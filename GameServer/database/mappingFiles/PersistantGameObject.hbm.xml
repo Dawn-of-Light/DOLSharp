@@ -1,0 +1,127 @@
+<?xml version="1.0" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="DOL.GS.PersistantGameObject, GameServer" table="`persistantgameobject`">
+		<id name="PersistantGameObjectID" column="`PersistantGameObjectID`" unsaved-value="0">
+			<generator class="native" />
+		</id>
+		<discriminator column="PersistantGameObjectType"/> 
+		
+		<property name="Name" type="String(255)" not-null="true" column="`Name`"/>
+		<property name="Realm" type="Byte" not-null="true" column="`Realm`"/>
+		<property name="Model" type="Int32" not-null="true" column="`Model`"/>
+		<property name="RegionID" type="Int32" not-null="true" column="`RegionID`"/>
+		<property name="Heading" type="Int32" not-null="true" column="`Heading`"/>
+		
+		<component name="DBPosition" class="DOL.GS.Database.DBPoint, GameServer">
+			<property name="X" type="Int32" not-null="true" column="`X`"/>
+			<property name="Y" type="Int32" not-null="true" column="`Y`"/>
+			<property name="Z" type="Int32" not-null="true" column="`Z`"/>
+		</component>
+		
+		<subclass name="DOL.GS.GameDoor, GameServer">
+			<property name="DoorID" type="Int32" not-null="true" column="`DoorID`"/>
+		</subclass>
+		
+		<subclass name="DOL.GS.GameCraftTool, GameServer">
+			<property name="ToolType" not-null="true" column="`ToolType`"/>
+		</subclass>
+		
+		<subclass name="DOL.GS.GameStaticItem, GameServer"/>
+		
+		<subclass name="DOL.GS.MovingGameStaticItem, GameServer">
+			<property name="Size" type="Byte" not-null="true" column="`Size`"/>
+			<property name="Level" type="Byte" not-null="true" column="`Level`"/>	
+		</subclass>
+		
+		<subclass name="DOL.GS.GameLivingBase, GameServer">
+			<property name="Level" type="Byte" not-null="true" column="`Level`"/>
+			<subclass name="DOL.GS.GameLiving, GameServer">
+				<property name="GuildName" type="String(255)" not-null="true" column="`GuildName`"/>
+				<property name="MaxSpeedBase" type="Int32" not-null="true" column="`MaxSpeedBase`"/>
+				<subclass name="DOL.GS.GameNPC, GameServer">
+					<property name="Size" type="Byte" not-null="true" column="`Size`"/>
+					<property name="Flags" type="Byte" not-null="true" column="`Flags`"/>
+					<property name="MeleeDamageType" type="DOL.GS.eDamageType, GameServer" not-null="true" column="`MeleeDamageType`"/>
+					<property name="EvadeChance" type="Byte" not-null="true" column="`EvadeChance`"/>
+					<property name="BlockChance" type="Byte" not-null="true" column="`BlockChance`"/>
+					<property name="ParryChance" type="Byte" not-null="true" column="`ParryChance`"/>
+					<property name="LeftHandSwingChance" type="Byte" not-null="true" column="`LeftHandSwingChance`"/>
+					<property name="InventoryID" type="Int32" not-null="true" column="`InventoryID`"/>
+					<one-to-one name="OwnBrain" class="DOL.AI.ABrain, GameServer" cascade="all-delete-orphan"/>
+					<subclass name="DOL.GS.GameMob, GameServer">
+						<property name="FactionID" type="Int32" not-null="true" column="`FactionID`"/>
+						<property name="RespawnInterval" type="Int32" not-null="true" column="`RespawnInterval`"/>
+						<subclass name="DOL.GS.GameMerchant, GameServer">
+							<property name="MerchantWindowID" type="Int32" not-null="true" column="`MerchantWindowID`"/>
+							<subclass name="DOL.GS.GameStableMaster, GameServer"/>
+						</subclass>
+						<subclass name="DOL.GS.GameCraftMaster, GameServer"/>
+						<subclass name="DOL.GS.GameTrainer, GameServer">
+							<subclass name="DOL.GS.GameStandardTrainer, GameServer">
+								<subclass name="DOL.GS.Trainer.AcolyteTrainer, GameServer"/>
+								<subclass name="DOL.GS.Trainer.AlbionRogueTrainer, GameServer"/>
+								<subclass name="DOL.GS.Trainer.DiscipleTrainer, GameServer"/>
+								<subclass name="DOL.GS.Trainer.ElementalistTrainer, GameServer"/>
+								<subclass name="DOL.GS.Trainer.FighterTrainer, GameServer"/>
+								<subclass name="DOL.GS.Trainer.MageTrainer, GameServer"/>
+								<subclass name="DOL.GS.Trainer.ForesterTrainer, GameServer"/>
+								<subclass name="DOL.GS.Trainer.GuardianTrainer, GameServer"/>
+								<subclass name="DOL.GS.Trainer.MagicianTrainer, GameServer"/>
+								<subclass name="DOL.GS.Trainer.NaturalistTrainer, GameServer"/>
+								<subclass name="DOL.GS.Trainer.StalkerTrainer, GameServer"/>
+								<subclass name="DOL.GS.Trainer.MidgardRogueTrainer, GameServer"/>
+								<subclass name="DOL.GS.Trainer.MysticTrainer, GameServer"/>
+								<subclass name="DOL.GS.Trainer.SeerTrainer, GameServer"/>
+								<subclass name="DOL.GS.Trainer.VikingTrainer, GameServer"/>
+							</subclass>
+							<subclass name="DOL.GS.Trainer.ArmsmanTrainer, GameServer"/>
+							<subclass name="DOL.GS.Trainer.CabalistTrainer, GameServer"/>
+							<subclass name="DOL.GS.Trainer.ClericTrainer, GameServer"/>
+							<subclass name="DOL.GS.Trainer.FriarTrainer, GameServer"/>
+							<subclass name="DOL.GS.Trainer.HereticTrainer, GameServer"/>
+							<subclass name="DOL.GS.Trainer.InfiltratorTrainer, GameServer"/>
+							<subclass name="DOL.GS.Trainer.MercenaryTrainer, GameServer"/>
+							<subclass name="DOL.GS.Trainer.MinstrelTrainer, GameServer"/>
+							<subclass name="DOL.GS.Trainer.NecromancerTrainer, GameServer"/>
+							<subclass name="DOL.GS.Trainer.PaladinTrainer, GameServer"/>
+							<subclass name="DOL.GS.Trainer.ReaverTrainer, GameServer"/>
+							<subclass name="DOL.GS.Trainer.ScoutTrainer, GameServer"/>
+							<subclass name="DOL.GS.Trainer.SorcererTrainer, GameServer"/>
+							<subclass name="DOL.GS.Trainer.TheurgistTrainer, GameServer"/>
+							<subclass name="DOL.GS.Trainer.WizardTrainer, GameServer"/>
+							<subclass name="DOL.GS.Trainer.AnimistTrainer, GameServer"/>
+							<subclass name="DOL.GS.Trainer.BainsheeTrainer, GameServer"/>
+							<subclass name="DOL.GS.Trainer.BardTrainer, GameServer"/>
+							<subclass name="DOL.GS.Trainer.BlademasterTrainer, GameServer"/>
+							<subclass name="DOL.GS.Trainer.ChampionTrainer, GameServer"/>
+							<subclass name="DOL.GS.Trainer.DruidTrainer, GameServer"/>
+							<subclass name="DOL.GS.Trainer.EldritchTrainer, GameServer"/>
+							<subclass name="DOL.GS.Trainer.EnchanterTrainer, GameServer"/>
+							<subclass name="DOL.GS.Trainer.HeroTrainer, GameServer"/>
+							<subclass name="DOL.GS.Trainer.MentalistTrainer, GameServer"/>
+							<subclass name="DOL.GS.Trainer.NightshadeTrainer, GameServer"/>
+							<subclass name="DOL.GS.Trainer.RangerTrainer, GameServer"/>
+							<subclass name="DOL.GS.Trainer.ValewalkerTrainer, GameServer"/>
+							<subclass name="DOL.GS.Trainer.VampiirTrainer, GameServer"/>
+							<subclass name="DOL.GS.Trainer.WardenTrainer, GameServer"/>
+							<subclass name="DOL.GS.Trainer.BerserkerTrainer, GameServer"/>
+							<subclass name="DOL.GS.Trainer.BonedancerTrainer, GameServer"/>
+							<subclass name="DOL.GS.Trainer.HealerTrainer, GameServer"/>
+							<subclass name="DOL.GS.Trainer.HunterTrainer, GameServer"/>
+							<subclass name="DOL.GS.Trainer.RunemasterTrainer, GameServer"/>
+							<subclass name="DOL.GS.Trainer.SavageTrainer, GameServer"/>
+							<subclass name="DOL.GS.Trainer.ShadowbladeTrainer, GameServer"/>
+							<subclass name="DOL.GS.Trainer.ShamanTrainer, GameServer"/>
+							<subclass name="DOL.GS.Trainer.SkaldTrainer, GameServer"/>
+							<subclass name="DOL.GS.Trainer.SpiritmasterTrainer, GameServer"/>
+							<subclass name="DOL.GS.Trainer.ThaneTrainer, GameServer"/>
+							<subclass name="DOL.GS.Trainer.ValkyrieTrainer, GameServer"/>
+							<subclass name="DOL.GS.Trainer.WarlockTrainer, GameServer"/>
+							<subclass name="DOL.GS.Trainer.WarriorTrainer, GameServer"/>
+						</subclass>
+					</subclass>
+				</subclass>
+			</subclass>
+		</subclass>
+	</class>
+</hibernate-mapping>

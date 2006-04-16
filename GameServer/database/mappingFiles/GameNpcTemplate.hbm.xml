@@ -1,0 +1,36 @@
+<?xml version="1.0" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="DOL.GS.GameNPCTemplate, GameServer" table="`gamenpctemplate`">
+		<id name="GameNPCTemplateID" column="`GameNPCTemplateID`" unsaved-value="0">
+			<generator class="native" />
+		</id>
+		<discriminator column="GameNPCTemplateType"/> 
+		
+		<property name="Name" type="String(255)" not-null="true" column="`Name`"/>
+		<property name="Realm" type="Byte" not-null="true" column="`Realm`"/>
+		<property name="Model" type="Int32" not-null="true" column="`Model`"/>
+		
+		<property name="Level" type="Byte" not-null="true" column="`Level`"/>
+		
+		<property name="GuildName" type="String(255)" not-null="true" column="`GuildName`"/>
+		<property name="MaxSpeedBase" type="Int32" not-null="true" column="`MaxSpeedBase`"/>
+		
+		<property name="Size" type="Byte" not-null="true" column="`Size`"/>
+		<property name="Flags" type="Byte" not-null="true" column="`Flags`"/>
+		<property name="MeleeDamageType" type="DOL.GS.eDamageType, GameServer" not-null="true" column="`MeleeDamageType`"/>
+		<property name="EvadeChance" type="Byte" not-null="true" column="`EvadeChance`"/>
+		<property name="BlockChance" type="Byte" not-null="true" column="`BlockChance`"/>
+		<property name="ParryChance" type="Byte" not-null="true" column="`ParryChance`"/>
+		<property name="LeftHandSwingChance" type="Byte" not-null="true" column="`LeftHandSwingChance`"/>
+		<property name="InventoryID" type="Int32" not-null="true" column="`InventoryID`"/>
+		<one-to-one name="OwnBrainTemplate" class="DOL.AI.ABrainTemplate, GameServer" cascade="all"/>
+		
+		<subclass name="DOL.GS.GameSummonedPetTemplate, GameServer" />
+		
+		<subclass name="DOL.GS.GameMobTemplate, GameServer">
+			<property name="FactionID" type="Int32" not-null="true" column="`FactionID`"/>
+			<property name="RespawnInterval" type="Int32" not-null="true" column="`RespawnInterval`"/>	
+		</subclass>
+	
+	</class>
+</hibernate-mapping>

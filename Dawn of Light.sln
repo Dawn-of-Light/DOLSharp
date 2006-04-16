@@ -1,0 +1,58 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DOLServer", ".\DOLServer\DOLServer.csproj", "{94183824-5CD9-43D9-A1E9-7B9996C1BB92}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameServer", ".\GameServer\GameServer.csproj", "{5E50A5FB-2805-414F-B8CD-744DC9B3F2BE}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DOLBase", ".\DOLBase\DOLBase.csproj", "{63E96E0D-10FD-4731-B029-5E66042E8C38}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", ".\UnitTests\UnitTests.csproj", "{D316A715-1B4D-4B2D-9B5E-1AC7555349A5}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameServerScripts", ".\GameServerScripts\GameServerScripts.csproj", "{88DA0491-79F8-4750-850C-686AB862260C}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Release = Release
+		Debug = Debug
+	EndGlobalSection
+	GlobalSection(ProjectDependencies) = postSolution
+		({94183824-5CD9-43D9-A1E9-7B9996C1BB92}).4 = ({5E50A5FB-2805-414F-B8CD-744DC9B3F2BE})
+		({94183824-5CD9-43D9-A1E9-7B9996C1BB92}).7 = ({63E96E0D-10FD-4731-B029-5E66042E8C38})
+		({5E50A5FB-2805-414F-B8CD-744DC9B3F2BE}).7 = ({63E96E0D-10FD-4731-B029-5E66042E8C38})
+		({D316A715-1B4D-4B2D-9B5E-1AC7555349A5}).1 = ({5E50A5FB-2805-414F-B8CD-744DC9B3F2BE})
+		({D316A715-1B4D-4B2D-9B5E-1AC7555349A5}).8 = ({63E96E0D-10FD-4731-B029-5E66042E8C38})
+		({88DA0491-79F8-4750-850C-686AB862260C}).3 = ({5E50A5FB-2805-414F-B8CD-744DC9B3F2BE})
+		({88DA0491-79F8-4750-850C-686AB862260C}).6 = ({63E96E0D-10FD-4731-B029-5E66042E8C38})
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{94183824-5CD9-43D9-A1E9-7B9996C1BB92}.Release.ActiveCfg = Release|.NET
+		{94183824-5CD9-43D9-A1E9-7B9996C1BB92}.Release.Build.0 = Release|.NET
+		{94183824-5CD9-43D9-A1E9-7B9996C1BB92}.Debug.ActiveCfg = Debug|.NET
+		{94183824-5CD9-43D9-A1E9-7B9996C1BB92}.Debug.Build.0 = Debug|.NET
+		{5E50A5FB-2805-414F-B8CD-744DC9B3F2BE}.Release.ActiveCfg = Release|.NET
+		{5E50A5FB-2805-414F-B8CD-744DC9B3F2BE}.Release.Build.0 = Release|.NET
+		{5E50A5FB-2805-414F-B8CD-744DC9B3F2BE}.Debug.ActiveCfg = Debug|.NET
+		{5E50A5FB-2805-414F-B8CD-744DC9B3F2BE}.Debug.Build.0 = Debug|.NET
+		{63E96E0D-10FD-4731-B029-5E66042E8C38}.Release.ActiveCfg = Release|.NET
+		{63E96E0D-10FD-4731-B029-5E66042E8C38}.Release.Build.0 = Release|.NET
+		{63E96E0D-10FD-4731-B029-5E66042E8C38}.Debug.ActiveCfg = Debug|.NET
+		{63E96E0D-10FD-4731-B029-5E66042E8C38}.Debug.Build.0 = Debug|.NET
+		{D316A715-1B4D-4B2D-9B5E-1AC7555349A5}.Release.ActiveCfg = Release|.NET
+		{D316A715-1B4D-4B2D-9B5E-1AC7555349A5}.Release.Build.0 = Release|.NET
+		{D316A715-1B4D-4B2D-9B5E-1AC7555349A5}.Debug.ActiveCfg = Debug|.NET
+		{D316A715-1B4D-4B2D-9B5E-1AC7555349A5}.Debug.Build.0 = Debug|.NET
+		{88DA0491-79F8-4750-850C-686AB862260C}.Release.ActiveCfg = Release|.NET
+		{88DA0491-79F8-4750-850C-686AB862260C}.Release.Build.0 = Release|.NET
+		{88DA0491-79F8-4750-850C-686AB862260C}.Debug.ActiveCfg = Debug|.NET
+		{88DA0491-79F8-4750-850C-686AB862260C}.Debug.Build.0 = Debug|.NET
+	EndGlobalSection
+EndGlobal

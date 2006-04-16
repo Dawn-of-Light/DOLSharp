@@ -1,0 +1,148 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>NHibernate.Caches.SysCache</name>
+    </assembly>
+    <members>
+        <member name="T:NHibernate.Caches.SysCache.CacheConfig">
+            <summary>
+            Config properties
+            </summary>
+        </member>
+        <member name="M:NHibernate.Caches.SysCache.CacheConfig.#ctor(System.String,System.String,System.String,System.String)">
+            <summary>
+            build a configuration
+            </summary>
+            <param name="region"></param>
+            <param name="relativeExpiration"></param>
+            <param name="staticExpiration"></param>
+            <param name="priority"></param>
+        </member>
+        <member name="P:NHibernate.Caches.SysCache.CacheConfig.Region">
+            <summary></summary>
+        </member>
+        <member name="P:NHibernate.Caches.SysCache.CacheConfig.Properties">
+            <summary></summary>
+        </member>
+        <member name="T:NHibernate.Caches.SysCache.SysCache">
+            <summary>
+            Pluggable cache implementation using the System.Web.Caching classes
+            </summary>
+        </member>
+        <member name="M:NHibernate.Caches.SysCache.SysCache.#ctor">
+            <summary>
+            default constructor
+            </summary>
+        </member>
+        <member name="M:NHibernate.Caches.SysCache.SysCache.#ctor(System.String)">
+            <summary>
+            constructor with no properties
+            </summary>
+            <param name="region"></param>
+        </member>
+        <member name="M:NHibernate.Caches.SysCache.SysCache.#ctor(System.String,System.Collections.IDictionary)">
+            <summary>
+            full constructor
+            </summary>
+            <param name="region"></param>
+            <param name="properties">cache configuration properties</param>
+            <remarks>
+            There are three (3) configurable parameters:
+            <ul>
+            	<li>staticExpiration = a specific DateTime to expire each item on</li>
+            	<li>relativeExpiration = number of seconds to wait before expiring each item</li>
+            	<li>priority = a numeric cost of expiring each item, where 1 is a low cost, 5 is the highest, and 3 is normal. Only values 1 through 5 are valid.</li>
+            </ul>
+            staticExpiration and relativeExpiration are exclusive - you can only specify one or the other, not both.
+            All parameters are optional. The defaults are a relativeExpiration of 300 seconds and the default priority of 3.
+            </remarks>
+            <exception cref="T:System.IndexOutOfRangeException">The "priority" property is not between 1 and 5</exception>
+            <exception cref="T:System.NotSupportedException">"staticExpiration" and "relativeExpiration" properties were both specified.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">The "staticExpiration" property is not in the future.</exception>
+            <exception cref="T:System.ArgumentException">The "relativeExpiration" property could not be parsed.</exception>
+        </member>
+        <member name="M:NHibernate.Caches.SysCache.SysCache.Get(System.Object)">
+            <summary></summary>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:NHibernate.Caches.SysCache.SysCache.Put(System.Object,System.Object)">
+            <summary></summary>
+            <param name="key"></param>
+            <param name="value"></param>
+        </member>
+        <member name="M:NHibernate.Caches.SysCache.SysCache.CacheItemRemoved(System.String,System.Object,System.Web.Caching.CacheItemRemovedReason)">
+            <summary>
+            make sure the Hashtable is in sync with the cache by using the callback.
+            </summary>
+            <param name="key"></param>
+            <param name="value"></param>
+            <param name="reason"></param>
+        </member>
+        <member name="M:NHibernate.Caches.SysCache.SysCache.Remove(System.Object)">
+            <summary></summary>
+            <param name="key"></param>
+        </member>
+        <member name="M:NHibernate.Caches.SysCache.SysCache.Clear">
+            <summary></summary>
+        </member>
+        <member name="M:NHibernate.Caches.SysCache.SysCache.Destroy">
+            <summary></summary>
+        </member>
+        <member name="M:NHibernate.Caches.SysCache.SysCache.Lock(System.Object)">
+            <summary></summary>
+            <param name="key"></param>
+        </member>
+        <member name="M:NHibernate.Caches.SysCache.SysCache.Unlock(System.Object)">
+            <summary></summary>
+            <param name="key"></param>
+        </member>
+        <member name="M:NHibernate.Caches.SysCache.SysCache.NextTimestamp">
+            <summary></summary>
+        </member>
+        <member name="P:NHibernate.Caches.SysCache.SysCache.Timeout">
+            <summary></summary>
+        </member>
+        <member name="P:NHibernate.Caches.SysCache.SysCache.Region">
+            <summary></summary>
+        </member>
+        <member name="T:NHibernate.Caches.SysCache.SysCacheProvider">
+            <summary>
+            Cache provider using the System.Web.Caching classes
+            </summary>
+        </member>
+        <member name="M:NHibernate.Caches.SysCache.SysCacheProvider.BuildCache(System.String,System.Collections.IDictionary)">
+            <summary>
+            build a new SysCache
+            </summary>
+            <param name="regionName"></param>
+            <param name="properties"></param>
+            <returns></returns>
+        </member>
+        <member name="M:NHibernate.Caches.SysCache.SysCacheProvider.NextTimestamp">
+            <summary></summary>
+            <returns></returns>
+        </member>
+        <member name="M:NHibernate.Caches.SysCache.SysCacheProvider.Start(System.Collections.IDictionary)">
+            <summary></summary>
+            <param name="properties"></param>
+        </member>
+        <member name="M:NHibernate.Caches.SysCache.SysCacheProvider.Stop">
+            <summary></summary>
+        </member>
+        <member name="T:NHibernate.Caches.SysCache.SysCacheSectionHandler">
+            <summary>
+            Config file provider
+            </summary>
+        </member>
+        <member name="M:NHibernate.Caches.SysCache.SysCacheSectionHandler.Create(System.Object,System.Object,System.Xml.XmlNode)">
+            <summary>
+            parse the config section
+            </summary>
+            <param name="parent"></param>
+            <param name="configContext"></param>
+            <param name="section"></param>
+            <returns>an array of CacheConfig objects</returns>
+        </member>
+    </members>
+</doc>
