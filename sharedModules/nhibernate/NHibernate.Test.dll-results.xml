@@ -1,0 +1,1534 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!--This file represents the results of running a test suite-->
+<test-results name="C:\net\nhibernate-release\nhibernate\build\nhibernate-1.0.2.0\bin\NHibernate.Test.dll" total="620" failures="0" not-run="8" date="15.1.2006" time="14:01">
+  <test-suite name="C:\net\nhibernate-release\nhibernate\build\nhibernate-1.0.2.0\bin\NHibernate.Test.dll" success="True" time="62,796875" asserts="0">
+    <results>
+      <test-suite name="NHibernate" success="True" time="62,796875" asserts="0">
+        <results>
+          <test-suite name="Test" success="True" time="62,796875" asserts="0">
+            <results>
+              <test-suite name="CacheTest" success="True" time="0,328125" asserts="0">
+                <results>
+                  <test-suite name="CacheFixture" success="True" time="0,328125" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.CacheTest.CacheFixture.TestSimpleCache" executed="True" success="True" time="0.313" asserts="24" />
+                      <test-case name="NHibernate.Test.CacheTest.CacheFixture.MinValueTimestamp" executed="True" success="True" time="0.000" asserts="6" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="TimestamperFixture" success="True" time="0" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.CacheTest.TimestamperFixture.VerifyIncrease" executed="True" success="True" time="0.000" asserts="0" />
+                    </results>
+                  </test-suite>
+                </results>
+              </test-suite>
+              <test-suite name="CfgTest" success="True" time="1,359375" asserts="0">
+                <results>
+                  <test-suite name="BinderFixture" success="True" time="0,34375" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.CfgTest.BinderFixture.DefaultUnsavedValueIsUndefined" executed="True" success="True" time="0.344" asserts="2" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="ConfigurationFixture" success="True" time="0,84375" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.CfgTest.ConfigurationFixture.ReadCfgXmlFromDefaultFile" executed="True" success="True" time="0.047" asserts="2" />
+                      <test-case name="NHibernate.Test.CfgTest.ConfigurationFixture.ManualConfiguration" executed="False">
+                        <reason>
+                          <message><![CDATA[Explicit selection required]]></message>
+                        </reason>
+                      </test-case>
+                      <test-case name="NHibernate.Test.CfgTest.ConfigurationFixture.ReadCfgXmlFromAssembly" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="NHibernate.Test.CfgTest.ConfigurationFixture.InvalidXmlInCfgFile" executed="True" success="True" time="0.016" asserts="0" />
+                      <test-case name="NHibernate.Test.CfgTest.ConfigurationFixture.EmptyPropertyTag" executed="True" success="True" time="0.000" asserts="0" />
+                      <test-case name="NHibernate.Test.CfgTest.ConfigurationFixture.CacheConfigurationForUnmappedClass" executed="True" success="True" time="0.031" asserts="0" />
+                      <test-case name="NHibernate.Test.CfgTest.ConfigurationFixture.CacheConfigurationForUnmappedCollection" executed="True" success="True" time="0.094" asserts="0" />
+                      <test-case name="NHibernate.Test.CfgTest.ConfigurationFixture.NoSessionFactoriesInConfiguration" executed="True" success="True" time="0.000" asserts="0" />
+                      <test-case name="NHibernate.Test.CfgTest.ConfigurationFixture.CacheConfiguration" executed="True" success="True" time="0.594" asserts="0" />
+                      <test-case name="NHibernate.Test.CfgTest.ConfigurationFixture.InvalidXmlInHbmFile" executed="True" success="True" time="0.016" asserts="0" />
+                      <test-case name="NHibernate.Test.CfgTest.ConfigurationFixture.ProxyWithDefaultNamespaceAndAssembly" executed="True" success="True" time="0.031" asserts="0" />
+                      <test-case name="NHibernate.Test.CfgTest.ConfigurationFixture.PersisterWithDefaultNamespaceAndAssembly" executed="True" success="True" time="0.000" asserts="0" />
+                      <test-case name="NHibernate.Test.CfgTest.ConfigurationFixture.AddDocument" executed="True" success="True" time="0.016" asserts="0" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="DefaultNsAssmFixture" success="True" time="0,09375" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.CfgTest.DefaultNsAssmFixture.TopDownJoined" executed="True" success="True" time="0.031" asserts="0" />
+                      <test-case name="NHibernate.Test.CfgTest.DefaultNsAssmFixture.BottomUpJoined" executed="True" success="True" time="0.016" asserts="0" />
+                      <test-case name="NHibernate.Test.CfgTest.DefaultNsAssmFixture.MixedJoined" executed="True" success="True" time="0.016" asserts="0" />
+                      <test-case name="NHibernate.Test.CfgTest.DefaultNsAssmFixture.MixedSubclass" executed="True" success="True" time="0.031" asserts="0" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="HbmOrderingFixture" success="True" time="0,078125" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.CfgTest.HbmOrderingFixture.TopDownJoined" executed="True" success="True" time="0.016" asserts="0" />
+                      <test-case name="NHibernate.Test.CfgTest.HbmOrderingFixture.BottomUpJoined" executed="True" success="True" time="0.016" asserts="0" />
+                      <test-case name="NHibernate.Test.CfgTest.HbmOrderingFixture.MixedJoined" executed="True" success="True" time="0.031" asserts="0" />
+                      <test-case name="NHibernate.Test.CfgTest.HbmOrderingFixture.MixedSubclass" executed="True" success="True" time="0.016" asserts="0" />
+                    </results>
+                  </test-suite>
+                </results>
+              </test-suite>
+              <test-suite name="CompositeId" success="True" time="0,71875" asserts="0">
+                <results>
+                  <test-suite name="ClassWithCompositeIdFixture" success="True" time="0,71875" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.CompositeId.ClassWithCompositeIdFixture.TestSimpleCRUD" executed="True" success="True" time="0.172" asserts="11" />
+                      <test-case name="NHibernate.Test.CompositeId.ClassWithCompositeIdFixture.Criteria" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="NHibernate.Test.CompositeId.ClassWithCompositeIdFixture.Hql" executed="True" success="True" time="0.031" asserts="1" />
+                    </results>
+                  </test-suite>
+                </results>
+              </test-suite>
+              <test-suite name="DialectTest" success="True" time="0,046875" asserts="0">
+                <results>
+                  <test-suite name="DialectFixture" success="True" time="0,03125" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.DialectTest.DialectFixture.IsQuotedTrue" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="NHibernate.Test.DialectTest.DialectFixture.IsQuotedFalse" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="NHibernate.Test.DialectTest.DialectFixture.QuoteTableNameNeeded" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="NHibernate.Test.DialectTest.DialectFixture.QuoteTableNameNotNeeded" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="NHibernate.Test.DialectTest.DialectFixture.QuoteTableNameAlreadyQuoted" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="NHibernate.Test.DialectTest.DialectFixture.UnQuoteAlreadyQuoted" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="NHibernate.Test.DialectTest.DialectFixture.UnQuoteNeedingQuote" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="NHibernate.Test.DialectTest.DialectFixture.UnQuoteArray" executed="True" success="True" time="0.031" asserts="3" />
+                      <test-case name="NHibernate.Test.DialectTest.DialectFixture.GetDialectUntrimmedName" executed="True" success="True" time="0.000" asserts="1" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="MsSqlDialectFixture" success="True" time="0,015625" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.DialectTest.MsSqlDialectFixture.GetLimitString" executed="True" success="True" time="0.000" asserts="5" />
+                      <test-case name="NHibernate.Test.DialectTest.MsSqlDialectFixture.IsQuotedTrue" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="NHibernate.Test.DialectTest.MsSqlDialectFixture.IsQuotedFalse" executed="True" success="True" time="0.016" asserts="1" />
+                      <test-case name="NHibernate.Test.DialectTest.MsSqlDialectFixture.QuoteTableNameNeeded" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="NHibernate.Test.DialectTest.MsSqlDialectFixture.QuoteTableNameNotNeeded" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="NHibernate.Test.DialectTest.MsSqlDialectFixture.QuoteTableNameAlreadyQuoted" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="NHibernate.Test.DialectTest.MsSqlDialectFixture.UnQuoteAlreadyQuoted" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="NHibernate.Test.DialectTest.MsSqlDialectFixture.UnQuoteNeedingQuote" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="NHibernate.Test.DialectTest.MsSqlDialectFixture.UnQuoteArray" executed="True" success="True" time="0.000" asserts="3" />
+                      <test-case name="NHibernate.Test.DialectTest.MsSqlDialectFixture.GetDialectUntrimmedName" executed="True" success="True" time="0.000" asserts="1" />
+                    </results>
+                  </test-suite>
+                </results>
+              </test-suite>
+              <test-suite name="DriverTest" success="True" time="0,078125" asserts="0">
+                <results>
+                  <test-suite name="NullReferenceFixture" success="True" time="0,078125" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.DriverTest.NullReferenceFixture.NoParameterNameNullReference" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="NHibernate.Test.DriverTest.NullReferenceFixture.NamedParameterAssignedNoError" executed="True" success="True" time="0.016" asserts="2" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="OracleClientDriverFixture" success="True" time="0" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.DriverTest.OracleClientDriverFixture.ConnectionClassName" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="NHibernate.Test.DriverTest.OracleClientDriverFixture.CommandClassName" executed="True" success="True" time="0.000" asserts="1" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="OracleDataClientDriverFixture" success="True" time="0" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.DriverTest.OracleDataClientDriverFixture.NoBooleanParameters" executed="False">
+                        <categories>
+                          <category name="ODP.NET" />
+                        </categories>
+                        <reason>
+                          <message><![CDATA[Explicit selection required]]></message>
+                        </reason>
+                      </test-case>
+                    </results>
+                  </test-suite>
+                </results>
+              </test-suite>
+              <test-suite name="ExceptionsTest" success="True" time="0" asserts="0">
+                <results>
+                  <test-suite name="PropertyAccessExceptionFixture" success="True" time="0" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.ExceptionsTest.PropertyAccessExceptionFixture.MessageWithoutTypeCtor" executed="True" success="True" time="0.000" asserts="1" />
+                    </results>
+                  </test-suite>
+                </results>
+              </test-suite>
+              <test-suite name="ExpressionTest" success="True" time="7,703125" asserts="0">
+                <results>
+                  <test-suite name="BetweenExpressionFixture" success="True" time="0,515625" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.ExpressionTest.BetweenExpressionFixture.BetweenSqlStringTest" executed="True" success="True" time="0.516" asserts="4" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="InExpressionFixture" success="True" time="0,734375" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.ExpressionTest.InExpressionFixture.InSqlStringTest" executed="True" success="True" time="0.359" asserts="5" />
+                      <test-case name="NHibernate.Test.ExpressionTest.InExpressionFixture.InEmptyList" executed="True" success="True" time="0.375" asserts="1" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="InsensitiveLikeExpressionFixture" success="True" time="0,375" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.ExpressionTest.InsensitiveLikeExpressionFixture.InsentitiveLikeSqlStringTest" executed="True" success="True" time="0.375" asserts="3" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="JunctionFixture" success="True" time="1,15625" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.ExpressionTest.JunctionFixture.SqlString" executed="True" success="True" time="0.406" asserts="2" />
+                      <test-case name="NHibernate.Test.ExpressionTest.JunctionFixture.GetTypedValues" executed="True" success="True" time="0.375" asserts="5" />
+                      <test-case name="NHibernate.Test.ExpressionTest.JunctionFixture.ToStringTest" executed="True" success="True" time="0.375" asserts="1" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="LogicalExpressionFixture" success="True" time="0,375" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.ExpressionTest.LogicalExpressionFixture.LogicalSqlStringTest" executed="True" success="True" time="0.375" asserts="2" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="NotExpressionFixture" success="True" time="0,375" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.ExpressionTest.NotExpressionFixture.NotSqlStringTest" executed="True" success="True" time="0.375" asserts="3" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="NotNullExpressionFixture" success="True" time="0,40625" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.ExpressionTest.NotNullExpressionFixture.NotNullSqlStringTest" executed="True" success="True" time="0.406" asserts="2" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="NullExpressionFixture" success="True" time="0,375" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.ExpressionTest.NullExpressionFixture.NullSqlStringTest" executed="True" success="True" time="0.375" asserts="2" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="PropertyExpressionFixture" success="True" time="0,375" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.ExpressionTest.PropertyExpressionFixture.SqlStringTest" executed="True" success="True" time="0.375" asserts="1" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="QueryByExampleTest" success="True" time="0,34375" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.ExpressionTest.QueryByExampleTest.TestSimpleQBE" executed="True" success="True" time="0.047" asserts="2" />
+                      <test-case name="NHibernate.Test.ExpressionTest.QueryByExampleTest.TestJunctionNotExpressionQBE" executed="True" success="True" time="0.016" asserts="2" />
+                      <test-case name="NHibernate.Test.ExpressionTest.QueryByExampleTest.TestExcludingQBE" executed="True" success="True" time="0.016" asserts="4" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="SimpleExpressionFixture" success="True" time="1,53125" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.ExpressionTest.SimpleExpressionFixture.SimpleSqlStringTest" executed="True" success="True" time="0.375" asserts="3" />
+                      <test-case name="NHibernate.Test.ExpressionTest.SimpleExpressionFixture.TestQuoting" executed="True" success="True" time="0.391" asserts="1" />
+                      <test-case name="NHibernate.Test.ExpressionTest.SimpleExpressionFixture.SimpleDateExpression" executed="True" success="True" time="0.391" asserts="3" />
+                      <test-case name="NHibernate.Test.ExpressionTest.SimpleExpressionFixture.MisspelledPropertyWithNormalizedEntityPersister" executed="True" success="True" time="0.375" asserts="0" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="SQLExpressionFixture" success="True" time="1,140625" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.ExpressionTest.SQLExpressionFixture.StraightSqlTest" executed="True" success="True" time="0.375" asserts="1" />
+                      <test-case name="NHibernate.Test.ExpressionTest.SQLExpressionFixture.NoParamsSqlStringTest" executed="True" success="True" time="0.391" asserts="1" />
+                      <test-case name="NHibernate.Test.ExpressionTest.SQLExpressionFixture.WithParameterTest" executed="True" success="True" time="0.375" asserts="3" />
+                    </results>
+                  </test-suite>
+                </results>
+              </test-suite>
+              <test-suite name="IdTest" success="True" time="0" asserts="0">
+                <results>
+                  <test-suite name="IdentifierGeneratorFactoryFixture" success="True" time="0" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.IdTest.IdentifierGeneratorFactoryFixture.NonCreatableStrategy" executed="True" success="True" time="0.000" asserts="0" />
+                    </results>
+                  </test-suite>
+                </results>
+              </test-suite>
+              <test-suite name="JoinedSubclass" success="True" time="1,28125" asserts="0">
+                <results>
+                  <test-suite name="JoinedSubclassFixture" success="True" time="0,703125" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.JoinedSubclass.JoinedSubclassFixture.TestJoinedSubclass" executed="True" success="True" time="0.125" asserts="11" />
+                      <test-case name="NHibernate.Test.JoinedSubclass.JoinedSubclassFixture.TestHql" executed="True" success="True" time="0.016" asserts="2" />
+                      <test-case name="NHibernate.Test.JoinedSubclass.JoinedSubclassFixture.TestCRUD" executed="True" success="True" time="0.047" asserts="5" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="JoinedSubclassExtendsFixture" success="True" time="0,578125" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.JoinedSubclass.JoinedSubclassExtendsFixture.TestJoinedSubclass" executed="True" success="True" time="0.063" asserts="11" />
+                      <test-case name="NHibernate.Test.JoinedSubclass.JoinedSubclassExtendsFixture.TestHql" executed="True" success="True" time="0.016" asserts="2" />
+                      <test-case name="NHibernate.Test.JoinedSubclass.JoinedSubclassExtendsFixture.TestCRUD" executed="True" success="True" time="0.031" asserts="5" />
+                    </results>
+                  </test-suite>
+                </results>
+              </test-suite>
+              <test-suite name="MappingExceptions" success="True" time="0,046875" asserts="0">
+                <results>
+                  <test-suite name="AddClassFixture" success="True" time="0,015625" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.MappingExceptions.AddClassFixture.ClassMissingMappingFile" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="NHibernate.Test.MappingExceptions.AddClassFixture.AddClassNotFound" executed="True" success="True" time="0.016" asserts="2" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="AddResourceFixture" success="True" time="0" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.MappingExceptions.AddResourceFixture.ResourceNotFound" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="NHibernate.Test.MappingExceptions.AddResourceFixture.AddDuplicateImport" executed="True" success="True" time="0.000" asserts="2" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="MissingDefCtorFixture" success="True" time="0,015625" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.MappingExceptions.MissingDefCtorFixture.ClassMissingDefaultCtor" executed="True" success="True" time="0.016" asserts="2" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="PropertyNotFoundExceptionFixture" success="True" time="0,015625" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.MappingExceptions.PropertyNotFoundExceptionFixture.MisspelledPropertyName" executed="True" success="True" time="0.016" asserts="5" />
+                    </results>
+                  </test-suite>
+                </results>
+              </test-suite>
+              <test-suite name="MappingTest" success="True" time="0" asserts="0">
+                <results>
+                  <test-suite name="ColumnFixture" success="True" time="0" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.MappingTest.ColumnFixture.YesNoSqlType" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="NHibernate.Test.MappingTest.ColumnFixture.StringSqlType" executed="True" success="True" time="0.000" asserts="2" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="ForeignKeyFixture" success="True" time="0" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.MappingTest.ForeignKeyFixture.UnmatchingColumns" executed="True" success="True" time="0.000" asserts="0" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="TableFixture" success="True" time="0" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.MappingTest.TableFixture.TableNameQuoted" executed="True" success="True" time="0.000" asserts="4" />
+                      <test-case name="NHibernate.Test.MappingTest.TableFixture.TableNameNotQuoted" executed="True" success="True" time="0.000" asserts="4" />
+                      <test-case name="NHibernate.Test.MappingTest.TableFixture.SchemaNameQuoted" executed="True" success="True" time="0.000" asserts="1" />
+                    </results>
+                  </test-suite>
+                </results>
+              </test-suite>
+              <test-suite name="NHSpecificTest" success="True" time="10,71875" asserts="0">
+                <results>
+                  <test-suite name="Docs" success="True" time="0,5" asserts="0">
+                    <results>
+                      <test-suite name="Associations" success="True" time="0,25" asserts="0">
+                        <results>
+                          <test-suite name="BiM21" success="True" time="0,25" asserts="0">
+                            <results>
+                              <test-suite name="Fixture" success="True" time="0,25" asserts="0">
+                                <results>
+                                  <test-case name="NHibernate.Test.NHSpecificTest.Docs.Associations.BiM21.Fixture.TestCorrectUse" executed="True" success="True" time="0.031" asserts="0" />
+                                  <test-case name="NHibernate.Test.NHSpecificTest.Docs.Associations.BiM21.Fixture.TestErrorUsage" executed="True" success="True" time="0.000" asserts="0" />
+                                </results>
+                              </test-suite>
+                            </results>
+                          </test-suite>
+                        </results>
+                      </test-suite>
+                      <test-suite name="ExampleParentChild" success="True" time="0,25" asserts="0">
+                        <results>
+                          <test-suite name="UpdateFixture" success="True" time="0,25" asserts="0">
+                            <results>
+                              <test-case name="NHibernate.Test.NHSpecificTest.Docs.ExampleParentChild.UpdateFixture.Update" executed="True" success="True" time="0.031" asserts="0" />
+                            </results>
+                          </test-suite>
+                        </results>
+                      </test-suite>
+                    </results>
+                  </test-suite>
+                  <test-suite name="NH251" success="True" time="0,015625" asserts="0">
+                    <results>
+                      <test-suite name="CustomAccessFixture" success="True" time="0,015625" asserts="0">
+                        <results>
+                          <test-case name="NHibernate.Test.NHSpecificTest.NH251.CustomAccessFixture.ConfigurationIsOK" executed="True" success="True" time="0.016" asserts="0" />
+                        </results>
+                      </test-suite>
+                    </results>
+                  </test-suite>
+                  <test-suite name="NH257" success="True" time="0" asserts="0">
+                    <results>
+                      <test-suite name="Fixture" success="True" time="0" asserts="0">
+                        <results>
+                          <test-case name="NHibernate.Test.NHSpecificTest.NH257.Fixture.ManyToManyTableCreationScript" executed="True" success="True" time="0.000" asserts="1" />
+                        </results>
+                      </test-suite>
+                    </results>
+                  </test-suite>
+                  <test-suite name="NH266" success="True" time="0,46875" asserts="0">
+                    <results>
+                      <test-suite name="Fixture" success="True" time="0,34375" asserts="0">
+                        <results>
+                          <test-case name="NHibernate.Test.NHSpecificTest.NH266.Fixture.BaseClassLoad" executed="True" success="True" time="0.031" asserts="3" />
+                          <test-case name="NHibernate.Test.NHSpecificTest.NH266.Fixture.SpecificSubclass" executed="True" success="True" time="0.016" asserts="3" />
+                        </results>
+                      </test-suite>
+                      <test-suite name="UserFixture" success="True" time="0,125" asserts="0">
+                        <results>
+                          <test-case name="NHibernate.Test.NHSpecificTest.NH266.UserFixture.WhereAttribute" executed="True" success="True" time="0.016" asserts="4" />
+                        </results>
+                      </test-suite>
+                    </results>
+                  </test-suite>
+                  <test-suite name="NH276" success="True" time="0,6875" asserts="0">
+                    <results>
+                      <test-suite name="JoinedSubclass" success="True" time="0,453125" asserts="0">
+                        <results>
+                          <test-suite name="Fixture" success="True" time="0,453125" asserts="0">
+                            <results>
+                              <test-case name="NHibernate.Test.NHSpecificTest.NH276.JoinedSubclass.Fixture.ManyToOneIdProperties" executed="True" success="True" time="0.031" asserts="2" />
+                            </results>
+                          </test-suite>
+                        </results>
+                      </test-suite>
+                      <test-suite name="Fixture" success="True" time="0,234375" asserts="0">
+                        <results>
+                          <test-case name="NHibernate.Test.NHSpecificTest.NH276.Fixture.ManyToOneId" executed="True" success="True" time="0.031" asserts="5" />
+                        </results>
+                      </test-suite>
+                    </results>
+                  </test-suite>
+                  <test-suite name="NH283" success="True" time="0,015625" asserts="0">
+                    <results>
+                      <test-suite name="Fixture" success="True" time="0,015625" asserts="0">
+                        <results>
+                          <test-case name="NHibernate.Test.NHSpecificTest.NH283.Fixture.ForeignKeyNames" executed="True" success="True" time="0.016" asserts="3" />
+                        </results>
+                      </test-suite>
+                    </results>
+                  </test-suite>
+                  <test-suite name="NH295" success="True" time="0,9375" asserts="0">
+                    <results>
+                      <test-suite name="SubclassFixture" success="True" time="0,390625" asserts="0">
+                        <results>
+                          <test-case name="NHibernate.Test.NHSpecificTest.NH295.SubclassFixture.LoadByIDFailure" executed="True" success="True" time="0.031" asserts="8" />
+                          <test-case name="NHibernate.Test.NHSpecificTest.NH295.SubclassFixture.List" executed="True" success="True" time="0.000" asserts="0" />
+                        </results>
+                      </test-suite>
+                      <test-suite name="JoinedSubclassFixture" success="True" time="0,546875" asserts="0">
+                        <results>
+                          <test-case name="NHibernate.Test.NHSpecificTest.NH295.JoinedSubclassFixture.LoadByIDFailure" executed="True" success="True" time="0.047" asserts="8" />
+                          <test-case name="NHibernate.Test.NHSpecificTest.NH295.JoinedSubclassFixture.List" executed="True" success="True" time="0.016" asserts="0" />
+                        </results>
+                      </test-suite>
+                    </results>
+                  </test-suite>
+                  <test-suite name="NH296" success="True" time="0,375" asserts="0">
+                    <results>
+                      <test-suite name="Fixture" success="True" time="0,375" asserts="0">
+                        <results>
+                          <test-case name="NHibernate.Test.NHSpecificTest.NH296.Fixture.CRUD" executed="True" success="True" time="0.016" asserts="2" />
+                        </results>
+                      </test-suite>
+                    </results>
+                  </test-suite>
+                  <test-suite name="NH309" success="True" time="0,265625" asserts="0">
+                    <results>
+                      <test-suite name="Fixture" success="True" time="0,265625" asserts="0">
+                        <results>
+                          <test-case name="NHibernate.Test.NHSpecificTest.NH309.Fixture.RemoveNodeFromNodesCollection" executed="True" success="True" time="0.047" asserts="3" />
+                        </results>
+                      </test-suite>
+                    </results>
+                  </test-suite>
+                  <test-suite name="NH315" success="True" time="0" asserts="0">
+                    <results>
+                      <test-suite name="Fixture" success="True" time="0" asserts="0">
+                        <results />
+                      </test-suite>
+                    </results>
+                  </test-suite>
+                  <test-suite name="NH317" success="True" time="0,15625" asserts="0">
+                    <results>
+                      <test-suite name="Fixture" success="True" time="0,15625" asserts="0">
+                        <results>
+                          <test-case name="NHibernate.Test.NHSpecificTest.NH317.Fixture.ProxySerialization" executed="True" success="True" time="0.031" asserts="2" />
+                        </results>
+                      </test-suite>
+                    </results>
+                  </test-suite>
+                  <test-suite name="NH318" success="True" time="0,125" asserts="0">
+                    <results>
+                      <test-suite name="Fixture" success="True" time="0,125" asserts="0">
+                        <results>
+                          <test-case name="NHibernate.Test.NHSpecificTest.NH318.Fixture.DeleteWithNotNullPropertySetToNull" executed="True" success="True" time="0.000" asserts="0" />
+                        </results>
+                      </test-suite>
+                    </results>
+                  </test-suite>
+                  <test-suite name="NH345" success="True" time="0,203125" asserts="0">
+                    <results>
+                      <test-suite name="Fixture" success="True" time="0,203125" asserts="0">
+                        <results>
+                          <test-case name="NHibernate.Test.NHSpecificTest.NH345.Fixture.OrderByCompositeProperty" executed="False">
+                            <reason>
+                              <message><![CDATA[This test fails on MS SQL 2000 because of SQL Server bug]]></message>
+                            </reason>
+                          </test-case>
+                        </results>
+                      </test-suite>
+                    </results>
+                  </test-suite>
+                  <test-suite name="NH350" success="True" time="0,140625" asserts="0">
+                    <results>
+                      <test-suite name="Fixture" success="True" time="0,140625" asserts="0">
+                        <results>
+                          <test-case name="NHibernate.Test.NHSpecificTest.NH350.Fixture.Loading" executed="True" success="True" time="0.031" asserts="0" />
+                        </results>
+                      </test-suite>
+                    </results>
+                  </test-suite>
+                  <test-suite name="NH364" success="True" time="0,21875" asserts="0">
+                    <results>
+                      <test-suite name="Fixture" success="True" time="0,21875" asserts="0">
+                        <results>
+                          <test-case name="NHibernate.Test.NHSpecificTest.NH364.Fixture.IdBagIdentity" executed="False">
+                            <reason>
+                              <message><![CDATA[NH-364: comment in IdentifierBag.PreInsert is 'TODO: native ids']]></message>
+                            </reason>
+                          </test-case>
+                        </results>
+                      </test-suite>
+                    </results>
+                  </test-suite>
+                  <test-suite name="NH369" success="True" time="0,390625" asserts="0">
+                    <results>
+                      <test-suite name="Fixture" success="True" time="0,390625" asserts="0">
+                        <results>
+                          <test-case name="NHibernate.Test.NHSpecificTest.NH369.Fixture.KeyManyToOneAndNormalizedPersister" executed="True" success="True" time="0.391" asserts="0" />
+                        </results>
+                      </test-suite>
+                    </results>
+                  </test-suite>
+                  <test-suite name="NH386" success="True" time="0,21875" asserts="0">
+                    <results>
+                      <test-suite name="Fixture" success="True" time="0,21875" asserts="0">
+                        <results>
+                          <test-case name="NHibernate.Test.NHSpecificTest.NH386.Fixture.Query" executed="True" success="True" time="0.000" asserts="0" />
+                        </results>
+                      </test-suite>
+                    </results>
+                  </test-suite>
+                  <test-suite name="NH392" success="True" time="0,125" asserts="0">
+                    <results>
+                      <test-suite name="Fixture" success="True" time="0,125" asserts="0">
+                        <results>
+                          <test-case name="NHibernate.Test.NHSpecificTest.NH392.Fixture.UnsavedMinusOneNoNullReferenceException" executed="True" success="True" time="0.000" asserts="1" />
+                        </results>
+                      </test-suite>
+                    </results>
+                  </test-suite>
+                  <test-suite name="NH401" success="True" time="0,25" asserts="0">
+                    <results>
+                      <test-suite name="Fixture" success="True" time="0,25" asserts="0">
+                        <results>
+                          <test-case name="NHibernate.Test.NHSpecificTest.NH401.Fixture.SaveOrUpdateCopy" executed="True" success="True" time="0.031" asserts="0" />
+                        </results>
+                      </test-suite>
+                    </results>
+                  </test-suite>
+                  <test-suite name="NH440" success="True" time="0,3125" asserts="0">
+                    <results>
+                      <test-suite name="Fixture" success="True" time="0,3125" asserts="0">
+                        <results>
+                          <test-case name="NHibernate.Test.NHSpecificTest.NH440.Fixture.StoreAndLookup" executed="True" success="True" time="0.031" asserts="2" />
+                          <test-case name="NHibernate.Test.NHSpecificTest.NH440.Fixture.StoreWithLinksAndLookup" executed="True" success="True" time="0.016" asserts="4" />
+                          <test-case name="NHibernate.Test.NHSpecificTest.NH440.Fixture.StoreWithLinksAndLookupWithQueryFromFruit" executed="True" success="True" time="0.031" asserts="5" />
+                        </results>
+                      </test-suite>
+                    </results>
+                  </test-suite>
+                  <test-suite name="NH464" success="True" time="0,046875" asserts="0">
+                    <results>
+                      <test-suite name="Fixture" success="True" time="0,046875" asserts="0">
+                        <results>
+                          <test-case name="NHibernate.Test.NHSpecificTest.NH464.Fixture.CompositeElement" executed="True" success="True" time="0.031" asserts="3" />
+                        </results>
+                      </test-suite>
+                    </results>
+                  </test-suite>
+                  <test-suite name="NH479" success="True" time="0,234375" asserts="0">
+                    <results>
+                      <test-suite name="Fixture" success="True" time="0,234375" asserts="0">
+                        <results>
+                          <test-case name="NHibernate.Test.NHSpecificTest.NH479.Fixture.SaveOrUpdateCopyTest" executed="True" success="True" time="0.031" asserts="0" />
+                        </results>
+                      </test-suite>
+                    </results>
+                  </test-suite>
+                  <test-suite name="NH480" success="True" time="0" asserts="0">
+                    <results>
+                      <test-suite name="Fixture" success="True" time="0" asserts="0">
+                        <results>
+                          <test-case name="NHibernate.Test.NHSpecificTest.NH480.Fixture.CheckIII" executed="True" success="True" time="0.000" asserts="7" />
+                        </results>
+                      </test-suite>
+                    </results>
+                  </test-suite>
+                  <test-suite name="NH496" success="True" time="0,125" asserts="0">
+                    <results>
+                      <test-suite name="Fixture" success="True" time="0,125" asserts="0">
+                        <results>
+                          <test-case name="NHibernate.Test.NHSpecificTest.NH496.Fixture.CRUD" executed="True" success="True" time="0.016" asserts="0" />
+                        </results>
+                      </test-suite>
+                    </results>
+                  </test-suite>
+                  <test-suite name="NH508" success="True" time="0,09375" asserts="0">
+                    <results>
+                      <test-suite name="Fixture" success="True" time="0,09375" asserts="0">
+                        <results>
+                          <test-case name="NHibernate.Test.NHSpecificTest.NH508.Fixture.Bug" executed="True" success="True" time="0.047" asserts="3" />
+                        </results>
+                      </test-suite>
+                    </results>
+                  </test-suite>
+                  <test-suite name="NH521" success="True" time="0,125" asserts="0">
+                    <results>
+                      <test-suite name="Fixture" success="True" time="0,125" asserts="0">
+                        <results>
+                          <test-case name="NHibernate.Test.NHSpecificTest.NH521.Fixture.AttachUninitProxyCausesInit" executed="True" success="True" time="0.016" asserts="4" />
+                        </results>
+                      </test-suite>
+                    </results>
+                  </test-suite>
+                  <test-suite name="NH523" success="True" time="0,234375" asserts="0">
+                    <results>
+                      <test-suite name="Fixture" success="True" time="0,234375" asserts="0">
+                        <results>
+                          <test-case name="NHibernate.Test.NHSpecificTest.NH523.Fixture.SaveOrUpdateCopyLazy" executed="True" success="True" time="0.031" asserts="0" />
+                        </results>
+                      </test-suite>
+                    </results>
+                  </test-suite>
+                  <test-suite name="NH525" success="True" time="0,21875" asserts="0">
+                    <results>
+                      <test-suite name="Fixture" success="True" time="0,21875" asserts="0">
+                        <results>
+                          <test-case name="NHibernate.Test.NHSpecificTest.NH525.Fixture.DoSomething" executed="True" success="True" time="0.016" asserts="1" />
+                        </results>
+                      </test-suite>
+                    </results>
+                  </test-suite>
+                  <test-suite name="AliasFixture" success="True" time="0" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.NHSpecificTest.AliasFixture.NoLeadingUnderscores" executed="True" success="True" time="0.000" asserts="2" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="BasicClassFixture" success="True" time="0,515625" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.NHSpecificTest.BasicClassFixture.TestPrivateFieldAccess" executed="True" success="True" time="0.016" asserts="1" />
+                      <test-case name="NHibernate.Test.NHSpecificTest.BasicClassFixture.TestCRUD" executed="True" success="True" time="0.141" asserts="605" />
+                      <test-case name="NHibernate.Test.NHSpecificTest.BasicClassFixture.TestArrayCRUD" executed="True" success="True" time="0.031" asserts="130" />
+                      <test-case name="NHibernate.Test.NHSpecificTest.BasicClassFixture.TestPrimitiveArrayCRUD" executed="True" success="True" time="0.047" asserts="132" />
+                      <test-case name="NHibernate.Test.NHSpecificTest.BasicClassFixture.TestMapCRUD" executed="True" success="True" time="0.031" asserts="129" />
+                      <test-case name="NHibernate.Test.NHSpecificTest.BasicClassFixture.TestSetCRUD" executed="True" success="True" time="0.047" asserts="131" />
+                      <test-case name="NHibernate.Test.NHSpecificTest.BasicClassFixture.TestBagCRUD" executed="True" success="True" time="0.047" asserts="172" />
+                      <test-case name="NHibernate.Test.NHSpecificTest.BasicClassFixture.BagRefresh" executed="True" success="True" time="0.031" asserts="1" />
+                      <test-case name="NHibernate.Test.NHSpecificTest.BasicClassFixture.TestListCRUD" executed="True" success="True" time="0.047" asserts="170" />
+                      <test-case name="NHibernate.Test.NHSpecificTest.BasicClassFixture.TestWrapArrayInListProperty" executed="True" success="True" time="0.016" asserts="3" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="BasicObjectFixture" success="True" time="0,34375" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.NHSpecificTest.BasicObjectFixture.TestCRUD" executed="True" success="True" time="0.047" asserts="7" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="BasicSerializableFixture" success="True" time="0,125" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.NHSpecificTest.BasicSerializableFixture.TestCRUD" executed="True" success="True" time="0.016" asserts="9" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="BasicTimeFixture" success="True" time="0,140625" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.NHSpecificTest.BasicTimeFixture.Insert" executed="True" success="True" time="0.016" asserts="5" />
+                      <test-case name="NHibernate.Test.NHSpecificTest.BasicTimeFixture.TimeArray" executed="True" success="True" time="0.016" asserts="5" />
+                      <test-case name="NHibernate.Test.NHSpecificTest.BasicTimeFixture.Update" executed="True" success="True" time="0.000" asserts="3" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="CollectionFixture" success="True" time="0,3125" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.NHSpecificTest.CollectionFixture.TestLoadParentFirst" executed="True" success="True" time="0.016" asserts="1" />
+                      <test-case name="NHibernate.Test.NHSpecificTest.CollectionFixture.TestLoadChildFirst" executed="True" success="True" time="0.016" asserts="1" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="EmptyMappingsFixture" success="True" time="0" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.NHSpecificTest.EmptyMappingsFixture.BeginWithIsolationLevel" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="NHibernate.Test.NHSpecificTest.EmptyMappingsFixture.ReconnectAfterClose" executed="True" success="True" time="0.000" asserts="0" />
+                      <test-case name="NHibernate.Test.NHSpecificTest.EmptyMappingsFixture.InvalidQuery" executed="True" success="True" time="0.000" asserts="0" />
+                      <test-case name="NHibernate.Test.NHSpecificTest.EmptyMappingsFixture.NullInterceptor" executed="True" success="True" time="0.000" asserts="0" />
+                      <test-case name="NHibernate.Test.NHSpecificTest.EmptyMappingsFixture.DisconnectShouldNotCloseUserSuppliedConnection" executed="True" success="True" time="0.000" asserts="2" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="GetSetHelperFixture" success="True" time="0,15625" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.NHSpecificTest.GetSetHelperFixture.TestDefaultValue" executed="True" success="True" time="0.016" asserts="11" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="GetTest" success="True" time="0,5625" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.NHSpecificTest.GetTest.GetVsLoad" executed="True" success="True" time="0.016" asserts="4" />
+                      <test-case name="NHibernate.Test.NHSpecificTest.GetTest.GetAndModify" executed="True" success="True" time="0.016" asserts="1" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="KeyFixture" success="True" time="0" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.NHSpecificTest.KeyFixture.CreateWithWrongTypeOfId" executed="True" success="True" time="0.000" asserts="0" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="LazyLoadBugTest" success="True" time="0,3125" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.NHSpecificTest.LazyLoadBugTest.TestLazyLoad" executed="True" success="True" time="0.016" asserts="0" />
+                      <test-case name="NHibernate.Test.NHSpecificTest.LazyLoadBugTest.TestLazyLoadNoAdd" executed="True" success="True" time="0.016" asserts="1" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="MapFixture" success="True" time="0,59375" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.NHSpecificTest.MapFixture.TestSelect" executed="True" success="True" time="0.094" asserts="0" />
+                      <test-case name="NHibernate.Test.NHSpecificTest.MapFixture.TestSort" executed="True" success="True" time="0.047" asserts="3" />
+                      <test-case name="NHibernate.Test.NHSpecificTest.MapFixture.TestInsert" executed="True" success="True" time="0.047" asserts="0" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="NH47Fixture" success="True" time="0,109375" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.NHSpecificTest.NH47Fixture.TestNH47" executed="False">
+                        <reason>
+                          <message><![CDATA[Explicit selection required]]></message>
+                        </reason>
+                      </test-case>
+                    </results>
+                  </test-suite>
+                  <test-suite name="NodeFixture" success="True" time="0,171875" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.NHSpecificTest.NodeFixture.InsertNodes" executed="True" success="True" time="0.063" asserts="14" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="OptimisticConcurrencyFixture" success="True" time="0,4375" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.NHSpecificTest.OptimisticConcurrencyFixture.StaleObjectStateCheckWithNormalizedEntityPersister" executed="True" success="True" time="0.063" asserts="0" />
+                      <test-case name="NHibernate.Test.NHSpecificTest.OptimisticConcurrencyFixture.StaleObjectStateCheckWithEntityPersisterAndOptimisticLock" executed="False">
+                        <reason>
+                          <message><![CDATA[Not implemented yet, throws HibernateException instead of StaleObjectStateException]]></message>
+                        </reason>
+                      </test-case>
+                    </results>
+                  </test-suite>
+                  <test-suite name="SetFixture" success="True" time="0" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.NHSpecificTest.SetFixture.DisassembleAndAssemble" executed="True" success="True" time="0.000" asserts="3" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="SimpleComponentFixture" success="True" time="0,203125" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.NHSpecificTest.SimpleComponentFixture.TestLoad" executed="True" success="True" time="0.016" asserts="3" />
+                      <test-case name="NHibernate.Test.NHSpecificTest.SimpleComponentFixture.TestInsert" executed="True" success="True" time="0.000" asserts="0" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="UnsavedValueFixture" success="True" time="0,125" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.NHSpecificTest.UnsavedValueFixture.TestCRUD" executed="True" success="True" time="0.031" asserts="7" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="UserTypeFixture" success="True" time="0,109375" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.NHSpecificTest.UserTypeFixture.InsertNull" executed="True" success="True" time="0.016" asserts="3" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="VersionTest" success="True" time="0" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.NHSpecificTest.VersionTest.UnsavedNegativeIntOrShort" executed="True" success="True" time="0.000" asserts="3" />
+                    </results>
+                  </test-suite>
+                </results>
+              </test-suite>
+              <test-suite name="PropertyTest" success="True" time="0,015625" asserts="0">
+                <results>
+                  <test-suite name="BasicSetterExceptionFixture" success="True" time="0" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.PropertyTest.BasicSetterExceptionFixture.SetInvalidType" executed="True" success="True" time="0.000" asserts="0" />
+                      <test-case name="NHibernate.Test.PropertyTest.BasicSetterExceptionFixture.SetValueArgumentException" executed="True" success="True" time="0.000" asserts="0" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="FieldAccessorFixture" success="True" time="0" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.PropertyTest.FieldAccessorFixture.GetValue" executed="True" success="True" time="0.000" asserts="6" />
+                      <test-case name="NHibernate.Test.PropertyTest.FieldAccessorFixture.SetValue" executed="True" success="True" time="0.000" asserts="2" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="FieldCamelCaseFixture" success="True" time="0" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.PropertyTest.FieldCamelCaseFixture.GetValue" executed="True" success="True" time="0.000" asserts="6" />
+                      <test-case name="NHibernate.Test.PropertyTest.FieldCamelCaseFixture.SetValue" executed="True" success="True" time="0.000" asserts="2" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="FieldCamelCaseUnderscoreFixture" success="True" time="0,015625" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.PropertyTest.FieldCamelCaseUnderscoreFixture.GetValue" executed="True" success="True" time="0.000" asserts="6" />
+                      <test-case name="NHibernate.Test.PropertyTest.FieldCamelCaseUnderscoreFixture.SetValue" executed="True" success="True" time="0.016" asserts="2" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="FieldGetterFixture" success="True" time="0" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.PropertyTest.FieldGetterFixture.NoNamingStrategy" executed="True" success="True" time="0.000" asserts="6" />
+                      <test-case name="NHibernate.Test.PropertyTest.FieldGetterFixture.CamelCaseNamingStrategy" executed="True" success="True" time="0.000" asserts="6" />
+                      <test-case name="NHibernate.Test.PropertyTest.FieldGetterFixture.CamelCaseUnderscoreNamingStrategy" executed="True" success="True" time="0.000" asserts="6" />
+                      <test-case name="NHibernate.Test.PropertyTest.FieldGetterFixture.LowerCaseUnderscoreNamingStrategy" executed="True" success="True" time="0.000" asserts="6" />
+                      <test-case name="NHibernate.Test.PropertyTest.FieldGetterFixture.PascalCaseMUnderscoreNamingStrategy" executed="True" success="True" time="0.000" asserts="6" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="FieldLowerCaseFixture" success="True" time="0" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.PropertyTest.FieldLowerCaseFixture.GetValue" executed="True" success="True" time="0.000" asserts="6" />
+                      <test-case name="NHibernate.Test.PropertyTest.FieldLowerCaseFixture.SetValue" executed="True" success="True" time="0.000" asserts="2" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="FieldLowerCaseUnderscoreFixture" success="True" time="0" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.PropertyTest.FieldLowerCaseUnderscoreFixture.GetValue" executed="True" success="True" time="0.000" asserts="6" />
+                      <test-case name="NHibernate.Test.PropertyTest.FieldLowerCaseUnderscoreFixture.SetValue" executed="True" success="True" time="0.000" asserts="2" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="FieldPascalCaseMUnderscoreFixture" success="True" time="0" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.PropertyTest.FieldPascalCaseMUnderscoreFixture.GetValue" executed="True" success="True" time="0.000" asserts="6" />
+                      <test-case name="NHibernate.Test.PropertyTest.FieldPascalCaseMUnderscoreFixture.SetValue" executed="True" success="True" time="0.000" asserts="2" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="FieldPascalCaseUnderscoreFixture" success="True" time="0" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.PropertyTest.FieldPascalCaseUnderscoreFixture.GetValue" executed="True" success="True" time="0.000" asserts="6" />
+                      <test-case name="NHibernate.Test.PropertyTest.FieldPascalCaseUnderscoreFixture.SetValue" executed="True" success="True" time="0.000" asserts="2" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="FieldSetterExceptionFixture" success="True" time="0" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.PropertyTest.FieldSetterExceptionFixture.SetInvalidType" executed="True" success="True" time="0.000" asserts="0" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="NoSetterCamelCaseFixture" success="True" time="0" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.PropertyTest.NoSetterCamelCaseFixture.GetValue" executed="True" success="True" time="0.000" asserts="8" />
+                      <test-case name="NHibernate.Test.PropertyTest.NoSetterCamelCaseFixture.SetValue" executed="True" success="True" time="0.000" asserts="2" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="NoSetterCamelCaseUnderscoreFixture" success="True" time="0" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.PropertyTest.NoSetterCamelCaseUnderscoreFixture.GetValue" executed="True" success="True" time="0.000" asserts="8" />
+                      <test-case name="NHibernate.Test.PropertyTest.NoSetterCamelCaseUnderscoreFixture.SetValue" executed="True" success="True" time="0.000" asserts="2" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="NoSetterLowerCaseFixture" success="True" time="0" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.PropertyTest.NoSetterLowerCaseFixture.GetValue" executed="True" success="True" time="0.000" asserts="8" />
+                      <test-case name="NHibernate.Test.PropertyTest.NoSetterLowerCaseFixture.SetValue" executed="True" success="True" time="0.000" asserts="2" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="NoSetterLowerCaseUnderscoreFixture" success="True" time="0" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.PropertyTest.NoSetterLowerCaseUnderscoreFixture.GetValue" executed="True" success="True" time="0.000" asserts="8" />
+                      <test-case name="NHibernate.Test.PropertyTest.NoSetterLowerCaseUnderscoreFixture.SetValue" executed="True" success="True" time="0.000" asserts="2" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="NoSetterPascalCaseMUnderscoreFixture" success="True" time="0" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.PropertyTest.NoSetterPascalCaseMUnderscoreFixture.GetValue" executed="True" success="True" time="0.000" asserts="8" />
+                      <test-case name="NHibernate.Test.PropertyTest.NoSetterPascalCaseMUnderscoreFixture.SetValue" executed="True" success="True" time="0.000" asserts="2" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="NoSetterPascalCaseUnderscoreFixture" success="True" time="0" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.PropertyTest.NoSetterPascalCaseUnderscoreFixture.GetValue" executed="True" success="True" time="0.000" asserts="8" />
+                      <test-case name="NHibernate.Test.PropertyTest.NoSetterPascalCaseUnderscoreFixture.SetValue" executed="True" success="True" time="0.000" asserts="2" />
+                    </results>
+                  </test-suite>
+                </results>
+              </test-suite>
+              <test-suite name="ProxyInterface" success="True" time="0,171875" asserts="0">
+                <results>
+                  <test-suite name="CastleProxyFixture" success="True" time="0,171875" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.ProxyInterface.CastleProxyFixture.Proxy" executed="True" success="True" time="0.031" asserts="3" />
+                      <test-case name="NHibernate.Test.ProxyInterface.CastleProxyFixture.ProxySerialize" executed="True" success="True" time="0.031" asserts="1" />
+                      <test-case name="NHibernate.Test.ProxyInterface.CastleProxyFixture.SerializeNotFoundProxy" executed="True" success="True" time="0.000" asserts="2" />
+                    </results>
+                  </test-suite>
+                </results>
+              </test-suite>
+              <test-suite name="ProxyTest" success="True" time="0,140625" asserts="0">
+                <results>
+                  <test-suite name="NHibernateProxyHelperFixture" success="True" time="0,140625" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.ProxyTest.NHibernateProxyHelperFixture.GetClassOfProxy" executed="True" success="True" time="0.016" asserts="3" />
+                    </results>
+                  </test-suite>
+                </results>
+              </test-suite>
+              <test-suite name="QueryTest" success="True" time="0,0625" asserts="0">
+                <results>
+                  <test-suite name="NamedParametersFixture" success="True" time="0,015625" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.QueryTest.NamedParametersFixture.TestMissingHQLParameters" executed="True" success="True" time="0.000" asserts="0" />
+                      <test-case name="NHibernate.Test.QueryTest.NamedParametersFixture.TestNullNamedParameter" executed="True" success="True" time="0.000" asserts="0" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="PositionalParametersFixture" success="True" time="0,03125" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.QueryTest.PositionalParametersFixture.TestMissingHQLParameters" executed="True" success="True" time="0.000" asserts="0" />
+                      <test-case name="NHibernate.Test.QueryTest.PositionalParametersFixture.TestMissingHQLParameters2" executed="True" success="True" time="0.000" asserts="0" />
+                      <test-case name="NHibernate.Test.QueryTest.PositionalParametersFixture.TestPositionOutOfBounds" executed="True" success="True" time="0.000" asserts="0" />
+                      <test-case name="NHibernate.Test.QueryTest.PositionalParametersFixture.TestNoPositionalParameters" executed="True" success="True" time="0.000" asserts="0" />
+                      <test-case name="NHibernate.Test.QueryTest.PositionalParametersFixture.TestNullIndexedParameter" executed="True" success="True" time="0.000" asserts="0" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="QueryParametersFixture" success="True" time="0,015625" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.QueryTest.QueryParametersFixture.ValidateNullParameters" executed="True" success="True" time="0.000" asserts="0" />
+                      <test-case name="NHibernate.Test.QueryTest.QueryParametersFixture.ValidateOk" executed="True" success="True" time="0.016" asserts="0" />
+                      <test-case name="NHibernate.Test.QueryTest.QueryParametersFixture.ValidateFailureDifferentLengths" executed="True" success="True" time="0.000" asserts="0" />
+                    </results>
+                  </test-suite>
+                </results>
+              </test-suite>
+              <test-suite name="SqlCommandTest" success="True" time="0,03125" asserts="0">
+                <results>
+                  <test-suite name="SqlDeleteBuilderFixture" success="True" time="0" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.SqlCommandTest.SqlDeleteBuilderFixture.DeleteSqlStringTest" executed="True" success="True" time="0.000" asserts="6" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="SqlInsertBuilderFixture" success="True" time="0" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.SqlCommandTest.SqlInsertBuilderFixture.InsertSqlStringTest" executed="True" success="True" time="0.000" asserts="6" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="SqlSelectBuilderFixture" success="True" time="0" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.SqlCommandTest.SqlSelectBuilderFixture.SelectStringSqlTest" executed="True" success="True" time="0.000" asserts="4" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="SqlSimpleSelectBuilderFixture" success="True" time="0" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.SqlCommandTest.SqlSimpleSelectBuilderFixture.SimpleSelectStringSqlTest" executed="True" success="True" time="0.000" asserts="8" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="SqlStringBuilderFixture" success="True" time="0" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.SqlCommandTest.SqlStringBuilderFixture.InsertAndAdd" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="NHibernate.Test.SqlCommandTest.SqlStringBuilderFixture.RemoveAt" executed="True" success="True" time="0.000" asserts="3" />
+                      <test-case name="NHibernate.Test.SqlCommandTest.SqlStringBuilderFixture.Index" executed="True" success="True" time="0.000" asserts="2" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="SqlStringFixture" success="True" time="0,015625" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.SqlCommandTest.SqlStringFixture.Append" executed="True" success="True" time="0.000" asserts="4" />
+                      <test-case name="NHibernate.Test.SqlCommandTest.SqlStringFixture.CompactWithNoParams" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="NHibernate.Test.SqlCommandTest.SqlStringFixture.CompactWithParams" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="NHibernate.Test.SqlCommandTest.SqlStringFixture.CompactWithNoString" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="NHibernate.Test.SqlCommandTest.SqlStringFixture.ContainsUntypedParameterWithoutParam" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="NHibernate.Test.SqlCommandTest.SqlStringFixture.ContainsUntypedParameterWithParam" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="NHibernate.Test.SqlCommandTest.SqlStringFixture.ContainsUntypedParameterWithUntypedParam" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="NHibernate.Test.SqlCommandTest.SqlStringFixture.ContainsUntypedParameterWithMixedUntypedParam" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="NHibernate.Test.SqlCommandTest.SqlStringFixture.Count" executed="True" success="True" time="0.000" asserts="3" />
+                      <test-case name="NHibernate.Test.SqlCommandTest.SqlStringFixture.EndsWith" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="NHibernate.Test.SqlCommandTest.SqlStringFixture.EndsWithEmptyString" executed="True" success="True" time="0.016" asserts="2" />
+                      <test-case name="NHibernate.Test.SqlCommandTest.SqlStringFixture.EndsWithParameter" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="NHibernate.Test.SqlCommandTest.SqlStringFixture.IsEmptyWithEmptyStrings" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="NHibernate.Test.SqlCommandTest.SqlStringFixture.IsEmptyWithString" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="NHibernate.Test.SqlCommandTest.SqlStringFixture.IsEmptyWithParam" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="NHibernate.Test.SqlCommandTest.SqlStringFixture.ParameterIndexesNoParams" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="NHibernate.Test.SqlCommandTest.SqlStringFixture.ParameterIndexOneParam" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="NHibernate.Test.SqlCommandTest.SqlStringFixture.ParameterIndexManyParam" executed="True" success="True" time="0.000" asserts="3" />
+                      <test-case name="NHibernate.Test.SqlCommandTest.SqlStringFixture.Replace" executed="True" success="True" time="0.000" asserts="6" />
+                      <test-case name="NHibernate.Test.SqlCommandTest.SqlStringFixture.StartsWith" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="NHibernate.Test.SqlCommandTest.SqlStringFixture.StartsWithEmptyString" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="NHibernate.Test.SqlCommandTest.SqlStringFixture.Substring" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="NHibernate.Test.SqlCommandTest.SqlStringFixture.TrimAllString" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="NHibernate.Test.SqlCommandTest.SqlStringFixture.TrimBeginParamEndString" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="NHibernate.Test.SqlCommandTest.SqlStringFixture.TrimBeginStringEndParam" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="NHibernate.Test.SqlCommandTest.SqlStringFixture.TrimAllParam" executed="True" success="True" time="0.000" asserts="1" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="SqlStringParameterFixture" success="True" time="0,015625" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.SqlCommandTest.SqlStringParameterFixture.EqualsSameType" executed="True" success="True" time="0.000" asserts="7" />
+                      <test-case name="NHibernate.Test.SqlCommandTest.SqlStringParameterFixture.EqualsLengthType" executed="True" success="True" time="0.000" asserts="7" />
+                      <test-case name="NHibernate.Test.SqlCommandTest.SqlStringParameterFixture.EqualsLengthDiffType" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="NHibernate.Test.SqlCommandTest.SqlStringParameterFixture.EqualsPrecisionDiffType" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="NHibernate.Test.SqlCommandTest.SqlStringParameterFixture.EqualsPrecisionType" executed="True" success="True" time="0.000" asserts="7" />
+                      <test-case name="NHibernate.Test.SqlCommandTest.SqlStringParameterFixture.TestParameterClone" executed="True" success="True" time="0.000" asserts="3" />
+                      <test-case name="NHibernate.Test.SqlCommandTest.SqlStringParameterFixture.TestParameterLengthClone" executed="True" success="True" time="0.016" asserts="4" />
+                      <test-case name="NHibernate.Test.SqlCommandTest.SqlStringParameterFixture.TestParameterPrecisionClone" executed="True" success="True" time="0.000" asserts="5" />
+                      <test-case name="NHibernate.Test.SqlCommandTest.SqlStringParameterFixture.TestSqlStringClone" executed="True" success="True" time="0.000" asserts="6" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="SqlUpdateBuilderFixture" success="True" time="0" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.SqlCommandTest.SqlUpdateBuilderFixture.UpdateStringSqlTest" executed="True" success="True" time="0.000" asserts="10" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="TemplateFixture" success="True" time="0" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.SqlCommandTest.TemplateFixture.ReplaceWithDialectQuote" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="NHibernate.Test.SqlCommandTest.TemplateFixture.OrderBySingleColumn" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="NHibernate.Test.SqlCommandTest.TemplateFixture.OrderByMultiColumn" executed="True" success="True" time="0.000" asserts="1" />
+                    </results>
+                  </test-suite>
+                </results>
+              </test-suite>
+              <test-suite name="Subclass" success="True" time="0,46875" asserts="0">
+                <results>
+                  <test-suite name="SubclassFixture" success="True" time="0,234375" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.Subclass.SubclassFixture.TestCRUD" executed="True" success="True" time="0.016" asserts="15" />
+                      <test-case name="NHibernate.Test.Subclass.SubclassFixture.HqlClassKeyword" executed="True" success="True" time="0.016" asserts="4" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="SubclassExtendsFixture" success="True" time="0,234375" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.Subclass.SubclassExtendsFixture.TestCRUD" executed="True" success="True" time="0.031" asserts="15" />
+                      <test-case name="NHibernate.Test.Subclass.SubclassExtendsFixture.HqlClassKeyword" executed="True" success="True" time="0.000" asserts="4" />
+                    </results>
+                  </test-suite>
+                </results>
+              </test-suite>
+              <test-suite name="TransactionTest" success="True" time="0,046875" asserts="0">
+                <results>
+                  <test-suite name="TransactionFixture" success="True" time="0,046875" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.TransactionTest.TransactionFixture.SecondTransactionShouldntBeCommitted" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="NHibernate.Test.TransactionTest.TransactionFixture.CommitAfterDisposeThrowsException" executed="True" success="True" time="0.000" asserts="0" />
+                      <test-case name="NHibernate.Test.TransactionTest.TransactionFixture.RollbackAfterDisposeThrowsException" executed="True" success="True" time="0.000" asserts="0" />
+                      <test-case name="NHibernate.Test.TransactionTest.TransactionFixture.EnlistAfterDisposeDoesNotThrowException" executed="True" success="True" time="0.000" asserts="0" />
+                      <test-case name="NHibernate.Test.TransactionTest.TransactionFixture.CommandAfterTransactionShouldWork" executed="True" success="True" time="0.016" asserts="0" />
+                      <test-case name="NHibernate.Test.TransactionTest.TransactionFixture.WasCommittedOrRolledBack" executed="True" success="True" time="0.000" asserts="9" />
+                    </results>
+                  </test-suite>
+                </results>
+              </test-suite>
+              <test-suite name="TypesTest" success="True" time="1,421875" asserts="0">
+                <results>
+                  <test-suite name="BinaryBlobTypeFixture" success="True" time="0,140625" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.TypesTest.BinaryBlobTypeFixture.ReadWrite" executed="True" success="True" time="0.016" asserts="12" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="BinaryTypeFixture" success="True" time="0,125" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.TypesTest.BinaryTypeFixture.Equals" executed="True" success="True" time="0.000" asserts="3" />
+                      <test-case name="NHibernate.Test.TypesTest.BinaryTypeFixture.InsertNull" executed="True" success="True" time="0.000" asserts="3" />
+                      <test-case name="NHibernate.Test.TypesTest.BinaryTypeFixture.InsertZeroLength" executed="True" success="True" time="0.016" asserts="3" />
+                      <test-case name="NHibernate.Test.TypesTest.BinaryTypeFixture.ReadWrite" executed="True" success="True" time="0.000" asserts="110" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="BooleanTypeFixture" success="True" time="0,125" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.TypesTest.BooleanTypeFixture.Equals" executed="True" success="True" time="0.016" asserts="3" />
+                      <test-case name="NHibernate.Test.TypesTest.BooleanTypeFixture.ReadWrite" executed="True" success="True" time="0.000" asserts="1" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="ByteTypeFixture" success="True" time="0,125" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.TypesTest.ByteTypeFixture.Equals" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="NHibernate.Test.TypesTest.ByteTypeFixture.ReadWrite" executed="True" success="True" time="0.016" asserts="1" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="DateTimeTypeFixture" success="True" time="0" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.TypesTest.DateTimeTypeFixture.Next" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="NHibernate.Test.TypesTest.DateTimeTypeFixture.Seed" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="NHibernate.Test.TypesTest.DateTimeTypeFixture.DeepCopyNotNull" executed="True" success="True" time="0.000" asserts="2" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="DecimalTypeFixture" success="True" time="0,125" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.TypesTest.DecimalTypeFixture.Equals" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="NHibernate.Test.TypesTest.DecimalTypeFixture.ReadWrite" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="NHibernate.Test.TypesTest.DecimalTypeFixture.UnsavedValue" executed="True" success="True" time="0.000" asserts="2" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="DoubleTypeFixture" success="True" time="0,109375" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.TypesTest.DoubleTypeFixture.Equals" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="NHibernate.Test.TypesTest.DoubleTypeFixture.ReadWrite" executed="True" success="True" time="0.000" asserts="1" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="EnumStringTypeFixture" success="True" time="0,15625" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.TypesTest.EnumStringTypeFixture.ReadFromLoad" executed="True" success="True" time="0.016" asserts="2" />
+                      <test-case name="NHibernate.Test.TypesTest.EnumStringTypeFixture.ReadFromQuery" executed="True" success="True" time="0.000" asserts="4" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="GuidTypeFixture" success="True" time="0,125" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.TypesTest.GuidTypeFixture.Equals" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="NHibernate.Test.TypesTest.GuidTypeFixture.ReadWrite" executed="True" success="True" time="0.016" asserts="1" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="Int16TypeFixture" success="True" time="0" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.TypesTest.Int16TypeFixture.Next" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="NHibernate.Test.TypesTest.Int16TypeFixture.Seed" executed="True" success="True" time="0.000" asserts="1" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="Int32TypeFixture" success="True" time="0" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.TypesTest.Int32TypeFixture.Next" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="NHibernate.Test.TypesTest.Int32TypeFixture.Seed" executed="True" success="True" time="0.000" asserts="1" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="Int64TypeFixture" success="True" time="0" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.TypesTest.Int64TypeFixture.Next" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="NHibernate.Test.TypesTest.Int64TypeFixture.Seed" executed="True" success="True" time="0.000" asserts="1" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="PersistentEnumTypeFixture" success="True" time="0,125" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.TypesTest.PersistentEnumTypeFixture.EqualsTrue" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="NHibernate.Test.TypesTest.PersistentEnumTypeFixture.EqualsFalseSameUnderlyingValue" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="NHibernate.Test.TypesTest.PersistentEnumTypeFixture.EqualsFalse" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="NHibernate.Test.TypesTest.PersistentEnumTypeFixture.UsageInHqlSelectNew" executed="True" success="True" time="0.016" asserts="0" />
+                      <test-case name="NHibernate.Test.TypesTest.PersistentEnumTypeFixture.UsageInHqlSelectNewInvalidConstructor" executed="True" success="True" time="0.000" asserts="0" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="SByteTypeFixture" success="True" time="0" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.TypesTest.SByteTypeFixture.Equals" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="NHibernate.Test.TypesTest.SByteTypeFixture.ObjectToSQLString" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="NHibernate.Test.TypesTest.SByteTypeFixture.StringToObject" executed="True" success="True" time="0.000" asserts="1" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="StringClobTypeFixture" success="True" time="0,15625" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.TypesTest.StringClobTypeFixture.ReadWrite" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="NHibernate.Test.TypesTest.StringClobTypeFixture.LongString" executed="True" success="True" time="0.016" asserts="1" />
+                      <test-case name="NHibernate.Test.TypesTest.StringClobTypeFixture.InsertNullValue" executed="True" success="True" time="0.000" asserts="1" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="StringTypeFixture" success="True" time="0,109375" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.TypesTest.StringTypeFixture.InsertNullValue" executed="True" success="True" time="0.016" asserts="1" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="TicksTypeFixture" success="True" time="0" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.TypesTest.TicksTypeFixture.Next" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="NHibernate.Test.TypesTest.TicksTypeFixture.Seed" executed="True" success="True" time="0.000" asserts="1" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="TimeSpanTypeFixture" success="True" time="0" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.TypesTest.TimeSpanTypeFixture.Next" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="NHibernate.Test.TypesTest.TimeSpanTypeFixture.Seed" executed="True" success="True" time="0.000" asserts="1" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="TimestampTypeFixture" success="True" time="0" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.TypesTest.TimestampTypeFixture.Next" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="NHibernate.Test.TypesTest.TimestampTypeFixture.Seed" executed="True" success="True" time="0.000" asserts="1" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="TypeFactoryFixture" success="True" time="0" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.TypesTest.TypeFactoryFixture.GetGuidSingleton" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="NHibernate.Test.TypesTest.TypeFactoryFixture.GetStringWithDiffLength" executed="True" success="True" time="0.000" asserts="1" />
+                    </results>
+                  </test-suite>
+                </results>
+              </test-suite>
+              <test-suite name="UtilityTest" success="True" time="0,375" asserts="0">
+                <results>
+                  <test-suite name="AssemblyQualifiedTypeNameFixture" success="True" time="0,015625" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.UtilityTest.AssemblyQualifiedTypeNameFixture.Construct" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="NHibernate.Test.UtilityTest.AssemblyQualifiedTypeNameFixture.Equals" executed="True" success="True" time="0.000" asserts="3" />
+                      <test-case name="NHibernate.Test.UtilityTest.AssemblyQualifiedTypeNameFixture.ConstructWithNullType" executed="True" success="True" time="0.000" asserts="0" />
+                      <test-case name="NHibernate.Test.UtilityTest.AssemblyQualifiedTypeNameFixture.ConstructWithNullAssembly" executed="True" success="True" time="0.000" asserts="0" />
+                      <test-case name="NHibernate.Test.UtilityTest.AssemblyQualifiedTypeNameFixture.ParseSimple" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="NHibernate.Test.UtilityTest.AssemblyQualifiedTypeNameFixture.ParseQualified" executed="True" success="True" time="0.016" asserts="2" />
+                      <test-case name="NHibernate.Test.UtilityTest.AssemblyQualifiedTypeNameFixture.ParseWithEscapes" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="NHibernate.Test.UtilityTest.AssemblyQualifiedTypeNameFixture.ParseFullAssemblyName" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="NHibernate.Test.UtilityTest.AssemblyQualifiedTypeNameFixture.ParseWithDefaultAssemblyUnused" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="NHibernate.Test.UtilityTest.AssemblyQualifiedTypeNameFixture.ParseWithDefaultAssembly" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="NHibernate.Test.UtilityTest.AssemblyQualifiedTypeNameFixture.ParseWithDefaultNamespaceAndAssembly" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="NHibernate.Test.UtilityTest.AssemblyQualifiedTypeNameFixture.ParseWithDefaultNamespaceNoAssembly" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="NHibernate.Test.UtilityTest.AssemblyQualifiedTypeNameFixture.ParseWithDefaultNamespaceUnused" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="NHibernate.Test.UtilityTest.AssemblyQualifiedTypeNameFixture.ParseTrims" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="NHibernate.Test.UtilityTest.AssemblyQualifiedTypeNameFixture.ParseInvalidEscape" executed="True" success="True" time="0.000" asserts="0" />
+                      <test-case name="NHibernate.Test.UtilityTest.AssemblyQualifiedTypeNameFixture.ToStringSimple" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="NHibernate.Test.UtilityTest.AssemblyQualifiedTypeNameFixture.ToStringComplex" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="NHibernate.Test.UtilityTest.AssemblyQualifiedTypeNameFixture.ToStringEscaped" executed="True" success="True" time="0.000" asserts="1" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="IdentityMapFixture" success="True" time="0" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.UtilityTest.IdentityMapFixture.AddNoHashCode" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="NHibernate.Test.UtilityTest.IdentityMapFixture.ConcurrentEntries" executed="True" success="True" time="0.000" asserts="5" />
+                      <test-case name="NHibernate.Test.UtilityTest.IdentityMapFixture.ConcurrentEntitiesModification" executed="True" success="True" time="0.000" asserts="4" />
+                      <test-case name="NHibernate.Test.UtilityTest.IdentityMapFixture.AddValueTypeException" executed="True" success="True" time="0.000" asserts="0" />
+                      <test-case name="NHibernate.Test.UtilityTest.IdentityMapFixture.Count" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="NHibernate.Test.UtilityTest.IdentityMapFixture.ContainsSameObjectByRef" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="NHibernate.Test.UtilityTest.IdentityMapFixture.ContainsSameObjectWithDiffEquals" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="NHibernate.Test.UtilityTest.IdentityMapFixture.ContainsDiffObjectWithEquals" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="NHibernate.Test.UtilityTest.IdentityMapFixture.SetItemChangedHashCodeTwice" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="NHibernate.Test.UtilityTest.IdentityMapFixture.SetItemsEqualHashCodeDiffIdentity" executed="True" success="True" time="0.000" asserts="4" />
+                      <test-case name="NHibernate.Test.UtilityTest.IdentityMapFixture.Keys" executed="True" success="True" time="0.000" asserts="3" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="IdentityMapSequencedFixture" success="True" time="0" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.UtilityTest.IdentityMapSequencedFixture.AddNoHashCode" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="NHibernate.Test.UtilityTest.IdentityMapSequencedFixture.ConcurrentEntries" executed="True" success="True" time="0.000" asserts="5" />
+                      <test-case name="NHibernate.Test.UtilityTest.IdentityMapSequencedFixture.ConcurrentEntitiesModification" executed="True" success="True" time="0.000" asserts="4" />
+                      <test-case name="NHibernate.Test.UtilityTest.IdentityMapSequencedFixture.AddValueTypeException" executed="True" success="True" time="0.000" asserts="0" />
+                      <test-case name="NHibernate.Test.UtilityTest.IdentityMapSequencedFixture.Count" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="NHibernate.Test.UtilityTest.IdentityMapSequencedFixture.ContainsSameObjectByRef" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="NHibernate.Test.UtilityTest.IdentityMapSequencedFixture.ContainsSameObjectWithDiffEquals" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="NHibernate.Test.UtilityTest.IdentityMapSequencedFixture.ContainsDiffObjectWithEquals" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="NHibernate.Test.UtilityTest.IdentityMapSequencedFixture.SetItemChangedHashCodeTwice" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="NHibernate.Test.UtilityTest.IdentityMapSequencedFixture.SetItemsEqualHashCodeDiffIdentity" executed="True" success="True" time="0.000" asserts="4" />
+                      <test-case name="NHibernate.Test.UtilityTest.IdentityMapSequencedFixture.Keys" executed="True" success="True" time="0.000" asserts="3" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="JoinedEnumerableFixture" success="True" time="0,015625" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.UtilityTest.JoinedEnumerableFixture.WrapsSingle" executed="True" success="True" time="0.016" asserts="5" />
+                      <test-case name="NHibernate.Test.UtilityTest.JoinedEnumerableFixture.WrapsSingleBreak" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="NHibernate.Test.UtilityTest.JoinedEnumerableFixture.WrapsMultiple" executed="True" success="True" time="0.000" asserts="9" />
+                      <test-case name="NHibernate.Test.UtilityTest.JoinedEnumerableFixture.WrapsMultipleBreak" executed="True" success="True" time="0.000" asserts="10" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="ReflectHelperFixture" success="True" time="0,328125" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.UtilityTest.ReflectHelperFixture.GetConstantValueEnum" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="NHibernate.Test.UtilityTest.ReflectHelperFixture.OverridesEquals" executed="True" success="True" time="0.000" asserts="4" />
+                      <test-case name="NHibernate.Test.UtilityTest.ReflectHelperFixture.NoTypeFoundReturnsNull" executed="True" success="True" time="0.156" asserts="1" />
+                      <test-case name="NHibernate.Test.UtilityTest.ReflectHelperFixture.TypeFoundInNotLoadedAssembly" executed="True" success="True" time="0.172" asserts="2" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="SequencedHashMapFixture" success="True" time="0,015625" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.UtilityTest.SequencedHashMapFixture.Add" executed="True" success="True" time="0.000" asserts="10" />
+                      <test-case name="NHibernate.Test.UtilityTest.SequencedHashMapFixture.Clear" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="NHibernate.Test.UtilityTest.SequencedHashMapFixture.Contains" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="NHibernate.Test.UtilityTest.SequencedHashMapFixture.GetEnumerator" executed="True" success="True" time="0.000" asserts="7" />
+                      <test-case name="NHibernate.Test.UtilityTest.SequencedHashMapFixture.GetEnumeratorEmpty" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="NHibernate.Test.UtilityTest.SequencedHashMapFixture.GetEnumeratorModifyExceptionFromAdd" executed="True" success="True" time="0.000" asserts="0" />
+                      <test-case name="NHibernate.Test.UtilityTest.SequencedHashMapFixture.GetEnumeratorModifyExceptionFromRemove" executed="True" success="True" time="0.000" asserts="0" />
+                      <test-case name="NHibernate.Test.UtilityTest.SequencedHashMapFixture.GetEnumeratorModifyExceptionFromUpdate" executed="True" success="True" time="0.000" asserts="0" />
+                      <test-case name="NHibernate.Test.UtilityTest.SequencedHashMapFixture.Remove" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="NHibernate.Test.UtilityTest.SequencedHashMapFixture.Item" executed="True" success="True" time="0.000" asserts="3" />
+                      <test-case name="NHibernate.Test.UtilityTest.SequencedHashMapFixture.Count" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="NHibernate.Test.UtilityTest.SequencedHashMapFixture.ContainsKey" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="NHibernate.Test.UtilityTest.SequencedHashMapFixture.ContainsValue" executed="True" success="True" time="0.000" asserts="3" />
+                      <test-case name="NHibernate.Test.UtilityTest.SequencedHashMapFixture.CopyTo" executed="True" success="True" time="0.000" asserts="7" />
+                      <test-case name="NHibernate.Test.UtilityTest.SequencedHashMapFixture.Keys" executed="True" success="True" time="0.000" asserts="4" />
+                      <test-case name="NHibernate.Test.UtilityTest.SequencedHashMapFixture.Values" executed="True" success="True" time="0.000" asserts="4" />
+                      <test-case name="NHibernate.Test.UtilityTest.SequencedHashMapFixture.ValuesEmpty" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="NHibernate.Test.UtilityTest.SequencedHashMapFixture.FirstKey" executed="True" success="True" time="0.000" asserts="3" />
+                      <test-case name="NHibernate.Test.UtilityTest.SequencedHashMapFixture.FirstValue" executed="True" success="True" time="0.000" asserts="3" />
+                      <test-case name="NHibernate.Test.UtilityTest.SequencedHashMapFixture.LastKey" executed="True" success="True" time="0.000" asserts="3" />
+                      <test-case name="NHibernate.Test.UtilityTest.SequencedHashMapFixture.LastValue" executed="True" success="True" time="0.000" asserts="3" />
+                      <test-case name="NHibernate.Test.UtilityTest.SequencedHashMapFixture.Serialize" executed="True" success="True" time="0.016" asserts="8" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="StringHelperFixture" success="True" time="0" asserts="0">
+                    <results>
+                      <test-case name="NHibernate.Test.UtilityTest.StringHelperFixture.GetClassnameFromFQType" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="NHibernate.Test.UtilityTest.StringHelperFixture.GetClassnameFromFQClass" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="NHibernate.Test.UtilityTest.StringHelperFixture.CountUnquotedParams" executed="True" success="True" time="0.000" asserts="4" />
+                      <test-case name="NHibernate.Test.UtilityTest.StringHelperFixture.CantCountQuotes" executed="True" success="True" time="0.000" asserts="0" />
+                      <test-case name="NHibernate.Test.UtilityTest.StringHelperFixture.Qualify" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="NHibernate.Test.UtilityTest.StringHelperFixture.QualifyArray" executed="True" success="True" time="0.000" asserts="2" />
+                    </results>
+                  </test-suite>
+                </results>
+              </test-suite>
+              <test-suite name="ABCProxyTest" success="True" time="0,734375" asserts="0">
+                <results>
+                  <test-case name="NHibernate.Test.ABCProxyTest.OptionalOneToOneInCollection" executed="True" success="True" time="0.047" asserts="1" />
+                  <test-case name="NHibernate.Test.ABCProxyTest.SharedColumn" executed="True" success="True" time="0.047" asserts="9" />
+                  <test-case name="NHibernate.Test.ABCProxyTest.Subclassing" executed="True" success="True" time="0.063" asserts="17" />
+                  <test-case name="NHibernate.Test.ABCProxyTest.SubclassMap" executed="True" success="True" time="0.000" asserts="0" />
+                  <test-case name="NHibernate.Test.ABCProxyTest.OneToOne" executed="True" success="True" time="0.047" asserts="8" />
+                </results>
+              </test-suite>
+              <test-suite name="ABCTest" success="True" time="0,5" asserts="0">
+                <results>
+                  <test-case name="NHibernate.Test.ABCTest.HigherLevelIndexDefinition" executed="True" success="True" time="0.000" asserts="1" />
+                  <test-case name="NHibernate.Test.ABCTest.Subselect" executed="True" success="True" time="0.031" asserts="0" />
+                  <test-case name="NHibernate.Test.ABCTest.Subclassing" executed="True" success="True" time="0.031" asserts="4" />
+                </results>
+              </test-suite>
+              <test-suite name="CriteriaTest" success="True" time="0,296875" asserts="0">
+                <results>
+                  <test-case name="NHibernate.Test.CriteriaTest.SimpleSelectTest" executed="True" success="True" time="0.016" asserts="6" />
+                  <test-case name="NHibernate.Test.CriteriaTest.SimpleDateCriteria" executed="True" success="True" time="0.016" asserts="4" />
+                  <test-case name="NHibernate.Test.CriteriaTest.CriteriaTypeMismatch" executed="True" success="True" time="0.016" asserts="0" />
+                  <test-case name="NHibernate.Test.CriteriaTest.CriteriaManyToOneEquals" executed="True" success="True" time="0.016" asserts="0" />
+                  <test-case name="NHibernate.Test.CriteriaTest.CriteriaCompositeProperty" executed="True" success="True" time="0.000" asserts="0" />
+                </results>
+              </test-suite>
+              <test-suite name="FooBarTest" success="True" time="15,390625" asserts="0">
+                <results>
+                  <test-case name="NHibernate.Test.FooBarTest.CollectionVersioning" executed="True" success="True" time="0.047" asserts="2" />
+                  <test-case name="NHibernate.Test.FooBarTest.ForCertain" executed="True" success="True" time="0.047" asserts="3" />
+                  <test-case name="NHibernate.Test.FooBarTest.BagMultipleElements" executed="True" success="True" time="0.203" asserts="6" />
+                  <test-case name="NHibernate.Test.FooBarTest.WierdSession" executed="True" success="True" time="0.109" asserts="0" />
+                  <test-case name="NHibernate.Test.FooBarTest.DereferenceLazyCollection" executed="True" success="True" time="0.109" asserts="7" />
+                  <test-case name="NHibernate.Test.FooBarTest.MoveLazyCollection" executed="True" success="True" time="0.141" asserts="9" />
+                  <test-case name="NHibernate.Test.FooBarTest.CriteriaCollection" executed="True" success="True" time="0.078" asserts="2" />
+                  <test-case name="NHibernate.Test.FooBarTest.Query" executed="True" success="True" time="1.172" asserts="105" />
+                  <test-case name="NHibernate.Test.FooBarTest.CascadeDeleteDetached" executed="True" success="True" time="0.078" asserts="4" />
+                  <test-case name="NHibernate.Test.FooBarTest.ForeignKeys" executed="True" success="True" time="0.078" asserts="0" />
+                  <test-case name="NHibernate.Test.FooBarTest.Databinder" executed="False">
+                    <reason>
+                      <message><![CDATA[IDatabinder not implemented yet]]></message>
+                    </reason>
+                  </test-case>
+                  <test-case name="NHibernate.Test.FooBarTest.NonlazyCollections" executed="True" success="True" time="0.031" asserts="2" />
+                  <test-case name="NHibernate.Test.FooBarTest.ReuseDeletedCollection" executed="True" success="True" time="0.094" asserts="2" />
+                  <test-case name="NHibernate.Test.FooBarTest.PropertyRef" executed="True" success="True" time="0.094" asserts="4" />
+                  <test-case name="NHibernate.Test.FooBarTest.QueryCollectionOfValues" executed="True" success="True" time="0.188" asserts="5" />
+                  <test-case name="NHibernate.Test.FooBarTest.BatchLoad" executed="True" success="True" time="0.203" asserts="17" />
+                  <test-case name="NHibernate.Test.FooBarTest.FetchInitializedCollection" executed="True" success="True" time="0.109" asserts="4" />
+                  <test-case name="NHibernate.Test.FooBarTest.LateCollectionAdd" executed="True" success="True" time="0.031" asserts="4" />
+                  <test-case name="NHibernate.Test.FooBarTest.Update" executed="True" success="True" time="0.063" asserts="1" />
+                  <test-case name="NHibernate.Test.FooBarTest.ListRemove" executed="True" success="True" time="0.078" asserts="4" />
+                  <test-case name="NHibernate.Test.FooBarTest.FetchInitializedCollectionDupe" executed="True" success="True" time="0.094" asserts="7" />
+                  <test-case name="NHibernate.Test.FooBarTest.Sortables" executed="True" success="True" time="0.078" asserts="6" />
+                  <test-case name="NHibernate.Test.FooBarTest.FetchList" executed="True" success="True" time="0.094" asserts="1" />
+                  <test-case name="NHibernate.Test.FooBarTest.BagOneToMany" executed="True" success="True" time="0.031" asserts="0" />
+                  <test-case name="NHibernate.Test.FooBarTest.QueryLockMode" executed="True" success="True" time="0.094" asserts="7" />
+                  <test-case name="NHibernate.Test.FooBarTest.ManyToManyBag" executed="True" success="True" time="0.078" asserts="3" />
+                  <test-case name="NHibernate.Test.FooBarTest.IdBag" executed="True" success="True" time="0.141" asserts="4" />
+                  <test-case name="NHibernate.Test.FooBarTest.ForceOuterJoin" executed="True" success="True" time="0.078" asserts="4" />
+                  <test-case name="NHibernate.Test.FooBarTest.EmptyCollection" executed="True" success="True" time="0.047" asserts="1" />
+                  <test-case name="NHibernate.Test.FooBarTest.OneToOneGenerator" executed="True" success="True" time="0.047" asserts="9" />
+                  <test-case name="NHibernate.Test.FooBarTest.Limit" executed="True" success="True" time="0.219" asserts="2" />
+                  <test-case name="NHibernate.Test.FooBarTest.Custom" executed="True" success="True" time="0.031" asserts="6" />
+                  <test-case name="NHibernate.Test.FooBarTest.SaveAddDelete" executed="True" success="True" time="0.016" asserts="0" />
+                  <test-case name="NHibernate.Test.FooBarTest.NamedParams" executed="True" success="True" time="0.125" asserts="4" />
+                  <test-case name="NHibernate.Test.FooBarTest.VerifyParameterNamedMissing" executed="True" success="True" time="0.016" asserts="0" />
+                  <test-case name="NHibernate.Test.FooBarTest.VerifyParameterPositionalMissing" executed="True" success="True" time="0.016" asserts="0" />
+                  <test-case name="NHibernate.Test.FooBarTest.VerifyParameterPositionalInQuotes" executed="True" success="True" time="0.016" asserts="0" />
+                  <test-case name="NHibernate.Test.FooBarTest.VerifyParameterPositionalInQuotes2" executed="True" success="True" time="0.016" asserts="0" />
+                  <test-case name="NHibernate.Test.FooBarTest.VerifyParameterPositionalMissing2" executed="True" success="True" time="0.047" asserts="0" />
+                  <test-case name="NHibernate.Test.FooBarTest.Dyna" executed="True" success="True" time="0.031" asserts="7" />
+                  <test-case name="NHibernate.Test.FooBarTest.FindByCriteria" executed="True" success="True" time="0.156" asserts="8" />
+                  <test-case name="NHibernate.Test.FooBarTest.AfterDelete" executed="True" success="True" time="0.031" asserts="0" />
+                  <test-case name="NHibernate.Test.FooBarTest.CollectionWhere" executed="True" success="True" time="0.125" asserts="5" />
+                  <test-case name="NHibernate.Test.FooBarTest.ComponentParent" executed="True" success="True" time="0.063" asserts="2" />
+                  <test-case name="NHibernate.Test.FooBarTest.CollectionCache" executed="True" success="True" time="0.078" asserts="0" />
+                  <test-case name="NHibernate.Test.FooBarTest.AssociationId" executed="True" success="True" time="0.063" asserts="4" />
+                  <test-case name="NHibernate.Test.FooBarTest.CascadeSave" executed="True" success="True" time="0.047" asserts="2" />
+                  <test-case name="NHibernate.Test.FooBarTest.CompositeKeyPathExpressions" executed="True" success="True" time="0.047" asserts="0" />
+                  <test-case name="NHibernate.Test.FooBarTest.CollectionsInSelect" executed="True" success="True" time="0.344" asserts="17" />
+                  <test-case name="NHibernate.Test.FooBarTest.NewFlushing" executed="True" success="True" time="0.063" asserts="8" />
+                  <test-case name="NHibernate.Test.FooBarTest.PersistCollections" executed="True" success="True" time="0.578" asserts="40" />
+                  <test-case name="NHibernate.Test.FooBarTest.SaveFlush" executed="True" success="True" time="0.016" asserts="2" />
+                  <test-case name="NHibernate.Test.FooBarTest.CreateUpdate" executed="True" success="True" time="0.078" asserts="2" />
+                  <test-case name="NHibernate.Test.FooBarTest.UpdateCollections" executed="True" success="True" time="0.141" asserts="10" />
+                  <test-case name="NHibernate.Test.FooBarTest.Load" executed="True" success="True" time="0.078" asserts="4" />
+                  <test-case name="NHibernate.Test.FooBarTest.Create" executed="True" success="True" time="0.047" asserts="1" />
+                  <test-case name="NHibernate.Test.FooBarTest.Callback" executed="True" success="True" time="0.172" asserts="1" />
+                  <test-case name="NHibernate.Test.FooBarTest.Polymorphism" executed="True" success="True" time="0.047" asserts="2" />
+                  <test-case name="NHibernate.Test.FooBarTest.RemoveContains" executed="True" success="True" time="0.063" asserts="3" />
+                  <test-case name="NHibernate.Test.FooBarTest.CollectionOfSelf" executed="True" success="True" time="0.078" asserts="3" />
+                  <test-case name="NHibernate.Test.FooBarTest.Find" executed="True" success="True" time="0.219" asserts="15" />
+                  <test-case name="NHibernate.Test.FooBarTest.DeleteRecursive" executed="True" success="True" time="0.047" asserts="0" />
+                  <test-case name="NHibernate.Test.FooBarTest.Reachability" executed="True" success="True" time="0.313" asserts="12" />
+                  <test-case name="NHibernate.Test.FooBarTest.PersistentLifecycle" executed="True" success="True" time="0.047" asserts="5" />
+                  <test-case name="NHibernate.Test.FooBarTest.Enumerable" executed="True" success="True" time="0.344" asserts="23" />
+                  <test-case name="NHibernate.Test.FooBarTest.EnumerableDisposable" executed="True" success="True" time="0.047" asserts="12" />
+                  <test-case name="NHibernate.Test.FooBarTest.Versioning" executed="True" success="True" time="0.047" asserts="7" />
+                  <test-case name="NHibernate.Test.FooBarTest.VersionedCollections" executed="True" success="True" time="0.047" asserts="14" />
+                  <test-case name="NHibernate.Test.FooBarTest.RecursiveLoad" executed="True" success="True" time="0.297" asserts="28" />
+                  <test-case name="NHibernate.Test.FooBarTest.MultiColumnQueries" executed="True" success="True" time="0.078" asserts="20" />
+                  <test-case name="NHibernate.Test.FooBarTest.DeleteTransient" executed="True" success="True" time="0.031" asserts="1" />
+                  <test-case name="NHibernate.Test.FooBarTest.DeleteUpdatedTransient" executed="True" success="True" time="0.016" asserts="1" />
+                  <test-case name="NHibernate.Test.FooBarTest.UpdateOrder" executed="True" success="True" time="0.031" asserts="1" />
+                  <test-case name="NHibernate.Test.FooBarTest.UpdateFromTransient" executed="True" success="True" time="0.125" asserts="15" />
+                  <test-case name="NHibernate.Test.FooBarTest.ArraysOfTimes" executed="True" success="True" time="0.094" asserts="0" />
+                  <test-case name="NHibernate.Test.FooBarTest.Components" executed="True" success="True" time="0.078" asserts="6" />
+                  <test-case name="NHibernate.Test.FooBarTest.Enum" executed="True" success="True" time="0.078" asserts="10" />
+                  <test-case name="NHibernate.Test.FooBarTest.NoForeignKeyViolations" executed="True" success="True" time="0.031" asserts="0" />
+                  <test-case name="NHibernate.Test.FooBarTest.LazyCollections" executed="True" success="True" time="0.047" asserts="2" />
+                  <test-case name="NHibernate.Test.FooBarTest.NewSessionLifecycle" executed="True" success="True" time="0.047" asserts="2" />
+                  <test-case name="NHibernate.Test.FooBarTest.Disconnect" executed="True" success="True" time="0.063" asserts="0" />
+                  <test-case name="NHibernate.Test.FooBarTest.OrderBy" executed="True" success="True" time="0.078" asserts="7" />
+                  <test-case name="NHibernate.Test.FooBarTest.ManyToOne" executed="True" success="True" time="0.031" asserts="1" />
+                  <test-case name="NHibernate.Test.FooBarTest.SaveDelete" executed="True" success="True" time="0.047" asserts="0" />
+                  <test-case name="NHibernate.Test.FooBarTest.ProxyArray" executed="True" success="True" time="0.047" asserts="5" />
+                  <test-case name="NHibernate.Test.FooBarTest.Cache" executed="True" success="True" time="0.016" asserts="2" />
+                  <test-case name="NHibernate.Test.FooBarTest.FindLoad" executed="True" success="True" time="0.063" asserts="2" />
+                  <test-case name="NHibernate.Test.FooBarTest.Refresh" executed="True" success="True" time="0.047" asserts="3" />
+                  <test-case name="NHibernate.Test.FooBarTest.RefreshTransient" executed="True" success="True" time="0.047" asserts="1" />
+                  <test-case name="NHibernate.Test.FooBarTest.AutoFlush" executed="True" success="True" time="0.078" asserts="5" />
+                  <test-case name="NHibernate.Test.FooBarTest.Veto" executed="True" success="True" time="0.016" asserts="0" />
+                  <test-case name="NHibernate.Test.FooBarTest.SerializableType" executed="True" success="True" time="0.031" asserts="1" />
+                  <test-case name="NHibernate.Test.FooBarTest.AutoFlushCollections" executed="True" success="True" time="0.109" asserts="8" />
+                  <test-case name="NHibernate.Test.FooBarTest.UserProvidedConnection" executed="True" success="True" time="0.016" asserts="2" />
+                  <test-case name="NHibernate.Test.FooBarTest.CachedCollection" executed="True" success="True" time="0.094" asserts="1" />
+                  <test-case name="NHibernate.Test.FooBarTest.ComplicatedQuery" executed="True" success="True" time="0.063" asserts="2" />
+                  <test-case name="NHibernate.Test.FooBarTest.LoadAfterDelete" executed="True" success="True" time="0.047" asserts="6" />
+                  <test-case name="NHibernate.Test.FooBarTest.ObjectType" executed="True" success="True" time="0.063" asserts="2" />
+                  <test-case name="NHibernate.Test.FooBarTest.Any" executed="True" success="True" time="0.063" asserts="5" />
+                  <test-case name="NHibernate.Test.FooBarTest.EmbeddedCompositeID" executed="True" success="True" time="0.016" asserts="5" />
+                  <test-case name="NHibernate.Test.FooBarTest.AutosaveChildren" executed="True" success="True" time="0.109" asserts="4" />
+                  <test-case name="NHibernate.Test.FooBarTest.OrphanDelete" executed="True" success="True" time="0.031" asserts="1" />
+                  <test-case name="NHibernate.Test.FooBarTest.TransientOrphanDelete" executed="True" success="True" time="0.188" asserts="3" />
+                  <test-case name="NHibernate.Test.FooBarTest.ProxiesInCollections" executed="True" success="True" time="0.219" asserts="7" />
+                  <test-case name="NHibernate.Test.FooBarTest.PSCache" executed="True" success="True" time="0.297" asserts="7" />
+                  <test-case name="NHibernate.Test.FooBarTest.Formula" executed="True" success="True" time="0.047" asserts="1" />
+                  <test-case name="NHibernate.Test.FooBarTest.AddAll" executed="True" success="True" time="0.078" asserts="2" />
+                  <test-case name="NHibernate.Test.FooBarTest.Copy" executed="True" success="True" time="0.047" asserts="1" />
+                </results>
+              </test-suite>
+              <test-suite name="FumTest" success="True" time="6,015625" asserts="0">
+                <results>
+                  <test-case name="NHibernate.Test.FumTest.CriteriaCollection" executed="True" success="True" time="0.109" asserts="4" />
+                  <test-case name="NHibernate.Test.FumTest.Criteria" executed="True" success="True" time="0.094" asserts="12" />
+                  <test-case name="NHibernate.Test.FumTest.ListIdentifiers" executed="True" success="True" time="0.031" asserts="4" />
+                  <test-case name="NHibernate.Test.FumTest.CompositeID" executed="True" success="True" time="0.047" asserts="5" />
+                  <test-case name="NHibernate.Test.FumTest.CompositeIDOneToOne" executed="True" success="True" time="0.031" asserts="0" />
+                  <test-case name="NHibernate.Test.FumTest.CompositeIDQuery" executed="True" success="True" time="0.094" asserts="27" />
+                  <test-case name="NHibernate.Test.FumTest.CompositeIDCollections" executed="True" success="True" time="0.156" asserts="3" />
+                  <test-case name="NHibernate.Test.FumTest.DeleteOwner" executed="True" success="True" time="0.078" asserts="1" />
+                  <test-case name="NHibernate.Test.FumTest.CompositeIDs" executed="True" success="True" time="0.016" asserts="4" />
+                  <test-case name="NHibernate.Test.FumTest.KeyManyToOne" executed="True" success="True" time="0.047" asserts="1" />
+                  <test-case name="NHibernate.Test.FumTest.CompositeKeyPathExpressions" executed="True" success="True" time="0.047" asserts="0" />
+                  <test-case name="NHibernate.Test.FumTest.UnflushedSessionSerialization" executed="True" success="True" time="0.047" asserts="4" />
+                </results>
+              </test-suite>
+              <test-suite name="MasterDetailTest" success="True" time="4,078125" asserts="0">
+                <results>
+                  <test-case name="NHibernate.Test.MasterDetailTest.ParentChildren" executed="True" success="True" time="0.031" asserts="1" />
+                  <test-case name="NHibernate.Test.MasterDetailTest.OuterJoin" executed="True" success="True" time="0.047" asserts="3" />
+                  <test-case name="NHibernate.Test.MasterDetailTest.Meta" executed="True" success="True" time="0.016" asserts="2" />
+                  <test-case name="NHibernate.Test.MasterDetailTest.Copy" executed="True" success="True" time="0.047" asserts="2" />
+                  <test-case name="NHibernate.Test.MasterDetailTest.CopyCascade" executed="True" success="True" time="0.031" asserts="2" />
+                  <test-case name="NHibernate.Test.MasterDetailTest.NotNullDiscriminator" executed="True" success="True" time="0.016" asserts="5" />
+                  <test-case name="NHibernate.Test.MasterDetailTest.SelfManyToOne" executed="True" success="True" time="0.031" asserts="1" />
+                  <test-case name="NHibernate.Test.MasterDetailTest.ExampleTest" executed="True" success="True" time="0.031" asserts="5" />
+                  <test-case name="NHibernate.Test.MasterDetailTest.NonLazyBidirectional" executed="True" success="True" time="0.047" asserts="0" />
+                  <test-case name="NHibernate.Test.MasterDetailTest.CollectionQuery" executed="True" success="True" time="0.031" asserts="0" />
+                  <test-case name="NHibernate.Test.MasterDetailTest.MasterDetail" executed="True" success="True" time="0.125" asserts="42" />
+                  <test-case name="NHibernate.Test.MasterDetailTest.IncomingOutgoing" executed="True" success="True" time="0.031" asserts="6" />
+                  <test-case name="NHibernate.Test.MasterDetailTest.Cascading" executed="True" success="True" time="0.031" asserts="2" />
+                  <test-case name="NHibernate.Test.MasterDetailTest.NamedQuery" executed="True" success="True" time="0.016" asserts="0" />
+                  <test-case name="NHibernate.Test.MasterDetailTest.Serialization" executed="True" success="True" time="0.031" asserts="5" />
+                  <test-case name="NHibernate.Test.MasterDetailTest.UpdateLazyCollections" executed="True" success="True" time="0.016" asserts="3" />
+                  <test-case name="NHibernate.Test.MasterDetailTest.MultiLevelCascade" executed="True" success="True" time="0.031" asserts="1" />
+                  <test-case name="NHibernate.Test.MasterDetailTest.MixNativeAssigned" executed="True" success="True" time="0.031" asserts="0" />
+                  <test-case name="NHibernate.Test.MasterDetailTest.CollectionReplaceOnUpdate" executed="True" success="True" time="0.219" asserts="2" />
+                  <test-case name="NHibernate.Test.MasterDetailTest.CollectionReplace2" executed="True" success="True" time="0.047" asserts="1" />
+                  <test-case name="NHibernate.Test.MasterDetailTest.CollectionReplace" executed="True" success="True" time="0.031" asserts="2" />
+                  <test-case name="NHibernate.Test.MasterDetailTest.Categories" executed="True" success="True" time="1.047" asserts="5" />
+                  <test-case name="NHibernate.Test.MasterDetailTest.CollectionRefresh" executed="True" success="True" time="0.141" asserts="3" />
+                  <test-case name="NHibernate.Test.MasterDetailTest.CachedCollectionRefresh" executed="True" success="True" time="0.047" asserts="3" />
+                  <test-case name="NHibernate.Test.MasterDetailTest.CustomPersister" executed="True" success="True" time="0.016" asserts="5" />
+                  <test-case name="NHibernate.Test.MasterDetailTest.Interface" executed="True" success="True" time="0.016" asserts="0" />
+                  <test-case name="NHibernate.Test.MasterDetailTest.NoUpdatedManyToOne" executed="True" success="True" time="0.031" asserts="0" />
+                  <test-case name="NHibernate.Test.MasterDetailTest.QueuedBagAdds" executed="True" success="True" time="0.016" asserts="6" />
+                  <test-case name="NHibernate.Test.MasterDetailTest.PolymorphicCriteria" executed="True" success="True" time="0.047" asserts="3" />
+                  <test-case name="NHibernate.Test.MasterDetailTest.ToStringWithNoIdentifier" executed="True" success="True" time="0.000" asserts="0" />
+                  <test-case name="NHibernate.Test.MasterDetailTest.TwoLeftJoinFetches" executed="True" success="True" time="0.016" asserts="0" />
+                </results>
+              </test-suite>
+              <test-suite name="MultiTableTest" success="True" time="1,84375" asserts="0">
+                <results>
+                  <test-case name="NHibernate.Test.MultiTableTest.FetchManyToOne" executed="True" success="True" time="0.094" asserts="0" />
+                  <test-case name="NHibernate.Test.MultiTableTest.Joins" executed="True" success="True" time="0.109" asserts="0" />
+                  <test-case name="NHibernate.Test.MultiTableTest.JoinOpenBug" executed="True" success="True" time="0.000" asserts="0" />
+                  <test-case name="NHibernate.Test.MultiTableTest.SubclassCollection" executed="True" success="True" time="0.266" asserts="9" />
+                  <test-case name="NHibernate.Test.MultiTableTest.CollectionOnly" executed="True" success="True" time="0.016" asserts="0" />
+                  <test-case name="NHibernate.Test.MultiTableTest.Queries" executed="True" success="True" time="0.109" asserts="0" />
+                  <test-case name="NHibernate.Test.MultiTableTest.Constraints" executed="True" success="True" time="0.016" asserts="0" />
+                  <test-case name="NHibernate.Test.MultiTableTest.MultiTable" executed="True" success="True" time="0.250" asserts="16" />
+                  <test-case name="NHibernate.Test.MultiTableTest.MultiTableGeneratedId" executed="True" success="True" time="0.094" asserts="14" />
+                  <test-case name="NHibernate.Test.MultiTableTest.MultiTableCollections" executed="True" success="True" time="0.250" asserts="11" />
+                  <test-case name="NHibernate.Test.MultiTableTest.MultiTableManyToOne" executed="True" success="True" time="0.016" asserts="8" />
+                  <test-case name="NHibernate.Test.MultiTableTest.MultiTableNativeId" executed="True" success="True" time="0.016" asserts="1" />
+                  <test-case name="NHibernate.Test.MultiTableTest.Collection" executed="True" success="True" time="0.141" asserts="4" />
+                  <test-case name="NHibernate.Test.MultiTableTest.OneToOne" executed="True" success="True" time="0.016" asserts="0" />
+                  <test-case name="NHibernate.Test.MultiTableTest.CollectionPointer" executed="True" success="True" time="0.125" asserts="1" />
+                  <test-case name="NHibernate.Test.MultiTableTest.DynamicUpdate" executed="True" success="True" time="0.016" asserts="1" />
+                </results>
+              </test-suite>
+              <test-suite name="ObjectAssert" success="True" time="0" asserts="0">
+                <results>
+                  <test-case name="NHibernate.Test.ObjectAssert.TestIDictionaryEqual" executed="True" success="True" time="0.000" asserts="5" />
+                </results>
+              </test-suite>
+              <test-suite name="ParentChildTest" success="True" time="6,359375" asserts="0">
+                <results>
+                  <test-case name="NHibernate.Test.ParentChildTest.Replicate" executed="True" success="True" time="0.063" asserts="0" />
+                  <test-case name="NHibernate.Test.ParentChildTest.QueryOneToOne" executed="True" success="True" time="0.031" asserts="2" />
+                  <test-case name="NHibernate.Test.ParentChildTest.ProxyReuse" executed="True" success="True" time="0.219" asserts="11" />
+                  <test-case name="NHibernate.Test.ParentChildTest.ComplexCriteria" executed="True" success="True" time="0.422" asserts="9" />
+                  <test-case name="NHibernate.Test.ParentChildTest.ClassWhere" executed="True" success="True" time="0.063" asserts="5" />
+                  <test-case name="NHibernate.Test.ParentChildTest.CollectionQuery" executed="True" success="True" time="0.094" asserts="12" />
+                  <test-case name="NHibernate.Test.ParentChildTest.ParentChild" executed="True" success="True" time="0.047" asserts="6" />
+                  <test-case name="NHibernate.Test.ParentChildTest.ParentNullChild" executed="True" success="True" time="0.031" asserts="3" />
+                  <test-case name="NHibernate.Test.ParentChildTest.ManyToMany" executed="True" success="True" time="0.078" asserts="9" />
+                  <test-case name="NHibernate.Test.ParentChildTest.Container" executed="True" success="True" time="0.109" asserts="21" />
+                  <test-case name="NHibernate.Test.ParentChildTest.CascadeCompositeElements" executed="True" success="True" time="0.047" asserts="6" />
+                  <test-case name="NHibernate.Test.ParentChildTest.Bag" executed="True" success="True" time="0.063" asserts="9" />
+                  <test-case name="NHibernate.Test.ParentChildTest.CircularCascade" executed="True" success="True" time="0.063" asserts="5" />
+                  <test-case name="NHibernate.Test.ParentChildTest.DeleteEmpty" executed="True" success="True" time="0.031" asserts="2" />
+                  <test-case name="NHibernate.Test.ParentChildTest.Locking" executed="True" success="True" time="0.047" asserts="25" />
+                  <test-case name="NHibernate.Test.ParentChildTest.ObjectType" executed="True" success="True" time="0.063" asserts="2" />
+                </results>
+              </test-suite>
+              <test-suite name="SessionCacheTest" success="True" time="0,0625" asserts="0">
+                <results>
+                  <test-case name="NHibernate.Test.SessionCacheTest.MakeCollectionTransient" executed="True" success="True" time="0.016" asserts="6" />
+                  <test-case name="NHibernate.Test.SessionCacheTest.LoadAfterNotExists" executed="True" success="True" time="0.016" asserts="1" />
+                </results>
+              </test-suite>
+              <test-suite name="SimpleTest" success="True" time="0,046875" asserts="0">
+                <results>
+                  <test-case name="NHibernate.Test.SimpleTest.TestCRUD" executed="True" success="True" time="0.016" asserts="8" />
+                  <test-case name="NHibernate.Test.SimpleTest.SetPropertiesOnQuery" executed="True" success="True" time="0.016" asserts="4" />
+                </results>
+              </test-suite>
+              <test-suite name="SQLFunctionsTest" success="True" time="0,625" asserts="0">
+                <results>
+                  <test-case name="NHibernate.Test.SQLFunctionsTest.DialectSQLFunctions" executed="True" success="True" time="0.016" asserts="5" />
+                  <test-case name="NHibernate.Test.SQLFunctionsTest.SetProperties" executed="True" success="True" time="0.016" asserts="1" />
+                  <test-case name="NHibernate.Test.SQLFunctionsTest.Broken" executed="True" success="True" time="0.016" asserts="0" />
+                  <test-case name="NHibernate.Test.SQLFunctionsTest.NothingToUpdate" executed="True" success="True" time="0.016" asserts="0" />
+                  <test-case name="NHibernate.Test.SQLFunctionsTest.CachedQuery" executed="True" success="True" time="0.031" asserts="12" />
+                  <test-case name="NHibernate.Test.SQLFunctionsTest.SQLFunctionAsAlias" executed="True" success="True" time="0.000" asserts="0" />
+                  <test-case name="NHibernate.Test.SQLFunctionsTest.CachedQueryOnInsert" executed="True" success="True" time="0.016" asserts="4" />
+                  <test-case name="NHibernate.Test.SQLFunctionsTest.CachedQueryRegion" executed="True" success="True" time="0.031" asserts="10" />
+                  <test-case name="NHibernate.Test.SQLFunctionsTest.SQLFunctions" executed="True" success="True" time="0.078" asserts="25" />
+                </results>
+              </test-suite>
+              <test-suite name="SQLLoaderTest" success="True" time="1,828125" asserts="0">
+                <results>
+                  <test-case name="NHibernate.Test.SQLLoaderTest.TS" executed="True" success="True" time="0.016" asserts="1" />
+                  <test-case name="NHibernate.Test.SQLLoaderTest.TSNamed" executed="True" success="True" time="0.016" asserts="1" />
+                  <test-case name="NHibernate.Test.SQLLoaderTest.FindBySQLStar" executed="True" success="True" time="0.016" asserts="0" />
+                  <test-case name="NHibernate.Test.SQLLoaderTest.FindBySQLProperties" executed="True" success="True" time="0.016" asserts="0" />
+                  <test-case name="NHibernate.Test.SQLLoaderTest.FindBySQLAssociatedObject" executed="True" success="True" time="0.016" asserts="1" />
+                  <test-case name="NHibernate.Test.SQLLoaderTest.FindBySQLMultipleObject" executed="True" success="True" time="0.141" asserts="2" />
+                  <test-case name="NHibernate.Test.SQLLoaderTest.FindBySQLParameters" executed="True" success="True" time="0.031" asserts="3" />
+                  <test-case name="NHibernate.Test.SQLLoaderTest.EscapedODBC" executed="False">
+                    <reason>
+                      <message><![CDATA[Escaping not implemented. Need to test with ODBC/OLEDB when implemented.]]></message>
+                    </reason>
+                  </test-case>
+                  <test-case name="NHibernate.Test.SQLLoaderTest.DoubleAliasing" executed="True" success="True" time="0.031" asserts="2" />
+                  <test-case name="NHibernate.Test.SQLLoaderTest.EmbeddedCompositeProperties" executed="True" success="True" time="0.016" asserts="4" />
+                  <test-case name="NHibernate.Test.SQLLoaderTest.ComponentStar" executed="True" success="True" time="0.016" asserts="4" />
+                  <test-case name="NHibernate.Test.SQLLoaderTest.ComponentNoStar" executed="True" success="True" time="0.000" asserts="4" />
+                  <test-case name="NHibernate.Test.SQLLoaderTest.FindSimpleBySQL" executed="True" success="True" time="0.016" asserts="3" />
+                  <test-case name="NHibernate.Test.SQLLoaderTest.FindBySQLSimpleByDiffSessions" executed="True" success="True" time="0.016" asserts="3" />
+                  <test-case name="NHibernate.Test.SQLLoaderTest.FindBySQLDiscriminatorSameSession" executed="True" success="True" time="0.000" asserts="6" />
+                  <test-case name="NHibernate.Test.SQLLoaderTest.FindBySQLDiscriminatedDiffSessions" executed="True" success="True" time="0.016" asserts="2" />
+                  <test-case name="NHibernate.Test.SQLLoaderTest.NamedSQLQuery" executed="True" success="True" time="0.016" asserts="6" />
+                </results>
+              </test-suite>
+              <test-suite name="TestTestCase" success="True" time="0" asserts="0">
+                <results>
+                  <test-case name="NHibernate.Test.TestTestCase.TestExecuteStatement" executed="True" success="True" time="0.000" asserts="0" />
+                </results>
+              </test-suite>
+            </results>
+          </test-suite>
+        </results>
+      </test-suite>
+    </results>
+  </test-suite>
+</test-results>

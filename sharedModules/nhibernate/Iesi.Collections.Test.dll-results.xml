@@ -1,0 +1,123 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!--This file represents the results of running a test suite-->
+<test-results name="C:\net\nhibernate-release\nhibernate\build\nhibernate-1.0.2.0\bin\Iesi.Collections.Test.dll" total="87" failures="0" not-run="0" date="15.1.2006" time="14:00">
+  <test-suite name="C:\net\nhibernate-release\nhibernate\build\nhibernate-1.0.2.0\bin\Iesi.Collections.Test.dll" success="True" time="0,046875" asserts="0">
+    <results>
+      <test-suite name="Iesi" success="True" time="0,046875" asserts="0">
+        <results>
+          <test-suite name="Collections" success="True" time="0,046875" asserts="0">
+            <results>
+              <test-suite name="Test" success="True" time="0,046875" asserts="0">
+                <results>
+                  <test-suite name="HashedSetFixture" success="True" time="0,03125" asserts="0">
+                    <results>
+                      <test-case name="Iesi.Collections.Test.HashedSetFixture.Serialization" executed="True" success="True" time="0.016" asserts="4" />
+                      <test-case name="Iesi.Collections.Test.HashedSetFixture.Clone" executed="True" success="True" time="0.000" asserts="6" />
+                      <test-case name="Iesi.Collections.Test.HashedSetFixture.CopyTo" executed="True" success="True" time="0.000" asserts="4" />
+                      <test-case name="Iesi.Collections.Test.HashedSetFixture.Count" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="Iesi.Collections.Test.HashedSetFixture.CtorWithDefaults" executed="True" success="True" time="0.000" asserts="4" />
+                      <test-case name="Iesi.Collections.Test.HashedSetFixture.Add" executed="True" success="True" time="0.000" asserts="4" />
+                      <test-case name="Iesi.Collections.Test.HashedSetFixture.AddAll" executed="True" success="True" time="0.000" asserts="3" />
+                      <test-case name="Iesi.Collections.Test.HashedSetFixture.Clear" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="Iesi.Collections.Test.HashedSetFixture.Contains" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="Iesi.Collections.Test.HashedSetFixture.ContainsAll" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="Iesi.Collections.Test.HashedSetFixture.ExclusiveOr" executed="True" success="True" time="0.000" asserts="10" />
+                      <test-case name="Iesi.Collections.Test.HashedSetFixture.Intersect" executed="True" success="True" time="0.000" asserts="7" />
+                      <test-case name="Iesi.Collections.Test.HashedSetFixture.IsEmpty" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="Iesi.Collections.Test.HashedSetFixture.Minus" executed="True" success="True" time="0.000" asserts="6" />
+                      <test-case name="Iesi.Collections.Test.HashedSetFixture.Remove" executed="True" success="True" time="0.000" asserts="4" />
+                      <test-case name="Iesi.Collections.Test.HashedSetFixture.RemoveAll" executed="True" success="True" time="0.000" asserts="3" />
+                      <test-case name="Iesi.Collections.Test.HashedSetFixture.RetainAll" executed="True" success="True" time="0.000" asserts="3" />
+                      <test-case name="Iesi.Collections.Test.HashedSetFixture.Union" executed="True" success="True" time="0.000" asserts="12" />
+                      <test-case name="Iesi.Collections.Test.HashedSetFixture.ExclusiveOrOperator" executed="True" success="True" time="0.000" asserts="6" />
+                      <test-case name="Iesi.Collections.Test.HashedSetFixture.IntersectOperator" executed="True" success="True" time="0.016" asserts="3" />
+                      <test-case name="Iesi.Collections.Test.HashedSetFixture.MinusOperator" executed="True" success="True" time="0.000" asserts="5" />
+                      <test-case name="Iesi.Collections.Test.HashedSetFixture.UnionOperator" executed="True" success="True" time="0.000" asserts="8" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="HybridSetFixture" success="True" time="0" asserts="0">
+                    <results>
+                      <test-case name="Iesi.Collections.Test.HybridSetFixture.Clone" executed="True" success="True" time="0.000" asserts="6" />
+                      <test-case name="Iesi.Collections.Test.HybridSetFixture.CopyTo" executed="True" success="True" time="0.000" asserts="4" />
+                      <test-case name="Iesi.Collections.Test.HybridSetFixture.Count" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="Iesi.Collections.Test.HybridSetFixture.CtorWithDefaults" executed="True" success="True" time="0.000" asserts="4" />
+                      <test-case name="Iesi.Collections.Test.HybridSetFixture.Add" executed="True" success="True" time="0.000" asserts="4" />
+                      <test-case name="Iesi.Collections.Test.HybridSetFixture.AddAll" executed="True" success="True" time="0.000" asserts="3" />
+                      <test-case name="Iesi.Collections.Test.HybridSetFixture.Clear" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="Iesi.Collections.Test.HybridSetFixture.Contains" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="Iesi.Collections.Test.HybridSetFixture.ContainsAll" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="Iesi.Collections.Test.HybridSetFixture.ExclusiveOr" executed="True" success="True" time="0.000" asserts="10" />
+                      <test-case name="Iesi.Collections.Test.HybridSetFixture.Intersect" executed="True" success="True" time="0.000" asserts="7" />
+                      <test-case name="Iesi.Collections.Test.HybridSetFixture.IsEmpty" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="Iesi.Collections.Test.HybridSetFixture.Minus" executed="True" success="True" time="0.000" asserts="6" />
+                      <test-case name="Iesi.Collections.Test.HybridSetFixture.Remove" executed="True" success="True" time="0.000" asserts="4" />
+                      <test-case name="Iesi.Collections.Test.HybridSetFixture.RemoveAll" executed="True" success="True" time="0.000" asserts="3" />
+                      <test-case name="Iesi.Collections.Test.HybridSetFixture.RetainAll" executed="True" success="True" time="0.000" asserts="3" />
+                      <test-case name="Iesi.Collections.Test.HybridSetFixture.Union" executed="True" success="True" time="0.000" asserts="12" />
+                      <test-case name="Iesi.Collections.Test.HybridSetFixture.ExclusiveOrOperator" executed="True" success="True" time="0.000" asserts="6" />
+                      <test-case name="Iesi.Collections.Test.HybridSetFixture.IntersectOperator" executed="True" success="True" time="0.000" asserts="3" />
+                      <test-case name="Iesi.Collections.Test.HybridSetFixture.MinusOperator" executed="True" success="True" time="0.000" asserts="5" />
+                      <test-case name="Iesi.Collections.Test.HybridSetFixture.UnionOperator" executed="True" success="True" time="0.000" asserts="8" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="ListSetFixture" success="True" time="0,015625" asserts="0">
+                    <results>
+                      <test-case name="Iesi.Collections.Test.ListSetFixture.Clone" executed="True" success="True" time="0.000" asserts="6" />
+                      <test-case name="Iesi.Collections.Test.ListSetFixture.CopyTo" executed="True" success="True" time="0.000" asserts="4" />
+                      <test-case name="Iesi.Collections.Test.ListSetFixture.Count" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="Iesi.Collections.Test.ListSetFixture.CtorWithDefaults" executed="True" success="True" time="0.000" asserts="4" />
+                      <test-case name="Iesi.Collections.Test.ListSetFixture.Add" executed="True" success="True" time="0.000" asserts="4" />
+                      <test-case name="Iesi.Collections.Test.ListSetFixture.AddAll" executed="True" success="True" time="0.000" asserts="3" />
+                      <test-case name="Iesi.Collections.Test.ListSetFixture.Clear" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="Iesi.Collections.Test.ListSetFixture.Contains" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="Iesi.Collections.Test.ListSetFixture.ContainsAll" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="Iesi.Collections.Test.ListSetFixture.ExclusiveOr" executed="True" success="True" time="0.016" asserts="10" />
+                      <test-case name="Iesi.Collections.Test.ListSetFixture.Intersect" executed="True" success="True" time="0.000" asserts="7" />
+                      <test-case name="Iesi.Collections.Test.ListSetFixture.IsEmpty" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="Iesi.Collections.Test.ListSetFixture.Minus" executed="True" success="True" time="0.000" asserts="6" />
+                      <test-case name="Iesi.Collections.Test.ListSetFixture.Remove" executed="True" success="True" time="0.000" asserts="4" />
+                      <test-case name="Iesi.Collections.Test.ListSetFixture.RemoveAll" executed="True" success="True" time="0.000" asserts="3" />
+                      <test-case name="Iesi.Collections.Test.ListSetFixture.RetainAll" executed="True" success="True" time="0.000" asserts="3" />
+                      <test-case name="Iesi.Collections.Test.ListSetFixture.Union" executed="True" success="True" time="0.000" asserts="12" />
+                      <test-case name="Iesi.Collections.Test.ListSetFixture.ExclusiveOrOperator" executed="True" success="True" time="0.000" asserts="6" />
+                      <test-case name="Iesi.Collections.Test.ListSetFixture.IntersectOperator" executed="True" success="True" time="0.000" asserts="3" />
+                      <test-case name="Iesi.Collections.Test.ListSetFixture.MinusOperator" executed="True" success="True" time="0.000" asserts="5" />
+                      <test-case name="Iesi.Collections.Test.ListSetFixture.UnionOperator" executed="True" success="True" time="0.000" asserts="8" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="SortedSetFixture" success="True" time="0" asserts="0">
+                    <results>
+                      <test-case name="Iesi.Collections.Test.SortedSetFixture.OrderedEnumeration" executed="True" success="True" time="0.000" asserts="3" />
+                      <test-case name="Iesi.Collections.Test.SortedSetFixture.OrderedCaseInsensitiveEnumeration" executed="True" success="True" time="0.000" asserts="3" />
+                      <test-case name="Iesi.Collections.Test.SortedSetFixture.Clone" executed="True" success="True" time="0.000" asserts="6" />
+                      <test-case name="Iesi.Collections.Test.SortedSetFixture.CopyTo" executed="True" success="True" time="0.000" asserts="4" />
+                      <test-case name="Iesi.Collections.Test.SortedSetFixture.Count" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="Iesi.Collections.Test.SortedSetFixture.CtorWithDefaults" executed="True" success="True" time="0.000" asserts="4" />
+                      <test-case name="Iesi.Collections.Test.SortedSetFixture.Add" executed="True" success="True" time="0.000" asserts="4" />
+                      <test-case name="Iesi.Collections.Test.SortedSetFixture.AddAll" executed="True" success="True" time="0.000" asserts="3" />
+                      <test-case name="Iesi.Collections.Test.SortedSetFixture.Clear" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="Iesi.Collections.Test.SortedSetFixture.Contains" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="Iesi.Collections.Test.SortedSetFixture.ContainsAll" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="Iesi.Collections.Test.SortedSetFixture.ExclusiveOr" executed="True" success="True" time="0.000" asserts="10" />
+                      <test-case name="Iesi.Collections.Test.SortedSetFixture.Intersect" executed="True" success="True" time="0.000" asserts="7" />
+                      <test-case name="Iesi.Collections.Test.SortedSetFixture.IsEmpty" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="Iesi.Collections.Test.SortedSetFixture.Minus" executed="True" success="True" time="0.000" asserts="6" />
+                      <test-case name="Iesi.Collections.Test.SortedSetFixture.Remove" executed="True" success="True" time="0.000" asserts="4" />
+                      <test-case name="Iesi.Collections.Test.SortedSetFixture.RemoveAll" executed="True" success="True" time="0.000" asserts="3" />
+                      <test-case name="Iesi.Collections.Test.SortedSetFixture.RetainAll" executed="True" success="True" time="0.000" asserts="3" />
+                      <test-case name="Iesi.Collections.Test.SortedSetFixture.Union" executed="True" success="True" time="0.000" asserts="12" />
+                      <test-case name="Iesi.Collections.Test.SortedSetFixture.ExclusiveOrOperator" executed="True" success="True" time="0.000" asserts="6" />
+                      <test-case name="Iesi.Collections.Test.SortedSetFixture.IntersectOperator" executed="True" success="True" time="0.000" asserts="3" />
+                      <test-case name="Iesi.Collections.Test.SortedSetFixture.MinusOperator" executed="True" success="True" time="0.000" asserts="5" />
+                      <test-case name="Iesi.Collections.Test.SortedSetFixture.UnionOperator" executed="True" success="True" time="0.000" asserts="8" />
+                    </results>
+                  </test-suite>
+                </results>
+              </test-suite>
+            </results>
+          </test-suite>
+        </results>
+      </test-suite>
+    </results>
+  </test-suite>
+</test-results>

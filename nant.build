@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+    <project name="DOL Build" default="debug" basedir=".">
+      
+      <target name="clean" description="Delete all previously compiled binaries.">
+          <delete>
+              <fileset>
+                  <include name="DOLBase/bin/**" />
+                  <include name="DOLBase/obj/**" />
+                  <include name="DOLDatabase/bin/**" />
+                  <include name="DOLDatabase/obj/**" />
+                  <include name="DOLServer/bin/**" />
+                  <include name="DOLServer/obj/**" />
+                  <include name="GameServer/obj/**" />
+                  <include name="UnitTests/bin/**" />
+                  <include name="UnitTests/obj/**" />
+              </fileset>
+          </delete>
+      </target>
+      
+      <target name="debug">
+        <property name="configuration.name" value="debug"/>          
+      	<call target="clean" />
+        <call target="build" />
+      </target>
+      
+      <target name="release">
+        <property name="configuration.name" value="release"/>
+      	<call target="clean" />
+        <call target="build" />
+      </target>
+      
+      <target name="build">
+        <delete dir="${configuration.name}" failonerror="false" />
+        <solution configuration="${configuration.name}" solutionfile="./Dawn of Light.sln">
+          <excludeprojects>
+            <include name="./GameServerScripts/GameServerScripts.csproj" />
+            <include name="./UnitTests/UnitTests.csproj" />
+          </excludeprojects>
+        </solution>
+        <mkdir dir="${configuration.name}/xml_db" />
+        <copy includeemptydirs="false" overwrite="true" todir="${configuration.name}/scripts">
+          <fileset basedir="./GameServerScripts">
+            <include name="**" />
+            <exclude name="*.csproj*" />
+            <exclude name="*.prjx*" />
+            <exclude name="obj/**" />
+            <exclude name="bin/**" />
+            <exclude name="VTune/**" />
+            <exclude name="AssemblyInfo.cs" />
+          </fileset>
+        </copy>
+        <copy includeemptydirs="false" overwrite="true" todir="${configuration.name}/config">
+          <fileset basedir="./GameServer/config">
+            <include name="*.xml" />
+          </fileset>
+        </copy>
+        <copy file="./history.txt" tofile="${configuration.name}/history.txt" />
+      </target>
+    </project>

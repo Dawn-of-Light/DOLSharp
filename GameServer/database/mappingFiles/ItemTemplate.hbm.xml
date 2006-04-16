@@ -1,0 +1,174 @@
+<?xml version="1.0" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="DOL.GS.GenericItemTemplate, GameServer" table="`itemtemplate`">
+		<cache usage="nonstrict-read-write"/>
+		<id name="ItemTemplateID" type="String(255)" column="`ItemTemplateID`">
+			<generator class="assigned" />
+		</id>
+		<discriminator column="ItemTemplateType"/> 
+		
+		<property name="Name" type="String(255)" not-null="true" column="`Name`"/>
+		<property name="Level" type="Byte" not-null="true" column="`Level`"/>
+		<property name="Weight" type="Int32" not-null="true" column="`Weight`"/>
+		<property name="Value" type="Int64" not-null="true" column="`Value`"/>
+		<property name="Realm" not-null="true" column="`Realm`"/>
+		<property name="Model" type="Int32" not-null="true" column="`Model`"/>
+		<property name="IsSaleable" type="YesNo" not-null="true" column="`IsSaleable`"/>
+		<property name="IsTradable" type="YesNo" not-null="true" column="`IsTradable`"/>
+		<property name="IsDropable" type="YesNo" not-null="true" column="`IsDropable`"/>
+		
+		<subclass name="DOL.GS.TravelTicketTemplate, GameServer">
+			<property name="TripPathID" type="Int32" not-null="true" column="`TripPathID`"/> 
+		</subclass>
+		<subclass name="DOL.GS.CraftingToolTemplate, GameServer">
+			<property name="Type" not-null="true" column="`Type`" /> 
+		</subclass>
+		<subclass name="DOL.GS.RespecStoneTemplate, GameServer">
+			<property name="RespecType" not-null="true" column="`RespecType`" /> 
+		</subclass>
+		<subclass name="DOL.GS.RenewalTemplate, GameServer" />
+		<subclass name="DOL.GS.DyeTemplate, GameServer">
+			<property name="Color" type="Int32" not-null="true" column="`Color`" /> 
+			<subclass name="DOL.GS.WeaponLusterTemplate, GameServer" />
+			<subclass name="DOL.GS.ClothDyeTemplate, GameServer" />
+			<subclass name="DOL.GS.EnamelTemplate, GameServer" />
+			<subclass name="DOL.GS.LeatherDyeTemplate, GameServer" />
+		</subclass>
+		<subclass name="DOL.GS.MagicalDustTemplate, GameServer">
+			<property name="Bonus" type="Int32" not-null="true" column="`Bonus`" /> 
+		</subclass>
+		<subclass name="DOL.GS.SpellCraftGemTemplate, GameServer">
+			<property name="Quality" type="Int32" not-null="true" column="`Quality`" /> 
+			<property name="BonusType" not-null="true" column="`BonusType`" />
+			<property name="Bonus" type="Byte" not-null="true" column="`Bonus`" />  
+		</subclass>
+		<subclass name="DOL.GS.AlchemieTinctureTemplate, GameServer">
+			<property name="SpellID" type="Int32" not-null="true" column="`SpellID`" />
+			<subclass name="DOL.GS.ActiveTinctureTemplate, GameServer" />
+			<subclass name="DOL.GS.ReactiveTinctureTemplate, GameServer" />
+			<subclass name="DOL.GS.StableTinctureTemplate, GameServer">
+				<property name="Charge" type="Byte" not-null="true" column="`Charge`" /> 
+				<property name="MaxCharge" type="Byte" not-null="true" column="`MaxCharge`" /> 
+			</subclass>
+		</subclass>
+    <subclass name="DOL.GS.MagicalItemTemplate, GameServer">
+      <property name="Charge" type="Byte" not-null="true" column="`Charge`" />
+      <property name="MaxCharge" type="Byte" not-null="true" column="`MaxCharge`" />
+      <property name="SpellID" type="Int32" not-null="true" column="`SpellID`" />
+      <subclass name="DOL.GS.PotionTemplate, GameServer" />
+    </subclass>
+    <subclass name="DOL.GS.StackableItemTemplate, GameServer">
+			<property name="MaxCount" type="Int32" not-null="true" column="`MaxCount`" />
+			<property name="PackSize" type="Int32" not-null="true" column="`PackSize`" />
+			<subclass name="DOL.GS.AmmunitionTemplate, GameServer">
+				<property name="Precision" not-null="true" column="`Precision`" /> 
+				<property name="Damage" not-null="true" column="`Damage`" /> 
+				<property name="Range" not-null="true" column="`Range`" />
+				<property name="DamageType" not-null="true" column="`DamageType`" />
+				<subclass name="DOL.GS.ArrowTemplate, GameServer" />
+				<subclass name="DOL.GS.BoltTemplate, GameServer" />
+			</subclass>
+      <subclass name="DOL.GS.MagicalStackableItemTemplate, GameServer">
+        <property name="SpellID" type="Int32" not-null="true" column="`SpellID`" />
+        <subclass name="DOL.GS.CatapultAmmunitionTemplate, GameServer" />
+        <subclass name="DOL.GS.PoisonTemplate, GameServer" />
+      </subclass>
+		</subclass>
+		<subclass name="DOL.GS.EquipableItemTemplate, GameServer">
+			<property name="Quality" type="Byte" not-null="true" column="`Quality`" /> 
+			<property name="Bonus" type="Byte" not-null="true" column="`Bonus`" /> 
+			<property name="Durability" type="Byte" not-null="true" column="`Durability`" /> 
+			<property name="Condition" type="Double" not-null="true" column="`Condition`" /> 
+			<property name="MaterialLevel" not-null="true" column="`MaterialLevel`" /> 
+			<property name="ProcSpellID" type="Int32" not-null="true" column="`ProcSpellID`" /> 
+			<property name="ProcEffectType" not-null="true" column="`ProcEffectType`" /> 
+			<property name="ChargeSpellID" type="Int32" not-null="true" column="`ChargeSpellID`" /> 
+			<property name="ChargeEffectType" not-null="true" column="`ChargeEffectType`" /> 
+			<property name="Charge" type="Byte" not-null="true" column="`Charge`" /> 
+			<property name="MaxCharge" type="Byte" not-null="true" column="`MaxCharge`" />
+			<set name="MagicalBonus" table="itemmagicalbonustemplate" cascade="all">
+				<key column="ItemTemplateID" />
+				<composite-element class="DOL.GS.ItemMagicalBonus, GameServer">
+					<property name="BonusType" not-null="true" column="`BonusType`"/>
+					<property name="Bonus" type="Int16" not-null="true" column="`Bonus`"/>
+				</composite-element>
+			</set>
+			<set name="AllowedClass" table="itemallowedclasstemplate" cascade="all">
+				<key column="ItemTemplateID" />
+				<element column="AllowedClass" type="DOL.GS.eCharacterClass, GameServer"/>
+			</set>
+			<subclass name="DOL.GS.JewelTemplate, GameServer" />
+			<subclass name="DOL.GS.BracerTemplate, GameServer" />
+			<subclass name="DOL.GS.RingTemplate, GameServer" />
+			<subclass name="DOL.GS.WaistTemplate, GameServer" />
+			<subclass name="DOL.GS.NecklaceTemplate, GameServer" >
+				<subclass name="DOL.GS.TeleportationMedaillonTemplate, GameServer">
+					<property name="X" type="Int32" not-null="true" column="`X`" /> 
+					<property name="Y" type="Int32" not-null="true" column="`Y`" /> 
+					<property name="Z" type="Int32" not-null="true" column="`Z`" /> 
+					<property name="Heading" type="Int32" not-null="true" column="`Heading`" /> 
+					<property name="Region" type="Int32" not-null="true" column="`Region`" /> 
+				</subclass>
+			</subclass>
+			<subclass name="DOL.GS.VisibleEquipmentTemplate, GameServer" >
+				<property name="Color" type="Int32" not-null="true" column="`Color`" /> 
+				<subclass name="DOL.GS.CloakTemplate, GameServer" />
+				<subclass name="DOL.GS.InstrumentTemplate, GameServer">
+					<property name="Type" not-null="true" column="`Type`" /> 
+				</subclass>
+				<subclass name="DOL.GS.ArmorTemplate, GameServer">
+					<property name="ArmorFactor" type="Byte" not-null="true" column="`ArmorFactor`" /> 
+					<property name="ArmorLevel" not-null="true" column="`ArmorLevel`" />
+					<property name="ModelExtension" type="Byte" not-null="true" column="`ModelExtension`" /> 
+					<subclass name="DOL.GS.HeadArmorTemplate, GameServer" />
+					<subclass name="DOL.GS.TorsoArmorTemplate, GameServer" />
+					<subclass name="DOL.GS.HandsArmorTemplate, GameServer" />
+					<subclass name="DOL.GS.FeetArmorTemplate, GameServer" />
+					<subclass name="DOL.GS.LegsArmorTemplate, GameServer" />
+					<subclass name="DOL.GS.ArmsArmorTemplate, GameServer" />
+				</subclass>
+				<subclass name="DOL.GS.WeaponTemplate, GameServer">
+					<property name="DamagePerSecond" type="Byte" not-null="true" column="`DamagePerSecond`" /> 
+					<property name="Speed" type="Int32" not-null="true" column="`Speed`" />
+					<property name="DamageType" not-null="true" column="`DamageType`" />
+					<property name="HandNeeded" not-null="true" column="`HandNeeded`" />
+					<property name="GlowEffect" type="Int32" not-null="true" column="`GlowEffect`" />
+					<subclass name="DOL.GS.ShieldTemplate, GameServer">
+						<property name="Size" not-null="true" column="`Size`" /> 
+					</subclass>
+					<subclass name="DOL.GS.RangedWeaponTemplate, GameServer">
+						<property name="WeaponRange" type="Int32" not-null="true" column="`WeaponRange`" /> 
+						<subclass name="DOL.GS.CompositebowTemplate, GameServer" />
+						<subclass name="DOL.GS.CrossbowTemplate, GameServer" />
+						<subclass name="DOL.GS.LongbowTemplate, GameServer" />
+						<subclass name="DOL.GS.RecurvedbowTemplate, GameServer" />
+						<subclass name="DOL.GS.ShortbowTemplate, GameServer" />
+						<subclass name="DOL.GS.ThrownWeaponTemplate, GameServer" >
+							<property name="MaxCount" type="Int32" not-null="true" column="`MaxCount`" />
+							<property name="PackSize" type="Int32" not-null="true" column="`PackSize`" />
+						</subclass>
+					</subclass>
+					<subclass name="DOL.GS.AxeTemplate, GameServer" />
+					<subclass name="DOL.GS.BladesTemplate, GameServer" />
+					<subclass name="DOL.GS.BluntTemplate, GameServer" />
+					<subclass name="DOL.GS.CelticSpearTemplate, GameServer" />
+					<subclass name="DOL.GS.CrushingWeaponTemplate, GameServer" />
+					<subclass name="DOL.GS.FlexibleWeaponTemplate, GameServer" />
+					<subclass name="DOL.GS.HammerTemplate, GameServer" />
+					<subclass name="DOL.GS.HandToHandTemplate, GameServer" />
+					<subclass name="DOL.GS.LargeWeaponTemplate, GameServer" />
+					<subclass name="DOL.GS.LeftAxeTemplate, GameServer" />
+					<subclass name="DOL.GS.PiercingTemplate, GameServer" />
+					<subclass name="DOL.GS.PolearmWeaponTemplate, GameServer" />
+					<subclass name="DOL.GS.ScytheTemplate, GameServer" />
+					<subclass name="DOL.GS.SlashingWeaponTemplate, GameServer" />
+					<subclass name="DOL.GS.SpearTemplate, GameServer" />
+					<subclass name="DOL.GS.StaffTemplate, GameServer" />
+					<subclass name="DOL.GS.SwordTemplate, GameServer" />
+					<subclass name="DOL.GS.ThrustWeaponTemplate, GameServer" />
+					<subclass name="DOL.GS.TwoHandedWeaponTemplate, GameServer" />
+				</subclass>	
+			</subclass>
+		</subclass>
+	</class>
+</hibernate-mapping>
