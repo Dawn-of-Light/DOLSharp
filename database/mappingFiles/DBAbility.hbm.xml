@@ -1,0 +1,11 @@
+<?xml version="1.0" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="DOL.GS.Database.DBAbility, GameServer" table="`ability`">
+		<id name="KeyName" type="String(50)" column="`KeyName`">
+			<generator class="assigned" />
+		</id>
+		<property name="Name" not-null="true" column="`Name`"/>
+		<property name="IconID" type="Int32" not-null="true" column="`IconID`"/>
+		<property name="Description" not-null="true" column="`Description`"/>
+	</class>
+</hibernate-mapping>
