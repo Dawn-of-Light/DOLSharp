@@ -1,1046 +1,677 @@
-<VisualStudioProject>
-    <CSHARP
-        ProjectType = "Local"
-        ProductVersion = "7.10.3077"
-        SchemaVersion = "2.0"
-        ProjectGuid = "{88DA0491-79F8-4750-850C-686AB862260C}"
-    >
-        <Build>
-            <Settings
-                ApplicationIcon = ""
-                AssemblyKeyContainerName = ""
-                AssemblyName = "GameServerScripts"
-                AssemblyOriginatorKeyFile = ""
-                DefaultClientScript = "JScript"
-                DefaultHTMLPageLayout = "Grid"
-                DefaultTargetSchema = "IE50"
-                DelaySign = "false"
-                OutputType = "Library"
-                PreBuildEvent = ""
-                PostBuildEvent = ""
-                RootNamespace = "DOL"
-                RunPostBuildEvent = "OnBuildSuccess"
-                StartupObject = ""
-            >
-                <Config
-                    Name = "Release"
-                    AllowUnsafeBlocks = "true"
-                    BaseAddress = "285212672"
-                    CheckForOverflowUnderflow = "false"
-                    ConfigurationOverrideFile = ""
-                    DefineConstants = "TRACE"
-                    DocumentationFile = ""
-                    DebugSymbols = "false"
-                    FileAlignment = "4096"
-                    IncrementalBuild = "false"
-                    NoStdLib = "false"
-                    NoWarn = "1591;219;1573;1572;168"
-                    Optimize = "true"
-                    OutputPath = "bin\Release\"
-                    RegisterForComInterop = "false"
-                    RemoveIntegerChecks = "false"
-                    TreatWarningsAsErrors = "false"
-                    WarningLevel = "4"
-                />
-                <Config
-                    Name = "Debug"
-                    AllowUnsafeBlocks = "false"
-                    BaseAddress = "285212672"
-                    CheckForOverflowUnderflow = "false"
-                    ConfigurationOverrideFile = ""
-                    DefineConstants = "DEBUG;TRACE"
-                    DocumentationFile = ""
-                    DebugSymbols = "true"
-                    FileAlignment = "4096"
-                    IncrementalBuild = "false"
-                    NoStdLib = "false"
-                    NoWarn = "1591;219;1573;1572;168"
-                    Optimize = "true"
-                    OutputPath = "bin\Debug\"
-                    RegisterForComInterop = "false"
-                    RemoveIntegerChecks = "false"
-                    TreatWarningsAsErrors = "false"
-                    WarningLevel = "4"
-                />
-            </Settings>
-            <References>
-                <Reference
-                    Name = "System.Xml"
-                    AssemblyName = "System.Xml"
-                />
-                <Reference
-                    Name = "System.Data"
-                    AssemblyName = "System.Data"
-                />
-                <Reference
-                    Name = "System"
-                    AssemblyName = "System"
-                />
-                <Reference
-                    Name = "GameServer"
-                    Project = "{5E50A5FB-2805-414F-B8CD-744DC9B3F2BE}"
-                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
-                />
-                <Reference
-                    Name = "DOLBase"
-                    Project = "{63E96E0D-10FD-4731-B029-5E66042E8C38}"
-                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
-                />
-                <Reference
-                    Name = "log4net"
-                    AssemblyName = "log4net"
-                    HintPath = "..\sharedModules\log4net\log4net.dll"
-                />
-                <Reference
-                    Name = "Castle.DynamicProxy"
-                    AssemblyName = "Castle.DynamicProxy"
-                    HintPath = "..\sharedModules\nhibernate\Castle.DynamicProxy.dll"
-                />
-                <Reference
-                    Name = "Iesi.Collections"
-                    AssemblyName = "Iesi.Collections"
-                    HintPath = "..\sharedModules\nhibernate\Iesi.Collections.dll"
-                />
-                <Reference
-                    Name = "NHibernate"
-                    AssemblyName = "NHibernate"
-                    HintPath = "..\sharedModules\nhibernate\NHibernate.dll"
-                />
-                <Reference
-                    Name = "NHibernate.Mapping.Attributes"
-                    AssemblyName = "NHibernate.Mapping.Attributes"
-                    HintPath = "..\sharedModules\nhibernate\NHibernate.Mapping.Attributes.dll"
-                />
-            </References>
-        </Build>
-        <Files>
-            <Include>
-                <File
-                    RelPath = "AssemblyInfo.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "globals.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "WebUIGenerator.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "XMLWebUIGenerator.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "admincommands\Account.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "admincommands\code.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "admincommands\plvl.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "customnpc\Blacksmith.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "customnpc\EmblemNPC.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "customnpc\Enchanter.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "customnpc\FaceCustomiser.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "customnpc\GuildRegistrar.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "customnpc\Hastener.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "customnpc\Healer.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "customnpc\NameRegistrar.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "customnpc\TownCrier.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "customnpc\VaultKeeper.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "customnpc\craft master\AlchemyMaster.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "customnpc\craft master\ArmorCraftingMaster.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "customnpc\craft master\FletchingMaster.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "customnpc\craft master\SpellCraftingMaster.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "customnpc\craft master\TailoringMaster.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "customnpc\craft master\WeaponCraftingMaster.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "gameevents\DOLTestServer.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "gameevents\FollowingNPC.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "gameevents\HookpointInventory.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "gameevents\PlayerEnterExit.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "gameevents\StartupEquipment.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "gameevents\StartupLocations.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "gameevents\StatPrint.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "gameevents\TalkingNPC.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "gmcommands\addbind.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "gmcommands\AddHookPoint.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "gmcommands\area.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "gmcommands\Ban.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "gmcommands\BroadcastMessage.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "gmcommands\cast.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "gmcommands\crafting.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "gmcommands\debug.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "gmcommands\debugjump.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "gmcommands\giverespec.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "gmcommands\givexp.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "gmcommands\harm.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "gmcommands\heal.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "gmcommands\house.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "gmcommands\item.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "gmcommands\jump.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "gmcommands\keep.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "gmcommands\KeepComponent.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "gmcommands\keepguard.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "gmcommands\kick.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "gmcommands\merchant.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "gmcommands\mob.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "gmcommands\morph.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "gmcommands\mountgm.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "gmcommands\npc.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "gmcommands\object.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "gmcommands\path.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "gmcommands\speed.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "gmcommands\titlegm.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "gmcommands\unban.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "gmcommands\walk.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "gmcommands\weather.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "playercommands\afk.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "playercommands\anonymous.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "playercommands\assist.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "playercommands\autosplit.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "playercommands\bind.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "playercommands\broadcast.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "playercommands\cancelstyle.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "playercommands\chatgroup.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "playercommands\cmdhelp.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "playercommands\control.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "playercommands\disband.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "playercommands\dismount.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "playercommands\duel.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "playercommands\email.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "playercommands\emote.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "playercommands\emotes.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "playercommands\facegloc.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "playercommands\faceloc.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "playercommands\friend.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "playercommands\gloc.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "playercommands\GroundAssist.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "playercommands\group.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "playercommands\guild.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "playercommands\guildchat.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "playercommands\hood.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "playercommands\invite.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "playercommands\lastname.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "playercommands\level.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "playercommands\makeleader.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "playercommands\noqueue.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "playercommands\password.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "playercommands\played.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "playercommands\pray.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "playercommands\quest.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "playercommands\quit.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "playercommands\random.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "playercommands\range.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "playercommands\release.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "playercommands\Repair.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "playercommands\respec.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "playercommands\roll.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "playercommands\safety.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "playercommands\salvage.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "playercommands\say.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "playercommands\send.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "playercommands\serverinfo.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "playercommands\settitle.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "playercommands\sprint.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "playercommands\stand.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "playercommands\stuck.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "playercommands\target.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "playercommands\task.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "playercommands\time.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "playercommands\version.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "playercommands\where.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "playercommands\whisper.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "playercommands\who.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "playercommands\yell.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "playertitles\BaneOfAlbionTitle.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "playertitles\BaneOfHiberniaTitle.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "playertitles\BaneOfMidgardTitle.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "playertitles\BattleEnforcerTitle.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "playertitles\ElderTitle.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "playertitles\Level20Title.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "playertitles\LoneEnforcerTitle.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "playertitles\VeteranTitle.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "quests\albion\AgainstTheGrain.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "quests\albion\AndrewsSkins.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "quests\albion\ArrowsForYettaFletcher.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "quests\albion\BaseFrederickQuest.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "quests\albion\BeginningOfWar.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "quests\albion\BuildingABetterBow.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "quests\albion\CityOfCamelot.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "quests\albion\ClericMulgrut.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "quests\albion\Collection.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "quests\albion\Culmination.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "quests\albion\Frontiers.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "quests\albion\GodelevasNeed.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "quests\albion\GreenerPastures.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "quests\albion\HalfOgreAllMan.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "quests\albion\HeartOfSephucoth.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "quests\albion\HuntForArachneida.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "quests\albion\HuntForSlith.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "quests\albion\ImportantDelivery.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "quests\albion\IreFairyIre.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "quests\albion\LawrencesOil.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "quests\albion\Nuisances.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "quests\albion\RevengeTheOtherWhiteMeat.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "quests\albion\ShakenSquire.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "quests\albion\TraitorInCotswold.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "quests\albion\TreviansBestFriend.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "quests\albion\WolfPeltCloak.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "quests\albion\YdeniasCrush.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "quests\albion\epic\Academy50.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "quests\albion\epic\Church50.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "quests\albion\epic\Defenders50.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "quests\albion\epic\Shadows50.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "quests\examples\HelpSirQuait.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "quests\examples\SimpleGlobalQuest.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "quests\hibernia\BaseAddrirPathPoints.xml"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "quests\hibernia\BaseAddrirQuest.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "quests\hibernia\CityOfTirnaNog.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "quests\hibernia\ImportantDelivery.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "quests\hibernia\Nuisances.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "quests\hibernia\TraitorInMagMell.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "quests\hibernia\epic\Essence50.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "quests\hibernia\epic\Focus50.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "quests\hibernia\epic\Harmony50.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "quests\midgard\BaseDalikorQuest.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "quests\midgard\BeginningOfWar.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "quests\midgard\CityOfJordheim.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "quests\midgard\Collection.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "quests\midgard\Culmination.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "quests\midgard\Frontiers.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "quests\midgard\ImportantDelivery.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "quests\midgard\Nuisances.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "quests\midgard\StolenEggs.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "quests\midgard\TraitorInMularn.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "quests\midgard\epic\MidgardRogue50.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "quests\midgard\epic\Mystic50.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "quests\midgard\epic\Seer50.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "quests\midgard\epic\Viking50.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-            </Include>
-        </Files>
-    </CSHARP>
-</VisualStudioProject>
-
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectType>Local</ProjectType>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{88DA0491-79F8-4750-850C-686AB862260C}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ApplicationIcon>
+    </ApplicationIcon>
+    <AssemblyKeyContainerName>
+    </AssemblyKeyContainerName>
+    <AssemblyName>GameServerScripts</AssemblyName>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+    <DefaultClientScript>JScript</DefaultClientScript>
+    <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
+    <DefaultTargetSchema>IE50</DefaultTargetSchema>
+    <DelaySign>false</DelaySign>
+    <OutputType>Library</OutputType>
+    <RootNamespace>DOL</RootNamespace>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <StartupObject>
+    </StartupObject>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>TRACE</DefineConstants>
+    <DocumentationFile>
+    </DocumentationFile>
+    <DebugSymbols>false</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>1591;219;1573;1572;168</NoWarn>
+    <Optimize>true</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>none</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DocumentationFile>
+    </DocumentationFile>
+    <DebugSymbols>true</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>1591;219;1573;1572;168</NoWarn>
+    <Optimize>true</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>full</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Castle.DynamicProxy">
+      <Name>Castle.DynamicProxy</Name>
+      <HintPath>..\sharedModules\nhibernate\Castle.DynamicProxy.dll</HintPath>
+    </Reference>
+    <Reference Include="Iesi.Collections">
+      <Name>Iesi.Collections</Name>
+      <HintPath>..\sharedModules\nhibernate\Iesi.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net">
+      <Name>log4net</Name>
+      <HintPath>..\sharedModules\log4net\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate">
+      <Name>NHibernate</Name>
+      <HintPath>..\sharedModules\nhibernate\NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate.Mapping.Attributes">
+      <Name>NHibernate.Mapping.Attributes</Name>
+      <HintPath>..\sharedModules\nhibernate\NHibernate.Mapping.Attributes.dll</HintPath>
+    </Reference>
+    <Reference Include="System">
+      <Name>System</Name>
+    </Reference>
+    <Reference Include="System.Data">
+      <Name>System.Data</Name>
+    </Reference>
+    <Reference Include="System.Xml">
+      <Name>System.Xml</Name>
+    </Reference>
+    <ProjectReference Include="..\DOLBase\DOLBase.csproj">
+      <Name>DOLBase</Name>
+      <Project>{63E96E0D-10FD-4731-B029-5E66042E8C38}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\GameServer\GameServer.csproj">
+      <Name>GameServer</Name>
+      <Project>{5E50A5FB-2805-414F-B8CD-744DC9B3F2BE}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="admincommands\Account.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="admincommands\code.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="admincommands\plvl.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="customnpc\Blacksmith.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="customnpc\craft master\AlchemyMaster.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="customnpc\craft master\ArmorCraftingMaster.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="customnpc\craft master\FletchingMaster.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="customnpc\craft master\SpellCraftingMaster.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="customnpc\craft master\TailoringMaster.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="customnpc\craft master\WeaponCraftingMaster.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="customnpc\EmblemNPC.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="customnpc\Enchanter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="customnpc\FaceCustomiser.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="customnpc\GuildRegistrar.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="customnpc\Hastener.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="customnpc\Healer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="customnpc\NameRegistrar.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="customnpc\TownCrier.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="customnpc\VaultKeeper.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="gameevents\DOLTestServer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="gameevents\FollowingNPC.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="gameevents\HookpointInventory.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="gameevents\PlayerEnterExit.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="gameevents\StartupEquipment.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="gameevents\StartupLocations.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="gameevents\StatPrint.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="gameevents\TalkingNPC.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="globals.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="gmcommands\addbind.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="gmcommands\AddHookPoint.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="gmcommands\area.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="gmcommands\Ban.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="gmcommands\BroadcastMessage.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="gmcommands\cast.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="gmcommands\crafting.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="gmcommands\debug.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="gmcommands\debugjump.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="gmcommands\giverespec.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="gmcommands\givexp.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="gmcommands\harm.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="gmcommands\heal.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="gmcommands\house.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="gmcommands\item.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="gmcommands\jump.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="gmcommands\keep.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="gmcommands\KeepComponent.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="gmcommands\keepguard.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="gmcommands\kick.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="gmcommands\merchant.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="gmcommands\mob.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="gmcommands\morph.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="gmcommands\mountgm.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="gmcommands\npc.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="gmcommands\object.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="gmcommands\path.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="gmcommands\speed.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="gmcommands\titlegm.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="gmcommands\unban.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="gmcommands\walk.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="gmcommands\weather.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="playercommands\afk.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="playercommands\anonymous.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="playercommands\assist.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="playercommands\autosplit.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="playercommands\bind.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="playercommands\broadcast.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="playercommands\cancelstyle.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="playercommands\chatgroup.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="playercommands\cmdhelp.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="playercommands\control.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="playercommands\disband.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="playercommands\dismount.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="playercommands\duel.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="playercommands\email.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="playercommands\emote.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="playercommands\emotes.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="playercommands\facegloc.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="playercommands\faceloc.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="playercommands\friend.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="playercommands\gloc.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="playercommands\GroundAssist.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="playercommands\group.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="playercommands\guild.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="playercommands\guildchat.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="playercommands\hood.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="playercommands\invite.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="playercommands\lastname.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="playercommands\level.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="playercommands\makeleader.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="playercommands\noqueue.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="playercommands\password.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="playercommands\played.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="playercommands\pray.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="playercommands\quest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="playercommands\quit.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="playercommands\random.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="playercommands\range.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="playercommands\release.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="playercommands\Repair.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="playercommands\respec.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="playercommands\roll.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="playercommands\safety.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="playercommands\salvage.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="playercommands\say.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="playercommands\send.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="playercommands\serverinfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="playercommands\settitle.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="playercommands\sprint.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="playercommands\stand.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="playercommands\stuck.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="playercommands\target.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="playercommands\task.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="playercommands\time.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="playercommands\version.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="playercommands\where.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="playercommands\whisper.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="playercommands\who.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="playercommands\yell.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="playertitles\BaneOfAlbionTitle.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="playertitles\BaneOfHiberniaTitle.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="playertitles\BaneOfMidgardTitle.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="playertitles\BattleEnforcerTitle.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="playertitles\ElderTitle.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="playertitles\Level20Title.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="playertitles\LoneEnforcerTitle.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="playertitles\VeteranTitle.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="quests\albion\AgainstTheGrain.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="quests\albion\AndrewsSkins.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="quests\albion\ArrowsForYettaFletcher.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="quests\albion\BaseFrederickQuest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="quests\albion\BeginningOfWar.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="quests\albion\BuildingABetterBow.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="quests\albion\CityOfCamelot.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="quests\albion\ClericMulgrut.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="quests\albion\Collection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="quests\albion\Culmination.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="quests\albion\epic\Academy50.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="quests\albion\epic\Church50.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="quests\albion\epic\Defenders50.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="quests\albion\epic\Shadows50.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="quests\albion\Frontiers.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="quests\albion\GodelevasNeed.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="quests\albion\GreenerPastures.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="quests\albion\HalfOgreAllMan.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="quests\albion\HeartOfSephucoth.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="quests\albion\HuntForArachneida.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="quests\albion\HuntForSlith.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="quests\albion\ImportantDelivery.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="quests\albion\IreFairyIre.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="quests\albion\LawrencesOil.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="quests\albion\Nuisances.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="quests\albion\RevengeTheOtherWhiteMeat.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="quests\albion\ShakenSquire.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="quests\albion\TraitorInCotswold.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="quests\albion\TreviansBestFriend.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="quests\albion\WolfPeltCloak.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="quests\albion\YdeniasCrush.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="quests\examples\HelpSirQuait.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="quests\examples\SimpleGlobalQuest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="quests\hibernia\BaseAddrirQuest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="quests\hibernia\CityOfTirnaNog.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="quests\hibernia\epic\Essence50.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="quests\hibernia\epic\Focus50.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="quests\hibernia\epic\Harmony50.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="quests\hibernia\ImportantDelivery.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="quests\hibernia\Nuisances.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="quests\hibernia\TraitorInMagMell.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="quests\midgard\BaseDalikorQuest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="quests\midgard\BeginningOfWar.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="quests\midgard\CityOfJordheim.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="quests\midgard\Collection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="quests\midgard\Culmination.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="quests\midgard\epic\MidgardRogue50.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="quests\midgard\epic\Mystic50.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="quests\midgard\epic\Seer50.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="quests\midgard\epic\Viking50.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="quests\midgard\Frontiers.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="quests\midgard\ImportantDelivery.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="quests\midgard\Nuisances.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="quests\midgard\StolenEggs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="quests\midgard\TraitorInMularn.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="WebUIGenerator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XMLWebUIGenerator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Content Include="quests\hibernia\BaseAddrirPathPoints.xml" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+</Project>
