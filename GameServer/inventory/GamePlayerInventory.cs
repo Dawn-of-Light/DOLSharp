@@ -805,14 +805,14 @@ namespace DOL.GS
 		/// <summary>
 		/// Sets/gets the living's cloak hood state
 		/// </summary>
-		public override bool IsCloakHoodUp
+        public override bool IsCloakHoodUp
 		{
 			get { return base.IsCloakHoodUp; }
 			set
 			{
-				base.IsCloakHoodUp = value;
-				
-				if(m_owner.ObjectState == eObjectState.Active)
+                base.IsCloakHoodUp = value;
+
+                if (m_owner != null && m_owner.ObjectState == eObjectState.Active)
 				{
 					m_owner.Out.SendInventorySlotsUpdate(null);
 					m_owner.UpdateEquipementAppearance();

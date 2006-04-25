@@ -29,7 +29,7 @@ namespace DOL.GS.Quests
 	/// Declares a Craft task.
 	/// craft Item for NPC
 	/// </summary>
-	public class CraftTask : AbstractTask
+	/*public class CraftTask : AbstractTask
 	{
 		public const string RECIEVER_ZONE = "recieverZone";
 		
@@ -213,5 +213,5 @@ namespace DOL.GS.Quests
 			} 
 			return false;
 		}
-	}
+	}*/
 }

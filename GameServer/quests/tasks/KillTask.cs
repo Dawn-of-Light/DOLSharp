@@ -27,119 +27,105 @@ using DOL.GS.Scripts;
 namespace DOL.GS.Quests
 {
 	/// <summary>
-	/// Declares a Kill Task	
-	/// Kill Mob A
+	/// Declares a Kill Task
 	/// </summary>
 	public class KillTask : AbstractTask
-	{				
-		// Chance of npc having task for player
-		protected new const ushort CHANCE = 75;
+	{
+	    #region Declaration
 
-		protected const String MOB_NAME = "mobName";
-		protected const String ITEM_INDEX = "itemIndex";
+        /// <summary>
+        /// The name of the mob to kill
+        /// </summary>
+        protected string m_targetMobName = null;
 
-		//private static int[] XPReward = new int[20]{25,50,100,200,400,800,1600,3200,6400,12800,18100,25600,36200,51200,72450,102400,144825,204800,289625,300000};
-		private static readonly int[] MoneyReward = new int[20] {28,57,77,105,140,190,257,347,470,632,735,852,987,1147,1330,1542,1790,2077,2407,2801 };					
+        /// <summary>
+        /// Gets or sets the name of the mob to kill
+        /// </summary>
+        public string TargetMobName
+        {
+            get { return m_targetMobName; }
+            set { m_targetMobName = value; }
+        }
 
-		// used to build generic mob item
-		private static readonly string[] StrFormat = {"{0}'s {1}","{1} of {0}"};
-		private static readonly string[] TaskObjects = {"Skin","Meat","Bones","Tooth","Claw","Skin","Legs","Collar","Bone","Ear","Head","Hair","Carapace","Skull","Pile of dirt","dust","Slice","Wings","egg","heart","mandible"};
-		private static readonly int[] ObjectModels = {629,102,105,106,106,629,108,109,497,501,503,506,517,540,541,541,548,551,587,595,614};
-		/// <summary>
-		/// Constructs a new task
-		/// </summary>
-		/// <param name="taskPlayer">The player doing this task</param>
-		public KillTask(GamePlayer taskPlayer) : base(taskPlayer)
-		{
-		}				
-		
-		/// <summary>
-		/// Constructs a new task from a database Object
-		/// </summary>
-		/// <param name="taskPlayer">The player doing the task</param>
-		/// <param name="dbTask">The database object</param>
-		public KillTask(GamePlayer taskPlayer, DBTask dbTask) : base(taskPlayer, dbTask)
-		{
-		}
+        /// <summary>
+        /// Store if we can give the reward to the player
+        /// </summary>
+        protected bool m_targetKilled = false;
 
-		public override long RewardMoney
-		{
-			get 
-			{
-				const ushort Scarto = 3; // Add/Remove % to the Result
-				
-				int ValueScarto = ((MoneyReward[m_taskPlayer.Level-1]/100)*Scarto);
-				return Util.Random(MoneyReward[m_taskPlayer.Level-1]-ValueScarto, MoneyReward[m_taskPlayer.Level-1]+ValueScarto);
-			}
-		}
-/*
-		public override long RewardXP
-		{
-			get
-			{
-				ushort Scarto = 3; // Add/Remove % to the Result
-				
-				int ValueScarto = ((XPReward[m_taskPlayer.Level-1]/100)*Scarto);
-				return new Random().Next(XPReward[m_taskPlayer.Level-1]-ValueScarto,XPReward[m_taskPlayer.Level-1]+ValueScarto);
-			}
-		}
-*/
-		public override IList RewardItems
-		{
-			get {return null;}
-		}
-		
-		/// <summary>
-		/// Retrieves the name of the task
-		/// </summary>
-		public override string Name
-		{
-			get { return "Kill Task"; }
-		}
+        /// <summary>
+        /// Gets or sets if we can give the reward to the player
+        /// </summary>
+        public bool TargetKilled
+        {
+            get { return m_targetKilled; }
+            set { m_targetKilled = value; }
+        }
+	    
+        /// <summary>
+        /// Retrieves the description for the current task
+        /// </summary>
+        public override string Description
+        {
+            get
+            {
+                if (TargetKilled)
+                {
+                    return "[Task] You have killed your target and must now return to "+RewardGiverName+" for your reward!";
+                }
+                else
+                {
+                    return "[Task] You have been asked to kill "+TargetMobName+".";
+                }
+            }
+        }
 
-		/// <summary>
-		/// Retrieves the description 
-		/// </summary>
-		public override string Description
-		{
-			get { return "Find a "+MobName+", kill it and bring something to prove your valor to "+RecieverName+" "; }
-		}		
-			
-		/// <summary>
-		/// Item related to task stored in dbTask
-		/// </summary>
-		public String MobName
-		{
-			get { return GetCustomProperty(MOB_NAME);}
-			set { SetCustomProperty(MOB_NAME,value);}
-		}
+        #endregion
 
-		/// <summary>
-		/// Item index
-		/// </summary>
-		public int ItemIndex
-		{
-			get { return int.Parse(GetCustomProperty(ITEM_INDEX));}
-			set { SetCustomProperty(ITEM_INDEX,value.ToString());}
-		}
+	    /// <summary>
+        /// Start the task
+        /// </summary>
+        /// <param name="taskPlayer">The player doing the quest</param>
+        /// <param name="taskGiver">The npc who give the task</param>
+        public override bool StartTask(GamePlayer taskPlayer, GameMob taskGiver)
+        {
+            GameMob mobToKill = GetRandomMob(taskPlayer);
+            if (mobToKill != null)
+            {
+                RewardGiverName = taskGiver.Name;
+                TargetMobName = mobToKill.Name;
 
-		public override string ItemName
-		{
-			get
-			{	
-				return string.Format(StrFormat[0],MobName,TaskObjects[ItemIndex]);
-			}
-			set {}
-		}
+                taskPlayer.Out.SendMessage(RewardGiverName + " says, \"Very well " + taskPlayer.Name + ", it's good to see adventurers willing to help out the realm in such times.  Search to the northeast and kill " + mobToKill.Name + " and return to me for your reward.  Good luck!\"", eChatType.CT_Important, eChatLoc.CL_ChatWindow);
+            
+                base.StartTask(taskPlayer, taskGiver);
+                return true;
+            }
 
-		/// <summary>
-		/// Called to finish the task.
-		/// Should be overridden and some rewards given etc.
-		/// </summary>
-		public override void FinishTask()
-		{			
-			base.FinishTask();
-		}		
+            return false;
+        }
+	    
+        /// <summary>
+        /// The reward money table
+        /// </summary>
+        private static readonly int[] MoneyReward = new int[20] { 28, 57, 77, 105, 140, 190, 257, 347, 470, 632, 735, 852, 987, 1147, 1330, 1542, 1790, 2077, 2407, 2801 };					
+
+        /// <summary>
+        /// Called to finish the task.
+        /// </summary>
+        public override void FinishTask()
+        {
+            const ushort Scarto = 3; // Add/Remove % to the Result
+
+            int ValueScarto = ((MoneyReward[m_taskPlayer.Level - 1] / 100) * Scarto);
+            m_taskPlayer.AddMoney(Util.Random(MoneyReward[m_taskPlayer.Level - 1] - ValueScarto, MoneyReward[m_taskPlayer.Level - 1] + ValueScarto), RewardGiverName + " give you {0}!");
+
+            double coef = (m_taskPlayer.Level < 19 ? 0.3 : 0.25); // 30% if level < 19 else 25 %
+            long rewardXP = (long)((m_taskPlayer.ExperienceForNextLevel - m_taskPlayer.Experience) * coef);
+
+            m_taskPlayer.Out.SendMessage("You have completed your task and earn " + rewardXP + " experience!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+            m_taskPlayer.GainExperience(rewardXP, 0, 0, false);
+
+            base.FinishTask();
+        }
 
 		/// <summary>
 		/// This method needs to be implemented in each task.
@@ -152,292 +138,78 @@ namespace DOL.GS.Quests
 		/// <param name="args">The event arguments</param>
 		public override void Notify(DOLEvent e, object sender, EventArgs args)
 		{
-			if (CheckTaskExpired()) 
-			{
+			GamePlayer player = sender as GamePlayer;
+
+			if (player == null || !(player.Task is KillTask))
 				return;
-			}
 
-			GamePlayer player = (GamePlayer) sender;			
+            if (e == GameLivingEvent.EnemyKilled)
+            {
+                EnemyKilledEventArgs gArgs = (EnemyKilledEventArgs)args;
+                if (gArgs.Target.Name == TargetMobName)
+                {
+                    lock (gArgs.Target.XPGainers.SyncRoot)
+                    {
+                        if (gArgs.Target.XPGainers.Keys.Count == 0)
+                        {
+                            return;
+                        }
 
-			if (e == GamePlayerEvent.GiveItem)
+                        foreach (GameLiving gainer in gArgs.Target.XPGainers.Keys)
+                        {
+                            //If the killed npc is gray for one of the xpGainer (no matter if player or another npc)
+                            //it is't worth anything either
+                            if (gainer.IsObjectGreyCon(gArgs.Target))
+                            {
+                                return;
+                            }
+                        }
+                    }
+                    
+                    player.Out.SendMessage("You must now return to "+RewardGiverName+" to receive your reward!", eChatType.CT_Important, eChatLoc.CL_ChatWindow);
+                    TargetKilled = true;
+
+                    player.Out.SendTaskUpdate();
+                }
+            }
+            else if (e == GameObjectEvent.InteractWith)
 			{
-				GiveItemEventArgs gArgs = (GiveItemEventArgs)args;				
-				GameLiving target = gArgs.Target as GameLiving;
-				GenericItem item = gArgs.Item;
-
-				if(player.Task.RecieverName == target.Name && item.Name == player.Task.ItemName)
+                InteractWithEventArgs gArgs = (InteractWithEventArgs)args;
+                if (gArgs.Target.Name == RewardGiverName)
 				{
-					player.Inventory.RemoveItem(item);
-					FinishTask();
+                    if (TargetKilled)
+                    {
+                        player.Out.SendMessage(RewardGiverName + " says, \"Good work " + player.Name + ". Here is your reward as promised.\"", eChatType.CT_Important, eChatLoc.CL_ChatWindow);
+            
+                        FinishTask();
+                    }
 				}
-			}
-			/// 
-			/// Check if Mob is the Target of a KillTask for each of XPGainers in the Killer Group and if true Drop the TaskItem
-			/// 
-			else if (e == GameLivingEvent.EnemyKilled) 
-			{
-				EnemyKilledEventArgs gArgs = (EnemyKilledEventArgs)args;
-
-				GameLiving target = gArgs.Target;
-
-				// check wether the right mob was killed
-				if (target.Name!=MobName)
-					return;
-
-				int lowestCon = int.MaxValue;
-				lock(target.XPGainers.SyncRoot)
-				{
-					if(target.XPGainers.Keys.Count == 0)
-					{
-						return;
-					}
-					foreach(GameObject gainer in target.XPGainers.Keys)
-					{
-						GamePlayer playerGainer = gainer as GamePlayer;
-						if(playerGainer != null)
-						{
-							if(playerGainer.Level <= GameLiving.NoXPForLevel.Length)
-							{
-								if(target.Level <= GameLiving.NoXPForLevel[playerGainer.Level])
-								{
-									lowestCon=-3;
-								}
-							}
-							else
-							{
-								int con = (int)playerGainer.GetConLevel(target);
-								if(con<lowestCon)
-								{
-									lowestCon=con;
-								}
-							}
-						}
-					}
-				}
-
-				// Uncomment line below to test taks as GM, other wise GM will not get items for kill
-				//lowestCon = 0;
-
-				if(lowestCon>=-2)	//Only add task Loot if not killing grays
-				{
-					ArrayList Owners = new ArrayList();
-					if(player.PlayerGroup == null)
-					{
-						Owners.Add(m_taskPlayer);
-					}
-					else
-					{
-						GamePlayer[] GPP = m_taskPlayer.PlayerGroup.GetPlayersInTheGroup();
-						foreach(GamePlayer GP in GPP)
-						{
-							if(GP.Task !=null && GP.Task.GetType() == typeof(KillTask))
-							{
-								if (((KillTask)GP.Task).MobName == target.Name)
-									Owners.Add(GP);
-							}
-						}
-					}
-
-					if(Owners.Count > 0)
-					{
-						ArrayList dropMessages = new ArrayList();
-						GenericItem itemdrop = GenerateItem(ItemName, 1, ObjectModels[ItemIndex]);
-						GameInventoryItem droppeditem = new GameInventoryItem(itemdrop);
-						for (int a = 0; a < Owners.Count; a++)
-						{
-							droppeditem.AddOwner((GamePlayer)Owners[a]);
-						}
-						droppeditem.Name = itemdrop.Name;
-						droppeditem.Position = target.Position;
-						droppeditem.Region = target.Region;
-						dropMessages.Add(target.GetName(0, true) +" drops "+ droppeditem.GetName(1, false) +".");
-						droppeditem.AddToWorld();
-						if(dropMessages.Count > 0)
-						{
-							foreach(GamePlayer visiblePlayer in target.GetInRadius(typeof(GamePlayer), WorldMgr.INFO_DISTANCE))
-							{
-								foreach(string str in dropMessages)
-								{
-									visiblePlayer.Out.SendMessage(str, eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
-								}
-							}
-						}
-					}
-				}
-			}
-		}		
-
-		/// <summary>
-		/// Search for a Mob to Kill and Give the KillTask to the Player
-		/// </summary>
-		/// <param name="player">The GamePlayer Object</param>
-		public static bool BuildTask(GamePlayer player, GameLiving source)
-		{
-			if (source == null)
-				return false;
-
-			GameMob Mob = GetRandomMob(player);
-			if(Mob == null)
-			{
-				player.Out.SendMessage("I have no task for you, come back later",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
-				return false;
-			}
-			else
-			{							
-				player.Task = new KillTask(player);
-				player.Task.TimeOut = DateTime.Now.AddHours(2);
-				((KillTask)player.Task).ItemIndex = Util.Random(0, TaskObjects.Length-1);
-				((KillTask)player.Task).MobName = Mob.Name;
-				player.Task.RecieverName = source.Name;
-
-				player.Out.SendMessage("Find "+Mob.GetName(1,false)+", kill it and bring me something to prove your valor. I've heard there should be one roaming in "+Mob.Region.GetZone(Mob.Position).Description+", but it doesn't matter which "+Mob.Name+" you kill.",eChatType.CT_System,eChatLoc.CL_PopupWindow);
-				//Player.Out.SendCustomDialog("", new CustomDialogResponse(TaskDialogResponse));
-				return true;
 			}
 		}
 
 		/// <summary>
-		/// Find a Random Mob in Radius Distance
+        /// Find a Random Mob bleue or yellow in the player ZONE
 		/// </summary>
 		/// <param name="player">The GamePlayer Object</param>		
 		/// <returns>The GameMob Searched</returns>
-		public static GameMob GetRandomMob(GamePlayer player)
-		{					
-			IList allValidMob = new ArrayList(1);
-			foreach(GameMob mob in player.Region.GetZone(player.Position).GetAllObjects(typeof(GameMob)))
-			{
-				if(mob.Realm == (byte)eRealm.None)
-				{
-					int conLevel = (int)player.GetConLevel(mob);
-					if(conLevel == -1 || conLevel == 0)
-					{
-						// bleue or yellow
-						allValidMob.Add(mob);
-					}
-				}
-			}
-
-			return (GameMob)allValidMob[Util.Random(allValidMob.Count - 1)];
-		}
-
-		/// <summary>
-		/// Idientifies Named Guards
-		/// At the moment this is done by simple name comparison against some known name patterns:
-		/// 
-		/// +*Guard*
-		///		-Guardian
-		///		-Guardian Sergeant
-		///		-*Guardian
-		///		-Guardian of the*
-		///		-Guard
-		///		-*Guard
-		///		-Guardsman
-		///		-*Guardsman
-		///		-Guard's Armorer
-		///	+Sir *
-		///	+Jarl *
-		///	+Lady *
-		///	+Soldier *
-		///	+Soldat *
-		///	+Sentinel *
-		///		-*Runes
-		///		-*Kynon 
-		///	
-		///	+*Viking*
-		///		-*Archer
-		///		-*Dreng
-		///		-*Huscarl
-		///		-*Jarl
-		///		
-		///	+Huntress *
-		///		
-		/// </summary>
-		/// <param name="living"></param>
-		/// <returns></returns>
-		public static bool CheckNamedGuard(GameLiving living)
+        public static GameMob GetRandomMob(GamePlayer player)
 		{
-			if (living.Realm==0)
-				return false;
-
-			String name = living.Name;
-
-			if (name.IndexOf("Guard")>=0)
-			{
-				
-				if (name =="Guardian") return false;
-				if (name =="Guardian Sergeant") return false;
-				if (name.EndsWith("Guardian")) return false;
-				if (name.StartsWith("Guardian of the")) return false;
-
-				if (name =="Guard") return false;
-				if (name.EndsWith("Guard")) return false;
-
-				if (name =="Guardsman") return false;
-				if (name.EndsWith("Guardsman")) return false;
-
-				if (name =="Guard's Armorer") return false;
-
-				return true;
-			}
-
-			if (name.StartsWith("Sir ") && (living.GuildName==null || living.GuildName=="") ) 
-			{
-				return true;
-			}
-
-			if (name.StartsWith("Captain ") && (living.GuildName==null || living.GuildName=="") ) 
-			{
-				return true;
-			}
-
-			if (name.StartsWith("Jarl ")) 
-			{
-				return true;
-			}
-
-			if (name.StartsWith("Lady ") && (living.GuildName==null || living.GuildName=="") )
-			{
-				return true;
-			}
-			if (name.StartsWith("Soldier ") || name.StartsWith("Soldat "))
-				return true;
-
-			if (name.StartsWith("Sentinel "))
-			{
-				if (name.EndsWith("Runes")) return false;
-				if (name.EndsWith("Kynon")) return false;
-
-				return true;
-			}
-
-
-			if (name.IndexOf("Viking")>=0)
-			{
-				if (name.EndsWith("Archer")) return false;
-				if (name.EndsWith("Dreng")) return false;
-				if (name.EndsWith("Huscarl")) return false;
-				if (name.EndsWith("Jarl")) return false;
-
-				return true;
-			}
-
-			if (name.StartsWith("Huntress "))
-			{
-				return true;
-			}
-
-			return false;
-		}		
-
-		public new static bool CheckAvailability(GamePlayer player, GameLiving target)
-		{
-			if (target==null)
-				return false;
-
-			if (!CheckNamedGuard(target))			
-				return false;
-
-			return AbstractTask.CheckAvailability(player,target,CHANCE);			
+		    IList allValidMob = new ArrayList(1);
+		    foreach (GameMob mob in player.Region.GetZone(player.Position).GetAllObjects(typeof(GameMob)))
+		    {
+		        if (mob.Realm == (byte)eRealm.None)
+		        {
+		            int conLevel = (int)player.GetConLevel(mob);
+		            if (conLevel == -1 || conLevel == 0)
+		            {
+		                // bleue or yellow
+		                allValidMob.Add(mob);
+		            }
+		        }
+		    }
+		    
+            if (allValidMob.Count > 0) return (GameMob)allValidMob[Util.Random(allValidMob.Count - 1)];
+            return null;
 		}
 	}
 }
