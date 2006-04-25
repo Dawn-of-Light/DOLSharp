@@ -1162,12 +1162,12 @@ namespace DOL.GS.PacketHandler
 			SendTCP(pak);
 		}
 
-		protected virtual void SendQuestPacket(AbstractQuest quest, int index)
+        protected virtual void SendQuestPacket(PlayerJournalEntry entry, int index)
 		{
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.QuestEntry));
 
 			pak.WriteByte((byte) index);
-			if (quest.Step <= 0)
+            if (entry == null)
 			{
 				pak.WriteByte(0);
 				pak.WriteByte(0);
@@ -1175,16 +1175,16 @@ namespace DOL.GS.PacketHandler
 			}
 			else
 			{
-				string name = quest.Name;
-				string desc = quest.Description;
+                string name = entry.Name;
+                string desc = entry.Description;
 				if (name.Length > byte.MaxValue)
 				{
-					if (log.IsWarnEnabled) log.Warn(quest.GetType().ToString() + ": name is too long for 1.68+ clients ("+name.Length+") '"+name+"'");
+                    if (log.IsWarnEnabled) log.Warn(entry.GetType().ToString() + ": name is too long for 1.68+ clients (" + name.Length + ") '" + name + "'");
 					name = name.Substring(0, byte.MaxValue);
 				}
 				if (desc.Length > byte.MaxValue)
 				{
-					if (log.IsWarnEnabled) log.Warn(quest.GetType().ToString() + ": description is too long for 1.68+ clients ("+desc.Length+") '"+desc+"'");
+                    if (log.IsWarnEnabled) log.Warn(entry.GetType().ToString() + ": description is too long for 1.68+ clients (" + desc.Length + ") '" + desc + "'");
 					desc = desc.Substring(0, byte.MaxValue);
 				}
 				pak.WriteByte((byte)name.Length);
@@ -1196,6 +1196,14 @@ namespace DOL.GS.PacketHandler
 			SendTCP(pak);
 		}
 
+        public virtual void SendTaskUpdate()
+        {
+            string description = "You have no current personal task.";
+            if (m_gameClient.Player.Task != null) description = m_gameClient.Player.Task.Description;
+
+            SendQuestPacket(new PlayerJournalEntry(description, ""), 0);	
+        }
+	    
 		public virtual void SendQuestUpdate(AbstractQuest quest)
 		{
 			int questIndex = 0;
@@ -1205,7 +1213,7 @@ namespace DOL.GS.PacketHandler
 				{
 					if (q == quest)
 					{
-						SendQuestPacket(q, questIndex);
+                        SendQuestPacket(new PlayerJournalEntry(quest.Name, quest.Description), questIndex);
 						break;
 					}
 					if (q.Step != 0) questIndex++;
@@ -1218,28 +1226,24 @@ namespace DOL.GS.PacketHandler
 			int questIndex = 0;
 			lock (m_gameClient.Player.ActiveQuests)
 			{
-				IList questToClear = null;
+				int questToClear = 0;
 				foreach (AbstractQuest quest in m_gameClient.Player.ActiveQuests)
 				{
 					if(quest.Step <= 0)
 					{
-						if(questToClear == null) questToClear = new ArrayList(1);
-						questToClear.Add(quest);
+                        questToClear++;
 					}
 					else
 					{
-						SendQuestPacket(quest, questIndex);
+						SendQuestPacket(new PlayerJournalEntry(quest.Name, quest.Description), questIndex);
 						questIndex++;
 					}
 				}
 
-				if(questToClear != null)
+				for(int i = 0 ; i < questToClear ; i++)
 				{
-					foreach(AbstractQuest quest in questToClear)
-					{
-						SendQuestPacket(quest, questIndex);
-						questIndex++;
-					}
+					SendQuestPacket(null, questIndex);
+					questIndex++;
 				}
 			}
 		}

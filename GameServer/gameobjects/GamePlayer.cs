@@ -1284,11 +1284,7 @@ namespace DOL.GS
 				}
 
 			// Reset taskDone per level.
-			if (Task!=null)
-			{
-				Task.TasksDone = 0;
-				Task.SaveIntoDatabase();
-			}
+			TaskDone = 0;
 		}
 
 		/// <summary>
@@ -6295,8 +6291,7 @@ namespace DOL.GS
 			TargetObject = null;
 
 			// cancel task if active
-			if (Task!=null && Task.TaskActive)
-				Task.ExpireTask();
+			if (Task != null) Task.ExpireTask();
 
 			string message;
 			ushort messageDistance = WorldMgr.DEATH_MESSAGE_DISTANCE;
@@ -8199,10 +8194,6 @@ namespace DOL.GS
 			LoadSkillsFromCharacter();
 			LoadCraftingSkills();
 
-			// Load Task object of player ...
-			DBTask task = (DBTask) GameServer.Database.FindObjectByKey(typeof(DBTask), PersistantGameObjectID);
-			if(task != null) m_task = AbstractTask.LoadFromDatabase(this, task);
-
 			m_titles.AddRange(PlayerTitleMgr.GetPlayerTitles(this));
 			IPlayerTitle t = PlayerTitleMgr.GetTitleByTypeName(CurrentTitleType);
 			if (t == null)
@@ -8227,6 +8218,7 @@ namespace DOL.GS
 			{
 				SaveSkillsToCharacter();
 				SaveCraftingSkills();
+                if (Task != null) Task.TimeLeft = Task.TimeLeft.Subtract(DateTime.Now.Subtract(LastPlayed)); // we have to set the task left time before set LastPlayed
 				m_playedTime = PlayedTime;  //We have to set the PlayedTime on the character before setting the LastPlayed
 				LastPlayed = DateTime.Now;
 				if(m_stuckFlag)
@@ -8620,7 +8612,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Holding tasks of player
 		/// </summary>
-		AbstractTask m_task = null;
+		protected AbstractTask m_task = null;
 
 		/// <summary>
 		/// Gets the tasklist of this player
@@ -8631,6 +8623,19 @@ namespace DOL.GS
 			set { m_task = value;}
 		}
 
+        /// <summary>
+        /// Holding the number of task already sone this level
+        /// </summary>
+        protected byte m_taskDone;
+
+        /// <summary>
+        /// Gets the number of task already sone this level
+        /// </summary>
+        public byte TaskDone
+        {
+            get { return m_taskDone; }
+            set { m_taskDone = value; }
+        }
 		#endregion
 
 		#region Quest
