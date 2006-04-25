@@ -142,13 +142,13 @@ namespace DOL.GS.PacketHandler
 			}
 			SendTCP(pak);
 		}
-		
-		protected override void SendQuestPacket(AbstractQuest quest, int index)
+
+        protected override void SendQuestPacket(PlayerJournalEntry entry, int index)
 		{
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.QuestEntry));
 
 			pak.WriteByte((byte) index);
-			if (quest.Step <= 0)
+			if (entry == null)
 			{
 				pak.WriteByte(0);
 				pak.WriteByte(0);
@@ -156,21 +156,21 @@ namespace DOL.GS.PacketHandler
 			}
 			else
 			{
-				string name = quest.Name;
-				string desc = quest.Description;
+				string name = entry.Name;
+				string desc = entry.Description;
 				if (name.Length > byte.MaxValue)
 				{
-					if (log.IsWarnEnabled) log.Warn(quest.GetType().ToString() + ": name is too long for 1.71 clients ("+name.Length+") '"+name+"'");
+					if (log.IsWarnEnabled) log.Warn(entry.GetType().ToString() + ": name is too long for 1.71 clients ("+name.Length+") '"+name+"'");
 					name = name.Substring(0, byte.MaxValue);
 				}
 				if (desc.Length > ushort.MaxValue)
 				{
-					if (log.IsWarnEnabled) log.Warn(quest.GetType().ToString() + ": description is too long for 1.71 clients ("+desc.Length+") '"+desc+"'");
+					if (log.IsWarnEnabled) log.Warn(entry.GetType().ToString() + ": description is too long for 1.71 clients ("+desc.Length+") '"+desc+"'");
 					desc = desc.Substring(0, ushort.MaxValue);
 				}
 				if (name.Length + desc.Length > 2048-10)
 				{
-					if (log.IsWarnEnabled) log.Warn(quest.GetType().ToString() + ": name + description length is too long and would have crashed the client.\nName ("+name.Length+"): '"+name+"'\nDesc ("+desc.Length+"): '"+desc+"'");
+					if (log.IsWarnEnabled) log.Warn(entry.GetType().ToString() + ": name + description length is too long and would have crashed the client.\nName ("+name.Length+"): '"+name+"'\nDesc ("+desc.Length+"): '"+desc+"'");
 					name = name.Substring(0, 32);
 					desc = desc.Substring(0, 2048-10 - name.Length); // all that's left
 				}

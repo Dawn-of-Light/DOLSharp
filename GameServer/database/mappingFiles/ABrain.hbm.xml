@@ -13,5 +13,8 @@
 			<property name="AggroLevel" type="Int32" not-null="true" column="`AggroLevel`"/>
 			<property name="AggroRange" type="Int32" not-null="true" column="`AggroRange`"/>	
 		</subclass>
-	</class>
+
+    <subclass name="DOL.AI.Brain.PeaceBrain, GameServer" />
+
+  </class>
 </hibernate-mapping>

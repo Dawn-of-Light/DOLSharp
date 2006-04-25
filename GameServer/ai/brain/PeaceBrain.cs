@@ -24,7 +24,7 @@ using DOL.Events;
 using DOL.GS;
 using log4net;
 
-namespace DOL.AI
+namespace DOL.AI.Brain
 {
 	/// <summary>
 	/// This is a brain class for all peace npc like merchand, trainer ect ...
