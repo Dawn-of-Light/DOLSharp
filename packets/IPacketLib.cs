@@ -477,6 +477,7 @@ namespace DOL.GS.PacketHandler
 		void SendWeather(uint x, uint width, ushort speed, ushort fogdiffusion, ushort intensity);
 		void SendPlayerModelTypeChange(GamePlayer player, byte modelType);
 		void SendObjectDelete(GameObject obj);
+        void SendTaskUpdate();
 		void SendQuestListUpdate();
 		void SendQuestUpdate(AbstractQuest quest);
 		void SendConcentrationList();

@@ -16,6 +16,7 @@
 	<mapping file="mapping\AbstractArea.hbm.xml" />
 	<mapping file="mapping\AbstractJumpPoint.hbm.xml" />
 	<mapping file="mapping\AbstractQuest.hbm.xml" />
+  <mapping file="mapping\AbstractTask.hbm.xml" />
 	<mapping file="mapping\Account.hbm.xml" />
 	<mapping file="mapping\Alliance.hbm.xml" />
 	<mapping file="mapping\BaseLoot.hbm.xml" />
@@ -31,7 +32,6 @@
 	<mapping file="mapping\DBSpell.hbm.xml" />
 	<mapping file="mapping\DBSpellLine.hbm.xml" />
 	<mapping file="mapping\DBStyle.hbm.xml" />
-	<mapping file="mapping\DBTask.hbm.xml" />
 	<mapping file="mapping\Faction.hbm.xml" />
 	<mapping file="mapping\GameNpcInventory.hbm.xml" />
 	<mapping file="mapping\GameNpcTemplate.hbm.xml" />

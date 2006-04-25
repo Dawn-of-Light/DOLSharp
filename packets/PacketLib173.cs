@@ -373,50 +373,44 @@ namespace DOL.GS.PacketHandler
 			int questIndex = 1;
 			lock (m_gameClient.Player.ActiveQuests)
 			{
-				foreach (AbstractQuest q in m_gameClient.Player.ActiveQuests)
-				{
-					if (q == quest)
-					{
-						SendQuestPacket(q, questIndex);
-						break;
-					}
-					if (q.Step != 0) questIndex++;
-				}
+                foreach (AbstractQuest q in m_gameClient.Player.ActiveQuests)
+                {
+                    if (q == quest)
+                    {
+                        SendQuestPacket(new PlayerJournalEntry(quest.Name, quest.Description), questIndex);
+                        break;
+                    }
+                    if (q.Step != 0) questIndex++;
+                }
 			}
 		}
 
 		public override void SendQuestListUpdate()
 		{
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.QuestEntry));
-			pak.WriteInt(0);
-			SendTCP(pak);
+            SendTaskUpdate();
 
 			int questIndex = 1;
 			lock (m_gameClient.Player.ActiveQuests)
 			{
-				IList questToClear = null;
-				foreach (AbstractQuest quest in m_gameClient.Player.ActiveQuests)
+                int questToClear = 0;
+                foreach (AbstractQuest quest in m_gameClient.Player.ActiveQuests)
 				{
 					if(quest.Step <= 0)
 					{
-						if(questToClear == null) questToClear = new ArrayList(1);
-						questToClear.Add(quest);
+                        questToClear++;
 					}
 					else
 					{
-						SendQuestPacket(quest, questIndex);
+                        SendQuestPacket(new PlayerJournalEntry(quest.Name, quest.Description), questIndex);
 						questIndex++;
 					}
 				}
 
-				if(questToClear != null)
-				{
-					foreach(AbstractQuest quest in questToClear)
-					{
-						SendQuestPacket(quest, questIndex);
-						questIndex++;
-					}
-				}
+                for (int i = 0; i < questToClear; i++)
+                {
+                    SendQuestPacket(null, questIndex);
+                    questIndex++;
+                }
 			}
 		}
 
