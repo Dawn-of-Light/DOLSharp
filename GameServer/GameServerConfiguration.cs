@@ -32,11 +32,6 @@ namespace DOL.GS
 		#region Server
 
 		/// <summary>
-		/// holds the server root directory
-		/// </summary>
-		protected string m_rootDirectory;
-
-		/// <summary>
 		/// Holds the log configuration file path
 		/// </summary>
 		protected string m_logConfigFile;
@@ -45,16 +40,6 @@ namespace DOL.GS
 		/// Holds the database configuration file path
 		/// </summary>
 		protected string m_databaseConfigFile;
-
-		/// <summary>
-		/// Holds the log configuration file path
-		/// </summary>
-		protected string m_regionConfigFile;
-		
-		/// <summary>
-		/// Holds the log configuration file path
-		/// </summary>
-		protected string m_zoneConfigFile;
 
 		/// <summary>
 		/// Name of the scripts compilation target
@@ -107,18 +92,6 @@ namespace DOL.GS
 		protected bool m_useReflectionOptimizer;
 
 		#endregion
-		#region Logging
-		/// <summary>
-		/// The logger name where to log the gm+ commandos
-		/// </summary>
-		protected string m_gmActionsLoggerName;
-
-		/// <summary>
-		/// The logger name where to log cheat attempts
-		/// </summary>
-		protected string m_cheatLoggerName;
-
-		#endregion
 		#region Network
 
 		/// <summary>
@@ -165,12 +138,8 @@ namespace DOL.GS
 		{
 			base.LoadFromConfig(root);
 
-			m_rootDirectory = root["Server"]["RootDirectory"].GetString(m_rootDirectory);
-
 			m_logConfigFile = root["Server"]["LogConfigFile"].GetString(m_logConfigFile);
 			m_databaseConfigFile = root["Server"]["DatabaseConfigFile"].GetString(m_databaseConfigFile);
-			m_regionConfigFile = root["Server"]["RegionConfigFile"].GetString(m_regionConfigFile);
-			m_zoneConfigFile = root["Server"]["ZoneConfigFile"].GetString(m_zoneConfigFile);
 			m_languageFile = root["Server"]["LanguageFile"].GetString(m_languageFile);
 
 			m_scriptCompilationTarget = root["Server"]["ScriptCompilationTarget"].GetString(m_scriptCompilationTarget);
@@ -206,9 +175,6 @@ namespace DOL.GS
 			m_ServerName = root["Server"]["ServerName"].GetString(m_ServerName);
 			m_ServerNameShort = root["Server"]["ServerNameShort"].GetString(m_ServerNameShort);
 
-			m_cheatLoggerName = root["Server"]["CheatLoggerName"].GetString(m_cheatLoggerName);
-			m_gmActionsLoggerName = root["Server"]["GMActionLoggerName"].GetString(m_gmActionsLoggerName);
-			
 			string ip = root["Server"]["RegionIP"].GetString("any");
 			if (ip == "any")
 				m_regionIP = IPAddress.Any;
@@ -239,11 +205,8 @@ namespace DOL.GS
 		{
 			base.SaveToConfig(root);
 
-			root["Server"]["RootDirectory"].Set(m_rootDirectory);
 			root["Server"]["LogConfigFile"].Set(m_logConfigFile);
 			root["Server"]["DatabaseConfigFile"].Set(m_databaseConfigFile);
-			root["Server"]["RegionConfigFile"].Set(m_regionConfigFile);
-			root["Server"]["ZoneConfigFile"].Set(m_zoneConfigFile);
 			root["Server"]["LanguageFile"].Set(m_languageFile);
 
 			root["Server"]["ScriptCompilationTarget"].Set(m_scriptCompilationTarget);
@@ -278,9 +241,6 @@ namespace DOL.GS
 			}
 			root["Server"]["GameType"].Set(serverType);
 
-			root["Server"]["CheatLoggerName"].Set(m_cheatLoggerName);
-			root["Server"]["GMActionLoggerName"].Set(m_gmActionsLoggerName);
-			
 			root["Server"]["RegionIP"].Set(m_regionIP);
 			root["Server"]["RegionPort"].Set(m_regionPort);
 			root["Server"]["UdpIP"].Set(m_udpIP);
@@ -301,15 +261,9 @@ namespace DOL.GS
 		{
 			m_ServerName = "Dawn Of Light";
 			m_ServerNameShort = "DOLSERVER";
-			if(Assembly.GetEntryAssembly()!=null)
-				m_rootDirectory = new FileInfo(Assembly.GetEntryAssembly().Location).DirectoryName;
-			else
-				m_rootDirectory = new FileInfo(Assembly.GetAssembly(typeof(GameServer)).Location).DirectoryName;
-
+			
 			m_logConfigFile = "." + Path.DirectorySeparatorChar + "config" + Path.DirectorySeparatorChar + "logconfig.xml";
 			m_databaseConfigFile = "." + Path.DirectorySeparatorChar + "config" + Path.DirectorySeparatorChar + "databaseconfig.xml";
-			m_regionConfigFile = "." + Path.DirectorySeparatorChar + "config" + Path.DirectorySeparatorChar + "regions.xml";
-			m_zoneConfigFile = "." + Path.DirectorySeparatorChar + "config" + Path.DirectorySeparatorChar + "zones.xml";
 			m_languageFile = "." + Path.DirectorySeparatorChar + "config" + Path.DirectorySeparatorChar + "GameServer.lng";
 
 			m_scriptCompilationTarget = "."+Path.DirectorySeparatorChar+"lib"+Path.DirectorySeparatorChar+"GameServerScripts.dll";
@@ -317,9 +271,6 @@ namespace DOL.GS
 			m_autoAccountCreation = true;
 			m_serverType = eGameServerType.GST_Normal;
 
-			m_cheatLoggerName = "cheats";
-			m_gmActionsLoggerName = "gmactions";
-			
 			m_regionIP = IPAddress.Any;
 			m_regionPort = 10400;
 			m_udpIP = IPAddress.Any;
@@ -335,21 +286,15 @@ namespace DOL.GS
 			{
 				m_cpuCount = int.Parse(Environment.GetEnvironmentVariable("NUMBER_OF_PROCESSORS"));
 			}
-			catch { m_cpuCount = -1; }
+			catch
+			{
+			    m_cpuCount = -1;
+			}
 			if (m_cpuCount < 1)
 				m_cpuCount = 1;
 		}
 
 		#endregion
-
-		/// <summary>
-		/// Gets or sets the root directory of the server
-		/// </summary>
-		public string RootDirectory
-		{
-			get { return m_rootDirectory; }
-			set { m_rootDirectory = value; }
-		}
 
 		/// <summary>
 		/// Gets or sets the log configuration file of this server
@@ -361,7 +306,7 @@ namespace DOL.GS
 				if(Path.IsPathRooted(m_logConfigFile))
 					return m_logConfigFile;
 				else
-					return Path.Combine(m_rootDirectory, m_logConfigFile);
+                    return Path.Combine(Directory.GetCurrentDirectory(), m_logConfigFile);
 			}
 			set { m_logConfigFile = value; }
 		}
@@ -376,7 +321,7 @@ namespace DOL.GS
 				if(Path.IsPathRooted(m_databaseConfigFile))
 					return m_databaseConfigFile;
 				else
-					return Path.Combine(m_rootDirectory, m_databaseConfigFile);
+                    return Path.Combine(Directory.GetCurrentDirectory(), m_databaseConfigFile);
 			}
 			set { m_databaseConfigFile = value; }
 		}
@@ -391,7 +336,7 @@ namespace DOL.GS
 				if(Path.IsPathRooted(m_languageFile))
 					return m_languageFile;
 				else
-					return Path.Combine(m_rootDirectory, m_languageFile);
+                    return Path.Combine(Directory.GetCurrentDirectory(), m_languageFile);
 			}
 			set { m_languageFile = value; }
 		}
@@ -448,24 +393,6 @@ namespace DOL.GS
 		{
 			get { return m_ServerNameShort; }
 			set { m_ServerNameShort = value; }
-		}
-
-		/// <summary>
-		/// Gets or sets the GM action logger name
-		/// </summary>
-		public string GMActionsLoggerName
-		{
-			get { return m_gmActionsLoggerName; }
-			set { m_gmActionsLoggerName = value; }
-		}
-
-		/// <summary>
-		/// Gets or sets the cheat logger name
-		/// </summary>
-		public string CheatLoggerName
-		{
-			get { return m_cheatLoggerName; }
-			set { m_cheatLoggerName = value; }
 		}
 
 		/// <summary>
