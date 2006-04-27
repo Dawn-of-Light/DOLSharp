@@ -232,19 +232,12 @@ namespace DOL.GS.Spells {
 				return;
 
 			int baseChance = 0;
-			if (ad.AttackType == AttackData.eAttackType.Ranged) {
-				baseChance = (int)(Spell.Frequency * 0.01);
-			} else if (ad.IsMeleeAttack) {
-				baseChance = (int)(Spell.Frequency * 0.01);
-				if (sender is GamePlayer)
-				{
-					GamePlayer player = (GamePlayer)sender;
-					Weapon leftWeapon = player.Inventory.GetItem(eInventorySlot.LeftHandWeapon) as Weapon;
-					// if we can use left weapon, we have currently a weapon in left hand and we still have endurance,
-					// we can assume that we are using the two weapons.
-					if (player.CanUseLefthandedWeapon && leftWeapon != null && !(leftWeapon is Shield)) {
-						baseChance /= 2;
-					} 
+            if (ad.IsMeleeAttack || ad.AttackType == AttackData.eAttackType.Ranged)
+            {
+			    baseChance = (int)(Spell.Frequency * 0.01);
+                if (ad.AttackType == AttackData.eAttackType.MeleeDualWield) 
+                {
+				    baseChance /= 2;
 				}
 			}
 

@@ -54,7 +54,7 @@ namespace DOL.GS
 
 				ParseLanguageFile(GameServer.Instance.Configuration.LanguageFile);
 
-				string path = GameServer.Instance.Configuration.RootDirectory +Path.DirectorySeparatorChar+ "scripts";
+				string path = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar+ "scripts";
 				ParseDirectory(path, "*.lng");
 			}
 			catch (Exception e)
