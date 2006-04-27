@@ -59,9 +59,9 @@ namespace DOL.GS.Quests
         protected string m_rewardGiverName = null;
 
         /// <summary>
-        /// The time left until the task will expire
+        /// The /played when the task started
         /// </summary>
-        protected TimeSpan m_timeLeft;
+        protected long m_startingPlayedTime;
 		
         /// <summary>
         /// Gets or sets the unique active task identifier in the db
@@ -91,44 +91,13 @@ namespace DOL.GS.Quests
         }
 
         /// <summary>
-        /// Gets or sets the time left until the task will expire
+        /// Gets or sets the /played time when the task started
         /// </summary>
-        public TimeSpan TimeLeft
+        public long StartingPlayedTime
         {
-            get { return m_timeLeft; }
-            set
-            {
-                m_timeLeft = value;
-
-              /*  m_expireTimer = new RegionTimer(m_taskPlayer);
-                m_expireTimer.Callback = new RegionTimerCallback(TaskExpireTimerCallback);
-
-                TimeSpan timeLeft;
-                if (m_timeLeft.Minutes > 60)
-                {
-                    timeLeft = m_timeLeft.Subtract(new TimeSpan(0, 60, 0));
-                }
-                else if (m_timeLeft.Minutes > 10)
-                {
-                    timeLeft = m_timeLeft.Subtract(new TimeSpan(0, 10, 0));
-                }
-                else if (m_timeLeft.Minutes > 1)
-                {
-                    timeLeft = m_timeLeft.Subtract(new TimeSpan(0, 1, 0));
-                }
-                else
-                {
-                    timeLeft = m_timeLeft;
-                }
-
-                m_expireTimer.Start(timeLeft.Milliseconds);*/
-            }
+            get { return m_startingPlayedTime; }
+            set { m_startingPlayedTime = value; }
         }
-
-        /// <summary>
-        /// Task expire timer
-        /// </summary>
-        protected RegionTimer m_expireTimer;
 
         /// <summary>
         /// Retrieves the description for the current task
@@ -138,46 +107,100 @@ namespace DOL.GS.Quests
             get;
         }
 
+        /// <summary>
+        /// Task expire timer
+        /// </summary>
+        protected RegionTimer m_taskExpireTimer;
+
+        /// <summary>
+        /// Gets or sets the RegionTimer of task expiration
+        /// </summary>
+        public RegionTimer TaskExpireTimer
+        {
+            get { return m_taskExpireTimer; }
+            set { m_taskExpireTimer = value; }
+        }
+	    
         #endregion
 
+        /// <summary>
+		/// Starts the task expiration timer.
+		/// </summary>
+		public virtual void StartTaskExpireTimer()
+		{
+			if (m_taskPlayer.ObjectState != eObjectState.Active) return;
+			if (m_taskExpireTimer.IsAlive) return;
+
+            int secondLeftBeforeExpire = (int)((StartingPlayedTime + 2 * 3600) - m_taskPlayer.PlayedTime);
+            if (secondLeftBeforeExpire <= 0)
+            {
+                m_taskExpireTimer.Start(1);
+            }
+            else
+            {
+                if (secondLeftBeforeExpire >= 3600) // 1 hour
+                {
+                    secondLeftBeforeExpire -= 3600;
+                }
+                else if(secondLeftBeforeExpire >= 600) // 10 min
+                {
+                    secondLeftBeforeExpire -= 600;
+                }
+                else if(secondLeftBeforeExpire >= 120) // 2 min
+                {
+                    secondLeftBeforeExpire -= 120;
+                }
+
+                m_taskExpireTimer.Start(secondLeftBeforeExpire * 1000);
+            }
+		}
+
+        /// <summary>
+        /// Stop the task expire timer
+         /// </summary>
+        public virtual void StopTaskExpireTimer()
+        {
+            if (m_taskExpireTimer == null) return;
+            m_taskExpireTimer.Stop();
+        }
+    
         /// <summary>
         /// Timer callback for task expire
         /// </summary>
         /// <param name="callingTimer">the calling timer</param>
         /// <returns>the new intervall</returns>
-        protected int TaskExpireTimerCallback(RegionTimer callingTimer)
+        public int TaskExpireTimerCallback(RegionTimer callingTimer)
         {
             if (m_taskPlayer.ObjectState != eObjectState.Active || !m_taskPlayer.Alive)
             {
-                m_expireTimer = null;
                 return 0;
             }
 
-            TimeSpan newTimeLeft = m_timeLeft.Subtract(DateTime.Now.Subtract(m_taskPlayer.LastPlayed));
-            if (newTimeLeft.Minutes >= 1)
+            int secondLeftBeforeExpire = (int)((StartingPlayedTime + 2 * 3600) - m_taskPlayer.PlayedTime);
+            if (secondLeftBeforeExpire <= 0)
             {
-                m_taskPlayer.Out.SendMessage("Your task will expire in " + newTimeLeft.Minutes + " minutes.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-
-                if (newTimeLeft.Minutes > 60)
-                {
-                    return newTimeLeft.Subtract(new TimeSpan(0, 60, 0)).Milliseconds;
-                }
-                else if (newTimeLeft.Minutes > 10)
-                {
-                    return newTimeLeft.Subtract(new TimeSpan(0, 10, 0)).Milliseconds;
-                }
-                else
-                {
-                    return newTimeLeft.Subtract(new TimeSpan(0, 1, 0)).Milliseconds;
-                }
+                ExpireTask();
+                return 0;
             }
             else
             {
-                ExpireTask();
-            }
+                m_taskPlayer.Out.SendMessage("Your task will expire in less than " + ((secondLeftBeforeExpire / 60) + 1) + " minutes.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 
-            m_expireTimer = null;
-            return 0;
+                if (secondLeftBeforeExpire >= 3600) // 1 hour
+                {
+                    secondLeftBeforeExpire -= 3600;
+                }
+                else if (secondLeftBeforeExpire >= 600) // 10 min
+                {
+                    secondLeftBeforeExpire -= 600;
+                }
+                else if (secondLeftBeforeExpire >= 120) // 2 min
+                {
+                    secondLeftBeforeExpire -= 120;
+                }
+                
+                return secondLeftBeforeExpire * 1000;
+            }
         }
 
         /// <summary>
@@ -188,9 +211,14 @@ namespace DOL.GS.Quests
         public virtual bool StartTask(GamePlayer taskPlayer, GameMob taskGiver)
         {
             TaskPlayer = taskPlayer;
+            StartingPlayedTime = taskPlayer.PlayedTime;
             taskPlayer.Task = this;
-            TimeLeft = new TimeSpan(2, 0, 0);
 
+            TaskExpireTimer = new RegionTimer(taskPlayer);
+            TaskExpireTimer.Callback = new RegionTimerCallback(TaskExpireTimerCallback);
+
+            StartTaskExpireTimer();
+            
             m_taskPlayer.Out.SendTaskUpdate();
             return true;
         }
@@ -202,6 +230,8 @@ namespace DOL.GS.Quests
         {
             m_taskPlayer.Task = null;
             m_taskPlayer.TaskDone ++;
+            
+            StopTaskExpireTimer();
 
             m_taskPlayer.Out.SendTaskUpdate();
             if(AbstractTaskID != 0) GameServer.Database.DeleteObject(this);
@@ -215,6 +245,8 @@ namespace DOL.GS.Quests
             m_taskPlayer.Out.SendMessage("Your fail your task!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
             m_taskPlayer.Task = null;
 
+            StopTaskExpireTimer();
+            
             m_taskPlayer.Out.SendTaskUpdate();
             if (AbstractTaskID != 0) GameServer.Database.DeleteObject(this);
         }

@@ -34,47 +34,26 @@ namespace DOL.GS.Scripts
 	{
 		public int OnCommand(GameClient client, string[] args)
 		{
-			if (args.Length > 1)
+            if (client.Player.TargetObject == null || client.Player.TargetObject == client.Player)
 			{
-				if (args[1] == "abort")
-				{
-					if (client.Player.Task != null) client.Player.Task.ExpireTask();
-				}
-			}
-			else
-			{
-				TaskCommand(client.Player);
-			}
-			return 1;
-		}
-
-		/// <summary>
-		/// Execute /Task Command
-		/// Same if Player write /Task or press TaskButtom
-		/// </summary>
-		/// <param name="player">The GamePlayer Object</param>
-		/// <returns>True if Command Execute Succesfully</returns>
-		public static bool TaskCommand(GamePlayer player)
-		{
-			if (player.TargetObject == null || player.TargetObject == player)
-			{
-				AbstractTask task = player.Task;
+                AbstractTask task = client.Player.Task;
 
 				if (task != null)
 				{
-                    player.Out.SendMessage(task.Description, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                   // player.Out.SendMessage("You have 116 minutes left to complete this task.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    client.Player.Out.SendMessage(task.Description, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    long minutesLeft = ((task.StartingPlayedTime + 2 * 3600) - client.Player.PlayedTime) / 60;
+                    client.Player.Out.SendMessage("You have " + (minutesLeft > 0 ? minutesLeft + " minutes" : "less than a minute") + " left to complete this task.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 				else
 				{
-					player.Out.SendMessage("You have no current personal task.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    client.Player.Out.SendMessage("You have no current personal task.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
-				return true;
 			}
 			else
 			{
-				 return TaskMgr.CanGiveTask(player, player.TargetObject as GameMob);
+               TaskMgr.CanGiveTask(client.Player, client.Player.TargetObject as GameMob);
 			}
+            return 0;
 		}
 	}
 
