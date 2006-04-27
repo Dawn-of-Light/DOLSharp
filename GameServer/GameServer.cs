@@ -433,20 +433,17 @@ namespace DOL
 				m_status = eGameServerStatus.GSS_Closed;
 				//Thread.CurrentThread.Priority = ThreadPriority.AboveNormal;
 				AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
-
+			    
 				//---------------------------------------------------------------
 				//Try to init log4net (must be do first)
 				if(!InitComponent(InitLog4Net(), "InitLog4Net()"))
 					return false;
-	
-				if (log.IsDebugEnabled)
-				{
-					log.Debug("Current directory is: "+Directory.GetCurrentDirectory());
-					log.Debug("Gameserver root directory is: "+Configuration.RootDirectory);
-					log.Debug("Changing directory to root directory");
-				}				
-				Directory.SetCurrentDirectory(Configuration.RootDirectory);
 
+                if (log.IsDebugEnabled)
+                {
+                    log.Debug("Current directory is: " + Directory.GetCurrentDirectory());
+                }
+			    
 				//---------------------------------------------------------------
 				//Try to init the server port
 				if (!InitComponent(InitSocket(), "InitSocket()"))
@@ -612,7 +609,7 @@ namespace DOL
 			/// <returns></returns>
 			public bool RecompileScripts()
 			{
-				string scriptDirectory = Configuration.RootDirectory + Path.DirectorySeparatorChar + "scripts";
+                string scriptDirectory = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + "scripts";
 				if(!Directory.Exists(scriptDirectory))
 					Directory.CreateDirectory(scriptDirectory);
 
@@ -847,9 +844,9 @@ namespace DOL
 				}
 				//Configure and watch the config file
 				XmlConfigurator.ConfigureAndWatch(logConfig);
-				
-				m_gmLog = LogManager.GetLogger(Configuration.GMActionsLoggerName);
-				m_cheatLog = LogManager.GetLogger(Configuration.CheatLoggerName);
+
+                m_gmLog = LogManager.GetLogger("gmactions");
+                m_cheatLog = LogManager.GetLogger("cheats");
 
 				return true;
 			}
