@@ -140,6 +140,8 @@ namespace DOL.GS.PacketHandler.v168
 				player.StartPowerRegeneration();
 				player.StartEnduranceRegeneration();
 				
+			    if(player.Task != null) player.Task.StartTaskExpireTimer();
+			        
 				player.SetPvPInvulnerability(10*1000, null);
 
 				AssemblyName an = Assembly.GetExecutingAssembly().GetName();

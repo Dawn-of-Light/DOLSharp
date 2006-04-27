@@ -7133,6 +7133,7 @@ namespace DOL.GS
 			//DOLConsole.WriteLine("add to world "+Name);
 			if (!base.AddToWorld())
 				return false;
+		    
 			m_pvpInvulnerabilityTick = 0;
 			m_healthRegenerationTimer = new RegionTimer(this);
 			m_powerRegenerationTimer = new RegionTimer(this);
@@ -7143,6 +7144,12 @@ namespace DOL.GS
 
 			m_maxLastZ = int.MinValue; //make sure we don't take any falling damage when changing zone
 			
+		    if(m_task != null)
+		    {
+                m_task.TaskExpireTimer = new RegionTimer(this);
+                m_task.TaskExpireTimer.Callback = new RegionTimerCallback(m_task.TaskExpireTimerCallback);
+		    }
+		       
 			return true;
 		}
 
@@ -7171,6 +7178,9 @@ namespace DOL.GS
 				m_pvpInvulnerabilityTimer.Stop();
 				m_pvpInvulnerabilityTimer = null;
 			}
+
+            if (m_task != null) m_task.StopTaskExpireTimer();
+		    
 			return true;
 		}
 
@@ -8218,8 +8228,7 @@ namespace DOL.GS
 			{
 				SaveSkillsToCharacter();
 				SaveCraftingSkills();
-                if (Task != null) Task.TimeLeft = Task.TimeLeft.Subtract(DateTime.Now.Subtract(LastPlayed)); // we have to set the task left time before set LastPlayed
-				m_playedTime = PlayedTime;  //We have to set the PlayedTime on the character before setting the LastPlayed
+                m_playedTime = PlayedTime;  //We have to set the PlayedTime on the character before setting the LastPlayed
 				LastPlayed = DateTime.Now;
 				if(m_stuckFlag)
 				{
