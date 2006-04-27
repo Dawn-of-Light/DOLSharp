@@ -11,7 +11,7 @@
     <one-to-one name="TaskPlayer" class="DOL.GS.GamePlayer, GameServer" constrained="true"/>
    
     <property name="RewardGiverName" type="String(255)" not-null="true" column="`RewardGiverName`"/>
-    <property name="TimeLeft" type="TimeSpan" not-null="true" column="`TimeLeft`"/>
+    <property name="StartingPlayedTime" type="Int64" not-null="true" column="`StartingPlayedTime`"/>
 
     <subclass name="DOL.GS.Quests.MoneyTask, GameServer">
       <property name="ItemName" type="String(255)" not-null="true" column="`ItemName`"/>
