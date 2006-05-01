@@ -88,7 +88,9 @@ namespace DOL.GS.PacketHandler.v168
 			client.Player.CurrentSpeed = speed;
 
 			client.Player.Strafing = ((data & 0xe000) != 0);
-			client.Player.IsSwimming = ((data & 0x400) != 0);
+			byte state = (byte)((data >> 10) & 7); // 3 bits status field
+			client.Player.IsSwimming = (state == 1);
+			//client.Player.IsClimbing = (state == 7);
 
 			//Don't use the "sit" flag because it is useful only
 			//for displaying sit status to other clients,
