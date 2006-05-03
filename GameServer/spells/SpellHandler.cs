@@ -338,12 +338,12 @@ namespace DOL.GS.Spells
 				long leftseconds = Math.Max(
 					Caster.TempProperties.getLongProperty(INTERRUPT_TIMEOUT_PROPERTY, 0) - Caster.Region.Time,
 					Caster.SwingTimeLeft);
-				Caster.TempProperties.removeProperty(INTERRUPT_TIMEOUT_PROPERTY);
 				if (leftseconds > 0)
 				{
 					MessageToCaster("You must wait " + (leftseconds/1000+1).ToString() + " seconds to cast a spell!", eChatType.CT_System);
 					return false;
 				}
+				Caster.TempProperties.removeProperty(INTERRUPT_TIMEOUT_PROPERTY);
 			}
 
 			if (m_spell.RecastDelay > 0 && m_caster is GamePlayer)
