@@ -1,0 +1,11 @@
+<?xml version="1.0" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="DOL.Database.DBLineXSpell, GameServer" table="`linexspell`">
+		<id name="LineXSpellID" column="`LineXSpellID`" unsaved-value="0">
+			<generator class="native" />
+		</id>
+		<property name="LineName" type="String(250)" not-null="true" column="`LineName`"/>
+		<property name="SpellID" type="Int32" not-null="true" column="`SpellID`"/>
+		<property name="Level" type="Int32" not-null="true" column="`Level`"/>
+	</class>
+</hibernate-mapping>

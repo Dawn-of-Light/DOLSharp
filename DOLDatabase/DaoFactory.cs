@@ -18,7 +18,7 @@
  */
 using System;
 using System.Collections.Generic;
-using DOL.Database.DaoInterfaces;
+using DOL.Database.IDaos;
 
 namespace DOL.Database
 {
