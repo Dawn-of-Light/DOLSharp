@@ -1,0 +1,11 @@
+<?xml version="1.0" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="DOL.Database.DBSpellLine, GameServer" table="`spellline`">
+		<id name="KeyName" column="`KeyName`">
+			<generator class="assigned" />
+		</id>
+		<property name="Name" type="String(255)" not-null="true" column="`Name`"/>
+		<property name="Spec" type="String(255)" not-null="true" column="`Spec`"/>
+		<property name="IsBaseLine" type="YesNo" not-null="true" column="`IsBaseLine`"/>
+	</class>
+</hibernate-mapping>

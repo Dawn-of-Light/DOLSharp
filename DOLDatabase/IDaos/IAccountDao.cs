@@ -16,21 +16,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections.Generic;
-using System.Text;
+using DOL.Database.TransferObjects;
 
-namespace DOL.Database
+namespace DOL.Database.IDaos
 {
-    /// <summary>
-    /// interface for data object management
-    /// </summary>
-    public interface IDataAccessObject
-    {
-        /// <summary>
-        /// save all data object of this type
-        /// </summary>
-        /// <returns> the number of object save to DB</returns>
-        int SaveAll();
-    }
+	public interface IAccountDao : IDataAccessObject
+	{
+		Account SelectByAccountName(string accountName);
+		Account SelectByAccountName(int accountID);
+		void Save(Account account);
+	}
 }

@@ -1,0 +1,16 @@
+<?xml version="1.0" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="DOL.Database.Movement.Path, GameServer" table="`path`">
+		<id name="PathID" column="`PathID`">
+			<generator class="native" />
+		</id>
+		<discriminator column="PathType"/> 
+		
+		<property name="RegionID" type="Int32" not-null="true" column="`RegionID`"/>
+		<many-to-one name="StartingPoint" cascade="all" class="DOL.Database.Movement.PathPoint, GameServer" column="`StartingPoint`"/>
+		<subclass name="DOL.Database.Movement.TripPath, GameServer">
+			<property name="SteedName" type="String(255)" not-null="true" column="`SteedName`"/>
+			<property name="SteedModel" type="Int32" not-null="true" column="`SteedModel`"/>
+		</subclass>
+	</class>
+</hibernate-mapping>

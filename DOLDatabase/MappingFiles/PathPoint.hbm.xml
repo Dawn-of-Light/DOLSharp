@@ -1,0 +1,15 @@
+<?xml version="1.0" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="DOL.Database.Movement.PathPoint, GameServer" table="`pathpoint`">
+		<id name="PathPointID" column="`PathPointID`">
+			<generator class="native" />
+		</id>
+		<component name="DBPosition" class="DOL.Database.DBPoint, GameServer">
+			<property name="X" type="Int32" not-null="true" column="`X`"/>
+			<property name="Y" type="Int32" not-null="true" column="`Y`"/>
+			<property name="Z" type="Int32" not-null="true" column="`Z`"/>
+		</component>
+		<property name="Speed" type="Int32" not-null="true" column="`Speed`"/>
+		<many-to-one name="NextPoint" cascade="all" class="DOL.Database.Movement.PathPoint, GameServer" column="`NextPoint`"/>
+	</class>
+</hibernate-mapping>

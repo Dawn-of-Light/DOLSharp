@@ -1,0 +1,27 @@
+<?xml version="1.0" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="DOL.Database.Guild, GameServer" table="`guild`">
+		<id name="GuildID" column="`GuildID`" unsaved-value="0">
+			<generator class="native" />
+		</id>
+		<property name="GuildName" type="String(255)" unique="true" not-null="true" column="`GuildName`"/>
+		<property name="Motd" type="String(255)" not-null="true" column="`Motd`"/>
+		<property name="OMotd" type="String(255)" not-null="true" column="`OMotd`"/>
+		<property name="Emblem" type="Int32" not-null="true" column="`Emblem`"/>
+		<property name="RealmPoints" type="Int64" not-null="true" column="`RealmPoints`"/>
+		<property name="BountyPoints" type="Int64" not-null="true" column="`BountyPoints`"/>
+		<property name="MeritPoints" type="Int64" not-null="true" column="`MeritPoints`"/>
+		<property name="Due" type="YesNo" not-null="true" column="`Due`"/>
+		<property name="TotalMoney" type="Int64" not-null="true" column="`TotalMoney`"/>
+		<property name="Level" type="Int32" not-null="true" column="`Level`"/>
+		<property name="Webpage" type="String(255)" not-null="true" column="`Webpage`"/>
+		<property name="Email" type="String(255)" not-null="true" column="`Email`"/>
+		<array name="GuildRanks" cascade="all" table="`guildrank`">
+			<key column="`GuildID`"/>
+			<index column="`RankLevel`" type="Byte"/>
+			<one-to-many class="DOL.Database.DBGuildRank, GameServer"/>
+		</array>
+		<many-to-one name="Alliance" cascade="save-update" class="DOL.Database.Alliance, GameServer" column="`Alliance`"/>
+		<!-- <many-to-one name="ClaimedKeep" column="`KeepID`" class="DOL.Database.AbstractGameKeep, GameServer" /> -->
+	</class>
+</hibernate-mapping>
