@@ -28,19 +28,85 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Castle.DynamicProxy, Version=1.1.5.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\sharedModules\nhibernate\Castle.DynamicProxy.dll</HintPath>
+    </Reference>
+    <Reference Include="Iesi.Collections, Version=1.0.0.1, Culture=neutral, PublicKeyToken=154fdcb44c4484fc">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\sharedModules\nhibernate\Iesi.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.9.0, Culture=neutral, PublicKeyToken=b32731d11ce58905">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\sharedModules\log4net\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate, Version=1.0.2.0, Culture=neutral, PublicKeyToken=154fdcb44c4484fc">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\sharedModules\nhibernate\NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate.Mapping.Attributes, Version=1.0.2.0, Culture=neutral, PublicKeyToken=154fdcb44c4484fc">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\sharedModules\nhibernate\NHibernate.Mapping.Attributes.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DAOFactory.cs" />
+    <Compile Include="DaoFactory.cs" />
+    <Compile Include="IDaos\IAccountDao.cs" />
+    <Compile Include="IDaos\IDataAccessObject.cs" />
+    <Compile Include="NHibernateDaos\AccountDao.cs" />
     <Compile Include="GlobalConstants.cs" />
-    <Compile Include="IDAOFactory.cs" />
-    <Compile Include="IDataAccessObject.cs" />
-    <Compile Include="Persistant\Account.cs" />
+    <Compile Include="IDaoFactory.cs" />
+    <Compile Include="Database.cs" />
+    <Compile Include="TransferObjects\Account.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="MappingFiles\" />
+    <Content Include="MappingFiles\ABrain.hbm.xml" />
+    <Content Include="MappingFiles\ABrainTemplate.hbm.xml" />
+    <Content Include="MappingFiles\AbstractArea.hbm.xml" />
+    <Content Include="MappingFiles\AbstractJumpPoint.hbm.xml" />
+    <Content Include="MappingFiles\AbstractQuest.hbm.xml" />
+    <Content Include="MappingFiles\AbstractTask.hbm.xml" />
+    <Content Include="MappingFiles\Account.hbm.xml" />
+    <Content Include="MappingFiles\Alliance.hbm.xml" />
+    <Content Include="MappingFiles\BaseLoot.hbm.xml" />
+    <Content Include="MappingFiles\BindPoint.hbm.xml" />
+    <Content Include="MappingFiles\CraftItemData.hbm.xml" />
+    <Content Include="MappingFiles\DBAbility.hbm.xml" />
+    <Content Include="MappingFiles\DBGuildRank.hbm.xml" />
+    <Content Include="MappingFiles\DBLineXSpell.hbm.xml" />
+    <Content Include="MappingFiles\DBSalvage.hbm.xml" />
+    <Content Include="MappingFiles\DBSinglePermission.hbm.xml" />
+    <Content Include="MappingFiles\DBSpecialization.hbm.xml" />
+    <Content Include="MappingFiles\DBSpecXAbility.hbm.xml" />
+    <Content Include="MappingFiles\DBSpell.hbm.xml" />
+    <Content Include="MappingFiles\DBSpellLine.hbm.xml" />
+    <Content Include="MappingFiles\DBStyle.hbm.xml" />
+    <Content Include="MappingFiles\Faction.hbm.xml" />
+    <Content Include="MappingFiles\GameNpcInventory.hbm.xml" />
+    <Content Include="MappingFiles\GameNpcTemplate.hbm.xml" />
+    <Content Include="MappingFiles\GamePlayer.hbm.xml" />
+    <Content Include="MappingFiles\GamePlayerInventory.hbm.xml" />
+    <Content Include="MappingFiles\Guild.hbm.xml" />
+    <Content Include="MappingFiles\InvalidName.hbm.xml" />
+    <Content Include="MappingFiles\Item.hbm.xml" />
+    <Content Include="MappingFiles\ItemTemplate.hbm.xml" />
+    <Content Include="MappingFiles\LootList.hbm.xml" />
+    <Content Include="MappingFiles\MerchantItem.hbm.xml" />
+    <Content Include="MappingFiles\MerchantPage.hbm.xml" />
+    <Content Include="MappingFiles\MerchantWindow.hbm.xml" />
+    <Content Include="MappingFiles\NPCEquipment.hbm.xml" />
+    <Content Include="MappingFiles\Path.hbm.xml" />
+    <Content Include="MappingFiles\PathPoint.hbm.xml" />
+    <Content Include="MappingFiles\PersistantGameObject.hbm.xml" />
+    <Content Include="MappingFiles\Region.hbm.xml" />
+    <Content Include="MappingFiles\SpawnGeneratorBase.hbm.xml" />
+    <Content Include="MappingFiles\SpawnTemplateBase.hbm.xml" />
+    <Content Include="MappingFiles\Zone.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
     <Folder Include="Properties\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
