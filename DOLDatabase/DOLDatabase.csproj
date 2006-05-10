@@ -55,12 +55,15 @@
   <ItemGroup>
     <Compile Include="DaoFactory.cs" />
     <Compile Include="IDaos\IAccountDao.cs" />
+    <Compile Include="IDaos\IBindPointDao.cs" />
     <Compile Include="IDaos\IDataAccessObject.cs" />
     <Compile Include="NHibernateDaos\AccountDao.cs" />
     <Compile Include="GlobalConstants.cs" />
     <Compile Include="IDaoFactory.cs" />
-    <Compile Include="Database.cs" />
-    <Compile Include="TransferObjects\Account.cs" />
+    <Compile Include="NHDatabase.cs" />
+    <Compile Include="NHibernateDaos\BindPointDao.cs" />
+    <Compile Include="TransferObjects\DBBindPoint.cs" />
+    <Compile Include="TransferObjects\DBAccount.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="MappingFiles\ABrain.hbm.xml" />

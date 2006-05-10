@@ -20,10 +20,8 @@ using DOL.Database.TransferObjects;
 
 namespace DOL.Database.IDaos
 {
-	public interface IAccountDao : IDataAccessObject
+	interface IBindPointDao : IDataAccessObject
 	{
-		DBAccount SelectByAccountName(string accountName);
-		DBAccount SelectByAccountName(int accountID);
-		void Save(DBAccount account);
+
 	}
 }
