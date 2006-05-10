@@ -16,14 +16,21 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using DOL.Database.TransferObjects;
 
-namespace DOL.Database.IDaos
+using System;
+using DOL.Database.IDaos;
+using DOL.Database.TransferObjects;
+using NHibernate.Expression;
+
+namespace DOL.Database.NHibernateDaos
 {
-	public interface IAccountDao : IDataAccessObject
+	class BindPointDao : IBindPointDao
 	{
-		DBAccount SelectByAccountName(string accountName);
-		DBAccount SelectByAccountName(int accountID);
-		void Save(DBAccount account);
+		public int SaveAll()
+		{
+			//NHDatabase.Instance.SaveObject(typeof(DBBindPoint));
+			//TODO
+			return 1;
+		}
 	}
 }
