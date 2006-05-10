@@ -24,7 +24,7 @@ namespace DOL.Database.TransferObjects
 	/// <summary>
 	/// Account table
 	/// </summary>
-	public class Account
+	public class DBAccount
 	{
 		private int		m_id;
 		private string m_accountName;
