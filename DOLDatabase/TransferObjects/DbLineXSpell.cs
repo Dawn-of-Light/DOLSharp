@@ -17,20 +17,66 @@
  *
  */
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Collections;
 
-namespace DOL.Database.IDaos
+namespace DOL.Database.TransferObjects
 {
 	/// <summary>
-	/// An interface for all data access objects.
+	/// 
 	/// </summary>
-	public interface IDataAccessObject
+	public class DbLineXSpell
 	{
-		/// <summary>
-		/// Saves all data object of this type, syncronous.
-		/// </summary>
-		/// <returns>The number of objects saved to DB.</returns>
-		void SaveAll();
+		protected int m_id;
+		protected string m_line_name;
+		protected int m_spellid;
+		protected int m_level;
+
+		public int LineXSpellID
+		{
+			get
+			{
+				return m_id;
+			}
+			set
+			{
+				m_id = value;
+			}
+		}
+		
+		public string LineName
+		{
+			get
+			{
+				return m_line_name;
+			}
+			set
+			{
+				m_line_name = value;
+			}
+		}
+
+		public int SpellID
+		{
+			get
+			{
+				return m_spellid;
+			}
+			set
+			{
+				m_spellid = value;
+			}
+		}
+
+		public int Level
+		{
+			get
+			{
+				return m_level;
+			}
+			set
+			{
+				m_level = value;
+			}
+		}
 	}
 }

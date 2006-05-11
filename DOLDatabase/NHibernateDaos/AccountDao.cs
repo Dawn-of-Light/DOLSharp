@@ -25,26 +25,24 @@ namespace DOL.Database.NHibernateDaos
 {
 	public class AccountDao : IAccountDao
 	{
-		public DBAccount SelectByAccountName(string accountName)
+		public DbAccount SelectByAccountName(string accountName)
 		{
-			return (DBAccount)NHDatabase.Instance.SelectObject(typeof(DBAccount), Expression.Eq("AccountName", accountName));
+			return (DbAccount)NHDatabase.Instance.SelectObject(typeof(DbAccount), Expression.Eq("AccountName", accountName));
 		}
 
-		public DBAccount SelectByAccountName(int accountID)
+		public DbAccount SelectByAccountName(int accountID)
 		{
-			return (DBAccount)NHDatabase.Instance.SelectObject(typeof(DBAccount), Expression.Eq("AccountID", accountID));
+			return (DbAccount)NHDatabase.Instance.SelectObject(typeof(DbAccount), Expression.Eq("AccountID", accountID));
 		}
 
-		public void Save(DBAccount account)
+		public void Save(DbAccount account)
 		{
 			NHDatabase.Instance.SaveObject(account);
 		}
 
-		public int SaveAll()
+		public void SaveAll()
 		{
-			//NHDatabase.Instance.SaveObject(typeof(DBAccount));
-			//TODO
-			return 1;
+			//TODO flush cache
 		}
 	}
 }

@@ -17,20 +17,44 @@
  *
  */
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Collections;
 
-namespace DOL.Database.IDaos
+namespace DOL.Database.TransferObjects
 {
 	/// <summary>
-	/// An interface for all data access objects.
+	/// Represent a player InvalidName
 	/// </summary>
-	public interface IDataAccessObject
-	{
+	public class DbInvalidName
+	{	
+		#region Declaraction
 		/// <summary>
-		/// Saves all data object of this type, syncronous.
+		/// The unique InvalidName identifier
 		/// </summary>
-		/// <returns>The number of objects saved to DB.</returns>
-		void SaveAll();
+		private int m_id;
+
+		/// <summary>
+		/// the invalid name
+		/// </summary>
+		private string m_name;
+
+		/// <summary>
+		/// Gets or sets the unique InvalidName identifier
+		/// </summary>
+		public int InvalidNameID
+		{
+			get	{ return m_id; }
+			set	{ m_id = value; }
+		}
+
+		/// <summary>
+		/// Gets or sets the invalid name
+		/// </summary>
+		public string Name
+		{
+			get	{	return m_name; }
+			set	{	m_name = value; }
+		}
+
+		#endregion
 	}
 }

@@ -16,36 +16,80 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-
 using System;
 using System.Collections;
-using DOL.Database.IDaos;
-using DOL.Database.TransferObjects;
-using NHibernate.Expression;
 
-namespace DOL.Database.NHibernateDaos
+namespace DOL.Database.TransferObjects
 {
 	/// <summary>
-	/// Bind point table
+	/// defines what abilities are available at what speclevels
 	/// </summary>
-	class BindPointDao : IBindPointDao
+	public class DbSpecXAbility
 	{
-		/// <summary>
-		/// save all bindpoint unactive
-		/// </summary>
-		public void SaveAll()
+		protected int		m_id;
+		protected string	m_spec;
+		protected string	m_abilitykey;
+		protected int		m_abilitylevel;
+		protected int		m_speclevel;
+
+		public int SpecXAbilityID
 		{
-			//TODO flush NH cache
+			get
+			{
+				return m_id;
+			}
+			set
+			{
+				m_id = value;
+			}
 		}
 
-		/// <summary>
-		/// get all the bindpoint of region in DB
-		/// </summary>
-		/// <param name="regionID">look for BP in this region</param>
-		/// <returns> list of bind point</returns>
-		public IList SelectByRegion(int regionID)
+		public string Spec
 		{
-			return NHDatabase.Instance.SelectObjects(typeof(DbBindPoint), Expression.Eq("Region", regionID));
+			get 
+			{ 
+				return m_spec;
+			}
+			set
+			{ 
+				m_spec = value; 
+			}
+		}
+
+		public int SpecLevel
+		{
+			get 
+			{ 
+				return m_speclevel; 
+			}
+			set 
+			{
+				m_speclevel = value;
+			}
+		}
+
+		public string AbilityKey
+		{
+			get 
+			{ 
+				return m_abilitykey; 
+			}
+			set 
+			{
+				m_abilitykey = value; 
+			}
+		}
+
+		public int AbilityLevel
+		{
+			get 
+			{ 
+				return m_abilitylevel;
+			}
+			set 
+			{
+				m_abilitylevel = value;
+			}
 		}
 	}
 }

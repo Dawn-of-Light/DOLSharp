@@ -62,8 +62,27 @@
     <Compile Include="IDaoFactory.cs" />
     <Compile Include="NHDatabase.cs" />
     <Compile Include="NHibernateDaos\BindPointDao.cs" />
-    <Compile Include="TransferObjects\DBBindPoint.cs" />
-    <Compile Include="TransferObjects\DBAccount.cs" />
+    <Compile Include="TransferObjects\DBAbility.cs" />
+    <Compile Include="TransferObjects\DbBindPoint.cs" />
+    <Compile Include="TransferObjects\DbAccount.cs" />
+    <Compile Include="TransferObjects\DbGuildRank.cs" />
+    <Compile Include="TransferObjects\DbHouse.cs" />
+    <Compile Include="TransferObjects\DbHouseIndoorItem.cs" />
+    <Compile Include="TransferObjects\DbHouseOutdoorItem.cs" />
+    <Compile Include="TransferObjects\DbItemTemplate.cs" />
+    <Compile Include="TransferObjects\DbKeepHookPoint.cs" />
+    <Compile Include="TransferObjects\DbKeepObject.cs" />
+    <Compile Include="TransferObjects\DbLineXSpell.cs" />
+    <Compile Include="TransferObjects\DbPoint.cs" />
+    <Compile Include="TransferObjects\DbSalvage.cs" />
+    <Compile Include="TransferObjects\DbSinglePermission.cs" />
+    <Compile Include="TransferObjects\DbSpecialization.cs" />
+    <Compile Include="TransferObjects\DbSpecXAbility.cs" />
+    <Compile Include="TransferObjects\DbSpell.cs" />
+    <Compile Include="TransferObjects\DbSpellLine.cs" />
+    <Compile Include="TransferObjects\DbStyle.cs" />
+    <Compile Include="TransferObjects\DbStyleSubstitute.cs" />
+    <Compile Include="TransferObjects\DbInvalidName.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="MappingFiles\ABrain.hbm.xml" />
