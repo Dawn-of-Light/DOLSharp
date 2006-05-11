@@ -17,20 +17,66 @@
  *
  */
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Collections;
 
-namespace DOL.Database.IDaos
+namespace DOL.Database.TransferObjects
 {
 	/// <summary>
-	/// An interface for all data access objects.
+	/// 
 	/// </summary>
-	public interface IDataAccessObject
+	public class DbSpellLine
 	{
-		/// <summary>
-		/// Saves all data object of this type, syncronous.
-		/// </summary>
-		/// <returns>The number of objects saved to DB.</returns>
-		void SaveAll();
+		protected string m_keyName;
+		protected string m_name="unknown";
+		protected string m_spec="unknown";
+		protected bool m_isBaseLine=true;
+
+		public string KeyName
+		{
+			get
+			{
+				return m_keyName;
+			}
+			set
+			{
+				m_keyName = value;
+			}
+		}
+
+		public string Name
+		{
+			get
+			{
+				return m_name;
+			}
+			set
+			{
+				m_name = value;
+			}
+		}
+
+		public string Spec
+		{
+			get
+			{
+				return m_spec;
+			}
+			set
+			{
+				m_spec = value;
+			}
+		}
+
+		public bool IsBaseLine
+		{
+			get
+			{
+				return m_isBaseLine;
+			}
+			set
+			{
+				m_isBaseLine = value;
+			}
+		}
 	}
 }

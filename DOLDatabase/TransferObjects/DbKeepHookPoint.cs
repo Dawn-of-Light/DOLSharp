@@ -22,121 +22,122 @@ using System.Collections;
 namespace DOL.Database.TransferObjects
 {
 	/// <summary>
-	/// Table of BindPoint where player pop when they die and released
+	/// keep hook point in DB
 	/// </summary>
-	public class DbBindPoint
+	/// 
+	public class DbKeepHookPoint
 	{
-		//This needs to be uint and ushort!
-		private int		m_id;
-		private int		m_xpos;
-		private int		m_ypos;
-		private int		m_zpos;
-		private int		m_region;
-		private int		m_radius;
-		private int		m_realm;
+		private int m_hookPointID;
+		private int m_keepComponentSkinID;
+		private int m_x;
+		private int m_y;
+		private int m_z;
+		private int m_heading;
+		private int m_height;
 
+		
 		/// <summary>
-		/// The unique id of this bind point
+		/// Hook Point
 		/// </summary>
-		public int BindPointID
+		public int HookPointID
 		{
-			get
+			get 
 			{
-				return m_id;
+				return m_hookPointID;
 			}
-			set
+			set	
 			{
-				m_id=value;
+				m_hookPointID = value;
 			}
-		}
+		}		
 
 		/// <summary>
-		/// The X position of bind
+		/// skin of component with hookpoint is linked
 		/// </summary>
-		public int X
+		public int KeepComponentSkinID
 		{
-			get
+			get 
 			{
-				return m_xpos;
+				return m_keepComponentSkinID;
 			}
-			set
+			set	
 			{
-				m_xpos=value;
+				m_keepComponentSkinID = value;
 			}
-		}
-
+		}		
+		
 		/// <summary>
-		/// The Y position of bind
-		/// </summary>
-		public int Y
-		{
-			get
-			{
-				return m_ypos;
-			}
-			set
-			{
-				m_ypos=value;
-			}
-		}
-
-		/// <summary>
-		/// The Z position of bind
+		/// Z position of door
 		/// </summary>
 		public int Z
 		{
 			get
 			{
-				return m_zpos;
+				return m_z;
 			}
 			set
 			{
-				m_zpos=value;
+				m_z = value;
 			}
 		}
 
 		/// <summary>
-		/// The radius of bind
+		/// Y position of door
 		/// </summary>
-		public int Radius
+		public int Y
 		{
 			get
 			{
-				return m_radius;
+				return m_y;
 			}
 			set
 			{
-				m_radius=value;
+				m_y = value;
 			}
 		}
 
 		/// <summary>
-		/// The region of bind
+		/// X position of door
 		/// </summary>
-		public int Region
+		public int X
 		{
 			get
 			{
-				return m_region;
+				return m_x;
 			}
 			set
 			{
-				m_region=value;
+				m_x = value;
 			}
 		}
 
 		/// <summary>
-		/// The realm of this bind
+		/// Heading of door
 		/// </summary>
-		public int Realm
+		public int Heading
 		{
 			get
 			{
-				return m_realm;
+				return m_heading;
 			}
 			set
 			{
-				m_realm = value;
+				m_heading = value;
+			}
+		}
+
+		/// <summary>
+		/// Height of door
+		/// </summary>
+		public int Height
+		{
+			set
+			{
+				m_height=value;
+			}
+			get
+			{
+				return m_height;
 			}
 		}
 	}

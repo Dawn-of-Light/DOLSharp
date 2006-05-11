@@ -17,20 +17,21 @@
  *
  */
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Collections;
 
-namespace DOL.Database.IDaos
+namespace DOL.Database.TransferObjects
 {
 	/// <summary>
-	/// An interface for all data access objects.
+	/// TODO: add neccessary fields for styles
 	/// </summary>
-	public interface IDataAccessObject
+	public class DbStyleSubstitute
 	{
-		/// <summary>
-		/// Saves all data object of this type, syncronous.
-		/// </summary>
-		/// <returns>The number of objects saved to DB.</returns>
-		void SaveAll();
+		private int	m_classId;
+		
+		public int ClassId
+		{
+			get { return m_classId; }
+			set { m_classId = value; }
+		}
 	}
 }

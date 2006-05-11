@@ -21,24 +21,23 @@ using System.Collections;
 
 namespace DOL.Database.TransferObjects
 {
-	/// <summary>
-	/// Table of BindPoint where player pop when they die and released
-	/// </summary>
-	public class DbBindPoint
+	public class DbHouseIndoorItem
 	{
-		//This needs to be uint and ushort!
-		private int		m_id;
-		private int		m_xpos;
-		private int		m_ypos;
-		private int		m_zpos;
-		private int		m_region;
-		private int		m_radius;
-		private int		m_realm;
+		private int m_id;	
+		//important data
+		private int m_housenumber;
+		private int m_model;
+		private int m_position;
+		private int m_placemode;
+		private int m_xpos;
+		private int m_ypos;
+		private string m_baseitemid;
+		//"can-be-null" data (well, i dont know if size can be 0)
+		private int m_color;
+		private int m_rotation;
+		private int m_size;
 
-		/// <summary>
-		/// The unique id of this bind point
-		/// </summary>
-		public int BindPointID
+		public int HouseIndoorItemID
 		{
 			get
 			{
@@ -46,13 +45,58 @@ namespace DOL.Database.TransferObjects
 			}
 			set
 			{
-				m_id=value;
+				m_id = value;
 			}
 		}
-
-		/// <summary>
-		/// The X position of bind
-		/// </summary>
+		
+		public int HouseNumber
+		{
+			get
+			{
+				return m_housenumber;
+			}
+			set
+			{
+				m_housenumber = value;
+			}
+		}
+		
+		public int Model
+		{
+			get
+			{
+				return m_model;
+			}
+			set
+			{
+				m_model = value;
+			}
+		}
+		
+		public int Position
+		{
+			get
+			{
+				return m_position;
+			}
+			set
+			{
+				m_position = value;
+			}
+		}
+		
+		public int Placemode
+		{
+			get
+			{
+				return m_placemode;
+			}
+			set
+			{
+				m_placemode = value;
+			}
+		}
+		
 		public int X
 		{
 			get
@@ -61,13 +105,10 @@ namespace DOL.Database.TransferObjects
 			}
 			set
 			{
-				m_xpos=value;
+				m_xpos = value;
 			}
 		}
-
-		/// <summary>
-		/// The Y position of bind
-		/// </summary>
+		
 		public int Y
 		{
 			get
@@ -76,67 +117,55 @@ namespace DOL.Database.TransferObjects
 			}
 			set
 			{
-				m_ypos=value;
+				m_ypos = value;
 			}
 		}
-
-		/// <summary>
-		/// The Z position of bind
-		/// </summary>
-		public int Z
+		
+		public string BaseItemID
 		{
 			get
 			{
-				return m_zpos;
+				return m_baseitemid;
 			}
 			set
 			{
-				m_zpos=value;
+				m_baseitemid = value;
 			}
 		}
-
-		/// <summary>
-		/// The radius of bind
-		/// </summary>
-		public int Radius
+		
+		public int Color
 		{
 			get
 			{
-				return m_radius;
+				return m_color;
 			}
 			set
 			{
-				m_radius=value;
+				m_color = value;
 			}
 		}
-
-		/// <summary>
-		/// The region of bind
-		/// </summary>
-		public int Region
+		
+		public int Rotation
 		{
 			get
 			{
-				return m_region;
+				return m_rotation;
 			}
 			set
 			{
-				m_region=value;
+				m_rotation = value;
 			}
 		}
 
-		/// <summary>
-		/// The realm of this bind
-		/// </summary>
-		public int Realm
+		public int Size
 		{
 			get
 			{
-				return m_realm;
+				return m_size;
 			}
 			set
 			{
-				m_realm = value;
+				m_size = value;
 			}
 		}
 	}

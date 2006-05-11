@@ -22,8 +22,8 @@ namespace DOL.Database.IDaos
 {
 	public interface IAccountDao : IDataAccessObject
 	{
-		DBAccount SelectByAccountName(string accountName);
-		DBAccount SelectByAccountName(int accountID);
-		void Save(DBAccount account);
+		DbAccount SelectByAccountName(string accountName);
+		DbAccount SelectByAccountName(int accountID);
+		void Save(DbAccount account);
 	}
 }
