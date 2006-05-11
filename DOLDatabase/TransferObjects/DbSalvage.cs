@@ -16,36 +16,77 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-
 using System;
 using System.Collections;
-using DOL.Database.IDaos;
-using DOL.Database.TransferObjects;
-using NHibernate.Expression;
 
-namespace DOL.Database.NHibernateDaos
+namespace DOL.Database.TransferObjects
 {
 	/// <summary>
-	/// Bind point table
+	/// The salvage table
 	/// </summary>
-	class BindPointDao : IBindPointDao
+	public class DbSalvage
 	{
-		/// <summary>
-		/// save all bindpoint unactive
-		/// </summary>
-		public void SaveAll()
+		private int m_id;
+		private int m_objectType;
+		private int m_salvageLevel;
+		private DbItemTemplate m_materialItemtemplate;
+		
+		public int SalvageID
 		{
-			//TODO flush NH cache
+			get
+			{
+				return m_id;
+			}
+			set
+			{
+				m_id = value;
+			}
 		}
 
 		/// <summary>
-		/// get all the bindpoint of region in DB
+		/// Object type of item to salvage
 		/// </summary>
-		/// <param name="regionID">look for BP in this region</param>
-		/// <returns> list of bind point</returns>
-		public IList SelectByRegion(int regionID)
+		public int ObjectType
 		{
-			return NHDatabase.Instance.SelectObjects(typeof(DbBindPoint), Expression.Eq("Region", regionID));
+			get
+			{
+				return m_objectType;
+			}
+			set
+			{
+				m_objectType = value;
+			}
+		}
+
+		/// <summary>
+		/// The salvage level of the row
+		/// </summary>
+		public int SalvageLevel
+		{
+			get
+			{
+				return m_salvageLevel;
+			}
+			set
+			{
+				m_salvageLevel = value;
+			}
+		}
+
+		/// <summary>
+		/// Index of item to craft
+		/// </summary>
+		public DbItemTemplate MaterialItemtemplate
+		{
+			get
+			{
+				if (m_materialItemtemplate == null) m_materialItemtemplate = new DbItemTemplate();
+				return m_materialItemtemplate;
+			}
+			set
+			{
+				m_materialItemtemplate = value;
+			}
 		}
 	}
 }

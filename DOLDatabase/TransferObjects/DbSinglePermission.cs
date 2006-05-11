@@ -17,20 +17,56 @@
  *
  */
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Collections;
 
-namespace DOL.Database.IDaos
+namespace DOL.Database.TransferObjects
 {
-	/// <summary>
-	/// An interface for all data access objects.
-	/// </summary>
-	public interface IDataAccessObject
+	public class DbSinglePermission
 	{
-		/// <summary>
-		/// Saves all data object of this type, syncronous.
-		/// </summary>
-		/// <returns>The number of objects saved to DB.</returns>
-		void SaveAll();
+		private int		m_id;
+		private string	m_playerID;
+		private string	m_command;
+
+		public DbSinglePermission()
+		{
+			m_playerID = "";
+			m_command = "";
+		}
+
+		public int SinglePermissionID
+		{
+			get
+			{
+				return m_id;
+			}
+			set
+			{
+				m_id = value;
+			}
+		}
+
+		public string PlayerID
+		{
+			get
+			{
+				return m_playerID;
+			}
+			set
+			{
+				m_playerID = value;
+			}
+		}
+
+		public string Command
+		{
+			get
+			{
+				return m_command;
+			}
+			set
+			{
+				m_command = value;
+			}
+		}
 	}
 }

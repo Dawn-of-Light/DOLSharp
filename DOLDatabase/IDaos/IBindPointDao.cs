@@ -17,11 +17,20 @@
  *
  */
 using DOL.Database.TransferObjects;
+using System.Collections;
 
 namespace DOL.Database.IDaos
 {
+	/// <summary>
+	/// interface for bind point DAO
+	/// </summary>
 	interface IBindPointDao : IDataAccessObject
 	{
-
+		/// <summary>
+		/// select bind point BP region
+		/// </summary>
+		/// <param name="regionID"></param>
+		/// <returns></returns>
+		IList SelectByRegion(int regionID);
 	}
 }

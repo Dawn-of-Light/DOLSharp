@@ -16,36 +16,77 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-
 using System;
 using System.Collections;
-using DOL.Database.IDaos;
-using DOL.Database.TransferObjects;
-using NHibernate.Expression;
 
-namespace DOL.Database.NHibernateDaos
+namespace DOL.Database.TransferObjects
 {
 	/// <summary>
-	/// Bind point table
+	/// The ability table
 	/// </summary>
-	class BindPointDao : IBindPointDao
+	public class DbAbility
 	{
-		/// <summary>
-		/// save all bindpoint unactive
-		/// </summary>
-		public void SaveAll()
+		protected string m_keyName;
+		protected string m_name;
+		protected int	 m_iconID;		// 0 if no icon, ability icons start at 0x190
+		protected string m_description;
+
+		
+		public string KeyName
 		{
-			//TODO flush NH cache
+			get 
+			{
+				return m_keyName;	
+			}
+			set	
+			{
+				m_keyName = value;
+			}
 		}
 
 		/// <summary>
-		/// get all the bindpoint of region in DB
+		/// Name of this ability
 		/// </summary>
-		/// <param name="regionID">look for BP in this region</param>
-		/// <returns> list of bind point</returns>
-		public IList SelectByRegion(int regionID)
+		public string Name
 		{
-			return NHDatabase.Instance.SelectObjects(typeof(DbBindPoint), Expression.Eq("Region", regionID));
+			get
+			{
+				return m_name;	
+			}
+			set	
+			{
+				m_name = value;
+			}
+		}
+
+		/// <summary>
+		/// icon of ability
+		/// </summary>
+		public int IconID
+		{
+			get 
+			{	
+				return m_iconID;	
+			}
+			set	
+			{
+				m_iconID = value;
+			}
+		}
+
+		/// <summary>
+		/// Small description of this ability
+		/// </summary>
+		public string Description
+		{
+			get 
+			{	
+				return m_description;
+			}
+			set	
+			{
+				m_description = value;
+			}
 		}
 	}
 }
