@@ -18,6 +18,8 @@
  */
 using System;
 using System.Collections.Generic;
+using System.Xml;
+using System.Reflection;
 using DOL.Database.IDaos;
 
 namespace DOL.Database
@@ -32,6 +34,58 @@ namespace DOL.Database
 		/// </summary>
 		private readonly Dictionary<Type, IDataAccessObject>
 			m_registeredDaos = new Dictionary<Type, IDataAccessObject>();
+
+		/// <summary>
+		/// constructor with cfg to configure it
+		/// </summary>
+		/// <param name="cfg"></param>
+		public DaoFactory(DaoFactoryConfiguration cfg)
+		{
+			Configure(cfg);
+		}
+
+		/// <summary>
+		/// configure with the XML
+		/// </summary>
+		/// <param name="cfg"></param>
+		public void Configure(DaoFactoryConfiguration cfg)
+		{ 
+			foreach ( XmlTextReader reader in cfg.Config)
+			{
+				ParseConfig(reader);
+			}
+		}
+
+		public void ParseConfig(XmlTextReader reader)
+		{
+			while (reader.Read())
+			{
+				if (reader.NodeType == XmlNodeType.Element)
+				{
+					if (reader.Name == "DaoList")
+						continue;
+
+					if (reader.Name == "RegisterDao")
+					{
+						IDataAccessObject dataAccessObject = null;
+						string name = reader.GetAttribute("type");
+						string dao = reader.GetAttribute("dao");
+						Type interfaceType = Assembly.GetExecutingAssembly().GetType(name);
+						Type daoType = Assembly.GetExecutingAssembly().GetType(dao);
+						dataAccessObject = Activator.CreateInstance(daoType) as IDataAccessObject;
+						//RegisterDao<interfaceType>(dataAccessObject);
+						//TODO FIX ME HERE
+					}
+					else
+					{
+						//todo log error
+					}
+				}
+				else
+					continue;
+			}
+			reader.Close();
+		}
 
 		/// <summary>
 		/// Registers the data access object and
