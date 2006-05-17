@@ -54,6 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DaoFactory.cs" />
+    <Compile Include="DaoFactoryConfiguration.cs" />
     <Compile Include="IDaos\IAccountDao.cs" />
     <Compile Include="IDaos\IBindPointDao.cs" />
     <Compile Include="IDaos\IDataAccessObject.cs" />
