@@ -19,7 +19,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using DOL.Database.IDaos;
+using DOL.Database.DataAccessInterfaces;
 
 namespace DOL.Database
 {
@@ -27,7 +27,7 @@ namespace DOL.Database
     /// An interface for data layer factory which will return all
     /// data access object which manage all data object.
     /// </summary>
-    public interface IDaoFactory
+	public interface IDatabaseMgr : IDisposable
     {
         /// <summary>
         /// Registers the data access object and
@@ -35,20 +35,39 @@ namespace DOL.Database
         /// </summary>
         /// <typeparam name="T">The DAO type to register.</typeparam>
         /// <param name="dataAccessObject">The DAO to register.</param>
-        void RegisterDao<T>(IDataAccessObject dataAccessObject)
+        void Register<T>(IDataAccessObject dataAccessObject)
 			where T : class, IDataAccessObject;
+
+    	/// <summary>
+		/// Creates an instance of <paramref name="dao"/> type and registers it
+		/// as <paramref name="daoInterface"/> type.
+    	/// </summary>
+    	/// <param name="daoInterface">The DAO interface to register.</param>
+    	/// <param name="dao">The DAO type to register.</param>
+    	/// <param name="param">The DAO params that are passed to constructor.</param>
+		void Register(Type daoInterface, Type dao, IDictionary<string, string> param);
         
         /// <summary>
-        /// Pick the data access object of this type and return it.
+        /// Gets the data access object of this type and return it.
         /// </summary>
 		/// <typeparam name="T">The type of data object to register.</typeparam>
         /// <returns></returns>
-        T GetDao<T>()
+        T Using<T>()
         	where T : class, IDataAccessObject;
 
         /// <summary>
-        /// Saves all data, synchronous.
+        /// Saves all data in registered DAOs, synchronous.
         /// </summary>
         void SaveAll();
+
+    	/// <summary>
+		/// Erases old database schemas and creates new ones.
+    	/// </summary>
+		void CreateSchemas();
+
+    	/// <summary>
+		/// Verifies database schemas.
+    	/// </summary>
+		IList<string> VerifySchemas();
     }
 }
