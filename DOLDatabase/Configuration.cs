@@ -17,12 +17,10 @@
  *
  */
 using System;
-using System.Collections;
 using System.Xml;
 using System.IO;
 using System.Collections.Generic;
 using System.Reflection;
-using DOL.Database.DataAccessInterfaces;
 using log4net;
 
 namespace DOL.Database
@@ -156,11 +154,11 @@ namespace DOL.Database
 		/// <para>Root element name must be "DatabaseConfiguration".</para>
 		/// <para>XML config example:
 		/// <code>
-		/// &lt;DatabaseConfiguration&lt;
-		///   &lt;IDatabaseMgr type="DOL.Database.NHibernate.NHDatabaseMgr, DOLDatabase" /&gt;
-		///   &lt;State type="DOL.Database.NHibernate.NHState, DOLDatabase" /&gt;
-		///   &lt;Register interface="DOL.Database.DataAccessInterfaces.IAccountDao, DOLDatabase" dao="DOL.Database.NHibernate.AccountDao, DOLDatabase" /&gt;
-		/// &lt;/DatabaseConfiguration&gt;
+		/// &lt;DatabaseMgrConfiguration&lt;
+		///   &lt;IDatabaseMgr type="DOL.Database.NHibernate.NHDatabaseMgr, DOLDatabaseNHibernate" /&gt;
+		///   &lt;State type="DOL.Database.NHibernate.NHState, DOLDatabase.NHibernate" config="NHibernateConfig.xml"/&gt;
+		///   &lt;Register interface="DOL.Database.DataAccessInterfaces.IAccountDao, DOLDatabase" dao="DOL.Database.NHibernate.AccountDao, DOLDatabase.NHibernate" /&gt;
+		/// &lt;/DatabaseMgrConfiguration&gt;
 		/// </code>
 		/// </para>
 		/// </remarks>
@@ -173,10 +171,10 @@ namespace DOL.Database
 				throw new ArgumentNullException("doc");
 			}
 			
-			XmlElement root = doc["DatabaseConfiguration"];
+			XmlElement root = doc["DatabaseMgrConfiguration"];
 			if (root == null)
 			{
-				throw new ArgumentException("Root element \"DataAccessMgrConfiguration\" is not found", "doc");
+				throw new ArgumentException("Root element \"DatabaseMgrConfiguration\" is not found", "doc");
 			}
 
 			XmlNode node;
@@ -312,6 +310,8 @@ namespace DOL.Database
 			/// Holds the DAO params.
 			/// </summary>
 			public IDictionary<string, string> DaoParams;
+			
+#warning add "operator==" and equals
 		}
 	}
 }

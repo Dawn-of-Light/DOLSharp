@@ -17,7 +17,7 @@
  *
  */
 
-namespace DOL
+namespace DOL.Database
 {
     /// <summary>
     /// Defines the realms for various packets and search functions etc.

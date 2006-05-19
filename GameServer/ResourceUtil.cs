@@ -34,11 +34,22 @@ namespace DOL.Config
 		public static Stream GetResourceStream(string fileName)
 		{
 			Assembly myAssembly = Assembly.GetAssembly(typeof(ResourceUtil));
+			return GetResourceStream(fileName, myAssembly);
+		}
+
+		/// <summary>
+		/// Searches for a specific resource and returns the stream.
+		/// </summary>
+		/// <param name="fileName">The name of the file.</param>
+		/// <param name="assembly">The assembly to search in.</param>
+		/// <returns>The resource stream.</returns>
+		public static Stream GetResourceStream(string fileName, Assembly assembly)
+		{
 			fileName = fileName.ToLower();
-			foreach(string name in myAssembly.GetManifestResourceNames())
+			foreach(string name in assembly.GetManifestResourceNames())
 			{
 				if(name.ToLower().EndsWith(fileName))
-					return myAssembly.GetManifestResourceStream(name);
+					return assembly.GetManifestResourceStream(name);
 			}
 			return null;
 		}
