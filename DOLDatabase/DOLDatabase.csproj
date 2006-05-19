@@ -9,11 +9,12 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>DOL.Database</RootNamespace>
     <AssemblyName>DOLDatabase</AssemblyName>
+    <RunPostBuildEvent>Always</RunPostBuildEvent>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
+    <Optimize>true</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -28,10 +29,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Castle.DynamicProxy, Version=1.1.5.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\sharedModules\nhibernate\Castle.DynamicProxy.dll</HintPath>
-    </Reference>
     <Reference Include="Iesi.Collections, Version=1.0.0.1, Culture=neutral, PublicKeyToken=154fdcb44c4484fc">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\sharedModules\nhibernate\Iesi.Collections.dll</HintPath>
@@ -39,14 +36,6 @@
     <Reference Include="log4net, Version=1.2.9.0, Culture=neutral, PublicKeyToken=b32731d11ce58905">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\sharedModules\log4net\log4net.dll</HintPath>
-    </Reference>
-    <Reference Include="NHibernate, Version=1.0.2.0, Culture=neutral, PublicKeyToken=154fdcb44c4484fc">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\sharedModules\nhibernate\NHibernate.dll</HintPath>
-    </Reference>
-    <Reference Include="NHibernate.Mapping.Attributes, Version=1.0.2.0, Culture=neutral, PublicKeyToken=154fdcb44c4484fc">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\sharedModules\nhibernate\NHibernate.Mapping.Attributes.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -62,11 +51,6 @@
     <Compile Include="DataAccessInterfaces\IDataAccessObject.cs" />
     <Compile Include="GlobalConstants.cs" />
     <Compile Include="IDatabaseMgr.cs" />
-    <Compile Include="NHibernate\AccountDao.cs" />
-    <Compile Include="NHibernate\BindPointDao.cs" />
-    <Compile Include="NHibernate\GenericDao.cs" />
-    <Compile Include="NHibernate\NHDatabaseMgr.cs" />
-    <Compile Include="NHibernate\NHState.cs" />
     <Compile Include="DataTransferObjects\DBAbility.cs" />
     <Compile Include="DataTransferObjects\DbBindPoint.cs" />
     <Compile Include="DataTransferObjects\DbAccount.cs" />
@@ -144,4 +128,8 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <PropertyGroup>
+    <PostBuildEvent>xcopy "$(TargetDir)*" "$(SolutionDir)$(ConfigurationName)\lib\" /q /s /y /i
+</PostBuildEvent>
+  </PropertyGroup>
 </Project>

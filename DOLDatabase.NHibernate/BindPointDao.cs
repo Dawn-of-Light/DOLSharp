@@ -18,7 +18,6 @@
  */
 
 using System;
-using System.Collections;
 using DOL.Database.DataAccessInterfaces;
 using DOL.Database.DataTransferObjects;
 using NHibernate.Expression;

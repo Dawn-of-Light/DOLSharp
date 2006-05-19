@@ -149,6 +149,8 @@
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
-    <PostBuildEvent>copy "$(TargetDir)DOLServer.exe" "$(SolutionDir)$(ConfigurationName)"</PostBuildEvent>
+    <PostBuildEvent>xcopy "$(TargetPath)" "$(SolutionDir)$(ConfigurationName)\" /q /s /y /i
+xcopy "$(TargetDir)*" "$(SolutionDir)$(ConfigurationName)\lib\" /q /s /y /i
+</PostBuildEvent>
   </PropertyGroup>
 </Project>

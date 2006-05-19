@@ -67,6 +67,8 @@ namespace DOL.Database
 											+ type.FullName);
 			}
 
+#warning use ReaderWriterLock instead
+			
 			lock (m_registeredDaos)
 			{
 				if (m_registeredDaos.ContainsKey(type))
@@ -218,6 +220,7 @@ namespace DOL.Database
 			{
 				throw new ObjectDisposedException("Database manager is disposed");
 			}
+#warning route to all registered DAOs
 		}
 
 		/// <summary>
@@ -230,6 +233,7 @@ namespace DOL.Database
 			{
 				throw new ObjectDisposedException("Database manager is disposed");
 			}
+#warning route to all registered DAOs
 			return null;
 		}
 

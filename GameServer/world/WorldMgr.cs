@@ -175,8 +175,8 @@ namespace DOL.GS
 
 					objects += objectsInRegion;
 
-					if (log.IsInfoEnabled)
-						log.Info("Registered region: " + currentRegion.Description + " ("+currentRegion.RegionID+") GameObjects count : "+objectsInRegion);
+					if (log.IsDebugEnabled)
+						log.Debug("Registered region: " + currentRegion.Description + " ("+currentRegion.RegionID+") GameObjects count : "+objectsInRegion);
 				}
 
 				if (log.IsInfoEnabled)

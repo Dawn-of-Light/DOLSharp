@@ -70,6 +70,10 @@ namespace DOL.Database.NHibernate
 		/// </summary>
 		/// <param name="param">The params.</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="param"/> is null.</exception>
+		/// <remarks>
+		/// Can load external NHibernate config files if "config" property is set
+		/// else App.config or nhibernate.cfg.xml is used.
+		/// </remarks>
 		public NHState(IDictionary<string, string> param)
 		{
 			if (param == null)
@@ -80,9 +84,16 @@ namespace DOL.Database.NHibernate
 			if (log.IsInfoEnabled)
 				log.Info("Loading server core database mapping ...");
 
-			string configFile = param["config"];
 			m_config = new NHConfiguration();
-			m_config.Configure(configFile);
+			if (param.ContainsKey("config"))
+			{
+				string configFile = param["config"];
+				m_config.Configure(configFile);
+			}
+			else
+			{
+				m_config.Configure();
+			}
 
 			if (log.IsInfoEnabled)
 				log.Info("Creating database connection and instanciating caches ...");

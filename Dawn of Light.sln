@@ -12,6 +12,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameServerScripts", "GameSe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DOLDatabase", "DOLDatabase\DOLDatabase.csproj", "{08330C59-24C2-494D-8AF2-327BEA6F6E24}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DOLDatabase.NHibernate", "DOLDatabase.NHibernate\DOLDatabase.NHibernate.csproj", "{BBB21EF5-BB7E-49A0-8C8C-A16F99BA2627}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,6 +44,10 @@ Global
 		{08330C59-24C2-494D-8AF2-327BEA6F6E24}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{08330C59-24C2-494D-8AF2-327BEA6F6E24}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{08330C59-24C2-494D-8AF2-327BEA6F6E24}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BBB21EF5-BB7E-49A0-8C8C-A16F99BA2627}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BBB21EF5-BB7E-49A0-8C8C-A16F99BA2627}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BBB21EF5-BB7E-49A0-8C8C-A16F99BA2627}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BBB21EF5-BB7E-49A0-8C8C-A16F99BA2627}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
