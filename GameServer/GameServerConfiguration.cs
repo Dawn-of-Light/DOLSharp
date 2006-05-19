@@ -21,6 +21,7 @@ using System.IO;
 using System.Net;
 using System.Reflection;
 using DOL.Config;
+using DOL.Database;
 
 namespace DOL.GS
 {
@@ -40,6 +41,11 @@ namespace DOL.GS
 		/// Holds the database configuration file path
 		/// </summary>
 		protected string m_databaseConfigFile;
+
+		/// <summary>
+		/// The <see cref="IDatabaseMgr"/>'s config file.
+		/// </summary>
+		protected string m_databaseMgrConfig;
 
 		/// <summary>
 		/// Name of the scripts compilation target
@@ -138,9 +144,10 @@ namespace DOL.GS
 		{
 			base.LoadFromConfig(root);
 
-			m_logConfigFile = root["Server"]["LogConfigFile"].GetString(m_logConfigFile);
+			m_logConfigFile      = root["Server"]["LogConfigFile"].GetString(m_logConfigFile);
+			m_databaseMgrConfig  = root["Server"]["DatabaseMgrConfig"].GetString(m_databaseMgrConfig);
 			m_databaseConfigFile = root["Server"]["DatabaseConfigFile"].GetString(m_databaseConfigFile);
-			m_languageFile = root["Server"]["LanguageFile"].GetString(m_languageFile);
+			m_languageFile       = root["Server"]["LanguageFile"].GetString(m_languageFile);
 
 			m_scriptCompilationTarget = root["Server"]["ScriptCompilationTarget"].GetString(m_scriptCompilationTarget);
 			m_scriptAssemblies = root["Server"]["ScriptAssemblies"].GetString(m_scriptAssemblies);
@@ -206,6 +213,7 @@ namespace DOL.GS
 			base.SaveToConfig(root);
 
 			root["Server"]["LogConfigFile"].Set(m_logConfigFile);
+			root["Server"]["DatabaseMgrConfig"].Set(m_databaseMgrConfig);
 			root["Server"]["DatabaseConfigFile"].Set(m_databaseConfigFile);
 			root["Server"]["LanguageFile"].Set(m_languageFile);
 
@@ -264,6 +272,7 @@ namespace DOL.GS
 			
 			m_logConfigFile = "." + Path.DirectorySeparatorChar + "config" + Path.DirectorySeparatorChar + "logconfig.xml";
 			m_databaseConfigFile = "." + Path.DirectorySeparatorChar + "config" + Path.DirectorySeparatorChar + "databaseconfig.xml";
+			m_databaseMgrConfig = "." + Path.DirectorySeparatorChar + "config" + Path.DirectorySeparatorChar + "DatabaseMgrConfig.xml";
 			m_languageFile = "." + Path.DirectorySeparatorChar + "config" + Path.DirectorySeparatorChar + "GameServer.lng";
 
 			m_scriptCompilationTarget = "."+Path.DirectorySeparatorChar+"lib"+Path.DirectorySeparatorChar+"GameServerScripts.dll";
@@ -282,14 +291,7 @@ namespace DOL.GS
 
 			m_useReflectionOptimizer = true;
 			
-			try
-			{
-				m_cpuCount = int.Parse(Environment.GetEnvironmentVariable("NUMBER_OF_PROCESSORS"));
-			}
-			catch
-			{
-			    m_cpuCount = -1;
-			}
+			m_cpuCount = Environment.ProcessorCount;
 			if (m_cpuCount < 1)
 				m_cpuCount = 1;
 		}
@@ -306,7 +308,7 @@ namespace DOL.GS
 				if(Path.IsPathRooted(m_logConfigFile))
 					return m_logConfigFile;
 				else
-                    return Path.Combine(Directory.GetCurrentDirectory(), m_logConfigFile);
+					return Path.Combine(Directory.GetCurrentDirectory(), m_logConfigFile);
 			}
 			set { m_logConfigFile = value; }
 		}
@@ -321,9 +323,26 @@ namespace DOL.GS
 				if(Path.IsPathRooted(m_databaseConfigFile))
 					return m_databaseConfigFile;
 				else
-                    return Path.Combine(Directory.GetCurrentDirectory(), m_databaseConfigFile);
+					return Path.Combine(Directory.GetCurrentDirectory(), m_databaseConfigFile);
 			}
 			set { m_databaseConfigFile = value; }
+		}
+
+		/// <summary>
+		/// Gets or sets the database manager's config file name.
+		/// </summary>
+		/// <value>The database manager's config file name.</value>
+		/// <seealso cref="IDatabaseMgr"/>
+		public string DatabaseMgrConfig
+		{
+			get
+			{
+				if (Path.IsPathRooted(m_databaseMgrConfig))
+					return m_databaseMgrConfig;
+				else
+					return Path.Combine(Directory.GetCurrentDirectory(), m_databaseMgrConfig);
+			}
+			set { m_databaseMgrConfig = value; }
 		}
 
 		/// <summary>
@@ -336,7 +355,7 @@ namespace DOL.GS
 				if(Path.IsPathRooted(m_languageFile))
 					return m_languageFile;
 				else
-                    return Path.Combine(Directory.GetCurrentDirectory(), m_languageFile);
+					return Path.Combine(Directory.GetCurrentDirectory(), m_languageFile);
 			}
 			set { m_languageFile = value; }
 		}
@@ -412,7 +431,7 @@ namespace DOL.GS
 			get { return m_regionPort; }
 			set { m_regionPort = value; }
 		}
-    
+
 		/// <summary>
 		/// Gets or sets the UDP ip
 		/// </summary>

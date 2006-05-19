@@ -156,7 +156,7 @@
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PostBuildEvent>xcopy "$(TargetDir)*" "$(SolutionDir)$(ConfigurationName)\lib\" /q /s /y /i
+</PostBuildEvent>
   </PropertyGroup>
 </Project>

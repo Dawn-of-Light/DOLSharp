@@ -18,11 +18,13 @@
  */
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
 using System.Threading;
+using DOL.Database;
 using DOL.Events;
 using DOL.GS.Database;
 using DOL.GS.JumpPoints;
@@ -85,7 +87,13 @@ namespace DOL
 			/// <summary>
 			/// Database instance
 			/// </summary>
+			[Obsolete("use m_databaseMgr, later")]
 			protected ObjectDatabase m_database = null;
+
+			/// <summary>
+			/// Database manager.
+			/// </summary>
+			protected IDatabaseMgr m_databaseMgr;
 
 			/// <summary>
 			/// Holds instance of current server rules
@@ -151,9 +159,29 @@ namespace DOL
 			/// <summary>
 			/// Gets the database instance
 			/// </summary>
+			[Obsolete("use DatabaseNew, later")]
 			public static ObjectDatabase Database
 			{
 				get { return Instance.m_database; }
+			}
+
+			/// <summary>
+			/// Gets the database manager instance.
+			/// </summary>
+			/// <value>The database manager.</value>
+			/// <seealso cref="IDatabaseMgr"/>
+			public static IDatabaseMgr DatabaseNew
+			{
+				get
+				{
+					IDatabaseMgr db = Instance.m_databaseMgr;
+					if (db == null)
+					{
+						throw new Exception(
+							"Database is not initialized yet, use [GameServerStartedEvent] or [ScriptLoadedEvent] to access the database");
+					}
+					return db;
+				}
 			}
 
 			/// <summary>
@@ -755,7 +783,7 @@ namespace DOL
 			/// Holds all packet buffers.
 			/// </summary>
 			private Queue m_packetBufPool;
-			
+
 			/// <summary>
 			/// Allocates all packet buffers.
 			/// </summary>
@@ -885,7 +913,17 @@ namespace DOL
 					{
 						if (log.IsInfoEnabled)
 							log.Info("Loading database configuration ...");
-			
+						
+						DOL.Database.Configuration cfg = new Configuration();
+						//Try to find the database mgr config file, if it doesn't exist we create it
+						if(!File.Exists(Configuration.DatabaseMgrConfig))
+						{
+							ResourceUtil.ExtractResource("DatabaseMgrConfig.xml", Configuration.DatabaseMgrConfig);
+						}
+
+						cfg.AddXmlFile(Configuration.DatabaseMgrConfig);
+						m_databaseMgr = cfg.BuildDatabaseMgr();
+						
 						//Try to find the databaseconfig file, if it doesn't exist we create it
 						if(!File.Exists(Configuration.DatabaseConfigFile))
 						{
@@ -909,6 +947,8 @@ namespace DOL
 						{
 							if (log.IsInfoEnabled)
 								log.Info("Creating database tables ...");
+							
+							m_databaseMgr.CreateSchemas();
 			
 							m_database.CreateDatabaseStructure(Configuration.DatabaseConfigFile);
 						}
@@ -916,17 +956,31 @@ namespace DOL
 						{
 							if (log.IsInfoEnabled)
 								log.Info("Testing actual database structure ...");
-			
+
+							IList<string> errors = m_databaseMgr.VerifySchemas();
+							if (errors != null)
+							{
+								if (log.IsErrorEnabled)
+								{
+									log.Error("Problems with database schemas:");
+									for (int i = 0; i < errors.Count; i++)
+									{
+										string s = errors[i];
+										log.Error(String.Format("{0,3}) {1}", i, s));
+									}
+								}
+							}
+
 							// Test the database structure
-							ArrayList errors = new ArrayList();
-							if(!m_database.TestDatabaseStructure(Configuration.DatabaseConfigFile, errors))
+							ArrayList errorsOld = new ArrayList();
+							if(!m_database.TestDatabaseStructure(Configuration.DatabaseConfigFile, errorsOld))
 							{
 								if (log.IsErrorEnabled)
 								{
 									log.Error("Wrong database structure found :");
 						
 									int i = 0;
-									foreach(string msg in errors)
+									foreach(string msg in errorsOld)
 									{
 										i++;
 										log.Error(String.Format("{0,3}) {1}",i,msg));

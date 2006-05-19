@@ -50,7 +50,7 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <OutputPath>..\debug\lib\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <BaseAddress>285212672</BaseAddress>
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
@@ -109,6 +109,10 @@
       <Name>DOLBase</Name>
       <Project>{63E96E0D-10FD-4731-B029-5E66042E8C38}</Project>
       <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\DOLDatabase\DOLDatabase.csproj">
+      <Project>{08330C59-24C2-494D-8AF2-327BEA6F6E24}</Project>
+      <Name>DOLDatabase</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -2334,6 +2338,7 @@
     <EmbeddedResource Include="config\logconfig.xml">
       <SubType>Code</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="config\DatabaseMgrConfig.xml" />
     <Content Include="database\mappingFiles\ABrain.hbm.xml" />
     <Content Include="database\mappingFiles\ABrainTemplate.hbm.xml" />
     <Content Include="database\mappingFiles\AbstractArea.hbm.xml" />
@@ -2433,6 +2438,8 @@
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
-    <PostBuildEvent>xcopy "$(ProjectDir)\database\mappingFiles\*.hbm.xml" "$(SolutionDir)\$(ConfigurationName)\mapping" /y /s /q /i</PostBuildEvent>
+    <PostBuildEvent>xcopy "$(ProjectDir)\database\mappingFiles\*.hbm.xml" "$(SolutionDir)$(ConfigurationName)\mapping" /y /s /q /i
+xcopy "$(TargetDir)*" "$(SolutionDir)$(ConfigurationName)\lib\" /q /s /y /i
+if not exist "$(SolutionDir)$(ConfigurationName)\config\DatabaseMgrConfig.xml" xcopy "$(ProjectDir)config\DatabaseMgrConfig.xml" "$(SolutionDir)$(ConfigurationName)\config\" /q /s /y /i</PostBuildEvent>
   </PropertyGroup>
 </Project>
