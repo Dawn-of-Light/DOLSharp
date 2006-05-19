@@ -74,50 +74,6 @@
     <Compile Include="DataTransferObjects\DbInvalidName.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="MappingFiles\ABrain.hbm.xml" />
-    <Content Include="MappingFiles\ABrainTemplate.hbm.xml" />
-    <Content Include="MappingFiles\AbstractArea.hbm.xml" />
-    <Content Include="MappingFiles\AbstractJumpPoint.hbm.xml" />
-    <Content Include="MappingFiles\AbstractQuest.hbm.xml" />
-    <Content Include="MappingFiles\AbstractTask.hbm.xml" />
-    <Content Include="MappingFiles\Account.hbm.xml" />
-    <Content Include="MappingFiles\Alliance.hbm.xml" />
-    <Content Include="MappingFiles\BaseLoot.hbm.xml" />
-    <Content Include="MappingFiles\BindPoint.hbm.xml" />
-    <Content Include="MappingFiles\CraftItemData.hbm.xml" />
-    <Content Include="MappingFiles\DBAbility.hbm.xml" />
-    <Content Include="MappingFiles\DBGuildRank.hbm.xml" />
-    <Content Include="MappingFiles\DBLineXSpell.hbm.xml" />
-    <Content Include="MappingFiles\DBSalvage.hbm.xml" />
-    <Content Include="MappingFiles\DBSinglePermission.hbm.xml" />
-    <Content Include="MappingFiles\DBSpecialization.hbm.xml" />
-    <Content Include="MappingFiles\DBSpecXAbility.hbm.xml" />
-    <Content Include="MappingFiles\DBSpell.hbm.xml" />
-    <Content Include="MappingFiles\DBSpellLine.hbm.xml" />
-    <Content Include="MappingFiles\DBStyle.hbm.xml" />
-    <Content Include="MappingFiles\Faction.hbm.xml" />
-    <Content Include="MappingFiles\GameNpcInventory.hbm.xml" />
-    <Content Include="MappingFiles\GameNpcTemplate.hbm.xml" />
-    <Content Include="MappingFiles\GamePlayer.hbm.xml" />
-    <Content Include="MappingFiles\GamePlayerInventory.hbm.xml" />
-    <Content Include="MappingFiles\Guild.hbm.xml" />
-    <Content Include="MappingFiles\InvalidName.hbm.xml" />
-    <Content Include="MappingFiles\Item.hbm.xml" />
-    <Content Include="MappingFiles\ItemTemplate.hbm.xml" />
-    <Content Include="MappingFiles\LootList.hbm.xml" />
-    <Content Include="MappingFiles\MerchantItem.hbm.xml" />
-    <Content Include="MappingFiles\MerchantPage.hbm.xml" />
-    <Content Include="MappingFiles\MerchantWindow.hbm.xml" />
-    <Content Include="MappingFiles\NPCEquipment.hbm.xml" />
-    <Content Include="MappingFiles\Path.hbm.xml" />
-    <Content Include="MappingFiles\PathPoint.hbm.xml" />
-    <Content Include="MappingFiles\PersistantGameObject.hbm.xml" />
-    <Content Include="MappingFiles\Region.hbm.xml" />
-    <Content Include="MappingFiles\SpawnGeneratorBase.hbm.xml" />
-    <Content Include="MappingFiles\SpawnTemplateBase.hbm.xml" />
-    <Content Include="MappingFiles\Zone.hbm.xml" />
-  </ItemGroup>
-  <ItemGroup>
     <Folder Include="Properties\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
