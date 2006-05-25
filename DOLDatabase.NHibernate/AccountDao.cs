@@ -24,7 +24,10 @@ using NHibernate.Expression;
 
 namespace DOL.Database.NHibernate
 {
-	public class AccountDao : GenericDao<DbAccount, int>, IAccountDao
+	/// <summary>
+	/// NHibernate implementation of <see cref="IAccountDao"/> interface.
+	/// </summary>
+	public class AccountDao : GenericDao<AccountTO, int>, IAccountDao
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="AccountDao"/> class.
@@ -35,13 +38,13 @@ namespace DOL.Database.NHibernate
 		}
 
 		/// <summary>
-		/// Loads a <see cref="DbAccount"/> by its name.
+		/// Finds an <see cref="AccountTO"/> by its name.
 		/// </summary>
-		/// <param name="accountName">The account name to load.</param>
+		/// <param name="accountName">The account name to find.</param>
 		/// <returns>The found object or null.</returns>
-		public DbAccount LoadByName(string accountName)
+		public AccountTO FindByName(string accountName)
 		{
-			return (DbAccount) State.SelectObject(typeof(DbAccount), Expression.Eq("AccountName", accountName));
+			return (AccountTO) Database.SelectObject(typeof(AccountTO), Expression.Eq("AccountName", accountName));
 		}
 	}
 }

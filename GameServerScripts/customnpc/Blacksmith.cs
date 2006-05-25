@@ -19,8 +19,8 @@
 
 using System;
 using System.Collections;
-using DOL.GS.Database;
 using DOL.GS.PacketHandler;
+using NHibernate.Mapping.Attributes;
 
 namespace DOL.GS.Scripts
 {
@@ -28,7 +28,7 @@ namespace DOL.GS.Scripts
 	/// This class holds all information that
 	/// EVERY blacksmith npc in the game world needs!
 	/// </summary>
-	[NHibernate.Mapping.Attributes.Subclass(NameType=typeof(Blacksmith), ExtendsType=typeof(GameMob))] 
+	[Subclass(NameType=typeof(Blacksmith), ExtendsType=typeof(GameMob))] 
 	public class Blacksmith : GameMob
 	{
 		private const string REPEAR_ITEM_WEAK = "repear item";

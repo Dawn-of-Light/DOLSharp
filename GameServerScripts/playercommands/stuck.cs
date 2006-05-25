@@ -17,6 +17,8 @@
  *
  */
 
+using DOL.Database;
+
 namespace DOL.GS.Scripts
 {
 	[CmdAttribute("&stuck",

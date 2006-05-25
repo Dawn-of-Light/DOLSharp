@@ -23,6 +23,7 @@ using System.Reflection;
 using log4net;
 using NHibernate;
 using NHibernate.Expression;
+using NHibernate.Mapping;
 using NHConfiguration=NHibernate.Cfg.Configuration;
 
 namespace DOL.Database.NHibernate
@@ -63,46 +64,6 @@ namespace DOL.Database.NHibernate
 		public NHConfiguration Config
 		{
 			get { return m_config; }
-		}
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="NHState"/> class.
-		/// </summary>
-		/// <param name="param">The params.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="param"/> is null.</exception>
-		/// <remarks>
-		/// Can load external NHibernate config files if "config" property is set
-		/// else App.config or nhibernate.cfg.xml is used.
-		/// </remarks>
-		public NHState(IDictionary<string, string> param)
-		{
-			if (param == null)
-			{
-				throw new ArgumentNullException("param", "params can't be null");
-			}
-
-			if (log.IsInfoEnabled)
-				log.Info("Loading server core database mapping ...");
-
-			m_config = new NHConfiguration();
-			if (param.ContainsKey("config"))
-			{
-				string configFile = param["config"];
-				m_config.Configure(configFile);
-			}
-			else
-			{
-				m_config.Configure();
-			}
-
-			if (log.IsInfoEnabled)
-				log.Info("Creating database connection and instanciating caches ...");
-
-			m_sessionFactory = m_config.BuildSessionFactory();
-			if (m_sessionFactory == null)
-			{
-				throw new ApplicationException("Failed to create session factory");
-			}
 		}
 
 		/// <summary>
@@ -209,7 +170,7 @@ namespace DOL.Database.NHibernate
 		/// <summary>
 		/// Updata a persistant object.
 		/// </summary>
-		public void SaveObject(object o)
+		public void UpdateObject(object o)
 		{
 			if (o == null)
 			{
@@ -442,7 +403,7 @@ namespace DOL.Database.NHibernate
 		}
 
 		/// <summary>
-		/// Load a lazy collection of a specific object.
+		/// Find a lazy collection of a specific object.
 		/// </summary>
 		/// <param name="obj">The object owning the lazy component to load.</param>
 		/// <param name="component">The component to load, it can be a collection.</param>
@@ -469,7 +430,7 @@ namespace DOL.Database.NHibernate
 		}
 
 		/// <summary>
-		/// Find a persistant object using its primary key.
+		/// Gets persistant objects count.
 		/// </summary>
 		/// <returns>Objects count.</returns>
 		public int GetObjectCount(Type type)
@@ -483,7 +444,7 @@ namespace DOL.Database.NHibernate
 			try
 			{
 				session = m_sessionFactory.OpenSession();
-				return (int) session.CreateQuery("SELECT COUNT(*) FROM "+type).UniqueResult();
+				return (int)session.CreateQuery("SELECT COUNT(*) FROM " + type.FullName).UniqueResult();
 			}
 			catch(Exception e)
 			{
@@ -505,6 +466,53 @@ namespace DOL.Database.NHibernate
 		public void Dispose()
 		{
 			m_sessionFactory.Close();
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="NHState"/> class.
+		/// </summary>
+		/// <param name="param">The params.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="param"/> is null.</exception>
+		/// <remarks>
+		/// Can load external NHibernate config files if "config" property is set
+		/// else App.config or nhibernate.cfg.xml is used.
+		/// </remarks>
+		public NHState(IDictionary<string, string> param)
+		{
+			if (param == null)
+			{
+				throw new ArgumentNullException("param", "params can't be null");
+			}
+
+			if (log.IsInfoEnabled)
+				log.Info("Loading server core database mapping ...");
+
+			m_config = new NHConfiguration();
+			if (param.ContainsKey("config"))
+			{
+				string configFile = param["config"];
+				m_config.Configure(configFile);
+			}
+			else
+			{
+				m_config.Configure();
+			}
+
+			if (log.IsInfoEnabled)
+				log.Info("Creating database connection and instanciating caches ...");
+
+			ISessionFactory factory = m_config.BuildSessionFactory();
+			if (factory == null)
+			{
+				throw new ApplicationException("Failed to create a session factory");
+			}
+			m_sessionFactory = factory;
+
+			log.ErrorFormat("mappings count: {0}", m_config.ClassMappings.Count);
+			foreach (PersistentClass c in m_config.ClassMappings)
+			{
+				log.ErrorFormat("found mapping for {0}", c.MappedClass.FullName);
+			}
 		}
 	}
 }

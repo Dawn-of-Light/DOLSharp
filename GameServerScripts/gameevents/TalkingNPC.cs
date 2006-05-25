@@ -27,9 +27,9 @@
  */
 using System;
 using System.Reflection;
+using DOL.AI.Brain;
 using DOL.Events;
 using DOL.GS.PacketHandler;
-using DOL.AI.Brain;
 using log4net;
 
 namespace DOL.GS.GameEvents

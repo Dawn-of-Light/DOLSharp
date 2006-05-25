@@ -17,6 +17,7 @@
  *
  */
 using System.Reflection;
+using DOL.Database;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Scripts

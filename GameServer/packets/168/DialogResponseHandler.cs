@@ -19,6 +19,7 @@
 using System;
 using System.Collections;
 using DOL.Events;
+using DOL.GS.Database;
 using DOL.GS.Quests;
 
 namespace DOL.GS.PacketHandler.v168

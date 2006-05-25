@@ -16,10 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections;
-using DOL.GS.Database;
-using DOL.GS.PacketHandler;
+using DOL.Database;
 using NHibernate.Expression;
 
 namespace DOL.GS.Scripts
@@ -126,7 +123,7 @@ namespace DOL.GS.Scripts
 						else
 						{
 							//Return database object
-							Account acc = (Account) GameServer.Database.SelectObject(typeof (Account), Expression.Eq("AccountID",cha.AccountID));
+							Account acc = (Account) GameServer.Database.SelectObject(typeof (Account), Expression.Eq("AccountId",cha.AccountId));
 							if (acc != null)
 								DisplayMessage(client, "Account name for character " + cha.Name + " is : " + acc.AccountName);
 							

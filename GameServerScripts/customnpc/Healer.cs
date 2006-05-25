@@ -27,13 +27,14 @@ using System.Collections;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 using DOL.GS.Spells;
+using NHibernate.Mapping.Attributes;
 
 namespace DOL.GS.Scripts
 {
 	/// <summary>
 	/// Represents an in-game GameHealer NPC
 	/// </summary>
-	[NHibernate.Mapping.Attributes.Subclass(NameType=typeof(GameHealer), ExtendsType=typeof(GameMob))] 
+	[Subclass(NameType=typeof(GameHealer), ExtendsType=typeof(GameMob))] 
 	public class GameHealer : GameMob
 	{
 		private const string CURRED_SPELL_TYPE = "PveResurrectionIllness";

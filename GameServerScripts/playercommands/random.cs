@@ -27,6 +27,7 @@
 ******************/
 
 using System;
+using DOL.Database;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Scripts
@@ -60,7 +61,7 @@ namespace DOL.GS.Scripts
 			// trying to convert number
 			try
 			{
-				thrownMax = System.Convert.ToInt32(args[1]);
+				thrownMax = Convert.ToInt32(args[1]);
 			}
 			catch (OverflowException)
 			{

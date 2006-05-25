@@ -19,7 +19,9 @@
 using System.Collections;
 using System;
 using System.Reflection;
+using DOL.Database;
 using DOL.GS.Database;
+using DOL.GS.PacketHandler;
 using log4net;
 
 namespace DOL.GS
@@ -639,7 +641,7 @@ namespace DOL.GS
 		/// <param name="msg">message string</param>
 		/// <param name="type">message type</param>
 		/// <param name="loc">message location</param>
-		public void SendMessageToGuildMembers(string msg, PacketHandler.eChatType type, PacketHandler.eChatLoc loc)
+		public void SendMessageToGuildMembers(string msg, eChatType type, eChatLoc loc)
 		{
 			lock(m_guildMembers.SyncRoot)
 			{

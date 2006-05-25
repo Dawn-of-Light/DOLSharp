@@ -1,0 +1,19 @@
+<?xml version="1.0" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="DOL.Database.DataTransferObjects.AccountTO, DOLDatabase" table="`account`">
+		<id name="AccountId" column="`AccountId`" unsaved-value="0">
+			<generator class="native" />
+		</id>
+		<property name="AccountName" type="String(20)" unique="true" not-null="true" column="`AccountName`"/>
+		<property name="Password" type="String" not-null="true" column="`Password`"/>
+		<property name="CreationDate" type="DateTime" not-null="true" column="`CreationDate`"/>
+		<property name="LastLogin" type="DateTime" not-null="true" column="`LastLogin`"/>
+		<property name="Realm" not-null="true" column="`Realm`"/>
+		<property name="PrivLevel" not-null="true" column="`PrivLevel`"/>
+		<property name="Mail" type="String" not-null="false" column="`Mail`"/>
+		<property name="LastLoginIp" type="String" not-null="true" column="`LastLoginIp`"/>
+		<property name="BanDuration" type="TimeSpan" not-null="true" column="`BanDuration`"/>
+		<property name="BanAuthor" type="String(255)" not-null="true" column="`BanAuthor`"/>
+		<property name="BanReason" type="String(255)" not-null="true" column="`BanReason`"/>
+	</class>
+</hibernate-mapping>

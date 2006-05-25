@@ -16,8 +16,8 @@
     <property name="hibernate.cache.provider_class">NHibernate.Caches.SysCache.SysCacheProvider, NHibernate.Caches.SysCache</property>
     <property name="relativeExpiration">10000</property>
 
-    <!-- Define all mapping files to load at -the server start 
-    <mapping file="mapping\ABrain.hbm.xml" /> -->
+    <!-- Define all mapping files to load at -the server start  -->
+    <mapping file="mappings\Account.hbm.xml" />
 
   </session-factory>
 </hibernate-configuration>

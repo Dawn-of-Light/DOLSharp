@@ -49,11 +49,11 @@
     <Compile Include="DataAccessInterfaces\IAccountDao.cs" />
     <Compile Include="DataAccessInterfaces\IBindPointDao.cs" />
     <Compile Include="DataAccessInterfaces\IDataAccessObject.cs" />
-    <Compile Include="GlobalConstants.cs" />
+    <Compile Include="Enums.cs" />
     <Compile Include="IDatabaseMgr.cs" />
     <Compile Include="DataTransferObjects\DBAbility.cs" />
     <Compile Include="DataTransferObjects\DbBindPoint.cs" />
-    <Compile Include="DataTransferObjects\DbAccount.cs" />
+    <Compile Include="DataTransferObjects\AccountTO.cs" />
     <Compile Include="DataTransferObjects\DbGuildRank.cs" />
     <Compile Include="DataTransferObjects\DbHouse.cs" />
     <Compile Include="DataTransferObjects\DbHouseIndoorItem.cs" />

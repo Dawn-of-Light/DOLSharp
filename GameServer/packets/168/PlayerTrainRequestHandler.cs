@@ -18,6 +18,7 @@
  */
 using System.Collections;
 using System.Reflection;
+using DOL.GS.Database;
 using log4net;
 
 namespace DOL.GS.PacketHandler.v168

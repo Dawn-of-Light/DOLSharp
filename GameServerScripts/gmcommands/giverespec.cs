@@ -20,6 +20,7 @@
 // Utility for GMs to set target players respecs.
 
 using System;
+using DOL.Database;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Scripts

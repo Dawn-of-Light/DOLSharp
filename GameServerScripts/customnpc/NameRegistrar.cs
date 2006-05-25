@@ -1,19 +1,16 @@
 /* 01/03/2005
    Written by Gavinius */
 
-using System;
-using DOL;
-using DOL.GS;
-using DOL.GS.Database;
 using System.Collections;
 using DOL.GS.PacketHandler;
+using NHibernate.Mapping.Attributes;
 
 namespace DOL.GS.Scripts
 {
 	/// <summary>
 	/// Represents an in-game NameRegistrar NPC
 	/// </summary>
-	[NHibernate.Mapping.Attributes.Subclass(NameType=typeof(NameRegistrar), ExtendsType=typeof(GameMob))] 
+	[Subclass(NameType=typeof(NameRegistrar), ExtendsType=typeof(GameMob))] 
 	public class NameRegistrar : GameMob
 	{
 		/// <summary>

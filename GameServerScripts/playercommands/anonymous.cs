@@ -27,10 +27,8 @@
  * 
  */
 
-using System;
-using DOL.GS;
+using DOL.Database;
 using DOL.GS.PacketHandler;
-using log4net;
 
 namespace DOL.GS.Scripts
 {

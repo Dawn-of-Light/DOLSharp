@@ -19,6 +19,7 @@
 using System;
 using System.Reflection;
 using DOL.Events;
+using DOL.GS.Database;
 using DOL.GS.PacketHandler;
 using log4net;
 

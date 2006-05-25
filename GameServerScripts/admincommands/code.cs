@@ -27,6 +27,7 @@ using System.CodeDom.Compiler;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using DOL.Database;
 using DOL.GS.PacketHandler;
 using log4net;
 using Microsoft.CSharp;

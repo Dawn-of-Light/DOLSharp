@@ -20,7 +20,9 @@ using System;
 using System.Collections;
 using System.Reflection;
 using DOL.AI.Brain;
+using DOL.Database;
 using DOL.GS;
+using DOL.GS.Database;
 using DOL.GS.PacketHandler;
 using DOL.GS.Quests;
 using log4net;
@@ -175,7 +177,7 @@ namespace DOLGameServerConsole
 		public void SendComponentUpdate(GameKeepComponent keepcomponent){}
 		public void SendWarmapUpdate(IList list) {}
 		public void SendWarmapBonuses() {}*/
-		public void SendCheckLOS(GameObject Checker, GameObject Target, DOL.GS.PacketHandler.CheckLOSResponse callback) {}
+		public void SendCheckLOS(GameObject Checker, GameObject Target, CheckLOSResponse callback) {}
 		public void SendLivingDataUpdate(GameLiving living, bool updateStrings) {}
 		public void SendPlayerTitles() {}
 		public void SendPlayerTitleUpdate(GamePlayer player) {}

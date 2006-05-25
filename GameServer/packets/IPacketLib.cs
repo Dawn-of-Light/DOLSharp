@@ -18,9 +18,9 @@
  */
 using System.Collections;
 using DOL.AI.Brain;
+using DOL.Database;
 using DOL.GS;
 using DOL.GS.Quests;
-using DOL.GS.Database;
 
 namespace DOL.GS.PacketHandler
 {
@@ -120,6 +120,7 @@ namespace DOL.GS.PacketHandler
 		CharacterOverview = 0xFD,
 		Realm = 0xFE,
 	}
+
 	/// <summary>
 	/// Enum for LoginDeny reasons
 	/// </summary>
@@ -146,42 +147,6 @@ namespace DOL.GS.PacketHandler
 		CafesAccountIsSuspended = 0x16,
 		NotAuthorizedToUseExpansionVersion = 0x17,
 		ServiceNotAvailable = 0xaa
-	};
-
-	/// <summary>
-	/// Defines the realms for various packets and search functions etc.
-	/// </summary>
-	public enum eRealm : byte
-	{
-		/// <summary>
-		/// First realm number, for use in all arrays
-		/// </summary>
-		_First = 0,
-		/// <summary>
-		/// No specific realm
-		/// </summary>
-		None = 0,
-		/// <summary>
-		/// Albion Realm
-		/// </summary>
-		Albion = 1,
-		/// <summary>
-		/// Midgard Realm
-		/// </summary>
-		Midgard = 2,
-		/// <summary>
-		/// Hibernia Realm
-		/// </summary>
-		Hibernia = 3,
-		/// <summary>
-		/// Last player realm number, for use in all arrays
-		/// </summary>
-		_LastPlayerRealm = 3,
-		/// <summary>
-		/// LastRealmNumber to allow dynamic allocation of realm specific arrays.
-		/// </summary>
-		_Last=6
-
 	};
 
 	/// <summary>
@@ -355,6 +320,7 @@ namespace DOL.GS.PacketHandler
 	};
 
 	public delegate void CustomDialogResponse(GamePlayer player, byte response);
+
 	public delegate void CheckLOSResponse(GamePlayer player, ushort response);
 
 	public enum eSoundType : ushort
@@ -386,7 +352,6 @@ namespace DOL.GS.PacketHandler
 		QuestSuscribe = 0x64,
 		BuyRespec = 0x20,
 	}
-
 
 	public interface IPacketLib
 	{
@@ -477,7 +442,7 @@ namespace DOL.GS.PacketHandler
 		void SendWeather(uint x, uint width, ushort speed, ushort fogdiffusion, ushort intensity);
 		void SendPlayerModelTypeChange(GamePlayer player, byte modelType);
 		void SendObjectDelete(GameObject obj);
-        void SendTaskUpdate();
+		void SendTaskUpdate();
 		void SendQuestListUpdate();
 		void SendQuestUpdate(AbstractQuest quest);
 		void SendConcentrationList();
@@ -508,10 +473,11 @@ namespace DOL.GS.PacketHandler
 		void SendSiegeWeaponCloseInterface();
 		void SendSiegeWeaponInterface(GameSiegeWeapon siegeWeapon);*/
 		//housing
-	/*	void SendHouse(House house);
+		/*	void SendHouse(House house);
 		void SendGarden(House house);
 		void SendRemoveGarden(House house);
 		void SendEnterHouse(House house);
 		void SendFurniture(House house);*/
 	}
 }
+

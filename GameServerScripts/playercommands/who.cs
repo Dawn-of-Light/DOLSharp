@@ -43,6 +43,7 @@ using System;
 using System.Collections;
 using System.Reflection;
 using System.Text;
+using DOL.Database;
 using DOL.GS.PacketHandler;
 using log4net;
 
@@ -231,11 +232,11 @@ namespace DOL.GS.Scripts
 				{
 					try
 					{
-						int currentNum = (int) System.Convert.ToUInt32(args[i]);
+						int currentNum = (int) Convert.ToUInt32(args[i]);
 						int nextNum = -1;
 						try
 						{
-							nextNum = (int) System.Convert.ToUInt32(args[i + 1]);
+							nextNum = (int) Convert.ToUInt32(args[i + 1]);
 						}
 						catch
 						{

@@ -23,6 +23,8 @@
  * Desc:	Implements /faceloc command
  * 
  */
+using System;
+using DOL.Database;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Scripts
@@ -49,8 +51,8 @@ namespace DOL.GS.Scripts
 					);
 				return 1;
 			}
-			int x = System.Convert.ToInt32(args[1]);
-			int y = System.Convert.ToInt32(args[2]);
+			int x = Convert.ToInt32(args[1]);
+			int y = Convert.ToInt32(args[2]);
 			Zone currentZone = client.Player.Region.GetZone(client.Player.Position);
 			if(currentZone == null) return 0;
 			int Xoffset = currentZone.XOffset;

@@ -16,14 +16,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Reflection;
-using System.IO;
-using DOL.GS.Database;
-using DOL.Events;
-using DOL.GS.PacketHandler;
-using log4net;
-
 namespace DOL.GS.Scripts
 {
 	/// <summary>

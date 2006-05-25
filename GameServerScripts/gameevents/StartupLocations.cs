@@ -27,8 +27,6 @@
 using System;
 using System.Collections.Specialized;
 using System.Reflection;
-using DOL.GS.PacketHandler;
-using DOL.GS.Database;
 using DOL.Events;
 using log4net;
 

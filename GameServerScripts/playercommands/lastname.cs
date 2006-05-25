@@ -3,10 +3,9 @@
 
 using System;
 using System.Collections;
-using DOL.GS;
+using DOL.Database;
 using DOL.GS.Database;
 using DOL.GS.PacketHandler;
-
 
 namespace DOL.GS.Scripts
 {

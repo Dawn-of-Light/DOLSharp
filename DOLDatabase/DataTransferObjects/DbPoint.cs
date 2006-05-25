@@ -26,14 +26,14 @@ namespace DOL.Database.DataTransferObjects
 	public class DbPoint
 	{
 		/// <summary>
-		/// Initializes a new instance of the <see cref="DBPoint"/> class.
+		/// Initializes a new instance of the <see cref="DbPoint"/> class.
 		/// </summary>
 		public DbPoint()
 		{
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="DBPoint"/> class.
+		/// Initializes a new instance of the <see cref="DbPoint"/> class.
 		/// </summary>
 		/// <param name="x">The x.</param>
 		/// <param name="y">The y.</param>

@@ -25,27 +25,39 @@ namespace DOL.Database.DataAccessInterfaces
 	/// <summary>
 	/// Generic interface with base DAO methods.
 	/// </summary>
-	/// <typeparam name="TTransferObject">The transfer object type.</typeparam>
+	/// <typeparam name="TTransferObject">The transfer object's type.</typeparam>
 	/// <typeparam name="TPrimaryKey">The transfer object's primary key type.</typeparam>
 	public interface IGenericDao<TTransferObject, TPrimaryKey> : IDataAccessObject
 	{
 		/// <summary>
-		/// Loads an object by primary key.
+		/// Finds an object by its primary key.
 		/// </summary>
 		/// <param name="key">The primary key.</param>
-		/// <returns>Loaded object.</returns>
-		TTransferObject Load(TPrimaryKey key);
+		/// <returns>The found object or null.</returns>
+		TTransferObject Find(TPrimaryKey key);
 
 		/// <summary>
-		/// Inserts a new object into a database.
+		/// Saves an object into a database.
 		/// </summary>
-		/// <param name="obj">The object to insert.</param>
-		void Insert(TTransferObject obj);
+		/// <param name="obj">The object to save.</param>
+		void Save(TTransferObject obj);
+
+		/// <summary>
+		/// Updates the persistent instance with data from transfer object.
+		/// </summary>
+		/// <param name="obj">The data.</param>
+		void Update(TTransferObject obj);
 
 		/// <summary>
 		/// Deletes an object from a database.
 		/// </summary>
 		/// <param name="obj">The object to delete.</param>
 		void Delete(TTransferObject obj);
+
+		/// <summary>
+		/// Gets the count of all stored objects.
+		/// </summary>
+		/// <value>The count of all objects.</value>
+		int CountAll();
 	}
 }
