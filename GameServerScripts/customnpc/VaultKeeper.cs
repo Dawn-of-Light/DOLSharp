@@ -18,13 +18,14 @@
  */
 //							Written by Doulbousiouf (01/11/2004)					//
 using System.Collections;
+using NHibernate.Mapping.Attributes;
 
 namespace DOL.GS.Scripts
 {
 	/// <summary>
 	/// Represents an in-game VaultKeeper NPC
 	/// </summary>
-	[NHibernate.Mapping.Attributes.Subclass(NameType=typeof(GameVaultKeeper), ExtendsType=typeof(GameMob))] 
+	[Subclass(NameType=typeof(GameVaultKeeper), ExtendsType=typeof(GameMob))] 
 	public class GameVaultKeeper : GameMob
 	{
 		#region Examine Message

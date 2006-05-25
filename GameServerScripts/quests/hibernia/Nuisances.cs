@@ -31,10 +31,10 @@
 using System;
 using System.Reflection;
 using DOL.AI.Brain;
-using DOL.GS.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
+using NHibernate.Mapping.Attributes;
 /* I suggest you declare yourself some namespaces for your quests
  * Like: DOL.GS.Quests.Albion
  *       DOL.GS.Quests.Midgard
@@ -98,7 +98,7 @@ namespace DOL.GS.Quests.Hibernia
 	 * as Quest. We must make it persistant using attributes, to
 	 * do this, we derive from the abstract class AbstractQuest
 	 */
-	[NHibernate.Mapping.Attributes.Subclass(NameType = typeof(NuisancesHib), ExtendsType = typeof(AbstractQuest))] 
+	[Subclass(NameType = typeof(NuisancesHib), ExtendsType = typeof(AbstractQuest))] 
 	public class NuisancesHib : BaseAddirQuest
 	{
 		/// <summary>

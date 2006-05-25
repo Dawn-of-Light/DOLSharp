@@ -17,6 +17,7 @@
  *
  */
 using System;
+using DOL.Database;
 using DOL.GS.PacketHandler;
 //Jump script, created by Crystal!
 

@@ -21,15 +21,15 @@ using DOL.Database.DataTransferObjects;
 namespace DOL.Database.DataAccessInterfaces
 {
 	/// <summary>
-	/// An interface to access <see cref="DbAccount"/> objects.
+	/// An interface to access <see cref="AccountTO"/> objects.
 	/// </summary>
-	public interface IAccountDao : IGenericDao<DbAccount, int>
+	public interface IAccountDao : IGenericDao<AccountTO, int>
 	{
 		/// <summary>
-		/// Loads a <see cref="DbAccount"/> by its name.
+		/// Finds a <see cref="AccountTO"/> by its name.
 		/// </summary>
 		/// <param name="accountName">The account name to load.</param>
 		/// <returns>The found object or null.</returns>
-		DbAccount LoadByName(string accountName);
+		AccountTO FindByName(string accountName);
 	}
 }

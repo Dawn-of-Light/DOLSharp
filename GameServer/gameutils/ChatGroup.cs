@@ -18,6 +18,7 @@
  */
 using System.Collections;
 using System.Collections.Specialized;
+using DOL.GS.Database;
 using DOL.GS.PacketHandler;
 namespace DOL.GS
 {

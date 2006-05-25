@@ -17,12 +17,14 @@
  *
  */
 
+using NHibernate.Mapping.Attributes;
+
 namespace DOL.GS.Scripts
 {
 	/// <summary>
 	/// Guild Registrar
 	/// </summary>	
-	[NHibernate.Mapping.Attributes.Subclass(NameType=typeof(GuildRegistrar), ExtendsType=typeof(GameMob))] 
+	[Subclass(NameType=typeof(GuildRegistrar), ExtendsType=typeof(GameMob))] 
 	public class GuildRegistrar : GameMob
 	{
 		protected const string FORM_A_GUILD = "form a guild";

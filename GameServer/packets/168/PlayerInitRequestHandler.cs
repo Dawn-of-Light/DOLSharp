@@ -20,6 +20,7 @@ using System;
 using System.Reflection;
 using DOL.Events;
 using DOL.GS;
+using DOL.GS.Database;
 using log4net;
 
 namespace DOL.GS.PacketHandler.v168

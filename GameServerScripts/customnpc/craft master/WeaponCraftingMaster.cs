@@ -1,13 +1,15 @@
  //using DOL.GS.Database;
 //using DOL.GS.PacketHandler;
 
+using NHibernate.Mapping.Attributes;
+
 namespace DOL.GS.Scripts
 {
 	/// <summary>
 	/// This class holds all information that
 	/// EVERY Weapon Crafting master npc in the game world needs!
 	/// </summary>
-	[NHibernate.Mapping.Attributes.Subclass(NameType=typeof(WeaponCraftingMaster), ExtendsType=typeof(GameCraftMaster))] 
+	[Subclass(NameType=typeof(WeaponCraftingMaster), ExtendsType=typeof(GameCraftMaster))] 
 	public class WeaponCraftingMaster : GameCraftMaster
 	{
 		private static readonly eCraftingSkill[] m_trainedSkills = 

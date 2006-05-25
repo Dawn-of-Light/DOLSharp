@@ -16,8 +16,10 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using DOL.GS.Quests;
+using DOL.Database;
 using DOL.GS.PacketHandler;
+using DOL.GS.Quests;
+using Iesi.Collections;
 
 namespace DOL.GS.Scripts
 {
@@ -30,7 +32,7 @@ namespace DOL.GS.Scripts
 		public int OnCommand(GameClient client, string[] args)
 		{
 			GamePlayer player = client.Player;
-			Iesi.Collections.ISet activeQuests = player.ActiveQuests;
+			ISet activeQuests = player.ActiveQuests;
 			lock (activeQuests)
 			{
 				client.Out.SendMessage(" ", eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -43,7 +45,7 @@ namespace DOL.GS.Scripts
 				}
 			}
 
-			Iesi.Collections.ISet finishedQuests = player.FinishedQuests;
+			ISet finishedQuests = player.FinishedQuests;
 			lock (finishedQuests)
 			{
 				client.Out.SendMessage(" ", eChatType.CT_System, eChatLoc.CL_SystemWindow);

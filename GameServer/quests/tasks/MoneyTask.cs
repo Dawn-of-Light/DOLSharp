@@ -20,6 +20,7 @@ using System;
 using System.Collections;
 using DOL.AI;
 using DOL.AI.Brain;
+using DOL.Database;
 using DOL.GS.Collections;
 using DOL.GS.Database;
 using DOL.Events;

@@ -23,8 +23,8 @@
 */
 
 using System;
-using System.Reflection;
 using System.Collections;
+using DOL.Database;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Scripts

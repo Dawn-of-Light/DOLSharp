@@ -20,6 +20,7 @@ using System.Collections;
 using System.Collections.Specialized;
 using System;
 using DOL.GS.Database;
+using DOL.GS.PacketHandler;
 
 namespace DOL.GS
 {
@@ -147,7 +148,7 @@ namespace DOL.GS
 			{
 				m_amotd = "Your guild have no alliances.";
 
-				SendMessageToAllianceMembers("Your alliance has been deleted!", PacketHandler.eChatType.CT_System, PacketHandler.eChatLoc.CL_SystemWindow);
+				SendMessageToAllianceMembers("Your alliance has been deleted!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				GameServer.Database.SaveObject(this);
 			}
 				
@@ -160,7 +161,7 @@ namespace DOL.GS
 		/// <summary>
 		/// send message to all member of alliance
 		/// </summary>
-		public void SendMessageToAllianceMembers(string msg, PacketHandler.eChatType type, PacketHandler.eChatLoc loc)
+		public void SendMessageToAllianceMembers(string msg, eChatType type, eChatLoc loc)
 		{
 			lock (m_allianceGuilds)
 			{

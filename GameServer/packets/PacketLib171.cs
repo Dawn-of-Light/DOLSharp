@@ -22,6 +22,8 @@ using System;
 using System.Reflection;
 using DOL.AI;
 using DOL.AI.Brain;
+using DOL.Database;
+using DOL.GS.Database;
 using DOL.GS.Quests;
 using log4net;
 

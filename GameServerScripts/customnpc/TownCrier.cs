@@ -17,7 +17,6 @@
  *
  */
 
-using DOL.GS.PacketHandler;
 //This script demonstrates how to create a data aware custom NPC
 
 namespace DOL.GS.Scripts

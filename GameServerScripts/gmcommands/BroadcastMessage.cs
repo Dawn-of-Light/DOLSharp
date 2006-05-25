@@ -17,6 +17,7 @@
  *
  */
 using System.Collections;
+using DOL.Database;
 
 namespace DOL.GS.Scripts
 {

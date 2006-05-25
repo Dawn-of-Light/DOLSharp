@@ -19,8 +19,8 @@
 using System;
 using System.Collections;
 using System.Reflection;
+using DOL.Database;
 using DOL.Events;
-using DOL.GS.Database;
 using DOL.GS.Movement;
 using DOL.GS.PacketHandler;
 

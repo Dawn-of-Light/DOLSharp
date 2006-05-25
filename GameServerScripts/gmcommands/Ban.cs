@@ -17,13 +17,11 @@
  *
  */
 using System;
-using System.Collections;
-using System.Net;
 using System.Reflection;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.GS.PacketHandler;
-using NHibernate.Expression;
 using log4net;
+using NHibernate.Expression;
 
 namespace DOL.GS.Scripts
 {

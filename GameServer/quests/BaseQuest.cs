@@ -25,6 +25,7 @@
 using System;
 using System.Collections;
 using System.Reflection;
+using DOL.Database;
 using DOL.GS.Database;
 using DOL.GS.PacketHandler;
 using log4net;

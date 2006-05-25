@@ -18,15 +18,15 @@
  */
 
 
-using System;
 using DOL.GS.PacketHandler;
+using NHibernate.Mapping.Attributes;
 
 namespace DOL.GS.Scripts
 {
 	/// <summary>
 	/// Represents an in-game FaceCustomiser NPC
 	/// </summary>
-	[NHibernate.Mapping.Attributes.Subclass(NameType=typeof(FaceCustomiser), ExtendsType=typeof(GameMob))] 
+	[Subclass(NameType=typeof(FaceCustomiser), ExtendsType=typeof(GameMob))] 
 	public class FaceCustomiser : GameMob
 	{
 		/// <summary>

@@ -17,8 +17,10 @@
  *
  */
 using System;
+using DOL.Database;
 using DOL.Events;
 using DOL.GS;
+using DOL.GS.Database;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.JumpPoints
@@ -31,7 +33,7 @@ namespace DOL.GS.JumpPoints
 		/// <summary>
 		/// The realm who current can enter df
 		/// </summary>
-		public static eRealm DarknessFallOwner = eRealm.None;
+		public static volatile eRealm DarknessFallOwner = eRealm.None;
 	
 		/// <summary>
 		/// initialize the darkness fall entrance system

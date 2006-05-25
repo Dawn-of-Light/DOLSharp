@@ -56,10 +56,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="MappingFiles\Account.hbm.xml" />
     <Content Include="NHibernateConfig.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="MappingFiles\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

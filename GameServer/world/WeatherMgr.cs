@@ -20,6 +20,7 @@ using System;
 using System.Collections.Specialized;
 using System.Reflection;
 using System.Threading;
+using DOL.GS.Database;
 using DOL.GS.PacketHandler;
 using log4net;
 

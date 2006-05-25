@@ -19,13 +19,15 @@
 //using DOL.GS.Database;
 //using DOL.GS.PacketHandler;
 
+using NHibernate.Mapping.Attributes;
+
 namespace DOL.GS.Scripts
 {
 	/// <summary>
 	/// This class holds all information that
 	/// EVERY spellcrafting master npc in the game world needs!
 	/// </summary>
-	[NHibernate.Mapping.Attributes.Subclass(NameType=typeof(SpellCraftingMaster), ExtendsType=typeof(GameCraftMaster))] 
+	[Subclass(NameType=typeof(SpellCraftingMaster), ExtendsType=typeof(GameCraftMaster))] 
 	public class SpellCraftingMaster : GameCraftMaster
 	{
 		private static readonly eCraftingSkill[] m_trainedSkills = 

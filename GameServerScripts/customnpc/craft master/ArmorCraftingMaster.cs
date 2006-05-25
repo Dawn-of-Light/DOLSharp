@@ -1,4 +1,4 @@
-using DOL.GS;
+using NHibernate.Mapping.Attributes;
 //using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Scripts
@@ -7,7 +7,7 @@ namespace DOL.GS.Scripts
 	/// This class holds all information that
 	/// EVERY armor crafting master npc in the game world needs!
 	/// </summary>
-	[NHibernate.Mapping.Attributes.Subclass(NameType=typeof(ArmorCraftingMaster), ExtendsType=typeof(GameCraftMaster))] 
+	[Subclass(NameType=typeof(ArmorCraftingMaster), ExtendsType=typeof(GameCraftMaster))] 
 	public class ArmorCraftingMaster : GameCraftMaster
 	{
 		private static readonly eCraftingSkill[] m_trainedSkills = 

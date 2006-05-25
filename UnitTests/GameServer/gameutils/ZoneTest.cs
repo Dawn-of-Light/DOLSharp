@@ -19,6 +19,7 @@
 using System;
 using DOL;
 using DOL.GS;
+using DOL.GS.Database;
 using DOL.GS.PacketHandler;
 using DOL.Tests;
 using NUnit.Framework;
