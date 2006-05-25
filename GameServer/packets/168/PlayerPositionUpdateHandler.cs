@@ -22,8 +22,10 @@ using System;
 using System.Collections;
 using System.Reflection;
 using System.Text;
+using DOL.Database;
 using DOL.GS;
 using DOL.Events;
+using DOL.GS.Database;
 using log4net;
 
 namespace DOL.GS.PacketHandler.v168

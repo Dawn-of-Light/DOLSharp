@@ -151,19 +151,19 @@ namespace DOL.GS
 			
 			if(!(player.TradeWindow.TradeItems[0] is AlchemieTincture))
 			{
-				player.Out.SendMessage("You can only combine alchemy tinctures!",PacketHandler.eChatType.CT_System,PacketHandler.eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage("You can only combine alchemy tinctures!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 				return false;
 			}
 
 			if(player.TradeWindow.ItemsCount > 1)
 			{
-				player.Out.SendMessage("You can only combine one tincture on one item!",PacketHandler.eChatType.CT_System,PacketHandler.eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage("You can only combine one tincture on one item!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 				return false;
 			}
 
 			if(((EquipableItem)item).ProcEffectType != eMagicalEffectType.NoEffect || ((EquipableItem)item).ChargeEffectType == eMagicalEffectType.ChargeEffect)
 			{
-				player.Out.SendMessage("The "+item.Name+" is already imbued with a magical effect!",PacketHandler.eChatType.CT_System,PacketHandler.eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage("The "+item.Name+" is already imbued with a magical effect!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 				return false;
 			}
 

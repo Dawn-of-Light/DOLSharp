@@ -22,6 +22,9 @@ using System.Net;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
+using DOL.Database;
+using DOL.Database.DataAccessInterfaces;
+using DOL.Database.DataTransferObjects;
 using DOL.GS.Database;
 using NHibernate.Expression;
 using log4net;
@@ -75,7 +78,7 @@ namespace DOL.GS.PacketHandler.v168
 
 			try
 			{
-				Account playerAccount;
+				AccountTO playerAccount;
 				// handle connection
 				lock (this)
 				{
@@ -116,7 +119,8 @@ namespace DOL.GS.PacketHandler.v168
 							return 1;
 						}
 
-						playerAccount = (Account) GameServer.Database.SelectObject(typeof(Account), Expression.Eq("AccountName",username));
+//						playerAccount = (Account) GameServer.Database.SelectObject(typeof(Account), Expression.Eq("AccountName",username));
+						playerAccount = GameServer.DatabaseNew.Using<IAccountDao>().FindByName(username);
 						client.PingTime = DateTime.Now.Ticks;
 
 						if(playerAccount == null)
@@ -145,31 +149,32 @@ namespace DOL.GS.PacketHandler.v168
 									return 1;
 								}
 
-								playerAccount = new Account();
+								playerAccount = new AccountTO();
 								playerAccount.AccountName = username;
 								playerAccount.Password = CryptPassword(password);
-								playerAccount.Realm = eRealm.None;
+#warning move eRealm property to the Database assembly
+								playerAccount.Realm = (eRealm) eRealm.None;
 								playerAccount.CreationDate = DateTime.Now;
 								playerAccount.LastLogin = DateTime.Now;
-								playerAccount.LastLoginIP = ipAddress;
+								playerAccount.LastLoginIp = ipAddress;
 								playerAccount.BanDuration = TimeSpan.Zero;
 								playerAccount.BanAuthor = string.Empty;
 								playerAccount.BanReason = string.Empty;
 
-								if(GameServer.Database.GetObjectCount(typeof (Account)) == 0)
+								if(GameServer.DatabaseNew.Using<IAccountDao>().CountAll() == 0)
 								{
-									playerAccount.PrivLevel = ePrivLevel.Admin;
+									playerAccount.PrivLevel = (ePrivLevel) ePrivLevel.Admin;
 									if (log.IsInfoEnabled)
 										log.Info("New admin account created: " + username);
 								}
 								else
 								{
-									playerAccount.PrivLevel = ePrivLevel.Player;
+									playerAccount.PrivLevel = (ePrivLevel) ePrivLevel.Player;
 									if (log.IsInfoEnabled)
 										log.Info("New account created: " + username);
 								}
 
-								GameServer.Database.AddNewObject(playerAccount);
+								GameServer.DatabaseNew.Using<IAccountDao>().Save(playerAccount);
 							}
 							else
 							{
@@ -223,13 +228,13 @@ namespace DOL.GS.PacketHandler.v168
 
 							// save player infos
 							playerAccount.LastLogin = DateTime.Now;
-							playerAccount.LastLoginIP = ipAddress;
+							playerAccount.LastLoginIp = ipAddress;
 
-							GameServer.Database.SaveObject(playerAccount);
+							GameServer.DatabaseNew.Using<IAccountDao>().Update(playerAccount);
 						}
 						
 						//Save the account table
-						client.Account = playerAccount;
+						client.Account = new Account(playerAccount);
 
 						// check if not too much client already logged in
 						if(client.Account.PrivLevel == ePrivLevel.Player && WorldMgr.GetAllPlayingClients().Count >= GameServer.Instance.Configuration.MaxClientCount - 10) // 10 gm or admin accounts reserved

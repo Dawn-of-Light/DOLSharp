@@ -23,6 +23,7 @@
 using System;
 using System.Collections;
 using DOL.AI.Brain;
+using DOL.GS.Database;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 

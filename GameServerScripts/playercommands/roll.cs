@@ -27,6 +27,7 @@
 ******************/
 
 using System;
+using DOL.Database;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Scripts
@@ -63,7 +64,7 @@ namespace DOL.GS.Scripts
 			// trying to convert number
 			try
 			{
-				dice = System.Convert.ToInt32(args[1]);
+				dice = Convert.ToInt32(args[1]);
 			}
 			catch (OverflowException)
 			{

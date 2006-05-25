@@ -28,7 +28,7 @@ namespace DOL.Database.NHibernate
 	/// <summary>
 	/// Provides basic NHibernate DAO functionality.
 	/// </summary>
-	/// <typeparam name="TTransferObject">The transfer object type.</typeparam>
+	/// <typeparam name="TTransferObject">The transfer object's type.</typeparam>
 	/// <typeparam name="TPrimaryKey">The transfer object's primary key.</typeparam>
 	public class GenericDao<TTransferObject, TPrimaryKey> : IGenericDao<TTransferObject, TPrimaryKey>
 	{
@@ -46,44 +46,61 @@ namespace DOL.Database.NHibernate
 		/// Gets the shared NHibernate state object.
 		/// </summary>
 		/// <value>The state object.</value>
-		protected NHState State
+		protected NHState Database
 		{
 			get { return m_state; }
 		}
 
 		/// <summary>
-		/// Loads an object by primary key.
+		/// Finds an object by its primary key.
 		/// </summary>
 		/// <param name="key">The primary key.</param>
-		/// <returns>Loaded object.</returns>
-		public TTransferObject Load(TPrimaryKey key)
+		/// <returns>The found object or null.</returns>
+		public virtual TTransferObject Find(TPrimaryKey key)
 		{
-			return (TTransferObject) State.FindObjectByKey(typeof(TTransferObject), key);
+			return (TTransferObject) Database.FindObjectByKey(typeof(TTransferObject), key);
 		}
 
 		/// <summary>
-		/// Inserts a new object into a database.
+		/// Saves an object into a database.
 		/// </summary>
-		/// <param name="obj">The object to insert.</param>
-		public void Insert(TTransferObject obj)
+		/// <param name="obj">The object to save.</param>
+		public virtual void Save(TTransferObject obj)
 		{
-			State.AddNewObject(obj);
+			Database.AddNewObject(obj);
+		}
+
+		/// <summary>
+		/// Updates the persistent instance with data from transfer object.
+		/// </summary>
+		/// <param name="obj">The data.</param>
+		public virtual void Update(TTransferObject obj)
+		{
+			Database.UpdateObject(obj);
 		}
 
 		/// <summary>
 		/// Deletes an object from a database.
 		/// </summary>
 		/// <param name="obj">The object to delete.</param>
-		public void Delete(TTransferObject obj)
+		public virtual void Delete(TTransferObject obj)
 		{
-			State.DeleteObject(obj);
+			Database.DeleteObject(obj);
 		}
 
 		/// <summary>
-		/// Saves all data objects of <typeparamref name="TTransferObject"/> type, syncronous.
+		/// Saves all data objects of <typeparamref name="TTransferObject"/> type, synchronous.
 		/// </summary>
 		public virtual void SaveAll()
 		{
+		}
+
+		/// <summary>
+		/// Gets the count of all stored objects.
+		/// </summary>
+		public virtual int CountAll()
+		{
+			return Database.GetObjectCount(typeof (TTransferObject));
 		}
 
 		/// <summary>

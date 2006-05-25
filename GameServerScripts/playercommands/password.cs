@@ -11,10 +11,10 @@
  */
 
 using System;
-using DOL.GS;
+using System.Reflection;
+using DOL.Database;
 using DOL.GS.PacketHandler;
 using DOL.GS.PacketHandler.v168;
-
 using log4net;
 
 namespace DOL.GS.Scripts
@@ -27,7 +27,7 @@ namespace DOL.GS.Scripts
 		/// <summary>
 		/// Defines a logger for this class.
 		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		public int OnCommand(GameClient client, string[] args)
 		{

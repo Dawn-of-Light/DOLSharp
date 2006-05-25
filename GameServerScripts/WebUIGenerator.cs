@@ -20,8 +20,11 @@ using System;
 using System.Collections;
 using System.IO;
 using System.Reflection;
+using System.Text;
+using System.Timers;
+using DOL.Database;
+using DOL.Database.DataAccessInterfaces;
 using DOL.Events;
-using DOL.GS.PacketHandler;
 using log4net;
 
 namespace DOL.GS.Scripts
@@ -60,8 +63,8 @@ namespace DOL.GS.Scripts
 			public ArrayList m_dirs = new ArrayList();
 		}
 
-		private static System.Text.StringBuilder m_js = null;
-		private static System.Timers.Timer m_timer = null;
+		private static StringBuilder m_js = null;
+		private static Timer m_timer = null;
 
 		/// <summary>
 		/// Parses a directory for all source files
@@ -158,7 +161,7 @@ namespace DOL.GS.Scripts
 		/// </summary>
 		private static void InitJS()
 		{
-			m_js = new System.Text.StringBuilder();
+			m_js = new StringBuilder();
 			StreamWriter nl = new StreamWriter(new MemoryStream());
 
 			m_js.Append(nl.NewLine);
@@ -188,22 +191,22 @@ namespace DOL.GS.Scripts
 			m_js.AppendFormat("var numAdminsConnected = {0}", admin);
 			m_js.Append(nl.NewLine);
 
-			m_js.AppendFormat("var numAccts = {0}", GameServer.Database.GetObjectCount(typeof (DOL.GS.Database.Account)));
+			m_js.AppendFormat("var numAccts = {0}", GameServer.DatabaseNew.Using<IAccountDao>().CountAll());
 			m_js.Append(nl.NewLine);
 
-			m_js.AppendFormat("var numMobs = {0}", GameServer.Database.GetObjectCount(typeof (DOL.GS.GameNPC)));
+			m_js.AppendFormat("var numMobs = {0}", GameServer.Database.GetObjectCount(typeof (GameNPC)));
 			m_js.Append(nl.NewLine);
 
-			m_js.AppendFormat("var numInvItems = {0}", GameServer.Database.GetObjectCount(typeof (DOL.GS.GenericItem)));
+			m_js.AppendFormat("var numInvItems = {0}", GameServer.Database.GetObjectCount(typeof (GenericItem)));
 			m_js.Append(nl.NewLine);
 
-			m_js.AppendFormat("var numPlrChars = {0}", GameServer.Database.GetObjectCount(typeof (DOL.GS.GamePlayer)));
+			m_js.AppendFormat("var numPlrChars = {0}", GameServer.Database.GetObjectCount(typeof (GamePlayer)));
 			m_js.Append(nl.NewLine);
 
-			m_js.AppendFormat("var numItemTemplates = {0}", GameServer.Database.GetObjectCount(typeof (DOL.GS.GenericItemTemplate)));
+			m_js.AppendFormat("var numItemTemplates = {0}", GameServer.Database.GetObjectCount(typeof (GenericItemTemplate)));
 			m_js.Append(nl.NewLine);
 
-			m_js.AppendFormat("var numWorldObjects = {0}", GameServer.Database.GetObjectCount(typeof (DOL.GS.GameStaticItem)));
+			m_js.AppendFormat("var numWorldObjects = {0}", GameServer.Database.GetObjectCount(typeof (GameStaticItem)));
 			m_js.Append(nl.NewLine);
 
 			m_js.AppendFormat("var srvrType = \"{0}\"", GameServer.Instance.Configuration.ServerType.ToString());
@@ -498,8 +501,8 @@ namespace DOL.GS.Scripts
 				Stop();
 			}
 
-			m_timer = new System.Timers.Timer(60000.0); //1 minute
-			m_timer.Elapsed += new System.Timers.ElapsedEventHandler(m_timer_Elapsed);
+			m_timer = new Timer(60000.0); //1 minute
+			m_timer.Elapsed += new ElapsedEventHandler(m_timer_Elapsed);
 			m_timer.AutoReset = true;
 			m_timer.Start();
 
@@ -517,7 +520,7 @@ namespace DOL.GS.Scripts
 			{
 				m_timer.Stop();
 				m_timer.Close();
-				m_timer.Elapsed -= new System.Timers.ElapsedEventHandler(m_timer_Elapsed);
+				m_timer.Elapsed -= new ElapsedEventHandler(m_timer_Elapsed);
 				m_timer = null;
 			}
 
@@ -533,7 +536,7 @@ namespace DOL.GS.Scripts
 		/// </summary>
 		/// <param name="sender">Caller of this function</param>
 		/// <param name="e">Info about the timer</param>
-		private static void m_timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+		private static void m_timer_Elapsed(object sender, ElapsedEventArgs e)
 		{
 			Generate();
 		}

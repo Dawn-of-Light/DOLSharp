@@ -28,7 +28,7 @@ namespace DOL.Database.DataAccessInterfaces
 	public interface IDataAccessObject
 	{
 		/// <summary>
-		/// Saves all data object of this type, syncronous.
+		/// Saves all data object of this type, synchronous.
 		/// </summary>
 		void SaveAll();
 	}

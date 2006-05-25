@@ -45,9 +45,8 @@ using System.Reflection;
 using DOL.AI.Brain;
 using DOL.Events;
 using DOL.GS.PacketHandler;
-using NHibernate.Mapping.Attributes;
 using log4net;
-
+using NHibernate.Mapping.Attributes;
 /* I suggest you declare yourself some namespaces for your quests
  * Like: DOL.GS.Quests.Albion
  *       DOL.GS.Quests.Midgard
@@ -125,7 +124,7 @@ namespace DOL.GS.Quests.Examples
 	 * as Quest. We must make it persistant using attributes, to
 	 * do this, we derive from the abstract class AbstractQuest
 	 */
-	[NHibernate.Mapping.Attributes.Subclass(NameType=typeof(HelpSirQuait), ExtendsType=typeof(AbstractQuest))] 
+	[Subclass(NameType=typeof(HelpSirQuait), ExtendsType=typeof(AbstractQuest))] 
 	public class HelpSirQuait : BaseQuest
 	{
 		/// <summary>

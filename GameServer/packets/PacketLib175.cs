@@ -20,6 +20,7 @@
 using System;
 using System.Reflection;
 using System.Collections;
+using DOL.GS.Database;
 using DOL.GS.PlayerTitles;
 using log4net;
 

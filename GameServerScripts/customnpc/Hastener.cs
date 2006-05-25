@@ -16,18 +16,16 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using System.Collections;
-using DOL.GS.Effects;
-using DOL.GS.PacketHandler;
 using DOL.GS.Spells;
+using NHibernate.Mapping.Attributes;
 
 namespace DOL.GS.Scripts
 {
 	/// <summary>
 	/// Represents an in-game Game Hastener NPC
 	/// </summary>
-	[NHibernate.Mapping.Attributes.Subclass(NameType=typeof(GameHastener), ExtendsType=typeof(GameMob))] 
+	[Subclass(NameType=typeof(GameHastener), ExtendsType=typeof(GameMob))] 
 	public class GameHastener : GameMob
 	{
 		/// <summary>

@@ -17,8 +17,8 @@
  *
  */
 using System;
-using DOL.GS.Database;
 using DOL.GS.PacketHandler;
+using NHibernate.Mapping.Attributes;
 
 namespace DOL.GS.Scripts
 {
@@ -26,7 +26,7 @@ namespace DOL.GS.Scripts
 	/// This class holds all information that
 	/// EVERY emblemer npc in the game world needs!
 	/// </summary>
-	[NHibernate.Mapping.Attributes.Subclass(NameType=typeof(EmblemNPC), ExtendsType=typeof(GameMob))] 
+	[Subclass(NameType=typeof(EmblemNPC), ExtendsType=typeof(GameMob))] 
 	public class EmblemNPC : GameMob
 	{
 		public const long EMBLEM_COST = 50000;

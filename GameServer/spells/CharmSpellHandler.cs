@@ -22,6 +22,7 @@ using System.Reflection;
 using DOL.AI.Brain;
 using DOL.Events;
 using DOL.GS;
+using DOL.GS.Database;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
 using log4net;

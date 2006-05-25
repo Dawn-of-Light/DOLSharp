@@ -19,6 +19,7 @@
 using System;
 using System.Reflection;
 using System.Collections;
+using DOL.Database;
 using DOL.GS.Database;
 using DOL.Events;
 using NHibernate.Expression;
