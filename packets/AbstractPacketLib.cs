@@ -18,6 +18,7 @@
  */
 using System;
 using System.Reflection;
+using DOL.GS.Database;
 using DOL.GS.Scripts;
 using log4net;
 

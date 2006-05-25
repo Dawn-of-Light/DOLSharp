@@ -22,7 +22,6 @@
 	  <mapping file="mapping\AbstractJumpPoint.hbm.xml" />
 	  <mapping file="mapping\AbstractQuest.hbm.xml" />
     <mapping file="mapping\AbstractTask.hbm.xml" />
-	  <mapping file="mapping\Account.hbm.xml" />
 	  <mapping file="mapping\Alliance.hbm.xml" />
 	  <mapping file="mapping\BaseLoot.hbm.xml" />
 	  <mapping file="mapping\BindPoint.hbm.xml" />

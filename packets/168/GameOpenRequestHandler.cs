@@ -18,6 +18,7 @@
  */
 using System;
 using System.Reflection;
+using DOL.GS.Database;
 
 namespace DOL.GS.PacketHandler.v168
 {

@@ -80,7 +80,7 @@
 
     <property name="CharacterClassID" type="Int32" not-null="true" column="`CharacterClassID`"/>
     <property name="SlotPosition" type="Byte" not-null="true" column="`SlotPosition`"/>
-    <property name="AccountID" type="Int32" not-null="true" column="`AccountID`"/>
+    <property name="AccountId" type="Int32" not-null="true" column="`AccountId`"/>
 
     <property name="Health" type="Int32" not-null="true" column="`Health`"/>
     <property name="Mana" type="Int32" not-null="true" column="`Mana`"/>

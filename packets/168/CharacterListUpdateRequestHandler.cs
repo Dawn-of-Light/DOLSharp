@@ -19,6 +19,7 @@
 using System;
 using System.Reflection;
 using System.Collections;
+using DOL.Database;
 using DOL.Events;
 using DOL.GS.Database;
 using log4net;
@@ -119,7 +120,7 @@ namespace DOL.GS.PacketHandler.v168
 					{
 						// create new character
 						GamePlayer ch = new GamePlayer();
-						ch.AccountID = client.Account.AccountID;
+						ch.AccountId = client.Account.AccountId;
 						ch.Name = charname;
 
 						if(packet.ReadByte() == 0x01)

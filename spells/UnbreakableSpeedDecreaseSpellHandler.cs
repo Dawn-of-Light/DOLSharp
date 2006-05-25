@@ -19,6 +19,7 @@
 using System;
 using System.Text;
 using DOL.GS;
+using DOL.GS.Database;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
 

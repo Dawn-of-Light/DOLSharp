@@ -17,6 +17,8 @@
  *
  */
 using System;
+using DOL.Database;
+using DOL.GS.Database;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS
@@ -601,13 +603,6 @@ namespace DOL.GS
 		Valkyrie = 34,
 		Warlock = 59,
 		Warrior = 22,
-	}
-
-	public enum ePrivLevel : byte
-	{
-		Player = 1,
-		GM = 2,
-		Admin = 3,
 	}
 
 	/// <summary>

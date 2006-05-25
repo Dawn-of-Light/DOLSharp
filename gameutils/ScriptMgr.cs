@@ -19,10 +19,13 @@
 using System;
 using System.CodeDom.Compiler;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
 using DOL.Config;
+using DOL.Database;
+using DOL.GS.Database;
 using DOL.GS.PacketHandler;
 using DOL.GS.ServerRules;
 using DOL.GS.Spells;
@@ -239,9 +242,7 @@ namespace DOL
 					try
 					{
 						// parse args
-						ArrayList args = ParseCmdLine(cmdLine);
-
-						string[] pars = (string[]) args.ToArray(typeof (string));
+						string[] pars = ParseCmdLine(cmdLine);
 						GameCommand myCommand = GuessCommand(pars[0]);
 
 						//If there is no such command, return false
@@ -252,7 +253,10 @@ namespace DOL
 							if (!SinglePermission.HasPermission(client.Player,pars[0].Substring(1,pars[0].Length-1)))
 							{
 								if (pars[0][0] == '&')
+								{
 									pars[0] = '/' + pars[0].Remove(0, 1);
+								}
+								
 								client.Out.SendMessage("You do not have enough priveleges to use " + pars[0], eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 								return true;
 							}
@@ -279,9 +283,7 @@ namespace DOL
 				{
 					try
 					{
-						ArrayList args = ParseCmdLine(cmdLine);
-
-						string[] pars = (string[]) args.ToArray(typeof (string));
+						string[] pars = ParseCmdLine(cmdLine);
 						GameCommand myCommand = GuessCommand(pars[0]);
 
 						//If there is no such command, return false
@@ -302,11 +304,11 @@ namespace DOL
 				/// </summary>
 				/// <param name="cmdLine">string that should be split</param>
 				/// <returns>Array of substrings</returns>
-				private static ArrayList ParseCmdLine(string cmdLine)
+				private static string[] ParseCmdLine(string cmdLine)
 				{
-					ArrayList args = new ArrayList();
+					List<string> args = new List<string>();
 					int state = 0;
-					string arg = "";
+					StringBuilder arg = new StringBuilder(cmdLine.Length);
 					for (int i = 0; i < cmdLine.Length; i++)
 					{
 						char c = cmdLine[i];
@@ -314,7 +316,7 @@ namespace DOL
 						{
 							case 0: // waiting for first arg char
 								if (c == ' ') continue;
-								arg = "";
+								arg.Length = 0;
 								if (c == '"') state = 2;
 								else
 								{
@@ -325,24 +327,27 @@ namespace DOL
 							case 1: // reading arg
 								if (c == ' ')
 								{
-									args.Add(arg);
+									args.Add(arg.ToString());
 									state = 0;
 								}
-								arg += c;
+								arg.Append(c);
 								break;
 							case 2: // reading string
 								if (c == '"')
 								{
-									args.Add(arg);
+									args.Add(arg.ToString());
 									state = 0;
 								}
-								arg += c;
+								arg.Append(c);
 								break;
 						}
 					}
-					if (state != 0) args.Add(arg);
+					if (state != 0) args.Add(arg.ToString());
 
-					return args;
+					string[] pars = new string[args.Count];
+					args.CopyTo(pars);
+
+					return pars;
 				}
 
 				/// <summary>

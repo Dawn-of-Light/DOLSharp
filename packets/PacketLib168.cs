@@ -24,6 +24,7 @@ using System.Net;
 using System.Reflection;
 using DOL.AI;
 using DOL.AI.Brain;
+using DOL.Database;
 using DOL.GS.Database;
 using DOL.GS.Effects;
 using DOL.GS.PlayerTitles;
@@ -155,7 +156,7 @@ namespace DOL.GS.PacketHandler
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.CharacterOverview));
 			pak.FillString(m_gameClient.Account.AccountName, 24);
 			
-			m_gameClient.Account.CharactersInSelectedRealm = GameServer.Database.SelectObjects(typeof(GamePlayer), Expression.And(Expression.Eq("AccountID", m_gameClient.Account.AccountID),Expression.Eq("Realm", (byte)realm)), Order.Asc("SlotPosition"));
+			m_gameClient.Account.CharactersInSelectedRealm = GameServer.Database.SelectObjects(typeof(GamePlayer), Expression.And(Expression.Eq("AccountId", m_gameClient.Account.AccountId),Expression.Eq("Realm", (byte)realm)), Order.Asc("SlotPosition"));
 			if (m_gameClient.Account.CharactersInSelectedRealm.Count < 1)
 			{
 				pak.Fill(0x0, 1848);

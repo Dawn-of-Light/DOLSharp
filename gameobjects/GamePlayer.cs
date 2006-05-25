@@ -22,6 +22,7 @@ using System.Reflection;
 using System.Collections;
 using System.Text;
 using DOL.AI.Brain;
+using DOL.Database;
 using DOL.GS;
 using DOL.Events;
 using DOL.GS.Database;
@@ -584,7 +585,7 @@ namespace DOL.GS
 		}
 		#endregion
 
-		#region Class/SlotPosition/AccountID
+		#region Class/SlotPosition/AccountId
 		/// <summary>
 		/// Players class
 		/// </summary>
@@ -666,7 +667,7 @@ namespace DOL.GS
 		/// <summary>
 		/// The account id of this character
 		/// </summary>
-		public int AccountID
+		public int AccountId
 		{
 			get { return m_accountID; }
 			set { m_accountID = value; }

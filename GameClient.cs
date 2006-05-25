@@ -18,11 +18,10 @@
  */
 using System;
 using System.Text;
-using System.Threading;
-using DOL.GS.Database;
 using System.Net;
 using System.Reflection;
 using DOL.Events;
+using DOL.GS.Database;
 using DOL.GS.PacketHandler;
 using log4net;
 
@@ -69,7 +68,7 @@ namespace DOL
 			/// <summary>
 			/// This variable holds the accountdata
 			/// </summary>
-			protected Account		 m_account;
+			protected Account m_account;
 			/// <summary>
 			/// Holds the time of the last ping
 			/// </summary>

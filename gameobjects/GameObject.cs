@@ -21,6 +21,7 @@ using System.Collections;
 using System.Reflection;
 using System.Text;
 using DOL.Events;
+using DOL.GS.Database;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS

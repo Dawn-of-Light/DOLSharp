@@ -19,8 +19,8 @@
 using System;
 using System.Collections;
 using System.Reflection;
-using DOL.GS.Database;
-using NHibernate.Expression;
+using DOL.Database;
+using DOL.Database.DataAccessInterfaces;
 using log4net;
 
 namespace DOL.GS.PacketHandler.v168
@@ -40,7 +40,7 @@ namespace DOL.GS.PacketHandler.v168
 			//GameServer.Database.FillObjectRelations(client.Account);
 
 			//reset realm if no characters
-			if(client.Account.Realm != eRealm.None && (int)GameServer.Database.SelectObject("SELECT COUNT(*) FROM GamePlayer WHERE `AccountID` = '"+ client.Account.AccountID+"'") <= 0)
+			if(client.Account.Realm != eRealm.None && (int)GameServer.Database.SelectObject("SELECT COUNT(*) FROM GamePlayer WHERE `AccountId` = '"+ client.Account.AccountId+"'") <= 0)
 			{
 				//DOLConsole.WriteLine("no chars, realm reset.");
 				client.Account.Realm = eRealm.None;
@@ -82,7 +82,7 @@ namespace DOL.GS.PacketHandler.v168
 					{
 						// save the choice
 						client.Account.Realm = chosenRealm;
-						GameServer.Database.SaveObject(client.Account);
+						client.Account.UpdateDatabase();
 					}
 				}
 				else

@@ -19,6 +19,7 @@
 #define NOENCRYPTION
 using System;
 using System.Reflection;
+using DOL.GS.Database;
 using log4net;
 
 namespace DOL.GS.PacketHandler
