@@ -27,6 +27,7 @@ using System.CodeDom.Compiler;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using DOL.Database;
 using DOL.GS.PacketHandler;
 using log4net;
@@ -53,9 +54,10 @@ namespace DOL.GS.Scripts
 			text.Append("using DOL;\n");
 			text.Append("using DOL.AI;\n");
 			text.Append("using DOL.AI.Brain;\n");
+			text.Append("using DOL.Database;\n");
 			text.Append("using DOL.GS.Database;\n");
 			text.Append("using DOL.GS;\n");
-			text.Append("using DOL.GS.Housing;\n");
+//			text.Append("using DOL.GS.Housing;\n");
 			text.Append("using DOL.GS.Quests;\n");
 			text.Append("using DOL.GS.Scripts;\n");
 			text.Append("using DOL.GS.PacketHandler;\n");
@@ -115,8 +117,26 @@ namespace DOL.GS.Scripts
 				return 1;
 			}
 			string code = String.Join(" ", args, 1, args.Length - 1);
-			ExecuteCode(client, code);
+			ThreadPool.QueueUserWorkItem(new WaitCallback(ThreadPoolCallback), new Params(client, code));
 			return 1;
+		}
+
+		private void ThreadPoolCallback(object state)
+		{
+			Params p = (Params) state;
+			ExecuteCode(p.Client, p.Code);
+		}
+
+		private class Params
+		{
+			public GameClient Client;
+			public string Code;
+
+			public Params(GameClient client, string code)
+			{
+				Client = client;
+				Code = code;
+			}
 		}
 	}
 }
