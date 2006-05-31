@@ -29,6 +29,7 @@ using System.Collections.Specialized;
 using System.Reflection;
 using DOL.Events;
 using log4net;
+using DOL.Database;
 
 namespace DOL.GS.GameEvents
 {
