@@ -1500,6 +1500,8 @@
     <Compile Include="packets\PacketLib182.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="packets\PacketLib183.cs" />
+    <Compile Include="packets\PacketLib184.cs" />
     <Compile Include="packets\PacketLibAttribute.cs">
       <SubType>Code</SubType>
     </Compile>

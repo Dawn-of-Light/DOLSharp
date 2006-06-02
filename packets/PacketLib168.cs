@@ -155,7 +155,7 @@ namespace DOL.GS.PacketHandler
 		{
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.CharacterOverview));
 			pak.FillString(m_gameClient.Account.AccountName, 24);
-			
+
 			m_gameClient.Account.CharactersInSelectedRealm = GameServer.Database.SelectObjects(typeof(GamePlayer), Expression.And(Expression.Eq("AccountId", m_gameClient.Account.AccountId),Expression.Eq("Realm", (byte)realm)), Order.Asc("SlotPosition"));
 			if (m_gameClient.Account.CharactersInSelectedRealm.Count < 1)
 			{
@@ -166,7 +166,7 @@ namespace DOL.GS.PacketHandler
 				GamePlayer currentChar = null;
 				IEnumerator iter = m_gameClient.Account.CharactersInSelectedRealm.GetEnumerator();
 				if(iter.MoveNext()) currentChar = (GamePlayer) iter.Current;
-				
+
 				for(int i = 0 ; i < 8 ; i++)
 				{
 					if(currentChar != null && currentChar.SlotPosition == i)
@@ -202,7 +202,7 @@ namespace DOL.GS.PacketHandler
 						pak.WriteByte((byte) currentChar.BasePiety);
 						pak.WriteByte((byte) currentChar.BaseEmpathy);
 						pak.WriteByte((byte) currentChar.BaseCharisma);
-			
+
 						VisibleEquipment currentItem;
 						for(int slot = (int)eInventorySlot.HeadArmor ; slot <= (int)eInventorySlot.ArmsArmor ; slot++)
 						{
@@ -221,7 +221,7 @@ namespace DOL.GS.PacketHandler
 						{
 							if(slot == (int)eInventorySlot.Jewellery) currentItem = (VisibleEquipment)currentChar.Inventory.GetItem(eInventorySlot.LeftHandWeapon);
 							else currentItem = (VisibleEquipment)currentChar.Inventory.GetItem((eInventorySlot)slot);
-						
+
 							if(currentItem == null)
 							{
 								pak.WriteShort(0x00);
@@ -244,7 +244,7 @@ namespace DOL.GS.PacketHandler
 								pak.WriteShortLowEndian((ushort) currentItem.Model); // all weapon models
 							}
 						}
-					
+
 						if (currentChar.ActiveWeaponSlot == GameLiving.eActiveWeaponSlot.TwoHanded)
 						{
 							pak.WriteByte(0x02);
@@ -260,10 +260,10 @@ namespace DOL.GS.PacketHandler
 							if(currentChar.Inventory.GetItem(eInventorySlot.RightHandWeapon) != null) pak.WriteByte(0x00); else pak.WriteByte(0xFF);
 							if(currentChar.Inventory.GetItem(eInventorySlot.LeftHandWeapon) != null) pak.WriteByte(0x01); else pak.WriteByte(0xFF);
 						}
-	
+
 						pak.WriteByte(0x00); //0x01=char in SI zone, classic client can't "play"
 						pak.WriteByte(0x00);
-					
+
 						currentChar = iter.MoveNext() ? (GamePlayer)iter.Current : null;
 					}
 					else
@@ -517,7 +517,7 @@ namespace DOL.GS.PacketHandler
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.PlayerCreate));
 			pak.WriteShort((ushort) playerToCreate.Client.SessionID);
 			pak.WriteShort((ushort) playerToCreate.ObjectID);
-			
+
 			Point playerPosition = playerToCreate.Position;
 			Point zonePosition = playerZone.ToLocalPosition(playerPosition);
 			pak.WriteShort((ushort) zonePosition.X);
@@ -567,7 +567,7 @@ namespace DOL.GS.PacketHandler
 			pak.WriteByte((byte) (totalOut ? 0x01 : 0x00));
 			if (m_gameClient.Player == null)
 				pak.WriteByte(0);
-			else				
+			else
 				pak.WriteByte(m_gameClient.Player.Level);
 			SendTCP(pak);
 		}
@@ -614,7 +614,7 @@ namespace DOL.GS.PacketHandler
 			{
 				flag |= 0x08;
 			}
-			
+
 			pak.WriteByte((byte)flag);
 			pak.WritePascalString(obj.Name);
 			IDoor door = obj as IDoor;
@@ -720,7 +720,7 @@ namespace DOL.GS.PacketHandler
 				if (npcObj.Inventory != null) flags |= 0x02; //If mob has equipment, then only show it after the client gets the 0xBD packet
 				if (npcObj.Brain is PeaceBrain) flags |= 0x10; // not in nearest enemy even if not same realm
 				if ((npcObj.Flags & (uint) GameNPC.eFlags.FLYING) != 0) flags |= 0x20;
-			
+
 			}
 			else if(steedObj != null)
 			{
@@ -811,7 +811,7 @@ namespace DOL.GS.PacketHandler
 			Point curZonePos = currentZone.ToLocalPosition(currentPosition);
 			byte targetZoneID = 0;
 			Point targetZonePos = Point.Zero;
-			
+
 			if(movingObj != null)
 			{
 				Point targetPoint = movingObj.TargetPosition;
@@ -834,9 +834,9 @@ namespace DOL.GS.PacketHandler
 			pak.WriteShort((ushort) targetZonePos.Z);
 			pak.WriteShort((ushort) obj.ObjectID);
 
-			if(npcObj != null 
-			&& npcObj.AttackState 
-			&& npcObj.TargetObject != null 
+			if(npcObj != null
+			&& npcObj.AttackState
+			&& npcObj.TargetObject != null
 			&& npcObj.TargetObject.ObjectState == eObjectState.Active
 			&& !npcObj.IsTurningDisabled)
 			{
@@ -901,7 +901,7 @@ namespace DOL.GS.PacketHandler
 				foreach (GenericItemBase item in items)
 				{
 					pak.WriteByte((byte) item.SlotPosition);
-					
+
 					int color = 0;
 					int glowEffect = 0;
 					if(item is VisibleEquipment)
@@ -1131,7 +1131,7 @@ namespace DOL.GS.PacketHandler
 			pak.WriteShort((ushort) m_gameClient.SessionID); //data1
 			pak.WriteShort(0x01); //custom dialog!	  //data2
 			pak.WriteShort(0x00); //data3
-			pak.WriteShort(0x00); 
+			pak.WriteShort(0x00);
 			pak.WriteByte((byte)(callback == null ? 0x00 : 0x01)); //ok or yes/no response
             pak.WriteByte(0x01); // autowrap text
 			pak.WriteString(msg, msg.Length);
@@ -1202,9 +1202,9 @@ namespace DOL.GS.PacketHandler
             string description = "You have no current personal task.";
             if (m_gameClient.Player.Task != null) description = m_gameClient.Player.Task.Description;
 
-            SendQuestPacket(new PlayerJournalEntry(description, ""), 0);	
+            SendQuestPacket(new PlayerJournalEntry(description, ""), 0);
         }
-	    
+
 		public virtual void SendQuestUpdate(AbstractQuest quest)
 		{
 			int questIndex = 0;
@@ -1424,7 +1424,7 @@ namespace DOL.GS.PacketHandler
 				foreach (int updatedSlot in slots)
 				{
 					pak.WriteByte((byte) updatedSlot);
-					
+
 					GenericItem item = m_gameClient.Player.Inventory.GetItem((eInventorySlot) updatedSlot) as GenericItem;
 					if (item == null)
 					{
@@ -1437,9 +1437,9 @@ namespace DOL.GS.PacketHandler
 					int handNeeded = 0;
 					int damageType = 0;
 					int condition = 0;
-					int durabiliy = 0; 
-					int quality = 0; 
-					int bonus = 0; 
+					int durabiliy = 0;
+					int quality = 0;
+					int bonus = 0;
 					int color = 0;
 					int effect = 0;
 					int count = 0;
@@ -1495,15 +1495,15 @@ namespace DOL.GS.PacketHandler
 					if(item is EquipableItem)
 					{
 						condition = (byte)((EquipableItem)item).Condition;
-						durabiliy = ((EquipableItem)item).Durability; 
-						quality = ((EquipableItem)item).Quality; 
+						durabiliy = ((EquipableItem)item).Durability;
+						quality = ((EquipableItem)item).Quality;
 						bonus = ((EquipableItem)item).Bonus;
 					}
 					else if(item is SpellCraftGem)
 					{
-						quality = ((SpellCraftGem)item).Quality; 
+						quality = ((SpellCraftGem)item).Quality;
 					}
-					
+
 
 					pak.WriteByte(item.Level);
 					pak.WriteByte((byte) value1);
@@ -1574,7 +1574,7 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendMerchantWindow(IGameMerchant merchant)
 		{
-			MerchantWindow window = GameServer.Database.FindObjectByKey(typeof(MerchantWindow), merchant.MerchantWindowID) as MerchantWindow;	
+			MerchantWindow window = GameServer.Database.FindObjectByKey(typeof(MerchantWindow), merchant.MerchantWindowID) as MerchantWindow;
 			if (window != null)
 			{
 				for (int pageNumber = 0; pageNumber < MerchantWindow.MAX_PAGES_IN_MERCHANTWINDOW; pageNumber++)
@@ -1601,13 +1601,13 @@ namespace DOL.GS.PacketHandler
 						{
 							//DOLConsole.WriteLine("Item i="+itemIndex);
 							pak.WriteByte((byte) i); //Item index on page
-							
+
 							int value1 = 0; // some object types use this field to display count
 							int value2 = 0; // some object types use this field to display count
 							int weight = item.Weight;
 							int handNeeded = 0;
 							int damageType = 0;
-							
+
 							if(item is StackableItemTemplate)
 							{
 								value1 = ((StackableItemTemplate)item).PackSize;
@@ -1627,7 +1627,7 @@ namespace DOL.GS.PacketHandler
 							else if(item is WeaponTemplate)
 							{
 								value1 = ((WeaponTemplate)item).DamagePerSecond;
-								
+
 								if(item is ThrownWeaponTemplate)
 								{
 									value2 = ((ThrownWeaponTemplate)item).PackSize;
@@ -1645,7 +1645,7 @@ namespace DOL.GS.PacketHandler
 								value1 = ((ArmorTemplate)item).ArmorFactor;
 								value2 = ((ArmorTemplate)item).Absorbtion;
 							}
-							
+
 							pak.WriteByte(item.Level);
 							pak.WriteByte((byte) value1);
 							pak.WriteByte((byte) value2);
@@ -1732,9 +1732,9 @@ namespace DOL.GS.PacketHandler
 						int handNeeded = 0;
 						int damageType = 0;
 						int condition = 0;
-						int durabiliy = 0; 
-						int quality = 0; 
-						int bonus = 0; 
+						int durabiliy = 0;
+						int quality = 0;
+						int bonus = 0;
 						int color = 0;
 						int effect = 0;
 						int count = 0;
@@ -1788,13 +1788,13 @@ namespace DOL.GS.PacketHandler
 						if(item is EquipableItem)
 						{
 							condition = (byte)((EquipableItem)item).Condition;
-							durabiliy = ((EquipableItem)item).Durability; 
-							quality = ((EquipableItem)item).Quality; 
+							durabiliy = ((EquipableItem)item).Durability;
+							quality = ((EquipableItem)item).Quality;
 							bonus = ((EquipableItem)item).Bonus;
 						}
 						else if(item is SpellCraftGem)
 						{
-							quality = ((SpellCraftGem)item).Quality; 
+							quality = ((SpellCraftGem)item).Quality;
 						}
 
 						if(item is VisibleEquipment)
@@ -1924,24 +1924,6 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendUpdatePlayerSkills()
 		{
-			switch (m_gameClient.Player.CharacterClass.ClassType)
-			{
-				case eClassType.PureTank:
-					SendUpdatePureTankSkills();
-					break;
-
-				case eClassType.ListCaster:
-					SendUpdateListCasterSkills();
-					break;
-
-				case eClassType.Hybrid:
-					SendUpdateHybridSkills();
-					break;
-			}
-		}
-
-		public virtual void SendUpdateHybridSkills()
-		{
 			if (m_gameClient.Player == null)
 				return;
 			IList specs = m_gameClient.Player.GetSpecList();
@@ -1949,194 +1931,148 @@ namespace DOL.GS.PacketHandler
 			IList styles = m_gameClient.Player.GetStyleList();
 			IList spelllines = m_gameClient.Player.GetSpellLines();
 			Hashtable m_styleId = new Hashtable();
+			int maxSkills = 0;
+			int firstSkills = 0;
 
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.VariousUpdate));
-			
+			bool flagSendHybrid = true;
+			if(m_gameClient.Player.CharacterClass.ClassType == eClassType.ListCaster)
+				flagSendHybrid = false;
+
 			lock (skills.SyncRoot)
-				lock (styles.SyncRoot)
-					lock (specs.SyncRoot)
-						lock (spelllines.SyncRoot)
-						{
-							int spellscount = m_gameClient.Player.GetAmountOfSpell();
+			lock (styles.SyncRoot)
+			lock (specs.SyncRoot)
+			lock (spelllines.SyncRoot)
+			{
+				int skillCount = specs.Count + skills.Count + styles.Count;
+				if (flagSendHybrid)
+					skillCount += m_gameClient.Player.GetAmountOfSpell();
 
-							pak.WriteByte(0x01); //subcode
-							pak.WriteByte((byte) (specs.Count + skills.Count + styles.Count + spellscount)); //number of entry
-							pak.WriteByte(0x03); //subtype
-							pak.WriteByte(0x00); //unk
+				pak.WriteByte(0x01); //subcode
+				pak.WriteByte((byte) skillCount); //number of entry
+				pak.WriteByte(0x03); //subtype
+				pak.WriteByte((byte)firstSkills);
 
-							foreach (Specialization spec in specs)
-							{
-								pak.WriteByte((byte) spec.Level);
-								pak.WriteByte((byte) eSkillPage.Specialization);
-								pak.WriteShort(0);
-								pak.WriteByte((byte) (m_gameClient.Player.GetModifiedSpecLevel(spec.KeyName) - spec.Level)); // bonus
-								pak.WriteShort(spec.ID);
-								pak.WritePascalString(spec.Name);
-							}
+				foreach (Specialization spec in specs)
+				{
+					CheckLengthHybridSkillsPacket(ref pak, ref maxSkills, ref firstSkills);
+					pak.WriteByte((byte) spec.Level);
+					pak.WriteByte((byte) eSkillPage.Specialization);
+					pak.WriteShort(0);
+					pak.WriteByte((byte) (m_gameClient.Player.GetModifiedSpecLevel(spec.KeyName) - spec.Level)); // bonus
+					pak.WriteShort(spec.ID);
+					pak.WritePascalString(spec.Name);
+				}
 
-							int i=0;
-							foreach (Skill skill in skills)
-							{
-								i++;
-								pak.WriteByte((byte) 0);
-								if(skill.ID < 500) pak.WriteByte((byte) eSkillPage.Abilities);
-								else pak.WriteByte((byte) eSkillPage.AbilitiesSpell);
-								pak.WriteShort(0);
-								pak.WriteByte(0);
-								pak.WriteShort(skill.ID);
-								pak.WritePascalString(skill.Name);
-							}
-
-							foreach (Style style in styles)
-							{
-								m_styleId[(int)style.ID] = i++;
-								//DOLConsole.WriteLine("style sended "+style.Name);
-								pak.WriteByte(0); // no level for style
-								pak.WriteByte((byte) eSkillPage.Styles);
-
-								int pre = 0;
-								switch (style.OpeningRequirementType)
-								{
-									case Style.eOpening.Offensive:
-										pre = 0 + (int) style.AttackResultRequirement; // last result of our attack against enemy
-										// hit, miss, target blocked, target parried, ...
-										if (style.AttackResultRequirement==Style.eAttackResult.Style)
-											pre |= ((100 + (int)m_styleId[style.OpeningRequirementValue]) << 8);
-										break;
-									case Style.eOpening.Defensive:
-										pre = 100 + (int) style.AttackResultRequirement; // last result of enemies attack against us
-										// hit, miss, you block, you parry, ...
-										break;
-									case Style.eOpening.Positional:
-										pre = 200 + style.OpeningRequirementValue;
-										break;
-								}
-
-								// style required?
-								if (pre == 0)
-								{
-									pre = 0x100;
-								}
-
-								pak.WriteShort((ushort) pre);
-								pak.WriteByte(0); // bonus
-								pak.WriteShort(style.ID);
-								pak.WritePascalString(style.Name);
-							}
-							foreach (SpellLine spellline in spelllines)
-							{
-								int spec_index = specs.IndexOf(m_gameClient.Player.GetSpecialization(spellline.Spec));
-								if (spec_index == -1)
-									spec_index = 0xFE; // Nightshade special value
-								IList spells = m_gameClient.Player.GetUsableSpellsOfLine(spellline);
-								foreach (Spell spell in spells)
-								{
-									pak.WriteByte((byte) spell.Level);
-									if (spell.InstrumentRequirement == 0)
-									{
-										pak.WriteByte((byte) eSkillPage.Spells);
-										pak.WriteByte(0);
-										pak.WriteByte((byte) spec_index);
-									}
-									else
-									{
-										pak.WriteByte((byte) eSkillPage.Songs);
-										pak.WriteByte(0);
-										pak.WriteByte(0xFF);
-									}
-									pak.WriteByte(0);
-									pak.WriteShort(spell.Icon);
-									pak.WritePascalString(spell.Name);
-								}
-							}
-						}
-			SendTCP(pak);
-		}
-
-		public virtual void SendUpdateListCasterSkills()
-		{
-			IList specs = m_gameClient.Player.GetSpecList();
-			IList skills = m_gameClient.Player.GetNonTrainableSkillList();
-			IList styles = m_gameClient.Player.GetStyleList();
-			IList spelllines = m_gameClient.Player.GetSpellLines();
-			Hashtable m_styleId = new Hashtable();
-
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.VariousUpdate));
-			
-			lock (skills.SyncRoot)
-				lock (styles.SyncRoot)
-					lock (specs.SyncRoot)
+				int i=0;
+				foreach (Skill skill in skills)
+				{
+					i++;
+					CheckLengthHybridSkillsPacket(ref pak, ref maxSkills, ref firstSkills);
+					pak.WriteByte(0);
+					if(skill.ID < 500) pak.WriteByte((byte) eSkillPage.Abilities);
+					else pak.WriteByte((byte) eSkillPage.AbilitiesSpell);
+					pak.WriteShort(0);
+					pak.WriteByte(0);
+					pak.WriteShort(skill.ID);
+					string str = "";
+					if(m_gameClient.Player.CharacterClass.ID == (int)eCharacterClass.Vampiir)
 					{
-						pak.WriteByte(0x01);//subcode
-						pak.WriteByte((byte)(specs.Count+skills.Count+styles.Count));//number of entry
-						pak.WriteByte(0x03);//subtype
-						pak.WriteByte(0);//unk
+						if (skill.Name == Abilities.VampiirConstitution ||
+								skill.Name == Abilities.VampiirDexterity ||
+								skill.Name == Abilities.VampiirStrength)
+							str = " +"+((m_gameClient.Player.Level - 5) * 3).ToString();
+						else if(skill.Name == Abilities.VampiirQuickness)
+							str = " +"+((m_gameClient.Player.Level - 5) * 2).ToString();
+					}
+					pak.WritePascalString(skill.Name + str);
+				}
 
-						foreach (Specialization spec in specs)
-						{
-							pak.WriteByte((byte)spec.Level);
-							pak.WriteByte((byte)eSkillPage.Specialization);
-							pak.WriteShort(0);
-							pak.WriteByte((byte)(m_gameClient.Player.GetModifiedSpecLevel(spec.KeyName)-spec.Level)); // bonus
-							pak.WriteShort(spec.ID);
-							pak.WritePascalString(spec.Name);
-						}
+				foreach (Style style in styles)
+				{
+					m_styleId[(int)style.ID] = i++;
+					CheckLengthHybridSkillsPacket(ref pak, ref maxSkills, ref firstSkills);
+					//DOLConsole.WriteLine("style sended "+style.Name);
+					pak.WriteByte(0); // no level for style
+					pak.WriteByte((byte) eSkillPage.Styles);
 
-						int i=0;
-						foreach (Skill skill in skills)
-						{
-							i++;
-							pak.WriteByte(0);
-							if(skill.ID < 500) pak.WriteByte((byte) eSkillPage.Abilities);
-							else pak.WriteByte((byte) eSkillPage.AbilitiesSpell);
-							pak.WriteShort(0);
-							pak.WriteByte(0);
-							pak.WriteShort(skill.ID);
-							pak.WritePascalString(skill.Name);
-						}
-
-						foreach (Style style in styles)
-						{
-							m_styleId[(int)style.ID] = i++;
-							//DOLConsole.WriteLine("style sent "+style.Name);
-							pak.WriteByte(0); // no level for style
-							pak.WriteByte((byte)eSkillPage.Styles);
-
-							int pre = 0;
-							switch (style.OpeningRequirementType)
-							{
-								case Style.eOpening.Offensive:
-									pre = 0 + (int)style.AttackResultRequirement; // last result of our attack against enemy
-									// hit, miss, target blocked, target parried, ...
-									if (style.AttackResultRequirement==Style.eAttackResult.Style)
-										pre |= ((100 + (int)m_styleId[style.OpeningRequirementValue]) << 8);
-									break;
-								case Style.eOpening.Defensive:
-									pre = 100 + (int)style.AttackResultRequirement; // last result of enemies attack against us
-									// hit, miss, you block, you parry, ...
-									break;
-								case Style.eOpening.Positional:
-									pre = 200 + style.OpeningRequirementValue;
-									break;
-							}
-
-							// style required?
-							if (pre == 0)
-							{
-								pre = 0x100;
-							}
-
-							pak.WriteShort((ushort)pre);
-							pak.WriteByte(0); // bonus
-							pak.WriteShort(style.ID);
-							pak.WritePascalString(style.Name);
-						}
+					int pre = 0;
+					switch (style.OpeningRequirementType)
+					{
+						case Style.eOpening.Offensive:
+							pre = 0 + (int) style.AttackResultRequirement; // last result of our attack against enemy
+							// hit, miss, target blocked, target parried, ...
+							if (style.AttackResultRequirement==Style.eAttackResult.Style)
+								pre |= ((100 + (int)m_styleId[style.OpeningRequirementValue]) << 8);
+							break;
+						case Style.eOpening.Defensive:
+							pre = 100 + (int) style.AttackResultRequirement; // last result of enemies attack against us
+							// hit, miss, you block, you parry, ...
+							break;
+						case Style.eOpening.Positional:
+							pre = 200 + style.OpeningRequirementValue;
+							break;
 					}
 
-			SendTCP(pak);
+					// style required?
+					if (pre == 0)
+					{
+						pre = 0x100;
+					}
 
+					pak.WriteShort((ushort) pre);
+					pak.WriteByte(0); // bonus
+					pak.WriteShort(style.ID);
+					pak.WritePascalString(style.Name);
+				}
+				if (flagSendHybrid)
+				{
+					foreach (SpellLine spellline in spelllines)
+					{
+						int spec_index = specs.IndexOf(m_gameClient.Player.GetSpecialization(spellline.Spec));
+						if (spec_index == -1)
+							spec_index = 0xFE; // Nightshade special value
+						IList spells = m_gameClient.Player.GetUsableSpellsOfLine(spellline);
+						foreach (Spell spell in spells)
+						{
+							CheckLengthHybridSkillsPacket(ref pak, ref maxSkills, ref firstSkills);
+							pak.WriteByte((byte) spell.Level);
+							if (spell.InstrumentRequirement == 0)
+							{
+								pak.WriteByte((byte) eSkillPage.Spells);
+								pak.WriteByte(0);
+								pak.WriteByte((byte) spec_index);
+							}
+							else
+							{
+								pak.WriteByte((byte) eSkillPage.Songs);
+								pak.WriteByte(0);
+								pak.WriteByte(0xFF);
+							}
+							pak.WriteByte(0);
+							pak.WriteShort(spell.Icon);
+							pak.WritePascalString(spell.Name);
+						}
+					}
+				}
+			}
+			if(pak.Length > 7)
+			{
+				pak.Position = 4;
+				pak.WriteByte((byte) (maxSkills - firstSkills)); //number of entry
+				pak.WriteByte(0x03); //subtype
+				pak.WriteByte((byte)firstSkills);
+				SendTCP(pak);
+			}
+			if (!flagSendHybrid)
+				SendListCastersSpell();
+		}
+
+		public virtual void SendListCastersSpell()
+		{
+			GSTCPPacketOut pak;// = new GSTCPPacketOut(GetPacketCode(ePackets.VariousUpdate));
+			IList spelllines = m_gameClient.Player.GetSpellLines();
 			byte linenumber = 0;
-
 			lock (spelllines.SyncRoot)
 			{
 				foreach (SpellLine line in spelllines)
@@ -2170,87 +2106,6 @@ namespace DOL.GS.PacketHandler
 					SendTCP(pak);
 				}
 			}
-		}
-
-		public virtual void SendUpdatePureTankSkills()
-		{
-			IList specs = m_gameClient.Player.GetSpecList();
-			IList skills = m_gameClient.Player.GetNonTrainableSkillList();
-			IList styles = m_gameClient.Player.GetStyleList();
-			Hashtable m_styleId = new Hashtable();
-
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.VariousUpdate));
-			
-			lock (skills.SyncRoot)
-				lock (styles.SyncRoot)
-					lock (specs.SyncRoot)
-					{
-						pak.WriteByte(0x01); //subcode
-						pak.WriteByte((byte) (specs.Count + skills.Count + styles.Count)); //number of entry
-						pak.WriteByte(0x03); //subtype
-						pak.WriteByte(0x00); //unk
-
-						foreach (Specialization spec in specs)
-						{
-							pak.WriteByte((byte) spec.Level);
-							pak.WriteByte((byte) eSkillPage.Specialization);
-							pak.WriteShort(0);
-							pak.WriteByte((byte) (m_gameClient.Player.GetModifiedSpecLevel(spec.KeyName) - spec.Level)); // bonus
-							pak.WriteShort(spec.ID);
-							pak.WritePascalString(spec.Name);
-						}
-
-						int i=0;
-						foreach (Skill skill in skills)
-						{
-							i++;
-							pak.WriteByte((byte) 0);
-							if(skill.ID < 500) pak.WriteByte((byte) eSkillPage.Abilities);
-							else pak.WriteByte((byte) eSkillPage.AbilitiesSpell);
-							pak.WriteShort(0);
-							pak.WriteByte(0);
-							pak.WriteShort(skill.ID);
-							pak.WritePascalString(skill.Name);
-						}
-
-						foreach (Style style in styles)
-						{
-							m_styleId[(int)style.ID] = i++;
-							//DOLConsole.WriteLine("style sended "+style.Name);
-							pak.WriteByte(0); // no level for style
-							pak.WriteByte((byte) eSkillPage.Styles);
-
-							int pre = 0;
-							switch (style.OpeningRequirementType)
-							{
-								case Style.eOpening.Offensive:
-									pre = 0 + (int) style.AttackResultRequirement; // last result of our attack against enemy
-									// hit, miss, target blocked, target parried, ...
-									if (style.AttackResultRequirement==Style.eAttackResult.Style)
-										pre |= ((100 + (int)m_styleId[style.OpeningRequirementValue]) << 8);
-									break;
-								case Style.eOpening.Defensive:
-									pre = 100 + (int) style.AttackResultRequirement; // last result of enemies attack against us
-									// hit, miss, you block, you parry, ...
-									break;
-								case Style.eOpening.Positional:
-									pre = 200 + style.OpeningRequirementValue;
-									break;
-							}
-
-							// style required?
-							if (pre == 0)
-							{
-								pre = 0x100;
-							}
-
-							pak.WriteShort((ushort) pre);
-							pak.WriteByte(0); // bonus
-							pak.WriteShort(style.ID);
-							pak.WritePascalString(style.Name);
-						}
-					}
-			SendTCP(pak);
 		}
 
 		public virtual void SendUpdateCraftingSkills()
@@ -2351,7 +2206,7 @@ namespace DOL.GS.PacketHandler
 				text.Add("- " + title.GetDescription(m_gameClient.Player));
 			SendCustomTextWindow("Player Statistics", text);
 		}
-		
+
 		public virtual void SendPlayerTitleUpdate(GamePlayer player)
 		{
 		}
@@ -2872,7 +2727,7 @@ namespace DOL.GS.PacketHandler
 		public virtual void SendWarmapBonuses()
 		{
 		}
-		 
+
 		public virtual void SendKeepClaim(AbstractGameKeep keep)
 		{}
 
@@ -3067,6 +2922,11 @@ namespace DOL.GS.PacketHandler
 			pak.WriteShort(radius);
 			SendTCP(pak);
 		}
-		
+
+		public virtual void CheckLengthHybridSkillsPacket(ref GSTCPPacketOut pak, ref int maxSkills, ref int first)
+		{
+			maxSkills++;
+		}
+
 	}
 }
