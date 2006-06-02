@@ -28,24 +28,26 @@ namespace DOL.GS.PacketHandler.v168
 	{
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
+			if (client.Player == null)
+				return 1;
 			uint X = packet.ReadInt();
 			uint Y = packet.ReadInt();
-			ushort id =(ushort) packet.ReadShort();
-			ushort obj=(ushort) packet.ReadShort();
-
-			if (client.Player.TargetObject == null)
+			ushort id  = packet.ReadShort();
+			ushort obj = packet.ReadShort();
+			
+			GameObject target = client.Player.TargetObject;
+			if (target == null)
 			{
 				client.Out.SendMessage("You must have a target to get something!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return 1;
 			}
-			if (client.Player.TargetObject.ObjectState != eObjectState.Active) 
+			if (target.ObjectState != eObjectState.Active)
 			{
 				client.Out.SendMessage("You have an invalid target!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				// DOLConsole.LogLine("player <"+this.Player.Name+"> tried to pickup inactive item "+floorItem.Name);
 				return 1;
 			}
-
-			client.Player.PickupObject(client.Player.TargetObject);
+			
+			client.Player.PickupObject(target);
 			return 1;
 		}
 	}

@@ -2805,10 +2805,10 @@ namespace DOL.GS
 		/// <param name="attacker">the attacker to add</param>
 		public virtual void AddAttacker(GameLiving attacker)
 		{
-//			log.Debug(Name + ": AddAttacker "+attacker.Name);
-			lock(m_attackers.SyncRoot)
+			lock (m_attackers.SyncRoot)
 			{
-				if(m_attackers.Contains(attacker)) return;
+				if (attacker == this) return;
+				if (m_attackers.Contains(attacker)) return;
 				m_attackers.Add(attacker);
 			}
 		}
@@ -3563,13 +3563,13 @@ namespace DOL.GS
 			set
 			{
 				GameObject previousTarget = m_targetObjectWeakReference.Target as GameObject;
-				if(AttackState && previousTarget is GameLiving)
+				if (/*AttackState && */previousTarget is GameLiving)
 					((GameLiving)previousTarget).RemoveAttacker(this);
 
 				GameObject newTarget = value;
-				m_targetObjectWeakReference.Target=newTarget;
+				m_targetObjectWeakReference.Target = newTarget;
 
-				if(AttackState && newTarget is GameLiving)
+				if (AttackState && newTarget is GameLiving)
 					((GameLiving)newTarget).AddAttacker(this);
 			}
 		}
