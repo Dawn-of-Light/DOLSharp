@@ -58,7 +58,7 @@ namespace DOL.GS.PacketHandler
 				foreach (int updatedSlot in slots)
 				{
 					pak.WriteByte((byte) updatedSlot);
-					
+
 					GenericItem item = m_gameClient.Player.Inventory.GetItem((eInventorySlot) updatedSlot) as GenericItem;
 					if (item == null)
 					{
@@ -69,17 +69,17 @@ namespace DOL.GS.PacketHandler
 
 //					eObjectType.GardenObject
 //					Value2 byte sets the width, only lower 4 bits 'seem' to be used (so 1-15 only)
-//					The byte used for "Hand" (IE: Mini-delve showing a weapon as Left-Hand 
+//					The byte used for "Hand" (IE: Mini-delve showing a weapon as Left-Hand
 //					usabe/TwoHanded), the lower 4 bits store the height (1-15 only)
-//					
+//
 					int value1 = 0; // some object types use this field to display count
 					int value2 = 0; // some object types use this field to display count
 					int handNeeded = 0;
 					int damageType = 0;
 					int condition = 0;
-					int durabiliy = 0; 
-					int quality = 0; 
-					int bonus = 0; 
+					int durabiliy = 0;
+					int quality = 0;
+					int bonus = 0;
 					int modelExtension = 0;
 					int color = 0;
 					int effect = 0;
@@ -119,31 +119,31 @@ namespace DOL.GS.PacketHandler
 						value1 = ((Armor)item).ArmorFactor;
 						value2 = ((Armor)item).Absorbtion;
 					}
-					
+
 					if(item is VisibleEquipment)
 					{
 						color = ((VisibleEquipment)item).Color;
 					}
-					
+
 					if(item is EquipableItem)
 					{
 						condition = (byte)((EquipableItem)item).Condition;
-						durabiliy = ((EquipableItem)item).Durability; 
-						quality = ((EquipableItem)item).Quality; 
+						durabiliy = ((EquipableItem)item).Durability;
+						quality = ((EquipableItem)item).Quality;
 						bonus = ((EquipableItem)item).Bonus;
 					}
 					else if(item is SpellCraftGem)
 					{
 						quality = ((SpellCraftGem)item).Quality;
 					}
-						
+
 					if(item is Weapon)
 					{
 						handNeeded = (byte)((Weapon)item).HandNeeded;
 						damageType = (byte)((Weapon)item).DamageType;
 						effect = ((Weapon)item).GlowEffect;
 					}
-					else if(item is Armor) 
+					else if(item is Armor)
 					{
 						modelExtension = ((Armor)item).ModelExtension;
 					}
