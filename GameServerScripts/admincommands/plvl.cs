@@ -84,14 +84,14 @@ namespace DOL.GS.Scripts
 					{
 						plvl = Convert.ToUInt16(args[1]);
 
-						GamePlayer obj = (GamePlayer) client.Player.TargetObject;
+						GamePlayer obj = client.Player.TargetObject as GamePlayer;
 
 						if (obj != null)
 						{
 							if (obj.Client.Account != null)
 							{
 								obj.Client.Account.PrivLevel = (ePrivLevel)plvl;
-								GameServer.Database.SaveObject(obj.Client.Account);
+								obj.Client.Account.UpdateDatabase();
 								foreach (GameNPC npc in client.Player.GetInRadius(typeof(GameNPC), WorldMgr.VISIBILITY_DISTANCE))
 								{
 									if ((npc.Flags & (int) GameNPC.eFlags.CANTTARGET) != 0 || (npc.Flags & (int) GameNPC.eFlags.DONTSHOWNAME) != 0)
@@ -104,6 +104,10 @@ namespace DOL.GS.Scripts
 									eChatType.CT_Important,
 									eChatLoc.CL_SystemWindow);
 							}
+						}
+						else
+						{
+							client.Out.SendMessage("Must select a player.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						}
 					}
 					catch (Exception)

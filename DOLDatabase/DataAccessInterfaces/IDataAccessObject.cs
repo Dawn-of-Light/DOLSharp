@@ -31,5 +31,10 @@ namespace DOL.Database.DataAccessInterfaces
 		/// Saves all data object of this type, synchronous.
 		/// </summary>
 		void SaveAll();
+
+		/// <summary>
+		/// Gets the tranfer object's type.
+		/// </summary>
+		Type TransferObjectType { get; }
 	}
 }
