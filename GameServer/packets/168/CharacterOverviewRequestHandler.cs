@@ -88,7 +88,7 @@ namespace DOL.GS.PacketHandler.v168
 				else
 				{
 					// use saved realm ignoring what user has chosen if server rules do not allow to choose the realm
-					chosenRealm = (eRealm)client.Account.Realm;
+					chosenRealm = client.Account.Realm;
 				}
 
 				//DOLConsole.WriteLine("Sending overview! realm="+client.Account.Realm);

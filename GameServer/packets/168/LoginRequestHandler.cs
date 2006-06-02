@@ -17,16 +17,12 @@
  *
  */
 using System;
-using System.IO;
-using System.Net;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using DOL.Database;
 using DOL.Database.DataAccessInterfaces;
 using DOL.Database.DataTransferObjects;
-using DOL.GS.Database;
-using NHibernate.Expression;
 using log4net;
 
 namespace DOL.GS.PacketHandler.v168
@@ -78,7 +74,6 @@ namespace DOL.GS.PacketHandler.v168
 
 			try
 			{
-				AccountTO playerAccount;
 				// handle connection
 				lock (this)
 				{
@@ -119,8 +114,7 @@ namespace DOL.GS.PacketHandler.v168
 							return 1;
 						}
 
-//						playerAccount = (Account) GameServer.Database.SelectObject(typeof(Account), Expression.Eq("AccountName",username));
-						playerAccount = GameServer.DatabaseNew.Using<IAccountDao>().FindByName(username);
+						AccountTO playerAccount = GameServer.DatabaseNew.Using<IAccountDao>().FindByName(username);
 						client.PingTime = DateTime.Now.Ticks;
 
 						if(playerAccount == null)
@@ -152,8 +146,7 @@ namespace DOL.GS.PacketHandler.v168
 								playerAccount = new AccountTO();
 								playerAccount.AccountName = username;
 								playerAccount.Password = CryptPassword(password);
-#warning move eRealm property to the Database assembly
-								playerAccount.Realm = (eRealm) eRealm.None;
+								playerAccount.Realm = eRealm.None;
 								playerAccount.CreationDate = DateTime.Now;
 								playerAccount.LastLogin = DateTime.Now;
 								playerAccount.LastLoginIp = ipAddress;
@@ -163,18 +156,18 @@ namespace DOL.GS.PacketHandler.v168
 
 								if(GameServer.DatabaseNew.Using<IAccountDao>().CountAll() == 0)
 								{
-									playerAccount.PrivLevel = (ePrivLevel) ePrivLevel.Admin;
+									playerAccount.PrivLevel = ePrivLevel.Admin;
 									if (log.IsInfoEnabled)
 										log.Info("New admin account created: " + username);
 								}
 								else
 								{
-									playerAccount.PrivLevel = (ePrivLevel) ePrivLevel.Player;
+									playerAccount.PrivLevel = ePrivLevel.Player;
 									if (log.IsInfoEnabled)
 										log.Info("New account created: " + username);
 								}
 
-								GameServer.DatabaseNew.Using<IAccountDao>().Save(playerAccount);
+								GameServer.DatabaseNew.Using<IAccountDao>().Create(playerAccount);
 							}
 							else
 							{
@@ -206,12 +199,6 @@ namespace DOL.GS.PacketHandler.v168
 								return 1;
 							}
 
-							// automatically remove the ban if the account is now unban
-							playerAccount.BanDuration = TimeSpan.Zero;
-							playerAccount.BanAuthor = string.Empty;
-							playerAccount.BanReason = string.Empty;
-						
-
 							// check password
 							if (!playerAccount.Password.StartsWith("##")) 
 							{
@@ -226,6 +213,12 @@ namespace DOL.GS.PacketHandler.v168
 								return 1;
 							}
 
+							// automatically remove the ban if the account is now unban
+							playerAccount.BanDuration = TimeSpan.Zero;
+							playerAccount.BanAuthor = string.Empty;
+							playerAccount.BanReason = string.Empty;
+
+
 							// save player infos
 							playerAccount.LastLogin = DateTime.Now;
 							playerAccount.LastLoginIp = ipAddress;
@@ -237,7 +230,9 @@ namespace DOL.GS.PacketHandler.v168
 						client.Account = new Account(playerAccount);
 
 						// check if not too much client already logged in
-						if(client.Account.PrivLevel == ePrivLevel.Player && WorldMgr.GetAllPlayingClients().Count >= GameServer.Instance.Configuration.MaxClientCount - 10) // 10 gm or admin accounts reserved
+						// create session ID here to disable double login bug
+						if ((client.Account.PrivLevel == ePrivLevel.Player && WorldMgr.GetConnectedClientsCount() >= GameServer.Instance.Configuration.MaxClientCount - 10) // 10 gm or admin accounts reserved
+							|| (WorldMgr.CreateSessionID(client) < 0))
 						{
 							if (log.IsInfoEnabled)
 								log.InfoFormat("Too many clients connected, denied login to " + playerAccount.AccountName);
@@ -246,15 +241,6 @@ namespace DOL.GS.PacketHandler.v168
 							return 1;
 						}
 
-						// create session ID here to disable double login bug
-						if (WorldMgr.CreateSessionID(client) < 0)
-						{
-							if (log.IsInfoEnabled)
-								log.InfoFormat("Too many clients connected, denied login to " + playerAccount.AccountName);
-							client.Out.SendLoginDenied(eLoginError.TooManyPlayersLoggedIn);
-							GameServer.Instance.Disconnect(client);
-							return 1;
-						}
 						client.Out.SendLoginGranted();
 						client.ClientState = GameClient.eClientState.Connecting;
 					}

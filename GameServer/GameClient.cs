@@ -20,8 +20,8 @@ using System;
 using System.Text;
 using System.Net;
 using System.Reflection;
+using DOL.Database.DataTransferObjects;
 using DOL.Events;
-using DOL.GS.Database;
 using DOL.GS.PacketHandler;
 using log4net;
 

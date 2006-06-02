@@ -108,7 +108,7 @@ namespace DOL
 			/// <summary>
 			/// Game server status variable
 			/// </summary>
-			protected eGameServerStatus m_status;
+			protected volatile eGameServerStatus m_status;
 
 			/// <summary>
 			/// The instance!

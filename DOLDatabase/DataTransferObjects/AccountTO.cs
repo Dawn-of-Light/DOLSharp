@@ -34,12 +34,12 @@ namespace DOL.Database.DataTransferObjects
 		/// <summary>
 		/// The name of the account (login).
 		/// </summary>
-		private string m_accountName;
+		private string m_accountName = "";
 
 		/// <summary>
 		/// The password of this account encode in MD5 when starts with '##' or clear text.
 		/// </summary>
-		private string m_password;
+		private string m_password = "";
 
 		/// <summary>
 		/// The date of creation of this account.
@@ -64,12 +64,12 @@ namespace DOL.Database.DataTransferObjects
 		/// <summary>
 		/// The mail of this account.
 		/// </summary>
-		private string m_mail;
+		private string m_mail = "";
 
 		/// <summary>
 		/// The last IP logged onto this account.
 		/// </summary>
-		private string m_lastLoginIp;
+		private string m_lastLoginIp = "";
 
 		/// <summary>
 		/// The ban duration of this account.
@@ -79,12 +79,12 @@ namespace DOL.Database.DataTransferObjects
 		/// <summary>
 		/// The ban author.
 		/// </summary>
-		private string m_banAuthor;
+		private string m_banAuthor = "";
 
 		/// <summary>
 		/// The ban reason.
 		/// </summary>
-		private string m_banReason;
+		private string m_banReason = "";
 		
 #warning ???
 		private IList m_charactersInSelectedRealm;
