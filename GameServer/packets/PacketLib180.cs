@@ -18,8 +18,10 @@
  */
 #define NOENCRYPTION
 using System;
+using System.Collections;
 using System.Reflection;
 using DOL.GS.Database;
+using DOL.GS.Styles;
 using log4net;
 
 namespace DOL.GS.PacketHandler
@@ -111,6 +113,171 @@ namespace DOL.GS.PacketHandler
 //				pak.WriteInt(playerToCreate.Guild.theGuildDB.Emblem);
 //				SendTCP(pak);
 //			}
+		}
+
+		public override void CheckLengthHybridSkillsPacket(ref GSTCPPacketOut pak, ref int maxSkills, ref int first)
+		{
+			if(pak.Length > 1000)
+			{
+				pak.Position = 4;
+				pak.WriteByte((byte)(maxSkills - first));
+				pak.WriteByte((byte)(first == 0 ? 99 : 0x03)); //subtype
+				pak.WriteByte((byte)first);
+				SendTCP(pak);
+				pak = new GSTCPPacketOut(GetPacketCode(ePackets.VariousUpdate));
+				pak.WriteByte(0x01); //subcode
+				pak.WriteByte((byte)maxSkills); //number of entry
+				pak.WriteByte(0x03); //subtype
+				pak.WriteByte((byte)first);
+				first = maxSkills;
+			}
+			maxSkills++;
+		}
+
+		public override void SendUpdatePlayerSkills()
+		{
+			if (m_gameClient.Player == null)
+				return;
+			IList specs = m_gameClient.Player.GetSpecList();
+			IList skills = m_gameClient.Player.GetNonTrainableSkillList();
+			IList styles = m_gameClient.Player.GetStyleList();
+			IList spelllines = m_gameClient.Player.GetSpellLines();
+			Hashtable m_styleId = new Hashtable();
+			int maxSkills = 0;
+			int firstSkills = 0;
+
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.VariousUpdate));
+			bool flagSendHybrid = true;
+			if(m_gameClient.Player.CharacterClass.ClassType == eClassType.ListCaster)
+				flagSendHybrid = false;
+
+			lock (skills.SyncRoot)
+			lock (styles.SyncRoot)
+			lock (specs.SyncRoot)
+			lock (spelllines.SyncRoot)
+			{
+				int skillCount = specs.Count + skills.Count + styles.Count;
+				if (flagSendHybrid)
+					skillCount += m_gameClient.Player.GetAmountOfSpell();
+
+				pak.WriteByte(0x01); //subcode
+				pak.WriteByte((byte) skillCount); //number of entry
+				pak.WriteByte(0x03); //subtype
+				pak.WriteByte((byte)firstSkills);
+
+				foreach (Specialization spec in specs)
+				{
+					CheckLengthHybridSkillsPacket(ref pak, ref maxSkills, ref firstSkills);
+					pak.WriteByte((byte) spec.Level);
+					pak.WriteByte((byte) eSkillPage.Specialization);
+					pak.WriteShort(0);
+					pak.WriteByte((byte) (m_gameClient.Player.GetModifiedSpecLevel(spec.KeyName) - spec.Level)); // bonus
+					pak.WriteShort(spec.ID);
+					pak.WritePascalString(spec.Name);
+				}
+
+				int i=0;
+				foreach (Skill skill in skills)
+				{
+					i++;
+					CheckLengthHybridSkillsPacket(ref pak, ref maxSkills, ref firstSkills);
+					pak.WriteByte(0);
+					if(skill.ID < 500) pak.WriteByte((byte) eSkillPage.Abilities);
+					else pak.WriteByte((byte) eSkillPage.AbilitiesSpell);
+					pak.WriteShort(0);
+					pak.WriteByte(0);
+					pak.WriteShort(skill.ID);
+					string str = "";
+					if(m_gameClient.Player.CharacterClass.ID == (int)eCharacterClass.Vampiir)
+					{
+						if (skill.Name == Abilities.VampiirConstitution ||
+								skill.Name == Abilities.VampiirDexterity ||
+								skill.Name == Abilities.VampiirStrength)
+							str = " +"+((m_gameClient.Player.Level - 5) * 3).ToString();
+						else if(skill.Name == Abilities.VampiirQuickness)
+							str = " +"+((m_gameClient.Player.Level - 5) * 2).ToString();
+					}
+					pak.WritePascalString(skill.Name + str);
+				}
+
+				foreach (Style style in styles)
+				{
+					m_styleId[(int)style.ID] = i++;
+					CheckLengthHybridSkillsPacket(ref pak, ref maxSkills, ref firstSkills);
+					//DOLConsole.WriteLine("style sended "+style.Name);
+					pak.WriteByte((byte) style.SpecLevelRequirement);
+					pak.WriteByte((byte) eSkillPage.Styles);
+
+					int pre = 0;
+					switch (style.OpeningRequirementType)
+					{
+						case Style.eOpening.Offensive:
+							pre = 0 + (int) style.AttackResultRequirement; // last result of our attack against enemy
+							// hit, miss, target blocked, target parried, ...
+							if (style.AttackResultRequirement==Style.eAttackResult.Style)
+								pre |= ((100 + (int)m_styleId[style.OpeningRequirementValue]) << 8);
+							break;
+						case Style.eOpening.Defensive:
+							pre = 100 + (int) style.AttackResultRequirement; // last result of enemies attack against us
+							// hit, miss, you block, you parry, ...
+							break;
+						case Style.eOpening.Positional:
+							pre = 200 + style.OpeningRequirementValue;
+							break;
+					}
+
+					// style required?
+					if (pre == 0)
+					{
+						pre = 0x100;
+					}
+
+					pak.WriteShort((ushort) pre);
+					pak.WriteByte(GlobalConstants.GetSpecToInternalIndex(style.Spec)); // index specialization
+					pak.WriteShort(style.ID);
+					pak.WritePascalString(style.Name);
+				}
+				if (flagSendHybrid)
+				{
+					foreach (SpellLine spellline in spelllines)
+					{
+						int spec_index = specs.IndexOf(m_gameClient.Player.GetSpecialization(spellline.Spec));
+						if (spec_index == -1)
+							spec_index = 0xFE; // Nightshade special value
+						IList spells = m_gameClient.Player.GetUsableSpellsOfLine(spellline);
+						foreach (Spell spell in spells)
+						{
+							CheckLengthHybridSkillsPacket(ref pak, ref maxSkills, ref firstSkills);
+							pak.WriteByte((byte) spell.Level);
+							if (spell.InstrumentRequirement == 0)
+							{
+								pak.WriteByte((byte) eSkillPage.Spells);
+								pak.WriteByte(0);
+								pak.WriteByte((byte) spec_index);
+							}
+							else
+							{
+								pak.WriteByte((byte) eSkillPage.Songs);
+								pak.WriteByte(0);
+								pak.WriteByte(0xFF);
+							}
+							pak.WriteByte(0);
+							pak.WriteShort(spell.Icon);
+							pak.WritePascalString(spell.Name);
+						}
+					}
+				}
+			}
+			if(pak.Length > 7)
+			{
+				pak.Position = 4;
+				pak.WriteByte((byte) (maxSkills - firstSkills)); //number of entry
+				pak.WriteByte(0x03); //subtype
+				pak.WriteByte((byte)firstSkills);
+				SendTCP(pak);
+			}
+			if (!flagSendHybrid)
+				SendListCastersSpell();
 		}
 	}
 }
