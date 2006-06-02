@@ -62,10 +62,10 @@ namespace DOL.Database.NHibernate
 		}
 
 		/// <summary>
-		/// Saves an object into a database.
+		/// Creates an object in a database.
 		/// </summary>
 		/// <param name="obj">The object to save.</param>
-		public virtual void Save(TTransferObject obj)
+		public virtual void Create(TTransferObject obj)
 		{
 			Database.AddNewObject(obj);
 		}
@@ -101,6 +101,14 @@ namespace DOL.Database.NHibernate
 		public virtual int CountAll()
 		{
 			return Database.GetObjectCount(typeof (TTransferObject));
+		}
+
+		/// <summary>
+		/// Gets the tranfer object's type.
+		/// </summary>
+		public Type TransferObjectType
+		{
+			get { return typeof (TTransferObject); }
 		}
 
 		/// <summary>

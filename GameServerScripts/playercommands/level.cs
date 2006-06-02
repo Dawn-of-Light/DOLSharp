@@ -25,7 +25,7 @@ namespace DOL.GS.Scripts
 			if (client.Player.TargetObject is GameTrainer)
 			{
 				//find a char level 50 in this account
-				if (GameServer.Database.SelectObject(typeof(GamePlayer), Expression.And(Expression.Eq("AccountId" , client.Account.AccountId), Expression.Ge("Level", 50))) != null)
+				if (GameServer.Database.SelectObject(typeof(GamePlayer), Expression.And(Expression.Eq("AccountId" , client.Account.AccountId), Expression.Ge("Level", (byte)50))) != null)
 				{
 					//if there is a level 50.. calculate the xp needed to get to
 					//level 20 from the current level and give it to the player

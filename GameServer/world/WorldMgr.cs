@@ -645,7 +645,7 @@ namespace DOL.GS
 		/// <returns>ArrayList of playing GameClients</returns>
 		public static ArrayList GetAllPlayingClients()
 		{
-			ArrayList targetClients = new ArrayList();
+			ArrayList targetClients = new ArrayList(GameServer.Instance.Configuration.MaxClientCount);
 			lock (m_clients.SyncRoot)
 			{
 				foreach (GameClient client in m_clients)
@@ -658,6 +658,24 @@ namespace DOL.GS
 				}
 			}
 			return targetClients;
+		}
+
+		/// <summary>
+		/// Gets the count of connected clients.
+		/// </summary>
+		/// <returns>The count of connected clients.</returns>
+		public static int GetConnectedClientsCount()
+		{
+			int count = 0;
+			lock (m_clients.SyncRoot)
+			{
+				foreach (GameClient client in m_clients)
+				{
+					if (client != null)
+						count++;
+				}
+			}
+			return count;
 		}
 
 		/// <summary>

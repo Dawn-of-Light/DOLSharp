@@ -16,9 +16,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DOL.Database.DataAccessInterfaces
 {
@@ -37,10 +34,10 @@ namespace DOL.Database.DataAccessInterfaces
 		TTransferObject Find(TPrimaryKey key);
 
 		/// <summary>
-		/// Saves an object into a database.
+		/// Creates an object in a database.
 		/// </summary>
 		/// <param name="obj">The object to save.</param>
-		void Save(TTransferObject obj);
+		void Create(TTransferObject obj);
 
 		/// <summary>
 		/// Updates the persistent instance with data from transfer object.

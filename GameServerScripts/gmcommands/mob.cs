@@ -648,7 +648,7 @@ namespace DOL.GS.Scripts
 				{
 					if(targetMob.PersistantGameObjectID != 0) GameServer.Database.SaveObject(targetMob);
 					else GameServer.Database.AddNewObject(targetMob);
-					client.Out.SendMessage("Target Mob saved in db DB!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					client.Out.SendMessage("Target Mob saved in DB!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 					break;
 

@@ -94,13 +94,9 @@ namespace DOL.GS.PacketHandler.v168
 			{
 				GamePlayer player = (GamePlayer)m_actionSource;
 
-				player.Out.SendMessage("ChangeTargetAction : m_newTargetId ="+m_newTargetId , eChatType.CT_System, eChatLoc.CL_SystemWindow);
-
 				GameObject myTarget = player.Region.GetObject((ushort)m_newTargetId) as GameObject;
 				player.TargetObject = myTarget;
 				player.TargetInView = m_targetInView;
-
-				player.Out.SendMessage("ChangeTargetAction :"+myTarget , eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 
 				if(myTarget != null)
