@@ -157,7 +157,7 @@ namespace DOL.GS.PacketHandler
 			}
 		}
 
-		protected void CheckLenghtHybridSkillsPacket(ref GSTCPPacketOut pak, ref int maxSkills, ref int first)
+		public override void CheckLengthHybridSkillsPacket(ref GSTCPPacketOut pak, ref int maxSkills, ref int first)
 		{
 			if(pak.Length > 1000)
 			{
@@ -201,130 +201,6 @@ namespace DOL.GS.PacketHandler
 			pak.WriteByte((byte) (noSound ? 1 : 0));
 			pak.WriteByte(success);
 			SendTCP(pak);
-		}
-
-		public override void SendUpdateHybridSkills()
-		{
-			if (m_gameClient.Player == null)
-				return;
-			IList specs = m_gameClient.Player.GetSpecList();
-			IList skills = m_gameClient.Player.GetNonTrainableSkillList();
-			IList styles = m_gameClient.Player.GetStyleList();
-			IList spelllines = m_gameClient.Player.GetSpellLines();
-			Hashtable m_styleId = new Hashtable();
-			int maxSkills = 0;
-			int firstSkills = 0;
-
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.VariousUpdate));
-
-			lock (skills.SyncRoot)
-			lock (styles.SyncRoot)
-			lock (specs.SyncRoot)
-			lock (spelllines.SyncRoot)
-			{
-				int spellscount = m_gameClient.Player.GetAmountOfSpell();
-				pak.WriteByte(0x01); //subcode
-				pak.WriteByte((byte) (specs.Count + skills.Count + styles.Count + spellscount)); //number of entry
-				pak.WriteByte(0x03); //subtype
-				pak.WriteByte((byte)firstSkills);
-
-				foreach (Specialization spec in specs)
-				{
-					CheckLenghtHybridSkillsPacket(ref pak, ref maxSkills, ref firstSkills);
-					pak.WriteByte((byte) spec.Level);
-					pak.WriteByte((byte) eSkillPage.Specialization);
-					pak.WriteShort(0);
-					pak.WriteByte((byte) (m_gameClient.Player.GetModifiedSpecLevel(spec.KeyName) - spec.Level)); // bonus
-					pak.WriteShort(spec.ID);
-					pak.WritePascalString(spec.Name);
-				}
-
-				int i=0;
-				foreach (Skill skill in skills)
-				{
-					i++;
-					CheckLenghtHybridSkillsPacket(ref pak, ref maxSkills, ref firstSkills);
-					pak.WriteByte(0);
-					if(skill.ID < 500) pak.WriteByte((byte) eSkillPage.Abilities);
-					else pak.WriteByte((byte) eSkillPage.AbilitiesSpell);
-					pak.WriteShort(0);
-					pak.WriteByte(0);
-					pak.WriteShort(skill.ID);
-					pak.WritePascalString(skill.Name);
-				}
-				foreach (Style style in styles)
-				{
-					m_styleId[(int)style.ID] = i++;
-					CheckLenghtHybridSkillsPacket(ref pak, ref maxSkills, ref firstSkills);
-					//DOLConsole.WriteLine("style sended "+style.Name);
-					pak.WriteByte(0); // no level for style
-					pak.WriteByte((byte) eSkillPage.Styles);
-
-					int pre = 0;
-					switch (style.OpeningRequirementType)
-					{
-						case Style.eOpening.Offensive:
-							pre = 0 + (int) style.AttackResultRequirement; // last result of our attack against enemy
-							// hit, miss, target blocked, target parried, ...
-							if (style.AttackResultRequirement==Style.eAttackResult.Style)
-								pre |= ((100 + (int)m_styleId[style.OpeningRequirementValue]) << 8);
-							break;
-						case Style.eOpening.Defensive:
-							pre = 100 + (int) style.AttackResultRequirement; // last result of enemies attack against us
-							// hit, miss, you block, you parry, ...
-							break;
-						case Style.eOpening.Positional:
-							pre = 200 + style.OpeningRequirementValue;
-							break;
-					}
-
-					// style required?
-					if (pre == 0)
-					{
-						pre = 0x100;
-					}
-
-					pak.WriteShort((ushort) pre);
-					pak.WriteByte(0); // bonus
-					pak.WriteShort(style.ID);
-					pak.WritePascalString(style.Name);
-				}
-				foreach (SpellLine spellline in spelllines)
-				{
-					int spec_index = specs.IndexOf(m_gameClient.Player.GetSpecialization(spellline.Spec));
-					if (spec_index == -1)
-						spec_index = 0xFE; // Nightshade special value
-					IList spells = m_gameClient.Player.GetUsableSpellsOfLine(spellline);
-					foreach (Spell spell in spells)
-					{
-						CheckLenghtHybridSkillsPacket(ref pak, ref maxSkills, ref firstSkills);
-						pak.WriteByte((byte) spell.Level);
-						if (spell.InstrumentRequirement == 0)
-						{
-							pak.WriteByte((byte) eSkillPage.Spells);
-							pak.WriteByte(0);
-							pak.WriteByte((byte) spec_index);
-						}
-						else
-						{
-							pak.WriteByte((byte) eSkillPage.Songs);
-							pak.WriteByte(0);
-							pak.WriteByte(0xFF);
-						}
-						pak.WriteByte(0);
-						pak.WriteShort(spell.Icon);
-						pak.WritePascalString(spell.Name);
-					}
-				}
-			}
-			if(pak.Length > 7)
-			{
-				pak.Position = 4;
-				pak.WriteByte((byte) (maxSkills - firstSkills)); //number of entry
-				pak.WriteByte(0x03); //subtype
-				pak.WriteByte((byte)firstSkills);
-				SendTCP(pak);
-			}
 		}
 
 		/*public override void SendWarmapBonuses()
