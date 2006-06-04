@@ -460,7 +460,7 @@ namespace DOL.GS
 						if (player.ObjectState != eObjectState.Active)
 							continue;
 
-						if (Environment.TickCount - player.LastNPCUpdate > PLAYER_UPDATE_TIME)
+						if ((uint)Environment.TickCount - player.LastNPCUpdate > PLAYER_UPDATE_TIME)
 						{
 							BitArray carray = player.CurrentUpdateArray;
 							BitArray narray = player.NewUpdateArray;
@@ -491,7 +491,7 @@ namespace DOL.GS
 							}
 							
 							player.SwitchUpdateArrays();
-							player.LastNPCUpdate = Environment.TickCount;
+							player.LastNPCUpdate = (uint)Environment.TickCount;
 						}
 					}
 					int took = Environment.TickCount - start;
