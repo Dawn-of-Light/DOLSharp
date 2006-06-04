@@ -3871,7 +3871,7 @@ namespace DOL.GS
 		/// were checked the last time for new npcs. Will be done
 		/// every 250ms in WorldMgr.
 		/// </summary>
-		protected int m_lastNPCUpdate;
+		protected uint m_lastNPCUpdate;
 
 		/// <summary>
 		/// true if the targetObject is visible
@@ -4166,7 +4166,7 @@ namespace DOL.GS
 		/// <summary>
 		/// The last time we did update the NPCs around us
 		/// </summary>
-		public int LastNPCUpdate
+		public uint LastNPCUpdate
 		{
 			get { return m_lastNPCUpdate; }
 			set { m_lastNPCUpdate = value; }
@@ -8125,7 +8125,7 @@ namespace DOL.GS
 			m_objectUpdates[1] = new BitArray(30000);
 			m_lastUniqueLocations = new GameLocation[4];
 			m_currentAreas = new ArrayList(1);
-			m_lastNPCUpdate = Environment.TickCount;
+			m_lastNPCUpdate = (uint) Environment.TickCount;
 			m_enteredGame = false;
 			m_customDialogCallback = null;
 			m_sitting = false;
