@@ -79,10 +79,10 @@ namespace DOL.GS
 			obj.Name = m_Name;
 			obj.Realm = m_Realm;
 			obj.Model = m_Model;
-			obj.Level = m_Level;
+            obj.Level = (byte)Util.Random(m_minLevel, m_maxLevel);
 			obj.GuildName = m_guildName;
 			obj.MaxSpeedBase = m_maxSpeedBase;
-			obj.Size = m_size;
+            obj.Size = (byte)Util.Random(m_minSize, m_maxSize);
 			obj.Flags = m_flags;
 			obj.MeleeDamageType = m_meleeDamageType;
 			obj.EvadeChance = m_evadeChance;
