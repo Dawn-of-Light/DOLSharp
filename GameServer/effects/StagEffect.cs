@@ -1,7 +1,24 @@
+/*
+ * DAWN OF LIGHT - The first free open source DAoC server emulator
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
+ */
 using System;
 using System.Collections;
 using DOL.Events;
-using DOL.GS.Database;
 using DOL.GS.PacketHandler;
 using DOL.GS.SkillHandler;
 
@@ -15,17 +32,17 @@ namespace DOL.GS.Effects
 		/*
         1.42
         Hibernian Heroes have receieved a new ability - "Spirit of the Hunt".
-        Whenever this ability is used, the Hero will shapeshift into a fearsome 
-        stag-headed Huntsman from Celtic Lore, and will receive bonus hit points. 
+        Whenever this ability is used, the Hero will shapeshift into a fearsome
+        stag-headed Huntsman from Celtic Lore, and will receive bonus hit points.
         There are four different levels of of this ability: Initiate(15th level),
-        Member(25th level), Leader(35th level), and Master(45th level). 
-        While in this form, the hero has increased hit points - +20% for the 
-        15th level ability up to +50% for the 45th level ability. The ability 
+        Member(25th level), Leader(35th level), and Master(45th level).
+        While in this form, the hero has increased hit points - +20% for the
+        15th level ability up to +50% for the 45th level ability. The ability
         lasts for thirty seconds - at the end of this time, the hero's
-        maximum hits will return to normal, but he keeps any hit point 
+        maximum hits will return to normal, but he keeps any hit point
         gain from the ability in his current hits (but he cannot exceed his
-        pre-buffed maximum). The ability can be used once every 30 minutes 
-        played. Please note that there is only one Huntsman creature - 
+        pre-buffed maximum). The ability can be used once every 30 minutes
+        played. Please note that there is only one Huntsman creature -
         male and female Heroes will both shapeshift into the same creature.
         */
 
@@ -98,11 +115,12 @@ namespace DOL.GS.Effects
 			else m_player.Model = 583;
 
 			double m_amountPercent = (ab.Level + 0.5 + Util.RandomDouble()) / 10; //+-5% random
-			m_amount = (int)(player.CalculateMaxHealth(player.Level, player.BaseConstitution) * m_amountPercent);
-			
+			m_amount = (int)(player.CalculateMaxHealth(player.Level, player.GetModified(eProperty.Constitution)) * m_amountPercent);
+
 			m_player.BuffBonusCategory1[(int)eProperty.MaxHealth] += m_amount;
-			m_player.ChangeHealth(m_player, (int)(m_player.GetModified(eProperty.MaxHealth) * m_amountPercent), true);
-			m_player.Out.SendCharStatsUpdate();
+			m_player.Health += (int)(m_player.GetModified(eProperty.MaxHealth) * m_amountPercent);
+			if (m_player.Health > m_player.MaxHealth) m_player.Health = m_player.MaxHealth;
+			m_player.Out.SendUpdatePlayer();
 
 			foreach (GamePlayer visiblePlayer in m_player.GetInRadius(typeof(GamePlayer), WorldMgr.VISIBILITY_DISTANCE))
 			{
@@ -111,7 +129,7 @@ namespace DOL.GS.Effects
 
 			StartTimers();
 
-			m_player.Out.SendMessage("You channel the spirit of the hunt within you!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			m_player.Out.SendMessage("You channel the spirit of the Hunt!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 			m_player.EffectList.Add(this);
 		}
 
@@ -124,14 +142,16 @@ namespace DOL.GS.Effects
 
 			m_player.Model = (ushort)m_player.CreationModel;
 
-			double m_amountPercent = m_amount / m_player.CalculateMaxHealth(m_player.Level, m_player.BaseConstitution);
+			double m_amountPercent = m_amount / m_player.GetModified(eProperty.MaxHealth);
+			int playerHealthPercent = m_player.HealthPercent;
 			m_player.BuffBonusCategory1[(int)eProperty.MaxHealth] -= m_amount;
-			m_player.ChangeHealth(m_player, (int)(-1 * m_player.Health * m_amountPercent), true);
-			m_player.Out.SendCharStatsUpdate();
-			
+			if (m_player.Alive)
+				m_player.Health = (int)Math.Max(1, 0.01 * m_player.MaxHealth * playerHealthPercent);
+			m_player.Out.SendUpdatePlayer();
+
 			// there is no animation on end of the effect
 			m_player.EffectList.Remove(this);
-			m_player.Out.SendMessage("You no longer channel the spirit of the hunt!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			m_player.Out.SendMessage("Your Spirit of the Hunt ends.", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 		}
 
 		/// <summary>
@@ -141,7 +161,7 @@ namespace DOL.GS.Effects
 		{
 			StopTimers();
 
-			m_expireTimer = new RegionTimer(m_player, new RegionTimerCallback(ExpiredCallback), BerserkAbilityHandler.DURATION);
+			m_expireTimer = new RegionTimer(m_player, new RegionTimerCallback(ExpiredCallback), StagAbilityHandler.DURATION);
 		}
 
 		/// <summary>
@@ -220,8 +240,8 @@ namespace DOL.GS.Effects
 				if (seconds > 0)
 				{
 					delveInfoList.Add(" "); //empty line
-					if(seconds > 60)
-						delveInfoList.Add("- " + seconds/60 + ":" + (seconds%60).ToString("00") + " minutes remaining.");
+					if (seconds > 60)
+						delveInfoList.Add("- " + seconds / 60 + ":" + (seconds % 60).ToString("00") + " minutes remaining.");
 					else
 						delveInfoList.Add("- " + seconds + " seconds remaining.");
 				}
