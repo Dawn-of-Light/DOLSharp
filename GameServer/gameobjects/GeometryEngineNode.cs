@@ -446,12 +446,12 @@ namespace DOL.GS
 
 				Point currentPosition = Position;
 				Point curElemRequestCenter = curElem.RequestCenter;
-				int currentTick = Environment.TickCount;
+				uint currentTick = (uint) Environment.TickCount;
 				short updateDelay = UPDATE_RATE_ALIVE;
 				
 				if(this is GameLivingBase && !((GameLivingBase)this).Alive) updateDelay = UPDATE_RATE_DEAD;
 				
-				if (currentTick >= (curElem.DataCacheTick + updateDelay) // its a long time we didn't update
+				if ((currentTick - curElem.DataCacheTick) >= updateDelay // its a long time we didn't update
 				|| FastMath.Abs(curElemRequestCenter.X - currentPosition.X) > MAX_DISTANCE_BEFORE_UPDATE
 				|| FastMath.Abs(curElemRequestCenter.Y - currentPosition.Y) > MAX_DISTANCE_BEFORE_UPDATE) // we have moved too much
 				{
@@ -468,7 +468,7 @@ namespace DOL.GS
 
 				return curElem.CacheData;
 			}
-			return new DynamicList();
+			return new DynamicList(0);
 		}
 
 		/// <summary>
@@ -476,9 +476,9 @@ namespace DOL.GS
 		/// </summary>
 		private sealed class OIRElement
 		{
-			private int m_dataCacheTick = 0; 
+			private uint m_dataCacheTick; 
 
-			public int DataCacheTick
+			public uint DataCacheTick
 			{
 				get { return m_dataCacheTick; }
 				set { m_dataCacheTick = value; }
