@@ -10,13 +10,16 @@
 		<property name="Realm" type="Byte" not-null="true" column="`Realm`"/>
 		<property name="Model" type="Int32" not-null="true" column="`Model`"/>
 		
-		<property name="Level" type="Byte" not-null="true" column="`Level`"/>
-		
-		<property name="GuildName" type="String(255)" not-null="true" column="`GuildName`"/>
+		<property name="MinLevel" type="Byte" not-null="true" column="`MinLevel`"/>
+    <property name="MaxLevel" type="Byte" not-null="true" column="`MaxLevel`"/>
+
+    <property name="GuildName" type="String(255)" not-null="true" column="`GuildName`"/>
 		<property name="MaxSpeedBase" type="Int32" not-null="true" column="`MaxSpeedBase`"/>
 		
-		<property name="Size" type="Byte" not-null="true" column="`Size`"/>
-		<property name="Flags" type="Byte" not-null="true" column="`Flags`"/>
+		<property name="MinSize" type="Byte" not-null="true" column="`MinSize`"/>
+    <property name="MaxSize" type="Byte" not-null="true" column="`MaxSize`"/>
+
+    <property name="Flags" type="Byte" not-null="true" column="`Flags`"/>
 		<property name="MeleeDamageType" type="DOL.GS.eDamageType, GameServer" not-null="true" column="`MeleeDamageType`"/>
 		<property name="EvadeChance" type="Byte" not-null="true" column="`EvadeChance`"/>
 		<property name="BlockChance" type="Byte" not-null="true" column="`BlockChance`"/>

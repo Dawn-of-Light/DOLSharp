@@ -99,19 +99,33 @@ namespace DOL.GS
 
 		#endregion
 
-		#region Level (GameLivingBase propertie)
+		#region Level(min/max) (GameLivingBase properties)
+        /// <summary>
+        /// The min level of the Object
+        /// </summary>
+        protected byte m_minLevel;
+
+        /// <summary>
+        /// Gets or Sets the min level of the Object
+        /// </summary>
+        public virtual byte MinLevel
+        {
+            get { return m_minLevel; }
+            set { m_minLevel = value; }
+        }
+	    
 		/// <summary>
-		/// The level of the Object
+		/// The max level of the Object
 		/// </summary>
-		protected byte m_Level;
+		protected byte m_maxLevel;
 
 		/// <summary>
-		/// Gets or Sets the current level of the Object
+		/// Gets or Sets the max level of the Object
 		/// </summary>
-		public virtual byte Level
+		public virtual byte MaxLevel
 		{
-			get { return m_Level; }
-			set { m_Level = value; }
+            get { return m_maxLevel; }
+            set { m_maxLevel = value; }
 		}
 		#endregion
 
@@ -145,20 +159,34 @@ namespace DOL.GS
 		}
 		#endregion
 
-		#region Size/Flags/MeleeDamageType/EvadeChance/BlockChance/ParryChance/LeftHandSwingChance/InventoryID/OwnBrainTemplate (GameNPC properties)
+		#region Size(min/max)/Flags/MeleeDamageType/EvadeChance/BlockChance/ParryChance/LeftHandSwingChance/InventoryID/OwnBrainTemplate (GameNPC properties)
+
+        /// <summary>
+        /// Holds the min size of the NPC
+        /// </summary>
+        protected byte m_minSize;
+
+        /// <summary>
+        /// Gets or sets the min size of the npc
+        /// </summary>
+        public byte MinSize
+        {
+            get { return m_minSize; }
+            set { m_minSize = value; }
+        }
+	    
+		/// <summary>
+		/// Holds the max size of the NPC
+		/// </summary>
+		protected byte m_maxSize;
 
 		/// <summary>
-		/// Holds the size of the NPC
+		/// Gets or sets the max size of the npc
 		/// </summary>
-		protected byte m_size;
-
-		/// <summary>
-		/// Gets or sets the size of the npc
-		/// </summary>
-		public byte Size
+		public byte MaxSize
 		{
-			get { return m_size; }
-			set { m_size = value; }
+            get { return m_maxSize; }
+            set { m_maxSize = value; }
 		}
 
 		/// <summary>
