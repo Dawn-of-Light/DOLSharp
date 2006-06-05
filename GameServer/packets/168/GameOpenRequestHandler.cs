@@ -45,7 +45,8 @@ namespace DOL.GS.PacketHandler.v168
 					client.Player.Out.SendMessage("Officer Message: "+client.Player.Guild.OMotd,eChatType.CT_System,eChatLoc.CL_SystemWindow);
 					if(client.Player.Guild.Alliance != null) client.Player.Out.SendMessage("Alliance Message: "+client.Player.Guild.Alliance.AMotd,eChatType.CT_System,eChatLoc.CL_SystemWindow);
 				}
-				client.Player.Out.SendMessage("You have entered "+client.Player.Region.Description ,eChatType.CT_System,eChatLoc.CL_SystemWindow);	
+				client.Player.Out.SendMessage("You have entered " + client.Player.Region.Description, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				client.Player.Out.SendMessage(client.Player.Region.Description, eChatType.CT_ScreenCenterSmaller, eChatLoc.CL_SystemWindow);	
 			}
 
 			return 1;
