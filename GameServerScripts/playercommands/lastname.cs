@@ -108,7 +108,7 @@ namespace DOL.GS.Scripts
 			}
 			
 			client.Player.TempProperties.setProperty(LASTNAME_WEAK, new WeakRef(NewLastname));
-			client.Out.SendCustomDialog("Would you like to set your last name to\x000a" + NewLastname + "?", new CustomDialogResponse(LastNameDialogResponse));
+			client.Out.SendCustomDialog("Would you like to set your last name to \x000a" + NewLastname + "?", new CustomDialogResponse(LastNameDialogResponse));
 
 			return 1;
 		}
