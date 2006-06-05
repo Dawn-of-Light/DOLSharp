@@ -42,9 +42,14 @@ namespace DOL.GS.Scripts
 		/// <returns>list with string messages</returns>
 		public override IList GetExamineMessages(GamePlayer player)
 		{
+			/*
+			 * You examine Elvar Ironhand. He is friendly and is a smith.
+			 * [Give him an object to be repaired]
+			 */
 			IList list = new ArrayList();
 			list.Add("You target [" + GetName(0, false) + "]");
-			list.Add("You examine " + GetName(0, false) + ".  " + GetPronoun(0, true) + " is " + GetAggroLevelString(player, false) + " and can repair your equipment.");
+			list.Add("You examine " + GetName(0, false) + ".  " + GetPronoun(0, true) + " is " + GetAggroLevelString(player, false) + " and is a smith.");
+			list.Add("[Give him an object to be repaired]");
 			return list;
 		}
 
