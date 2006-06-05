@@ -33,6 +33,7 @@ using System.Reflection;
 using DOL.AI.Brain;
 using DOL.Events;
 using DOL.GS.PacketHandler;
+using DOL.Database;
 using log4net;
 using NHibernate.Expression;
 using NHibernate.Mapping.Attributes;
