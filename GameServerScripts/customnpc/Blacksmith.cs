@@ -31,7 +31,7 @@ namespace DOL.GS.Scripts
 	[Subclass(NameType=typeof(Blacksmith), ExtendsType=typeof(GameMob))] 
 	public class Blacksmith : GameMob
 	{
-		private const string REPEAR_ITEM_WEAK = "repear item";
+		private const string REPEAR_ITEM_WEAK = "repair item";
 
 		#region Examine/Interact Message
 
@@ -44,7 +44,7 @@ namespace DOL.GS.Scripts
 		{
 			IList list = new ArrayList();
 			list.Add("You target [" + GetName(0, false) + "]");
-			list.Add("You examine " + GetName(0, false) + ".  " + GetPronoun(0, true) + " is " + GetAggroLevelString(player, false) + " and can repear your equipment.");
+			list.Add("You examine " + GetName(0, false) + ".  " + GetPronoun(0, true) + " is " + GetAggroLevelString(player, false) + " and can repair your equipment.");
 			return list;
 		}
 
@@ -82,7 +82,7 @@ namespace DOL.GS.Scripts
 			EquipableItem itemToRepair = item as EquipableItem;
 			if (itemToRepair == null)
 			{
-				player.Out.SendMessage(GetName(0, false) + " can't repear this objet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(GetName(0, false) + " can't repair this objet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
 			
@@ -145,7 +145,7 @@ namespace DOL.GS.Scripts
 			{
 				item.Condition += item.Durability;
 				item.Durability = 0;
-				SayTo(player, "Uhh, that " + item.Name + " was already rather old, I won't be able to repair it once again, so be careful!");
+				SayTo(player, "Uhh, that " + item.Name + " is rather old, I won't be able to repair it again, so be careful!");
 			}
 			else
 			{
@@ -155,7 +155,7 @@ namespace DOL.GS.Scripts
 			}
 
 			player.Out.SendInventorySlotsUpdate(new int[] {item.SlotPosition});
-			SayTo(player, "It's ok. Now you can use your " + item.Name + " in fight!");
+			SayTo(player, "It's done. Your " + item.Name + " is ready for combat!");
 			return;
 		}
 
