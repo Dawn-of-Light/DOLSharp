@@ -6,6 +6,6 @@
 			<generator class="native" />
 		</id>
 		<property name="Position" type="Int32" not-null="true" column="`Position`"/>
-		<many-to-one name="ItemTemplate" cascade="none" class="DOL.GS.GenericItemTemplate, GameServer" column="`PersistantGameObjectID`"/>
+		<many-to-one name="ItemTemplate" cascade="none" class="DOL.GS.GenericItemTemplate, GameServer" column="`ItemTemplateID`"/>
 	</class>
 </hibernate-mapping>
