@@ -39,7 +39,7 @@ namespace DOL.GS
 	/// </summary>
 	public class GameMobTemplate : GameNPCTemplate
 	{
-		#region FactionID / RespawnInterval (GameMob properties)
+		#region FactionID / RespawnInterval / LootList (GameMob properties)
 
 		/// <summary>
 		/// The faction if of this template
@@ -68,6 +68,20 @@ namespace DOL.GS
 			get { return m_respawnInterval; }
 			set { m_respawnInterval = value; }
 		}
+
+        /// <summary>
+        /// Holds the unique id of the loot list to use when the mob must drop
+        /// </summary>
+        protected int m_lootListID;
+
+        /// <summary>
+        /// Get and set the unique id of the loot list to use when the mob must drop
+        /// </summary>
+        public int LootListID
+        {
+            get { return m_lootListID; }
+            set { m_lootListID = value; }
+        }
 		#endregion
 		
 		/// <summary>
@@ -101,6 +115,7 @@ namespace DOL.GS
 			obj.OwnBrain.Body = obj;
 			obj.Faction = FactionMgr.GetFaction(m_factionID);
 			obj.RespawnInterval = m_respawnInterval;
+            obj.LootListID = m_lootListID;
 			return obj;
 		}
 	}

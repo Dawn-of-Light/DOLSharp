@@ -32,8 +32,9 @@
 		
 		<subclass name="DOL.GS.GameMobTemplate, GameServer">
 			<property name="FactionID" type="Int32" not-null="true" column="`FactionID`"/>
-			<property name="RespawnInterval" type="Int32" not-null="true" column="`RespawnInterval`"/>	
-		</subclass>
+			<property name="RespawnInterval" type="Int32" not-null="true" column="`RespawnInterval`"/>
+      <property name="LootListID" type="Int32" not-null="true" column="`LootListID`"/>
+    </subclass>
 	
 	</class>
 </hibernate-mapping>
