@@ -51,7 +51,8 @@
 					<subclass name="DOL.GS.GameMob, GameServer">
 						<property name="FactionID" type="Int32" not-null="true" column="`FactionID`"/>
 						<property name="RespawnInterval" type="Int32" not-null="true" column="`RespawnInterval`"/>
-						<subclass name="DOL.GS.GameMerchant, GameServer">
+            <property name="LootListID" type="Int32" not-null="true" column="`LootListID`"/>
+            <subclass name="DOL.GS.GameMerchant, GameServer">
 							<property name="MerchantWindowID" type="Int32" not-null="true" column="`MerchantWindowID`"/>
 							<subclass name="DOL.GS.GameStableMaster, GameServer"/>
 						</subclass>
