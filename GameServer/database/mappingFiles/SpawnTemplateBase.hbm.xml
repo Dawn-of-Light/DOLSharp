@@ -6,7 +6,7 @@
 		</id>
 		<discriminator column="SpawnTemplateBaseType"/> 
 
-		<many-to-one name="MobTemplate" cascade="none" class="DOL.GS.GameMobTemplate, GameServer" column="`PersistantGameObjectID`"/>
+		<many-to-one name="MobTemplate" cascade="none" class="DOL.GS.GameMobTemplate, GameServer" column="`GameNPCTemplateID`"/>
 	
 		<subclass name="DOL.GS.SpawnGenerators.SpawnTemplateClassic, GameServer">
 			<property name="Count" type="Int32" not-null="true" column="`Count`"/>
