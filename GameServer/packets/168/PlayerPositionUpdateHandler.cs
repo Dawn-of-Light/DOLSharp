@@ -238,8 +238,7 @@ namespace DOL.GS.PacketHandler.v168
 			// pet in view ((flags & 0x04) != 0))
 			// target in view ((flags & 0x10) != 0) or ((flags & 0x20) != 0))
 		
-		//	DOLConsole.WriteLine("Flying Speed="+flyspeed+" rest = "+(flyingflag>>15)+" "+((flyingflag>>14)&0x01)+" "+((flyingflag>>13)&0x01)+"  "+((flyingflag>>12)&0x01));
-			
+			//	DOLConsole.WriteLine("Flying Speed="+flyspeed+" rest = "+(flyingflag>>15)+" "+((flyingflag>>14)&0x01)+" "+((flyingflag>>13)&0x01)+"  "+((flyingflag>>12)&0x01));
 			//**************//
 			//FALLING DAMAGE//
 			//**************//
@@ -249,46 +248,39 @@ namespace DOL.GS.PacketHandler.v168
 				/* Are we on the ground? */
 				if ((flyingflag >> 15) != 0)
 				{
-					const int minFallDamageDistance = 180;
-					const int maxFallDamageDistance = 1024 - minFallDamageDistance;
 					int safeFallLevel = client.Player.GetAbilityLevel(Abilities.SafeFall);
-					int damageDistance = maxLastZ - targetPos.Z - minFallDamageDistance - (100 * safeFallLevel);
-
-					if (damageDistance > 0)
+					int fallSpeed = (flyingflag & 0xFFF) - 100 * safeFallLevel; // 0x7FF fall speed and 0x800 bit = fall speed overcaped
+					if (fallSpeed > 400)
 					{
-						if (safeFallLevel > 0)
-							client.Out.SendMessage("The damage was lessened by your safe_fall ability!", eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
-
-						damageDistance = Math.Min(damageDistance, maxFallDamageDistance);
-						
-						// player with 100% health should never die from fall damage
-						int damageValue = (client.Player.MaxHealth - 1)*damageDistance/maxFallDamageDistance;
-						int damagePercent = damageValue*100/client.Player.MaxHealth;
-
 						client.Out.SendMessage("You take falling damage!", eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
-
-						if (damagePercent > 0)
+						int fallPercent = Math.Min(99, (fallSpeed - 401) / 6);
+						if (fallPercent > 0)
 						{
-							// on live servers this message is not sent sometimes; others are always shown
-							client.Out.SendMessage("You take " + damagePercent + "% of your max hits in damage.", eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
+							if (safeFallLevel > 0)
+								client.Out.SendMessage("The damage was lessened by your Safe Fall ability!", eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
+							client.Out.SendMessage("You take " + fallPercent + "% of your max hits in damage.", eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
+
+							client.Player.EndurancePercent -= (byte)fallPercent;
+							client.Player.TakeDamage(null, eDamageType.Falling, (int)(0.01 * fallPercent * (client.Player.MaxHealth - 1)), 0);
+
+							//Update the player's health to all other players around
+							foreach (GamePlayer player in client.Player.GetInRadius(typeof(GamePlayer), WorldMgr.VISIBILITY_DISTANCE))
+								player.Out.SendCombatAnimation(null, client.Player, 0, 0, 0, 0, 0, client.Player.HealthPercent);
+
+//							client.Player.ChangeHealth(client.Player, GameLiving.eHealthChangeType.Unknown, -0.01*fallPercent*(client.Player.MaxHealth - 1));
 						}
-
-						//Damage player before sending update
-						client.Player.ChangeHealth(null, -damageValue, false);
-
-						//Update the player's health to all other players around
-						foreach (GamePlayer player in client.Player.GetInRadius(typeof(GamePlayer), WorldMgr.VISIBILITY_DISTANCE))
-							player.Out.SendCombatAnimation(null, client.Player, 0, 0, 0, 0, 0, client.Player.HealthPercent);
-
 						client.Out.SendMessage("You lose endurance!", eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
-						client.Player.EndurancePercent -= (byte)damagePercent;
 					}
 					client.Player.MaxLastZ = targetPos.Z;
 				}
-				else if(flyingflag == 0 || maxLastZ < targetPos.Z)
+				else
 				{
-					// always set Z if on the ground or if new z is bigger than old z
-					client.Player.MaxLastZ = targetPos.Z;
+					// always set Z if on the ground
+					if (flyingflag == 0)
+						client.Player.MaxLastZ = targetPos.Z;
+					// set Z if in air and higher than old Z
+					else if (maxLastZ < targetPos.Z)
+						client.Player.MaxLastZ = targetPos.Z;
 				}
 			}
 			//**************//
