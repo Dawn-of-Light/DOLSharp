@@ -870,6 +870,12 @@ namespace DOL.GS
 				if (brain != null)
 					brain.Start();
 			}
+
+			if (Mana <= 0 && MaxMana > 0)
+				Mana = MaxMana;
+			else if (Mana > 0 && MaxMana > 0)
+				StartPowerRegeneration();
+
 			return true;
 		}
 
@@ -1338,7 +1344,7 @@ namespace DOL.GS
 				{
 					foreach (Spell spell in this.Spells)
 					{
-						if (spell.SpellType == "DirectDamage")
+						if (spell.SpellType == "DirectDamage" || spell.SpellType == "Bolt")
 						{
 							SpellLine spellline = SkillBase.GetSpellLine(GlobalSpellsLines.Mob_Spells);
 							this.CastSpell(spell,spellline);
@@ -1361,19 +1367,6 @@ namespace DOL.GS
 				m_runningSpellHandler.CastingCompleteEvent -= new CastingCompleteCallback(OnAfterSpellCastSequence);
 				m_runningSpellHandler = null;
 			}
-		}
-
-		/// <summary>
-		/// Callback after spell execution finished and next spell can be processed
-		/// </summary>
-		/// <param name="handler"></param>
-		public override void OnAfterSpellCastSequence(ISpellHandler handler)
-		{
-			if (handler.Spell.SpellType == "DirectDamage")
-			{
-				m_runningSpellHandler = handler;
-				handler.CastSpell();
-			}			
 		}
 
 		/// <summary>
