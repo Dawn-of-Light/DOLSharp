@@ -199,6 +199,7 @@ namespace DOL.GS.Spells
 
 			m_interrupted = false;
 			GameLivingBase target = Caster.TargetObject as GameLivingBase;
+			bool check = CheckBeginCast(target);
 			if (Spell.Pulse != 0 && CancelPulsingSpell(Caster, Spell.SpellType))
 			{
 				// is done even if caster is sitting
@@ -207,8 +208,7 @@ namespace DOL.GS.Spells
 				else
 					MessageToCaster("You stop playing your song.", eChatType.CT_Spell);
 			}
-			else if (GameServer.ServerRules.IsAllowedToCastSpell(Caster, target, Spell, m_spellLine)
-				&& CheckBeginCast(target))
+			else if (GameServer.ServerRules.IsAllowedToCastSpell(Caster, target, Spell, m_spellLine) && check)
 			{
 				if (Spell.CastTime > 0)
 				{
@@ -386,9 +386,9 @@ namespace DOL.GS.Spells
 				}
 
 
-				switch (m_spell.Target)
+				switch (m_spell.Target.ToLower())
 				{
-					case "Enemy":
+					case "enemy":
 						if (selectedTarget == m_caster)
 						{
 							MessageToCaster("You can't attack yourself! ", eChatType.CT_System);
@@ -408,7 +408,7 @@ namespace DOL.GS.Spells
 						}
 						break;
 
-					case "Corpse":
+					case "corpse":
 						if (selectedTarget.Alive || !GameServer.ServerRules.IsSameRealm(Caster, selectedTarget, true))
 						{
 							MessageToCaster("This spell only works on dead members of your realm!", eChatType.CT_SpellResisted);
@@ -416,14 +416,14 @@ namespace DOL.GS.Spells
 						}
 						break;
 
-					case "Realm":
+					case "realm":
 						if (!GameServer.ServerRules.IsSameRealm(Caster, selectedTarget, false))
 						{
 							return false;
 						}
 						break;
 
-					case "Pet":
+					case "pet":
 						if (Caster is GamePlayer)
 						{
 							GamePlayer casterPlayer = (GamePlayer)Caster;
@@ -920,11 +920,11 @@ namespace DOL.GS.Spells
 		public virtual IList SelectTargets(GameLivingBase castTarget)
 		{
 			ArrayList list = new ArrayList(8);
-			
-			switch (Spell.Target)
+
+			switch (Spell.Target.ToLower())
 			{
 					// GTAoE
-				case "Area":
+				case "area":
 					if (Spell.Radius > 0)
 					{
 						foreach (GameLivingBase living in Caster.Region.GetInRadius(typeof(GameLivingBase), Caster.GroundTarget, (ushort) Spell.Radius))
@@ -937,12 +937,12 @@ namespace DOL.GS.Spells
 					}
 					break;
 
-				case "Corpse":
+				case "corpse":
 					if (castTarget != null && !castTarget.Alive)
 						list.Add(castTarget);
 					break;
 
-				case "Pet":
+				case "pet":
 					if (Caster is GamePlayer)
 					{
 						IControlledBrain npc = ((GamePlayer)Caster).ControlledNpc;
@@ -955,7 +955,7 @@ namespace DOL.GS.Spells
 					}
 					break;
 
-				case "Enemy":
+				case "enemy":
 					if (Spell.Radius > 0)
 					{
 						if (castTarget == null || Spell.Range == 0)
@@ -975,7 +975,7 @@ namespace DOL.GS.Spells
 					}
 					break;
 
-				case "Realm":
+				case "realm":
 					if (Spell.Radius > 0)
 					{
 						if (castTarget == null || Spell.Range == 0)
@@ -995,11 +995,11 @@ namespace DOL.GS.Spells
 					}
 					break;
 
-				case "Self":
+				case "self":
 					list.Add(Caster);
 					break;
 
-				case "Group":
+				case "group":
 					if (Caster is GamePlayer)
 					{
 						GamePlayer casterPlayer = (GamePlayer)Caster;
