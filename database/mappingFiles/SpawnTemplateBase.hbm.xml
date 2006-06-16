@@ -4,7 +4,7 @@
 		<id name="SpawnTemplateBaseID" type="Int32" column="`SpawnTemplateBaseID`">
 			<generator class="assigned" />
 		</id>
-		<discriminator column="SpawnTemplateBaseType"/> 
+		<discriminator column="`SpawnTemplateBaseType`"/> 
 
 		<many-to-one name="MobTemplate" cascade="none" class="DOL.GS.GameMobTemplate, GameServer" column="`GameNPCTemplateID`"/>
 	

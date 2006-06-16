@@ -6,7 +6,7 @@
         <param name="property">TaskPlayer</param>
       </generator>
     </id>
-    <discriminator column="TaskType"/>
+    <discriminator column="`TaskType`"/>
 
     <one-to-one name="TaskPlayer" class="DOL.GS.GamePlayer, GameServer" constrained="true"/>
    

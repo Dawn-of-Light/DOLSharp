@@ -4,7 +4,7 @@
 		<id name="ItemID" type="Int32" column="`ItemID`" unsaved-value="0">
 			<generator class="native" />
 		</id>
-		<discriminator column="NPCEquipmentType"/>
+		<discriminator column="`NPCEquipmentType`"/>
 		
 		<property name="Model" type="Int32" not-null="true" column="`Model`"/>
 		<property name="SlotPosition" type="Int32" not-null="true" column="`SlotPosition`"/>
