@@ -6,7 +6,7 @@
 				<param name="property">Body</param>
 			</generator>
 		</id>
-		<discriminator column="ABrainType"/> 
+		<discriminator column="`ABrainType`"/> 
 		
 		<one-to-one name="Body" class="DOL.GS.GameNPC, GameServer" constrained="true"/>
 		<subclass name="DOL.AI.Brain.StandardMobBrain, GameServer">

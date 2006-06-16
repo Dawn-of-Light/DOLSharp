@@ -4,7 +4,7 @@
 		<id name="PathID" column="`PathID`">
 			<generator class="native" />
 		</id>
-		<discriminator column="PathType"/> 
+		<discriminator column="`PathType`"/> 
 		
 		<property name="RegionID" type="Int32" not-null="true" column="`RegionID`"/>
 		<many-to-one name="StartingPoint" cascade="all" class="DOL.GS.Movement.PathPoint, GameServer" column="`StartingPoint`"/>

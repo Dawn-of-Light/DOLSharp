@@ -5,7 +5,7 @@
 		<id name="LootID" type="Int32" column="`LootID`" unsaved-value="0">
 			<generator class="native" />
 		</id>
-		<discriminator column="LootType"/> 
+		<discriminator column="`LootType`"/> 
 		
 		<property name="Chance" type="Int32" not-null="true" column="`Chance`"/>
 		

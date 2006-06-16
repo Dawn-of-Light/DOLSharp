@@ -4,7 +4,7 @@
 		<id name="AreaID" column="`AreaID`" unsaved-value="0">
 			<generator class="native" />
 		</id>
-		<discriminator column="AreaType"/> 
+		<discriminator column="`AreaType`"/> 
 		
 		<property name="Description" type="String(255)" not-null="true" column="`Description`"/>
 		<property name="Sound" type="Byte" not-null="true" column="`Sound`"/>
