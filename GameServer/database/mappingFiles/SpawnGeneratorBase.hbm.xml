@@ -4,7 +4,7 @@
 		<id name="SpawnGeneratorBaseID" type="Int32" column="`SpawnGeneratorBaseID`">
 			<generator class="assigned" />
 		</id>
-		<discriminator column="SpawnGeneratorBaseType"/> 
+		<discriminator column="`SpawnGeneratorBaseType`"/> 
 
 		<property name="RegionID" type="Int32" not-null="true" column="`RegionID`"/>
 		<set name="SpawnTemplates" cascade="all" table="spawntemplate">

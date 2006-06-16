@@ -4,7 +4,7 @@
 		<id name="ItemID" column="`ItemID`" unsaved-value="0">
 			<generator class="native" />
 		</id>
-		<discriminator column="GenericItemType"/> 
+		<discriminator column="`GenericItemType`"/> 
 		
 		<property name="Name" type="String(255)" not-null="true" column="`Name`"/>
 		<property name="Level" type="Byte" not-null="true" column="`Level`"/>

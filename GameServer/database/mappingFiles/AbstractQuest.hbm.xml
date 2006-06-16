@@ -4,7 +4,7 @@
 		<id name="AbstractQuestID" type="Int32" column="`AbstractQuestID`" unsaved-value="0">
 			<generator class="native" />
 		</id>
-		<discriminator column="QuestType"/> 
+		<discriminator column="`QuestType`"/> 
 		
 		<property name="Step" type="Byte" not-null="true" column="`Step`"/>
 		<many-to-one name="QuestPlayer" class="DOL.GS.GamePlayer, GameServer" not-null="true" column="`PersistantGameObjectID`"/>

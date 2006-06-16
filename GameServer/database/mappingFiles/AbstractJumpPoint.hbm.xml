@@ -4,7 +4,7 @@
 		<id name="JumpPointID" type="Int32" column="`JumpPointID`">
 			<generator class="assigned" />
 		</id>
-		<discriminator column="JumpPointType"/> 
+		<discriminator column="`JumpPointType`"/> 
 		
 		<subclass name="DOL.GS.JumpPoints.ClassicJumpPoint, GameServer">
 			<component name="TargetLocation" class="DOL.GS.JumpPoints.JumpPointTargetLocation, GameServer">

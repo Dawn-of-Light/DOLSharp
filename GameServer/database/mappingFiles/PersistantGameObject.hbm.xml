@@ -4,7 +4,7 @@
 		<id name="PersistantGameObjectID" column="`PersistantGameObjectID`" unsaved-value="0">
 			<generator class="native" />
 		</id>
-		<discriminator column="PersistantGameObjectType"/> 
+		<discriminator column="`PersistantGameObjectType`"/> 
 		
 		<property name="Name" type="String(255)" not-null="true" column="`Name`"/>
 		<property name="Realm" type="Byte" not-null="true" column="`Realm`"/>
@@ -51,8 +51,8 @@
 					<subclass name="DOL.GS.GameMob, GameServer">
 						<property name="FactionID" type="Int32" not-null="true" column="`FactionID`"/>
 						<property name="RespawnInterval" type="Int32" not-null="true" column="`RespawnInterval`"/>
-            <property name="LootListID" type="Int32" not-null="true" column="`LootListID`"/>
-            <subclass name="DOL.GS.GameMerchant, GameServer">
+						<property name="LootListID" type="Int32" not-null="true" column="`LootListID`"/>
+						<subclass name="DOL.GS.GameMerchant, GameServer">
 							<property name="MerchantWindowID" type="Int32" not-null="true" column="`MerchantWindowID`"/>
 							<subclass name="DOL.GS.GameStableMaster, GameServer"/>
 						</subclass>
