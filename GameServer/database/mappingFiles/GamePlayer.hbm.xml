@@ -47,9 +47,9 @@
     <property name="TaskDone" type="Byte" not-null="true" column="`TaskDone`"/>
 
     <map name="FactionAggroLevel" table="factionaggrolevel" cascade="all">
-      <key column="PersistantGameObjectID" />
+      <key column="`PersistantGameObjectID`" />
       <index column="`FactionID`" type="Int32"/>
-      <element column="AggroLevel" type="Int32"/>
+      <element column="`AggroLevel`" type="Int32"/>
     </map>
 
     <property name="Race" type="Int32" not-null="true" column="`Race`"/>

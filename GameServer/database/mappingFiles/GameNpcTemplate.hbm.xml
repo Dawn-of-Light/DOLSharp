@@ -4,7 +4,7 @@
 		<id name="GameNPCTemplateID" column="`GameNPCTemplateID`" unsaved-value="0">
 			<generator class="native" />
 		</id>
-		<discriminator column="GameNPCTemplateType"/> 
+		<discriminator column="`GameNPCTemplateType`"/> 
 		
 		<property name="Name" type="String(255)" not-null="true" column="`Name`"/>
 		<property name="Realm" type="Byte" not-null="true" column="`Realm`"/>

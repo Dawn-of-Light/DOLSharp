@@ -5,7 +5,7 @@
 		<id name="ItemTemplateID" type="String(255)" column="`ItemTemplateID`">
 			<generator class="assigned" />
 		</id>
-		<discriminator column="ItemTemplateType"/> 
+		<discriminator column="`ItemTemplateType`"/> 
 		
 		<property name="Name" type="String(255)" not-null="true" column="`Name`"/>
 		<property name="Level" type="Byte" not-null="true" column="`Level`"/>

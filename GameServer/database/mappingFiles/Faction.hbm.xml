@@ -6,11 +6,11 @@
 		</id>
 		<property name="Name" type="String(255)" not-null="true" column="`Name`"/>
 		<set name="FriendFactions" table="friendfactions" cascade="all">
-			<key column="FactionID" />
+			<key column="`FactionID`" />
 			<one-to-many class="DOL.GS.Faction, GameServer"/>
 		</set>
 		<set name="EnemyFactions" table="enemyfactions" cascade="all">
-			<key column="FactionID" />
+			<key column="`FactionID`" />
 			<one-to-many class="DOL.GS.Faction, GameServer"/>
 		</set>
 	</class>
