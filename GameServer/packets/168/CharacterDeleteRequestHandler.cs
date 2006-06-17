@@ -38,16 +38,8 @@ namespace DOL.GS.PacketHandler.v168
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			string charName = packet.ReadString(30);
-			GamePlayer charac = null;
-			foreach(GamePlayer currentChar in client.Account.CharactersInSelectedRealm)
-			{
-				if(currentChar.Name.ToLower().Equals(charName.ToLower()))
-				{
-					charac = currentChar;
-					break;
-				}
-			}
-			
+
+			GamePlayer charac = client.Account.GetCharacter(charName);
 			if (charac == null)
 				return 0;
 			
@@ -86,17 +78,17 @@ namespace DOL.GS.PacketHandler.v168
 			}*/
 
 			GameServer.Database.DeleteObject(charac);
-			client.Account.CharactersInSelectedRealm.Remove(charac);
+			client.Account.RemoveCharacter(charac);
 			client.Player = null;
 
-			if (client.Account.CharactersInSelectedRealm.Count == 0)
+			if (client.Account.CharactersCount == 0)
 			{
 				if (log.IsInfoEnabled)
 					log.Info(string.Format("Account {0} has no more chars. Realm resetted!", client.Account.AccountName));
 				//Client has no more characters, so the client can choose
 				//the realm again!
 				client.Account.Realm = eRealm.None;
-				GameServer.Database.SaveObject(client.Account);
+				client.Account.UpdateDatabase();
 			}
 					
 			return 1;

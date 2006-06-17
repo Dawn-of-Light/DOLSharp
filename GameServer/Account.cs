@@ -38,6 +38,15 @@ namespace DOL.GS
 		private readonly AccountTO m_account;
 
 		/// <summary>
+		/// Gets the account TO.
+		/// </summary>
+		/// <value>The account TO.</value>
+		internal AccountTO AccountTO
+		{
+			get { return m_account; }
+		}
+
+		/// <summary>
 		/// The unique id of the acccount.
 		/// </summary>
 		public int AccountId
@@ -144,13 +153,70 @@ namespace DOL.GS
 			set { m_account.BanReason = value; }
 		}
 
+		#endregion
+
+		#region Characters manipulation
+		
 		/// <summary>
-		/// The list of all the characters in the actual realm.
+		/// Gets the character.
 		/// </summary>
-		public IList CharactersInSelectedRealm
+		/// <param name="realm">The realm.</param>
+		/// <param name="slot">The slot.</param>
+		/// <returns>The found character or null.</returns>
+		public GamePlayer GetCharacter(eRealm realm, int slot)
 		{
-			get { return m_account.CharactersInSelectedRealm; }
-			set { m_account.CharactersInSelectedRealm = value; }
+			foreach (GamePlayer player in m_account.Characters)
+			{
+				if ((eRealm) player.Realm == realm && player.SlotPosition == slot)
+				{
+					return player;
+				}
+			}
+			return null;
+		}
+
+		/// <summary>
+		/// Gets the character by name, case-insensitive.
+		/// </summary>
+		/// <param name="name">The name.</param>
+		/// <returns>The found character or null.</returns>
+		public GamePlayer GetCharacter(string name)
+		{
+			foreach (GamePlayer player in m_account.Characters)
+			{
+				if (string.Compare(name, player.Name, true) == 0)
+				{
+					return player;
+				}
+			}
+			return null;
+		}
+
+		/// <summary>
+		/// Adds the character.
+		/// </summary>
+		/// <param name="player">The player.</param>
+		public void AddCharacter(GamePlayer player)
+		{
+			m_account.Characters.Add(player);
+		}
+
+		/// <summary>
+		/// Removes the character.
+		/// </summary>
+		/// <param name="player">The player.</param>
+		public void RemoveCharacter(GamePlayer player)
+		{
+			m_account.Characters.Remove(player);
+		}
+
+		/// <summary>
+		/// Gets the count of characters.
+		/// </summary>
+		/// <value>The characters count.</value>
+		public int CharactersCount
+		{
+			get { return m_account.Characters.Count; }
 		}
 
 		#endregion
@@ -161,6 +227,15 @@ namespace DOL.GS
 		public void UpdateDatabase()
 		{
 			GameServer.DatabaseNew.Using<IAccountDao>().Update(m_account);
+		}
+
+
+		/// <summary>
+		/// Deletes the account from database.
+		/// </summary>
+		public void DeleteFromDatabase()
+		{
+			GameServer.DatabaseNew.Using<IAccountDao>().Delete(m_account);
 		}
 
 		/// <summary>

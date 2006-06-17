@@ -947,7 +947,7 @@ namespace DOL
 						{
 							if (log.IsInfoEnabled)
 								log.Info("Creating database tables ...");
-							
+
 							m_databaseMgr.CreateSchemas();
 			
 							m_database.CreateDatabaseStructure(Configuration.DatabaseConfigFile);
@@ -966,7 +966,7 @@ namespace DOL
 									for (int i = 0; i < errors.Count; i++)
 									{
 										string s = errors[i];
-										log.Error(String.Format("{0,3}) {1}", i, s));
+										log.Error(String.Format("{0,3}) {1}", i + 1, s));
 									}
 								}
 							}

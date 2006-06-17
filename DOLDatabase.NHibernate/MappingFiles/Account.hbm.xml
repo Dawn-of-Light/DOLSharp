@@ -4,6 +4,10 @@
 		<id name="AccountId" column="`AccountId`" unsaved-value="0">
 			<generator class="native" />
 		</id>
+		<bag name="Characters" cascade="all">
+			<key column="`AccountId`"/>
+			<one-to-many class="DOL.GS.GamePlayer, GameServer"/>
+		</bag>
 		<property name="AccountName" type="String(20)" unique="true" not-null="true" column="`AccountName`"/>
 		<property name="Password" type="String" not-null="true" column="`Password`"/>
 		<property name="CreationDate" type="DateTime" not-null="true" column="`CreationDate`"/>
