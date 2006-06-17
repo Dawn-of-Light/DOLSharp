@@ -86,8 +86,10 @@ namespace DOL.Database.DataTransferObjects
 		/// </summary>
 		private string m_banReason = "";
 		
-#warning ???
-		private IList m_charactersInSelectedRealm;
+		/// <summary>
+		/// The account's characters
+		/// </summary>
+		private IList m_characters;
 
 		#region All get/set
 
@@ -199,19 +201,22 @@ namespace DOL.Database.DataTransferObjects
 			set { m_banReason = value; }
 		}
 
-		#endregion
-
 		/// <summary>
 		/// The list of all the characters in the actual realm.
 		/// </summary>
-		public IList CharactersInSelectedRealm
+		public IList Characters
 		{
 			get
 			{
-				if (m_charactersInSelectedRealm == null) m_charactersInSelectedRealm = new ArrayList(1);
-				return m_charactersInSelectedRealm;
+				if (m_characters == null)
+				{
+					m_characters = new ArrayList(1);
+				}
+				return m_characters;
 			}
-			set { m_charactersInSelectedRealm = value; }
+			set { m_characters = value; }
 		}
+
+		#endregion
 	}
 }

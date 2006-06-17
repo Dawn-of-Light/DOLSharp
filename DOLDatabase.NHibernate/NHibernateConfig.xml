@@ -18,6 +18,11 @@
 
     <!-- Define all mapping files to load at -the server start  -->
     <mapping file="mappings\Account.hbm.xml" />
+    <mapping file="mappings\AbstractQuest.hbm.xml" />
+    <mapping file="mappings\AbstractTask.hbm.xml" />
+    <mapping file="mappings\GamePlayer.hbm.xml" />
+    <mapping file="mappings\GamePlayerInventory.hbm.xml" />
+    <mapping file="mappings\Item.hbm.xml" />
 
   </session-factory>
 </hibernate-configuration>

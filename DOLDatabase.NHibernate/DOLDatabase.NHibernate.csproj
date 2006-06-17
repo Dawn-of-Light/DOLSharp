@@ -56,7 +56,12 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="MappingFiles\AbstractQuest.hbm.xml" />
+    <Content Include="MappingFiles\AbstractTask.hbm.xml" />
     <Content Include="MappingFiles\Account.hbm.xml" />
+    <Content Include="MappingFiles\GamePlayer.hbm.xml" />
+    <Content Include="MappingFiles\GamePlayerInventory.hbm.xml" />
+    <Content Include="MappingFiles\Item.hbm.xml" />
     <Content Include="NHibernateConfig.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
