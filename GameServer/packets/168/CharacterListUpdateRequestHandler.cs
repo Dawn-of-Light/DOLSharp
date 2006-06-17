@@ -269,7 +269,7 @@ namespace DOL.GS.PacketHandler.v168
 							log.Warn(client.Account.AccountName + " tried to create invalid character:" +
 								"\nchar name="+ch.Name+", race="+ch.Race+", realm="+ch.Realm+", class="+ch.CharacterClassID+", region="+ch.Region+
 								"\nstr="+ch.BaseStrength+", con="+ch.BaseConstitution+", dex="+ch.BaseDexterity+", qui="+ch.BaseQuickness+", int="+ch.BaseIntelligence+", pie="+ch.BasePiety+", emp="+ch.BaseEmpathy+", chr="+ch.BaseCharisma);
-						
+
 						if (client.Account.Realm == 0) client.Out.SendRealm(eRealm.None);
 						else client.Out.SendCharacterOverview((eRealm)client.Account.Realm);
 					}
@@ -304,8 +304,33 @@ namespace DOL.GS.PacketHandler.v168
 			/// <returns>True if valid</returns>
 			public static bool IsCharacterValid(GamePlayer ch)
 			{
+				bool valid = true;
 				try
 				{
+					if (ch.Realm > 3)
+					{
+						if (log.IsWarnEnabled)
+							log.Warn("Wrong realm: " + ch.Realm);
+						valid = false;
+					}
+					if (ch.Level != 1)
+					{
+						if (log.IsWarnEnabled)
+							log.Warn("Wrong level: " + ch.Level);
+						valid = false;
+					}
+					if (Array.IndexOf(CLASSES_BY_REALM[ch.Realm], ch.CharacterClassID) == -1)
+					{
+						if (log.IsWarnEnabled)
+							log.Warn("Wrong class: " + ch.CharacterClassID + ", realm:" + ch.Realm);
+						valid = false;
+					}
+					if (Array.IndexOf(CLASSES_BY_RACE[ch.Race], ch.CharacterClassID) == -1)
+					{
+						if (log.IsWarnEnabled)
+							log.Warn("Wrong race: " + ch.Race + ", class:" + ch.CharacterClassID);
+						valid = false;
+					}
 					int pointsUsed = 0;
 					pointsUsed += PointsUsed(ch.Race, STR, ch.BaseStrength);
 					pointsUsed += PointsUsed(ch.Race, CON, ch.BaseConstitution);
@@ -316,20 +341,20 @@ namespace DOL.GS.PacketHandler.v168
 					pointsUsed += PointsUsed(ch.Race, EMP, ch.BaseEmpathy);
 					pointsUsed += PointsUsed(ch.Race, CHA, ch.BaseCharisma);
 
-					if(pointsUsed != 30)
+					if (pointsUsed != 30)
 					{
 						if (log.IsWarnEnabled)
-							log.Warn("Points used: "+pointsUsed);
-						return false;
+							log.Warn("Points used: " + pointsUsed);
+						valid = false;
 					}
 				}
-				catch(Exception e)
+				catch (Exception e)
 				{
 					if (log.IsErrorEnabled)
 						log.Error("CharacterCreation", e);
 					return false;
 				}
-				return true;
+				return valid;
 			}
 
 			/// <summary>
@@ -373,6 +398,105 @@ namespace DOL.GS.PacketHandler.v168
 				new int[8] { 90, 70, 40, 40, 60, 60, 60, 60 }, // Half Ogre
 				new int[8] { 55, 55, 55, 60, 60, 75, 60, 60 }, // Frostalf
 				new int[8] { 60, 80, 50, 50, 60, 60, 60, 60 }, // Shar
+			};
+
+			/// <summary>
+			/// All possible player starting classes
+			/// </summary>
+			protected static readonly int[][] CLASSES_BY_REALM = new int[][]
+			{
+				null, // "Unknown",
+				new int[] { (int)eCharacterClass.Fighter,
+							(int)eCharacterClass.Acolyte,
+							(int)eCharacterClass.Mage,
+							(int)eCharacterClass.Elementalist,
+							(int)eCharacterClass.AlbionRogue,
+							(int)eCharacterClass.Disciple }, // Albion
+				new int[] { (int)eCharacterClass.Viking,
+							(int)eCharacterClass.Mystic,
+							(int)eCharacterClass.Seer,
+							(int)eCharacterClass.MidgardRogue }, // Midgard
+				new int[] { (int)eCharacterClass.Guardian,
+							(int)eCharacterClass.Stalker,
+							(int)eCharacterClass.Naturalist,
+							(int)eCharacterClass.Magician,
+							(int)eCharacterClass.Forester }, // Hibernia
+			};
+
+			/// <summary>
+			/// All the possible classes by race
+			/// </summary>
+			protected static readonly int[][] CLASSES_BY_RACE = new int[][]
+			{
+				null, // "Unknown",
+				//
+				new int[] { (int)eCharacterClass.Fighter,
+							(int)eCharacterClass.Acolyte,
+							(int)eCharacterClass.Mage,
+							(int)eCharacterClass.Elementalist,
+							(int)eCharacterClass.AlbionRogue,
+							(int)eCharacterClass.Disciple }, // Briton
+				new int[] { (int)eCharacterClass.Fighter,
+							(int)eCharacterClass.Acolyte,
+							(int)eCharacterClass.Mage,
+							(int)eCharacterClass.Elementalist }, // Avalonian
+				new int[] { (int)eCharacterClass.Fighter,
+							(int)eCharacterClass.Acolyte,
+							(int)eCharacterClass.AlbionRogue }, // Highlander
+				new int[] { (int)eCharacterClass.Fighter,
+							(int)eCharacterClass.Mage,
+							(int)eCharacterClass.AlbionRogue,
+							(int)eCharacterClass.Disciple }, // Saracen
+				new int[] { (int)eCharacterClass.Viking,
+							(int)eCharacterClass.Mystic,
+							(int)eCharacterClass.Seer,
+							(int)eCharacterClass.MidgardRogue }, // Norseman
+				new int[] { (int)eCharacterClass.Viking,
+							(int)eCharacterClass.Mystic,
+							(int)eCharacterClass.Seer }, // Troll
+				new int[] { (int)eCharacterClass.Viking,
+							(int)eCharacterClass.Mystic,
+							(int)eCharacterClass.Seer,
+							(int)eCharacterClass.MidgardRogue }, // Dwarf
+				new int[] { (int)eCharacterClass.Viking,
+							(int)eCharacterClass.Mystic,
+							(int)eCharacterClass.Seer,
+							(int)eCharacterClass.MidgardRogue }, // Kobold
+				new int[] { (int)eCharacterClass.Guardian,
+							(int)eCharacterClass.Stalker,
+							(int)eCharacterClass.Naturalist,
+							(int)eCharacterClass.Magician,
+							(int)eCharacterClass.Forester }, // Celt
+				new int[] { (int)eCharacterClass.Guardian,
+							(int)eCharacterClass.Naturalist,
+							(int)eCharacterClass.Forester }, // Firbolg
+				new int[] { (int)eCharacterClass.Guardian,
+							(int)eCharacterClass.Stalker,
+							(int)eCharacterClass.Magician }, // Elf
+				new int[] { (int)eCharacterClass.Guardian,
+							(int)eCharacterClass.Stalker,
+							(int)eCharacterClass.Magician }, // Lurikeen
+				new int[] { (int)eCharacterClass.Fighter,
+							(int)eCharacterClass.Acolyte,
+							(int)eCharacterClass.Mage,
+							(int)eCharacterClass.AlbionRogue,
+							(int)eCharacterClass.Disciple }, // Inconnu
+				new int[] { (int)eCharacterClass.Viking,
+							(int)eCharacterClass.Mystic,
+							(int)eCharacterClass.MidgardRogue }, // Valkyn
+				new int[] { (int)eCharacterClass.Guardian,
+							(int)eCharacterClass.Naturalist,
+							(int)eCharacterClass.Forester }, // Sylvan
+				new int[] { (int)eCharacterClass.Fighter,
+							(int)eCharacterClass.Mage,
+							(int)eCharacterClass.Elementalist }, // Half Ogre
+				new int[] { (int)eCharacterClass.Viking,
+							(int)eCharacterClass.Mystic,
+							(int)eCharacterClass.Seer,
+							(int)eCharacterClass.MidgardRogue }, // Frostalf
+				new int[] { (int)eCharacterClass.Guardian,
+							(int)eCharacterClass.Stalker,
+							(int)eCharacterClass.Magician }, // Shar
 			};
 		}
 
