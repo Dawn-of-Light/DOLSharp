@@ -51,22 +51,19 @@ namespace DOL.GS.PacketHandler.v168
 				// packet is sent on every region change (and twice after "play" was pressed)
 				if(
 				(
-					(client.Player == null && client.Account.CharactersInSelectedRealm != null) 
-				  ||(client.Player!=null && client.Player.Name.ToLower() != charName.ToLower())
+					(client.Player == null) 
+				  ||(string.Compare(client.Player.Name, charName, true) != 0)
 				)
 				&& client.ClientState == GameClient.eClientState.CharScreen)
 				{
-					foreach(GamePlayer player in client.Account.CharactersInSelectedRealm)
+					GamePlayer player = client.Account.GetCharacter(charName);
+					if(player != null)
 					{
-						if(player.Name == charName)
-						{
-							client.Player = player;
-							player.Client = client;
-							player.InitOnConnect();
+						client.Player = player;
+						player.Client = client;
+						player.InitOnConnect();
 
-							GameEventMgr.Notify(GameClientEvent.PlayerLoaded,this);
-							break;
-						}
+						GameEventMgr.Notify(GameClientEvent.PlayerLoaded, this);
 					}
 				}
 

@@ -153,126 +153,115 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendCharacterOverview(eRealm realm)
 		{
+			Account account = m_gameClient.Account;
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.CharacterOverview));
-			pak.FillString(m_gameClient.Account.AccountName, 24);
 
-			m_gameClient.Account.CharactersInSelectedRealm = GameServer.Database.SelectObjects(typeof(GamePlayer), Expression.And(Expression.Eq("AccountId", m_gameClient.Account.AccountId),Expression.Eq("Realm", (byte)realm)), Order.Asc("SlotPosition"));
-			if (m_gameClient.Account.CharactersInSelectedRealm.Count < 1)
-			{
-				pak.Fill(0x0, 1848);
-			}
-			else
-			{
-				GamePlayer currentChar = null;
-				IEnumerator iter = m_gameClient.Account.CharactersInSelectedRealm.GetEnumerator();
-				if(iter.MoveNext()) currentChar = (GamePlayer) iter.Current;
+			pak.FillString(account.AccountName, 24);
 
-				for(int i = 0 ; i < 8 ; i++)
+			for(int i = 0 ; i < 8 ; i++)
+			{
+				GamePlayer currentChar = account.GetCharacter(realm, i);
+				if (currentChar == null)
 				{
-					if(currentChar != null && currentChar.SlotPosition == i)
+					pak.Fill(0x0, 184); // no char in this slot
+				}
+				else
+				{
+					pak.FillString(currentChar.Name, 24);
+					pak.Fill(0x0, 24); //0 String
+
+					Region reg = currentChar.Region;
+					Zone zon = null;
+					if (reg != null)
+						zon = reg.GetZone(currentChar.Position);
+					if (zon != null)
+						pak.FillString(zon.Description, 24);
+					else
+						pak.Fill(0x0, 24); //No known location
+
+					pak.FillString("", 24); //Class name
+
+					pak.FillString(GlobalConstants.RaceToName((eRace)currentChar.Race), 24);
+					pak.WriteByte((byte) currentChar.Level);
+					pak.WriteByte((byte) currentChar.CharacterClassID);
+					pak.WriteByte((byte) currentChar.Realm);
+					pak.WriteByte((byte)(((((byte)currentChar.Race & 0xF0) << 2)+((byte)currentChar.Race & 0x0F)) | (currentChar.Gender << 4)));
+					pak.WriteShortLowEndian((ushort) currentChar.Model);
+					pak.WriteByte((byte) currentChar.Region.RegionID);
+					pak.WriteByte(0x0); //second byte of region, currently unused
+					pak.WriteInt(0x0); //Unknown, last used?
+					pak.WriteByte((byte) currentChar.BaseStrength);
+					pak.WriteByte((byte) currentChar.BaseDexterity);
+					pak.WriteByte((byte) currentChar.BaseConstitution);
+					pak.WriteByte((byte) currentChar.BaseQuickness);
+					pak.WriteByte((byte) currentChar.BaseIntelligence);
+					pak.WriteByte((byte) currentChar.BasePiety);
+					pak.WriteByte((byte) currentChar.BaseEmpathy);
+					pak.WriteByte((byte) currentChar.BaseCharisma);
+
+					VisibleEquipment currentItem;
+					for(int slot = (int)eInventorySlot.HeadArmor ; slot <= (int)eInventorySlot.ArmsArmor ; slot++)
 					{
-						pak.FillString(currentChar.Name, 24);
-						pak.Fill(0x0, 24); //0 String
-
-						Region reg = currentChar.Region;
-						Zone zon = null;
-						if (reg != null)
-							zon = reg.GetZone(currentChar.Position);
-						if (zon != null)
-							pak.FillString(zon.Description, 24);
-						else
-							pak.Fill(0x0, 24); //No known location
-
-						pak.FillString("", 24); //Class name
-
-						pak.FillString(GlobalConstants.RaceToName((eRace)currentChar.Race), 24);
-						pak.WriteByte((byte) currentChar.Level);
-						pak.WriteByte((byte) currentChar.CharacterClassID);
-						pak.WriteByte((byte) currentChar.Realm);
-						pak.WriteByte((byte)(((((byte)currentChar.Race & 0xF0) << 2)+((byte)currentChar.Race & 0x0F)) | (currentChar.Gender << 4)));
-						pak.WriteShortLowEndian((ushort) currentChar.Model);
-						pak.WriteByte((byte) currentChar.Region.RegionID);
-						pak.WriteByte(0x0); //second byte of region, currently unused
-						pak.WriteInt(0x0); //Unknown, last used?
-						pak.WriteByte((byte) currentChar.BaseStrength);
-						pak.WriteByte((byte) currentChar.BaseDexterity);
-						pak.WriteByte((byte) currentChar.BaseConstitution);
-						pak.WriteByte((byte) currentChar.BaseQuickness);
-						pak.WriteByte((byte) currentChar.BaseIntelligence);
-						pak.WriteByte((byte) currentChar.BasePiety);
-						pak.WriteByte((byte) currentChar.BaseEmpathy);
-						pak.WriteByte((byte) currentChar.BaseCharisma);
-
-						VisibleEquipment currentItem;
-						for(int slot = (int)eInventorySlot.HeadArmor ; slot <= (int)eInventorySlot.ArmsArmor ; slot++)
+						currentItem = (VisibleEquipment)currentChar.Inventory.GetItem((eInventorySlot)slot);
+						if(currentItem == null)
 						{
-							currentItem = (VisibleEquipment)currentChar.Inventory.GetItem((eInventorySlot)slot);
-							if(currentItem == null)
-							{
-								pak.WriteShort(0x00);
-							}
-							else
-							{
-								pak.WriteShortLowEndian((ushort) currentItem.Model); // all armors models
-							}
-						}
-
-						for(int slot = (int)eInventorySlot.HeadArmor ; slot <= (int)eInventorySlot.ArmsArmor ; slot++)
-						{
-							if(slot == (int)eInventorySlot.Jewellery) currentItem = (VisibleEquipment)currentChar.Inventory.GetItem(eInventorySlot.LeftHandWeapon);
-							else currentItem = (VisibleEquipment)currentChar.Inventory.GetItem((eInventorySlot)slot);
-
-							if(currentItem == null)
-							{
-								pak.WriteShort(0x00);
-							}
-							else
-							{
-								pak.WriteShortLowEndian((ushort) currentItem.Color); // all armors color (+shield)
-							}
-						}
-
-						for(int slot = (int)eInventorySlot.RightHandWeapon ; slot <= (int)eInventorySlot.DistanceWeapon ; slot++)
-						{
-							currentItem = (VisibleEquipment)currentChar.Inventory.GetItem((eInventorySlot)slot);
-							if(currentItem == null)
-							{
-								pak.WriteShort(0x00);
-							}
-							else
-							{
-								pak.WriteShortLowEndian((ushort) currentItem.Model); // all weapon models
-							}
-						}
-
-						if (currentChar.ActiveWeaponSlot == GameLiving.eActiveWeaponSlot.TwoHanded)
-						{
-							pak.WriteByte(0x02);
-							pak.WriteByte(0x02);
-						}
-						else if (currentChar.ActiveWeaponSlot == GameLiving.eActiveWeaponSlot.Distance)
-						{
-							pak.WriteByte(0x03);
-							pak.WriteByte(0x03);
+							pak.WriteShort(0x00);
 						}
 						else
 						{
-							if(currentChar.Inventory.GetItem(eInventorySlot.RightHandWeapon) != null) pak.WriteByte(0x00); else pak.WriteByte(0xFF);
-							if(currentChar.Inventory.GetItem(eInventorySlot.LeftHandWeapon) != null) pak.WriteByte(0x01); else pak.WriteByte(0xFF);
+							pak.WriteShortLowEndian((ushort) currentItem.Model); // all armors models
 						}
+					}
 
-						pak.WriteByte(0x00); //0x01=char in SI zone, classic client can't "play"
-						pak.WriteByte(0x00);
+					for(int slot = (int)eInventorySlot.HeadArmor ; slot <= (int)eInventorySlot.ArmsArmor ; slot++)
+					{
+						if(slot == (int)eInventorySlot.Jewellery) currentItem = (VisibleEquipment)currentChar.Inventory.GetItem(eInventorySlot.LeftHandWeapon);
+						else currentItem = (VisibleEquipment)currentChar.Inventory.GetItem((eInventorySlot)slot);
 
-						currentChar = iter.MoveNext() ? (GamePlayer)iter.Current : null;
+						if(currentItem == null)
+						{
+							pak.WriteShort(0x00);
+						}
+						else
+						{
+							pak.WriteShortLowEndian((ushort) currentItem.Color); // all armors color (+shield)
+						}
+					}
+
+					for(int slot = (int)eInventorySlot.RightHandWeapon ; slot <= (int)eInventorySlot.DistanceWeapon ; slot++)
+					{
+						currentItem = (VisibleEquipment)currentChar.Inventory.GetItem((eInventorySlot)slot);
+						if(currentItem == null)
+						{
+							pak.WriteShort(0x00);
+						}
+						else
+						{
+							pak.WriteShortLowEndian((ushort) currentItem.Model); // all weapon models
+						}
+					}
+
+					if (currentChar.ActiveWeaponSlot == GameLiving.eActiveWeaponSlot.TwoHanded)
+					{
+						pak.WriteByte(0x02);
+						pak.WriteByte(0x02);
+					}
+					else if (currentChar.ActiveWeaponSlot == GameLiving.eActiveWeaponSlot.Distance)
+					{
+						pak.WriteByte(0x03);
+						pak.WriteByte(0x03);
 					}
 					else
 					{
-						pak.Fill(0x0, 184); // no char in this slot
+						if(currentChar.Inventory.GetItem(eInventorySlot.RightHandWeapon) != null) pak.WriteByte(0x00); else pak.WriteByte(0xFF);
+						if(currentChar.Inventory.GetItem(eInventorySlot.LeftHandWeapon) != null) pak.WriteByte(0x01); else pak.WriteByte(0xFF);
 					}
+
+					pak.WriteByte(0x00); //0x01=char in SI zone, classic client can't "play"
+					pak.WriteByte(0x00);
 				}
-				pak.Fill(0x0, 0x68); //Don't know why so many trailing 0's | Corillian: Cuz they're stupid like that ;)
 			}
+			pak.Fill(0x0, 0x68); //Don't know why so many trailing 0's | Corillian: Cuz they're stupid like that ;)
 			SendTCP(pak);
 		}
 

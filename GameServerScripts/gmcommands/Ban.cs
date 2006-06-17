@@ -19,6 +19,8 @@
 using System;
 using System.Reflection;
 using DOL.Database;
+using DOL.Database.DataAccessInterfaces;
+using DOL.Database.DataTransferObjects;
 using DOL.GS.PacketHandler;
 using log4net;
 using NHibernate.Expression;
@@ -50,13 +52,13 @@ namespace DOL.GS.Scripts
 				}
 				if(args[1] == "status")
 				{
-					Account account = (Account) GameServer.Database.SelectObject(typeof (Account), Expression.Eq("AccountName", args[2]));
-					if(account != null)
-					{	
-						TimeSpan durationLeft = (account.LastLogin.Add(account.BanDuration)).Subtract(DateTime.Now);
+					AccountTO acc = GameServer.DatabaseNew.Using<IAccountDao>().FindByName(args[2]);
+					if(acc != null)
+					{
+						TimeSpan durationLeft = (acc.LastLogin.Add(acc.BanDuration)).Subtract(DateTime.Now);
 						if(durationLeft.CompareTo(TimeSpan.Zero) > 0)
 						{
-							client.Out.SendMessage("This account has been banned by "+account.BanAuthor+" for the reason "+account.BanReason+".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							client.Out.SendMessage("This account has been banned by " + acc.BanAuthor + " for the reason " + acc.BanReason + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							client.Out.SendMessage("The ban will expire in "+durationLeft.Days+" days "+durationLeft.Hours+" hours "+durationLeft.Minutes+" minutes.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						}
 						else
@@ -66,13 +68,13 @@ namespace DOL.GS.Scripts
 					}
 					else
 					{
-						client.Out.SendMessage("The account "+account.AccountName+" does not exist.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						client.Out.SendMessage("The account " + args[2] + " does not exist.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}
 					return 1;
 				}
 
 				string reason= "No special reason";
-				Account accountToBan;
+				Account accountToBan = null;
 				TimeSpan banDuration;
 
 				GamePlayer player = client.Player.TargetObject as GamePlayer;
@@ -117,7 +119,11 @@ namespace DOL.GS.Scripts
 					else
 					{
 						//Get database object
-						accountToBan = (Account) GameServer.Database.SelectObject(typeof (Account), Expression.Eq("AccountName", args[1]));
+						AccountTO accTO = GameServer.DatabaseNew.Using<IAccountDao>().FindByName(args[1]);
+						if (accTO != null)
+						{
+							accountToBan = new Account(accTO);
+						}
 					}
 					
 					banDuration =  new TimeSpan(Convert.ToInt32(args[2]), Convert.ToInt32(args[3]), Convert.ToInt32(args[4]), 0 , 0);
@@ -133,7 +139,7 @@ namespace DOL.GS.Scripts
 				accountToBan.BanAuthor = client.Player.Name;
 				accountToBan.BanReason = reason;
 		
-				GameServer.Database.SaveObject(accountToBan);
+				accountToBan.UpdateDatabase();
 
 				client.Out.SendMessage("Account " + accountToBan.AccountName + " banned.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 			}

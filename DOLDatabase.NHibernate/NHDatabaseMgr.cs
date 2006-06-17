@@ -19,7 +19,9 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Reflection;
 using System.Text;
+using log4net;
 using NHibernate.Dialect;
 using NHibernate.Mapping;
 using NHibernate.Tool.hbm2ddl;
@@ -31,6 +33,11 @@ namespace DOL.Database.NHibernate
 	/// </summary>
 	public class NHDatabaseMgr : DatabaseMgr
 	{
+		/// <summary>
+		/// Defines a logger for this class.
+		/// </summary>
+		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="NHDatabaseMgr"/> class.
 		/// </summary>
@@ -99,14 +106,36 @@ namespace DOL.Database.NHibernate
 					}
 					else
 					{
+//						if (log.IsDebugEnabled)
+//						{
+//							log.DebugFormat("checking table '{0}'", requiredTablename);
+//						}
+
 						Dictionary<string, string> table = tables[requiredTablename];
 
 						statement.CommandText = "SHOW COLUMNS IN `" + requiredTablename + "`;";
-					
+						
 						using (reader = statement.ExecuteReader())
 						while (reader.Read())
 						{
-							table.Add(reader.GetString(0).ToLower(), reader.GetString(1));
+							string field = reader.GetString(0).ToLower();
+							string fieldType = reader.GetString(1);
+//							if (log.IsDebugEnabled)
+//							{
+//								log.DebugFormat("  field '{0}'", field);
+//							}
+							
+							if (!table.ContainsKey(field))
+							{
+								table.Add(field, fieldType);
+							}
+							else if (table[field] != fieldType)
+							{
+								throw new Exception("Different field types in table: '" + requiredTablename
+								                    + "' field: '" + field
+								                    + "' type1: '" + table[field]
+								                    + "' type2: '" + fieldType + "'");
+							}
 						}
 
 						foreach (Column requiredColumn in pClass.Table.ColumnCollection)
