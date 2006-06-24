@@ -198,7 +198,7 @@ namespace DOL.GS
 			m_dbAutoCreate = root["Server"]["DBAutoCreate"].GetBoolean(m_dbAutoCreate);
 			m_dbSaveInterval = root["Server"]["DBAutosaveInterval"].GetInt(m_dbSaveInterval);
 			m_maxClientCount = root["Server"]["MaxClientCount"].GetInt(m_maxClientCount);
-			m_useReflectionOptimizer =  root["Server"]["UseReflexionOptimiser"].GetBoolean(m_useReflectionOptimizer);
+			m_useReflectionOptimizer = root["Server"]["UseReflectionOptimizer"].GetBoolean(m_useReflectionOptimizer);
 			m_cpuCount = root["Server"]["CpuCount"].GetInt(m_cpuCount);
 			if (m_cpuCount < 1)
 				m_cpuCount = 1;
@@ -257,7 +257,7 @@ namespace DOL.GS
 			root["Server"]["DBAutoCreate"].Set(m_dbAutoCreate);
 			root["Server"]["DBAutosaveInterval"].Set(m_dbSaveInterval);
 			root["Server"]["MaxClientCount"].Set(m_maxClientCount);
-			root["Server"]["UseReflexionOptimiser"].Set(m_useReflectionOptimizer);
+			root["Server"]["UseReflectionOptimizer"].Set(m_useReflectionOptimizer);
 			root["Server"]["CpuCount"].Set(m_cpuCount);
 		}
 		#endregion
