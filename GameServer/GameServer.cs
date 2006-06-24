@@ -913,7 +913,9 @@ namespace DOL
 					{
 						if (log.IsInfoEnabled)
 							log.Info("Loading database configuration ...");
-						
+
+						NHibernate.Cfg.Environment.UseReflectionOptimizer = Configuration.UseReflectionOptimizer;
+
 						DOL.Database.Configuration cfg = new Configuration();
 						//Try to find the database mgr config file, if it doesn't exist we create it
 						if(!File.Exists(Configuration.DatabaseMgrConfig))
@@ -929,8 +931,6 @@ namespace DOL
 						{
 							ResourceUtil.ExtractResource(new FileInfo(Configuration.DatabaseConfigFile).Name, Configuration.DatabaseConfigFile);
 						}
-
-						if(!Configuration.UseReflectionOptimizer) NHibernate.Cfg.Environment.UseReflectionOptimizer = false;
 
 						m_database = new ObjectDatabase(Configuration.DatabaseConfigFile); // Open the connection to the database
 					}

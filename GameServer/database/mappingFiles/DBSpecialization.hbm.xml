@@ -7,10 +7,9 @@
 		<property name="Name" type="String(255)" not-null="true" column="`Name`"/>
 		<property name="Icon" type="Int32" not-null="true" column="`Icon`"/>
 		<property name="Description" type="String(255)" not-null="true" column="`Description`"/>
-		<array name="Styles" table="`style`">
+		<bag name="Styles" table="`style`">
 			<key column="`KeyName`"/>
-			<index column="`SpecLevelRequirement`" type="Int32"/>
 			<one-to-many class="DOL.GS.Database.DBStyle, GameServer"/>
-		</array>
+		</bag>
 	</class>
 </hibernate-mapping>

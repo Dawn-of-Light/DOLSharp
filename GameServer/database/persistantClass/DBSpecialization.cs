@@ -30,7 +30,7 @@ namespace DOL.GS.Database
 		protected string m_name = "unknown spec";
 		protected string m_description = "no description";
 		protected int	 m_icon = 0;
-		protected DBStyle[] m_styles;
+		protected IList m_styles;
 
 		public string KeyName 
 		{
@@ -80,7 +80,7 @@ namespace DOL.GS.Database
 			}
 		}
 
-		public DBStyle[] Styles
+		public IList Styles
 		{
 			get
 			{	
