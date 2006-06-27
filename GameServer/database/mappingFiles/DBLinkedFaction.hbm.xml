@@ -1,0 +1,11 @@
+<?xml version="1.0" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="DOL.GS.Database.DBLinkedFaction, GameServer" table="`LinkedFaction`">
+		<id name="DBLinkedFactionID" column="`DBLinkedFactionID`" unsaved-value="0">
+			<generator class="native" />
+		</id>
+		<property name="FactionID" type="Int32" not-null="true" column="`FactionID`"/>
+		<property name="LinkedFactionID" type="Int32" not-null="true" column="`LinkedFactionID`"/>
+		<property name="IsFriend" type="YesNo" not-null="true" column="`IsFriend`"/>
+	</class>
+</hibernate-mapping>

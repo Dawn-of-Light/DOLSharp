@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Prebuild xmlns="http://dnpb.sourceforge.net/schemas/dnpb-1.6.xsd">
+	<Solution name="Dawn of Light">
+		<Configuration name="Debug">
+			<Options>
+				<CompilerDefines>DEBUG;TRACE;WIN32;NET</CompilerDefines>
+				<OptimizeCode>true</OptimizeCode>
+				<CheckUnderflowOverflow>false</CheckUnderflowOverflow>
+				<AllowUnsafe>false</AllowUnsafe>
+				<WarningLevel>4</WarningLevel>
+				<WarningsAsErrors>false</WarningsAsErrors>
+				<SuppressWarnings>1591;219;1573;1572;168</SuppressWarnings>
+				<OutputPath>..\Debug</OutputPath>
+				<DebugInformation>true</DebugInformation>
+				<RegisterComInterop>false</RegisterComInterop>
+				<IncrementalBuild>false</IncrementalBuild>
+				<BaseAddress>285212672</BaseAddress>
+				<FileAlignment>4096</FileAlignment>
+				<NoStdLib>false</NoStdLib>
+				<XmlDocFile>Docs.xml</XmlDocFile>
+				<PostBuildEvent>postBuildEvent='xcopy "$(ProjectDir)\database\mappingFiles\*.hbm.xml" "$(SolutionDir)\$(ConfigurationName)\mapping" /y /s /q /i'</PostBuildEvent>
+			</Options>
+		</Configuration>
+		<Configuration name="Release">
+			<Options>
+				<CompilerDefines>TRACE</CompilerDefines>
+				<OptimizeCode>true</OptimizeCode>
+				<CheckUnderflowOverflow>false</CheckUnderflowOverflow>
+				<AllowUnsafe>true</AllowUnsafe>
+				<WarningLevel>4</WarningLevel>
+				<WarningsAsErrors>false</WarningsAsErrors>
+				<SuppressWarnings>1591;219;1573;1572;168</SuppressWarnings>
+				<OutputPath>..\Release</OutputPath>
+				<DebugInformation>false</DebugInformation>
+				<RegisterComInterop>false</RegisterComInterop>
+				<IncrementalBuild>false</IncrementalBuild>
+				<BaseAddress>285212672</BaseAddress>
+				<FileAlignment>4096</FileAlignment>
+				<NoStdLib>false</NoStdLib>
+				<XmlDocFile>Docs.xml</XmlDocFile>
+			</Options>
+		</Configuration>
+		<Project name="DOLBase" path="DOLBase" language="C#" type="Library" assemblyName="DOLBase" rootNamespace="DOL">
+			<Configuration name="Debug">
+				<Options>
+					<OutputPath>..\Debug\lib</OutputPath>
+				</Options>
+			</Configuration>
+			<Configuration name="Release">
+				<Options>
+					<OutputPath>..\Release\lib</OutputPath>
+					<XmlDocFile>DOLBase.xml</XmlDocFile>
+				</Options>
+			</Configuration>
+			<ReferencePath>..\sharedModules</ReferencePath>
+			<Reference name="System"/>
+			<Reference name="System.Xml"/>
+			<Reference name="log4net" path="..\sharedModules\log4net"/>
+			<Reference name="ICSharpCode.SharpZipLib" path="..\sharedModules\ICSharpCode.SharpZLib"/>
+			<Reference name="System.Data"/>
+			<Files>
+				<Match path="." pattern="*.cs" recurse="true"/>
+			</Files>
+		</Project>
+		<Project name="GameServer" path="GameServer" language="C#" type="Library" assemblyName="GameServer" rootNamespace="DOL">
+			<Configuration name="Debug">
+				<Options>
+					<OutputPath>..\Debug\lib</OutputPath>
+				</Options>
+			</Configuration>
+			<Configuration name="Release">
+				<Options>
+					<OutputPath>..\Release\lib</OutputPath>
+					<XmlDocFile>GameServer.xml</XmlDocFile>
+				</Options>
+			</Configuration>
+			<ReferencePath>..\sharedModules</ReferencePath>
+			<Reference name="System.Xml"/>
+			<Reference name="System.Data"/>
+			<Reference name="System"/>
+			<Reference name="log4net" path="..\sharedModules\log4net"/>
+			<Reference name="Castle.DynamicProxy" path="..\sharedModules\nhibernate"/>
+			<Reference name="Iesi.Collections" path="..\sharedModules\nhibernate"/>
+			<Reference name="NHibernate" path="..\sharedModules\nhibernate"/>
+			<Reference name="NHibernate.Mapping.Attributes" path="..\sharedModules\nhibernate"/>
+			<Reference name="DOLBase"/>
+			<Files>
+				<Match path="." pattern="*.cs" recurse="true"/>
+				<Match path=".\config" pattern="*.xml" recurse="false" buildAction="EmbeddedResource"/>
+				<Match path=".\database\mappingFiles" pattern="*.xml" recurse="false" buildAction="EmbeddedResource"/>
+			</Files>
+		</Project>
+		<Project name="GameServerScripts" path="GameServerScripts" language="C#" type="Library" assemblyName="GameServerScripts" rootNamespace="DOL">
+			<Configuration name="Debug">
+				<Options>
+					<OutputPath>..\Debug\lib</OutputPath>
+				</Options>
+			</Configuration>
+			<Configuration name="Release">
+				<Options>
+					<OutputPath>..\Release\lib</OutputPath>
+					<XmlDocFile>GameServerScripts.xml</XmlDocFile>
+				</Options>
+			</Configuration>
+			<ReferencePath>..\sharedModules</ReferencePath>
+			<Reference name="System.Xml"/>
+			<Reference name="System.Data"/>
+			<Reference name="System"/>
+			<Reference name="GameServer"/>
+			<Reference name="log4net" path="..\sharedModules\log4net"/>
+			<Reference name="Castle.DynamicProxy" path="..\sharedModules\nhibernate"/>
+			<Reference name="Iesi.Collections" path="..\sharedModules\nhibernate"/>
+			<Reference name="NHibernate" path="..\sharedModules\nhibernate"/>
+			<Reference name="NHibernate.Mapping.Attributes" path="..\sharedModules\nhibernate"/>
+			<Reference name="DOLBase"/>
+			<Files>
+				<Match path="." pattern="*.cs" recurse="true"/>
+			</Files>
+		</Project>
+		<Project name="UnitTests" path="UnitTests" language="C#" type="Library" assemblyName="UnitTests" rootNamespace="DOL">
+			<Configuration name="Debug">
+				<Options>
+					<OutputPath>bin\Debug</OutputPath>
+				</Options>
+			</Configuration>
+			<Configuration name="Release">
+				<Options>
+					<OutputPath>bin\Release</OutputPath>
+					<XmlDocFile>UnitTests.xml</XmlDocFile>
+				</Options>
+			</Configuration>
+			<ReferencePath>..\sharedModules</ReferencePath>
+			<Reference name="System"/>
+			<Reference name="GameServer"/>
+			<Reference name="System.Xml"/>
+			<Reference name="System.Data"/>
+			<Reference name="log4net" path="..\sharedModules\log4net"/>
+			<Reference name="nunit.framework" path="..\sharedModules\nunit"/>
+			<Reference name="Iesi.Collections" path="..\sharedModules\nhibernate"/>
+			<Reference name="NHibernate" path="..\sharedModules\nhibernate"/>
+			<Reference name="DOLBase"/>
+			<Reference name="nunit.core" path="..\sharedModules\nunit"/>
+			<Files>
+				<Match path="." pattern="*.cs" recurse="true"/>
+			</Files>
+		</Project>
+		<Project name="DOLServer" path="DOLServer" language="C#" type="Exe" assemblyName="DOLServer" rootNamespace="DOLServer">
+			<Configuration name="Debug">
+				<Options>
+					<OutputPath>..\Debug</OutputPath>
+				</Options>
+			</Configuration>
+			<Configuration name="Release">
+				<Options>
+					<OutputPath>..\Release</OutputPath>
+					<XmlDocFile>DOLServer.xml</XmlDocFile>
+				</Options>
+			</Configuration>
+			<ReferencePath>..\sharedModules</ReferencePath>
+			<Reference name="System"/>
+			<Reference name="System.Data"/>
+			<Reference name="System.XML"/>
+			<Reference name="System.ServiceProcess"/>
+			<Reference name="GameServer" localCopy="true"/>
+			<Reference name="System.Configuration.Install"/>
+			<Reference name="log4net" path="..\sharedModules\log4net"/>
+			<Reference name="DOLBase" localCopy="true"/>
+			<Files>
+				<Match path="." pattern="*.cs" recurse="true"/>
+			</Files>
+		</Project>
+	</Solution>
+</Prebuild>

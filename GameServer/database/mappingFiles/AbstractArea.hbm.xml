@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="DOL.GS.AbstractArea, GameServer" table="`Area`">
+		<id name="AreaID" column="`AreaID`" unsaved-value="0">
+			<generator class="native" />
+		</id>
+		<discriminator column="AreaType"/> 
+		
+		<property name="Description" type="String(255)" not-null="true" column="`Description`"/>
+		<property name="Sound" type="Byte" not-null="true" column="`Sound`"/>
+		<property name="IsBroadcastEnabled" type="YesNo" not-null="true" column="`IsBroadcastEnabled`"/>
+		<property name="RegionID" type="Int32" not-null="true" column="`RegionID`"/>
+			
+		<subclass name="DOL.GS.Square, GameServer">
+			<property name="X" type="Int32" not-null="true" column="`X`"/>
+			<property name="Y" type="Int32" not-null="true" column="`Y`"/>
+			<property name="Width" type="Int32" not-null="true" column="`Width`"/>
+			<property name="Height" type="Int32" not-null="true" column="`Height`"/>
+		</subclass>
+		
+		<subclass name="DOL.GS.Circle, GameServer">
+			<property name="X" type="Int32" not-null="true" column="`X`"/>
+			<property name="Y" type="Int32" not-null="true" column="`Y`"/>
+			<property name="Radius" type="Int32" not-null="true" column="`Radius`"/>
+		</subclass>
+		
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,311 @@
+/*
+ * DAWN OF LIGHT - The first free open source DAoC server emulator
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
+ */
+using System;
+using System.Collections;
+using DOL.GS.Database;
+
+namespace DOL.GS
+{
+	/// <summary>
+	/// This class represents a static Item in the gameworld
+	/// </summary>
+	public class GameStaticItem : GameObject
+	{
+		/// <summary>
+		/// The emblem of the Object
+		/// </summary>
+		protected ushort m_Emblem;
+
+		/// <summary>
+		/// Constructs a new GameStaticItem
+		/// </summary>
+		public GameStaticItem() : base()
+		{
+			m_owners = new ArrayList(1);
+		}
+
+		/// <summary>
+		/// Constructs a new GameStaticItem from a WorldObject
+		/// </summary>
+		/// <param name="obj">WorldObject to take as template</param>
+		public GameStaticItem(WorldObject obj) : base()
+		{
+			CopyFrom(obj);
+		}
+
+		#region Name/Model/GetName/GetExamineMessages
+		/// <summary>
+		/// gets or sets the model of this Item
+		/// </summary>
+		public override int Model
+		{
+			get { return base.Model; }
+			set
+			{
+				base.Model = value;
+				if(ObjectState==eObjectState.Active)
+					foreach(GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+						player.Out.SendItemCreate(this);
+			}
+		}
+
+		/// <summary>
+		/// Gets or Sets the current Emblem of the Object
+		/// </summary>
+		public virtual ushort Emblem
+		{
+			get { return m_Emblem; }
+			set
+			{
+				m_Emblem = value;
+				if(ObjectState==eObjectState.Active)
+					foreach(GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+						player.Out.SendItemCreate(this);
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets the name of this item
+		/// </summary>
+		public override string Name
+		{
+			get { return base.Name; }
+			set
+			{
+				base.Name = value;
+				if(ObjectState==eObjectState.Active)
+					foreach(GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+						player.Out.SendItemCreate(this);
+			}
+		}
+
+		/// <summary>
+		/// Returns name with article for nouns
+		/// </summary>
+		/// <param name="article">0=definite, 1=indefinite</param>
+		/// <param name="firstLetterUppercase"></param>
+		/// <returns>name of this object (includes article if needed)</returns>
+		public override string GetName(int article, bool firstLetterUppercase)
+		{
+			if(char.IsUpper(Name[0]))
+			{
+				// proper name
+				if(firstLetterUppercase) return "The "+Name; else return "the "+Name;
+			}
+			else
+			{
+				// common noun
+				return base.GetName(article, firstLetterUppercase);
+			}
+		}
+
+		/// <summary>
+		/// Adds messages to ArrayList which are sent when object is targeted
+		/// </summary>
+		/// <param name="player">GamePlayer that is examining this object</param>
+		/// <returns>list with string messages</returns>
+		public override IList GetExamineMessages(GamePlayer player)
+		{
+			IList list = base.GetExamineMessages(player);
+			list.Insert(0, "You select "+ GetName(0, false) +".");
+			return list;
+		}
+		#endregion
+
+		/// <summary>
+		/// Copies a world object into this object
+		/// </summary>
+		/// <param name="obj">World object to be copied</param>
+		public void CopyFrom(WorldObject obj)
+		{
+			RegionId = (ushort) obj.Region;
+			Name = obj.Name;
+			Model = (ushort)obj.Model;
+			Emblem = (ushort)obj.Emblem;
+			Heading = (ushort)obj.Heading;
+			Position = new Point(obj.X, obj.Y, obj.Z);
+			InternalID = obj.WorldObjectID.ToString();
+		}
+
+		/// <summary>
+		/// Gets or sets the heading of this item
+		/// </summary>
+		public override int Heading
+		{
+			get { return base.Heading; }
+			set
+			{
+				base.Heading = value;
+				if(ObjectState==eObjectState.Active)
+					foreach(GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+						player.Out.SendItemCreate(this);
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets the level of this item
+		/// </summary>
+		public override byte Level
+		{
+			get { return base.Level; }
+			set
+			{
+				base.Level = value;
+				if(ObjectState==eObjectState.Active)
+					foreach(GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+						player.Out.SendItemCreate(this);
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets the realm of this item
+		/// </summary>
+		public override byte Realm
+		{
+			get { return base.Realm; }
+			set
+			{
+				base.Realm = value;
+				if(ObjectState==eObjectState.Active)
+					foreach(GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+						player.Out.SendItemCreate(this);
+			}
+		}
+
+		/// <summary>
+		/// Saves this Item in the WorldObject DB
+		/// </summary>
+		public override void SaveIntoDatabase()
+		{
+			WorldObject obj = null;
+			if(InternalID != null)
+				obj = (WorldObject) GameServer.Database.FindObjectByKey(typeof(WorldObject), InternalID);
+			if(obj == null)
+				obj = new WorldObject();
+			obj.Name = Name;
+			obj.Model = Model;
+			obj.Emblem = Emblem;
+			obj.Heading = Heading;
+			obj.Region = RegionId;
+			Point pos = Position;
+			obj.X = pos.X;
+			obj.Y = pos.Y;
+			obj.Z = pos.Z;
+			obj.ClassType = this.GetType().ToString();
+
+			/*if(InternalID == null)
+			{
+				GameServer.Database.AddNewObject(obj);
+				InternalID = obj.ObjectId;
+			}
+			else
+				GameServer.Database.SaveObject(obj);*/
+		}
+
+		/// <summary>
+		/// Deletes this item from the WorldObject DB
+		/// </summary>
+		public override void DeleteFromDatabase()
+		{
+			if(InternalID != null)
+			{
+				WorldObject obj = (WorldObject) GameServer.Database.FindObjectByKey(typeof(WorldObject), InternalID);
+				if(obj != null)
+				  GameServer.Database.DeleteObject(obj);
+			}
+			InternalID = null;
+		}
+
+		/// <summary>
+		/// Called to create an item in the world
+		/// </summary>
+		/// <returns>true when created</returns>
+		public override bool AddToWorld()
+		{
+			if(!base.AddToWorld()) return false;
+			foreach(GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+				player.Out.SendItemCreate(this);
+			return true;
+		}
+
+		/// <summary>
+		/// Called to remove the item from the world
+		/// </summary>
+		/// <returns>true if removed</returns>
+		public override bool RemoveFromWorld()
+		{
+			if (ObjectState == eObjectState.Active)
+			{
+				foreach(GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE)) 
+					player.Out.SendRemoveObject(this);
+			}
+			return base.RemoveFromWorld();
+		}
+
+		/// <summary>
+		/// Holds the owners of this item, can be more than 1 person
+		/// </summary>
+		private readonly ArrayList	  m_owners;
+		/// <summary>
+		/// Adds an owner to this item
+		/// </summary>
+		/// <param name="player">the object that is an owner</param>
+		public void AddOwner(GameObject player)
+		{
+			lock(m_owners)
+			{
+				foreach(WeakReference weak in m_owners)
+					if(weak.Target==player) return;
+				m_owners.Add(new WeakRef(player));
+			}
+		}
+		/// <summary>
+		/// Tests if a specific gameobject owns this item
+		/// </summary>
+		/// <param name="testOwner">the owner to test for</param>
+		/// <returns>true if this object owns this item</returns>
+		public bool IsOwner(GameObject testOwner)
+		{
+			lock(m_owners)
+			{
+				//No owner ... return true
+				if(m_owners.Count==0) return true;
+
+				foreach(WeakReference weak in m_owners)
+					if(weak.Target==testOwner) return true;
+				return false;
+			}
+		}
+
+		/// <summary>
+		/// Returns an array of owners
+		/// </summary>
+		public GameObject[] Owners
+		{
+			get
+			{
+				ArrayList activeOwners = new ArrayList();
+				foreach(WeakReference weak in m_owners)
+					if(weak.Target!=null)
+						activeOwners.Add(weak.Target);
+				return (GameObject[])activeOwners.ToArray(typeof(GameObject));
+			}
+		}
+	}
+}

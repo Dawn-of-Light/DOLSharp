@@ -1,0 +1,14 @@
+<?xml version="1.0" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="DOL.GS.Database.BindPoint, GameServer" table="`BindPoint`">
+		<id name="BindPointID" column="`BindPointID`" unsaved-value="0">
+			<generator class="native" />
+		</id>
+		<property name="X" type="Int32" not-null="true" column="`X`"/>
+		<property name="Y" type="Int32" not-null="true" column="`Y`"/>
+		<property name="Z" type="Int32" not-null="true" column="`Z`"/>
+		<property name="Radius" type="Int32" not-null="true" column="`Radius`"/>
+		<property name="Region" type="Int32" not-null="true" column="`Region`"/>
+		<property name="Realm" type="Int32" not-null="true" column="`Realm`"/>
+	</class>
+</hibernate-mapping>
