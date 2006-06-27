@@ -1,0 +1,14 @@
+<?xml version="1.0" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="DOL.GS.Database.DBPathPoint, GameServer" table="`PathPoint`">
+		<id name="PathPointID" column="`PathPointID`">
+			<generator class="assigned" />
+		</id>
+		<property name="Step" type="Int32" not-null="true" column="`Step`"/>
+		<property name="X" type="Int32" not-null="true" column="`X`"/>
+		<property name="Y" type="Int32" not-null="true" column="`Y`"/>
+		<property name="Z" type="Int32" not-null="true" column="`Z`"/>
+		<property name="MaxSpeed" type="Int32" not-null="true" column="`MaxSpeed`"/>
+		<property name="WaitTime" type="Int32" not-null="true" column="`WaitTime`"/>
+	</class>
+</hibernate-mapping>

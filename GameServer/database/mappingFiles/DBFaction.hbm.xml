@@ -1,0 +1,10 @@
+<?xml version="1.0" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="DOL.GS.Database.DBFaction, GameServer" table="`Faction`">
+		<id name="FactionID" column="`FactionID`" unsaved-value="0">
+			<generator class="native" />
+		</id>
+		<property name="Name" type="String(255)" not-null="true" column="`Name`"/>
+		<property name="BaseFriendShip" type="Int32" not-null="true" column="`BaseFriendShip`"/>
+	</class>
+</hibernate-mapping>

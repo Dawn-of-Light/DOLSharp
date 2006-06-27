@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="DOL.GS.Database.DBLootTemplate, GameServer" table="`LootTemplate`">
+		<id name="LootTemplateID" column="`LootTemplateID`" unsaved-value="0">
+			<generator class="native" />
+		</id>
+		<property name="TemplateName" type="String(255)" not-null="true" column="`TemplateName`"/>
+		<property name="ItemTemplateID" type="String(255)" not-null="true" column="`ItemTemplateID`"/>
+		<property name="Chance" type="Int32" not-null="true" column="`Chance`"/>
+		<many-to-one name="ItemTemplate" column="`ItemTemplateID`" class="DOL.GS.GenericItemTemplate, GameServer"  insert="false" update="false" />
+		
+	</class>
+</hibernate-mapping>

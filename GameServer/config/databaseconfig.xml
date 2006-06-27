@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-configuration  xmlns="urn:nhibernate-configuration-2.0" >
+  <session-factory name="DawnOfLight">
+	<!-- Define all database connection / dialog parameters -->
+    <property name="connection.provider">NHibernate.Connection.DriverConnectionProvider</property>
+    <property name="connection.driver_class">NHibernate.Driver.MySqlDataDriver</property>
+    <property name="connection.connection_string">Server=localhost;Database=nhibernate;User ID=root; Password=</property>
+    <property name="dialect">NHibernate.Dialect.MySQLDialect</property>
+	<!--   <property name="show_sql">true</property>  -->
+ 
+	<!-- Define where is stored the mapping -->
+	<mapping file="mapping\AbstractArea.hbm.xml" />
+	<mapping file="mapping\AbstractJumpPoint.hbm.xml" />
+	<mapping file="mapping\AbstractQuest.hbm.xml" />
+	<mapping file="mapping\Account.hbm.xml" />
+	<mapping file="mapping\Alliance.hbm.xml" />
+	<mapping file="mapping\BindPoint.hbm.xml" />
+	<mapping file="mapping\CraftItemData.hbm.xml" />
+	<mapping file="mapping\DBAbility.hbm.xml" />
+	<mapping file="mapping\DBDoor.hbm.xml" />
+	<mapping file="mapping\DBFaction.hbm.xml" />
+	<mapping file="mapping\DBFactionAggroLevel.hbm.xml" />
+	<mapping file="mapping\DBGuildRank.hbm.xml" />
+	<mapping file="mapping\DBHouse.hbm.xml" />
+	<mapping file="mapping\DBHouseIndoorItem.hbm.xml" />
+	<mapping file="mapping\DBHouseOutdoorItem.hbm.xml" />
+	<mapping file="mapping\DBKeepHookPoint.hbm.xml" />
+	<mapping file="mapping\DBKeepObject.hbm.xml" />
+	<mapping file="mapping\DBLineXSpell.hbm.xml" />
+	<mapping file="mapping\DBLinkedFaction.hbm.xml" />
+	<mapping file="mapping\DBLootGenerator.hbm.xml" />
+	<mapping file="mapping\DBLootOTD.hbm.xml" />
+	<mapping file="mapping\DBLootTemplate.hbm.xml" />
+	<mapping file="mapping\DBMobSpawner.hbm.xml" />
+	<mapping file="mapping\DBMobXLootTemplate.hbm.xml" />
+	<mapping file="mapping\DBNPC.hbm.xml" />
+	<mapping file="mapping\DBNpcTemplate.hbm.xml" />
+	<mapping file="mapping\DBOTDXCharacter.hbm.xml" />
+	<mapping file="mapping\DBPath.hbm.xml" />
+	<mapping file="mapping\DBPathPoint.hbm.xml" />
+	<mapping file="mapping\DBRace.hbm.xml" />
+	<mapping file="mapping\DBSalvage.hbm.xml" />
+	<mapping file="mapping\DBSinglePermission.hbm.xml" />
+	<mapping file="mapping\DBSpawnArea.hbm.xml" />
+	<mapping file="mapping\DBSpecialization.hbm.xml" />
+	<mapping file="mapping\DBSpecXAbility.hbm.xml" />
+	<mapping file="mapping\DBSpell.hbm.xml" />
+	<mapping file="mapping\DBSpellLine.hbm.xml" />
+	<mapping file="mapping\DBStyle.hbm.xml" />
+	<mapping file="mapping\DBTask.hbm.xml" />
+	<mapping file="mapping\GameKeep.hbm.xml" />
+  	<mapping file="mapping\GameKeepComponent.hbm.xml" />
+	<mapping file="mapping\GamePlayer.hbm.xml" />
+	<mapping file="mapping\Guild.hbm.xml" />
+	<mapping file="mapping\InvalidName.hbm.xml" />
+	<mapping file="mapping\Item.hbm.xml" />
+	<mapping file="mapping\ItemTemplate.hbm.xml" />
+	<mapping file="mapping\MerchantItem.hbm.xml" />
+	<mapping file="mapping\Mob.hbm.xml" />
+	<mapping file="mapping\NPCEquipment.hbm.xml" />
+	<mapping file="mapping\Region.hbm.xml" />
+	<mapping file="mapping\WorldObject.hbm.xml" />
+	<mapping file="mapping\Zone.hbm.xml" />
+  </session-factory>
+</hibernate-configuration> 

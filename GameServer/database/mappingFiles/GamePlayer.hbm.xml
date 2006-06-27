@@ -1,0 +1,152 @@
+<?xml version="1.0" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="DOL.GS.GamePlayer, GameServer" table="`GamePlayer`">
+		<id name="CharacterID" column="`CharacterID`">
+			<generator class="native" />
+		</id>
+		<property name="Name" type="String(24)" not-null="true" unique="true" column="`Name`"/>
+		<property name="LastName" type="String(23)" not-null="false" column="`LastName`"/>
+		
+		<property name="CreationDate" type="DateTime" not-null="true" column="`CreationDate`"/>
+		<property name="LastPlayed" type="DateTime" not-null="true" column="`LastPlayed`"/>
+		<property name="PlayedTime" type="Int64" not-null="true" column="`PlayedTime`"/>
+		
+		<component name="Inventory" class="DOL.GS.GamePlayerInventory, GameServer">
+			<parent name="Player"/>
+			<map name="InventoryItems" cascade="all" table="`Item`">
+				<key column="`Owner`"/>
+				<index column="`SlotPosition`" type="Int32"/>
+				<one-to-many class="DOL.GS.GenericItem, GameServer"/>
+			</map>
+		</component>
+		
+		<set name="ActiveQuests" inverse="true" cascade="all">
+			<key column="QuestPlayer" />
+			<one-to-many class="DOL.GS.Quests.AbstractQuest, GameServer"/>
+		</set>
+			
+		<set name="FinishedQuests" table="FinishedQuests" cascade="all">
+			<key column="CharacterID" />
+			<composite-element class="DOL.GS.Quests.FinishedQuest, GameServer">
+				<property name="FinishedQuestType" type="Type" not-null="true" column="`FinishedQuestType`"/>
+				<property name="Count" type="Byte" not-null="true" column="`Count`"/>
+			</composite-element>
+		</set>
+		
+		<property name="Race" type="Int32" not-null="true" column="`Race`"/>
+		<property name="Gender" type="Int32" not-null="true" column="`Gender`"/>
+		<property name="Model" type="Int32" not-null="true" column="`Model`"/>
+		<property name="CreationModel" type="Int32" not-null="true" column="`CreationModel`"/>
+		
+			<property name="CustomisationStep" type="Byte" not-null="true" column="`CustomisationStep`"/>
+			<property name="EyeSize" type="Byte" not-null="true" column="`EyeSize`"/>
+			<property name="LipSize" type="Byte" not-null="true" column="`LipSize`"/>
+			<property name="EyeColor" type="Byte" not-null="true" column="`EyeColor`"/>
+			<property name="HairColor" type="Byte" not-null="true" column="`HairColor`"/>
+			<property name="FaceType" type="Byte" not-null="true" column="`FaceType`"/>
+			<property name="HairStyle" type="Byte" not-null="true" column="`HairStyle`"/>
+			<property name="MoodType" type="Byte" not-null="true" column="`MoodType`"/>
+			
+		<property name="BaseConstitution" type="Int32" not-null="true" column="`BaseConstitution`"/>
+		<property name="BaseDexterity" type="Int32" not-null="true" column="`BaseDexterity`"/>
+		<property name="BaseStrength" type="Int32" not-null="true" column="`BaseStrength`"/>
+		<property name="BaseQuickness" type="Int32" not-null="true" column="`BaseQuickness`"/>
+		<property name="BaseIntelligence" type="Int32" not-null="true" column="`BaseIntelligence`"/>
+		<property name="BasePiety" type="Int32" not-null="true" column="`BasePiety`"/>
+		<property name="BaseEmpathy" type="Int32" not-null="true" column="`BaseEmpathy`"/>
+		<property name="BaseCharisma" type="Int32" not-null="true" column="`BaseCharisma`"/>
+		
+		<component name="DBPosition" class="DOL.GS.Database.DBPoint, GameServer">
+			<property name="X" type="Int32" not-null="true" column="`X`"/>
+			<property name="Y" type="Int32" not-null="true" column="`Y`"/>
+			<property name="Z" type="Int32" not-null="true" column="`Z`"/>
+		</component>
+
+		<property name="RegionId" type="Int32" not-null="true" column="`RegionId`"/>
+		<property name="Heading" type="Int32" not-null="true" column="`Heading`"/>
+		<property name="MaxSpeedBase" type="Int32" not-null="true" column="`MaxSpeedBase`"/>
+		
+		<property name="TotalConstitutionLostAtDeath" type="Int32" not-null="true" column="`TotalConstitutionLostAtDeath`"/>
+		<property name="DeathTime" type="Int64" not-null="true" column="`DeathTime`"/>
+		<property name="DeathCount" type="Byte" not-null="true" column="`DeathCount`"/>
+		
+		<property name="CharacterClassID" type="Int32" not-null="true" column="`CharacterClassID`"/>
+		<property name="Realm" type="Byte" not-null="true" column="`Realm`"/>
+		<property name="SlotPosition" type="Byte" not-null="true" column="`SlotPosition`"/>
+		<property name="AccountID" type="Int32" not-null="true" column="`AccountID`"/>
+		
+		<property name="Health" type="Int32" not-null="true" column="`Health`"/>
+		<property name="Mana" type="Int32" not-null="true" column="`Mana`"/>
+		<property name="EndurancePercent" type="Byte" not-null="true" column="`EndurancePercent`"/>
+		
+		<property name="Experience" type="Int64" not-null="true" column="`Experience`"/>
+		<property name="Level" type="Byte" not-null="true" column="`Level`"/>
+		<property name="IsLevelSecondStage" type="YesNo" not-null="true" column="`IsLevelSecondStage`"/>
+		
+		<property name="RespecAmountAllSkill" type="Int32" not-null="true" column="`RespecAmountAllSkill`"/>
+		<property name="RespecAmountSingleSkill" type="Int32" not-null="true" column="`RespecAmountSingleSkill`"/>
+		<property name="IsLevelRespecUsed" type="YesNo" not-null="true" column="`IsLevelRespecUsed`"/>
+		<property name="RespecBought" type="Int32" not-null="true" column="`RespecBought`"/>
+		
+		<property name="BindX" type="Int32" not-null="true" column="`BindX`"/>
+		<property name="BindY" type="Int32" not-null="true" column="`BindY`"/>
+		<property name="BindZ" type="Int32" not-null="true" column="`BinzZ`"/>
+		<property name="BindHeading" type="Int32" not-null="true" column="`BindHeading`"/>
+		<property name="BindRegion" type="Int32" not-null="true" column="`BindRegion`"/>
+		
+		<property name="BountyPoints" type="Int64" not-null="true" column="`BountyPoints`"/>
+		<property name="RealmPoints" type="Int64" not-null="true" column="`RealmPoints`"/>
+		<property name="SkillSpecialtyPoints" type="Int32" not-null="true" column="`SkillSpecialtyPoints`"/>
+		<property name="RealmSpecialtyPoints" type="Int32" not-null="true" column="`RealmSpecialtyPoints`"/>
+		<property name="RealmLevel" type="Int32" not-null="true" column="`RealmLevel`"/>
+		
+		<property name="GuildID" type="Int64" not-null="true" column="`GuildID`"/>
+		<property name="GuildRank" type="Byte" not-null="true" column="`GuildRank`"/>
+		<property name="GuildNameFlag" type="YesNo" not-null="true" column="`GuildNameFlag`"/>
+			
+		<property name="Copper" type="Int32" not-null="true" column="`Copper`"/>
+		<property name="Silver" type="Int32" not-null="true" column="`Silver`"/>
+		<property name="Gold" type="Int32" not-null="true" column="`Gold`"/>
+		<property name="Platinum" type="Int32" not-null="true" column="`Platinum`"/>
+		<property name="Mithril" type="Int32" not-null="true" column="`Mithril`"/>
+		
+		<property name="SerializedAbilities" not-null="false" column="`SerializedAbilities`"/>
+		<property name="SerializedSpecs" not-null="false" column="`SerializedSpecs`"/>
+		<property name="SerializedSpellLines" not-null="false" column="`SerializedSpellLines`"/>
+		<property name="Styles" not-null="false" column="`Styles`"/>
+		<property name="DisabledSpells" not-null="false" column="`DisabledSpells`"/>
+		<property name="DisabledAbilities" not-null="false" column="`DisabledAbilities`"/>
+		
+		<property name="SerializedFriendsList" not-null="false" column="`SerializedFriendsList`"/>
+		
+		<property name="CraftingPrimarySkill"  not-null="true" column="`CraftingPrimarySkill`"/>
+		<property name="SerializedCraftingSkills" not-null="false" column="`SerializedCraftingSkills`"/>
+		
+		<property name="SafetyFlag" type="YesNo" not-null="true" column="`SafetyFlag`"/>
+		<property name="IsCloakHoodUp" type="YesNo" not-null="true" column="`IsCloakHoodUp`"/>
+		<property name="SpellQueue" type="YesNo" not-null="true" column="`SpellQueue`"/>
+		<property name="CancelStyle" type="YesNo" not-null="true" column="`CancelStyle`"/>
+		<property name="IsAnonymous" type="YesNo" not-null="true" column="`IsAnonymous`"/>
+		<property name="UsedLevelCommand" type="YesNo" not-null="true" column="`UsedLevelCommand`"/>
+		
+		<property name="CurrentTitleType" type="String(255)" not-null="false" column="`CurrentTitleType`"/>
+		
+		<property name="ActiveWeaponSlot" not-null="true" column="`ActiveWeaponSlot`"/>
+		<property name="ActiveQuiverSlot" not-null="true" column="`ActiveQuiverSlot`"/>
+		
+		<property name="LotNumber" type="Int32" not-null="true" column="`LotNumber`"/>
+	
+		<property name="KillsAlbionPlayers" type="Int32" not-null="true" column="`KillsAlbionPlayers`"/>
+		<property name="KillsMidgardPlayers" type="Int32" not-null="true" column="`KillsMidgardPlayers`"/>
+		<property name="KillsHiberniaPlayers" type="Int32" not-null="true" column="`KillsHiberniaPlayers`"/>
+		<property name="KillsAlbionDeathBlows" type="Int32" not-null="true" column="`KillsAlbionDeathBlows`"/>
+		<property name="KillsMidgardDeathBlows" type="Int32" not-null="true" column="`KillsMidgardDeathBlows`"/>
+		<property name="KillsHiberniaDeathBlows" type="Int32" not-null="true" column="`KillsHiberniaDeathBlows`"/>
+		<property name="KillsAlbionSolo" type="Int32" not-null="true" column="`KillsAlbionSolo`"/>
+		<property name="KillsMidgardSolo" type="Int32" not-null="true" column="`KillsMidgardSolo`"/>
+		<property name="KillsHiberniaSolo" type="Int32" not-null="true" column="`KillsHiberniaSolo`"/>
+		<property name="CapturedKeeps" type="Int32" not-null="true" column="`CapturedKeeps`"/>
+		<property name="CapturedTowers" type="Int32" not-null="true" column="`CapturedTowers`"/>
+		
+	</class>
+</hibernate-mapping>

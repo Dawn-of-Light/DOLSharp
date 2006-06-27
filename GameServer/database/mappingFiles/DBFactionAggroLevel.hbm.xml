@@ -1,0 +1,11 @@
+<?xml version="1.0" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="DOL.GS.Database.DBFactionAggroLevel, GameServer" table="`FactionAggroLevel`">
+		<id name="FactionAggroLevelID" column="`FactionAggroLevelID`" unsaved-value="0">
+			<generator class="native" />
+		</id>
+		<property name="CharacterID" type="String(255)" not-null="true" column="`CharacterID`"/>
+		<property name="FactionID" type="Int32" not-null="true" column="`FactionID`"/>
+		<property name="AggroLevel" type="Int32" not-null="true" column="`AggroLevel`"/>
+	</class>
+</hibernate-mapping>

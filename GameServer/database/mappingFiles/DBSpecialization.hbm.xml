@@ -1,0 +1,16 @@
+<?xml version="1.0" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="DOL.GS.Database.DBSpecialization, GameServer" table="`Specialization`">
+		<id name="KeyName" column="`KeyName`">
+			<generator class="assigned" />
+		</id>
+		<property name="Name" type="String(255)" not-null="true" column="`Name`"/>
+		<property name="Icon" type="Int32" not-null="true" column="`Icon`"/>
+		<property name="Description" type="String(255)" not-null="true" column="`Description`"/>
+		<array name="Styles" table="`Style`">
+			<key column="`KeyName`"/>
+			<index column="`SpecLevelRequirement`" type="Int32"/>
+			<one-to-many class="DOL.GS.Database.DBStyle, GameServer"/>
+		</array>
+	</class>
+</hibernate-mapping>
