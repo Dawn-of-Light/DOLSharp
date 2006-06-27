@@ -1,16 +1,16 @@
 /*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -55,7 +55,7 @@ namespace DOL.GS
 		private readonly Timer m_upgradeTimer;
 
 		/// <summary>
-		/// 
+		///
 		/// </summary>
 		public enum eKeepType: byte
 		{
@@ -97,7 +97,7 @@ namespace DOL.GS
 		/// This hold list of all keep doors
 		/// </summary>
 		private ArrayList m_doors;
-		
+
 		/// <summary>
 		/// keep doors
 		/// </summary>
@@ -106,7 +106,7 @@ namespace DOL.GS
 			get	{ return m_doors; }
 			set { m_doors = value; }
 		}
-		
+
 		/// <summary>
 		/// the keep db object
 		/// </summary>
@@ -138,7 +138,7 @@ namespace DOL.GS
 		/// This lord of keep
 		/// </summary>
 		private GameKeepGuard m_lord;
-		
+
 		/// <summary>
 		/// Lord of keep or captain of tower which must be killed to take control of keep
 		/// </summary>
@@ -147,7 +147,7 @@ namespace DOL.GS
 			get	{ return m_lord; }
 			set	{ m_lord = value; }
 		}
-		
+
 		/// <summary>
 		/// List of all banners
 		/// </summary>
@@ -181,9 +181,9 @@ namespace DOL.GS
 		/// </summary>
 		public Zone CurrentZone
 		{
-			get 
+			get
 			{
-				if (m_currentRegion != null) 
+				if (m_currentRegion != null)
 				{
 					return m_currentRegion.GetZone(X, Y);
 				}
@@ -202,8 +202,9 @@ namespace DOL.GS
 		public Guild Guild
 		{
 			get	{ return m_guild; }
+			set { m_guild = value; }
 		}
-		
+
 		/// <summary>
 		/// Difficulty level of keep for each realm
 		/// the keep is more difficult the guild which have claimed gain more bonus
@@ -234,7 +235,7 @@ namespace DOL.GS
 			}
 		}
 		#region DBkeep properties
-			
+
 		public int KeepID
 		{
 			get	{ return DBKeep.KeepID; }
@@ -250,13 +251,13 @@ namespace DOL.GS
 			get	{ return DBKeep.Name; }
 			set	{ DBKeep.Name = value; }
 		}
-				
+
 		public int Region
 		{
 			get	{ return DBKeep.Region; }
 			set	{ DBKeep.Region = value; }
 		}
-			
+
 		public int X
 		{
 			get	{ return DBKeep.X; }
@@ -277,7 +278,7 @@ namespace DOL.GS
 		{
 			get	{ return DBKeep.Heading; }
 			set	{ DBKeep.Heading = value; }
-		}	
+		}
 		public int Realm
 		{
 			get	{ return DBKeep.Realm; }
@@ -296,9 +297,9 @@ namespace DOL.GS
 		public eKeepType KeepType
 		{
 			get	{ return (eKeepType)DBKeep.KeepType; }
-			set	
-			{ 
-				DBKeep.KeepType = (int)value; 
+			set
+			{
+				DBKeep.KeepType = (int)value;
 				//todo : update all guard
 			}
 		}
@@ -341,7 +342,7 @@ namespace DOL.GS
 			m_difficultyLevel[0] = m_dbkeep.AlbionDifficultyLevel;
 			m_difficultyLevel[1] = m_dbkeep.MidgardDifficultyLevel;
 			m_difficultyLevel[2] = m_dbkeep.HiberniaDifficultyLevel;
-			if (m_dbkeep.ClaimedGuildName != null && m_dbkeep.ClaimedGuildName != "")
+			if (m_dbkeep.ClaimedGuildName != "")
 			{
 				Guild myguild = GuildMgr.GetGuildByName(m_dbkeep.ClaimedGuildName);
 				if (myguild != null)
@@ -351,6 +352,8 @@ namespace DOL.GS
 					m_claimTimer.Change(CLAIM_CALLBACK_INTERVAL, CLAIM_CALLBACK_INTERVAL);
 				}
 			}
+			if (m_targetLevel< Level)
+				m_targetLevel = Level;
 		}
 
 		/// <summary>
@@ -360,6 +363,8 @@ namespace DOL.GS
 		{
 			if (m_guild != null)
 				m_dbkeep.ClaimedGuildName = m_guild.Name;
+			else
+				m_dbkeep.ClaimedGuildName = "";
 			if(InternalID == null)
 			{
 				GameServer.Database.AddNewObject(m_dbkeep);
@@ -377,11 +382,11 @@ namespace DOL.GS
 		/// This can be banner, guard, static item like catapult,...
 		/// </summary>
 		public void LoadObjects()
-		{			
-			eRealm realm = (eRealm)this.DBKeep.Realm;
+		{
+			eRealm realm = (eRealm)Realm;
 			DataObject[] objs = GameServer.Database.SelectObjects(typeof(DBKeepObject),"KeepID = " + this.KeepID + " AND Realm = " + (int)realm + " AND KeepType = " + (int)KeepType);
 			CurrentRegion = WorldMgr.GetRegion((ushort)this.DBKeep.Region);
-			
+
 			GameObject gameObject = null;
 			foreach(DBKeepObject dbkeepObject in objs)
 			{
@@ -449,7 +454,7 @@ namespace DOL.GS
 			}
 		}
 
-		
+
 		#endregion
 
 		#region claim
@@ -520,7 +525,7 @@ namespace DOL.GS
 				return;
 			}
 			player.Out.SendCustomDialog("Do you want to claim " + this.Name, new CustomDialogResponse(ClaimDialogResponse));
-			
+
 		}
 
 		//TODO : check if keep is underattack if yes keep can not been claim
@@ -549,9 +554,9 @@ namespace DOL.GS
 			{
 				banner.ChangeGuild(player.Guild);
 			}
-			foreach(GamePlayer currentPlayer in player.GetPlayersInRadius(WorldMgr.OBJ_UPDATE_DISTANCE))
+			foreach(GameClient client in player.GetPlayersInRadius(WorldMgr.OBJ_UPDATE_DISTANCE))
 			{
-				currentPlayer.Out.SendKeepClaim(this);
+				client.Out.SendKeepClaim(this);
 			}
 			GameEventMgr.Notify(KeepEvent.KeepClaimed, this, new KeepEventArgs(player));
 			m_claimTimer.Change(1, CLAIM_CALLBACK_INTERVAL);
@@ -564,6 +569,8 @@ namespace DOL.GS
 		/// <param name="state"></param>
 		public void ClaimCallBack(object state)
 		{
+			if (Guild == null)
+				return;
 			if (this.Guild.BountyPoints < 50*this.Level)
 			{
 				this.Release();
@@ -594,7 +601,7 @@ namespace DOL.GS
 			this.Guild.SendMessageToGuildMembers("You loose the claim of the keep :" + this.Name,eChatType.CT_Guild,eChatLoc.CL_SystemWindow);
 			this.m_guild = null;
 			m_claimTimer.Change(Timeout.Infinite, Timeout.Infinite);
-			this.Level = 1;
+			this.Level = 0;
 			this.SaveIntoDatabase();
 		}
 		#endregion
@@ -614,14 +621,14 @@ namespace DOL.GS
 			this.Guild.SendMessageToGuildMembers(this.Name + " is being upgraded to level " + targetLevel,eChatType.CT_Guild,eChatLoc.CL_SystemWindow);
 			this.SaveIntoDatabase();
 		}
-		
+
 		/// <summary>
 		/// call back called to increase the level by one
 		/// </summary>
 		/// <param name="state"></param>
 		public void UpgradeTimerCallback(object state)
 		{
-			if ((TargetLevel < 1) || (TargetLevel > 10))
+			if ((TargetLevel < 0) || (TargetLevel > 9))
 			{
 				return ;
 			}
@@ -632,7 +639,7 @@ namespace DOL.GS
 
 			foreach(GameClient client in WorldMgr.GetAllPlayingClients())
 			{
-				client.Out.SendMessage("The keep "+this.Name+" is upgraded to level "+this.Level+"!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+				client.Out.SendMessage("The keep "+this.Name+" is upgraded to level "+(this.Level+1)+"!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 			}
 
 			foreach(GameKeepComponent comp in this.KeepComponents)
@@ -667,7 +674,7 @@ namespace DOL.GS
 			2 Relics owned - Upgrade time from level 5 to level 10 is 24 hours
 			3 or 4 Relics owned - Upgrade time from level 5 to level 10 remains unchanged (32 hours)
 			5 Relics owned - Upgrade time from level 5 to level 10 is 48 hours
-			6 Relics owned - Upgrade time from level 5 to level 10 is 64 hours 
+			6 Relics owned - Upgrade time from level 5 to level 10 is 64 hours
 			*/
 			return 0;
 		}
@@ -704,12 +711,12 @@ namespace DOL.GS
 		/// <param name="realm"></param>
 		public void Reset(eRealm realm)
 		{
-			DBKeep.Realm = (int)realm;
-			this.Level = 1;
-			this.KeepType = eKeepType.Melee;
-			if (this.Guild != null)
+			Realm = (byte)realm;
+			Level = 0;
+			KeepType = eKeepType.Melee;
+			if (Guild != null)
 			{
-				this.Release();
+				Release();
 			}
 			m_claimTimer.Change(Timeout.Infinite, Timeout.Infinite);
 			DeleteAllGuard();
@@ -719,13 +726,13 @@ namespace DOL.GS
 			{
 				door.Reset(realm);
 			}
-			foreach (GameClient client in WorldMgr.GetClientsOfRegion(this.CurrentRegion.ID))
+			foreach (GameClient client in WorldMgr.GetClientsOfRegion(CurrentRegion.ID))
 			{
 				client.Player.Out.SendKeepComponentUpdate(this,false);
 			}
-			this.SaveIntoDatabase();
+			SaveIntoDatabase();
 		}
-		
+
 		/// <summary>
 		/// function called when lord is killed
 		/// to warn that the loard have been taken
@@ -736,17 +743,13 @@ namespace DOL.GS
 		public void LordKilled(DOLEvent e, object sender, EventArgs args)
 		{
 			DyingEventArgs dyingarg = args as DyingEventArgs;
-
+			if(dyingarg == null) return;
 
 			string realm = GlobalConstants.RealmToName((eRealm)dyingarg.Killer.Realm);
 			foreach (GameClient cl in WorldMgr.GetAllPlayingClients())
 			{
-				for (int i = 0; i < 3; i++)
-				{
-					cl.Player.Out.SendMessage("The Forces of " + realm + " have captured " + this.Name, eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-				}
+				cl.Player.Out.SendMessage("The Forces of " + realm + " have captured " + this.Name+"!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 			}
-			GameEventMgr.RemoveHandler(Lord,GameNPCEvent.Dying,new DOLEventHandler(LordKilled));
 			GameEventMgr.Notify(KeepEvent.KeepTaken,this,new KeepEventArgs(dyingarg.Killer as GamePlayer));
 
 			Reset((eRealm)dyingarg.Killer.Realm);

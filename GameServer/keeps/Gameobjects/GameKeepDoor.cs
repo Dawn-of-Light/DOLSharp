@@ -20,6 +20,8 @@ using System;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
+using System.Reflection;
+using log4net;
 
 
 namespace DOL.GS
@@ -30,26 +32,31 @@ namespace DOL.GS
 	public class GameKeepDoor : GameLiving, IDoor
 	{
 		/// <summary>
+		/// Defines a logger for this class.
+		/// </summary>
+		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
+		/// <summary>
 		/// the keep door constructor
 		/// </summary>
 		/// <param name="keep"></param>
 		public GameKeepDoor(AbstractGameKeep keep) : base()
-		{
+		{	
 			Level = 0;
 			Keep = keep;
-			Health = MaxHealth;
-			Name = "Keep Door";
-			SaveInDB = false;
+			Health = MaxHealth;			
+			Name = "Keep Door";			
 			GameEventMgr.AddHandler(this,GameLivingEvent.Dying,new DOLEventHandler(OpenDoor));
 			keep.Doors.Add(this);
 			CurrentRegion = keep.CurrentRegion;
-			Realm = (byte)keep.Realm;
-			//Don't waste timer resources
+			Realm = (byte)keep.Realm;			
+			m_oldHealthPercent = HealthPercent;
 			m_healthRegenerationPeriod = 3600000; //3600000 ms = 3600 seconds = 1 hour
 		}
-
+		
 		#region properties
 
+		private byte m_oldHealthPercent;
 		/// <summary>
 		/// This hold the door index which is unique
 		/// </summary>
@@ -62,10 +69,14 @@ namespace DOL.GS
 		{
 			get
 			{
-				return this.m_doorID;
+				return m_doorID;	
+			}
+			set
+			{
+				m_doorID = value;
 			}
 		}
-
+		
 		/// <summary>
 		/// This flag is send in packet(keep door =4, regular door = 0)
 		/// </summary>
@@ -73,7 +84,7 @@ namespace DOL.GS
 		{
 			get
 			{
-				return 4;
+				return 4;	
 			}
 		}
 
@@ -84,7 +95,7 @@ namespace DOL.GS
 		{
 			get
 			{
-				return (byte)Keep.DBKeep.Realm;
+				return (byte)Keep.Realm;
 			}
 		}
 
@@ -92,9 +103,9 @@ namespace DOL.GS
 		/// This hold keep owner
 		/// </summary>
 		private AbstractGameKeep m_keep;
-
+		
 		/// <summary>
-		/// Keep owner of the door
+		/// Keep owner of the door 
 		/// </summary>
 		public AbstractGameKeep Keep
 		{
@@ -112,7 +123,7 @@ namespace DOL.GS
 		/// door state (open or closed)
 		/// </summary>
 		private eDoorState m_state;
-
+		
 		/// <summary>
 		/// door state (open or closed)
 		/// call the broadcast of state in area
@@ -160,6 +171,20 @@ namespace DOL.GS
 		/// <param name="criticalAmount">the amount of critical damage</param>
 		public override void TakeDamage(GameObject source, eDamageType damageType, int damageAmount, int criticalAmount)
 		{
+			if (damageType != eDamageType.Slash && damageType != eDamageType.Thrust && damageType != eDamageType.Crush)
+			{
+				if (source is GamePlayer)
+					(source as GamePlayer).Out.SendMessage("Your attack has no effect on the door!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+				return;
+			}
+			//only on hp change
+			if (m_oldHealthPercent != HealthPercent)
+			{
+				m_oldHealthPercent = HealthPercent;
+				foreach(GamePlayer player in this.GetPlayersInRadius(WorldMgr.OBJ_UPDATE_DISTANCE))
+					player.Out.SendKeepDoorUpdate(this);
+			}
+
 			//Work around the XP system
 			if(Alive)
 			{
@@ -172,6 +197,17 @@ namespace DOL.GS
 			}
 		}
 
+		public override int ChangeHealth(GameObject changeSource, GameLiving.eHealthChangeType healthChangeType, int changeAmount)
+		{
+			if (healthChangeType == eHealthChangeType.Spell)
+			{
+				if (changeSource is GamePlayer)
+					(changeSource as GamePlayer).Out.SendMessage("Your spell has no effect on the door!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+				return 0;
+			}
+			return base.ChangeHealth(changeSource, healthChangeType, changeAmount);
+		}
+
 		/// <summary>
 		/// This function is called from the ObjectInteractRequestHandler
 		/// It teleport player in the keep if player and keep have the same realm
@@ -180,8 +216,12 @@ namespace DOL.GS
 		/// <returns>false if interaction is prevented</returns>
 		public override bool Interact(GamePlayer player)
 		{
-			//todo constant here too
-			if(!WorldMgr.CheckDistance(this, player,175) && player.Client.Account.PrivLevel == 1) return false;
+			int keepId = (DoorID - 700000000) / 100000;
+			int keepPiece = (DoorID - 700000000 - keepId * 100000) / 10000;
+			int componentId = (DoorID - 700000000 - keepId * 100000 - keepPiece * 10000) / 100;
+			int doorIndex = (DoorID - 700000000 - keepId * 100000 - keepPiece * 10000 - componentId * 100);
+			
+			if (!WorldMgr.CheckDistance(this, player, WorldMgr.INTERACT_DISTANCE) && player.Client.Account.PrivLevel == 1) return false;
 
 			if (player.Mez)
 			{
@@ -195,17 +235,88 @@ namespace DOL.GS
 				return false;
 			}
 
-			if (GameServer.ServerRules.IsSameRealm(player, this, true)) 
-			{ 
-				int keepx, keepy; 
-				if (IsObjectInFront(player, 180)) 
-					GetSpotFromHeading(-300, out keepx, out keepy); 
-				else 
-					GetSpotFromHeading(300, out keepx, out keepy); 
-				player.MoveTo(CurrentRegionID, keepx, keepy, player.Z + 100, player.Heading); 
-				return true; 
+
+			if (GameServer.ServerRules.IsSameRealm(player, this, true) || player.Client.Account.PrivLevel != 1)
+			{
+				int keepx = 0, keepy = 0, keepz = Z, distance = 0;
+
+				//calculate distance
+				//normal door
+				if (doorIndex == 1)
+					distance = 300;
+				//side or internal door
+				else if (doorIndex == 2)
+					distance = 150;
+
+				//calculate Z
+				if (m_keep is GameKeepTower)
+				{
+					//when entering a tower, we need to raise Z
+					//portal keeps are considered towers too, so we check component count
+					if (IsObjectInFront(player, 180))
+					{
+						if (m_keep.KeepComponents.Count == 1 && doorIndex == 1)
+							keepz = Z + 83;
+					}
+				}
+				else
+				{
+					//when entering a keeps inner door, we need to raise Z
+					if (IsObjectInFront(player, 180)) 
+					{
+						//To find out if a door is the keeps inner door, we compare the distance between
+						//the component for the keep and the component for the gate
+						int keepdistance = int.MaxValue;
+						int gatedistance = int.MaxValue;
+						foreach (GameKeepComponent c in this.Keep.KeepComponents)
+						{
+							if ((GameKeepComponent.eComponentSkin)c.Skin == GameKeepComponent.eComponentSkin.Keep)
+							{
+								keepdistance = WorldMgr.GetDistance(this, c);
+							}
+							if ((GameKeepComponent.eComponentSkin)c.Skin == GameKeepComponent.eComponentSkin.Gate)
+							{
+								gatedistance = WorldMgr.GetDistance(this, c);
+							}
+							//when these are filled we can stop the search
+							if (keepdistance != int.MaxValue && gatedistance != int.MaxValue)
+								break;
+						}
+						if (doorIndex == 1 && keepdistance < gatedistance)
+							keepz = Z + 92;//checked in game with lvl 1 keep
+					}
+				}
+
+				//calculate x y
+				if (IsObjectInFront(player, 180))
+					GetSpotFromHeading(-distance, out keepx, out keepy);
+				else
+					GetSpotFromHeading(distance, out keepx, out keepy);
+
+				//move player
+				player.MoveTo(CurrentRegionID, keepx, keepy, keepz, player.Heading);
 			}
-			return false;
+			return base.Interact(player);
+		}
+
+		public override System.Collections.IList GetExamineMessages(GamePlayer player)
+		{
+			/*
+			 * You select the Keep Gate. It belongs to your realm.
+			 * You target [the Keep Gate]
+			 * 
+			 * You select the Keep Gate. It belongs to an enemy realm and can be attacked!
+			 * You target [the Keep Gate]
+			 * 
+			 * You select the Postern Door. It belongs to an enemy realm!
+			 * You target [the Postern Door]
+			 */
+
+			System.Collections.IList list = base.GetExamineMessages(player);
+			if (GameServer.ServerRules.IsSameRealm(player, this, true) || player.Client.Account.PrivLevel != 1)
+				list.Add("You select the " + Name + ". It belongs to your realm.");
+			else list.Add("You select the " + Name + ". It belongs to an enemy realm!");
+			return list;
 		}
 
 		/// <summary>
@@ -246,22 +357,28 @@ namespace DOL.GS
 		public override void SaveIntoDatabase()
 		{
 			DBDoor obj = null;
+			bool New = false;
 			if (InternalID != null)
-				obj = (DBDoor) GameServer.Database.FindObjectByKey(typeof (DBDoor), InternalID);
+				obj = (DBDoor) GameServer.Database.FindObjectByKey(typeof (DBDoor), InternalID);			
+
 			if (obj == null)
-				obj = new DBDoor();
-			obj.Name = this.Name;
-			obj.Heading = this.Heading;
-			obj.X = this.X;
-			obj.Y = this.Y;
-			obj.Z = this.Z;
-			obj.InternalID = this.DoorID;
-			obj.Health = this.Health;
-			obj.KeepID = this.Keep.KeepID;
-			if (InternalID == null)
 			{
-				GameServer.Database.AddNewObject(obj);
-				InternalID = obj.ObjectId;
+				obj = new DBDoor();				
+				New = true;
+			}
+
+			obj.Name = Name;
+			obj.Heading = Heading;
+			obj.X = X;
+			obj.Y = Y;
+			obj.Z = Z;
+			obj.InternalID = DoorID;
+			obj.ObjectId = DoorID.ToString();
+			obj.Health = Health;
+			obj.KeepID = Keep.KeepID;
+			if (New)
+			{
+				GameServer.Database.AddNewObject(obj);				
 			}
 			else
 				GameServer.Database.SaveObject(obj);
@@ -278,7 +395,8 @@ namespace DOL.GS
 			if (dbdoor == null)return;
 			Name = dbdoor.Name;
 			Health = dbdoor.Health;
-			m_doorID = (int)dbdoor.InternalID;
+			m_oldHealthPercent = HealthPercent;
+			m_doorID = dbdoor.InternalID;
 			X = dbdoor.X;
 			Y = dbdoor.Y;
 			Z = dbdoor.Z;
@@ -310,6 +428,8 @@ namespace DOL.GS
 		/// <param name="args"></param>
 		public void OpenDoor(DOLEvent e, object o, EventArgs args)
 		{
+			foreach (GamePlayer player in this.GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
+				player.Out.SendMessage("The Keep Gate is broken!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			lock(this)
 			{
 				m_state = eDoorState.Open;
@@ -334,9 +454,9 @@ namespace DOL.GS
 		/// </summary>
 		public virtual void BroadcastDoorStatus()
 		{
-			foreach(GameClient client in WorldMgr.GetClientsOfRegion(this.CurrentRegionID))
-			{
-				client.Player.Out.SendDoorState(this);
+			foreach(GameClient client in WorldMgr.GetClientsOfRegion(CurrentRegionID))
+			{	
+				client.Out.SendDoorState(this);
 			}
 		}
 
@@ -356,8 +476,9 @@ namespace DOL.GS
 		/// <param name="realm">new realm of keep taken</param>
 		public void Reset(eRealm realm)
 		{
-			this.Realm = (byte)realm;
-			this.Health = this.MaxHealth;
+			Realm = (byte)realm;
+			Health = MaxHealth;
+			m_oldHealthPercent = HealthPercent;
 			CloseDoor();
 		}
 	}
