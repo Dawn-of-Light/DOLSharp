@@ -1,0 +1,15 @@
+<?xml version="1.0" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="DOL.GS.Database.DBDoor, GameServer" table="`Door`">
+		<id name="DoorID" column="`DoorID`" unsaved-value="0">
+			<generator class="native" />
+		</id>
+		<property name="Name" type="String(255)" not-null="true" column="`Name`"/>
+		<property name="X" type="Int32" not-null="true" column="`X`"/>
+		<property name="Y" type="Int32" not-null="true" column="`Y`"/>
+		<property name="Z" type="Int32" not-null="true" column="`Z`"/>
+		<property name="Heading" type="Int32" not-null="true" column="`Heading`"/>
+		<property name="KeepID" type="Int32" not-null="true" column="`KeepID`"/>
+		<property name="Health" type="Int32" not-null="true" column="`Health`"/>
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,211 @@
+/*
+ * DAWN OF LIGHT - The first free open source DAoC server emulator
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
+ */
+
+using System;
+using System.Collections;
+using System.Reflection;
+using DOL.GS.Database;
+using DOL.GS.PacketHandler;
+using log4net;
+
+namespace DOL.GS.Housing
+{
+	public class HouseMgr
+	{
+		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
+		public static readonly ushort MAXHOUSES = 2000; 
+		public static readonly ushort HOUSE_DISTANCE = 5120; //guessed, but i'm sure its > vis dist.
+
+		private static Hashtable m_houselists;
+		private static Hashtable m_idlist;
+
+		public static bool Start()
+		{
+			m_houselists = new Hashtable();
+			m_idlist = new Hashtable();
+			int regions = 0;
+			foreach(RegionEntry entry in WorldMgr.GetRegionList())
+			{
+				Region reg = WorldMgr.GetRegion(entry.id);
+				if(reg!=null && reg.IsHousingEnabled)
+				{
+					if(!m_houselists.ContainsKey(reg))
+						m_houselists.Add(reg.RegionID, new Hashtable());
+
+					if(!m_idlist.ContainsKey(reg))
+						m_idlist.Add(reg, 0);
+
+					regions++;
+				}
+			}
+			HouseTemplateMgr.Initialize();
+
+			int houses = 0;
+			int lotmarkers = 0;
+			foreach(DBHouse house in GameServer.Database.SelectAllObjects(typeof(DBHouse)))
+			{
+				if (house.Model!=0)
+				{
+					int id = -1;
+					if((id = GetUniqueID((ushort)house.RegionID))>=0)
+					{
+						House newHouse = new House(house);
+						newHouse.UniqueID = id;
+						Hashtable hash = (Hashtable)m_houselists[house.RegionID];
+						if (hash==null) continue;
+						if (hash.ContainsKey(newHouse.HouseNumber)) continue;
+						hash.Add(newHouse.HouseNumber,newHouse);
+						houses++;
+					} 
+						else
+					{
+						if(log.IsWarnEnabled)
+							log.Warn("Failed to get a unique id, cant load house! More than "+HouseMgr.MAXHOUSES+" houses in region "+house.RegionID+" or region not loaded // housing not enabled?");
+					}
+				}
+					else
+				{
+					if(!m_idlist.ContainsKey(house.RegionID)) continue;
+					GameLotMarker.SpawnLotMarker(house);
+					lotmarkers++;
+				}
+			}
+
+			if(log.IsInfoEnabled)
+				log.Info("loaded "+houses+" houses and "+lotmarkers+" lotmarkers in "+regions+" regions!");
+			
+			return true;
+		}
+
+		public static void Stop()
+		{
+		}
+
+
+		public static int GetUniqueID(ushort regionid)
+		{
+			if(m_idlist.ContainsKey(regionid))
+			{
+				int id = (int)m_idlist[regionid];
+				id += 1;
+				m_idlist[regionid] = id;
+				return id;
+			}
+
+			return -1;
+		}
+
+		public static Hashtable GetHouses(Region region)
+		{
+			return (Hashtable)m_houselists[region];
+		}
+
+		public static House GetHouse(Region region, int housenumber)
+		{
+			Hashtable hash = (Hashtable)m_houselists[region];
+			if(hash==null) return null;
+
+			return (House)hash[housenumber];
+		}
+
+		public static House GetHouse(int housenumber)
+		{
+			foreach(Hashtable hash in m_houselists.Values)
+			{
+				if(hash.ContainsKey(housenumber))
+				{
+					return (House)hash[housenumber];
+				}
+			}
+			return null;
+		}
+
+
+		public static void AddHouse(House house)
+		{
+			Hashtable hash = (Hashtable)m_houselists[house.Region];
+			if (hash==null) return;
+			if (hash.ContainsKey(house.HouseNumber)) return;
+			hash.Add(house.HouseNumber,house);
+			house.SaveIntoDatabase();
+			house.SendUpdate();
+		}
+
+		public static void RemoveHouse(House house)
+		{
+			Hashtable hash = (Hashtable)m_houselists[house.Region];
+			if (hash==null) return;
+			foreach (GamePlayer player in house.Region.GetPlayerInRadius(house.Position, WorldMgr.OBJ_UPDATE_DISTANCE, false))
+			{
+				//player.Out.SendRemoveHouse(house);
+				player.Out.SendRemoveGarden(house);
+			}
+			hash.Remove(house);
+		}
+
+
+		public static bool IsOwner(DBHouse house, GamePlayer player)
+		{
+			if (house == null || player == null) return false;
+			if (house.OwnerIDs == null) return false;
+
+			return (house.OwnerIDs.IndexOf(player.Name)>=0);
+		}
+
+		public static void AddOwner(DBHouse house, GamePlayer player)
+		{
+			if (house == null || player == null) return;
+			if (house.OwnerIDs!=null)
+			{
+				if(house.OwnerIDs.IndexOf(player.InternalID)<0)
+					return;
+			}
+			house.OwnerIDs += player.InternalID+";";
+			GameServer.Database.SaveObject(house);
+		}
+
+		public static void DeleteOwner(DBHouse house, GamePlayer player)
+		{
+			if (house == null || player == null) return;
+			if (house.OwnerIDs==null) return;
+
+			house.OwnerIDs = house.OwnerIDs.Replace(player.InternalID+";","");
+			GameServer.Database.SaveObject(house);
+		}
+		
+		public static ArrayList GetOwners(DBHouse house)
+		{
+			if(house==null) return null;
+			if(house.OwnerIDs==null) return null;
+
+			ArrayList owners = new ArrayList();
+			string[] ids = house.OwnerIDs.Split(';');
+
+			foreach(string id in ids)
+			{
+				GamePlayer character = (GamePlayer)GameServer.Database.FindObjectByKey(typeof(GamePlayer),id);
+				if(character==null) continue;
+				owners.Add(character);
+			}
+			return owners;
+		}
+
+	}
+}

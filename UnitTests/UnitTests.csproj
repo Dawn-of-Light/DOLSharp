@@ -1,0 +1,183 @@
+<VisualStudioProject>
+    <CSHARP
+				ProjectType = "Local"
+				ProductVersion = "7.10.3077"
+				SchemaVersion = "2.0"
+				ProjectGuid = "{2391156B-D20D-4777-A615-628FA978FCAB}"
+		>
+				<Build>
+            <Settings
+				  ApplicationIcon = ""
+				  AssemblyKeyContainerName = ""
+				  AssemblyName = "UnitTests"
+				  AssemblyOriginatorKeyFile = ""
+				  DefaultClientScript = "JScript"
+				  DefaultHTMLPageLayout = "Grid"
+				  DefaultTargetSchema = "IE50"
+				  DelaySign = "false"
+				  OutputType = "Library"
+				  PreBuildEvent = ""
+				  PostBuildEvent = "postBuildEvent='xcopy "$(ProjectDir)\database\mappingFiles\*.hbm.xml" "$(SolutionDir)\$(ConfigurationName)\mapping" /y /s /q /i'"
+				  RunPostBuildEvent = "OnBuildSuccess"
+				  RootNamespace = "DOL"
+				  StartupObject = ""
+		     >
+				  <Config
+				      Name = "Debug"
+				      AllowUnsafeBlocks = "false"
+				      BaseAddress = "285212672"
+				      CheckForOverflowUnderflow = "false"
+				      ConfigurationOverrideFile = ""
+				      DefineConstants = "DEBUG;TRACE;WIN32;NET"
+				      DocumentationFile = "Docs.xml"
+				      DebugSymbols = "true"
+				      FileAlignment = "4096"
+				      IncrementalBuild = "false"
+				      NoStdLib = "false"
+				      NoWarn = "1591;219;1573;1572;168"
+				      Optimize = "true"
+                    OutputPath = "bin\Debug\"
+                    RegisterForComInterop = "false"
+                    RemoveIntegerChecks = "false"
+                    TreatWarningsAsErrors = "false"
+                    WarningLevel = "4"
+                />
+				  <Config
+				      Name = "Release"
+				      AllowUnsafeBlocks = "true"
+				      BaseAddress = "285212672"
+				      CheckForOverflowUnderflow = "false"
+				      ConfigurationOverrideFile = ""
+				      DefineConstants = "TRACE"
+				      DocumentationFile = "UnitTests.xml"
+				      DebugSymbols = "false"
+				      FileAlignment = "4096"
+				      IncrementalBuild = "false"
+				      NoStdLib = "false"
+				      NoWarn = "1591;219;1573;1572;168"
+				      Optimize = "true"
+                    OutputPath = "bin\Release\"
+                    RegisterForComInterop = "false"
+                    RemoveIntegerChecks = "false"
+                    TreatWarningsAsErrors = "false"
+                    WarningLevel = "4"
+                />
+            </Settings>
+            <References>
+                <Reference
+                    Name = "System"
+                    AssemblyName = "System"
+                />
+                <Reference
+                    Name = "GameServer"
+                    AssemblyName = "GameServer"
+                    Project = "{E9EFE5C6-BCB6-4D24-B520-869FB4B4A085}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
+                <Reference
+                    Name = "System.Xml"
+                    AssemblyName = "System.Xml"
+                />
+                <Reference
+                    Name = "System.Data"
+                    AssemblyName = "System.Data"
+                />
+                <Reference
+                    Name = "log4net"
+                    AssemblyName = "log4net"
+                    HintPath = "..\sharedModules\log4net\log4net.dll"
+                />
+                <Reference
+                    Name = "nunit.framework"
+                    AssemblyName = "nunit.framework"
+                    HintPath = "..\sharedModules\nunit\nunit.framework.dll"
+                />
+                <Reference
+                    Name = "Iesi.Collections"
+                    AssemblyName = "Iesi.Collections"
+                    HintPath = "..\sharedModules\nhibernate\Iesi.Collections.dll"
+                />
+                <Reference
+                    Name = "NHibernate"
+                    AssemblyName = "NHibernate"
+                    HintPath = "..\sharedModules\nhibernate\NHibernate.dll"
+                />
+                <Reference
+                    Name = "DOLBase"
+                    AssemblyName = "DOLBase"
+                    Project = "{35786A49-495F-4A35-86DC-825D18665E60}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
+                <Reference
+                    Name = "nunit.core"
+                    AssemblyName = "nunit.core"
+                    HintPath = "..\sharedModules\nunit\nunit.core.dll"
+                />
+            </References>
+        </Build>
+        <Files>
+            <Include>
+                <File
+                    RelPath = "DOLTestCase.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "GameServer\gameutils\AllianceTest.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "GameServer\gameutils\DatabaseTest.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "GameServer\gameutils\DatabaseTestCache.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "GameServer\gameutils\LanguageTest.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "GameServer\gameutils\LootMgrTest.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "GameServer\gameutils\RegionTest.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "GameServer\gameutils\ZoneTest.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "GameServer\item\ItemTemplateTest.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "GameServer\quests\KillTaskTest.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "GameServer\quests\MoneyTaskTest.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "GameServer\world\RegionOidAllocation.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+            </Include>
+        </Files>
+    </CSHARP>
+</VisualStudioProject>
