@@ -16,9 +16,11 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using System.Collections;
+using System;
+using System.Reflection;
 using DOL.Database;
+using log4net;
 
 namespace DOL.GS
 {
@@ -38,7 +40,14 @@ namespace DOL.GS
 			DataObject[] dbdoors =	GameServer.Database.SelectAllObjects(typeof(DBDoor));
 			foreach(DBDoor door in dbdoors)
 			{
-				GameObject mydoor = new GameDoor();
+				GameObject mydoor;
+				if (door.KeepID != 0) 
+				{
+					AbstractGameKeep keep = KeepMgr.getKeepByID(door.KeepID);
+					mydoor = new GameKeepDoor(keep);
+				}
+				else
+					mydoor = new GameDoor();
 				mydoor.LoadFromDatabase(door);
 				m_doors.Add(door.InternalID,mydoor);
 			}
