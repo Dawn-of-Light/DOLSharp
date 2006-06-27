@@ -47,8 +47,8 @@ namespace DOL.GS.Scripts
 			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Crush));
 
 			player.AddAbility(SkillBase.GetAbility(Abilities.Sprint));
-			player.AddAbility(SkillBase.GetAbility(Abilities.AlbArmor, (int)eArmorLevel.Medium));
-			player.AddAbility(SkillBase.GetAbility(Abilities.Shield, (int)eShieldSize.Medium));
+			player.AddAbility(SkillBase.GetAbility(Abilities.AlbArmor, ArmorLevel.Studded));
+			player.AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Medium));
 			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Slashing));
 			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Thrusting));
 			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Crushing));

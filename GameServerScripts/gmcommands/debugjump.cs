@@ -18,16 +18,12 @@
  */
 using System;
 using DOL.GS.PacketHandler;
-using NHibernate.Expression;
 
 namespace DOL.GS.Scripts
 {
-	[CmdAttribute(
-		"]jump",
-		(uint)ePrivLevel.GM,
-		"Teleports yourself to the specified location",
-  		"]jump <zoneID> <locX> <locY> <locZ> <heading>",
-  		"Autoused for *jump in debug mode")]
+	[CmdAttribute("]jump",(uint)ePrivLevel.GM,"Teleports yourself to the specified location",
+  			"]jump <zoneID> <locX> <locY> <locZ> <heading>",
+  			"Autoused for *jump in debug mode")]
 	public class OnDebugJump: ICommandHandler
 	{
 		public int OnCommand(GameClient client, string[] args)
@@ -36,17 +32,16 @@ namespace DOL.GS.Scripts
 			{
 				try
 				{
-					Zone zone = (Zone)GameServer.Database.SelectObject(typeof(Zone), Expression.Eq("ZoneID", Convert.ToUInt16(args[1])));
-		        	if (zone == null)
+		        	Zone z=WorldMgr.GetZone(Convert.ToUInt16(args[1]));
+					if (z == null)
 						client.Out.SendMessage("Unknown zone ID: " + args[1], eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					
-					ushort RegionID = (ushort)zone.Region.RegionID;
-					int x = zone.XOffset+Convert.ToInt32(args[2]);
-					int y = zone.YOffset+Convert.ToInt32(args[3]);
-					int z = Convert.ToInt32(args[4]);
-					ushort Heading = Convert.ToUInt16(args[5]);
+					ushort RegionID=z.ZoneRegion.ID;
+					int X=z.XOffset+Convert.ToInt32(args[2]);
+					int Y=z.YOffset+Convert.ToInt32(args[3]);
+					int Z=Convert.ToInt32(args[4]);
+					ushort Heading=Convert.ToUInt16(args[5]);
 					if(!CheckExpansion(client,RegionID)) return 0;
-					client.Player.MoveTo(RegionID, new Point(x, y, z), Heading);
+					client.Player.MoveTo(RegionID,X,Y,Z,Heading);
 					return 1;
 				}
 				catch

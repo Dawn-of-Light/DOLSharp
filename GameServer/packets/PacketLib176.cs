@@ -20,7 +20,7 @@
 using System;
 using System.Reflection;
 using System.Collections;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.GS.Quests;
 using log4net;
 
@@ -65,7 +65,7 @@ namespace DOL.GS.PacketHandler
 					pak.WritePascalString(player.Name);
 					pak.WriteString(player.CharacterClass.Name, 4);
 					if(player.CurrentZone != null)
-						pak.WriteShort((ushort)player.CurrentZone.ZoneID);
+						pak.WriteShort(player.CurrentZone.ID);
 					else
 						pak.WriteShort(0); // ?
 					pak.WriteByte(0); // duration
@@ -97,29 +97,31 @@ namespace DOL.GS.PacketHandler
 			if (items != null)
 			{
 				pak.WriteByte((byte) items.Count);
-				foreach (VisibleEquipment item in items)
+				foreach (InventoryItem item in items)
 				{
 					pak.WriteByte((byte) item.SlotPosition); // TODO For extended guild patter used 0x80 & slot
 
 					ushort model = (ushort) (item.Model & 0x1FFF);
-				
-					if ((item.Color & ~0xFF) != 0)
+					int texture = (item.Emblem != 0) ? item.Emblem : item.Color;
+
+					if ((texture & ~0xFF) != 0)
 						model |= 0x8000;
-					else if ((item.Color & 0xFF) != 0)
+					else if ((texture & 0xFF) != 0)
 						model |= 0x4000;
-					if (item is Weapon && ((Weapon)item).GlowEffect != 0)
+					if (item.Effect != 0)
 						model |= 0x2000;
 
 					pak.WriteShort(model);
 
-					if (item is Armor) pak.WriteByte(((Armor)item).ModelExtension);
+					if (item.SlotPosition > Slot.RANGED || item.SlotPosition < Slot.RIGHTHAND)
+						pak.WriteByte((byte) item.Extension);
 
-					if ((item.Color & ~0xFF) != 0)
-						pak.WriteShort((ushort) item.Color);
-					else if ((item.Color & 0xFF) != 0)
-						pak.WriteByte((byte) item.Color);
-					if (item is Weapon && ((Weapon)item).GlowEffect != 0)
-						pak.WriteShort((ushort) ((Weapon)item).GlowEffect);
+					if ((texture & ~0xFF) != 0)
+						pak.WriteShort((ushort) texture);
+					else if ((texture & 0xFF) != 0)
+						pak.WriteByte((byte) texture);
+					if (item.Effect != 0)
+						pak.WriteByte((byte)item.Effect);
 				}
 			}
 			else
@@ -134,7 +136,7 @@ namespace DOL.GS.PacketHandler
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.QuestEntry));
 
 			pak.WriteByte((byte) index);
-			if (quest.Step <= 0)
+			if (quest.Step == -1)
 			{
 				pak.WriteByte(0);
 				pak.WriteByte(0);

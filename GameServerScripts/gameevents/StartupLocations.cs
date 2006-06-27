@@ -27,8 +27,7 @@
 using System;
 using System.Collections.Specialized;
 using System.Reflection;
-using DOL.GS.PacketHandler;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.Events;
 using log4net;
 
@@ -53,7 +52,8 @@ namespace DOL.GS.GameEvents
 			bool result = InitLocationTables();
 			GameEventMgr.AddHandler(DatabaseEvent.CharacterCreated, new DOLEventHandler(CharacterCreation));
 			if (log.IsInfoEnabled)
-				log.Info("StartupLocations initialized");
+				if (log.IsInfoEnabled)
+					log.Info("StartupLocations initialized");
 		}
 
 
@@ -73,40 +73,42 @@ namespace DOL.GS.GameEvents
 			CharacterEventArgs chArgs = args as CharacterEventArgs;
 			if (chArgs == null)
 				return;
-			GamePlayer ch = chArgs.Character;
+			Character ch = chArgs.Character;
 			try
 			{
 				StartLocation loc = null;
 
-				if (ch.RegionId == 1 || ch.RegionId == 100 || ch.RegionId == 200) // all classic regions
+				if (ch.Region == 1 || ch.Region == 100 || ch.Region == 200) // all classic regions
 				{
-					loc = (StartLocation) m_classicLocations[(int)ch.Race][ch.CharacterClassID];
+					loc = (StartLocation) m_classicLocations[ch.Race][ch.Class];
 				}
-				else if (ch.RegionId == 51 || ch.RegionId == 151 || ch.RegionId == 181) // all SI regions
+				else if (ch.Region == 51 || ch.Region == 151 || ch.Region == 181) // all SI regions
 				{
-					loc = (StartLocation) m_shroudedIslesLocations[(int)ch.Race][ch.CharacterClassID];
+					loc = (StartLocation) m_shroudedIslesLocations[ch.Race][ch.Class];
 				}
 				else
 				{
 					log.DebugFormat("tried to create char in unknown region {0}", ch.Region);
 					switch (ch.Realm)
 					{
-						default:ch.RegionId = 1; break;
-						case (byte)eRealm.Midgard: ch.RegionId = 100; break;
-						case (byte)eRealm.Hibernia: ch.RegionId = 200; break;
+						default:ch.Region = 1; break;
+						case 2: ch.Region = 100; break;
+						case 3: ch.Region = 200; break;
 					}
-					loc = (StartLocation) m_classicLocations[(int)ch.Race][ch.CharacterClassID];
+					loc = (StartLocation) m_classicLocations[ch.Race][ch.Class];
 				}
 
 				if (loc == null)
 				{
-					log.Warn("startup location not found: char name=" + ch.Name + "; region=" + ch.Region + "; realm=" + ch.Realm + "; class=" + ch.CharacterClassID + " (" + (eCharacterClass) ch.CharacterClassID + "); race=" + ch.Race + " (" + (eRace)ch.Race + ")");
+					log.Warn("startup location not found: account=" + ch.AccountName + "; char name=" + ch.Name + "; region=" + ch.Region + "; realm=" + ch.Realm + "; class=" + ch.Class + " (" + (eCharacterClass) ch.Class + "); race=" + ch.Race + " (" + (eRace)ch.Race + ")");
 				}
 				else
 				{
 					// can't change region on char creation, that is hardcoded in the client
-					ch.Position = new Point(loc.X, loc.Y,  loc.Z);
-					ch.Heading = loc.Heading;
+					ch.Xpos = loc.X;
+					ch.Ypos = loc.Y;
+					ch.Zpos = loc.Z;
+					ch.Direction = loc.Heading;
 				}
 
 				BindCharacter(ch);
@@ -114,7 +116,7 @@ namespace DOL.GS.GameEvents
 			catch (Exception e)
 			{
 				if (log.IsErrorEnabled)
-					log.Error("StartupLocations script: error changing location. char name=" + ch.Name + "; region=" + ch.Region + "; realm=" + ch.Realm + "; class=" + ch.CharacterClassID + " (" + (eCharacterClass) ch.CharacterClassID + "); race=" + ch.Race + " (" + (eRace)ch.Race + ")", e);
+					log.Error("StartupLocations script: error changing location. account=" + ch.AccountName + "; char name=" + ch.Name + "; region=" + ch.Region + "; realm=" + ch.Realm + "; class=" + ch.Class + " (" + (eCharacterClass) ch.Class + "); race=" + ch.Race + " (" + (eRace)ch.Race + ")", e);
 			}
 		}
 
@@ -122,13 +124,13 @@ namespace DOL.GS.GameEvents
 		/// Binds character to current location
 		/// </summary>
 		/// <param name="ch"></param>
-		protected static void BindCharacter(GamePlayer ch)
+		protected static void BindCharacter(Character ch)
 		{
-			ch.BindRegion = ch.RegionId;
-			ch.BindHeading = ch.Heading;
-			ch.BindX = ch.Position.X;
-			ch.BindY = ch.Position.Y;
-			ch.BindZ= ch.Position.Z;
+			ch.BindRegion = ch.Region;
+			ch.BindHeading = ch.Direction;
+			ch.BindXpos = ch.Xpos;
+			ch.BindYpos = ch.Ypos;
+			ch.BindZpos = ch.Zpos;
 		}
 
 		/// <summary>

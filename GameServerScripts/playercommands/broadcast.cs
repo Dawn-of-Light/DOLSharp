@@ -24,22 +24,37 @@ namespace DOL.GS.Scripts
 				return 1;
 			}
 
-			bool broadcastDone = false;
-			string message = string.Join(" ", args, 1, args.Length - 1);
-			foreach (AbstractArea currentArea in client.Player.CurrentAreas)
-			{
-				if(currentArea.IsBroadcastEnabled == true)
-				{
-					currentArea.SendMessage("[Broadcast] " + client.Player.Name + ": " + message, eChatType.CT_Broadcast, eChatLoc.CL_ChatWindow);
-					broadcastDone = true;
-				}
-			}
-			
-			if(broadcastDone == false)
+			AbstractArea targetArea = CheckArea(client.Player);
+
+			if (targetArea == null)
 			{
 				client.Out.SendMessage("You cannot broadcast here!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return 1;
 			}
-			return -1;
+
+			string message = string.Join(" ", args, 1, args.Length - 1);
+
+			Broadcast(client.Player.Name, message, targetArea, client.Player.CurrentRegionID);
+
+			return 1;
+		}
+
+		private AbstractArea CheckArea(GamePlayer player)
+		{
+			foreach (AbstractArea thisArea in player.CurrentAreas)
+			{
+				if (AreaMgr.BroadcastableAreas.Contains(thisArea)) return thisArea;
+			}
+			return null;
+		}
+
+		private void Broadcast(string name, string message, AbstractArea area, ushort regionID)
+		{
+			foreach (GameClient thisClient in WorldMgr.GetClientsOfRegion(regionID))
+			{
+				if (thisClient.Player.CurrentAreas.Contains(area))
+					thisClient.Player.Out.SendMessage("[Broadcast] " + name + ": " + message, eChatType.CT_Broadcast, eChatLoc.CL_ChatWindow);
+			}
 		}
 	}
 }

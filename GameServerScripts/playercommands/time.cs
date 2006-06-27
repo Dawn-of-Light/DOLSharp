@@ -32,7 +32,7 @@ namespace DOL.GS.Scripts
 		{
 			// starts a new day with 'speed' at 'time'(1/1000)
 			// /time speed time
-			if (client.Account.PrivLevel != ePrivLevel.Player)
+			if (client.Account.PrivLevel > 1)
 			{
 				if (args.Length == 3)
 				{

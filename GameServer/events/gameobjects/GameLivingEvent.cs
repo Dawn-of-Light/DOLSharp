@@ -83,10 +83,6 @@ namespace DOL.Events
 		/// </summary>
 		public static readonly GameLivingEvent AttackFinished = new GameLivingEvent("GameLiving.AttackedEnemy");
 		/// <summary>
-		/// The TakeDamage event is fired whenever a living takes damage
-		/// </summary>
-		public static readonly GameLivingEvent TakeDamage = new GameLivingEvent("GameLiving.TakeDamage");
-		/// <summary>
 		/// The EnemyKilled event is fired whenever the living kill something
 		/// </summary>
 		public static readonly GameLivingEvent EnemyKilled = new GameLivingEvent("GameLiving.EnemyKilled");
@@ -111,10 +107,6 @@ namespace DOL.Events
 		/// <seealso cref="EnemyHealedEventArgs"/>
 		/// </summary>
 		public static readonly GameLivingEvent EnemyHealed = new GameLivingEvent("GameLiving.EnemyHealed");
-        /// <summary>
-        /// The Timer event is fired whenever an previously added timer has finished
-        /// Used within questsystem
-        /// </summary>
-        public static readonly GameLivingEvent Timer = new GameLivingEvent("GameLiving.Timer");
+
 	}
 }

@@ -62,7 +62,7 @@ namespace DOL.GS.PacketHandler.v168
 			protected override void OnTick()
 			{
 				GamePlayer player = (GamePlayer)m_actionSource;
-				Region region = player.Region;
+				Region region = player.CurrentRegion;
 				if (region == null) return;
 				GameObject obj = region.GetObject((ushort)m_targetOid);
 				if(obj == null) return;

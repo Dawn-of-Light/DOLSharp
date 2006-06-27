@@ -61,7 +61,10 @@ namespace DOL.GS.Scripts
 			}
 			text.Append("\"");
 			string message = text.ToString();
-			mychatgroup.SendMessageToMembers(message);
+			foreach (GamePlayer ply in mychatgroup.Members.Keys)
+			{
+				ply.Out.SendMessage(message, eChatType.CT_Friend, eChatLoc.CL_ChatWindow);
+			}
 			return 1;
 		}
 	}
@@ -123,7 +126,6 @@ namespace DOL.GS.Scripts
 							client.Out.SendMessage("You must be the leader to invite a player to join the chat group.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return 1;
 						}
-						client.Player.Out.SendMessage("You have invited " + inviteeclient.Player.Name + " to join your chatgroup.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						inviteeclient.Player.TempProperties.setProperty(JOIN_CHATGROUP_PROPERTY, mychatgroup);
 						inviteeclient.Player.Out.SendCustomDialog("Do you want to join " + client.Player.Name + "'s chatgroup?", new CustomDialogResponse(JoinChatGroup));
 					}
@@ -148,7 +150,7 @@ namespace DOL.GS.Scripts
 							if (player.Guild != null)
 							{
 								text.Append(" <");
-								text.Append(GuildMgr.GetGuildByID(player.GuildID).GuildName);
+								text.Append(player.GuildName);
 								text.Append(">");
 							}
 							client.Out.SendMessage(text.ToString(), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -203,7 +205,10 @@ namespace DOL.GS.Scripts
 						}
 						mychatgroup.Listen = !mychatgroup.Listen;
 						string message = "The listen mode of chatgroup is switch " + (mychatgroup.Listen ? "on." : "off.");
-						mychatgroup.SendMessageToMembers(message);			
+						foreach (GamePlayer ply in mychatgroup.Members.Keys)
+						{
+							ply.Out.SendMessage(message, eChatType.CT_Friend, eChatLoc.CL_ChatWindow);
+						}					
 					}
 					break;
 				case "leader":
@@ -230,7 +235,12 @@ namespace DOL.GS.Scripts
 							client.Out.SendMessage("There is no player with this name.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return 1;
 						}
-						mychatgroup.SetLeader(inviteeclient.Player);				
+						mychatgroup.Members[inviteeclient.Player] = true;
+						string message = inviteeclient.Player.Name + " becomes a moderator.";
+						foreach (GamePlayer ply in mychatgroup.Members.Keys)
+						{
+							ply.Out.SendMessage(message, eChatType.CT_Friend, eChatLoc.CL_ChatWindow);
+						}					
 					}
 					break;
 				case "public":
@@ -248,7 +258,10 @@ namespace DOL.GS.Scripts
 						}
 						mychatgroup.IsPublic = true;
 						string message = "The chatgroup is now public";
-						mychatgroup.SendMessageToMembers(message);
+						foreach (GamePlayer ply in mychatgroup.Members.Keys)
+						{
+							ply.Out.SendMessage(message, eChatType.CT_Friend, eChatLoc.CL_ChatWindow);
+						}
 					}
 					break;
 				case "private":
@@ -266,7 +279,10 @@ namespace DOL.GS.Scripts
 						}
 						mychatgroup.IsPublic = false;
 						string message = "The chatgroup is now private";
-						mychatgroup.SendMessageToMembers(message);
+						foreach (GamePlayer ply in mychatgroup.Members.Keys)
+						{
+							ply.Out.SendMessage(message, eChatType.CT_Friend, eChatLoc.CL_ChatWindow);
+						}
 					}
 					break;
 				case "join":

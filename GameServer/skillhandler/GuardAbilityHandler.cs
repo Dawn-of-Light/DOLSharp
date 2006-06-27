@@ -38,7 +38,7 @@ namespace DOL.GS.SkillHandler
 		/// <summary>
 		/// The guard distance
 		/// </summary>
-		public static readonly ushort GUARD_DISTANCE = 256;
+		public const int GUARD_DISTANCE = 256;
 
 		public void Execute(Ability ab, GamePlayer player)
 		{

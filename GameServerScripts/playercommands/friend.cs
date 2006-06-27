@@ -31,7 +31,7 @@ namespace DOL.GS.Scripts
 		{
 			if (args.Length < 2)
 			{
-				string[] friends = client.Player.SerializedFriendsList.Split(',');
+				string[] friends = client.Player.PlayerCharacter.SerializedFriendsList.Split(',');
 				client.Out.SendCustomTextWindow("Friends (snapshot)", friends);
 				return 1;
 			}

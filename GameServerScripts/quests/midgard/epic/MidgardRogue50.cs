@@ -36,68 +36,13 @@
 
 using System;
 using System.Reflection;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
 
 namespace DOL.GS.Quests.Midgard
 {
-	/* The first thing we do, is to declare the quest requirement
-* class linked with the new Quest. To do this, we derive 
-* from the abstract class AbstractQuestDescriptor
-*/
-	public class Rogue_50Descriptor : AbstractQuestDescriptor
-	{
-		/* This is the type of the quest class linked with 
-		 * this requirement class, you must override the 
-		 * base method like that
-		 */
-		public override Type LinkedQuestType
-		{
-			get { return typeof(Rogue_50); }
-		}
-
-		/* This value is used to retrieves the minimum level needed
-		 *  to be able to make this quest. Override it only if you need, 
-		 * the default value is 1
-		 */
-		public override int MinLevel
-		{
-			get { return 50; }
-		}
-
-		/* This method is used to know if the player is qualified to 
-		 * do the quest. The base method always test his level and
-		 * how many time the quest has been done. Override it only if 
-		 * you want to add a custom test (here we test also the class name)
-		 */
-		public override bool CheckQuestQualification(GamePlayer player)
-		{
-			// if the player is already doing the quest his level is no longer of relevance
-			if (player.IsDoingQuest(typeof(Rogue_50)) != null)
-				return true;
-
-			if (player.CharacterClass.ID != (byte)eCharacterClass.Shadowblade &&
-				player.CharacterClass.ID != (byte)eCharacterClass.Hunter)
-				return false;
-
-			// This checks below are only performed is player isn't doing quest already
-
-			//if (player.HasFinishedQuest(typeof(Academy_47)) == 0) return false;
-
-			//if (!CheckPartAccessible(player,typeof(CityOfCamelot)))
-			//	return false;
-			return base.CheckQuestQualification(player);
-		}
-	}
-
-
-	/* The second thing we do, is to declare the class we create
-	 * as Quest. We must make it persistant using attributes, to
-	 * do this, we derive from the abstract class AbstractQuest
-	 */
-	[NHibernate.Mapping.Attributes.Subclass(NameType = typeof(Rogue_50), ExtendsType = typeof(AbstractQuest))]
 	public class Rogue_50 : BaseQuest
 	{
 		/// <summary>
@@ -106,30 +51,44 @@ namespace DOL.GS.Quests.Midgard
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		protected const string questTitle = "War Concluded";
+		protected const int minimumLevel = 50;
+		protected const int maximumLevel = 50;
 
 		private static GameNPC Masrim = null; // Start NPC
-		private static GameMob Oona = null; // Mob to kill
+		private static GameNPC Oona = null; // Mob to kill
 		private static GameNPC MorlinCaan = null; // Trainer for reward
 
-		private static GenericItemTemplate oona_head = null; //ball of flame
-		private static GenericItemTemplate sealed_pouch = null; //sealed pouch
+		private static ItemTemplate oona_head = null; //ball of flame
+		private static ItemTemplate sealed_pouch = null; //sealed pouch
+		private static ItemTemplate HunterEpicBoots = null; //Call of the Hunt Boots 
+		private static ItemTemplate HunterEpicHelm = null; //Call of the Hunt Coif 
+		private static ItemTemplate HunterEpicGloves = null; //Call of the Hunt Gloves 
+		private static ItemTemplate HunterEpicVest = null; //Call of the Hunt Hauberk 
+		private static ItemTemplate HunterEpicLegs = null; //Call of the Hunt Legs 
+		private static ItemTemplate HunterEpicArms = null; //Call of the Hunt Sleeves 
+		private static ItemTemplate ShadowbladeEpicBoots = null; //Shadow Shrouded Boots 
+		private static ItemTemplate ShadowbladeEpicHelm = null; //Shadow Shrouded Coif 
+		private static ItemTemplate ShadowbladeEpicGloves = null; //Shadow Shrouded Gloves 
+		private static ItemTemplate ShadowbladeEpicVest = null; //Shadow Shrouded Hauberk 
+		private static ItemTemplate ShadowbladeEpicLegs = null; //Shadow Shrouded Legs 
+		private static ItemTemplate ShadowbladeEpicArms = null; //Shadow Shrouded Sleeves         
 
-		private static FeetArmorTemplate HunterEpicBoots = null; //Call of the Hunt Boots 
-		private static HeadArmorTemplate HunterEpicHelm = null; //Call of the Hunt Coif 
-		private static HandsArmorTemplate HunterEpicGloves = null; //Call of the Hunt Gloves 
-		private static TorsoArmorTemplate HunterEpicVest = null; //Call of the Hunt Hauberk 
-		private static LegsArmorTemplate HunterEpicLegs = null; //Call of the Hunt Legs 
-		private static ArmsArmorTemplate HunterEpicArms = null; //Call of the Hunt Sleeves 
+		// Constructors
+		public Rogue_50() : base()
+		{
+		}
 
-		private static FeetArmorTemplate ShadowbladeEpicBoots = null; //Shadow Shrouded Boots 
-		private static HeadArmorTemplate ShadowbladeEpicHelm = null; //Shadow Shrouded Coif 
-		private static HandsArmorTemplate ShadowbladeEpicGloves = null; //Shadow Shrouded Gloves 
-		private static TorsoArmorTemplate ShadowbladeEpicVest = null; //Shadow Shrouded Hauberk 
-		private static LegsArmorTemplate ShadowbladeEpicLegs = null; //Shadow Shrouded Legs 
-		private static ArmsArmorTemplate ShadowbladeEpicArms = null; //Shadow Shrouded Sleeves
+		public Rogue_50(GamePlayer questingPlayer) : base(questingPlayer)
+		{
+		}
 
-		private static GameNPC[] HunterTrainers = null;
-		private static GameNPC[] ShadowbladeTrainers = null;
+		public Rogue_50(GamePlayer questingPlayer, int step) : base(questingPlayer, step)
+		{
+		}
+
+		public Rogue_50(GamePlayer questingPlayer, DBQuest dbQuest) : base(questingPlayer, dbQuest)
+		{
+		}
 
 		[ScriptLoadedEvent]
 		public static void ScriptLoaded(DOLEvent e, object sender, EventArgs args)
@@ -149,11 +108,13 @@ namespace DOL.GS.Quests.Midgard
 				Masrim.Model = 177;
 				Masrim.Name = "Masrim";
 				Masrim.GuildName = "";
-				Masrim.Realm = (byte)eRealm.Midgard;
-				Masrim.RegionId = 100;
+				Masrim.Realm = (byte) eRealm.Midgard;
+				Masrim.CurrentRegionID = 100;
 				Masrim.Size = 52;
 				Masrim.Level = 40;
-				Masrim.Position = new Point(749099, 813104, 4437);
+				Masrim.X = 749099;
+				Masrim.Y = 813104;
+				Masrim.Z = 4437;
 				Masrim.Heading = 2605;
 				Masrim.AddToWorld();
 				if (SAVE_INTO_DATABASE)
@@ -176,14 +137,15 @@ namespace DOL.GS.Quests.Midgard
 				Oona.Model = 356;
 				Oona.Name = "Oona";
 				Oona.GuildName = "";
-				Oona.Realm = (byte)eRealm.None;
-				Oona.RegionId = 100;
+				Oona.Realm = (byte) eRealm.None;
+				Oona.CurrentRegionID = 100;
 				Oona.Size = 50;
 				Oona.Level = 65;
-				Oona.Position = new Point(607233, 786850, 4384);
+				Oona.X = 607233;
+				Oona.Y = 786850;
+				Oona.Z = 4384;
 				Oona.Heading = 3891;
 				Oona.Flags = 1;
-				Oona.RespawnInterval = 5 * 60 * 1000;
 				Oona.AddToWorld();
 				if (SAVE_INTO_DATABASE)
 				{
@@ -192,7 +154,7 @@ namespace DOL.GS.Quests.Midgard
 
 			}
 			else
-				Oona = npcs[0] as GameMob;
+				Oona = npcs[0];
 			// end npc
 
 			npcs = WorldMgr.GetNPCsByName("Morlin Caan", eRealm.Midgard);
@@ -205,11 +167,13 @@ namespace DOL.GS.Quests.Midgard
 				MorlinCaan.Model = 235;
 				MorlinCaan.Name = "Morlin Caan";
 				MorlinCaan.GuildName = "Smith";
-				MorlinCaan.Realm = (byte)eRealm.Midgard;
-				MorlinCaan.RegionId = 101;
+				MorlinCaan.Realm = (byte) eRealm.Midgard;
+				MorlinCaan.CurrentRegionID = 101;
 				MorlinCaan.Size = 50;
 				MorlinCaan.Level = 54;
-				MorlinCaan.Position = new Point(33400, 33620, 8023);
+				MorlinCaan.X = 33400;
+				MorlinCaan.Y = 33620;
+				MorlinCaan.Z = 8023;
 				MorlinCaan.Heading = 523;
 				MorlinCaan.AddToWorld();
 				if (SAVE_INTO_DATABASE)
@@ -226,477 +190,591 @@ namespace DOL.GS.Quests.Midgard
 
 			#region defineItems
 
-			oona_head = (GenericItemTemplate)GameServer.Database.FindObjectByKey(typeof(GenericItemTemplate), "oona_head");
+			oona_head = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "oona_head");
 			if (oona_head == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Oona's Head , creating it ...");
-				oona_head = new GenericItemTemplate();
-				oona_head.ItemTemplateID = "oona_head";
+				oona_head = new ItemTemplate();
+				oona_head.Id_nb = "oona_head";
 				oona_head.Name = "Oona's Head";
 				oona_head.Level = 8;
+				oona_head.Item_Type = 29;
 				oona_head.Model = 503;
 				oona_head.IsDropable = false;
-				oona_head.IsSaleable = false;
-				oona_head.IsTradable = false;
+				oona_head.IsPickable = false;
+				oona_head.DPS_AF = 0;
+				oona_head.SPD_ABS = 0;
+				oona_head.Object_Type = 41;
+				oona_head.Hand = 0;
+				oona_head.Type_Damage = 0;
+				oona_head.Quality = 100;
+				oona_head.MaxQuality = 100;
 				oona_head.Weight = 12;
-
 				if (SAVE_INTO_DATABASE)
 				{
 					GameServer.Database.AddNewObject(oona_head);
 				}
+
 			}
 
-			sealed_pouch = (GenericItemTemplate)GameServer.Database.FindObjectByKey(typeof(GenericItemTemplate), "sealed_pouch");
+			sealed_pouch = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "sealed_pouch");
 			if (sealed_pouch == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Sealed Pouch , creating it ...");
-				sealed_pouch = new GenericItemTemplate();
-				sealed_pouch.ItemTemplateID = "sealed_pouch";
+				sealed_pouch = new ItemTemplate();
+				sealed_pouch.Id_nb = "sealed_pouch";
 				sealed_pouch.Name = "Sealed Pouch";
 				sealed_pouch.Level = 8;
+				sealed_pouch.Item_Type = 29;
 				sealed_pouch.Model = 488;
 				sealed_pouch.IsDropable = false;
-				sealed_pouch.IsSaleable = false;
-				sealed_pouch.IsTradable = false;
+				sealed_pouch.IsPickable = false;
+				sealed_pouch.DPS_AF = 0;
+				sealed_pouch.SPD_ABS = 0;
+				sealed_pouch.Object_Type = 41;
+				sealed_pouch.Hand = 0;
+				sealed_pouch.Type_Damage = 0;
+				sealed_pouch.Quality = 100;
+				sealed_pouch.MaxQuality = 100;
 				sealed_pouch.Weight = 12;
-
 				if (SAVE_INTO_DATABASE)
 				{
 					GameServer.Database.AddNewObject(sealed_pouch);
 				}
+
 			}
-			ArmorTemplate i = null;
-			#region Hunter
-			HunterEpicBoots = (FeetArmorTemplate)GameServer.Database.FindObjectByKey(typeof(FeetArmorTemplate), "HunterEpicBoots");
+// end item
+
+			HunterEpicBoots = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "HunterEpicBoots");
 			if (HunterEpicBoots == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Hunters Epic Boots , creating it ...");
-				i = new FeetArmorTemplate();
-				i.ItemTemplateID = "HunterEpicBoots";
-				i.Name = "Call of the Hunt Boots";
-				i.Level = 50;
-				i.Model = 760;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.Medium;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Hunter);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Midgard;
+				HunterEpicBoots = new ItemTemplate();
+				HunterEpicBoots.Id_nb = "HunterEpicBoots";
+				HunterEpicBoots.Name = "Call of the Hunt Boots";
+				HunterEpicBoots.Level = 50;
+				HunterEpicBoots.Item_Type = 23;
+				HunterEpicBoots.Model = 760;
+				HunterEpicBoots.IsDropable = true;
+				HunterEpicBoots.IsPickable = true;
+				HunterEpicBoots.DPS_AF = 100;
+				HunterEpicBoots.SPD_ABS = 19;
+				HunterEpicBoots.Object_Type = 34;
+				HunterEpicBoots.Quality = 100;
+				HunterEpicBoots.MaxQuality = 100;
+				HunterEpicBoots.Weight = 22;
+				HunterEpicBoots.Bonus = 35;
+				HunterEpicBoots.MaxCondition = 50000;
+				HunterEpicBoots.MaxDurability = 50000;
+				HunterEpicBoots.Condition = 50000;
+				HunterEpicBoots.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 19));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 19));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Thrust, 10));
+				HunterEpicBoots.Bonus1 = 19;
+				HunterEpicBoots.Bonus1Type = (int) eStat.CON;
+
+				HunterEpicBoots.Bonus2 = 19;
+				HunterEpicBoots.Bonus2Type = (int) eStat.DEX;
+
+				HunterEpicBoots.Bonus3 = 10;
+				HunterEpicBoots.Bonus3Type = (int) eResist.Thrust;
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(i);
+					GameServer.Database.AddNewObject(HunterEpicBoots);
 				}
-				HunterEpicBoots = (FeetArmorTemplate)i;
-			}
 
+			}
+//end item
 			//Call of the Hunt Coif 
-			HunterEpicHelm = (HeadArmorTemplate)GameServer.Database.FindObjectByKey(typeof(HeadArmorTemplate), "HunterEpicHelm");
+			HunterEpicHelm = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "HunterEpicHelm");
 			if (HunterEpicHelm == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Hunters Epic Helm , creating it ...");
-				i = new HeadArmorTemplate();
-				i.ItemTemplateID = "HunterEpicHelm";
-				i.Name = "Call of the Hunt Coif";
-				i.Level = 50;
-				i.Model = 829; //NEED TO WORK ON..
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.Medium;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Hunter);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Midgard;
+				HunterEpicHelm = new ItemTemplate();
+				HunterEpicHelm.Id_nb = "HunterEpicHelm";
+				HunterEpicHelm.Name = "Call of the Hunt Coif";
+				HunterEpicHelm.Level = 50;
+				HunterEpicHelm.Item_Type = 21;
+				HunterEpicHelm.Model = 829; //NEED TO WORK ON..
+				HunterEpicHelm.IsDropable = true;
+				HunterEpicHelm.IsPickable = true;
+				HunterEpicHelm.DPS_AF = 100;
+				HunterEpicHelm.SPD_ABS = 19;
+				HunterEpicHelm.Object_Type = 34;
+				HunterEpicHelm.Quality = 100;
+				HunterEpicHelm.MaxQuality = 100;
+				HunterEpicHelm.Weight = 22;
+				HunterEpicHelm.Bonus = 35;
+				HunterEpicHelm.MaxCondition = 50000;
+				HunterEpicHelm.MaxDurability = 50000;
+				HunterEpicHelm.Condition = 50000;
+				HunterEpicHelm.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Spear, 3));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Stealth, 3));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Composite, 3));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 19));
+				HunterEpicHelm.Bonus1 = 3;
+				HunterEpicHelm.Bonus1Type = (int) eProperty.Skill_Spear;
+
+				HunterEpicHelm.Bonus2 = 3;
+				HunterEpicHelm.Bonus2Type = (int) eProperty.Skill_Stealth;
+
+				HunterEpicHelm.Bonus3 = 3;
+				HunterEpicHelm.Bonus3Type = (int) eProperty.Skill_Composite;
+
+				HunterEpicHelm.Bonus4 = 19;
+				HunterEpicHelm.Bonus4Type = (int) eStat.DEX;
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(i);
+					GameServer.Database.AddNewObject(HunterEpicHelm);
 				}
-				HunterEpicHelm = (HeadArmorTemplate)i;
-			}
 
+			}
+//end item
 			//Call of the Hunt Gloves 
-			HunterEpicGloves = (HandsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(HandsArmorTemplate), "HunterEpicGloves");
+			HunterEpicGloves = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "HunterEpicGloves");
 			if (HunterEpicGloves == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Hunters Epic Gloves , creating it ...");
-				i = new HandsArmorTemplate();
-				i.ItemTemplateID = "HunterEpicGloves";
-				i.Name = "Call of the Hunt Gloves ";
-				i.Level = 50;
-				i.Model = 759;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.Medium;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Hunter);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Midgard;
+				HunterEpicGloves = new ItemTemplate();
+				HunterEpicGloves.Id_nb = "HunterEpicGloves";
+				HunterEpicGloves.Name = "Call of the Hunt Gloves ";
+				HunterEpicGloves.Level = 50;
+				HunterEpicGloves.Item_Type = 22;
+				HunterEpicGloves.Model = 759;
+				HunterEpicGloves.IsDropable = true;
+				HunterEpicGloves.IsPickable = true;
+				HunterEpicGloves.DPS_AF = 100;
+				HunterEpicGloves.SPD_ABS = 19;
+				HunterEpicGloves.Object_Type = 34;
+				HunterEpicGloves.Quality = 100;
+				HunterEpicGloves.MaxQuality = 100;
+				HunterEpicGloves.Weight = 22;
+				HunterEpicGloves.Bonus = 35;
+				HunterEpicGloves.MaxCondition = 50000;
+				HunterEpicGloves.MaxDurability = 50000;
+				HunterEpicGloves.Condition = 50000;
+				HunterEpicGloves.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Composite, 5));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Quickness, 15));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 33));
+				HunterEpicGloves.Bonus1 = 5;
+				HunterEpicGloves.Bonus1Type = (int) eProperty.Skill_Composite;
+
+				HunterEpicGloves.Bonus2 = 15;
+				HunterEpicGloves.Bonus2Type = (int) eStat.QUI;
+
+				HunterEpicGloves.Bonus3 = 33;
+				HunterEpicGloves.Bonus3Type = (int) eProperty.MaxHealth;
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(i);
+					GameServer.Database.AddNewObject(HunterEpicGloves);
 				}
-				HunterEpicGloves = (HandsArmorTemplate)i;
-			}
 
+			}
 			//Call of the Hunt Hauberk 
-			HunterEpicVest = (TorsoArmorTemplate)GameServer.Database.FindObjectByKey(typeof(TorsoArmorTemplate), "HunterEpicVest");
+			HunterEpicVest = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "HunterEpicVest");
 			if (HunterEpicVest == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Hunters Epic Vest , creating it ...");
-				i = new TorsoArmorTemplate();
-				i.ItemTemplateID = "HunterEpicVest";
-				i.Name = "Call of the Hunt Jerkin";
-				i.Level = 50;
-				i.Model = 756;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.Medium;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Hunter);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Midgard;
+				HunterEpicVest = new ItemTemplate();
+				HunterEpicVest.Id_nb = "HunterEpicVest";
+				HunterEpicVest.Name = "Call of the Hunt Jerkin";
+				HunterEpicVest.Level = 50;
+				HunterEpicVest.Item_Type = 25;
+				HunterEpicVest.Model = 756;
+				HunterEpicVest.IsDropable = true;
+				HunterEpicVest.IsPickable = true;
+				HunterEpicVest.DPS_AF = 100;
+				HunterEpicVest.SPD_ABS = 19;
+				HunterEpicVest.Object_Type = 34;
+				HunterEpicVest.Quality = 100;
+				HunterEpicVest.MaxQuality = 100;
+				HunterEpicVest.Weight = 22;
+				HunterEpicVest.Bonus = 35;
+				HunterEpicVest.MaxCondition = 50000;
+				HunterEpicVest.MaxDurability = 50000;
+				HunterEpicVest.Condition = 50000;
+				HunterEpicVest.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 13));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 15));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 13));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Cold, 6));
+				HunterEpicVest.Bonus1 = 13;
+				HunterEpicVest.Bonus1Type = (int) eStat.STR;
+
+				HunterEpicVest.Bonus2 = 15;
+				HunterEpicVest.Bonus2Type = (int) eStat.CON;
+
+				HunterEpicVest.Bonus3 = 13;
+				HunterEpicVest.Bonus3Type = (int) eStat.DEX;
+
+				HunterEpicVest.Bonus4 = 6;
+				HunterEpicVest.Bonus4Type = (int) eResist.Cold;
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(i);
+					GameServer.Database.AddNewObject(HunterEpicVest);
 				}
-				HunterEpicVest = (TorsoArmorTemplate)i;
-			}
 
+			}
 			//Call of the Hunt Legs 
-			HunterEpicLegs = (LegsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(LegsArmorTemplate), "HunterEpicLegs");
+			HunterEpicLegs = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "HunterEpicLegs");
 			if (HunterEpicLegs == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Hunters Epic Legs , creating it ...");
-				i = new LegsArmorTemplate();
-				i.ItemTemplateID = "HunterEpicLegs";
-				i.Name = "Call of the Hunt Legs";
-				i.Level = 50;
-				i.Model = 757;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.Medium;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Hunter);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Midgard;
+				HunterEpicLegs = new ItemTemplate();
+				HunterEpicLegs.Id_nb = "HunterEpicLegs";
+				HunterEpicLegs.Name = "Call of the Hunt Legs";
+				HunterEpicLegs.Level = 50;
+				HunterEpicLegs.Item_Type = 27;
+				HunterEpicLegs.Model = 757;
+				HunterEpicLegs.IsDropable = true;
+				HunterEpicLegs.IsPickable = true;
+				HunterEpicLegs.DPS_AF = 100;
+				HunterEpicLegs.SPD_ABS = 19;
+				HunterEpicLegs.Object_Type = 34;
+				HunterEpicLegs.Quality = 100;
+				HunterEpicLegs.MaxQuality = 100;
+				HunterEpicLegs.Weight = 22;
+				HunterEpicLegs.Bonus = 35;
+				HunterEpicLegs.MaxCondition = 50000;
+				HunterEpicLegs.MaxDurability = 50000;
+				HunterEpicLegs.Condition = 50000;
+				HunterEpicLegs.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 15));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 15));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Quickness, 7));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Matter, 12));
+				HunterEpicLegs.Bonus1 = 15;
+				HunterEpicLegs.Bonus1Type = (int) eStat.CON;
+
+				HunterEpicLegs.Bonus2 = 15;
+				HunterEpicLegs.Bonus2Type = (int) eStat.DEX;
+
+				HunterEpicLegs.Bonus3 = 7;
+				HunterEpicLegs.Bonus3Type = (int) eStat.QUI;
+
+				HunterEpicLegs.Bonus4 = 12;
+				HunterEpicLegs.Bonus4Type = (int) eResist.Matter;
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(i);
+					GameServer.Database.AddNewObject(HunterEpicLegs);
 				}
-				HunterEpicLegs = (LegsArmorTemplate)i;
-			}
 
+			}
 			//Call of the Hunt Sleeves 
-			HunterEpicArms = (ArmsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(ArmsArmorTemplate), "HunterEpicArms");
+			HunterEpicArms = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "HunterEpicArms");
 			if (HunterEpicArms == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Hunter Epic Arms , creating it ...");
-				i = new ArmsArmorTemplate();
-				i.ItemTemplateID = "HunterEpicArms";
-				i.Name = "Call of the Hunt Sleeves";
-				i.Level = 50;
-				i.Model = 758;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.Medium;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Hunter);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Midgard;
+				HunterEpicArms = new ItemTemplate();
+				HunterEpicArms.Id_nb = "HunterEpicArms";
+				HunterEpicArms.Name = "Call of the Hunt Sleeves";
+				HunterEpicArms.Level = 50;
+				HunterEpicArms.Item_Type = 28;
+				HunterEpicArms.Model = 758;
+				HunterEpicArms.IsDropable = true;
+				HunterEpicArms.IsPickable = true;
+				HunterEpicArms.DPS_AF = 100;
+				HunterEpicArms.SPD_ABS = 19;
+				HunterEpicArms.Object_Type = 34;
+				HunterEpicArms.Quality = 100;
+				HunterEpicArms.MaxQuality = 100;
+				HunterEpicArms.Weight = 22;
+				HunterEpicArms.Bonus = 35;
+				HunterEpicArms.MaxCondition = 50000;
+				HunterEpicArms.MaxDurability = 50000;
+				HunterEpicArms.Condition = 50000;
+				HunterEpicArms.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 15));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Quickness, 15));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Crush, 10));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Slash, 10));
+				HunterEpicArms.Bonus1 = 15;
+				HunterEpicArms.Bonus1Type = (int) eStat.STR;
+
+				HunterEpicArms.Bonus2 = 15;
+				HunterEpicArms.Bonus2Type = (int) eStat.QUI;
+
+				HunterEpicArms.Bonus3 = 10;
+				HunterEpicArms.Bonus3Type = (int) eResist.Crush;
+
+				HunterEpicArms.Bonus4 = 10;
+				HunterEpicArms.Bonus4Type = (int) eResist.Slash;
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(i);
+					GameServer.Database.AddNewObject(HunterEpicArms);
 				}
-				HunterEpicArms = (ArmsArmorTemplate)i;
+
 			}
-			#endregion
-			#region Shadowblade
 			//Shadow Shrouded Boots 
-			ShadowbladeEpicBoots = (FeetArmorTemplate)GameServer.Database.FindObjectByKey(typeof(FeetArmorTemplate), "ShadowbladeEpicBoots");
+			ShadowbladeEpicBoots = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ShadowbladeEpicBoots");
 			if (ShadowbladeEpicBoots == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Shadowblade Epic Boots , creating it ...");
-				i = new FeetArmorTemplate();
-				i.ItemTemplateID = "ShadowbladeEpicBoots";
-				i.Name = "Shadow Shrouded Boots";
-				i.Level = 50;
-				i.Model = 765;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.Low;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Shadowblade);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Midgard;
+				ShadowbladeEpicBoots = new ItemTemplate();
+				ShadowbladeEpicBoots.Id_nb = "ShadowbladeEpicBoots";
+				ShadowbladeEpicBoots.Name = "Shadow Shrouded Boots";
+				ShadowbladeEpicBoots.Level = 50;
+				ShadowbladeEpicBoots.Item_Type = 23;
+				ShadowbladeEpicBoots.Model = 765;
+				ShadowbladeEpicBoots.IsDropable = true;
+				ShadowbladeEpicBoots.IsPickable = true;
+				ShadowbladeEpicBoots.DPS_AF = 100;
+				ShadowbladeEpicBoots.SPD_ABS = 10;
+				ShadowbladeEpicBoots.Object_Type = 33;
+				ShadowbladeEpicBoots.Quality = 100;
+				ShadowbladeEpicBoots.MaxQuality = 100;
+				ShadowbladeEpicBoots.Weight = 22;
+				ShadowbladeEpicBoots.Bonus = 35;
+				ShadowbladeEpicBoots.MaxCondition = 50000;
+				ShadowbladeEpicBoots.MaxDurability = 50000;
+				ShadowbladeEpicBoots.Condition = 50000;
+				ShadowbladeEpicBoots.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Stealth, 5));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 13));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Quickness, 13));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Heat, 6));
+				ShadowbladeEpicBoots.Bonus1 = 5;
+				ShadowbladeEpicBoots.Bonus1Type = (int) eProperty.Skill_Stealth;
+
+				ShadowbladeEpicBoots.Bonus2 = 13;
+				ShadowbladeEpicBoots.Bonus2Type = (int) eStat.DEX;
+
+				ShadowbladeEpicBoots.Bonus3 = 13;
+				ShadowbladeEpicBoots.Bonus3Type = (int) eStat.QUI;
+
+				ShadowbladeEpicBoots.Bonus4 = 6;
+				ShadowbladeEpicBoots.Bonus4Type = (int) eResist.Heat;
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(i);
+					GameServer.Database.AddNewObject(ShadowbladeEpicBoots);
 				}
-				ShadowbladeEpicBoots = (FeetArmorTemplate)i;
-			}
 
+			}
 			//Shadow Shrouded Coif 
-			ShadowbladeEpicHelm = (HeadArmorTemplate)GameServer.Database.FindObjectByKey(typeof(HeadArmorTemplate), "ShadowbladeEpicHelm");
+			ShadowbladeEpicHelm = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ShadowbladeEpicHelm");
 			if (ShadowbladeEpicHelm == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Shadowblade Epic Helm , creating it ...");
-				i = new HeadArmorTemplate();
-				i.ItemTemplateID = "ShadowbladeEpicHelm";
-				i.Name = "Shadow Shrouded Coif";
-				i.Level = 50;
-				i.Model = 335; //NEED TO WORK ON..
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.Low;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Shadowblade);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Midgard;
+				ShadowbladeEpicHelm = new ItemTemplate();
+				ShadowbladeEpicHelm.Id_nb = "ShadowbladeEpicHelm";
+				ShadowbladeEpicHelm.Name = "Shadow Shrouded Coif";
+				ShadowbladeEpicHelm.Level = 50;
+				ShadowbladeEpicHelm.Item_Type = 21;
+				ShadowbladeEpicHelm.Model = 335; //NEED TO WORK ON..
+				ShadowbladeEpicHelm.IsDropable = true;
+				ShadowbladeEpicHelm.IsPickable = true;
+				ShadowbladeEpicHelm.DPS_AF = 100;
+				ShadowbladeEpicHelm.SPD_ABS = 10;
+				ShadowbladeEpicHelm.Object_Type = 33;
+				ShadowbladeEpicHelm.Quality = 100;
+				ShadowbladeEpicHelm.MaxQuality = 100;
+				ShadowbladeEpicHelm.Weight = 22;
+				ShadowbladeEpicHelm.Bonus = 35;
+				ShadowbladeEpicHelm.MaxCondition = 50000;
+				ShadowbladeEpicHelm.MaxDurability = 50000;
+				ShadowbladeEpicHelm.Condition = 50000;
+				ShadowbladeEpicHelm.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 10));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 12));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 10));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Quickness, 10));
+				ShadowbladeEpicHelm.Bonus1 = 10;
+				ShadowbladeEpicHelm.Bonus1Type = (int) eStat.STR;
+
+				ShadowbladeEpicHelm.Bonus2 = 12;
+				ShadowbladeEpicHelm.Bonus2Type = (int) eStat.CON;
+
+				ShadowbladeEpicHelm.Bonus3 = 10;
+				ShadowbladeEpicHelm.Bonus3Type = (int) eStat.DEX;
+
+				ShadowbladeEpicHelm.Bonus4 = 10;
+				ShadowbladeEpicHelm.Bonus4Type = (int) eStat.QUI;
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(i);
+					GameServer.Database.AddNewObject(ShadowbladeEpicHelm);
 				}
-				ShadowbladeEpicHelm = (HeadArmorTemplate)i;
-			}
 
+			}
 			//Shadow Shrouded Gloves 
-			ShadowbladeEpicGloves = (HandsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(HandsArmorTemplate), "ShadowbladeEpicGloves");
+			ShadowbladeEpicGloves = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ShadowbladeEpicGloves");
 			if (ShadowbladeEpicGloves == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Shadowblade Epic Gloves , creating it ...");
-				i = new HandsArmorTemplate();
-				i.ItemTemplateID = "ShadowbladeEpicGloves";
-				i.Name = "Shadow Shrouded Gloves";
-				i.Level = 50;
-				i.Model = 764;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.Low;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Shadowblade);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Midgard;
+				ShadowbladeEpicGloves = new ItemTemplate();
+				ShadowbladeEpicGloves.Id_nb = "ShadowbladeEpicGloves";
+				ShadowbladeEpicGloves.Name = "Shadow Shrouded Gloves";
+				ShadowbladeEpicGloves.Level = 50;
+				ShadowbladeEpicGloves.Item_Type = 22;
+				ShadowbladeEpicGloves.Model = 764;
+				ShadowbladeEpicGloves.IsDropable = true;
+				ShadowbladeEpicGloves.IsPickable = true;
+				ShadowbladeEpicGloves.DPS_AF = 100;
+				ShadowbladeEpicGloves.SPD_ABS = 10;
+				ShadowbladeEpicGloves.Object_Type = 33;
+				ShadowbladeEpicGloves.Quality = 100;
+				ShadowbladeEpicGloves.MaxQuality = 100;
+				ShadowbladeEpicGloves.Weight = 22;
+				ShadowbladeEpicGloves.Bonus = 35;
+				ShadowbladeEpicGloves.MaxCondition = 50000;
+				ShadowbladeEpicGloves.MaxDurability = 50000;
+				ShadowbladeEpicGloves.Condition = 50000;
+				ShadowbladeEpicGloves.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Critical_Strike, 2));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Quickness, 12));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 33));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Envenom, 4));
+				ShadowbladeEpicGloves.Bonus1 = 2;
+				ShadowbladeEpicGloves.Bonus1Type = (int) eProperty.Skill_Critical_Strike;
+
+				ShadowbladeEpicGloves.Bonus2 = 12;
+				ShadowbladeEpicGloves.Bonus2Type = (int) eStat.QUI;
+
+				ShadowbladeEpicGloves.Bonus3 = 33;
+				ShadowbladeEpicGloves.Bonus3Type = (int) eProperty.MaxHealth;
+
+				ShadowbladeEpicGloves.Bonus4 = 4;
+				ShadowbladeEpicGloves.Bonus4Type = (int) eProperty.Skill_Envenom;
 
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(i);
+					GameServer.Database.AddNewObject(ShadowbladeEpicGloves);
 				}
-				ShadowbladeEpicGloves = (HandsArmorTemplate)i;
-			}
 
+			}
 			//Shadow Shrouded Hauberk 
-			ShadowbladeEpicVest = (TorsoArmorTemplate)GameServer.Database.FindObjectByKey(typeof(TorsoArmorTemplate), "ShadowbladeEpicVest");
+			ShadowbladeEpicVest = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ShadowbladeEpicVest");
 			if (ShadowbladeEpicVest == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Shadowblade Epic Vest , creating it ...");
-				i = new TorsoArmorTemplate();
-				i.ItemTemplateID = "ShadowbladeEpicVest";
-				i.Name = "Shadow Shrouded Jerkin";
-				i.Level = 50;
-				i.Model = 761;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.Low;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Shadowblade);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Midgard;
+				ShadowbladeEpicVest = new ItemTemplate();
+				ShadowbladeEpicVest.Id_nb = "ShadowbladeEpicVest";
+				ShadowbladeEpicVest.Name = "Shadow Shrouded Jerkin";
+				ShadowbladeEpicVest.Level = 50;
+				ShadowbladeEpicVest.Item_Type = 25;
+				ShadowbladeEpicVest.Model = 761;
+				ShadowbladeEpicVest.IsDropable = true;
+				ShadowbladeEpicVest.IsPickable = true;
+				ShadowbladeEpicVest.DPS_AF = 100;
+				ShadowbladeEpicVest.SPD_ABS = 10;
+				ShadowbladeEpicVest.Object_Type = 33;
+				ShadowbladeEpicVest.Quality = 100;
+				ShadowbladeEpicVest.MaxQuality = 100;
+				ShadowbladeEpicVest.Weight = 22;
+				ShadowbladeEpicVest.Bonus = 35;
+				ShadowbladeEpicVest.MaxCondition = 50000;
+				ShadowbladeEpicVest.MaxDurability = 50000;
+				ShadowbladeEpicVest.Condition = 50000;
+				ShadowbladeEpicVest.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 13));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 13));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 30));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Heat, 6));
+				ShadowbladeEpicVest.Bonus1 = 13;
+				ShadowbladeEpicVest.Bonus1Type = (int) eStat.STR;
+
+				ShadowbladeEpicVest.Bonus2 = 13;
+				ShadowbladeEpicVest.Bonus2Type = (int) eStat.DEX;
+
+				ShadowbladeEpicVest.Bonus3 = 30;
+				ShadowbladeEpicVest.Bonus3Type = (int) eProperty.MaxHealth;
+
+				ShadowbladeEpicVest.Bonus4 = 6;
+				ShadowbladeEpicVest.Bonus4Type = (int) eResist.Heat;
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(i);
+					GameServer.Database.AddNewObject(ShadowbladeEpicVest);
 				}
-				ShadowbladeEpicLegs = (LegsArmorTemplate)i;
-			}
 
+			}
 			//Shadow Shrouded Legs 
-			ShadowbladeEpicLegs = (LegsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(LegsArmorTemplate), "ShadowbladeEpicLegs");
+			ShadowbladeEpicLegs = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ShadowbladeEpicLegs");
 			if (ShadowbladeEpicLegs == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Shadowblade Epic Legs , creating it ...");
-				i = new LegsArmorTemplate();
-				i.ItemTemplateID = "ShadowbladeEpicLegs";
-				i.Name = "Shadow Shrouded Legs";
-				i.Level = 50;
-				i.Model = 762;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.Low;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Shadowblade);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Midgard;
+				ShadowbladeEpicLegs = new ItemTemplate();
+				ShadowbladeEpicLegs.Id_nb = "ShadowbladeEpicLegs";
+				ShadowbladeEpicLegs.Name = "Shadow Shrouded Legs";
+				ShadowbladeEpicLegs.Level = 50;
+				ShadowbladeEpicLegs.Item_Type = 27;
+				ShadowbladeEpicLegs.Model = 762;
+				ShadowbladeEpicLegs.IsDropable = true;
+				ShadowbladeEpicLegs.IsPickable = true;
+				ShadowbladeEpicLegs.DPS_AF = 100;
+				ShadowbladeEpicLegs.SPD_ABS = 10;
+				ShadowbladeEpicLegs.Object_Type = 33;
+				ShadowbladeEpicLegs.Quality = 100;
+				ShadowbladeEpicLegs.MaxQuality = 100;
+				ShadowbladeEpicLegs.Weight = 22;
+				ShadowbladeEpicLegs.Bonus = 35;
+				ShadowbladeEpicLegs.MaxCondition = 50000;
+				ShadowbladeEpicLegs.MaxDurability = 50000;
+				ShadowbladeEpicLegs.Condition = 50000;
+				ShadowbladeEpicLegs.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 12));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 15));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Quickness, 12));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Slash, 10));
+				ShadowbladeEpicLegs.Bonus1 = 12;
+				ShadowbladeEpicLegs.Bonus1Type = (int) eStat.STR;
+
+				ShadowbladeEpicLegs.Bonus2 = 15;
+				ShadowbladeEpicLegs.Bonus2Type = (int) eStat.CON;
+
+				ShadowbladeEpicLegs.Bonus3 = 12;
+				ShadowbladeEpicLegs.Bonus3Type = (int) eStat.QUI;
+
+				ShadowbladeEpicLegs.Bonus4 = 10;
+				ShadowbladeEpicLegs.Bonus4Type = (int) eResist.Slash;
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(i);
+					GameServer.Database.AddNewObject(ShadowbladeEpicLegs);
 				}
-				ShadowbladeEpicLegs = (LegsArmorTemplate)i;
-			}
 
+			}
 			//Shadow Shrouded Sleeves 
-			ShadowbladeEpicArms = (ArmsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(ArmsArmorTemplate), "ShadowbladeEpicArms");
+			ShadowbladeEpicArms = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ShadowbladeEpicArms");
 			if (ShadowbladeEpicArms == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Shadowblade Epic Arms , creating it ...");
-				i = new ArmsArmorTemplate();
-				i.ItemTemplateID = "ShadowbladeEpicArms";
-				i.Name = "Shadow Shrouded Sleeves";
-				i.Level = 50;
-				i.Model = 763;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.Low;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Shadowblade);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Midgard;
+				ShadowbladeEpicArms = new ItemTemplate();
+				ShadowbladeEpicArms.Id_nb = "ShadowbladeEpicArms";
+				ShadowbladeEpicArms.Name = "Shadow Shrouded Sleeves";
+				ShadowbladeEpicArms.Level = 50;
+				ShadowbladeEpicArms.Item_Type = 28;
+				ShadowbladeEpicArms.Model = 763;
+				ShadowbladeEpicArms.IsDropable = true;
+				ShadowbladeEpicArms.IsPickable = true;
+				ShadowbladeEpicArms.DPS_AF = 100;
+				ShadowbladeEpicArms.SPD_ABS = 10;
+				ShadowbladeEpicArms.Object_Type = 33;
+				ShadowbladeEpicArms.Quality = 100;
+				ShadowbladeEpicArms.MaxQuality = 100;
+				ShadowbladeEpicArms.Weight = 22;
+				ShadowbladeEpicArms.Bonus = 35;
+				ShadowbladeEpicArms.MaxCondition = 50000;
+				ShadowbladeEpicArms.MaxDurability = 50000;
+				ShadowbladeEpicArms.Condition = 50000;
+				ShadowbladeEpicArms.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 15));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 16));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Crush, 10));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Thrust, 10));
+				ShadowbladeEpicArms.Bonus1 = 15;
+				ShadowbladeEpicArms.Bonus1Type = (int) eStat.CON;
+
+				ShadowbladeEpicArms.Bonus2 = 16;
+				ShadowbladeEpicArms.Bonus2Type = (int) eStat.DEX;
+
+				ShadowbladeEpicArms.Bonus3 = 10;
+				ShadowbladeEpicArms.Bonus3Type = (int) eResist.Crush;
+
+				ShadowbladeEpicArms.Bonus4 = 10;
+				ShadowbladeEpicArms.Bonus4Type = (int) eResist.Thrust;
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(i);
+					GameServer.Database.AddNewObject(ShadowbladeEpicArms);
 				}
-				ShadowbladeEpicArms = (ArmsArmorTemplate)i;
+
 			}
-			#endregion
-			#endregion
+//Shadowblade Epic Sleeves End
+//Item Descriptions End
 
-			HunterTrainers = WorldMgr.GetNPCsByType(typeof(DOL.GS.Trainer.HunterTrainer), eRealm.Midgard);
-			ShadowbladeTrainers = WorldMgr.GetNPCsByType(typeof(DOL.GS.Trainer.ShadowbladeTrainer), eRealm.Midgard);
-
-			foreach (GameNPC npc in HunterTrainers)
-				GameEventMgr.AddHandler(npc, GameNPCEvent.Interact, new DOLEventHandler(TalkToTrainer));
-			foreach (GameNPC npc in ShadowbladeTrainers)
-				GameEventMgr.AddHandler(npc, GameNPCEvent.Interact, new DOLEventHandler(TalkToTrainer));
+			#endregion
 
 			GameEventMgr.AddHandler(Masrim, GameObjectEvent.Interact, new DOLEventHandler(TalkToMasrim));
 			GameEventMgr.AddHandler(Masrim, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToMasrim));
@@ -704,10 +782,8 @@ namespace DOL.GS.Quests.Midgard
 			GameEventMgr.AddHandler(MorlinCaan, GameObjectEvent.Interact, new DOLEventHandler(TalkToMorlinCaan));
 			GameEventMgr.AddHandler(MorlinCaan, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToMorlinCaan));
 
-			GameEventMgr.AddHandler(Oona, GameNPCEvent.Dying, new DOLEventHandler(TargetDying));
-
 			/* Now we bring to Masrim the possibility to give this quest to players */
-			QuestMgr.AddQuestDescriptor(Masrim, typeof(Rogue_50Descriptor));
+			Masrim.AddQuestToGive(typeof (Rogue_50));
 
 			if (log.IsInfoEnabled)
 				log.Info("Quest \"" + questTitle + "\" initialized");
@@ -726,29 +802,22 @@ namespace DOL.GS.Quests.Midgard
 			GameEventMgr.RemoveHandler(MorlinCaan, GameObjectEvent.Interact, new DOLEventHandler(TalkToMorlinCaan));
 			GameEventMgr.RemoveHandler(MorlinCaan, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToMorlinCaan));
 
-			GameEventMgr.RemoveHandler(Oona, GameNPCEvent.Dying, new DOLEventHandler(TargetDying));
-
-			foreach (GameNPC npc in HunterTrainers)
-				GameEventMgr.RemoveHandler(npc, GameNPCEvent.Interact, new DOLEventHandler(TalkToTrainer));
-			foreach (GameNPC npc in ShadowbladeTrainers)
-				GameEventMgr.RemoveHandler(npc, GameNPCEvent.Interact, new DOLEventHandler(TalkToTrainer));
-
 			/* Now we remove to Masrim the possibility to give this quest to players */
-			QuestMgr.RemoveQuestDescriptor(Masrim, typeof(Rogue_50Descriptor));
+			Masrim.RemoveQuestToGive(typeof (Rogue_50));
 		}
 
 		protected static void TalkToMasrim(DOLEvent e, object sender, EventArgs args)
 		{
 			//We get the player from the event arguments and check if he qualifies		
-			GamePlayer player = ((SourceEventArgs)args).Source as GamePlayer;
+			GamePlayer player = ((SourceEventArgs) args).Source as GamePlayer;
 			if (player == null)
 				return;
 
-			if (QuestMgr.CanGiveQuest(typeof(Rogue_50), player, Masrim) <= 0)
+			if(Masrim.CanGiveQuest(typeof (Rogue_50), player)  <= 0)
 				return;
 
 			//We also check if the player is already doing the quest
-			Rogue_50 quest = player.IsDoingQuest(typeof(Rogue_50)) as Rogue_50;
+			Rogue_50 quest = player.IsDoingQuest(typeof (Rogue_50)) as Rogue_50;
 
 			if (e == GameObjectEvent.Interact)
 			{
@@ -762,10 +831,10 @@ namespace DOL.GS.Quests.Midgard
 					Masrim.SayTo(player, "Midgard needs your [services]");
 				}
 			}
-			// The player whispered to the NPC
+				// The player whispered to the NPC
 			else if (e == GameLivingEvent.WhisperReceive)
 			{
-				WhisperReceiveEventArgs wArgs = (WhisperReceiveEventArgs)args;
+				WhisperReceiveEventArgs wArgs = (WhisperReceiveEventArgs) args;
 				//Check player is already doing quest
 				if (quest == null)
 				{
@@ -791,15 +860,15 @@ namespace DOL.GS.Quests.Midgard
 		protected static void TalkToMorlinCaan(DOLEvent e, object sender, EventArgs args)
 		{
 			//We get the player from the event arguments and check if he qualifies		
-			GamePlayer player = ((SourceEventArgs)args).Source as GamePlayer;
+			GamePlayer player = ((SourceEventArgs) args).Source as GamePlayer;
 			if (player == null)
 				return;
 
-			if (QuestMgr.CanGiveQuest(typeof(Rogue_50), player, Masrim) <= 0)
+			if(Masrim.CanGiveQuest(typeof (Rogue_50), player)  <= 0)
 				return;
 
 			//We also check if the player is already doing the quest
-			Rogue_50 quest = player.IsDoingQuest(typeof(Rogue_50)) as Rogue_50;
+			Rogue_50 quest = player.IsDoingQuest(typeof (Rogue_50)) as Rogue_50;
 
 			if (e == GameObjectEvent.Interact)
 			{
@@ -811,6 +880,29 @@ namespace DOL.GS.Quests.Midgard
 			}
 		}
 
+		public override bool CheckQuestQualification(GamePlayer player)
+		{
+			// if the player is already doing the quest his level is no longer of relevance
+			if (player.IsDoingQuest(typeof (Rogue_50)) != null)
+				return true;
+
+			if (player.CharacterClass.ID != (byte) eCharacterClass.Shadowblade &&
+				player.CharacterClass.ID != (byte) eCharacterClass.Hunter)
+				return false;
+
+			// This checks below are only performed is player isn't doing quest already
+
+			//if (player.HasFinishedQuest(typeof(Academy_47)) == 0) return false;
+
+			//if (!CheckPartAccessible(player,typeof(CityOfCamelot)))
+			//	return false;
+
+			if (player.Level < minimumLevel || player.Level > maximumLevel)
+				return false;
+
+			return true;
+		}
+
 		/* This is our callback hook that will be called when the player clicks
 		 * on any button in the quest offer dialog. We check if he accepts or
 		 * declines here...
@@ -818,7 +910,7 @@ namespace DOL.GS.Quests.Midgard
 
 		private static void CheckPlayerAbortQuest(GamePlayer player, byte response)
 		{
-			Rogue_50 quest = player.IsDoingQuest(typeof(Rogue_50)) as Rogue_50;
+			Rogue_50 quest = player.IsDoingQuest(typeof (Rogue_50)) as Rogue_50;
 
 			if (quest == null)
 				return;
@@ -836,10 +928,10 @@ namespace DOL.GS.Quests.Midgard
 
 		private static void CheckPlayerAcceptQuest(GamePlayer player, byte response)
 		{
-			if (QuestMgr.CanGiveQuest(typeof(Rogue_50), player, Masrim) <= 0)
+			if(Masrim.CanGiveQuest(typeof (Rogue_50), player)  <= 0)
 				return;
 
-			if (player.IsDoingQuest(typeof(Rogue_50)) != null)
+			if (player.IsDoingQuest(typeof (Rogue_50)) != null)
 				return;
 
 			if (response == 0x00)
@@ -849,7 +941,7 @@ namespace DOL.GS.Quests.Midgard
 			else
 			{
 				//Check if we can add the quest!
-				if (!QuestMgr.GiveQuestToPlayer(typeof(Rogue_50), player, Masrim))
+				if (!Masrim.GiveQuest(typeof (Rogue_50), player, 1))
 					return;
 
 				player.Out.SendMessage("Kill Oona in Raumarik loc 20k,51k!", eChatType.CT_System, eChatLoc.CL_PopupWindow);
@@ -875,37 +967,8 @@ namespace DOL.GS.Quests.Midgard
 						return "[Step #2] Return to Masrim and give her Oona's Head!";
 					case 3:
 						return "[Step #3] Go to Morlin Caan in Jordheim and give him the Sealed Pouch for your reward!";
-					default:
-						return "[Step #" + Step + "] No Description entered for this step!";
 				}
-			}
-		}
-
-		protected static void TalkToTrainer(DOLEvent e, object sender, EventArgs args)
-		{
-			InteractEventArgs iargs = args as InteractEventArgs;
-
-			GamePlayer player = iargs.Source as GamePlayer;
-			GameNPC npc = sender as GameNPC;
-			Rogue_50Descriptor a = new Rogue_50Descriptor();
-
-			if (!a.CheckQuestQualification(player)) return;
-			if (player.IsDoingQuest(typeof(Rogue_50)) == null) return;
-
-			npc.SayTo(player, "Masrim has an important task for you, please seek her out in Fort Atla");
-		}
-
-		protected static void TargetDying(DOLEvent e, object sender, EventArgs args)
-		{
-			GameMob mob = sender as GameMob;
-			foreach (GamePlayer player in mob.XPGainers)
-			{
-				Rogue_50 quest = (Rogue_50)player.IsDoingQuest(typeof(Rogue_50));
-				if (quest == null) continue;
-				if (quest.Step != 1) continue;
-				player.Out.SendMessage("You collect Oona's Head", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				quest.GiveItemToPlayer(CreateQuestItem(oona_head, quest.Name));
-				quest.Step = 2;
+				return base.Description;
 			}
 		}
 
@@ -913,29 +976,29 @@ namespace DOL.GS.Quests.Midgard
 		{
 			GamePlayer player = sender as GamePlayer;
 
-			if (player == null || player.IsDoingQuest(typeof(Rogue_50)) == null)
+			if (player==null || player.IsDoingQuest(typeof (Rogue_50)) == null)
 				return;
-			/*
+
 			if (Step == 1 && e == GameLivingEvent.EnemyKilled)
 			{
-				EnemyKilledEventArgs gArgs = (EnemyKilledEventArgs)args;
+				EnemyKilledEventArgs gArgs = (EnemyKilledEventArgs) args;
 				if (gArgs.Target.Name == Oona.Name)
 				{
 					m_questPlayer.Out.SendMessage("You collect Oona's Head", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					GiveItemToPlayer(CreateQuestItem(oona_head, Name));
+					GiveItem(player, oona_head);
 					Step = 2;
 					return;
 				}
-			}*/
+			}
 
 			if (Step == 2 && e == GamePlayerEvent.GiveItem)
 			{
-				GiveItemEventArgs gArgs = (GiveItemEventArgs)args;
-				if (gArgs.Target.Name == Masrim.Name && gArgs.Item.Name == oona_head.Name)
+				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
+				if (gArgs.Target.Name == Masrim.Name && gArgs.Item.Id_nb == oona_head.Id_nb)
 				{
-					RemoveItemFromPlayer(Masrim, oona_head);
+					RemoveItem(Masrim, player, oona_head);
 					Masrim.SayTo(player, "Take this sealed pouch to Morlin Caan in Jordheim for your reward!");
-					GiveItemToPlayer(CreateQuestItem(sealed_pouch, Name));
+					GiveItem(player, sealed_pouch);
 					Step = 3;
 					return;
 				}
@@ -943,10 +1006,10 @@ namespace DOL.GS.Quests.Midgard
 
 			if (Step == 3 && e == GamePlayerEvent.GiveItem)
 			{
-				GiveItemEventArgs gArgs = (GiveItemEventArgs)args;
-				if (gArgs.Target.Name == MorlinCaan.Name && gArgs.Item.Name == sealed_pouch.Name)
+				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
+				if (gArgs.Target.Name == MorlinCaan.Name && gArgs.Item.Id_nb == sealed_pouch.Id_nb)
 				{
-					RemoveItemFromPlayer(MorlinCaan, sealed_pouch);
+					RemoveItem(MorlinCaan, player, sealed_pouch);
 					MorlinCaan.SayTo(player, "You have earned this Epic Armour!");
 					FinishQuest();
 					return;
@@ -958,30 +1021,30 @@ namespace DOL.GS.Quests.Midgard
 		{
 			base.AbortQuest(); //Defined in Quest, changes the state, stores in DB etc ...
 
-			RemoveItemFromPlayer(sealed_pouch);
+			RemoveItem(m_questPlayer, sealed_pouch, false);
 		}
 
 		public override void FinishQuest()
 		{
 			base.FinishQuest(); //Defined in Quest, changes the state, stores in DB etc ...
 
-			if (m_questPlayer.CharacterClass.ID == (byte)eCharacterClass.Shadowblade)
+			if (m_questPlayer.CharacterClass.ID == (byte) eCharacterClass.Shadowblade)
 			{
-				GiveItemToPlayer(ShadowbladeEpicArms);
-				GiveItemToPlayer(ShadowbladeEpicBoots);
-				GiveItemToPlayer(ShadowbladeEpicGloves);
-				GiveItemToPlayer(ShadowbladeEpicHelm);
-				GiveItemToPlayer(ShadowbladeEpicLegs);
-				GiveItemToPlayer(ShadowbladeEpicVest);
+				GiveItem(m_questPlayer, ShadowbladeEpicArms);
+				GiveItem(m_questPlayer, ShadowbladeEpicBoots);
+				GiveItem(m_questPlayer, ShadowbladeEpicGloves);
+				GiveItem(m_questPlayer, ShadowbladeEpicHelm);
+				GiveItem(m_questPlayer, ShadowbladeEpicLegs);
+				GiveItem(m_questPlayer, ShadowbladeEpicVest);
 			}
-			else if (m_questPlayer.CharacterClass.ID == (byte)eCharacterClass.Hunter)
+			else if (m_questPlayer.CharacterClass.ID == (byte) eCharacterClass.Hunter)
 			{
-				GiveItemToPlayer(HunterEpicArms);
-				GiveItemToPlayer(HunterEpicBoots);
-				GiveItemToPlayer(HunterEpicGloves);
-				GiveItemToPlayer(HunterEpicHelm);
-				GiveItemToPlayer(HunterEpicLegs);
-				GiveItemToPlayer(HunterEpicVest);
+				GiveItem(m_questPlayer, HunterEpicArms);
+				GiveItem(m_questPlayer, HunterEpicBoots);
+				GiveItem(m_questPlayer, HunterEpicGloves);
+				GiveItem(m_questPlayer, HunterEpicHelm);
+				GiveItem(m_questPlayer, HunterEpicLegs);
+				GiveItem(m_questPlayer, HunterEpicVest);
 			}
 
 			m_questPlayer.GainExperience(1937768448, 0, 0, true);

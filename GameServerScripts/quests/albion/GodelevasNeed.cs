@@ -31,7 +31,7 @@
 using System;
 using System.Reflection;
 using DOL.AI.Brain;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
@@ -46,45 +46,12 @@ using log4net;
 
 namespace DOL.GS.Quests.Albion
 {
-    /* The first thing we do, is to declare the quest requirement
-    * class linked with the new Quest. To do this, we derive 
-    * from the abstract class AbstractQuestDescriptor
-    */
-    public class GodelevasNeedDescription : AbstractQuestDescriptor
-    {
-        /* This is the type of the quest class linked with 
-         * this requirement class, you must override the 
-         * base methid like that
-         */
-        public override Type LinkedQuestType
-        {
-            get { return typeof(GodelevasNeed); }
-        }
+	/* The first thing we do, is to declare the class we create
+	 * as Quest. To do this, we derive from the abstract class
+	 * AbstractQuest
+	 * 	 
+	 */
 
-        /* This value is used to retrieves the minimum level needed
-         *  to be able to make this quest. Override it only if you need, 
-         * the default value is 1
-         */
-        public override int MinLevel
-        {
-            get { return 2; }
-        }
-
-        /* This value is used to retrieves how maximum level needed
-         * to be able to make this quest. Override it only if you need, 
-         * the default value is 50
-         */
-        public override int MaxLevel
-        {
-            get { return 6; }
-        }
-    }
-
-    /* The second thing we do, is to declare the class we create
-     * as Quest. We must make it persistant using attributes, to
-     * do this, we derive from the abstract class AbstractQuest
-     */
-    [NHibernate.Mapping.Attributes.Subclass(NameType = typeof(GodelevasNeed), ExtendsType = typeof(AbstractQuest))]
 	public class GodelevasNeed : BaseQuest
 	{
 		/// <summary>
@@ -102,16 +69,37 @@ namespace DOL.GS.Quests.Albion
 		 * 
 		 */
 		protected const string questTitle = "Godeleva's Need";
+		protected const int minimumLevel = 2;
+		protected const int maximumLevel = 6;
 
 		private static GameNPC godelevaDowden = null;
 
-		private static GenericItemTemplate woodenBucket= null;
-		private static GenericItemTemplate fullWoodenBucket= null;
+		private static ItemTemplate woodenBucket= null;
+		private static ItemTemplate fullWoodenBucket= null;
 		
-		private static BracerTemplate reedBracer = null;
+		private static ItemTemplate reedBracer = null;
 
 		private static GameLocation cotswoldVillageBridge = new GameLocation("Bridge Location", 1, 557671, 512396, 1876);
 		
+		/* We need to define the constructors from the base class here, else there might be problems
+		 * when loading this quest...
+		 */
+		public GodelevasNeed() : base()
+		{
+		}
+
+		public GodelevasNeed(GamePlayer questingPlayer) : this(questingPlayer, 1)
+		{
+		}
+
+		public GodelevasNeed(GamePlayer questingPlayer, int step) : base(questingPlayer, step)
+		{
+		}
+
+		public GodelevasNeed(GamePlayer questingPlayer, DBQuest dbQuest) : base(questingPlayer, dbQuest)
+		{
+		}
+
 		/* The following method is called automatically when this quest class
 		 * is loaded. You might notice that this method is the same as in standard
 		 * game events. And yes, quests basically are game events for single players
@@ -160,7 +148,7 @@ namespace DOL.GS.Quests.Albion
 					log.Warn("Could not find " + godelevaDowden.Name + ", creating him ...");
 				godelevaDowden.GuildName = "Part of " + questTitle + " Quest";
 				godelevaDowden.Realm = (byte) eRealm.Albion;
-				godelevaDowden.RegionId = 1;
+				godelevaDowden.CurrentRegionID = 1;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
 				template.AddNPCEquipment(eInventorySlot.FeetArmor, 138);
@@ -171,7 +159,9 @@ namespace DOL.GS.Quests.Albion
 
 				godelevaDowden.Size = 48;
 				godelevaDowden.Level = 40;
-				godelevaDowden.Position = new Point(559528, 510953, 2488);
+				godelevaDowden.X = 559528;
+				godelevaDowden.Y = 510953;
+				godelevaDowden.Z = 2488;
 				godelevaDowden.Heading = 1217;
 
 				//You don't have to store the created mob in the db if you don't want,
@@ -191,23 +181,32 @@ namespace DOL.GS.Quests.Albion
 			#region defineItems
 
 			// item db check
-			woodenBucket = (GenericItemTemplate) GameServer.Database.FindObjectByKey(typeof (GenericItemTemplate), "wooden_bucket");
+			woodenBucket = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "wooden_bucket");
 			if (woodenBucket == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Wooden Bucket, creating it ...");
-				woodenBucket = new GenericItemTemplate();
+				woodenBucket = new ItemTemplate();
 				woodenBucket.Name = "Wooden Bucket";
 				woodenBucket.Level = 1;
 				woodenBucket.Weight = 10;
 				woodenBucket.Model = 1610;
-				woodenBucket.Realm = eRealm.Albion;
 
-				woodenBucket.ItemTemplateID = "wooden_bucket";
-				woodenBucket.Value = 0;
-				woodenBucket.IsSaleable = false;
+				woodenBucket.Object_Type = (int) eObjectType.GenericItem;
+				woodenBucket.Id_nb = "wooden_bucket";
+				woodenBucket.Gold = 0;
+				woodenBucket.Silver = 0;
+				woodenBucket.Copper = 0;
+				woodenBucket.IsPickable = false;
 				woodenBucket.IsDropable = false;
-				woodenBucket.IsTradable = false;
+				
+				woodenBucket.Quality = 100;
+				woodenBucket.MaxQuality = 100;
+				woodenBucket.Condition = 1000;
+				woodenBucket.MaxCondition = 1000;
+				woodenBucket.Durability = 1000;
+				woodenBucket.MaxDurability = 1000;
+
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -217,23 +216,32 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			fullWoodenBucket = (GenericItemTemplate) GameServer.Database.FindObjectByKey(typeof (GenericItemTemplate), "full_wooden_bucket");
+			fullWoodenBucket = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "full_wooden_bucket");
 			if (fullWoodenBucket == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Full Wooden Bucket, creating it ...");
-				fullWoodenBucket = new GenericItemTemplate();
+				fullWoodenBucket = new ItemTemplate();
 				fullWoodenBucket.Name = "Full Wooden Bucket";
 				fullWoodenBucket.Level = 1;
 				fullWoodenBucket.Weight = 250;
 				fullWoodenBucket.Model = 1610;
-				fullWoodenBucket.Realm = eRealm.Albion;
 
-				fullWoodenBucket.ItemTemplateID = "full_wooden_bucket";
-				fullWoodenBucket.Value = 0;
-				fullWoodenBucket.IsSaleable = false;
+				fullWoodenBucket.Object_Type = (int) eObjectType.GenericItem;
+				fullWoodenBucket.Id_nb = "full_wooden_bucket";
+				fullWoodenBucket.Gold = 0;
+				fullWoodenBucket.Silver = 0;
+				fullWoodenBucket.Copper = 0;
+				fullWoodenBucket.IsPickable = false;
 				fullWoodenBucket.IsDropable = false;
-				fullWoodenBucket.IsTradable = false;
+				
+				fullWoodenBucket.Quality = 100;
+				fullWoodenBucket.MaxQuality = 100;
+				fullWoodenBucket.Condition = 1000;
+				fullWoodenBucket.MaxCondition = 1000;
+				fullWoodenBucket.Durability = 1000;
+				fullWoodenBucket.MaxDurability = 1000;
+
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -243,32 +251,39 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			reedBracer = (BracerTemplate) GameServer.Database.FindObjectByKey(typeof (BracerTemplate), "reed_bracer");
+			reedBracer = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "reed_bracer");
 			if (reedBracer == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Reed Bracer of Health creating it ...");
-				reedBracer = new BracerTemplate();
+				reedBracer = new ItemTemplate();
 				reedBracer.Name = "Reed Bracer";
 				reedBracer.Level = 3;
 				reedBracer.Weight = 1;
 				reedBracer.Model = 598;
-				reedBracer.Realm = eRealm.Albion;
 
-				reedBracer.ItemTemplateID = "reed_bracer";
+				reedBracer.Object_Type = (int) eObjectType.Magical;
+				reedBracer.Item_Type = (int) eEquipmentItems.L_BRACER;
+				reedBracer.Id_nb = "reed_bracer";
 
-				reedBracer.Value = 30;
-				reedBracer.IsTradable = true;
+				reedBracer.Gold = 0;
+				reedBracer.Silver = 0;
+				reedBracer.Copper = 30;
+				reedBracer.IsPickable = true;
 				reedBracer.IsDropable = true;
-				reedBracer.IsSaleable = true;
 
-				reedBracer.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 8));
-				reedBracer.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Cold, 1));
-				
-				reedBracer.Quality = 100;
-				reedBracer.Condition = 100;
-				reedBracer.Durability = 100;
 				reedBracer.Bonus = 1;
+				reedBracer.Bonus1Type = (int)eProperty.MaxHealth;
+				reedBracer.Bonus1 = 8;
+				reedBracer.Bonus2Type = (int)eProperty.Resist_Cold;
+				reedBracer.Bonus2 = 1;
+
+				reedBracer.Quality = 100;
+				reedBracer.MaxQuality = 100;
+				reedBracer.Condition = 1000;
+				reedBracer.MaxCondition = 1000;
+				reedBracer.Durability = 1000;
+				reedBracer.MaxDurability = 1000;
 
 
 				//You don't have to store the created item in the db if you don't want,
@@ -293,8 +308,8 @@ namespace DOL.GS.Quests.Albion
 			GameEventMgr.AddHandler(godelevaDowden, GameLivingEvent.Interact, new DOLEventHandler(TalkToGodelevaDowden));
 			GameEventMgr.AddHandler(godelevaDowden, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToGodelevaDowden));
 
-            /* Now we bring to Ydenia the possibility to give this quest to players */
-            QuestMgr.AddQuestDescriptor(godelevaDowden, typeof(GodelevasNeedDescription));
+			/* Now we bring to Ydenia the possibility to give this quest to players */
+			godelevaDowden.AddQuestToGive(typeof (GodelevasNeed));
 
 			if (log.IsInfoEnabled)
 				log.Info("Quest \"" + questTitle + "\" initialized");
@@ -325,7 +340,7 @@ namespace DOL.GS.Quests.Albion
 			GameEventMgr.RemoveHandler(godelevaDowden, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToGodelevaDowden));
 
 			/* Now we remove to Ydenia the possibility to give this quest to players */
-            QuestMgr.RemoveQuestDescriptor(godelevaDowden, typeof(GodelevasNeedDescription));
+			godelevaDowden.RemoveQuestToGive(typeof (GodelevasNeed));
 		}
 
 		protected static void PlayerEnterWorld(DOLEvent e, object sender, EventArgs args)
@@ -369,7 +384,7 @@ namespace DOL.GS.Quests.Albion
 			if (player == null)
 				return;
 
-            if (QuestMgr.CanGiveQuest(typeof(GodelevasNeed), player, godelevaDowden) <= 0)
+			if(godelevaDowden.CanGiveQuest(typeof (GodelevasNeed), player)  <= 0)
 				return;
 
 			//We also check if the player is already doing the quest
@@ -416,6 +431,15 @@ namespace DOL.GS.Quests.Albion
 							break;
 					}
 				}
+				else
+				{
+					switch (wArgs.Text)
+					{
+						case "abort":
+							player.Out.SendCustomDialog("Do you really want to abort this quest, \nall items gained during quest will be lost?", new CustomDialogResponse(CheckPlayerAbortQuest));
+							break;
+					}
+				}
 			}
 		}
 
@@ -431,14 +455,14 @@ namespace DOL.GS.Quests.Albion
 			{
 				UseSlotEventArgs uArgs = (UseSlotEventArgs) args;
 
-				GenericItem item = player.Inventory.GetItem((eInventorySlot)uArgs.Slot);
-				if (item != null && item.Name == woodenBucket.Name)
+				InventoryItem item = player.Inventory.GetItem((eInventorySlot)uArgs.Slot);
+				if (item != null && item.Id_nb == woodenBucket.Id_nb)
 				{
-					if (player.Position.CheckSquareDistance(cotswoldVillageBridge.Position, 500*500))
+					if (WorldMgr.CheckDistance(player, cotswoldVillageBridge, 500))
 					{
 						SendSystemMessage(player, "You use the wooden bucket and scoop up some fresh river water.");
-                        player.Inventory.RemoveItem(item);
-                        player.Inventory.AddItem(eInventorySlot.FirstBackpack, fullWoodenBucket.CreateInstance());
+
+						ReplaceItem(player, woodenBucket, fullWoodenBucket);
 						quest.Step = 2;
 					}
 					else
@@ -446,6 +470,49 @@ namespace DOL.GS.Quests.Albion
 						SendSystemMessage(player, "You can't scoop up some river water here.");
 					}
 				}
+			}
+		}
+
+
+		/// <summary>
+		/// This method checks if a player qualifies for this quest
+		/// </summary>
+		/// <returns>true if qualified, false if not</returns>
+		public override bool CheckQuestQualification(GamePlayer player)
+		{
+			// if the player is already doing the quest his level is no longer of relevance
+			if (player.IsDoingQuest(typeof (GodelevasNeed)) != null)
+				return true;
+
+			// This checks below are only performed is player isn't doing quest already
+
+			if (player.Level < minimumLevel || player.Level > maximumLevel)
+				return false;
+
+			return true;
+		}
+
+		
+		/* This is our callback hook that will be called when the player clicks
+		 * on any button in the quest offer dialog. We check if he accepts or
+		 * declines here...
+		 */
+
+		private static void CheckPlayerAbortQuest(GamePlayer player, byte response)
+		{
+			GodelevasNeed quest = player.IsDoingQuest(typeof (GodelevasNeed)) as GodelevasNeed;
+
+			if (quest == null)
+				return;
+
+			if (response == 0x00)
+			{
+				SendSystemMessage(player, "Good, no go out there and finish your work!");
+			}
+			else
+			{
+				SendSystemMessage(player, "Aborting Quest " + questTitle + ". You can start over again if you want.");
+				quest.AbortQuest();
 			}
 		}
 
@@ -458,7 +525,7 @@ namespace DOL.GS.Quests.Albion
 		{
 			//We recheck the qualification, because we don't talk to players
 			//who are not doing the quest
-            if (QuestMgr.CanGiveQuest(typeof(GodelevasNeed), player, godelevaDowden) <= 0)
+			if(godelevaDowden.CanGiveQuest(typeof (GodelevasNeed), player)  <= 0)
 				return;
 
 			if (player.IsDoingQuest(typeof (GodelevasNeed)) != null)
@@ -471,11 +538,11 @@ namespace DOL.GS.Quests.Albion
 			else
 			{
 				//Check if we can add the quest!
-                if (!QuestMgr.GiveQuestToPlayer(typeof(GodelevasNeed), player, godelevaDowden))
+				if (!godelevaDowden.GiveQuest(typeof (GodelevasNeed), player, 1))
 					return;
 
-				// give woodenBucket 
-                player.Inventory.AddItem(eInventorySlot.FirstBackpack, woodenBucket.CreateInstance());
+				// give letter                
+				GiveItem(godelevaDowden, player, woodenBucket);
 
 				SendReply(player, "Great!  Thanks a lot.  Here, take this bucket down the river's edge and use it to get me some water.  Bring the full bucket back to me.  Hurry now!  I need to get things cleaned up!");
 
@@ -511,9 +578,8 @@ namespace DOL.GS.Quests.Albion
 						return "[Step #1] Take the bucket to the river and USE it to get some water.  The default key for USING items is E or F4.";
 					case 2:
 						return "[Step #2] Take the full bucket back to Godeleva in the tavern in Cotswold.";
-                    default:
-                        return "[Step #" + Step + "] No Description entered for this step!";
 				}
+				return base.Description;
 			}
 		}
 
@@ -530,9 +596,9 @@ namespace DOL.GS.Quests.Albion
 				if(Step == 2)
 				{
 					GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-					if (gArgs.Target.Name == godelevaDowden.Name && gArgs.Item.Name == fullWoodenBucket.Name)
+					if (gArgs.Target.Name == godelevaDowden.Name && gArgs.Item.Id_nb == fullWoodenBucket.Id_nb)
 					{
-						RemoveItemFromPlayer(godelevaDowden, gArgs.Item);
+						RemoveItem(godelevaDowden, m_questPlayer, fullWoodenBucket);
 
 						godelevaDowden.TurnTo(m_questPlayer);
 						godelevaDowden.SayTo(m_questPlayer, "Ah, great!  This is a good and full bucket!  Thank you friend!  Here is a little something for you.  A traveler gave it to me, but it's not much use to me now.  It will serve you better.  Now, I'm off to clean.  Be safe friend!");
@@ -543,13 +609,24 @@ namespace DOL.GS.Quests.Albion
 			}
 		}
 
+		public override void AbortQuest()
+		{
+			base.AbortQuest(); //Defined in Quest, changes the state, stores in DB etc ...
+
+			RemoveItem(m_questPlayer, woodenBucket, false);
+			RemoveItem(m_questPlayer, fullWoodenBucket, false);
+
+			GameEventMgr.RemoveHandler(m_questPlayer, GamePlayerEvent.UseSlot, new DOLEventHandler(PlayerUseSlot));
+			GameEventMgr.RemoveHandler(m_questPlayer, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
+		}
+
 		public override void FinishQuest()
 		{
 			base.FinishQuest(); //Defined in Quest, changes the state, stores in DB etc ...
 
 			//Give reward to player here ...
 
-			GiveItemToPlayer(godelevaDowden, reedBracer.CreateInstance());
+			GiveItem(godelevaDowden, m_questPlayer, reedBracer);
 
 			m_questPlayer.GainExperience(40 + (m_questPlayer.Level - 1) * 4, 0, 0, true);
 			m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 7, Util.Random(50)), "You are awarded 7 silver and some copper!");

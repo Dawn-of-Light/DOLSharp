@@ -19,7 +19,7 @@
 using System;
 using System.Collections;
 using DOL.AI.Brain;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.GS.PacketHandler;
 using DOL.GS.Styles;
 
@@ -116,7 +116,7 @@ namespace DOL.GS.ServerRules
 			}
 
 			// clients with priv level > 1 are considered friendly by anyone
-			if(target is GamePlayer && ((GamePlayer)target).Client.Account.PrivLevel > ePrivLevel.Player) return true;
+			if(target is GamePlayer && ((GamePlayer)target).Client.Account.PrivLevel > 1) return true;
 			if (source.Realm == (int)eRealm.Peace || target.Realm == (int)eRealm.Peace) return true;
 
 			if(source.Realm != target.Realm)
@@ -129,7 +129,7 @@ namespace DOL.GS.ServerRules
 
 		public override bool IsAllowedCharsInAllRealms(GameClient client)
 		{
-			if(client.Account.PrivLevel > ePrivLevel.Player) return true;
+			if(client.Account.PrivLevel > 1) return true;
 			return false;
 		}
 
@@ -150,7 +150,7 @@ namespace DOL.GS.ServerRules
 			if(source == null || target == null) return false;
 
 			// clients with priv level > 1 are allowed to trade with anyone
-			if(source is GamePlayer && ((GamePlayer)source).Client.Account.PrivLevel > ePrivLevel.Player) return true;
+			if(source is GamePlayer && ((GamePlayer)source).Client.Account.PrivLevel > 1) return true;
 			// Peace NPCs can  trade with everybody
 			if(source.Realm == (int) eRealm.Peace) return true;
 			if(source.Realm != target.Realm)
@@ -166,8 +166,8 @@ namespace DOL.GS.ServerRules
 			if(source == null || target == null) return false;
 
 			// clients with priv level > 1 are allowed to talk and hear anyone
-			if(source is GamePlayer && ((GamePlayer)source).Client.Account.PrivLevel > ePrivLevel.Player) return true;
-			if(target.Client.Account.PrivLevel > ePrivLevel.Player) return true;
+			if(source is GamePlayer && ((GamePlayer)source).Client.Account.PrivLevel > 1) return true;
+			if(target.Client.Account.PrivLevel > 1) return true;
 			// Peace NPCs can be understood by everybody
 			if(source.Realm == (int) eRealm.Peace) return true;
 			if(source.Realm != target.Realm) return false;
@@ -192,31 +192,24 @@ namespace DOL.GS.ServerRules
 		/// <param name="player"></param>
 		/// <param name="point"></param>
 		/// <returns></returns>
-		public override bool IsAllowedToCraft(GamePlayer player, GenericItemTemplate item)
+		public override bool IsAllowedToCraft(GamePlayer player, ItemTemplate item)
 		{
-			return player.Realm == (byte)item.Realm;
+			return player.Realm == item.Realm;
 		}
 
-		public override bool CheckAbilityToUseItem(GamePlayer player, EquipableItem item)
+		public override bool CheckAbilityToUseItem(GamePlayer player, ItemTemplate item)
 		{
-			if(player == null)
+			if(player == null || item == null)
 				return false;
 
-			if(item.Realm != eRealm.None && item.Realm != (eRealm)player.Realm)
-			{
+			if(item.Realm != 0 && item.Realm != player.Realm)
 				return false;
-			}
-
-			if(item.AllowedClass.Count > 0 && !item.AllowedClass.Contains((eCharacterClass)player.CharacterClassID))
-			{
-				return false;
-			}
 
 			//armor
-			if (item.ObjectType >= eObjectType._FirstArmor && item.ObjectType <= eObjectType._LastArmor)
+			if (item.Object_Type >= (int)eObjectType._FirstArmor && item.Object_Type <= (int)eObjectType._LastArmor)
 			{
 				int armorAbility = -1;
-				switch (item.Realm)
+				switch ((eRealm)item.Realm)
 				{
 					case eRealm.Albion   : armorAbility = player.GetAbilityLevel(Abilities.AlbArmor); break;
 					case eRealm.Hibernia : armorAbility = player.GetAbilityLevel(Abilities.HibArmor); break;
@@ -227,15 +220,16 @@ namespace DOL.GS.ServerRules
 						armorAbility = Math.Max(armorAbility, player.GetAbilityLevel(Abilities.MidArmor));
 						break;
 				}
-				switch (item.ObjectType)
+				switch ((eObjectType)item.Object_Type)
 				{
-					case eObjectType.Cloth       : return armorAbility >= (int)eArmorLevel.VeryLow;
-					case eObjectType.Leather     : return armorAbility >= (int)eArmorLevel.Low;
+					case eObjectType.GenericArmor: return armorAbility >= ArmorLevel.GenericArmor;
+					case eObjectType.Cloth       : return armorAbility >= ArmorLevel.Cloth;
+					case eObjectType.Leather     : return armorAbility >= ArmorLevel.Leather;
 					case eObjectType.Reinforced  :
-					case eObjectType.Studded     : return armorAbility >= (int)eArmorLevel.Medium;
+					case eObjectType.Studded     : return armorAbility >= ArmorLevel.Studded;
 					case eObjectType.Scale       :
-					case eObjectType.Chain       : return armorAbility >= (int)eArmorLevel.High;
-					case eObjectType.Plate       : return armorAbility >= (int)eArmorLevel.VeryHigh;
+					case eObjectType.Chain       : return armorAbility >= ArmorLevel.Chain;
+					case eObjectType.Plate       : return armorAbility >= ArmorLevel.Plate;
 					default: return false;
 				}
 			}
@@ -244,13 +238,13 @@ namespace DOL.GS.ServerRules
 			string[] otherCheck = new string[0];
 
 			//http://dol.kitchenhost.de/files/dol/Info/itemtable.txt
-			switch(item.ObjectType)
+			switch((eObjectType)item.Object_Type)
 			{
 				case eObjectType.GenericItem     : return true;
 				case eObjectType.GenericArmor    : return true;
 				case eObjectType.GenericWeapon   : return true;
 				case eObjectType.Staff           : abilityCheck = Abilities.Weapon_Staves; break;
-				case eObjectType.ShortBow        : abilityCheck = Abilities.Weapon_Shortbows; break;
+				case eObjectType.Fired           : abilityCheck = Abilities.Weapon_Shortbows; break;
 
 					//alb
 				case eObjectType.CrushingWeapon  : abilityCheck = Abilities.Weapon_Crushing; break;
@@ -260,7 +254,7 @@ namespace DOL.GS.ServerRules
 				case eObjectType.PolearmWeapon   : abilityCheck = Abilities.Weapon_Polearms; break;
 				case eObjectType.Longbow         : abilityCheck = Abilities.Weapon_Longbows; break;
 				case eObjectType.Crossbow        : abilityCheck = Abilities.Weapon_Crossbow; break;
-				case eObjectType.FlexibleWeapon        : abilityCheck = Abilities.Weapon_Flexible; break;
+				case eObjectType.Flexible        : abilityCheck = Abilities.Weapon_Flexible; break;
 				//TODO: case 5: abilityCheck = Abilities.Weapon_Thrown; break;
 
 					//mid
@@ -270,7 +264,7 @@ namespace DOL.GS.ServerRules
 				case eObjectType.Axe             : abilityCheck = Abilities.Weapon_Axes; break;
 				case eObjectType.Spear           : abilityCheck = Abilities.Weapon_Spears; break;
 				case eObjectType.CompositeBow    : abilityCheck = Abilities.Weapon_CompositeBows; break;
-				case eObjectType.ThrownWeapon    : abilityCheck = Abilities.Weapon_Thrown; break;
+				case eObjectType.Thrown          : abilityCheck = Abilities.Weapon_Thrown; break;
 				case eObjectType.HandToHand      : abilityCheck = Abilities.Weapon_HandToHand; break;
 
 					//hib
@@ -278,17 +272,18 @@ namespace DOL.GS.ServerRules
 				case eObjectType.Blades          : abilityCheck = Abilities.Weapon_Blades; break;
 				case eObjectType.Blunt           : abilityCheck = Abilities.Weapon_Blunt; break;
 				case eObjectType.Piercing        : abilityCheck = Abilities.Weapon_Piercing; break;
-				case eObjectType.LargeWeapon     : abilityCheck = Abilities.Weapon_LargeWeapons; break;
+				case eObjectType.LargeWeapons    : abilityCheck = Abilities.Weapon_LargeWeapons; break;
 				case eObjectType.CelticSpear     : abilityCheck = Abilities.Weapon_CelticSpear; break;
 				case eObjectType.Scythe          : abilityCheck = Abilities.Weapon_Scythe; break;
 
 					//misc
-				//case eObjectType.Magical         : return true;
-				case eObjectType.Shield          : return player.GetAbilityLevel(Abilities.Shield) >= (byte)(((Shield)item).Size);
-				//case eObjectType.Bolt            : abilityCheck = Abilities.Weapon_Crossbow; break;
-				//case eObjectType.Arrow           : otherCheck = new string[] { Abilities.Weapon_CompositeBows, Abilities.Weapon_Longbows, Abilities.Weapon_RecurvedBows, Abilities.Weapon_Shortbows }; break;
-				//case eObjectType.Poison          : return player.GetModifiedSpecLevel(Specs.Envenom) > 0;
+				case eObjectType.Magical         : return true;
+				case eObjectType.Shield          : return player.GetAbilityLevel(Abilities.Shield) >= item.Type_Damage;
+				case eObjectType.Bolt            : abilityCheck = Abilities.Weapon_Crossbow; break;
+				case eObjectType.Arrow           : otherCheck = new string[] { Abilities.Weapon_CompositeBows, Abilities.Weapon_Longbows, Abilities.Weapon_RecurvedBows, Abilities.Weapon_Shortbows }; break;
+				case eObjectType.Poison          : return player.GetModifiedSpecLevel(Specs.Envenom) > 0;
 				case eObjectType.Instrument      : return player.HasAbility(Abilities.Weapon_Instruments);
+				//TODO: different shield sizes
 			}
 
 			//player.Out.SendMessage("ability: \""+abilityCheck+"\"; type: "+item.Object_Type, eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -313,7 +308,7 @@ namespace DOL.GS.ServerRules
 			{
 				m_compatibleObjectTypes = new Hashtable();
 				m_compatibleObjectTypes[(int)eObjectType.Staff] = new eObjectType[] { eObjectType.Staff };
-				m_compatibleObjectTypes[(int)eObjectType.ShortBow] = new eObjectType[] { eObjectType.ShortBow };
+				m_compatibleObjectTypes[(int)eObjectType.Fired] = new eObjectType[] { eObjectType.Fired };
 
 				//alb
 				m_compatibleObjectTypes[(int)eObjectType.CrushingWeapon]  = new eObjectType[] { eObjectType.CrushingWeapon };
@@ -321,7 +316,7 @@ namespace DOL.GS.ServerRules
 				m_compatibleObjectTypes[(int)eObjectType.ThrustWeapon]    = new eObjectType[] { eObjectType.ThrustWeapon };
 				m_compatibleObjectTypes[(int)eObjectType.TwoHandedWeapon] = new eObjectType[] { eObjectType.TwoHandedWeapon };
 				m_compatibleObjectTypes[(int)eObjectType.PolearmWeapon]   = new eObjectType[] { eObjectType.PolearmWeapon };
-				m_compatibleObjectTypes[(int)eObjectType.FlexibleWeapon]  = new eObjectType[] { eObjectType.FlexibleWeapon };
+				m_compatibleObjectTypes[(int)eObjectType.Flexible]        = new eObjectType[] { eObjectType.Flexible };
 				m_compatibleObjectTypes[(int)eObjectType.Longbow]         = new eObjectType[] { eObjectType.Longbow };
 				m_compatibleObjectTypes[(int)eObjectType.Crossbow]        = new eObjectType[] { eObjectType.Crossbow };
 				//TODO: case 5: abilityCheck = Abilities.Weapon_Thrown; break;                                         
@@ -334,13 +329,13 @@ namespace DOL.GS.ServerRules
 				m_compatibleObjectTypes[(int)eObjectType.HandToHand]   = new eObjectType[] { eObjectType.HandToHand };
 				m_compatibleObjectTypes[(int)eObjectType.Spear]        = new eObjectType[] { eObjectType.Spear };
 				m_compatibleObjectTypes[(int)eObjectType.CompositeBow] = new eObjectType[] { eObjectType.CompositeBow };
-				m_compatibleObjectTypes[(int)eObjectType.ThrownWeapon] = new eObjectType[] { eObjectType.ThrownWeapon };
+				m_compatibleObjectTypes[(int)eObjectType.Thrown]       = new eObjectType[] { eObjectType.Thrown };
 
 				//hib
 				m_compatibleObjectTypes[(int)eObjectType.Blunt]        = new eObjectType[] { eObjectType.Blunt };
 				m_compatibleObjectTypes[(int)eObjectType.Blades]       = new eObjectType[] { eObjectType.Blades };
 				m_compatibleObjectTypes[(int)eObjectType.Piercing]     = new eObjectType[] { eObjectType.Piercing };
-				m_compatibleObjectTypes[(int)eObjectType.LargeWeapon]  = new eObjectType[] { eObjectType.LargeWeapon };
+				m_compatibleObjectTypes[(int)eObjectType.LargeWeapons] = new eObjectType[] { eObjectType.LargeWeapons };
 				m_compatibleObjectTypes[(int)eObjectType.CelticSpear]  = new eObjectType[] { eObjectType.CelticSpear };
 				m_compatibleObjectTypes[(int)eObjectType.Scythe]       = new eObjectType[] { eObjectType.Scythe };
 				m_compatibleObjectTypes[(int)eObjectType.RecurvedBow]  = new eObjectType[] { eObjectType.RecurvedBow };
@@ -366,7 +361,7 @@ namespace DOL.GS.ServerRules
 		{
 			if (IsSameRealm(source, target, true))
 				return target.Name;
-			return GlobalConstants.RaceToName((eRace)target.Race);
+			return target.RaceName;
 		}
 
 		/// <summary>
@@ -391,7 +386,7 @@ namespace DOL.GS.ServerRules
 		public override string GetPlayerGuildName(GamePlayer source, GamePlayer target)
 		{
 			if (IsSameRealm(source, target, true))
-				return GuildMgr.GetGuildByID(target.GuildID).GuildName;
+				return target.GuildName;
 			return string.Empty;
 		}
 	}

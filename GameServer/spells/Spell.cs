@@ -18,7 +18,7 @@
  */
 using System;
 using System.Text;
-using DOL.GS.Database;
+using DOL.Database;
 
 namespace DOL.GS
 {

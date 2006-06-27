@@ -36,7 +36,7 @@ namespace DOL.GS.Spells
 		/// <param name="target"></param>
 		public override void FinishSpellCast(GameLiving target)
 		{
-			m_caster.ChangeMana(null, GameLiving.eManaChangeType.Spell, -CalculateNeededPower(target));
+			m_caster.Mana -= CalculateNeededPower(target);
 			base.FinishSpellCast(target);
 		}
 
@@ -51,7 +51,7 @@ namespace DOL.GS.Spells
 			if (target == null || !target.Alive)
 				return;
 
-			target.LastAttackedByEnemyTick = target.Region.Time; //have to do it here because OnAttackedByEnemy is not called to not get aggro
+			target.LastAttackedByEnemyTick = target.CurrentRegion.Time; //have to do it here because OnAttackedByEnemy is not called to not get aggro
 			SendEffectAnimation(target, 0, false, 1);
 
 			if (target is GamePlayer)

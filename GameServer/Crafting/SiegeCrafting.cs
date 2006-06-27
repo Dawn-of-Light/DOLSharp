@@ -16,7 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS
@@ -42,7 +42,7 @@ namespace DOL.GS
 		/// <param name="player">the crafting player</param>
 		/// <param name="craftItemData">the object in construction</param>
 		/// <returns>true if the player hold all needed tools</returns>
-		public override bool CheckTool(GamePlayer player, CraftItemData craftItemData)
+		public override bool CheckTool(GamePlayer player, DBCraftedItem craftItemData)
 		{
 			bool result = false;
 			foreach (GameStaticItem item in player.GetItemsInRadius(CRAFT_DISTANCE))
@@ -55,27 +55,27 @@ namespace DOL.GS
 
 			if(result == false)
 			{
-				player.Out.SendMessage("You do not have the tools to make the "+craftItemData.TemplateToCraft.Name+".",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage("You do not have the tools to make the "+craftItemData.ItemTemplate.Name+".",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 				player.Out.SendMessage("You must find a lathe!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 				return false;
 			}
 
 			byte flags = 0;
-			foreach (GenericItem item in player.Inventory.GetItemRange(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+			foreach (InventoryItem item in player.Inventory.GetItemRange(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
 			{
-				if(!(item is CraftingTool)) continue;
+				if(item == null || item.Object_Type != 0) continue;
 
-				if(((CraftingTool)item).Type == eCraftingToolType.PlaningTool)
+				if(item.Name == "planing tool")
 				{
 					if((flags & 0x01) == 0) flags |= 0x01;
 					if(flags >= 0x07) break;
 				}
-				else if(((CraftingTool)item).Type == eCraftingToolType.SmithHammer)
+				else if(item.Name == "smith's hammer")
 				{
 					if((flags & 0x02) == 0) flags |= 0x02;
 					if(flags >= 0x07) break;
 				}
-				else if(((CraftingTool)item).Type == eCraftingToolType.SewingKit)
+				else if(item.Name == "sewing kit")
 				{
 					if((flags & 0x04) == 0) flags |= 0x04;
 					if(flags >= 0x07) break;
@@ -84,24 +84,25 @@ namespace DOL.GS
 
 			if(flags < 0x07)
 			{
-				player.Out.SendMessage("You do not have the tools to make the "+craftItemData.TemplateToCraft.Name+".",eChatType.CT_System,eChatLoc.CL_SystemWindow);
-					
 				if((flags & 0x01) == 0)
 				{
+					player.Out.SendMessage("You do not have the tools to make the "+craftItemData.ItemTemplate.Name+".",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 					player.Out.SendMessage("You must find a planing tool!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 					return false;
 				}
 
 				if((flags & 0x02) == 0)
 				{
+					player.Out.SendMessage("You do not have the tools to make the "+craftItemData.ItemTemplate.Name+".",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 					player.Out.SendMessage("You must find a smith tool!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 					return false;
 				}
 
 				if((flags & 0x04) == 0)
 				{
+					player.Out.SendMessage("You do not have the tools to make the "+craftItemData.ItemTemplate.Name+".",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 					player.Out.SendMessage("You must find a sewing kit!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
-					return false;	
+					return false;
 				}
 			}
 
@@ -113,7 +114,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="player"></param>
 		/// <param name="item"></param>
-		public override void GainCraftingSkillPoints(GamePlayer player, CraftItemData item)
+		public override void GainCraftingSkillPoints(GamePlayer player, DBCraftedItem item)
 		{
 			int maxAchivableLevel;
 			switch (player.CraftingPrimarySkill)
@@ -172,10 +173,10 @@ namespace DOL.GS
 				player.Out.SendUpdateCraftingSkills();
 			}
 		}
-		protected override void BuildCraftedItem(GamePlayer player, CraftItemData craftItemData)
+		protected override void BuildCraftedItem(GamePlayer player, DBCraftedItem craftItemData)
 		{
-		/*	GameSiegeWeapon siegeweapon = null;
-			switch ((eObjectType)craftItemData.ItemtemplateToCraft.Object_Type)
+			GameSiegeWeapon siegeweapon = null;
+			switch ((eObjectType)craftItemData.ItemTemplate.Object_Type)
 			{
 				case eObjectType.SiegeBalista :
 				{
@@ -208,11 +209,13 @@ namespace DOL.GS
 					return;
 				}
 			}
-			siegeweapon.LoadFromDatabase(craftItemData.ItemtemplateToCraft);
-			siegeweapon.Region = player.Region;
+			siegeweapon.LoadFromDatabase(craftItemData.ItemTemplate);
+			siegeweapon.CurrentRegion = player.CurrentRegion;
 			siegeweapon.Heading = player.Heading;
-			siegeweapon.Position = player.Position;
-			siegeweapon.AddToWorld();*/
+			siegeweapon.X = player.X;
+			siegeweapon.Y = player.Y;
+			siegeweapon.Z = player.Z;
+			siegeweapon.AddToWorld();
 		}
 	}
 }

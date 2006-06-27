@@ -164,7 +164,7 @@ namespace DOL.AI.Brain
 		{
 			WalkState = eWalkState.ComeHere;
 			Body.StopFollow();
-			Body.WalkTo(Owner.Position, Body.MaxSpeed);
+			Body.WalkTo(Owner, Body.MaxSpeed);
 		}
 
 		/// <summary>
@@ -175,7 +175,7 @@ namespace DOL.AI.Brain
 		{
 			WalkState = eWalkState.GoTarget;
 			Body.StopFollow();
-			Body.WalkTo(target.Position, Body.MaxSpeed);
+			Body.WalkTo(target, Body.MaxSpeed);
 		}
 
 		/// <summary>
@@ -240,7 +240,7 @@ namespace DOL.AI.Brain
 				Owner.CurrentUpdateArray[Body.ObjectID-1] = true;
 			}
 
-			if (!Body.Position.CheckSquareDistance(Owner.Position, (uint)(MAX_OWNER_FOLLOW_DIST*MAX_OWNER_FOLLOW_DIST)))
+			if (!WorldMgr.CheckDistance(Body, Owner, MAX_OWNER_FOLLOW_DIST))
 				Owner.CommandNpcRelease();
 
 			if (AggressionState == eAggressionState.Aggressive)
@@ -368,7 +368,7 @@ namespace DOL.AI.Brain
 			}
 		}
 
-		protected override void BringFriends(GameLiving living)
+		protected override void BringFriends(AttackData ad)
 		{
 			// don't
 		}

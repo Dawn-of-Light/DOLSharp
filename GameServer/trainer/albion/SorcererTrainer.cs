@@ -17,11 +17,7 @@
  *
  */
 using System;
-using System.Collections;
-using System.Reflection;
-using DOL.Events;
 using DOL.GS.PacketHandler;
-using log4net;
 
 namespace DOL.GS.Trainer
 {
@@ -31,55 +27,10 @@ namespace DOL.GS.Trainer
 	[NPCGuildScript("Sorcerer Trainer", eRealm.Albion)]		// this attribute instructs DOL to use this script for all "Sorcerer Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class SorcererTrainer : GameTrainer
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		public const string WEAPON_ID = "sorcerer_item";
 
-		/// <summary>
-		/// This hash constrain all item template the trainer can give
-		/// </summary>	
-		private static IDictionary allStartupItems = new Hashtable();
-
-		/// <summary>
-		/// This function is called at the server startup
-		/// </summary>	
-		[GameServerStartedEvent]
-		public static void OnServerStartup(DOLEvent e, object sender, EventArgs args)
+		public SorcererTrainer() : base()
 		{
-			#region Sorcerer staff
-
-			StaffTemplate sorcerer_item_template = new StaffTemplate();
-			sorcerer_item_template.Name = "Sorcerer Staff of Focus";
-			sorcerer_item_template.Level = 5;
-			sorcerer_item_template.Durability=100;
-			sorcerer_item_template.Condition = 100;
-			sorcerer_item_template.Quality = 90;
-			sorcerer_item_template.Bonus = 10;
-			sorcerer_item_template.DamagePerSecond = 30;
-			sorcerer_item_template.Speed = 4400;
-			sorcerer_item_template.Weight = 45;
-			sorcerer_item_template.Model = 19;
-			sorcerer_item_template.Realm = eRealm.Albion;
-			sorcerer_item_template.IsDropable = true; 
-			sorcerer_item_template.IsTradable = false; 
-			sorcerer_item_template.IsSaleable = false;
-			sorcerer_item_template.MaterialLevel = eMaterialLevel.Bronze;
-			
-			sorcerer_item_template.AllowedClass.Add(eCharacterClass.Sorcerer);
-
-			sorcerer_item_template.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Focus_Matter, 4));
-			sorcerer_item_template.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Focus_Body, 4));
-			sorcerer_item_template.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Focus_Mind, 4));
-			
-			if(!allStartupItems.Contains("Sorcerer_Staff_of_Focus"))
-			{
-				allStartupItems.Add("Sorcerer_Staff_of_Focus", sorcerer_item_template);
-			
-				if (log.IsDebugEnabled)
-					log.Debug("Adding " + sorcerer_item_template.Name + " to SorcererTrainer gifts.");
-			}
-			#endregion
 		}
 
 		/// <summary>
@@ -134,9 +85,10 @@ namespace DOL.GS.Trainer
 			switch (text) {
 			case "join the Academy":
 				// promote player to other class
-				if (CanPromotePlayer(player)) 
-					PromotePlayer(player, (int)eCharacterClass.Sorcerer, "You are now part of our shadow! You shall forever have a place among us! Here too is your guild weapon, a Staff of Focus!", new GenericItemTemplate[] {allStartupItems["Sorcerer_Staff_of_Focus"] as GenericItemTemplate});
-					
+				if (CanPromotePlayer(player)) {
+					PromotePlayer(player, (int)eCharacterClass.Sorcerer, "You are now part of our shadow! You shall forever have a place among us! Here too is your guild weapon, a Staff of Focus!", null);
+					player.ReceiveItem(this,WEAPON_ID);
+				}
 				break;
 			}
 			return true;		

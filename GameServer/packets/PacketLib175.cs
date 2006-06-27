@@ -158,18 +158,18 @@ namespace DOL.GS.PacketHandler
 
 			pak.WritePascalString(player.CharacterClass.BaseName); // base class
 
-			pak.WriteByte((byte) (player.LotNumber >> 8)); // personal house high byte
-			pak.WritePascalString(GuildMgr.GetGuildByID(player.GuildID).GuildName);
-			pak.WriteByte((byte) (player.LotNumber & 0xFF)); // personal house low byte
+			pak.WriteByte((byte) (player.PlayerCharacter.LotNumber >> 8)); // personal house high byte
+			pak.WritePascalString(player.GuildName);
+			pak.WriteByte((byte) (player.PlayerCharacter.LotNumber & 0xFF)); // personal house low byte
 
 			pak.WritePascalString(player.LastName);
 
 			pak.WriteByte(0x0); // ML Level
-			pak.WritePascalString(GlobalConstants.RaceToName((eRace)player.Race));
+			pak.WritePascalString(player.RaceName);
 
 			pak.WriteByte(0x0);
-			if (m_gameClient.Player.Guild != null)
-				pak.WritePascalString(m_gameClient.Player.Guild.GuildRanks[m_gameClient.Player.GuildRank].Title);
+			if (player.GuildRank != null)
+				pak.WritePascalString(player.GuildRank.Title);
 			else
 				pak.WritePascalString("");
 			pak.WriteByte(0x0);
@@ -346,7 +346,7 @@ namespace DOL.GS.PacketHandler
 			// racial resists
 			for (int i = 0; i < updateResists.Length; i++)
 			{
-				racial[i] = SkillBase.GetRaceResist(m_gameClient.Player.Race, updateResists[i]);
+				racial[i] = SkillBase.GetRaceResist((eRace)m_gameClient.Player.Race, updateResists[i]);
 				pak.WriteShort((ushort)racial[i]);
 			}
 
@@ -384,7 +384,7 @@ namespace DOL.GS.PacketHandler
 		public override void SendPlayerCreate(GamePlayer playerToCreate)
 		{
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.PlayerCreate172));
-			Region playerRegion = playerToCreate.Region;
+			Region playerRegion = playerToCreate.CurrentRegion;
 			if (playerRegion == null)
 			{
 				if (log.IsWarnEnabled)
@@ -398,25 +398,23 @@ namespace DOL.GS.PacketHandler
 					log.Warn("SendPlayerCreate: playerZone == null");
 				return;
 			}
-			Point zonePos = playerZone.ToLocalPosition(playerToCreate.Position);
-			
 			pak.WriteShort((ushort)playerToCreate.Client.SessionID);
 			pak.WriteShort((ushort)playerToCreate.ObjectID);
-			pak.WriteShort((ushort)playerToCreate.Model);
-			pak.WriteShort((ushort)zonePos.Z);
-			pak.WriteShort((ushort)playerZone.ZoneID);
-			pak.WriteShort((ushort)zonePos.X);
-			pak.WriteShort((ushort)zonePos.Y);
-			pak.WriteShort((ushort) playerToCreate.Heading);
+			pak.WriteShort(playerToCreate.Model);
+			pak.WriteShort((ushort)playerToCreate.Z);
+			pak.WriteShort(playerZone.ID);
+			pak.WriteShort((ushort)playerRegion.GetXOffInZone(playerToCreate.X, playerToCreate.Y));
+			pak.WriteShort((ushort)playerRegion.GetYOffInZone(playerToCreate.X, playerToCreate.Y));
+			pak.WriteShort(playerToCreate.Heading);
 
-			pak.WriteByte(playerToCreate.EyeSize); //1-4 = Eye Size / 5-8 = Nose Size
-			pak.WriteByte(playerToCreate.LipSize); //1-4 = Ear size / 5-8 = Kin size
-			pak.WriteByte(playerToCreate.MoodType); //1-4 = Ear size / 5-8 = Kin size
-			pak.WriteByte(playerToCreate.EyeColor); //1-4 = Skin Color / 5-8 = Eye Color
+			pak.WriteByte(playerToCreate.GetFaceAttribute(eCharFacePart.EyeSize)); //1-4 = Eye Size / 5-8 = Nose Size
+			pak.WriteByte(playerToCreate.GetFaceAttribute(eCharFacePart.LipSize)); //1-4 = Ear size / 5-8 = Kin size
+			pak.WriteByte(playerToCreate.GetFaceAttribute(eCharFacePart.MoodType)); //1-4 = Ear size / 5-8 = Kin size
+			pak.WriteByte(playerToCreate.GetFaceAttribute(eCharFacePart.EyeColor)); //1-4 = Skin Color / 5-8 = Eye Color
 			pak.WriteByte(playerToCreate.Level);
-			pak.WriteByte(playerToCreate.HairColor); //Hair: 1-4 = Color / 5-8 = unknown
-			pak.WriteByte(playerToCreate.FaceType); //1-4 = Unknown / 5-8 = Face type
-			pak.WriteByte(playerToCreate.HairStyle); //1-4 = Unknown / 5-8 = Hair Style
+			pak.WriteByte(playerToCreate.GetFaceAttribute(eCharFacePart.HairColor)); //Hair: 1-4 = Color / 5-8 = unknown
+			pak.WriteByte(playerToCreate.GetFaceAttribute(eCharFacePart.FaceType)); //1-4 = Unknown / 5-8 = Face type
+			pak.WriteByte(playerToCreate.GetFaceAttribute(eCharFacePart.HairStyle)); //1-4 = Unknown / 5-8 = Hair Style
 
 			int flags = (GameServer.ServerRules.GetLivingRealm(m_gameClient.Player, playerToCreate) & 0x03) << 2;
 			if (playerToCreate.Alive == false) flags |= 0x01;
@@ -447,7 +445,7 @@ namespace DOL.GS.PacketHandler
 			pak.WriteByte((byte) ((version%100)/10));
 			//pak.WriteByte(build);
 			pak.WriteByte(0x00);
-			pak.WritePascalString(m_gameClient.Account.AccountName);
+			pak.WritePascalString(m_gameClient.Account.Name);
 			pak.WritePascalString(GameServer.Instance.Configuration.ServerNameShort); //server name
 			pak.WriteByte(0x0C); //Server ID
 			pak.WriteByte(GameServer.ServerRules.GetColorHandling(m_gameClient));

@@ -37,7 +37,7 @@ namespace DOL.GS.PropertyCalc
 			GamePlayer player = living as GamePlayer;
 			if (player != null)
 			{
-				return (1000+player.GetModified(eProperty.Quickness)+player.GetModified(eProperty.Dexterity)-100) * player.GetAbilityLevel(Abilities.Evade) * 5 / 100;
+				return (1000+player.Quickness+player.Dexterity-100) * player.GetAbilityLevel(Abilities.Evade) * 5 / 100;
 			}
 
 			GameNPC npc = living as GameNPC;

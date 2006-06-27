@@ -17,7 +17,7 @@
  *
  */
 using System;
-using DOL.GS.Database;
+using DOL.Database;
 
 namespace DOL.GS.PacketHandler.v168
 {
@@ -29,14 +29,15 @@ namespace DOL.GS.PacketHandler.v168
 	{
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
-			if(client.Player.Guild == null || client.Player.GuildRank > 0)
+			if(client.Player.Guild == null)
 				return 0;
-			
+			if(!client.Player.Guild.GotAccess(client.Player, eGuildRank.Leader))
+				return 0;
 			int primarycolor   = packet.ReadByte() & 0x0F; //4bits
 			int secondarycolor = packet.ReadByte() & 0x07; //3bits
 			int pattern        = packet.ReadByte() & 0x03; //2bits
 			int logo           = packet.ReadByte() & 0x7F; //7bits
-			ushort oldemblem = (ushort)client.Player.Guild.Emblem;
+			ushort oldemblem = client.Player.Guild.theGuildDB.Emblem;
 			ushort newemblem = (ushort)((logo << 9) | (pattern << 7) | (primarycolor << 3) | secondarycolor);
 			if (GuildMgr.IsEmblemUsed(newemblem))
 			{

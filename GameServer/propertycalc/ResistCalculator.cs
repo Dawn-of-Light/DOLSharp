@@ -33,17 +33,8 @@ namespace DOL.GS.PropertyCalc
 	[PropertyCalculator(eProperty.Resist_First, eProperty.Resist_Last)]
 	public class ResistCalculator : PropertyCalculator
 	{
-        /// <summary>
-        /// Initializes a new instance of the <see cref="T:ResistCalculator"/> class.
-        /// </summary>
 		public ResistCalculator() {}
 
-        /// <summary>
-        /// calculates the final property value
-        /// </summary>
-        /// <param name="living"></param>
-        /// <param name="property"></param>
-        /// <returns></returns>
 		public override int CalcValue(GameLiving living, eProperty property) 
 		{
 			int itemBonus = living.ItemBonus[(int)property];
@@ -53,14 +44,20 @@ namespace DOL.GS.PropertyCalc
 				debuff = -debuff;
 			}
 			int res = 0;
-			res += SkillBase.GetRaceResist(living.Race, (eResist)property);
-			int cap = living.Level / 2 + 1;
-            if (itemBonus > cap) {
-				itemBonus = cap;
-			}
 
-			if (buffBonus > cap) {
-				buffBonus = cap;
+			if (living is GamePlayer) 
+			{
+				GamePlayer player = (GamePlayer)living;
+				res += SkillBase.GetRaceResist((eRace)player.Race, (eResist)property);
+				int cap = living.Level / 2 + 1;
+
+				if (itemBonus > cap) {
+					itemBonus = cap;
+				}
+
+				if (buffBonus > cap) {
+					buffBonus = cap;
+				}
 			}
 
 			//100% debuff effectiveness for resists buffs

@@ -33,7 +33,7 @@
 using System;
 using System.Reflection;
 using DOL.AI.Brain;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
@@ -48,45 +48,12 @@ using log4net;
 
 namespace DOL.GS.Quests.Albion
 {
-	/* The first thing we do, is to declare the quest requirement
-	* class linked with the new Quest. To do this, we derive 
-	* from the abstract class AbstractQuestDescriptor
-	*/
-	public class HeartOfSephucothDescriptor : AbstractQuestDescriptor
-	{
-		/* This is the type of the quest class linked with 
-		 * this requirement class, you must override the 
-		 * base methid like that
-		 */
-		public override Type LinkedQuestType
-		{
-			get { return typeof(HeartOfSephucoth); }
-		}
-
-		/* This value is used to retrieves the minimum level needed
-		 *  to be able to make this quest. Override it only if you need, 
-		 * the default value is 1
-		 */
-		public override int MinLevel
-		{
-			get { return 7; }
-		}
-
-		/* This value is used to retrieves how maximum level needed
-		 * to be able to make this quest. Override it only if you need, 
-		 * the default value is 50
-		 */
-		public override int MaxLevel
-		{
-			get { return 14; }
-		}
-	}
-
-	/* The second thing we do, is to declare the class we create
-	 * as Quest. We must make it persistant using attributes, to
-	 * do this, we derive from the abstract class AbstractQuest
+	/* The first thing we do, is to declare the class we create
+	 * as Quest. To do this, we derive from the abstract class
+	 * AbstractQuest
+	 * 	 
 	 */
-	[NHibernate.Mapping.Attributes.Subclass(NameType = typeof(HeartOfSephucoth), ExtendsType = typeof(AbstractQuest))]
+
 	public class HeartOfSephucoth : BaseQuest
 	{
 		/// <summary>
@@ -104,14 +71,36 @@ namespace DOL.GS.Quests.Albion
 		 * 
 		 */
 		protected const string questTitle = "Heart of Sephucoth";
+		protected const int minimumLevel = 7;
+		protected const int maximumLevel = 14;
 
 		private static GameNPC eowylnAstos = null;
 		private static GameNPC sephucoth = null;
 		
-		private static GenericItemTemplate sephucothsHeart = null;
-		private static GenericItemTemplate polishedBone = null;
+		private static ItemTemplate sephucothsHeart = null;
+		private static ItemTemplate polishedBone = null;
 
-		private static NecklaceTemplate fieryCrystalPendant = null;
+		private static ItemTemplate fieryCrystalPendant = null;
+		
+		
+		/* We need to define the constructors from the base class here, else there might be problems
+		 * when loading this quest...
+		 */
+		public HeartOfSephucoth() : base()
+		{
+		}
+
+		public HeartOfSephucoth(GamePlayer questingPlayer) : this(questingPlayer, 1)
+		{
+		}
+
+		public HeartOfSephucoth(GamePlayer questingPlayer, int step) : base(questingPlayer, step)
+		{
+		}
+
+		public HeartOfSephucoth(GamePlayer questingPlayer, DBQuest dbQuest) : base(questingPlayer, dbQuest)
+		{
+		}
 
 		/* The following method is called automatically when this quest class
 		 * is loaded. You might notice that this method is the same as in standard
@@ -161,16 +150,18 @@ namespace DOL.GS.Quests.Albion
 					log.Warn("Could not find " + eowylnAstos.Name + ", creating him ...");
 				eowylnAstos.GuildName = "Part of " + questTitle + " Quest";
 				eowylnAstos.Realm = (byte) eRealm.Albion;
-				eowylnAstos.RegionId = 1;
+				eowylnAstos.CurrentRegionID = 1;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
-				template.AddNPCEquipment(eInventorySlot.TorsoArmor, 58, 40, 0);
+				template.AddNPCEquipment(eInventorySlot.TorsoArmor, 58, 40);
 				eowylnAstos.Inventory = template.CloseTemplate();
 				eowylnAstos.SwitchWeapon(GameLiving.eActiveWeaponSlot.Standard);
 
 				eowylnAstos.Size = 54;
 				eowylnAstos.Level = 17;
-				eowylnAstos.Position = new Point(559680, 513793, 2619);
+				eowylnAstos.X = 559680;
+				eowylnAstos.Y = 513793;
+				eowylnAstos.Z = 2619;
 				eowylnAstos.Heading = 3185;
 
 				//You don't have to store the created mob in the db if you don't want,
@@ -190,10 +181,10 @@ namespace DOL.GS.Quests.Albion
 			#region defineItems
 
 			// item db check
-			sephucothsHeart = (GenericItemTemplate) GameServer.Database.FindObjectByKey(typeof (GenericItemTemplate), "sephucoths_heart");
+			sephucothsHeart = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "sephucoths_heart");
 			if (sephucothsHeart == null)
 			{
-				sephucothsHeart = new GenericItemTemplate();
+				sephucothsHeart = new ItemTemplate();
 				sephucothsHeart.Name = "Sephucoth's Heart";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find "+sephucothsHeart.Name+", creating it ...");
@@ -201,11 +192,21 @@ namespace DOL.GS.Quests.Albion
 				sephucothsHeart.Weight = 0;
 				sephucothsHeart.Model = 595;
 
-				sephucothsHeart.ItemTemplateID = "sephucoths_heart";
-
+				sephucothsHeart.Object_Type = (int) eObjectType.GenericItem;
+				sephucothsHeart.Id_nb = "sephucoths_heart";
+				sephucothsHeart.Gold = 0;
+				sephucothsHeart.Silver = 0;
+				sephucothsHeart.Copper = 0;
+				sephucothsHeart.IsPickable = false;
 				sephucothsHeart.IsDropable = false;
-				sephucothsHeart.IsSaleable = false;
-				sephucothsHeart.IsTradable = false;
+				
+				sephucothsHeart.Quality = 100;
+				sephucothsHeart.MaxQuality = 100;
+				sephucothsHeart.Condition = 1000;
+				sephucothsHeart.MaxCondition = 1000;
+				sephucothsHeart.Durability = 1000;
+				sephucothsHeart.MaxDurability = 1000;
+
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -215,10 +216,10 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			polishedBone = (GenericItemTemplate) GameServer.Database.FindObjectByKey(typeof (GenericItemTemplate), "polished_bone");
+			polishedBone = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "polished_bone");
 			if (polishedBone == null)
 			{
-				polishedBone = new GenericItemTemplate();
+				polishedBone = new ItemTemplate();
 				polishedBone.Name = "Polished Bone";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find "+polishedBone.Name+", creating it ...");
@@ -226,11 +227,21 @@ namespace DOL.GS.Quests.Albion
 				polishedBone.Weight = 15;
 				polishedBone.Model = 497;
 
-				polishedBone.ItemTemplateID = "polished_bone";
-
+				polishedBone.Object_Type = (int) eObjectType.GenericItem;
+				polishedBone.Id_nb = "polished_bone";
+				polishedBone.Gold = 0;
+				polishedBone.Silver = 0;
+				polishedBone.Copper = 0;
+				polishedBone.IsPickable = false;
 				polishedBone.IsDropable = false;
-				polishedBone.IsSaleable = false;
-				polishedBone.IsTradable = false;
+				
+				polishedBone.Quality = 100;
+				polishedBone.MaxQuality = 100;
+				polishedBone.Condition = 1000;
+				polishedBone.MaxCondition = 1000;
+				polishedBone.Durability = 1000;
+				polishedBone.MaxDurability = 1000;
+
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -240,10 +251,10 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			fieryCrystalPendant = (NecklaceTemplate) GameServer.Database.FindObjectByKey(typeof (NecklaceTemplate), "fiery_crystal_pendant");
+			fieryCrystalPendant = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "fiery_crystal_pendant");
 			if (fieryCrystalPendant == null)
 			{
-				fieryCrystalPendant = new NecklaceTemplate();
+				fieryCrystalPendant = new ItemTemplate();
 				fieryCrystalPendant.Name = "Fiery Crystal Pendant";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find "+fieryCrystalPendant.Name+", creating it ...");
@@ -252,15 +263,27 @@ namespace DOL.GS.Quests.Albion
 				fieryCrystalPendant.Weight = 8;
 				fieryCrystalPendant.Model = 101;
 			
-				fieryCrystalPendant.ItemTemplateID = "fiery_crystal_pendant";
-				fieryCrystalPendant.Value = 30;
-
+				fieryCrystalPendant.Object_Type = (int) eObjectType.Magical;
+				fieryCrystalPendant.Item_Type = (int) eEquipmentItems.NECK;
+				fieryCrystalPendant.Id_nb = "fiery_crystal_pendant";
+				fieryCrystalPendant.Gold = 0;
+				fieryCrystalPendant.Silver = 0;
+				fieryCrystalPendant.Copper = 30;
+				fieryCrystalPendant.IsPickable = true;
 				fieryCrystalPendant.IsDropable = true;
-				fieryCrystalPendant.IsSaleable = true;
-				fieryCrystalPendant.IsTradable = true;
 
-				fieryCrystalPendant.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Fire, 1));
-				fieryCrystalPendant.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Intelligence, 1));
+				fieryCrystalPendant.Bonus1 = 1;
+				fieryCrystalPendant.Bonus1Type = (int)eProperty.Skill_Fire;
+				fieryCrystalPendant.Bonus2 = 1;
+				fieryCrystalPendant.Bonus2Type = (int)eProperty.Intelligence;
+			
+				fieryCrystalPendant.Quality = 100;
+				fieryCrystalPendant.MaxQuality = 100;
+				fieryCrystalPendant.Condition = 1000;
+				fieryCrystalPendant.MaxCondition = 1000;
+				fieryCrystalPendant.Durability = 1000;
+				fieryCrystalPendant.MaxDurability = 1000;
+
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -283,8 +306,8 @@ namespace DOL.GS.Quests.Albion
 			GameEventMgr.AddHandler(eowylnAstos, GameLivingEvent.Interact, new DOLEventHandler(TalkToEowylnAstos));
 			GameEventMgr.AddHandler(eowylnAstos, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToEowylnAstos));
 
-			/* Now we bring to Ydenia the possibility to give this quest to players */
-			QuestMgr.AddQuestDescriptor(eowylnAstos, typeof(HeartOfSephucothDescriptor));
+			/* Now we bring to Yetta Fletcher the possibility to give this quest to players */
+			eowylnAstos.AddQuestToGive(typeof (HeartOfSephucoth));
 
 			if (log.IsInfoEnabled)
 				log.Info("Quest \"" + questTitle + "\" initialized");
@@ -313,7 +336,7 @@ namespace DOL.GS.Quests.Albion
 			GameEventMgr.RemoveHandler(eowylnAstos, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToEowylnAstos));
 
 			/* Now we remove to Yetta Fletcher the possibility to give this quest to players */
-			QuestMgr.RemoveQuestDescriptor(eowylnAstos, typeof(HeartOfSephucothDescriptor));
+			eowylnAstos.RemoveQuestToGive(typeof (HeartOfSephucoth));
 		}
 
 		/* This is the method we declared as callback for the hooks we set to
@@ -328,7 +351,7 @@ namespace DOL.GS.Quests.Albion
 			if (player == null)
 				return;
 
-			if (QuestMgr.CanGiveQuest(typeof(HeartOfSephucothDescriptor), player, eowylnAstos) <= 0)
+			if(eowylnAstos.CanGiveQuest(typeof (HeartOfSephucoth), player)  <= 0)
 				return;
 
 			//We also check if the player is already doing the quest
@@ -385,6 +408,57 @@ namespace DOL.GS.Quests.Albion
 							break;
 					}
 				}
+				else
+				{
+					switch (wArgs.Text)
+					{
+						case "abort":
+							player.Out.SendCustomDialog("Do you really want to abort this quest, \nall items gained during quest will be lost?", new CustomDialogResponse(CheckPlayerAbortQuest));
+							break;
+					}
+				}
+			}
+		}
+
+		/// <summary>
+		/// This method checks if a player qualifies for this quest
+		/// </summary>
+		/// <returns>true if qualified, false if not</returns>
+		public override bool CheckQuestQualification(GamePlayer player)
+		{
+			// if the player is already doing the quest his level is no longer of relevance
+			if (player.IsDoingQuest(typeof (HeartOfSephucoth)) != null)
+				return true;
+
+			// This checks below are only performed is player isn't doing quest already
+
+			if (player.Level < minimumLevel || player.Level > maximumLevel)
+				return false;
+
+			return true;
+		}
+
+		
+		/* This is our callback hook that will be called when the player clicks
+		 * on any button in the quest offer dialog. We check if he accepts or
+		 * declines here...
+		 */
+
+		private static void CheckPlayerAbortQuest(GamePlayer player, byte response)
+		{
+			HeartOfSephucoth quest = player.IsDoingQuest(typeof (HeartOfSephucoth)) as HeartOfSephucoth;
+
+			if (quest == null)
+				return;
+
+			if (response == 0x00)
+			{
+				SendSystemMessage(player, "Good, no go out there and finish your work!");
+			}
+			else
+			{
+				SendSystemMessage(player, "Aborting Quest " + questTitle + ". You can start over again if you want.");
+				quest.AbortQuest();
 			}
 		}
 
@@ -397,7 +471,7 @@ namespace DOL.GS.Quests.Albion
 		{
 			//We recheck the qualification, because we don't talk to players
 			//who are not doing the quest
-			if (QuestMgr.CanGiveQuest(typeof(HeartOfSephucothDescriptor), player, eowylnAstos) <= 0)
+			if(eowylnAstos.CanGiveQuest(typeof (HeartOfSephucoth), player)  <= 0)
 				return;
 
 			if (player.IsDoingQuest(typeof (HeartOfSephucoth)) != null)
@@ -410,7 +484,7 @@ namespace DOL.GS.Quests.Albion
 			else
 			{
 				//Check if we can add the quest!
-				if (!QuestMgr.GiveQuestToPlayer(typeof(HeartOfSephucoth), player))
+				if (!eowylnAstos.GiveQuest(typeof (HeartOfSephucoth), player, 1))
 					return;
 
 				SendReply(player, "Aye, the locals have given it the name Sephucoth. Return its heart to me and I will instruct you further.");
@@ -448,9 +522,8 @@ namespace DOL.GS.Quests.Albion
 						return "[Step #3] Retrieve a piece of polished bone from a large skeleton.";
 					case 4:
 						return "[Step #4] Return the polished bone to Eowyln.";
-					default:
-						return "[Step #" + Step + "] No Description entered for this step!";
 				}
+				return base.Description;
 			}
 		}
 
@@ -476,11 +549,13 @@ namespace DOL.GS.Quests.Albion
 								sephucoth.Model = 136;
 								sephucoth.Name = "Sephucoth";
 								sephucoth.Realm = (byte) eRealm.None;
-								sephucoth.RegionId = 1;
+								sephucoth.CurrentRegionID = 1;
 
 								sephucoth.Size = 55;
 								sephucoth.Level = 7;
-								sephucoth.Position = new Point(560836, 527260, 2082);
+								sephucoth.X = 560836;
+								sephucoth.Y = 527260;
+								sephucoth.Z = 2082;
 								sephucoth.Heading = 1480;
 
 								StandardMobBrain brain = new StandardMobBrain();  // set a brain witch find a lot mob friend to attack the player
@@ -494,7 +569,7 @@ namespace DOL.GS.Quests.Albion
 					}
 					else if (gArgs.Target.Name == "Sephucoth")
 					{
-						GiveItemToPlayer(gArgs.Target, sephucothsHeart.CreateInstance());
+						GiveItem(gArgs.Target, player, sephucothsHeart);
 						if(sephucoth != null) { sephucoth = null; }
 
 						Step = 2;
@@ -506,7 +581,7 @@ namespace DOL.GS.Quests.Albion
 					{
 						if (Util.Chance(50))
 						{
-							GiveItemToPlayer(gArgs.Target, polishedBone.CreateInstance());
+							GiveItem(gArgs.Target, player, polishedBone);
 							Step = 4;
 						}
 					}
@@ -517,17 +592,17 @@ namespace DOL.GS.Quests.Albion
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
 				if (gArgs.Target.Name == eowylnAstos.Name)
 				{
-					if(gArgs.Item.Name == sephucothsHeart.Name && Step == 2)
+					if(gArgs.Item.Id_nb == sephucothsHeart.Id_nb && Step == 2)
 					{
-						RemoveItemFromPlayer(eowylnAstos, sephucothsHeart);
+						RemoveItem(eowylnAstos, m_questPlayer, sephucothsHeart);
 
 						eowylnAstos.TurnTo(m_questPlayer);
 						eowylnAstos.SayTo(m_questPlayer, "You have done well traveler! I will still require one final object to complete the pendant. Seek out a large skeleton and bring from it a piece of polished bone! Return this to me and I shall finish your pendant.");
 						Step = 3;
 					}
-					else if(gArgs.Item.Name == polishedBone.Name && Step == 4)
+					else if(gArgs.Item.Id_nb == polishedBone.Id_nb && Step == 4)
 					{
-						RemoveItemFromPlayer(eowylnAstos, polishedBone);
+						RemoveItem(eowylnAstos, m_questPlayer, polishedBone);
 
 						eowylnAstos.TurnTo(m_questPlayer);
 						eowylnAstos.SayTo(m_questPlayer, "Eowyln draws two items before her. Gathering her strength, she shouts.");
@@ -540,15 +615,24 @@ namespace DOL.GS.Quests.Albion
 
 		protected virtual int BuildNecklace(RegionTimer callingTimer)
 		{
-			eowylnAstos.Emote(eEmote.Yes);
+			m_questPlayer.Out.SendEmoteAnimation(eowylnAstos, eEmote.Yes);
 			SendMessage(m_questPlayer, "Eowyln carefully fashions a delicate necklace about the crystal and smiles.", 0, eChatType.CT_Say, eChatLoc.CL_PopupWindow);
 							
 			eowylnAstos.SayTo(m_questPlayer, "Here is your pendant. I thank you for allowing me the opportunity to create such a great item!");
 		
-			GiveItemToPlayer(eowylnAstos, fieryCrystalPendant.CreateInstance());
+			GiveItem(eowylnAstos, m_questPlayer, fieryCrystalPendant);
 							
 			FinishQuest();
 			return 0;
+		}
+						
+
+		public override void AbortQuest()
+		{
+			base.AbortQuest(); //Defined in Quest, changes the state, stores in DB etc ...
+
+			RemoveItem(m_questPlayer, sephucothsHeart, false);
+			RemoveItem(m_questPlayer, polishedBone, false);
 		}
 	}
 }

@@ -19,7 +19,8 @@
 using System.Collections;
 using System.Collections.Specialized;
 using System;
-using DOL.GS.Database;
+
+using DOL.Database;
 
 namespace DOL.GS
 {

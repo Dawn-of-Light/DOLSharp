@@ -79,11 +79,7 @@ namespace DOL.GS.Scripts
 				return 1;
 			}
 
-			Point target = targetNPC.Position;
-			target.X += xoff;
-			target.Y += yoff;
-			target.Z += zoff;
-			targetNPC.WalkTo(target, speed);
+			targetNPC.WalkTo((targetNPC.X + xoff), (targetNPC.Y + yoff), (targetNPC.Z + zoff), speed);
 			return 1;
 		}
 	}

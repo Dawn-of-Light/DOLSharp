@@ -93,7 +93,7 @@ namespace DOL.GS.Effects
 			m_protectSource.EffectList.Add(this);
 			m_protectTarget.EffectList.Add(this);
 
-			if (!protectSource.Position.CheckSquareDistance(protectTarget.Position, (uint) (ProtectAbilityHandler.PROTECT_DISTANCE*ProtectAbilityHandler.PROTECT_DISTANCE)))
+			if (!WorldMgr.CheckDistance(protectSource, protectTarget,ProtectAbilityHandler.PROTECT_DISTANCE))
 			{
 				protectSource.Out.SendMessage(string.Format("You are now protecting {0}, but you must stand closer.", protectTarget.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				protectTarget.Out.SendMessage(string.Format("{0} is now protecting you, but you must stand closer.", protectSource.GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -125,8 +125,7 @@ namespace DOL.GS.Effects
 		/// Called when effect must be canceled
 		/// </summary>
 		public void Cancel(bool playerCancel) {
-			GameEventMgr.RemoveHandler(m_playerGroup, PlayerGroupEvent.PlayerDisbanded, new DOLEventHandler(GroupDisbandCallback));
-			// intercept handling is done by the active part             
+            // intercept handling is done by the active part             
 			m_protectSource.EffectList.Remove(this);
 			m_protectTarget.EffectList.Remove(this);
 
@@ -144,8 +143,8 @@ namespace DOL.GS.Effects
 			
 			get
 			{
-				if (m_protectSource != null && m_protectTarget != null)
-					return m_protectSource.GetName(0, false) + " is Guarding " + m_protectTarget.GetName(0, false);
+				if (ProtectSource!=null)
+					return "Protect:"+ProtectSource.GetName(0,false);
 				return "Protect";
 			}
 		}

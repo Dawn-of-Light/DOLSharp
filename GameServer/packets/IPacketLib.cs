@@ -21,7 +21,7 @@ using DOL.AI.Brain;
 using DOL.GS;
 using DOL.GS.Housing;
 using DOL.GS.Quests;
-using DOL.GS.Database;
+using DOL.Database;
 
 namespace DOL.GS.PacketHandler
 {
@@ -376,23 +376,6 @@ namespace DOL.GS.PacketHandler
 		Close,
 	}
 
-	public enum eDialogType : byte
-	{
-		Ok = 0x00,
-		YesNo = 0x01,
-	}
-
-	public enum eDialogCode : byte
-	{
-		SimpleWarning = 0x00,
-		GuildInvite = 0x03,
-		GroupInvite = 0x05,
-		CustomDialog = 0x06,
-		GuildLeave = 0x08,
-		QuestSuscribe = 0x64,
-		BuyRespec = 0x20,
-	}
-
 
 	public interface IPacketLib
 	{
@@ -448,9 +431,13 @@ namespace DOL.GS.PacketHandler
 		void SendSpellEffectAnimation(GameLiving spellCaster, GameLiving spellTarget,ushort spellid, ushort boltTime, bool noSound, byte success);
 		void SendRiding(GameObject rider, GameObject steed, bool dismount);
 		void SendFindGroupWindowUpdate(GamePlayer[] list);
-		void SendDialogBox(eDialogCode code, ushort data1, ushort data2, ushort data3, ushort data4, eDialogType type, bool autoWarpText, string message);
+		void SendGroupInviteCommand(GamePlayer invitingPlayer, string inviteMessage);
+		void SendSimpleWarningDialog(string warning);
 		void SendCustomDialog(string msg, DOL.GS.PacketHandler.CustomDialogResponse callback);
 		void SendCheckLOS(GameObject Checker, GameObject Target, DOL.GS.PacketHandler.CheckLOSResponse callback);
+		void SendGuildLeaveCommand(GamePlayer invitingPlayer,string inviteMessage);
+		void SendGuildInviteCommand(GamePlayer invitingPlayer,string inviteMessage);
+		void SendQuestSubscribeCommand(GameNPC invitingNPC,ushort questid, string inviteMessage);        
 		void SendGroupWindowUpdate();
 		void SendGroupMemberUpdate(bool updateIcons, GamePlayer player);
 		void SendGroupMembersUpdate(bool updateIcons);

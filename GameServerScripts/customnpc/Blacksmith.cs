@@ -19,7 +19,7 @@
 
 using System;
 using System.Collections;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Scripts
@@ -43,7 +43,7 @@ namespace DOL.GS.Scripts
 			if (!base.Interact(player))
 				return false;
 
-			TurnTo(player.Position);
+			TurnTo(player.X, player.Y);
 			SayTo(player, eChatLoc.CL_ChatWindow, "I can repair weapons or armor for you, Just hand me the item you want repaired and I'll see what I can do, for a small fee.");
 			return true;
 		}
@@ -52,36 +52,44 @@ namespace DOL.GS.Scripts
 
 		#region Receive item
 
-        public override bool ReceiveItem(GameLiving source, GenericItem item)
+		public override bool ReceiveItem(GameLiving source, InventoryItem item)
 		{
 			GamePlayer player = source as GamePlayer;
 			if (player == null || item == null)
 				return false;
 			
-			EquipableItem itemToRepair = item as EquipableItem;
-			if (itemToRepair == null)
+			if (item.Count != 1)
 			{
-				player.Out.SendMessage(GetName(0, false) + " can't repear this objet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(GetName(0, false) + " can't repear stacked objets.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
-			
-			if (itemToRepair.Condition >= 100)
+			switch (item.Object_Type)
+			{
+				case (int) eObjectType.GenericItem:
+				case (int) eObjectType.Magical:
+				case (int) eObjectType.Instrument:
+				case (int) eObjectType.Poison:
+					SayTo(player, "I can't repear that.");
+					return false;
+			}
+			if (item.Condition < item.MaxCondition)
+			{
+				if (item.Durability <= 0)
+				{
+					player.Out.SendMessage("This object can't be repaired.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					return false;
+				}
+				else
+				{
+					player.TempProperties.setProperty(REPEAR_ITEM_WEAK, new WeakRef(item));
+					long NeededMoney = ((item.MaxCondition - item.Condition)*item.Value)/item.MaxCondition;
+					player.Client.Out.SendCustomDialog(GetName(0, true) + " asks " + Money.GetString(NeededMoney) + "\n to repair " + item.Name, new CustomDialogResponse(BlacksmithDialogResponse));
+				}
+			}
+			else
 			{
 				player.Out.SendMessage("This object doesn't need to be repaired.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return false;
-			
 			}
-			
-			if (itemToRepair.Durability <= 0)
-			{
-				player.Out.SendMessage("This object can't be repaired.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return false;
-			}
-			
-			player.TempProperties.setProperty(REPEAR_ITEM_WEAK, new WeakRef(itemToRepair));
-			long NeededMoney = (long)((100 - itemToRepair.Condition) * item.Value / 100);
-			player.Client.Out.SendCustomDialog(GetName(0, true) + " asks " + Money.GetString(NeededMoney) + "\n to repair " + item.Name, new CustomDialogResponse(BlacksmithDialogResponse));
-				
 			return false;
 		}
 
@@ -97,17 +105,17 @@ namespace DOL.GS.Scripts
 			if (response != 0x01)
 				return;
 
-			EquipableItem item = itemWeak.Target as EquipableItem;
+			InventoryItem item = (InventoryItem) itemWeak.Target;
 
 			if (item == null || item.SlotPosition == (int) eInventorySlot.Ground
-				|| item.Owner == null || item.Owner != player)
+				|| item.OwnerID == null || item.OwnerID != player.InternalID)
 			{
 				player.Out.SendMessage("Invalid item.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
-			int ToRecoverCond = (int)(100 - item.Condition);
-			long cost = ToRecoverCond*item.Value/100;
+			int ToRecoverCond = item.MaxCondition - item.Condition;
+			long cost = ToRecoverCond*item.Value/item.MaxCondition;
 
 			if (!player.RemoveMoney(cost))
 			{
@@ -117,20 +125,35 @@ namespace DOL.GS.Scripts
 
 			player.Out.SendMessage("You give to " + GetName(0, false) + " " + Money.GetString((long) cost) + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
-			if (ToRecoverCond >= item.Durability)
+			if (ToRecoverCond + 1 >= item.Durability)
 			{
-				item.Condition += item.Durability;
+				item.Condition = item.Condition + item.Durability;
 				item.Durability = 0;
 				SayTo(player, "Uhh, that " + item.Name + " was already rather old, I won't be able to repair it once again, so be careful!");
 			}
 			else
 			{
-				item.Condition = 100;
-				item.Durability -= (byte)(ToRecoverCond + 1);
+				item.Condition = item.MaxCondition;
+				item.Durability -= (ToRecoverCond + 1);
 				SayTo(player, "Well, it's finished. Your " + item.Name + " is practically new. Come back if you need my service once again!");
 			}
 
-			player.Out.SendInventorySlotsUpdate(new int[] {item.SlotPosition});
+			// Add some random Quality +1/-1 stuff to make smithing more interesting
+			// Chance of quality -1 must be higher than +1 to reduce chance ob smithing abuse.
+			if (item.Quality > 0 && Util.Chance(10)) // 10% chance to reduce item quality by one
+			{
+				item.Quality--;
+			}
+			else
+			{
+				int proChance = (item.MaxQuality - item.Quality)/2;
+				if (Util.Chance(proChance))
+				{
+					item.Quality++;
+				}
+			}
+
+			player.Out.SendInventoryItemsUpdate(new InventoryItem[] {item});
 			SayTo(player, "It's ok. Now you can use your " + item.Name + " in fight!");
 			return;
 		}

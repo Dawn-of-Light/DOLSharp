@@ -57,8 +57,8 @@ namespace DOL.GS.Spells
 				if (target.Mana < target.MaxMana) target.StartPowerRegeneration();
 				else if (target.Mana > target.MaxMana) target.Mana = target.MaxMana;
 
-				if (target.EndurancePercent < 100) target.StartEnduranceRegeneration();
-				else if (target.EndurancePercent > 100) target.EndurancePercent = 100;
+				if (target.Endurance < target.MaxEndurance) target.StartEnduranceRegeneration();
+				else if (target.Endurance > target.MaxEndurance) target.Endurance = target.MaxEndurance;
 			}
 		}
 
@@ -100,8 +100,6 @@ namespace DOL.GS.Spells
 			if (Spell.EffectGroup != 0)
 				return Spell.EffectGroup == compare.Spell.EffectGroup;
 			if (base.IsOverwritable(compare) == false) return false;
-			if (Spell.Duration > 0 && compare.Concentration > 0)
-				return compare.Spell.Value >= Spell.Value;
 			return compare.SpellHandler.SpellLine.IsBaseLine == SpellLine.IsBaseLine;
 		}
 

@@ -55,7 +55,7 @@ namespace DOL.GS.PropertyCalc
 //				- Pets that are not in combat have also received the new run speed, only when they are following, to allow them to keep up with their owners.
 				if(speed == 1 && !player.InCombat) speed *= 1.25; // new run speed is 125% when no buff
 
-				if (player.IsOverencumbered && player.Client.Account.PrivLevel == ePrivLevel.Player)
+				if (player.IsOverencumbered && player.Client.Account.PrivLevel < 2)
 				{
 					double Enc = player.Encumberance; // calculating player.Encumberance is a bit slow with all those locks, don't call it much
 					if(Enc>player.MaxEncumberance)

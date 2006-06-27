@@ -86,7 +86,7 @@ namespace DOL.GS.Scripts
 			}
 			else
 			{
-				if (player.Position.CheckSquareDistance(player.TargetObject.Position, WorldMgr.WHISPER_DISTANCE*WorldMgr.WHISPER_DISTANCE))
+				if (WorldMgr.GetDistance(player.X, player.Y, 0, player.TargetObject.X, player.TargetObject.Y, 0) <= WorldMgr.WHISPER_DISTANCE)
 					//ToDo: Use follow Line instead of Above when Dol will support Mob with a Z coordinate.
 					//foreach(GameNPC mob in WorldMgr.GetNPCsCloseToObject(Player, WorldMgr.WHISPER_DISTANCE))
 				{

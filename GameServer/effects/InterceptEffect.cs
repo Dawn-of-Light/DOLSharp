@@ -84,7 +84,7 @@ namespace DOL.GS.Effects
 
 			GameEventMgr.AddHandler(m_group, PlayerGroupEvent.PlayerDisbanded, new DOLEventHandler(GroupDisbandCallback));
 
-			if (!interceptor.Position.CheckSquareDistance(intercepted.Position, (uint) (InterceptAbilityHandler.INTERCEPT_DISTANCE*InterceptAbilityHandler.INTERCEPT_DISTANCE)))
+			if (!WorldMgr.CheckDistance(interceptor, intercepted,InterceptAbilityHandler.INTERCEPT_DISTANCE))
 			{
 				interceptor.Out.SendMessage(string.Format("You are now attempting to intercept an attack for {0}, but you must stand closer.", intercepted.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				intercepted.Out.SendMessage(string.Format("{0} is now attempting to intercept an attack for you, but you must stand closer.", interceptor.GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -137,8 +137,8 @@ namespace DOL.GS.Effects
 		{
 			get
 			{
-				if (m_interceptSource != null && m_interceptTarget != null)
-					return m_interceptSource.GetName(0, false) + " is Guarding " + m_interceptTarget.GetName(0, false);
+				if (m_interceptSource!=null)
+					return "Intercept: "+m_interceptSource.GetName(0, false);
 				return "Intercept";
 			}
 		}

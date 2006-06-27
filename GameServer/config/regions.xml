@@ -1,0 +1,2787 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <Region27>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>27</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Tutorial Zone</description>
+  </Region27>
+  <Region300>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>300</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Nisse's Lair KT1</description>
+  </Region300>
+  <Region200>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>200</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>0</expansion>
+    <description>Hibernia Terrain</description>
+  </Region200>
+  <Region201>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>201</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>0</expansion>
+    <description>Tir Na Nog</description>
+  </Region201>
+  <Region202>
+    <description>Hibernia Housing</description>
+    <isDivingEnabled>False</isDivingEnabled>
+    <waterLevel>0</waterLevel>
+    <port>10400</port>
+    <ip>127.0.0.1</ip>
+    <isHousingEnabled>True</isHousingEnabled>
+    <expansion>0</expansion>
+    <id>202</id>
+  </Region202>
+  <Region199>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>199</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>2</expansion>
+    <description>Volurgon</description>
+  </Region199>
+  <Region426>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>426</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Deliah's Sanctuary</description>
+  </Region426>
+  <Region427>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>427</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Stonehenge AW3</description>
+  </Region427>
+  <Region488>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>488</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>The Forgotten Vein</description>
+  </Region488>
+  <Region487>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>487</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>The Pit of Despair</description>
+  </Region487>
+  <Region484>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>484</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Koalinth AW2</description>
+  </Region484>
+  <Region483>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>483</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Koalinth AW1</description>
+  </Region483>
+  <Region480>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>480</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Treibh AW2</description>
+  </Region480>
+  <Region499>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>499</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Alb Launch</description>
+  </Region499>
+  <Region020>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>20</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>0</expansion>
+    <description>Stonehenge Barrows Dungeon</description>
+  </Region020>
+  <Region021>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>21</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>0</expansion>
+    <description>Tomb of Mithra</description>
+  </Region021>
+  <Region083>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>83</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>2</expansion>
+    <description>Stygia Necropolis</description>
+  </Region083>
+  <Region023>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>23</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>0</expansion>
+    <description>Catacombs of Carvoda</description>
+  </Region023>
+  <Region024>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>24</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>0</expansion>
+    <description>Tepok's Mine</description>
+  </Region024>
+  <Region025>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>25</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>0</expansion>
+    <description>Bog Men</description>
+  </Region025>
+  <Region389>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>389</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Shafts of the Tenebrae</description>
+  </Region389>
+  <Region388>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>388</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Alb AbMines AW1</description>
+  </Region388>
+  <Region435>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>435</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Forge AW 1 - Alb</description>
+  </Region435>
+  <Region451>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>451</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Muire KT2</description>
+  </Region451>
+  <Region450>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>450</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Muire  KT1</description>
+  </Region450>
+  <Region455>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>455</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Spraggon KT1</description>
+  </Region455>
+  <Region459>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>459</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Spraggon KT5</description>
+  </Region459>
+  <Region458>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>458</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Spraggon KT4</description>
+  </Region458>
+  <Region442>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>442</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>The Steward's Crypt</description>
+  </Region442>
+  <Region443>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>443</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Serf's Folly</description>
+  </Region443>
+  <Region222>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>222</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>0</expansion>
+    <description>Spraggon Den</description>
+  </Region222>
+  <Region223>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>223</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>0</expansion>
+    <description>Koalinth Lair</description>
+  </Region223>
+  <Region220>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>220</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>0</expansion>
+    <description>Coruscating Mine</description>
+  </Region220>
+  <Region221>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>221</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>0</expansion>
+    <description>Undead</description>
+  </Region221>
+  <Region226>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>226</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Abandoned Mines</description>
+  </Region226>
+  <Region227>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>227</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Abandoned Mines</description>
+  </Region227>
+  <Region224>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>224</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>0</expansion>
+    <description>Ursine Caves</description>
+  </Region224>
+  <Region498>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>498</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Alb Launch</description>
+  </Region498>
+  <Region228>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>228</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Abandoned Mines</description>
+  </Region228>
+  <Region229>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>229</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Burial Grounds</description>
+  </Region229>
+  <Region303>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>303</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Nisse's KT4</description>
+  </Region303>
+  <Region302>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>302</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Nisse's KT3</description>
+  </Region302>
+  <Region305>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>305</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Cursed Tomb KT1</description>
+  </Region305>
+  <Region304>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>304</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Nisse's KT5</description>
+  </Region304>
+  <Region307>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>307</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Cursed Tomb KT3</description>
+  </Region307>
+  <Region306>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>306</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Cursed Tomb KT2</description>
+  </Region306>
+  <Region309>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>309</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Cursed Tomb KT5</description>
+  </Region309>
+  <Region308>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>308</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Cursed Tomb KT4</description>
+  </Region308>
+  <Region401>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>401</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Mithra KT2</description>
+  </Region401>
+  <Region461>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>461</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Treibh KT2</description>
+  </Region461>
+  <Region462>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>462</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Treibh KT3</description>
+  </Region462>
+  <Region463>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>463</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Treibh KT4</description>
+  </Region463>
+  <Region375>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>375</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Lost Passages</description>
+  </Region375>
+  <Region465>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>465</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Koalinth KT1</description>
+  </Region465>
+  <Region466>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>466</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Koalinth KT2</description>
+  </Region466>
+  <Region408>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>408</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Keltoi KT4</description>
+  </Region408>
+  <Region002>
+    <description>Albion Housing</description>
+    <isDivingEnabled>False</isDivingEnabled>
+    <waterLevel>0</waterLevel>
+    <port>10400</port>
+    <ip>127.0.0.1</ip>
+    <isHousingEnabled>True</isHousingEnabled>
+    <expansion>0</expansion>
+    <id>2</id>
+  </Region002>
+  <Region469>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>469</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Koalinth KT5</description>
+  </Region469>
+  <Region049>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>49</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Rugnog's Haven</description>
+  </Region049>
+  <Region001>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>1</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>0</expansion>
+    <description>Albion Terrain</description>
+  </Region001>
+  <Region473>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>473</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Coruscating KT4</description>
+  </Region473>
+  <Region123>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>123</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>2</expansion>
+    <description>Aphophian</description>
+  </Region123>
+  <Region310>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>310</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Vendo KT1</description>
+  </Region310>
+  <Region311>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>311</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Vendo KT2</description>
+  </Region311>
+  <Region312>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>312</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Vendo KT3</description>
+  </Region312>
+  <Region313>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>313</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Vendo KT4</description>
+  </Region313>
+  <Region314>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>314</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Vendo KT5</description>
+  </Region314>
+  <Region315>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>315</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Varulvhamn KT1</description>
+  </Region315>
+  <Region316>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>316</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Varulvhamn KT2</description>
+  </Region316>
+  <Region317>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>317</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Varulvhamn KT3</description>
+  </Region317>
+  <Region318>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>318</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Varulvhamn KT4</description>
+  </Region318>
+  <Region319>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>319</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Varulvhamn KT5</description>
+  </Region319>
+  <Region496>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>496</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Nyttheim Hib AW1</description>
+  </Region496>
+  <Region495>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>495</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Abandoned Mines</description>
+  </Region495>
+  <Region494>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>494</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>the Wolves Den</description>
+  </Region494>
+  <Region493>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>493</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Shar Labyrinth</description>
+  </Region493>
+  <Region492>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>492</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>The Queen's Labyrinth</description>
+  </Region492>
+  <Region491>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>491</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>The Queen's Labyrinth</description>
+  </Region491>
+  <Region030>
+    <waterLevel>7970</waterLevel>
+    <isDivingEnabled>True</isDivingEnabled>
+    <id>30</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>2</expansion>
+    <description>Trials of Atlantis Terrain</description>
+  </Region030>
+  <Region035>
+    <waterLevel>18960</waterLevel>
+    <isDivingEnabled>True</isDivingEnabled>
+    <id>35</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>2</expansion>
+    <description>Cetus' Pit</description>
+  </Region035>
+  <Region245>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>245</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>0</expansion>
+    <description>Hall of the Corrupt</description>
+  </Region245>
+  <Region037>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>True</isDivingEnabled>
+    <id>37</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>2</expansion>
+    <description>Medusa's Lair</description>
+  </Region037>
+  <Region036>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>True</isDivingEnabled>
+    <id>36</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>2</expansion>
+    <description>Sobekite Eternal</description>
+  </Region036>
+  <Region097>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>97</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Deadlands of Annwn</description>
+  </Region097>
+  <Region096>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>96</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Underground Forest</description>
+  </Region096>
+  <Region130>
+    <waterLevel>7970</waterLevel>
+    <isDivingEnabled>True</isDivingEnabled>
+    <id>130</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>2</expansion>
+    <description>Trials of Atlantis Terrain</description>
+  </Region130>
+  <Region243>
+    <waterLevel>19856</waterLevel>
+    <isDivingEnabled>True</isDivingEnabled>
+    <id>243</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Kobold Undercity</description>
+  </Region243>
+  <Region323>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>323</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Spindelhalla KT4</description>
+  </Region323>
+  <Region135>
+    <waterLevel>18960</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>135</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>2</expansion>
+    <description>Cetus' Pit</description>
+  </Region135>
+  <Region321>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>321</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Spindelhalla KT2</description>
+  </Region321>
+  <Region320>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>320</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Spindelhalla KT1</description>
+  </Region320>
+  <Region327>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>327</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Caverns of Madness</description>
+  </Region327>
+  <Region326>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>326</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Kobold City AW1</description>
+  </Region326>
+  <Region325>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>325</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Kobold City AW1</description>
+  </Region325>
+  <Region324>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>324</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Spindelhalla KT5</description>
+  </Region324>
+  <Region329>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>329</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Burial AW2</description>
+  </Region329>
+  <Region328>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>328</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Burial AW1</description>
+  </Region328>
+  <Region440>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>440</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Forge AW 2 - Mid</description>
+  </Region440>
+  <Region446>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>446</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>0</expansion>
+    <description>Veil Rift</description>
+  </Region446>
+  <Region447>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>447</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>0</expansion>
+    <description>Veil Rift</description>
+  </Region447>
+  <Region444>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>444</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Muire AW</description>
+  </Region444>
+  <Region445>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>445</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Muire AW4</description>
+  </Region445>
+  <Region065>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>65</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Inconnu Crypt</description>
+  </Region065>
+  <Region066>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>66</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Underground Forest</description>
+  </Region066>
+  <Region067>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>67</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Deadlands of Annwn</description>
+  </Region067>
+  <Region060>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>60</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>1</expansion>
+    <description>Caer Sidi</description>
+  </Region060>
+  <Region061>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>61</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>1</expansion>
+    <description>Krondon</description>
+  </Region061>
+  <Region062>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>62</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>1</expansion>
+    <description>Crystal Cave</description>
+  </Region062>
+  <Region063>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>63</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Roman Aqueducts</description>
+  </Region063>
+  <Region237>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>True</isDivingEnabled>
+    <id>237</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>0</expansion>
+    <description>15to19BG</description>
+  </Region237>
+  <Region236>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>True</isDivingEnabled>
+    <id>236</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>0</expansion>
+    <description>10to14BG</description>
+  </Region236>
+  <Region235>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>235</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>0</expansion>
+    <description>5to9BG</description>
+  </Region235>
+  <Region102>
+    <description>Midgard Housing</description>
+    <isDivingEnabled>False</isDivingEnabled>
+    <waterLevel>0</waterLevel>
+    <port>10400</port>
+    <ip>127.0.0.1</ip>
+    <isHousingEnabled>True</isHousingEnabled>
+    <expansion>0</expansion>
+    <id>102</id>
+  </Region102>
+  <Region101>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>101</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>0</expansion>
+    <description>Jordheim</description>
+  </Region101>
+  <Region100>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>100</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>0</expansion>
+    <description>Midgard Terrain</description>
+  </Region100>
+  <Region332>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>332</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Rebel Half Orc Lair</description>
+  </Region332>
+  <Region333>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>333</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>The Haunted Halls</description>
+  </Region333>
+  <Region330>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>330</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Burial AW3</description>
+  </Region330>
+  <Region331>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>331</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Thieves Den</description>
+  </Region331>
+  <Region109>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>109</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>The Frontlines</description>
+  </Region109>
+  <Region335>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>335</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>A Mine Mid AW4</description>
+  </Region335>
+  <Region415>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>415</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Cordova KT1</description>
+  </Region415>
+  <Region414>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>414</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Tepok KT5</description>
+  </Region414>
+  <Region413>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>413</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Tepok KT4</description>
+  </Region413>
+  <Region412>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>412</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Tepok KT3</description>
+  </Region412>
+  <Region411>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>411</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Tepok KT2</description>
+  </Region411>
+  <Region472>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>472</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Coruscating KT3</description>
+  </Region472>
+  <Region475>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>475</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Spraggon AW1</description>
+  </Region475>
+  <Region474>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>474</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Coruscating KT5</description>
+  </Region474>
+  <Region476>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>476</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Spraggon AW2</description>
+  </Region476>
+  <Region479>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>479</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Treibh AW1</description>
+  </Region479>
+  <Region010>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>10</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>0</expansion>
+    <description>City of Camelot</description>
+  </Region010>
+  <Region188>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>188</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Merlin's Cave</description>
+  </Region188>
+  <Region464>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>464</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Treibh KT5</description>
+  </Region464>
+  <Region345>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>345</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Tomte Prison</description>
+  </Region345>
+  <Region347>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>347</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Nisse's AW3</description>
+  </Region347>
+  <Region346>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>346</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Nisse's Retreat</description>
+  </Region346>
+  <Region424>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>424</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Stonehenge KT5</description>
+  </Region424>
+  <Region425>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>425</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>The Lost Wing</description>
+  </Region425>
+  <Region349>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>349</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Lios's Eternal Rest</description>
+  </Region349>
+  <Region348>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>348</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Nisse's AW4</description>
+  </Region348>
+  <Region420>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>420</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Stonehenge KT1</description>
+  </Region420>
+  <Region421>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>421</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Stonehenge KT2</description>
+  </Region421>
+  <Region422>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>422</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Stonehenge KT3</description>
+  </Region422>
+  <Region423>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>423</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Stonehenge KT4</description>
+  </Region423>
+  <Region046>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>46</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>2</expansion>
+    <description>Volcanus Dungeon</description>
+  </Region046>
+  <Region047>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>47</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>2</expansion>
+    <description>Aerus Sky City</description>
+  </Region047>
+  <Region045>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>45</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>2</expansion>
+    <description>Stygia Terrain Boss</description>
+  </Region045>
+  <Region428>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>428</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Stonehenge AW4</description>
+  </Region428>
+  <Region429>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>429</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Snyblem's Lair</description>
+  </Region429>
+  <Region040>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>40</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>2</expansion>
+    <description>Stygia Necropolis</description>
+  </Region040>
+  <Region251>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>251</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>0</expansion>
+    <description>Murdaigean</description>
+  </Region251>
+  <Region250>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>250</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>0</expansion>
+    <description>Caledon</description>
+  </Region250>
+  <Region253>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>253</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>0</expansion>
+    <description>Abermenai</description>
+  </Region253>
+  <Region252>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>252</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>0</expansion>
+    <description>Thidranki</description>
+  </Region252>
+  <Region048>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>48</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Test Zone</description>
+  </Region048>
+  <Region160>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>160</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>1</expansion>
+    <description>Tuscaran Glacier</description>
+  </Region160>
+  <Region163>
+    <waterLevel>7879</waterLevel>
+    <isDivingEnabled>True</isDivingEnabled>
+    <id>163</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>1</expansion>
+    <description>New Frontiers</description>
+  </Region163>
+  <Region162>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>162</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Deadlands of Annwn</description>
+  </Region162>
+  <Region350>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>350</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Liche's Unrest</description>
+  </Region350>
+  <Region351>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>351</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Cursed Tomb AW3</description>
+  </Region351>
+  <Region352>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>352</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Cursed Tomb AW4</description>
+  </Region352>
+  <Region353>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>353</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Den of Bones</description>
+  </Region353>
+  <Region453>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>453</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Muire KT4</description>
+  </Region453>
+  <Region452>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>452</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Muire KT3</description>
+  </Region452>
+  <Region358>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>358</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>The Burrow</description>
+  </Region358>
+  <Region359>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>359</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Varulvhamn AW3</description>
+  </Region359>
+  <Region457>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>457</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Spraggon KT3</description>
+  </Region457>
+  <Region456>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>456</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Spraggon KT2</description>
+  </Region456>
+  <Region244>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>244</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>0</expansion>
+    <description>Frontiers RvR dungeon</description>
+  </Region244>
+  <Region454>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>454</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Muire KT5</description>
+  </Region454>
+  <Region246>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>246</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>0</expansion>
+    <description>Dodens Gruva</description>
+  </Region246>
+  <Region247>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>247</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>0</expansion>
+    <description>Catacomb Figure Demo</description>
+  </Region247>
+  <Region240>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>True</isDivingEnabled>
+    <id>240</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>0</expansion>
+    <description>30to34BG</description>
+  </Region240>
+  <Region241>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>True</isDivingEnabled>
+    <id>241</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>0</expansion>
+    <description>35to39BG</description>
+  </Region241>
+  <Region071>
+    <waterLevel>5804</waterLevel>
+    <isDivingEnabled>True</isDivingEnabled>
+    <id>71</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>2</expansion>
+    <description>Midgard Atlantis Remnant</description>
+  </Region071>
+  <Region070>
+    <waterLevel>5804</waterLevel>
+    <isDivingEnabled>True</isDivingEnabled>
+    <id>70</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>2</expansion>
+    <description>Albion Atlantis Remnant</description>
+  </Region070>
+  <Region073>
+    <waterLevel>7970</waterLevel>
+    <isDivingEnabled>True</isDivingEnabled>
+    <id>73</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>2</expansion>
+    <description>Trials of Atlantis Terrain</description>
+  </Region073>
+  <Region072>
+    <waterLevel>5804</waterLevel>
+    <isDivingEnabled>True</isDivingEnabled>
+    <id>72</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>2</expansion>
+    <description>Hibernia Atlantis Remnant</description>
+  </Region072>
+  <Region248>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>248</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>0</expansion>
+    <description>Summoner's Hall</description>
+  </Region248>
+  <Region249>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>249</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>0</expansion>
+    <description>Darkness Falls</description>
+  </Region249>
+  <Region079>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>True</isDivingEnabled>
+    <id>79</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>2</expansion>
+    <description>Sobekite Eternal</description>
+  </Region079>
+  <Region078>
+    <waterLevel>18960</waterLevel>
+    <isDivingEnabled>True</isDivingEnabled>
+    <id>78</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>2</expansion>
+    <description>Cetus' Pit</description>
+  </Region078>
+  <Region367>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>367</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Vandr's Bane </description>
+  </Region367>
+  <Region366>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>366</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Gnoll Lair</description>
+  </Region366>
+  <Region365>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>365</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Bandit Lair</description>
+  </Region365>
+  <Region364>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>364</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Spindelhalla AW4</description>
+  </Region364>
+  <Region363>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>363</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Spindelhalla AW3</description>
+  </Region363>
+  <Region362>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>362</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>The Master's Lair</description>
+  </Region362>
+  <Region361>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>361</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Arachnid's Labyrinth</description>
+  </Region361>
+  <Region360>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>360</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Varulvhamn AW4</description>
+  </Region360>
+  <Region406>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>406</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Keltoi KT2</description>
+  </Region406>
+  <Region407>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>407</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Keltoi KT3</description>
+  </Region407>
+  <Region404>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>404</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Mithra KT5</description>
+  </Region404>
+  <Region405>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>405</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Keltoi KT1</description>
+  </Region405>
+  <Region369>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>369</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Half-Orc Camp</description>
+  </Region369>
+  <Region368>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>368</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Past and Present</description>
+  </Region368>
+  <Region400>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>400</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Mithra  KT1</description>
+  </Region400>
+  <Region233>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>233</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>0</expansion>
+    <description>Summoner's Hall</description>
+  </Region233>
+  <Region232>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>232</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>0</expansion>
+    <description>Art Test Dungeon</description>
+  </Region232>
+  <Region231>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>231</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>0</expansion>
+    <description>Art Test Dungeon</description>
+  </Region231>
+  <Region230>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>230</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Catacomb Dungeon</description>
+  </Region230>
+  <Region161>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>161</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>1</expansion>
+    <description>Ianvidiur's Lair</description>
+  </Region161>
+  <Region234>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>234</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>0</expansion>
+    <description>1to4BG</description>
+  </Region234>
+  <Region409>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>409</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Keltoi KT5</description>
+  </Region409>
+  <Region301>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>301</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Nisse's KT2</description>
+  </Region301>
+  <Region239>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>True</isDivingEnabled>
+    <id>239</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>0</expansion>
+    <description>25to29BG</description>
+  </Region239>
+  <Region147>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>147</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>2</expansion>
+    <description>Aerus Sky City</description>
+  </Region147>
+  <Region146>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>146</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>2</expansion>
+    <description>Volcanus Dungeon</description>
+  </Region146>
+  <Region145>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>145</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>2</expansion>
+    <description>Stygia Terrain Boss</description>
+  </Region145>
+  <Region376>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>376</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Goblin's Cookery</description>
+  </Region376>
+  <Region377>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>377</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>The Beastmaster's Den</description>
+  </Region377>
+  <Region374>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>374</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Unrestful Tomb</description>
+  </Region374>
+  <Region140>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>140</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>2</expansion>
+    <description>Stygia Necropolis</description>
+  </Region140>
+  <Region372>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>372</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Hounds of Arwan</description>
+  </Region372>
+  <Region373>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>373</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Passage of Echoes</description>
+  </Region373>
+  <Region370>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>370</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Brutal Realization</description>
+  </Region370>
+  <Region371>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>371</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>History Repeats Itself</description>
+  </Region371>
+  <Region149>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>149</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Nyttheim</description>
+  </Region149>
+  <Region148>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>148</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>The Frontlines</description>
+  </Region148>
+  <Region437>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>437</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Forge AW 1 - Hib</description>
+  </Region437>
+  <Region436>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>436</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Forge AW 2 - Alb</description>
+  </Region436>
+  <Region378>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>378</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Tepok_AW3</description>
+  </Region378>
+  <Region379>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>379</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Tepok_AW4</description>
+  </Region379>
+  <Region433>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>433</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Nyttheim Alb AW1</description>
+  </Region433>
+  <Region432>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>432</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Aqueduct AW4</description>
+  </Region432>
+  <Region439>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>439</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Forge AW 1 - Mib</description>
+  </Region439>
+  <Region438>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>438</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Forge AW 2 - Hib</description>
+  </Region438>
+  <Region051>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>51</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>1</expansion>
+    <description>Albion Expansion</description>
+  </Region051>
+  <Region050>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>50</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>1</expansion>
+    <description>Avalon City</description>
+  </Region050>
+  <Region059>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>59</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Glashtin Forges</description>
+  </Region059>
+  <Region058>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>58</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Underground Forest</description>
+  </Region058>
+  <Region150>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>150</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>1</expansion>
+    <description>Trollheim</description>
+  </Region150>
+  <Region151>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>151</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>1</expansion>
+    <description>Midgard Expansion</description>
+  </Region151>
+  <Region381>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>381</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>The Arena</description>
+  </Region381>
+  <Region380>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>380</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Lair of Doom</description>
+  </Region380>
+  <Region383>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>383</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Catacombs_AW4</description>
+  </Region383>
+  <Region382>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>382</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Catacombs_AW3</description>
+  </Region382>
+  <Region385>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>385</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>The Betrayer's Den</description>
+  </Region385>
+  <Region384>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>384</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>The Ritual Hall</description>
+  </Region384>
+  <Region387>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>387</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Keltoi_AW4</description>
+  </Region387>
+  <Region386>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>386</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Keltoi_AW3</description>
+  </Region386>
+  <Region088>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>88</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>2</expansion>
+    <description>Stygia Terrain Boss</description>
+  </Region088>
+  <Region089>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>89</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>2</expansion>
+    <description>Volcanus Dungeon</description>
+  </Region089>
+  <Region068>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>68</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Lower Crypt</description>
+  </Region068>
+  <Region069>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>69</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Merlin's Cave</description>
+  </Region069>
+  <Region080>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>True</isDivingEnabled>
+    <id>80</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>2</expansion>
+    <description>Medusa's Lair</description>
+  </Region080>
+  <Region322>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>322</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Spindelhalla KT3</description>
+  </Region322>
+  <Region398>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>398</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Lower Crypt AW</description>
+  </Region398>
+  <Region399>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>399</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Lower Crypt AW</description>
+  </Region399>
+  <Region390>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>390</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Lair of the Exiled</description>
+  </Region390>
+  <Region391>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>391</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Alb AbMines AW4</description>
+  </Region391>
+  <Region392>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>392</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>The Hall of Reawakening</description>
+  </Region392>
+  <Region393>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>393</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>The Hidden Crypt</description>
+  </Region393>
+  <Region394>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>394</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Mithra_AW3</description>
+  </Region394>
+  <Region395>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>395</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Mithra_AW4</description>
+  </Region395>
+  <Region396>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>396</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Depths of Despair</description>
+  </Region396>
+  <Region397>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>397</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Lower Crypt AW</description>
+  </Region397>
+  <Region242>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>True</isDivingEnabled>
+    <id>242</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>0</expansion>
+    <description>40to44BG</description>
+  </Region242>
+  <Region410>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>410</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Tepok KT1</description>
+  </Region410>
+  <Region355>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>355</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Vendo AW3</description>
+  </Region355>
+  <Region356>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>356</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Vendo AW4</description>
+  </Region356>
+  <Region419>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>419</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Cordova KT5</description>
+  </Region419>
+  <Region418>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>418</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Cordova KT4</description>
+  </Region418>
+  <Region125>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>125</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>0</expansion>
+    <description>Spindelhalla</description>
+  </Region125>
+  <Region124>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>124</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>2</expansion>
+    <description>Hephaestian</description>
+  </Region124>
+  <Region127>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>127</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>0</expansion>
+    <description>Werewolf Lair</description>
+  </Region127>
+  <Region126>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>126</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>0</expansion>
+    <description>Vendo Caves</description>
+  </Region126>
+  <Region129>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>129</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>0</expansion>
+    <description>Nisee's Lair</description>
+  </Region129>
+  <Region128>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>128</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>0</expansion>
+    <description>Cursed Tomb</description>
+  </Region128>
+  <Region334>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>334</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>A Mine Mid AW3</description>
+  </Region334>
+  <Region022>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>22</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>0</expansion>
+    <description>Keltoi Fogou</description>
+  </Region022>
+  <Region460>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>460</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Treibh KT1</description>
+  </Region460>
+  <Region402>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>402</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Mithra KT3</description>
+  </Region402>
+  <Region403>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>403</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Mithra KT4</description>
+  </Region403>
+  <Region467>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>467</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Koalinth KT3</description>
+  </Region467>
+  <Region468>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>468</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Koalinth KT4</description>
+  </Region468>
+  <Region238>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>True</isDivingEnabled>
+    <id>238</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>0</expansion>
+    <description>20to24BG</description>
+  </Region238>
+  <Region189>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>189</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Glashtin Forge</description>
+  </Region189>
+  <Region136>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>136</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>2</expansion>
+    <description>Sobekite Eternal</description>
+  </Region136>
+  <Region137>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>137</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>2</expansion>
+    <description>Medusa's Lair</description>
+  </Region137>
+  <Region181>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>181</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>1</expansion>
+    <description>Hibernia Expansion</description>
+  </Region181>
+  <Region180>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>180</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>1</expansion>
+    <description>Fomor</description>
+  </Region180>
+  <Region434>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>434</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Queen's Lab Alb AW1</description>
+  </Region434>
+  <Region431>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>431</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Aqueduct AW3</description>
+  </Region431>
+  <Region430>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>430</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>the Plutonian Shore</description>
+  </Region430>
+  <Region099>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>99</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Glashtin Forge</description>
+  </Region099>
+  <Region098>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>98</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Merlin's Cave</description>
+  </Region098>
+  <Region497>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>497</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Mid Launch</description>
+  </Region497>
+  <Region093>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>93</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Shar Labyrinth</description>
+  </Region093>
+  <Region092>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>92</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Veil Rift</description>
+  </Region092>
+  <Region091>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>91</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>2</expansion>
+    <description>Celestius</description>
+  </Region091>
+  <Region090>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>90</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>2</expansion>
+    <description>Aerus Sky City</description>
+  </Region090>
+  <Region198>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>198</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>2</expansion>
+    <description>Shaitan</description>
+  </Region198>
+  <Region354>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>354</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>The Ritual Chamber</description>
+  </Region354>
+  <Region095>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>95</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>The Frontlines</description>
+  </Region095>
+  <Region094>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>94</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>The Queen's Labyrinth</description>
+  </Region094>
+  <Region357>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>357</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>The Cursed Lair</description>
+  </Region357>
+  <Region190>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>190</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>1</expansion>
+    <description>Tur Suil &amp; Galladoria</description>
+  </Region190>
+  <Region191>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>191</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>1</expansion>
+    <description>Galladoria</description>
+  </Region191>
+  <Region196>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>196</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>The Otherworld</description>
+  </Region196>
+  <Region197>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>197</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>The Otherworld</description>
+  </Region197>
+  <Region195>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>195</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>The Otherworld</description>
+  </Region195>
+  <Region448>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>448</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Veil Rift AW3</description>
+  </Region448>
+  <Region449>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>449</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Veil Rift AW4</description>
+  </Region449>
+  <Region471>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>471</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Coruscating KT2</description>
+  </Region471>
+  <Region470>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>470</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Half Orc Command Post</description>
+  </Region470>
+  <Region417>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>417</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Cordova KT3</description>
+  </Region417>
+  <Region416>
+    <waterLevel>0</waterLevel>
+    <isDivingEnabled>False</isDivingEnabled>
+    <id>416</id>
+    <ip>127.0.0.1</ip>
+    <port>10400</port>
+    <expansion>3</expansion>
+    <description>Cordova KT2</description>
+  </Region416>
+</root>

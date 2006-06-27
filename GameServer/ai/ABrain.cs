@@ -58,38 +58,6 @@ namespace DOL.AI
 		{
 		}
 
-        /// <summary>
-        /// parse params
-        /// </summary>
-        /// <param name="strparams"></param>
-        public void ParseParam(string strparams)
-        {
-            string[] strparam = strparams.Split(',');
-            foreach (string str in strparam)
-            {
-                if (str == null || str == "")
-                    continue;
-                LoadParam(str);
-            }
-        }
-        /// <summary>
-        /// Loads each param.
-        /// </summary>
-        /// <param name="str">The STR.</param>
-        protected virtual void LoadParam(string str)
-        {
-            str = str.Replace(" ", "");//remove space
-            string[] param = str.Split('=');
-            switch (param[0])
-            {
-                default:
-                    {
-                        if (log.IsErrorEnabled)
-                            log.Error("Could not recognize param :" + param[0] + ".");
-                    } break;
-            }
-        }
-
 		/// <summary>
 		/// Returns the string representation of the ABrain
 		/// </summary>

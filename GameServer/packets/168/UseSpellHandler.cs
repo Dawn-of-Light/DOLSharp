@@ -45,8 +45,7 @@ namespace DOL.GS.PacketHandler.v168
 				int yOffsetInZone = packet.ReadShort();
 				int currentZoneID = packet.ReadShort();
 				int realZ = packet.ReadShort();
-				Zone newZone = client.Player.Region.GetZone((ushort)currentZoneID);
-				//WorldMgr.GetZone((ushort)currentZoneID);
+				Zone newZone = WorldMgr.GetZone((ushort)currentZoneID);
 				if (newZone == null)
 				{
 					if (log.IsWarnEnabled)
@@ -54,11 +53,9 @@ namespace DOL.GS.PacketHandler.v168
 				}
 				else
 				{
-					Point pos = new Point(
-						newZone.XOffset + xOffsetInZone,
-						newZone.YOffset + yOffsetInZone,
-						realZ);
-					client.Player.Position = pos;
+					client.Player.X = newZone.XOffset + xOffsetInZone;
+					client.Player.Y = newZone.YOffset + yOffsetInZone;
+					client.Player.Z = realZ;
 					client.Player.MovementStartTick = Environment.TickCount;
 				}
 			}
@@ -156,12 +153,12 @@ namespace DOL.GS.PacketHandler.v168
 				else
 				{
 					if (log.IsWarnEnabled)
-						log.Warn("Client <"+player.Client.Account.AccountName+"> requested incorrect spell at level "+m_spellLevel+" in spell-line "+castLine.Name);
+						log.Warn("Client <"+player.Client.Account.Name+"> requested incorrect spell at level "+m_spellLevel+" in spell-line "+castLine.Name);
 				}
 				if(castLine==null)
 				{
 					if (log.IsWarnEnabled)
-						log.Warn("Client <"+player.Client.Account.AccountName+"> requested incorrect spell-line index");
+						log.Warn("Client <"+player.Client.Account.Name+"> requested incorrect spell-line index");
 				}
 			}
 		}

@@ -20,7 +20,7 @@ using System;
 using System.Reflection;
 using System.Collections;
 using DOL.AI.Brain;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.GS.PacketHandler;
 using log4net;
 
@@ -52,13 +52,12 @@ namespace DOL.GS
 
 			mob.Name=Name;
 			mob.Guild=GuildName;
-			Point pos = Position;
-			mob.X=pos.X;
-			mob.Y=pos.Y;
-			mob.Z=pos.Z;
+			mob.X=X;
+			mob.Y=Y;
+			mob.Z=Z;
 			mob.Heading=Heading;
 			mob.Speed=MaxSpeedBase;
-			mob.Region=RegionId;
+			mob.Region=CurrentRegionID;
 			mob.Realm=Realm;
 			mob.Model=Model;
 			mob.Size=Size;
@@ -76,20 +75,20 @@ namespace DOL.GS
 				mob.FactionID = m_faction.ID;
 			mob.MeleeDamageType = (int)MeleeDamageType;
 
-			/*if(InternalID == null)
+			if(InternalID == null)
 			{
 				GameServer.Database.AddNewObject(mob);
 				InternalID = mob.ObjectId;
 			}
 			else
-				GameServer.Database.SaveObject(mob);*/
+				GameServer.Database.SaveObject(mob);
 		}
 
 		/// <summary>
 		/// Loads a merchant from the DB
 		/// </summary>
 		/// <param name="mobobject">The mob DB object</param>
-		public override void LoadFromDatabase(object mobobject)
+		public override void LoadFromDatabase(DataObject mobobject)
 		{
 			base.LoadFromDatabase(mobobject);
 			if(!(mobobject is Mob)) return;
@@ -200,13 +199,17 @@ namespace DOL.GS
 			//Heal this mob, move it to the spawnlocation
 			Health = MaxHealth;
 			Mana = MaxMana;
-			EndurancePercent = 100;
-			Point spawn = m_spawnPosition;
+			Endurance = MaxEndurance;
+			int origSpawnX=m_spawnX;
+			int origSpawnY=m_spawnY;
 			//X=(m_spawnX+Random(750)-350); //new SpawnX = oldSpawn +- 350 coords
 			//Y=(m_spawnY+Random(750)-350);	//new SpawnX = oldSpawn +- 350 coords
-			Position = m_spawnPosition;
+			X=m_spawnX;
+			Y=m_spawnY;
+			Z=m_spawnZ;
 			AddToWorld();
-			m_spawnPosition = spawn;
+			m_spawnX=origSpawnX;
+			m_spawnY=origSpawnY;
 			return 0;
 		}
 
@@ -229,7 +232,7 @@ namespace DOL.GS
 		/// <summary>
 		/// The chance for a critical hit
 		/// </summary>
-		public override int AttackCriticalChance(Weapon weapon)
+		public override int AttackCriticalChance(InventoryItem weapon)
 		{
 			return 0;
 		}
@@ -290,9 +293,9 @@ namespace DOL.GS
 			{
 				if(m_xpGainers.Keys.Count==0) return;
 
-				GenericItemTemplate[] lootTemplates = LootMgr.GetLoot(this, killer);
+				ItemTemplate[] lootTemplates = LootMgr.GetLoot(this, killer);
 
-				foreach (GenericItemTemplate lootTemplate in lootTemplates)
+				foreach (ItemTemplate lootTemplate in lootTemplates)
 				{
 					GameStaticItem loot;
 					if (GameMoney.IsItemMoney(lootTemplate.Name))
@@ -303,10 +306,12 @@ namespace DOL.GS
 					} 
 					else 
 					{
-						loot = new GameInventoryItem(lootTemplate.CreateInstance());
-						loot.Position = Position;
+						loot = new GameInventoryItem(new InventoryItem(lootTemplate));
+						loot.X = X;
+						loot.Y = Y;
+						loot.Z = Z;
 						loot.Heading = Heading;
-						loot.Region = Region;					
+						loot.CurrentRegion = CurrentRegion;					
 					}
 
 					bool playerAttacker = false;
@@ -442,9 +447,8 @@ namespace DOL.GS
 			this.Model = template.Model;
 			this.Size = template.Size;
 			this.MaxSpeedBase = template.MaxSpeed;
-			//this.Flags = template.Flags;
-            this.Flags = (byte)((byte)(template.IsStealth ? eFlags.STEALTH : 0) + (byte)(template.IsFlying ? eFlags.FLYING : 0) + (byte)(template.IsGhost ? eFlags.GHOST : 0) + (byte)(template.IsNameHidden ? eFlags.DONTSHOWNAME : 0) + (byte)(template.IsTargetable ? eFlags.CANTTARGET : 0));
-            this.Inventory = template.Inventory;
+			this.Flags = template.Flags;
+			this.Inventory = template.Inventory;
 			this.MeleeDamageType = template.MeleeDamageType;
 			this.ParryChance = template.ParryChance;
 			this.EvadeChance = template.EvadeChance;

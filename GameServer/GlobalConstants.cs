@@ -21,6 +21,97 @@ using DOL.GS.PacketHandler;
 
 namespace DOL.GS
 {
+	public enum eObjectType : byte
+	{
+		GenericItem = 0,
+		GenericWeapon = 1,
+
+		//Albion weapons
+		CrushingWeapon = 2,
+		SlashingWeapon = 3,
+		ThrustWeapon = 4,
+		Fired = 5,
+		TwoHandedWeapon = 6,
+		PolearmWeapon = 7,
+		Staff = 8,
+		Longbow = 9,
+		Crossbow = 10,
+		Flexible = 24,
+
+		//Midgard weapons
+		Sword = 11,
+		Hammer = 12,
+		Axe = 13,
+		Spear = 14,
+		CompositeBow = 15,
+		Thrown = 16,
+		LeftAxe = 17,
+		HandToHand = 25,
+
+		//Hibernia weapons
+		RecurvedBow = 18,
+		Blades = 19,
+		Blunt = 20,
+		Piercing = 21,
+		LargeWeapons = 22,
+		CelticSpear = 23,
+		Scythe = 26,
+
+		//Armor
+		_FirstArmor = 31,
+		GenericArmor = 31,
+		Cloth = 32,
+		Leather =33,
+		Studded = 34,
+		Chain = 35,
+		Plate = 36,
+		Reinforced = 37,
+		Scale = 38,
+		_LastArmor = 38,
+
+		//Misc
+		Magical = 41,
+		Shield = 42,
+		Arrow = 43,
+		Bolt = 44,
+		Instrument = 45,
+		Poison = 46,
+		AlchemyTincture = 47,
+		SpellcraftGem = 48,
+		GardenObject = 49,
+		SiegeBalista = 50,
+		SiegeCatapult = 51,
+		SiegeCauldron = 52,
+		SiegeRam = 53,
+		SiegeTrebuchet = 54,
+	}//64 max
+
+	/// <summary>
+	/// This enumeration holds all equipment
+	/// items that can be used by a player
+	/// </summary>
+	public enum eEquipmentItems : byte
+	{
+		RIGHT_HAND	= 0x0A,
+		LEFT_HAND	= 0x0B,
+		TWO_HANDED	= 0x0C,
+		RANGED		= 0x0D,
+		HEAD		= 0x15,
+		HAND		= 0x16,
+		FEET		= 0x17,
+		JEWEL		= 0x18,
+		TORSO		= 0x19,
+		CLOAK		= 0x1A,
+		LEGS		= 0x1B,
+		ARMS		= 0x1C,
+		NECK		= 0x1D,
+		WAIST		= 0x20,
+		L_BRACER	= 0x21,
+		R_BRACER	= 0x22,
+		L_RING		= 0x23,
+		R_RING		= 0x24
+	};
+
 	/// <summary>
 	/// all known slots
 	/// </summary>
@@ -69,14 +160,16 @@ namespace DOL.GS
 	/// <summary>
 	/// The armor ability level for different armor types
 	/// </summary>
-	public enum eArmorLevel : byte
+	public abstract class ArmorLevel
 	{
-		VeryLow		= 0, //cloth (0% abs)
-		Low			= 1, //leather (10% abs)
-		Medium		= 2, //studded leather / reinforced  (19 % abs)
-		High		= 3, //Chain / Scale (27% abs)
-		VeryHigh	= 4, //Plate (34% abs)
-
+		public const int GenericArmor = 0;
+		public const int Cloth = 1;
+		public const int Leather = 2;
+		public const int Reinforced = 3;
+		public const int Studded = 3;
+		public const int Scale = 4;
+		public const int Chain = 4;
+		public const int Plate = 5;
 	}
 
 	/// <summary>
@@ -100,6 +193,14 @@ namespace DOL.GS
 		_LastResist = 15,
 
 		Falling = 255,
+	}
+
+	public enum eWeaponDamageType : byte
+	{
+		Elemental = 0,
+		Crush = 1,
+		Slash = 2,
+		Thrust = 3,
 	}
 
 	public enum eStat : byte
@@ -489,20 +590,10 @@ namespace DOL.GS
 		MaxProperty = 212,
 	}
 
-    /// <summary>
-	/// available gender
-	/// </summary>
-    public enum eGender : byte
-    {
-        Male = 0,
-        Female = 1,
-        Other = 2,// no transexual here ;) just its ...
-    }
-
 	/// <summary>
 	/// available races
 	/// </summary>
-	public enum eRace : int
+	public enum eRace : byte
 	{
 		Unknown = 0,
 		Briton = 1,
@@ -600,11 +691,35 @@ namespace DOL.GS
 		Warrior = 22,
 	}
 
-	public enum ePrivLevel : byte
+	/// <summary>
+	/// Customisable face part
+	/// </summary>
+	public enum eCharFacePart : byte
 	{
-		Player = 1,
-		GM = 2,
-		Admin = 3,
+		EyeSize = 0,
+		LipSize = 1,
+		EyeColor = 2,
+		HairColor = 3,
+		FaceType = 4,
+		HairStyle = 5,
+		MoodType = 6,
+		_Last = 6,
+	}
+
+	public abstract class ShieldLevel
+	{
+		public const int Small = 1;
+		public const int Medium = 2;
+		public const int Large = 3;
+	}
+
+	public enum eMaterial : byte
+	{
+		Cloth = 0,
+		Leather = 1,
+        LeatherAndMetal = 2,
+		Metal = 3,
+		Wood = 4,
 	}
 
 	/// <summary>
@@ -1000,33 +1115,7 @@ namespace DOL.GS
 				default :	 return "";
 			}
 		}
-	
-		public static string RaceToName(eRace race)
-		{
-			switch (race)
-			{
-				case eRace.Briton:			return "Briton";
-				case eRace.Avalonian:		return "Avalonian";
-				case eRace.Highlander:		return "Highlander";
-				case eRace.Saracen:			return "Saracen";
-				case eRace.Norseman:		return "Norseman";
-				case eRace.Troll:			return "Troll";
-				case eRace.Dwarf:			return "Dwarf";
-				case eRace.Kobold:			return "Kobold";
-				case eRace.Celt:			return "Celt";
-				case eRace.Firbolg:			return "Firbolg";
-				case eRace.Elf:				return "Elf";
-				case eRace.Lurikeen:		return "Lurikeen";
-				case eRace.Inconnu:			return "Inconnu";
-				case eRace.Valkyn:			return "Valkyn";
-				case eRace.Sylvan:			return "Sylvan";
-				case eRace.HalfOgre:		return "Half Ogre";
-				case eRace.Frostalf:		return "Frostalf";
-				case eRace.Shar:			return "Shar";
-				default:					return "Unknown";
-			}
-		}
-		
+
 		public static byte GetSpecToInternalIndex(string name)
 		{
 			switch (name)

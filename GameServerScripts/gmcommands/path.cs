@@ -18,7 +18,7 @@
  */
 using System;
 using System.Collections;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.GS.Movement;
 using DOL.GS.PacketHandler;
 
@@ -46,8 +46,10 @@ namespace DOL.GS.Scripts
 			//Create a new object
 			GameStaticItem obj = new GameStaticItem();
 			//Fill the object variables
-			obj.Position = pp.Position;
-			obj.Region = client.Player.Region;
+			obj.X = pp.X;
+			obj.Y = pp.Y;
+			obj.Z = pp.Z;
+			obj.CurrentRegion = client.Player.CurrentRegion;
 			obj.Heading = client.Player.Heading;
 			obj.Name = name;
 			obj.Model = 488;
@@ -77,7 +79,7 @@ namespace DOL.GS.Scripts
 			//Remove old temp objects
 			RemoveAllTempPathObjects(client);
 			
-			PathPoint startpoint = new PathPoint(client.Player.Position, 100000, ePathType.Once);
+			PathPoint startpoint = new PathPoint(client.Player.X, client.Player.Y, client.Player.Z, 100000, ePathType.Once);
 			client.Player.TempProperties.setProperty(TEMP_PATH_FIRST, startpoint);
 			client.Player.TempProperties.setProperty(TEMP_PATH_LAST, startpoint);
 			client.Player.Out.SendMessage("Path creation started! You can add new pathpoints via /path add now!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -109,7 +111,7 @@ namespace DOL.GS.Scripts
 				}
 			}
 
-			PathPoint newpp = new PathPoint(client.Player.Position, speedlimit, path.Type);
+			PathPoint newpp = new PathPoint(client.Player.X, client.Player.Y, client.Player.Z, speedlimit, path.Type);
 			path.Next = newpp;
 			newpp.Prev = path;
 			client.Player.TempProperties.setProperty(TEMP_PATH_LAST, newpp);
@@ -259,7 +261,7 @@ namespace DOL.GS.Scripts
 			string ticket = "ticket to " + target;
 			if (stable.TradeItems != null)
 			{
-				foreach (TravelTicketTemplate template in stable.TradeItems.GetAllItems().Values)
+				foreach (ItemTemplate template in stable.TradeItems.GetAllItems().Values)
 				{
 					if (template != null && template.Name == ticket)
 					{

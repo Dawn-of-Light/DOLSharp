@@ -23,7 +23,7 @@
 using System;
 using System.Collections;
 
-using DOL.GS.Database; //yeah for the DBIndoorItem class!
+using DOL.Database; //yeah for the DBIndoorItem class!
 
 namespace DOL.GS.Housing
 {
@@ -77,8 +77,8 @@ namespace DOL.GS.Housing
 			get { return m_placemode;  }
 			set { m_placemode = value; }
 		}
-		GenericItemTemplate m_baseitem;
-		public GenericItemTemplate BaseItem
+		ItemTemplate m_baseitem;
+		public ItemTemplate BaseItem
 		{
 			get { return m_baseitem; }
 			set { m_baseitem = value;}			
@@ -99,7 +99,7 @@ namespace DOL.GS.Housing
 	    	this.Size = dbitem.Size;
 	    	this.Position = dbitem.Position;
 	    	this.Placemode = dbitem.Placemode;
-			this.BaseItem = (GenericItemTemplate)GameServer.Database.FindObjectByKey(typeof(GenericItemTemplate), dbitem.BaseItemID);
+			this.BaseItem = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), dbitem.BaseItemID);
 			this.DatabaseItem = dbitem;
 		}
 
@@ -114,7 +114,7 @@ namespace DOL.GS.Housing
 			dbitem.Y = Y;
 			if (BaseItem != null)
 			{
-				dbitem.BaseItemID = BaseItem.ItemTemplateID;
+				dbitem.BaseItemID = BaseItem.Id_nb;
 			}
 			else
 			{

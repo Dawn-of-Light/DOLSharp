@@ -36,17 +36,19 @@ namespace DOL.GS
 		}
 		public GameKeepLord(AbstractGameKeep keep) : base(keep)
 		{}
-		public GameKeepLord(GameKeepGuard guard)
+		public GameKeepLord(GameKeepGuard m_guard)
 		{
-			this.Realm = guard.Realm;
-			this.Level = guard.Level;
-			this.Region  = guard.Region;
-			this.Position = guard.Position;
-			this.Heading = guard.Heading;
-			this.CurrentSpeed = guard.CurrentSpeed;
-			this.MaxSpeedBase = guard.MaxSpeedBase;
-			this.GuildName = guard.GuildName;
-			this.Size = guard.Size;
+			this.Realm = m_guard.Realm;
+			this.Level = m_guard.Level;
+			this.CurrentRegion  = m_guard.CurrentRegion;
+			this.X = m_guard.X;
+			this.Y = m_guard.Y;
+			this.Z = m_guard.Z;
+			this.Heading = m_guard.Heading;
+			this.CurrentSpeed = m_guard.CurrentSpeed;
+			this.MaxSpeedBase = m_guard.MaxSpeedBase;
+			this.GuildName = m_guard.GuildName;
+			this.Size = m_guard.Size;
 		}
 
 		/// <summary>
@@ -76,7 +78,7 @@ namespace DOL.GS
 			if (myBrain == null)
 				return false;
 
-			this.TurnTo(player.Position);
+			this.TurnTo(player.X, player.Y);
 			if ( myBrain.Keep.Guild == null)
 				this.SayTo(player, eChatLoc.CL_PopupWindow, "Do you want to [Claim] this keep?");
 			else

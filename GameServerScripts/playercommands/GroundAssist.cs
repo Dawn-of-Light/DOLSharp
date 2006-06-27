@@ -28,20 +28,20 @@ namespace DOL.GS.Scripts
 	{
 		public int OnCommand(GameClient client, string[] args)
 		{
-			GamePlayer obj = client.Player.TargetObject as GamePlayer;
+			GameObject obj = client.Player.TargetObject;
 			if (args.Length >1)
 			{
 				GameClient myclient;
-				myclient = WorldMgr.GetClientByPlayerName(args[1], true);
+				myclient = WorldMgr.GetClientByPlayerName(args[1],true);
 				if (myclient == null)
 				{
-					client.Player.Out.SendMessage("No player with this name in game.", eChatType.CT_Say, eChatLoc.CL_SystemWindow);
+					client.Player.Out.SendMessage("No player with this name in game.",eChatType.CT_Say,eChatLoc.CL_SystemWindow);
 					return 1;
 				}
 				obj = myclient.Player;
 			}
 			if (obj != null)
-				client.Player.GroundTarget = obj.GroundTarget;
+				client.Player.SetGroundTarget(obj.X, obj.Y, obj.Z);
 			else
 				client.Player.Out.SendMessage("You must select a target before use this command.",eChatType.CT_Say,eChatLoc.CL_SystemWindow);
 			return 1;

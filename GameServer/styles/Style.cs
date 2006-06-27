@@ -17,8 +17,9 @@
  *
  */
 using System;
+using DOL.Database.Attributes;
 using DOL.GS;
-using DOL.GS.Database;
+using DOL.Database;
 
 namespace DOL.GS.Styles
 {

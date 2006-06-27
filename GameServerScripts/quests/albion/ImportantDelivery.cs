@@ -32,11 +32,10 @@
 
 using System;
 using System.Reflection;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
-using DOL.GS.Quests;
 /* I suggest you declare yourself some namespaces for your quests
  * Like: DOL.GS.Quests.Albion
  *       DOL.GS.Quests.Midgard
@@ -48,44 +47,12 @@ using DOL.GS.Quests;
 
 namespace DOL.GS.Quests.Albion
 {
-	/* The first thing we do, is to declare the quest requirement
-	* class linked with the new Quest. To do this, we derive 
-	* from the abstract class AbstractQuestDescriptor
-	*/
-	public class ImportantDeliveryDescriptor : AbstractQuestDescriptor
-	{
-		/* This is the type of the quest class linked with 
-		 * this requirement class, you must override the 
-		 * base methid like that
-		 */
-		public override Type LinkedQuestType
-		{
-			get { return typeof(ImportantDelivery); }
-		}
-
-		/* This value is used to retrieves how maximum level needed
-		 * to be able to make this quest. Override it only if you need, 
-		 * the default value is 50
-		 */
-		public override int MaxLevel
-		{
-			get { return 1; }
-		}
-
-		public override bool CheckQuestQualification(GamePlayer player)
-		{
-			if (!BaseFrederickQuest.CheckPartAccessible(player, typeof(ImportantDelivery)))
-				return false;
-
-			return base.CheckQuestQualification(player);
-		}
-	}
-
-	/* The second thing we do, is to declare the class we create
-	 * as Quest. We must make it persistant using attributes, to
-	 * do this, we derive from the abstract class AbstractQuest
+	/* The first thing we do, is to declare the class we create
+	 * as Quest. To do this, we derive from the abstract class
+	 * AbstractQuest
+	 * 	 
 	 */
-	[NHibernate.Mapping.Attributes.Subclass(NameType = typeof(ImportantDelivery), ExtendsType = typeof(AbstractQuest))]
+
 	public class ImportantDelivery : BaseFrederickQuest
 	{
 		/// <summary>
@@ -104,6 +71,8 @@ namespace DOL.GS.Quests.Albion
 		 */
 
 		protected const string questTitle = "Important Delivery";
+		protected const int minimumLevel = 1;
+		protected const int maximumLevel = 1;
 
 		private static GameNPC masterFrederick = null;
 		private static GameNPC dunan = null;
@@ -111,11 +80,32 @@ namespace DOL.GS.Quests.Albion
 		private static GameNPC vuloch = null;
 		private static GameNPC yaren = null;
 
-		private static TravelTicketTemplate ticketToLudlow = null;
-		private static TravelTicketTemplate ticketToBombard = null;
-		private static GenericItemTemplate sackOfSupplies = null;
-		private static GenericItemTemplate crateOfVegetables = null;
-		private static CloakTemplate recruitsCloak = null;
+		private static ItemTemplate ticketToLudlow = null;
+		private static ItemTemplate ticketToBombard = null;
+		private static ItemTemplate sackOfSupplies = null;
+		private static ItemTemplate crateOfVegetables = null;
+		private static ItemTemplate recruitsCloak = null;
+
+
+		/* We need to define the constructors from the base class here, else there might be problems
+		 * when loading this quest...
+		 */
+		public ImportantDelivery() : base()
+		{
+		}		
+
+		public ImportantDelivery(GamePlayer questingPlayer) : this(questingPlayer, 1)
+		{
+		}
+
+		public ImportantDelivery(GamePlayer questingPlayer, int step) : base(questingPlayer, step)
+		{
+		}
+
+		public ImportantDelivery(GamePlayer questingPlayer, DBQuest dbQuest) : base(questingPlayer, dbQuest)
+		{
+		}
+
 
 		/* The following method is called automatically when this quest class
 		 * is loaded. You might notice that this method is the same as in standard
@@ -161,10 +151,12 @@ namespace DOL.GS.Quests.Albion
 					log.Warn("Could not find " + dunan.Name + ", creating ...");
 				dunan.GuildName = "Part of " + questTitle + " Quest";
 				dunan.Realm = (byte) eRealm.Albion;
-				dunan.RegionId = 1;
+				dunan.CurrentRegionID = 1;
 				dunan.Size = 49;
 				dunan.Level = 21;
-				dunan.Position = new Point(531663, 479785, 2200);
+				dunan.X = 531663;
+				dunan.Y = 479785;
+				dunan.Z = 2200;
 				dunan.Heading = 1579;
 				dunan.EquipmentTemplateID = "1707754";
 				//You don't have to store the created mob in the db if you don't want,
@@ -187,10 +179,12 @@ namespace DOL.GS.Quests.Albion
 					log.Warn("Could not find " + bombard.Name + ", creating ...");
 				bombard.GuildName = "Stable Master";
 				bombard.Realm = (byte) eRealm.Albion;
-				bombard.RegionId = 1;
+				bombard.CurrentRegionID = 1;
 				bombard.Size = 49;
 				bombard.Level = 4;
-				bombard.Position = new Point(515718, 496739, 3352);
+				bombard.X = 515718;
+				bombard.Y = 496739;
+				bombard.Z = 3352;
 				bombard.Heading = 2500;
 
 				//You don't have to store the created mob in the db if you don't want,
@@ -213,10 +207,12 @@ namespace DOL.GS.Quests.Albion
 					log.Warn("Could not find " + vuloch.Name + ", creating ...");
 				vuloch.GuildName = "Stable Master";
 				vuloch.Realm = (byte) eRealm.Albion;
-				vuloch.RegionId = 1;
+				vuloch.CurrentRegionID = 1;
 				vuloch.Size = 50;
 				vuloch.Level = 4;
-				vuloch.Position = new Point(553089, 513380, 2896);
+				vuloch.X = 553089;
+				vuloch.Y = 513380;
+				vuloch.Z = 2896;
 				vuloch.Heading = 2139;
 
 				//You don't have to store the created mob in the db if you don't want,
@@ -240,10 +236,12 @@ namespace DOL.GS.Quests.Albion
 					log.Warn("Could not find " + yaren.Name + ", creating ...");
 				yaren.GuildName = "Stable Master";
 				yaren.Realm = (byte) eRealm.Albion;
-				yaren.RegionId = 1;
+				yaren.CurrentRegionID = 1;
 				yaren.Size = 48;
 				yaren.Level = 4;
-				yaren.Position = new Point(529638, 478091, 2200);
+				yaren.X = 529638;
+				yaren.Y = 478091;
+				yaren.Z = 2200;
 				yaren.Heading = 3160;
 				yaren.EquipmentTemplateID = "11701347";
 
@@ -265,34 +263,34 @@ namespace DOL.GS.Quests.Albion
 			ticketToBombard = CreateTicketTo("North Camelot Gates");
 
 
-            sackOfSupplies = (GenericItemTemplate) GameServer.Database.FindObjectByKey(typeof (GenericItemTemplate), "sack_of_supplies");
-            if (sackOfSupplies == null)
-            {
-	            sackOfSupplies = new GenericItemTemplate();
-	            sackOfSupplies.Name = "Sack of Supplies";
-	            if (log.IsWarnEnabled)
-		            log.Warn("Could not find " + sackOfSupplies.Name + " , creating it ...");
+			sackOfSupplies = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "sack_of_supplies");
+			if (sackOfSupplies == null)
+			{
+				sackOfSupplies = new ItemTemplate();
+				sackOfSupplies.Name = "Sack of Supplies";
+				if (log.IsWarnEnabled)
+					log.Warn("Could not find " + sackOfSupplies.Name + " , creating it ...");
 
-	            sackOfSupplies.Weight = 10;
-	            sackOfSupplies.Model = 488;
+				sackOfSupplies.Weight = 10;
+				sackOfSupplies.Model = 488;
 
-	            sackOfSupplies.ItemTemplateID = "sack_of_supplies";
+				sackOfSupplies.Object_Type = (int) eObjectType.GenericItem;
 
+				sackOfSupplies.Id_nb = "sack_of_supplies";
+				sackOfSupplies.IsPickable = true;
 				sackOfSupplies.IsDropable = false;
-				sackOfSupplies.IsSaleable = false;
-				sackOfSupplies.IsTradable = false;
 
-	            //You don't have to store the created item in the db if you don't want,
-	            //it will be recreated each time it is not found, just comment the following
-	            //line if you rather not modify your database
-	            if (SAVE_INTO_DATABASE)
-		            GameServer.Database.AddNewObject(sackOfSupplies);
-            }
+				//You don't have to store the created item in the db if you don't want,
+				//it will be recreated each time it is not found, just comment the following
+				//line if you rather not modify your database
+				if (SAVE_INTO_DATABASE)
+					GameServer.Database.AddNewObject(sackOfSupplies);
+			}
 
-			crateOfVegetables = (GenericItemTemplate) GameServer.Database.FindObjectByKey(typeof (GenericItemTemplate), "crate_of_vegetables");
+			crateOfVegetables = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "crate_of_vegetables");
 			if (crateOfVegetables == null)
 			{
-				crateOfVegetables = new GenericItemTemplate();
+				crateOfVegetables = new ItemTemplate();
 				crateOfVegetables.Name = "Crate of Vegetables";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + crateOfVegetables.Name + " , creating it ...");
@@ -300,11 +298,11 @@ namespace DOL.GS.Quests.Albion
 				crateOfVegetables.Weight = 15;
 				crateOfVegetables.Model = 602;
 
-				crateOfVegetables.ItemTemplateID = "crate_of_vegetables";
+				crateOfVegetables.Object_Type = (int) eObjectType.GenericItem;
 
+				crateOfVegetables.Id_nb = "crate_of_vegetables";
+				crateOfVegetables.IsPickable = true;
 				crateOfVegetables.IsDropable = false;
-				crateOfVegetables.IsSaleable = false;
-				crateOfVegetables.IsTradable = false;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -314,10 +312,10 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			recruitsCloak = (CloakTemplate) GameServer.Database.FindObjectByKey(typeof (CloakTemplate), "recruits_cloak");
+			recruitsCloak = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_cloak");
 			if (recruitsCloak == null)
 			{
-				recruitsCloak = new CloakTemplate();
+				recruitsCloak = new ItemTemplate();
 				recruitsCloak.Name = "Recruit's Cloak";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + recruitsCloak.Name + ", creating it ...");
@@ -326,18 +324,30 @@ namespace DOL.GS.Quests.Albion
 				recruitsCloak.Weight = 3;
 				recruitsCloak.Model = 57; // studded Boots                
 
-				recruitsCloak.ItemTemplateID = "recruits_cloak";
-				recruitsCloak.Value = 100;
-
+				recruitsCloak.Object_Type = (int) eObjectType.Cloth;
+				recruitsCloak.Item_Type = (int) eEquipmentItems.CLOAK;
+				recruitsCloak.Id_nb = "recruits_cloak";
+				recruitsCloak.Gold = 0;
+				recruitsCloak.Silver = 1;
+				recruitsCloak.Copper = 0;
+				recruitsCloak.IsPickable = true;
 				recruitsCloak.IsDropable = true;
-				recruitsCloak.IsSaleable = true;
-				recruitsCloak.IsTradable = true;
 				recruitsCloak.Color = 36;
 
 				recruitsCloak.Bonus = 1; // default bonus
 
-				recruitsCloak.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 1));
-				recruitsCloak.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Slash, 1));
+				recruitsCloak.Bonus1 = 1;
+				recruitsCloak.Bonus1Type = (int) eStat.CON;
+
+				recruitsCloak.Bonus2 = 1;
+				recruitsCloak.Bonus2Type = (int) eResist.Slash;
+
+				recruitsCloak.Quality = 100;
+				recruitsCloak.MaxQuality = 100;
+				recruitsCloak.Condition = 1000;
+				recruitsCloak.MaxCondition = 1000;
+				recruitsCloak.Durability = 1000;
+				recruitsCloak.MaxDurability = 1000;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -348,97 +358,25 @@ namespace DOL.GS.Quests.Albion
 
 			#endregion
 
-			/*
-            #region defineConversation
-            QuestBuilder builder = QuestMgr.getBuilder(typeof(ImportantDelivery));
-
-            BaseQuestPart a;
-
-            // Master Frederick
-            builder.AddInteraction(masterFrederick, -1, eTextType.Talk, null, "Greetings to you my young friend. I am Master Frederick. I'm here to help you find your way around this vast realm. In the process, you'll have the ability to earn weapons, armor, coin and some levels. Would you like to start [training] now?");
-            builder.AddInteraction(masterFrederick, -1, eTextType.Talk, "training", "I thought you would. What I am here to do is to guide you through your first few seasons, until I feel you're confident and skilled enough to make it on your own in Albion. If you aren't properly trained, then what good are you to the realm? None, of course. Now, I will start your training off by asking you a simple quesion, whether or not you wish to [proceed] with your training. A dialogue box will pop up. Either press the Accept or Decline button.");
-
-            // Offer quest to player
-            a = builder.AddInteraction(masterFrederick,-1,eTextType.None,"proceed",null);
-                a.AddAction(eActionType.OfferQuest, typeof(ImportantDelivery), "Are you ready to begin your training?");            
-            builder.AddOnQuestDecline(masterFrederick, eTextType.Talk, "Oh well, if you change your mind, please come back!");                            
-            builder.AddOnQuestAccept(masterFrederick, eTextType.Talk, "Congratulations! You are now one step closer to understanding the world of Camelot! During this phase of your training, I will be sending you to different parts of the realm to deliver much needed supplies to various citizens. You will need to check your QUEST JOURNAL from time to time to see what you need to accomplish next on your quest. You can access the quest journal from the COMMAND button on your [character sheet].");                
-                            
-            // do some smalltalk
-            builder.AddInteraction(masterFrederick, 1, eTextType.Talk, "character sheet", "Your character sheet houses all of your character's information, such as attributes, weapon skill, base class and profession. If at any time you want to see your character's statistics, press the far left icon on the menu bar (it looks like a person with a circle around them) for more [information].");
-            a = builder.AddInteraction(masterFrederick, 1, eTextType.Talk, "information", "I know this all seems a little overwhelming, but I have a special item here that will make this transition a smooth one. Please, take this [journal].");
-                a.AddAction(eActionType.IncQuestStep,typeof(ImportantDelivery));
-            
-            builder.AddInteraction(masterFrederick, 2, eTextType.Talk, "journal", "This journal will help you from time to time while you are doing various tasks for me. I like to call it a smart journal. It was made by one of the sorcerers at the Academy for new recruits like you. It will help to [expedite] your training.");
-            builder.AddInteraction(masterFrederick, 2, eTextType.Talk, "expedite", "Now that I've given you a small introduction to the world of Albion, let's get started with your first task. I need for you to deliver this package of supplies to Apprentice Dunan in Ludlow. Don't worry, I have a special [horse ticket] for you.");
-
-            // give player items for dunan and ticket
-            a = builder.AddInteraction(masterFrederick, 2, eTextType.Talk, "horse ticket", "All you need to do is take this horse ticket to Vuloch near the gates of Camelot. Hand him the ticket and you'll be on your way to Ludlow. Be swift my young recruit. Time is of the essence.");
-                a.AddAction(eActionType.GiveItem,ticketToLudlow);
-                a.AddAction(eActionType.GiveItem,sackOfSupplies);
-                a.AddAction(eActionType.IncQuestStep,typeof(ImportantDelivery));
-
-            builder.AddInteraction(masterFrederick, 2, eTextType.Talk, null, "This journal will help you from time to time while you are doing various tasks for me. I like to call it a smart journal. It was made by one of the sorcerers at the Academy for new recruits like you. It will help to [expedite] your training.");
-            builder.AddInteraction(masterFrederick, 3, eTextType.Talk, null, "All you need to do is take this horse ticket to Vuloch near the gates of Camelot. Hand him the ticket and you'll be on your way to Ludlow. Be swift my young recruit. Time is of the essence.");
-            
-            // Add Abort Possibility for quest            
-            a = builder.AddInteraction(masterFrederick, 0, eTextType.None, "abort", null);                
-                a.AddAction(eActionType.OfferQuestAbort,typeof(ImportantDelivery), "Do you really want to abort this quest, \nall items gained during quest will be lost?");                        
-            builder.AddOnQuestContinue(masterFrederick, eTextType.Talk, "Good, no go out there and finish your work!");
-            builder.AddOnQuestAbort(masterFrederick, eTextType.Talk, "Do you really want to abandon your duties? The realm always needs willing men and women, so come back if you changed your mind.");
-
-            // Goto vuloch and give him the ticket
-            a = builder.AddOnGiveItem(vuloch, 3, ticketToLudlow, eTextType.Emote, "You give Vuloch the item");
-                a.AddAction(eActionType.IncQuestStep, typeof(ImportantDelivery));
-    
-            // Talk to Dunan 
-            builder.AddInteraction(dunan, 3,5, eTextType.Talk, null, "Greetings traveler. I've not seen you around here before. You must be a new recruit. Well then, is there something I can help you with?");                
-
-            // Give supplies to dunan
-            a = builder.AddOnGiveItem(dunan, 3, 4, sackOfSupplies, eTextType.Talk, "Oh, I see. Yes, from Master Frederick. We've been waiting for these supplies for a while. It's good to have them. I don't suppose you're up for one more [errand], are you?");
-                a.AddAction(eActionType.SetQuestStep, typeof(ImportantDelivery), 5);
-                a.AddAction(eActionType.TakeItem, sackOfSupplies);
-
-            a = builder.CreateQuestPart(dunan, eTextType.Talk, "Oh, I see. Yes, from Master Frederick. We've been waiting for these supplies for a while. It's good to have them. I don't suppose you're up for one more [errand], are you?");
-                a.AddRequirement(eRequirementType.QuestStep, typeof(ImportantDelivery), 2, eComparator.Greater);
-                a.AddRequirement(eRequirementType.QuestStep, typeof(ImportantDelivery), 5, eComparator.Less);
-                a.AddTrigger(eTriggerType.GiveItem,null,sackOfSupplies);
-                a.AddAction(eActionType.SetQuestStep, typeof(ImportantDelivery), 5);
-                a.AddAction(eActionType.TakeItem, sackOfSupplies);
-            AddQuestPart(a);
-
-            builder.AddInteraction(dunan, 5, eTextType.Talk, null, "Oh, I see. Yes, from Master Frederick. We've been waiting for these supplies for a while. It's good to have them. I don't suppose you're up for one more [errand], are you?");
-            
-            // More work to do, give player items for bombard and ticket 
-            a = builder.AddInteraction(dunan, 5, eTextType.Talk, "errand", "I need for you to deliver this crate of vegetables to Stable Master Bombard at the Camelot Gates. Don't worry, I'll give you a ticket so you don't have to run there. Thank you my friend. Be swift so the vegetables don't rot.");
-                a.AddAction(eActionType.GiveItem,ticketToBombard);
-                a.AddAction(eActionType.GiveItem,crateOfVegetables);
-                a.AddAction(eActionType.IncQuestStep,typeof(ImportantDelivery));
-
-            // Goto Yaren and give him the ticket
-            a = builder.AddOnGiveItem(yaren, 6, ticketToBombard, eTextType.None, null);
-                a.AddAction(eActionType.IncQuestStep, typeof(ImportantDelivery));
-
-            // Bombard
-            builder.AddInteraction(bombard, 6,7, eTextType.Talk, null, "Welcome to my stable friend. What can I do for you today?");                      
-            
-            // Give crate to bombard
-            a = builder.AddOnGiveItem(bombard,6,7,crateOfVegetables, eTextType.Talk, "Ah, the vegetables I've been waiting for from Dunan. Thank you for delivering them to me. I couldn't find anyone to look after my stable so I could go and get them. Let me see, I think a [reward] is in order for your hard work.");                
-                a.AddAction(eActionType.SetQuestStep, typeof(ImportantDelivery), 8);
-                a.AddAction(eActionType.TakeItem, crateOfVegetables);
-
-            // Finish Quest and recive reward
-            a = builder.AddInteraction(bombard, 8, eTextType.Talk, "reward", "Ah, here we are. I know it isn't much, but I got it in a trade a while ago, and I don't have much use for it. I'm sure you can put it to use though, can't you? Let me know if you're in need of anything else. I have a few errands I need run.");
-                a.AddAction(eActionType.FinishQuest, typeof(ImportantDelivery));
-            a = builder.AddInteraction(bombard, 8, eTextType.Talk, null, "Ah, here we are. I know it isn't much, but I got it in a trade a while ago, and I don't have much use for it. I'm sure you can put it to use though, can't you? Let me know if you're in need of anything else. I have a few errands I need run.");
-                a.AddAction(eActionType.FinishQuest, typeof(ImportantDelivery));
-            
-            #endregion
-
+			/* Now we add some hooks to the npc we found.
+			* Actually, we want to know when a player interacts with him.
+			* So, we hook the right-click (interact) and the whisper method
+			* of npc and set the callback method to the "TalkToXXX"
+			* method. This means, the "TalkToXXX" method is called whenever
+			* a player right clicks on him or when he whispers to him.
 			*/
+			//We want to be notified whenever a player enters the world            
+			GameEventMgr.AddHandler(masterFrederick, GameLivingEvent.Interact, new DOLEventHandler(TalkToMasterFrederick));
+			GameEventMgr.AddHandler(masterFrederick, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToMasterFrederick));
 
-			/* Now we bring to Ydenia the possibility to give this quest to players */
-			QuestMgr.AddQuestDescriptor(masterFrederick, typeof(ImportantDeliveryDescriptor));
+			GameEventMgr.AddHandler(bombard, GameLivingEvent.Interact, new DOLEventHandler(TalkToBombard));
+			GameEventMgr.AddHandler(bombard, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToBombard));
+
+			GameEventMgr.AddHandler(dunan, GameLivingEvent.Interact, new DOLEventHandler(TalkToDunan));
+			GameEventMgr.AddHandler(dunan, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToDunan));
+
+			/* Now we bring to masterFrederick the possibility to give this quest to players */
+			masterFrederick.AddQuestToGive(typeof (ImportantDelivery));
 
 			if (log.IsInfoEnabled)
 				log.Info("Quest \"" + questTitle + "\" initialized");
@@ -455,9 +393,315 @@ namespace DOL.GS.Quests.Albion
 		[ScriptUnloadedEvent]
 		public static void ScriptUnloaded(DOLEvent e, object sender, EventArgs args)
 		{
-            //remove quest from npc
-			QuestMgr.RemoveQuestDescriptor(masterFrederick, typeof(ImportantDeliveryDescriptor));
-		}	
+			/* If sirQuait has not been initialized, then we don't have to remove any
+			 * hooks from him ;-)
+			 */
+			if (masterFrederick == null)
+				return;
+
+			/* Removing hooks works just as adding them but instead of 
+			 * AddHandler, we call RemoveHandler, the parameters stay the same
+			 */
+
+			GameEventMgr.RemoveHandler(masterFrederick, GameLivingEvent.Interact, new DOLEventHandler(TalkToMasterFrederick));
+			GameEventMgr.RemoveHandler(masterFrederick, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToMasterFrederick));
+
+			GameEventMgr.RemoveHandler(bombard, GameLivingEvent.Interact, new DOLEventHandler(TalkToBombard));
+			GameEventMgr.RemoveHandler(bombard, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToBombard));
+
+			GameEventMgr.RemoveHandler(dunan, GameLivingEvent.Interact, new DOLEventHandler(TalkToDunan));
+			GameEventMgr.RemoveHandler(dunan, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToDunan));
+
+			/* Now we remove to masterFrederick the possibility to give this quest to players */
+			masterFrederick.RemoveQuestToGive(typeof (ImportantDelivery));
+		}
+
+		/* This is the method we declared as callback for the hooks we set to
+		 * NPC. It will be called whenever a player right clicks on NPC
+		 * or when he whispers something to him.
+		 */
+
+		protected static void TalkToMasterFrederick(DOLEvent e, object sender, EventArgs args)
+		{
+			//We get the player from the event arguments and check if he qualifies
+			//for the quest!		
+			GamePlayer player = ((SourceEventArgs) args).Source as GamePlayer;
+			if (player == null)
+				return;
+
+			if(masterFrederick.CanGiveQuest(typeof (ImportantDelivery), player)  <= 0)
+				return;
+
+			//We also check if the player is already doing the quest
+			ImportantDelivery quest = player.IsDoingQuest(typeof (ImportantDelivery)) as ImportantDelivery;
+
+			masterFrederick.TurnTo(player);
+			//Did the player rightclick on NPC?
+			if (e == GameObjectEvent.Interact)
+			{
+				if (quest == null)
+				{
+					//Player is not doing the quest...
+					masterFrederick.SayTo(player, "Greetings to you my young friend. I am Master Frederick. I'm here to help you find your way around this vast realm. In the process, you'll have the ability to earn weapons, armor, coin and some levels. Would you like to start [training] now?");
+					return;
+				}
+				else
+				{
+					if (quest.Step == 2)
+					{
+						masterFrederick.SayTo(player, "This journal will help you from time to time while you are doing various tasks for me. I like to call it a smart journal. It was made by one of the sorcerers at the Academy for new recruits like you. It will help to [expedite] your training.");
+					}
+					else if (quest.Step == 3)
+					{
+						masterFrederick.SayTo(player, "All you need to do is take this horse ticket to Vuloch near the gates of Camelot. Hand him the ticket and you'll be on your way to Ludlow. Be swift my young recruit. Time is of the essence.");
+					}
+					return;
+				}
+			}
+				// The player whispered to NPC (clicked on the text inside the [])
+			else if (e == GameLivingEvent.WhisperReceive)
+			{
+				WhisperReceiveEventArgs wArgs = (WhisperReceiveEventArgs) args;
+
+				if (quest == null)
+				{
+					//Do some small talk :)
+					switch (wArgs.Text)
+					{
+						case "training":
+							masterFrederick.SayTo(player, "I thought you would. What I am here to do is to guide you through your first few seasons, until I feel you're confident and skilled enough to make it on your own in Albion. If you aren't properly trained, then what good are you to the realm? None, of course. Now, I will start your training off by asking you a simple quesion, whether or not you wish to [proceed] with your training. A dialogue box will pop up. Either press the Accept or Decline button.");
+							break;
+							//If the player offered his "help", we send the quest dialog now!
+						case "proceed":
+							player.Out.SendCustomDialog("Are you ready to begin your training?", new CustomDialogResponse(CheckPlayerAcceptQuest));
+							break;
+					}
+				}
+				else
+				{
+					switch (wArgs.Text)
+					{
+						case "character sheet":
+							masterFrederick.SayTo(player, "Your character sheet houses all of your character's information, such as attributes, weapon skill, base class and profession. If at any time you want to see your character's statistics, press the far left icon on the menu bar (it looks like a person with a circle around them) for more [information].");
+							break;
+						case "information":
+							masterFrederick.SayTo(player, "I know this all seems a little overwhelming, but I have a special item here that will make this transition a smooth one. Please, take this [journal].");
+							if (quest.Step == 1)
+								quest.Step = 2;
+							break;
+						case "journal":
+							masterFrederick.SayTo(player, "This journal will help you from time to time while you are doing various tasks for me. I like to call it a smart journal. It was made by one of the sorcerers at the Academy for new recruits like you. It will help to [expedite] your training.");
+							break;
+						case "expedite":
+							masterFrederick.SayTo(player, "Now that I've given you a small introduction to the world of Albion, let's get started with your first task. I need for you to deliver this package of supplies to Apprentice Dunan in Ludlow. Don't worry, I have a special [horse ticket] for you.");
+							break;
+						case "horse ticket":
+							masterFrederick.SayTo(player, "All you need to do is take this horse ticket to Vuloch near the gates of Camelot. Hand him the ticket and you'll be on your way to Ludlow. Be swift my young recruit. Time is of the essence.");
+							if (quest.Step == 2)
+							{
+								GiveItem(masterFrederick, player, ticketToLudlow);
+								GiveItem(masterFrederick, player, sackOfSupplies);
+								quest.Step = 3;
+							}
+							break;
+						case "abort":
+							player.Out.SendCustomDialog("Do you really want to abort this quest, \nall items gained during quest will be lost?", new CustomDialogResponse(CheckPlayerAbortQuest));
+							break;
+					}
+				}
+			}
+		}
+
+		protected static void TalkToDunan(DOLEvent e, object sender, EventArgs args)
+		{
+			//We get the player from the event arguments and check if he qualifies
+			//for the quest!		
+			GamePlayer player = ((SourceEventArgs) args).Source as GamePlayer;
+			if (player == null)
+				return;
+
+			if(masterFrederick.CanGiveQuest(typeof (ImportantDelivery), player)  <= 0)
+				return;
+
+			//We also check if the player is already doing the quest
+			ImportantDelivery quest = player.IsDoingQuest(typeof (ImportantDelivery)) as ImportantDelivery;
+
+			dunan.TurnTo(player);
+			//Did the player rightclick on NPC?
+			if (e == GameObjectEvent.Interact)
+			{
+				if (quest != null)
+				{
+					if (quest.Step >= 3 && quest.Step <= 4)
+					{
+						dunan.SayTo(player, "Greetings traveler. I've not seen you around here before. You must be a new recruit. Well then, is there something I can help you with?");
+					}
+					else if (quest.Step == 5)
+					{
+						dunan.SayTo(player, "Oh, I see. Yes, from Master Frederick. We've been waiting for these supplies for a while. It's good to have them. I don't suppose you're up for one more [errand], are you?");
+					}
+					else if (quest.Step == 6)
+					{
+						dunan.SayTo(player, "I need for you to deliver this crate of vegetables to Stable Master Bombard at the Camelot Gates. Don't worry, I'll give you a ticket so you don't have to run there. Thank you my friend. Be swift so the vegetables don't rot.");
+					}
+				}
+
+				return;
+			}
+			else if (e == GameLivingEvent.WhisperReceive)
+			{
+				WhisperReceiveEventArgs wArgs = (WhisperReceiveEventArgs) args;
+
+				if (quest != null)
+				{
+					//Do some small talk :)
+					switch (wArgs.Text)
+					{
+						case "errand":
+							dunan.SayTo(player, "I need for you to deliver this crate of vegetables to Stable Master Bombard at the Camelot Gates. Don't worry, I'll give you a ticket so you don't have to run there. Thank you my friend. Be swift so the vegetables don't rot.");
+							if (quest.Step == 5)
+							{
+								GiveItem(dunan, player, ticketToBombard);
+								GiveItem(dunan, player, crateOfVegetables);
+
+								quest.Step = 6;
+							}
+							break;
+					}
+				}
+			}
+		}
+
+		protected static void TalkToBombard(DOLEvent e, object sender, EventArgs args)
+		{
+			//We get the player from the event arguments and check if he qualifies
+			//for the quest!		
+			GamePlayer player = ((SourceEventArgs) args).Source as GamePlayer;
+			if (player == null)
+				return;
+
+			if(masterFrederick.CanGiveQuest(typeof (ImportantDelivery), player)  <= 0)
+				return;
+
+			//We also check if the player is already doing the quest
+			ImportantDelivery quest = player.IsDoingQuest(typeof (ImportantDelivery)) as ImportantDelivery;
+
+			bombard.TurnTo(player);
+			//Did the player rightclick on NPC?
+			if (e == GameObjectEvent.Interact)
+			{
+				if (quest != null)
+				{
+					if (quest.Step == 7)
+					{
+						bombard.SayTo(player, "Welcome to my stable friend. What can I do for you today?");
+					}
+					else if (quest.Step == 8)
+					{
+						bombard.SayTo(player, "Ah, here we are. I know it isn't much, but I got it in a trade a while ago, and I don't have much use for it. I'm sure you can put it to use though, can't you? Let me know if you're in need of anything else. I have a few errands I need run.");
+						quest.FinishQuest();
+					}
+
+				}
+
+				return;
+			}
+			else if (e == GameLivingEvent.WhisperReceive)
+			{
+				WhisperReceiveEventArgs wArgs = (WhisperReceiveEventArgs) args;
+
+				if (quest != null)
+				{
+					//Do some small talk :)
+					switch (wArgs.Text)
+					{
+						case "reward":
+							bombard.SayTo(player, "Ah, here we are. I know it isn't much, but I got it in a trade a while ago, and I don't have much use for it. I'm sure you can put it to use though, can't you? Let me know if you're in need of anything else. I have a few errands I need run.");
+							if (quest.Step == 8)
+							{
+								quest.FinishQuest();
+							}
+							break;
+					}
+				}
+			}
+		}
+
+		/// <summary>
+		/// This method checks if a player qualifies for this quest
+		/// </summary>
+		/// <returns>true if qualified, false if not</returns>
+		public override bool CheckQuestQualification(GamePlayer player)
+		{
+			// if the player is already doing the quest his level is no longer of relevance
+			if (player.IsDoingQuest(typeof (ImportantDelivery)) != null)
+				return true;
+
+			// This checks below are only performed is player isn't doing quest already
+
+			if (!CheckPartAccessible(player, typeof (ImportantDelivery)))
+				return false;
+
+			if (player.Level < minimumLevel || player.Level > maximumLevel)
+				return false;
+
+			return true;
+		}
+
+
+		/* This is our callback hook that will be called when the player clicks
+		 * on any button in the quest offer dialog. We check if he accepts or
+		 * declines here...
+		 */
+
+		private static void CheckPlayerAbortQuest(GamePlayer player, byte response)
+		{
+			ImportantDelivery quest = player.IsDoingQuest(typeof (ImportantDelivery)) as ImportantDelivery;
+
+			if (quest == null)
+				return;
+
+			if (response == 0x00)
+			{
+				SendSystemMessage(player, "Good, no go out there and finish your work!");
+			}
+			else
+			{
+				SendSystemMessage(player, "Aborting Quest " + questTitle + ". You can start over again if you want.");
+				quest.AbortQuest();
+			}
+		}
+
+		/* This is our callback hook that will be called when the player clicks
+		 * on any button in the quest offer dialog. We check if he accepts or
+		 * declines here...
+		 */
+
+		private static void CheckPlayerAcceptQuest(GamePlayer player, byte response)
+		{
+			//We recheck the qualification, because we don't talk to players
+			//who are not doing the quest
+			if(masterFrederick.CanGiveQuest(typeof (ImportantDelivery), player)  <= 0)
+				return;
+
+			ImportantDelivery quest = player.IsDoingQuest(typeof (ImportantDelivery)) as ImportantDelivery;
+
+			if (quest != null)
+				return;
+
+			if (response == 0x00)
+			{
+				SendReply(player, "Oh well, if you change your mind, please come back!");
+			}
+			else
+			{
+				//Check if we can add the quest!
+				if (!masterFrederick.GiveQuest(typeof (ImportantDelivery), player, 1))
+					return;
+
+				masterFrederick.SayTo(player, "Congratulations! You are now one step closer to understanding the world of Camelot! During this phase of your training, I will be sending you to different parts of the realm to deliver much needed supplies to various citizens. You will need to check your QUEST JOURNAL from time to time to see what you need to accomplish next on your quest. You can access the quest journal from the COMMAND button on your [character sheet].");
+			}
+		}
 
 		/* Now we set the quest name.
 		 * If we don't override the base method, then the quest
@@ -475,6 +719,7 @@ namespace DOL.GS.Quests.Albion
 		 * description for ALL steps will be "UNDEFINDED QUEST DESCRIPTION"
 		 * and this isn't something nice either ;-)
 		 */
+
 		public override string Description
 		{
 			get
@@ -497,15 +742,74 @@ namespace DOL.GS.Quests.Albion
 						return "[Step #7] Now that you are in Bombard's stable, you must hand him the Crate of Vegetables. If you prefer, you may right click to interact with him first.";
 					case 8:
 						return "[Step #8] Talk to Bombard to recieve your reward for your hard work.";
-					default:
-						return "[Step #" + Step + "] No Description entered for this step!";
+
 				}
+				return base.Description;
 			}
 		}
 
 		public override void Notify(DOLEvent e, object sender, EventArgs args)
+		{			
+			GamePlayer player = sender as GamePlayer;			
+
+			if (player == null || player.IsDoingQuest(typeof (ImportantDelivery)) == null)
+				return;
+
+			if (Step == 3 && e == GamePlayerEvent.GiveItem)
+			{
+				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
+				if (gArgs.Target.Name == vuloch.Name && gArgs.Item.Id_nb == ticketToLudlow.Id_nb)
+				{
+					Step = 4;
+					return;
+				}
+			}
+
+			if (Step >= 3 && Step <= 4 && e == GamePlayerEvent.GiveItem)
+			{
+				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
+				if (gArgs.Target.Name == dunan.Name && gArgs.Item.Id_nb == sackOfSupplies.Id_nb)
+				{
+					dunan.SayTo(player, "Oh, I see. Yes, from Master Frederick. We've been waiting for these supplies for a while. It's good to have them. I don't suppose you're up for one more [errand], are you?");
+					RemoveItem(dunan, player, sackOfSupplies);
+					Step = 5;
+					return;
+				}
+			}
+
+			if (Step == 6 && e == GamePlayerEvent.GiveItem)
+			{
+				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
+				if (gArgs.Target.Name == yaren.Name && gArgs.Item.Id_nb == ticketToBombard.Id_nb)
+				{
+					Step = 7;
+					return;
+				}
+			}
+
+			if (Step >= 6 && Step <= 7 && e == GamePlayerEvent.GiveItem)
+			{
+				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
+				if (gArgs.Target.Name == bombard.Name && gArgs.Item.Id_nb == crateOfVegetables.Id_nb)
+				{
+					bombard.SayTo(player, "Ah, the vegetables I've been waiting for from Dunan. Thank you for delivering them to me. I couldn't find anyone to look after my stable so I could go and get them. Let me see, I think a [reward] is in order for your hard work.");
+					RemoveItem(bombard, player, crateOfVegetables);
+					Step = 8;
+					return;
+				}
+			}
+
+		}
+
+		public override void AbortQuest()
 		{
-			
+			base.AbortQuest(); //Defined in Quest, changes the state, stores in DB etc ...
+
+			RemoveItem(m_questPlayer, ticketToBombard, false);
+			RemoveItem(m_questPlayer, ticketToLudlow, false);
+			RemoveItem(m_questPlayer, sackOfSupplies, false);
+			RemoveItem(m_questPlayer, crateOfVegetables, false);
+
 		}
 
 		public override void FinishQuest()
@@ -513,10 +817,12 @@ namespace DOL.GS.Quests.Albion
 			base.FinishQuest(); //Defined in Quest, changes the state, stores in DB etc ...
 
 			//Give reward to player here ...            
-			GiveItemToPlayer(bombard, recruitsCloak.CreateInstance());
+			GiveItem(bombard, m_questPlayer, recruitsCloak);
 
 			m_questPlayer.GainExperience(12, 0, 0, true);
 			m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 1, Util.Random(50)), "You recieve {0} as a reward.");
+
 		}
+
 	}
 }

@@ -20,7 +20,7 @@
 using System;
 using System.Reflection;
 using System.Collections;
-using DOL.GS.Database;
+using DOL.Database;
 using log4net;
 
 namespace DOL.GS
@@ -50,15 +50,15 @@ namespace DOL.GS
 		{
 			m_factions = new Hashtable(1);
 
-			IList dbfactions = GameServer.Database.SelectAllObjects(typeof(DBFaction));
+			DataObject[] dbfactions =	GameServer.Database.SelectAllObjects(typeof(DBFaction));
 			foreach(DBFaction dbfaction in dbfactions)
 			{
 				Faction myfaction = new Faction();
 				myfaction.LoadFromDatabase(dbfaction);
-				m_factions.Add(dbfaction.FactionID,myfaction);
+				m_factions.Add(dbfaction.ID,myfaction);
 			}
 
-			IList dblinkedfactions = GameServer.Database.SelectAllObjects(typeof(DBLinkedFaction));
+			DataObject[] dblinkedfactions =	GameServer.Database.SelectAllObjects(typeof(DBLinkedFaction));
 			foreach(DBLinkedFaction dblinkedfaction in dblinkedfactions)
 			{
 				Faction faction = GetFactionByID(dblinkedfaction.LinkedFactionID);
@@ -73,7 +73,7 @@ namespace DOL.GS
 				else
 					faction.AddEnemyFaction(linkedFaction);
 			}
-			IList dbfactionAggroLevels = GameServer.Database.SelectAllObjects(typeof(DBFactionAggroLevel));
+			DataObject[] dbfactionAggroLevels =	GameServer.Database.SelectAllObjects(typeof(DBFactionAggroLevel));
 			foreach(DBFactionAggroLevel dbfactionAggroLevel in dbfactionAggroLevels)
 			{
 				Faction faction = GetFactionByID(dbfactionAggroLevel.FactionID);

@@ -79,7 +79,7 @@ namespace DOL.GS.Effects
 			m_player.EffectList.Remove(this);
 
 			// TODO add proper transform animation
-			m_player.Model = (ushort)m_player.CreationModel;			
+			m_player.Model = (ushort)m_player.PlayerCharacter.CreationModel;			
 
 			// there is no animation on end of the effect
 			m_player.Out.SendMessage("Your berserker frenzy ends.", eChatType.CT_System, eChatLoc.CL_SystemWindow);

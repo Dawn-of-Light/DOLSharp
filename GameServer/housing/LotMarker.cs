@@ -18,7 +18,7 @@
  */
 using System;
 using System.Collections;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Housing
@@ -27,6 +27,7 @@ namespace DOL.GS.Housing
 	{
 		public GameLotMarker() : base()
 		{
+			SaveInDB = false;
 		}
 
 		private DBHouse m_dbitem;
@@ -78,15 +79,15 @@ namespace DOL.GS.Housing
 			lock (this)
 			{
 				if (DatabaseItem.OwnerIDs != null) return;
-				if (player.LotNumber != 0 && player.Client.Account.PrivLevel == ePrivLevel.Player)
+				if (player.PlayerCharacter.LotNumber != 0 && player.Client.Account.PrivLevel <= 1)
 				{
-					player.Out.SendMessage("You do already own another lot or house (Number " + player.LotNumber + ").", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage("You do already own another lot or house (Number " + player.PlayerCharacter.LotNumber + ").", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
 					return;
 				}
 				if (player.RemoveMoney(HouseTemplateMgr.GetLotPrice(DatabaseItem), "You just bought this lot for {0}.", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow))
 				{
-					player.LotNumber = DatabaseItem.HouseNumber;
-					GameServer.Database.SaveObject(player);
+					player.PlayerCharacter.LotNumber = DatabaseItem.HouseNumber;
+					GameServer.Database.SaveObject(player.PlayerCharacter);
 					HouseMgr.AddOwner(DatabaseItem,player);
 				}
 				else
@@ -96,15 +97,15 @@ namespace DOL.GS.Housing
 			}
 		}
 
-		public override bool ReceiveItem(GameLiving source, GenericItem item)
+		public override bool ReceiveItem(GameLiving source, InventoryItem item)
 		{
 			if (source == null || item == null) return false;
 			if (!(source is GamePlayer)) return false;
 
-	/*		GamePlayer player = (GamePlayer) source;
+			GamePlayer player = (GamePlayer) source;
 			if (HouseMgr.IsOwner(DatabaseItem, player))
 			{
-				switch (item.ItemID)
+				switch (item.Id_nb)
 				{
 					case "alb_cottage_deed":
 						CreateHouse(player, 1);
@@ -152,7 +153,7 @@ namespace DOL.GS.Housing
 			else
 			{
 				player.Out.SendMessage("You do not own this lot!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			}*/
+			}
 			return false;
 		}
 
@@ -169,7 +170,7 @@ namespace DOL.GS.Housing
 
 			if (player.Guild != null)
 			{
-				DatabaseItem.Emblem = player.Guild.Emblem;
+				DatabaseItem.Emblem = player.Guild.theGuildDB.Emblem;
 			}
 
 			House house = new House(DatabaseItem);
@@ -183,9 +184,9 @@ namespace DOL.GS.Housing
 			return true;
 		}
 
-		public virtual bool OnPlayerSell(GamePlayer player, GenericItem item)
+		public virtual bool OnPlayerSell(GamePlayer player, InventoryItem item)
 		{
-			if (!item.IsSaleable)
+			if (!item.IsDropable)
 			{
 				player.Out.SendMessage("This item can't be sold.", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
 				return false;
@@ -193,23 +194,22 @@ namespace DOL.GS.Housing
 			return true;
 		}
 
-		public long OnPlayerAppraise(GamePlayer player, GenericItem item)
+		public long OnPlayerAppraise(GamePlayer player, InventoryItem item)
 		{
 			if (item == null)
 				return 0;
 
-			long valeur = item.Value / 2;
-
-			if(item is StackableItem) valeur *= Math.Max(1, ((StackableItem)item).Count);
-
-			return valeur;
+			int itemCount = Math.Max(1, item.Count);
+			return item.Value*itemCount/2;
 		}
 
 		public static void SpawnLotMarker(DBHouse house)
 		{
 			GameLotMarker obj = new GameLotMarker();
-			obj.Position = new Point(house.X, house.Y, house.Z);
-			obj.RegionId = (ushort)house.RegionID;
+			obj.X = house.X;
+			obj.Y = house.Y;
+			obj.Z = house.Z;
+			obj.CurrentRegionID = (ushort)house.RegionID;
 			obj.Heading = (ushort) house.Heading;
 			obj.Name = "Lot Marker";
 			obj.Model = 1308;
@@ -218,7 +218,7 @@ namespace DOL.GS.Housing
 			//No clue how we can check if a region
 			//is in albion, midgard or hibernia instead
 			//of checking the region id directly
-			switch (obj.RegionId)
+			switch (obj.CurrentRegionID)
 			{
 				case 2:
 					obj.Model = 1308;

@@ -36,7 +36,7 @@ namespace DOL.GS.Spells
 		/// <param name="target"></param>
 		public override void FinishSpellCast(GameLiving target)
 		{
-			m_caster.ChangeMana(null, GameLiving.eManaChangeType.Spell, -CalculateNeededPower(target));
+			m_caster.Mana -= CalculateNeededPower(target);
 			base.FinishSpellCast(target);
 		}
 
@@ -87,7 +87,7 @@ namespace DOL.GS.Spells
 			double heal = Spell.Value * effectiveness;
 			if (target.IsDiseased)
 				heal /= 2;
-			target.ChangeHealth(target, GameLiving.eHealthChangeType.Regenerate , (int)heal); // Regenerate don't generate aggro
+			target.Health += (int)heal;
 			//"You feel calm and healthy."
 			MessageToLiving(target, Spell.Message1, eChatType.CT_Spell);
 		}

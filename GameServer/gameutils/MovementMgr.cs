@@ -19,7 +19,7 @@
 using System;
 using System.Collections;
 using System.Reflection;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.Events;
 using log4net;
 
@@ -73,18 +73,16 @@ namespace DOL.GS.Movement
 		{
 			SortedList sorted = new SortedList();
 			pathID.Replace('\'', '/'); // we must replace the ', found no other way yet
-			DBPath dbpath = (DBPath) GameServer.Database.FindObjectByKey(typeof(DBPath), pathID);
+			DBPath dbpath = (DBPath) GameServer.Database.SelectObject(typeof(DBPath), "PathID='"+GameServer.Database.Escape(pathID)+"'");
 			DBPathPoint[] pathpoints = null;
 			ePathType pathType = ePathType.Once;
 
-			if (dbpath != null) 
-			{
+			if (dbpath != null) {
 				pathpoints = dbpath.PathPoints;	
 				pathType = (ePathType)dbpath.PathType;
 			}
-			if (pathpoints == null) 
-			{
-			//	pathpoints = (DBPathPoint[]) GameServer.Database.SelectObjects(typeof(DBPathPoint), "PathID='"+GameServer.Database.Escape(pathID)+"'");				
+			if (pathpoints == null) {
+				pathpoints = (DBPathPoint[]) GameServer.Database.SelectObjects(typeof(DBPathPoint), "PathID='"+GameServer.Database.Escape(pathID)+"'");				
 			}
 
 			foreach (DBPathPoint point in pathpoints)
@@ -96,7 +94,7 @@ namespace DOL.GS.Movement
 			for (int i=0; i<sorted.Count; i++)
 			{
 				DBPathPoint pp = (DBPathPoint)sorted.GetByIndex(i);
-				PathPoint p = new PathPoint(new Point(pp.X, pp.Y, pp.Z), pp.MaxSpeed, pathType);
+				PathPoint p = new PathPoint(pp.X, pp.Y, pp.Z, pp.MaxSpeed,pathType);
 				p.WaitTime = pp.WaitTime;
 
 				if (first==null) 
@@ -129,8 +127,7 @@ namespace DOL.GS.Movement
 				return;
 
 			pathID.Replace('\'', '/'); // we must replace the ', found no other way yet
-			DBPath thePath = (DBPath)GameServer.Database.FindObjectByKey(typeof(DBPath), pathID);
-			foreach (DBPathPoint pp in thePath.PathPoints) 
+			foreach (DBPath pp in GameServer.Database.SelectObjects(typeof(DBPath), "PathID='"+GameServer.Database.Escape(pathID)+"'")) 
 			{
 				GameServer.Database.DeleteObject(pp);
 			}
@@ -139,22 +136,15 @@ namespace DOL.GS.Movement
 			
 			//Set the current pathpoint to the rootpoint!
 			path = root;
-			DBPath dbp = new DBPath();
-			dbp.PathID = pathID;
-			dbp.PathType = (int)root.Type;
+			DBPath dbp = new DBPath(pathID, root.Type);
 			GameServer.Database.AddNewObject(dbp);
 
 			int i=1;
 			do 
 			{			
-				Point pos = path.Position;
-				DBPathPoint dbpp = new DBPathPoint();
-				dbpp.X = pos.X;
-				dbpp.Y = pos.Y;
-				dbpp.Z = pos.Z;
-				dbpp.MaxSpeed = path.MaxSpeed;
+				DBPathPoint dbpp = new DBPathPoint(path.X, path.Y, path.Z, path.MaxSpeed);
 				dbpp.Step = i++;
-				dbpp.PathPointID = pathID;
+				dbpp.PathID = pathID;
 				dbpp.WaitTime = path.WaitTime;
 				GameServer.Database.AddNewObject(dbpp);
 				path = path.Next;
@@ -198,7 +188,9 @@ namespace DOL.GS.Movement
 				return;
 			} 
 			npc.PathingNormalSpeed = speed;
-			if (npc.Position.CheckSquareDistance(npc.CurrentWayPoint.Position, 100*100))
+			//if (Point3D.GetDistance(npc.CurrentWayPoint, npc)<100)
+			//not sure because here use point3D get distance but why??
+			if (WorldMgr.CheckDistance(npc.CurrentWayPoint, npc,100))
 			{
 				if (npc.CurrentWayPoint.Type == ePathType.Path_Reverse && npc.CurrentWayPoint.FiredFlag)
 					npc.CurrentWayPoint = npc.CurrentWayPoint.Prev;
@@ -212,9 +204,9 @@ namespace DOL.GS.Movement
 			if (npc.CurrentWayPoint != null) 
 			{
 				GameEventMgr.AddHandler(npc, GameNPCEvent.CloseToTarget, new DOLEventHandler(OnCloseToWaypoint));
-				npc.WalkTo(npc.CurrentWayPoint.Position, Math.Min(speed, npc.CurrentWayPoint.MaxSpeed));
+				npc.WalkTo(npc.CurrentWayPoint, Math.Min(speed, npc.CurrentWayPoint.MaxSpeed));
 			} 
-			else
+			else 
 			{
 				npc.Notify(GameNPCEvent.PathMoveEnds, npc);
 			}					
@@ -299,7 +291,7 @@ namespace DOL.GS.Movement
 					 
 				if (npc.CurrentWayPoint != null) 
 				{
-					npc.WalkTo(npc.CurrentWayPoint.Position, Math.Min(npc.PathingNormalSpeed, npc.CurrentWayPoint.MaxSpeed));
+					npc.WalkTo(npc.CurrentWayPoint, Math.Min(npc.PathingNormalSpeed, npc.CurrentWayPoint.MaxSpeed));
 				}
 				else
 				{

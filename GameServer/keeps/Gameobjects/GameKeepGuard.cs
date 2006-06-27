@@ -18,7 +18,7 @@
  */
 using System;
 using DOL.AI.Brain;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.GS.PacketHandler;
 using DOL.Events;
 
@@ -50,6 +50,7 @@ namespace DOL.GS
 				brain.AggroRange = 50;
 				SetOwnBrain(brain);
 			}
+			SaveInDB = false;
 		}
 
 		/// <summary>
@@ -68,10 +69,9 @@ namespace DOL.GS
 			}
 			dbKeepGuard.Name = Name;
 			dbKeepGuard.BaseLevel = Level;
-			Point pos = Position;
-			dbKeepGuard.X = pos.X;
-			dbKeepGuard.Y = pos.Y;
-			dbKeepGuard.Z = pos.Z;
+			dbKeepGuard.X = X;
+			dbKeepGuard.Y = Y;
+			dbKeepGuard.Z = Z;
 			dbKeepGuard.Heading = Heading;
 			dbKeepGuard.EquipmentID = EquipmentTemplateID;
 			
@@ -85,7 +85,7 @@ namespace DOL.GS
 			if(InternalID == null)
 			{
 				GameServer.Database.AddNewObject(dbKeepGuard);
-				InternalID = dbKeepGuard.KeepObjectID.ToString();;
+				InternalID = dbKeepGuard.ObjectId;
 			}
 			else
 				GameServer.Database.SaveObject(dbKeepGuard);
@@ -95,7 +95,7 @@ namespace DOL.GS
 		/// load keep guard from DB object
 		/// </summary>
 		/// <param name="obj"> the db object</param>
-		public override void LoadFromDatabase(object obj)
+		public override void LoadFromDatabase(DataObject obj)
 		{
 			base.LoadFromDatabase(obj);
 			DBKeepObject dbkeepobj = obj as DBKeepObject;
@@ -108,13 +108,15 @@ namespace DOL.GS
 			this.Realm = (byte)dbkeepobj.Realm;
 			this.Model = (ushort)dbkeepobj.Model;
 			this.Size= 50;
-			this.Position = new Point(dbkeepobj.X, dbkeepobj.Y, dbkeepobj.Z);
+			this.X = dbkeepobj.X;
+			this.Y = dbkeepobj.Y;
+			this.Z = dbkeepobj.Z;
 			this.Heading = (ushort)dbkeepobj.Heading;
 			this.LoadEquipmentTemplateFromDatabase(dbkeepobj.EquipmentID);
 			AbstractGameKeep keep = brain.Keep ;
 			if (keep != null)
 			{	
-				this.Region = keep.Region;
+				this.CurrentRegion = keep.CurrentRegion;
 				this.Level = (byte)(dbkeepobj.BaseLevel + keep.Level);
 				if (!this.AddToKeep(keep))
 					return;
@@ -169,13 +171,13 @@ namespace DOL.GS
 		/// <param name="guild"> the guild owner of the keep</param>
 		public void ChangeGuild(Guild guild)
 		{
-			GuildName = guild.GuildName;
-			VisibleEquipment lefthand = (VisibleEquipment)Inventory.GetItem(eInventorySlot.LeftHandWeapon);
+			this.GuildName = guild.Name;
+			InventoryItem lefthand = this.Inventory.GetItem(eInventorySlot.LeftHandWeapon);
 			if (lefthand != null)
-				lefthand.Color = guild.Emblem;
-			VisibleEquipment cloak = (VisibleEquipment)Inventory.GetItem(eInventorySlot.Cloak);
+				lefthand.Emblem = guild.theGuildDB.Emblem;
+			InventoryItem cloak = this.Inventory.GetItem(eInventorySlot.Cloak);
 			if (cloak != null)
-				cloak.Color = guild.Emblem;
+				cloak.Emblem = guild.theGuildDB.Emblem;
 			this.UpdateNPCEquipmentAppearance();
 			GameEventMgr.AddHandler(this,GameLivingEvent.AttackedByEnemy,new DOLEventHandler(WarnGuild));
 			GameEventMgr.AddHandler(this,GameLivingEvent.Dying,new DOLEventHandler(WarnGuild));

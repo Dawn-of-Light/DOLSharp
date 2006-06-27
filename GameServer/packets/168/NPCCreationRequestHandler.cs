@@ -27,7 +27,7 @@ namespace DOL.GS.PacketHandler.v168
 		{
 			ushort id = packet.ReadShort();
 //			GameNPC npc = (GameNPC)WorldMgr.GetObjectTypeByIDFromRegion(client.Player.CurrentRegionID, id, typeof(GameNPC));
-			Region region = client.Player.Region;
+			Region region = client.Player.CurrentRegion;
 			if (region == null) return 1;
 			GameNPC npc = region.GetObject(id) as GameNPC;
 

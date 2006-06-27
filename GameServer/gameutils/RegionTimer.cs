@@ -78,7 +78,7 @@ namespace DOL.GS
 		/// Constructs a new region timer
 		/// </summary>
 		/// <param name="timerOwner">The game object that is starting the timer</param>
-		public RegionTimer(GameObject timerOwner) : base(timerOwner.Region.TimeManager)
+		public RegionTimer(GameObject timerOwner) : base(timerOwner.CurrentRegion.TimeManager)
 		{
 		}
 

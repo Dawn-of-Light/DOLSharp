@@ -62,10 +62,11 @@ namespace DOL.GS.GameEvents
 			//variable will hold the current position
 			protected int m_currentPathPoint;
 
-			//The originalPos,Heading is the place where the horse is 
+			//The originalX,Y,Heading is the place where the horse is 
 			//originally positioned. This is used to make the horse 
 			//walk back to the startposition after the race
-			protected Point m_originalPos;
+			protected int m_originalX;
+			protected int m_originalY;
 			protected ushort m_originalHeading;
 
 			//This enum holds all possible states a racehorse can have
@@ -88,14 +89,18 @@ namespace DOL.GS.GameEvents
 
 			//The constructor of the racehorse takes the grazing position
 			//and the HorseRace event as parameters
-			public RaceHorse(Point origPos, ushort origHeading) : base()
+			public RaceHorse(int origX, int origY, ushort origHeading) : base()
 			{
-				Position = m_originalPos = origPos;
+				m_originalX = origX;
+				m_originalY = origY;
 				m_originalHeading = origHeading;
 
-				RegionId = 1;
+				CurrentRegionID = 1;
 				Level = 10;
 				Realm = 0;
+				X = m_originalX;
+				Y = m_originalY;
+				Z = 0;
 				Heading = m_originalHeading;
 				GuildName = "Race Horse";
 			}
@@ -162,10 +167,11 @@ namespace DOL.GS.GameEvents
 				m_horseNum = RegisterRacingHorse(this);
 
 				//Now we fetch our startposition
-				Point start = GetStartPoint();
+				int startX, startY;
+				GetStartPoint(out startX, out startY);
 
 				//Make the mob and it's rider walk to our startposition!
-				WalkTo(start, 250);
+				WalkTo(startX, startY, 0, 250);
 				//Set the horse state correctly
 				HorseState = RaceHorseState.WalkingToStart;
 				//Return true -> allow the mounting
@@ -193,7 +199,7 @@ namespace DOL.GS.GameEvents
 				UnregisterRacingHorse(this);
 
 				//Walk back to our grazing spot if the rider dismounts
-				WalkTo(m_originalPos, 75);
+				WalkTo(m_originalX, m_originalY, 0, 75);
 				//Set our horsestate correctly
 				m_horseState = RaceHorseState.WalkingToGrazing;
 				//Return true -> allow the dismounting
@@ -212,10 +218,11 @@ namespace DOL.GS.GameEvents
 						m_currentPathPoint = 0;
 
 						//Get the next point we will be racing to
-						Point next = GetNextPoint(m_currentPathPoint);
+						int x, y;
+						GetNextPoint(m_currentPathPoint, out x, out y);
 
 						//Turn the horse towards the next point on the path
-						TurnTo(next);
+						TurnTo(x, y);
 
 						//We are waiting for the race to start now!
 						m_horseState = RaceHorseState.WaitingForRaceStart;
@@ -258,10 +265,11 @@ namespace DOL.GS.GameEvents
 								CurrentSpeed = 550;
 
 							//We get our next pathpoint and
-							Point next = GetNextPoint(m_currentPathPoint);
+							int nextX, nextY;
+							GetNextPoint(m_currentPathPoint, out nextX, out nextY);
 							m_currentPathPoint++;
 
-							WalkTo(next, CurrentSpeed);
+							WalkTo(nextX, nextY, 0, CurrentSpeed);
 						}
 					}
 				}
@@ -278,19 +286,20 @@ namespace DOL.GS.GameEvents
 				m_currentPathPoint = 0;
 
 				//We fetch the next pathpoint
-				Point next = GetNextPoint(m_currentPathPoint);
+				int x, y;
+				GetNextPoint(m_currentPathPoint, out x, out y);
 
 				//Now our current point is 1
 				m_currentPathPoint++;
 				//Walk to the target spot ... our speed is 500+random 20
 				Random rnd = new Random();
-				WalkTo(next, (ushort) (500 + rnd.Next(20)));
+				WalkTo(x, y, 0, (ushort) (500 + rnd.Next(20)));
 			}
 
 			//This function is used to return the next pathpoint for a horse
 			//given the current pathpoint. The horses will race parallel to each
 			//other, depending on their startnumber
-			protected Point GetNextPoint(int curPoint)
+			protected void GetNextPoint(int curPoint, out int x, out int y)
 			{
 				//We get the vector from our current point to the next point and turn
 				//it by 90 degrees so it is normal to our vector to the next point
@@ -329,15 +338,13 @@ namespace DOL.GS.GameEvents
 				}
 
 				//return the next point with the correct offset
-				return new Point(
-					(int) (racePoints[curPoint + 1, 0] + offx),
-					(int) (racePoints[curPoint + 1, 1] + offy),
-					0);
+				x = (int) (racePoints[curPoint + 1, 0] + offx);
+				y = (int) (racePoints[curPoint + 1, 1] + offy);
 			}
 
 			//Get the startpoint of our horse based on the startnumber
 			//Works exactly like the getnextpoint function
-			protected Point GetStartPoint()
+			protected void GetStartPoint(out int x, out int y)
 			{
 				float normvx = racePoints[1, 1] - racePoints[0, 1]; //DIFFY
 				float normvy = -(racePoints[1, 0] - racePoints[0, 0]); //-DIFFX
@@ -370,10 +377,8 @@ namespace DOL.GS.GameEvents
 						break;
 				}
 
-				return new Point(
-					(int) (racePoints[0, 0] + offx),
-					(int) (racePoints[0, 1] + offy),
-					0);
+				x = (int) (racePoints[0, 0] + offx);
+				y = (int) (racePoints[0, 1] + offy);
 			}
 		}
 
@@ -407,22 +412,22 @@ namespace DOL.GS.GameEvents
 			m_currentRanking = 0;
 
 			//Now declare all our horses and their initial position
-			m_horses[0] = new RaceHorse(new Point(504406, 436722, 0), 6082);
+			m_horses[0] = new RaceHorse(504406, 436722, 6082);
 			m_horses[0].Name = "Blacky";
 			m_horses[0].Model = 450;
 			m_horses[0].Size = 50;
 
-			m_horses[1] = new RaceHorse(new Point(504499, 436679, 0), 7484);
+			m_horses[1] = new RaceHorse(504499, 436679, 7484);
 			m_horses[1].Name = "Speedy";
 			m_horses[1].Model = 449;
 			m_horses[1].Size = 40;
 
-			m_horses[2] = new RaceHorse(new Point(504504, 436830, 0), 6778);
+			m_horses[2] = new RaceHorse(504504, 436830, 6778);
 			m_horses[2].Name = "Lucky";
 			m_horses[2].Model = 448;
 			m_horses[2].Size = 50;
 
-			m_horses[3] = new RaceHorse(new Point(504416, 436618, 0), 1568);
+			m_horses[3] = new RaceHorse(504416, 436618, 1568);
 			m_horses[3].Name = "Binky";
 			m_horses[3].Model = 447;
 			m_horses[3].Size = 50;
@@ -442,7 +447,8 @@ namespace DOL.GS.GameEvents
 			m_raceStartTimer.Start();
 
 			if (log.IsInfoEnabled)
-				log.Info("HorseRace Event initialized: "+good);
+				if (log.IsInfoEnabled)
+					log.Info("HorseRace Event initialized: "+good);
 		}
 
 		//This function is implemented from the IGameEvent

@@ -17,9 +17,8 @@
  *
  */
 using System;
-using System.Collections;
 using System.Reflection;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.GS.Housing;
 using log4net;
 
@@ -85,46 +84,30 @@ namespace DOL.GS.PacketHandler.v168
 			int pagenumber = item_slot/MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
 			int slotnumber = item_slot%MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
 
-			GenericItemTemplate template = items.GetItem(pagenumber, (eMerchantWindowSlot) slotnumber);
+			ItemTemplate template = items.GetItem(pagenumber, (eMerchantWindowSlot) slotnumber);
 			if (template == null)
 				return 1;
 
+			//Calculate the amout of items
+			int amountToBuy = item_count;
+			if (template.PackSize > 0)
+				amountToBuy *= template.PackSize;
+
+			if (amountToBuy <= 0)
+				return 0;
+
+
 			lock (client.Player.Inventory)
 			{
-				long moneyNeeded = template.Value * item_count;
-				int slotNeeded = item_count;
-				
-				if(template is StackableItemTemplate)
+				//Calculate the value of items
+				long totalValue = item_count*template.Value;
+				if (client.Player.GetCurrentMoney() < totalValue)
 				{
-					StackableItem itemToAdd = (StackableItem)template.CreateInstance();	
-					moneyNeeded *= itemToAdd.Count;
-				
-					int countToAdd = item_count * itemToAdd.Count;
-
-					foreach (GenericItem item in client.Player.Inventory.GetItemRange(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
-					{
-                        if (itemToAdd.CanStackWith((StackableItem)item))
-						{
-                            StackableItem toItem = item as StackableItem;
-							countToAdd -= (toItem.MaxCount - toItem.Count);
-							if(countToAdd <= 0)
-							{
-								break;
-							}
-						}
-					}
-				
-					if(countToAdd > 0)
-					{
-						slotNeeded = countToAdd / itemToAdd.MaxCount;
-					}
-					else
-					{	
-						slotNeeded = 0;
-					}
+					client.Player.Out.SendMessage("You need " + Money.GetString(totalValue) + " to buy this.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					return 0;
 				}
 
-				if(!client.Player.Inventory.IsSlotsFree(slotNeeded, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+				if (!client.Player.Inventory.AddTemplate(template, amountToBuy, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
 				{
 					client.Out.SendMessage("Not enough inventory space to buy that.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return 1;
@@ -133,20 +116,14 @@ namespace DOL.GS.PacketHandler.v168
 				//Generate the buy message
 				string message;
 				if (item_count > 1)
-					message = "You just bought " + item_count + " pieces of " + template.Name + " for {0}.";
+					message = "You just bought " + item_count + " pieces of " + template.GetName(1, false) + " for {0}.";
 				else
-					message = "You just bought " + template.Name + " for {0}.";
+					message = "You just bought " + template.GetName(1, false) + " for {0}.";
 
 				// Check if player has enough money and subtract the money
-				if (!client.Player.RemoveMoney(moneyNeeded, message, eChatType.CT_Merchant, eChatLoc.CL_SystemWindow))
+				if (!client.Player.RemoveMoney(totalValue, message, eChatType.CT_Merchant, eChatLoc.CL_SystemWindow))
 				{
-					client.Player.Out.SendMessage("You need " + Money.GetString(moneyNeeded) + " to buy this.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return 0;
-				}
-
-				for(int i = 0 ; i < item_count ; i++)
-				{
-					client.Player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, template.CreateInstance());
+					throw new Exception("Money amount changed while adding items.");
 				}
 			}
 			return 1;

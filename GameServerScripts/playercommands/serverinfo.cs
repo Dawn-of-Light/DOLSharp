@@ -35,7 +35,7 @@ namespace DOL.GS.Scripts
 			client.Out.SendMessage("version: " + an.Version, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			client.Out.SendMessage("type: " + GameServer.Instance.Configuration.ServerType + " (" + GameServer.ServerRules.RulesDescription() + ")", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			client.Out.SendMessage("playing: " + WorldMgr.GetAllPlayingClientsCount(), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			long sec = client.Player.Region.Time/1000;
+			long sec = client.Player.CurrentRegion.Time/1000;
 			long min = sec/60;
 			long hours = min/60;
 			long days = hours/24;

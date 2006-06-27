@@ -17,12 +17,8 @@
  *
  */
 using System;
-using System.Collections;
-using System.Reflection;
-using DOL.Events;
 using DOL.GS.PacketHandler;
-using DOL.GS.Database;
-using log4net;
+using DOL.Database;
 
 namespace DOL.GS.Trainer
 {
@@ -32,49 +28,10 @@ namespace DOL.GS.Trainer
 	[NPCGuildScript("Magician Trainer", eRealm.Hibernia)]		// this attribute instructs DOL to use this script for all "Magician Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class MagicianTrainer : GameTrainer
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
-		/// <summary>
-		/// This hash constrain all item template the trainer can give
-		/// </summary>	
-		private static IDictionary allStartupItems = new Hashtable();
-
-		/// <summary>
-		/// This function is called at the server startup
-		/// </summary>	
-		[GameServerStartedEvent]
-		public static void OnServerStartup(DOLEvent e, object sender, EventArgs args)
+		public const string PRACTICE_WEAPON_ID = "training_staff";
+	
+		public MagicianTrainer() : base()
 		{
-			#region Training staff
-
-			StaffTemplate training_staff_hib_template = new StaffTemplate();
-			training_staff_hib_template.Name = "training staff";
-			training_staff_hib_template.Level = 0;
-			training_staff_hib_template.Durability = 100;
-			training_staff_hib_template.Condition = 100;
-			training_staff_hib_template.Quality = 90;
-			training_staff_hib_template.Bonus = 0;
-			training_staff_hib_template.DamagePerSecond = 12;
-			training_staff_hib_template.Speed = 4500;
-			training_staff_hib_template.Weight = 45;
-			training_staff_hib_template.Model = 19;
-			training_staff_hib_template.Realm = eRealm.Hibernia;
-			training_staff_hib_template.IsDropable = true; 
-			training_staff_hib_template.IsTradable = false; 
-			training_staff_hib_template.IsSaleable = false;
-			training_staff_hib_template.MaterialLevel = eMaterialLevel.Bronze;
-
-			if(!allStartupItems.Contains("training_staff"))
-			{
-				allStartupItems.Add("training_staff", training_staff_hib_template);
-			
-				if (log.IsDebugEnabled)
-					log.Debug("Adding " + training_staff_hib_template.Name + " to MagicianTrainer gifts.");
-			}
-			#endregion
 		}
 
 		/// <summary>
@@ -87,22 +44,24 @@ namespace DOL.GS.Trainer
  			if (!base.Interact(player)) return false;
 								
 			// check if class matches				
-			if (player.CharacterClass.ID == (int) eCharacterClass.Magician)
-			{
+			if (player.CharacterClass.ID == (int) eCharacterClass.Magician) {
+
+				// popup the training window
 				player.Out.SendTrainerWindow();
 							
 				// player can be promoted
-				if (player.Level>=5) 
+				if (player.Level>=5) {
 					player.Out.SendMessage(this.Name + " says, \"You must now seek your training elsewhere. Which path would you like to follow? [Eldritch], [Enchanter] or [Mentalist]?\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+				} else {
+					//player.Out.SendMessage(this.Name + " says, \"Select what you like to train.\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+				}
 
 				// ask for basic equipment if player doesnt own it
-				if (player.Inventory.GetFirstItemByType("StaffTemplate", eInventorySlot.Min_Inv, eInventorySlot.Max_Inv) == null) {
+				if (player.Inventory.GetFirstItemByID(PRACTICE_WEAPON_ID, eInventorySlot.Min_Inv, eInventorySlot.Max_Inv) == null) {
 					player.Out.SendMessage(this.Name + " says, \"Do you require a [practice staff]?\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
 				}
 				
-			} 
-			else
-			{
+			} else {
 				player.Out.SendMessage(this.Name + " says, \"You must seek elsewhere for your training.\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
 			}
 			return true;
@@ -147,11 +106,9 @@ namespace DOL.GS.Trainer
 				}
 				return true;
 			case "practice staff":
-				if (player.Inventory.GetFirstItemByType("StaffTemplate", eInventorySlot.Min_Inv, eInventorySlot.Max_Inv) == null)
+				if (player.Inventory.GetFirstItemByID(PRACTICE_WEAPON_ID, eInventorySlot.Min_Inv, eInventorySlot.Max_Inv) == null)
 				{
-					GenericItemTemplate itemTemplate = allStartupItems["training_staff"] as GenericItemTemplate;
-					if(itemTemplate != null)
-						player.ReceiveItem(this, itemTemplate.CreateInstance());
+					player.ReceiveItem(this,PRACTICE_WEAPON_ID);
 				}
 				return true;
 			

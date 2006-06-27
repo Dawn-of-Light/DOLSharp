@@ -17,11 +17,7 @@
  *
  */
 using System;
-using System.Collections;
-using System.Reflection;
-using DOL.Events;
 using DOL.GS.PacketHandler;
-using log4net;
 
 namespace DOL.GS.Trainer
 {
@@ -31,23 +27,8 @@ namespace DOL.GS.Trainer
 	[NPCGuildScript("Minstrel Trainer", eRealm.Albion)]		// this attribute instructs DOL to use this script for all "Minstrel Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class MinstrelTrainer : GameTrainer
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
-		/// <summary>
-		/// This hash constrain all item template the trainer can give
-		/// </summary>	
-		private static IDictionary allStartupItems = new Hashtable();
-
-		/// <summary>
-		/// This function is called at the server startup
-		/// </summary>	
-		[GameServerStartedEvent]
-		public static void OnServerStartup(DOLEvent e, object sender, EventArgs args)
+		public MinstrelTrainer() : base()
 		{
-			// TODO find level 5 trainer gift
 		}
 
 		/// <summary>
@@ -102,9 +83,9 @@ namespace DOL.GS.Trainer
 			switch (text) {
 			case "join the Academy":
 				// promote player to other class
-				if (CanPromotePlayer(player)) 
-					PromotePlayer(player, (int)eCharacterClass.Minstrel, "Welcome! Stand proud and sing the tales of old so that all may know of our name!", null);
-				
+				if (CanPromotePlayer(player)) {
+					PromotePlayer(player, (int)eCharacterClass.Minstrel, "Welcome! Stand proud and sing the tales of old so that all may know of our name!", null);	// TODO: gifts
+				}
 				break;
 			}
 			return true;		

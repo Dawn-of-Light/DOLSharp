@@ -75,7 +75,7 @@ namespace DOL.GS.Scripts
 				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Dual_Wield));
 				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Envenom));
 				player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Crossbow));
-				player.AddAbility(SkillBase.GetAbility(Abilities.Shield, (int)eShieldSize.Small));
+				player.AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Small));
 				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 2));
 			}
 			if (player.Level >= 10)

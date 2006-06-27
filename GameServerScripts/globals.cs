@@ -21,6 +21,13 @@ using System.IO;
 
 namespace DOL.GS.Scripts
 {
+	public enum ePrivLevel : uint
+	{
+		Player = 1,
+		GM = 2,
+		Admin = 3,
+	}
+
 	public enum eHandFlag : int
 	{
 		Right = 0,

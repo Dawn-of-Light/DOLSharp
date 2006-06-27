@@ -17,60 +17,50 @@
  *
  */
 using System;
-using System.Reflection;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Scripts
 {
-	public enum eItemProperty : int
-	{
-		Name = 1,
-		Level = 2,
-		Weight = 3,
-		Value = 4,
-		Realm = 5,
-		Model = 6,
-		IsSaleable = 7,
-		IsTradable = 8,
-		IsDropable = 9,
-		QuestName = 10,
-		CrafterName = 11,
-		MaxCount = 12,
-		Count = 13,
-		Color = 14,
-		AmmuPrecision = 15,
-		AmmuDamage = 16,
-		AmmuRange = 17,
-		DamageType = 18,
-		Quality = 19,
-		Bonus = 20,
-		Durability = 21,
-		Condition = 22,
-		MaterialLevel = 23,
-		ArmorFactor = 24,
-		ArmorLevel = 25,
-		ModelExtension = 26,
-		InstrumentType = 27,
-		DPS = 28,
-		SPD = 29,
-		HandNeeded = 30,
-		GlowEffect = 31,
-		ShieldSize = 32,
-	}
-
 	[Cmd("&item", //command to handle
 		(uint) ePrivLevel.GM, //minimum privelege level
 		"Various Item commands!", //command description
 		//usage
-		"Slot number is optional, if not included the default is the last backpack slot (backpack slot : first = 40, last = 79)",
+		"Slot numbers are optional, if not included the default is 79 (the last backpack slot)",
 		"names with spaces are given in quotes \"<name>\"",
 		"'/item blank' - create a blank item",
-		"'/item info <ItemTemplateID>' - get Info on a ItemTemplate",
-		"'/item create <type>' - create a new item",
-		"'/item instance <ItemTemplateID>' - create a new item from a template",
-		"'/item change <propertyID> <value> [slot #]' - change a property of a item",
-		"'/item savetemplate <NewTemplateID> [slot #]' - create a new template")]
+		"'/item info <ItemTemplateName>' - get Info on a ItemTemplate",
+		"'/item create <ItemTemplateName> [count]' - create a new item from a template",
+		"'/item count <amount> [slot #]' - change item count",
+		"'/item maxcount <amount> [slot #]' - change max amount allowed in one slot",
+		"'/item packsize <amount> [slot #]' - change amount of items sold at once",
+		"'/item model <ModelID> [slot #]' - change item model",
+		"'/item extension <extensionID> [slot #]' - change item extension",
+		"'/item color <ColorID> [slot #]' - change item color",
+		"'/item effect <EffectID> [slot #]' - change item effect",
+		"'/item name <NameID> [slot #]' - change item name",
+		"'/item craftername <CrafterNameID> [slot #]' - change item crafter name",
+		"'/item type <TypeID> [slot #]' - change item type",
+		"'/item object <ObjectID> [slot #]' - change object type",
+		"'/item hand <HandID> [slot #]' - change item hand",
+		"'/item damagetype <DamageTypeID> [slot #]' - change item damage type",
+		"'/item emblem <EmblemID> [slot #]' - change item emblem",
+		"'/item price <gold> <silver> <copper> [slot #]' - change the price of an item",
+		"'/item condition <con> <maxCon> [slot #]' - change the condition of an item",
+		"'/item quality <qua> <maxQua> [slot #]' - change the quality of an item",
+		"'/item durability <dur> <maxDur> [slot #]' - change the durability of an item",
+		"'/item ispickable <true or false> [slot #]' - sets whether or not an item can be picked up",
+		"'/item isdropable <true or false> [slot #]' - sets whether or not an item can be dropped",
+		"'/item bonus <bonus> [slot #]' - sets the item bonus",
+		"'/item mbonus <num> <bonus type> <value> [slot #]' - sets the item magical bonus (num 0 = ExtraBonus)",
+		"'/item weight <weight> [slot #]' - sets the item weight",
+		"'/item dps_af <NewDPS_AF> [slot #]' - change item DPS_AF",
+		"'/item spd_abs <NewSPD_ABS> [slot #]' - change item SPD_ABS",
+		"'/item material <Material> <MaterialLevel> [slot #]' - change item material",
+		"'/item spell <Charges> <MaxCharges> <SpellID> [slot #]' - change item spell charges",
+		"'/item proc <SpellID> [slot #]' - change item proc",
+		"'/item realm <num> [slot #]' - change items realm",
+		"'/item savetemplate <TemplateID> [slot #]' - create a new template")]
 	public class ItemCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		public int OnCommand(GameClient client, string[] args)
@@ -87,16 +77,10 @@ namespace DOL.GS.Scripts
 				{
 					case "blank":
 						{
-							GenericItem item = new GenericItem();
+							InventoryItem item = new InventoryItem();
+							Random rand = new Random();
+							item.Id_nb = "blankItem" + rand.Next().ToString();
 							item.Name = "a blank item";
-							item.Level = 1;
-							item.Weight = 1;
-							item.Value = 1;
-							item.Realm = 0;
-							item.Model = 488;
-							item.IsSaleable = true;
-							item.IsTradable = true;
-							item.IsDropable = true;
 							if (client.Player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, item))
 							{
 								client.Out.SendMessage("Blank item created in first free backpack slot.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -107,144 +91,47 @@ namespace DOL.GS.Scripts
 							}
 							break;
 						}
-					case "info":
-					{
-						GenericItemTemplate obj = (GenericItemTemplate) GameServer.Database.FindObjectByKey(typeof (GenericItemTemplate), args[2]);
-
-						if (obj == null)
-						{
-							client.Out.SendMessage("Itemtemplate with ID:" + args[2] + " is unknown!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 0;
-
-						}
-						client.Out.SendMessage("--------------------------------------------------------------", eChatType.CT_System, eChatLoc.CL_PopupWindow);
-						client.Out.SendMessage("Item Template: " + obj.ItemTemplateID, eChatType.CT_System, eChatLoc.CL_PopupWindow);
-						client.Out.SendMessage("         Type: " + obj.GetType(), eChatType.CT_System, eChatLoc.CL_PopupWindow);
-						client.Out.SendMessage("         Name: " + obj.Name, eChatType.CT_System, eChatLoc.CL_PopupWindow);
-						client.Out.SendMessage("        Level: " + obj.Level, eChatType.CT_System, eChatLoc.CL_PopupWindow);
-						client.Out.SendMessage("        Realm: " + obj.Realm, eChatType.CT_System, eChatLoc.CL_PopupWindow);
-						client.Out.SendMessage("  Value/Price: " + obj.Value+"c", eChatType.CT_System, eChatLoc.CL_PopupWindow);
-						client.Out.SendMessage("       Weight: " + (obj.Weight/10.0f) + "lbs", eChatType.CT_System, eChatLoc.CL_PopupWindow);
-						client.Out.SendMessage("        Model: " + obj.Model, eChatType.CT_System, eChatLoc.CL_PopupWindow);
-						client.Out.SendMessage("  Is dropable: " + (obj.IsDropable ? "yes" : "no"), eChatType.CT_System, eChatLoc.CL_PopupWindow);
-						client.Out.SendMessage("  Is saleable: " + (obj.IsSaleable ? "yes" : "no"), eChatType.CT_System, eChatLoc.CL_PopupWindow);
-						client.Out.SendMessage("  Is Tradable: " + (obj.IsTradable ? "yes" : "no"), eChatType.CT_System, eChatLoc.CL_PopupWindow);
-						
-						if(obj is AmmunitionTemplate)
-						{
-							client.Out.SendMessage("  Precision: " + ((AmmunitionTemplate)obj).Precision + "%", eChatType.CT_System, eChatLoc.CL_PopupWindow);
-							client.Out.SendMessage("     Damage: " + ((AmmunitionTemplate)obj).Damage + "%", eChatType.CT_System, eChatLoc.CL_PopupWindow);
-							client.Out.SendMessage("      Range: " + ((AmmunitionTemplate)obj).Range + "%", eChatType.CT_System, eChatLoc.CL_PopupWindow);
-							client.Out.SendMessage("Damage type: " + ((AmmunitionTemplate)obj).DamageType + "%", eChatType.CT_System, eChatLoc.CL_PopupWindow);
-						}
-
-						if(obj is EquipableItemTemplate)
-						{
-							client.Out.SendMessage("      Quality: " + ((EquipableItemTemplate)obj).Quality + "%", eChatType.CT_System, eChatLoc.CL_PopupWindow);
-							client.Out.SendMessage("        Bonus: " + ((EquipableItemTemplate)obj).Bonus + "%", eChatType.CT_System, eChatLoc.CL_PopupWindow);
-							client.Out.SendMessage("   Durability: " + ((EquipableItemTemplate)obj).Durability + "%", eChatType.CT_System, eChatLoc.CL_PopupWindow);
-							client.Out.SendMessage("    Condition: " + (int)(((EquipableItemTemplate)obj).Condition) + "%", eChatType.CT_System, eChatLoc.CL_PopupWindow);
-							client.Out.SendMessage("MaterialLevel: " + ((EquipableItemTemplate)obj).MaterialLevel, eChatType.CT_System, eChatLoc.CL_PopupWindow);
-							client.Out.SendMessage("Allowed class: " + ((((EquipableItemTemplate)obj).AllowedClass.Count == 0) ? "all" : ""), eChatType.CT_System, eChatLoc.CL_PopupWindow);
-							foreach(eCharacterClass cl in ((EquipableItemTemplate)obj).AllowedClass)
-								client.Out.SendMessage(cl.ToString(), eChatType.CT_System, eChatLoc.CL_PopupWindow);
-							if(((EquipableItemTemplate)obj).MagicalBonus.Count > 0)
-								client.Out.SendMessage("Magical bonus: ", eChatType.CT_System, eChatLoc.CL_PopupWindow);
-							foreach(ItemMagicalBonus bn in ((EquipableItemTemplate)obj).MagicalBonus)
-								client.Out.SendMessage(" - "+ bn.BonusType +" : "+ bn.Bonus, eChatType.CT_System, eChatLoc.CL_PopupWindow);
-							
-							if(obj is VisibleEquipmentTemplate)
-							{
-								client.Out.SendMessage("    Color: " + ((VisibleEquipmentTemplate)obj).Color , eChatType.CT_System, eChatLoc.CL_PopupWindow);
-								if(obj is InstrumentTemplate)
-								{
-									client.Out.SendMessage("     Type: " + ((InstrumentTemplate)obj).Type, eChatType.CT_System, eChatLoc.CL_PopupWindow);
-								}
-								if(obj is ArmorTemplate)
-								{
-									client.Out.SendMessage("    Factor: " + ((ArmorTemplate)obj).ArmorFactor, eChatType.CT_System, eChatLoc.CL_PopupWindow);
-									client.Out.SendMessage("       ABS: " + ((ArmorTemplate)obj).ArmorLevel, eChatType.CT_System, eChatLoc.CL_PopupWindow);
-									client.Out.SendMessage(" Model ext: " + ((ArmorTemplate)obj).ModelExtension, eChatType.CT_System, eChatLoc.CL_PopupWindow);
-								}
-								if(obj is WeaponTemplate)
-								{
-									client.Out.SendMessage("       DPS: " + ((WeaponTemplate)obj).DamagePerSecond, eChatType.CT_System, eChatLoc.CL_PopupWindow);
-									client.Out.SendMessage("       SPD: " + ((WeaponTemplate)obj).Speed +"ms", eChatType.CT_System, eChatLoc.CL_PopupWindow);
-									client.Out.SendMessage("DamageType: " + ((WeaponTemplate)obj).DamageType, eChatType.CT_System, eChatLoc.CL_PopupWindow);
-									client.Out.SendMessage("HandNeeded: " + ((WeaponTemplate)obj).HandNeeded, eChatType.CT_System, eChatLoc.CL_PopupWindow);
-									client.Out.SendMessage("GlowEffect: " + ((WeaponTemplate)obj).GlowEffect, eChatType.CT_System, eChatLoc.CL_PopupWindow);
-									if(obj is ShieldTemplate)
-									{
-										client.Out.SendMessage(" Shield size: " + ((ShieldTemplate)obj).Size, eChatType.CT_System, eChatLoc.CL_PopupWindow);
-									}
-									if(obj is RangedWeaponTemplate)
-									{
-										client.Out.SendMessage("   Range: " + ((RangedWeaponTemplate)obj).Range, eChatType.CT_System, eChatLoc.CL_PopupWindow);
-									}
-								}
-							}
-						}
-						break;
-					}
 					case "create":
-					{
-						//Create a new object
-						try
-						{
-							GenericItem item = Assembly.GetAssembly(typeof (GameServer)).CreateInstance(args[2], false) as GenericItem;
-							if(item == null)
-							{
-								client.Out.SendMessage("Object of type "+args[2]+" can't be added to a player inventory.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return 1;
-							}
-
-							item.Name = "New item";
-							item.Level = 0;
-							item.Weight = 0;
-							item.Value = 0;
-							item.Realm = eRealm.None;
-							item.Model = 488;
-							item.IsSaleable = true;
-							item.IsTradable = true;
-							item.IsDropable = true;
-							item.QuestName = "";
-							item.CrafterName = "";
-
-							if(item is StackableItem)
-							{
-								((StackableItem)item).Count = 1;
-								((StackableItem)item).MaxCount = 1;
-							}
-							if (client.Player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, item))
-							{
-								client.Out.SendMessage("Item with type "+args[2]+" created.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							}
-							
-						}
-						catch (Exception e)
-						{
-							client.Out.SendMessage(e.ToString(), eChatType.CT_System, eChatLoc.CL_PopupWindow);
-							client.Out.SendMessage("Type /item for command overview", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						}
-
-						break;
-					}
-					case "instance":
 						{
 							//Create a new object
 							try
 							{
-								GenericItemTemplate template = (GenericItemTemplate) GameServer.Database.FindObjectByKey(typeof (GenericItemTemplate), args[2]);
+								ItemTemplate template = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), GameServer.Database.Escape(args[2]));
 								if (template == null)
 								{
 									client.Out.SendMessage("ItemTemplate with id " + args[2] + " could not be found!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 									return 0;
 								}
-								
-								GenericItem item = template.CreateInstance();
-								if (client.Player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, item))
+								else
 								{
-									client.Out.SendMessage("Item created: level= " + item.Level + " name= " + item.Name, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									int count = 1;
+									if (args.Length >= 4)
+									{
+										try
+										{
+											count = Convert.ToInt32(args[3]);
+											if (count < 1)
+												count = 1;
+										}
+										catch (Exception)
+										{
+										}
+									}
+
+									InventoryItem item = new InventoryItem();
+									item.CopyFrom(template);
+									if (item.IsStackable)
+									{
+										item.Count = count;
+										item.Weight = item.Count*item.Weight;
+									}
+									if (client.Player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, item))
+									{
+										string countStr = "";
+										if (count > 1)
+											countStr = " count= " + count;
+										client.Out.SendMessage("Item created: level= " + item.Level + " name= " + item.GetName(0, false) + countStr, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									}
 								}
 							}
 							catch (Exception)
@@ -254,135 +141,11 @@ namespace DOL.GS.Scripts
 
 							break;
 						}
-					case "change":
+					case "count":
 						{
-							if(args.Length < 4 || args.Length > 5)
-							{
-								client.Out.SendMessage("Property ID description :",eChatType.CT_System,eChatLoc.CL_SystemWindow);
-					
-								foreach(int valeur in Enum.GetValues(typeof(eItemProperty)))
-								{
-									client.Out.SendMessage(valeur +" = "+ Enum.GetName(typeof(eItemProperty), valeur),eChatType.CT_System,eChatLoc.CL_SystemWindow);
-								}
-								return 1;
-							}
-
-							try
-							{
-								eItemProperty itemProperty = (eItemProperty)Convert.ToInt32(args[2]);
-								int slot = (int) eInventorySlot.LastBackpack;
-								if (args.Length > 4)
-								{
-									try
-									{
-										slot = Convert.ToInt32(args[4]);
-									}
-									catch
-									{
-									}
-								}
-
-								GenericItem item = client.Player.Inventory.GetItem((eInventorySlot) slot);
-								if (item == null)
-								{
-									client.Out.SendMessage("No item in slot " + slot + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-									return 0;
-								}
-
-								switch(itemProperty)
-								{
-									case eItemProperty.Name : item.Name = args[3];
-										break;
-									case eItemProperty.Level: item.Level = Convert.ToByte(args[3]);
-										break;
-									case eItemProperty.Weight: item.Weight = Convert.ToInt32(args[3]);
-										break;
-									case eItemProperty.Value: item.Value = Convert.ToInt64(args[3]);
-										break;
-									case eItemProperty.Realm: item.Realm = (eRealm)Convert.ToByte(args[3]);
-										break;
-									case eItemProperty.Model: item.Model = Convert.ToInt32(args[3]);
-										break;
-									case eItemProperty.IsSaleable: item.IsSaleable = Convert.ToBoolean(args[3]);
-										break;
-									case eItemProperty.IsTradable: item.IsTradable = Convert.ToBoolean(args[3]);
-										break;
-									case eItemProperty.IsDropable: item.IsDropable = Convert.ToBoolean(args[3]);
-										break;
-									case eItemProperty.QuestName : item.QuestName = args[3];
-										break;
-									case eItemProperty.CrafterName : item.CrafterName = args[3];
-										break;
-									case eItemProperty.MaxCount : if(item is StackableItem) ((StackableItem)item).MaxCount = Convert.ToInt32(args[3]);
-										break;
-									case eItemProperty.Count : if(item is StackableItem) ((StackableItem)item).Count = Convert.ToInt32(args[3]);
-										break;
-									case eItemProperty.Color :  if(item is VisibleEquipment) ((VisibleEquipment)item).Color = Convert.ToInt32(args[3]);
-																if(item is Dye) ((Dye)item).Color = Convert.ToInt32(args[3]);
-										break;
-									case eItemProperty.AmmuPrecision :  if(item is Ammunition) ((Ammunition)item).Precision = (ePrecision)Convert.ToByte(args[3]);
-										break;
-									case eItemProperty.AmmuDamage :  if(item is Ammunition) ((Ammunition)item).Damage = (eDamageLevel)Convert.ToByte(args[3]);
-										break;
-									case eItemProperty.AmmuRange :  if(item is Ammunition) ((Ammunition)item).Range = (eRange)Convert.ToByte(args[3]);
-										break;
-									case eItemProperty.DamageType :  if(item is Weapon) ((Weapon)item).DamageType = (eDamageType)Convert.ToByte(args[3]);
-																	 if(item is Ammunition) ((Ammunition)item).DamageType = (eDamageType)Convert.ToByte(args[3]);
-										break;
-									case eItemProperty.Quality :  if(item is EquipableItem) ((EquipableItem)item).Quality = Convert.ToByte(args[3]);
-																	if(item is SpellCraftGem) ((SpellCraftGem)item).Quality = Convert.ToByte(args[3]);
-										break;
-									case eItemProperty.Bonus :  if(item is EquipableItem) ((EquipableItem)item).Bonus = Convert.ToByte(args[3]);
-																if(item is MagicalDust) ((MagicalDust)item).Bonus = Convert.ToByte(args[3]);
-										break;
-									case eItemProperty.Durability :  if(item is EquipableItem) ((EquipableItem)item).Durability = Convert.ToByte(args[3]);
-										break;
-									case eItemProperty.Condition :  if(item is EquipableItem) ((EquipableItem)item).Condition = Convert.ToByte(args[3]);
-										break;
-									case eItemProperty.MaterialLevel :  if(item is EquipableItem) ((EquipableItem)item).MaterialLevel = (eMaterialLevel)Convert.ToByte(args[3]);
-										break;
-									case eItemProperty.ArmorFactor :  if(item is Armor) ((Armor)item).ArmorFactor = Convert.ToByte(args[3]);
-										break;
-									case eItemProperty.ArmorLevel :  if(item is Armor) ((Armor)item).ArmorLevel = (eArmorLevel)Convert.ToByte(args[3]);
-										break;
-									case eItemProperty.ModelExtension :  if(item is Armor) ((Armor)item).ModelExtension = Convert.ToByte(args[3]);
-										break;
-									case eItemProperty.InstrumentType :  if(item is Instrument) ((Instrument)item).Type = (eInstrumentType)Convert.ToByte(args[3]);
-										break;
-									case eItemProperty.DPS :  if(item is Weapon) ((Weapon)item).DamagePerSecond = Convert.ToByte(args[3]);
-										break;
-									case eItemProperty.SPD :  if(item is Weapon) ((Weapon)item).Speed = Convert.ToInt32(args[3]);
-										break;
-									case eItemProperty.HandNeeded :  if(item is Weapon) ((Weapon)item).HandNeeded = (eHandNeeded)Convert.ToByte(args[3]);
-										break;
-									case eItemProperty.GlowEffect :  if(item is Weapon) ((Weapon)item).GlowEffect = Convert.ToByte(args[3]);
-										break;
-									case eItemProperty.ShieldSize :  if(item is Shield) ((Shield)item).Size = (eShieldSize)Convert.ToByte(args[3]);
-										break;
-								}
-
-								client.Player.Out.SendInventorySlotsUpdate(new int[] {item.SlotPosition});
-								client.Player.UpdateEncumberance();
-							}
-							catch
-							{
-								client.Out.SendMessage("'/item change <propertyID> <value> [slot #]' to change a item property", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							}
-							break;
-						}
-					
-					case "savetemplate":
-						{
-							if (args.Length < 3)
-							{
-								client.Out.SendMessage("Incorrect format for /item", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return 0;
-							}
-
 							int slot = (int) eInventorySlot.LastBackpack;
-							string name = args[2];
 
-							if (args.Length > 3)
+							if (args.Length >= 4)
 							{
 								try
 								{
@@ -392,38 +155,1278 @@ namespace DOL.GS.Scripts
 								{
 								}
 							}
-								
-				
-							GenericItem item = client.Player.Inventory.GetItem((eInventorySlot) slot);
+
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot) slot);
+
+							if (item == null)
+							{
+								client.Out.SendMessage("No item in slot " + slot + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return 0;
+							}
+							if (!item.IsStackable)
+							{
+								client.Out.SendMessage(item.GetName(0, true) + " is not stackable.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return 0;
+							}
+							try
+							{
+								if (Convert.ToInt32(args[2]) < 1)
+								{
+									item.Weight = item.Weight/item.Count;
+									item.Count = 1;
+								}
+								else
+								{
+									item.Weight = Convert.ToInt32(args[2])*item.Weight/item.Count;
+									item.Count = Convert.ToInt32(args[2]);
+								}
+								client.Out.SendInventoryItemsUpdate(new InventoryItem[] {item});
+								client.Player.UpdateEncumberance();
+							}
+							catch
+							{
+								client.Out.SendMessage("'/item count <amount> [slot #]' to change item count", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							}
+							break;
+						}
+					case "maxcount":
+						{
+							int slot = (int) eInventorySlot.LastBackpack;
+
+							if (args.Length >= 4)
+							{
+								try
+								{
+									slot = Convert.ToInt32(args[3]);
+								}
+								catch
+								{
+								}
+							}
+
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot) slot);
+
+							if (item == null)
+							{
+								client.Out.SendMessage("No item in slot " + slot + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return 0;
+							}
+							try
+							{
+								item.MaxCount = Convert.ToInt32(args[2]);
+								if (item.MaxCount < 1)
+									item.MaxCount = 1;
+							}
+							catch
+							{
+								client.Out.SendMessage("'/item maxcount <amount> [slot #]' to change max amount allowed in one slot", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							}
+							break;
+						}
+					case "packsize":
+						{
+							int slot = (int) eInventorySlot.LastBackpack;
+
+							if (args.Length >= 4)
+							{
+								try
+								{
+									slot = Convert.ToInt32(args[3]);
+								}
+								catch
+								{
+								}
+							}
+
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot) slot);
+
+							if (item == null)
+							{
+								client.Out.SendMessage("No item in slot " + slot + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return 0;
+							}
+							try
+							{
+								item.PackSize = Convert.ToInt32(args[2]);
+								if (item.PackSize < 1)
+									item.PackSize = 1;
+							}
+							catch
+							{
+								client.Out.SendMessage("'/item packsize <amount> [slot #]' to change amount of items sold at once", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							}
+							break;
+						}
+					case "info":
+						{
+							ItemTemplate obj = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), GameServer.Database.Escape(args[2]));
+
+							if (obj == null)
+							{
+								client.Out.SendMessage("Itemtemplate with ID:" + args[2] + " is unknown!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return 0;
+
+							}
+							client.Out.SendMessage("--------------------------------------------------------------", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+							client.Out.SendMessage("Item Template: " + obj.Id_nb, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+							client.Out.SendMessage("         Name: " + obj.Name, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+							client.Out.SendMessage("        Level: " + obj.Level, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+							client.Out.SendMessage("         Type: " + GlobalConstants.ObjectTypeToName(obj.Object_Type), eChatType.CT_System, eChatLoc.CL_PopupWindow);
+							client.Out.SendMessage("         Slot: " + GlobalConstants.SlotToName(obj.Item_Type), eChatType.CT_System, eChatLoc.CL_PopupWindow);
+							client.Out.SendMessage("        Realm: " + obj.Realm, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+							client.Out.SendMessage("  Value/Price: " + obj.Gold + "g " + obj.Silver + "s " + obj.Copper + "c", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+							client.Out.SendMessage("       Weight: " + (obj.Weight/10.0f) + "lbs", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+							client.Out.SendMessage("      Quality: " + obj.Quality + "/" + obj.MaxQuality + "(max)", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+							client.Out.SendMessage("   Durability: " + obj.Durability + "/" + obj.MaxDurability + "(max)", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+							client.Out.SendMessage("    Condition: " + obj.Condition + "/" + obj.MaxCondition + "(max)", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+							client.Out.SendMessage("  Is dropable: " + (obj.IsDropable ? "yes" : "no"), eChatType.CT_System, eChatLoc.CL_PopupWindow);
+							client.Out.SendMessage("  Is pickable: " + (obj.IsPickable ? "yes" : "no"), eChatType.CT_System, eChatLoc.CL_PopupWindow);
+							client.Out.SendMessage(" Is stackable: " + (obj.IsStackable ? "yes" : "no"), eChatType.CT_System, eChatLoc.CL_PopupWindow);
+							if (GlobalConstants.IsWeapon(obj.Object_Type))
+							{
+								client.Out.SendMessage("         Hand: " + GlobalConstants.ItemHandToName(obj.Hand), eChatType.CT_System, eChatLoc.CL_PopupWindow);
+								client.Out.SendMessage("Damage/Second: " + (obj.DPS_AF/10.0f), eChatType.CT_System, eChatLoc.CL_PopupWindow);
+								client.Out.SendMessage("        Speed: " + (obj.SPD_ABS/10.0f), eChatType.CT_System, eChatLoc.CL_PopupWindow);
+								client.Out.SendMessage("  Damage type: " + GlobalConstants.WeaponDamageTypeToName(obj.Type_Damage), eChatType.CT_System, eChatLoc.CL_PopupWindow);
+								client.Out.SendMessage("        Bonus: " + obj.Bonus, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+							}
+							else if (GlobalConstants.IsArmor(obj.Object_Type))
+							{
+								client.Out.SendMessage("  Armorfactor: " + obj.DPS_AF, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+								client.Out.SendMessage("    Absorbage: " + obj.SPD_ABS, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+								client.Out.SendMessage("        Bonus: " + obj.Bonus, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+							}
+							else if (obj.Object_Type == (int) eObjectType.Shield)
+							{
+								client.Out.SendMessage("  Shield type: " + GlobalConstants.ShieldTypeToName(obj.DPS_AF), eChatType.CT_System, eChatLoc.CL_PopupWindow);
+								client.Out.SendMessage("        Bonus: " + obj.Bonus, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+							}
+							else if (obj.Object_Type == (int) eObjectType.Arrow || obj.Object_Type == (int) eObjectType.Bolt)
+							{
+								client.Out.SendMessage(" Ammunition #: " + obj.DPS_AF, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+								client.Out.SendMessage("       Damage: " + GlobalConstants.AmmunitionTypeToDamageName(obj.SPD_ABS), eChatType.CT_System, eChatLoc.CL_PopupWindow);
+								client.Out.SendMessage("        Range: " + GlobalConstants.AmmunitionTypeToRangeName(obj.SPD_ABS), eChatType.CT_System, eChatLoc.CL_PopupWindow);
+								client.Out.SendMessage("     Accuracy: " + GlobalConstants.AmmunitionTypeToAccuracyName(obj.SPD_ABS), eChatType.CT_System, eChatLoc.CL_PopupWindow);
+								client.Out.SendMessage("        Bonus: " + obj.Bonus, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+							}
+							else if (obj.Object_Type == (int) eObjectType.Instrument)
+							{
+								client.Out.SendMessage("   Instrument: " + GlobalConstants.InstrumentTypeToName(obj.DPS_AF), eChatType.CT_System, eChatLoc.CL_PopupWindow);
+							}
+							break;
+						}
+					case "model":
+						{
+							int slot = (int) eInventorySlot.LastBackpack;
+
+							if (args.Length >= 4)
+							{
+								try
+								{
+									slot = Convert.ToInt32(args[3]);
+								}
+								catch
+								{
+									slot = (int) eInventorySlot.LastBackpack;
+								}
+							}
+
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot) slot);
+
+							if (item == null)
+							{
+								client.Out.SendMessage("No item in slot " + slot + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return 0;
+							}
+
+							try
+							{
+								item.Model = Convert.ToUInt16(args[2]);
+								client.Out.SendInventoryItemsUpdate(new InventoryItem[] {item});
+								if (item.SlotPosition < (int) eInventorySlot.FirstBackpack)
+									client.Player.UpdateEquipementAppearance();
+							}
+							catch
+							{
+								client.Out.SendMessage("'/item model <ModelID> <slot #>' to change item model", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							}
+							break;
+						}
+					case "extension":
+						{
+							int slot = (int) eInventorySlot.LastBackpack;
+
+							if (args.Length >= 4)
+							{
+								try
+								{
+									slot = Convert.ToInt32(args[3]);
+								}
+								catch
+								{
+									slot = (int) eInventorySlot.LastBackpack;
+								}
+							}
+
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot) slot);
+
+							if (item == null)
+							{
+								client.Out.SendMessage("No item in slot " + slot + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return 0;
+							}
+							try
+							{
+								item.Extension = Convert.ToByte(args[2]);
+								client.Out.SendInventoryItemsUpdate(new InventoryItem[] {item});
+								if (item.SlotPosition < (int) eInventorySlot.FirstBackpack)
+									client.Player.UpdateEquipementAppearance();
+							}
+							catch
+							{
+								client.Out.SendMessage("'/item extension <extension> <slot #>' to change item extension", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							}
+							break;
+						}
+					case "color":
+						{
+							int slot = (int) eInventorySlot.LastBackpack;
+
+							if (args.Length >= 4)
+							{
+								try
+								{
+									slot = Convert.ToInt32(args[3]);
+								}
+								catch
+								{
+									slot = (int) eInventorySlot.LastBackpack;
+								}
+							}
+
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot) slot);
+
+							if (item == null)
+							{
+								client.Out.SendMessage("No item in slot " + slot + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return 0;
+							}
+
+							try
+							{
+								item.Color = Convert.ToUInt16(args[2]);
+								client.Out.SendInventoryItemsUpdate(new InventoryItem[] {item});
+								if (item.SlotPosition < (int) eInventorySlot.FirstBackpack)
+									client.Player.UpdateEquipementAppearance();
+							}
+							catch
+							{
+								client.Out.SendMessage("'/item color <ColorID> <slot #>' to change item color", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							}
+							break;
+						}
+					case "effect":
+						{
+							int slot = (int) eInventorySlot.LastBackpack;
+
+							if (args.Length >= 4)
+							{
+								try
+								{
+									slot = Convert.ToInt32(args[3]);
+								}
+								catch
+								{
+									slot = (int) eInventorySlot.LastBackpack;
+								}
+							}
+
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot) slot);
+
+							if (item == null)
+							{
+								client.Out.SendMessage("No item in slot " + slot + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return 0;
+							}
+							try
+							{
+								item.Effect = Convert.ToUInt16(args[2]);
+								client.Out.SendInventoryItemsUpdate(new InventoryItem[] {item});
+								if (item.SlotPosition < (int) eInventorySlot.FirstBackpack)
+									client.Player.UpdateEquipementAppearance();
+							}
+							catch
+							{
+								client.Out.SendMessage("'/item effect <EffectID> <slot #>' to change item effect", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							}
+							break;
+						}
+					case "type":
+						{
+							int slot = (int) eInventorySlot.LastBackpack;
+
+							if (args.Length >= 4)
+							{
+								try
+								{
+									slot = Convert.ToInt32(args[3]);
+								}
+								catch
+								{
+									slot = (int) eInventorySlot.LastBackpack;
+								}
+							}
+
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot) slot);
+
+							if (item == null)
+							{
+								client.Out.SendMessage("No item in slot " + slot + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return 0;
+							}
+							try
+							{
+								item.Item_Type = Convert.ToInt32(args[2]);
+								client.Out.SendInventoryItemsUpdate(new InventoryItem[] {item});
+							}
+							catch
+							{
+								client.Out.SendMessage("'/item type <TypeID> <slot #>' to change item type", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							}
+							break;
+						}
+					case "object":
+						{
+							int slot = (int) eInventorySlot.LastBackpack;
+
+							if (args.Length >= 4)
+							{
+								try
+								{
+									slot = Convert.ToInt32(args[3]);
+								}
+								catch
+								{
+									slot = (int) eInventorySlot.LastBackpack;
+								}
+							}
+
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot) slot);
+
+							if (item == null)
+							{
+								client.Out.SendMessage("No item in slot " + slot + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return 0;
+							}
+							try
+							{
+								item.Object_Type = Convert.ToInt32(args[2]);
+								client.Out.SendInventoryItemsUpdate(new InventoryItem[] {item});
+							}
+							catch
+							{
+								client.Out.SendMessage("'/item object <ObjectID> <slot #>' to change object type", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							}
+							break;
+						}
+					case "hand":
+						{
+							int slot = (int) eInventorySlot.LastBackpack;
+
+							if (args.Length >= 4)
+							{
+								try
+								{
+									slot = Convert.ToInt32(args[3]);
+								}
+								catch
+								{
+									slot = (int) eInventorySlot.LastBackpack;
+								}
+							}
+
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot) slot);
+
+							if (item == null)
+							{
+								client.Out.SendMessage("No item in slot " + slot + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return 0;
+							}
+							try
+							{
+								item.Hand = Convert.ToInt32(args[2]);
+								client.Out.SendInventoryItemsUpdate(new InventoryItem[] {item});
+							}
+							catch
+							{
+								client.Out.SendMessage("'/item hand <HandID> <slot #>' to change item hand", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							}
+							break;
+						}
+					case "damagetype":
+						{
+							int slot = (int) eInventorySlot.LastBackpack;
+
+							if (args.Length >= 4)
+							{
+								try
+								{
+									slot = Convert.ToInt32(args[3]);
+								}
+								catch
+								{
+									slot = (int) eInventorySlot.LastBackpack;
+								}
+							}
+
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot) slot);
+
+							if (item == null)
+							{
+								client.Out.SendMessage("No item in slot " + slot + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return 0;
+							}
+							try
+							{
+								item.Type_Damage = Convert.ToInt32(args[2]);
+								client.Out.SendInventoryItemsUpdate(new InventoryItem[] {item});
+							}
+							catch
+							{
+								client.Out.SendMessage("'/item damagetype <DamageTypeID> <slot #>' to change item damage type.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							}
+							break;
+						}
+					case "name":
+						{
+							int slot = (int) eInventorySlot.LastBackpack;
+
+							if (args.Length >= 4)
+							{
+								try
+								{
+									slot = Convert.ToInt32(args[3]);
+								}
+								catch
+								{
+									slot = (int) eInventorySlot.LastBackpack;
+								}
+							}
+
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot) slot);
+
+							if (item == null)
+							{
+								client.Out.SendMessage("No item in slot " + slot + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return 0;
+							}
+							try
+							{
+								item.Name = args[2];
+								client.Out.SendInventoryItemsUpdate(new InventoryItem[] {item});
+							}
+							catch
+							{
+								client.Out.SendMessage("'/item name <Name> <slot #>' to change item name", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							}
+							break;
+						}
+					case "craftername":
+					{
+						int slot = (int) eInventorySlot.LastBackpack;
+
+						if (args.Length >= 4)
+						{
+							try
+							{
+								slot = Convert.ToInt32(args[3]);
+							}
+							catch
+							{
+								slot = (int) eInventorySlot.LastBackpack;
+							}
+						}
+
+						InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot) slot);
+
+						if (item == null)
+						{
+							client.Out.SendMessage("No item in slot " + slot + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							return 0;
+						}
+						try
+						{
+							item.CrafterName = args[2];
+							client.Out.SendInventoryItemsUpdate(new InventoryItem[] {item});
+						}
+						catch
+						{
+							client.Out.SendMessage("'/item craftername <CrafterName> <slot #>' to change item crafter name.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						}
+						break;
+					}
+					case "emblem":
+						{
+							int slot = (int) eInventorySlot.LastBackpack;
+
+							if (args.Length >= 4)
+							{
+								try
+								{
+									slot = Convert.ToInt32(args[3]);
+								}
+								catch
+								{
+									slot = (int) eInventorySlot.LastBackpack;
+								}
+							}
+
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot) slot);
+
+							if (item == null)
+							{
+								client.Out.SendMessage("No item in slot " + slot + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return 0;
+							}
+							try
+							{
+								item.Emblem = Convert.ToUInt16(args[2]);
+								client.Out.SendInventoryItemsUpdate(new InventoryItem[] {item});
+								if (item.SlotPosition < (int) eInventorySlot.FirstBackpack)
+									client.Player.UpdateEquipementAppearance();
+							}
+							catch
+							{
+								client.Out.SendMessage("'/item emblem <EmblemID> <slot #>' to change item emblem", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							}
+							break;
+						}
+					case "level":
+						{
+							int slot = (int) eInventorySlot.LastBackpack;
+
+							if (args.Length >= 4)
+							{
+								try
+								{
+									slot = Convert.ToInt32(args[3]);
+								}
+								catch
+								{
+									slot = (int) eInventorySlot.LastBackpack;
+								}
+							}
+
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot) slot);
+
+							if (item == null)
+							{
+								client.Out.SendMessage("No item in slot " + slot + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return 0;
+							}
+							try
+							{
+								item.Level = Convert.ToUInt16(args[2]);
+								client.Out.SendInventoryItemsUpdate(new InventoryItem[] {item});
+							}
+							catch
+							{
+								client.Out.SendMessage("'/item <level> <NewLevel> <slot #>' to change item level", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							}
+							break;
+						}
+					case "price":
+						{
+							int slot = (int) eInventorySlot.LastBackpack;
+
+							if (args.Length >= 6)
+							{
+								try
+								{
+									slot = Convert.ToInt32(args[5]);
+								}
+								catch
+								{
+									slot = (int) eInventorySlot.LastBackpack;
+								}
+							}
+
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot) slot);
+
+							if (item == null)
+							{
+								client.Out.SendMessage("No item in slot " + slot + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return 0;
+							}
+							try
+							{
+								item.Gold = (short) (Convert.ToInt16(args[2])%1000);
+								item.Silver = (byte) (Convert.ToByte(args[3])%100);
+								item.Copper = (byte) (Convert.ToByte(args[4])%100);
+								client.Out.SendInventoryItemsUpdate(new InventoryItem[] {item});
+							}
+							catch
+							{
+								client.Out.SendMessage("'/item price <gold> <silver> <copper> <slot #>' to change item price", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							}
+							break;
+						}
+					case "condition":
+						{
+							int slot = (int) eInventorySlot.LastBackpack;
+
+							if (args.Length >= 5)
+							{
+								try
+								{
+									slot = Convert.ToInt32(args[4]);
+								}
+								catch
+								{
+									slot = (int) eInventorySlot.LastBackpack;
+								}
+							}
+
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot) slot);
+
+							if (item == null)
+							{
+								client.Out.SendMessage("No item in slot " + slot + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return 0;
+							}
+							try
+							{
+								int con = Convert.ToInt32(args[2]);
+								int maxcon = Convert.ToInt32(args[3]);
+								item.Condition = con;
+								item.MaxCondition = maxcon;
+								client.Out.SendInventoryItemsUpdate(new InventoryItem[] {item});
+							}
+							catch
+							{
+								client.Out.SendMessage("'/item condition <Con> <MaxCon> <slot #>' to change item Con Stats", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							}
+							break;
+						}
+					case "durability":
+						{
+							int slot = (int) eInventorySlot.LastBackpack;
+
+							if (args.Length >= 5)
+							{
+								try
+								{
+									slot = Convert.ToInt32(args[4]);
+								}
+								catch
+								{
+									slot = (int) eInventorySlot.LastBackpack;
+								}
+							}
+
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot) slot);
+
+							if (item == null)
+							{
+								client.Out.SendMessage("No item in slot " + slot + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return 0;
+							}
+							try
+							{
+								int Dur = Convert.ToInt32(args[2]);
+								int MaxDur = Convert.ToInt32(args[3]);
+								item.Durability = Dur;
+								item.MaxDurability = MaxDur;
+
+								client.Out.SendInventoryItemsUpdate(new InventoryItem[] {item});
+							}
+							catch
+							{
+								client.Out.SendMessage("'/item durability <Dur> <MaxDur> <slot #>' to change item Dur Stats", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							}
+							break;
+						}
+					case "quality":
+						{
+							int slot = (int) eInventorySlot.LastBackpack;
+
+							if (args.Length >= 5)
+							{
+								try
+								{
+									slot = Convert.ToInt32(args[4]);
+								}
+								catch
+								{
+									slot = (int) eInventorySlot.LastBackpack;
+								}
+							}
+
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot) slot);
+
+							if (item == null)
+							{
+								client.Out.SendMessage("No item in slot " + slot + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return 0;
+							}
+
+							try
+							{
+								int Qua = Convert.ToInt32(args[2]);
+								int MaxQua = Convert.ToInt32(args[3]);
+								item.Quality = Qua;
+								item.MaxQuality = MaxQua;
+
+								client.Out.SendInventoryItemsUpdate(new InventoryItem[] {item});
+							}
+							catch
+							{
+								client.Out.SendMessage("'/item quality <Qua> <MaxQua> <slot #>' to change item Qua Stats", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							}
+							break;
+						}
+					case "bonus":
+						{
+							int slot = (int) eInventorySlot.LastBackpack;
+
+							if (args.Length >= 4)
+							{
+								try
+								{
+									slot = Convert.ToInt32(args[3]);
+								}
+								catch
+								{
+									slot = (int) eInventorySlot.LastBackpack;
+								}
+							}
+
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot) slot);
+
+							if (item == null)
+							{
+								client.Out.SendMessage("No item in slot " + slot + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return 0;
+							}
+							try
+							{
+								int Bonus = Convert.ToInt32(args[2]);
+								item.Bonus = Bonus;
+
+								client.Out.SendInventoryItemsUpdate(new InventoryItem[] {item});
+							}
+							catch
+							{
+								client.Out.SendMessage("'/item bonus <Bonus> <slot #>' to change item bonus %", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							}
+							break;
+						}
+					case "mbonus":
+						{
+							int slot = (int) eInventorySlot.LastBackpack;
+							int num = 0;
+							int bonusType = 0;
+							int bonusValue = 0;
+
+							if (args.Length >= 6)
+							{
+								try
+								{
+									slot = Convert.ToInt32(args[5]);
+								}
+								catch
+								{
+									slot = (int) eInventorySlot.LastBackpack;
+								}
+							}
+
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot) slot);
+
+							if (item == null)
+							{
+								client.Out.SendMessage("No item in slot " + slot + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return 0;
+							}
+							try
+							{
+								num = Convert.ToInt32(args[2]);
+							}
+							catch
+							{
+								client.Out.SendMessage("Not set bonus number!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							}
+							try
+							{
+								bonusType = Convert.ToInt32(args[3]);
+								if (bonusType < 0 || bonusType >= (int)eProperty.MaxProperty)
+								{
+									client.Out.SendMessage("Bonus type should be in range from 0 to "+(int)(eProperty.MaxProperty-1), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									break;
+								}
+							}
+							catch
+							{
+								client.Out.SendMessage("Not set bonus type!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							}
+							try
+							{
+								bonusValue = Convert.ToInt32(args[4]);
+								switch (num)
+								{
+									case 0:
+										{
+											item.ExtraBonus = bonusValue;
+											item.ExtraBonusType = bonusType;
+											break;
+										}
+									case 1:
+										{
+											item.Bonus1 = bonusValue;
+											item.Bonus1Type = bonusType;
+											break;
+										}
+									case 2:
+										{
+											item.Bonus2 = bonusValue;
+											item.Bonus2Type = bonusType;
+											break;
+										}
+									case 3:
+										{
+											item.Bonus3 = bonusValue;
+											item.Bonus3Type = bonusType;
+											break;
+										}
+									case 4:
+										{
+											item.Bonus4 = bonusValue;
+											item.Bonus4Type = bonusType;
+											break;
+										}
+									case 5:
+										{
+											item.Bonus5 = bonusValue;
+											item.Bonus5Type = bonusType;
+											break;
+										}
+									default:
+										client.Out.SendMessage("Unknown bonus number: " + num, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+										return 1;
+								}
+								if (item.SlotPosition < (int) eInventorySlot.FirstBackpack)
+								{
+									client.Out.SendCharStatsUpdate();
+									client.Out.SendCharResistsUpdate();
+								}
+							}
+							catch
+							{
+								client.Out.SendMessage("Not set bonus value!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							}
+							break;
+						}
+					case "weight":
+						{
+							int slot = (int) eInventorySlot.LastBackpack;
+
+							if (args.Length >= 4)
+							{
+								try
+								{
+									slot = Convert.ToInt32(args[3]);
+								}
+								catch
+								{
+									slot = (int) eInventorySlot.LastBackpack;
+								}
+							}
+
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot) slot);
+
+							if (item == null)
+							{
+								client.Out.SendMessage("No item in slot " + slot + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return 0;
+							}
+							try
+							{
+								item.Weight = Convert.ToInt32(args[2]);
+								client.Out.SendInventoryItemsUpdate(new InventoryItem[] {item});
+							}
+							catch
+							{
+								client.Out.SendMessage("'/item weight <Weight> <slot #>' to change item weight", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							}
+							break;
+						}
+					case "dps_af":
+					case "dps":
+					case "af":
+						{
+							int slot = (int) eInventorySlot.LastBackpack;
+
+							if (args.Length >= 4)
+							{
+								try
+								{
+									slot = Convert.ToInt32(args[3]);
+								}
+								catch
+								{
+									slot = (int) eInventorySlot.LastBackpack;
+								}
+							}
+
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot) slot);
+
+							if (item == null)
+							{
+								client.Out.SendMessage("No item in slot " + slot + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return 0;
+							}
+							try
+							{
+								item.DPS_AF = Convert.ToByte(args[2]);
+								client.Out.SendInventoryItemsUpdate(new InventoryItem[] {item});
+							}
+							catch
+							{
+								client.Out.SendMessage("'/item DPS_AF <NewDPS_AF> <slot #>' to change item DPS_AF", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							}
+							break;
+						}
+					case "spd_abs":
+					case "spd":
+					case "abs":
+						{
+							int slot = (int) eInventorySlot.LastBackpack;
+
+							if (args.Length >= 4)
+							{
+								try
+								{
+									slot = Convert.ToInt32(args[3]);
+								}
+								catch
+								{
+									slot = (int) eInventorySlot.LastBackpack;
+								}
+							}
+
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot) slot);
+
+							if (item == null)
+							{
+								client.Out.SendMessage("No item in slot " + slot + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return 0;
+							}
+							try
+							{
+								item.SPD_ABS = Convert.ToByte(args[2]);
+								client.Out.SendInventoryItemsUpdate(new InventoryItem[] {item});
+							}
+							catch
+							{
+								client.Out.SendMessage("'/item SPD_ABS <NewSPD_ABS> <slot #>' to change item SPD_ABS", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							}
+							break;
+						}
+					case "isdropable":
+						{
+							int slot = (int) eInventorySlot.LastBackpack;
+
+							if (args.Length >= 4)
+							{
+								try
+								{
+									slot = Convert.ToInt32(args[3]);
+								}
+								catch
+								{
+									slot = (int) eInventorySlot.LastBackpack;
+								}
+							}
+
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot) slot);
+
+							if (item == null)
+							{
+								client.Out.SendMessage("No item in slot " + slot + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return 0;
+							}
+
+							try
+							{
+								item.IsDropable = Convert.ToBoolean(args[2]);
+							}
+							catch
+							{
+								client.Out.SendMessage("'/item isdropable <true or false> <slot #>' to change allow item to be droped or not", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							}
+							break;
+						}
+					case "ispickable":
+						{
+							int slot = (int) eInventorySlot.LastBackpack;
+
+							if (args.Length >= 4)
+							{
+								try
+								{
+									slot = Convert.ToInt32(args[3]);
+								}
+								catch
+								{
+									slot = (int) eInventorySlot.LastBackpack;
+								}
+							}
+
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot) slot);
+
+							if (item == null)
+							{
+								client.Out.SendMessage("No item in slot " + slot + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return 0;
+							}
+
+							try
+							{
+								item.IsPickable = Convert.ToBoolean(args[2]);
+							}
+							catch
+							{
+								client.Out.SendMessage("'/item ispickable <true or false> <slot #>' to change allow item to be picked or not", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							}
+
+							break;
+						}
+					case "spell":
+						{
+							int slot = (int) eInventorySlot.LastBackpack;
+
+							if (args.Length >= 6)
+							{
+								try
+								{
+									slot = Convert.ToInt32(args[5]);
+								}
+								catch
+								{
+									slot = (int) eInventorySlot.LastBackpack;
+								}
+							}
+
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot) slot);
+
+							if (item == null)
+							{
+								client.Out.SendMessage("No item in slot " + slot + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return 0;
+							}
+
+							try
+							{
+								int Charges = Convert.ToInt32(args[2]);
+								int MaxCharges = Convert.ToInt32(args[3]);
+								int SpellID = Convert.ToInt32(args[4]);
+								item.Charges = Charges;
+								item.MaxCharges = MaxCharges;
+								item.SpellID = SpellID;
+
+								client.Out.SendInventoryItemsUpdate(new InventoryItem[] {item});
+							}
+							catch
+							{
+								client.Out.SendMessage("'/item spell <Charges> <MaxCharges> <SpellID> [slot #]' to change item spell charges", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							}
+							break;
+						}
+					case "proc":
+					{
+						int slot = (int) eInventorySlot.LastBackpack;
+
+						if (args.Length >= 4)
+						{
+							try
+							{
+								slot = Convert.ToInt32(args[3]);
+							}
+							catch
+							{
+								slot = (int) eInventorySlot.LastBackpack;
+							}
+						}
+
+						InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot) slot);
+
+						if (item == null)
+						{
+							client.Out.SendMessage("No item in slot " + slot + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							return 0;
+						}
+						try
+						{
+							item.ProcSpellID = Convert.ToInt32(args[2]);
+							client.Out.SendInventoryItemsUpdate(new InventoryItem[] {item});
+						}
+						catch
+						{
+							client.Out.SendMessage("'/item proc <ProcSpellID> <slot #>' to change proc type", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						}
+						break;
+					}
+					case "realm":
+						{
+							int slot = (int) eInventorySlot.LastBackpack;
+
+							if (args.Length >= 4)
+							{
+								try
+								{
+									slot = Convert.ToInt32(args[3]);
+								}
+								catch
+								{
+									slot = (int) eInventorySlot.LastBackpack;
+								}
+							}
+
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot) slot);
+
+							if (item == null)
+							{
+								client.Out.SendMessage("No item in slot " + slot + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return 0;
+							}
+
+							try
+							{
+								item.Realm = (int)Enum.Parse(typeof(eRealm), args[2], true);
+							}
+							catch
+							{
+								client.Out.SendMessage("'/item realm <num> <slot #>' to change items realm", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							}
+
+							break;
+						}
+					case "savetemplate":
+						{
+							int slot = (int) eInventorySlot.LastBackpack;
+							string name = "";
+
+							if (args.Length >= 4)
+							{
+								try
+								{
+									slot = Convert.ToInt32(args[3]);
+								}
+								catch
+								{
+									slot = (int) eInventorySlot.LastBackpack;
+								}
+
+								if (slot > (int) eInventorySlot.LastBackpack)
+								{
+									slot = (int) eInventorySlot.LastBackpack;
+								}
+
+								if (slot < 0)
+								{
+									slot = 0;
+								}
+
+								name = args[2];
+							}
+							else if (args.Length >= 3)
+							{
+								name = args[2];
+							}
+							else
+							{
+								client.Out.SendMessage("Incorrect format for /item", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return 0;
+							}
+
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot) slot);
+
 							if (item == null)
 							{
 								client.Out.SendMessage("No item located in slot " + slot, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return 0;
 							}
-							
-							GenericItemTemplate temp = (GenericItemTemplate) GameServer.Database.FindObjectByKey(typeof (GenericItemTemplate), name);
-							if (temp != null)
+							//try
+							//{
+
+
+							ItemTemplate temp = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), GameServer.Database.Escape(name));
+
+							bool add = false;
+
+							if (temp == null)
 							{
-								client.Out.SendMessage("A template with this name already exist.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return 0;
+								add = true;
+								temp = new ItemTemplate();
 							}
-							
-							temp = Assembly.GetAssembly(typeof(GameServer)).CreateInstance(item.GetType().FullName + "Template", false) as GenericItemTemplate;
-							temp.ItemTemplateID = name;
-							temp.Name = item.Name;
-							
+
+							item.Id_nb = name;
+							temp.Bonus = item.Bonus;
+							temp.Bonus1 = item.Bonus1;
+							temp.Bonus2 = item.Bonus2;
+							temp.Bonus3 = item.Bonus3;
+							temp.Bonus4 = item.Bonus4;
+							temp.Bonus5 = item.Bonus5;
+							temp.Bonus1Type = item.Bonus1Type;
+							temp.Bonus2Type = item.Bonus2Type;
+							temp.Bonus3Type = item.Bonus3Type;
+							temp.Bonus4Type = item.Bonus4Type;
+							temp.Bonus5Type = item.Bonus5Type;
+							temp.Gold = item.Gold;
+							temp.Silver = item.Silver;
+							temp.Copper = item.Copper;
+							temp.Color = item.Color;
+							temp.Condition = item.Condition;
+							temp.DPS_AF = item.DPS_AF;
+							temp.Durability = item.Durability;
+							temp.Effect = item.Effect;
+							temp.Emblem = item.Emblem;
+							temp.ExtraBonus = item.ExtraBonus;
+							temp.ExtraBonusType = item.ExtraBonusType;
+							temp.Hand = item.Hand;
+							temp.Id_nb = item.Id_nb;
 							temp.IsDropable = item.IsDropable;
+							temp.IsPickable = item.IsPickable;
+							temp.Item_Type = item.Item_Type;
 							temp.Level = item.Level;
+							temp.MaxCondition = item.MaxCondition;
+							temp.MaxDurability = item.MaxDurability;
+							temp.MaxQuality = item.MaxQuality;
 							temp.Model = item.Model;
+							temp.Extension = item.Extension;
 							temp.Name = item.Name;
+							temp.Object_Type = item.Object_Type;
+							temp.Quality = item.Quality;
+							temp.SPD_ABS = item.SPD_ABS;
+							temp.Type_Damage = item.Type_Damage;
 							temp.Weight = item.Weight;
+							temp.MaxCount = item.MaxCount;
+							temp.PackSize = item.PackSize;
+							temp.Charges = item.Charges;
+							temp.MaxCharges = item.MaxCharges;
+							temp.SpellID = item.SpellID;
+							temp.ProcSpellID = item.ProcSpellID;
 							temp.Realm = item.Realm;
 
-							
-							GameServer.Database.AddNewObject(temp);
-							
+							if (add)
+							{
+								GameServer.Database.AddNewObject(temp);
+							}
+							else
+							{
+								GameServer.Database.SaveObject(temp);
+							}
 
-							client.Out.SendMessage("The ItemTemplate with the id " + name + " was successfully saved", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							client.Out.SendMessage("The ItemTemplate " + name + " was successfully saved", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						}
 						break;
 				}

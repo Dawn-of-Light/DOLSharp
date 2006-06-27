@@ -19,7 +19,7 @@
 using System;
 using System.Collections;
 using System.Reflection;
-using DOL.GS.Database;
+using DOL.Database;
 using log4net;
 
 namespace DOL.GS.PacketHandler.v168
@@ -58,7 +58,36 @@ namespace DOL.GS.PacketHandler.v168
 			protected override void OnTick()
 			{
 				GamePlayer player = (GamePlayer)m_actionSource;
-				
+				//check emblems at world load before any updates
+				lock (player.Inventory)
+				{
+					Guild playerGuild = player.Guild;
+					foreach(InventoryItem myitem in player.Inventory.AllItems)
+					{
+						if (myitem != null && myitem.Emblem != 0)
+						{
+							if (playerGuild == null || myitem.Emblem != playerGuild.theGuildDB.Emblem )
+							{
+								myitem.Emblem = 0;
+							}
+							if (player.Level < 20)
+							{
+								if (player.CraftingPrimarySkill == eCraftingSkill.NoCrafting)
+								{
+									myitem.Emblem = 0;
+								}
+								else
+								{
+									if (player.GetCraftingSkillValue(player.CraftingPrimarySkill) < 400)
+									{
+										myitem.Emblem = 0;
+									}
+								}
+							}
+						}
+					}
+				}
+
 				player.Client.ClientState=GameClient.eClientState.WorldEnter;
 				// 0x88 - Position
 				// 0x6D - FriendList
@@ -146,7 +175,7 @@ namespace DOL.GS.PacketHandler.v168
 				player.Stealth(false);
 				//check item at world load
 				if (log.IsDebugEnabled)
-					log.DebugFormat("Client {0}({1} PID:{2} OID:{3}) entering Region {4}(ID:{5})", player.Client.Account.AccountName, player.Name, player.Client.SessionID, player.ObjectID, player.Region.Description, player.RegionId);
+					log.DebugFormat("Client {0}({1} PID:{2} OID:{3}) entering Region {4}(ID:{5})", player.Client.Account.Name, player.Name, player.Client.SessionID, player.ObjectID, player.CurrentRegion.Description, player.CurrentRegionID);
 			}
 		}
 	}

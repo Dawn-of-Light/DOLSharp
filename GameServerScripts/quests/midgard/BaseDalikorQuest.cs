@@ -38,7 +38,7 @@
 using System;
 using System.Reflection;
 using DOL.AI.Brain;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.GS.PacketHandler;
 using log4net;
 /* I suggest you declare yourself some namespaces for your quests
@@ -81,17 +81,33 @@ namespace DOL.GS.Quests.Midgard
 		 * when loading this quest...
 		 */
 
+		public BaseDalikorQuest() : base()
+		{
+		}
+
+		public BaseDalikorQuest(GamePlayer questingPlayer) : base(questingPlayer)
+		{
+		}
+
+		public BaseDalikorQuest(GamePlayer questingPlayer, int step) : base(questingPlayer, step)
+		{
+		}
+
+		public BaseDalikorQuest(GamePlayer questingPlayer, DBQuest dbQuest) : base(questingPlayer, dbQuest)
+		{
+		}
+
 		public static Type[] m_questSequel = new Type[]
 			{
-				typeof (ImportantDeliveryMid), // level 1
+				typeof (ImportantDelivery), // level 1
 				typeof (CityOfJordheim), // level 1
-				typeof (NuisancesMid), // level 2
+				typeof (Nuisances), // level 2
 				typeof (TraitorInMularn), // level 2
-				typeof (FrontiersMid), // level 3
-				typeof (CollectionMid), // level 3
+				typeof (Frontiers), // level 3
+				typeof (Collection), // level 3
 				typeof (StolenEggs), // level 4
-				typeof (BeginningOfWarMid), // level 4
-				typeof (CulminationMid) // level 5
+				typeof (BeginningOfWar), // level 4
+				typeof (Culmination) // level 5
 			};
 
 		/// <summary>
@@ -150,7 +166,7 @@ namespace DOL.GS.Quests.Midgard
 					log.Warn("Could not find " + dalikor.Name + ", creating him ...");
 				dalikor.GuildName = "Part of Dalikor Quests";
 				dalikor.Realm = (byte) eRealm.Midgard;
-				dalikor.Region = locationDalikor.Region;
+				dalikor.CurrentRegionID = locationDalikor.RegionID;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
 				template.AddNPCEquipment(eInventorySlot.TorsoArmor, 348);
@@ -162,9 +178,18 @@ namespace DOL.GS.Quests.Midgard
 				dalikor.Inventory = template.CloseTemplate();
 				dalikor.SwitchWeapon(GameLiving.eActiveWeaponSlot.Standard);
 
+//				dalikor.AddNPCEquipment((byte) eEquipmentItems.TORSO, 348, 0, 0, 0);
+//				dalikor.AddNPCEquipment((byte) eEquipmentItems.LEGS, 349, 0, 0, 0);
+//				dalikor.AddNPCEquipment((byte) eEquipmentItems.ARMS, 350, 0, 0, 0);
+//				dalikor.AddNPCEquipment((byte) eEquipmentItems.HAND, 351, 0, 0, 0);
+//				dalikor.AddNPCEquipment((byte) eEquipmentItems.FEET, 352, 0, 0, 0);
+//				dalikor.AddNPCEquipment((byte) eVisibleItems.RIGHT_HAND, 4, 0, 0, 0);
+
 				dalikor.Size = 50;
 				dalikor.Level = 50;
-				dalikor.Position = locationDalikor.Position;
+				dalikor.X = locationDalikor.X;
+				dalikor.Y = locationDalikor.Y;
+				dalikor.Z = locationDalikor.Z;
 				dalikor.Heading = locationDalikor.Heading;
 
 				StandardMobBrain brain = new StandardMobBrain();

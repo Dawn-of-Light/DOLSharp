@@ -272,8 +272,7 @@ namespace DOL.GS
 			foreach (GameClient cl in WorldMgr.GetClientsOfRegion(m_regionID))
 			{
 				cl.Out.SendWeather(0,0,0,0,0);
-				Point pos = cl.Player.Position;
-				if (pos.X > (currentLine-m_width) && pos.X < (currentLine+m_width))
+				if(cl.Player.X > (currentLine-m_width) && cl.Player.X < (currentLine+m_width))
 					cl.Out.SendMessage("The sky clears up again as the storm clouds disperse!",eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 			}
 			m_weatherTimer.Change(CHECK_INTERVAL, CHECK_INTERVAL);
@@ -287,7 +286,7 @@ namespace DOL.GS
 		/// <param name="player">The player entering the region</param>
 		public static void UpdatePlayerWeather(GamePlayer player)
 		{
-			WeatherMgr mgr = GetWeatherForRegion((ushort)player.RegionId);
+			WeatherMgr mgr = GetWeatherForRegion(player.CurrentRegionID);
 			if(mgr!=null && mgr.IsActive)
 				player.Out.SendWeather(mgr.CurrentWeatherLine,mgr.m_width, mgr.m_speed, mgr.m_fogDiffusion, mgr.m_intensity);
 		}

@@ -18,7 +18,7 @@
  */
 using System;
 using System.Collections;
-using DOL.GS.Database;
+using DOL.Database;
 
 namespace DOL.GS
 {
@@ -43,11 +43,14 @@ namespace DOL.GS
 			
 			long moneyCount = minLoot+Util.Random(minLoot>>1);
 			
-			GenericItemTemplate money = new GenericItemTemplate();
+			ItemTemplate money = new ItemTemplate();
 			money.Model = 488;
 			money.Name = "bag of coins";
 			money.Level = 0;
-            money.Value = moneyCount;
+
+			money.Copper=(byte) Money.GetCopper(moneyCount);
+			money.Silver=(byte) Money.GetSilver(moneyCount);
+			money.Gold=(byte) Money.GetGold(moneyCount);
 
 			loot.AddFixed(money);
 			return loot;

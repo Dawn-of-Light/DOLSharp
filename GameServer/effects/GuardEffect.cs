@@ -95,7 +95,7 @@ namespace DOL.GS.Effects
 			m_guardSource.EffectList.Add(this);
 			m_guardTarget.EffectList.Add(this);
 
-			if (!guardSource.Position.CheckSquareDistance(guardTarget.Position, (uint)(GuardAbilityHandler.GUARD_DISTANCE*GuardAbilityHandler.GUARD_DISTANCE)))
+			if (!WorldMgr.CheckDistance(guardSource, guardTarget,GuardAbilityHandler.GUARD_DISTANCE))
 			{
 				guardSource.Out.SendMessage(string.Format("You are now guarding {0}, but you must stand closer.", guardTarget.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				guardTarget.Out.SendMessage(string.Format("{0} is now guarding you, but you must stand closer.", guardSource.GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -128,7 +128,6 @@ namespace DOL.GS.Effects
 		/// </summary>
 		public void Cancel(bool playerCancel)
 		{
-			GameEventMgr.RemoveHandler(m_playerGroup, PlayerGroupEvent.PlayerDisbanded, new DOLEventHandler(GroupDisbandCallback));
 			m_guardSource.EffectList.Remove(this);
 			m_guardTarget.EffectList.Remove(this);
 
@@ -145,8 +144,8 @@ namespace DOL.GS.Effects
 		{
 			get
 			{
-				if (m_guardSource != null && m_guardTarget != null)
-					return m_guardSource.GetName(0, false) + " is Guarding " + m_guardTarget.GetName(0, false);
+				if (m_guardSource != null)
+					return "Guard: " + m_guardSource.GetName(0, false);
 				return "Guard";
 			}
 		}

@@ -1,62 +1,62 @@
 <VisualStudioProject>
     <CSHARP
-				ProjectType = "Local"
-				ProductVersion = "7.10.3077"
-				SchemaVersion = "2.0"
-				ProjectGuid = "{237F3128-0C3C-4BA0-A76C-8CE6D8CBB839}"
-		>
-				<Build>
+        ProjectType = "Local"
+        ProductVersion = "7.10.3077"
+        SchemaVersion = "2.0"
+        ProjectGuid = "{6DDF274A-91A3-4EAF-B0E3-30FD559ABD51}"
+    >
+        <Build>
             <Settings
-				  ApplicationIcon = ""
-				  AssemblyKeyContainerName = ""
-				  AssemblyName = "DOLServer"
-				  AssemblyOriginatorKeyFile = ""
-				  DefaultClientScript = "JScript"
-				  DefaultHTMLPageLayout = "Grid"
-				  DefaultTargetSchema = "IE50"
-				  DelaySign = "false"
-				  OutputType = "Exe"
-				  PreBuildEvent = ""
-				  PostBuildEvent = "postBuildEvent='xcopy "$(ProjectDir)\database\mappingFiles\*.hbm.xml" "$(SolutionDir)\$(ConfigurationName)\mapping" /y /s /q /i'"
-				  RunPostBuildEvent = "OnBuildSuccess"
-				  RootNamespace = "DOLServer"
-				  StartupObject = ""
-		     >
-				  <Config
-				      Name = "Debug"
-				      AllowUnsafeBlocks = "false"
-				      BaseAddress = "285212672"
-				      CheckForOverflowUnderflow = "false"
-				      ConfigurationOverrideFile = ""
-				      DefineConstants = "DEBUG;TRACE;WIN32;NET"
-				      DocumentationFile = "Docs.xml"
-				      DebugSymbols = "true"
-				      FileAlignment = "4096"
-				      IncrementalBuild = "false"
-				      NoStdLib = "false"
-				      NoWarn = "1591;219;1573;1572;168"
-				      Optimize = "true"
-                    OutputPath = "..\Debug\"
+                ApplicationIcon = ""
+                AssemblyKeyContainerName = ""
+                AssemblyName = "DOLServer"
+                AssemblyOriginatorKeyFile = ""
+                DefaultClientScript = "JScript"
+                DefaultHTMLPageLayout = "Grid"
+                DefaultTargetSchema = "IE50"
+                DelaySign = "false"
+                OutputType = "Exe"
+                PreBuildEvent = ""
+                PostBuildEvent = 'copy "$(TargetDir)DOLServer.exe" "$(SolutionDir)$(ConfigurationName)"&#xd;&#xa;if exist "$(TargetDir)DOLServer.pdb" (copy "$(TargetDir)DOLServer.pdb" "$(SolutionDir)$(ConfigurationName)")'
+                RootNamespace = "DOLServer"
+                RunPostBuildEvent = "OnBuildSuccess"
+                StartupObject = ""
+            >
+                <Config
+                    Name = "Debug"
+                    AllowUnsafeBlocks = "false"
+                    BaseAddress = "285212672"
+                    CheckForOverflowUnderflow = "false"
+                    ConfigurationOverrideFile = ""
+                    DefineConstants = "DEBUG;TRACE"
+                    DocumentationFile = "DOLServer.xml"
+                    DebugSymbols = "true"
+                    FileAlignment = "4096"
+                    IncrementalBuild = "false"
+                    NoStdLib = "false"
+                    NoWarn = "1570;1572;1573;1587;1591;1592"
+                    Optimize = "true"
+                    OutputPath = "bin\Debug\"
                     RegisterForComInterop = "false"
                     RemoveIntegerChecks = "false"
                     TreatWarningsAsErrors = "false"
                     WarningLevel = "4"
                 />
-				  <Config
-				      Name = "Release"
-				      AllowUnsafeBlocks = "true"
-				      BaseAddress = "285212672"
-				      CheckForOverflowUnderflow = "false"
-				      ConfigurationOverrideFile = ""
-				      DefineConstants = "TRACE"
-				      DocumentationFile = "DOLServer.xml"
-				      DebugSymbols = "false"
-				      FileAlignment = "4096"
-				      IncrementalBuild = "false"
-				      NoStdLib = "false"
-				      NoWarn = "1591;219;1573;1572;168"
-				      Optimize = "true"
-                    OutputPath = "..\Release\"
+                <Config
+                    Name = "Release"
+                    AllowUnsafeBlocks = "false"
+                    BaseAddress = "285212672"
+                    CheckForOverflowUnderflow = "false"
+                    ConfigurationOverrideFile = ""
+                    DefineConstants = "TRACE"
+                    DocumentationFile = "DOLServer.xml"
+                    DebugSymbols = "false"
+                    FileAlignment = "4096"
+                    IncrementalBuild = "false"
+                    NoStdLib = "false"
+                    NoWarn = ""
+                    Optimize = "true"
+                    OutputPath = "bin\Release\"
                     RegisterForComInterop = "false"
                     RemoveIntegerChecks = "false"
                     TreatWarningsAsErrors = "false"
@@ -67,39 +67,51 @@
                 <Reference
                     Name = "System"
                     AssemblyName = "System"
+                    HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.dll"
                 />
                 <Reference
                     Name = "System.Data"
                     AssemblyName = "System.Data"
+                    HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Data.dll"
                 />
                 <Reference
                     Name = "System.XML"
-                    AssemblyName = "System.XML"
+                    AssemblyName = "System.Xml"
+                    HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
                 />
                 <Reference
                     Name = "System.ServiceProcess"
                     AssemblyName = "System.ServiceProcess"
+                    HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.ServiceProcess.dll"
                 />
                 <Reference
                     Name = "GameServer"
-                    AssemblyName = "GameServer"
-                    Project = "{3FCFB605-E46B-4147-AAF5-D45A43235629}"
+                    Project = "{ACB92917-3D42-4F40-97F9-EA904A41DE36}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                    Private = "True"
+                />
+                <Reference
+                    Name = "DOLDatabase"
+                    Project = "{43BFC675-13B7-4AA8-97F6-6109948849CC}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                    Private = "True"
                 />
                 <Reference
                     Name = "System.Configuration.Install"
                     AssemblyName = "System.Configuration.Install"
+                    HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Configuration.Install.dll"
                 />
                 <Reference
                     Name = "log4net"
                     AssemblyName = "log4net"
                     HintPath = "..\sharedModules\log4net\log4net.dll"
+                    Private = "True"
                 />
                 <Reference
                     Name = "DOLBase"
-                    AssemblyName = "DOLBase"
-                    Project = "{722D049D-F4B0-4DB7-ABDA-C54BD554589E}"
+                    Project = "{A4A0FB22-124C-45CA-A653-2887DE0CC3E0}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                    Private = "True"
                 />
             </References>
         </Build>
@@ -117,13 +129,23 @@
                 />
                 <File
                     RelPath = "GameServerService.cs"
-                    SubType = "Code"
+                    SubType = "Component"
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "GameServerService.resx"
+                    DependentUpon = "GameServerService.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "GameServerServiceInstaller.cs"
-                    SubType = "Code"
+                    SubType = "Component"
                     BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "GameServerServiceInstaller.resx"
+                    DependentUpon = "GameServerServiceInstaller.cs"
+                    BuildAction = "EmbeddedResource"
                 />
                 <File
                     RelPath = "IAction.cs"
@@ -169,3 +191,4 @@
         </Files>
     </CSHARP>
 </VisualStudioProject>
+

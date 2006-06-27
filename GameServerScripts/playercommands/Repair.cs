@@ -16,7 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.GS.PacketHandler;
 using System.Collections;
 using System.Reflection;
@@ -84,7 +84,7 @@ namespace DOL.GS.Scripts
 				return false;
 			}
 
-			if (!player.Position.CheckSquareDistance(obj.Position, (uint) (WorldMgr.INTERACT_DISTANCE*WorldMgr.INTERACT_DISTANCE)))
+			if (!WorldMgr.CheckDistance(player, obj, WorldMgr.INTERACT_DISTANCE))
 			{
 				player.Out.SendMessage("You are too far away to repair this component.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
@@ -188,11 +188,11 @@ namespace DOL.GS.Scripts
 		public static int CalculatePlayersWood(GamePlayer player, int removeamount)
 		{
 			int amount = 0;
-			foreach (GenericItem item in player.Inventory.GetItemRange(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+			foreach (InventoryItem item in player.Inventory.GetItemRange(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
 			{
 				foreach (string name in WoodNames)
 				{
-					/*if (item.Name.Replace(" wooden boards", "").ToLower() == name)
+					if (item.Name.Replace(" wooden boards", "").ToLower() == name)
 					{
 						int woodvalue = GetWoodValue(item.Name.ToLower());
 						amount += item.Count * woodvalue;
@@ -211,7 +211,7 @@ namespace DOL.GS.Scripts
 							}
 						}
 						break;
-					}*/
+					}
 				}
 			}
 			return amount;

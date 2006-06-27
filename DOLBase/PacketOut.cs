@@ -172,14 +172,14 @@ namespace DOL
 		/// <param name="str">String to write</param>
 		public virtual void WritePascalString(string str)
 		{
-
-			WriteByte((byte)str.Length);
-			
 			if(str.Length <= 0)
 			{
+				WriteByte(0);
 				return;
 			}
-			Write(Encoding.Default.GetBytes(str), 0,str.Length);
+			byte[] bytes = Encoding.Default.GetBytes(str);
+			WriteByte((byte)bytes.Length);
+			Write(bytes, 0, bytes.Length);
 		}
 
 		/// <summary>
@@ -204,7 +204,8 @@ namespace DOL
 				return;
 			}
 
-			Write(Encoding.Default.GetBytes(str), 0, str.Length);
+			byte[] bytes = Encoding.Default.GetBytes(str);
+			Write(bytes, 0, bytes.Length);
 		}
 
 		/// <summary>
@@ -218,7 +219,8 @@ namespace DOL
 			{
 				return;
 			}
-			Write(Encoding.Default.GetBytes(str), 0, str.Length < maxlen ? str.Length : maxlen);
+			byte[] bytes = Encoding.Default.GetBytes(str);
+			Write(bytes, 0, bytes.Length < maxlen ? bytes.Length : maxlen);
 		}
 
 		/// <summary>
@@ -242,7 +244,8 @@ namespace DOL
 				return;
 			}
 
-			Write(Encoding.Default.GetBytes(str), 0, len > str.Length ? str.Length : len);
+			byte[] bytes = Encoding.Default.GetBytes(str);
+			Write(bytes, 0, len > bytes.Length ? bytes.Length : len);
 			this.Position = pos + len;
 		}
 	}

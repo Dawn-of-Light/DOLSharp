@@ -19,7 +19,7 @@
 using System.Collections;
 using System.Collections.Specialized;
 using System.Reflection;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.GS.PacketHandler;
 using log4net;
 
@@ -48,21 +48,21 @@ namespace DOL.GS
 		/// <param name="player">the crafting player</param>
 		/// <param name="craftItemData">the object in construction</param>
 		/// <returns>true if the player hold all needed tools</returns>
-		public override bool CheckTool(GamePlayer player, CraftItemData craftItemData)
+		public override bool CheckTool(GamePlayer player, DBCraftedItem craftItemData)
 		{
 			if(! base.CheckTool(player, craftItemData)) return false;
 
 			byte flags = 0;
-			foreach (GenericItem item in player.Inventory.GetItemRange(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+			foreach (InventoryItem item in player.Inventory.GetItemRange(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
 			{
-				if(!(item is CraftingTool)) continue;
+				if(item == null || item.Object_Type != 0) continue;
 
-				if(((CraftingTool)item).Type == eCraftingToolType.AlchemyKit)
+				if(item.Name == "alchemy kit")
 				{
 					if((flags & 0x01) == 0) flags |= 0x01;
 					if(flags >= 0x03) break;
 				}
-				else if(((CraftingTool)item).Type == eCraftingToolType.MortarAndPestle)
+				else if(item.Name == "mortar and pestle")
 				{
 					if((flags & 0x02) == 0) flags |= 0x02;
 					if(flags >= 0x03) break;
@@ -71,18 +71,19 @@ namespace DOL.GS
 
 			if(flags < 0x03)
 			{
-				player.Out.SendMessage("You do not have the tools to make the "+craftItemData.TemplateToCraft.Name+".",eChatType.CT_System,eChatLoc.CL_SystemWindow);
-					
 				if((flags & 0x01) == 0)
 				{
+					player.Out.SendMessage("You do not have the tools to make the "+craftItemData.ItemTemplate.Name+".",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 					player.Out.SendMessage("You must find a alchemy kit!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 					return false;
 				}
-				else
+
+				if((flags & 0x02) == 0)
 				{
+					player.Out.SendMessage("You do not have the tools to make the "+craftItemData.ItemTemplate.Name+".",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 					player.Out.SendMessage("You must find a mortar and pestle!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 					return false;
-				}	
+				}
 			}
 
 			return true;
@@ -93,7 +94,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="player"></param>
 		/// <param name="item"></param>
-		public override void GainCraftingSkillPoints(GamePlayer player, CraftItemData item)
+		public override void GainCraftingSkillPoints(GamePlayer player, DBCraftedItem item)
 		{
 			base.GainCraftingSkillPoints(player, item);
 
@@ -145,11 +146,11 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="player"></param>
 		/// <param name="item"></param>
-		public override bool IsAllowedToCombine(GamePlayer player, GenericItem item)
+		public override bool IsAllowedToCombine(GamePlayer player, InventoryItem item)
 		{
 			if(! base.IsAllowedToCombine(player, item)) return false;
 			
-			if(!(player.TradeWindow.TradeItems[0] is AlchemieTincture))
+			if(((InventoryItem)player.TradeWindow.TradeItems[0]).Object_Type != (int)eObjectType.AlchemyTincture)
 			{
 				player.Out.SendMessage("You can only combine alchemy tinctures!",PacketHandler.eChatType.CT_System,PacketHandler.eChatLoc.CL_SystemWindow);
 				return false;
@@ -161,7 +162,7 @@ namespace DOL.GS
 				return false;
 			}
 
-			if(((EquipableItem)item).ProcEffectType != eMagicalEffectType.NoEffect || ((EquipableItem)item).ChargeEffectType == eMagicalEffectType.ChargeEffect)
+			if(item.ProcSpellID != 0 || item.SpellID != 0)
 			{
 				player.Out.SendMessage("The "+item.Name+" is already imbued with a magical effect!",PacketHandler.eChatType.CT_System,PacketHandler.eChatLoc.CL_SystemWindow);
 				return false;
@@ -180,30 +181,23 @@ namespace DOL.GS
 		/// <param name="player"></param>
 		/// <param name="item"></param>
 		/// <returns></returns>
-		protected override void ApplyMagicalEffect(GamePlayer player, EquipableItem item)
+		protected override void ApplyMagicalEffect(GamePlayer player, InventoryItem item)
 		{
-			AlchemieTincture tincture = (AlchemieTincture)player.TradeWindow.TradeItems[0];
+			InventoryItem tincture = (InventoryItem)player.TradeWindow.TradeItems[0];
 			if(item == null || tincture == null) return ; // be sure at least one item in each side
 			
-			if(tincture is ActiveTincture)
+			if(tincture.ProcSpellID != 0)
 			{
-				item.ProcSpellID = ((ActiveTincture)tincture).SpellID;
-				item.ProcEffectType = eMagicalEffectType.ActiveEffect;
+				item.ProcSpellID = tincture.ProcSpellID;
 			}
-			else if(tincture is ReactiveTincture)
+			else
 			{
-				item.ProcSpellID = ((ReactiveTincture)tincture).SpellID;
-				item.ProcEffectType = eMagicalEffectType.ReactiveEffect;
-			}
-			else if(tincture is StableTincture)
-			{
-				item.ChargeSpellID = ((StableTincture)tincture).SpellID;
-				item.MaxCharge = GetItemMaxCharges(item);
-				item.Charge = item.MaxCharge;
-				item.ChargeEffectType = eMagicalEffectType.ChargeEffect;
+				item.MaxCharges = GetItemMaxCharges(item);
+				item.Charges = item.MaxCharges;
+				item.SpellID = tincture.SpellID;
 			}
 
-			player.Inventory.RemoveItem(tincture);
+			player.Inventory.RemoveCountFromStack(tincture, 1);
 		}
 
 		#endregion
@@ -214,14 +208,14 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="item"></param>
 		/// <returns></returns>
-		public byte GetItemMaxCharges(EquipableItem item)
+		public int GetItemMaxCharges(InventoryItem item)
 		{
-			if (item.Quality <= 94)			return 2;
-			else if (item.Quality <= 95)	return 3;
-			else if (item.Quality <= 96)	return 4;
-			else if (item.Quality <= 97)	return 5;
-			else if (item.Quality <= 98)	return 6;
-			else if (item.Quality <= 99)	return 7;
+			if ((item.Quality*100/item.MaxQuality) <= 94)		return 2;
+			else if ((item.Quality*100/item.MaxQuality) <= 95)	return 3;
+			else if ((item.Quality*100/item.MaxQuality) <= 96)	return 4;
+			else if ((item.Quality*100/item.MaxQuality) <= 97)	return 5;
+			else if ((item.Quality*100/item.MaxQuality) <= 98)	return 6;
+			else if ((item.Quality*100/item.MaxQuality) <= 99)	return 7;
 			else	return 10;
 		}
 

@@ -17,11 +17,7 @@
  *
  */
 using System;
-using System.Collections;
-using System.Reflection;
-using DOL.Events;
 using DOL.GS.PacketHandler;
-using log4net;
 
 namespace DOL.GS.Trainer
 {
@@ -31,51 +27,10 @@ namespace DOL.GS.Trainer
 	[NPCGuildScript("Druid Trainer", eRealm.Hibernia)]		// this attribute instructs DOL to use this script for all "Druid Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class DruidTrainer : GameTrainer
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		public const string ARMOR_ID1 = "druid_item";
 
-		/// <summary>
-		/// This hash constrain all item template the trainer can give
-		/// </summary>	
-		private static IDictionary allStartupItems = new Hashtable();
-
-		/// <summary>
-		/// This function is called at the server startup
-		/// </summary>	
-		[GameServerStartedEvent]
-		public static void OnServerStartup(DOLEvent e, object sender, EventArgs args)
-		{	
-			#region Driud gloves
-
-			HandsArmorTemplate druid_gloves_template = new HandsArmorTemplate();
-			druid_gloves_template.Name = "Druid Initiate Gloves";
-			druid_gloves_template.Level = 5;
-			druid_gloves_template.Durability = 100;
-			druid_gloves_template.Condition = 100;
-			druid_gloves_template.Quality = 90;
-			druid_gloves_template.Bonus = 10;
-			druid_gloves_template.ArmorLevel = eArmorLevel.Low;
-			druid_gloves_template.ArmorFactor = 14;
-			druid_gloves_template.Weight = 16;
-			druid_gloves_template.Model = 356;
-			druid_gloves_template.Realm = eRealm.Hibernia;
-			druid_gloves_template.IsDropable = true; 
-			druid_gloves_template.IsTradable = false; 
-			druid_gloves_template.IsSaleable = false;
-			druid_gloves_template.MaterialLevel = eMaterialLevel.Bronze;
-			
-			druid_gloves_template.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Empathy, 1));
-			
-			if(!allStartupItems.Contains("Druid_Initiate_Gloves"))
-			{
-				allStartupItems.Add("Druid_Initiate_Gloves", druid_gloves_template);
-			
-				if (log.IsDebugEnabled)
-					log.Debug("Adding " + druid_gloves_template.Name + " to DruidTrainer gifts.");
-			}
-			#endregion
+		public DruidTrainer() : base()
+		{
 		}
 
 		/// <summary>
@@ -88,18 +43,22 @@ namespace DOL.GS.Trainer
  			if (!base.Interact(player)) return false;
 								
 			// check if class matches.				
-			if (player.CharacterClass.ID == (int) eCharacterClass.Druid)
-			{
+			if (player.CharacterClass.ID == (int) eCharacterClass.Druid) {
+
+				// popup the training window
 				player.Out.SendTrainerWindow();
+				//player.Out.SendMessage(this.Name + " says, \"Select what you like to train.\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
 				player.Out.SendMessage(this.Name + " says, \"I shall impart all that I know, young Druid.\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
-			} 
-			else if (CanPromotePlayer(player)) 
-			{
-				player.Out.SendMessage(this.Name + " says, \"Do you wish to walk the Path of Harmony and learn the ways of the [Druid]?\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+
 			} 
 			else 
 			{
-				player.Out.SendMessage(this.Name + " says, \"You must seek elsewhere for your training.\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
+				// perhaps player can be promoted
+				if (CanPromotePlayer(player)) {
+					player.Out.SendMessage(this.Name + " says, \"Do you wish to walk the Path of Harmony and learn the ways of the [Druid]?\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+				} else {
+					player.Out.SendMessage(this.Name + " says, \"You must seek elsewhere for your training.\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);							
+				}
 			}
 			return true;
  		}
@@ -126,12 +85,13 @@ namespace DOL.GS.Trainer
 			if (!base.WhisperReceive(source, text)) return false;			
 			GamePlayer player = source as GamePlayer;			
 	
-			switch (text)
-			{
-				case "Druid":
-					if (CanPromotePlayer(player)) 
-						PromotePlayer(player, (int)eCharacterClass.Druid, "The path of the Druid suits you, " + source.GetName(0, false) + ". Welcome. Take this, " + source.GetName(0, false) + ". You are a Druid now. Stick to our ways, and you shall go far.", new GenericItemTemplate[] {allStartupItems["Druid_Initiate_Gloves"] as GenericItemTemplate});
-					
+			switch (text) {
+			case "Druid":
+				// promote player to other class
+				if (CanPromotePlayer(player)) {
+					PromotePlayer(player, (int)eCharacterClass.Druid, "The path of the Druid suits you, " + source.GetName(0, false) + ". Welcome. Take this, " + source.GetName(0, false) + ". You are a Druid now. Stick to our ways, and you shall go far.", null);
+					player.ReceiveItem(this,ARMOR_ID1);
+				}
 				break;
 			}
 			return true;		

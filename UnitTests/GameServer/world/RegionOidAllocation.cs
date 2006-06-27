@@ -18,7 +18,7 @@
  */
 using System;
 using System.Threading;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.Tests;
 using NUnit.Framework;
 
@@ -36,7 +36,7 @@ namespace DOL.GS.World
 		[TestFixtureSetUp] public override void Init()
 		{
 			base.Init();
-			Region data = new Region();
+			RegionData data = new RegionData();
 			data.Id = 5555;
 			data.Name = "reg data1";
 			data.Description = "reg test1";
@@ -59,7 +59,7 @@ namespace DOL.GS.World
 				Assert.IsTrue(mob.ObjectID == -1, "mob {0} oid={1}, should be -1", i, mob.ObjectID);
 				Assert.IsFalse(mob.ObjectState == GameObject.eObjectState.Active, "mob {0} state={1}, should be not Active", i, mob.ObjectState);
 				mob.Name = "test mob " + i;
-				mob.Region = m_reg;
+				mob.CurrentRegion = m_reg;
 				m_reg.PreAllocateRegionSpace(1953);
 			}
 

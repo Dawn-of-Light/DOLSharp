@@ -17,7 +17,6 @@
  *
  */
 using System;
-using DOL.GS;
 
 namespace DOL.Events
 {
@@ -27,19 +26,25 @@ namespace DOL.Events
 	public class MoveToEventArgs : EventArgs
 	{
 		private ushort regionID;
-		private Point position;
+		private int x;
+    private int y;
+		private int z;
 		private ushort heading;
 
 		/// <summary>
 		/// Constructs new MoveToEventArgs
 		/// </summary>
 		/// <param name="regionId">the target regionid</param>
-		/// <param name="position">the target position</param>
+		/// <param name="x">the target x</param>
+		/// <param name="y">the target y</param>
+		/// <param name="z">the target z</param>
 		/// <param name="heading">the target heading</param>
-		public MoveToEventArgs(ushort regionId, Point position, ushort heading)
+		public MoveToEventArgs(ushort regionId, int x, int y, int z, ushort heading)
 		{
 			this.regionID = regionId;
-			this.position = position;
+			this.x = x;
+			this.y = y;
+			this.z = z;
 			this.heading = heading;
 		}
 
@@ -50,13 +55,29 @@ namespace DOL.Events
 		{
 			get { return regionID; }
 		}
-		
+
 		/// <summary>
-		/// Gets the target position.
+		/// Gets the target x
 		/// </summary>
-		public Point NewPosition
+		public int X
 		{
-			get { return position; }
+			get { return x; }
+		}
+
+		/// <summary>
+		/// Gets the target y
+		/// </summary>
+		public int Y
+		{
+			get { return y; }
+		}
+
+		/// <summary>
+		/// Gets the target z
+		/// </summary>
+		public int Z
+		{
+			get { return z; }
 		}
 
 		/// <summary>

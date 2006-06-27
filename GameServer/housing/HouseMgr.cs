@@ -20,7 +20,7 @@
 using System;
 using System.Collections;
 using System.Reflection;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.GS.PacketHandler;
 using log4net;
 
@@ -30,8 +30,8 @@ namespace DOL.GS.Housing
 	{
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		public static readonly ushort MAXHOUSES = 2000; 
-		public static readonly ushort HOUSE_DISTANCE = 5120; //guessed, but i'm sure its > vis dist.
+		public const int MAXHOUSES = 2000; 
+		public const int HOUSE_DISTANCE = 5120; //guessed, but i'm sure its > vis dist.
 
 		private static Hashtable m_houselists;
 		private static Hashtable m_idlist;
@@ -44,13 +44,13 @@ namespace DOL.GS.Housing
 			foreach(RegionEntry entry in WorldMgr.GetRegionList())
 			{
 				Region reg = WorldMgr.GetRegion(entry.id);
-				if(reg!=null && reg.IsHousingEnabled)
+				if(reg!=null && reg.HousingEnabled)
 				{
-					if(!m_houselists.ContainsKey(reg))
-						m_houselists.Add(reg.RegionID, new Hashtable());
+					if(!m_houselists.ContainsKey(reg.ID))
+						m_houselists.Add(reg.ID, new Hashtable());
 
-					if(!m_idlist.ContainsKey(reg))
-						m_idlist.Add(reg, 0);
+					if(!m_idlist.ContainsKey(reg.ID))
+						m_idlist.Add(reg.ID, 0);
 
 					regions++;
 				}
@@ -64,7 +64,7 @@ namespace DOL.GS.Housing
 				if (house.Model!=0)
 				{
 					int id = -1;
-					if((id = GetUniqueID((ushort)house.RegionID))>=0)
+					if((id = GetUniqueID(house.RegionID))>=0)
 					{
 						House newHouse = new House(house);
 						newHouse.UniqueID = id;
@@ -112,14 +112,14 @@ namespace DOL.GS.Housing
 			return -1;
 		}
 
-		public static Hashtable GetHouses(Region region)
+		public static Hashtable GetHouses(ushort regionid)
 		{
-			return (Hashtable)m_houselists[region];
+			return (Hashtable)m_houselists[regionid];
 		}
 
-		public static House GetHouse(Region region, int housenumber)
+		public static House GetHouse(ushort regionid, int housenumber)
 		{
-			Hashtable hash = (Hashtable)m_houselists[region];
+			Hashtable hash = (Hashtable)m_houselists[regionid];
 			if(hash==null) return null;
 
 			return (House)hash[housenumber];
@@ -140,7 +140,7 @@ namespace DOL.GS.Housing
 
 		public static void AddHouse(House house)
 		{
-			Hashtable hash = (Hashtable)m_houselists[house.Region];
+			Hashtable hash = (Hashtable)m_houselists[house.RegionID];
 			if (hash==null) return;
 			if (hash.ContainsKey(house.HouseNumber)) return;
 			hash.Add(house.HouseNumber,house);
@@ -150,9 +150,9 @@ namespace DOL.GS.Housing
 
 		public static void RemoveHouse(House house)
 		{
-			Hashtable hash = (Hashtable)m_houselists[house.Region];
+			Hashtable hash = (Hashtable)m_houselists[house.RegionID];
 			if (hash==null) return;
-			foreach (GamePlayer player in house.Region.GetPlayerInRadius(house.Position, WorldMgr.OBJ_UPDATE_DISTANCE, false))
+			foreach (GamePlayer player in WorldMgr.GetPlayersCloseToSpot((ushort) house.RegionID, house.X, house.Y, house.Z, WorldMgr.OBJ_UPDATE_DISTANCE))
 			{
 				//player.Out.SendRemoveHouse(house);
 				player.Out.SendRemoveGarden(house);
@@ -166,7 +166,7 @@ namespace DOL.GS.Housing
 			if (house == null || player == null) return false;
 			if (house.OwnerIDs == null) return false;
 
-			return (house.OwnerIDs.IndexOf(player.Name)>=0);
+			return (house.OwnerIDs.IndexOf(player.PlayerCharacter.ObjectId)>=0);
 		}
 
 		public static void AddOwner(DBHouse house, GamePlayer player)
@@ -200,7 +200,7 @@ namespace DOL.GS.Housing
 
 			foreach(string id in ids)
 			{
-				GamePlayer character = (GamePlayer)GameServer.Database.FindObjectByKey(typeof(GamePlayer),id);
+				Character character = (Character)GameServer.Database.FindObjectByKey(typeof(Character),id);
 				if(character==null) continue;
 				owners.Add(character);
 			}

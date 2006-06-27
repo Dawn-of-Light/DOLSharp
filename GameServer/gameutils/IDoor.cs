@@ -30,15 +30,15 @@ namespace DOL.GS
 	/// <summary>
 	/// IDoor is interface for door and keepdoor
 	/// </summary>
-	public interface IDoor : IWorldPosition
+	public interface IDoor : IPoint3D
 	{
-		int Heading { get; }
-		string Name { get; }
-		byte Realm { get; }
-		int Flag { get; }
-		int DoorID { get; }
-		int ObjectID { get; }
-		eDoorState State { get; set; }
+		string Name	{get;}
+		int Flag {get;}
+		ushort Heading	{get;}
+		byte Realm {get;}
+		int DoorID	{get;}
+		int ObjectID	{get;}
+		eDoorState State {get; set;}
 		void Open();
 		void Close();
 	}

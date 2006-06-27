@@ -17,7 +17,7 @@
  *
  */
 using System;
-using DOL.GS.Database;
+using DOL.Database;
 
 namespace DOL.GS
 {
@@ -60,12 +60,12 @@ namespace DOL.GS
 		}
 		public override void DoDamage()
 		{
-			GenericItem ammo = this.Ammo[AmmoSlot] as GenericItem;
+			InventoryItem ammo = this.Ammo[AmmoSlot] as InventoryItem;
 			//todo remove ammo + spell in db and uncomment
 			//m_spellHandler.StartSpell(player);
 			base.DoDamage();//anim mut be called after damage
 		}
-		public override bool ReceiveItem(GameLiving source, GenericItem item)
+		public override bool ReceiveItem(GameLiving source, DOL.Database.InventoryItem item)
 		{
 			//todo check if bullet
 			return base.ReceiveItem (source, item);

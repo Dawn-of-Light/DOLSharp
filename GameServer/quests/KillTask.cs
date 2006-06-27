@@ -18,7 +18,7 @@
  */
 using System;
 using System.Collections;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using DOL.GS.Scripts;
@@ -162,7 +162,7 @@ namespace DOL.GS.Quests
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs)args;				
 				GameLiving target = gArgs.Target as GameLiving;
-				GenericItem item = gArgs.Item;
+				InventoryItem item = gArgs.Item;
 
 				if(player.Task.RecieverName == target.Name && item.Name == player.Task.ItemName)
 				{
@@ -239,7 +239,7 @@ namespace DOL.GS.Quests
 					if(Owners.Count > 0)
 					{
 						ArrayList dropMessages = new ArrayList();
-						GenericItem itemdrop = GenerateItem(ItemName, 1, ObjectModels[ItemIndex]);
+						InventoryItem itemdrop = GenerateItem(ItemName, 1, ObjectModels[ItemIndex]);
 						GameInventoryItem droppeditem = new GameInventoryItem(itemdrop);
 						for (int a = 0; a < Owners.Count; a++)
 						{
@@ -248,8 +248,10 @@ namespace DOL.GS.Quests
 						droppeditem.Name = itemdrop.Name;
 						dropMessages.Add(target.GetName(0, true) +" drops "+ droppeditem.GetName(1, false) +".");
 						droppeditem.Level = 1;
-						droppeditem.Position = target.Position;
-						droppeditem.Region = target.Region;
+						droppeditem.X = target.X;
+						droppeditem.Y = target.Y;
+						droppeditem.Z = target.Z;
+						droppeditem.CurrentRegion = target.CurrentRegion;
 						droppeditem.AddToWorld();
 						if(dropMessages.Count > 0)
 						{

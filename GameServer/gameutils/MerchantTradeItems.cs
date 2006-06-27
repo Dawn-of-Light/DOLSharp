@@ -20,8 +20,7 @@ using System;
 using System.Collections;
 using System.Collections.Specialized;
 using System.Reflection;
-using DOL.GS.Database;
-using NHibernate.Expression;
+using DOL.Database;
 using log4net;
 
 namespace DOL.GS
@@ -100,7 +99,7 @@ namespace DOL.GS
 		/// <param name="page">Zero-based page number</param>
 		/// <param name="slot">Zero-based slot number</param>
 		/// <param name="item">The item template to add</param>
-		public virtual bool AddTradeItem(int page, eMerchantWindowSlot slot, GenericItemTemplate item)
+		public virtual bool AddTradeItem(int page, eMerchantWindowSlot slot, ItemTemplate item)
 		{
 			lock (m_usedItemsTemplates.SyncRoot)
 			{
@@ -143,13 +142,13 @@ namespace DOL.GS
 				HybridDictionary itemsInPage = new HybridDictionary(MAX_ITEM_IN_TRADEWINDOWS);
 				if (m_itemsListID != null && m_itemsListID.Length > 0)
 				{
-					IList itemList = GameServer.Database.SelectObjects(typeof(MerchantItem), Expression.And(Expression.Eq("ItemListID", m_itemsListID),Expression.Eq("PageNumber", page)));		
+					DataObject[] itemList = GameServer.Database.SelectObjects(typeof(MerchantItem), "ItemListID = '" + m_itemsListID + "' AND PageNumber = '" + page + "'");
 					foreach (MerchantItem merchantitem in itemList)
 					{
-						GenericItemTemplate item = (GenericItemTemplate)GameServer.Database.FindObjectByKey(typeof(GenericItemTemplate), merchantitem.ItemTemplateID);
+						ItemTemplate item = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), merchantitem.ItemTemplateID);
 						if (item != null)
 						{
-							GenericItemTemplate slotItem = (GenericItemTemplate)itemsInPage[merchantitem.SlotPosition];
+							ItemTemplate slotItem = (ItemTemplate)itemsInPage[merchantitem.SlotPosition];
 							if (slotItem == null)
 							{
 								itemsInPage.Add(merchantitem.SlotPosition, item);
@@ -166,7 +165,7 @@ namespace DOL.GS
 					foreach (DictionaryEntry de in m_usedItemsTemplates)
 					{
 						if ((int)de.Key/MAX_ITEM_IN_TRADEWINDOWS == page)
-							itemsInPage[(int)de.Key] = (GenericItemTemplate)de.Value;
+							itemsInPage[(int)de.Key] = (ItemTemplate)de.Value;
 					}
 				}
 				return itemsInPage;
@@ -185,26 +184,26 @@ namespace DOL.GS
 		/// <param name="page">The item page</param>
 		/// <param name="slot">The item slot</param>
 		/// <returns>Item template or null</returns>
-		public virtual GenericItemTemplate GetItem(int page, eMerchantWindowSlot slot)
+		public virtual ItemTemplate GetItem(int page, eMerchantWindowSlot slot)
 		{
 			try
 			{
 				slot = GetValidSlot(page, slot);
 				if (slot == eMerchantWindowSlot.Invalid) return null;
 
-				GenericItemTemplate item;
+				ItemTemplate item;
 				lock (m_usedItemsTemplates.SyncRoot)
 				{
-					item = m_usedItemsTemplates[(int)slot] as GenericItemTemplate;
+					item = m_usedItemsTemplates[(int)slot] as ItemTemplate;
 					if (item != null) return item;
 				}
 
 				if (m_itemsListID != null && m_itemsListID.Length > 0)
 				{
-					MerchantItem itemToFind = (MerchantItem)GameServer.Database.SelectObject(typeof (MerchantItem), Expression.And(Expression.And(Expression.Eq("ItemListID",m_itemsListID),Expression.Eq("PageNumber",page)),Expression.Eq("SlotPosition",(int)slot)));
+					MerchantItem itemToFind = (MerchantItem)GameServer.Database.SelectObject(typeof (MerchantItem), "ItemListID = '" + m_itemsListID + "' AND PageNumber = '" + page + "' AND SlotPosition = '" + (int)slot + "'");
 					if (itemToFind != null)
 					{
-						item = (GenericItemTemplate)GameServer.Database.FindObjectByKey(typeof (GenericItemTemplate), itemToFind.ItemTemplateID);
+						item = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof (ItemTemplate), itemToFind.ItemTemplateID);
 					}
 				}
 				return item;
@@ -228,13 +227,13 @@ namespace DOL.GS
 				Hashtable allItems = new Hashtable();
 				if (m_itemsListID != null)
 				{
-					IList itemList = GameServer.Database.SelectObjects(typeof(MerchantItem), Expression.Eq("ItemListID",m_itemsListID));
+					DataObject[] itemList = GameServer.Database.SelectObjects(typeof(MerchantItem), "ItemListID = '" + m_itemsListID + "'");
 					foreach (MerchantItem merchantitem in itemList)
 					{
-						GenericItemTemplate item = (GenericItemTemplate)GameServer.Database.FindObjectByKey(typeof(GenericItemTemplate), merchantitem.ItemTemplateID);
+						ItemTemplate item = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), merchantitem.ItemTemplateID);
 						if (item != null)
 						{
-							GenericItemTemplate slotItem = (GenericItemTemplate)allItems[merchantitem.SlotPosition];
+							ItemTemplate slotItem = (ItemTemplate)allItems[merchantitem.SlotPosition];
 							if (slotItem == null)
 							{
 								allItems.Add(merchantitem.SlotPosition, item);
@@ -251,7 +250,7 @@ namespace DOL.GS
 				{
 					foreach (DictionaryEntry de in m_usedItemsTemplates)
 					{
-						allItems[(int)de.Key] = (GenericItemTemplate)de.Value;
+						allItems[(int)de.Key] = (ItemTemplate)de.Value;
 					}
 				}
 				return allItems;

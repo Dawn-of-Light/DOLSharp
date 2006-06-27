@@ -54,7 +54,7 @@ namespace DOL.GS.Scripts
 
 			// Abilities
 			player.AddAbility(SkillBase.GetAbility(Abilities.Sprint));
-			player.AddAbility(SkillBase.GetAbility(Abilities.MidArmor, (int)eArmorLevel.VeryLow));
+			player.AddAbility(SkillBase.GetAbility(Abilities.MidArmor, ArmorLevel.Cloth));
 			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Staves));
 		}
 	}

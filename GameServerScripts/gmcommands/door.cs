@@ -17,7 +17,7 @@
  *
  */
 using System;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Scripts
@@ -44,14 +44,13 @@ namespace DOL.GS.Scripts
 					return 0;
 				}
 				DBDoor door = new DBDoor();
-				Point pos = client.Player.Position;
-				door.X = pos.X;
-				door.Y = pos.Y;
-				door.Z = pos.Z;
+				door.X = client.Player.X;
+				door.Y = client.Player.Y;
+				door.Z = client.Player.Z;
 				door.Heading = client.Player.Heading;
-				door.DoorID = doorid;
+				door.InternalID = doorid;
 				GameServer.Database.AddNewObject(door);
-				client.Out.SendMessage("door created with id = " + door.DoorID, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				client.Out.SendMessage("door created with id = " + door.ObjectId, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return 1;
 			}
 			else

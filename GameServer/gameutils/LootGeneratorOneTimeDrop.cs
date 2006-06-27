@@ -20,10 +20,9 @@ using System;
 using System.Collections;
 using System.Collections.Specialized;
 using System.Reflection;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.AI.Brain;
 using DOL.GS.PacketHandler;
-using NHibernate.Expression;
 using log4net;
 
 namespace DOL.GS
@@ -63,7 +62,7 @@ namespace DOL.GS
 				m_OTDXMob = new HybridDictionary(500);
 				lock(m_OTDXMob)
 				{
-					IList m_lootOTDs=null;
+					DataObject[] m_lootOTDs=null;
 					try
 					{
 						m_lootOTDs = GameServer.Database.SelectAllObjects(typeof(DBLootOTD));
@@ -106,7 +105,7 @@ namespace DOL.GS
 				{
 					if ( (lootOTD.MinLevel < player.Level))
 					{
-						DBOTDXCharacter obj = (DBOTDXCharacter)GameServer.Database.SelectObject(typeof(DBOTDXCharacter), Expression.And(Expression.Eq("CharacterName",player.Name),Expression.Eq("LootOTD_ID",lootOTD.LootOTDID)));
+						DataObject obj = GameServer.Database.SelectObject(typeof(DBOTDXCharacter),"CharacterName = '"+GameServer.Database.Escape(player.Name)+"' AND LootOTD_ID = '"+lootOTD.ObjectId+"'");
 						if (obj != null) continue;
 
 						string[] sclass = lootOTD.SerializedClassAllowed.Split(',');
@@ -121,12 +120,12 @@ namespace DOL.GS
 						}
 						if (!classFlag) continue;
 
-						if (player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack,lootOTD.item.CreateInstance()))
+						if (player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack,new InventoryItem(lootOTD.item)))
 							player.Out.SendMessage("Your inventory is full!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 						DBOTDXCharacter OtdxChar = new DBOTDXCharacter();
 						OtdxChar.CharacterName = player.Name;
-						OtdxChar.LootOTD_ID = lootOTD.LootOTDID.ToString();
+						OtdxChar.LootOTD_ID = lootOTD.ObjectId;
 						GameServer.Database.AddNewObject(OtdxChar);
 					}
 				}

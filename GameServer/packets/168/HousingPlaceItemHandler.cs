@@ -17,7 +17,7 @@
  *
  */
 using System;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.GS.Housing;
 
 namespace DOL.GS.PacketHandler.v168
@@ -37,8 +37,8 @@ namespace DOL.GS.PacketHandler.v168
 			int xpos = packet.ReadShort(); //x for inside objs
 			int ypos = packet.ReadShort(); //y for inside objs.
 
-			GenericItem orgitem = client.Player.Inventory.GetItem((eInventorySlot) slot);
-			House house = (House) HouseMgr.GetHouse(client.Player.Region, housenumber);
+			InventoryItem orgitem = client.Player.Inventory.GetItem((eInventorySlot) slot);
+			House house = (House) HouseMgr.GetHouse(client.Player.CurrentRegionID,housenumber);
 
 			if (house == null)
 				return 1;
@@ -57,7 +57,7 @@ namespace DOL.GS.PacketHandler.v168
 
 					OutdoorItem iitem = new OutdoorItem();
 					iitem.Model = orgitem.Model;
-					iitem.BaseItem = (GenericItemTemplate) GameServer.Database.FindObjectByKey(typeof (GenericItemTemplate), orgitem.ItemID);
+					iitem.BaseItem = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), orgitem.Id_nb);
 					iitem.Position = Convert.ToByte(position);
 					iitem.Rotation = Convert.ToByte(rotation);
 
@@ -72,7 +72,7 @@ namespace DOL.GS.PacketHandler.v168
 					client.Player.Out.SendMessage("Garden Object placed. " + (30 - house.OutdoorItems.Count) + " slots remaining.", eChatType.CT_Help, eChatLoc.CL_SystemWindow);
 					client.Player.Out.SendMessage("You drop the " + orgitem.Name + " into your into your garden!", eChatType.CT_Help, eChatLoc.CL_SystemWindow);
 
-					foreach (GamePlayer player in house.Region.GetPlayerInRadius(house.Position, WorldMgr.OBJ_UPDATE_DISTANCE, false))
+					foreach (GamePlayer player in WorldMgr.GetPlayersCloseToSpot((ushort) house.RegionID, house.X, house.Y, house.Z, WorldMgr.OBJ_UPDATE_DISTANCE))
 					{
 						player.Out.SendGarden(house);
 					}
@@ -81,12 +81,12 @@ namespace DOL.GS.PacketHandler.v168
 				case 2:
 				case 3:
 
-					if ((int)orgitem.ObjectType == 51 && method == 3)
+					if (orgitem.Object_Type == 51 && method == 3)
 					{
 						client.Player.Out.SendMessage("You have to put this item on the floor, not on a wall!", eChatType.CT_Help, eChatLoc.CL_SystemWindow);
 						return 1;
 					}
-					if ((int)orgitem.ObjectType == 50 && method == 2)
+					if (orgitem.Object_Type == 50 && method == 2)
 					{
 						client.Player.Out.SendMessage("You have to put this item on a wall, not on the floor!", eChatType.CT_Help, eChatLoc.CL_SystemWindow);
 						return 1;
@@ -94,7 +94,7 @@ namespace DOL.GS.PacketHandler.v168
 
 					IndoorItem oitem = new IndoorItem();
 					oitem.Model = orgitem.Model;
-				//	oitem.Color = orgitem.Color;
+					oitem.Color = orgitem.Color;
 					oitem.X = xpos;
 					oitem.Y = ypos;
 					oitem.Rotation = 0;
@@ -103,12 +103,12 @@ namespace DOL.GS.PacketHandler.v168
 					oitem.Placemode = method;
 					oitem.BaseItem = null;
 
-					if ((int)orgitem.ObjectType == 50 || (int)orgitem.ObjectType == 51)
+					if (orgitem.Object_Type == 50 || orgitem.Object_Type == 51)
 					{
 						//its a housing item, so lets take it!
 						client.Player.Inventory.RemoveItem(orgitem);
 						//set right base item, so we can recreate it on take.
-						oitem.BaseItem = (GenericItemTemplate) GameServer.Database.FindObjectByKey(typeof (GenericItemTemplate), orgitem.ItemID);
+						oitem.BaseItem = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), orgitem.Id_nb);
 					}
 
 					DBHouseIndoorItem odbitem = oitem.CreateDBIndoorItem(housenumber);
@@ -151,7 +151,7 @@ namespace DOL.GS.PacketHandler.v168
 
 				case 4:
 
-				/*	switch (orgitem.ItemID)
+					switch (orgitem.Id_nb)
 					{
 						case "porch_deed":
 							if (house.EditPorch(true))
@@ -179,7 +179,7 @@ namespace DOL.GS.PacketHandler.v168
 							client.Player.Out.SendMessage("That would make no sense!", eChatType.CT_Help, eChatLoc.CL_SystemWindow);
 							return 1;
 
-					}*/
+					}
 
 				case 5:
 					client.Player.Out.SendMessage("No hookpoints now!", eChatType.CT_Help, eChatLoc.CL_SystemWindow);

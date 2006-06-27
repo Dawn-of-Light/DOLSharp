@@ -32,7 +32,7 @@ namespace DOL.GS.Scripts
 	{
 		public int OnCommand(GameClient client, string[] args)
 		{
-			uint plvl = (uint)client.Account.PrivLevel;
+			uint plvl = client.Account.PrivLevel;
 			bool iscmd = true;
 
 			if (args.Length > 1)

@@ -87,7 +87,7 @@ namespace DOL.GS.PacketHandler.v168
 				}
 
 				player.Out.SendMessage("You have invited " + target.Name + " to join your group.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
-				target.Out.SendDialogBox(eDialogCode.GroupInvite, (ushort)player.Client.SessionID, 0x00, 0x00, 0x00, eDialogType.YesNo, false, player.Name + " has invited you to join\n" + player.GetPronoun(1, false) + " group. Do you wish to join?");
+				target.Out.SendGroupInviteCommand(player, player.Name + " has invited you to join\n" + player.GetPronoun(1, false) + " group. Do you wish to join?");
 				target.Out.SendMessage(player.Name + " has invited you to join "+ player.GetPronoun(1, false) +" group.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 		}

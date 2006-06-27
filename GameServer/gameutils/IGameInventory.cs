@@ -1,6 +1,6 @@
 using System;
 using System.Collections;
-using DOL.GS.Database;
+using DOL.Database;
 
 namespace DOL.GS
 {
@@ -73,21 +73,24 @@ namespace DOL.GS
 	/// </summary>		
 	public interface IGameInventory
 	{
-		IDictionary		InventoryItems{ get; set; }
 		bool            LoadFromDatabase(string inventoryID);
 		bool            SaveIntoDatabase(string inventoryID);
 
-		bool			AddItem(eInventorySlot slot, GenericItem item);
-		bool            RemoveItem(GenericItem item);
-		bool			RemoveCountFromStack(StackableItem item, int count);
+		bool			AddItem(eInventorySlot slot, InventoryItem item);
+		bool			AddCountToStack(InventoryItem item, int count);
+		bool			AddTemplate(ItemTemplate template, int count, eInventorySlot minSlot, eInventorySlot maxSlot);
+		bool            RemoveItem(InventoryItem item);
+		bool			RemoveCountFromStack(InventoryItem item, int count);
+		bool			RemoveTemplate(string templateID, int count, eInventorySlot minSlot, eInventorySlot maxSlot);
 		bool            MoveItem(eInventorySlot fromSlot, eInventorySlot toSlot, int itemCount);
-		GenericItem		GetItem(eInventorySlot slot);
+		InventoryItem   GetItem(eInventorySlot slot);
 		ICollection     GetItemRange(eInventorySlot minSlot, eInventorySlot maxSlot);
 
 		void            BeginChanges();
 		void            CommitChanges();
 
 		int				CountSlots(bool countUsed, eInventorySlot minSlot, eInventorySlot maxSlot);
+		int				CountItemTemplate(string itemtemplateID, eInventorySlot minSlot, eInventorySlot maxSlot);
 		bool			IsSlotsFree(int count, eInventorySlot minSlot, eInventorySlot maxSlot);
 		
 		eInventorySlot	FindFirstEmptySlot(eInventorySlot first, eInventorySlot last);
@@ -95,12 +98,12 @@ namespace DOL.GS
 		eInventorySlot	FindFirstFullSlot(eInventorySlot first, eInventorySlot last);
 		eInventorySlot	FindLastFullSlot(eInventorySlot first, eInventorySlot last);
 
-		GenericItem		GetFirstItemByType(string type, eInventorySlot minSlot, eInventorySlot maxSlot);
-		GenericItem	    GetFirstItemByName(string name ,eInventorySlot minSlot, eInventorySlot maxSlot);
+		InventoryItem	GetFirstItemByID(string uniqueID, eInventorySlot minSlot, eInventorySlot maxSlot);
+		InventoryItem	GetFirstItemByObjectType(int objectType, eInventorySlot minSlot, eInventorySlot maxSlot);
+		InventoryItem   GetFirstItemByName(string name ,eInventorySlot minSlot, eInventorySlot maxSlot);
 
 		ICollection     VisibleItems    { get; }
 		ICollection     EquippedItems   { get; }
-		ICollection     ArmorItems		{ get; }
 		ICollection     AllItems        { get; }
 
 		int             InventoryWeight { get; }

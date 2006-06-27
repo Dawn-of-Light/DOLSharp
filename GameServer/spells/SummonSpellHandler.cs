@@ -58,7 +58,7 @@ namespace DOL.GS.Spells
 		/// </summary>
 		public override void FinishSpellCast(GameLiving target)
 		{
-			m_caster.ChangeMana(null, GameLiving.eManaChangeType.Spell, -CalculateNeededPower(target));
+			m_caster.Mana -= CalculateNeededPower(target);
 			base.FinishSpellCast(target);
 		}
 
@@ -98,22 +98,23 @@ namespace DOL.GS.Spells
 				return;
 			}
 
-			Point spawnSpot = target.GetSpotFromHeading(64);
-			spawnSpot.Z = target.Position.Z;
+			int x, y;
+			target.GetSpotFromHeading(64, out x, out y);
 			GameSpellEffect effect = CreateSpellEffect(target, effectiveness);
 			ControlledNpc controlledBrain = new ControlledNpc(player);
 
 			GameSummonedPet summoned = new GameSummonedPet(template);
 			summoned.SetOwnBrain(controlledBrain);
-			summoned.Position = spawnSpot;
-			summoned.Region = target.Region;
+			summoned.X = x;
+			summoned.Y = y;
+			summoned.Z = target.Z;
+			summoned.CurrentRegion = target.CurrentRegion;
 			summoned.Heading = (ushort)((target.Heading + 2048)%4096);
 			summoned.Realm = target.Realm;
 			summoned.CurrentSpeed = 0;
 			if (Spell.Damage < 0) summoned.Level = (byte)(target.Level * Spell.Damage * -0.01);
 			else summoned.Level = (byte)Spell.Damage;
-			if (Spell.Value > 0 && summoned.Level > Spell.Value)
-				summoned.Level = (byte)Spell.Value;
+			if(summoned.Level > Spell.Value) summoned.Level = (byte)Spell.Value;
 			summoned.AddToWorld();
 
 			GameEventMgr.AddHandler(player, GamePlayerEvent.CommandNpcRelease, new DOLEventHandler(OnNpcReleaseCommand));

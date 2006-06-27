@@ -18,10 +18,8 @@
  */
 using System;
 using System.Reflection;
-using System.Collections;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.Events;
-using NHibernate.Expression;
 using log4net;
 
 namespace DOL.GS.PacketHandler.v168
@@ -37,67 +35,71 @@ namespace DOL.GS.PacketHandler.v168
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			string charName = packet.ReadString(30);
-			GamePlayer charac = null;
-			foreach(GamePlayer currentChar in client.Account.CharactersInSelectedRealm)
-			{
-				if(currentChar.Name.ToLower().Equals(charName.ToLower()))
+			Character[] chars = client.Account.Characters;
+			if (chars == null)
+				return 0;
+			for (int i = 0; i < chars.Length; i++)
+				if (chars[i].Name.ToLower().Equals(charName.ToLower()))
 				{
-					charac = currentChar;
+					if (client.ActiveCharIndex == i)
+						client.ActiveCharIndex = -1;
+
+					if (log.IsInfoEnabled)
+						log.Info(String.Format("Deleting character {0}!", charName));
+					//Fire the deletion event before removing the char
+					GameEventMgr.Notify(DatabaseEvent.CharacterDeleted, null, new CharacterEventArgs(chars[i]));
+					//EventMgr.FireCharacterDeletion(chars[i]);
+
+					// delete items
+					try
+					{
+						DataObject[] objs = GameServer.Database.SelectObjects(typeof(InventoryItem), "OwnerID = '" + chars[i].ObjectId + "'");
+						foreach (InventoryItem item in objs)
+						{
+							GameServer.Database.DeleteObject(item);
+						}
+						GameServer.Database.WriteDatabaseTable(typeof (InventoryItem));
+					}
+					catch (Exception e)
+					{
+						if (log.IsErrorEnabled)
+							log.Error("Error deleting char items, char OID="+chars[i].ObjectId, e);
+					}
+
+					// delete quests
+					try
+					{
+						DataObject[] objs = GameServer.Database.SelectObjects(typeof(DBQuest), "CharName = '"+GameServer.Database.Escape(chars[i].Name) + "'");
+						foreach (DBQuest quest in objs)
+						{
+							GameServer.Database.DeleteObject(quest);
+						}
+						GameServer.Database.WriteDatabaseTable(typeof (DBQuest));
+					}
+					catch (Exception e)
+					{
+						if (log.IsErrorEnabled)
+							log.Error("Error deleting char quests, char OID="+chars[i].ObjectId, e);
+					}
+
+					GameServer.Database.DeleteObject(chars[i]);
+					GameServer.Database.WriteDatabaseTable(typeof (Character));
+					client.Account.Characters = null;
+					GameServer.Database.FillObjectRelations(client.Account);
+					client.Player = null;
+
+					if (client.Account.Characters == null || client.Account.Characters.Length == 0)
+					{
+						if (log.IsInfoEnabled)
+							log.Info(string.Format("Account {0} has no more chars. Realm resetted!", client.Account.Name));
+						//Client has no more characters, so the client can choose
+						//the realm again!
+						client.Account.Realm = 0;
+						GameServer.Database.SaveObject(client.Account);
+						GameServer.Database.WriteDatabaseTable(typeof (Account));
+					}
 					break;
 				}
-			}
-			
-			if (charac == null)
-				return 0;
-			
-			if (log.IsInfoEnabled)
-				log.Info(String.Format("Deleting character {0}!", charName));
-			//Fire the deletion event before removing the char
-			GameEventMgr.Notify(DatabaseEvent.CharacterDeleted, null, new CharacterEventArgs(charac));
-			
-			// delete items
-		/*	try // items should be automatically deleted by nhibernate
-			{
-				foreach (GenericItem item in charac.InventoryItems.Values)
-				{
-					GameServer.Database.DeleteObject(item);
-				}
-			}
-			catch (Exception e)
-			{
-				if (log.IsErrorEnabled)
-					log.Error("Error deleting char items, char OID="+charac.PlayerName, e);
-			}*/
-
-			// delete quests
-			/*try
-			{
-				IList objs = GameServer.Database.SelectObjects(typeof(DBQuest), Expression.Eq("CharacterID", charac.CharacterID));
-				foreach (DBQuest quest in objs)
-				{
-					GameServer.Database.DeleteObject(quest);
-				}
-			}
-			catch (Exception e)
-			{
-				if (log.IsErrorEnabled)
-					log.Error("Error deleting char quests, char OID="+charac.Name, e);
-			}*/
-
-			GameServer.Database.DeleteObject(charac);
-			client.Account.CharactersInSelectedRealm.Remove(charac);
-			client.Player = null;
-
-			if (client.Account.CharactersInSelectedRealm.Count == 0)
-			{
-				if (log.IsInfoEnabled)
-					log.Info(string.Format("Account {0} has no more chars. Realm resetted!", client.Account.AccountName));
-				//Client has no more characters, so the client can choose
-				//the realm again!
-				client.Account.Realm = eRealm.None;
-				GameServer.Database.SaveObject(client.Account);
-			}
-					
 			return 1;
 		}
 	}

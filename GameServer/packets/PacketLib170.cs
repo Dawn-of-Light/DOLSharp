@@ -48,10 +48,9 @@ namespace DOL.GS.PacketHandler
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.KeepInfo));
 
 			pak.WriteShort((ushort)keep.KeepID);
-			pak.WriteShort((ushort)keep.CurrentZone.ZoneID);//zone id not sure
-			Point pos = keep.Position;
-			pak.WriteInt((uint)pos.X);
-			pak.WriteInt((uint)pos.Y);
+			pak.WriteShort(keep.CurrentZone.ID);//zone id not sure
+			pak.WriteInt((uint)keep.X);
+			pak.WriteInt((uint)keep.Y);
 			pak.WriteShort((ushort)keep.Heading);
 			pak.WriteByte((byte)keep.Realm);
 			pak.WriteByte((byte)keep.Level);//level(not sure)
@@ -146,7 +145,7 @@ namespace DOL.GS.PacketHandler
 
 			if (component.Keep.Guild != null)
 			{
-				pak.WriteString(component.Keep.Guild.GuildName);
+				pak.WriteString(component.Keep.Guild.Name);
 			}
 			pak.WriteByte(0);
 			SendTCP(pak);
@@ -222,7 +221,7 @@ namespace DOL.GS.PacketHandler
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.QuestEntry));
 
 			pak.WriteByte((byte) index);
-			if (quest.Step == 0)
+			if (quest.Step == -1)
 			{
 				pak.WriteByte(0);
 				pak.WriteByte(0);
@@ -250,7 +249,6 @@ namespace DOL.GS.PacketHandler
 			}
 			SendTCP(pak);
 		}
-
 		public override void SendWarmapUpdate(IList list)
 		{
 			if (m_gameClient.Player==null) return;
@@ -283,9 +281,9 @@ namespace DOL.GS.PacketHandler
     			if (guild != null)
 				{
     				flag |= 0x04; // claimed
-    				name = guild.GuildName;
+    				name = guild.Name;
 				}
-				if (m_gameClient.Account.PrivLevel > ePrivLevel.Player && m_gameClient.Player.TempProperties.getObjectProperty(GamePlayer.DEBUG_MODE_PROPERTY, null) != null)
+				if (m_gameClient.Account.PrivLevel > 1 && m_gameClient.Player.TempProperties.getObjectProperty(GamePlayer.DEBUG_MODE_PROPERTY, null) != null)
                 	flag |= 0x10;
 				// flag |= 0x10; // TODO Teleport
 				// flag |= 0x08; // TODO Under siedge

@@ -63,7 +63,7 @@ namespace DOL.GS.Spells
 		/// </summary>
 		public override void FinishSpellCast(GameLiving target)
 		{
-			Caster.ChangeMana(null, GameLiving.eManaChangeType.Spell, -CalculateNeededPower(target));
+			Caster.Mana -= CalculateNeededPower(target);
 			base.FinishSpellCast(target);
 		}
 
@@ -314,7 +314,7 @@ namespace DOL.GS.Spells
 
 					m_controlledBrain.ClearAggroList();
 
-					npc.TempProperties.setProperty(GameNPC.CHARMED_TICK_PROP, npc.Region.Time);
+					npc.TempProperties.setProperty(GameNPC.CHARMED_TICK_PROP, npc.CurrentRegion.Time);
 				}
 			}
 			else

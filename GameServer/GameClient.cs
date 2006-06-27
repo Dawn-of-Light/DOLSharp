@@ -19,7 +19,7 @@
 using System;
 using System.Text;
 using System.Threading;
-using DOL.GS.Database;
+using DOL.Database;
 using System.Net;
 using System.Reflection;
 using DOL.Events;
@@ -67,6 +67,10 @@ namespace DOL
 			/// </summary>
 			protected volatile GamePlayer m_player;
 			/// <summary>
+			/// This variable holds the active charindex
+			/// </summary>
+			protected int			m_activeCharIndex;
+			/// <summary>
 			/// This variable holds the accountdata
 			/// </summary>
 			protected Account		 m_account;
@@ -86,6 +90,7 @@ namespace DOL
 			{
 				m_clientVersion = eClientVersion.VersionNotChecked;
 				m_player = null;
+				m_activeCharIndex=-1; //No character loaded yet!
 			}
 
 			/// <summary>
@@ -179,13 +184,68 @@ namespace DOL
 			}
 
 			/// <summary>
+			/// Loads a player from the DB
+			/// </summary>
+			/// <param name="accountindex">Index of the character within the account</param>
+			public void LoadPlayer(int accountindex)
+			{
+				m_activeCharIndex = accountindex;
+				GamePlayer player = null;
+				m_player = null;
+				Character car = m_account.Characters[m_activeCharIndex];
+
+				Assembly gasm = Assembly.GetAssembly(typeof(GameServer));
+
+				if(car.ClassType!=null && car.ClassType.Length>0)
+				{
+					try
+					{
+						player = (GamePlayer)gasm.CreateInstance(car.ClassType, false, BindingFlags.CreateInstance, null, new object[] { this, m_account.Characters[m_activeCharIndex] }, null, null);
+					}
+					catch (Exception e)
+					{
+						if (log.IsErrorEnabled)
+							log.Error("LoadPlayer", e);
+					}
+					if(player==null)
+					{
+						foreach (Assembly asm in DOL.GS.Scripts.ScriptMgr.Scripts)
+						{
+							try
+							{
+								player = (GamePlayer)asm.CreateInstance(car.ClassType, false, BindingFlags.CreateInstance, null, new object[] { this, m_account.Characters[m_activeCharIndex] }, null, null);
+							}
+							catch (Exception e)
+							{
+								if (log.IsErrorEnabled)
+									log.Error("LoadPlayer", e);
+							}
+							if (player != null)
+								break;
+						}
+					}
+					if(player==null)
+					{
+						player = new GamePlayer(this,m_account.Characters[m_activeCharIndex]);
+					}
+				} 
+				else
+				{
+					player = new GamePlayer(this,m_account.Characters[m_activeCharIndex]);
+				}
+				Thread.MemoryBarrier();
+				m_player = player;
+				GameEventMgr.Notify(GameClientEvent.PlayerLoaded,this);
+			}
+
+			/// <summary>
 			/// Saves a player to the DB
 			/// </summary>
 			public void SavePlayer()
 			{
 				try
 				{
-					if(m_player!=null)
+					if(m_activeCharIndex!=-1 && m_player!=null)
 					{
 						m_player.SaveIntoDatabase();
 					}
@@ -203,7 +263,7 @@ namespace DOL
 			protected void OnLinkdeath()
 			{
 				if (log.IsDebugEnabled)
-					log.Debug("Linkdeath called ("+Account.AccountName+")  client state="+ClientState);
+					log.Debug("Linkdeath called ("+Account.Name+")  client state="+ClientState);
 
 				//If we have no sessionid we simply disconnect
 				if(m_sessionID==0 || Player==null)
@@ -212,18 +272,10 @@ namespace DOL
 					return;
 				}
 
-				try
-				{
-					ClientState = eClientState.Linkdead;
-					//If we have a good sessionid, we won't
-					//remove the client yet!
-					Player.OnLinkdeath();
-				}
-				catch(Exception e)
-				{
-					log.Error("OnLinkdeath()", e);
-					Quit();
-				}
+				ClientState = eClientState.Linkdead;
+				//If we have a good sessionid, we won't
+				//remove the client yet!
+				Player.OnLinkdeath();
 			}
 
 
@@ -272,9 +324,9 @@ namespace DOL
 							if (log.IsInfoEnabled)
 							{
 								if (m_udpEndpoint!=null)
-									log.Info("(" + m_udpEndpoint.Address.ToString() + ") " + Account.AccountName + " just disconnected!");
+									log.Info("(" + m_udpEndpoint.Address.ToString() + ") " + Account.Name + " just disconnected!");
 								else
-									log.Info("(" + TcpEndpoint + ") " + Account.AccountName + " just disconnected!");
+									log.Info("(" + TcpEndpoint + ") " + Account.Name + " just disconnected!");
 							}
 						}
 					}
@@ -354,6 +406,15 @@ namespace DOL
 					m_player = value;
 					GameEventMgr.Notify(GameClientEvent.PlayerLoaded, this); // hmm seems not right
 				}
+			}
+
+			/// <summary>
+			/// Gets or sets the character index for the player currently being used
+			/// </summary>
+			public int ActiveCharIndex
+			{
+				get { return m_activeCharIndex; }
+				set { m_activeCharIndex=value; }
 			}
 
 			/// <summary>
@@ -507,7 +568,7 @@ namespace DOL
 					.Append(" state:").Append(ClientState.ToString())
 					.Append(" IP:").Append(TcpEndpoint)
 					.Append(" session:").Append(SessionID)
-					.Append(" acc:").Append(Account == null ? "null" : Account.AccountName)
+					.Append(" acc:").Append(Account == null ? "null" : Account.Name)
 					.Append(" char:").Append(Player == null ? "null" : Player.Name)
 					.Append(" class:").Append(Player == null ? "null" : Player.CharacterClass.ID.ToString())
 					.ToString();

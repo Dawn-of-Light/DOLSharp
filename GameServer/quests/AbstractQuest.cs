@@ -20,7 +20,7 @@ using System;
 using System.Collections.Specialized;
 using System.Reflection;
 using System.Text;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using DOL.GS.Scripts;
@@ -39,78 +39,157 @@ namespace DOL.GS.Quests
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		#region Declaraction
-
-		/// <summary>
-		/// The unique active quest identifier in the db
-		/// </summary>
-		protected int m_id;
-
-		/// <summary>
-		/// The actual quest step
-		/// </summary>
-		protected byte m_step;
-
 		/// <summary>
 		/// The player doing the quest
 		/// </summary>
-		protected GamePlayer m_questPlayer;
+		protected GamePlayer m_questPlayer = null;
+		/// <summary>
+		/// The quest database object, storing the information for the player
+		/// and the quest. Eg. QuestStep etc.
+		/// </summary>
+		private DBQuest m_dbQuest = null;
 
 		/// <summary>
-		/// Gets or sets the unique active quest identifier in the db
-		/// </summary>
-		public int AbstractQuestID
+		/// Constructs a new empty Quest
+		/// </summary>		
+		public AbstractQuest()
 		{
-			get	{ return m_id; }
-			set	{ m_id = value; }
 		}
 
 		/// <summary>
-		/// Gets or Sets the current step of the quest.
+		/// Constructs a new Quest
 		/// </summary>
-		public virtual byte Step
+		/// <param name="questingPlayer">The player doing this quest</param>
+		public AbstractQuest(GamePlayer questingPlayer) : this(questingPlayer, 1)
 		{
-			get { return m_step; }
-			set { m_step = value; }
 		}
 
 		/// <summary>
-		/// Gets or sets the player doing the quest
+		/// Constructs a new Quest
 		/// </summary>
-		public GamePlayer QuestPlayer
+		/// <param name="questingPlayer">The player doing this quest</param>
+		/// <param name="step">The current step the player is on</param>
+		public AbstractQuest(GamePlayer questingPlayer,int step)
 		{
-			get	{ return m_questPlayer; }
-			set	{ m_questPlayer = value; }
+			m_questPlayer = questingPlayer;
+			
+			DBQuest dbQuest = new DBQuest();
+			dbQuest.CharName = questingPlayer.Name;
+			dbQuest.Name = GetType().FullName;
+			dbQuest.Step = step;
+			m_dbQuest = dbQuest;
+			SaveIntoDatabase();
+		}
+
+		/// <summary>
+		/// Constructs a new Quest from a database Object
+		/// </summary>
+		/// <param name="questingPlayer">The player doing the quest</param>
+		/// <param name="dbQuest">The database object</param>
+		public AbstractQuest(GamePlayer questingPlayer, DBQuest dbQuest)
+		{
+			m_questPlayer = questingPlayer;
+			m_dbQuest = dbQuest;
+			ParseCustomProperties();
+			SaveIntoDatabase();
+		}
+
+		/// <summary>
+		/// Loads a quest from the databaseobject and assigns it to a player
+		/// </summary>
+		/// <param name="targetPlayer">Player to assign the loaded quest</param>
+		/// <param name="dbQuest">Quest to load</param>
+		/// <returns>The created quest</returns>
+		public static AbstractQuest LoadFromDatabase(GamePlayer targetPlayer, DBQuest dbQuest)
+		{
+			Type questType = null;
+			foreach (Assembly asm in ScriptMgr.Scripts)
+			{
+				questType = asm.GetType(dbQuest.Name);
+				if (questType != null)
+					break;
+			}
+			if(questType==null)
+				questType = Assembly.GetAssembly(typeof(GameServer)).GetType(dbQuest.Name);
+			if(questType==null)
+			{
+				if (log.IsErrorEnabled)
+					log.Error("Could not find quest: "+dbQuest.Name+"!");
+				return null;
+			}
+			return (AbstractQuest)Activator.CreateInstance(questType, new object[] { targetPlayer, dbQuest });
+		}
+
+		/// <summary>
+		/// Saves this quest into the database
+		/// </summary>
+		public virtual void SaveIntoDatabase()
+		{
+			if(m_dbQuest.IsValid)
+				GameServer.Database.SaveObject(m_dbQuest);
+			else
+				GameServer.Database.AddNewObject(m_dbQuest);
+		}
+		  
+		/// <summary>
+		/// Deletes this quest from the database
+		/// </summary>
+		public virtual void DeleteFromDatabase()
+		{
+			if(!m_dbQuest.IsValid) return;
+
+			DBQuest dbQuest = (DBQuest) GameServer.Database.FindObjectByKey(typeof(DBQuest), m_dbQuest.ObjectId);
+			if(dbQuest!=null)
+				GameServer.Database.DeleteObject(dbQuest);
+		}
+
+		/// <summary>
+		/// Retrieves how much time player can do the quest
+		/// </summary>
+		public virtual int MaxQuestCount
+		{
+			get { return 1; }
 		}
 
 		/// <summary>
 		/// Retrieves the name of the quest
 		/// </summary>
-		public abstract string Name
+		public virtual string Name
 		{
-			get;
+			get { return "QUEST NAME UNDEFINED!"; }
 		}
 
 		/// <summary>
 		/// Retrieves the description for the current quest step
 		/// </summary>
-		public abstract string Description
+		public virtual string Description
 		{
-			get;
+			get { return "QUEST DESCRIPTION UNDEFINED!"; }
 		}
 
-		#endregion
-
-		#region Function
 		/// <summary>
-		/// Change the Quest Step, it will change the 
-		/// description and also update the player quest list!
+		/// Gets or Sets the current step of the quest.
+		/// Changing the Quest Step will propably change the 
+		/// description and also update the player quest list and
+		/// store the changes in the database!
 		/// </summary>
-		public virtual void ChangeQuestStep(byte newStep)
+		public virtual int Step
 		{
-			m_step = newStep; 
-			m_questPlayer.Out.SendQuestUpdate(this);
+			get { return m_dbQuest.Step; }
+			set 
+			{ 
+				m_dbQuest.Step = value; 
+				SaveIntoDatabase();
+				m_questPlayer.Out.SendQuestUpdate(this);
+			}
 		}
+
+		/// <summary>
+		/// This method needs to be implemented in each quest.
+		/// This method checks if a player qualifies for this quest
+		/// </summary>
+		/// <returns>true if qualified, false if not</returns>
+		public abstract bool CheckQuestQualification(GamePlayer player);
 
 		/// <summary>
 		/// Called to finish the quest.
@@ -118,67 +197,24 @@ namespace DOL.GS.Quests
 		/// </summary>
 		public virtual void FinishQuest()
 		{
-			m_step = 0; // tag this quest as finished
+			Step = -1; // -1 indicates finished or aborted quests etc, they won't show up in the list
 			m_questPlayer.Out.SendQuestListUpdate();
 			m_questPlayer.Out.SendMessage("You finish the "+Name+" quest!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 
-			m_questPlayer.ActiveQuests.Remove(this);
-			if(AbstractQuestID != 0) GameServer.Database.DeleteObject(this);
-			
-			bool isNewQuestFinished = true;
-			foreach(FinishedQuest quest in m_questPlayer.FinishedQuests)
-			{
-				if(quest.FinishedQuestType.Equals(GetType()))
-				{
-					quest.Count ++;
-					isNewQuestFinished = false;
-					break;
-				}
-			}
-			
-			if(isNewQuestFinished)
-			{
-				FinishedQuest newFinishedQuest = new FinishedQuest();
-				newFinishedQuest.FinishedQuestType = GetType();
-				newFinishedQuest.Count = 1;
-				m_questPlayer.FinishedQuests.Add(newFinishedQuest);
-			}
-
-			//Update all npc in the visibility range
-			foreach (GameNPC npc in m_questPlayer.GetNPCsInRadius(WorldMgr.VISIBILITY_DISTANCE))
-			{
-				m_questPlayer.Out.SendNPCsQuestEffect(npc, QuestMgr.CanGiveOneQuest(npc, m_questPlayer));
-			}
+			// move quest from active list to finished list...
+			m_questPlayer.QuestList.Remove(this);
+			m_questPlayer.QuestListFinished.Add(this);
 		}
 
 		/// <summary>
 		/// Called to abort the quest and remove it from the database!
 		/// </summary>
-		public virtual void CheckPlayerAbortQuest(GamePlayer player, byte response)
-		{
-			if(response == 0x01)
-			{
-				AbortQuest();
-			}
-		}
-
-		/// <summary>
-		/// Aborts the quest and removes it from the database
-		/// </summary>
 		public virtual void AbortQuest()
 		{
-			m_step = 0; // tag this quest as finished
+			Step = -1;
+			m_questPlayer.QuestList.Remove(this);
+			DeleteFromDatabase();
 			m_questPlayer.Out.SendQuestListUpdate();
-			m_questPlayer.Out.SendMessage("You abort the " + Name + " quest!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-
-			m_questPlayer.ActiveQuests.Remove(this);
-			if (AbstractQuestID != 0) GameServer.Database.DeleteObject(this);
-
-			//Update all npc in the visibility range
-			foreach (GameNPC npc in m_questPlayer.GetNPCsInRadius(WorldMgr.VISIBILITY_DISTANCE))
-			{
-				m_questPlayer.Out.SendNPCsQuestEffect(npc, QuestMgr.CanGiveOneQuest(npc, m_questPlayer));
-			}
 		}
 
 		/// <summary>
@@ -192,7 +228,105 @@ namespace DOL.GS.Quests
 		/// <param name="args">The event arguments</param>
 		public abstract void Notify(DOLEvent e, object sender, EventArgs args);
 
-		#endregion
+		
+		/// <summary>
+		/// This HybridDictionary holds all the custom properties of this quest
+		/// </summary>
+		protected readonly HybridDictionary m_customProperties = new HybridDictionary();
+		
+		/// <summary>
+		/// This method parses the custom properties string of the m_dbQuest
+		/// into the HybridDictionary for easier use and access
+		/// </summary>
+		public void ParseCustomProperties()
+		{
+			if(m_dbQuest.CustomPropertiesString == null)
+				return;
 
+			lock(m_customProperties)
+			{
+				m_customProperties.Clear();
+				string[] properties = m_dbQuest.CustomPropertiesString.Split(';');
+				foreach(string property in properties)
+				if(property.Length>0)
+				{
+					string[] values = property.Split('=');
+					m_customProperties[values[0]] = values[1];
+				}
+			}
+		}
+
+		/// <summary>
+		/// This method sets a custom Property to a specific value
+		/// </summary>
+		/// <param name="key">The name of the property</param>
+		/// <param name="value">The value of the property</param>
+		public void SetCustomProperty(string key, string value)
+		{
+			if(key==null)
+				throw new ArgumentNullException("key");
+			if(value==null)
+				throw new ArgumentNullException("value");
+
+			//Make the string safe
+			key = key.Replace(';',',');
+			key = key.Replace('=','-');
+			value = value.Replace(';',',');
+			value = value.Replace('=','-');
+			lock(m_customProperties)
+			{
+				m_customProperties[key]=value;
+			}
+			SaveCustomProperties();
+		}
+
+		/// <summary>
+		/// Saves the custom properties into the database
+		/// </summary>
+		protected void SaveCustomProperties()
+		{
+			StringBuilder builder = new StringBuilder();
+			lock(m_customProperties)
+			{
+				foreach(string hKey in m_customProperties.Keys)
+				{
+					builder.Append(hKey);
+					builder.Append("=");
+					builder.Append(m_customProperties[hKey]);
+					builder.Append(";");
+				}
+			}
+			m_dbQuest.CustomPropertiesString = builder.ToString();
+			SaveIntoDatabase();
+		}
+		
+		/// <summary>
+		/// Removes a custom property from the database
+		/// </summary>
+		/// <param name="key">The key name of the property</param>
+		public void RemoveCustomProperty(string key)
+		{
+			if(key==null)
+				throw new ArgumentNullException("key");
+
+			lock(m_customProperties)
+			{
+				m_customProperties.Remove(key);
+			}
+			SaveCustomProperties();
+		}
+
+		/// <summary>
+		/// This method retrieves a custom property from the database
+		/// </summary>
+		/// <param name="key">The property key</param>
+		/// <returns>The property value</returns>
+		public string GetCustomProperty(string key)
+		{
+			if(key==null)
+				throw new ArgumentNullException("key");
+
+			return (string)m_customProperties[key];
+		}
 	}
 }

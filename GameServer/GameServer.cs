@@ -23,15 +23,16 @@ using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
 using System.Threading;
+using DOL.Database;
+using DOL.Database.Attributes;
+using DOL.Database.Connection;
 using DOL.Events;
-using DOL.GS.Database;
+using DOL.GS.DatabaseConverters;
 using DOL.GS.Housing;
-using DOL.GS.JumpPoints;
 using DOL.GS.PacketHandler;
 using DOL.GS.PlayerTitles;
 using DOL.GS.Scripts;
 using DOL.GS.ServerRules;
-using DOL.GS.SpawnGenerators;
 using DOL.Config;
 using log4net;
 using log4net.Config;
@@ -87,6 +88,11 @@ namespace DOL
 			/// Database instance
 			/// </summary>
 			protected ObjectDatabase m_database = null;
+
+			/// <summary>
+			/// Contains a list of invalid names
+			/// </summary>
+			protected ArrayList m_invalidNames = new ArrayList();
 
 			/// <summary>
 			/// Holds instance of current server rules
@@ -162,13 +168,21 @@ namespace DOL
 			/// </summary>
 			public int SaveInterval
 			{
-				get { return Configuration.DBSaveInterval; }
+				get { return Configuration.SaveInterval; }
 				set
 				{
-					Configuration.DBSaveInterval = value;
+					Configuration.SaveInterval = value;
 					if (m_timer != null)
 						m_timer.Change(value*MINUTE_CONV, Timeout.Infinite);
 				}
+			}
+
+			/// <summary>
+			/// Gets an array of invalid player names
+			/// </summary>
+			public ArrayList InvalidNames
+			{
+				get { return m_invalidNames; }
 			}
 
 			/// <summary>
@@ -184,7 +198,7 @@ namespace DOL
 
 			#endregion
 
-			#region CreateInstance
+			#region Initialization
 
 			/// <summary>
 			/// Creates the gameserver instance
@@ -193,7 +207,67 @@ namespace DOL
 			public static void CreateInstance(GameServerConfiguration config)
 			{
 				//Only one intance
-				if(Instance==null) m_instance = new GameServer(config);
+				if(Instance!=null)
+					return;
+
+				//Try to find the log.config file, if it doesn't exist
+				//we create it
+				FileInfo logConfig = new FileInfo(config.LogConfigFile);
+				if(!logConfig.Exists)
+				{
+					ResourceUtil.ExtractResource(logConfig.Name,logConfig.FullName);
+				}
+				//Configure and watch the config file
+				XmlConfigurator.ConfigureAndWatch(logConfig);
+				//Create the instance
+				m_instance = new GameServer(config);
+			}
+
+			/// <summary>
+			/// Loads an array of invalid names
+			/// </summary>
+			public void LoadInvalidNames()
+			{
+				try
+				{
+					m_invalidNames.Clear();
+
+					if (File.Exists(Configuration.InvalidNamesFile))
+					{
+						using (StreamReader file = File.OpenText(Configuration.InvalidNamesFile))
+						{
+							string line = null;
+							while ((line = file.ReadLine()) != null)
+							{
+								if (line[0] == '#')
+								{
+									continue;
+								}
+
+								m_invalidNames.Add(line.ToLower());
+							}
+
+							file.Close();
+						}
+					}
+					else
+					{
+						using (StreamWriter file = File.CreateText(Configuration.InvalidNamesFile))
+						{
+							file.WriteLine("#This file contains invalid name segments.");
+							file.WriteLine("#If a player's name contains any portion of a segment it is rejected.");
+							file.WriteLine("#Example: if a segment is \"bob\" then the name PlayerBobIsCool would be rejected");
+							file.WriteLine("#The # symbol at the beginning of a line means a comment and will not be read");
+							file.Flush();
+							file.Close();
+						}
+					}
+				}
+				catch (Exception e)
+				{
+					if (log.IsErrorEnabled)
+						log.Error("LoadInvalidNames", e);
+				}
 			}
 
 			#endregion
@@ -230,10 +304,6 @@ namespace DOL
 			{
 				try
 				{
-					m_pudpbuf = new byte[MAX_UDPBUF];
-					m_udpReceiveCallback = new AsyncCallback(RecvFromCallback);
-					m_udpSendCallback = new AsyncCallback(SendToCallback);
-
 					//open our udp socket
 					m_udplisten = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 					m_udplisten.Bind(new IPEndPoint(Configuration.UDPIp, Configuration.UDPPort));
@@ -253,7 +323,7 @@ namespace DOL
 			/// <summary>
 			/// Holds udp receive callback delegate
 			/// </summary>
-			protected AsyncCallback m_udpReceiveCallback;
+			protected readonly AsyncCallback m_udpReceiveCallback;
 
 			/// <summary>
 			/// UDP event handler. Called when a UDP packet is waiting to be read
@@ -355,7 +425,7 @@ namespace DOL
 			/// <summary>
 			/// Holds the async UDP send callback
 			/// </summary>
-			protected AsyncCallback m_udpSendCallback;
+			protected readonly AsyncCallback m_udpSendCallback;
 
 			/// <summary>
 			/// Sends a UDP packet
@@ -376,24 +446,13 @@ namespace DOL
 			/// <param name="clientEndpoint">Address of receiving client</param>
 			public void SendUDP(byte[] bytes, int count, EndPoint clientEndpoint, AsyncCallback callback)
 			{
-				try
-				{
-					int start = Environment.TickCount;
+				int start = Environment.TickCount;
 
-					m_udplisten.BeginSendTo(bytes, 0, count, SocketFlags.None, clientEndpoint, callback, m_udplisten);
+				m_udplisten.BeginSendTo(bytes, 0, count, SocketFlags.None, clientEndpoint, callback, m_udplisten);
 
-					int took = Environment.TickCount - start;
-					if (took > 100 && log.IsWarnEnabled)
-						log.WarnFormat("m_udplisten.BeginSendTo took {0}ms! (UDP to {1})", took, clientEndpoint.ToString());
-				}
-				catch (SocketException)
-				{
-				}
-				catch (Exception e)
-				{
-					if (log.IsErrorEnabled)
-						log.Error("SendUDP", e);
-				}
+				int took = Environment.TickCount - start;
+				if (took > 100 && log.IsWarnEnabled)
+					log.WarnFormat("m_udplisten.BeginSendTo took {0}ms! (UDP to {1})", took, clientEndpoint.ToString());
 			}
 
 			/// <summary>
@@ -436,19 +495,10 @@ namespace DOL
 
 				AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
 
-
 				//---------------------------------------------------------------
-				//Try to init log4net (must be do first)
-				if(!InitComponent(InitLog4Net(), "InitLog4Net()"))
+				//Check and convert the database version if older that current
+				if (!CheckDatabaseVersion())
 					return false;
-
-				if (log.IsDebugEnabled)
-				{
-					log.Debug("Current directory is: "+Directory.GetCurrentDirectory());
-					log.Debug("Gameserver root directory is: "+Configuration.RootDirectory);
-					log.Debug("Changing directory to root directory");
-				}				
-				Directory.SetCurrentDirectory(Configuration.RootDirectory);
 
 				//---------------------------------------------------------------
 				//Try to init the server port
@@ -463,21 +513,6 @@ namespace DOL
 				//---------------------------------------------------------------
 				//Try to start the udp port
 				if (!InitComponent(StartUDP(), "StartUDP()"))
-					return false;
-
-				//---------------------------------------------------------------
-				//Try to compile the Scripts
-				if (!InitComponent(RecompileScripts(), "Script compilation"))
-					return false;
-
-				//---------------------------------------------------------------
-				//Try to initialize the database after the script compilation
-				if (!InitComponent(InitDB(), "Database Initialization"))
-					return false;
-
-				//---------------------------------------------------------------
-				//Try to initialize the script components
-				if (!InitComponent(StartScriptComponents(), "Script components"))
 					return false;
 
 				//---------------------------------------------------------------
@@ -499,6 +534,21 @@ namespace DOL
 				if (!InitComponent(NpcTemplateMgr.Init(), "Npc Templates Manager"))
 					return false;
 
+				//---------------------------------------------------------------
+				//Try to initialize the WorldMgr in early state
+				RegionData[] regionsData;
+				if (!InitComponent(WorldMgr.EarlyInit(out regionsData), "World Manager PreInitialization"))
+					return false;
+
+				//---------------------------------------------------------------
+				//Try to compile the Scripts
+				if (!InitComponent(RecompileScripts(), "Script compilation"))
+					return false;
+
+				//---------------------------------------------------------------
+				//Try to initialize the script components
+				if (!InitComponent(StartScriptComponents(), "Script components"))
+					return false;
 
 				//---------------------------------------------------------------
 				//Load all faction managers
@@ -512,9 +562,10 @@ namespace DOL
 
 				//---------------------------------------------------------------
 				//Try to initialize the WorldMgr
-				if (!InitComponent(WorldMgr.Init(), "World Manager Initialization"))
+				if (!InitComponent(WorldMgr.Init(regionsData), "World Manager Initialization"))
 					return false;
-				
+				regionsData = null;
+
 				//---------------------------------------------------------------
 				//Load the house manager
 				if (!InitComponent(HouseMgr.Start(), "House Manager"))
@@ -527,16 +578,11 @@ namespace DOL
 
 				//---------------------------------------------------------------
 				//Load the area manager
-				if (!InitComponent(AreaMgr.LoadAllAreas(), "AreaMgr"))
+				if (!AreaMgr.LoadAllAreas())
 					return false;
 
 				//---------------------------------------------------------------
-				//Load the jump point manager
-				if (!InitComponent(JumpPointMgr.LoadAllJumpPoints(), "JumpPointMgr"))
-					return false;
-
-				//---------------------------------------------------------------
-				//Enable PlayerSave timer now
+				//Enable Worldsave timer now
 				if (m_timer != null)
 				{
 					m_timer.Change(Timeout.Infinite, Timeout.Infinite);
@@ -544,13 +590,14 @@ namespace DOL
 				}
 				m_timer = new Timer(new TimerCallback(SaveTimerProc), null, SaveInterval*MINUTE_CONV, Timeout.Infinite);
 				if (log.IsInfoEnabled)
-					log.Info("Player save timer: true");
-				 
+					log.Info("World save timer: true");
+
 				//---------------------------------------------------------------
 				//Load all guilds
-				if (!InitComponent(GuildMgr.LoadAllGuilds(), "GuildMgr"))
-					return false;
-				
+				GuildMgr.LoadAllGuilds();
+				if (log.IsInfoEnabled)
+					log.Info("GuildMgr initialized: true");
+
 				//---------------------------------------------------------------
 				//Load the keep manager
 				if (!InitComponent(KeepMgr.Load(), "Keep Manager"))
@@ -576,12 +623,6 @@ namespace DOL
 				if (!InitComponent(PlayerTitleMgr.Init(), "Player Titles Manager"))
 					return false;
 
-                //---------------------------------------------------------------
-				//Load pspawn generator manager
-                //if (!InitComponent(SpawnGeneratorMgr.Init(), "Spawn Generator Manager"))
-				//	return false;
-                // load in each region now.
-                
 				//---------------------------------------------------------------
 				//Notify our scripts that everything went fine!
 				GameEventMgr.Notify(ScriptEvent.Loaded);
@@ -679,6 +720,100 @@ namespace DOL
 			}
 
 			/// <summary>
+			/// Checks and convers database to newer versions
+			/// </summary>
+			/// <returns>true if all went fine, false if errors</returns>
+			protected virtual bool CheckDatabaseVersion()
+			{
+				const string versionKey = "DatabaseVersion";
+				const string errorKey = "LastError";
+
+				XMLConfigFile xmlConfig = new XMLConfigFile();
+				FileInfo versionFile = new FileInfo("./config/DatabaseVersion.xml");
+				int currentVersion = 1;
+
+				try
+				{
+					log.Info("Checking database version...");
+
+					if (versionFile.Exists)
+					{
+						xmlConfig = XMLConfigFile.ParseXMLFile(versionFile);
+						currentVersion = xmlConfig[versionKey].GetInt();
+					}
+
+					if (currentVersion < 0)
+					{
+						log.FatalFormat("There were errors converting database to version {0}. Please inspect the problem and change the version number to a positive value in {1}", -(currentVersion-1), versionFile.Name);
+						string lastError = xmlConfig[errorKey].GetString(null);
+						if (lastError != null)
+							log.FatalFormat("last error:\n{0}", lastError);
+						return false;
+					}
+
+					SortedList convertersByVersion = new SortedList();
+					foreach (Type type in typeof(GameServer).Assembly.GetTypes())
+					{
+						if (!type.IsClass) continue;
+						if (!typeof(IDatabaseConverter).IsAssignableFrom(type)) continue;
+						object[] attributes = type.GetCustomAttributes(typeof(DatabaseConverterAttribute), false);
+						if (attributes.Length <= 0) continue;
+						DatabaseConverterAttribute attr = (DatabaseConverterAttribute)attributes[0];
+
+						if (convertersByVersion.ContainsKey(attr.TargetVersion))
+						{
+							log.ErrorFormat("{0}: converter to version {1} is already defined!", type.FullName, attr.TargetVersion);
+							return false;
+						}
+						if (attr.TargetVersion < 1)
+						{
+							log.ErrorFormat("{0}: converter version is {1}, should be higher than zero!", type.FullName, attr.TargetVersion);
+							return false;
+						}
+						object instance = Activator.CreateInstance(type);
+						convertersByVersion.Add(attr.TargetVersion, instance);
+					}
+
+					int prevVersion = 1;
+					foreach (DictionaryEntry entry in convertersByVersion)
+					{
+						IDatabaseConverter converter = (IDatabaseConverter)entry.Value;
+						int version = (int)entry.Key;
+						if (prevVersion + 1 != version)
+						{
+							log.ErrorFormat("{0}: gap between database converters (prev converter version = {1}, current converter version = {2})", converter.GetType().FullName, prevVersion, version);
+							return false;
+						}
+						prevVersion = version;
+					}
+
+					for (int i = currentVersion+1;; i++)
+					{
+						IDatabaseConverter conv = (IDatabaseConverter)convertersByVersion[i];
+						if (conv == null)
+							break;
+
+						log.InfoFormat("Converting database to version {0}...", i);
+						conv.ConvertDatabase();
+
+						xmlConfig[versionKey].Set(i);
+						versionFile.Refresh();
+						xmlConfig.Save(versionFile);
+					}
+					return true;
+				}
+				catch (Exception e)
+				{
+					log.Error("Error checking/converting database version:", e);
+					xmlConfig[versionKey].Set(-Math.Abs(currentVersion));
+					xmlConfig[errorKey].Set(e.ToString());
+					versionFile.Refresh();
+					xmlConfig.Save(versionFile);
+					return false;
+				}
+			}
+
+			/// <summary>
 			/// Prints out some text info on component initialisation
 			/// and stops the server again if the component failed
 			/// </summary>
@@ -751,10 +886,16 @@ namespace DOL
 				//unload all weatherMgr
 				WeatherMgr.Unload();
 
-				//Save all players
+				//Stop the WorldMgr, save all players
+				//WorldMgr.SaveToDatabase();
 				SaveTimerProc(null);
 
 				WorldMgr.Exit();
+
+
+				//Save the database
+				if (m_database != null)
+					m_database.WriteDatabaseTables();
 
 				m_serverRules = null;
 
@@ -850,29 +991,7 @@ namespace DOL
 
 			#endregion
 
-			#region Log4Net
-
-			/// <summary>
-			/// Initializes Log4Net
-			/// </summary>
-			/// <returns>True if the Log4Net was successfully initialized</returns>
-			public bool InitLog4Net()
-			{
-				//Try to find the log.config file, if it doesn't exist we create it
-				FileInfo logConfig = new FileInfo(Configuration.LogConfigFile);
-				if(!logConfig.Exists)
-				{
-					ResourceUtil.ExtractResource(logConfig.Name,logConfig.FullName);
-				}
-				//Configure and watch the config file
-				XmlConfigurator.ConfigureAndWatch(logConfig);
-				
-				m_gmLog = LogManager.GetLogger(Configuration.GMActionsLoggerName);
-				m_cheatLog = LogManager.GetLogger(Configuration.CheatLoggerName);
-
-				return true;
-			}
-
+			#region Logging
 			/// <summary>
 			/// Writes a line to the gm log file
 			/// </summary>
@@ -903,67 +1022,61 @@ namespace DOL
 			{
 				if (m_database == null)
 				{
+					DataConnection con = new DataConnection(Configuration.DBType, Configuration.DBConnectionString);
+					m_database = new ObjectDatabase(con);
 					try
 					{
-						if (log.IsInfoEnabled)
-							log.Info("Loading database configuration ...");
-			
-						//Try to find the databaseconfig file, if it doesn't exist we create it
-						if(!File.Exists(Configuration.DatabaseConfigFile))
+						//We will search our assemblies for DataTables by reflection so 
+						//it is not neccessary anymore to register new tables with the 
+						//server, it is done automatically!
+						foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
 						{
-							ResourceUtil.ExtractResource(new FileInfo(Configuration.DatabaseConfigFile).Name, Configuration.DatabaseConfigFile);
-						}
-						m_database = new ObjectDatabase(Configuration.DatabaseConfigFile); // Open the connection to the database
-					}
-					catch (Exception e)
-					{
-						if (log.IsErrorEnabled)
-							log.Error("Error connecting to database", e);
-						return false;
-					}
-
-					try
-					{
-						if(Configuration.DBAutoCreate)
-						{
-							if (log.IsInfoEnabled)
-								log.Info("Creating database tables ...");
-			
-							m_database.CreateDatabaseStructure(Configuration.DatabaseConfigFile);
-						}
-						else
-						{
-							if (log.IsInfoEnabled)
-								log.Info("Testing actual database structure ...");
-			
-							// Test the database structure
-							ArrayList errors = new ArrayList();
-							if(!m_database.TestDatabaseStructure(Configuration.DatabaseConfigFile, errors))
+							// Walk through each type in the assembly
+							foreach (Type type in assembly.GetTypes())
 							{
-								if (log.IsErrorEnabled)
+								// Pick up a class
+								if (type.IsClass != true)
+									continue;
+								object[] attrib = type.GetCustomAttributes(typeof (DataTable), true);
+								if (attrib.Length > 0)
 								{
-									log.Error("Wrong database structure found :");
-						
-									int i = 0;
-									foreach(string msg in errors)
-									{
-										i++;
-										log.Error(String.Format("{0,3}) {1}",i,msg));
-									}
+									if (log.IsInfoEnabled)
+										log.Info("Registering table: " + type.FullName);
+									m_database.RegisterDataObject(type);
 								}
-								return false;
 							}
 						}
 					}
-					catch (Exception e)
+					catch (DatabaseException e)
 					{
 						if (log.IsErrorEnabled)
-							log.Error("Error checking database structure", e);
+							log.Error("Error registering Tables", e);
 						return false;
 					}
 
+					try
+					{
+						m_database.LoadDatabaseTables();
+					}
+					catch (DatabaseException e)
+					{
+						if (log.IsErrorEnabled)
+							log.Error("Error loading Database", e);
+						return false;
+					}
 				}
+				if (log.IsInfoEnabled)
+					log.Info("Database Initialization: true");
 				return true;
+			}
+
+			/// <summary>
+			/// Writes the database to disk
+			/// </summary>
+			public void SaveDatabase()
+			{
+				if (m_database != null)
+					m_database.WriteDatabaseTables();
 			}
 
 			/// <summary>
@@ -974,26 +1087,36 @@ namespace DOL
 			{
 				try
 				{
-					int startTick = System.Environment.TickCount;
+					int startTick = Environment.TickCount;
 					if (log.IsInfoEnabled)
-						log.Info("Saving players ...");
+						log.Info("Saving database...");
 					if (log.IsDebugEnabled)
 						log.Debug("Save ThreadId=" + AppDomain.GetCurrentThreadId());
 					int saveCount = 0;
-					
-					ThreadPriority oldprio = Thread.CurrentThread.Priority;
-					Thread.CurrentThread.Priority = ThreadPriority.Lowest;
+					if (m_database != null)
+					{
+						ThreadPriority oldprio = Thread.CurrentThread.Priority;
+						Thread.CurrentThread.Priority = ThreadPriority.Lowest;
 
-					//Only save the players (+inventory + quests ect ...), NOT any other object!
-					saveCount = WorldMgr.SavePlayers();
+						//Only save the players, NOT any other object!
+						saveCount = WorldMgr.SavePlayers();
 
-					Thread.CurrentThread.Priority = oldprio;
-					
+						//The following line goes through EACH region and EACH object
+						//is tested for savability. A real waste of time, so it is commented out
+						//WorldMgr.SaveToDatabase();
+
+						GuildMgr.SaveAllGuilds();
+
+						FactionMgr.SaveAllAggroToFaction();
+
+						m_database.WriteDatabaseTables();
+						Thread.CurrentThread.Priority = oldprio;
+					}
 					if (log.IsInfoEnabled)
 						log.Info("Saving database complete!");
-					startTick = System.Environment.TickCount - startTick;
+					startTick = Environment.TickCount - startTick;
 					if (log.IsInfoEnabled)
-						log.Info("Saved " + saveCount + " players in " + startTick + "ms");
+						log.Info("Saved all databases and " + saveCount + " players in " + startTick + "ms");
 				}
 				catch (Exception e1)
 				{
@@ -1010,13 +1133,54 @@ namespace DOL
 			#endregion
 
 			#region Constructors
-	
 			/// <summary>
-			/// Constructor
+			/// Default game server constructor
+			/// </summary>
+			protected GameServer() : this(new GameServerConfiguration())
+			{
+			}
+
+			/// <summary>
+			/// Constructor with a given configuration
 			/// </summary>
 			/// <param name="config">A valid game server configuration</param>
 			protected GameServer(GameServerConfiguration config) : base(config)
 			{
+				m_gmLog = LogManager.GetLogger(Configuration.GMActionsLoggerName);
+				m_cheatLog = LogManager.GetLogger(Configuration.CheatLoggerName);
+
+				if (log.IsDebugEnabled)
+				{
+					log.Debug("Current directory is: "+Directory.GetCurrentDirectory());
+					log.Debug("Gameserver root directory is: "+Configuration.RootDirectory);
+					log.Debug("Changing directory to root directory");
+				}				
+				Directory.SetCurrentDirectory(Configuration.RootDirectory);
+
+				try
+				{
+					LoadInvalidNames();
+
+					m_pudpbuf = new byte[MAX_UDPBUF];
+					m_udpReceiveCallback = new AsyncCallback(RecvFromCallback);
+					m_udpSendCallback = new AsyncCallback(SendToCallback);
+
+					if (!InitDB() || m_database == null)
+					{
+						if (log.IsErrorEnabled)
+							log.Error("Could not initialize DB, please check path/connection string");
+						throw new ApplicationException("DB initialization error");
+					}
+
+					if (log.IsInfoEnabled)
+						log.Info("Game Server Initialization finished!");
+				}
+				catch (Exception e)
+				{
+					if (log.IsFatalEnabled)
+						log.Fatal("GameServer initialization failed!", e);
+					throw new ApplicationException("Fatal Error: Could not initialize Game Server", e);
+				}
 			}
 			#endregion
 

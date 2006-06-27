@@ -17,12 +17,8 @@
  *
  */
 using System;
-using System.Collections;
-using System.Reflection;
-using DOL.Events;
 using DOL.GS.PacketHandler;
-using DOL.GS.Database;
-using log4net;
+using DOL.Database;
 
 namespace DOL.GS.Trainer
 {
@@ -32,78 +28,11 @@ namespace DOL.GS.Trainer
 	[NPCGuildScript("Fighter Trainer", eRealm.Albion)]		// this attribute instructs DOL to use this script for all "Fighter Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class FighterTrainer : GameTrainer
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		public const string PRACTICE_WEAPON_ID = "practice_sword";
+		public const string PRACTICE_SHIELD_ID = "small_training_shield";
 
-		/// <summary>
-		/// This hash constrain all item template the trainer can give
-		/// </summary>	
-		private static IDictionary allStartupItems = new Hashtable();
-
-		/// <summary>
-		/// This function is called at the server startup
-		/// </summary>	
-		[GameServerStartedEvent]
-		public static void OnServerStartup(DOLEvent e, object sender, EventArgs args)
+		public FighterTrainer() : base()
 		{
-			#region Practice sword
-
-			SlashingWeaponTemplate practice_sword_template = new SlashingWeaponTemplate();
-			practice_sword_template.Name = "practice sword";
-			practice_sword_template.Level = 0;
-			practice_sword_template.Durability = 100;
-			practice_sword_template.Condition = 100;
-			practice_sword_template.Quality = 90;
-			practice_sword_template.Bonus = 0;
-			practice_sword_template.DamagePerSecond = 12;
-			practice_sword_template.Speed = 2500;
-			practice_sword_template.Weight = 10;
-			practice_sword_template.Model = 3;
-			practice_sword_template.Realm = eRealm.Albion;
-			practice_sword_template.IsDropable = true; 
-			practice_sword_template.IsTradable = false; 
-			practice_sword_template.IsSaleable = false;
-			practice_sword_template.MaterialLevel = eMaterialLevel.Bronze;
-	
-			if(!allStartupItems.Contains("practice_sword"))
-			{
-				allStartupItems.Add("practice_sword", practice_sword_template);
-			
-				if (log.IsDebugEnabled)
-					log.Debug("Adding " + practice_sword_template.Name + " to FighterTrainer gifts.");
-			}
-			#endregion
-
-			#region Training shield
-
-			ShieldTemplate small_training_shield_template = new ShieldTemplate();
-			small_training_shield_template.Name = "small training shield";
-			small_training_shield_template.Level = 2;
-			small_training_shield_template.Durability = 100;
-			small_training_shield_template.Condition = 100;
-			small_training_shield_template.Quality = 100;
-			small_training_shield_template.Bonus = 0;
-			small_training_shield_template.DamagePerSecond = 10;
-			small_training_shield_template.Speed = 2000;
-			small_training_shield_template.Size = eShieldSize.Small;
-			small_training_shield_template.Weight = 32;
-			small_training_shield_template.Model = 59;
-			small_training_shield_template.Realm = eRealm.Albion;
-			small_training_shield_template.IsDropable = true; 
-			small_training_shield_template.IsTradable = false; 
-			small_training_shield_template.IsSaleable = false;
-			small_training_shield_template.MaterialLevel = eMaterialLevel.Bronze;
-		
-			if(!allStartupItems.Contains("small_training_shield"))
-			{
-				allStartupItems.Add("small_training_shield", small_training_shield_template);
-			
-				if (log.IsDebugEnabled)
-					log.Debug("Adding " + small_training_shield_template.Name + " to FighterTrainer gifts.");
-			}
-			#endregion
 		}
 
 		/// <summary>
@@ -116,25 +45,26 @@ namespace DOL.GS.Trainer
  			if (!base.Interact(player)) return false;
 								
 			// check if class matches				
-			if (player.CharacterClass.ID == (int) eCharacterClass.Fighter) 
-			{
+			if (player.CharacterClass.ID == (int) eCharacterClass.Fighter) {
+
+				// popup the training window
 				player.Out.SendTrainerWindow();
 							
 				// player can be promoted
-				if (player.Level>=5) 
+				if (player.Level>=5) {
 					player.Out.SendMessage(this.Name + " says, \"You must now seek your training elsewhere. Which path would you like to follow? [Armsman], [Paladin], or [Mercenary]?\"", eChatType.CT_Say, eChatLoc.CL_PopupWindow);												
-				
+				} else {
+					//player.Out.SendMessage(this.Name + " says, \"Select what you like to train.\"", eChatType.CT_Say, eChatLoc.CL_PopupWindow);												
+				}
 
 				// ask for basic equipment if player doesnt own it
-				if (player.Inventory.GetFirstItemByType("SlashingWeaponTemplate", eInventorySlot.Min_Inv, eInventorySlot.Max_Inv) == null) {
+				if (player.Inventory.GetFirstItemByID(PRACTICE_WEAPON_ID, eInventorySlot.Min_Inv, eInventorySlot.Max_Inv) == null) {
 					player.Out.SendMessage(this.Name + " says, \"Do you require a [practice weapon]?\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);																																			
 				}
-				if (player.Inventory.GetFirstItemByType("ShieldTemplate", eInventorySlot.Min_Inv, eInventorySlot.Max_Inv) == null) {
+				if (player.Inventory.GetFirstItemByID(PRACTICE_SHIELD_ID, eInventorySlot.Min_Inv, eInventorySlot.Max_Inv) == null) {
 					player.Out.SendMessage(this.Name + " says, \"Do you require a [training shield]?\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);																																			
 				}
-			} 
-			else 
-			{
+			} else {
 				player.Out.SendMessage(this.Name + " says, \"You must seek elsewhere for your training.\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);							
 			}
 			return true;
@@ -177,19 +107,15 @@ namespace DOL.GS.Trainer
 				}
 				return true;
 			case "practice weapon":
-				if (player.Inventory.GetFirstItemByType("SlashingWeaponTemplate", eInventorySlot.Min_Inv, eInventorySlot.Max_Inv) == null)
+				if (player.Inventory.GetFirstItemByID(PRACTICE_WEAPON_ID, eInventorySlot.Min_Inv, eInventorySlot.Max_Inv) == null)
 				{
-					GenericItemTemplate itemTemplate = allStartupItems["practice_sword"] as GenericItemTemplate;
-					if(itemTemplate != null)
-						player.ReceiveItem(this, itemTemplate.CreateInstance());
+					player.ReceiveItem(this,PRACTICE_WEAPON_ID);
 				}
 				return true;
 			case "training shield":
-				if (player.Inventory.GetFirstItemByType("ShieldTemplate", eInventorySlot.Min_Inv, eInventorySlot.Max_Inv) == null)
+				if (player.Inventory.GetFirstItemByID(PRACTICE_SHIELD_ID, eInventorySlot.Min_Inv, eInventorySlot.Max_Inv) == null)
 				{
-					GenericItemTemplate itemTemplate = allStartupItems["small_training_shield"] as GenericItemTemplate;
-					if(itemTemplate != null)
-						player.ReceiveItem(this, itemTemplate.CreateInstance());
+					player.ReceiveItem(this, PRACTICE_SHIELD_ID);
 				}
 				return true;
 			}

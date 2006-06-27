@@ -68,10 +68,15 @@ namespace DOL.GS
 		}
 		public override int CalculRP()
 		{
-			return 1000*DifficultyLevel();
+			return 1000*DifficultyLevel;
 		}
 
-	    public ArrayList Towers
+		public void AddTower(GameKeepTower tower)
+		{
+			if (!m_towers.Contains(tower))
+				m_towers.Add(tower);
+		}
+		public ArrayList Towers
 		{
 			get{return m_towers;}
 			set{m_towers = value;}

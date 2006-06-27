@@ -21,7 +21,7 @@ using System.Collections;
 using System.Reflection;
 using System.Threading;
 using DOL.AI.Brain;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.GS.PacketHandler;
 using log4net;
 
@@ -157,15 +157,15 @@ namespace DOL.GS
 		/// <param name="player">Player making the sale</param>
 		/// <param name="item">The InventoryItem to be sold</param>
 		/// <returns>true if selling is allowed, false if it should be prevented</returns>
-		public virtual bool OnPlayerSell(GamePlayer player, GenericItem item)
+		public virtual bool OnPlayerSell(GamePlayer player, InventoryItem item)
 		{
-			if (!item.IsSaleable)
+			if (!item.IsDropable)
 			{
 				player.Out.SendMessage("This item can't be sold.", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
 				return false;
 			}
 
-			if(!Position.CheckSquareDistance(player.Position, (uint)(WorldMgr.PICKUP_DISTANCE*WorldMgr.PICKUP_DISTANCE))) // tested
+			if(!WorldMgr.CheckDistance(this, player, WorldMgr.PICKUP_DISTANCE)) // tested
 			{ 
 				player.Out.SendMessage(Name +" is too far away!", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
 				return false;
@@ -180,12 +180,14 @@ namespace DOL.GS
 		/// <param name="player">The player whose item needs appraising</param>
 		/// <param name="item">The item to be appraised</param>
 		/// <returns>The price this merchant will pay for the offered items</returns>
-		public virtual long OnPlayerAppraise(GamePlayer player, GenericItem item)
+		public virtual long OnPlayerAppraise(GamePlayer player, InventoryItem item)
 		{
 			if (item == null)
 				return 0;
 
-			return item.Value / 2;
+			int itemCount = Math.Max(1, item.Count);
+			int packSize = Math.Max(1, item.PackSize);
+			return item.Value*itemCount/packSize/2;
 		}
 
 		#endregion
@@ -196,7 +198,7 @@ namespace DOL.GS
 		/// Loads a merchant from the DB
 		/// </summary>
 		/// <param name="merchantobject">The merchant DB object</param>
-		public override void LoadFromDatabase(object merchantobject)
+		public override void LoadFromDatabase(DataObject merchantobject)
 		{
 			base.LoadFromDatabase(merchantobject);
 			if(!(merchantobject is Mob)) return;
@@ -218,13 +220,12 @@ namespace DOL.GS
 
 			merchant.Name = Name;
 			merchant.Guild = GuildName;
-			Point pos = Position;
-			merchant.X = pos.X;
-			merchant.Y = pos.Y;
-			merchant.Z = pos.Z;
+			merchant.X = X;
+			merchant.Y = Y;
+			merchant.Z = Z;
 			merchant.Heading = Heading;
 			merchant.Speed = MaxSpeedBase;
-			merchant.Region = RegionId;
+			merchant.Region = CurrentRegionID;
 			merchant.Realm = Realm;
 			merchant.Model = Model;
 			merchant.Size = Size;
@@ -247,7 +248,7 @@ namespace DOL.GS
 				merchant.ItemsListTemplateID = m_tradeItems.ItemsListID;
 			}
 
-			/*if (InternalID == null)
+			if (InternalID == null)
 			{
 				GameServer.Database.AddNewObject(merchant);
 				InternalID = merchant.ObjectId;
@@ -255,7 +256,7 @@ namespace DOL.GS
 			else
 			{
 				GameServer.Database.SaveObject(merchant);
-			}*/
+			}
 		}
 
 		/// <summary>

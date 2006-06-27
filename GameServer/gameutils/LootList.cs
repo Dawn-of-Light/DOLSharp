@@ -18,7 +18,7 @@
  */
 using System;
 using System.Collections;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.GS;
 
 namespace DOL.GS
@@ -60,12 +60,12 @@ namespace DOL.GS
 		/// Adds a dbloottemplate to list of fixed drops
 		/// </summary>
 		/// <param name="loot"></param>
-		public void AddFixed(GenericItemTemplate loot)
+		public void AddFixed(ItemTemplate loot)
 		{
 			m_fixedItemDrops.Add(loot);
 		}
 
-		public void AddRandom(int chance, GenericItemTemplate loot)
+		public void AddRandom(int chance, ItemTemplate loot)
 		{
 			LootEntry entry = new LootEntry(chance,loot);
 			m_randomItemDrops.Add(entry);
@@ -95,7 +95,7 @@ namespace DOL.GS
 		/// Returns a list of ItemTemplates chosen from Random and Fixed loot.
 		/// </summary>
 		/// <returns></returns>
-		public GenericItemTemplate[] GetLoot()
+		public ItemTemplate[] GetLoot()
 		{			
 			ArrayList loot = new ArrayList(m_fixedItemDrops.Count + m_dropCount);
 			loot.AddRange(m_fixedItemDrops);
@@ -125,7 +125,7 @@ namespace DOL.GS
 					}
 				}
 			}
-			return (GenericItemTemplate[])loot.ToArray(typeof(GenericItemTemplate));
+			return (ItemTemplate[])loot.ToArray(typeof(ItemTemplate));
 		}
 	}
 
@@ -135,15 +135,15 @@ namespace DOL.GS
 	class LootEntry
 	{
 		int m_chance;
-		GenericItemTemplate m_itemTemplate;
+		ItemTemplate m_itemTemplate;
 
-		public LootEntry (int chance, GenericItemTemplate item)
+		public LootEntry (int chance, ItemTemplate item)
 		{
 			m_chance = chance;
 			m_itemTemplate = item;
 		}
 
-		public GenericItemTemplate ItemTemplate
+		public ItemTemplate ItemTemplate
 		{
 			get {return m_itemTemplate;}
 		}

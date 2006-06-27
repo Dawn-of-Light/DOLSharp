@@ -42,7 +42,7 @@ namespace DOL.GS.PacketHandler.v168
 				client.Out.SendMessage("You can't fire a siege weapon while sitting!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return 1;
 			}
-			if(!client.Player.Position.CheckSquareDistance(client.Player.SiegeWeapon.Position, (uint) (GameSiegeWeapon.SIEGE_WEAPON_CONTROLE_DISTANCE*GameSiegeWeapon.SIEGE_WEAPON_CONTROLE_DISTANCE)))
+			if(!WorldMgr.CheckDistance(client.Player,client.Player.SiegeWeapon,GameSiegeWeapon.SIEGE_WEAPON_CONTROLE_DISTANCE))
 			{
 				client.Out.SendMessage(client.Player.SiegeWeapon.GetName(0,true)+" is too far away for you to control!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return 1;
