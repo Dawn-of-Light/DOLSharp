@@ -169,6 +169,7 @@ namespace DOL.GS.PacketHandler.v168
 					client.Player.MaxLastZ = int.MinValue;
 				}
 				client.Out.SendMessage("You have entered " + newZone.Description + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				client.Out.SendMessage(newZone.Description, eChatType.CT_ScreenCenterSmaller, eChatLoc.CL_SystemWindow);	
 				client.Player.LastPositionUpdateZone = newZone;
 			}
 
@@ -335,7 +336,7 @@ namespace DOL.GS.PacketHandler.v168
 								client.Out.SendMessage("The damage was lessened by your Safe Fall ability!", eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
 							client.Out.SendMessage("You take " + fallPercent + "% of your max hits in damage.", eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
 
-							client.Player.Endurance -= client.Player.MaxEndurance * fallPercent / 100;
+							client.Player.Endurance -= (client.Player.MaxEndurance * fallPercent) / 100;
 							client.Player.TakeDamage(null, eDamageType.Falling, (int)(0.01 * fallPercent * (client.Player.MaxHealth - 1)), 0);
 
 							//Update the player's health to all other players around
