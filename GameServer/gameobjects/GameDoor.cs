@@ -17,7 +17,7 @@
  *
  */
 using System;
-using DOL.GS.Database;
+using DOL.Database;
 
 namespace DOL.GS
 {
@@ -48,20 +48,21 @@ namespace DOL.GS
 		/// Loads this door from a door table slot
 		/// </summary>
 		/// <param name="obj">DBDoor</param>
-		public override void LoadFromDatabase(object obj)
+		public override void LoadFromDatabase(DataObject obj)
 		{
-			/*DBDoor m_dbdoor = obj as DBDoor;
-			InternalID = m_dbdoor.DoorID.ToString();
+			base.LoadFromDatabase(obj);
+            DBDoor m_dbdoor = obj as DBDoor;
 			if (m_dbdoor == null)return;
-			Zone curZone = WorldMgr.GetZone((ushort)(m_dbdoor.DoorID/100000));
+			Zone curZone = WorldMgr.GetZone((ushort)(m_dbdoor.InternalID/100000));
 			if (curZone == null) return;
-			Region = curZone.Region;
-			Name = m_dbdoor.Name;
-			Heading = (ushort) m_dbdoor.Heading;
-			Position = new Point(m_dbdoor.X, m_dbdoor.Y, m_dbdoor.Z);
-			DoorID = m_dbdoor.DoorID;*/
+			this.CurrentRegion = curZone.ZoneRegion;
+			this.Name = m_dbdoor.Name;
+			this.Heading = (ushort) m_dbdoor.Heading;
+			this.X = m_dbdoor.X;
+			this.Y = m_dbdoor.Y;
+			this.Z = m_dbdoor.Z;
+			this.DoorID = m_dbdoor.InternalID;
 		}
-
 		/// <summary>
 		/// save this door to a door table slot
 		/// </summary>
@@ -72,20 +73,19 @@ namespace DOL.GS
 				obj = (DBDoor) GameServer.Database.FindObjectByKey(typeof (DBDoor), InternalID);
 			if (obj == null)
 				obj = new DBDoor();
-			obj.Name = Name;
-			obj.Heading = Heading;
-			Point pos = Position;
-			obj.X = pos.X;
-			obj.Y = pos.Y;
-			obj.Z = pos.Z;
-			obj.DoorID = this.DoorID;
-			/*if (InternalID == null)
+			obj.Name = this.Name;
+			obj.Heading = this.Heading;
+			obj.X = this.X;
+			obj.Y = this.Y;
+			obj.Z = this.Z;
+			obj.InternalID = this.DoorID;
+			if (InternalID == null)
 			{
 				GameServer.Database.AddNewObject(obj);
 				InternalID = obj.ObjectId;
 			}
 			else
-				GameServer.Database.SaveObject(obj);*/
+				GameServer.Database.SaveObject(obj);
 		}
 
 		#region Properties

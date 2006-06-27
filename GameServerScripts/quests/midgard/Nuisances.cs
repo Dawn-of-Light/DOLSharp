@@ -31,7 +31,7 @@
 using System;
 using System.Reflection;
 using DOL.AI.Brain;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
@@ -46,66 +46,13 @@ using log4net;
 
 namespace DOL.GS.Quests.Midgard
 {
-
-	/* The first thing we do, is to declare the quest requirement
-	 * class linked with the new Quest. To do this, we derive 
-	 * from the abstract class AbstractQuestDescriptor
+	/* The first thing we do, is to declare the class we create
+	 * as Quest. To do this, we derive from the abstract class
+	 * AbstractQuest
+	 * 	 
 	 */
-	public class NuisancesMidDescriptor : AbstractQuestDescriptor
-	{
-		/* This is the type of the quest class linked with 
-		 * this requirement class, you must override the 
-		 * base method like that
-		 */
-		public override Type LinkedQuestType
-		{
-			get { return typeof(NuisancesMid); }
-		}
 
-		/* This value is used to retrieves the minimum level needed
-		 *  to be able to make this quest. Override it only if you need, 
-		 * the default value is 1
-		 */
-		public override int MinLevel
-		{
-			get { return 2; }
-		}
-
-		/* This value is used to retrieves how maximum level needed
-		 * to be able to make this quest. Override it only if you need, 
-		 * the default value is 50
-		 */
-		public override int MaxLevel
-		{
-			get { return 2; }
-		}
-
-		/* This method is used to know if the player is qualified to 
-		 * do the quest. The base method always test his level and
-		 * how many time the quest has been done. Override it only if 
-		 * you want to add a custom test (here we test also the class name)
-		 */
-		public override bool CheckQuestQualification(GamePlayer player)
-		{
-			// if the player is already doing the quest his level is no longer of relevance
-			if (player.IsDoingQuest(typeof(NuisancesMid)) != null)
-				return true;
-
-			// This checks below are only performed is player isn't doing quest already
-			if (!BaseDalikorQuest.CheckPartAccessible(player, typeof(NuisancesMid)))
-				return false;
-
-			return base.CheckQuestQualification(player);
-		}
-	}
-
-
-	/* The second thing we do, is to declare the class we create
-	 * as Quest. We must make it persistant using attributes, to
-	 * do this, we derive from the abstract class AbstractQuest
-	 */
-	[NHibernate.Mapping.Attributes.Subclass(NameType = typeof(NuisancesMid), ExtendsType = typeof(AbstractQuest))] 
-	public class NuisancesMid : BaseDalikorQuest
+	public class Nuisances : BaseDalikorQuest
 	{
 		/// <summary>
 		/// Defines a logger for this class.
@@ -122,17 +69,41 @@ namespace DOL.GS.Quests.Midgard
 		 * 
 		 */
 		protected const string questTitle = "Nuisances (Mid)";
+		protected const int minimumLevel = 2;
+		protected const int maximumLevel = 2;
 
 		private static GameNPC dalikor = null;
 		private GameNPC askefruer = null;
 
 		private static GameLocation askefruerLocation = new GameLocation("Fallen Askefruer", 100, 100, 44585, 56194, 4780, 294);
-		private static Circle askefruerArea = null;
+		private static IArea askefruerArea = null;
 
-		private static GenericItemTemplate emptyMagicBox = null;
-		private static GenericItemTemplate fullMagicBox = null;
-		private static SwordTemplate recruitsShortSword = null;
-		private static StaffTemplate recruitsStaff = null;
+		private static ItemTemplate emptyMagicBox = null;
+		private static ItemTemplate fullMagicBox = null;
+		private static ItemTemplate recruitsShortSword = null;
+		private static ItemTemplate recruitsStaff = null;
+
+
+		/* We need to define the constructors from the base class here, else there might be problems
+		 * when loading this quest...
+		 */
+
+		public Nuisances() : base()
+		{
+		}
+
+		public Nuisances(GamePlayer questingPlayer) : this(questingPlayer, 1)
+		{
+		}
+
+		public Nuisances(GamePlayer questingPlayer, int step) : base(questingPlayer, step)
+		{
+		}
+
+		public Nuisances(GamePlayer questingPlayer, DBQuest dbQuest) : base(questingPlayer, dbQuest)
+		{
+		}
+
 
 		/* The following method is called automatically when this quest class
 		 * is loaded. You might notice that this method is the same as in standard
@@ -173,21 +144,22 @@ namespace DOL.GS.Quests.Midgard
 			#region defineItems 
 
 			// item db check
-			emptyMagicBox = (GenericItemTemplate)GameServer.Database.FindObjectByKey(typeof(GenericItemTemplate), "empty_wodden_magic_box");
+			emptyMagicBox = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "empty_wodden_magic_box");
 			if (emptyMagicBox == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Empty Wodden Magic Box, creating it ...");
-				emptyMagicBox = new GenericItemTemplate();
+				emptyMagicBox = new ItemTemplate();
 				emptyMagicBox.Name = "Empty Wodden Magic Box";
 
 				emptyMagicBox.Weight = 5;
 				emptyMagicBox.Model = 602;
-				emptyMagicBox.ItemTemplateID = "empty_wodden_magic_box";
 
+				emptyMagicBox.Object_Type = (int) eObjectType.GenericItem;
+				emptyMagicBox.Id_nb = "empty_wodden_magic_box";
+
+				emptyMagicBox.IsPickable = true;
 				emptyMagicBox.IsDropable = false;
-				emptyMagicBox.IsSaleable = false;
-				emptyMagicBox.IsTradable = false;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -197,22 +169,22 @@ namespace DOL.GS.Quests.Midgard
 			}
 
 			// item db check
-			fullMagicBox = (GenericItemTemplate)GameServer.Database.FindObjectByKey(typeof(GenericItemTemplate), "full_wodden_magic_box");
+			fullMagicBox = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "full_wodden_magic_box");
 			if (fullMagicBox == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Full Wodden Magic Box, creating it ...");
-				fullMagicBox = new GenericItemTemplate();
+				fullMagicBox = new ItemTemplate();
 				fullMagicBox.Name = "Full Wodden Magic Box";
 
 				fullMagicBox.Weight = 3;
 				fullMagicBox.Model = 602;
 
-				fullMagicBox.ItemTemplateID = "full_wodden_magic_box";
+				fullMagicBox.Object_Type = (int) eObjectType.GenericItem;
 
+				fullMagicBox.Id_nb = "full_wodden_magic_box";
+				fullMagicBox.IsPickable = true;
 				fullMagicBox.IsDropable = false;
-				fullMagicBox.IsSaleable = false;
-				fullMagicBox.IsTradable = false;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -222,10 +194,10 @@ namespace DOL.GS.Quests.Midgard
 			}
 
 			// item db check
-			recruitsShortSword = (SwordTemplate)GameServer.Database.FindObjectByKey(typeof(SwordTemplate), "recruits_short_sword_mid");
+			recruitsShortSword = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_short_sword_mid");
 			if (recruitsShortSword == null)
 			{
-				recruitsShortSword = new SwordTemplate();
+				recruitsShortSword = new ItemTemplate();
 				recruitsShortSword.Name = "Recruit's Short Sword (Mid)";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + recruitsShortSword.Name + ", creating it ...");
@@ -234,21 +206,34 @@ namespace DOL.GS.Quests.Midgard
 				recruitsShortSword.Weight = 18;
 				recruitsShortSword.Model = 3; // studded Boots
 
-				recruitsShortSword.DamagePerSecond = 23;
-				recruitsShortSword.Speed = 3000;
-				recruitsShortSword.HandNeeded = eHandNeeded.RightHand;
-				recruitsShortSword.ItemTemplateID = "recruits_short_sword_mid";
-				recruitsShortSword.Value = 200;
+				recruitsShortSword.DPS_AF = 23; // Armour
+				recruitsShortSword.SPD_ABS = 30; // Absorption
 
+				recruitsShortSword.Type_Damage = (int) eDamageType.Slash;
+				recruitsShortSword.Object_Type = (int) eObjectType.Sword;
+				recruitsShortSword.Item_Type = (int) eEquipmentItems.LEFT_HAND;
+				recruitsShortSword.Id_nb = "recruits_short_sword_mid";
+				recruitsShortSword.Gold = 0;
+				recruitsShortSword.Silver = 2;
+				recruitsShortSword.Copper = 0;
+				recruitsShortSword.IsPickable = true;
 				recruitsShortSword.IsDropable = true;
-				recruitsShortSword.IsSaleable = true;
-				recruitsShortSword.IsTradable = true;
 				recruitsShortSword.Color = 61;
 
 				recruitsShortSword.Bonus = 1; // default bonus
 
-				recruitsShortSword.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 3));
-				recruitsShortSword.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Body, 1));
+				recruitsShortSword.Bonus1 = 3;
+				recruitsShortSword.Bonus1Type = (int) eStat.STR;
+
+				recruitsShortSword.Bonus2 = 1;
+				recruitsShortSword.Bonus2Type = (int) eResist.Body;
+
+				recruitsShortSword.Quality = 100;
+				recruitsShortSword.MaxQuality = 100;
+				recruitsShortSword.Condition = 1000;
+				recruitsShortSword.MaxCondition = 1000;
+				recruitsShortSword.Durability = 1000;
+				recruitsShortSword.MaxDurability = 1000;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -258,10 +243,10 @@ namespace DOL.GS.Quests.Midgard
 			}
 
 			// item db check
-			recruitsStaff = (StaffTemplate)GameServer.Database.FindObjectByKey(typeof(StaffTemplate), "recruits_staff");
+			recruitsStaff = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_staff");
 			if (recruitsStaff == null)
 			{
-				recruitsStaff = new StaffTemplate();
+				recruitsStaff = new ItemTemplate();
 				recruitsStaff.Name = "Recruit's Staff";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + recruitsStaff.Name + ", creating it ...");
@@ -270,22 +255,34 @@ namespace DOL.GS.Quests.Midgard
 				recruitsStaff.Weight = 45;
 				recruitsStaff.Model = 442;
 
-				recruitsStaff.DamagePerSecond = 24;
-				recruitsStaff.Speed = 4500;
-				recruitsStaff.HandNeeded = eHandNeeded.TwoHands;
+				recruitsStaff.DPS_AF = 24;
+				recruitsStaff.SPD_ABS = 45;
 
-				recruitsStaff.ItemTemplateID = "recruits_staff";
-				recruitsStaff.Value = 2000;
-
+				recruitsStaff.Type_Damage = (int) eDamageType.Slash;
+				recruitsStaff.Object_Type = (int) eObjectType.Staff;
+				recruitsStaff.Item_Type = (int) eEquipmentItems.LEFT_HAND;
+				recruitsStaff.Id_nb = "recruits_staff";
+				recruitsStaff.Gold = 0;
+				recruitsStaff.Silver = 2;
+				recruitsStaff.Copper = 0;
+				recruitsStaff.IsPickable = true;
 				recruitsStaff.IsDropable = true;
-				recruitsStaff.IsSaleable = true;
-				recruitsStaff.IsTradable = true;
 				recruitsStaff.Color = 61;
 
 				recruitsStaff.Bonus = 1; // default bonus
 
-				recruitsStaff.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Intelligence, 3));
-				recruitsStaff.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Crush, 1));
+				recruitsStaff.Bonus1 = 3;
+				recruitsStaff.Bonus1Type = (int) eStat.INT;
+
+				recruitsStaff.Bonus2 = 1;
+				recruitsStaff.Bonus2Type = (int) eResist.Crush;
+
+				recruitsStaff.Quality = 100;
+				recruitsStaff.MaxQuality = 100;
+				recruitsStaff.Condition = 1000;
+				recruitsStaff.MaxCondition = 1000;
+				recruitsStaff.Durability = 1000;
+				recruitsStaff.MaxDurability = 1000;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -296,14 +293,8 @@ namespace DOL.GS.Quests.Midgard
 
 			#endregion
 
-			askefruerArea = new Circle();
-			askefruerArea.Description = "Askefruer contamined Area";
-			askefruerArea.RegionID = askefruerLocation.Region.RegionID;
-			askefruerArea.X = askefruerLocation.Position.X;
-			askefruerArea.Y = askefruerLocation.Position.Y;
-			askefruerArea.Radius = 1500;
-
-			GameEventMgr.AddHandler(AreaEvent.PlayerEnter, new DOLEventHandler(PlayerEnterAskefruerArea));
+			askefruerArea = WorldMgr.GetRegion(askefruerLocation.RegionID).AddArea(new Area.Circle("Askefruer contamined Area", askefruerLocation.X, askefruerLocation.Y, 0, 1500));
+			askefruerArea.RegisterPlayerEnter(new DOLEventHandler(PlayerEnterAskefruerArea));
 
 			/* Now we add some hooks to the npc we found.
 			* Actually, we want to know when a player interacts with him.
@@ -319,7 +310,7 @@ namespace DOL.GS.Quests.Midgard
 			GameEventMgr.AddHandler(dalikor, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToDalikor));
 
 			/* Now we bring to dalikor the possibility to give this quest to players */
-			QuestMgr.AddQuestDescriptor(dalikor, typeof(NuisancesMidDescriptor));
+			dalikor.AddQuestToGive(typeof (Nuisances));
 
 			if (log.IsInfoEnabled)
 				log.Info("Quest \"" + questTitle + "\" initialized");
@@ -341,7 +332,8 @@ namespace DOL.GS.Quests.Midgard
 			if (dalikor == null)
 				return;
 
-			AreaMgr.UnregisterArea(askefruerArea);
+			askefruerArea.UnRegisterPlayerEnter(new DOLEventHandler(PlayerEnterAskefruerArea));
+			WorldMgr.GetRegion(askefruerLocation.RegionID).RemoveArea(askefruerArea);
 
 			/* Removing hooks works just as adding them but instead of 
 			 * AddHandler, we call RemoveHandler, the parameters stay the same
@@ -350,11 +342,9 @@ namespace DOL.GS.Quests.Midgard
 
 			GameEventMgr.RemoveHandler(dalikor, GameLivingEvent.Interact, new DOLEventHandler(TalkToDalikor));
 			GameEventMgr.RemoveHandler(dalikor, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToDalikor));
-
-
-			GameEventMgr.RemoveHandler(AreaEvent.PlayerEnter, new DOLEventHandler(PlayerEnterAskefruerArea));
+		
 			/* Now we remove to dalikor the possibility to give this quest to players */
-			QuestMgr.RemoveQuestDescriptor(dalikor, typeof(NuisancesMidDescriptor));
+			dalikor.RemoveQuestToGive(typeof (Nuisances));
 		}
 
 		protected static void PlayerLeftWorld(DOLEvent e, object sender, EventArgs args)
@@ -363,7 +353,7 @@ namespace DOL.GS.Quests.Midgard
 			if (player == null)
 				return;
 
-			NuisancesMid quest = player.IsDoingQuest(typeof (NuisancesMid)) as NuisancesMid;
+			Nuisances quest = player.IsDoingQuest(typeof (Nuisances)) as Nuisances;
 			if (quest != null)
 			{
 				GameEventMgr.RemoveHandler(player, GamePlayerEvent.UseSlot, new DOLEventHandler(PlayerUseSlot));
@@ -383,13 +373,12 @@ namespace DOL.GS.Quests.Midgard
 			askefruer.Name = "Fallen Askefruer";
 			askefruer.GuildName = "Part of " + questTitle + " Quest";
 			askefruer.Realm = (byte) eRealm.None;
-			askefruer.Region = askefruerLocation.Region;
+			askefruer.CurrentRegionID = askefruerLocation.RegionID;
 			askefruer.Size = 50;
 			askefruer.Level = 4;
-			Point pos = askefruerLocation.Position;
-			pos.X += Util.Random(-150, 150);
-			pos.Y += Util.Random(-150, 150);
-			askefruer.Position = pos;
+			askefruer.X = askefruerLocation.X + Util.Random(-150, 150);
+			askefruer.Y = askefruerLocation.Y + Util.Random(-150, 150);
+			askefruer.Z = askefruerLocation.Z;
 			askefruer.Heading = askefruerLocation.Heading;
 
 			StandardMobBrain brain = new StandardMobBrain();
@@ -412,7 +401,7 @@ namespace DOL.GS.Quests.Midgard
 			GamePlayer player = (GamePlayer) sender;
 			// player already morphed...            
 
-			NuisancesMid quest = (NuisancesMid) player.IsDoingQuest(typeof (NuisancesMid));
+			Nuisances quest = (Nuisances) player.IsDoingQuest(typeof (Nuisances));
 			if (quest == null)
 				return;
 
@@ -420,10 +409,10 @@ namespace DOL.GS.Quests.Midgard
 			{
 				UseSlotEventArgs uArgs = (UseSlotEventArgs) args;
 
-				GenericItem item = player.Inventory.GetItem((eInventorySlot)uArgs.Slot);
-				if (item != null && item.Name == emptyMagicBox.Name)
+				InventoryItem item = player.Inventory.GetItem((eInventorySlot)uArgs.Slot);
+				if (item != null && item.Id_nb == emptyMagicBox.Id_nb)
 				{
-					if (player.Position.CheckSquareDistance(quest.askefruer.Position, 500*500))
+					if (WorldMgr.GetDistance(player, quest.askefruer) < 500)
 					{
 						foreach (GamePlayer visPlayer in quest.askefruer.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 						{
@@ -432,8 +421,8 @@ namespace DOL.GS.Quests.Midgard
 
 						SendSystemMessage(player, "You catch " + quest.askefruer.GetName(0, false) + " in your magical wodden box!");
 						new RegionTimer(player, new RegionTimerCallback(quest.DeleteAskefruer), 2000);
-						player.Inventory.RemoveItem(item);
-						player.ReceiveItem(player, fullMagicBox.CreateInstance());
+
+						ReplaceItem(player, emptyMagicBox, fullMagicBox);
 
 						quest.Step = 2;
 					}
@@ -448,9 +437,8 @@ namespace DOL.GS.Quests.Midgard
 		protected static void PlayerEnterAskefruerArea(DOLEvent e, object sender, EventArgs args)
 		{
 			AreaEventArgs aargs = args as AreaEventArgs;
-			if (aargs.Area != askefruerArea) return;
 			GamePlayer player = aargs.GameObject as GamePlayer;
-			NuisancesMid quest = player.IsDoingQuest(typeof (NuisancesMid)) as NuisancesMid;
+			Nuisances quest = player.IsDoingQuest(typeof (Nuisances)) as Nuisances;
 
 			if (quest != null && quest.askefruer == null && quest.Step == 1)
 			{
@@ -471,7 +459,7 @@ namespace DOL.GS.Quests.Midgard
 			if (player == null)
 				return;
 
-			NuisancesMid quest = player.IsDoingQuest(typeof (NuisancesMid)) as NuisancesMid;
+			Nuisances quest = player.IsDoingQuest(typeof (Nuisances)) as Nuisances;
 			if (quest != null)
 			{
 				GameEventMgr.AddHandler(player, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
@@ -491,11 +479,11 @@ namespace DOL.GS.Quests.Midgard
 			if (player == null)
 				return;
 
-			if (QuestMgr.CanGiveQuest(typeof(NuisancesMid), player, dalikor) <= 0)
+			if(dalikor.CanGiveQuest(typeof (Nuisances), player)  <= 0)
 				return;
 
 			//We also check if the player is already doing the quest
-			NuisancesMid quest = player.IsDoingQuest(typeof (NuisancesMid)) as NuisancesMid;
+			Nuisances quest = player.IsDoingQuest(typeof (Nuisances)) as Nuisances;
 
 			dalikor.TurnTo(player);
 			//Did the player rightclick on NPC?
@@ -550,13 +538,33 @@ namespace DOL.GS.Quests.Midgard
 								quest.FinishQuest();
 								dalikor.SayTo(player, "Don't go far, I have need of your services again Eeinken.");
 							}
-							break;/*
+							break;
 						case "abort":
 							player.Out.SendCustomDialog("Do you really want to abort this quest, \nall items gained during quest will be lost?", new CustomDialogResponse(CheckPlayerAbortQuest));
-							break;*/
+							break;
 					}
 				}
 			}
+		}
+
+		/// <summary>
+		/// This method checks if a player qualifies for this quest
+		/// </summary>
+		/// <returns>true if qualified, false if not</returns>
+		public override bool CheckQuestQualification(GamePlayer player)
+		{
+			// if the player is already doing the quest his level is no longer of relevance
+			if (player.IsDoingQuest(typeof (Nuisances)) != null)
+				return true;
+
+			// This checks below are only performed is player isn't doing quest already
+			if (!CheckPartAccessible(player, typeof (Nuisances)))
+				return false;
+
+			if (player.Level < minimumLevel || player.Level > maximumLevel)
+				return false;
+
+			return true;
 		}
 
 
@@ -564,7 +572,7 @@ namespace DOL.GS.Quests.Midgard
 		 * on any button in the quest offer dialog. We check if he accepts or
 		 * declines here...
 		 */
-		/*
+
 		private static void CheckPlayerAbortQuest(GamePlayer player, byte response)
 		{
 			Nuisances quest = player.IsDoingQuest(typeof (Nuisances)) as Nuisances;
@@ -581,7 +589,7 @@ namespace DOL.GS.Quests.Midgard
 				SendSystemMessage(player, "Aborting Quest " + questTitle + ". You can start over again if you want.");
 				quest.AbortQuest();
 			}
-		}*/
+		}
 
 		/* This is our callback hook that will be called when the player clicks
 		 * on any button in the quest offer dialog. We check if he accepts or
@@ -592,10 +600,10 @@ namespace DOL.GS.Quests.Midgard
 		{
 			//We recheck the qualification, because we don't talk to players
 			//who are not doing the quest
-			if (QuestMgr.CanGiveQuest(typeof(NuisancesMid), player, dalikor) <= 0)
+			if(dalikor.CanGiveQuest(typeof (Nuisances), player)  <= 0)
 				return;
 
-			NuisancesMid quest = player.IsDoingQuest(typeof (NuisancesMid)) as NuisancesMid;
+			Nuisances quest = player.IsDoingQuest(typeof (Nuisances)) as Nuisances;
 
 			if (quest != null)
 				return;
@@ -607,12 +615,12 @@ namespace DOL.GS.Quests.Midgard
 			else
 			{
 				//Check if we can add the quest!
-				if (!QuestMgr.GiveQuestToPlayer(typeof(NuisancesMid), player, dalikor))
+				if (!dalikor.GiveQuest(typeof (Nuisances), player, 1))
 					return;
 
 				dalikor.SayTo(player, "Excellent, recruit! I believe the noise is coming from the south-southeast of this tower, near the base of the hills. You'll find that there are a lot of huldu near that area, but it is not them. Take this box. When you have discovered what or who is making this noise, USE the box to capture them, then bring it back to me. Be safe Eeinken.");
 				// give necklace                
-				player.ReceiveItem(dalikor, emptyMagicBox.CreateInstance());
+				GiveItem(dalikor, player, emptyMagicBox);
 
 				GameEventMgr.AddHandler(player, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
 				GameEventMgr.AddHandler(player, GamePlayerEvent.UseSlot, new DOLEventHandler(PlayerUseSlot));
@@ -648,9 +656,8 @@ namespace DOL.GS.Quests.Midgard
 						return "[Step #2] Take the Full Magical Wooden Box back to Dalikor at the guard tower near Mularn. Be sure to hand him the Full Magical Wooden Box.";
 					case 3:
 						return "[Step #3] Wait for Dalikor to reward you. If he stops speaking with you, simply ask him if there is a [reward] for your efforts.";
-					default:
-						return "[Step #" + Step + "] No Description entered for this step!";
 				}
+				return base.Description;
 			}
 		}
 
@@ -658,47 +665,48 @@ namespace DOL.GS.Quests.Midgard
 		{
 			GamePlayer player = sender as GamePlayer;
 
-			if (player==null || player.IsDoingQuest(typeof (NuisancesMid)) == null)
+			if (player==null || player.IsDoingQuest(typeof (Nuisances)) == null)
 				return;
 
 			if (Step == 2 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == dalikor.Name && gArgs.Item.Name == fullMagicBox.Name)
+				if (gArgs.Target.Name == dalikor.Name && gArgs.Item.Id_nb == fullMagicBox.Id_nb)
 				{
-					RemoveItemFromPlayer(dalikor, fullMagicBox);
+					RemoveItem(dalikor, m_questPlayer, fullMagicBox);
 
 					dalikor.TurnTo(m_questPlayer);
 					dalikor.SayTo(m_questPlayer, "Hm...It's quite heavy. Let me take a peek inside.");
 					SendEmoteMessage(m_questPlayer, "Dalikor opens the top of the wooden box carefully. Once he spies the creatures inside, he closes the lid quickly.");
-					dalikor.Emote(eEmote.Yes);
+
+					m_questPlayer.Out.SendEmoteAnimation(dalikor, eEmote.Yes);
 					Step = 3;
 					return;
 				}
 			}
 
 		}
-		/*
+
 		public override void AbortQuest()
 		{
 			base.AbortQuest(); //Defined in Quest, changes the state, stores in DB etc ...
 
-			RemoveItemFromPlayer(emptyMagicBox);
-			RemoveItemFromPlayer(fullMagicBox);
+			RemoveItem(m_questPlayer, emptyMagicBox, false);
+			RemoveItem(m_questPlayer, fullMagicBox, false);
 
 			GameEventMgr.RemoveHandler(m_questPlayer, GamePlayerEvent.UseSlot, new DOLEventHandler(PlayerUseSlot));
 			GameEventMgr.RemoveHandler(m_questPlayer, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
-		}*/
+		}
 
 		public override void FinishQuest()
 		{
 			base.FinishQuest(); //Defined in Quest, changes the state, stores in DB etc ...
 
 			//Give reward to player here ...            
-			if (m_questPlayer.HasAbilityToUseItem(recruitsShortSword.CreateInstance() as EquipableItem))
-				GiveItemToPlayer(dalikor, recruitsShortSword.CreateInstance());
+			if (m_questPlayer.HasAbilityToUseItem(recruitsShortSword))
+				GiveItem(dalikor, m_questPlayer, recruitsShortSword);
 			else
-				GiveItemToPlayer(dalikor, recruitsStaff.CreateInstance());
+				GiveItem(dalikor, m_questPlayer, recruitsStaff);
 
 			m_questPlayer.GainExperience(100, 0, 0, true);
 			m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 3, Util.Random(50)), "You recieve {0} as a reward.");

@@ -17,8 +17,7 @@
  *
  */
 using System;
-using DOL.Events;
-using DOL.GS.Database;
+using DOL.Database;
 
 namespace DOL.GS.PacketHandler.v168
 {
@@ -56,23 +55,11 @@ namespace DOL.GS.PacketHandler.v168
 				// packet is sent on every region change (and twice after "play" was pressed)
 				if(
 				   (
-					(client.Player == null && client.Account.CharactersInSelectedRealm != null) 
+					(client.Player == null && client.Account.Characters != null) 
 					|| (client.Player!=null && client.Player.Name.ToLower()!=charName.ToLower())
 				   ) && client.ClientState == GameClient.eClientState.CharScreen)
 				{
-					foreach(GamePlayer player in client.Account.CharactersInSelectedRealm)
-					{
-						if(player.Name == charName)
-						{
-							client.Player = player;
-							player.LoadFromDatabase(client);
-
-							GameEventMgr.Notify(GameClientEvent.PlayerLoaded,this);
-							break;
-						}
-					}
-
-					/*bool charFound=false;
+					bool charFound=false;
 					for(int i=0;i<client.Account.Characters.Length;i++)
 					{
 						if(client.Account.Characters[i]!=null 
@@ -87,7 +74,7 @@ namespace DOL.GS.PacketHandler.v168
 					{
 						client.Player=null;
 						client.ActiveCharIndex=-1;
-					}*/
+					}
 				}
 				if(client.Player==null)
 				{

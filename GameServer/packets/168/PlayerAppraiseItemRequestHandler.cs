@@ -18,7 +18,7 @@
  */
 using System;
 using DOL.GS.Housing;
-using DOL.GS.Database;
+using DOL.Database;
 
 namespace DOL.GS.PacketHandler.v168
 {
@@ -67,11 +67,9 @@ namespace DOL.GS.PacketHandler.v168
 				if(player.TargetObject==null)
 					return;
 
-				GenericItem item = player.Inventory.GetItem((eInventorySlot)m_slot);
-				if(item == null)
-					return;
+				InventoryItem item=player.Inventory.GetItem((eInventorySlot)m_slot);
 
-				if(!item.IsSaleable)
+				if(!item.IsDropable)
 				{
 					player.Out.SendMessage("This item can't be sold.", eChatType.CT_Merchant,eChatLoc.CL_SystemWindow);
 					return;
@@ -96,16 +94,16 @@ namespace DOL.GS.PacketHandler.v168
 				if(val == 0)
 				{
 					if(player.TargetObject is GameLiving)
-						message = player.TargetObject.GetName(0, true)+" isn't interested in "+item.Name;
+						message = player.TargetObject.GetName(0, true)+" isn't interested in "+item.GetName(0, false);
 					else
-						message = item.Name + " isn't worth any value!";
+						message = item.GetName(0, true) + " isn't worth any value!";
 				}
 				else
 				{
 					if(player.TargetObject is GameLiving)
-						message = player.TargetObject.GetName(0, true)+" offers you "+Money.GetString(val)+" for "+item.Name;
+						message = player.TargetObject.GetName(0, true)+" offers you "+Money.GetString(val)+" for "+item.GetName(0, false);
 					else
-						message = "You would gain "+Money.GetString(val)+" for "+item.Name;
+						message = "You would gain "+Money.GetString(val)+" for "+item.GetName(0, false);
 				}
 				player.Out.SendMessage(message, eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
 			}

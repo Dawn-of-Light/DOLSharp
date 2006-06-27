@@ -44,13 +44,13 @@ namespace DOL.GS.Scripts
 				if (living != null)
 				{
 					living.Health = living.MaxHealth;
-					living.EndurancePercent = 100;
+					living.Endurance = living.MaxEndurance;
 					living.Mana = living.MaxMana;
 				}
 				else
 				{
 					client.Player.Health = client.Player.MaxHealth;
-                    client.Player.EndurancePercent = 100;
+					client.Player.Endurance = client.Player.MaxEndurance;
 					client.Player.Mana = client.Player.MaxMana;
 				}
 			}

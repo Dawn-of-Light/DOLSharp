@@ -25,7 +25,7 @@ using System;
 using System.Collections;
 using System.Collections.Specialized;
 using System.Reflection;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.GS.Utils;
 using log4net;
 
@@ -80,7 +80,7 @@ namespace DOL.GS
 				lock(m_templateNameXLootTemplate)
 				{
 					// ** find our loot template **
-					IList m_lootTemplates=null;
+					DataObject[] m_lootTemplates=null;
 					try
 					{
 						m_lootTemplates = GameServer.Database.SelectAllObjects(typeof(DBLootTemplate));
@@ -107,7 +107,7 @@ namespace DOL.GS
 							if (dbTemplate.ItemTemplate==null) 
 							{
 								if (log.IsWarnEnabled)
-									log.Warn("No ItemTemplate found for id="+dbTemplate.ItemTemplateID+". Check loottemplat entry with id="+dbTemplate.LootTemplateID);
+									log.Warn("No ItemTemplate found for id="+dbTemplate.ItemTemplateID+". Check loottemplat entry with id="+dbTemplate.ObjectId);
 								continue;
 							}
 
@@ -122,7 +122,7 @@ namespace DOL.GS
 				lock(m_mobXLootTemplates)
 				{
 					// ** find our mobs related with loot templates **
-					IList m_mobLootTemplates=null;
+					DataObject[] m_mobLootTemplates=null;
 					try
 					{
 						m_mobLootTemplates = GameServer.Database.SelectAllObjects(typeof(DBMobXLootTemplate));

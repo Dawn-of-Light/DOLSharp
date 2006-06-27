@@ -17,7 +17,6 @@
  *
  */
 using System;
-using DOL.GS;
 
 namespace DOL.Events
 {
@@ -26,24 +25,34 @@ namespace DOL.Events
 	/// </summary>
 	public class TurnToEventArgs : EventArgs
 	{
-		private Point m_point;
+		private int x;
+		private int y;
 
 		/// <summary>
 		/// Constructs a new TurnToEventArgs
 		/// </summary>
 		/// <param name="x">the target x</param>
 		/// <param name="y">the target y</param>
-		public TurnToEventArgs(Point point)
+		public TurnToEventArgs(int x, int y)
 		{
-			m_point = point;
+			this.x=x;
+			this.y=y;
 		}
 
 		/// <summary>
-		/// Gets the target point.
+		/// Gets the target X
 		/// </summary>
-		public Point Point
+		public int X
 		{
-			get { return m_point; }
+			get { return x; }
+		}		
+		
+		/// <summary>
+		/// Gets the target Y
+		/// </summary>
+		public int Y
+		{
+			get { return y; }
 		}
 	}
 }

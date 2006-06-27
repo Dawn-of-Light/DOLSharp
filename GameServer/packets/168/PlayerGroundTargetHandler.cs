@@ -33,35 +33,43 @@ namespace DOL.GS.PacketHandler.v168
 			ushort flag = packet.ReadShort();
 //			ushort unk2 = packet.ReadShort();
 
-			new ChangeGroundTargetHandler(client.Player, new Point(groundX, groundY, groundZ), flag)
-				.Start(1);
+			new ChangeGroundTargetHandler(client.Player, groundX, groundY, groundZ, flag).Start(1);
 
 			return 1;
 		}
 
 		/// <summary>
-		/// Handles ground target changes.
+		/// Handles ground target changes
 		/// </summary>
 		protected class ChangeGroundTargetHandler : RegionAction
 		{
 			/// <summary>
-			/// The new ground target position.
+			/// The new ground X
 			/// </summary>
-			protected readonly Point m_newPosition;
-
+			protected readonly int m_x;
 			/// <summary>
-			/// Various flags.
+			/// The new ground Y
 			/// </summary>
+			protected readonly int m_y;
+			/// <summary>
+			/// The new ground Z
+			/// </summary>
+			protected readonly int m_z;
+
 			protected readonly ushort m_flag;
 
 			/// <summary>
-			/// Constructs a new ChangeGroundTargetHandler.
+			/// Constructs a new ChangeGroundTargetHandler
 			/// </summary>
-			/// <param name="actionSource">The action source.</param>
-			/// <param name="position">The new ground target position.</param>
-			public ChangeGroundTargetHandler(GamePlayer actionSource, Point position, ushort flag) : base(actionSource)
+			/// <param name="actionSource">The action source</param>
+			/// <param name="x">The new ground X</param>
+			/// <param name="y">The new ground Y</param>
+			/// <param name="z">The new ground Z</param>
+			public ChangeGroundTargetHandler(GamePlayer actionSource, int x, int y, int z, ushort flag) : base(actionSource)
 			{
-				m_newPosition = position;
+				m_x = x;
+				m_y = y;
+				m_z = z;
 				m_flag = flag;
 			}
 
@@ -72,7 +80,7 @@ namespace DOL.GS.PacketHandler.v168
 			{
 				GamePlayer player = (GamePlayer)m_actionSource;
 				player.GroundTargetInView = ((m_flag & 0x100) != 0);
-				player.GroundTarget = m_newPosition;
+				player.SetGroundTarget(m_x, m_y, (ushort)m_z);
 				if(!player.GroundTargetInView)
 					player.Out.SendMessage("Your ground target is not visible!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 			}

@@ -17,11 +17,7 @@
  *
  */
 using System;
-using System.Collections;
-using System.Reflection;
-using DOL.Events;
 using DOL.GS.PacketHandler;
-using log4net;
 
 namespace DOL.GS.Trainer
 {
@@ -31,23 +27,8 @@ namespace DOL.GS.Trainer
 	[NPCGuildScript("Reaver Trainer", eRealm.Albion)]		// this attribute instructs DOL to use this script for all "Reaver Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class ReaverTrainer : GameTrainer
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
-		/// <summary>
-		/// This hash constrain all item template the trainer can give
-		/// </summary>	
-		private static IDictionary allStartupItems = new Hashtable();
-
-		/// <summary>
-		/// This function is called at the server startup
-		/// </summary>	
-		[GameServerStartedEvent]
-		public static void OnServerStartup(DOLEvent e, object sender, EventArgs args)
+		public ReaverTrainer() : base()
 		{
-			// TODO find level 5 trainer gift
 		}
 
 		/// <summary>
@@ -108,7 +89,7 @@ namespace DOL.GS.Trainer
 						//##Melarlian says, "You have come to seek admittance into the [Temple of Arawn] to worship the old god that your ancestors worshipped?"
 						//##Melarlian says, "Very well then. Choose your weapon, and it shall be done. Know that once this choice is made, there is no return. You may choose a flexible [slashing] or a flexible [crushing] weapon?"
 						//##Melarlian says, "Here is your Whip of the Initiate. Welcome to the Temple of Arawn, Calaoron."
-						PromotePlayer(player, (int)eCharacterClass.Reaver, "Welcome to the Temple of Arawn, " + player.Name + ".", null);
+						PromotePlayer(player, (int)eCharacterClass.Reaver, "Welcome to the Temple of Arawn, " + player.Name + ".", null);	// TODO: gifts
 					}
 					break;
 			}

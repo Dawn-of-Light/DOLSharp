@@ -31,7 +31,7 @@
 using System;
 using System.Reflection;
 using DOL.AI.Brain;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
@@ -46,60 +46,13 @@ using log4net;
 
 namespace DOL.GS.Quests.Hibernia
 {
-
-	/* The first thing we do, is to declare the quest requirement
-	 * class linked with the new Quest. To do this, we derive 
-	 * from the abstract class AbstractQuestDescriptor
+	/* The first thing we do, is to declare the class we create
+	 * as Quest. To do this, we derive from the abstract class
+	 * AbstractQuest
+	 * 	 
 	 */
-	public class NuisancesHibDescriptor : AbstractQuestDescriptor
-	{
-		/* This is the type of the quest class linked with 
-		 * this requirement class, you must override the 
-		 * base method like that
-		 */
-		public override Type LinkedQuestType
-		{
-			get { return typeof(NuisancesHib); }
-		}
 
-		/* This value is used to retrieves the minimum level needed
-		 *  to be able to make this quest. Override it only if you need, 
-		 * the default value is 1
-		 */
-				public override int MinLevel
-				{
-					get { return 2; }
-				}
-
-		/* This value is used to retrieves how maximum level needed
-		 * to be able to make this quest. Override it only if you need, 
-		 * the default value is 50
-		 */
-		public override int MaxLevel
-		{
-			get { return 2; }
-		}
-
-		/* This method is used to know if the player is qualified to 
-		 * do the quest. The base method always test his level and
-		 * how many time the quest has been done. Override it only if 
-		 * you want to add a custom test (here we test also the class name)
-		 */
-		public override bool CheckQuestQualification(GamePlayer player)
-		{
-			if (!BaseAddirQuest.CheckPartAccessible(player, typeof(NuisancesHib)))
-				return false;
-			return base.CheckQuestQualification(player);
-		}
-	}
-
-
-	/* The second thing we do, is to declare the class we create
-	 * as Quest. We must make it persistant using attributes, to
-	 * do this, we derive from the abstract class AbstractQuest
-	 */
-	[NHibernate.Mapping.Attributes.Subclass(NameType = typeof(NuisancesHib), ExtendsType = typeof(AbstractQuest))] 
-	public class NuisancesHib : BaseAddirQuest
+	public class Nuisances : BaseAddirQuest
 	{
 		/// <summary>
 		/// Defines a logger for this class.
@@ -116,17 +69,40 @@ namespace DOL.GS.Quests.Hibernia
 		 * 
 		 */
 		protected const string questTitle = "Nuisances (Hib)";
+		protected const int minimumLevel = 2;
+		protected const int maximumLevel = 2;
 
 		private static GameNPC addrir = null;
 		private GameNPC sluagh = null;
 
 		private static GameLocation sluaghLocation = new GameLocation("sluagh Location", 200, 200, 27416, 4129, 5221, 310);
-		private static Circle sluaghArea = null;
+		private static IArea sluaghArea = null;
 
-		private static GenericItemTemplate emptyMagicBox = null;
-		private static GenericItemTemplate fullMagicBox = null;
-		private static SwordTemplate recruitsShortSword = null;
-		private static StaffTemplate recruitsStaff = null;
+		private static ItemTemplate emptyMagicBox = null;
+		private static ItemTemplate fullMagicBox = null;
+		private static ItemTemplate recruitsShortSword = null;
+		private static ItemTemplate recruitsStaff = null;
+
+
+		/* We need to define the constructors from the base class here, else there might be problems
+		 * when loading this quest...
+		 */
+		public Nuisances() : base()
+		{
+		}
+
+		public Nuisances(GamePlayer questingPlayer) : this(questingPlayer, 1)
+		{
+		}
+
+		public Nuisances(GamePlayer questingPlayer, int step) : base(questingPlayer, step)
+		{
+		}
+
+		public Nuisances(GamePlayer questingPlayer, DBQuest dbQuest) : base(questingPlayer, dbQuest)
+		{
+		}
+
 
 		/* The following method is called automatically when this quest class
 		 * is loaded. You might notice that this method is the same as in standard
@@ -167,22 +143,22 @@ namespace DOL.GS.Quests.Hibernia
 			#region defineItems
 
 			// item db check
-			emptyMagicBox = (GenericItemTemplate)GameServer.Database.FindObjectByKey(typeof(GenericItemTemplate), "empty_wodden_magic_box");
+			emptyMagicBox = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "empty_wodden_magic_box");
 			if (emptyMagicBox == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Empty Wodden Magic Box, creating it ...");
-				emptyMagicBox = new GenericItemTemplate();
+				emptyMagicBox = new ItemTemplate();
 				emptyMagicBox.Name = "Empty Wodden Magic Box";
 
 				emptyMagicBox.Weight = 5;
 				emptyMagicBox.Model = 602;
 
-				emptyMagicBox.ItemTemplateID = "empty_wodden_magic_box";
+				emptyMagicBox.Object_Type = (int) eObjectType.GenericItem;
+				emptyMagicBox.Id_nb = "empty_wodden_magic_box";
 
+				emptyMagicBox.IsPickable = true;
 				emptyMagicBox.IsDropable = false;
-				emptyMagicBox.IsSaleable = false;
-				emptyMagicBox.IsTradable = false;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -192,22 +168,22 @@ namespace DOL.GS.Quests.Hibernia
 			}
 
 			// item db check
-			fullMagicBox = (GenericItemTemplate)GameServer.Database.FindObjectByKey(typeof(GenericItemTemplate), "full_wodden_magic_box");
+			fullMagicBox = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "full_wodden_magic_box");
 			if (fullMagicBox == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Full Wodden Magic Box, creating it ...");
-				fullMagicBox = new GenericItemTemplate();
+				fullMagicBox = new ItemTemplate();
 				fullMagicBox.Name = "Full Wodden Magic Box";
 
 				fullMagicBox.Weight = 3;
 				fullMagicBox.Model = 602;
 
-				fullMagicBox.ItemTemplateID = "full_wodden_magic_box";
+				fullMagicBox.Object_Type = (int) eObjectType.GenericItem;
 
+				fullMagicBox.Id_nb = "full_wodden_magic_box";
+				fullMagicBox.IsPickable = true;
 				fullMagicBox.IsDropable = false;
-				fullMagicBox.IsSaleable = false;
-				fullMagicBox.IsTradable = false;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -217,34 +193,50 @@ namespace DOL.GS.Quests.Hibernia
 			}
 
 			// item db check
-			recruitsShortSword = (SwordTemplate)GameServer.Database.FindObjectByKey(typeof(SwordTemplate), "recruits_short_sword_hib");
+			recruitsShortSword = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_short_sword_hib");
 			if (recruitsShortSword == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Recruit's Short Sword (Hib), creating it ...");
-				recruitsShortSword = new SwordTemplate();
+				recruitsShortSword = new ItemTemplate();
 				recruitsShortSword.Name = "Recruit's Short Sword (Hib)";
 				recruitsShortSword.Level = 4;
 
 				recruitsShortSword.Weight = 18;
 				recruitsShortSword.Model = 3; // studded Boots
 
-				recruitsShortSword.DamagePerSecond = 24;
-				recruitsShortSword.Speed = 3000;
+				recruitsShortSword.DPS_AF = 24; // Armour
+				recruitsShortSword.SPD_ABS = 30; // Absorption
 
-				recruitsShortSword.ItemTemplateID = "recruits_short_sword_hib";
-				recruitsShortSword.Value = 200;
-				recruitsShortSword.Color = 46; // green metal
-
+				recruitsShortSword.Type_Damage = (int) eDamageType.Slash;
+				recruitsShortSword.Object_Type = (int) eObjectType.Blades;
+				recruitsShortSword.Item_Type = (int) eEquipmentItems.LEFT_HAND;
+				recruitsShortSword.Id_nb = "recruits_short_sword_hib";
+				recruitsShortSword.Gold = 0;
+				recruitsShortSword.Silver = 2;
+				recruitsShortSword.Copper = 0;
+				recruitsShortSword.IsPickable = true;
 				recruitsShortSword.IsDropable = true;
-				recruitsShortSword.IsSaleable = true;
-				recruitsShortSword.IsTradable = true;
+				recruitsShortSword.Color = 46; // green metal
 
 				recruitsShortSword.Bonus = 1; // default bonus
 
-				recruitsShortSword.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 3));
-				recruitsShortSword.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Quickness, 1));
-				recruitsShortSword.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Body, 1));
+				recruitsShortSword.Bonus1 = 3;
+				recruitsShortSword.Bonus1Type = (int) eStat.STR;
+
+				recruitsShortSword.Bonus2 = 1;
+				recruitsShortSword.Bonus2Type = (int) eStat.QUI;
+
+				recruitsShortSword.Bonus3 = 1;
+				recruitsShortSword.Bonus3Type = (int) eResist.Body;
+
+				recruitsShortSword.Quality = 100;
+				recruitsShortSword.MaxQuality = 100;
+				recruitsShortSword.Condition = 1000;
+				recruitsShortSword.MaxCondition = 1000;
+				recruitsShortSword.Durability = 1000;
+				recruitsShortSword.MaxDurability = 1000;
+
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
@@ -253,10 +245,10 @@ namespace DOL.GS.Quests.Hibernia
 			}
 
 			// item db check
-			recruitsStaff = (StaffTemplate)GameServer.Database.FindObjectByKey(typeof(StaffTemplate), "recruits_staff");
+			recruitsStaff = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_staff");
 			if (recruitsStaff == null)
 			{
-				recruitsStaff = new StaffTemplate();
+				recruitsStaff = new ItemTemplate();
 				recruitsStaff.Name = "Recruit's Staff";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + recruitsStaff.Name + ", creating it ...");
@@ -265,21 +257,34 @@ namespace DOL.GS.Quests.Hibernia
 				recruitsStaff.Weight = 45;
 				recruitsStaff.Model = 442;
 
-				recruitsStaff.DamagePerSecond = 24;
-				recruitsStaff.Speed = 4500;
+				recruitsStaff.DPS_AF = 24;
+				recruitsStaff.SPD_ABS = 45;
 
-				recruitsStaff.ItemTemplateID = "recruits_staff";
-				recruitsStaff.Value = 200;
-
+				recruitsStaff.Type_Damage = (int) eDamageType.Slash;
+				recruitsStaff.Object_Type = (int) eObjectType.Staff;
+				recruitsStaff.Item_Type = (int) eEquipmentItems.LEFT_HAND;
+				recruitsStaff.Id_nb = "recruits_staff";
+				recruitsStaff.Gold = 0;
+				recruitsStaff.Silver = 2;
+				recruitsStaff.Copper = 0;
+				recruitsStaff.IsPickable = true;
 				recruitsStaff.IsDropable = true;
-				recruitsStaff.IsSaleable = true;
-				recruitsStaff.IsTradable = true;
 				recruitsStaff.Color = 45; // blue metal
 
 				recruitsStaff.Bonus = 1; // default bonus
 
-				recruitsStaff.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Intelligence, 3));
-				recruitsStaff.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Crush, 1));
+				recruitsStaff.Bonus1 = 3;
+				recruitsStaff.Bonus1Type = (int) eStat.INT;
+
+				recruitsStaff.Bonus2 = 1;
+				recruitsStaff.Bonus2Type = (int) eResist.Crush;
+
+				recruitsStaff.Quality = 100;
+				recruitsStaff.MaxQuality = 100;
+				recruitsStaff.Condition = 1000;
+				recruitsStaff.MaxCondition = 1000;
+				recruitsStaff.Durability = 1000;
+				recruitsStaff.MaxDurability = 1000;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -290,14 +295,8 @@ namespace DOL.GS.Quests.Hibernia
 
 			#endregion
 
-
-			sluaghArea = new Circle();
-			sluaghArea.Description = "Sluagh contamined Area";
-			sluaghArea.X = sluaghLocation.Position.X;
-			sluaghArea.Y = sluaghLocation.Position.Y;
-			sluaghArea.Radius = 1500;
-			sluaghArea.RegionID = sluaghLocation.Region.RegionID;
-			AreaMgr.RegisterArea(sluaghArea);
+			sluaghArea = WorldMgr.GetRegion(sluaghLocation.RegionID).AddArea(new Area.Circle("Sluagh contamined Area", sluaghLocation.X, sluaghLocation.Y, 0, 1500));
+			sluaghArea.RegisterPlayerEnter(new DOLEventHandler(PlayerEnterSluaghArea));
 
 			/* Now we add some hooks to the npc we found.
 			* Actually, we want to know when a player interacts with him.
@@ -312,10 +311,8 @@ namespace DOL.GS.Quests.Hibernia
 			GameEventMgr.AddHandler(addrir, GameLivingEvent.Interact, new DOLEventHandler(TalkToAddrir));
 			GameEventMgr.AddHandler(addrir, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToAddrir));
 
-			GameEventMgr.AddHandler(AreaEvent.PlayerEnter, new DOLEventHandler(PlayerEnterSluaghArea));
-
 			/* Now we bring to addrir the possibility to give this quest to players */
-			QuestMgr.AddQuestDescriptor(addrir, typeof(NuisancesHibDescriptor));
+			addrir.AddQuestToGive(typeof (Nuisances));
 
 			if (log.IsInfoEnabled)
 				log.Info("Quest \"" + questTitle + "\" initialized");
@@ -337,7 +334,8 @@ namespace DOL.GS.Quests.Hibernia
 			if (addrir == null)
 				return;
 
-			AreaMgr.UnregisterArea(sluaghArea);
+			sluaghArea.UnRegisterPlayerEnter(new DOLEventHandler(PlayerEnterSluaghArea));
+			WorldMgr.GetRegion(sluaghLocation.RegionID).RemoveArea(sluaghArea);
 
 			/* Removing hooks works just as adding them but instead of 
 			 * AddHandler, we call RemoveHandler, the parameters stay the same
@@ -347,10 +345,8 @@ namespace DOL.GS.Quests.Hibernia
 			GameEventMgr.RemoveHandler(addrir, GameLivingEvent.Interact, new DOLEventHandler(TalkToAddrir));
 			GameEventMgr.RemoveHandler(addrir, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToAddrir));
 
-			GameEventMgr.RemoveHandler(AreaEvent.PlayerEnter, new DOLEventHandler(PlayerEnterSluaghArea));
-
 			/* Now we remove to addrir the possibility to give this quest to players */
-			QuestMgr.RemoveQuestDescriptor(addrir, typeof(NuisancesHibDescriptor));
+			addrir.RemoveQuestToGive(typeof (Nuisances));
 		}
 
 		protected static void PlayerLeftWorld(DOLEvent e, object sender, EventArgs args)
@@ -359,7 +355,7 @@ namespace DOL.GS.Quests.Hibernia
 			if (player == null)
 				return;
 
-			NuisancesHib quest = player.IsDoingQuest(typeof (NuisancesHib)) as NuisancesHib;
+			Nuisances quest = player.IsDoingQuest(typeof (Nuisances)) as Nuisances;
 			if (quest != null)
 			{
 				GameEventMgr.RemoveHandler(player, GamePlayerEvent.UseSlot, new DOLEventHandler(PlayerUseSlot));
@@ -379,13 +375,12 @@ namespace DOL.GS.Quests.Hibernia
 			sluagh.Name = "Sluagh Footsoldier";
 			sluagh.GuildName = "Part of " + questTitle + " Quest";
 			sluagh.Realm = (byte) eRealm.None;
-			sluagh.RegionId = 200;
+			sluagh.CurrentRegionID = 200;
 			sluagh.Size = 50;
 			sluagh.Level = 4;
-			Point pos = sluaghLocation.Position;
-			pos.X += Util.Random(-150, 150);
-			pos.Y += Util.Random(-150, 150);
-			sluagh.Position = pos;
+			sluagh.X = sluaghLocation.X + Util.Random(-150, 150);
+			sluagh.Y = sluaghLocation.Y + Util.Random(-150, 150);
+			sluagh.Z = sluaghLocation.Z;
 			sluagh.Heading = sluaghLocation.Heading;
 
 			StandardMobBrain brain = new StandardMobBrain();
@@ -407,7 +402,7 @@ namespace DOL.GS.Quests.Hibernia
 		{
 			GamePlayer player = (GamePlayer) sender;
 
-			NuisancesHib quest = (NuisancesHib) player.IsDoingQuest(typeof (NuisancesHib));
+			Nuisances quest = (Nuisances) player.IsDoingQuest(typeof (Nuisances));
 			if (quest == null)
 				return;
 
@@ -415,10 +410,10 @@ namespace DOL.GS.Quests.Hibernia
 			{
 				UseSlotEventArgs uArgs = (UseSlotEventArgs) args;
 
-				GenericItem item = player.Inventory.GetItem((eInventorySlot)uArgs.Slot);
-				if (item != null && item.Name == emptyMagicBox.Name)
+				InventoryItem item = player.Inventory.GetItem((eInventorySlot)uArgs.Slot);
+				if (item != null && item.Id_nb == emptyMagicBox.Id_nb)
 				{
-					if (player.Position.CheckSquareDistance(quest.sluagh.Position, 500*500))
+					if (WorldMgr.GetDistance(player, quest.sluagh) < 500)
 					{
 						foreach (GamePlayer visPlayer in quest.sluagh.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 						{
@@ -427,8 +422,8 @@ namespace DOL.GS.Quests.Hibernia
 
 						SendSystemMessage(player, "You catch the sluagh footsoldier in your magical wodden box!");
 						new RegionTimer(player, new RegionTimerCallback(quest.DeleteSluagh), 2000);
-						player.Inventory.RemoveItem(item);
-						player.ReceiveItem(player, fullMagicBox.CreateInstance());
+
+						ReplaceItem(player, emptyMagicBox, fullMagicBox);
 
 						quest.Step = 2;
 					}
@@ -443,9 +438,8 @@ namespace DOL.GS.Quests.Hibernia
 		protected static void PlayerEnterSluaghArea(DOLEvent e, object sender, EventArgs args)
 		{
 			AreaEventArgs aargs = args as AreaEventArgs;
-			if (aargs.Area != sluaghArea) return;
 			GamePlayer player = aargs.GameObject as GamePlayer;
-			NuisancesHib quest = player.IsDoingQuest(typeof (NuisancesHib)) as NuisancesHib;
+			Nuisances quest = player.IsDoingQuest(typeof (Nuisances)) as Nuisances;
 
 			if (quest != null && quest.sluagh == null && quest.Step == 1)
 			{
@@ -466,7 +460,7 @@ namespace DOL.GS.Quests.Hibernia
 			if (player == null)
 				return;
 
-			NuisancesHib quest = player.IsDoingQuest(typeof (NuisancesHib)) as NuisancesHib;
+			Nuisances quest = player.IsDoingQuest(typeof (Nuisances)) as Nuisances;
 			if (quest != null)
 			{
 				GameEventMgr.AddHandler(player, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
@@ -486,11 +480,11 @@ namespace DOL.GS.Quests.Hibernia
 			if (player == null)
 				return;
 
-			if (QuestMgr.CanGiveQuest(typeof(NuisancesHib), player, addrir) <= 0)
+			if(addrir.CanGiveQuest(typeof (Nuisances), player)  <= 0)
 				return;
 
 			//We also check if the player is already doing the quest
-			NuisancesHib quest = player.IsDoingQuest(typeof (NuisancesHib)) as NuisancesHib;
+			Nuisances quest = player.IsDoingQuest(typeof (Nuisances)) as Nuisances;
 
 			addrir.TurnTo(player);
 			//Did the player rightclick on NPC?
@@ -538,6 +532,60 @@ namespace DOL.GS.Quests.Hibernia
 							break;
 					}
 				}
+				else
+				{
+					switch (wArgs.Text)
+					{
+						case "abort":
+							player.Out.SendCustomDialog("Do you really want to abort this quest, \nall items gained during quest will be lost?", new CustomDialogResponse(CheckPlayerAbortQuest));
+							break;
+					}
+				}
+			}
+		}
+
+		/// <summary>
+		/// This method checks if a player qualifies for this quest
+		/// </summary>
+		/// <returns>true if qualified, false if not</returns>
+		public override bool CheckQuestQualification(GamePlayer player)
+		{
+			// if the player is already doing the quest his level is no longer of relevance
+			if (player.IsDoingQuest(typeof (Nuisances)) != null)
+				return true;
+
+			// This checks below are only performed is player isn't doing quest already
+
+			if (!CheckPartAccessible(player, typeof (Nuisances)))
+				return false;
+
+			if (player.Level < minimumLevel || player.Level > maximumLevel)
+				return false;
+
+			return true;
+		}
+
+
+		/* This is our callback hook that will be called when the player clicks
+		 * on any button in the quest offer dialog. We check if he accepts or
+		 * declines here...
+		 */
+
+		private static void CheckPlayerAbortQuest(GamePlayer player, byte response)
+		{
+			Nuisances quest = player.IsDoingQuest(typeof (Nuisances)) as Nuisances;
+
+			if (quest == null)
+				return;
+
+			if (response == 0x00)
+			{
+				SendSystemMessage(player, "Good, no go out there and finish your work!");
+			}
+			else
+			{
+				SendSystemMessage(player, "Aborting Quest " + questTitle + ". You can start over again if you want.");
+				quest.AbortQuest();
 			}
 		}
 
@@ -550,10 +598,10 @@ namespace DOL.GS.Quests.Hibernia
 		{
 			//We recheck the qualification, because we don't talk to players
 			//who are not doing the quest
-			if (QuestMgr.CanGiveQuest(typeof(NuisancesHib), player, addrir) <= 0)
+			if(addrir.CanGiveQuest(typeof (Nuisances), player)  <= 0)
 				return;
 
-			NuisancesHib quest = player.IsDoingQuest(typeof (NuisancesHib)) as NuisancesHib;
+			Nuisances quest = player.IsDoingQuest(typeof (Nuisances)) as Nuisances;
 
 			if (quest != null)
 				return;
@@ -565,12 +613,12 @@ namespace DOL.GS.Quests.Hibernia
 			else
 			{
 				//Check if we can add the quest!
-				if (!QuestMgr.GiveQuestToPlayer(typeof(NuisancesHib), player, addrir))
+				if (!addrir.GiveQuest(typeof (Nuisances), player, 1))
 					return;
 
 				addrir.SayTo(player, "Excellent recruit! Now here, take this magical box. I have a feeling there is something out there, and I would like for you to catch it, as proof to Fagan that something needs to be done. When you find the spot that is the noisiest, USE the box and capture whatever it is. Good luck Lirone. Return to me as quickly as you can.");
-				// give necklace        
-				player.ReceiveItem(addrir, emptyMagicBox.CreateInstance());
+				// give necklace                
+				GiveItem(addrir, player, emptyMagicBox);
 
 				GameEventMgr.AddHandler(player, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
 				GameEventMgr.AddHandler(player, GamePlayerEvent.UseSlot, new DOLEventHandler(PlayerUseSlot));
@@ -606,9 +654,8 @@ namespace DOL.GS.Quests.Hibernia
 						return "[Step #2] Take the Full Magical Wooden Box back to Addrir in Mag Mell.";
 					case 3:
 						return "[Step #3] Wait for Addrir to reward you. If he stops speaking with you at any time, ask if there is something he can give you for your [efforts].";
-					default:
-						return "[Step #" + Step + "] No Description entered for this step!";
 				}
+				return base.Description;
 			}
 		}
 
@@ -616,20 +663,21 @@ namespace DOL.GS.Quests.Hibernia
 		{
 			GamePlayer player = sender as GamePlayer;
 
-			if (player==null || player.IsDoingQuest(typeof (NuisancesHib)) == null)
+			if (player==null || player.IsDoingQuest(typeof (Nuisances)) == null)
 				return;
 
 			if (Step == 2 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == addrir.Name && gArgs.Item.Name == fullMagicBox.Name)
+				if (gArgs.Target.Name == addrir.Name && gArgs.Item.Id_nb == fullMagicBox.Id_nb)
 				{
-					RemoveItemFromPlayer(addrir, fullMagicBox);
+					RemoveItem(addrir, m_questPlayer, fullMagicBox);
 
 					addrir.TurnTo(m_questPlayer);
 					addrir.SayTo(m_questPlayer, "Ah, it is quite heavy, let me take a peek.");
 					SendEmoteMessage(m_questPlayer, "Addrir takes the box from you and carefully opens the lid. When he sees what is inside, he closes the lid quickly.");
-					addrir.Emote(eEmote.Yes);
+
+					m_questPlayer.Out.SendEmoteAnimation(addrir, eEmote.Yes);
 					Step = 3;
 					return;
 				}
@@ -637,15 +685,26 @@ namespace DOL.GS.Quests.Hibernia
 
 		}
 
+		public override void AbortQuest()
+		{
+			base.AbortQuest(); //Defined in Quest, changes the state, stores in DB etc ...
+
+			RemoveItem(m_questPlayer, emptyMagicBox, false);
+			RemoveItem(m_questPlayer, fullMagicBox, false);
+
+			GameEventMgr.RemoveHandler(m_questPlayer, GamePlayerEvent.UseSlot, new DOLEventHandler(PlayerUseSlot));
+			GameEventMgr.RemoveHandler(m_questPlayer, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
+		}
+
 		public override void FinishQuest()
 		{
 			base.FinishQuest(); //Defined in Quest, changes the state, stores in DB etc ...
 
 			//Give reward to player here ...            
-			if (m_questPlayer.HasAbilityToUseItem(recruitsShortSword.CreateInstance() as EquipableItem))
-				GiveItemToPlayer(addrir, recruitsShortSword.CreateInstance());
+			if (m_questPlayer.HasAbilityToUseItem(recruitsShortSword))
+				GiveItem(addrir, m_questPlayer, recruitsShortSword);
 			else
-				GiveItemToPlayer(addrir, recruitsStaff.CreateInstance());
+				GiveItem(addrir, m_questPlayer, recruitsStaff);
 
 			m_questPlayer.GainExperience(100, 0, 0, true);
 			m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 3, Util.Random(50)), "You recieve {0} as a reward.");

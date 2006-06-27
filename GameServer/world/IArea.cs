@@ -32,7 +32,12 @@ namespace DOL.GS
 		/// <summary>
 		/// Returns the ID of this zone
 		/// </summary>
-		int AreaID { get; set;}		
+		ushort ID{ get; set;}		
+
+		void UnRegisterPlayerEnter(DOLEventHandler callback);
+		void UnRegisterPlayerLeave(DOLEventHandler callback);
+		void RegisterPlayerEnter(DOLEventHandler callback);
+		void RegisterPlayerLeave(DOLEventHandler callback);
 
 		/// <summary>
 		/// Checks wether is intersects with given zone.
@@ -47,7 +52,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="spot"></param>
 		/// <returns></returns>
-		bool IsContaining(Point spot);
+		bool IsContaining(IPoint3D spot);
 		
 		/// <summary>
 		/// Called whenever a player leaves the given area

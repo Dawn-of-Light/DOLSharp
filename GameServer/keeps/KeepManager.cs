@@ -16,9 +16,10 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
+using System;
 using System.Collections;
 using System.Reflection;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.GS.PacketHandler;
 using log4net;
 
@@ -51,25 +52,43 @@ namespace DOL.GS
 			{
 				m_keeps.Clear();
 
-				IList keeps = GameServer.Database.SelectAllObjects(typeof(GameKeep));
-                foreach (GameKeep keep in keeps)
+				DataObject[] keeps = GameServer.Database.SelectAllObjects(typeof(DBKeep));
+				foreach (DBKeep datakeep in keeps)
 				{
-					m_keeps.Add(keep.KeepID, keep);
+					if (WorldMgr.GetRegion((ushort)datakeep.Region) == null)
+						continue;
+					AbstractGameKeep keep;
+					if ((datakeep.KeepID >>8) != 0)
+						keep = new GameKeepTower();
+					else
+						keep = new GameKeep();
+					keep.Load(datakeep);
+					m_keeps.Add(datakeep.KeepID, keep);
 				}
-                IList towers = GameServer.Database.SelectAllObjects(typeof(GameKeepTower));
-                foreach (GameKeepTower tower in towers)
-                {
-                    m_keeps.Add(tower.KeepID, tower);
-                }
 				foreach(AbstractGameKeep keep in  m_keeps.Values)
 				{
-                    keep.Load();
+					GameKeepTower tower = keep as GameKeepTower;
+					if (tower == null) continue;
+					int index = tower.KeepID & 0xFF;
+					GameKeep mykeep = getKeepByID(index) as GameKeep;
+					if (mykeep != null)
+						mykeep.AddTower(tower);
+					tower.Keep = mykeep;
 				}
 				//get with one command is more quick even if we look for keep in hashtable
-				IList keepcomponents= GameServer.Database.SelectAllObjects(typeof(GameKeepComponent));
-				foreach(GameKeepComponent component in keepcomponents)
+				DBKeepComponent[] keepcomponents= (DBKeepComponent[])GameServer.Database.SelectAllObjects(typeof(DBKeepComponent));
+				foreach(DBKeepComponent component in keepcomponents)
 				{
-                    component.Load();
+					AbstractGameKeep keep = getKeepByID(component.KeepID);
+					if (keep == null)
+					{
+						if (log.IsWarnEnabled)
+							log.WarnFormat("No keep with ID {0} for component ID {1}", component.KeepID, component.ID);
+						continue;
+					}
+					GameKeepComponent gamecomponent = new GameKeepComponent();
+					gamecomponent.LoadFromDatabase(component,keep);
+					keep.KeepComponents.Add(gamecomponent);
 				}
 				if (m_keeps.Count != 0)
 				{
@@ -91,7 +110,7 @@ namespace DOL.GS
 		{
 			Hashtable hookPointList = new Hashtable();
 
-			IList dbkeepHookPoints = GameServer.Database.SelectAllObjects(typeof(DBKeepHookPoint));
+			DBKeepHookPoint[] dbkeepHookPoints = (DBKeepHookPoint[])GameServer.Database.SelectAllObjects(typeof(DBKeepHookPoint));
 			foreach(DBKeepHookPoint dbhookPoint in dbkeepHookPoints)
 			{
 				ArrayList currentArray;
@@ -149,7 +168,7 @@ namespace DOL.GS
 		/// <param name="point3d"></param>
 		/// <param name="radius"></param>
 		/// <returns></returns>
-		public static IEnumerable getKeepsCloseToSpot(ushort regionid, Point point3d, int radius)
+		public static IEnumerable getKeepsCloseToSpot(ushort regionid, IPoint3D point3d, int radius)
 		{
 			return getKeepsCloseToSpot(regionid, point3d.X, point3d.Y, point3d.Z, radius); 
 		}
@@ -161,7 +180,7 @@ namespace DOL.GS
 		/// <param name="point3d"></param>
 		/// <param name="radius"></param>
 		/// <returns></returns>
-		public static AbstractGameKeep getKeepCloseToSpot(ushort regionid, Point point3d, int radius)
+		public static AbstractGameKeep getKeepCloseToSpot(ushort regionid, IPoint3D point3d, int radius)
 		{
 			return getKeepCloseToSpot(regionid, point3d.X, point3d.Y, point3d.Z, radius); 
 		}
@@ -172,7 +191,7 @@ namespace DOL.GS
 			SortedList keepsByID = new SortedList();
 			foreach(AbstractGameKeep keep in m_keeps.Values)
 			{
-				if (keep.Region.RegionID != 163)
+				if (keep.CurrentRegion.ID != 163)
 					continue;
 				if (((keep.KeepID & 0xFF) / 25 - 1) == map)
 					keepsByID.Add(keep.KeepID,keep);
@@ -186,7 +205,7 @@ namespace DOL.GS
 			ArrayList myKeeps = new ArrayList();
 			foreach(AbstractGameKeep keep in m_keeps.Values)
 			{
-				if (keep.Region.RegionID != 163)
+				if (keep.CurrentRegion.ID != 163)
 					continue;
 				myKeeps.Add(keep);
 			}
@@ -210,10 +229,10 @@ namespace DOL.GS
 			{
 				foreach(AbstractGameKeep keep in m_keeps.Values)
 				{
-					if (keep.Region.RegionID != regionid)
+					if (keep.CurrentRegion.ID != regionid)
 						continue;
-                    long xdiff = keep.Position.X - x;
-                    long ydiff = keep.Position.Y - y;
+					long xdiff = keep.DBKeep.X - x;
+					long ydiff = keep.DBKeep.Y - y;
 					long range = xdiff * xdiff + ydiff * ydiff ;
 					if (range < radiussqrt)
 						myKeeps.Add(keep);
@@ -240,10 +259,10 @@ namespace DOL.GS
 				long myKeepRange = radiussqrt;
 				foreach(AbstractGameKeep keep in m_keeps.Values)
 				{
-					if (keep.Region.RegionID != regionid)
+					if (keep.DBKeep.Region != regionid)
 						continue;
-                    long xdiff = keep.Position.X - x;
-                    long ydiff = keep.Position.Y - y;
+					long xdiff = keep.DBKeep.X - x;
+					long ydiff = keep.DBKeep.Y - y;
 					long range = xdiff * xdiff + ydiff * ydiff ;
 					if (range > radiussqrt)
 						continue;

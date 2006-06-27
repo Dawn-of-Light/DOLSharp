@@ -17,7 +17,8 @@
  *
  */
 using System;
-using DOL.GS.Database;
+using System.Net.Sockets;
+using DOL.Database;
 using DOL.Events;
 using DOL.GS;
 using DOL.GS.PacketHandler;
@@ -60,7 +61,7 @@ namespace DOL.GS.Quests.Tests
 					Console.WriteLine("Item:"+ task.Description);
 
 					// Check Notify Event handling
-                    GenericItem item = new GenericItem();
+					InventoryItem item = new InventoryItem();
 					item.Name = task.ItemName;
 
 					GameMob npc = new GameMob();

@@ -19,8 +19,7 @@
 
 using System;
 using System.Collections;
-using DOL.GS.Database;
-using NHibernate.Expression;
+using DOL.Database;
 
 namespace DOL.GS.Housing
 {
@@ -50,7 +49,7 @@ namespace DOL.GS.Housing
 
 		public static MerchantTradeItems GetLotMarkerItems(GameLotMarker marker)
 		{
-			switch (marker.RegionId)
+			switch (marker.CurrentRegionID)
 			{
 				case 2:
 					return AlbionLotMarkerItems;
@@ -112,14 +111,14 @@ namespace DOL.GS.Housing
 
 		static void CheckMerchantItems(string merchantid, string[] itemids)
 		{
-			IList merchantitems = GameServer.Database.SelectObjects(typeof (MerchantItem), Expression.Eq("ItemListID", merchantid));
+			DataObject[] merchantitems = GameServer.Database.SelectObjects(typeof (MerchantItem), "ItemListID=\'" + GameServer.Database.Escape(merchantid) + "\'");
 			int slot = 0;
 			foreach (string itemid in itemids)
 			{
 				bool found = false;
-				foreach (MerchantItem dbitem in merchantitems)
+				foreach (DataObject dbitem in merchantitems)
 				{
-					if (dbitem.ItemTemplateID == itemid)
+					if (((MerchantItem) dbitem).ItemTemplateID == itemid)
 					{
 						found = true;
 						break;
@@ -141,27 +140,26 @@ namespace DOL.GS.Housing
 
 		static void CheckItemTemplate(string name, string id, int model, int objtype, int copper, int dps, int spd, int hand, int weight)
 		{
-            //TODO convert this method
-            /*
-			SwordTemplate templateitem = (SwordTemplate) GameServer.Database.FindObjectByKey(typeof (SwordTemplate), id);
+			ItemTemplate templateitem = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), GameServer.Database.Escape(id));
 			if (templateitem == null)
 			{
-				templateitem = new SwordTemplate();
-				templateitem.ItemTemplateID = id;
+				templateitem = new ItemTemplate();
 				templateitem.Name = name;
 				templateitem.Model = model;
 				templateitem.Level = 0;
+				templateitem.Object_Type = objtype;
+				templateitem.Id_nb = id;
+				templateitem.IsPickable = true;
 				templateitem.IsDropable = true;
-                templateitem.IsSaleable = true;
-                templateitem.IsTradable = true;
-                templateitem.DamagePerSecond = (byte)dps;
-                templateitem.Speed = spd;
-                templateitem.HandNeeded = (eHandNeeded)hand;
+				templateitem.DPS_AF = dps;
+				templateitem.SPD_ABS = spd;
+				templateitem.Hand = 0x0E;
 				templateitem.Weight = weight;
-                templateitem.Value = copper;
+				templateitem.Copper = (byte) Money.GetCopper(copper);
+				templateitem.Silver = (byte) Money.GetSilver(copper);
+				templateitem.Gold = (short) Money.GetGold(copper);
 				GameServer.Database.AddNewObject(templateitem);
 			}
-             */
 		}
 	}
 }

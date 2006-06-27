@@ -44,7 +44,7 @@ using System;
 using System.Collections;
 using System.Reflection;
 using DOL.AI.Brain;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
@@ -59,64 +59,13 @@ using log4net;
 
 namespace DOL.GS.Quests.Midgard
 {
-	/* The first thing we do, is to declare the quest requirement
-	 * class linked with the new Quest. To do this, we derive 
-	 * from the abstract class AbstractQuestDescriptor
+	/* The first thing we do, is to declare the class we create
+	 * as Quest. To do this, we derive from the abstract class
+	 * AbstractQuest
+	 * 	 
 	 */
-	public class BeginningOfWarDescriptor : AbstractQuestDescriptor
-	{
-		/* This is the type of the quest class linked with 
-		 * this requirement class, you must override the 
-		 * base method like that
-		 */
-		public override Type LinkedQuestType
-		{
-			get { return typeof(BeginningOfWarMid); }
-		}
 
-		/* This value is used to retrieves the minimum level needed
-		 *  to be able to make this quest. Override it only if you need, 
-		 * the default value is 1
-		 */
-		public override int MinLevel
-		{
-			get { return 4; }
-		}
-
-		/* This value is used to retrieves how maximum level needed
-		 * to be able to make this quest. Override it only if you need, 
-		 * the default value is 50
-		 */
-		public override int MaxLevel
-		{
-			get { return 4; }
-		}
-
-		/* This method is used to know if the player is qualified to 
-		 * do the quest. The base method always test his level and
-		 * how many time the quest has been done. Override it only if 
-		 * you want to add a custom test (here we test also the class name)
-		 */
-		public override bool CheckQuestQualification(GamePlayer player)
-		{
-			// This checks below are only performed is player isn't doing quest already
-			if (player.HasFinishedQuest(typeof(StolenEggs)) == 0)
-				return false;
-
-			if (!BaseDalikorQuest.CheckPartAccessible(player, typeof(BeginningOfWarMid)))
-				return false;
-
-			return base.CheckQuestQualification(player);
-		}
-	}
-
-
-	/* The second thing we do, is to declare the class we create
-	 * as Quest. We must make it persistant using attributes, to
-	 * do this, we derive from the abstract class AbstractQuest
-	 */
-	[NHibernate.Mapping.Attributes.Subclass(NameType = typeof(BeginningOfWarMid), ExtendsType = typeof(AbstractQuest))] 
-	public class BeginningOfWarMid : BaseDalikorQuest
+	public class BeginningOfWar : BaseDalikorQuest
 	{
 		/// <summary>
 		/// Defines a logger for this class.
@@ -134,6 +83,8 @@ namespace DOL.GS.Quests.Midgard
 		 */
 
 		protected const string questTitle = "Beginning of War (Mid)";
+		protected const int minimumLevel = 4;
+		protected const int maximumLevel = 4;
 
 		private static GameNPC dalikor = null;
 
@@ -147,17 +98,39 @@ namespace DOL.GS.Quests.Midgard
 
 		private bool princessAiyrAttackStarted = false;
 
-		private static GenericItemTemplate tatteredShirt = null;
-		private static GenericItemTemplate smieraGattoClaw = null;
-		private static GenericItemTemplate coastalWolfBlood = null;
+		private static ItemTemplate tatteredShirt = null;
+		private static ItemTemplate smieraGattoClaw = null;
+		private static ItemTemplate coastalWolfBlood = null;
 
-		private static GenericItemTemplate princessAiyrHead = null;
+		private static ItemTemplate princessAiyrHead = null;
 
-		private static GenericItemTemplate scrollBriedi = null;
-		private static GenericItemTemplate listBriedi = null;
-		private static HeadArmorTemplate recruitsHelm = null;
-		private static HeadArmorTemplate recruitsCap = null;
-		private static RingTemplate recruitsRing = null;
+		private static ItemTemplate scrollBriedi = null;
+		private static ItemTemplate listBriedi = null;
+		private static ItemTemplate recruitsHelm = null;
+		private static ItemTemplate recruitsCap = null;
+		private static ItemTemplate recruitsRing = null;
+
+
+		/* We need to define the constructors from the base class here, else there might be problems
+		 * when loading this quest...
+		 */
+
+		public BeginningOfWar() : base()
+		{
+		}
+
+		public BeginningOfWar(GamePlayer questingPlayer) : this(questingPlayer, 1)
+		{
+		}
+
+		public BeginningOfWar(GamePlayer questingPlayer, int step) : base(questingPlayer, step)
+		{
+		}
+
+		public BeginningOfWar(GamePlayer questingPlayer, DBQuest dbQuest) : base(questingPlayer, dbQuest)
+		{
+		}
+
 
 		/* The following method is called automatically when this quest class
 		 * is loaded. You might notice that this method is the same as in standard
@@ -203,12 +176,13 @@ namespace DOL.GS.Quests.Midgard
 					log.Warn("Could not find " + briedi.Name + ", creating him ...");
 				briedi.GuildName = "Part of " + questTitle + " Quest";
 				briedi.Realm = (byte) eRealm.Midgard;
-				briedi.RegionId = 103;
+				briedi.CurrentRegionID = 103;
 
 				briedi.Size = 50;
 				briedi.Level = 45;
-				Zone z = WorldMgr.GetRegion(100).GetZone(103);
-				briedi.Position = z.ToRegionPosition(new Point(26240, 15706, 4489));
+				briedi.X = GameLocation.ConvertLocalXToGlobalX(26240, 103);
+				briedi.Y = GameLocation.ConvertLocalYToGlobalY(15706, 103);
+				briedi.Z = 4489;
 				briedi.Heading = 292;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
@@ -221,6 +195,13 @@ namespace DOL.GS.Quests.Midgard
 				briedi.Inventory = template.CloseTemplate();
 				briedi.SwitchWeapon(GameLiving.eActiveWeaponSlot.TwoHanded);
                 briedi.AddToWorld();
+
+//				briedi.AddNPCEquipment((byte) eEquipmentItems.TORSO, 348, 0, 0, 0);
+//				briedi.AddNPCEquipment((byte) eEquipmentItems.LEGS, 349, 0, 0, 0);
+//				briedi.AddNPCEquipment((byte) eEquipmentItems.ARMS, 350, 0, 0, 0);
+//				briedi.AddNPCEquipment((byte) eEquipmentItems.HAND, 351, 0, 0, 0);
+//				briedi.AddNPCEquipment((byte) eEquipmentItems.FEET, 352, 0, 0, 0);
+//				briedi.AddNPCEquipment((byte) eEquipmentItems.TWO_HANDED, 640, 0, 0, 0);
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -244,13 +225,14 @@ namespace DOL.GS.Quests.Midgard
 				princessAiyr.Name = "Princess Aiyr";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + princessAiyr.Name + ", creating ...");
-				Zone z = WorldMgr.GetRegion(100).GetZone(100);
-				princessAiyr.Position = z.ToRegionPosition(new Point(39315, 38957, 5460));
+				princessAiyr.X = GameLocation.ConvertLocalXToGlobalX(39315, 100);
+				princessAiyr.Y = GameLocation.ConvertLocalYToGlobalY(38957, 100);
+				princessAiyr.Z = 5460;
 				princessAiyr.Heading = 1;
 				princessAiyr.Model = 678;
 				princessAiyr.GuildName = "Part of " + questTitle + " Quest";
 				princessAiyr.Realm = (byte) eRealm.None;
-				princessAiyr.RegionId = 100;
+				princessAiyr.CurrentRegionID = 100;
 				princessAiyr.Size = 49;
 				princessAiyr.Level = 3;
 
@@ -291,14 +273,13 @@ namespace DOL.GS.Quests.Midgard
 						log.Warn("Could not find " + askefruerSorceress[i].Name + ", creating ...");
 					askefruerSorceress[i].GuildName = "Part of " + questTitle + " Quest";
 					askefruerSorceress[i].Realm = (byte) eRealm.None;
-					askefruerSorceress[i].RegionId = 100;
+					askefruerSorceress[i].CurrentRegionID = 100;
 					askefruerSorceress[i].Size = 35;
 					askefruerSorceress[i].Level = 3;
-					Point pos = princessAiyr.Position;
-					pos.X += Util.Random(-150, 150);
-					pos.Y += Util.Random(-150, 150);
-					askefruerSorceress[i].Position = pos;
-					
+					askefruerSorceress[i].X = princessAiyr.X + Util.Random(-150, 150);
+					askefruerSorceress[i].Y = princessAiyr.Y + Util.Random(-150, 150);
+					askefruerSorceress[i].Z = princessAiyr.Z;
+
 					StandardMobBrain brain = new StandardMobBrain();
 					brain.AggroLevel = 30;
 					brain.AggroRange = 300;
@@ -320,10 +301,10 @@ namespace DOL.GS.Quests.Midgard
 
 			#region defineItems
 
-			coastalWolfBlood = (GenericItemTemplate)GameServer.Database.FindObjectByKey(typeof(GenericItemTemplate), "coastal_wolf_blood");
+			coastalWolfBlood = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "coastal_wolf_blood");
 			if (coastalWolfBlood == null)
 			{
-				coastalWolfBlood = new GenericItemTemplate();
+				coastalWolfBlood = new ItemTemplate();
 				coastalWolfBlood.Name = "Coastal Wolf Blood";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + coastalWolfBlood.Name + " , creating it ...");
@@ -331,11 +312,11 @@ namespace DOL.GS.Quests.Midgard
 				coastalWolfBlood.Weight = 110;
 				coastalWolfBlood.Model = 99;
 
-				coastalWolfBlood.ItemTemplateID = "coastal_wolf_blood";
+				coastalWolfBlood.Object_Type = (int) eObjectType.GenericItem;
 
+				coastalWolfBlood.Id_nb = "coastal_wolf_blood";
+				coastalWolfBlood.IsPickable = true;
 				coastalWolfBlood.IsDropable = false;
-				coastalWolfBlood.IsSaleable = false;
-				coastalWolfBlood.IsTradable = false;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -344,10 +325,10 @@ namespace DOL.GS.Quests.Midgard
 					GameServer.Database.AddNewObject(coastalWolfBlood);
 			}
 
-			tatteredShirt = (GenericItemTemplate)GameServer.Database.FindObjectByKey(typeof(GenericItemTemplate), "tattered_shirt");
+			tatteredShirt = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "tattered_shirt");
 			if (tatteredShirt == null)
 			{
-				tatteredShirt = new GenericItemTemplate();
+				tatteredShirt = new ItemTemplate();
 				tatteredShirt.Name = "Tattered Shirt";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + tatteredShirt.Name + " , creating it ...");
@@ -355,11 +336,11 @@ namespace DOL.GS.Quests.Midgard
 				tatteredShirt.Weight = 10;
 				tatteredShirt.Model = 139;
 
-				tatteredShirt.ItemTemplateID = "tattered_shirt";
+				tatteredShirt.Object_Type = (int) eObjectType.GenericItem;
 
+				tatteredShirt.Id_nb = "tattered_shirt";
+				tatteredShirt.IsPickable = true;
 				tatteredShirt.IsDropable = false;
-				tatteredShirt.IsSaleable = false;
-				tatteredShirt.IsTradable = false;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -368,10 +349,10 @@ namespace DOL.GS.Quests.Midgard
 					GameServer.Database.AddNewObject(tatteredShirt);
 			}
 
-			scrollBriedi = (GenericItemTemplate)GameServer.Database.FindObjectByKey(typeof(GenericItemTemplate), "scroll_for_briedi");
+			scrollBriedi = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "scroll_for_briedi");
 			if (scrollBriedi == null)
 			{
-				scrollBriedi = new GenericItemTemplate();
+				scrollBriedi = new ItemTemplate();
 				scrollBriedi.Name = "Scroll for Master Briedi";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + scrollBriedi.Name + " , creating it ...");
@@ -379,11 +360,11 @@ namespace DOL.GS.Quests.Midgard
 				scrollBriedi.Weight = 10;
 				scrollBriedi.Model = 498;
 
-				scrollBriedi.ItemTemplateID = "scroll_for_briedi";
+				scrollBriedi.Object_Type = (int) eObjectType.GenericItem;
 
+				scrollBriedi.Id_nb = "scroll_for_briedi";
+				scrollBriedi.IsPickable = true;
 				scrollBriedi.IsDropable = false;
-				scrollBriedi.IsSaleable = false;
-				scrollBriedi.IsTradable = false;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -392,10 +373,10 @@ namespace DOL.GS.Quests.Midgard
 					GameServer.Database.AddNewObject(scrollBriedi);
 			}
 
-			listBriedi = (GenericItemTemplate)GameServer.Database.FindObjectByKey(typeof(GenericItemTemplate), "list_for_briedi");
+			listBriedi = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "list_for_briedi");
 			if (listBriedi == null)
 			{
-				listBriedi = new GenericItemTemplate();
+				listBriedi = new ItemTemplate();
 				listBriedi.Name = "List for Master Briedi";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + listBriedi.Name + " , creating it ...");
@@ -403,11 +384,11 @@ namespace DOL.GS.Quests.Midgard
 				listBriedi.Weight = 10;
 				listBriedi.Model = 498;
 
-				listBriedi.ItemTemplateID = "list_for_briedi";
+				listBriedi.Object_Type = (int) eObjectType.GenericItem;
 
+				listBriedi.Id_nb = "list_for_briedi";
+				listBriedi.IsPickable = true;
 				listBriedi.IsDropable = false;
-				listBriedi.IsSaleable = false;
-				listBriedi.IsTradable = false;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -416,10 +397,10 @@ namespace DOL.GS.Quests.Midgard
 					GameServer.Database.AddNewObject(listBriedi);
 			}
 
-			smieraGattoClaw = (GenericItemTemplate)GameServer.Database.FindObjectByKey(typeof(GenericItemTemplate), "smiera_gatto_claw");
+			smieraGattoClaw = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "smiera_gatto_claw");
 			if (smieraGattoClaw == null)
 			{
-				smieraGattoClaw = new GenericItemTemplate();
+				smieraGattoClaw = new ItemTemplate();
 				smieraGattoClaw.Name = "Smiera-Gatto's Claw";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + smieraGattoClaw.Name + " , creating it ...");
@@ -427,11 +408,11 @@ namespace DOL.GS.Quests.Midgard
 				smieraGattoClaw.Weight = 2;
 				smieraGattoClaw.Model = 106;
 
-				smieraGattoClaw.ItemTemplateID = "smiera_gatto_claw";
+				smieraGattoClaw.Object_Type = (int) eObjectType.GenericItem;
 
+				smieraGattoClaw.Id_nb = "smiera_gatto_claw";
+				smieraGattoClaw.IsPickable = true;
 				smieraGattoClaw.IsDropable = false;
-				smieraGattoClaw.IsSaleable = false;
-				smieraGattoClaw.IsTradable = false;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -440,10 +421,10 @@ namespace DOL.GS.Quests.Midgard
 					GameServer.Database.AddNewObject(smieraGattoClaw);
 			}
 
-			princessAiyrHead = (GenericItemTemplate)GameServer.Database.FindObjectByKey(typeof(GenericItemTemplate), "princess_ayir_head");
+			princessAiyrHead = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "princess_ayir_head");
 			if (princessAiyrHead == null)
 			{
-				princessAiyrHead = new GenericItemTemplate();
+				princessAiyrHead = new ItemTemplate();
 				princessAiyrHead.Name = "Princess Ayir's Head";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + princessAiyrHead.Name + " , creating it ...");
@@ -451,11 +432,11 @@ namespace DOL.GS.Quests.Midgard
 				princessAiyrHead.Weight = 15;
 				princessAiyrHead.Model = 503;
 
-				princessAiyrHead.ItemTemplateID = "princess_ayir_head";
+				princessAiyrHead.Object_Type = (int) eObjectType.GenericItem;
 
+				princessAiyrHead.Id_nb = "princess_ayir_head";
+				princessAiyrHead.IsPickable = true;
 				princessAiyrHead.IsDropable = false;
-				princessAiyrHead.IsSaleable = false;
-				princessAiyrHead.IsTradable = false;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -465,10 +446,10 @@ namespace DOL.GS.Quests.Midgard
 			}
 
 			// item db check
-			recruitsHelm = (HeadArmorTemplate)GameServer.Database.FindObjectByKey(typeof(HeadArmorTemplate), "recruits_studded_helm_mid");
+			recruitsHelm = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_studded_helm_mid");
 			if (recruitsHelm == null)
 			{
-				recruitsHelm = new HeadArmorTemplate();
+				recruitsHelm = new ItemTemplate();
 				recruitsHelm.Name = "Recruit's Studded Helm (Mid)";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + recruitsHelm.Name + ", creating it ...");
@@ -477,22 +458,36 @@ namespace DOL.GS.Quests.Midgard
 				recruitsHelm.Weight = 24;
 				recruitsHelm.Model = 824; // studded vest
 
-				recruitsHelm.ArmorFactor = 12;
-				recruitsHelm.ArmorLevel = eArmorLevel.Medium;
-				recruitsHelm.ItemTemplateID = "recruits_studded_helm_mid";
-				recruitsHelm.Value = 900;
+				recruitsHelm.DPS_AF = 12; // Armour
+				recruitsHelm.SPD_ABS = 19; // Absorption
 
+				recruitsHelm.Object_Type = (int) eObjectType.Studded;
+				recruitsHelm.Item_Type = (int) eEquipmentItems.HEAD;
+				recruitsHelm.Id_nb = "recruits_studded_helm_mid";
+				recruitsHelm.Gold = 0;
+				recruitsHelm.Silver = 9;
+				recruitsHelm.Copper = 0;
+				recruitsHelm.IsPickable = true;
 				recruitsHelm.IsDropable = true;
-				recruitsHelm.IsSaleable = true;
-				recruitsHelm.IsTradable = true;
-
 				recruitsHelm.Color = 14; // blue leather
 
 				recruitsHelm.Bonus = 5; // default bonus
 
-				recruitsHelm.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 4));
-				recruitsHelm.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Spirit, 1));
-				recruitsHelm.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 12));
+				recruitsHelm.Bonus1 = 4;
+				recruitsHelm.Bonus1Type = (int) eStat.DEX;
+
+				recruitsHelm.Bonus2 = 1;
+				recruitsHelm.Bonus2Type = (int) eResist.Spirit;
+
+				recruitsHelm.Bonus3 = 12;
+				recruitsHelm.Bonus3Type = (int) eProperty.MaxHealth;
+
+				recruitsHelm.Quality = 100;
+				recruitsHelm.MaxQuality = 100;
+				recruitsHelm.Condition = 1000;
+				recruitsHelm.MaxCondition = 1000;
+				recruitsHelm.Durability = 1000;
+				recruitsHelm.MaxDurability = 1000;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -502,10 +497,10 @@ namespace DOL.GS.Quests.Midgard
 			}
 
 			// item db check
-			recruitsCap = (HeadArmorTemplate)GameServer.Database.FindObjectByKey(typeof(HeadArmorTemplate), "recruits_quilted_cap");
+			recruitsCap = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_quilted_cap");
 			if (recruitsCap == null)
 			{
-				recruitsCap = new HeadArmorTemplate();
+				recruitsCap = new ItemTemplate();
 				recruitsCap.Name = "Recruit's Quilted Cap";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + recruitsCap.Name + ", creating it ...");
@@ -514,21 +509,36 @@ namespace DOL.GS.Quests.Midgard
 				recruitsCap.Weight = 8;
 				recruitsCap.Model = 822; // studded vest
 
-				recruitsCap.ArmorFactor = 6;
-				recruitsCap.ArmorLevel = eArmorLevel.VeryLow;
-				recruitsCap.ItemTemplateID = "recruits_quilted_cap";
-				recruitsCap.Value = 900;
+				recruitsCap.DPS_AF = 6; // Armour
+				recruitsCap.SPD_ABS = 0; // Absorption
 
+				recruitsCap.Object_Type = (int) eObjectType.Cloth;
+				recruitsCap.Item_Type = (int) eEquipmentItems.HEAD;
+				recruitsCap.Id_nb = "recruits_quilted_cap";
+				recruitsCap.Gold = 0;
+				recruitsCap.Silver = 9;
+				recruitsCap.Copper = 0;
+				recruitsCap.IsPickable = true;
 				recruitsCap.IsDropable = true;
-				recruitsCap.IsSaleable = true;
-				recruitsCap.IsTradable = true;
 				recruitsCap.Color = 36; // blue cloth
 
 				recruitsCap.Bonus = 5; // default bonus
 
-				recruitsCap.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 4));
-				recruitsCap.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 20));
-				recruitsCap.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Spirit, 1));
+				recruitsCap.Bonus1 = 4;
+				recruitsCap.Bonus1Type = (int) eStat.DEX;
+
+				recruitsCap.Bonus2 = 20;
+				recruitsCap.Bonus2Type = (int) eProperty.MaxHealth;
+
+				recruitsCap.Bonus3 = 1;
+				recruitsCap.Bonus3Type = (int) eResist.Spirit;
+
+				recruitsCap.Quality = 100;
+				recruitsCap.MaxQuality = 100;
+				recruitsCap.Condition = 1000;
+				recruitsCap.MaxCondition = 1000;
+				recruitsCap.Durability = 1000;
+				recruitsCap.MaxDurability = 1000;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -537,10 +547,10 @@ namespace DOL.GS.Quests.Midgard
 					GameServer.Database.AddNewObject(recruitsCap);
 			}
 
-			recruitsRing = (RingTemplate)GameServer.Database.FindObjectByKey(typeof(RingTemplate), "recruits_pewter_ring");
+			recruitsRing = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_pewter_ring");
 			if (recruitsRing == null)
 			{
-				recruitsRing = new RingTemplate();
+				recruitsRing = new ItemTemplate();
 				recruitsRing.Name = "Recruit's Pewter Ring";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + recruitsRing.Name + ", creating it ...");
@@ -548,18 +558,33 @@ namespace DOL.GS.Quests.Midgard
 
 				recruitsRing.Weight = 2;
 				recruitsRing.Model = 103;
-				recruitsRing.ItemTemplateID = "recruits_pewter_ring";
-				recruitsRing.Value = 900;
 
+				recruitsRing.Object_Type = (int) eObjectType.Magical;
+				recruitsRing.Item_Type = (int) eEquipmentItems.R_RING;
+				recruitsRing.Id_nb = "recruits_pewter_ring";
+				recruitsRing.Gold = 0;
+				recruitsRing.Silver = 9;
+				recruitsRing.Copper = 0;
+				recruitsRing.IsPickable = true;
 				recruitsRing.IsDropable = true;
-				recruitsRing.IsSaleable = true;
-				recruitsRing.IsTradable = true;
 
 				recruitsRing.Bonus = 5; // default bonus
 
-				recruitsRing.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 4));
-				recruitsRing.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Crush, 1));
-				recruitsRing.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 12));
+				recruitsRing.Bonus1 = 4;
+				recruitsRing.Bonus1Type = (int) eStat.CON;
+
+				recruitsRing.Bonus2 = 1;
+				recruitsRing.Bonus2Type = (int) eResist.Crush;
+
+				recruitsRing.Bonus3 = 12;
+				recruitsRing.Bonus3Type = (int) eProperty.MaxHealth;
+
+				recruitsRing.Quality = 100;
+				recruitsRing.MaxQuality = 100;
+				recruitsRing.Condition = 1000;
+				recruitsRing.MaxCondition = 1000;
+				recruitsRing.Durability = 1000;
+				recruitsRing.MaxDurability = 1000;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -589,7 +614,7 @@ namespace DOL.GS.Quests.Midgard
 			GameEventMgr.AddHandler(princessAiyr, GameNPCEvent.OnAICallback, new DOLEventHandler(CheckNearPrincessAyir));
 
 			/* Now we bring to dalikor the possibility to give this quest to players */
-			QuestMgr.AddQuestDescriptor(dalikor, typeof(BeginningOfWarDescriptor));
+			dalikor.AddQuestToGive(typeof (BeginningOfWar));
 
 			if (log.IsInfoEnabled)
 				log.Info("Quest \"" + questTitle + "\" initialized");
@@ -626,7 +651,7 @@ namespace DOL.GS.Quests.Midgard
 			GameEventMgr.RemoveHandler(princessAiyr, GameNPCEvent.OnAICallback, new DOLEventHandler(CheckNearPrincessAyir));
 
 			/* Now we remove to dalikor the possibility to give this quest to players */
-			QuestMgr.RemoveQuestDescriptor(dalikor, typeof(BeginningOfWarDescriptor));
+			dalikor.RemoveQuestToGive(typeof (BeginningOfWar));
 
 		}
 
@@ -640,7 +665,7 @@ namespace DOL.GS.Quests.Midgard
 
 			foreach (GamePlayer player in m_princessAyir.GetPlayersInRadius(1000))
 			{
-				BeginningOfWarMid quest = (BeginningOfWarMid) player.IsDoingQuest(typeof (BeginningOfWarMid));
+				BeginningOfWar quest = (BeginningOfWar) player.IsDoingQuest(typeof (BeginningOfWar));
 
 				if (quest != null && !quest.princessAiyrAttackStarted && quest.Step == 16)
 				{
@@ -681,11 +706,11 @@ namespace DOL.GS.Quests.Midgard
 			if (player == null)
 				return;
 
-			if (QuestMgr.CanGiveQuest(typeof(BeginningOfWarMid), player, dalikor) <= 0)
+			if(dalikor.CanGiveQuest(typeof (BeginningOfWar), player)  <= 0)
 				return;
 
 			//We also check if the player is already doing the quest
-			BeginningOfWarMid quest = player.IsDoingQuest(typeof (BeginningOfWarMid)) as BeginningOfWarMid;
+			BeginningOfWar quest = player.IsDoingQuest(typeof (BeginningOfWar)) as BeginningOfWar;
 
 			dalikor.TurnTo(player);
 
@@ -765,7 +790,7 @@ namespace DOL.GS.Quests.Midgard
 								{
 									foreach (GamePlayer groupMember in player.PlayerGroup.GetPlayersInTheGroup())
 									{
-										BeginningOfWarMid memberQuest = groupMember.IsDoingQuest(typeof (BeginningOfWarMid)) as BeginningOfWarMid;
+										BeginningOfWar memberQuest = groupMember.IsDoingQuest(typeof (BeginningOfWar)) as BeginningOfWar;
 										// we found another groupmember doing the same quest...
 										if (memberQuest != null && memberQuest.briediClone != null)
 										{
@@ -800,6 +825,10 @@ namespace DOL.GS.Quests.Midgard
 								quest.FinishQuest();
 							}
 							break;
+
+						case "abort":
+							player.Out.SendCustomDialog("Do you really want to abort this quest, \nall items gained during quest will be lost?", new CustomDialogResponse(CheckPlayerAbortQuest));
+							break;
 					}
 				}
 			}
@@ -818,11 +847,11 @@ namespace DOL.GS.Quests.Midgard
 			if (player == null)
 				return;
 
-			if (QuestMgr.CanGiveQuest(typeof(BeginningOfWarMid), player, dalikor) <= 0)
+			if(dalikor.CanGiveQuest(typeof (BeginningOfWar), player)  <= 0)
 				return;
 
 			//We also check if the player is already doing the quest
-			BeginningOfWarMid quest = player.IsDoingQuest(typeof (BeginningOfWarMid)) as BeginningOfWarMid;
+			BeginningOfWar quest = player.IsDoingQuest(typeof (BeginningOfWar)) as BeginningOfWar;
 
 			briedi.TurnTo(player);
 			if (e == GameLivingEvent.Interact)
@@ -861,7 +890,7 @@ namespace DOL.GS.Quests.Midgard
 							briedi.SayTo(player, "Here. Now hurry up and get me those items. I don't have all day you know!");
 							if (quest.Step == 3)
 							{
-								player.ReceiveItem(briedi, listBriedi.CreateInstance());
+								GiveItem(briedi, player, listBriedi);
 								quest.Step = 4;
 								briedi.SayTo(player, "Off we go!");
 							}
@@ -892,11 +921,11 @@ namespace DOL.GS.Quests.Midgard
 			if (player == null)
 				return;
 
-			if (QuestMgr.CanGiveQuest(typeof(BeginningOfWarMid), player, dalikor) <= 0)
+			if(dalikor.CanGiveQuest(typeof (BeginningOfWar), player)  <= 0)
 				return;
 
 			//We also check if the player is already doing the quest
-			BeginningOfWarMid quest = player.IsDoingQuest(typeof (BeginningOfWarMid)) as BeginningOfWarMid;
+			BeginningOfWar quest = player.IsDoingQuest(typeof (BeginningOfWar)) as BeginningOfWar;
 
 			if (e == GameLivingEvent.Interact)
 			{
@@ -917,7 +946,7 @@ namespace DOL.GS.Quests.Midgard
 						{
 							foreach (GamePlayer groupMember in player.PlayerGroup.GetPlayersInTheGroup())
 							{
-								BeginningOfWarMid memberQuest = groupMember.IsDoingQuest(typeof (BeginningOfWarMid)) as BeginningOfWarMid;
+								BeginningOfWar memberQuest = groupMember.IsDoingQuest(typeof (BeginningOfWar)) as BeginningOfWar;
 								// we found another groupmember doing the same quest...
 								if (memberQuest != null && memberQuest.Step == 14)
 								{
@@ -987,14 +1016,13 @@ namespace DOL.GS.Quests.Midgard
 				briediClone.Model = briedi.Model;
 				briediClone.GuildName = briedi.GuildName;
 				briediClone.Realm = briedi.Realm;
-				briediClone.Region = locationBriediClone.Region;
+				briediClone.CurrentRegionID = locationBriediClone.RegionID;
 				briediClone.Size = briedi.Size;
 				briediClone.Level = 15; // to make the figthing against fairy sorceress a bit more dramatic :)
 
-				Point pos = locationBriediClone.Position;
-				pos.X += Util.Random(-150, 150);
-				pos.Y += Util.Random(-150, 150);
-				briediClone.Position = pos;
+				briediClone.X = locationBriediClone.X + Util.Random(-150, 150);
+				briediClone.Y = locationBriediClone.X + Util.Random(-150, 150);
+				briediClone.Z = locationBriediClone.Y;
 				briediClone.Heading = locationBriediClone.Heading;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
@@ -1006,6 +1034,13 @@ namespace DOL.GS.Quests.Midgard
 				template.AddNPCEquipment(eInventorySlot.TwoHandWeapon, 640);
 				briediClone.Inventory = template.CloseTemplate();
 				briediClone.SwitchWeapon(GameLiving.eActiveWeaponSlot.TwoHanded);
+
+//				briediClone.AddNPCEquipment((byte) eEquipmentItems.TORSO, 348, 0, 0, 0);
+//				briediClone.AddNPCEquipment((byte) eEquipmentItems.LEGS, 349, 0, 0, 0);
+//				briediClone.AddNPCEquipment((byte) eEquipmentItems.ARMS, 350, 0, 0, 0);
+//				briediClone.AddNPCEquipment((byte) eEquipmentItems.HAND, 351, 0, 0, 0);
+//				briediClone.AddNPCEquipment((byte) eEquipmentItems.FEET, 352, 0, 0, 0);
+//				briediClone.AddNPCEquipment((byte) eEquipmentItems.TWO_HANDED, 640, 0, 0, 0);
 
 				StandardMobBrain brain = new StandardMobBrain();
 				brain.AggroLevel = 0;
@@ -1034,7 +1069,7 @@ namespace DOL.GS.Quests.Midgard
 			if (player == null)
 				return;
 
-			BeginningOfWarMid quest = player.IsDoingQuest(typeof (BeginningOfWarMid)) as BeginningOfWarMid;
+			BeginningOfWar quest = player.IsDoingQuest(typeof (BeginningOfWar)) as BeginningOfWar;
 			if (quest != null)
 			{
 				GameEventMgr.RemoveHandler(player, GamePlayerEvent.UseSlot, new DOLEventHandler(PlayerUseSlot));
@@ -1050,14 +1085,14 @@ namespace DOL.GS.Quests.Midgard
 			if (player == null)
 				return;
 
-			BeginningOfWarMid quest = (BeginningOfWarMid) player.IsDoingQuest(typeof (BeginningOfWarMid));
+			BeginningOfWar quest = (BeginningOfWar) player.IsDoingQuest(typeof (BeginningOfWar));
 			if (quest == null)
 				return;
 
 			UseSlotEventArgs uArgs = (UseSlotEventArgs) args;
 
-			GenericItem item = player.Inventory.GetItem((eInventorySlot)uArgs.Slot);
-			if (item != null && item.Name == listBriedi.Name)
+			InventoryItem item = player.Inventory.GetItem((eInventorySlot)uArgs.Slot);
+			if (item != null && item.Id_nb == listBriedi.Id_nb)
 			{
 				if (quest.Step >= 4 && quest.Step <= 8)
 				{
@@ -1080,7 +1115,7 @@ namespace DOL.GS.Quests.Midgard
 				{
 					quest.Step = 9;
 					SendSystemMessage(player, "The List disappears in a puff of blue smoke.");
-					player.Inventory.RemoveItem(item);
+					RemoveItem(player, listBriedi);
 				}
 			}
 
@@ -1092,7 +1127,7 @@ namespace DOL.GS.Quests.Midgard
 			if (player == null)
 				return;
 
-			BeginningOfWarMid quest = player.IsDoingQuest(typeof (BeginningOfWarMid)) as BeginningOfWarMid;
+			BeginningOfWar quest = player.IsDoingQuest(typeof (BeginningOfWar)) as BeginningOfWar;
 			if (quest != null)
 			{
 				GameEventMgr.AddHandler(player, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
@@ -1105,6 +1140,29 @@ namespace DOL.GS.Quests.Midgard
 			}
 		}
 
+		/// <summary>
+		/// This method checks if a player qualifies for this quest
+		/// </summary>
+		/// <returns>true if qualified, false if not</returns>
+		public override bool CheckQuestQualification(GamePlayer player)
+		{
+			// if the player is already doing the quest his level is no longer of relevance
+			if (player.IsDoingQuest(typeof (BeginningOfWar)) != null)
+				return true;
+
+			// This checks below are only performed is player isn't doing quest already
+			if (player.HasFinishedQuest(typeof (StolenEggs)) == 0)
+				return false;
+
+			if (!CheckPartAccessible(player, typeof (BeginningOfWar)))
+				return false;
+
+			if (player.Level < minimumLevel || player.Level > maximumLevel)
+				return false;
+
+			return true;
+		}
+
 		/* This is our callback hook that will be called when the player clicks
 		 * on any button in the quest offer dialog. We check if he accepts or
 		 * declines here...
@@ -1114,10 +1172,10 @@ namespace DOL.GS.Quests.Midgard
 		{
 			//We recheck the qualification, because we don't talk to players
 			//who are not doing the quest
-			if (QuestMgr.CanGiveQuest(typeof(BeginningOfWarMid), player, dalikor) <= 0)
+			if(dalikor.CanGiveQuest(typeof (BeginningOfWar), player)  <= 0)
 				return;
 
-			BeginningOfWarMid quest = player.IsDoingQuest(typeof (BeginningOfWarMid)) as BeginningOfWarMid;
+			BeginningOfWar quest = player.IsDoingQuest(typeof (BeginningOfWar)) as BeginningOfWar;
 
 			if (quest != null)
 				return;
@@ -1129,7 +1187,7 @@ namespace DOL.GS.Quests.Midgard
 			else
 			{
 				//Check if we can add the quest!
-				if (!QuestMgr.GiveQuestToPlayer(typeof(BeginningOfWarMid), player, dalikor))
+				if (!dalikor.GiveQuest(typeof (BeginningOfWar), player, 1))
 					return;
 
 				GameEventMgr.AddHandler(player, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
@@ -1137,11 +1195,34 @@ namespace DOL.GS.Quests.Midgard
 
 				dalikor.SayTo(player, "I thought you would. There's no adventure too dangerous for you, is there Eeinken? This task is simple enough. Take this scroll to Master Briedi in Gotar. I suggest you take a griffin so you can get there faster. Good luck.");
 
-				player.ReceiveItem(dalikor, scrollBriedi.CreateInstance());
+				GiveItem(dalikor, player, scrollBriedi);
 
 				// dirty hack to keep step number same as in alb beginnWarQuest.
-				quest = player.IsDoingQuest(typeof (BeginningOfWarMid)) as BeginningOfWarMid;
+				quest = player.IsDoingQuest(typeof (BeginningOfWar)) as BeginningOfWar;
 				if(quest != null) quest.Step = 2; 
+			}
+		}
+
+		/* This is our callback hook that will be called when the player clicks
+		 * on any button in the quest offer dialog. We check if he accepts or
+		 * declines here...
+		 */
+
+		private static void CheckPlayerAbortQuest(GamePlayer player, byte response)
+		{
+			BeginningOfWar quest = player.IsDoingQuest(typeof (BeginningOfWar)) as BeginningOfWar;
+
+			if (quest == null)
+				return;
+
+			if (response == 0x00)
+			{
+				SendSystemMessage(player, "Good, no go out there and finish your work!");
+			}
+			else
+			{
+				SendSystemMessage(player, "Aborting Quest " + questTitle + ". You can start over again if you want.");
+				quest.AbortQuest();
 			}
 		}
 
@@ -1206,9 +1287,9 @@ namespace DOL.GS.Quests.Midgard
 						return "[Step #18] Return to Dalikor at the guard tower near Mularn. Be sure to tell him that Master Briedi has [returned to Gotar].";
 					case 19:
 						return "[Step #19] Wait for Dalikor to reward you for your efforts om defeating the Askefruer army. If he forgets, ask him about the [reward].";
-					default:
-						return "[Step #" + Step + "] No Description entered for this step!";
+
 				}
+				return base.Description;
 			}
 		}
 
@@ -1216,16 +1297,16 @@ namespace DOL.GS.Quests.Midgard
 		{
 			GamePlayer player = sender as GamePlayer;
 
-			if (player==null || player.IsDoingQuest(typeof (BeginningOfWarMid)) == null)
+			if (player==null || player.IsDoingQuest(typeof (BeginningOfWar)) == null)
 				return;
 
 			if (Step == 2 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == briedi.Name && gArgs.Item.Name == scrollBriedi.Name)
+				if (gArgs.Target.Name == briedi.Name && gArgs.Item.Id_nb == scrollBriedi.Id_nb)
 				{
 					briedi.SayTo(m_questPlayer, "Hmph, what's this? A letter for me, eh? Well, let's see what it has to say.");
-					RemoveItemFromPlayer(briedi, scrollBriedi);
+					RemoveItem(briedi, player, scrollBriedi);
 					SendEmoteMessage(player, "Master Briedi unrolls the scroll and reads through it. When he is finished, he returns his attentions to you.");
 					Step = 3;
 					return;
@@ -1240,7 +1321,7 @@ namespace DOL.GS.Quests.Midgard
 				if (gArgs.Target.Name == "escaped thrall" && (Step == 5 || Step == 4))
 				{
 					SendSystemMessage("You slay the escaped thrall and find a Tattered Shirt for Master Briedi.");
-					GiveItemToPlayer(gArgs.Target, tatteredShirt.CreateInstance());
+					GiveItem(gArgs.Target, player, tatteredShirt);
 					Step = 6;
 					return;
 				}
@@ -1248,7 +1329,7 @@ namespace DOL.GS.Quests.Midgard
 				if (gArgs.Target.Name == "smiera-gatto" && (Step == 7 || Step == 6))
 				{
 					SendSystemMessage("You slay the Smiera-gatto and get it's claw for Master Briedi.");
-					GiveItemToPlayer(gArgs.Target, smieraGattoClaw.CreateInstance());
+					GiveItem(gArgs.Target, player, smieraGattoClaw);
 					Step = 8;
 					return;
 				}
@@ -1258,11 +1339,11 @@ namespace DOL.GS.Quests.Midgard
 					if (Step == 8)
 					{
 						SendSystemMessage(player, "The List disappears in a puff of blue smoke.");
-						RemoveItemFromPlayer(listBriedi);
+						RemoveItem(player, listBriedi);
 					}
 
 					SendSystemMessage("You slay the wolf and retrieve some of its blood for Master Briedi.");
-					GiveItemToPlayer(gArgs.Target, coastalWolfBlood.CreateInstance());
+					GiveItem(gArgs.Target, player, coastalWolfBlood);
 
 					Step = 10;
 					return;
@@ -1275,24 +1356,24 @@ namespace DOL.GS.Quests.Midgard
 
 				if (gArgs.Target.Name == briedi.Name)
 				{
-					if (Step == 10 && gArgs.Item.Name == tatteredShirt.Name)
+					if (Step == 10 && gArgs.Item.Id_nb == tatteredShirt.Id_nb)
 					{
 						briedi.SayTo(m_questPlayer, "Uh huh, yes...Alright, now give me that claw from those smiera-gattos.");
-						RemoveItemFromPlayer(briedi, tatteredShirt);
+						RemoveItem(briedi, player, tatteredShirt);
 						Step = 11;
 						return;
 					}
-					else if (Step == 11 && gArgs.Item.Name == smieraGattoClaw.Name)
+					else if (Step == 11 && gArgs.Item.Id_nb == smieraGattoClaw.Id_nb)
 					{
 						briedi.SayTo(m_questPlayer, "Yes, this is a claw alright. Now, for the coastal wolf blood. You better have gotten me enough of this.");
-						RemoveItemFromPlayer(briedi, smieraGattoClaw);
+						RemoveItem(briedi, player, smieraGattoClaw);
 						Step = 12;
 						return;
 					}
-					else if (Step == 12 && gArgs.Item.Name == coastalWolfBlood.Name)
+					else if (Step == 12 && gArgs.Item.Id_nb == coastalWolfBlood.Id_nb)
 					{
 						briedi.SayTo(m_questPlayer, "Well, it's a little less than I was hoping for, but it will do. Now listen kid. You go back to that no good son of mine and tell him I'll go ahead and help him with his little problem. In fact, let me [expedite] your journey for you.");
-						RemoveItemFromPlayer(briedi, coastalWolfBlood);
+						RemoveItem(briedi, player, coastalWolfBlood);
 						Step = 13;
 						return;
 					}
@@ -1306,7 +1387,7 @@ namespace DOL.GS.Quests.Midgard
 				if (gArgs.Target.Name == princessAiyr.Name)
 				{
 					SendSystemMessage("You slay the princess and take her head as proof.");
-					GiveItemToPlayer(gArgs.Target, princessAiyrHead.CreateInstance());
+					GiveItem(gArgs.Target, player, princessAiyrHead);
 					Step = 17;
 
 					new RegionTimer(gArgs.Target, new RegionTimerCallback(TalkBriediClone), 7000);
@@ -1317,14 +1398,31 @@ namespace DOL.GS.Quests.Midgard
 			if (Step == 18 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == dalikor.Name && gArgs.Item.Name == princessAiyrHead.Name)
+				if (gArgs.Target.Name == dalikor.Name && gArgs.Item.Id_nb == princessAiyrHead.Id_nb)
 				{
 					dalikor.SayTo(m_questPlayer, "Interesting. I shall present this to the council as well. I do so hope this is the end of our Askefruer problems, but somehow, I sense it is not. Nevertheless, I have here a [reward] for you from the council.");
-					RemoveItemFromPlayer(dalikor, princessAiyrHead);
+					RemoveItem(dalikor, player, princessAiyrHead);
 					Step = 19;
 					return;
 				}
 			}
+		}
+
+		public override void AbortQuest()
+		{
+			ResetMasterBriedi();
+
+			base.AbortQuest(); //Defined in Quest, changes the state, stores in DB etc ...
+
+			RemoveItem(m_questPlayer, scrollBriedi, false);
+			RemoveItem(m_questPlayer, listBriedi, false);
+			RemoveItem(m_questPlayer, coastalWolfBlood, false);
+			RemoveItem(m_questPlayer, tatteredShirt, false);
+			RemoveItem(m_questPlayer, smieraGattoClaw, false);
+			RemoveItem(m_questPlayer, princessAiyrHead, false);
+
+			GameEventMgr.RemoveHandler(m_questPlayer, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
+			GameEventMgr.RemoveHandler(m_questPlayer, GamePlayerEvent.UseSlot, new DOLEventHandler(PlayerUseSlot));
 		}
 
 		public override void FinishQuest()
@@ -1336,11 +1434,11 @@ namespace DOL.GS.Quests.Midgard
 			//Give reward to player here ...              
 			m_questPlayer.GainExperience(507, 0, 0, true);
 			m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 8, Util.Random(50)), "You recieve {0} as a reward.");
-			if (m_questPlayer.HasAbilityToUseItem(recruitsHelm.CreateInstance() as EquipableItem))
-				GiveItemToPlayer(dalikor, recruitsHelm.CreateInstance());
+			if (m_questPlayer.HasAbilityToUseItem(recruitsHelm))
+				GiveItem(dalikor, m_questPlayer, recruitsHelm);
 			else
-				GiveItemToPlayer(dalikor, recruitsCap.CreateInstance());
-			GiveItemToPlayer(dalikor, recruitsRing.CreateInstance());
+				GiveItem(dalikor, m_questPlayer, recruitsCap);
+			GiveItem(dalikor, m_questPlayer, recruitsRing);
 
 			GameEventMgr.RemoveHandler(m_questPlayer, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
 			GameEventMgr.RemoveHandler(m_questPlayer, GamePlayerEvent.UseSlot, new DOLEventHandler(PlayerUseSlot));

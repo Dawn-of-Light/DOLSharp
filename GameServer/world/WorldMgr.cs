@@ -22,7 +22,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Threading;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.GS.PacketHandler;
 using DOL.GS.Utils;
 using log4net;
@@ -46,64 +46,69 @@ namespace DOL.GS
 		/// <summary>
 		/// Ping timeout definition in seconds
 		/// </summary>
-		public static readonly long PING_TIMEOUT = 360; // 6 min default ping timeout (ticks are 100 nano seconds)
+		public const long PING_TIMEOUT = 360; // 6 min default ping timeout (ticks are 100 nano seconds)
 		/// <summary>
 		/// Holds the distance which player get experience from a living object
 		/// </summary>
-		public static readonly ushort MAX_EXPFORKILL_DISTANCE = 16384;
+		public const int MAX_EXPFORKILL_DISTANCE = 16384;
 		/// <summary>
 		/// Is the distance a whisper can be heard
 		/// </summary>
-		public static readonly uint WHISPER_DISTANCE = 512; // tested
+		public const int WHISPER_DISTANCE = 512; // tested
 		/// <summary>
 		/// Is the distance a say is broadcast
 		/// </summary>
-		public static readonly ushort SAY_DISTANCE = 512; // tested
+		public const int SAY_DISTANCE = 512; // tested
 		/// <summary>
 		/// Is the distance info messages are broadcast (player attacks, spell cast, player stunned/rooted/mezzed, loot dropped)
 		/// </summary>
-		public static readonly ushort INFO_DISTANCE = 512; // tested for player attacks, think it's same for rest
+		public const int INFO_DISTANCE = 512; // tested for player attacks, think it's same for rest
 		/// <summary>
 		/// Is the distance a death message is broadcast when player dies
 		/// </summary>
-		public static readonly ushort DEATH_MESSAGE_DISTANCE = ushort.MaxValue; // unknown
+		public const ushort DEATH_MESSAGE_DISTANCE = ushort.MaxValue; // unknown
 		/// <summary>
 		/// Is the distance a yell is broadcast
 		/// </summary>
-		public static readonly ushort YELL_DISTANCE = 1024; // tested
+		public const int YELL_DISTANCE = 1024; // tested
 		/// <summary>
 		/// Is the distance at which livings can give a item
 		/// </summary>
-		public static readonly ushort GIVE_ITEM_DISTANCE = 128;  // tested
+		public const int GIVE_ITEM_DISTANCE = 128;  // tested
 		/// <summary>
 		/// Is the distance at which livings can interact
 		/// </summary>
-		public static readonly ushort INTERACT_DISTANCE = 192;  // tested
+		public const int INTERACT_DISTANCE = 192;  // tested
 		/// <summary>
 		/// Is the distance an player can see
 		/// </summary>
-		public static readonly ushort VISIBILITY_DISTANCE = 3600;
+		public const int VISIBILITY_DISTANCE = 3600;
 		/// <summary>
 		/// Is the square distance a player can see
 		/// </summary>
-		public static readonly int VISIBILITY_SQUARE_DISTANCE = 12960000;
+		public const int VISIBILITY_SQUARE_DISTANCE = 12960000;
 		/// <summary>
 		/// Holds the distance at which objects are updated
 		/// </summary>
-		public static readonly ushort OBJ_UPDATE_DISTANCE = 4096;
+		public const int OBJ_UPDATE_DISTANCE = 4096;
 		/// <summary>
 		/// How often players are updated
 		/// </summary>
-		public static readonly int PLAYER_UPDATE_TIME = 300;
+		public const int PLAYER_UPDATE_TIME = 300;
 		/// <summary>
 		/// How close a player can be to pick up loot
 		/// </summary>
-		public static readonly ushort PICKUP_DISTANCE = 256;
+		public const int PICKUP_DISTANCE = 256;
 
 		/// <summary>
 		/// This hashtable holds all regions in the world
 		/// </summary>
 		private static readonly Hashtable m_regions = new Hashtable();
+
+		/// <summary>
+		/// This hashtable holds all zones in the world, for easy access
+		/// </summary>
+		private static readonly Hashtable m_zones = new Hashtable();
 
 		/// <summary>
 		/// This array holds all gameclients connected to the game
@@ -124,7 +129,7 @@ namespace DOL.GS
 		/// <summary>
 		/// This constant defines the day constant
 		/// </summary>
-		private static readonly int DAY = 77760000;
+		private const int DAY = 77760000;
 
 		/// <summary>
 		/// This holds the tick when the day started
@@ -143,6 +148,68 @@ namespace DOL.GS
 		private static Timer m_dayResetTimer;
 
 		/// <summary>
+		/// Region ID INI field
+		/// </summary>
+		private const string ENTRY_REG_ID = "id";
+		/// <summary>
+		/// Region IP INI field
+		/// </summary>
+		private const string ENTRY_REG_IP = "ip";
+		/// <summary>
+		/// Region port INI field
+		/// </summary>
+		private const string ENTRY_REG_PORT = "port";
+		/// <summary>
+		/// Region description INI field
+		/// </summary>
+		private const string ENTRY_REG_DESC = "description";
+		/// <summary>
+		/// Region diving enable INI field
+		/// </summary>
+		private const string ENTRY_REG_DIVING_ENABLE = "isDivingEnabled";
+		/// <summary>
+		/// Region diving enable INI field
+		/// </summary>
+		private const string ENTRY_REG_HOUSING_ENABLE = "isHousingEnabled";
+		/// <summary>
+		/// Region water level INI field
+		/// </summary>
+		private const string ENTRY_REG_WATER_LEVEL = "waterLevel";
+		/// <summary>
+		/// Region expansion INI field
+		/// </summary>
+		private const string ENTRY_REG_EXPANSION = "expansion";
+
+		/// <summary>
+		/// Zone ID INI field
+		/// </summary>
+		private const string ENTRY_ZONE_ZONEID = "zoneID";
+		/// <summary>
+		/// Zone region INI field
+		/// </summary>
+		private const string ENTRY_ZONE_REGIONID = "regionID";
+		/// <summary>
+		/// Zone description INI field
+		/// </summary>
+		private const string ENTRY_ZONE_DESC = "description";
+		/// <summary>
+		/// Zone X offset INI field
+		/// </summary>
+		private const string ENTRY_ZONE_OFFX = "offsetx";
+		/// <summary>
+		/// Zone Y offset INI field
+		/// </summary>
+		private const string ENTRY_ZONE_OFFY = "offsety";
+		/// <summary>
+		/// Zone width INI field
+		/// </summary>
+		private const string ENTRY_ZONE_WIDTH = "width";
+		/// <summary>
+		/// Zone height INI field
+		/// </summary>
+		private const string ENTRY_ZONE_HEIGHT = "height";
+
+		/// <summary>
 		/// Relocation threads for relocation of zones
 		/// </summary>
 		private static Thread m_relocationThread;
@@ -153,10 +220,128 @@ namespace DOL.GS
 		private static GameTimer.TimeManager[] m_regionTimeManagers;
 
 		/// <summary>
+		/// Initializes the most important things that is needed for some code
+		/// </summary>
+		/// <param name="regionsData">The loaded regions data</param>
+		public static bool EarlyInit(out RegionData[] regionsData) 
+		{
+			log.Debug(GC.GetTotalMemory(true)/1000+"kb - w1");
+
+			lock (m_regions.SyncRoot)
+				m_regions.Clear();
+			lock (m_zones.SyncRoot)
+				m_zones.Clear();
+
+			//If the files are missing this method
+			//creates the default values
+			CheckRegionAndZoneConfigs();
+
+			XMLConfigFile zoneCfg = XMLConfigFile.ParseXMLFile(new FileInfo(GameServer.Instance.Configuration.ZoneConfigFile));
+			XMLConfigFile regionCfg = XMLConfigFile.ParseXMLFile(new FileInfo(GameServer.Instance.Configuration.RegionConfigFile));
+
+			if(log.IsDebugEnabled)
+			{
+				log.Debug(string.Format("{0} blocks read from {1}", regionCfg.Children.Count, GameServer.Instance.Configuration.RegionConfigFile));
+				log.Debug(string.Format("{0} blocks read from {1}", zoneCfg.Children.Count, GameServer.Instance.Configuration.ZoneConfigFile));
+			}
+
+			// sort the regions by mob count
+
+			log.Debug("loading mobs from DB...");
+			DataObject[] objs = GameServer.Database.SelectAllObjects(typeof(Mob));
+
+			Hashtable mobsByRegionId = new Hashtable(512);
+			foreach (Mob mob in objs)
+			{
+				ArrayList list = (ArrayList)mobsByRegionId[mob.Region];
+				if (list == null)
+				{
+					list = new ArrayList(1024);
+					mobsByRegionId.Add(mob.Region, list);
+				}
+				list.Add(mob);
+			}
+			objs = null;
+
+			ArrayList regions = new ArrayList(512);
+			foreach(DictionaryEntry entry in regionCfg.Children)
+			{
+				string name = (string) entry.Key;
+				ConfigElement config = (ConfigElement) entry.Value;
+
+				RegionData data = new RegionData();
+				data.Id = (ushort)config[ENTRY_REG_ID].GetInt();
+				data.Name = name;
+				data.Description = config[ENTRY_REG_DESC].GetString();
+				data.Ip = config[ENTRY_REG_IP].GetString();
+				data.Port = (ushort)config[ENTRY_REG_PORT].GetInt();
+				data.WaterLevel = config[ENTRY_REG_WATER_LEVEL].GetInt();
+				data.DivingEnabled = config[ENTRY_REG_DIVING_ENABLE].GetBoolean(false);
+				data.HousingEnabled = config[ENTRY_REG_HOUSING_ENABLE].GetBoolean(false);
+				data.Expansion = config[ENTRY_REG_EXPANSION].GetInt();
+//				data.Mobs = (Mob[])GameServer.Database.SelectObjects(typeof(Mob), "Region = '" + data.Id + "'");
+				ArrayList mobs = (ArrayList)mobsByRegionId[data.Id];
+				if (mobs == null)
+					data.Mobs = new Mob[0];
+				else
+					data.Mobs = (Mob[])mobs.ToArray(typeof(Mob));
+
+				regions.Add(data);
+			}
+
+			regions.Sort();
+
+			/////
+
+			log.Debug(GC.GetTotalMemory(true)/1000+"kb - w2");
+
+			int cpuCount = GameServer.Instance.Configuration.CpuCount;
+			if (cpuCount < 1)
+				cpuCount = 1;
+
+			GameTimer.TimeManager[] timers = new GameTimer.TimeManager[cpuCount];
+			for (int i = 0; i < cpuCount; i++)
+			{
+				timers[i] = new GameTimer.TimeManager("RegionTime" + (i+1).ToString());
+			}
+			
+			m_regionTimeManagers = timers;
+
+			for (int i = 0; i < regions.Count; i++)
+			{
+				RegionData region = (RegionData)regions[i];
+				RegisterRegion(timers[FastMath.Abs(i%(cpuCount*2)-cpuCount)%cpuCount], region);
+			}
+
+			log.Debug(GC.GetTotalMemory(true)/1000+"kb - w3");
+
+			foreach(DictionaryEntry entry in zoneCfg.Children)
+			{
+				//string name = (string) entry.Key;
+				ConfigElement config = (ConfigElement) entry.Value;
+
+				RegisterZone(
+					(ushort)config[ENTRY_ZONE_ZONEID].GetInt(),
+					(ushort)config[ENTRY_ZONE_REGIONID].GetInt(),
+					config[ENTRY_ZONE_DESC].GetString(),
+					(byte)config[ENTRY_ZONE_OFFX].GetInt(),
+					(byte)config[ENTRY_ZONE_OFFY].GetInt(),
+					(byte)config[ENTRY_ZONE_WIDTH].GetInt(),
+					(byte)config[ENTRY_ZONE_HEIGHT].GetInt());
+			}
+
+			log.Debug(GC.GetTotalMemory(true)/1000+"kb - w4");
+
+			regionsData = (RegionData[])regions.ToArray(typeof(RegionData));
+
+			return true;
+		}
+
+		/// <summary>
 		/// Initializes the WorldMgr. This function must be called
 		/// before the WorldMgr can be used!
 		/// </summary>
-		public static bool Init()
+		public static bool Init(RegionData[] regionsData)
 		{
 			try
 			{
@@ -164,54 +349,22 @@ namespace DOL.GS
 				
 				LootMgr.Init();
 
-				log.Debug(GC.GetTotalMemory(true)/1000+"kb - w1");
-
-				lock (m_regions.SyncRoot)
+				long mobs = 0;
+				long merchants = 0;
+				long items = 0;
+				foreach(RegionData data in regionsData)
 				{
-					m_regions.Clear();
-
-					int cpuCount = GameServer.Instance.Configuration.CpuCount;
-					if (cpuCount < 1)
-						cpuCount = 1;
-
-					GameTimer.TimeManager[] timers = new GameTimer.TimeManager[cpuCount];
-					for (int i = 0; i < cpuCount; i++)
-					{
-						timers[i] = new GameTimer.TimeManager("RegionTime" + (i+1).ToString());
-					}
-			
-					m_regionTimeManagers = timers;
-
-					log.Debug("loading regions and zones from DB...");
-
-					long mobs = 0;
-					long merchants = 0;
-					long items = 0;
-				
-					IList regions = GameServer.Database.SelectAllObjects(typeof(Region));
-					foreach(Region currentRegion in regions)
-					{
-						currentRegion.TimeManager = timers[FastMath.Abs(m_regions.Count%(cpuCount*2)-cpuCount)%cpuCount];
-
-						m_regions.Add(currentRegion.RegionID, currentRegion);
-
-						currentRegion.LoadFromDatabase(ref mobs, ref merchants, ref items);
-
-						if (log.IsInfoEnabled)
-							log.Info("Registered region: " + currentRegion.Description + " ("+currentRegion.RegionID+")");
-					}
-
-					if (log.IsInfoEnabled)
-					{
-						log.Info("Total Region: " + m_regions.Count);
-						log.Info("Total Mobs: " + mobs);
-						log.Info("Total Merchants: " + merchants);
-						log.Info("Total Items: " + items);
-					}
+					Region reg = (Region)m_regions[data.Id];
+					reg.LoadFromDatabase(data.Mobs, ref mobs, ref merchants, ref items);
 				}
 
-				log.Debug(GC.GetTotalMemory(true)/1000+"kb - w2");
-				
+				if (log.IsInfoEnabled)
+				{
+					log.Info("Total Mobs: " + mobs);
+					log.Info("Total Merchants: " + merchants);
+					log.Info("Total Items: " + items);
+				}
+
 				m_NPCUpdateThread = new Thread(new ThreadStart(NPCUpdateThreadStart));
 				m_NPCUpdateThread.Name = "NpcUpdate";
 				m_NPCUpdateThread.IsBackground = true;
@@ -267,7 +420,7 @@ namespace DOL.GS
 							if (client.PingTime + PING_TIMEOUT*1000*1000*10 < DateTime.Now.Ticks)
 							{
 								if (log.IsWarnEnabled)
-									log.Warn("Ping timeout for client " + client.Account.AccountName);
+									log.Warn("Ping timeout for client " + client.Account.Name);
 								GameServer.Instance.Disconnect(client);
 							}
 						}
@@ -277,7 +430,7 @@ namespace DOL.GS
 							if (client.PingTime + 10*60*10000000L < DateTime.Now.Ticks)
 							{
 								if (log.IsWarnEnabled)
-									log.Warn("Hard timeout for client " + client.Account.AccountName + " (" + client.ClientState + ")");
+									log.Warn("Hard timeout for client " + client.Account.Name + " (" + client.ClientState + ")");
 								GameServer.Instance.Disconnect(client);
 							}
 						}
@@ -425,7 +578,7 @@ namespace DOL.GS
 						if (client.ClientState == GameClient.eClientState.Playing && player == null)
 						{
 							if (log.IsErrorEnabled)
-								log.Error("account has no active player but is playing, disconnecting! => " + client.Account.AccountName);
+								log.Error("account has no active player but is playing, disconnecting! => " + client.Account.Name);
 							GameServer.Instance.Disconnect(client);
 							Thread.Sleep(200);
 						}
@@ -439,7 +592,7 @@ namespace DOL.GS
 							BitArray carray = player.CurrentUpdateArray;
 							BitArray narray = player.NewUpdateArray;
 							narray.SetAll(false);
-							lock (player.Region.ObjectsSyncLock)
+							lock (player.CurrentRegion.ObjectsSyncLock)
 							{
 								foreach (GameNPC npc in player.GetNPCsInRadius(VISIBILITY_DISTANCE))
 								{
@@ -537,6 +690,22 @@ namespace DOL.GS
 		}
 
 		/// <summary>
+		/// Creates and adds a new region to the WorldMgr
+		/// </summary>
+		/// <param name="time">Time manager for the region</param>
+		/// <param name="data">The region data</param>
+		/// <returns>Registered region</returns>
+		public static Region RegisterRegion(GameTimer.TimeManager time, RegionData data)
+		{
+			Region region = new Region(time, data);
+			lock (m_regions.SyncRoot)
+			{
+				m_regions.Add(data.Id, region);
+			}
+			return region;
+		}
+
+		/// <summary>
 		/// Creates an array of region entries
 		/// </summary>
 		/// <returns>An array of regions available on the server</returns>
@@ -558,10 +727,10 @@ namespace DOL.GS
 				while (iter.MoveNext())
 				{
 					Region reg = (Region) iter.Value;
-					regs[i].id = (ushort)reg.RegionID;
+					regs[i].id = reg.ID;
 					regs[i].ip = ip;
 					regs[i].toPort = port;
-					regs[i].name = "Region"+reg.RegionID;
+					regs[i].name = reg.Name;
 					regs[i].fromPort = port;
 					regs[i].expansion = reg.Expansion;
 
@@ -570,6 +739,45 @@ namespace DOL.GS
 			}
 
 			return regs;
+		}
+
+		/// <summary>
+		/// Registers a Zone into a Region
+		/// </summary>
+		/// <param name="zoneID">ID of the Zone</param>
+		/// <param name="regionID">ID of the Region the Zone belongs to</param>
+		/// <param name="desc">Description of Zone</param>
+		/// <param name="offx">X offset within Region</param>
+		/// <param name="offy">Y offset within Region</param>
+		/// <param name="width">Width of Zone</param>
+		/// <param name="height">Height of Zone</param>
+		public static void RegisterZone(ushort zoneID, ushort regionID, string desc, byte offx, byte offy, byte width, byte height)
+		{
+			Region reg = GetRegion(regionID);
+			if (reg == null)
+			{
+				if (log.IsWarnEnabled)
+					log.Warn("Could not find Region " + regionID + " for Zone " + desc);
+				return;
+			}
+			Zone zone = new Zone(
+				reg,
+				zoneID,
+				desc,
+				offx*8192,
+				offy*8192,
+				width*8192,
+				height*8192);
+
+			lock (reg.Zones.SyncRoot)
+			{
+				reg.Zones.Add(zone);
+			}
+			lock (m_zones.SyncRoot)
+			{
+				m_zones.Add(zoneID, zone);
+			}
+
 		}
 
 		/// <summary>
@@ -612,8 +820,19 @@ namespace DOL.GS
 		/// <returns>Region or null if not found</returns>
 		public static Region GetRegion(ushort regionID)
 		{
-			return (Region) m_regions[(int)regionID];
+			return (Region) m_regions[regionID];
 		}
+
+		/// <summary>
+		/// Gets a Zone object by it's ID
+		/// </summary>
+		/// <param name="zoneID">the zoneID</param>
+		/// <returns>the zone object or null</returns>
+		public static Zone GetZone(ushort zoneID)
+		{
+			return (Zone) m_zones[zoneID];
+		}
+
 
 		/// <summary>
 		/// Creates a new SessionID for a GameClient object
@@ -653,47 +872,10 @@ namespace DOL.GS
 			for (int i = 0; i < objs.Length; i++)
 			{
 				GameObject obj = objs[i];
-				if (obj == null || !objectType.IsInstanceOfType(obj)) continue;
-				if (realm != eRealm.None && obj.Realm != (byte)realm) continue;
-				if (name != "" && obj.Name != name) continue;
-				returnObjs.Add(obj);
+				if (obj != null && objectType.IsInstanceOfType(obj) && obj.Realm == (byte) realm && obj.Name == name)
+					returnObjs.Add(obj);
 			}
 			return (GameObject[]) returnObjs.ToArray(objectType);
-		}
-
-		/// <summary>
-		/// Searches for a object with the given internal mob id, from a specific region
-		/// </summary>
-		/// <param name="iid">The internal id (in db) of the object to search</param>
-		/// <param name="regionID">The region to search</param>		
-		/// <param name="objectType">The type of the object you search</param>
-		/// <returns>object with the specified parameters</returns>
-		public static GameObject GetObjectByInternalIDFromRegion(string iid, ushort regionID, Type objectType)
-		{
-			Region reg = (Region)m_regions[regionID];
-			if (reg == null)
-				return null;
-			GameObject[] objs = reg.Objects;
-			
-			for (int i = 0; i < objs.Length; i++)
-			{
-				GameObject obj = objs[i];
-				if (obj != null && objectType.IsInstanceOfType(obj) && obj.InternalID == iid)
-					return obj;
-			}
-			return null;
-		}
-
-		/// <summary>
-		/// Searches for all objects with the given name, from a specific region
-		/// </summary>
-		/// <param name="name">The name of the object to search</param>
-		/// <param name="regionID">The region to search</param>		
-		/// <param name="objectType">The type of the object you search</param>
-		/// <returns>All objects with the specified parameters</returns>
-		public static GameObject[] GetObjectsByNameFromRegion(string name, ushort regionID, Type objectType)
-		{
-			return GetObjectsByNameFromRegion(name, regionID, eRealm.None, objectType);
 		}
 
 		/// <summary>
@@ -707,50 +889,10 @@ namespace DOL.GS
 		{
 			ArrayList returnObjs = new ArrayList();
 			foreach (Region reg in m_regions.Values)
-				returnObjs.AddRange(GetObjectsByNameFromRegion(name, (ushort)reg.RegionID, realm, objectType));
+				returnObjs.AddRange(GetObjectsByNameFromRegion(name, reg.ID, realm, objectType));
 			return (GameObject[]) returnObjs.ToArray(objectType);
 		}
 
-		/// <summary>
-		/// Searches for all objects with the given name in ALL regions!
-		/// </summary>
-		/// <param name="name">The name of the object to search</param>		
-		/// <param name="objectType">The type of the object you search</param>
-		/// <returns>All objects with the specified parameters</returns>b
-		public static GameObject[] GetObjectsByName(string name, Type objectType)
-		{
-			ArrayList returnObjs = new ArrayList();
-			foreach (Region reg in m_regions.Values)
-				returnObjs.AddRange(GetObjectsByNameFromRegion(name, (ushort)reg.RegionID, objectType));
-			return (GameObject[])returnObjs.ToArray(objectType);
-		}
-
-		/// <summary>
-		/// Searches for a object with the given internal id (in db) in ALL regions!
-		/// </summary>
-		/// <param name="name">The internal id of the object to search</param>		
-		/// <param name="objectType">The type of the object you search</param>
-		/// <returns>object with the specified parameters</returns>b
-		public static GameObject GetObjectByInternalID(string iid, Type objectType)
-		{
-			GameObject result = null;
-			foreach (Region reg in m_regions.Values)
-			{
-				result = GetObjectByInternalIDFromRegion(iid, (ushort)reg.RegionID, objectType);
-				if (result != null)
-					break;
-			}
-			return result;
-		}
-
-		/// <summary>
-		/// Searches for a object with the given internal id (in db) in ALL regions!
-		/// </summary>
-		/// <returns>object with the specified parameters</returns>b
-		public static GameObject GetObjectByInternalID(string iid)
-		{
-			return GetObjectByInternalID(iid, typeof(GameObject));
-		}
 		/// <summary>
 		/// Searches for all NPCs with the given name, from a specific region and realm
 		/// </summary>
@@ -768,45 +910,10 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="name">The name of the object to search</param>
 		/// <param name="realm">The realm of the object we search!</param>
-		/// <returns>All NPCs with the specified parameters</returns>
+		/// <returns>All NPCs with the specified parameters</returns>b
 		public static GameNPC[] GetNPCsByName(string name, eRealm realm)
 		{
 			return (GameNPC[]) GetObjectsByName(name, realm, typeof (GameNPC));
-		}
-
-		/// <summary>
-		/// Searches for all NPCs with the given name in ALL regions!
-		/// </summary>
-		/// <param name="name">The name of the object to search</param>		
-		/// <returns>All NPCs with the specified parameters</returns>
-		public static GameNPC[] GetNPCsByName(string name)
-		{
-			return (GameNPC[]) GetObjectsByName(name, typeof(GameNPC));
-			
-		}
-
-		/// <summary>
-		/// Searches for the first NPC with the given name in ALL regions!
-		/// </summary>
-		/// <param name="name">The name.</param>
-		/// <returns>NPC with the specificed name, or null if no npc is found</returns>
-		public static GameNPC GetNPCByName(string name)
-		{
-			GameNPC[] npcs = GetNPCsByName(name);
-			if (npcs.Length > 0)
-				return npcs[0];
-			else
-				return null;
-		}
-
-		public static GameNPC[] GetNPCsByType(Type npcType)
-		{
-			return (GameNPC[])GetObjectsByName("", npcType);
-		}
-
-		public static GameNPC[] GetNPCsByType(Type npcType, eRealm npcRealm)
-		{
-			return (GameNPC[])GetObjectsByName("", npcRealm, npcType);
 		}
 
 		/// <summary>
@@ -873,6 +980,140 @@ namespace DOL.GS
 			client.Player.Delete();
 			return;
 		}
+
+		//Various functions to get a list of players/mobs/items
+		#region getdistance
+		/// <summary>
+		/// Get's the distance of two GameObjects
+		/// </summary>
+		/// <param name="obj1">Object1</param>
+		/// <param name="obj2">Object2</param>
+		/// <returns>The distance in units or -1 if they are not the same Region</returns>
+		public static int GetDistance(GameObject obj1, GameObject obj2)
+		{
+			if (obj1.CurrentRegion != obj2.CurrentRegion)
+				return -1;
+			return GetDistance(obj1.X, obj1.Y, obj1.Z, obj2.X, obj2.Y, obj2.Z);
+		}
+
+		/// <summary>
+		/// Get's the distance of two GameObjects
+		/// </summary>
+		/// <param name="obj1">Object1</param>
+		/// <param name="obj2">Object2</param>
+		/// <param name="zfactor">Factor for Z distance use lower 0..1 to lower Z influence</param>
+		/// <returns>The distance in units or -1 if they are not the same Region</returns>
+		public static int GetDistance(GameObject obj1, GameObject obj2, double zfactor)
+		{
+			if (obj1.CurrentRegion != obj2.CurrentRegion)
+				return -1;
+			return GetDistance(obj1.X, obj1.Y, obj1.Z, obj2.X, obj2.Y, obj2.Z, zfactor);
+		}
+
+		/// <summary>
+		/// Gets the distance of two arbitary points in space
+		/// </summary>
+		/// <param name="x1">X of Point1</param>
+		/// <param name="y1">Y of Point1</param>
+		/// <param name="z1">Z of Point1</param>
+		/// <param name="x2">X of Point2</param>
+		/// <param name="y2">Y of Point2</param>
+		/// <param name="z2">Z of Point2</param>
+		/// <returns>The distance</returns>
+		public static int GetDistance(int x1, int y1, int z1, int x2, int y2, int z2)
+		{
+			long xdiff = (long) x1 - x2;
+			long ydiff = (long) y1 - y2;
+			//SH: Removed Z checks when one of the two Z values is zero(on ground)
+			if (z1 == 0 || z2 == 0)
+				return (int) Math.Sqrt(xdiff*xdiff + ydiff*ydiff);
+
+			long zdiff = (long) z1 - z2;
+			return (int) Math.Sqrt(xdiff*xdiff + ydiff*ydiff + zdiff*zdiff);
+		}
+
+		/// <summary>
+		/// Gets the distance of two arbitary points in space
+		/// </summary>
+		/// <param name="x1">X of Point1</param>
+		/// <param name="y1">Y of Point1</param>
+		/// <param name="z1">Z of Point1</param>
+		/// <param name="x2">X of Point2</param>
+		/// <param name="y2">Y of Point2</param>
+		/// <param name="z2">Z of Point2</param>
+		/// <param name="zfactor">Factor for Z distance use lower 0..1 to lower Z influence</param>
+		/// <returns>The distance</returns>
+		public static int GetDistance(int x1, int y1, int z1, int x2, int y2, int z2, double zfactor)
+		{
+			long xdiff = (long) x1 - x2;
+			long ydiff = (long) y1 - y2;
+			//SH: Removed Z checks when one of the two Z values is zero(on ground)
+			if (z1 == 0 || z2 == 0)
+				return (int) Math.Sqrt(xdiff*xdiff + ydiff*ydiff);
+
+			long zdiff = (long) ((z1 - z2)*zfactor);
+			return (int) Math.Sqrt(xdiff*xdiff + ydiff*ydiff + zdiff*zdiff);
+		}
+
+		/// <summary>
+		/// Gets the distance of an Object to an arbitary point
+		/// </summary>
+		/// <param name="obj">GameObject used as Point1</param>
+		/// <param name="x">X of Point2</param>
+		/// <param name="y">Y of Point2</param>
+		/// <param name="z">Z of Point2</param>
+		/// <returns>The distance</returns>
+		public static int GetDistance(GameObject obj, int x, int y, int z)
+		{
+			return GetDistance(obj.X, obj.Y, obj.Z, x, y, z);
+		}
+		#endregion
+		#region check distance
+		public static bool CheckDistance(int x1, int y1, int z1, int x2, int y2, int z2,int radius)
+		{
+			return CheckSquareDistance(x1, y1, z1, x2, y2, z2,radius*radius);
+		}
+		public static bool CheckDistance(IPoint3D obj, IPoint3D obj2,int radius)
+		{
+			return CheckDistance(obj.X, obj.Y,obj.Z,obj2.X,obj2.Y,obj2.Z,radius);
+		}
+		public static bool CheckDistance(GameObject obj, int x2, int y2, int z2,int radius)
+		{
+			return CheckDistance(obj.X, obj.Y,obj.Z,x2,y2,z2,radius);
+		}
+		public static bool CheckDistance(GameObject obj, GameObject obj2,int radius)
+		{
+			if (obj.CurrentRegion != obj2.CurrentRegion)
+				return false;
+			return CheckDistance(obj.X, obj.Y,obj.Z,obj2.X,obj2.Y,obj2.Z,radius);
+		}
+		#endregion
+		#region check square distance
+		public static bool CheckSquareDistance(int x1, int y1, int z1, int x2, int y2, int z2,int squareRadius)
+		{
+			long xdiff = (long) x1 - x2;
+			long ydiff = (long) y1 - y2;
+			//SH: Removed Z checks when one of the two Z values is zero(on ground)
+			if (z1 == 0 || z2 == 0)
+				return (xdiff*xdiff + ydiff*ydiff <= squareRadius);
+			long zdiff = (long) z1 - z2;
+			return (xdiff*xdiff + ydiff*ydiff + zdiff*zdiff <= squareRadius);
+		}
+		public static bool CheckSquareDistance(IPoint3D obj, IPoint3D obj2,int squareRadius)
+		{
+			return CheckSquareDistance(obj.X, obj.Y,obj.Z,obj2.X,obj2.Y,obj2.Z,squareRadius);
+		}
+		public static bool CheckSquareDistance(GameObject obj, int x2, int y2, int z2,int squareRadius)
+		{
+			return CheckSquareDistance(obj.X, obj.Y,obj.Z,x2,y2,z2,squareRadius);
+		}
+		public static bool CheckSquareDistance(GameObject obj, GameObject obj2,int squareRadius)
+		{
+			if (obj.CurrentRegion != obj2.CurrentRegion)
+				return false;
+			return CheckSquareDistance(obj.X, obj.Y,obj.Z,obj2.X,obj2.Y,obj2.Z,squareRadius);
+		}
+		#endregion
 
 		/// <summary>
 		/// Returns the number of playing Clients inside a realm
@@ -941,7 +1182,7 @@ namespace DOL.GS
 						if (client.IsPlaying
 						    && client.Player != null
 						    && client.Player.ObjectState == GameObject.eObjectState.Active
-						    && client.Player.RegionId == regionID)
+						    && client.Player.CurrentRegionID == regionID)
 							count++;
 					}
 				}
@@ -966,7 +1207,7 @@ namespace DOL.GS
 						if (client.IsPlaying
 						    && client.Player != null
 						    && client.Player.ObjectState == GameObject.eObjectState.Active
-						    && client.Player.RegionId == regionID)
+						    && client.Player.CurrentRegionID == regionID)
 							targetClients.Add(client);
 					}
 				}
@@ -988,8 +1229,8 @@ namespace DOL.GS
 				foreach (GameClient client in m_clients)
 				{
 					if (client != null)
-						if ((exactMatch && client.Account.AccountName.ToLower() == accountName)
-						    || (!exactMatch && client.Account.AccountName.ToLower().StartsWith(accountName)))
+						if ((exactMatch && client.Account.Name.ToLower() == accountName)
+						    || (!exactMatch && client.Account.Name.ToLower().StartsWith(accountName)))
 						{
 							return client;
 						}
@@ -1104,7 +1345,7 @@ namespace DOL.GS
 		public static GameClient GetClientByPlayerNameFromRegion(string playerName, ushort regionID, bool exactMatch)
 		{
 			GameClient client = GetClientByPlayerName(playerName, exactMatch);
-			if (client == null || client.Player.RegionId != regionID)
+			if (client == null || client.Player.CurrentRegionID != regionID)
 				return null;
 			return client;
 		}
@@ -1203,16 +1444,18 @@ namespace DOL.GS
 		/// spot in the region
 		/// </summary>
 		/// <param name="regionid">Region to search</param>
-		/// <param name="position">Position inside region</param>
+		/// <param name="x">X inside region</param>
+		/// <param name="y">Y inside region</param>
+		/// <param name="z">Z inside region</param>
 		/// <param name="withDistance">Wether or not to return the objects with distance</param>
 		/// <param name="radiusToCheck">Radius to sarch for GameClients</param>
 		/// <returns>IEnumerator that can be used to go through all players</returns>
-		public static IEnumerable GetPlayersCloseToSpot(ushort regionid, Point position, ushort radiusToCheck, bool withDistance)
+		public static IEnumerable GetPlayersCloseToSpot(ushort regionid, int x, int y, int z, ushort radiusToCheck, bool withDistance)
 		{
 			Region reg = GetRegion(regionid);
 			if (reg == null)
 				return new Region.EmptyEnumerator();
-			return reg.GetPlayerInRadius(position, radiusToCheck, withDistance);
+			return reg.GetPlayerInRadius(x, y, z, radiusToCheck, withDistance);
 		}
 
 		/// <summary>
@@ -1220,12 +1463,39 @@ namespace DOL.GS
 		/// spot in the region
 		/// </summary>
 		/// <param name="regionid">Region to search</param>
-		/// <param name="position">Position inside region</param>
+		/// <param name="x">X inside region</param>
+		/// <param name="y">Y inside region</param>
+		/// <param name="z">Z inside region</param>
 		/// <param name="radiusToCheck">Radius to sarch for GameClients</param>
 		/// <returns>IEnumerator that can be used to go through all players</returns>
-		public static IEnumerable GetPlayersCloseToSpot(ushort regionid, Point position, ushort radiusToCheck)
+		public static IEnumerable GetPlayersCloseToSpot(ushort regionid, int x, int y, int z, ushort radiusToCheck)
 		{
-			return GetPlayersCloseToSpot(regionid, position, radiusToCheck, false);
+			return GetPlayersCloseToSpot(regionid, x, y, z, radiusToCheck, false);
+		}
+
+		/// <summary>
+		/// Returns an IEnumerator of GamePlayers close to another GameObject
+		/// </summary>
+		/// <param name="obj">GameObject to check</param>
+		/// <param name="radiusToCheck">Radius around GameObject to check for clients</param>
+		/// <param name="withDistance">Wether or not to return the objects with distance</param>
+		/// <returns>IEnumerator of players close to the target object</returns>
+		[Obsolete("Use GameObject.GetPlayersInRadius instead!", false)]
+		public static IEnumerable GetPlayersCloseToObject(GameObject obj, ushort radiusToCheck, bool withDistance)
+		{
+			return obj.CurrentRegion.GetPlayerInRadius(obj.X, obj.Y, obj.Z, radiusToCheck, withDistance);
+		}
+
+		/// <summary>
+		/// Returns an IEnumerator of GamePlayers close to another GameObject
+		/// </summary>
+		/// <param name="obj">GameObject to check</param>
+		/// <param name="radiusToCheck">Radius around GameObject to check for clients</param>
+		/// <returns>IEnumerator of players close to the target object</returns>
+		[Obsolete("Use GameObject.GetPlayersInRadius instead!", false)]
+		public static IEnumerable GetPlayersCloseToObject(GameObject obj, ushort radiusToCheck)
+		{
+			return GetPlayersCloseToObject(obj, radiusToCheck, false);
 		}
 
 		/// <summary>
@@ -1233,16 +1503,18 @@ namespace DOL.GS
 		/// spot in the region
 		/// </summary>
 		/// <param name="regionid">Region to search</param>
-		/// <param name="position">Position inside region</param>
+		/// <param name="x">X inside region</param>
+		/// <param name="y">Y inside region</param>
+		/// <param name="z">Z inside region</param>
 		/// <param name="radiusToCheck">Radius to sarch for GameNPCs</param>
 		/// <param name="withDistance">Wether or not to return the objects with distance</param>
 		/// <returns>IEnumerator that can be used to go through all NPCs</returns>
-		public static IEnumerable GetNPCsCloseToSpot(ushort regionid, Point position, ushort radiusToCheck, bool withDistance)
+		public static IEnumerable GetNPCsCloseToSpot(ushort regionid, int x, int y, int z, ushort radiusToCheck, bool withDistance)
 		{
 			Region reg = GetRegion(regionid);
 			if (reg == null)
 				return new Region.EmptyEnumerator();
-			return reg.GetNPCsInRadius(position, radiusToCheck, withDistance);
+			return reg.GetNPCsInRadius(x, y, z, radiusToCheck, withDistance);
 		}
 
 		/// <summary>
@@ -1250,12 +1522,39 @@ namespace DOL.GS
 		/// spot in the region
 		/// </summary>
 		/// <param name="regionid">Region to search</param>
-		/// <param name="position">Position inside region</param>
+		/// <param name="x">X inside region</param>
+		/// <param name="y">Y inside region</param>
+		/// <param name="z">Z inside region</param>
 		/// <param name="radiusToCheck">Radius to sarch for GameNPCs</param>
 		/// <returns>IEnumerator that can be used to go through all NPCs</returns>
-		public static IEnumerable GetNPCsCloseToSpot(ushort regionid, Point position, ushort radiusToCheck)
+		public static IEnumerable GetNPCsCloseToSpot(ushort regionid, int x, int y, int z, ushort radiusToCheck)
 		{
-			return GetNPCsCloseToSpot(regionid, position, radiusToCheck, false);
+			return GetNPCsCloseToSpot(regionid, x, y, z, radiusToCheck, false);
+		}
+
+		/// <summary>
+		/// Returns an IEnumerator of GameNPCs close to another GameObject
+		/// </summary>
+		/// <param name="obj">GameObject to check</param>
+		/// <param name="radiusToCheck">Radius around GameObject to check for NPCs</param>
+		/// <param name="withDistance">Wether or not to return the objects with distance</param>
+		/// <returns>IEnumerator of NPCs close to the target object</returns>
+		[Obsolete("Use GameObject.GetNPCsInRadius instead!", false)]
+		public static IEnumerable GetNPCsCloseToObject(GameObject obj, ushort radiusToCheck, bool withDistance)
+		{
+			return obj.CurrentRegion.GetNPCsInRadius(obj.X, obj.Y, obj.Z, radiusToCheck, withDistance);
+		}
+
+		/// <summary>
+		/// Returns an IEnumerator of GameNPCs close to another GameObject
+		/// </summary>
+		/// <param name="obj">GameObject to check</param>
+		/// <param name="radiusToCheck">Radius around GameObject to check for NPCs</param>
+		/// <returns>IEnumerator of NPCs close to the target object</returns>
+		[Obsolete("Use GameObject.GetNPCsInRadius instead!", false)]
+		public static IEnumerable GetNPCsCloseToObject(GameObject obj, ushort radiusToCheck)
+		{
+			return GetNPCsCloseToObject(obj, radiusToCheck, false);
 		}
 
 		/// <summary>
@@ -1263,16 +1562,18 @@ namespace DOL.GS
 		/// spot in the region
 		/// </summary>
 		/// <param name="regionid">Region to search</param>
-		/// <param name="position">Position inside region</param>
+		/// <param name="x">X inside region</param>
+		/// <param name="y">Y inside region</param>
+		/// <param name="z">Z inside region</param>
 		/// <param name="radiusToCheck">Radius to sarch for GameItems</param>
 		/// <param name="withDistance">Wether or not to return the objects with distance</param>
 		/// <returns>IEnumerator that can be used to go through all items</returns>
-		public static IEnumerable GetItemsCloseToSpot(ushort regionid, Point position, ushort radiusToCheck, bool withDistance)
+		public static IEnumerable GetItemsCloseToSpot(ushort regionid, int x, int y, int z, ushort radiusToCheck, bool withDistance)
 		{
 			Region reg = GetRegion(regionid);
 			if (reg == null)
 				return new Region.EmptyEnumerator();
-			return reg.GetItemsInRadius(position, radiusToCheck, withDistance);
+			return reg.GetItemsInRadius(x, y, z, radiusToCheck, withDistance);
 		}
 
 		/// <summary>
@@ -1280,12 +1581,92 @@ namespace DOL.GS
 		/// spot in the region
 		/// </summary>
 		/// <param name="regionid">Region to search</param>
-		/// <param name="position">Position inside region</param>
+		/// <param name="x">X inside region</param>
+		/// <param name="y">Y inside region</param>
+		/// <param name="z">Z inside region</param>
 		/// <param name="radiusToCheck">Radius to sarch for GameItems</param>
 		/// <returns>IEnumerator that can be used to go through all items</returns>
-		public static IEnumerable GetItemsCloseToSpot(ushort regionid, Point position, ushort radiusToCheck)
+		public static IEnumerable GetItemsCloseToSpot(ushort regionid, int x, int y, int z, ushort radiusToCheck)
 		{
-			return GetItemsCloseToSpot(regionid, position, radiusToCheck, false);
+			return GetItemsCloseToSpot(regionid, x, y, z, radiusToCheck, false);
+		}
+
+		/// <summary>
+		/// Returns an IEnumerator of GameItems close to another GameObject
+		/// </summary>
+		/// <param name="obj">GameObject to check</param>
+		/// <param name="radiusToCheck">Radius around GameObject to check for items</param>
+		/// <param name="withDistance">Wether or not to return the objects with distance</param>
+		/// <returns>IEnumerator of items close to the target object</returns>
+		[Obsolete("Use GameObject.GetItemsInRadius instead!", false)]
+		public static IEnumerable GetItemsCloseToObject(GameObject obj, ushort radiusToCheck, bool withDistance)
+		{
+			return obj.CurrentRegion.GetItemsInRadius(obj.X, obj.Y, obj.Z, radiusToCheck, withDistance);
+		}
+
+		/// <summary>
+		/// Returns an IEnumerator of GameItems close to another GameObject
+		/// </summary>
+		/// <param name="obj">GameObject to check</param>
+		/// <param name="radiusToCheck">Radius around GameObject to check for items</param>
+		/// <returns>IEnumerator of items close to the target object</returns>
+		[Obsolete("Use GameObject.GetItemsInRadius instead!", false)]
+		public static IEnumerable GetItemsCloseToObject(GameObject obj, ushort radiusToCheck)
+		{
+			return GetItemsCloseToObject(obj, radiusToCheck, false);
+		}
+
+		/// <summary>
+		/// Saves the world to the DB
+		/// </summary>
+		public static void SaveToDatabase()
+		{
+			// region entries are not dynamically changed, so we can iterate without lock
+			//lock(m_regions.SyncRoot)
+			//{
+			IDictionaryEnumerator iter = m_regions.GetEnumerator();
+/*
+				using(WorldSaveProgress dlg = new WorldSaveProgress())
+				{
+					dlg.progBar.Minimum = 0;
+					dlg.progBar.Minimum = m_regions.Count;
+					dlg.progBar.Step = 1;
+					dlg.lblTxt.Select(dlg.lblTxt.Text.Length-1, 0);
+
+					dlg.Show();
+
+					while(iter.MoveNext())
+					{
+						Region reg = (Region)iter.Value;
+
+						reg.SaveToDatabase();
+						dlg.progBar.PerformStep();
+					}
+
+					dlg.Close();
+				}
+				*/
+			while (iter.MoveNext())
+			{
+				Region reg = (Region) iter.Value;
+				if (log.IsDebugEnabled)
+					log.Debug("saving region " + reg.Description + " " + reg.Name + " " + iter.Key);
+				reg.SaveToDatabase();
+				if (log.IsDebugEnabled)
+					log.Debug("Saved region " + reg.Description);
+				Thread.Sleep(0);
+			}
+			//}
+		}
+
+		private static void CheckRegionAndZoneConfigs()
+		{
+			FileInfo regionConfigFile = new FileInfo(GameServer.Instance.Configuration.RegionConfigFile);
+			FileInfo zoneConfigFile = new FileInfo(GameServer.Instance.Configuration.ZoneConfigFile);
+			if(!regionConfigFile.Exists)
+				ResourceUtil.ExtractResource(regionConfigFile.Name, regionConfigFile.FullName);
+			if(!zoneConfigFile.Exists)
+				ResourceUtil.ExtractResource(zoneConfigFile.Name, zoneConfigFile.FullName);
 		}
 
 		/// <summary>

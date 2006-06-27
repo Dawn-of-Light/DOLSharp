@@ -4,350 +4,83 @@ CVS log file
 Please describe how you have changed the sources on CVS as detailed
 as possible so it is easy for the developers to see what has been done!
 ------------------------------------------------------------------------------
-THIS IS THE HEAD BRANCH, feel free to add new features here and modify the
-core. If you do bugfixing here, remember to also put the bugfixes in STABLE
+THIS IS THE STABLE BRANCH, do NOT add new features here, only add bugfixes
+and code that is absolutely required to keep this branch stable!
 ------------------------------------------------------------------------------
-Cisien (04.APR.2006) - 1.8.057
+Noret (17.Jun.2006) - 1.7.159
+*) Code from Tiv:
+- New: Checks for char's class and realm on char creation
+------------------------------------------------------------------------------
+Tiv (12.Jun.2006) - 1.7.158
+- Fixes: 1.80+ spell/styles support
+- New: 1.84 base
+------------------------------------------------------------------------------
+Noret (8.Jun.2006) - 1.7.157
+* Code from Dre
+- New: 1.83 support
+------------------------------------------------------------------------------
+Noret (7.Jun.2006) - 1.7.156
+* Code from Dre
+- Bugfix: GameNPCs start regenerating mana when added to the world
+* Code from Tiv
+- Changed: Fall damage
+- Bugfix: Stag effect
+------------------------------------------------------------------------------
+Cisien (04.APR.2006) - 1.7.155
 * Code from Tiv
 - Bugfix: Support for 1.82 increased. Spells/inventory/style lists now work
 ------------------------------------------------------------------------------
-WitchKing (04.Apr.2006) - 1.8.056
+WitchKing (04.Apr.2006) - 1.7.154
 * Thanks to Dre
 - Bugfix: 1.82 packet lib inherits from 1.81 now
 ------------------------------------------------------------------------------
-Cisien (29.Mar.2006): - 1.8.055:
+Cisien (29.Mar.2006) - 1.7.153
 - Change: ServerName and ServerNameShort now show in the default config file.
 ------------------------------------------------------------------------------
-Etaew (21.Mar.2006): - 1.8.054:
-- BugFix: You can no longer destroy equipped items
-Firstly this isn't Live behaviour secondly it didn't removed magical bonuses
+Cisien (04.Mar.2006) - 1.7.152
+- New: support for 1.82
 ------------------------------------------------------------------------------
-Duff (18.Mar.2006): - 1.8.053:
-- Add : DBNPC is load on region
-------------------------------------------------------------------------------
-Etaew (15.Mar.2006): - 1.8.052:
-- BugFix: All Midgard Epic Quests now compile
-- BugFix: Set Realm / Material Level on all Epic Items
-- BugFix: Pressing the craft icon while crafting will close the timer window
-------------------------------------------------------------------------------
-Etaew (12.Mar.2006): - 1.8.051:
-- BugFix: All Hibernian Epic Quests now compile
-- Add: Vampiir and Bainshee Epics (follows Path of Harmony)
-- BugFix: When the leader leaves a ChatGroup a new leader is selected
-- BugFix: CombatHealSpell's will no longer display you cannot heal dead
-	group member messages.
-- BugFix: Stealthed players are no longer included in an NPCs 
-	CalculateNextAttackTarget method
-- BugFix: Moving too far away from your trade partner will cancel the trade
-- BugFix: /invite now guesses the players name instead of having to type it all in
-- BugFix: You can now /who any part of the zone description or guild name to get
-	results instead of just the first word
-- BugFix: Conc buffs value >= Timer buffs will overwrite now.
-------------------------------------------------------------------------------
-Gandulf (10.Mar.2006): - 1.8.050:
-- Add: Added Example of Quest-Abort scenario to HelpSirQuait Quest
-------------------------------------------------------------------------------
-Cisien (09.Mar.2006): - 1.8.049
-- Change : GuildName to GuildID
-------------------------------------------------------------------------------
-Duff (06.Mar.2006): - 1.8.048:
-- Add : DBNPC for futur use in a system to load only NPC
-- Change :  spawn generator manager to be linked and load in region. 
-- Change : npc template to have more field (some will be added or remove to 
-enhance mob params)
-- Change : ScriptMgr.GetInstance(string type,params object[] args)
-- Change : NPC have a constructor with npc template so you can have an npc not mob 
-	   which inherit from NPC which is load from template
-- Add : add race manager and race system with race data object.
-TODO : spellXNPCTemplate to have spell linked to npc
-------------------------------------------------------------------------------
-Etaew (06.Mar.2006): - 1.8.047:
-- BugFix: All Albion Epic Quests now compile
-- BugFix: All XP gainers on Epics (Group members) should now get credit even
-	if they don't fight
-- BugFix: Only the proper class can now wear the epic armor
-- BugFix: A number of typos in descriptions
-- Add: Heretic Epic (follows Guild of Shadows)
-- Add: All Trainers should let the player know where there epic starts if they
-	are eligable
-- Add: WorldMgr.GetNPCsByType() method
-- Changed: Guard, Protect and Intercept delve and mouseover info now tells you
-	source and target.
-------------------------------------------------------------------------------
-Cisien (04.Mar.2006): - 1.8.046:
-- Add: 1.82 client support
-------------------------------------------------------------------------------
-Etaew (26.Feb.2006): - 1.8.045:
-- BugFix: Changing guard and protect multiple times in the group will no longer
-	give multiple you are no longer... messages when the group disbands
-- BugFix: All Midgard non epic quests now compile
-TODO: Epic Quest Convert / Fix quest TravelTicket nHibernate error
-------------------------------------------------------------------------------
-Holly (25.Feb.2006): - 1.8.044:
-- BugFix: Midgard Rogue trainer now gives proper weapon type
-- Add: 1.81 support (copy&paste from stable)
-------------------------------------------------------------------------------
-Holly (23.Feb.2006): - 1.8.043:
-- BugFix: bugfix with set method at CrushWeapon
-------------------------------------------------------------------------------
-Gandulf (19.Feb.2006): - 1.8.042:
-- Change: Updated QuestSystem to current Head and reactivated it after
-          disabling during quest refactoring. System still in developement, 
-          compiles at least.
-------------------------------------------------------------------------------
-Holly (18.Feb.2006): - 1.8.041:
-- BugFix: missing set methods for all remaining weapons (Linux friendly)
-------------------------------------------------------------------------------
-Holly (18.Feb.2006): - 1.8.040:
-- BugFix: Linux friendly patches of GamePlayer.cs and Staff.cs 
-	  (missing get/set)
-------------------------------------------------------------------------------
-Etaew (16.Feb.2006): - 1.8.039:
-- Bugfix: All Hibernian non epic quests now compile
-------------------------------------------------------------------------------
-Duff (14.Feb.2006): - 1.8.038:
-- Add : spawned mob wander
-- Change : wanderbrain for mob without spawned generator inspired from Dre77 code.
-------------------------------------------------------------------------------
-ZCU-Holly (11.Feb.2006): 1.8.037:
-- Bugfix: ItemMagicalBonus.Bonus is now Int16 (for malluses implementation)
-------------------------------------------------------------------------------
-Etaew (10.Feb.2006): 1.8.036:
-- Bugfix: The rest of the Albion non epic quests now compile
-- Note: Important Delivery / Nuisanses steps are disabled until the new quest
-	system is updated
-------------------------------------------------------------------------------
-ZCU-Holly (9.Feb.2006): 1.8.035:
-- Remove: TwoItems class (it's totaly useless)
-- Change: Everything working with Item speed now works in miliseconds
-- BugFix: All Trainer given equipment has proper speed and forbidden
-          IsTradable, IsSaleAble (like official servers)
-------------------------------------------------------------------------------
-Etaew (9.Feb.2006): - 1.8.034:
-- Bugfix: Albion Quests - Frontiers / Godelevas Need / Greener Pastures /
-			  Half Ogre All Man now compile
-- Removed: All references to the Old ItemTemplate system
-		TODO: Housing System update
-------------------------------------------------------------------------------
-Etaew (8.Feb.2006): - 1.8.033:
-- Bugfix: Albion Quests - Cleric Mulgrut / Collection / Culmination now compile
-------------------------------------------------------------------------------
-ZCU-Holly (8.Feb.2006): - 1.8.032:
-- Bugfix: Added missing Crossbow(Template) reference to .hbm.xml
-- Change: Changed Item System to the latest Doulbousiouf's design
-- Add: All children of StackableItem now have own override of CanStackWith()		
-- Add: TwoItems class (atm working to check if itemA+itemB can stack together)
-- Add: CatapultAmmunition(Template) :: TODO OnItemUsed() is atm empty
-------------------------------------------------------------------------------
-Etaew (7.Feb.2006): - 1.8.031:
-- Bugfix: Albion Quests - Building A Better Bow / City of Camelot now compile
-- Add: RemoveItemFromPlayer overload to accept templates
-------------------------------------------------------------------------------
-Etaew (6.Feb.2006): - 1.8.030:
-- Bugfix: Albion Quests - Arrows for Yetta Fletcher / Beginning Of War now compile
-- Change: Renamed RemoveItemToPlayer method to RemoveItemFromPlayer
-- Add: CreateQuestItem overload to accept the Quests name
-------------------------------------------------------------------------------
-Etaew (5.Feb.2006): - 1.8.029:
-- BugFix: Albion Quests - Against The Grain / Andrews Skin now compile
-------------------------------------------------------------------------------
-Duff (4.Feb.2006): - 1.8.028:
-- BugFix : /keep cmd work again now
-- Change : bring a friend system to use spawner when mob pop from spawner
-------------------------------------------------------------------------------
-Doulbousiouf (2.Feb.2006) - 1.8.027:
-- Change : some improvment in the 'Geometry Engine'
-------------------------------------------------------------------------------
-Doulbousiouf (26.Jan.2006) - 1.8.026:
+Doulbousiouf (29.Jan.2006) - 1.7.151:
 - Bugfix : correct ranged attack packet sequence
-*) Code by Alex_Speed :
-- Add : /repec buy command
-- Add : more check in /gc form
+- Change : target selection in spellhandler use cache
 ------------------------------------------------------------------------------
-Fooljam (24.Jan.2006) - 1.8.025:
+Tiv (28.Jan.2006) - 1.7.150:
+- Bugfix: Inverted armor magic resists
+- Bugfix: 1.81 pet icon packet
+------------------------------------------------------------------------------
+ZCU-Holly (24.Jan.2006) -1.7.149:
+- Bugfix: fixed typos in GM commands
+------------------------------------------------------------------------------
+Fooljam (24.Jan.2006) - 1.7.148:
 *) Thanks to Alex_Speed for his help
 - Bugfix: Players can now see the TOA/Catacomb bonus names in item properties.
 *) Code by Dust
 - Bugfix: Players can longer create a guild name whith other characters than Alpha.
+(see /gc form)
 ------------------------------------------------------------------------------
-ZCU-Holly (23.Jan.2006) - 1.8.024
-- Bugfix : Fixed typos in GM commands
-*) Code by Miki001 :
-- Bugfix : Fixed login bug for 1.68 clients in PacketLib168
+Doulbousiouf (12.Jan.2006) - 1.7.147:
+- Bugfix: damage calculation on sitting players sometimes don't use armor
 ------------------------------------------------------------------------------
-Duff (19.Jan.2006):
-- Change : I have add to dnpb project the support of VS2005 and prebuild/postbuild event
-	   So now prebuild generate the project file perfectely
-	   It is my own release, so it is not an officail one but it work well ;)
+Tiv (19.Dec.2005) - 1.7.146:
+- Bugfix: more 1.81 support (sending magic spells, custom text window)
 ------------------------------------------------------------------------------
-Doulbousiouf (19.Jan.2006) - 1.8.023:
-- Change : trades between players now generate 0 sql request 
+Tiv (16.Dec.2005) - 1.7.145:
+- New: support 1.81
 ------------------------------------------------------------------------------
-Doulbousiouf (16.Jan.2006) - 1.8.022:
-*) Code by Tobz :
-- Bugfix : /faceloc and /facegloc can no longer be used while stun or mez
-- Bugfix : Corrected a spelling error in RealmCheckJumpPoint.cs
-- Add : /unban command
-*) Code by Alex_Speed & Tiv :
-- Add : all needed 1.78+ guild datas and right (merit + social windows)
-- Add : /gc infos and a lot of typo in /gc command
-- Credit : /clap to Alex_Speed for his hard work
-*) Code by me :
-- Bugfix : /gc motd should work
-- Bugfix : add motd right in guildrank table
+Noret (16.Dec.2005) - 1.7.144:
+*) Code from divinespear:
+- Bugfix: Correct bytes count is sent for strings with multi-byte characters
 ------------------------------------------------------------------------------
-Doulbousiouf (14.Jan.2006) - 1.8.021:
-- Bugfix : adding player to its guild in the char select screen
+Duff (13.Dec.2005) - 1.7.143:
+- Bugfix: No bug when a keep is not claimed on load from database
 ------------------------------------------------------------------------------
-Doulbousiouf (12.Jan.2006) - 1.8.020:
-- Bugfix : exception when trying to equip a cloak
-- Bugfix : stackable item can be create using /item create DOL.GS.StackableItem
-- Bugfix : NHibernate log level is now by default set to WARN 
-- Bugfix : damage calculation on sitting players sometimes don't use armor
+Noret (6.Dec.2005) - 1.7.142:
+*) Based on info from Tiv:
+- Bugfix: Players should no longer leave ghosts after /release
 ------------------------------------------------------------------------------
-Doulbousiouf (9.Jan.2006) - 1.8.019:
-- Add : multi target location jump point system
-------------------------------------------------------------------------------
-Duff (7.Jan.2006) - 1.8.018:
-- Change : migrate all the keep system to nhibernate
-------------------------------------------------------------------------------
-Doulbousiouf (7.Jan.2006) - 1.8.017:
-- New : new jump point system
-------------------------------------------------------------------------------
-Doulbousiouf (6.Jan.2006) - 1.8.016:
-- Change : Scripts are now compiled first
-- Change : Region and zone are now loaded from the db. A working database can be
-	   dowloaded here : http://doldata.fleetingclarity.com/showthread.php?t=1014
-- Change : Refactored area system, big Clean in region.cs, zone.cs and worldmgr.cs.
-	   Region, Zone and AbstractArea class are now persistants
-- Add : Second part of the new quest system, all quest are now manadged in the
-	QuestMgr class, and the quest souscription work using the event system
-- Add : You can do quests without a npc to give it, you can find a example in the
-	/quests/example directory (it is the starting step for a advanced event 
-	system using steps and player journal in event)
-- BugFix : the server can now start with a empty /scripts directory
-- BugFix : char are now created with max health, max mana and max endurance
-- Remove : all useless things like zone.xml, region.xml, RegionData class ect ...
-
-NOTA: Only the quests of the directory /quests/examples are compatible,
-      remove all others quest of your /scripts directory
-------------------------------------------------------------------------------
-Noret (26.Dec.2005) - 1.8.015:
-- Bugfix: Point-to-point heading calculation (fixes TargetNotInView problem)
-------------------------------------------------------------------------------
-Doulbousiouf(21.Dec.2005) - 1.8.014:
-- Add : new quest system (see HelpSirQuait.cs as example)
-- Add : GamePlayer class is now persistant
-- Add : thousand of others changes :)
-------------------------------------------------------------------------------
-Doulbousiouf(2.Dec.2005) - 1.8.013:
-- Add : GameServerScript project compile now except all quests witch are for 
-	the moment not compatible
-------------------------------------------------------------------------------
-Duff (02.Dec.2005) - 1.8.012:
-- Add : linked mob
-- Add : wander as random walk
-------------------------------------------------------------------------------
-Doulbousiouf(29.Nov.2005) - 1.8.011:
-- Add : Another part of the new item system, now player inventory, mob equipment
-	and merchants should work
-------------------------------------------------------------------------------
-Duff (27.Nov.2005) - 1.8.010:
-- Add : spawn generator
-- Add : spawn area DB
-- Add : mob spawner DB
-- Add : lootmgr for faction
-- add : scriptmgr getinstance (string type)
-- Add : standard spawn generator and square are
-- BugFix : remove doldatabase reference in prebuild
-- Add : nhibernate reference and log4net in prebuild
-- Add : the lastest dot net prebuild exe to support vs2005
-	So, if you are under VS2005 simply use clean.bat and Vs2005.bat
-------------------------------------------------------------------------------
-Doulbousiouf(26.Nov.2005) - 1.8.009:
-- Bugfix : Correct the database structure check to work under linux (report by Zoni)
-------------------------------------------------------------------------------
-Doulbousiouf(25.Nov.2005) - 1.8.008:
-- Add :    First part of the new item system.
-------------------------------------------------------------------------------
-Gandulf(23.Nov.2005) - 1.8.007:
-- Change : Cleaned Parameters of QuestTrigger, -Action, - Requirements
-           Added alternative string params for most of them
-- Add :    WorldMgr.getXYZ Methods to retrieve NPC, GameObjects by Name or Id,
-           without knowing realm, region.
-------------------------------------------------------------------------------
-Noret (20.Nov.2005) - 1.8.006:
-- Changed: Used custom collection for GetInRadius
-- Changed: Removed database versions code
-- Changed: Replaced X/Y/Z properties with Position
-           and other small position related changes, best to compare
-           to old code to find out how it works now; some of them:
-CurrentRegion   => Region
-CurrentRegionID => RegionId
-WorldMgr.CheckDistance(this,enemy,range)  => Position.CheckDistance(enemy.Position, range)
-WorldMgr.GetDistance(owner, attackTarget) => owner.Position.GetDistance(attackTarget.Position)
-GetHeadingToSpot(tx,ty)        => m_position.GetHeadingTo(walkTarget)
-WorldMgr.GetPlayersCloseToSpot => m_region.GetPlayerInRadius
-target.GetSpotFromHeading(64, out x, out y) => Point spawnSpot = target.GetSpotFromHeading(64)
-zone.ToLocalPosition(Point regionPosition)
-zone.ToRegionPosition(Point localPos)
-------------------------------------------------------------------------------
-Doulbousiouf (19.Nov.2005) - 1.8.005:
-- Change : Update to NHibernate v1.0.1.0 and add all needed libraries
-- Change : GameServerScripts project compile now
-	   (except TownCrier.cs and XMLWebUIGenerator.cs)
-------------------------------------------------------------------------------
-Doulbousiouf (17.Nov.2005) - 1.8.004:
-- Remove : DOLDatabase project
-- Add : NHibernate database layer and new database structure (your old tables   
-	are no longer compatibles). The default configuration is done to work 
-	with MySQL, to use it you must first install the MySQL Connector.net
-	(http://dev.mysql.com/downloads/connector/net/1.0.html)
-	You are on the head branch, this is not the final code and a lot of 
-	feature are disabled / bugged and still in devellopment.
-	The GameServerScript project is for the moment not compatible.
-	!!! Use this version for tests only !!!
-------------------------------------------------------------------------------
-Duff (12.Nov.2005) - 1.8.003:
-*) Code by Rizla from dracis (modified a bit by me):
-- Add : decay on siege weapon
-- Change : damage of siege weapon to crush
-- Add : some other things in siege weapon
-- Add : control command
-*) Code by me
-- Add : repair
-------------------------------------------------------------------------------
-Gandulf (12.Nov.2005) - 1.8.002:
-- Changed: QuestPart-System Update
-           Some Parameters of Actions, Triggers, Requirements were
-           changed/reordered
-- Changed: SendCustomDialog no autowraps message text. This makes writing
-           long texts easier, since you don't have to worry about linebreaks.
-------------------------------------------------------------------------------           
-Smallhorse (12.Nov.2005) - 1.8.001:
-- Changed: Removed .NET 2.0 code from the new quest system! 
-					 Project is now compilable in NET 1.1 again.
-					 Not tested if everything still works with the new system (but only
-					 small changes were done!)
-------------------------------------------------------------------------------
-Gandulf (10.Nov.2005) - 1.8.001:
-- New: QuestPart-System (alpha)
-- Changed: 2 Quests to new Quest-System (Albion: ImportantDelivery, Nuisances)
-- New: IPacketLib.SendQuestAbortCommand
-------------------------------------------------------------------------------
-Smallhorse (10.Nov.2005) - 1.8.000:
-
-Moved HEAD 1.7.140 to STABLE branch!
-Please use the 1.8.xxx version numbering now.
-
-And remember:
-  New Code -> HEAD
-  Bugfixes -> HEAD + STABLE
-
-Thanks!
-Let's continue the great work,
-SmallHorse
-
+Noret (22.Nov.2005) - 1.7.141:
+- Bugfix: Players can only join the group they were invited to
+- Bugfix: UDP should no longer stop working after exceptions
 ------------------------------------------------------------------------------
 Noret (6.Nov.2005) - 1.7.140:
 - Changed: IPlayerTitle.IsForced takes player param for checks

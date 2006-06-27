@@ -17,11 +17,7 @@
  *
  */
 using System;
-using System.Collections;
-using System.Reflection;
-using DOL.Events;
 using DOL.GS.PacketHandler;
-using log4net;
 
 namespace DOL.GS.Trainer
 {
@@ -31,55 +27,10 @@ namespace DOL.GS.Trainer
 	[NPCGuildScript("Theurgist Trainer", eRealm.Albion)]		// this attribute instructs DOL to use this script for all "Theurgist Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class TheurgistTrainer : GameTrainer
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		public const string WEAPON_ID = "theurgist_item";
 
-		/// <summary>
-		/// This hash constrain all item template the trainer can give
-		/// </summary>	
-		private static IDictionary allStartupItems = new Hashtable();
-
-		/// <summary>
-		/// This function is called at the server startup
-		/// </summary>	
-		[GameServerStartedEvent]
-		public static void OnServerStartup(DOLEvent e, object sender, EventArgs args)
+		public TheurgistTrainer() : base()
 		{
-			#region Theurgist staff
-
-			StaffTemplate theurgist_item_template = new StaffTemplate();
-			theurgist_item_template.Name = "Theurgist Staff of Focus";
-			theurgist_item_template.Level = 5;
-			theurgist_item_template.Durability= 100;
-			theurgist_item_template.Condition = 100;
-			theurgist_item_template.Quality = 90;
-			theurgist_item_template.Bonus = 10;
-			theurgist_item_template.DamagePerSecond = 30;
-			theurgist_item_template.Speed = 4400;
-			theurgist_item_template.Weight = 45;
-			theurgist_item_template.Model = 19;
-			theurgist_item_template.Realm = eRealm.Albion;
-			theurgist_item_template.IsDropable = true; 
-			theurgist_item_template.IsTradable = false; 
-			theurgist_item_template.IsSaleable = false;
-			theurgist_item_template.MaterialLevel = eMaterialLevel.Bronze;
-			
-			theurgist_item_template.AllowedClass.Add(eCharacterClass.Theurgist);
-
-			theurgist_item_template.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Focus_Earth, 4));
-			theurgist_item_template.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Focus_Cold, 4));
-			theurgist_item_template.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Focus_Air, 4));	
-
-			if(!allStartupItems.Contains("Theurgist_Staff_of_Focus"))
-			{
-				allStartupItems.Add("Theurgist_Staff_of_Focus", theurgist_item_template);
-			
-				if (log.IsDebugEnabled)
-					log.Debug("Adding " + theurgist_item_template.Name + " to TheurgistTrainer gifts.");
-			}
-			#endregion
 		}
 
 		/// <summary>
@@ -134,9 +85,10 @@ namespace DOL.GS.Trainer
 			switch (text) {
 			case "join the Defenders of Albion":
 				// promote player to other class
-				if (CanPromotePlayer(player)) 
-					PromotePlayer(player, (int)eCharacterClass.Theurgist, "I know you shall do your best to guard the realm from those that would harm it! To help you with this task, here is a gift from the Defenders! Use it well!", new GenericItemTemplate[] {allStartupItems["Theurgist_Staff_of_Focus"] as GenericItemTemplate});
-					
+				if (CanPromotePlayer(player)) {
+					PromotePlayer(player, (int)eCharacterClass.Theurgist, "I know you shall do your best to guard the realm from those that would harm it! To help you with this task, here is a gift from the Defenders! Use it well!", null);
+					player.ReceiveItem(this,WEAPON_ID);
+				}
 				break;
 			}
 			return true;		

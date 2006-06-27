@@ -21,41 +21,42 @@ using System.Collections;
 using System.Reflection;
 
 using DOL.GS.PacketHandler;
-using DOL.GS.Database;
+using DOL.Database;
 
 using log4net;
 
 namespace DOL.GS.Housing
 {
-	public class House : IWorldPosition
+	public class House : IPoint3D
 	{
 		public int HouseNumber
 		{
 			get { return m_databaseItem.HouseNumber; }
 			set { m_databaseItem.HouseNumber = value; }
 		}
-		
-		public Point Position
-		{
-			get { return new Point(m_databaseItem.X, m_databaseItem.Y, m_databaseItem.Z); }
-			set
-			{
-				m_databaseItem.X = value.X;
-				m_databaseItem.Y = value.Y;
-				m_databaseItem.Z = value.Z;
-			}
-		}
-		
-		private Region m_region;
 
-		public Region Region
+		public int X
 		{
-			get { return m_region; }
-			set
-			{
-				m_region = value;
-				m_databaseItem.RegionID = value.RegionID;
-			}
+			get { return m_databaseItem.X; }
+			set { m_databaseItem.X = value; }
+		}
+
+		public int Y
+		{
+			get { return m_databaseItem.Y; }
+			set { m_databaseItem.Y = value; }
+		}
+
+		public int Z
+		{
+			get { return m_databaseItem.Z; }
+			set { m_databaseItem.Z = value; }
+		}
+
+		public ushort RegionID
+		{
+			get { return m_databaseItem.RegionID; }
+			set { m_databaseItem.RegionID = value; }
 		}
 
 		public int Heading
@@ -216,7 +217,7 @@ namespace DOL.GS.Housing
 		/// </summary>
 		public void SendUpdate()
 		{
-			foreach(GamePlayer player in m_region.GetPlayerInRadius(Position, HouseMgr.HOUSE_DISTANCE, false))
+			foreach(GamePlayer player in WorldMgr.GetPlayersCloseToSpot((ushort)this.RegionID, this.X, this.Y, this.Z, HouseMgr.HOUSE_DISTANCE))
 			{
 				player.Out.SendHouse(this);
 				player.Out.SendGarden(this);
@@ -247,65 +248,64 @@ namespace DOL.GS.Housing
 			client.Out.SendRemoveGarden(this);
 			client.Player.InHouse = true;
 			client.Player.CurrentHouse = this;
-			
-			Point pos = Position;
-			Point target;
 
 			switch (this.Model)
 			{
 				//thx to sp4m
 				default:
-					target = pos;
+					client.Player.MoveTo((ushort) this.RegionID, this.X, this.Y, 25022, client.Player.Heading);
 					break;
 
 				case 1:
-					target = new Point(pos.X + 80, pos.Y + 100, 25025);
+					client.Player.MoveTo((ushort) this.RegionID, this.X + 80, this.Y + 100, ((ushort) (25025)), client.Player.Heading);
 					break;
 
 				case 2:
-					target = new Point(pos.X - 260, pos.Y + 100, 24910);
+					client.Player.MoveTo((ushort) this.RegionID, this.X - 260, this.Y + 100, ((ushort) (24910)), client.Player.Heading);
 					break;
 
 				case 3:
-					target = new Point(pos.X - 200, pos.Y + 100, 24800);
+					client.Player.MoveTo((ushort) this.RegionID, this.X - 200, this.Y + 100, ((ushort) (24800)), client.Player.Heading);
 					break;
 
 				case 4:
-					target = new Point(pos.X - 350, pos.Y - 30, 24660);
+					client.Player.MoveTo((ushort) this.RegionID, this.X - 350, this.Y - 30, ((ushort) (24660)), client.Player.Heading);
 					break;
 
 				case 5:
-					target = new Point(pos.X + 230, pos.Y - 480, 25100);
+					client.Player.MoveTo((ushort) this.RegionID, this.X + 230, this.Y - 480, ((ushort) (25100)), client.Player.Heading);
 					break;
 
 				case 6:
+					client.Player.MoveTo((ushort) this.RegionID, this.X - 80, this.Y - 660, ((ushort) (24700)), client.Player.Heading);
+					break;
+
 				case 7:
-					target = new Point(pos.X - 80, pos.Y - 660, 24700);
+					client.Player.MoveTo((ushort) this.RegionID, this.X - 80, this.Y - 660, ((ushort) (24700)), client.Player.Heading);
 					break;
 
 				case 8:
-					target = new Point(pos.X - 90, pos.Y - 625, 24670);
+					client.Player.MoveTo((ushort) this.RegionID, this.X - 90, this.Y - 625, ((ushort) (24670)), client.Player.Heading);
 					break;
 
 				case 9:
-					target = new Point(pos.X + 400, pos.Y - 160, 25150);
+					client.Player.MoveTo((ushort) this.RegionID, this.X + 400, this.Y - 160, ((ushort) (25150)), client.Player.Heading);
 					break;
 
 				case 10:
-					target = new Point(pos.X + 400, pos.Y - 80, 25060);
+					client.Player.MoveTo((ushort) this.RegionID, this.X + 400, this.Y - 80, ((ushort) (25060)), client.Player.Heading);
 					break;
 
 				case 11:
-					target = new Point(pos.X + 400, pos.Y - 60, 24900);
+					client.Player.MoveTo((ushort) this.RegionID, this.X + 400, this.Y - 60, ((ushort) (24900)), client.Player.Heading);
 					break;
 
 				case 12:
-					target = new Point(pos.X, pos.Y - 620, 24595);
+					client.Player.MoveTo((ushort) this.RegionID, this.X, this.Y - 620, ((ushort) (24595)), client.Player.Heading);
 					break;
 			}
-			client.Player.MoveTo((ushort)Region.RegionID, target, (ushort)client.Player.Heading);
 
-			client.Out.SendMessage("You have entered house number " + HouseNumber + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			client.Out.SendMessage("You have entered house number " + this.HouseNumber + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}
 
 		/// <summary>
@@ -315,7 +315,7 @@ namespace DOL.GS.Housing
 		/// <param name="silent">text or not</param>
 		public void Exit(GamePlayer player, bool silent)
 		{
-			player.MoveTo((ushort)Region.RegionID, Position, (ushort)Heading);
+			player.MoveTo(RegionID, X, Y, Z, (ushort)Heading);
 				
 			if(!silent) player.Out.SendMessage("You have left house number " + HouseNumber + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		
@@ -370,7 +370,7 @@ namespace DOL.GS.Housing
 			text.Add("Rent due in: (todo)");
 			text.Add(" ");
 			text.Add("Owners:");
-			foreach (GamePlayer character in HouseMgr.GetOwners(this.m_databaseItem))
+			foreach (Character character in HouseMgr.GetOwners(this.m_databaseItem))
 			{
 				text.Add("-" + character.Name);
 			}
@@ -425,9 +425,7 @@ namespace DOL.GS.Housing
 		public ArrayList GetAllPlayersInHouse()
 		{
 			ArrayList ret = new ArrayList();
-			Point pos = Position;
-			pos.Z = 25000;
-			foreach (GamePlayer player in Region.GetPlayerInRadius(pos, WorldMgr.VISIBILITY_DISTANCE, false))
+			foreach (GamePlayer player in WorldMgr.GetPlayersCloseToSpot((ushort) this.RegionID, this.X, this.Y, 25000, WorldMgr.VISIBILITY_DISTANCE))
 			{
 				if (player.CurrentHouse == this && player.InHouse)
 				{
@@ -464,10 +462,10 @@ namespace DOL.GS.Housing
 			{
 				int page = slot / 30;
 				int pslot = slot % 30;
-				GenericItemTemplate item = items.GetItem(page,(eMerchantWindowSlot)pslot);
+				ItemTemplate item = items.GetItem(page,(eMerchantWindowSlot)pslot);
 				if(item!=null)
 				{
-					price += item.Value;
+					price += Money.GetMoney(0,0,item.Gold,item.Silver,item.Copper);
 				}
 			}
 
@@ -482,11 +480,11 @@ namespace DOL.GS.Housing
 				int page = slot / 30;
 				int pslot = slot % 30;
 
-				GenericItemTemplate item = items.GetItem(page,(eMerchantWindowSlot)pslot);
+				ItemTemplate item = items.GetItem(page,(eMerchantWindowSlot)pslot);
 				
 				if(item!=null)
 				{
-				/*	switch(item.ObjectType)
+					switch(item.Object_Type)
 					{
 						case 2: IndoorGuildBanner = (item.DPS_AF == 1 ? true : false); break;
 						case 3: IndoorGuildShield = (item.DPS_AF == 1 ? true : false); break;
@@ -506,7 +504,7 @@ namespace DOL.GS.Housing
 						case 63: TrussMaterial = item.DPS_AF; break;
 
 						default: WindowMaterial = (item.Gold-1); break; //dirty work a round - dont know how mythic did it, hardcoded? but it works.
-					}*/
+					}
 				}
 			}
 
@@ -521,7 +519,7 @@ namespace DOL.GS.Housing
 			}
 			else
 			{
-				foreach(GamePlayer p in Region.GetPlayerInRadius(Position, HouseMgr.HOUSE_DISTANCE, false))
+				foreach(GamePlayer p in WorldMgr.GetPlayersCloseToSpot((ushort)this.RegionID, this.X, this.Y, this.Z, HouseMgr.HOUSE_DISTANCE))
 				{
 					p.Out.SendHouse(this); //update wall look
 				}
@@ -531,7 +529,6 @@ namespace DOL.GS.Housing
 
 		public House(DBHouse house)
 		{
-			m_region = WorldMgr.GetRegion((ushort) house.RegionID);
 			m_databaseItem = house;
 			m_indooritems = new ArrayList();
 			m_outdooritems = new ArrayList();

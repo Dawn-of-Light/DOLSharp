@@ -39,7 +39,7 @@ namespace DOL.GS.Spells
 		/// </summary>
 		public override void FinishSpellCast(GameLiving target)
 		{
-			m_caster.ChangeMana(null, GameLiving.eManaChangeType.Spell, -CalculateNeededPower(target));
+			m_caster.Mana -= CalculateNeededPower(target);
 			base.FinishSpellCast(target);
 		}
 
@@ -52,8 +52,8 @@ namespace DOL.GS.Spells
 		{
 			base.OnEffectStart(effect);
 
-			Caster.LastAttackTick = Caster.Region.Time;
-			effect.Owner.LastAttackedByEnemyTick = effect.Owner.Region.Time;
+			Caster.LastAttackTick = Caster.CurrentRegion.Time;
+			effect.Owner.LastAttackedByEnemyTick = effect.Owner.CurrentRegion.Time;
 
 			effect.Owner.Disease(true);
 			effect.Owner.BuffBonusMultCategory1.Set((int)eProperty.MaxSpeed, this, 1.0 - 0.075);

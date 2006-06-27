@@ -19,9 +19,8 @@
 using System;
 using System.Collections;
 using DOL.GS;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.GS.PacketHandler;
-using NHibernate.Expression;
 
 namespace DOL.GS.Scripts
 {
@@ -77,8 +76,10 @@ namespace DOL.GS.Scripts
 					//Create a new merchant
 					GameMerchant merchant = new GameMerchant();
 					//Fill the object variables
-					merchant.Position=client.Player.Position;
-					merchant.Region=client.Player.Region;
+					merchant.X=client.Player.X;
+					merchant.Y=client.Player.Y;
+					merchant.Z=client.Player.Z;
+					merchant.CurrentRegion=client.Player.CurrentRegion;
 					merchant.Heading=client.Player.Heading;
 					merchant.Level=1;
 					merchant.Realm=client.Player.Realm;
@@ -159,7 +160,7 @@ namespace DOL.GS.Scripts
 												 return 1;
 											 }
 											
-											 GenericItemTemplate template = (GenericItemTemplate) GameServer.Database.FindObjectByKey(typeof(GenericItemTemplate), templateID);
+											 ItemTemplate template = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof(ItemTemplate), templateID);
 											 if(template == null)
 											 {
 												 client.Out.SendMessage("ItemTemplate with id "+templateID+" could not be found!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
@@ -178,7 +179,7 @@ namespace DOL.GS.Scripts
 												 return 1;
 											 }
 
-											 MerchantItem item = (MerchantItem) GameServer.Database.SelectObject(typeof(MerchantItem),Expression.And(Expression.And(Expression.Eq("ItemListID",targetMerchant.TradeItems.ItemsListID), Expression.Eq("PageNumber", page)) ,Expression.Eq("SlotPosition", slot)));
+											 MerchantItem item = (MerchantItem) GameServer.Database.SelectObject(typeof(MerchantItem),"ItemListID = '"+targetMerchant.TradeItems.ItemsListID+"' AND PageNumber = '"+page+"' AND SlotPosition = '"+slot+"'");
 											 if(item == null)
 											 {
 												 item = new MerchantItem();
@@ -233,7 +234,7 @@ namespace DOL.GS.Scripts
 													return 1;
 												}
 
-												MerchantItem item = (MerchantItem) GameServer.Database.SelectObject(typeof(MerchantItem),Expression.And(Expression.And(Expression.Eq("ItemListID",targetMerchant.TradeItems.ItemsListID), Expression.Eq("PageNumber", page)) ,Expression.Eq("SlotPosition", slot)));
+												MerchantItem item = (MerchantItem) GameServer.Database.SelectObject(typeof(MerchantItem),"ItemListID = '"+targetMerchant.TradeItems.ItemsListID+"' AND PageNumber = '"+page+"' AND SlotPosition = '"+slot+"'");
 												if(item == null)
 												{
 													client.Out.SendMessage("Slot "+slot+" in page "+page+" is already empty.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
@@ -266,12 +267,14 @@ namespace DOL.GS.Scripts
 												}
 												client.Out.SendMessage("Deleting articles list template ...",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 
-												IList merchantitems = GameServer.Database.SelectObjects(typeof(MerchantItem),Expression.Eq("ItemsListID",targetMerchant.TradeItems.ItemsListID));
-												foreach(MerchantItem item in merchantitems)
+												MerchantItem[] merchantitems=(MerchantItem[]) GameServer.Database.SelectObjects(typeof(MerchantItem),"ItemsListID = '"+targetMerchant.TradeItems.ItemsListID+"'");
+												if(merchantitems.Length>0)
 												{
-													GameServer.Database.DeleteObject(item);
+													foreach(MerchantItem item in merchantitems)
+													{
+														GameServer.Database.DeleteObject(item);
+													}
 												}
-												
 												client.Out.SendMessage("Merchant articles list deleted.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 											} 
 											catch(Exception)

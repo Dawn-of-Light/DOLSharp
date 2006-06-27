@@ -20,7 +20,7 @@
 
 using System;
 using System.Collections;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.GS.Spells;
 using DOL.GS.Styles;
 using DOL.GS.Effects;
@@ -65,7 +65,7 @@ namespace DOL.GS.PacketHandler
 					for(int i = 0; i < group.PlayerCount; ++i)
 					{
 						GamePlayer updatePlayer = group[i];
-						bool sameRegion = updatePlayer.Region == m_gameClient.Player.Region;
+						bool sameRegion = updatePlayer.CurrentRegion == m_gameClient.Player.CurrentRegion;
 
 						pak.WriteByte(updatePlayer.Level);
 						if (sameRegion)
@@ -85,7 +85,7 @@ namespace DOL.GS.PacketHandler
 								playerStatus |= 0x08;
 							if (updatePlayer.Client.ClientState == GameClient.eClientState.Linkdead)
 								playerStatus |= 0x10;
-							if (updatePlayer.Region != m_gameClient.Player.Region)
+							if (updatePlayer.CurrentRegion != m_gameClient.Player.CurrentRegion)
 								playerStatus |= 0x20;
 
 							pak.WriteByte(playerStatus);
@@ -110,7 +110,7 @@ namespace DOL.GS.PacketHandler
 		protected override void WriteGroupMemberUpdate(GSTCPPacketOut pak, bool updateIcons, GamePlayer player)
 		{
 			pak.WriteByte((byte)(player.PlayerGroupIndex+1)); // From 1 to 8
-			bool sameRegion = player.Region == m_gameClient.Player.Region;
+			bool sameRegion = player.CurrentRegion == m_gameClient.Player.CurrentRegion;
 			if (sameRegion)
 			{
 				pak.WriteByte(player.HealthPercent);

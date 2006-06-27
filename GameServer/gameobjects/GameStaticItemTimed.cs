@@ -23,7 +23,7 @@ namespace DOL.GS
 	/// <summary>
 	/// Holds a static item in the world that will disappear after some interval
 	/// </summary>
-	public class GameStaticItemTimed : GameStaticItem
+	public class GameStaticItemTimed:GameStaticItem
 	{
 		/// <summary>
 		/// How long this object can stay in the world without being removed
@@ -35,11 +35,18 @@ namespace DOL.GS
 		protected RemoveItemAction m_removeItemAction;
 
 		/// <summary>
+		/// Creates a new static item that will disappear after 2 minutes
+		/// </summary>
+		public GameStaticItemTimed() : base()
+		{
+		}
+
+		/// <summary>
 		/// Creates a new static item that will disappear after the given
-		/// tick-count (vanishTicks = 0 => disappear time = 2 mins)
+		/// tick-count
 		/// </summary>
 		/// <param name="vanishTicks">milliseconds after which the item will vanish</param>
-		public GameStaticItemTimed(int vanishTicks): base()
+		public GameStaticItemTimed(int vanishTicks): this()
 		{
 			if(vanishTicks > 0)
 				m_removeDelay = vanishTicks;
@@ -108,6 +115,7 @@ namespace DOL.GS
 			protected override void OnTick()
 			{
 				GameStaticItem item = (GameStaticItem)m_actionSource;
+				//remove this object from the world after some time
 				item.Delete();
 			}
 		}

@@ -17,7 +17,6 @@
  *
  */
 using System;
-using DOL.GS;
 
 namespace DOL.Events
 {
@@ -26,28 +25,50 @@ namespace DOL.Events
 	/// </summary>
 	public class WalkToEventArgs : EventArgs
 	{
-		Point p;
+		private int x;
+		private int y;
+		private int z;
 		private int speed;
 
 		/// <summary>
-		/// Constructs a new WalkToEventArgs.
+		/// Constructs a new WalkToEventArgs
 		/// </summary>
-		/// <param name="walkTarget">the target point to walk to.</param>
-		/// <param name="speed">the walk speed.</param>
-		public WalkToEventArgs(Point walkTarget, int speed)
+		/// <param name="x">the target x</param>
+		/// <param name="y">the target y</param>
+		/// <param name="z">the target z</param>
+		/// <param name="speed">the walk speed</param>
+		public WalkToEventArgs(int x, int y, int z, int speed)
 		{
-			this.p = walkTarget;
-			this.speed = speed;
+			this.x=x;
+			this.y=y;
+			this.z=z;
+			this.speed=speed;
 		}
 
 		/// <summary>
-		/// Gets the walk target.
+		/// Gets the target x
 		/// </summary>
-		public Point WalkTarget
+		public int X
 		{
-			get { return p; }
+			get { return x; }
+		}		
+		
+		/// <summary>
+		/// Gets the target y
+		/// </summary>
+		public int Y
+		{
+			get { return y; }
 		}
-
+		
+		/// <summary>
+		/// Gets the target z
+		/// </summary>
+		public int Z
+		{
+			get { return z; }
+		}
+		
 		/// <summary>
 		/// Gets the walk speed
 		/// </summary>

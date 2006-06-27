@@ -81,5 +81,10 @@ namespace DOL.Events
 		/// <seealso cref="ReceiveMoneyEventArgs"/>
 		/// </summary>
 		public static readonly GameObjectEvent ReceiveMoney = new GameObjectEvent("GameObjectEvent.ReceiveMoney");
+		/// <summary>
+		/// The TakeDamage event is fired whenever an object takes damage
+		/// <seealso cref="TakeDamageEventArgs"/>
+		/// </summary>
+		public static readonly GameObjectEvent TakeDamage = new GameObjectEvent("GameObject.TakeDamage");
 	}
 }

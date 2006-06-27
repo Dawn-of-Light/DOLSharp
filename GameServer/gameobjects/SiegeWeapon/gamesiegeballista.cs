@@ -18,7 +18,6 @@
  */
 using System;
 using DOL.GS.Spells;
-using DOL.GS.Database;
 using System.Collections;
 using DOL.GS.Scripts;
 /*1,Ballista,1,ammo,0.46,1
@@ -84,7 +83,7 @@ namespace DOL.GS
 			//m_spellHandler.StartSpell(player);
 			base.DoDamage();//anim mut be called after damage
 		}
-		public override bool ReceiveItem(GameLiving source, GenericItem item)
+		public override bool ReceiveItem(GameLiving source, DOL.Database.InventoryItem item)
 		{
 			//todo check if bullet
 			return base.ReceiveItem (source, item);

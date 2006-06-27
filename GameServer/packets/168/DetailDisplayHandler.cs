@@ -17,7 +17,7 @@
  *
  */
 using System;
-using DOL.GS.Database;
+using DOL.Database;
 using System.Collections;
 using DOL.GS.Effects;
 using DOL.GS.Scripts;
@@ -44,7 +44,7 @@ namespace DOL.GS.PacketHandler.v168
 			{
 				case 1: //Display Infos on inventory item
 				{
-					GenericItem item = client.Player.Inventory.GetItem((eInventorySlot)objectID);
+					InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)objectID);
 					if(item == null)
 						return 1;
 
@@ -63,16 +63,16 @@ namespace DOL.GS.PacketHandler.v168
 					//**********************************
 					//show info for all types of weapons
 					//**********************************
-					if (item is Weapon)
+					if ((item.Object_Type >= (int)eObjectType.GenericWeapon) && (item.Object_Type<= (int)eObjectType.Scythe))
 					{
 
 						//						objectInfo.Add("Usable by:");
 						//						objectInfo.Add("- ");
 						//						objectInfo.Add(" ");
 
-						WriteMagicalBonuses(objectInfo, (EquipableItem)item, client, false);
+						WriteMagicalBonuses(objectInfo, item, client, false);
 
-						WriteClassicWeaponInfos(objectInfo, (Weapon)item, client);
+						WriteClassicWeaponInfos(objectInfo, item, client);
 
 						// Text for object witch can't be sell or trade
 						//				if(objectType == 1)
@@ -88,15 +88,15 @@ namespace DOL.GS.PacketHandler.v168
 					//*********************************
 					//shows info for all types of armor
 					//*********************************
-					if (item is Armor)
+					if (item.Object_Type >= (int)eObjectType.Cloth && item.Object_Type <= (int)eObjectType.Scale)
 					{
 						//						objectInfo.Add("Usable by:");
 						//						objectInfo.Add("- ");
 						//						objectInfo.Add(" ");
 
-						WriteMagicalBonuses(objectInfo, (EquipableItem)item, client, false);
+						WriteMagicalBonuses(objectInfo, item, client, false);
 
-						WriteClassicArmorInfos(objectInfo, (Armor)item, client);
+						WriteClassicArmorInfos(objectInfo, item, client);
 
 						// Text for object witch can't be sell or trade
 						//				if(objectType == 1)
@@ -113,15 +113,15 @@ namespace DOL.GS.PacketHandler.v168
 					//***********************************
 					//shows info for Shields			*
 					//***********************************
-					if (item is Shield)
+					if (item.Object_Type == (int)eObjectType.Shield)
 					{
 						//						objectInfo.Add("Usable by:");
 						//						objectInfo.Add("- ");
 						//						objectInfo.Add(" ");
 
-						WriteMagicalBonuses(objectInfo, (EquipableItem)item, client, false);
+						WriteMagicalBonuses(objectInfo, item, client, false);
 
-						WriteClassicShieldInfos(objectInfo, (Shield)item, client);
+						WriteClassicShieldInfos(objectInfo, item, client);
 
 						// Text for object witch can't be sell or trade
 						//				if(objectType == 1)
@@ -135,97 +135,75 @@ namespace DOL.GS.PacketHandler.v168
 					}
 
 					//***********************************
-					//shows info for Poison Potions
-					//***********************************
-					if (item is Poison)
-					{
-						WritePoisonInfo(objectInfo, (Poison)item, client);
-					}
-
-					//***********************************
-					//shows info for SpellCraftGem
-					//***********************************
-					if (item is SpellCraftGem)
-					{
-						WriteBonusLine(objectInfo, ((SpellCraftGem)item).BonusType, ((SpellCraftGem)item).Bonus);
-						WriteFocusLine(objectInfo, ((SpellCraftGem)item).BonusType, ((SpellCraftGem)item).Bonus);
-					}
-
-					//***********************************
-					//shows info for AlchemieTincture
-					//***********************************
-					if (item is AlchemieTincture)
-					{
-						WriteSpellInfo(objectInfo, GlobalSpellsLines.Item_Effects, ((AlchemieTincture)item).SpellID, client);
-					}
-
-					//***********************************
 					//shows info for Magic Items
 					//***********************************
-					if (item is MagicalItem)
+					if (item.Object_Type == (int)eObjectType.Magical || item.Object_Type == (int)eObjectType.AlchemyTincture || item.Object_Type == (int)eObjectType.SpellcraftGem)
 					{
-						WriteSpellInfo(objectInfo, GlobalSpellsLines.Item_Effects, ((MagicalItem)item).SpellID, client);
+						WriteMagicalBonuses(objectInfo, item, client, false);
+					}
+
+					//***********************************
+					//shows info for Poison Potions
+					//***********************************
+					if (item.Object_Type == (int)eObjectType.Poison)
+					{
+						WritePoisonInfo(objectInfo, item, client);
 					}
 
 
 					//Add admin info
-					if (client.Account.PrivLevel > ePrivLevel.Player)
+					if (client.Account.PrivLevel > 1 )
 					{
 						objectInfo.Add("----------Technical informations----------");
-						objectInfo.Add("	  Item ID: "+item.ItemID);
-						objectInfo.Add("   Class Name: "+item.GetType());
-						objectInfo.Add("   ObjectType: "+GlobalConstants.ObjectTypeToName((int)item.ObjectType));
+						objectInfo.Add("Item Template: "+item.Id_nb);
 						objectInfo.Add("         Name: "+item.Name);
 						objectInfo.Add("        Level: "+item.Level);
 						objectInfo.Add("        Model: "+item.Model);
+						objectInfo.Add("         Type: "+GlobalConstants.ObjectTypeToName(item.Object_Type));
+						objectInfo.Add("         Slot: "+GlobalConstants.SlotToName(item.Item_Type));
+						objectInfo.Add("       Emblem: "+item.Emblem);
+						objectInfo.Add("       Effect: "+item.Effect);
+						objectInfo.Add("  Value/Price: "+item.Gold+"g "+item.Silver+"s "+item.Copper+"c");
+						objectInfo.Add("       Weight: "+(item.Weight/10.0f)+"lbs");
+						objectInfo.Add("      Quality: "+item.Quality+"/"+item.MaxQuality+"(max)");
+						objectInfo.Add("   Durability: "+item.Durability+"/"+item.MaxDurability+"(max)");
+						objectInfo.Add("    Condition: "+item.Condition+"/"+item.MaxCondition+"(max)");
 						objectInfo.Add("        Realm: "+item.Realm);
-						objectInfo.Add("        Value: "+item.Value);
 						objectInfo.Add("  Is dropable: "+(item.IsDropable?"yes":"no"));
-						objectInfo.Add("  Is tradable: "+(item.IsTradable?"yes":"no"));
-						objectInfo.Add("  Is saleable: "+(item.IsSaleable?"yes":"no"));
-						objectInfo.Add("   Quest name: "+item.QuestName);
-						objectInfo.Add(" Crafter name: "+item.CrafterName);
-						
-						if(item is EquipableItem)
+						objectInfo.Add("  Is pickable: "+(item.IsPickable?"yes":"no"));
+						objectInfo.Add(" Is stackable: "+(item.IsStackable?"yes":"no"));
+						if(GlobalConstants.IsWeapon(item.Object_Type))
 						{
-							objectInfo.Add("         Quality: "+((EquipableItem)item).Quality);
-							objectInfo.Add("      Durability: "+((EquipableItem)item).Durability);
-							objectInfo.Add("       Condition: "+((EquipableItem)item).Condition);
-							objectInfo.Add("           Bonus: "+((EquipableItem)item).Bonus);
-							objectInfo.Add("   MaterialLevel: "+((EquipableItem)item).MaterialLevel);
-							objectInfo.Add("  ProcEffectType: "+((EquipableItem)item).ProcEffectType);
-							objectInfo.Add("ChargeEffectType: "+((EquipableItem)item).ChargeEffectType);
-							
-							if(item is VisibleEquipment)
-							{
-								objectInfo.Add("   Color: "+((VisibleEquipment)item).Color);
-							
-								if(item is Instrument)
-								{
-									objectInfo.Add("  InstrType: "+((Instrument)item).Type);
-								}
-
-								if(item is Armor)
-								{
-									objectInfo.Add("   ArmorFactor: "+((Armor)item).ArmorFactor);
-									objectInfo.Add("   ArmorLevel : "+((Armor)item).ArmorLevel);
-									objectInfo.Add("ModelExtension: "+((Armor)item).ModelExtension);
-								}
-
-								if(item is Weapon)
-								{
-									objectInfo.Add("         DPS: "+((Weapon)item).DamagePerSecond);
-									objectInfo.Add("       Speed: "+((Weapon)item).Speed/1000+"."+((Weapon)item).Speed%1000);
-									objectInfo.Add("  DamageType: "+((Weapon)item).DamageType);
-									objectInfo.Add("  HandNeeded: "+((Weapon)item).HandNeeded);
-									objectInfo.Add("GlowEffectID: "+((Weapon)item).GlowEffect);
-
-									if(item is Shield)
-									{
-										objectInfo.Add("  Shield Size: "+((Shield)item).Size);
-									}
-								}
-							}
+							objectInfo.Add("         Hand: "+GlobalConstants.ItemHandToName(item.Hand));
+							objectInfo.Add("Damage/Second: "+(item.DPS_AF/10.0f));
+							objectInfo.Add("        Speed: "+(item.SPD_ABS/10.0f));
+							objectInfo.Add("  Damage type: "+GlobalConstants.WeaponDamageTypeToName(item.Type_Damage));
+							objectInfo.Add("        Bonus: "+item.Bonus);
+						}
+						else if(GlobalConstants.IsArmor(item.Object_Type))
+						{
+							objectInfo.Add("  Armorfactor: "+item.DPS_AF);
+							objectInfo.Add("    Absorbage: "+item.SPD_ABS);
+							objectInfo.Add("        Bonus: "+item.Bonus);
+						}
+						else if(item.Object_Type==(int)eObjectType.Shield)
+						{
+							objectInfo.Add("Damage/Second: "+(item.DPS_AF/10.0f));
+							objectInfo.Add("        Speed: "+(item.SPD_ABS/10.0f));
+							objectInfo.Add("  Shield type: "+GlobalConstants.ShieldTypeToName(item.Type_Damage));
+							objectInfo.Add("        Bonus: "+item.Bonus);
+						}
+						else if(item.Object_Type==(int)eObjectType.Arrow || item.Object_Type==(int)eObjectType.Bolt)
+						{
+							objectInfo.Add(" Ammunition #: "+item.DPS_AF);
+							objectInfo.Add("       Damage: "+GlobalConstants.AmmunitionTypeToDamageName(item.SPD_ABS));
+							objectInfo.Add("        Range: "+GlobalConstants.AmmunitionTypeToRangeName(item.SPD_ABS));
+							objectInfo.Add("     Accuracy: "+GlobalConstants.AmmunitionTypeToAccuracyName(item.SPD_ABS));
+							objectInfo.Add("        Bonus: "+item.Bonus);
+						}
+						else if(item.Object_Type==(int)eObjectType.Instrument)
+						{
+							objectInfo.Add("   Instrument: "+GlobalConstants.InstrumentTypeToName(item.DPS_AF));
 						}
 					}
 
@@ -320,7 +298,7 @@ namespace DOL.GS.PacketHandler.v168
 					int pagenumber= objectID/MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
 					int slotnumber= objectID%MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
 
-					GenericItemTemplate item = merchant.TradeItems.GetItem(pagenumber ,(eMerchantWindowSlot)slotnumber);
+					ItemTemplate item = merchant.TradeItems.GetItem(pagenumber ,(eMerchantWindowSlot)slotnumber);
 					if(item == null)
 						return 1;
 
@@ -328,61 +306,61 @@ namespace DOL.GS.PacketHandler.v168
 					//**********************************
 					//show info for all weapons
 					//**********************************
-					if (item is WeaponTemplate)
+					if ((item.Object_Type >= (int)eObjectType.GenericWeapon) && (item.Object_Type<= (int)eObjectType.Scythe))
 					{
 
 						//						objectInfo.Add("Usable by:");
 						//						objectInfo.Add("- ");
 
-		//				WriteMagicalBonuses(objectInfo, item, client, false);
+						WriteMagicalBonuses(objectInfo, item, client, false);
 
-		//				WriteClassicWeaponInfos(objectInfo, item, client);
+						WriteClassicWeaponInfos(objectInfo, item, client);
 					}
 
 					//*********************************
 					//shows info for all types of armor
 					//*********************************
-					if (item is ArmorTemplate)
+					if (item.Object_Type >= (int)eObjectType.Cloth && item.Object_Type <= (int)eObjectType.Scale)
 					{
 						//						objectInfo.Add("Usable by:");
 						//						objectInfo.Add("- ");
 						//						objectInfo.Add(" ");
 
-		//				WriteMagicalBonuses(objectInfo, item, client, false);
+						WriteMagicalBonuses(objectInfo, item, client, false);
 
-		//				WriteClassicArmorInfos(objectInfo, item, client);
+						WriteClassicArmorInfos(objectInfo, item, client);
 
 					}
 
 					//***********************************
 					//shows info for Shields			*
 					//***********************************
-					if (item is ShieldTemplate)
+					if (item.Object_Type == (int)eObjectType.Shield)
 					{
 						//						objectInfo.Add("Usable by:");
 						//						objectInfo.Add("- ");
 						//						objectInfo.Add(" ");
 
-		//				WriteMagicalBonuses(objectInfo, item, client, false);
+						WriteMagicalBonuses(objectInfo, item, client, false);
 
-		//				WriteClassicShieldInfos(objectInfo, item, client);
+						WriteClassicShieldInfos(objectInfo, item, client);
 
 					}
 
 					//***********************************
 					//shows info for Magic Items
 					//***********************************
-					if (item is MagicalItemTemplate)
+					if (item.Object_Type == (int)eObjectType.Magical || item.Object_Type == (int)eObjectType.AlchemyTincture || item.Object_Type == (int)eObjectType.SpellcraftGem)
 					{
-		//				WriteSpellInfo(objectInfo, GlobalSpellsLines.Item_Effects, ((MagicalItemTemplate)item).SpellID, client);
+						WriteMagicalBonuses(objectInfo, item, client, false);
 					}
 
 					//***********************************
 					//shows info for Poison Items
 					//***********************************
-					if (item is PoisonTemplate)
+					if (item.Object_Type == (int)eObjectType.Poison)
 					{
-		//				WritePoisonInfo(objectInfo, item, client);
+						WritePoisonInfo(objectInfo, item, client);
 					}
 					break;
 				}
@@ -566,11 +544,14 @@ namespace DOL.GS.PacketHandler.v168
 
 				case 7: //trade windows
 				{
-					ArrayList partnerTradeItems = client.Player.TradeWindow.PartnerTradeItems;
-					GenericItem item=null;
+					ITradeWindow playerTradeWindow = client.Player.TradeWindow;
+					if (playerTradeWindow == null)
+						return 1;
 
-					if(client.Player.TradeWindow.PartnerTradeItems != null && objectID < client.Player.TradeWindow.PartnerItemsCount)
-						item = (GenericItem)client.Player.TradeWindow.PartnerTradeItems[objectID];
+					InventoryItem item=null;
+
+					if(playerTradeWindow.PartnerTradeItems != null && objectID < playerTradeWindow.PartnerItemsCount)
+						item = (InventoryItem)playerTradeWindow.PartnerTradeItems[objectID];
 
 					if(item == null)
 						return 1;
@@ -589,16 +570,16 @@ namespace DOL.GS.PacketHandler.v168
 					//**********************************
 					//show info for all types of weapons
 					//**********************************
-					if (item is Weapon)
+					if ((item.Object_Type >= (int)eObjectType.GenericWeapon) && (item.Object_Type<= (int)eObjectType.Scythe))
 					{
 
 						//						objectInfo.Add("Usable by:");
 						//						objectInfo.Add("- ");
 						//						objectInfo.Add(" ");
 
-						WriteMagicalBonuses(objectInfo, (EquipableItem)item, client, false);
+						WriteMagicalBonuses(objectInfo, item, client, false);
 
-						WriteClassicWeaponInfos(objectInfo, (Weapon)item, client);
+						WriteClassicWeaponInfos(objectInfo, item, client);
 
 						// Text for object witch can't be sold
 						//				if(...)
@@ -611,15 +592,15 @@ namespace DOL.GS.PacketHandler.v168
 					//*********************************
 					//shows info for all types of armor
 					//*********************************
-					if (item is Armor)
+					if (item.Object_Type >= (int)eObjectType.Cloth && item.Object_Type <= (int)eObjectType.Scale)
 					{
 						//						objectInfo.Add("Usable by:");
 						//						objectInfo.Add("- ");
 						//						objectInfo.Add(" ");
 
-						WriteMagicalBonuses(objectInfo, (EquipableItem)item, client, false);
+						WriteMagicalBonuses(objectInfo, item, client, false);
 
-						WriteClassicArmorInfos(objectInfo, (Armor)item, client);
+						WriteClassicArmorInfos(objectInfo, item, client);
 
 						// Text for object witch can't be sold
 						//				if(objectType == 1)
@@ -633,15 +614,15 @@ namespace DOL.GS.PacketHandler.v168
 					//***********************************
 					//shows info for Shields			*
 					//***********************************
-					if (item is Shield)
+					if (item.Object_Type == (int)eObjectType.Shield)
 					{
 						//						objectInfo.Add("Usable by:");
 						//						objectInfo.Add("- ");
 						//						objectInfo.Add(" ");
 
-						WriteMagicalBonuses(objectInfo, (EquipableItem)item, client, false);
+						WriteMagicalBonuses(objectInfo, item, client, false);
 
-						WriteClassicShieldInfos(objectInfo, (Shield)item, client);
+						WriteClassicShieldInfos(objectInfo, item, client);
 
 						// Text for object witch can't be sold
 						//				if(objectType == 1)
@@ -652,36 +633,19 @@ namespace DOL.GS.PacketHandler.v168
 					}
 
 					//***********************************
-					//shows info for Poison Potions
-					//***********************************
-					if (item is Poison)
-					{
-						WritePoisonInfo(objectInfo, (Poison)item, client);
-					}
-
-					//***********************************
-					//shows info for SpellCraftGem
-					//***********************************
-					if (item is SpellCraftGem)
-					{
-						WriteBonusLine(objectInfo, ((SpellCraftGem)item).BonusType, ((SpellCraftGem)item).Bonus);
-						WriteFocusLine(objectInfo, ((SpellCraftGem)item).BonusType, ((SpellCraftGem)item).Bonus);
-					}
-
-					//***********************************
-					//shows info for AlchemieTincture
-					//***********************************
-					if (item is AlchemieTincture)
-					{
-						WriteSpellInfo(objectInfo, GlobalSpellsLines.Item_Effects, ((AlchemieTincture)item).SpellID, client);
-					}
-
-					//***********************************
 					//shows info for Magic Items
 					//***********************************
-					if (item is MagicalItem)
+					if (item.Object_Type == (int)eObjectType.Magical || item.Object_Type == (int)eObjectType.AlchemyTincture || item.Object_Type == (int)eObjectType.SpellcraftGem)
 					{
-						WriteSpellInfo(objectInfo, GlobalSpellsLines.Item_Effects, ((MagicalItem)item).SpellID, client);
+						WriteMagicalBonuses(objectInfo, item, client, false);
+					}
+
+					//***********************************
+					//shows info for Poison Potions
+					//***********************************
+					if (item.Object_Type == (int)eObjectType.Poison)
+					{
+						WritePoisonInfo(objectInfo, item, client);
 					}
 					break;
 
@@ -749,7 +713,7 @@ namespace DOL.GS.PacketHandler.v168
 				}
 				case 12: // Item info to Group Chat
 				{
-					GenericItem item = client.Player.Inventory.GetItem((eInventorySlot)objectID);
+					InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)objectID);
 					if(item == null) return 1;
 					string str = client.Player.Name+"/Item: \"" + GetShortItemInfo(item, client) + '"';
 					if (client.Player.PlayerGroup == null)
@@ -762,7 +726,7 @@ namespace DOL.GS.PacketHandler.v168
 				}
 				case 13: // Item info to Guild Chat
 				{
-					GenericItem item = client.Player.Inventory.GetItem((eInventorySlot)objectID);
+					InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)objectID);
 					if(item == null) return 1;
 					string str = "[Guild] "+client.Player.Name+"/Item: \"" + GetShortItemInfo(item, client) + '"';
 					if (client.Player.Guild == null)
@@ -770,21 +734,21 @@ namespace DOL.GS.PacketHandler.v168
 						client.Out.SendMessage("You don't belong to a player guild.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						return 1;
 					}
-					if (!client.Player.Guild.CheckGuildPermission(client.Player, eGuildPerm.GcSpeak))
+					if (!client.Player.Guild.GotAccess(client.Player, eGuildRank.GcSpeak))
 					{
 						client.Out.SendMessage("You don't have permission to speak on the on guild line.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						return 1;
 					}
-					foreach (GamePlayer ply in client.Player.Guild.ListOnlineMembers)
+					foreach (GamePlayer ply in client.Player.Guild.ListOnlineMembers())
 					{
-						if (!client.Player.Guild.CheckGuildPermission(ply, eGuildPerm.GcHear)) continue;
+						if (!client.Player.Guild.GotAccess(ply, eGuildRank.GcHear)) continue;
 						ply.Out.SendMessage(str, eChatType.CT_Guild, eChatLoc.CL_ChatWindow);
 					}
 					return 1;
 				}
 				case 15: // Item info to Chat group
 				{
-					GenericItem item = client.Player.Inventory.GetItem((eInventorySlot)objectID);
+					InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)objectID);
 					if(item == null) return 1;
 
 					ChatGroup mychatgroup = (ChatGroup) client.Player.TempProperties.getObjectProperty(ChatGroup.CHATGROUP_PROPERTY, null);
@@ -807,7 +771,7 @@ namespace DOL.GS.PacketHandler.v168
 				}
 				case 100://repair
 				{
-					GenericItem item = client.Player.Inventory.GetItem((eInventorySlot)objectID);
+					InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)objectID);
 					if (item != null)
 					{
 						client.Player.RepairItem(item);
@@ -820,7 +784,7 @@ namespace DOL.GS.PacketHandler.v168
 				}
 				case 101://selfcraft
 				{
-					GenericItem item = client.Player.Inventory.GetItem((eInventorySlot)objectID);
+					InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)objectID);
 					if (item != null)
 					{
 						client.Player.OpenSelfCraft(item);
@@ -833,7 +797,7 @@ namespace DOL.GS.PacketHandler.v168
 				}
 				case 102://salvage
 				{
-					GenericItem item = client.Player.Inventory.GetItem((eInventorySlot)objectID);
+					InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)objectID);
 					if (item != null)
 					{
 						client.Player.SalvageItem(item);
@@ -867,7 +831,7 @@ Type    Description           Id
 			*/
 		}
 
-		protected string GetShortItemInfo(GenericItem item, GameClient client)
+		protected string GetShortItemInfo(InventoryItem item, GameClient client)
 		{
 			// TODO: correct info format if anyone is interested...
 /*
@@ -883,33 +847,36 @@ Type    Description           Id
 			ges) health regen Value: 8  Tradeable.".
 */
 
-			string str = "- ["+item.Name+"]: "+GlobalConstants.ObjectTypeToName((int)item.ObjectType);
+			string str = "- ["+item.Name+"]: "+GlobalConstants.ObjectTypeToName(item.Object_Type);
 			ArrayList objectInfo = new ArrayList();
 
-			if (item is Weapon)
+			if ((item.Object_Type >= (int)eObjectType.GenericWeapon) && (item.Object_Type<= (int)eObjectType.Scythe))
 			{
-				WriteMagicalBonuses(objectInfo, (EquipableItem)item, client, true);
-				WriteClassicWeaponInfos(objectInfo, (Weapon)item, client);
+				WriteMagicalBonuses(objectInfo, item, client, true);
+				WriteClassicWeaponInfos(objectInfo, item, client);
 			}
-			if (item is Armor)
+			if (item.Object_Type >= (int)eObjectType.Cloth && item.Object_Type <= (int)eObjectType.Scale)
 			{
-				WriteMagicalBonuses(objectInfo, (EquipableItem)item, client, true);
-				WriteClassicArmorInfos(objectInfo, (Armor)item, client);
+				WriteMagicalBonuses(objectInfo, item, client, true);
+				WriteClassicArmorInfos(objectInfo, item, client);
 			}
-			if (item is Shield)
+			if (item.Object_Type == (int)eObjectType.Shield)
 			{
-				WriteMagicalBonuses(objectInfo, (EquipableItem)item, client, true);
-				WriteClassicShieldInfos(objectInfo, (Shield)item, client);
+				WriteMagicalBonuses(objectInfo, item, client, true);
+				WriteClassicShieldInfos(objectInfo, item, client);
 			}
-			
+			if (item.Object_Type == (int)eObjectType.Magical)
+			{
+				WriteMagicalBonuses(objectInfo, item, client, true);
+			}
 			if (item.CrafterName != null && item.CrafterName != "")
 			{
 				objectInfo.Add(" ");//empty line
 				objectInfo.Add("Crafter : "+item.CrafterName);
 			}
-			if (item is Poison)
+			if (item.Object_Type == (int)eObjectType.Poison)
 			{
-				WritePoisonInfo(objectInfo, (Poison)item, client);
+				WritePoisonInfo(objectInfo, item, client);
 			}
 
 			foreach(string s in objectInfo)
@@ -932,12 +899,12 @@ Type    Description           Id
 		/// Effective Damage:
 		/// - X.X DPS
 		/// </summary>
-		public void WriteClassicWeaponInfos(ArrayList output, Weapon item, GameClient client)
+		public void WriteClassicWeaponInfos(ArrayList output, ItemTemplate item, GameClient client)
 		{
-			double itemDPS = item.DamagePerSecond/10.0;
+			double itemDPS = item.DPS_AF/10.0;
 			double clampedDPS = Math.Min(itemDPS, 1.2 + 0.3 * client.Player.Level);
-			double itemSPD = item.Speed/1000.0;
-			double effectiveDPS = itemDPS * item.Quality/100.0 * item.Condition/100;
+			double itemSPD = item.SPD_ABS/10.0;
+			double effectiveDPS = itemDPS * item.Quality/100.0 * item.Condition/item.MaxCondition;
 
 			output.Add(" ");
 			output.Add(" ");
@@ -948,9 +915,9 @@ Type    Description           Id
 				output.Add("- " + clampedDPS.ToString("0.0") + " Clamped DPS");
 			}
 
-			if(item.Speed >= 0)
+			if(item.SPD_ABS >= 0)
 			{
-                output.Add("- " + itemSPD.ToString("0.0") + " Weapon Speed");
+				output.Add("- " + itemSPD.ToString("0.0") + " Weapon Speed");
 			}
 
 			if(item.Quality != 0)
@@ -959,19 +926,20 @@ Type    Description           Id
 			}
 			if(item.Condition != 0)
 			{
-				output.Add("- " + (byte)item.Condition + "% Condition");
+				output.Add("- " + item.ConditionPercent + "% Condition");
 			}
 
 			string damageType = "None";
-			switch(item.DamageType)
+			if(item.Type_Damage != 0)
 			{
-				case eDamageType.Crush:  damageType="Crush"; break;
-				case eDamageType.Slash:  damageType="Slash"; break;
-				case eDamageType.Thrust: damageType="Thrust"; break;
-				default: damageType="Natural"; break;
+				switch(item.Type_Damage)
+				{
+					case (int)eDamageType.Crush:  damageType="Crush"; break;
+					case (int)eDamageType.Slash:  damageType="Slash"; break;
+					case (int)eDamageType.Thrust: damageType="Thrust"; break;
+				}
+				output.Add("Damage Type: " + damageType);
 			}
-			output.Add("Damage Type: " + damageType);
-			
 			output.Add(" ");
 
 			output.Add("Effective Damage:");
@@ -989,11 +957,11 @@ Type    Description           Id
 		/// - X.X Clamped DPS
 		/// - XX Shield Speed
 		/// </summary>
-		public void WriteClassicShieldInfos(ArrayList output, Shield item, GameClient client)
+		public void WriteClassicShieldInfos(ArrayList output, ItemTemplate item, GameClient client)
 		{
-			double itemDPS = item.DamagePerSecond/10.0;
+			double itemDPS = item.DPS_AF/10.0;
 			double clampedDPS = Math.Min(itemDPS, 1.2 + 0.3 * client.Player.Level);
-			double itemSPD = item.Speed/1000.0;
+			double itemSPD = item.SPD_ABS/10.0;
 
 			output.Add(" ");
 			output.Add(" ");
@@ -1003,18 +971,18 @@ Type    Description           Id
 				output.Add("- " + itemDPS.ToString("0.0") + " Base DPS");
 				output.Add("- " + clampedDPS.ToString("0.0") + " Clamped DPS");
 			}
-			if(item.Speed >= 0)
+			if(item.SPD_ABS >= 0)
 			{
-                output.Add("- " + itemSPD.ToString("0.0") + " Shield Speed");
+				output.Add("- " + itemSPD.ToString("0.0") + " Shield Speed");
 			}
 
 			output.Add(" ");
 
-			switch (item.Size)
+			switch (item.Type_Damage)
 			{
-				case eShieldSize.Small: output.Add("- Shield Size : Small"); break;
-				case eShieldSize.Medium: output.Add("- Shield Size : Medium"); break;
-				case eShieldSize.Large: output.Add("- Shield Size : Large"); break;
+				case 1: output.Add("- Shield Size : Small"); break;
+				case 2: output.Add("- Shield Size : Medium"); break;
+				case 3: output.Add("- Shield Size : Large"); break;
 			}
 		}
 
@@ -1032,31 +1000,31 @@ Type    Description           Id
 		/// Effective Armor:
 		/// - X.X Factor
 		/// </summary>
-		public void WriteClassicArmorInfos(ArrayList output, Armor item,GameClient client)
+		public void WriteClassicArmorInfos(ArrayList output, ItemTemplate item,GameClient client)
 		{
 			output.Add(" ");
 			output.Add(" ");
 			output.Add("Armor Modifiers:");
-			if(item.ArmorFactor != 0)
+			if(item.DPS_AF != 0)
 			{
-				output.Add("- " + item.ArmorFactor + " Base Factor");
+				output.Add("- " + item.DPS_AF + " Base Factor");
 			}
 			double AF = 0;
-			if(item.ArmorFactor != 0)
+			if(item.DPS_AF != 0)
 			{
 				int afCap = client.Player.Level;
-				if (item.ArmorLevel != eArmorLevel.VeryLow) // cloth
+				if (item.Object_Type != (int)eObjectType.Cloth)
 				{
 					afCap *= 2;
 				}
 
-				AF = Math.Min(afCap, item.ArmorFactor);
+				AF = Math.Min(afCap, item.DPS_AF);
 
 				output.Add("- " + (int)AF + " Clamped Factor");
 			}
-			if((byte)item.ArmorLevel >= 0)
+			if(item.SPD_ABS >= 0)
 			{
-				output.Add("- " + item.Absorbtion + "% Absorption");
+				output.Add("- " + item.SPD_ABS + "% Absorption");
 			}
 			if(item.Quality != 0)
 			{
@@ -1064,29 +1032,31 @@ Type    Description           Id
 			}
 			if(item.Condition != 0)
 			{
-				output.Add("- " + (byte)item.Condition + "% Condition");
+				output.Add("- " + item.ConditionPercent + "% Condition");
 			}
 			output.Add(" ");
 
 			output.Add("Effective Armor:");
 			double EAF = 0;
-			if(item.ArmorFactor != 0)
+			if(item.DPS_AF != 0)
 			{
-				EAF = AF * item.Quality/100.0 * item.Condition/100 * (1 + item.Absorbtion/100.0 );
+				EAF = AF * item.Quality/100.0 * item.Condition/item.MaxCondition * (1 + item.SPD_ABS/100.0 );
 				output.Add("- " + (int)EAF + " Factor");
 			}
 
 		}
 
-		public void WriteMagicalBonuses(ArrayList output, EquipableItem item, GameClient client, bool shortInfo)
+		public void WriteMagicalBonuses(ArrayList output, ItemTemplate item, GameClient client, bool shortInfo)
 		{
 			int oldCount = output.Count;
 
-			foreach(ItemMagicalBonus bonus in item.MagicalBonus)
-			{
-				WriteBonusLine(output, bonus.BonusType, bonus.Bonus);
-			}
-			
+			WriteBonusLine(output, item.Bonus1Type, item.Bonus1);
+			WriteBonusLine(output, item.Bonus2Type, item.Bonus2);
+			WriteBonusLine(output, item.Bonus3Type, item.Bonus3);
+			WriteBonusLine(output, item.Bonus4Type, item.Bonus4);
+			WriteBonusLine(output, item.Bonus5Type, item.Bonus5);
+			WriteBonusLine(output, item.ExtraBonusType, item.ExtraBonus);
+
 			if (output.Count > oldCount)
 			{
 				output.Add(" ");
@@ -1096,11 +1066,13 @@ Type    Description           Id
 
 			oldCount = output.Count;
 
-			foreach(ItemMagicalBonus bonus in item.MagicalBonus)
-			{
-				WriteFocusLine(output, bonus.BonusType, bonus.Bonus);
-			}
-			
+			WriteFocusLine(output, item.Bonus1Type, item.Bonus1);
+			WriteFocusLine(output, item.Bonus2Type, item.Bonus2);
+			WriteFocusLine(output, item.Bonus3Type, item.Bonus3);
+			WriteFocusLine(output, item.Bonus4Type, item.Bonus4);
+			WriteFocusLine(output, item.Bonus5Type, item.Bonus5);
+			WriteFocusLine(output, item.ExtraBonusType, item.ExtraBonus);
+
 			if (output.Count > oldCount)
 			{
 				output.Add(" ");
@@ -1110,16 +1082,16 @@ Type    Description           Id
 
 			if (!shortInfo)
 			{
-				if(item.ProcEffectType == eMagicalEffectType.ActiveEffect || item.ProcEffectType == eMagicalEffectType.ReactiveEffect)
+				if(item.ProcSpellID != 0)
 				{
 					string spellNote = "";
 					output.Add(" ");
 					output.Add("Magical Ability:");
-					if (item.ProcEffectType == eMagicalEffectType.ActiveEffect)
+					if (GlobalConstants.IsWeapon(item.Object_Type))
 					{
 						spellNote = "- Spell has a chance of casting when this weapon strikes an enemy.";
 					}
-					else if (item.ProcEffectType == eMagicalEffectType.ReactiveEffect)
+					else if (GlobalConstants.IsArmor(item.Object_Type))
 					{
 						spellNote = "- Spell has a chance of casting when enemy strikes at this armor.";
 					}
@@ -1156,7 +1128,7 @@ Type    Description           Id
 					}
 				}
 
-				if(item.ProcEffectType == eMagicalEffectType.PoisonEffect)
+				if(item.SpellID != 0)
 				{
 					SpellLine poisonLine = SkillBase.GetSpellLine(GlobalSpellsLines.Mundane_Poisons);
 					if (poisonLine != null)
@@ -1166,15 +1138,15 @@ Type    Description           Id
 						{
 							foreach(Spell spl in spells)
 							{
-								if(spl.ID == item.ChargeSpellID)
+								if(spl.ID == item.SpellID)
 								{
 									output.Add(" ");
 									output.Add("Level Requirement:");
 									output.Add("- " + spl.Level + " Level");
 									output.Add(" ");
 									output.Add("Charged Magic Ability:");
-									output.Add("- " + item.Charge+ " Charges");
-									output.Add("- " + item.MaxCharge+ " Max");
+									output.Add("- " + item.Charges+ " Charges");
+									output.Add("- " + item.MaxCharges+ " Max");
 									output.Add(" ");
 
 									ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, spl, poisonLine);
@@ -1194,10 +1166,7 @@ Type    Description           Id
 							}
 						}
 					}
-				}
 
-				if(item.ProcEffectType == eMagicalEffectType.ChargeEffect)
-				{
 					SpellLine chargeEffectsLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
 					if (chargeEffectsLine != null)
 					{
@@ -1206,15 +1175,15 @@ Type    Description           Id
 						{
 							foreach(Spell spl in spells)
 							{
-								if(spl.ID == item.ChargeSpellID)
+								if(spl.ID == item.SpellID)
 								{
 									output.Add(" ");
 									output.Add("Level Requirement:");
 									output.Add("- " + spl.Level + " Level");
 									output.Add(" ");
 									output.Add("Charged Magic Ability:");
-									output.Add("- " + item.Charge+ " Charges");
-									output.Add("- " + item.MaxCharge+ " Max");
+									output.Add("- " + item.Charges+ " Charges");
+									output.Add("- " + item.MaxCharges+ " Max");
 									output.Add(" ");
 
 									ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, spl, chargeEffectsLine);
@@ -1238,9 +1207,9 @@ Type    Description           Id
 			}
 		}
 
-		protected void WriteBonusLine(ArrayList list, eProperty bonusCat, int bonusValue)
+		protected void WriteBonusLine(ArrayList list, int bonusCat, int bonusValue)
 		{
-			if(bonusCat != 0 && bonusValue != 0 && !SkillBase.CheckPropertyType(bonusCat, ePropertyType.Focus))
+			if(bonusCat != 0 && bonusValue != 0 && !SkillBase.CheckPropertyType((eProperty)bonusCat, ePropertyType.Focus))
 			{
 				//- Axe: 5 pts
 				//- Strength: 15 pts
@@ -1253,25 +1222,25 @@ Type    Description           Id
 				//Power: 6 % of power pool.
 				list.Add(string.Format(
 					"- {0}: {1}{2}",
-					SkillBase.GetPropertyName(bonusCat),
+					SkillBase.GetPropertyName((eProperty)bonusCat),
 					bonusValue.ToString("+0;-0;0"),
-					((bonusCat == eProperty.PowerPool) || (bonusCat >= eProperty.Resist_First && bonusCat <= eProperty.Resist_Last))
-					? ( (bonusCat == eProperty.PowerPool) ? "% of power pool." : "%" )
+					((bonusCat == (int)eProperty.PowerPool) || (bonusCat >= (int)eProperty.Resist_First && bonusCat <= (int)eProperty.Resist_Last))
+					? ( (bonusCat == (int)eProperty.PowerPool) ? "% of power pool." : "%" )
 						: " pts"
 				));
 			}
 		}
 
-		protected void WriteFocusLine(ArrayList list, eProperty focusCat, int focusLevel)
+		protected void WriteFocusLine(ArrayList list, int focusCat, int focusLevel)
 		{
-			if(SkillBase.CheckPropertyType(focusCat, ePropertyType.Focus))
+			if(SkillBase.CheckPropertyType((eProperty)focusCat, ePropertyType.Focus))
 			{
 				//- Body Magic: 4 lvls
-				list.Add(string.Format("- {0}: {1} lvls", SkillBase.GetPropertyName(focusCat), focusLevel));
+				list.Add(string.Format("- {0}: {1} lvls", SkillBase.GetPropertyName((eProperty)focusCat), focusLevel));
 			}
 		}
 
-		protected void WritePoisonInfo(ArrayList list, Poison item, GameClient client)
+		protected void WritePoisonInfo(ArrayList list, ItemTemplate item, GameClient client)
 		{
 			if (item.SpellID != 0)
 			{
@@ -1290,48 +1259,11 @@ Type    Description           Id
 								list.Add("- " + spl.Level + " Level");
 								list.Add(" ");
 								list.Add("Offensive Proc Ability:");
-								//removed due to poisons don't have charges
-                                //list.Add("- " + item.Charge+ " Charges");
-								//list.Add("- " + item.MaxCharge+ " Max");
+								list.Add("- " + item.Charges+ " Charges");
+								list.Add("- " + item.MaxCharges+ " Max");
 								list.Add(" ");
 
 								ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, spl, poisonLine);
-								if(spellHandler != null)
-								{
-									list.AddRange(spellHandler.DelveInfo);
-								}
-								else
-								{
-									list.Add("-"+ spl.Name +" (Not implemented yet)");
-								}
-								break;
-							}
-						}
-					}
-				}
-			}
-		}
-
-		protected void WriteSpellInfo(ArrayList list, string spellLine, int spellID, GameClient client)
-		{
-			if (spellID != 0)
-			{
-				SpellLine spellLin = SkillBase.GetSpellLine(spellLine);
-				if (spellLine != null)
-				{
-					IList spells = SkillBase.GetSpellList(spellLin.KeyName);
-					if (spells != null)
-					{
-						foreach(Spell spl in spells)
-						{
-							if(spl.ID == spellID)
-							{
-								list.Add(" ");
-								list.Add("Level Requirement:");
-								list.Add("- " + spl.Level + " Level");
-								list.Add(" ");
-
-								ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, spl, spellLin);
 								if(spellHandler != null)
 								{
 									list.AddRange(spellHandler.DelveInfo);

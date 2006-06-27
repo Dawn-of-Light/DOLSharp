@@ -17,56 +17,54 @@
  *
  */
 using System;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.Events;
 namespace DOL.GS
 {
 	/// <summary>
 	/// A keepComponent
 	/// </summary>
-	public class GameKeepHookPoint : IWorldPosition
+	public class GameKeepHookPoint : IPoint3D
 	{
 		public GameKeepHookPoint(int id,GameKeepComponent component)
 		{
 			m_index = id;
 			m_component = component;
 			m_hookpointTimer = new HookpointTimer(this,this.Component);
-			m_position = component.Position;
-			Heading = (ushort)component.Heading;
+			this.X = component.X;
+			this.Y = component.Y;
+			this.Z = component.Z;
+			this.Heading = component.Heading;
 		}
 
 		public GameKeepHookPoint(DBKeepHookPoint dbhookPoint,GameKeepComponent component)
 		{
 			double angle = (component.Keep.Heading * 0.017453292519943295769236907684886); // angle*2pi/360;
-			int x = -1;
-			int y = -1;
-			Point pos = component.Position;
 			switch(component.ComponentHeading)
             {
 				case 0:
-					x = (int)(pos.X + Math.Cos(angle) * dbhookPoint.X + Math.Sin(angle) * dbhookPoint.Y);
-					y = (int)(pos.Y - Math.Cos(angle) * dbhookPoint.Y + Math.Sin(angle) * dbhookPoint.X);
+					X = (int)(component.X + Math.Cos(angle) * dbhookPoint.X + Math.Sin(angle) * dbhookPoint.Y);
+					Y = (int)(component.Y - Math.Cos(angle) * dbhookPoint.Y + Math.Sin(angle) * dbhookPoint.X);
 					break;
 				case 1:
-					x = (int)(pos.X + Math.Cos(angle) * dbhookPoint.Y - Math.Sin(angle) * dbhookPoint.X);
-					y = (int)(pos.Y + Math.Cos(angle) * dbhookPoint.X + Math.Sin(angle) * dbhookPoint.Y);
+					X = (int)(component.X + Math.Cos(angle) * dbhookPoint.Y - Math.Sin(angle) * dbhookPoint.X);
+					Y = (int)(component.Y + Math.Cos(angle) * dbhookPoint.X + Math.Sin(angle) * dbhookPoint.Y);
 					break;
 				case 2:
-					x = (int)(pos.X - Math.Cos(angle) * dbhookPoint.X - Math.Sin(angle) * dbhookPoint.Y);
-					y = (int)(pos.Y + Math.Cos(angle) * dbhookPoint.Y - Math.Sin(angle) * dbhookPoint.X);
+					X = (int)(component.X - Math.Cos(angle) * dbhookPoint.X - Math.Sin(angle) * dbhookPoint.Y);
+					Y = (int)(component.Y + Math.Cos(angle) * dbhookPoint.Y - Math.Sin(angle) * dbhookPoint.X);
 					break;
 				case 3:
-					x = (int)(pos.X - Math.Cos(angle) * dbhookPoint.Y + Math.Sin(angle) * dbhookPoint.X);
-					y = (int)(pos.Y - Math.Cos(angle) * dbhookPoint.X - Math.Sin(angle) * dbhookPoint.Y);
+					X = (int)(component.X - Math.Cos(angle) * dbhookPoint.Y + Math.Sin(angle) * dbhookPoint.X);
+					Y = (int)(component.Y - Math.Cos(angle) * dbhookPoint.X - Math.Sin(angle) * dbhookPoint.Y);
 					break;
             }
-			int z = pos.Z + dbhookPoint.Z;
-			m_position = new Point(x, y, z);
+			this.Z = component.Z + dbhookPoint.Z;
 //			this.Heading = (ushort) dbhookPoint.Heading;
-			Heading = (ushort)component.Heading;
+			this.Heading = component.Heading;
 			this.m_index = dbhookPoint.HookPointID;
 			this.Component = component;
-			m_hookpointTimer = new HookpointTimer(this, this.Component);
+			m_hookpointTimer = new HookpointTimer(this,this.Component);
 		}
 		#region properties
 
@@ -92,27 +90,25 @@ namespace DOL.GS
 			get { return (m_object == null); }
 		}
 
-		/// <summary>
-		/// Gets the object's region.
-		/// </summary>
-		public Region Region
+		private int m_z;
+		public int Z
 		{
-			get { return m_component.Region; }
-			set {  }
+			get{return m_z;}
+			set{m_z = value;}
 		}
 
-		/// <summary>
-		/// The hookpoint's position.
-		/// </summary>
-		private Point m_position;
-
-		/// <summary>
-		/// Gets or sets the object's position in the region.
-		/// </summary>
-		public Point Position
+		private int m_x;
+		public int X
 		{
-			get { return m_position; }
-			set { m_position = value; }
+			get{return m_x;}
+			set{m_x = value;}
+		}
+
+		private int m_y;
+		public int Y
+		{
+			get{return m_y;}
+			set{m_y = value;}
 		}
 
 		private ushort m_heading;

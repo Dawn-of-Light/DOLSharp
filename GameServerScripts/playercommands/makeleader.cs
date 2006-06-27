@@ -18,7 +18,7 @@
  */
 using System;
 using DOL.GS;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.GS.PacketHandler;
 using System.Collections;
 

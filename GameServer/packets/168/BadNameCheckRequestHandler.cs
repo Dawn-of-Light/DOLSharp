@@ -18,8 +18,6 @@
  */
 using System;
 using System.Collections;
-using DOL.GS.Database;
-using NHibernate.Expression;
 
 namespace DOL.GS.PacketHandler.v168
 {
@@ -28,14 +26,16 @@ namespace DOL.GS.PacketHandler.v168
 	{
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
-			string name = packet.ReadString(30).ToLower();
-			
+			string name=packet.ReadString(30);
+			//TODO do bad name checks here from some database with
+			//bad names, this is just a temp testthing here
 			bool bad = false;
 
-			IList allInvalidNames = GameServer.Database.SelectAllObjects(typeof(InvalidName));
-			foreach(InvalidName inv in allInvalidNames)
+			ArrayList names = GameServer.Instance.InvalidNames;
+
+			foreach(string s in names)
 			{
-				if(name.IndexOf(inv.Name.ToLower()) != -1)
+				if(name.ToLower().IndexOf(s) != -1)
 				{
 					bad = true;
 					break;

@@ -85,7 +85,7 @@ namespace DOL.GS.SkillHandler
 			}
 
 			// You cannot engage a mob that was attacked within the last 5 seconds...
-			if (target.LastAttackedByEnemyTick > target.Region.Time - EngageAbilityHandler.ENGAGE_ATTACK_DELAY_TICK) 
+			if (target.LastAttackedByEnemyTick > target.CurrentRegion.Time - EngageAbilityHandler.ENGAGE_ATTACK_DELAY_TICK) 
 			{
 				player.Out.SendMessage(target.GetName(0,true)+" has been attacked recently and you are unable to engage.", eChatType.CT_System, eChatLoc.CL_SystemWindow);	
 				return;

@@ -18,7 +18,7 @@
  */
 /*
  * Author:	Ogre <ogre@videogasm.com>
- * Rev:		$Id: faceloc.cs,v 1.8 2006/01/16 16:52:20 doulbousiouf Exp $
+ * Rev:		$Id: faceloc.cs,v 1.6 2005/05/10 13:36:38 noret Exp $
  * 
  * Desc:	Implements /faceloc command
  * 
@@ -36,9 +36,6 @@ namespace DOL.GS.Scripts
 	{
 		public int OnCommand(GameClient client, string[] args)
 		{
-			if (client.Player.Mez || client.Player.Stun)
-				return 1;
-
 			if (args.Length < 3)
 			{
 				client.Out.SendMessage
@@ -55,7 +52,7 @@ namespace DOL.GS.Scripts
 			int Yoffset = client.Player.CurrentZone.YOffset;
 			int glocX = Xoffset + x;
 			int glocY = Yoffset + y;
-			ushort direction = client.Player.Position.GetHeadingTo(new Point(glocX, glocY, 0));
+			ushort direction = client.Player.GetHeadingToSpot(glocX, glocY);
 			client.Player.Heading = direction;
 			client.Out.SendPlayerJump(true);
 			return 1;

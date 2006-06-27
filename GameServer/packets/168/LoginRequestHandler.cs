@@ -22,8 +22,7 @@ using System.Net;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
-using DOL.GS.Database;
-using NHibernate.Expression;
+using DOL.Database;
 using log4net;
 
 namespace DOL.GS.PacketHandler.v168
@@ -116,7 +115,7 @@ namespace DOL.GS.PacketHandler.v168
 							return 1;
 						}
 
-						playerAccount = (Account) GameServer.Database.SelectObject(typeof(Account), Expression.Eq("AccountName",username));
+						playerAccount = (Account) GameServer.Database.FindObjectByKey(typeof(Account), username);
 						client.PingTime = DateTime.Now.Ticks;
 
 						if(playerAccount == null)
@@ -145,26 +144,21 @@ namespace DOL.GS.PacketHandler.v168
 									return 1;
 								}
 
-								playerAccount = new Account();
-								playerAccount.AccountName = username;
-								playerAccount.Password = CryptPassword(password);
-								playerAccount.Realm = eRealm.None;
-								playerAccount.CreationDate = DateTime.Now;
-								playerAccount.LastLogin = DateTime.Now;
-								playerAccount.LastLoginIP = ipAddress;
-								playerAccount.BanDuration = TimeSpan.Zero;
-								playerAccount.BanAuthor = string.Empty;
-								playerAccount.BanReason = string.Empty;
+								// No! Proceeding...
+								bool first = GameServer.Database.GetObjectCount(typeof (Account)) == 0;
 
-								if(GameServer.Database.GetObjectCount(typeof (Account)) == 0)
+								playerAccount = new Account();
+								playerAccount.Name = username;
+								playerAccount.Password = CryptPassword(password);
+						
+								if(first)
 								{
-									playerAccount.PrivLevel = ePrivLevel.Admin;
+									playerAccount.PrivLevel = 3;
 									if (log.IsInfoEnabled)
 										log.Info("New admin account created: " + username);
 								}
 								else
 								{
-									playerAccount.PrivLevel = ePrivLevel.Player;
 									if (log.IsInfoEnabled)
 										log.Info("New account created: " + username);
 								}
@@ -190,23 +184,6 @@ namespace DOL.GS.PacketHandler.v168
 //								}
 //							}
 
-							// check banned account
-							if(playerAccount.LastLogin.Add(playerAccount.BanDuration).CompareTo(DateTime.Now) > 0)
-							{
-								if (log.IsInfoEnabled)
-									log.InfoFormat("Banned account try to connect, denied login to " + playerAccount.AccountName);
-							
-								client.Out.SendLoginDenied(eLoginError.AccountIsBannedFromThisServerType);
-								GameServer.Instance.Disconnect(client);
-								return 1;
-							}
-
-							// automatically remove the ban if the account is now unban
-							playerAccount.BanDuration = TimeSpan.Zero;
-							playerAccount.BanAuthor = string.Empty;
-							playerAccount.BanReason = string.Empty;
-						
-
 							// check password
 							if (!playerAccount.Password.StartsWith("##")) 
 							{
@@ -220,32 +197,21 @@ namespace DOL.GS.PacketHandler.v168
 								GameServer.Instance.Disconnect(client);
 								return 1;
 							}
-
-							// save player infos
-							playerAccount.LastLogin = DateTime.Now;
-							playerAccount.LastLoginIP = ipAddress;
-
-							GameServer.Database.SaveObject(playerAccount);
 						}
-						
+
+						// save player infos
+						playerAccount.LastLogin = DateTime.Now;
+						playerAccount.LastLoginIP = ipAddress;
+
 						//Save the account table
+						//GameServer.Database.WriteDatabaseTable(typeof(Account));
 						client.Account = playerAccount;
-
-						// check if not too much client already logged in
-						if(client.Account.PrivLevel == ePrivLevel.Player && WorldMgr.GetAllPlayingClientsCount() >= GameServer.Instance.Configuration.MaxClientCount - 10) // 10 gm or admin accounts reserved
-						{
-							if (log.IsInfoEnabled)
-								log.InfoFormat("Too many clients connected, denied login to " + playerAccount.AccountName);
-							client.Out.SendLoginDenied(eLoginError.TooManyPlayersLoggedIn);
-							client.Disconnect();
-							return 1;
-						}
 
 						// create session ID here to disable double login bug
 						if (WorldMgr.CreateSessionID(client) < 0)
 						{
 							if (log.IsInfoEnabled)
-								log.InfoFormat("Too many clients connected, denied login to " + playerAccount.AccountName);
+								log.InfoFormat("Too many clients connected, denied login to " + playerAccount.Name);
 							client.Out.SendLoginDenied(eLoginError.TooManyPlayersLoggedIn);
 							client.Disconnect();
 							return 1;
@@ -254,7 +220,16 @@ namespace DOL.GS.PacketHandler.v168
 						client.ClientState = GameClient.eClientState.Connecting;
 					}
 				}
+
+				GameServer.Database.SaveObject(playerAccount);
 			} 
+			catch (DatabaseException e) 
+			{
+				if (log.IsErrorEnabled)
+					log.Error("LoginRequestHandler", e);
+				client.Out.SendLoginDenied(eLoginError.CannotAccessUserAccount);
+				GameServer.Instance.Disconnect(client);
+			}
 			catch(Exception e)
 			{
 				if (log.IsErrorEnabled)

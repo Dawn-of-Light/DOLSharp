@@ -19,126 +19,38 @@
 using System.Collections;
 using System;
 using System.Reflection;
-using DOL.GS.Database;
+using DOL.Database;
 using log4net;
 
 namespace DOL.GS
 {
-	
-	/// <summary>
-	/// Defines the guilds permission
-	/// </summary>
-	public enum eGuildPerm : byte
+	//-----------------------------------------------------------------------------------------------
+	// GuildEntry
+	//-----------------------------------------------------------------------------------------------
+	public enum eGuildRank : int
 	{
-		/// <summary>
-		/// First permission, for use in all arrays
-		/// </summary>
-		_First = 0,
-		/// <summary>
-		/// Hear guild chat
-		/// </summary>
-		GcHear = 0,
-		/// <summary>
-		/// Speak guild chat
-		/// </summary>
-		GcSpeak = 1,
-		/// <summary>
-		/// Hear officer guild chat
-		/// </summary>
-		OcHear = 2,
-		/// <summary>
-		/// Speak officer guild chat
-		/// </summary>
-		OcSpeak = 3,
-		/// <summary>
-		/// Hear alliance guild chat
-		/// </summary>
-		AcHear = 4,
-		/// <summary>
-		/// Speak alliance guild chat
-		/// </summary>
-		AcSpeak = 5,
-		/// <summary>
-		/// View guild informations
-		/// </summary>
-		View = 6,
-		/// <summary>
-		/// Can player wear the emblem
-		/// </summary>
-		Emblem = 7,
-		/// <summary>
-		/// Can invite players to the guild
-		/// </summary>
-		Invite = 8,
-		/// <summary>
-		/// Can remove players from the guild
-		/// </summary>
-		Remove = 9,
-		/// <summary>
-		/// Can promote guild members
-		/// </summary>
-		Promote = 10,
-		/// <summary>
-		/// Can claim a keep
-		/// </summary>
-		Claim = 11,
-		/// <summary>
-		/// Can upgrade a keep
-		/// </summary>
-		Upgrade = 12,
-		/// <summary>
-		/// Can release a keep
-		/// </summary>
-		Release = 13,
-		/// <summary>
-		/// Can create a alliance
-		/// </summary>
-		Alli = 14,
-		/// <summary>
-		/// Can edit the motd
-		/// </summary>
-		Motd = 15,
-		/// <summary>
-		/// Can edit the motd
-		/// </summary>
-		Deposit = 16,
-		/// <summary>
-		/// Can edit the motd
-		/// </summary>
-		Withdraw = 17,
-		/// <summary>
-		/// Can edit the motd
-		/// </summary>
-		Dues = 18,
-		/// <summary>
-		/// Can edit the motd
-		/// </summary>
-		Buff = 19,
-		/// <summary>
-		/// Can edit the motd
-		/// </summary>
-		GetMission = 20,
-		/// <summary>
-		/// Can edit the motd
-		/// </summary>
-		SetNote = 21,
-		/// <summary>
-		/// Can summon a banner
-		/// </summary>
-		SummonBanner = 22,
-		/// <summary>
-		/// Can buy a banner
-		/// </summary>
-		BuyBanner = 23,
-		/// <summary>
-		/// Last permission, for use in all arrays
-		/// </summary>
-		_Last = 15,
+		Emblem,
+		AcHear,
+		AcSpeak,
+		Demote,
+		Promote,
+		GcHear,
+		GcSpeak,
+		Invite,
+		OcHear,
+		OcSpeak,
+		Remove,
+		Leader,
+		Alli,
+		View,
+		Claim,
+		Upgrade,
+		Release
 	}
-
 	/// <summary>
-	/// Summary description for a Guild
-	/// </summary> 
+	/// Summary description for a Guild inside the game.
+	/// </summary>
+	/// 
 	public class Guild
 	{
 		/// <summary>
@@ -146,141 +58,80 @@ namespace DOL.GS
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		#region Declaraction
-
 		/// <summary>
-		/// Max guild name length
+		/// This holds all players inside the guild
 		/// </summary>
-		public const int MAX_GUILD_NAME_LENGTH = 30;
-
-		/// <summary>
-		/// The unique guild identifier
-		/// </summary>
-		private int m_id;
+		protected readonly ArrayList m_guildMembers = new ArrayList();
 
 		/// <summary>
 		/// This holds all players inside the guild
 		/// </summary>
-		private readonly ArrayList m_guildMembers = new ArrayList();
+		protected Alliance  m_alliance=null;
+
+
+		/// <summary>
+		/// This holds the DB instance of the guild
+		/// </summary>
+		protected DBguild m_DBguild;
 
 		/// <summary>
 		/// the name of the guild
 		/// </summary>
-		private string m_guildName;
-
-		/// <summary>
-		/// Holds the guild motd
-		/// </summary>
-		private string	m_motd;
-
-		/// <summary>
-		/// Holds the officier motd
-		/// </summary>
-		private string	m_omotd;
-
-		/// <summary>
-		/// Holds the guild emblem
-		/// </summary>
-		private int		m_emblem;
+		protected string m_name;
 
 		/// <summary>
 		/// Holds the guild realm points
 		/// </summary>
-		private long m_realmPoints;
+		protected long m_realmPoints;
 
 		/// <summary>
 		/// Holds the guild bounty points
 		/// </summary>
-		private long m_bountyPoints;
+		protected long m_bountyPoints;
 
 		/// <summary>
-		/// Holds the guild merit points
+		/// Stores claimed keep (unique)
 		/// </summary>
-		private long m_meritPoints;
+		protected AbstractGameKeep m_claimedKeep;
 
 		/// <summary>
-		/// Holds the guild due
+		/// Stores guild unique run-time ID
 		/// </summary>
-		private bool m_due;
+		protected ushort m_id;
 
 		/// <summary>
-		/// Holds the guild money
+		/// Creates an empty Guild. Don't use this, use
+		/// GuildMgr.CreateGuild() to create a guild
 		/// </summary>
-		private long m_totalMoney;
-
-		/// <summary>
-		/// Holds the guild lvl
-		/// </summary>
-		private int m_level;
-
-		/// <summary>
-		/// Holds the guild webpage
-		/// </summary>
-		private string m_webpage;
-
-		/// <summary>
-		/// Holds the guild email
-		/// </summary>
-		private string m_email;
-
-		/// <summary>
-		/// Holds all guild ranks with their permissions
-		/// </summary>
-		private DBGuildRank[] m_guildRanks;
-
-		/// <summary>
-		/// Holds the guild claimed keep
-		/// </summary>
-		private AbstractGameKeep m_claimedKeep;
-
-		/// <summary>
-		/// Holds the alliance the guild is on
-		/// </summary>
-		private Alliance m_alliance;
-
-		/// <summary>
-		/// Gets or sets the unique guild identifier
-		/// </summary>
-		public int GuildID
+		public Guild()
 		{
-			get	{ return m_id; }
-			set	{ m_id = value; }
 		}
 
 		/// <summary>
 		/// Gets or sets the guild db
 		/// </summary>
-		public string GuildName
+		public DBguild theGuildDB
 		{
-			get	{	return m_guildName; }
-			set	{	m_guildName = value; }
+			get	{	return m_DBguild; }
+			set	{	m_DBguild = value;	}
 		}
 
 		/// <summary>
-		/// Gets or sets the guild motd
+		/// Gets or sets the guild db
 		/// </summary>
-		public string Motd
+		public Alliance  alliance
 		{
-			get { return m_motd; }
-			set	{ m_motd = value; }
+			get	{	return m_alliance; }
+			set	{	m_alliance = value;	}
 		}
 
 		/// <summary>
-		/// Gets or sets the guild officer motd
+		/// Gets or sets the guild db
 		/// </summary>
-		public string OMotd
+		public string Name
 		{
-			get { return m_omotd; }
-			set	{ m_omotd = value; }
-		}
-
-		/// <summary>
-		/// Gets or sets the guild officer motd
-		/// </summary>
-		public int Emblem
-		{
-			get { return m_emblem; }
-			set	{ m_emblem = value; }
+			get	{	return m_name; }
+			set	{	m_name = value; }
 		}
 
 		/// <summary>
@@ -289,7 +140,6 @@ namespace DOL.GS
 		public long RealmPoints
 		{
 			get { return m_realmPoints; }
-			set	{ m_realmPoints = value; }
 		}
 
 		/// <summary>
@@ -298,124 +148,8 @@ namespace DOL.GS
 		public long BountyPoints
 		{
 			get { return m_bountyPoints; }
-			set	{ m_bountyPoints = value; }
 		}
 
-		/// <summary>
-		/// Gets or sets the guild realm points
-		/// </summary>
-		public long MeritPoints
-		{
-			get { return m_meritPoints; }
-			set { m_meritPoints = value; }
-		}
-
-		/// <summary>
-		/// Gets or sets the guild due
-		/// </summary>
-		public bool Due
-		{
-			get { return m_due; }
-			set { m_due = value; }
-		}
-
-		/// <summary>
-		/// Gets or sets the guild total money
-		/// </summary>
-		public long TotalMoney
-		{
-			get { return m_totalMoney; }
-			set { m_totalMoney = value; }
-		}
-
-		/// <summary>
-		/// Gets or sets the guild level
-		/// </summary>
-		public int Level
-		{
-			get { return m_level; }
-			set { m_level = value; }
-		}
-
-		/// <summary>
-		/// Gets or sets the guild webpage
-		/// </summary>
-		public string Webpage
-		{
-			get { return m_webpage; }
-			set { m_webpage = value; }
-		}
-
-		/// <summary>
-		/// Gets or sets the guild email
-		/// </summary>
-		public string Email
-		{
-			get { return m_email; }
-			set { m_email = value; }
-		}
-
-		/// <summary>
-		/// Returns a list of online members inside this guild
-		/// </summary>
-		/// <returns>ArrayList of members</returns>
-		public IList ListOnlineMembers
-		{
-			get { return m_guildMembers; }
-		}
-
-		/// <summary>
-		/// Returns a array of all guild ranks with their permissions
-		/// </summary>
-		/// <returns>ArrayList of members</returns>
-		public DBGuildRank[] GuildRanks
-		{
-			get
-			{
-				if(m_guildRanks == null)
-				{
-					// create default guild ranks perm
-					m_guildRanks =  new DBGuildRank[10];
-					for (byte i = 0 ; i < m_guildRanks.Length ; i++)
-					{
-						DBGuildRank rank = new DBGuildRank();
-						rank.RankLevel = i;
-						rank.Title = "";
-						
-						rank.GcHear = true;
-						if(i < 9) rank.GcSpeak = true;	else rank.GcSpeak = false;
-						if(i < 9) rank.View = true;		else rank.View = false;
-						if(i < 8) rank.Emblem = true;	else rank.Emblem = false;
-						if(i < 6) rank.AcSpeak = true;	else rank.AcSpeak = false;
-						if(i < 7) rank.AcHear = true;	else rank.AcHear = false;
-						if(i < 5) rank.OcHear = true;	else rank.OcHear = false;
-						if(i < 4) rank.OcSpeak = true;	else rank.OcSpeak = false;
-						if(i < 3) rank.Invite = true;	else rank.Invite = false;
-						if(i < 3) rank.Promote = true;	else rank.Promote = false;
-						if(i < 2) rank.Release = true;	else rank.Release = false;
-						if(i < 2) rank.Upgrade = true;	else rank.Upgrade = false;
-						if(i < 2) rank.Claim = true;	else rank.Claim = false;
-						if(i < 1) rank.Remove = true;	else rank.Remove = false;
-						if(i < 1) rank.Alli = true;		else rank.Alli = false;
-						if(i < 1) rank.Motd = true;		else rank.Motd = false;
-						if(i < 1) rank.Deposit = true;	else rank.Deposit = false;
-						if(i < 1) rank.Withdraw = true; else rank.Withdraw = false;
-						if(i < 1) rank.Dues = true;		else rank.Dues = false;
-						if(i < 1) rank.Buff = true;		else rank.Buff = false;
-						if(i < 1) rank.GetMission = true;	else rank.GetMission = false;
-						if(i < 1) rank.SetNote = true;	else rank.SetNote = false;
-						if(i < 1) rank.SummonBanner = true;	else rank.SummonBanner = false;
-						if(i < 1) rank.BuyBanner = true;	else rank.BuyBanner = false;
-						m_guildRanks[rank.RankLevel] = rank;
-						
-						GameServer.Database.AddNewObject(rank);
-					}
-				}
-				return m_guildRanks;
-			}
-			set	{ m_guildRanks = value; }
-		}
-		
 		/// <summary>
 		/// Gets or sets the guild claimed keep
 		/// </summary>
@@ -426,42 +160,49 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Gets or sets the alliance the guild is on
+		/// Returns the number of players online inside this guild
 		/// </summary>
-		public Alliance Alliance
+		public int MemberOnlineCount
 		{
-			get { return m_alliance; }
-			set	{ m_alliance = value; }
+			get
+			{
+				return m_guildMembers.Count;
+			}
 		}
-		#endregion
-
-		#region AddGuildMember / RemoveOnlineMember
 
 		/// <summary>
-		/// Add a online member
+		/// Gets/Sets unique run-time guild ID
 		/// </summary>
-		/// <param name="member">the player named beeing added</param>
-		/// <returns>true or false</returns>
-		public bool AddOnlineMember(GamePlayer member)
+		public ushort ID
+		{
+			get { return m_id; }
+			set { m_id = value; }
+		}
+
+		/// <summary>
+		/// Adds a player to the guild
+		/// </summary>
+		/// <param name="member">GamePlayer to be added to the guild</param>
+		/// <returns>true if added successfully</returns>
+		public bool AddOnlineMember(GamePlayer member) 
 		{
 			lock(m_guildMembers.SyncRoot)
 			{
 				if(!m_guildMembers.Contains(member))
 				{
 					m_guildMembers.Add(member);
-					member.Guild = this;
-
 					return true;
 				}
 			}
+
 			return false;
 		}
 
 		/// <summary>
-		/// Remove a online member
+		/// Removes a player from the guild
 		/// </summary>
-		/// <param name="member">the player named beeing remove</param>
-		/// <returns>true or false</returns>
+		/// <param name="member">GamePlayer to be removed</param>
+		/// <returns>true if removed, false if not</returns>
 		public bool RemoveOnlineMember(GamePlayer member)
 		{
 			lock(m_guildMembers.SyncRoot)
@@ -469,170 +210,250 @@ namespace DOL.GS
 				if(m_guildMembers.Contains(member))
 				{
 					m_guildMembers.Remove(member);
-					member.Guild = null;
 
 					return true;
 				}
 			}
 			return false;
 		}
-		
+
+		/// <summary>
+		/// Remove all Members from memory
+		/// </summary>
+		public void RemoveAllMembers()
+		{
+			lock(m_guildMembers.SyncRoot)
+			{
+				m_guildMembers.Clear();
+			}
+		}
+
+		/// <summary>
+		/// Returns a guild according to the matching membername
+		/// </summary>
+		/// <returns>GuildMemberEntry</returns>
+		public GamePlayer GetMemberByName(string memberName)
+		{
+			lock(m_guildMembers.SyncRoot)
+			{
+				foreach(GamePlayer member in m_guildMembers)
+				{
+					if(member.Name == memberName)
+					{
+						return member;
+					}
+				}
+			}
+			return null;
+		}
+
 		/// <summary>
 		/// Add's a player to this Guild
 		/// </summary>
-		/// <param name="player">the player beeing added</param>
+		/// <param name="addeePlayer">the player beeing added</param>
 		/// <returns>true or false</returns>
-		public bool AddGuildMember(GamePlayer player, byte startingRank)
+		public bool AddPlayer(GamePlayer addeePlayer)
 		{
-			if (player.Guild != null) RemoveOnlineMember(player);
-			
-			if(AddOnlineMember(player))
+			if (log.IsDebugEnabled)
+				log.Debug("Adding player to the guild, guild name=\""+Name+"\"; player name="+addeePlayer.Name);
+			if (addeePlayer == null)
+				return false;
+
+			// guild name can't be null, it's set to "" if no guild
+			//if (addeePlayer.GuildName != null) // Hey this should have been tested by the guild script!
+			//	return false;
+
+			try 
 			{
-				player.GuildID = GuildID;
-				player.GuildRank = startingRank;
-
-				if (log.IsInfoEnabled)
-					log.Info("Adding player ("+player.Name+") to the guild ("+GuildName+")");
-
-				return true;
+				AddOnlineMember(addeePlayer);
+				addeePlayer.GuildName = Name;
+				addeePlayer.GuildRank = GetRankByID(9);
+				addeePlayer.Guild = this;
+				addeePlayer.SaveIntoDatabase();
 			}
-			return false;
-		}
+			catch(Exception e)
+			{
+				if (log.IsErrorEnabled)
+					log.Error("AddPlayer", e);
+				return false;
+			}
 
+			// No errors
+			return true;
+		}
+		
 		/// <summary>
 		/// Delete's a member from this Guild
 		/// </summary>
-		/// <param name="player">the player named beeing remove</param>
+		/// <param name="removername">the player (client) removing</param>
+		/// <param name="member">the player named beeing remove</param>
 		/// <returns>true or false</returns>
-		public bool RemoveGuildMember(GamePlayer player)
+		public bool RemovePlayer(string removername, GamePlayer member)
 		{
-			if (RemoveOnlineMember(player) == true)
+			try
 			{
-				player.GuildID = 0;
-				player.GuildRank = 9;
+				RemoveOnlineMember(member);
+				member.GuildName = "";
+				member.GuildRank = null;
+				member.Guild = null;
+				member.SaveIntoDatabase();
 
-				if (log.IsInfoEnabled)
-					log.Info("Removing player ("+player.Name+") from the guild ("+GuildName+")");
-			
-				return true;
+				// Send message to removerClient about successful removal
+				member.Out.SendMessage(removername + " remove you from " + theGuildDB.GuildName, PacketHandler.eChatType.CT_System, PacketHandler.eChatLoc.CL_SystemWindow);
 			}
-			return false;
-		}
-		#endregion
+			catch(Exception e)
+			{
+				if (log.IsErrorEnabled)
+					log.Error("RemovePlayer", e);
+				return false;
+			}
 
-		#region CheckGuildPermission / SendMessageToGuildMembers
+			return true;
+		}
+
 		/// <summary>
 		/// Looks up if a given client have access for the specific command in this guild
 		/// </summary>
 		/// <returns>true or false</returns>
-		public bool CheckGuildPermission(GamePlayer member, eGuildPerm permToCheck)
+		public bool GotAccess(GamePlayer member, eGuildRank rankneededforcommand)
 		{
-			// If player have a privlevel above 1, it has access enough
-			if (member.Client.Account.PrivLevel > ePrivLevel.Player) return true;
-
-			// Is the player in the guild at all?
-			if (!m_guildMembers.Contains(member)) return false;
-
-			switch(permToCheck)
+			try
 			{
-				case eGuildPerm.GcHear: 
+				// Is the player in the guild at all?
+				if (!m_guildMembers.Contains(member))
+					return false;
+
+				// If player have a privlevel above 1, it has access enough
+				if (member.Client.Account.PrivLevel > 1)
+					return true;
+				else // No guild leader, lets check if user rank is high enough in the guild
 				{
-					return GuildRanks[member.GuildRank].GcHear;
-				} 
-				case eGuildPerm.GcSpeak: 
-				{
-					return GuildRanks[member.GuildRank].GcSpeak;
-				} 
-				case eGuildPerm.OcHear: 
-				{
-					return GuildRanks[member.GuildRank].OcHear;
-				} 
-				case eGuildPerm.OcSpeak: 
-				{
-					return GuildRanks[member.GuildRank].OcSpeak;
-				} 
-				case eGuildPerm.AcHear: 
-				{
-					return GuildRanks[member.GuildRank].AcHear;
-				} 
-				case eGuildPerm.AcSpeak: 
-				{
-					return GuildRanks[member.GuildRank].AcSpeak;
-				} 
-				case eGuildPerm.View: 
-				{
-					return GuildRanks[member.GuildRank].View;
-				} 
-				case eGuildPerm.Emblem: 
-				{
-					return GuildRanks[member.GuildRank].Emblem;
-				} 
-				case eGuildPerm.Invite: 
-				{
-					return GuildRanks[member.GuildRank].Invite;
-				} 
-				case eGuildPerm.Remove: 
-				{
-					return GuildRanks[member.GuildRank].Remove;
+					if (member.GuildRank == null)
+					{
+						if (log.IsWarnEnabled)
+							log.Warn("Rank not in db for player "+member.Name);
+						return false;
+					}
+
+					switch(rankneededforcommand)
+					{
+						case eGuildRank.Emblem: 
+						{
+							return member.GuildRank.Emblem;
+						} 
+						case eGuildRank.AcHear: 
+						{
+							return member.GuildRank.AcHear;
+						} 
+						case eGuildRank.AcSpeak: 
+						{
+							return member.GuildRank.AcSpeak;
+						} 
+						case eGuildRank.Demote: 
+						{
+							return member.GuildRank.Promote;
+						} 
+						case eGuildRank.Promote: 
+						{
+							return member.GuildRank.Promote;
+						} 
+						case eGuildRank.GcHear: 
+						{
+							return member.GuildRank.GcHear;
+						} 
+						case eGuildRank.GcSpeak: 
+						{
+							return member.GuildRank.GcSpeak;
+						} 
+						case eGuildRank.Invite: 
+						{
+							return member.GuildRank.Invite;
+						} 
+						case eGuildRank.OcHear: 
+						{
+							return member.GuildRank.OcHear;
+						} 
+						case eGuildRank.OcSpeak: 
+						{
+							return member.GuildRank.OcSpeak;
+						} 
+						case eGuildRank.Remove: 
+						{
+							return member.GuildRank.Remove;
+						} 
+						case eGuildRank.Alli: 
+						{
+							return member.GuildRank.Alli;
+						} 
+						case eGuildRank.View: 
+						{
+							return member.GuildRank.View;
+						} 
+						case eGuildRank.Claim: 
+						{
+							return member.GuildRank.Claim;
+						}
+						case eGuildRank.Release: 
+						{
+							return member.GuildRank.Release;
+						} 
+						case eGuildRank.Upgrade: 
+						{
+							return member.GuildRank.Upgrade;
+						} 
+						case eGuildRank.Leader: 
+						{
+							return (member.GuildRank.RankLevel == 0);
+						} 
+						default : 
+						{
+							if (log.IsWarnEnabled)
+								log.Warn("Required rank not in the DB: "+rankneededforcommand);
+							return false;
+						}
+					}
 				}
-				case eGuildPerm.Promote: 
-				{
-					return GuildRanks[member.GuildRank].Promote;
-				}
-				case eGuildPerm.Claim: 
-				{
-					return GuildRanks[member.GuildRank].Claim;
-				} 
-				case eGuildPerm.Upgrade: 
-				{
-					return GuildRanks[member.GuildRank].Upgrade;
-				}
-				case eGuildPerm.Release: 
-				{
-					return GuildRanks[member.GuildRank].Release;
-				} 
-				case eGuildPerm.Alli: 
-				{
-					return GuildRanks[member.GuildRank].Alli;
-				} 
-				case eGuildPerm.Motd:
-				{
-					return GuildRanks[member.GuildRank].Motd;
-				}
-				case eGuildPerm.Deposit:
-				{
-					return GuildRanks[member.GuildRank].Deposit;
-				}
-				case eGuildPerm.Withdraw:
-				{
-					return GuildRanks[member.GuildRank].Withdraw;
-				}
-				case eGuildPerm.Dues:
-				{
-					return GuildRanks[member.GuildRank].Dues;
-				}
-				case eGuildPerm.Buff:
-				{
-					return GuildRanks[member.GuildRank].Buff;
-				}
-				case eGuildPerm.GetMission:
-				{
-					return GuildRanks[member.GuildRank].GetMission;
-				}
-				case eGuildPerm.SetNote:
-				{
-					return GuildRanks[member.GuildRank].SetNote;
-				}
-				case eGuildPerm.SummonBanner:
-				{
-					return GuildRanks[member.GuildRank].SummonBanner;
-				}
-				case eGuildPerm.BuyBanner:
-				{
-					return GuildRanks[member.GuildRank].BuyBanner;
-				} 
 			}
-			return false;
+			catch(Exception e)
+			{
+				if (log.IsErrorEnabled)
+					log.Error("GotAccess", e);
+				return false;
+			}
+		}
+
+		/// <summary>
+		/// get rank by level
+		/// </summary>
+		/// <param name="index">the index of rank</param>
+		/// <returns>the dbrank</returns>
+		public DBRank GetRankByID(int index)
+		{
+			try
+			{
+				foreach (DBRank rank in theGuildDB.Ranks)
+				{
+					if ( rank.RankLevel == index )
+						return rank;
+
+				}
+				return null;
+			}
+			catch(Exception e)
+			{
+				if (log.IsErrorEnabled)
+					log.Error("GetRankByID", e);
+				return null;
+			}
+		}
+
+		/// <summary>
+		/// Returns a list of members by their status
+		/// </summary>
+		/// <returns>ArrayList of members</returns>
+		public ArrayList ListOnlineMembers()
+		{
+			return m_guildMembers;
 		}
 
 		/// <summary>
@@ -645,13 +466,95 @@ namespace DOL.GS
 		{
 			lock(m_guildMembers.SyncRoot)
 			{
-				foreach(GamePlayer player in m_guildMembers)
+				foreach(GamePlayer pl in m_guildMembers)
 				{
-					if (player.Client.IsPlaying)
-						player.Out.SendMessage(msg, type, loc);
+					if (pl.Client.IsPlaying)
+						pl.Out.SendMessage(msg,type,loc);
 				}
 			}
 		}
-		#endregion
+
+		/// <summary>
+		/// Checks if a player is in the guild
+		/// </summary>
+		/// <param name="memberName">GamePlayer to check</param>
+		/// <returns>true if the player is in the guild</returns>
+		public bool IsInTheGuild(string memberName)
+		{
+			lock(m_guildMembers.SyncRoot)
+			{
+				foreach(GamePlayer member in m_guildMembers)
+				{
+					if(member.Name == memberName)
+					{
+						return true;
+					}
+				}
+			}
+			return false;
+		}
+
+		/// <summary>
+		/// Called when this guild gains realm points
+		/// </summary>
+		/// <param name="amount">The amount of realm points gained</param>
+		public virtual void GainRealmPoints(long amount)
+		{
+			lock (this)
+			{
+				m_realmPoints += amount;
+				m_DBguild.RealmPoints = m_realmPoints;
+			}
+		}
+
+		/// <summary>
+		/// Called when this guild gains bounty points
+		/// </summary>
+		/// <param name="amount">The amount of bounty points gained</param>
+		public virtual void GainBountyPoints(long amount)
+		{
+			lock (this)
+			{
+				m_bountyPoints += amount;
+				m_DBguild.BountyPoints = m_bountyPoints;
+			}
+		}
+		/// <summary>
+		/// Called when this guild loose bounty points
+		/// </summary>
+		/// <param name="amount">The amount of bounty points gained</param>
+		public virtual bool RemoveBountyPoints(long amount)
+		{
+			lock (this)
+			{
+				if (amount > m_bountyPoints) return false;
+				m_bountyPoints -= amount;
+				m_DBguild.BountyPoints = m_bountyPoints;
+				return true;
+			}
+		}
+
+		/// <summary>
+		/// Loads this guild from a guild table
+		/// </summary>
+		/// <param name="obj"></param>
+		public void LoadFromDatabase(DataObject obj)
+		{
+			if(!(obj is DBguild))
+				return;
+
+			m_DBguild = (DBguild)obj;
+			m_name = m_DBguild.GuildName;
+			m_realmPoints = m_DBguild.RealmPoints;
+			m_bountyPoints = m_DBguild.BountyPoints;
+		}
+
+		/// <summary>
+		/// Saves this guild to database
+		/// </summary>
+		public void SaveIntoDatabase()
+		{
+			GameServer.Database.SaveObject(theGuildDB);
+		}
 	}
 }

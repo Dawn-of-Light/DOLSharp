@@ -17,16 +17,15 @@
  *
  */
 using System;
-using DOL.GS.Database;
+using DOL.Database;
 
 namespace DOL.GS.Movement
 {
 	/// <summary>
 	/// represents a point in a way path
 	/// </summary>
-	public class PathPoint
+	public class PathPoint : Point3D
 	{
-		protected Point m_position;
 		protected int m_maxspeed;
 		protected PathPoint m_next = null;
 		protected PathPoint m_prev = null;
@@ -34,24 +33,16 @@ namespace DOL.GS.Movement
 		protected bool m_flag;
 		protected int m_waitTime = 0;
 
-		public PathPoint(PathPoint pp) : this(pp.Position, pp.MaxSpeed,pp.Type) {}
+		public PathPoint(PathPoint pp) : this(pp, pp.MaxSpeed,pp.Type) {}
 
-		public PathPoint(Point p, int maxspeed, ePathType type)
+		public PathPoint(Point3D p, int maxspeed, ePathType type) : this(p.X,  p.Y,  p.Z, maxspeed, type) {}
+
+		public PathPoint(int x, int y, int z, int maxspeed, ePathType type) : base(x, y, z)
 		{
-			m_position = p;
 			m_maxspeed = maxspeed;
 			m_type = type;
 			m_flag = false;
 			m_waitTime = 0;
-		}
-
-		/// <summary>
-		/// Gets or sets path point's position.
-		/// </summary>
-		public Point Position
-		{
-			get { return m_position; }
-			set { m_position = value; }
 		}
 
 		/// <summary>

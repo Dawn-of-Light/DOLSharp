@@ -94,12 +94,12 @@ namespace DOL.GS.Effects
 				m_idleTicks = 0;
 			else m_idleTicks++;
 
-			if (m_player.EndurancePercent - 5 <= 0 || m_idleTicks >= 6) {
+			if (m_player.Endurance - 5 <= 0 || m_idleTicks >= 6) {
 				Cancel(false);
 				nextInterval = 0;
 			} else {
 				nextInterval = Util.Random(600, 1400);
-				if (m_player.IsMoving) m_player.EndurancePercent -= 5; //remove endurance only if effect is not stopped
+				if (m_player.IsMoving) m_player.Endurance -= 5; //remove endurance only if effect is not stopped
 			}
 			//m_player.Out.SendUpdatePlayer();
 			return nextInterval;

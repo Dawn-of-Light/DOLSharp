@@ -89,7 +89,7 @@ namespace DOL.GS.PacketHandler.v168
 
 					case 1:
 
-						if (player.Region != m_house.Region) //no "beaming" any more.
+						if (player.CurrentRegionID != m_house.RegionID) //no "beaming" any more.
 						{ 
 							player.Out.SendMessage("You are too far away to enter house "+m_house.HouseNumber+".",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 							return; 

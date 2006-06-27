@@ -17,11 +17,7 @@
  *
  */
 using System;
-using System.Collections;
-using System.Reflection;
-using DOL.Events;
 using DOL.GS.PacketHandler;
-using log4net;
 
 namespace DOL.GS.Trainer
 {
@@ -31,55 +27,10 @@ namespace DOL.GS.Trainer
 	[NPCGuildScript("Cabalist Trainer", eRealm.Albion)]		// this attribute instructs DOL to use this script for all "Cabalist Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class CabalistTrainer : GameTrainer
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		public const string WEAPON_ID = "cabalist_item";
 
-		/// <summary>
-		/// This hash constrain all item template the trainer can give
-		/// </summary>	
-		private static IDictionary allStartupItems = new Hashtable();
-
-		/// <summary>
-		/// This function is called at the server startup
-		/// </summary>	
-		[GameServerStartedEvent]
-		public static void OnServerStartup(DOLEvent e, object sender, EventArgs args)
+		public CabalistTrainer() : base()
 		{
-			#region Cabalist staff
-
-			StaffTemplate cabalist_staff_template = new StaffTemplate();
-			cabalist_staff_template.Name = "Cabalist Staff of Focus";
-			cabalist_staff_template.Level = 5;
-			cabalist_staff_template.Durability=100;
-			cabalist_staff_template.Condition = 100;
-			cabalist_staff_template.Quality = 90;
-			cabalist_staff_template.Bonus = 10;
-			cabalist_staff_template.DamagePerSecond = 30;
-			cabalist_staff_template.Speed = 4400;
-			cabalist_staff_template.Weight = 45;
-			cabalist_staff_template.Model = 19;
-			cabalist_staff_template.Realm = eRealm.Albion;
-			cabalist_staff_template.IsDropable = true; 
-			cabalist_staff_template.IsTradable = false; 
-			cabalist_staff_template.IsSaleable = false;
-			cabalist_staff_template.MaterialLevel = eMaterialLevel.Bronze;
-			
-			cabalist_staff_template.AllowedClass.Add(eCharacterClass.Cabalist);
-
-			cabalist_staff_template.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Focus_Body, 4));
-			cabalist_staff_template.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Focus_Matter, 4));
-			cabalist_staff_template.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Focus_Spirit, 4));
-			
-			if(!allStartupItems.Contains("Cabalist_Staff_Of_Focus"))
-			{
-				allStartupItems.Add("Cabalist_Staff_Of_Focus", cabalist_staff_template);
-			
-				if (log.IsDebugEnabled)
-					log.Debug("Adding " + cabalist_staff_template.Name + " to CabalistTrainer gifts.");
-			}
-			#endregion
 		}
 
 		/// <summary>
@@ -134,9 +85,10 @@ namespace DOL.GS.Trainer
 			switch (text) {
 			case "join the Guild of Shadows":
 				// promote player to other class
-				if (CanPromotePlayer(player)) 
-					PromotePlayer(player, (int)eCharacterClass.Cabalist, "Welcome to our guild! You have much to learn, but I see greatness in your future! Here too is your guild weapon, a Staff of Focus!", new GenericItemTemplate[] {allStartupItems["Cabalist_Staff_Of_Focus"] as GenericItemTemplate});
-				
+				if (CanPromotePlayer(player)) {
+					PromotePlayer(player, (int)eCharacterClass.Cabalist, "Welcome to our guild! You have much to learn, but I see greatness in your future! Here too is your guild weapon, a Staff of Focus!", null);
+					player.ReceiveItem(this,WEAPON_ID);
+				}
 				break;
 			}
 			return true;		

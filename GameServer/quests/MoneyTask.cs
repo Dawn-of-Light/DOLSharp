@@ -18,7 +18,7 @@
  */
 using System;
 using System.Collections;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using DOL.GS.Scripts;
@@ -135,7 +135,7 @@ namespace DOL.GS.Quests
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs)args;				
 				GameLiving target = gArgs.Target as GameLiving;
-				GenericItem item = gArgs.Item;
+				InventoryItem item = gArgs.Item;
 
 				if(player.Task.RecieverName == target.Name && item.Name == player.Task.ItemName)
 				{
@@ -151,7 +151,7 @@ namespace DOL.GS.Quests
 		/// <param name="Name">Base Nameof the NPC</param>
 		/// <param name="Level">Level of Generated Item</param>
 		/// <returns>A Generated NPC Item</returns>
-		public static GenericItem GenerateNPCItem(string Name, byte Level)
+		public static InventoryItem GenerateNPCItem(string Name, int Level)
 		{			
 			int Id = Util.Random(0, TaskObjects.Length-1);
 			int format = Util.Random(0, StrFormat.Length-1);
@@ -176,7 +176,7 @@ namespace DOL.GS.Quests
 			}
 			else
 			{
-				GenericItem TaskItems = GenerateNPCItem(NPC.Name, player.Level);
+				InventoryItem TaskItems = GenerateNPCItem(NPC.Name, player.Level);
 				
 				player.Task = new MoneyTask(player);
 				player.Task.TimeOut = DateTime.Now.AddHours(2);
@@ -184,7 +184,7 @@ namespace DOL.GS.Quests
 				player.Task.RecieverName = NPC.Name;
 				((MoneyTask)player.Task).RecieverZone = NPC.CurrentZone.Description;
 				
-				player.Out.SendMessage("Bring "+TaskItems.Name+" to "+NPC.Name +" in "+ NPC.CurrentZone.Description, eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+				player.Out.SendMessage("Bring "+TaskItems.GetName(0,false)+" to "+NPC.Name +" in "+ NPC.CurrentZone.Description, eChatType.CT_Say, eChatLoc.CL_PopupWindow);
 				//Player.Out.SendCustomDialog("", new CustomDialogResponse(TaskDialogResponse));
 
 				player.ReceiveItem(source,TaskItems);

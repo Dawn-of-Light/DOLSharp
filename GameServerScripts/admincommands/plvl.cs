@@ -89,7 +89,7 @@ namespace DOL.GS.Scripts
 						{
 							if (obj.Client.Account != null)
 							{
-								obj.Client.Account.PrivLevel = (ePrivLevel)plvl;
+								obj.Client.Account.PrivLevel = plvl;
 								GameServer.Database.SaveObject(obj.Client.Account);
 								foreach (GameNPC npc in client.Player.GetNPCsInRadius(WorldMgr.VISIBILITY_DISTANCE))
 								{

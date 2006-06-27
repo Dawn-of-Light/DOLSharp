@@ -31,7 +31,7 @@
 using System;
 using System.Reflection;
 using DOL.AI.Brain;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
@@ -46,53 +46,12 @@ using log4net;
 
 namespace DOL.GS.Quests.Albion
 {
-	/* The first thing we do, is to declare the quest requirement
-	* class linked with the new Quest. To do this, we derive 
-	* from the abstract class AbstractQuestDescriptor
-	*/
-	public class NuisancesDescriptor : AbstractQuestDescriptor
-	{
-		/* This is the type of the quest class linked with 
-		 * this requirement class, you must override the 
-		 * base methid like that
-		 */
-		public override Type LinkedQuestType
-		{
-			get { return typeof(Nuisances); }
-		}
-
-		/* This value is used to retrieves the minimum level needed
-		 *  to be able to make this quest. Override it only if you need, 
-		 * the default value is 1
-		 */
-		public override int MinLevel
-		{
-			get { return 2; }
-		}
-
-		/* This value is used to retrieves how maximum level needed
-		 * to be able to make this quest. Override it only if you need, 
-		 * the default value is 50
-		 */
-		public override int MaxLevel
-		{
-			get { return 2; }
-		}
-
-		public override bool CheckQuestQualification(GamePlayer player)
-		{
-			if (!BaseFrederickQuest.CheckPartAccessible(player, typeof(Nuisances)))
-				return false;
-
-			return base.CheckQuestQualification(player);
-		}
-	}
-
-	/* The second thing we do, is to declare the class we create
-	 * as Quest. We must make it persistant using attributes, to
-	 * do this, we derive from the abstract class AbstractQuest
+	/* The first thing we do, is to declare the class we create
+	 * as Quest. To do this, we derive from the abstract class
+	 * AbstractQuest
+	 * 	 
 	 */
-	[NHibernate.Mapping.Attributes.Subclass(NameType = typeof(Nuisances), ExtendsType = typeof(AbstractQuest))]
+
 	public class Nuisances : BaseFrederickQuest
 	{
 		/// <summary>
@@ -110,18 +69,42 @@ namespace DOL.GS.Quests.Albion
 		 * 
 		 */
 		protected const string questTitle = "Nuisances";
+		protected const int minimumLevel = 2;
+		protected const int maximumLevel = 2;
 
 		private static GameNPC masterFrederick = null;
-		private static GameNPC ireFairy = null;
+
+		protected GameNPC ireFairy = null;
 
 		private static GameLocation fairyLocation = new GameLocation("Ire Fairy", 1, 561200, 505951, 2405);
 
-		private static Circle fairyArea = null;
+		private static IArea fairyArea = null;
 
-		private static GenericItemTemplate emptyMagicBox = null;
-		private static GenericItemTemplate fullMagicBox = null;
-		private static SwordTemplate recruitsShortSword = null;
-		private static StaffTemplate recruitsStaff = null;
+		private static ItemTemplate emptyMagicBox = null;
+		private static ItemTemplate fullMagicBox = null;
+		private static ItemTemplate recruitsShortSword = null;
+		private static ItemTemplate recruitsStaff = null;
+
+
+		/* We need to define the constructors from the base class here, else there might be problems
+		 * when loading this quest...
+		 */
+		public Nuisances() : base()
+		{
+		}
+
+		public Nuisances(GamePlayer questingPlayer) : this(questingPlayer, 1)
+		{
+		}
+
+		public Nuisances(GamePlayer questingPlayer, int step) : base(questingPlayer, step)
+		{
+		}
+
+		public Nuisances(GamePlayer questingPlayer, DBQuest dbQuest) : base(questingPlayer, dbQuest)
+		{
+		}
+
 
 		/* The following method is called automatically when this quest class
 		 * is loaded. You might notice that this method is the same as in standard
@@ -156,55 +139,28 @@ namespace DOL.GS.Quests.Albion
 			#region defineNPCS
 
 			masterFrederick = GetMasterFrederick();
-			GameNPC[] npcs;
-			npcs = WorldMgr.GetNPCsByName("Ire Fairy", eRealm.None);
-			if (npcs.Length == 0)
-			{
-				ireFairy = new GameMob();
-				ireFairy.Model = 603;
-				ireFairy.Name = "Ire Fairy";
-				ireFairy.GuildName = "Part of " + questTitle + " Quest";
-				ireFairy.Realm = (byte)eRealm.None;
-				ireFairy.RegionId = 1;
-				ireFairy.Size = 50;
-				ireFairy.Level = 4;
-				Zone z = WorldMgr.GetRegion(1).GetZone(1);
-				Point pos = new Point(12336 + Util.Random(-150, 150), 22623 + Util.Random(-150, 150), 2405);
-				ireFairy.Position = pos;
-				ireFairy.Heading = 226;
-
-				StandardMobBrain brain = new StandardMobBrain();
-				brain.AggroLevel = 20;
-				brain.AggroRange = 200;
-				ireFairy.SetOwnBrain(brain);
-
-				if (SAVE_INTO_DATABASE)
-					ireFairy.SaveIntoDatabase();
-			}
-			else
-				ireFairy = npcs[0];
 
 			#endregion
 
 			#region defineItems
 
 			// item db check
-			emptyMagicBox = (GenericItemTemplate)GameServer.Database.FindObjectByKey(typeof(GenericItemTemplate), "empty_wodden_magic_box");
+			emptyMagicBox = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "empty_wodden_magic_box");
 			if (emptyMagicBox == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Empty Wodden Magic Box, creating it ...");
-				emptyMagicBox = new GenericItemTemplate();
+				emptyMagicBox = new ItemTemplate();
 				emptyMagicBox.Name = "Empty Wodden Magic Box";
 
 				emptyMagicBox.Weight = 5;
 				emptyMagicBox.Model = 602;
 
-				emptyMagicBox.ItemTemplateID = "empty_wodden_magic_box";
+				emptyMagicBox.Object_Type = (int) eObjectType.GenericItem;
+				emptyMagicBox.Id_nb = "empty_wodden_magic_box";
 
+				emptyMagicBox.IsPickable = true;
 				emptyMagicBox.IsDropable = false;
-				emptyMagicBox.IsSaleable = false;
-				emptyMagicBox.IsTradable = false;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -214,22 +170,22 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			fullMagicBox = (GenericItemTemplate)GameServer.Database.FindObjectByKey(typeof(GenericItemTemplate), "full_wodden_magic_box");
+			fullMagicBox = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "full_wodden_magic_box");
 			if (fullMagicBox == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Full Wodden Magic Box, creating it ...");
-				fullMagicBox = new GenericItemTemplate();
+				fullMagicBox = new ItemTemplate();
 				fullMagicBox.Name = "Full Wodden Magic Box";
 
 				fullMagicBox.Weight = 3;
 				fullMagicBox.Model = 602;
 
-				fullMagicBox.ItemTemplateID = "full_wodden_magic_box";
+				fullMagicBox.Object_Type = (int) eObjectType.GenericItem;
 
+				fullMagicBox.Id_nb = "full_wodden_magic_box";
+				fullMagicBox.IsPickable = true;
 				fullMagicBox.IsDropable = false;
-				fullMagicBox.IsSaleable = false;
-				fullMagicBox.IsTradable = false;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -239,34 +195,46 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			recruitsShortSword = (SwordTemplate)GameServer.Database.FindObjectByKey(typeof(SwordTemplate), "recruits_short_sword");
+			recruitsShortSword = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_short_sword");
 			if (recruitsShortSword == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Recruit's Short Sword, creating it ...");
-				recruitsShortSword = new SwordTemplate();
+				recruitsShortSword = new ItemTemplate();
 				recruitsShortSword.Name = "Recruit's Short Sword";
 				recruitsShortSword.Level = 4;
 
 				recruitsShortSword.Weight = 18;
 				recruitsShortSword.Model = 3; // studded Boots
 
-				recruitsShortSword.DamagePerSecond = 23;
-				recruitsShortSword.Speed = 3000;
-				recruitsShortSword.DamageType = eDamageType.Slash;
-				recruitsShortSword.HandNeeded = eHandNeeded.RightHand;
-				recruitsShortSword.ItemTemplateID = "recruits_short_sword";
-				recruitsShortSword.Value = 200;
+				recruitsShortSword.DPS_AF = 23; // Armour
+				recruitsShortSword.SPD_ABS = 30; // Absorption
 
+				recruitsShortSword.Type_Damage = (int) eDamageType.Slash;
+				recruitsShortSword.Object_Type = (int) eObjectType.SlashingWeapon;
+				recruitsShortSword.Item_Type = (int) eEquipmentItems.LEFT_HAND;
+				recruitsShortSword.Id_nb = "recruits_short_sword";
+				recruitsShortSword.Gold = 0;
+				recruitsShortSword.Silver = 2;
+				recruitsShortSword.Copper = 0;
+				recruitsShortSword.IsPickable = true;
 				recruitsShortSword.IsDropable = true;
-				recruitsShortSword.IsSaleable = true;
-				recruitsShortSword.IsTradable = true;
 				recruitsShortSword.Color = 45; // blue metal
 
 				recruitsShortSword.Bonus = 1; // default bonus
 
-				recruitsShortSword.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 3));
-				recruitsShortSword.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Body, 1));
+				recruitsShortSword.Bonus1 = 3;
+				recruitsShortSword.Bonus1Type = (int) eStat.STR;
+
+				recruitsShortSword.Bonus2 = 1;
+				recruitsShortSword.Bonus2Type = (int) eResist.Body;
+
+				recruitsShortSword.Quality = 100;
+				recruitsShortSword.MaxQuality = 100;
+				recruitsShortSword.Condition = 1000;
+				recruitsShortSword.MaxCondition = 1000;
+				recruitsShortSword.Durability = 1000;
+				recruitsShortSword.MaxDurability = 1000;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -276,10 +244,10 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			recruitsStaff = (StaffTemplate)GameServer.Database.FindObjectByKey(typeof(StaffTemplate), "recruits_staff");
+			recruitsStaff = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_staff");
 			if (recruitsStaff == null)
 			{
-				recruitsStaff = new StaffTemplate();
+				recruitsStaff = new ItemTemplate();
 				recruitsStaff.Name = "Recruit's Staff";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + recruitsStaff.Name + ", creating it ...");
@@ -288,23 +256,34 @@ namespace DOL.GS.Quests.Albion
 				recruitsStaff.Weight = 45;
 				recruitsStaff.Model = 442;
 
-				recruitsStaff.DamageType = eDamageType.Crush;
-				recruitsStaff.Speed = 4500;
-				recruitsStaff.DamagePerSecond = 24;
-				recruitsStaff.HandNeeded = eHandNeeded.TwoHands;
+				recruitsStaff.DPS_AF = 24;
+				recruitsStaff.SPD_ABS = 45;
 
-				recruitsStaff.ItemTemplateID = "recruits_staff";
-				recruitsStaff.Value = 200;
-
+				recruitsStaff.Type_Damage = (int) eDamageType.Slash;
+				recruitsStaff.Object_Type = (int) eObjectType.Staff;
+				recruitsStaff.Item_Type = (int) eEquipmentItems.LEFT_HAND;
+				recruitsStaff.Id_nb = "recruits_staff";
+				recruitsStaff.Gold = 0;
+				recruitsStaff.Silver = 2;
+				recruitsStaff.Copper = 0;
+				recruitsStaff.IsPickable = true;
 				recruitsStaff.IsDropable = true;
-				recruitsStaff.IsSaleable = true;
-				recruitsStaff.IsTradable = true;
 				recruitsStaff.Color = 45; // blue metal
 
 				recruitsStaff.Bonus = 1; // default bonus
 
-				recruitsStaff.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Intelligence, 3));
-				recruitsStaff.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Crush, 1));
+				recruitsStaff.Bonus1 = 3;
+				recruitsStaff.Bonus1Type = (int) eStat.INT;
+
+				recruitsStaff.Bonus2 = 1;
+				recruitsStaff.Bonus2Type = (int) eResist.Crush;
+
+				recruitsStaff.Quality = 100;
+				recruitsStaff.MaxQuality = 100;
+				recruitsStaff.Condition = 1000;
+				recruitsStaff.MaxCondition = 1000;
+				recruitsStaff.Durability = 1000;
+				recruitsStaff.MaxDurability = 1000;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -315,111 +294,24 @@ namespace DOL.GS.Quests.Albion
 
 			#endregion
 
-			fairyArea = new Circle();
-			fairyArea.Description = "Fairy contamined Area";
-			fairyArea.X = fairyLocation.Position.X;
-			fairyArea.Y = fairyLocation.Position.Y;
-			fairyArea.RegionID = fairyLocation.Region.RegionID;
-			fairyArea.Radius = 1500;
+			fairyArea = WorldMgr.GetRegion(fairyLocation.RegionID).AddArea(new Area.Circle("Fairy contamined Area", fairyLocation.X, fairyLocation.Y, 0, 1500));
+			fairyArea.RegisterPlayerEnter(new DOLEventHandler(PlayerEnterFairyArea));
 
-			/*
-			QuestBuilder builder = QuestMgr.getBuilder(typeof(Nuisances));
-			BaseQuestPart a;
-
-			builder.AddInteraction(masterFrederick, -1, eTextType.Talk, null, "My young recruit, I fear we have a growing problem on our hands. For the past several nights, citizens in Cotswold have been complaining of a constant ringing noise. It has started to keep them up at [night].");
-
-			builder.AddInteraction(masterFrederick, 2, eTextType.Talk, null, "Ah {Player}, you've returned, and none the worse for wear. Tell me, what did you find?");
-			builder.AddInteraction(masterFrederick, 3, eTextType.Talk, null, "Ire fairies! They're the worst! Well, now we know who has been causing these problems. You've done good work here today. It is time for a reward for your [efforts].");
-
-			builder.AddInteraction(masterFrederick, -1, eTextType.Talk, "night", "It has even begun to affect the wildlife in this area. The guards can not commit any troops to finding out the cause of this ringing sound, so the responsibility falls to you {Player}. Will you help [Cotswold]?");
-
-			a = builder.AddInteraction(masterFrederick, -1, eTextType.None, "Cotswold", null);
-			a.AddAction(eActionType.Animation, eEmote.Beg, masterFrederick);
-			a.AddAction(eActionType.OfferQuest, typeof(Nuisances), "Will you help out Cotswold and discover who or what is making this noise?");
-
-			builder.AddOnQuestDecline(masterFrederick, eTextType.Talk, "Oh well, if you change your mind, please come back!");
-			a = builder.AddOnQuestAccept(masterFrederick, eTextType.Talk, "This magical box will help you capture whatever is making that noise. The reports indicate that the noise is the loudest to the west-northwest, near the banks of the river. Find the source of the noise. Take this box with you. Some of the other trainers seem to think it is magical in nature. I'm not so sure. USE the box in the area that is the loudest, or where you encounter trouble. See if you can capture anything.");
-			a.AddAction(eActionType.GiveItem, emptyMagicBox);
-
-			a = builder.AddInteraction(masterFrederick, 3, eTextType.Talk, "efforts", "A Fighter is nothing unless he has a good weapon by his or her side. For you, a new sword is in order. Use it well. For now, I must think about what to do with these Ire Fairies, and figure out why they are here.");
-			a.AddAction(eActionType.FinishQuest, typeof(Nuisances));
-			a.AddAction(eActionType.Talk, "Don't go far, I have need of your services again {Player}.");
-
-			// Add Abort Possibility for quest            
-			a = builder.AddInteraction(masterFrederick, 0, eTextType.None, "abort", null);
-			a.AddAction(eActionType.OfferQuestAbort, typeof(Nuisances), "Do you really want to abort this quest, \nall items gained during quest will be lost?");
-			builder.AddOnQuestContinue(masterFrederick, eTextType.Talk, "Good {Player}, no go out there and finish your work!");
-			builder.AddOnQuestAbort(masterFrederick, eTextType.Talk, "Do you really want to abandon your duties? The realm always needs willing men and women, so come back if you changed your mind.");
-
-
-			a = builder.CreateQuestPart(ireFairy, 1, eTextType.Emote, "Ire Fairies! Quick! USE your Magical Wooden Box to capture the fairies! To USE an item, right click on the item and type /use.");
-			a.AddTrigger(eTriggerType.EnterArea, null, fairyArea);
-			a.AddAction(eActionType.MonsterSpawn, ireFairy);
-			AddQuestPart(a);
-
-			a = builder.CreateQuestPart(ireFairy, 1, eTextType.Emote, "As soon as the fairy gets out of your view, it quickly hides behind a tree.");
-			a.AddTrigger(eTriggerType.LeaveArea, null, fairyArea);
-			a.AddAction(eActionType.MonsterUnspawn, ireFairy);
-			AddQuestPart(a);
-
-			a = builder.CreateQuestPart(ireFairy, 1, eTextType.Emote, "You try to catch the ire fairy in your magical wodden box!");
-			a.AddTrigger(eTriggerType.ItemUsed, null, emptyMagicBox);
-			a.AddRequirement(eRequirementType.Distance, ireFairy, 500, eComparator.Less);
-			a.AddAction(eActionType.Attack, 15);
-			a.AddAction(eActionType.Emote, "Quick, the ire fairy noticed your intentions, and is attacking you. Try to dodge here attacks until the magic of the box works.");
-			a.AddAction(eActionType.Animation, eEmote.Bind);
-			a.AddAction(eActionType.Timer, "irefairy_timer", 5000);
-			AddQuestPart(a);
-
-			a = builder.CreateQuestPart(ireFairy, 1, eTextType.Emote, "You catch the ire fairy in your magical wodden box!");
-			a.AddTrigger(eTriggerType.Timer, "irefairy_timer");
-			a.AddRequirement(eRequirementType.Distance, ireFairy, 2000, eComparator.Less);
-			a.AddRequirement(eRequirementType.InventoryItem, emptyMagicBox);
-			a.AddAction(eActionType.ReplaceItem, emptyMagicBox, fullMagicBox);
-			a.AddAction(eActionType.SetQuestStep, typeof(Nuisances), 2);
-			a.AddAction(eActionType.MonsterUnspawn, ireFairy);
-			a.AddAction(eActionType.Timer, "fullbox_timer", 10000);
-			AddQuestPart(a);
-
-			a = builder.CreateQuestPart(ireFairy, 1, eTextType.Emote, "You got too far away, try again.");
-			a.AddTrigger(eTriggerType.Timer, "irefairy_timer");
-			a.AddRequirement(eRequirementType.Distance, ireFairy, 2000, eComparator.Greater);
-			AddQuestPart(a);
-
-			a = builder.CreateQuestPart(ireFairy, 1, eTextType.Emote, "There is nothing within the reach of the magic box that can be cought.");
-			a.AddTrigger(eTriggerType.ItemUsed, null, emptyMagicBox);
-			a.AddRequirement(eRequirementType.Distance, ireFairy, 500, eComparator.Greater);
-			AddQuestPart(a);
-
-			a = builder.CreateQuestPart(ireFairy, 2, eTextType.Emote, "The box suddenly starts to shake wildly.");
-			a.AddTrigger(eTriggerType.Timer, "fullbox_timer");
-			a.AddRequirement(eRequirementType.InventoryItem, fullMagicBox);
-			a.AddAction(eActionType.Dialog, "Hey big mister, please let my out. You don't know what your doing, Master Frederick will tear my wings apart... he's going to kill me ... please! I beg you let me out!!!");
-			AddQuestPart(a);
-
-			a = builder.CreateQuestPart(ireFairy, 2, eTextType.Emote, "You open the full magic box and release the ire fairy.");
-			a.AddTrigger(eTriggerType.ItemUsed, null, fullMagicBox);
-			a.AddRequirement(eRequirementType.InventoryItem, fullMagicBox);
-			a.AddAction(eActionType.ReplaceItem, fullMagicBox, emptyMagicBox);
-			a.AddAction(eActionType.Animation, eEmote.Yes);
-			AddQuestPart(a);
-
-
-			// give the full box back to master frederick
-			a = builder.AddOnGiveItem(masterFrederick, 2, fullMagicBox, eTextType.Talk, "Ah, it is quite heavy, let me take a peek.");
-			a.AddAction(eActionType.Animation, eEmote.Yes);
-			a.AddAction(eActionType.Message, "Master Frederick opens the box carefully. When he sees the contents, he quickly closes it and turns his attention back to you.");
-			a.AddAction(eActionType.SetQuestStep, typeof(Nuisances), 3);
-			a.AddAction(eActionType.TakeItem, fullMagicBox);
-
-			// give the empty box back to master frederick
-			a = builder.AddOnGiveItem(masterFrederick, 2, emptyMagicBox, eTextType.Talk, "What's this, there's no fairy in there. Don't tell me you let yourself trick into release that *poor* fairy. You still have a lot to learn young {Player}.");
-			a.AddAction(eActionType.Animation, eEmote.No);
-			a.AddAction(eActionType.SetQuestStep, typeof(Nuisances), 3);
-			a.AddAction(eActionType.TakeItem, emptyMagicBox);
+			/* Now we add some hooks to the npc we found.
+			* Actually, we want to know when a player interacts with him.
+			* So, we hook the right-click (interact) and the whisper method
+			* of npc and set the callback method to the "TalkToXXX"
+			* method. This means, the "TalkToXXX" method is called whenever
+			* a player right clicks on him or when he whispers to him.
 			*/
-			/* Now we bring to Ydenia the possibility to give this quest to players */
-			QuestMgr.AddQuestDescriptor(masterFrederick, typeof(NuisancesDescriptor));
+			//We want to be notified whenever a player enters the world
+			GameEventMgr.AddHandler(GamePlayerEvent.GameEntered, new DOLEventHandler(PlayerEnterWorld));
+
+			GameEventMgr.AddHandler(masterFrederick, GameLivingEvent.Interact, new DOLEventHandler(TalkToMasterFrederick));
+			GameEventMgr.AddHandler(masterFrederick, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToMasterFrederick));
+
+			/* Now we bring to masterFrederick the possibility to give this quest to players */
+			masterFrederick.AddQuestToGive(typeof (Nuisances));
 
 			if (log.IsInfoEnabled)
 				log.Info("Quest \"" + questTitle + "\" initialized");
@@ -435,12 +327,306 @@ namespace DOL.GS.Quests.Albion
 		[ScriptUnloadedEvent]
 		public static void ScriptUnloaded(DOLEvent e, object sender, EventArgs args)
 		{
-
+			/* If sirQuait has not been initialized, then we don't have to remove any
+			 * hooks from him ;-)
+			 */
 			if (masterFrederick == null)
 				return;
 
+			/* Removing hooks works just as adding them but instead of 
+			 * AddHandler, we call RemoveHandler, the parameters stay the same
+			 */
+			fairyArea.UnRegisterPlayerEnter(new DOLEventHandler(PlayerEnterFairyArea));
+			WorldMgr.GetRegion(fairyLocation.RegionID).RemoveArea(fairyArea);
+
+			GameEventMgr.RemoveHandler(GamePlayerEvent.GameEntered, new DOLEventHandler(PlayerEnterWorld));
+
+			GameEventMgr.RemoveHandler(masterFrederick, GameLivingEvent.Interact, new DOLEventHandler(TalkToMasterFrederick));
+			GameEventMgr.RemoveHandler(masterFrederick, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToMasterFrederick));
+
 			/* Now we remove to masterFrederick the possibility to give this quest to players */
-			QuestMgr.RemoveQuestDescriptor(masterFrederick, typeof(NuisancesDescriptor));
+			masterFrederick.RemoveQuestToGive(typeof (Nuisances));
+		}
+
+		protected static void PlayerLeftWorld(DOLEvent e, object sender, EventArgs args)
+		{
+			GamePlayer player = sender as GamePlayer;
+			if (player == null)
+				return;
+
+			Nuisances quest = player.IsDoingQuest(typeof (Nuisances)) as Nuisances;
+			if (quest != null)
+			{
+				GameEventMgr.RemoveHandler(player, GamePlayerEvent.UseSlot, new DOLEventHandler(PlayerUseSlot));
+				GameEventMgr.RemoveHandler(player, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
+
+				if (quest.ireFairy != null && quest.ireFairy.ObjectState == GameObject.eObjectState.Active)
+				{
+					quest.ireFairy.Delete();
+				}
+
+			}
+		}
+
+		protected virtual void CreateFairy()
+		{
+			ireFairy = new GameMob();
+			ireFairy.Model = 603;
+			ireFairy.Name = "Ire Fairy";
+			ireFairy.GuildName = "Part of " + questTitle + " Quest";
+			ireFairy.Realm = (byte) eRealm.None;
+			ireFairy.CurrentRegionID = 1;
+			ireFairy.Size = 50;
+			ireFairy.Level = 4;
+			ireFairy.X = GameLocation.ConvertLocalXToGlobalX(12336, 0) + Util.Random(-150, 150);
+			ireFairy.Y = GameLocation.ConvertLocalYToGlobalY(22623, 0) + Util.Random(-150, 150);
+			ireFairy.Z = 2405;
+			ireFairy.Heading = 226;
+
+			StandardMobBrain brain = new StandardMobBrain();
+			brain.AggroLevel = 20;
+			brain.AggroRange = 200;
+			ireFairy.SetOwnBrain(brain);
+
+			ireFairy.AddToWorld();
+		}
+
+		protected virtual int DeleteFairy(RegionTimer callingTimer)
+		{
+			ireFairy.Delete();
+			ireFairy = null;
+			return 0;
+		}
+
+		protected static void PlayerEnterFairyArea(DOLEvent e, object sender, EventArgs args)
+		{
+			AreaEventArgs aargs = args as AreaEventArgs;
+			GamePlayer player = aargs.GameObject as GamePlayer;
+			Nuisances quest = player.IsDoingQuest(typeof (Nuisances)) as Nuisances;
+
+			if (quest != null && quest.ireFairy == null && quest.Step == 1)
+			{
+				// player near grove            
+				SendSystemMessage(player, "Ire Fairies! Quick! USE your Magical Wooden Box to capture the fairies! To USE an item, right click on the item and type /use.");
+				quest.CreateFairy();
+
+				foreach (GamePlayer visPlayer in quest.ireFairy.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+				{
+					visPlayer.Out.SendSpellCastAnimation(quest.ireFairy, 1, 20);
+				}
+			}
+		}
+
+		protected static void PlayerUseSlot(DOLEvent e, object sender, EventArgs args)
+		{
+			GamePlayer player = (GamePlayer) sender;
+
+			Nuisances quest = (Nuisances) player.IsDoingQuest(typeof (Nuisances));
+			if (quest == null)
+				return;
+
+			if (quest.Step == 1 && quest.ireFairy != null)
+			{
+				UseSlotEventArgs uArgs = (UseSlotEventArgs) args;
+
+				InventoryItem item = player.Inventory.GetItem((eInventorySlot)uArgs.Slot);
+				if (item != null && item.Id_nb == emptyMagicBox.Id_nb)
+				{
+					if (WorldMgr.GetDistance(player, quest.ireFairy) < 500)
+					{
+						foreach (GamePlayer visPlayer in quest.ireFairy.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+						{
+							visPlayer.Out.SendSpellCastAnimation(quest.ireFairy, 1, 20);
+						}
+
+						SendSystemMessage(player, "You catch ire fairy in your magical wodden box!");
+						new RegionTimer(player, new RegionTimerCallback(quest.DeleteFairy), 2000);
+
+						ReplaceItem(player, emptyMagicBox, fullMagicBox);
+						quest.Step = 2;
+
+					}
+					else
+					{
+						SendSystemMessage(player, "There is nothing within the reach of the magic box that can be cought.");
+					}
+				}
+			}
+		}
+
+		protected static void PlayerEnterWorld(DOLEvent e, object sender, EventArgs args)
+		{
+			GamePlayer player = sender as GamePlayer;
+			if (player == null)
+				return;
+
+			Nuisances quest = player.IsDoingQuest(typeof (Nuisances)) as Nuisances;
+			if (quest != null)
+			{
+				GameEventMgr.AddHandler(player, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
+				GameEventMgr.AddHandler(player, GamePlayerEvent.UseSlot, new DOLEventHandler(PlayerUseSlot));
+			}
+		}
+
+		/* This is the method we declared as callback for the hooks we set to
+		 * NPC. It will be called whenever a player right clicks on NPC
+		 * or when he whispers something to him.
+		 */
+
+		protected static void TalkToMasterFrederick(DOLEvent e, object sender, EventArgs args)
+		{
+			//We get the player from the event arguments and check if he qualifies		
+			GamePlayer player = ((SourceEventArgs) args).Source as GamePlayer;
+			if (player == null)
+				return;
+
+			if(masterFrederick.CanGiveQuest(typeof (Nuisances), player)  <= 0)
+				return;
+
+			//We also check if the player is already doing the quest
+			Nuisances quest = player.IsDoingQuest(typeof (Nuisances)) as Nuisances;
+
+			masterFrederick.TurnTo(player);
+			//Did the player rightclick on NPC?
+			if (e == GameObjectEvent.Interact)
+			{
+				if (quest == null)
+				{
+					//Player is not doing the quest...
+					masterFrederick.SayTo(player, "My young recruit, I fear we have a growing problem on our hands. For the past several nights, citizens in Cotswold have been complaining of a constant ringing noise. It has started to keep them up at [night].");
+					return;
+				}
+				else
+				{
+					if (quest.Step == 2)
+					{
+						masterFrederick.SayTo(player, "Vinde, you've returned, and none the worse for wear. Tell me, what did you find?");
+					}
+					else if (quest.Step == 3)
+					{
+						masterFrederick.SayTo(player, "Ire fairies! They're the worst! Well, now we know who has been causing these problems. Vinde, you've done good work here today. It is time for a reward for your [efforts].");
+
+					}
+					return;
+				}
+			}
+				// The player whispered to NPC (clicked on the text inside the [])
+			else if (e == GameLivingEvent.WhisperReceive)
+			{
+				WhisperReceiveEventArgs wArgs = (WhisperReceiveEventArgs) args;
+				if (quest == null)
+				{
+					//Do some small talk :)
+					switch (wArgs.Text)
+					{
+						case "night":
+							masterFrederick.SayTo(player, "It has even begun to affect the wildlife in this area. The guards can not commit any troops to finding out the cause of this ringing sound, so the responsibility falls to you Vinde. Will you help [Cotswold]?");
+							break;
+							//If the player offered his "help", we send the quest dialog now!
+						case "Cotswold":
+							player.Out.SendCustomDialog("Will you help out Cotswold and discover who or what is making this noise?", new CustomDialogResponse(CheckPlayerAcceptQuest));
+							break;
+					}
+				}
+				else
+				{
+					switch (wArgs.Text)
+					{
+						case "efforts":
+							masterFrederick.SayTo(player, "A Fighter is nothing unless he has a good weapon by his or her side. For you, a new sword is in order. Use it well Vinde. For now, I must think about what to do with these Ire Fairies, and figure out why they are here.");
+							if (quest.Step == 3)
+							{
+								quest.FinishQuest();
+								masterFrederick.SayTo(player, "Don't go far, I have need of your services again Vinde.");
+							}
+							break;
+						case "abort":
+							player.Out.SendCustomDialog("Do you really want to abort this quest, \nall items gained during quest will be lost?", new CustomDialogResponse(CheckPlayerAbortQuest));
+							break;
+					}
+				}
+			}
+		}
+
+		/// <summary>
+		/// This method checks if a player qualifies for this quest
+		/// </summary>
+		/// <returns>true if qualified, false if not</returns>
+		public override bool CheckQuestQualification(GamePlayer player)
+		{
+			// if the player is already doing the quest his level is no longer of relevance
+			if (player.IsDoingQuest(typeof (Nuisances)) != null)
+				return true;
+
+			// This checks below are only performed is player isn't doing quest already
+
+			if (!CheckPartAccessible(player, typeof (Nuisances)))
+				return false;
+
+			if (player.Level < minimumLevel || player.Level > maximumLevel)
+				return false;
+
+			return true;
+		}
+
+
+		/* This is our callback hook that will be called when the player clicks
+		 * on any button in the quest offer dialog. We check if he accepts or
+		 * declines here...
+		 */
+
+		private static void CheckPlayerAbortQuest(GamePlayer player, byte response)
+		{
+			Nuisances quest = player.IsDoingQuest(typeof (Nuisances)) as Nuisances;
+
+			if (quest == null)
+				return;
+
+			if (response == 0x00)
+			{
+				SendSystemMessage(player, "Good, no go out there and finish your work!");
+			}
+			else
+			{
+				SendSystemMessage(player, "Aborting Quest " + questTitle + ". You can start over again if you want.");
+				quest.AbortQuest();
+			}
+		}
+
+		/* This is our callback hook that will be called when the player clicks
+		 * on any button in the quest offer dialog. We check if he accepts or
+		 * declines here...
+		 */
+
+		private static void CheckPlayerAcceptQuest(GamePlayer player, byte response)
+		{
+			//We recheck the qualification, because we don't talk to players
+			//who are not doing the quest
+			if(masterFrederick.CanGiveQuest(typeof (Nuisances), player)  <= 0)
+				return;
+
+			Nuisances quest = player.IsDoingQuest(typeof (Nuisances)) as Nuisances;
+
+			if (quest != null)
+				return;
+
+			if (response == 0x00)
+			{
+				SendReply(player, "Oh well, if you change your mind, please come back!");
+			}
+			else
+			{
+				//Check if we can add the quest!
+				if (!masterFrederick.GiveQuest(typeof (Nuisances), player, 1))
+					return;
+
+				masterFrederick.SayTo(player, "This magical box will help you capture whatever is making that noise. The reports indicate that the noise is the loudest to the west-northwest, near the banks of the river. Find the source of the noise Vinde. Take this box with you. Some of the other trainers seem to think it is magical in nature. I'm not so sure. USE the box in the area that is the loudest, or where you encounter trouble. See if you can capture anything.");
+				// give necklace                
+				GiveItem(masterFrederick, player, emptyMagicBox);
+
+				GameEventMgr.AddHandler(player, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
+				GameEventMgr.AddHandler(player, GamePlayerEvent.UseSlot, new DOLEventHandler(PlayerUseSlot));
+			}
 		}
 
 		/* Now we set the quest name.
@@ -472,15 +658,47 @@ namespace DOL.GS.Quests.Albion
 						return "[Step #2] Take the Full Magical Wooden Box back to Master Frederick in Cotswold. Be sure to hand him the Full Magical Wooden Box.";
 					case 3:
 						return "[Step #3] Wait for Master Frederick to reward you. If he stops speaking with you at any time, ask if there is something he can give you for your [efforts].";
-					default:
-						return "[Step #" + Step + "] No Description entered for this step!";
 				}
+				return base.Description;
 			}
 		}
 
 		public override void Notify(DOLEvent e, object sender, EventArgs args)
 		{
+			GamePlayer player = sender as GamePlayer;
 
+			if (player==null || player.IsDoingQuest(typeof (Nuisances)) == null)
+				return;
+
+			if (Step == 2 && e == GamePlayerEvent.GiveItem)
+			{
+				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
+				if (gArgs.Target.Name == masterFrederick.Name && gArgs.Item.Id_nb == fullMagicBox.Id_nb)
+				{
+					RemoveItem(masterFrederick, m_questPlayer, fullMagicBox);
+
+					masterFrederick.TurnTo(m_questPlayer);
+					masterFrederick.SayTo(m_questPlayer, "Ah, it is quite heavy, let me take a peek.");
+					SendEmoteMessage(m_questPlayer, "Master Frederick opens the box carefully. When he sees the contents, he quickly closes it and turns his attention back to you.");
+
+					m_questPlayer.Out.SendEmoteAnimation(masterFrederick, eEmote.Yes);
+					Step = 3;
+					return;
+				}
+			}
+
+		}
+
+		public override void AbortQuest()
+		{
+			base.AbortQuest(); //Defined in Quest, changes the state, stores in DB etc ...
+
+			RemoveItem(m_questPlayer, emptyMagicBox, false);
+			RemoveItem(m_questPlayer, fullMagicBox, false);
+
+
+			GameEventMgr.RemoveHandler(m_questPlayer, GamePlayerEvent.UseSlot, new DOLEventHandler(PlayerUseSlot));
+			GameEventMgr.RemoveHandler(m_questPlayer, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
 		}
 
 		public override void FinishQuest()
@@ -488,13 +706,16 @@ namespace DOL.GS.Quests.Albion
 			base.FinishQuest(); //Defined in Quest, changes the state, stores in DB etc ...
 
 			//Give reward to player here ...            
-			if (m_questPlayer.HasAbilityToUseItem(recruitsShortSword.CreateInstance() as EquipableItem))
-				GiveItemToPlayer(masterFrederick, recruitsShortSword.CreateInstance());
+			if (m_questPlayer.HasAbilityToUseItem(recruitsShortSword))
+				GiveItem(masterFrederick, m_questPlayer, recruitsShortSword);
 			else
-				GiveItemToPlayer(masterFrederick, recruitsStaff.CreateInstance());
+				GiveItem(masterFrederick, m_questPlayer, recruitsStaff);
 
 			m_questPlayer.GainExperience(100, 0, 0, true);
 			m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 3, Util.Random(50)), "You recieve {0} as a reward.");
+
+			GameEventMgr.RemoveHandler(m_questPlayer, GamePlayerEvent.UseSlot, new DOLEventHandler(PlayerUseSlot));
+			GameEventMgr.RemoveHandler(m_questPlayer, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
 		}
 
 	}

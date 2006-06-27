@@ -53,7 +53,7 @@ namespace DOL.GS.Scripts
 		/// <returns>true if the player is suitable for this title.</returns>
 		public override bool IsSuitable(GamePlayer player)
 		{
-			TimeSpan t = DateTime.Now.Subtract(player.CreationDate);
+			TimeSpan t = DateTime.Now.Subtract(player.PlayerCharacter.CreationDate);
 			return t.TotalDays >= 180.0; // ~half year
 		}
 	}

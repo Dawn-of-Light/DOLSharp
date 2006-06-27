@@ -18,9 +18,8 @@
  */
 using System;
 using System.Reflection;
-using System.Collections;
 using DOL.Events;
-using DOL.GS.Database;
+using DOL.Database;
 using log4net;
 
 namespace DOL.GS.PacketHandler.v168
@@ -35,11 +34,11 @@ namespace DOL.GS.PacketHandler.v168
 
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
+			bool invalidChar = false;
+			//DOLConsole.WriteLine("Character creation!\n");
 			packet.Skip(24); //Skip the account name, we don't need it
 			int charsCount = client.Version < GameClient.eClientVersion.Version173 ? 8 : 10;
-			
-			IEnumerator iter = client.Account.CharactersInSelectedRealm.GetEnumerator();	
-			for(byte i=0 ; i < charsCount ; i++)
+			for(int i=0;i<charsCount;i++)
 			{
 				string charname = packet.ReadString(24);
 				if(charname.Length==0)
@@ -49,62 +48,55 @@ namespace DOL.GS.PacketHandler.v168
 				}
 				else
 				{
-					GamePlayer character = null;
-					if(iter.MoveNext()) character = (GamePlayer) iter.Current;
-
-					if(character != null && character.Name.ToLower().Equals(charname.ToLower()))
+					String select = String.Format("Name = '{0}'",GameServer.Database.Escape(charname));
+					Character character = (Character) GameServer.Database.SelectObject(typeof(Character), select);
+					if(character != null)
 					{
-						// update old characters
+						// update old character
+
 						switch(packet.ReadByte())
 						{
 							case 0x02: //player config
 							{
-								if(character.CustomisationStep == 3)
-								{
-									character.EyeSize = (byte)packet.ReadByte();
-									character.LipSize = (byte)packet.ReadByte();
-									character.EyeColor = (byte)packet.ReadByte();
-									character.HairColor = (byte)packet.ReadByte();
-									character.FaceType = (byte)packet.ReadByte();
-									character.HairStyle = (byte)packet.ReadByte();
-									packet.Skip(3);
-									character.MoodType = (byte)packet.ReadByte();
-									packet.Skip(89); // Skip location string, race string, classe string, level ,class ,realm and startRaceGender
-									character.CreationModel = packet.ReadShortLowEndian(); //read new model
-									character.Model = character.CreationModel;
-									packet.Skip(58); // skip all other things
+								character.EyeSize = (byte)packet.ReadByte();
+								character.LipSize = (byte)packet.ReadByte();
+								character.EyeColor = (byte)packet.ReadByte();
+								character.HairColor = (byte)packet.ReadByte();
+								character.FaceType = (byte)packet.ReadByte();
+								character.HairStyle = (byte)packet.ReadByte();
+								packet.Skip(3);
+								character.MoodType = (byte)packet.ReadByte();
+								packet.Skip(89); // Skip location string, race string, classe string, level ,class ,realm and startRaceGender
+								character.CreationModel = packet.ReadShortLowEndian(); //read new model
+								character.CurrentModel = character.CreationModel;
+								packet.Skip(58); // skip all other things
 
-									character.CustomisationStep = 2; // disable config button
+								character.CustomisationStep = 2; // disable config button
 
-									GameServer.Database.SaveObject(character);
+								GameServer.Database.SaveObject(character);
 
-									if (log.IsInfoEnabled)
-										log.Info(String.Format("Character {0} face proprieties configured by account {1}!\n",charname,client.Account.AccountName));
-								}
+								if (log.IsInfoEnabled)
+									log.Info(String.Format("Character {0} face proprieties configured by account {1}!\n",charname,client.Account.Name));
 							}
 								break;
 							case 0x03:  //auto config
 							{
-								if(character.CustomisationStep == 1)
-								{
-									character.EyeSize = (byte)packet.ReadByte();
-									character.LipSize = (byte)packet.ReadByte();
-									character.EyeColor = (byte)packet.ReadByte();
-									character.HairColor = (byte)packet.ReadByte();
-									character.FaceType = (byte)packet.ReadByte();
-									character.HairStyle = (byte)packet.ReadByte();
-									packet.Skip(3);
-									character.MoodType = (byte)packet.ReadByte();
-									packet.Skip(149); // skip all other things
+								character.EyeSize = (byte)packet.ReadByte();
+								character.LipSize = (byte)packet.ReadByte();
+								character.EyeColor = (byte)packet.ReadByte();
+								character.HairColor = (byte)packet.ReadByte();
+								character.FaceType = (byte)packet.ReadByte();
+								character.HairStyle = (byte)packet.ReadByte();
+								packet.Skip(3);
+								character.MoodType = (byte)packet.ReadByte();
+								packet.Skip(149); // skip all other things
 
-									character.CustomisationStep = 3; // enable config button to player
+								character.CustomisationStep = 3; // enable config button to player
 
-									GameServer.Database.SaveObject(character);
+								GameServer.Database.SaveObject(character);
 
-									if (log.IsInfoEnabled)
-										log.Info(String.Format("Character {0} face proprieties auto updated!\n",charname));
-							
-								}
+								if (log.IsInfoEnabled)
+									log.Info(String.Format("Character {0} face proprieties auto updated!\n",charname));
 							}
 								break;
 							default :  //do nothing
@@ -118,8 +110,12 @@ namespace DOL.GS.PacketHandler.v168
 					else
 					{
 						// create new character
-						GamePlayer ch = new GamePlayer();
-						ch.AccountID = client.Account.AccountID;
+
+						Account account = client.Account;
+						//TODO new db framework
+						Character ch = new Character();
+						ch.ClassType = "DOL.GS.GamePlayer";
+						ch.AccountName = account.Name;
 						ch.Name = charname;
 
 						if(packet.ReadByte() == 0x01)
@@ -144,17 +140,15 @@ namespace DOL.GS.PacketHandler.v168
 
 						packet.Skip(24); //Location String
 						ch.LastName = "";
-						ch.GuildID = 0;
+						ch.GuildName = "";
 						packet.Skip(24); //Skip class name
 						packet.Skip(24); //Skip race name
-						ch.Level = (byte)packet.ReadByte(); //not safe!
+						ch.Level = packet.ReadByte(); //not safe!
 						ch.Level = 1;
-						ch.CharacterClassID = packet.ReadByte();
-						ch.Realm = (byte)packet.ReadByte();
-						ch.SlotPosition = i;
+						ch.Class = packet.ReadByte();
+						ch.Realm = packet.ReadByte();
+						ch.AccountSlot = i + ch.Realm*100;
 
-						ch.MaxSpeedBase = GamePlayer.PLAYER_BASE_SPEED;
-						
 						//The following byte contains
 						//1bit=start location ... in SI you can choose ...
 						//1bit=first race bit
@@ -170,98 +164,129 @@ namespace DOL.GS.PacketHandler.v168
 						bool siStartLocation = ((startRaceGender>>7)!=0);
 
 						ch.CreationModel = packet.ReadShortLowEndian();
-						ch.Model = ch.CreationModel;
-						ch.RegionId = packet.ReadByte();
+						ch.CurrentModel = ch.CreationModel;
+						ch.Region = packet.ReadByte();
 						packet.Skip(1); //TODO second byte of region unused currently
 						packet.Skip(4); //TODO Unknown Int / last used?
-						ch.BaseStrength = packet.ReadByte();
-						ch.BaseDexterity = packet.ReadByte();
-						ch.BaseConstitution = packet.ReadByte();
-						ch.BaseQuickness = packet.ReadByte();
-						ch.BaseIntelligence = packet.ReadByte();
-						ch.BasePiety = packet.ReadByte();
-						ch.BaseEmpathy = packet.ReadByte();
-						ch.BaseCharisma = packet.ReadByte();
+						//packet.Skip(8); //TODO stats
+						ch.Strength = (byte)packet.ReadByte();
+						ch.Dexterity = (byte)packet.ReadByte();
+						ch.Constitution =(byte) packet.ReadByte();
+						ch.Quickness = (byte)packet.ReadByte();
+						ch.Intelligence = (byte)packet.ReadByte();
+						ch.Piety = (byte)packet.ReadByte();
+						ch.Empathy = (byte)packet.ReadByte();
+						ch.Charisma = (byte)packet.ReadByte();
 						packet.Skip(44); //TODO equipment
+
+						// check if client tried to create invalid char
+						if(!CheckCharacter.IsCharacterValid(ch))
+						{
+							invalidChar = true;
+							if (log.IsWarnEnabled)
+								log.Warn(ch.AccountName + " tried to create invalid character:" +
+								"\nchar name="+ch.Name+", race="+ch.Race+", realm="+ch.Realm+", class="+ch.Class+", region="+ch.Region+
+								"\nstr="+ch.Strength+", con="+ch.Constitution+", dex="+ch.Dexterity+", qui="+ch.Quickness+", int="+ch.Intelligence+", pie="+ch.Piety+", emp="+ch.Empathy+", chr="+ch.Charisma);
+							continue;
+						}
 
 						ch.CreationDate = DateTime.Now;
 
-						ch.Position = new Point(505603, 494709, 2463);
-						ch.Heading = 5947;
+						ch.Endurance=100;
+						ch.MaxEndurance=100;
+						ch.Concentration=100;
+						ch.MaxSpeed=GamePlayer.PLAYER_BASE_SPEED;
 
-						if(ch.RegionId == 51 && ch.Realm==(byte)eRealm.Albion)//Albion SI start point (I hope)
+
+
+						ch.Xpos = 505603;
+						ch.Ypos = 494709;
+						ch.Zpos = 2463;
+						ch.Direction = 5947;
+
+						if(ch.Region==51 && ch.Realm==1)//Albion SI start point (I hope)
 						{
-							ch.Position = new Point(526252, 542415, 3165);
-							ch.Heading = 5286;
+							ch.Xpos = 526252;
+							ch.Ypos = 542415;
+							ch.Zpos = 3165;
+							ch.Direction = 5286;
 						}
-						if(ch.RegionId != 51 && ch.Realm==(byte)eRealm.Albion)//Albion start point (Church outside Camelot/humberton)
+						if(ch.Region !=51 && ch.Realm==1)//Albion start point (Church outside Camelot/humberton)
 						{
-							ch.Position = new Point(505603, 494709, 2463);
-							ch.Heading = 5947;
+							ch.Xpos = 505603;
+							ch.Ypos = 494709;
+							ch.Zpos = 2463;
+							ch.Direction = 5947;
+							//ch.Region = 1;
+							//DOLConsole.WriteLine(String.Format("Character ClassName:"+ch.ClassName+" created!"));
+							//DOLConsole.WriteLine(String.Format("Character RaceName:"+ch.RaceName+" created!"));
 						}
-						if(ch.RegionId == 151 && ch.Realm==(byte)eRealm.Midgard)//Midgard SI start point
+						if(ch.Region==151 && ch.Realm==2)//Midgard SI start point
 						{
-							ch.Position = new Point(293720, 356408, 3488);
-							ch.Heading = 6670;
+							ch.Xpos = 293720;
+							ch.Ypos = 356408;
+							ch.Zpos = 3488;
+							ch.Direction = 6670;
 						}
-						if(ch.RegionId != 151 && ch.Realm==(byte)eRealm.Midgard)//Midgard start point (Fort Atla)
+						if(ch.Region !=151 && ch.Realm==2)//Midgard start point (Fort Atla)
 						{
-							ch.Position = new Point(749103, 815835, 4408);
-							ch.Heading = 7915;
+							ch.Xpos = 749103;
+							ch.Ypos = 815835;
+							ch.Zpos = 4408;
+							ch.Direction = 7915;
+							//ch.Region = 100;
+							//DOLConsole.WriteLine(String.Format("Character ClassName:"+ch.ClassName+" created!"));
+							//DOLConsole.WriteLine(String.Format("Character RaceName:"+ch.RaceName+" created!"));
 						}
-						if(ch.RegionId == 181 && ch.Realm==(byte)eRealm.Hibernia)//Hibernia SI start point
+						if(ch.Region==181 && ch.Realm==3)//Hibernia SI start point
 						{
-							ch.Position = new Point(426483, 440626, 5952);
-							ch.Heading = 2403;
+							ch.Xpos = 426483;
+							ch.Ypos = 440626;
+							ch.Zpos = 5952;
+							ch.Direction = 2403;
 						}
-						if(ch.RegionId != 181 && ch.Realm==(byte)eRealm.Hibernia)//Hibernia start point (Mag Mel)
+						if(ch.Region !=181 && ch.Realm==3)//Hibernia start point (Mag Mel)
 						{
-							ch.Position = new Point(345900, 490867, 5200);
-							ch.Heading = 4826;
+							ch.Xpos = 345900;
+							ch.Ypos = 490867;
+							ch.Zpos = 5200;
+							ch.Direction = 4826;
+							//ch.Region = 200;
+							//DOLConsole.WriteLine(String.Format("Character ClassName:"+ch.ClassName+" created!"));
+							//DOLConsole.WriteLine(String.Format("Character RaceName:"+ch.RaceName+" created!"));
 						}
 
                         // chars are bound on creation
-						ch.BindRegion = ch.RegionId;
-						ch.BindHeading = ch.Heading;
-						ch.BindX = ch.Position.X;
-						ch.BindY = ch.Position.Y;
-						ch.BindZ = ch.Position.Z;
+						ch.BindRegion = ch.Region;
+						ch.BindHeading = ch.Direction;
+						ch.BindXpos = ch.Xpos;
+						ch.BindYpos = ch.Ypos;
+						ch.BindZpos = ch.Zpos;
 
-						ch.IsLevelRespecUsed = true;
-						ch.SafetyFlag = true;
+						//Save the character in the database
+						GameServer.Database.AddNewObject(ch);
+						//Fire the character creation event
+						GameEventMgr.Notify(DatabaseEvent.CharacterCreated, null, new CharacterEventArgs(ch));
+						//write changes
+						GameServer.Database.SaveObject(ch);
 
-						// check if client tried to create invalid char
-						if(CheckCharacter.IsCharacterValid(ch))
-						{
-							//Fire the character creation event
-							GameEventMgr.Notify(DatabaseEvent.CharacterCreated, null, new CharacterEventArgs(ch));
-							//Save the character in the database
-							GameServer.Database.AddNewObject(ch);
-							
-							if(character != null)
-								client.Account.CharactersInSelectedRealm.Insert(client.Account.CharactersInSelectedRealm.IndexOf(character), ch);
-							else
-								client.Account.CharactersInSelectedRealm.Add(ch);
+						client.Account.Characters=null;
 
-							if (log.IsInfoEnabled)
-								log.Info(String.Format("Character {0} created!\n",charname));
-						}
-						else
-						{
-							if (log.IsWarnEnabled)
-								log.Warn(client.Account.AccountName + " tried to create invalid character:" +
-									"\nchar name="+ch.Name+", race="+ch.Race+", realm="+ch.Realm+", class="+ch.CharacterClassID+", region="+ch.Region+
-									"\nstr="+ch.BaseStrength+", con="+ch.BaseConstitution+", dex="+ch.BaseDexterity+", qui="+ch.BaseQuickness+", int="+ch.BaseIntelligence+", pie="+ch.BasePiety+", emp="+ch.BaseEmpathy+", chr="+ch.BaseCharisma);
-							
-							if (client.Account.Realm == 0) client.Out.SendRealm(eRealm.None);
-							else client.Out.SendCharacterOverview((eRealm)client.Account.Realm);
-						}
-
-						break;
+						if (log.IsInfoEnabled)
+							log.Info(String.Format("Character {0} created!\n",charname));
 					}
 				}
 			}
-			
+			if(invalidChar)
+			{
+				if (client.Account.Realm == 0) client.Out.SendRealm(eRealm.None);
+				else client.Out.SendCharacterOverview((eRealm)client.Account.Realm);
+			}
+			else
+			{
+				GameServer.Database.WriteDatabaseTable(typeof(Character));
+				GameServer.Database.FillObjectRelations(client.Account);
+			}
 			return 1;
 		}
 
@@ -286,34 +311,58 @@ namespace DOL.GS.PacketHandler.v168
 			/// </summary>
 			/// <param name="ch">The character to check</param>
 			/// <returns>True if valid</returns>
-			public static bool IsCharacterValid(GamePlayer ch)
+			public static bool IsCharacterValid(Character ch)
 			{
+				bool valid = true;
 				try
 				{
-					int pointsUsed = 0;
-					pointsUsed += PointsUsed(ch.Race, STR, ch.BaseStrength);
-					pointsUsed += PointsUsed(ch.Race, CON, ch.BaseConstitution);
-					pointsUsed += PointsUsed(ch.Race, DEX, ch.BaseDexterity);
-					pointsUsed += PointsUsed(ch.Race, QUI, ch.BaseQuickness);
-					pointsUsed += PointsUsed(ch.Race, INT, ch.BaseIntelligence);
-					pointsUsed += PointsUsed(ch.Race, PIE, ch.BasePiety);
-					pointsUsed += PointsUsed(ch.Race, EMP, ch.BaseEmpathy);
-					pointsUsed += PointsUsed(ch.Race, CHA, ch.BaseCharisma);
-
-					if(pointsUsed != 30)
+					if (ch.Realm > 3)
 					{
 						if (log.IsWarnEnabled)
-							log.Warn("Points used: "+pointsUsed);
-						return false;
+							log.Warn("Wrong realm: " + ch.Realm);
+						valid = false;
+					}
+					if (ch.Level != 1)
+					{
+						if (log.IsWarnEnabled)
+							log.Warn("Wrong level: " + ch.Level);
+						valid = false;
+					}
+					if (Array.IndexOf(STARTING_CLASSES[ch.Realm], ch.Class) == -1)
+					{
+						if (log.IsWarnEnabled)
+							log.Warn("Wrong class: " + ch.Class + ", realm:" + ch.Realm);
+						valid = false;
+					}
+					if (Array.IndexOf(RACES_CLASSES[ch.Race], ch.Class) == -1)
+					{
+						if (log.IsWarnEnabled)
+							log.Warn("Wrong race: " + ch.Race + ", class:" + ch.Class);
+						valid = false;
+					}
+					int pointsUsed = 0;
+					pointsUsed += PointsUsed(ch.Race, STR, ch.Strength);
+					pointsUsed += PointsUsed(ch.Race, CON, ch.Constitution);
+					pointsUsed += PointsUsed(ch.Race, DEX, ch.Dexterity);
+					pointsUsed += PointsUsed(ch.Race, QUI, ch.Quickness);
+					pointsUsed += PointsUsed(ch.Race, INT, ch.Intelligence);
+					pointsUsed += PointsUsed(ch.Race, PIE, ch.Piety);
+					pointsUsed += PointsUsed(ch.Race, EMP, ch.Empathy);
+					pointsUsed += PointsUsed(ch.Race, CHA, ch.Charisma);
+					if (pointsUsed != 30)
+					{
+						if (log.IsWarnEnabled)
+							log.Warn("Points used: " + pointsUsed);
+						valid = false;
 					}
 				}
-				catch(Exception e)
+				catch (Exception e)
 				{
 					if (log.IsErrorEnabled)
 						log.Error("CharacterCreation", e);
 					return false;
 				}
-				return true;
+				return valid;
 			}
 
 			/// <summary>
@@ -357,6 +406,102 @@ namespace DOL.GS.PacketHandler.v168
 				new int[8] { 90, 70, 40, 40, 60, 60, 60, 60 }, // Half Ogre
 				new int[8] { 55, 55, 55, 60, 60, 75, 60, 60 }, // Frostalf
 				new int[8] { 60, 80, 50, 50, 60, 60, 60, 60 }, // Shar
+			};
+
+			/// <summary>
+			/// All possible player starting classes
+			/// </summary>
+			protected static readonly int[][] STARTING_CLASSES = new int[][]
+			{
+				null, // "Unknown",
+				new int[] { (int)eCharacterClass.Fighter,
+							(int)eCharacterClass.Acolyte,
+							(int)eCharacterClass.Mage,
+							(int)eCharacterClass.Elementalist,
+							(int)eCharacterClass.AlbionRogue,
+							(int)eCharacterClass.Disciple }, // Albion
+				new int[] { (int)eCharacterClass.Viking,
+							(int)eCharacterClass.Mystic,
+							(int)eCharacterClass.Seer,
+							(int)eCharacterClass.MidgardRogue }, // Midgard
+				new int[] { (int)eCharacterClass.Guardian,
+							(int)eCharacterClass.Stalker,
+							(int)eCharacterClass.Naturalist,
+							(int)eCharacterClass.Magician,
+							(int)eCharacterClass.Forester }, // Hibernia
+			};
+
+			protected static readonly int[][] RACES_CLASSES = new int[][]
+			{
+				null, // "Unknown",
+				//
+				new int[] { (int)eCharacterClass.Fighter,
+							(int)eCharacterClass.Acolyte,
+							(int)eCharacterClass.Mage,
+							(int)eCharacterClass.Elementalist,
+							(int)eCharacterClass.AlbionRogue,
+							(int)eCharacterClass.Disciple }, // Briton
+				new int[] { (int)eCharacterClass.Fighter,
+							(int)eCharacterClass.Acolyte,
+							(int)eCharacterClass.Mage,
+							(int)eCharacterClass.Elementalist }, // Avalonian
+				new int[] { (int)eCharacterClass.Fighter,
+							(int)eCharacterClass.Acolyte,
+							(int)eCharacterClass.AlbionRogue }, // Highlander
+				new int[] { (int)eCharacterClass.Fighter,
+							(int)eCharacterClass.Mage,
+							(int)eCharacterClass.AlbionRogue,
+							(int)eCharacterClass.Disciple }, // Saracen
+				new int[] { (int)eCharacterClass.Viking,
+							(int)eCharacterClass.Mystic,
+							(int)eCharacterClass.Seer,
+							(int)eCharacterClass.MidgardRogue }, // Norseman
+				new int[] { (int)eCharacterClass.Viking,
+							(int)eCharacterClass.Mystic,
+							(int)eCharacterClass.Seer }, // Troll
+				new int[] { (int)eCharacterClass.Viking,
+							(int)eCharacterClass.Mystic,
+							(int)eCharacterClass.Seer,
+							(int)eCharacterClass.MidgardRogue }, // Dwarf
+				new int[] { (int)eCharacterClass.Viking,
+							(int)eCharacterClass.Mystic,
+							(int)eCharacterClass.Seer,
+							(int)eCharacterClass.MidgardRogue }, // Kobold
+				new int[] { (int)eCharacterClass.Guardian,
+							(int)eCharacterClass.Stalker,
+							(int)eCharacterClass.Naturalist,
+							(int)eCharacterClass.Magician,
+							(int)eCharacterClass.Forester }, // Celt
+				new int[] { (int)eCharacterClass.Guardian,
+							(int)eCharacterClass.Naturalist,
+							(int)eCharacterClass.Forester }, // Firbolg
+				new int[] { (int)eCharacterClass.Guardian,
+							(int)eCharacterClass.Stalker,
+							(int)eCharacterClass.Magician }, // Elf
+				new int[] { (int)eCharacterClass.Guardian,
+							(int)eCharacterClass.Stalker,
+							(int)eCharacterClass.Magician }, // Lurikeen
+				new int[] { (int)eCharacterClass.Fighter,
+							(int)eCharacterClass.Acolyte,
+							(int)eCharacterClass.Mage,
+							(int)eCharacterClass.AlbionRogue,
+							(int)eCharacterClass.Disciple }, // Inconnu
+				new int[] { (int)eCharacterClass.Viking,
+							(int)eCharacterClass.Mystic,
+							(int)eCharacterClass.MidgardRogue }, // Valkyn
+				new int[] { (int)eCharacterClass.Guardian,
+							(int)eCharacterClass.Naturalist,
+							(int)eCharacterClass.Forester }, // Sylvan
+				new int[] { (int)eCharacterClass.Fighter,
+							(int)eCharacterClass.Mage,
+							(int)eCharacterClass.Elementalist }, // Half Ogre
+				new int[] { (int)eCharacterClass.Viking,
+							(int)eCharacterClass.Mystic,
+							(int)eCharacterClass.Seer,
+							(int)eCharacterClass.MidgardRogue }, // Frostalf
+				new int[] { (int)eCharacterClass.Guardian,
+							(int)eCharacterClass.Stalker,
+							(int)eCharacterClass.Magician }, // Shar
 			};
 		}
 

@@ -57,7 +57,9 @@ namespace DOL.GS.GameEvents
 				//npc in the constructor. You can set
 				//the npc position, model etc. in the
 				//StartEvent() method too if you want.
-				Position = new Point(505599, 437679, 0);
+				X = 505599;
+				Y = 437679;
+				Z = 0;
 				Heading = 0x0;
 				Name = "Ugly Spider";
 				GuildName = "Rightclick me";
@@ -65,7 +67,7 @@ namespace DOL.GS.GameEvents
 				Size = 30;
 				Level = 10;
 				Realm = 1;
-				RegionId = 1;
+				CurrentRegionID = 1;
 
 				//At the beginning, the spider isn't following anyone
 				m_playerToFollow = null;
@@ -102,7 +104,7 @@ namespace DOL.GS.GameEvents
 				if (m_playerToFollow == null)
 					return;
 				//If the player has moved to another region, we stop following
-				if (m_playerToFollow.RegionId != RegionId)
+				if (m_playerToFollow.CurrentRegionID != CurrentRegionID)
 				{
 					//Reset the player
 					m_playerToFollow = null;
@@ -110,15 +112,12 @@ namespace DOL.GS.GameEvents
 					StopMoving();
 				}
 
-				Point playerPos = m_playerToFollow.Position;
-				Point myPos = Position;
-				
 				//Calculate the difference between our position and the players position
-				double diffx = playerPos.X - myPos.X;
-				double diffy = playerPos.Y - myPos.Y;
+				float diffx = (long) m_playerToFollow.X - X;
+				float diffy = (long) m_playerToFollow.Y - Y;
 
 				//Calculate the distance to the player
-				double distance = Math.Sqrt(diffx*diffx + diffy*diffy);
+				float distance = (float) Math.Sqrt(diffx*diffx + diffy*diffy);
 
 				//If the player walks away too far, then we will stop following
 				if (distance > 3000)
@@ -136,14 +135,13 @@ namespace DOL.GS.GameEvents
 				//Our spot will be 50 coordinates from the player, so we
 				//calculate how much x and how much y we need to subtract
 				//from the player to get the right x and y to walk to 
-				diffx = diffx*50/distance;
-				diffy = diffy*50/distance;
+				diffx = (diffx/distance)*50;
+				diffy = (diffy/distance)*50;
 
 				//Subtract the offset from the players position to get
 				//our target position
-				myPos.X = (int) (playerPos.X - diffx);
-				myPos.Y = (int) (playerPos.Y - diffy);
-				myPos.Z = 0;
+				int newX = (int) (m_playerToFollow.X - diffx);
+				int newY = (int) (m_playerToFollow.Y - diffy);
 
 				//Our speed is based on the distance to the player
 				//We will walk faster to the player if the player
@@ -154,7 +152,7 @@ namespace DOL.GS.GameEvents
 					speed = 50;
 
 				//Make the mob walk to the new spot
-				WalkTo(myPos, speed);
+				WalkTo(newX, newY, 0, speed);
 			}
 		}
 

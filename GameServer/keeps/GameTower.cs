@@ -17,7 +17,6 @@
  *
  */
 
-using System;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS
@@ -30,23 +29,7 @@ namespace DOL.GS
 		public GameKeepTower()
 		{
 		}
-        public override int KeepID
-        {
-            get
-            {
-                return Keep.KeepID;
-            }
-        }
-
-	    public int TowerID
-	    {
-	        get { return (int)(KeepID/256); }
-	    }
-        public int LinkedKeepID
-        {
-            get { return KeepID - ((KeepID>>8) <<8); }
-        }
-	    /// <summary>
+		/// <summary>
 		/// table of claim bounty point take from guild each cycle
 		/// </summary>
 		public new static readonly int[] ClaimBountyPointCost =
@@ -63,8 +46,7 @@ namespace DOL.GS
 			100,
 		};
 		private GameKeep m_keep;
-
-	    public override int CalculateTimeToUpgrade()
+		public override int CalculateTimeToUpgrade()
 		{
 			return 12*60*1000;
    		}
@@ -84,7 +66,7 @@ namespace DOL.GS
 		}
 		public override int CalculRP()
 		{
-            return 100 * DifficultyLevel();
+			return 100*DifficultyLevel;
 		}
 
 		public GameKeep Keep

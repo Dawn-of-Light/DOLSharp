@@ -73,7 +73,7 @@ namespace DOL.GS.Scripts
 			if (player.Level >= 5) 
 			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Thrown));
-				player.AddAbility(SkillBase.GetAbility(Abilities.Shield, (int)eShieldSize.Medium));
+				player.AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Medium));
 
 				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Shields));
 				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Thrown_Weapons));
@@ -84,8 +84,8 @@ namespace DOL.GS.Scripts
 			}
 			if (player.Level >= 10) 
 			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.MidArmor, (int)eArmorLevel.High));
-				player.AddAbility(SkillBase.GetAbility(Abilities.Shield, (int)eShieldSize.Large));
+				player.AddAbility(SkillBase.GetAbility(Abilities.MidArmor, ArmorLevel.Chain));
+				player.AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Large));
 			}
 			if (player.Level >= 12) 
 			{

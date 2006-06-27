@@ -21,7 +21,7 @@ using System.Collections;
 using DOL.AI.Brain;
 using DOL.Events;
 using DOL.GS.PacketHandler;
-using DOL.GS.Database;
+using DOL.Database;
 
 namespace DOL.GS
 {
@@ -30,6 +30,12 @@ namespace DOL.GS
 	/// </summary>
 	public class GameTrainer : GameMob
 	{
+		/// <summary>
+		/// Constructs a new GameTrainer
+		/// </summary>
+		public GameTrainer()
+		{
+		}
 
 		#region GetExamineMessages/GetAggroLevelString
 		/// <summary>
@@ -114,20 +120,15 @@ namespace DOL.GS
 		/// <param name="source"></param>
 		/// <param name="item"></param>
 		/// <returns></returns>
-		public override bool ReceiveItem(GameLiving source, GenericItem item)
+		public override bool ReceiveItem(GameLiving source, InventoryItem item)
 		{
 			if(source==null || item==null) return false;
 
 			GamePlayer player = source as GamePlayer;
-			if(player != null && item != null && item is RespecStone)
+			if(player != null && item != null && item.Id_nb == "respec_stone")
 			{
-				if(((RespecStone)item).RespecType == eRespecType.Full)
-					player.RespecAmountAllSkill++;
-				else
-					player.RespecAmountSingleSkill++;
-				
+				player.RespecAmountAllSkill++;
 				player.Out.SendMessage("Thanks, I'll add an extra respec to your account.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				player.Inventory.RemoveItem(item);
 				return true;
 			}
 
@@ -142,7 +143,7 @@ namespace DOL.GS
 		/// <param name="messageToPlayer">the message for the player</param>
 		/// <param name="gifts">Array of inventory items as promotion gifts</param>
 		/// <returns>true if successfull</returns>
-		public bool PromotePlayer(GamePlayer player, int classid, string messageToPlayer, GenericItemTemplate[] gifts) {
+		public bool PromotePlayer(GamePlayer player, int classid, string messageToPlayer, InventoryItem[] gifts) {
 
 			if(player == null) return false;
 
@@ -162,11 +163,9 @@ namespace DOL.GS
 				player.Out.SendUpdatePlayer();	
 				
 				// Initiate equipment
-				if (gifts!=null && gifts.Length > 0) 
-				{
-					for (int i=0; i < gifts.Length; i++) 
-					{
-						if(gifts[i] != null) player.ReceiveItem(this, gifts[i].CreateInstance());
+				if (gifts!=null && gifts.Length>0) {
+					for (int i=0; i<gifts.Length; i++) {
+						player.ReceiveItem(this, gifts[i]);
 					}
 				}
 
@@ -198,7 +197,7 @@ namespace DOL.GS
 		/// Get class name from guild name
 		/// </summary>
 		/// <param name="obj"></param>
-		public override void LoadFromDatabase(object obj)
+		public override void LoadFromDatabase(DataObject obj)
 		{
 			base.LoadFromDatabase(obj);
 			// "Fighter Trainer"

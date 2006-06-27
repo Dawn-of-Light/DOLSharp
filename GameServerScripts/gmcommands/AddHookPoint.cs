@@ -18,7 +18,7 @@
  */
 using System;
 using DOL.GS.PacketHandler;
-using DOL.GS.Database;
+using DOL.Database;
 
 namespace DOL.GS.Scripts
 {
@@ -50,11 +50,9 @@ namespace DOL.GS.Scripts
 				DBKeepHookPoint dbkeephp = new DBKeepHookPoint();
 				dbkeephp.HookPointID = id;
 				dbkeephp.KeepComponentSkinID = skin;
-				Point p = client.Player.Position;
-				Point c = compo.Position;
-				dbkeephp.X = p.X - c.X;
-				dbkeephp.Y = p.Y - c.Y;
-				dbkeephp.Z = p.Z - c.Z;
+				dbkeephp.X = client.Player.X - compo.X;
+				dbkeephp.Y = client.Player.Y - compo.Y;
+				dbkeephp.Z = client.Player.Z - compo.Z;
 				dbkeephp.Heading = compo.Heading;
 				GameServer.Database.AddNewObject(dbkeephp);
 			}

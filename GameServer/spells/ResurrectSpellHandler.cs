@@ -41,7 +41,7 @@ namespace DOL.GS.Spells
 		/// </summary>
 		public override void FinishSpellCast(GameLiving target)
 		{
-			m_caster.ChangeMana(null, GameLiving.eManaChangeType.Spell, -CalculateNeededPower(target));
+			m_caster.Mana -= CalculateNeededPower(target);
 			base.FinishSpellCast(target);
 		}
 
@@ -134,12 +134,12 @@ namespace DOL.GS.Spells
 		protected virtual void ResurrectLiving(GameLiving living)
 		{
 			if (m_caster.ObjectState != GameObject.eObjectState.Active) return;
-			if (m_caster.Region != living.Region) return;
+			if (m_caster.CurrentRegionID != living.CurrentRegionID) return;
 
-			living.ChangeHealth(m_caster, GameLiving.eHealthChangeType.Spell, living.MaxHealth * m_spell.ResurrectHealth / 100);
-			living.ChangeMana(m_caster, GameLiving.eManaChangeType.Spell, living.MaxMana * m_spell.ResurrectMana / 100);
-			living.EndurancePercent = 0; //no endurance after any rez
-			living.MoveTo((ushort)m_caster.RegionId, m_caster.Position, (ushort)m_caster.Heading);
+			living.Health = living.MaxHealth * m_spell.ResurrectHealth / 100;
+			living.Mana = living.MaxMana * m_spell.ResurrectMana / 100;
+			living.Endurance = 0; //no endurance after any rez
+			living.MoveTo(m_caster.CurrentRegionID, m_caster.X, m_caster.Y, m_caster.Z, m_caster.Heading);
 
 			GameTimer resurrectExpiredTimer = null;
 			lock (m_resTimersByLiving.SyncRoot)

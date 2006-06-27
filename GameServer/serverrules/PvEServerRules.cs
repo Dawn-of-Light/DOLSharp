@@ -19,7 +19,7 @@
 using System;
 using DOL.AI.Brain;
 using DOL.GS.PacketHandler;
-using DOL.GS.Database;
+using DOL.Database;
 
 namespace DOL.GS.ServerRules
 {
@@ -109,7 +109,7 @@ namespace DOL.GS.ServerRules
 			}
 
 			// clients with priv level > 1 are considered friendly by anyone
-			if(target is GamePlayer && ((GamePlayer)target).Client.Account.PrivLevel > ePrivLevel.Player) return true;
+			if(target is GamePlayer && ((GamePlayer)target).Client.Account.PrivLevel > 1) return true;
 
 			// mobs can heal mobs, players heal players/NPC
 			if(source.Realm == 0 && target.Realm == 0) return true;
@@ -126,9 +126,9 @@ namespace DOL.GS.ServerRules
 		/// <param name="player"></param>
 		/// <param name="point"></param>
 		/// <returns></returns>
-		public override bool IsAllowedToCraft(GamePlayer player, GenericItemTemplate item)
+		public override bool IsAllowedToCraft(GamePlayer player, ItemTemplate item)
 		{
-			return player.Realm == (byte)item.Realm;
+			return player.Realm == item.Realm;
 		}
 
 		public override bool IsAllowedCharsInAllRealms(GameClient client)

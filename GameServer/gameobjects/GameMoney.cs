@@ -19,7 +19,7 @@
 using System;
 using System.Collections;
 using DOL.GS;
-using DOL.GS.Database;
+using DOL.Database;
 
 namespace DOL.GS
 {
@@ -42,7 +42,7 @@ namespace DOL.GS
 		/// Constructs a new Money bag with a value that will disappear after 2 minutes
 		/// </summary>
 		/// <param name="copperValue">the coppervalue of this bag</param>
-		public GameMoney(long copperValue) : base(120000)
+		public GameMoney(long copperValue):base(120000)
 		{
 			Level = 0;
 			Model = 488;
@@ -71,9 +71,11 @@ namespace DOL.GS
 		/// <param name="dropper">the gameobject that dropped this bag</param>
 		public GameMoney(long copperValue, GameObject dropper):this(copperValue)
 		{
-			Position = dropper.Position;
+			X=dropper.X;
+			Y=dropper.Y;
+			Z=dropper.Z;
 			Heading = dropper.Heading;
-			Region = dropper.Region;
+			CurrentRegion = dropper.CurrentRegion;
 		}
 		/// <summary>
 		/// Returns the number of mithril pieces in this bag

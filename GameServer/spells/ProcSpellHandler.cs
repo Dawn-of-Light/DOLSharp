@@ -18,7 +18,7 @@
  */
 using System;
 using System.Collections;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.Events;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
@@ -71,7 +71,7 @@ namespace DOL.GS.Spells {
 		/// </summary>
 		public override void FinishSpellCast(GameLiving target) 
 		{
-			m_caster.ChangeMana(null, GameLiving.eManaChangeType.Spell, -CalculateNeededPower(target));
+			m_caster.Mana -= CalculateNeededPower(target);
 			base.FinishSpellCast(target);
 		}
 
@@ -239,10 +239,10 @@ namespace DOL.GS.Spells {
 				if (sender is GamePlayer)
 				{
 					GamePlayer player = (GamePlayer)sender;
-					Weapon leftWeapon = player.Inventory.GetItem(eInventorySlot.LeftHandWeapon) as Weapon;
+					InventoryItem leftWeapon = player.Inventory.GetItem(eInventorySlot.LeftHandWeapon);
 					// if we can use left weapon, we have currently a weapon in left hand and we still have endurance,
 					// we can assume that we are using the two weapons.
-					if (player.CanUseLefthandedWeapon && leftWeapon != null && !(leftWeapon is Shield)) {
+					if (player.CanUseLefthandedWeapon && leftWeapon != null && leftWeapon.Object_Type != (int)eObjectType.Shield) {
 						baseChance /= 2;
 					} 
 				}

@@ -77,14 +77,10 @@ namespace DOL.GS.Scripts
 
 			if (client.Player.TargetObject != null)
 			{
-				if (client.Player.TargetObject.Region != client.Player.Region)
-				{
-					client.Out.SendMessage("Target is in another region.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return 1;
-				}
-				
+				int distanceToTarget = WorldMgr.GetDistance((GameObject) client.Player, (GameObject) client.Player.TargetObject);
+
 				// target not in range
-				if (!client.Player.Position.CheckSquareDistance(client.Player.TargetObject.Position, EMOTE_RANGE_TO_TARGET*EMOTE_RANGE_TO_TARGET))
+				if (distanceToTarget > EMOTE_RANGE_TO_TARGET || distanceToTarget < 0)
 				{
 					client.Out.SendMessage("You don't see your target around here.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return 1;

@@ -45,7 +45,7 @@ using System;
 using System.Collections;
 using System.Reflection;
 using DOL.AI.Brain;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
@@ -60,55 +60,12 @@ using log4net;
 
 namespace DOL.GS.Quests.Albion
 {
-    /* The first thing we do, is to declare the quest requirement
-* class linked with the new Quest. To do this, we derive 
-* from the abstract class AbstractQuestDescriptor
-*/
-    public class BeginningOfWarDescriptor : AbstractQuestDescriptor
-    {
-        /* This is the type of the quest class linked with 
-         * this requirement class, you must override the 
-         * base method like that
-         */
-        public override Type LinkedQuestType
-        {
-            get { return typeof(BeginningOfWar); }
-        }
+	/* The first thing we do, is to declare the class we create
+	 * as Quest. To do this, we derive from the abstract class
+	 * AbstractQuest
+	 * 	 
+	 */
 
-        /* This value is used to retrieves the minimum level needed
-         *  to be able to make this quest. Override it only if you need, 
-         * the default value is 1
-         */
-        public override int MinLevel
-        {
-            get { return 4; }
-        }
-
-        /* This value is used to retrieves how maximum level needed
-         * to be able to make this quest. Override it only if you need, 
-         * the default value is 50
-         */
-        public override int MaxLevel
-        {
-            get { return 4; }
-        }
-
-        public override bool CheckQuestQualification(GamePlayer player)
-        {
-            // This checks below are only performed is player isn't doing quest already
-            if (player.HasFinishedQuest(typeof(IreFairyIre)) == 0)
-                return false;
-
-            if (!BaseFrederickQuest.CheckPartAccessible(player, typeof(BeginningOfWar)))
-                return false;
-            return base.CheckQuestQualification(player);
-        }
-    }
-    /* The second thing we do, is to declare the class we create
-     * as Quest. We must make it persistant using attributes, to
-     * do this, we derive from the abstract class AbstractQuest
-     */
-    [NHibernate.Mapping.Attributes.Subclass(NameType = typeof(BeginningOfWar), ExtendsType = typeof(AbstractQuest))] 
 	public class BeginningOfWar : BaseFrederickQuest
 	{
 		/// <summary>
@@ -129,6 +86,8 @@ namespace DOL.GS.Quests.Albion
 		protected static GameLocation locationFrederick = new GameLocation("Master Frederick", 1, 0, 19105 + 50, 26552 + 40, 2861, 0);
 
 		protected const string questTitle = "Beginning of War";
+		protected const int minimumLevel = 4;
+		protected const int maximumLevel = 4;
 
 		private static GameNPC masterFrederick = null;
 
@@ -142,16 +101,37 @@ namespace DOL.GS.Quests.Albion
 
 		private bool princessOberaAttackStarted = false;
 
-		private static GenericItemTemplate swampSlimeItem = null;
-		private static GenericItemTemplate swampRatTail = null;
-		private static GenericItemTemplate princessOberasHead = null;
-		private static GenericItemTemplate riverSpritlingClaw = null;
+		private static ItemTemplate swampSlimeItem = null;
+		private static ItemTemplate swampRatTail = null;
+		private static ItemTemplate princessOberasHead = null;
+		private static ItemTemplate riverSpritlingClaw = null;
 
-		private static GenericItemTemplate scrollDunwyn = null;
-		private static GenericItemTemplate listDunwyn = null;
-		private static HeadArmorTemplate recruitsHelm = null;
-		private static HeadArmorTemplate recruitsCap = null;
-		private static RingTemplate recruitsRing = null;
+		private static ItemTemplate scrollDunwyn = null;
+		private static ItemTemplate listDunwyn = null;
+		private static ItemTemplate recruitsHelm = null;
+		private static ItemTemplate recruitsCap = null;
+		private static ItemTemplate recruitsRing = null;
+
+
+		/* We need to define the constructors from the base class here, else there might be problems
+		 * when loading this quest...
+		 */
+		public BeginningOfWar() : base()
+		{
+		}
+
+		public BeginningOfWar(GamePlayer questingPlayer) : this(questingPlayer, 1)
+		{
+		}
+
+		public BeginningOfWar(GamePlayer questingPlayer, int step) : base(questingPlayer, step)
+		{
+		}
+
+		public BeginningOfWar(GamePlayer questingPlayer, DBQuest dbQuest) : base(questingPlayer, dbQuest)
+		{
+		}
+
 
 		/* The following method is called automatically when this quest class
 		 * is loaded. You might notice that this method is the same as in standard
@@ -171,8 +151,9 @@ namespace DOL.GS.Quests.Albion
 		[ScriptLoadedEvent]
 		public static void ScriptLoaded(DOLEvent e, object sender, EventArgs args)
 		{
-            if (log.IsInfoEnabled)
-                log.Info("Quest \"" + questTitle + "\" initializing ...");
+			if (log.IsInfoEnabled)
+				if (log.IsInfoEnabled)
+					log.Info("Quest \"" + questTitle + "\" initializing ...");
 			/* First thing we do in here is to search for the NPCs inside
 			* the world who comes from the certain Realm. If we find a the players,
 			* this means we don't have to create a new one.
@@ -197,17 +178,22 @@ namespace DOL.GS.Quests.Albion
 				dunwyn.Name = "Master Dunwyn";
 				dunwyn.GuildName = "Part of " + questTitle + " Quest";
 				dunwyn.Realm = (byte) eRealm.Albion;
-				dunwyn.RegionId = 1;
+				dunwyn.CurrentRegionID = 1;
 
 				dunwyn.Size = 50;
 				dunwyn.Level = 20;
-				dunwyn.Position = new Point(465383, 634773, 1840);
+				dunwyn.X = 465383;
+				dunwyn.Y = 634773;
+				dunwyn.Z = 1840;
 				dunwyn.Heading = 187;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
 				template.AddNPCEquipment(eInventorySlot.TorsoArmor, 798);
 				template.AddNPCEquipment(eInventorySlot.RightHandWeapon, 19);
 				dunwyn.Inventory = template.CloseTemplate();
+
+//				dunwyn.AddNPCEquipment((byte) eEquipmentItems.TORSO, 798, 0, 0, 0);
+//				dunwyn.AddNPCEquipment((byte) eEquipmentItems.RIGHT_HAND, 19, 0, 0, 0);
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -229,12 +215,14 @@ namespace DOL.GS.Quests.Albion
 				princessObera = new GameMob();
 
 				princessObera.Name = "Princess Obera";
-				princessObera.Position = new Point(579289, 508200, 2779);
+				princessObera.X = 579289;
+				princessObera.Y = 508200;
+				princessObera.Z = 2779;
 				princessObera.Heading = 347;
 				princessObera.Model = 603;
 				princessObera.GuildName = "Part of " + questTitle + " Quest";
 				princessObera.Realm = (byte) eRealm.None;
-				princessObera.RegionId = 1;
+				princessObera.CurrentRegionID = 1;
 				princessObera.Size = 49;
 				princessObera.Level = 3;
 
@@ -275,13 +263,12 @@ namespace DOL.GS.Quests.Albion
 					fairySorceress[i].Name = "ire fairy sorceress";
 					fairySorceress[i].GuildName = "Part of " + questTitle + " Quest";
 					fairySorceress[i].Realm = (byte) eRealm.None;
-					fairySorceress[i].RegionId = 1;
+					fairySorceress[i].CurrentRegionID = 1;
 					fairySorceress[i].Size = 35;
 					fairySorceress[i].Level = 3;
-					Point pos = princessObera.Position;
-					pos.X += Util.Random(-150, 150);
-					pos.Y += Util.Random(-150, 150);
-					fairySorceress[i].Position = pos;
+					fairySorceress[i].X = princessObera.X + Util.Random(-150, 150);
+					fairySorceress[i].Y = princessObera.Y + Util.Random(-150, 150);
+					fairySorceress[i].Z = princessObera.Z;
 
 					StandardMobBrain brain = new StandardMobBrain();
 					brain.AggroLevel = 30;
@@ -304,10 +291,10 @@ namespace DOL.GS.Quests.Albion
 
 			#region defineItems
 
-			swampRatTail = (GenericItemTemplate) GameServer.Database.FindObjectByKey(typeof (GenericItemTemplate), "swamp_rat_tail");
+			swampRatTail = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "swamp_rat_tail");
 			if (swampRatTail == null)
 			{
-				swampRatTail = new GenericItemTemplate();
+				swampRatTail = new ItemTemplate();
 				swampRatTail.Name = "Swamp Rat Tail";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + swampRatTail.Name + " , creating it ...");
@@ -315,10 +302,11 @@ namespace DOL.GS.Quests.Albion
 				swampRatTail.Weight = 110;
 				swampRatTail.Model = 515;
 
-				swampRatTail.ItemTemplateID = "swamp_rat_tail";
-                swampRatTail.IsDropable = false;
-                swampRatTail.IsSaleable = false;
-                swampRatTail.IsTradable = false;
+				swampRatTail.Object_Type = (int) eObjectType.GenericItem;
+
+				swampRatTail.Id_nb = "swamp_rat_tail";
+				swampRatTail.IsPickable = true;
+				swampRatTail.IsDropable = false;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -327,10 +315,10 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(swampRatTail);
 			}
 
-			swampSlimeItem = (GenericItemTemplate) GameServer.Database.FindObjectByKey(typeof (GenericItemTemplate), "swamp_slime");
+			swampSlimeItem = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "swamp_slime");
 			if (swampSlimeItem == null)
 			{
-				swampSlimeItem = new GenericItemTemplate();
+				swampSlimeItem = new ItemTemplate();
 				swampSlimeItem.Name = "Swamp Slime";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + swampSlimeItem.Name + " , creating it ...");
@@ -338,10 +326,11 @@ namespace DOL.GS.Quests.Albion
 				swampSlimeItem.Weight = 10;
 				swampSlimeItem.Model = 553;
 
-				swampSlimeItem.ItemTemplateID = "swamp_slime";
-                swampSlimeItem.IsDropable = false;
-                swampSlimeItem.IsSaleable = false;
-                swampSlimeItem.IsTradable = false;
+				swampSlimeItem.Object_Type = (int) eObjectType.GenericItem;
+
+				swampSlimeItem.Id_nb = "swamp_slime";
+				swampSlimeItem.IsPickable = true;
+				swampSlimeItem.IsDropable = false;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -350,10 +339,10 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(swampSlimeItem);
 			}
 
-			scrollDunwyn = (GenericItemTemplate) GameServer.Database.FindObjectByKey(typeof (GenericItemTemplate), "scroll_for_dunwyn");
+			scrollDunwyn = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "scroll_for_dunwyn");
 			if (scrollDunwyn == null)
 			{
-				scrollDunwyn = new GenericItemTemplate();
+				scrollDunwyn = new ItemTemplate();
 				scrollDunwyn.Name = "Scroll for Master Dunwyn";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + scrollDunwyn.Name + " , creating it ...");
@@ -361,10 +350,11 @@ namespace DOL.GS.Quests.Albion
 				scrollDunwyn.Weight = 10;
 				scrollDunwyn.Model = 498;
 
-				scrollDunwyn.ItemTemplateID = "scroll_for_dunwyn";
-                scrollDunwyn.IsDropable = false;
-                scrollDunwyn.IsSaleable = false;
-                scrollDunwyn.IsTradable = false;
+				scrollDunwyn.Object_Type = (int) eObjectType.GenericItem;
+
+				scrollDunwyn.Id_nb = "scroll_for_dunwyn";
+				scrollDunwyn.IsPickable = true;
+				scrollDunwyn.IsDropable = false;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -373,10 +363,10 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(scrollDunwyn);
 			}
 
-			listDunwyn = (GenericItemTemplate) GameServer.Database.FindObjectByKey(typeof (GenericItemTemplate), "list_for_dunwyn");
+			listDunwyn = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "list_for_dunwyn");
 			if (listDunwyn == null)
 			{
-				listDunwyn = new GenericItemTemplate();
+				listDunwyn = new ItemTemplate();
 				listDunwyn.Name = "List for Master Dunwyn";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + listDunwyn.Name + " , creating it ...");
@@ -384,10 +374,11 @@ namespace DOL.GS.Quests.Albion
 				listDunwyn.Weight = 10;
 				listDunwyn.Model = 498;
 
-				listDunwyn.ItemTemplateID = "list_for_dunwyn";
-                listDunwyn.IsDropable = false;
-                listDunwyn.IsSaleable = false;
-                listDunwyn.IsTradable = false;
+				listDunwyn.Object_Type = (int) eObjectType.GenericItem;
+
+				listDunwyn.Id_nb = "list_for_dunwyn";
+				listDunwyn.IsPickable = true;
+				listDunwyn.IsDropable = false;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -396,10 +387,10 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(listDunwyn);
 			}
 
-			riverSpritlingClaw = (GenericItemTemplate) GameServer.Database.FindObjectByKey(typeof (GenericItemTemplate), "river_spritling_claw");
+			riverSpritlingClaw = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "river_spritling_claw");
 			if (riverSpritlingClaw == null)
 			{
-				riverSpritlingClaw = new GenericItemTemplate();
+				riverSpritlingClaw = new ItemTemplate();
 				riverSpritlingClaw.Name = "River Spriteling Claw";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + riverSpritlingClaw.Name + " , creating it ...");
@@ -407,10 +398,11 @@ namespace DOL.GS.Quests.Albion
 				riverSpritlingClaw.Weight = 2;
 				riverSpritlingClaw.Model = 106;
 
-				riverSpritlingClaw.ItemTemplateID = "river_spritling_claw";
-                riverSpritlingClaw.IsDropable = false;
-                riverSpritlingClaw.IsSaleable = false;
-                riverSpritlingClaw.IsTradable = false;
+				riverSpritlingClaw.Object_Type = (int) eObjectType.GenericItem;
+
+				riverSpritlingClaw.Id_nb = "river_spritling_claw";
+				riverSpritlingClaw.IsPickable = true;
+				riverSpritlingClaw.IsDropable = false;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -419,10 +411,10 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(riverSpritlingClaw);
 			}
 
-			princessOberasHead = (GenericItemTemplate) GameServer.Database.FindObjectByKey(typeof (GenericItemTemplate), "princess_oberas_head");
+			princessOberasHead = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "princess_oberas_head");
 			if (princessOberasHead == null)
 			{
-				princessOberasHead = new GenericItemTemplate();
+				princessOberasHead = new ItemTemplate();
 				princessOberasHead.Name = "Princess Obera's Head";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + princessOberasHead.Name + " , creating it ...");
@@ -430,10 +422,11 @@ namespace DOL.GS.Quests.Albion
 				princessOberasHead.Weight = 15;
 				princessOberasHead.Model = 503;
 
-				princessOberasHead.ItemTemplateID = "princess_oberas_head";
-                princessOberasHead.IsDropable = false;
-                princessOberasHead.IsSaleable = false;
-                princessOberasHead.IsTradable = false;
+				princessOberasHead.Object_Type = (int) eObjectType.GenericItem;
+
+				princessOberasHead.Id_nb = "princess_oberas_head";
+				princessOberasHead.IsPickable = true;
+				princessOberasHead.IsDropable = false;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -443,10 +436,10 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			recruitsHelm = (HeadArmorTemplate) GameServer.Database.FindObjectByKey(typeof (HeadArmorTemplate), "recruits_studded_helm");
+			recruitsHelm = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_studded_helm");
 			if (recruitsHelm == null)
 			{
-				recruitsHelm = new HeadArmorTemplate();
+				recruitsHelm = new ItemTemplate();
 				recruitsHelm.Name = "Recruit's Studded Helm";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + recruitsHelm.Name + ", creating it ...");
@@ -455,23 +448,36 @@ namespace DOL.GS.Quests.Albion
 				recruitsHelm.Weight = 24;
 				recruitsHelm.Model = 824; // studded vest
 
-                recruitsHelm.ArmorFactor = 12;
-                recruitsHelm.ArmorLevel = eArmorLevel.Medium;
+				recruitsHelm.DPS_AF = 12; // Armour
+				recruitsHelm.SPD_ABS = 19; // Absorption
 
-				recruitsHelm.ItemTemplateID = "recruits_studded_helm";
-                recruitsHelm.Value = 900;
-                recruitsHelm.IsDropable = true;
-                recruitsHelm.IsSaleable = true;
-                recruitsHelm.IsTradable = true;
-
+				recruitsHelm.Object_Type = (int) eObjectType.Studded;
+				recruitsHelm.Item_Type = (int) eEquipmentItems.HEAD;
+				recruitsHelm.Id_nb = "recruits_studded_helm";
+				recruitsHelm.Gold = 0;
+				recruitsHelm.Silver = 9;
+				recruitsHelm.Copper = 0;
+				recruitsHelm.IsPickable = true;
+				recruitsHelm.IsDropable = true;
 				recruitsHelm.Color = 9; // red leather
-                recruitsHelm.Quality = 100;
 
 				recruitsHelm.Bonus = 5; // default bonus
 
-                recruitsHelm.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 4));
-                recruitsHelm.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Spirit, 1));
-                recruitsHelm.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 12));
+				recruitsHelm.Bonus1 = 4;
+				recruitsHelm.Bonus1Type = (int) eStat.DEX;
+
+				recruitsHelm.Bonus2 = 1;
+				recruitsHelm.Bonus2Type = (int) eResist.Spirit;
+
+				recruitsHelm.Bonus3 = 12;
+				recruitsHelm.Bonus3Type = (int) eProperty.MaxHealth;
+
+				recruitsHelm.Quality = 100;
+				recruitsHelm.MaxQuality = 100;
+				recruitsHelm.Condition = 1000;
+				recruitsHelm.MaxCondition = 1000;
+				recruitsHelm.Durability = 1000;
+				recruitsHelm.MaxDurability = 1000;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -481,10 +487,10 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			recruitsCap = (HeadArmorTemplate) GameServer.Database.FindObjectByKey(typeof (HeadArmorTemplate), "recruits_quilted_cap");
+			recruitsCap = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_quilted_cap");
 			if (recruitsCap == null)
 			{
-				recruitsCap = new HeadArmorTemplate();
+				recruitsCap = new ItemTemplate();
 				recruitsCap.Name = "Recruit's Quilted Cap";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + recruitsCap.Name + ", creating it ...");
@@ -493,23 +499,36 @@ namespace DOL.GS.Quests.Albion
 				recruitsCap.Weight = 8;
 				recruitsCap.Model = 822; // studded vest
 
-                recruitsCap.ArmorLevel = eArmorLevel.VeryLow;
-                recruitsCap.ArmorFactor = 6;
+				recruitsCap.DPS_AF = 6; // Armour
+				recruitsCap.SPD_ABS = 0; // Absorption
 
-				recruitsCap.ItemTemplateID = "recruits_quilted_cap";
-
-                recruitsCap.Value = 900;
-                recruitsCap.IsDropable = true;
-                recruitsCap.IsSaleable = true;
-                recruitsCap.IsTradable = true;
+				recruitsCap.Object_Type = (int) eObjectType.Cloth;
+				recruitsCap.Item_Type = (int) eEquipmentItems.HEAD;
+				recruitsCap.Id_nb = "recruits_quilted_cap";
+				recruitsCap.Gold = 0;
+				recruitsCap.Silver = 9;
+				recruitsCap.Copper = 0;
+				recruitsCap.IsPickable = true;
+				recruitsCap.IsDropable = true;
 				recruitsCap.Color = 27; // red cloth
-                recruitsCap.Quality = 100;
 
 				recruitsCap.Bonus = 5; // default bonus
 
-                recruitsCap.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 4));
-                recruitsCap.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Spirit, 1));
-                recruitsCap.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 20));
+				recruitsCap.Bonus1 = 4;
+				recruitsCap.Bonus1Type = (int) eStat.DEX;
+
+				recruitsCap.Bonus2 = 20;
+				recruitsCap.Bonus2Type = (int) eProperty.MaxHealth;
+
+				recruitsCap.Bonus3 = 1;
+				recruitsCap.Bonus3Type = (int) eResist.Spirit;
+
+				recruitsCap.Quality = 100;
+				recruitsCap.MaxQuality = 100;
+				recruitsCap.Condition = 1000;
+				recruitsCap.MaxCondition = 1000;
+				recruitsCap.Durability = 1000;
+				recruitsCap.MaxDurability = 1000;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -518,10 +537,10 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(recruitsCap);
 			}
 
-			recruitsRing = (RingTemplate) GameServer.Database.FindObjectByKey(typeof (RingTemplate), "recruits_silver_ring");
+			recruitsRing = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_silver_ring");
 			if (recruitsRing == null)
 			{
-				recruitsRing = new RingTemplate();
+				recruitsRing = new ItemTemplate();
 				recruitsRing.Name = "Recruit's Silver Ring";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + recruitsRing.Name + ", creating it ...");
@@ -530,18 +549,26 @@ namespace DOL.GS.Quests.Albion
 				recruitsRing.Weight = 2;
 				recruitsRing.Model = 103; // studded vest                
 
-				recruitsRing.ItemTemplateID = "recruits_silver_ring";
-                recruitsRing.Value = 900;
-
+				recruitsRing.Object_Type = (int) eObjectType.Magical;
+				recruitsRing.Item_Type = (int) eEquipmentItems.R_RING;
+				recruitsRing.Id_nb = "recruits_silver_ring";
+				recruitsRing.Gold = 0;
+				recruitsRing.Silver = 9;
+				recruitsRing.Copper = 0;
+				recruitsRing.IsPickable = true;
 				recruitsRing.IsDropable = true;
-                recruitsRing.IsSaleable = true;
-                recruitsRing.IsTradable = true;
 
 				recruitsRing.Bonus = 5; // default bonus
 
-                recruitsRing.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 20));
+				recruitsRing.Bonus1 = 20;
+				recruitsRing.Bonus1Type = (int) eProperty.MaxHealth;
 
 				recruitsRing.Quality = 100;
+				recruitsRing.MaxQuality = 100;
+				recruitsRing.Condition = 1000;
+				recruitsRing.MaxCondition = 1000;
+				recruitsRing.Durability = 1000;
+				recruitsRing.MaxDurability = 1000;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -571,10 +598,11 @@ namespace DOL.GS.Quests.Albion
 			GameEventMgr.AddHandler(princessObera, GameNPCEvent.OnAICallback, new DOLEventHandler(CheckNearPrincessObera));
 
 			/* Now we bring to masterFrederick the possibility to give this quest to players */
-            QuestMgr.AddQuestDescriptor(masterFrederick, typeof(BeginningOfWarDescriptor));
+			masterFrederick.AddQuestToGive(typeof (BeginningOfWar));
 
-            if (log.IsInfoEnabled)
-                log.Info("Quest \"" + questTitle + "\" initialized");
+			if (log.IsInfoEnabled)
+				if (log.IsInfoEnabled)
+					log.Info("Quest \"" + questTitle + "\" initialized");
 
 		}
 
@@ -608,7 +636,7 @@ namespace DOL.GS.Quests.Albion
 			GameEventMgr.RemoveHandler(princessObera, GameNPCEvent.OnAICallback, new DOLEventHandler(CheckNearPrincessObera));
 	
 			/* Now we remove to masterFrederick the possibility to give this quest to players */
-			QuestMgr.RemoveQuestDescriptor(masterFrederick, typeof(BeginningOfWarDescriptor));
+			masterFrederick.RemoveQuestToGive(typeof (BeginningOfWar));
 		}
 
 		protected static void CheckNearPrincessObera(DOLEvent e, object sender, EventArgs args)
@@ -671,13 +699,13 @@ namespace DOL.GS.Quests.Albion
 			if (player == null)
 				return;
 
-            if (QuestMgr.CanGiveQuest(typeof(BeginningOfWar), player, masterFrederick) <= 0)
+			if(masterFrederick.CanGiveQuest(typeof (BeginningOfWar), player)  <= 0)
 				return;
 
 			//We also check if the player is already doing the quest
 			BeginningOfWar quest = player.IsDoingQuest(typeof (BeginningOfWar)) as BeginningOfWar;
 
-			masterFrederick.TurnTo(player.Position);
+			masterFrederick.TurnTo(player);
 
 			//Did the player rightclick on NPC?
 			if (e == GameObjectEvent.Interact)
@@ -693,7 +721,7 @@ namespace DOL.GS.Quests.Albion
 					if (quest.Step == 1)
 					{
 						masterFrederick.SayTo(player, "There is an old wizard I know by the name of Dunwyn. Well, Master Dunwyn, to show respect. He patrols a small section of road in the Avalon Marsh. Take this note to Master Dunwyn explaining our situation. I'm sure he would be interested in one more fight for the good of Albion.");
-                        player.ReceiveItem(masterFrederick, scrollDunwyn.CreateInstance());
+						GiveItem(masterFrederick, player, scrollDunwyn);
 						quest.Step = 2;
 					}
 					else if (quest.Step == 13)
@@ -745,7 +773,7 @@ namespace DOL.GS.Quests.Albion
 							masterFrederick.SayTo(player, "There is an old wizard I know by the name of Dunwyn. Well, Master Dunwyn, to show respect. He patrols a small section of road in the Avalon Marsh at the guard tower near the big portal. Take this note to Master Dunwyn explaining our situation. I'm sure he would be interested in one more fight for the good of Albion.");
 							if (quest.Step == 1)
 							{
-                                player.ReceiveItem(masterFrederick, scrollDunwyn.CreateInstance());
+								GiveItem(masterFrederick, player, scrollDunwyn);
 								quest.Step = 2;
 							}
 							break;
@@ -809,6 +837,10 @@ namespace DOL.GS.Quests.Albion
 								quest.FinishQuest();
 							}
 							break;
+
+						case "abort":
+							player.Out.SendCustomDialog("Do you really want to abort this quest, \nall items gained during quest will be lost?", new CustomDialogResponse(CheckPlayerAbortQuest));
+							break;
 					}
 				}
 			}
@@ -827,13 +859,13 @@ namespace DOL.GS.Quests.Albion
 			if (player == null)
 				return;
 
-            if (QuestMgr.CanGiveQuest(typeof(BeginningOfWar), player, masterFrederick) <= 0)
+			if(masterFrederick.CanGiveQuest(typeof (BeginningOfWar), player)  <= 0)
 				return;
 
 			//We also check if the player is already doing the quest
 			BeginningOfWar quest = player.IsDoingQuest(typeof (BeginningOfWar)) as BeginningOfWar;
 
-			dunwyn.TurnTo(player.Position);
+			dunwyn.TurnTo(player);
 			if (e == GameLivingEvent.Interact)
 			{
 				if (quest != null)
@@ -870,7 +902,7 @@ namespace DOL.GS.Quests.Albion
 							dunwyn.SayTo(player, "Alright young'un. You get me those supplies there on that list, and I'll be sure to go help you defeat that thingiemabobber whateveritscalled over there near Camelot. Now go on. Get!");
 							if (quest.Step == 3)
 							{
-                                player.ReceiveItem(dunwyn, listDunwyn.CreateInstance());
+								GiveItem(player, listDunwyn);
 								quest.Step = 4;
 							}
 							break;
@@ -900,7 +932,7 @@ namespace DOL.GS.Quests.Albion
 			if (player == null)
 				return;
 
-            if (QuestMgr.CanGiveQuest(typeof(BeginningOfWar), player, masterFrederick) <= 0)
+			if(masterFrederick.CanGiveQuest(typeof (BeginningOfWar), player)  <= 0)
 				return;
 
 			//We also check if the player is already doing the quest
@@ -1005,14 +1037,13 @@ namespace DOL.GS.Quests.Albion
 				dunwynClone.Model = dunwyn.Model;
 				dunwynClone.GuildName = dunwyn.GuildName;
 				dunwynClone.Realm = dunwyn.Realm;
-				dunwynClone.RegionId = 1;
+				dunwynClone.CurrentRegionID = 1;
 				dunwynClone.Size = dunwyn.Size;
 				dunwynClone.Level = 15; // to make the figthing against fairy sorceress a bit more dramatic :)
 
-				dunwynClone.Position = new Point(
-					567604 + Util.Random(-150, 150),
-					509619 + Util.Random(-150, 150),
-					2813);
+				dunwynClone.X = 567604 + Util.Random(-150, 150);
+				dunwynClone.Y = 509619 + Util.Random(-150, 150);
+				dunwynClone.Z = 2813;
 				dunwynClone.Heading = 3292;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
@@ -1020,6 +1051,9 @@ namespace DOL.GS.Quests.Albion
 				template.AddNPCEquipment(eInventorySlot.RightHandWeapon, 19);
 				dunwynClone.Inventory = template.CloseTemplate();
 				dunwynClone.SwitchWeapon(GameLiving.eActiveWeaponSlot.Standard);
+
+//				dunwynClone.AddNPCEquipment((byte) eEquipmentItems.TORSO, 798, 0, 0, 0);
+//				dunwynClone.AddNPCEquipment((byte) eEquipmentItems.RIGHT_HAND, 19, 0, 0, 0);
 
 				StandardMobBrain brain = new StandardMobBrain();
 				brain.AggroLevel = 0;
@@ -1071,8 +1105,8 @@ namespace DOL.GS.Quests.Albion
 
 			UseSlotEventArgs uArgs = (UseSlotEventArgs) args;
 
-			GenericItem item = player.Inventory.GetItem((eInventorySlot)uArgs.Slot);
-			if (item != null && item.Name == listDunwyn.Name)
+			InventoryItem item = player.Inventory.GetItem((eInventorySlot)uArgs.Slot);
+			if (item != null && item.Id_nb == listDunwyn.Id_nb)
 			{
 				if (quest.Step >= 4 && quest.Step <= 8)
 				{
@@ -1095,7 +1129,7 @@ namespace DOL.GS.Quests.Albion
 				{
 					quest.Step = 9;
 					SendSystemMessage(player, "The List disappears in a puff of blue smoke.");
-                    player.Inventory.RemoveItem(player.Inventory.GetFirstItemByName(listDunwyn.Name, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack));
+					RemoveItem(player, listDunwyn);
 				}
 			}
 
@@ -1120,6 +1154,29 @@ namespace DOL.GS.Quests.Albion
 			}
 		}
 
+		/// <summary>
+		/// This method checks if a player qualifies for this quest
+		/// </summary>
+		/// <returns>true if qualified, false if not</returns>
+		public override bool CheckQuestQualification(GamePlayer player)
+		{
+			// if the player is already doing the quest his level is no longer of relevance
+			if (player.IsDoingQuest(typeof (BeginningOfWar)) != null)
+				return true;
+
+			// This checks below are only performed is player isn't doing quest already
+			if (player.HasFinishedQuest(typeof (IreFairyIre)) == 0)
+				return false;
+
+			if (!CheckPartAccessible(player, typeof (BeginningOfWar)))
+				return false;
+
+			if (player.Level < minimumLevel || player.Level > maximumLevel)
+				return false;
+
+			return true;
+		}
+
 		/* This is our callback hook that will be called when the player clicks
 		 * on any button in the quest offer dialog. We check if he accepts or
 		 * declines here...
@@ -1129,7 +1186,7 @@ namespace DOL.GS.Quests.Albion
 		{
 			//We recheck the qualification, because we don't talk to players
 			//who are not doing the quest
-            if (QuestMgr.CanGiveQuest(typeof(BeginningOfWar), player, masterFrederick) <= 0)
+			if(masterFrederick.CanGiveQuest(typeof (BeginningOfWar), player)  <= 0)
 				return;
 
 			BeginningOfWar quest = player.IsDoingQuest(typeof (BeginningOfWar)) as BeginningOfWar;
@@ -1144,13 +1201,36 @@ namespace DOL.GS.Quests.Albion
 			else
 			{
 				//Check if we can add the quest!
-                if (QuestMgr.CanGiveQuest(typeof(BeginningOfWar), player, masterFrederick) <= 0)
+				if (!masterFrederick.GiveQuest(typeof (BeginningOfWar), player, 1))
 					return;
 
 				GameEventMgr.AddHandler(player, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
 				GameEventMgr.AddHandler(player, GamePlayerEvent.UseSlot, new DOLEventHandler(PlayerUseSlot));
 
 				masterFrederick.SayTo(player, "Excellent recruit, simply excellent! Now listen, I know you won't be able to defeat this fairie army on your own. So I have a [solution] to this problem.");
+			}
+		}
+
+		/* This is our callback hook that will be called when the player clicks
+		 * on any button in the quest offer dialog. We check if he accepts or
+		 * declines here...
+		 */
+
+		private static void CheckPlayerAbortQuest(GamePlayer player, byte response)
+		{
+			BeginningOfWar quest = player.IsDoingQuest(typeof (BeginningOfWar)) as BeginningOfWar;
+
+			if (quest == null)
+				return;
+
+			if (response == 0x00)
+			{
+				masterFrederick.SayTo(player, "Good, no go out there and finish your work!");
+			}
+			else
+			{
+				SendSystemMessage(player, "Aborting Quest " + questTitle + ". You can start over again if you want.");
+				quest.AbortQuest();
 			}
 		}
 
@@ -1215,10 +1295,9 @@ namespace DOL.GS.Quests.Albion
 						return "[Step #18] Return to Master Frederick. Be sure to tell him that Master Dunwyn has [returned to the Marsh].";
 					case 19:
 						return "[Step #19] Wait for Master Frederick to reward you for your efforts in defeating the fairy army. If he forgets, ask him about the [reward].";
-                    default:
-                        return "[Step #" + Step + "] No Description entered for this step!";
 
 				}
+				return base.Description;
 			}
 		}
 
@@ -1232,10 +1311,10 @@ namespace DOL.GS.Quests.Albion
 			if (Step == 2 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == dunwyn.Name && gArgs.Item.Name == scrollDunwyn.Name)
+				if (gArgs.Target.Name == dunwyn.Name && gArgs.Item.Id_nb == scrollDunwyn.Id_nb)
 				{
 					dunwyn.SayTo(player, "What? What's this? A letter, for me? Hrm...Let me see what it says. Yes...one moment.");
-                    RemoveItemFromPlayer(gArgs.Item);
+					RemoveItem(dunwyn, player, scrollDunwyn);
 					Step = 3;
 					return;
 				}
@@ -1249,7 +1328,7 @@ namespace DOL.GS.Quests.Albion
 				if (gArgs.Target.Name == "swamp slime" && (Step == 5 || Step == 4))
 				{
 					SendSystemMessage("You slay the swamp slime and retrieve some of it's slime for Master Dunwyn.");
-                    GiveItemToPlayer(swampSlimeItem.CreateInstance());
+					GiveItem(gArgs.Target, player, swampSlimeItem);
 					Step = 6;
 					return;
 				}
@@ -1257,7 +1336,7 @@ namespace DOL.GS.Quests.Albion
 				if (gArgs.Target.Name == "river spriteling" && (Step == 7 || Step == 6))
 				{
 					SendSystemMessage("You slay the spriteling and get it's claw for Master Dunwyn.");
-                    GiveItemToPlayer(riverSpritlingClaw.CreateInstance());
+					GiveItem(gArgs.Target, player, riverSpritlingClaw);
 					Step = 8;
 					return;
 				}
@@ -1267,11 +1346,11 @@ namespace DOL.GS.Quests.Albion
 					if (Step == 8)
 					{
 						SendSystemMessage(player, "The List disappears in a puff of blue smoke.");
-						RemoveItemFromPlayer(listDunwyn);
+						RemoveItem(player, listDunwyn);
 					}
 
 					SendSystemMessage("You slay the rat and retrieve it's tail for Master Dunwyn.");
-                    GiveItemToPlayer(swampRatTail.CreateInstance());
+					GiveItem(gArgs.Target, player, swampRatTail);
 
 					Step = 10;
 					return;
@@ -1284,24 +1363,24 @@ namespace DOL.GS.Quests.Albion
 
 				if (gArgs.Target.Name == dunwyn.Name)
 				{
-					if (Step == 10 && gArgs.Item.Name == swampSlimeItem.Name)
+					if (Step == 10 && gArgs.Item.Id_nb == swampSlimeItem.Id_nb)
 					{
 						dunwyn.SayTo(player, "Well, least you managed to get a good amount of it. Ok, now give me the spriteling claw.");
-                        RemoveItemFromPlayer(gArgs.Item);
+						RemoveItem(dunwyn, player, swampSlimeItem);
 						Step = 11;
 						return;
 					}
-					else if (Step == 11 && gArgs.Item.Name == riverSpritlingClaw.Name)
+					else if (Step == 11 && gArgs.Item.Id_nb == riverSpritlingClaw.Id_nb)
 					{
 						dunwyn.SayTo(player, "Good, good. A nice sharp one. I like it. Now, give me the swamp rat tail. This had better be a good, thick one!");
-                        RemoveItemFromPlayer(gArgs.Item);
+						RemoveItem(dunwyn, player, riverSpritlingClaw);
 						Step = 12;
 						return;
 					}
-					else if (Step == 12 && gArgs.Item.Name == swampRatTail.Name)
+					else if (Step == 12 && gArgs.Item.Id_nb == swampRatTail.Id_nb)
 					{
 						dunwyn.SayTo(player, "Yes yes, this will have to do. Now listen here whipersnapper. I have a few things to do yet, so why don't you get yourself back to your trainer and I'll be along promptly. In fact, let me [teleport] you home. *hehe*");
-                        RemoveItemFromPlayer(gArgs.Item);
+						RemoveItem(dunwyn, player, swampRatTail);
 						Step = 13;
 						return;
 					}
@@ -1315,7 +1394,7 @@ namespace DOL.GS.Quests.Albion
 				if (gArgs.Target.Name == princessObera.Name)
 				{
 					SendSystemMessage("You slay the princess and take her head as proof.");
-                    GiveItemToPlayer(princessOberasHead.CreateInstance());
+					GiveItem(gArgs.Target, player, princessOberasHead);
 					Step = 17;
 
 					new RegionTimer(gArgs.Target, new RegionTimerCallback(TalkDunwynClone), 7000);
@@ -1326,14 +1405,31 @@ namespace DOL.GS.Quests.Albion
 			if (Step == 18 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == masterFrederick.Name && gArgs.Item.Name == princessOberasHead.Name)
+				if (gArgs.Target.Name == masterFrederick.Name && gArgs.Item.Id_nb == princessOberasHead.Id_nb)
 				{
 					masterFrederick.SayTo(player, "Excellent work recruit! My, this is a rather large fairy head, don't you think? Well, nevermind that. I'm sure we won't hear from those fairies ever again. And, as per our usual agreement, I have a [reward] for you.");
-                    RemoveItemFromPlayer(gArgs.Item);
+					RemoveItem(masterFrederick, player, princessOberasHead);
 					Step = 19;
 					return;
 				}
 			}
+		}
+
+		public override void AbortQuest()
+		{
+			ResetMasterDunwyn();
+
+			base.AbortQuest(); //Defined in Quest, changes the state, stores in DB etc ...
+
+			RemoveItem(m_questPlayer, scrollDunwyn, false);
+			RemoveItem(m_questPlayer, listDunwyn, false);
+			RemoveItem(m_questPlayer, swampRatTail, false);
+			RemoveItem(m_questPlayer, swampSlimeItem, false);
+			RemoveItem(m_questPlayer, riverSpritlingClaw, false);
+			RemoveItem(m_questPlayer, princessOberasHead, false);
+
+			GameEventMgr.RemoveHandler(m_questPlayer, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
+			GameEventMgr.RemoveHandler(m_questPlayer, GamePlayerEvent.UseSlot, new DOLEventHandler(PlayerUseSlot));
 		}
 
 		public override void FinishQuest()
@@ -1346,11 +1442,11 @@ namespace DOL.GS.Quests.Albion
 			m_questPlayer.GainExperience(507, 0, 0, true);
 			m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 8, Util.Random(50)), "You recieve {0} as a reward.");
 
-			if (m_questPlayer.HasAbilityToUseItem(recruitsHelm.CreateInstance() as HeadArmor))
-				GiveItemToPlayer(masterFrederick, recruitsHelm.CreateInstance());
+			if (m_questPlayer.HasAbilityToUseItem(recruitsHelm))
+				GiveItem(masterFrederick, m_questPlayer, recruitsHelm);
 			else
-				GiveItemToPlayer(masterFrederick, recruitsCap.CreateInstance());
-			GiveItemToPlayer(masterFrederick, recruitsRing.CreateInstance());
+				GiveItem(masterFrederick, m_questPlayer, recruitsCap);
+			GiveItem(masterFrederick, m_questPlayer, recruitsRing);
 
 			GameEventMgr.RemoveHandler(m_questPlayer, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
 			GameEventMgr.RemoveHandler(m_questPlayer, GamePlayerEvent.UseSlot, new DOLEventHandler(PlayerUseSlot));

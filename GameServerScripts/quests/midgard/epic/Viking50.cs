@@ -35,72 +35,13 @@
 
 using System;
 using System.Reflection;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
 
 namespace DOL.GS.Quests.Midgard
 {
-	/* The first thing we do, is to declare the quest requirement
-* class linked with the new Quest. To do this, we derive 
-* from the abstract class AbstractQuestDescriptor
-*/
-	public class Viking_50Descriptor : AbstractQuestDescriptor
-	{
-		/* This is the type of the quest class linked with 
-		 * this requirement class, you must override the 
-		 * base method like that
-		 */
-		public override Type LinkedQuestType
-		{
-			get { return typeof(Viking_50); }
-		}
-
-		/* This value is used to retrieves the minimum level needed
-		 *  to be able to make this quest. Override it only if you need, 
-		 * the default value is 1
-		 */
-		public override int MinLevel
-		{
-			get { return 50; }
-		}
-
-		/* This method is used to know if the player is qualified to 
-		 * do the quest. The base method always test his level and
-		 * how many time the quest has been done. Override it only if 
-		 * you want to add a custom test (here we test also the class name)
-		 */
-		public override bool CheckQuestQualification(GamePlayer player)
-		{
-			// if the player is already doing the quest his level is no longer of relevance
-			if (player.IsDoingQuest(typeof(Viking_50)) != null)
-				return true;
-
-			if (player.CharacterClass.ID != (byte)eCharacterClass.Warrior &&
-				player.CharacterClass.ID != (byte)eCharacterClass.Berserker &&
-				player.CharacterClass.ID != (byte)eCharacterClass.Thane &&
-				player.CharacterClass.ID != (byte)eCharacterClass.Skald &&
-				player.CharacterClass.ID != (byte)eCharacterClass.Savage &&
-				player.CharacterClassID != (byte)eCharacterClass.Valkyrie)
-				return false;
-
-			// This checks below are only performed is player isn't doing quest already
-
-			//if (player.HasFinishedQuest(typeof(Academy_47)) == 0) return false;
-
-			//if (!CheckPartAccessible(player,typeof(CityOfCamelot)))
-			//	return false;
-			return base.CheckQuestQualification(player);
-		}
-	}
-
-
-	/* The second thing we do, is to declare the class we create
-	 * as Quest. We must make it persistant using attributes, to
-	 * do this, we derive from the abstract class AbstractQuest
-	 */
-	[NHibernate.Mapping.Attributes.Subclass(NameType = typeof(Viking_50), ExtendsType = typeof(AbstractQuest))]
 	public class Viking_50 : BaseQuest
 	{
 		/// <summary>
@@ -109,62 +50,62 @@ namespace DOL.GS.Quests.Midgard
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		protected const string questTitle = "An End to the Daggers";
+		protected const int minimumLevel = 50;
+		protected const int maximumLevel = 50;
 
 		private static GameNPC Lynnleigh = null; // Start NPC
-		private static GameMob Ydenia = null; // Mob to kill
+		private static GameNPC Ydenia = null; // Mob to kill
 		private static GameNPC Elizabeth = null; // reward NPC
 
-		private static GenericItemTemplate tome_enchantments = null;
-		private static GenericItemTemplate sealed_pouch = null;
+		private static ItemTemplate tome_enchantments = null;
+		private static ItemTemplate sealed_pouch = null;
+		private static ItemTemplate WarriorEpicBoots = null;
+		private static ItemTemplate WarriorEpicHelm = null;
+		private static ItemTemplate WarriorEpicGloves = null;
+		private static ItemTemplate WarriorEpicLegs = null;
+		private static ItemTemplate WarriorEpicArms = null;
+		private static ItemTemplate WarriorEpicVest = null;
+		private static ItemTemplate BerserkerEpicBoots = null;
+		private static ItemTemplate BerserkerEpicHelm = null;
+		private static ItemTemplate BerserkerEpicGloves = null;
+		private static ItemTemplate BerserkerEpicLegs = null;
+		private static ItemTemplate BerserkerEpicArms = null;
+		private static ItemTemplate BerserkerEpicVest = null;
+		private static ItemTemplate ThaneEpicBoots = null;
+		private static ItemTemplate ThaneEpicHelm = null;
+		private static ItemTemplate ThaneEpicGloves = null;
+		private static ItemTemplate ThaneEpicLegs = null;
+		private static ItemTemplate ThaneEpicArms = null;
+		private static ItemTemplate ThaneEpicVest = null;
+		private static ItemTemplate SkaldEpicBoots = null;
+		private static ItemTemplate SkaldEpicHelm = null;
+		private static ItemTemplate SkaldEpicGloves = null;
+		private static ItemTemplate SkaldEpicVest = null;
+		private static ItemTemplate SkaldEpicLegs = null;
+		private static ItemTemplate SkaldEpicArms = null;
+		private static ItemTemplate SavageEpicBoots = null;
+		private static ItemTemplate SavageEpicHelm = null;
+		private static ItemTemplate SavageEpicGloves = null;
+		private static ItemTemplate SavageEpicVest = null;
+		private static ItemTemplate SavageEpicLegs = null;
+		private static ItemTemplate SavageEpicArms = null;
 
-		private static FeetArmorTemplate WarriorEpicBoots = null;
-		private static HeadArmorTemplate WarriorEpicHelm = null;
-		private static HandsArmorTemplate WarriorEpicGloves = null;
-		private static LegsArmorTemplate WarriorEpicLegs = null;
-		private static ArmsArmorTemplate WarriorEpicArms = null;
-		private static TorsoArmorTemplate WarriorEpicVest = null;
+		// Constructors
+		public Viking_50() : base()
+		{
+		}
 
-		private static FeetArmorTemplate BerserkerEpicBoots = null;
-		private static HeadArmorTemplate BerserkerEpicHelm = null;
-		private static HandsArmorTemplate BerserkerEpicGloves = null;
-		private static LegsArmorTemplate BerserkerEpicLegs = null;
-		private static ArmsArmorTemplate BerserkerEpicArms = null;
-		private static TorsoArmorTemplate BerserkerEpicVest = null;
+		public Viking_50(GamePlayer questingPlayer) : base(questingPlayer)
+		{
+		}
 
-		private static FeetArmorTemplate ThaneEpicBoots = null;
-		private static HeadArmorTemplate ThaneEpicHelm = null;
-		private static HandsArmorTemplate ThaneEpicGloves = null;
-		private static LegsArmorTemplate ThaneEpicLegs = null;
-		private static ArmsArmorTemplate ThaneEpicArms = null;
-		private static TorsoArmorTemplate ThaneEpicVest = null;
+		public Viking_50(GamePlayer questingPlayer, int step) : base(questingPlayer, step)
+		{
+		}
 
-		private static FeetArmorTemplate SkaldEpicBoots = null;
-		private static HeadArmorTemplate SkaldEpicHelm = null;
-		private static HandsArmorTemplate SkaldEpicGloves = null;
-		private static LegsArmorTemplate SkaldEpicLegs = null;
-		private static ArmsArmorTemplate SkaldEpicArms = null;
-		private static TorsoArmorTemplate SkaldEpicVest = null;
-
-		private static FeetArmorTemplate SavageEpicBoots = null;
-		private static HeadArmorTemplate SavageEpicHelm = null;
-		private static HandsArmorTemplate SavageEpicGloves = null;
-		private static LegsArmorTemplate SavageEpicLegs = null;
-		private static ArmsArmorTemplate SavageEpicArms = null;
-		private static TorsoArmorTemplate SavageEpicVest = null;
-
-		private static FeetArmorTemplate ValkyrieEpicBoots = null;
-		private static HeadArmorTemplate ValkyrieEpicHelm = null;
-		private static HandsArmorTemplate ValkyrieEpicGloves = null;
-		private static LegsArmorTemplate ValkyrieEpicLegs = null;
-		private static ArmsArmorTemplate ValkyrieEpicArms = null;
-		private static TorsoArmorTemplate ValkyrieEpicVest = null;
-
-		private static GameNPC[] WarriorTrainers = null;
-		private static GameNPC[] BerserkerTrainers = null;
-		private static GameNPC[] ThaneTrainers = null;
-		private static GameNPC[] SkaldTrainers = null;
-		private static GameNPC[] SavageTrainers = null;
-		private static GameNPC[] ValkyrieTrainers = null;
+		public Viking_50(GamePlayer questingPlayer, DBQuest dbQuest) : base(questingPlayer, dbQuest)
+		{
+		}
 
 		[ScriptLoadedEvent]
 		public static void ScriptLoaded(DOLEvent e, object sender, EventArgs args)
@@ -184,11 +125,13 @@ namespace DOL.GS.Quests.Midgard
 				Lynnleigh.Model = 217;
 				Lynnleigh.Name = "Lynnleigh";
 				Lynnleigh.GuildName = "";
-				Lynnleigh.Realm = (byte)eRealm.Midgard;
-				Lynnleigh.RegionId = 100;
+				Lynnleigh.Realm = (byte) eRealm.Midgard;
+				Lynnleigh.CurrentRegionID = 100;
 				Lynnleigh.Size = 51;
 				Lynnleigh.Level = 50;
-				Lynnleigh.Position = new Point(760085, 758453, 4736);
+				Lynnleigh.X = 760085;
+				Lynnleigh.Y = 758453;
+				Lynnleigh.Z = 4736;
 				Lynnleigh.Heading = 2197;
 				Lynnleigh.AddToWorld();
 				if (SAVE_INTO_DATABASE)
@@ -209,11 +152,13 @@ namespace DOL.GS.Quests.Midgard
 				Elizabeth.Model = 217;
 				Elizabeth.Name = "Elizabeth";
 				Elizabeth.GuildName = "Enchanter";
-				Elizabeth.Realm = (byte)eRealm.Midgard;
-				Elizabeth.RegionId = 100;
+				Elizabeth.Realm = (byte) eRealm.Midgard;
+				Elizabeth.CurrentRegionID = 100;
 				Elizabeth.Size = 51;
 				Elizabeth.Level = 41;
-				Elizabeth.Position = new Point(802849, 727081, 4681);
+				Elizabeth.X = 802849;
+				Elizabeth.Y = 727081;
+				Elizabeth.Z = 4681;
 				Elizabeth.Heading = 2480;
 				Elizabeth.AddToWorld();
 				if (SAVE_INTO_DATABASE)
@@ -236,15 +181,16 @@ namespace DOL.GS.Quests.Midgard
 				Ydenia.Model = 217;
 				Ydenia.Name = "Ydenia of Seithkona";
 				Ydenia.GuildName = "";
-				Ydenia.Realm = (byte)eRealm.None;
-				Ydenia.RegionId = 100;
+				Ydenia.Realm = (byte) eRealm.None;
+				Ydenia.CurrentRegionID = 100;
 				Ydenia.Size = 100;
 				Ydenia.Level = 65;
-				Ydenia.Position = new Point(637680, 767189, 4480);
+				Ydenia.X = 637680;
+				Ydenia.Y = 767189;
+				Ydenia.Z = 4480;
 				Ydenia.Heading = 2156;
 				Ydenia.Flags = 1;
 				Ydenia.MaxSpeedBase = 200;
-				Ydenia.RespawnInterval = 5 * 60 * 1000;
 				Ydenia.AddToWorld();
 				if (SAVE_INTO_DATABASE)
 				{
@@ -253,1365 +199,1373 @@ namespace DOL.GS.Quests.Midgard
 
 			}
 			else
-				Ydenia = npcs[0] as GameMob;
+				Ydenia = npcs[0];
 			// end npc
 
 			#endregion
 
 			#region defineItems
 
-			tome_enchantments = (GenericItemTemplate)GameServer.Database.FindObjectByKey(typeof(GenericItemTemplate), "tome_enchantments");
+			tome_enchantments = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "tome_enchantments");
 			if (tome_enchantments == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Tome of Enchantments , creating it ...");
-				tome_enchantments = new GenericItemTemplate();
-				tome_enchantments.ItemTemplateID = "tome_enchantments";
+				tome_enchantments = new ItemTemplate();
+				tome_enchantments.Id_nb = "tome_enchantments";
 				tome_enchantments.Name = "Tome of Enchantments";
 				tome_enchantments.Level = 8;
+				tome_enchantments.Item_Type = 0;
 				tome_enchantments.Model = 500;
 				tome_enchantments.IsDropable = false;
-				tome_enchantments.IsSaleable = false;
-				tome_enchantments.IsTradable = false;
+				tome_enchantments.IsPickable = false;
+				tome_enchantments.DPS_AF = 0;
+				tome_enchantments.SPD_ABS = 0;
+				tome_enchantments.Object_Type = 0;
+				tome_enchantments.Hand = 0;
+				tome_enchantments.Type_Damage = 0;
+				tome_enchantments.Quality = 100;
+				tome_enchantments.MaxQuality = 100;
 				tome_enchantments.Weight = 12;
-
 				if (SAVE_INTO_DATABASE)
 				{
 					GameServer.Database.AddNewObject(tome_enchantments);
 				}
+
 			}
 
-			sealed_pouch = (GenericItemTemplate)GameServer.Database.FindObjectByKey(typeof(GenericItemTemplate), "sealed_pouch");
+			sealed_pouch = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "sealed_pouch");
 			if (sealed_pouch == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Sealed Pouch , creating it ...");
-				sealed_pouch = new GenericItemTemplate();
-				sealed_pouch.ItemTemplateID = "sealed_pouch";
+				sealed_pouch = new ItemTemplate();
+				sealed_pouch.Id_nb = "sealed_pouch";
 				sealed_pouch.Name = "Sealed Pouch";
 				sealed_pouch.Level = 8;
+				sealed_pouch.Item_Type = 29;
 				sealed_pouch.Model = 488;
 				sealed_pouch.IsDropable = false;
-				sealed_pouch.IsSaleable = false;
-				sealed_pouch.IsTradable = false;
+				sealed_pouch.IsPickable = false;
+				sealed_pouch.DPS_AF = 0;
+				sealed_pouch.SPD_ABS = 0;
+				sealed_pouch.Object_Type = 41;
+				sealed_pouch.Hand = 0;
+				sealed_pouch.Type_Damage = 0;
+				sealed_pouch.Quality = 100;
+				sealed_pouch.MaxQuality = 100;
 				sealed_pouch.Weight = 12;
 				if (SAVE_INTO_DATABASE)
 				{
 					GameServer.Database.AddNewObject(sealed_pouch);
 				}
 			}
-			ArmorTemplate i = null;
-			#region Warrior
-			WarriorEpicBoots = (FeetArmorTemplate)GameServer.Database.FindObjectByKey(typeof(FeetArmorTemplate), "WarriorEpicBoots");
+
+			WarriorEpicBoots = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "WarriorEpicBoots");
 			if (WarriorEpicBoots == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Warrior Epic Boots , creating it ...");
-				i = new FeetArmorTemplate();
-				i.ItemTemplateID = "WarriorEpicBoots";
-				i.Name = "Tyr's Might Boots";
-				i.Level = 50;
-				i.Model = 780;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.High;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Warrior);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Midgard;
+				WarriorEpicBoots = new ItemTemplate();
+				WarriorEpicBoots.Id_nb = "WarriorEpicBoots";
+				WarriorEpicBoots.Name = "Tyr's Might Boots";
+				WarriorEpicBoots.Level = 50;
+				WarriorEpicBoots.Item_Type = 23;
+				WarriorEpicBoots.Model = 780;
+				WarriorEpicBoots.IsDropable = true;
+				WarriorEpicBoots.IsPickable = true;
+				WarriorEpicBoots.DPS_AF = 100;
+				WarriorEpicBoots.SPD_ABS = 27;
+				WarriorEpicBoots.Object_Type = 35;
+				WarriorEpicBoots.Quality = 100;
+				WarriorEpicBoots.MaxQuality = 100;
+				WarriorEpicBoots.Weight = 22;
+				WarriorEpicBoots.Bonus = 35;
+				WarriorEpicBoots.MaxCondition = 50000;
+				WarriorEpicBoots.MaxDurability = 50000;
+				WarriorEpicBoots.Durability = 50000;
+				WarriorEpicBoots.Condition = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 16));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Quickness, 15));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Heat, 10));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Energy, 10));
+				WarriorEpicBoots.Bonus1 = 16;
+				WarriorEpicBoots.Bonus1Type = (int) eStat.CON;
+
+				WarriorEpicBoots.Bonus2 = 15;
+				WarriorEpicBoots.Bonus2Type = (int) eStat.QUI;
+
+				WarriorEpicBoots.Bonus3 = 10;
+				WarriorEpicBoots.Bonus3Type = (int) eResist.Heat;
+
+				WarriorEpicBoots.Bonus4 = 10;
+				WarriorEpicBoots.Bonus4Type = (int) eResist.Energy;
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(i);
+					GameServer.Database.AddNewObject(WarriorEpicBoots);
 				}
-				WarriorEpicBoots = (FeetArmorTemplate)i;
-			}
 
-			WarriorEpicHelm = (HeadArmorTemplate)GameServer.Database.FindObjectByKey(typeof(HeadArmorTemplate), "WarriorEpicHelm");
+			}
+//end item
+			WarriorEpicHelm = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "WarriorEpicHelm");
 			if (WarriorEpicHelm == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Warrior Epic Helm , creating it ...");
-				i = new HeadArmorTemplate();
-				i.ItemTemplateID = "WarriorEpicHelm";
-				i.Name = "Tyr's Might Coif";
-				i.Level = 50;
-				i.Model = 832; //NEED TO WORK ON..
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.High;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Warrior);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Midgard;
+				WarriorEpicHelm = new ItemTemplate();
+				WarriorEpicHelm.Id_nb = "WarriorEpicHelm";
+				WarriorEpicHelm.Name = "Tyr's Might Coif";
+				WarriorEpicHelm.Level = 50;
+				WarriorEpicHelm.Item_Type = 21;
+				WarriorEpicHelm.Model = 832; //NEED TO WORK ON..
+				WarriorEpicHelm.IsDropable = true;
+				WarriorEpicHelm.IsPickable = true;
+				WarriorEpicHelm.DPS_AF = 100;
+				WarriorEpicHelm.SPD_ABS = 27;
+				WarriorEpicHelm.Object_Type = 35;
+				WarriorEpicHelm.Quality = 100;
+				WarriorEpicHelm.MaxQuality = 100;
+				WarriorEpicHelm.Weight = 22;
+				WarriorEpicHelm.Bonus = 35;
+				WarriorEpicHelm.MaxCondition = 50000;
+				WarriorEpicHelm.MaxDurability = 50000;
+				WarriorEpicHelm.Condition = 50000;
+				WarriorEpicHelm.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 12));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 12));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 12));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Crush, 11));
+				WarriorEpicHelm.Bonus1 = 12;
+				WarriorEpicHelm.Bonus1Type = (int) eStat.STR;
+
+				WarriorEpicHelm.Bonus2 = 12;
+				WarriorEpicHelm.Bonus2Type = (int) eStat.CON;
+
+				WarriorEpicHelm.Bonus3 = 12;
+				WarriorEpicHelm.Bonus3Type = (int) eStat.DEX;
+
+				WarriorEpicHelm.Bonus4 = 11;
+				WarriorEpicHelm.Bonus4Type = (int) eResist.Crush;
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(i);
+					GameServer.Database.AddNewObject(WarriorEpicHelm);
 				}
-				WarriorEpicHelm = (HeadArmorTemplate)i;
-			}
 
-			WarriorEpicGloves = (HandsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(HandsArmorTemplate), "WarriorEpicGloves");
+			}
+//end item
+			WarriorEpicGloves = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "WarriorEpicGloves");
 			if (WarriorEpicGloves == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Warrior Epic Gloves , creating it ...");
-				i = new HandsArmorTemplate();
-				i.ItemTemplateID = "WarriorEpicGloves";
-				i.Name = "Tyr's Might Gloves";
-				i.Level = 50;
-				i.Model = 779;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.High;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Warrior);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Midgard;
+				WarriorEpicGloves = new ItemTemplate();
+				WarriorEpicGloves.Id_nb = "WarriorEpicGloves";
+				WarriorEpicGloves.Name = "Tyr's Might Gloves";
+				WarriorEpicGloves.Level = 50;
+				WarriorEpicGloves.Item_Type = 22;
+				WarriorEpicGloves.Model = 779;
+				WarriorEpicGloves.IsDropable = true;
+				WarriorEpicGloves.IsPickable = true;
+				WarriorEpicGloves.DPS_AF = 100;
+				WarriorEpicGloves.SPD_ABS = 27;
+				WarriorEpicGloves.Object_Type = 35;
+				WarriorEpicGloves.Quality = 100;
+				WarriorEpicGloves.MaxQuality = 100;
+				WarriorEpicGloves.Weight = 22;
+				WarriorEpicGloves.Bonus = 35;
+				WarriorEpicGloves.MaxCondition = 50000;
+				WarriorEpicGloves.MaxDurability = 50000;
+				WarriorEpicGloves.Condition = 50000;
+				WarriorEpicGloves.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Shields, 3));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Parry, 3));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 15));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 13));
+				WarriorEpicGloves.Bonus1 = 3;
+				WarriorEpicGloves.Bonus1Type = (int) eProperty.Skill_Shields;
+
+				WarriorEpicGloves.Bonus2 = 3;
+				WarriorEpicGloves.Bonus2Type = (int) eProperty.Skill_Parry;
+
+				WarriorEpicGloves.Bonus3 = 15;
+				WarriorEpicGloves.Bonus3Type = (int) eStat.STR;
+
+				WarriorEpicGloves.Bonus4 = 13;
+				WarriorEpicGloves.Bonus4Type = (int) eStat.DEX;
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(i);
+					GameServer.Database.AddNewObject(WarriorEpicGloves);
 				}
-				WarriorEpicGloves = (HandsArmorTemplate)i;
+
 			}
 
-			WarriorEpicVest = (TorsoArmorTemplate)GameServer.Database.FindObjectByKey(typeof(TorsoArmorTemplate), "WarriorEpicVest");
+			WarriorEpicVest = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "WarriorEpicVest");
 			if (WarriorEpicVest == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Warrior Epic Vest , creating it ...");
-				i = new TorsoArmorTemplate();
-				i.ItemTemplateID = "WarriorEpicVest";
-				i.Name = "Tyr's Might Hauberk";
-				i.Level = 50;
-				i.Model = 776;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.High;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Warrior);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Midgard;
+				WarriorEpicVest = new ItemTemplate();
+				WarriorEpicVest.Id_nb = "WarriorEpicVest";
+				WarriorEpicVest.Name = "Tyr's Might Hauberk";
+				WarriorEpicVest.Level = 50;
+				WarriorEpicVest.Item_Type = 25;
+				WarriorEpicVest.Model = 776;
+				WarriorEpicVest.IsDropable = true;
+				WarriorEpicVest.IsPickable = true;
+				WarriorEpicVest.DPS_AF = 100;
+				WarriorEpicVest.SPD_ABS = 27;
+				WarriorEpicVest.Object_Type = 35;
+				WarriorEpicVest.Quality = 100;
+				WarriorEpicVest.MaxQuality = 100;
+				WarriorEpicVest.Weight = 22;
+				WarriorEpicVest.Bonus = 35;
+				WarriorEpicVest.MaxCondition = 50000;
+				WarriorEpicVest.MaxDurability = 50000;
+				WarriorEpicVest.Condition = 50000;
+				WarriorEpicVest.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 13));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 13));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Matter, 6));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 30));
+				WarriorEpicVest.Bonus1 = 13;
+				WarriorEpicVest.Bonus1Type = (int) eStat.STR;
+
+				WarriorEpicVest.Bonus2 = 13;
+				WarriorEpicVest.Bonus2Type = (int) eStat.DEX;
+
+				WarriorEpicVest.Bonus3 = 6;
+				WarriorEpicVest.Bonus3Type = (int) eResist.Matter;
+
+				WarriorEpicVest.Bonus4 = 30;
+				WarriorEpicVest.Bonus4Type = (int) eProperty.MaxHealth;
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(i);
+					GameServer.Database.AddNewObject(WarriorEpicVest);
 				}
-				WarriorEpicVest = (TorsoArmorTemplate)i;
+
 			}
 
-			WarriorEpicLegs = (LegsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(LegsArmorTemplate), "WarriorEpicLegs");
+			WarriorEpicLegs = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "WarriorEpicLegs");
 			if (WarriorEpicLegs == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Warrior Epic Legs , creating it ...");
-				i = new LegsArmorTemplate();
-				i.ItemTemplateID = "WarriorEpicLegs";
-				i.Name = "Tyr's Might Legs";
-				i.Level = 50;
-				i.Model = 777;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.High;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Warrior);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Midgard;
+				WarriorEpicLegs = new ItemTemplate();
+				WarriorEpicLegs.Id_nb = "WarriorEpicLegs";
+				WarriorEpicLegs.Name = "Tyr's Might Legs";
+				WarriorEpicLegs.Level = 50;
+				WarriorEpicLegs.Item_Type = 27;
+				WarriorEpicLegs.Model = 777;
+				WarriorEpicLegs.IsDropable = true;
+				WarriorEpicLegs.IsPickable = true;
+				WarriorEpicLegs.DPS_AF = 100;
+				WarriorEpicLegs.SPD_ABS = 27;
+				WarriorEpicLegs.Object_Type = 35;
+				WarriorEpicLegs.Quality = 100;
+				WarriorEpicLegs.MaxQuality = 100;
+				WarriorEpicLegs.Weight = 22;
+				WarriorEpicLegs.Bonus = 35;
+				WarriorEpicLegs.MaxCondition = 50000;
+				WarriorEpicLegs.MaxDurability = 50000;
+				WarriorEpicLegs.Condition = 50000;
+				WarriorEpicLegs.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 22));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 15));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Cold, 8));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Body, 8));
+				WarriorEpicLegs.Bonus1 = 22;
+				WarriorEpicLegs.Bonus1Type = (int) eStat.CON;
+
+				WarriorEpicLegs.Bonus2 = 15;
+				WarriorEpicLegs.Bonus2Type = (int) eStat.STR;
+
+				WarriorEpicLegs.Bonus3 = 8;
+				WarriorEpicLegs.Bonus3Type = (int) eResist.Cold;
+
+				WarriorEpicLegs.Bonus4 = 8;
+				WarriorEpicLegs.Bonus4Type = (int) eResist.Body;
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(i);
+					GameServer.Database.AddNewObject(WarriorEpicLegs);
 				}
-				WarriorEpicLegs = (LegsArmorTemplate)i;
+
 			}
 
-			WarriorEpicArms = (ArmsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(ArmsArmorTemplate), "WarriorEpicArms");
+			WarriorEpicArms = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "WarriorEpicArms");
 			if (WarriorEpicArms == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Warrior Epic Arms , creating it ...");
-				i = new ArmsArmorTemplate();
-				i.ItemTemplateID = "WarriorEpicArms";
-				i.Name = "Tyr's Might Sleeves";
-				i.Level = 50;
-				i.Model = 778;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.High;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Warrior);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Midgard;
+				WarriorEpicArms = new ItemTemplate();
+				WarriorEpicArms.Id_nb = "WarriorEpicArms";
+				WarriorEpicArms.Name = "Tyr's Might Sleeves";
+				WarriorEpicArms.Level = 50;
+				WarriorEpicArms.Item_Type = 28;
+				WarriorEpicArms.Model = 778;
+				WarriorEpicArms.IsDropable = true;
+				WarriorEpicArms.IsPickable = true;
+				WarriorEpicArms.DPS_AF = 100;
+				WarriorEpicArms.SPD_ABS = 27;
+				WarriorEpicArms.Object_Type = 35;
+				WarriorEpicArms.Quality = 100;
+				WarriorEpicArms.MaxQuality = 100;
+				WarriorEpicArms.Weight = 22;
+				WarriorEpicArms.Bonus = 35;
+				WarriorEpicArms.MaxCondition = 50000;
+				WarriorEpicArms.MaxDurability = 50000;
+				WarriorEpicArms.Condition = 50000;
+				WarriorEpicArms.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 22));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Quickness, 15));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Crush, 8));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Slash, 9));
+				WarriorEpicArms.Bonus1 = 22;
+				WarriorEpicArms.Bonus1Type = (int) eStat.DEX;
+
+				WarriorEpicArms.Bonus2 = 15;
+				WarriorEpicArms.Bonus2Type = (int) eStat.QUI;
+
+				WarriorEpicArms.Bonus3 = 8;
+				WarriorEpicArms.Bonus3Type = (int) eResist.Crush;
+
+				WarriorEpicArms.Bonus4 = 8;
+				WarriorEpicArms.Bonus4Type = (int) eResist.Slash;
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(i);
+					GameServer.Database.AddNewObject(WarriorEpicArms);
 				}
-				WarriorEpicArms = (ArmsArmorTemplate)i;
+
 			}
-			#endregion
-			#region Berserker
-			BerserkerEpicBoots = (FeetArmorTemplate)GameServer.Database.FindObjectByKey(typeof(FeetArmorTemplate), "BerserkerEpicBoots");
+			BerserkerEpicBoots = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "BerserkerEpicBoots");
 			if (BerserkerEpicBoots == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Berserker Epic Boots , creating it ...");
-				i = new FeetArmorTemplate();
-				i.ItemTemplateID = "BerserkerEpicBoots";
-				i.Name = "Courage Bound Boots";
-				i.Level = 50;
-				i.Model = 755;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.Medium;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Berserker);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Midgard;
+				BerserkerEpicBoots = new ItemTemplate();
+				BerserkerEpicBoots.Id_nb = "BerserkerEpicBoots";
+				BerserkerEpicBoots.Name = "Courage Bound Boots";
+				BerserkerEpicBoots.Level = 50;
+				BerserkerEpicBoots.Item_Type = 23;
+				BerserkerEpicBoots.Model = 755;
+				BerserkerEpicBoots.IsDropable = true;
+				BerserkerEpicBoots.IsPickable = true;
+				BerserkerEpicBoots.DPS_AF = 100;
+				BerserkerEpicBoots.SPD_ABS = 19;
+				BerserkerEpicBoots.Object_Type = 34;
+				BerserkerEpicBoots.Quality = 100;
+				BerserkerEpicBoots.MaxQuality = 100;
+				BerserkerEpicBoots.Weight = 22;
+				BerserkerEpicBoots.Bonus = 35;
+				BerserkerEpicBoots.MaxCondition = 50000;
+				BerserkerEpicBoots.MaxDurability = 50000;
+				BerserkerEpicBoots.Condition = 50000;
+				BerserkerEpicBoots.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 19));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Quickness, 15));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Spirit, 8));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Energy, 8));
+				BerserkerEpicBoots.Bonus1 = 19;
+				BerserkerEpicBoots.Bonus1Type = (int) eStat.DEX;
+
+				BerserkerEpicBoots.Bonus2 = 15;
+				BerserkerEpicBoots.Bonus2Type = (int) eStat.QUI;
+
+				BerserkerEpicBoots.Bonus3 = 8;
+				BerserkerEpicBoots.Bonus3Type = (int) eResist.Spirit;
+
+				BerserkerEpicBoots.Bonus4 = 8;
+				BerserkerEpicBoots.Bonus4Type = (int) eResist.Energy;
 
 				if (SAVE_INTO_DATABASE)
 				{
 					GameServer.Database.AddNewObject(BerserkerEpicBoots);
 				}
-				BerserkerEpicBoots = (FeetArmorTemplate)i;
-			}
 
-			BerserkerEpicHelm = (HeadArmorTemplate)GameServer.Database.FindObjectByKey(typeof(HeadArmorTemplate), "BerserkerEpicHelm");
+			}
+//end item
+			BerserkerEpicHelm = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "BerserkerEpicHelm");
 			if (BerserkerEpicHelm == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Berserker Epic Helm , creating it ...");
-				i = new HeadArmorTemplate();
-				i.ItemTemplateID = "BerserkerEpicHelm";
-				i.Name = "Courage Bound Helm";
-				i.Level = 50;
-				i.Model = 829; //NEED TO WORK ON..
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.Medium;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Berserker);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Midgard;
+				BerserkerEpicHelm = new ItemTemplate();
+				BerserkerEpicHelm.Id_nb = "BerserkerEpicHelm";
+				BerserkerEpicHelm.Name = "Courage Bound Helm";
+				BerserkerEpicHelm.Level = 50;
+				BerserkerEpicHelm.Item_Type = 21;
+				BerserkerEpicHelm.Model = 829; //NEED TO WORK ON..
+				BerserkerEpicHelm.IsDropable = true;
+				BerserkerEpicHelm.IsPickable = true;
+				BerserkerEpicHelm.DPS_AF = 100;
+				BerserkerEpicHelm.SPD_ABS = 19;
+				BerserkerEpicHelm.Object_Type = 34;
+				BerserkerEpicHelm.Quality = 100;
+				BerserkerEpicHelm.MaxQuality = 100;
+				BerserkerEpicHelm.Weight = 22;
+				BerserkerEpicHelm.Bonus = 35;
+				BerserkerEpicHelm.MaxCondition = 50000;
+				BerserkerEpicHelm.MaxDurability = 50000;
+				BerserkerEpicHelm.Condition = 50000;
+				BerserkerEpicHelm.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 10));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 15));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 10));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Quickness, 10));
+				BerserkerEpicHelm.Bonus1 = 10;
+				BerserkerEpicHelm.Bonus1Type = (int) eStat.STR;
+
+				BerserkerEpicHelm.Bonus2 = 15;
+				BerserkerEpicHelm.Bonus2Type = (int) eStat.CON;
+
+				BerserkerEpicHelm.Bonus3 = 10;
+				BerserkerEpicHelm.Bonus3Type = (int) eStat.DEX;
+
+				BerserkerEpicHelm.Bonus4 = 10;
+				BerserkerEpicHelm.Bonus4Type = (int) eStat.QUI;
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(i);
+					GameServer.Database.AddNewObject(BerserkerEpicHelm);
 				}
-				BerserkerEpicHelm = (HeadArmorTemplate)i;
 			}
-
-			BerserkerEpicGloves = (HandsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(HandsArmorTemplate), "BerserkerEpicGloves");
+//end item
+			BerserkerEpicGloves = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "BerserkerEpicGloves");
 			if (BerserkerEpicGloves == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Berserker Epic Gloves , creating it ...");
-				i = new HandsArmorTemplate();
-				i.ItemTemplateID = "BerserkerEpicGloves";
-				i.Name = "Courage Bound Gloves";
-				i.Level = 50;
-				i.Model = 754;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.Medium;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Berserker);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Midgard;
+				BerserkerEpicGloves = new ItemTemplate();
+				BerserkerEpicGloves.Id_nb = "BerserkerEpicGloves";
+				BerserkerEpicGloves.Name = "Courage Bound Gloves";
+				BerserkerEpicGloves.Level = 50;
+				BerserkerEpicGloves.Item_Type = 22;
+				BerserkerEpicGloves.Model = 754;
+				BerserkerEpicGloves.IsDropable = true;
+				BerserkerEpicGloves.IsPickable = true;
+				BerserkerEpicGloves.DPS_AF = 100;
+				BerserkerEpicGloves.SPD_ABS = 19;
+				BerserkerEpicGloves.Object_Type = 34;
+				BerserkerEpicGloves.Quality = 100;
+				BerserkerEpicGloves.MaxQuality = 100;
+				BerserkerEpicGloves.Weight = 22;
+				BerserkerEpicGloves.Bonus = 35;
+				BerserkerEpicGloves.MaxCondition = 50000;
+				BerserkerEpicGloves.MaxDurability = 50000;
+				BerserkerEpicGloves.Condition = 50000;
+				BerserkerEpicGloves.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Left_Axe, 3));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Parry, 3));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 12));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 33));
+				BerserkerEpicGloves.Bonus1 = 3;
+				BerserkerEpicGloves.Bonus1Type = (int) eProperty.Skill_Left_Axe;
+
+				BerserkerEpicGloves.Bonus2 = 3;
+				BerserkerEpicGloves.Bonus2Type = (int) eProperty.Skill_Parry;
+
+				BerserkerEpicGloves.Bonus3 = 12;
+				BerserkerEpicGloves.Bonus3Type = (int) eStat.STR;
+
+				BerserkerEpicGloves.Bonus4 = 33;
+				BerserkerEpicGloves.Bonus4Type = (int) eProperty.MaxHealth;
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(i);
+					GameServer.Database.AddNewObject(BerserkerEpicGloves);
 				}
-				BerserkerEpicGloves = (HandsArmorTemplate)i;
 			}
 
-			BerserkerEpicVest = (TorsoArmorTemplate)GameServer.Database.FindObjectByKey(typeof(TorsoArmorTemplate), "BerserkerEpicVest");
+			BerserkerEpicVest = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "BerserkerEpicVest");
 			if (BerserkerEpicVest == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Berserker Epic Vest , creating it ...");
-				i = new TorsoArmorTemplate();
-				i.ItemTemplateID = "BerserkerEpicVest";
-				i.Name = "Courage Bound Jerkin";
-				i.Level = 50;
-				i.Model = 751;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.Medium;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Berserker);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Midgard;
+				BerserkerEpicVest = new ItemTemplate();
+				BerserkerEpicVest.Id_nb = "BerserkerEpicVest";
+				BerserkerEpicVest.Name = "Courage Bound Jerkin";
+				BerserkerEpicVest.Level = 50;
+				BerserkerEpicVest.Item_Type = 25;
+				BerserkerEpicVest.Model = 751;
+				BerserkerEpicVest.IsDropable = true;
+				BerserkerEpicVest.IsPickable = true;
+				BerserkerEpicVest.DPS_AF = 100;
+				BerserkerEpicVest.SPD_ABS = 19;
+				BerserkerEpicVest.Object_Type = 34;
+				BerserkerEpicVest.Quality = 100;
+				BerserkerEpicVest.MaxQuality = 100;
+				BerserkerEpicVest.Weight = 22;
+				BerserkerEpicVest.Bonus = 35;
+				BerserkerEpicVest.MaxCondition = 50000;
+				BerserkerEpicVest.MaxDurability = 50000;
+				BerserkerEpicVest.Condition = 50000;
+				BerserkerEpicVest.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 13));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 13));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Body, 6));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 30));
+				BerserkerEpicVest.Bonus1 = 13;
+				BerserkerEpicVest.Bonus1Type = (int) eStat.STR;
+
+				BerserkerEpicVest.Bonus2 = 13;
+				BerserkerEpicVest.Bonus2Type = (int) eStat.DEX;
+
+				BerserkerEpicVest.Bonus3 = 6;
+				BerserkerEpicVest.Bonus3Type = (int) eResist.Body;
+
+				BerserkerEpicVest.Bonus4 = 30;
+				BerserkerEpicVest.Bonus4Type = (int) eProperty.MaxHealth;
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(i);
+					GameServer.Database.AddNewObject(BerserkerEpicVest);
 				}
-				BerserkerEpicVest = (TorsoArmorTemplate)i;
 			}
 
-			BerserkerEpicLegs = (LegsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(LegsArmorTemplate), "BerserkerEpicLegs");
+			BerserkerEpicLegs = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "BerserkerEpicLegs");
 			if (BerserkerEpicLegs == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Berserker Epic Legs , creating it ...");
-				i = new LegsArmorTemplate();
-				i.ItemTemplateID = "BerserkerEpicLegs";
-				i.Name = "Courage Bound Leggings";
-				i.Level = 50;
-				i.Model = 752;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.Medium;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Berserker);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Midgard;
+				BerserkerEpicLegs = new ItemTemplate();
+				BerserkerEpicLegs.Id_nb = "BerserkerEpicLegs";
+				BerserkerEpicLegs.Name = "Courage Bound Leggings";
+				BerserkerEpicLegs.Level = 50;
+				BerserkerEpicLegs.Item_Type = 27;
+				BerserkerEpicLegs.Model = 752;
+				BerserkerEpicLegs.IsDropable = true;
+				BerserkerEpicLegs.IsPickable = true;
+				BerserkerEpicLegs.DPS_AF = 100;
+				BerserkerEpicLegs.SPD_ABS = 19;
+				BerserkerEpicLegs.Object_Type = 34;
+				BerserkerEpicLegs.Quality = 100;
+				BerserkerEpicLegs.MaxQuality = 100;
+				BerserkerEpicLegs.Weight = 22;
+				BerserkerEpicLegs.Bonus = 35;
+				BerserkerEpicLegs.MaxCondition = 50000;
+				BerserkerEpicLegs.MaxDurability = 50000;
+				BerserkerEpicLegs.Condition = 50000;
+				BerserkerEpicLegs.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 15));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 15));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 7));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Slash, 12));
+				BerserkerEpicLegs.Bonus1 = 15;
+				BerserkerEpicLegs.Bonus1Type = (int) eStat.STR;
+
+				BerserkerEpicLegs.Bonus2 = 15;
+				BerserkerEpicLegs.Bonus2Type = (int) eStat.CON;
+
+				BerserkerEpicLegs.Bonus3 = 7;
+				BerserkerEpicLegs.Bonus3Type = (int) eStat.DEX;
+
+				BerserkerEpicLegs.Bonus4 = 12;
+				BerserkerEpicLegs.Bonus4Type = (int) eResist.Slash;
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(i);
+					GameServer.Database.AddNewObject(BerserkerEpicLegs);
 				}
-				BerserkerEpicLegs = (LegsArmorTemplate)i;
 			}
 
-			BerserkerEpicArms = (ArmsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(ArmsArmorTemplate), "BerserkerEpicArms");
+			BerserkerEpicArms = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "BerserkerEpicArms");
 			if (BerserkerEpicArms == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Berserker Epic Arms , creating it ...");
-				i = new ArmsArmorTemplate();
-				i.ItemTemplateID = "BerserkerEpicArms";
-				i.Name = "Courage Bound Sleeves";
-				i.Level = 50;
-				i.Model = 753;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.Medium;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Berserker);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Midgard;
+				BerserkerEpicArms = new ItemTemplate();
+				BerserkerEpicArms.Id_nb = "BerserkerEpicArms";
+				BerserkerEpicArms.Name = "Courage Bound Sleeves";
+				BerserkerEpicArms.Level = 50;
+				BerserkerEpicArms.Item_Type = 28;
+				BerserkerEpicArms.Model = 753;
+				BerserkerEpicArms.IsDropable = true;
+				BerserkerEpicArms.IsPickable = true;
+				BerserkerEpicArms.DPS_AF = 100;
+				BerserkerEpicArms.SPD_ABS = 19;
+				BerserkerEpicArms.Object_Type = 34;
+				BerserkerEpicArms.Quality = 100;
+				BerserkerEpicArms.MaxQuality = 100;
+				BerserkerEpicArms.Weight = 22;
+				BerserkerEpicArms.Bonus = 35;
+				BerserkerEpicArms.MaxCondition = 50000;
+				BerserkerEpicArms.MaxDurability = 50000;
+				BerserkerEpicArms.Condition = 50000;
+				BerserkerEpicArms.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 19));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 15));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Thrust, 8));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Heat, 8));
+				BerserkerEpicArms.Bonus1 = 19;
+				BerserkerEpicArms.Bonus1Type = (int) eStat.STR;
+
+				BerserkerEpicArms.Bonus2 = 15;
+				BerserkerEpicArms.Bonus2Type = (int) eStat.CON;
+
+				BerserkerEpicArms.Bonus3 = 8;
+				BerserkerEpicArms.Bonus3Type = (int) eResist.Thrust;
+
+				BerserkerEpicArms.Bonus4 = 8;
+				BerserkerEpicArms.Bonus4Type = (int) eResist.Heat;
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(i);
+					GameServer.Database.AddNewObject(BerserkerEpicArms);
 				}
-				BerserkerEpicArms = (ArmsArmorTemplate)i;
+
 			}
-			#endregion
-			#region Thane
-			ThaneEpicBoots = (FeetArmorTemplate)GameServer.Database.FindObjectByKey(typeof(FeetArmorTemplate), "ThaneEpicBoots");
+			ThaneEpicBoots = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ThaneEpicBoots");
 			if (ThaneEpicBoots == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Thane Epic Boots , creating it ...");
-				i = new FeetArmorTemplate();
-				i.ItemTemplateID = "ThaneEpicBoots";
-				i.Name = "Storm Touched Boots";
-				i.Level = 50;
-				i.Model = 791;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.High;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Thane);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Midgard;
+				ThaneEpicBoots = new ItemTemplate();
+				ThaneEpicBoots.Id_nb = "ThaneEpicBoots";
+				ThaneEpicBoots.Name = "Storm Touched Boots";
+				ThaneEpicBoots.Level = 50;
+				ThaneEpicBoots.Item_Type = 23;
+				ThaneEpicBoots.Model = 791;
+				ThaneEpicBoots.IsDropable = true;
+				ThaneEpicBoots.IsPickable = true;
+				ThaneEpicBoots.DPS_AF = 100;
+				ThaneEpicBoots.SPD_ABS = 27;
+				ThaneEpicBoots.Object_Type = 35;
+				ThaneEpicBoots.Quality = 100;
+				ThaneEpicBoots.MaxQuality = 100;
+				ThaneEpicBoots.Weight = 22;
+				ThaneEpicBoots.Bonus = 35;
+				ThaneEpicBoots.MaxCondition = 50000;
+				ThaneEpicBoots.MaxDurability = 50000;
+				ThaneEpicBoots.Condition = 50000;
+				ThaneEpicBoots.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 13));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 13));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Quickness, 13));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Matter, 8));
+				ThaneEpicBoots.Bonus1 = 13;
+				ThaneEpicBoots.Bonus1Type = (int) eStat.CON;
+
+				ThaneEpicBoots.Bonus2 = 13;
+				ThaneEpicBoots.Bonus2Type = (int) eStat.DEX;
+
+				ThaneEpicBoots.Bonus3 = 13;
+				ThaneEpicBoots.Bonus3Type = (int) eStat.QUI;
+
+				ThaneEpicBoots.Bonus4 = 8;
+				ThaneEpicBoots.Bonus4Type = (int) eResist.Matter;
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(i);
+					GameServer.Database.AddNewObject(ThaneEpicBoots);
 				}
-				ThaneEpicBoots = (FeetArmorTemplate)i;
-			}
 
-			ThaneEpicHelm = (HeadArmorTemplate)GameServer.Database.FindObjectByKey(typeof(HeadArmorTemplate), "ThaneEpicHelm");
+			}
+//end item
+			ThaneEpicHelm = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ThaneEpicHelm");
 			if (ThaneEpicHelm == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Thane Epic Helm , creating it ...");
-				i = new HeadArmorTemplate();
-				i.ItemTemplateID = "ThaneEpicHelm";
-				i.Name = "Storm Touched Coif";
-				i.Level = 50;
-				i.Model = 832; //NEED TO WORK ON..
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.High;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Thane);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Midgard;
+				ThaneEpicHelm = new ItemTemplate();
+				ThaneEpicHelm.Id_nb = "ThaneEpicHelm";
+				ThaneEpicHelm.Name = "Storm Touched Coif";
+				ThaneEpicHelm.Level = 50;
+				ThaneEpicHelm.Item_Type = 21;
+				ThaneEpicHelm.Model = 832; //NEED TO WORK ON..
+				ThaneEpicHelm.IsDropable = true;
+				ThaneEpicHelm.IsPickable = true;
+				ThaneEpicHelm.DPS_AF = 100;
+				ThaneEpicHelm.SPD_ABS = 27;
+				ThaneEpicHelm.Object_Type = 35;
+				ThaneEpicHelm.Quality = 100;
+				ThaneEpicHelm.MaxQuality = 100;
+				ThaneEpicHelm.Weight = 22;
+				ThaneEpicHelm.Bonus = 35;
+				ThaneEpicHelm.MaxCondition = 50000;
+				ThaneEpicHelm.MaxDurability = 50000;
+				ThaneEpicHelm.Condition = 50000;
+				ThaneEpicHelm.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Stormcalling, 4));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 18));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Spirit, 4));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxMana, 6));
+				ThaneEpicHelm.Bonus1 = 4;
+				ThaneEpicHelm.Bonus1Type = (int) eProperty.Skill_Stormcalling;
+
+				ThaneEpicHelm.Bonus2 = 18;
+				ThaneEpicHelm.Bonus2Type = (int) eStat.CON;
+
+				ThaneEpicHelm.Bonus3 = 4;
+				ThaneEpicHelm.Bonus3Type = (int) eResist.Spirit;
+
+				ThaneEpicHelm.Bonus4 = 6;
+				ThaneEpicHelm.Bonus4Type = (int) eProperty.PowerRegenerationRate;
+
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(i);
+					GameServer.Database.AddNewObject(ThaneEpicHelm);
 				}
-				ThaneEpicHelm = (HeadArmorTemplate)i;
-			}
 
-			ThaneEpicGloves = (HandsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(HandsArmorTemplate), "ThaneEpicGloves");
+			}
+//end item
+			ThaneEpicGloves = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ThaneEpicGloves");
 			if (ThaneEpicGloves == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Thane Epic Gloves , creating it ...");
-				i = new HandsArmorTemplate();
-				i.ItemTemplateID = "ThaneEpicGloves";
-				i.Name = "Storm Touched Gloves";
-				i.Level = 50;
-				i.Model = 790;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.High;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Thane);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Midgard;
+				ThaneEpicGloves = new ItemTemplate();
+				ThaneEpicGloves.Id_nb = "ThaneEpicGloves";
+				ThaneEpicGloves.Name = "Storm Touched Gloves";
+				ThaneEpicGloves.Level = 50;
+				ThaneEpicGloves.Item_Type = 22;
+				ThaneEpicGloves.Model = 790;
+				ThaneEpicGloves.IsDropable = true;
+				ThaneEpicGloves.IsPickable = true;
+				ThaneEpicGloves.DPS_AF = 100;
+				ThaneEpicGloves.SPD_ABS = 27;
+				ThaneEpicGloves.Object_Type = 35;
+				ThaneEpicGloves.Quality = 100;
+				ThaneEpicGloves.MaxQuality = 100;
+				ThaneEpicGloves.Weight = 22;
+				ThaneEpicGloves.Bonus = 35;
+				ThaneEpicGloves.MaxCondition = 50000;
+				ThaneEpicGloves.MaxDurability = 50000;
+				ThaneEpicGloves.Condition = 50000;
+				ThaneEpicGloves.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Sword, 3));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Hammer, 3));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Axe, 3));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 19));
+				ThaneEpicGloves.Bonus1 = 3;
+				ThaneEpicGloves.Bonus1Type = (int) eProperty.Skill_Sword;
+
+				ThaneEpicGloves.Bonus2 = 3;
+				ThaneEpicGloves.Bonus2Type = (int) eProperty.Skill_Hammer;
+
+				ThaneEpicGloves.Bonus3 = 3;
+				ThaneEpicGloves.Bonus3Type = (int) eProperty.Skill_Axe;
+
+				ThaneEpicGloves.Bonus4 = 19;
+				ThaneEpicGloves.Bonus4Type = (int) eStat.STR;
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(i);
+					GameServer.Database.AddNewObject(ThaneEpicGloves);
 				}
-				ThaneEpicGloves = (HandsArmorTemplate)i;
+
 			}
 
-			ThaneEpicVest = (TorsoArmorTemplate)GameServer.Database.FindObjectByKey(typeof(TorsoArmorTemplate), "ThaneEpicVest");
+			ThaneEpicVest = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ThaneEpicVest");
 			if (ThaneEpicVest == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Thane Epic Vest , creating it ...");
-				i = new TorsoArmorTemplate();
-				i.ItemTemplateID = "ThaneEpicVest";
-				i.Name = "Storm Touched Hauberk";
-				i.Level = 50;
-				i.Model = 787;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.High;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Thane);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Midgard;
+				ThaneEpicVest = new ItemTemplate();
+				ThaneEpicVest.Id_nb = "ThaneEpicVest";
+				ThaneEpicVest.Name = "Storm Touched Hauberk";
+				ThaneEpicVest.Level = 50;
+				ThaneEpicVest.Item_Type = 25;
+				ThaneEpicVest.Model = 787;
+				ThaneEpicVest.IsDropable = true;
+				ThaneEpicVest.IsPickable = true;
+				ThaneEpicVest.DPS_AF = 100;
+				ThaneEpicVest.SPD_ABS = 27;
+				ThaneEpicVest.Object_Type = 35;
+				ThaneEpicVest.Quality = 100;
+				ThaneEpicVest.MaxQuality = 100;
+				ThaneEpicVest.Weight = 22;
+				ThaneEpicVest.Bonus = 35;
+				ThaneEpicVest.MaxCondition = 50000;
+				ThaneEpicVest.MaxDurability = 50000;
+				ThaneEpicVest.Condition = 50000;
+				ThaneEpicVest.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 13));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 13));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Slash, 6));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 30));
+				ThaneEpicVest.Bonus1 = 13;
+				ThaneEpicVest.Bonus1Type = (int) eStat.STR;
+
+				ThaneEpicVest.Bonus2 = 13;
+				ThaneEpicVest.Bonus2Type = (int) eStat.CON;
+
+				ThaneEpicVest.Bonus3 = 6;
+				ThaneEpicVest.Bonus3Type = (int) eResist.Slash;
+
+				ThaneEpicVest.Bonus4 = 30;
+				ThaneEpicVest.Bonus4Type = (int) eProperty.MaxHealth;
+
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(i);
+					GameServer.Database.AddNewObject(ThaneEpicVest);
 				}
-				ThaneEpicLegs = (LegsArmorTemplate)i;
 			}
 
-			ThaneEpicLegs = (LegsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(LegsArmorTemplate), "ThaneEpicLegs");
+			ThaneEpicLegs = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ThaneEpicLegs");
 			if (ThaneEpicLegs == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Thane Epic Legs , creating it ...");
-				i = new LegsArmorTemplate();
-				i.ItemTemplateID = "ThaneEpicLegs";
-				i.Name = "Storm Touched Legs";
-				i.Level = 50;
-				i.Model = 788;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.High;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Thane);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Midgard;
+				ThaneEpicLegs = new ItemTemplate();
+				ThaneEpicLegs.Id_nb = "ThaneEpicLegs";
+				ThaneEpicLegs.Name = "Storm Touched Legs";
+				ThaneEpicLegs.Level = 50;
+				ThaneEpicLegs.Item_Type = 27;
+				ThaneEpicLegs.Model = 788;
+				ThaneEpicLegs.IsDropable = true;
+				ThaneEpicLegs.IsPickable = true;
+				ThaneEpicLegs.DPS_AF = 100;
+				ThaneEpicLegs.SPD_ABS = 27;
+				ThaneEpicLegs.Object_Type = 35;
+				ThaneEpicLegs.Quality = 100;
+				ThaneEpicLegs.MaxQuality = 100;
+				ThaneEpicLegs.Weight = 22;
+				ThaneEpicLegs.Bonus = 35;
+				ThaneEpicLegs.MaxCondition = 50000;
+				ThaneEpicLegs.MaxDurability = 50000;
+				ThaneEpicLegs.Condition = 50000;
+				ThaneEpicLegs.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 19));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Piety, 15));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Crush, 8));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Heat, 8));
+				ThaneEpicLegs.Bonus1 = 19;
+				ThaneEpicLegs.Bonus1Type = (int) eStat.CON;
+
+				ThaneEpicLegs.Bonus2 = 15;
+				ThaneEpicLegs.Bonus2Type = (int) eStat.PIE;
+
+				ThaneEpicLegs.Bonus3 = 8;
+				ThaneEpicLegs.Bonus3Type = (int) eResist.Crush;
+
+				ThaneEpicLegs.Bonus4 = 8;
+				ThaneEpicLegs.Bonus4Type = (int) eResist.Heat;
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(i);
+					GameServer.Database.AddNewObject(ThaneEpicLegs);
 				}
-				ThaneEpicLegs = (LegsArmorTemplate)i;
 			}
 
-			ThaneEpicArms = (ArmsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(ArmsArmorTemplate), "ThaneEpicArms");
+			ThaneEpicArms = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ThaneEpicArms");
 			if (ThaneEpicArms == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Thane Epic Arms , creating it ...");
-				i = new ArmsArmorTemplate();
-				i.ItemTemplateID = "ThaneEpicArms";
-				i.Name = "Storm Touched Sleeves";
-				i.Level = 50;
-				i.Model = 789;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.High;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Thane);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Midgard;
+				ThaneEpicArms = new ItemTemplate();
+				ThaneEpicArms.Id_nb = "ThaneEpicArms";
+				ThaneEpicArms.Name = "Storm Touched Sleeves";
+				ThaneEpicArms.Level = 50;
+				ThaneEpicArms.Item_Type = 28;
+				ThaneEpicArms.Model = 789;
+				ThaneEpicArms.IsDropable = true;
+				ThaneEpicArms.IsPickable = true;
+				ThaneEpicArms.DPS_AF = 100;
+				ThaneEpicArms.SPD_ABS = 27;
+				ThaneEpicArms.Object_Type = 35;
+				ThaneEpicArms.Quality = 100;
+				ThaneEpicArms.MaxQuality = 100;
+				ThaneEpicArms.Weight = 22;
+				ThaneEpicArms.Bonus = 35;
+				ThaneEpicArms.MaxCondition = 50000;
+				ThaneEpicArms.MaxDurability = 50000;
+				ThaneEpicArms.Condition = 50000;
+				ThaneEpicArms.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 18));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Quickness, 16));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Thrust, 8));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Body, 8));
+				ThaneEpicArms.Bonus1 = 18;
+				ThaneEpicArms.Bonus1Type = (int) eStat.STR;
+
+				ThaneEpicArms.Bonus2 = 16;
+				ThaneEpicArms.Bonus2Type = (int) eStat.QUI;
+
+				ThaneEpicArms.Bonus3 = 8;
+				ThaneEpicArms.Bonus3Type = (int) eResist.Thrust;
+
+				ThaneEpicArms.Bonus4 = 8;
+				ThaneEpicArms.Bonus4Type = (int) eResist.Body;
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(i);
+					GameServer.Database.AddNewObject(ThaneEpicArms);
 				}
-				ThaneEpicArms = (ArmsArmorTemplate)i;
 			}
-			#endregion
-			#region Skald
 			//Valhalla Touched Boots
-			SkaldEpicBoots = (FeetArmorTemplate)GameServer.Database.FindObjectByKey(typeof(FeetArmorTemplate), "SkaldEpicBoots");
+			SkaldEpicBoots = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "SkaldEpicBoots");
 			if (SkaldEpicBoots == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Skalds Epic Boots , creating it ...");
-				i = new FeetArmorTemplate();
-				i.ItemTemplateID = "SkaldEpicBoots";
-				i.Name = "Battlesung Boots";
-				i.Level = 50;
-				i.Model = 775;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.High;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Skald);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Midgard;
+				SkaldEpicBoots = new ItemTemplate();
+				SkaldEpicBoots.Id_nb = "SkaldEpicBoots";
+				SkaldEpicBoots.Name = "Battlesung Boots";
+				SkaldEpicBoots.Level = 50;
+				SkaldEpicBoots.Item_Type = 23;
+				SkaldEpicBoots.Model = 775;
+				SkaldEpicBoots.IsDropable = true;
+				SkaldEpicBoots.IsPickable = true;
+				SkaldEpicBoots.DPS_AF = 100;
+				SkaldEpicBoots.SPD_ABS = 27;
+				SkaldEpicBoots.Object_Type = 35;
+				SkaldEpicBoots.Quality = 100;
+				SkaldEpicBoots.MaxQuality = 100;
+				SkaldEpicBoots.Weight = 22;
+				SkaldEpicBoots.Bonus = 35;
+				SkaldEpicBoots.MaxCondition = 50000;
+				SkaldEpicBoots.MaxDurability = 50000;
+				SkaldEpicBoots.Condition = 50000;
+				SkaldEpicBoots.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 13));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Quickness, 13));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Cold, 10));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 24));
+				SkaldEpicBoots.Bonus1 = 13;
+				SkaldEpicBoots.Bonus1Type = (int) eStat.CON;
+
+				SkaldEpicBoots.Bonus2 = 13;
+				SkaldEpicBoots.Bonus2Type = (int) eStat.QUI;
+
+				SkaldEpicBoots.Bonus3 = 10;
+				SkaldEpicBoots.Bonus3Type = (int) eResist.Cold;
+
+				SkaldEpicBoots.Bonus4 = 24;
+				SkaldEpicBoots.Bonus4Type = (int) eProperty.MaxHealth;
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(i);
+					GameServer.Database.AddNewObject(SkaldEpicBoots);
 				}
-				SkaldEpicBoots = (FeetArmorTemplate)i;
 			}
-
+//end item
 			//Valhalla Touched Coif 
-			SkaldEpicHelm = (HeadArmorTemplate)GameServer.Database.FindObjectByKey(typeof(HeadArmorTemplate), "SkaldEpicHelm");
+			SkaldEpicHelm = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "SkaldEpicHelm");
 			if (SkaldEpicHelm == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Skalds Epic Helm , creating it ...");
-				i = new HeadArmorTemplate();
-				i.ItemTemplateID = "SkaldEpicHelm";
-				i.Name = "Battlesung Coif";
-				i.Level = 50;
-				i.Model = 832; //NEED TO WORK ON..
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.High;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Skald);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Midgard;
+				SkaldEpicHelm = new ItemTemplate();
+				SkaldEpicHelm.Id_nb = "SkaldEpicHelm";
+				SkaldEpicHelm.Name = "Battlesung Coif";
+				SkaldEpicHelm.Level = 50;
+				SkaldEpicHelm.Item_Type = 21;
+				SkaldEpicHelm.Model = 832; //NEED TO WORK ON..
+				SkaldEpicHelm.IsDropable = true;
+				SkaldEpicHelm.IsPickable = true;
+				SkaldEpicHelm.DPS_AF = 100;
+				SkaldEpicHelm.SPD_ABS = 27;
+				SkaldEpicHelm.Object_Type = 35;
+				SkaldEpicHelm.Quality = 100;
+				SkaldEpicHelm.MaxQuality = 100;
+				SkaldEpicHelm.Weight = 22;
+				SkaldEpicHelm.Bonus = 35;
+				SkaldEpicHelm.MaxCondition = 50000;
+				SkaldEpicHelm.MaxDurability = 50000;
+				SkaldEpicHelm.Condition = 50000;
+				SkaldEpicHelm.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Battlesongs, 5));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Charisma, 15));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 33));
+				SkaldEpicHelm.Bonus1 = 5;
+				SkaldEpicHelm.Bonus1Type = (int) eProperty.Skill_Battlesongs;
+
+				SkaldEpicHelm.Bonus2 = 15;
+				SkaldEpicHelm.Bonus2Type = (int) eStat.CHR;
+
+				SkaldEpicHelm.Bonus3 = 33;
+				SkaldEpicHelm.Bonus3Type = (int) eProperty.MaxHealth;
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(i);
+					GameServer.Database.AddNewObject(SkaldEpicHelm);
 				}
-				SkaldEpicHelm = (HeadArmorTemplate)i;
 			}
-
+//end item
 			//Valhalla Touched Gloves 
-			SkaldEpicGloves = (HandsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(HandsArmorTemplate), "SkaldEpicGloves");
+			SkaldEpicGloves = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "SkaldEpicGloves");
 			if (SkaldEpicGloves == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Skalds Epic Gloves , creating it ...");
-				i = new HandsArmorTemplate();
-				i.ItemTemplateID = "SkaldEpicGloves";
-				i.Name = "Battlesung Gloves";
-				i.Level = 50;
-				i.Model = 774;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.High;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Skald);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Midgard;
+				SkaldEpicGloves = new ItemTemplate();
+				SkaldEpicGloves.Id_nb = "SkaldEpicGloves";
+				SkaldEpicGloves.Name = "Battlesung Gloves";
+				SkaldEpicGloves.Level = 50;
+				SkaldEpicGloves.Item_Type = 22;
+				SkaldEpicGloves.Model = 774;
+				SkaldEpicGloves.IsDropable = true;
+				SkaldEpicGloves.IsPickable = true;
+				SkaldEpicGloves.DPS_AF = 100;
+				SkaldEpicGloves.SPD_ABS = 27;
+				SkaldEpicGloves.Object_Type = 35;
+				SkaldEpicGloves.Quality = 100;
+				SkaldEpicGloves.MaxQuality = 100;
+				SkaldEpicGloves.Weight = 22;
+				SkaldEpicGloves.Bonus = 35;
+				SkaldEpicGloves.MaxCondition = 50000;
+				SkaldEpicGloves.MaxDurability = 50000;
+				SkaldEpicGloves.Condition = 50000;
+				SkaldEpicGloves.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 18));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 15));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Body, 8));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Energy, 10));
+				SkaldEpicGloves.Bonus1 = 18;
+				SkaldEpicGloves.Bonus1Type = (int) eStat.STR;
+
+				SkaldEpicGloves.Bonus2 = 15;
+				SkaldEpicGloves.Bonus2Type = (int) eStat.DEX;
+
+				SkaldEpicGloves.Bonus3 = 8;
+				SkaldEpicGloves.Bonus3Type = (int) eResist.Body;
+
+				SkaldEpicGloves.Bonus4 = 10;
+				SkaldEpicGloves.Bonus4Type = (int) eResist.Energy;
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(i);
+					GameServer.Database.AddNewObject(SkaldEpicGloves);
 				}
-				SkaldEpicGloves = (HandsArmorTemplate)i;
-			}
 
+			}
 			//Valhalla Touched Hauberk 
-			SkaldEpicVest = (TorsoArmorTemplate)GameServer.Database.FindObjectByKey(typeof(TorsoArmorTemplate), "SkaldEpicVest");
+			SkaldEpicVest = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "SkaldEpicVest");
 			if (SkaldEpicVest == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Skalds Epic Vest , creating it ...");
-				i = new TorsoArmorTemplate();
-				i.ItemTemplateID = "SkaldEpicVest";
-				i.Name = "Battlesung Hauberk";
-				i.Level = 50;
-				i.Model = 771;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.High;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Skald);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Midgard;
+				SkaldEpicVest = new ItemTemplate();
+				SkaldEpicVest.Id_nb = "SkaldEpicVest";
+				SkaldEpicVest.Name = "Battlesung Hauberk";
+				SkaldEpicVest.Level = 50;
+				SkaldEpicVest.Item_Type = 25;
+				SkaldEpicVest.Model = 771;
+				SkaldEpicVest.IsDropable = true;
+				SkaldEpicVest.IsPickable = true;
+				SkaldEpicVest.DPS_AF = 100;
+				SkaldEpicVest.SPD_ABS = 27;
+				SkaldEpicVest.Object_Type = 35;
+				SkaldEpicVest.Quality = 100;
+				SkaldEpicVest.MaxQuality = 100;
+				SkaldEpicVest.Weight = 22;
+				SkaldEpicVest.Bonus = 35;
+				SkaldEpicVest.MaxCondition = 50000;
+				SkaldEpicVest.MaxDurability = 50000;
+				SkaldEpicVest.Condition = 50000;
+				SkaldEpicVest.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 13));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 13));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Charisma, 13));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Matter, 8));
+				SkaldEpicVest.Bonus1 = 13;
+				SkaldEpicVest.Bonus1Type = (int) eStat.STR;
+
+				SkaldEpicVest.Bonus2 = 13;
+				SkaldEpicVest.Bonus2Type = (int) eStat.CON;
+
+				SkaldEpicVest.Bonus3 = 13;
+				SkaldEpicVest.Bonus3Type = (int) eStat.CHR;
+
+				SkaldEpicVest.Bonus4 = 8;
+				SkaldEpicVest.Bonus4Type = (int) eResist.Matter;
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(i);
+					GameServer.Database.AddNewObject(SkaldEpicVest);
 				}
-				SkaldEpicVest = (TorsoArmorTemplate)i;
 			}
-
 			//Valhalla Touched Legs 
-			SkaldEpicLegs = (LegsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(LegsArmorTemplate), "SkaldEpicLegs");
+			SkaldEpicLegs = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "SkaldEpicLegs");
 			if (SkaldEpicLegs == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Skalds Epic Legs , creating it ...");
-				i = new LegsArmorTemplate();
-				i.ItemTemplateID = "SkaldEpicLegs";
-				i.Name = "Battlesung Legs";
-				i.Level = 50;
-				i.Model = 772;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.High;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Skald);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Midgard;
+				SkaldEpicLegs = new ItemTemplate();
+				SkaldEpicLegs.Id_nb = "SkaldEpicLegs";
+				SkaldEpicLegs.Name = "Battlesung Legs";
+				SkaldEpicLegs.Level = 50;
+				SkaldEpicLegs.Item_Type = 27;
+				SkaldEpicLegs.Model = 772;
+				SkaldEpicLegs.IsDropable = true;
+				SkaldEpicLegs.IsPickable = true;
+				SkaldEpicLegs.DPS_AF = 100;
+				SkaldEpicLegs.SPD_ABS = 27;
+				SkaldEpicLegs.Object_Type = 35;
+				SkaldEpicLegs.Quality = 100;
+				SkaldEpicLegs.MaxQuality = 100;
+				SkaldEpicLegs.Weight = 22;
+				SkaldEpicLegs.Bonus = 35;
+				SkaldEpicLegs.MaxCondition = 50000;
+				SkaldEpicLegs.MaxDurability = 50000;
+				SkaldEpicLegs.Condition = 50000;
+				SkaldEpicLegs.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 13));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 13));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Spirit, 8));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 27));
+				SkaldEpicLegs.Bonus1 = 13;
+				SkaldEpicLegs.Bonus1Type = (int) eStat.STR;
+
+				SkaldEpicLegs.Bonus2 = 13;
+				SkaldEpicLegs.Bonus2Type = (int) eStat.CON;
+
+				SkaldEpicLegs.Bonus3 = 8;
+				SkaldEpicLegs.Bonus3Type = (int) eResist.Spirit;
+
+				SkaldEpicLegs.Bonus4 = 27;
+				SkaldEpicLegs.Bonus4Type = (int) eProperty.MaxHealth;
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(i);
+					GameServer.Database.AddNewObject(SkaldEpicLegs);
 				}
-				SkaldEpicLegs = (LegsArmorTemplate)i;
 			}
-
 			//Valhalla Touched Sleeves 
-			SkaldEpicArms = (ArmsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(ArmsArmorTemplate), "SkaldEpicArms");
+			SkaldEpicArms = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "SkaldEpicArms");
 			if (SkaldEpicArms == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Skald Epic Arms , creating it ...");
-				i = new ArmsArmorTemplate();
-				i.ItemTemplateID = "SkaldEpicArms";
-				i.Name = "Battlesung Sleeves";
-				i.Level = 50;
-				i.Model = 773;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.High;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Skald);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Midgard;
+				SkaldEpicArms = new ItemTemplate();
+				SkaldEpicArms.Id_nb = "SkaldEpicArms";
+				SkaldEpicArms.Name = "Battlesung Sleeves";
+				SkaldEpicArms.Level = 50;
+				SkaldEpicArms.Item_Type = 28;
+				SkaldEpicArms.Model = 773;
+				SkaldEpicArms.IsDropable = true;
+				SkaldEpicArms.IsPickable = true;
+				SkaldEpicArms.DPS_AF = 100;
+				SkaldEpicArms.SPD_ABS = 27;
+				SkaldEpicArms.Object_Type = 35;
+				SkaldEpicArms.Quality = 100;
+				SkaldEpicArms.MaxQuality = 100;
+				SkaldEpicArms.Weight = 22;
+				SkaldEpicArms.Bonus = 35;
+				SkaldEpicArms.MaxCondition = 50000;
+				SkaldEpicArms.MaxDurability = 50000;
+				SkaldEpicArms.Condition = 50000;
+				SkaldEpicArms.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 16));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 15));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Thrust, 10));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Cold, 10));
+				SkaldEpicArms.Bonus1 = 16;
+				SkaldEpicArms.Bonus1Type = (int) eStat.STR;
+
+				SkaldEpicArms.Bonus2 = 15;
+				SkaldEpicArms.Bonus2Type = (int) eStat.CON;
+
+				SkaldEpicArms.Bonus3 = 10;
+				SkaldEpicArms.Bonus3Type = (int) eResist.Thrust;
+
+				SkaldEpicArms.Bonus4 = 10;
+				SkaldEpicArms.Bonus4Type = (int) eResist.Cold;
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(i);
+					GameServer.Database.AddNewObject(SkaldEpicArms);
 				}
-				SkaldEpicArms = (ArmsArmorTemplate)i;
 			}
-			#endregion
-			#region Savage
 			//Subterranean Boots 
-			SavageEpicBoots = (FeetArmorTemplate)GameServer.Database.FindObjectByKey(typeof(FeetArmorTemplate), "SavageEpicBoots");
+			SavageEpicBoots = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "SavageEpicBoots");
 			if (SavageEpicBoots == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Savage Epic Boots , creating it ...");
-				i = new FeetArmorTemplate();
-				i.ItemTemplateID = "SavageEpicBoots";
-				i.Name = "Kelgor's Battle Boots";
-				i.Level = 50;
-				i.Model = 1196;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.Medium;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Savage);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Midgard;
+				SavageEpicBoots = new ItemTemplate();
+				SavageEpicBoots.Id_nb = "SavageEpicBoots";
+				SavageEpicBoots.Name = "Kelgor's Battle Boots";
+				SavageEpicBoots.Level = 50;
+				SavageEpicBoots.Item_Type = 23;
+				SavageEpicBoots.Model = 1196;
+				SavageEpicBoots.IsDropable = true;
+				SavageEpicBoots.IsPickable = true;
+				SavageEpicBoots.DPS_AF = 100;
+				SavageEpicBoots.SPD_ABS = 27;
+				SavageEpicBoots.Object_Type = 34;
+				SavageEpicBoots.Quality = 100;
+				SavageEpicBoots.MaxQuality = 100;
+				SavageEpicBoots.Weight = 22;
+				SavageEpicBoots.Bonus = 35;
+				SavageEpicBoots.MaxCondition = 50000;
+				SavageEpicBoots.MaxDurability = 50000;
+				SavageEpicBoots.Condition = 50000;
+				SavageEpicBoots.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 15));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 19));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Matter, 8));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Energy, 8));
+				SavageEpicBoots.Bonus1 = 15;
+				SavageEpicBoots.Bonus1Type = (int) eStat.CON;
+
+				SavageEpicBoots.Bonus2 = 19;
+				SavageEpicBoots.Bonus2Type = (int) eStat.DEX;
+
+				SavageEpicBoots.Bonus3 = 8;
+				SavageEpicBoots.Bonus3Type = (int) eResist.Matter;
+
+				SavageEpicBoots.Bonus4 = 8;
+				SavageEpicBoots.Bonus4Type = (int) eResist.Energy;
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(i);
+					GameServer.Database.AddNewObject(SavageEpicBoots);
 				}
-				SavageEpicBoots = (FeetArmorTemplate)i;
 			}
-
 			//Subterranean Coif 
-			SavageEpicHelm = (HeadArmorTemplate)GameServer.Database.FindObjectByKey(typeof(HeadArmorTemplate), "SavageEpicHelm");
+			SavageEpicHelm = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "SavageEpicHelm");
 			if (SavageEpicHelm == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Savage Epic Helm , creating it ...");
-				i = new HeadArmorTemplate();
-				i.ItemTemplateID = "SavageEpicHelm";
-				i.Name = "Kelgor's Battle Helm";
-				i.Level = 50;
-				i.Model = 824; //NEED TO WORK ON..
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.Medium;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Savage);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Midgard;
+				SavageEpicHelm = new ItemTemplate();
+				SavageEpicHelm.Id_nb = "SavageEpicHelm";
+				SavageEpicHelm.Name = "Kelgor's Battle Helm";
+				SavageEpicHelm.Level = 50;
+				SavageEpicHelm.Item_Type = 21;
+				SavageEpicHelm.Model = 824; //NEED TO WORK ON..
+				SavageEpicHelm.IsDropable = true;
+				SavageEpicHelm.IsPickable = true;
+				SavageEpicHelm.DPS_AF = 100;
+				SavageEpicHelm.SPD_ABS = 19;
+				SavageEpicHelm.Object_Type = 34;
+				SavageEpicHelm.Quality = 100;
+				SavageEpicHelm.MaxQuality = 100;
+				SavageEpicHelm.Weight = 22;
+				SavageEpicHelm.Bonus = 35;
+				SavageEpicHelm.MaxCondition = 50000;
+				SavageEpicHelm.MaxDurability = 50000;
+				SavageEpicHelm.Condition = 50000;
+				SavageEpicHelm.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 15));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 10));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 10));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Quickness, 10));
+				SavageEpicHelm.Bonus1 = 15;
+				SavageEpicHelm.Bonus1Type = (int) eStat.STR;
+
+				SavageEpicHelm.Bonus2 = 10;
+				SavageEpicHelm.Bonus2Type = (int) eStat.CON;
+
+				SavageEpicHelm.Bonus3 = 10;
+				SavageEpicHelm.Bonus3Type = (int) eStat.DEX;
+
+				SavageEpicHelm.Bonus4 = 10;
+				SavageEpicHelm.Bonus4Type = (int) eStat.QUI;
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(i);
+					GameServer.Database.AddNewObject(SavageEpicHelm);
 				}
-				SavageEpicHelm = (HeadArmorTemplate)i;
 			}
-
 			//Subterranean Gloves 
-			SavageEpicGloves = (HandsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(HandsArmorTemplate), "SavageEpicGloves");
+			SavageEpicGloves = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "SavageEpicGloves");
 			if (SavageEpicGloves == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Savage Epic Gloves , creating it ...");
-				i = new HandsArmorTemplate();
-				i.ItemTemplateID = "SavageEpicGloves";
-				i.Name = "Kelgor's Battle Gauntlets";
-				i.Level = 50;
-				i.Model = 1195;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.Medium;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Savage);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Midgard;
+				SavageEpicGloves = new ItemTemplate();
+				SavageEpicGloves.Id_nb = "SavageEpicGloves";
+				SavageEpicGloves.Name = "Kelgor's Battle Gauntlets";
+				SavageEpicGloves.Level = 50;
+				SavageEpicGloves.Item_Type = 22;
+				SavageEpicGloves.Model = 1195;
+				SavageEpicGloves.IsDropable = true;
+				SavageEpicGloves.IsPickable = true;
+				SavageEpicGloves.DPS_AF = 100;
+				SavageEpicGloves.SPD_ABS = 19;
+				SavageEpicGloves.Object_Type = 34;
+				SavageEpicGloves.Quality = 100;
+				SavageEpicGloves.MaxQuality = 100;
+				SavageEpicGloves.Weight = 22;
+				SavageEpicGloves.Bonus = 35;
+				SavageEpicGloves.MaxCondition = 50000;
+				SavageEpicGloves.MaxDurability = 50000;
+				SavageEpicGloves.Condition = 50000;
+				SavageEpicGloves.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Parry, 3));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 12));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 33));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_HandToHand, 3));
+				SavageEpicGloves.Bonus1 = 3;
+				SavageEpicGloves.Bonus1Type = (int) eProperty.Skill_Parry;
+
+				SavageEpicGloves.Bonus2 = 12;
+				SavageEpicGloves.Bonus2Type = (int) eStat.DEX;
+
+				SavageEpicGloves.Bonus3 = 33;
+				SavageEpicGloves.Bonus3Type = (int) eProperty.MaxHealth;
+
+				SavageEpicGloves.Bonus4 = 3;
+				SavageEpicGloves.Bonus4Type = (int) eProperty.Skill_HandToHand;
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(i);
+					GameServer.Database.AddNewObject(SavageEpicGloves);
 				}
-				SavageEpicGloves = (HandsArmorTemplate)i;
 			}
-
 			//Subterranean Hauberk 
-			SavageEpicVest = (TorsoArmorTemplate)GameServer.Database.FindObjectByKey(typeof(TorsoArmorTemplate), "SavageEpicVest");
+			SavageEpicVest = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "SavageEpicVest");
 			if (SavageEpicVest == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Savage Epic Vest , creating it ...");
-				i = new TorsoArmorTemplate();
-				i.ItemTemplateID = "SavageEpicVest";
-				i.Name = "Kelgor's Battle Vest";
-				i.Level = 50;
-				i.Model = 1192;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.Medium;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Savage);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Midgard;
+				SavageEpicVest = new ItemTemplate();
+				SavageEpicVest.Id_nb = "SavageEpicVest";
+				SavageEpicVest.Name = "Kelgor's Battle Vest";
+				SavageEpicVest.Level = 50;
+				SavageEpicVest.Item_Type = 25;
+				SavageEpicVest.Model = 1192;
+				SavageEpicVest.IsDropable = true;
+				SavageEpicVest.IsPickable = true;
+				SavageEpicVest.DPS_AF = 100;
+				SavageEpicVest.SPD_ABS = 19;
+				SavageEpicVest.Object_Type = 34;
+				SavageEpicVest.Quality = 100;
+				SavageEpicVest.MaxQuality = 100;
+				SavageEpicVest.Weight = 22;
+				SavageEpicVest.Bonus = 35;
+				SavageEpicVest.MaxCondition = 50000;
+				SavageEpicVest.MaxDurability = 50000;
+				SavageEpicVest.Condition = 50000;
+				SavageEpicVest.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 13));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Quickness, 13));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Slash, 6));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 30));
+				SavageEpicVest.Bonus1 = 13;
+				SavageEpicVest.Bonus1Type = (int) eStat.STR;
+
+				SavageEpicVest.Bonus2 = 13;
+				SavageEpicVest.Bonus2Type = (int) eStat.QUI;
+
+				SavageEpicVest.Bonus3 = 6;
+				SavageEpicVest.Bonus3Type = (int) eResist.Slash;
+
+				SavageEpicVest.Bonus4 = 30;
+				SavageEpicVest.Bonus4Type = (int) eProperty.MaxHealth;
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(i);
+					GameServer.Database.AddNewObject(SavageEpicVest);
 				}
-				SavageEpicVest = (TorsoArmorTemplate)i;
 			}
-
 			//Subterranean Legs 
-			SavageEpicLegs = (LegsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(LegsArmorTemplate), "SavageEpicLegs");
+			SavageEpicLegs = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "SavageEpicLegs");
 			if (SavageEpicLegs == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Savage Epic Legs , creating it ...");
-				i = new LegsArmorTemplate();
-				i.ItemTemplateID = "SavageEpicLegs";
-				i.Name = "Kelgor's Battle Leggings";
-				i.Level = 50;
-				i.Model = 1193;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.Medium;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Savage);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Midgard;
+				SavageEpicLegs = new ItemTemplate();
+				SavageEpicLegs.Id_nb = "SavageEpicLegs";
+				SavageEpicLegs.Name = "Kelgor's Battle Leggings";
+				SavageEpicLegs.Level = 50;
+				SavageEpicLegs.Item_Type = 27;
+				SavageEpicLegs.Model = 1193;
+				SavageEpicLegs.IsDropable = true;
+				SavageEpicLegs.IsPickable = true;
+				SavageEpicLegs.DPS_AF = 100;
+				SavageEpicLegs.SPD_ABS = 19;
+				SavageEpicLegs.Object_Type = 34;
+				SavageEpicLegs.Quality = 100;
+				SavageEpicLegs.MaxQuality = 100;
+				SavageEpicLegs.Weight = 22;
+				SavageEpicLegs.Bonus = 35;
+				SavageEpicLegs.MaxCondition = 50000;
+				SavageEpicLegs.MaxDurability = 50000;
+				SavageEpicLegs.Condition = 50000;
+				SavageEpicLegs.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Heat, 12));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 7));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 15));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Quickness, 15));
+				SavageEpicLegs.Bonus1 = 12;
+				SavageEpicLegs.Bonus1Type = (int) eResist.Heat;
+
+				SavageEpicLegs.Bonus2 = 7;
+				SavageEpicLegs.Bonus2Type = (int) eStat.CON;
+
+				SavageEpicLegs.Bonus3 = 15;
+				SavageEpicLegs.Bonus3Type = (int) eStat.DEX;
+
+				SavageEpicLegs.Bonus4 = 15;
+				SavageEpicLegs.Bonus4Type = (int) eStat.QUI;
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(i);
+					GameServer.Database.AddNewObject(SavageEpicLegs);
 				}
-				SavageEpicLegs = (LegsArmorTemplate)i;
 			}
-
 			//Subterranean Sleeves 
-			SavageEpicArms = (ArmsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(ArmsArmorTemplate), "SavageEpicArms");
+			SavageEpicArms = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "SavageEpicArms");
 			if (SavageEpicArms == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Savage Epic Arms , creating it ...");
-				i = new ArmsArmorTemplate();
-				i.ItemTemplateID = "SavageEpicArms";
-				i.Name = "Kelgor's Battle Sleeves";
-				i.Level = 50;
-				i.Model = 1194;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.Medium;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Savage);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Midgard;
+				SavageEpicArms = new ItemTemplate();
+				SavageEpicArms.Id_nb = "SavageEpicArms";
+				SavageEpicArms.Name = "Kelgor's Battle Sleeves";
+				SavageEpicArms.Level = 50;
+				SavageEpicArms.Item_Type = 28;
+				SavageEpicArms.Model = 1194;
+				SavageEpicArms.IsDropable = true;
+				SavageEpicArms.IsPickable = true;
+				SavageEpicArms.DPS_AF = 100;
+				SavageEpicArms.SPD_ABS = 19;
+				SavageEpicArms.Object_Type = 34;
+				SavageEpicArms.Quality = 100;
+				SavageEpicArms.MaxQuality = 100;
+				SavageEpicArms.Weight = 22;
+				SavageEpicArms.Bonus = 35;
+				SavageEpicArms.MaxCondition = 50000;
+				SavageEpicArms.MaxDurability = 50000;
+				SavageEpicArms.Condition = 50000;
+				SavageEpicArms.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 19));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Quickness, 15));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Cold, 8));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Heat, 8));
+				SavageEpicArms.Bonus1 = 19;
+				SavageEpicArms.Bonus1Type = (int) eStat.STR;
+
+				SavageEpicArms.Bonus2 = 15;
+				SavageEpicArms.Bonus2Type = (int) eStat.QUI;
+
+				SavageEpicArms.Bonus3 = 8;
+				SavageEpicArms.Bonus3 = (int) eResist.Cold;
+
+				SavageEpicArms.Bonus4 = 8;
+				SavageEpicArms.Bonus4Type = (int) eResist.Heat;
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(i);
+					GameServer.Database.AddNewObject(SavageEpicArms);
 				}
-				SavageEpicArms = (ArmsArmorTemplate)i;
+
 			}
+//Savage Epic Sleeves End
+//Item Descriptions End
+
 			#endregion
-			#region Valkyrie
-			//Valhalla Touched Boots
-			ValkyrieEpicBoots = (FeetArmorTemplate)GameServer.Database.FindObjectByKey(typeof(FeetArmorTemplate), "ValkyrieEpicBoots");
-			if (ValkyrieEpicBoots == null)
-			{
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find Valkyries Epic Boots , creating it ...");
-				i = new FeetArmorTemplate();
-				i.ItemTemplateID = "ValkyrieEpicBoots";
-				i.Name = "Battle Maiden's Boots";
-				i.Level = 50;
-				i.Model = 2932;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.High;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Valkyrie);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Midgard;
-
-				/*
-				 *   Constitution: 7 pts
-				 *   Dexterity: 13 pts
-				 *   Quickness: 13 pts
-				 *   Body Resist: 8%
-				 */
-
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 7));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 13));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Quickness, 13));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Body, 8));
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddNewObject(i);
-				}
-				ValkyrieEpicBoots = (FeetArmorTemplate)i;
-			}
-
-			//Valhalla Touched Coif 
-			ValkyrieEpicHelm = (HeadArmorTemplate)GameServer.Database.FindObjectByKey(typeof(HeadArmorTemplate), "ValkyrieEpicHelm");
-			if (ValkyrieEpicHelm == null)
-			{
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find Valkyries Epic Helm , creating it ...");
-				i = new HeadArmorTemplate();
-				i.ItemTemplateID = "ValkyrieEpicHelm";
-				i.Name = "Battle Maiden's Coif";
-				i.Level = 50;
-				i.Model = 832; //NEED TO WORK ON..
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.High;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Valkyrie);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Midgard;
-
-				/*
-				 *   Sword: 4 pts
-				 *   Constitution: 18 pts
-				 *   Cold Resist: 4%
-				 *   Energy Resist: 6%
-				 */
-
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Sword, 4));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 18));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Cold, 4));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Energy, 6));
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddNewObject(i);
-				}
-				ValkyrieEpicHelm = (HeadArmorTemplate)i;
-			}
-
-			//Valhalla Touched Gloves 
-			ValkyrieEpicGloves = (HandsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(HandsArmorTemplate), "ValkyrieEpicGloves");
-			if (ValkyrieEpicGloves == null)
-			{
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find Valkyries Epic Gloves , creating it ...");
-				i = new HandsArmorTemplate();
-				i.ItemTemplateID = "ValkyrieEpicGloves";
-				i.Name = "Battle Maiden's Gloves";
-				i.Level = 50;
-				i.Model = 2931;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.High;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Valkyrie);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Midgard;
-
-				/*
-				 *   Spear: 3 pts
-				 *   Parry: +3 pts
-				 *   Strength: 19 pts
-				 *   Odin's Will: +3 pts
-				 */
-
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Spear, 3));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Parry, 3));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 19));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_OdinsWill, 3));
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddNewObject(i);
-				}
-				ValkyrieEpicGloves = (HandsArmorTemplate)i;
-			}
-
-			//Valhalla Touched Hauberk 
-			ValkyrieEpicVest = (TorsoArmorTemplate)GameServer.Database.FindObjectByKey(typeof(TorsoArmorTemplate), "ValkyrieEpicVest");
-			if (ValkyrieEpicVest == null)
-			{
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find Valkyries Epic Vest , creating it ...");
-				i = new TorsoArmorTemplate();
-				i.ItemTemplateID = "ValkyrieEpicVest";
-				i.Name = "Battle Maiden's Hauberk";
-				i.Level = 50;
-				i.Model = 2928;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.High;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Valkyrie);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Midgard;
-
-				/*
-				 *   Strength: 13 pts
-				 *   Constitution: 13 pts
-				 *   Slash Resist: 6%
-				 *   Hits: 30 pts
-				 */
-
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 13));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 13));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Slash, 6));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 30));
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddNewObject(i);
-				}
-				ValkyrieEpicVest = (TorsoArmorTemplate)i;
-			}
-
-			//Valhalla Touched Legs 
-			ValkyrieEpicLegs = (LegsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(LegsArmorTemplate), "ValkyrieEpicLegs");
-			if (ValkyrieEpicLegs == null)
-			{
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find Valkyries Epic Legs , creating it ...");
-				i = new LegsArmorTemplate();
-				i.ItemTemplateID = "ValkyrieEpicLegs";
-				i.Name = "Battle Maiden's Legs";
-				i.Level = 50;
-				i.Model = 2929;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.High;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Valkyrie);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Midgard;
-
-				/*
-				 *   Constitution: 19 pts
-				 *	 Piety: 15 pts
-				 *   Crush Resist: 8%
-				 *   Heat Resist: 8%
-				 */
-
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 19));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Piety, 15));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Crush, 8));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Heat, 8));
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddNewObject(i);
-				}
-				ValkyrieEpicLegs = (LegsArmorTemplate)i;
-			}
-
-			//Valhalla Touched Sleeves 
-			ValkyrieEpicArms = (ArmsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(ArmsArmorTemplate), "ValkyrieEpicArms");
-			if (ValkyrieEpicArms == null)
-			{
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find Valkyrie Epic Arms , creating it ...");
-				i = new ArmsArmorTemplate();
-				i.ItemTemplateID = "ValkyrieEpicArms";
-				i.Name = "Battle Maiden's Sleeves";
-				i.Level = 50;
-				i.Model = 2930;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.High;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Valkyrie);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Midgard;
-
-				/*
-				 *   Strength: 18 pts
-				 *   Quickness: 16 pts
-				 *   Thrust Resist: 8%
-				 *   Spirit Resist: 8%
-				 */
-
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 18));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Quickness, 16));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Thrust, 8));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Spirit, 8));
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddNewObject(i);
-				}
-				ValkyrieEpicArms = (ArmsArmorTemplate)i;
-			}
-			#endregion
-			#endregion
-
-			WarriorTrainers = WorldMgr.GetNPCsByType(typeof(DOL.GS.Trainer.WarriorTrainer), eRealm.Midgard);
-			BerserkerTrainers = WorldMgr.GetNPCsByType(typeof(DOL.GS.Trainer.BerserkerTrainer), eRealm.Midgard);
-			ThaneTrainers = WorldMgr.GetNPCsByType(typeof(DOL.GS.Trainer.ThaneTrainer), eRealm.Midgard);
-			SkaldTrainers = WorldMgr.GetNPCsByType(typeof(DOL.GS.Trainer.SkaldTrainer), eRealm.Midgard);
-			SavageTrainers = WorldMgr.GetNPCsByType(typeof(DOL.GS.Trainer.SavageTrainer), eRealm.Midgard);
-			ValkyrieTrainers = WorldMgr.GetNPCsByType(typeof(DOL.GS.Trainer.ValkyrieTrainer), eRealm.Midgard);
-
-
-			foreach (GameNPC npc in WarriorTrainers)
-				GameEventMgr.AddHandler(npc, GameNPCEvent.Interact, new DOLEventHandler(TalkToTrainer));
-			foreach (GameNPC npc in BerserkerTrainers)
-				GameEventMgr.AddHandler(npc, GameNPCEvent.Interact, new DOLEventHandler(TalkToTrainer));
-			foreach (GameNPC npc in ThaneTrainers)
-				GameEventMgr.AddHandler(npc, GameNPCEvent.Interact, new DOLEventHandler(TalkToTrainer));
-			foreach (GameNPC npc in SkaldTrainers)
-				GameEventMgr.AddHandler(npc, GameNPCEvent.Interact, new DOLEventHandler(TalkToTrainer));
-			foreach (GameNPC npc in SavageTrainers)
-				GameEventMgr.AddHandler(npc, GameNPCEvent.Interact, new DOLEventHandler(TalkToTrainer));
-			foreach (GameNPC npc in ValkyrieTrainers)
-				GameEventMgr.AddHandler(npc, GameNPCEvent.Interact, new DOLEventHandler(TalkToTrainer));
 
 			GameEventMgr.AddHandler(Lynnleigh, GameObjectEvent.Interact, new DOLEventHandler(TalkToLynnleigh));
 			GameEventMgr.AddHandler(Lynnleigh, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToLynnleigh));
@@ -1619,10 +1573,8 @@ namespace DOL.GS.Quests.Midgard
 			GameEventMgr.AddHandler(Elizabeth, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToElizabeth));
 			GameEventMgr.AddHandler(Elizabeth, GameLivingEvent.Interact, new DOLEventHandler(TalkToElizabeth));
 
-			GameEventMgr.AddHandler(Ydenia, GameNPCEvent.Dying, new DOLEventHandler(TargetDying));
-
 			/* Now we bring to Lynnleigh the possibility to give this quest to players */
-			QuestMgr.AddQuestDescriptor(Lynnleigh, typeof(Viking_50Descriptor));
+			Lynnleigh.AddQuestToGive(typeof (Viking_50));
 
 			if (log.IsInfoEnabled)
 				log.Info("Quest \"" + questTitle + "\" initialized");
@@ -1640,37 +1592,23 @@ namespace DOL.GS.Quests.Midgard
 
 			GameEventMgr.RemoveHandler(Elizabeth, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToElizabeth));
 			GameEventMgr.RemoveHandler(Elizabeth, GameLivingEvent.Interact, new DOLEventHandler(TalkToElizabeth));
-
-			GameEventMgr.RemoveHandler(Ydenia, GameNPCEvent.Dying, new DOLEventHandler(TargetDying));
-			foreach (GameNPC npc in WarriorTrainers)
-				GameEventMgr.RemoveHandler(npc, GameNPCEvent.Interact, new DOLEventHandler(TalkToTrainer));
-			foreach (GameNPC npc in BerserkerTrainers)
-				GameEventMgr.RemoveHandler(npc, GameNPCEvent.Interact, new DOLEventHandler(TalkToTrainer));
-			foreach (GameNPC npc in ThaneTrainers)
-				GameEventMgr.RemoveHandler(npc, GameNPCEvent.Interact, new DOLEventHandler(TalkToTrainer));
-			foreach (GameNPC npc in SkaldTrainers)
-				GameEventMgr.RemoveHandler(npc, GameNPCEvent.Interact, new DOLEventHandler(TalkToTrainer));
-			foreach (GameNPC npc in SavageTrainers)
-				GameEventMgr.RemoveHandler(npc, GameNPCEvent.Interact, new DOLEventHandler(TalkToTrainer));
-			foreach (GameNPC npc in ValkyrieTrainers)
-				GameEventMgr.RemoveHandler(npc, GameNPCEvent.Interact, new DOLEventHandler(TalkToTrainer));
-
+		
 			/* Now we remove to Lynnleigh the possibility to give this quest to players */
-			QuestMgr.RemoveQuestDescriptor(Lynnleigh, typeof(Viking_50Descriptor));
+			Lynnleigh.RemoveQuestToGive(typeof (Viking_50));
 		}
 
 		protected static void TalkToLynnleigh(DOLEvent e, object sender, EventArgs args)
 		{
 			//We get the player from the event arguments and check if he qualifies		
-			GamePlayer player = ((SourceEventArgs)args).Source as GamePlayer;
+			GamePlayer player = ((SourceEventArgs) args).Source as GamePlayer;
 			if (player == null)
 				return;
 
-			if (QuestMgr.CanGiveQuest(typeof(Viking_50), player, Lynnleigh) <= 0)
+			if(Lynnleigh.CanGiveQuest(typeof (Viking_50), player)  <= 0)
 				return;
 
 			//We also check if the player is already doing the quest
-			Viking_50 quest = player.IsDoingQuest(typeof(Viking_50)) as Viking_50;
+			Viking_50 quest = player.IsDoingQuest(typeof (Viking_50)) as Viking_50;
 
 			if (e == GameObjectEvent.Interact)
 			{
@@ -1683,10 +1621,10 @@ namespace DOL.GS.Quests.Midgard
 					Lynnleigh.SayTo(player, "Ah, this reveals exactly where Jango and his deserters took Ydenia to dispose of him. He also has a note here about how strong Ydenia really was. That [worries me].");
 				}
 			}
-			// The player whispered to the NPC
+				// The player whispered to the NPC
 			else if (e == GameLivingEvent.WhisperReceive)
 			{
-				WhisperReceiveEventArgs wArgs = (WhisperReceiveEventArgs)args;
+				WhisperReceiveEventArgs wArgs = (WhisperReceiveEventArgs) args;
 
 				if (quest == null)
 				{
@@ -1715,15 +1653,15 @@ namespace DOL.GS.Quests.Midgard
 		protected static void TalkToElizabeth(DOLEvent e, object sender, EventArgs args)
 		{
 			//We get the player from the event arguments and check if he qualifies		
-			GamePlayer player = ((SourceEventArgs)args).Source as GamePlayer;
+			GamePlayer player = ((SourceEventArgs) args).Source as GamePlayer;
 			if (player == null)
 				return;
 
-			if (QuestMgr.CanGiveQuest(typeof(Viking_50), player, Lynnleigh) <= 0)
+			if(Lynnleigh.CanGiveQuest(typeof (Viking_50), player)  <= 0)
 				return;
 
 			//We also check if the player is already doing the quest
-			Viking_50 quest = player.IsDoingQuest(typeof(Viking_50)) as Viking_50;
+			Viking_50 quest = player.IsDoingQuest(typeof (Viking_50)) as Viking_50;
 
 			if (e == GameObjectEvent.Interact)
 			{
@@ -1737,10 +1675,10 @@ namespace DOL.GS.Quests.Midgard
 					}
 				}
 			}
-			// The player whispered to the NPC
+				// The player whispered to the NPC
 			else if (e == GameLivingEvent.WhisperReceive)
 			{
-				WhisperReceiveEventArgs wArgs = (WhisperReceiveEventArgs)args;
+				WhisperReceiveEventArgs wArgs = (WhisperReceiveEventArgs) args;
 
 				if (quest != null)
 				{
@@ -1755,6 +1693,32 @@ namespace DOL.GS.Quests.Midgard
 			}
 		}
 
+		public override bool CheckQuestQualification(GamePlayer player)
+		{
+			// if the player is already doing the quest his level is no longer of relevance
+			if (player.IsDoingQuest(typeof (Viking_50)) != null)
+				return true;
+
+			if (player.CharacterClass.ID != (byte) eCharacterClass.Warrior &&
+				player.CharacterClass.ID != (byte) eCharacterClass.Berserker &&
+				player.CharacterClass.ID != (byte) eCharacterClass.Thane &&
+				player.CharacterClass.ID != (byte) eCharacterClass.Skald &&
+				player.CharacterClass.ID != (byte) eCharacterClass.Savage)
+				return false;
+
+			// This checks below are only performed is player isn't doing quest already
+
+			//if (player.HasFinishedQuest(typeof(Academy_47)) == 0) return false;
+
+			//if (!CheckPartAccessible(player,typeof(CityOfCamelot)))
+			//	return false;
+
+			if (player.Level < minimumLevel || player.Level > maximumLevel)
+				return false;
+
+			return true;
+		}
+
 		/* This is our callback hook that will be called when the player clicks
 		 * on any button in the quest offer dialog. We check if he accepts or
 		 * declines here...
@@ -1762,7 +1726,7 @@ namespace DOL.GS.Quests.Midgard
 
 		private static void CheckPlayerAbortQuest(GamePlayer player, byte response)
 		{
-			Viking_50 quest = player.IsDoingQuest(typeof(Viking_50)) as Viking_50;
+			Viking_50 quest = player.IsDoingQuest(typeof (Viking_50)) as Viking_50;
 
 			if (quest == null)
 				return;
@@ -1780,10 +1744,10 @@ namespace DOL.GS.Quests.Midgard
 
 		private static void CheckPlayerAcceptQuest(GamePlayer player, byte response)
 		{
-			if (QuestMgr.CanGiveQuest(typeof(Viking_50), player, Lynnleigh) <= 0)
+			if(Lynnleigh.CanGiveQuest(typeof (Viking_50), player)  <= 0)
 				return;
 
-			if (player.IsDoingQuest(typeof(Viking_50)) != null)
+			if (player.IsDoingQuest(typeof (Viking_50)) != null)
 				return;
 
 			if (response == 0x00)
@@ -1793,7 +1757,7 @@ namespace DOL.GS.Quests.Midgard
 			else
 			{
 				//Check if we can add the quest!
-				if (!QuestMgr.GiveQuestToPlayer(typeof(Viking_50), player, Lynnleigh))
+				if (!Lynnleigh.GiveQuest(typeof (Viking_50), player, 1))
 					return;
 
 				Lynnleigh.SayTo(player, "Yes, you must face and defeat him! There is a note scrawled in the corner of the map that even in death Ydenia is strong. He has gathered followers to protect him in his spirit state and they will come to his aid if he is attacked. Even though you have improved your skills quite a bit, I would highley recommed taking some friends with you to face Ydenia. It is imperative that you defeat him and obtain the totem he holds if I am to end the spell. According to the map you can find Ydenia in Raumarik. Head to the river in Raumarik and go north. When you reach the end of it, go northwest to the next river. Cross the river and head west. Follow the snowline until you reach a group of trees. That is where you will find Ydenia and his followers. Return to me when you have the totem. May all the gods be with you.");
@@ -1818,38 +1782,9 @@ namespace DOL.GS.Quests.Midgard
 					case 2:
 						return "[Step #2] Return to Lynnleigh and give her tome of Enchantments!";
 					case 3:
-						return "[Step #3] Take the sealed pouch to Elizabeth in Mularn for your reward, and say you ready to 'take them'!";
-					default:
-						return "[Step #" + Step + "] No Description entered for this step!";
+						return "[Step #3] Tell Lynnleigh you can 'take them' for your rewards!";
 				}
-			}
-		}
-
-		protected static void TalkToTrainer(DOLEvent e, object sender, EventArgs args)
-		{
-			InteractEventArgs iargs = args as InteractEventArgs;
-
-			GamePlayer player = iargs.Source as GamePlayer;
-			GameNPC npc = sender as GameNPC;
-			Viking_50Descriptor a = new Viking_50Descriptor();
-
-			if (!a.CheckQuestQualification(player)) return;
-			if (player.IsDoingQuest(typeof(Viking_50)) == null) return;
-
-			npc.SayTo(player, "Lynnleigh has an important task for you, please seek her out on the island South West of Vasudheim");
-		}
-
-		protected static void TargetDying(DOLEvent e, object sender, EventArgs args)
-		{
-			GameMob mob = sender as GameMob;
-			foreach (GamePlayer player in mob.XPGainers)
-			{
-				Viking_50 quest = (Viking_50)player.IsDoingQuest(typeof(Viking_50));
-				if (quest == null) continue;
-				if (quest.Step != 1) continue;
-				quest.Step = 2;
-				quest.GiveItemToPlayer(CreateQuestItem(tome_enchantments, quest.Name));
-				player.Out.SendMessage("Ydenia drops the Tome of Enchantments and you pick it up!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return base.Description;
 			}
 		}
 
@@ -1857,41 +1792,40 @@ namespace DOL.GS.Quests.Midgard
 		{
 			GamePlayer player = sender as GamePlayer;
 
-			if (player == null || player.IsDoingQuest(typeof(Viking_50)) == null)
+			if (player==null || player.IsDoingQuest(typeof (Viking_50)) == null)
 				return;
-			/*
+
 			if (Step == 1 && e == GameLivingEvent.EnemyKilled)
 			{
-				EnemyKilledEventArgs gArgs = (EnemyKilledEventArgs)args;
+				EnemyKilledEventArgs gArgs = (EnemyKilledEventArgs) args;
 
 				if (gArgs.Target.Name == Ydenia.Name)
 				{
 					Step = 2;
-					GiveItemToPlayer(CreateQuestItem(tome_enchantments, Name));
+					GiveItem(player, tome_enchantments);
 					m_questPlayer.Out.SendMessage("Ydenia drops the Tome of Enchantments and you pick it up!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return;
 				}
 			}
-			 */
 
 			if (Step == 2 && e == GamePlayerEvent.GiveItem)
 			{
-				GiveItemEventArgs gArgs = (GiveItemEventArgs)args;
-				if (gArgs.Target.Name == Lynnleigh.Name && gArgs.Item.Name == tome_enchantments.Name)
+				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
+				if (gArgs.Target.Name == Lynnleigh.Name && gArgs.Item.Id_nb == tome_enchantments.Id_nb)
 				{
-					RemoveItemFromPlayer(Lynnleigh, tome_enchantments);
+					RemoveItem(Lynnleigh, player, tome_enchantments);
 					Lynnleigh.SayTo(player, "Take this sealed pouch to Elizabeth in Mularn for your reward!");
-					GiveItemToPlayer(Lynnleigh, CreateQuestItem(sealed_pouch, Name));
+					GiveItem(Lynnleigh, player, sealed_pouch);
 					Step = 3;
 				}
 			}
 
 			if (Step == 3 && e == GamePlayerEvent.GiveItem)
 			{
-				GiveItemEventArgs gArgs = (GiveItemEventArgs)args;
-				if (gArgs.Target.Name == Elizabeth.Name && gArgs.Item.Name == sealed_pouch.Name)
+				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
+				if (gArgs.Target.Name == Elizabeth.Name && gArgs.Item.Id_nb == sealed_pouch.Id_nb)
 				{
-					RemoveItemFromPlayer(Elizabeth, sealed_pouch);
+					RemoveItem(Elizabeth, player, sealed_pouch);
 					Elizabeth.SayTo(player, "There are six parts to your reward, so make sure you have room for them. Just let me know when you are ready, and then you can [take them] with our thanks!");
 					Step = 4;
 				}
@@ -1902,67 +1836,58 @@ namespace DOL.GS.Quests.Midgard
 		{
 			base.AbortQuest(); //Defined in Quest, changes the state, stores in DB etc ...
 
-			RemoveItemFromPlayer(sealed_pouch);
-			RemoveItemFromPlayer(tome_enchantments);
+			RemoveItem(m_questPlayer, sealed_pouch, false);
+			RemoveItem(m_questPlayer, tome_enchantments, false);
 		}
 
 		public override void FinishQuest()
 		{
 			base.FinishQuest(); //Defined in Quest, changes the state, stores in DB etc ...
 
-			if (m_questPlayer.CharacterClass.ID == (byte)eCharacterClass.Warrior)
+			if (m_questPlayer.CharacterClass.ID == (byte) eCharacterClass.Warrior)
 			{
-				GiveItemToPlayer(WarriorEpicArms);
-				GiveItemToPlayer(WarriorEpicBoots);
-				GiveItemToPlayer(WarriorEpicGloves);
-				GiveItemToPlayer(WarriorEpicHelm);
-				GiveItemToPlayer(WarriorEpicLegs);
-				GiveItemToPlayer(WarriorEpicVest);
+				GiveItem(m_questPlayer, WarriorEpicArms);
+				GiveItem(m_questPlayer, WarriorEpicBoots);
+				GiveItem(m_questPlayer, WarriorEpicGloves);
+				GiveItem(m_questPlayer, WarriorEpicHelm);
+				GiveItem(m_questPlayer, WarriorEpicLegs);
+				GiveItem(m_questPlayer, WarriorEpicVest);
 			}
-			else if (m_questPlayer.CharacterClass.ID == (byte)eCharacterClass.Berserker)
+			else if (m_questPlayer.CharacterClass.ID == (byte) eCharacterClass.Berserker)
 			{
-				GiveItemToPlayer(BerserkerEpicArms);
-				GiveItemToPlayer(BerserkerEpicBoots);
-				GiveItemToPlayer(BerserkerEpicGloves);
-				GiveItemToPlayer(BerserkerEpicHelm);
-				GiveItemToPlayer(BerserkerEpicLegs);
-				GiveItemToPlayer(BerserkerEpicVest);
+				GiveItem(m_questPlayer, BerserkerEpicArms);
+				GiveItem(m_questPlayer, BerserkerEpicBoots);
+				GiveItem(m_questPlayer, BerserkerEpicGloves);
+				GiveItem(m_questPlayer, BerserkerEpicHelm);
+				GiveItem(m_questPlayer, BerserkerEpicLegs);
+				GiveItem(m_questPlayer, BerserkerEpicVest);
 			}
-			else if (m_questPlayer.CharacterClass.ID == (byte)eCharacterClass.Thane)
+			else if (m_questPlayer.CharacterClass.ID == (byte) eCharacterClass.Thane)
 			{
-				GiveItemToPlayer(ThaneEpicArms);
-				GiveItemToPlayer(ThaneEpicBoots);
-				GiveItemToPlayer(ThaneEpicGloves);
-				GiveItemToPlayer(ThaneEpicHelm);
-				GiveItemToPlayer(ThaneEpicLegs);
-				GiveItemToPlayer(ThaneEpicVest);
+				GiveItem(m_questPlayer, ThaneEpicArms);
+				GiveItem(m_questPlayer, ThaneEpicBoots);
+				GiveItem(m_questPlayer, ThaneEpicGloves);
+				GiveItem(m_questPlayer, ThaneEpicHelm);
+				GiveItem(m_questPlayer, ThaneEpicLegs);
+				GiveItem(m_questPlayer, ThaneEpicVest);
 			}
-			else if (m_questPlayer.CharacterClass.ID == (byte)eCharacterClass.Skald)
+			else if (m_questPlayer.CharacterClass.ID == (byte) eCharacterClass.Skald)
 			{
-				GiveItemToPlayer(SkaldEpicArms);
-				GiveItemToPlayer(SkaldEpicBoots);
-				GiveItemToPlayer(SkaldEpicGloves);
-				GiveItemToPlayer(SkaldEpicHelm);
-				GiveItemToPlayer(SkaldEpicLegs);
-				GiveItemToPlayer(SkaldEpicVest);
+				GiveItem(m_questPlayer, SkaldEpicArms);
+				GiveItem(m_questPlayer, SkaldEpicBoots);
+				GiveItem(m_questPlayer, SkaldEpicGloves);
+				GiveItem(m_questPlayer, SkaldEpicHelm);
+				GiveItem(m_questPlayer, SkaldEpicLegs);
+				GiveItem(m_questPlayer, SkaldEpicVest);
 			}
-			else if (m_questPlayer.CharacterClass.ID == (byte)eCharacterClass.Savage)
+			else if (m_questPlayer.CharacterClass.ID == (byte) eCharacterClass.Savage)
 			{
-				GiveItemToPlayer(SavageEpicArms);
-				GiveItemToPlayer(SavageEpicBoots);
-				GiveItemToPlayer(SavageEpicGloves);
-				GiveItemToPlayer(SavageEpicHelm);
-				GiveItemToPlayer(SavageEpicLegs);
-				GiveItemToPlayer(SavageEpicVest);
-			}
-			else if (m_questPlayer.CharacterClassID == (byte)eCharacterClass.Valkyrie)
-			{
-				GiveItemToPlayer(ValkyrieEpicArms);
-				GiveItemToPlayer(ValkyrieEpicBoots);
-				GiveItemToPlayer(ValkyrieEpicGloves);
-				GiveItemToPlayer(ValkyrieEpicHelm);
-				GiveItemToPlayer(ValkyrieEpicLegs);
-				GiveItemToPlayer(ValkyrieEpicVest);
+				GiveItem(m_questPlayer, SavageEpicArms);
+				GiveItem(m_questPlayer, SavageEpicBoots);
+				GiveItem(m_questPlayer, SavageEpicGloves);
+				GiveItem(m_questPlayer, SavageEpicHelm);
+				GiveItem(m_questPlayer, SavageEpicLegs);
+				GiveItem(m_questPlayer, SavageEpicVest);
 			}
 
 			m_questPlayer.GainExperience(1937768448, 0, 0, true);

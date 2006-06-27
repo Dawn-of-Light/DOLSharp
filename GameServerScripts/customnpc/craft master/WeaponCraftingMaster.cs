@@ -1,4 +1,4 @@
- //using DOL.GS.Database;
+ //using DOL.Database;
 //using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Scripts

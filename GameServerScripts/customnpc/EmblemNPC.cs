@@ -17,7 +17,7 @@
  *
  */
 using System;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Scripts
@@ -33,55 +33,66 @@ namespace DOL.GS.Scripts
 			if (!base.Interact(player))
 				return false;
 
-			TurnTo(player.Position);
+			TurnTo(player.X, player.Y);
 			SayTo(player, eChatLoc.CL_ChatWindow, "For a 5 gold, I can put the emblem of your guild on the item. Just hand me the item.");
 
 			return true;
 		}
 
-        public override bool ReceiveItem(GameLiving source, GenericItem item)
+		public override bool ReceiveItem(GameLiving source, InventoryItem item)
 		{
-			GamePlayer player = source as GamePlayer;
-			if (player == null || item == null)
+			GamePlayer t = source as GamePlayer;
+			if (t == null || item == null)
 				return false;
 			
-			if(!(item is Cloak) && !(item is Shield))
+			if (item.Emblem != 0)
 			{
-				player.Out.SendMessage("I can not put an emblem on this item.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				t.Out.SendMessage("This item already has an emblem on it.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
 
-			if (((VisibleEquipment)item).Color != 0) //TODO only check if it is a emblem
+			if (item.Object_Type == (int) eObjectType.Shield
+				|| item.Item_Type == Slot.CLOAK)
 			{
-				player.Out.SendMessage("This item already has an emblem on it.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return false;
-			}
+				if (t.Guild == null)
+				{
+					t.Out.SendMessage("You have no guild.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					return false;
+				}
+				if (t.Guild.theGuildDB.Emblem == 0)
+				{
+					t.Out.SendMessage("Your guild has no emblem.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					return false;
+				}
+				if (t.Level < 20) //if level of player < 20 so can not put emblem
+				{
+					if (t.CraftingPrimarySkill == eCraftingSkill.NoCrafting)
+					{
+						t.Out.SendMessage("You have to be at least level 20 or have 400 in a tradeskill to be able to wear an emblem.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						return false;
+					}
+					else
+					{
+						if (t.GetCraftingSkillValue(t.CraftingPrimarySkill) < 400)
+						{
+							t.Out.SendMessage("You have to be at least level 20 or have 400 in a tradeskill to be able to wear an emblem.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							return false;
+						}
+					}
 
-			if (player.Guild == null)
-			{
-				player.Out.SendMessage("You have no guild.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return false;
-			}
-			if (player.Guild.Emblem == 0)
-			{
-				player.Out.SendMessage("Your guild has no emblem.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return false;
-			}
-			if (player.Level < 20 && (player.CraftingPrimarySkill == eCraftingSkill.NoCrafting || player.GetCraftingSkillValue(player.CraftingPrimarySkill) < 400)) //if level of player < 20 so can not put emblem
-			{
-				player.Out.SendMessage("You have to be at least level 20 or have 400 in a tradeskill to be able to wear an emblem.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return false;
-			}
+				}
 
-			if (!player.Guild.CheckGuildPermission(player, eGuildPerm.Emblem))
-			{
-				player.Out.SendMessage("You do not have enough privileges for that.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return false;
+				if (!t.Guild.GotAccess(t, eGuildRank.Emblem))
+				{
+					t.Out.SendMessage("You do not have enough privileges for that.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					return false;
+				}
+				t.TempProperties.setProperty(EMBLEMIZE_ITEM_WEAK, new WeakRef(item));
+				t.Out.SendCustomDialog("Do you agree to put an emblem\x000Aon this object?", new CustomDialogResponse(EmblemerDialogResponse));
 			}
-			player.TempProperties.setProperty(EMBLEMIZE_ITEM_WEAK, new WeakRef(item));
-			player.Out.SendCustomDialog("Do you agree to put an emblem\x000Aon this object?", new CustomDialogResponse(EmblemerDialogResponse));
-		
-			
+			else
+				t.Out.SendMessage("I can not put an emblem on this item.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
 			return false;
 		}
 
@@ -97,10 +108,10 @@ namespace DOL.GS.Scripts
 			if (response != 0x01)
 				return; //declined
 
-			GenericItem item = (GenericItem) itemWeak.Target;
+			InventoryItem item = (InventoryItem) itemWeak.Target;
 
 			if (item == null || item.SlotPosition == (int) eInventorySlot.Ground
-				|| item.Owner == null || item.Owner.CharacterID.ToString() != player.InternalID)
+				|| item.OwnerID == null || item.OwnerID != player.InternalID)
 			{
 				player.Out.SendMessage("Invalid item.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
@@ -112,13 +123,10 @@ namespace DOL.GS.Scripts
 				return;
 			}
 
-			((VisibleEquipment)item).Color = player.Guild.Emblem;
-			player.Out.SendInventorySlotsUpdate(new int[] {item.SlotPosition});
-
+			item.Emblem = player.Guild.theGuildDB.Emblem;
+			player.Out.SendInventoryItemsUpdate(new InventoryItem[] {item});
 			if (item.SlotPosition < (int) eInventorySlot.FirstBackpack)
-			{
 				player.UpdateEquipementAppearance();
-			}
 			SayTo(player, eChatLoc.CL_ChatWindow, "I have put an emblem on your item.");
 			return;
 		}

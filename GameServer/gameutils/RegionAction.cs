@@ -35,7 +35,7 @@ namespace DOL.GS
 		/// Constructs a new region action
 		/// </summary>
 		/// <param name="actionSource">The action source</param>
-		public RegionAction(GameObject actionSource) : base(actionSource.Region.TimeManager)
+		public RegionAction(GameObject actionSource) : base(actionSource.CurrentRegion.TimeManager)
 		{
 			if (actionSource == null)
 				throw new ArgumentNullException("actionSource");

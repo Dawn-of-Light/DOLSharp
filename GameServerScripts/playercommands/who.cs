@@ -91,7 +91,7 @@ namespace DOL.GS.Scripts
 				GamePlayer addPlayer = serverClient.Player;
                 if (addPlayer == null) continue;
 				if (addPlayer.Client != client // allways add self
-					&& client.Account.PrivLevel == ePrivLevel.Admin
+					&& client.Account.PrivLevel < (int)ePrivLevel.GM
 					&& (addPlayer.IsAnonymous
 					|| !GameServer.ServerRules.IsSameRealm(addPlayer, client.Player, true))) continue;
 				clientsList.Add(addPlayer.Client);
@@ -157,7 +157,7 @@ namespace DOL.GS.Scripts
 
 
 		// make /who line using GamePlayer
-		private string FormatLine(GamePlayer player, ePrivLevel PrivLevel)
+		private string FormatLine(GamePlayer player, uint PrivLevel)
 		{
 			/*
 			 * /setwho class | trade
@@ -175,15 +175,15 @@ namespace DOL.GS.Scripts
 			}
 
 			StringBuilder result = new StringBuilder(player.Name, 100);
-			if (player.GuildID != 0)
+			if (player.GuildName != "")
 			{
 				result.Append(" <");
-				result.Append(GuildMgr.GetGuildByID(player.GuildID).GuildName);
+				result.Append(player.GuildName);
 				result.Append(">");
 			}
 
 			// simle format for PvP
-			if (GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvP && PrivLevel == ePrivLevel.Player)
+			if (GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvP && PrivLevel == 1)
 				return result.ToString();
 
 			result.Append(" the Level ");
@@ -288,13 +288,13 @@ namespace DOL.GS.Scripts
 			{
 				if (player.Name.ToLower().StartsWith(m_filterString))
 					return true;
-				if (GuildMgr.GetGuildByID(player.GuildID).GuildName.ToLower().IndexOf(m_filterString) >= 0)
+				if (player.GuildName.ToLower().StartsWith(m_filterString))
 					return true;
 				if (GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvP)
 					return false;
 				if (player.CharacterClass.Name.ToLower().StartsWith(m_filterString))
 					return true;
-				if (player.CurrentZone != null && player.CurrentZone.Description.ToLower().IndexOf(m_filterString) >= 0)
+				if (player.CurrentZone != null && player.CurrentZone.Description.ToLower().StartsWith(m_filterString))
 					return true;
 				return false;
 			}

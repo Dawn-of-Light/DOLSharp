@@ -55,13 +55,13 @@ namespace DOL.GS.Scripts
 			if (!base.Interact(player))
 				return false;
 
-			TurnTo(player.Position);
+			TurnTo(player.X, player.Y);
 
-			if(player.CustomisationStep == 2)
+			if(player.PlayerCharacter.CustomisationStep == 2)
 			{
 				SayTo(player, eChatLoc.CL_PopupWindow, player.CharacterClass.Name +", I have discovered a secret spell that will allow you to change your appearance. I can cast this spell upon you if you wish. All you must do is say the word and I will [change your appearance].");
 			}
-			else if(player.CustomisationStep == 3)
+			else if(player.PlayerCharacter.CustomisationStep == 3)
 			{
 				SayTo(player, eChatLoc.CL_PopupWindow, "You have already been granted the ability to change your appearance. You must leave this world to make the changes. (Log out to change your appearance.)");
 			}
@@ -84,7 +84,7 @@ namespace DOL.GS.Scripts
 			if (player == null)
 				return false;
 
-			if (player.CustomisationStep == 2 && text == "change your appearance")
+			if (player.PlayerCharacter.CustomisationStep == 2 && text == "change your appearance")
 			{
 				foreach(GamePlayer players in this.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE)) 
 				{
@@ -93,7 +93,7 @@ namespace DOL.GS.Scripts
 				new RegionTimer(player, new RegionTimerCallback(EndCastCallback), CAST_TIME);
 			
 				SayTo(player, eChatLoc.CL_PopupWindow, "There it is done! Now, you must leave this world for a short time for the magic to work. (You must log out to change your appearance.)");
-				player.CustomisationStep = 3;
+				player.PlayerCharacter.CustomisationStep = 3;
 			}
 			return true;
 		}

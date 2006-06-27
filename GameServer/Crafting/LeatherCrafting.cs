@@ -19,7 +19,7 @@
 using System.Collections;
 using System.Collections.Specialized;
 using System.Reflection;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.GS.PacketHandler;
 using log4net;
 
@@ -46,19 +46,19 @@ namespace DOL.GS
 		/// <param name="player">the crafting player</param>
 		/// <param name="craftItemData">the object in construction</param>
 		/// <returns>true if the player hold all needed tools</returns>
-		public override bool CheckTool(GamePlayer player, CraftItemData craftItemData)
+		public override bool CheckTool(GamePlayer player, DBCraftedItem craftItemData)
 		{
 			byte flags = 0;
-			foreach (GenericItem item in player.Inventory.GetItemRange(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+			foreach (InventoryItem item in player.Inventory.GetItemRange(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
 			{
-				if(!(item is CraftingTool)) continue;
+				if(item == null || item.Object_Type != 0) continue;
 
-				if(((CraftingTool)item).Type == eCraftingToolType.SmithHammer)
+				if(item.Name == "smith's hammer")
 				{
 					if((flags & 0x01) == 0) flags |= 0x01;
 					if(flags >= 0x03) break;
 				}
-				else if(((CraftingTool)item).Type == eCraftingToolType.MortarAndPestle)
+				else if(item.Name == "sewing kit")
 				{
 					if((flags & 0x02) == 0) flags |= 0x02;
 					if(flags >= 0x03) break;
@@ -67,18 +67,19 @@ namespace DOL.GS
 
 			if(flags < 0x03)
 			{
-				player.Out.SendMessage("You do not have the tools to make the "+craftItemData.TemplateToCraft.Name+".",eChatType.CT_System,eChatLoc.CL_SystemWindow);
-					
 				if((flags & 0x01) == 0)
 				{
+					player.Out.SendMessage("You do not have the tools to make the "+craftItemData.ItemTemplate.Name+".",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 					player.Out.SendMessage("You must find a smith tool!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 					return false;
 				}
-				else
+
+				if((flags & 0x02) == 0)
 				{
+					player.Out.SendMessage("You do not have the tools to make the "+craftItemData.ItemTemplate.Name+".",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 					player.Out.SendMessage("You must find a sewing kit!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 					return false;
-				}	
+				}
 			}
 
 			return true;
@@ -89,7 +90,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="player"></param>
 		/// <param name="item"></param>
-		public override void GainCraftingSkillPoints(GamePlayer player, CraftItemData item)
+		public override void GainCraftingSkillPoints(GamePlayer player, DBCraftedItem item)
 		{
 			if (player.GetCraftingSkillValue(eCraftingSkill.LeatherCrafting) < player.GetCraftingSkillValue(player.CraftingPrimarySkill)) // max secondary skill cap == primary skill
 			{

@@ -18,7 +18,7 @@
  */
 using System;
 using System.Reflection;
-using DOL.GS.Database;
+using DOL.Database;
 using log4net;
 
 namespace DOL.GS
@@ -36,32 +36,75 @@ namespace DOL.GS
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		/// <summary>
-		/// The GenericItem that is contained within
+		/// The InventoryItem that is contained within
 		/// </summary>
-		private GenericItem m_item;
+		private InventoryItem m_item;
 
 		/// <summary>
-		/// Constructs a GameInventoryItem based on an
-		/// GenericItem. Will disappear after 3 minutes if
-		/// added to the world
+		/// Constructs an empty GameInventoryItem
+		/// that will disappear from the world after 3 minutes
 		/// </summary>
-		/// <param name="item">the InventoryItem to put into this class</param>
-		public GameInventoryItem(GenericItem item) : base(180000)
+		public GameInventoryItem() : base(180000)
 		{
-			m_item = item;
-			m_item.SlotPosition = 0;
-			m_item.Owner = null;
-			m_Level = (byte)item.Level;
-			m_Model = (ushort)item.Model;
-			m_Name = item.Name;
 		}
 
 		/// <summary>
-		/// Gets the GenericItem contained within this class
+		/// Constructs a GameInventoryItem based on an
+		/// InventoryItem. Will disappear after 3 minutes if
+		/// added to the world
 		/// </summary>
-		public GenericItem Item
+		/// <param name="item">the InventoryItem to put into this class</param>
+		public GameInventoryItem(InventoryItem item) : this()
 		{
-			get { return m_item; }
+			m_item = item;
+			m_item.SlotPosition = 0;
+			m_item.OwnerID = null;
+			this.Level = (byte)item.Level;
+			this.Model = (ushort)item.Model;
+			this.Name = item.Name;
+		}
+
+		/// <summary>
+		/// Creates a new GameInventoryItem based on an
+		/// InventoryTemplateID. Will disappear after 3 minutes if
+		/// added to the world
+		/// </summary>
+		/// <param name="templateID">the templateID to load and create an item</param>
+		/// <returns>Found item or null</returns>
+		public static GameInventoryItem CreateFromTemplate(string templateID)
+		{
+			ItemTemplate template = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof(ItemTemplate), templateID);
+			if (template == null)
+			{
+				if (log.IsWarnEnabled)
+					log.Warn("Item Creation: Template not found!\n"+Environment.StackTrace);
+				return null;
+			}
+
+			GameInventoryItem invItem = new GameInventoryItem();
+
+			invItem.m_item = new InventoryItem();
+			invItem.m_item.SlotPosition = 0;
+			invItem.m_item.OwnerID = null;
+
+			invItem.Level = (byte)template.Level;
+			invItem.Model = (ushort)template.Model;
+			invItem.Name = template.Name;
+
+			invItem.m_item.CopyFrom(template);
+
+			return invItem;
+		}
+
+		/// <summary>
+		/// Gets the InventoryItem contained within this class
+		/// </summary>
+		public InventoryItem Item
+		{
+			get
+			{
+				return m_item;
+			}
 		}
 	}
 }

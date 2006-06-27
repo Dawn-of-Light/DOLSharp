@@ -19,7 +19,7 @@
 using System;
 using System.Reflection;
 using DOL.AI.Brain;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.GS.PacketHandler;
 using DOL.GS.Spells;
 using System.Collections;
@@ -47,7 +47,7 @@ namespace DOL.GS.Styles
 		/// <param name="style">The style to execute</param>
 		/// <param name="weapon">The weapon used to execute the style</param>
 		/// <returns>true if the player can execute the style right now, false if not</returns>
-		public static bool CanUseStyle(GameLiving living, Style style, Weapon weapon)
+		public static bool CanUseStyle(GameLiving living, Style style, InventoryItem weapon)
 		{
 			//First thing in processors, lock the objects you modify
 			//This way it makes sure the objects are not modified by
@@ -124,7 +124,7 @@ namespace DOL.GS.Styles
 
 					case Style.eOpening.Positional:
 						// get players angle on target
-						float angle = target.GetAngleToSpot(living.Position);
+						float angle = target.GetAngleToTarget(living);	
 						//player.Out.SendDebugMessage("Positional check: "+style.OpeningRequirementValue+" angle "+angle+" target heading="+target.Heading);						
 
 					switch ((Style.eOpeningPosition)style.OpeningRequirementValue) {
@@ -205,7 +205,7 @@ namespace DOL.GS.Styles
 					return;
 				}
 
-				Weapon weapon = (style.WeaponTypeRequirement == (int)eObjectType.Shield) ? living.Inventory.GetItem(eInventorySlot.LeftHandWeapon) as Weapon : living.AttackWeapon;
+				InventoryItem weapon = (style.WeaponTypeRequirement == (int)eObjectType.Shield) ? living.Inventory.GetItem(eInventorySlot.LeftHandWeapon) : living.AttackWeapon;
 //				if (weapon == null) return;	// no weapon = no style
 				if (!CheckWeaponType(style, living, weapon))
 				{
@@ -221,8 +221,8 @@ namespace DOL.GS.Styles
 
 				if(player != null) //Do mob use endurance?
 				{
-					int fatCost = CalculateEnduranceCost(player, style, weapon.Speed);
-					if (player.EndurancePercent < fatCost) 
+					int fatCost = CalculateEnduranceCost(player, style, weapon.SPD_ABS);
+					if (player.Endurance < fatCost) 
 					{
 						player.Out.SendMessage("You are too fatigued to use this style!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						return;
@@ -291,7 +291,7 @@ namespace DOL.GS.Styles
 		/// </param>
 		/// <param name="weapon">The weapon used to execute the style</param>
 		/// <returns>true if a style was performed, false if not</returns>
-		public static bool ExecuteStyle(GameLiving living, AttackData attackData, Weapon weapon)
+		public static bool ExecuteStyle(GameLiving living, AttackData attackData, InventoryItem weapon)
 		{			
 			//First thing in processors, lock the objects you modify
 			//This way it makes sure the objects are not modified by
@@ -303,13 +303,13 @@ namespace DOL.GS.Styles
 				if(attackData.Style==null)
 					return false;
 
-				if (weapon != null && weapon is Shield)
+				if (weapon != null && weapon.Object_Type == (int)eObjectType.Shield)
 				{
-					attackData.AnimationId = (weapon.HandNeeded != eHandNeeded.TwoHands) ? attackData.Style.ID : attackData.Style.TwoHandAnimation; // 2h shield?
+					attackData.AnimationId = (weapon.Hand != 1) ? attackData.Style.ID : attackData.Style.TwoHandAnimation; // 2h shield?
 				}
 				int fatCost = 0;
 				if(weapon != null)
-					fatCost = CalculateEnduranceCost(living, attackData.Style, weapon.Speed);
+					fatCost = CalculateEnduranceCost(living, attackData.Style, weapon.SPD_ABS);
 
 				//Reduce endurance if styled attack missed
 				switch(attackData.AttackResult)
@@ -319,7 +319,7 @@ namespace DOL.GS.Styles
 					case GameLiving.eAttackResult.Missed:
 					case GameLiving.eAttackResult.Parried:
 						if(player != null) //No mob endu lost yet
-							living.EndurancePercent -= (byte)Math.Max(1, fatCost / 2);
+							living.Endurance -= Math.Max(1, fatCost / 2);
 						return false;
 				}
 
@@ -334,7 +334,7 @@ namespace DOL.GS.Styles
 					if(player != null)
 					{
 						// reduce players endurance, full endurance if failed style
-						player.EndurancePercent -= (byte)fatCost;
+						player.Endurance -= fatCost;
 
 						//"You must be hidden to perform this style!"
 						//Print a style-fail message
@@ -381,7 +381,7 @@ namespace DOL.GS.Styles
 					if(player != null)
 					{
 						// reduce players endurance
-						player.EndurancePercent -= (byte)fatCost;
+						player.Endurance -= fatCost;
 						string damageAmount = (attackData.StyleDamage > 0) ? " (+"+attackData.StyleDamage+")" : "";
 						player.Out.SendMessage("You perform your " + attackData.Style.Name + " perfectly!"+damageAmount, eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 					}
@@ -412,7 +412,7 @@ namespace DOL.GS.Styles
 					}
 
 					if(weapon != null)
-						attackData.AnimationId = (weapon.HandNeeded != eHandNeeded.TwoHands) ? attackData.Style.ID : attackData.Style.TwoHandAnimation; // special animation for two-hand
+						attackData.AnimationId = (weapon.Hand != 1) ? attackData.Style.ID : attackData.Style.TwoHandAnimation; // special animation for two-hand
 					else if(living.Inventory != null)
 						attackData.AnimationId = (living.Inventory.GetItem(eInventorySlot.RightHandWeapon) != null ) ? attackData.Style.ID : attackData.Style.TwoHandAnimation; // special animation for two-hand
 					else
@@ -432,7 +432,7 @@ namespace DOL.GS.Styles
 		/// <returns>Endurance needed to use style</returns>
 		public static int CalculateEnduranceCost(GameLiving living, Style style, int weaponSpd)
 		{
-			int fatCost = weaponSpd/100 * style.EnduranceCost / 40;
+			int fatCost = weaponSpd * style.EnduranceCost / 40;
 			if(weaponSpd < 40)
 				fatCost++;
 			fatCost = (int)Math.Ceiling(fatCost*living.GetModified(eProperty.FatigueConsumption)*0.01);
@@ -447,7 +447,7 @@ namespace DOL.GS.Styles
 		/// <param name="living">The living wanting to execute the style</param>
 		/// <param name="weapon">The weapon used to execute the style</param>
 		/// <returns>true if correct weapon active</returns>
-		protected static bool CheckWeaponType(Style style, GameLiving living, Weapon weapon)
+		protected static bool CheckWeaponType(Style style, GameLiving living, InventoryItem weapon)
 		{
 			if(living is GameNPC)
 				return true;
@@ -459,16 +459,16 @@ namespace DOL.GS.Styles
 				case Style.SpecialWeaponType.DualWield:
 					// both weapons are needed to use style,
 					// shield is not a weapon here
-					Weapon rightHand = player.AttackWeapon;
-					Weapon leftHand = player.Inventory.GetItem(eInventorySlot.LeftHandWeapon) as Weapon;
+					InventoryItem rightHand = player.AttackWeapon;
+					InventoryItem leftHand = player.Inventory.GetItem(eInventorySlot.LeftHandWeapon);
 					if (rightHand == null) return false;
 					if (leftHand == null) return false;
-					if (rightHand is RangedWeapon || rightHand.HandNeeded == eHandNeeded.TwoHands) return false;
+					if (rightHand.Item_Type != Slot.RIGHTHAND && rightHand.Item_Type != Slot.LEFTHAND) return false;
 					if (style.Spec == Specs.HandToHand
-						&& (!(rightHand is HandToHand)
-						|| !(leftHand is HandToHand)))
+						&& (rightHand.Object_Type != (int)eObjectType.HandToHand
+						|| leftHand.Object_Type != (int)eObjectType.HandToHand))
 							return false;
-					return !(leftHand is Shield);
+					return leftHand.Object_Type != (int)eObjectType.Shield;
 
 				case Style.SpecialWeaponType.AnyWeapon:
 					// TODO: style can be used with any weapon type,
@@ -483,13 +483,13 @@ namespace DOL.GS.Styles
 
 					// can't use shield styles if no active weapon
 					if(style.WeaponTypeRequirement == (int)eObjectType.Shield
-						&& (player.AttackWeapon == null || (player.AttackWeapon is RangedWeapon || player.AttackWeapon.HandNeeded == eHandNeeded.TwoHands)))
+						&& (player.AttackWeapon == null || (player.AttackWeapon.Item_Type != Slot.RIGHTHAND && player.AttackWeapon.Item_Type != Slot.LEFTHAND)))
 							return false;
 
 					// weapon type check
 					return GameServer.ServerRules.IsObjectTypesEqual(
 							(eObjectType)style.WeaponTypeRequirement,
-							weapon.ObjectType);
+							(eObjectType)weapon.Object_Type);
 			}
 		}
 

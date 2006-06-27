@@ -35,7 +35,7 @@
 
 using System;
 using System.Reflection;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
@@ -50,55 +50,12 @@ using log4net;
 
 namespace DOL.GS.Quests.Midgard
 {
-
-	/* The first thing we do, is to declare the quest requirement
-	 * class linked with the new Quest. To do this, we derive 
-	 * from the abstract class AbstractQuestDescriptor
+	/* The first thing we do, is to declare the class we create
+	 * as Quest. To do this, we derive from the abstract class
+	 * AbstractQuest
+	 * 	 
 	 */
-	public class CityOfJordheimDescriptor : AbstractQuestDescriptor
-	{
-		/* This is the type of the quest class linked with 
-		 * this requirement class, you must override the 
-		 * base method like that
-		 */
-		public override Type LinkedQuestType
-		{
-			get { return typeof(CityOfJordheim); }
-		}
 
-		/* This value is used to retrieves how maximum level needed
-		 * to be able to make this quest. Override it only if you need, 
-		 * the default value is 50
-		 */
-		public override int MaxLevel
-		{
-			get { return 1; }
-		}
-
-		/* This method is used to know if the player is qualified to 
-		 * do the quest. The base method always test his level and
-		 * how many time the quest has been done. Override it only if 
-		 * you want to add a custom test (here we test also the class name)
-		 */
-		public override bool CheckQuestQualification(GamePlayer player)
-		{
-			// This checks below are only performed is player isn't doing quest already
-			if (player.HasFinishedQuest(typeof(ImportantDeliveryMid)) == 0)
-				return false;
-
-			if (!BaseDalikorQuest.CheckPartAccessible(player, typeof(CityOfJordheim)))
-				return false;
-
-			return base.CheckQuestQualification(player);
-		}
-	}
-
-
-	/* The second thing we do, is to declare the class we create
-	 * as Quest. We must make it persistant using attributes, to
-	 * do this, we derive from the abstract class AbstractQuest
-	 */
-	[NHibernate.Mapping.Attributes.Subclass(NameType = typeof(CityOfJordheim), ExtendsType = typeof(AbstractQuest))] 
 	public class CityOfJordheim : BaseDalikorQuest
 	{
 		/// <summary>
@@ -117,6 +74,8 @@ namespace DOL.GS.Quests.Midgard
 		 */
 
 		protected const string questTitle = "City of Jordheim";
+		protected const int minimumLevel = 1;
+		protected const int maximumLevel = 1;
 
 		protected static GameLocation warriorTrainer = new GameLocation("Warrior Trainer", 101, 29902, 35916, 8005, 2275);
 		protected static GameLocation savageTrainer = new GameLocation("Savage Trainer", 101, 28882, 35823, 8021, 2662);
@@ -135,14 +94,35 @@ namespace DOL.GS.Quests.Midgard
 		private GameNPC assistant = null;
 		private GameTimer assistantTimer = null;
 
-		private static TravelTicketTemplate ticketToMularn = null;
-        private static GenericItemTemplate scrollYuliwyf = null;
-        private static GenericItemTemplate receiptHarlfug = null;
-        private static GenericItemTemplate letterDalikor = null;
-        private static GenericItemTemplate assistantNecklace = null;
-        private static GenericItemTemplate chestOfCoins = null;
-        private static ShieldTemplate recruitsRoundShield = null;
-        private static BracerTemplate recruitsBracer = null;
+		private static ItemTemplate ticketToMularn = null;
+		private static ItemTemplate scrollYuliwyf = null;
+		private static ItemTemplate receiptHarlfug = null;
+		private static ItemTemplate letterDalikor = null;
+		private static ItemTemplate assistantNecklace = null;
+		private static ItemTemplate chestOfCoins = null;
+		private static ItemTemplate recruitsRoundShield = null;
+		private static ItemTemplate recruitsBracer = null;
+
+
+		/* We need to define the constructors from the base class here, else there might be problems
+		 * when loading this quest...
+		 */
+
+		public CityOfJordheim() : base()
+		{
+		}
+
+		public CityOfJordheim(GamePlayer questingPlayer) : this(questingPlayer, 1)
+		{
+		}
+
+		public CityOfJordheim(GamePlayer questingPlayer, int step) : base(questingPlayer, step)
+		{
+		}
+
+		public CityOfJordheim(GamePlayer questingPlayer, DBQuest dbQuest) : base(questingPlayer, dbQuest)
+		{
+		}
 
 
 		/* The following method is called automatically when this quest class
@@ -189,10 +169,12 @@ namespace DOL.GS.Quests.Midgard
 					log.Warn("Could not find " + yuliwyf.Name + ", creating ...");
 				yuliwyf.GuildName = "Part of " + questTitle + " Quest";
 				yuliwyf.Realm = (byte) eRealm.Midgard;
-				yuliwyf.RegionId = 101;
+				yuliwyf.CurrentRegionID = 101;
 				yuliwyf.Size = 51;
 				yuliwyf.Level = 50;
-				yuliwyf.Position = new Point(31929, 28279, 8819);
+				yuliwyf.X = 31929;
+				yuliwyf.Y = 28279;
+				yuliwyf.Z = 8819;
 				yuliwyf.Heading = 2013;
 				yuliwyf.EquipmentTemplateID = "5101262";
 				//You don't have to store the created mob in the db if you don't want,
@@ -216,10 +198,12 @@ namespace DOL.GS.Quests.Midgard
 					log.Warn("Could not find " + harlfug.Name + ", creating her ...");
 				harlfug.GuildName = "Stable Master";
 				harlfug.Realm = (byte) eRealm.Midgard;
-				harlfug.RegionId = 100;
+				harlfug.CurrentRegionID = 100;
 				harlfug.Size = 52;
 				harlfug.Level = 41;
-				harlfug.Position = new Point(773458, 754240, 4600);
+				harlfug.X = 773458;
+				harlfug.Y = 754240;
+				harlfug.Z = 4600;
 				harlfug.Heading = 2707;
 				harlfug.EquipmentTemplateID = "5100798";
 
@@ -239,10 +223,10 @@ namespace DOL.GS.Quests.Midgard
 
 			ticketToMularn = CreateTicketTo("Mularn");
 
-			scrollYuliwyf = (GenericItemTemplate)GameServer.Database.FindObjectByKey(typeof(GenericItemTemplate), "scroll_for_yuliwyf");
+			scrollYuliwyf = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "scroll_for_yuliwyf");
 			if (scrollYuliwyf == null)
 			{
-				scrollYuliwyf = new GenericItemTemplate();
+				scrollYuliwyf = new ItemTemplate();
 				scrollYuliwyf.Name = "Scroll for Jarl Yuliwyf";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + scrollYuliwyf.Name + " , creating it ...");
@@ -250,11 +234,11 @@ namespace DOL.GS.Quests.Midgard
 				scrollYuliwyf.Weight = 3;
 				scrollYuliwyf.Model = 498;
 
-				scrollYuliwyf.ItemTemplateID = "scroll_for_yuliwyf";
+				scrollYuliwyf.Object_Type = (int) eObjectType.GenericItem;
 
+				scrollYuliwyf.Id_nb = "scroll_for_yuliwyf";
+				scrollYuliwyf.IsPickable = true;
 				scrollYuliwyf.IsDropable = false;
-				scrollYuliwyf.IsSaleable = false;
-				scrollYuliwyf.IsTradable = false;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -264,10 +248,10 @@ namespace DOL.GS.Quests.Midgard
 			}
 
 
-			receiptHarlfug = (GenericItemTemplate)GameServer.Database.FindObjectByKey(typeof(GenericItemTemplate), "receipt_for_harlfug");
+			receiptHarlfug = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "receipt_for_harlfug");
 			if (receiptHarlfug == null)
 			{
-				receiptHarlfug = new GenericItemTemplate();
+				receiptHarlfug = new ItemTemplate();
 				receiptHarlfug.Name = "Receipt for Harlfug";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + receiptHarlfug.Name + " , creating it ...");
@@ -275,11 +259,11 @@ namespace DOL.GS.Quests.Midgard
 				receiptHarlfug.Weight = 3;
 				receiptHarlfug.Model = 498;
 
-				receiptHarlfug.ItemTemplateID = "receipt_for_harlfug";
+				receiptHarlfug.Object_Type = (int) eObjectType.GenericItem;
 
+				receiptHarlfug.Id_nb = "receipt_for_harlfug";
+				receiptHarlfug.IsPickable = true;
 				receiptHarlfug.IsDropable = false;
-				receiptHarlfug.IsSaleable = false;
-				receiptHarlfug.IsTradable = false;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -288,10 +272,10 @@ namespace DOL.GS.Quests.Midgard
 					GameServer.Database.AddNewObject(receiptHarlfug);
 			}
 
-			chestOfCoins = (GenericItemTemplate)GameServer.Database.FindObjectByKey(typeof(GenericItemTemplate), "small_chest_of_coins");
+			chestOfCoins = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "small_chest_of_coins");
 			if (chestOfCoins == null)
 			{
-				chestOfCoins = new GenericItemTemplate();
+				chestOfCoins = new ItemTemplate();
 				chestOfCoins.Name = "Small Chest of Coins";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + chestOfCoins.Name + " , creating it ...");
@@ -299,11 +283,11 @@ namespace DOL.GS.Quests.Midgard
 				chestOfCoins.Weight = 15;
 				chestOfCoins.Model = 602;
 
-				chestOfCoins.ItemTemplateID = "small_chest_of_coins";
+				chestOfCoins.Object_Type = (int) eObjectType.GenericItem;
 
+				chestOfCoins.Id_nb = "small_chest_of_coins";
+				chestOfCoins.IsPickable = true;
 				chestOfCoins.IsDropable = false;
-				chestOfCoins.IsSaleable = false;
-				chestOfCoins.IsTradable = false;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -312,10 +296,10 @@ namespace DOL.GS.Quests.Midgard
 					GameServer.Database.AddNewObject(chestOfCoins);
 			}
 
-			letterDalikor = (GenericItemTemplate)GameServer.Database.FindObjectByKey(typeof(GenericItemTemplate), "letter_for_dalikor");
+			letterDalikor = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "letter_for_dalikor");
 			if (letterDalikor == null)
 			{
-				letterDalikor = new GenericItemTemplate();
+				letterDalikor = new ItemTemplate();
 				letterDalikor.Name = "Letter for Dalikor";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + letterDalikor.Name + " , creating it ...");
@@ -323,11 +307,11 @@ namespace DOL.GS.Quests.Midgard
 				letterDalikor.Weight = 3;
 				letterDalikor.Model = 498;
 
-				letterDalikor.ItemTemplateID = "letter_for_dalikor";
+				letterDalikor.Object_Type = (int) eObjectType.GenericItem;
 
+				letterDalikor.Id_nb = "letter_for_dalikor";
+				letterDalikor.IsPickable = true;
 				letterDalikor.IsDropable = false;
-				letterDalikor.IsSaleable = false;
-				letterDalikor.IsTradable = false;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -336,10 +320,10 @@ namespace DOL.GS.Quests.Midgard
 					GameServer.Database.AddNewObject(letterDalikor);
 			}
 
-			assistantNecklace = (GenericItemTemplate)GameServer.Database.FindObjectByKey(typeof(GenericItemTemplate), "assistant_necklace");
+			assistantNecklace = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "assistant_necklace");
 			if (assistantNecklace == null)
 			{
-				assistantNecklace = new GenericItemTemplate();
+				assistantNecklace = new ItemTemplate();
 				assistantNecklace.Name = "Assistant's Necklace";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + assistantNecklace.Name + " , creating it ...");
@@ -347,11 +331,12 @@ namespace DOL.GS.Quests.Midgard
 				assistantNecklace.Weight = 3;
 				assistantNecklace.Model = 101;
 
-				assistantNecklace.ItemTemplateID = "assistant_necklace";
+				assistantNecklace.Object_Type = (int) eObjectType.Magical;
+				assistantNecklace.Item_Type = (int) eEquipmentItems.NECK;
 
+				assistantNecklace.Id_nb = "assistant_necklace";
+				assistantNecklace.IsPickable = true;
 				assistantNecklace.IsDropable = false;
-				assistantNecklace.IsSaleable = false;
-				assistantNecklace.IsTradable = false;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -361,34 +346,47 @@ namespace DOL.GS.Quests.Midgard
 			}
 
 			// item db check
-			recruitsRoundShield = (ShieldTemplate)GameServer.Database.FindObjectByKey(typeof(ShieldTemplate), "recruits_round_shield_mid");
+			recruitsRoundShield = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_round_shield_mid");
 			if (recruitsRoundShield == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Recruit's Round Shield (Mid), creating it ...");
-				recruitsRoundShield = new ShieldTemplate();
+				recruitsRoundShield = new ItemTemplate();
 				recruitsRoundShield.Name = "Recruit's Round Shield (Mid)";
 				recruitsRoundShield.Level = 4;
 
 				recruitsRoundShield.Weight = 31;
 				recruitsRoundShield.Model = 59; // studded Boots                
 
-				recruitsRoundShield.ItemTemplateID = "recruits_round_shield_mid";
-				recruitsRoundShield.Value = 400;
-
+				recruitsRoundShield.Object_Type = 0x2A; // (int)eObjectType.Shield;
+				recruitsRoundShield.Item_Type = (int) eEquipmentItems.LEFT_HAND;
+				recruitsRoundShield.Id_nb = "recruits_round_shield_mid";
+				recruitsRoundShield.Gold = 0;
+				recruitsRoundShield.Silver = 4;
+				recruitsRoundShield.Copper = 0;
+				recruitsRoundShield.IsPickable = true;
 				recruitsRoundShield.IsDropable = true;
-				recruitsRoundShield.IsSaleable = true;
-				recruitsRoundShield.IsTradable = true;
 				recruitsRoundShield.Color = 61;
+				recruitsRoundShield.Hand = 2;
+				recruitsRoundShield.DPS_AF = 1;
+				recruitsRoundShield.SPD_ABS = 1;
 
-				recruitsRoundShield.DamagePerSecond = 1;
-				recruitsRoundShield.Speed = 1;
-				recruitsRoundShield.Size = eShieldSize.Small;
+				recruitsRoundShield.Type_Damage = 1;
 
 				recruitsRoundShield.Bonus = 1; // default bonus
 
-				recruitsRoundShield.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 3));
-				recruitsRoundShield.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Body, 1));
+				recruitsRoundShield.Bonus1 = 3;
+				recruitsRoundShield.Bonus1Type = (int) eStat.STR;
+
+				recruitsRoundShield.Bonus2 = 1;
+				recruitsRoundShield.Bonus2Type = (int) eResist.Body;
+
+				recruitsRoundShield.Quality = 100;
+				recruitsRoundShield.MaxQuality = 100;
+				recruitsRoundShield.Condition = 1000;
+				recruitsRoundShield.MaxCondition = 1000;
+				recruitsRoundShield.Durability = 1000;
+				recruitsRoundShield.MaxDurability = 1000;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -398,10 +396,10 @@ namespace DOL.GS.Quests.Midgard
 			}
 
 			// item db check
-			recruitsBracer = (BracerTemplate)GameServer.Database.FindObjectByKey(typeof(BracerTemplate), "recruits_silver_bracer");
+			recruitsBracer = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_silver_bracer");
 			if (recruitsBracer == null)
 			{
-				recruitsBracer = new BracerTemplate();
+				recruitsBracer = new ItemTemplate();
 				recruitsBracer.Name = "Recruit's Silver Bracer";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + recruitsBracer.Name + ", creating it ...");
@@ -409,17 +407,36 @@ namespace DOL.GS.Quests.Midgard
 
 				recruitsBracer.Weight = 10;
 				recruitsBracer.Model = 130;
-				recruitsBracer.ItemTemplateID = "recruits_silver_bracer";
-				recruitsBracer.Value = 400;
 
+				recruitsBracer.Object_Type = (int) eObjectType.Magical;
+				recruitsBracer.Item_Type = (int) eEquipmentItems.L_BRACER;
+				recruitsBracer.Id_nb = "recruits_silver_bracer";
+				recruitsBracer.Gold = 0;
+				recruitsBracer.Silver = 4;
+				recruitsBracer.Copper = 0;
+				recruitsBracer.IsPickable = true;
 				recruitsBracer.IsDropable = true;
-				recruitsBracer.IsSaleable = true;
-				recruitsBracer.IsTradable = true;
+				//recruitsBracer.Color = 36;
+				//recruitsBracer.Hand = 2;
+				//recruitsBracer.DPS_AF = 1;
+				//recruitsBracer.SPD_ABS = 1;
+
+				//recruitsBracer.Type_Damage = 1;
 
 				recruitsBracer.Bonus = 1; // default bonus
 
-				recruitsBracer.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 8));
-				recruitsBracer.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Crush, 1));
+				recruitsBracer.Bonus1 = 8;
+				recruitsBracer.Bonus1Type = (int) eProperty.MaxHealth;
+
+				recruitsBracer.Bonus2 = 1;
+				recruitsBracer.Bonus2Type = (int) eResist.Crush;
+
+				recruitsBracer.Quality = 100;
+				recruitsBracer.MaxQuality = 100;
+				recruitsBracer.Condition = 1000;
+				recruitsBracer.MaxCondition = 1000;
+				recruitsBracer.Durability = 1000;
+				recruitsBracer.MaxDurability = 1000;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -450,7 +467,7 @@ namespace DOL.GS.Quests.Midgard
 			GameEventMgr.AddHandler(yuliwyf, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToYuliwyf));
 
 			/* Now we bring to harlfug the possibility to give this quest to players */
-			QuestMgr.AddQuestDescriptor(harlfug, typeof(CityOfJordheimDescriptor));
+			harlfug.AddQuestToGive(typeof (CityOfJordheim));
 
 			if (log.IsInfoEnabled)
 				log.Info("Quest \"" + questTitle + "\" initialized");
@@ -488,7 +505,7 @@ namespace DOL.GS.Quests.Midgard
 			GameEventMgr.RemoveHandler(yuliwyf, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToYuliwyf));
 
 			/* Now we remove to harlfug the possibility to give this quest to players */
-			QuestMgr.RemoveQuestDescriptor(harlfug, typeof(CityOfJordheimDescriptor));
+			harlfug.RemoveQuestToGive(typeof (CityOfJordheim));
 		}
 
 		/* This is the method we declared as callback for the hooks we set to
@@ -503,7 +520,7 @@ namespace DOL.GS.Quests.Midgard
 			if (player == null)
 				return;
 
-			if (QuestMgr.CanGiveQuest(typeof(CityOfJordheim), player, harlfug) <= 0)
+			if(harlfug.CanGiveQuest(typeof (CityOfJordheim), player)  <= 0)
 				return;
 
 			//We also check if the player is already doing the quest
@@ -563,7 +580,7 @@ namespace DOL.GS.Quests.Midgard
 			if (player == null)
 				return;
 
-			if (QuestMgr.CanGiveQuest(typeof(CityOfJordheim), player, harlfug) <= 0)
+			if(harlfug.CanGiveQuest(typeof (CityOfJordheim), player)  <= 0)
 				return;
 
 			//We also check if the player is already doing the quest
@@ -599,7 +616,7 @@ namespace DOL.GS.Quests.Midgard
 							dalikor.SayTo(player, "Harlfug's coins will be safe and sound for when he comes to Jordheim next time.Please, take this receipt back to him for me. Good luck.");
 							if (quest.Step == 6)
 							{
-								player.ReceiveItem(dalikor, receiptHarlfug.CreateInstance());
+								GiveItem(dalikor, player, receiptHarlfug);
 								quest.Step = 7;
 							}
 							break;
@@ -615,7 +632,7 @@ namespace DOL.GS.Quests.Midgard
 			if (player == null)
 				return;
 
-			if (QuestMgr.CanGiveQuest(typeof(CityOfJordheim), player, harlfug) <= 0)
+			if(harlfug.CanGiveQuest(typeof (CityOfJordheim), player)  <= 0)
 				return;
 
 			//We also check if the player is already doing the quest
@@ -658,6 +675,9 @@ namespace DOL.GS.Quests.Midgard
 						case "necklace":
 							harlfug.SayTo(player, "The necklace was made by my wife, who is a Spiritmaster. She is currently helping out with a few things in Aegirhamn, or else she could take the money to the vault keeper, hehe. Anyhow, you'll need to USE the necklace once you're inside Jordheim. I'm sure your journal there will be able to help you out. Don't worry, you'll get the hang of it. Be sure to give the Vault Keeper the scroll. Good luck, and thank you again.");
 							break;
+						case "abort":
+							player.Out.SendCustomDialog("Do you really want to abort this quest, \nall items gained during quest will be lost?", new CustomDialogResponse(CheckPlayerAbortQuest));
+							break;
 					}
 				}
 			}
@@ -670,7 +690,7 @@ namespace DOL.GS.Quests.Midgard
 			if (player == null)
 				return;
 
-			if (QuestMgr.CanGiveQuest(typeof(CityOfJordheim), player, harlfug) <= 0)
+			if(harlfug.CanGiveQuest(typeof (CityOfJordheim), player)  <= 0)
 				return;
 
 			//We also check if the player is already doing the quest
@@ -794,7 +814,7 @@ namespace DOL.GS.Quests.Midgard
 				return;
 
 			// assistant works only in camelot...
-			if (player.RegionId != 101)
+			if (player.CurrentRegionID != 101)
 				return;
 
 			CityOfJordheim quest = (CityOfJordheim) player.IsDoingQuest(typeof (CityOfJordheim));
@@ -803,8 +823,8 @@ namespace DOL.GS.Quests.Midgard
 
 			UseSlotEventArgs uArgs = (UseSlotEventArgs) args;
 
-			GenericItem item = player.Inventory.GetItem((eInventorySlot)uArgs.Slot);
-			if (item != null && item.Name == assistantNecklace.Name)
+			InventoryItem item = player.Inventory.GetItem((eInventorySlot)uArgs.Slot);
+			if (item != null && item.Id_nb == assistantNecklace.Id_nb)
 			{
 				foreach (GamePlayer visPlayer in player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 				{
@@ -837,10 +857,7 @@ namespace DOL.GS.Quests.Midgard
 		{
 			if (assistant != null && assistant.ObjectState == GameObject.eObjectState.Active)
 			{
-				Point pos = m_questPlayer.Position;
-				pos.X += 50;
-				pos.Y += 30;
-				assistant.MoveTo((ushort)m_questPlayer.RegionId, pos, (ushort)m_questPlayer.Heading);
+				assistant.MoveTo(m_questPlayer.CurrentRegionID, m_questPlayer.X + 50, m_questPlayer.Y + 30, m_questPlayer.Z, m_questPlayer.Heading);
 			}
 			else
 			{
@@ -849,13 +866,12 @@ namespace DOL.GS.Quests.Midgard
 				assistant.Name = m_questPlayer.Name + "'s Assistant";
 				assistant.GuildName = "Part of " + questTitle + " Quest";
 				assistant.Realm = m_questPlayer.Realm;
-				assistant.RegionId = m_questPlayer.RegionId;
+				assistant.CurrentRegionID = m_questPlayer.CurrentRegionID;
 				assistant.Size = 25;
 				assistant.Level = 5;
-				Point pos = m_questPlayer.Position;
-				pos.X += 50;
-				pos.Y += 50;
-				assistant.Position = pos;
+				assistant.X = m_questPlayer.X + 50;
+				assistant.Y = m_questPlayer.Y + 50;
+				assistant.Z = m_questPlayer.Z;
 				assistant.Heading = m_questPlayer.Heading;
 
 				assistant.AddToWorld();
@@ -878,6 +894,53 @@ namespace DOL.GS.Quests.Midgard
 			return 0;
 		}
 
+		/// <summary>
+		/// This method checks if a player qualifies for this quest
+		/// </summary>
+		/// <returns>true if qualified, false if not</returns>
+		public override bool CheckQuestQualification(GamePlayer player)
+		{
+			// if the player is already doing the quest his level is no longer of relevance
+			if (player.IsDoingQuest(typeof (CityOfJordheim)) != null)
+				return true;
+
+			// This checks below are only performed is player isn't doing quest already
+			if (player.HasFinishedQuest(typeof (ImportantDelivery)) == 0)
+				return false;
+
+			if (!CheckPartAccessible(player, typeof (CityOfJordheim)))
+				return false;
+
+			if (player.Level < minimumLevel || player.Level > maximumLevel)
+				return false;
+
+			return true;
+		}
+
+
+		/* This is our callback hook that will be called when the player clicks
+		 * on any button in the quest offer dialog. We check if he accepts or
+		 * declines here...
+		 */
+
+		private static void CheckPlayerAbortQuest(GamePlayer player, byte response)
+		{
+			CityOfJordheim quest = player.IsDoingQuest(typeof (CityOfJordheim)) as CityOfJordheim;
+
+			if (quest == null)
+				return;
+
+			if (response == 0x00)
+			{
+				SendSystemMessage(player, "Good, no go out there and finish your work!");
+			}
+			else
+			{
+				SendSystemMessage(player, "Aborting Quest " + questTitle + ". You can start over again if you want.");
+				quest.AbortQuest();
+			}
+		}
+
 		/* This is our callback hook that will be called when the player clicks
 		 * on any button in the quest offer dialog. We check if he accepts or
 		 * declines here...
@@ -887,7 +950,7 @@ namespace DOL.GS.Quests.Midgard
 		{
 			//We recheck the qualification, because we don't talk to players
 			//who are not doing the quest
-			if (QuestMgr.CanGiveQuest(typeof(CityOfJordheim), player, harlfug) <= 0)
+			if(harlfug.CanGiveQuest(typeof (CityOfJordheim), player)  <= 0)
 				return;
 
 			CityOfJordheim quest = player.IsDoingQuest(typeof (CityOfJordheim)) as CityOfJordheim;
@@ -902,14 +965,14 @@ namespace DOL.GS.Quests.Midgard
 			else
 			{
 				//Check if we can add the quest!
-				if (!QuestMgr.GiveQuestToPlayer(typeof(CityOfJordheim), player, harlfug))
+				if (!harlfug.GiveQuest(typeof (CityOfJordheim), player, 1))
 					return;
 
 				harlfug.SayTo(player, "Oh thank you Eeinken. This means a lot to me. Here, take this chest of coins, this scroll and this [necklace].");
 
-				player.ReceiveItem(harlfug, assistantNecklace.CreateInstance());
-				player.ReceiveItem(harlfug, chestOfCoins.CreateInstance());
-				player.ReceiveItem(harlfug, scrollYuliwyf.CreateInstance());
+				GiveItem(harlfug, player, assistantNecklace);
+				GiveItem(harlfug, player, chestOfCoins);
+				GiveItem(harlfug, player, scrollYuliwyf);
 				player.GainExperience(7, 0, 0, true);
 
 				GameEventMgr.AddHandler(player, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
@@ -960,9 +1023,8 @@ namespace DOL.GS.Quests.Midgard
 						return "[Step #9] Wait for Dalikor to finish reading the note from Harlfug. If he stops responding ask him if he is [finished] with the note.";
 					case 10:
 						return "[Step #10] Wait for Dalikor to reward you. If your he stops speaking with you at any time, ask him if there is a [reward] for your efforts.";
-					default:
-						return "[Step #" + Step + "] No Description entered for this step!";
 				}
+				return base.Description;
 			}
 		}
 
@@ -976,10 +1038,10 @@ namespace DOL.GS.Quests.Midgard
 			if (Step <= 4 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == yuliwyf.Name && gArgs.Item.Name == scrollYuliwyf.Name)
+				if (gArgs.Target.Name == yuliwyf.Name && gArgs.Item.Id_nb == scrollYuliwyf.Id_nb)
 				{
 					yuliwyf.SayTo(player, "What's this? Ah! From Stable Master Harlfug. Excellent. It looks like he wishes to make a deposit. If that is indeed the case, please hand me the Small Chest of Coins.");
-					RemoveItemFromPlayer(yuliwyf, scrollYuliwyf);
+					RemoveItem(yuliwyf, player, scrollYuliwyf);
 					Step = 5;
 					return;
 				}
@@ -988,10 +1050,10 @@ namespace DOL.GS.Quests.Midgard
 			if (Step == 5 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == yuliwyf.Name && gArgs.Item.Name == chestOfCoins.Name)
+				if (gArgs.Target.Name == yuliwyf.Name && gArgs.Item.Id_nb == chestOfCoins.Id_nb)
 				{
 					yuliwyf.SayTo(player, "My my, this is quite heavy. Business must be very good for Harlfug. If you don't mind waiting for just a few moments, I will count these coins and give you a receipt.");
-					RemoveItemFromPlayer(yuliwyf, chestOfCoins);
+					RemoveItem(yuliwyf, player, chestOfCoins);
 					Step = 6;
 					return;
 				}
@@ -1000,15 +1062,15 @@ namespace DOL.GS.Quests.Midgard
 			if (Step == 7 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == harlfug.Name && gArgs.Item.Name == receiptHarlfug.Name)
+				if (gArgs.Target.Name == harlfug.Name && gArgs.Item.Id_nb == receiptHarlfug.Id_nb)
 				{
 					harlfug.SayTo(player, "Ah, fantastic. I'm glad to know my money is now in a safe place. Thank you so much for doing that for me, and I hope the trip into Jordhiem was informative for you. Here, take this letter back to Dalikor in Mularn. I want for him to know what a fantastic job you did for me by delivering these vegetables from Haggerfel, and for taking care of some business in Jordheim for me. Thank you again Eeinken. I hope we speak again soon.");
 
-					RemoveItemFromPlayer(harlfug, receiptHarlfug);
-					RemoveItemFromPlayer(harlfug, assistantNecklace);
+					RemoveItem(harlfug, player, receiptHarlfug);
+					RemoveItem(harlfug, player, assistantNecklace);
 
-					GiveItemToPlayer(harlfug, ticketToMularn.CreateInstance());
-					GiveItemToPlayer(harlfug, letterDalikor.CreateInstance());
+					GiveItem(harlfug, player, ticketToMularn);
+					GiveItem(harlfug, player, letterDalikor);
 					Step = 8;
 					return;
 				}
@@ -1017,13 +1079,13 @@ namespace DOL.GS.Quests.Midgard
 			if (Step == 8 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == dalikor.Name && gArgs.Item.Name == letterDalikor.Name)
+				if (gArgs.Target.Name == dalikor.Name && gArgs.Item.Id_nb == letterDalikor.Id_nb)
 				{
 					dalikor.SayTo(player, "Ah, from Harlfug. Let me see what is says. One moment please.");
 					SendSystemMessage(player, "Dalikor reads the note from Harlfug carefully.");
-					dalikor.Emote(eEmote.Ponder);
+					player.Out.SendEmoteAnimation(dalikor, eEmote.Ponder);
 
-					RemoveItemFromPlayer(dalikor, letterDalikor);
+					RemoveItem(dalikor, player, letterDalikor);
 					Step = 9;
 					return;
 				}
@@ -1031,15 +1093,37 @@ namespace DOL.GS.Quests.Midgard
 
 		}
 
+		public override void AbortQuest()
+		{
+			base.AbortQuest(); //Defined in Quest, changes the state, stores in DB etc ...
+
+			RemoveItem(m_questPlayer, assistantNecklace, false);
+			RemoveItem(m_questPlayer, chestOfCoins, false);
+			RemoveItem(m_questPlayer, letterDalikor, false);
+			RemoveItem(m_questPlayer, scrollYuliwyf, false);
+			RemoveItem(m_questPlayer, ticketToMularn, false);
+
+			// remove the 7 xp you get on quest start for beeing so nice to bombard again.
+			m_questPlayer.GainExperience(-7, 0, 0, true);
+
+			if (assistantTimer != null)
+			{
+				assistantTimer.Start(1);
+			}
+
+			GameEventMgr.RemoveHandler(m_questPlayer, GamePlayerEvent.UseSlot, new DOLEventHandler(PlayerUseSlot));
+			GameEventMgr.RemoveHandler(m_questPlayer, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
+		}
+
 		public override void FinishQuest()
 		{
 			base.FinishQuest(); //Defined in Quest, changes the state, stores in DB etc ...
 
 			//Give reward to player here ...            
-			if (m_questPlayer.HasAbilityToUseItem(recruitsRoundShield.CreateInstance() as EquipableItem))
-				GiveItemToPlayer(dalikor, recruitsRoundShield.CreateInstance());
+			if (m_questPlayer.HasAbilityToUseItem(recruitsRoundShield))
+				GiveItem(dalikor, m_questPlayer, recruitsRoundShield);
 			else
-				GiveItemToPlayer(dalikor, recruitsBracer.CreateInstance());
+				GiveItem(dalikor, m_questPlayer, recruitsBracer);
 
 			m_questPlayer.GainExperience(26, 0, 0, true);
 			m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 2, Util.Random(50)), "You recieve {0} as a reward.");

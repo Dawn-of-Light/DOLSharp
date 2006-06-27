@@ -17,8 +17,7 @@
  *
  */
 using System;
-using DOL.GS.Database;
-using NHibernate.Expression;
+using DOL.Database;
 
 
 namespace DOL.GS.PacketHandler.v168
@@ -28,8 +27,9 @@ namespace DOL.GS.PacketHandler.v168
 	{
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
-			string name = packet.ReadString(30);
-			GamePlayer character = (GamePlayer) GameServer.Database.SelectObject(typeof(GamePlayer), Expression.Eq("Name", name));
+			string name=packet.ReadString(30);
+			string select = string.Format("Name = '{0}'",GameServer.Database.Escape(name));
+			Character character = (Character) GameServer.Database.SelectObject(typeof(Character), select);
 			bool nameExists = (character != null);
 			/*if(nameExists)
 				DOLConsole.WriteLine(string.Format("Name {0} already exists!",name));

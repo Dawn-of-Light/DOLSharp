@@ -15,70 +15,13 @@
 
 using System;
 using System.Reflection;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
 
 namespace DOL.GS.Quests.Albion
 {
-	/* The first thing we do, is to declare the quest requirement
- * class linked with the new Quest. To do this, we derive 
- * from the abstract class AbstractQuestDescriptor
- */
-	public class Shadows_50Descriptor : AbstractQuestDescriptor
-	{
-		/* This is the type of the quest class linked with 
-		 * this requirement class, you must override the 
-		 * base method like that
-		 */
-		public override Type LinkedQuestType
-		{
-			get { return typeof(Shadows_50); }
-		}
-
-		/* This value is used to retrieves the minimum level needed
-		 *  to be able to make this quest. Override it only if you need, 
-		 * the default value is 1
-		 */
-		public override int MinLevel
-		{
-			get { return 50; }
-		}
-
-		/* This method is used to know if the player is qualified to 
-		 * do the quest. The base method always test his level and
-		 * how many time the quest has been done. Override it only if 
-		 * you want to add a custom test (here we test also the class name)
-		 */
-		public override bool CheckQuestQualification(GamePlayer player)
-		{
-			// if the player is already doing the quest his level is no longer of relevance
-			if (player.IsDoingQuest(typeof(Shadows_50)) != null)
-				return true;
-
-			if (player.CharacterClass.ID != (byte)eCharacterClass.Reaver &&
-				player.CharacterClass.ID != (byte)eCharacterClass.Mercenary &&
-				player.CharacterClass.ID != (byte)eCharacterClass.Cabalist &&
-				player.CharacterClass.ID != (byte)eCharacterClass.Necromancer &&
-				player.CharacterClass.ID != (byte)eCharacterClass.Infiltrator &&
-				player.CharacterClass.ID != (byte)eCharacterClass.Heretic)
-				return false;
-
-			// This checks below are only performed is player isn't doing quest already
-
-			//if (player.HasFinishedQuest(typeof(Academy_47)) == 0) return false;
-
-			return base.CheckQuestQualification(player);
-		}
-	}
-
-
-	/* The second thing we do, is to declare the class we create
-	 * as Quest. We must make it persistant using attributes, to
-	 * do this, we derive from the abstract class AbstractQuest
-	 */
-	[NHibernate.Mapping.Attributes.Subclass(NameType = typeof(Shadows_50), ExtendsType = typeof(AbstractQuest))]
 	public class Shadows_50 : BaseQuest
 	{
 		/// <summary>
@@ -87,66 +30,70 @@ namespace DOL.GS.Quests.Albion
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		protected const string questTitle = "Feast of the Decadent";
+		protected const int minimumLevel = 50;
+		protected const int maximumLevel = 50;
 
 		private static GameNPC Lidmann = null; // Start NPC
-		private static GameMob Uragaig = null; // Mob to kill
+		private static GameNPC Uragaig = null; // Mob to kill
 
-		private static GenericItemTemplate sealed_pouch = null; //sealed pouch
+		private static ItemTemplate sealed_pouch = null; //sealed pouch
+		private static ItemTemplate MercenaryEpicBoots = null; // of the Shadowy Embers  Boots 
+		private static ItemTemplate MercenaryEpicHelm = null; // of the Shadowy Embers  Coif 
+		private static ItemTemplate MercenaryEpicGloves = null; // of the Shadowy Embers  Gloves 
+		private static ItemTemplate MercenaryEpicVest = null; // of the Shadowy Embers  Hauberk 
+		private static ItemTemplate MercenaryEpicLegs = null; // of the Shadowy Embers  Legs 
+		private static ItemTemplate MercenaryEpicArms = null; // of the Shadowy Embers  Sleeves 
+		private static ItemTemplate ReaverEpicBoots = null; //Shadow Shrouded Boots 
+		private static ItemTemplate ReaverEpicHelm = null; //Shadow Shrouded Coif 
+		private static ItemTemplate ReaverEpicGloves = null; //Shadow Shrouded Gloves 
+		private static ItemTemplate ReaverEpicVest = null; //Shadow Shrouded Hauberk 
+		private static ItemTemplate ReaverEpicLegs = null; //Shadow Shrouded Legs 
+		private static ItemTemplate ReaverEpicArms = null; //Shadow Shrouded Sleeves 
+		private static ItemTemplate CabalistEpicBoots = null; //Valhalla Touched Boots 
+		private static ItemTemplate CabalistEpicHelm = null; //Valhalla Touched Coif 
+		private static ItemTemplate CabalistEpicGloves = null; //Valhalla Touched Gloves 
+		private static ItemTemplate CabalistEpicVest = null; //Valhalla Touched Hauberk 
+		private static ItemTemplate CabalistEpicLegs = null; //Valhalla Touched Legs 
+		private static ItemTemplate CabalistEpicArms = null; //Valhalla Touched Sleeves 
+		private static ItemTemplate InfiltratorEpicBoots = null; //Subterranean Boots 
+		private static ItemTemplate InfiltratorEpicHelm = null; //Subterranean Coif 
+		private static ItemTemplate InfiltratorEpicGloves = null; //Subterranean Gloves 
+		private static ItemTemplate InfiltratorEpicVest = null; //Subterranean Hauberk 
+		private static ItemTemplate InfiltratorEpicLegs = null; //Subterranean Legs 
+		private static ItemTemplate InfiltratorEpicArms = null; //Subterranean Sleeves		
+		private static ItemTemplate NecromancerEpicBoots = null; //Subterranean Boots 
+		private static ItemTemplate NecromancerEpicHelm = null; //Subterranean Coif 
+		private static ItemTemplate NecromancerEpicGloves = null; //Subterranean Gloves 
+		private static ItemTemplate NecromancerEpicVest = null; //Subterranean Hauberk 
+		private static ItemTemplate NecromancerEpicLegs = null; //Subterranean Legs 
+		private static ItemTemplate NecromancerEpicArms = null; //Subterranean Sleeves
 
-		private static FeetArmorTemplate MercenaryEpicBoots = null; // of the Shadowy Embers  Boots 
-		private static HeadArmorTemplate MercenaryEpicHelm = null; // of the Shadowy Embers  Coif 
-		private static HandsArmorTemplate MercenaryEpicGloves = null; // of the Shadowy Embers  Gloves 
-		private static TorsoArmorTemplate MercenaryEpicVest = null; // of the Shadowy Embers  Hauberk 
-		private static LegsArmorTemplate MercenaryEpicLegs = null; // of the Shadowy Embers  Legs 
-		private static ArmsArmorTemplate MercenaryEpicArms = null; // of the Shadowy Embers  Sleeves 
+		// Constructors
+		public Shadows_50()
+			: base()
+		{
+		}
+		public Shadows_50(GamePlayer questingPlayer)
+			: base(questingPlayer)
+		{
+		}
 
-		private static FeetArmorTemplate ReaverEpicBoots = null; //Shadow Shrouded Boots 
-		private static HeadArmorTemplate ReaverEpicHelm = null; //Shadow Shrouded Coif 
-		private static HandsArmorTemplate ReaverEpicGloves = null; //Shadow Shrouded Gloves 
-		private static TorsoArmorTemplate ReaverEpicVest = null; //Shadow Shrouded Hauberk 
-		private static LegsArmorTemplate ReaverEpicLegs = null; //Shadow Shrouded Legs 
-		private static ArmsArmorTemplate ReaverEpicArms = null; //Shadow Shrouded Sleeves 
+		public Shadows_50(GamePlayer questingPlayer, int step)
+			: base(questingPlayer, step)
+		{
+		}
 
-		private static FeetArmorTemplate CabalistEpicBoots = null; //Valhalla Touched Boots 
-		private static HeadArmorTemplate CabalistEpicHelm = null; //Valhalla Touched Coif 
-		private static HandsArmorTemplate CabalistEpicGloves = null; //Valhalla Touched Gloves 
-		private static TorsoArmorTemplate CabalistEpicVest = null; //Valhalla Touched Hauberk 
-		private static LegsArmorTemplate CabalistEpicLegs = null; //Valhalla Touched Legs 
-		private static ArmsArmorTemplate CabalistEpicArms = null; //Valhalla Touched Sleeves 
-
-		private static FeetArmorTemplate InfiltratorEpicBoots = null; //Subterranean Boots 
-		private static HeadArmorTemplate InfiltratorEpicHelm = null; //Subterranean Coif 
-		private static HandsArmorTemplate InfiltratorEpicGloves = null; //Subterranean Gloves 
-		private static TorsoArmorTemplate InfiltratorEpicVest = null; //Subterranean Hauberk 
-		private static LegsArmorTemplate InfiltratorEpicLegs = null; //Subterranean Legs 
-		private static ArmsArmorTemplate InfiltratorEpicArms = null; //Subterranean Sleeves		
-
-		private static FeetArmorTemplate NecromancerEpicBoots = null; //Subterranean Boots 
-		private static HeadArmorTemplate NecromancerEpicHelm = null; //Subterranean Coif 
-		private static HandsArmorTemplate NecromancerEpicGloves = null; //Subterranean Gloves 
-		private static TorsoArmorTemplate NecromancerEpicVest = null; //Subterranean Hauberk 
-		private static LegsArmorTemplate NecromancerEpicLegs = null; //Subterranean Legs 
-		private static ArmsArmorTemplate NecromancerEpicArms = null; //Subterranean Sleeves
-
-		private static FeetArmorTemplate HereticEpicBoots = null;
-		private static HeadArmorTemplate HereticEpicHelm = null; 
-		private static HandsArmorTemplate HereticEpicGloves = null;
-		private static TorsoArmorTemplate HereticEpicVest = null;
-		private static LegsArmorTemplate HereticEpicLegs = null;
-		private static ArmsArmorTemplate HereticEpicArms = null;
-
-		private static GameNPC[] MercenaryTrainers = null;
-		private static GameNPC[] ReaverTrainers = null;
-		private static GameNPC[] CabalistTrainers = null;
-		private static GameNPC[] InfiltratorTrainers = null;
-		private static GameNPC[] NecromancerTrainers = null;
-		private static GameNPC[] HereticTrainers = null;
+		public Shadows_50(GamePlayer questingPlayer, DBQuest dbQuest)
+			: base(questingPlayer, dbQuest)
+		{
+		}
 
 		[ScriptLoadedEvent]
 		public static void ScriptLoaded(DOLEvent e, object sender, EventArgs args)
 		{
 			if (log.IsInfoEnabled)
-				log.Info("Quest \"" + questTitle + "\" initializing ...");
+				if (log.IsInfoEnabled)
+					log.Info("Quest \"" + questTitle + "\" initializing ...");
 
 			#region NPC Declarations
 
@@ -161,10 +108,12 @@ namespace DOL.GS.Quests.Albion
 				Lidmann.Name = "Lidmann Halsey";
 				Lidmann.GuildName = "";
 				Lidmann.Realm = (byte)eRealm.Albion;
-				Lidmann.RegionId = 1;
+				Lidmann.CurrentRegionID = 1;
 				Lidmann.Size = 50;
 				Lidmann.Level = 50;
-				Lidmann.Position = new Point(466464, 634554, 1954);
+				Lidmann.X = 466464;
+				Lidmann.Y = 634554;
+				Lidmann.Z = 1954;
 				Lidmann.Heading = 1809;
 				Lidmann.AddToWorld();
 				if (SAVE_INTO_DATABASE)
@@ -188,12 +137,13 @@ namespace DOL.GS.Quests.Albion
 				Uragaig.Name = "Cailleach Uragaig";
 				Uragaig.GuildName = "";
 				Uragaig.Realm = (byte)eRealm.None;
-				Uragaig.RegionId = 1;
+				Uragaig.CurrentRegionID = 1;
 				Uragaig.Size = 55;
 				Uragaig.Level = 70;
-				Uragaig.Position = new Point(316218, 664484, 2736);
+				Uragaig.X = 316218;
+				Uragaig.Y = 664484;
+				Uragaig.Z = 2736;
 				Uragaig.Heading = 3072;
-				Uragaig.RespawnInterval = 5 * 60 * 1000;
 				Uragaig.AddToWorld();
 				if (SAVE_INTO_DATABASE)
 				{
@@ -202,1317 +152,1321 @@ namespace DOL.GS.Quests.Albion
 
 			}
 			else
-				Uragaig = npcs[0] as GameMob;
+				Uragaig = npcs[0];
 			// end npc
 
 			#endregion
 
 			#region Item Declarations
 
-			sealed_pouch = (GenericItemTemplate)GameServer.Database.FindObjectByKey(typeof(GenericItemTemplate), "sealed_pouch");
+			sealed_pouch = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "sealed_pouch");
 			if (sealed_pouch == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Sealed Pouch , creating it ...");
-				sealed_pouch = new GenericItemTemplate();
-				sealed_pouch.ItemTemplateID = "sealed_pouch";
+				sealed_pouch = new ItemTemplate();
+				sealed_pouch.Id_nb = "sealed_pouch";
 				sealed_pouch.Name = "Sealed Pouch";
 				sealed_pouch.Level = 8;
+				sealed_pouch.Item_Type = 29;
 				sealed_pouch.Model = 488;
 				sealed_pouch.IsDropable = false;
-				sealed_pouch.IsSaleable = false;
-				sealed_pouch.IsTradable = false;
+				sealed_pouch.IsPickable = false;
+				sealed_pouch.DPS_AF = 0;
+				sealed_pouch.SPD_ABS = 0;
+				sealed_pouch.Object_Type = 41;
+				sealed_pouch.Hand = 0;
+				sealed_pouch.Type_Damage = 0;
+				sealed_pouch.Quality = 100;
+				sealed_pouch.MaxQuality = 100;
 				sealed_pouch.Weight = 12;
-
 				if (SAVE_INTO_DATABASE)
 				{
 					GameServer.Database.AddNewObject(sealed_pouch);
 				}
-			}
 
-			ArmorTemplate i = null;
-			#region Mercenary
-			MercenaryEpicBoots = (FeetArmorTemplate)GameServer.Database.FindObjectByKey(typeof(FeetArmorTemplate), "MercenaryEpicBoots");
+			}
+			// end item
+			ItemTemplate i = null;
+			MercenaryEpicBoots = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "MercenaryEpicBoots");
 			if (MercenaryEpicBoots == null)
 			{
-				i = new FeetArmorTemplate();
-				i.ItemTemplateID = "MercenaryEpicBoots";
+				i = new ItemTemplate();
+				i.Id_nb = "MercenaryEpicBoots";
 				i.Name = "Boots of the Shadowy Embers";
 				i.Level = 50;
+				i.Item_Type = 23;
 				i.Model = 722;
 				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.Medium;
+				i.IsPickable = true;
+				i.DPS_AF = 100;
+				i.SPD_ABS = 27;
+				i.Object_Type = 35;
 				i.Quality = 100;
+				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Mercenary);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Albion;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 15));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Quickness, 16));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Cold, 8));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 9));
 
-				if (SAVE_INTO_DATABASE)
+				i.Bonus1 = 15;
+				i.Bonus1Type = (int)eStat.DEX;
+
+				i.Bonus2 = 16;
+				i.Bonus2Type = (int)eStat.QUI;
+
+				i.Bonus3 = 8;
+				i.Bonus3Type = (int)eResist.Cold;
+
+				i.Bonus4 = 9;
+				i.Bonus4Type = (int)eStat.STR;
 				{
 					GameServer.Database.AddNewObject(i);
 				}
 
-				MercenaryEpicBoots = (FeetArmorTemplate)i;
+				MercenaryEpicBoots = i;
 
 			}
 			//end item
 			// of the Shadowy Embers  Coif
-			MercenaryEpicHelm = (HeadArmorTemplate)GameServer.Database.FindObjectByKey(typeof(HeadArmorTemplate), "MercenaryEpicHelm");
+			MercenaryEpicHelm = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "MercenaryEpicHelm");
 			if (MercenaryEpicHelm == null)
 			{
-				i = new HeadArmorTemplate();
-				i.ItemTemplateID = "MercenaryEpicHelm";
+				i = new ItemTemplate();
+				i.Id_nb = "MercenaryEpicHelm";
 				i.Name = "Coif of the Shadowy Embers";
 				i.Level = 50;
+				i.Item_Type = 21;
 				i.Model = 1290; //NEED TO WORK ON..
 				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.Medium;
+				i.IsPickable = true;
+				i.DPS_AF = 100;
+				i.SPD_ABS = 27;
+				i.Object_Type = 35;
 				i.Quality = 100;
+				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Mercenary);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Albion;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 16));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 18));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Body, 8));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Thrust, 8));
 
-				if (SAVE_INTO_DATABASE)
+				i.Bonus1 = 16;
+				i.Bonus1Type = (int)eStat.DEX;
+
+				i.Bonus2 = 18;
+				i.Bonus2Type = (int)eStat.STR;
+
+				i.Bonus3 = 8;
+				i.Bonus3Type = (int)eResist.Body;
+
+				i.Bonus4 = 8;
+				i.Bonus4Type = (int)eResist.Thrust;
 				{
 					GameServer.Database.AddNewObject(i);
 				}
 
-				MercenaryEpicHelm = (HeadArmorTemplate)i;
+				MercenaryEpicHelm = i;
 
 			}
 			//end item
 			// of the Shadowy Embers  Gloves
-			MercenaryEpicGloves = (HandsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(HandsArmorTemplate), "MercenaryEpicGloves");
+			MercenaryEpicGloves = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "MercenaryEpicGloves");
 			if (MercenaryEpicGloves == null)
 			{
-				i = new HandsArmorTemplate();
-				i.ItemTemplateID = "MercenaryEpicGloves";
+				i = new ItemTemplate();
+				i.Id_nb = "MercenaryEpicGloves";
 				i.Name = "Gauntlets of the Shadowy Embers";
 				i.Level = 50;
+				i.Item_Type = 22;
 				i.Model = 721;
 				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.Medium;
+				i.IsPickable = true;
+				i.DPS_AF = 100;
+				i.SPD_ABS = 27;
+				i.Object_Type = 35;
 				i.Quality = 100;
+				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Mercenary);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Albion;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 19));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 15));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Crush, 8));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Matter, 8));
 
-				if (SAVE_INTO_DATABASE)
+				i.Bonus1 = 19;
+				i.Bonus1Type = (int)eStat.STR;
+
+				i.Bonus2 = 15;
+				i.Bonus2Type = (int)eStat.CON;
+
+				i.Bonus3 = 8;
+				i.Bonus3Type = (int)eResist.Crush;
+
+				i.Bonus4 = 8;
+				i.Bonus4Type = (int)eResist.Matter;
 				{
 					GameServer.Database.AddNewObject(i);
 				}
 
-				MercenaryEpicGloves = (HandsArmorTemplate)i;
+				MercenaryEpicGloves = i;
 
 			}
 			// of the Shadowy Embers  Hauberk
-			MercenaryEpicVest = (TorsoArmorTemplate)GameServer.Database.FindObjectByKey(typeof(TorsoArmorTemplate), "MercenaryEpicVest");
+			MercenaryEpicVest = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "MercenaryEpicVest");
 			if (MercenaryEpicVest == null)
 			{
-				i = new TorsoArmorTemplate();
-				i.ItemTemplateID = "MercenaryEpicVest";
+				i = new ItemTemplate();
+				i.Id_nb = "MercenaryEpicVest";
 				i.Name = "Haurberk of the Shadowy Embers";
 				i.Level = 50;
+				i.Item_Type = 25;
 				i.Model = 718;
 				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.Medium;
+				i.IsPickable = true;
+				i.DPS_AF = 100;
+				i.SPD_ABS = 27;
+				i.Object_Type = 35;
 				i.Quality = 100;
+				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Mercenary);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Albion;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 15));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 48));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Cold, 4));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Thrust, 6));
 
-				if (SAVE_INTO_DATABASE)
+				i.Bonus1 = 15;
+				i.Bonus1Type = (int)eStat.DEX;
+
+				i.Bonus2 = 48;
+				i.Bonus2Type = (int)eProperty.MaxHealth;
+
+				i.Bonus3 = 4;
+				i.Bonus3Type = (int)eResist.Cold;
+
+				i.Bonus4 = 6;
+				i.Bonus4Type = (int)eResist.Thrust;
 				{
 					GameServer.Database.AddNewObject(i);
 				}
 
-				MercenaryEpicVest = (TorsoArmorTemplate)i;
+				MercenaryEpicVest = i;
 
 			}
 			// of the Shadowy Embers  Legs
-			MercenaryEpicLegs = (LegsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(LegsArmorTemplate), "MercenaryEpicLegs");
+			MercenaryEpicLegs = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "MercenaryEpicLegs");
 			if (MercenaryEpicLegs == null)
 			{
-				i = new LegsArmorTemplate();
-				i.ItemTemplateID = "MercenaryEpicLegs";
+				i = new ItemTemplate();
+				i.Id_nb = "MercenaryEpicLegs";
 				i.Name = "Chausses of the Shadowy Embers";
 				i.Level = 50;
+				i.Item_Type = 27;
 				i.Model = 719;
 				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.Medium;
+				i.IsPickable = true;
+				i.DPS_AF = 100;
+				i.SPD_ABS = 27;
+				i.Object_Type = 35;
 				i.Quality = 100;
+				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Mercenary);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Albion;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 18));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 16));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Heat, 8));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Slash, 8));
 
-				if (SAVE_INTO_DATABASE)
+				i.Bonus1 = 18;
+				i.Bonus1Type = (int)eStat.CON;
+
+				i.Bonus2 = 16;
+				i.Bonus2Type = (int)eStat.STR;
+
+				i.Bonus3 = 8;
+				i.Bonus3Type = (int)eResist.Heat;
+
+				i.Bonus4 = 8;
+				i.Bonus4Type = (int)eResist.Slash;
 				{
 					GameServer.Database.AddNewObject(i);
 				}
 
-				MercenaryEpicLegs = (LegsArmorTemplate)i;
+				MercenaryEpicLegs = i;
 
 			}
 			// of the Shadowy Embers  Sleeves
-			MercenaryEpicArms = (ArmsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(ArmsArmorTemplate), "MercenaryEpicArms");
+			MercenaryEpicArms = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "MercenaryEpicArms");
 			if (MercenaryEpicArms == null)
 			{
-				i = new ArmsArmorTemplate();
-				i.ItemTemplateID = "MercenaryEpicArms";
+				i = new ItemTemplate();
+				i.Id_nb = "MercenaryEpicArms";
 				i.Name = "Sleeves of the Shadowy Embers";
 				i.Level = 50;
+				i.Item_Type = 28;
 				i.Model = 720;
 				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.Medium;
+				i.IsPickable = true;
+				i.DPS_AF = 100;
+				i.SPD_ABS = 27;
+				i.Object_Type = 35;
 				i.Quality = 100;
+				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Mercenary);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Albion;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 15));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 16));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Cold, 8));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Quickness, 12));
 
-				if (SAVE_INTO_DATABASE)
+				i.Bonus1 = 15;
+				i.Bonus1Type = (int)eStat.CON;
+
+				i.Bonus2 = 16;
+				i.Bonus2Type = (int)eStat.DEX;
+
+				i.Bonus3 = 8;
+				i.Bonus3Type = (int)eResist.Cold;
+
+				i.Bonus4 = 12;
+				i.Bonus4Type = (int)eStat.QUI;
 				{
 					GameServer.Database.AddNewObject(i);
 				}
 
-				MercenaryEpicArms = (ArmsArmorTemplate)i;
+				MercenaryEpicArms = i;
 
 			}
-			#endregion
-			#region Reaver
 			//Reaver Epic Sleeves End
-			ReaverEpicBoots = (FeetArmorTemplate)GameServer.Database.FindObjectByKey(typeof(FeetArmorTemplate), "ReaverEpicBoots");
+			ReaverEpicBoots = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ReaverEpicBoots");
 			if (ReaverEpicBoots == null)
 			{
-				i = new FeetArmorTemplate();
-				i.ItemTemplateID = "ReaverEpicBoots";
+				i = new ItemTemplate();
+				i.Id_nb = "ReaverEpicBoots";
 				i.Name = "Boots of Murky Secrets";
 				i.Level = 50;
+				i.Item_Type = 23;
 				i.Model = 1270;
 				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.Medium;
+				i.IsPickable = true;
+				i.DPS_AF = 100;
+				i.SPD_ABS = 27;
+				i.Object_Type = 35;
 				i.Quality = 100;
+				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Reaver);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Albion;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 14));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 9));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Cold, 9));
 
-				if (SAVE_INTO_DATABASE)
+				i.Bonus1 = 14;
+				i.Bonus1Type = (int)eProperty.MaxMana;
+
+				i.Bonus2 = 9;
+				i.Bonus2Type = (int)eStat.STR;
+
+				i.Bonus3 = 8;
+				i.Bonus3Type = (int)eResist.Cold;
+
+				//                    i.Bonus4 = 10;
+				//                    i.Bonus4Type = (int)eResist.Energy;
 				{
 					GameServer.Database.AddNewObject(i);
 				}
 
-				ReaverEpicBoots = (FeetArmorTemplate)i;
+				ReaverEpicBoots = i;
 
 			}
 			//end item
 			//of Murky Secrets Coif
-			ReaverEpicHelm = (HeadArmorTemplate)GameServer.Database.FindObjectByKey(typeof(HeadArmorTemplate), "ReaverEpicHelm");
+			ReaverEpicHelm = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ReaverEpicHelm");
 			if (ReaverEpicHelm == null)
 			{
-				i = new HeadArmorTemplate();
-				i.ItemTemplateID = "ReaverEpicHelm";
+				i = new ItemTemplate();
+				i.Id_nb = "ReaverEpicHelm";
 				i.Name = "Coif of Murky Secrets";
 				i.Level = 50;
+				i.Item_Type = 21;
 				i.Model = 1290; //NEED TO WORK ON..
 				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.Medium;
+				i.IsPickable = true;
+				i.DPS_AF = 100;
+				i.SPD_ABS = 27;
+				i.Object_Type = 35;
 				i.Quality = 100;
+				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Reaver);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Albion;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Piety, 16));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Flexible_Weapon, 6));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Body, 8));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Thrust, 8));
 
-				if (SAVE_INTO_DATABASE)
+				i.Bonus1 = 16;
+				i.Bonus1Type = (int)eStat.PIE;
+
+				i.Bonus2 = 6;
+				i.Bonus2Type = (int)eProperty.Skill_Flexible_Weapon;
+
+				i.Bonus3 = 8;
+				i.Bonus3Type = (int)eResist.Body;
+
+				i.Bonus4 = 8;
+				i.Bonus4Type = (int)eResist.Thrust;
 				{
 					GameServer.Database.AddNewObject(i);
 				}
 
-				ReaverEpicHelm = (HeadArmorTemplate)i;
+				ReaverEpicHelm = i;
 
 			}
 			//end item
 			//of Murky Secrets Gloves
-			ReaverEpicGloves = (HandsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(HandsArmorTemplate), "ReaverEpicGloves");
+			ReaverEpicGloves = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ReaverEpicGloves");
 			if (ReaverEpicGloves == null)
 			{
-				i = new HandsArmorTemplate();
-				i.ItemTemplateID = "ReaverEpicGloves";
+				i = new ItemTemplate();
+				i.Id_nb = "ReaverEpicGloves";
 				i.Name = "Gauntlets of Murky Secrets";
 				i.Level = 50;
+				i.Item_Type = 22;
 				i.Model = 1271;
 				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.Medium;
+				i.IsPickable = true;
+				i.DPS_AF = 100;
+				i.SPD_ABS = 27;
+				i.Object_Type = 35;
 				i.Quality = 100;
+				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Reaver);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Albion;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 19));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 15));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Matter, 8));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Crush, 8));
 
-				if (SAVE_INTO_DATABASE)
+				i.Bonus1 = 19;
+				i.Bonus1Type = (int)eStat.STR;
+
+				i.Bonus2 = 15;
+				i.Bonus2Type = (int)eStat.CON;
+
+				i.Bonus3 = 8;
+				i.Bonus3Type = (int)eResist.Matter;
+
+				i.Bonus4 = 8;
+				i.Bonus4Type = (int)eResist.Crush;
 				{
 					GameServer.Database.AddNewObject(i);
 				}
 
-				ReaverEpicGloves = (HandsArmorTemplate)i;
+				ReaverEpicGloves = i;
 
 			}
 			//of Murky Secrets Hauberk
-			ReaverEpicVest = (TorsoArmorTemplate)GameServer.Database.FindObjectByKey(typeof(TorsoArmorTemplate), "ReaverEpicVest");
+			ReaverEpicVest = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ReaverEpicVest");
 			if (ReaverEpicVest == null)
 			{
-				i = new TorsoArmorTemplate();
-				i.ItemTemplateID = "ReaverEpicVest";
+				i = new ItemTemplate();
+				i.Id_nb = "ReaverEpicVest";
 				i.Name = "Hauberk of Murky Secrets";
 				i.Level = 50;
+				i.Item_Type = 25;
 				i.Model = 1267;
 				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.Medium;
+				i.IsPickable = true;
+				i.DPS_AF = 100;
+				i.SPD_ABS = 27;
+				i.Object_Type = 35;
 				i.Quality = 100;
+				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Reaver);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Albion;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 48));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Piety, 15));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Cold, 4));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Thrust, 6));
 
-				if (SAVE_INTO_DATABASE)
+				i.Bonus1 = 48;
+				i.Bonus1Type = (int)eProperty.MaxHealth;
+
+				i.Bonus2 = 15;
+				i.Bonus2Type = (int)eStat.PIE;
+
+				i.Bonus3 = 4;
+				i.Bonus3Type = (int)eResist.Cold;
+
+				i.Bonus4 = 6;
+				i.Bonus4Type = (int)eResist.Thrust;
 				{
 					GameServer.Database.AddNewObject(i);
 				}
 
-				ReaverEpicVest = (TorsoArmorTemplate)i;
+				ReaverEpicVest = i;
 
 			}
 			//of Murky Secrets Legs
-			ReaverEpicLegs = (LegsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(LegsArmorTemplate), "ReaverEpicLegs");
+			ReaverEpicLegs = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ReaverEpicLegs");
 			if (ReaverEpicLegs == null)
 			{
-				i = new LegsArmorTemplate();
-				i.ItemTemplateID = "ReaverEpicLegs";
+				i = new ItemTemplate();
+				i.Id_nb = "ReaverEpicLegs";
 				i.Name = "Chausses of Murky Secrets";
 				i.Level = 50;
+				i.Item_Type = 27;
 				i.Model = 1268;
 				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.Medium;
+				i.IsPickable = true;
+				i.DPS_AF = 100;
+				i.SPD_ABS = 27;
+				i.Object_Type = 35;
 				i.Quality = 100;
+				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Reaver);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Albion;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 18));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 16));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Heat, 8));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Slash, 8));
 
-				if (SAVE_INTO_DATABASE)
+				i.Bonus1 = 18;
+				i.Bonus1Type = (int)eStat.CON;
+
+				i.Bonus2 = 16;
+				i.Bonus2Type = (int)eStat.STR;
+
+				i.Bonus3 = 8;
+				i.Bonus3Type = (int)eResist.Heat;
+
+				i.Bonus4 = 8;
+				i.Bonus4Type = (int)eResist.Slash;
 				{
 					GameServer.Database.AddNewObject(i);
 				}
 
-				ReaverEpicLegs = (LegsArmorTemplate)i;
+				ReaverEpicLegs = i;
 
 			}
 			//of Murky Secrets Sleeves
-			ReaverEpicArms = (ArmsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(ArmsArmorTemplate), "ReaverEpicArms");
+			ReaverEpicArms = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ReaverEpicArms");
 			if (ReaverEpicArms == null)
 			{
-				i = new ArmsArmorTemplate();
-				i.ItemTemplateID = "ReaverEpicArms";
+				i = new ItemTemplate();
+				i.Id_nb = "ReaverEpicArms";
 				i.Name = "Sleeves of Murky Secrets";
 				i.Level = 50;
+				i.Item_Type = 28;
 				i.Model = 1269;
 				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.Medium;
+				i.IsPickable = true;
+				i.DPS_AF = 100;
+				i.SPD_ABS = 27;
+				i.Object_Type = 35;
 				i.Quality = 100;
+				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Reaver);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Albion;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 16));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 15));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Cold, 8));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Slashing, 4));
 
-				if (SAVE_INTO_DATABASE)
+				i.Bonus1 = 16;
+				i.Bonus1Type = (int)eStat.CON;
+
+				i.Bonus2 = 15;
+				i.Bonus2Type = (int)eStat.DEX;
+
+				i.Bonus3 = 8;
+				i.Bonus3Type = (int)eResist.Cold;
+
+				i.Bonus4 = 4;
+				i.Bonus4Type = (int)eProperty.Skill_Slashing;
 				{
 					GameServer.Database.AddNewObject(i);
 				}
 
-				ReaverEpicArms = (ArmsArmorTemplate)i;
+				ReaverEpicArms = i;
+
 			}
-			#endregion
-			#region Infiltrator
-			InfiltratorEpicBoots = (FeetArmorTemplate)GameServer.Database.FindObjectByKey(typeof(FeetArmorTemplate), "InfiltratorEpicBoots");
+			InfiltratorEpicBoots = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "InfiltratorEpicBoots");
 			if (InfiltratorEpicBoots == null)
 			{
-				i = new FeetArmorTemplate();
-				i.ItemTemplateID = "InfiltratorEpicBoots";
-				i.Name = "Shadow-Woven Boots";
-				i.Level = 50;
-				i.Model = 796;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.Low;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Infiltrator);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Albion;
+				InfiltratorEpicBoots = new ItemTemplate();
+				InfiltratorEpicBoots.Id_nb = "InfiltratorEpicBoots";
+				InfiltratorEpicBoots.Name = "Shadow-Woven Boots";
+				InfiltratorEpicBoots.Level = 50;
+				InfiltratorEpicBoots.Item_Type = 23;
+				InfiltratorEpicBoots.Model = 796;
+				InfiltratorEpicBoots.IsDropable = true;
+				InfiltratorEpicBoots.IsPickable = true;
+				InfiltratorEpicBoots.DPS_AF = 100;
+				InfiltratorEpicBoots.SPD_ABS = 10;
+				InfiltratorEpicBoots.Object_Type = 33;
+				InfiltratorEpicBoots.Quality = 100;
+				InfiltratorEpicBoots.MaxQuality = 100;
+				InfiltratorEpicBoots.Weight = 22;
+				InfiltratorEpicBoots.Bonus = 35;
+				InfiltratorEpicBoots.MaxCondition = 50000;
+				InfiltratorEpicBoots.MaxDurability = 50000;
+				InfiltratorEpicBoots.Condition = 50000;
+				InfiltratorEpicBoots.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Quickness, 13));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 13));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Cold, 8));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 13));
+				InfiltratorEpicBoots.Bonus1 = 13;
+				InfiltratorEpicBoots.Bonus1Type = (int)eStat.QUI;
 
-				if (SAVE_INTO_DATABASE)
+				InfiltratorEpicBoots.Bonus2 = 13;
+				InfiltratorEpicBoots.Bonus2Type = (int)eStat.DEX;
+
+				InfiltratorEpicBoots.Bonus3 = 8;
+				InfiltratorEpicBoots.Bonus3Type = (int)eResist.Cold;
+
+				InfiltratorEpicBoots.Bonus4 = 13;
+				InfiltratorEpicBoots.Bonus4Type = (int)eStat.CON;
 				{
-					GameServer.Database.AddNewObject(i);
+					GameServer.Database.AddNewObject(InfiltratorEpicBoots);
 				}
-				InfiltratorEpicBoots = (FeetArmorTemplate)i;
 
 			}
 			//end item
 			//Shadow-Woven Coif
-			InfiltratorEpicHelm = (HeadArmorTemplate)GameServer.Database.FindObjectByKey(typeof(HeadArmorTemplate), "InfiltratorEpicHelm");
+			InfiltratorEpicHelm = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "InfiltratorEpicHelm");
 			if (InfiltratorEpicHelm == null)
 			{
-				i = new HeadArmorTemplate();
-				i.ItemTemplateID = "InfiltratorEpicHelm";
-				i.Name = "Shadow-Woven Coif";
-				i.Level = 50;
-				i.Model = 1290; //NEED TO WORK ON..
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.Low;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Infiltrator);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Albion;
+				InfiltratorEpicHelm = new ItemTemplate();
+				InfiltratorEpicHelm.Id_nb = "InfiltratorEpicHelm";
+				InfiltratorEpicHelm.Name = "Shadow-Woven Coif";
+				InfiltratorEpicHelm.Level = 50;
+				InfiltratorEpicHelm.Item_Type = 21;
+				InfiltratorEpicHelm.Model = 1290; //NEED TO WORK ON..
+				InfiltratorEpicHelm.IsDropable = true;
+				InfiltratorEpicHelm.IsPickable = true;
+				InfiltratorEpicHelm.DPS_AF = 100;
+				InfiltratorEpicHelm.SPD_ABS = 10;
+				InfiltratorEpicHelm.Object_Type = 33;
+				InfiltratorEpicHelm.Quality = 100;
+				InfiltratorEpicHelm.MaxQuality = 100;
+				InfiltratorEpicHelm.Weight = 22;
+				InfiltratorEpicHelm.Bonus = 35;
+				InfiltratorEpicHelm.MaxCondition = 50000;
+				InfiltratorEpicHelm.MaxDurability = 50000;
+				InfiltratorEpicHelm.Condition = 50000;
+				InfiltratorEpicHelm.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 13));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Quickness, 13));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Spirit, 8));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 13));
+				InfiltratorEpicHelm.Bonus1 = 13;
+				InfiltratorEpicHelm.Bonus1Type = (int)eStat.DEX;
 
-				if (SAVE_INTO_DATABASE)
+				InfiltratorEpicHelm.Bonus2 = 13;
+				InfiltratorEpicHelm.Bonus2Type = (int)eStat.QUI;
+
+				InfiltratorEpicHelm.Bonus3 = 8;
+				InfiltratorEpicHelm.Bonus3Type = (int)eResist.Spirit;
+
+				InfiltratorEpicHelm.Bonus4 = 13;
+				InfiltratorEpicHelm.Bonus4Type = (int)eStat.STR;
 				{
-					GameServer.Database.AddNewObject(i);
+					GameServer.Database.AddNewObject(InfiltratorEpicHelm);
 				}
-				InfiltratorEpicHelm = (HeadArmorTemplate)i;
 
 			}
 			//end item
 			//Shadow-Woven Gloves
-			InfiltratorEpicGloves = (HandsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(HandsArmorTemplate), "InfiltratorEpicGloves");
+			InfiltratorEpicGloves = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "InfiltratorEpicGloves");
 			if (InfiltratorEpicGloves == null)
 			{
-				i = new HandsArmorTemplate();
-				i.ItemTemplateID = "InfiltratorEpicGloves";
-				i.Name = "Shadow-Woven Gloves";
-				i.Level = 50;
-				i.Model = 795;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.Low;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Infiltrator);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Albion;
+				InfiltratorEpicGloves = new ItemTemplate();
+				InfiltratorEpicGloves.Id_nb = "InfiltratorEpicGloves";
+				InfiltratorEpicGloves.Name = "Shadow-Woven Gloves";
+				InfiltratorEpicGloves.Level = 50;
+				InfiltratorEpicGloves.Item_Type = 22;
+				InfiltratorEpicGloves.Model = 795;
+				InfiltratorEpicGloves.IsDropable = true;
+				InfiltratorEpicGloves.IsPickable = true;
+				InfiltratorEpicGloves.DPS_AF = 100;
+				InfiltratorEpicGloves.SPD_ABS = 10;
+				InfiltratorEpicGloves.Object_Type = 33;
+				InfiltratorEpicGloves.Quality = 100;
+				InfiltratorEpicGloves.MaxQuality = 100;
+				InfiltratorEpicGloves.Weight = 22;
+				InfiltratorEpicGloves.Bonus = 35;
+				InfiltratorEpicGloves.MaxCondition = 50000;
+				InfiltratorEpicGloves.MaxDurability = 50000;
+				InfiltratorEpicGloves.Condition = 50000;
+				InfiltratorEpicGloves.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 18));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 21));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Envenom, 3));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Critical_Strike, 3));
 
-				if (SAVE_INTO_DATABASE)
+				InfiltratorEpicGloves.Bonus1 = 18;
+				InfiltratorEpicGloves.Bonus1Type = (int)eStat.STR;
+
+				InfiltratorEpicGloves.Bonus2 = 21;
+				InfiltratorEpicGloves.Bonus2Type = (int)eProperty.MaxHealth;
+
+				InfiltratorEpicGloves.Bonus3 = 3;
+				InfiltratorEpicGloves.Bonus3Type = (int)eProperty.Skill_Envenom;
+
+				InfiltratorEpicGloves.Bonus4 = 3;
+				InfiltratorEpicGloves.Bonus4Type = (int)eProperty.Skill_Critical_Strike;
 				{
-					GameServer.Database.AddNewObject(i);
+					GameServer.Database.AddNewObject(InfiltratorEpicGloves);
 				}
-
-				InfiltratorEpicGloves = (HandsArmorTemplate)i;
 
 			}
 			//Shadow-Woven Hauberk
-			InfiltratorEpicVest = (TorsoArmorTemplate)GameServer.Database.FindObjectByKey(typeof(TorsoArmorTemplate), "InfiltratorEpicVest");
+			InfiltratorEpicVest = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "InfiltratorEpicVest");
 			if (InfiltratorEpicVest == null)
 			{
-				i = new TorsoArmorTemplate();
-				i.ItemTemplateID = "InfiltratorEpicVest";
-				i.Name = "Shadow-Woven Jerkin";
-				i.Level = 50;
-				i.Model = 792;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.Low;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Infiltrator);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Albion;
+				InfiltratorEpicVest = new ItemTemplate();
+				InfiltratorEpicVest.Id_nb = "InfiltratorEpicVest";
+				InfiltratorEpicVest.Name = "Shadow-Woven Jerkin";
+				InfiltratorEpicVest.Level = 50;
+				InfiltratorEpicVest.Item_Type = 25;
+				InfiltratorEpicVest.Model = 792;
+				InfiltratorEpicVest.IsDropable = true;
+				InfiltratorEpicVest.IsPickable = true;
+				InfiltratorEpicVest.DPS_AF = 100;
+				InfiltratorEpicVest.SPD_ABS = 10;
+				InfiltratorEpicVest.Object_Type = 33;
+				InfiltratorEpicVest.Quality = 100;
+				InfiltratorEpicVest.MaxQuality = 100;
+				InfiltratorEpicVest.Weight = 22;
+				InfiltratorEpicVest.Bonus = 35;
+				InfiltratorEpicVest.MaxCondition = 50000;
+				InfiltratorEpicVest.MaxDurability = 50000;
+				InfiltratorEpicVest.Condition = 50000;
+				InfiltratorEpicVest.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 36));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 16));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Cold, 8));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Body, 8));
+				InfiltratorEpicVest.Bonus1 = 36;
+				InfiltratorEpicVest.Bonus1Type = (int)eProperty.MaxHealth;
 
-				if (SAVE_INTO_DATABASE)
+				InfiltratorEpicVest.Bonus2 = 16;
+				InfiltratorEpicVest.Bonus2Type = (int)eStat.DEX;
+
+				InfiltratorEpicVest.Bonus3 = 8;
+				InfiltratorEpicVest.Bonus3Type = (int)eResist.Cold;
+
+				InfiltratorEpicVest.Bonus4 = 8;
+				InfiltratorEpicVest.Bonus4Type = (int)eResist.Body;
 				{
-					GameServer.Database.AddNewObject(i);
+					GameServer.Database.AddNewObject(InfiltratorEpicVest);
 				}
-				InfiltratorEpicVest = (TorsoArmorTemplate)i;
 
 			}
 			//Shadow-Woven Legs
-			InfiltratorEpicLegs = (LegsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(LegsArmorTemplate), "InfiltratorEpicLegs");
+			InfiltratorEpicLegs = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "InfiltratorEpicLegs");
 			if (InfiltratorEpicLegs == null)
 			{
-				i = new LegsArmorTemplate();
-				i.ItemTemplateID = "InfiltratorEpicLegs";
-				i.Name = "Shadow-Woven Leggings";
-				i.Level = 50;
-				i.Model = 793;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.Low;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Infiltrator);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Albion;
+				InfiltratorEpicLegs = new ItemTemplate();
+				InfiltratorEpicLegs.Id_nb = "InfiltratorEpicLegs";
+				InfiltratorEpicLegs.Name = "Shadow-Woven Leggings";
+				InfiltratorEpicLegs.Level = 50;
+				InfiltratorEpicLegs.Item_Type = 27;
+				InfiltratorEpicLegs.Model = 793;
+				InfiltratorEpicLegs.IsDropable = true;
+				InfiltratorEpicLegs.IsPickable = true;
+				InfiltratorEpicLegs.DPS_AF = 100;
+				InfiltratorEpicLegs.SPD_ABS = 10;
+				InfiltratorEpicLegs.Object_Type = 33;
+				InfiltratorEpicLegs.Quality = 100;
+				InfiltratorEpicLegs.MaxQuality = 100;
+				InfiltratorEpicLegs.Weight = 22;
+				InfiltratorEpicLegs.Bonus = 35;
+				InfiltratorEpicLegs.MaxCondition = 50000;
+				InfiltratorEpicLegs.MaxDurability = 50000;
+				InfiltratorEpicLegs.Condition = 50000;
+				InfiltratorEpicLegs.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 21));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Quickness, 16));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Heat, 6));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Crush, 6));
+				InfiltratorEpicLegs.Bonus1 = 21;
+				InfiltratorEpicLegs.Bonus1Type = (int)eStat.CON;
 
-				if (SAVE_INTO_DATABASE)
+				InfiltratorEpicLegs.Bonus2 = 16;
+				InfiltratorEpicLegs.Bonus2Type = (int)eStat.QUI;
+
+				InfiltratorEpicLegs.Bonus3 = 6;
+				InfiltratorEpicLegs.Bonus3Type = (int)eResist.Heat;
+
+				InfiltratorEpicLegs.Bonus4 = 6;
+				InfiltratorEpicLegs.Bonus4Type = (int)eResist.Crush;
 				{
-					GameServer.Database.AddNewObject(i);
+					GameServer.Database.AddNewObject(InfiltratorEpicLegs);
 				}
-				InfiltratorEpicLegs = (LegsArmorTemplate)i;
 
 			}
 			//Shadow-Woven Sleeves
-			InfiltratorEpicArms = (ArmsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(ArmsArmorTemplate), "InfiltratorEpicArms");
+			InfiltratorEpicArms = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "InfiltratorEpicArms");
 			if (InfiltratorEpicArms == null)
 			{
-				i = new ArmsArmorTemplate();
-				i.ItemTemplateID = "InfiltratorEpicArms";
-				i.Name = "Shadow-Woven Sleeves";
-				i.Level = 50;
-				i.Model = 794;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.Low;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Infiltrator);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Albion;
+				InfiltratorEpicArms = new ItemTemplate();
+				InfiltratorEpicArms.Id_nb = "InfiltratorEpicArms";
+				InfiltratorEpicArms.Name = "Shadow-Woven Sleeves";
+				InfiltratorEpicArms.Level = 50;
+				InfiltratorEpicArms.Item_Type = 28;
+				InfiltratorEpicArms.Model = 794;
+				InfiltratorEpicArms.IsDropable = true;
+				InfiltratorEpicArms.IsPickable = true;
+				InfiltratorEpicArms.DPS_AF = 100;
+				InfiltratorEpicArms.SPD_ABS = 10;
+				InfiltratorEpicArms.Object_Type = 33;
+				InfiltratorEpicArms.Quality = 100;
+				InfiltratorEpicArms.MaxQuality = 100;
+				InfiltratorEpicArms.Weight = 22;
+				InfiltratorEpicArms.Bonus = 35;
+				InfiltratorEpicArms.MaxCondition = 50000;
+				InfiltratorEpicArms.MaxDurability = 50000;
+				InfiltratorEpicArms.Condition = 50000;
+				InfiltratorEpicArms.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 21));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 18));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Matter, 6));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Slash, 41));
+				InfiltratorEpicArms.Bonus1 = 21;
+				InfiltratorEpicArms.Bonus1Type = (int)eStat.DEX;
 
-				if (SAVE_INTO_DATABASE)
+				InfiltratorEpicArms.Bonus2 = 18;
+				InfiltratorEpicArms.Bonus2Type = (int)eStat.STR;
+
+				InfiltratorEpicArms.Bonus3 = 6;
+				InfiltratorEpicArms.Bonus3Type = (int)eResist.Matter;
+
+				InfiltratorEpicArms.Bonus4 = 4;
+				InfiltratorEpicArms.Bonus4Type = (int)eResist.Slash;
 				{
-					GameServer.Database.AddNewObject(i);
+					GameServer.Database.AddNewObject(InfiltratorEpicArms);
 				}
-				InfiltratorEpicArms = (ArmsArmorTemplate)i;
 
 			}
-			#endregion
-			#region Cabalist
-			CabalistEpicBoots = (FeetArmorTemplate)GameServer.Database.FindObjectByKey(typeof(FeetArmorTemplate), "CabalistEpicBoots");
+			CabalistEpicBoots = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "CabalistEpicBoots");
 			if (CabalistEpicBoots == null)
 			{
-				i = new FeetArmorTemplate();
-				i.ItemTemplateID = "CabalistEpicBoots";
-				i.Name = "Warm Boots of the Construct";
-				i.Level = 50;
-				i.Model = 143;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 50;
-				i.ArmorLevel = eArmorLevel.VeryLow;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Cabalist);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Albion;
+				CabalistEpicBoots = new ItemTemplate();
+				CabalistEpicBoots.Id_nb = "CabalistEpicBoots";
+				CabalistEpicBoots.Name = "Warm Boots of the Construct";
+				CabalistEpicBoots.Level = 50;
+				CabalistEpicBoots.Item_Type = 23;
+				CabalistEpicBoots.Model = 143;
+				CabalistEpicBoots.IsDropable = true;
+				CabalistEpicBoots.IsPickable = true;
+				CabalistEpicBoots.DPS_AF = 50;
+				CabalistEpicBoots.SPD_ABS = 0;
+				CabalistEpicBoots.Object_Type = 32;
+				CabalistEpicBoots.Quality = 100;
+				CabalistEpicBoots.MaxQuality = 100;
+				CabalistEpicBoots.Weight = 22;
+				CabalistEpicBoots.Bonus = 35;
+				CabalistEpicBoots.MaxCondition = 50000;
+				CabalistEpicBoots.MaxDurability = 50000;
+				CabalistEpicBoots.Condition = 50000;
+				CabalistEpicBoots.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 22));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Matter, 3));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Slash, 8));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Thrust, 8));
+				CabalistEpicBoots.Bonus1 = 22;
+				CabalistEpicBoots.Bonus1Type = (int)eStat.DEX;
 
-				if (SAVE_INTO_DATABASE)
+				CabalistEpicBoots.Bonus2 = 3;
+				CabalistEpicBoots.Bonus2Type = (int)eProperty.Skill_Matter;
+
+				CabalistEpicBoots.Bonus3 = 8;
+				CabalistEpicBoots.Bonus3Type = (int)eResist.Slash;
+
+				CabalistEpicBoots.Bonus4 = 8;
+				CabalistEpicBoots.Bonus4Type = (int)eResist.Thrust;
 				{
-					GameServer.Database.AddNewObject(i);
+					GameServer.Database.AddNewObject(CabalistEpicBoots);
 				}
 
-				CabalistEpicBoots = (FeetArmorTemplate)i;
 			}
 			//end item
 			//Warm of the Construct Coif
-			CabalistEpicHelm = (HeadArmorTemplate)GameServer.Database.FindObjectByKey(typeof(HeadArmorTemplate), "CabalistEpicHelm");
+			CabalistEpicHelm = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "CabalistEpicHelm");
 			if (CabalistEpicHelm == null)
 			{
-				i = new HeadArmorTemplate();
-				i.ItemTemplateID = "CabalistEpicHelm";
+				i = new ItemTemplate();
+				i.Id_nb = "CabalistEpicHelm";
 				i.Name = "Warm Coif of the Construct";
 				i.Level = 50;
+				i.Item_Type = 21;
 				i.Model = 1290; //NEED TO WORK ON..
 				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 50;
-				i.ArmorLevel = eArmorLevel.VeryLow;
+				i.IsPickable = true;
+				i.DPS_AF = 50;
+				i.SPD_ABS = 0;
+				i.Object_Type = 32;
 				i.Quality = 100;
+				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Cabalist);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Albion;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Intelligence, 21));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 13));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Heat, 8));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Matter, 8));
+				i.Bonus1 = 21;
+				i.Bonus1Type = (int)eStat.INT;
 
-				if (SAVE_INTO_DATABASE)
+				i.Bonus2 = 13;
+				i.Bonus2Type = (int)eStat.DEX;
+
+				i.Bonus3 = 8;
+				i.Bonus3Type = (int)eResist.Heat;
+
+				i.Bonus4 = 8;
+				i.Bonus4Type = (int)eResist.Matter;
 				{
 					GameServer.Database.AddNewObject(i);
 				}
-				CabalistEpicHelm = (HeadArmorTemplate)i;
+				CabalistEpicHelm = i;
 
 			}
 			//end item
 			//Warm of the Construct Gloves
-			CabalistEpicGloves = (HandsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(HandsArmorTemplate), "CabalistEpicGloves");
+			CabalistEpicGloves = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "CabalistEpicGloves");
 			if (CabalistEpicGloves == null)
 			{
-				i = new HandsArmorTemplate();
-				i.ItemTemplateID = "CabalistEpicGloves";
+				i = new ItemTemplate();
+				i.Id_nb = "CabalistEpicGloves";
 				i.Name = "Warm Gloves of the Construct";
 				i.Level = 50;
+				i.Item_Type = 22;
 				i.Model = 142;
 				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 50;
-				i.ArmorLevel = eArmorLevel.VeryLow;
+				i.IsPickable = true;
+				i.DPS_AF = 50;
+				i.SPD_ABS = 0;
+				i.Object_Type = 32;
 				i.Quality = 100;
+				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Cabalist);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Albion;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 10));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Intelligence, 10));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxMana, 8));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Energy, 10));
+				i.Bonus1 = 10;
+				i.Bonus1Type = (int)eStat.DEX;
 
-				if (SAVE_INTO_DATABASE)
+				i.Bonus2 = 10;
+				i.Bonus2Type = (int)eStat.INT;
+
+				i.Bonus3 = 8;
+				i.Bonus3Type = (int)eProperty.MaxMana;
+
+				i.Bonus4 = 10;
+				i.Bonus4Type = (int)eResist.Energy;
 				{
 					GameServer.Database.AddNewObject(i);
 				}
 
-				CabalistEpicGloves = (HandsArmorTemplate)i;
-			}
+				CabalistEpicGloves = i;
 
+			}
 			//Warm of the Construct Hauberk
-			CabalistEpicVest = (TorsoArmorTemplate)GameServer.Database.FindObjectByKey(typeof(TorsoArmorTemplate), "CabalistEpicVest");
+			CabalistEpicVest = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "CabalistEpicVest");
 			if (CabalistEpicVest == null)
 			{
-				i = new TorsoArmorTemplate();
-				i.ItemTemplateID = "CabalistEpicVest";
+				i = new ItemTemplate();
+				i.Id_nb = "CabalistEpicVest";
 				i.Name = "Warm Robe of the Construct";
 				i.Level = 50;
+				i.Item_Type = 25;
 				i.Model = 682;
 				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 50;
-				i.ArmorLevel = eArmorLevel.VeryLow;
+				i.IsPickable = true;
+				i.DPS_AF = 50;
+				i.SPD_ABS = 0;
+				i.Object_Type = 32;
 				i.Quality = 100;
+				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Cabalist);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Albion;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 24));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxMana, 14));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Crush, 4));
+				i.Bonus1 = 24;
+				i.Bonus1Type = (int)eProperty.MaxHealth;
 
-				if (SAVE_INTO_DATABASE)
+				i.Bonus2 = 14;
+				i.Bonus2Type = (int)eProperty.MaxMana;
+
+				i.Bonus3 = 4;
+				i.Bonus3Type = (int)eResist.Crush;
+
+				//                    i.Bonus4 = 10;
+				//                    i.Bonus4Type = (int)eResist.Energy;
 				{
 					GameServer.Database.AddNewObject(i);
 				}
 
-				CabalistEpicVest = (TorsoArmorTemplate)i;
+				CabalistEpicVest = i;
 
 			}
 			//Warm of the Construct Legs
-			CabalistEpicLegs = (LegsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(LegsArmorTemplate), "CabalistEpicLegs");
+			CabalistEpicLegs = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "CabalistEpicLegs");
 			if (CabalistEpicLegs == null)
 			{
-				i = new LegsArmorTemplate();
-				i.ItemTemplateID = "CabalistEpicLegs";
+				i = new ItemTemplate();
+				i.Id_nb = "CabalistEpicLegs";
 				i.Name = "Warm Leggings of the Construct";
 				i.Level = 50;
+				i.Item_Type = 27;
 				i.Model = 140;
 				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 50;
-				i.ArmorLevel = eArmorLevel.VeryLow;
+				i.IsPickable = true;
+				i.DPS_AF = 50;
+				i.SPD_ABS = 0;
+				i.Object_Type = 32;
 				i.Quality = 100;
+				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Cabalist);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Albion;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 22));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Spirit, 4));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Cold, 8));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Matter, 8));
 
-				if (SAVE_INTO_DATABASE)
+				i.Bonus1 = 22;
+				i.Bonus1Type = (int)eStat.CON;
+
+				i.Bonus2 = 4;
+				i.Bonus2Type = (int)eProperty.Skill_Spirit;
+
+				i.Bonus3 = 8;
+				i.Bonus3Type = (int)eResist.Cold;
+
+				i.Bonus4 = 8;
+				i.Bonus4Type = (int)eResist.Matter;
 				{
 					GameServer.Database.AddNewObject(i);
 				}
 
-				CabalistEpicLegs = (LegsArmorTemplate)i;
+				CabalistEpicLegs = i;
 
 			}
 			//Warm of the Construct Sleeves
-			CabalistEpicArms = (ArmsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(ArmsArmorTemplate), "CabalistEpicArms");
+			CabalistEpicArms = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "CabalistEpicArms");
 			if (CabalistEpicArms == null)
 			{
-				i = new ArmsArmorTemplate();
-				i.ItemTemplateID = "CabalistEpicArms";
+				i = new ItemTemplate();
+				i.Id_nb = "CabalistEpicArms";
 				i.Name = "Warm Sleeves of the Construct";
 				i.Level = 50;
+				i.Item_Type = 28;
 				i.Model = 141;
 				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 50;
-				i.ArmorLevel = eArmorLevel.VeryLow;
+				i.IsPickable = true;
+				i.DPS_AF = 50;
+				i.SPD_ABS = 0;
+				i.Object_Type = 32;
 				i.Quality = 100;
+				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Cabalist);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Albion;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Intelligence, 18));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Body, 4));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 16));
 
-				if (SAVE_INTO_DATABASE)
+				i.Bonus1 = 18;
+				i.Bonus1Type = (int)eStat.INT;
+
+				i.Bonus2 = 4;
+				i.Bonus2Type = (int)eProperty.Skill_Body;
+
+				i.Bonus3 = 16;
+				i.Bonus3Type = (int)eStat.DEX;
+
+				//                    i.Bonus4 = 10;
+				//                    i.Bonus4Type = (int)eResist.Energy;
 				{
 					GameServer.Database.AddNewObject(i);
 				}
-				CabalistEpicArms = (ArmsArmorTemplate)i;
+				CabalistEpicArms = i;
+
 			}
-			#endregion
-			#region Necromancer
-			NecromancerEpicBoots = (FeetArmorTemplate)GameServer.Database.FindObjectByKey(typeof(FeetArmorTemplate), "NecromancerEpicBoots");
+
+
+			NecromancerEpicBoots = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NecromancerEpicBoots");
 			if (NecromancerEpicBoots == null)
 			{
-				i = new FeetArmorTemplate();
-				i.ItemTemplateID = "NecromancerEpicBoots";
+				i = new ItemTemplate();
+				i.Id_nb = "NecromancerEpicBoots";
 				i.Name = "Boots of Forbidden Rites";
 				i.Level = 50;
+				i.Item_Type = 23;
 				i.Model = 143;
 				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 50;
-				i.ArmorLevel = eArmorLevel.VeryLow;
+				i.IsPickable = true;
+				i.DPS_AF = 50;
+				i.SPD_ABS = 0;
+				i.Object_Type = 32;
 				i.Quality = 100;
+				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Necromancer);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Albion;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Intelligence, 22));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Pain_working, 4));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Slash, 8));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Thrust, 8));
 
-				if (SAVE_INTO_DATABASE)
+				i.Bonus1 = 22;
+				i.Bonus1Type = (int)eStat.INT;
+
+				i.Bonus2 = 4;
+				i.Bonus2Type = (int)eProperty.Skill_Pain_working;
+
+				i.Bonus3 = 8;
+				i.Bonus3Type = (int)eResist.Slash;
+
+				i.Bonus4 = 8;
+				i.Bonus4Type = (int)eResist.Thrust;
 				{
 					GameServer.Database.AddNewObject(i);
 				}
 
-				NecromancerEpicBoots = (FeetArmorTemplate)i;
+				NecromancerEpicBoots = i;
 			}
-
+			//end item
 			//of Forbidden Rites Coif
-			NecromancerEpicHelm = (HeadArmorTemplate)GameServer.Database.FindObjectByKey(typeof(HeadArmorTemplate), "NecromancerEpicHelm");
+			NecromancerEpicHelm = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NecromancerEpicHelm");
 			if (NecromancerEpicHelm == null)
 			{
-				i = new HeadArmorTemplate();
-				i.ItemTemplateID = "NecromancerEpicHelm";
+				i = new ItemTemplate();
+				i.Id_nb = "NecromancerEpicHelm";
 				i.Name = "Cap of Forbidden Rites";
 				i.Level = 50;
+				i.Item_Type = 21;
 				i.Model = 1290; //NEED TO WORK ON..
 				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 50;
-				i.ArmorLevel = eArmorLevel.VeryLow;
+				i.IsPickable = true;
+				i.DPS_AF = 50;
+				i.SPD_ABS = 0;
+				i.Object_Type = 32;
 				i.Quality = 100;
+				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Necromancer);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Albion;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Intelligence, 21));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Quickness, 13));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Heat, 8));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Matter, 8));
 
-				if (SAVE_INTO_DATABASE)
+				i.Bonus1 = 21;
+				i.Bonus1Type = (int)eStat.INT;
+
+				i.Bonus2 = 13;
+				i.Bonus2Type = (int)eStat.QUI;
+
+				i.Bonus3 = 8;
+				i.Bonus3Type = (int)eResist.Heat;
+
+				i.Bonus4 = 8;
+				i.Bonus4Type = (int)eResist.Matter;
 				{
 					GameServer.Database.AddNewObject(i);
 				}
-				NecromancerEpicHelm = (HeadArmorTemplate)i;
-			}
+				NecromancerEpicHelm = i;
 
+			}
+			//end item
 			//of Forbidden Rites Gloves
-			NecromancerEpicGloves = (HandsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(HandsArmorTemplate), "NecromancerEpicGloves");
+			NecromancerEpicGloves = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NecromancerEpicGloves");
 			if (NecromancerEpicGloves == null)
 			{
-				i = new HandsArmorTemplate();
-				i.ItemTemplateID = "NecromancerEpicGloves";
+				i = new ItemTemplate();
+				i.Id_nb = "NecromancerEpicGloves";
 				i.Name = "Gloves of Forbidden Rites";
 				i.Level = 50;
+				i.Item_Type = 22;
 				i.Model = 142;
 				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 50;
-				i.ArmorLevel = eArmorLevel.VeryLow;
+				i.IsPickable = true;
+				i.DPS_AF = 50;
+				i.SPD_ABS = 0;
+				i.Object_Type = 32;
 				i.Quality = 100;
+				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Necromancer);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Albion;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 10));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Intelligence, 10));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxMana, 8));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Energy, 10));
 
-				if (SAVE_INTO_DATABASE)
+				i.Bonus1 = 10;
+				i.Bonus1Type = (int)eStat.STR;
+
+				i.Bonus2 = 10;
+				i.Bonus2Type = (int)eStat.INT;
+
+				i.Bonus3 = 8;
+				i.Bonus3Type = (int)eProperty.MaxMana;
+
+				i.Bonus4 = 10;
+				i.Bonus4Type = (int)eResist.Energy;
 				{
 					GameServer.Database.AddNewObject(i);
 				}
+				NecromancerEpicGloves = i;
 
-				NecromancerEpicGloves = (HandsArmorTemplate)i;
 			}
-
 			//of Forbidden Rites Hauberk
-			NecromancerEpicVest = (TorsoArmorTemplate)GameServer.Database.FindObjectByKey(typeof(TorsoArmorTemplate), "NecromancerEpicVest");
+			NecromancerEpicVest = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NecromancerEpicVest");
 			if (NecromancerEpicVest == null)
 			{
-				i = new TorsoArmorTemplate();
-				i.ItemTemplateID = "NecromancerEpicVest";
+				i = new ItemTemplate();
+				i.Id_nb = "NecromancerEpicVest";
 				i.Name = "Robe of Forbidden Rites";
 				i.Level = 50;
+				i.Item_Type = 25;
 				i.Model = 1266;
 				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 50;
-				i.ArmorLevel = eArmorLevel.VeryLow;
+				i.IsPickable = true;
+				i.DPS_AF = 50;
+				i.SPD_ABS = 0;
+				i.Object_Type = 32;
 				i.Quality = 100;
+				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Necromancer);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Albion;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 24));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxMana, 14));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Crush, 4));
 
-				if (SAVE_INTO_DATABASE)
+				i.Bonus1 = 24;
+				i.Bonus1Type = (int)eProperty.MaxHealth;
+
+				i.Bonus2 = 14;
+				i.Bonus2Type = (int)eProperty.MaxMana;
+
+				i.Bonus3 = 4;
+				i.Bonus3Type = (int)eResist.Crush;
+
+				//                    i.Bonus4 = 10;
+				//                    i.Bonus4Type = (int)eResist.Energy;
 				{
 					GameServer.Database.AddNewObject(i);
 				}
 
-				NecromancerEpicVest = (TorsoArmorTemplate)i;
-			}
+				NecromancerEpicVest = i;
 
+			}
 			//of Forbidden Rites Legs
-			NecromancerEpicLegs = (LegsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(LegsArmorTemplate), "NecromancerEpicLegs");
+			NecromancerEpicLegs = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NecromancerEpicLegs");
 			if (NecromancerEpicLegs == null)
 			{
-				i = new LegsArmorTemplate();
-				i.ItemTemplateID = "NecromancerEpicLegs";
+				i = new ItemTemplate();
+				i.Id_nb = "NecromancerEpicLegs";
 				i.Name = "Leggings of Forbidden Rites";
 				i.Level = 50;
+				i.Item_Type = 27;
 				i.Model = 140;
 				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 50;
-				i.ArmorLevel = eArmorLevel.VeryLow;
+				i.IsPickable = true;
+				i.DPS_AF = 50;
+				i.SPD_ABS = 0;
+				i.Object_Type = 32;
 				i.Quality = 100;
+				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Necromancer);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Albion;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 22));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Death_Servant, 4));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Cold, 8));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Matter, 8));
 
-				if (SAVE_INTO_DATABASE)
+				i.Bonus1 = 22;
+				i.Bonus1Type = (int)eStat.CON;
+
+				i.Bonus2 = 4;
+				i.Bonus2Type = (int)eProperty.Skill_Death_Servant;
+
+				i.Bonus3 = 8;
+				i.Bonus3Type = (int)eResist.Cold;
+
+				i.Bonus4 = 8;
+				i.Bonus4Type = (int)eResist.Matter;
 				{
 					GameServer.Database.AddNewObject(i);
 				}
-				NecromancerEpicLegs = (LegsArmorTemplate)i;
-			}
+				NecromancerEpicLegs = i;
 
+			}
 			//of Forbidden Rites Sleeves
-			NecromancerEpicArms = (ArmsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(ArmsArmorTemplate), "NecromancerEpicArms");
+			NecromancerEpicArms = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NecromancerEpicArms");
 			if (NecromancerEpicArms == null)
 			{
-				i = new ArmsArmorTemplate();
-				i.ItemTemplateID = "NecromancerEpicArms";
+				i = new ItemTemplate();
+				i.Id_nb = "NecromancerEpicArms";
 				i.Name = "Sleeves of Forbidden Rites";
 				i.Level = 50;
+				i.Item_Type = 28;
 				i.Model = 141;
 				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 50;
-				i.ArmorLevel = eArmorLevel.VeryLow;
+				i.IsPickable = true;
+				i.DPS_AF = 50;
+				i.SPD_ABS = 0;
+				i.Object_Type = 32;
 				i.Quality = 100;
+				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Necromancer);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Albion;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Intelligence, 18));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_DeathSight, 4));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 16));
 
-				if (SAVE_INTO_DATABASE)
+				i.Bonus1 = 18;
+				i.Bonus1Type = (int)eStat.INT;
+
+				i.Bonus2 = 4;
+				i.Bonus2Type = (int)eProperty.Skill_DeathSight;
+
+				i.Bonus3 = 16;
+				i.Bonus3Type = (int)eStat.DEX;
+
+				//                    i.Bonus4 = 10;
+				//                    i.Bonus4Type = (int)eResist.Energy;
 				{
 					GameServer.Database.AddNewObject(i);
 				}
-				NecromancerEpicArms = (ArmsArmorTemplate)i;
+				NecromancerEpicArms = i;
+				//Item Descriptions End
 			}
+
+			//Reaver Epic Sleeves End
+			//Item Descriptions End
+
 			#endregion
-			#region Heretic
-			HereticEpicBoots = (FeetArmorTemplate)GameServer.Database.FindObjectByKey(typeof(FeetArmorTemplate), "HereticEpicBoots");
-			if (HereticEpicBoots == null)
-			{
-				i = new FeetArmorTemplate();
-				i.ItemTemplateID = "HereticEpicBoots";
-				i.Name = "Boots of the Zealous Renegade";
-				i.Level = 50;
-				i.Model = 143;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 50;
-				i.ArmorLevel = eArmorLevel.VeryLow;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Heretic);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Albion;
-
-				/*
-				Strength: 16 pts
-				Constitution: 18 pts
-				Slash Resist: 8%
-				Heat Resist: 8%
-				*/
-
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 16));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 18));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Slash, 8));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Heat, 8));
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddNewObject(i);
-				}
-
-				HereticEpicBoots = (FeetArmorTemplate)i;
-			}
-
-			//of Forbidden Rites Coif
-			HereticEpicHelm = (HeadArmorTemplate)GameServer.Database.FindObjectByKey(typeof(HeadArmorTemplate), "HereticEpicHelm");
-			if (HereticEpicHelm == null)
-			{
-				i = new HeadArmorTemplate();
-				i.ItemTemplateID = "HereticEpicHelm";
-				i.Name = "Cap of the Zealous Renegade";
-				i.Level = 50;
-				i.Model = 1290; //NEED TO WORK ON..
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 50;
-				i.ArmorLevel = eArmorLevel.VeryLow;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Heretic);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Albion;
-
-				/*
-				 *   Thrust Resist: 6%
-					Piety: 15 pts
-					Hits: 48 pts
-					Cold Resist: 4%
-				 */
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Thrust, 6));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Piety, 15));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 48));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Cold, 4));
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddNewObject(i);
-				}
-				HereticEpicHelm = (HeadArmorTemplate)i;
-			}
-
-			//of the Zealous Renegade Gloves
-			HereticEpicGloves = (HandsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(HandsArmorTemplate), "HereticEpicGloves");
-			if (HereticEpicGloves == null)
-			{
-				i = new HandsArmorTemplate();
-				i.ItemTemplateID = "HereticEpicGloves";
-				i.Name = "Gloves of the Zealous Renegade";
-				i.Level = 50;
-				i.Model = 142;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 50;
-				i.ArmorLevel = eArmorLevel.VeryLow;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Heretic);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Albion;
-
-				/*
-				 *   Strength: 9 pts
-				Cold Resist: 8%
-				Power: 14 pts
-				 */
-
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 10));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Cold, 8));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxMana, 14));
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddNewObject(i);
-				}
-
-				HereticEpicGloves = (HandsArmorTemplate)i;
-			}
-
-			//of the Zealous Renegade Hauberk
-			HereticEpicVest = (TorsoArmorTemplate)GameServer.Database.FindObjectByKey(typeof(TorsoArmorTemplate), "HereticEpicVest");
-			if (HereticEpicVest == null)
-			{
-				i = new TorsoArmorTemplate();
-				i.ItemTemplateID = "HereticEpicVest";
-				i.Name = "Robe of the Zealous Renegade";
-				i.Level = 50;
-				i.Model = 2921;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 50;
-				i.ArmorLevel = eArmorLevel.VeryLow;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Heretic);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Albion;
-
-				/*
-				 *   Crush: 4 pts
-					Constitution: 16 pts
-					Dexterity: 15 pts
-					Cold Resist: 8%
-				 */
-
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Crushing, 4));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 16));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 15));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Cold, 8));
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddNewObject(i);
-				}
-
-				HereticEpicVest = (TorsoArmorTemplate)i;
-			}
-
-			//of the Zealous Renegade Legs
-			HereticEpicLegs = (LegsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(LegsArmorTemplate), "HereticEpicLegs");
-			if (HereticEpicLegs == null)
-			{
-				i = new LegsArmorTemplate();
-				i.ItemTemplateID = "HereticEpicLegs";
-				i.Name = "Leggings of the Zealous Renegade";
-				i.Level = 50;
-				i.Model = 140;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 50;
-				i.ArmorLevel = eArmorLevel.VeryLow;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Heretic);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Albion;
-
-				/*
-				 *   Constitution: 15 pts
-					Strength: 19 pts
-					Crush Resist: 8%
-					Matter Resist: 8%
-				 */
-
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 15));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 19));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Crush, 8));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Matter, 8));
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddNewObject(i);
-				}
-				HereticEpicLegs = (LegsArmorTemplate)i;
-			}
-
-			//of the Zealous Renegade Sleeves
-			HereticEpicArms = (ArmsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(ArmsArmorTemplate), "HereticEpicArms");
-			if (HereticEpicArms == null)
-			{
-				i = new ArmsArmorTemplate();
-				i.ItemTemplateID = "HereticEpicArms";
-				i.Name = "Sleeves of the Zealous Renegade";
-				i.Level = 50;
-				i.Model = 141;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 50;
-				i.ArmorLevel = eArmorLevel.VeryLow;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Heretic);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Albion;
-
-				/*
-				 *   Piety: 16 pts
-					Thrust Resist: 8%
-					Body Resist: 8%
-					Flexible: 6 pts
-				 */
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Piety, 16));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Thrust, 8));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Body, 8));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Flexible_Weapon, 6));
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddNewObject(i);
-				}
-				HereticEpicArms = (ArmsArmorTemplate)i;
-			}
-			#endregion
-			#endregion
-
-			MercenaryTrainers = WorldMgr.GetNPCsByType(typeof(DOL.GS.Trainer.MercenaryTrainer), eRealm.Albion);
-			ReaverTrainers = WorldMgr.GetNPCsByType(typeof(DOL.GS.Trainer.ReaverTrainer), eRealm.Albion);
-			CabalistTrainers = WorldMgr.GetNPCsByType(typeof(DOL.GS.Trainer.CabalistTrainer), eRealm.Albion);
-			InfiltratorTrainers = WorldMgr.GetNPCsByType(typeof(DOL.GS.Trainer.InfiltratorTrainer), eRealm.Albion);
-			NecromancerTrainers = WorldMgr.GetNPCsByType(typeof(DOL.GS.Trainer.NecromancerTrainer), eRealm.Albion);
-			HereticTrainers = WorldMgr.GetNPCsByType(typeof(DOL.GS.Trainer.HereticTrainer), eRealm.Albion);
-
-			foreach (GameNPC npc in MercenaryTrainers)
-				GameEventMgr.AddHandler(npc, GameNPCEvent.Interact, new DOLEventHandler(TalkToTrainer));
-			foreach (GameNPC npc in ReaverTrainers)
-				GameEventMgr.AddHandler(npc, GameNPCEvent.Interact, new DOLEventHandler(TalkToTrainer));
-			foreach (GameNPC npc in CabalistTrainers)
-				GameEventMgr.AddHandler(npc, GameNPCEvent.Interact, new DOLEventHandler(TalkToTrainer));
-			foreach (GameNPC npc in InfiltratorTrainers)
-				GameEventMgr.AddHandler(npc, GameNPCEvent.Interact, new DOLEventHandler(TalkToTrainer));
-			foreach (GameNPC npc in NecromancerTrainers)
-				GameEventMgr.AddHandler(npc, GameNPCEvent.Interact, new DOLEventHandler(TalkToTrainer));
-			foreach (GameNPC npc in HereticTrainers)
-				GameEventMgr.AddHandler(npc, GameNPCEvent.Interact, new DOLEventHandler(TalkToTrainer));
 
 			GameEventMgr.AddHandler(Lidmann, GameObjectEvent.Interact, new DOLEventHandler(TalkToLidmann));
 			GameEventMgr.AddHandler(Lidmann, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToLidmann));
-			GameEventMgr.AddHandler(Uragaig, GameNPCEvent.Dying, new DOLEventHandler(TargetDying));
 
 			/* Now we bring to Lidmann the possibility to give this quest to players */
-			QuestMgr.AddQuestDescriptor(Lidmann, typeof(Shadows_50Descriptor));
+			Lidmann.AddQuestToGive(typeof(Shadows_50));
 
 			if (log.IsInfoEnabled)
 				log.Info("Quest \"" + questTitle + "\" initialized");
@@ -1527,23 +1481,9 @@ namespace DOL.GS.Quests.Albion
 			// remove handlers
 			GameEventMgr.RemoveHandler(Lidmann, GameObjectEvent.Interact, new DOLEventHandler(TalkToLidmann));
 			GameEventMgr.RemoveHandler(Lidmann, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToLidmann));
-			GameEventMgr.RemoveHandler(Uragaig, GameNPCEvent.Dying, new DOLEventHandler(TargetDying));
-
-			foreach (GameNPC npc in MercenaryTrainers)
-				GameEventMgr.RemoveHandler(npc, GameNPCEvent.Interact, new DOLEventHandler(TalkToTrainer));
-			foreach (GameNPC npc in ReaverTrainers)
-				GameEventMgr.RemoveHandler(npc, GameNPCEvent.Interact, new DOLEventHandler(TalkToTrainer));
-			foreach (GameNPC npc in CabalistTrainers)
-				GameEventMgr.RemoveHandler(npc, GameNPCEvent.Interact, new DOLEventHandler(TalkToTrainer));
-			foreach (GameNPC npc in InfiltratorTrainers)
-				GameEventMgr.RemoveHandler(npc, GameNPCEvent.Interact, new DOLEventHandler(TalkToTrainer));
-			foreach (GameNPC npc in NecromancerTrainers)
-				GameEventMgr.RemoveHandler(npc, GameNPCEvent.Interact, new DOLEventHandler(TalkToTrainer));
-			foreach (GameNPC npc in HereticTrainers)
-				GameEventMgr.RemoveHandler(npc, GameNPCEvent.Interact, new DOLEventHandler(TalkToTrainer));
 
 			/* Now we remove to Lidmann the possibility to give this quest to players */
-			QuestMgr.RemoveQuestDescriptor(Lidmann, typeof(Shadows_50Descriptor));
+			Lidmann.RemoveQuestToGive(typeof(Shadows_50));
 		}
 
 		protected static void TalkToLidmann(DOLEvent e, object sender, EventArgs args)
@@ -1553,7 +1493,7 @@ namespace DOL.GS.Quests.Albion
 			if (player == null)
 				return;
 
-			if (QuestMgr.CanGiveQuest(typeof(Shadows_50), player, Lidmann) <= 0)
+			if (Lidmann.CanGiveQuest(typeof(Shadows_50), player) <= 0)
 				return;
 
 			//We also check if the player is already doing the quest
@@ -1588,7 +1528,7 @@ namespace DOL.GS.Quests.Albion
 							player.Out.SendCustomDialog("Will you help Lidmann [Defenders of Albion Level 50 Epic]?", new CustomDialogResponse(CheckPlayerAcceptQuest));
 							break;
 					}
-				}/*
+				}
 				else
 				{
 					switch (wArgs.Text)
@@ -1597,16 +1537,42 @@ namespace DOL.GS.Quests.Albion
 							player.Out.SendCustomDialog("Do you really want to abort this quest, \nall items gained during quest will be lost?", new CustomDialogResponse(CheckPlayerAbortQuest));
 							break;
 					}
-				}*/
+				}
 			}
 
+		}
+
+		public override bool CheckQuestQualification(GamePlayer player)
+		{
+			// if the player is already doing the quest his level is no longer of relevance
+			if (player.IsDoingQuest(typeof(Shadows_50)) != null)
+				return true;
+
+			if (player.CharacterClass.ID != (byte)eCharacterClass.Reaver &&
+				player.CharacterClass.ID != (byte)eCharacterClass.Mercenary &&
+				player.CharacterClass.ID != (byte)eCharacterClass.Cabalist &&
+				player.CharacterClass.ID != (byte)eCharacterClass.Necromancer &&
+				player.CharacterClass.ID != (byte)eCharacterClass.Infiltrator)
+				return false;
+
+			// This checks below are only performed is player isn't doing quest already
+
+			//if (player.HasFinishedQuest(typeof(Academy_47)) == 0) return false;
+
+			//if (!CheckPartAccessible(player,typeof(CityOfCamelot)))
+			//	return false;
+
+			if (player.Level < minimumLevel || player.Level > maximumLevel)
+				return false;
+
+			return true;
 		}
 
 		/* This is our callback hook that will be called when the player clicks
 		 * on any button in the quest offer dialog. We check if he accepts or
 		 * declines here...
 		 */
-		/*
+
 		private static void CheckPlayerAbortQuest(GamePlayer player, byte response)
 		{
 			Shadows_50 quest = player.IsDoingQuest(typeof(Shadows_50)) as Shadows_50;
@@ -1624,10 +1590,10 @@ namespace DOL.GS.Quests.Albion
 				quest.AbortQuest();
 			}
 		}
-		*/
+
 		private static void CheckPlayerAcceptQuest(GamePlayer player, byte response)
 		{
-			if (QuestMgr.CanGiveQuest(typeof(Shadows_50), player, Lidmann) <= 0)
+			if (Lidmann.CanGiveQuest(typeof(Shadows_50), player) <= 0)
 				return;
 
 			if (player.IsDoingQuest(typeof(Shadows_50)) != null)
@@ -1640,7 +1606,7 @@ namespace DOL.GS.Quests.Albion
 			else
 			{
 				// Check to see if we can add quest
-				if (!QuestMgr.GiveQuestToPlayer(typeof(Shadows_50), player, Lidmann))
+				if (!Lidmann.GiveQuest(typeof(Shadows_50), player, 1))
 					return;
 
 				player.Out.SendMessage("Kill Cailleach Uragaig in Lyonesse loc 29k, 33k!", eChatType.CT_System, eChatLoc.CL_PopupWindow);
@@ -1664,36 +1630,8 @@ namespace DOL.GS.Quests.Albion
 						return "[Step #1] Seek out Cailleach Uragaig in Lyonesse Loc 29k,33k kill her!";
 					case 2:
 						return "[Step #2] Return to Lidmann Halsey for your reward!";
-					default:
-						return "[Step #" + Step + "] No Description entered for this step!";
 				}
-			}
-		}
-
-		protected static void TalkToTrainer(DOLEvent e, object sender, EventArgs args)
-		{
-			InteractEventArgs iargs = args as InteractEventArgs;
-
-			GamePlayer player = iargs.Source as GamePlayer;
-			GameNPC npc = sender as GameNPC;
-			Shadows_50Descriptor a = new Shadows_50Descriptor();
-
-			if (!a.CheckQuestQualification(player)) return;
-			if (player.IsDoingQuest(typeof(Shadows_50)) != null) return;
-
-			npc.SayTo(player, "Lidmann Halsey has an important task for you, please seek him out at the tower guarding Adribards Retreat");
-		}
-
-		protected static void TargetDying(DOLEvent e, object sender, EventArgs args)
-		{
-			GameMob mob = sender as GameMob;
-			foreach (GamePlayer player in mob.XPGainers)
-			{
-				Shadows_50 quest = (Shadows_50)player.IsDoingQuest(typeof(Shadows_50));
-				if (quest == null) continue;
-				player.Out.SendMessage("Take the pouch to Lidmann Halsey", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				player.ReceiveItem(null, CreateQuestItem(sealed_pouch, quest.Name));
-				quest.Step = 2;
+				return base.Description;
 			}
 		}
 
@@ -1703,96 +1641,87 @@ namespace DOL.GS.Quests.Albion
 
 			if (player == null || player.IsDoingQuest(typeof(Shadows_50)) == null)
 				return;
-			/*
+
 			if (Step == 1 && e == GameLivingEvent.EnemyKilled)
 			{
 				EnemyKilledEventArgs gArgs = (EnemyKilledEventArgs)args;
 				if (gArgs.Target.Name == Uragaig.Name)
 				{
 					m_questPlayer.Out.SendMessage("Take the pouch to Lidmann Halsey", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					GiveItemToPlayer(CreateQuestItem(sealed_pouch, Name));
+					GiveItem(player, sealed_pouch);
 					Step = 2;
 					return;
 				}
 			}
-			*/
+
 			if (Step == 2 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs)args;
-				if (gArgs.Target.Name == Lidmann.Name && gArgs.Item.Name == sealed_pouch.Name)
+				if (gArgs.Target.Name == Lidmann.Name && gArgs.Item.Id_nb == sealed_pouch.Id_nb)
 				{
-					RemoveItemFromPlayer(Lidmann, sealed_pouch);
+					RemoveItem(Lidmann, player, sealed_pouch);
 					Lidmann.SayTo(player, "You have earned this Epic Armour!");
 					FinishQuest();
 					return;
 				}
 			}
 		}
-		/*
-				public override void AbortQuest()
-				{
-					base.AbortQuest(); //Defined in Quest, changes the state, stores in DB etc ...
 
-					RemoveItem(m_questPlayer, sealed_pouch, false);
-				}
-		*/
+		public override void AbortQuest()
+		{
+			base.AbortQuest(); //Defined in Quest, changes the state, stores in DB etc ...
+
+			RemoveItem(m_questPlayer, sealed_pouch, false);
+		}
+
 		public override void FinishQuest()
 		{
 			base.FinishQuest(); //Defined in Quest, changes the state, stores in DB etc ...
 
 			if (m_questPlayer.CharacterClass.ID == (byte)eCharacterClass.Reaver)
 			{
-				GiveItemToPlayer(ReaverEpicArms.CreateInstance());
-				GiveItemToPlayer(ReaverEpicBoots.CreateInstance());
-				GiveItemToPlayer(ReaverEpicGloves.CreateInstance());
-				GiveItemToPlayer(ReaverEpicHelm.CreateInstance());
-				GiveItemToPlayer(ReaverEpicLegs.CreateInstance());
-				GiveItemToPlayer(ReaverEpicVest.CreateInstance());
+				GiveItem(m_questPlayer, ReaverEpicArms);
+				GiveItem(m_questPlayer, ReaverEpicBoots);
+				GiveItem(m_questPlayer, ReaverEpicGloves);
+				GiveItem(m_questPlayer, ReaverEpicHelm);
+				GiveItem(m_questPlayer, ReaverEpicLegs);
+				GiveItem(m_questPlayer, ReaverEpicVest);
 			}
 			else if (m_questPlayer.CharacterClass.ID == (byte)eCharacterClass.Mercenary)
 			{
-				GiveItemToPlayer(MercenaryEpicArms.CreateInstance());
-				GiveItemToPlayer(MercenaryEpicBoots.CreateInstance());
-				GiveItemToPlayer(MercenaryEpicGloves.CreateInstance());
-				GiveItemToPlayer(MercenaryEpicHelm.CreateInstance());
-				GiveItemToPlayer(MercenaryEpicLegs.CreateInstance());
-				GiveItemToPlayer(MercenaryEpicVest.CreateInstance());
+				GiveItem(m_questPlayer, MercenaryEpicArms);
+				GiveItem(m_questPlayer, MercenaryEpicBoots);
+				GiveItem(m_questPlayer, MercenaryEpicGloves);
+				GiveItem(m_questPlayer, MercenaryEpicHelm);
+				GiveItem(m_questPlayer, MercenaryEpicLegs);
+				GiveItem(m_questPlayer, MercenaryEpicVest);
 			}
 			else if (m_questPlayer.CharacterClass.ID == (byte)eCharacterClass.Cabalist)
 			{
-				GiveItemToPlayer(CabalistEpicArms.CreateInstance());
-				GiveItemToPlayer(CabalistEpicBoots.CreateInstance());
-				GiveItemToPlayer(CabalistEpicGloves.CreateInstance());
-				GiveItemToPlayer(CabalistEpicHelm.CreateInstance());
-				GiveItemToPlayer(CabalistEpicLegs.CreateInstance());
-				GiveItemToPlayer(CabalistEpicVest.CreateInstance());
+				GiveItem(m_questPlayer, CabalistEpicArms);
+				GiveItem(m_questPlayer, CabalistEpicBoots);
+				GiveItem(m_questPlayer, CabalistEpicGloves);
+				GiveItem(m_questPlayer, CabalistEpicHelm);
+				GiveItem(m_questPlayer, CabalistEpicLegs);
+				GiveItem(m_questPlayer, CabalistEpicVest);
 			}
 			else if (m_questPlayer.CharacterClass.ID == (byte)eCharacterClass.Infiltrator)
 			{
-				GiveItemToPlayer(InfiltratorEpicArms.CreateInstance());
-				GiveItemToPlayer(InfiltratorEpicBoots.CreateInstance());
-				GiveItemToPlayer(InfiltratorEpicGloves.CreateInstance());
-				GiveItemToPlayer(InfiltratorEpicHelm.CreateInstance());
-				GiveItemToPlayer(InfiltratorEpicLegs.CreateInstance());
-				GiveItemToPlayer(InfiltratorEpicVest.CreateInstance());
+				GiveItem(m_questPlayer, InfiltratorEpicArms);
+				GiveItem(m_questPlayer, InfiltratorEpicBoots);
+				GiveItem(m_questPlayer, InfiltratorEpicGloves);
+				GiveItem(m_questPlayer, InfiltratorEpicHelm);
+				GiveItem(m_questPlayer, InfiltratorEpicLegs);
+				GiveItem(m_questPlayer, InfiltratorEpicVest);
 			}
 			else if (m_questPlayer.CharacterClass.ID == (byte)eCharacterClass.Necromancer)
 			{
-				GiveItemToPlayer(NecromancerEpicArms.CreateInstance());
-				GiveItemToPlayer(NecromancerEpicBoots.CreateInstance());
-				GiveItemToPlayer(NecromancerEpicGloves.CreateInstance());
-				GiveItemToPlayer(NecromancerEpicHelm.CreateInstance());
-				GiveItemToPlayer(NecromancerEpicLegs.CreateInstance());
-				GiveItemToPlayer(NecromancerEpicVest.CreateInstance());
-			}
-			else if (m_questPlayer.CharacterClassID == (byte)eCharacterClass.Heretic)
-			{
-				GiveItemToPlayer(HereticEpicArms.CreateInstance());
-				GiveItemToPlayer(HereticEpicBoots.CreateInstance());
-				GiveItemToPlayer(HereticEpicGloves.CreateInstance());
-				GiveItemToPlayer(HereticEpicHelm.CreateInstance());
-				GiveItemToPlayer(HereticEpicLegs.CreateInstance());
-				GiveItemToPlayer(HereticEpicVest.CreateInstance());
+				GiveItem(m_questPlayer, NecromancerEpicArms);
+				GiveItem(m_questPlayer, NecromancerEpicBoots);
+				GiveItem(m_questPlayer, NecromancerEpicGloves);
+				GiveItem(m_questPlayer, NecromancerEpicHelm);
+				GiveItem(m_questPlayer, NecromancerEpicLegs);
+				GiveItem(m_questPlayer, NecromancerEpicVest);
 			}
 
 			m_questPlayer.GainExperience(1937768448, 0, 0, true);

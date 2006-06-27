@@ -19,7 +19,7 @@
 using System;
 using System.Collections;
 using System.Text;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.Events;
 
 namespace DOL.GS
@@ -118,28 +118,7 @@ namespace DOL.GS
 				return false;
 			}
 		}
-        public override string Name
-        {
-            get
-            {
-                return Keep.Name;
-            }
-            set
-            {
-                Keep.Name = value;
-            }
-        }
-        public override Region Region
-        {
-            get
-            {
-                return Keep.Region;
-            }
-            set
-            {
-                Keep.Region = value;
-            }
-        }
+
 		/// <summary>
 		/// relative X to keep
 		/// </summary>
@@ -150,13 +129,7 @@ namespace DOL.GS
 		public int ComponentX
 		{
 			get	{ return m_componentx; }
-			set
-			{
-                double angle = (Keep.Heading * 0.017453292519943295769236907684886); // angle*2pi/360;
-                m_componentx = value;
-                m_position.m_x = (int)(Keep.Position.X + ((sbyte)m_componentx * 148 * Math.Cos(angle) + (sbyte)m_componenty * 148 * Math.Sin(angle)));
-                m_position.m_y = (int)(Keep.Position.Y - ((sbyte)m_componenty * 148 * Math.Cos(angle) - (sbyte)m_componentx * 148 * Math.Sin(angle)));
-			}
+			set	{ m_componentx = value; }
 		}
 
 		/// <summary>
@@ -169,13 +142,7 @@ namespace DOL.GS
 		public int ComponentY
 		{
 			get	{ return m_componenty; }
-			set
-			{
-                double angle = (Keep.Heading * 0.017453292519943295769236907684886); // angle*2pi/360;
-			    m_componenty = value;
-                m_position.m_x = (int)(Keep.Position.X + ((sbyte)m_componentx * 148 * Math.Cos(angle) + (sbyte)m_componenty * 148 * Math.Sin(angle)));
-                m_position.m_y = (int)(Keep.Position.Y - ((sbyte)m_componenty * 148 * Math.Cos(angle) - (sbyte)m_componentx * 148 * Math.Sin(angle)));
-			}
+			set	{ m_componenty = value; }
 		}
 
 		/// <summary>
@@ -188,14 +155,7 @@ namespace DOL.GS
 		public int ComponentHeading
 		{
 			get	{ return m_componentHeading; }
-			set
-			{
-			    m_componentHeading = value;
-                //need check to be sure for heading
-                double angle = (m_componentHeading * 90 + Keep.Heading);
-                if (angle > 360) angle -= 360;
-                this.Heading = (ushort)(angle / 0.08789);
-			}
+			set	{ m_componentHeading = value; }
 		}
 
 		/// <summary>
@@ -210,7 +170,7 @@ namespace DOL.GS
 		}
 		private Hashtable m_hookPoints;
 		private byte m_oldHealthPercent;
-		private bool m_rized = false;
+		private bool m_rized;
 
 		public Hashtable HookPoints
 		{
@@ -239,22 +199,45 @@ namespace DOL.GS
 		public GameKeepComponent()
 		{
 			m_hookPoints = new Hashtable(41);
-			GameEventMgr.AddHandler(this,GameLivingEvent.TakeDamage, new DOLEventHandler(SendComponentUpdate));
-            this.Model = INVISIBLE_MODEL;
-		    
+			GameEventMgr.AddHandler(this,GameObjectEvent.TakeDamage, new DOLEventHandler(SendComponentUpdate));
 		}
-        public GameKeepComponent(int componentID, int componentSkinID, int componentX, int componentY, int componentHead, int componentHeight, int componentHealth, int keepid) : this()
-        { 
-            
-        }
 
 		/// <summary>
 		/// load component from db object
 		/// </summary>
-		public void Load()
+		public void LoadFromDatabase(DBKeepComponent component,AbstractGameKeep keep)
 		{
-            m_position.Z = Keep.Position.Z;
+			Region myregion = WorldMgr.GetRegion((ushort)keep.Region);
+			if (myregion == null)
+				return;
+			this.Keep = keep;
+			//this.DBKeepComponent = component;
+			base.LoadFromDatabase(component);
+			//this x and y is for get object in radius
+			double angle = (keep.Heading * 0.017453292519943295769236907684886); // angle*2pi/360;
+			X = (int) (keep.X + ((sbyte)component.X * 148 * Math.Cos(angle) + (sbyte)component.Y * 148 * Math.Sin(angle)));
+			Y = (int) (keep.Y - ((sbyte)component.Y * 148 * Math.Cos(angle) - (sbyte)component.X * 148 * Math.Sin(angle)));
+			this.Z = keep.Z;
+			// and this one for packet sent
+			this.ComponentX = component.X;
+			this.ComponentY = component.Y;
+			this.ComponentHeading = (ushort)component.Heading;
+			//need check to be sure for heading
+			angle = (component.Heading * 90 + keep.Heading);
+			if (angle > 360) angle -= 360;
+			this.Heading = (ushort)(angle / 0.08789);
+			this.Name = keep.Name;
+			this.Model = INVISIBLE_MODEL;
+			this.Skin = component.Skin;
+			this.Level = (byte)keep.Level;
+//			this.Health = MaxHealth;
+			this.Health = component.Health;
 			this.m_oldHealthPercent = this.HealthPercent;
+			this.CurrentRegion = myregion;
+			this.Height = component.Height;
+			this.ID = component.ID;
+			this.SaveInDB = false;
+			this.Rized = false;
 			this.AddToWorld();
 		}
 
@@ -263,7 +246,29 @@ namespace DOL.GS
 		/// </summary>
 		public override void SaveIntoDatabase()
 		{
-            GameServer.Database.SaveObject(this);
+			DBKeepComponent obj = null;
+			if(InternalID != null)
+				obj = (DBKeepComponent) GameServer.Database.FindObjectByKey(typeof(DBKeepComponent), InternalID);
+			if(obj == null)
+				obj = new DBKeepComponent();
+			obj.Heading = ComponentHeading;
+			obj.Health = Health;
+			obj.X = this.ComponentX;
+			obj.Y = this.ComponentY;
+			obj.ID = this.ID;
+			obj.Height = this.Height;
+			obj.Skin = this.Skin;
+
+			if(InternalID == null)
+			{
+				GameServer.Database.AddNewObject(obj);
+				InternalID = obj.ObjectId;
+			}
+			else
+			{
+				GameServer.Database.SaveObject(obj);
+			}
+			base.SaveIntoDatabase ();
 		}
 
 		/// <summary>
@@ -278,7 +283,7 @@ namespace DOL.GS
 			if (m_oldHealthPercent == this.HealthPercent) return;
 			m_oldHealthPercent = this.HealthPercent;
 
-			foreach(GameClient client in WorldMgr.GetClientsOfRegion((ushort)RegionId))
+			foreach(GameClient client in WorldMgr.GetClientsOfRegion(this.CurrentRegionID))
 				client.Out.SendKeepComponentDetailUpdate(this);
 		}
 
@@ -286,8 +291,12 @@ namespace DOL.GS
 		{
 			StopHealthRegeneration();
 			base.Delete();
-			GameEventMgr.RemoveHandler(this,GameLivingEvent.TakeDamage, new DOLEventHandler(SendComponentUpdate));
-			GameServer.Database.DeleteObject(this);
+			GameEventMgr.RemoveHandler(this,GameObjectEvent.TakeDamage, new DOLEventHandler(SendComponentUpdate));
+			DBKeepComponent obj = null;
+			if(this.InternalID != null)
+				obj = (DBKeepComponent) GameServer.Database.FindObjectByKey(typeof(DBKeepComponent), this.InternalID);
+			if (obj != null)
+				GameServer.Database.DeleteObject(obj);
 			//todo find a packet to remove the keep
 		}
 
@@ -342,7 +351,7 @@ namespace DOL.GS
 			Health += amount;
 			m_oldHealthPercent = HealthPercent;
 			if (oldStatus != Status)
-				foreach(GameClient client in WorldMgr.GetClientsOfRegion((ushort)RegionId))
+				foreach(GameClient client in WorldMgr.GetClientsOfRegion(this.CurrentRegionID))
 					client.Out.SendKeepComponentDetailUpdate(this);
 		}
 

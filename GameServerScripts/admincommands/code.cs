@@ -52,7 +52,7 @@ namespace DOL.GS.Scripts
 			text.Append("using DOL;\n");
 			text.Append("using DOL.AI;\n");
 			text.Append("using DOL.AI.Brain;\n");
-			text.Append("using DOL.GS.Database;\n");
+			text.Append("using DOL.Database;\n");
 			text.Append("using DOL.GS;\n");
 			text.Append("using DOL.GS.Housing;\n");
 			text.Append("using DOL.GS.Quests;\n");

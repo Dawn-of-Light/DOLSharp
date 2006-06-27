@@ -19,7 +19,6 @@
 using System;
 using System.Collections;
 using DOL.Events;
-using DOL.GS.Quests;
 
 namespace DOL.GS.PacketHandler.v168
 {
@@ -62,11 +61,11 @@ namespace DOL.GS.PacketHandler.v168
 			/// <summary>
 			/// The dialog type
 			/// </summary>
-			protected readonly byte m_messageType;
+			protected readonly int m_messageType;
 			/// <summary>
 			/// The players response
 			/// </summary>
-			protected readonly byte m_response;
+			protected readonly int m_response;
 
 			/// <summary>
 			/// Constructs a new DialogBoxResponseAction
@@ -77,7 +76,7 @@ namespace DOL.GS.PacketHandler.v168
 			/// <param name="data3">The general data field</param>
 			/// <param name="messageType">The dialog type</param>
 			/// <param name="response">The players response</param>
-			public DialogBoxResponseAction(GamePlayer actionSource, int data1, int data2, int data3, byte messageType, byte response) : base(actionSource)
+			public DialogBoxResponseAction(GamePlayer actionSource, int data1, int data2, int data3, int messageType, int response) : base(actionSource)
 			{
 				m_data1 = data1;
 				m_data2 = data2;
@@ -93,7 +92,7 @@ namespace DOL.GS.PacketHandler.v168
 			{
 				GamePlayer player = (GamePlayer)m_actionSource;
 
-				if(m_messageType==(byte)eDialogCode.CustomDialog && m_data2==0x01) //Custom dialog
+				if(m_messageType==0x06 && m_data2==0x01) //Custom dialog
 				{
 					CustomDialogResponse callback=null;
 					lock(player)
@@ -102,33 +101,33 @@ namespace DOL.GS.PacketHandler.v168
 						player.CustomDialogCallback=null;
 					}
 					if(callback==null) return;
-					callback(player, m_response);
+					callback(player, (byte)m_response);
 					return;
 				}
-				else if(m_messageType==(byte)eDialogCode.GuildInvite)// if Message is guild invit
+				else if(m_messageType==0x03 )// if Message is guild invit
 				{
-					GamePlayer guildLeader = player.Region.GetObject((ushort)m_data1) as GamePlayer;
+					GamePlayer guildLeader = WorldMgr.GetObjectByIDFromRegion(player.CurrentRegionID,(ushort)m_data1) as GamePlayer;
 					if (m_response==0x01)//accepte
 					{
 						if(guildLeader == null)
 						{
 							return;
 						}
-						if(player.Guild != null)
+						if(player.Guild!=null)
 						{
 							player.Out.SendMessage("You are still in a guild.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 							return;
 						}
 						if(guildLeader.Guild != null )
 						{
-							guildLeader.Guild.AddGuildMember(player, 9);
+							guildLeader.Guild.AddPlayer(player);
 							return;
 						}
 						else
 						{
-							guildLeader.Out.SendMessage("You are not in a guild anymore.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+							player.Out.SendMessage("You are not in a guild.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 							return;
-						}			
+						}		
 					}
 					else
 					{
@@ -137,7 +136,7 @@ namespace DOL.GS.PacketHandler.v168
 						return;
 					}	
 				}
-				else if(m_messageType==(byte)eDialogCode.GuildLeave )// if Message is guild leave
+				else if(m_messageType==0x08 )// if Message is guild leave
 				{
 					if (m_response==0x01)//accepte
 					{
@@ -148,117 +147,93 @@ namespace DOL.GS.PacketHandler.v168
 						}
 						else
 						{
-							player.Guild.RemoveGuildMember(player);
-							return;
+							player.Guild.RemovePlayer(player.Name,player);
 						}	
 					}
 					else
 					{
 						player.Out.SendMessage("You decline to quit your guild.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						return;
-					}		
+					}	
 				}
-				else if(m_messageType==(byte)eDialogCode.QuestSuscribe )// if Message is quest dialogue
-				{
-					GameNPC invitingNPC = player.Region.GetObject((ushort)m_data2) as GameNPC;
+				else if(m_messageType==0x64 )// if Message is quest dialogue
+				{                    
+                    GameLiving invitingNPC = (GameLiving) WorldMgr.GetObjectByIDFromRegion(player.CurrentRegionID,(ushort)m_data2);
+					if (invitingNPC == null)
+						return;
 
-					AbstractQuestDescriptor desc = QuestMgr.GetQuestDescriptor(invitingNPC, (ushort)m_data1);
-					if(desc == null)
+                    QuestEventArgs args = new QuestEventArgs(invitingNPC, player, (ushort)m_data1);
+                    if (m_response==0x01)//accept
 					{
-						return;
-					}
-
-					if(m_data3 == 0x00)
-					{
-						if (m_response==0x01)//accept
-						{
-							player.Notify(GamePlayerEvent.AcceptQuest, player, new QuestEventArgs(invitingNPC, player, desc));
-							return;
-						}
-						else
-						{
-							player.Notify(GamePlayerEvent.DeclineQuest, player, new QuestEventArgs(invitingNPC, player, desc));
-							return;
-						}	
-					}
-					else if(m_data3 == 0x01)
-					{
-						if (m_response==0x01)//accept
-						{
-							player.Notify(GamePlayerEvent.AbortQuest, player, new QuestEventArgs(invitingNPC, player, desc));
-							return;
-						}
-						else
-						{
-							player.Notify(GamePlayerEvent.ContinueQuest, player, new QuestEventArgs(invitingNPC, player, desc));
-							return;
-						}	
-					}
-				}
-				else if(m_messageType==(byte)eDialogCode.GroupInvite && m_response==0x01)// if Message is group invit and Response is Yes
-				{
-					GameClient cln = WorldMgr.GetClientFromID(m_data1);
-					if (cln == null) return;
-					GamePlayer groupLeader = cln.Player;
-					if(groupLeader == null) return;
-					if(player.PlayerGroup!=null)
-					{
-						player.Out.SendMessage("You are still in a group.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
-						return;
-					}
-					if(player.InCombat)
-					{
-						player.Out.SendMessage("You can't join a group while in combat!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						return;
-					}
-					if(groupLeader.PlayerGroup != null )
-					{
-						if(groupLeader.PlayerGroup.PlayerCount>=PlayerGroup.MAX_GROUP_SIZE)
-						{
-							player.Out.SendMessage("The group is full.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
-							return;
-						}
-						if(groupLeader.PlayerGroup.IsGroupInCombat())
-						{
-							player.Out.SendMessage("You can't join a group that is in combat!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return;
-						}
-						groupLeader.PlayerGroup.AddPlayer(player);
-						return;
+						//TODO add quest to player
+                        //Note: This is done withing quest code since we have to check requirements, etc for each quest individually                        
+                        player.Notify(GamePlayerEvent.AcceptQuest, player,args);
+                        return;
 					}
 					else
 					{
-						PlayerGroup group = new PlayerGroup(groupLeader);
-						GroupMgr.AddGroup(group, group);
-						groupLeader.PlayerGroup = group;
-						group.AddPlayer(groupLeader);
-						group.AddPlayer(player);
+                        player.Notify(GamePlayerEvent.DeclineQuest, player,args);
+                        //player.Out.SendMessage("You decline to subcribe to quest", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						return;
+					}	
+				}
+				else if(m_messageType==0x05)// if Message is group invit
+				{
+					PlayerGroup invToGroup = (PlayerGroup)player.TempProperties.getObjectProperty(PacketLib168.INVITED_TO_GROUP, null);
+					player.TempProperties.removeProperty(PacketLib168.INVITED_TO_GROUP);
+					if (m_response==0x01) //  and Response is Yes
+					{
+						GameClient cln = WorldMgr.GetClientFromID(m_data1);
+						if (cln == null) return;
+						GamePlayer groupLeader = cln.Player;
+						if (groupLeader == null) return;
+						if (groupLeader.PlayerGroup != null && groupLeader.PlayerGroup != invToGroup) return;
+						HandleGroupInvite(invToGroup, groupLeader);
 					}
 				}
-				else if (m_messageType == (byte)eDialogCode.BuyRespec && m_response==0x01) // if Message is respec buy
-				{
-					if (player.RespecAmountAllSkill > 0 || player.RespecAmountSingleSkill > 0)
-					{
-						player.Out.SendMessage("You already have a respec avalable!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						return;
-					}
-					
-					long cost = GamePlayer.CalculateRespecCost(player.RespecBought + 1, player.Level);
-					if (player.RemoveMoney(cost))
-					{
-						if (player.RespecBought < 10) player.RespecBought++;
-						player.RespecAmountSingleSkill++;
-						player.IsLevelRespecUsed = false;
+			}
 
-						player.Out.SendMessage("You just bought a respec single for " + Money.GetString(cost) + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						return;
-					}
-					else
+			/// <summary>
+			/// Creates a group if it doesn't exist and adds action owner to it.
+			/// </summary>
+			/// <param name="invToGroup">Group where player was invited or null.</param>
+			/// <param name="groupLeader">Group leader.</param>
+			private void HandleGroupInvite(PlayerGroup invToGroup, GamePlayer groupLeader)
+			{
+				GamePlayer player = (GamePlayer)m_actionSource;
+				if(player.PlayerGroup!=null)
+				{
+					player.Out.SendMessage("You are still in a group.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+					return;
+				}
+				if(player.InCombat)
+				{
+					player.Out.SendMessage("You can't join a group while in combat!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					return;
+				}
+				if(invToGroup != null )
+				{
+					if(invToGroup.PlayerCount>=PlayerGroup.MAX_GROUP_SIZE)
 					{
-						player.Out.SendMessage("You cannot afford the respec which costs " + Money.GetString(cost) + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						player.Out.SendMessage("The group is full.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 						return;
 					}
+					if(invToGroup.IsGroupInCombat())
+					{
+						player.Out.SendMessage("You can't join a group that is in combat!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						return;
+					}
+					invToGroup.AddPlayer(player);
+					return;
+				}
+				else
+				{
+					PlayerGroup group = new PlayerGroup(groupLeader);
+					GroupMgr.AddGroup(group, group);
+					groupLeader.PlayerGroup = group;
+					group.AddPlayer(groupLeader);
+					group.AddPlayer(player);
+					return;
 				}
 			}
 		}

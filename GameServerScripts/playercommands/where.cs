@@ -35,14 +35,14 @@ namespace DOL.GS.Scripts
 			if (targetnpc != null && CheckTargetIsGuard(targetnpc))
 			{
 				string name = String.Join(" ", args, 1, args.Length - 1);
-				GameNPC[] npcs = WorldMgr.GetNPCsByNameFromRegion(name, (ushort)client.Player.RegionId, (eRealm) client.Player.Realm);
+				GameNPC[] npcs = WorldMgr.GetNPCsByNameFromRegion(name, client.Player.CurrentRegionID, (eRealm) client.Player.Realm);
 				if (npcs == null || npcs.Length <= 0)
 				{
 					targetnpc.SayTo(client.Player, "Sorry, i do not know this person.");
 					return 0;
 				}
 				GameNPC npc = npcs[0];
-				ushort heading = targetnpc.Position.GetHeadingTo(npc.Position);
+				ushort heading = targetnpc.GetHeadingToTarget(npc);
 				string directionstring = GetDirectionFromHeading(heading);
 				targetnpc.SayTo(client.Player, eChatLoc.CL_SystemWindow, npc.Name + " is in the " + directionstring);
 				targetnpc.TurnTo(npc, 10000);
@@ -54,9 +54,6 @@ namespace DOL.GS.Scripts
 
 		public bool CheckTargetIsGuard(GameLiving target)
 		{
-			if (target is GamePlayer)
-				return false;
-
 			if (target.Realm == 0)
 				return false;
 

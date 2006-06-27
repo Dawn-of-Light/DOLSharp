@@ -25,20 +25,11 @@ namespace DOL.AI.Brain
 	/// </summary>
 	public class KeepGuardBrain : GuardBrain
 	{
-        /// <summary>
-        /// the constructor
-        /// </summary>
 		public KeepGuardBrain() : base()
 		{
 			
 		}
-
 		protected AbstractGameKeep m_keep;
-
-        /// <summary>
-        /// Gets or sets the keep.
-        /// </summary>
-        /// <value>The keep.</value>
 		public AbstractGameKeep Keep 
 		{ 
 			get{return m_keep;}

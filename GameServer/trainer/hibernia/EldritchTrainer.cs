@@ -17,11 +17,7 @@
  *
  */
 using System;
-using System.Collections;
-using System.Reflection;
-using DOL.Events;
 using DOL.GS.PacketHandler;
-using log4net;
 
 namespace DOL.GS.Trainer
 {
@@ -31,51 +27,10 @@ namespace DOL.GS.Trainer
 	[NPCGuildScript("Eldritch Trainer", eRealm.Hibernia)]		// this attribute instructs DOL to use this script for all "Eldritch Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class EldritchTrainer : GameTrainer
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		public const string WEAPON_ID1 = "eldritch_item";
 
-		/// <summary>
-		/// This hash constrain all item template the trainer can give
-		/// </summary>	
-		private static IDictionary allStartupItems = new Hashtable();
-
-		/// <summary>
-		/// This function is called at the server startup
-		/// </summary>	
-		[GameServerStartedEvent]
-		public static void OnServerStartup(DOLEvent e, object sender, EventArgs args)
-		{	
-			#region Eldritch staff
-
-			StaffTemplate eldritch_staff_template = new StaffTemplate();
-			eldritch_staff_template.Name = "Eldritch Staff of Focus";
-			eldritch_staff_template.Level = 5;
-			eldritch_staff_template.Durability = 100;
-			eldritch_staff_template.Condition = 100;
-			eldritch_staff_template.Quality = 90;
-			eldritch_staff_template.Bonus = 10;
-			eldritch_staff_template.DamagePerSecond = 30;
-			eldritch_staff_template.Speed = 4400;
-			eldritch_staff_template.Weight = 45;
-			eldritch_staff_template.Model = 19;
-			eldritch_staff_template.Realm = eRealm.Hibernia;
-			eldritch_staff_template.IsDropable = true; 
-			eldritch_staff_template.IsTradable = false; 
-			eldritch_staff_template.IsSaleable = false;
-			eldritch_staff_template.MaterialLevel = eMaterialLevel.Bronze;
-			
-			eldritch_staff_template.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Focus_Void, 4));
-			
-			if(!allStartupItems.Contains("Eldritch_Staff_of_Focus"))
-			{
-				allStartupItems.Add("Eldritch_Staff_of_Focus", eldritch_staff_template);
-			
-				if (log.IsDebugEnabled)
-					log.Debug("Adding " + eldritch_staff_template.Name + " to EldritchTrainer gifts.");
-			}
-			#endregion
+		public EldritchTrainer() : base()
+		{
 		}
 
 		/// <summary>
@@ -88,18 +43,22 @@ namespace DOL.GS.Trainer
  			if (!base.Interact(player)) return false;
 								
 			// check if class matches.				
-			if (player.CharacterClass.ID == (int) eCharacterClass.Eldritch)
-			{
+			if (player.CharacterClass.ID == (int) eCharacterClass.Eldritch) {
+
+				// popup the training window
 				player.Out.SendTrainerWindow();
+				//player.Out.SendMessage(this.Name + " says, \"Select what you like to train.\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);												
 				player.Out.SendMessage(this.Name + " says, \"Drink up this knowledge, " + player.Name + ", and remember it, for there shall be a day when I no longer rise in the morning, and you may be required to take my place.\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
-			} 
-			else if (CanPromotePlayer(player)) 
-			{
-				player.Out.SendMessage(this.Name + " says, \"Greetings, " + player.Name + ". It is my understanding that you have chosen the Path of Focus, and wish to train as an [Eldritch].\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+
 			} 
 			else 
 			{
-				player.Out.SendMessage(this.Name + " says, \"You must seek elsewhere for your training.\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
+				// perhaps player can be promoted
+				if (CanPromotePlayer(player)) {
+					player.Out.SendMessage(this.Name + " says, \"Greetings, " + player.Name + ". It is my understanding that you have chosen the Path of Focus, and wish to train as an [Eldritch].\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+				} else {
+					player.Out.SendMessage(this.Name + " says, \"You must seek elsewhere for your training.\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);							
+				}
 			}
 			return true;
  		}
@@ -125,12 +84,13 @@ namespace DOL.GS.Trainer
 			if (!base.WhisperReceive(source, text)) return false;			
 			GamePlayer player = source as GamePlayer;			
 	
-			switch (text) 
-			{
-				case "Eldritch":
-					if (CanPromotePlayer(player)) 
-						PromotePlayer(player, (int)eCharacterClass.Eldritch, "I can give you the gift of knowledge, but wisdom you must seek on your own. I welcome you, " + source.GetName(0, false) + ". Here, take this welcoming gift. Use it wisely.", new GenericItemTemplate[] {allStartupItems["Eldritch_Staff_of_Focus"] as GenericItemTemplate});
-				
+			switch (text) {
+			case "Eldritch":
+				// promote player to other class
+				if (CanPromotePlayer(player)) {
+					PromotePlayer(player, (int)eCharacterClass.Eldritch, "I can give you the gift of knowledge, but wisdom you must seek on your own. I welcome you, " + source.GetName(0, false) + ". Here, take this welcoming gift. Use it wisely.", null);
+					player.ReceiveItem(this,WEAPON_ID1);
+				}
 				break;
 			}
 			return true;		

@@ -42,10 +42,7 @@ namespace DOL.GS.PacketHandler
 
 		public override void SendUpdatePlayer()
 		{
-            if (m_gameClient == null)
-                return;
-
-            GamePlayer player = m_gameClient.Player;
+			GamePlayer player = m_gameClient.Player;
 			if (player == null)
 				return;
 
@@ -78,18 +75,18 @@ namespace DOL.GS.PacketHandler
 
 			pak.WritePascalString(player.CharacterClass.BaseName); // base class
 
-			pak.WriteByte((byte) (player.LotNumber >> 8)); // personal house high byte
-			pak.WritePascalString(GuildMgr.GetGuildByID(player.GuildID).GuildName);
-			pak.WriteByte((byte) (player.LotNumber & 0xFF)); // personal house low byte
+			pak.WriteByte((byte) (player.PlayerCharacter.LotNumber >> 8)); // personal house high byte
+			pak.WritePascalString(player.GuildName);
+			pak.WriteByte((byte) (player.PlayerCharacter.LotNumber & 0xFF)); // personal house low byte
 
 			pak.WritePascalString(player.LastName);
 
 			pak.WriteByte(0x0); // ML Level
-			pak.WritePascalString(GlobalConstants.RaceToName((eRace)player.Race));
+			pak.WritePascalString(player.RaceName);
 
 			pak.WriteByte(0x0);
-			if (m_gameClient.Player.Guild != null)
-				pak.WritePascalString(m_gameClient.Player.Guild.GuildRanks[m_gameClient.Player.GuildRank].Title);
+			if (player.GuildRank != null)
+				pak.WritePascalString(player.GuildRank.Title);
 			else
 				pak.WritePascalString("");
 			pak.WriteByte(0x0);

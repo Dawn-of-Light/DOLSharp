@@ -17,7 +17,7 @@
  *
  */
 using System;
-using DOL.GS.Database;
+using DOL.Database;
 
 namespace DOL.GS.PacketHandler.v168
 {
@@ -28,12 +28,7 @@ namespace DOL.GS.PacketHandler.v168
 		{
 			packet.Skip(4);
 			int slot = packet.ReadShort();
-			if (slot >= 10 && slot <= 36)
-			{
-				client.Out.SendMessage("You cannot destroy an equipped item!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 0;
-			}
-			GenericItem item = client.Player.Inventory.GetItem((eInventorySlot)slot);
+			InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)slot);
 			if (item != null && client.Player.Inventory.RemoveItem(item)) {
 				client.Out.SendMessage("You destroy the "+item.Name+".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}

@@ -1,62 +1,62 @@
 <VisualStudioProject>
     <CSHARP
-				ProjectType = "Local"
-				ProductVersion = "7.10.3077"
-				SchemaVersion = "2.0"
-				ProjectGuid = "{722D049D-F4B0-4DB7-ABDA-C54BD554589E}"
-		>
-				<Build>
+        ProjectType = "Local"
+        ProductVersion = "7.10.3077"
+        SchemaVersion = "2.0"
+        ProjectGuid = "{A4A0FB22-124C-45CA-A653-2887DE0CC3E0}"
+    >
+        <Build>
             <Settings
-				  ApplicationIcon = ""
-				  AssemblyKeyContainerName = ""
-				  AssemblyName = "DOLBase"
-				  AssemblyOriginatorKeyFile = ""
-				  DefaultClientScript = "JScript"
-				  DefaultHTMLPageLayout = "Grid"
-				  DefaultTargetSchema = "IE50"
-				  DelaySign = "false"
-				  OutputType = "Library"
-				  PreBuildEvent = ""
-				  PostBuildEvent = "postBuildEvent='xcopy "$(ProjectDir)\database\mappingFiles\*.hbm.xml" "$(SolutionDir)\$(ConfigurationName)\mapping" /y /s /q /i'"
-				  RunPostBuildEvent = "OnBuildSuccess"
-				  RootNamespace = "DOL"
-				  StartupObject = ""
-		     >
-				  <Config
-				      Name = "Debug"
-				      AllowUnsafeBlocks = "false"
-				      BaseAddress = "285212672"
-				      CheckForOverflowUnderflow = "false"
-				      ConfigurationOverrideFile = ""
-				      DefineConstants = "DEBUG;TRACE;WIN32;NET"
-				      DocumentationFile = "Docs.xml"
-				      DebugSymbols = "true"
-				      FileAlignment = "4096"
-				      IncrementalBuild = "false"
-				      NoStdLib = "false"
-				      NoWarn = "1591;219;1573;1572;168"
-				      Optimize = "true"
-                    OutputPath = "..\Debug\lib\"
+                ApplicationIcon = ""
+                AssemblyKeyContainerName = ""
+                AssemblyName = "DOLBase"
+                AssemblyOriginatorKeyFile = ""
+                DefaultClientScript = "JScript"
+                DefaultHTMLPageLayout = "Grid"
+                DefaultTargetSchema = "IE50"
+                DelaySign = "false"
+                OutputType = "Library"
+                PreBuildEvent = ""
+                PostBuildEvent = ""
+                RootNamespace = "DOL"
+                RunPostBuildEvent = "OnBuildSuccess"
+                StartupObject = ""
+            >
+                <Config
+                    Name = "Debug"
+                    AllowUnsafeBlocks = "false"
+                    BaseAddress = "285212672"
+                    CheckForOverflowUnderflow = "false"
+                    ConfigurationOverrideFile = ""
+                    DefineConstants = "DEBUG;TRACE"
+                    DocumentationFile = "DOLBase.xml"
+                    DebugSymbols = "true"
+                    FileAlignment = "4096"
+                    IncrementalBuild = "false"
+                    NoStdLib = "false"
+                    NoWarn = ""
+                    Optimize = "true"
+                    OutputPath = "bin\Debug\"
                     RegisterForComInterop = "false"
                     RemoveIntegerChecks = "false"
                     TreatWarningsAsErrors = "false"
                     WarningLevel = "4"
                 />
-				  <Config
-				      Name = "Release"
-				      AllowUnsafeBlocks = "true"
-				      BaseAddress = "285212672"
-				      CheckForOverflowUnderflow = "false"
-				      ConfigurationOverrideFile = ""
-				      DefineConstants = "TRACE"
-				      DocumentationFile = "DOLBase.xml"
-				      DebugSymbols = "false"
-				      FileAlignment = "4096"
-				      IncrementalBuild = "false"
-				      NoStdLib = "false"
-				      NoWarn = "1591;219;1573;1572;168"
-				      Optimize = "true"
-                    OutputPath = "..\Release\lib\"
+                <Config
+                    Name = "Release"
+                    AllowUnsafeBlocks = "true"
+                    BaseAddress = "285212672"
+                    CheckForOverflowUnderflow = "false"
+                    ConfigurationOverrideFile = ""
+                    DefineConstants = "TRACE"
+                    DocumentationFile = "DOLBase.xml"
+                    DebugSymbols = "false"
+                    FileAlignment = "4096"
+                    IncrementalBuild = "false"
+                    NoStdLib = "false"
+                    NoWarn = ""
+                    Optimize = "true"
+                    OutputPath = "bin\Release\"
                     RegisterForComInterop = "false"
                     RemoveIntegerChecks = "false"
                     TreatWarningsAsErrors = "false"
@@ -67,24 +67,29 @@
                 <Reference
                     Name = "System"
                     AssemblyName = "System"
+                    HintPath = "..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.dll"
                 />
                 <Reference
-                    Name = "System.Xml"
+                    Name = "System.XML"
                     AssemblyName = "System.Xml"
+                    HintPath = "..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
                 />
                 <Reference
                     Name = "log4net"
                     AssemblyName = "log4net"
                     HintPath = "..\sharedModules\log4net\log4net.dll"
+                    Private = "True"
                 />
                 <Reference
                     Name = "ICSharpCode.SharpZipLib"
                     AssemblyName = "ICSharpCode.SharpZipLib"
                     HintPath = "..\sharedModules\ICSharpCode.SharpZLib\ICSharpCode.SharpZipLib.dll"
+                    Private = "True"
                 />
                 <Reference
                     Name = "System.Data"
                     AssemblyName = "System.Data"
+                    HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Data.dll"
                 />
             </References>
         </Build>
@@ -194,3 +199,4 @@
         </Files>
     </CSHARP>
 </VisualStudioProject>
+

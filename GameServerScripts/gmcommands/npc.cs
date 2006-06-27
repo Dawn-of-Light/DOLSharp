@@ -166,12 +166,16 @@ namespace DOL.GS.Scripts
 							speed = Convert.ToInt32(args[3]);
 						}
 
-						Point pos = Point.Zero;
+						int X=0;
+						int Y=0;
+						int Z=0;
 						switch (args[2].ToLower())
 						{
 							case "me":
 							{
-								pos = client.Player.Position;
+								X = client.Player.X;
+								Y = client.Player.Y;
+								Z = client.Player.Z;
 								break;
 							}
 
@@ -182,7 +186,9 @@ namespace DOL.GS.Scripts
 								{
 									if (targetplayer.Name.ToLower() == args[2].ToLower())
 									{
-										pos = targetplayer.Position;
+										X = targetplayer.X;
+										Y = targetplayer.Y;
+										Z = targetplayer.Z;
 										break;
 									}
 								}
@@ -191,7 +197,9 @@ namespace DOL.GS.Scripts
 								{
 									if (target.Name.ToLower() == args[2].ToLower())
 									{
-										pos = target.Position;
+										X = target.X;
+										Y = target.Y;
+										Z = target.Z;
 										break;
 									}
 								}
@@ -199,13 +207,13 @@ namespace DOL.GS.Scripts
 							}
 						}
 
-						if(pos == Point.Zero)
+						if(X == 0 && Y == 0 && Z == 0)
 						{
 							client.Out.SendMessage("Can't find name "+ args[2].ToLower() +" near your target.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return 0;
 						}
 
-						npc.WalkTo(pos, speed);
+						npc.WalkTo(X, Y, Z, speed);
 						client.Out.SendMessage("Your target is walking to your location!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
                         break;
                     }
@@ -256,7 +264,7 @@ namespace DOL.GS.Scripts
 							return 0;
 						}
 
-						npc.TurnTo(target.Position);
+						npc.TurnTo(target);
                         break;
                     }
 				case "follow":

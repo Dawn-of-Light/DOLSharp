@@ -18,16 +18,17 @@
  */
 using System;
 using System.Collections;
-using DOL.GS.Database;
+using DOL.Database;
 
 
 namespace DOL.GS
 {
-	public interface IKeep : IWorldPosition
+	public interface IKeep
 	{
 		ArrayList KeepComponents{get;}
 		ArrayList Guards	{get;}
-		void Load();
+		void Load(DBKeep keep);
+		void LoadFromDatabase(DataObject keep);
 		void SaveIntoDatabase();
 		void LoadObjects();
 	}

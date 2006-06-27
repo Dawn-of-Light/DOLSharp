@@ -17,8 +17,7 @@
  *
  */
 using System;
-using DOL.GS;
-using DOL.GS.Database;
+using DOL.Database;
 
 namespace DOL.Events
 {
@@ -30,14 +29,14 @@ namespace DOL.Events
 		/// <summary>
 		/// Holds the target character for this event
 		/// </summary>
-		private GamePlayer m_character;
+		private Character m_character;
 		
 		/// <summary>
 		/// Constructs a new event argument class for the
 		/// character events 
 		/// </summary>
 		/// <param name="character"></param>
-		public CharacterEventArgs(GamePlayer character)
+		public CharacterEventArgs(Character character)
 		{
 			m_character = character;
 		}
@@ -45,7 +44,7 @@ namespace DOL.Events
 		/// <summary>
 		/// Gets the target account for this event
 		/// </summary>
-		public GamePlayer Character
+		public Character Character
 		{
 			get
 			{

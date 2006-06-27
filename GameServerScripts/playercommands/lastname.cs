@@ -2,9 +2,8 @@
    Written by Gavinius */
 
 using System;
-using System.Collections;
 using DOL.GS;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.GS.PacketHandler;
 
 
@@ -58,7 +57,7 @@ namespace DOL.GS.Scripts
 			}
 
 			/* Chek if you are near enough to NPC*/
-			if(!client.Player.Position.CheckSquareDistance(client.Player.TargetObject.Position, (uint) (WorldMgr.INTERACT_DISTANCE*WorldMgr.INTERACT_DISTANCE)))
+			if(WorldMgr.GetDistance(client.Player,client.Player.TargetObject) > WorldMgr.INTERACT_DISTANCE)
 			{
 				client.Out.SendMessage("You are too far away to interact with " + client.Player.TargetObject.Name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return 1;
@@ -96,12 +95,10 @@ namespace DOL.GS.Scripts
 				return 1;
 			}
 			
-			/* Check if lastname is legal and is not contained in invalidname */
-			IList allInvalidNames = GameServer.Database.SelectAllObjects(typeof(InvalidName));
-			string ToLowerNewLastname = NewLastname.ToLower();
-			foreach(InvalidName inv in allInvalidNames)
+			/* Check if lastname is legal and is not contained in invalidnames.txt */
+			foreach (string invalid in GameServer.Instance.InvalidNames)
 			{
-				if(ToLowerNewLastname.IndexOf(inv.Name.ToLower()) != -1)
+				if(NewLastname.ToLower().IndexOf(invalid) != -1)
 				{
 					client.Out.SendMessage(NewLastname + " is not a legal last name! Choose another.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return 1;
@@ -141,7 +138,7 @@ namespace DOL.GS.Scripts
 				return;
 			}
 
-			if (!player.Position.CheckSquareDistance(player.TargetObject.Position, (uint) (WorldMgr.INTERACT_DISTANCE*WorldMgr.INTERACT_DISTANCE)))
+			if(WorldMgr.GetDistance(player,player.TargetObject) > WorldMgr.INTERACT_DISTANCE)
 			{
 				player.Out.SendMessage("You are too far away to interact with " + player.TargetObject.Name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;

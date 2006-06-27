@@ -16,9 +16,22 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
+// Respec script Version 1.0 by Echostorm
+/* Ver 1.0 Notes:
+ * With changes to the core the respec system adds a new (allowed null) field to the DOL character file called RespecAllSkill that contains an integer.
+ * All characters with 1 or more in their RespecAllSkill field, who are targeting their trainer will be able to Respec, or reset their spec
+ *		points to their full amount and return their specs to 1 clearing their style and spell lists.  One respec is deducted each time.
+ * Characters recieve 1 respec upon creation, and 2 more at 20th and 40th levels.  Respecs are currently cumulative due to the high
+ *		demand.
+ * Respec stones have been added to default item template to prevent confustion with item databases.  They can be created via the /item command
+ *		by typing /item create respec_stone.
+ * Respec stones may be turned in to trainers for respecs.
+ * 
+ * TODO: include autotrains in the formula
+ * TODO: realm respec
+ */
 
 
-using System;
 using System.Collections;
 using DOL.GS.PacketHandler;
 
@@ -56,28 +69,6 @@ namespace DOL.GS.Scripts
 				return 1;
 			}
 
-			if (args[1].ToLower() == "buy")
-			{
-				if (client.Player.RespecAmountAllSkill > 0 || client.Player.RespecAmountSingleSkill > 0)
-				{
-					client.Out.SendMessage("You already have a respec avalable!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return 1;
-				}
-
-				long cost = GamePlayer.CalculateRespecCost(client.Player.RespecBought + 1, client.Player.Level);
-				if (client.Player.GetCurrentMoney() < cost)
-				{
-					// Message from live
-					client.Out.SendMessage("You cannot afford the respec which costs "+ Money.GetString(cost) + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return 1;
-				}
-				
-				long nextPrice = GamePlayer.CalculateRespecCost(client.Player.RespecBought + 2, client.Player.Level);
-				client.Out.SendDialogBox(eDialogCode.BuyRespec, 0x00, 0x00, 0x00, 0x00, eDialogType.YesNo, true, "Do you want to buy a respec single-line for " + Money.GetString(cost) + " ?\nThe next one will cost " + Money.GetString(nextPrice) + ".\n Respec lost on level up.");
-				
-				return 1;
-			}
-
 			// Player must be speaking with trainer to respec.  (Thus have trainer targeted.) Prevents losing points out in the wild.
 			if (client.Player.TargetObject is GameTrainer == false)
 			{
@@ -97,21 +88,14 @@ namespace DOL.GS.Scripts
 					return 1;
 				}
 
-				// Wipe skills and styles.
-				IList specList = client.Player.GetSpecList();
-				lock (specList.SyncRoot)
-				{
-					foreach (Specialization cspec in specList)
-					{
-						if (cspec.Level < 2)
-							continue;
-						specPoints += RespecSingleLine(client.Player, cspec);
-					}
-				}
+				specPoints = RespecAllLines(client.Player); // Wipe skills and styles.
 
 				client.Player.RespecAmountAllSkill--; // Decriment players respecs available.
+
+				if (client.Player.Level == 5)
+					client.Player.IsLevelRespecUsed = true;
 			}
-			else 
+			else
 			{
 				// Check for single-line respecs.
 				if (client.Player.RespecAmountSingleSkill < 1)
@@ -135,8 +119,10 @@ namespace DOL.GS.Scripts
 
 				specPoints = RespecSingleLine(client.Player, specLine); // Wipe skills and styles.
 				client.Player.RespecAmountSingleSkill--; // Decriment players respecs available.
-				
-				client.Player.IsLevelRespecUsed = true;
+				if (client.Player.Level == 20 || client.Player.Level == 40)
+				{
+					client.Player.IsLevelRespecUsed = true;
+				}
 			}
 
 			// Assign full points returned
@@ -157,6 +143,22 @@ namespace DOL.GS.Scripts
 			return 1;
 		}
 
+		protected int RespecAllLines(GamePlayer player)
+		{
+			int specPoints = 0;
+			IList specList = player.GetSpecList();
+			lock (specList.SyncRoot)
+			{
+				foreach (Specialization cspec in specList)
+				{
+					if (cspec.Level < 2)
+						continue;
+					specPoints += RespecSingleLine(player, cspec);
+				}
+			}
+
+			return specPoints;
+		}
 
 		/// <summary>
 		/// Respec single line
@@ -180,7 +182,7 @@ namespace DOL.GS.Scripts
 			 */
 			int specPoints = (specLine.Level*(specLine.Level + 1) - 2)/2;
 			specLine.Level = 1;
-			if (!player.UsedLevelCommand)
+			if (!player.PlayerCharacter.UsedLevelCommand)
 			{
 				foreach (string lineKey in player.CharacterClass.AutoTrainableSkills())
 				{

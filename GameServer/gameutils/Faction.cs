@@ -18,9 +18,8 @@
  */
 using System;
 using System.Collections;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.GS.PacketHandler;
-using NHibernate.Expression;
 
 namespace DOL.GS
 {
@@ -51,7 +50,7 @@ namespace DOL.GS
 		public void LoadFromDatabase(DBFaction dbfaction)
 		{
 			m_name= dbfaction.Name;
-			m_id=dbfaction.FactionID;
+			m_id=dbfaction.ID;
 			m_baseFriendship=dbfaction.BaseFriendShip;
 		}
 		public void SaveAggroToFaction()
@@ -64,7 +63,7 @@ namespace DOL.GS
 		}
 		public void SaveAggroToFaction(string charID)
 		{
-			DBFactionAggroLevel dbfactionAggroLevel = (DBFactionAggroLevel)GameServer.Database.SelectObject(typeof(DBFactionAggroLevel), Expression.And(Expression.Eq("CharacterID",charID),Expression.Eq("FactionID", ID)));
+			DBFactionAggroLevel dbfactionAggroLevel = (DBFactionAggroLevel)GameServer.Database.SelectObject(typeof(DBFactionAggroLevel),"CharacterID = '" + charID + "' AND FactionID ="+this.ID);
 			if (dbfactionAggroLevel == null)
 			{
 				dbfactionAggroLevel = new DBFactionAggroLevel();
@@ -225,19 +224,19 @@ namespace DOL.GS
 		/// <param name="killer"></param>
 		public void DicreaseFriendship(GamePlayer killer)
 		{
-			if (!m_updatePlayer.Contains(killer.CharacterID))
-				m_updatePlayer.Add(killer.CharacterID);
-			if(m_playerxFaction.ContainsKey(killer.CharacterID))
+			if (!m_updatePlayer.Contains(killer.PlayerCharacter.ObjectId))
+				m_updatePlayer.Add(killer.PlayerCharacter.ObjectId);
+			if(m_playerxFaction.ContainsKey(killer.PlayerCharacter.ObjectId))
 			{
-				int friendship = (int)m_playerxFaction[killer.CharacterID];
+				int friendship = (int)m_playerxFaction[killer.PlayerCharacter.ObjectId];
 				if (friendship > MIN_VALUE)
-					m_playerxFaction[killer.CharacterID] = friendship -DICREASE_VALUE;
+					m_playerxFaction[killer.PlayerCharacter.ObjectId] = friendship -DICREASE_VALUE;
 			}
 			else
 			{
-				m_playerxFaction.Add(killer.CharacterID, BaseFriendShip - DICREASE_VALUE);
+				m_playerxFaction.Add(killer.PlayerCharacter.ObjectId, BaseFriendShip - DICREASE_VALUE);
 			}
-			killer.Out.SendMessage("Your relationship with "+this.Name+" has decreased.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			killer.Out.SendMessage("Your relationship with "+this.Name+" has decrease.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			
 		}
 		
@@ -247,19 +246,19 @@ namespace DOL.GS
 		/// <param name="killer"></param>
 		public void IncreaseFriendship(GamePlayer killer)
 		{
-			if (!m_updatePlayer.Contains(killer.CharacterID))
-				m_updatePlayer.Add(killer.CharacterID);
-			if(m_playerxFaction.ContainsKey(killer.CharacterID))
+			if (!m_updatePlayer.Contains(killer.PlayerCharacter.ObjectId))
+				m_updatePlayer.Add(killer.PlayerCharacter.ObjectId);
+			if(m_playerxFaction.ContainsKey(killer.PlayerCharacter.ObjectId))
 			{
-				int friendship = (int)m_playerxFaction[killer.CharacterID];
+				int friendship = (int)m_playerxFaction[killer.PlayerCharacter.ObjectId];
 				if (friendship < MAX_VALUE)
-					m_playerxFaction[killer.CharacterID] = friendship + INCREASE_VALUE;
+					m_playerxFaction[killer.PlayerCharacter.ObjectId] = friendship + INCREASE_VALUE;
 			}
 			else
 			{
-				m_playerxFaction.Add(killer.CharacterID, BaseFriendShip + INCREASE_VALUE);
+				m_playerxFaction.Add(killer.PlayerCharacter.ObjectId, BaseFriendShip + INCREASE_VALUE);
 			}
-			killer.Out.SendMessage("Your relationship with "+this.Name+" has increased.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			killer.Out.SendMessage("Your relationship with "+this.Name+" has increase.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}
 		
 
@@ -270,8 +269,8 @@ namespace DOL.GS
 		/// <returns></returns>
 		public int GetAggroToFaction(GamePlayer player)
 		{
-			if(m_playerxFaction.ContainsKey(player.CharacterID))
-				return (int)m_playerxFaction[player.CharacterID];
+			if(m_playerxFaction.ContainsKey(player.PlayerCharacter.ObjectId))
+				return (int)m_playerxFaction[player.PlayerCharacter.ObjectId];
 			else
 				return BaseFriendShip;
 		}

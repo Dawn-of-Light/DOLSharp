@@ -19,7 +19,7 @@
 using System;
 using System.Collections;
 using System.Net.Sockets;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.Events;
 using DOL.GS;
 using DOL.Tests;
@@ -46,8 +46,10 @@ namespace DOL.GS.Tests
 			Region region = WorldMgr.GetRegion(1);
 			GameObject obj = new GameMob();
 			obj.Name="TestObject";
-			obj.Position = new Point(400000, 200000, 2000);
-			obj.Region = region;
+			obj.X = 400000;
+			obj.Y = 200000;
+			obj.Z = 2000;
+			obj.CurrentRegion = region;
 
 			obj.AddToWorld();
 
@@ -61,11 +63,11 @@ namespace DOL.GS.Tests
 		[Test] public void AddArea()
 		{
 			Region region = WorldMgr.GetRegion(1);
-			IArea insertArea = region.AddArea(new Area.Circle(null, new Point(1000, 1000, 0), 500));
+			IArea insertArea = region.AddArea(new Area.Circle(null,1000,1000,0,500));
 
 			Assert.IsNotNull(insertArea);
 
-			IList areas = region.GetAreasOfSpot(new Point(501, 1000, 0));
+			IList areas = region.GetAreasOfSpot(501,1000,0);			
 			Assert.IsTrue(areas.Count>0);
 
 			bool found = false;
@@ -80,7 +82,7 @@ namespace DOL.GS.Tests
 			Assert.IsTrue(found);
 
 			//
-			areas = region.GetAreasOfSpot(new Point(1499, 1000, 2000));
+			areas = region.GetAreasOfSpot(1499,1000,2000);			
 			Assert.IsTrue(areas.Count>0);
 
 			found = false;
@@ -107,7 +109,7 @@ namespace DOL.GS.Tests
 
 			region.RemoveArea(insertArea);
 
-			areas = region.GetAreasOfSpot(new Point(1499, 1000, 2000));
+			areas = region.GetAreasOfSpot(1499,1000,2000);
 			Assert.IsTrue(areas.Count==0);
 
 		}

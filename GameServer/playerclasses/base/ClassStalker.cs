@@ -48,7 +48,7 @@ namespace DOL.GS.Scripts
 
 			player.AddAbility(SkillBase.GetAbility(Abilities.Sprint));
 			player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 1));
-			player.AddAbility(SkillBase.GetAbility(Abilities.HibArmor, (int)eArmorLevel.Low));
+			player.AddAbility(SkillBase.GetAbility(Abilities.HibArmor, ArmorLevel.Leather));
 			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Blades));
 			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Piercing));
 			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Staves));

@@ -41,13 +41,6 @@ namespace DOL.GS.Spells
 			base.StartSpell(target);
 		}
 
-		public override bool HealTarget(GameLiving target, int amount)
-		{
-			//if a target is dead we dont display cant heal dead member message
-			if (!target.Alive) return false;
-			return base.HealTarget(target, amount);
-		}
-
 		// constructor
 		public CombatHealSpellHandler(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) {}
 	}

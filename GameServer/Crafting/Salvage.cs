@@ -20,9 +20,8 @@ using System;
 using System.Collections;
 using System.Collections.Specialized;
 using System.Reflection;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.GS.PacketHandler;
-using NHibernate.Expression;
 using log4net;
 
 namespace DOL.GS
@@ -69,7 +68,7 @@ namespace DOL.GS
 		/// <param name="item"></param>
 		/// <param name="player"></param>
 		/// <returns></returns>
-		public static int BeginWork(GamePlayer player, EquipableItem item)
+		public static int BeginWork(GamePlayer player, InventoryItem item)
 		{
 			if (!IsAllowedToBeginWork(player, item))
 			{
@@ -78,10 +77,11 @@ namespace DOL.GS
 
 			int salvageLevel = CraftingMgr.GetItemCraftLevel(item) / 100;
 			if(salvageLevel > 9) salvageLevel = 9; // max 9
-			DBSalvage material = (DBSalvage) GameServer.Database.SelectObject(typeof(DBSalvage), Expression.And(Expression.Eq("ObjectType", item.ObjectType),Expression.Eq("SalvageLevel", salvageLevel)));
-			if (material == null || material.MaterialItemtemplate == null)
+			
+			DBSalvage material = (DBSalvage) GameServer.Database.SelectObject(typeof(DBSalvage),"ObjectType ='"+item.Object_Type+"' AND SalvageLevel ='"+salvageLevel+"'");
+			if (material == null || material.RawMaterial == null)
 			{
-				player.Out.SendMessage("Salvage material for object type ("+item.ObjectType+") not implemented yet.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage("Salvage material for object type ("+item.Object_Type+") not implemented yet.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 				return 0;
 			}
 
@@ -114,7 +114,7 @@ namespace DOL.GS
 		protected static int Proceed(RegionTimer timer)
 		{
 			GamePlayer player = (GamePlayer)timer.Properties.getObjectProperty(PLAYER_CRAFTER, null);
-			EquipableItem itemToSalvage = (EquipableItem)timer.Properties.getObjectProperty(ITEM_CRAFTER, null);
+			InventoryItem itemToSalvage = (InventoryItem)timer.Properties.getObjectProperty(ITEM_CRAFTER, null);
 			DBSalvage material = (DBSalvage)timer.Properties.getObjectProperty(MATERIAL_CRAFTER, null);
 			int materialCount = (int)timer.Properties.getObjectProperty(MATERIAL_COUNT_CRAFTER, 0);
 
@@ -129,14 +129,63 @@ namespace DOL.GS
 			player.CraftTimer.Stop();
 			player.Out.SendCloseTimerWindow();
 
-			player.Inventory.RemoveItem(itemToSalvage);
-		
-			StackableItem newItem = (StackableItem) material.MaterialItemtemplate.CreateInstance();
-			newItem.Count = materialCount;
-			newItem.Weight *= materialCount;
-			player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, newItem);
-				
-			player.Out.SendMessage("You get back " +materialCount+ " "+ material.MaterialItemtemplate.Name+ " after salvaging the " +itemToSalvage.Name+ ".",eChatType.CT_Important,eChatLoc.CL_SystemWindow);
+			player.Inventory.RemoveItem(itemToSalvage); // clean the free of the item to salvage
+			
+			Hashtable changedSlots = new Hashtable(5); // value: < 0 = new item count; > 0 = add to old
+			lock(player.Inventory)
+			{
+				int count = materialCount;
+				foreach (InventoryItem item in player.Inventory.GetItemRange(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+				{
+					if (item == null) continue;
+					if (item.Id_nb != material.RawMaterial.Id_nb) continue;
+					if (item.Count >= item.MaxCount) continue;
+
+					int countFree = item.MaxCount - item.Count;
+					if (count > countFree)
+					{
+						changedSlots.Add(item.SlotPosition, countFree); // existing item should be changed
+						count -= countFree;
+					}
+					else
+					{
+						changedSlots.Add(item.SlotPosition, count); // existing item should be changed
+						count = 0;
+						break;
+					}
+				}
+
+				if(count > 0) // Add new object
+				{
+					eInventorySlot firstEmptySlot = player.Inventory.FindFirstEmptySlot(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
+					changedSlots.Add((int)firstEmptySlot, -count); // Create the item in the free slot (always at least one)
+					count = 0;
+				}
+			
+			}
+
+			InventoryItem newItem = null;
+
+			player.Inventory.BeginChanges();
+			foreach(DictionaryEntry de in changedSlots)
+			{
+				int countToAdd = (int) de.Value;
+				if(countToAdd > 0)	// Add to exiting item
+				{
+					newItem = player.Inventory.GetItem((eInventorySlot)de.Key);
+					player.Inventory.AddCountToStack(newItem, countToAdd);
+				}
+				else
+				{
+					newItem = new InventoryItem(material.RawMaterial);
+					newItem.Count = -countToAdd;
+					newItem.Weight *= -countToAdd;
+					player.Inventory.AddItem((eInventorySlot)de.Key, newItem);
+				}
+			}
+			player.Inventory.CommitChanges();
+
+			player.Out.SendMessage("You get back " +materialCount+ " "+ material.RawMaterial.Name+ " after salvaging the " +itemToSalvage.Name+ ".",eChatType.CT_Important,eChatLoc.CL_SystemWindow);
 			
 			return 0;
 		}
@@ -146,12 +195,13 @@ namespace DOL.GS
 		#region Requirement check
 
 		/// <summary>
-		/// Check if the player can salvage the item
+		/// Check if the player own can enchant the item
 		/// </summary>
 		/// <param name="player"></param>
 		/// <param name="item"></param>
+		/// <param name="percentNeeded">min 50 max 100</param>
 		/// <returns></returns>
-		public static bool IsAllowedToBeginWork(GamePlayer player, EquipableItem item)
+		public static bool IsAllowedToBeginWork(GamePlayer player, InventoryItem item)
 		{
 			if(item.SlotPosition < (int)eInventorySlot.FirstBackpack || item.SlotPosition > (int)eInventorySlot.LastBackpack)
 			{
@@ -188,9 +238,9 @@ namespace DOL.GS
 		/// <summary>
 		/// Calculate the chance of sucess
 		/// </summary>
-		protected static int CalculateMaterialCount(GamePlayer player, EquipableItem item, DBSalvage material)
+		protected static int CalculateMaterialCount(GamePlayer player, InventoryItem item, DBSalvage material)
 		{
-			int maxCount = (int)Math.Floor(item.Value * 0.45 / material.MaterialItemtemplate.Value); // crafted item return max 45% of the item value in material
+			int maxCount = (int)Math.Floor(Money.GetMoney(0, 0, item.Gold, item.Silver ,item.Copper) * 0.45 / Money.GetMoney(0, 0, material.RawMaterial.Gold, material.RawMaterial.Silver ,material.RawMaterial.Copper)); // crafted item return max 45% of the item value in material
 			if(item.CrafterName == null || item.CrafterName == "") maxCount = (int)Math.Ceiling((double)maxCount / 2); // merchand item return max the number of material of the same item if it was crafted crafted / 2 and Ceiling (it give max 30% of the base value)
 	
 			int playerPercent = player.GetCraftingSkillValue(CraftingMgr.GetSecondaryCraftingSkillToWorkOnItem(item)) * 100 / CraftingMgr.GetItemCraftLevel(item);

@@ -20,122 +20,53 @@
  * Author:		Gandulf Kohlweiss
  * Date:
  * Directory: /scripts/quests/
+ *
+ * Description:
+ *  Brief Walkthrough:
  */
 
 using System;
 using System.Collections;
 using System.Reflection;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.GS.PacketHandler;
 using log4net;
-using DOL.Events;
+/* I suggest you declare yourself some namespaces for your quests
+ * Like: DOL.GS.Quests.Albion
+ *       DOL.GS.Quests.Midgard
+ *       DOL.GS.Quests.Hibernia
+ * Also this is the name that will show up in the database as QuestName
+ * so setting good values here will result in easier to read and cleaner
+ * Database Code
+ */
 
 namespace DOL.GS.Quests
 {
-	
-    /// <summary>
-    /// BaseQuest provides some helper classes for writing quests and
-    /// integrates a new QuestPart Based QuestSystem.
-    /// </summary>
-    public abstract class BaseQuest : AbstractQuest
+	/* The first thing we do, is to declare the class we create
+	 * as Quest. To do this, we derive from the abstract class
+	 * AbstractQuest
+	 *
+	 */
+
+	public abstract class BaseQuest : AbstractQuest
 	{
 		/// <summary>
 		/// Defines a logger for this class.
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-		
-		/// <summary>
-        /// Global Constant for all quests to define wether npcs/itemTemplate should be saved in db or not.
-		/// </summary>
+
+		/* Declare the variables we need inside our quest.
+		 * You can declare static variables here, which will be available in
+		 * ALL instance of your quest and should be initialized ONLY ONCE inside
+		 * the OnScriptLoaded method.
+		 *
+		 * Or declare nonstatic variables here which can be unique for each Player
+		 * and change through the quest journey...
+		 *
+		 */
+
+		// Global Constant for all quests to define wether npcs should be saved in db or not.
 		public static bool SAVE_INTO_DATABASE = false;
-
-
-		#region Helper functions to use items in quests
-
-		/// <summary>
-		/// Use this function each time you want to create a quest item
-		/// </summary>
-		protected static GenericItem CreateQuestItem(GenericItemTemplate template, AbstractQuest quest)
-		{
-            return CreateQuestItem(template, quest.Name);
-		}
-
-        protected static GenericItem CreateQuestItem(GenericItemTemplate template, string questName)
-        {
-            GenericItem item = template.CreateInstance();
-            item.QuestName = questName;
-            return item;
-        }
-
-		/// <summary>
-		/// Use this function when you want to remove a item from the questing player
-		/// </summary>
-		protected virtual void RemoveItemFromPlayer(GenericItem item)
-		{
-			RemoveItemFromPlayer(null, item);
-		}
-
-		/// <summary>
-		/// Use this function when the questing player give a item to a npc
-		/// </summary>
-		protected virtual void RemoveItemFromPlayer(GameLiving target, GenericItem item)
-		{
-			m_questPlayer.Inventory.RemoveItem(item);
-			if (target != null)
-			{
-				m_questPlayer.Out.SendMessage("You give the " + item.Name + " to " + target.GetName(0, false), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			}
-		}		
-
-        /// <summary>
-        /// Use this function when you want to remove a item from the questing player
-        /// </summary>
-        protected virtual void RemoveItemFromPlayer(GenericItemTemplate template)
-        {
-            RemoveItemFromPlayer(null, m_questPlayer.Inventory.GetFirstItemByName(template.Name, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack));
-        }
-
-        /// <summary>
-        /// Use this function when the questing player give a item to a npc
-        /// </summary>
-        protected virtual void RemoveItemFromPlayer(GameLiving target, GenericItemTemplate template)
-        {
-            RemoveItemFromPlayer(target, m_questPlayer.Inventory.GetFirstItemByName(template.Name, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack));
-        }
-
-		/// <summary>
-		/// Use this function when the player gains a item
-		/// </summary>
-		protected virtual void GiveItemToPlayer(GenericItem item)
-		{
-			GiveItemToPlayer(null, item);
-		}
-				
-        /// <summary>
-        /// Use this function when the player gains a item
-        /// </summary>
-        protected virtual void GiveItemToPlayer(GenericItemTemplate template)
-        {
-            GiveItemToPlayer(null, template.CreateInstance());
-        }
-
-		/// <summary>
-		/// Use this function when the player gains a item
-		/// </summary>
-		protected virtual void GiveItemToPlayer(GameLiving source, GenericItemTemplate template)
-		{
-			m_questPlayer.ReceiveItem(source, template.CreateInstance());
-		}
-
-        /// <summary>
-        /// Use this function when the player gains a item
-        /// </summary>
-		protected virtual void GiveItemToPlayer(GameLiving source, GenericItem item)
-		{
-			m_questPlayer.ReceiveItem(source, item);
-		}		
-		#endregion
-
 
 		public static Queue m_sayTimerQueue = new Queue();
 		public static Queue m_sayObjectQueue = new Queue();
@@ -152,115 +83,70 @@ namespace DOL.GS.Quests
 		public Queue m_portTeleportTimerQueue = new Queue();
 		public Queue m_portObjectQueue = new Queue();
 		public Queue m_portDestinationQueue = new Queue();
-		        
-        /// <summary>
-        /// List of all QuestParts that can be fired on interact Events.
-        /// </summary>
-		//private static IDictionary interactQuestParts = new HybridDictionary();
-        
-        /// <summary>
-        /// List of all QuestParts that can be fired on notify method of quest.
-        /// </summary>
-        private static IList questParts = null;
-		
-        [ScriptUnloadedEvent]
-        public static void ScriptUnloadedBase(DOLEvent e, object sender, EventArgs args)
-        {
-			if (questParts!=null) {
-			  for (int i = questParts.Count - 1; i >= 0; i--)
-			  {
-				  RemoveQuestPart((BaseQuestPart)questParts[i]);
-			  }
+		/* We need to define the constructors from the base class here, else there might be problems
+		 * when loading this quest...
+		 */
+
+		public BaseQuest() : base()
+		{
+		}
+
+		public BaseQuest(GamePlayer questingPlayer) : base(questingPlayer)
+		{
+		}
+
+		public BaseQuest(GamePlayer questingPlayer, int step) : base(questingPlayer, step)
+		{
+		}
+
+		public BaseQuest(GamePlayer questingPlayer, DBQuest dbQuest) : base(questingPlayer, dbQuest)
+		{
+		}
+
+		protected static void RemoveItem(GamePlayer player, ItemTemplate itemTemplate)
+		{
+			RemoveItem(null, player, itemTemplate, true);
+		}
+
+		protected static void RemoveItem(GamePlayer player, ItemTemplate itemTemplate, bool notify)
+		{
+			RemoveItem(null, player, itemTemplate, notify);
+		}
+
+		protected static void RemoveItem(GameLiving target, GamePlayer player, ItemTemplate itemTemplate)
+		{
+			RemoveItem(target, player, itemTemplate, true);
+		}
+
+		protected static void ReplaceItem(GamePlayer target, ItemTemplate itemTemplateOut, ItemTemplate itemTemplateIn)
+		{
+			target.Inventory.BeginChanges();
+			RemoveItem(target, itemTemplateOut, false);
+			GiveItem(target, itemTemplateIn);
+			target.Inventory.CommitChanges();
+		}
+
+		protected static void RemoveItem(GameLiving target, GamePlayer player, ItemTemplate itemTemplate, bool notify)
+		{
+			lock (player.Inventory)
+			{
+				InventoryItem item = player.Inventory.GetFirstItemByID(itemTemplate.Id_nb, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
+				if (item != null)
+				{
+					player.Inventory.RemoveItem(item);
+					if (target != null)
+					{
+						player.Out.SendMessage("You give the " + itemTemplate.Name + " to " + target.GetName(0, false), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					}
+				}
+				else if (notify)
+				{
+					player.Out.SendMessage("You cannot remove the \"" + itemTemplate.Name + "\" because you don't have it.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				}
 			}
-            questParts = null;
-        }
+		}
 
-        // Base QuestPart methods
-
-        /// <summary>
-        /// Registers all needed handlers for the given questPart,
-        /// this will not add the questpart to the quest. For this case use AddQuestPart
-        /// </summary>
-        /// <param name="questPart">QuestPart to register handlers for</param>
-        protected static void RegisterQuestPart(BaseQuestPart questPart)
-        {
-            if (questPart.Triggers == null)
-                log.Warn("QuestPart without any triggers added, this questpart will never be notified.\n Details: " + questPart);            
-
-            foreach (IQuestTrigger trigger in questPart.Triggers)
-            {
-                trigger.Register();
-            }
-        }
-
-        /// <summary>
-        /// Remove all registered handlers for this quest,
-        /// this will not remove the questPart from the quest.
-        /// </summary>
-        /// <param name="questPart">QuestPart to remove handlers from</param>
-        protected static void UnRegisterQuestPart(BaseQuestPart questPart)
-        {
-            if (questPart.Triggers == null)
-                return;
-
-            foreach (IQuestTrigger trigger in questPart.Triggers)
-            {
-                trigger.Unregister();
-            }
-        }
-        /// <summary>
-        /// Adds the given questpart to the quest depending on the added triggers it will either
-        /// be added as InteractQuestPart as NotifyQuestPart or both and also register the needed event handler.
-        /// </summary>
-        /// <param name="questPart">QuestPart to be added</param>
-        public static void AddQuestPart(BaseQuestPart questPart)
-        {
-            if (questPart.QuestPartAdded)
-                log.Error("QuestPart " + questPart + " was already added to Quest.");
-
-            RegisterQuestPart(questPart);
-                        
-            if (questParts == null)
-                questParts = new ArrayList();
-
-            if (!questParts.Contains(questPart))
-                questParts.Add(questPart);
-            
-            questPart.QuestPartAdded = true;
-        }
-
-        /// <summary>
-        /// Remove the given questpart from the quest and also unregister the handlers
-        /// </summary>
-        /// <param name="questPart">QuestPart to be removed</param>
-        public static void RemoveQuestPart(BaseQuestPart questPart)
-        {
-            if (questParts == null)
-                return;
-
-            UnRegisterQuestPart(questPart);            
-            questParts.Remove(questPart);
-            questPart.QuestPartAdded = false;
-        }        
-
-        /// <summary>
-        /// Quest internal Notify method only fires if player already has the quest assigned
-        /// </summary>
-        /// <param name="e"></param>
-        /// <param name="sender"></param>
-        /// <param name="args"></param>
-        public override void Notify(DOLEvent e, object sender, EventArgs args)
-        {
-            if (questParts == null)
-                return;
-
-            foreach (BaseQuestPart questPart in questParts)
-            {
-                questPart.Notify(e, sender, args);
-            }
-        }
-
-        protected static int MakeSaySequence(RegionTimer callingTimer)
+		protected static int MakeSaySequence(RegionTimer callingTimer)
 		{
 			m_sayTimerQueue.Dequeue();
 			GamePlayer player = (GamePlayer) m_sayObjectQueue.Dequeue();
@@ -277,12 +163,27 @@ namespace DOL.GS.Quests
 		protected void SendSystemMessage(String msg)
 		{
 			SendSystemMessage(m_questPlayer, msg);
-		}			
+		}
+
+		protected void SendEmoteMessage(String msg)
+		{
+			SendEmoteMessage(m_questPlayer, msg, 0);
+		}
+
+		protected void SendReply(String msg, uint delay)
+		{
+			SendReply(m_questPlayer, msg, delay);
+		}
 
 		protected static void SendSystemMessage(GamePlayer player, String msg)
 		{
 			SendEmoteMessage(player, msg, 0);
-		}		
+		}
+
+		protected static void SendSystemMessage(GamePlayer player, String msg, uint delay)
+		{
+			SendMessage(player, msg, delay, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+		}
 
 		protected static void SendEmoteMessage(GamePlayer player, String msg)
 		{
@@ -299,12 +200,15 @@ namespace DOL.GS.Quests
 			SendMessage(player, msg, 0, eChatType.CT_Say, eChatLoc.CL_PopupWindow);
 		}
 
+		protected static void SendReply(GamePlayer player, String msg, uint delay)
+		{
+			SendMessage(player, msg, delay, eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+		}
+
 		protected static void SendMessage(GamePlayer player, String msg, uint delay, eChatType chatType, eChatLoc chatLoc)
 		{
 			if (delay == 0)
-			{
 				player.Out.SendMessage(msg, chatType, chatLoc);
-			}
 			else
 			{
 				m_sayMessageQueue.Enqueue(msg);
@@ -315,26 +219,57 @@ namespace DOL.GS.Quests
 			}
 		}
 
-		protected static TravelTicketTemplate CreateTicketTo(String location)
+		protected static void GiveItem(GamePlayer player, ItemTemplate itemTemplate)
 		{
-			TravelTicketTemplate ticket = (TravelTicketTemplate)GameServer.Database.FindObjectByKey(typeof(TravelTicketTemplate), "ticket_to_" + location.ToLower());
+			GiveItem(null, player, itemTemplate);
+		}
+
+		protected static void GiveItem(GameLiving source, GamePlayer player, ItemTemplate itemTemplate)
+		{
+			InventoryItem item = new InventoryItem(itemTemplate);
+			if (player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, item))
+			{
+				if(source == null)
+				{
+					player.Out.SendMessage("You receive the " + itemTemplate.Name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				}
+				else
+				{
+					player.Out.SendMessage("You receive " + itemTemplate.GetName(0, false) + " from " + source.GetName(0, false) + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				}
+			}
+			else
+			{
+				player.CreateItemOnTheGround(item);
+				player.Out.SendMessage("Your Inventory is full. You couldn't recieve the " + itemTemplate.Name + ", so it's been placed on the ground. Pick it up as soon as possible or it will vanish in a few minutes.", eChatType.CT_Important, eChatLoc.CL_PopupWindow);
+			}
+		}
+
+		protected static ItemTemplate CreateTicketTo(String location)
+		{
+			ItemTemplate ticket = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ticket_to_" + GameServer.Database.Escape(location.ToLower()));
 			if (ticket == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Ticket to " + location + ", creating it ...");
-				ticket = new TravelTicketTemplate();
+				ticket = new ItemTemplate();
 				ticket.Name = "ticket to " + location;
 
 				ticket.Weight = 0;
 				ticket.Model = 498;
 
-				ticket.ItemTemplateID = "ticket_to_" + location.ToLower();
+				ticket.Object_Type = (int) eObjectType.GenericItem;
+				ticket.Item_Type = 40;
 
+				ticket.Id_nb = "ticket_to_" + location.ToLower();
+				;
+				ticket.IsPickable = true;
 				ticket.IsDropable = true;
-				ticket.IsSaleable = true;
-				ticket.IsTradable = true;
 
-				ticket.Value = Money.GetMoney(0, 0, 0, 5, 3);
+				ticket.Gold = 0;
+				ticket.Silver = 5;
+				ticket.Copper = 3;
+				ticket.PackSize = 1;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -395,11 +330,9 @@ namespace DOL.GS.Quests
 			m_animEmoteTeleportTimerQueue.Enqueue(new RegionTimer(target, new RegionTimerCallback(MakeAnimEmoteSequence), (int)delay + 2000));
 
 			m_portObjectQueue.Enqueue(target);
-			
-			Point pos = location.Position;
-			pos.X += Util.Random(-fuzzyLocation, fuzzyLocation);
-			pos.Y += Util.Random(-fuzzyLocation, fuzzyLocation);
-			location.Position = pos;
+
+			location.X += Util.Random(0 - fuzzyLocation, fuzzyLocation);
+			location.Y += Util.Random(0 - fuzzyLocation, fuzzyLocation);
 
 			m_portDestinationQueue.Enqueue(location);
 			m_portTeleportTimerQueue.Enqueue(new RegionTimer(target, new RegionTimerCallback(MakePortSequence), (int)delay + 3000));
@@ -418,7 +351,7 @@ namespace DOL.GS.Quests
 				m_portTeleportTimerQueue.Dequeue();
 				GameObject gameObject = (GameObject) m_portObjectQueue.Dequeue();
 				GameLocation location = (GameLocation) m_portDestinationQueue.Dequeue();
-				gameObject.MoveTo((ushort)location.Region.RegionID, location.Position, location.Heading);
+				gameObject.MoveTo(location.RegionID, location.X, location.Y, location.Z, location.Heading);
 			}
 			return 0;
 		}

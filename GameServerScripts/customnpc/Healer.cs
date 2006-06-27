@@ -122,7 +122,7 @@ namespace DOL.GS.Scripts
 			if (!base.Interact(player))
 				return false;
 
-			TurnTo(player.Position);
+			TurnTo(player.X, player.Y);
 
 			GameSpellEffect effect = SpellHandler.FindEffectOnTarget(player, CURRED_SPELL_TYPE);
 			if (effect != null)
@@ -146,7 +146,7 @@ namespace DOL.GS.Scripts
 
 		protected void HealerDialogResponse(GamePlayer player, byte response)
 		{
-			if (!Position.CheckDistance(player.Position, WorldMgr.INTERACT_DISTANCE*WorldMgr.INTERACT_DISTANCE))
+			if (!WorldMgr.CheckDistance(this, player,WorldMgr.INTERACT_DISTANCE))
 			{
 				player.Out.SendMessage("You are too far away to speak with " + GetName(0, false) + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;

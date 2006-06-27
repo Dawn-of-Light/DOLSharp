@@ -18,7 +18,7 @@
  */
 using System;
 using System.Collections;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS
@@ -101,25 +101,13 @@ namespace DOL.GS
 		/// <param name="player">the crafting player</param>
 		/// <param name="craftItemData">the object in construction</param>
 		/// <returns>true if the player hold all needed tools</returns>
-		public override bool CheckTool(GamePlayer player, CraftItemData craftItemData)
+		public override bool CheckTool(GamePlayer player, DBCraftedItem craftItemData)
 		{
 			if(! base.CheckTool(player, craftItemData)) return false;
 
-			bool spellcraftKitFound = false;
-			foreach (GenericItem item in player.Inventory.GetItemRange(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+			if(player.Inventory.GetFirstItemByName("spellcraft kit", eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) == null)
 			{
-				if(!(item is CraftingTool)) continue;
-
-				if(((CraftingTool)item).Type == eCraftingToolType.SpellcraftKit)
-				{
-					spellcraftKitFound = true;
-					break;
-				}
-			}
-
-			if(spellcraftKitFound == false)
-			{
-				player.Out.SendMessage("You do not have the tools to make the "+craftItemData.TemplateToCraft.Name+".",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage("You do not have the tools to make the "+craftItemData.ItemTemplate.Name+".",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 				player.Out.SendMessage("You must find a spellcraft kit!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 				return false;
 			}
@@ -132,7 +120,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="player"></param>
 		/// <param name="item"></param>
-		public override void GainCraftingSkillPoints(GamePlayer player, CraftItemData item)
+		public override void GainCraftingSkillPoints(GamePlayer player, DBCraftedItem item)
 		{
 			base.GainCraftingSkillPoints(player, item);
 
@@ -184,11 +172,11 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="player"></param>
 		/// <param name="item"></param>
-		public override bool IsAllowedToCombine(GamePlayer player, GenericItem item)
+		public override bool IsAllowedToCombine(GamePlayer player, InventoryItem item)
 		{
 			if(! base.IsAllowedToCombine(player, item)) return false;
 					
-			if(player.TradeWindow.TradeItems[0] is MagicalDust) // first ingredient to combine is Dust => echantement
+			if(((InventoryItem)player.TradeWindow.TradeItems[0]).Model == 525) // first ingredient to combine is Dust => echantement
 			{
 				if (item.Level < 15)
 				{
@@ -198,9 +186,9 @@ namespace DOL.GS
 
 				lock (player.TradeWindow.Sync)
 				{
-					foreach(GenericItem materialToCombine in player.TradeWindow.TradeItems)
+					foreach(InventoryItem materialToCombine in player.TradeWindow.TradeItems)
 					{
-						if(!(materialToCombine is MagicalDust))
+						if(materialToCombine.Model != 525)
 						{
 							player.Out.SendMessage(materialToCombine.Name+" can't be used to enchant a item!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 							return false;
@@ -210,50 +198,61 @@ namespace DOL.GS
 			}
 			else
 			{
-				EquipableItem itemToEnchant = (EquipableItem)item;
-				if(itemToEnchant.MagicalBonus.Count >= 4)
+				ArrayList bonusToApply = new ArrayList(4);
+				if(item.Bonus1Type != 0)
 				{
-					player.Out.SendMessage("The "+item.Name+" is already imbued with 4 different types of magical properties!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
-					return false;
-				}
-
-				lock (player.TradeWindow.Sync)
-				{
-					for(int i = 0; i < player.TradeWindow.ItemsCount; i++)
+					bonusToApply.Add(item.Bonus1Type);
+					if(item.Bonus2Type != 0)
 					{
-						SpellCraftGem currentGem = player.TradeWindow.TradeItems[i] as SpellCraftGem;
-
-						if(currentGem == null)
+						bonusToApply.Add(item.Bonus2Type);
+						if(item.Bonus3Type != 0)
 						{
-							player.Out.SendMessage("This item can't be used to Spellcraft!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
-							return false;
-						}
-				
-						foreach(ItemMagicalBonus bonus in itemToEnchant.MagicalBonus)
-						{
-							if(bonus.BonusType == currentGem.BonusType)
+							bonusToApply.Add(item.Bonus3Type);
+							if(item.Bonus4Type != 0)
 							{
-								player.Out.SendMessage("You can't put the same bonus on an item multiple times!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+								player.Out.SendMessage("The "+item.Name+" is already imbued with 4 different types of magical properties!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 								return false;
 							}
 						}
 					}
 				}
 
-				if(itemToEnchant.MagicalBonus.Count + player.TradeWindow.ItemsCount >= 4)
+				lock (player.TradeWindow.Sync)
 				{
-					player.Out.SendMessage("The "+item.Name+" can only be imbued with 4 different types of magical properties!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
-					return false;
+					for(int i = 0; i < player.TradeWindow.ItemsCount; i++)
+					{
+						InventoryItem currentItem = (InventoryItem)player.TradeWindow.TradeItems[i];
+
+						if(currentItem.Object_Type != (int)eObjectType.SpellcraftGem)
+						{
+							player.Out.SendMessage("This item can't be used to Spellcraft!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+							return false;
+						}
+				
+						if(bonusToApply.Contains(currentItem.Bonus1Type))
+						{
+							player.Out.SendMessage("You can't put the same bonus on an item multiple times!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+							return false;
+						}
+
+						if(bonusToApply.Count >= 4)
+						{
+							player.Out.SendMessage("The "+item.Name+" can only be imbued with 4 different types of magical properties!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+							return false;
+						}
+
+						bonusToApply.Add(currentItem.Bonus1Type);
+					}
 				}
 
-				int bonusLevel = GetTotalImbuePoints(player, itemToEnchant);
+				int bonusLevel = GetTotalImbuePoints(player, item);
 				if(bonusLevel > player.GetCraftingSkillValue(eCraftingSkill.SpellCrafting)/20)
 				{
 					player.Out.SendMessage("You have not enough skill to imbue that much!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 					return false;
 				}
 
-				if(bonusLevel - GetItemMaxImbuePoints(itemToEnchant) > 5)
+				if(bonusLevel - GetItemMaxImbuePoints(item) > 5)
 				{
 					player.Out.SendMessage("You can't overcharge your "+item.Name+" more than 5 levels!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 					return false;
@@ -273,15 +272,15 @@ namespace DOL.GS
 		/// <param name="player"></param>
 		/// <param name="item"></param>
 		/// <returns></returns>
-		protected override void ApplyMagicalEffect(GamePlayer player, EquipableItem item)
+		protected override void ApplyMagicalEffect(GamePlayer player, InventoryItem item)
 		{
 			if(item == null || player.TradeWindow.TradeItems[0] == null) return ; // be sure at least one item in each side
 			
-			if(player.TradeWindow.TradeItems[0] is MagicalDust) // Echant item
+			if(((InventoryItem)player.TradeWindow.TradeItems[0]).Model == 525) // Echant item
 			{
 				ApplyMagicalDusts(player, item);
 			}
-			else if(player.TradeWindow.TradeItems[0] is SpellCraftGem) // Spellcraft item
+			else if(((InventoryItem)player.TradeWindow.TradeItems[0]).Object_Type == (int)eObjectType.SpellcraftGem) // Spellcraft item
 			{
 				ApplySpellcraftGems(player, item);
 			}
@@ -293,7 +292,7 @@ namespace DOL.GS
 		/// <param name="player"></param>
 		/// <param name="item"></param>
 		/// <returns></returns>
-		private void ApplyMagicalDusts(GamePlayer player, EquipableItem item)
+		private void ApplyMagicalDusts(GamePlayer player, InventoryItem item)
 		{
 			int spellCrafterLevel = player.GetCraftingSkillValue(eCraftingSkill.SpellCrafting);
 			
@@ -312,9 +311,9 @@ namespace DOL.GS
 			int bonusMod = item.Bonus;
 			lock (player.TradeWindow.Sync)
 			{
-				foreach (MagicalDust dust in  player.TradeWindow.TradeItems)
+				foreach (InventoryItem gemme in  player.TradeWindow.TradeItems)
 				{
-					switch (dust.Name)
+					switch (gemme.Name)
 					{
 						case "coppery imbued dust": bonusMod +=2;break;
 						case "coppery enchanted dust": bonusMod +=4;break;
@@ -342,11 +341,11 @@ namespace DOL.GS
 						case "platinum ensorcelled dust": bonusMod +=40;break;
 
 					}
-					player.Inventory.RemoveItem(dust);
+					player.Inventory.RemoveCountFromStack(gemme, 1);
 				}
 			}
 
-			item.Bonus = (byte)Math.Min(bonusMod, bonusCap);
+			item.Bonus = Math.Min(bonusMod, bonusCap);
 
 			player.Inventory.CommitChanges();
 		}
@@ -357,7 +356,7 @@ namespace DOL.GS
 		/// <param name="player"></param>
 		/// <param name="item"></param>
 		/// <returns></returns>
-		private void ApplySpellcraftGems(GamePlayer player, EquipableItem item)
+		private void ApplySpellcraftGems(GamePlayer player, InventoryItem item)
 		{
 			int maxBonusLevel = GetItemMaxImbuePoints(item);
 			int bonusLevel = GetTotalImbuePoints(player, item);
@@ -372,10 +371,29 @@ namespace DOL.GS
 				lock (player.TradeWindow.Sync)
 				{
 					player.Inventory.BeginChanges();
-					foreach(SpellCraftGem gem in (ArrayList)player.TradeWindow.TradeItems.Clone())
+					foreach(InventoryItem gem in (ArrayList)player.TradeWindow.TradeItems.Clone())
 					{
-						item.MagicalBonus.Add(new ItemMagicalBonus(gem.BonusType, gem.Bonus));
-						player.Inventory.RemoveItem(gem);
+						if(item.Bonus1Type == 0)
+						{
+							item.Bonus1Type = gem.Bonus1Type;
+							item.Bonus1 = gem.Bonus1;
+						}
+						else if(item.Bonus2Type == 0)
+						{
+							item.Bonus2Type = gem.Bonus1Type;
+							item.Bonus2 = gem.Bonus1;
+						}
+						else if(item.Bonus3Type == 0)
+						{
+							item.Bonus3Type = gem.Bonus1Type;
+							item.Bonus3 = gem.Bonus1;
+						}
+						else if(item.Bonus4Type == 0)
+						{
+							item.Bonus4Type = gem.Bonus1Type;
+							item.Bonus4 = gem.Bonus1;
+						}
+						player.Inventory.RemoveCountFromStack(gem, 1);
 					}
 					player.Inventory.CommitChanges();
 				}
@@ -393,18 +411,18 @@ namespace DOL.GS
 				lock (player.TradeWindow.Sync)
 				{
 					player.Inventory.BeginChanges();
-					if(tradePartner != null && item.Owner == tradePartner)
+					if(tradePartner != null && item.OwnerID == tradePartner.InternalID)
 					{
-						tradePartner.Inventory.RemoveItem(item);
+						tradePartner.Inventory.RemoveCountFromStack(item, 1);
 					}
 					else
 					{
-						player.Inventory.RemoveItem(item);
+						player.Inventory.RemoveCountFromStack(item, 1);
 					}
 
-					foreach(GenericItem gem in (ArrayList)player.TradeWindow.TradeItems.Clone())
+					foreach(InventoryItem gem in (ArrayList)player.TradeWindow.TradeItems.Clone())
 					{
-						player.Inventory.RemoveItem(gem);
+						player.Inventory.RemoveCountFromStack(gem, 1);
 					}
 					player.Inventory.CommitChanges();
 				}
@@ -430,13 +448,13 @@ namespace DOL.GS
 		# region Show informations to player
 
 		/// <summary>
-		/// Show to player all infos about the current spellcraft
+		/// Shaw to player all infos about the current spellcraft
 		/// </summary>
 		/// <param name="player"></param>
 		/// <param name="item"></param>
-		public virtual void ShowSpellCraftingInfos(GamePlayer player, EquipableItem item)
+		public virtual void ShowSpellCraftingInfos(GamePlayer player, InventoryItem item)
 		{
-			if(!(player.TradeWindow.TradeItems[0] is SpellCraftGem)) return; // check if applying dust
+			if(((InventoryItem)player.TradeWindow.TradeItems[0]).Model == 525) return; // check if applying dust
 
 			ArrayList spellcraftInfos = new ArrayList(10);
 
@@ -445,18 +463,29 @@ namespace DOL.GS
 
 			spellcraftInfos.Add("Spellcrafting the "+ item.Name +" ("+ totalItemCharges +" total imbue points)");
 			spellcraftInfos.Add("Bonus currently on the "+ item.Name +" :");
-			foreach(ItemMagicalBonus bonus in item.MagicalBonus)
+			if(item.Bonus1Type != 0)
 			{
-				spellcraftInfos.Add("\t"+ SkillBase.GetPropertyName(bonus.BonusType) +": "+ bonus.Bonus +" "+ ((bonus.BonusType >= eProperty.Resist_First && bonus.BonusType <= eProperty.Resist_Last) ? "%" : " pts"));
+				spellcraftInfos.Add("\t"+ SkillBase.GetPropertyName((eProperty)item.Bonus1Type) +": "+ item.Bonus1 +" "+ ((item.Bonus1Type >= (int)eProperty.Resist_First && item.Bonus1Type <= (int)eProperty.Resist_Last) ? "%" : " pts"));
+				if(item.Bonus2Type != 0)
+				{
+					spellcraftInfos.Add("\t"+ SkillBase.GetPropertyName((eProperty)item.Bonus2Type) +": "+ item.Bonus2 +" "+ ((item.Bonus2Type >= (int)eProperty.Resist_First && item.Bonus2Type <= (int)eProperty.Resist_Last) ? "%" : "pts"));
+					if(item.Bonus3Type != 0)
+					{
+						spellcraftInfos.Add("\t"+ SkillBase.GetPropertyName((eProperty)item.Bonus3Type) +": "+ item.Bonus3 +" "+ ((item.Bonus3Type >= (int)eProperty.Resist_First && item.Bonus3Type <= (int)eProperty.Resist_Last) ? "%" : "pts"));
+						if(item.Bonus4Type != 0)
+						{
+							spellcraftInfos.Add("\t"+ SkillBase.GetPropertyName((eProperty)item.Bonus4Type) +": "+ item.Bonus4 +" "+ ((item.Bonus4Type >= (int)eProperty.Resist_First && item.Bonus4Type <= (int)eProperty.Resist_Last) ? "%" : "pts"));
+						}
+					}
+				}
 			}
-			
 			spellcraftInfos.Add("Gem Bonuses:");
 			lock (player.TradeWindow.Sync)
 			{
 				for(int i = 0; i < player.TradeWindow.ItemsCount; i++)
 				{
-					SpellCraftGem currentGem = (SpellCraftGem)player.TradeWindow.TradeItems[i];
-					spellcraftInfos.Add("\t"+ currentGem.Name +" - "+ SkillBase.GetPropertyName(currentGem.BonusType) +": ("+ GetGemImbuePoints(currentGem.BonusType, currentGem.Bonus) +") "+ currentGem.Bonus +" "+ ((currentGem.BonusType >= eProperty.Resist_First && currentGem.BonusType <= eProperty.Resist_Last) ? "%" : "pts"));
+					InventoryItem currentGem = (InventoryItem)player.TradeWindow.TradeItems[i];
+					spellcraftInfos.Add("\t"+ currentGem.Name +" - "+ SkillBase.GetPropertyName((eProperty)currentGem.Bonus1Type) +": ("+ GetGemImbuePoints(currentGem.Bonus1Type, currentGem.Bonus1) +") "+ currentGem.Bonus1 +" "+ ((currentGem.Bonus1Type >= (int)eProperty.Resist_First && currentGem.Bonus1Type <= (int)eProperty.Resist_Last) ? "%" : "pts"));
 				}
 			}
 			spellcraftInfos.Add("Used "+ totalGemmesCharges +" of "+ totalItemCharges +" imbue point capacity.");
@@ -490,29 +519,29 @@ namespace DOL.GS
 		/// <param name="maxBonusLevel"></param>
 		/// <param name="bonusLevel"></param>
 		/// <returns></returns>
-		protected int CalculateChanceToOverchargeItem(GamePlayer player, EquipableItem item, int maxBonusLevel, int bonusLevel)
+		protected int CalculateChanceToOverchargeItem(GamePlayer player, InventoryItem item, int maxBonusLevel, int bonusLevel)
 		{
 			int baseChance = GetOverchargePenality(maxBonusLevel, bonusLevel);
 
 			int gemmeModifier = 0;
 			lock (player.TradeWindow.Sync)
 			{
-				foreach (SpellCraftGem gemme in player.TradeWindow.TradeItems)
+				foreach (InventoryItem gemme in player.TradeWindow.TradeItems)
 				{
-					if (gemme.Quality == 96) gemmeModifier += 1;
-					else if (gemme.Quality == 97) gemmeModifier += 3;
-					else if (gemme.Quality == 98) gemmeModifier += 5;
-					else if (gemme.Quality == 99) gemmeModifier += 8;
-					else if (gemme.Quality == 100) gemmeModifier += 11;
+					if ((gemme.Quality*100/gemme.MaxQuality) == 96) gemmeModifier += 1;
+					else if ((gemme.Quality*100/gemme.MaxQuality) == 97) gemmeModifier += 3;
+					else if ((gemme.Quality*100/gemme.MaxQuality) == 98) gemmeModifier += 5;
+					else if ((gemme.Quality*100/gemme.MaxQuality) == 99) gemmeModifier += 8;
+					else if ((gemme.Quality*100/gemme.MaxQuality) == 100) gemmeModifier += 11;
 				}
 			}
 
 			int itemQualityModifier=0;
-			if (item.Quality == 96) itemQualityModifier += 6;
-			else if (item.Quality == 97) itemQualityModifier += 8;
-			else if (item.Quality == 98) itemQualityModifier += 10;
-			else if (item.Quality == 99) itemQualityModifier += 18;
-			else if (item.Quality == 100) itemQualityModifier += 26;
+			if ((item.Quality*100/item.MaxQuality) == 96) itemQualityModifier += 6;
+			else if ((item.Quality*100/item.MaxQuality) == 97) itemQualityModifier += 8;
+			else if ((item.Quality*100/item.MaxQuality) == 98) itemQualityModifier += 10;
+			else if ((item.Quality*100/item.MaxQuality) == 99) itemQualityModifier += 18;
+			else if ((item.Quality*100/item.MaxQuality) == 100) itemQualityModifier += 26;
 			
 			int intSkill = player.GetCraftingSkillValue(eCraftingSkill.SpellCrafting);
 			int intSkillMod;
@@ -550,12 +579,12 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="item"></param>
 		/// <returns></returns>
-		protected int GetItemMaxImbuePoints(EquipableItem item)
+		protected int GetItemMaxImbuePoints(InventoryItem item)
 		{
-			if(item.Quality < 94) return 0;
+			if((item.Quality*100/item.MaxQuality) < 94) return 0;
 			if(item.Level > 51) return 32;
 			if(item.Level < 1) return 0;
-			return itemMaxBonusLevel[item.Level - 1, item.Quality - 94];
+			return itemMaxBonusLevel[item.Level - 1, (item.Quality*100/item.MaxQuality) - 94];
 		}
 
 		/// <summary>
@@ -564,24 +593,38 @@ namespace DOL.GS
 		/// <param name="player">player spellcrafting</param>
 		/// <param name="item">item to calculate imbues for</param>
 		/// <returns></returns>
-		protected int GetTotalImbuePoints(GamePlayer player, EquipableItem item)
+		protected int GetTotalImbuePoints(GamePlayer player, InventoryItem item)
 		{
 			int totalGemBonus = 0;
 			int biggerGemCharge = 0;	
 			
-			foreach(ItemMagicalBonus bonus in item.MagicalBonus)
+			if(item.Bonus1Type != 0)
 			{
-				int currentBonusImbuePoint = GetGemImbuePoints(bonus.BonusType, bonus.Bonus);
+				int currentBonusImbuePoint = GetGemImbuePoints(item.Bonus1Type, item.Bonus1);
 				totalGemBonus += currentBonusImbuePoint;
 				if(currentBonusImbuePoint > biggerGemCharge) biggerGemCharge = currentBonusImbuePoint;
+
+				if(item.Bonus2Type != 0)
+				{
+					currentBonusImbuePoint = GetGemImbuePoints(item.Bonus2Type, item.Bonus2);
+					totalGemBonus += currentBonusImbuePoint;
+					if(currentBonusImbuePoint > biggerGemCharge) biggerGemCharge = currentBonusImbuePoint;
+
+					if(item.Bonus3Type != 0)
+					{
+						currentBonusImbuePoint = GetGemImbuePoints(item.Bonus3Type, item.Bonus3);
+						totalGemBonus += currentBonusImbuePoint;
+						if(currentBonusImbuePoint > biggerGemCharge) biggerGemCharge = currentBonusImbuePoint;
+					}
+				}
 			}
 
 			lock (player.TradeWindow.Sync)
 			{
 				for(int i = 0 ; i < player.TradeWindow.TradeItems.Count ; i++)
 				{
-					SpellCraftGem currentGem = (SpellCraftGem)player.TradeWindow.TradeItems[i];
-					int currentGemCharge = GetGemImbuePoints(currentGem.BonusType, currentGem.Bonus);
+					InventoryItem currentGem = (InventoryItem)player.TradeWindow.TradeItems[i];
+					int currentGemCharge = GetGemImbuePoints(currentGem.Bonus1Type, currentGem.Bonus1);
 					if(currentGemCharge > biggerGemCharge) biggerGemCharge = currentGemCharge;
 					
 					totalGemBonus += currentGemCharge;	
@@ -596,17 +639,16 @@ namespace DOL.GS
 		/// <summary>
 		/// Get how much the gem use like bonus point
 		/// </summary>
-		/// <param name="bonusType"></param>
-		/// <param name="bonusValue"></param>
+		/// <param name="gem"></param>
 		/// <returns></returns>
-		protected int GetGemImbuePoints(eProperty bonusType, Int16 bonusValue)
+		protected int GetGemImbuePoints(int bonusType, int bonusValue)
 		{
 			int gemBonus;
-			if (bonusType <= eProperty.Stat_Last)			gemBonus = (int)(((bonusValue - 1) * 2 / 3) + 1); //stat
-			else if (bonusType == eProperty.MaxMana)		gemBonus = (int)((bonusValue * 2) - 2); //mana
-			else if (bonusType == eProperty.MaxHealth)		gemBonus = (int)(bonusValue / 4); //HP
-			else if (bonusType <= eProperty.Resist_Last)	gemBonus = (int)((bonusValue * 2) - 2);//resist
-			else if (bonusType <= eProperty.Skill_Last)	gemBonus = (int)((bonusValue - 1) * 5);//skill
+			if (bonusType <= (int)eProperty.Stat_Last)			gemBonus = (int)(((bonusValue - 1) * 2 / 3) + 1); //stat
+			else if (bonusType == (int)eProperty.MaxMana)		gemBonus = (int)((bonusValue * 2) - 2); //mana
+			else if (bonusType == (int)eProperty.MaxHealth)		gemBonus = (int)(bonusValue / 4); //HP
+			else if (bonusType <= (int)eProperty.Resist_Last)	gemBonus = (int)((bonusValue * 2) - 2);//resist
+			else if (bonusType <= (int)eProperty.Skill_Last)	gemBonus = (int)((bonusValue - 1) * 5);//skill
 			else												gemBonus = 1;// focus
 			if(gemBonus < 1) gemBonus = 1;
 

@@ -317,7 +317,7 @@ namespace DOL.GS.PacketHandler
 			{
 				if (log.IsDebugEnabled)
 					log.Debug(Marshal.ToHexDump(
-						string.Format("<=== <{2}> Packet 0x{0:X2} (0x{1:X2}) length: {3}", buf[2], buf[2] ^ 168, (m_client.Account != null) ? m_client.Account.AccountName : m_client.TcpEndpoint, buf.Length),
+						string.Format("<=== <{2}> Packet 0x{0:X2} (0x{1:X2}) length: {3}", buf[2], buf[2] ^ 168, (m_client.Account != null) ? m_client.Account.Name : m_client.TcpEndpoint, buf.Length),
 						buf));
 
 				if (buf.Length > 2048)
@@ -325,7 +325,7 @@ namespace DOL.GS.PacketHandler
 					if (log.IsErrorEnabled)
 					{
 						string desc = String.Format("Sending packets longer than 2048 cause client to crash, check log for stacktrace. Packet code: 0x{0:X2}, account: {1}, packet size: {2}.",
-							buf[2], (m_client.Account != null) ? m_client.Account.AccountName : m_client.TcpEndpoint, buf.Length);
+							buf[2], (m_client.Account != null) ? m_client.Account.Name : m_client.TcpEndpoint, buf.Length);
 						log.Error(Marshal.ToHexDump(desc, buf) + "\n" + Environment.StackTrace);
 					}
 				}
@@ -363,7 +363,7 @@ namespace DOL.GS.PacketHandler
 				{
 					// assure that no exception is thrown into the upper layers and interrupt game loops!
 					if (log.IsWarnEnabled)
-						log.Warn("It seems <" + ((m_client.Account != null) ? m_client.Account.AccountName : "???") + "> went linkdead. Closing connection. (SendTCP, " + e.GetType() + ": " + e.Message + ")");
+						log.Warn("It seems <" + ((m_client.Account != null) ? m_client.Account.Name : "???") + "> went linkdead. Closing connection. (SendTCP, " + e.GetType() + ": " + e.Message + ")");
 					//DOLConsole.WriteWarning(e.ToString());
 					GameServer.Instance.Disconnect(m_client);
 				}
@@ -572,7 +572,22 @@ namespace DOL.GS.PacketHandler
 			
 			Buffer.BlockCopy(buf, 0, m_udpSendBuffer, 0, buf.Length);
 
-			GameServer.Instance.SendUDP(m_udpSendBuffer, buf.Length, m_client.UDPEndPoint, m_asyncUdpCallback);
+			try
+			{
+				GameServer.Instance.SendUDP(m_udpSendBuffer, buf.Length, m_client.UDPEndPoint, m_asyncUdpCallback);
+			}
+			catch (Exception e)
+			{
+				int count;
+				lock (m_udpQueue.SyncRoot)
+				{
+					count = m_udpQueue.Count;
+					m_udpQueue.Clear();
+					m_sendingUdp = false;
+				}
+				if (log.IsErrorEnabled)
+					log.ErrorFormat("trying to send UDP (" + count + ")", e);
+			}
 		}
 
 		/// <summary>
@@ -618,7 +633,15 @@ namespace DOL.GS.PacketHandler
 			}
 			catch (Exception e)
 			{
-				log.Error("AsyncUdpSendCallback", e);
+				int count;
+				lock (m_udpQueue.SyncRoot)
+				{
+					count = m_udpQueue.Count;
+					m_udpQueue.Clear();
+					m_sendingUdp = false;
+				}
+				if (log.IsErrorEnabled)
+					log.Error("AsyncUdpSendCallback (" + count + ")", e);
 			}
 		}
 
@@ -775,7 +798,7 @@ namespace DOL.GS.PacketHandler
 		
 		public void HandlePacketTimeout(object sender, ElapsedEventArgs e)
 		{
-			string source = ((m_client.Account != null) ? m_client.Account.AccountName : m_client.TcpEndpoint);
+			string source = ((m_client.Account != null) ? m_client.Account.Name : m_client.TcpEndpoint);
 			if (log.IsErrorEnabled)
 				log.Error("Thread " + m_handlerThreadID + " - Handler " + m_activePacketHandler.GetType().ToString() + " takes too much time (>10000ms) <" + source + "> " + "!");
 		}
@@ -816,7 +839,7 @@ namespace DOL.GS.PacketHandler
 						builder.Append("Stack for thread from account: ");
 						if(client!=null && client.Account!=null)
 						{
-							builder.Append(client.Account.AccountName);
+							builder.Append(client.Account.Name);
 							if(client.Player!=null)
 							{
 								builder.Append(" (");
@@ -867,7 +890,7 @@ namespace DOL.GS.PacketHandler
 			{
 				log.ErrorFormat("Received packet code is outside of m_packetHandlers array bounds! "+m_client.ToString());
 				log.Error(Marshal.ToHexDump(
-					String.Format("===> <{2}> Packet 0x{0:X2} (0x{1:X2}) length: {3} (ThreadId={4})", code, code ^ 168, (m_client.Account != null) ? m_client.Account.AccountName : m_client.TcpEndpoint, packet.PacketSize, AppDomain.GetCurrentThreadId()),
+					String.Format("===> <{2}> Packet 0x{0:X2} (0x{1:X2}) length: {3} (ThreadId={4})", code, code ^ 168, (m_client.Account != null) ? m_client.Account.Name : m_client.TcpEndpoint, packet.PacketSize, AppDomain.GetCurrentThreadId()),
 					packet.ToArray()));
 			}
 
@@ -875,7 +898,7 @@ namespace DOL.GS.PacketHandler
 			//if (packet.ID != (0x12^168) && packet.ID != (0x0b^168) && packet.ID != (0x01^168)) {
 			if (log.IsDebugEnabled)
 				log.Debug(Marshal.ToHexDump(
-					String.Format("===> <{2}> Packet 0x{0:X2} (0x{1:X2}) length: {3} handled by {4} (ThreadId={5})", code, code ^ 168, (m_client.Account != null) ? m_client.Account.AccountName : m_client.TcpEndpoint, packet.PacketSize, packetHandler, AppDomain.GetCurrentThreadId()),
+					String.Format("===> <{2}> Packet 0x{0:X2} (0x{1:X2}) length: {3} handled by {4} (ThreadId={5})", code, code ^ 168, (m_client.Account != null) ? m_client.Account.Name : m_client.TcpEndpoint, packet.PacketSize, packetHandler, AppDomain.GetCurrentThreadId()),
 					packet.ToArray()));
 
 			if (packetHandler != null)
@@ -941,7 +964,7 @@ namespace DOL.GS.PacketHandler
 				m_activePacketHandler = null;
 				if (timeUsed > 1000)
 				{
-					string source = ((m_client.Account != null) ? m_client.Account.AccountName : m_client.TcpEndpoint);
+					string source = ((m_client.Account != null) ? m_client.Account.Name : m_client.TcpEndpoint);
 					if (log.IsWarnEnabled)
 						log.Warn("(" + source + ") Handle packet Thread " + AppDomain.GetCurrentThreadId() + " " + packetHandler + " took " + timeUsed + "ms!");
 				}

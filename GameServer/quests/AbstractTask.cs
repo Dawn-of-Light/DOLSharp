@@ -21,7 +21,7 @@ using System.Collections;
 using System.Collections.Specialized;
 using System.Reflection;
 using System.Text;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using DOL.GS.Scripts;
@@ -92,10 +92,15 @@ namespace DOL.GS.Quests
 			else // if player has no active task, load dbtask an use tasksdone
 			{
 				// Load Task object of player ...
-				DBTask task = (DBTask) GameServer.Database.FindObjectByKey(typeof(DBTask), taskPlayer.Name);
-				if (task  != null)
+				DBTask[] tasks = (DBTask[]) GameServer.Database.SelectObjects(typeof(DBTask),"CharName ='"+GameServer.Database.Escape(taskPlayer.Name)+"'");
+				if (tasks.Length==1)
 				{
-					dbTask = task;
+					dbTask = tasks[0];
+				}
+				else if (tasks.Length>1)
+				{
+					if (log.IsErrorEnabled)
+						log.Error("More than one DBTask Object found for player "+taskPlayer.Name);
 				}
 			}
 
@@ -103,7 +108,7 @@ namespace DOL.GS.Quests
 			if (dbTask==null)
 			{
 				dbTask = new DBTask();
-				dbTask.CharacterID = Convert.ToInt32(taskPlayer.InternalID);
+				dbTask.CharName = taskPlayer.Name;
 			}
 
 			dbTask.TaskType = GetType().FullName;
@@ -234,7 +239,7 @@ namespace DOL.GS.Quests
 		/// </summary>
 		public virtual void SaveIntoDatabase()
 		{
-			if(m_dbTask.CharacterID != 0)
+			if(m_dbTask.IsValid)
 				GameServer.Database.SaveObject(m_dbTask);
 			else
 				GameServer.Database.AddNewObject(m_dbTask);
@@ -245,9 +250,9 @@ namespace DOL.GS.Quests
 		/// </summary>
 		public virtual void DeleteFromDatabase()
 		{
-			if(m_dbTask.CharacterID != 0) return;
+			if(!m_dbTask.IsValid) return;
 
-			DBTask dbTask = (DBTask) GameServer.Database.FindObjectByKey(typeof(DBTask), m_dbTask.CharacterID);
+			DBTask dbTask = (DBTask) GameServer.Database.FindObjectByKey(typeof(DBTask), m_dbTask.ObjectId);
 			if(dbTask!=null)
 				GameServer.Database.DeleteObject(dbTask);
 		}
@@ -382,7 +387,7 @@ namespace DOL.GS.Quests
 			if (RewardItems!=null && RewardItems.Count>0)
 			{
 				m_taskPlayer.Inventory.BeginChanges();
-				foreach (GenericItem item in RewardItems)
+				foreach (InventoryItem item in RewardItems)
 				{
 					m_taskPlayer.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, item);
 				}
@@ -406,7 +411,7 @@ namespace DOL.GS.Quests
 			{
 				lock (m_taskPlayer.Inventory)
 				{
-					GenericItem item = m_taskPlayer.Inventory.GetFirstItemByName(ItemName, eInventorySlot.Min_Inv, eInventorySlot.Max_Inv);
+					InventoryItem item = m_taskPlayer.Inventory.GetFirstItemByID(ItemName, eInventorySlot.Min_Inv, eInventorySlot.Max_Inv);
 					if (item != null)
 						m_taskPlayer.Inventory.RemoveItem(item);
 				}
@@ -462,17 +467,33 @@ namespace DOL.GS.Quests
 		/// <param name="ItemName">Name for the object</param>
 		/// <param name="ItemLevel">Level to give to the object</param>
 		/// <returns>InventoryItem of given Name and Level</returns>
-		public static GenericItem GenerateItem(string ItemName, byte ItemLevel, int Model)
+		public static InventoryItem GenerateItem(string ItemName, int ItemLevel, int Model)
 		{
-			GenericItem TaskItems = new GenericItem();
+			InventoryItem TaskItems = new InventoryItem();
 			TaskItems.Name = ItemName;
 			TaskItems.Level = ItemLevel;
+			TaskItems.DPS_AF = 0;
+			TaskItems.SPD_ABS = 0;
+			TaskItems.Hand = 0;
+			//TaskItems.Type_Damage = 0;
+			TaskItems.Object_Type = 0;
+			TaskItems.Item_Type = 1;
 			TaskItems.Weight = 1;
 			TaskItems.Model = Model;
-			TaskItems.Value = 0;
-			TaskItems.IsDropable = false;
-			TaskItems.IsTradable = false;
-			TaskItems.IsSaleable = false;
+			TaskItems.Gold = 0;
+			TaskItems.Silver = 0;
+			TaskItems.Copper = 0;
+			TaskItems.Color = 0;
+			TaskItems.IsDropable = true;
+			TaskItems.IsPickable = true;
+			//TaskItems.IsStackable = false;
+			TaskItems.AutoSave = false;
+			TaskItems.Condition = 90;
+			TaskItems.Durability = 1000;
+			TaskItems.Quality = 80+ItemLevel;
+			TaskItems.MaxCondition = TaskItems.Condition;
+			TaskItems.MaxDurability = TaskItems.Durability;
+			TaskItems.MaxQuality = TaskItems.Quality;
 			return TaskItems;
 		}
 

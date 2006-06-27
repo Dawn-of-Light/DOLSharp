@@ -69,7 +69,7 @@ namespace DOL.GS.PacketHandler.v168
 
 				if (mydoor != null)
 				{
-					if (!player.Position.CheckSquareDistance(mydoor.Position, (uint)(WorldMgr.PICKUP_DISTANCE*WorldMgr.PICKUP_DISTANCE)))
+					if (!WorldMgr.CheckDistance(player, mydoor, WorldMgr.PICKUP_DISTANCE))
 					{
 						player.Out.SendMessage("You are too far away to open this door!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 						return;
@@ -88,8 +88,10 @@ namespace DOL.GS.PacketHandler.v168
 					//else basic quick hack
 					GameDoor door = new GameDoor();
 					door.DoorID = m_doorId;
-					door.Position = player.Position;
-					door.Region = player.Region;
+					door.X = player.X;
+					door.Y = player.Y;
+					door.Z = player.Z;
+					door.CurrentRegion = player.CurrentRegion;
 					door.Open();
 				}			
 			}

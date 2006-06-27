@@ -1,1 +1,2 @@
-Prebuild /usage /pause
+dnpb /usage
+pause

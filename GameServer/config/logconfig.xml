@@ -4,7 +4,7 @@
 <log4net>
   <!-- Setup the root category, add the appenders and set the default level -->
   <root>
-    <level value="INFO" />
+    <level value="DEBUG" />
     <appender-ref ref="ColoredConsoleAppender" />
     <appender-ref ref="GameServerLogFile" />    
   </root>
@@ -74,7 +74,19 @@
   </appender>
   
   <!-- We set the log level for some lowlevel loggers so it won't clutter our output -->
-  <logger name="NHibernate">
-    <level value="WARN" />
+  <logger name="DOL.GS.PacketHandler.PacketProcessor">
+    <level value="INFO" />
+  </logger>
+  <logger name="DOL.Database.ObjectDatabase">
+    <level value="INFO" />
+  </logger>
+  <logger name="DOL.GS.GameObject">
+    <level value="INFO" />
+  </logger>
+  <logger name="DOL.Database.Connection.DataConnection">
+    <level value="INFO" />
+  </logger>
+  <logger name="DOL.GS.Zone">
+    <level value="INFO" />
   </logger>
 </log4net>

@@ -19,7 +19,7 @@
 using System.Collections;
 using System.Collections.Specialized;
 using System.Reflection;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.GS.PacketHandler;
 using log4net;
 
@@ -46,12 +46,12 @@ namespace DOL.GS
 		/// <param name="player">the crafting player</param>
 		/// <param name="craftItemData">the object in construction</param>
 		/// <returns>true if the player hold all needed tools</returns>
-		public override bool CheckTool(GamePlayer player, CraftItemData craftItemData)
+		public override bool CheckTool(GamePlayer player, DBCraftedItem craftItemData)
 		{
 			bool needSmithHammerAndForge = false;
-			foreach (RawMaterial material in craftItemData.RawMaterials)
+			foreach (DBCraftedXItem rawmaterial in craftItemData.RawMaterials)
 			{
-				if(material.MaterialTemplate.Model == 519) // metal bar
+				if(rawmaterial.ItemTemplate.Model == 519) // metal bar
 				{
 					needSmithHammerAndForge = true;
 					break;
@@ -72,40 +72,23 @@ namespace DOL.GS
 
 				if(result == false)
 				{
-					player.Out.SendMessage("You do not have the tools to make the "+craftItemData.TemplateToCraft.Name+".",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage("You do not have the tools to make the "+craftItemData.ItemTemplate.Name+".",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 					player.Out.SendMessage("You must find a forge!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+					return false;
+				}
+
+				if(player.Inventory.GetFirstItemByName("smith's hammer", eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) == null)
+				{
+					player.Out.SendMessage("You do not have the tools to make the "+craftItemData.ItemTemplate.Name+".",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage("You must find a smith tool!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 					return false;
 				}
 			}
 
-			byte flags = 0;
-			foreach (GenericItem item in player.Inventory.GetItemRange(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+			if(player.Inventory.GetFirstItemByName("sewing kit", eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) == null)
 			{
-				if(!(item is CraftingTool)) continue;
-
-				if(((CraftingTool)item).Type == eCraftingToolType.SewingKit)
-				{
-					if((flags & 0x01) == 0) flags |= 0x01;
-					if(!needSmithHammerAndForge || flags >= 0x03) break;
-				}
-				else if(needSmithHammerAndForge && ((CraftingTool)item).Type == eCraftingToolType.SmithHammer)
-				{
-					if((flags & 0x02) == 0) flags |= 0x02;
-					if(flags >= 0x03) break;
-				}
-			}
-
-			if((flags & 0x01) == 0)
-			{
-				player.Out.SendMessage("You do not have the tools to make the "+craftItemData.TemplateToCraft.Name+".",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage("You do not have the tools to make the "+craftItemData.ItemTemplate.Name+".",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 				player.Out.SendMessage("You must find a sewing kit!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
-				return false;
-			}
-
-			if(needSmithHammerAndForge && (flags & 0x02) == 0)
-			{
-				player.Out.SendMessage("You do not have the tools to make the "+craftItemData.TemplateToCraft.Name+".",eChatType.CT_System,eChatLoc.CL_SystemWindow);
-				player.Out.SendMessage("You must find a smith tool!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 				return false;
 			}
 
@@ -115,12 +98,14 @@ namespace DOL.GS
 		/// <summary>
 		/// Calculate the minumum needed secondary crafting skill level to make the item
 		/// </summary>
-		public override int CalculateSecondCraftingSkillMinimumLevel(CraftItemData item)
+		public override int CalculateSecondCraftingSkillMinimumLevel(DBCraftedItem item)
 		{
-			ArmorTemplate armorTemplate = item.TemplateToCraft as ArmorTemplate;
-			if(armorTemplate != null && armorTemplate.ArmorLevel <= eArmorLevel.Medium)
+			switch(item.ItemTemplate.Object_Type)
 			{
-				return item.CraftingLevel - 30;
+				case (int)eObjectType.Cloth:
+				case (int)eObjectType.Leather:
+				case (int)eObjectType.Studded:
+					return item.CraftingLevel - 30;
 			}
 
 			return base.CalculateSecondCraftingSkillMinimumLevel(item);
@@ -131,7 +116,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="player"></param>
 		/// <param name="item"></param>
-		public override void GainCraftingSkillPoints(GamePlayer player, CraftItemData item)
+		public override void GainCraftingSkillPoints(GamePlayer player, DBCraftedItem item)
 		{
 			base.GainCraftingSkillPoints(player, item);
 

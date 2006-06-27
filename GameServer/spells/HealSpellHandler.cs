@@ -57,9 +57,9 @@ namespace DOL.GS.Spells
 
 			// group heals seem to use full power even if no heals
 			if (!healed && Spell.Target == "Realm")
-				m_caster.ChangeMana(null, GameLiving.eManaChangeType.Spell, -CalculateNeededPower(target) >> 1); // only 1/2 power if no heal
+				m_caster.Mana -= CalculateNeededPower(target) >> 1; // only 1/2 power if no heal
 			else
-				m_caster.ChangeMana(null, GameLiving.eManaChangeType.Spell, -CalculateNeededPower(target));
+				m_caster.Mana -= CalculateNeededPower(target);
 
 			// send animation for non pulsing spells only
 			if (Spell.Pulse == 0)
@@ -140,7 +140,7 @@ namespace DOL.GS.Spells
 			if (spellValue < 0)
 			{
 				if (casterPlayer != null)
-					spellValue = (spellValue / -100.0) * casterPlayer.CalculateMaxHealth(casterPlayer.Level, casterPlayer.BaseConstitution);
+					spellValue = (spellValue / -100.0) * casterPlayer.CalculateMaxHealth(casterPlayer.Level, casterPlayer.GetBaseStat(eStat.CON));
 				else
 					spellValue = (spellValue / -100.0) * m_caster.MaxHealth;
 

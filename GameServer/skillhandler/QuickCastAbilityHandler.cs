@@ -69,7 +69,7 @@ namespace DOL.GS.SkillHandler
 			}
 
 			long quickcastChangeTick = player.TempProperties.getLongProperty(GamePlayer.QUICK_CAST_CHANGE_TICK, 0L);
-			long changeTime = player.Region.Time - quickcastChangeTick;
+			long changeTime = player.CurrentRegion.Time - quickcastChangeTick;
 			if(changeTime < DISABLE_DURATION)
 			{
 				player.Out.SendMessage("You must wait " + ((DISABLE_DURATION-changeTime)/1000) + " more second to attempt to quick cast!", eChatType.CT_System, eChatLoc.CL_SystemWindow);

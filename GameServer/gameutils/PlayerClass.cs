@@ -17,7 +17,7 @@
  *
  */
 using System;
-using DOL.GS.Database;
+using DOL.Database;
 using System.Collections;
 using DOL.GS.PacketHandler;
 
@@ -335,7 +335,7 @@ namespace DOL.GS
 		/// <param name="player">player to modify</param>
 		public virtual void OnLevelUp(GamePlayer player)
 		{
-			if (!player.UsedLevelCommand)
+			if (!player.PlayerCharacter.UsedLevelCommand)
 			{
 				//Autotrain
 				IList playerSpecs = player.GetSpecList();
