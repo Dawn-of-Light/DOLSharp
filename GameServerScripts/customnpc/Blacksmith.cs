@@ -27,23 +27,39 @@ namespace DOL.GS.Scripts
 	[NPCGuildScript("Smith")]
 	public class Blacksmith : GameMob
 	{
-		private const string REPEAR_ITEM_WEAK = "repear item";
+		private const string REPAIR_ITEM_WEAK = "repair item";
 
 		#region Examine/Interact Message
 
+		/// <summary>
+		/// Adds messages to ArrayList which are sent when object is targeted
+		/// </summary>
+		/// <param name="player">GamePlayer that is examining this object</param>
+		/// <returns>list with string messages</returns>
 		public override IList GetExamineMessages(GamePlayer player)
 		{
+			/*
+			 * You examine Elvar Ironhand. He is friendly and is a smith.
+			 * [Give him an object to be repaired]
+			 */
 			IList list = new ArrayList();
-			list.Add("You examine " + GetName(0, false) + ".  " + GetPronoun(0, true) + " is " + GetAggroLevelString(player, false) + " and can repear your equipment.");
+			list.Add("You target [" + GetName(0, false) + "]");
+			list.Add("You examine " + GetName(0, false) + ".  " + GetPronoun(0, true) + " is " + GetAggroLevelString(player, false) + " and is a smith.");
+			list.Add("[Give him an object to be repaired]");
 			return list;
 		}
 
+		/// <summary>
+		/// This function is called from the ObjectInteractRequestHandler
+		/// </summary>
+		/// <param name="player">GamePlayer that interacts with this object</param>
+		/// <returns>false if interaction is prevented</returns>
 		public override bool Interact(GamePlayer player)
 		{
 			if (!base.Interact(player))
 				return false;
 
-			TurnTo(player.X, player.Y);
+			TurnTo(player, 1000);
 			SayTo(player, eChatLoc.CL_ChatWindow, "I can repair weapons or armor for you, Just hand me the item you want repaired and I'll see what I can do, for a small fee.");
 			return true;
 		}
@@ -81,7 +97,7 @@ namespace DOL.GS.Scripts
 				}
 				else
 				{
-					player.TempProperties.setProperty(REPEAR_ITEM_WEAK, new WeakRef(item));
+					player.TempProperties.setProperty(REPAIR_ITEM_WEAK, new WeakRef(item));
 					long NeededMoney = ((item.MaxCondition - item.Condition)*item.Value)/item.MaxCondition;
 					player.Client.Out.SendCustomDialog(GetName(0, true) + " asks " + Money.GetString(NeededMoney) + "\n to repair " + item.Name, new CustomDialogResponse(BlacksmithDialogResponse));
 				}
@@ -97,10 +113,10 @@ namespace DOL.GS.Scripts
 		{
 			WeakReference itemWeak =
 				(WeakReference) player.TempProperties.getObjectProperty(
-					REPEAR_ITEM_WEAK,
+					REPAIR_ITEM_WEAK,
 					new WeakRef(null)
 					);
-			player.TempProperties.removeProperty(REPEAR_ITEM_WEAK);
+			player.TempProperties.removeProperty(REPAIR_ITEM_WEAK);
 
 			if (response != 0x01)
 				return;
@@ -154,7 +170,7 @@ namespace DOL.GS.Scripts
 			}
 
 			player.Out.SendInventoryItemsUpdate(new InventoryItem[] {item});
-			SayTo(player, "It's ok. Now you can use your " + item.Name + " in fight!");
+			SayTo(player, "It's done. Your " + item.Name + " is ready for combat!");
 			return;
 		}
 

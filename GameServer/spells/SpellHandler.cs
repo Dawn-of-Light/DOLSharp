@@ -192,7 +192,6 @@ namespace DOL.GS.Spells
 			m_interrupted = false;
 			GameLiving target = Caster.TargetObject as GameLiving;
 
-			bool check = CheckBeginCast(target);
 			if (Spell.Pulse != 0 && CancelPulsingSpell(Caster, Spell.SpellType))
 			{
 				// is done even if caster is sitting
@@ -201,7 +200,7 @@ namespace DOL.GS.Spells
 				else
 					MessageToCaster("You stop playing your song.", eChatType.CT_Spell);
 			}
-			else if (GameServer.ServerRules.IsAllowedToCastSpell(Caster, target, Spell, m_spellLine) && check)
+			else if (GameServer.ServerRules.IsAllowedToCastSpell(Caster, target, Spell, m_spellLine) && CheckBeginCast(target))
 			{
 				if (Spell.CastTime > 0)
 				{
@@ -330,12 +329,12 @@ namespace DOL.GS.Spells
 				long leftseconds = Math.Max(
 					Caster.TempProperties.getLongProperty(INTERRUPT_TIMEOUT_PROPERTY, 0) - Caster.CurrentRegion.Time,
 					Caster.SwingTimeLeft);
-				Caster.TempProperties.removeProperty(INTERRUPT_TIMEOUT_PROPERTY);
 				if (leftseconds > 0)
 				{
 					MessageToCaster("You must wait " + (leftseconds/1000+1).ToString() + " seconds to cast a spell!", eChatType.CT_System);
 					return false;
 				}
+				Caster.TempProperties.removeProperty(INTERRUPT_TIMEOUT_PROPERTY);
 			}
 
 			if (m_spell.RecastDelay > 0 && m_caster is GamePlayer)
