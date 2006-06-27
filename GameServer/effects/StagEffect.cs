@@ -115,7 +115,7 @@ namespace DOL.GS.Effects
 			else m_player.Model = 583;
 
 			double m_amountPercent = (ab.Level + 0.5 + Util.RandomDouble()) / 10; //+-5% random
-			m_amount = (int)(player.CalculateMaxHealth(player.Level, player.Constitution) * m_amountPercent);
+			m_amount = (int)(player.CalculateMaxHealth(player.Level, player.GetModified(eProperty.Constitution)) * m_amountPercent);
 
 			m_player.BuffBonusCategory1[(int)eProperty.MaxHealth] += m_amount;
 			m_player.Health += (int)(m_player.GetModified(eProperty.MaxHealth) * m_amountPercent);
@@ -145,7 +145,8 @@ namespace DOL.GS.Effects
 			double m_amountPercent = m_amount / m_player.GetModified(eProperty.MaxHealth);
 			int playerHealthPercent = m_player.HealthPercent;
 			m_player.BuffBonusCategory1[(int)eProperty.MaxHealth] -= m_amount;
-			m_player.Health = m_player.Alive ? (int)Math.Max(1, 0.01 * m_player.MaxHealth * playerHealthPercent) : 0;
+			if (m_player.Alive)
+				m_player.Health = (int)Math.Max(1, 0.01 * m_player.MaxHealth * playerHealthPercent);
 			m_player.Out.SendUpdatePlayer();
 
 			// there is no animation on end of the effect
@@ -239,8 +240,8 @@ namespace DOL.GS.Effects
 				if (seconds > 0)
 				{
 					delveInfoList.Add(" "); //empty line
-					if(seconds > 60)
-						delveInfoList.Add("- " + seconds/60 + ":" + (seconds%60).ToString("00") + " minutes remaining.");
+					if (seconds > 60)
+						delveInfoList.Add("- " + seconds / 60 + ":" + (seconds % 60).ToString("00") + " minutes remaining.");
 					else
 						delveInfoList.Add("- " + seconds + " seconds remaining.");
 				}

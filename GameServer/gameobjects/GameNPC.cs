@@ -2059,6 +2059,17 @@ namespace DOL.GS
 		}
 
 		/// <summary>
+		/// Callback after spell execution finished and next spell can be processed
+		/// </summary>
+		/// <param name="handler"></param>
+		public override void OnAfterSpellCastSequence(ISpellHandler handler)
+		{
+			if (handler.Spell.SpellType == "DirectDamage")
+				m_runningSpellHandler = handler;
+			handler.CastSpell();
+		}
+
+		/// <summary>
 		/// 
 		/// </summary>
 		/// <param name="body"></param>
