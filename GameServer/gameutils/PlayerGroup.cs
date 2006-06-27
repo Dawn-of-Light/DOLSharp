@@ -184,7 +184,7 @@ namespace DOL.GS
 				for(int i=0; i < m_groupMembers.Count; i++)
 				{
 					GamePlayer member = (GamePlayer)m_groupMembers[i];
-					if (updateOtherRegions || member.Region == player.Region)
+					if (updateOtherRegions || member.CurrentRegion == player.CurrentRegion)
 					{
 						member.Out.SendGroupMemberUpdate(updateIcons, player);
 					}
@@ -208,7 +208,7 @@ namespace DOL.GS
 				for(int i=0; i < m_groupMembers.Count; i++)
 				{
 					GamePlayer member = (GamePlayer)m_groupMembers[i];
-					if (updateOtherRegions || member.Region == player.Region)
+					if (updateOtherRegions || member.CurrentRegion == player.CurrentRegion)
 					{
 						player.Out.SendGroupMemberUpdate(updateIcons, member);
 					}

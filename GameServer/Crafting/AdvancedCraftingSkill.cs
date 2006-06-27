@@ -20,7 +20,7 @@ using System.Collections.Specialized;
 using System.Collections;
 using System.Reflection;
 using DOL.GS.PacketHandler;
-using DOL.GS.Database;
+using DOL.Database;
 using log4net;
 
 namespace DOL.GS
@@ -38,7 +38,7 @@ namespace DOL.GS
 		/// <param name="player">the crafting player</param>
 		/// <param name="craftItemData">the object in construction</param>
 		/// <returns>true if the player hold all needed tools</returns>
-		public override bool CheckTool(GamePlayer player, CraftItemData craftItemData)
+		public override bool CheckTool(GamePlayer player, DBCraftedItem craftItemData)
 		{
 			foreach (GameStaticItem item in player.GetItemsInRadius(CRAFT_DISTANCE))
 			{
@@ -48,7 +48,7 @@ namespace DOL.GS
 				}
 			}
 
-			player.Out.SendMessage("You do not have the tools to make the "+craftItemData.TemplateToCraft.Name+".",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+			player.Out.SendMessage("You do not have the tools to make the "+craftItemData.ItemTemplate.Name+".",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 			player.Out.SendMessage("You must find a alchemy table!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 			
 			return false;
@@ -58,13 +58,13 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="player"></param>
 		/// <param name="item"></param>
-		public override void GainCraftingSkillPoints(GamePlayer player, CraftItemData item)
+		public override void GainCraftingSkillPoints(GamePlayer player, DBCraftedItem item)
 		{
 			int gainPointChance = CalculateChanceToGainPoint(player, item);
 
-			foreach (RawMaterial material in item.RawMaterials)
+			foreach (DBCraftedXItem rawmaterial in item.RawMaterials)
 			{
-				switch(material.MaterialTemplate.Model)
+				switch(rawmaterial.ItemTemplate.Model)
 				{
 					case 117 :	//"gem"
 					{
@@ -98,10 +98,10 @@ namespace DOL.GS
 				return false;
 			}
 
-			GenericItem itemToCombine = (GenericItem)player.TradeWindow.PartnerTradeItems[0];
+			InventoryItem itemToCombine = (InventoryItem)player.TradeWindow.PartnerTradeItems[0];
 			if(!IsAllowedToCombine(player, itemToCombine)) return false;
 
-			ApplyMagicalEffect(player, (EquipableItem)itemToCombine);
+			ApplyMagicalEffect(player, itemToCombine);
 
 			return true;
 		}
@@ -115,9 +115,11 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="item"></param>
 		/// <returns></returns>
-		public virtual bool IsAllowedToCombine(GamePlayer player, GenericItem item)
+		public virtual bool IsAllowedToCombine(GamePlayer player, InventoryItem item)
 		{
-			if(item == null || player.TradeWindow.ItemsCount <= 0)
+			if(item == null) return false;
+			
+			if(player.TradeWindow.ItemsCount <= 0)
 			{
 				player.Out.SendMessage("You need something to imbue "+item.Name+" with!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 				return false;	
@@ -129,7 +131,7 @@ namespace DOL.GS
 				return false;
 			}
 
-			if (!(item is EquipableItem))
+			if (!GlobalConstants.IsArmor(item.Object_Type) && !GlobalConstants.IsWeapon(item.Object_Type))
 			{
 				player.Out.SendMessage("This item can't be enchanted!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 				return false;	
@@ -147,7 +149,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="item"></param>
 		/// <returns></returns>
-		protected abstract void ApplyMagicalEffect(GamePlayer player, EquipableItem item);
+		protected abstract void ApplyMagicalEffect(GamePlayer player, InventoryItem item);
 		
 		#endregion
 

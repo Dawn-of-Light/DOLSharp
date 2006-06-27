@@ -1,0 +1,11 @@
+bin
+obj
+GameServer.csproj.user
+DOL.GS.GSControlPanel.resources
+DOL.GSOptionsDlg.resources
+GSControlPanel.resources
+GSOptionsDlg.resources
+DOL.GS.GSOptionsDlg.resources
+VTune
+GameServer.xml
+GameServer.prjx

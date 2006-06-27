@@ -19,7 +19,7 @@
 using System.Collections;
 using System.Collections.Specialized;
 using System.Reflection;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.GS.PacketHandler;
 using log4net;
 
@@ -46,7 +46,7 @@ namespace DOL.GS
 		/// <param name="player">the crafting player</param>
 		/// <param name="craftItemData">the object in construction</param>
 		/// <returns>true if the player hold all needed tools</returns>
-		public override bool CheckTool(GamePlayer player, CraftItemData craftItemData)
+		public override bool CheckTool(GamePlayer player, DBCraftedItem craftItemData)
 		{
 			bool result = false;
 			foreach (GameStaticItem item in player.GetItemsInRadius(CRAFT_DISTANCE))
@@ -60,26 +60,14 @@ namespace DOL.GS
 
 			if(result == false)
 			{
-				player.Out.SendMessage("You do not have the tools to make the "+craftItemData.TemplateToCraft.Name+".",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage("You do not have the tools to make the "+craftItemData.ItemTemplate.Name+".",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 				player.Out.SendMessage("You must find a forge!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 				return false;
 			}
 
-			bool smithHammerFound = false;
-			foreach (GenericItem item in player.Inventory.GetItemRange(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+			if(player.Inventory.GetFirstItemByName("smith's hammer", eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) == null)
 			{
-				if(!(item is CraftingTool)) continue;
-
-				if(((CraftingTool)item).Type == eCraftingToolType.SmithHammer)
-				{
-					smithHammerFound = true;
-					break;
-				}
-			}
-
-			if(smithHammerFound == false)
-			{
-				player.Out.SendMessage("You do not have the tools to make the "+craftItemData.TemplateToCraft.Name+".",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage("You do not have the tools to make the "+craftItemData.ItemTemplate.Name+".",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 				player.Out.SendMessage("You must find a smith tool!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 				return false;
 			}
@@ -92,7 +80,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="player"></param>
 		/// <param name="item"></param>
-		public override void GainCraftingSkillPoints(GamePlayer player, CraftItemData item)
+		public override void GainCraftingSkillPoints(GamePlayer player, DBCraftedItem item)
 		{
 			if (player.GetCraftingSkillValue(eCraftingSkill.MetalWorking) < player.GetCraftingSkillValue(player.CraftingPrimarySkill)) // max secondary skill cap == primary skill
 			{

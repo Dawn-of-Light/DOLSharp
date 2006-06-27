@@ -34,7 +34,6 @@
         <solution configuration="${configuration.name}" solutionfile="./Dawn of Light.sln">
           <excludeprojects>
             <include name="./GameServerScripts/GameServerScripts.csproj" />
-            <include name="./UnitTests/UnitTests.csproj" />
           </excludeprojects>
         </solution>
         <mkdir dir="${configuration.name}/xml_db" />

@@ -1,0 +1,11 @@
+bin
+obj
+DOLBase.csproj.user
+DOL.AdapterInfoDlg.resources
+DOL.ConsoleOptionsDlg.resources
+AdapterInfoDlg.resources
+ConsoleOptionsDlg.resources
+DOL.AboutBox.resources
+VTune
+DOLBase.xml
+DOLBase.prjx

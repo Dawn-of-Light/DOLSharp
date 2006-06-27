@@ -17,7 +17,7 @@
  *
  */
 using System;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.Events;
 using DOL.GS;
 using System.Reflection;
@@ -45,7 +45,7 @@ namespace DOL.GS.PacketHandler.v168
 			if(toSlot>1000)
 			{
 				ushort objectID = (ushort)(toSlot-1000);
-				GameObject obj = client.Player.Region.GetObject(objectID);
+				GameObject obj = WorldMgr.GetObjectByIDFromRegion(client.Player.CurrentRegionID,objectID);
 				if(obj==null || obj.ObjectState!=GameObject.eObjectState.Active)
 				{
 					client.Out.SendInventorySlotsUpdate(new int[] {fromSlot});
@@ -77,17 +77,17 @@ namespace DOL.GS.PacketHandler.v168
 					}
 				}
 
-				if(!obj.Position.CheckSquareDistance(client.Player.Position, (uint)(WorldMgr.GIVE_ITEM_DISTANCE*WorldMgr.GIVE_ITEM_DISTANCE)))
-				{ 
-					client.Out.SendMessage("You are too far away to give anything to " + obj.GetName(0, false) + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					client.Out.SendInventorySlotsUpdate(new int[] {fromSlot});
-					return 0;
-				}
-
 				//Is the item we want to move in our backpack?
 				if(fromSlot>=(ushort)eInventorySlot.FirstBackpack && fromSlot<=(ushort)eInventorySlot.LastBackpack)
 				{
-					GenericItem item = client.Player.Inventory.GetItem((eInventorySlot)fromSlot);
+					if(!WorldMgr.CheckDistance(obj, client.Player, WorldMgr.GIVE_ITEM_DISTANCE))
+					{ 
+						client.Out.SendMessage("You are too far away to give anything to " + obj.GetName(0, false) + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						client.Out.SendInventorySlotsUpdate(new int[] {fromSlot});
+						return 0;
+					}
+
+					InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)fromSlot);
 					if(item == null)
 					{
 						client.Out.SendInventorySlotsUpdate(new int[] {fromSlot});
@@ -99,9 +99,16 @@ namespace DOL.GS.PacketHandler.v168
 					
 					//If the item has been removed by the event handlers, return;
 					//item = client.Player.Inventory.GetItem((eInventorySlot)fromSlot);
-					if(item == null || item.Owner == null) 
+					if(item == null || item.OwnerID == null) 
 					{
 						client.Out.SendInventorySlotsUpdate(new int[] {fromSlot});
+						return 0;
+					}	
+
+					if(!item.IsDropable)
+					{
+						client.Out.SendInventorySlotsUpdate(new int[] {fromSlot});
+						client.Out.SendMessage("You can not remove this item!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 						return 0;
 					}
 
@@ -138,6 +145,13 @@ namespace DOL.GS.PacketHandler.v168
 
 					if(client.Version >= GameClient.eClientVersion.Version178) // add it back for proper slot update...
 						fromSlot += eInventorySlot.Mithril178 - eInventorySlot.Mithril;
+					
+					if(!WorldMgr.CheckDistance(obj, client.Player, WorldMgr.GIVE_ITEM_DISTANCE))
+					{ 
+						client.Out.SendMessage("You are too far away to give anything to " + obj.GetName(0, false) + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						client.Out.SendInventorySlotsUpdate(new int[] {fromSlot});
+						return 0;
+					}
 
 					if(flatmoney > client.Player.GetCurrentMoney())
 					{
@@ -177,20 +191,31 @@ namespace DOL.GS.PacketHandler.v168
 				//We want to drop the item
 				if (toSlot==(ushort)eInventorySlot.Ground)
 				{
-					GenericItem item = client.Player.Inventory.GetItem((eInventorySlot)fromSlot);
+					InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)fromSlot);
 					if (item == null)
 					{
 						client.Out.SendInventorySlotsUpdate(new int[] {fromSlot});
 						client.Out.SendMessage("Invalid item (slot# "+fromSlot+").",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 						return 0;
 					}
-
-					if (client.Player.DropItem(item))
+					if (fromSlot<(ushort)eInventorySlot.FirstBackpack)
 					{
-						client.Out.SendMessage("You drop " + item.Name + " on the ground!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+						client.Out.SendInventorySlotsUpdate(new int[] {fromSlot});
+						return 0;
+					}
+					if(!item.IsDropable)
+					{
+						client.Out.SendInventorySlotsUpdate(new int[] {fromSlot});
+						client.Out.SendMessage("You can not drop this item!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+						return 0;
+					}
+
+					if (client.Player.DropItem((eInventorySlot)fromSlot))
+					{
+						client.Out.SendMessage("You drop " + item.GetName(0, false) + " on the ground!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 						return 1;
 					}
-					client.Out.SendInventorySlotsUpdate(new int[] {fromSlot});
+					client.Out.SendInventoryItemsUpdate(null);
 					return 0;
 				}
 				//We want to move the item in inventory
@@ -203,23 +228,19 @@ namespace DOL.GS.PacketHandler.v168
 				|| (fromSlot>=(ushort)eInventorySlot.FirstVault && fromSlot<=(ushort)eInventorySlot.LastVault))
 				&& toSlot==(ushort)eInventorySlot.PlayerPaperDoll)
 			{
-				EquipableItem item = client.Player.Inventory.GetItem((eInventorySlot)fromSlot) as EquipableItem;
-				if(item==null)
-				{
-					client.Out.SendMessage("This item can't be equipped!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
-					return 0;
-				}
-				toSlot=0;
 
-				foreach(eInventorySlot slot in item.EquipableSlot)
-				{
-					if(null == client.Player.Inventory.GetItem(slot))
-					{
-						toSlot = (ushort)slot;
+				InventoryItem item= client.Player.Inventory.GetItem((eInventorySlot)fromSlot);
+				if(item==null) return 0;
+				toSlot=0;
+				foreach (eEquipmentItems type in Enum.GetValues(typeof(eEquipmentItems)) )
+				{ 
+					if(item.Item_Type==(int)type) 
+					{ 
+//						client.Out.SendMessage("You moved "+item.Name+"["+item.Item_Type+"] to "+type,eChatType.CT_System,eChatLoc.CL_SystemWindow);
+						toSlot = (ushort)item.Item_Type;
 						break;
 					}
-				}
-	
+				} 
 				if (toSlot==0)
 				{
 					client.Out.SendInventorySlotsUpdate(new int[] {fromSlot});

@@ -17,7 +17,7 @@
  *
  */
 using System;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 
@@ -39,9 +39,10 @@ namespace DOL.GS
 			Keep = keep;
 			Health = MaxHealth;
 			Name = "Keep Door";
+			SaveInDB = false;
 			GameEventMgr.AddHandler(this,GameLivingEvent.Dying,new DOLEventHandler(OpenDoor));
 			keep.Doors.Add(this);
-			Region = keep.Region;
+			CurrentRegion = keep.CurrentRegion;
 			Realm = (byte)keep.Realm;
 			//Don't waste timer resources
 			m_healthRegenerationPeriod = 3600000; //3600000 ms = 3600 seconds = 1 hour
@@ -83,7 +84,7 @@ namespace DOL.GS
 		{
 			get
 			{
-				return (byte)Keep.Realm;
+				return (byte)Keep.DBKeep.Realm;
 			}
 		}
 
@@ -157,7 +158,7 @@ namespace DOL.GS
 		/// <param name="damageType">the damage type</param>
 		/// <param name="damageAmount">the amount of damage</param>
 		/// <param name="criticalAmount">the amount of critical damage</param>
-		public override void TakeDamage(GameLiving source, eDamageType damageType, int damageAmount, int criticalAmount)
+		public override void TakeDamage(GameObject source, eDamageType damageType, int damageAmount, int criticalAmount)
 		{
 			//Work around the XP system
 			if(Alive)
@@ -180,7 +181,7 @@ namespace DOL.GS
 		public override bool Interact(GamePlayer player)
 		{
 			//todo constant here too
-			if(!Position.CheckSquareDistance(player.Position, 175*175) && player.Client.Account.PrivLevel == ePrivLevel.Player) return false;
+			if(!WorldMgr.CheckDistance(this, player,175) && player.Client.Account.PrivLevel == 1) return false;
 
 			if (player.Mez)
 			{
@@ -196,13 +197,12 @@ namespace DOL.GS
 
 			if (GameServer.ServerRules.IsSameRealm(player, this, true)) 
 			{ 
-				Point keepPos;
+				int keepx, keepy; 
 				if (IsObjectInFront(player, 180)) 
-					keepPos = GetSpotFromHeading(-300);
+					GetSpotFromHeading(-300, out keepx, out keepy); 
 				else 
-					keepPos = GetSpotFromHeading(300);
-				keepPos.Z = player.Position.Z + 100;
-				player.MoveTo((ushort)RegionId, keepPos, (ushort)player.Heading); 
+					GetSpotFromHeading(300, out keepx, out keepy); 
+				player.MoveTo(CurrentRegionID, keepx, keepy, player.Z + 100, player.Heading); 
 				return true; 
 			}
 			return false;
@@ -252,36 +252,36 @@ namespace DOL.GS
 				obj = new DBDoor();
 			obj.Name = this.Name;
 			obj.Heading = this.Heading;
-			Point pos = Position;
-			obj.X = pos.X;
-			obj.Y = pos.Y;
-			obj.Z = pos.Z;
-			obj.DoorID = this.DoorID;
+			obj.X = this.X;
+			obj.Y = this.Y;
+			obj.Z = this.Z;
+			obj.InternalID = this.DoorID;
 			obj.Health = this.Health;
 			obj.KeepID = this.Keep.KeepID;
-			/*if (InternalID == null)
+			if (InternalID == null)
 			{
 				GameServer.Database.AddNewObject(obj);
 				InternalID = obj.ObjectId;
 			}
 			else
-				GameServer.Database.SaveObject(obj);*/
+				GameServer.Database.SaveObject(obj);
 		}
 
 		/// <summary>
 		/// load the keep door object from DB object
 		/// </summary>
 		/// <param name="obj"></param>
-		public override void LoadFromDatabase(object obj)
+		public override void LoadFromDatabase(DataObject obj)
 		{
+			base.LoadFromDatabase(obj);
 			DBDoor dbdoor = obj as DBDoor;
 			if (dbdoor == null)return;
-			InternalID = dbdoor.DoorID.ToString();
 			Name = dbdoor.Name;
 			Health = dbdoor.Health;
-			m_doorID = (int)dbdoor.DoorID;
-			Position = new Point(dbdoor.X, dbdoor.Y, dbdoor.Z);
-
+			m_doorID = (int)dbdoor.InternalID;
+			X = dbdoor.X;
+			Y = dbdoor.Y;
+			Z = dbdoor.Z;
 			Heading = (ushort)dbdoor.Heading;
 			AddToWorld();
 		}
@@ -334,7 +334,7 @@ namespace DOL.GS
 		/// </summary>
 		public virtual void BroadcastDoorStatus()
 		{
-			foreach(GameClient client in WorldMgr.GetClientsOfRegion((ushort)RegionId))
+			foreach(GameClient client in WorldMgr.GetClientsOfRegion(this.CurrentRegionID))
 			{
 				client.Player.Out.SendDoorState(this);
 			}

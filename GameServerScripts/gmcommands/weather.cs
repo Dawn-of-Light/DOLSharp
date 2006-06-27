@@ -43,7 +43,7 @@ namespace DOL.GS.Scripts
 
 		public void PrintStormInfo(GameClient client)
 		{
-			WeatherMgr mgr = WeatherMgr.GetWeatherForRegion((ushort)client.Player.RegionId);
+			WeatherMgr mgr = WeatherMgr.GetWeatherForRegion(client.Player.CurrentRegionID);
 			if (mgr == null)
 				return;
 			bool active = mgr.IsActive;
@@ -67,7 +67,7 @@ namespace DOL.GS.Scripts
 				return 1;
 			}
 
-			WeatherMgr mgr = WeatherMgr.GetWeatherForRegion((ushort)client.Player.RegionId);
+			WeatherMgr mgr = WeatherMgr.GetWeatherForRegion(client.Player.CurrentRegionID);
 
 			if (args.Length == 2)
 			{

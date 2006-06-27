@@ -21,10 +21,9 @@ using System.Collections;
 using System.Reflection;
 using DOL.AI;
 using DOL.AI.Brain;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.GS.PacketHandler;
 using DOL.GS.Utils;
-using NHibernate.Expression;
 
 namespace DOL.GS.Scripts
 {
@@ -46,7 +45,7 @@ namespace DOL.GS.Scripts
 		"'/mob movehere'",
 		"'/mob remove' to remove this mob from the DB",
 		"'/mob ghost' makes this mob ghostlike",
-		"'/mob stealth' makes this mob stealth",
+		"'/mob transparent' makes this mob transparent",
 		"'/mob fly' makes this mob able to fly by changing the Z coordinate",
 		"'/mob noname' still possible to target this mob but removes the name from above mob",
 		"'/mob notarget' makes it impossible to target this mob and removes the name from above it",
@@ -127,11 +126,12 @@ namespace DOL.GS.Scripts
 						{
 							GameMob mob = new GameMob();
 							//Fill the object variables
-							Point pos = client.Player.Position;
-							pos.X = FastMath.Abs(pos.X + Util.Random(-radius, radius));
-							pos.Y = FastMath.Abs(pos.Y + Util.Random(-radius, radius));
-							mob.Position = pos;
-							mob.Region = client.Player.Region;
+							int x = client.Player.X + DOL.GS.Util.Random(-radius, radius);
+							int y = client.Player.Y + DOL.GS.Util.Random(-radius, radius);
+							mob.X = FastMath.Abs(x);
+							mob.Y = FastMath.Abs(y);
+							mob.Z = client.Player.Z;
+							mob.CurrentRegion = client.Player.CurrentRegion;
 							mob.Heading = client.Player.Heading;
 							mob.Level = (byte) DOL.GS.Util.Random(10, 50);
 							mob.Realm = (byte) DOL.GS.Util.Random(1, 3);
@@ -185,11 +185,12 @@ namespace DOL.GS.Scripts
 							GameMob mob = new GameMob();
 
 							//Fill the object variables
-							Point pos = client.Player.Position;
-							pos.X = FastMath.Abs(pos.X + Util.Random(-radius, radius));
-							pos.Y = FastMath.Abs(pos.Y + Util.Random(-radius, radius));
-							mob.Position = pos;
-							mob.Region = client.Player.Region;
+							int x = client.Player.X + DOL.GS.Util.Random(-radius, radius);
+							int y = client.Player.Y + DOL.GS.Util.Random(-radius, radius);
+							mob.X = FastMath.Abs(x);
+							mob.Y = FastMath.Abs(y);
+							mob.Z = client.Player.Z;
+							mob.CurrentRegion = client.Player.CurrentRegion;
 							mob.Heading = client.Player.Heading;
 							mob.Level = level;
 							mob.Realm = realm;
@@ -236,8 +237,10 @@ namespace DOL.GS.Scripts
 						name = CheckName(name, client);
 						GameMob mob = new GameMob();
 						//Fill the object variables
-						mob.Position = client.Player.Position;
-						mob.Region = client.Player.Region;
+						mob.X = client.Player.X;
+						mob.Y = client.Player.Y;
+						mob.Z = client.Player.Z;
+						mob.CurrentRegion = client.Player.CurrentRegion;
 						mob.Heading = client.Player.Heading;
 						mob.Level = level;
 						mob.Realm = 0;
@@ -270,7 +273,7 @@ namespace DOL.GS.Scripts
 							info.Add(" + Not aggressive brain");
 						}
 						info.Add(" + Damage type: " + targetMob.MeleeDamageType);
-						info.Add(" + Position: " + targetMob.Position.ToString());
+						info.Add(" + Position: X=" + targetMob.X + " Y=" + targetMob.Y + " Z=" + targetMob.Z);
 						info.Add(" + Guild: " + targetMob.GuildName);
 						info.Add(" + Model: " + targetMob.Model + " sized to " + targetMob.Size);
 						info.Add(string.Format(" + Flags: {0} (0x{1})", ((GameNPC.eFlags) targetMob.Flags).ToString("G"), targetMob.Flags.ToString("X")));
@@ -401,8 +404,10 @@ namespace DOL.GS.Scripts
 							return 0;
 						}
 						//Fill the object variables
-						mob.Position = client.Player.Position;
-						mob.Region = client.Player.Region;
+						mob.X = client.Player.X;
+						mob.Y = client.Player.Y;
+						mob.Z = client.Player.Z;
+						mob.CurrentRegion = client.Player.CurrentRegion;
 						mob.Heading = client.Player.Heading;
 						mob.Level = 1;
 						mob.Realm = 0;
@@ -618,7 +623,7 @@ namespace DOL.GS.Scripts
 
 				case "movehere":
 					{
-						targetMob.MoveTo((ushort)client.Player.RegionId, client.Player.Position, (ushort)client.Player.Heading);
+						targetMob.MoveTo(client.Player.CurrentRegionID, client.Player.X, client.Player.Y, client.Player.Z, client.Player.Heading);
 						targetMob.SaveIntoDatabase();
 						client.Out.SendMessage("Target Mob '" + targetMob.Name + "' moved to your location!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}
@@ -664,17 +669,14 @@ namespace DOL.GS.Scripts
 						client.Out.SendMessage(message, eChatType.CT_System, eChatLoc.CL_PopupWindow);
 						client.Out.SendMessage("--------------------------------------------------------------", eChatType.CT_System, eChatLoc.CL_PopupWindow);
 						client.Out.SendMessage("", eChatType.CT_System, eChatLoc.CL_PopupWindow);
-						foreach (VisibleEquipment item in targetMob.Inventory.AllItems)
+						foreach (InventoryItem item in targetMob.Inventory.AllItems)
 						{
 							client.Out.SendMessage("Slot Description : [" + GlobalConstants.SlotToName(item.SlotPosition) + "]", eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							client.Out.SendMessage("------------", eChatType.CT_System, eChatLoc.CL_PopupWindow);
-							client.Out.SendMessage("         Slot: " + item.SlotPosition, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+							client.Out.SendMessage("         Slot: " + GlobalConstants.SlotToName(item.Item_Type), eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							client.Out.SendMessage("        Model: " + item.Model, eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							client.Out.SendMessage("        Color: " + item.Color, eChatType.CT_System, eChatLoc.CL_PopupWindow);
-							if(item is Armor)
-								client.Out.SendMessage("ModelExtension: " + ((Armor)item).ModelExtension, eChatType.CT_System, eChatLoc.CL_PopupWindow);
-							else if(item is Weapon)
-								client.Out.SendMessage("    GlowEffect: " + ((Weapon)item).GlowEffect, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+							client.Out.SendMessage("       Effect: " + item.Effect, eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							client.Out.SendMessage("------------", eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							client.Out.SendMessage("", eChatType.CT_System, eChatLoc.CL_PopupWindow);
 						}
@@ -860,7 +862,7 @@ namespace DOL.GS.Scripts
 									if (args.Length > 3)
 									{
 										bool replace = (args.Length > 4 && args[4].ToLower() == "replace") ? true : false;
-										if (!replace && null != GameServer.Database.SelectObject(typeof(NPCEquipment), Expression.Eq("TemplateID",args[3])))
+										if (!replace && null != GameServer.Database.SelectObject(typeof (NPCEquipment), "TemplateID = '" + args[3] + "'"))
 										{
 											client.Out.SendMessage("Template with name '" + args[3] + "' already exists. Use 'replace' flag if you want to overwrite it.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 											return 1;
@@ -893,35 +895,35 @@ namespace DOL.GS.Scripts
 
 				case "ghost":
 					{
-						targetMob.Flags ^= (byte) GameNPC.eFlags.GHOST;
+						targetMob.Flags ^= (uint) GameNPC.eFlags.GHOST;
 						targetMob.SaveIntoDatabase();
 						client.Out.SendMessage("Mob GHOST flag is set to " + ((targetMob.Flags & (uint) GameNPC.eFlags.GHOST) != 0), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}
 					break;
-				case "stealth":
+				case "transparent":
 				{
-					targetMob.Flags ^= (byte) GameNPC.eFlags.STEALTH;
+					targetMob.Flags ^= (uint) GameNPC.eFlags.TRANSPARENT;
 					targetMob.SaveIntoDatabase();
-					client.Out.SendMessage("Mob TRANSPARENT flag is set to " + ((targetMob.Flags & (uint) GameNPC.eFlags.STEALTH) != 0), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					client.Out.SendMessage("Mob TRANSPARENT flag is set to " + ((targetMob.Flags & (uint) GameNPC.eFlags.TRANSPARENT) != 0), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 					break;
 				case "fly":
 					{
-						targetMob.Flags ^= (byte) GameNPC.eFlags.FLYING;
+						targetMob.Flags ^= (uint) GameNPC.eFlags.FLYING;
 						targetMob.SaveIntoDatabase();
 						client.Out.SendMessage("Mob FLYING flag is set to " + ((targetMob.Flags & (uint) GameNPC.eFlags.FLYING) != 0), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}
 					break;
 				case "noname":
 					{
-						targetMob.Flags ^= (byte) GameNPC.eFlags.DONTSHOWNAME;
+						targetMob.Flags ^= (uint) GameNPC.eFlags.DONTSHOWNAME;
 						targetMob.SaveIntoDatabase();
 						client.Out.SendMessage("Mob DONTSHOWNAME flag is set to " + ((targetMob.Flags & (uint) GameNPC.eFlags.DONTSHOWNAME) != 0), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}
 					break;
 				case "notarget":
 					{
-						targetMob.Flags ^= (byte) GameNPC.eFlags.CANTTARGET;
+						targetMob.Flags ^= (uint) GameNPC.eFlags.CANTTARGET;
 						targetMob.SaveIntoDatabase();
 						client.Out.SendMessage("Mob CANTTARGET flag is set to " + ((targetMob.Flags & (uint) GameNPC.eFlags.CANTTARGET) != 0), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}
@@ -934,10 +936,10 @@ namespace DOL.GS.Scripts
 							int chance = Convert.ToInt16(args[3]);
 							string name = targetMob.Name;
 
-							IList template = GameServer.Database.SelectObjects(typeof(DBLootTemplate), Expression.And(Expression.Eq("TemplateName", name),Expression.Eq("ItemTemplateID",lootTemplateID)));
+							DataObject[] template = GameServer.Database.SelectObjects(typeof(DBLootTemplate), "TemplateName = '" + name + "' AND ItemTemplateID = '" + lootTemplateID + "'");
 							if (template != null)
 							{
-								foreach (DBLootTemplate loot in template)
+								foreach (DataObject loot in template)
 								{
 									GameServer.Database.DeleteObject(loot);
 								}
@@ -975,10 +977,10 @@ namespace DOL.GS.Scripts
 						string name = targetMob.Name;
 						if (lootTemplateID.ToLower().ToString() == "all")
 						{
-							IList template = GameServer.Database.SelectObjects(typeof(DBLootTemplate), Expression.Eq("TemplateName",name));
+							DataObject[] template = GameServer.Database.SelectObjects(typeof(DBLootTemplate), "TemplateName = '" + name + "'");
 							if (template != null)
 							{
-								foreach (DBLootTemplate loot in template)
+								foreach (DataObject loot in template)
 								{
 									GameServer.Database.DeleteObject(loot);
 								}
@@ -993,10 +995,10 @@ namespace DOL.GS.Scripts
 						}
 						else
 						{
-							IList template = GameServer.Database.SelectObjects(typeof(DBLootTemplate), Expression.And(Expression.Eq("TemplateName",name), Expression.Eq("ItemTemplateID",lootTemplateID)));
+							DataObject[] template = GameServer.Database.SelectObjects(typeof(DBLootTemplate), "TemplateName = '" + name + "' AND ItemTemplateID = '" + lootTemplateID + "'");
 							if (template != null)
 							{
-								foreach (DBLootTemplate loot in template)
+								foreach (DataObject loot in template)
 								{
 									GameServer.Database.DeleteObject(loot);
 								}
@@ -1013,12 +1015,12 @@ namespace DOL.GS.Scripts
 					break;
 				case "viewloot":
 					{
-						IList template = GameServer.Database.SelectObjects(typeof(DBLootTemplate), Expression.Eq("TemplateName",targetMob.Name));
+						DataObject[] template = GameServer.Database.SelectObjects(typeof(DBLootTemplate), "TemplateName = '" + targetMob.Name + "'");
 						ArrayList info = new ArrayList();
 
 						foreach (DBLootTemplate loot in template)
 						{
-							info.Add(loot.ItemTemplate.Name + "(" + loot.ItemTemplate.ItemTemplateID + ") Drop Chance: " + loot.Chance.ToString());
+							info.Add(loot.ItemTemplate.Name + "(" + loot.ItemTemplate.Id_nb + ") Drop Chance: " + loot.Chance.ToString());
 						}
 						client.Out.SendCustomTextWindow("[ " + targetMob.Name + "'s Loot Table ]", info);
 					}
@@ -1042,8 +1044,10 @@ namespace DOL.GS.Scripts
 						}
 
 						//Fill the object variables
-						mob.Position = client.Player.Position;
-						mob.Region = client.Player.Region;
+						mob.X = client.Player.X;
+						mob.Y = client.Player.Y;
+						mob.Z = client.Player.Z;
+						mob.CurrentRegion = client.Player.CurrentRegion;
 						mob.Heading = client.Player.Heading;
 						mob.Level = targetMob.Level;
 						mob.Realm = targetMob.Realm;

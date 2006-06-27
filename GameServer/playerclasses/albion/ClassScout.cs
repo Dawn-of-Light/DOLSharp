@@ -69,12 +69,12 @@ namespace DOL.GS.Scripts
 				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Longbow));
 				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Shields));
 				player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Longbows));
-				player.AddAbility(SkillBase.GetAbility(Abilities.Shield, (int)eShieldSize.Small));
+				player.AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Small));
 
 			}
 			if (player.Level >= 10)
 			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.AlbArmor, (int)eArmorLevel.Medium));
+				player.AddAbility(SkillBase.GetAbility(Abilities.AlbArmor, ArmorLevel.Studded));
 			}
 			if (player.Level >= 12)
 			{

@@ -18,10 +18,9 @@
  */
 using System;
 using System.Collections;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
-using NHibernate.Expression;
 
 namespace DOL.GS.Quests
 {
@@ -128,7 +127,7 @@ namespace DOL.GS.Quests
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs)args;				
 				GameLiving target = gArgs.Target as GameLiving;
-				GenericItem item = gArgs.Item;
+				InventoryItem item = gArgs.Item;
 
 				if(player.Task.RecieverName == target.Name && item.Name == player.Task.ItemName)
 				{
@@ -143,11 +142,14 @@ namespace DOL.GS.Quests
 		/// </summary>
 		/// <param name="player">Level of Generated Item</param>
 		/// <returns>A Generated NPC Item</returns>
-		public static GenericItemTemplate GenerateNPCItem(GamePlayer player)
+		public static ItemTemplate GenerateNPCItem(GamePlayer player)
 		{			
 			int mediumCraftingLevel = player.GetCraftingSkillValue(player.CraftingPrimarySkill)+20;
-			IList craftitem = GameServer.Database.SelectObjects(typeof(CraftItemData), Expression.And(Expression.Eq("CraftingSkillType",(int)player.CraftingPrimarySkill),Expression.Between("CraftingLevel", mediumCraftingLevel-20 ,  mediumCraftingLevel+20))); 
-			return ((CraftItemData)craftitem[Util.Random(craftitem.Count)]).TemplateToCraft;
+			int lowLevel = mediumCraftingLevel-20;
+			int highLevel = mediumCraftingLevel+20;
+			DBCraftedItem[] craftitem = GameServer.Database.SelectObjects(typeof(DBCraftedItem),"CraftingSkillType="+(int)player.CraftingPrimarySkill+" AND CraftingLevel>"+lowLevel+" AND CraftingLevel<"+highLevel ) as DBCraftedItem[]; 
+			int craftrnd = Util.Random(craftitem.Length);
+			return craftitem[craftrnd].ItemTemplate;
 		}		
 
 		/// <summary>
@@ -167,16 +169,16 @@ namespace DOL.GS.Quests
 			}
 			else
 			{
-				GenericItemTemplate taskItem = GenerateNPCItem(player);
+				ItemTemplate TaskItems = GenerateNPCItem(player);
 				
 				player.Task = new CraftTask(player);
 				player.Task.TimeOut = DateTime.Now.AddHours(2);
-				player.Task.ItemName = taskItem.Name;
-				((CraftTask)player.Task).SetRewardMoney((long) (taskItem.Value * RewardMoneyRatio));
+				player.Task.ItemName = TaskItems.Name;
+				((CraftTask)player.Task).SetRewardMoney((long) (TaskItems.Value * RewardMoneyRatio));
 				player.Task.RecieverName = NPC.Name;
 				((CraftTask)player.Task).RecieverZone = NPC.CurrentZone.Description;
 				
-				player.Out.SendMessage("Craft "+taskItem.Name+" for "+NPC.Name +" in "+ NPC.CurrentZone.Description, eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+				player.Out.SendMessage("Craft "+TaskItems.GetName(0,false)+" for "+NPC.Name +" in "+ NPC.CurrentZone.Description, eChatType.CT_Say, eChatLoc.CL_PopupWindow);
 				return true;
 			}
 			

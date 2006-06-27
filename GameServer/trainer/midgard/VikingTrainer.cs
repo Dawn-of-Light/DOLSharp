@@ -17,12 +17,8 @@
  *
  */
 using System;
-using System.Collections;
-using System.Reflection;
-using DOL.Events;
 using DOL.GS.PacketHandler;
-using DOL.GS.Database;
-using log4net;
+using DOL.Database;
 
 namespace DOL.GS.Trainer
 {
@@ -32,50 +28,10 @@ namespace DOL.GS.Trainer
 	[NPCGuildScript("Viking Trainer", eRealm.Midgard)]		// this attribute instructs DOL to use this script for all "Acolyte Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class VikingTrainer : GameTrainer
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
-		/// <summary>
-		/// This hash constrain all item template the trainer can give
-		/// </summary>	
-		private static IDictionary allStartupItems = new Hashtable();
-
-		/// <summary>
-		/// This function is called at the server startup
-		/// </summary>	
-		[GameServerStartedEvent]
-		public static void OnServerStartup(DOLEvent e, object sender, EventArgs args)
+		public const string PRACTICE_WEAPON_ID = "training_axe";
+		
+		public VikingTrainer() : base()
 		{
-			#region Training axe
-
-			AxeTemplate training_axe_template = new AxeTemplate();
-			training_axe_template.Name = "training axe";
-			training_axe_template.Level = 0;
-			training_axe_template.Durability = 100;
-			training_axe_template.Condition = 100;
-			training_axe_template.Quality = 90;
-			training_axe_template.Bonus = 0;
-			training_axe_template.DamagePerSecond = 13;
-			training_axe_template.Speed = 2500;
-			training_axe_template.HandNeeded = eHandNeeded.LeftHand;
-			training_axe_template.Weight = 20;
-			training_axe_template.Model = 316;
-			training_axe_template.Realm = eRealm.Midgard;
-			training_axe_template.IsDropable = true; 
-			training_axe_template.IsTradable = false; 
-			training_axe_template.IsSaleable = false;
-			training_axe_template.MaterialLevel = eMaterialLevel.Bronze;
-			
-			if(!allStartupItems.Contains("training_axe"))
-			{
-				allStartupItems.Add("training_axe", training_axe_template);
-			
-				if (log.IsDebugEnabled)
-					log.Debug("Adding " + training_axe_template.Name + " to VikingTrainer gifts.");
-			}
-			#endregion
 		}
 
 		/// <summary>
@@ -88,21 +44,24 @@ namespace DOL.GS.Trainer
  			if (!base.Interact(player)) return false;
 								
 			// check if class matches				
-			if (player.CharacterClass.ID == (int) eCharacterClass.Viking)
-			{
+			if (player.CharacterClass.ID == (int) eCharacterClass.Viking) {
+
+				// popup the training window
 				player.Out.SendTrainerWindow();
 							
 				// player can be promoted
-				if (player.Level>=5)
+				if (player.Level>=5) {
 					player.Out.SendMessage(this.Name + " says, \"You must now seek your training elsewhere. Which path would you like to follow? [Warrior], [Berserker], [Skald] or [Thane]?\"", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+				} else {
+					//player.Out.SendMessage(this.Name + " says, \"Select what you like to train.\"", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+				}
 
 				// ask for basic equipment if player doesnt own it
-				if (player.Inventory.GetFirstItemByType("AxeTemplate", eInventorySlot.Min_Inv, eInventorySlot.Max_Inv) == null) {
+				if (player.Inventory.GetFirstItemByID(PRACTICE_WEAPON_ID, eInventorySlot.Min_Inv, eInventorySlot.Max_Inv) == null) {
 					player.Out.SendMessage(this.Name + " says, \"Do you require a [practice weapon]?\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
 				}
-			} 
-			else 
-			{
+				
+			} else {
 				player.Out.SendMessage(this.Name + " says, \"You must seek elsewhere for your training.\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
 			}
 			return true;
@@ -155,11 +114,9 @@ namespace DOL.GS.Trainer
 				}
 				return true;
 			case "practice weapon":
-				if (player.Inventory.GetFirstItemByType("AxeTemplate", eInventorySlot.Min_Inv, eInventorySlot.Max_Inv) == null)
+				if (player.Inventory.GetFirstItemByID(PRACTICE_WEAPON_ID, eInventorySlot.Min_Inv, eInventorySlot.Max_Inv) == null)
 				{
-					GenericItemTemplate itemTemplate = allStartupItems["training_axe"] as GenericItemTemplate;
-					if(itemTemplate != null)
-						player.ReceiveItem(this, itemTemplate.CreateInstance());
+					player.ReceiveItem(this,PRACTICE_WEAPON_ID);
 				}
 				return true;
 			

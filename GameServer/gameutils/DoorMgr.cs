@@ -18,7 +18,7 @@
  */
 using System;
 using System.Collections;
-using DOL.GS.Database;
+using DOL.Database;
 
 namespace DOL.GS
 {
@@ -35,12 +35,12 @@ namespace DOL.GS
 		public static bool Init()
 		{
 			m_doors = new Hashtable();
-			IList dbdoors =	GameServer.Database.SelectAllObjects(typeof(DBDoor));
+			DataObject[] dbdoors =	GameServer.Database.SelectAllObjects(typeof(DBDoor));
 			foreach(DBDoor door in dbdoors)
 			{
-				GameDoor mydoor = new GameDoor();
+				GameObject mydoor = new GameDoor();
 				mydoor.LoadFromDatabase(door);
-				m_doors.Add(door.DoorID,mydoor);
+				m_doors.Add(door.InternalID,mydoor);
 			}
 			return true;
 		}
@@ -58,17 +58,29 @@ namespace DOL.GS
 		/// This function get the door close to spot
 		/// </summary>
 		/// <returns>array of door</returns>
-		public static IEnumerable getDoorsCloseToSpot(ushort regionid, Point p, ushort radius)
+		public static IEnumerable getDoorsCloseToSpot(ushort regionid, IPoint3D point3d, int radius)
+		{
+			return getDoorsCloseToSpot(regionid, point3d.X, point3d.Y, point3d.Z, radius); 
+		}
+
+		/// <summary>
+		/// This function get the door close to spot
+		/// </summary>
+		/// <returns>array of door</returns>
+		public static IEnumerable getDoorsCloseToSpot(ushort regionid, int x, int y, int z, int radius)
 		{
 			ArrayList mydoors = new ArrayList();
-			uint radiussqrt = (uint) (radius * radius);
+			int radiussqrt = radius * radius;
 			lock (m_doors.SyncRoot)
 			{
 				foreach(GameObject door in m_doors.Values)//door inerite from GameObject and IDoor
 				{
-					if (door.RegionId != regionid)
+					if (door.CurrentRegionID != regionid)
 						continue;
-					if (p.CheckSquareDistance(door.Position, radiussqrt))
+					int xdiff = door.X - x;
+					int ydiff = door.Y - y;
+					int range = xdiff * xdiff + ydiff * ydiff ;
+					if (range < radiussqrt)
 						mydoors.Add(door);
 				}
 			}

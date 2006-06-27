@@ -112,7 +112,10 @@ namespace DOLGameServerConsole
 		public void SendSpellEffectAnimation(GameLiving spellCaster, GameLiving spellTarget, ushort spellid, ushort boltTime, bool noSound, byte success) {}
 		public void SendRiding(GameObject rider, GameObject steed, bool dismount) {}
 		public void SendFindGroupWindowUpdate(GamePlayer[] list) {}
-		public void SendDialogBox(eDialogCode code, ushort data1, ushort data2, ushort data3, ushort data4, eDialogType type, bool autoWarpText, string message) {}
+		public void SendGroupInviteCommand(GamePlayer invitingPlayer, string inviteMessage) {}
+		public void SendGuildLeaveCommand(GamePlayer invitingPlayer, string inviteMessage) {}
+		public void SendGuildInviteCommand(GamePlayer invitingPlayer, string inviteMessage) {}
+		public void SendQuestSubscribeCommand(GameNPC invitingNPC,ushort questid, string inviteMessage) {}
 		public void SendGroupWindowUpdate() {}
 		public void SendGroupMemberUpdate(bool updateIcons, GamePlayer player) {}
 		public void SendGroupMembersUpdate(bool updateIcons) {}
@@ -144,6 +147,7 @@ namespace DOLGameServerConsole
 		public void SendDebugMessage(string format, params object[] parameters) {}
 		public void SendDebugPopupMessage(string format, params object[] parameters) {}
 		public void SendEmblemDialogue() {}
+		public void SendSimpleWarningDialog(string warning) {}
 		public void SendWeather(uint x, uint width, ushort speed, ushort fogdiffusion, ushort intensity) {}
 		public void SendPlayerModelTypeChange(GamePlayer player, byte modelType) {}
 		public void SendObjectDelete(GameObject obj) {}

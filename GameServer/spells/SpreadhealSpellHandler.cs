@@ -84,7 +84,7 @@ namespace DOL.GS.Spells
 						{
 							if (!player.Alive) continue;
 							//heal only if target is in range
-							if (target.Position.CheckSquareDistance(player.Position, SPREADHEAL_RANGE*SPREADHEAL_RANGE))
+							if (WorldMgr.CheckDistance(target, player,SPREADHEAL_RANGE))
 							{
 								double playerHealthPercent = player.Health / (double)player.MaxHealth;
 								if (playerHealthPercent < 1)

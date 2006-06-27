@@ -21,7 +21,7 @@ using System.Collections;
 using System.Collections.Specialized;
 using System.Reflection;
 using DOL.AI.Brain;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.Events;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
@@ -425,13 +425,13 @@ namespace DOL.GS
 		public enum eHealthChangeType: byte
 		{
 			/// <summary>
-			/// The health was changed by something internal, used by release for example
+			/// The health was changed by something unknown
 			/// </summary>
 			Unknown = 0,
 			/// <summary>
 			/// Regeneration changed the health
 			/// </summary>
-			Regenerate = 1,	// don't generate aggro
+			Regenerate = 1,
 			/// <summary>
 			/// A spell changed the health
 			/// </summary>
@@ -439,13 +439,8 @@ namespace DOL.GS
 			/// <summary>
 			/// A potion changed the health
 			/// </summary>
-			Potion = 3,
-			/// <summary>
-			/// When a weapon hit
-			/// </summary>
-			AttackDamage = 4 // don't send player update packet
+			Potion = 3
 		}
-
 		/// <summary>
 		/// Holds all the ways this living can
 		/// be healed
@@ -467,7 +462,7 @@ namespace DOL.GS
 			/// <summary>
 			/// Mana was changed by potion
 			/// </summary>
-			Potion = 3,
+			Potion = 3
 		}
 		/// <summary>
 		/// Holds all the ways this living can
@@ -536,20 +531,6 @@ namespace DOL.GS
 			/// Fourth quiver slot
 			/// </summary>
 			Fourth = 0x80,
-		}
-
-		/// <summary>
-		/// Holds the weaponslot to be used
-		/// </summary>
-		protected eActiveWeaponSlot	m_activeWeaponSlot;
-		
-		/// <summary>
-		/// Returns the current active weapon slot of this living
-		/// </summary>
-		public virtual eActiveWeaponSlot ActiveWeaponSlot
-		{
-			get	{ return m_activeWeaponSlot; }
-			set	{ m_activeWeaponSlot = value; }
 		}
 
 		/// <summary>
@@ -651,7 +632,10 @@ namespace DOL.GS
 		/// Damage in float because it might contain small amounts
 		/// </summary>
 		protected readonly HybridDictionary m_xpGainers;
-
+		/// <summary>
+		/// Holds the weaponslot to be used
+		/// </summary>
+		protected eActiveWeaponSlot	m_activeWeaponSlot;
 		/// <summary>
 		/// AttackAction used for making an attack every weapon speed intervals
 		/// </summary>
@@ -662,7 +646,13 @@ namespace DOL.GS
 		/// and have this living as target.
 		/// </summary>
 		protected readonly ArrayList	m_attackers;
-		
+		/// <summary>
+		/// Returns the current active weapon slot of this living
+		/// </summary>
+		public virtual eActiveWeaponSlot ActiveWeaponSlot
+		{
+			get	{ return m_activeWeaponSlot; }
+		}
 		/// <summary>
 		/// Gets a hashtable holding
 		/// gameobject->float
@@ -720,7 +710,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="weapon">attack weapons</param>
 		/// <returns>effective speed of the attack. average if more than one weapon.</returns>
-		public virtual int AttackSpeed(params Weapon[] weapon)
+		public virtual int AttackSpeed(params InventoryItem[] weapon)
 		{
 			//TODO needs to come from the DB
 			double speed = 3400 * (1.0 - (GetModified(eProperty.Quickness) - 60)/500.0);
@@ -741,15 +731,15 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="weapon">the weapon used for attack</param>
 		/// <returns></returns>
-		public virtual double AttackDamage(Weapon weapon)
+		public virtual double AttackDamage(InventoryItem weapon)
 		{
 			double damage = (1.0 + Level/3.7 + Level*Level/175.0) * AttackSpeed(weapon) * 0.001;
-			if(weapon == null || !(weapon is RangedWeapon))
+			if(weapon == null || weapon.Item_Type == Slot.RIGHTHAND || weapon.Item_Type == Slot.LEFTHAND || weapon.Item_Type ==  Slot.TWOHAND)
 			{
 				//Melee damage buff and debuff
 				damage *= GetModified(eProperty.MeleeDamage)*0.01;
 			}
-			else
+			else if(weapon.Item_Type == Slot.RANGED)
 			{
 				//Ranged damage buff and debuff
 				damage *= GetModified(eProperty.RangedDamage)*0.01;
@@ -763,7 +753,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="weapon">attack weapon</param>
 		/// <returns></returns>
-		public virtual double UnstyledDamageCap(Weapon weapon)
+		public virtual double UnstyledDamageCap(InventoryItem weapon)
 		{
 			return AttackDamage(weapon) * (2.82 + 0.00009 * AttackSpeed(weapon));
 		}
@@ -792,7 +782,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="weapon"></param>
 		/// <returns></returns>
-		public virtual int GetWeaponStat(Weapon weapon)
+		public virtual int GetWeaponStat(InventoryItem weapon)
 		{
 			return GetModified(eProperty.Strength);
 		}
@@ -828,7 +818,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets the weaponskill of weapon
 		/// </summary>
-		public virtual double GetWeaponSkill(Weapon weapon)
+		public virtual double GetWeaponSkill(InventoryItem weapon)
 		{
 				const double bs = 128.0 / 50.0;	// base factor (not 400)
 				return (int)((Level+1) * bs * (1 + (GetWeaponStat(weapon) - 50) * 0.005) * (Level*2/50));
@@ -837,7 +827,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Returns the weapon used to attack, null=natural
 		/// </summary>
-		public virtual Weapon AttackWeapon
+		public virtual InventoryItem AttackWeapon
 		{
 			get
 			{
@@ -845,9 +835,9 @@ namespace DOL.GS
 				{
 					switch (ActiveWeaponSlot)
 					{
-						case eActiveWeaponSlot.Standard : return Inventory.GetItem(eInventorySlot.RightHandWeapon) as Weapon;
-						case eActiveWeaponSlot.TwoHanded: return Inventory.GetItem(eInventorySlot.TwoHandWeapon) as Weapon;
-						case eActiveWeaponSlot.Distance : return Inventory.GetItem(eInventorySlot.DistanceWeapon) as Weapon;
+						case eActiveWeaponSlot.Standard : return Inventory.GetItem(eInventorySlot.RightHandWeapon);
+						case eActiveWeaponSlot.TwoHanded: return Inventory.GetItem(eInventorySlot.TwoHandWeapon);
+						case eActiveWeaponSlot.Distance : return Inventory.GetItem(eInventorySlot.DistanceWeapon);
 					}
 				}
 				return null;
@@ -859,7 +849,7 @@ namespace DOL.GS
 		/// Returns the chance for a critical hit
 		/// </summary>
 		/// <param name="weapon">attack weapon</param>
-		public virtual int AttackCriticalChance(Weapon weapon)
+		public virtual int AttackCriticalChance(InventoryItem weapon)
 		{
 			return 0;
 		}
@@ -875,7 +865,7 @@ namespace DOL.GS
 		/// Returns the damage type of the current attack
 		/// </summary>
 		/// <param name="weapon">attack weapon</param>
-		public virtual eDamageType AttackDamageType(Weapon weapon)
+		public virtual eDamageType AttackDamageType(InventoryItem weapon)
 		{
 			return eDamageType.Natural;
 		}
@@ -902,7 +892,7 @@ namespace DOL.GS
 		/// <summary>
 		/// determines the spec level for current AttackWeapon
 		/// </summary>
-		public virtual int WeaponSpecLevel(Weapon weapon)
+		public virtual int WeaponSpecLevel(InventoryItem weapon)
 		{
 			if (weapon==null) return 0;
 			return 0;	// TODO
@@ -912,7 +902,7 @@ namespace DOL.GS
 		/// Gets the weapondamage of currently used weapon
 		/// </summary>
 		/// <param name="weapon">the weapon used for attack</param>
-		public virtual double WeaponDamage(Weapon weapon)
+		public virtual double WeaponDamage(InventoryItem weapon)
 		{
 			return 0;
 		}
@@ -929,7 +919,7 @@ namespace DOL.GS
 		public virtual bool InCombat
 		{
 			get {
-				Region region = Region;
+				Region region = CurrentRegion;
 				if (region == null)
 					return false;
 				return LastAttackTick+10000 >= region.Time || LastAttackedByEnemyTick+10000 >= region.Time;
@@ -1209,7 +1199,7 @@ namespace DOL.GS
 		/// <param name="effectiveness">damage effectiveness (0..1)</param>
 		/// <param name="dualWield">indicates if both weapons are used for attack</param>
 		/// <returns>the object where we collect and modifiy all parameters about the attack</returns>
-		protected virtual AttackData MakeAttack(GameObject target, Weapon weapon, Style style, double effectiveness, int interruptDuration, bool dualWield)
+		protected virtual AttackData MakeAttack(GameObject target, InventoryItem weapon, Style style, double effectiveness, int interruptDuration, bool dualWield)
 		{
 			AttackData ad = new AttackData();
 			ad.Attacker = this;
@@ -1217,7 +1207,7 @@ namespace DOL.GS
 			ad.Damage = 0;
 			ad.CriticalDamage = 0;
 			ad.Style = style;
-			ad.WeaponSpeed = (weapon == null ? AttackSpeed(null)/100 : weapon.Speed);
+			ad.WeaponSpeed = (weapon == null ? AttackSpeed(null)/100 : weapon.SPD_ABS);
 			ad.DamageType = AttackDamageType(weapon);
 			ad.ArmorHitLocation = eArmorSlot.UNKNOWN;
 
@@ -1225,13 +1215,14 @@ namespace DOL.GS
 				ad.AttackType = AttackData.eAttackType.MeleeDualWield;
 			else if (weapon == null)
 				ad.AttackType = AttackData.eAttackType.MeleeOneHand;
-			else if(weapon is RangedWeapon)
-				ad.AttackType = AttackData.eAttackType.Ranged;
-			else if(weapon.HandNeeded == eHandNeeded.TwoHands)
-				ad.AttackType = AttackData.eAttackType.MeleeTwoHand;
-			else
-				ad.AttackType = AttackData.eAttackType.MeleeOneHand;
-				
+			else switch (weapon.Item_Type)
+			{
+				default:
+				case Slot.RIGHTHAND:
+				case Slot.LEFTHAND: ad.AttackType = AttackData.eAttackType.MeleeOneHand; break;
+				case Slot.TWOHAND : ad.AttackType = AttackData.eAttackType.MeleeTwoHand; break;
+				case Slot.RANGED  : ad.AttackType = AttackData.eAttackType.Ranged; break;
+			}
 
 			//No target, stop the attack
 			if(ad.Target==null) {
@@ -1240,7 +1231,7 @@ namespace DOL.GS
 			}
 
 			// check region
-			if (ad.Target.RegionId != RegionId || ad.Target.ObjectState != eObjectState.Active) {
+			if (ad.Target.CurrentRegionID != CurrentRegionID || ad.Target.ObjectState != eObjectState.Active) {
 				ad.AttackResult = eAttackResult.NoValidTarget;
 				return ad;
 			}
@@ -1258,7 +1249,7 @@ namespace DOL.GS
 			}
 
 			//We have no attacking distance!
-			if (!Position.CheckDistance(ad.Target.Position, AttackRange)) {
+			if (!WorldMgr.CheckDistance(this,ad.Target,AttackRange)){
 				//DOLConsole.LogLine(this.Name+"("+X+","+Y+","+Z+") attacks but "+ad.Target.Name+"("+ad.Target.X+","+ad.Target.Y+","+ad.Target.Z+") out of range "+dist+" > "+AttackRange);
 				ad.AttackResult = eAttackResult.OutOfRange;
 				return ad;
@@ -1278,9 +1269,9 @@ namespace DOL.GS
 			{
 				double damage = AttackDamage(weapon) * effectiveness;
 
-				Armor armor = null;
+				InventoryItem armor = null;
 				if (ad.Target.Inventory != null)
-					armor = ad.Target.Inventory.GetItem((eInventorySlot)ad.ArmorHitLocation) as Armor;
+					armor = ad.Target.Inventory.GetItem((eInventorySlot)ad.ArmorHitLocation);
 
 				int lowerboundary = (WeaponSpecLevel(weapon)-1) * 50 / (ad.Target.EffectiveLevel + 1) + 75;
 				lowerboundary = Math.Max(lowerboundary, 75);
@@ -1614,7 +1605,7 @@ namespace DOL.GS
 		/// Gets/Sets the item that is used for ranged attack
 		/// </summary>
 		/// <returns>Item that will be used for range/accuracy/damage modifications</returns>
-		protected virtual Ammunition RangeAttackAmmo
+		protected virtual ItemTemplate RangeAttackAmmo
 		{
 			get { return null; }
 			set {}
@@ -1624,7 +1615,7 @@ namespace DOL.GS
 		/// Gets/Sets the target for current ranged attack
 		/// </summary>
 		/// <returns></returns>
-		public virtual GameObject RangeAttackTarget
+		protected virtual GameObject RangeAttackTarget
 		{
 			get { return TargetObject; }
 			set {}
@@ -1683,14 +1674,14 @@ namespace DOL.GS
 					return;
 				}
 
-				// Store all datas which must not change during the attack
+				// Store all datas witch must not change during the attack
 				double effectiveness = 1;
 				int ticksToTarget = 1;
 				int interruptDuration = 0;
 				int leftHandSwingCount = 0;
 				Style combatStyle = null;
-				Weapon attackWeapon = owner.AttackWeapon;
-				Weapon leftWeapon = (owner.Inventory == null) ? null : owner.Inventory.GetItem(eInventorySlot.LeftHandWeapon) as Weapon;
+				InventoryItem attackWeapon = owner.AttackWeapon;
+				InventoryItem leftWeapon = (owner.Inventory == null) ? null : owner.Inventory.GetItem(eInventorySlot.LeftHandWeapon);
 				GameObject attackTarget = null;
 
 				if(owner.ActiveWeaponSlot == eActiveWeaponSlot.Distance)
@@ -1699,8 +1690,8 @@ namespace DOL.GS
 					eCheckRangeAttackStateResult rangeCheckresult = owner.CheckRangeAttackState(attackTarget);
 					if(rangeCheckresult==eCheckRangeAttackStateResult.Hold)
 					{
-						Interval = 100;
-						return; //Hold the shot a little bit more
+						Interval = 1000;
+						return; //Hold the shot another second
 					}
 					else if(rangeCheckresult==eCheckRangeAttackStateResult.Stop)
 					{
@@ -1748,10 +1739,10 @@ namespace DOL.GS
 							// and the resulting interrupt will last 1.5 seconds."
 
 							long rapidFireMaxDuration = owner.AttackSpeed(attackWeapon) / 2; // half of the total time
-							long elapsedTime = owner.Region.Time - owner.TempProperties.getLongProperty(GamePlayer.RANGE_ATTACK_HOLD_START, 0L); // elapsed time before ready to fire
+							long elapsedTime = owner.CurrentRegion.Time - owner.TempProperties.getLongProperty(GamePlayer.RANGE_ATTACK_HOLD_START, 0L); // elapsed time before ready to fire
 							if(elapsedTime < rapidFireMaxDuration)
 							{
-								effectiveness = 0.5 + (double)elapsedTime * 0.5 / (double)rapidFireMaxDuration;
+								effectiveness = 0.5 + (double)elapsedTime * 0.5 /(double)rapidFireMaxDuration;
 								interruptDuration = (int)(interruptDuration * effectiveness);
 							}
 						}
@@ -1785,7 +1776,7 @@ namespace DOL.GS
 						}
 					}
 
-					ticksToTarget = 1 + owner.Position.GetDistance(attackTarget.Position) * 100 / 150; // 150 units per 1/10s
+					ticksToTarget = 1 + WorldMgr.GetDistance(owner, attackTarget) * 100 / 150; // 150 units per 1/10s
 				}
 				else
 				{
@@ -1816,8 +1807,8 @@ namespace DOL.GS
 					// calculate LA damage reduction
 					if (owner is GamePlayer)
 					{
-						if(owner.CanUseLefthandedWeapon && leftWeapon != null && !(leftWeapon is Shield)
-						&& attackWeapon != null && (attackWeapon.HandNeeded == eHandNeeded.RightHand || attackWeapon.HandNeeded == eHandNeeded.LeftHand))
+						if(owner.CanUseLefthandedWeapon && leftWeapon != null && leftWeapon.Object_Type != (int)eObjectType.Shield
+						&& attackWeapon != null && (attackWeapon.Item_Type == Slot.RIGHTHAND || attackWeapon.Item_Type == Slot.LEFTHAND))
 						{
 							leftHandSwingCount = owner.CalculateLeftHandSwingCount();
 
@@ -1926,12 +1917,12 @@ namespace DOL.GS
 			/// <summary>
 			/// The weapon of the attack
 			/// </summary>
-			protected readonly Weapon m_attackWeapon;
+			protected readonly InventoryItem m_attackWeapon;
 
 			/// <summary>
 			/// The weapon in the left hand of the attacker
 			/// </summary>
-			protected readonly Weapon m_leftWeapon;
+			protected readonly InventoryItem m_leftWeapon;
 
 			/// <summary>
 			/// The number of swing witch must be done by the left weapon
@@ -1957,7 +1948,7 @@ namespace DOL.GS
 			/// Constructs a new attack action
 			/// </summary>
 			/// <param name="owner">The action source</param>
-			public WeaponOnTargetAction(GameLiving owner, GameObject target, Weapon attackWeapon, Weapon leftWeapon, int leftHandSwingCount, double effectiveness, int interruptDuration, Style combatStyle) : base(owner)
+			public WeaponOnTargetAction(GameLiving owner, GameObject target, InventoryItem attackWeapon, InventoryItem leftWeapon, int leftHandSwingCount, double effectiveness, int interruptDuration, Style combatStyle) : base(owner)
 			{
 				m_target = target;
 				m_attackWeapon = attackWeapon;
@@ -1978,13 +1969,13 @@ namespace DOL.GS
 				int leftHandSwingCount = m_leftHandSwingCount;
 				AttackData mainHandAD = null;
 				AttackData leftHandAD = null;
-				Weapon mainWeapon = m_attackWeapon;
-				Weapon leftWeapon = m_leftWeapon;
+				InventoryItem mainWeapon = m_attackWeapon;
+				InventoryItem leftWeapon = m_leftWeapon;
 
 				if (!owner.CanUseLefthandedWeapon
-					|| (mainWeapon != null && (mainWeapon is RangedWeapon || mainWeapon.HandNeeded == eHandNeeded.TwoHands))
+					|| (mainWeapon != null && mainWeapon.Item_Type != Slot.RIGHTHAND && mainWeapon.Item_Type != Slot.LEFTHAND)
 					|| leftWeapon == null
-					|| leftWeapon is Shield)
+					|| leftWeapon.Object_Type == (int)eObjectType.Shield)
 				{
 					// no left hand used, all is simple here
 					mainHandAD = owner.MakeAttack(m_target, mainWeapon, style, m_effectiveness, m_interruptDuration, false);
@@ -2117,14 +2108,14 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="ad"></param>
 		/// <param name="weapon"></param>
-		protected virtual void StartWeaponMagicalEffect(AttackData ad, Weapon weapon)
+		protected virtual void StartWeaponMagicalEffect(AttackData ad, InventoryItem weapon)
 		{
 			if (weapon != null)
 			{
-				if(weapon.ProcEffectType == eMagicalEffectType.ActiveEffect)
+				if(weapon.ProcSpellID != 0)
 				{
 					// random chance (4.0spd = 10%)
-					if (!Util.ChanceDouble(weapon.Speed*0.0025))
+					if (!Util.ChanceDouble(weapon.SPD_ABS*0.0025))
 						return;
 
 					SpellLine procEffectLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
@@ -2153,7 +2144,7 @@ namespace DOL.GS
 				}
 
 				// poison
-				if(weapon.ChargeEffectType == eMagicalEffectType.PoisonEffect)
+				if(weapon.SpellID != 0)
 				{
 					SpellLine poisonLine = SkillBase.GetSpellLine(GlobalSpellsLines.Mundane_Poisons);
 					if (poisonLine != null)
@@ -2163,7 +2154,7 @@ namespace DOL.GS
 						{
 							foreach (Spell spell in spells)
 							{
-								if (spell.ID == weapon.ChargeSpellID)
+								if (spell.ID == weapon.SpellID)
 								{
 									if(spell.Level <= Level)
 									{
@@ -2178,11 +2169,8 @@ namespace DOL.GS
 							}
 						}
 					}
-					weapon.Charge --;
-					if(weapon.Charge <= 0)
-					{
-						weapon.ChargeEffectType = eMagicalEffectType.NoEffect;
-					}
+					weapon.Charges --;
+					if(weapon.Charges <= 0) { weapon.MaxCharges = 0; weapon.SpellID = 0; }
 				}
 			}
 		}
@@ -2206,7 +2194,7 @@ namespace DOL.GS
 			if(effect != null && effect.EngageSource == this)
 				effect.Cancel(false);
 
-			Weapon weapon = AttackWeapon;
+			InventoryItem weapon = AttackWeapon;
 			int speed = AttackSpeed(weapon);
 			if (speed > 0)
 			{
@@ -2276,7 +2264,7 @@ namespace DOL.GS
 		/// <param name="ad">The attack data</param>
 		/// <param name="weapon">The weapon used</param>
 		/// <returns>The amount of critical damage</returns>
-		public virtual int CalculateCriticalDamage(AttackData ad, Weapon weapon)
+		public virtual int CalculateCriticalDamage(AttackData ad, InventoryItem weapon)
 		{
 			if(Util.Chance(AttackCriticalChance(weapon)))
 			{
@@ -2301,7 +2289,7 @@ namespace DOL.GS
 		/// <param name="ad">AttackData</param>
 		/// <param name="weapon">the weapon used for attack</param>
 		/// <returns>the result of the attack</returns>
-		public virtual eAttackResult CalculateEnemyAttackResult(AttackData ad, Weapon weapon)
+		public virtual eAttackResult CalculateEnemyAttackResult(AttackData ad, InventoryItem weapon)
 		{
 			//1.To-Hit modifiers on styles do not any effect on whether your opponent successfully Evades, Blocks, or Parries. – Grab Bag 2/27/03
 			//2.The correct Order of Resolution in combat is Intercept, Evade, Parry, Block (Shield), Guard, Hit/Miss, and then Bladeturn. – Grab Bag 2/27/03, Grab Bag 4/4/03
@@ -2346,7 +2334,7 @@ namespace DOL.GS
 					if (inter.InterceptSource.Sitting) continue;
 					if (inter.InterceptSource.ObjectState != eObjectState.Active) continue;
 					if (inter.InterceptSource.Alive == false) continue;
-					if (!Position.CheckSquareDistance(inter.InterceptSource.Position, (uint)(InterceptAbilityHandler.INTERCEPT_DISTANCE*InterceptAbilityHandler.INTERCEPT_DISTANCE))) continue;
+					if (!WorldMgr.CheckDistance(this, inter.InterceptSource,InterceptAbilityHandler.INTERCEPT_DISTANCE)) continue;
 					if (Util.Chance(50)) continue; // TODO: proper chance formula?
 					intercept = inter;
 				}
@@ -2451,7 +2439,7 @@ namespace DOL.GS
 						if (parryChance > 0.99) parryChance = 0.99;
 
 						if (m_attackers.Count > 1) parryChance /= m_attackers.Count;
-						if (weapon != null && weapon.HandNeeded == eHandNeeded.TwoHands) parryChance /= 2;
+						if (weapon != null && weapon.Hand == 1) parryChance /= 2;
 
 						if (Util.ChanceDouble(parryChance))
 						{
@@ -2482,10 +2470,10 @@ namespace DOL.GS
 				double blockChance = double.MinValue;
 				if (player != null)
 				{
-					Weapon lefthand = Inventory.GetItem(eInventorySlot.LeftHandWeapon) as Weapon;
-					if (lefthand!=null && (player.AttackWeapon==null || player.ActiveWeaponSlot == eActiveWeaponSlot.Standard))
+					InventoryItem lefthand = Inventory.GetItem(eInventorySlot.LeftHandWeapon);
+					if (lefthand!=null && (player.AttackWeapon==null || player.AttackWeapon.Item_Type==Slot.RIGHTHAND || player.AttackWeapon.Item_Type==Slot.LEFTHAND))
 					{
-						if (lefthand is Shield && IsObjectInFront(ad.Attacker, 120))
+						if (lefthand.Object_Type == (int)eObjectType.Shield && IsObjectInFront(ad.Attacker, 120))
 						{
 							blockChance = GetModified(eProperty.BlockChance) * lefthand.Quality * 0.01;
 						}
@@ -2508,21 +2496,21 @@ namespace DOL.GS
 					if (blockChance < 0.01) blockChance = 0.01;
 
 					// Reduce block chance if the shield used is too small (valable only for player because npc inventory does not store the shield size but only the model of item)
-					if(player != null && (byte)(((Shield)Inventory.GetItem(eInventorySlot.LeftHandWeapon)).Size) - m_attackers.Count < 0) blockChance /= m_attackers.Count;
+					if(player != null && Inventory.GetItem(eInventorySlot.LeftHandWeapon).Type_Damage - m_attackers.Count < 0) blockChance /= m_attackers.Count;
 					if (ad.AttackType == AttackData.eAttackType.MeleeDualWield) blockChance /= 2;
 
 					// Engage raised block change to 85% if attacker is engageTarget and player is in attackstate
 					if (engage!=null && AttackState && engage.EngageTarget==ad.Attacker )
 					{
 						// You cannot engage a mob that was attacked within the last X seconds...
-						if (engage.EngageTarget.LastAttackedByEnemyTick > engage.EngageTarget.Region.Time - EngageAbilityHandler.ENGAGE_ATTACK_DELAY_TICK)
+						if (engage.EngageTarget.LastAttackedByEnemyTick > engage.EngageTarget.CurrentRegion.Time - EngageAbilityHandler.ENGAGE_ATTACK_DELAY_TICK)
 						{
 							engage.EngageSource.Out.SendMessage(engage.EngageTarget.GetName(0,true)+" has been attacked recently and you are unable to engage.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						}
 						// Check if player has enough endurance left to engage
-						else if (engage.EngageSource.EndurancePercent>=EngageAbilityHandler.ENGAGE_DURATION_LOST)
+						else if (engage.EngageSource.Endurance>=EngageAbilityHandler.ENGAGE_DURATION_LOST)
 						{
-							engage.EngageSource.EndurancePercent -= EngageAbilityHandler.ENGAGE_DURATION_LOST;
+							engage.EngageSource.Endurance -= EngageAbilityHandler.ENGAGE_DURATION_LOST;
 							engage.EngageSource.Out.SendMessage("You concentrate on blocking the blow!", eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
 
 							if (blockChance < 0.85)
@@ -2554,12 +2542,12 @@ namespace DOL.GS
 				!stealthStyle)
 			{
 				// check distance
-				if (guard.GuardSource.Position.CheckSquareDistance(guard.GuardTarget.Position, (uint)(GuardAbilityHandler.GUARD_DISTANCE*GuardAbilityHandler.GUARD_DISTANCE)))
+				if (WorldMgr.CheckDistance(guard.GuardSource, guard.GuardTarget, GuardAbilityHandler.GUARD_DISTANCE))
 				{
 					// check player is wearing shield and NO two handed weapon
-					Shield leftHand  = guard.GuardSource.Inventory.GetItem(eInventorySlot.LeftHandWeapon) as Shield;
-					Weapon rightHand = guard.GuardSource.AttackWeapon;
-					if ((rightHand == null || rightHand.HandNeeded != eHandNeeded.TwoHands) && leftHand != null)
+					InventoryItem leftHand  = guard.GuardSource.Inventory.GetItem(eInventorySlot.LeftHandWeapon);
+					InventoryItem rightHand = guard.GuardSource.AttackWeapon;
+					if ((rightHand == null || rightHand.Hand != 1) && leftHand != null && leftHand.Object_Type == (int)eObjectType.Shield)
 					{
 						// TODO
 						// insert actual formula for guarding here, this is just a guessed one based on block.
@@ -2571,7 +2559,7 @@ namespace DOL.GS
 						if (guardchance > 0.99) guardchance = 0.99;
 						if (guardchance < 0.01) guardchance = 0.01;
 
-						if((byte)(leftHand.Size) - m_attackers.Count < 0) guardchance /= m_attackers.Count;
+						if(leftHand.Type_Damage - m_attackers.Count < 0) guardchance /= m_attackers.Count;
 						if (ad.AttackType == AttackData.eAttackType.MeleeDualWield) guardchance /= 2;
 
 						if (Util.ChanceDouble(guardchance))
@@ -2595,9 +2583,9 @@ namespace DOL.GS
 			if(ad.Target is GamePlayer)
 			{
 				ad.ArmorHitLocation = ((GamePlayer)ad.Target).CalculateArmorHitLocation();
-				Armor armor = null;
+				InventoryItem armor = null;
 				if (ad.Target.Inventory != null)
-					armor = ad.Target.Inventory.GetItem((eInventorySlot)ad.ArmorHitLocation) as Armor;
+					armor = ad.Target.Inventory.GetItem((eInventorySlot)ad.ArmorHitLocation);
 				if (armor != null)
 					armorBonus = armor.Bonus;
 			}
@@ -2624,18 +2612,16 @@ namespace DOL.GS
 			}
 			if(ad.Attacker.ActiveWeaponSlot == eActiveWeaponSlot.Distance)
 			{
-				Ammunition ammo = RangeAttackAmmo;
+				ItemTemplate ammo = RangeAttackAmmo;
 				if(ammo!=null)
-				{
-					switch(ammo.Precision)
+					switch((ammo.SPD_ABS>>4)&0x3)
 					{
-							// http://rothwellhome.org/guides/archery.htm
-						case ePrecision.Reduced: missrate += 15; break; // Rough
-						case ePrecision.Normal: break;
-						case ePrecision.Improved: missrate -= 15; break; // doesn't exist (?)
-						case ePrecision.Enhanced: missrate -= 25; break; // Footed
+						// http://rothwellhome.org/guides/archery.htm
+						case 0: missrate += 15; break; // Rough
+//						case 1: missrate -= 0; break;
+						case 2: missrate -= 15; break; // doesn't exist (?)
+						case 3: missrate -= 25; break; // Footed
 					}
-				}
 			}
 			if (this is GamePlayer && ((GamePlayer)this).Sitting)
 			{
@@ -2690,18 +2676,15 @@ namespace DOL.GS
 		/// <summary>
 		/// This method is called whenever this living
 		/// should take damage from some source
-		/// NOTA: Use ChangeHealth to change the player health,
-		/// this function is used only to deal weapon damage 
-		/// and no update packet are send !!!
 		/// </summary>
 		/// <param name="source">the damage source</param>
 		/// <param name="damageType">the damage type</param>
 		/// <param name="damageAmount">the amount of damage</param>
 		/// <param name="criticalAmount">the amount of critical damage</param>
-		public virtual void TakeDamage(GameLiving source, eDamageType damageType, int damageAmount, int criticalAmount)
+		public override void TakeDamage(GameObject source, eDamageType damageType, int damageAmount, int criticalAmount)
 		{
-			Notify(GameLivingEvent.TakeDamage, this, new TakeDamageEventArgs(source, damageType, damageAmount, criticalAmount));
-		
+			base.TakeDamage(source, damageType, damageAmount, criticalAmount);
+
 			double damageDealt = damageAmount + criticalAmount;
 
 			if (source is GameNPC)
@@ -2725,8 +2708,7 @@ namespace DOL.GS
 						for (int i = 0; i < attackerGroup.PlayerCount; i++)
 						{
 							GamePlayer player = attackerGroup[i];
-							if (Position.CheckSquareDistance(player.Position, (uint)(WorldMgr.MAX_EXPFORKILL_DISTANCE*WorldMgr.MAX_EXPFORKILL_DISTANCE))
-							    && player.Alive && player.ObjectState == eObjectState.Active)
+							if (WorldMgr.CheckDistance(player, this, WorldMgr.MAX_EXPFORKILL_DISTANCE) && player.Alive && player.ObjectState == eObjectState.Active)
 								xpGainers.Add(player);
 						}
 					}
@@ -2748,7 +2730,7 @@ namespace DOL.GS
 			}
 
 			bool oldAlive = Alive;
-			ChangeHealth(source, eHealthChangeType.AttackDamage, -1 * (damageAmount+criticalAmount));
+			Health-=damageAmount+criticalAmount;
 			if(!Alive)
 			{
 				if (oldAlive) // check if living was already dead
@@ -2780,8 +2762,8 @@ namespace DOL.GS
 			case eAttackResult.Missed:
 			case eAttackResult.Parried:
 			case eAttackResult.Fumbled:
-				LastAttackedByEnemyTick = Region.Time;
-				ad.Attacker.LastAttackTick = Region.Time;
+				LastAttackedByEnemyTick = CurrentRegion.Time;
+				ad.Attacker.LastAttackTick = CurrentRegion.Time;
 				break;
 			}
 		}
@@ -2791,7 +2773,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="ad">Infos about the attack</param>
 		/// <param name="weapon">The weapon used for attack</param>
-		public virtual void ShowAttackAnimation(AttackData ad, Weapon weapon)
+		public virtual void ShowAttackAnimation(AttackData ad, InventoryItem weapon)
 		{
 			bool showAnim=false;
 			switch(ad.AttackResult)
@@ -2833,8 +2815,8 @@ namespace DOL.GS
 						resultByte = 2;
 						if (ad.Target != null && ad.Target.Inventory != null)
 						{
-							Shield lefthand = ad.Target.Inventory.GetItem(eInventorySlot.LeftHandWeapon) as Shield;
-							if (lefthand != null)
+							InventoryItem lefthand = ad.Target.Inventory.GetItem(eInventorySlot.LeftHandWeapon);
+							if (lefthand!=null && lefthand.Object_Type==(int)eObjectType.Shield)
 							{
 								defendersWeapon = lefthand.Model;
 							}
@@ -2893,20 +2875,13 @@ namespace DOL.GS
 		{
 			//TODO fire event that might increase or reduce the amount
 			int oldHealth = Health;
-			Health = Math.Min(Health+changeAmount, MaxHealth); //cap heal to max health
-			Health = Math.Max(Health, 0); //min heal is 0
+			Health+=changeAmount;
 			int healthChanged = Health - oldHealth;
 
-			// damage => we start the regeneration
-			if(healthChanged < 0)
+			//Nofiy our enemies that we were healed by other means than
+			//natural regeneration, this allows for aggro on healers!
+			if(healthChangeType != eHealthChangeType.Regenerate)
 			{
-				if(Alive) StartHealthRegeneration(); // only if always alive
-				else Health = 0;
-			}
-			else if(healthChangeType != eHealthChangeType.Regenerate)
-			{
-				//Nofiy our enemies that we were healed by other means than
-				//natural regeneration, this allows for aggro on healers!
 				IList attackers;
 				lock (m_attackers.SyncRoot) { attackers = (IList)m_attackers.Clone(); }
 
@@ -2933,17 +2908,8 @@ namespace DOL.GS
 		{
 			//TODO fire event that might increase or reduce the amount
 			int oldMana = Mana;
-			Mana = Math.Min(Mana+changeAmount, MaxMana); //cap Mana to max Mana
-			Mana = Math.Max(Mana, 0); //mi mana is 0
-			int manaChanged = Mana - oldMana;
-
-			// If the mana is reduced we start the regeneration
-			if(manaChanged < 0)
-			{
-				if(Alive) StartPowerRegeneration(); // only if always alive
-				else Mana = 0;
-			}
-			return manaChanged;
+			Mana+=changeAmount;
+			return Mana - oldMana;
 		}
 
 		/// <summary>
@@ -2956,9 +2922,9 @@ namespace DOL.GS
 		public virtual int ChangeEndurance(GameObject changeSource, eEnduranceChangeType enduranceChangeType, int changeAmount)
 		{
 			//TODO fire event that might increase or reduce the amount
-			int oldEndurance = EndurancePercent;
-			EndurancePercent+= (byte)changeAmount;
-			return EndurancePercent - oldEndurance;
+			int oldEndurance = Endurance;
+			Endurance+=changeAmount;
+			return Endurance - oldEndurance;
 		}
 
 		/// <summary>
@@ -3147,10 +3113,10 @@ namespace DOL.GS
 			RangeAttackState=eRangeAttackState.None;
 			RangeAttackType=eRangeAttackType.Normal;
 
-			VisibleEquipment rightHandSlot = (VisibleEquipment)Inventory.GetItem(eInventorySlot.RightHandWeapon);
-			VisibleEquipment leftHandSlot  = (VisibleEquipment)Inventory.GetItem(eInventorySlot.LeftHandWeapon);
-			VisibleEquipment twoHandSlot   = (VisibleEquipment)Inventory.GetItem(eInventorySlot.TwoHandWeapon);
-			VisibleEquipment distanceSlot  = (VisibleEquipment)Inventory.GetItem(eInventorySlot.DistanceWeapon);
+			InventoryItem rightHandSlot = Inventory.GetItem(eInventorySlot.RightHandWeapon);
+			InventoryItem leftHandSlot  = Inventory.GetItem(eInventorySlot.LeftHandWeapon);
+			InventoryItem twoHandSlot   = Inventory.GetItem(eInventorySlot.TwoHandWeapon);
+			InventoryItem distanceSlot  = Inventory.GetItem(eInventorySlot.DistanceWeapon);
 
 			// simple active slot logic:
 			// 0=right hand, 1=left hand, 2=two-hand, 3=range, F=none
@@ -3172,7 +3138,7 @@ namespace DOL.GS
 					break;
 
 				case eActiveWeaponSlot.TwoHanded:
-					if (twoHandSlot != null && !(twoHandSlot is Instrument) && ((Weapon)twoHandSlot).HandNeeded == eHandNeeded.TwoHands) // 2h
+					if (twoHandSlot != null && twoHandSlot.Hand == 1) // 2h
 					{
 						rightHand = leftHand = 0x02;
 						break;
@@ -3192,7 +3158,7 @@ namespace DOL.GS
 					leftHand = 0xFF; // cannot use left-handed weapons if ranged slot active
 					if (distanceSlot == null)
 						rightHand = 0xFF;
-					else if (!(distanceSlot is Instrument) && ((Weapon)distanceSlot).HandNeeded == eHandNeeded.TwoHands) // bows use 2 hands, trowing axes 1h
+					else if (distanceSlot.Hand == 1) // bows use 2 hands, trowing axes 1h
 						rightHand = leftHand = 0x03;
 					else rightHand = 0x03;
 					break;
@@ -3341,97 +3307,37 @@ namespace DOL.GS
 		}
 
 		#endregion
-		#region Gender/Race/GetPronoun
+		#region Stats, Resists
+		/// <summary>
+		/// The name of the states
+		/// </summary>
+		public static readonly string[] STAT_NAMES = new string[]{"Unknown Stat","Strength", "Dexterity", "Constitution", "Quickness", "Intelligence",
+									"Piety", "Empathy", "Charisma"};
 
-        /// <summary>
-        /// Holds the player's race id
-        /// </summary>
-        protected int m_race;
+		/// <summary>
+		/// base values for char stats
+		/// </summary>
+		protected readonly short[] m_charStat = new short[8];
+		/// <summary>
+		/// get a unmodified char stat value
+		/// </summary>
+		/// <param name="stat"></param>
+		/// <returns></returns>
+		public int GetBaseStat(eStat stat)
+		{
+			return m_charStat[stat-eStat._First];
+		}
+		/// <summary>
+		/// changes a base stat value
+		/// </summary>
+		/// <param name="stat"></param>
+		/// <param name="amount"></param>
+		public virtual void ChangeBaseStat(eStat stat, short amount)
+		{
+			m_charStat[stat-eStat._First] += amount;
+		}
 
-        /// <summary>
-        /// Gets or sets this player's race id
-        /// </summary>
-        public int Race
-        {
-            get { return m_race; }
-            set { m_race = value; }
-        }
-
-        /// <summary>
-        /// Holds the player's gender
-        /// </summary>
-        private int m_gender;
-
-        /// <summary>
-        /// Male or female character
-        /// </summary>
-        public int Gender
-        {
-            get { return m_gender; }
-            set { m_gender = value; }
-        }
-
-        /// <summary>
-        /// Pronoun of this player in case you need to refer it in 3rd person
-        /// http://webster.commnet.edu/grammar/cases.htm
-        /// </summary>
-        /// <param name="firstLetterUppercase"></param>
-        /// <param name="form">0=Subjective, 1=Possessive, 2=Objective</param>
-        /// <returns>pronoun of this object</returns>
-        public override string GetPronoun(int form, bool firstLetterUppercase)
-        {
-            if (Gender == 0) // male
-                switch (form)
-                {
-                    default:
-                        // Subjective
-                        if (firstLetterUppercase)
-                            return "He";
-                        else
-                            return "he";
-                    case 1:
-                        // Possessive
-                        if (firstLetterUppercase)
-                            return "His";
-                        else
-                            return "his";
-                    case 2:
-                        // Objective
-                        if (firstLetterUppercase)
-                            return "Him";
-                        else
-                            return "him";
-                }
-            else if (Gender == 1)
-                // female
-                switch (form)
-                {
-                    default:
-                        // Subjective
-                        if (firstLetterUppercase)
-                            return "She";
-                        else
-                            return "she";
-                    case 1:
-                        // Possessive
-                        if (firstLetterUppercase)
-                            return "Her";
-                        else
-                            return "her";
-                    case 2:
-                        // Objective
-                        if (firstLetterUppercase)
-                            return "Her";
-                        else
-                            return "her";
-                }
-            else
-                return base.GetPronoun(form, firstLetterUppercase);
-        }
-
-        #endregion
-        #region Stats, Resists
-        /// <summary>
+		/// <summary>
 		/// this field is just for convinience and speed purposes
 		/// converts the damage types to resist fields
 		/// </summary>
@@ -3649,16 +3555,7 @@ namespace DOL.GS
 			}
 
 			//If we are fully healed, we stop the timer
-			if(Health >= MaxHealth)
-			{
-				//We clean all damagedealers if we are fully healed,
-				//no special XP calculations need to be done
-				lock(m_xpGainers.SyncRoot)
-				{
-					//DOLConsole.WriteLine(this.Name+": Health=100% -> clear xpgainers");
-					m_xpGainers.Clear();
-				}
-				
+			if(Health>=MaxHealth) {
 				return 0;
 			}
 
@@ -3718,7 +3615,7 @@ namespace DOL.GS
 		/// <param name="selfRegenerationTimer">timer calling this function</param>
 		protected virtual int EnduranceRegenerationTimerCallback(RegionTimer selfRegenerationTimer)
 		{
-			if (EndurancePercent < 100)
+			if (Endurance<MaxEndurance)
 			{
 				int regen = GetModified(eProperty.EnduranceRegenerationRate);
 				if (regen > 0)
@@ -3726,7 +3623,7 @@ namespace DOL.GS
 					ChangeEndurance(this, eEnduranceChangeType.Regenerate, regen);
 				}
 			}
-			if (EndurancePercent >= 100) return 0;
+			if (Endurance >= MaxEndurance) return 0;
 
 			return 500 + Util.Random(1000); // 1000ms +-500ms;
 		}
@@ -3737,13 +3634,25 @@ namespace DOL.GS
 		/// </summary>
 		protected int m_health;
 		/// <summary>
+		/// Maxiumum value that can be in m_health
+		/// </summary>
+		//protected int m_maxHealth;
+		/// <summary>
 		/// Amount of mana
 		/// </summary>
 		protected int m_mana;
 		/// <summary>
-		/// Percent of endurance
+		/// Maximum value that can be in m_mana
 		/// </summary>
-		protected byte m_endurancePercent;
+		//protected int m_maxMana;
+		/// <summary>
+		/// Amount of endurance
+		/// </summary>
+		protected int m_endurance;
+		/// <summary>
+		/// Maximum value that can be in m_endurance
+		/// </summary>
+		protected int m_maxEndurance;
 
 		/// <summary>
 		/// Gets/sets the object health
@@ -3751,16 +3660,52 @@ namespace DOL.GS
 		public virtual int Health
 		{
 			get { return m_health; }
-			set { m_health = value; }
+			set
+			{
+
+				int maxhealth = MaxHealth;
+				if(value >= maxhealth)
+				{
+					m_health = maxhealth;
+
+					// noret: i see a problem here when players get not RPs after this player was healed to full
+					// either move this to GameNPC or add a check.
+
+					//We clean all damagedealers if we are fully healed,
+					//no special XP calculations need to be done
+					lock(m_xpGainers.SyncRoot)
+					{
+						//DOLConsole.WriteLine(this.Name+": Health=100% -> clear xpgainers");
+						m_xpGainers.Clear();
+					}
+				}
+				else if (value > 0)
+				{
+					m_health = value;
+				}
+				else
+				{
+					m_health = 0;
+				}
+
+				if (Alive && m_health < maxhealth)
+				{
+					StartHealthRegeneration();
+				}
+			}
 		}
 
 		/// <summary>
-		/// Gets the maximum amount of health
+		/// Gets/sets the maximum amount of health
 		/// </summary>
 		public virtual int MaxHealth
 		{
 			get	{ return GetModified(eProperty.MaxHealth); }
-			// no set
+//			set
+//			{
+//				m_maxHealth = value;
+//				Health = Health; //cut extra hit points if there are any or start regeneration
+//			}
 		}
 
 		/// <summary>
@@ -3780,7 +3725,16 @@ namespace DOL.GS
 		public virtual int Mana
 		{
 			get { return m_mana; }
-			set { m_mana = value; }
+			set
+			{
+				int maxmana = MaxMana;
+				m_mana = Math.Min(value, maxmana);
+				m_mana = Math.Max(m_mana, 0);
+
+				if(Alive && m_mana < maxmana) {
+					StartPowerRegeneration();
+				}
+			}
 		}
 
 		/// <summary>
@@ -3792,7 +3746,11 @@ namespace DOL.GS
 			{
 				return GetModified(eProperty.MaxMana);
 			}
-			// no set
+//			set
+//			{
+//				m_maxMana = value;
+//				Mana=Mana; //cut extra mana points if there are any or start regeneration
+//			}
 		}
 
 		/// <summary>
@@ -3807,19 +3765,42 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Gets and set the endurance in percent
+		/// Gets/sets the object endurance
+		/// </summary>
+		public virtual int Endurance
+		{
+			get { return m_endurance; }
+			set
+			{
+				m_endurance = Math.Min(value, m_maxEndurance);
+				m_endurance = Math.Max(m_endurance, 0);
+				if (Alive && m_endurance < m_maxEndurance) {
+					StartEnduranceRegeneration();
+				}
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets the maximum endurance of this living
+		/// </summary>
+		public virtual int MaxEndurance
+		{
+			get { return m_maxEndurance; }
+			set
+			{
+				m_maxEndurance=value;
+				Endurance=Endurance; //cut extra end points if there are any or start regeneration
+			}
+		}
+
+		/// <summary>
+		/// Gets the endurance in percent of maximum
 		/// </summary>
 		public virtual byte EndurancePercent
 		{
-			get { return m_endurancePercent; }
-			set
+			get
 			{
-				m_endurancePercent = Math.Min(value, (byte)100);
-				m_endurancePercent = Math.Max(m_endurancePercent, (byte)0);
-				if (Alive && m_endurancePercent < 100) 
-				{
-					StartEnduranceRegeneration();
-				}
+				return (byte) (MaxEndurance <= 0 ? 0 : ((Endurance*100)/MaxEndurance));
 			}
 		}
 
@@ -3909,12 +3890,12 @@ namespace DOL.GS
 		/// <summary>
 		/// Holds the Living's Coordinate inside the current Region
 		/// </summary>
-		protected Point	m_groundTarget;
+		protected Point3D	m_groundTarget;
 
 		/// <summary>
 		/// Gets the current direction the Object is facing
 		/// </summary>
-		public override int Heading
+		public override ushort Heading
 		{
 			get { return base.Heading; }
 			set
@@ -4008,12 +3989,21 @@ namespace DOL.GS
 			}
 		}
 		/// <summary>
-		/// Gets or sets the Living's ground-target Coordinate inside the current Region
+		/// Gets the Living's ground-target Coordinate inside the current Region
 		/// </summary>
-		public virtual Point GroundTarget
+		public virtual Point3D GroundTarget
 		{
 			get { return m_groundTarget; }
-			set { m_groundTarget = value; }
+		}
+
+		/// <summary>
+		/// Sets the Living's ground-target Coordinates inside the current Region
+		/// </summary>
+		public virtual void SetGroundTarget(int groundX, int groundY, int groundZ)
+		{
+			m_groundTarget.X = groundX;
+			m_groundTarget.Y = groundY;
+			m_groundTarget.Z = groundZ;
 		}
 
 		/// <summary>
@@ -4044,6 +4034,11 @@ namespace DOL.GS
 		private int  m_movementStartTick;
 
 		/// <summary>
+		/// Holds all areas this player is currently within
+		/// </summary>
+		private IList m_currentAreas;
+		
+		/// <summary>
 		/// The X addition per coordinate of forward movement
 		/// </summary>
 		protected float m_xAddition;
@@ -4057,21 +4052,6 @@ namespace DOL.GS
 		/// The Z addition per coordinate of forward movement
 		/// </summary>
 		protected float m_zAddition;
-		
-		/// <summary>
-		/// The living's position cache.
-		/// </summary>
-		protected Point m_positionCache;
-		
-		/// <summary>
-		/// The position cache time stamp.
-		/// </summary>
-		protected int m_positionCacheTick;
-
-		/// <summary>
-		/// The position cache time expiration flag, forces cache update.
-		/// </summary>
-		protected bool m_positionCacheExpired = true;
 
 		/// <summary>
 		/// Gets the X addition per coordinate of forward movement
@@ -4109,12 +4089,11 @@ namespace DOL.GS
 			}
 			else
 			{
-				double h = Heading/HEADING_CONST;
+				float h = (float)(Heading/HEADING_CONST);
 				m_xAddition = (float)(-Math.Sin(h)*speed*0.001);
 				m_yAddition = (float)(Math.Cos(h)*speed*0.001);
 				m_zAddition = 0f;
 			}
-			m_positionCacheExpired = true;
 //			log.WarnFormat("{0} living pos addition set to ({1} {2} {3})", Name, m_xAddition, m_yAddition, m_zAddition);
 		}
 		
@@ -4123,52 +4102,84 @@ namespace DOL.GS
 		/// </summary>
 		public int MovementStartTick
 		{
-			get { return m_movementStartTick; }
-			set { m_movementStartTick = value; }
+			get
+			{
+				return m_movementStartTick;
+			}
+			set
+			{
+				m_movementStartTick=value;
+			}
 		}
 		/// <summary>
 		/// Returns if the npc is moving or not
 		/// </summary>
 		public virtual bool IsMoving
 		{
-			get { return m_currentSpeed != 0; }
+			get
+			{
+				return m_currentSpeed!=0;
+			}
 		}
-
 		/// <summary>
-		/// Gets or sets the object's position in the region.
+		/// Gets the current position of this living.
 		/// </summary>
-		public override Point Position
+		public override int X
 		{
 			get
 			{
-				int tick = Environment.TickCount;
-				if (tick == m_positionCacheTick && !m_positionCacheExpired)
-					return m_positionCache;
-
-				m_positionCacheExpired = false;
-				m_positionCacheTick = tick;
-				double timeSinceMoved = tick - m_movementStartTick;
-				m_positionCache.X = m_position.X + (int) (timeSinceMoved*m_xAddition);
-				m_positionCache.Y = m_position.Y + (int) (timeSinceMoved*m_yAddition);
-				m_positionCache.Z = m_position.Z + (int) (timeSinceMoved*m_zAddition);
-
-				return m_positionCache;
+				if(!IsMoving)
+					return base.X;
+				return (int)(base.X+((Environment.TickCount-MovementStartTick)*m_xAddition));
 			}
-			set { base.Position = value; }
+			set
+			{
+				base.X=value;
+			}
+		}
+		/// <summary>
+		/// Gets the current position of this living.
+		/// </summary>
+		public override int Y
+		{
+			get
+			{
+				if(!IsMoving)
+					return base.Y;
+				return (int)(base.Y+((Environment.TickCount-MovementStartTick)*m_yAddition));
+			}
+			set
+			{
+				base.Y=value;
+			}
+		}
+		/// <summary>
+		/// Gets the current position of this living.
+		/// </summary>
+		public override int Z
+		{
+			get
+			{
+				if(!IsMoving)
+					return base.Z;
+				return (int)(base.Z+((Environment.TickCount-MovementStartTick)*m_zAddition));
+			}
+			set
+			{
+				base.Z=value;
+			}
 		}
 
 		/// <summary>
-		/// Gets the position this object will have in the future.
+		/// Gets the position this object will have in the future
 		/// </summary>
-		/// <param name="timeDiff">The difference between now and "the future" in ms.</param>
-		/// <returns>The future point.</returns>
-		public virtual Point GetFuturePosition(int timeDiff)
+		/// <param name="x">out future x</param>
+		/// <param name="y">out future y</param>
+		/// <param name="timeDiff">the difference between now and "the future" in ms</param>
+		public virtual void GetFuturePosition(out int x, out int y, int timeDiff)
 		{
-			Point p = Position;
-			p.X += (int) (timeDiff*m_xAddition);
-			p.Y += (int) (timeDiff*m_yAddition);
-			p.Z += (int) (timeDiff*m_zAddition);
-			return p;
+			x=(int)(X+(timeDiff*m_xAddition));
+			y=(int)(Y+(timeDiff*m_yAddition));
 		}
 
 		/// <summary>
@@ -4176,16 +4187,27 @@ namespace DOL.GS
 		/// over region boundaries
 		/// </summary>
 		/// <param name="regionID">new regionid</param>
-		/// <param name="newPosition">The new position.</param>
+		/// <param name="x">new x</param>
+		/// <param name="y">new y</param>
+		/// <param name="z">new z</param>
 		/// <param name="heading">new heading</param>
 		/// <returns>true if moved</returns>
-		public override bool MoveTo(ushort regionID, Point newPosition, ushort heading)
+		public override bool MoveTo(ushort regionID, int x, int y, int z, ushort heading)
 		{
-			if (regionID != RegionId)
+			if (regionID != CurrentRegionID)
 			{
 				CancelAllConcentrationEffects();
 			}
-			return base.MoveTo(regionID, newPosition, heading);
+			return base.MoveTo(regionID, x, y, z, heading);
+		}
+
+		/// <summary>
+		/// Holds all areas this player is currently within
+		/// </summary>
+		public IList CurrentAreas
+		{
+			get { return m_currentAreas; }
+			set { m_currentAreas = value; }
 		}
 
 		/// <summary>
@@ -4282,10 +4304,10 @@ namespace DOL.GS
 		public virtual bool Whisper(GameLiving target, string str)
 		{
 			if(target==null || str==null) return false;
-			if(!Position.CheckSquareDistance(target.Position, WorldMgr.WHISPER_DISTANCE*WorldMgr.WHISPER_DISTANCE))
+			if(!WorldMgr.CheckDistance(this,target,WorldMgr.WHISPER_DISTANCE))
 				return false;
 			Notify(GameLivingEvent.Whisper, this, new WhisperEventArgs(target, str));
-			return target.WhisperReceive(this, str);
+			return target.WhisperReceive(this,str);
 		}
 		/// <summary>
 		/// Makes this living do an emote-animation
@@ -4308,14 +4330,14 @@ namespace DOL.GS
 		/// <param name="source">Source from where to get the item</param>
 		/// <param name="item">Item to get</param>
 		/// <returns>true if the item was successfully received</returns>
-		public override bool ReceiveItem(GameLiving source, GenericItem item)
+		public override bool ReceiveItem(GameLiving source, InventoryItem item)
 		{
 			if(source==null || item==null) return false;
 
 			Notify(GameLivingEvent.ReceiveItem, this, new ReceiveItemEventArgs(source, this, item));
 
 			//If the item has been removed by the event handlers : return
-			if(item == null || item.Owner == null)
+			if(item == null || item.OwnerID == null)
 			{
 				return true;
 			}
@@ -4355,10 +4377,16 @@ namespace DOL.GS
 		/// <summary>
 		/// Get/Set inventory
 		/// </summary>
-		public virtual IGameInventory Inventory
+		public IGameInventory Inventory
 		{
-			get { return m_inventory; }
-			set { m_inventory = value; }
+			get
+			{
+				return m_inventory;
+			}
+			set
+			{
+				m_inventory = value;
+			}
 		}
 		#endregion
 		#region Effects
@@ -4564,7 +4592,7 @@ namespace DOL.GS
 		{
 			m_guildName = string.Empty;
 			m_targetObjectWeakReference = new WeakRef(null);
-			m_groundTarget = Point.Zero;
+			m_groundTarget = new Point3D(0,0,0);
 
 			//Set all combat properties
 			m_activeWeaponSlot = eActiveWeaponSlot.Standard;
@@ -4579,9 +4607,12 @@ namespace DOL.GS
 			m_concEffects = new ConcentrationList(this);
 			m_attackers = new ArrayList(1);
 
-			//m_health = 1;
+			m_health = 1;
 			m_mana = 1;
-			m_endurancePercent = 1;
+			m_endurance = 1;
+			m_maxEndurance = 1;
+
+			m_currentAreas = new ArrayList(1);
 		}
 	}
 }

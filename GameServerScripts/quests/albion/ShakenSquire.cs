@@ -31,7 +31,7 @@
 using System;
 using System.Reflection;
 using DOL.AI.Brain;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
@@ -46,45 +46,12 @@ using log4net;
 
 namespace DOL.GS.Quests.Albion
 {
-	/* The first thing we do, is to declare the quest requirement
-	* class linked with the new Quest. To do this, we derive 
-	* from the abstract class AbstractQuestDescriptor
-	*/
-	public class ShakenSquireDescriptor : AbstractQuestDescriptor
-	{
-		/* This is the type of the quest class linked with 
-		 * this requirement class, you must override the 
-		 * base methid like that
-		 */
-		public override Type LinkedQuestType
-		{
-			get { return typeof(ShakenSquire); }
-		}
-
-		/* This value is used to retrieves the minimum level needed
-		 *  to be able to make this quest. Override it only if you need, 
-		 * the default value is 1
-		 */
-		public override int MinLevel
-		{
-			get { return 6; }
-		}
-
-		/* This value is used to retrieves how maximum level needed
-		 * to be able to make this quest. Override it only if you need, 
-		 * the default value is 50
-		 */
-		public override int MaxLevel
-		{
-			get { return 9; }
-		}
-	}
-
-	/* The second thing we do, is to declare the class we create
-	 * as Quest. We must make it persistant using attributes, to
-	 * do this, we derive from the abstract class AbstractQuest
+	/* The first thing we do, is to declare the class we create
+	 * as Quest. To do this, we derive from the abstract class
+	 * AbstractQuest
+	 * 	 
 	 */
-	[NHibernate.Mapping.Attributes.Subclass(NameType = typeof(ShakenSquire), ExtendsType = typeof(AbstractQuest))]
+
 	public class ShakenSquire : BaseQuest
 	{
 		/// <summary>
@@ -102,11 +69,33 @@ namespace DOL.GS.Quests.Albion
 		 * 
 		 */
 		protected const string questTitle = "Shaken Squire";
+		protected const int minimumLevel = 6;
+		protected const int maximumLevel = 9;
 
 		private static GameNPC sirJerem = null;
 		private static GameNPC squireGalune = null;
 
 		private static GameNPC smallSpider = null;
+
+		
+		/* We need to define the constructors from the base class here, else there might be problems
+		 * when loading this quest...
+		 */
+		public ShakenSquire() : base()
+		{
+		}
+
+		public ShakenSquire(GamePlayer questingPlayer) : this(questingPlayer, 1)
+		{
+		}
+
+		public ShakenSquire(GamePlayer questingPlayer, int step) : base(questingPlayer, step)
+		{
+		}
+
+		public ShakenSquire(GamePlayer questingPlayer, DBQuest dbQuest) : base(questingPlayer, dbQuest)
+		{
+		}
 
 		/* The following method is called automatically when this quest class
 		 * is loaded. You might notice that this method is the same as in standard
@@ -156,15 +145,15 @@ namespace DOL.GS.Quests.Albion
 					log.Warn("Could not find " + sirJerem.Name + ", creating him ...");
 				sirJerem.GuildName = "Part of " + questTitle + " Quest";
 				sirJerem.Realm = (byte) eRealm.Albion;
-				sirJerem.RegionId = 1;
+				sirJerem.CurrentRegionID = 1;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
-				template.AddNPCEquipment(eInventorySlot.TwoHandWeapon, 68, 21, 0);
+				template.AddNPCEquipment(eInventorySlot.TwoHandWeapon, 68, 21);
 				template.AddNPCEquipment(eInventorySlot.HeadArmor, 64);
 				template.AddNPCEquipment(eInventorySlot.HandsArmor, 49);
 				template.AddNPCEquipment(eInventorySlot.FeetArmor, 50);
 				template.AddNPCEquipment(eInventorySlot.TorsoArmor, 46);
-				template.AddNPCEquipment(eInventorySlot.Cloak, 57, 27, 0);
+				template.AddNPCEquipment(eInventorySlot.Cloak, 57, 27);
 				template.AddNPCEquipment(eInventorySlot.LegsArmor, 47);
 				template.AddNPCEquipment(eInventorySlot.ArmsArmor, 158);
 				sirJerem.Inventory = template.CloseTemplate();
@@ -172,7 +161,9 @@ namespace DOL.GS.Quests.Albion
 
 				sirJerem.Size = 51;
 				sirJerem.Level = 38;
-				sirJerem.Position = new Point(573815, 530850, 2933);
+				sirJerem.X = 573815;
+				sirJerem.Y = 530850;
+				sirJerem.Z = 2933;
 				sirJerem.Heading = 2685;
 
 				//You don't have to store the created mob in the db if you don't want,
@@ -197,7 +188,7 @@ namespace DOL.GS.Quests.Albion
 					log.Warn("Could not find " + squireGalune.Name + ", creating him ...");
 				squireGalune.GuildName = "Part of " + questTitle + " Quest";
 				squireGalune.Realm = (byte) eRealm.Albion;
-				squireGalune.RegionId = 21;
+				squireGalune.CurrentRegionID = 21;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
 				template.AddNPCEquipment(eInventorySlot.RightHandWeapon, 320);
@@ -210,7 +201,9 @@ namespace DOL.GS.Quests.Albion
 
 				squireGalune.Size = 45;
 				squireGalune.Level = 8;
-				squireGalune.Position = new Point(33219, 31931, 16240);
+				squireGalune.X = 33219;
+				squireGalune.Y = 31931;
+				squireGalune.Z = 16240;
 				squireGalune.Heading = 477;
 
 				//You don't have to store the created mob in the db if you don't want,
@@ -243,10 +236,12 @@ namespace DOL.GS.Quests.Albion
 					log.Warn("Could not find " + smallSpider.Name + ", creating him ...");
 				smallSpider.GuildName = "Part of " + questTitle + " Quest";
 				smallSpider.Realm = (byte) eRealm.None;
-				smallSpider.RegionId = 21;
+				smallSpider.CurrentRegionID = 21;
 				smallSpider.Size = 17;
 				smallSpider.Level = 5;
-				smallSpider.Position = new Point(33158, 31973, 16240);
+				smallSpider.X = 33158;
+				smallSpider.Y = 31973;
+				smallSpider.Z = 16240;
 
 				StandardMobBrain brain = new StandardMobBrain();
 				brain.AggroLevel = 0;
@@ -284,7 +279,7 @@ namespace DOL.GS.Quests.Albion
 			GameEventMgr.AddHandler(squireGalune, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToSquireGalune));
 
 			/* Now we bring to Ydenia the possibility to give this quest to players */
-			QuestMgr.AddQuestDescriptor(sirJerem, typeof(ShakenSquireDescriptor));
+			sirJerem.AddQuestToGive(typeof (ShakenSquire));
 
 			if (log.IsInfoEnabled)
 				log.Info("Quest \"" + questTitle + "\" initialized");
@@ -317,7 +312,7 @@ namespace DOL.GS.Quests.Albion
 			GameEventMgr.RemoveHandler(squireGalune, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToSquireGalune));
 
 			/* Now we remove to Ydenia the possibility to give this quest to players */
-			QuestMgr.RemoveQuestDescriptor(sirJerem, typeof(ShakenSquireDescriptor));
+			sirJerem.RemoveQuestToGive(typeof (ShakenSquire));
 		}
 
 
@@ -333,7 +328,7 @@ namespace DOL.GS.Quests.Albion
 			if (player == null)
 				return;
 
-			if (QuestMgr.CanGiveQuest(typeof(ShakenSquire), player, sirJerem) <= 0)
+			if(sirJerem.CanGiveQuest(typeof (ShakenSquire), player)  <= 0)
 				return;
 
 			//We also check if the player is already doing the quest
@@ -412,6 +407,10 @@ namespace DOL.GS.Quests.Albion
 								quest.FinishQuest();
 							}
 							break;
+
+						case "abort":
+							player.Out.SendCustomDialog("Do you really want to abort this quest, \nall items gained during quest will be lost?", new CustomDialogResponse(CheckPlayerAbortQuest));
+							break;
 					}
 				}
 			}
@@ -478,6 +477,48 @@ namespace DOL.GS.Quests.Albion
 			}
 		}
 
+		/// <summary>
+		/// This method checks if a player qualifies for this quest
+		/// </summary>
+		/// <returns>true if qualified, false if not</returns>
+		public override bool CheckQuestQualification(GamePlayer player)
+		{
+			// if the player is already doing the quest his level is no longer of relevance
+			if (player.IsDoingQuest(typeof (ShakenSquire)) != null)
+				return true;
+
+			// This checks below are only performed is player isn't doing quest already
+
+			if (player.Level < minimumLevel || player.Level > maximumLevel)
+				return false;
+
+			return true;
+		}
+
+		
+		/* This is our callback hook that will be called when the player clicks
+		 * on any button in the quest offer dialog. We check if he accepts or
+		 * declines here...
+		 */
+
+		private static void CheckPlayerAbortQuest(GamePlayer player, byte response)
+		{
+			ShakenSquire quest = player.IsDoingQuest(typeof (ShakenSquire)) as ShakenSquire;
+
+			if (quest == null)
+				return;
+
+			if (response == 0x00)
+			{
+				SendSystemMessage(player, "Good, no go out there and finish your work!");
+			}
+			else
+			{
+				SendSystemMessage(player, "Aborting Quest " + questTitle + ". You can start over again if you want.");
+				quest.AbortQuest();
+			}
+		}
+
 		/* This is our callback hook that will be called when the player clicks
 		 * on any button in the quest offer dialog. We check if he accepts or
 		 * declines here...
@@ -487,7 +528,7 @@ namespace DOL.GS.Quests.Albion
 		{
 			//We recheck the qualification, because we don't talk to players
 			//who are not doing the quest
-			if (QuestMgr.CanGiveQuest(typeof(ShakenSquire), player, sirJerem) <= 0)
+			if(sirJerem.CanGiveQuest(typeof (ShakenSquire), player)  <= 0)
 				return;
 
 			if (player.IsDoingQuest(typeof (ShakenSquire)) != null)
@@ -500,7 +541,7 @@ namespace DOL.GS.Quests.Albion
 			else
 			{
 				//Check if we can add the quest!
-				if (!QuestMgr.GiveQuestToPlayer(typeof(ShakenSquire), player, sirJerem))
+				if (!sirJerem.GiveQuest(typeof (ShakenSquire), player, 1))
 					return;
 
 				SendReply(player, "Thank you for agreeing to help. I'm fairly sure that Master Graent has been telling him all kinds of tales about the Tomb of Mithra to the east.  Come to think of it, I know I've seen the squire speaking with him more than [once].");
@@ -537,10 +578,9 @@ namespace DOL.GS.Quests.Albion
 					case 3:
 						return "[Step #3] Now that you've defeated the spider, speak to Squire Galune.";
 					case 4:
-						return "[Step #4] You've rescued Squire Galune from the Tomb of Mithra. Travel west from the dungeon to Prydwen Keep and let Sir Jerem know that you found his squire.";
-					default:
-						return "[Step #" + Step + "] No Description entered for this step!";
+						return "[Step #4] You've rescued Squire Galune from the Tomb of Mithra. Travel west from the dungeon to Prydwen Keep and let Sir Jerem know that you found his squire."; 
 				}
+				return base.Description;
 			}
 		}
 
@@ -556,9 +596,7 @@ namespace DOL.GS.Quests.Albion
 				if(Step == 2)
 				{
 					EnemyKilledEventArgs gArgs = (EnemyKilledEventArgs) args;
-					Point tpos = gArgs.Target.Position;
-					Point spos = smallSpider.Position;
-					if (gArgs.Target.Name == "small spider" && gArgs.Target.Region == smallSpider.Region && tpos.X == spos.X && tpos.Y == spos.Y)
+					if (gArgs.Target.Name == "small spider" && gArgs.Target.CurrentRegionID == smallSpider.CurrentRegionID && gArgs.Target.X == smallSpider.X && gArgs.Target.Y == smallSpider.Y)
 					{
 						Step = 3;
 						return;

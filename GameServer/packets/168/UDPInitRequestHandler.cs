@@ -17,19 +17,12 @@
  *
  */
 using System;
-using System.Reflection;
-using log4net;
 
 namespace DOL.GS.PacketHandler.v168
 {
 	[PacketHandlerAttribute(PacketHandlerType.UDP,0xBC^168,"Handles UDP init")]
 	public class UDPInitRequestHandler : IPacketHandler
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			client.Out.SendUDPInitReply();

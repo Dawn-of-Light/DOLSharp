@@ -75,12 +75,12 @@ namespace DOL.GS.Scripts
 			{
 				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Instruments));
 				player.AddSpellLine(SkillBase.GetSpellLine("Instruments"));
-				player.AddAbility(SkillBase.GetAbility(Abilities.Shield, (int)eShieldSize.Small));
+				player.AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Small));
 				player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Instruments));
 			}
 			if (player.Level >= 10)
 			{				
-				player.AddAbility(SkillBase.GetAbility(Abilities.AlbArmor, (int)eArmorLevel.Medium));
+				player.AddAbility(SkillBase.GetAbility(Abilities.AlbArmor, ArmorLevel.Studded));
 			}
 			if (player.Level >= 15)
 			{
@@ -89,7 +89,7 @@ namespace DOL.GS.Scripts
 			}
 			if (player.Level >= 20)
 			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.AlbArmor, (int)eArmorLevel.High));
+				player.AddAbility(SkillBase.GetAbility(Abilities.AlbArmor, ArmorLevel.Chain));
 			}
 		}
 

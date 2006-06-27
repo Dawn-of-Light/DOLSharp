@@ -19,7 +19,7 @@
 using System.Collections;
 using System.Collections.Specialized;
 using System;
-using DOL.GS.Database;
+using DOL.Database;
 
 namespace DOL.GS
 {
@@ -28,148 +28,125 @@ namespace DOL.GS
 	/// </summary>
 	public class Alliance
 	{
-		#region Declaraction
-		/// <summary>
-		/// The unique alliance identifier
-		/// </summary>
-		protected int m_id;
-
-		/// <summary>
-		/// Holds the alliance motd
-		/// </summary>
-		private string	m_amotd;
-
-		/// <summary>
-		/// Holds all alliance guilds
-		/// </summary>
-		protected IList m_allianceGuilds;
-
-		/// <summary>
-		/// Holds the alliance leader
-		/// </summary>
-		protected Guild m_allianceLeader;
-
-		/// <summary>
-		/// Gets or sets the unique alliance identifier
-		/// </summary>
-		public int AllianceID
+		protected ArrayList m_guilds;
+		protected DBAlliance m_dballiance;
+		public Alliance()
 		{
-			get	{ return m_id; }
-			set	{ m_id = value; }
+			m_dballiance = null;
+			m_guilds = new ArrayList(2);
 		}
-
-		/// <summary>
-		/// Gets or sets the alliance motd
-		/// </summary>
-		public string AMotd
-		{
-			get { return m_amotd; }
-			set	{ m_amotd = value; }
-		}
-
-		/// <summary>
-		/// Gets or sets all alliances guilds
-		/// </summary>
-		public IList AllianceGuilds
+		public ArrayList Guilds
 		{
 			get
 			{
-				if(m_allianceGuilds == null) m_allianceGuilds = new ArrayList();
-				return m_allianceGuilds;
+				return m_guilds;
 			}
 			set
 			{
-				m_allianceGuilds = value;
+				m_guilds = value;
 			}
 		}
-
-		/// <summary>
-		/// Gets or sets the alliance leader
-		/// </summary>
-		public Guild AllianceLeader
+		public DBAlliance Dballiance
 		{
 			get
 			{
-				return m_allianceLeader;
+				return m_dballiance;
 			}
 			set
 			{
-				m_allianceLeader = value;
+				m_dballiance = value;
 			}
 		}
-		#endregion
-
-		#region AddGuildToAlliance / RemoveGuildFromAlliance
-		/// <summary>
-		/// Add a guild to the alliance
-		/// </summary>
-		/// <param name="guildToAdd">the guild to add</param>
-		public bool AddGuildToAlliance(Guild guildToAdd)
+		
+		#region IList
+		public void AddGuild(Guild myguild)
 		{
-			if(guildToAdd.Alliance.AllianceLeader != guildToAdd || guildToAdd.Alliance.AllianceGuilds.Count > 1) return false; //can't join a alliance if already in another
-
-			if(m_allianceGuilds.Contains(guildToAdd)) return false; // already a member of this alliance
-			
-			GameServer.Database.DeleteObject(guildToAdd.Alliance);  //delete the empty alliance
-
-			guildToAdd.Alliance = this;
-			lock(m_allianceGuilds.SyncRoot)
+			lock (Guilds)
 			{
-				m_allianceGuilds.Add(guildToAdd);
+				myguild.alliance = this;
+				Guilds.Add(myguild);
+				myguild.theGuildDB.AllianceID = m_dballiance.ObjectId;
+				m_dballiance.DBguilds=null;
+				GameServer.Database.SaveObject(m_dballiance);
+				GameServer.Database.FillObjectRelations(m_dballiance);
+				SendMessageToAllianceMembers(myguild.Name +" has joined the alliance of "+m_dballiance.AllianceName, PacketHandler.eChatType.CT_System, PacketHandler.eChatLoc.CL_SystemWindow);
 			}
-			GameServer.Database.SaveObject(guildToAdd);
-			return true;
 		}
-
-		/// <summary>
-		/// Remove a guild from the alliance
-		/// </summary>
-		/// <param name="guildToRemove">the guild to remove</param>
-		public bool RemoveGuildFromAlliance(Guild guildToRemove)
+		public void RemoveGuild(Guild myguild)
 		{
-			if(m_allianceLeader == guildToRemove) return false; //can't leave your own alliance
-
-			lock(m_allianceGuilds.SyncRoot)
+			lock (Guilds)
 			{
-				if(!m_allianceGuilds.Contains(guildToRemove)) return false;// guild not in the alliance
-			
-				m_allianceGuilds.Remove(guildToRemove);
+				myguild.alliance = null;
+				Guilds.Remove(myguild);
+				myguild.theGuildDB.AllianceID = "";
+				m_dballiance.DBguilds=null;
+				GameServer.Database.SaveObject(m_dballiance);
+				GameServer.Database.FillObjectRelations(m_dballiance);
+				SendMessageToAllianceMembers(myguild.Name +" has left the alliance of "+m_dballiance.AllianceName, PacketHandler.eChatType.CT_System, PacketHandler.eChatLoc.CL_SystemWindow);
 			}
-
-			guildToRemove.Alliance = new Alliance();
-			guildToRemove.Alliance.AMotd = "Your guild have no alliances.";
-			guildToRemove.Alliance.AllianceLeader = guildToRemove;
-			guildToRemove.Alliance.AllianceGuilds.Add(guildToRemove);
-			
-			GameServer.Database.SaveObject(guildToRemove);	// save the guild in a new empty alliance
-			
-			if(m_allianceGuilds.Count <= 1) // only the leader guild stay in the alliance => empty alliance
+		}
+		public void Clear()
+		{
+			lock (Guilds)
 			{
-				m_amotd = "Your guild have no alliances.";
-
-				SendMessageToAllianceMembers("Your alliance has been deleted!", PacketHandler.eChatType.CT_System, PacketHandler.eChatLoc.CL_SystemWindow);
-				GameServer.Database.SaveObject(this);
+				foreach(Guild guild in Guilds)
+				{
+					guild.alliance=null;
+					guild.theGuildDB.AllianceID = "";
+				}
+				Guilds.Clear();
 			}
-				
-			return true;
+		}
+		public bool Contains(Guild myguild)
+		{
+			lock (Guilds)
+			{
+				return Guilds.Contains(myguild);
+			}
 		}
 
 		#endregion
 		
-		#region SendMessageToAllianceMembers
 		/// <summary>
 		/// send message to all member of alliance
 		/// </summary>
+		/// <param name="obj"></param>
 		public void SendMessageToAllianceMembers(string msg, PacketHandler.eChatType type, PacketHandler.eChatLoc loc)
 		{
-			lock (m_allianceGuilds)
+			lock (Guilds)
 			{
-				foreach(Guild allie in m_allianceGuilds)
+				foreach(Guild guild in Guilds)
 				{
-					allie.SendMessageToGuildMembers(msg, type, loc);	// send the message to all others allies
+					guild.SendMessageToGuildMembers(msg, type, loc);
 				}
 			}
 		}
-		#endregion
+		
+		/// <summary>
+		/// Loads this alliance from an alliance table
+		/// </summary>
+		/// <param name="obj"></param>
+		public void LoadFromDatabase(DataObject obj)
+		{
+			if(!(obj is DBAlliance))
+				return;
+
+			m_dballiance = (DBAlliance)obj;
+		}
+
+		/// <summary>
+		/// Saves this alliance to database
+		/// </summary>
+		public void SaveIntoDatabase()
+		{
+			GameServer.Database.SaveObject(m_dballiance);
+			lock (Guilds)
+			{
+				foreach(Guild guild in Guilds)
+				{
+					guild.SaveIntoDatabase();
+				}
+			}
+		}
 	}
 }

@@ -17,11 +17,7 @@
  *
  */
 using System;
-using System.Collections;
-using System.Reflection;
-using DOL.Events;
 using DOL.GS.PacketHandler;
-using log4net;
 
 namespace DOL.GS.Trainer
 {
@@ -31,23 +27,8 @@ namespace DOL.GS.Trainer
 	[NPCGuildScript("Shadowblade Trainer", eRealm.Midgard)]		// this attribute instructs DOL to use this script for all "Shadowblade Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class ShadowbladeTrainer : GameTrainer
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
-		/// <summary>
-		/// This hash constrain all item template the trainer can give
-		/// </summary>	
-		private static IDictionary allStartupItems = new Hashtable();
-
-		/// <summary>
-		/// This function is called at the server startup
-		/// </summary>	
-		[GameServerStartedEvent]
-		public static void OnServerStartup(DOLEvent e, object sender, EventArgs args)
+		public ShadowbladeTrainer() : base()
 		{
-			// TODO find level 5 trainer gift
 		}
 
 		/// <summary>
@@ -60,17 +41,19 @@ namespace DOL.GS.Trainer
  			if (!base.Interact(player)) return false;
 								
 			// check if class matches.				
-			if (player.CharacterClass.ID == (int) eCharacterClass.Shadowblade) 
-			{
+			if (player.CharacterClass.ID == (int) eCharacterClass.Shadowblade) {
+
+				// popup the training window
 				player.Out.SendTrainerWindow();
-			}
-			else if (CanPromotePlayer(player)) 
-			{
-				player.Out.SendMessage(this.Name + " says, \"Do you desire to [join the House of Loki] and defend our realm as a Shadowblade?\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
-			} 
-			else 
-			{
-				player.Out.SendMessage(this.Name + " says, \"You must seek elsewhere for your training.\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
+				//player.Out.SendMessage(this.Name + " says, \"Select what you like to train.\"", eChatType.CT_Say, eChatLoc.CL_PopupWindow);												
+
+			} else {
+				// perhaps player can be promoted
+				if (CanPromotePlayer(player)) {
+					player.Out.SendMessage(this.Name + " says, \"Do you desire to [join the House of Loki] and defend our realm as a Shadowblade?\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
+				} else {
+					player.Out.SendMessage(this.Name + " says, \"You must seek elsewhere for your training.\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);							
+				}
 			}
 			return true;
  		}
@@ -97,12 +80,12 @@ namespace DOL.GS.Trainer
 			if (!base.WhisperReceive(source, text)) return false;			
 			GamePlayer player = source as GamePlayer;			
 	
-			switch (text)
-			{
-				case "join the House of Loki":
-					if (CanPromotePlayer(player)) 
-						PromotePlayer(player, (int)eCharacterClass.Shadowblade, "Welcome young Shadowblade! May your time in Midgard army be rewarding!", null);
-				
+			switch (text) {
+			case "join the House of Loki":
+				// promote player to other class
+				if (CanPromotePlayer(player)) {
+					PromotePlayer(player, (int)eCharacterClass.Shadowblade, "Welcome young Shadowblade! May your time in Midgard army be rewarding!", null);	// TODO: gifts
+				}
 				break;
 			}
 			return true;		

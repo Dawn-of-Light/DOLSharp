@@ -21,8 +21,7 @@ using System.Collections;
 using System.Reflection;
 using System.Text;
 using System.Threading;
-using DOL.GS.Database;
-using NHibernate.Expression;
+using DOL.Database;
 using log4net;
 
 namespace DOL.GS
@@ -104,9 +103,21 @@ namespace DOL.GS
 		/// <param name="slot">The equipment slot</param>
 		/// <param name="model">The equipment model</param>
 		/// <param name="color">The equipment color</param>
-		/// <param name="value">Effect for weapon and ModelExtension for armor</param>
 		/// <returns>true if added</returns>
-		public bool AddNPCEquipment(eInventorySlot slot, int model, int color, int value)
+		public bool AddNPCEquipment(eInventorySlot slot, int model, int color)
+		{
+			return AddNPCEquipment(slot, model, color, 0);
+		}
+
+		/// <summary>
+		/// Adds item to template reusing inventory item instances from other templates.
+		/// </summary>
+		/// <param name="slot">The equipment slot</param>
+		/// <param name="model">The equipment model</param>
+		/// <param name="color">The equipment color</param>
+		/// <param name="effect">The equipment effect</param>
+		/// <returns>true if added</returns>
+		public bool AddNPCEquipment(eInventorySlot slot, int model, int color, int effect)
 		{
 			lock (this)
 			{
@@ -117,34 +128,16 @@ namespace DOL.GS
 					if (slot == eInventorySlot.Invalid) return false;
 					if (m_items.Contains((int)slot)) return false;
 
-					string itemID = string.Format("{0}:{1},{2},{3}", slot, model, color, value);
-					VisibleEquipment item = (VisibleEquipment)m_usedInventoryItems[itemID];
+					string itemID = string.Format("{0}:{1},{2},{3}", slot, model, color, effect);
+					InventoryItem item = (InventoryItem)m_usedInventoryItems[itemID];
 					if (item == null)
 					{
-						bool isArmor = false;
-						foreach(eInventorySlot slt in ARMOR_SLOTS)
-						{
-							if(slot == slt)
-							{
-								isArmor = true;
-								break;
-							}
-						}
-
-						if(isArmor)
-						{
-							item = new GenericArmor();
-							((GenericArmor)item).ModelExtension = (byte)value;
-						}
-						else
-						{
-							item = new GenericWeapon();
-							((GenericWeapon)item).GlowEffect = value;
-						}
-
-						((VisibleEquipment)item).Model = model;
-						((VisibleEquipment)item).Color = color;
-						((VisibleEquipment)item).SlotPosition = (int)slot;
+						item = new InventoryItem();
+						item.Id_nb = itemID;
+						item.Model = model;
+						item.Color = color;
+						item.Effect = effect;
+						item.SlotPosition = (int)slot;
 					}
 					m_items.Add((int)slot, item);
 					return true;
@@ -186,11 +179,11 @@ namespace DOL.GS
 					{
 						m_isClosed = true;
 						StringBuilder templateID = new StringBuilder(m_items.Count*16);
-						foreach (GenericItem item in new SortedList(m_items).Values)
+						foreach (InventoryItem item in new SortedList(m_items).Values)
 						{
 							if (templateID.Length > 0)
 								templateID.Append(";");
-							templateID.Append(item.ItemID);
+							templateID.Append(item.Id_nb);
 						}
 
 						GameNpcInventoryTemplate finalTemplate = m_usedInventoryTemplates[templateID.ToString()] as GameNpcInventoryTemplate;
@@ -269,9 +262,9 @@ namespace DOL.GS
 					if (npcEquip == null) return false;
 
 					foreach (NPCEquipment npcItem in npcEquip) {
-						if (!AddNPCEquipment((eInventorySlot)npcItem.Slot, npcItem.Model, npcItem.Color, npcItem.Value)) {
+						if (!AddNPCEquipment((eInventorySlot)npcItem.Slot, npcItem.Model, npcItem.Color, npcItem.Effect)) {
 								if (log.IsWarnEnabled)
-									log.Warn("Error adding NPC equipment, ObjectId=" + npcItem.NPCEquipmentID);
+									log.Warn("Error adding NPC equipment, ObjectId=" + npcItem.ObjectId);
 						}
 					}
 					return true;
@@ -298,7 +291,7 @@ namespace DOL.GS
 					if (templateID == null)
 						throw new ArgumentNullException("templateID");
 
-					IList npcEquipment = GameServer.Database.SelectObjects(typeof(NPCEquipment), Expression.Eq("TemplateID",templateID));
+					DataObject[] npcEquipment = GameServer.Database.SelectObjects(typeof(NPCEquipment), "TemplateID = '" + templateID + "'");
 
 					// delete removed item templates
 					foreach (NPCEquipment npcItem in npcEquipment)
@@ -308,22 +301,18 @@ namespace DOL.GS
 					}
 
 					// save changed item templates
-					foreach (VisibleEquipment item in m_items.Values)
+					foreach (InventoryItem item in m_items.Values)
 					{
 						bool foundInDB = false;
 						foreach (NPCEquipment npcItem in npcEquipment)
 						{
 							if (item.SlotPosition != npcItem.Slot) continue;
 
-							if (item.Model != npcItem.Model || item.Color != npcItem.Color
-							|| (item is Armor && ((Armor)item).ModelExtension != npcItem.Value)
-							|| (item is Weapon) && ((Weapon)item).GlowEffect != npcItem.Value)
+							if (item.Model != npcItem.Model || item.Color != npcItem.Color || item.Effect != npcItem.Effect)
 							{
 								npcItem.Model = item.Model;
 								npcItem.Color = item.Color;
-								if(item is Armor) npcItem.Value = ((Armor)item).ModelExtension;
-								else if(item is Weapon) npcItem.Value = ((Weapon)item).GlowEffect;
-								else npcItem.Value = 0;
+								npcItem.Effect = item.Effect;
 								GameServer.Database.SaveObject(npcItem);
 							}
 							foundInDB = true;
@@ -335,8 +324,7 @@ namespace DOL.GS
 							npcItem.Slot = item.SlotPosition;
 							npcItem.Model = item.Model;
 							npcItem.Color = item.Color;
-							if(item is Armor) npcItem.Value = ((Armor)item).ModelExtension;
-							else if(item is Weapon) npcItem.Value = ((Weapon)item).GlowEffect;
+							npcItem.Effect = item.Effect;
 							npcItem.TemplateID = templateID;
 							GameServer.Database.AddNewObject(npcItem);
 						}
@@ -363,7 +351,7 @@ namespace DOL.GS
 		/// <param name="slot"></param>
 		/// <param name="item"></param>
 		/// <returns>false</returns>
-		public override bool AddItem(eInventorySlot slot, GenericItem item)
+		public override bool AddItem(eInventorySlot slot, InventoryItem item)
 		{
 			return false;
 		}
@@ -373,7 +361,18 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="item">the item to remove</param>
 		/// <returns>false</returns>
-		public override bool RemoveItem(GenericItem item)
+		public override bool RemoveItem(InventoryItem item)
+		{
+			return false;
+		}
+
+		/// <summary>
+		/// Overridden. Inventory template cannot be modified.
+		/// </summary>
+		/// <param name="item"></param>
+		/// <param name="count"></param>
+		/// <returns>false</returns>
+		public override bool AddCountToStack(InventoryItem item, int count)
 		{
 			return false;
 		}
@@ -384,7 +383,7 @@ namespace DOL.GS
 		/// <param name="item">the item to remove</param>
 		/// <param name="count">the count of items to be removed from the stack</param>
 		/// <returns>false</returns>
-		public override bool RemoveCountFromStack(StackableItem item, int count)
+		public override bool RemoveCountFromStack(InventoryItem item, int count)
 		{
 			return false;
 		}
@@ -406,7 +405,7 @@ namespace DOL.GS
 		/// <param name="fromItem">First Item</param>
 		/// <param name="toItem">Second Item</param>
 		/// <returns>false</returns>
-		protected override bool CombineItems(int fromItem, int toItem)
+		protected override bool CombineItems(InventoryItem fromItem, InventoryItem toItem)
 		{
 			return false;
 		}
@@ -442,10 +441,10 @@ namespace DOL.GS
 		/// <param name="minSlot">The first slot</param>
 		/// <param name="maxSlot">The last slot</param>
 		/// <returns>false</returns>
-	/*	public override bool AddTemplate(ItemTemplate template, int count, eInventorySlot minSlot, eInventorySlot maxSlot)
+		public override bool AddTemplate(ItemTemplate template, int count, eInventorySlot minSlot, eInventorySlot maxSlot)
 		{
 			return false;
-		}*/
+		}
 
 		/// <summary>
 		/// Overridden. Inventory template cannot be modified.
@@ -455,10 +454,10 @@ namespace DOL.GS
 		/// <param name="minSlot">The first slot</param>
 		/// <param name="maxSlot">The last slot</param>
 		/// <returns>false</returns>
-	/*	public override bool RemoveTemplate(string templateID, int count, eInventorySlot minSlot, eInventorySlot maxSlot)
+		public override bool RemoveTemplate(string templateID, int count, eInventorySlot minSlot, eInventorySlot maxSlot)
 		{
 			return false;
-		}*/
+		}
 
 		#endregion
 	}

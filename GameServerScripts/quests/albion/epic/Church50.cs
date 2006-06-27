@@ -32,69 +32,13 @@
 
 using System;
 using System.Reflection;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
 
 namespace DOL.GS.Quests.Albion
 {
-	/* The first thing we do, is to declare the quest requirement
- * class linked with the new Quest. To do this, we derive 
- * from the abstract class AbstractQuestDescriptor
- */
-	public class Church_50Descriptor : AbstractQuestDescriptor
-	{
-		/* This is the type of the quest class linked with 
-		 * this requirement class, you must override the 
-		 * base method like that
-		 */
-		public override Type LinkedQuestType
-		{
-			get { return typeof(Church_50); }
-		}
-
-		/* This value is used to retrieves the minimum level needed
-		 *  to be able to make this quest. Override it only if you need, 
-		 * the default value is 1
-		 */
-		public override int MinLevel
-		{
-			get { return 50; }
-		}
-
-		/* This method is used to know if the player is qualified to 
-		 * do the quest. The base method always test his level and
-		 * how many time the quest has been done. Override it only if 
-		 * you want to add a custom test (here we test also the class name)
-		 */
-		public override bool CheckQuestQualification(GamePlayer player)
-		{
-			// if the player is already doing the quest his level is no longer of relevance
-			if (player.IsDoingQuest(typeof(Church_50)) != null)
-				return true;
-
-			if (player.CharacterClass.ID != (byte)eCharacterClass.Cleric &&
-				player.CharacterClass.ID != (byte)eCharacterClass.Paladin)
-				return false;
-
-			// This checks below are only performed is player isn't doing quest already
-
-			//if (player.HasFinishedQuest(typeof(Academy_47)) == 0) return false;
-
-			//if (!CheckPartAccessible(player,typeof(CityOfCamelot)))
-			//	return false;
-
-			return base.CheckQuestQualification(player);
-		}
-	}
-
-
-	/* The second thing we do, is to declare the class we create
-	 * as Quest. We must make it persistant using attributes, to
-	 * do this, we derive from the abstract class AbstractQuest
-	 */
-	[NHibernate.Mapping.Attributes.Subclass(NameType = typeof(Church_50), ExtendsType = typeof(AbstractQuest))] 
 	public class Church_50 : BaseQuest
 	{
 		/// <summary>
@@ -103,34 +47,49 @@ namespace DOL.GS.Quests.Albion
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		protected const string questTitle = "Passage to Eternity";
+		protected const int minimumLevel = 50;
+		protected const int maximumLevel = 50;
 
 		private static GameNPC Roben = null; // Start NPC
-		private static GameMob Blythe = null; // Mob to kill
+		private static GameNPC Blythe = null; // Mob to kill
 
-		private static GenericItemTemplate statue_of_arawn = null; //sealed pouch
+		private static ItemTemplate statue_of_arawn = null; //sealed pouch
+		private static ItemTemplate ClericEpicBoots = null; //Shadow Shrouded Boots 
+		private static ItemTemplate ClericEpicHelm = null; //Shadow Shrouded Coif 
+		private static ItemTemplate ClericEpicGloves = null; //Shadow Shrouded Gloves 
+		private static ItemTemplate ClericEpicVest = null; //Shadow Shrouded Hauberk 
+		private static ItemTemplate ClericEpicLegs = null; //Shadow Shrouded Legs 
+		private static ItemTemplate ClericEpicArms = null; //Shadow Shrouded Sleeves 
+		private static ItemTemplate PaladinEpicBoots = null; //Valhalla Touched Boots 
+		private static ItemTemplate PaladinEpicHelm = null; //Valhalla Touched Coif 
+		private static ItemTemplate PaladinEpicGloves = null; //Valhalla Touched Gloves 
+		private static ItemTemplate PaladinEpicVest = null; //Valhalla Touched Hauberk 
+		private static ItemTemplate PaladinEpicLegs = null; //Valhalla Touched Legs 
+		private static ItemTemplate PaladinEpicArms = null; //Valhalla Touched Sleeves
 
-		private static FeetArmorTemplate ClericEpicBoots = null; //Shadow Shrouded Boots 
-		private static HeadArmorTemplate ClericEpicHelm = null; //Shadow Shrouded Coif 
-		private static HandsArmorTemplate ClericEpicGloves = null; //Shadow Shrouded Gloves 
-		private static TorsoArmorTemplate ClericEpicVest = null; //Shadow Shrouded Hauberk 
-		private static LegsArmorTemplate ClericEpicLegs = null; //Shadow Shrouded Legs 
-		private static ArmsArmorTemplate ClericEpicArms = null; //Shadow Shrouded Sleeves 
+		// Constructors
+		public Church_50() : base()
+		{
+		}
 
-		private static FeetArmorTemplate PaladinEpicBoots = null; //Valhalla Touched Boots 
-		private static HeadArmorTemplate PaladinEpicHelm = null; //Valhalla Touched Coif 
-		private static HandsArmorTemplate PaladinEpicGloves = null; //Valhalla Touched Gloves 
-		private static TorsoArmorTemplate PaladinEpicVest = null; //Valhalla Touched Hauberk 
-		private static LegsArmorTemplate PaladinEpicLegs = null; //Valhalla Touched Legs 
-		private static ArmsArmorTemplate PaladinEpicArms = null; //Valhalla Touched Sleeves
+		public Church_50(GamePlayer questingPlayer) : base(questingPlayer)
+		{
+		}
 
-		private static GameNPC[] ClericTrainers = null;
-		private static GameNPC[] PaladinTrainers = null;
+		public Church_50(GamePlayer questingPlayer, int step) : base(questingPlayer, step)
+		{
+		}
+
+		public Church_50(GamePlayer questingPlayer, DBQuest dbQuest) : base(questingPlayer, dbQuest)
+		{
+		}
 
 		[ScriptLoadedEvent]
 		public static void ScriptLoaded(DOLEvent e, object sender, EventArgs args)
 		{
 			if (log.IsInfoEnabled)
-				log.Info("Quest \"" + questTitle + "\" initializing ...");
+				if (log.IsInfoEnabled)
+					log.Info("Quest \"" + questTitle + "\" initializing ...");
 
 			#region defineNPCs
 
@@ -145,10 +104,12 @@ namespace DOL.GS.Quests.Albion
 				Roben.Name = "Roben Fraomar";
 				Roben.GuildName = "";
 				Roben.Realm = (byte) eRealm.Albion;
-				Roben.RegionId = 1;
+				Roben.CurrentRegionID = 1;
 				Roben.Size = 52;
 				Roben.Level = 50;
-				Roben.Position = new Point(408557, 651675, 5200);
+				Roben.X = 408557;
+				Roben.Y = 651675;
+				Roben.Z = 5200;
 				Roben.Heading = 3049;
 				Roben.AddToWorld();
 
@@ -169,491 +130,614 @@ namespace DOL.GS.Quests.Albion
 				Blythe.Name = "Sister Blythe";
 				Blythe.GuildName = "";
 				Blythe.Realm = (byte) eRealm.None;
-				Blythe.RegionId = 1;
+				Blythe.CurrentRegionID = 1;
 				Blythe.Size = 50;
 				Blythe.Level = 69;
-				Blythe.Position = new Point(322231, 671546, 2762);
+				Blythe.X = 322231;
+				Blythe.Y = 671546;
+				Blythe.Z = 2762;
 				Blythe.Heading = 1683;
-				Blythe.RespawnInterval = 5 * 60 * 1000;
 				Blythe.AddToWorld();
 
 				if (SAVE_INTO_DATABASE)
 					Blythe.SaveIntoDatabase();
 			}
 			else
-				Blythe = npcs[0] as GameMob;
+				Blythe = npcs[0];
 			// end npc
 
 			#endregion
 
 			#region defineItems
 
-			statue_of_arawn = (GenericItemTemplate)GameServer.Database.FindObjectByKey(typeof(GenericItemTemplate), "statue_of_arawn");
+			statue_of_arawn = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "statue_of_arawn");
 			if (statue_of_arawn == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Statue of Arawn, creating it ...");
-				statue_of_arawn = new GenericItemTemplate();
-				statue_of_arawn.ItemTemplateID = "statue_of_arawn";
+				statue_of_arawn = new ItemTemplate();
+				statue_of_arawn.Id_nb = "statue_of_arawn";
 				statue_of_arawn.Name = "Statue of Arawn";
 				statue_of_arawn.Level = 8;
+				statue_of_arawn.Item_Type = 29;
 				statue_of_arawn.Model = 593;
 				statue_of_arawn.IsDropable = false;
-				statue_of_arawn.IsSaleable = false;
-				statue_of_arawn.IsTradable = false;
+				statue_of_arawn.IsPickable = false;
+				statue_of_arawn.DPS_AF = 0;
+				statue_of_arawn.SPD_ABS = 0;
+				statue_of_arawn.Object_Type = 41;
+				statue_of_arawn.Hand = 0;
+				statue_of_arawn.Type_Damage = 0;
+				statue_of_arawn.Quality = 100;
+				statue_of_arawn.MaxQuality = 100;
 				statue_of_arawn.Weight = 12;
-
 				if (SAVE_INTO_DATABASE)
+				{
 					GameServer.Database.AddNewObject(statue_of_arawn);
-			}
+				}
 
-			ArmorTemplate i = null;
-			#region Cleric
-			ClericEpicBoots = (FeetArmorTemplate)GameServer.Database.FindObjectByKey(typeof(FeetArmorTemplate), "ClericEpicBoots");
+			}
+// end item
+			ItemTemplate i = null;
+			ClericEpicBoots = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ClericEpicBoots");
 			if (ClericEpicBoots == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Clerics Epic Boots , creating it ...");
-				i = new FeetArmorTemplate();
-				i.ItemTemplateID = "ClericEpicBoots";
+				i = new ItemTemplate();
+				i.Id_nb = "ClericEpicBoots";
 				i.Name = "Boots of Defiant Soul";
 				i.Level = 50;
+				i.Item_Type = 23;
 				i.Model = 717;
 				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.High;
+				i.IsPickable = true;
+				i.DPS_AF = 100;
+				i.SPD_ABS = 27;
+				i.Object_Type = 35;
 				i.Quality = 100;
+				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Cleric);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Albion;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 13));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 13));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Quickness, 13));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Spirit, 8));
+				i.Bonus1 = 13;
+				i.Bonus1Type = (int) eStat.CON;
+
+				i.Bonus2 = 13;
+				i.Bonus2Type = (int) eStat.DEX;
+
+				i.Bonus3 = 13;
+				i.Bonus3Type = (int) eStat.QUI;
+
+				i.Bonus4 = 8;
+				i.Bonus4Type = (int) eResist.Spirit;
 
 				if (SAVE_INTO_DATABASE)
 				{
 					GameServer.Database.AddNewObject(i);
 				}
-				ClericEpicBoots = (FeetArmorTemplate)i;
-			}
+				ClericEpicBoots = i;
 
+			}
+//end item
 			//of the Defiant Soul  Coif 
-			ClericEpicHelm = (HeadArmorTemplate)GameServer.Database.FindObjectByKey(typeof(HeadArmorTemplate), "ClericEpicHelm");
+			ClericEpicHelm = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ClericEpicHelm");
 			if (ClericEpicHelm == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Clerics Epic Helm , creating it ...");
-				i = new HeadArmorTemplate();
-				i.ItemTemplateID = "ClericEpicHelm";
+				i = new ItemTemplate();
+				i.Id_nb = "ClericEpicHelm";
 				i.Name = "Coif of Defiant Soul";
 				i.Level = 50;
+				i.Item_Type = 21;
 				i.Model = 1290; //NEED TO WORK ON..
 				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.High;
+				i.IsPickable = true;
+				i.DPS_AF = 100;
+				i.SPD_ABS = 27;
+				i.Object_Type = 35;
 				i.Quality = 100;
+				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Cleric);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Albion;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Enhancement, 4));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 4));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Piety, 4));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Energy, 4));
+				i.Bonus1 = 4;
+				i.Bonus1Type = (int) eProperty.Focus_Enchantments;
+
+				i.Bonus2 = 12;
+				i.Bonus2Type = (int) eStat.CON;
+
+				i.Bonus3 = 19;
+				i.Bonus3Type = (int) eStat.PIE;
+
+				i.Bonus4 = 8;
+				i.Bonus4Type = (int) eResist.Energy;
 
 				if (SAVE_INTO_DATABASE)
 				{
 					GameServer.Database.AddNewObject(i);
 				}
 
-				ClericEpicHelm = (HeadArmorTemplate)i;
-			}
+				ClericEpicHelm = i;
 
+			}
+//end item
 			//of the Defiant Soul  Gloves 
-			ClericEpicGloves = (HandsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(HandsArmorTemplate), "ClericEpicGloves");
+			ClericEpicGloves = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ClericEpicGloves");
 			if (ClericEpicGloves == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Clerics Epic Gloves , creating it ...");
-				i = new HandsArmorTemplate();
-				i.ItemTemplateID = "ClericEpicGloves";
+				i = new ItemTemplate();
+				i.Id_nb = "ClericEpicGloves";
 				i.Name = "Gauntlets of Defiant Soul";
 				i.Level = 50;
+				i.Item_Type = 22;
 				i.Model = 716;
 				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.High;
+				i.IsPickable = true;
+				i.DPS_AF = 100;
+				i.SPD_ABS = 27;
+				i.Object_Type = 35;
 				i.Quality = 100;
+				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Cleric);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Albion;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Smiting, 4));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Piety, 22));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Crush, 8));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Matter, 8));
+				i.Bonus1 = 4;
+				i.Bonus1Type = (int) eProperty.Skill_Smiting;
+
+				i.Bonus2 = 22;
+				i.Bonus2Type = (int) eStat.PIE;
+
+				i.Bonus3 = 8;
+				i.Bonus3Type = (int) eResist.Crush;
+
+				i.Bonus4 = 8;
+				i.Bonus4Type = (int) eResist.Matter;
 
 				if (SAVE_INTO_DATABASE)
 				{
 					GameServer.Database.AddNewObject(i);
 				}
 
-				ClericEpicGloves = (HandsArmorTemplate)i;
-			}
+				ClericEpicGloves = i;
 
+			}
 			//of the Defiant Soul  Hauberk 
-			ClericEpicVest = (TorsoArmorTemplate)GameServer.Database.FindObjectByKey(typeof(TorsoArmorTemplate), "ClericEpicVest");
+			ClericEpicVest = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ClericEpicVest");
 			if (ClericEpicVest == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Clerics Epic Vest , creating it ...");
-				i = new TorsoArmorTemplate();
-				i.ItemTemplateID = "ClericEpicVest";
+				i = new ItemTemplate();
+				i.Id_nb = "ClericEpicVest";
 				i.Name = "Habergeon of Defiant Soul";
 				i.Level = 50;
+				i.Item_Type = 25;
 				i.Model = 713;
 				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.High;
+				i.IsPickable = true;
+				i.DPS_AF = 100;
+				i.SPD_ABS = 27;
+				i.Object_Type = 35;
 				i.Quality = 100;
+				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Cleric);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Albion;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Crush, 4));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Spirit, 4));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxMana, 12));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 27));
+				i.Bonus1 = 4;
+				i.Bonus1Type = (int) eResist.Crush;
+
+				i.Bonus2 = 4;
+				i.Bonus2Type = (int) eResist.Spirit;
+
+				i.Bonus3 = 12;
+				i.Bonus3Type = (int) eProperty.PowerRegenerationRate;
+
+				i.Bonus4 = 27;
+				i.Bonus4Type = (int) eProperty.MaxHealth;
 
 				if (SAVE_INTO_DATABASE)
 				{
 					GameServer.Database.AddNewObject(i);
 				}
-				ClericEpicVest = (TorsoArmorTemplate)i;
-			}
+				ClericEpicVest = i;
 
+			}
 			//of the Defiant Soul  Legs 
-			ClericEpicLegs = (LegsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(LegsArmorTemplate), "ClericEpicLegs");
+			ClericEpicLegs = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ClericEpicLegs");
 			if (ClericEpicLegs == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Clerics Epic Legs , creating it ...");
-				i = new LegsArmorTemplate();
-				i.ItemTemplateID = "ClericEpicLegs";
+				i = new ItemTemplate();
+				i.Id_nb = "ClericEpicLegs";
 				i.Name = "Chaussess of Defiant Soul";
 				i.Level = 50;
+				i.Item_Type = 27;
 				i.Model = 714;
 				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.High;
+				i.IsPickable = true;
+				i.DPS_AF = 100;
+				i.SPD_ABS = 27;
+				i.Object_Type = 35;
 				i.Quality = 100;
+				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Cleric);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Albion;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Rejuvenation, 4));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 22));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Slash, 8));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Cold, 8));
+				i.Bonus1 = 4;
+				i.Bonus1Type = (int) eProperty.Skill_Rejuvenation;
+
+				i.Bonus2 = 22;
+				i.Bonus2Type = (int) eStat.CON;
+
+				i.Bonus3 = 8;
+				i.Bonus3Type = (int) eResist.Slash;
+
+				i.Bonus4 = 8;
+				i.Bonus4Type = (int) eResist.Cold;
 
 				if (SAVE_INTO_DATABASE)
 				{
 					GameServer.Database.AddNewObject(i);
 				}
 
-				ClericEpicLegs = (LegsArmorTemplate)i;
-			}
+				ClericEpicLegs = i;
 
+			}
 			//of the Defiant Soul  Sleeves 
-			ClericEpicArms = (ArmsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(ArmsArmorTemplate), "ClericEpicArms");
+			ClericEpicArms = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ClericEpicArms");
 			if (ClericEpicArms == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Cleric Epic Arms , creating it ...");
-				i = new ArmsArmorTemplate();
-				i.ItemTemplateID = "ClericEpicArms";
+				i = new ItemTemplate();
+				i.Id_nb = "ClericEpicArms";
 				i.Name = "Sleeves of Defiant Soul";
 				i.Level = 50;
+				i.Item_Type = 28;
 				i.Model = 715;
 				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.High;
+				i.IsPickable = true;
+				i.DPS_AF = 100;
+				i.SPD_ABS = 27;
+				i.Object_Type = 35;
 				i.Quality = 100;
+				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Cleric);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Albion;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 16));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Piety, 18));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Thrust, 8));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Heat, 8));
+				i.Bonus1 = 16;
+				i.Bonus1Type = (int) eStat.STR;
+
+				i.Bonus2 = 18;
+				i.Bonus2Type = (int) eStat.PIE;
+
+				i.Bonus3 = 8;
+				i.Bonus3Type = (int) eResist.Thrust;
+
+				i.Bonus4 = 8;
+				i.Bonus4Type = (int) eResist.Heat;
 
 				if (SAVE_INTO_DATABASE)
 				{
 					GameServer.Database.AddNewObject(i);
 				}
 
-				ClericEpicArms = (ArmsArmorTemplate)i;
+				ClericEpicArms = i;
 			}
-			#endregion
-			#region Paladin
-			PaladinEpicBoots = (FeetArmorTemplate)GameServer.Database.FindObjectByKey(typeof(FeetArmorTemplate), "PaladinEpicBoots");
+
+			PaladinEpicBoots = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "PaladinEpicBoots");
 			if (PaladinEpicBoots == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Paladin Epic Boots , creating it ...");
-				i = new FeetArmorTemplate();
-				i.ItemTemplateID = "PaladinEpicBoots";
+				i = new ItemTemplate();
+				i.Id_nb = "PaladinEpicBoots";
 				i.Name = "Sabaton of the Iron Will";
 				i.Level = 50;
+				i.Item_Type = 23;
 				i.Model = 697;
 				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.VeryHigh;
+				i.IsPickable = true;
+				i.DPS_AF = 100;
+				i.SPD_ABS = 34;
+				i.Object_Type = 36;
 				i.Quality = 100;
+				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Paladin);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Albion;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 18));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Quickness, 19));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Slash, 6));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Energy, 6));
+				i.Bonus1 = 18;
+				i.Bonus1Type = (int) eStat.STR;
+
+				i.Bonus2 = 19;
+				i.Bonus2Type = (int) eStat.QUI;
+
+				i.Bonus3 = 6;
+				i.Bonus3Type = (int) eResist.Slash;
+
+				i.Bonus4 = 6;
+				i.Bonus4Type = (int) eResist.Energy;
 
 				if (SAVE_INTO_DATABASE)
 				{
 					GameServer.Database.AddNewObject(i);
 				}
 
-				PaladinEpicBoots = (FeetArmorTemplate)i;
-			}
+				PaladinEpicBoots = i;
 
+			}
+//end item
 			//of the Iron Will Coif 
-			PaladinEpicHelm = (HeadArmorTemplate)GameServer.Database.FindObjectByKey(typeof(HeadArmorTemplate), "PaladinEpicHelm");
+			PaladinEpicHelm = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "PaladinEpicHelm");
 			if (PaladinEpicHelm == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Paladin Epic Helm , creating it ...");
-				i = new HeadArmorTemplate();
-				i.ItemTemplateID = "PaladinEpicHelm";
+				i = new ItemTemplate();
+				i.Id_nb = "PaladinEpicHelm";
 				i.Name = "Hounskull of the Iron Will";
 				i.Level = 50;
+				i.Item_Type = 21;
 				i.Model = 1290; //NEED TO WORK ON..
 				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.VeryHigh;
+				i.IsPickable = true;
+				i.DPS_AF = 100;
+				i.SPD_ABS = 34;
+				i.Object_Type = 36;
 				i.Quality = 100;
+				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Paladin);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Albion;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 18));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 19));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Crush, 6));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Matter, 6));
+				i.Bonus1 = 18;
+				i.Bonus1Type = (int) eStat.CON;
+
+				i.Bonus2 = 19;
+				i.Bonus2Type = (int) eStat.DEX;
+
+				i.Bonus3 = 6;
+				i.Bonus3Type = (int) eResist.Crush;
+
+				i.Bonus4 = 6;
+				i.Bonus4Type = (int) eResist.Matter;
 
 				if (SAVE_INTO_DATABASE)
 				{
 					GameServer.Database.AddNewObject(i);
 				}
 
-				PaladinEpicHelm = (HeadArmorTemplate)i;
-			}
+				PaladinEpicHelm = i;
 
+			}
+//end item
 			//of the Iron Will Gloves 
-			PaladinEpicGloves = (HandsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(HandsArmorTemplate), "PaladinEpicGloves");
+			PaladinEpicGloves = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "PaladinEpicGloves");
 			if (PaladinEpicGloves == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Paladin Epic Gloves , creating it ...");
-				i = new HandsArmorTemplate();
-				i.ItemTemplateID = "PaladinEpicGloves";
+				i = new ItemTemplate();
+				i.Id_nb = "PaladinEpicGloves";
 				i.Name = "Gauntlets of the Iron Will";
 				i.Level = 50;
+				i.Item_Type = 22;
 				i.Model = 696;
 				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.VeryHigh;
+				i.IsPickable = true;
+				i.DPS_AF = 100;
+				i.SPD_ABS = 34;
+				i.Object_Type = 36;
 				i.Quality = 100;
+				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Paladin);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Albion;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 19));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Quickness, 18));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Crush, 6));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Heat, 6));
+				i.Bonus1 = 19;
+				i.Bonus1Type = (int) eStat.STR;
+
+				i.Bonus2 = 18;
+				i.Bonus2Type = (int) eStat.QUI;
+
+				i.Bonus3 = 6;
+				i.Bonus3Type = (int) eResist.Crush;
+
+				i.Bonus4 = 6;
+				i.Bonus4Type = (int) eResist.Heat;
 
 				if (SAVE_INTO_DATABASE)
 				{
 					GameServer.Database.AddNewObject(i);
 				}
 
-				PaladinEpicGloves = (HandsArmorTemplate)i;
-			}
+				PaladinEpicGloves = i;
 
+			}
 			//of the Iron Will Hauberk 
-			PaladinEpicVest = (TorsoArmorTemplate)GameServer.Database.FindObjectByKey(typeof(TorsoArmorTemplate), "PaladinEpicVest");
+			PaladinEpicVest = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "PaladinEpicVest");
 			if (PaladinEpicVest == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Paladin Epic Vest , creating it ...");
-				i = new TorsoArmorTemplate();
-				i.ItemTemplateID = "PaladinEpicVest";
+				i = new ItemTemplate();
+				i.Id_nb = "PaladinEpicVest";
 				i.Name = "Curiass of the Iron Will";
 				i.Level = 50;
+				i.Item_Type = 25;
 				i.Model = 693;
 				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.VeryHigh;
+				i.IsPickable = true;
+				i.DPS_AF = 100;
+				i.SPD_ABS = 34;
+				i.Object_Type = 36;
 				i.Quality = 100;
+				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Paladin);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Albion;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 15));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Body, 6));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Spirit, 6));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 24));
+				i.Bonus1 = 15;
+				i.Bonus1Type = (int) eStat.STR;
+
+				i.Bonus2 = 6;
+				i.Bonus2Type = (int) eResist.Body;
+
+				i.Bonus3 = 6;
+				i.Bonus3Type = (int) eResist.Spirit;
+
+				i.Bonus4 = 24;
+				i.Bonus4Type = (int) eProperty.MaxHealth;
 
 				if (SAVE_INTO_DATABASE)
 				{
 					GameServer.Database.AddNewObject(i);
 				}
 
-				PaladinEpicVest = (TorsoArmorTemplate)i;
-			}
+				PaladinEpicVest = i;
 
+			}
 			//of the Iron Will Legs 
-			PaladinEpicLegs = (LegsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(LegsArmorTemplate), "PaladinEpicLegs");
+			PaladinEpicLegs = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "PaladinEpicLegs");
 			if (PaladinEpicLegs == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Paladin Epic Legs , creating it ...");
-				i = new LegsArmorTemplate();
-				i.ItemTemplateID = "PaladinEpicLegs";
+				i = new ItemTemplate();
+				i.Id_nb = "PaladinEpicLegs";
 				i.Name = "Greaves of the Iron Will";
 				i.Level = 50;
+				i.Item_Type = 27;
 				i.Model = 694;
 				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.VeryHigh;
+				i.IsPickable = true;
+				i.DPS_AF = 100;
+				i.SPD_ABS = 34;
+				i.Object_Type = 36;
 				i.Quality = 100;
+				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Paladin);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Albion;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 22));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 15));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Crush, 6));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Cold, 6));
+				i.Bonus1 = 22;
+				i.Bonus1Type = (int) eStat.CON;
+
+				i.Bonus2 = 15;
+				i.Bonus2Type = (int) eStat.DEX;
+
+				i.Bonus3 = 6;
+				i.Bonus3Type = (int) eResist.Crush;
+
+				i.Bonus4 = 6;
+				i.Bonus4Type = (int) eResist.Cold;
 
 				if (SAVE_INTO_DATABASE)
 				{
 					GameServer.Database.AddNewObject(i);
 				}
 
-				PaladinEpicLegs = (LegsArmorTemplate)i;
-			}
+				PaladinEpicLegs = i;
 
+			}
 			//of the Iron Will Sleeves 
-			PaladinEpicArms = (ArmsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(ArmsArmorTemplate), "PaladinEpicArms");
+			PaladinEpicArms = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "PaladinEpicArms");
 			if (PaladinEpicArms == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Paladin Epic Arms , creating it ...");
-				i = new ArmsArmorTemplate();
-				i.ItemTemplateID = "PaladinEpicArms";
+				i = new ItemTemplate();
+				i.Id_nb = "PaladinEpicArms";
 				i.Name = "Spaulders of the Iron Will";
 				i.Level = 50;
+				i.Item_Type = 28;
 				i.Model = 695;
 				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.VeryHigh;
+				i.IsPickable = true;
+				i.DPS_AF = 100;
+				i.SPD_ABS = 34;
+				i.Object_Type = 36;
 				i.Quality = 100;
+				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Paladin);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Albion;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 19));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 15));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Quickness, 9));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Spirit, 6));
+				i.Bonus1 = 19;
+				i.Bonus1Type = (int) eStat.CON;
+
+				i.Bonus2 = 15;
+				i.Bonus2Type = (int) eStat.DEX;
+
+				i.Bonus3 = 9;
+				i.Bonus3Type = (int) eStat.QUI;
+
+				i.Bonus4 = 6;
+				i.Bonus4Type = (int) eResist.Spirit;
 
 				if (SAVE_INTO_DATABASE)
 				{
 					GameServer.Database.AddNewObject(i);
 				}
 
-				PaladinEpicArms = (ArmsArmorTemplate)i;
+				PaladinEpicArms = i;
 			}
-			#endregion
-			#endregion
 
-			ClericTrainers = WorldMgr.GetNPCsByType(typeof(DOL.GS.Trainer.ClericTrainer), eRealm.Albion);
-			PaladinTrainers = WorldMgr.GetNPCsByType(typeof(DOL.GS.Trainer.PaladinTrainer), eRealm.Albion);
-
-			foreach (GameNPC npc in ClericTrainers)
-				GameEventMgr.AddHandler(npc, GameNPCEvent.Interact, new DOLEventHandler(TalkToTrainer));
-			foreach (GameNPC npc in PaladinTrainers)
-				GameEventMgr.AddHandler(npc, GameNPCEvent.Interact, new DOLEventHandler(TalkToTrainer));
+			#endregion
 
 			GameEventMgr.AddHandler(Roben, GameObjectEvent.Interact, new DOLEventHandler(TalkToRoben));
 			GameEventMgr.AddHandler(Roben, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToRoben));
-			GameEventMgr.AddHandler(Blythe, GameNPCEvent.Dying, new DOLEventHandler(TargetDying));
 
 			/* Now we bring to Roben the possibility to give this quest to players */
-			QuestMgr.AddQuestDescriptor(Roben, typeof(Church_50Descriptor));
+			Roben.AddQuestToGive(typeof (Church_50));
 
 			if (log.IsInfoEnabled)
 				log.Info("Quest \"" + questTitle + "\" initialized");
@@ -669,10 +753,9 @@ namespace DOL.GS.Quests.Albion
 			// remove handlers
 			GameEventMgr.RemoveHandler(Roben, GameObjectEvent.Interact, new DOLEventHandler(TalkToRoben));
 			GameEventMgr.RemoveHandler(Roben, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToRoben));
-			GameEventMgr.RemoveHandler(Blythe, GameNPCEvent.Dying, new DOLEventHandler(TargetDying));
 
 			/* Now we remove to Roben the possibility to give this quest to players */
-			QuestMgr.RemoveQuestDescriptor(Roben, typeof(Church_50Descriptor));
+			Roben.RemoveQuestToGive(typeof (Church_50));
 		}
 
 		protected static void TalkToRoben(DOLEvent e, object sender, EventArgs args)
@@ -682,7 +765,7 @@ namespace DOL.GS.Quests.Albion
 			if (player == null)
 				return;
 
-			if (QuestMgr.CanGiveQuest(typeof(Church_50), player, Roben) <= 0)
+			if(Roben.CanGiveQuest(typeof (Church_50), player)  <= 0)
 				return;
 
 			//We also check if the player is already doing the quest
@@ -736,20 +819,43 @@ namespace DOL.GS.Quests.Albion
 						case "Lyonesse":
 							Roben.SayTo(player, "The cathedral that Axton speaks of lies deep at the heart of that land, behind the Pikeman, across from the Trees. Its remaining walls can be seen at great distances during the day so you should not miss it. I would travel with thee, but my services are required elswhere. Fare thee well " + player.CharacterClass.Name + ".");
 							break;
-							/*
+
 						case "abort":
 							player.Out.SendCustomDialog("Do you really want to abort this quest, \nall items gained during quest will be lost?", new CustomDialogResponse(CheckPlayerAbortQuest));
-							break;*/
+							break;
 					}
 				}
 			}
+		}
+
+		public override bool CheckQuestQualification(GamePlayer player)
+		{
+			// if the player is already doing the quest his level is no longer of relevance
+			if (player.IsDoingQuest(typeof (Church_50)) != null)
+				return true;
+
+			if (player.CharacterClass.ID != (byte) eCharacterClass.Cleric &&
+				player.CharacterClass.ID != (byte) eCharacterClass.Paladin)
+				return false;
+
+			// This checks below are only performed is player isn't doing quest already
+
+			//if (player.HasFinishedQuest(typeof(Academy_47)) == 0) return false;
+
+			//if (!CheckPartAccessible(player,typeof(CityOfCamelot)))
+			//	return false;
+
+			if (player.Level < minimumLevel || player.Level > maximumLevel)
+				return false;
+
+			return true;
 		}
 
 		/* This is our callback hook that will be called when the player clicks
 		 * on any button in the quest offer dialog. We check if he accepts or
 		 * declines here...
 		 */
-		/*
+
 		private static void CheckPlayerAbortQuest(GamePlayer player, byte response)
 		{
 			Church_50 quest = player.IsDoingQuest(typeof (Church_50)) as Church_50;
@@ -766,11 +872,11 @@ namespace DOL.GS.Quests.Albion
 				SendSystemMessage(player, "Aborting Quest " + questTitle + ". You can start over again if you want.");
 				quest.AbortQuest();
 			}
-		}*/
+		}
 
 		private static void CheckPlayerAcceptQuest(GamePlayer player, byte response)
 		{
-			if (QuestMgr.CanGiveQuest(typeof(Church_50), player, Roben) <= 0)
+			if(Roben.CanGiveQuest(typeof (Church_50), player)  <= 0)
 				return;
 
 			if (player.IsDoingQuest(typeof (Church_50)) != null)
@@ -783,8 +889,8 @@ namespace DOL.GS.Quests.Albion
 			else
 			{
 				// Check to see if we can add quest
-				if (!QuestMgr.GiveQuestToPlayer(typeof(Church_50), player, Roben))
-					return;
+				if (!Roben.GiveQuest(typeof (Church_50), player, 1))
+					return;;
 
 				Roben.SayTo(player, "You must not let this occur " + player.GetName(0, false) + "! I am familar with [Lyonesse]. I suggest that you gather a strong group of adventurers in order to succeed in this endeavor!");
 			}
@@ -807,37 +913,8 @@ namespace DOL.GS.Quests.Albion
 						return "[Step #1] Gather a strong group of adventures and travel to the ancient temple of Arwan. This temple can be found within Lyonesse, surrounded by the dark one's priests. Only by slaying their leader can this evil be stopped!";
 					case 2:
 						return "[Step #2] Return the statue of Arawn to Roben Fraomar for your reward!";
-					default:
-						return "[Step #" + Step + "] No Description entered for this step!";
 				}
-			}
-		}
-
-		protected static void TalkToTrainer(DOLEvent e, object sender, EventArgs args)
-		{
-			InteractEventArgs iargs = args as InteractEventArgs;
-
-			GamePlayer player = iargs.Source as GamePlayer;
-			GameNPC npc = sender as GameNPC;
-			Church_50Descriptor a = new Church_50Descriptor();
-
-			if (!a.CheckQuestQualification(player)) return;
-			if (player.IsDoingQuest(typeof(Church_50)) != null) return;
-
-			npc.SayTo(player, "Roben Fromar has an important task for you, please seek her out in Cornwall Station");
-		}
-
-		protected static void TargetDying(DOLEvent e, object sender, EventArgs args)
-		{
-			GameMob mob = sender as GameMob;
-			foreach (GamePlayer player in mob.XPGainers)
-			{
-				Church_50 quest = (Church_50)player.IsDoingQuest(typeof(Church_50));
-				if (quest == null) continue;
-				if (quest.Step != 1) continue;
-				player.Out.SendMessage("As you search the dead body of sister Blythe, you find a sacred " + statue_of_arawn.Name + ", bring it to " + Roben.Name + " has proof of your success.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				player.ReceiveItem(null, CreateQuestItem(statue_of_arawn, quest.Name));
-				quest.Step = 2;
+				return base.Description;
 			}
 		}
 
@@ -847,25 +924,25 @@ namespace DOL.GS.Quests.Albion
 
 			if (player==null || player.IsDoingQuest(typeof (Church_50)) == null)
 				return;
-			/*
+
 			if (Step == 1 && e == GameLivingEvent.EnemyKilled)
 			{
 				EnemyKilledEventArgs gArgs = (EnemyKilledEventArgs) args;
 				if (gArgs.Target.Name == Blythe.Name)
 				{
 					m_questPlayer.Out.SendMessage("As you search the dead body of sister Blythe, you find a sacred " + statue_of_arawn.Name + ", bring it to " + Roben.Name + " has proof of your success.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					GiveItemToPlayer(CreateQuestItem(statue_of_arawn, Name));
+					GiveItem(player, statue_of_arawn);
 					Step = 2;
 					return;
 				}
 			}
-			*/
+
 			if (Step == 2 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == Roben.Name && gArgs.Item.Name == statue_of_arawn.Name)
+				if (gArgs.Target.Name == Roben.Name && gArgs.Item.Id_nb == statue_of_arawn.Id_nb)
 				{
-					RemoveItemFromPlayer(Roben, statue_of_arawn);
+					RemoveItem(player, statue_of_arawn, true);
 					Roben.SayTo(player, "You have earned this Epic Armour, wear it with honour!");
 
 					FinishQuest();
@@ -874,14 +951,12 @@ namespace DOL.GS.Quests.Albion
 			}
 		}
 
-		/*
 		public override void AbortQuest()
 		{
 			base.AbortQuest(); //Defined in Quest, changes the state, stores in DB etc ...
 
-			RemoveItemFromPlayer(statue_of_arawn);
+			RemoveItem(m_questPlayer, statue_of_arawn, false);
 		}
-		 */
 
 		public override void FinishQuest()
 		{
@@ -889,21 +964,21 @@ namespace DOL.GS.Quests.Albion
 
 			if (m_questPlayer.CharacterClass.ID == (byte) eCharacterClass.Cleric)
 			{
-				GiveItemToPlayer(ClericEpicBoots.CreateInstance());
-				GiveItemToPlayer(ClericEpicArms.CreateInstance());
-				GiveItemToPlayer(ClericEpicGloves.CreateInstance());
-				GiveItemToPlayer(ClericEpicHelm.CreateInstance());
-				GiveItemToPlayer(ClericEpicVest.CreateInstance());
-				GiveItemToPlayer(ClericEpicLegs.CreateInstance());
+				GiveItem(m_questPlayer, ClericEpicBoots);
+				GiveItem(m_questPlayer, ClericEpicArms);
+				GiveItem(m_questPlayer, ClericEpicGloves);
+				GiveItem(m_questPlayer, ClericEpicHelm);
+				GiveItem(m_questPlayer, ClericEpicVest);
+				GiveItem(m_questPlayer, ClericEpicLegs);
 			}
 			else if (m_questPlayer.CharacterClass.ID == (byte) eCharacterClass.Paladin)
 			{
-				GiveItemToPlayer(PaladinEpicBoots.CreateInstance());
-				GiveItemToPlayer(PaladinEpicArms.CreateInstance());
-				GiveItemToPlayer(PaladinEpicGloves.CreateInstance());
-				GiveItemToPlayer(PaladinEpicHelm.CreateInstance());
-				GiveItemToPlayer(PaladinEpicVest.CreateInstance());
-				GiveItemToPlayer(PaladinEpicLegs.CreateInstance());
+				GiveItem(m_questPlayer, PaladinEpicBoots);
+				GiveItem(m_questPlayer, PaladinEpicArms);
+				GiveItem(m_questPlayer, PaladinEpicGloves);
+				GiveItem(m_questPlayer, PaladinEpicHelm);
+				GiveItem(m_questPlayer, PaladinEpicVest);
+				GiveItem(m_questPlayer, PaladinEpicLegs);
 			}
 
 			m_questPlayer.GainExperience(1937768448, 0, 0, true);

@@ -17,11 +17,7 @@
  *
  */
 using System;
-using System.Collections;
-using System.Reflection;
-using DOL.Events;
 using DOL.GS.PacketHandler;
-using log4net;
 
 namespace DOL.GS.Trainer
 {
@@ -31,23 +27,8 @@ namespace DOL.GS.Trainer
 	[NPCGuildScript("Nightshade Trainer", eRealm.Hibernia)]		// this attribute instructs DOL to use this script for all "Nightshade Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class NightshadeTrainer : GameTrainer
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
-		/// <summary>
-		/// This hash constrain all item template the trainer can give
-		/// </summary>	
-		private static IDictionary allStartupItems = new Hashtable();
-
-		/// <summary>
-		/// This function is called at the server startup
-		/// </summary>	
-		[GameServerStartedEvent]
-		public static void OnServerStartup(DOLEvent e, object sender, EventArgs args)
+		public NightshadeTrainer() : base()
 		{
-			// TODO find level 5 trainer gift
 		}
 
 		/// <summary>
@@ -60,18 +41,21 @@ namespace DOL.GS.Trainer
  			if (!base.Interact(player)) return false;
 								
 			// check if class matches.				
-			if (player.CharacterClass.ID == (int) eCharacterClass.Nightshade)
-			{
+			if (player.CharacterClass.ID == (int) eCharacterClass.Nightshade) {
+
+				// popup the training window
 				player.Out.SendTrainerWindow();
-				player.Out.SendMessage(this.Name + " says, \"Here for a bit of training, " + player.Name + "? Step up and get it!\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
-			} 
-			else if (CanPromotePlayer(player)) 
-			{
-				player.Out.SendMessage(this.Name + " says, \"You have thought this through, I'm sure. Tell me now if you wish to train as a [Nightshade] and follow the Path of Essence.\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+				player.Out.SendMessage(this.Name + " says, \"Here for a bit of training, " + player.Name + "? Step up and get it!\"", eChatType.CT_System, eChatLoc.CL_PopupWindow); //popup window on live
+
 			} 
 			else 
 			{
-				player.Out.SendMessage(this.Name + " says, \"You must seek elsewhere for your training.\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
+				// perhaps player can be promoted
+				if (CanPromotePlayer(player)) {
+					player.Out.SendMessage(this.Name + " says, \"You have thought this through, I'm sure. Tell me now if you wish to train as a [Nightshade] and follow the Path of Essence.\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+				} else {
+					player.Out.SendMessage(this.Name + " says, \"You must seek elsewhere for your training.\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);							
+				}
 			}
 			return true;
  		}
@@ -97,13 +81,13 @@ namespace DOL.GS.Trainer
 			if (!base.WhisperReceive(source, text)) return false;			
 			GamePlayer player = source as GamePlayer;			
 	
-			switch (text) 
-			{
-				case "Nightshade":
-					if (CanPromotePlayer(player)) 
-						PromotePlayer(player, (int)eCharacterClass.Nightshade, "Some would think you mad, choosing to walk through life as a Nightshade. It is not meant for everyone, but I think it will suit you, " + source.GetName(0, false) + ". Here, from me, a small gift to aid you in your journeys.", null);
+			switch (text) {
+			case "Nightshade":
+				// promote player to other class
+				if (CanPromotePlayer(player)) {
+					PromotePlayer(player, (int)eCharacterClass.Nightshade, "Some would think you mad, choosing to walk through life as a Nightshade. It is not meant for everyone, but I think it will suit you, " + source.GetName(0, false) + ". Here, from me, a small gift to aid you in your journeys.", null);	// TODO: gifts
 					//"You receive  Nightshade Initiate Boots from Lierna!"
-				
+				}
 				break;
 			}
 			return true;		

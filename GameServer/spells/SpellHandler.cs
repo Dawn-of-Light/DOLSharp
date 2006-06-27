@@ -21,7 +21,7 @@ using System.Collections;
 using System.Reflection;
 using System.Text;
 using DOL.AI.Brain;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 using DOL.GS.SkillHandler;
@@ -98,20 +98,16 @@ namespace DOL.GS.Spells
 				return;
 
 			// no instrument anymore = stop the song
-			if (m_spell.InstrumentRequirement != 0)
+			if (m_spell.InstrumentRequirement != 0 && !CheckInstrument())
 			{
-				Instrument instrument = GetCasterInstrument();
-				if (instrument == null || (int)instrument.Type != m_spell.InstrumentRequirement)
-				{
-					MessageToCaster("You stop playing your song.", eChatType.CT_Spell);
-					effect.Cancel(false);
-					return;
-				}
+				MessageToCaster("You stop playing your song.", eChatType.CT_Spell);
+				effect.Cancel(false);
+				return;
 			}
 
 			if (Caster.Mana > Spell.PulsePower)
 			{
-				Caster.ChangeMana(null, GameLiving.eManaChangeType.Spell, -Spell.PulsePower);
+				Caster.Mana -= Spell.PulsePower;
 				if (Spell.InstrumentRequirement != 0 || !HasPositiveEffect)
 					SendEffectAnimation(Caster, 0, true, 1); // pulsing auras or songs
 				StartSpell(Caster.TargetObject as GameLiving);
@@ -126,18 +122,14 @@ namespace DOL.GS.Spells
 		/// Checks if caster holds the right instrument for this spell
 		/// </summary>
 		/// <returns>true if right instrument</returns>
-		protected Instrument GetCasterInstrument()
+		protected bool CheckInstrument()
 		{
-			if(Caster.Inventory != null)
+			InventoryItem instrument = Caster.AttackWeapon;
+			if (instrument == null || instrument.Object_Type != (int) eObjectType.Instrument || instrument.DPS_AF != m_spell.InstrumentRequirement)
 			{
-				switch (Caster.ActiveWeaponSlot)
-				{
-					case GameLiving.eActiveWeaponSlot.Standard : return Caster.Inventory.GetItem(eInventorySlot.RightHandWeapon) as Instrument;
-					case GameLiving.eActiveWeaponSlot.TwoHanded: return Caster.Inventory.GetItem(eInventorySlot.TwoHandWeapon) as Instrument;
-					case GameLiving.eActiveWeaponSlot.Distance : return Caster.Inventory.GetItem(eInventorySlot.DistanceWeapon) as Instrument;
-				}
+				return false;
 			}
-			return null;
+			return true;
 		}
 
 		/// <summary>
@@ -199,6 +191,8 @@ namespace DOL.GS.Spells
 
 			m_interrupted = false;
 			GameLiving target = Caster.TargetObject as GameLiving;
+
+			bool check = CheckBeginCast(target);
 			if (Spell.Pulse != 0 && CancelPulsingSpell(Caster, Spell.SpellType))
 			{
 				// is done even if caster is sitting
@@ -207,8 +201,7 @@ namespace DOL.GS.Spells
 				else
 					MessageToCaster("You stop playing your song.", eChatType.CT_Spell);
 			}
-			else if (GameServer.ServerRules.IsAllowedToCastSpell(Caster, target, Spell, m_spellLine)
-				&& CheckBeginCast(target))
+			else if (GameServer.ServerRules.IsAllowedToCastSpell(Caster, target, Spell, m_spellLine) && check)
 			{
 				if (Spell.CastTime > 0)
 				{
@@ -278,7 +271,7 @@ namespace DOL.GS.Spells
 				chance = Math.Min(99, chance);
 				if (Util.Chance((int) chance))
 				{
-					Caster.TempProperties.setProperty(INTERRUPT_TIMEOUT_PROPERTY, Caster.Region.Time + SPELL_INTERRUPT_DURATION);
+					Caster.TempProperties.setProperty(INTERRUPT_TIMEOUT_PROPERTY, Caster.CurrentRegion.Time + SPELL_INTERRUPT_DURATION);
 					MessageToCaster(attacker.GetName(0, true) + " is attacking you and your spell is interrupted!", eChatType.CT_SpellResisted);
 					InterruptCasting(); // always interrupt at the moment
 					return true;
@@ -309,8 +302,7 @@ namespace DOL.GS.Spells
 
 			if (m_spell.InstrumentRequirement != 0)
 			{
-				Instrument instrument = GetCasterInstrument();
-				if (instrument == null || (int)instrument.Type != m_spell.InstrumentRequirement)
+				if (!CheckInstrument())
 				{
 					MessageToCaster("You are not wielding the right type of instrument!", eChatType.CT_SpellResisted);
 					return false;
@@ -336,7 +328,7 @@ namespace DOL.GS.Spells
 			if (m_spell.CastTime > 0 && m_caster is GamePlayer)
 			{
 				long leftseconds = Math.Max(
-					Caster.TempProperties.getLongProperty(INTERRUPT_TIMEOUT_PROPERTY, 0) - Caster.Region.Time,
+					Caster.TempProperties.getLongProperty(INTERRUPT_TIMEOUT_PROPERTY, 0) - Caster.CurrentRegion.Time,
 					Caster.SwingTimeLeft);
 				Caster.TempProperties.removeProperty(INTERRUPT_TIMEOUT_PROPERTY);
 				if (leftseconds > 0)
@@ -358,7 +350,7 @@ namespace DOL.GS.Spells
 
 			if (m_spell.Target == "Area")
 			{
-				if (!m_caster.GroundTarget.CheckDistance(m_caster.Position, CalculateSpellRange()))
+				if (!WorldMgr.CheckDistance(m_caster, m_caster.GroundTarget, CalculateSpellRange()))
 				{
 					MessageToCaster("Your area target is out of range.  Select a closer target.", eChatType.CT_SpellResisted);
 					return false;
@@ -379,16 +371,15 @@ namespace DOL.GS.Spells
 					return false;
 				}
 
-				if (!m_caster.Position.CheckDistance(selectedTarget.Position, CalculateSpellRange()))
+				if (!WorldMgr.CheckDistance(m_caster, selectedTarget, CalculateSpellRange()))
 				{
 					MessageToCaster("That target is too far away!", eChatType.CT_SpellResisted);
 					return false;
 				}
-
-
-				switch (m_spell.Target)
+				
+				switch (m_spell.Target.ToLower())
 				{
-					case "Enemy":
+					case "enemy":
 						if (selectedTarget == m_caster)
 						{
 							MessageToCaster("You can't attack yourself! ", eChatType.CT_System);
@@ -408,7 +399,7 @@ namespace DOL.GS.Spells
 						}
 						break;
 
-					case "Corpse":
+					case "corpse":
 						if (selectedTarget.Alive || !GameServer.ServerRules.IsSameRealm(Caster, selectedTarget, true))
 						{
 							MessageToCaster("This spell only works on dead members of your realm!", eChatType.CT_SpellResisted);
@@ -416,14 +407,14 @@ namespace DOL.GS.Spells
 						}
 						break;
 
-					case "Realm":
+					case "realm":
 						if (!GameServer.ServerRules.IsSameRealm(Caster, selectedTarget, false))
 						{
 							return false;
 						}
 						break;
 
-					case "Pet":
+					case "pet":
 						if (Caster is GamePlayer)
 						{
 							GamePlayer casterPlayer = (GamePlayer)Caster;
@@ -556,8 +547,7 @@ namespace DOL.GS.Spells
 
 			if (m_spell.InstrumentRequirement != 0)
 			{
-				Instrument instrument = GetCasterInstrument();
-				if (instrument == null || (int)instrument.Type != m_spell.InstrumentRequirement)
+				if (!CheckInstrument())
 				{
 					MessageToCaster("You are not wielding the right type of instrument!", eChatType.CT_SpellResisted);
 					return false;
@@ -573,7 +563,7 @@ namespace DOL.GS.Spells
 
 			if (m_spell.Target == "Area")
 			{
-				if (!m_caster.GroundTarget.CheckDistance(m_caster.Position, CalculateSpellRange()))
+				if (!WorldMgr.CheckDistance(m_caster, m_caster.GroundTarget, CalculateSpellRange()))
 				{
 					MessageToCaster("Your area target is out of range.  Select a closer target.", eChatType.CT_SpellResisted);
 					return false;
@@ -594,7 +584,7 @@ namespace DOL.GS.Spells
 					return false;
 				}
 
-				if (!m_caster.Position.CheckDistance(target.Position, CalculateSpellRange()))
+				if (!WorldMgr.CheckDistance(m_caster, target, CalculateSpellRange()))
 				{
 					MessageToCaster("That target is too far away!", eChatType.CT_SpellResisted);
 					return false;
@@ -761,7 +751,7 @@ namespace DOL.GS.Spells
 			/// <param name="actionSource">The caster</param>
 			/// <param name="handler">The spell handler</param>
 			/// <param name="target">The target object</param>
-			public DelayedCastTimer(GameLiving actionSource, SpellHandler handler, GameLiving target) : base(actionSource.Region.TimeManager)
+			public DelayedCastTimer(GameLiving actionSource, SpellHandler handler, GameLiving target) : base(actionSource.CurrentRegion.TimeManager)
 			{
 				if (handler == null)
 					throw new ArgumentNullException("handler");
@@ -816,7 +806,7 @@ namespace DOL.GS.Spells
 				{
 					return 2000; //always 2 sec
 				}
-				ticks = (int)(ticks * (1.0 - Math.Min(0.6, (((GamePlayer)m_caster).GetModified(eProperty.Dexterity) - 60)/600.0)));
+				ticks = (int)(ticks * (1.0 - Math.Min(0.6, (((GamePlayer)m_caster).Dexterity - 60)/600.0)));
 			}
 			if (ticks < 1)
 				ticks = 1; // at least 1 tick
@@ -861,7 +851,7 @@ namespace DOL.GS.Spells
 		public virtual void FinishSpellCast(GameLiving target)
 		{
 			// endurance
-			m_caster.EndurancePercent -= 5;
+			m_caster.Endurance -= 5;
 
 			// messages
 			if (Spell.InstrumentRequirement == 0)
@@ -893,7 +883,7 @@ namespace DOL.GS.Spells
 				QuickCastEffect quickcast = (QuickCastEffect) m_caster.EffectList.GetOfType(typeof (QuickCastEffect));
 				if (quickcast != null && Spell.CastTime > 0)
 				{
-					((GamePlayer) m_caster).TempProperties.setProperty(GamePlayer.QUICK_CAST_CHANGE_TICK, m_caster.Region.Time);
+					((GamePlayer) m_caster).TempProperties.setProperty(GamePlayer.QUICK_CAST_CHANGE_TICK, m_caster.CurrentRegion.Time);
 					((GamePlayer) m_caster).DisableSkill(SkillBase.GetAbility(Abilities.Quickcast), QuickCastAbilityHandler.DISABLE_DURATION);
 					quickcast.Cancel(false);
 				}
@@ -922,20 +912,20 @@ namespace DOL.GS.Spells
 			ArrayList list = new ArrayList(8);
 			GameLiving target = castTarget as GameLiving;
 
-			switch (Spell.Target)
+			switch (Spell.Target.ToLower())
 			{
 					// GTAoE
-				case "Area":
+				case "area":
 					if (Spell.Radius > 0)
 					{
-						foreach (GamePlayer player in Caster.Region.GetPlayerInRadius(Caster.GroundTarget, (ushort) Spell.Radius, false))
+						foreach (GamePlayer player in WorldMgr.GetPlayersCloseToSpot(Caster.CurrentRegionID, Caster.GroundTarget.X, Caster.GroundTarget.Y, Caster.GroundTarget.Z, (ushort) Spell.Radius))
 						{
 							if (GameServer.ServerRules.IsAllowedToAttack(Caster, player, true))
 							{
 								list.Add(player);
 							}
 						}
-						foreach (GameNPC npc in Caster.Region.GetPlayerInRadius(Caster.GroundTarget, (ushort) Spell.Radius, false))
+						foreach (GameNPC npc in WorldMgr.GetNPCsCloseToSpot(Caster.CurrentRegionID, Caster.GroundTarget.X, Caster.GroundTarget.Y, Caster.GroundTarget.Z, (ushort) Spell.Radius))
 						{
 							if (GameServer.ServerRules.IsAllowedToAttack(Caster, npc, true))
 							{
@@ -945,12 +935,12 @@ namespace DOL.GS.Spells
 					}
 					break;
 
-				case "Corpse":
+				case "corpse":
 					if (target != null && !target.Alive)
 						list.Add(target);
 					break;
 
-				case "Pet":
+				case "pet":
 					if (Caster is GamePlayer)
 					{
 						IControlledBrain npc = ((GamePlayer)Caster).ControlledNpc;
@@ -963,7 +953,7 @@ namespace DOL.GS.Spells
 					}
 					break;
 
-				case "Enemy":
+				case "enemy":
 					if (Spell.Radius > 0)
 					{
 						if (target == null || Spell.Range == 0)
@@ -990,7 +980,7 @@ namespace DOL.GS.Spells
 					}
 					break;
 
-				case "Realm":
+				case "realm":
 					if (Spell.Radius > 0)
 					{
 						if (target == null || Spell.Range == 0)
@@ -1017,11 +1007,11 @@ namespace DOL.GS.Spells
 					}
 					break;
 
-				case "Self":
+				case "self":
 					list.Add(Caster);
 					break;
 
-				case "Group":
+				case "group":
 					if (Caster is GamePlayer)
 					{
 						GamePlayer casterPlayer = (GamePlayer)Caster;
@@ -1033,7 +1023,7 @@ namespace DOL.GS.Spells
 							IControlledBrain npc = casterPlayer.ControlledNpc;
 							if (npc != null)
 							{
-								if (casterPlayer.Position.CheckDistance(npc.Body.Position, spellRange))
+								if (WorldMgr.CheckDistance(casterPlayer,npc.Body,spellRange))
 									list.Add(npc.Body);
 							}
 						}
@@ -1044,13 +1034,13 @@ namespace DOL.GS.Spells
 								foreach (GamePlayer groupPlayer in group)
 								{
 									// only players in range
-									if (casterPlayer.Position.CheckDistance(groupPlayer.Position, spellRange))
+									if (WorldMgr.CheckDistance(casterPlayer,groupPlayer,spellRange))
 										list.Add(groupPlayer);
 
 									IControlledBrain npc = groupPlayer.ControlledNpc;
 									if (npc != null)
 									{
-										if (casterPlayer.Position.CheckDistance(npc.Body.Position, spellRange))
+										if (WorldMgr.CheckDistance(casterPlayer,npc.Body,spellRange))
 											list.Add(npc.Body);
 									}
 								}
@@ -1091,7 +1081,7 @@ namespace DOL.GS.Spells
 				}
 				else if (Spell.Target == "Area")
 				{
-					int dist = t.Position.GetDistance(Caster.GroundTarget);
+					int dist = WorldMgr.GetDistance(t,Caster.GroundTarget.X,Caster.GroundTarget.Y,Caster.GroundTarget.Z);
 					if (dist >= 0)
 					{
 						ApplyEffectOnTarget(t, (1 - dist/(double) Spell.Radius));
@@ -1099,7 +1089,7 @@ namespace DOL.GS.Spells
 				}
 				else
 				{
-					int dist = t.Position.GetDistance(target.Position);
+					int dist = WorldMgr.GetDistance(target, t);
 					if (dist >= 0)
 					{
 						ApplyEffectOnTarget(t, (1 - dist/(double) Spell.Radius));
@@ -1119,11 +1109,11 @@ namespace DOL.GS.Spells
 			double duration = Spell.Duration;
 			if (Spell.InstrumentRequirement != 0)
 			{
-				Instrument instrument = GetCasterInstrument();
+				InventoryItem instrument = Caster.AttackWeapon;
 				if (instrument != null)
 				{
 					duration *= 1.0 + Math.Min(1.0, instrument.Level/(double)Caster.Level); // up to 200% duration for songs
-					duration *= instrument.Condition/100 * instrument.Quality/100;
+					duration *= instrument.Condition/(double)instrument.MaxCondition * instrument.Quality/(double)instrument.MaxQuality;
 				}
 			}
 
@@ -1380,8 +1370,8 @@ namespace DOL.GS.Spells
 				if (aggroBrain != null)
 					aggroBrain.AddToAggroList(Caster, 1);
 			}
-			target.LastAttackedByEnemyTick = target.Region.Time;
-			Caster.LastAttackTick = Caster.Region.Time;
+			target.LastAttackedByEnemyTick = target.CurrentRegion.Time;
+			Caster.LastAttackTick = Caster.CurrentRegion.Time;
 		}
 
 		#region messages

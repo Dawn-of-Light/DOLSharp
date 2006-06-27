@@ -17,7 +17,7 @@
  *
  */
 using System;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.GS.Housing;
 
 namespace DOL.GS.PacketHandler.v168
@@ -33,7 +33,7 @@ namespace DOL.GS.PacketHandler.v168
 			int method = packet.ReadByte();
 
 
-			House house = (House) HouseMgr.GetHouse(client.Player.Region, housenumber);
+			House house = (House) HouseMgr.GetHouse(client.Player.CurrentRegionID,housenumber);
 
 			if (house == null)
 				return 1;
@@ -48,16 +48,16 @@ namespace DOL.GS.PacketHandler.v168
 						{
 							GameServer.Database.DeleteObject(((OutdoorItem) house.OutdoorItems[i]).DatabaseItem); //delete the database instance
 
-						//	InventoryItem invitem = new InventoryItem();
-						//	invitem.CopyFrom(((OutdoorItem) house.OutdoorItems[i]).BaseItem);
-						//	client.Player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, invitem);
+							InventoryItem invitem = new InventoryItem();
+							invitem.CopyFrom(((OutdoorItem) house.OutdoorItems[i]).BaseItem);
+							client.Player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, invitem);
 
 							house.OutdoorItems.RemoveAt(i);
 
 							client.Out.SendGarden(house);
 
 							client.Out.SendMessage("Garden Tile Removed.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						//	client.Out.SendMessage("You get " + invitem.Name + " and put it in your backpack.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							client.Out.SendMessage("You get " + invitem.Name + " and put it in your backpack.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return 1;
 						}
 					}
@@ -76,13 +76,13 @@ namespace DOL.GS.PacketHandler.v168
 
 					if (iitem.BaseItem != null)
 					{
-					//	GenericItem item = new GenericItem();
-					//	item.CopyFrom(((IndoorItem) house.IndoorItems[(position)]).BaseItem);
-					//	if (client.Player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, item))
+						InventoryItem item = new InventoryItem();
+						item.CopyFrom(((IndoorItem) house.IndoorItems[(position)]).BaseItem);
+						if (client.Player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, item))
 						{
-					//		client.Player.Out.SendMessage("The " + item.Name + " is cleared from the wall surface.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							client.Player.Out.SendMessage("The " + item.Name + " is cleared from the wall surface.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						}
-					//	else
+						else
 						{
 							//you need free slot :p
 							return 1;

@@ -32,7 +32,7 @@
 using System;
 using System.Reflection;
 using DOL.AI.Brain;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
@@ -47,68 +47,12 @@ using log4net;
 
 namespace DOL.GS.Quests.Midgard
 {
-
-	/* The first thing we do, is to declare the quest requirement
-	 * class linked with the new Quest. To do this, we derive 
-	 * from the abstract class AbstractQuestDescriptor
+	/* The first thing we do, is to declare the class we create
+	 * as Quest. To do this, we derive from the abstract class
+	 * AbstractQuest
+	 * 	 
 	 */
-	public class TraitorInMularnDescriptor : AbstractQuestDescriptor
-	{
-		/* This is the type of the quest class linked with 
-		 * this requirement class, you must override the 
-		 * base method like that
-		 */
-		public override Type LinkedQuestType
-		{
-			get { return typeof(TraitorInMularn); }
-		}
 
-		/* This value is used to retrieves the minimum level needed
-		 *  to be able to make this quest. Override it only if you need, 
-		 * the default value is 1
-		 */
-		public override int MinLevel
-		{
-			get { return 2; }
-		}
-
-		/* This value is used to retrieves how maximum level needed
-		 * to be able to make this quest. Override it only if you need, 
-		 * the default value is 50
-		 */
-		public override int MaxLevel
-		{
-			get { return 2; }
-		}
-
-		/* This method is used to know if the player is qualified to 
-		 * do the quest. The base method always test his level and
-		 * how many time the quest has been done. Override it only if 
-		 * you want to add a custom test (here we test also the class name)
-		 */
-		public override bool CheckQuestQualification(GamePlayer player)
-		{
-			// if the player is already doing the quest his level is no longer of relevance
-			if (player.IsDoingQuest(typeof(TraitorInMularn)) != null)
-				return true;
-
-			// This checks below are only performed is player isn't doing quest already
-			if (player.HasFinishedQuest(typeof(NuisancesMid)) == 0)
-				return false;
-
-			if (!BaseDalikorQuest.CheckPartAccessible(player, typeof(TraitorInMularn)))
-				return false;
-
-			return base.CheckQuestQualification(player);
-		}
-	}
-
-
-	/* The second thing we do, is to declare the class we create
-	 * as Quest. We must make it persistant using attributes, to
-	 * do this, we derive from the abstract class AbstractQuest
-	 */
-	[NHibernate.Mapping.Attributes.Subclass(NameType = typeof(TraitorInMularn), ExtendsType = typeof(AbstractQuest))] 
 	public class TraitorInMularn : BaseDalikorQuest
 	{
 		/// <summary>
@@ -126,17 +70,41 @@ namespace DOL.GS.Quests.Midgard
 		 * 
 		 */
 		protected const string questTitle = "Traitor in Mularn";
+		protected const int minimumLevel = 2;
+		protected const int maximumLevel = 2;
 
 		private static GameNPC dalikor = null;
 		private static GameNPC ladyHinda = null;
 
-		private static GenericItemTemplate necklaceOfDoppelganger = null;
-		private static GenericItemTemplate askefruerPlans = null;
-		private static FeetArmorTemplate recruitsBoots = null;
-		private static FeetArmorTemplate recruitsQuiltedBoots = null;
+		private static ItemTemplate necklaceOfDoppelganger = null;
+		private static ItemTemplate askefruerPlans = null;
+		private static ItemTemplate recruitsBoots = null;
+		private static ItemTemplate recruitsQuiltedBoots = null;
 
 		private static GameLocation hindaEnd = new GameLocation("Lady Hinda", 100, 100, 56484, 55671, 4682, 29);
 		private static GameLocation hindaStart = new GameLocation("Lady Hinda", 100, 811022, 727295, 4677, 908);
+
+
+		/* We need to define the constructors from the base class here, else there might be problems
+		 * when loading this quest...
+		 */
+
+		public TraitorInMularn() : base()
+		{
+		}
+
+		public TraitorInMularn(GamePlayer questingPlayer) : this(questingPlayer, 1)
+		{
+		}
+
+		public TraitorInMularn(GamePlayer questingPlayer, int step) : base(questingPlayer, step)
+		{
+		}
+
+		public TraitorInMularn(GamePlayer questingPlayer, DBQuest dbQuest) : base(questingPlayer, dbQuest)
+		{
+		}
+
 
 		/* The following method is called automatically when this quest class
 		 * is loaded. You might notice that this method is the same as in standard
@@ -181,10 +149,12 @@ namespace DOL.GS.Quests.Midgard
 				ladyHinda.Name = "Lady Hinda";
 				ladyHinda.GuildName = "Part of " + questTitle + " Quest";
 				ladyHinda.Realm = (byte) eRealm.None;
-				ladyHinda.Region = hindaStart.Region;
+				ladyHinda.CurrentRegionID = hindaStart.RegionID;
 				ladyHinda.Size = 50;
 				ladyHinda.Level = 30;
-				ladyHinda.Position = hindaStart.Position;
+				ladyHinda.X = hindaStart.X;
+				ladyHinda.Y = hindaStart.Y;
+				ladyHinda.Z = hindaStart.Z;
 				ladyHinda.Heading = hindaStart.Heading;
 
 				StandardMobBrain brain = new StandardMobBrain();
@@ -206,21 +176,33 @@ namespace DOL.GS.Quests.Midgard
 			#region defineItems
 
 			// item db check
-			necklaceOfDoppelganger = (GenericItemTemplate)GameServer.Database.FindObjectByKey(typeof(GenericItemTemplate), "necklace_of_the_doppelganger");
+			necklaceOfDoppelganger = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "necklace_of_the_doppelganger");
 			if (necklaceOfDoppelganger == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Necklace of the Doppelganger, creating it ...");
-				necklaceOfDoppelganger = new GenericItemTemplate();
+				necklaceOfDoppelganger = new ItemTemplate();
 				necklaceOfDoppelganger.Name = "Necklace of the Doppelganger";
 				necklaceOfDoppelganger.Level = 2;
 				necklaceOfDoppelganger.Weight = 2;
 				necklaceOfDoppelganger.Model = 101;
-				necklaceOfDoppelganger.ItemTemplateID = "necklace_of_the_doppelganger";
 
+				necklaceOfDoppelganger.Object_Type = (int) eObjectType.Magical;
+				necklaceOfDoppelganger.Item_Type = (int) eEquipmentItems.NECK;
+				necklaceOfDoppelganger.Id_nb = "necklace_of_the_doppelganger";
+				necklaceOfDoppelganger.Gold = 0;
+				necklaceOfDoppelganger.Silver = 0;
+				necklaceOfDoppelganger.Copper = 0;
+				necklaceOfDoppelganger.IsPickable = true;
 				necklaceOfDoppelganger.IsDropable = false;
-				necklaceOfDoppelganger.IsSaleable = false;
-				necklaceOfDoppelganger.IsTradable = false;
+
+				necklaceOfDoppelganger.Quality = 100;
+				necklaceOfDoppelganger.MaxQuality = 100;
+				necklaceOfDoppelganger.Condition = 1000;
+				necklaceOfDoppelganger.MaxCondition = 1000;
+				necklaceOfDoppelganger.Durability = 1000;
+				necklaceOfDoppelganger.MaxDurability = 1000;
+
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -230,22 +212,22 @@ namespace DOL.GS.Quests.Midgard
 			}
 
 			// item db check
-			askefruerPlans = (GenericItemTemplate)GameServer.Database.FindObjectByKey(typeof(GenericItemTemplate), "askefruer_plans");
+			askefruerPlans = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "askefruer_plans");
 			if (askefruerPlans == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Askefruer Plans, creating it ...");
-				askefruerPlans = new GenericItemTemplate();
+				askefruerPlans = new ItemTemplate();
 				askefruerPlans.Name = "Akefruer Plans";
 
 				askefruerPlans.Weight = 3;
 				askefruerPlans.Model = 498;
 
-				askefruerPlans.ItemTemplateID = "askefruer_plans";
+				askefruerPlans.Object_Type = (int) eObjectType.GenericItem;
 
+				askefruerPlans.Id_nb = "askefruer_plans";
+				askefruerPlans.IsPickable = true;
 				askefruerPlans.IsDropable = false;
-				askefruerPlans.IsSaleable = false;
-				askefruerPlans.IsTradable = false;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -255,10 +237,10 @@ namespace DOL.GS.Quests.Midgard
 			}
 
 			// item db check
-			recruitsBoots = (FeetArmorTemplate)GameServer.Database.FindObjectByKey(typeof(FeetArmorTemplate), "recruits_studded_boots_mid");
+			recruitsBoots = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_studded_boots_mid");
 			if (recruitsBoots == null)
 			{
-				recruitsBoots = new FeetArmorTemplate();
+				recruitsBoots = new ItemTemplate();
 				recruitsBoots.Name = "Recruit's Studded Boots (Mid)";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + recruitsBoots.Name + ", creating it ...");
@@ -267,22 +249,37 @@ namespace DOL.GS.Quests.Midgard
 				recruitsBoots.Weight = 24;
 				recruitsBoots.Model = 84; // studded Boots
 
-				recruitsBoots.ArmorFactor = 12;
-				recruitsBoots.ArmorLevel = eArmorLevel.Medium;
+				recruitsBoots.DPS_AF = 12; // Armour
+				recruitsBoots.SPD_ABS = 19; // Absorption
 
-				recruitsBoots.ItemTemplateID = "recruits_studded_boots_mid";
-				recruitsBoots.Value = 1000;
-
+				recruitsBoots.Object_Type = (int) eObjectType.Studded;
+				recruitsBoots.Item_Type = (int) eEquipmentItems.FEET;
+				recruitsBoots.Id_nb = "recruits_studded_boots_mid";
+				recruitsBoots.Gold = 0;
+				recruitsBoots.Silver = 10;
+				recruitsBoots.Copper = 0;
+				recruitsBoots.IsPickable = true;
 				recruitsBoots.IsDropable = true;
-				recruitsBoots.IsSaleable = true;
-				recruitsBoots.IsTradable = true;
 				recruitsBoots.Color = 14;
 
 				recruitsBoots.Bonus = 1; // default bonus
 
-				recruitsBoots.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 3));
-				recruitsBoots.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 1));
-				recruitsBoots.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Spirit, 1));
+				recruitsBoots.Bonus1 = 3;
+				recruitsBoots.Bonus1Type = (int) eStat.STR;
+
+
+				recruitsBoots.Bonus2 = 1;
+				recruitsBoots.Bonus2Type = (int) eStat.CON;
+
+				recruitsBoots.Bonus3 = 1;
+				recruitsBoots.Bonus3Type = (int) eResist.Spirit;
+
+				recruitsBoots.Quality = 100;
+				recruitsBoots.MaxQuality = 100;
+				recruitsBoots.Condition = 1000;
+				recruitsBoots.MaxCondition = 1000;
+				recruitsBoots.Durability = 1000;
+				recruitsBoots.MaxDurability = 1000;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -292,10 +289,10 @@ namespace DOL.GS.Quests.Midgard
 			}
 
 			// item db check
-			recruitsQuiltedBoots = (FeetArmorTemplate)GameServer.Database.FindObjectByKey(typeof(FeetArmorTemplate), "recruits_quilted_boots");
+			recruitsQuiltedBoots = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_quilted_boots");
 			if (recruitsQuiltedBoots == null)
 			{
-				recruitsQuiltedBoots = new FeetArmorTemplate();
+				recruitsQuiltedBoots = new ItemTemplate();
 				recruitsQuiltedBoots.Name = "Recruit's Quilted Boots";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + recruitsQuiltedBoots.Name + ", creating it ...");
@@ -304,21 +301,37 @@ namespace DOL.GS.Quests.Midgard
 				recruitsQuiltedBoots.Weight = 8;
 				recruitsQuiltedBoots.Model = 155; // studded Boots
 
-				recruitsQuiltedBoots.ArmorFactor = 6;
-				recruitsQuiltedBoots.ArmorLevel = eArmorLevel.VeryLow;
-				recruitsQuiltedBoots.ItemTemplateID = "recruits_quilted_boots";
-				recruitsQuiltedBoots.Value = 1000;
+				recruitsQuiltedBoots.DPS_AF = 6; // Armour
+				recruitsQuiltedBoots.SPD_ABS = 0; // Absorption
 
+				recruitsQuiltedBoots.Object_Type = (int) eObjectType.Cloth;
+				recruitsQuiltedBoots.Item_Type = (int) eEquipmentItems.FEET;
+				recruitsQuiltedBoots.Id_nb = "recruits_quilted_boots";
+				recruitsQuiltedBoots.Gold = 0;
+				recruitsQuiltedBoots.Silver = 10;
+				recruitsQuiltedBoots.Copper = 0;
+				recruitsQuiltedBoots.IsPickable = true;
 				recruitsQuiltedBoots.IsDropable = true;
-				recruitsQuiltedBoots.IsSaleable = true;
-				recruitsQuiltedBoots.IsTradable = true;
 				recruitsQuiltedBoots.Color = 36;
 
 				recruitsQuiltedBoots.Bonus = 5; // default bonus
 
-				recruitsQuiltedBoots.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 3));
-				recruitsQuiltedBoots.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 1));
-				recruitsQuiltedBoots.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Spirit, 1));
+				recruitsQuiltedBoots.Bonus1 = 3;
+				recruitsQuiltedBoots.Bonus1Type = (int) eStat.CON;
+
+
+				recruitsQuiltedBoots.Bonus2 = 1;
+				recruitsQuiltedBoots.Bonus2Type = (int) eStat.STR;
+
+				recruitsQuiltedBoots.Bonus3 = 1;
+				recruitsQuiltedBoots.Bonus3Type = (int) eResist.Spirit;
+
+				recruitsQuiltedBoots.Quality = 100;
+				recruitsQuiltedBoots.MaxQuality = 100;
+				recruitsQuiltedBoots.Condition = 1000;
+				recruitsQuiltedBoots.MaxCondition = 1000;
+				recruitsQuiltedBoots.Durability = 1000;
+				recruitsQuiltedBoots.MaxDurability = 1000;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -346,7 +359,7 @@ namespace DOL.GS.Quests.Midgard
 			GameEventMgr.AddHandler(ladyHinda, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToLadyHinda));
 
 			/* Now we bring to dalikor the possibility to give this quest to players */
-			QuestMgr.AddQuestDescriptor(dalikor, typeof(TraitorInMularnDescriptor));
+			dalikor.AddQuestToGive(typeof (TraitorInMularn));
 
 			if (log.IsInfoEnabled)
 				log.Info("Quest \"" + questTitle + "\" initialized");
@@ -381,7 +394,7 @@ namespace DOL.GS.Quests.Midgard
 			GameEventMgr.RemoveHandler(ladyHinda, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToLadyHinda));
 
 			/* Now we remove to dalikor the possibility to give this quest to players */
-			QuestMgr.RemoveQuestDescriptor(dalikor, typeof(TraitorInMularnDescriptor));
+			dalikor.RemoveQuestToGive(typeof (TraitorInMularn));
 		}
 
 		protected static void PlayerLeftWorld(DOLEvent e, object sender, EventArgs args)
@@ -398,7 +411,8 @@ namespace DOL.GS.Quests.Midgard
 				// remorph player back...
 				if (player.Model == ladyHinda.Model)
 				{
-					player.Model = player.CreationModel;
+					GameClient client = player.Client;
+					player.Model = (ushort) client.Account.Characters[client.ActiveCharIndex].CreationModel;
 					SendSystemMessage(player, "You change back to your normal form!");
 				}
 
@@ -425,10 +439,10 @@ namespace DOL.GS.Quests.Midgard
 			{
 				UseSlotEventArgs uArgs = (UseSlotEventArgs) args;
 
-				GenericItem item = player.Inventory.GetItem((eInventorySlot)uArgs.Slot);
-				if (item != null && item.Name == necklaceOfDoppelganger.Name)
+				InventoryItem item = player.Inventory.GetItem((eInventorySlot)uArgs.Slot);
+				if (item != null && item.Id_nb == necklaceOfDoppelganger.Id_nb)
 				{
-					if (player.Position.CheckSquareDistance(hindaEnd.Position, 2500*2500))
+					if (WorldMgr.GetDistance(player, hindaEnd.X, hindaEnd.Y, hindaEnd.Z) < 2500)
 					{
 						foreach (GamePlayer visPlayer in player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 						{
@@ -441,10 +455,12 @@ namespace DOL.GS.Quests.Midgard
 
 						if (!ladyHinda.Alive || ladyHinda.ObjectState != GameObject.eObjectState.Active)
 						{
-							ladyHinda.Position = hindaStart.Position;
+							ladyHinda.X = hindaStart.X;
+							ladyHinda.Y = hindaStart.Y;
+							ladyHinda.Z = hindaStart.Z;
 							ladyHinda.Heading = hindaStart.Heading;
 							ladyHinda.AddToWorld();
-							ladyHinda.WalkTo(hindaStart.Position, ladyHinda.MaxSpeed);
+							ladyHinda.WalkTo(hindaEnd.X, hindaEnd.Y, hindaEnd.Z, ladyHinda.MaxSpeed);
 						}
 						quest.Step = 3;
 					}
@@ -466,7 +482,9 @@ namespace DOL.GS.Quests.Midgard
 
 				if (quest.Step == 3 && (!ladyHinda.Alive || ladyHinda.ObjectState != GameObject.eObjectState.Active))
 				{
-					ladyHinda.Position = hindaEnd.Position;
+					ladyHinda.X = hindaEnd.X;
+					ladyHinda.Y = hindaEnd.Y;
+					ladyHinda.Z = hindaEnd.Z;
 					ladyHinda.Heading = hindaEnd.Heading;
 					ladyHinda.AddToWorld();
 				}
@@ -485,7 +503,7 @@ namespace DOL.GS.Quests.Midgard
 			if (player == null)
 				return;
 
-			if (QuestMgr.CanGiveQuest(typeof(TraitorInMularn), player, dalikor) <= 0)
+			if( dalikor.CanGiveQuest(typeof (TraitorInMularn), player)  <= 0)
 				return;
 
 			//We also check if the player is already doing the quest
@@ -562,10 +580,10 @@ namespace DOL.GS.Quests.Midgard
 							{
 								quest.FinishQuest();
 							}
-							break;/*
+							break;
 						case "abort":
 							player.Out.SendCustomDialog("Do you really want to abort this quest, \nall items gained during quest will be lost?", new CustomDialogResponse(CheckPlayerAbortQuest));
-							break;*/
+							break;
 					}
 				}
 			}
@@ -578,7 +596,7 @@ namespace DOL.GS.Quests.Midgard
 			if (player == null)
 				return;
 
-			if (QuestMgr.CanGiveQuest(typeof(TraitorInMularn), player, dalikor) <= 0)
+			if( dalikor.CanGiveQuest(typeof (TraitorInMularn), player)  <= 0)
 				return;
 
 			//We also check if the player is already doing the quest
@@ -608,7 +626,7 @@ namespace DOL.GS.Quests.Midgard
 							ladyHinda.SayTo(player, "I have with me the plans for tomorrow night. We will need your help in being prepared. Your instructions are written on the parchment. Take it and memorize your duties, lest our Queen be angered. I bid you farewell for now.");
 							if (quest.Step == 3)
 							{
-								player.ReceiveItem(ladyHinda, askefruerPlans.CreateInstance());
+								GiveItem(ladyHinda, player, askefruerPlans);
 
 								new RegionTimer(ladyHinda, new RegionTimerCallback(quest.CastLadyFelin), 10000);
 								new RegionTimer(ladyHinda, new RegionTimerCallback(quest.RemoveLadyFelin), 12000);
@@ -621,12 +639,35 @@ namespace DOL.GS.Quests.Midgard
 			}
 		}
 
+		/// <summary>
+		/// This method checks if a player qualifies for this quest
+		/// </summary>
+		/// <returns>true if qualified, false if not</returns>
+		public override bool CheckQuestQualification(GamePlayer player)
+		{
+			// if the player is already doing the quest his level is no longer of relevance
+			if (player.IsDoingQuest(typeof (TraitorInMularn)) != null)
+				return true;
+
+			// This checks below are only performed is player isn't doing quest already
+			if (player.HasFinishedQuest(typeof (Nuisances)) == 0)
+				return false;
+
+			if (!CheckPartAccessible(player, typeof (TraitorInMularn)))
+				return false;
+
+			if (player.Level < minimumLevel || player.Level > maximumLevel)
+				return false;
+
+			return true;
+		}
+
 
 		/* This is our callback hook that will be called when the player clicks
 		 * on any button in the quest offer dialog. We check if he accepts or
 		 * declines here...
 		 */
-		/*
+
 		private static void CheckPlayerAbortQuest(GamePlayer player, byte response)
 		{
 			TraitorInMularn quest = player.IsDoingQuest(typeof (TraitorInMularn)) as TraitorInMularn;
@@ -643,7 +684,7 @@ namespace DOL.GS.Quests.Midgard
 				SendSystemMessage(player, "Aborting Quest " + questTitle + ". You can start over again if you want.");
 				quest.AbortQuest();
 			}
-		}*/
+		}
 
 		/* This is our callback hook that will be called when the player clicks
 		 * on any button in the quest offer dialog. We check if he accepts or
@@ -654,7 +695,7 @@ namespace DOL.GS.Quests.Midgard
 		{
 			//We recheck the qualification, because we don't talk to players
 			//who are not doing the quest
-			if (QuestMgr.CanGiveQuest(typeof(TraitorInMularn), player, dalikor) <= 0)
+			if( dalikor.CanGiveQuest(typeof (TraitorInMularn), player)  <= 0)
 				return;
 
 			TraitorInMularn quest = player.IsDoingQuest(typeof (TraitorInMularn)) as TraitorInMularn;
@@ -669,12 +710,12 @@ namespace DOL.GS.Quests.Midgard
 			else
 			{
 				//Check if we can add the quest!
-				if (!QuestMgr.GiveQuestToPlayer(typeof(TraitorInMularn), player, dalikor))
+				if (!dalikor.GiveQuest(typeof (TraitorInMularn), player, 1))
 					return;
 
 				dalikor.SayTo(player, "Thank you recruit. Now, listen. The traitor has a necklace that allows him to change into the shape of an Askefruer. He says it makes them more comfortable with him. I [have] the necklace with me.");
-				// give necklace    
-				player.ReceiveItem(dalikor, necklaceOfDoppelganger.CreateInstance());
+				// give necklace                
+				GiveItem(dalikor, player, necklaceOfDoppelganger);
 
 				GameEventMgr.AddHandler(player, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
 				GameEventMgr.AddHandler(player, GamePlayerEvent.UseSlot, new DOLEventHandler(PlayerUseSlot));
@@ -701,7 +742,8 @@ namespace DOL.GS.Quests.Midgard
 
 		protected virtual int ResetPlayerModel(RegionTimer callingTimer)
 		{
-			m_questPlayer.Model = m_questPlayer.CreationModel;
+			GameClient client = m_questPlayer.Client;
+			m_questPlayer.Model = (ushort) client.Account.Characters[client.ActiveCharIndex].CreationModel;
 			SendSystemMessage("You change back to your normal form!");
 			return 0;
 		}
@@ -739,9 +781,8 @@ namespace DOL.GS.Quests.Midgard
 						return "[Step #4] Take the Askefruer Plans you received from Lady Hinda back to Dalikor for further analysis.";
 					case 5:
 						return "[Step #5] Wait for Dalikor to reward you. If he stops speaking with you, ask if there is [something] you might be given for your efforts.";
-					default:
-						return "[Step #" + Step + "] No Description entered for this step!";
 				}
+				return base.Description;
 			}
 		}
 
@@ -755,42 +796,42 @@ namespace DOL.GS.Quests.Midgard
 			if (Step == 4 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == dalikor.Name && gArgs.Item.Name == askefruerPlans.Name)
+				if (gArgs.Target.Name == dalikor.Name && gArgs.Item.Id_nb == askefruerPlans.Id_nb)
 				{
-					RemoveItemFromPlayer(dalikor, askefruerPlans);
+					RemoveItem(dalikor, m_questPlayer, askefruerPlans);
 
 					dalikor.TurnTo(m_questPlayer);
 					dalikor.SayTo(m_questPlayer, "Ah! The plans of the Askefruer. Ah, but they are in a language I do not understand. I will have to take this to the elders of Mularn for further study. Before I do that, though, I have [something] here for you.");
-					dalikor.Emote(eEmote.Ponder);
+					m_questPlayer.Out.SendEmoteAnimation(dalikor, eEmote.Ponder);
 					Step = 5;
 					return;
 				}
 			}
 
 		}
-		/*
+
 		public override void AbortQuest()
 		{
 			base.AbortQuest(); //Defined in Quest, changes the state, stores in DB etc ...
 
-			RemoveItemFromPlayer(necklaceOfDoppelganger);
-			RemoveItemFromPlayer(askefruerPlans);
+			RemoveItem(m_questPlayer, necklaceOfDoppelganger, false);
+			RemoveItem(m_questPlayer, askefruerPlans, false);
 
 			GameEventMgr.RemoveHandler(m_questPlayer, GamePlayerEvent.UseSlot, new DOLEventHandler(PlayerUseSlot));
 			GameEventMgr.RemoveHandler(m_questPlayer, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
 		}
-		*/
+
 
 		public override void FinishQuest()
 		{
 			base.FinishQuest(); //Defined in Quest, changes the state, stores in DB etc ...
 
-			RemoveItemFromPlayer(dalikor, necklaceOfDoppelganger);
+			RemoveItem(dalikor, m_questPlayer, necklaceOfDoppelganger);
 			//Give reward to player here ...            
-			if (m_questPlayer.HasAbilityToUseItem(recruitsBoots.CreateInstance() as EquipableItem))
-				GiveItemToPlayer(dalikor, recruitsBoots.CreateInstance());
+			if (m_questPlayer.HasAbilityToUseItem(recruitsBoots))
+				GiveItem(dalikor, m_questPlayer, recruitsBoots);
 			else
-				GiveItemToPlayer(dalikor, recruitsQuiltedBoots.CreateInstance());
+				GiveItem(dalikor, m_questPlayer, recruitsQuiltedBoots);
 
 			m_questPlayer.GainExperience(40, 0, 0, true);
 			m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 4, Util.Random(50)), "You recieve {0} as a reward.");

@@ -43,13 +43,13 @@ namespace DOL.GS.SkillHandler
 			}
 
 			long stealthChangeTick = player.TempProperties.getLongProperty(GamePlayer.STEALTH_CHANGE_TICK, 0L);
-			long changeTime = player.Region.Time - stealthChangeTick;
+			long changeTime = player.CurrentRegion.Time - stealthChangeTick;
 			if(changeTime < 2000)
 			{
 				player.Out.SendMessage("You must wait " + ((2000-changeTime)/1000).ToString() + " more second to attempt to hide!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
-			player.TempProperties.setProperty(GamePlayer.STEALTH_CHANGE_TICK, player.Region.Time);
+			player.TempProperties.setProperty(GamePlayer.STEALTH_CHANGE_TICK, player.CurrentRegion.Time);
 
 			if (!player.IsStealthed)
 			{
@@ -110,7 +110,7 @@ namespace DOL.GS.SkillHandler
 					if (!GameServer.ServerRules.IsAllowedToAttack(ply, player, true)) continue;
 
 					//GM's don't prevent stealth
-					if (ply.Client.Account.PrivLevel > ePrivLevel.Player) continue;
+					if (ply.Client.Account.PrivLevel > 1) continue;
 
 					//Range check
 					if (!IsObjectTooClose(ply, player)) continue;
@@ -150,19 +150,19 @@ namespace DOL.GS.SkillHandler
 		/// <returns>true if object prevents player from hiding</returns>
 		private bool IsObjectTooClose(GameObject obj, GamePlayer player)
 		{
-			double enemyLevel = Math.Max(1.0, obj.Level);
-			double stealthLevel = player.GetModifiedSpecLevel(Specs.Stealth);
-			double radius;
+			float enemyLevel = Math.Max(1f, obj.Level);
+			float stealthLevel = player.GetModifiedSpecLevel(Specs.Stealth);
+			float radius;
 
 			if(obj is GamePlayer && ((GamePlayer)obj).HasAbility(Abilities.DetectHidden))
 			{
 				//1792.0 = 2048.0 - 256.0 <- Detect Hidden doubles the range
-				radius = 2048.0 - (1792.0 * stealthLevel / enemyLevel); 
+				radius = 2048f - (1792f * stealthLevel / enemyLevel); 
 			}
 			else
 			{
 				//1024.0 = 1024.0 - 128.0 <- normal Range
-				radius = 1024.0 - (896.0 * stealthLevel / enemyLevel); 
+				radius = 1024f - (896f * stealthLevel / enemyLevel); 
 			}
 
 			//If we are so skilled we can hide right under the nose of
@@ -172,7 +172,7 @@ namespace DOL.GS.SkillHandler
 
 			//Test if the stealthing player is in range of this 
 			//player's "impossible to hide" circle
-			return obj.Position.CheckDistance(player.Position, (int)radius);
+			return WorldMgr.CheckDistance(obj, player,(int)radius);
 		}
 	}
 }

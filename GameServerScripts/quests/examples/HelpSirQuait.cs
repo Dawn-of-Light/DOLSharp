@@ -42,11 +42,10 @@
 
 using System;
 using System.Reflection;
+using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
-using NHibernate.Mapping.Attributes;
 using log4net;
-
 /* I suggest you declare yourself some namespaces for your quests
  * Like: DOL.GS.Quests.Albion
  *       DOL.GS.Quests.Midgard
@@ -58,77 +57,15 @@ using log4net;
 
 namespace DOL.GS.Quests.Examples
 {
-	
-	/* The first thing we do, is to declare the quest requirement
-	 * class linked with the new Quest. To do this, we derive 
-	 * from the abstract class AbstractQuestDescriptor
+	/* The first thing we do, is to declare the class we create
+	 * as Quest. To do this, we derive from the abstract class
+	 * AbstractQuest
+	 * 
+	 * This quest for example will be stored in the database with
+	 * the name: DOL.GS.Quests.Examples.SirQuaitHelp
 	 */
-	public class HelpSirQuaitDescriptor : AbstractQuestDescriptor
-	{
-		/* This is the type of the quest class linked with 
-		 * this requirement class, you must override the 
-		 * base method like that
-		 */
-		public override Type LinkedQuestType
-		{
-			get { return typeof(HelpSirQuait); }
-		}
 
-		/* This value is used to retrieves how many times the 
-		 * player can do the quest. Override it only if you need, 
-		 * the default value is 1
-		 */
-		public override int MaxQuestCount
-		{
-			get { return 3; }
-		}
-
-		/* This value is used to retrieves the minimum level needed
-		 *  to be able to make this quest. Override it only if you need, 
-		 * the default value is 1
-		 */
-//		public override int MinLevel
-//		{
-//			get { return 1; }
-//		}
-
-		/* This value is used to retrieves how maximum level needed
-		 * to be able to make this quest. Override it only if you need, 
-		 * the default value is 50
-		 */
-		public override int MaxLevel
-		{
-			get { return 10; }
-		}
-
-		/* This method is used to know if the player is qualified to 
-		 * do the quest. The base method always test his level and
-		 * how many time the quest has been done. Override it only if 
-		 * you want to add a custom test (here we test also the class name)
-		 */
-		public override bool CheckQuestQualification(GamePlayer player)
-		{
-			if(base.CheckQuestQualification(player) == false)
-				return false;
-
-			// if the player is already doing the quest his level is no longer of relevance
-			if (player.IsDoingQuest(typeof (HelpSirQuait)) != null)
-				return true;
-
-			if (player.CharacterClass.Name != "Fighter")
-				return false;
-
-			return true;
-		}
-	}
-
-
-	/* The second thing we do, is to declare the class we create
-	 * as Quest. We must make it persistant using attributes, to
-	 * do this, we derive from the abstract class AbstractQuest
-	 */
-	[NHibernate.Mapping.Attributes.Subclass(NameType=typeof(HelpSirQuait), ExtendsType=typeof(AbstractQuest))] 
-	public class HelpSirQuait : BaseQuest
+	public class HelpSirQuait : AbstractQuest
 	{
 		/// <summary>
 		/// Defines a logger for this class.
@@ -140,11 +77,34 @@ namespace DOL.GS.Quests.Examples
 		 * ALL instance of your quest and should be initialized ONLY ONCE inside
 		 * the OnScriptLoaded method.
 		 * 
+		 * Or declare nonstatic variables here which can be unique for each Player
+		 * and change through the quest journey...
+		 * 
 		 * We store our two mobs as static variables, since we need them
 		 */
 		private static GameNPC sirQuait = null;
 		private static GameNPC evilThief = null;
-		private static SlashingWeaponTemplate sirQuaitsSwordTemplate = null;
+		private static ItemTemplate sirQuaitsSword = null;
+
+		/* We need to define the constructors from the base class here, else there might be problems
+		 * when loading this quest...
+		 */
+
+		public HelpSirQuait() : base()
+		{
+		}
+
+		public HelpSirQuait(GamePlayer questingPlayer) : base(questingPlayer)
+		{
+		}
+
+		public HelpSirQuait(GamePlayer questingPlayer, int step) : base(questingPlayer, step)
+		{
+		}
+
+		public HelpSirQuait(GamePlayer questingPlayer, DBQuest dbQuest) : base(questingPlayer, dbQuest)
+		{
+		}
 
 
 		/* The following method is called automatically when this quest class
@@ -162,24 +122,22 @@ namespace DOL.GS.Quests.Examples
 		 * want. We will do it the standard way here ... and make Sir Quait wail
 		 * a bit about the loss of his sword! 
 		 */
+
 		[ScriptLoadedEvent]
 		public static void ScriptLoaded(DOLEvent e, object sender, EventArgs args)
 		{
-		   /* First thing we do in here is to search for a Sir Quait NPC inside
-			* the world who comes from the Albion realm. If we find a Sir Quait,
-			* this means we don't have to create a new one. 
-			* 
-			* NOTE: You can do anything you want in this method, you don't have
-			* to search for NPC's ... you could create a custom item, place it
-			* on the ground and if a player picks it up, he will get the quest!
-			* Just examples, do anything you like and feel comfortable with :)
-			*/
-
-			#region Define NPC and ItemTemplate
-			
+			/* First thing we do in here is to search for a Sir Quait NPC inside
+				* the world who comes from the Albion realm. If we find a Sir Quait,
+				* this means we don't have to create a new one. 
+				* 
+				* NOTE: You can do anything you want in this method, you don't have
+				* to search for NPC's ... you could create a custom item, place it
+				* on the ground and if a player picks it up, he will get the quest!
+				* Just examples, do anything you like and feel comfortable with :)
+				*/
 			GameNPC[] npcs = WorldMgr.GetNPCsByName("Sir Quait", eRealm.Albion);
 
-			/* If the npcs array length is 0 then no Sir Quait exists in
+			/* Whops, if the npcs array length is 0 then no Sir Quait exists in
 				* this users Mob Database, so we simply create one ;-)
 				* else we take the existing one. And if more than one exist, we take
 				* the first ...
@@ -193,18 +151,18 @@ namespace DOL.GS.Quests.Examples
 				sirQuait.Name = "Sir Quait";
 				sirQuait.GuildName = "Part of DOL Quest Example";
 				sirQuait.Realm = (byte) eRealm.Albion;
-				sirQuait.RegionId = 1;
+				sirQuait.CurrentRegionID = 1;
 				sirQuait.Size = 50;
 				sirQuait.Level = 10;
-				sirQuait.Position = new Point(531971, 478955, 1500);
+				sirQuait.X = 531971;
+				sirQuait.Y = 478955;
+				sirQuait.Z = 0;
 				sirQuait.Heading = 3570;
 
-				/* You don't have to store the created mob in the db if you don't want,
-				 * it will be recreated each time it is not found, just give the value
-				 * you want to SAVE_INTO_DATABASE in the file BaseQuest.cs
-				 */
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(sirQuait);
+				//You don't have to store the created mob in the db if you don't want,
+				//it will be recreated each time it is not found, just comment the following
+				//line if you rather not modify your database
+				sirQuait.SaveIntoDatabase();
 
 				sirQuait.AddToWorld();
 			}
@@ -224,70 +182,54 @@ namespace DOL.GS.Quests.Examples
 				evilThief.Name = "Evil Thief of the Shadowclan";
 				evilThief.GuildName = "Part of DOL Quest Example";
 				evilThief.Realm = (byte) eRealm.None; //Needs to be none, else we can't kill him ;-)
-				evilThief.RegionId = 1;
+				evilThief.CurrentRegionID = 1;
 				evilThief.Size = 50;
 				evilThief.Level = 1;
-				evilThief.Position = new Point(532571, 479055, 1500);
+				evilThief.X = 532571;
+				evilThief.Y = 479055;
+				evilThief.Z = 0;
 				evilThief.Heading = 3570;
 
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(evilThief);
-
+				//You don't have to store the creted mob in the db if you don't want,
+				//it will be recreated each time it is not found, just comment the following
+				//line if you rather not modify your database
+				evilThief.SaveIntoDatabase();
 				evilThief.AddToWorld();
 			}
 			else
 				evilThief = npcs[0];
 
-			sirQuaitsSwordTemplate = (SlashingWeaponTemplate) GameServer.Database.FindObjectByKey(typeof (SlashingWeaponTemplate), "SirQuaitsSword");
-			if (sirQuaitsSwordTemplate == null)
+			sirQuaitsSword = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "SirQuaitsSword");
+			if (sirQuaitsSword == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("\"Help Sir Quait\" Quest could not find Sir Quait's Sword, creating it ...");
+				sirQuaitsSword = new ItemTemplate();
+				sirQuaitsSword.Id_nb = "SirQuaitsSword";
+				sirQuaitsSword.Name = "Sir Quait's Sword";
+				sirQuaitsSword.Level = 1;
+				sirQuaitsSword.Model = 847;
+				sirQuaitsSword.IsDropable = false;
+				sirQuaitsSword.IsPickable = false;
 
-				sirQuaitsSwordTemplate = new SlashingWeaponTemplate();
-				sirQuaitsSwordTemplate.ItemTemplateID = "SirQuaitsSword";
-				sirQuaitsSwordTemplate.Name = "Sir Quaits Sword";
-				sirQuaitsSwordTemplate.Level = 1;
-				sirQuaitsSwordTemplate.Durability = 100;
-				sirQuaitsSwordTemplate.Condition = 100;
-				sirQuaitsSwordTemplate.Quality = 90;
-				sirQuaitsSwordTemplate.Bonus = 0;
-				sirQuaitsSwordTemplate.DamagePerSecond = 12;
-				sirQuaitsSwordTemplate.Speed = 25;
-				sirQuaitsSwordTemplate.Weight = 10;
-				sirQuaitsSwordTemplate.Model = 3;
-				sirQuaitsSwordTemplate.Realm = eRealm.Albion;
-				sirQuaitsSwordTemplate.IsDropable = true; 
-				sirQuaitsSwordTemplate.IsTradable = true; 
-				sirQuaitsSwordTemplate.IsSaleable = true;
-				sirQuaitsSwordTemplate.MaterialLevel = eMaterialLevel.Bronze;
-
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(sirQuaitsSwordTemplate);
+				//You don't have to store the created item in the db if you don't want,
+				//it will be recreated each time it is not found, just comment the following
+				//line if you rather not modify your database
+				GameServer.Database.AddNewObject(sirQuaitsSword);
 			}
-			#endregion
 
 			/* Now we add some hooks to the Sir Quait we found.
-			* Actually, we want to know when a player interacts with him.
-			* So, we hook the right-click (interact) and the whisper method
-			* of Sir Quait and set the callback method to the "TalkToSirQuait"
-			* method. This means, the "TalkToSirQuait" method is called whenever
-			* a player right clicks on him or when he whispers to him.
-			*/
+				* Actually, we want to know when a player interacts with him.
+				* So, we hook the right-click (interact) and the whisper method
+				* of Sir Quait and set the callback method to the "TalkToSirQuait"
+				* method. This means, the "TalkToSirQuait" method is called whenever
+				* a player right clicks on him or when he whispers to him.
+				*/
 			GameEventMgr.AddHandler(sirQuait, GameLivingEvent.Interact, new DOLEventHandler(TalkToSirQuait));
 			GameEventMgr.AddHandler(sirQuait, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToSirQuait));
 
-			/* Now we add some hooks to trigger the quest dialog reponse.
-			 */
-			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(QuestDialogReponse));
-			GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(QuestDialogReponse));
-
-			GameEventMgr.AddHandler(GamePlayerEvent.AbortQuest, new DOLEventHandler(QuestDialogReponse));
-			GameEventMgr.AddHandler(GamePlayerEvent.ContinueQuest, new DOLEventHandler(QuestDialogReponse));
-
-			/* Now we bring to SirQuait the possibility to give this quest to players,
-			 */
-			QuestMgr.AddQuestDescriptor(sirQuait, typeof (HelpSirQuaitDescriptor));
+			/* Now we bring to SirQuait the possibility to give this quest to players */
+			sirQuait.AddQuestToGive(typeof (HelpSirQuait));
 
 			if (log.IsInfoEnabled)
 				log.Info("HelpSirQuait Quest initialized");
@@ -299,6 +241,7 @@ namespace DOL.GS.Quests.Examples
 		 * Since we set hooks in the load method, it is good practice to remove
 		 * those hooks again!
 		 */
+
 		[ScriptUnloadedEvent]
 		public static void ScriptUnloaded(DOLEvent e, object sender, EventArgs args)
 		{
@@ -314,11 +257,8 @@ namespace DOL.GS.Quests.Examples
 			GameEventMgr.RemoveHandler(sirQuait, GameObjectEvent.Interact, new DOLEventHandler(TalkToSirQuait));
 			GameEventMgr.RemoveHandler(sirQuait, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToSirQuait));
 
-			GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(QuestDialogReponse));
-			GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(QuestDialogReponse));
-
 			/* Now we remove to SirQuait the possibility to give this quest to players */
-			QuestMgr.RemoveQuestDescriptor(sirQuait, typeof (HelpSirQuaitDescriptor));
+			sirQuait.RemoveQuestToGive(typeof (HelpSirQuait));
 		}
 
 
@@ -326,6 +266,7 @@ namespace DOL.GS.Quests.Examples
 		 * Sir Quait. It will be called whenever a player right clicks on Sir Quait
 		 * or when he whispers something to him.
 		 */
+
 		protected static void TalkToSirQuait(DOLEvent e, object sender, EventArgs args)
 		{
 			//We get the player from the event arguments and check if he qualifies		
@@ -335,12 +276,16 @@ namespace DOL.GS.Quests.Examples
 
 			//Now we check if the player is qualified for the quest
 			//and only let the player do the quest 3 times
-			if (QuestMgr.CanGiveQuest(typeof(HelpSirQuait), player, sirQuait) <= 0)
+			if( sirQuait.CanGiveQuest(typeof (HelpSirQuait), player)  <= 0)
 				return;
 
 			//Did the player rightclick on Sir Quait?
 			if (e == GameObjectEvent.Interact)
 			{
+				//We get the player from the event arguments and check if he qualifies
+				//for the quest!
+				InteractEventArgs iargs = args as InteractEventArgs;
+
 				//We check if the player is already doing the quest
 				if (player.IsDoingQuest(typeof (HelpSirQuait)) != null)
 				{
@@ -372,7 +317,7 @@ namespace DOL.GS.Quests.Examples
 							break;
 							//If the player offered his "help", we send the quest dialog now!
 						case "you help me":
-							QuestMgr.ProposeQuestToPlayer(typeof (HelpSirQuait), "Do you want to help Sir Quait?", player, sirQuait);
+							player.Out.SendCustomDialog("Do you want to help Sir Quait?", new CustomDialogResponse(CheckPlayerAcceptQuest));
 							break;
 					}
 				}
@@ -386,9 +331,6 @@ namespace DOL.GS.Quests.Examples
 						case "find":
 							player.Out.SendMessage("Really!? Please give it to me!", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
 							break;
-						case "abort":
-							QuestMgr.AbortQuestToPlayer(typeof(HelpSirQuait), "Do you really want to abort the quest?", player, sirQuait);
-							break;
 					}
 				}
 			}
@@ -398,42 +340,56 @@ namespace DOL.GS.Quests.Examples
 		 * on any button in the quest offer dialog. We check if he accepts or
 		 * declines here...
 		 */
-		protected static void QuestDialogReponse(DOLEvent e, object sender, EventArgs args)
+
+		private static void CheckPlayerAcceptQuest(GamePlayer player, byte response)
 		{
-			QuestEventArgs gArgs = args as QuestEventArgs;
+			if( sirQuait.CanGiveQuest(typeof (HelpSirQuait), player)  <= 0)
+				return;
 
-			if(gArgs != null && gArgs.QuestDescriptor.LinkedQuestType.Equals(typeof (HelpSirQuait)))
+			if (player.IsDoingQuest(typeof (HelpSirQuait)) != null)
+				return;
+
+			if (response == 0x00)
 			{
-				GamePlayer player = gArgs.Player;
-				if(player == null) return;
+				player.Out.SendMessage("Oh well, if you change your mind, please come back!", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+			}
+			else
+			{
+				//Check if we can add the quest!
+				if (!sirQuait.GiveQuest(typeof (HelpSirQuait), player, 1))
+					return;
 
-				if (e == GamePlayerEvent.AcceptQuest)
-				{
-					if(QuestMgr.GiveQuestToPlayer(typeof (HelpSirQuait), player, gArgs.Source as GameNPC))
-					{
-						player.Out.SendMessage("Thank you! Please bring the [sword] back to me!", eChatType.CT_Say, eChatLoc.CL_PopupWindow);	
-					}
-				}
-				else if (e == GamePlayerEvent.DeclineQuest)
-				{
-
-					player.Out.SendMessage("Oh well, if you change your mind, please come back!", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
-				}
-				else if (e == GamePlayerEvent.AbortQuest)
-				{
-					// at the moment AbortQuest needs a response as returned by the customDialog. Since the actual events are already fired depending on the response: ContinueQuest, AbortQuest, this response bit is no  longer needed actually.
-					player.AbortQuest(gArgs.QuestDescriptor.LinkedQuestType, 0x01);
-				}
-				else if (e == GamePlayerEvent.ContinueQuest)
-				{
-					player.Out.SendMessage("Allright, go on and finish your quest!", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
-				}
+				player.Out.SendMessage("Thank you! Please bring the [sword] back to me!", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
 			}
 		}
 
+		/// <summary>
+		/// This method checks if a player is qualified for this quest
+		/// </summary>
+		/// <returns>true if qualified, false if not</returns>
+		public override bool CheckQuestQualification(GamePlayer player)
+		{
+			// if the player is already doing the quest his level is no longer of relevance
+			if (player.IsDoingQuest(typeof (HelpSirQuait)) != null)
+				return true;
 
-		/* Now we need to set the quest name.
-		 * We must override the base method to do it.
+			if (player.Level > 2 || player.CharacterClass.Name != "Fighter")
+				return false;
+			return true;
+		}
+
+		/// <summary>
+		/// Retrieves how much time player can do the quest (default 1 time)
+		/// </summary>
+		public override int MaxQuestCount
+		{
+			get { return 3; }
+		}
+
+		/* Now we set the quest name.
+		 * If we don't override the base method, then the quest
+		 * will have the name "UNDEFINED QUEST NAME" and we don't
+		 * want that, do we? ;-)
 		 */
 		public override string Name
 		{
@@ -441,9 +397,11 @@ namespace DOL.GS.Quests.Examples
 		}
 
 		/* Now we set the quest step descriptions.
-		 * You must do it by overriding the base
-		 * method.
+		 * If we don't override the base method, then the quest
+		 * description for ALL steps will be "UNDEFINDED QUEST DESCRIPTION"
+		 * and this isn't something nice either ;-)
 		 */
+
 		public override string Description
 		{
 			get
@@ -454,56 +412,50 @@ namespace DOL.GS.Quests.Examples
 						return "[Step #1] Find the evil thief and get the magic sword from him!";
 					case 2:
 						return "[Step #2] Bring back Sir Quait's magic sword to receive your reward!";
-					default :
-                        return "[Step #" + Step + "] No Description entered for this step!";
 				}
+				return base.Description;
 			}
 		}
 
-		/* This method needs to be implemented in each quest.
-		 * It is the core of the quest. The global event hook of the GamePlayer.
-		 * This method will be called whenever a GamePlayer with this quest
-		 * fires ANY event!
-		 */
 		public override void Notify(DOLEvent e, object sender, EventArgs args)
 		{
 			GamePlayer player = sender as GamePlayer;
 
-			if (player == null || player.IsDoingQuest(typeof (HelpSirQuait)) == null)
+			if (player==null || player.IsDoingQuest(typeof (HelpSirQuait)) == null)
 				return;
 
 			if (Step == 1 && e == GameLivingEvent.EnemyKilled)
 			{
 				EnemyKilledEventArgs gArgs = (EnemyKilledEventArgs) args;
-				if (gArgs.Target.Name == evilThief.Name)
+				if (gArgs.Target.Name == "Evil Thief of the Shadowclan")
 				{
 					player.Out.SendMessage("You defeated the evil thief and quickly pick up Sir Quait's sword!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					player.Inventory.AddItem(eInventorySlot.FirstBackpack, CreateQuestItem(sirQuaitsSwordTemplate, this));
-					ChangeQuestStep(2);
+					InventoryItem item = new InventoryItem();
+					item.CopyFrom(sirQuaitsSword);
+					player.Inventory.AddItem(eInventorySlot.FirstBackpack, item);
+					Step = 2;
 					return;
 				}
 			}
 			else if (Step == 2 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == sirQuait.Name && gArgs.Item.Name == sirQuaitsSwordTemplate.Name)
+				if (gArgs.Target.Name == "Sir Quait" && gArgs.Item.Id_nb == "SirQuaitsSword")
 				{
-					RemoveItemFromPlayer(sirQuait, gArgs.Item);
+//					player.Inventory.FindItemByID("SirQuaitsSword"); // huh?
+					if (!player.Inventory.RemoveItem(gArgs.Item))
+						return;
 					FinishQuest();
 					return;
 				}
 			}
 		}
 
-		/* This method is the end of the quest
-		 * Use it to give thanks and reward to the player.
-		 * You must call the base function at the end 
-		 * of it to save the finished quest in the db.
-		 */
 		public override void FinishQuest()
 		{
 			m_questPlayer.Out.SendMessage("Sir Quait thanks you for bringing back his holy sword!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			base.FinishQuest(); // This function must be called at the end
+			base.FinishQuest(); //Defined in Quest, changes the state, stores in DB etc ...
+			//Give reward to player here ...
 		}
 
 	}

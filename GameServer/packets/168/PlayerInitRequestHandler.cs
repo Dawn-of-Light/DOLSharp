@@ -63,7 +63,7 @@ namespace DOL.GS.PacketHandler.v168
 				// 0x3A - ?
 
 				if (log.IsDebugEnabled)
-					log.DebugFormat("Client {0}({1}) entering world: pid->{2} oid->{3}", player.Client.Account.AccountName, player.Name, player.Client.SessionID, player.ObjectID);
+					log.DebugFormat("Client {0}({1}) entering world: pid->{2} oid->{3}", player.Client.Account.Name, player.Name, player.Client.SessionID, player.ObjectID);
 				//If put here it works, in 0x7C-World Init alone not ... *sigh*
 
 				player.Out.SendUpdatePoints();
@@ -74,7 +74,7 @@ namespace DOL.GS.PacketHandler.v168
 				player.CurrentUpdateArray.SetAll(false);
 				//KeepMgr.broadcastKeeps(player.Player);
 
-				player.Region.Notify(RegionEvent.PlayerEnter, player.Region, new RegionPlayerEventArgs(player));
+				player.CurrentRegion.Notify(RegionEvent.PlayerEnter, player.CurrentRegion, new RegionPlayerEventArgs(player));
 
 				//Send npcs in view a 0x72 message
 				foreach (GameNPC npc in player.GetNPCsInRadius(WorldMgr.VISIBILITY_DISTANCE))
@@ -129,6 +129,8 @@ namespace DOL.GS.PacketHandler.v168
 					player.PlayerGroup.UpdateAllToMember(player, true, false);
 					player.PlayerGroup.UpdateMember(player, true, true);
 				}
+				
+				player.IsPlayerMoved = false;
 
 				player.Out.SendPlayerInitFinished();
 				player.TargetObject = null;

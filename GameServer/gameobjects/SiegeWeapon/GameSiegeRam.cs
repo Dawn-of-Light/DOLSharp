@@ -18,8 +18,6 @@
  */
 using System;
 using DOL.Events;
-using DOL.GS.PacketHandler;
-
 namespace DOL.GS
 {
 	/// <summary>
@@ -29,11 +27,10 @@ namespace DOL.GS
 	{
 		public GameSiegeRam() : base()
 		{
-			MeleeDamageType = eDamageType.Crush;
+			MeleeDamageType = eDamageType.Body;
 			Name = "siege ram";
 
 			//AmmoType = 0x3B00;
-			AmmoType = 0x2601;
 			//this.Effect = 0x8A1;
 			this.Model = 0xA2A;//0xA28
 			//TODO find all value for ram
@@ -49,14 +46,7 @@ namespace DOL.GS
 		protected override void SelectObjectTarget(DOLEvent e, object sender, EventArgs arguments)
 		{
 			InteractWithEventArgs arg = arguments as InteractWithEventArgs;
-			if (this.TargetObject is GameKeepDoor)
-			{
-				if (Position.CheckSquareDistance(TargetObject.Position, (uint) (WorldMgr.PICKUP_DISTANCE*WorldMgr.PICKUP_DISTANCE)))
-					TargetObject = arg.Target;
-
-				Owner.Out.SendMessage("The Ram is to far away from your target!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				}
-
+			TargetObject = arg.Target;
 		}
 		public override void DoDamage()
 		{
@@ -67,7 +57,11 @@ namespace DOL.GS
 				return;
 			}
 			//todo good  distance check
-
+			if (!WorldMgr.CheckDistance(this,target,WorldMgr.PICKUP_DISTANCE))
+			{
+				//todo msg
+				return;
+			}
 			int damageAmount = 0;
 			switch(this.Level)
 			{
@@ -79,8 +73,7 @@ namespace DOL.GS
 					break;
 			}
 			
-			target.TakeDamage(this,eDamageType.Crush,damageAmount,0);
-			Owner.Out.SendMessage("The Ram hits " + target.Name + " for " + damageAmount + " dmg!", eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
+			target.TakeDamage(this,eDamageType.Body,damageAmount,0);
 			base.DoDamage();
 		}
 	}

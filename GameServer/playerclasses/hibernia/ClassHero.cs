@@ -62,7 +62,7 @@ namespace DOL.GS.Scripts
 
 			if (player.Level >= 5) 
 			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Shield, (int)eShieldSize.Medium));
+				player.AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Medium));
 				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Shields));
 
 				player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_CelticSpear));
@@ -73,7 +73,7 @@ namespace DOL.GS.Scripts
 				player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_LargeWeapons));
 				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Large_Weapons));
 
-				player.AddAbility(SkillBase.GetAbility(Abilities.Shield, (int)eShieldSize.Large));
+				player.AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Large));
 			}
 			if (player.Level >= 11) 
 			{
@@ -86,7 +86,7 @@ namespace DOL.GS.Scripts
 			if (player.Level >= 15) 
 			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Shortbows));
-				player.AddAbility(SkillBase.GetAbility(Abilities.HibArmor, (int)eArmorLevel.High));
+				player.AddAbility(SkillBase.GetAbility(Abilities.HibArmor, ArmorLevel.Scale));
 				player.AddAbility(SkillBase.GetAbility(Abilities.Stag, 1));
 				player.AddAbility(SkillBase.GetAbility(Abilities.Tireless));
 			}

@@ -20,11 +20,10 @@ using System;
 using System.Reflection;
 using System.Collections;
 using System.Threading;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using DOL.GS.Scripts;
-using NHibernate.Expression;
 using log4net;
 
 namespace DOL.GS
@@ -55,10 +54,6 @@ namespace DOL.GS
 		/// </summary>
 		private readonly Timer m_upgradeTimer;
 
-        private int m_albionDifficultyLevel;
-        private int m_midgardDifficultyLevel;
-        private int m_hiberniaDifficultyLevel;
-	    
 		/// <summary>
 		/// 
 		/// </summary>
@@ -111,6 +106,20 @@ namespace DOL.GS
 			get	{ return m_doors; }
 			set { m_doors = value; }
 		}
+		
+		/// <summary>
+		/// the keep db object
+		/// </summary>
+		private DBKeep m_dbkeep;
+
+		/// <summary>
+		/// the keepdb object
+		/// </summary>
+		public DBKeep DBKeep
+		{
+			get	{ return m_dbkeep; }
+			set { m_dbkeep = value;}
+		}
 
 		/// <summary>
 		/// This hold list of all guards of keep
@@ -154,31 +163,17 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// The keep's position.
+		/// region of the keep
 		/// </summary>
-		private Point m_position;
-
-		/// <summary>
-		/// Gets or sets the keep's postion.
-		/// </summary>
-		public Point Position
-		{
-			get { return m_position; }
-			set { m_position = value; }
-		}
+		private Region m_currentRegion;
 
 		/// <summary>
 		/// region of the keep
 		/// </summary>
-		private Region m_region;
-
-		/// <summary>
-		/// region of the keep
-		/// </summary>
-		public Region Region
+		public Region CurrentRegion
 		{
-			get	{ return m_region; }
-			set	{ m_region = value; }
+			get	{ return m_currentRegion; }
+			set	{ m_currentRegion = value; }
 		}
 
 		/// <summary>
@@ -188,9 +183,9 @@ namespace DOL.GS
 		{
 			get 
 			{
-				if (m_region != null) 
+				if (m_currentRegion != null) 
 				{
-					return m_region.GetZone(Position);
+					return m_currentRegion.GetZone(X, Y);
 				}
 				return null;
 			}
@@ -207,53 +202,25 @@ namespace DOL.GS
 		public Guild Guild
 		{
 			get	{ return m_guild; }
-            set	{ m_guild = value; }
 		}
+		
+		/// <summary>
+		/// Difficulty level of keep for each realm
+		/// the keep is more difficult the guild which have claimed gain more bonus
+		/// </summary>
+		private int[] m_difficultyLevel = new int[3];
 
-        /// <summary>
-        /// Albion difficulty level
-        /// </summary>
-        public int AlbionDifficultyLevel
-        {
-            get
-            {
-                return m_albionDifficultyLevel;
-            }
-            set
-            {
-                m_albionDifficultyLevel = value;
-            }
-        }
-
-        /// <summary>
-        /// Midgard difficulty level
-        /// </summary>
-        public int MidgardDifficultyLevel
-        {
-            get
-            {
-                return m_midgardDifficultyLevel;
-            }
-            set
-            {
-                m_midgardDifficultyLevel = value;
-            }
-        }
-
-        /// <summary>
-        /// Hibernia difficulty level
-        /// </summary>
-        public int HiberniaDifficultyLevel
-        {
-            get
-            {
-                return m_hiberniaDifficultyLevel;
-            }
-            set
-            {
-                m_hiberniaDifficultyLevel = value;
-            }
-        }
+		/// <summary>
+		/// Difficulty level of keep for each realm
+		/// the keep is more difficult the guild which have claimed gain more bonus
+		/// </summary>
+		public int DifficultyLevel
+		{
+			get
+			{
+				return m_difficultyLevel[Realm-1];
+			}
+		}
 		private int m_targetLevel;
 		public int TargetLevel
 		{
@@ -267,50 +234,71 @@ namespace DOL.GS
 			}
 		}
 		#region DBkeep properties
-        private int m_keepID;
-		public virtual int KeepID
+			
+		public int KeepID
 		{
-			get	{ return m_keepID; }
-            set { m_keepID = value; }
+			get	{ return DBKeep.KeepID; }
+			set	{ DBKeep.KeepID = value; }
 		}
-        private int m_level;
 		public int Level
 		{
-			get	{ return m_level; }
-            set { m_level = value; }
+			get	{ return DBKeep.Level; }
+			set	{ DBKeep.Level = value; }
 		}
-        private string m_name;
 		public string Name
 		{
-			get	{ return m_name; }
-            set { m_name = value; }
+			get	{ return DBKeep.Name; }
+			set	{ DBKeep.Name = value; }
 		}
-        private int m_heading;
-		public int Heading
+				
+		public int Region
 		{
-			get	{ return m_heading; }
-            set { m_heading = value; }
-		}	
-        private int m_realm;
-		public int Realm
-		{
-			get	{ return m_realm; }
-			set	{ m_realm = value; }
+			get	{ return DBKeep.Region; }
+			set	{ DBKeep.Region = value; }
 		}
-        private eRealm m_originalRealm;
-		public eRealm OriginalRealm
+			
+		public int X
 		{
-            get { return m_originalRealm; }
-            set { m_originalRealm = value; }
+			get	{ return DBKeep.X; }
+			set	{ DBKeep.X = value; }
 		}
 
-	    private eKeepType m_keepType;
+		public int Y
+		{
+			get	{ return DBKeep.Y; }
+			set	{ DBKeep.Y = value; }
+		}
+		public int Z
+		{
+			get	{ return DBKeep.Z; }
+			set	{ DBKeep.Z = value; }
+		}
+		public int Heading
+		{
+			get	{ return DBKeep.Heading; }
+			set	{ DBKeep.Heading = value; }
+		}	
+		public int Realm
+		{
+			get	{ return DBKeep.Realm; }
+			set	{ DBKeep.Realm = value; }
+		}
+		public eRealm OriginalRealm
+		{
+			get	{ return (eRealm)DBKeep.OriginalRealm; }
+		}
+		private string m_InternalID;
+		public string InternalID
+		{
+			get { return m_InternalID; }
+			set { m_InternalID = value; }
+		}
 		public eKeepType KeepType
 		{
-			get	{ return m_keepType; }
+			get	{ return (eKeepType)DBKeep.KeepType; }
 			set	
-			{
-                m_keepType = value; 
+			{ 
+				DBKeep.KeepType = (int)value; 
 				//todo : update all guard
 			}
 		}
@@ -334,23 +322,52 @@ namespace DOL.GS
 		/// <summary>
 		/// load keep from Db object and load keep component and object of keep
 		/// </summary>
-		public void Load()
+		/// <param name="keep"></param>
+		public void Load(DBKeep keep)
 		{
-            if (this.Guild != null)
-            {
-                m_claimTimer.Change(CLAIM_CALLBACK_INTERVAL, CLAIM_CALLBACK_INTERVAL);
-            }
+			LoadFromDatabase(keep);
 			LoadObjects();
-			GameEventMgr.AddHandler(Region,RegionEvent.PlayerEnter,new DOLEventHandler(SendKeepInit));
+			GameEventMgr.AddHandler(CurrentRegion,RegionEvent.PlayerEnter,new DOLEventHandler(SendKeepInit));
 		}
 
+		/// <summary>
+		/// load keep from DB
+		/// </summary>
+		/// <param name="keep"></param>
+		public void LoadFromDatabase(DataObject keep)
+		{
+			m_dbkeep = keep as DBKeep;
+			InternalID = keep.ObjectId;
+			m_difficultyLevel[0] = m_dbkeep.AlbionDifficultyLevel;
+			m_difficultyLevel[1] = m_dbkeep.MidgardDifficultyLevel;
+			m_difficultyLevel[2] = m_dbkeep.HiberniaDifficultyLevel;
+			if (m_dbkeep.ClaimedGuildName != null && m_dbkeep.ClaimedGuildName != "")
+			{
+				Guild myguild = GuildMgr.GetGuildByName(m_dbkeep.ClaimedGuildName);
+				if (myguild != null)
+				{
+					this.m_guild = myguild;
+					this.m_guild.ClaimedKeep = this;
+					m_claimTimer.Change(CLAIM_CALLBACK_INTERVAL, CLAIM_CALLBACK_INTERVAL);
+				}
+			}
+		}
 
 		/// <summary>
 		/// save keep in DB
 		/// </summary>
 		public void SaveIntoDatabase()
 		{
-			GameServer.Database.SaveObject(this);
+			if (m_guild != null)
+				m_dbkeep.ClaimedGuildName = m_guild.Name;
+			if(InternalID == null)
+			{
+				GameServer.Database.AddNewObject(m_dbkeep);
+				InternalID = m_dbkeep.ObjectId;
+			}
+			else
+				GameServer.Database.SaveObject(m_dbkeep);
+
 			foreach (GameKeepComponent comp in this.KeepComponents)
 				comp.SaveIntoDatabase();
 		}
@@ -361,9 +378,9 @@ namespace DOL.GS
 		/// </summary>
 		public void LoadObjects()
 		{			
-			eRealm realm = (eRealm)this.Realm;
-			IList objs = GameServer.Database.SelectObjects(typeof(DBKeepObject), Expression.And(Expression.And(Expression.Eq("KeepID",KeepID),Expression.Eq("Realm",(int)realm)),Expression.Eq("KeepType",(int)KeepType)));
-			//Region = WorldMgr.GetRegion(this.Regionid);
+			eRealm realm = (eRealm)this.DBKeep.Realm;
+			DataObject[] objs = GameServer.Database.SelectObjects(typeof(DBKeepObject),"KeepID = " + this.KeepID + " AND Realm = " + (int)realm + " AND KeepType = " + (int)KeepType);
+			CurrentRegion = WorldMgr.GetRegion((ushort)this.DBKeep.Region);
 			
 			GameObject gameObject = null;
 			foreach(DBKeepObject dbkeepObject in objs)
@@ -466,7 +483,7 @@ namespace DOL.GS
 				player.Out.SendMessage("You must be in a guild to claim a keep.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 				return false;
 			}
-			if (!player.Guild.CheckGuildPermission(player, eGuildPerm.Claim))
+			if (!player.Guild.GotAccess(player, eGuildRank.Claim))
 			{
 				player.Out.SendMessage("You do not have permission to claim for your guild.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
@@ -522,7 +539,7 @@ namespace DOL.GS
 			Lord.Say(Lord.Name + " has accepted your request to claim the outpost.");
 			foreach(GameClient client in WorldMgr.GetClientsOfRealm(player.Realm))
 			{
-				client.Out.SendMessage(player.GuildName+" has taken control of "+this.Name+"!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+				client.Out.SendMessage(player.GuildName+" has taken control of "+this.DBKeep.Name+"!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 			}
 			foreach( GameKeepGuard guard in Guards)
 			{
@@ -532,9 +549,9 @@ namespace DOL.GS
 			{
 				banner.ChangeGuild(player.Guild);
 			}
-			foreach(GameClient client in player.GetPlayersInRadius(WorldMgr.OBJ_UPDATE_DISTANCE))
+			foreach(GamePlayer currentPlayer in player.GetPlayersInRadius(WorldMgr.OBJ_UPDATE_DISTANCE))
 			{
-				client.Out.SendKeepClaim(this);
+				currentPlayer.Out.SendKeepClaim(this);
 			}
 			GameEventMgr.Notify(KeepEvent.KeepClaimed, this, new KeepEventArgs(player));
 			m_claimTimer.Change(1, CLAIM_CALLBACK_INTERVAL);
@@ -553,10 +570,10 @@ namespace DOL.GS
 				return;
 			}
 			int amount = CalculRP();
-			this.Guild.RealmPoints += amount;
+			this.Guild.GainRealmPoints(amount);
 
 			int cost = ClaimBountyPointCost[this.Level-1];
-			this.Guild.BountyPoints -= cost;
+			this.Guild.GainBountyPoints(-cost);
 		}
 
 		public virtual int CalculRP()
@@ -622,7 +639,7 @@ namespace DOL.GS
 			{
 				comp.Update();
 			}
-			foreach (GameClient client in WorldMgr.GetClientsOfRegion((ushort)Region.RegionID))
+			foreach (GameClient client in WorldMgr.GetClientsOfRegion(this.CurrentRegion.ID))
 			{
 				client.Out.SendKeepComponentUpdate(this,true);
 			}
@@ -687,7 +704,7 @@ namespace DOL.GS
 		/// <param name="realm"></param>
 		public void Reset(eRealm realm)
 		{
-			this.Realm = (int)realm;
+			DBKeep.Realm = (int)realm;
 			this.Level = 1;
 			this.KeepType = eKeepType.Melee;
 			if (this.Guild != null)
@@ -702,7 +719,7 @@ namespace DOL.GS
 			{
 				door.Reset(realm);
 			}
-			foreach (GameClient client in WorldMgr.GetClientsOfRegion((ushort)Region.RegionID))
+			foreach (GameClient client in WorldMgr.GetClientsOfRegion(this.CurrentRegion.ID))
 			{
 				client.Player.Out.SendKeepComponentUpdate(this,false);
 			}
@@ -736,26 +753,6 @@ namespace DOL.GS
 		}
 		#endregion
 
-	    public int DifficultyLevel()
-	    {
-	        switch ((eRealm)Realm)
-	        {
-	            case eRealm.Albion :
-	                return AlbionDifficultyLevel;
-	            case eRealm.Midgard :
-	                return MidgardDifficultyLevel;
-	            case eRealm.Hibernia :
-	                return HiberniaDifficultyLevel;
-                default :
-	                    return 1;
-	        }
-	    }
-
-        public void AddKeepComponents(GameKeepComponent comp)
-        {
-            this.KeepComponents.Add(comp);
-            comp.Keep = this;
-        }
 		/// <summary>
 		/// send keep init when player enter in region
 		/// </summary>

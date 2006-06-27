@@ -59,8 +59,7 @@ namespace DOL.GS.Scripts
 			}
 			else
 			{ // Inviting by name
-				int result = 0;
-				GameClient targetClient = WorldMgr.GuessClientByPlayerNameAndRealm(targetName, 0, out result);
+				GameClient targetClient = WorldMgr.GetClientByPlayerNameAndRealm(targetName, 0);
 				if (targetClient == null)
 					target = null;
 				else
@@ -84,7 +83,7 @@ namespace DOL.GS.Scripts
 			}
 
 			client.Out.SendMessage("You have invited " + target.Name + " to join your group.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			target.Out.SendDialogBox(eDialogCode.GroupInvite, (ushort)client.SessionID, 0x00, 0x00, 0x00, eDialogType.YesNo, false, client.Player.Name + " has invited you to join\n" + client.Player.GetPronoun(1, false) + " group. Do you wish to join?");
+			target.Out.SendGroupInviteCommand(client.Player, client.Player.Name + " has invited you to join\n" + client.Player.GetPronoun(1, false) + " group. Do you wish to join?");
 			target.Out.SendMessage(client.Player.Name + " has invited you to join " + client.Player.GetPronoun(1, false) + " group.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 			return 1;

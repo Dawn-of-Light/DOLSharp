@@ -23,7 +23,7 @@
 
 using System;
 using System.Collections;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Scripts
@@ -33,7 +33,7 @@ namespace DOL.GS.Scripts
 	{
 		private const string ENCHANT_ITEM_WEAK = "enchanting item";
 		private const string TOWARDSTR = " towards you.";
-		private byte[] BONUS_TABLE = new byte[] {5, 5, 10, 15, 20, 25, 30, 30};
+		private int[] BONUS_TABLE = new int[] {5, 5, 10, 15, 20, 25, 30, 30};
 
 		public override IList GetExamineMessages(GamePlayer player)
 		{
@@ -66,29 +66,29 @@ namespace DOL.GS.Scripts
 			return false;
 		}
 
-        public override bool ReceiveItem(GameLiving source, GenericItem item)
+		public override bool ReceiveItem(GameLiving source, InventoryItem item)
 		{
-			GamePlayer player = source as GamePlayer;
-			if (player == null || item == null)
+			GamePlayer t = source as GamePlayer;
+			if (t == null || item == null)
 				return false;
 
 			if (item.Level >= 10 && item.CrafterName != "")
 			{
-				if (item is EquipableItem)
+				if (item.Object_Type != (int) eObjectType.Magical && item.Object_Type != (int) eObjectType.Bolt && item.Object_Type != (int) eObjectType.Poison)
 				{
-					if (((EquipableItem)item).Bonus == 0)
+					if (item.Bonus == 0)
 					{
-						player.TempProperties.setProperty(ENCHANT_ITEM_WEAK, new WeakRef(item));
-						player.Client.Out.SendCustomDialog("It will cost " + Money.GetString(item.Value / 5) + "\x000ato enchant that. Do you accept?", new CustomDialogResponse(EnchanterDialogResponse));
+						t.TempProperties.setProperty(ENCHANT_ITEM_WEAK, new WeakRef(item));
+						t.Client.Out.SendCustomDialog("It will cost " + Money.GetString(CalculEnchantPrice(item)) + "\x000ato enchant that. Do you accept?", new CustomDialogResponse(EnchanterDialogResponse));
 					}
 					else
-						SayTo(player, eChatLoc.CL_SystemWindow, "This item is already enchanted!");
+						SayTo(t, eChatLoc.CL_SystemWindow, "This item is already enchanted!");
 				}
 				else
-					SayTo(player, eChatLoc.CL_SystemWindow, "This item can't be enchanted!");
+					SayTo(t, eChatLoc.CL_SystemWindow, "This item can't be enchanted!");
 			}
 			else
-				SayTo(player, eChatLoc.CL_SystemWindow, "I can't enchant that material.");
+				SayTo(t, eChatLoc.CL_SystemWindow, "I can't enchant that material.");
 
 			return false;
 		}
@@ -103,37 +103,40 @@ namespace DOL.GS.Scripts
 			player.TempProperties.removeProperty(ENCHANT_ITEM_WEAK);
 
 
-			if (response != 0x01 || !Position.CheckSquareDistance(player.Position, (uint) (WorldMgr.INTERACT_DISTANCE*WorldMgr.INTERACT_DISTANCE)))
+			if (response != 0x01 || !WorldMgr.CheckDistance(this, player,WorldMgr.INTERACT_DISTANCE))
 				return;
 
-			EquipableItem item = (EquipableItem) itemWeak.Target;
+			InventoryItem item = (InventoryItem) itemWeak.Target;
 			if (item == null || item.SlotPosition == (int) eInventorySlot.Ground
-				|| item.Owner == null || item.Owner  != player)
+				|| item.OwnerID == null || item.OwnerID != player.InternalID)
 			{
 				player.Out.SendMessage("Invalid item.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
-			long Fee = item.Value / 5;
+			long Fee = CalculEnchantPrice(item);
 
 			if (player.GetCurrentMoney() < Fee)
 			{
 				SayTo(player, eChatLoc.CL_SystemWindow, "I need " + Money.GetString(Fee) + " to enchant that.");
 				return;
 			}
-
 			if (item.Level < 50)
 				item.Bonus = BONUS_TABLE[(item.Level/5) - 2];
 			else
 				item.Bonus = 35;
 
 			item.Name = "bright " + item.Name;
-			player.Out.SendInventorySlotsUpdate(new int[] {item.SlotPosition});
-
+			player.Out.SendInventoryItemsUpdate(new InventoryItem[] {item});
 			player.Out.SendMessage("You give " + GetName(0, false) + " " + Money.GetString(Fee) + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			player.RemoveMoney(Fee, null);
-			SayTo(player, eChatLoc.CL_SystemWindow, "There, it is now " + item.Name + "!");
+			SayTo(player, eChatLoc.CL_SystemWindow, "There, it is now " + item.GetName(1, false) + "!");
 			return;
+		}
+
+		public long CalculEnchantPrice(InventoryItem item)
+		{
+			return (Money.GetMoney(0, 0, item.Gold, item.Silver, item.Copper)/5);
 		}
 	}
 }

@@ -30,7 +30,7 @@ namespace DOL.GS.PacketHandler.v168
 			int menuid = packet.ReadByte();
 			int unkown = packet.ReadByte();
 
-			House house = (House)HouseMgr.GetHouse(client.Player.Region, housenumber);
+			House house = (House)HouseMgr.GetHouse(client.Player.CurrentRegionID,housenumber);
 			if(house==null) { return 1; }
 
 			client.Player.CurrentHouse = house;

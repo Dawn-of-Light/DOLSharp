@@ -83,14 +83,14 @@ namespace DOL.GS.Scripts
 			if (player.Level >= 5) 
 			{			
 				player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_RecurvedBows));
-				player.AddAbility(SkillBase.GetAbility(Abilities.Shield, (int)eShieldSize.Small));
+				player.AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Small));
 
 				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Pathfinding));
 				player.AddSpellLine(SkillBase.GetSpellLine("Pathfinding"));
 			}
 			if (player.Level >= 10) 
 			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.HibArmor, (int)eArmorLevel.Medium));
+				player.AddAbility(SkillBase.GetAbility(Abilities.HibArmor, ArmorLevel.Reinforced));
 				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Celtic_Dual));
 			}
 			if (player.Level >= 12) 

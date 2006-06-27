@@ -33,7 +33,7 @@
 
 using System;
 using System.Reflection;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
@@ -48,40 +48,12 @@ using log4net;
 
 namespace DOL.GS.Quests.Albion
 {
-    /* The first thing we do, is to declare the quest requirement
-    * class linked with the new Quest. To do this, we derive 
-    * from the abstract class AbstractQuestDescriptor
-    */
-    public class CityOfCamelotDescriptor : AbstractQuestDescriptor
-    {
-        /* This is the type of the quest class linked with 
-         * this requirement class, you must override the 
-         * base methid like that
-         */
-        public override Type LinkedQuestType
-        {
-            get { return typeof(CityOfCamelot); }
-        }
+	/* The first thing we do, is to declare the class we create
+	 * as Quest. To do this, we derive from the abstract class
+	 * AbstractQuest
+	 * 	 
+	 */
 
-        public override bool CheckQuestQualification(GamePlayer player)
-        {
-            // This checks below are only performed is player isn't doing quest already
-
-            if (player.HasFinishedQuest(typeof(ImportantDelivery)) == 0)
-                return false;
-
-            if (!BaseFrederickQuest.CheckPartAccessible(player, typeof(CityOfCamelot)))
-                return false;
-
-            return base.CheckQuestQualification(player);
-        }
-    }
-
-    /* The second thing we do, is to declare the class we create
-     * as Quest. We must make it persistant using attributes, to
-     * do this, we derive from the abstract class AbstractQuest
-     */
-    [NHibernate.Mapping.Attributes.Subclass(NameType = typeof(CityOfCamelot), ExtendsType = typeof(AbstractQuest))]
 	public class CityOfCamelot : BaseFrederickQuest
 	{
 		/// <summary>
@@ -100,6 +72,8 @@ namespace DOL.GS.Quests.Albion
 		 */
 
 		protected const string questTitle = "City of Camelot";
+		protected const int minimumLevel = 1;
+		protected const int maximumLevel = 1;
 
 		protected static GameLocation armsManTrainer = new GameLocation("Armsman Trainer", 10, 30985, 31520, 8216, 0);
 		protected static GameLocation reaverTrainer = new GameLocation("Reaver Trainer", 10, 32545, 26900, 7830, 0);
@@ -116,14 +90,35 @@ namespace DOL.GS.Quests.Albion
 		private GameNPC assistant = null;
 		private RegionTimer assistantTimer = null;
 
-		private static TravelTicketTemplate ticketToCotswold = null;
-		private static GenericItemTemplate scrollUrqhart = null;
-		private static GenericItemTemplate receiptBombard = null;
-		private static GenericItemTemplate letterFrederick = null;
-		private static NecklaceTemplate assistantNecklace = null;
-		private static GenericItemTemplate chestOfCoins = null;
-		private static ShieldTemplate recruitsRoundShield = null;
-		private static BracerTemplate recruitsBracer = null;
+		private static ItemTemplate ticketToCotswold = null;
+		private static ItemTemplate scrollUrqhart = null;
+		private static ItemTemplate receiptBombard = null;
+		private static ItemTemplate letterFrederick = null;
+		private static ItemTemplate assistantNecklace = null;
+		private static ItemTemplate chestOfCoins = null;
+		private static ItemTemplate recruitsRoundShield = null;
+		private static ItemTemplate recruitsBracer = null;
+
+
+		/* We need to define the constructors from the base class here, else there might be problems
+		 * when loading this quest...
+		 */
+		public CityOfCamelot() : base()
+		{
+		}
+
+		public CityOfCamelot(GamePlayer questingPlayer) : this(questingPlayer, 1)
+		{
+		}
+
+		public CityOfCamelot(GamePlayer questingPlayer, int step) : base(questingPlayer, step)
+		{
+		}
+
+		public CityOfCamelot(GamePlayer questingPlayer, DBQuest dbQuest) : base(questingPlayer, dbQuest)
+		{
+		}
+
 
 		/* The following method is called automatically when this quest class
 		 * is loaded. You might notice that this method is the same as in standard
@@ -143,8 +138,9 @@ namespace DOL.GS.Quests.Albion
 		[ScriptLoadedEvent]
 		public static void ScriptLoaded(DOLEvent e, object sender, EventArgs args)
 		{
-            if (log.IsInfoEnabled)
-                log.Info("Quest \"" + questTitle + "\" initializing ...");
+			if (log.IsInfoEnabled)
+				if (log.IsInfoEnabled)
+					log.Info("Quest \"" + questTitle + "\" initializing ...");
 			/* First thing we do in here is to search for the NPCs inside
 			* the world who comes from the certain Realm. If we find a the players,
 			* this means we don't have to create a new one.
@@ -169,10 +165,12 @@ namespace DOL.GS.Quests.Albion
 				lordUrqhart.Name = "Lord Urqhart";
 				lordUrqhart.GuildName = "Vault Keeper";
 				lordUrqhart.Realm = (byte) eRealm.Albion;
-				lordUrqhart.RegionId = 10;
+				lordUrqhart.CurrentRegionID = 10;
 				lordUrqhart.Size = 49;
 				lordUrqhart.Level = 50;
-				lordUrqhart.Position = new Point(35500, 23857, 8751);
+				lordUrqhart.X = 35500;
+				lordUrqhart.Y = 23857;
+				lordUrqhart.Z = 8751;
 				lordUrqhart.Heading = 603;
 				lordUrqhart.EquipmentTemplateID = "1707104";
 				//You don't have to store the created mob in the db if you don't want,
@@ -196,10 +194,12 @@ namespace DOL.GS.Quests.Albion
 				bombard.Name = "Bombard";
 				bombard.GuildName = "Stable Master";
 				bombard.Realm = (byte) eRealm.Albion;
-				bombard.RegionId = 1;
+				bombard.CurrentRegionID = 1;
 				bombard.Size = 49;
 				bombard.Level = 4;
-				bombard.Position = new Point(515718, 496739, 3352);
+				bombard.X = 515718;
+				bombard.Y = 496739;
+				bombard.Z = 3352;
 				bombard.Heading = 2500;
 
 				//You don't have to store the created mob in the db if you don't want,
@@ -218,10 +218,10 @@ namespace DOL.GS.Quests.Albion
 
 			ticketToCotswold = CreateTicketTo("Camelot Hills");
 
-			scrollUrqhart = (GenericItemTemplate) GameServer.Database.FindObjectByKey(typeof (GenericItemTemplate), "scroll_for_urqhart");
+			scrollUrqhart = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "scroll_for_urqhart");
 			if (scrollUrqhart == null)
 			{
-				scrollUrqhart = new GenericItemTemplate();
+				scrollUrqhart = new ItemTemplate();
 				scrollUrqhart.Name = "Scroll for Vault Keeper Urqhart";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + scrollUrqhart.Name + " , creating it ...");
@@ -229,10 +229,11 @@ namespace DOL.GS.Quests.Albion
 				scrollUrqhart.Weight = 3;
 				scrollUrqhart.Model = 498;
 
-				scrollUrqhart.ItemTemplateID = "scroll_for_urqhart";
-                scrollUrqhart.IsDropable = false;
-                scrollUrqhart.IsSaleable = false;
-                scrollUrqhart.IsTradable = false;
+				scrollUrqhart.Object_Type = (int) eObjectType.GenericItem;
+
+				scrollUrqhart.Id_nb = "scroll_for_urqhart";
+				scrollUrqhart.IsPickable = true;
+				scrollUrqhart.IsDropable = false;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -242,10 +243,10 @@ namespace DOL.GS.Quests.Albion
 			}
 
 
-			receiptBombard = (GenericItemTemplate) GameServer.Database.FindObjectByKey(typeof (GenericItemTemplate), "receipt_for_bombard");
+			receiptBombard = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "receipt_for_bombard");
 			if (receiptBombard == null)
 			{
-				receiptBombard = new GenericItemTemplate();
+				receiptBombard = new ItemTemplate();
 				receiptBombard.Name = "Receipt for Bombard";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + receiptBombard.Name + " , creating it ...");
@@ -253,11 +254,11 @@ namespace DOL.GS.Quests.Albion
 				receiptBombard.Weight = 3;
 				receiptBombard.Model = 498;
 
+				receiptBombard.Object_Type = (int) eObjectType.GenericItem;
 
-				receiptBombard.ItemTemplateID = "receipt_for_bombard";
-                receiptBombard.IsDropable = false;
-                receiptBombard.IsSaleable = false;
-                receiptBombard.IsTradable = false;
+				receiptBombard.Id_nb = "receipt_for_bombard";
+				receiptBombard.IsPickable = true;
+				receiptBombard.IsDropable = false;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -266,10 +267,10 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(receiptBombard);
 			}
 
-			chestOfCoins = (GenericItemTemplate) GameServer.Database.FindObjectByKey(typeof (GenericItemTemplate), "small_chest_of_coins");
+			chestOfCoins = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "small_chest_of_coins");
 			if (chestOfCoins == null)
 			{
-				chestOfCoins = new GenericItemTemplate();
+				chestOfCoins = new ItemTemplate();
 				chestOfCoins.Name = "Small Chest of Coins";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + chestOfCoins.Name + " , creating it ...");
@@ -277,10 +278,11 @@ namespace DOL.GS.Quests.Albion
 				chestOfCoins.Weight = 15;
 				chestOfCoins.Model = 602;
 
-				chestOfCoins.ItemTemplateID = "small_chest_of_coins";
-                chestOfCoins.IsDropable = false;
-                chestOfCoins.IsSaleable = false;
-                chestOfCoins.IsTradable = false;
+				chestOfCoins.Object_Type = (int) eObjectType.GenericItem;
+
+				chestOfCoins.Id_nb = "small_chest_of_coins";
+				chestOfCoins.IsPickable = true;
+				chestOfCoins.IsDropable = false;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -289,10 +291,10 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(chestOfCoins);
 			}
 
-			letterFrederick = (GenericItemTemplate) GameServer.Database.FindObjectByKey(typeof (GenericItemTemplate), "letter_for_frederick");
+			letterFrederick = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "letter_for_frederick");
 			if (letterFrederick == null)
 			{
-				letterFrederick = new GenericItemTemplate();
+				letterFrederick = new ItemTemplate();
 				letterFrederick.Name = "Letter for Frederick";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + letterFrederick.Name + " , creating it ...");
@@ -300,10 +302,11 @@ namespace DOL.GS.Quests.Albion
 				letterFrederick.Weight = 3;
 				letterFrederick.Model = 498;
 
-				letterFrederick.ItemTemplateID = "letter_for_frederick";
-                letterFrederick.IsDropable = false;
-                letterFrederick.IsSaleable = false;
-                letterFrederick.IsTradable = false;
+				letterFrederick.Object_Type = (int) eObjectType.GenericItem;
+
+				letterFrederick.Id_nb = "letter_for_frederick";
+				letterFrederick.IsPickable = true;
+				letterFrederick.IsDropable = false;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -312,10 +315,10 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(letterFrederick);
 			}
 
-			assistantNecklace = (NecklaceTemplate) GameServer.Database.FindObjectByKey(typeof (NecklaceTemplate), "assistant_necklace");
+			assistantNecklace = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "assistant_necklace");
 			if (assistantNecklace == null)
 			{
-				assistantNecklace = new NecklaceTemplate();
+				assistantNecklace = new ItemTemplate();
 				assistantNecklace.Name = "Assistant's Necklace";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + assistantNecklace.Name + " , creating it ...");
@@ -323,10 +326,12 @@ namespace DOL.GS.Quests.Albion
 				assistantNecklace.Weight = 3;
 				assistantNecklace.Model = 101;
 
-				assistantNecklace.ItemTemplateID = "assistant_necklace";
-                assistantNecklace.IsDropable = false;
-                assistantNecklace.IsSaleable = false;
-                assistantNecklace.IsTradable = false;
+				assistantNecklace.Object_Type = (int) eObjectType.Magical;
+				assistantNecklace.Item_Type = (int) eEquipmentItems.NECK;
+
+				assistantNecklace.Id_nb = "assistant_necklace";
+				assistantNecklace.IsPickable = true;
+				assistantNecklace.IsDropable = false;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -336,40 +341,47 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			recruitsRoundShield = (ShieldTemplate) GameServer.Database.FindObjectByKey(typeof (ShieldTemplate), "recruits_round_shield");
+			recruitsRoundShield = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_round_shield");
 			if (recruitsRoundShield == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Recruit's Round Shield, creating it ...");
-				recruitsRoundShield = new ShieldTemplate();
+				recruitsRoundShield = new ItemTemplate();
 				recruitsRoundShield.Name = "Recruit's Round Shield";
 				recruitsRoundShield.Level = 4;
 
 				recruitsRoundShield.Weight = 31;
 				recruitsRoundShield.Model = 59; // studded Boots                
 
-				recruitsRoundShield.ItemTemplateID = "recruits_round_shield";
-
-                recruitsRoundShield.Value = 400;
-
-                recruitsRoundShield.IsDropable = true;
-                recruitsRoundShield.IsSaleable = true;
-                recruitsRoundShield.IsTradable = true;
-
+				recruitsRoundShield.Object_Type = 0x2A; // (int)eObjectType.Shield;
+				recruitsRoundShield.Item_Type = (int) eEquipmentItems.LEFT_HAND;
+				recruitsRoundShield.Id_nb = "recruits_round_shield";
+				recruitsRoundShield.Gold = 0;
+				recruitsRoundShield.Silver = 4;
+				recruitsRoundShield.Copper = 0;
+				recruitsRoundShield.IsPickable = true;
+				recruitsRoundShield.IsDropable = true;
 				recruitsRoundShield.Color = 36;
+				recruitsRoundShield.Hand = 2;
+				recruitsRoundShield.DPS_AF = 1;
+				recruitsRoundShield.SPD_ABS = 1;
 
-                recruitsRoundShield.HandNeeded = eHandNeeded.LeftHand;
-
-                recruitsRoundShield.Speed = 1;
-                recruitsRoundShield.DamagePerSecond = 1;
-
+				recruitsRoundShield.Type_Damage = 1;
 
 				recruitsRoundShield.Bonus = 1; // default bonus
 
-                recruitsRoundShield.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 1));
-                recruitsRoundShield.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Body, 1));
+				recruitsRoundShield.Bonus1 = 1;
+				recruitsRoundShield.Bonus1Type = (int) eStat.STR;
+
+				recruitsRoundShield.Bonus2 = 1;
+				recruitsRoundShield.Bonus2Type = (int) eResist.Body;
 
 				recruitsRoundShield.Quality = 100;
+				recruitsRoundShield.MaxQuality = 100;
+				recruitsRoundShield.Condition = 1000;
+				recruitsRoundShield.MaxCondition = 1000;
+				recruitsRoundShield.Durability = 1000;
+				recruitsRoundShield.MaxDurability = 1000;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -379,10 +391,10 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			recruitsBracer = (BracerTemplate) GameServer.Database.FindObjectByKey(typeof (BracerTemplate), "recruits_silver_bracer");
+			recruitsBracer = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_silver_bracer");
 			if (recruitsBracer == null)
 			{
-				recruitsBracer = new BracerTemplate();
+				recruitsBracer = new ItemTemplate();
 				recruitsBracer.Name = "Recruit's Silver Bracer";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + recruitsBracer.Name + ", creating it ...");
@@ -391,19 +403,35 @@ namespace DOL.GS.Quests.Albion
 				recruitsBracer.Weight = 10;
 				recruitsBracer.Model = 130;
 
-				recruitsBracer.ItemTemplateID = "recruits_silver_bracer";
-                recruitsBracer.Value = 400;
+				recruitsBracer.Object_Type = (int) eObjectType.Magical;
+				recruitsBracer.Item_Type = (int) eEquipmentItems.L_BRACER;
+				recruitsBracer.Id_nb = "recruits_silver_bracer";
+				recruitsBracer.Gold = 0;
+				recruitsBracer.Silver = 4;
+				recruitsBracer.Copper = 0;
+				recruitsBracer.IsPickable = true;
+				recruitsBracer.IsDropable = true;
+				//recruitsBracer.Color = 36;
+				//recruitsBracer.Hand = 2;
+				//recruitsBracer.DPS_AF = 1;
+				//recruitsBracer.SPD_ABS = 1;
 
-                recruitsBracer.IsDropable = true;
-                recruitsBracer.IsSaleable = true;
-                recruitsBracer.IsTradable = true;
+				//recruitsBracer.Type_Damage = 1;
 
 				recruitsBracer.Bonus = 1; // default bonus
 
-                recruitsBracer.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 8));
-                recruitsBracer.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Crush, 1));
+				recruitsBracer.Bonus1 = 8;
+				recruitsBracer.Bonus1Type = (int) eProperty.MaxHealth;
+
+				recruitsBracer.Bonus2 = 1;
+				recruitsBracer.Bonus2Type = (int) eResist.Crush;
 
 				recruitsBracer.Quality = 100;
+				recruitsBracer.MaxQuality = 100;
+				recruitsBracer.Condition = 1000;
+				recruitsBracer.MaxCondition = 1000;
+				recruitsBracer.Durability = 1000;
+				recruitsBracer.MaxDurability = 1000;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -433,11 +461,12 @@ namespace DOL.GS.Quests.Albion
 			GameEventMgr.AddHandler(lordUrqhart, GameLivingEvent.Interact, new DOLEventHandler(TalkToUrqhart));
 			GameEventMgr.AddHandler(lordUrqhart, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToUrqhart));
 
-            /* Now we bring to Ydenia the possibility to give this quest to players */
-            QuestMgr.AddQuestDescriptor(bombard, typeof(CityOfCamelotDescriptor));
+			/* Now we bring to bombard the possibility to give this quest to players */
+			bombard.AddQuestToGive(typeof (CityOfCamelot));
 
-            if (log.IsInfoEnabled)
-                log.Info("Quest \"" + questTitle + "\" initialized");
+			if (log.IsInfoEnabled)
+				if (log.IsInfoEnabled)
+					log.Info("Quest \"" + questTitle + "\" initialized");
 
 		}
 
@@ -472,7 +501,7 @@ namespace DOL.GS.Quests.Albion
 			GameEventMgr.RemoveHandler(lordUrqhart, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToUrqhart));
 
 			/* Now we remove to bombard the possibility to give this quest to players */
-            QuestMgr.RemoveQuestDescriptor(bombard, typeof(CityOfCamelotDescriptor));
+			bombard.RemoveQuestToGive(typeof (CityOfCamelot));
 		}
 
 		/* This is the method we declared as callback for the hooks we set to
@@ -487,7 +516,7 @@ namespace DOL.GS.Quests.Albion
 			if (player == null)
 				return;
 
-            if (QuestMgr.CanGiveQuest(typeof(CityOfCamelot), player, bombard) <= 0)
+			if(bombard.CanGiveQuest(typeof (CityOfCamelot), player)  <= 0)
 				return;
 
 			//We also check if the player is already doing the quest
@@ -538,7 +567,7 @@ namespace DOL.GS.Quests.Albion
 			if (player == null)
 				return;
 
-            if (QuestMgr.CanGiveQuest(typeof(CityOfCamelot), player, bombard) <= 0)
+			if(bombard.CanGiveQuest(typeof (CityOfCamelot), player)  <= 0)
 				return;
 
 			//We also check if the player is already doing the quest
@@ -574,7 +603,7 @@ namespace DOL.GS.Quests.Albion
 							lordUrqhart.SayTo(player, "Alright, here you are my friend, as promised. Please be sure to return it to Bombard. Have a nice day!");
 							if (quest.Step == 6)
 							{
-                                player.ReceiveItem(lordUrqhart, receiptBombard.CreateInstance());
+								GiveItem(lordUrqhart, player, receiptBombard);
 								quest.Step = 7;
 							}
 							break;
@@ -590,7 +619,7 @@ namespace DOL.GS.Quests.Albion
 			if (player == null)
 				return;
 
-            if (QuestMgr.CanGiveQuest(typeof(CityOfCamelot), player, bombard) <= 0)
+			if(bombard.CanGiveQuest(typeof (CityOfCamelot), player)  <= 0)
 				return;
 
 			//We also check if the player is already doing the quest
@@ -633,6 +662,9 @@ namespace DOL.GS.Quests.Albion
 						case "necklace":
 							bombard.SayTo(player, "The necklace was made by my wife, a Cabalist with the Academy. She is currently helping out with a few things in Avalon Marsh, or else she could take the money to the vault keeper, hehe. Anyhow, you'll need to USE the necklace once you're inside Camelot City. I'm sure your journal there will be able to help you out. Don't worry, you'll get the hang of it. Be sure to give the Vault Keeper the scroll. Good luck, and thank you again.");
 							break;
+						case "abort":
+							player.Out.SendCustomDialog("Do you really want to abort this quest, \nall items gained during quest will be lost?", new CustomDialogResponse(CheckPlayerAbortQuest));
+							break;
 					}
 				}
 			}
@@ -645,7 +677,7 @@ namespace DOL.GS.Quests.Albion
 			if (player == null)
 				return;
 
-            if (QuestMgr.CanGiveQuest(typeof(CityOfCamelot), player, bombard) <= 0)
+			if(bombard.CanGiveQuest(typeof (CityOfCamelot), player)  <= 0)
 				return;
 
 			//We also check if the player is already doing the quest
@@ -766,7 +798,7 @@ namespace DOL.GS.Quests.Albion
 				return;
 
 			// assistant works only in camelot...
-			if (player.RegionId != 10)
+			if (player.CurrentRegionID != 10)
 				return;
 
 			CityOfCamelot quest = (CityOfCamelot) player.IsDoingQuest(typeof (CityOfCamelot));
@@ -775,8 +807,8 @@ namespace DOL.GS.Quests.Albion
 
 			UseSlotEventArgs uArgs = (UseSlotEventArgs) args;
 
-			GenericItem item = player.Inventory.GetItem((eInventorySlot)uArgs.Slot);
-			if (item != null && item.Name == assistantNecklace.Name)
+			InventoryItem item = player.Inventory.GetItem((eInventorySlot)uArgs.Slot);
+			if (item != null && item.Id_nb == assistantNecklace.Id_nb)
 			{
 				foreach (GamePlayer visPlayer in player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 				{
@@ -790,6 +822,7 @@ namespace DOL.GS.Quests.Albion
 					quest.Step = 2;
 				}
 			}
+
 		}
 
 		protected virtual int DeleteAssistant(RegionTimer callingTimer)
@@ -808,10 +841,7 @@ namespace DOL.GS.Quests.Albion
 		{
 			if (assistant != null && assistant.ObjectState == GameObject.eObjectState.Active)
 			{
-				Point pos = m_questPlayer.Position;
-				pos.X += 50;
-				pos.Y += 30;
-				assistant.MoveTo((ushort)m_questPlayer.RegionId, pos, (ushort)m_questPlayer.Heading);
+				assistant.MoveTo(m_questPlayer.CurrentRegionID, m_questPlayer.X + 50, m_questPlayer.Y + 30, m_questPlayer.Z, m_questPlayer.Heading);
 			}
 			else
 			{
@@ -820,13 +850,12 @@ namespace DOL.GS.Quests.Albion
 				assistant.Name = m_questPlayer.Name + "'s Assistant";
 				assistant.GuildName = "Part of " + questTitle + " Quest";
 				assistant.Realm = m_questPlayer.Realm;
-				assistant.RegionId = m_questPlayer.RegionId;
+				assistant.CurrentRegionID = m_questPlayer.CurrentRegionID;
 				assistant.Size = 25;
 				assistant.Level = 5;
-				Point pos = m_questPlayer.Position;
-				pos.X += 50;
-				pos.Y += 50;
-				assistant.Position = pos;
+				assistant.X = m_questPlayer.X + 50;
+				assistant.Y = m_questPlayer.Y + 50;
+				assistant.Z = m_questPlayer.Z;
 				assistant.Heading = m_questPlayer.Heading;
 
 				assistant.AddToWorld();
@@ -849,6 +878,54 @@ namespace DOL.GS.Quests.Albion
 			return 0;
 		}
 
+		/// <summary>
+		/// This method checks if a player qualifies for this quest
+		/// </summary>
+		/// <returns>true if qualified, false if not</returns>
+		public override bool CheckQuestQualification(GamePlayer player)
+		{
+			// if the player is already doing the quest his level is no longer of relevance
+			if (player.IsDoingQuest(typeof (CityOfCamelot)) != null)
+				return true;
+
+			// This checks below are only performed is player isn't doing quest already
+
+			if (player.HasFinishedQuest(typeof (ImportantDelivery)) == 0)
+				return false;
+
+			if (!CheckPartAccessible(player, typeof (CityOfCamelot)))
+				return false;
+
+			if (player.Level < minimumLevel || player.Level > maximumLevel)
+				return false;
+
+			return true;
+		}
+
+
+		/* This is our callback hook that will be called when the player clicks
+		 * on any button in the quest offer dialog. We check if he accepts or
+		 * declines here...
+		 */
+
+		private static void CheckPlayerAbortQuest(GamePlayer player, byte response)
+		{
+			CityOfCamelot quest = player.IsDoingQuest(typeof (CityOfCamelot)) as CityOfCamelot;
+
+			if (quest == null)
+				return;
+
+			if (response == 0x00)
+			{
+				SendSystemMessage(player, "Good, no go out there and finish your work!");
+			}
+			else
+			{
+				SendSystemMessage(player, "Aborting Quest " + questTitle + ". You can start over again if you want.");
+				quest.AbortQuest();
+			}
+		}
+
 		/* This is our callback hook that will be called when the player clicks
 		 * on any button in the quest offer dialog. We check if he accepts or
 		 * declines here...
@@ -858,7 +935,7 @@ namespace DOL.GS.Quests.Albion
 		{
 			//We recheck the qualification, because we don't talk to players
 			//who are not doing the quest
-            if (QuestMgr.CanGiveQuest(typeof(CityOfCamelot), player, bombard) <= 0)
+			if(bombard.CanGiveQuest(typeof (CityOfCamelot), player)  <= 0)
 				return;
 
 			CityOfCamelot quest = player.IsDoingQuest(typeof (CityOfCamelot)) as CityOfCamelot;
@@ -873,14 +950,14 @@ namespace DOL.GS.Quests.Albion
 			else
 			{
 				//Check if we can add the quest!
-                if (QuestMgr.CanGiveQuest(typeof(CityOfCamelot), player, bombard) <= 0)
+				if (!bombard.GiveQuest(typeof (CityOfCamelot), player, 1))
 					return;
 
 				bombard.SayTo(player, "Oh thank you Vinde. This means a lot to me. Here, take this chest of coins, this scroll and this [necklace].");
 
-                player.ReceiveItem(bombard, assistantNecklace.CreateInstance());
-                player.ReceiveItem(bombard, chestOfCoins.CreateInstance());
-                player.ReceiveItem(bombard, scrollUrqhart.CreateInstance());
+				GiveItem(bombard, player, assistantNecklace);
+				GiveItem(bombard, player, chestOfCoins);
+				GiveItem(bombard, player, scrollUrqhart);
 				player.GainExperience(7, 0, 0, true);
 
 				GameEventMgr.AddHandler(player, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
@@ -931,9 +1008,9 @@ namespace DOL.GS.Quests.Albion
 						return "[Step #9] Wait for Master Frederick to finish reading the note from Bombard. If he stops speaking with you, ask him if he is [done] with the letter.";
 					case 10:
 						return "[Step #10] Wait for Master Frederick to reward you. If your trainer stops speaking with you at any time, ask him if there is a [reward] for your efforts.";
-                    default:
-                        return "[Step #" + Step + "] No Description entered for this step!";
+
 				}
+				return base.Description;
 			}
 		}
 
@@ -947,10 +1024,10 @@ namespace DOL.GS.Quests.Albion
 			if (Step <= 4 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == lordUrqhart.Name && gArgs.Item.Name == scrollUrqhart.Name)
+				if (gArgs.Target.Name == lordUrqhart.Name && gArgs.Item.Id_nb == scrollUrqhart.Id_nb)
 				{
 					lordUrqhart.SayTo(player, "Ah, a note from Bombard. Excellent. I see he wishes to make a deposit. Alright then, just hand me the chest please.");
-					RemoveItemFromPlayer(lordUrqhart, scrollUrqhart.CreateInstance());
+					RemoveItem(lordUrqhart, player, scrollUrqhart);
 					Step = 5;
 					return;
 				}
@@ -959,10 +1036,10 @@ namespace DOL.GS.Quests.Albion
 			if (Step == 5 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == lordUrqhart.Name && gArgs.Item.Name == chestOfCoins.Name)
+				if (gArgs.Target.Name == lordUrqhart.Name && gArgs.Item.Id_nb == chestOfCoins.Id_nb)
 				{
 					lordUrqhart.SayTo(player, "My this is heavy. Business must be booming for him! Well, one moment and I will write you a receipt to take back to him.");
-					RemoveItemFromPlayer(lordUrqhart, chestOfCoins);
+					RemoveItem(lordUrqhart, player, chestOfCoins);
 					Step = 6;
 					return;
 				}
@@ -971,13 +1048,15 @@ namespace DOL.GS.Quests.Albion
 			if (Step == 7 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == bombard.Name && gArgs.Item.Name == receiptBombard.Name)
+				if (gArgs.Target.Name == bombard.Name && gArgs.Item.Id_nb == receiptBombard.Id_nb)
 				{
 					bombard.SayTo(player, "Ah, fantastic. I'm glad to know my money is now in a safe place. Thank you so much for doing that for me, and I hope the trip into Camelot was informative for you. Here, take this letter back to Master Frederick in Cotswold. I want for him to know what a fantastic job you did for me by delivering these vegetables from Ludlow, and for taking care of some business in Camelot for me. Thank you again Vinde. I hope we speak again soon.");
 
-                    RemoveItemFromPlayer(bombard, assistantNecklace);
-					GiveItemToPlayer(bombard, ticketToCotswold.CreateInstance());
-					GiveItemToPlayer(bombard, letterFrederick.CreateInstance());
+					RemoveItem(bombard, player, receiptBombard);
+					RemoveItem(bombard, player, assistantNecklace);
+
+					GiveItem(bombard, player, ticketToCotswold);
+					GiveItem(bombard, player, letterFrederick);
 					Step = 8;
 					return;
 				}
@@ -986,13 +1065,13 @@ namespace DOL.GS.Quests.Albion
 			if (Step == 8 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == masterFrederick.Name && gArgs.Item.Name == letterFrederick.Name)
+				if (gArgs.Target.Name == masterFrederick.Name && gArgs.Item.Id_nb == letterFrederick.Id_nb)
 				{
 					masterFrederick.SayTo(player, "Ah, from Bombard. Let me see what is says. One moment please.");
 					SendSystemMessage(player, "Master Frederick reads the note from Bombard carefully.");
 					player.Out.SendEmoteAnimation(masterFrederick, eEmote.Ponder);
 
-					RemoveItemFromPlayer(masterFrederick, letterFrederick.CreateInstance());
+					RemoveItem(masterFrederick, player, letterFrederick);
 					Step = 9;
 					return;
 				}
@@ -1000,15 +1079,37 @@ namespace DOL.GS.Quests.Albion
 
 		}
 
+		public override void AbortQuest()
+		{
+			base.AbortQuest(); //Defined in Quest, changes the state, stores in DB etc ...
+
+			RemoveItem(m_questPlayer, assistantNecklace, false);
+			RemoveItem(m_questPlayer, chestOfCoins, false);
+			RemoveItem(m_questPlayer, letterFrederick, false);
+			RemoveItem(m_questPlayer, scrollUrqhart, false);
+			RemoveItem(m_questPlayer, ticketToCotswold, false);
+
+			// remove the 7 xp you get on quest start for beeing so nice to bombard again.
+			m_questPlayer.GainExperience(-7, 0, 0, true);
+
+			if (assistantTimer != null)
+			{
+				assistantTimer.Start(1);
+			}
+
+			GameEventMgr.RemoveHandler(m_questPlayer, GamePlayerEvent.UseSlot, new DOLEventHandler(PlayerUseSlot));
+			GameEventMgr.RemoveHandler(m_questPlayer, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
+		}
+
 		public override void FinishQuest()
 		{
 			base.FinishQuest(); //Defined in Quest, changes the state, stores in DB etc ...
 
 			//Give reward to player here ...            
-			if (m_questPlayer.HasAbilityToUseItem(recruitsRoundShield.CreateInstance() as Shield))
-				GiveItemToPlayer(masterFrederick, recruitsRoundShield.CreateInstance());
+			if (m_questPlayer.HasAbilityToUseItem(recruitsRoundShield))
+				GiveItem(masterFrederick, m_questPlayer, recruitsRoundShield);
 			else
-				GiveItemToPlayer(masterFrederick, recruitsBracer.CreateInstance());
+				GiveItem(masterFrederick, m_questPlayer, recruitsBracer);
 
 			m_questPlayer.GainExperience(26, 0, 0, true);
 			m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 2, Util.Random(50)), "You recieve {0} as a reward.");

@@ -311,7 +311,7 @@ namespace DOL.GS.Effects
 			/// Constructs a new pulsing timer
 			/// </summary>
 			/// <param name="effect">The pulsing effect</param>
-			public PulsingEffectTimer(GameSpellEffect effect) : base(effect.m_owner.Region.TimeManager)
+			public PulsingEffectTimer(GameSpellEffect effect) : base(effect.m_owner.CurrentRegion.TimeManager)
 			{
 				if (effect == null)
 					throw new ArgumentNullException("effect");

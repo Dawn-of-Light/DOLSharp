@@ -19,7 +19,7 @@
 using System.Collections;
 using System.Collections.Specialized;
 using System.Reflection;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.GS.PacketHandler;
 using log4net;
 
@@ -46,7 +46,7 @@ namespace DOL.GS
 		/// <param name="player">the crafting player</param>
 		/// <param name="craftItemData">the object in construction</param>
 		/// <returns>true if the player hold all needed tools</returns>
-		public override bool CheckTool(GamePlayer player, CraftItemData craftItemData)
+		public override bool CheckTool(GamePlayer player, DBCraftedItem craftItemData)
 		{
 			// todo check tools
 
@@ -58,7 +58,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="player"></param>
 		/// <param name="item"></param>
-		public override void GainCraftingSkillPoints(GamePlayer player, CraftItemData item)
+		public override void GainCraftingSkillPoints(GamePlayer player, DBCraftedItem item)
 		{
 			if (player.GetCraftingSkillValue(eCraftingSkill.GemCutting) < player.GetCraftingSkillValue(player.CraftingPrimarySkill)) // max secondary skill cap == primary skill
 			{

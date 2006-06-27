@@ -64,7 +64,7 @@ namespace DOL.GS.Scripts
 			if (player.Level >= 5)
 			{
 				player.RemoveAbility(Abilities.AlbArmor);
-				player.AddAbility(SkillBase.GetAbility(Abilities.AlbArmor, (int)eArmorLevel.VeryLow));
+				player.AddAbility(SkillBase.GetAbility(Abilities.AlbArmor, ArmorLevel.Cloth));
 				player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Flexible));
 				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Flexible));
 				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Crush));

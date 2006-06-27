@@ -17,11 +17,7 @@
  *
  */
 using System;
-using System.Collections;
-using System.Reflection;
-using DOL.Events;
 using DOL.GS.PacketHandler;
-using log4net;
 
 namespace DOL.GS.Trainer
 {
@@ -31,23 +27,10 @@ namespace DOL.GS.Trainer
 	[NPCGuildScript("Vampiir Trainer", eRealm.Hibernia)]		// this attribute instructs DOL to use this script for all "Vampiir Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class VampiirTrainer : GameTrainer
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		public const string ARMOR_ID1 = "Vampiir_item";
 
-		/// <summary>
-		/// This hash constrain all item template the trainer can give
-		/// </summary>	
-		private static IDictionary allStartupItems = new Hashtable();
-
-		/// <summary>
-		/// This function is called at the server startup
-		/// </summary>	
-		[GameServerStartedEvent]
-		public static void OnServerStartup(DOLEvent e, object sender, EventArgs args)
-		{	
-			// TODO find level 5 trainer gift
+		public VampiirTrainer() : base()
+		{
 		}
 
 		/// <summary>
@@ -60,18 +43,20 @@ namespace DOL.GS.Trainer
  			if (!base.Interact(player)) return false;
 								
 			// check if class matches.				
-			if (player.CharacterClass.ID == (int) eCharacterClass.Vampiir)
-			{
+			if (player.CharacterClass.ID == (int) eCharacterClass.Vampiir) {
+
+				// popup the training window
 				player.Out.SendTrainerWindow();
+				//player.Out.SendMessage(this.Name + " says, \"Select what you like to train.\"", eChatType.CT_System, eChatLoc.CL_PopupWindow;
 				player.Out.SendMessage(this.Name + " says, \"Do you wish to learn some more, " + player.Name + "? Step up and receive your training!\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
-			} 
-			else if (CanPromotePlayer(player))
-			{
-				player.Out.SendMessage(this.Name + " says, \"" + player.Name + ", do you choose the Path of Affinity, and life as a [Vampiir]?\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
-			} 
-			else
-			{
-				player.Out.SendMessage(this.Name + " says, \"You must seek elsewhere for your training.\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
+
+			} else {
+				// perhaps player can be promoted
+				if (CanPromotePlayer(player)) {
+					player.Out.SendMessage(this.Name + " says, \"" + player.Name + ", do you choose the Path of Affinity, and life as a [Vampiir]?\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+				} else {
+					player.Out.SendMessage(this.Name + " says, \"You must seek elsewhere for your training.\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);							
+				}
 			}
 			return true;
  		}
@@ -98,12 +83,12 @@ namespace DOL.GS.Trainer
 			if (!base.WhisperReceive(source, text)) return false;			
 			GamePlayer player = source as GamePlayer;			
 	
-			switch (text) 
-			{
-				case "Vampiir":
-					if (CanPromotePlayer(player))
-						PromotePlayer(player, (int)eCharacterClass.Vampiir, "Very well, " + source.GetName(0, false) + ". I gladly take your training into my hands. Congratulations, from this day forth, you are a Vampiir. Here, take this gift to aid you.", null);
-				
+			switch (text) {
+			case "Vampiir":
+				// promote player to other class
+				if (CanPromotePlayer(player)) {
+					PromotePlayer(player, (int)eCharacterClass.Vampiir, "Very well, " + source.GetName(0, false) + ". I gladly take your training into my hands. Congratulations, from this day forth, you are a Vampiir. Here, take this gift to aid you.", null);
+				}
 				break;
 			}
 			return true;		

@@ -19,7 +19,7 @@
 using System;
 using System.Collections;
 using System.Reflection;
-using DOL.GS.Database;
+using DOL.Database;
 using log4net;
 
 namespace DOL.GS

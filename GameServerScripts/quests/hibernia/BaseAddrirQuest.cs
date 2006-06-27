@@ -33,7 +33,7 @@
 using System;
 using System.Reflection;
 using DOL.AI.Brain;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.GS.PacketHandler;
 using log4net;
 /* I suggest you declare yourself some namespaces for your quests
@@ -70,11 +70,30 @@ namespace DOL.GS.Quests.Hibernia
 		 * 
 		 */
 
+		/* We need to define the constructors from the base class here, else there might be problems
+		 * when loading this quest...
+		 */
+		public BaseAddirQuest() : base()
+		{
+		}
+
+		public BaseAddirQuest(GamePlayer questingPlayer) : base(questingPlayer)
+		{
+		}
+
+		public BaseAddirQuest(GamePlayer questingPlayer, int step) : base(questingPlayer, step)
+		{
+		}
+
+		public BaseAddirQuest(GamePlayer questingPlayer, DBQuest dbQuest) : base(questingPlayer, dbQuest)
+		{
+		}
+
 		public static Type[] m_questSequel = new Type[]
 			{
-				typeof (ImportantDeliveryHib), // level 1
+				typeof (ImportantDelivery), // level 1
 				typeof (CityOfTirnaNog), // level 1
-				typeof (NuisancesHib), // level 2
+				typeof (Nuisances), // level 2
 				typeof (TraitorInMagMell) // level 2
 
 			};
@@ -135,20 +154,24 @@ namespace DOL.GS.Quests.Hibernia
 					log.Warn("Could not find " + addrir.Name + ", creating him ...");
 				addrir.GuildName = "Part of Addrir Quests";
 				addrir.Realm = (byte) eRealm.Hibernia;
-				addrir.RegionId = 200;
+				addrir.CurrentRegionID = 200;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
-				template.AddNPCEquipment(eInventorySlot.TorsoArmor, 58, 35, 0);
-				template.AddNPCEquipment(eInventorySlot.Cloak, 57, 32, 0);
+				template.AddNPCEquipment(eInventorySlot.TorsoArmor, 58, 35);
+				template.AddNPCEquipment(eInventorySlot.Cloak, 57, 32);
 				template.AddNPCEquipment(eInventorySlot.RightHandWeapon, 1173);
 				addrir.Inventory = template.CloseTemplate();
 				addrir.SwitchWeapon(GameLiving.eActiveWeaponSlot.Standard);
 
+//				addrir.AddNPCEquipment((byte) eVisibleItems.TORSO, 58, 35, 0, 0);
+//				addrir.AddNPCEquipment((byte) eVisibleItems.CLOAK, 57, 32, 0, 0);
+//				addrir.AddNPCEquipment((byte) eVisibleItems.RIGHT_HAND, 1173, 0, 0, 0);
+
 				addrir.Size = 50;
 				addrir.Level = 50;
-
-				Zone z = WorldMgr.GetRegion(200).GetZone(200);
-				addrir.Position = z.ToRegionPosition(new Point(26955, 7789, 5196));
+				addrir.X = GameLocation.ConvertLocalXToGlobalX(26955, 200);
+				addrir.Y = GameLocation.ConvertLocalYToGlobalY(7789, 200);
+				addrir.Z = 5196;
 				addrir.Heading = 22;
 
 				StandardMobBrain brain = new StandardMobBrain();

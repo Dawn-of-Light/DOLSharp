@@ -47,12 +47,13 @@ namespace DOL.GS.GameEvents
 			//Empty constructor, sets the default parameters for this NPC
 			public FightingNPC() : base()
 			{
+				Z = 0;
 				Heading = 0x0;
 				Model = 40;
 				Size = 50;
 				Level = 10;
 				Realm = 1;
-				RegionId = 1;
+				CurrentRegionID = 1;
 				GuildName = "DOLTopia";
 			}
 
@@ -90,13 +91,14 @@ namespace DOL.GS.GameEvents
 
 			//We create our guardmaster-trainer
 			m_guardMaster = new FightingNPC();
-			m_guardMaster.Position = new Point(531771, 478755, 0);
+			m_guardMaster.X = 531771;
+			m_guardMaster.Y = 478755;
 			m_guardMaster.Heading = 3570;
 			m_guardMaster.Name = "Master Guard Trainer";
 			//Now we add some nice equipment to the guard-trainer
 			GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
 			template.AddNPCEquipment(eInventorySlot.TwoHandWeapon, 843, 43, 13);
-			template.AddNPCEquipment(eInventorySlot.Cloak, 57, 65, 3);
+			template.AddNPCEquipment(eInventorySlot.Cloak, 57, 65);
 			template.AddNPCEquipment(eInventorySlot.TorsoArmor, 46);
 			template.AddNPCEquipment(eInventorySlot.LegsArmor, 47);
 			template.AddNPCEquipment(eInventorySlot.ArmsArmor, 48);
@@ -121,7 +123,7 @@ namespace DOL.GS.GameEvents
 			// same inventory template for all
 			template = new GameNpcInventoryTemplate();
 			template.AddNPCEquipment(eInventorySlot.TwoHandWeapon, 843);
-			template.AddNPCEquipment(eInventorySlot.Cloak, 57, 32, 4);
+			template.AddNPCEquipment(eInventorySlot.Cloak, 57, 32);
 			template.AddNPCEquipment(eInventorySlot.TorsoArmor, 36);
 			template.AddNPCEquipment(eInventorySlot.LegsArmor, 37);
 			template.AddNPCEquipment(eInventorySlot.ArmsArmor, 38);
@@ -152,30 +154,37 @@ namespace DOL.GS.GameEvents
 			}
 
 			//We set the position, model and size of our trainees
-			Point basePos = m_guardMaster.Position;
-			
-			m_guardTrainee[0].Position = new Point(basePos.X - 70, basePos.Y - 66, 0);
-			m_guardTrainee[0].Heading = m_guardTrainee[0].Position.GetHeadingTo(basePos);
+			m_guardTrainee[0].X = m_guardMaster.X - 70;
+			m_guardTrainee[0].Y = m_guardMaster.Y - 66;
+			m_guardTrainee[0].Heading = m_guardTrainee[0].GetHeadingToSpot(m_guardMaster.X, m_guardMaster.Y);
 			m_guardTrainee[0].Model = (ushort) m_rnd.Next(32, 55);
 			m_guardTrainee[0].Size = (byte) (45 + m_rnd.Next(10));
 
-			m_guardTrainee[1].Position = new Point(basePos.X + 76, basePos.Y - 29, 0);
-			m_guardTrainee[1].Heading = m_guardTrainee[1].Position.GetHeadingTo(basePos);
+			m_guardTrainee[1].X = m_guardMaster.X + 76;
+			m_guardTrainee[1].Y = m_guardMaster.Y - 29;
+			m_guardTrainee[1].Heading = m_guardTrainee[1].GetHeadingToSpot(m_guardMaster.X, m_guardMaster.Y);
+			;
 			m_guardTrainee[1].Model = (ushort) m_rnd.Next(32, 55);
 			m_guardTrainee[1].Size = (byte) (45 + m_rnd.Next(10));
 
-			m_guardTrainee[2].Position = new Point(basePos.X - 110, basePos.Y + 22, 0);
-			m_guardTrainee[2].Heading = m_guardTrainee[2].Position.GetHeadingTo(basePos);
+			m_guardTrainee[2].X = m_guardMaster.X - 110;
+			m_guardTrainee[2].Y = m_guardMaster.Y + 22;
+			m_guardTrainee[2].Heading = m_guardTrainee[2].GetHeadingToSpot(m_guardMaster.X, m_guardMaster.Y);
+			;
 			m_guardTrainee[2].Model = (ushort) m_rnd.Next(32, 55);
 			m_guardTrainee[2].Size = (byte) (45 + m_rnd.Next(10));
 
-			m_guardTrainee[3].Position = new Point(basePos.X - 34, basePos.Y + 88, 0);
-			m_guardTrainee[3].Heading = m_guardTrainee[3].Position.GetHeadingTo(basePos);
+			m_guardTrainee[3].X = m_guardMaster.X - 34;
+			m_guardTrainee[3].Y = m_guardMaster.Y + 88;
+			m_guardTrainee[3].Heading = m_guardTrainee[3].GetHeadingToSpot(m_guardMaster.X, m_guardMaster.Y);
+			;
 			m_guardTrainee[3].Model = (ushort) m_rnd.Next(32, 55);
 			m_guardTrainee[3].Size = (byte) (45 + m_rnd.Next(10));
 
-			m_guardTrainee[4].Position = new Point(basePos.X + 52, basePos.Y + 64, 0);
-			m_guardTrainee[4].Heading = m_guardTrainee[4].Position.GetHeadingTo(basePos);
+			m_guardTrainee[4].X = m_guardMaster.X + 52;
+			m_guardTrainee[4].Y = m_guardMaster.Y + 64;
+			m_guardTrainee[4].Heading = m_guardTrainee[4].GetHeadingToSpot(m_guardMaster.X, m_guardMaster.Y);
+			;
 			m_guardTrainee[4].Model = (ushort) m_rnd.Next(32, 55);
 			m_guardTrainee[4].Size = (byte) (45 + m_rnd.Next(10));
 

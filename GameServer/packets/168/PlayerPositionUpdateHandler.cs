@@ -117,27 +117,25 @@ namespace DOL.GS.PacketHandler.v168
 				currentZoneID = packet.ReadShort();
 			}
 
-			//Zone newZone = WorldMgr.GetZone(currentZoneID);
-			Zone newZone = client.Player.Region.GetZone(currentZoneID);
+			Zone newZone = WorldMgr.GetZone(currentZoneID);
 			if (newZone == null)
 			{
 				if (log.IsErrorEnabled)
 					log.Error(client.Player.Name + "'s position in unknown zone! => " + currentZoneID);
 
-				// move to bind point if not at it
-				Point bind = new Point(
-					client.Player.BindX,
-					client.Player.BindY,
-					client.Player.BindZ);
-				
-				if (client.Player.RegionId != client.Player.BindRegion
-					|| client.Player.Position != bind)
+				// move to bind point if not on it
+				if (client.Player.CurrentRegionID != client.Player.PlayerCharacter.BindRegion
+					|| client.Player.X != client.Player.PlayerCharacter.BindXpos
+					|| client.Player.Y != client.Player.PlayerCharacter.BindYpos)
 				{
 					client.Out.SendMessage("Unknown zone, moving to bind point.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 					client.Player.MoveTo(
-						(ushort) client.Player.BindRegion,
-						bind,
-						(ushort) client.Player.BindHeading);
+						(ushort) client.Player.PlayerCharacter.BindRegion,
+						client.Player.PlayerCharacter.BindXpos,
+						client.Player.PlayerCharacter.BindYpos,
+						(ushort) client.Player.PlayerCharacter.BindZpos,
+						(ushort) client.Player.PlayerCharacter.BindHeading
+						);
 				}
 
 				return 1; // TODO: what should we do? player lost in space
@@ -146,21 +144,18 @@ namespace DOL.GS.PacketHandler.v168
 			// move to bind if player fell through the floor
 			if (realZ == 0)
 			{
-				Point bind = new Point(
-					client.Player.BindX,
-					client.Player.BindY,
-					client.Player.BindZ);
-
 				client.Player.MoveTo(
-					(ushort) client.Player.BindRegion,
-					bind,
-					(ushort) client.Player.BindHeading);
+					(ushort) client.Player.PlayerCharacter.BindRegion,
+					client.Player.PlayerCharacter.BindXpos,
+					client.Player.PlayerCharacter.BindYpos,
+					(ushort) client.Player.PlayerCharacter.BindZpos,
+					(ushort) client.Player.PlayerCharacter.BindHeading
+					);
 				return 1;
 			}
 
 			int realX = newZone.XOffset + xOffsetInZone;
 			int realY = newZone.YOffset + yOffsetInZone;
-			Point realPos = new Point(realX, realY, realZ);
 			//DOLConsole.WriteLine("zx="+newZone.XOffset+" zy="+newZone.YOffset+" XOff="+xOffsetInZone+" YOff="+yOffsetInZone+" curZ="+currentZoneID);
 
 
@@ -169,7 +164,7 @@ namespace DOL.GS.PacketHandler.v168
 			{
 				//If the region changes -> make sure we don't take any falling damage
 				if (lastPositionUpdateZone != null
-					&& newZone.Region.RegionID != lastPositionUpdateZone.Region.RegionID)
+					&& newZone.ZoneRegion.ID != lastPositionUpdateZone.ZoneRegion.ID)
 				{
 					client.Player.MaxLastZ = int.MinValue;
 				}
@@ -178,7 +173,7 @@ namespace DOL.GS.PacketHandler.v168
 			}
 
 			int lastTick = client.Player.TempProperties.getIntProperty(LASTUPDATETICK, 0);
-			if (lastTick != 0 && client.Account.PrivLevel == ePrivLevel.Player)
+			if (lastTick != 0 && client.Account.PrivLevel == 1)
 			{
 				int tickDiff = Environment.TickCount - lastTick;
 				int maxDist = 0;
@@ -189,8 +184,13 @@ namespace DOL.GS.PacketHandler.v168
 
 				maxDist = (maxDist*DIST_TOLERANCE/100);
 
-				
-				int plyDist = client.Player.Position.GetDistance(realPos);
+				int plyDist = WorldMgr.GetDistance(
+					client.Player.PlayerCharacter.Xpos,
+					client.Player.PlayerCharacter.Ypos,
+					0,
+					realX,
+					realY,
+					0);
 
 				//We ignore distances below 100 coordinates because below that the toleranze
 				//is nonexistent... eg. sometimes bumping into a wall would cause you to move
@@ -208,7 +208,7 @@ namespace DOL.GS.PacketHandler.v168
 						builder.Append("CharName=");
 						builder.Append(client.Player.Name);
 						builder.Append(" Account=");
-						builder.Append(client.Account.AccountName);
+						builder.Append(client.Account.Name);
 						builder.Append(" IP=");
 						builder.Append(client.TcpEndpoint);
 						GameServer.Instance.LogCheatAction(builder.ToString());
@@ -219,16 +219,11 @@ namespace DOL.GS.PacketHandler.v168
 			client.Player.TempProperties.setProperty(LASTUPDATETICK, Environment.TickCount);
 
 
-			client.Player.Position = realPos;
-			// used to predict current position, should be before
-			// any calculation (like fall damage)
-			client.Player.MovementStartTick = Environment.TickCount;
-
 			// Begin ---------- New Area System -----------					
-			if (client.Player.Region.Time > client.Player.AreaUpdateTick) // check if update is needed
+			if (client.Player.CurrentRegion.Time > client.Player.AreaUpdateTick) // check if update is needed
 			{
 				IList oldAreas = client.Player.CurrentAreas;
-				IList newAreas = AreaMgr.GetAreasOfSpot(newZone, realPos);
+				IList newAreas = newZone.GetAreasOfSpot(client.Player);
 
 				// Check for left areas
 				if (oldAreas != null)
@@ -251,7 +246,7 @@ namespace DOL.GS.PacketHandler.v168
 				}
 				// set current areas to new one...
 				client.Player.CurrentAreas = newAreas;
-				client.Player.AreaUpdateTick = client.Player.Region.Time + 1500; // update every 1.5 seconds
+				client.Player.AreaUpdateTick = client.Player.CurrentRegion.Time + 2000; // update every 2 seconds
 			}
 			// End ---------- New Area System -----------
 
@@ -260,6 +255,22 @@ namespace DOL.GS.PacketHandler.v168
 			client.Player.Heading = (ushort) (headingflag & 0xFFF);
 			ushort flyingflag = packet.ReadShort();
 			byte flags = (byte) packet.ReadByte();
+			
+			if ((flags & 0x40) != 0)
+			{
+				client.Player.IsPlayerMoved = false;
+			}
+			// ignore position changes until client confirms that he knows that he was moved
+			if (!client.Player.IsPlayerMoved)
+			{
+				client.Player.X = realX;
+				client.Player.Y = realY;
+				client.Player.Z = realZ;
+				// used to predict current position, should be before
+				// any calculation (like fall damage)
+				client.Player.MovementStartTick = Environment.TickCount;
+			}
+			
 			client.Player.TargetInView = ((flags & 0x10) != 0);
 			client.Player.GroundTargetInView = ((flags & 0x08) != 0);
 			//7  6  5  4  3  2  1 0
@@ -270,14 +281,16 @@ namespace DOL.GS.PacketHandler.v168
 			{
 				GameLocation[] locations = client.Player.LastUniqueLocations;
 				GameLocation loc = locations[0];
-				if (loc.Position != realPos || loc.Region != client.Player.Region)
+				if (loc.X != realX || loc.Y != realY || loc.Z != realZ || loc.RegionID != client.Player.CurrentRegionID)
 				{
 					loc = locations[locations.Length - 1];
 					Array.Copy(locations, 0, locations, 1, locations.Length - 1);
 					locations[0] = loc;
-					loc.Position = realPos;
-					loc.Heading = (ushort)client.Player.Heading;
-					loc.Region = client.Player.Region;
+					loc.X = realX;
+					loc.Y = realY;
+					loc.Z = realZ;
+					loc.Heading = client.Player.Heading;
+					loc.RegionID = client.Player.CurrentRegionID;
 				}
 			}
 
@@ -310,55 +323,39 @@ namespace DOL.GS.PacketHandler.v168
 				/* Are we on the ground? */
 				if ((flyingflag >> 15) != 0)
 				{
-					const int minFallDamageDistance = 180;
-					const int maxFallDamageDistance = 1024 - minFallDamageDistance;
 					int safeFallLevel = client.Player.GetAbilityLevel(Abilities.SafeFall);
-					int damageDistance = maxLastZ - realPos.Z - minFallDamageDistance - (100 * safeFallLevel);
-
-					if (damageDistance > 0)
+					int fallSpeed = (flyingflag & 0xFFF) - 100 * safeFallLevel; // 0x7FF fall speed and 0x800 bit = fall speed overcaped
+					if (fallSpeed > 400)
 					{
-						if (safeFallLevel > 0)
-							client.Out.SendMessage("The damage was lessened by your safe_fall ability!", eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
-
-						damageDistance = Math.Min(damageDistance, maxFallDamageDistance);
-						// player with 100% health should never die from fall damage
-						//					double damagePercent =  (double)damageDistance / maxFallDamageDistance;
-						//					damagePercent = Math.Min(0.99, damagePercent);
-						//					int damageValue = (int)(client.Player.MaxHealth * damagePercent);
-
-						// player with 100% health should never die from fall damage
-						int damageValue = (client.Player.MaxHealth - 1)*damageDistance/maxFallDamageDistance;
-						int damagePercent = damageValue*100/client.Player.MaxHealth;
-
 						client.Out.SendMessage("You take falling damage!", eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
-
-						if (damagePercent > 0)
+						int fallPercent = Math.Min(99, (fallSpeed - 401) / 6);
+						if (fallPercent > 0)
 						{
-							// on live servers this message is not sent sometimes; others are always shown
-							client.Out.SendMessage("You take " + damagePercent + "% of your max hits in damage.", eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
+							if (safeFallLevel > 0)
+								client.Out.SendMessage("The damage was lessened by your Safe Fall ability!", eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
+							client.Out.SendMessage("You take " + fallPercent + "% of your max hits in damage.", eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
+
+							client.Player.Endurance -= client.Player.MaxEndurance * fallPercent / 100;
+							client.Player.TakeDamage(null, eDamageType.Falling, (int)(0.01 * fallPercent * (client.Player.MaxHealth - 1)), 0);
+
+							//Update the player's health to all other players around
+							foreach (GamePlayer player in client.Player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+								player.Out.SendCombatAnimation(null, client.Player, 0, 0, 0, 0, 0, client.Player.HealthPercent);
+
+							//							client.Player.ChangeHealth(client.Player, GameLiving.eHealthChangeType.Unknown, -0.01*fallPercent*(client.Player.MaxHealth - 1));
 						}
-
-						//Damage player before sending update
-						//client.Player.TakeDamage(null, eDamageType.Falling, damageValue, 0);
-						client.Player.ChangeHealth(client.Player, GameLiving.eHealthChangeType.Unknown, -damageValue);
-
-						//Update the player's health to all other players around
-						//foreach (GamePlayer player in client.Player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-						//	player.Out.SendCombatAnimation(null, client.Player, 0, 0, 0, 0, 0, client.Player.HealthPercent);
-
 						client.Out.SendMessage("You lose endurance!", eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
-						client.Player.EndurancePercent -= (byte)damagePercent;
 					}
-					client.Player.MaxLastZ = realPos.Z;
+					client.Player.MaxLastZ = client.Player.Z;
 				}
 				else
 				{
 					// always set Z if on the ground
 					if (flyingflag == 0)
-						client.Player.MaxLastZ = realPos.Z;
-						// set Z if in air and higher than old Z
-					else if (maxLastZ < realPos.Z)
-						client.Player.MaxLastZ = realPos.Z;
+						client.Player.MaxLastZ = client.Player.Z;
+					// set Z if in air and higher than old Z
+					else if (maxLastZ < client.Player.Z)
+						client.Player.MaxLastZ = client.Player.Z;
 				}
 			}
 			//**************//
@@ -401,6 +398,7 @@ namespace DOL.GS.PacketHandler.v168
 			{
 				con168[16] |= 0x04;
 			}
+			con168[16] &= 0xFD; //11 11 11 01
 			//stealth is set here 
 			if (client.Player.IsStealthed)
 			{
@@ -454,17 +452,6 @@ namespace DOL.GS.PacketHandler.v168
 				}
 				else
 					player.Out.SendObjectDelete(client.Player); //remove the stealthed player from view
-			}
-
-			//Moving too far cancels trades
-			if (client.Player.TradeWindow != null)
-			{
-				if (!client.Player.Position.CheckDistance(client.Player.TradeWindow.Partner.Position, WorldMgr.GIVE_ITEM_DISTANCE))
-				{
-					client.Player.Out.SendMessage("You move too far from your trade partner and cancel the trade!,", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					client.Player.TradeWindow.Partner.Out.SendMessage("Your trade partner moves too far away and cancels the trade!,", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					client.Player.TradeWindow.CloseTrade();
-				}
 			}
 
 			//Notify the GameEventMgr of the moving player

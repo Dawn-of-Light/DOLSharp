@@ -196,16 +196,14 @@ namespace DOL.GS
 				case 3:
 				{
 					if (player.Guild == null)return;
-					if(player.Guild.BountyPoints < Gold)
+					if(!player.Guild.RemoveBountyPoints(Gold))
 					{
 						player.Out.SendMessage("You dont have enough bounty point!", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
 						return;
 					}
 					else
-					{
 						player.Out.SendMessage("You buy "+this.GetName(1,false)+".", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
-						player.Guild.BountyPoints -= Gold;
-					}
+
 				}break;
 				case 4:
 				{
@@ -219,15 +217,17 @@ namespace DOL.GS
 			if (hookPointObj == null) return;
 			//use default value so no need to load
 			//hookPointObj.LoadFromDatabase(this.ObjectTemplate);
-			hookPointObj.Region = player.Region;
+			hookPointObj.CurrentRegion = player.CurrentRegion;
 			hookPointObj.Realm = (byte)hookpoint.Component.Keep.Realm;
 			hookPointObj.Heading = hookpoint.Component.Heading;
 			if (hookPointObj is GameSiegeWeapon)
 				((GameSiegeWeapon)hookPointObj).EnableToMoove = false;
 			//TODO find good hp place from id and type of  component
-			hookPointObj.Position = hookpoint.Position;
+			hookPointObj.X = hookpoint.X;
+			hookPointObj.Y = hookpoint.Y;
+			hookPointObj.Z = hookpoint.Z;
 			if (hookPointObj is GameMob)
-				((GameMob)hookPointObj).RespawnInterval = 0;//do not respawn
+				((GameMob)hookPointObj).RespawnInterval =0;//do not respawn
 			hookPointObj.AddToWorld();
 			hookpoint.Object = hookPointObj;
 		}

@@ -37,68 +37,13 @@
 
 using System;
 using System.Reflection;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
 
 namespace DOL.GS.Quests.Hibernia
 {
-	/* The first thing we do, is to declare the quest requirement
- * class linked with the new Quest. To do this, we derive 
- * from the abstract class AbstractQuestDescriptor
- */
-	public class Essence_50Descriptor : AbstractQuestDescriptor
-	{
-		/* This is the type of the quest class linked with 
-		 * this requirement class, you must override the 
-		 * base method like that
-		 */
-		public override Type LinkedQuestType
-		{
-			get { return typeof(Essence_50); }
-		}
-
-		/* This value is used to retrieves the minimum level needed
-		 *  to be able to make this quest. Override it only if you need, 
-		 * the default value is 1
-		 */
-		public override int MinLevel
-		{
-			get { return 50; }
-		}
-
-		/* This method is used to know if the player is qualified to 
-		 * do the quest. The base method always test his level and
-		 * how many time the quest has been done. Override it only if 
-		 * you want to add a custom test (here we test also the class name)
-		 */
-		public override bool CheckQuestQualification(GamePlayer player)
-		{
-			// if the player is already doing the quest his level is no longer of relevance
-			if (player.IsDoingQuest(typeof(Essence_50)) != null)
-				return true;
-
-			if (player.CharacterClass.ID != (byte)eCharacterClass.Champion &&
-				player.CharacterClass.ID != (byte)eCharacterClass.Bard &&
-				player.CharacterClass.ID != (byte)eCharacterClass.Nightshade &&
-				player.CharacterClass.ID != (byte)eCharacterClass.Enchanter)
-				return false;
-
-			// This checks below are only performed is player isn't doing quest already
-
-			//if (player.HasFinishedQuest(typeof(Academy_47)) == 0) return false;
-
-			return base.CheckQuestQualification(player);
-		}
-	}
-
-
-	/* The second thing we do, is to declare the class we create
-	 * as Quest. We must make it persistant using attributes, to
-	 * do this, we derive from the abstract class AbstractQuest
-	 */
-	[NHibernate.Mapping.Attributes.Subclass(NameType = typeof(Essence_50), ExtendsType = typeof(AbstractQuest))]
 	public class Essence_50 : BaseQuest
 	{
 		/// <summary>
@@ -107,44 +52,55 @@ namespace DOL.GS.Quests.Hibernia
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		protected const string questTitle = "The Moonstone Twin";
+		protected const int minimumLevel = 50;
+		protected const int maximumLevel = 50;
 
-		private static GameMob Brigit = null; // Start NPC        
-		private static GameMob Caithor = null; // Mob to kill
+		private static GameNPC Brigit = null; // Start NPC        
+		private static GameNPC Caithor = null; // Mob to kill
 
-		private static GenericItemTemplate Moonstone = null; //ball of flame
+		private static ItemTemplate Moonstone = null; //ball of flame
 
-		private static FeetArmorTemplate ChampionEpicBoots = null; //Mist Shrouded Boots 
-		private static HeadArmorTemplate ChampionEpicHelm = null; //Mist Shrouded Coif 
-		private static HandsArmorTemplate ChampionEpicGloves = null; //Mist Shrouded Gloves 
-		private static TorsoArmorTemplate ChampionEpicVest = null; //Mist Shrouded Hauberk 
-		private static LegsArmorTemplate ChampionEpicLegs = null; //Mist Shrouded Legs 
-		private static ArmsArmorTemplate ChampionEpicArms = null; //Mist Shrouded Sleeves 
+		private static ItemTemplate ChampionEpicBoots = null; //Mist Shrouded Boots 
+		private static ItemTemplate ChampionEpicHelm = null; //Mist Shrouded Coif 
+		private static ItemTemplate ChampionEpicGloves = null; //Mist Shrouded Gloves 
+		private static ItemTemplate ChampionEpicVest = null; //Mist Shrouded Hauberk 
+		private static ItemTemplate ChampionEpicLegs = null; //Mist Shrouded Legs 
+		private static ItemTemplate ChampionEpicArms = null; //Mist Shrouded Sleeves 
+		private static ItemTemplate BardEpicBoots = null; //Shadow Shrouded Boots 
+		private static ItemTemplate BardEpicHelm = null; //Shadow Shrouded Coif 
+		private static ItemTemplate BardEpicGloves = null; //Shadow Shrouded Gloves 
+		private static ItemTemplate BardEpicVest = null; //Shadow Shrouded Hauberk 
+		private static ItemTemplate BardEpicLegs = null; //Shadow Shrouded Legs 
+		private static ItemTemplate BardEpicArms = null; //Shadow Shrouded Sleeves 
+		private static ItemTemplate EnchanterEpicBoots = null; //Valhalla Touched Boots 
+		private static ItemTemplate EnchanterEpicHelm = null; //Valhalla Touched Coif 
+		private static ItemTemplate EnchanterEpicGloves = null; //Valhalla Touched Gloves 
+		private static ItemTemplate EnchanterEpicVest = null; //Valhalla Touched Hauberk 
+		private static ItemTemplate EnchanterEpicLegs = null; //Valhalla Touched Legs 
+		private static ItemTemplate EnchanterEpicArms = null; //Valhalla Touched Sleeves 
+		private static ItemTemplate NightshadeEpicBoots = null; //Subterranean Boots 
+		private static ItemTemplate NightshadeEpicHelm = null; //Subterranean Coif 
+		private static ItemTemplate NightshadeEpicGloves = null; //Subterranean Gloves 
+		private static ItemTemplate NightshadeEpicVest = null; //Subterranean Hauberk 
+		private static ItemTemplate NightshadeEpicLegs = null; //Subterranean Legs 
+		private static ItemTemplate NightshadeEpicArms = null; //Subterranean Sleeves         
 
-		private static FeetArmorTemplate BardEpicBoots = null; //Shadow Shrouded Boots 
-		private static HeadArmorTemplate BardEpicHelm = null; //Shadow Shrouded Coif 
-		private static HandsArmorTemplate BardEpicGloves = null; //Shadow Shrouded Gloves 
-		private static TorsoArmorTemplate BardEpicVest = null; //Shadow Shrouded Hauberk 
-		private static LegsArmorTemplate BardEpicLegs = null; //Shadow Shrouded Legs 
-		private static ArmsArmorTemplate BardEpicArms = null; //Shadow Shrouded Sleeves 
+		// Constructors
+		public Essence_50() : base()
+		{
+		}
 
-		private static FeetArmorTemplate EnchanterEpicBoots = null; //Valhalla Touched Boots 
-		private static HeadArmorTemplate EnchanterEpicHelm = null; //Valhalla Touched Coif 
-		private static HandsArmorTemplate EnchanterEpicGloves = null; //Valhalla Touched Gloves 
-		private static TorsoArmorTemplate EnchanterEpicVest = null; //Valhalla Touched Hauberk 
-		private static LegsArmorTemplate EnchanterEpicLegs = null; //Valhalla Touched Legs 
-		private static ArmsArmorTemplate EnchanterEpicArms = null; //Valhalla Touched Sleeves 
+		public Essence_50(GamePlayer questingPlayer) : base(questingPlayer)
+		{
+		}
 
-		private static FeetArmorTemplate NightshadeEpicBoots = null; //Subterranean Boots 
-		private static HeadArmorTemplate NightshadeEpicHelm = null; //Subterranean Coif 
-		private static HandsArmorTemplate NightshadeEpicGloves = null; //Subterranean Gloves 
-		private static TorsoArmorTemplate NightshadeEpicVest = null; //Subterranean Hauberk 
-		private static LegsArmorTemplate NightshadeEpicLegs = null; //Subterranean Legs 
-		private static ArmsArmorTemplate NightshadeEpicArms = null; //Subterranean Sleeves
+		public Essence_50(GamePlayer questingPlayer, int step) : base(questingPlayer, step)
+		{
+		}
 
-		private static GameNPC[] ChampionTrainers = null;
-		private static GameNPC[] BardTrainers = null;
-		private static GameNPC[] EnchanterTrainers = null;
-		private static GameNPC[] NightshadeTrainers = null;
+		public Essence_50(GamePlayer questingPlayer, DBQuest dbQuest) : base(questingPlayer, dbQuest)
+		{
+		}
 
 		[ScriptLoadedEvent]
 		public static void ScriptLoaded(DOLEvent e, object sender, EventArgs args)
@@ -164,11 +120,13 @@ namespace DOL.GS.Quests.Hibernia
 				Brigit.Model = 384;
 				Brigit.Name = "Brigit";
 				Brigit.GuildName = "";
-				Brigit.Realm = (byte)eRealm.Hibernia;
-				Brigit.RegionId = 201;
+				Brigit.Realm = (byte) eRealm.Hibernia;
+				Brigit.CurrentRegionID = 201;
 				Brigit.Size = 51;
 				Brigit.Level = 50;
-				Brigit.Position = new Point(33131, 32922, 8008);
+				Brigit.X = 33131;
+				Brigit.Y = 32922;
+				Brigit.Z = 8008;
 				Brigit.Heading = 3254;
 				Brigit.AddToWorld();
 				if (SAVE_INTO_DATABASE)
@@ -178,7 +136,7 @@ namespace DOL.GS.Quests.Hibernia
 
 			}
 			else
-				Brigit = npcs[0] as GameMob;
+				Brigit = npcs[0];
 			// end npc
 
 			npcs = WorldMgr.GetNPCsByName("Caithor", eRealm.None);
@@ -191,13 +149,14 @@ namespace DOL.GS.Quests.Hibernia
 				Caithor.Model = 339;
 				Caithor.Name = "Caithor";
 				Caithor.GuildName = "";
-				Caithor.Realm = (byte)eRealm.None;
-				Caithor.RegionId = 200;
+				Caithor.Realm = (byte) eRealm.None;
+				Caithor.CurrentRegionID = 200;
 				Caithor.Size = 60;
 				Caithor.Level = 65;
-				Caithor.Position = new Point(470547, 531497, 4984);
+				Caithor.X = 470547;
+				Caithor.Y = 531497;
+				Caithor.Z = 4984;
 				Caithor.Heading = 3319;
-				Caithor.RespawnInterval = 5 * 60 * 1000;
 				Caithor.AddToWorld();
 				if (SAVE_INTO_DATABASE)
 				{
@@ -206,896 +165,1108 @@ namespace DOL.GS.Quests.Hibernia
 
 			}
 			else
-				Caithor = npcs[0] as GameMob;
+				Caithor = npcs[0];
 			// end npc
 
 			#endregion
 
 			#region Item Declarations
 
-			Moonstone = (GenericItemTemplate)GameServer.Database.FindObjectByKey(typeof(GenericItemTemplate), "Moonstone");
+			Moonstone = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "Moonstone");
 			if (Moonstone == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Moonstone , creating it ...");
-				Moonstone = new GenericItemTemplate();
-				Moonstone.ItemTemplateID = "Moonstone";
+				Moonstone = new ItemTemplate();
+				Moonstone.Id_nb = "Moonstone";
 				Moonstone.Name = "Moonstone";
 				Moonstone.Level = 8;
+				Moonstone.Item_Type = 29;
 				Moonstone.Model = 514;
 				Moonstone.IsDropable = false;
-				Moonstone.IsSaleable = false;
-				Moonstone.IsTradable = false;
+				Moonstone.IsPickable = false;
+				Moonstone.DPS_AF = 0;
+				Moonstone.SPD_ABS = 0;
+				Moonstone.Object_Type = 41;
+				Moonstone.Hand = 0;
+				Moonstone.Type_Damage = 0;
+				Moonstone.Quality = 100;
+				Moonstone.MaxQuality = 100;
 				Moonstone.Weight = 12;
-
 				if (SAVE_INTO_DATABASE)
 				{
 					GameServer.Database.AddNewObject(Moonstone);
 				}
-			}
 
-			ArmorTemplate i = null;
-			#region Bard	
-			BardEpicBoots = (FeetArmorTemplate)GameServer.Database.FindObjectByKey(typeof(FeetArmorTemplate), "BardEpicBoots");
+			}
+// end item			
+			BardEpicBoots = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "BardEpicBoots");
 			if (BardEpicBoots == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Bards Epic Boots , creating it ...");
-				i = new FeetArmorTemplate();
-				i.ItemTemplateID = "BardEpicBoots";
-				i.Name = "Moonsung Boots";
-				i.Level = 50;
-				i.Model = 738;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.Medium;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Bard);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Hibernia;
+				BardEpicBoots = new ItemTemplate();
+				BardEpicBoots.Id_nb = "BardEpicBoots";
+				BardEpicBoots.Name = "Moonsung Boots";
+				BardEpicBoots.Level = 50;
+				BardEpicBoots.Item_Type = 23;
+				BardEpicBoots.Model = 738;
+				BardEpicBoots.IsDropable = true;
+				BardEpicBoots.IsPickable = true;
+				BardEpicBoots.DPS_AF = 100;
+				BardEpicBoots.SPD_ABS = 19;
+				BardEpicBoots.Object_Type = 37;
+				BardEpicBoots.Quality = 100;
+				BardEpicBoots.MaxQuality = 100;
+				BardEpicBoots.Weight = 22;
+				BardEpicBoots.Bonus = 35;
+				BardEpicBoots.MaxCondition = 50000;
+				BardEpicBoots.MaxDurability = 50000;
+				BardEpicBoots.Condition = 50000;
+				BardEpicBoots.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Quickness, 15));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Matter, 10));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxMana, 4));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 33));
+				BardEpicBoots.Bonus1 = 15;
+				BardEpicBoots.Bonus1Type = (int) eStat.QUI;
+
+				BardEpicBoots.Bonus2 = 10;
+				BardEpicBoots.Bonus2Type = (int) eResist.Matter;
+
+				BardEpicBoots.Bonus3 = 4;
+				BardEpicBoots.Bonus3Type = (int) eProperty.PowerRegenerationRate;
+
+				BardEpicBoots.Bonus4 = 33;
+				BardEpicBoots.Bonus4Type = (int) eProperty.MaxHealth;
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(i);
+					GameServer.Database.AddNewObject(BardEpicBoots);
 				}
-				BardEpicBoots = (FeetArmorTemplate)i;
-			}
 
+			}
+//end item
 			//Moonsung Coif 
-			BardEpicHelm = (HeadArmorTemplate)GameServer.Database.FindObjectByKey(typeof(HeadArmorTemplate), "BardEpicHelm");
+			BardEpicHelm = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "BardEpicHelm");
 			if (BardEpicHelm == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Bards Epic Helm , creating it ...");
-				i = new HeadArmorTemplate();
-				i.ItemTemplateID = "BardEpicHelm";
-				i.Name = "Moonsung Coif";
-				i.Level = 50;
-				i.Model = 1292; //NEED TO WORK ON..
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.Medium;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Bard);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Hibernia;
+				BardEpicHelm = new ItemTemplate();
+				BardEpicHelm.Id_nb = "BardEpicHelm";
+				BardEpicHelm.Name = "Moonsung Coif";
+				BardEpicHelm.Level = 50;
+				BardEpicHelm.Item_Type = 21;
+				BardEpicHelm.Model = 1292; //NEED TO WORK ON..
+				BardEpicHelm.IsDropable = true;
+				BardEpicHelm.IsPickable = true;
+				BardEpicHelm.DPS_AF = 100;
+				BardEpicHelm.SPD_ABS = 19;
+				BardEpicHelm.Object_Type = 37;
+				BardEpicHelm.Quality = 100;
+				BardEpicHelm.MaxQuality = 100;
+				BardEpicHelm.Weight = 22;
+				BardEpicHelm.Bonus = 35;
+				BardEpicHelm.MaxCondition = 50000;
+				BardEpicHelm.MaxDurability = 50000;
+				BardEpicHelm.Condition = 50000;
+				BardEpicHelm.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Charisma, 18));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxMana, 4));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Regrowth, 3));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 21));
+				BardEpicHelm.Bonus1 = 18;
+				BardEpicHelm.Bonus1Type = (int) eStat.CHR;
+
+				BardEpicHelm.Bonus2 = 4;
+				BardEpicHelm.Bonus2Type = (int) eProperty.PowerRegenerationRate;
+
+				BardEpicHelm.Bonus3 = 3;
+				BardEpicHelm.Bonus3Type = (int) eProperty.Skill_Regrowth;
+
+				BardEpicHelm.Bonus4 = 21;
+				BardEpicHelm.Bonus4Type = (int) eProperty.MaxHealth;
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(i);
+					GameServer.Database.AddNewObject(BardEpicHelm);
 				}
-				BardEpicHelm = (HeadArmorTemplate)i;
-			}
 
+
+			}
+//end item
 			//Moonsung Gloves 
-			BardEpicGloves = (HandsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(HandsArmorTemplate), "BardEpicGloves");
+			BardEpicGloves = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "BardEpicGloves");
 			if (BardEpicGloves == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Bards Epic Gloves , creating it ...");
-				i = new HandsArmorTemplate();
-				i.ItemTemplateID = "BardEpicGloves";
-				i.Name = "Moonsung Gloves ";
-				i.Level = 50;
-				i.Model = 737;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.Medium;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Bard);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Hibernia;
+				BardEpicGloves = new ItemTemplate();
+				BardEpicGloves.Id_nb = "BardEpicGloves";
+				BardEpicGloves.Name = "Moonsung Gloves ";
+				BardEpicGloves.Level = 50;
+				BardEpicGloves.Item_Type = 22;
+				BardEpicGloves.Model = 737;
+				BardEpicGloves.IsDropable = true;
+				BardEpicGloves.IsPickable = true;
+				BardEpicGloves.DPS_AF = 100;
+				BardEpicGloves.SPD_ABS = 19;
+				BardEpicGloves.Object_Type = 37;
+				BardEpicGloves.Quality = 100;
+				BardEpicGloves.MaxQuality = 100;
+				BardEpicGloves.Weight = 22;
+				BardEpicGloves.Bonus = 35;
+				BardEpicGloves.MaxCondition = 50000;
+				BardEpicGloves.MaxDurability = 50000;
+				BardEpicGloves.Condition = 50000;
+				BardEpicGloves.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Nurture, 3));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Music, 3));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 12));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 33));
+				BardEpicGloves.Bonus1 = 3;
+				BardEpicGloves.Bonus1Type = (int) eProperty.Skill_Nurture;
+
+				BardEpicGloves.Bonus2 = 3;
+				BardEpicGloves.Bonus2Type = (int) eProperty.Skill_Music;
+
+				BardEpicGloves.Bonus3 = 12;
+				BardEpicGloves.Bonus3Type = (int) eStat.DEX;
+
+				BardEpicGloves.Bonus4 = 33;
+				BardEpicGloves.Bonus4Type = (int) eProperty.MaxHealth;
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(i);
+					GameServer.Database.AddNewObject(BardEpicGloves);
 				}
-				BardEpicGloves = (HandsArmorTemplate)i;
-			}
 
+			}
 			//Moonsung Hauberk 
-			BardEpicVest = (TorsoArmorTemplate)GameServer.Database.FindObjectByKey(typeof(TorsoArmorTemplate), "BardEpicVest");
+			BardEpicVest = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "BardEpicVest");
 			if (BardEpicVest == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Bards Epic Vest , creating it ...");
-				i = new TorsoArmorTemplate();
-				i.ItemTemplateID = "BardEpicVest";
-				i.Name = "Moonsung Hauberk";
-				i.Level = 50;
-				i.Model = 734;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.Medium;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Bard);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Hibernia;
+				BardEpicVest = new ItemTemplate();
+				BardEpicVest.Id_nb = "BardEpicVest";
+				BardEpicVest.Name = "Moonsung Hauberk";
+				BardEpicVest.Level = 50;
+				BardEpicVest.Item_Type = 25;
+				BardEpicVest.Model = 734;
+				BardEpicVest.IsDropable = true;
+				BardEpicVest.IsPickable = true;
+				BardEpicVest.DPS_AF = 100;
+				BardEpicVest.SPD_ABS = 19;
+				BardEpicVest.Object_Type = 37;
+				BardEpicVest.Quality = 100;
+				BardEpicVest.MaxQuality = 100;
+				BardEpicVest.Weight = 22;
+				BardEpicVest.Bonus = 35;
+				BardEpicVest.MaxCondition = 50000;
+				BardEpicVest.MaxDurability = 50000;
+				BardEpicVest.Condition = 50000;
+				BardEpicVest.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Regrowth, 3));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Nurture, 3));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 13));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Charisma, 15));
+				BardEpicVest.Bonus1 = 3;
+				BardEpicVest.Bonus1Type = (int) eProperty.Skill_Regrowth;
+
+				BardEpicVest.Bonus2 = 3;
+				BardEpicVest.Bonus2Type = (int) eProperty.Skill_Nurture;
+
+				BardEpicVest.Bonus3 = 13;
+				BardEpicVest.Bonus3Type = (int) eStat.CON;
+
+				BardEpicVest.Bonus4 = 15;
+				BardEpicVest.Bonus4Type = (int) eStat.CHR;
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(i);
+					GameServer.Database.AddNewObject(BardEpicVest);
 				}
-				BardEpicVest = (TorsoArmorTemplate)i;
-			}
 
+			}
 			//Moonsung Legs 
-			BardEpicLegs = (LegsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(LegsArmorTemplate), "BardEpicLegs");
+			BardEpicLegs = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "BardEpicLegs");
 			if (BardEpicLegs == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Bards Epic Legs , creating it ...");
-				i = new LegsArmorTemplate();
-				i.ItemTemplateID = "BardEpicLegs";
-				i.Name = "Moonsung Legs";
-				i.Level = 50;
-				i.Model = 735;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.Medium;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Bard);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Hibernia;
+				BardEpicLegs = new ItemTemplate();
+				BardEpicLegs.Id_nb = "BardEpicLegs";
+				BardEpicLegs.Name = "Moonsung Legs";
+				BardEpicLegs.Level = 50;
+				BardEpicLegs.Item_Type = 27;
+				BardEpicLegs.Model = 735;
+				BardEpicLegs.IsDropable = true;
+				BardEpicLegs.IsPickable = true;
+				BardEpicLegs.DPS_AF = 100;
+				BardEpicLegs.SPD_ABS = 19;
+				BardEpicLegs.Object_Type = 37;
+				BardEpicLegs.Quality = 100;
+				BardEpicLegs.MaxQuality = 100;
+				BardEpicLegs.Weight = 22;
+				BardEpicLegs.Bonus = 35;
+				BardEpicLegs.MaxCondition = 50000;
+				BardEpicLegs.MaxDurability = 50000;
+				BardEpicLegs.Condition = 50000;
+				BardEpicLegs.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 16));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 15));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Body, 10));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Matter, 10));
+				BardEpicLegs.Bonus1 = 16;
+				BardEpicLegs.Bonus1Type = (int) eStat.CON;
+
+				BardEpicLegs.Bonus2 = 15;
+				BardEpicLegs.Bonus2Type = (int) eStat.DEX;
+
+				BardEpicLegs.Bonus3 = 10;
+				BardEpicLegs.Bonus3Type = (int) eResist.Body;
+
+				BardEpicLegs.Bonus4 = 10;
+				BardEpicLegs.Bonus4Type = (int) eResist.Matter;
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(i);
+					GameServer.Database.AddNewObject(BardEpicLegs);
 				}
-				BardEpicLegs = (LegsArmorTemplate)i;
-			}
 
+			}
 			//Moonsung Sleeves 
-			BardEpicArms = (ArmsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(ArmsArmorTemplate), "BardEpicArms");
+			BardEpicArms = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "BardEpicArms");
 			if (BardEpicArms == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Bard Epic Arms , creating it ...");
-				i = new ArmsArmorTemplate();
-				i.ItemTemplateID = "BardEpicArms";
-				i.Name = "Moonsung Sleeves";
-				i.Level = 50;
-				i.Model = 736;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.Medium;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Bard);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Hibernia;
+				BardEpicArms = new ItemTemplate();
+				BardEpicArms.Id_nb = "BardEpicArms";
+				BardEpicArms.Name = "Moonsung Sleeves";
+				BardEpicArms.Level = 50;
+				BardEpicArms.Item_Type = 28;
+				BardEpicArms.Model = 736;
+				BardEpicArms.IsDropable = true;
+				BardEpicArms.IsPickable = true;
+				BardEpicArms.DPS_AF = 100;
+				BardEpicArms.SPD_ABS = 19;
+				BardEpicArms.Object_Type = 37;
+				BardEpicArms.Quality = 100;
+				BardEpicArms.MaxQuality = 100;
+				BardEpicArms.Weight = 22;
+				BardEpicArms.Bonus = 35;
+				BardEpicArms.MaxCondition = 50000;
+				BardEpicArms.MaxDurability = 50000;
+				BardEpicArms.Condition = 50000;
+				BardEpicArms.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 15));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 12));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 10));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Energy, 12));
+				BardEpicArms.Bonus1 = 15;
+				BardEpicArms.Bonus1Type = (int) eStat.STR;
+
+				BardEpicArms.Bonus2 = 12;
+				BardEpicArms.Bonus2Type = (int) eStat.CHR;
+
+				BardEpicArms.Bonus3 = 10;
+				BardEpicArms.Bonus3Type = (int) eStat.CON;
+
+				BardEpicArms.Bonus4 = 12;
+				BardEpicArms.Bonus4Type = (int) eResist.Energy;
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(i);
+					GameServer.Database.AddNewObject(BardEpicArms);
 				}
-				BardEpicArms = (ArmsArmorTemplate)i;
+
 			}
-			#endregion
-			#region Champion
-			//Champion Epic Sleeves End
-			ChampionEpicBoots = (FeetArmorTemplate)GameServer.Database.FindObjectByKey(typeof(FeetArmorTemplate), "ChampionEpicBoots");
+//Champion Epic Sleeves End
+			ChampionEpicBoots = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ChampionEpicBoots");
 			if (ChampionEpicBoots == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Champions Epic Boots , creating it ...");
-				i = new FeetArmorTemplate();
-				i.ItemTemplateID = "ChampionEpicBoots";
-				i.Name = "Moonglow Boots";
-				i.Level = 50;
-				i.Model = 814;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.High;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Champion);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Hibernia;
+				ChampionEpicBoots = new ItemTemplate();
+				ChampionEpicBoots.Id_nb = "ChampionEpicBoots";
+				ChampionEpicBoots.Name = "Moonglow Boots";
+				ChampionEpicBoots.Level = 50;
+				ChampionEpicBoots.Item_Type = 23;
+				ChampionEpicBoots.Model = 814;
+				ChampionEpicBoots.IsDropable = true;
+				ChampionEpicBoots.IsPickable = true;
+				ChampionEpicBoots.DPS_AF = 100;
+				ChampionEpicBoots.SPD_ABS = 27;
+				ChampionEpicBoots.Object_Type = 38;
+				ChampionEpicBoots.Quality = 100;
+				ChampionEpicBoots.MaxQuality = 100;
+				ChampionEpicBoots.Weight = 22;
+				ChampionEpicBoots.Bonus = 35;
+				ChampionEpicBoots.MaxCondition = 50000;
+				ChampionEpicBoots.MaxDurability = 50000;
+				ChampionEpicBoots.Condition = 50000;
+				ChampionEpicBoots.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 33));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Heat, 10));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Matter, 10));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 15));
+				ChampionEpicBoots.Bonus1 = 33;
+				ChampionEpicBoots.Bonus1Type = (int) eProperty.MaxHealth;
+
+				ChampionEpicBoots.Bonus2 = 10;
+				ChampionEpicBoots.Bonus2Type = (int) eResist.Heat;
+
+				ChampionEpicBoots.Bonus3 = 10;
+				ChampionEpicBoots.Bonus3Type = (int) eResist.Matter;
+
+				ChampionEpicBoots.Bonus4 = 15;
+				ChampionEpicBoots.Bonus4Type = (int) eStat.DEX;
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(i);
+					GameServer.Database.AddNewObject(ChampionEpicBoots);
 				}
-				ChampionEpicBoots = (FeetArmorTemplate)i;
-			}
 
+			}
+//end item
 			//Moonglow Coif 
-			ChampionEpicHelm = (HeadArmorTemplate)GameServer.Database.FindObjectByKey(typeof(HeadArmorTemplate), "ChampionEpicHelm");
+			ChampionEpicHelm = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ChampionEpicHelm");
 			if (ChampionEpicHelm == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Champions Epic Helm , creating it ...");
-				i = new HeadArmorTemplate();
-				i.ItemTemplateID = "ChampionEpicHelm";
-				i.Name = "Moonglow Coif";
-				i.Level = 50;
-				i.Model = 1292; //NEED TO WORK ON..
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.High;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Champion);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Hibernia;
+				ChampionEpicHelm = new ItemTemplate();
+				ChampionEpicHelm.Id_nb = "ChampionEpicHelm";
+				ChampionEpicHelm.Name = "Moonglow Coif";
+				ChampionEpicHelm.Level = 50;
+				ChampionEpicHelm.Item_Type = 21;
+				ChampionEpicHelm.Model = 1292; //NEED TO WORK ON..
+				ChampionEpicHelm.IsDropable = true;
+				ChampionEpicHelm.IsPickable = true;
+				ChampionEpicHelm.DPS_AF = 100;
+				ChampionEpicHelm.SPD_ABS = 27;
+				ChampionEpicHelm.Object_Type = 38;
+				ChampionEpicHelm.Quality = 100;
+				ChampionEpicHelm.MaxQuality = 100;
+				ChampionEpicHelm.Weight = 22;
+				ChampionEpicHelm.Bonus = 35;
+				ChampionEpicHelm.MaxCondition = 50000;
+				ChampionEpicHelm.MaxDurability = 50000;
+				ChampionEpicHelm.Condition = 50000;
+				ChampionEpicHelm.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Valor, 3));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 12));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Quickness, 12));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxMana, 6));
+				ChampionEpicHelm.Bonus1 = 3;
+				ChampionEpicHelm.Bonus1Type = (int) eProperty.Skill_Valor;
+
+				ChampionEpicHelm.Bonus2 = 12;
+				ChampionEpicHelm.Bonus2Type = (int) eStat.CON;
+
+				ChampionEpicHelm.Bonus3 = 12;
+				ChampionEpicHelm.Bonus3Type = (int) eStat.QUI;
+
+				ChampionEpicHelm.Bonus4 = 6;
+				ChampionEpicHelm.Bonus4Type = (int) eProperty.PowerRegenerationRate;
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(i);
+					GameServer.Database.AddNewObject(ChampionEpicHelm);
 				}
-				ChampionEpicHelm = (HeadArmorTemplate)i;
-			}
 
+			}
+//end item
 			//Moonglow Gloves 
-			ChampionEpicGloves = (HandsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(HandsArmorTemplate), "ChampionEpicGloves");
+			ChampionEpicGloves = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ChampionEpicGloves");
 			if (ChampionEpicGloves == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Champions Epic Gloves , creating it ...");
-				i = new HandsArmorTemplate();
-				i.ItemTemplateID = "ChampionEpicGloves";
-				i.Name = "Moonglow Gloves ";
-				i.Level = 50;
-				i.Model = 813;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.High;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Champion);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Hibernia;
+				ChampionEpicGloves = new ItemTemplate();
+				ChampionEpicGloves.Id_nb = "ChampionEpicGloves";
+				ChampionEpicGloves.Name = "Moonglow Gloves ";
+				ChampionEpicGloves.Level = 50;
+				ChampionEpicGloves.Item_Type = 22;
+				ChampionEpicGloves.Model = 813;
+				ChampionEpicGloves.IsDropable = true;
+				ChampionEpicGloves.IsPickable = true;
+				ChampionEpicGloves.DPS_AF = 100;
+				ChampionEpicGloves.SPD_ABS = 27;
+				ChampionEpicGloves.Object_Type = 38;
+				ChampionEpicGloves.Quality = 100;
+				ChampionEpicGloves.MaxQuality = 100;
+				ChampionEpicGloves.Weight = 22;
+				ChampionEpicGloves.Bonus = 35;
+				ChampionEpicGloves.MaxCondition = 50000;
+				ChampionEpicGloves.MaxDurability = 50000;
+				ChampionEpicGloves.Condition = 50000;
+				ChampionEpicGloves.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Parry, 3));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 15));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Quickness, 15));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Crush, 10));
+				ChampionEpicGloves.Bonus1 = 3;
+				ChampionEpicGloves.Bonus1Type = (int) eProperty.Skill_Parry;
+
+				ChampionEpicGloves.Bonus2 = 15;
+				ChampionEpicGloves.Bonus2Type = (int) eStat.STR;
+
+				ChampionEpicGloves.Bonus3 = 15;
+				ChampionEpicGloves.Bonus3Type = (int) eStat.QUI;
+
+				ChampionEpicGloves.Bonus4 = 10;
+				ChampionEpicGloves.Bonus4Type = (int) eResist.Crush;
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(i);
+					GameServer.Database.AddNewObject(ChampionEpicGloves);
 				}
-				ChampionEpicGloves = (HandsArmorTemplate)i;
-			}
 
+			}
 			//Moonglow Hauberk 
-			ChampionEpicVest = (TorsoArmorTemplate)GameServer.Database.FindObjectByKey(typeof(TorsoArmorTemplate), "ChampionEpicVest");
+			ChampionEpicVest = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ChampionEpicVest");
 			if (ChampionEpicVest == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Champions Epic Vest , creating it ...");
-				i = new TorsoArmorTemplate();
-				i.ItemTemplateID = "ChampionEpicVest";
-				i.Name = "Moonglow Brestplate";
-				i.Level = 50;
-				i.Model = 810;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.High;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Champion);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Hibernia;
+				ChampionEpicVest = new ItemTemplate();
+				ChampionEpicVest.Id_nb = "ChampionEpicVest";
+				ChampionEpicVest.Name = "Moonglow Brestplate";
+				ChampionEpicVest.Level = 50;
+				ChampionEpicVest.Item_Type = 25;
+				ChampionEpicVest.Model = 810;
+				ChampionEpicVest.IsDropable = true;
+				ChampionEpicVest.IsPickable = true;
+				ChampionEpicVest.DPS_AF = 100;
+				ChampionEpicVest.SPD_ABS = 27;
+				ChampionEpicVest.Object_Type = 38;
+				ChampionEpicVest.Quality = 100;
+				ChampionEpicVest.MaxQuality = 100;
+				ChampionEpicVest.Weight = 22;
+				ChampionEpicVest.Bonus = 35;
+				ChampionEpicVest.MaxCondition = 50000;
+				ChampionEpicVest.MaxDurability = 50000;
+				ChampionEpicVest.Condition = 50000;
+				ChampionEpicVest.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Valor, 4));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 13));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Quickness, 13));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Energy, 10));
+				ChampionEpicVest.Bonus1 = 4;
+				ChampionEpicVest.Bonus1Type = (int) eProperty.Skill_Valor;
+
+				ChampionEpicVest.Bonus2 = 13;
+				ChampionEpicVest.Bonus2Type = (int) eStat.STR;
+
+				ChampionEpicVest.Bonus3 = 13;
+				ChampionEpicVest.Bonus3Type = (int) eStat.QUI;
+
+				ChampionEpicVest.Bonus4 = 10;
+				ChampionEpicVest.Bonus4Type = (int) eResist.Energy;
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(i);
+					GameServer.Database.AddNewObject(ChampionEpicVest);
 				}
-				ChampionEpicVest = (TorsoArmorTemplate)i;
-			}
 
+			}
 			//Moonglow Legs 
-			ChampionEpicLegs = (LegsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(LegsArmorTemplate), "ChampionEpicLegs");
+			ChampionEpicLegs = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ChampionEpicLegs");
 			if (ChampionEpicLegs == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Champions Epic Legs , creating it ...");
-				i = new LegsArmorTemplate();
-				i.ItemTemplateID = "ChampionEpicLegs";
-				i.Name = "Moonglow Legs";
-				i.Level = 50;
-				i.Model = 811;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.High;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Champion);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Hibernia;
+				ChampionEpicLegs = new ItemTemplate();
+				ChampionEpicLegs.Id_nb = "ChampionEpicLegs";
+				ChampionEpicLegs.Name = "Moonglow Legs";
+				ChampionEpicLegs.Level = 50;
+				ChampionEpicLegs.Item_Type = 27;
+				ChampionEpicLegs.Model = 811;
+				ChampionEpicLegs.IsDropable = true;
+				ChampionEpicLegs.IsPickable = true;
+				ChampionEpicLegs.DPS_AF = 100;
+				ChampionEpicLegs.SPD_ABS = 27;
+				ChampionEpicLegs.Object_Type = 38;
+				ChampionEpicLegs.Quality = 100;
+				ChampionEpicLegs.MaxQuality = 100;
+				ChampionEpicLegs.Weight = 22;
+				ChampionEpicLegs.Bonus = 35;
+				ChampionEpicLegs.MaxCondition = 50000;
+				ChampionEpicLegs.MaxDurability = 50000;
+				ChampionEpicLegs.Condition = 50000;
+				ChampionEpicLegs.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 15));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 15));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Crush, 10));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 18));
+				ChampionEpicLegs.Bonus1 = 15;
+				ChampionEpicLegs.Bonus1Type = (int) eStat.CON;
+
+				ChampionEpicLegs.Bonus2 = 15;
+				ChampionEpicLegs.Bonus2Type = (int) eStat.DEX;
+
+				ChampionEpicLegs.Bonus3 = 10;
+				ChampionEpicLegs.Bonus3Type = (int) eResist.Crush;
+
+				ChampionEpicLegs.Bonus4 = 18;
+				ChampionEpicLegs.Bonus4Type = (int) eProperty.MaxHealth;
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(i);
+					GameServer.Database.AddNewObject(ChampionEpicLegs);
 				}
-				ChampionEpicLegs = (LegsArmorTemplate)i;
-			}
 
+			}
 			//Moonglow Sleeves 
-			ChampionEpicArms = (ArmsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(ArmsArmorTemplate), "ChampionEpicArms");
+			ChampionEpicArms = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ChampionEpicArms");
 			if (ChampionEpicArms == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Champion Epic Arms , creating it ...");
-				i = new ArmsArmorTemplate();
-				i.ItemTemplateID = "ChampionEpicArms";
-				i.Name = "Moonglow Sleeves";
-				i.Level = 50;
-				i.Model = 812;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.High;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Champion);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Hibernia;
+				ChampionEpicArms = new ItemTemplate();
+				ChampionEpicArms.Id_nb = "ChampionEpicArms";
+				ChampionEpicArms.Name = "Moonglow Sleeves";
+				ChampionEpicArms.Level = 50;
+				ChampionEpicArms.Item_Type = 28;
+				ChampionEpicArms.Model = 812;
+				ChampionEpicArms.IsDropable = true;
+				ChampionEpicArms.IsPickable = true;
+				ChampionEpicArms.DPS_AF = 100;
+				ChampionEpicArms.SPD_ABS = 27;
+				ChampionEpicArms.Object_Type = 38;
+				ChampionEpicArms.Quality = 100;
+				ChampionEpicArms.MaxQuality = 100;
+				ChampionEpicArms.Weight = 22;
+				ChampionEpicArms.Bonus = 35;
+				ChampionEpicArms.MaxCondition = 50000;
+				ChampionEpicArms.MaxDurability = 50000;
+				ChampionEpicArms.Condition = 50000;
+				ChampionEpicArms.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Large_Weapon, 3));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 10));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Quickness, 10));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 33));
+				ChampionEpicArms.Bonus1 = 3;
+				ChampionEpicArms.Bonus1Type = (int) eProperty.Skill_Large_Weapon;
+
+				ChampionEpicArms.Bonus2 = 10;
+				ChampionEpicArms.Bonus2Type = (int) eStat.STR;
+
+				ChampionEpicArms.Bonus3 = 10;
+				ChampionEpicArms.Bonus3Type = (int) eStat.QUI;
+
+				ChampionEpicArms.Bonus4 = 33;
+				ChampionEpicArms.Bonus4Type = (int) eProperty.MaxHealth;
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(i);
+					GameServer.Database.AddNewObject(ChampionEpicArms);
 				}
-				ChampionEpicArms = (ArmsArmorTemplate)i;
+
 			}
-			#endregion
-			#region Nightshade
-			NightshadeEpicBoots = (FeetArmorTemplate)GameServer.Database.FindObjectByKey(typeof(FeetArmorTemplate), "NightshadeEpicBoots");
+			NightshadeEpicBoots = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "NightshadeEpicBoots");
 			if (NightshadeEpicBoots == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Nightshade Epic Boots , creating it ...");
-				i = new FeetArmorTemplate();
-				i.ItemTemplateID = "NightshadeEpicBoots";
-				i.Name = "Moonlit Boots";
-				i.Level = 50;
-				i.Model = 750;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.Low;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Nightshade);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Hibernia;
+				NightshadeEpicBoots = new ItemTemplate();
+				NightshadeEpicBoots.Id_nb = "NightshadeEpicBoots";
+				NightshadeEpicBoots.Name = "Moonlit Boots";
+				NightshadeEpicBoots.Level = 50;
+				NightshadeEpicBoots.Item_Type = 23;
+				NightshadeEpicBoots.Model = 750;
+				NightshadeEpicBoots.IsDropable = true;
+				NightshadeEpicBoots.IsPickable = true;
+				NightshadeEpicBoots.DPS_AF = 100;
+				NightshadeEpicBoots.SPD_ABS = 10;
+				NightshadeEpicBoots.Object_Type = 33;
+				NightshadeEpicBoots.Quality = 100;
+				NightshadeEpicBoots.MaxQuality = 100;
+				NightshadeEpicBoots.Weight = 22;
+				NightshadeEpicBoots.Bonus = 35;
+				NightshadeEpicBoots.MaxCondition = 50000;
+				NightshadeEpicBoots.MaxDurability = 50000;
+				NightshadeEpicBoots.Condition = 50000;
+				NightshadeEpicBoots.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 12));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 15));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Thrust, 10));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 24));
+				NightshadeEpicBoots.Bonus1 = 12;
+				NightshadeEpicBoots.Bonus1Type = (int) eStat.STR;
+
+				NightshadeEpicBoots.Bonus2 = 15;
+				NightshadeEpicBoots.Bonus2Type = (int) eStat.DEX;
+
+				NightshadeEpicBoots.Bonus3 = 10;
+				NightshadeEpicBoots.Bonus3Type = (int) eResist.Thrust;
+
+				NightshadeEpicBoots.Bonus4 = 24;
+				NightshadeEpicBoots.Bonus4Type = (int) eProperty.MaxHealth;
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(i);
+					GameServer.Database.AddNewObject(NightshadeEpicBoots);
 				}
-				NightshadeEpicBoots = (FeetArmorTemplate)i;
-			}
 
+			}
+//end item
 			//Moonlit Coif 
-			NightshadeEpicHelm = (HeadArmorTemplate)GameServer.Database.FindObjectByKey(typeof(HeadArmorTemplate), "NightshadeEpicHelm");
+			NightshadeEpicHelm = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "NightshadeEpicHelm");
 			if (NightshadeEpicHelm == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Nightshade Epic Helm , creating it ...");
-				i = new HeadArmorTemplate();
-				i.ItemTemplateID = "NightshadeEpicHelm";
-				i.Name = "Moonlit Helm";
-				i.Level = 50;
-				i.Model = 1292; //NEED TO WORK ON..
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.Low;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Nightshade);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Hibernia;
+				NightshadeEpicHelm = new ItemTemplate();
+				NightshadeEpicHelm.Id_nb = "NightshadeEpicHelm";
+				NightshadeEpicHelm.Name = "Moonlit Helm";
+				NightshadeEpicHelm.Level = 50;
+				NightshadeEpicHelm.Item_Type = 21;
+				NightshadeEpicHelm.Model = 1292; //NEED TO WORK ON..
+				NightshadeEpicHelm.IsDropable = true;
+				NightshadeEpicHelm.IsPickable = true;
+				NightshadeEpicHelm.DPS_AF = 100;
+				NightshadeEpicHelm.SPD_ABS = 10;
+				NightshadeEpicHelm.Object_Type = 33;
+				NightshadeEpicHelm.Quality = 100;
+				NightshadeEpicHelm.MaxQuality = 100;
+				NightshadeEpicHelm.Weight = 22;
+				NightshadeEpicHelm.Bonus = 35;
+				NightshadeEpicHelm.MaxCondition = 50000;
+				NightshadeEpicHelm.MaxDurability = 50000;
+				NightshadeEpicHelm.Condition = 50000;
+				NightshadeEpicHelm.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 9));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 9));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Quickness, 9));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 39));
+				NightshadeEpicHelm.Bonus1 = 9;
+				NightshadeEpicHelm.Bonus1Type = (int) eStat.STR;
+
+				NightshadeEpicHelm.Bonus2 = 9;
+				NightshadeEpicHelm.Bonus2Type = (int) eStat.DEX;
+
+				NightshadeEpicHelm.Bonus3 = 9;
+				NightshadeEpicHelm.Bonus3Type = (int) eStat.QUI;
+
+				NightshadeEpicHelm.Bonus4 = 39;
+				NightshadeEpicHelm.Bonus4Type = (int) eProperty.MaxHealth;
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(i);
+					GameServer.Database.AddNewObject(NightshadeEpicHelm);
 				}
-				NightshadeEpicHelm = (HeadArmorTemplate)i;
-			}
 
+			}
+//end item
 			//Moonlit Gloves 
-			NightshadeEpicGloves = (HandsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(HandsArmorTemplate), "NightshadeEpicGloves");
+			NightshadeEpicGloves = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "NightshadeEpicGloves");
 			if (NightshadeEpicGloves == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Nightshade Epic Gloves , creating it ...");
-				i = new HandsArmorTemplate();
-				i.ItemTemplateID = "NightshadeEpicGloves";
-				i.Name = "Moonlit Gloves ";
-				i.Level = 50;
-				i.Model = 749;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.Low;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Nightshade);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Hibernia;
+				NightshadeEpicGloves = new ItemTemplate();
+				NightshadeEpicGloves.Id_nb = "NightshadeEpicGloves";
+				NightshadeEpicGloves.Name = "Moonlit Gloves ";
+				NightshadeEpicGloves.Level = 50;
+				NightshadeEpicGloves.Item_Type = 22;
+				NightshadeEpicGloves.Model = 749;
+				NightshadeEpicGloves.IsDropable = true;
+				NightshadeEpicGloves.IsPickable = true;
+				NightshadeEpicGloves.DPS_AF = 100;
+				NightshadeEpicGloves.SPD_ABS = 10;
+				NightshadeEpicGloves.Object_Type = 33;
+				NightshadeEpicGloves.Quality = 100;
+				NightshadeEpicGloves.MaxQuality = 100;
+				NightshadeEpicGloves.Weight = 22;
+				NightshadeEpicGloves.Bonus = 35;
+				NightshadeEpicGloves.MaxCondition = 50000;
+				NightshadeEpicGloves.MaxDurability = 50000;
+				NightshadeEpicGloves.Condition = 50000;
+				NightshadeEpicGloves.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Critical_Strike, 2));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 12));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Quickness, 13));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Envenom, 5));
+				NightshadeEpicGloves.Bonus1 = 2;
+				NightshadeEpicGloves.Bonus1Type = (int) eProperty.Skill_Critical_Strike;
+
+				NightshadeEpicGloves.Bonus2 = 12;
+				NightshadeEpicGloves.Bonus2Type = (int) eStat.DEX;
+
+				NightshadeEpicGloves.Bonus3 = 13;
+				NightshadeEpicGloves.Bonus3Type = (int) eStat.QUI;
+
+				NightshadeEpicGloves.Bonus4 = 5;
+				NightshadeEpicGloves.Bonus4Type = (int) eProperty.Skill_Envenom;
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(i);
+					GameServer.Database.AddNewObject(NightshadeEpicGloves);
 				}
-				NightshadeEpicGloves = (HandsArmorTemplate)i;
+
 			}
 			//Moonlit Hauberk 
-			NightshadeEpicVest = (TorsoArmorTemplate)GameServer.Database.FindObjectByKey(typeof(TorsoArmorTemplate), "NightshadeEpicVest");
+			NightshadeEpicVest = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "NightshadeEpicVest");
 			if (NightshadeEpicVest == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Nightshade Epic Vest , creating it ...");
-				i = new TorsoArmorTemplate();
-				i.ItemTemplateID = "NightshadeEpicVest";
-				i.Name = "Moonlit Leather Jerking";
-				i.Level = 50;
-				i.Model = 746;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.Low;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Nightshade);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Hibernia;
+				NightshadeEpicVest = new ItemTemplate();
+				NightshadeEpicVest.Id_nb = "NightshadeEpicVest";
+				NightshadeEpicVest.Name = "Moonlit Leather Jerking";
+				NightshadeEpicVest.Level = 50;
+				NightshadeEpicVest.Item_Type = 25;
+				NightshadeEpicVest.Model = 746;
+				NightshadeEpicVest.IsDropable = true;
+				NightshadeEpicVest.IsPickable = true;
+				NightshadeEpicVest.DPS_AF = 100;
+				NightshadeEpicVest.SPD_ABS = 10;
+				NightshadeEpicVest.Object_Type = 33;
+				NightshadeEpicVest.Quality = 100;
+				NightshadeEpicVest.MaxQuality = 100;
+				NightshadeEpicVest.Weight = 22;
+				NightshadeEpicVest.Bonus = 35;
+				NightshadeEpicVest.MaxCondition = 50000;
+				NightshadeEpicVest.MaxDurability = 50000;
+				NightshadeEpicVest.Condition = 50000;
+				NightshadeEpicVest.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 10));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 10));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 30));
+				NightshadeEpicVest.Bonus1 = 10;
+				NightshadeEpicVest.Bonus1Type = (int) eStat.STR;
+
+				NightshadeEpicVest.Bonus2 = 10;
+				NightshadeEpicVest.Bonus2Type = (int) eStat.DEX;
+
+				NightshadeEpicVest.Bonus3 = 30;
+				NightshadeEpicVest.Bonus3Type = (int) eProperty.MaxHealth;
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(i);
+					GameServer.Database.AddNewObject(NightshadeEpicVest);
 				}
-				NightshadeEpicVest = (TorsoArmorTemplate)i;
-			}
 
+			}
 			//Moonlit Legs 
-			NightshadeEpicLegs = (LegsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(LegsArmorTemplate), "NightshadeEpicLegs");
+			NightshadeEpicLegs = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "NightshadeEpicLegs");
 			if (NightshadeEpicLegs == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Nightshade Epic Legs , creating it ...");
-				i = new LegsArmorTemplate();
-				i.ItemTemplateID = "NightshadeEpicLegs";
-				i.Name = "Moonlit Leggings";
-				i.Level = 50;
-				i.Model = 747;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.Low;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Nightshade);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Hibernia;
+				NightshadeEpicLegs = new ItemTemplate();
+				NightshadeEpicLegs.Id_nb = "NightshadeEpicLegs";
+				NightshadeEpicLegs.Name = "Moonlit Leggings";
+				NightshadeEpicLegs.Level = 50;
+				NightshadeEpicLegs.Item_Type = 27;
+				NightshadeEpicLegs.Model = 747;
+				NightshadeEpicLegs.IsDropable = true;
+				NightshadeEpicLegs.IsPickable = true;
+				NightshadeEpicLegs.DPS_AF = 100;
+				NightshadeEpicLegs.SPD_ABS = 10;
+				NightshadeEpicLegs.Object_Type = 33;
+				NightshadeEpicLegs.Quality = 100;
+				NightshadeEpicLegs.MaxQuality = 100;
+				NightshadeEpicLegs.Weight = 22;
+				NightshadeEpicLegs.Bonus = 35;
+				NightshadeEpicLegs.MaxCondition = 50000;
+				NightshadeEpicLegs.MaxDurability = 50000;
+				NightshadeEpicLegs.Condition = 50000;
+				NightshadeEpicLegs.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 16));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 15));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Crush, 10));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Slash, 10));
+				NightshadeEpicLegs.Bonus1 = 16;
+				NightshadeEpicLegs.Bonus1Type = (int) eStat.CON;
+
+				NightshadeEpicLegs.Bonus2 = 15;
+				NightshadeEpicLegs.Bonus2Type = (int) eStat.DEX;
+
+				NightshadeEpicLegs.Bonus3 = 10;
+				NightshadeEpicLegs.Bonus3Type = (int) eResist.Crush;
+
+				NightshadeEpicLegs.Bonus4 = 10;
+				NightshadeEpicLegs.Bonus4Type = (int) eResist.Slash;
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(i);
+					GameServer.Database.AddNewObject(NightshadeEpicLegs);
 				}
-				NightshadeEpicLegs = (LegsArmorTemplate)i;
-			}
 
+			}
 			//Moonlit Sleeves 
-			NightshadeEpicArms = (ArmsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(ArmsArmorTemplate), "NightshadeEpicArms");
+			NightshadeEpicArms = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "NightshadeEpicArms");
 			if (NightshadeEpicArms == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Nightshade Epic Arms , creating it ...");
-				NightshadeEpicArms = new ArmsArmorTemplate();
-				NightshadeEpicArms.ItemTemplateID = "NightshadeEpicArms";
+				NightshadeEpicArms = new ItemTemplate();
+				NightshadeEpicArms.Id_nb = "NightshadeEpicArms";
 				NightshadeEpicArms.Name = "Moonlit Sleeves";
 				NightshadeEpicArms.Level = 50;
+				NightshadeEpicArms.Item_Type = 28;
 				NightshadeEpicArms.Model = 748;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.Low;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Nightshade);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Hibernia;
+				NightshadeEpicArms.IsDropable = true;
+				NightshadeEpicArms.IsPickable = true;
+				NightshadeEpicArms.DPS_AF = 100;
+				NightshadeEpicArms.SPD_ABS = 10;
+				NightshadeEpicArms.Object_Type = 33;
+				NightshadeEpicArms.Quality = 100;
+				NightshadeEpicArms.MaxQuality = 100;
+				NightshadeEpicArms.Weight = 22;
+				NightshadeEpicArms.Bonus = 35;
+				NightshadeEpicArms.MaxCondition = 50000;
+				NightshadeEpicArms.MaxDurability = 50000;
+				NightshadeEpicArms.Condition = 50000;
+				NightshadeEpicArms.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Celtic_Dual, 4));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 16));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 15));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Cold, 6));
+				NightshadeEpicArms.Bonus1 = 4;
+				NightshadeEpicArms.Bonus1Type = (int) eProperty.Skill_Celtic_Dual;
+
+				NightshadeEpicArms.Bonus2 = 16;
+				NightshadeEpicArms.Bonus2Type = (int) eStat.CON;
+
+				NightshadeEpicArms.Bonus3 = 15;
+				NightshadeEpicArms.Bonus3Type = (int) eStat.DEX;
+
+				NightshadeEpicArms.Bonus4 = 6;
+				NightshadeEpicArms.Bonus4Type = (int) eResist.Cold;
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(i);
+                    GameServer.Database.AddNewObject(NightshadeEpicArms);
 				}
-				NightshadeEpicArms = (ArmsArmorTemplate)i;
+
 			}
-			#endregion
-			#region Enchanter
-			EnchanterEpicBoots = (FeetArmorTemplate)GameServer.Database.FindObjectByKey(typeof(FeetArmorTemplate), "EnchanterEpicBoots");
+			EnchanterEpicBoots = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "EnchanterEpicBoots");
 			if (EnchanterEpicBoots == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Enchanter Epic Boots , creating it ...");
-				i = new FeetArmorTemplate();
-				i.ItemTemplateID = "EnchanterEpicBoots";
-				i.Name = "Moonspun Boots";
-				i.Level = 50;
-				i.Model = 382;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 50;
-				i.ArmorLevel = eArmorLevel.VeryLow;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Enchanter);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Hibernia;
+				EnchanterEpicBoots = new ItemTemplate();
+				EnchanterEpicBoots.Id_nb = "EnchanterEpicBoots";
+				EnchanterEpicBoots.Name = "Moonspun Boots";
+				EnchanterEpicBoots.Level = 50;
+				EnchanterEpicBoots.Item_Type = 23;
+				EnchanterEpicBoots.Model = 382;
+				EnchanterEpicBoots.IsDropable = true;
+				EnchanterEpicBoots.IsPickable = true;
+				EnchanterEpicBoots.DPS_AF = 50;
+				EnchanterEpicBoots.SPD_ABS = 0;
+				EnchanterEpicBoots.Object_Type = 32;
+				EnchanterEpicBoots.Quality = 100;
+				EnchanterEpicBoots.MaxQuality = 100;
+				EnchanterEpicBoots.Weight = 22;
+				EnchanterEpicBoots.Bonus = 35;
+				EnchanterEpicBoots.MaxCondition = 50000;
+				EnchanterEpicBoots.MaxDurability = 50000;
+				EnchanterEpicBoots.Condition = 50000;
+				EnchanterEpicBoots.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 12));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 12));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Body, 12));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 39));
+				EnchanterEpicBoots.Bonus1 = 12;
+				EnchanterEpicBoots.Bonus1Type = (int) eStat.CON;
+
+				EnchanterEpicBoots.Bonus2 = 12;
+				EnchanterEpicBoots.Bonus2Type = (int) eStat.DEX;
+
+				EnchanterEpicBoots.Bonus3 = 12;
+				EnchanterEpicBoots.Bonus3Type = (int) eResist.Body;
+
+				EnchanterEpicBoots.Bonus4 = 39;
+				EnchanterEpicBoots.Bonus4Type = (int) eProperty.MaxHealth;
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(i);
+					GameServer.Database.AddNewObject(EnchanterEpicBoots);
 				}
-				EnchanterEpicBoots = (FeetArmorTemplate)i;
 
 			}
-			//end item
+//end item
 			//Moonspun Coif 
-			EnchanterEpicHelm = (HeadArmorTemplate)GameServer.Database.FindObjectByKey(typeof(HeadArmorTemplate), "EnchanterEpicHelm");
+			EnchanterEpicHelm = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "EnchanterEpicHelm");
 			if (EnchanterEpicHelm == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Enchanter Epic Helm , creating it ...");
-				i = new HeadArmorTemplate();
-				i.ItemTemplateID = "EnchanterEpicHelm";
-				i.Name = "Moonspun Cap";
-				i.Level = 50;
-				i.Model = 1298; //NEED TO WORK ON..
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 50;
-				i.ArmorLevel = eArmorLevel.VeryLow;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Enchanter);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Hibernia;
+				EnchanterEpicHelm = new ItemTemplate();
+				EnchanterEpicHelm.Id_nb = "EnchanterEpicHelm";
+				EnchanterEpicHelm.Name = "Moonspun Cap";
+				EnchanterEpicHelm.Level = 50;
+				EnchanterEpicHelm.Item_Type = 21;
+				EnchanterEpicHelm.Model = 1298; //NEED TO WORK ON..
+				EnchanterEpicHelm.IsDropable = true;
+				EnchanterEpicHelm.IsPickable = true;
+				EnchanterEpicHelm.DPS_AF = 50;
+				EnchanterEpicHelm.SPD_ABS = 0;
+				EnchanterEpicHelm.Object_Type = 32;
+				EnchanterEpicHelm.Quality = 100;
+				EnchanterEpicHelm.MaxQuality = 100;
+				EnchanterEpicHelm.Weight = 22;
+				EnchanterEpicHelm.Bonus = 35;
+				EnchanterEpicHelm.MaxCondition = 50000;
+				EnchanterEpicHelm.MaxDurability = 50000;
+				EnchanterEpicHelm.Condition = 50000;
+				EnchanterEpicHelm.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 21));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Energy, 8));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Enchantments, 4));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Intelligence, 18));
+				EnchanterEpicHelm.Bonus1 = 21;
+				EnchanterEpicHelm.Bonus1Type = (int) eProperty.MaxHealth;
+
+				EnchanterEpicHelm.Bonus2 = 8;
+				EnchanterEpicHelm.Bonus2Type = (int) eResist.Energy;
+
+				EnchanterEpicHelm.Bonus3 = 4;
+				EnchanterEpicHelm.Bonus3Type = (int) eProperty.Skill_Enchantments;
+
+				EnchanterEpicHelm.Bonus4 = 18;
+				EnchanterEpicHelm.Bonus4Type = (int) eStat.INT;
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(i);
+					GameServer.Database.AddNewObject(EnchanterEpicHelm);
 				}
-				EnchanterEpicHelm = (HeadArmorTemplate)i;
-			}
 
+			}
+//end item
 			//Moonspun Gloves 
-			EnchanterEpicGloves = (HandsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(HandsArmorTemplate), "EnchanterEpicGloves");
+			EnchanterEpicGloves = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "EnchanterEpicGloves");
 			if (EnchanterEpicGloves == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Enchanter Epic Gloves , creating it ...");
-				i = new HandsArmorTemplate();
-				i.ItemTemplateID = "EnchanterEpicGloves";
-				i.Name = "Moonspun Gloves ";
-				i.Level = 50;
-				i.Model = 381;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 50;
-				i.ArmorLevel = eArmorLevel.VeryLow;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Enchanter);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Hibernia;
+				EnchanterEpicGloves = new ItemTemplate();
+				EnchanterEpicGloves.Id_nb = "EnchanterEpicGloves";
+				EnchanterEpicGloves.Name = "Moonspun Gloves ";
+				EnchanterEpicGloves.Level = 50;
+				EnchanterEpicGloves.Item_Type = 22;
+				EnchanterEpicGloves.Model = 381;
+				EnchanterEpicGloves.IsDropable = true;
+				EnchanterEpicGloves.IsPickable = true;
+				EnchanterEpicGloves.DPS_AF = 50;
+				EnchanterEpicGloves.SPD_ABS = 0;
+				EnchanterEpicGloves.Object_Type = 32;
+				EnchanterEpicGloves.Quality = 100;
+				EnchanterEpicGloves.MaxQuality = 100;
+				EnchanterEpicGloves.Weight = 22;
+				EnchanterEpicGloves.Bonus = 35;
+				EnchanterEpicGloves.MaxCondition = 50000;
+				EnchanterEpicGloves.MaxDurability = 50000;
+				EnchanterEpicGloves.Condition = 50000;
+				EnchanterEpicGloves.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 30));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Mana, 4));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Intelligence, 6));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 13));
+				EnchanterEpicGloves.Bonus1 = 30;
+				EnchanterEpicGloves.Bonus1Type = (int) eProperty.MaxHealth;
+
+				EnchanterEpicGloves.Bonus2 = 4;
+				EnchanterEpicGloves.Bonus2Type = (int) eProperty.Skill_Mana;
+
+				EnchanterEpicGloves.Bonus3 = 6;
+				EnchanterEpicGloves.Bonus3Type = (int) eStat.INT;
+
+				EnchanterEpicGloves.Bonus4 = 13;
+				EnchanterEpicGloves.Bonus4Type = (int) eStat.DEX;
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(i);
+					GameServer.Database.AddNewObject(EnchanterEpicGloves);
 				}
-				EnchanterEpicGloves = (HandsArmorTemplate)i;
-			}
 
+			}
 			//Moonspun Hauberk 
-			EnchanterEpicVest = (TorsoArmorTemplate)GameServer.Database.FindObjectByKey(typeof(TorsoArmorTemplate), "EnchanterEpicVest");
+			EnchanterEpicVest = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "EnchanterEpicVest");
 			if (EnchanterEpicVest == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Enchanter Epic Vest , creating it ...");
-				i = new TorsoArmorTemplate();
-				i.ItemTemplateID = "EnchanterEpicVest";
-				i.Name = "Moonspun Vest";
-				i.Level = 50;
-				i.Model = 781;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 50;
-				i.ArmorLevel = eArmorLevel.VeryLow;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Enchanter);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Hibernia;
+				EnchanterEpicVest = new ItemTemplate();
+				EnchanterEpicVest.Id_nb = "EnchanterEpicVest";
+				EnchanterEpicVest.Name = "Moonspun Vest";
+				EnchanterEpicVest.Level = 50;
+				EnchanterEpicVest.Item_Type = 25;
+				EnchanterEpicVest.Model = 781;
+				EnchanterEpicVest.IsDropable = true;
+				EnchanterEpicVest.IsPickable = true;
+				EnchanterEpicVest.DPS_AF = 50;
+				EnchanterEpicVest.SPD_ABS = 0;
+				EnchanterEpicVest.Object_Type = 32;
+				EnchanterEpicVest.Quality = 100;
+				EnchanterEpicVest.MaxQuality = 100;
+				EnchanterEpicVest.Weight = 22;
+				EnchanterEpicVest.Bonus = 35;
+				EnchanterEpicVest.MaxCondition = 50000;
+				EnchanterEpicVest.MaxDurability = 50000;
+				EnchanterEpicVest.Condition = 50000;
+				EnchanterEpicVest.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 30));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Intelligence, 15));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 15));
+				EnchanterEpicVest.Bonus1 = 30;
+				EnchanterEpicVest.Bonus1Type = (int) eProperty.MaxHealth;
+
+				EnchanterEpicVest.Bonus2 = 15;
+				EnchanterEpicVest.Bonus2Type = (int) eStat.INT;
+
+				EnchanterEpicVest.Bonus3 = 15;
+				EnchanterEpicVest.Bonus3Type = (int) eStat.DEX;
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(i);
+					GameServer.Database.AddNewObject(EnchanterEpicVest);
 				}
-				EnchanterEpicVest = (TorsoArmorTemplate)i;
-			}
 
+			}
 			//Moonspun Legs 
-			EnchanterEpicLegs = (LegsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(LegsArmorTemplate), "EnchanterEpicLegs");
+			EnchanterEpicLegs = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "EnchanterEpicLegs");
 			if (EnchanterEpicLegs == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Enchanter Epic Legs , creating it ...");
-				i = new LegsArmorTemplate();
-				i.ItemTemplateID = "EnchanterEpicLegs";
-				i.Name = "Moonspun Pants";
-				i.Level = 50;
-				i.Model = 379;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 50;
-				i.ArmorLevel = eArmorLevel.VeryLow;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Enchanter);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Hibernia;
+				EnchanterEpicLegs = new ItemTemplate();
+				EnchanterEpicLegs.Id_nb = "EnchanterEpicLegs";
+				EnchanterEpicLegs.Name = "Moonspun Pants";
+				EnchanterEpicLegs.Level = 50;
+				EnchanterEpicLegs.Item_Type = 27;
+				EnchanterEpicLegs.Model = 379;
+				EnchanterEpicLegs.IsDropable = true;
+				EnchanterEpicLegs.IsPickable = true;
+				EnchanterEpicLegs.DPS_AF = 50;
+				EnchanterEpicLegs.SPD_ABS = 0;
+				EnchanterEpicLegs.Object_Type = 32;
+				EnchanterEpicLegs.Quality = 100;
+				EnchanterEpicLegs.MaxQuality = 100;
+				EnchanterEpicLegs.Weight = 22;
+				EnchanterEpicLegs.Bonus = 35;
+				EnchanterEpicLegs.MaxCondition = 50000;
+				EnchanterEpicLegs.MaxDurability = 50000;
+				EnchanterEpicLegs.Condition = 50000;
+				EnchanterEpicLegs.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 16));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 15));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Heat, 10));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Cold, 10));
+				EnchanterEpicLegs.Bonus1 = 16;
+				EnchanterEpicLegs.Bonus1Type = (int) eStat.CON;
+
+				EnchanterEpicLegs.Bonus2 = 15;
+				EnchanterEpicLegs.Bonus2Type = (int) eStat.DEX;
+
+				EnchanterEpicLegs.Bonus3 = 10;
+				EnchanterEpicLegs.Bonus3Type = (int) eResist.Heat;
+
+				EnchanterEpicLegs.Bonus4 = 10;
+				EnchanterEpicLegs.Bonus4Type = (int) eResist.Cold;
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(i);
+					GameServer.Database.AddNewObject(EnchanterEpicLegs);
 				}
-				EnchanterEpicLegs = (LegsArmorTemplate)i;
-			}
 
+			}
 			//Moonspun Sleeves 
-			EnchanterEpicArms = (ArmsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(ArmsArmorTemplate), "EnchanterEpicArms");
+			EnchanterEpicArms = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "EnchanterEpicArms");
 			if (EnchanterEpicArms == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Enchanter Epic Arms , creating it ...");
-				EnchanterEpicArms = new ArmsArmorTemplate();
-				EnchanterEpicArms.ItemTemplateID = "EnchanterEpicArms";
+				EnchanterEpicArms = new ItemTemplate();
+				EnchanterEpicArms.Id_nb = "EnchanterEpicArms";
 				EnchanterEpicArms.Name = "Moonspun Sleeves";
 				EnchanterEpicArms.Level = 50;
+				EnchanterEpicArms.Item_Type = 28;
 				EnchanterEpicArms.Model = 380;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 50;
-				i.ArmorLevel = eArmorLevel.VeryLow;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Enchanter);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Hibernia;
+				EnchanterEpicArms.IsDropable = true;
+				EnchanterEpicArms.IsPickable = true;
+				EnchanterEpicArms.DPS_AF = 50;
+				EnchanterEpicArms.SPD_ABS = 0;
+				EnchanterEpicArms.Object_Type = 32;
+				EnchanterEpicArms.Quality = 100;
+				EnchanterEpicArms.MaxQuality = 100;
+				EnchanterEpicArms.Weight = 22;
+				EnchanterEpicArms.Bonus = 35;
+				EnchanterEpicArms.MaxCondition = 50000;
+				EnchanterEpicArms.MaxDurability = 50000;
+				EnchanterEpicArms.Condition = 50000;
+				EnchanterEpicArms.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 27));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Intelligence, 10));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Light, 5));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 10));
+				EnchanterEpicArms.Bonus1 = 27;
+				EnchanterEpicArms.Bonus1Type = (int) eProperty.MaxHealth;
+
+				EnchanterEpicArms.Bonus2 = 10;
+				EnchanterEpicArms.Bonus2Type = (int) eStat.INT;
+
+				EnchanterEpicArms.Bonus3 = 5;
+				EnchanterEpicArms.Bonus3Type = (int) eProperty.Skill_Light;
+
+				EnchanterEpicArms.Bonus4 = 10;
+				EnchanterEpicArms.Bonus4Type = (int) eStat.DEX;
 
 				if (SAVE_INTO_DATABASE)
 				{
 					GameServer.Database.AddNewObject(EnchanterEpicArms);
 				}
-				EnchanterEpicArms = (ArmsArmorTemplate)i;
+
 			}
-			#endregion
-			#endregion
 
-			ChampionTrainers = WorldMgr.GetNPCsByType(typeof(DOL.GS.Trainer.ChampionTrainer), eRealm.Hibernia);
-			BardTrainers = WorldMgr.GetNPCsByType(typeof(DOL.GS.Trainer.BardTrainer), eRealm.Hibernia);
-			EnchanterTrainers = WorldMgr.GetNPCsByType(typeof(DOL.GS.Trainer.EnchanterTrainer), eRealm.Hibernia);
-			NightshadeTrainers = WorldMgr.GetNPCsByType(typeof(DOL.GS.Trainer.NightshadeTrainer), eRealm.Hibernia);
+//Champion Epic Sleeves End
+//Item Descriptions End
 
-			foreach (GameNPC npc in ChampionTrainers)
-				GameEventMgr.AddHandler(npc, GameNPCEvent.Interact, new DOLEventHandler(TalkToTrainer));
-			foreach (GameNPC npc in BardTrainers)
-				GameEventMgr.AddHandler(npc, GameNPCEvent.Interact, new DOLEventHandler(TalkToTrainer));
-			foreach (GameNPC npc in EnchanterTrainers)
-				GameEventMgr.AddHandler(npc, GameNPCEvent.Interact, new DOLEventHandler(TalkToTrainer));
-			foreach (GameNPC npc in NightshadeTrainers)
-				GameEventMgr.AddHandler(npc, GameNPCEvent.Interact, new DOLEventHandler(TalkToTrainer));
+			#endregion
 
 			GameEventMgr.AddHandler(Brigit, GameObjectEvent.Interact, new DOLEventHandler(TalkToBrigit));
 			GameEventMgr.AddHandler(Brigit, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToBrigit));
-			GameEventMgr.AddHandler(Caithor, GameNPCEvent.Dying, new DOLEventHandler(TargetDying));
 
 			/* Now we bring to Brigit the possibility to give this quest to players */
-			QuestMgr.AddQuestDescriptor(Brigit, typeof(Essence_50Descriptor));
+			Brigit.AddQuestToGive(typeof (Essence_50));
 
 			if (log.IsInfoEnabled)
 				log.Info("Quest \"" + questTitle + "\" initialized");
@@ -1111,30 +1282,22 @@ namespace DOL.GS.Quests.Hibernia
 			GameEventMgr.RemoveHandler(Brigit, GameObjectEvent.Interact, new DOLEventHandler(TalkToBrigit));
 			GameEventMgr.RemoveHandler(Brigit, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToBrigit));
 
-			foreach (GameNPC npc in ChampionTrainers)
-				GameEventMgr.RemoveHandler(npc, GameNPCEvent.Interact, new DOLEventHandler(TalkToTrainer));
-			foreach (GameNPC npc in BardTrainers)
-				GameEventMgr.RemoveHandler(npc, GameNPCEvent.Interact, new DOLEventHandler(TalkToTrainer));
-			foreach (GameNPC npc in EnchanterTrainers)
-				GameEventMgr.RemoveHandler(npc, GameNPCEvent.Interact, new DOLEventHandler(TalkToTrainer));
-			foreach (GameNPC npc in NightshadeTrainers)
-				GameEventMgr.RemoveHandler(npc, GameNPCEvent.Interact, new DOLEventHandler(TalkToTrainer));
-
 			/* Now we remove to Brigit the possibility to give this quest to players */
-			QuestMgr.RemoveQuestDescriptor(Brigit, typeof(Essence_50Descriptor));
+			Brigit.RemoveQuestToGive(typeof (Essence_50));
 		}
 
 		protected static void TalkToBrigit(DOLEvent e, object sender, EventArgs args)
 		{
 			//We get the player from the event arguments and check if he qualifies		
-			GamePlayer player = ((SourceEventArgs)args).Source as GamePlayer;
+			GamePlayer player = ((SourceEventArgs) args).Source as GamePlayer;
 			if (player == null)
 				return;
-			if (QuestMgr.CanGiveQuest(typeof(Essence_50), player, Brigit) <= 0)
+
+			if(Brigit.CanGiveQuest(typeof (Essence_50), player)  <= 0)
 				return;
 
 			//We also check if the player is already doing the quest
-			Essence_50 quest = player.IsDoingQuest(typeof(Essence_50)) as Essence_50;
+			Essence_50 quest = player.IsDoingQuest(typeof (Essence_50)) as Essence_50;
 
 			if (e == GameObjectEvent.Interact)
 			{
@@ -1151,7 +1314,7 @@ namespace DOL.GS.Quests.Hibernia
 				// The player whispered to the NPC
 			else if (e == GameLivingEvent.WhisperReceive)
 			{
-				WhisperReceiveEventArgs wArgs = (WhisperReceiveEventArgs)args;
+				WhisperReceiveEventArgs wArgs = (WhisperReceiveEventArgs) args;
 				//Check player is already doing quest
 				if (quest == null)
 				{
@@ -1161,7 +1324,7 @@ namespace DOL.GS.Quests.Hibernia
 							player.Out.SendCustomDialog("Will you help Brigit [Path of Essence Level 50 Epic]?", new CustomDialogResponse(CheckPlayerAcceptQuest));
 							break;
 					}
-				}/*
+				}
 				else
 				{
 					switch (wArgs.Text)
@@ -1171,20 +1334,44 @@ namespace DOL.GS.Quests.Hibernia
 							break;
 					}
 				}
-				  */
 
 			}
 
+		}
+
+		public override bool CheckQuestQualification(GamePlayer player)
+		{
+			// if the player is already doing the quest his level is no longer of relevance
+			if (player.IsDoingQuest(typeof (Essence_50)) != null)
+				return true;
+
+			if (player.CharacterClass.ID != (byte) eCharacterClass.Champion &&
+				player.CharacterClass.ID != (byte) eCharacterClass.Bard &&
+				player.CharacterClass.ID != (byte) eCharacterClass.Nightshade &&
+				player.CharacterClass.ID != (byte) eCharacterClass.Enchanter)
+				return false;
+
+			// This checks below are only performed is player isn't doing quest already
+
+			//if (player.HasFinishedQuest(typeof(Academy_47)) == 0) return false;
+
+			//if (!CheckPartAccessible(player,typeof(CityOfCamelot)))
+			//	return false;
+
+			if (player.Level < minimumLevel || player.Level > maximumLevel)
+				return false;
+
+			return true;
 		}
 
 		/* This is our callback hook that will be called when the player clicks
 		 * on any button in the quest offer dialog. We check if he accepts or
 		 * declines here...
 		 */
-		/*
+
 		private static void CheckPlayerAbortQuest(GamePlayer player, byte response)
 		{
-			Essence_50 quest = player.IsDoingQuest(typeof(Essence_50)) as Essence_50;
+			Essence_50 quest = player.IsDoingQuest(typeof (Essence_50)) as Essence_50;
 
 			if (quest == null)
 				return;
@@ -1199,13 +1386,13 @@ namespace DOL.GS.Quests.Hibernia
 				quest.AbortQuest();
 			}
 		}
-		*/
+
 		private static void CheckPlayerAcceptQuest(GamePlayer player, byte response)
 		{
-			if (QuestMgr.CanGiveQuest(typeof(Essence_50), player, Brigit) <= 0)
+			if(Brigit.CanGiveQuest(typeof (Essence_50), player)  <= 0)
 				return;
 
-			if (player.IsDoingQuest(typeof(Essence_50)) != null)
+			if (player.IsDoingQuest(typeof (Essence_50)) != null)
 				return;
 
 			if (response == 0x00)
@@ -1215,7 +1402,7 @@ namespace DOL.GS.Quests.Hibernia
 			else
 			{
 				//Check if we can add the quest!
-				if (!QuestMgr.GiveQuestToPlayer(typeof(Essence_50), player, Brigit))
+				if (!Brigit.GiveQuest(typeof (Essence_50), player, 1))
 					return;
 				player.Out.SendMessage("Kill Caithor in Cursed Forest loc 28k 48k ", eChatType.CT_System, eChatLoc.CL_PopupWindow);
 			}
@@ -1238,37 +1425,8 @@ namespace DOL.GS.Quests.Hibernia
 						return "[Step #1] Seek out Caithor in Cursed Forest Loc 20k,48k kill him!";
 					case 2:
 						return "[Step #2] Return to Brigit and give the Moonstone!";
-					default:
-						return "[Step #" + Step + "] No Description entered for this step!";
 				}
-			}
-		}
-
-		protected static void TalkToTrainer(DOLEvent e, object sender, EventArgs args)
-		{
-			InteractEventArgs iargs = args as InteractEventArgs;
-
-			GamePlayer player = iargs.Source as GamePlayer;
-			GameNPC npc = sender as GameNPC;
-			Essence_50Descriptor a = new Essence_50Descriptor();
-
-			if (!a.CheckQuestQualification(player)) return;
-			if (player.IsDoingQuest(typeof(Essence_50)) != null) return;
-
-			npc.SayTo(player, "Brigit has an important task for you, please seek her out in Tir na Nog");
-		}
-
-		protected static void TargetDying(DOLEvent e, object sender, EventArgs args)
-		{
-			GameMob mob = sender as GameMob;
-			foreach (GamePlayer player in mob.XPGainers)
-			{
-				Essence_50 quest = (Essence_50)player.IsDoingQuest(typeof(Essence_50));
-				if (quest == null) continue;
-				if (quest.Step != 1) continue;
-				player.Out.SendMessage("You collect the Moonstone from Caithor", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				player.ReceiveItem(null, CreateQuestItem(Moonstone, quest.Name));
-				quest.Step = 2;
+				return base.Description;
 			}
 		}
 
@@ -1276,81 +1434,81 @@ namespace DOL.GS.Quests.Hibernia
 		{
 			GamePlayer player = sender as GamePlayer;
 
-			if (player == null || player.IsDoingQuest(typeof(Essence_50)) == null)
+			if (player==null || player.IsDoingQuest(typeof (Essence_50)) == null)
 				return;
-			/*
+
 			if (Step == 1 && e == GameLivingEvent.EnemyKilled)
 			{
-				EnemyKilledEventArgs gArgs = (EnemyKilledEventArgs)args;
+				EnemyKilledEventArgs gArgs = (EnemyKilledEventArgs) args;
 				if (gArgs.Target.Name == Caithor.Name)
 				{
 					m_questPlayer.Out.SendMessage("You collect the Moonstone from Caithor", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					GiveItemToPlayer(CreateQuestItem(Moonstone, typeof(Essence_50)));
+					GiveItem(player, Moonstone);
 					Step = 2;
 					return;
 				}
 
 			}
-			*/
+
 			if (Step == 2 && e == GamePlayerEvent.GiveItem)
 			{
-				GiveItemEventArgs gArgs = (GiveItemEventArgs)args;
-				if (gArgs.Target.Name == Brigit.Name && gArgs.Item.Name == Moonstone.Name)
+				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
+				if (gArgs.Target.Name == Brigit.Name && gArgs.Item.Id_nb == Moonstone.Id_nb)
 				{
-					RemoveItemFromPlayer(Brigit, Moonstone);
+					RemoveItem(Brigit, player, Moonstone);
 					Brigit.SayTo(player, "You have earned this Epic Armour!");
 					FinishQuest();
 					return;
 				}
 			}
 		}
-		/*
+
 		public override void AbortQuest()
 		{
 			base.AbortQuest(); //Defined in Quest, changes the state, stores in DB etc ...
 
 			RemoveItem(m_questPlayer, Moonstone, false);
 		}
-		*/
+
 		public override void FinishQuest()
 		{
 			base.FinishQuest(); //Defined in Quest, changes the state, stores in DB etc ...
 
-			if (m_questPlayer.CharacterClass.ID == (byte)eCharacterClass.Champion)
+			if (m_questPlayer.CharacterClass.ID == (byte) eCharacterClass.Champion)
 			{
-				GiveItemToPlayer(ChampionEpicArms.CreateInstance());
-				GiveItemToPlayer(ChampionEpicBoots.CreateInstance());
-				GiveItemToPlayer(ChampionEpicGloves.CreateInstance());
-				GiveItemToPlayer(ChampionEpicHelm.CreateInstance());
-				GiveItemToPlayer(ChampionEpicLegs.CreateInstance());
-				GiveItemToPlayer(ChampionEpicVest.CreateInstance());
+				GiveItem(m_questPlayer, ChampionEpicArms);
+				GiveItem(m_questPlayer, ChampionEpicBoots);
+				GiveItem(m_questPlayer, ChampionEpicGloves);
+				GiveItem(m_questPlayer, ChampionEpicHelm);
+				GiveItem(m_questPlayer, ChampionEpicLegs);
+				GiveItem(m_questPlayer, ChampionEpicVest);
 			}
-			else if (m_questPlayer.CharacterClass.ID == (byte)eCharacterClass.Bard)
+			else if (m_questPlayer.CharacterClass.ID == (byte) eCharacterClass.Bard)
 			{
-				GiveItemToPlayer(BardEpicArms.CreateInstance());
-				GiveItemToPlayer(BardEpicBoots.CreateInstance());
-				GiveItemToPlayer(BardEpicGloves.CreateInstance());
-				GiveItemToPlayer(BardEpicHelm.CreateInstance());
-				GiveItemToPlayer(BardEpicLegs.CreateInstance());
-				GiveItemToPlayer(BardEpicVest.CreateInstance());
+				GiveItem(m_questPlayer, BardEpicArms);
+				GiveItem(m_questPlayer, BardEpicBoots);
+				GiveItem(m_questPlayer, BardEpicGloves);
+				GiveItem(m_questPlayer, BardEpicHelm);
+				GiveItem(m_questPlayer, BardEpicLegs);
+				GiveItem(m_questPlayer, BardEpicVest);
 			}
-			else if (m_questPlayer.CharacterClass.ID == (byte)eCharacterClass.Enchanter)
+			else if (m_questPlayer.CharacterClass.ID == (byte) eCharacterClass.Enchanter)
 			{
-				GiveItemToPlayer(EnchanterEpicArms.CreateInstance());
-				GiveItemToPlayer(EnchanterEpicBoots.CreateInstance());
-				GiveItemToPlayer(EnchanterEpicGloves.CreateInstance());
-				GiveItemToPlayer(EnchanterEpicHelm.CreateInstance());
-				GiveItemToPlayer(EnchanterEpicLegs.CreateInstance());
-				GiveItemToPlayer(EnchanterEpicVest.CreateInstance());
+				GiveItem(m_questPlayer, EnchanterEpicArms);
+				GiveItem(m_questPlayer, EnchanterEpicBoots);
+				GiveItem(m_questPlayer, EnchanterEpicGloves);
+				GiveItem(m_questPlayer, EnchanterEpicHelm);
+				GiveItem(m_questPlayer, EnchanterEpicLegs);
+				GiveItem(m_questPlayer, EnchanterEpicVest);
 			}
-			else if (m_questPlayer.CharacterClass.ID == (byte)eCharacterClass.Nightshade)
+			else if (m_questPlayer.CharacterClass.ID == (byte) eCharacterClass.Nightshade)
 			{
-				GiveItemToPlayer(NightshadeEpicArms.CreateInstance());
-				GiveItemToPlayer(NightshadeEpicBoots.CreateInstance());
-				GiveItemToPlayer(NightshadeEpicGloves.CreateInstance());
-				GiveItemToPlayer(NightshadeEpicHelm.CreateInstance());
-				GiveItemToPlayer(NightshadeEpicLegs.CreateInstance());
-				GiveItemToPlayer(NightshadeEpicVest.CreateInstance());
+				GiveItem(m_questPlayer, NightshadeEpicArms);
+				GiveItem(m_questPlayer, NightshadeEpicBoots);
+				GiveItem(m_questPlayer, NightshadeEpicGloves);
+				GiveItem(m_questPlayer, NightshadeEpicHelm);
+				GiveItem(m_questPlayer, NightshadeEpicLegs);
+				GiveItem(m_questPlayer, NightshadeEpicVest);
 			}
 
 			m_questPlayer.GainExperience(1937768448, 0, 0, true);

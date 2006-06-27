@@ -17,8 +17,6 @@
  *
  */
 using System.Collections;
-using DOL.GS.PacketHandler;
-using System;
 
 namespace DOL.GS
 {
@@ -42,76 +40,6 @@ namespace DOL.GS
 		/// </summary>
 		string GuildName { get; }
 
-        /// <summary>
-        /// Gets the template npc guild name
-        /// </summary>
-        eGender Gender { get; }
-
-        /// <summary>
-        /// Gets the template npc guild name
-        /// </summary>
-        int Race { get; }
-
-        /// <summary>
-        /// Gets the template npc guild name
-        /// </summary>
-        Faction Faction { get; }
-
-        /// <summary>
-        /// Gets the template npc guild name
-        /// </summary>
-        eRealm Realm { get; }
-
-        /// <summary>
-        /// Gets the template npc guild name
-        /// </summary>
-        int Level { get; }
-
-        /// <summary>
-        /// Gets the template npc guild name
-        /// </summary>
-        int MaximumHealth { get; }
-
-        /// <summary>
-        /// Gets the template npc guild name
-        /// </summary>
-        bool IsGhost { get; }
-
-        /// <summary>
-        /// Gets the template npc guild name
-        /// </summary>
-        bool IsNameHidden { get; }
-
-        /// <summary>
-        /// Gets the template npc guild name
-        /// </summary>
-        bool IsTargetable { get; }
-
-        /// <summary>
-        /// Gets the template npc guild name
-        /// </summary>
-        bool IsFlying { get; }
-
-        /// <summary>
-        /// True if NPC is stealth
-        /// </summary>
-        bool IsStealth { get; }
-        
-        /// <summary>
-        /// Gets the template npc guild name
-        /// </summary>
-        int AggroLevel { get; }
-
-        /// <summary>
-        /// Gets the template npc guild name
-        /// </summary>
-        int AggroRange { get; }
-
-        /// <summary>
-        /// Gets the template npc guild name
-        /// </summary>
-        Type BrainType { get; }
-
 		/// <summary>
 		/// Gets the template npc model
 		/// </summary>
@@ -126,6 +54,11 @@ namespace DOL.GS
 		/// Gets the template npc max speed
 		/// </summary>
 		short MaxSpeed { get; }
+
+		/// <summary>
+		/// Gets the template npc flags
+		/// </summary>
+		uint Flags { get; }
 
 		/// <summary>
 		/// Gets the template npc inventory

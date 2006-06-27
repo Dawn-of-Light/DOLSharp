@@ -19,7 +19,7 @@
 using System;
 using System.Collections;
 using DOL.AI.Brain;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.GS.Effects;
 
 namespace DOL.GS.Spells
@@ -34,7 +34,7 @@ namespace DOL.GS.Spells
 		/// </summary>
 		public override void FinishSpellCast(GameLiving target)
 		{
-			m_caster.ChangeMana(null, GameLiving.eManaChangeType.Spell, -CalculateNeededPower(target));
+			m_caster.Mana -= CalculateNeededPower(target);
 			base.FinishSpellCast(target);
 		}
 
@@ -56,8 +56,8 @@ namespace DOL.GS.Spells
 		/// <param name="effectiveness">factor from 0..1 (0%-100%)</param>
 		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
 		{
-			Caster.LastAttackTick = Caster.Region.Time;
-			target.LastAttackedByEnemyTick = target.Region.Time;
+			Caster.LastAttackTick = Caster.CurrentRegion.Time;
+			target.LastAttackedByEnemyTick = target.CurrentRegion.Time;
 
 			base.ApplyEffectOnTarget(target, effectiveness);
 

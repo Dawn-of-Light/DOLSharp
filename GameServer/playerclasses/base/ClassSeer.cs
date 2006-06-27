@@ -51,8 +51,8 @@ namespace DOL.GS.Scripts
 			player.AddSpellLine(SkillBase.GetSpellLine("Augmentation"));
 
 			player.AddAbility(SkillBase.GetAbility(Abilities.Sprint));
-			player.AddAbility(SkillBase.GetAbility(Abilities.MidArmor, (int)eArmorLevel.Low));
-			player.AddAbility(SkillBase.GetAbility(Abilities.Shield, (int)eShieldSize.Small));
+			player.AddAbility(SkillBase.GetAbility(Abilities.MidArmor, ArmorLevel.Leather));
+			player.AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Small));
 			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Hammers));
 			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Staves));
 		}

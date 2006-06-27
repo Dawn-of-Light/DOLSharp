@@ -20,7 +20,7 @@ using System;
 using System.Collections;
 using System.Collections.Specialized;
 using System.Reflection;
-using DOL.GS.Database;
+using DOL.Database;
 using log4net;
 
 namespace DOL.GS
@@ -36,7 +36,7 @@ namespace DOL.GS
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		//Defines the visible slots that will be displayed to players
-		public static readonly eInventorySlot[] VISIBLE_SLOTS = 
+		protected static readonly eInventorySlot[] VISIBLE_SLOTS = 
 		{ 
 			eInventorySlot.RightHandWeapon,
 			eInventorySlot.LeftHandWeapon,
@@ -52,7 +52,7 @@ namespace DOL.GS
 		};    
 
 		//Defines all the slots that hold equipment
-		public static readonly eInventorySlot[] EQUIP_SLOTS = 
+		protected static readonly eInventorySlot[] EQUIP_SLOTS = 
 		{ 
 			eInventorySlot.RightHandWeapon,
 			eInventorySlot.LeftHandWeapon,
@@ -76,18 +76,7 @@ namespace DOL.GS
 			eInventorySlot.RightBracer,
 			eInventorySlot.LeftRing,
 			eInventorySlot.RightRing,
-		};  
-  
-		//Defines all slots where a armor part can be equipped
-		public static readonly eInventorySlot[] ARMOR_SLOTS = 
-		{ 
-			eInventorySlot.HeadArmor,
-			eInventorySlot.HandsArmor,
-			eInventorySlot.FeetArmor,
-			eInventorySlot.TorsoArmor,
-			eInventorySlot.LegsArmor,
-			eInventorySlot.ArmsArmor
-		};   
+		};    
 
 		#region Constructor/Declaration/LoadDatabase/SaveDatabase
 		/// <summary>
@@ -95,7 +84,7 @@ namespace DOL.GS
 		/// for players the vault, the equipped items and the backpack
 		/// and for mob the quest drops ect ...
 		/// </summary>
-		protected IDictionary  m_items = new HybridDictionary();
+		protected readonly HybridDictionary  m_items;
 
 		/// <summary>
 		/// Holds the begin changes counter for slot updates
@@ -105,16 +94,15 @@ namespace DOL.GS
 		/// <summary>
 		/// Holds all changed slots
 		/// </summary>
-		protected ArrayList m_changedSlots = new ArrayList(1);
-
+		protected ArrayList m_changedSlots;
 
 		/// <summary>
-		/// Get or set the inventory hash
+		/// Constructs a new empty inventory
 		/// </summary>
-		public virtual IDictionary InventoryItems
+		public GameLivingInventory()
 		{
-			get { return m_items; }
-			set { m_items = value; }
+			m_items = new HybridDictionary();
+			m_changedSlots = new ArrayList(1);
 		}
 
 		/// <summary>
@@ -189,6 +177,30 @@ namespace DOL.GS
 				}
 
 				return result;
+			}
+		}
+
+		/// <summary>
+		/// Count items of some type
+		/// </summary>
+		/// <param name="itemtemplateID">template to count</param>
+		/// <param name="minSlot">first slot</param>
+		/// <param name="maxSlot">last slot</param>
+		/// <returns>number of matched items found</returns>
+		public int CountItemTemplate(string itemtemplateID, eInventorySlot minSlot, eInventorySlot maxSlot) {
+			lock (this) {
+				int count = 0;
+				if(minSlot > maxSlot) {
+					eInventorySlot tmp = minSlot;
+					minSlot = maxSlot;
+					maxSlot = tmp;
+				}
+
+				for (int i = (int)minSlot; i <= (int)(maxSlot); i++) {
+					InventoryItem item = (InventoryItem)m_items[i];
+					if (item != null && item.Id_nb == itemtemplateID) count+=item.Count;
+				}
+				return count++;			
 			}
 		}
 
@@ -336,7 +348,7 @@ namespace DOL.GS
 				ArrayList items = new ArrayList();
 				for(int i=(int)minSlot; i<=(int)maxSlot;i++)
 				{
-					GenericItem item = m_items[i] as GenericItem;
+					InventoryItem item = m_items[i] as InventoryItem;
 					if (item!=null)
 						items.Add(item);
 				}
@@ -346,13 +358,13 @@ namespace DOL.GS
 
 		/// <summary>
 		/// Searches for the first occurrence of an item with given
-		/// objecttype between specified slots
+		/// ID between specified slots
 		/// </summary>
-		/// <param name="typeName">object Type</param>
+		/// <param name="uniqueID">item ID</param>
 		/// <param name="minSlot">fist slot for search</param>
 		/// <param name="maxSlot">last slot for search</param>
 		/// <returns>found item or null</returns>
-		public GenericItem GetFirstItemByType(string typeName ,eInventorySlot minSlot, eInventorySlot maxSlot)
+		public InventoryItem GetFirstItemByID(string uniqueID, eInventorySlot minSlot, eInventorySlot maxSlot)
 		{
 			lock (this)
 			{		
@@ -370,10 +382,47 @@ namespace DOL.GS
 
 				for(int i=(int)minSlot; i<=(int)maxSlot;i++)
 				{
-					GenericItem item = m_items[i] as GenericItem;
+					InventoryItem item = m_items[i] as InventoryItem;
 					if (item!=null)
 					{
-						if (item.GetType().Name == typeName)
+						if(item.Id_nb == uniqueID)
+							return item;
+					}
+				}
+			}
+			return null;
+		}
+
+		/// <summary>
+		/// Searches for the first occurrence of an item with given
+		/// objecttype between specified slots
+		/// </summary>
+		/// <param name="objectType">object Type</param>
+		/// <param name="minSlot">fist slot for search</param>
+		/// <param name="maxSlot">last slot for search</param>
+		/// <returns>found item or null</returns>
+		public InventoryItem GetFirstItemByObjectType(int objectType ,eInventorySlot minSlot, eInventorySlot maxSlot)
+		{
+			lock (this)
+			{		
+				minSlot = GetValidInventorySlot(minSlot);
+				maxSlot = GetValidInventorySlot(maxSlot);
+				if(minSlot == eInventorySlot.Invalid || maxSlot == eInventorySlot.Invalid)
+					return null;
+
+				if(minSlot > maxSlot)
+				{
+					eInventorySlot tmp = minSlot;
+					minSlot = maxSlot;
+					maxSlot = tmp;
+				}
+
+				for(int i=(int)minSlot; i<=(int)maxSlot;i++)
+				{
+					InventoryItem item = m_items[i] as InventoryItem;
+					if (item!=null)
+					{
+						if (item.Object_Type == objectType)
 							return item;
 					}
 				}
@@ -389,7 +438,7 @@ namespace DOL.GS
 		/// <param name="minSlot">fist slot for search</param>
 		/// <param name="maxSlot">last slot for search</param>
 		/// <returns>found item or null</returns>
-		public GenericItem GetFirstItemByName(string name ,eInventorySlot minSlot, eInventorySlot maxSlot)
+		public InventoryItem GetFirstItemByName(string name ,eInventorySlot minSlot, eInventorySlot maxSlot)
 		{
 			lock (this)
 			{		
@@ -407,7 +456,7 @@ namespace DOL.GS
 
 				for(int i=(int)minSlot; i<=(int)maxSlot;i++)
 				{
-					GenericItem item = m_items[i] as GenericItem;
+					InventoryItem item = m_items[i] as InventoryItem;
 					if (item!=null)
 					{
 						if (item.Name == name)
@@ -426,7 +475,7 @@ namespace DOL.GS
 		/// <param name="slot"></param>
 		/// <param name="item"></param>
 		/// <returns>The eInventorySlot where the item has been added</returns>
-		public virtual bool AddItem(eInventorySlot slot, GenericItem item)
+		public virtual bool AddItem(eInventorySlot slot, InventoryItem item)
 		{
 			if (item == null) return false;
 			lock (this)
@@ -441,6 +490,10 @@ namespace DOL.GS
 				}
 				m_items.Add((int)slot, item);
 				item.SlotPosition=(int)slot;
+				if (item.OwnerID != null)
+				{
+					item.OwnerID = null; // owner ID for NPC
+				}
 
 				if (!m_changedSlots.Contains((int)slot))
 					m_changedSlots.Add((int)slot);
@@ -455,7 +508,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="item">the item to remove</param>
 		/// <returns>true if successfull</returns>
-		public virtual bool RemoveItem(GenericItem item)
+		public virtual bool RemoveItem(InventoryItem item)
 		{
 			lock(this)
 			{
@@ -467,7 +520,7 @@ namespace DOL.GS
 					if (!m_changedSlots.Contains(item.SlotPosition))
 						m_changedSlots.Add(item.SlotPosition);
 
-					item.Owner = null;
+					item.OwnerID = null;
 					item.SlotPosition = (int)eInventorySlot.Invalid;
 
 					if (m_changesCounter <= 0)
@@ -479,12 +532,41 @@ namespace DOL.GS
 		}
 
 		/// <summary>
+		/// Adds count of items to the inventory item
+		/// </summary>
+		/// <param name="item"></param>
+		/// <param name="count"></param>
+		/// <returns></returns>
+		public virtual bool AddCountToStack(InventoryItem item, int count)
+		{
+			if (item == null) return false;
+			if (count <= 0) return false;
+			lock(this)
+			{
+				if (m_items.Contains(item.SlotPosition))
+				{
+					if(item.Count+count > item.MaxCount) return false;
+
+					item.Weight += item.Weight/item.Count*count;
+					item.Count += count;
+
+					if (!m_changedSlots.Contains(item.SlotPosition))
+						m_changedSlots.Add(item.SlotPosition);
+					if (m_changesCounter <= 0)
+						UpdateChangedSlots();
+					return true;
+				}
+				return false;
+			}
+		}
+
+		/// <summary>
 		/// Removes count of items from the inventory item
 		/// </summary>
 		/// <param name="item">the item to remove</param>
 		/// <param name="count">the count of items to be removed from the stack</param>
 		/// <returns>true one item removed</returns>
-		public virtual bool RemoveCountFromStack(StackableItem item, int count)
+		public virtual bool RemoveCountFromStack(InventoryItem item, int count)
 		{
 			if (item == null) return false;
 			if (count <= 0) return false;
@@ -500,6 +582,7 @@ namespace DOL.GS
 					}
 					else
 					{
+						item.Weight -= item.Weight/item.Count*count;
 						item.Count -= count;
 
 						if (!m_changedSlots.Contains(itemSlot))
@@ -521,13 +604,13 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="slot">SlotPosition</param>
 		/// <returns>the item in the specified slot if the slot is valid and null if not</returns>
-		public virtual GenericItem GetItem(eInventorySlot slot)
+		public virtual InventoryItem GetItem(eInventorySlot slot)
 		{
 			lock (this)
 			{
 				slot = GetValidInventorySlot(slot);
 				if (slot == eInventorySlot.Invalid) return null;
-				return (m_items[(int)slot] as GenericItem);
+				return (m_items[(int)slot] as InventoryItem);
 			}
 		}
 
@@ -546,7 +629,8 @@ namespace DOL.GS
 				if (fromSlot == eInventorySlot.Invalid || toSlot == eInventorySlot.Invalid)
 					return false;
 
-				if (!CombineItems((int)fromSlot, (int)toSlot) && !StackItems((int)fromSlot, (int)toSlot, itemCount)) 
+				if (!CombineItems((InventoryItem)m_items[(int)fromSlot], (InventoryItem)m_items[(int)toSlot]) &&
+					!StackItems((int)fromSlot, (int)toSlot, itemCount)) 
 				{
 					ExchangeItems((int)fromSlot, (int)toSlot);
 				}
@@ -602,26 +686,6 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Get the list of all equipped armor items
-		/// </summary>
-		public virtual ICollection ArmorItems 
-		{ 
-			get
-			{
-				ArrayList items = new ArrayList();
-				lock (this)
-				{
-					foreach(eInventorySlot slot in ARMOR_SLOTS)
-					{
-						object item = m_items[(int)slot];
-						if(item!=null) items.Add(item);
-					}
-				}
-				return items;    
-			}
-		}
-
-		/// <summary>
 		/// Get the list of all items in the inventory
 		/// </summary>
 		public virtual ICollection AllItems
@@ -631,15 +695,216 @@ namespace DOL.GS
 
 		#endregion
 
+		#region AddTemplate/RemoveTemplate
+
+		/// <summary>
+		/// Adds needed amount of items to inventory if there
+		/// is enough space else nothing is done
+		/// </summary>
+		/// <param name="template">The ItemTemplate</param>
+		/// <param name="count">The count of items to add</param>
+		/// <param name="minSlot">The first slot</param>
+		/// <param name="maxSlot">The last slot</param>
+		/// <returns>True if all items were added</returns>
+		public virtual bool AddTemplate(ItemTemplate template, int count, eInventorySlot minSlot, eInventorySlot maxSlot)
+		{
+			if (template == null) return false;
+			if (count <= 0) return false;
+			if (minSlot > maxSlot)
+			{
+				eInventorySlot tmp = minSlot;
+				minSlot = maxSlot;
+				maxSlot = tmp;
+			}
+			if (minSlot < eInventorySlot.Min_Inv) return false;
+			if (maxSlot > eInventorySlot.Max_Inv) return false;
+
+			lock (this)
+			{
+				Hashtable changedSlots = new Hashtable(); // value: <0 = new item count; >0 = add to old
+				bool fits = false;
+				eInventorySlot i = minSlot;
+
+				// fill the gaps in existing stacks
+				do
+				{
+					eInventorySlot curSlot = GetValidInventorySlot(i);
+					if (curSlot == eInventorySlot.Invalid) continue; // skip slots not valid in this inventory
+
+					InventoryItem curItem = (InventoryItem)m_items[(int)curSlot];
+					if (curItem == null) continue; // skip empty slots
+					if (curItem.Id_nb != template.Id_nb) continue;
+					if (curItem.Count >= curItem.MaxCount) continue;
+
+					int countFree = curItem.MaxCount - curItem.Count;
+					int countAdd = count;
+					if (countAdd > countFree)
+						countAdd = countFree;
+					changedSlots[(int)curSlot] = countAdd; // existing item should be changed
+					count -= countAdd;
+
+					if (count == 0)
+					{
+						fits = true;
+						break;
+					}
+					else if (count < 0)
+					{
+						throw new Exception("Count is less than zero while filling gaps, should never happen!");
+					}
+				} while (++i <= maxSlot);
+
+				if (!fits)
+				{
+					// still not fits? add new items.
+					for (i = minSlot; i <= maxSlot; i++)
+					{
+						eInventorySlot curSlot = GetValidInventorySlot(i);
+						if (curSlot == eInventorySlot.Invalid) continue; // skip slots not valid in this inventory
+						if (changedSlots.Contains((int)curSlot)) continue; // skip reserved slots
+						if (m_items.Contains((int)curSlot)) continue; // skip used slots
+
+						int countAdd = count;
+						if (countAdd > template.MaxCount)
+							countAdd = template.MaxCount;
+						changedSlots[(int)curSlot] = -countAdd; // new item should be added
+						count -= countAdd;
+
+						if (count == 0)
+						{
+							fits = true;
+							break;
+						}
+						else if (count < 0)
+						{
+							throw new Exception("Count is less than zero while adding new items, should never happen!");
+						}
+					}
+				}
+
+				if (!fits) return false;
+
+				// add new items
+				BeginChanges();
+
+				foreach (DictionaryEntry de in changedSlots)
+				{
+					int slot = (int)de.Key;
+					int value = (int)de.Value;
+					if (value > 0) // existing item should be changed
+					{
+						InventoryItem item = (InventoryItem)m_items[slot];
+						AddCountToStack(item, value);
+					}
+					else if (value < 0) // new item should be added
+					{
+						InventoryItem item = new InventoryItem(template);
+						item.Count = -value;
+						item.Weight *= -value;
+						AddItem((eInventorySlot)slot, item);
+					}
+				}
+
+				CommitChanges();
+
+				return true;
+			}
+		}
+
+		/// <summary>
+		/// Removes needed amount of items from inventory if
+		/// enough amount of items are in inventory
+		/// </summary>
+		/// <param name="templateID">The ItemTemplate ID</param>
+		/// <param name="count">The count of items to add</param>
+		/// <param name="minSlot">The first slot</param>
+		/// <param name="maxSlot">The last slot</param>
+		/// <returns>True if all items were added</returns>
+		public virtual bool RemoveTemplate(string templateID, int count, eInventorySlot minSlot, eInventorySlot maxSlot)
+		{
+			if (templateID == null) return false;
+			if (count <= 0) return false;
+			if (minSlot > maxSlot)
+			{
+				eInventorySlot tmp = minSlot;
+				minSlot = maxSlot;
+				maxSlot = tmp;
+			}
+			if (minSlot < eInventorySlot.Min_Inv) return false;
+			if (maxSlot > eInventorySlot.Max_Inv) return false;
+
+			lock (this)
+			{
+				Hashtable changedSlots = new Hashtable(); // value: null = remove item completely; >0 = remove count from stack
+				bool remove = false;
+				for (eInventorySlot i = minSlot; i <= maxSlot; i++)
+				{
+					InventoryItem item = (InventoryItem)m_items[(int)i];
+					if (item == null) continue;
+					if (item.Id_nb != templateID) continue;
+
+					if (count >= item.Count)
+					{
+						count -= item.Count;
+						changedSlots.Add(item, null); // remove completely
+					}
+					else
+					{
+						changedSlots.Add(item, count); // remove count
+						count = 0;
+					}
+
+					if (count == 0)
+					{
+						remove = true;
+						break;
+					}
+					else if (count < 0)
+					{
+						throw new Exception("Count less than zero while removing template.");
+					}
+				}
+
+				if (!remove) return false;
+
+
+				BeginChanges();
+
+				foreach (DictionaryEntry de in changedSlots)
+				{
+					InventoryItem item = (InventoryItem)de.Key;
+					if (de.Value == null)
+					{
+						if (!RemoveItem(item))
+						{
+							CommitChanges();
+							throw new Exception("Error removing item.");
+						}
+					}
+					else if (!RemoveCountFromStack(item, (int)de.Value))
+					{
+						CommitChanges();
+						throw new Exception("Error removing count from stack.");
+					}
+				}
+
+				CommitChanges();
+
+				return true;
+			}
+		}
+
+		#endregion
+
 		#region Combine/Exchange/Stack Items
 
 		/// <summary>
 		/// Combine 2 items together if possible
 		/// </summary>
-		/// <param name="fromSlot">First Item</param>
-		/// <param name="toSlot">Second Item</param>
+		/// <param name="fromItem">First Item</param>
+		/// <param name="toItem">Second Item</param>
 		/// <returns>true if items combined successfully</returns>
-		protected virtual bool CombineItems(int fromSlot,int toSlot)
+		protected virtual bool CombineItems(InventoryItem fromItem, InventoryItem toItem)
 		{
 			return false;
 		}
@@ -664,8 +929,8 @@ namespace DOL.GS
 		/// <returns>true if items exchanged successfully</returns>
 		protected virtual bool ExchangeItems(int fromSlot, int toSlot)
 		{
-			GenericItem newFromItem = (GenericItem)m_items[toSlot];
-			GenericItem newToItem = (GenericItem)m_items[fromSlot];
+			InventoryItem newFromItem = (InventoryItem)m_items[toSlot];
+			InventoryItem newToItem = (InventoryItem)m_items[fromSlot];
 			m_items[fromSlot]=newFromItem;
 			m_items[toSlot]=newToItem;
 
@@ -691,13 +956,13 @@ namespace DOL.GS
 		{ 
 			get
 			{
-				GenericItem item = null;
+				InventoryItem item = null;
 				int weight=0;
 				lock (this)
 				{
 					foreach(eInventorySlot slot in EQUIP_SLOTS)
 					{
-						item = m_items[(int)slot] as GenericItem;
+						item = m_items[(int)slot] as InventoryItem;
 						if(item!=null)
 							weight+=item.Weight;
 					}

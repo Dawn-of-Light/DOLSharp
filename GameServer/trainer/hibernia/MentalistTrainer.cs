@@ -17,11 +17,7 @@
  *
  */
 using System;
-using System.Collections;
-using System.Reflection;
-using DOL.Events;
 using DOL.GS.PacketHandler;
-using log4net;
 
 namespace DOL.GS.Trainer
 {
@@ -31,51 +27,10 @@ namespace DOL.GS.Trainer
 	[NPCGuildScript("Mentalist Trainer", eRealm.Hibernia)]		// this attribute instructs DOL to use this script for all "Mentalist Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class MentalistTrainer : GameTrainer
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		public const string WEAPON_ID1 = "mentalist_item";
 
-		/// <summary>
-		/// This hash constrain all item template the trainer can give
-		/// </summary>	
-		private static IDictionary allStartupItems = new Hashtable();
-
-		/// <summary>
-		/// This function is called at the server startup
-		/// </summary>	
-		[GameServerStartedEvent]
-		public static void OnServerStartup(DOLEvent e, object sender, EventArgs args)
-		{	
-			#region Mentalist Staff
-
-			StaffTemplate mentalist_staff_template = new StaffTemplate();
-			mentalist_staff_template.Name = "Staff of Mental Clarity";
-			mentalist_staff_template.Level = 5;
-			mentalist_staff_template.Durability = 100;
-			mentalist_staff_template.Condition = 100;
-			mentalist_staff_template.Quality = 90;
-			mentalist_staff_template.Bonus = 10;
-			mentalist_staff_template.DamagePerSecond = 30;
-			mentalist_staff_template.Speed = 4400;
-			mentalist_staff_template.Weight = 45;
-			mentalist_staff_template.Model = 19;
-			mentalist_staff_template.Realm = eRealm.Hibernia;
-			mentalist_staff_template.IsDropable = true; 
-			mentalist_staff_template.IsTradable = false; 
-			mentalist_staff_template.IsSaleable = false;
-			mentalist_staff_template.MaterialLevel = eMaterialLevel.Bronze;
-			
-			mentalist_staff_template.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Focus_Mentalism, 4));
-			
-			if(!allStartupItems.Contains("Staff_of_Mental_Clarity"))
-			{
-				allStartupItems.Add("Staff_of_Mental_Clarity", mentalist_staff_template);
-			
-				if (log.IsDebugEnabled)
-					log.Debug("Adding " + mentalist_staff_template.Name + " to MentalistTrainer gifts.");
-			}
-			#endregion
+		public MentalistTrainer() : base()
+		{
 		}
 
 		/// <summary>
@@ -88,18 +43,22 @@ namespace DOL.GS.Trainer
  			if (!base.Interact(player)) return false;
 								
 			// check if class matches.				
-			if (player.CharacterClass.ID == (int) eCharacterClass.Mentalist)
-			{
+			if (player.CharacterClass.ID == (int) eCharacterClass.Mentalist) {
+
+				// popup the training window
 				player.Out.SendTrainerWindow();
+				//player.Out.SendMessage(this.Name + " says, \"Select what you like to train.\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
 				player.Out.SendMessage(this.Name + " says, \"Our way is a hard one, " + player.Name + ". I can only train you in skills. You must gain knowledge and wisdom on your own.\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
-			} 
-			else if (CanPromotePlayer(player)) 
-			{
-				player.Out.SendMessage(this.Name + " says, \"Do you wish to train as a [Mentalist] and walk the Path of Harmony?\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+
 			} 
 			else 
 			{
-				player.Out.SendMessage(this.Name + " says, \"You must seek elsewhere for your training.\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
+				// perhaps player can be promoted
+				if (CanPromotePlayer(player)) {
+					player.Out.SendMessage(this.Name + " says, \"Do you wish to train as a [Mentalist] and walk the Path of Harmony?\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+				} else {
+					player.Out.SendMessage(this.Name + " says, \"You must seek elsewhere for your training.\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);							
+				}
 			}
 			return true;
  		}
@@ -126,12 +85,13 @@ namespace DOL.GS.Trainer
 			if (!base.WhisperReceive(source, text)) return false;			
 			GamePlayer player = source as GamePlayer;			
 	
-			switch (text) 
-			{
-				case "Mentalist":
-					if (CanPromotePlayer(player)) 
-						PromotePlayer(player, (int)eCharacterClass.Mentalist, "Well met then, " + source.GetName(0, false) + ". It is a hard road, but I see hardness is no stranger to you. Welcome, Mentalist, welcome. Here, take this. It will aid you in your first encounters as a Mentalist.", new GenericItemTemplate[] {allStartupItems["Staff_of_Mental_Clarity"] as GenericItemTemplate});
-					
+			switch (text) {
+			case "Mentalist":
+				// promote player to other class
+				if (CanPromotePlayer(player)) {
+					PromotePlayer(player, (int)eCharacterClass.Mentalist, "Well met then, " + source.GetName(0, false) + ". It is a hard road, but I see hardness is no stranger to you. Welcome, Mentalist, welcome. Here, take this. It will aid you in your first encounters as a Mentalist.", null);
+					player.ReceiveItem(this,WEAPON_ID1);
+				}
 				break;
 			}
 			return true;		

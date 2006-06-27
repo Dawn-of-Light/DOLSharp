@@ -18,7 +18,7 @@
  */
 using System;
 using System.Collections;
-using DOL.GS.Database;
+using DOL.Database;
 
 namespace DOL.GS
 {
@@ -53,7 +53,7 @@ namespace DOL.GS
 		/// <summary>
 		/// gets or sets the model of this Item
 		/// </summary>
-		public override int Model
+		public override ushort Model
 		{
 			get { return base.Model; }
 			set
@@ -134,19 +134,21 @@ namespace DOL.GS
 		/// <param name="obj">World object to be copied</param>
 		public void CopyFrom(WorldObject obj)
 		{
-			RegionId = (ushort) obj.Region;
+			CurrentRegionID = obj.Region;
 			Name = obj.Name;
-			Model = (ushort)obj.Model;
-			Emblem = (ushort)obj.Emblem;
-			Heading = (ushort)obj.Heading;
-			Position = new Point(obj.X, obj.Y, obj.Z);
-			InternalID = obj.WorldObjectID.ToString();
+			Model = obj.Model;
+			Emblem = obj.Emblem;
+			Heading = obj.Heading;
+			X = obj.X;
+			Y = obj.Y;
+			Z = obj.Z;
+			InternalID = obj.ObjectId;
 		}
 
 		/// <summary>
 		/// Gets or sets the heading of this item
 		/// </summary>
-		public override int Heading
+		public override ushort Heading
 		{
 			get { return base.Heading; }
 			set
@@ -197,25 +199,24 @@ namespace DOL.GS
 			if(InternalID != null)
 				obj = (WorldObject) GameServer.Database.FindObjectByKey(typeof(WorldObject), InternalID);
 			if(obj == null)
-				obj = new WorldObject();
+			  obj = new WorldObject();
 			obj.Name = Name;
 			obj.Model = Model;
 			obj.Emblem = Emblem;
 			obj.Heading = Heading;
-			obj.Region = RegionId;
-			Point pos = Position;
-			obj.X = pos.X;
-			obj.Y = pos.Y;
-			obj.Z = pos.Z;
+			obj.Region = CurrentRegionID;
+			obj.X = X;
+			obj.Y = Y;
+			obj.Z = Z;
 			obj.ClassType = this.GetType().ToString();
 
-			/*if(InternalID == null)
+			if(InternalID == null)
 			{
 				GameServer.Database.AddNewObject(obj);
 				InternalID = obj.ObjectId;
 			}
 			else
-				GameServer.Database.SaveObject(obj);*/
+				GameServer.Database.SaveObject(obj);
 		}
 
 		/// <summary>

@@ -72,9 +72,14 @@ namespace DOL.GS.Spells
 			}
 
 			if (!healed && Spell.Target == "Realm")
-				m_caster.ChangeMana(null, GameLiving.eManaChangeType.Spell, -CalculateNeededPower(target) >> 1);// only 1/2 power if no heal
+			{
+				m_caster.Mana -= CalculateNeededPower(target) >> 1;	// only 1/2 power if no heal
+			}
 			else
-				m_caster.ChangeMana(null, GameLiving.eManaChangeType.Spell, -CalculateNeededPower(target));
+			{
+				m_caster.Mana -= CalculateNeededPower(target);
+				m_caster.Health -= transferHeal >> 1;
+			}
 
 			// send animation for non pulsing spells only
 			if (Spell.Pulse == 0)

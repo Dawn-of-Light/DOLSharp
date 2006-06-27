@@ -18,8 +18,7 @@
  */
 using System;
 using System.Collections;
-using DOL.GS.Database;
-using DOL.GS.PacketHandler;
+using DOL.Database;
 using DOL.GS.Styles;
 
 namespace DOL.GS.ServerRules
@@ -126,7 +125,7 @@ namespace DOL.GS.ServerRules
 		/// <param name="player"></param>
 		/// <param name="point"></param>
 		/// <returns></returns>
-		bool IsAllowedToCraft(GamePlayer player, GenericItemTemplate item);
+		bool IsAllowedToCraft(GamePlayer player, ItemTemplate item);
 
 		/// <summary>
 		/// Short description of server rules
@@ -161,7 +160,7 @@ namespace DOL.GS.ServerRules
 		/// <param name="player"></param>
 		/// <param name="item"></param>
 		/// <returns>true if player has ability to use item</returns>
-		bool CheckAbilityToUseItem(GamePlayer player, EquipableItem item);
+		bool CheckAbilityToUseItem(GamePlayer player, ItemTemplate item);
 
 		/// <summary>
 		/// Checks whether one object type is equal to another

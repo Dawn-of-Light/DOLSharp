@@ -32,7 +32,7 @@
 
 using System;
 using System.Reflection;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
@@ -47,57 +47,13 @@ using log4net;
 
 namespace DOL.GS.Quests.Midgard
 {
-
-	/* The first thing we do, is to declare the quest requirement
-	 * class linked with the new Quest. To do this, we derive 
-	 * from the abstract class AbstractQuestDescriptor
+	/* The first thing we do, is to declare the class we create
+	 * as Quest. To do this, we derive from the abstract class
+	 * AbstractQuest
+	 * 	 
 	 */
-	public class ImportantDeliveryMidDescriptor : AbstractQuestDescriptor
-	{
-		/* This is the type of the quest class linked with 
-		 * this requirement class, you must override the 
-		 * base method like that
-		 */
-		public override Type LinkedQuestType
-		{
-			get { return typeof(ImportantDeliveryMid); }
-		}
 
-		/* This value is used to retrieves how maximum level needed
-		 * to be able to make this quest. Override it only if you need, 
-		 * the default value is 50
-		 */
-		public override int MaxLevel
-		{
-			get { return 1; }
-		}
-
-		/* This method is used to know if the player is qualified to 
-		 * do the quest. The base method always test his level and
-		 * how many time the quest has been done. Override it only if 
-		 * you want to add a custom test (here we test also the class name)
-		 */
-		public override bool CheckQuestQualification(GamePlayer player)
-		{
-			// if the player is already doing the quest his level is no longer of relevance
-			if (player.IsDoingQuest(typeof(ImportantDeliveryMid)) != null)
-				return true;
-
-			// This checks below are only performed is player isn't doing quest already
-			if (!BaseDalikorQuest.CheckPartAccessible(player, typeof(ImportantDeliveryMid)))
-				return false;
-
-			return base.CheckQuestQualification(player);
-		}
-	}
-
-
-	/* The second thing we do, is to declare the class we create
-	 * as Quest. We must make it persistant using attributes, to
-	 * do this, we derive from the abstract class AbstractQuest
-	 */
-	[NHibernate.Mapping.Attributes.Subclass(NameType = typeof(ImportantDeliveryMid), ExtendsType = typeof(AbstractQuest))]
-	public class ImportantDeliveryMid : BaseDalikorQuest
+	public class ImportantDelivery : BaseDalikorQuest
 	{
 		/// <summary>
 		/// Defines a logger for this class.
@@ -115,6 +71,8 @@ namespace DOL.GS.Quests.Midgard
 		 */
 
 		protected const string questTitle = "Important Delivery (Mid)";
+		protected const int minimumLevel = 1;
+		protected const int maximumLevel = 1;
 
 		private static GameNPC dalikor = null;
 
@@ -124,11 +82,32 @@ namespace DOL.GS.Quests.Midgard
 
 		private static GameNPC yolafson = null;
 
-		private static TravelTicketTemplate ticketToHaggerfel = null;
-		private static TravelTicketTemplate ticketToVasudheim = null;
-		private static GenericItemTemplate sackOfSupplies = null;
-		private static GenericItemTemplate crateOfVegetables = null;
-		private static CloakTemplate recruitsCloak = null;
+		private static ItemTemplate ticketToHaggerfel = null;
+		private static ItemTemplate ticketToVasudheim = null;
+		private static ItemTemplate sackOfSupplies = null;
+		private static ItemTemplate crateOfVegetables = null;
+		private static ItemTemplate recruitsCloak = null;
+
+
+		/* We need to define the constructors from the base class here, else there might be problems
+		 * when loading this quest...
+		 */
+
+		public ImportantDelivery() : base()
+		{
+		}
+
+		public ImportantDelivery(GamePlayer questingPlayer) : this(questingPlayer, 1)
+		{
+		}
+
+		public ImportantDelivery(GamePlayer questingPlayer, int step) : base(questingPlayer, step)
+		{
+		}
+
+		public ImportantDelivery(GamePlayer questingPlayer, DBQuest dbQuest) : base(questingPlayer, dbQuest)
+		{
+		}
 
 
 		/* The following method is called automatically when this quest class
@@ -174,12 +153,13 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find" + abohas.Name + " , creating her ...");
 				abohas.GuildName = "Part of " + questTitle + " Quest";
-				abohas.Realm = (byte)eRealm.Midgard;
-				abohas.RegionId = 100;
+				abohas.Realm = (byte) eRealm.Midgard;
+				abohas.CurrentRegionID = 100;
 				abohas.Size = 49;
 				abohas.Level = 21;
-				Zone z = WorldMgr.GetRegion(100).GetZone(100);
-				abohas.Position = z.ToRegionPosition(new Point(52274, 29985, 4960));
+				abohas.X = GameLocation.ConvertLocalXToGlobalX(52274, 100);
+				abohas.Y = GameLocation.ConvertLocalYToGlobalY(29985, 100);
+				abohas.Z = 4960;
 				abohas.Heading = 123;
 				//abohas.EquipmentTemplateID = "1707754";
 				//You don't have to store the created mob in the db if you don't want,
@@ -201,11 +181,13 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + harlfug.Name + ", creating her ...");
 				harlfug.GuildName = "Stable Master";
-				harlfug.Realm = (byte)eRealm.Midgard;
-				harlfug.RegionId = 100;
+				harlfug.Realm = (byte) eRealm.Midgard;
+				harlfug.CurrentRegionID = 100;
 				harlfug.Size = 52;
 				harlfug.Level = 41;
-				harlfug.Position = new Point(773458, 754240, 4600);
+				harlfug.X = 773458;
+				harlfug.Y = 754240;
+				harlfug.Z = 4600;
 				harlfug.Heading = 2707;
 				harlfug.EquipmentTemplateID = "5100798";
 
@@ -228,11 +210,13 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + gularg.Name + ", creating her ...");
 				gularg.GuildName = "Stable Master";
-				gularg.Realm = (byte)eRealm.Midgard;
-				gularg.RegionId = 100;
+				gularg.Realm = (byte) eRealm.Midgard;
+				gularg.CurrentRegionID = 100;
 				gularg.Size = 50;
 				gularg.Level = 41;
-				gularg.Position = new Point(803766, 721959, 4686);
+				gularg.X = 803766;
+				gularg.Y = 721959;
+				gularg.Z = 4686;
 				gularg.Heading = 3925;
 				gularg.EquipmentTemplateID = "5100798";
 
@@ -256,11 +240,13 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + yolafson.Name + ", creating her ...");
 				yolafson.GuildName = "Stable Master";
-				yolafson.Realm = (byte)eRealm.Midgard;
-				yolafson.RegionId = 100;
+				yolafson.Realm = (byte) eRealm.Midgard;
+				yolafson.CurrentRegionID = 100;
 				yolafson.Size = 51;
 				yolafson.Level = 41;
-				yolafson.Position = new Point(805721, 700414, 4960);
+				yolafson.X = 805721;
+				yolafson.Y = 700414;
+				yolafson.Z = 4960;
 				yolafson.Heading = 1206;
 				yolafson.EquipmentTemplateID = "5100798";
 
@@ -282,10 +268,10 @@ namespace DOL.GS.Quests.Midgard
 			ticketToVasudheim = CreateTicketTo("Vasudheim");
 
 
-			sackOfSupplies = (GenericItemTemplate)GameServer.Database.FindObjectByKey(typeof(GenericItemTemplate), "sack_of_supplies");
+			sackOfSupplies = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "sack_of_supplies");
 			if (sackOfSupplies == null)
 			{
-				sackOfSupplies = new GenericItemTemplate();
+				sackOfSupplies = new ItemTemplate();
 				sackOfSupplies.Name = "Sack of Supplies";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + sackOfSupplies.Name + " , creating it ...");
@@ -293,11 +279,11 @@ namespace DOL.GS.Quests.Midgard
 				sackOfSupplies.Weight = 10;
 				sackOfSupplies.Model = 488;
 
-				sackOfSupplies.ItemTemplateID = "sack_of_supplies";
+				sackOfSupplies.Object_Type = (int) eObjectType.GenericItem;
 
+				sackOfSupplies.Id_nb = "sack_of_supplies";
+				sackOfSupplies.IsPickable = true;
 				sackOfSupplies.IsDropable = false;
-				sackOfSupplies.IsSaleable = false;
-				sackOfSupplies.IsTradable = false;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -306,10 +292,10 @@ namespace DOL.GS.Quests.Midgard
 					GameServer.Database.AddNewObject(sackOfSupplies);
 			}
 
-			crateOfVegetables = (GenericItemTemplate)GameServer.Database.FindObjectByKey(typeof(GenericItemTemplate), "crate_of_vegetables");
+			crateOfVegetables = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "crate_of_vegetables");
 			if (crateOfVegetables == null)
 			{
-				crateOfVegetables = new GenericItemTemplate();
+				crateOfVegetables = new ItemTemplate();
 				crateOfVegetables.Name = "Crate of Vegetables";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + crateOfVegetables.Name + " , creating it ...");
@@ -317,11 +303,11 @@ namespace DOL.GS.Quests.Midgard
 				crateOfVegetables.Weight = 15;
 				crateOfVegetables.Model = 602;
 
-				crateOfVegetables.ItemTemplateID = "crate_of_vegetables";
+				crateOfVegetables.Object_Type = (int) eObjectType.GenericItem;
 
+				crateOfVegetables.Id_nb = "crate_of_vegetables";
+				crateOfVegetables.IsPickable = true;
 				crateOfVegetables.IsDropable = false;
-				crateOfVegetables.IsSaleable = false;
-				crateOfVegetables.IsTradable = false;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -331,10 +317,10 @@ namespace DOL.GS.Quests.Midgard
 			}
 
 			// item db check
-			recruitsCloak = (CloakTemplate)GameServer.Database.FindObjectByKey(typeof(CloakTemplate), "recruits_cloak_mid");
+			recruitsCloak = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_cloak_mid");
 			if (recruitsCloak == null)
 			{
-				recruitsCloak = new CloakTemplate();
+				recruitsCloak = new ItemTemplate();
 				recruitsCloak.Name = "Recruit's Cloak (Mid)";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + recruitsCloak.Name + ", creating it ...");
@@ -343,18 +329,30 @@ namespace DOL.GS.Quests.Midgard
 				recruitsCloak.Weight = 3;
 				recruitsCloak.Model = 57;
 
-				recruitsCloak.ItemTemplateID = "recruits_cloak_mid";
-				recruitsCloak.Value = 100;
-
+				recruitsCloak.Object_Type = (int) eObjectType.Cloth;
+				recruitsCloak.Item_Type = (int) eEquipmentItems.CLOAK;
+				recruitsCloak.Id_nb = "recruits_cloak_mid";
+				recruitsCloak.Gold = 0;
+				recruitsCloak.Silver = 1;
+				recruitsCloak.Copper = 0;
+				recruitsCloak.IsPickable = true;
 				recruitsCloak.IsDropable = true;
-				recruitsCloak.IsSaleable = true;
-				recruitsCloak.IsTradable = true;
 				recruitsCloak.Color = 44; // brown
 
 				recruitsCloak.Bonus = 1; // default bonus
 
-				recruitsCloak.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 1));
-				recruitsCloak.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Slash, 1));
+				recruitsCloak.Bonus1 = 1;
+				recruitsCloak.Bonus1Type = (int) eStat.CON;
+
+				recruitsCloak.Bonus2 = 1;
+				recruitsCloak.Bonus2Type = (int) eResist.Slash;
+
+				recruitsCloak.Quality = 100;
+				recruitsCloak.MaxQuality = 100;
+				recruitsCloak.Condition = 1000;
+				recruitsCloak.MaxCondition = 1000;
+				recruitsCloak.Durability = 1000;
+				recruitsCloak.MaxDurability = 1000;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -383,7 +381,7 @@ namespace DOL.GS.Quests.Midgard
 			GameEventMgr.AddHandler(abohas, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToAbohas));
 
 			/* Now we bring to dalikor the possibility to give this quest to players */
-			QuestMgr.AddQuestDescriptor(dalikor, typeof(ImportantDeliveryMid));
+			dalikor.AddQuestToGive(typeof (ImportantDelivery));
 
 			if (log.IsInfoEnabled)
 				log.Info("Quest \"" + questTitle + "\" initialized");
@@ -420,7 +418,7 @@ namespace DOL.GS.Quests.Midgard
 			GameEventMgr.RemoveHandler(abohas, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToAbohas));
 
 			/* Now we remove to dalikor the possibility to give this quest to players */
-			QuestMgr.RemoveQuestDescriptor(dalikor, typeof(ImportantDeliveryMid));
+			dalikor.RemoveQuestToGive(typeof (ImportantDelivery));
 		}
 
 		/* This is the method we declared as callback for the hooks we set to
@@ -432,15 +430,15 @@ namespace DOL.GS.Quests.Midgard
 		{
 			//We get the player from the event arguments and check if he qualifies
 			//for the quest!		
-			GamePlayer player = ((SourceEventArgs)args).Source as GamePlayer;
+			GamePlayer player = ((SourceEventArgs) args).Source as GamePlayer;
 			if (player == null)
 				return;
 
-			if (QuestMgr.CanGiveQuest(typeof(ImportantDeliveryMid), player, dalikor) <= 0)
+			if(dalikor.CanGiveQuest(typeof (ImportantDelivery), player)  <= 0)
 				return;
 
 			//We also check if the player is already doing the quest
-			ImportantDeliveryMid quest = player.IsDoingQuest(typeof(ImportantDeliveryMid)) as ImportantDeliveryMid;
+			ImportantDelivery quest = player.IsDoingQuest(typeof (ImportantDelivery)) as ImportantDelivery;
 
 			dalikor.TurnTo(player);
 			//Did the player rightclick on NPC?
@@ -467,10 +465,10 @@ namespace DOL.GS.Quests.Midgard
 					return;
 				}
 			}
-			// The player whispered to NPC (clicked on the text inside the [])
+				// The player whispered to NPC (clicked on the text inside the [])
 			else if (e == GameLivingEvent.WhisperReceive)
 			{
-				WhisperReceiveEventArgs wArgs = (WhisperReceiveEventArgs)args;
+				WhisperReceiveEventArgs wArgs = (WhisperReceiveEventArgs) args;
 
 				if (quest == null)
 				{
@@ -480,7 +478,7 @@ namespace DOL.GS.Quests.Midgard
 						case "training":
 							dalikor.SayTo(player, "I thought you would. What I am here to do is to guide you through your first few seasons, until I feel you're confident and skilled enough to make it on your own in Albion. If you aren't properly trained, then what good are you to the realm? None, of course. Now, I will start your training off by asking you a simple quesion, whether or not you wish to [proceed] with your training. A dialogue box will pop up. Either press the Accept or Decline button.");
 							break;
-						//If the player offered his "help", we send the quest dialog now!
+							//If the player offered his "help", we send the quest dialog now!
 						case "proceed":
 							player.Out.SendCustomDialog("Are you ready to begin your training?", new CustomDialogResponse(CheckPlayerAcceptQuest));
 							break;
@@ -508,14 +506,14 @@ namespace DOL.GS.Quests.Midgard
 							dalikor.SayTo(player, "All you need to do is take this horse ticket to Gularg in Mularn. Hand him the ticket and you'll be on your way to Haggerfel. Be swift my young recruit. Time is of the essence.");
 							if (quest.Step == 2)
 							{
-								player.ReceiveItem(dalikor, ticketToHaggerfel.CreateInstance());
-								player.ReceiveItem(dalikor, sackOfSupplies.CreateInstance());
+								GiveItem(dalikor, player, ticketToHaggerfel);
+								GiveItem(dalikor, player, sackOfSupplies);
 								quest.Step = 3;
 							}
-							break;/*
+							break;
 						case "abort":
 							player.Out.SendCustomDialog("Do you really want to abort this quest, \nall items gained during quest will be lost?", new CustomDialogResponse(CheckPlayerAbortQuest));
-							break;*/
+							break;
 					}
 				}
 			}
@@ -525,15 +523,15 @@ namespace DOL.GS.Quests.Midgard
 		{
 			//We get the player from the event arguments and check if he qualifies
 			//for the quest!		
-			GamePlayer player = ((SourceEventArgs)args).Source as GamePlayer;
+			GamePlayer player = ((SourceEventArgs) args).Source as GamePlayer;
 			if (player == null)
 				return;
 
-			if (QuestMgr.CanGiveQuest(typeof(ImportantDeliveryMid), player, dalikor) <= 0)
+			if( dalikor.CanGiveQuest(typeof (ImportantDelivery), player)  <= 0)
 				return;
 
 			//We also check if the player is already doing the quest
-			ImportantDeliveryMid quest = player.IsDoingQuest(typeof(ImportantDeliveryMid)) as ImportantDeliveryMid;
+			ImportantDelivery quest = player.IsDoingQuest(typeof (ImportantDelivery)) as ImportantDelivery;
 
 			abohas.TurnTo(player);
 			//Did the player rightclick on NPC?
@@ -559,7 +557,7 @@ namespace DOL.GS.Quests.Midgard
 			}
 			else if (e == GameLivingEvent.WhisperReceive)
 			{
-				WhisperReceiveEventArgs wArgs = (WhisperReceiveEventArgs)args;
+				WhisperReceiveEventArgs wArgs = (WhisperReceiveEventArgs) args;
 
 				if (quest != null)
 				{
@@ -570,8 +568,8 @@ namespace DOL.GS.Quests.Midgard
 							abohas.SayTo(player, "I need for you to deliver this crate of vegetables to Stable Master Harlfug in Vasudheim. Don't worry, I'll give you a ticket so you don't have to run there. Thank you my friend. Be swift so the vegetables don't rot.");
 							if (quest.Step == 5)
 							{
-								player.ReceiveItem(dalikor, ticketToVasudheim.CreateInstance());
-								player.ReceiveItem(dalikor, crateOfVegetables.CreateInstance());
+								GiveItem(abohas, player, ticketToVasudheim);
+								GiveItem(abohas, player, crateOfVegetables);
 
 								quest.Step = 6;
 							}
@@ -585,15 +583,15 @@ namespace DOL.GS.Quests.Midgard
 		{
 			//We get the player from the event arguments and check if he qualifies
 			//for the quest!		
-			GamePlayer player = ((SourceEventArgs)args).Source as GamePlayer;
+			GamePlayer player = ((SourceEventArgs) args).Source as GamePlayer;
 			if (player == null)
 				return;
 
-			if (QuestMgr.CanGiveQuest(typeof(ImportantDeliveryMid), player, dalikor) <= 0)
+			if( dalikor.CanGiveQuest(typeof (ImportantDelivery), player)  <= 0)
 				return;
 
 			//We also check if the player is already doing the quest
-			ImportantDeliveryMid quest = player.IsDoingQuest(typeof(ImportantDeliveryMid)) as ImportantDeliveryMid;
+			ImportantDelivery quest = player.IsDoingQuest(typeof (ImportantDelivery)) as ImportantDelivery;
 
 			harlfug.TurnTo(player);
 			//Did the player rightclick on NPC?
@@ -617,7 +615,7 @@ namespace DOL.GS.Quests.Midgard
 			}
 			else if (e == GameLivingEvent.WhisperReceive)
 			{
-				WhisperReceiveEventArgs wArgs = (WhisperReceiveEventArgs)args;
+				WhisperReceiveEventArgs wArgs = (WhisperReceiveEventArgs) args;
 
 				if (quest != null)
 				{
@@ -636,15 +634,35 @@ namespace DOL.GS.Quests.Midgard
 			}
 		}
 
+		/// <summary>
+		/// This method checks if a player qualifies for this quest
+		/// </summary>
+		/// <returns>true if qualified, false if not</returns>
+		public override bool CheckQuestQualification(GamePlayer player)
+		{
+			// if the player is already doing the quest his level is no longer of relevance
+			if (player.IsDoingQuest(typeof (ImportantDelivery)) != null)
+				return true;
+
+			// This checks below are only performed is player isn't doing quest already
+			if (!CheckPartAccessible(player, typeof (ImportantDelivery)))
+				return false;
+
+			if (player.Level < minimumLevel || player.Level > maximumLevel)
+				return false;
+
+			return true;
+		}
+
 
 		/* This is our callback hook that will be called when the player clicks
 		 * on any button in the quest offer dialog. We check if he accepts or
 		 * declines here...
 		 */
-		/*
+
 		private static void CheckPlayerAbortQuest(GamePlayer player, byte response)
 		{
-			ImportantDelivery quest = player.IsDoingQuest(typeof(ImportantDelivery)) as ImportantDelivery;
+			ImportantDelivery quest = player.IsDoingQuest(typeof (ImportantDelivery)) as ImportantDelivery;
 
 			if (quest == null)
 				return;
@@ -659,7 +677,7 @@ namespace DOL.GS.Quests.Midgard
 				quest.AbortQuest();
 			}
 		}
-		*/
+
 		/* This is our callback hook that will be called when the player clicks
 		 * on any button in the quest offer dialog. We check if he accepts or
 		 * declines here...
@@ -669,10 +687,10 @@ namespace DOL.GS.Quests.Midgard
 		{
 			//We recheck the qualification, because we don't talk to players
 			//who are not doing the quest
-			if (QuestMgr.CanGiveQuest(typeof(ImportantDeliveryMid), player, dalikor) <= 0)
+			if( dalikor.CanGiveQuest(typeof (ImportantDelivery), player)  <= 0)
 				return;
 
-			ImportantDeliveryMid quest = player.IsDoingQuest(typeof(ImportantDeliveryMid)) as ImportantDeliveryMid;
+			ImportantDelivery quest = player.IsDoingQuest(typeof (ImportantDelivery)) as ImportantDelivery;
 
 			if (quest != null)
 				return;
@@ -684,7 +702,7 @@ namespace DOL.GS.Quests.Midgard
 			else
 			{
 				//Check if we can add the quest!
-				if (!QuestMgr.GiveQuestToPlayer(typeof(ImportantDeliveryMid), player, dalikor))
+				if (!dalikor.GiveQuest(typeof (ImportantDelivery), player, 1))
 					return;
 
 				SendReply(player, "Congratulations! You are now one step closer to understanding the world of Camelot! During this phase of your training, I will be sending you to different parts of the realm to deliver much needed supplies to various citizens. You will need to check your QUEST JOURNAL from time to time to see what you need to accomplish next on your quest. You can access the quest journal from the COMMAND button on your [character sheet].");
@@ -730,9 +748,9 @@ namespace DOL.GS.Quests.Midgard
 						return "[Step #7] Hand Harlfug the Crate of Vegetables. If you prefer, you may right click to interact with him first.";
 					case 8:
 						return "[Step #8] Listen to Stable Master Harlfug some more. If he stops speaking with you, ask him if he has a [reward] for your hard work and service to Midgard.";
-					default:
-						return "[Step #" + Step + "] No Description entered for this step!";
+
 				}
+				return base.Description;
 			}
 		}
 
@@ -740,13 +758,13 @@ namespace DOL.GS.Quests.Midgard
 		{
 			GamePlayer player = sender as GamePlayer;
 
-			if (player == null || player.IsDoingQuest(typeof(ImportantDeliveryMid)) == null)
+			if (player==null || player.IsDoingQuest(typeof (ImportantDelivery)) == null)
 				return;
 
 			if (Step == 3 && e == GamePlayerEvent.GiveItem)
 			{
-				GiveItemEventArgs gArgs = (GiveItemEventArgs)args;
-				if (gArgs.Target.Name == gularg.Name && gArgs.Item.Name == ticketToHaggerfel.Name)
+				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
+				if (gArgs.Target.Name == gularg.Name && gArgs.Item.Id_nb == ticketToHaggerfel.Id_nb)
 				{
 					Step = 4;
 					return;
@@ -755,11 +773,11 @@ namespace DOL.GS.Quests.Midgard
 
 			if (Step >= 3 && Step <= 4 && e == GamePlayerEvent.GiveItem)
 			{
-				GiveItemEventArgs gArgs = (GiveItemEventArgs)args;
-				if (gArgs.Target.Name == abohas.Name && gArgs.Item.Name == sackOfSupplies.Name)
+				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
+				if (gArgs.Target.Name == abohas.Name && gArgs.Item.Id_nb == sackOfSupplies.Id_nb)
 				{
 					abohas.SayTo(player, "Oh, I see. Yes, from Dalikor. We've been waiting for these supplies for a while. It's good to have them. I don't suppose you're up for one more [errand], are you?");
-					RemoveItemFromPlayer(abohas, sackOfSupplies);
+					RemoveItem(abohas, player, sackOfSupplies);
 					Step = 5;
 					return;
 				}
@@ -767,8 +785,8 @@ namespace DOL.GS.Quests.Midgard
 
 			if (Step == 6 && e == GamePlayerEvent.GiveItem)
 			{
-				GiveItemEventArgs gArgs = (GiveItemEventArgs)args;
-				if (gArgs.Target.Name == yolafson.Name && gArgs.Item.Name == ticketToVasudheim.Name)
+				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
+				if (gArgs.Target.Name == yolafson.Name && gArgs.Item.Id_nb == ticketToVasudheim.Id_nb)
 				{
 					Step = 7;
 					return;
@@ -777,38 +795,40 @@ namespace DOL.GS.Quests.Midgard
 
 			if (Step >= 6 && Step <= 7 && e == GamePlayerEvent.GiveItem)
 			{
-				GiveItemEventArgs gArgs = (GiveItemEventArgs)args;
-				if (gArgs.Target.Name == harlfug.Name && gArgs.Item.Name == crateOfVegetables.Name)
+				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
+				if (gArgs.Target.Name == harlfug.Name && gArgs.Item.Id_nb == crateOfVegetables.Id_nb)
 				{
 					harlfug.SayTo(player, "Ah, the vegetables I've been waiting for from Abohas. Thank you for delivering them to me. I couldn't find anyone to look after my stable so I could go and get them. Let me see, I think a [reward] is in order for your hard work.");
-					RemoveItemFromPlayer(harlfug, crateOfVegetables);
+					RemoveItem(harlfug, player, crateOfVegetables);
 					Step = 8;
 					return;
 				}
 			}
 
 		}
-		/*
+
 		public override void AbortQuest()
 		{
 			base.AbortQuest(); //Defined in Quest, changes the state, stores in DB etc ...
 
-			RemoveItemFromPlayer(ticketToVasudheim);
-			RemoveItemFromPlayer(ticketToHaggerfel);
-			RemoveItemFromPlayer(sackOfSupplies);
-			RemoveItemFromPlayer(crateOfVegetables);
+			RemoveItem(m_questPlayer, ticketToVasudheim, false);
+			RemoveItem(m_questPlayer, ticketToHaggerfel, false);
+			RemoveItem(m_questPlayer, sackOfSupplies, false);
+			RemoveItem(m_questPlayer, crateOfVegetables, false);
 
 		}
-		*/
+
 		public override void FinishQuest()
 		{
 			base.FinishQuest(); //Defined in Quest, changes the state, stores in DB etc ...
 
 			//Give reward to player here ...            
-			GiveItemToPlayer(harlfug, recruitsCloak.CreateInstance());
+			GiveItem(harlfug, m_questPlayer, recruitsCloak);
 
 			m_questPlayer.GainExperience(12, 0, 0, true);
 			m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 1, Util.Random(50)), "You recieve {0} as a reward.");
+
 		}
+
 	}
 }

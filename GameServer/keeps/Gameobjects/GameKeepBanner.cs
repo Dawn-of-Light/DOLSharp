@@ -16,7 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS
@@ -64,20 +64,22 @@ namespace DOL.GS
 		/// load GameKeepBanner from db object
 		/// </summary>
 		/// <param name="obj"></param>
-		public override void LoadFromDatabase(object obj)
+		public override void LoadFromDatabase(DataObject obj)
 		{
 			//todo make command to make banner
 			//keep must been add before loadfromDB
+			base.LoadFromDatabase(obj);
 			DBKeepObject dbkeepobj = obj as DBKeepObject;
 			if (dbkeepobj == null)return;
-			InternalID = dbkeepobj.KeepObjectID.ToString();
 			this.Name = dbkeepobj.Name;
 			this.Realm = (byte)dbkeepobj.Realm;
 			this.Model = (ushort)dbkeepobj.Model;
 			this.Emblem = (ushort)GetEmblem();
-			this.Position = new Point(dbkeepobj.X, dbkeepobj.Y, dbkeepobj.Z);
+			this.X = dbkeepobj.X;
+			this.Y = dbkeepobj.Y;
+			this.Z = dbkeepobj.Z;
 			this.Heading = (ushort)dbkeepobj.Heading;
-			this.Region = this.Keep.Region;
+			this.CurrentRegion = this.Keep.CurrentRegion;
 			this.Level = (byte)(dbkeepobj.BaseLevel);
 			this.Keep.Banners.Add(this);
 			this.AddToWorld();
@@ -101,13 +103,12 @@ namespace DOL.GS
 			obj.Heading = Heading;
 			obj.KeepID = Keep.KeepID;
 			obj.Realm = Realm;
-			Point pos = Position;
-			obj.X = pos.X;
-			obj.Y = pos.Y;
-			obj.Z = pos.Z;
+			obj.X = X;
+			obj.Y = Y;
+			obj.Z = Z;
 			obj.ClassType = this.GetType().ToString();
 
-			/*if(InternalID == null)
+			if(InternalID == null)
 			{
 				GameServer.Database.AddNewObject(obj);
 				InternalID = obj.ObjectId;
@@ -116,7 +117,7 @@ namespace DOL.GS
 			{
 				obj.ObjectId = this.InternalID;
 				GameServer.Database.SaveObject(obj);
-			}*/
+			}
 		}
 
 		/// <summary>
@@ -125,7 +126,7 @@ namespace DOL.GS
 		/// <param name="guild"></param>
 		public void ChangeGuild(Guild guild)
 		{
-			this.Emblem = (ushort)guild.Emblem;
+			this.Emblem = guild.theGuildDB.Emblem;
 			ushort model = 679 ;
 			switch (Keep.Realm)
 			{
@@ -146,7 +147,7 @@ namespace DOL.GS
 		{
 			if (this.Keep.Guild != null)
 			{
-				return this.Keep.Guild.Emblem;
+				return this.Keep.Guild.theGuildDB.Emblem;
 			}
 			switch (this.Realm)
 			{

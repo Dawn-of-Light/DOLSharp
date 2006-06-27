@@ -33,7 +33,7 @@
 using System;
 using System.Reflection;
 using DOL.AI.Brain;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
@@ -48,69 +48,13 @@ using log4net;
 
 namespace DOL.GS.Quests.Midgard
 {
-
-	/* The first thing we do, is to declare the quest requirement
-	 * class linked with the new Quest. To do this, we derive 
-	 * from the abstract class AbstractQuestDescriptor
+	/* The first thing we do, is to declare the class we create
+	 * as Quest. To do this, we derive from the abstract class
+	 * AbstractQuest
+	 * 	 
 	 */
-	public class CollectionMidDescriptor : AbstractQuestDescriptor
-	{
-		/* This is the type of the quest class linked with 
-		 * this requirement class, you must override the 
-		 * base method like that
-		 */
-		public override Type LinkedQuestType
-		{
-			get { return typeof(CollectionMid); }
-		}
 
-		/* This value is used to retrieves the minimum level needed
-		 *  to be able to make this quest. Override it only if you need, 
-		 * the default value is 1
-		 */
-		public override int MinLevel
-		{
-			get { return 3; }
-		}
-
-		/* This value is used to retrieves how maximum level needed
-		 * to be able to make this quest. Override it only if you need, 
-		 * the default value is 50
-		 */
-		public override int MaxLevel
-		{
-			get { return 3; }
-		}
-
-		/* This method is used to know if the player is qualified to 
-		 * do the quest. The base method always test his level and
-		 * how many time the quest has been done. Override it only if 
-		 * you want to add a custom test (here we test also the class name)
-		 */
-		public override bool CheckQuestQualification(GamePlayer player)
-		{
-			// if the player is already doing the quest his level is no longer of relevance
-			if (player.IsDoingQuest(typeof(CollectionMid)) != null)
-				return true;
-
-			// This checks below are only performed is player isn't doing quest already
-			if (player.HasFinishedQuest(typeof(FrontiersMid)) == 0)
-				return false;
-
-			if (!BaseDalikorQuest.CheckPartAccessible(player, typeof(CollectionMid)))
-				return false;
-
-			return base.CheckQuestQualification(player);
-		}
-	}
-
-
-	/* The second thing we do, is to declare the class we create
-	 * as Quest. We must make it persistant using attributes, to
-	 * do this, we derive from the abstract class AbstractQuest
-	 */
-	[NHibernate.Mapping.Attributes.Subclass(NameType = typeof(CollectionMid), ExtendsType = typeof(AbstractQuest))]
-	public class CollectionMid : BaseDalikorQuest
+	public class Collection : BaseDalikorQuest
 	{
 		/// <summary>
 		/// Defines a logger for this class.
@@ -128,6 +72,8 @@ namespace DOL.GS.Quests.Midgard
 		 */
 
 		protected const string questTitle = "Collection (Mid)";
+		protected const int minimumLevel = 3;
+		protected const int maximumLevel = 3;
 
 		private static GameNPC dalikor = null;
 
@@ -135,10 +81,31 @@ namespace DOL.GS.Quests.Midgard
 		private static String[] generalNames = {"Mitan", "Ostadi", "Seiki"};
 		private static GameLocation[] generalLocations = new GameLocation[3];
 
-		private static GenericItemTemplate askefruerWings = null;
-		private static GenericItemTemplate dustyOldMap = null;
-		private static ArmsArmorTemplate recruitsArms = null;
-		private static ArmsArmorTemplate recruitsSleeves = null;
+		private static ItemTemplate askefruerWings = null;
+		private static ItemTemplate dustyOldMap = null;
+		private static ItemTemplate recruitsArms = null;
+		private static ItemTemplate recruitsSleeves = null;
+
+
+		/* We need to define the constructors from the base class here, else there might be problems
+		 * when loading this quest...
+		 */
+
+		public Collection() : base()
+		{
+		}
+
+		public Collection(GamePlayer questingPlayer) : this(questingPlayer, 1)
+		{
+		}
+
+		public Collection(GamePlayer questingPlayer, int step) : base(questingPlayer, step)
+		{
+		}
+
+		public Collection(GamePlayer questingPlayer, DBQuest dbQuest) : base(questingPlayer, dbQuest)
+		{
+		}
 
 		/* The following method is called automatically when this quest class
 		 * is loaded. You might notice that this method is the same as in standard
@@ -194,12 +161,14 @@ namespace DOL.GS.Quests.Midgard
 
 					general[i].GuildName = "Part of " + questTitle + " Quest";
 					general[i].Name = generalNames[i];
-					general[i].Position = generalLocations[i].Position;
+					general[i].X = generalLocations[i].X;
+					general[i].Y = generalLocations[i].Y;
+					general[i].Z = generalLocations[i].Z;
 					general[i].Heading = generalLocations[i].Heading;
 					;
 
 					general[i].Realm = (byte) eRealm.None;
-					general[i].Region = generalLocations[i].Region;
+					general[i].CurrentRegionID = generalLocations[i].RegionID;
 					general[i].Size = 49;
 					general[i].Level = 2;
 
@@ -259,10 +228,10 @@ namespace DOL.GS.Quests.Midgard
 			}
 */
 
-			askefruerWings = (GenericItemTemplate)GameServer.Database.FindObjectByKey(typeof(GenericItemTemplate), "askefruer_wings");
+			askefruerWings = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "askefruer_wings");
 			if (askefruerWings == null)
 			{
-				askefruerWings = new GenericItemTemplate();
+				askefruerWings = new ItemTemplate();
 				askefruerWings.Name = "Wings of Askefruer";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + askefruerWings.Name + " , creating it ...");
@@ -270,11 +239,11 @@ namespace DOL.GS.Quests.Midgard
 				askefruerWings.Weight = 2;
 				askefruerWings.Model = 551;
 
-				askefruerWings.ItemTemplateID = "askefruer_wings";
+				askefruerWings.Object_Type = (int) eObjectType.GenericItem;
 
+				askefruerWings.Id_nb = "askefruer_wings";
+				askefruerWings.IsPickable = true;
 				askefruerWings.IsDropable = false;
-				askefruerWings.IsSaleable = false;
-				askefruerWings.IsTradable = false;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -283,10 +252,10 @@ namespace DOL.GS.Quests.Midgard
 					GameServer.Database.AddNewObject(askefruerWings);
 			}
 
-			dustyOldMap = (GenericItemTemplate)GameServer.Database.FindObjectByKey(typeof(GenericItemTemplate), "dusty_old_map");
+			dustyOldMap = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "dusty_old_map");
 			if (dustyOldMap == null)
 			{
-				dustyOldMap = new GenericItemTemplate();
+				dustyOldMap = new ItemTemplate();
 				dustyOldMap.Name = "Dusty Old Map";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + dustyOldMap.Name + " , creating it ...");
@@ -294,11 +263,11 @@ namespace DOL.GS.Quests.Midgard
 				dustyOldMap.Weight = 10;
 				dustyOldMap.Model = 498;
 
-				dustyOldMap.ItemTemplateID = "dusty_old_map";
+				dustyOldMap.Object_Type = (int) eObjectType.GenericItem;
 
+				dustyOldMap.Id_nb = "dusty_old_map";
+				dustyOldMap.IsPickable = true;
 				dustyOldMap.IsDropable = false;
-				dustyOldMap.IsSaleable = false;
-				dustyOldMap.IsTradable = false;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -309,10 +278,10 @@ namespace DOL.GS.Quests.Midgard
 
 
 			// item db check
-			recruitsArms = (ArmsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(ArmsArmorTemplate), "recruits_studded_arms_mid");
+			recruitsArms = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_studded_arms_mid");
 			if (recruitsArms == null)
 			{
-				recruitsArms = new ArmsArmorTemplate();
+				recruitsArms = new ItemTemplate();
 				recruitsArms.Name = "Recruit's Studded Arms (Mid)";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + recruitsArms.Name + ", creating it ...");
@@ -321,22 +290,33 @@ namespace DOL.GS.Quests.Midgard
 				recruitsArms.Weight = 36;
 				recruitsArms.Model = 83; // studded Boots
 
-				recruitsArms.ArmorFactor = 10;
-				recruitsArms.ArmorLevel = eArmorLevel.Medium;
+				recruitsArms.DPS_AF = 10; // Armour
+				recruitsArms.SPD_ABS = 19; // Absorption
 
-				recruitsArms.ItemTemplateID = "recruits_studded_arms_mid";
-				recruitsArms.Value = 400;
-
+				recruitsArms.Object_Type = (int) eObjectType.Studded;
+				recruitsArms.Item_Type = (int) eEquipmentItems.ARMS;
+				recruitsArms.Id_nb = "recruits_studded_arms_mid";
+				recruitsArms.Gold = 0;
+				recruitsArms.Silver = 4;
+				recruitsArms.Copper = 0;
+				recruitsArms.IsPickable = true;
 				recruitsArms.IsDropable = true;
-				recruitsArms.IsSaleable = true;
-				recruitsArms.IsTradable = true;
-
 				recruitsArms.Color = 36; // blue cloth
 
 				recruitsArms.Bonus = 5; // default bonus
 
-				recruitsArms.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Quickness, 4));
-				recruitsArms.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Body, 1));
+				recruitsArms.Bonus1 = 4;
+				recruitsArms.Bonus1Type = (int) eStat.QUI;
+
+				recruitsArms.Bonus2 = 1;
+				recruitsArms.Bonus2Type = (int) eResist.Body;
+
+				recruitsArms.Quality = 100;
+				recruitsArms.MaxQuality = 100;
+				recruitsArms.Condition = 1000;
+				recruitsArms.MaxCondition = 1000;
+				recruitsArms.Durability = 1000;
+				recruitsArms.MaxDurability = 1000;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -345,10 +325,10 @@ namespace DOL.GS.Quests.Midgard
 					GameServer.Database.AddNewObject(recruitsArms);
 			}
 
-			recruitsSleeves = (ArmsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(ArmsArmorTemplate), "recruits_quilted_sleeves");
+			recruitsSleeves = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_quilted_sleeves");
 			if (recruitsSleeves == null)
 			{
-				recruitsSleeves = new ArmsArmorTemplate();
+				recruitsSleeves = new ItemTemplate();
 				recruitsSleeves.Name = "Recruit's Quilted Sleeves";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + recruitsSleeves.Name + ", creating it ...");
@@ -357,21 +337,33 @@ namespace DOL.GS.Quests.Midgard
 				recruitsSleeves.Weight = 12;
 				recruitsSleeves.Model = 153;
 
-				recruitsSleeves.ArmorFactor = 6;
-				recruitsSleeves.ArmorLevel = eArmorLevel.VeryLow;
-				recruitsSleeves.ItemTemplateID = "recruits_quilted_sleeves";
-				recruitsSleeves.Value = 400;
+				recruitsSleeves.DPS_AF = 6; // Armour
+				recruitsSleeves.SPD_ABS = 0; // Absorption
 
+				recruitsSleeves.Object_Type = (int) eObjectType.Cloth;
+				recruitsSleeves.Item_Type = (int) eEquipmentItems.ARMS;
+				recruitsSleeves.Id_nb = "recruits_quilted_sleeves";
+				recruitsSleeves.Gold = 0;
+				recruitsSleeves.Silver = 4;
+				recruitsSleeves.Copper = 0;
+				recruitsSleeves.IsPickable = true;
 				recruitsSleeves.IsDropable = true;
-				recruitsSleeves.IsSaleable = true;
-				recruitsSleeves.IsTradable = true;
-
 				recruitsSleeves.Color = 27; // red cloth
 
 				recruitsSleeves.Bonus = 5; // default bonus
 
-				recruitsSleeves.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 4));
-				recruitsSleeves.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Body, 1));
+				recruitsSleeves.Bonus1 = 4;
+				recruitsSleeves.Bonus1Type = (int) eStat.DEX;
+
+				recruitsSleeves.Bonus2 = 1;
+				recruitsSleeves.Bonus2Type = (int) eResist.Body;
+
+				recruitsSleeves.Quality = 100;
+				recruitsSleeves.MaxQuality = 100;
+				recruitsSleeves.Condition = 1000;
+				recruitsSleeves.MaxCondition = 1000;
+				recruitsSleeves.Durability = 1000;
+				recruitsSleeves.MaxDurability = 1000;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -396,7 +388,7 @@ namespace DOL.GS.Quests.Midgard
 			GameEventMgr.AddHandler(dalikor, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToDalikor));
 
 			/* Now we bring to dalikor the possibility to give this quest to players */
-			QuestMgr.AddQuestDescriptor(dalikor, typeof(CollectionMidDescriptor));
+			dalikor.AddQuestToGive(typeof (Collection));
 
 			if (log.IsInfoEnabled)
 				log.Info("Quest \"" + questTitle + "\" initialized");
@@ -428,7 +420,7 @@ namespace DOL.GS.Quests.Midgard
 			GameEventMgr.RemoveHandler(dalikor, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToDalikor));
 
 			/* Now we remove to dalikor the possibility to give this quest to players */
-			QuestMgr.RemoveQuestDescriptor(dalikor, typeof(CollectionMidDescriptor));
+			dalikor.RemoveQuestToGive(typeof (Collection));
 		}
 
 		/* This is the method we declared as callback for the hooks we set to
@@ -443,11 +435,11 @@ namespace DOL.GS.Quests.Midgard
 			if (player == null)
 				return;
 
-			if (QuestMgr.CanGiveQuest(typeof(CollectionMid), player, dalikor) <= 0)
+			if(dalikor.CanGiveQuest(typeof (Collection), player)  <= 0)
 				return;
 
 			//We also check if the player is already doing the quest
-			CollectionMid quest = player.IsDoingQuest(typeof (CollectionMid)) as CollectionMid;
+			Collection quest = player.IsDoingQuest(typeof (Collection)) as Collection;
 
 			dalikor.TurnTo(player);
 
@@ -515,7 +507,7 @@ namespace DOL.GS.Quests.Midgard
 							dalikor.SayTo(player, "Njarmir has provided us with a rough location of where he thinks the Askefruer are. He is not one hundred percent certain though, so you will need to do most of the searching on your own. USE the map from time to time to help you find these hidden camps. Remember, slay the Askefruer there. If you can, get their wings as proof of their demise. Be swift Eeinken. There isn't much time.");
 							if (quest.Step == 1)
 							{
-								player.ReceiveItem(dalikor, dustyOldMap.CreateInstance());
+								GiveItem(dalikor, player, dustyOldMap);
 								quest.Step = 2;
 							}
 							break;
@@ -526,6 +518,9 @@ namespace DOL.GS.Quests.Midgard
 							{
 								quest.FinishQuest();
 							}
+							break;
+						case "abort":
+							player.Out.SendCustomDialog("Do you really want to abort this quest, \nall items gained during quest will be lost?", new CustomDialogResponse(CheckPlayerAbortQuest));
 							break;
 					}
 				}
@@ -538,7 +533,7 @@ namespace DOL.GS.Quests.Midgard
 			if (player == null)
 				return;
 
-			CollectionMid quest = player.IsDoingQuest(typeof (CollectionMid)) as CollectionMid;
+			Collection quest = player.IsDoingQuest(typeof (Collection)) as Collection;
 			if (quest != null)
 			{
 				GameEventMgr.RemoveHandler(player, GamePlayerEvent.UseSlot, new DOLEventHandler(PlayerUseSlot));
@@ -552,7 +547,7 @@ namespace DOL.GS.Quests.Midgard
 			if (player == null)
 				return;
 
-			CollectionMid quest = player.IsDoingQuest(typeof (CollectionMid)) as CollectionMid;
+			Collection quest = player.IsDoingQuest(typeof (Collection)) as Collection;
 			if (quest != null)
 			{
 				GameEventMgr.AddHandler(player, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
@@ -565,14 +560,14 @@ namespace DOL.GS.Quests.Midgard
 			GamePlayer player = (GamePlayer) sender;
 			// player already morphed...            
 
-			CollectionMid quest = (CollectionMid) player.IsDoingQuest(typeof (CollectionMid));
+			Collection quest = (Collection) player.IsDoingQuest(typeof (Collection));
 			if (quest == null)
 				return;
 
 			UseSlotEventArgs uArgs = (UseSlotEventArgs) args;
 
-			GenericItem item = player.Inventory.GetItem((eInventorySlot)uArgs.Slot);
-			if (item != null && item.Name == dustyOldMap.Name)
+			InventoryItem item = player.Inventory.GetItem((eInventorySlot)uArgs.Slot);
+			if (item != null && item.Id_nb == dustyOldMap.Id_nb)
 			{
 				if (quest.Step == 2)
 				{
@@ -593,6 +588,53 @@ namespace DOL.GS.Quests.Midgard
 			}
 		}
 
+		/// <summary>
+		/// This method checks if a player qualifies for this quest
+		/// </summary>
+		/// <returns>true if qualified, false if not</returns>
+		public override bool CheckQuestQualification(GamePlayer player)
+		{
+			// if the player is already doing the quest his level is no longer of relevance
+			if (player.IsDoingQuest(typeof (Collection)) != null)
+				return true;
+
+			// This checks below are only performed is player isn't doing quest already
+			if (player.HasFinishedQuest(typeof (Frontiers)) == 0)
+				return false;
+
+			if (!CheckPartAccessible(player, typeof (Collection)))
+				return false;
+
+			if (player.Level < minimumLevel || player.Level > maximumLevel)
+				return false;
+
+			return true;
+		}
+
+
+		/* This is our callback hook that will be called when the player clicks
+		 * on any button in the quest offer dialog. We check if he accepts or
+		 * declines here...
+		 */
+
+		private static void CheckPlayerAbortQuest(GamePlayer player, byte response)
+		{
+			Collection quest = player.IsDoingQuest(typeof (Collection)) as Collection;
+
+			if (quest == null)
+				return;
+
+			if (response == 0x00)
+			{
+				SendSystemMessage(player, "Good, no go out there and finish your work!");
+			}
+			else
+			{
+				SendSystemMessage(player, "Aborting Quest " + questTitle + ". You can start over again if you want.");
+				quest.AbortQuest();
+			}
+		}
+
 		/* This is our callback hook that will be called when the player clicks
 		 * on any button in the quest offer dialog. We check if he accepts or
 		 * declines here...
@@ -602,10 +644,10 @@ namespace DOL.GS.Quests.Midgard
 		{
 			//We recheck the qualification, because we don't talk to players
 			//who are not doing the quest
-			if (QuestMgr.CanGiveQuest(typeof(CollectionMid), player, dalikor) <= 0)
+			if(dalikor.CanGiveQuest(typeof (Collection), player)  <= 0)
 				return;
 
-			CollectionMid quest = player.IsDoingQuest(typeof (CollectionMid)) as CollectionMid;
+			Collection quest = player.IsDoingQuest(typeof (Collection)) as Collection;
 
 			if (quest != null)
 				return;
@@ -617,7 +659,7 @@ namespace DOL.GS.Quests.Midgard
 			else
 			{
 				//Check if we can add the quest!
-				if (!QuestMgr.GiveQuestToPlayer(typeof(CollectionMid), player, dalikor))
+				if (!dalikor.GiveQuest(typeof (Collection), player, 1))
 					return;
 
 				GameEventMgr.AddHandler(player, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
@@ -668,9 +710,8 @@ namespace DOL.GS.Quests.Midgard
 						return "[Step #6] Hand Dalikor the Askefruer wings.";
 					case 9:
 						return "[Step #7] Wait for Dalikor to reward you. If he stops speaking with you, ask if there might be a reward] for your troubles.";
-					default:
-						return "[Step #" + Step + "] No Description entered for this step!";
 				}
+				return base.Description;
 			}
 		}
 
@@ -678,7 +719,7 @@ namespace DOL.GS.Quests.Midgard
 		{
 			GamePlayer player = sender as GamePlayer;
 
-			if (player == null || player.IsDoingQuest(typeof (CollectionMid)) == null)
+			if (player == null || player.IsDoingQuest(typeof (Collection)) == null)
 				return;
 
 			if (Step >= 2 && Step <= 4 && e == GameLivingEvent.EnemyKilled)
@@ -688,7 +729,7 @@ namespace DOL.GS.Quests.Midgard
 				if (gArgs.Target.Name == generalNames[Step - 2])
 				{
 					SendSystemMessage("You slay the creature and take it's wing.");
-					GiveItemToPlayer(gArgs.Target, askefruerWings.CreateInstance());
+					GiveItem(gArgs.Target, player, askefruerWings);
 					SendSystemMessage(player, generalNames[Step - 2] + " yells at you, \"A curse on you land-bound monster! I curse you for killing me!\"");
 					Step++;
 					return;
@@ -698,7 +739,7 @@ namespace DOL.GS.Quests.Midgard
 			if (Step >= 6 && Step <= 8 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == dalikor.Name && gArgs.Item.Name == askefruerWings.Name)
+				if (gArgs.Target.Name == dalikor.Name && gArgs.Item.Id_nb == askefruerWings.Id_nb)
 				{
 					if (Step == 6)
 					{
@@ -712,7 +753,7 @@ namespace DOL.GS.Quests.Midgard
 					{
 						dalikor.SayTo(player, "Yes, the final wing. It appears as though you have finished the task at hand. I do not condone the needless killing of other beings, but I feel as though these Fallen Askefruer leave us little choice. But for your efforts, I have a [reward] for you.");
 					}
-					RemoveItemFromPlayer(dalikor, askefruerWings);
+					RemoveItem(dalikor, player, askefruerWings);
 					Step++;
 					return;
 				}
@@ -720,17 +761,30 @@ namespace DOL.GS.Quests.Midgard
 
 		}
 
+		public override void AbortQuest()
+		{
+			base.AbortQuest(); //Defined in Quest, changes the state, stores in DB etc ...
+
+			RemoveItem(m_questPlayer, dustyOldMap, false);
+			RemoveItem(m_questPlayer, askefruerWings, false);
+			RemoveItem(m_questPlayer, askefruerWings, false);
+			RemoveItem(m_questPlayer, askefruerWings, false);
+
+			GameEventMgr.RemoveHandler(m_questPlayer, GamePlayerEvent.UseSlot, new DOLEventHandler(PlayerUseSlot));
+			GameEventMgr.RemoveHandler(m_questPlayer, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
+		}
+
 		public override void FinishQuest()
 		{
 			base.FinishQuest(); //Defined in Quest, changes the state, stores in DB etc ...
 
 			//Give reward to player here ...  
-			RemoveItemFromPlayer(dalikor, dustyOldMap);
+			RemoveItem(dalikor, m_questPlayer, dustyOldMap);
 
-			if (m_questPlayer.HasAbilityToUseItem(recruitsArms.CreateInstance() as EquipableItem))
-				GiveItemToPlayer(dalikor, recruitsArms.CreateInstance());
+			if (m_questPlayer.HasAbilityToUseItem(recruitsArms))
+				GiveItem(dalikor, m_questPlayer, recruitsArms);
 			else
-				GiveItemToPlayer(dalikor, recruitsSleeves.CreateInstance());
+				GiveItem(dalikor, m_questPlayer, recruitsSleeves);
 
 			m_questPlayer.GainExperience(240, 0, 0, true);
 			m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 6, Util.Random(50)), "You recieve {0} as a reward.");

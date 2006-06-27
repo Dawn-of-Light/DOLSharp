@@ -39,7 +39,7 @@ namespace DOL.GS.PacketHandler.v168
 					return 0;
 				AbstractGameKeep keep = KeepMgr.getKeepByID(keepId);
 				if (keep == null) return 1;
-				client.Player.MoveTo((ushort)keep.Region.RegionID, keep.Position, (ushort)keep.Heading);
+				client.Player.MoveTo((ushort)keep.Region, keep.X, keep.Y, keep.Z, (ushort)keep.Heading);
 			}
 			else if (code == 1) // TODO Warmap Update
 				return 0;

@@ -19,7 +19,7 @@
 using System.Collections;
 using System.Collections.Specialized;
 using System.Reflection;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.GS.PacketHandler;
 using log4net;
 
@@ -46,10 +46,10 @@ namespace DOL.GS
 		/// <param name="player">the crafting player</param>
 		/// <param name="craftItemData">the object in construction</param>
 		/// <returns>true if the player hold all needed tools</returns>
-		public override bool CheckTool(GamePlayer player, CraftItemData craftItemData)
+		public override bool CheckTool(GamePlayer player, DBCraftedItem craftItemData)
 		{
 			bool result = false;
-			if(!(craftItemData.TemplateToCraft is AmmunitionTemplate))
+			if(craftItemData.ItemTemplate.Object_Type != (int)eObjectType.Arrow && craftItemData.ItemTemplate.Object_Type != (int)eObjectType.Bolt)
 			{
 				foreach (GameStaticItem item in player.GetItemsInRadius(CRAFT_DISTANCE))
 				{
@@ -62,49 +62,32 @@ namespace DOL.GS
 
 				if(result == false)
 				{
-					player.Out.SendMessage("You do not have the tools to make the "+craftItemData.TemplateToCraft.Name+".",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage("You do not have the tools to make the "+craftItemData.ItemTemplate.Name+".",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 					player.Out.SendMessage("You must find a lathe!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 					return false;
 				}
 			}
 
-			bool needSmithHammer = false;
-			foreach (RawMaterial material in craftItemData.RawMaterials)
+			if(player.Inventory.GetFirstItemByName("planing tool", eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) == null)
 			{
-				if(material.MaterialTemplate.Model == 519) // metal bar
+				player.Out.SendMessage("You do not have the tools to make the "+craftItemData.ItemTemplate.Name+".",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage("You must find a planing tool!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+				return false;
+			}
+
+			bool needSmithHammer = false;
+			foreach (DBCraftedXItem rawmaterial in craftItemData.RawMaterials)
+			{
+				if(rawmaterial.ItemTemplate.Model == 519) // metal bar
 				{
 					needSmithHammer = true;
 					break;
 				}
 			}
 
-			byte flags = 0;
-			foreach (GenericItem item in player.Inventory.GetItemRange(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+			if(needSmithHammer && player.Inventory.GetFirstItemByName("smith's hammer", eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) == null)
 			{
-				if(!(item is CraftingTool)) continue;
-
-				if(((CraftingTool)item).Type == eCraftingToolType.PlaningTool)
-				{
-					if((flags & 0x01) == 0) flags |= 0x01;
-					if(!needSmithHammer || flags >= 0x03) break;
-				}
-				else if(needSmithHammer && ((CraftingTool)item).Type == eCraftingToolType.SmithHammer)
-				{
-					if((flags & 0x02) == 0) flags |= 0x02;
-					if(flags >= 0x03) break;
-				}
-			}
-
-			if((flags & 0x01) == 0)
-			{
-				player.Out.SendMessage("You do not have the tools to make the "+craftItemData.TemplateToCraft.Name+".",eChatType.CT_System,eChatLoc.CL_SystemWindow);
-				player.Out.SendMessage("You must find a planing tool!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
-				return false;
-			}
-
-			if(needSmithHammer && (flags & 0x02) == 0)
-			{
-				player.Out.SendMessage("You do not have the tools to make the "+craftItemData.TemplateToCraft.Name+".",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage("You do not have the tools to make the "+craftItemData.ItemTemplate.Name+".",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 				player.Out.SendMessage("You must find a smith tool!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 				return false;
 			}
@@ -115,19 +98,25 @@ namespace DOL.GS
 		/// <summary>
 		/// Calculate the minumum needed secondary crafting skill level to make the item
 		/// </summary>
-		public override int CalculateSecondCraftingSkillMinimumLevel(CraftItemData item)
+		public override int CalculateSecondCraftingSkillMinimumLevel(DBCraftedItem item)
 		{
-			if(item.TemplateToCraft is StaffTemplate)
+			switch(item.ItemTemplate.Object_Type)
 			{
-				return item.CraftingLevel - 35;
-			}
-			if(item.TemplateToCraft is RangedWeaponTemplate)
-			{
-				return item.CraftingLevel - 20;
-			}
-			if(item.TemplateToCraft is AmmunitionTemplate)
-			{
-				return item.CraftingLevel - 15;
+				case (int)eObjectType.Fired:  //tested
+				case (int)eObjectType.Longbow: //tested
+				case (int)eObjectType.Crossbow: //tested
+				case (int)eObjectType.Instrument: //tested
+				case (int)eObjectType.RecurvedBow:
+				case (int)eObjectType.CompositeBow:
+							return item.CraftingLevel - 20;
+
+				case (int)eObjectType.Arrow: //tested
+				case (int)eObjectType.Bolt: //tested
+				case (int)eObjectType.Thrown:
+							return item.CraftingLevel - 15;
+
+				case (int)eObjectType.Staff: //tested
+							return item.CraftingLevel - 35;
 			}
 
 			return base.CalculateSecondCraftingSkillMinimumLevel(item);
@@ -138,7 +127,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="player"></param>
 		/// <param name="item"></param>
-		public override void GainCraftingSkillPoints(GamePlayer player, CraftItemData item)
+		public override void GainCraftingSkillPoints(GamePlayer player, DBCraftedItem item)
 		{
 			base.GainCraftingSkillPoints(player, item);
 

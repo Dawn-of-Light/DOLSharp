@@ -16,11 +16,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections;
 using System.Reflection;
-using DOL.GS.Database;
-using NHibernate.Expression;
+using DOL.Database;
 using log4net;
 
 namespace DOL.GS.PacketHandler.v168
@@ -37,13 +34,35 @@ namespace DOL.GS.PacketHandler.v168
 		{
 			string accountName = packet.ReadString(24);
 
-			//GameServer.Database.FillObjectRelations(client.Account);
+			GameServer.Database.FillObjectRelations(client.Account);
 
 			//reset realm if no characters
-			if(client.Account.Realm != eRealm.None && (int)GameServer.Database.SelectObject("SELECT COUNT(*) FROM GamePlayer WHERE `AccountID` = '"+ client.Account.AccountID+"'") <= 0)
+			if((client.Account.Characters == null || client.Account.Characters.Length <= 0) && client.Account.Realm != (int)eRealm.None)
 			{
 				//DOLConsole.WriteLine("no chars, realm reset.");
-				client.Account.Realm = eRealm.None;
+				client.Account.Realm = (int)eRealm.None;
+			}
+
+			//fix old chars slot for compatibility
+			//TODO: remove after some time or with next realease
+			if(client.Account.Characters != null)
+			{
+				foreach(Character ch in client.Account.Characters)
+				{
+					bool changes = false;
+					if(ch.AccountSlot < 8)
+					{
+						ch.AccountSlot += ch.Realm*100;
+						changes = true;
+					}
+					else if(ch.AccountSlot < 100)
+					{
+						ch.AccountSlot = ch.AccountSlot/8*100 + ch.AccountSlot%8;
+						changes = true;
+					}
+					if (changes)
+						GameServer.Database.SaveObject(ch);
+				}
 			}
 
 			if(accountName.EndsWith("-X")) 
@@ -57,14 +76,20 @@ namespace DOL.GS.PacketHandler.v168
 					//Requests to know what realm an account is
 					//assigned to... if Realm::NONE is sent, the
 					//Realm selection screen is shown
-					client.Out.SendRealm(client.Account.Realm);
+					switch(client.Account.Realm)
+					{
+						case 1: client.Out.SendRealm(eRealm.Albion); break;
+						case 2: client.Out.SendRealm(eRealm.Midgard); break;
+						case 3: client.Out.SendRealm(eRealm.Hibernia); break;
+						default: client.Out.SendRealm(eRealm.None); break;
+					}
 				}
 			} 
 			else 
 			{
 				eRealm chosenRealm;
 
-				if(client.Account.Realm == eRealm.None || GameServer.ServerRules.IsAllowedCharsInAllRealms(client))
+				if(client.Account.Realm == (int)eRealm.None || GameServer.ServerRules.IsAllowedCharsInAllRealms(client))
 				{
 					// allow player to choose the realm if not set already or if allowed by server rules
 					if(accountName.EndsWith("-S"))      chosenRealm = eRealm.Albion;
@@ -73,16 +98,17 @@ namespace DOL.GS.PacketHandler.v168
 					else
 					{
 						if (log.IsErrorEnabled)
-							log.Error("User has chosen unknown realm: "+accountName+"; account="+client.Account.AccountName);
+							log.Error("User has chosen unknown realm: "+accountName+"; account="+client.Account.Name);
 						client.Out.SendRealm(eRealm.None);
 						return 1;
 					}
 
-					if (client.Account.Realm == eRealm.None && !GameServer.ServerRules.IsAllowedCharsInAllRealms(client))
+					if (client.Account.Realm == (int)eRealm.None && !GameServer.ServerRules.IsAllowedCharsInAllRealms(client))
 					{
 						// save the choice
-						client.Account.Realm = chosenRealm;
+						client.Account.Realm = (int)chosenRealm;
 						GameServer.Database.SaveObject(client.Account);
+						GameServer.Database.WriteDatabaseTable(typeof (Account));
 					}
 				}
 				else
@@ -91,6 +117,7 @@ namespace DOL.GS.PacketHandler.v168
 					chosenRealm = (eRealm)client.Account.Realm;
 				}
 
+				//GameServer.Database.FillObjectRelations(client.Account);
 				//DOLConsole.WriteLine("Sending overview! realm="+client.Account.Realm);
 				client.ClientState=GameClient.eClientState.CharScreen;
 				client.Player = null;

@@ -18,7 +18,7 @@
  */
 /*
  * Author:	Ogre <ogre@videogasm.com>
- * Rev:		$Id: facegloc.cs,v 1.10 2006/01/16 16:52:20 doulbousiouf Exp $
+ * Rev:		$Id: facegloc.cs,v 1.8 2005/09/29 17:40:21 doulbousiouf Exp $
  * 
  * Desc:	Implements /facegloc command
  * 
@@ -37,26 +37,23 @@ namespace DOL.GS.Scripts
 	{
 		public int OnCommand(GameClient client, string[] args)
 		{
-			if (client.Player.Mez || client.Player.Stun)
-				return 1;
-
 			if (args.Length < 3)
 			{
 				client.Out.SendMessage("Please enter X and Y coordinates.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return 1;
 			}
-
-			Point pos;
+			int x, y;
 			try
 			{
-				pos = new Point(int.Parse(args[1]), int.Parse(args[2]), 0);
+				x = Convert.ToInt32(args[1]);
+				y = Convert.ToInt32(args[2]);
 			}
 			catch (Exception)
 			{
 				client.Out.SendMessage("Please enter X and Y coordinates.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return 1;
 			}
-			ushort direction = client.Player.Position.GetHeadingTo(pos);
+			ushort direction = client.Player.GetHeadingToSpot(x, y);
 			client.Player.Heading = direction;
 			client.Out.SendPlayerJump(true);
 			return 1;

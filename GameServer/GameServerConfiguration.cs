@@ -21,6 +21,7 @@ using System.IO;
 using System.Net;
 using System.Reflection;
 using DOL.Config;
+using DOL.Database.Connection;
 
 namespace DOL.GS
 {
@@ -40,11 +41,6 @@ namespace DOL.GS
 		/// Holds the log configuration file path
 		/// </summary>
 		protected string m_logConfigFile;
-		
-		/// <summary>
-		/// Holds the database configuration file path
-		/// </summary>
-		protected string m_databaseConfigFile;
 
 		/// <summary>
 		/// Holds the log configuration file path
@@ -113,6 +109,11 @@ namespace DOL.GS
 		/// </summary>
 		protected string m_cheatLoggerName;
 
+		/// <summary>
+		/// The file name of the invalid names file
+		/// </summary>
+		protected string m_invalidNamesFile = "";
+
 		#endregion
 		#region Network
 
@@ -142,12 +143,22 @@ namespace DOL.GS
 		/// <summary>
 		/// The path to the XML database folder
 		/// </summary>
-		protected bool m_dbAutoCreate;
+		protected string m_dbConnectionString;
+
+		/// <summary>
+		/// Type database type
+		/// </summary>
+		protected ConnectionType m_dbType;
+
+		/// <summary>
+		/// True if the server shall autosave the db
+		/// </summary>
+		protected bool m_autoSave;
 
 		/// <summary>
 		/// The auto save interval in minutes
 		/// </summary>
-		protected int m_dbSaveInterval;
+		protected int m_saveInterval;
 
 		#endregion
 		#region Load/Save
@@ -163,7 +174,6 @@ namespace DOL.GS
 			m_rootDirectory = root["Server"]["RootDirectory"].GetString(m_rootDirectory);
 
 			m_logConfigFile = root["Server"]["LogConfigFile"].GetString(m_logConfigFile);
-			m_databaseConfigFile = root["Server"]["DatabaseConfigFile"].GetString(m_databaseConfigFile);
 			m_regionConfigFile = root["Server"]["RegionConfigFile"].GetString(m_regionConfigFile);
 			m_zoneConfigFile = root["Server"]["ZoneConfigFile"].GetString(m_zoneConfigFile);
 			m_languageFile = root["Server"]["LanguageFile"].GetString(m_languageFile);
@@ -203,7 +213,8 @@ namespace DOL.GS
 
 			m_cheatLoggerName = root["Server"]["CheatLoggerName"].GetString(m_cheatLoggerName);
 			m_gmActionsLoggerName = root["Server"]["GMActionLoggerName"].GetString(m_gmActionsLoggerName);
-			
+			m_invalidNamesFile = root["Server"]["InvalidNamesFile"].GetString(m_invalidNamesFile);
+
 			string ip = root["Server"]["RegionIP"].GetString("any");
 			if (ip == "any")
 				m_regionIP = IPAddress.Any;
@@ -217,8 +228,31 @@ namespace DOL.GS
 				m_udpIP = IPAddress.Parse(ip);
 			m_udpPort = (ushort) root["Server"]["UdpPort"].GetInt(m_udpPort);
 
-			m_dbAutoCreate = root["Server"]["DBAutoCreate"].GetBoolean(m_dbAutoCreate);
-			m_dbSaveInterval = root["Server"]["DBAutosaveInterval"].GetInt(m_dbSaveInterval);
+			string db = root["Server"]["DBType"].GetString("XML");
+			switch (db.ToLower())
+			{
+				case "xml":
+					m_dbType = ConnectionType.DATABASE_XML;
+					break;
+				case "mysql":
+					m_dbType = ConnectionType.DATABASE_MYSQL;
+					break;
+				case "mssql":
+					m_dbType = ConnectionType.DATABASE_MSSQL;
+					break;
+				case "odbc":
+					m_dbType = ConnectionType.DATABASE_ODBC;
+					break;
+				case "oledb":
+					m_dbType = ConnectionType.DATABASE_OLEDB;
+					break;
+				default:
+					m_dbType = ConnectionType.DATABASE_XML;
+					break;
+			}
+			m_dbConnectionString = root["Server"]["DBConnectionString"].GetString(m_dbConnectionString);
+			m_autoSave = root["Server"]["DBAutosave"].GetBoolean(m_autoSave);
+			m_saveInterval = root["Server"]["DBAutosaveInterval"].GetInt(m_saveInterval);
 			m_maxClientCount = root["Server"]["MaxClientCount"].GetInt(m_maxClientCount);
 			m_cpuCount = root["Server"]["CpuCount"].GetInt(m_cpuCount);
 			if (m_cpuCount < 1)
@@ -232,12 +266,10 @@ namespace DOL.GS
 		protected override void SaveToConfig(ConfigElement root)
 		{
 			base.SaveToConfig(root);
-
 			root["Server"]["ServerName"].Set(m_ServerName);
 			root["Server"]["ServerNameShort"].Set(m_ServerNameShort);
 			root["Server"]["RootDirectory"].Set(m_rootDirectory);
 			root["Server"]["LogConfigFile"].Set(m_logConfigFile);
-			root["Server"]["DatabaseConfigFile"].Set(m_databaseConfigFile);
 			root["Server"]["RegionConfigFile"].Set(m_regionConfigFile);
 			root["Server"]["ZoneConfigFile"].Set(m_zoneConfigFile);
 			root["Server"]["LanguageFile"].Set(m_languageFile);
@@ -276,14 +308,40 @@ namespace DOL.GS
 
 			root["Server"]["CheatLoggerName"].Set(m_cheatLoggerName);
 			root["Server"]["GMActionLoggerName"].Set(m_gmActionsLoggerName);
-			
+			root["Server"]["InvalidNamesFile"].Set(m_invalidNamesFile);
+
 			root["Server"]["RegionIP"].Set(m_regionIP);
 			root["Server"]["RegionPort"].Set(m_regionPort);
 			root["Server"]["UdpIP"].Set(m_udpIP);
 			root["Server"]["UdpPort"].Set(m_udpPort);
 
-			root["Server"]["DBAutoCreate"].Set(m_dbAutoCreate);
-			root["Server"]["DBAutosaveInterval"].Set(m_dbSaveInterval);
+			string db = "XML";
+			
+			switch (m_dbType)
+			{
+			case ConnectionType.DATABASE_XML:
+				db = "XML";
+					break;
+			case ConnectionType.DATABASE_MYSQL:
+				db = "MYSQL";
+					break;
+			case ConnectionType.DATABASE_MSSQL:
+				db = "MSSQL";
+					break;
+			case ConnectionType.DATABASE_ODBC:
+				db = "ODBC";
+					break;
+			case ConnectionType.DATABASE_OLEDB:
+				db = "OLEDB";
+					break;
+				default:
+					m_dbType = ConnectionType.DATABASE_XML;
+					break;
+			}
+			root["Server"]["DBType"].Set(db);
+			root["Server"]["DBConnectionString"].Set(m_dbConnectionString);
+			root["Server"]["DBAutosave"].Set(m_autoSave);
+			root["Server"]["DBAutosaveInterval"].Set(m_saveInterval);
 		}
 		#endregion
 		#region Constructors
@@ -300,26 +358,28 @@ namespace DOL.GS
 				m_rootDirectory = new FileInfo(Assembly.GetAssembly(typeof(GameServer)).Location).DirectoryName;
 
 			m_logConfigFile = "." + Path.DirectorySeparatorChar + "config" + Path.DirectorySeparatorChar + "logconfig.xml";
-			m_databaseConfigFile = "." + Path.DirectorySeparatorChar + "config" + Path.DirectorySeparatorChar + "databaseconfig.xml";
 			m_regionConfigFile = "." + Path.DirectorySeparatorChar + "config" + Path.DirectorySeparatorChar + "regions.xml";
 			m_zoneConfigFile = "." + Path.DirectorySeparatorChar + "config" + Path.DirectorySeparatorChar + "zones.xml";
 			m_languageFile = "." + Path.DirectorySeparatorChar + "config" + Path.DirectorySeparatorChar + "GameServer.lng";
 
 			m_scriptCompilationTarget = "."+Path.DirectorySeparatorChar+"lib"+Path.DirectorySeparatorChar+"GameServerScripts.dll";
-			m_scriptAssemblies = "DOLBase.dll,GameServer.dll,System.dll,log4net.dll,System.Xml.dll,NHibernate.dll,Iesi.Collections.dll,NHibernate.Mapping.Attributes.dll";
+			m_scriptAssemblies = "DOLBase.dll,GameServer.dll,DOLDatabase.dll,System.dll,log4net.dll,System.Xml.dll";
 			m_autoAccountCreation = true;
 			m_serverType = eGameServerType.GST_Normal;
 
 			m_cheatLoggerName = "cheats";
 			m_gmActionsLoggerName = "gmactions";
-			
+			m_invalidNamesFile = "." + Path.DirectorySeparatorChar + "config" + Path.DirectorySeparatorChar + "invalidnames.txt";
+
 			m_regionIP = IPAddress.Any;
 			m_regionPort = 10400;
 			m_udpIP = IPAddress.Any;
 			m_udpPort = 10400;
 
-			m_dbAutoCreate = false;
-			m_dbSaveInterval = 10;
+			m_dbType = ConnectionType.DATABASE_XML;
+			m_dbConnectionString = m_rootDirectory+Path.DirectorySeparatorChar+"xml_db";
+			m_autoSave = true;
+			m_saveInterval = 10;
 			m_maxClientCount = 500;
 			
 			try
@@ -358,18 +418,33 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Gets or sets the database configuration file of this server
+		/// Gets or sets the region configuration file of this server
 		/// </summary>
-		public string DatabaseConfigFile
+		public string RegionConfigFile
+		{
+			get 
+			{ 
+				if(Path.IsPathRooted(m_regionConfigFile))
+					return m_regionConfigFile;
+				else
+					return Path.Combine(m_rootDirectory, m_regionConfigFile);
+			}
+			set { m_regionConfigFile = value; }
+		}
+
+		/// <summary>
+		/// Gets or sets the zone configuration file of this server
+		/// </summary>
+		public string ZoneConfigFile
 		{
 			get
 			{
-				if(Path.IsPathRooted(m_databaseConfigFile))
-					return m_databaseConfigFile;
+				if(Path.IsPathRooted(m_zoneConfigFile))
+					return m_zoneConfigFile;
 				else
-					return Path.Combine(m_rootDirectory, m_databaseConfigFile);
+					return Path.Combine(m_rootDirectory, m_zoneConfigFile);
 			}
-			set { m_databaseConfigFile = value; }
+			set { m_zoneConfigFile = value; }
 		}
 
 		/// <summary>
@@ -460,6 +535,21 @@ namespace DOL.GS
 		}
 
 		/// <summary>
+		/// Gets or sets the invalid name filename
+		/// </summary>
+		public string InvalidNamesFile
+		{
+			get
+			{
+				if(Path.IsPathRooted(m_invalidNamesFile))
+					return m_invalidNamesFile;
+				else
+					return Path.Combine(m_rootDirectory, m_invalidNamesFile);
+			}
+			set { m_invalidNamesFile = value; }
+		}
+
+		/// <summary>
 		/// Gets or sets the region ip
 		/// </summary>
 		public IPAddress RegionIp
@@ -496,21 +586,39 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Gets or sets the autocreate flag
+		/// Gets or sets the xml database path
 		/// </summary>
-		public bool DBAutoCreate
+		public string DBConnectionString
 		{
-			get { return m_dbAutoCreate; }
-			set { m_dbAutoCreate = value; }
+			get { return m_dbConnectionString; }
+			set { m_dbConnectionString = value; }
+		}
+
+		/// <summary>
+		/// Gets or sets the DB type
+		/// </summary>
+		public ConnectionType DBType
+		{
+			get { return m_dbType; }
+			set { m_dbType = value; }
+		}
+
+		/// <summary>
+		/// Gets or sets the autosave flag
+		/// </summary>
+		public bool AutoSave
+		{
+			get { return m_autoSave; }
+			set { m_autoSave = value; }
 		}
 
 		/// <summary>
 		/// Gets or sets the autosave interval
 		/// </summary>
-		public int DBSaveInterval
+		public int SaveInterval
 		{
-			get { return m_dbSaveInterval; }
-			set { m_dbSaveInterval = value; }
+			get { return m_saveInterval; }
+			set { m_saveInterval = value; }
 		}
 
 		/// <summary>

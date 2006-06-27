@@ -40,7 +40,7 @@ namespace DOL.GS
 		/// <param name="template"></param>
 		public GameSummonedPet(INpcTemplate template) : base(template)
 		{
-			Spells = template.Spells;
+
 		}
 
 		/// <summary>

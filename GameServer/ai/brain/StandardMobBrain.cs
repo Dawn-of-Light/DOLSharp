@@ -19,7 +19,7 @@
 using System;
 using System.Collections;
 using System.Reflection;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.Events;
 using DOL.GS;
 using DOL.GS.Effects;
@@ -166,102 +166,7 @@ namespace DOL.AI.Brain
 			get { return m_aggroMaxRange; }
 			set { m_aggroMaxRange = value; }
 		}
-        public void Aggro(GameLiving living, int aggroamount)
-        {
-            //			log.Debug(Body.Name + ": AddToAggroList="+(living==null?"(null)":living.Name)+", "+aggroamount);
 
-            // only protect if gameplayer and aggroamout > 0
-            if (living is GamePlayer && aggroamount > 0)
-            {
-                GamePlayer player = (GamePlayer)living;
-
-                if (player.PlayerGroup != null)
-                { // player is in group, add whole group to aggro list
-                    lock (m_aggroTable.SyncRoot)
-                    {
-                        foreach (GamePlayer groupPlayer in player.PlayerGroup.GetPlayersInTheGroup())
-                        {
-                            if (m_aggroTable[groupPlayer] == null)
-                            {
-                                m_aggroTable[groupPlayer] = 1L;	// add the missing group member on aggro table
-                            }
-                        }
-                    }
-                }
-
-                //ProtectEffect protect = (ProtectEffect) player.EffectList.GetOfType(typeof(ProtectEffect));
-                foreach (ProtectEffect protect in player.EffectList.GetAllOfType(typeof(ProtectEffect)))
-                {
-                    // if no aggro left => break
-                    if (aggroamount <= 0) break;
-
-                    //if (protect==null) continue;
-                    if (protect.ProtectTarget != living) continue;
-                    if (protect.ProtectSource.Stun) continue;
-                    if (protect.ProtectSource.Mez) continue;
-                    if (protect.ProtectSource.Sitting) continue;
-                    if (protect.ProtectSource.ObjectState != GameObject.eObjectState.Active) continue;
-                    if (!protect.ProtectSource.Alive) continue;
-                    if (!protect.ProtectSource.InCombat) continue;
-
-                    if (!living.Position.CheckSquareDistance(protect.ProtectSource.Position, (uint)(ProtectAbilityHandler.PROTECT_DISTANCE * ProtectAbilityHandler.PROTECT_DISTANCE)))
-                        continue;
-                    // P I: prevents 10% of aggro amount
-                    // P II: prevents 20% of aggro amount
-                    // P III: prevents 30% of aggro amount
-                    // guessed percentages, should never be higher than or equal to 50%
-                    int abilityLevel = protect.ProtectSource.GetAbilityLevel(Abilities.Protect);
-                    int protectAmount = (int)((abilityLevel * 0.10) * aggroamount);
-
-                    if (protectAmount > 0)
-                    {
-                        aggroamount -= protectAmount;
-                        protect.ProtectSource.Out.SendMessage("You are protecting " + player.GetName(0, false) + " and distract " + Body.GetName(0, false) + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                        //						player.Out.SendMessage("You are protected by " + protect.ProtectSource.GetName(0, false) + " from " + Body.GetName(0, false) + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-
-                        lock (m_aggroTable.SyncRoot)
-                        {
-                            if (m_aggroTable[protect.ProtectSource] != null)
-                            {
-                                long amount = (long)m_aggroTable[protect.ProtectSource];
-                                amount += protectAmount;
-                                m_aggroTable[protect.ProtectSource] = amount;
-                            }
-                            else
-                            {
-                                m_aggroTable[protect.ProtectSource] = (long)protectAmount;
-                            }
-                        }
-                    }
-                }
-            }
-
-            lock (m_aggroTable.SyncRoot)
-            {
-                if (m_aggroTable[living] != null)
-                {
-                    long amount = (long)m_aggroTable[living];
-                    amount += aggroamount;
-                    if (amount <= 0)
-                    {
-                        m_aggroTable.Remove(living);
-                    }
-                    else
-                    {
-                        m_aggroTable[living] = amount;
-                    }
-                }
-                else
-                {
-                    if (aggroamount > 0)
-                    {
-                        m_aggroTable[living] = (long)aggroamount;
-                    }
-                }
-
-                AttackMostWanted();
-            }
-        }
 		/// <summary>
 		/// Add living to the aggrolist
 		/// aggroamount can be negative to lower amount of aggro		
@@ -270,9 +175,96 @@ namespace DOL.AI.Brain
 		/// <param name="aggroamount"></param>
 		public virtual void AddToAggroList(GameLiving living, int aggroamount)
 		{
-            if (!this.Body.InCombat)
-                BringFriends(living);
-            Aggro(living, aggroamount);
+//			log.Debug(Body.Name + ": AddToAggroList="+(living==null?"(null)":living.Name)+", "+aggroamount);
+
+			// only protect if gameplayer and aggroamout > 0
+			if (living is GamePlayer && aggroamount > 0)
+			{
+				GamePlayer player = (GamePlayer)living;
+				
+				if (player.PlayerGroup != null) { // player is in group, add whole group to aggro list
+					lock(m_aggroTable.SyncRoot) 
+					{
+						foreach (GamePlayer groupPlayer in player.PlayerGroup.GetPlayersInTheGroup()) {
+							if (m_aggroTable[groupPlayer] == null) {
+								m_aggroTable[groupPlayer] = 1L;	// add the missing group member on aggro table
+							}
+						}
+					}
+				}
+
+				//ProtectEffect protect = (ProtectEffect) player.EffectList.GetOfType(typeof(ProtectEffect));
+				foreach (ProtectEffect protect in player.EffectList.GetAllOfType(typeof(ProtectEffect))) 
+				{
+					// if no aggro left => break
+					if (aggroamount <=0) break;
+
+					//if (protect==null) continue;
+					if (protect.ProtectTarget != living) continue;
+					if (protect.ProtectSource.Stun) continue;
+					if (protect.ProtectSource.Mez) continue;
+					if (protect.ProtectSource.Sitting) continue;
+					if (protect.ProtectSource.ObjectState != GameObject.eObjectState.Active) continue;
+					if (!protect.ProtectSource.Alive) continue;
+					if (!protect.ProtectSource.InCombat) continue;
+																			
+					if (!WorldMgr.CheckDistance(living,protect.ProtectSource,ProtectAbilityHandler.PROTECT_DISTANCE))	
+						continue;		                                            												
+					// P I: prevents 10% of aggro amount
+					// P II: prevents 20% of aggro amount
+					// P III: prevents 30% of aggro amount
+					// guessed percentages, should never be higher than or equal to 50%
+					int abilityLevel = protect.ProtectSource.GetAbilityLevel(Abilities.Protect);
+					int protectAmount = (int)((abilityLevel * 0.10) * aggroamount);
+
+					if (protectAmount > 0)
+					{
+						aggroamount -= protectAmount;
+						protect.ProtectSource.Out.SendMessage("You are protecting " + player.GetName(0, false) + " and distract " + Body.GetName(0, false) + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+//						player.Out.SendMessage("You are protected by " + protect.ProtectSource.GetName(0, false) + " from " + Body.GetName(0, false) + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
+						lock(m_aggroTable.SyncRoot) 
+						{
+							if(m_aggroTable[protect.ProtectSource] != null) 
+							{
+								long amount = (long)m_aggroTable[protect.ProtectSource];
+								amount += protectAmount;
+								m_aggroTable[protect.ProtectSource] = amount;
+							}
+							else
+							{
+								m_aggroTable[protect.ProtectSource] =(long) protectAmount;
+							}
+						}					
+					}                                              
+				}
+			}
+
+			lock(m_aggroTable.SyncRoot) 
+			{
+				if(m_aggroTable[living] != null) 
+				{
+					long amount = (long)m_aggroTable[living];
+					amount += aggroamount;
+					if (amount <= 0) 
+					{
+						m_aggroTable.Remove(living);
+					} 
+					else 
+					{
+						m_aggroTable[living] = amount;
+					}
+				} 
+				else 
+				{
+					if(aggroamount > 0) 
+					{
+						m_aggroTable[living] = (long)aggroamount;
+					}
+				}
+
+				AttackMostWanted();
+			}
 		}
 
 		/// <summary>
@@ -371,13 +363,10 @@ namespace DOL.AI.Brain
 
 					if(living.Alive 
 						&& amount > maxAggro
-						&& living.Region == Body.Region
+						&& living.CurrentRegion == Body.CurrentRegion
 						&& living.ObjectState == GameObject.eObjectState.Active)
 					{
-						//mobs dont include stealthed players in there next attack target calculations
-						if ((living is GamePlayer) && (living as GamePlayer).IsStealthed) continue;
-
-						int distance = Body.Position.GetDistance(living.Position);
+						int distance = WorldMgr.GetDistance(Body, living);
 						if (distance < MAX_AGGRO_DISTANCE) 
 						{
 							double aggro = amount * Math.Min(500.0 / distance, 1);
@@ -432,10 +421,10 @@ namespace DOL.AI.Brain
 
 			if (sender == Body)
 			{
-				if (e == GameLivingEvent.TakeDamage)
+				if (e == GameObjectEvent.TakeDamage)
 				{
 					TakeDamageEventArgs eArgs = args as TakeDamageEventArgs;
-					if (eArgs == null) return;
+					if (eArgs == null || eArgs.DamageSource is GameLiving==false) return;
 
 					int aggro = eArgs.DamageAmount + eArgs.CriticalAmount;
 					if (eArgs.DamageSource is GameNPC)
@@ -576,57 +565,96 @@ namespace DOL.AI.Brain
 				ad.AttackResult == GameLiving.eAttackResult.Parried))
 			{
 				Body.StartAttack(ad.Attacker);
+				BringFriends(ad);
 			}
 		}
 
-		protected virtual void BringFriends(GameLiving living)
+		protected virtual void BringFriends(AttackData ad)
 		{
-            if (living is GamePlayer) 
+			// some experimental code workaround for bring a friend
+			/////////////////////////////////////////////////////////////
+			if (ad.Attacker is GamePlayer) 
 			{
-                GamePlayer player = (GamePlayer)living;
-                ArrayList inRangeGroupPlayers = new ArrayList();
-                if (player.PlayerGroup != null)
-                {
-                    foreach (GamePlayer p in player.PlayerGroup)
-                    {
-                        //low cpu usage to use check distance better than get in radius
-                        if (p.Position.CheckDistance(player.Position, 1500) && p != player)
-                        {
-                            inRangeGroupPlayers.Add(p);
-                        }
-                    }
-                }
-                if (inRangeGroupPlayers.Count >= 3)
-                {
-                    int i = DOL.GS.Util.Random(inRangeGroupPlayers.Count - 1);
-                    GameNPC npc = FindFriendForAttack();
+				GamePlayer player = (GamePlayer)ad.Attacker;
+				ArrayList nearPlayers = new ArrayList();
+				foreach (GamePlayer p in ad.Attacker.GetPlayersInRadius(500)) 
+				{
+					if (p != player) 
+					{
+						nearPlayers.Add(p);
+					}
+				}
+				ArrayList inRangeGroupPlayers = new ArrayList();
+				if (player.PlayerGroup != null) 
+				{ 
+					foreach (GamePlayer p in ad.Attacker.GetPlayersInRadius(1500)) 
+					{
+						if (p.PlayerGroup == player.PlayerGroup && p != player) 
+						{
+							inRangeGroupPlayers.Add(p);
+						}
+					}
+				}
+				GamePlayer victim = null;
+				GamePlayer victim2 = null;
+				if (nearPlayers.Count>=3) 
+				{
+
+					// roulette selection
+					int i = DOL.GS.Util.Random(nearPlayers.Count-1);
+					victim = (GamePlayer)nearPlayers[i];
+					if (nearPlayers.Count>=6) 
+					{
+						nearPlayers.RemoveAt(i);
+						i = DOL.GS.Util.Random(nearPlayers.Count-1);
+						victim2 = (GamePlayer)nearPlayers[i];
+					}
+
+				}	
+				else if (player.PlayerGroup != null && player.PlayerGroup.PlayerCount >= 4 && inRangeGroupPlayers.Count > 0) 
+				{
+
+					// roulette selection
+					int i = DOL.GS.Util.Random(inRangeGroupPlayers.Count-1);
+					victim = (GamePlayer)inRangeGroupPlayers[i];
+					if (player.PlayerGroup.PlayerCount>=7 && inRangeGroupPlayers.Count > 1) 
+					{
+						inRangeGroupPlayers.RemoveAt(i);
+						i = DOL.GS.Util.Random(inRangeGroupPlayers.Count-1);
+						victim2 = (GamePlayer)inRangeGroupPlayers[i];
+					}
+
+				}
+
+				// find a friend to attack selected player
+				if (victim != null) 
+				{
+					GameNPC npc = FindFriendForAttack();
 					if (npc != null) 
 					{
-                        ((StandardMobBrain)npc.Brain).Aggro((GamePlayer)inRangeGroupPlayers[i],2);
+						npc.StartAttack(victim);
+						if (victim2 != null) 
+						{
+							npc = FindFriendForAttack();
+							if (npc != null) 
+							{
+								npc.StartAttack(victim2);
+							}
+						}
 					}
-                    if (inRangeGroupPlayers.Count >= 5)
-                    {
-                        inRangeGroupPlayers.RemoveAt(i);
-                         i = DOL.GS.Util.Random(inRangeGroupPlayers.Count - 1);
-                         npc = FindFriendForAttack();
-					    if (npc != null) 
-					    {
-                            ((StandardMobBrain)npc.Brain).Aggro((GamePlayer)inRangeGroupPlayers[i],2);
-					    }
-                    }
-                }
-            }
+				}
+			}
 		}
 
 		/// <summary>
 		/// searches for a friend to group for combat
 		/// </summary>
 		/// <returns></returns>
-		protected virtual GameNPC FindFriendForAttack()
+		protected GameNPC FindFriendForAttack()
 		{
 			foreach (GameNPC npc in Body.GetNPCsInRadius(600)) 
 			{
-                if (npc is GameMob && npc.Name == Body.Name && !npc.InCombat && npc.Brain is IControlledBrain == false && (npc.Brain is IAggressiveBrain)) 
+				if (npc is GameMob && npc.Name == Body.Name && !npc.InCombat && npc.Brain is IControlledBrain==false) 
 				{
 					return npc;
 				}

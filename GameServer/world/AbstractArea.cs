@@ -17,7 +17,6 @@
  *
  */
 using System;
-using System.Collections;
 using DOL.Events;
 using DOL.GS;
 using DOL.GS.PacketHandler;
@@ -25,45 +24,48 @@ using DOL.GS.PacketHandler;
 namespace DOL.GS
 {
 	/// <summary>
-	/// AbstractArea extend this if you wish to implement a new custom area.
+	/// AbstractArea extend this if you wish to implement e new custom area.
 	/// For examples see Area.Cricle, Area.Square
 	/// </summary>
 	public abstract class AbstractArea : IArea
-	{		
-		#region Declaration
-		
+	{						
 		/// <summary>
-		/// The ID of the Area eg. 15
+		/// Constant holding max number of areas per zone, increase if more ares are needed,
+		/// this will slightly increase memory usage on server
+		/// </summary>		
+		public const ushort MAX_AREAS_PER_ZONE = 50;
+
+		/// <summary>
+		/// The ID of the Area eg. 15 ( == index in Region.m_areas array)
 		/// </summary>
-		protected int m_id;		
+		protected ushort m_ID;		
 
 		/// <summary>
 		/// The description of the Area eg. "Camelot Hills"
 		/// </summary>
-		protected string m_description;
+		protected string m_Description;
 
 		/// <summary>
 		/// The area sound to play on enter/leave events
 		/// </summary>
-		protected byte m_sound;	
+		protected byte m_sound;
 
 		/// <summary>
-		/// /broadcast enables in the area ?
+		/// Constructs a new AbstractArea
 		/// </summary>
-		protected bool m_isBroadcastEnabled;
-	
-		/// <summary>
-		/// the region id of the area
-		/// </summary>
-		protected int m_regionID;
+		/// <param name="desc"></param>
+		public AbstractArea(string desc)
+		{			
+			m_Description = desc;			
+		}		
 	
 		/// <summary>
 		/// Returns the ID of this Area
 		/// </summary>
-		public int AreaID
+		public ushort ID
 		{
-			get { return m_id; }
-			set { m_id = value; }
+			get { return m_ID; }
+			set { m_ID = value; }
 		}
 
 		/// <summary>
@@ -71,8 +73,7 @@ namespace DOL.GS
 		/// </summary>
 		public string Description
 		{
-			get { return m_description; }
-			set { m_description = value; }
+			get { return m_Description; }			
 		}
 
 		/// <summary>
@@ -84,47 +85,29 @@ namespace DOL.GS
 			set { m_sound = value; }
 		}
 
-		/// <summary>
-		/// Gets or sets if /broadcast is enable in the area
-		/// </summary>
-		public bool IsBroadcastEnabled
+		#region Event handling
+
+		public void UnRegisterPlayerEnter(DOLEventHandler callback)
 		{
-			get { return m_isBroadcastEnabled; }
-			set { m_isBroadcastEnabled = value; }
+			GameEventMgr.RemoveHandler(this,AreaEvent.PlayerEnter,callback);
 		}
 
-		/// <summary>
-		/// Gets or sets the regionID of the area
-		/// </summary>
-		public int RegionID
-		{
-			get { return m_regionID; }
-			set { m_regionID = value; }
+		public void UnRegisterPlayerLeave(DOLEventHandler callback)
+		{	
+			GameEventMgr.RemoveHandler(this,AreaEvent.PlayerLeave,callback);
 		}
 
+		public void RegisterPlayerEnter(DOLEventHandler callback)
+		{
+			GameEventMgr.AddHandler(this,AreaEvent.PlayerEnter,callback);
+		}		
+
+		public void RegisterPlayerLeave(DOLEventHandler callback)
+		{	
+			GameEventMgr.AddHandler(this,AreaEvent.PlayerLeave,callback);
+		}	
 		#endregion
-
-		#region Function
-
-		/// <summary>
-		/// the list of all players inside this area (used for /broadcast)
-		/// </summary>
-		protected IList m_playersInArea = new ArrayList(1);
-
-		/// <summary>
-		/// Broadcast a message to all players inside the area
-		/// </summary>
-		public virtual void SendMessage(String message, eChatType type, eChatLoc loc)
-		{
-			lock(m_playersInArea.SyncRoot)
-			{
-				foreach(GamePlayer player in m_playersInArea)
-				{
-					player.Out.SendMessage(message, type, loc);
-				}
-			}
-		}
-
+		
 		/// <summary>
 		/// Checks wether area intersects with given zone
 		/// </summary>
@@ -137,23 +120,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="spot"></param>
 		/// <returns></returns>
-		public abstract bool IsContaining(Point spot);
-
-		/// <summary>
-		/// Check if two areas are equals
-		/// </summary>
-		/// <param name="area">the area to compare with</param>
-		/// <returns>true if equals</returns>
-		public virtual bool IsEqual(AbstractArea area)
-		{
-			if(area == null)
-				return false;
-
-			if(area.RegionID != m_regionID)
-				return false;
-
-			return true;
-		}
+		public abstract bool IsContaining(IPoint3D spot);			
 
 		/// <summary>
 		/// Called whenever a player leaves the given area
@@ -161,7 +128,6 @@ namespace DOL.GS
 		/// <param name="player"></param>
 		public virtual void OnPlayerLeave(GamePlayer player)
 		{
-			m_playersInArea.Remove(player);
 			if (Description!=null && Description!="")
 				player.Out.SendMessage("(Region) You have left "+Description+"!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 
@@ -174,7 +140,6 @@ namespace DOL.GS
 		/// <param name="player"></param>
 		public virtual void OnPlayerEnter(GamePlayer player)
 		{
-			m_playersInArea.Add(player);
 			if (Description!=null && Description!="")
 			{
 				player.Out.SendMessage("(Region) You have entered "+Description+"!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
@@ -186,6 +151,5 @@ namespace DOL.GS
 			}
 			player.Notify(AreaEvent.PlayerEnter, this, new AreaEventArgs(this, player));
 		}
-		#endregion
 	}
 }

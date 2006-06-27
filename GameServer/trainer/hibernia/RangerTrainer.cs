@@ -17,11 +17,7 @@
  *
  */
 using System;
-using System.Collections;
-using System.Reflection;
-using DOL.Events;
 using DOL.GS.PacketHandler;
-using log4net;
 
 namespace DOL.GS.Trainer
 {
@@ -31,51 +27,10 @@ namespace DOL.GS.Trainer
 	[NPCGuildScript("Ranger Trainer", eRealm.Hibernia)]		// this attribute instructs DOL to use this script for all "Ranger Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class RangerTrainer : GameTrainer
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		public const string WEAPON_ID1 = "ranger_item";
 
-		/// <summary>
-		/// This hash constrain all item template the trainer can give
-		/// </summary>	
-		private static IDictionary allStartupItems = new Hashtable();
-
-		/// <summary>
-		/// This function is called at the server startup
-		/// </summary>	
-		[GameServerStartedEvent]
-		public static void OnServerStartup(DOLEvent e, object sender, EventArgs args)
-		{	
-			#region Ranger Recurve Bow
-
-			RecurvedbowTemplate ranger_item_template = new RecurvedbowTemplate();
-			ranger_item_template.Name = "Elven Recurve Bow";
-			ranger_item_template.Level = 5;
-			ranger_item_template.Durability=100;
-			ranger_item_template.Condition = 100;
-			ranger_item_template.Quality = 90;
-			ranger_item_template.Bonus = 10;	
-			ranger_item_template.DamagePerSecond = 30;
-			ranger_item_template.Speed = 4700;
-			ranger_item_template.Weight = 31;
-			ranger_item_template.Model = 471;
-			ranger_item_template.Realm = eRealm.Hibernia;
-			ranger_item_template.IsDropable = true; 
-			ranger_item_template.IsTradable = false; 
-			ranger_item_template.IsSaleable = false;
-			ranger_item_template.MaterialLevel = eMaterialLevel.Bronze;
-			
-			ranger_item_template.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_RecurvedBow, 1));
-			
-			if(!allStartupItems.Contains("Elven_Recurve_Bow"))
-			{
-				allStartupItems.Add("Elven_Recurve_Bow", ranger_item_template);
-			
-				if (log.IsDebugEnabled)
-					log.Debug("Adding " + ranger_item_template.Name + " to RangerTrainer gifts.");
-			}
-			#endregion
+		public RangerTrainer() : base()
+		{
 		}
 
 		/// <summary>
@@ -88,18 +43,22 @@ namespace DOL.GS.Trainer
  			if (!base.Interact(player)) return false;
 
 			// check if class matches.				
-			if (player.CharacterClass.ID == (int) eCharacterClass.Ranger)
-			{
+			if (player.CharacterClass.ID == (int) eCharacterClass.Ranger) {
+
+				// popup the training window
 				player.Out.SendTrainerWindow();
+				//player.Out.SendMessage(this.Name + " says, \"Select what you like to train.\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
 				player.Out.SendMessage(this.Name + " says, \"You wish to learn more of our ways? Fine then.\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
-			} 
-			else if (CanPromotePlayer(player)) 
-			{
-				player.Out.SendMessage(this.Name + " says, \"You know, the way of a [Ranger] is not for everyone. Are you sure this is your choice?\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+
 			} 
 			else 
 			{
-				player.Out.SendMessage(this.Name + " says, \"You must seek elsewhere for your training.\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
+				// perhaps player can be promoted
+				if (CanPromotePlayer(player)) {
+					player.Out.SendMessage(this.Name + " says, \"You know, the way of a [Ranger] is not for everyone. Are you sure this is your choice?\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+				} else {
+					player.Out.SendMessage(this.Name + " says, \"You must seek elsewhere for your training.\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);							
+				}
 			}
 			return true;
  		}
@@ -126,12 +85,13 @@ namespace DOL.GS.Trainer
 			if (!base.WhisperReceive(source, text)) return false;			
 			GamePlayer player = source as GamePlayer;			
 	
-			switch (text) 
-			{
-				case "Ranger":
-					if (CanPromotePlayer(player)) 
-						PromotePlayer(player, (int)eCharacterClass.Ranger, "Good then. Your path as a Ranger is before you. Walk it with care, friend. Take these, " + source.GetName(0, false) + ", to help make walking the path a bit easier.", new GenericItemTemplate[] {allStartupItems["Elven_Recurve_Bow"] as GenericItemTemplate});
-					
+			switch (text) {
+			case "Ranger":
+				// promote player to other class
+				if (CanPromotePlayer(player)) {
+					PromotePlayer(player, (int)eCharacterClass.Ranger, "Good then. Your path as a Ranger is before you. Walk it with care, friend. Take these, " + source.GetName(0, false) + ", to help make walking the path a bit easier.", null);
+					player.ReceiveItem(this,WEAPON_ID1);
+				}
 				break;
 			}
 			return true;		

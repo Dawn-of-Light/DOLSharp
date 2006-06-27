@@ -80,7 +80,7 @@ namespace DOL.GS.Scripts
 			}
 			if (player.Level >= 10)
 			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.AlbArmor, (int)eArmorLevel.High));
+				player.AddAbility(SkillBase.GetAbility(Abilities.AlbArmor, ArmorLevel.Chain));
 				player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Shortbows));
 				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 1));
 

@@ -17,7 +17,7 @@
  *
  */
 using System.Reflection;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.GS.PacketHandler;
 using log4net;
 
@@ -69,8 +69,10 @@ namespace DOL.GS
 		/// <returns></returns>
 		public static AbstractCraftingSkill getSkillbyEnum(eCraftingSkill skill)
 		{
-			if(skill == eCraftingSkill.NoCrafting) return null;
-			return m_craftingskills[(int)skill - 1] as AbstractCraftingSkill;
+			int index = (int)skill - 1;
+			if (index < 0 || index >= m_craftingskills.Length)
+				return null;
+			return m_craftingskills[index] as AbstractCraftingSkill;
 		}
 
 		/// <summary>
@@ -79,21 +81,22 @@ namespace DOL.GS
 		/// <returns></returns>
 		public static bool Init()
 		{
-			// primary skills
+			// skill
 			m_craftingskills[(int)eCraftingSkill.ArmorCrafting - 1] = new ArmorCrafting();
 			m_craftingskills[(int)eCraftingSkill.Fletching - 1] = new Fletching();
-			m_craftingskills[(int)eCraftingSkill.Tailoring - 1] = new Tailoring();
-			m_craftingskills[(int)eCraftingSkill.WeaponCrafting - 1] = new WeaponCrafting();
-			// secondary skills
 			m_craftingskills[(int)eCraftingSkill.Jewellery - 1] = new Jewellery();
 			m_craftingskills[(int)eCraftingSkill.SiegeCrafting - 1] = new SiegeCrafting();
+			m_craftingskills[(int)eCraftingSkill.Tailoring - 1] = new Tailoring();
+			m_craftingskills[(int)eCraftingSkill.WeaponCrafting - 1] = new WeaponCrafting();
+
 			m_craftingskills[(int)eCraftingSkill.ClothWorking - 1] = new ClothWorking();
 			m_craftingskills[(int)eCraftingSkill.GemCutting - 1] = new GemCutting();
 			m_craftingskills[(int)eCraftingSkill.HerbalCrafting - 1] = new HerbalCrafting();
 			m_craftingskills[(int)eCraftingSkill.LeatherCrafting - 1] = new LeatherCrafting();
 			m_craftingskills[(int)eCraftingSkill.MetalWorking - 1] = new MetalWorking();
 			m_craftingskills[(int)eCraftingSkill.WoodWorking - 1] = new WoodWorking();
-			//advanced skill
+
+			//Advanced skill
 			m_craftingskills[(int)eCraftingSkill.Alchemy - 1] = new Alchemy();
 			m_craftingskills[(int)eCraftingSkill.SpellCrafting - 1] = new SpellCrafting();
 
@@ -105,51 +108,128 @@ namespace DOL.GS
 		/// <summary>
 		/// Return the crafting skill needed to work on the item
 		/// </summary>
-		public static eCraftingSkill GetSecondaryCraftingSkillToWorkOnItem(EquipableItem item)
+		public static eCraftingSkill GetSecondaryCraftingSkillToWorkOnItem(InventoryItem item)
 		{
-			if(item is Armor && ((Armor)item).ArmorLevel == eArmorLevel.VeryLow)
-			{ // cloth
-				return eCraftingSkill.ClothWorking;
-			}
-
-			if(item is Armor && (((Armor)item).ArmorLevel == eArmorLevel.Low || ((Armor)item).ArmorLevel == eArmorLevel.Medium))
-			{ // leather , studded
-				return eCraftingSkill.LeatherCrafting;
-			}
-
-			if(item is RangedWeapon || item is Instrument)
-			{ // ranged weapon , instruments
-				return eCraftingSkill.WoodWorking;
-			}
-
-			if(item is Weapon)
+			switch(item.Object_Type)
 			{
-				return eCraftingSkill.MetalWorking;
-			}
+				case (int)eObjectType.Cloth:
+					return eCraftingSkill.ClothWorking;
+
+				case (int)eObjectType.Leather:
+				case (int)eObjectType.Studded:
+					return eCraftingSkill.LeatherCrafting;
 			
-			return eCraftingSkill.NoCrafting;	
+					// all weapon
+				case (int)eObjectType.Axe:
+				case (int)eObjectType.Blades:
+				case (int)eObjectType.Blunt:
+				case (int)eObjectType.CelticSpear:
+				case (int)eObjectType.CrushingWeapon:
+				case (int)eObjectType.Flexible:
+				case (int)eObjectType.Hammer:
+				case (int)eObjectType.HandToHand:
+				case (int)eObjectType.LargeWeapons:
+				case (int)eObjectType.LeftAxe:
+				case (int)eObjectType.Piercing:
+				case (int)eObjectType.PolearmWeapon:
+				case (int)eObjectType.Scythe:
+				case (int)eObjectType.Shield:
+				case (int)eObjectType.SlashingWeapon:
+				case (int)eObjectType.Spear:
+				case (int)eObjectType.Sword:
+				case (int)eObjectType.ThrustWeapon:
+				case (int)eObjectType.TwoHandedWeapon:
+					// all other armor
+				case (int)eObjectType.Chain:
+				case (int)eObjectType.Plate:
+				case (int)eObjectType.Reinforced:
+				case (int)eObjectType.Scale:
+					return eCraftingSkill.MetalWorking;
+
+				case (int)eObjectType.CompositeBow:
+				case (int)eObjectType.Crossbow:
+				case (int)eObjectType.Fired:
+				case (int)eObjectType.Instrument:
+				case (int)eObjectType.Longbow:
+				case (int)eObjectType.RecurvedBow:
+				case (int)eObjectType.Staff:
+					return eCraftingSkill.WoodWorking;
+
+				default : 
+					return eCraftingSkill.NoCrafting;
+			}	
 		}
 
 		/// <summary>
 		/// Return the approximative craft level of the item
 		/// </summary>
-		public static int GetItemCraftLevel(EquipableItem item)
+		public static int GetItemCraftLevel(InventoryItem item)
 		{
-			if(item is Armor)
+			switch(item.Object_Type)
 			{
-				int baseLevel = 15 + item.Level * 20; // gloves
-				foreach(eInventorySlot slot in item.EquipableSlot)
+				case (int)eObjectType.Cloth:
+				case (int)eObjectType.Leather:
+				case (int)eObjectType.Studded:
+				case (int)eObjectType.Chain:
+				case (int)eObjectType.Plate:
+				case (int)eObjectType.Reinforced:
+				case (int)eObjectType.Scale:
 				{
-					if(slot == eInventorySlot.HeadArmor) return baseLevel + 15;
-					if(slot == eInventorySlot.FeetArmor) return baseLevel + 30;
-					if(slot == eInventorySlot.LegsArmor) return baseLevel + 50;
-					if(slot == eInventorySlot.ArmsArmor) return baseLevel + 65;
-					if(slot == eInventorySlot.TorsoArmor) return baseLevel + 80;
-				}
-				return baseLevel;
-			}
+					int baseLevel = 15 + item.Level * 20; // gloves
+					switch(item.Item_Type)
+					{
+						case (int)eInventorySlot.HeadArmor: // head
+							return baseLevel + 15;
 
-			return 15 + (item.Level - 1) * 20;		
+						case (int)eInventorySlot.FeetArmor: // feet
+							return baseLevel + 30;
+
+						case (int)eInventorySlot.LegsArmor: // legs
+							return baseLevel + 50;
+
+						case (int)eInventorySlot.ArmsArmor: // arms
+							return baseLevel + 65;
+
+						case (int)eInventorySlot.TorsoArmor: // torso
+							return baseLevel + 80;
+
+						default:
+							return baseLevel;
+					}
+				}
+					
+				case (int)eObjectType.Axe:
+				case (int)eObjectType.Blades:
+				case (int)eObjectType.Blunt:
+				case (int)eObjectType.CelticSpear:
+				case (int)eObjectType.CrushingWeapon:
+				case (int)eObjectType.Flexible:
+				case (int)eObjectType.Hammer:
+				case (int)eObjectType.HandToHand:
+				case (int)eObjectType.LargeWeapons:
+				case (int)eObjectType.LeftAxe:
+				case (int)eObjectType.Piercing:
+				case (int)eObjectType.PolearmWeapon:
+				case (int)eObjectType.Scythe:
+				case (int)eObjectType.Shield:
+				case (int)eObjectType.SlashingWeapon:
+				case (int)eObjectType.Spear:
+				case (int)eObjectType.Sword:
+				case (int)eObjectType.ThrustWeapon:
+				case (int)eObjectType.TwoHandedWeapon:
+
+				case (int)eObjectType.CompositeBow:
+				case (int)eObjectType.Crossbow:
+				case (int)eObjectType.Fired:
+				case (int)eObjectType.Instrument:
+				case (int)eObjectType.Longbow:
+				case (int)eObjectType.RecurvedBow:
+				case (int)eObjectType.Staff:
+					return 15 + (item.Level - 1) * 20;
+
+				default :
+					return 0;
+			}
 		}
 
 		#endregion

@@ -132,7 +132,7 @@ namespace DOL.GS.Spells
 			/// Constructs a new RestoreSpeedTimer
 			/// </summary>
 			/// <param name="effect">The speed changing effect</param>
-			public RestoreSpeedTimer(GameSpellEffect effect) : base(effect.Owner.Region.TimeManager)
+			public RestoreSpeedTimer(GameSpellEffect effect) : base(effect.Owner.CurrentRegion.TimeManager)
 			{
 				m_effect = effect;
 			}

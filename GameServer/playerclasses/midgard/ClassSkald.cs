@@ -86,7 +86,7 @@ namespace DOL.GS.Scripts
 			}
 			if (player.Level >= 20)
 			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.MidArmor, (int)eArmorLevel.High));
+				player.AddAbility(SkillBase.GetAbility(Abilities.MidArmor, ArmorLevel.Chain));
 				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 1));
 			}
 		}

@@ -29,9 +29,11 @@ namespace DOL.GS.Scripts
 		public int OnCommand(GameClient client, string[] args)
 		{
 			client.Out.SendMessage(
-				"You are at Pos:" + client.Player.Position.ToString()
+				"You are at X:" + client.Player.X
+					+ " Y:" + client.Player.Y
+					+ " Z:" + client.Player.Z
 					+ " Heading:" + client.Player.Heading
-					+ " Region:" + client.Player.RegionId,
+					+ " Region:" + client.Player.CurrentRegionID,
 				eChatType.CT_System,
 				eChatLoc.CL_SystemWindow);
 			//Command handled fine

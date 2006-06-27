@@ -93,7 +93,7 @@ namespace DOL.GS.PacketHandler.v168
 			{
 				GamePlayer player = (GamePlayer)m_actionSource;
 
-				GameObject myTarget = player.Region.GetObject((ushort)m_newTargetId);
+				GameObject myTarget = player.CurrentRegion.GetObject((ushort)m_newTargetId);
 				player.TargetObject = myTarget;
 				player.TargetInView = m_targetInView;
 
@@ -124,7 +124,7 @@ namespace DOL.GS.PacketHandler.v168
 				if (player.PrayState)
 				{
 					GameGravestone gravestone = myTarget as GameGravestone;
-					if (gravestone == null || gravestone != GravestoneMgr.GetPlayerGravestone(player))
+					if (gravestone == null || !gravestone.InternalID.Equals(player.InternalID))
 					{
 						player.Out.SendMessage("You are no longer targetting your cairn. Your prayers fail.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						player.PrayTimerStop();

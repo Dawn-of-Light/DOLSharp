@@ -38,7 +38,7 @@ namespace DOL.GS.PropertyCalc
 			if (player != null)
 			{
 				int shield = (player.GetModifiedSpecLevel(Specs.Shields)-1)*(10/2);
-				return 50 + shield + (player.GetModified(eProperty.Dexterity) * 2 - 100) / 4;
+				return 50 + shield + (player.Dexterity*2 - 100) / 4;
 			}
 
 			GameNPC npc = living as GameNPC;

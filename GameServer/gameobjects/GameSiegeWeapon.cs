@@ -19,8 +19,7 @@
 using System;
 using System.Collections;
 using DOL.GS.PacketHandler;
-using DOL.AI.Brain;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.Events;
 
 namespace DOL.GS
@@ -33,9 +32,6 @@ namespace DOL.GS
 	{
 		public GameSiegeWeapon()
 		{
-			SetOwnBrain(new SiegeWeaponBrain());
-			this.Realm = 0;
-			Level = 1;
 			CurrentState = eState.Inactive;
 			m_ammo = new ArrayList();
 
@@ -51,8 +47,7 @@ namespace DOL.GS
 				};//en ms
 			m_enableToMove = true;
 		}
-		public static readonly ushort SIEGE_WEAPON_CONTROLE_DISTANCE = 2000;
-		public static readonly int DECAYPERIOD = 240000; //ms
+		public const int SIEGE_WEAPON_CONTROLE_DISTANCE = 2000;
 		#region enum
 		public enum eState : byte
 		{
@@ -75,15 +70,15 @@ namespace DOL.GS
 		}
 		#endregion
 		#region properties
-		public override Region Region
+		public override Region CurrentRegion
 		{
 			get
 			{
-				return base.Region;
+				return base.CurrentRegion;
 			}
 			set
 			{
-                base.Region = value;
+                base.CurrentRegion = value;
 				this.SiegeWeaponTimer = new SiegeTimer(this);
 			}
 		}
@@ -140,95 +135,54 @@ namespace DOL.GS
 			get { return m_ammoSlot; }
 			set {m_ammoSlot = value;}
 		}
-		public int DecayedHp
-		{
-			get{return 3 * (this.MaxHealth / 10);}
-		}
-		public int DeductHp
-		{
-			get{return -this.MaxHealth / 10;}
-		}
-		private int m_timesrepaired;
-		public int TimesRepaired
-		{
-			get { return m_timesrepaired; }
-			set { m_timesrepaired = value; }
-		}
-
-		protected RegionTimer m_decayTimer;
-		/// <summary>
-		/// The lock object for lazy regen timers initialization
-		/// </summary>
-		protected readonly object m_decayTimerLock = new object();
-		protected GameObject m_decayObject = null;
-
+		
 
 #endregion
 		#region public methode
 		public void TakeControl(GamePlayer player)
 		{
-			GameEventMgr.AddHandler(GamePlayerEvent.Dying, new DOLEventHandler(ReleaseControlOnEvent));
-			GameEventMgr.AddHandler(GamePlayerEvent.Quit, new DOLEventHandler(ReleaseControlOnEvent));
 			if (this.Owner != null)
 			{
-				player.Out.SendMessage(GetName(0, true) + " is allready under control of another player.", eChatType.CT_Say, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(GetName(0,true)+" is ever under control.",eChatType.CT_Say,eChatLoc.CL_SystemWindow);
 				return;
 			}
 			if (player.SiegeWeapon != null)
 			{
-				player.Out.SendMessage("You allready have a siege weapon under control.", eChatType.CT_Say, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage("You have ever a siege weapon under control.",eChatType.CT_Say,eChatLoc.CL_SystemWindow);
 				return;
 			}
 			if (this.IsMoving)
 			{
-				player.Out.SendMessage("You can't take control of a siege weapon while it is moving.", eChatType.CT_Say, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage("You can take the control of a siege weapon while it is moving.",eChatType.CT_Say,eChatLoc.CL_SystemWindow);
 				return;
 			}
 			this.Owner = player;
 			player.SiegeWeapon = this;
-			Arm();
 			CurrentState &= GameSiegeWeapon.eState.Armed;
 			this.Owner.Out.SendSiegeWeaponInterface(this);
 			player.Out.SendMessage("You take control of "+GetName(0,false)+".",eChatType.CT_Say,eChatLoc.CL_SystemWindow);
 			GameEventMgr.AddHandler(player,GamePlayerEvent.InteractWith,new DOLEventHandler(SelectObjectTarget));
 
 		}
-
-		public static void ReleaseControlOnEvent(DOLEvent e, object sender, EventArgs args)
-		{
-			GamePlayer player = sender as GamePlayer;
-			if (player == null)
-				return;
-			player.SiegeWeapon.ReleaseControl();
-		}
-
 		public void ReleaseControl()
 		{
 			this.Owner.Out.SendMessage("You are no longer controlling " + GetName(0, false) + ".",eChatType.CT_Say,eChatLoc.CL_SystemWindow);
 			this.Owner.Out.SendSiegeWeaponCloseInterface();
 			GameEventMgr.RemoveHandler(this.Owner,GamePlayerEvent.InteractWith,new DOLEventHandler(SelectObjectTarget));
-			GameEventMgr.RemoveHandler(GamePlayerEvent.Dying, new DOLEventHandler(ReleaseControlOnEvent));
-			GameEventMgr.RemoveHandler(GamePlayerEvent.Quit, new DOLEventHandler(ReleaseControlOnEvent));
 			this.Owner.SiegeWeapon = null;
 			this.Owner = null;
 		}
 		protected virtual void SelectObjectTarget(DOLEvent e, object sender, EventArgs arguments)
 		{
 			InteractWithEventArgs arg = arguments as InteractWithEventArgs;
-			if (!Position.CheckSquareDistance(Owner.Position, (uint) (WorldMgr.INTERACT_DISTANCE*WorldMgr.INTERACT_DISTANCE)))
-			{
-				this.Owner.Out.SendMessage(GetName(0,true)+ "'s target is too far away to reach!",eChatType.CT_Say,eChatLoc.CL_SystemWindow);
-				return;
-			}
-			GroundTarget = arg.Target.Position;
+			SetGroundTarget(arg.Target.X,arg.Target.Y,arg.Target.Z);
 		}
 
 		public void Aim()
 		{
-			if (!CanUse()) return;
 			//The trebuchet isn't ready to be aimed yet!
 			SiegeWeaponTimer.CurrentAction = SiegeTimer.eAction.Aiming;
-			this.Heading = Position.GetHeadingTo(GroundTarget);
+			this.Heading = GetHeadingToTarget(GroundTarget);
 			PreAction();
 			if (Owner != null)
 			{
@@ -238,18 +192,16 @@ namespace DOL.GS
 
 		public void Arm()
 		{
-			if (!CanUse()) return;
 			SiegeWeaponTimer.CurrentAction = SiegeTimer.eAction.Arming;
 			PreAction();
 			if (Owner != null)
 			{//You prepare the cauldron of boiling oil for firing. (15.0s until armed)
-				Owner.Out.SendMessage("You prepare "+GetName(0,false)+" for firing. ("+(GetActionDelay(SiegeTimer.eAction.Arming)/1000).ToString("N")+"s until armed)", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Owner.Out.SendMessage("You prepare "+GetName(0,false)+" for firing. ("+(GetActionDelay(SiegeTimer.eAction.Arming)/100).ToString("N")+"s until armed)", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 
 		}
 		public void Move()
 		{
-			if (!CanUse()) return;
 			if (!m_enableToMove)return;
 			ReleaseControl();
 			WalkTo(GroundTarget,100);
@@ -263,7 +215,6 @@ namespace DOL.GS
 		}
 		public void Aimed()
 		{
-			if (!CanUse()) return;
 			this.CurrentState |= eState.Aimed;
 			if (Owner != null)
 			{
@@ -272,7 +223,6 @@ namespace DOL.GS
 		}
 		public void Armed()
 		{
-			if (!CanUse()) return;
 			this.CurrentState |= eState.Armed;
 			if (Owner != null)
 			{
@@ -282,7 +232,6 @@ namespace DOL.GS
 		}
 		public void Fire()
 		{
-			if (!CanUse()) return;
 			if (this.CurrentState != eState.Ready){
 				if (Owner != null)
 				{
@@ -317,15 +266,12 @@ namespace DOL.GS
 
 		public void Repair()
 		{
-			if (TimesRepaired <= 3)
+			if(this.Owner.GetCraftingSkillValue(eCraftingSkill.SiegeCrafting) == -1)
 			{
-				this.Owner.RepairSiegeWeapon(this);
-					TimesRepaired = TimesRepaired + 1;
+				this.Owner.Out.SendMessage("You must be a Siege weapon crafter to repair it.",eChatType.CT_Say,eChatLoc.CL_SystemWindow);
+				return;
 			}
-			else
-			{
-				this.Owner.Out.SendMessage("The siegeweapon has decayed beyond repairs!", eChatType.CT_Say, eChatLoc.CL_SystemWindow);
-			}
+			this.Owner.RepairSiegeWeapon(this);
 		}
 
 		public void salvage()
@@ -335,7 +281,7 @@ namespace DOL.GS
 				this.Owner.Out.SendMessage("You must be a Siege weapon crafter to repair it.",eChatType.CT_Say,eChatLoc.CL_SystemWindow);
 				return;
 			}
-			this.Owner.SalvageSiegeWeapon(this);
+			this.Owner.RepairSiegeWeapon(this);
 		}
 		#endregion
 		#region private methode
@@ -361,20 +307,7 @@ namespace DOL.GS
 		{
 			return ActionDelay[(int)action];
 		}
-		private Boolean CanUse()
-		{
-            if (Health <= DecayedHp)
-            {
-                this.Owner.Out.SendMessage("The siegeweapon needs to be repaired!", eChatType.CT_Say, eChatLoc.CL_SystemWindow);
-                return false;
-            }
-			if (!Position.CheckSquareDistance(Owner.Position, (uint) (WorldMgr.INTERACT_DISTANCE*WorldMgr.INTERACT_DISTANCE)))
-			{
-				Owner.Out.SendMessage("You are too far from your siege equipment to control it any longer!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return false;
-			}
-			return true;
-		}	
+		
 		private void PreAction()
 		{
 			if (SiegeWeaponTimer.IsAlive)
@@ -390,15 +323,14 @@ namespace DOL.GS
 			}
 			BroadcastAnimation();
 		}
-
 		#endregion
 		#region override function
-		public override bool ReceiveItem(GameLiving source, GenericItem item)
+		public override bool ReceiveItem(GameLiving source, DOL.Database.InventoryItem item)
 		{
 			//todo check if bullet
 			return base.ReceiveItem (source, item);
 		}
-		public override void TakeDamage(GameLiving source, eDamageType damageType, int damageAmount, int criticalAmount)
+		public override void TakeDamage(GameObject source, eDamageType damageType, int damageAmount, int criticalAmount)
 		{
 			if (source is GamePlayer)
 			{
@@ -409,7 +341,7 @@ namespace DOL.GS
 		}
 		public override bool Interact(GamePlayer player)
 		{
-			if(!Position.CheckSquareDistance(player.Position, (uint)(WorldMgr.INTERACT_DISTANCE*WorldMgr.INTERACT_DISTANCE)))
+			if(!WorldMgr.CheckDistance(this, player, WorldMgr.INTERACT_DISTANCE))
 			{
 				player.Out.SendMessage("You are too far from siege equipment to control it!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
@@ -422,11 +354,11 @@ namespace DOL.GS
 			//TODO
 			return base.Type ();
 		}
-		public override void LoadFromDatabase(object obj)
+		public override void LoadFromDatabase(DataObject obj)
 		{
 			base.LoadFromDatabase(obj);
-			if(!(obj is GenericItemTemplate)) return;
-			GenericItemTemplate item = (GenericItemTemplate)obj;
+			if(!(obj is ItemTemplate)) return;
+			ItemTemplate item = (ItemTemplate)obj;
 			this.Name = item.Name;
 			this.Model = (ushort) item.Model;
 		}
@@ -434,60 +366,6 @@ namespace DOL.GS
 		public bool EnableToMoove
 		{
 			set { m_enableToMove = value; }
-		}
-		public override bool AddToWorld()
-		{
-			if (!base.AddToWorld()) return false;
-			StartDecay();
-			TimesRepaired = 0;
-			return true;
-		}
-		public override bool RemoveFromWorld()
-		{
-			if (!base.RemoveFromWorld()) return false;
-			StopDecay();
-			return true;
-		}
-		#endregion
-		#region decay
-		private void StartDecay()
-		{
-			if (ObjectState != eObjectState.Active)
-				return;
-			lock (m_decayTimerLock)
-			{
-				if (m_decayTimer == null)
-				{
-					m_decayTimer = new RegionTimer(this);
-					m_decayTimer.Callback = new RegionTimerCallback(DecayTimerCallback);
-				}
-				else if (m_decayTimer.IsAlive)
-					return;
-				m_decayTimer.Start(DECAYPERIOD);
-			}
-		}
-
-		private void StopDecay()
-		{
-			lock (m_decayTimerLock)
-			{
-				if (m_decayTimer == null)
-					return;
-				m_decayTimer.Stop();
-				m_decayTimer = null;
-			}
-		}
-
-		private int DecayTimerCallback(RegionTimer callingTimer)
-		{
-			if (Health <= 0)
-			{
-				StopDecay();
-				Die(m_decayObject);
-				return 0;
-			}
-			ChangeHealth(this, eHealthChangeType.Unknown, DeductHp);
-			return DECAYPERIOD;
 		}
 
 		#endregion
@@ -534,11 +412,12 @@ namespace DOL.GS
 			{
 					case eAction.Arming:
 					{
-						SiegeWeapon.Armed();
+						SiegeWeapon.CurrentState &= GameSiegeWeapon.eState.Armed;
+						SiegeWeapon.Owner.Out.SendMessage("Your " + SiegeWeapon.Name + " is now armed!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}break;
 				case eAction.Aiming :
 					{
-						SiegeWeapon.Aimed();
+						SiegeWeapon.CurrentState &= GameSiegeWeapon.eState.Aimed;
 					}break;
 				case eAction.Loading :
 					{
@@ -559,7 +438,11 @@ namespace DOL.GS
 	#endregion
 }
 /* messages:
+You are too far from your siege equipment to control it any longer!
+You can't salvage the trebuchet!
+The trebuchet's target is too far away to reach!
 Your target has moved out of range!
 You put the ice ball into the field catapult.
+The trebuchet is fully repaired!
 That object isn't carryable...
 */

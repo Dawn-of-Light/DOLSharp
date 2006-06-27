@@ -18,11 +18,10 @@
  */
 using System;
 using System.Reflection;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.GS.Scripts;
 using log4net;
 using System.Collections;
-using DOL.GS.PacketHandler;
 
 namespace DOL.GS
 {
@@ -38,28 +37,15 @@ namespace DOL.GS
 
 		protected int 			m_templateId;
 		protected string		m_name;
-        protected eGender       m_gender;//duff todo
-        protected int        m_race;//duff todo
 		protected string		m_guildName;
-        protected Faction       m_faction;//duff todo
-        protected eRealm        m_realm;//duff todo
 		protected ushort		m_model;
-        protected int           m_level;//duff todo
 		protected byte			m_size;
-        protected int           m_maximumHealth;//duff todo
-        protected bool          m_isGhost;//duff todo
-        protected bool          m_isNameHidden;//duff todo
-        protected bool          m_isTargetable;//duff todo
-        protected bool          m_isFlying;//duff todo
-        protected bool          m_isStealth;//duff todo
-        protected int           m_aggroLevel;//duff todo
-        protected int           m_aggroRange;//duff todo
-        protected Type          m_brainType;//duff todo
 		protected short			m_maxSpeed;
 		protected byte 			m_parryChance;
 		protected byte 			m_evadeChance;
 		protected byte 			m_blockChance;
 		protected byte 			m_leftHandSwingChance;
+		protected uint			m_flags;
 		protected IGameInventory	m_inventory;
 		protected eDamageType	m_meleeDamageType;
 		protected readonly IList m_styles;
@@ -74,32 +60,17 @@ namespace DOL.GS
 			if (data == null)
 				throw new ArgumentNullException("data");
 
-			m_templateId = data.NpcTemplateID;
+			m_templateId = data.TemplateId;
 			m_name = data.Name;
 			m_guildName = data.GuildName;
-			m_model = (ushort)data.Model;
+			m_model = data.Model;
 			m_size = data.Size;
 			m_maxSpeed = data.MaxSpeed;
 			m_parryChance = data.ParryChance;
 			m_evadeChance = data.EvadeChance;
 			m_blockChance = data.BlockChance;
 			m_leftHandSwingChance = data.LeftHandSwingChance;
-            m_gender = (eGender)data.Gender;
-            m_race = data.Race;
-            m_faction = FactionMgr.GetFactionByID(data.FactionID);
-            m_realm = (eRealm)data.Realm;//duff todo
-            m_level = data.Level;
-            m_maximumHealth = data.MaximumHealth;
-            m_isGhost = data.IsGhost;
-            m_isNameHidden = data.IsNameHidden;
-            m_isTargetable = data.IsTargetable;
-            m_isFlying = data.IsFlying;
-            m_isStealth = data.IsStealth;
-            m_aggroLevel = data.AggroLevel;
-            m_aggroRange = data.AggroRange;
-            m_brainType = ScriptMgr.GetType(data.BrainType);
-            if (m_brainType == null)
-                m_brainType = typeof(AI.Brain.StandardMobBrain);
+
 			string[] splitedSpells=data.Spells.Split('|');
 			IList spells = SkillBase.GetSpellList(GlobalSpellsLines.Mob_Spells);
 			m_spells = new ArrayList();
@@ -120,6 +91,11 @@ namespace DOL.GS
 
 			//TODO : style system for mob
 			m_styles=data.Styles.Split('|');
+			
+			if (data.Ghost)
+			{
+				m_flags |= (int)GameNPC.eFlags.GHOST;
+			}
 
 			m_meleeDamageType = (eDamageType)data.MeleeDamageType;
 			if (data.MeleeDamageType == 0)
@@ -166,6 +142,10 @@ namespace DOL.GS
 		public short MaxSpeed { get { return m_maxSpeed; } }
 
 		/// <summary>
+		/// Gets the template npc flags
+		/// </summary>
+		public uint Flags { get { return m_flags; } }
+		/// <summary>
 		/// Gets the template npc inventory
 		/// </summary>
 		public IGameInventory Inventory { get { return m_inventory; } }
@@ -201,124 +181,5 @@ namespace DOL.GS
 		/// </summary>
 		public IList Styles{ get { return m_styles; } }
 
-        public eGender Gender { get { return m_gender; } }
-
-        /// <summary>
-        /// Gets the template npc guild name
-        /// </summary>
-        /// <value></value>
-        public int Race
-        {
-            get { return m_race; }
-        }
-
-        /// <summary>
-        /// Gets the template npc guild name
-        /// </summary>
-        /// <value></value>
-        public Faction Faction
-        {
-            get { return m_faction; }
-        }
-
-        /// <summary>
-        /// Gets the template npc guild name
-        /// </summary>
-        /// <value></value>
-        public eRealm Realm
-        {
-            get { return m_realm; }
-        }
-
-        /// <summary>
-        /// Gets the template npc guild name
-        /// </summary>
-        /// <value></value>
-        public int Level
-        {
-            get { return m_level; }
-        }
-
-        /// <summary>
-        /// Gets the template npc guild name
-        /// </summary>
-        /// <value></value>
-        public int MaximumHealth
-        {
-            get { return m_maximumHealth; }
-        }
-
-        /// <summary>
-        /// Gets the template npc guild name
-        /// </summary>
-        /// <value></value>
-        public bool IsGhost
-        {
-            get { return m_isGhost; }
-        }
-
-        /// <summary>
-        /// Gets the template npc guild name
-        /// </summary>
-        /// <value></value>
-        public bool IsNameHidden
-        {
-            get { return m_isNameHidden; }
-        }
-
-        /// <summary>
-        /// Gets the template npc guild name
-        /// </summary>
-        /// <value></value>
-        public bool IsTargetable
-        {
-            get { return m_isTargetable; }
-        }
-
-        /// <summary>
-        /// Gets the template npc guild name
-        /// </summary>
-        /// <value></value>
-        public bool IsFlying
-        {
-            get { return m_isFlying; }
-        }
-
-        /// <summary>
-        /// Gets the template npc guild name
-        /// </summary>
-        /// <value></value>
-        public int AggroLevel
-        {
-            get { return m_aggroLevel; }
-        }
-
-        /// <summary>
-        /// Gets the template npc guild name
-        /// </summary>
-        /// <value></value>
-        public int AggroRange
-        {
-            get { return m_aggroRange; }
-        }
-
-        /// <summary>
-        /// Gets the template npc guild name
-        /// </summary>
-        /// <value></value>
-        public Type BrainType
-        {
-            get { return m_brainType; }
-        }
-
-
-        /// <summary>
-        /// True if NPC is stealth
-        /// </summary>
-        /// <value></value>
-        public bool IsStealth
-        {
-            get { return m_isStealth; }
-        }
-    }
+	}
 }

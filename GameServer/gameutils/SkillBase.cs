@@ -1,16 +1,16 @@
 /*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -21,11 +21,10 @@ using System.Collections;
 using System.Collections.Specialized;
 using System.Reflection;
 using System.Text;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.GS.PacketHandler;
 using DOL.GS.Scripts;
 using DOL.GS.Styles;
-using NHibernate.Expression;
 using log4net;
 
 namespace DOL.GS
@@ -126,7 +125,7 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// strong identification name 
+		/// strong identification name
 		/// </summary>
 		public virtual string KeyName
 		{
@@ -196,7 +195,7 @@ namespace DOL.GS
 	}
 
 	/// <summary>
-	/// 
+	///
 	/// </summary>
 	public class SkillBase
 	{
@@ -255,26 +254,26 @@ namespace DOL.GS
 			if (log.IsInfoEnabled)
 				log.Info("Loading spells...");
 			Hashtable spells = new Hashtable(5000);
-			IList spelldb = GameServer.Database.SelectAllObjects(typeof (DBSpell));
-			for (int i = 0; i < spelldb.Count; i++)
+			DataObject[] spelldb = GameServer.Database.SelectAllObjects(typeof (DBSpell));
+			for (int i = 0; i < spelldb.Length; i++)
 			{
 				DBSpell spell = (DBSpell) spelldb[i];
 				spells[spell.SpellID] = spell;
 			}
 			if (log.IsInfoEnabled)
-				log.Info("Spells loaded: " + spelldb.Count);
+				log.Info("Spells loaded: " + spelldb.Length);
 
 
-			// load all spell lines 
-			IList dbo = GameServer.Database.SelectAllObjects(typeof (DBSpellLine));
-			for (int i = 0; i < dbo.Count; i++)
+			// load all spell lines
+			DataObject[] dbo = GameServer.Database.SelectAllObjects(typeof (DBSpellLine));
+			for (int i = 0; i < dbo.Length; i++)
 			{
 				string lineID = ((DBSpellLine) dbo[i]).KeyName;
 				string lineName = ((DBSpellLine) dbo[i]).Name;
 				string spec = ((DBSpellLine) dbo[i]).Spec;
 				bool baseline = ((DBSpellLine) dbo[i]).IsBaseLine;
 				ArrayList spell_list = new ArrayList();
-				IList dbo2 = GameServer.Database.SelectObjects(typeof (DBLineXSpell), Expression.Eq("LineName", lineID));
+				DBLineXSpell[] dbo2 = (DBLineXSpell[]) GameServer.Database.SelectObjects(typeof (DBLineXSpell), "LineName = '" + GameServer.Database.Escape(lineID) + "'");
 				foreach (DBLineXSpell lxs in dbo2)
 				{
 					DBSpell spell = (DBSpell) spells[lxs.SpellID];
@@ -295,15 +294,15 @@ namespace DOL.GS
 				m_spellLists[lineID] = spell_list;
 				RegisterSpellLine(new SpellLine(lineID, lineName, spec, baseline));
 				if (log.IsDebugEnabled)
-					log.Debug("SpellLine: " + lineID + ", " + dbo2.Count + " spells");
+					log.Debug("SpellLine: " + lineID + ", " + dbo2.Length + " spells");
 			}
 			if (log.IsInfoEnabled)
-				log.Info("Total spell lines loaded: " + dbo.Count);
+				log.Info("Total spell lines loaded: " + dbo.Length);
 
 			// load Abilities
 			if (log.IsInfoEnabled)
 				log.Info("Loading Abilities...");
-			IList abilities = GameServer.Database.SelectAllObjects(typeof (DBAbility));
+			DataObject[] abilities = GameServer.Database.SelectAllObjects(typeof (DBAbility));
 			if (abilities != null)
 			{
 				foreach (DBAbility dba in abilities)
@@ -312,13 +311,13 @@ namespace DOL.GS
 				}
 			}
 			if (log.IsInfoEnabled)
-				log.Info("Total abilities loaded: " + ((abilities != null) ? abilities.Count : 0));
+				log.Info("Total abilities loaded: " + ((abilities != null) ? abilities.Length : 0));
 
 
 			// load Specialization & styles
 			if (log.IsInfoEnabled)
 				log.Info("Loading specialization & styles...");
-			IList specabilities = GameServer.Database.SelectAllObjects(typeof (DBSpecXAbility));
+			DataObject[] specabilities = GameServer.Database.SelectAllObjects(typeof (DBSpecXAbility));
 			if (specabilities != null)
 			{
 				foreach (DBSpecXAbility sxa in specabilities)
@@ -342,7 +341,7 @@ namespace DOL.GS
 				}
 			}
 
-			IList specs = GameServer.Database.SelectAllObjects(typeof (DBSpecialization));
+			DataObject[] specs = GameServer.Database.SelectAllObjects(typeof (DBSpecialization));
 			if (specs != null)
 			{
 				foreach (DBSpecialization spec in specs)
@@ -365,7 +364,7 @@ namespace DOL.GS
 						}
 					}
 					m_styleLists[spec.KeyName] = styleList; // also adds empty lists, so we dont have to generate empty lists later
-					RegisterSpec(new Specialization(spec.KeyName, spec.Name, (ushort)spec.Icon));
+					RegisterSpec(new Specialization(spec.KeyName, spec.Name, spec.Icon));
 					int specAbCount = 0;
 					if (m_specAbilities[spec.KeyName] != null)
 					{
@@ -376,16 +375,16 @@ namespace DOL.GS
 				}
 			}
 			if (log.IsInfoEnabled)
-				log.Info("Total specializations loaded: " + ((specs != null) ? specs.Count : 0));
+				log.Info("Total specializations loaded: " + ((specs != null) ? specs.Length : 0));
 
-		/*	IList stylesByClass = (DBStyleSubstitute[]) GameServer.Database.SelectAllObjects(typeof(DBStyleSubstitute));
+			DBStyleSubstitute[] stylesByClass = (DBStyleSubstitute[]) GameServer.Database.SelectAllObjects(typeof(DBStyleSubstitute));
 			foreach (DBStyleSubstitute style in stylesByClass)
 			{
 				Style st = new Style((DBStyle)style);
 				m_stylesByIDClass[((long)st.ID<<32) | (uint)style.ClassId] = st;
 			}
 			if (log.IsInfoEnabled)
-				log.Info("Total style substitue loaded: " + ((stylesByClass != null) ? stylesByClass.Length : 0));*/
+				log.Info("Total style substitue loaded: " + ((stylesByClass != null) ? stylesByClass.Length : 0));
 
 			// load skill action handlers
 			//Search for ability handlers in the gameserver first
@@ -468,11 +467,11 @@ namespace DOL.GS
 		/// <param name="armor"></param>
 		/// <param name="damageType"></param>
 		/// <returns>resist value</returns>
-		public static int GetArmorResist(Armor armor, eDamageType damageType)
+		public static int GetArmorResist(ItemTemplate armor, eDamageType damageType)
 		{
 			if (armor == null) return 0;
-			int realm     = (int)armor.Realm - (int)eRealm._First;
-			int armorType = (int)armor.ObjectType - (int)eObjectType._FirstArmor;
+			int realm     = armor.Realm - (int)eRealm._First;
+			int armorType = armor.Object_Type - (int)eObjectType._FirstArmor;
 			int damage    = damageType - eDamageType._FirstResist;
 			if (realm < 0     || realm > eRealm._LastPlayerRealm - eRealm._First) return 0;
 			if (armorType < 0 || armorType > eObjectType._LastArmor - eObjectType._FirstArmor) return 0;
@@ -557,10 +556,10 @@ namespace DOL.GS
 
 			int off = (realm - eRealm._First) << (DAMAGETYPE_BITCOUNT + ARMORTYPE_BITCOUNT);
 			off |= (armorType - eObjectType._FirstArmor) << DAMAGETYPE_BITCOUNT;
-			m_armorResists[off + (eDamageType.Heat   - eDamageType._FirstResist)] = heat;
-			m_armorResists[off + (eDamageType.Cold   - eDamageType._FirstResist)] = cold;
-			m_armorResists[off + (eDamageType.Matter - eDamageType._FirstResist)] = matter;
-			m_armorResists[off + (eDamageType.Energy - eDamageType._FirstResist)] = energy;
+			m_armorResists[off + (eDamageType.Heat   - eDamageType._FirstResist)] = -heat;
+			m_armorResists[off + (eDamageType.Cold   - eDamageType._FirstResist)] = -cold;
+			m_armorResists[off + (eDamageType.Matter - eDamageType._FirstResist)] = -matter;
+			m_armorResists[off + (eDamageType.Energy - eDamageType._FirstResist)] = -energy;
 		}
 
 		#endregion
@@ -636,13 +635,13 @@ namespace DOL.GS
 
 			/*
 			 * http://www.camelotherald.com/more/1036.shtml
-			 * "- ALL melee weapon skills - This bonus will increase your 
-			 * skill in many weapon types. This bonus does not increase shield, 
-			 * parry, archery skills, or dual wield skills (hand to hand is the 
-			 * exception, as this skill is also the main weapon skill associated 
-			 * with hand to hand weapons, and not just the off-hand skill). If 
-			 * your item has "All melee weapon skills: +3" and your character 
-			 * can train in hammer, axe and sword, your item should give you 
+			 * "- ALL melee weapon skills - This bonus will increase your
+			 * skill in many weapon types. This bonus does not increase shield,
+			 * parry, archery skills, or dual wield skills (hand to hand is the
+			 * exception, as this skill is also the main weapon skill associated
+			 * with hand to hand weapons, and not just the off-hand skill). If
+			 * your item has "All melee weapon skills: +3" and your character
+			 * can train in hammer, axe and sword, your item should give you
 			 * a +3 increase to all three."
 			 */
 
@@ -862,7 +861,7 @@ namespace DOL.GS
 			m_propertyNames[eProperty.Skill_Cursing] = "Cursing";
 			m_propertyNames[eProperty.Skill_Hexing] = "Hexing";
 			m_propertyNames[eProperty.Skill_Witchcraft] = "Witchcraft";
-			
+
 
 			// Classic Focii
 			m_propertyNames[eProperty.Focus_Darkness] = "Darkness Focus";
@@ -900,7 +899,7 @@ namespace DOL.GS
 			m_propertyNames[eProperty.Focus_Cursing] = "Cursing Focus";
 			m_propertyNames[eProperty.Focus_Hexing] = "Hexing Focus";
 			m_propertyNames[eProperty.Focus_Witchcraft] = "Witchcraft Focus";
-			
+
 			m_propertyNames[eProperty.MaxSpeed] = "Maximum Speed";
 			m_propertyNames[eProperty.MaxConcentration] = "Concentration";
 
@@ -935,7 +934,7 @@ namespace DOL.GS
 			m_propertyNames[eProperty.RangedDamage] = "Ranged Damage";
 			m_propertyNames[eProperty.MesmerizeDuration] = "Mesmerize Duration";
 			m_propertyNames[eProperty.StunDuration] = "Stun Duration";
-			m_propertyNames[eProperty.SpeedDecreaseDuration] = "Speed Decrease Duration";		
+			m_propertyNames[eProperty.SpeedDecreaseDuration] = "Speed Decrease Duration";
 			m_propertyNames[eProperty.BladeturnReinforcement] = "Bladeturn Reinforcement";
 			m_propertyNames[eProperty.DefensiveBonus] = "Defensive Bonus";
 			m_propertyNames[eProperty.PieceAblative] = "Piece Ablative";
@@ -1059,7 +1058,7 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// 
+		///
 		/// </summary>
 		/// <param name="keyname"></param>
 		/// <returns></returns>
@@ -1069,7 +1068,7 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// 
+		///
 		/// </summary>
 		/// <param name="keyname"></param>
 		/// <param name="level"></param>
@@ -1088,7 +1087,7 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// 
+		///
 		/// </summary>
 		/// <param name="keyname"></param>
 		/// <returns></returns>
@@ -1106,7 +1105,7 @@ namespace DOL.GS
 
 
 		/// <summary>
-		/// 
+		///
 		/// </summary>
 		/// <param name="keyname"></param>
 		/// <returns></returns>
@@ -1166,7 +1165,7 @@ namespace DOL.GS
 		/// if no spells are associated or spell-line is unknown the list will be empty
 		/// </summary>
 		/// <param name="spellLineID">KeyName of spell-line</param>
-		/// <returns>list of spells, never null</returns> 
+		/// <returns>list of spells, never null</returns>
 		public static IList GetSpellList(string spellLineID)
 		{
 			IList list = (IList) m_spellLists[spellLineID];
@@ -1182,7 +1181,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="styleID">id of style</param>
 		/// <param name="classId">ClassID for which style list is requested</param>
-		/// <returns>style or null if not found</returns> 
+		/// <returns>style or null if not found</returns>
 		public static Style GetStyleByID(int styleID, int ClassId)
 		{
 			long key = ((long)styleID<<32) | (uint)ClassId;
@@ -1209,14 +1208,130 @@ namespace DOL.GS
 
 
 		/// <summary>
-		/// determine race dependend base resist 
+		/// determine race dependend base resist
 		/// </summary>
 		/// <param name="race"></param>
 		/// <param name="type"></param>
 		/// <returns></returns>
-		public static int GetRaceResist(int raceid, eResist type)
+		public static int GetRaceResist(eRace race, eResist type)
 		{
-            return RaceMgr.GetResist(raceid, type);
+			// when first called create the resist table
+			if (m_raceResists == null)
+			{
+				m_raceResists = new HybridDictionary[20];
+
+				#region init the table
+
+				// http://camelot.allakhazam.com/Start_Stats.html
+				// Alb
+				m_raceResists[(int) eRace.Avalonian] = new HybridDictionary();
+				m_raceResists[(int) eRace.Avalonian][eResist.Crush] = 2;
+				m_raceResists[(int) eRace.Avalonian][eResist.Slash] = 3;
+				m_raceResists[(int) eRace.Avalonian][eResist.Matter] = 5;
+
+				m_raceResists[(int) eRace.Briton] = new HybridDictionary();
+				m_raceResists[(int) eRace.Briton][eResist.Crush] = 2;
+				m_raceResists[(int) eRace.Briton][eResist.Slash] = 3;
+				m_raceResists[(int) eRace.Briton][eResist.Matter] = 5;
+
+				m_raceResists[(int) eRace.Highlander] = new HybridDictionary();
+				m_raceResists[(int) eRace.Highlander][eResist.Crush] = 3;
+				m_raceResists[(int) eRace.Highlander][eResist.Slash] = 2;
+				m_raceResists[(int) eRace.Highlander][eResist.Cold] = 5;
+
+				m_raceResists[(int) eRace.Saracen] = new HybridDictionary();
+				m_raceResists[(int) eRace.Saracen][eResist.Slash] = 2;
+				m_raceResists[(int) eRace.Saracen][eResist.Thrust] = 3;
+				m_raceResists[(int) eRace.Saracen][eResist.Heat] = 5;
+
+				m_raceResists[(int) eRace.Inconnu] = new HybridDictionary();
+				m_raceResists[(int) eRace.Inconnu][eResist.Crush] = 2;
+				m_raceResists[(int) eRace.Inconnu][eResist.Thrust] = 3;
+				m_raceResists[(int) eRace.Inconnu][eResist.Heat] = 5;
+				m_raceResists[(int) eRace.Inconnu][eResist.Spirit] = 5;
+
+				m_raceResists[(int) eRace.HalfOgre] = new HybridDictionary();
+				m_raceResists[(int) eRace.HalfOgre][eResist.Thrust] = 2;
+				m_raceResists[(int) eRace.HalfOgre][eResist.Slash] = 3;
+				m_raceResists[(int) eRace.HalfOgre][eResist.Matter] = 5;
+
+				// Hib
+				m_raceResists[(int) eRace.Celt] = new HybridDictionary();
+				m_raceResists[(int) eRace.Celt][eResist.Crush] = 2;
+				m_raceResists[(int) eRace.Celt][eResist.Slash] = 3;
+				m_raceResists[(int) eRace.Celt][eResist.Spirit] = 5;
+
+				m_raceResists[(int) eRace.Elf] = new HybridDictionary();
+				m_raceResists[(int) eRace.Elf][eResist.Slash] = 2;
+				m_raceResists[(int) eRace.Elf][eResist.Thrust] = 3;
+				m_raceResists[(int) eRace.Elf][eResist.Spirit] = 5;
+
+				m_raceResists[(int) eRace.Firbolg] = new HybridDictionary();
+				m_raceResists[(int) eRace.Firbolg][eResist.Crush] = 3;
+				m_raceResists[(int) eRace.Firbolg][eResist.Slash] = 2;
+				m_raceResists[(int) eRace.Firbolg][eResist.Heat] = 5;
+
+				m_raceResists[(int) eRace.Lurikeen] = new HybridDictionary();
+				m_raceResists[(int) eRace.Lurikeen][eResist.Crush] = 5;
+				m_raceResists[(int) eRace.Lurikeen][eResist.Energy] = 5;
+
+				m_raceResists[(int) eRace.Sylvan] = new HybridDictionary();
+				m_raceResists[(int) eRace.Sylvan][eResist.Crush] = 3;
+				m_raceResists[(int) eRace.Sylvan][eResist.Thrust] = 2;
+				m_raceResists[(int) eRace.Sylvan][eResist.Matter] = 5;
+				m_raceResists[(int) eRace.Sylvan][eResist.Energy] = 5;
+
+				m_raceResists[(int) eRace.Shar] = new HybridDictionary();
+				m_raceResists[(int) eRace.Shar][eResist.Crush] = 5;
+				m_raceResists[(int) eRace.Shar][eResist.Energy] = 5;
+
+				// Mid
+				m_raceResists[(int) eRace.Dwarf] = new HybridDictionary();
+				m_raceResists[(int) eRace.Dwarf][eResist.Slash] = 2;
+				m_raceResists[(int) eRace.Dwarf][eResist.Thrust] = 3;
+				m_raceResists[(int) eRace.Dwarf][eResist.Body] = 5;
+
+				m_raceResists[(int) eRace.Kobold] = new HybridDictionary();
+				m_raceResists[(int) eRace.Kobold][eResist.Crush] = 2;
+				m_raceResists[(int) eRace.Kobold][eResist.Slash] = 3;
+				m_raceResists[(int) eRace.Kobold][eResist.Matter] = 5;
+
+				m_raceResists[(int) eRace.Troll] = new HybridDictionary();
+				m_raceResists[(int) eRace.Troll][eResist.Slash] = 3;
+				m_raceResists[(int) eRace.Troll][eResist.Thrust] = 2;
+				m_raceResists[(int) eRace.Troll][eResist.Matter] = 5;
+
+				m_raceResists[(int) eRace.Norseman] = new HybridDictionary();
+				m_raceResists[(int) eRace.Norseman][eResist.Crush] = 2;
+				m_raceResists[(int) eRace.Norseman][eResist.Slash] = 3;
+				m_raceResists[(int) eRace.Norseman][eResist.Cold] = 5;
+
+				m_raceResists[(int) eRace.Valkyn] = new HybridDictionary();
+				m_raceResists[(int) eRace.Valkyn][eResist.Slash] = 3;
+				m_raceResists[(int) eRace.Valkyn][eResist.Thrust] = 2;
+				m_raceResists[(int) eRace.Valkyn][eResist.Cold] = 5;
+				m_raceResists[(int) eRace.Valkyn][eResist.Body] = 5;
+
+				m_raceResists[(int) eRace.Frostalf] = new HybridDictionary();
+				m_raceResists[(int) eRace.Frostalf][eResist.Slash] = 2;
+				m_raceResists[(int) eRace.Frostalf][eResist.Thrust] = 3;
+				m_raceResists[(int) eRace.Frostalf][eResist.Spirit] = 5;
+
+				#endregion
+			}
+
+			HybridDictionary resists = m_raceResists[(int) race];
+			if (resists == null)
+			{
+				if (log.IsWarnEnabled)
+					log.Warn("No resists for race " + race + " defined");
+				return 0;
+			}
+			if (resists[type] == null)
+			{
+				return 0;
+			}
+			return (int) resists[type];
 		}
 
 		/// <summary>
@@ -1249,7 +1364,7 @@ namespace DOL.GS
 				#region init the table
 
 				m_objectTypeToSpec[(int) eObjectType.Staff] = Specs.Staff;
-				m_objectTypeToSpec[(int) eObjectType.ShortBow] = Specs.ShortBow;
+				m_objectTypeToSpec[(int) eObjectType.Fired] = Specs.ShortBow;
 
 				//alb
 				m_objectTypeToSpec[(int) eObjectType.CrushingWeapon] = Specs.Crush;
@@ -1257,10 +1372,10 @@ namespace DOL.GS
 				m_objectTypeToSpec[(int) eObjectType.ThrustWeapon] = Specs.Thrust;
 				m_objectTypeToSpec[(int) eObjectType.TwoHandedWeapon] = Specs.Two_Handed;
 				m_objectTypeToSpec[(int) eObjectType.PolearmWeapon] = Specs.Polearms;
-				m_objectTypeToSpec[(int) eObjectType.FlexibleWeapon] = Specs.Flexible;
+				m_objectTypeToSpec[(int) eObjectType.Flexible] = Specs.Flexible;
 				m_objectTypeToSpec[(int) eObjectType.Longbow] = Specs.Longbow;
 				m_objectTypeToSpec[(int) eObjectType.Crossbow] = Specs.Crossbow;
-				//TODO: case 5: abilityCheck = Abilities.Weapon_Thrown; break;                                         
+				//TODO: case 5: abilityCheck = Abilities.Weapon_Thrown; break;
 
 				//mid
 				m_objectTypeToSpec[(int) eObjectType.Hammer] = Specs.Hammer;
@@ -1270,13 +1385,13 @@ namespace DOL.GS
 				m_objectTypeToSpec[(int) eObjectType.HandToHand] = Specs.HandToHand;
 				m_objectTypeToSpec[(int) eObjectType.Spear] = Specs.Spear;
 				m_objectTypeToSpec[(int) eObjectType.CompositeBow] = Specs.CompositeBow;
-				m_objectTypeToSpec[(int) eObjectType.ThrownWeapon] = Specs.Thrown_Weapons;
+				m_objectTypeToSpec[(int) eObjectType.Thrown] = Specs.Thrown_Weapons;
 
 				//hib
 				m_objectTypeToSpec[(int) eObjectType.Blunt] = Specs.Blunt;
 				m_objectTypeToSpec[(int) eObjectType.Blades] = Specs.Blades;
 				m_objectTypeToSpec[(int) eObjectType.Piercing] = Specs.Piercing;
-				m_objectTypeToSpec[(int) eObjectType.LargeWeapon] = Specs.Large_Weapons;
+				m_objectTypeToSpec[(int) eObjectType.LargeWeapons] = Specs.Large_Weapons;
 				m_objectTypeToSpec[(int) eObjectType.CelticSpear] = Specs.Celtic_Spear;
 				m_objectTypeToSpec[(int) eObjectType.Scythe] = Specs.Scythe;
 				m_objectTypeToSpec[(int) eObjectType.RecurvedBow] = Specs.RecurveBow;
@@ -1308,7 +1423,7 @@ namespace DOL.GS
 
 				#region init the table
 
-				//Weapon specs                           
+				//Weapon specs
 				//Alb
 				m_specToSkill[Specs.Thrust] = eProperty.Skill_Thrusting;
 				m_specToSkill[Specs.Slash] = eProperty.Skill_Slashing;
@@ -1376,7 +1491,7 @@ namespace DOL.GS
 				m_specToSkill[Specs.Cursing] = eProperty.Skill_Cursing;
 				m_specToSkill[Specs.Hexing] = eProperty.Skill_Hexing;
 				m_specToSkill[Specs.Witchcraft] = eProperty.Skill_Witchcraft;
-				
+
 				//Hib
 				m_specToSkill[Specs.Arboreal_Path] = eProperty.Skill_Arboreal;
 				m_specToSkill[Specs.Creeping_Path] = eProperty.Skill_Creeping;

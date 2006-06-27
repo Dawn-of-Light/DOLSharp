@@ -18,7 +18,7 @@
  */
 using System;
 using DOL.GS.PacketHandler;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.AI.Brain;
 using DOL.Events;
 
@@ -124,12 +124,14 @@ namespace DOL.GS.Scripts
 					lordTemplate.AddNPCEquipment(eInventorySlot.Cloak, 164);
 					lordTemplate.AddNPCEquipment(eInventorySlot.LegsArmor, 151);
 					//todo make constant for radius
-					AbstractGameKeep keep = KeepMgr.getKeepCloseToSpot((ushort)client.Player.RegionId , client.Player.Position, 10000);
+					AbstractGameKeep keep = KeepMgr.getKeepCloseToSpot( client.Player.CurrentRegionID , client.Player, 10000);
 					GameKeepGuard m_guard = new GameKeepGuard(keep);
 					m_guard.Realm = 1;//alb only for moment
 					m_guard.Level = 50;
-					m_guard.Region = client.Player.Region;
-					m_guard.Position = client.Player.Position;
+					m_guard.CurrentRegion = client.Player.CurrentRegion;
+					m_guard.X = client.Player.X;
+					m_guard.Y = client.Player.Y;
+					m_guard.Z = client.Player.Z;
 					m_guard.Heading = client.Player.Heading;
 					m_guard.CurrentSpeed = 0;
 					m_guard.MaxSpeedBase = 200;
@@ -218,7 +220,7 @@ namespace DOL.GS.Scripts
 				}break;
 				case "create":
 				{
-					AbstractGameKeep keep = KeepMgr.getKeepCloseToSpot((ushort)client.Player.RegionId , client.Player.Position, 10000);
+					AbstractGameKeep keep = KeepMgr.getKeepCloseToSpot( client.Player.CurrentRegionID , client.Player,10000);
 					GameKeepGuard m_guard = new GameKeepGuard(keep);
 					if (args.Length > 2)
 					{
@@ -229,8 +231,10 @@ namespace DOL.GS.Scripts
 					m_guard.Name = CheckName("Blank guard", client);
 
 					//Fill the object variables
-					m_guard.Position = client.Player.Position;
-					m_guard.Region = client.Player.Region;
+					m_guard.X = client.Player.X;
+					m_guard.Y = client.Player.Y;
+					m_guard.Z = client.Player.Z;
+					m_guard.CurrentRegion = client.Player.CurrentRegion;
 					m_guard.Heading = client.Player.Heading;
 					m_guard.Level = 50;
 					m_guard.Realm = 1;
@@ -260,7 +264,7 @@ namespace DOL.GS.Scripts
 					AbstractGameKeep mykeep = null;
 					if (args.Length < 3)
 					{
-						mykeep = KeepMgr.getKeepCloseToSpot((ushort)client.Player.RegionId, client.Player.Position, WorldMgr.VISIBILITY_DISTANCE);
+						mykeep = KeepMgr.getKeepCloseToSpot(client.Player.CurrentRegionID, client.Player, WorldMgr.VISIBILITY_DISTANCE);
 					}
 					else
 					{

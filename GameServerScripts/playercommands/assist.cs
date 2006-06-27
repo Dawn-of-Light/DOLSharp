@@ -31,7 +31,7 @@ namespace DOL.GS.Scripts
 				GameClient assistClient = WorldMgr.GetClientByPlayerName(args[1], true);
 				if (assistClient != null)
 				{
-					if (!client.Player.Position.CheckSquareDistance(assistClient.Player.Position, 2048*2048))
+					if (!WorldMgr.CheckDistance(client.Player, assistClient.Player, 2048))
 					{
 						client.Out.SendMessage("You don't see " + args[1] + " around here!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						return 0;

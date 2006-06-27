@@ -18,7 +18,7 @@
  */
 using System;
 using System.Reflection;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.Events;
 using DOL.GS.Movement;
 using DOL.GS.PacketHandler;
@@ -51,7 +51,7 @@ namespace DOL.GS
 		/// <param name="source">Source from where to get the item</param>
 		/// <param name="item">Item to get</param>
 		/// <returns>true if the item was successfully received</returns>
-		public override bool ReceiveItem(GameLiving source, GenericItem item)
+		public override bool ReceiveItem(GameLiving source, InventoryItem item)
 		{
 			if(source==null || item==null) return false;
 
@@ -59,13 +59,13 @@ namespace DOL.GS
 			{
 				GamePlayer player = (GamePlayer)source;
 
-				if (item is TravelTicket) // && item.Name.StartsWith("ticket to ") && item.Item_Type==40)
+				if (item.Name.StartsWith("ticket to ") && item.Item_Type==40)
 				{
 					String destination = item.Name.Substring(10);
 					PathPoint path = MovementMgr.Instance.LoadPath(this.Name+"=>"+destination);
 					if (path != null)
 					{	
-						player.Inventory.RemoveItem(item);
+						player.Inventory.RemoveCountFromStack(item, 1);
 
 						GameHorse horse = new GameHorse();
 						foreach (GameNPC npc in GetNPCsInRadius(400))
@@ -81,9 +81,11 @@ namespace DOL.GS
 							}
 						}
 						horse.Realm = source.Realm;
-						horse.Position = path.Position;
-						horse.Region = Region;
-						horse.Heading = path.Position.GetHeadingTo(path.Next.Position);
+						horse.X = path.X;
+						horse.Y = path.Y;
+						horse.Z = path.Z;
+						horse.CurrentRegion = CurrentRegion;
+						horse.Heading = Point2D.GetHeadingToLocation(path, path.Next);
 						horse.AddToWorld();
 						horse.CurrentWayPoint = path;
 						GameEventMgr.AddHandler(horse, GameNPCEvent.PathMoveEnds, new DOLEventHandler(OnHorseAtPathEnd));					

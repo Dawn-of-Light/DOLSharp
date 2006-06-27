@@ -69,7 +69,7 @@ namespace DOL.GS.Scripts
 
 			if (player.Level >= 5) 
 			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Shield, (int)eShieldSize.Medium));
+				player.AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Medium));
 				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Shields));
 
 
@@ -90,7 +90,7 @@ namespace DOL.GS.Scripts
 			}
 			if (player.Level >= 20) 
 			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.HibArmor, (int)eArmorLevel.High));
+				player.AddAbility(SkillBase.GetAbility(Abilities.HibArmor, ArmorLevel.Scale));
 			}
 			if (player.Level >= 25) 
 			{

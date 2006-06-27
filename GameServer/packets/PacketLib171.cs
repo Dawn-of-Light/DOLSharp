@@ -48,14 +48,13 @@ namespace DOL.GS.PacketHandler
 
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.PositionAndObjectID));
 			pak.WriteShort((ushort)m_gameClient.Player.ObjectID); //This is the player's objectid not Sessionid!!!
-			Point pos = m_gameClient.Player.Position;
-			pak.WriteShort((ushort)pos.Z);
-			pak.WriteInt((uint)pos.X);
-			pak.WriteInt((uint)pos.Y);
-			pak.WriteShort((ushort) m_gameClient.Player.Heading);
+			pak.WriteShort((ushort)m_gameClient.Player.Z);
+			pak.WriteInt((uint)m_gameClient.Player.X);
+			pak.WriteInt((uint)m_gameClient.Player.Y);
+			pak.WriteShort(m_gameClient.Player.Heading);
 
 			int flags = 0;
-			if (m_gameClient.Player.Region.IsDivingEnabled)
+			if (m_gameClient.Player.CurrentRegion.DivingEnabled)
 				flags = 0x80 | (m_gameClient.Player.IsUnderwater?0x01:0x00);
 			pak.WriteByte((byte)(flags));
 
@@ -64,7 +63,7 @@ namespace DOL.GS.PacketHandler
 			if (zone == null) return;
 			pak.WriteShort((ushort)(zone.XOffset/0x2000));
 			pak.WriteShort((ushort)(zone.YOffset/0x2000));
-			pak.WriteShort((ushort) m_gameClient.Player.RegionId);
+			pak.WriteShort(m_gameClient.Player.CurrentRegionID);
 			pak.WriteShort(0x00); //TODO: unknown, new in 1.71
 			SendTCP(pak);
 		}
@@ -74,12 +73,11 @@ namespace DOL.GS.PacketHandler
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.ItemCreate));
 			pak.WriteShort((ushort)obj.ObjectID);
 			pak.WriteShort((ushort)obj.Emblem);
-			pak.WriteShort((ushort) obj.Heading);
-			Point pos = obj.Position;
-			pak.WriteShort((ushort)pos.Z);
-			pak.WriteInt((uint)pos.X);
-			pak.WriteInt((uint)pos.Y);
-			pak.WriteShort((ushort) obj.Model);
+			pak.WriteShort(obj.Heading);
+			pak.WriteShort((ushort)obj.Z);
+			pak.WriteInt((uint)obj.X);
+			pak.WriteInt((uint)obj.Y);
+			pak.WriteShort(obj.Model);
 			int flag = 0;
 			if (obj is GameInventoryItem)
 				flag |= (obj.Realm&3) << 4;
@@ -100,10 +98,9 @@ namespace DOL.GS.PacketHandler
 			pak.WriteShort((ushort)obj.ObjectID);
 			pak.WriteShort(0); // emblem?
 			pak.WriteShort((ushort)obj.Heading);
-			Point pos = obj.Position;
-			pak.WriteShort((ushort)pos.Z);
-			pak.WriteInt((uint)pos.X);
-			pak.WriteInt((uint)pos.Y);
+			pak.WriteShort((ushort)obj.Z);
+			pak.WriteInt((uint)obj.X);
+			pak.WriteInt((uint)obj.Y);
 			pak.WriteShort(0xFFFF);//model is FFFF for door
 			pak.WriteShort((ushort)((obj.Realm&3) << 4)); // 0x30;
 			pak.WriteInt(0x0); //TODO: unknown, new in 1.71 maybe life for keep door NF?
@@ -119,26 +116,30 @@ namespace DOL.GS.PacketHandler
 			if(npc is GameMovingObject) { SendMovingObjectCreate(npc as GameMovingObject); return; }
 
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.NPCCreate));
-			int speed = npc.CurrentSpeed;
-			ushort speedZ = (ushort) (npc.ZAddition * 1000);
-			Point pos = npc.Position;
+			int speed = 0;
+			ushort speedZ = 0;
+			if(!npc.IsOnTarget())
+			{
+				speed = npc.CurrentSpeed;
+				speedZ = (ushort)npc.ZAddition;
+			}
 			pak.WriteShort((ushort)npc.ObjectID);
 			pak.WriteShort((ushort)(speed));
-			pak.WriteShort((ushort) npc.Heading);
-			pak.WriteShort((ushort)pos.Z);
-			pak.WriteInt((uint)pos.X);
-			pak.WriteInt((uint)pos.Y);
+			pak.WriteShort(npc.Heading);
+			pak.WriteShort((ushort)npc.Z);
+			pak.WriteInt((uint)npc.X);
+			pak.WriteInt((uint)npc.Y);
 			pak.WriteShort(speedZ);
-			pak.WriteShort((ushort) npc.Model);
+			pak.WriteShort(npc.Model);
 			pak.WriteByte(npc.Size);
 			pak.WriteByte(npc.Level);
 
 			byte flags = (byte)(GameServer.ServerRules.GetLivingRealm(m_gameClient.Player, npc) << 6);
 			if((npc.Flags & (uint)GameNPC.eFlags.GHOST) != 0) flags |= 0x01;
-			if(npc.Inventory != null) flags |= 0x02; //If mob has equipment, then only show it after the client gets the 0xBD packet
-			if((npc.Flags & (uint)GameNPC.eFlags.PEACE) != 0) flags |= 0x10;
 			if((npc.Flags & (uint)GameNPC.eFlags.FLYING) != 0) flags |= 0x20;
-			
+			//If mob has equipment, then only show it after
+			//the client gets the 0xBD packet
+			if(npc.Inventory != null) flags |= 0x02;
 
 			pak.WriteByte(flags);
 			pak.WriteByte(0x20); //TODO this is the default maxstick distance
@@ -146,13 +147,13 @@ namespace DOL.GS.PacketHandler
 			string add = "";
 			byte flags2 = 0x00;
 			if((npc.Flags & (uint)GameNPC.eFlags.CANTTARGET) != 0)
-				if (m_gameClient.Account.PrivLevel > ePrivLevel.Player) add += "-DOR"; // indicates DOR flag for GMs
+				if (m_gameClient.Account.PrivLevel > 1) add += "-DOR"; // indicates DOR flag for GMs
 				else flags2 |= 0x01;
 			if ((npc.Flags & (uint) GameNPC.eFlags.DONTSHOWNAME) != 0)
-				if (m_gameClient.Account.PrivLevel > ePrivLevel.Player) add += "-NON"; // indicates NON flag for GMs
+				if (m_gameClient.Account.PrivLevel > 1) add += "-NON"; // indicates NON flag for GMs
 				else flags2 |= 0x02;
-			if((npc.Flags & (uint)GameNPC.eFlags.STEALTH) != 0) flags2 |= 0x04;
-			if(QuestMgr.CanGiveOneQuest(npc, m_gameClient.Player)) flags2 |= 0x08;
+			if((npc.Flags & (uint)GameNPC.eFlags.TRANSPARENT) != 0) flags2 |= 0x04;
+			if(npc.CanGiveOneQuest(m_gameClient.Player)) flags2 |= 0x08;
 
 			pak.WriteByte(flags2); // 4 high bits seems unused (new in 1.71)
 			pak.WriteByte(0x00); // new in 1.71
@@ -205,7 +206,7 @@ namespace DOL.GS.PacketHandler
 					pak.WritePascalString(player.Name);
 					pak.WriteString(player.CharacterClass.Name, 4);
 					if(player.CurrentZone != null)
-						pak.WriteByte((byte)player.CurrentZone.ZoneID);
+						pak.WriteByte((byte)player.CurrentZone.ID);
 					else
 						pak.WriteByte(255);
 					pak.WriteByte(0); // duration
@@ -228,7 +229,7 @@ namespace DOL.GS.PacketHandler
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.QuestEntry));
 
 			pak.WriteByte((byte) index);
-			if (quest.Step <= 0)
+			if (quest.Step == -1)
 			{
 				pak.WriteByte(0);
 				pak.WriteByte(0);

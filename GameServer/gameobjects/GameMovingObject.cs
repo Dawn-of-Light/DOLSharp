@@ -34,7 +34,7 @@ namespace DOL.GS
 			return 0;
 		}
 
-		public override int Model
+		public override ushort Model
 		{
 			get
 			{
@@ -50,41 +50,6 @@ namespace DOL.GS
 		public override bool IsWorthReward
 		{
 			get {return false;}
-		}
-		/// <summary>
-		/// This methode is override to remove XP system
-		/// </summary>
-		/// <param name="source">the damage source</param>
-		/// <param name="damageType">the damage type</param>
-		/// <param name="damageAmount">the amount of damage</param>
-		/// <param name="criticalAmount">the amount of critical damage</param>
-		public override void TakeDamage(GameLiving source, eDamageType damageType, int damageAmount, int criticalAmount)
-		{
-			//Work around the XP system
-			if (Alive)
-			{
-				ChangeHealth(source, eHealthChangeType.AttackDamage, -1 * (damageAmount + criticalAmount));
-				if (!Alive)
-				{
-					Die(source);
-				}
-			}
-		}
-		/// <summary>
-		/// Starts the power regeneration
-		/// </summary>
-		public override void StartPowerRegeneration()
-		{
-			//No regeneration for moving objects
-			return;
-		}
-		/// <summary>
-		/// Starts the endurance regeneration
-		/// </summary>
-		public override void StartEnduranceRegeneration()
-		{
-			//No regeneration for moving objects
-			return;
 		}
 	}
 }

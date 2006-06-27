@@ -175,8 +175,8 @@ namespace DOL.GS.Scripts
 			int gm = 0;
 			int admin = 0;
 			foreach (GameClient client in WorldMgr.GetAllClients()) {
-				if (client.Account.PrivLevel == ePrivLevel.GM) gm++;
-				if (client.Account.PrivLevel == ePrivLevel.Admin) admin++;
+				if (client.Account.PrivLevel == (int)ePrivLevel.GM) gm++;
+				if (client.Account.PrivLevel == (int)ePrivLevel.Admin) admin++;
 			}
 
 			m_js.AppendFormat("var numClientsConnected = {0}", GameServer.Instance.ClientCount);
@@ -188,25 +188,25 @@ namespace DOL.GS.Scripts
 			m_js.AppendFormat("var numAdminsConnected = {0}", admin);
 			m_js.Append(nl.NewLine);
 
-			m_js.AppendFormat("var numAccts = {0}", GameServer.Database.GetObjectCount(typeof (DOL.GS.Database.Account)));
+			m_js.AppendFormat("var numAccts = {0}", GameServer.Database.GetObjectCount(typeof (DOL.Database.Account)));
 			m_js.Append(nl.NewLine);
 
-			m_js.AppendFormat("var numMobs = {0}", GameServer.Database.GetObjectCount(typeof (DOL.GS.Database.Mob)));
+			m_js.AppendFormat("var numMobs = {0}", GameServer.Database.GetObjectCount(typeof (DOL.Database.Mob)));
 			m_js.Append(nl.NewLine);
 
-			m_js.AppendFormat("var numInvItems = {0}", GameServer.Database.GetObjectCount(typeof (DOL.GS.GenericItem)));
+			m_js.AppendFormat("var numInvItems = {0}", GameServer.Database.GetObjectCount(typeof (DOL.Database.InventoryItem)));
 			m_js.Append(nl.NewLine);
 
-			m_js.AppendFormat("var numPlrChars = {0}", GameServer.Database.GetObjectCount(typeof (DOL.GS.GamePlayer)));
+			m_js.AppendFormat("var numPlrChars = {0}", GameServer.Database.GetObjectCount(typeof (DOL.Database.Character)));
 			m_js.Append(nl.NewLine);
 
-			m_js.AppendFormat("var numMerchantItems = {0}", GameServer.Database.GetObjectCount(typeof (DOL.GS.Database.MerchantItem)));
+			m_js.AppendFormat("var numMerchantItems = {0}", GameServer.Database.GetObjectCount(typeof (DOL.Database.MerchantItem)));
 			m_js.Append(nl.NewLine);
 
-			m_js.AppendFormat("var numItemTemplates = {0}", GameServer.Database.GetObjectCount(typeof (DOL.GS.GenericItemTemplate)));
+			m_js.AppendFormat("var numItemTemplates = {0}", GameServer.Database.GetObjectCount(typeof (DOL.Database.ItemTemplate)));
 			m_js.Append(nl.NewLine);
 
-			m_js.AppendFormat("var numWorldObjects = {0}", GameServer.Database.GetObjectCount(typeof (DOL.GS.Database.WorldObject)));
+			m_js.AppendFormat("var numWorldObjects = {0}", GameServer.Database.GetObjectCount(typeof (DOL.Database.WorldObject)));
 			m_js.Append(nl.NewLine);
 
 			m_js.AppendFormat("var srvrType = \"{0}\"", GameServer.Instance.Configuration.ServerType.ToString());
@@ -374,7 +374,7 @@ namespace DOL.GS.Scripts
 				//Race
 				m_js.Append("document.write(\"<td bgcolor=\\\"#333333\\\">\")");
 				m_js.Append(nl.NewLine);
-				m_js.AppendFormat("document.write(\"{0}\")", GlobalConstants.RaceToName((eRace)plr.Race));
+				m_js.AppendFormat("document.write(\"{0}\")", plr.RaceName);
 				m_js.Append(nl.NewLine);
 				m_js.Append("document.write(\"</td>\")");
 				m_js.Append(nl.NewLine);
@@ -383,7 +383,7 @@ namespace DOL.GS.Scripts
 				//Guild
 				m_js.Append("document.write(\"<td bgcolor=\\\"#333333\\\">\")");
 				m_js.Append(nl.NewLine);
-				m_js.AppendFormat("document.write(\"{0}\")", GuildMgr.GetGuildByID(plr.GuildID).GuildName);
+				m_js.AppendFormat("document.write(\"{0}\")", plr.GuildName);
 				m_js.Append(nl.NewLine);
 				m_js.Append("document.write(\"</td>\")");
 				m_js.Append(nl.NewLine);
@@ -419,17 +419,16 @@ namespace DOL.GS.Scripts
 				//Current Region
 				m_js.Append("document.write(\"<td bgcolor=\\\"#333333\\\">\")");
 				m_js.Append(nl.NewLine);
-				m_js.AppendFormat("document.write(\"{0}\")", plr.Region.Description);
+				m_js.AppendFormat("document.write(\"{0}\")", plr.CurrentRegion.Description);
 				m_js.Append(nl.NewLine);
 				m_js.Append("document.write(\"</td>\")");
 				m_js.Append(nl.NewLine);
 				m_js.Append(nl.NewLine);
 
-				Point pos = plr.Position;
 				//X
 				m_js.Append("document.write(\"<td align=\\\"center\\\" bgcolor=\\\"#333333\\\">\")");
 				m_js.Append(nl.NewLine);
-				m_js.AppendFormat("document.write(\"{0}\")", pos.X);
+				m_js.AppendFormat("document.write(\"{0}\")", plr.X);
 				m_js.Append(nl.NewLine);
 				m_js.Append("document.write(\"</td>\")");
 				m_js.Append(nl.NewLine);
@@ -438,7 +437,7 @@ namespace DOL.GS.Scripts
 				//Y
 				m_js.Append("document.write(\"<td align=\\\"center\\\" bgcolor=\\\"#333333\\\">\")");
 				m_js.Append(nl.NewLine);
-				m_js.AppendFormat("document.write(\"{0}\")", pos.Y);
+				m_js.AppendFormat("document.write(\"{0}\")", plr.Y);
 				m_js.Append(nl.NewLine);
 				m_js.Append("document.write(\"</td>\")");
 				m_js.Append(nl.NewLine);

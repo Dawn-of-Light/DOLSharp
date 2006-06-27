@@ -243,7 +243,7 @@ namespace DOL.GS.ServerRules
 					if(m_safeRegions != null)
 					{
 						foreach(int reg in m_safeRegions)
-							if (playerAttacker.RegionId == reg)
+							if (playerAttacker.CurrentRegionID == reg)
 							{
 								if(quiet == false) MessageToLiving(playerAttacker, "You're currently in a safe zone, you can't attack other players here.");
 								return false;
@@ -264,7 +264,7 @@ namespace DOL.GS.ServerRules
 						bool unsafeRegion = false;
 						foreach(int regionID in m_unsafeRegions)
 						{
-							if(regionID == playerDefender.RegionId)
+							if(regionID == playerDefender.CurrentRegionID)
 							{
 								unsafeRegion = true;
 								break;
@@ -358,7 +358,7 @@ namespace DOL.GS.ServerRules
 			}
 
 			// clients with priv level > 1 are considered friendly by anyone
-			if(target is GamePlayer && ((GamePlayer)target).Client.Account.PrivLevel > ePrivLevel.Player) return true;
+			if(target is GamePlayer && ((GamePlayer)target).Client.Account.PrivLevel > 1) return true;
 
 			// mobs can heal mobs, players heal players/NPC
 			if(source.Realm == 0 && target.Realm == 0) return true;

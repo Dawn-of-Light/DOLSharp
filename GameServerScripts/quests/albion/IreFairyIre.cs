@@ -34,7 +34,7 @@
 using System;
 using System.Reflection;
 using DOL.AI.Brain;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
@@ -49,55 +49,12 @@ using log4net;
 
 namespace DOL.GS.Quests.Albion
 {
-	/* The first thing we do, is to declare the quest requirement
-	* class linked with the new Quest. To do this, we derive 
-	* from the abstract class AbstractQuestDescriptor
-	*/
-	public class IreFairyIreDescriptor : AbstractQuestDescriptor
-	{
-		/* This is the type of the quest class linked with 
-		 * this requirement class, you must override the 
-		 * base methid like that
-		 */
-		public override Type LinkedQuestType
-		{
-			get { return typeof(IreFairyIre); }
-		}
-
-		/* This value is used to retrieves the minimum level needed
-		 *  to be able to make this quest. Override it only if you need, 
-		 * the default value is 1
-		 */
-		public override int MinLevel
-		{
-			get { return 4; }
-		}
-
-		/* This value is used to retrieves how maximum level needed
-		 * to be able to make this quest. Override it only if you need, 
-		 * the default value is 50
-		 */
-		public override int MaxLevel
-		{
-			get { return 4; }
-		}
-
-		public override bool CheckQuestQualification(GamePlayer player)
-		{
-			// This checks below are only performed is player isn't doing quest already			
-
-			if (!BaseFrederickQuest.CheckPartAccessible(player, typeof(IreFairyIre)))
-				return false;
-
-			return base.CheckQuestQualification(player);
-		}
-	}
-
-	/* The second thing we do, is to declare the class we create
-	 * as Quest. We must make it persistant using attributes, to
-	 * do this, we derive from the abstract class AbstractQuest
+	/* The first thing we do, is to declare the class we create
+	 * as Quest. To do this, we derive from the abstract class
+	 * AbstractQuest
+	 * 	 
 	 */
-	[NHibernate.Mapping.Attributes.Subclass(NameType = typeof(IreFairyIre), ExtendsType = typeof(AbstractQuest))]
+
 	public class IreFairyIre : BaseFrederickQuest
 	{
 		/// <summary>
@@ -116,6 +73,8 @@ namespace DOL.GS.Quests.Albion
 		 */
 
 		protected const string questTitle = "Ire Fairy Ire";
+		protected const int minimumLevel = 4;
+		protected const int maximumLevel = 4;
 
 		private static GameNPC masterFrederick = null;
 		private static GameStableMaster colm = null;
@@ -127,10 +86,31 @@ namespace DOL.GS.Quests.Albion
 
 		private bool fairyDragonflyHandlerAttackStarted = false;
 
-		private static GenericItemTemplate dragonflyWhip = null;
-		//private static GenericItemTemplate dustyOldMap = null;
-		private static TorsoArmorTemplate recruitsVest = null;
-		private static TorsoArmorTemplate recruitsQuiltedVest = null;
+		private static ItemTemplate dragonflyWhip = null;
+		private static ItemTemplate dustyOldMap = null;
+		private static ItemTemplate recruitsVest = null;
+		private static ItemTemplate recruitsQuiltedVest = null;
+
+
+		/* We need to define the constructors from the base class here, else there might be problems
+		 * when loading this quest...
+		 */
+		public IreFairyIre() : base()
+		{
+		}
+
+		public IreFairyIre(GamePlayer questingPlayer) : this(questingPlayer, 1)
+		{
+		}
+
+		public IreFairyIre(GamePlayer questingPlayer, int step) : base(questingPlayer, step)
+		{
+		}
+
+		public IreFairyIre(GamePlayer questingPlayer, DBQuest dbQuest) : base(questingPlayer, dbQuest)
+		{
+		}
+
 
 		/* The following method is called automatically when this quest class
 		 * is loaded. You might notice that this method is the same as in standard
@@ -176,11 +156,13 @@ namespace DOL.GS.Quests.Albion
 					log.Warn("Could not find " + nob.Name + ", creating him ...");
 				nob.GuildName = "Part of " + questTitle + " Quest";
 				nob.Realm = (byte) eRealm.Albion;
-				nob.RegionId = 1;
+				nob.CurrentRegionID = 1;
 
 				nob.Size = 45;
 				nob.Level = 4;
-				nob.Position = new Point(573019, 504485, 2199);
+				nob.X = 573019;
+				nob.Y = 504485;
+				nob.Z = 2199;
 				nob.Heading = 10;
 
 				//You don't have to store the created mob in the db if you don't want,
@@ -204,17 +186,25 @@ namespace DOL.GS.Quests.Albion
 					log.Warn("Could not find " + colm.Name + ", creating ...");
 				colm.GuildName = "Stable Master";
 				colm.Realm = (byte) eRealm.Albion;
-				colm.RegionId = 1;
+				colm.CurrentRegionID = 1;
 				colm.Size = 51;
 				colm.Level = 50;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
-				template.AddNPCEquipment(eInventorySlot.TorsoArmor, 81, 10, 0);
-				template.AddNPCEquipment(eInventorySlot.LegsArmor, 82, 10, 0);
-				template.AddNPCEquipment(eInventorySlot.FeetArmor, 84, 10, 0);
-				template.AddNPCEquipment(eInventorySlot.Cloak, 57, 32, 0);
+				template.AddNPCEquipment(eInventorySlot.TorsoArmor, 81, 10);
+				template.AddNPCEquipment(eInventorySlot.LegsArmor, 82, 10);
+				template.AddNPCEquipment(eInventorySlot.FeetArmor, 84, 10);
+				template.AddNPCEquipment(eInventorySlot.Cloak, 57, 32);
 				colm.Inventory = template.CloseTemplate();
-				colm.Position = new Point(562775, 512453, 2438);
+
+//				colm.AddNPCEquipment(Slot.TORSO, 81, 10, 0, 0);
+//				colm.AddNPCEquipment(Slot.LEGS, 82, 10, 0, 0);
+//				colm.AddNPCEquipment(Slot.FEET, 84, 10, 0, 0);
+//				colm.AddNPCEquipment(Slot.CLOAK, 57, 32, 0, 0);
+
+				colm.X = 562775;
+				colm.Y = 512453;
+				colm.Z = 2438;
 				colm.Heading = 158;
 				colm.MaxSpeedBase = 200;
 
@@ -245,11 +235,13 @@ namespace DOL.GS.Quests.Albion
 					log.Warn("Could not find " + haruld.Name + ", creating ...");
 				haruld.GuildName = "Stable Master";
 				haruld.Realm = (byte) eRealm.Albion;
-				haruld.RegionId = 1;
+				haruld.CurrentRegionID = 1;
 				haruld.Size = 49;
 				haruld.Level = 4;
 
-				haruld.Position = new Point(572479, 504410, 2184);
+				haruld.X = 572479;
+				haruld.Y = 504410;
+				haruld.Z = 2184;
 				haruld.Heading = 944;
 				haruld.MaxSpeedBase = 100;
 
@@ -279,12 +271,14 @@ namespace DOL.GS.Quests.Albion
 				fairyDragonflyHandler.Name = "Fairy Dragonfly Handler";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + fairyDragonflyHandler.Name + ", creating ...");
-				fairyDragonflyHandler.Position = new Point(575334, 506403, 2331);
+				fairyDragonflyHandler.X = 575334;
+				fairyDragonflyHandler.Y = 506403;
+				fairyDragonflyHandler.Z = 2331;
 				fairyDragonflyHandler.Heading = 114;
 				fairyDragonflyHandler.Model = 603;
 				fairyDragonflyHandler.GuildName = "Part of " + questTitle + " Quest";
 				fairyDragonflyHandler.Realm = (byte) eRealm.None;
-				fairyDragonflyHandler.RegionId = 1;
+				fairyDragonflyHandler.CurrentRegionID = 1;
 				fairyDragonflyHandler.Size = 49;
 				fairyDragonflyHandler.Level = 3;
 
@@ -307,10 +301,10 @@ namespace DOL.GS.Quests.Albion
 
 			#region defineItems
 
-			dragonflyWhip = (GenericItemTemplate) GameServer.Database.FindObjectByKey(typeof (GenericItemTemplate), "dragonfly_whip");
+			dragonflyWhip = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "dragonfly_whip");
 			if (dragonflyWhip == null)
 			{
-				dragonflyWhip = new GenericItemTemplate();
+				dragonflyWhip = new ItemTemplate();
 				dragonflyWhip.Name = "Dragonfly Whip";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + dragonflyWhip.Name + " , creating it ...");
@@ -318,11 +312,11 @@ namespace DOL.GS.Quests.Albion
 				dragonflyWhip.Weight = 15;
 				dragonflyWhip.Model = 859;
 
-				dragonflyWhip.ItemTemplateID = "dragonfly_whip";
+				dragonflyWhip.Object_Type = (int) eObjectType.GenericItem;
 
+				dragonflyWhip.Id_nb = "dragonfly_whip";
+				dragonflyWhip.IsPickable = true;
 				dragonflyWhip.IsDropable = false;
-				dragonflyWhip.IsSaleable = false;
-				dragonflyWhip.IsTradable = false;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -332,10 +326,10 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			recruitsVest = (TorsoArmorTemplate) GameServer.Database.FindObjectByKey(typeof (TorsoArmorTemplate), "recruits_studded_vest");
+			recruitsVest = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_studded_vest");
 			if (recruitsVest == null)
 			{
-				recruitsVest = new TorsoArmorTemplate();
+				recruitsVest = new ItemTemplate();
 				recruitsVest.Name = "Recruit's Studded Vest";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + recruitsVest.Name + ", creating it ...");
@@ -344,21 +338,33 @@ namespace DOL.GS.Quests.Albion
 				recruitsVest.Weight = 60;
 				recruitsVest.Model = 81; // studded vest
 
-				recruitsVest.ArmorFactor = 12;
-				recruitsVest.ArmorLevel = eArmorLevel.Medium;
+				recruitsVest.DPS_AF = 12; // Armour
+				recruitsVest.SPD_ABS = 19; // Absorption
 
-				recruitsVest.ItemTemplateID = "recruits_studded_vest";
-				recruitsVest.Value = 900;
-
+				recruitsVest.Object_Type = (int) eObjectType.Studded;
+				recruitsVest.Item_Type = (int) eEquipmentItems.TORSO;
+				recruitsVest.Id_nb = "recruits_studded_vest";
+				recruitsVest.Gold = 0;
+				recruitsVest.Silver = 9;
+				recruitsVest.Copper = 0;
+				recruitsVest.IsPickable = true;
 				recruitsVest.IsDropable = true;
-				recruitsVest.IsSaleable = true;
-				recruitsVest.IsTradable = true;
 				recruitsVest.Color = 9; // red leather
 
 				recruitsVest.Bonus = 5; // default bonus
 
-				recruitsVest.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 4));
-				recruitsVest.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 3));
+				recruitsVest.Bonus1 = 4;
+				recruitsVest.Bonus1Type = (int) eStat.STR;
+
+				recruitsVest.Bonus2 = 3;
+				recruitsVest.Bonus2Type = (int) eStat.CON;
+
+				recruitsVest.Quality = 100;
+				recruitsVest.MaxQuality = 100;
+				recruitsVest.Condition = 1000;
+				recruitsVest.MaxCondition = 1000;
+				recruitsVest.Durability = 1000;
+				recruitsVest.MaxDurability = 1000;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -368,10 +374,10 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			recruitsQuiltedVest = (TorsoArmorTemplate) GameServer.Database.FindObjectByKey(typeof (TorsoArmorTemplate), "recruits_quilted_vest");
+			recruitsQuiltedVest = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_quilted_vest");
 			if (recruitsQuiltedVest == null)
 			{
-				recruitsQuiltedVest = new TorsoArmorTemplate();
+				recruitsQuiltedVest = new ItemTemplate();
 				recruitsQuiltedVest.Name = "Recruit's Quilted Vest";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + recruitsQuiltedVest.Name + ", creating it ...");
@@ -380,21 +386,33 @@ namespace DOL.GS.Quests.Albion
 				recruitsQuiltedVest.Weight = 20;
 				recruitsQuiltedVest.Model = 151; // studded vest
 
-				recruitsQuiltedVest.ArmorFactor = 6;
-				recruitsQuiltedVest.ArmorLevel = eArmorLevel.VeryLow;
+				recruitsQuiltedVest.DPS_AF = 6; // Armour
+				recruitsQuiltedVest.SPD_ABS = 0; // Absorption
 
-				recruitsQuiltedVest.ItemTemplateID = "recruits_quilted_vest";
-				recruitsQuiltedVest.Value = 900;
-
+				recruitsQuiltedVest.Object_Type = (int) eObjectType.Cloth;
+				recruitsQuiltedVest.Item_Type = (int) eEquipmentItems.TORSO;
+				recruitsQuiltedVest.Id_nb = "recruits_quilted_vest";
+				recruitsQuiltedVest.Gold = 0;
+				recruitsQuiltedVest.Silver = 9;
+				recruitsQuiltedVest.Copper = 0;
+				recruitsQuiltedVest.IsPickable = true;
 				recruitsQuiltedVest.IsDropable = true;
-				recruitsQuiltedVest.IsSaleable = true;
-				recruitsQuiltedVest.IsTradable = true;
 				recruitsQuiltedVest.Color = 9; // red leather
 
 				recruitsQuiltedVest.Bonus = 5; // default bonus
 
-				recruitsQuiltedVest.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Intelligence, 4));
-				recruitsQuiltedVest.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 3));
+				recruitsQuiltedVest.Bonus1 = 4;
+				recruitsQuiltedVest.Bonus1Type = (int) eStat.INT;
+
+				recruitsQuiltedVest.Bonus2 = 3;
+				recruitsQuiltedVest.Bonus2Type = (int) eStat.DEX;
+
+				recruitsQuiltedVest.Quality = 100;
+				recruitsQuiltedVest.MaxQuality = 100;
+				recruitsQuiltedVest.Condition = 1000;
+				recruitsQuiltedVest.MaxCondition = 1000;
+				recruitsQuiltedVest.Durability = 1000;
+				recruitsQuiltedVest.MaxDurability = 1000;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -427,8 +445,8 @@ namespace DOL.GS.Quests.Albion
 
 			GameEventMgr.AddHandler(fairyDragonflyHandler, GameNPCEvent.OnAICallback, new DOLEventHandler(CheckNearFairyDragonflyHandler));
 
-			/* Now we bring to Ydenia the possibility to give this quest to players */
-			QuestMgr.AddQuestDescriptor(masterFrederick, typeof(IreFairyIreDescriptor));
+			/* Now we bring to masterFrederick the possibility to give this quest to players */
+			masterFrederick.AddQuestToGive(typeof (IreFairyIre));
 
 			if (log.IsInfoEnabled)
 				log.Info("Quest \"" + questTitle + "\" initialized");
@@ -469,7 +487,7 @@ namespace DOL.GS.Quests.Albion
 			GameEventMgr.RemoveHandler(fairyDragonflyHandler, GameNPCEvent.OnAICallback, new DOLEventHandler(CheckNearFairyDragonflyHandler));
 			
 			/* Now we remove to masterFrederick the possibility to give this quest to players */
-			QuestMgr.RemoveQuestDescriptor(masterFrederick, typeof(IreFairyIreDescriptor));
+			masterFrederick.RemoveQuestToGive(typeof (IreFairyIre));
 		}
 
 		/* This is the method we declared as callback for the hooks we set to
@@ -484,7 +502,7 @@ namespace DOL.GS.Quests.Albion
 			if (player == null)
 				return;
 
-			if (QuestMgr.CanGiveQuest(typeof(IreFairyIre), player, masterFrederick) <= 0)
+			if(masterFrederick.CanGiveQuest(typeof (IreFairyIre), player)  <= 0)
 				return;
 
 			//We also check if the player is already doing the quest
@@ -554,7 +572,7 @@ namespace DOL.GS.Quests.Albion
 			if (player == null)
 				return;
 
-			if (QuestMgr.CanGiveQuest(typeof(IreFairyIre), player, masterFrederick) <= 0)
+			if(masterFrederick.CanGiveQuest(typeof (IreFairyIre), player)  <= 0)
 				return;
 
 			//We also check if the player is already doing the quest
@@ -596,13 +614,12 @@ namespace DOL.GS.Quests.Albion
 			dragonflyHatchling.Name = "Dragonfly Hatchling";
 			dragonflyHatchling.GuildName = "Part of " + questTitle + " Quest";
 			dragonflyHatchling.Realm = (byte) eRealm.Peace;
-			dragonflyHatchling.RegionId = 1;
+			dragonflyHatchling.CurrentRegionID = 1;
 			dragonflyHatchling.Size = 25;
 			dragonflyHatchling.Level = 3;
-			Point pos = fairyDragonflyHandler.Position;
-			pos.X += Util.Random(-150, 150);
-			pos.Y += Util.Random(-150, 150);
-			dragonflyHatchling.Position = pos;
+			dragonflyHatchling.X = fairyDragonflyHandler.X + Util.Random(-150, 150);
+			dragonflyHatchling.Y = fairyDragonflyHandler.Y + Util.Random(-150, 150);
+			dragonflyHatchling.Z = fairyDragonflyHandler.Z;
 			dragonflyHatchling.Heading = 93;
 			dragonflyHatchling.MaxSpeedBase = 200;
 
@@ -632,7 +649,7 @@ namespace DOL.GS.Quests.Albion
 			if (player == null)
 				return;
 
-			if (QuestMgr.CanGiveQuest(typeof(IreFairyIre), player, masterFrederick) <= 0)
+			if(masterFrederick.CanGiveQuest(typeof (IreFairyIre), player)  <= 0)
 				return;
 
 			//We also check if the player is already doing the quest
@@ -695,6 +712,9 @@ namespace DOL.GS.Quests.Albion
 								quest.FinishQuest();
 							}
 							break;
+						case "abort":
+							player.Out.SendCustomDialog("Do you really want to abort this quest, \nall items gained during quest will be lost?", new CustomDialogResponse(CheckPlayerAbortQuest));
+							break;
 					}
 				}
 			}
@@ -712,7 +732,7 @@ namespace DOL.GS.Quests.Albion
 			if (player == null)
 				return;
 
-			if (QuestMgr.CanGiveQuest(typeof(IreFairyIre), player, masterFrederick) <= 0)
+			if(masterFrederick.CanGiveQuest(typeof (IreFairyIre), player)  <= 0)
 				return;
 
 			//We also check if the player is already doing the quest
@@ -744,7 +764,7 @@ namespace DOL.GS.Quests.Albion
 			if (player == null)
 				return;
 
-			if (QuestMgr.CanGiveQuest(typeof(IreFairyIre), player, masterFrederick) <= 0)
+			if(masterFrederick.CanGiveQuest(typeof (IreFairyIre), player)  <= 0)
 				return;
 
 			//We also check if the player is already doing the quest
@@ -770,10 +790,10 @@ namespace DOL.GS.Quests.Albion
 					{
 						colm.SayTo(player, "I know this isn't much, but I used to do a bit of adventuring in my time. I'm sure you'll be able to use this. Now, I think you should return to Master Frederick and let him or her know what's going on.");
 
-						if (player.HasAbilityToUseItem(recruitsVest.CreateInstance() as EquipableItem))
-							player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, recruitsVest.CreateInstance());
+						if (player.HasAbilityToUseItem(recruitsVest))
+							GiveItem(colm, player, recruitsVest);
 						else
-							player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, recruitsQuiltedVest.CreateInstance());
+							GiveItem(colm, player, recruitsQuiltedVest);
 
 						quest.Step = 7;
 					}
@@ -792,10 +812,10 @@ namespace DOL.GS.Quests.Albion
 							colm.SayTo(player, "I know this isn't much, but I used to do a bit of adventuring in my time. I'm sure you'll be able to use this. Now, I think you should return to your trainer and let him or her know what's going on.");
 							if (quest.Step == 6)
 							{
-								if (player.HasAbilityToUseItem(recruitsVest.CreateInstance() as EquipableItem))
-									player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, recruitsVest.CreateInstance());
+								if (player.HasAbilityToUseItem(recruitsVest))
+									GiveItem(colm, player, recruitsVest);
 								else
-									player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, recruitsQuiltedVest.CreateInstance());
+									GiveItem(colm, player, recruitsQuiltedVest);
 								quest.Step = 7;
 							}
 							break;
@@ -817,6 +837,51 @@ namespace DOL.GS.Quests.Albion
 			}
 		}
 
+		/// <summary>
+		/// This method checks if a player qualifies for this quest
+		/// </summary>
+		/// <returns>true if qualified, false if not</returns>
+		public override bool CheckQuestQualification(GamePlayer player)
+		{
+			// if the player is already doing the quest his level is no longer of relevance
+			if (player.IsDoingQuest(typeof (IreFairyIre)) != null)
+				return true;
+
+			// This checks below are only performed is player isn't doing quest already			
+
+			if (!CheckPartAccessible(player, typeof (IreFairyIre)))
+				return false;
+
+			if (player.Level < minimumLevel || player.Level > maximumLevel)
+				return false;
+
+			return true;
+		}
+
+
+		/* This is our callback hook that will be called when the player clicks
+		 * on any button in the quest offer dialog. We check if he accepts or
+		 * declines here...
+		 */
+
+		private static void CheckPlayerAbortQuest(GamePlayer player, byte response)
+		{
+			IreFairyIre quest = player.IsDoingQuest(typeof (IreFairyIre)) as IreFairyIre;
+
+			if (quest == null)
+				return;
+
+			if (response == 0x00)
+			{
+				SendSystemMessage(player, "Good, no go out there and finish your work!");
+			}
+			else
+			{
+				SendSystemMessage(player, "Aborting Quest " + questTitle + ". You can start over again if you want.");
+				quest.AbortQuest();
+			}
+		}
+
 		/* This is our callback hook that will be called when the player clicks
 		 * on any button in the quest offer dialog. We check if he accepts or
 		 * declines here...
@@ -826,7 +891,7 @@ namespace DOL.GS.Quests.Albion
 		{
 			//We recheck the qualification, because we don't talk to players
 			//who are not doing the quest
-			if (QuestMgr.CanGiveQuest(typeof(IreFairyIre), player, masterFrederick) <= 0)
+			if(masterFrederick.CanGiveQuest(typeof (IreFairyIre), player)  <= 0)
 				return;
 
 			IreFairyIre quest = player.IsDoingQuest(typeof (IreFairyIre)) as IreFairyIre;
@@ -841,7 +906,7 @@ namespace DOL.GS.Quests.Albion
 			else
 			{
 				//Check if we can add the quest!
-				if (!QuestMgr.GiveQuestToPlayer(typeof(IreFairyIre), player, masterFrederick))
+				if (!masterFrederick.GiveQuest(typeof (IreFairyIre), player, 1))
 					return;
 
 				masterFrederick.SayTo(player, "Alright recruit, we have very few leads in regards to this egg napping, but I am of the opinion someone saw something. Haruld at the stable across the way may have seen something. There are a lot of fairies that reside near there. Go speak with him.");
@@ -885,9 +950,8 @@ namespace DOL.GS.Quests.Albion
 						return "[Step #6] Ask Colm if he has something to show his [appreciation] for your efforts.";
 					case 7:
 						return "[Step #7] Return to Master Frederick at the guard tower in Cotswold. Tell him that you have returned the hatchling to Colm.";
-					default:
-						return "[Step #" + Step + "] No Description entered for this step!";
 				}
+				return base.Description;
 			}
 		}
 
@@ -905,7 +969,7 @@ namespace DOL.GS.Quests.Albion
 				if (gArgs.Target == fairyDragonflyHandler)
 				{
 					SendSystemMessage("You slay the creature and pluck a whip from the Ire Fairy trainer's hands.");
-					GiveItemToPlayer(gArgs.Target, dragonflyWhip.CreateInstance());
+					GiveItem(gArgs.Target, player, dragonflyWhip);
 					Step = 4;
 					return;
 				}
@@ -915,15 +979,30 @@ namespace DOL.GS.Quests.Albion
 			if (Step == 5 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == colm.Name && gArgs.Item.Name == dragonflyWhip.Name)
+				if (gArgs.Target.Name == colm.Name && gArgs.Item.Id_nb == dragonflyWhip.Id_nb)
 				{
 					colm.SayTo(player, "A whip?! This is outrageous! I see they were just trying to torture him. These Ire Fairies are truly malicious creatures. I hope you wipe them out one day Vinde. Here, take this as a sign of my [appreciation] for the return of the little one.");
-					RemoveItemFromPlayer(colm, dragonflyWhip);
+					RemoveItem(colm, player, dragonflyWhip);
 					Step = 6;
 					return;
 				}
 			}
 
+		}
+
+		public override void AbortQuest()
+		{
+			base.AbortQuest(); //Defined in Quest, changes the state, stores in DB etc ...
+
+			RemoveItem(m_questPlayer, dragonflyWhip, false);
+			RemoveItem(m_questPlayer, dustyOldMap, false);
+
+			if (m_questPlayer.HasAbilityToUseItem(recruitsVest))
+				RemoveItem(m_questPlayer, recruitsVest, false);
+			else
+				RemoveItem(m_questPlayer, recruitsQuiltedVest, false);
+
+			deleteDragonflyHatchling();
 		}
 
 

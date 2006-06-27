@@ -38,7 +38,7 @@
 using System;
 using System.Reflection;
 using DOL.AI.Brain;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.GS.PacketHandler;
 using log4net;
 /* I suggest you declare yourself some namespaces for your quests
@@ -74,6 +74,25 @@ namespace DOL.GS.Quests.Albion
 		 * and change through the quest journey...
 		 * 
 		 */
+
+		/* We need to define the constructors from the base class here, else there might be problems
+		 * when loading this quest...
+		 */
+		public BaseFrederickQuest() : base()
+		{
+		}
+
+		public BaseFrederickQuest(GamePlayer questingPlayer) : base(questingPlayer)
+		{
+		}
+
+		public BaseFrederickQuest(GamePlayer questingPlayer, int step) : base(questingPlayer, step)
+		{
+		}
+
+		public BaseFrederickQuest(GamePlayer questingPlayer, DBQuest dbQuest) : base(questingPlayer, dbQuest)
+		{
+		}
 
 		public static Type[] m_questSequel = new Type[]
 			{
@@ -144,7 +163,7 @@ namespace DOL.GS.Quests.Albion
 					log.Warn("Could not find " + masterFrederick.Name + ", creating him ...");
 				masterFrederick.GuildName = "Part of Frederick Quests";
 				masterFrederick.Realm = (byte) eRealm.Albion;
-				masterFrederick.RegionId = 1;
+				masterFrederick.CurrentRegionID = 1;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
 				template.AddNPCEquipment(eInventorySlot.TorsoArmor, 41);
@@ -155,9 +174,17 @@ namespace DOL.GS.Quests.Albion
 				masterFrederick.Inventory = template.CloseTemplate();
 				masterFrederick.SwitchWeapon(GameLiving.eActiveWeaponSlot.Standard);
 
+//				masterFrederick.AddNPCEquipment((byte) eVisibleItems.TORSO, 41, 0, 0, 0);
+//				masterFrederick.AddNPCEquipment((byte) eVisibleItems.LEG, 42, 0, 0, 0);
+//				masterFrederick.AddNPCEquipment((byte) eVisibleItems.BOOT, 40, 0, 0, 0);
+//				masterFrederick.AddNPCEquipment((byte) eVisibleItems.CLOAK, 91, 0, 0, 0);
+//				masterFrederick.AddNPCEquipment((byte) eVisibleItems.RIGHT_HAND, 4, 0, 0, 0);
+
 				masterFrederick.Size = 50;
 				masterFrederick.Level = 50;
-				masterFrederick.Position = new Point(567969, 509880, 2861);
+				masterFrederick.X = 567969;
+				masterFrederick.Y = 509880;
+				masterFrederick.Z = 2861;
 				masterFrederick.Heading = 65;
 
 				StandardMobBrain brain = new StandardMobBrain();

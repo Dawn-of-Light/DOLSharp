@@ -19,7 +19,7 @@
 using System;
 using System.Collections;
 using System.Reflection;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.GS.PacketHandler;
 using log4net;
 
@@ -89,13 +89,13 @@ namespace DOL.GS.Scripts
 					DBFaction dbfaction = new DBFaction();
 					dbfaction.BaseFriendShip = basefriendship;
 					dbfaction.Name = name;
-					dbfaction.FactionID = (max + 1);
-					log.Info("add obj to db with id :"+dbfaction.FactionID);
+					dbfaction.ID = (max + 1);
+					log.Info("add obj to db with id :"+dbfaction.ID);
 					GameServer.Database.AddNewObject(dbfaction);
 					log.Info("add obj to db");
 					myfaction = new Faction();
 					myfaction.LoadFromDatabase(dbfaction);
-					FactionMgr.Factions.Add(dbfaction.FactionID,myfaction);
+					FactionMgr.Factions.Add(dbfaction.ID,myfaction);
 					client.Player.TempProperties.setProperty(TEMP_FACTION_LAST, myfaction);	
 					client.Player.Out.SendMessage("New faction created",eChatType.CT_Say,eChatLoc.CL_SystemWindow);
 				}break;

@@ -17,7 +17,7 @@
  *
  */
 using System;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.GS.Housing;
 
 namespace DOL.GS.PacketHandler.v168
@@ -40,9 +40,12 @@ namespace DOL.GS.PacketHandler.v168
 
 			lock (client.Player.Inventory)
 			{
-				GenericItem item = client.Player.Inventory.GetItem((eInventorySlot)item_slot);
+				InventoryItem item=client.Player.Inventory.GetItem((eInventorySlot)item_slot);
 				if (item==null)
 					return 0;
+
+				int itemCount = Math.Max(1, item.Count);
+				int packSize = Math.Max(1, item.PackSize);
 
 				long itemValue = 0;
 				if(client.Player.TargetObject is GameMerchant)
@@ -60,23 +63,21 @@ namespace DOL.GS.PacketHandler.v168
 					itemValue = ((GameLotMarker)client.Player.TargetObject).OnPlayerAppraise(client.Player, item);
 				}
 				else
-					return 0;  
+					return 0;  //itemValue = item.Value*itemCount/packSize/2;
+
+				string message;
+				if(client.Player.TargetObject is GameLiving)
+					message = ((GameLiving)client.Player.TargetObject).GetName(0, true)+" gives you {0} for "+item.GetName(0, false)+".";
+				else
+					message = "You gain {0} for "+item.GetName(0, false)+".";
 
 				if (client.Player.Inventory.RemoveItem(item))
 				{
-					string message;
-					if(client.Player.TargetObject is GameLiving)
-						message = ((GameLiving)client.Player.TargetObject).GetName(0, true)+" gives you {0} for "+item.Name+".";
-					else
-						message = "You gain {0} for "+item.Name+".";
-
 					client.Player.AddMoney(itemValue, message, eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
 					return 1;
 				}
 				else 
-				{
 					client.Out.SendMessage("This item can't be sold.", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
-				}
 			}
 			return 0;
 		}

@@ -4,7 +4,7 @@
 *http://camelot.allakhazam.com/quests.html?realm=Hibernia&cquest=299
 *Date           : 22 November 2004
 *Quest Name     : The Horn Twin (level 50)
-*Quest Classes  : Mentalist, Druid, Blademaster, Nighthsade, Animist, Valewaker(Path of Essence)
+*Quest Classes  : Mentalist, Druid, Blademaster, Nighthsade(Path of Essence)
 *Quest Version  : v1
 *
 *ToDo:
@@ -15,73 +15,13 @@
 
 using System;
 using System.Reflection;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
 
 namespace DOL.GS.Quests.Hibernia
 {
-	/* The first thing we do, is to declare the quest requirement
-	* class linked with the new Quest. To do this, we derive 
-	* from the abstract class AbstractQuestDescriptor
-	*/
-	public class Harmony_50Descriptor : AbstractQuestDescriptor
-	{
-		/* This is the type of the quest class linked with 
-		 * this requirement class, you must override the 
-		 * base method like that
-		 */
-		public override Type LinkedQuestType
-		{
-			get { return typeof(Harmony_50); }
-		}
-
-		/* This value is used to retrieves the minimum level needed
-		 *  to be able to make this quest. Override it only if you need, 
-		 * the default value is 1
-		 */
-		public override int MinLevel
-		{
-			get { return 50; }
-		}
-
-		/* This method is used to know if the player is qualified to 
-		 * do the quest. The base method always test his level and
-		 * how many time the quest has been done. Override it only if 
-		 * you want to add a custom test (here we test also the class name)
-		 */
-		public override bool CheckQuestQualification(GamePlayer player)
-		{
-			// if the player is already doing the quest his level is no longer of relevance
-			if (player.IsDoingQuest(typeof(Harmony_50)) != null)
-				return true;
-
-			if (player.CharacterClass.ID != (byte)eCharacterClass.Blademaster &&
-				player.CharacterClass.ID != (byte)eCharacterClass.Druid &&
-				player.CharacterClass.ID != (byte)eCharacterClass.Valewalker &&
-				player.CharacterClass.ID != (byte)eCharacterClass.Animist &&
-				player.CharacterClass.ID != (byte)eCharacterClass.Mentalist &&
-				player.CharacterClass.ID != (byte)eCharacterClass.Vampiir &&
-				player.CharacterClass.ID != (byte)eCharacterClass.Bainshee)
-				return false;
-
-			// This checks below are only performed is player isn't doing quest already
-
-			//if (player.HasFinishedQuest(typeof(Academy_47)) == 0) return false;
-
-			//if (!CheckPartAccessible(player,typeof(CityOfCamelot)))
-			//	return false;
-			return base.CheckQuestQualification(player);
-		}
-	}
-
-
-	/* The second thing we do, is to declare the class we create
-	 * as Quest. We must make it persistant using attributes, to
-	 * do this, we derive from the abstract class AbstractQuest
-	 */
-	[NHibernate.Mapping.Attributes.Subclass(NameType = typeof(Harmony_50), ExtendsType = typeof(AbstractQuest))]
 	public class Harmony_50 : BaseQuest
 	{
 		/// <summary>
@@ -90,69 +30,65 @@ namespace DOL.GS.Quests.Hibernia
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		protected const string questTitle = "The Horn Twin";
+		protected const int minimumLevel = 50;
+		protected const int maximumLevel = 50;
 
-		private static GameMob Revelin = null; // Start NPC
+		private static GameNPC Revelin = null; // Start NPC
 		//private static GameNPC Lauralaye = null; //Reward NPC
-		private static GameMob Cailean = null; // Mob to kill
+		private static GameNPC Cailean = null; // Mob to kill
 
-		private static GenericItemTemplate Horn = null; //ball of flame
+		private static ItemTemplate Horn = null; //ball of flame        
+		private static ItemTemplate BlademasterEpicBoots = null; //Mist Shrouded Boots 
+		private static ItemTemplate BlademasterEpicHelm = null; //Mist Shrouded Coif 
+		private static ItemTemplate BlademasterEpicGloves = null; //Mist Shrouded Gloves 
+		private static ItemTemplate BlademasterEpicVest = null; //Mist Shrouded Hauberk 
+		private static ItemTemplate BlademasterEpicLegs = null; //Mist Shrouded Legs 
+		private static ItemTemplate BlademasterEpicArms = null; //Mist Shrouded Sleeves 
+		private static ItemTemplate DruidEpicBoots = null; //Shadow Shrouded Boots 
+		private static ItemTemplate DruidEpicHelm = null; //Shadow Shrouded Coif 
+		private static ItemTemplate DruidEpicGloves = null; //Shadow Shrouded Gloves 
+		private static ItemTemplate DruidEpicVest = null; //Shadow Shrouded Hauberk 
+		private static ItemTemplate DruidEpicLegs = null; //Shadow Shrouded Legs 
+		private static ItemTemplate DruidEpicArms = null; //Shadow Shrouded Sleeves 
+		private static ItemTemplate MentalistEpicBoots = null; //Valhalla Touched Boots 
+		private static ItemTemplate MentalistEpicHelm = null; //Valhalla Touched Coif 
+		private static ItemTemplate MentalistEpicGloves = null; //Valhalla Touched Gloves 
+		private static ItemTemplate MentalistEpicVest = null; //Valhalla Touched Hauberk 
+		private static ItemTemplate MentalistEpicLegs = null; //Valhalla Touched Legs 
+		private static ItemTemplate MentalistEpicArms = null; //Valhalla Touched Sleeves 
+		private static ItemTemplate AnimistEpicBoots = null; //Subterranean Boots 
+		private static ItemTemplate AnimistEpicHelm = null; //Subterranean Coif 
+		private static ItemTemplate AnimistEpicGloves = null; //Subterranean Gloves 
+		private static ItemTemplate AnimistEpicVest = null; //Subterranean Hauberk 
+		private static ItemTemplate AnimistEpicLegs = null; //Subterranean Legs 
+		private static ItemTemplate AnimistEpicArms = null; //Subterranean Sleeves 
+		private static ItemTemplate ValewalkerEpicBoots = null; //Subterranean Boots 
+		private static ItemTemplate ValewalkerEpicHelm = null; //Subterranean Coif 
+		private static ItemTemplate ValewalkerEpicGloves = null; //Subterranean Gloves 
+		private static ItemTemplate ValewalkerEpicVest = null; //Subterranean Hauberk 
+		private static ItemTemplate ValewalkerEpicLegs = null; //Subterranean Legs 
+		private static ItemTemplate ValewalkerEpicArms = null; //Subterranean Sleeves         
 
-		private static FeetArmorTemplate BlademasterEpicBoots = null; //Mist Shrouded Boots 
-		private static HeadArmorTemplate BlademasterEpicHelm = null; //Mist Shrouded Coif 
-		private static HandsArmorTemplate BlademasterEpicGloves = null; //Mist Shrouded Gloves 
-		private static TorsoArmorTemplate BlademasterEpicVest = null; //Mist Shrouded Hauberk 
-		private static LegsArmorTemplate BlademasterEpicLegs = null; //Mist Shrouded Legs 
-		private static ArmsArmorTemplate BlademasterEpicArms = null; //Mist Shrouded Sleeves 
+		// Constructors
+		public Harmony_50()
+			: base()
+		{
+		}
 
-		private static FeetArmorTemplate DruidEpicBoots = null; //Shadow Shrouded Boots 
-		private static HeadArmorTemplate DruidEpicHelm = null; //Shadow Shrouded Coif 
-		private static HandsArmorTemplate DruidEpicGloves = null; //Shadow Shrouded Gloves 
-		private static TorsoArmorTemplate DruidEpicVest = null; //Shadow Shrouded Hauberk 
-		private static LegsArmorTemplate DruidEpicLegs = null; //Shadow Shrouded Legs 
-		private static ArmsArmorTemplate DruidEpicArms = null; //Shadow Shrouded Sleeves 
+		public Harmony_50(GamePlayer questingPlayer)
+			: base(questingPlayer)
+		{
+		}
 
-		private static FeetArmorTemplate MentalistEpicBoots = null; //Valhalla Touched Boots 
-		private static HeadArmorTemplate MentalistEpicHelm = null; //Valhalla Touched Coif 
-		private static HandsArmorTemplate MentalistEpicGloves = null; //Valhalla Touched Gloves 
-		private static TorsoArmorTemplate MentalistEpicVest = null; //Valhalla Touched Hauberk 
-		private static LegsArmorTemplate MentalistEpicLegs = null; //Valhalla Touched Legs 
-		private static ArmsArmorTemplate MentalistEpicArms = null; //Valhalla Touched Sleeves 
+		public Harmony_50(GamePlayer questingPlayer, int step)
+			: base(questingPlayer, step)
+		{
+		}
 
-		private static FeetArmorTemplate AnimistEpicBoots = null; //Subterranean Boots 
-		private static HeadArmorTemplate AnimistEpicHelm = null; //Subterranean Coif 
-		private static HandsArmorTemplate AnimistEpicGloves = null; //Subterranean Gloves 
-		private static TorsoArmorTemplate AnimistEpicVest = null; //Subterranean Hauberk 
-		private static LegsArmorTemplate AnimistEpicLegs = null; //Subterranean Legs 
-		private static ArmsArmorTemplate AnimistEpicArms = null; //Subterranean Sleeves 
-
-		private static FeetArmorTemplate ValewalkerEpicBoots = null; //Subterranean Boots 
-		private static HeadArmorTemplate ValewalkerEpicHelm = null; //Subterranean Coif 
-		private static HandsArmorTemplate ValewalkerEpicGloves = null; //Subterranean Gloves 
-		private static TorsoArmorTemplate ValewalkerEpicVest = null; //Subterranean Hauberk 
-		private static LegsArmorTemplate ValewalkerEpicLegs = null; //Subterranean Legs 
-		private static ArmsArmorTemplate ValewalkerEpicArms = null; //Subterranean Sleeves
-
-		private static FeetArmorTemplate VampiirEpicBoots = null;
-		private static HeadArmorTemplate VampiirEpicHelm = null;
-		private static HandsArmorTemplate VampiirEpicGloves = null;
-		private static TorsoArmorTemplate VampiirEpicVest = null;
-		private static LegsArmorTemplate VampiirEpicLegs = null;
-		private static ArmsArmorTemplate VampiirEpicArms = null;
-
-		private static FeetArmorTemplate BainsheeEpicBoots = null;
-		private static HeadArmorTemplate BainsheeEpicHelm = null;
-		private static HandsArmorTemplate BainsheeEpicGloves = null;
-		private static TorsoArmorTemplate BainsheeEpicVest = null;
-		private static LegsArmorTemplate BainsheeEpicLegs = null;
-		private static ArmsArmorTemplate BainsheeEpicArms = null;
-
-		private static GameNPC[] BlademasterTrainers = null;
-		private static GameNPC[] DruidTrainers = null;
-		private static GameNPC[] MentalistTrainers = null;
-		private static GameNPC[] AnimistTrainers = null;
-		private static GameNPC[] ValewalkerTrainers = null;
-		private static GameNPC[] VampiirTrainers = null;
-		private static GameNPC[] BainsheeTrainers = null;
+		public Harmony_50(GamePlayer questingPlayer, DBQuest dbQuest)
+			: base(questingPlayer, dbQuest)
+		{
+		}
 
 		[ScriptLoadedEvent]
 		public static void ScriptLoaded(DOLEvent e, object sender, EventArgs args)
@@ -173,10 +109,12 @@ namespace DOL.GS.Quests.Hibernia
 				Revelin.Name = "Revelin";
 				Revelin.GuildName = "";
 				Revelin.Realm = (byte)eRealm.Hibernia;
-				Revelin.RegionId = 200;
+				Revelin.CurrentRegionID = 200;
 				Revelin.Size = 42;
 				Revelin.Level = 20;
-				Revelin.Position = new Point(344387, 706197, 6351);
+				Revelin.X = 344387;
+				Revelin.Y = 706197;
+				Revelin.Z = 6351;
 				Revelin.Heading = 2127;
 				Revelin.AddToWorld();
 				if (SAVE_INTO_DATABASE)
@@ -186,7 +124,7 @@ namespace DOL.GS.Quests.Hibernia
 
 			}
 			else
-				Revelin = npcs[0] as GameMob;
+				Revelin = npcs[0];
 			// end npc
 
 			npcs = WorldMgr.GetNPCsByName("Cailean", eRealm.None);
@@ -200,12 +138,13 @@ namespace DOL.GS.Quests.Hibernia
 				Cailean.Name = "Cailean";
 				Cailean.GuildName = "";
 				Cailean.Realm = (byte)eRealm.None;
-				Cailean.RegionId = 200;
+				Cailean.CurrentRegionID = 200;
 				Cailean.Size = 60;
 				Cailean.Level = 65;
-				Cailean.Position = new Point(479042, 508134, 4569);
+				Cailean.X = 479042;
+				Cailean.Y = 508134;
+				Cailean.Z = 4569;
 				Cailean.Heading = 3319;
-				Cailean.RespawnInterval = 5 * 60 * 1000;
 				Cailean.AddToWorld();
 				if (SAVE_INTO_DATABASE)
 				{
@@ -214,1495 +153,1299 @@ namespace DOL.GS.Quests.Hibernia
 
 			}
 			else
-				Cailean = npcs[0] as GameMob;
+				Cailean = npcs[0];
 			// end npc
 
 			#endregion
 
 			#region Item Declarations
 
-			Horn = (GenericItemTemplate)GameServer.Database.FindObjectByKey(typeof(GenericItemTemplate), "Horn");
+			Horn = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "Horn");
 			if (Horn == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Horn , creating it ...");
-				Horn = new GenericItemTemplate();
-				Horn.ItemTemplateID = "Horn";
+				Horn = new ItemTemplate();
+				Horn.Id_nb = "Horn";
 				Horn.Name = "Horn";
 				Horn.Level = 8;
+				Horn.Item_Type = 29;
 				Horn.Model = 586;
 				Horn.IsDropable = false;
-				Horn.IsSaleable = false;
-				Horn.IsTradable = false;
+				Horn.IsPickable = false;
+				Horn.DPS_AF = 0;
+				Horn.SPD_ABS = 0;
+				Horn.Object_Type = 41;
+				Horn.Hand = 0;
+				Horn.Type_Damage = 0;
+				Horn.Quality = 100;
+				Horn.MaxQuality = 100;
 				Horn.Weight = 12;
 				if (SAVE_INTO_DATABASE)
 				{
 					GameServer.Database.AddNewObject(Horn);
 				}
-			}
 
-			ArmorTemplate i = null;
-			#region Druid
-			DruidEpicBoots = (FeetArmorTemplate)GameServer.Database.FindObjectByKey(typeof(FeetArmorTemplate), "DruidEpicBoots");
+			}
+			// end item
+			ItemTemplate i = null;
+
+			DruidEpicBoots = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "DruidEpicBoots");
 			if (DruidEpicBoots == null)
 			{
-				i = new FeetArmorTemplate();
-				i.ItemTemplateID = "DruidEpicBoots";
+				i = new ItemTemplate();
+				i.Id_nb = "DruidEpicBoots";
 				i.Name = "Sidhe Scale Boots";
 				i.Level = 50;
+				i.Item_Type = 23;
 				i.Model = 743;
 				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.High;
+				i.IsPickable = true;
+				i.DPS_AF = 100;
+				i.SPD_ABS = 27;
+				i.Object_Type = 38;
 				i.Quality = 100;
+				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Druid);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Hibernia;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 9));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Quickness, 9));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Body, 14));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 36));
+				i.Bonus1 = 9;
+				i.Bonus1Type = (int)eStat.CON;
 
-				if (SAVE_INTO_DATABASE)
+				i.Bonus2 = 9;
+				i.Bonus2Type = (int)eStat.QUI;
+
+				i.Bonus3 = 14;
+				i.Bonus3Type = (int)eResist.Body;
+
+				i.Bonus4 = 36;
+				i.Bonus4Type = (int)eProperty.MaxHealth;
 				{
 					GameServer.Database.AddNewObject(i);
 				}
-				DruidEpicBoots = (FeetArmorTemplate)i;
-			}
 
+				DruidEpicBoots = i;
+
+			}
+			//end item
 			//Sidhe Scale Coif
-			DruidEpicHelm = (HeadArmorTemplate)GameServer.Database.FindObjectByKey(typeof(HeadArmorTemplate), "DruidEpicHelm");
+			DruidEpicHelm = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "DruidEpicHelm");
 			if (DruidEpicHelm == null)
 			{
-				i = new HeadArmorTemplate();
-				i.ItemTemplateID = "DruidEpicHelm";
+				i = new ItemTemplate();
+				i.Id_nb = "DruidEpicHelm";
 				i.Name = "Sidhe Scale Coif";
 				i.Level = 50;
+				i.Item_Type = 21;
 				i.Model = 1292; //NEED TO WORK ON..
 				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.High;
+				i.IsPickable = true;
+				i.DPS_AF = 100;
+				i.SPD_ABS = 27;
+				i.Object_Type = 38;
 				i.Quality = 100;
+				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Druid);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Hibernia;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Empathy, 15));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Nurture, 3));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Nature, 3));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 27));
+				i.Bonus1 = 15;
+				i.Bonus1Type = (int)eStat.EMP;
 
-				if (SAVE_INTO_DATABASE)
+				i.Bonus2 = 3;
+				i.Bonus2Type = (int)eProperty.Skill_Nurture;
+
+				i.Bonus3 = 3;
+				i.Bonus3Type = (int)eProperty.Skill_Nature;
+
+				i.Bonus4 = 27;
+				i.Bonus4Type = (int)eProperty.MaxHealth;
 				{
 					GameServer.Database.AddNewObject(i);
 				}
-				DruidEpicHelm = (HeadArmorTemplate)i;
-			}
+				DruidEpicHelm = i;
 
+			}
+			//end item
 			//Sidhe Scale Gloves
-			DruidEpicGloves = (HandsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(HandsArmorTemplate), "DruidEpicGloves");
+			DruidEpicGloves = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "DruidEpicGloves");
 			if (DruidEpicGloves == null)
 			{
-				i = new HandsArmorTemplate();
-				i.ItemTemplateID = "DruidEpicGloves";
+				i = new ItemTemplate();
+				i.Id_nb = "DruidEpicGloves";
 				i.Name = "Sidhe Scale Gloves ";
 				i.Level = 50;
+				i.Item_Type = 22;
 				i.Model = 742;
 				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.High;
+				i.IsPickable = true;
+				i.DPS_AF = 100;
+				i.SPD_ABS = 27;
+				i.Object_Type = 38;
 				i.Quality = 100;
+				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Druid);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Hibernia;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Regrowth, 3));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxMana, 6));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 12));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Empathy, 12));
+				i.Bonus1 = 3;
+				i.Bonus1Type = (int)eProperty.Skill_Regrowth;
 
-				if (SAVE_INTO_DATABASE)
+				i.Bonus2 = 6;
+				i.Bonus2Type = (int)eProperty.MaxMana;
+
+				i.Bonus3 = 12;
+				i.Bonus3Type = (int)eStat.DEX;
+
+				i.Bonus4 = 12;
+				i.Bonus4Type = (int)eStat.EMP;
 				{
 					GameServer.Database.AddNewObject(i);
 				}
-				DruidEpicGloves = (HandsArmorTemplate)i;
-			}
+				DruidEpicGloves = i;
 
+			}
 			//Sidhe Scale Hauberk
-			DruidEpicVest = (TorsoArmorTemplate)GameServer.Database.FindObjectByKey(typeof(TorsoArmorTemplate), "DruidEpicVest");
+			DruidEpicVest = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "DruidEpicVest");
 			if (DruidEpicVest == null)
 			{
-				i = new TorsoArmorTemplate();
-				i.ItemTemplateID = "DruidEpicVest";
+				i = new ItemTemplate();
+				i.Id_nb = "DruidEpicVest";
 				i.Name = "Sidhe Scale Breastplate";
 				i.Level = 50;
+				i.Item_Type = 25;
 				i.Model = 739;
 				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.High;
+				i.IsPickable = true;
+				i.DPS_AF = 100;
+				i.SPD_ABS = 27;
+				i.Object_Type = 38;
 				i.Quality = 100;
+				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Druid);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Hibernia;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Empathy, 15));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Nature, 3));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Slash, 10));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 30));
+				i.Bonus1 = 15;
+				i.Bonus1Type = (int)eStat.EMP;
 
-				if (SAVE_INTO_DATABASE)
+				i.Bonus2 = 3;
+				i.Bonus2Type = (int)eProperty.Skill_Nature;
+
+				i.Bonus3 = 10;
+				i.Bonus3Type = (int)eResist.Slash;
+
+				i.Bonus4 = 30;
+				i.Bonus4Type = (int)eProperty.MaxHealth;
 				{
 					GameServer.Database.AddNewObject(i);
 				}
-				DruidEpicVest = (TorsoArmorTemplate)i;
-			}
+				DruidEpicVest = i;
 
+			}
 			//Sidhe Scale Legs
-			DruidEpicLegs = (LegsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(LegsArmorTemplate), "DruidEpicLegs");
+			DruidEpicLegs = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "DruidEpicLegs");
 			if (DruidEpicLegs == null)
 			{
-				i = new LegsArmorTemplate();
-				i.ItemTemplateID = "DruidEpicLegs";
+				i = new ItemTemplate();
+				i.Id_nb = "DruidEpicLegs";
 				i.Name = "Sidhe Scale Leggings";
 				i.Level = 50;
+				i.Item_Type = 27;
 				i.Model = 740;
 				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.High;
+				i.IsPickable = true;
+				i.DPS_AF = 100;
+				i.SPD_ABS = 27;
+				i.Object_Type = 38;
 				i.Quality = 100;
+				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Druid);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Hibernia;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 57));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Crush, 8));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Spirit, 8));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Cold, 8));
+				i.Bonus1 = 57;
+				i.Bonus1Type = (int)eProperty.MaxHealth;
 
-				if (SAVE_INTO_DATABASE)
+				i.Bonus2 = 8;
+				i.Bonus2Type = (int)eResist.Crush;
+
+				i.Bonus3 = 8;
+				i.Bonus3Type = (int)eResist.Spirit;
+
+				i.Bonus4 = 8;
+				i.Bonus4Type = (int)eResist.Cold;
 				{
 					GameServer.Database.AddNewObject(i);
 				}
 
-				DruidEpicLegs = (LegsArmorTemplate)i;
-			}
+				DruidEpicLegs = i;
 
+			}
 			//Sidhe Scale Sleeves
-			DruidEpicArms = (ArmsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(ArmsArmorTemplate), "DruidEpicArms");
+			DruidEpicArms = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "DruidEpicArms");
 			if (DruidEpicArms == null)
 			{
-				i = new ArmsArmorTemplate();
-				i.ItemTemplateID = "DruidEpicArms";
+				i = new ItemTemplate();
+				i.Id_nb = "DruidEpicArms";
 				i.Name = "Sidhe Scale Sleeves";
 				i.Level = 50;
+				i.Item_Type = 28;
 				i.Model = 741;
 				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.High;
+				i.IsPickable = true;
+				i.DPS_AF = 100;
+				i.SPD_ABS = 27;
+				i.Object_Type = 38;
 				i.Quality = 100;
+				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Druid);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Hibernia;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 13));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 13));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Empathy, 13));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Matter, 8));
+				i.Bonus1 = 13;
+				i.Bonus1Type = (int)eStat.CON;
 
-				if (SAVE_INTO_DATABASE)
+				i.Bonus2 = 13;
+				i.Bonus2Type = (int)eStat.STR;
+
+				i.Bonus3 = 13;
+				i.Bonus3Type = (int)eStat.EMP;
+
+				i.Bonus4 = 8;
+				i.Bonus4Type = (int)eResist.Matter;
 				{
 					GameServer.Database.AddNewObject(i);
 				}
-				DruidEpicArms = (ArmsArmorTemplate)i;
+
+				DruidEpicArms = i;
+
 			}
-			#endregion
-			#region Blademaster
 			//Blademaster Epic Sleeves End
-			BlademasterEpicBoots = (FeetArmorTemplate)GameServer.Database.FindObjectByKey(typeof(FeetArmorTemplate), "BlademasterEpicBoots");
+			BlademasterEpicBoots = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "BlademasterEpicBoots");
 			if (BlademasterEpicBoots == null)
 			{
-				i = new FeetArmorTemplate();
-				i.ItemTemplateID = "BlademasterEpicBoots";
+				i = new ItemTemplate();
+				i.Id_nb = "BlademasterEpicBoots";
 				i.Name = "Sidhe Studded Boots";
 				i.Level = 50;
+				i.Item_Type = 23;
 				i.Model = 786;
 				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.Medium;
+				i.IsPickable = true;
+				i.DPS_AF = 100;
+				i.SPD_ABS = 19;
+				i.Object_Type = 37;
 				i.Quality = 100;
+				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Blademaster);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Hibernia;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 12));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Quickness, 15));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 24));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Cold, 10));
+				i.Bonus1 = 12;
+				i.Bonus1Type = (int)eStat.DEX;
 
-				if (SAVE_INTO_DATABASE)
+				i.Bonus2 = 15;
+				i.Bonus2Type = (int)eStat.QUI;
+
+				i.Bonus3 = 24;
+				i.Bonus3Type = (int)eProperty.MaxHealth;
+
+				i.Bonus4 = 10;
+				i.Bonus4Type = (int)eResist.Cold;
 				{
 					GameServer.Database.AddNewObject(i);
 				}
-				BlademasterEpicBoots = (FeetArmorTemplate)i;
-			}
+				BlademasterEpicBoots = i;
 
+			}
+			//end item
 			//Sidhe Studded Coif
-			BlademasterEpicHelm = (HeadArmorTemplate)GameServer.Database.FindObjectByKey(typeof(HeadArmorTemplate), "BlademasterEpicHelm");
+			BlademasterEpicHelm = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "BlademasterEpicHelm");
 			if (BlademasterEpicHelm == null)
 			{
-				i = new HeadArmorTemplate();
-				i.ItemTemplateID = "BlademasterEpicHelm";
+				i = new ItemTemplate();
+				i.Id_nb = "BlademasterEpicHelm";
 				i.Name = "Sidhe Studded Helm";
 				i.Level = 50;
+				i.Item_Type = 21;
 				i.Model = 1292; //NEED TO WORK ON..
 				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.Medium;
+				i.IsPickable = true;
+				i.DPS_AF = 100;
+				i.SPD_ABS = 19;
+				i.Object_Type = 37;
 				i.Quality = 100;
+				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Blademaster);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Hibernia;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 30));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Spirit, 10));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Heat, 10));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Quickness, 16));
+				i.Bonus1 = 30;
+				i.Bonus1Type = (int)eProperty.MaxHealth;
 
-				if (SAVE_INTO_DATABASE)
+				i.Bonus2 = 10;
+				i.Bonus2Type = (int)eResist.Spirit;
+
+				i.Bonus3 = 10;
+				i.Bonus3Type = (int)eResist.Heat;
+
+				i.Bonus4 = 16;
+				i.Bonus4Type = (int)eStat.QUI;
 				{
 					GameServer.Database.AddNewObject(i);
 				}
-				BlademasterEpicHelm = (HeadArmorTemplate)i;
-			}
 
+				BlademasterEpicHelm = i;
+
+			}
+			//end item
 			//Sidhe Studded Gloves
-			BlademasterEpicGloves = (HandsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(HandsArmorTemplate), "BlademasterEpicGloves");
+			BlademasterEpicGloves = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "BlademasterEpicGloves");
 			if (BlademasterEpicGloves == null)
 			{
-				i = new HandsArmorTemplate();
-				i.ItemTemplateID = "BlademasterEpicGloves";
+				i = new ItemTemplate();
+				i.Id_nb = "BlademasterEpicGloves";
 				i.Name = "Sidhe Studded Gloves ";
 				i.Level = 50;
+				i.Item_Type = 22;
 				i.Model = 785;
 				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.Medium;
+				i.IsPickable = true;
+				i.DPS_AF = 100;
+				i.SPD_ABS = 19;
+				i.Object_Type = 37;
 				i.Quality = 100;
+				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Blademaster);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Hibernia;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 15));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 13));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Celtic_Dual, 3));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Parry, 3));
+				i.Bonus1 = 15;
+				i.Bonus1Type = (int)eStat.DEX;
 
-				if (SAVE_INTO_DATABASE)
+				i.Bonus2 = 13;
+				i.Bonus2Type = (int)eStat.STR;
+
+				i.Bonus3 = 3;
+				i.Bonus3Type = (int)eProperty.Skill_Celtic_Dual;
+
+				i.Bonus4 = 3;
+				i.Bonus4Type = (int)eProperty.Skill_Parry;
 				{
 					GameServer.Database.AddNewObject(i);
 				}
-				BlademasterEpicGloves = (HandsArmorTemplate)i;
-			}
 
+				BlademasterEpicGloves = i;
+
+			}
 			//Sidhe Studded Hauberk
-			BlademasterEpicVest = (TorsoArmorTemplate)GameServer.Database.FindObjectByKey(typeof(TorsoArmorTemplate), "BlademasterEpicVest");
+			BlademasterEpicVest = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "BlademasterEpicVest");
 			if (BlademasterEpicVest == null)
 			{
-				i = new TorsoArmorTemplate();
-				i.ItemTemplateID = "BlademasterEpicVest";
+				i = new ItemTemplate();
+				i.Id_nb = "BlademasterEpicVest";
 				i.Name = "Sidhe Studded Hauberk";
 				i.Level = 50;
+				i.Item_Type = 25;
 				i.Model = 782;
 				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.Medium;
+				i.IsPickable = true;
+				i.DPS_AF = 100;
+				i.SPD_ABS = 19;
+				i.Object_Type = 37;
 				i.Quality = 100;
+				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Blademaster);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Hibernia;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 12));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 12));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 33));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Slash, 8));
+				i.Bonus1 = 12;
+				i.Bonus1Type = (int)eStat.CON;
 
-				if (SAVE_INTO_DATABASE)
+				i.Bonus2 = 12;
+				i.Bonus2Type = (int)eStat.DEX;
+
+				i.Bonus3 = 33;
+				i.Bonus3Type = (int)eProperty.MaxHealth;
+
+				i.Bonus4 = 8;
+				i.Bonus4Type = (int)eResist.Slash;
 				{
 					GameServer.Database.AddNewObject(i);
 				}
-				BlademasterEpicVest = (TorsoArmorTemplate)i;
-			}
 
+				BlademasterEpicVest = i;
+
+			}
 			//Sidhe Studded Legs
-			BlademasterEpicLegs = (LegsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(LegsArmorTemplate), "BlademasterEpicLegs");
+			BlademasterEpicLegs = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "BlademasterEpicLegs");
 			if (BlademasterEpicLegs == null)
 			{
-				i = new LegsArmorTemplate();
-				i.ItemTemplateID = "BlademasterEpicLegs";
+				i = new ItemTemplate();
+				i.Id_nb = "BlademasterEpicLegs";
 				i.Name = "Sidhe Studded Leggings";
 				i.Level = 50;
+				i.Item_Type = 27;
 				i.Model = 783;
 				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.Medium;
+				i.IsPickable = true;
+				i.DPS_AF = 100;
+				i.SPD_ABS = 19;
+				i.Object_Type = 37;
 				i.Quality = 100;
+				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Blademaster);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Hibernia;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Quickness, 12));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 12));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 27));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Cold, 12));
+				i.Bonus1 = 12;
+				i.Bonus1Type = (int)eStat.QUI;
 
-				if (SAVE_INTO_DATABASE)
+				i.Bonus2 = 12;
+				i.Bonus2Type = (int)eStat.STR;
+
+				i.Bonus3 = 27;
+				i.Bonus3Type = (int)eProperty.MaxHealth;
+
+				i.Bonus4 = 12;
+				i.Bonus4Type = (int)eResist.Cold;
 				{
 					GameServer.Database.AddNewObject(i);
 				}
-				BlademasterEpicLegs = (LegsArmorTemplate)i;
-			}
 
+				BlademasterEpicLegs = i;
+
+			}
 			//Sidhe Studded Sleeves
-			BlademasterEpicArms = (ArmsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(ArmsArmorTemplate), "BlademasterEpicArms");
+			BlademasterEpicArms = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "BlademasterEpicArms");
 			if (BlademasterEpicArms == null)
 			{
-				i = new ArmsArmorTemplate();
-				i.ItemTemplateID = "BlademasterEpicArms";
+				i = new ItemTemplate();
+				i.Id_nb = "BlademasterEpicArms";
 				i.Name = "Sidhe Studded Sleeves";
 				i.Level = 50;
+				i.Item_Type = 28;
 				i.Model = 784;
 				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.Medium;
+				i.IsPickable = true;
+				i.DPS_AF = 100;
+				i.SPD_ABS = 19;
+				i.Object_Type = 37;
 				i.Quality = 100;
+				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Blademaster);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Hibernia;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 18));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 16));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Cold, 8));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Heat, 8));
+				i.Bonus1 = 18;
+				i.Bonus1Type = (int)eStat.CON;
 
-				if (SAVE_INTO_DATABASE)
+				i.Bonus2 = 16;
+				i.Bonus2Type = (int)eStat.STR;
+
+				i.Bonus3 = 8;
+				i.Bonus3Type = (int)eResist.Cold;
+
+				i.Bonus4 = 8;
+				i.Bonus4Type = (int)eResist.Heat;
 				{
 					GameServer.Database.AddNewObject(i);
 				}
-				BlademasterEpicArms = (ArmsArmorTemplate)i;
+
+				BlademasterEpicArms = i;
+
 			}
-			#endregion
-			#region Animist
-			AnimistEpicBoots = (FeetArmorTemplate)GameServer.Database.FindObjectByKey(typeof(FeetArmorTemplate), "AnimistEpicBoots");
+			AnimistEpicBoots = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "AnimistEpicBoots");
 			if (AnimistEpicBoots == null)
 			{
-				i = new FeetArmorTemplate();
-				i.ItemTemplateID = "AnimistEpicBoots";
+				i = new ItemTemplate();
+				i.Id_nb = "AnimistEpicBoots";
 				i.Name = "Brightly Woven Boots";
 				i.Level = 50;
+				i.Item_Type = 23;
 				i.Model = 382;
 				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 50;
-				i.ArmorLevel = eArmorLevel.VeryLow;
+				i.IsPickable = true;
+				i.DPS_AF = 50;
+				i.SPD_ABS = 0;
+				i.Object_Type = 32;
 				i.Quality = 100;
+				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Animist);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Hibernia;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 12));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 12));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 27));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Matter, 12));
+				i.Bonus1 = 12;
+				i.Bonus1Type = (int)eStat.CON;
 
-				if (SAVE_INTO_DATABASE)
+				i.Bonus2 = 12;
+				i.Bonus2Type = (int)eStat.DEX;
+
+				i.Bonus3 = 27;
+				i.Bonus3Type = (int)eProperty.MaxHealth;
+
+				i.Bonus4 = 12;
+				i.Bonus4Type = (int)eResist.Matter;
 				{
 					GameServer.Database.AddNewObject(i);
 				}
-				AnimistEpicBoots = (FeetArmorTemplate)i;
-			}
+				AnimistEpicBoots = i;
 
+			}
+			//end item
 			//Brightly Woven Coif
-			AnimistEpicHelm = (HeadArmorTemplate)GameServer.Database.FindObjectByKey(typeof(HeadArmorTemplate), "AnimistEpicHelm");
+			AnimistEpicHelm = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "AnimistEpicHelm");
 			if (AnimistEpicHelm == null)
 			{
-				i = new HeadArmorTemplate();
-				i.ItemTemplateID = "AnimistEpicHelm";
+				i = new ItemTemplate();
+				i.Id_nb = "AnimistEpicHelm";
 				i.Name = "Brightly Woven Cap";
 				i.Level = 50;
+				i.Item_Type = 21;
 				i.Model = 1292; //NEED TO WORK ON..
 				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 50;
-				i.ArmorLevel = eArmorLevel.VeryLow;
+				i.IsPickable = true;
+				i.DPS_AF = 50;
+				i.SPD_ABS = 0;
+				i.Object_Type = 32;
 				i.Quality = 100;
+				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Animist);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Hibernia;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 18));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Arboreal, 4));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 21));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Thrust, 8));
+				i.Bonus1 = 18;
+				i.Bonus1Type = (int)eStat.CON;
 
-				if (SAVE_INTO_DATABASE)
+				i.Bonus2 = 4;
+				i.Bonus2Type = (int)eProperty.Skill_Arboreal;
+
+				i.Bonus3 = 21;
+				i.Bonus3Type = (int)eProperty.MaxHealth;
+
+				i.Bonus4 = 8;
+				i.Bonus4Type = (int)eResist.Thrust;
 				{
 					GameServer.Database.AddNewObject(i);
 				}
-				AnimistEpicHelm = (HeadArmorTemplate)i;
-			}
 
+				AnimistEpicHelm = i;
+
+			}
+			//end item
 			//Brightly Woven Gloves
-			AnimistEpicGloves = (HandsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(HandsArmorTemplate), "AnimistEpicGloves");
+			AnimistEpicGloves = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "AnimistEpicGloves");
 			if (AnimistEpicGloves == null)
 			{
-				i = new HandsArmorTemplate();
-				i.ItemTemplateID = "AnimistEpicGloves";
+				i = new ItemTemplate();
+				i.Id_nb = "AnimistEpicGloves";
 				i.Name = "Brightly Woven Gloves ";
 				i.Level = 50;
+				i.Item_Type = 22;
 				i.Model = 381;
 				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 50;
-				i.ArmorLevel = eArmorLevel.VeryLow;
+				i.IsPickable = true;
+				i.DPS_AF = 50;
+				i.SPD_ABS = 0;
+				i.Object_Type = 32;
 				i.Quality = 100;
+				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Animist);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Hibernia;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 10));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Intelligence, 9));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Creeping, 4));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 30));
+				i.Bonus1 = 10;
+				i.Bonus1Type = (int)eStat.DEX;
 
-				if (SAVE_INTO_DATABASE)
+				i.Bonus2 = 9;
+				i.Bonus2Type = (int)eStat.INT;
+
+				i.Bonus3 = 4;
+				i.Bonus3Type = (int)eProperty.Skill_Creeping;
+
+				i.Bonus4 = 30;
+				i.Bonus4Type = (int)eProperty.MaxHealth;
 				{
 					GameServer.Database.AddNewObject(i);
 				}
-				AnimistEpicGloves = (HandsArmorTemplate)i;
-			}
+				AnimistEpicGloves = i;
 
+			}
 			//Brightly Woven Hauberk
-			AnimistEpicVest = (TorsoArmorTemplate)GameServer.Database.FindObjectByKey(typeof(TorsoArmorTemplate), "AnimistEpicVest");
+			AnimistEpicVest = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "AnimistEpicVest");
 			if (AnimistEpicVest == null)
 			{
-				i = new TorsoArmorTemplate();
-				i.ItemTemplateID = "AnimistEpicVest";
+				i = new ItemTemplate();
+				i.Id_nb = "AnimistEpicVest";
 				i.Name = "Brightly Woven Robe";
 				i.Level = 50;
+				i.Item_Type = 25;
 				i.Model = 1186;
 				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 50;
-				i.ArmorLevel = eArmorLevel.VeryLow;
+				i.IsPickable = true;
+				i.DPS_AF = 50;
+				i.SPD_ABS = 0;
+				i.Object_Type = 32;
 				i.Quality = 100;
+				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Animist);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Hibernia;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 12));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 30));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxMana, 6));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Body, 6));
+				i.Bonus1 = 12;
+				i.Bonus1Type = (int)eStat.DEX;
 
-				if (SAVE_INTO_DATABASE)
+				i.Bonus2 = 30;
+				i.Bonus2Type = (int)eProperty.MaxHealth;
+
+				i.Bonus3 = 6;
+				i.Bonus3Type = (int)eProperty.MaxMana;
+
+				i.Bonus4 = 8;
+				i.Bonus4Type = (int)eResist.Body;
 				{
 					GameServer.Database.AddNewObject(i);
 				}
-				AnimistEpicVest = (TorsoArmorTemplate)i;
-			}
+				AnimistEpicVest = i;
 
+			}
 			//Brightly Woven Legs
-			AnimistEpicLegs = (LegsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(LegsArmorTemplate), "AnimistEpicLegs");
+			AnimistEpicLegs = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "AnimistEpicLegs");
 			if (AnimistEpicLegs == null)
 			{
-				i = new LegsArmorTemplate();
-				i.ItemTemplateID = "AnimistEpicLegs";
+				i = new ItemTemplate();
+				i.Id_nb = "AnimistEpicLegs";
 				i.Name = "Brightly Woven Pants";
 				i.Level = 50;
+				i.Item_Type = 27;
 				i.Model = 379;
 				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 50;
-				i.ArmorLevel = eArmorLevel.VeryLow;
+				i.IsPickable = true;
+				i.DPS_AF = 50;
+				i.SPD_ABS = 0;
+				i.Object_Type = 32;
 				i.Quality = 100;
+				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Animist);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Hibernia;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 16));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 15));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Cold, 10));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Body, 10));
+				i.Bonus1 = 16;
+				i.Bonus1Type = (int)eStat.CON;
 
-				if (SAVE_INTO_DATABASE)
+				i.Bonus2 = 15;
+				i.Bonus2Type = (int)eStat.DEX;
+
+				i.Bonus3 = 10;
+				i.Bonus3Type = (int)eResist.Cold;
+
+				i.Bonus4 = 10;
+				i.Bonus4Type = (int)eResist.Body;
 				{
 					GameServer.Database.AddNewObject(i);
 				}
-				AnimistEpicLegs = (LegsArmorTemplate)i;
-			}
+				AnimistEpicLegs = i;
 
+			}
 			//Brightly Woven Sleeves
-			AnimistEpicArms = (ArmsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(ArmsArmorTemplate), "AnimistEpicArms");
+			AnimistEpicArms = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "AnimistEpicArms");
 			if (AnimistEpicArms == null)
 			{
-				i = new ArmsArmorTemplate();
-				i.ItemTemplateID = "AnimistEpicArms";
+				i = new ItemTemplate();
+				i.Id_nb = "AnimistEpicArms";
 				i.Name = "Brightly Woven Sleeves";
 				i.Level = 50;
+				i.Item_Type = 28;
 				i.Model = 380;
 				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 50;
-				i.ArmorLevel = eArmorLevel.VeryLow;
+				i.IsPickable = true;
+				i.DPS_AF = 50;
+				i.SPD_ABS = 0;
+				i.Object_Type = 32;
 				i.Quality = 100;
+				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Animist);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Hibernia;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 10));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 27));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Intelligence, 10));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxMana, 4));
+				i.Bonus1 = 10;
+				i.Bonus1Type = (int)eStat.DEX;
 
-				if (SAVE_INTO_DATABASE)
+				i.Bonus2 = 27;
+				i.Bonus2Type = (int)eProperty.MaxHealth;
+
+				i.Bonus3 = 10;
+				i.Bonus3Type = (int)eStat.INT;
+
+				i.Bonus4 = 4;
+				i.Bonus4Type = (int)eProperty.Skill_Mana;
 				{
 					GameServer.Database.AddNewObject(i);
 				}
-				AnimistEpicArms = (ArmsArmorTemplate)i;
+				AnimistEpicArms = i;
+
 			}
-			#endregion
-			#region Mentalist
-			MentalistEpicBoots = (FeetArmorTemplate)GameServer.Database.FindObjectByKey(typeof(FeetArmorTemplate), "MentalistEpicBoots");
+			MentalistEpicBoots = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "MentalistEpicBoots");
 			if (MentalistEpicBoots == null)
 			{
-				i = new FeetArmorTemplate();
-				i.ItemTemplateID = "MentalistEpicBoots";
+				i = new ItemTemplate();
+				i.Id_nb = "MentalistEpicBoots";
 				i.Name = "Sidhe Woven Boots";
 				i.Level = 50;
+				i.Item_Type = 23;
 				i.Model = 382;
 				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 50;
-				i.ArmorLevel = eArmorLevel.VeryLow;
+				i.IsPickable = true;
+				i.DPS_AF = 50;
+				i.SPD_ABS = 0;
+				i.Object_Type = 32;
 				i.Quality = 100;
+				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Mentalist);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Hibernia;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 12));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 12));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Matter, 12));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 27));
+				i.Bonus1 = 12;
+				i.Bonus1Type = (int)eStat.CON;
 
-				if (SAVE_INTO_DATABASE)
+				i.Bonus2 = 12;
+				i.Bonus2Type = (int)eStat.DEX;
+
+				i.Bonus3 = 12;
+				i.Bonus3Type = (int)eResist.Matter;
+
+				i.Bonus4 = 27;
+				i.Bonus4Type = (int)eProperty.MaxHealth;
 				{
 					GameServer.Database.AddNewObject(i);
 				}
-				MentalistEpicBoots = (FeetArmorTemplate)i;
-			}
+				MentalistEpicBoots = i;
 
+			}
+			//end item
 			//Sidhe Woven Coif
-			MentalistEpicHelm = (HeadArmorTemplate)GameServer.Database.FindObjectByKey(typeof(HeadArmorTemplate), "MentalistEpicHelm");
+			MentalistEpicHelm = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "MentalistEpicHelm");
 			if (MentalistEpicHelm == null)
 			{
-				i = new HeadArmorTemplate();
-				i.ItemTemplateID = "MentalistEpicHelm";
+				i = new ItemTemplate();
+				i.Id_nb = "MentalistEpicHelm";
 				i.Name = "Sidhe Woven Cap";
 				i.Level = 50;
+				i.Item_Type = 21;
 				i.Model = 1298; //NEED TO WORK ON..
 				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 50;
-				i.ArmorLevel = eArmorLevel.VeryLow;
+				i.IsPickable = true;
+				i.DPS_AF = 50;
+				i.SPD_ABS = 0;
+				i.Object_Type = 32;
 				i.Quality = 100;
+				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Mentalist);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Hibernia;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Intelligence, 18));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Mentalism, 4));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Thrust, 8));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 21));
+				i.Bonus1 = 18;
+				i.Bonus1Type = (int)eStat.INT;
 
-				if (SAVE_INTO_DATABASE)
+				i.Bonus2 = 4;
+				i.Bonus2Type = (int)eProperty.Skill_Mentalism;
+
+				i.Bonus3 = 8;
+				i.Bonus3Type = (int)eResist.Thrust;
+
+				i.Bonus4 = 21;
+				i.Bonus4Type = (int)eProperty.MaxHealth;
 				{
 					GameServer.Database.AddNewObject(i);
 				}
-				MentalistEpicHelm = (HeadArmorTemplate)i;
-			}
+				MentalistEpicHelm = i;
 
+			}
+			//end item
 			//Sidhe Woven Gloves
-			MentalistEpicGloves = (HandsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(HandsArmorTemplate), "MentalistEpicGloves");
+			MentalistEpicGloves = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "MentalistEpicGloves");
 			if (MentalistEpicGloves == null)
 			{
-				i = new HandsArmorTemplate();
-				i.ItemTemplateID = "MentalistEpicGloves";
+				i = new ItemTemplate();
+				i.Id_nb = "MentalistEpicGloves";
 				i.Name = "Sidhe Woven Gloves ";
 				i.Level = 50;
+				i.Item_Type = 22;
 				i.Model = 381;
 				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 50;
-				i.ArmorLevel = eArmorLevel.VeryLow;
+				i.IsPickable = true;
+				i.DPS_AF = 50;
+				i.SPD_ABS = 0;
+				i.Object_Type = 32;
 				i.Quality = 100;
+				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Mentalist);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Hibernia;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 30));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Light, 4));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Intelligence, 9));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 10));
+				i.Bonus1 = 30;
+				i.Bonus1Type = (int)eProperty.MaxHealth;
 
-				if (SAVE_INTO_DATABASE)
+				i.Bonus2 = 4;
+				i.Bonus2Type = (int)eProperty.Skill_Light;
+
+				i.Bonus3 = 9;
+				i.Bonus3Type = (int)eStat.INT;
+
+				i.Bonus4 = 10;
+				i.Bonus4Type = (int)eStat.DEX;
 				{
 					GameServer.Database.AddNewObject(i);
 				}
-				MentalistEpicGloves = (HandsArmorTemplate)i;
-			}
+				MentalistEpicGloves = i;
 
+			}
 			//Sidhe Woven Hauberk
-			MentalistEpicVest = (TorsoArmorTemplate)GameServer.Database.FindObjectByKey(typeof(TorsoArmorTemplate), "MentalistEpicVest");
+			MentalistEpicVest = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "MentalistEpicVest");
 			if (MentalistEpicVest == null)
 			{
-				i = new TorsoArmorTemplate();
-				i.ItemTemplateID = "MentalistEpicVest";
+				i = new ItemTemplate();
+				i.Id_nb = "MentalistEpicVest";
 				i.Name = "Sidhe Woven Vest";
 				i.Level = 50;
+				i.Item_Type = 25;
 				i.Model = 745;
 				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 50;
-				i.ArmorLevel = eArmorLevel.VeryLow;
+				i.IsPickable = true;
+				i.DPS_AF = 50;
+				i.SPD_ABS = 0;
+				i.Object_Type = 32;
 				i.Quality = 100;
+				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Mentalist);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Hibernia;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 12));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Body, 8));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 30));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxMana, 6));
+				i.Bonus1 = 12;
+				i.Bonus1Type = (int)eStat.DEX;
 
-				if (SAVE_INTO_DATABASE)
+				i.Bonus2 = 8;
+				i.Bonus2Type = (int)eResist.Body;
+
+				i.Bonus3 = 30;
+				i.Bonus3Type = (int)eProperty.MaxHealth;
+
+				i.Bonus4 = 6;
+				i.Bonus4Type = (int)eProperty.MaxMana;
 				{
 					GameServer.Database.AddNewObject(i);
 				}
-				MentalistEpicVest = (TorsoArmorTemplate)i;
-			}
+				MentalistEpicVest = i;
 
+			}
 			//Sidhe Woven Legs
-			MentalistEpicLegs = (LegsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(LegsArmorTemplate), "MentalistEpicLegs");
+			MentalistEpicLegs = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "MentalistEpicLegs");
 			if (MentalistEpicLegs == null)
 			{
-				i = new LegsArmorTemplate();
-				i.ItemTemplateID = "MentalistEpicLegs";
+				i = new ItemTemplate();
+				i.Id_nb = "MentalistEpicLegs";
 				i.Name = "Sidhe Woven Pants";
 				i.Level = 50;
+				i.Item_Type = 27;
 				i.Model = 379;
 				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 50;
-				i.ArmorLevel = eArmorLevel.VeryLow;
+				i.IsPickable = true;
+				i.DPS_AF = 50;
+				i.SPD_ABS = 0;
+				i.Object_Type = 32;
 				i.Quality = 100;
+				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Mentalist);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Hibernia;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 16));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 15));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Cold, 10));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Body, 10));
+				i.Bonus1 = 16;
+				i.Bonus1Type = (int)eStat.CON;
 
-				if (SAVE_INTO_DATABASE)
+				i.Bonus2 = 15;
+				i.Bonus2Type = (int)eStat.DEX;
+
+				i.Bonus3 = 10;
+				i.Bonus3Type = (int)eResist.Cold;
+
+				i.Bonus4 = 10;
+				i.Bonus4Type = (int)eResist.Body;
 				{
 					GameServer.Database.AddNewObject(i);
 				}
-				MentalistEpicLegs = (LegsArmorTemplate)i;
-			}
+				MentalistEpicLegs = i;
 
+			}
 			//Sidhe Woven Sleeves
-			MentalistEpicArms = (ArmsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(ArmsArmorTemplate), "MentalistEpicArms");
+			MentalistEpicArms = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "MentalistEpicArms");
 			if (MentalistEpicArms == null)
 			{
-				i = new ArmsArmorTemplate();
-				i.ItemTemplateID = "MentalistEpicArms";
+				i = new ItemTemplate();
+				i.Id_nb = "MentalistEpicArms";
 				i.Name = "Sidhe Woven Sleeves";
 				i.Level = 50;
+				i.Item_Type = 28;
 				i.Model = 380;
 				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 50;
-				i.ArmorLevel = eArmorLevel.VeryLow;
+				i.IsPickable = true;
+				i.DPS_AF = 50;
+				i.SPD_ABS = 0;
+				i.Object_Type = 32;
 				i.Quality = 100;
+				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Mentalist);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Hibernia;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 10));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 27));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Intelligence, 10));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Mana, 4));
+				i.Bonus1 = 10;
+				i.Bonus1Type = (int)eStat.DEX;
 
-				if (SAVE_INTO_DATABASE)
+				i.Bonus2 = 27;
+				i.Bonus2Type = (int)eProperty.MaxHealth;
+
+				i.Bonus3 = 10;
+				i.Bonus3Type = (int)eStat.INT;
+
+				i.Bonus4 = 4;
+				i.Bonus4Type = (int)eProperty.Skill_Mana;
 				{
 					GameServer.Database.AddNewObject(i);
 				}
-				MentalistEpicArms = (ArmsArmorTemplate)i;
+				MentalistEpicArms = i;
+
 			}
-			#endregion
-			#region Valewalker
-			ValewalkerEpicBoots = (FeetArmorTemplate)GameServer.Database.FindObjectByKey(typeof(FeetArmorTemplate), "ValewalkerEpicBoots");
+			ValewalkerEpicBoots = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ValewalkerEpicBoots");
 			if (ValewalkerEpicBoots == null)
 			{
-				i = new FeetArmorTemplate();
-				i.ItemTemplateID = "ValewalkerEpicBoots";
+				i = new ItemTemplate();
+				i.Id_nb = "ValewalkerEpicBoots";
 				i.Name = "Boots of the Misty Glade";
 				i.Level = 50;
+				i.Item_Type = 23;
 				i.Model = 382;
 				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 50;
-				i.ArmorLevel = eArmorLevel.VeryLow;
+				i.IsPickable = true;
+				i.DPS_AF = 50;
+				i.SPD_ABS = 0;
+				i.Object_Type = 32;
 				i.Quality = 100;
+				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Valewalker);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Hibernia;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 12));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Matter, 10));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Heat, 10));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 33));
+				i.Bonus1 = 12;
+				i.Bonus1Type = (int)eStat.CON;
 
-				if (SAVE_INTO_DATABASE)
+				i.Bonus2 = 10;
+				i.Bonus2Type = (int)eResist.Matter;
+
+				i.Bonus3 = 10;
+				i.Bonus3Type = (int)eResist.Heat;
+
+				i.Bonus4 = 33;
+				i.Bonus4Type = (int)eProperty.MaxHealth;
 				{
 					GameServer.Database.AddNewObject(i);
 				}
-				ValewalkerEpicBoots = (FeetArmorTemplate)i;
-			}
+				ValewalkerEpicBoots = i;
 
+			}
+			//end item
 			//Misty Glade Coif
-			ValewalkerEpicHelm = (HeadArmorTemplate)GameServer.Database.FindObjectByKey(typeof(HeadArmorTemplate), "ValewalkerEpicHelm");
+			ValewalkerEpicHelm = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ValewalkerEpicHelm");
 			if (ValewalkerEpicHelm == null)
 			{
-				i = new HeadArmorTemplate();
-				i.ItemTemplateID = "ValewalkerEpicHelm";
+				i = new ItemTemplate();
+				i.Id_nb = "ValewalkerEpicHelm";
 				i.Name = "Cap of the Misty Glade";
 				i.Level = 50;
+				i.Item_Type = 21;
 				i.Model = 1292; //NEED TO WORK ON..
 				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 50;
-				i.ArmorLevel = eArmorLevel.VeryLow;
+				i.IsPickable = true;
+				i.DPS_AF = 50;
+				i.SPD_ABS = 0;
+				i.Object_Type = 32;
 				i.Quality = 100;
+				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Valewalker);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Hibernia;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Arboreal, 3));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxMana, 6));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 12));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Intelligence, 12));
+				i.Bonus1 = 3;
+				i.Bonus1Type = (int)eProperty.Skill_Arboreal;
 
-				if (SAVE_INTO_DATABASE)
+				i.Bonus2 = 6;
+				i.Bonus2Type = (int)eProperty.MaxMana;
+
+				i.Bonus3 = 12;
+				i.Bonus3Type = (int)eStat.CON;
+
+				i.Bonus4 = 12;
+				i.Bonus4Type = (int)eStat.INT;
 				{
 					GameServer.Database.AddNewObject(i);
 				}
-				ValewalkerEpicHelm = (HeadArmorTemplate)i;
-			}
+				ValewalkerEpicHelm = i;
 
+			}
+			//end item
 			//Misty Glade Gloves
-			ValewalkerEpicGloves = (HandsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(HandsArmorTemplate), "ValewalkerEpicGloves");
+			ValewalkerEpicGloves = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ValewalkerEpicGloves");
 			if (ValewalkerEpicGloves == null)
 			{
-				i = new HandsArmorTemplate();
-				i.ItemTemplateID = "ValewalkerEpicGloves";
+				i = new ItemTemplate();
+				i.Id_nb = "ValewalkerEpicGloves";
 				i.Name = "Gloves of the Misty Glades";
 				i.Level = 50;
+				i.Item_Type = 22;
 				i.Model = 381;
 				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 50;
-				i.ArmorLevel = eArmorLevel.VeryLow;
+				i.IsPickable = true;
+				i.DPS_AF = 50;
+				i.SPD_ABS = 0;
+				i.Object_Type = 32;
 				i.Quality = 100;
+				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Valewalker);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Hibernia;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Parry, 3));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 15));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 15));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Crush, 10));
+				i.Bonus1 = 3;
+				i.Bonus1Type = (int)eProperty.Skill_Parry;
 
-				if (SAVE_INTO_DATABASE)
+				i.Bonus2 = 15;
+				i.Bonus2Type = (int)eStat.CON;
+
+				i.Bonus3 = 15;
+				i.Bonus3Type = (int)eStat.DEX;
+
+				i.Bonus4 = 10;
+				i.Bonus4Type = (int)eResist.Crush;
 				{
 					GameServer.Database.AddNewObject(i);
 				}
-				ValewalkerEpicGloves = (HandsArmorTemplate)i;
-			}
+				ValewalkerEpicGloves = i;
 
+			}
 			//Misty Glade Hauberk
-			ValewalkerEpicVest = (TorsoArmorTemplate)GameServer.Database.FindObjectByKey(typeof(TorsoArmorTemplate), "ValewalkerEpicVest");
+			ValewalkerEpicVest = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ValewalkerEpicVest");
 			if (ValewalkerEpicVest == null)
 			{
-				i = new TorsoArmorTemplate();
-				i.ItemTemplateID = "ValewalkerEpicVest";
+				i = new ItemTemplate();
+				i.Id_nb = "ValewalkerEpicVest";
 				i.Name = "Robe of the Misty Glade";
 				i.Level = 50;
+				i.Item_Type = 25;
 				i.Model = 1003;
 				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 50;
-				i.ArmorLevel = eArmorLevel.VeryLow;
+				i.IsPickable = true;
+				i.DPS_AF = 50;
+				i.SPD_ABS = 0;
+				i.Object_Type = 32;
 				i.Quality = 100;
+				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Valewalker);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Hibernia;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Intelligence, 13));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 13));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Arboreal, 4));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Energy, 10));
+				i.Bonus1 = 13;
+				i.Bonus1Type = (int)eStat.INT;
 
-				if (SAVE_INTO_DATABASE)
+				i.Bonus2 = 13;
+				i.Bonus2Type = (int)eStat.STR;
+
+				i.Bonus3 = 4;
+				i.Bonus3Type = (int)eProperty.Skill_Arboreal;
+
+				i.Bonus4 = 10;
+				i.Bonus4Type = (int)eResist.Energy;
 				{
 					GameServer.Database.AddNewObject(i);
 				}
-				ValewalkerEpicVest = (TorsoArmorTemplate)i;
-			}
+				ValewalkerEpicVest = i;
 
+			}
 			//Misty Glade Legs
-			ValewalkerEpicLegs = (LegsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(LegsArmorTemplate), "ValewalkerEpicLegs");
+			ValewalkerEpicLegs = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ValewalkerEpicLegs");
 			if (ValewalkerEpicLegs == null)
 			{
-				i = new LegsArmorTemplate();
-				i.ItemTemplateID = "ValewalkerEpicLegs";
+				i = new ItemTemplate();
+				i.Id_nb = "ValewalkerEpicLegs";
 				i.Name = "Pants of the Misty Glade";
 				i.Level = 50;
+				i.Item_Type = 27;
 				i.Model = 379;
 				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 50;
-				i.ArmorLevel = eArmorLevel.VeryLow;
+				i.IsPickable = true;
+				i.DPS_AF = 50;
+				i.SPD_ABS = 0;
+				i.Object_Type = 32;
 				i.Quality = 100;
+				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Valewalker);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Hibernia;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 15));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 15));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Crush, 10));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 18));
+				i.Bonus1 = 15;
+				i.Bonus1Type = (int)eStat.DEX;
 
-				if (SAVE_INTO_DATABASE)
+				i.Bonus2 = 15;
+				i.Bonus2Type = (int)eStat.CON;
+
+				i.Bonus3 = 10;
+				i.Bonus3Type = (int)eResist.Crush;
+
+				i.Bonus4 = 18;
+				i.Bonus4Type = (int)eProperty.MaxHealth;
 				{
 					GameServer.Database.AddNewObject(i);
 				}
-				ValewalkerEpicLegs = (LegsArmorTemplate)i;
-			}
+				ValewalkerEpicLegs = i;
 
+			}
 			//Misty Glade Sleeves
-			ValewalkerEpicArms = (ArmsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(ArmsArmorTemplate), "ValewalkerEpicArms");
+			ValewalkerEpicArms = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ValewalkerEpicArms");
 			if (ValewalkerEpicArms == null)
 			{
-				i = new ArmsArmorTemplate();
-				i.ItemTemplateID = "ValewalkerEpicArms";
+				i = new ItemTemplate();
+				i.Id_nb = "ValewalkerEpicArms";
 				i.Name = "Sleeves of the Misty Glade";
 				i.Level = 50;
+				i.Item_Type = 28;
 				i.Model = 380;
 				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 50;
-				i.ArmorLevel = eArmorLevel.VeryLow;
+				i.IsPickable = true;
+				i.DPS_AF = 50;
+				i.SPD_ABS = 0;
+				i.Object_Type = 32;
 				i.Quality = 100;
+				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Valewalker);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Hibernia;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
 
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Scythe, 3));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 10));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Intelligence, 10));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 33));
+				i.Bonus1 = 3;
+				i.Bonus1Type = (int)eProperty.Skill_Scythe;
 
-				if (SAVE_INTO_DATABASE)
+				i.Bonus2 = 10;
+				i.Bonus2Type = (int)eStat.DEX;
+
+				i.Bonus3 = 10;
+				i.Bonus3Type = (int)eStat.INT;
+
+				i.Bonus4 = 33;
+				i.Bonus4Type = (int)eProperty.MaxHealth;
 				{
 					GameServer.Database.AddNewObject(i);
 				}
-				ValewalkerEpicArms = (ArmsArmorTemplate)i;
+				ValewalkerEpicArms = i;
+
 			}
+
+			//Blademaster Epic Sleeves End
+			//Item Descriptions End
+
 			#endregion
-			#region Vampiir
-			VampiirEpicBoots = (FeetArmorTemplate)GameServer.Database.FindObjectByKey(typeof(FeetArmorTemplate), "VampiirEpicBoots");
-			if (VampiirEpicBoots == null)
-			{
-				i = new FeetArmorTemplate();
-				i.ItemTemplateID = "VampiirEpicBoots";
-				i.Name = "Archfiend Etched Boots";
-				i.Level = 50;
-				i.Model = 2927;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.Low;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Vampiir);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Hibernia;
-
-				/*
-				 *   Strength: 12 pts
-				 *   Dexterity: 15 pts
-				 *   Thrust Resist: 10%
-				 *   Hits: 24 pts
-				 */
-
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 12));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 15));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Thrust, 10));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 24));
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddNewObject(i);
-				}
-				VampiirEpicBoots = (FeetArmorTemplate)i;
-			}
-
-			//Misty Glade Coif
-			VampiirEpicHelm = (HeadArmorTemplate)GameServer.Database.FindObjectByKey(typeof(HeadArmorTemplate), "VampiirEpicHelm");
-			if (VampiirEpicHelm == null)
-			{
-				i = new HeadArmorTemplate();
-				i.ItemTemplateID = "VampiirEpicHelm";
-				i.Name = "Archfiend Etched Helm";
-				i.Level = 50;
-				i.Model = 1292; //NEED TO WORK ON..
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.Low;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Vampiir);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Hibernia;
-
-				/*
-				 *   Strength: 6 pts
-				 *   Constitution: 16 pts
-				 *   Dexterity: 6 pts
-				 *   Hits: 30 pts
-				 */
-
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 6));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 16));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 6));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 30));
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddNewObject(i);
-				}
-				VampiirEpicHelm = (HeadArmorTemplate)i;
-			}
-
-			//Misty Glade Gloves
-			VampiirEpicGloves = (HandsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(HandsArmorTemplate), "VampiirEpicGloves");
-			if (VampiirEpicGloves == null)
-			{
-				i = new HandsArmorTemplate();
-				i.ItemTemplateID = "VampiirEpicGloves";
-				i.Name = "Archfiend Etched Gloves";
-				i.Level = 50;
-				i.Model = 2926;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.Low;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Vampiir);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Hibernia;
-
-				/*
-				 *   Dexterity: 12 pts
-				 *   Quickness: 13 pts
-				 *   Dementia: +2 pts
-				 *   Shadow Mastery: +5 pts
-				 */
-
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 12));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Quickness, 13));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Dementia, 2));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_ShadowMastery, 5));
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddNewObject(i);
-				}
-				VampiirEpicGloves = (HandsArmorTemplate)i;
-			}
-
-			//Misty Glade Hauberk
-			VampiirEpicVest = (TorsoArmorTemplate)GameServer.Database.FindObjectByKey(typeof(TorsoArmorTemplate), "VampiirEpicVest");
-			if (VampiirEpicVest == null)
-			{
-				i = new TorsoArmorTemplate();
-				i.ItemTemplateID = "VampiirEpicVest";
-				i.Name = "Archfiend Etched Vest";
-				i.Level = 50;
-				i.Model = 2923;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.Low;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Vampiir);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Hibernia;
-
-				/*
-				 *   Strength: 10 pts
-				 *   Dexterity: 10 pts
-				 *   Quickness: 10 pts
-				 *   Hits: 30 pts
-				 */
-
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 10));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 10));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Quickness, 10));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 30));
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddNewObject(i);
-				}
-				VampiirEpicVest = (TorsoArmorTemplate)i;
-			}
-
-			//Misty Glade Legs
-			VampiirEpicLegs = (LegsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(LegsArmorTemplate), "VampiirEpicLegs");
-			if (VampiirEpicLegs == null)
-			{
-				i = new LegsArmorTemplate();
-				i.ItemTemplateID = "VampiirEpicLegs";
-				i.Name = "Archfiend Etched Leggings";
-				i.Level = 50;
-				i.Model = 2924;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.Low;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Vampiir);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Hibernia;
-
-				/*
-				 *   Constitution: 16 pts
-				 *   Dexterity: 15 pts
-				 *   Crush Resist: 10%
-				 *   Slash Resist: 10%
-				 */
-
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 16));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 15));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Crush, 10));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Slash, 10));
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddNewObject(i);
-				}
-				VampiirEpicLegs = (LegsArmorTemplate)i;
-			}
-
-			//Misty Glade Sleeves
-			VampiirEpicArms = (ArmsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(ArmsArmorTemplate), "VampiirEpicArms");
-			if (VampiirEpicArms == null)
-			{
-				i = new ArmsArmorTemplate();
-				i.ItemTemplateID = "VampiirEpicArms";
-				i.Name = "Archfiend Etched Sleeves";
-				i.Level = 50;
-				i.Model = 2925;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 100;
-				i.ArmorLevel = eArmorLevel.Low;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Vampiir);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Hibernia;
-
-				/*
-				 *   Strength: 15 pts
-				 *   Dexterity: 15 pts
-				 *   Cold Resist: 6%
-				 *   Vampiiric Embrace: +4 pts
-				 */
-
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 15));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 15));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Cold, 6));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_VampiiricEmbrace, 4));
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddNewObject(i);
-				}
-				VampiirEpicArms = (ArmsArmorTemplate)i;
-			}
-			#endregion
-			#region Bainshee
-			BainsheeEpicBoots = (FeetArmorTemplate)GameServer.Database.FindObjectByKey(typeof(FeetArmorTemplate), "BainsheeEpicBoots");
-			if (BainsheeEpicBoots == null)
-			{
-				i = new FeetArmorTemplate();
-				i.ItemTemplateID = "BainsheeEpicBoots";
-				i.Name = "Boots of the Keening Spirit";
-				i.Level = 50;
-				i.Model = 2952;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 50;
-				i.ArmorLevel = eArmorLevel.VeryLow;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Bainshee);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Hibernia;
-
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 12));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Matter, 10));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Heat, 10));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 33));
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddNewObject(i);
-				}
-				BainsheeEpicBoots = (FeetArmorTemplate)i;
-			}
-
-			//Keening Spirit Coif
-			BainsheeEpicHelm = (HeadArmorTemplate)GameServer.Database.FindObjectByKey(typeof(HeadArmorTemplate), "BainsheeEpicHelm");
-			if (BainsheeEpicHelm == null)
-			{
-				i = new HeadArmorTemplate();
-				i.ItemTemplateID = "BainsheeEpicHelm";
-				i.Name = "Cap of the Keening Spirit";
-				i.Level = 50;
-				i.Model = 1292; //NEED TO WORK ON..
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 50;
-				i.ArmorLevel = eArmorLevel.VeryLow;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Bainshee);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Hibernia;
-
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Arboreal, 3));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxMana, 6));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 12));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Intelligence, 12));
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddNewObject(i);
-				}
-				BainsheeEpicHelm = (HeadArmorTemplate)i;
-			}
-
-			//Keening Spirit Gloves
-			BainsheeEpicGloves = (HandsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(HandsArmorTemplate), "BainsheeEpicGloves");
-			if (BainsheeEpicGloves == null)
-			{
-				i = new HandsArmorTemplate();
-				i.ItemTemplateID = "BainsheeEpicGloves";
-				i.Name = "Gloves of the Keening Spirits";
-				i.Level = 50;
-				i.Model = 2950;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 50;
-				i.ArmorLevel = eArmorLevel.VeryLow;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Bainshee);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Hibernia;
-
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Parry, 3));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 15));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 15));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Crush, 10));
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddNewObject(i);
-				}
-				BainsheeEpicGloves = (HandsArmorTemplate)i;
-			}
-
-			//Keening Spirit Hauberk
-			BainsheeEpicVest = (TorsoArmorTemplate)GameServer.Database.FindObjectByKey(typeof(TorsoArmorTemplate), "BainsheeEpicVest");
-			if (BainsheeEpicVest == null)
-			{
-				i = new TorsoArmorTemplate();
-				i.ItemTemplateID = "BainsheeEpicVest";
-				i.Name = "Robe of the Keening Spirit";
-				i.Level = 50;
-				i.Model = 2922;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 50;
-				i.ArmorLevel = eArmorLevel.VeryLow;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Bainshee);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Hibernia;
-
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Intelligence, 13));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 13));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Arboreal, 4));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Energy, 10));
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddNewObject(i);
-				}
-				BainsheeEpicVest = (TorsoArmorTemplate)i;
-			}
-
-			//Keening Spirit Legs
-			BainsheeEpicLegs = (LegsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(LegsArmorTemplate), "BainsheeEpicLegs");
-			if (BainsheeEpicLegs == null)
-			{
-				i = new LegsArmorTemplate();
-				i.ItemTemplateID = "BainsheeEpicLegs";
-				i.Name = "Pants of the Keening Spirit";
-				i.Level = 50;
-				i.Model = 2949;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 50;
-				i.ArmorLevel = eArmorLevel.VeryLow;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Bainshee);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Hibernia;
-
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 15));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 15));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Crush, 10));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 18));
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddNewObject(i);
-				}
-				BainsheeEpicLegs = (LegsArmorTemplate)i;
-			}
-
-			//Keening Spirit Sleeves
-			BainsheeEpicArms = (ArmsArmorTemplate)GameServer.Database.FindObjectByKey(typeof(ArmsArmorTemplate), "BainsheeEpicArms");
-			if (BainsheeEpicArms == null)
-			{
-				i = new ArmsArmorTemplate();
-				i.ItemTemplateID = "BainsheeEpicArms";
-				i.Name = "Sleeves of the Keening Spirit";
-				i.Level = 50;
-				i.Model = 2948;
-				i.IsDropable = true;
-				i.IsSaleable = false;
-				i.IsTradable = true;
-				i.ArmorFactor = 50;
-				i.ArmorLevel = eArmorLevel.VeryLow;
-				i.Quality = 100;
-				i.Weight = 22;
-				i.Bonus = 35;
-				i.AllowedClass.Add(eCharacterClass.Bainshee);
-				i.MaterialLevel = eMaterialLevel.Arcanium;
-				i.Realm = eRealm.Hibernia;
-
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Scythe, 3));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 10));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Intelligence, 10));
-				i.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 33));
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddNewObject(i);
-				}
-				BainsheeEpicArms = (ArmsArmorTemplate)i;
-			}
-			#endregion
-			#endregion
-
-			BlademasterTrainers = WorldMgr.GetNPCsByType(typeof(DOL.GS.Trainer.BlademasterTrainer), eRealm.Hibernia);
-			DruidTrainers = WorldMgr.GetNPCsByType(typeof(DOL.GS.Trainer.DruidTrainer), eRealm.Hibernia);
-			MentalistTrainers = WorldMgr.GetNPCsByType(typeof(DOL.GS.Trainer.MentalistTrainer), eRealm.Hibernia);
-			AnimistTrainers = WorldMgr.GetNPCsByType(typeof(DOL.GS.Trainer.AnimistTrainer), eRealm.Hibernia);
-			ValewalkerTrainers = WorldMgr.GetNPCsByType(typeof(DOL.GS.Trainer.ValewalkerTrainer), eRealm.Hibernia);
-			VampiirTrainers = WorldMgr.GetNPCsByType(typeof(DOL.GS.Trainer.VampiirTrainer), eRealm.Hibernia);
-			BainsheeTrainers = WorldMgr.GetNPCsByType(typeof(DOL.GS.Trainer.BainsheeTrainer), eRealm.Hibernia);
-
-			foreach (GameNPC npc in BlademasterTrainers)
-				GameEventMgr.AddHandler(npc, GameNPCEvent.Interact, new DOLEventHandler(TalkToTrainer));
-			foreach (GameNPC npc in DruidTrainers)
-				GameEventMgr.AddHandler(npc, GameNPCEvent.Interact, new DOLEventHandler(TalkToTrainer));
-			foreach (GameNPC npc in MentalistTrainers)
-				GameEventMgr.AddHandler(npc, GameNPCEvent.Interact, new DOLEventHandler(TalkToTrainer));
-			foreach (GameNPC npc in AnimistTrainers)
-				GameEventMgr.AddHandler(npc, GameNPCEvent.Interact, new DOLEventHandler(TalkToTrainer));
-			foreach (GameNPC npc in ValewalkerTrainers)
-				GameEventMgr.AddHandler(npc, GameNPCEvent.Interact, new DOLEventHandler(TalkToTrainer));
-			foreach (GameNPC npc in VampiirTrainers)
-				GameEventMgr.AddHandler(npc, GameNPCEvent.Interact, new DOLEventHandler(TalkToTrainer));
-			foreach (GameNPC npc in BainsheeTrainers)
-				GameEventMgr.AddHandler(npc, GameNPCEvent.Interact, new DOLEventHandler(TalkToTrainer));
 
 			GameEventMgr.AddHandler(Revelin, GameObjectEvent.Interact, new DOLEventHandler(TalkToRevelin));
 			GameEventMgr.AddHandler(Revelin, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToRevelin));
-			GameEventMgr.AddHandler(Cailean, GameNPCEvent.Dying, new DOLEventHandler(TargetDying));
 
 			/* Now we bring to Revelin the possibility to give this quest to players */
-			QuestMgr.AddQuestDescriptor(Revelin, typeof(Harmony_50Descriptor));
+			Revelin.AddQuestToGive(typeof(Harmony_50));
 
 			if (log.IsInfoEnabled)
 				log.Info("Quest \"" + questTitle + "\" initialized");
@@ -1718,23 +1461,8 @@ namespace DOL.GS.Quests.Hibernia
 			GameEventMgr.RemoveHandler(Revelin, GameObjectEvent.Interact, new DOLEventHandler(TalkToRevelin));
 			GameEventMgr.RemoveHandler(Revelin, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToRevelin));
 
-			foreach (GameNPC npc in BlademasterTrainers)
-				GameEventMgr.RemoveHandler(npc, GameNPCEvent.Interact, new DOLEventHandler(TalkToTrainer));
-			foreach (GameNPC npc in DruidTrainers)
-				GameEventMgr.RemoveHandler(npc, GameNPCEvent.Interact, new DOLEventHandler(TalkToTrainer));
-			foreach (GameNPC npc in MentalistTrainers)
-				GameEventMgr.RemoveHandler(npc, GameNPCEvent.Interact, new DOLEventHandler(TalkToTrainer));
-			foreach (GameNPC npc in AnimistTrainers)
-				GameEventMgr.RemoveHandler(npc, GameNPCEvent.Interact, new DOLEventHandler(TalkToTrainer));
-			foreach (GameNPC npc in ValewalkerTrainers)
-				GameEventMgr.RemoveHandler(npc, GameNPCEvent.Interact, new DOLEventHandler(TalkToTrainer));
-			foreach (GameNPC npc in VampiirTrainers)
-				GameEventMgr.RemoveHandler(npc, GameNPCEvent.Interact, new DOLEventHandler(TalkToTrainer));
-			foreach (GameNPC npc in BainsheeTrainers)
-				GameEventMgr.RemoveHandler(npc, GameNPCEvent.Interact, new DOLEventHandler(TalkToTrainer));
-
 			/* Now we remove to Revelin the possibility to give this quest to players */
-			QuestMgr.RemoveQuestDescriptor(Revelin, typeof(Harmony_50Descriptor));
+			Revelin.RemoveQuestToGive(typeof(Harmony_50));
 		}
 
 		protected static void TalkToRevelin(DOLEvent e, object sender, EventArgs args)
@@ -1744,7 +1472,7 @@ namespace DOL.GS.Quests.Hibernia
 			if (player == null)
 				return;
 
-			if (QuestMgr.CanGiveQuest(typeof(Harmony_50), player, Revelin) <= 0)
+			if (Revelin.CanGiveQuest(typeof(Harmony_50), player) <= 0)
 				return;
 
 			//We also check if the player is already doing the quest
@@ -1787,6 +1515,32 @@ namespace DOL.GS.Quests.Hibernia
 			}
 		}
 
+		public override bool CheckQuestQualification(GamePlayer player)
+		{
+			// if the player is already doing the quest his level is no longer of relevance
+			if (player.IsDoingQuest(typeof(Harmony_50)) != null)
+				return true;
+
+			if (player.CharacterClass.ID != (byte)eCharacterClass.Blademaster &&
+				player.CharacterClass.ID != (byte)eCharacterClass.Druid &&
+				player.CharacterClass.ID != (byte)eCharacterClass.Valewalker &&
+				player.CharacterClass.ID != (byte)eCharacterClass.Animist &&
+				player.CharacterClass.ID != (byte)eCharacterClass.Mentalist)
+				return false;
+
+			// This checks below are only performed is player isn't doing quest already
+
+			//if (player.HasFinishedQuest(typeof(Academy_47)) == 0) return false;
+
+			//if (!CheckPartAccessible(player,typeof(CityOfCamelot)))
+			//	return false;
+
+			if (player.Level < minimumLevel || player.Level > maximumLevel)
+				return false;
+
+			return true;
+		}
+
 		/* This is our callback hook that will be called when the player clicks
 				 * on any button in the quest offer dialog. We check if he accepts or
 				 * declines here...
@@ -1812,7 +1566,7 @@ namespace DOL.GS.Quests.Hibernia
 
 		private static void CheckPlayerAcceptQuest(GamePlayer player, byte response)
 		{
-			if (QuestMgr.CanGiveQuest(typeof(Harmony_50), player, Revelin) <= 0)
+			if (Revelin.CanGiveQuest(typeof(Harmony_50), player) <= 0)
 				return;
 
 			if (player.IsDoingQuest(typeof(Harmony_50)) != null)
@@ -1825,7 +1579,7 @@ namespace DOL.GS.Quests.Hibernia
 			else
 			{
 				// Check to see if we can add quest
-				if (!QuestMgr.GiveQuestToPlayer(typeof(Harmony_50), player, Revelin))
+				if (!Revelin.GiveQuest(typeof(Harmony_50), player, 1))
 					return;
 				player.Out.SendMessage("Kill Cailean in Cursed Forest loc 28k 24k ", eChatType.CT_System, eChatLoc.CL_PopupWindow);
 			}
@@ -1848,37 +1602,8 @@ namespace DOL.GS.Quests.Hibernia
 						return "[Step #1] Seek out Cailean in Cursed Forest Loc 28k,24k kill him!";
 					case 2:
 						return "[Step #2] Return to Revelin and give the Horn!";
-					default:
-						return "[Step #" + Step + "] No Description entered for this step!";
 				}
-			}
-		}
-
-		protected static void TalkToTrainer(DOLEvent e, object sender, EventArgs args)
-		{
-			InteractEventArgs iargs = args as InteractEventArgs;
-
-			GamePlayer player = iargs.Source as GamePlayer;
-			GameNPC npc = sender as GameNPC;
-			Harmony_50Descriptor a = new Harmony_50Descriptor();
-
-			if (!a.CheckQuestQualification(player)) return;
-			if (player.IsDoingQuest(typeof(Focus_50)) != null) return;
-
-			npc.SayTo(player, "Revelin has an important task for you, please seek him out at the Parth Farm near Innis Carthaig.");
-		}
-
-		protected static void TargetDying(DOLEvent e, object sender, EventArgs args)
-		{
-			GameMob mob = sender as GameMob;
-			foreach (GamePlayer player in mob.XPGainers)
-			{
-				Harmony_50 quest = (Harmony_50)player.IsDoingQuest(typeof(Harmony_50));
-				if (quest == null) continue;
-				if (quest.Step != 1) continue;
-				player.Out.SendMessage("You collect the Horn from Cailean", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				quest.GiveItemToPlayer(CreateQuestItem(Horn, quest.Name));
-				quest.Step = 2;
+				return base.Description;
 			}
 		}
 
@@ -1888,7 +1613,7 @@ namespace DOL.GS.Quests.Hibernia
 
 			if (player == null || player.IsDoingQuest(typeof(Harmony_50)) == null)
 				return;
-			/*
+
 			if (Step == 1 && e == GameLivingEvent.EnemyKilled)
 			{
 				EnemyKilledEventArgs gArgs = (EnemyKilledEventArgs)args;
@@ -1896,19 +1621,19 @@ namespace DOL.GS.Quests.Hibernia
 				if (gArgs.Target.Name == Cailean.Name)
 				{
 					m_questPlayer.Out.SendMessage("You collect the Horn from Cailean", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					GiveItemToPlayer(CreateQuestItem(Horn, Name));
+					GiveItem(player, Horn);
 					Step = 2;
 					return;
 				}
 
 			}
-			*/
+
 			if (Step == 2 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs)args;
-				if (gArgs.Target.Name == Revelin.Name && gArgs.Item.Name == Horn.Name)
+				if (gArgs.Target.Name == Revelin.Name && gArgs.Item.Id_nb == Horn.Id_nb)
 				{
-					RemoveItemFromPlayer(Revelin, Horn);
+					RemoveItem(Revelin, player, Horn);
 					Revelin.SayTo(player, "You have earned this Epic Armour!");
 					FinishQuest();
 					return;
@@ -1919,7 +1644,8 @@ namespace DOL.GS.Quests.Hibernia
 		public override void AbortQuest()
 		{
 			base.AbortQuest(); //Defined in Quest, changes the state, stores in DB etc ...
-			RemoveItemFromPlayer(Horn);
+
+			RemoveItem(m_questPlayer, Horn, false);
 		}
 
 		public override void FinishQuest()
@@ -1928,66 +1654,48 @@ namespace DOL.GS.Quests.Hibernia
 
 			if (m_questPlayer.CharacterClass.ID == (byte)eCharacterClass.Blademaster)
 			{
-				GiveItemToPlayer(BlademasterEpicArms);
-				GiveItemToPlayer(BlademasterEpicBoots);
-				GiveItemToPlayer(BlademasterEpicGloves);
-				GiveItemToPlayer(BlademasterEpicHelm);
-				GiveItemToPlayer(BlademasterEpicLegs);
-				GiveItemToPlayer(BlademasterEpicVest);
+				GiveItem(m_questPlayer, BlademasterEpicArms);
+				GiveItem(m_questPlayer, BlademasterEpicBoots);
+				GiveItem(m_questPlayer, BlademasterEpicGloves);
+				GiveItem(m_questPlayer, BlademasterEpicHelm);
+				GiveItem(m_questPlayer, BlademasterEpicLegs);
+				GiveItem(m_questPlayer, BlademasterEpicVest);
 			}
 			else if (m_questPlayer.CharacterClass.ID == (byte)eCharacterClass.Animist)
 			{
-				GiveItemToPlayer(AnimistEpicArms);
-				GiveItemToPlayer(AnimistEpicBoots);
-				GiveItemToPlayer(AnimistEpicGloves);
-				GiveItemToPlayer(AnimistEpicHelm);
-				GiveItemToPlayer(AnimistEpicLegs);
-				GiveItemToPlayer(AnimistEpicVest);
+				GiveItem(m_questPlayer, AnimistEpicArms);
+				GiveItem(m_questPlayer, AnimistEpicBoots);
+				GiveItem(m_questPlayer, AnimistEpicGloves);
+				GiveItem(m_questPlayer, AnimistEpicHelm);
+				GiveItem(m_questPlayer, AnimistEpicLegs);
+				GiveItem(m_questPlayer, AnimistEpicVest);
 			}
 			else if (m_questPlayer.CharacterClass.ID == (byte)eCharacterClass.Mentalist)
 			{
-				GiveItemToPlayer(MentalistEpicArms);
-				GiveItemToPlayer(MentalistEpicBoots);
-				GiveItemToPlayer(MentalistEpicGloves);
-				GiveItemToPlayer(MentalistEpicHelm);
-				GiveItemToPlayer(MentalistEpicLegs);
-				GiveItemToPlayer(MentalistEpicVest);
+				GiveItem(m_questPlayer, MentalistEpicArms);
+				GiveItem(m_questPlayer, MentalistEpicBoots);
+				GiveItem(m_questPlayer, MentalistEpicGloves);
+				GiveItem(m_questPlayer, MentalistEpicHelm);
+				GiveItem(m_questPlayer, MentalistEpicLegs);
+				GiveItem(m_questPlayer, MentalistEpicVest);
 			}
 			else if (m_questPlayer.CharacterClass.ID == (byte)eCharacterClass.Druid)
 			{
-				GiveItemToPlayer(DruidEpicArms);
-				GiveItemToPlayer(DruidEpicBoots);
-				GiveItemToPlayer(DruidEpicGloves);
-				GiveItemToPlayer(DruidEpicHelm);
-				GiveItemToPlayer(DruidEpicLegs);
-				GiveItemToPlayer(DruidEpicVest);
+				GiveItem(m_questPlayer, DruidEpicArms);
+				GiveItem(m_questPlayer, DruidEpicBoots);
+				GiveItem(m_questPlayer, DruidEpicGloves);
+				GiveItem(m_questPlayer, DruidEpicHelm);
+				GiveItem(m_questPlayer, DruidEpicLegs);
+				GiveItem(m_questPlayer, DruidEpicVest);
 			}
 			else if (m_questPlayer.CharacterClass.ID == (byte)eCharacterClass.Valewalker)
 			{
-				GiveItemToPlayer(ValewalkerEpicArms);
-				GiveItemToPlayer(ValewalkerEpicBoots);
-				GiveItemToPlayer(ValewalkerEpicGloves);
-				GiveItemToPlayer(ValewalkerEpicHelm);
-				GiveItemToPlayer(ValewalkerEpicLegs);
-				GiveItemToPlayer(ValewalkerEpicVest);
-			}
-			else if (m_questPlayer.CharacterClass.ID == (byte)eCharacterClass.Vampiir)
-			{
-				GiveItemToPlayer(VampiirEpicArms);
-				GiveItemToPlayer(VampiirEpicBoots);
-				GiveItemToPlayer(VampiirEpicGloves);
-				GiveItemToPlayer(VampiirEpicHelm);
-				GiveItemToPlayer(VampiirEpicLegs);
-				GiveItemToPlayer(VampiirEpicVest);
-			}
-			else if (m_questPlayer.CharacterClass.ID == (byte)eCharacterClass.Bainshee)
-			{
-				GiveItemToPlayer(BainsheeEpicArms);
-				GiveItemToPlayer(BainsheeEpicBoots);
-				GiveItemToPlayer(BainsheeEpicGloves);
-				GiveItemToPlayer(BainsheeEpicHelm);
-				GiveItemToPlayer(BainsheeEpicLegs);
-				GiveItemToPlayer(BainsheeEpicVest);
+				GiveItem(m_questPlayer, ValewalkerEpicArms);
+				GiveItem(m_questPlayer, ValewalkerEpicBoots);
+				GiveItem(m_questPlayer, ValewalkerEpicGloves);
+				GiveItem(m_questPlayer, ValewalkerEpicHelm);
+				GiveItem(m_questPlayer, ValewalkerEpicLegs);
+				GiveItem(m_questPlayer, ValewalkerEpicVest);
 			}
 
 			m_questPlayer.GainExperience(1937768448, 0, 0, true);

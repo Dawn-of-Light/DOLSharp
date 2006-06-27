@@ -38,23 +38,23 @@ namespace DOL.GS.PacketHandler.v168
 			{
 				client.Out.SendItemCreate(item);
 			}
-			foreach(IDoor door in DoorMgr.getDoorsCloseToSpot((ushort)client.Player.RegionId, client.Player.Position, WorldMgr.OBJ_UPDATE_DISTANCE))
+			foreach(IDoor door in DoorMgr.getDoorsCloseToSpot(client.Player.CurrentRegionID,client.Player,WorldMgr.OBJ_UPDATE_DISTANCE))
 			{
 				client.Out.SendDoorCreate(door);
 			}
 			
 			//housing
-			if(client.Player.Region.IsHousingEnabled)
+			if(client.Player.CurrentRegion.HousingEnabled)
 			{ 
 				if(client.Player.HousingUpdateArray==null)
 					client.Player.HousingUpdateArray = new BitArray(HouseMgr.MAXHOUSES);
 				
-				Hashtable houses = (Hashtable)HouseMgr.GetHouses(client.Player.Region);
+				Hashtable houses = (Hashtable)HouseMgr.GetHouses(client.Player.CurrentRegionID);
 				if(houses!=null)
 				{
-					foreach(House house in HouseMgr.GetHouses(client.Player.Region).Values)
+					foreach(House house in HouseMgr.GetHouses(client.Player.CurrentRegionID).Values)
 					{
-						if(house.Position.CheckSquareDistance(client.Player.Position, (uint)(HouseMgr.HOUSE_DISTANCE*HouseMgr.HOUSE_DISTANCE)))
+						if(WorldMgr.GetDistance(client.Player, house.X, house.Y, house.Z)<=HouseMgr.HOUSE_DISTANCE)
 						{
 							if(!client.Player.HousingUpdateArray[house.UniqueID])
 							{

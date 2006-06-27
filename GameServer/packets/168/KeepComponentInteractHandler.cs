@@ -37,7 +37,7 @@ namespace DOL.GS.PacketHandler.v168
 				client.Out.SendKeepComponentHookPoint(((GameKeepComponent)keep.KeepComponents[wallId]),HPindex);
 			else if (responce == 0x02)//select an hookpoint
 			{
-				if (client.Account.PrivLevel > ePrivLevel.Player)
+				if (client.Account.PrivLevel > 1)
 					client.Out.SendMessage("DEBUG : selected hookpoint id "+HPindex, eChatType.CT_Say , eChatLoc.CL_SystemWindow);
 
 				GameKeepComponent hp = keep.KeepComponents[wallId] as GameKeepComponent;

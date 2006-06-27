@@ -17,11 +17,7 @@
  *
  */
 using System;
-using System.Collections;
-using System.Reflection;
-using DOL.Events;
 using DOL.GS.PacketHandler;
-using log4net;
 
 namespace DOL.GS.Trainer
 {
@@ -31,23 +27,8 @@ namespace DOL.GS.Trainer
 	[NPCGuildScript("Infiltrator Trainer", eRealm.Albion)]		// this attribute instructs DOL to use this script for all "Infiltrator Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class InfiltratorTrainer : GameTrainer
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
-		/// <summary>
-		/// This hash constrain all item template the trainer can give
-		/// </summary>	
-		private static IDictionary allStartupItems = new Hashtable();
-
-		/// <summary>
-		/// This function is called at the server startup
-		/// </summary>	
-		[GameServerStartedEvent]
-		public static void OnServerStartup(DOLEvent e, object sender, EventArgs args)
+		public InfiltratorTrainer() : base()
 		{
-			// TODO find level 5 trainer gift + corect sentance
 		}
 
 		/// <summary>
@@ -102,9 +83,9 @@ namespace DOL.GS.Trainer
 			switch (text) {
 			case "join the Guild of Shadows":
 				// promote player to other class
-				if (CanPromotePlayer(player)) 
-					PromotePlayer(player, (int)eCharacterClass.Infiltrator, "You joined the Guild of Shadows as an Infiltrator.", null);
-				
+				if (CanPromotePlayer(player)) {
+					PromotePlayer(player, (int)eCharacterClass.Infiltrator, "TODO: (correct text) You joined the Guild of Shadows as an Infiltrator.", null);	// TODO: gifts
+				}
 				break;
 			}
 			return true;		

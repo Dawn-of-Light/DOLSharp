@@ -247,7 +247,7 @@ namespace DOL
 						//If there is no such command, return false
 						if (myCommand == null) return false;
 
-						if ((uint)client.Account.PrivLevel < myCommand.m_lvl)
+						if (client.Account.PrivLevel < myCommand.m_lvl)
 						{
 							if (!SinglePermission.HasPermission(client.Player,pars[0].Substring(1,pars[0].Length-1)))
 							{
@@ -378,7 +378,7 @@ namespace DOL
 						string commandText = String.Join(" ", pars);
 						string targetName = "(no target)";
 						string playerName = (client.Player == null) ? "(player is null)" : client.Player.Name;
-						string accountName = (client.Account == null) ? "account is null" : client.Account.AccountName;
+						string accountName = (client.Account == null) ? "account is null" : client.Account.Name;
 
 						if (client.Player == null)
 						{
@@ -388,7 +388,7 @@ namespace DOL
 						{
 							targetName = client.Player.TargetObject.Name;
 							if (client.Player.TargetObject is GamePlayer)
-								targetName += "(" + ((GamePlayer) client.Player.TargetObject).Client.Account.AccountName + ")";
+								targetName += "(" + ((GamePlayer) client.Player.TargetObject).Client.Account.Name + ")";
 						}
 						GameServer.Instance.LogGMAction("Command: " + playerName + "(" + accountName + ") -> " + targetName + " - \"/" + commandText.Remove(0, 1) + "\"");
 
@@ -1094,40 +1094,6 @@ namespace DOL
 					}
 					
 					return (Type[]) types.ToArray(typeof (Type));
-				}
-				public static object GetInstance(string type,params object[] args)
-				{
-					Type instanceType = null;
-					foreach (Assembly asm in ScriptMgr.Scripts)
-					{
-						instanceType = asm.GetType(type);
-						if (instanceType != null)
-							break;
-					}
-					if(instanceType==null) 
-					{
-						instanceType = Assembly.GetAssembly(typeof(GameServer)).GetType(type);
-					}
-
-					if(instanceType==null)
-					{
-						if (log.IsErrorEnabled)
-							log.Error("Could not find class of type: "+type+"!!!");						
-						return null;
-					}
-					try	
-					{
-                        if (args == null || args.Length < 1)
-						    return Activator.CreateInstance(instanceType);
-                        else
-                            return Activator.CreateInstance(instanceType,args);
-					}
-					catch
-					{
-						if (log.IsErrorEnabled)
-							log.Error("Could not find class of type: "+type+"!!!");						
-						return null;
-					}
 				}
 			}
 		}

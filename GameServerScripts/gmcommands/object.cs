@@ -19,7 +19,7 @@
 using System;
 using System.Collections;
 using DOL.GS;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Scripts
@@ -65,15 +65,17 @@ namespace DOL.GS.Scripts
 			{
 				case "info":
 				{
-					client.Out.SendMessage("[ "+" "+targetObject.Name+" "+" ]", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					client.Out.SendMessage(" + Model: "+targetObject.Model, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					client.Out.SendMessage(" + Emblem: "+targetObject.Emblem, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					client.Out.SendMessage(" + pos: "+targetObject.Position.ToString(), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					client.Out.SendMessage("[ "+" "+targetObject.Name+" "+" ]",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+					client.Out.SendMessage(" + Model: "+targetObject.Model,eChatType.CT_System,eChatLoc.CL_SystemWindow);
+					client.Out.SendMessage(" + Emblem: "+targetObject.Emblem,eChatType.CT_System,eChatLoc.CL_SystemWindow);
+					client.Out.SendMessage(" + [X]: "+targetObject.X + " [Y]: "+targetObject.Y + " [Z]: "+targetObject.Z,eChatType.CT_System,eChatLoc.CL_SystemWindow);
 					break;
 				}
 				case "movehere":
 				{
-					targetObject.Position = client.Player.Position;
+					targetObject.X = client.Player.X;
+					targetObject.Y = client.Player.Y;
+					targetObject.Z = client.Player.Z;
 					targetObject.Heading = client.Player.Heading;
 					break;
 				}
@@ -82,8 +84,10 @@ namespace DOL.GS.Scripts
 					//Create a new object
 					GameStaticItem obj = new GameStaticItem();
 					//Fill the object variables
-					obj.Position = client.Player.Position;
-					obj.Region=client.Player.Region;
+					obj.X=client.Player.X;
+					obj.Y=client.Player.Y;
+					obj.Z=client.Player.Z;
+					obj.CurrentRegion=client.Player.CurrentRegion;
 					obj.Heading=client.Player.Heading;
 					obj.Name="New Object";
 					obj.Model=100;

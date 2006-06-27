@@ -18,9 +18,7 @@
  */
 using System;
 using System.Reflection;
-using System.Collections;
-using DOL.GS.Database;
-using NHibernate.Expression;
+using DOL.Database;
 using log4net;
 
 namespace DOL.GS
@@ -41,7 +39,7 @@ namespace DOL.GS
 		/// groups are rounded down to 1-5, 5-10, 10-15, 15-20, 20-25, etc...
 		/// 1:n Mapping between Moblevel and LootTemplate
 		/// </summary>
-		protected static GenericItemTemplate[][] m_itemTemplates=null;
+		protected static ItemTemplate[][] m_itemTemplates=null;
 
 		protected const int LEVEL_RANGE = 5; // 
 		protected const int LEVEL_SIZE = 10; // 10*LEVEL_RANGE = up to level 50
@@ -62,17 +60,17 @@ namespace DOL.GS
 		{
 			if (m_itemTemplates==null)
 			{
-				m_itemTemplates = new GenericItemTemplate[LEVEL_SIZE+1][];
+				m_itemTemplates = new ItemTemplate[LEVEL_SIZE+1][];
 
 				lock(m_itemTemplates.SyncRoot)
 				{
 					// ** find our loot template **
-					IList itemTemplates=null;
+					DataObject[] itemTemplates=null;
 					for (int i=0;i <= LEVEL_SIZE; i++) 
 					{
 						try
 						{
-							itemTemplates = GameServer.Database.SelectObjects(typeof(GenericItemTemplate), Expression.And(Expression.Ge("Level", i*LEVEL_RANGE), Expression.Le("Level", (i+1)*LEVEL_RANGE)));
+							itemTemplates = GameServer.Database.SelectObjects(typeof(ItemTemplate),"Level>="+(i*LEVEL_RANGE)+" AND Level<="+((i+1)*LEVEL_RANGE));
 						}
 						catch(Exception e)
 						{
@@ -83,7 +81,7 @@ namespace DOL.GS
 
 						if(itemTemplates != null) // did we find a loot template
 						{
-							m_itemTemplates[i] = (GenericItemTemplate[]) itemTemplates;
+							m_itemTemplates[i]= (ItemTemplate[]) itemTemplates;
 						}
 					}
 				}
@@ -97,7 +95,7 @@ namespace DOL.GS
 
 			if (Util.Chance(25)) 
 			{
-				GenericItemTemplate[] itemTemplates = m_itemTemplates[Math.Min(m_itemTemplates.Length-1, mob.Level/LEVEL_RANGE)];
+				ItemTemplate[] itemTemplates = m_itemTemplates[Math.Min(m_itemTemplates.Length-1, mob.Level/LEVEL_RANGE)];
 				if (itemTemplates!=null && itemTemplates.Length>0)
 				{
 					loot.AddRandom(100, itemTemplates[Util.Random(itemTemplates.Length-1)]);
