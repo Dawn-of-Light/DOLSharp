@@ -1,0 +1,266 @@
+/*
+ * DAWN OF LIGHT - The first free open source DAoC server emulator
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
+ */
+using DOL.Events;
+using DOL.GS.PacketHandler;
+
+namespace DOL.GS
+{		
+	/// <summary>
+	/// Collection of basic area shapes
+	/// Circle
+	/// Square
+	/// </summary>
+	public class Area 
+	{
+		public class Square : AbstractArea
+		{
+			/// <summary>
+			/// The X coordinate of this Area
+			/// </summary>
+			protected int m_X;
+
+			/// <summary>
+			/// The Y coordinate of this Area 
+			/// </summary>
+			protected int m_Y;
+
+			/// <summary>
+			/// The width of this Area 
+			/// </summary>
+			protected int m_Width;
+
+			/// <summary>
+			/// The height of this Area 
+			/// </summary>
+			protected int m_Height;
+
+			public Square(string desc, int x, int y, int width, int height): base(desc)
+			{
+				m_X = x;
+				m_Y = y;
+				m_Height = height;
+				m_Width = width;
+			}
+
+			/// <summary>
+			/// Returns the X Coordinate of this Area
+			/// </summary>
+			public int X
+			{
+				get { return m_X; }
+			}
+
+			/// <summary>
+			/// Returns the Y Coordinate of this Area
+			/// </summary>
+			public int Y
+			{
+				get { return m_Y; }
+			}
+
+			/// <summary>
+			/// Returns the Width of this Area
+			/// </summary>
+			public int Width
+			{
+				get { return m_Width; }
+			}
+
+			/// <summary>
+			/// Returns the Height of this Area
+			/// </summary>
+			public int Height
+			{
+				get { return m_Height; }
+			}
+
+			/// <summary>
+			/// Checks wether area intersects with given zone
+			/// </summary>
+			/// <param name="zone"></param>
+			/// <returns></returns>
+			public override bool IsIntersectingZone(Zone zone)
+			{
+				if (X+Width < zone.XOffset)
+					return false;
+				if (X-Width >= zone.XOffset + 65536)
+					return false;
+				if (Y+Height < zone.YOffset)
+					return false;
+				if (Y-Height >= zone.YOffset + 65536)
+					return false;
+
+				return true;
+			}	
+
+			/// <summary>
+			/// Checks wether given point is within area boundaries
+			/// </summary>
+			/// <param name="p"></param>
+			/// <returns></returns>
+			public override bool IsContaining(IPoint3D p)
+			{							
+				long m_xdiff = (long) p.X - X;
+				if (m_xdiff < 0 || m_xdiff > Width)
+					return false;
+
+				long m_ydiff = (long) p.Y - Y;
+				if (m_ydiff < 0 || m_ydiff > Height)
+					return false;
+
+				/*
+				//SH: Removed Z checks when one of the two Z values is zero(on ground)
+				if (Z != 0 && spotZ != 0)
+				{
+					long m_zdiff = (long) spotZ - Z;
+					if (m_zdiff> Radius)
+						return false;
+				}
+				*/
+
+				return true;
+			}
+		}
+
+		public class Circle : AbstractArea
+		{
+			
+			/// <summary>
+			/// The X coordinate of this Area
+			/// </summary>
+			protected int m_X;
+
+			/// <summary>
+			/// The Y coordinate of this Area
+			/// </summary>
+			protected int m_Y;
+
+			/// <summary>
+			/// The Z coordinate of this Area
+			/// </summary>
+			protected int m_Z;
+
+			/// <summary>
+			/// The radius of the area in Coordinates
+			/// </summary>
+			protected int m_Radius;
+
+			protected long m_distSq;
+
+			public Circle( string desc, int x, int y, int z, int radius) : base(desc)
+			{															
+				m_Description = desc;
+				m_X = x;
+				m_Y = y;
+				m_Z= z;
+				m_Radius= radius;
+					
+				m_RadiusRadius = radius*radius;
+			}
+
+			/// <summary>
+			/// Returns the X Coordinate of this Area
+			/// </summary>
+			public int X
+			{
+				get { return m_X; }
+			}
+
+			/// <summary>
+			/// Returns the Y Coordinate of this Area
+			/// </summary>
+			public int Y
+			{
+				get { return m_Y; }
+			}
+
+			/// <summary>
+			/// Returns the Width of this Area
+			/// </summary>
+			public int Z
+			{
+				get { return m_Z; }
+			}
+
+			/// <summary>
+			/// Returns the Height of this Area
+			/// </summary>
+			public int Radius
+			{
+				get { return m_Radius; }
+			}
+
+			/// <summary>
+			/// Cache for radius*radius to increase performance of circle check,
+			/// radius is still needed for square check
+			/// </summary>
+			private int m_RadiusRadius;
+			
+
+			/// <summary>
+			/// Checks wether area intersects with given zone
+			/// </summary>
+			/// <param name="zone"></param>
+			/// <returns></returns>
+			public override bool IsIntersectingZone(Zone zone)
+			{
+				if (X+Radius < zone.XOffset)
+					return false;
+				if (X-Radius >= zone.XOffset + 65536)
+					return false;
+				if (Y+Radius < zone.YOffset)
+					return false;
+				if (Y-Radius >= zone.YOffset + 65536)
+					return false;
+
+				return true;
+			}	
+
+			/// <summary>
+			/// Checks wether given point is within area boundaries
+			/// </summary>
+			/// <param name="p"></param>
+			/// <returns></returns>
+			public override bool IsContaining(IPoint3D p)
+			{						
+				// spot is not in square around circle no need to check for circle...
+				long m_xdiff = (long) p.X - X;
+				if (m_xdiff > Radius)
+					return false;
+
+				long m_ydiff = (long) p.Y - Y;
+				if (m_ydiff > Radius)
+					return false;
+
+
+				// check if spot is in circle
+				m_distSq = m_xdiff*m_xdiff + m_ydiff*m_ydiff;
+
+				//SH: Removed Z checks when one of the two Z values is zero(on ground)
+				if (Z != 0 && p.Z != 0)
+				{
+					long m_zdiff = (long) p.Z - Z;
+					m_distSq += m_zdiff*m_zdiff;
+				}
+
+				return (m_distSq <= m_RadiusRadius);
+			}
+		}
+	}
+}
