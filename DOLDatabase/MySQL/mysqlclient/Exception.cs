@@ -30,18 +30,18 @@ namespace MySql.Data.MySqlClient
 	[Serializable]
 	public sealed class MySqlException : SystemException
 	{
-		private int		errorCode;
-		private bool	isFatal;
+		private int			errorCode;
+		private bool		isFatal;
+
+		internal MySqlException() 
+		{
+		}
 
 		internal MySqlException(string msg) : base(msg)
 		{
 		}
-		
-		internal MySqlException(string msg, Exception ex) : base(msg, ex)
-		{
-		}
 
-		internal MySqlException() 
+		internal MySqlException(string msg, Exception ex) : base(msg, ex)
 		{
 		}
 
@@ -52,11 +52,11 @@ namespace MySql.Data.MySqlClient
 
 		internal MySqlException(string msg, int errno) : this(msg)
 		{
-			errorCode = errno;	
+			errorCode = errno;
 		}
 
 		private MySqlException(SerializationInfo info,
-					StreamingContext context) : base(info, context)
+			StreamingContext context) : base(info, context)
 		{
 		}
 
@@ -65,14 +65,13 @@ namespace MySql.Data.MySqlClient
 		/// </summary>
 		public int Number 
 		{
-			get { return errorCode; }
+			get { return errorCode; } 
 		}
-
 
 		/// <summary>
 		/// True if this exception was fatal and cause the closing of the connection, false otherwise.
 		/// </summary>
-		public bool IsFatal 
+		internal bool IsFatal 
 		{
 			get { return isFatal; }
 		}

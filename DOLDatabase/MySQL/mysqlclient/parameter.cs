@@ -77,7 +77,7 @@ namespace MySql.Data.MySqlClient
 		/// <param name="dbType">One of the <see cref="MySqlDbType"/> values. </param>
 		public MySqlParameter( string parameterName, MySqlDbType dbType) : this (parameterName, null)
 		{
-			SetMySqlDbType( dbType );
+			MySqlDbType = dbType;
 		}
 
 		/// <summary>
@@ -313,6 +313,14 @@ namespace MySql.Data.MySqlClient
 				}
 			}
 			return valueObject;
+		}
+
+		internal int GetPSType()
+		{
+			if (this.mySqlDbType == MySqlDbType.Bit)
+				return (int)MySqlDbType.Int64 | 0x8000;
+			else
+				return (int)this.mySqlDbType;
 		}
 
 		internal void Serialize( PacketWriter writer, bool binary ) 

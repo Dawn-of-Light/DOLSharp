@@ -382,16 +382,16 @@ namespace MySql.Data.MySqlClient
 		{
 			CheckState();
 
-			string sql = cmdText;
+			string sql = TrimSemicolons(cmdText);
 
 			if (0 != (behavior & CommandBehavior.SchemaOnly))
 			{
-				sql = "SET SQL_SELECT_LIMIT=0;" + cmdText + ";SET sql_select_limit=-1";
+				sql = "SET SQL_SELECT_LIMIT=0;" + sql + ";SET sql_select_limit=-1";
 			}
 
 			if (0 != (behavior & CommandBehavior.SingleRow))
 			{
-				sql = "SET SQL_SELECT_LIMIT=1;" + cmdText + ";SET sql_select_limit=-1";
+				sql = "SET SQL_SELECT_LIMIT=1;" + sql + ";SET sql_select_limit=-1";
 			}
 
 			updateCount = -1;
@@ -435,15 +435,36 @@ namespace MySql.Data.MySqlClient
 				return;
 
 			// strip out names from parameter markers
-			string strippedSQL = PrepareCommandText();
+			string psSQL = CommandText;
+
+			if (CommandType == CommandType.StoredProcedure)
+			{
+				if (storedProcedure == null)
+					storedProcedure = new StoredProcedure(connection);
+				psSQL = storedProcedure.Prepare(this);
+			}
+			psSQL = PrepareCommandText(psSQL);
 
 			// ask our connection to send the prepare command
-			preparedStatement = connection.driver.Prepare( strippedSQL, (string[])parameterMap.ToArray(typeof(string)) );
+			preparedStatement = connection.driver.Prepare(psSQL, (string[])parameterMap.ToArray(typeof(string)));
 		}
 		#endregion
 
 
 		#region Private Methods
+
+		private string TrimSemicolons(string sql)
+		{
+			System.Text.StringBuilder sb = new System.Text.StringBuilder(sql);
+			int start = 0;
+			while (sb[start] == ';')
+				start++;
+
+			int end = sb.Length-1;
+			while (sb[end] == ';')
+				end--;
+			return sb.ToString(start, end-start+1);
+		}
 
 		/// <summary>
 		/// Serializes the given parameter to the given memory stream
@@ -545,12 +566,12 @@ namespace MySql.Data.MySqlClient
 		/// the parameterMap array list that includes all the paramter names in the
 		/// order they appeared in the SQL
 		/// </remarks>
-		private string PrepareCommandText()
+		private string PrepareCommandText(string text)
 		{
 			StringBuilder	newSQL = new StringBuilder();
 
 			// tokenize the sql first
-			ArrayList tokens = TokenizeSql( CommandText );
+			ArrayList tokens = TokenizeSql(text);
 			parameterMap.Clear();
 
 			foreach (string token in tokens)
@@ -607,7 +628,8 @@ namespace MySql.Data.MySqlClient
 					sqlPart.Remove( 0, sqlPart.Length ); 
 				}
 				else if (sqlPart.Length > 0 && sqlPart[0] == parameters.ParameterMarker && 
-					! Char.IsLetterOrDigit(c) && c != '_' && c != '.' && c != '$')
+					! Char.IsLetterOrDigit(c) && c != '_' && c != '.' && c != '$' 
+					&& c != '@')
 				{
 					tokens.Add( sqlPart.ToString() );
 					sqlPart.Remove( 0, sqlPart.Length ); 

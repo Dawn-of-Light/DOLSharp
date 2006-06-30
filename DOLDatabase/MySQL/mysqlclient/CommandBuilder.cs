@@ -120,16 +120,31 @@ namespace MySql.Data.MySqlClient
 
 		#region Public Methods
 		/// <summary>
-		/// Retrieves parameter information from the stored procedure specified in the MySqlCommand and populates the Parameters collection of the specified MySqlCommand object.
-		/// This method is not currently supported since stored procedures are not available in MySql.
+		/// Retrieves parameter information from the stored procedure specified 
+		/// in the MySqlCommand and populates the Parameters collection of the 
+		/// specified MySqlCommand object.
+		/// This method is not currently supported since stored procedures are 
+		/// not available in MySql.
 		/// </summary>
-		/// <param name="command">The MySqlCommand referencing the stored procedure from which the parameter information is to be derived. The derived parameters are added to the Parameters collection of the MySqlCommand.</param>
-		/// <exception cref="InvalidOperationException">The command text is not a valid stored procedure name.</exception>
+		/// <param name="command">The MySqlCommand referencing the stored 
+		/// procedure from which the parameter information is to be derived. 
+		/// The derived parameters are added to the Parameters collection of the 
+		/// MySqlCommand.</param>
+		/// <exception cref="InvalidOperationException">The command text is not 
+		/// a valid stored procedure name.</exception>
 		public static void DeriveParameters(MySqlCommand command)
 		{
-			// this is just to make FxCop happy until we support this routine
-			string text = command.CommandText;
-			throw new MySqlException("DeriveParameters is not supported (due to MySql not supporting SP)");
+			if (!command.Connection.driver.Version.isAtLeast(5,0,0))
+				throw new MySqlException("DeriveParameters is not supported on versions " +
+					"prior to 5.0");
+			StoredProcedure sp = new StoredProcedure(command.Connection);
+			sp.DiscoverParameters(command, "");
+		}
+
+		public static void DeriveParameters(MySqlCommand command, bool useProc)
+		{
+			StoredProcedure sp = new StoredProcedure(command.Connection);
+			sp.DiscoverParameters(command, useProc ? "PROCEDURE" : "FUNCTION");
 		}
 
 		/// <include file='docs/MySqlCommandBuilder.xml' path='docs/GetDeleteCommand/*'/>
@@ -219,8 +234,17 @@ namespace MySql.Data.MySqlClient
 
 		private static string GetParameterName(string columnName)
 		{
-			string colName = columnName.Replace(" ", "");
-			return colName;
+			StringBuilder sb = new StringBuilder(columnName);
+			sb.Replace(" ", "");
+			sb.Replace("/", "_per_");
+			sb.Replace("-", "_");
+			sb.Replace(")", "_cb_");
+			sb.Replace("(", "_ob_");
+			sb.Replace("%", "_pct_");
+			sb.Replace("<", "_lt_");
+			sb.Replace(">", "_gt_");
+			sb.Replace(".", "_pt_");
+			return sb.ToString();
 		}
 
 		private MySqlParameter CreateParameter(DataRow row, bool Original)
@@ -438,8 +462,6 @@ namespace MySql.Data.MySqlClient
 
 		private static bool IncludedInWhereClause(DataRow schemaRow)
 		{
-			// just to shut fxcop up
-			bool hasErrors = schemaRow.HasErrors;
 			//			if ((bool) schemaRow ["IsLong"])
 			//				return false;
 			return true;

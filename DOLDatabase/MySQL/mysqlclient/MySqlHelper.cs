@@ -196,7 +196,8 @@ namespace MySql.Data.MySqlClient
 			MySqlConnection cn = new MySqlConnection( connectionString );
 			cn.Open();
 			MySqlDataAdapter da = new MySqlDataAdapter( commandText, cn );
-			MySqlCommandBuilder cb = new MySqlCommandBuilder( da );
+			MySqlCommandBuilder cb = new MySqlCommandBuilder(da);
+			cb.ToString();
 			da.Update( ds, tablename );
 			cn.Close();
 		}

@@ -42,9 +42,9 @@ namespace MySql.Data.MySqlClient
 		protected int					serverLanguage;
 		protected Hashtable				serverProps;
 		protected MySqlConnection		connection;
-		protected bool					processing;
 		protected Hashtable				charSets;
 		protected bool					hasWarnings;
+		protected long					maxPacketSize;
 
 		public Driver(MySqlConnectionString settings)
 		{
@@ -54,6 +54,11 @@ namespace MySql.Data.MySqlClient
 		}
 
 		#region Properties
+
+		internal long MaxPacketSize 
+		{
+			get { return maxPacketSize; }
+		}
 
 		public int ThreadID 
 		{
@@ -77,13 +82,6 @@ namespace MySql.Data.MySqlClient
 			set { encoding = value; }
 		}
 
-		public bool IsProcessing 
-		{ 
-			//TODO: remove comment
-		//	get { return processing; }
-			set { processing = value; }
-		}
-
 		public ServerStatusFlags ServerStatus 
 		{
 			get { return serverStatus; }
@@ -95,6 +93,11 @@ namespace MySql.Data.MySqlClient
 		}
 
 		#endregion
+
+		public string Property(string key)
+		{
+			return (string)serverProps[key];
+		}
 
 		public bool IsTooOld() 
 		{
@@ -143,6 +146,11 @@ namespace MySql.Data.MySqlClient
 		{
 			this.connection = connection;
 			
+			// if we have already configured this driver and we are supposed
+			// to cache server config, then exit
+			if (serverProps != null && connectionString.CacheServerConfig)
+				return;
+
 			// load server properties
 			serverProps = new Hashtable();
 			MySqlCommand cmd = new MySqlCommand("SHOW VARIABLES", connection);
@@ -159,6 +167,9 @@ namespace MySql.Data.MySqlClient
 				Logger.LogException( ex );
 				throw;
 			}
+
+			if (serverProps.Contains( "max_allowed_packet"))
+				maxPacketSize = Convert.ToInt64(serverProps["max_allowed_packet"]);
 
 #if AUTHENTICATED
 			string licenseType = (string)serverProps["license"];
@@ -249,7 +260,7 @@ namespace MySql.Data.MySqlClient
 				while (reader.Read()) 
 				{
 					errors.Add(new MySqlError(reader.GetString(0), 
-						reader.GetUInt32(1), reader.GetString(2)));
+						reader.GetInt32(1), reader.GetString(2)));
 				}
 				reader.Close();
 

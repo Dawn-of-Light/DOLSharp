@@ -151,7 +151,17 @@ namespace MySql.Data.MySqlClient
 		/// <summary><b>Obsolete</b>  Use VarChar type</summary>
 		String      = 254,
 		/// <summary></summary>
-		Geometry	= 255
+		Geometry	= 255,
+		/// <summary></summary>
+		UByte		= 1024,
+		/// <summary></summary>
+		UInt16		= 1025,
+		/// <summary></summary>
+		UInt24		= 1026,
+		/// <summary></summary>
+		UInt32		= 1027,
+		/// <summary></summary>
+		UInt64		= 1028
 	};
 
 

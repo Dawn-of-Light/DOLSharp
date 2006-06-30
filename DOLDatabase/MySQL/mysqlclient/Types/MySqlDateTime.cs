@@ -149,6 +149,10 @@ namespace MySql.Data.Types
 			if (value is MySqlDateTime)
 				value = (value as MySqlDateTime).GetDateTime();
 
+			if (value is string)
+				value = DateTime.Parse((string)value, 
+					System.Globalization.CultureInfo.CurrentCulture);
+
 			if (! (value is DateTime))
 				throw new MySqlException( "Only DateTime objects can be serialized by MySqlDateTime" );
 
