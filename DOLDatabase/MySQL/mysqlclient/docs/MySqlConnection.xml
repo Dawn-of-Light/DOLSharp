@@ -833,6 +833,12 @@ Recognized values are <B>true</B>, <B>false</B>, <B>yes</B>, and <B>no</B>.</td>
 			use the new '?' parameter marker.</note>
 			</td>
 		</tr>
+		<tr>
+			<td>Pipe Name<para>  -or-  </para>Pipe</td>
+			<td>mysql</td>
+			<td>When set to the name of a named pipe, the <B>MySqlConnection</B> will attempt to connect to MySQL
+			on that named pipe.<br/><br/>This settings only applies to the Windows platform.</td>
+		</tr>
 		</table>
 		</div>
 	<para>
@@ -873,10 +879,23 @@ pool, or if necessary, is created and added to the appropriate pool. Recognized
 values are <B>true</B>, <B>false</B>, <B>yes</B>, and <B>no</B>.</td>
 		</tr>
 		<tr>
-			<td>Pipe Name<para>  -or-  </para>Pipe</td>
-			<td></td>
-			<td>When set to the name of a named pipe, the <B>MySqlConnection</B> will attempt to connect to MySQL
-			on that named pipe.<br/><br/>This settings only applies to the Windows platform.</td>
+			<td>Reset Pooled Connections<para>  -or-  </para>
+			    ResetConnections<para>  -or-  </para>
+			    ResetPooledConnections</td>
+			<td>true</td>
+			<td>Specifies whether a ping and a reset should be sent to the server
+			before a pooled connection is returned.  Not resetting will yeild faster
+			connection opens but also will not clear out session items such as
+			temp tables.</td>
+		</tr>
+		<tr>
+			<td>Cache Server Configuration<para>  -or-  </para>
+			    CacheServerConfiguration<para>  -or-  </para>
+			    CacheServerConfig</td>
+			<td>false</td>
+			<td>Specifies whether server variables should be updated when a pooled
+			connection is returned.  Turning this one will yeild faster opens but
+			will also not catch any server changes made by other connections.</td>
 		</tr>
 	</table></div>
 <para>When setting keyword or connection pooling values that require a Boolean 

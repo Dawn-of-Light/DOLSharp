@@ -268,7 +268,10 @@ namespace MySql.Data.MySqlClient
 		/// <returns></returns>
 		public bool Ping() 
 		{
-			return driver.Ping();
+			bool result = driver.Ping();
+			if (! result)
+				Terminate();
+			return result;
 		}
 
 		/// <include file='docs/MySqlConnection.xml' path='docs/Open/*'/>

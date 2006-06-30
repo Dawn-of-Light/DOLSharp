@@ -24,10 +24,8 @@ using System.Net;
 using System.Net.Sockets;
 using System.Collections;
 using System.Threading;
+using System.Reflection;
 using MySql.Data.MySqlClient;
-#if __MonoCS__ 
-using Mono.Posix;
-#endif
 
 namespace MySql.Data.Common
 {
@@ -36,7 +34,6 @@ namespace MySql.Data.Common
 	/// </summary>
 	internal class StreamCreator
 	{
-		private const uint FIONBIO = 0x8004667e;
 		string				hostList;
 		int					port;
 		string				pipeName;
@@ -82,7 +79,7 @@ namespace MySql.Data.Common
 			Stream stream = null;
 			for (int i=0; i < ipAddresses.Count; i++)
 			{
-				if ( pipeName != null )
+				if (usePipe)
 					stream = CreateNamedPipeStream( (string)hostNames[index] );
 				else
 					stream = CreateSocketStream( (IPAddress)ipAddresses[index], port, false );
@@ -105,6 +102,18 @@ namespace MySql.Data.Common
 			return new NamedPipeStream(pipePath, FileAccess.ReadWrite);
 		}
 
+		private EndPoint CreateUnixEndPoint(string host)
+		{
+			// first we need to load the Mono.posix assembly
+			Assembly a = Assembly.LoadWithPartialName("Mono.Posix");
+
+			// then we need to construct a UnixEndPoint object
+			EndPoint ep = (EndPoint)a.CreateInstance("Mono.Posix.UnixEndPoint", 
+				false, BindingFlags.CreateInstance, null, 
+				new object[1] { host }, null, null);
+			return ep;
+		}
+
 		private Stream CreateSocketStream(IPAddress ip, int port, bool unix) 
 		{
 			SocketStream ss = null;
@@ -113,16 +122,11 @@ namespace MySql.Data.Common
 				//
 				// Lets try to connect
 				EndPoint endPoint;
-#if __MonoCS__ && !WINDOWS
-				if (unix)
-					endPoint = new UnixEndPoint(hostList[0]);
+
+				if (!Platform.IsWindows() && unix)
+					endPoint = CreateUnixEndPoint(hostList);
 				else
-#else
-				endPoint = 	new IPEndPoint(ip, port);
-				if (unix)
-					throw new PlatformNotSupportedException(
-						Resources.GetString("UnixSocketsNotSupported"));
-#endif
+					endPoint = 	new IPEndPoint(ip, port);
 
 				ss = unix ? 
 					new SocketStream(AddressFamily.Unix, SocketType.Stream, ProtocolType.IP) :

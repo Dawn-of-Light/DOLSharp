@@ -243,7 +243,7 @@ namespace MySql.Data.MySqlClient
 			ReadBuffer( baseStream, compBuf, 0, compLen );
 			Inflater i = new Inflater();
 			i.SetInput( compBuf, 0, compLen );
-			int count = i.Inflate( buf, index, unCompLen );
+			i.Inflate( buf, index, unCompLen );
 		}
 
 		private void ReadNextPacket()
@@ -256,7 +256,7 @@ namespace MySql.Data.MySqlClient
 
 //			int compressedLen = baseStream.ReadByte() + (baseStream.ReadByte() << 8) + 
 //				(baseStream.ReadByte() << 16);
-			byte seq = (byte)baseStream.ReadByte();
+			baseStream.ReadByte();  // seq
 			int unCompressedLen = baseStream.ReadByte() + (baseStream.ReadByte() << 8) + 
 				(baseStream.ReadByte() << 16);
 

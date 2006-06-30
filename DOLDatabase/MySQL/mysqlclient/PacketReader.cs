@@ -146,7 +146,7 @@ namespace MySql.Data.MySqlClient
 				ReadByte();
 				int errorCode = ReadInteger(2);
 				string msg = ReadString();
-				throw new MySqlException( msg, errorCode );
+				throw new MySqlException(msg, errorCode);
 			}
 
 		}

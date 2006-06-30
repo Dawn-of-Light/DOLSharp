@@ -91,7 +91,7 @@ namespace MySql.Data.MySqlClient
 			string dataMemoryName = memoryName + "_" + connectNumber;
 			dataMap = OpenFileMapping( FILE_MAP_WRITE, false, 
 				dataMemoryName + "_DATA" );
-			dataView = MapViewOfFile( dataMap, FILE_MAP_WRITE, 0, 0, (UIntPtr)BUFFERLENGTH );
+			dataView = MapViewOfFile( dataMap, FILE_MAP_WRITE, 0, 0, (UIntPtr)(uint)BUFFERLENGTH );
 
 			serverWrote = new AutoResetEvent(false);
 			serverWrote.Handle = OpenEvent( EVENT_ALL_ACCESS, false, 
@@ -151,7 +151,7 @@ namespace MySql.Data.MySqlClient
 		{
 			try 
 			{
-				dataView = MapViewOfFile( dataMap, FILE_MAP_WRITE, 0, 0, (UIntPtr)BUFFERLENGTH );
+				dataView = MapViewOfFile( dataMap, FILE_MAP_WRITE, 0, 0, (UIntPtr)(uint)BUFFERLENGTH );
 				if (dataView == IntPtr.Zero) return true;
 				return false;
 			}
@@ -227,8 +227,8 @@ namespace MySql.Data.MySqlClient
 		static extern IntPtr OpenEvent(uint dwDesiredAccess, bool bInheritHandle,
 			string lpName);
 
-		[DllImport("kernel32.dll")]
-		static extern bool SetEvent(IntPtr hEvent);
+//		[DllImport("kernel32.dll")]
+//		static extern bool SetEvent(IntPtr hEvent);
 
 		[DllImport("kernel32.dll")]
 		static extern IntPtr OpenFileMapping(uint dwDesiredAccess, bool bInheritHandle,

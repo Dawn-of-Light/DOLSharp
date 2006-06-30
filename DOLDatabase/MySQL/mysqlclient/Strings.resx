@@ -151,4 +151,7 @@
 	<data name="ReadFromStreamFailed">
 		<value>Reading from the stream has failed.</value>
 	</data>
+	<data name="QueryTooLarge">
+		<value>Packets larger than max_allowed_packet are not allowed.</value>
+	</data>
 </root>

@@ -48,6 +48,7 @@ namespace MySql.Data.MySqlClient
 		}
 
 		#region Server Properties
+
 /*		public string Name 
 		{
 			get { return connectionName; }
@@ -60,7 +61,6 @@ namespace MySql.Data.MySqlClient
 		public string Server 
 		{
 			get { return GetString("host"); }
-//			set { keyValues["host"] = value; }
 		}
 
 		[Category("Connection")]
@@ -69,7 +69,6 @@ namespace MySql.Data.MySqlClient
 		public int Port 
 		{
 			get { return GetInt("port"); }
-//			set { keyValues["port"] = value; }
 		}
 
 		[Category("Connection")]
@@ -78,7 +77,6 @@ namespace MySql.Data.MySqlClient
 		public ConnectionProtocol Protocol
 		{
 			get { return (ConnectionProtocol)keyValues["protocol"]; }
-//			set { keyValues["protocol"] = value; }
 		}
 
 		[Category("Connection")]
@@ -86,7 +84,6 @@ namespace MySql.Data.MySqlClient
 		public string PipeName 
 		{
 			get { return GetString("pipeName"); }
-//			set { keyValues["pipeName"] = value; }
 		}
 
 		[Category("Connection")]
@@ -95,7 +92,6 @@ namespace MySql.Data.MySqlClient
 		public bool UseCompression 
 		{
 			get { return GetBool("compress"); }
-//			set { keyValues["compress"] = value; }
 		}
 
 		[Category("Connection")]
@@ -113,7 +109,6 @@ namespace MySql.Data.MySqlClient
 		public int ConnectionTimeout
 		{
 			get { return GetInt("connect timeout"); }
-//			set { keyValues["connect timeout"] = value; }
 		}
 
 		[Category("Connection")]
@@ -122,7 +117,6 @@ namespace MySql.Data.MySqlClient
 		public bool AllowBatch 
 		{
 			get { return GetBool("allow batch"); }
-//			set { keyValues["allow batch"] = value; }
 		}
 
 		[Category("Connection")]
@@ -131,7 +125,6 @@ namespace MySql.Data.MySqlClient
 		public bool Logging
 		{
 			get { return GetBool("logging"); }
-//			set { keyValues["logging"] = value; }
 		}
 
 		[Category("Connection")]
@@ -140,7 +133,6 @@ namespace MySql.Data.MySqlClient
 		public string SharedMemoryName 
 		{
 			get { return GetString("memname"); }
-//			set { keyValues["memname"] = value; }
 		}
 
 		[Category("Connection")]
@@ -149,7 +141,6 @@ namespace MySql.Data.MySqlClient
 		public bool UseOldSyntax 
 		{
 			get { return GetBool("oldsyntax"); }
-//			set { keyValues["oldsyntax"] = value; }
 		}
 		#endregion
 
@@ -160,7 +151,6 @@ namespace MySql.Data.MySqlClient
 		public string UserId 
 		{
 			get { return GetString("user id"); }
-//			set { keyValues["user id"] = value; }
 		}
 
 		[Category("Authentication")]
@@ -168,7 +158,6 @@ namespace MySql.Data.MySqlClient
 		public string Password 
 		{
 			get { return GetString("password"); }
-//			set { keyValues["password"] = value; }
 		}
 
 /*		[Category("Authentication")]
@@ -186,7 +175,6 @@ namespace MySql.Data.MySqlClient
 		public bool PersistSecurityInfo 
 		{
 			get { return GetBool("persist security info"); }
-//			set { keyValues["persist security info"] = value; }
 		}
 		#endregion
 
@@ -198,7 +186,6 @@ namespace MySql.Data.MySqlClient
 		public bool Pooling 
 		{
 			get { return GetBool("pooling"); }
-//			set { keyValues["pooling"] = value; }
 		}
 
 		[Category("Pooling")]
@@ -207,7 +194,6 @@ namespace MySql.Data.MySqlClient
 		public int MinPoolSize 
 		{
 			get { return GetInt("min pool size"); }
-//			set { keyValues["min pool size"] = value; }
 		}
 
 		[Category("Pooling")]
@@ -216,7 +202,6 @@ namespace MySql.Data.MySqlClient
 		public int MaxPoolSize 
 		{
 			get { return GetInt("max pool size"); }
-//			set { keyValues["max pool size"] = value; }
 		}
 
 		[Category("Pooling")]
@@ -225,19 +210,34 @@ namespace MySql.Data.MySqlClient
 		public int ConnectionLifetime 
 		{
 			get { return GetInt("connect lifetime"); }
-//			set { keyValues["connect lifetime"] = value; }
+		}
+
+		[Category("Pooling")]
+		[Description("Should connections pulled from connection pools be reset")]
+		[DefaultValue(true)]
+		public bool ResetPooledConnections
+		{
+			get { return GetBool("reset_pooled_conn"); }
+		}
+
+		[Category("Pooling")]
+		[Description("Should connections pulled from connection pools use cached server configuration")]
+		[DefaultValue(false)]
+		public bool CacheServerConfig
+		{
+			get { return GetBool("cache_server_config"); }
 		}
 
 		#endregion
 
 		#region Other Properties
+
 		[Category("Other")]
 		[Description("Should zero datetimes be supported")]
 		[DefaultValue(false)]
 		public bool AllowZeroDateTime 
 		{
 			get { return GetBool("allowzerodatetime"); }
-//			set { keyValues["alllowzerodatetime"] = value; }
 		}
 
 		[Category("Other")]
@@ -246,7 +246,6 @@ namespace MySql.Data.MySqlClient
 		public bool ConvertZeroDateTime 
 		{
 			get { return GetBool("convertzerodatetime"); }
-//			set { keyValues["convertzerodatetime"] = value; }
 		}
 
 		[Category("Other")]
@@ -255,7 +254,6 @@ namespace MySql.Data.MySqlClient
 		public string CharacterSet 
 		{
 			get { return GetString("charset"); }
-//			set { keyValues["charset"] = value; }
 		}
 
 		#endregion
@@ -355,6 +353,8 @@ namespace MySql.Data.MySqlClient
 				defaults["memname"] = "MYSQL";
 				defaults["allowzerodatetime"] = false;
 				defaults["convertzerodatetime"] = false;
+				defaults["reset_pooled_conn"] = true;
+				defaults["cache_server_config"] = false;
 			}
 			return (Hashtable)defaults.Clone();
 		}
@@ -367,15 +367,27 @@ namespace MySql.Data.MySqlClient
 
 			switch (lowerCaseKey)
 			{
+				case "cache server configuration":
+				case "cacheserverconfig":
+				case "cacheserverconfiguration":
+					hash["cache_server_config"] = boolVal;
+					break;
+
+				case "reset pooled connections":
+				case "resetpooledconnections":
+				case "reset connections":
+					hash["reset_pooled_conn"] = boolVal;
+					break;
+
 				case "character set":
 				case "charset":
 					hash["charset"] = value;
-					return true;
+					break;
 
 				case "use compression":
 				case "compress":
 					hash["compress"] = boolVal;
-					return true;
+					break;
 
 				case "protocol":
 					if (value == "socket" || value == "tcp")
@@ -386,43 +398,46 @@ namespace MySql.Data.MySqlClient
 						hash["protocol"] = ConnectionProtocol.UnixSocket;
 					else if (value == "memory")
 						hash["protocol"] = ConnectionProtocol.SharedMemory;
-					return true;
+					break;
 
 				case "pipe name":
 				case "pipe":
 					hash["pipeName"] = value;
-					return true;
+					break;
 
 				case "allow batch":
 					hash["allow batch"] = boolVal;
-					return true;
+					break;
 
 				case "logging":
 					hash["logging"] = boolVal;
-					return true;
+					break;
 
 				case "shared memory name":
 					hash["memname"] = value;
-					return true;
+					break;
 
 				case "old syntax":
 				case "oldsyntax":
 					hash["oldsyntax"] = boolVal;
-					return true;
+					break;
 
 				case "convert zero datetime":
 				case "convertzerodatetime":
 					hash["convertzerodatetime"] = boolVal;
-					return true;
+					break;
 
 				case "allow zero datetime":
 				case "allowzerodatetime":
 					hash["allowzerodatetime"] = boolVal;
-					return true;
+					break;
+
+				default:
+					if (! base.ConnectionParameterParsed(hash, key, value))
+						throw new ArgumentException(Resources.GetString("KeywordNotSupported"), key);
+					break;
 			}
 
-			if (! base.ConnectionParameterParsed(hash, key, value))
-				throw new ArgumentException(Resources.GetString("KeywordNotSupported"), key);
 			return true;
 		}
 

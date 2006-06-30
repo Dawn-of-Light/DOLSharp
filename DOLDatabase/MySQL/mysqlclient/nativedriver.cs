@@ -39,7 +39,6 @@ namespace MySql.Data.MySqlClient
 	{
 		public    int					MaxSinglePacket = 255 * 255 * 255;
 		protected byte					packetSeq;
-		protected long					maxPacketSize;
 
 		protected int					protocol;
 		protected String				encryptionSeed;
@@ -67,12 +66,6 @@ namespace MySql.Data.MySqlClient
 			get { return packetSeq; }
 		}
 
-		public long MaxPacketSize 
-		{
-			get { return maxPacketSize; }
-			set { maxPacketSize = value; }
-		}
-
 		/// <summary>
 		/// Returns true if this connection can handle batch SQL natively
 		/// This means MySQL 4.1.1 or later.
@@ -92,14 +85,6 @@ namespace MySql.Data.MySqlClient
 				}
 				return false;
 			}
-		}
-
-		public override void Configure( MySqlConnection connection )
-		{
-			base.Configure( connection );
-
-			if ( serverProps.Contains( "max_allowed_packet" ))
-				maxPacketSize = Convert.ToInt64( serverProps["max_allowed_packet"] );
 		}
 
 		private void ExecuteCommand( DBCmd cmd, byte[] bytes, int length ) 
@@ -142,8 +127,8 @@ namespace MySql.Data.MySqlClient
 		{
 			base.Open();
 
-			Stream stream = null;
 			// connect to one of our specified hosts
+			Stream stream;
 			try 
 			{
 				if (Settings.Protocol == ConnectionProtocol.SharedMemory)
@@ -337,8 +322,6 @@ namespace MySql.Data.MySqlClient
 
 		public override CommandResult SendQuery( byte[] bytes, int length, bool consume ) 
 		{
-			IsProcessing = true;
-
 			if (Settings.Logging)
 				Logger.LogCommand( DBCmd.QUERY, encoding.GetString( bytes, 0, length ) );
 
@@ -351,10 +334,12 @@ namespace MySql.Data.MySqlClient
 		public override void Close() 
 		{
 			if (isOpen)
+			{
 				ExecuteCommand(DBCmd.QUIT, null, 0);
 
-			writer.Stream.Close();
-			reader.Stream.Close();
+				writer.Stream.Close();
+				reader.Stream.Close();
+			}
 
 			base.Close();
 		}
@@ -366,9 +351,9 @@ namespace MySql.Data.MySqlClient
 			{
 				// if we are processing a command, we can't send a command since MySQL doesn't 
 				// support interleaved commands
-				if (processing) return true;
+				//if (processing) return true;
 
-				ExecuteCommand( DBCmd.PING, null, 0 ); 
+				ExecuteCommand(DBCmd.PING, null, 0); 
 				return reader.ReadOk();
 			}
 			catch (Exception) 
@@ -406,7 +391,7 @@ namespace MySql.Data.MySqlClient
 				hasWarnings = reader.ReadInteger(2) != 0;
 				if (reader.HasMoreData) 
 				{
-					string serverMessage = reader.ReadLenString();
+					reader.ReadLenString();  //TODO: server message
 				}
 			}
 			return 0;
