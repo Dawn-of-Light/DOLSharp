@@ -62,11 +62,8 @@ namespace MySql.Data.MySqlClient
 
 		#endregion
 
-		public CommandResult Execute( MySqlParameterCollection parameters )
+		public CommandResult Execute(MySqlParameterCollection parameters)
 		{
-			if (parameters.Count < paramList.Length)
-				throw new MySqlException( "Invalid number of parameters for statement execute" );
-
 			PacketWriter packet = new PacketWriter();
 			packet.Driver = (NativeDriver)driver;
 
@@ -97,13 +94,17 @@ namespace MySql.Data.MySqlClient
 			foreach ( MySqlField param in paramList )
 			{
 				MySqlParameter parm = parameters[ param.ColumnName ];
-				packet.WriteInteger( (long)parm.MySqlDbType, 2 ); 
+				packet.WriteInteger((long)parm.GetPSType(), 2);
 			}
 
 			// now write out all non-null values
 			foreach ( MySqlField param in paramList )
 			{
-				MySqlParameter parm = parameters[ param.ColumnName ];
+				int index = parameters.IndexOf(param.ColumnName);
+				if (index == -1)
+					throw new MySqlException("Parameter '" + param.ColumnName +
+						"' is not defined.");
+				MySqlParameter parm = parameters[index];
 				if (parm.Value == DBNull.Value || parm.Value == null) continue;
 
 				packet.Encoding = param.Encoding;

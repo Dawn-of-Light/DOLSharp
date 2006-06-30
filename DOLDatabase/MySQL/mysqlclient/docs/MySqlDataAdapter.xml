@@ -32,6 +32,11 @@
 	are set to initial values. For a list of these values, see the <B>MySQLDataAdapter</B> 
 	constructor.
 	</para>
+	<note>
+	Please be aware that the <see cref="DataColumn"/> class in .NET 1.0 and 1.1 does not allow columns
+	with type of UInt16, UInt32, or UInt64 to be autoincrement columns.  If you plan to use autoincremement
+	columns with MySQL, you should consider using signed integer columns.
+	</note>
 </remarks>
 
 <example>

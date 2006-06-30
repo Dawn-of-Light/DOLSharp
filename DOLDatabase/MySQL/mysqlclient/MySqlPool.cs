@@ -21,8 +21,6 @@
 using System;
 using MySql.Data.Common;
 using System.Collections;
-using System.Threading;
-using log4net;
 
 namespace MySql.Data.MySqlClient
 {
@@ -31,13 +29,8 @@ namespace MySql.Data.MySqlClient
 	/// </summary>
 	internal sealed class MySqlPool
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
 		private ArrayList				inUsePool;
-		private ArrayList				idlePool;
+		private Queue					idlePool;
 		private MySqlConnectionString	settings;
 		private int						minSize;
 		private int						maxSize;
@@ -47,8 +40,8 @@ namespace MySql.Data.MySqlClient
 			minSize = settings.MinPoolSize;
 			maxSize = settings.MaxPoolSize;
 			this.settings = settings;
-			inUsePool =new ArrayList();
-			idlePool = new ArrayList( settings.MinPoolSize );
+			inUsePool =new ArrayList(maxSize);
+			idlePool = new Queue(maxSize);
 
 			// prepopulate the idle pool to minSize
 			for (int i=0; i < minSize; i++) 
@@ -61,7 +54,7 @@ namespace MySql.Data.MySqlClient
 			set { settings = value; }
 		}
 
-		private int CheckConnections() 
+/*		private int CheckConnections() 
 		{
 			int freed = 0;
 			lock (inUsePool.SyncRoot) 
@@ -78,85 +71,61 @@ namespace MySql.Data.MySqlClient
 			}
 			return freed;
 		}
+*/
+		private Driver CheckoutConnection()
+		{
+			lock(idlePool.SyncRoot)
+			{
+				if (idlePool.Count == 0) return null;
+				Driver driver = (Driver)idlePool.Dequeue();
+
+				// if the user asks us to ping/reset pooled connections
+				// do so now
+				if (settings.ResetPooledConnections)
+				{
+					if (!driver.Ping())
+					{
+						driver.Close();
+						return null;
+					}
+					driver.Reset();
+				}
+
+				lock (inUsePool.SyncRoot)
+				{
+					inUsePool.Add(driver);
+				}
+				return driver;
+			}
+		}
 
 		private Driver GetPooledConnection()
 		{
-			Driver driver = null;
-
-			// if here are no idle connections and inUsePool is full, then we
-			// check each of the inUsePool connections and make sure they are
-			// actually in use.
-			if (idlePool.Count == 0 && inUsePool.Count == maxSize) 
+			while (true)
 			{
-				int freed = CheckConnections();
+				if (idlePool.Count > 0)
+					return CheckoutConnection();
 
-				// if we freed no connections, then we can't pull one so we return null
-				if (0 == freed) return null;
-			}
+				// if idlepool == 0 and inusepool == max, then we can't create a new one
+				if (inUsePool.Count == maxSize)
+					return null;
 
-			// if we get here, then we have at least one connection in the idle pool
-			lock (idlePool.SyncRoot) 
-			{
-				for (int i=idlePool.Count-1; i >=0; i--)
-				{
-					driver = (idlePool[i] as Driver);
-					if ( driver.Ping() )
-					{
-						lock (inUsePool) 
-						{
-							inUsePool.Add( driver );
-						}
-						idlePool.RemoveAt( i );
-						break;
-					}
-					else 
-					{
-						driver.SafeClose();
-						idlePool.RemoveAt(i);
-						driver = null;
-					}
-				}
-			}
-
-			if ( driver != null ) 
-			{
-				driver.Settings = settings;
-				driver.Reset();
-			}
-			else if ((idlePool.Count+inUsePool.Count) < maxSize)
-			{
-				// if we couldn't get a pooled connection and there is still room
-				// make a new one
-				driver = CreateNewPooledConnection();
-				if ( driver != null)
-				{
-					lock (idlePool.SyncRoot)
-						lock (inUsePool.SyncRoot) 
-						{
-							idlePool.Remove( driver );
-							inUsePool.Add( driver );
-						}
-				}
-			}
-
-			// make sure we stay at least minSize in our combined pools
-			while ((idlePool.Count + inUsePool.Count) < minSize)
 				CreateNewPooledConnection();
-
-			return driver;
+			}
 		}
 
-		private Driver CreateNewPooledConnection()
+		private void CreateNewPooledConnection()
 		{
 			lock(idlePool.SyncRoot) 
 				lock (inUsePool.SyncRoot)
 				{
 					// first we check if we are allowed to create another
-					if ((inUsePool.Count + idlePool.Count) == maxSize) return null;
+					if ((inUsePool.Count + idlePool.Count) == maxSize)
+						return;
 
-					Driver driver = Driver.Create( settings );
-					idlePool.Add( driver );
-					return driver;
+					Driver driver = Driver.Create(settings);
+
+					idlePool.Enqueue(driver);
 				}
 		}
 
@@ -165,11 +134,11 @@ namespace MySql.Data.MySqlClient
 			lock (idlePool.SyncRoot)
 				lock (inUsePool.SyncRoot) 
 				{
-					inUsePool.Remove( driver );
+					inUsePool.Remove(driver);
 					if (driver.Settings.ConnectionLifetime != 0 && driver.IsTooOld())
 						driver.Close();
 					else
-						idlePool.Add( driver );
+						idlePool.Enqueue(driver);
 				}
 		}
 
@@ -182,15 +151,7 @@ namespace MySql.Data.MySqlClient
 
 			// wait timeOut seconds at most to get a connection
 			while (driver == null && (Environment.TickCount - start) < ticks)
-			{
 				driver = GetPooledConnection();
-				if (driver == null)
-				{
-					if(log.IsWarnEnabled)
-						log.Warn("No pooled connections left, waiting... idle=" + idlePool.Count + " inUse=" + inUsePool.Count);
-					Thread.Sleep(200); // wait for connection
-				}
-			}
 					 
 			// if pool size is at maximum, then we must have reached our timeout so we simply
 			// throw our exception

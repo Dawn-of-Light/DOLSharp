@@ -660,25 +660,16 @@ namespace MySql.Data.MySqlClient
 					return false;
 				}
 				readCount = 0;
-			}
-			catch (MySqlException ex) 
-			{
-				if (ex.IsFatal)
-					connection.Terminate();
-				throw;
-			}
 
-			schemaTable = null;
+				schemaTable = null;
 
-			// When executing query statements, the result byte that is returned
-			// from MySql is the column count.  That is why we reference the LastResult
-			// property here to dimension our field array
-			connection.SetState( ConnectionState.Fetching );
+				// When executing query statements, the result byte that is returned
+				// from MySql is the column count.  That is why we reference the LastResult
+				// property here to dimension our field array
+				connection.SetState( ConnectionState.Fetching );
 
-			// load in our field defs and set our internal variables so we know
-			// what we can do (canRead, hasRows)
-			try 
-			{
+				// load in our field defs and set our internal variables so we know
+				// what we can do (canRead, hasRows)
 				canRead = hasRows = currentResult.Load();
 				fields = currentResult.Fields;
 				return true;

@@ -97,6 +97,7 @@ namespace MySql.Data.MySqlClient
 			mapping.Add("tis620", 874);
 			mapping.Add("binary", "latin1");
 			mapping.Add("cp1250", 1250);
+			mapping.Add("cp932", 932);
 
 			// relatively sure about
 /*			mapping.Add( "default", 0 );

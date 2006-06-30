@@ -276,6 +276,23 @@ namespace MySql.Data.MySqlClient
 			if (value == null) 
 				throw new ArgumentException("The MySqlParameterCollection only accepts non-null MySqlParameter type objects.", "value");
 
+			string inComingName = value.ParameterName.ToLower();
+			if (inComingName[0] == paramMarker)
+				inComingName = inComingName.Substring(1, inComingName.Length-1);
+
+			for (int i=0; i < _parms.Count; i++)
+			{
+				MySqlParameter p = (MySqlParameter)_parms[i];
+				string name = p.ParameterName.ToLower();
+				if (name[0] == paramMarker)
+					name = name.Substring(1, name.Length-1);
+				if (name == inComingName)
+				{
+					_parms[i] = value;
+					return value;
+				}
+			}
+
 			_parms.Add(value);
 			return value;
 		}

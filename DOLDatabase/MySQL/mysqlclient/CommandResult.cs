@@ -142,7 +142,6 @@ namespace MySql.Data.MySqlClient
 			if (driver.HasWarnings)
 				driver.ReportWarnings();
 
-			driver.IsProcessing = false;
 			return false;
 		}
 
