@@ -119,6 +119,20 @@ namespace DOL.GS
 		/// <returns>true if added</returns>
 		public bool AddNPCEquipment(eInventorySlot slot, int model, int color, int effect)
 		{
+			return AddNPCEquipment(slot, model, color, 0, 0);
+		}
+
+		/// <summary>
+		/// Adds item to template reusing iventory  item instances from other templates.
+		/// </summary>
+		/// <param name="slot">The equipment slot</param>
+		/// <param name="model">The equipment model</param>
+		/// <param name="color">The equipment color</param>
+		/// <param name="effect">The equipment effect</param>
+		/// <param name="extension">The equipment extension</param>
+		/// <returns>true if added</returns>
+		public bool AddNPCEquipment(eInventorySlot slot, int model, int color, int effect, int extension)
+		{
 			lock (this)
 			{
 				lock (m_usedInventoryItems.SyncRoot)
@@ -128,7 +142,7 @@ namespace DOL.GS
 					if (slot == eInventorySlot.Invalid) return false;
 					if (m_items.Contains((int)slot)) return false;
 
-					string itemID = string.Format("{0}:{1},{2},{3}", slot, model, color, effect);
+					string itemID = string.Format("{0}:{1},{2},{3}", slot, model, color, effect, extension);
 					InventoryItem item = (InventoryItem)m_usedInventoryItems[itemID];
 					if (item == null)
 					{
@@ -137,6 +151,7 @@ namespace DOL.GS
 						item.Model = model;
 						item.Color = color;
 						item.Effect = effect;
+						item.Extension = (byte)extension;
 						item.SlotPosition = (int)slot;
 					}
 					m_items.Add((int)slot, item);
@@ -261,10 +276,12 @@ namespace DOL.GS
 					ArrayList npcEquip = (ArrayList)m_npcEquipmentCache[templateID];
 					if (npcEquip == null) return false;
 
-					foreach (NPCEquipment npcItem in npcEquip) {
-						if (!AddNPCEquipment((eInventorySlot)npcItem.Slot, npcItem.Model, npcItem.Color, npcItem.Effect)) {
-								if (log.IsWarnEnabled)
-									log.Warn("Error adding NPC equipment, ObjectId=" + npcItem.ObjectId);
+					foreach (NPCEquipment npcItem in npcEquip)
+					{
+						if (!AddNPCEquipment((eInventorySlot)npcItem.Slot, npcItem.Model, npcItem.Color, npcItem.Effect, npcItem.Extension))
+						{
+							if (log.IsWarnEnabled)
+								log.Warn("Error adding NPC equipment, ObjectId=" + npcItem.ObjectId);
 						}
 					}
 					return true;
