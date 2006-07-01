@@ -1,735 +1,468 @@
-<VisualStudioProject>
-    <CSHARP
-        ProjectType = "Local"
-        ProductVersion = "7.10.3077"
-        SchemaVersion = "2.0"
-        ProjectGuid = "{43BFC675-13B7-4AA8-97F6-6109948849CC}"
-    >
-        <Build>
-            <Settings
-                ApplicationIcon = ""
-                AssemblyKeyContainerName = ""
-                AssemblyName = "DOLDatabase"
-                AssemblyOriginatorKeyFile = ""
-                DefaultClientScript = "JScript"
-                DefaultHTMLPageLayout = "Grid"
-                DefaultTargetSchema = "IE50"
-                DelaySign = "false"
-                OutputType = "Library"
-                PreBuildEvent = ""
-                PostBuildEvent = ""
-                RootNamespace = "DOLDatabase"
-                RunPostBuildEvent = "OnBuildSuccess"
-                StartupObject = ""
-            >
-                <Config
-                    Name = "Debug"
-                    AllowUnsafeBlocks = "false"
-                    BaseAddress = "285212672"
-                    CheckForOverflowUnderflow = "false"
-                    ConfigurationOverrideFile = ""
-                    DefineConstants = "DEBUG;TRACE"
-                    DocumentationFile = "DOLDatabase.xml"
-                    DebugSymbols = "true"
-                    FileAlignment = "4096"
-                    IncrementalBuild = "false"
-                    NoStdLib = "false"
-                    NoWarn = "1570;1572;1573;1587;1591;1592"
-                    Optimize = "true"
-                    OutputPath = "bin\Debug\"
-                    RegisterForComInterop = "false"
-                    RemoveIntegerChecks = "false"
-                    TreatWarningsAsErrors = "false"
-                    WarningLevel = "4"
-                />
-                <Config
-                    Name = "Release"
-                    AllowUnsafeBlocks = "false"
-                    BaseAddress = "285212672"
-                    CheckForOverflowUnderflow = "false"
-                    ConfigurationOverrideFile = ""
-                    DefineConstants = "TRACE"
-                    DocumentationFile = "DOLDatabase.xml"
-                    DebugSymbols = "false"
-                    FileAlignment = "4096"
-                    IncrementalBuild = "false"
-                    NoStdLib = "false"
-                    NoWarn = ""
-                    Optimize = "true"
-                    OutputPath = "bin\Release\"
-                    RegisterForComInterop = "false"
-                    RemoveIntegerChecks = "false"
-                    TreatWarningsAsErrors = "false"
-                    WarningLevel = "4"
-                />
-            </Settings>
-            <References>
-                <Reference
-                    Name = "System"
-                    AssemblyName = "System"
-                    HintPath = "..\..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.dll"
-                />
-                <Reference
-                    Name = "System.Data"
-                    AssemblyName = "System.Data"
-                    HintPath = "..\..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Data.dll"
-                />
-                <Reference
-                    Name = "System.XML"
-                    AssemblyName = "System.Xml"
-                    HintPath = "..\..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
-                />
-                <Reference
-                    Name = "System.Drawing"
-                    AssemblyName = "System.Drawing"
-                    HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Drawing.dll"
-                />
-                <Reference
-                    Name = "log4net"
-                    AssemblyName = "log4net"
-                    HintPath = "..\sharedModules\log4net\log4net.dll"
-                />
-                <Reference
-                    Name = "ICSharpCode.SharpZipLib"
-                    AssemblyName = "ICSharpCode.SharpZipLib"
-                    HintPath = "..\sharedModules\ICSharpCode.SharpZLib\ICSharpCode.SharpZipLib.dll"
-                />
-            </References>
-        </Build>
-        <Files>
-            <Include>
-                <File
-                    RelPath = "AssemblyInfo.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "DatabaseException.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "DataObject.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "DataTableHandler.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "ObjectDatabase.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Attributes\DataElement.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Attributes\DataTable.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Attributes\PrimaryKey.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Attributes\Relation.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Cache\CacheException.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Cache\ICache.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Cache\SimpleCache.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Connection\ConnectionType.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Connection\DataConnection.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "DOLTables\Account.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "DOLTables\BindPoint.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "DOLTables\Character.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "DOLTables\DBAbility.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "DOLTables\DBAlliance.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "DOLTables\DBArea.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "DOLTables\DBBanedAccount.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "DOLTables\DBCraftedItem.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "DOLTables\DBCraftedXItem.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "DOLTables\DBDoor.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "DOLTables\DBFaction.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "DOLTables\DBFactionAggroLevel.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "DOLTables\DBguild.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "DOLTables\DBHouse.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "DOLTables\DBHouseIndoorItem.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "DOLTables\DBHouseOutdoorItem.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "DOLTables\DBKeep.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "DOLTables\DBKeepComponent.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "DOLTables\DBKeepHookPoint.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "DOLTables\DBKeepObject.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "DOLTables\DBLineXSpell.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "DOLTables\DBLinkedFaction.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "DOLTables\DBLootGenerator.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "DOLTables\DBLootOTD.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "DOLTables\DBLootTemplate.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "DOLTables\DBMobXLootTemplate.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "DOLTables\DBNpcTemplate.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "DOLTables\DBOTDXCharacter.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "DOLTables\DBPath.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "DOLTables\DBPathPoint.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "DOLTables\DBQuest.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "DOLTables\DBRank.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "DOLTables\DBSalvage.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "DOLTables\DBSinglePermission.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "DOLTables\DBSpecialization.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "DOLTables\DBSpecXAbility.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "DOLTables\DBSpell.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "DOLTables\DBSpellLine.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "DOLTables\DBStyle.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "DOLTables\DBStyleSubstitute.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "DOLTables\DBTask.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "DOLTables\InventoryItem.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "DOLTables\ItemTemplate.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "DOLTables\MerchantItem.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "DOLTables\Mob.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "DOLTables\NPCEquipment.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "DOLTables\WorldObject.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "DOLTables\ZonePoint.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "MySQL\mysqlclient\CharSetMap.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "MySQL\mysqlclient\command.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "MySQL\mysqlclient\CommandBuilder.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "MySQL\mysqlclient\CommandResult.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "MySQL\mysqlclient\CompressedStream.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "MySQL\mysqlclient\Connection.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "MySQL\mysqlclient\ConnectionString.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "MySQL\mysqlclient\Crypt.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "MySQL\mysqlclient\dataadapter.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "MySQL\mysqlclient\datareader.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "MySQL\mysqlclient\Driver.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "MySQL\mysqlclient\Exception.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "MySQL\mysqlclient\Field.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "MySQL\mysqlclient\Logger.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "MySQL\mysqlclient\MysqlDefs.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "MySQL\mysqlclient\MySqlError.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "MySQL\mysqlclient\MySqlHelper.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "MySQL\mysqlclient\MySqlPool.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "MySQL\mysqlclient\MySqlPoolManager.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "MySQL\mysqlclient\nativedriver.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "MySQL\mysqlclient\PacketReader.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "MySQL\mysqlclient\PacketWriter.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "MySQL\mysqlclient\parameter.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "MySQL\mysqlclient\parameter_collection.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "MySQL\mysqlclient\PreparedStatement.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "MySQL\mysqlclient\SharedMemoryStream.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "MySQL\mysqlclient\StoredProcedure.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "MySQL\mysqlclient\transaction.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "MySQL\mysqlclient\common\DBConnectionString.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "MySQL\mysqlclient\common\NamedPipeStream.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "MySQL\mysqlclient\common\NativeMethods.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "MySQL\mysqlclient\common\Platform.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "MySQL\mysqlclient\common\Resources.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "MySQL\mysqlclient\common\SocketStream.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "MySQL\mysqlclient\common\StreamCreator.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "MySQL\mysqlclient\common\Utility.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "MySQL\mysqlclient\common\Version.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "MySQL\mysqlclient\docs\MySqlCommand.xml"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "MySQL\mysqlclient\docs\MySqlCommandBuilder.xml"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "MySQL\mysqlclient\docs\MySqlConnection.xml"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "MySQL\mysqlclient\docs\MySqlDataAdapter.xml"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "MySQL\mysqlclient\docs\MySqlDataReader.xml"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "MySQL\mysqlclient\docs\MySqlException.xml"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "MySQL\mysqlclient\docs\MySqlHelper.xml"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "MySQL\mysqlclient\docs\MySqlParameter.xml"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "MySQL\mysqlclient\docs\MySqlParameterCollection.xml"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "MySQL\mysqlclient\docs\MySqlTransaction.xml"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "MySQL\mysqlclient\Types\MySqlBinary.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "MySQL\mysqlclient\Types\MySqlBit.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "MySQL\mysqlclient\Types\MySqlByte.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "MySQL\mysqlclient\Types\MySqlConversionException.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "MySQL\mysqlclient\Types\MySqlDateTime.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "MySQL\mysqlclient\Types\MySqlDecimal.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "MySQL\mysqlclient\Types\MySqlDouble.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "MySQL\mysqlclient\Types\MySqlInt16.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "MySQL\mysqlclient\Types\MySqlInt32.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "MySQL\mysqlclient\Types\MySqlInt64.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "MySQL\mysqlclient\Types\MySqlSingle.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "MySQL\mysqlclient\Types\MySqlString.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "MySQL\mysqlclient\Types\MySqlTime.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "MySQL\mysqlclient\Types\MySqlUByte.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "MySQL\mysqlclient\Types\MySqlUInt16.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "MySQL\mysqlclient\Types\MySqlUInt32.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "MySQL\mysqlclient\Types\MySqlUInt64.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "MySQL\mysqlclient\Types\MySqlValue.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "UniqueID\IdGenerator.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-            </Include>
-        </Files>
-    </CSHARP>
-</VisualStudioProject>
-
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectType>Local</ProjectType>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{43BFC675-13B7-4AA8-97F6-6109948849CC}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ApplicationIcon>
+    </ApplicationIcon>
+    <AssemblyKeyContainerName>
+    </AssemblyKeyContainerName>
+    <AssemblyName>DOLDatabase</AssemblyName>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+    <DefaultClientScript>JScript</DefaultClientScript>
+    <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
+    <DefaultTargetSchema>IE50</DefaultTargetSchema>
+    <DelaySign>false</DelaySign>
+    <OutputType>Library</OutputType>
+    <RootNamespace>DOLDatabase</RootNamespace>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <StartupObject>
+    </StartupObject>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DocumentationFile>DOLDatabase.xml</DocumentationFile>
+    <DebugSymbols>true</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>1570;1572;1573;1587;1591;1592</NoWarn>
+    <Optimize>true</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>full</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>TRACE</DefineConstants>
+    <DocumentationFile>DOLDatabase.xml</DocumentationFile>
+    <DebugSymbols>false</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>true</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>none</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <Name>ICSharpCode.SharpZipLib</Name>
+      <HintPath>..\sharedModules\ICSharpCode.SharpZLib\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net">
+      <Name>log4net</Name>
+      <HintPath>..\sharedModules\log4net\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="System">
+      <Name>System</Name>
+    </Reference>
+    <Reference Include="System.Data">
+      <Name>System.Data</Name>
+    </Reference>
+    <Reference Include="System.Drawing">
+      <Name>System.Drawing</Name>
+    </Reference>
+    <Reference Include="System.Xml">
+      <Name>System.XML</Name>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Attributes\DataElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Attributes\DataTable.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Attributes\PrimaryKey.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Attributes\Relation.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Cache\CacheException.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Cache\ICache.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Cache\SimpleCache.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Connection\ConnectionType.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Connection\DataConnection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DatabaseException.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DataObject.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DataTableHandler.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DOLTables\Account.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DOLTables\BindPoint.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DOLTables\Character.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DOLTables\DBAbility.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DOLTables\DBAlliance.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DOLTables\DBArea.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DOLTables\DBBanedAccount.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DOLTables\DBCraftedItem.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DOLTables\DBCraftedXItem.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DOLTables\DBDoor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DOLTables\DBFaction.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DOLTables\DBFactionAggroLevel.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DOLTables\DBguild.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DOLTables\DBHouse.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DOLTables\DBHouseIndoorItem.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DOLTables\DBHouseOutdoorItem.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DOLTables\DBKeep.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DOLTables\DBKeepComponent.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DOLTables\DBKeepHookPoint.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DOLTables\DBKeepObject.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DOLTables\DBLineXSpell.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DOLTables\DBLinkedFaction.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DOLTables\DBLootGenerator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DOLTables\DBLootOTD.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DOLTables\DBLootTemplate.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DOLTables\DBMobXLootTemplate.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DOLTables\DBNpcTemplate.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DOLTables\DBOTDXCharacter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DOLTables\DBPath.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DOLTables\DBPathPoint.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DOLTables\DBQuest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DOLTables\DBRank.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DOLTables\DBSalvage.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DOLTables\DBSinglePermission.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DOLTables\DBSpecialization.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DOLTables\DBSpecXAbility.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DOLTables\DBSpell.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DOLTables\DBSpellLine.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DOLTables\DBStyle.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DOLTables\DBStyleSubstitute.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DOLTables\DBTask.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DOLTables\InventoryItem.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DOLTables\ItemTemplate.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DOLTables\MerchantItem.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DOLTables\Mob.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DOLTables\NPCEquipment.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DOLTables\WorldObject.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DOLTables\ZonePoint.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\CharSetMap.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\command.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\CommandBuilder.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\CommandResult.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\common\DBConnectionString.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\common\NamedPipeStream.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\common\NativeMethods.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\common\Platform.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\common\Resources.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\common\SocketStream.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\common\StreamCreator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\common\Utility.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\common\Version.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\CompressedStream.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\Connection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\ConnectionString.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\Crypt.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\dataadapter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\datareader.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\Driver.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\Exception.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\Field.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\Logger.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\MysqlDefs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\MySqlError.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\MySqlHelper.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\MySqlPool.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\MySqlPoolManager.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\nativedriver.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\PacketReader.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\PacketWriter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\parameter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\parameter_collection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\PreparedStatement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\SharedMemoryStream.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\StoredProcedure.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\transaction.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\Types\MySqlBinary.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\Types\MySqlBit.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\Types\MySqlByte.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\Types\MySqlConversionException.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\Types\MySqlDateTime.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\Types\MySqlDecimal.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\Types\MySqlDouble.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\Types\MySqlInt16.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\Types\MySqlInt32.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\Types\MySqlInt64.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\Types\MySqlSingle.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\Types\MySqlString.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\Types\MySqlTime.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\Types\MySqlUByte.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\Types\MySqlUInt16.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\Types\MySqlUInt32.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\Types\MySqlUInt64.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\Types\MySqlValue.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ObjectDatabase.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UniqueID\IdGenerator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Content Include="MySQL\mysqlclient\docs\MySqlCommand.xml" />
+    <Content Include="MySQL\mysqlclient\docs\MySqlCommandBuilder.xml" />
+    <Content Include="MySQL\mysqlclient\docs\MySqlConnection.xml" />
+    <Content Include="MySQL\mysqlclient\docs\MySqlDataAdapter.xml" />
+    <Content Include="MySQL\mysqlclient\docs\MySqlDataReader.xml" />
+    <Content Include="MySQL\mysqlclient\docs\MySqlException.xml" />
+    <Content Include="MySQL\mysqlclient\docs\MySqlHelper.xml" />
+    <Content Include="MySQL\mysqlclient\docs\MySqlParameter.xml" />
+    <Content Include="MySQL\mysqlclient\docs\MySqlParameterCollection.xml" />
+    <Content Include="MySQL\mysqlclient\docs\MySqlTransaction.xml" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+</Project>
