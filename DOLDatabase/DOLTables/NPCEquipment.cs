@@ -34,6 +34,7 @@ namespace DOL.Database
 		protected int		m_model;
 		protected int		m_color;
 		protected int		m_effect;
+		protected int		m_extension; 
 
 		static bool			m_autoSave;
 
@@ -123,5 +124,19 @@ namespace DOL.Database
 				m_effect = value;
 			}
 		}
+
+		[DataElement(AllowDbNull = true)]
+		public int Extension
+		{
+			get
+			{
+				return m_extension;
+			}
+			set
+			{
+				Dirty = true;
+				m_extension = value;
+			}
+		} 
 	}
 }
