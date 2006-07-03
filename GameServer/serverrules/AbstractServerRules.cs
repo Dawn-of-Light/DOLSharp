@@ -166,6 +166,15 @@ namespace DOL.GS.ServerRules
 				}
 			}
 
+			// PEACE NPCs can't be attacked/attack
+			if (attacker is GameNPC)
+				if ((((GameNPC)attacker).Flags & (uint)GameNPC.eFlags.PEACE) != 0)
+					return false;
+
+			if (defender is GameNPC)
+				if ((((GameNPC)defender).Flags & (uint)GameNPC.eFlags.PEACE) != 0)
+					return false;
+
 			return true;
 		}
 

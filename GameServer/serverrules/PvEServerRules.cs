@@ -63,10 +63,6 @@ namespace DOL.GS.ServerRules
 				return false;
 			}
 
-			// PEACE NPCs can't be attacked/attack
-			if (defender.Realm == (int)eRealm.Peace || attacker.Realm == (int)eRealm.Peace)
-				return false;
-
 			if (attacker.Realm != 0 && defender.Realm != 0)
 			{
 				if (attacker is GamePlayer && ((GamePlayer)attacker).DuelTarget != defender)
@@ -114,7 +110,15 @@ namespace DOL.GS.ServerRules
 			// mobs can heal mobs, players heal players/NPC
 			if(source.Realm == 0 && target.Realm == 0) return true;
 			if(source.Realm != 0 && target.Realm != 0) return true;
-			if (source.Realm == (int) eRealm.Peace || target.Realm == (int) eRealm.Peace) return true;
+
+			//Peace flag NPCs are same realm
+			if (target is GameNPC)
+				if ((((GameNPC)target).Flags & (uint)GameNPC.eFlags.PEACE) != 0)
+					return true;
+
+			if (source is GameNPC)
+				if ((((GameNPC)source).Flags & (uint)GameNPC.eFlags.PEACE) != 0)
+					return true;
 
 			if(quiet == false) MessageToLiving(source, target.GetName(0, true) + " is not a member of your realm!");
 			return false;

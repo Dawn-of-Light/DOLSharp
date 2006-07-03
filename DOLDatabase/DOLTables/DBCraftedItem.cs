@@ -44,6 +44,9 @@ namespace DOL
 				m_autoSave=false;
 			}
 
+			/// <summary>
+			/// AutoSave
+			/// </summary>
 			override public bool AutoSave
 			{
 				get

@@ -25,103 +25,128 @@ using System;
 using DOL.Database;
 using DOL.Database.Attributes;
 
-namespace DOL
+namespace DOL.Database
 {
-	namespace Database
+	/// <summary>
+	/// The Database Entry for an Outdoor Housing Item
+	/// </summary>
+	[DataTable(TableName = "DBOutdoorItem")]
+	public class DBHouseOutdoorItem : DataObject
 	{
-		[DataTable(TableName="DBOutdoorItem")]
-		public class DBHouseOutdoorItem : DataObject
+		private int m_housenumber;
+		private int m_model;
+		private int m_position;
+		private int m_rotation;
+
+		private string m_baseitemid;
+
+		private static bool m_autoSave;
+
+		/// <summary>
+		/// The Constructor
+		/// </summary>
+		public DBHouseOutdoorItem()
 		{
-			private int m_housenumber;
-			private int m_model;
-			private int m_position;
-			private int m_rotation;
+			m_autoSave = false;
+		}
 
-			private string m_baseitemid;
+		/// <summary>
+		/// The House Number
+		/// </summary>
+		[DataElement(AllowDbNull = false, Index = true)]
+		public int HouseNumber
+		{
+			get
+			{
+				return m_housenumber;
+			}
+			set
+			{
+				Dirty = true;
+				m_housenumber = value;
+			}
+		}
 
-			static bool m_autoSave;
+		/// <summary>
+		/// The Model
+		/// </summary>
+		[DataElement(AllowDbNull = false)]
+		public int Model
+		{
+			get
+			{
+				return m_model;
+			}
+			set
+			{
+				Dirty = true;
+				m_model = value;
+			}
+		}
 
-			public DBHouseOutdoorItem()
+		/// <summary>
+		/// The Position
+		/// </summary>
+		[DataElement(AllowDbNull = false)]
+		public int Position
+		{
+			get
 			{
-				m_autoSave=false;
+				return m_position;
 			}
+			set
+			{
+				Dirty = true;
+				m_position = value;
+			}
+		}
 
-			[DataElement(AllowDbNull=false, Index=true)]
-			public int HouseNumber
+		/// <summary>
+		/// The Rotation
+		/// </summary>
+		[DataElement(AllowDbNull = false)]
+		public int Rotation
+		{
+			get
 			{
-				get
-				{
-					return m_housenumber;
-				}
-				set
-				{
-					Dirty = true;
-					m_housenumber = value;
-				}
+				return m_rotation;
 			}
-			[DataElement(AllowDbNull=false)]
-			public int Model
+			set
 			{
-				get
-				{
-					return m_model;
-				}
-				set
-				{
-					Dirty = true;
-					m_model = value;
-				}
+				Dirty = true;
+				m_rotation = value;
 			}
-			[DataElement(AllowDbNull=false)]
-			public int Position
-			{
-				get
-				{
-					return m_position;
-				}
-				set
-				{
-					Dirty = true;
-					m_position = value;
-				}
-			}
-			[DataElement(AllowDbNull=false)]
-			public int Rotation
-			{
-				get
-				{
-					return m_rotation;
-				}
-				set
-				{
-					Dirty = true;
-					m_rotation = value;
-				}
-			}
-			[DataElement(AllowDbNull=false)]
-			public string BaseItemID
-			{
-				get
-				{
-					return m_baseitemid;
-				}
-				set
-				{
-					Dirty = true;
-					m_baseitemid = value;
-				}
-			}
+		}
 
-			override public bool AutoSave
+		/// <summary>
+		/// The Base Item ID
+		/// </summary>
+		[DataElement(AllowDbNull = false)]
+		public string BaseItemID
+		{
+			get
 			{
-				get
-				{
-					return m_autoSave;
-				}
-				set
-				{
-					m_autoSave = value;
-				}
+				return m_baseitemid;
+			}
+			set
+			{
+				Dirty = true;
+				m_baseitemid = value;
+			}
+		}
+
+		/// <summary>
+		/// Autosave
+		/// </summary>
+		override public bool AutoSave
+		{
+			get
+			{
+				return m_autoSave;
+			}
+			set
+			{
+				m_autoSave = value;
 			}
 		}
 	}
