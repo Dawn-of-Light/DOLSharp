@@ -266,7 +266,7 @@ namespace DOL.GS.PacketHandler.v168
 						//Save the character in the database
 						GameServer.Database.AddNewObject(ch);
 						//Fire the character creation event
-						GameEventMgr.Notify(DatabaseEvent.CharacterCreated, null, new CharacterEventArgs(ch));
+						GameEventMgr.Notify(DatabaseEvent.CharacterCreated, null, new CharacterEventArgs(ch, client));
 						//write changes
 						GameServer.Database.SaveObject(ch);
 
