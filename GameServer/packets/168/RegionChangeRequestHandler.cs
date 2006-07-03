@@ -42,6 +42,20 @@ namespace DOL.GS.PacketHandler.v168
 		{
 			ushort JumpSpotID = packet.ReadShort();
 			ZonePoint zonePoint = (ZonePoint)GameServer.Database.SelectObject(typeof(ZonePoint), "Id = " + JumpSpotID + " AND Realm = " + client.Player.Realm);
+
+			//tutorial zone
+			if (client.Player.CurrentRegionID == 27)
+			{
+				zonePoint = new ZonePoint();
+				switch (client.Player.Realm)
+				{
+					case 1: zonePoint.Region = 1; break;
+					case 2: zonePoint.Region = 100; break;
+					case 3: zonePoint.Region = 200; break;
+				}
+				zonePoint.ClassType = "DOL.GS.GameEvents.TutorialJumpPointHandler";
+			}
+
 			if (zonePoint == null)
 			{
 				client.Out.SendMessage("Invalid Jump : [" + JumpSpotID + "]", eChatType.CT_System, eChatLoc.CL_SystemWindow);

@@ -195,6 +195,7 @@
     <Compile Include="gameevents\TalkingNPC.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="gameevents\TutorialJumpPointHandler.cs" />
     <Compile Include="globals.cs">
       <SubType>Code</SubType>
     </Compile>

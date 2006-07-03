@@ -18,6 +18,7 @@
  */
 using System;
 using DOL.Database;
+using DOL.GS;
 
 namespace DOL.Events
 {
@@ -30,25 +31,42 @@ namespace DOL.Events
 		/// Holds the target character for this event
 		/// </summary>
 		private Character m_character;
+
+		/// <summary>
+		/// Holds the character's creation client for this event
+		/// </summary>
+		private GameClient m_client;
 		
 		/// <summary>
 		/// Constructs a new event argument class for the
 		/// character events 
 		/// </summary>
 		/// <param name="character"></param>
-		public CharacterEventArgs(Character character)
+		public CharacterEventArgs(Character character, GameClient client)
 		{
 			m_character = character;
+			m_client = client;
 		}
 
 		/// <summary>
-		/// Gets the target account for this event
+		/// Gets the character for this event
 		/// </summary>
 		public Character Character
 		{
 			get
 			{
 				return m_character;
+			}
+		}
+
+		/// <summary>
+		/// Gets the client for this event
+		/// </summary>
+		public GameClient GameClient
+		{
+			get
+			{
+				return m_client;
 			}
 		}
 	}
