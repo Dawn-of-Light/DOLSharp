@@ -47,7 +47,7 @@ namespace DOL.GS.PacketHandler.v168
 					if (log.IsInfoEnabled)
 						log.Info(String.Format("Deleting character {0}!", charName));
 					//Fire the deletion event before removing the char
-					GameEventMgr.Notify(DatabaseEvent.CharacterDeleted, null, new CharacterEventArgs(chars[i]));
+					GameEventMgr.Notify(DatabaseEvent.CharacterDeleted, null, new CharacterEventArgs(chars[i], client));
 					//EventMgr.FireCharacterDeletion(chars[i]);
 
 					// delete items
