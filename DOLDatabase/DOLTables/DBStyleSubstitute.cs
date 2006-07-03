@@ -30,10 +30,16 @@ namespace DOL.Database
 		static bool	m_autoSave = false;
 		private int	m_classId;
 
+		/// <summary>
+		/// The Constructor
+		/// </summary>
 		public DBStyleSubstitute() : base()
 		{
 		}
 
+		/// <summary>
+		/// The Style Substitute Class ID
+		/// </summary>
 		[DataElement(AllowDbNull=false)]
 		public int ClassId
 		{
@@ -41,6 +47,9 @@ namespace DOL.Database
 			set { m_classId = value; Dirty = true; }
 		}
 		
+		/// <summary>
+		/// AutoSave in table?
+		/// </summary>
 		override public bool AutoSave
 		{
 			get

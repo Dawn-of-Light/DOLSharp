@@ -35,11 +35,14 @@ namespace DOL.Database
 	[DataTable(TableName="MobXLootTemplate")]
 	public class DBMobXLootTemplate : DataObject
 	{
-		protected string	m_MobName = "";
-		protected string	m_LootTemplateName = "";
-		protected int		m_dropCount;
-		static bool			m_autoSave;
+		private string	m_MobName = "";
+		private string	m_LootTemplateName = "";
+		private int		m_dropCount;
+		private static bool			m_autoSave;
 		
+		/// <summary>
+		/// Constructor
+		/// </summary>
 		public DBMobXLootTemplate()
 		{
 			m_MobName = "";
@@ -48,12 +51,18 @@ namespace DOL.Database
 			m_autoSave = false;
 		}
 
+		/// <summary>
+		/// Auto Save
+		/// </summary>
 		override public bool AutoSave
 		{
 			get	{return m_autoSave;}
 			set	{m_autoSave = value;}
 		}
 		
+		/// <summary>
+		/// Mob Name
+		/// </summary>
 		[DataElement(AllowDbNull=false)]
 		public string MobName
 		{
@@ -65,6 +74,9 @@ namespace DOL.Database
 			}
 		}
 		
+		/// <summary>
+		/// Loot Template Name
+		/// </summary>
 		[DataElement(AllowDbNull=false)]
 		public string LootTemplateName
 		{
@@ -76,6 +88,9 @@ namespace DOL.Database
 			}
 		}
 
+		/// <summary>
+		/// Drop Count
+		/// </summary>
 		[DataElement(AllowDbNull=false)]
 		public int DropCount
 		{

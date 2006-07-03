@@ -29,17 +29,26 @@ namespace DOL.Database
 	[DataTable(TableName="Quest")]
 	public class DBQuest : DataObject
 	{
-		protected	string	m_name;
-		protected	string	m_charname;
-		protected	int			m_step;
-		protected string	m_customPropertiesString;
+		private string		m_name;
+		private	string		m_charname;
+		private	int			m_step;
+		private string		m_customPropertiesString;
 
-		static		bool	m_autoSave;
+		private static bool	m_autoSave;
 
+		/// <summary>
+		/// Constructor
+		/// </summary>
 		public DBQuest() : this("",1,"")
 		{
 		}
 
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		/// <param name="name">The quest name</param>
+		/// <param name="step">The step number</param>
+		/// <param name="charname">The character name</param>
 		public DBQuest(string name, int step, string charname)
 		{
 			m_name = name;
@@ -47,6 +56,9 @@ namespace DOL.Database
 			m_charname = charname;
 		}
 
+		/// <summary>
+		/// AutoSave record
+		/// </summary>
 		override public bool AutoSave
 		{
 			get
@@ -59,6 +71,9 @@ namespace DOL.Database
 			}
 		}
 
+		/// <summary>
+		/// Quest Name
+		/// </summary>
 		[DataElement(AllowDbNull=false,Unique=false)]
 		public string Name
 		{
@@ -73,6 +88,9 @@ namespace DOL.Database
 			}
 		}
 
+		/// <summary>
+		/// Quest Step
+		/// </summary>
 		[DataElement(AllowDbNull=false,Unique=false)]
 		public int Step
 		{
@@ -87,6 +105,9 @@ namespace DOL.Database
 			}
 		}
 
+		/// <summary>
+		/// Character Name
+		/// </summary>
 		[DataElement(AllowDbNull=false,Unique=false)]
 		public string CharName
 		{
@@ -101,6 +122,9 @@ namespace DOL.Database
 			}
 		}
 
+		/// <summary>
+		/// Custom properties string
+		/// </summary>
 		[DataElement(AllowDbNull=true,Unique=false)]
 		public string CustomPropertiesString
 		{

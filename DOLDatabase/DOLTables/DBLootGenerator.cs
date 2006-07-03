@@ -28,26 +28,50 @@ namespace DOL.Database
 	/// </summary>
 	[DataTable(TableName="LootGenerator")]
 	public class DBLootGenerator : DataObject
-	{		
+	{	
+		/// <summary>
+		/// Trigger Mob
+		/// </summary>
 		protected string	m_mobName = "";
+		/// <summary>
+		/// Trigger Guild
+		/// </summary>
 		protected string	m_mobGuild = "";
+		/// <summary>
+		/// Trigger Faction
+		/// </summary>
 		protected string	m_mobFaction = "";
+		/// <summary>
+		/// Class of the Loot Generator
+		/// </summary>
 		protected string	m_lootGeneratorClass = "";
+		/// <summary>
+		/// Exclusive Priority
+		/// </summary>
 		protected int		m_exclusivePriority = 0;
 				
 		static bool			m_autoSave;
 
+		/// <summary>
+		/// Constructor
+		/// </summary>
 		public DBLootGenerator()
 		{
 			m_autoSave = false;
 		}
 
+		/// <summary>
+		/// AutoSave
+		/// </summary>
 		override public bool AutoSave
 		{
 			get	{return m_autoSave;}
 			set	{m_autoSave = value;}
 		}
 
+		/// <summary>
+		/// MobName
+		/// </summary>
 		[DataElement(AllowDbNull=true,Unique=false)]
 		public String MobName
 		{
@@ -59,6 +83,9 @@ namespace DOL.Database
 			}
 		}
 
+		/// <summary>
+		/// MobGuild
+		/// </summary>
 		[DataElement(AllowDbNull=true,Unique=false)]
 		public String MobGuild
 		{
@@ -70,6 +97,9 @@ namespace DOL.Database
 			}
 		}
 
+		/// <summary>
+		/// MobFaction
+		/// </summary>
 		[DataElement(AllowDbNull=true,Unique=false)]
 		public String MobFaction
 		{
@@ -81,6 +111,9 @@ namespace DOL.Database
 			}
 		}
 
+		/// <summary>
+		/// LootGeneratorClass
+		/// </summary>
 		[DataElement(AllowDbNull=false,Unique=false)]
 		public String LootGeneratorClass
 		{
@@ -92,6 +125,9 @@ namespace DOL.Database
 			}
 		}
 
+		/// <summary>
+		/// ExclusivePriority
+		/// </summary>
 		[DataElement(AllowDbNull=false,Unique=false)]
 		public int ExclusivePriority
 		{

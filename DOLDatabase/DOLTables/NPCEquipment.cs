@@ -29,20 +29,44 @@ namespace DOL.Database
 	[DataTable(TableName="NPCEquipment")]
 	public class NPCEquipment : DataObject
 	{
+		/// <summary>
+		/// The Equipment Template ID
+		/// </summary>
 		protected string	m_templateID;
+		/// <summary>
+		/// The Item Slot
+		/// </summary>
 		protected int		m_slot;
+		/// <summary>
+		/// The Item Model
+		/// </summary>
 		protected int		m_model;
+		/// <summary>
+		/// The Item Color
+		/// </summary>
 		protected int		m_color;
+		/// <summary>
+		/// The Item Effect
+		/// </summary>
 		protected int		m_effect;
+		/// <summary>
+		/// The Item Extension
+		/// </summary>
 		protected int		m_extension; 
 
 		static bool			m_autoSave;
 
+		/// <summary>
+		/// The Constructor
+		/// </summary>
 		public NPCEquipment()
 		{
 			m_autoSave=false;
 		}
 
+		/// <summary>
+		/// Autosave in table
+		/// </summary>
 		override public bool AutoSave
 		{
 			get
@@ -55,6 +79,9 @@ namespace DOL.Database
 			}
 		}
 
+		/// <summary>
+		/// Template ID
+		/// </summary>
 		[DataElement(AllowDbNull=false)]
 		public string TemplateID
 		{
@@ -69,6 +96,9 @@ namespace DOL.Database
 			}
 		}
 
+		/// <summary>
+		/// Slot
+		/// </summary>
 		[DataElement(AllowDbNull=false)]
 		public int Slot
 		{
@@ -83,6 +113,9 @@ namespace DOL.Database
 			}
 		}
 
+		/// <summary>
+		/// Model
+		/// </summary>
 		[DataElement(AllowDbNull=false)]
 		public int Model
 		{
@@ -97,6 +130,9 @@ namespace DOL.Database
 			}
 		}
 
+		/// <summary>
+		/// Color
+		/// </summary>
 		[DataElement(AllowDbNull=true)]
 		public int Color
 		{
@@ -111,6 +147,9 @@ namespace DOL.Database
 			}
 		}
 
+		/// <summary>
+		/// Effect
+		/// </summary>
 		[DataElement(AllowDbNull=true)]
 		public int Effect
 		{
@@ -125,6 +164,9 @@ namespace DOL.Database
 			}
 		}
 
+		/// <summary>
+		/// Extension
+		/// </summary>
 		[DataElement(AllowDbNull = true)]
 		public int Extension
 		{

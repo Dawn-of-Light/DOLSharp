@@ -189,7 +189,7 @@ namespace DOL.GS.Quests.Midgard
 				Ydenia.Y = 767189;
 				Ydenia.Z = 4480;
 				Ydenia.Heading = 2156;
-				Ydenia.Flags = 1;
+				Ydenia.Flags ^= (uint)GameNPC.eFlags.GHOST;
 				Ydenia.MaxSpeedBase = 200;
 				Ydenia.AddToWorld();
 				if (SAVE_INTO_DATABASE)

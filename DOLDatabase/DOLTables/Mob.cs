@@ -24,6 +24,9 @@ using System.Collections;
 
 namespace DOL.Database
 {
+	/// <summary>
+	/// The database side of GameMob
+	/// </summary>
 	[DataTable(TableName="Mob")]
  	public class Mob : DataObject
 	{
@@ -53,6 +56,9 @@ namespace DOL.Database
 
 		static bool			m_autoSave;
 
+		/// <summary>
+		/// The Constructor
+		/// </summary>
 		public Mob()
 		{
 			m_autoSave=false;
@@ -62,6 +68,9 @@ namespace DOL.Database
 			m_respawnInterval = -1; // randow respawn by default
 		}
 
+		/// <summary>
+		/// AutoSave
+		/// </summary>
 		override public bool AutoSave
 		{
 			get
@@ -74,6 +83,9 @@ namespace DOL.Database
 			}
 		}
 
+		/// <summary>
+		/// The Mob's ClassType
+		/// </summary>
 		[DataElement(AllowDbNull = true)]
 		public string ClassType
 		{
@@ -88,6 +100,9 @@ namespace DOL.Database
 			}
 		}
 
+		/// <summary>
+		/// The Mob's Name
+		/// </summary>
 		[DataElement(AllowDbNull=false)]
 		public string Name
 		{
@@ -101,7 +116,10 @@ namespace DOL.Database
 				m_name = value;
 			}
 		}
-				
+			
+		/// <summary>
+		/// The Mob's Guild Name
+		/// </summary>
 		[DataElement(AllowDbNull=true)]
 		public string Guild
 		{
@@ -116,6 +134,9 @@ namespace DOL.Database
 			}
 		}
 
+		/// <summary>
+		/// The Mob's X Position
+		/// </summary>
 		[DataElement(AllowDbNull=false)]
 		public int X
 		{
@@ -130,6 +151,9 @@ namespace DOL.Database
 			}
 		}
 		
+		/// <summary>
+		/// The Mob's Y Position
+		/// </summary>
 		[DataElement(AllowDbNull=false)]
 		public int Y
 		{
@@ -144,6 +168,9 @@ namespace DOL.Database
 			}
 		}
 
+		/// <summary>
+		/// The Mob's Z Position
+		/// </summary>
 		[DataElement(AllowDbNull=false)]
 		public int Z
 		{
@@ -158,6 +185,9 @@ namespace DOL.Database
 			}
 		}
 		
+		/// <summary>
+		/// The Mob's Max Speed
+		/// </summary>
 		[DataElement(AllowDbNull=false)]
 		public int Speed
 		{
@@ -172,6 +202,9 @@ namespace DOL.Database
 			}
 		}
 
+		/// <summary>
+		/// The Mob's Heading
+		/// </summary>
 		[DataElement(AllowDbNull=false)]
 		public ushort Heading
 		{
@@ -186,6 +219,9 @@ namespace DOL.Database
 			}
 		}
 
+		/// <summary>
+		/// The Mob's Region ID
+		/// </summary>
 		[DataElement(AllowDbNull=false)]
 		public ushort Region
 		{
@@ -200,6 +236,9 @@ namespace DOL.Database
 			}
 		}
 		
+		/// <summary>
+		/// The Mob's Model
+		/// </summary>
 		[DataElement(AllowDbNull=false)]
 		public ushort Model
 		{
@@ -214,6 +253,9 @@ namespace DOL.Database
 			}
 		}
 		
+		/// <summary>
+		/// The Mob's Size
+		/// </summary>
 		[DataElement(AllowDbNull=false)]
 		public byte Size
 		{
@@ -228,6 +270,9 @@ namespace DOL.Database
 			}
 		}
 		
+		/// <summary>
+		/// The Mob's Level
+		/// </summary>
 		[DataElement(AllowDbNull=false)]
 		public byte Level
 		{
@@ -242,6 +287,9 @@ namespace DOL.Database
 			}
 		}
 		
+		/// <summary>
+		/// The Mob's Realm
+		/// </summary>
 		[DataElement(AllowDbNull=false)]
 		public byte Realm
 		{
@@ -255,7 +303,10 @@ namespace DOL.Database
 				m_realm = value;
 			}
 		}
-				
+			
+		/// <summary>
+		/// The Mob's Equipment Template ID
+		/// </summary>
 		[DataElement(AllowDbNull=true)]
 		public string EquipmentTemplateID
 		{
@@ -270,6 +321,9 @@ namespace DOL.Database
 			}
 		}
 
+		/// <summary>
+		/// The Mob's Items List Template ID
+		/// </summary>
 		[DataElement(AllowDbNull=true)]
 		public string ItemsListTemplateID
 		{
@@ -284,6 +338,9 @@ namespace DOL.Database
 			}
 		}
 
+		/// <summary>
+		/// The Mob's Flags
+		/// </summary>
 		[DataElement(AllowDbNull=true)]
 		public uint Flags
 		{
@@ -298,6 +355,9 @@ namespace DOL.Database
 			}
 		}
 
+		/// <summary>
+		/// The Mob's Aggro Level
+		/// </summary>
 		[DataElement(AllowDbNull=true)]
 		public int AggroLevel
 		{
@@ -305,6 +365,9 @@ namespace DOL.Database
 			set { Dirty = true;	m_aggrolevel = value;	}
 		}
 
+		/// <summary>
+		/// The Mob's Aggro Range
+		/// </summary>
 		[DataElement(AllowDbNull=true)]
 		public int AggroRange
 		{
@@ -312,6 +375,9 @@ namespace DOL.Database
 			set { Dirty = true;	m_aggrorange = value;	}
 		}
 
+		/// <summary>
+		/// The Mob's Melee Damage Type
+		/// </summary>
 		[DataElement(AllowDbNull=true)]
 		public int MeleeDamageType
 		{
@@ -319,6 +385,9 @@ namespace DOL.Database
 			set { Dirty = true; m_meleeDamageType = value; }
 		}
 
+		/// <summary>
+		/// The Mob's Respawn Interval
+		/// </summary>
 		[DataElement(AllowDbNull=false)]
 		public int RespawnInterval
 		{
@@ -326,6 +395,9 @@ namespace DOL.Database
 			set { Dirty = true; m_respawnInterval = value; }
 		}
 
+		/// <summary>
+		/// The Mob's Faction ID
+		/// </summary>
 		[DataElement(AllowDbNull=true)]
 		public int FactionID
 		{

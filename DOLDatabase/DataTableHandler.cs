@@ -35,6 +35,10 @@ namespace DOL.Database
 		DataSet dset;
 		bool hasRelations;
 
+		/// <summary>
+		/// The Constructor
+		/// </summary>
+		/// <param name="dataSet"></param>
 		public DataTableHandler(DataSet dataSet)
 		{
 			cache = new SimpleCache();
@@ -43,6 +47,9 @@ namespace DOL.Database
 			hasRelations = false;
 		}
 
+		/// <summary>
+		/// Has Relations
+		/// </summary>
 		public bool HasRelations
 		{
 			get
@@ -55,6 +62,9 @@ namespace DOL.Database
 			}
 		}
 
+		/// <summary>
+		/// Cache
+		/// </summary>
 		public ICache Cache
 		{
 			get
@@ -63,6 +73,9 @@ namespace DOL.Database
 			}
 		}
 	
+		/// <summary>
+		/// DataSet
+		/// </summary>
 		public DataSet DataSet
 		{
 			get
@@ -71,6 +84,9 @@ namespace DOL.Database
 			}
 		}
 
+		/// <summary>
+		/// Uses Precaching
+		/// </summary>
 		public bool UsesPreCaching
 		{
 			get
@@ -83,21 +99,41 @@ namespace DOL.Database
 			}
 		}
 
+		/// <summary>
+		/// Set Cache Object
+		/// </summary>
+		/// <param name="Key">The key object</param>
+		/// <param name="Obj">The value DataObject</param>
 		public void SetCacheObject(object Key, DataObject Obj)
 		{
 			cache[Key] = Obj;
 		}
 
+		/// <summary>
+		/// Get Cache Object
+		/// </summary>
+		/// <param name="Key">The key object</param>
+		/// <returns>The value DataObject</returns>
 		public DataObject GetCacheObject(object Key)
 		{
 			return cache[Key] as DataObject;
 		}
 
+		/// <summary>
+		/// Set Pre-Cached Object
+		/// </summary>
+		/// <param name="key">The key object</param>
+		/// <param name="obj">The value DataObject</param>
 		public void SetPreCachedObject(object key, DataObject obj)
 		{
 			precache[key] = obj;
 		}
 
+		/// <summary>
+		/// Get Pre-Cached Object
+		/// </summary>
+		/// <param name="key">The key object</param>
+		/// <returns>The value DataObject</returns>
 		public DataObject GetPreCachedObject(object key)
 		{
 			return precache[key] as DataObject;
