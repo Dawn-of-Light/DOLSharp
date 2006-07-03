@@ -163,6 +163,10 @@ namespace DOL.GS.PacketHandler
 		/// </summary>
 		None = 0,
 		/// <summary>
+		/// First player realm number, for use in all arrays
+		/// </summary>
+		_FirstPlayerRealm = 3,
+		/// <summary>
 		/// Albion Realm
 		/// </summary>
 		Albion = 1,
@@ -178,15 +182,11 @@ namespace DOL.GS.PacketHandler
 		/// Last player realm number, for use in all arrays
 		/// </summary>
 		_LastPlayerRealm = 3,
-		/// <summary>
-		/// Peace Realm - Is friendly for all gamelivings (mobs, npcs, players)
-		/// </summary>
-		Peace = 6, // 6 because 4 will be PVX Guards and 5 will perhaps be Event Realms ....
 
 		/// <summary>
 		/// LastRealmNumber to allow dynamic allocation of realm specific arrays.
 		/// </summary>
-		_Last=6
+		_Last=3
 
 	};
 

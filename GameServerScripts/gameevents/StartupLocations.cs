@@ -86,6 +86,21 @@ namespace DOL.GS.GameEvents
 				{
 					loc = (StartLocation) m_shroudedIslesLocations[ch.Race][ch.Class];
 				}
+				else if (ch.Region == 27) // tutorial all realms use the same region
+				{
+					switch (ch.Realm)
+					{
+						case 1: // alb
+							loc = new StartLocation(95644, 101313, 5340, 1024);
+							break;
+						case 2: // mid
+							loc = new StartLocation(226716, 232385, 5340, 1024);
+							break;
+						case 3: // hib
+							loc = new StartLocation(357788, 363457, 5340, 1024);
+							break;
+					}
+				}
 				else
 				{
 					log.DebugFormat("tried to create char in unknown region {0}", ch.Region);

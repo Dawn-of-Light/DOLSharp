@@ -29,6 +29,9 @@ using DOL.Database.Attributes;
 
 namespace DOL.Database
 {
+	/// <summary>
+	/// DataTable class for NPC Templates
+	/// </summary>
 	[DataTable(TableName="NpcTemplate")]
  	public class DBNpcTemplate : DataObject
 	{
@@ -50,17 +53,26 @@ namespace DOL.Database
 
 		private static bool	m_autoSave;
 
+		/// <summary>
+		/// Constructor
+		/// </summary>
 		public DBNpcTemplate()
 		{
 			m_autoSave = false;
 		}
 
+		/// <summary>
+		/// AutoSave in table?
+		/// </summary>
 		public override bool AutoSave
 		{
 			get { return m_autoSave; }
 			set { m_autoSave = value; }
 		}
 
+		/// <summary>
+		/// Template ID
+		/// </summary>
 		[DataElement(AllowDbNull = false)]
 		public int TemplateId
 		{
@@ -72,6 +84,9 @@ namespace DOL.Database
 			}
 		}
 
+		/// <summary>
+		/// Name
+		/// </summary>
 		[DataElement(AllowDbNull=false)]
 		public string Name
 		{
@@ -83,6 +98,9 @@ namespace DOL.Database
 			}
 		}
 
+		/// <summary>
+		/// GuildName
+		/// </summary>
 		[DataElement(AllowDbNull=true)]
 		public string GuildName
 		{
@@ -94,6 +112,9 @@ namespace DOL.Database
 			}
 		}
 
+		/// <summary>
+		/// Model
+		/// </summary>
 		[DataElement(AllowDbNull=false)]
 		public ushort Model
 		{
@@ -105,6 +126,9 @@ namespace DOL.Database
 			}
 		}
 
+		/// <summary>
+		/// Size
+		/// </summary>
 		[DataElement(AllowDbNull=false)]
 		public byte Size
 		{
@@ -116,6 +140,9 @@ namespace DOL.Database
 			}
 		}
 
+		/// <summary>
+		/// MaxSpeed
+		/// </summary>
 		[DataElement(AllowDbNull=false)]
 		public short MaxSpeed
 		{
@@ -127,6 +154,9 @@ namespace DOL.Database
 			}
 		}
 
+		/// <summary>
+		/// EquipmentTemplateID
+		/// </summary>
 		[DataElement(AllowDbNull=true)]
 		public string EquipmentTemplateID
 		{
@@ -138,6 +168,9 @@ namespace DOL.Database
 			}
 		}
 
+		/// <summary>
+		/// Ghost
+		/// </summary>
 		[DataElement(AllowDbNull=true)]
 		public bool Ghost
 		{
@@ -149,6 +182,9 @@ namespace DOL.Database
 			}
 		}
 
+		/// <summary>
+		/// MeleeDamageType
+		/// </summary>
 		[DataElement(AllowDbNull=true)]
 		public byte MeleeDamageType
 		{
@@ -160,6 +196,9 @@ namespace DOL.Database
 			}
 		}
 
+		/// <summary>
+		/// ParryChance
+		/// </summary>
 		[DataElement(AllowDbNull = true)]
 		public byte ParryChance
 		{
@@ -171,6 +210,9 @@ namespace DOL.Database
 			}
 		}
 
+		/// <summary>
+		/// EvadeChance
+		/// </summary>
 		[DataElement(AllowDbNull = true)]
 		public byte EvadeChance
 		{
@@ -182,6 +224,9 @@ namespace DOL.Database
 			}
 		}
 
+		/// <summary>
+		/// BlockChance
+		/// </summary>
 		[DataElement(AllowDbNull = true)]
 		public byte BlockChance
 		{
@@ -193,6 +238,9 @@ namespace DOL.Database
 			}
 		}
 
+		/// <summary>
+		/// LeftHandSwingChance
+		/// </summary>
 		[DataElement(AllowDbNull = true)]
 		public byte LeftHandSwingChance
 		{
@@ -204,6 +252,9 @@ namespace DOL.Database
 			}
 		}
 
+		/// <summary>
+		/// Spells
+		/// </summary>
 		[DataElement(AllowDbNull = true)]
 		public string Spells
 		{
@@ -215,6 +266,9 @@ namespace DOL.Database
 			}
 		}
 
+		/// <summary>
+		/// Styles
+		/// </summary>
 		[DataElement(AllowDbNull = true)]
 		public string Styles
 		{

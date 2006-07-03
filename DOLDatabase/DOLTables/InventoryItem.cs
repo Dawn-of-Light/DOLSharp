@@ -23,59 +23,218 @@ using DOL.Database.Attributes;
 
 namespace DOL.Database
 {
+	/// <summary>
+	/// The Bonus Type ID
+	/// </summary>
 	public enum eItemBonusType
 	{
+		/// <summary>
+		/// Strength
+		/// </summary>
 		Strength = 1,
+		/// <summary>
+		/// Dexterity
+		/// </summary>
 		Dexterity = 2,
-		Consitution = 3,
+		/// <summary>
+		/// Constitution
+		/// </summary>
+		Constitution = 3,
+		/// <summary>
+		/// Quickness
+		/// </summary>
 		Quickness = 4,
+		/// <summary>
+		/// Intelligence
+		/// </summary>
 		Intelligence = 5,
+		/// <summary>
+		/// Piety
+		/// </summary>
 		Piety = 6,
+		/// <summary>
+		/// Empathy
+		/// </summary>
 		Empathy = 7,
+		/// <summary>
+		/// Charisma
+		/// </summary>
 		Charisma = 8,
+		/// <summary>
+		/// Max Mana
+		/// </summary>
 		Mana = 9,
+		/// <summary>
+		/// Max Health
+		/// </summary>
 		Health = 10,
+		/// <summary>
+		/// Body Resist
+		/// </summary>
 		Resist_Body = 11,
+		/// <summary>
+		/// Cold Resist
+		/// </summary>
 		Resist_Cold = 12,
+		/// <summary>
+		/// Crush Resist
+		/// </summary>
 		Resist_Crush = 13,
+		/// <summary>
+		/// Energy Resist
+		/// </summary>
 		Resist_Energy = 14,
+		/// <summary>
+		/// Heat Resist
+		/// </summary>
 		Resist_Heat = 15,
+		/// <summary>
+		/// Matter Resist
+		/// </summary>
 		Resist_Matter = 16,
+		/// <summary>
+		/// Slash Resist
+		/// </summary>
 		Resist_Slash = 17,
+		/// <summary>
+		/// Spirit Resist
+		/// </summary>
 		Resist_Spirit = 18,
+		/// <summary>
+		/// Thrust Resist
+		/// </summary>
 		Resist_Thrust = 19,
+		/// <summary>
+		/// Two Handed Skill
+		/// </summary>
 		Skill_Two_Handed = 20,
+		/// <summary>
+		/// Body Magic Skill
+		/// </summary>
 		Skill_Body = 21,
+		/// <summary>
+		/// Chants Skill
+		/// </summary>
 		Skill_Chants = 22,
-		Skill_Critical_strike = 23,
+		/// <summary>
+		/// Critical Strike Skill
+		/// </summary>
+		Skill_Critical_Strike = 23,
+		/// <summary>
+		/// Cross Bows Skill
+		/// </summary>
 		Skill_Cross_Bows = 24,
+		/// <summary>
+		/// Crushing Skill
+		/// </summary>
 		Skill_Crushing = 25,
+		/// <summary>
+		/// Death Servant Magic Skill
+		/// </summary>
 		Skill_Death_Servant = 26,
+		/// <summary>
+		/// Death Sight Magic Skill
+		/// </summary>
 		Skill_DeathSight = 27,
+		/// <summary>
+		/// Dual Wield Skill
+		/// </summary>
 		Skill_Dual_Wield = 28,
+		/// <summary>
+		/// Earth Magic Skill
+		/// </summary>
 		Skill_Earth = 29,
+		/// <summary>
+		/// Enhancement Magic Skill
+		/// </summary>
 		Skill_Enhancement = 30,
-		Skill_Envenan = 31,
+		/// <summary>
+		/// Envenom Skill
+		/// </summary>
+		Skill_Envenom = 31,
+		/// <summary>
+		/// Fire Magic Skill
+		/// </summary>
 		Skill_Fire = 32,
+		/// <summary>
+		/// Flexible Weapon Skill
+		/// </summary>
 		Skill_Flexible_Weapon = 33,
+		/// <summary>
+		/// Ice Magic Skill
+		/// </summary>
 		Skill_Ice = 34,
+		/// <summary>
+		/// Instruments Skill
+		/// </summary>
 		Skill_Instruments = 35,
-		Skill_Long_bows = 36,
+		/// <summary>
+		/// Longbow Skill
+		/// </summary>
+		Skill_Longbows = 36,
+		/// <summary>
+		/// Matter Magic Skill
+		/// </summary>
 		Skill_Matter = 37,
+		/// <summary>
+		/// Mind Magic Skill
+		/// </summary>
 		Skill_Mind = 38,
-		Skill_Pain_working = 39,
+		/// <summary>
+		/// Painworking Magic Skill
+		/// </summary>
+		Skill_Painworking = 39,
+		/// <summary>
+		/// Parry Skill
+		/// </summary>
 		Skill_Parry = 40,
+		/// <summary>
+		/// Polearms Skill
+		/// </summary>
 		Skill_Polearms = 41,
+		/// <summary>
+		/// Rejuvenation Skill
+		/// </summary>
 		Skill_Rejuvenation = 42,
+		/// <summary>
+		/// Shields Skill
+		/// </summary>
 		Skill_Shields = 43,
+		/// <summary>
+		/// Slashing Skill
+		/// </summary>
 		Skill_Slashing = 44,
+		/// <summary>
+		/// Smiting Skill
+		/// </summary>
 		Skill_Smiting = 45,
+		/// <summary>
+		/// Soulrending Skill
+		/// </summary>
 		Skill_SoulRending = 46,
+		/// <summary>
+		/// Spirit Magic Skill
+		/// </summary>
 		Skill_Spirit = 47,
+		/// <summary>
+		/// Staff Skill
+		/// </summary>
 		Skill_Staff = 48,
+		/// <summary>
+		/// Stealth Skill
+		/// </summary>
 		Skill_Stealth = 49,
+		/// <summary>
+		/// Thrusting Skill
+		/// </summary>
 		Skill_Thrusting = 50,
+		/// <summary>
+		/// Wind Magic Skill
+		/// </summary>
 		Skill_Wind = 51,
+		/// <summary>
+		/// Focus Magics.....
+		/// </summary>
 		Focus = 52,//add all focus
 	};
 

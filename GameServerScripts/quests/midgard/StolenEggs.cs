@@ -546,7 +546,7 @@ namespace DOL.GS.Quests.Midgard
 			grifflet.Model = 1236;
 			grifflet.Name = "Grifflet";
 			grifflet.GuildName = "Part of " + m_questPlayer.GetName(0, false) + "'s " + questTitle + " Quest";
-			grifflet.Realm = (byte) eRealm.Peace;
+			grifflet.Flags ^= (uint)GameNPC.eFlags.PEACE;
 			grifflet.CurrentRegionID = askefruerTrainer.CurrentRegionID;
 			grifflet.Size = 20;
 			grifflet.Level = 3;

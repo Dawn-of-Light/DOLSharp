@@ -24,46 +24,46 @@ namespace DOL.Database
 	/// <summary>
 	/// TODO: add neccessary fields for styles
 	/// </summary>
-	[DataTable(TableName="Style")]
+	[DataTable(TableName = "Style")]
 	public class DBStyle : DataObject
 	{
 		/// <summary>
 		/// The ID of this style
 		/// </summary>
-		protected int			m_ID;
+		protected int m_ID;
 		/// <summary>
 		/// The name of this style
 		/// </summary>
-		protected string	m_Name;
+		protected string m_Name;
 		/// <summary>
 		/// The name of the spec needed for this style "None" for no requirement
 		/// </summary>
-	  protected string	m_SpecKeyName;
+		protected string m_SpecKeyName;
 		/// <summary>
 		/// The level of specialisation required to gain this style
 		/// </summary>
-		protected int			m_SpecLevelRequirement;
+		protected int m_SpecLevelRequirement;
 		/// <summary>
 		/// The icon for this style
 		/// </summary>
-		protected int			m_Icon;
+		protected int m_Icon;
 		/// <summary>
 		/// The fatique cost for this style in % of total fatique
-		/// Will be modified by weapon speed & Realm Abilities
+		/// Will be modified by weapon speed and Realm Abilities
 		///		>=5(low), >=10(medium), >=15(high)
 		/// </summary>
-		protected int			m_EnduranceCost; 
+		protected int m_EnduranceCost;
 		/// <summary>
 		/// Style requires stealth
 		/// </summary>
-		protected bool		m_StealthRequirement;
+		protected bool m_StealthRequirement;
 		/// <summary>
 		/// The opening requirement of this style
 		///		0 = offensive opening eg. style in reply to your previous action
 		///		1 = defensive opening eg. style in reply to enemy previous action
 		///		2 = positional opening eg. front, side, or back
 		/// </summary>
-		protected int			m_openingRequirementType;
+		protected int m_openingRequirementType;
 		/// <summary>
 		/// opening requirement value
 		/// for offensive openings the styleid of the required style before this
@@ -73,7 +73,7 @@ namespace DOL.Database
 		///		1 = side of enemy
 		///		2 = front of enemy
 		/// </summary>
-		protected int			m_openingRequirementValue; //style required before this one
+		protected int m_openingRequirementValue; //style required before this one
 		/// <summary>
 		/// The required result of the previous attack.
 		/// For offensive styles the attack result of your last attack
@@ -87,20 +87,20 @@ namespace DOL.Database
 		///		6 = fumble
 		///		7 = style
 		/// </summary>
-		protected int			m_AttackResultRequirement; 
+		protected int m_AttackResultRequirement;
 		/// <summary>
 		/// This holds the type of weapon needed for this style
 		/// See "eObjectType" for values
 		/// </summary>
-		protected int			m_WeaponTypeRequirement;
-//		/// <summary>
-//		/// The damage addition factor of this style
-//		/// </summary>
-//		protected int			m_Damage;
-//		/// <summary>
-//		/// Addition to damage for each level above requirement
-//		/// </summary>
-//		protected int			m_DamageAddPerLevel;
+		protected int m_WeaponTypeRequirement;
+		//		/// <summary>
+		//		/// The damage addition factor of this style
+		//		/// </summary>
+		//		protected int			m_Damage;
+		//		/// <summary>
+		//		/// Addition to damage for each level above requirement
+		//		/// </summary>
+		//		protected int			m_DamageAddPerLevel;
 		/// <summary>
 		/// GrowthRate as used in Wyrd's spreadsheet
 		/// </summary>
@@ -111,172 +111,226 @@ namespace DOL.Database
 		///		1 = effect
 		///		2 = taunt
 		/// </summary>
-		protected int			m_SpecialType;
+		protected int m_SpecialType;
 		/// <summary>
 		/// The value for the special effect of this style
 		///		For taunt:
-		///			< 0 = detaunt
-		///			> 0 = taunt
+		///			less than 0 = detaunt
+		///			greater than 0 = taunt
 		///		For effects it is the effectID
 		/// </summary>
-		protected int			m_SpecialValue;
+		protected int m_SpecialValue;
 		/// <summary>
 		/// The bonus to hit value for this style
 		/// below 0 = penalty
 		/// above 0 = bonus
 		/// </summary>
-		protected int			m_BonusToHit;
+		protected int m_BonusToHit;
 		/// <summary>
 		/// The bonus to defense for this style
 		/// below 0 = penalty
 		/// above 0 = bonus
 		/// </summary>
-		protected int			m_BonusToDefense;
+		protected int m_BonusToDefense;
 		/// <summary>
 		/// The animation ID for 2h weapon styles
 		/// </summary>
-		protected int			m_TwoHandAnimation;
+		protected int m_TwoHandAnimation;
 
-		static bool	m_autoSave;
+		static bool m_autoSave;
 
+		/// <summary>
+		/// The Constructor
+		/// </summary>
 		public DBStyle()
 		{
 			m_autoSave = false;
 		}
 
-		[DataElement(AllowDbNull=false, Unique=true)]
-	  public int ID
-	  {
-	    get { return m_ID; }
-	    set { m_ID = value; }
-	  }
+		/// <summary>
+		/// The Style ID
+		/// </summary>
+		[DataElement(AllowDbNull = false, Unique = true)]
+		public int ID
+		{
+			get { return m_ID; }
+			set { m_ID = value; }
+		}
 
-		[DataElement(AllowDbNull=false)]
-	  public string Name
-	  {
-	    get { return m_Name; }
-	    set { m_Name = value; Dirty = true; }
-	  }
+		/// <summary>
+		/// The Style Name
+		/// </summary>
+		[DataElement(AllowDbNull = false)]
+		public string Name
+		{
+			get { return m_Name; }
+			set { m_Name = value; Dirty = true; }
+		}
 
-		[DataElement(AllowDbNull=false, Index=true)]
+		/// <summary>
+		/// The Style SpecKeyName
+		/// </summary>
+		[DataElement(AllowDbNull = false, Index = true)]
 		public string SpecKeyName
-	  {
-	    get { return m_SpecKeyName; }
-	    set { m_SpecKeyName = value; Dirty = true; }
-	  }
+		{
+			get { return m_SpecKeyName; }
+			set { m_SpecKeyName = value; Dirty = true; }
+		}
 
-		[DataElement(AllowDbNull=true)]
-	  public int SpecLevelRequirement
-	  {
-	    get { return m_SpecLevelRequirement; }
-	    set { m_SpecLevelRequirement = value; Dirty = true; }
-	  }
+		/// <summary>
+		/// The Style Spec Level Requirement
+		/// </summary>
+		[DataElement(AllowDbNull = true)]
+		public int SpecLevelRequirement
+		{
+			get { return m_SpecLevelRequirement; }
+			set { m_SpecLevelRequirement = value; Dirty = true; }
+		}
 
-//	  [DataElement(AllowDbNull=false)]
-//	  public int Icon
-//	  {
-//	    get { return m_Icon; }
-//	    set { m_Icon = value; Dirty = true; }
-//	  }
+		//	  [DataElement(AllowDbNull=false)]
+		//	  public int Icon
+		//	  {
+		//	    get { return m_Icon; }
+		//	    set { m_Icon = value; Dirty = true; }
+		//	  }
 
-		[DataElement(AllowDbNull=false)]
-	  public int EnduranceCost
-	  {
-	    get { return m_EnduranceCost; }
-	    set { m_EnduranceCost = value; Dirty = true; }
-	  }
+		/// <summary>
+		/// The Style Endurance Cost
+		/// </summary>
+		[DataElement(AllowDbNull = false)]
+		public int EnduranceCost
+		{
+			get { return m_EnduranceCost; }
+			set { m_EnduranceCost = value; Dirty = true; }
+		}
 
-		[DataElement(AllowDbNull=true)]
-	  public bool StealthRequirement
-	  {
-	    get { return m_StealthRequirement; }
-	    set { m_StealthRequirement = value; Dirty = true; }
-	  }
+		/// <summary>
+		/// The Style Stealth Requirement
+		/// </summary>
+		[DataElement(AllowDbNull = true)]
+		public bool StealthRequirement
+		{
+			get { return m_StealthRequirement; }
+			set { m_StealthRequirement = value; Dirty = true; }
+		}
 
-		[DataElement(AllowDbNull=true)]
-	  public int OpeningRequirementType
-	  {
-	    get { return m_openingRequirementType; }
-	    set { m_openingRequirementType = value; Dirty = true; }
-	  }
+		/// <summary>
+		/// The Style Opening Requirement Type
+		/// </summary>
+		[DataElement(AllowDbNull = true)]
+		public int OpeningRequirementType
+		{
+			get { return m_openingRequirementType; }
+			set { m_openingRequirementType = value; Dirty = true; }
+		}
 
-	  [DataElement(AllowDbNull=true)]
+		/// <summary>
+		/// The Style Opening Requirement Value
+		/// </summary>
+		[DataElement(AllowDbNull = true)]
 		public int OpeningRequirementValue
-	  {
-	    get { return m_openingRequirementValue; }
-	    set { m_openingRequirementValue = value; Dirty = true; }
-	  }
+		{
+			get { return m_openingRequirementValue; }
+			set { m_openingRequirementValue = value; Dirty = true; }
+		}
 
-		[DataElement(AllowDbNull=true)]
-	  public int AttackResultRequirement
-	  {
-	    get { return m_AttackResultRequirement; }
-	    set { m_AttackResultRequirement = value; Dirty = true; }
-	  }
+		/// <summary>
+		/// The Style Attack Result Requirement
+		/// </summary>
+		[DataElement(AllowDbNull = true)]
+		public int AttackResultRequirement
+		{
+			get { return m_AttackResultRequirement; }
+			set { m_AttackResultRequirement = value; Dirty = true; }
+		}
 
-		[DataElement(AllowDbNull=true)]
-	  public int WeaponTypeRequirement
-	  {
-	    get { return m_WeaponTypeRequirement; }
-	    set { m_WeaponTypeRequirement = value; Dirty = true; }
-	  }
+		/// <summary>
+		/// The Style Weapon Type Requirement
+		/// </summary>
+		[DataElement(AllowDbNull = true)]
+		public int WeaponTypeRequirement
+		{
+			get { return m_WeaponTypeRequirement; }
+			set { m_WeaponTypeRequirement = value; Dirty = true; }
+		}
 
-//		[DataElement(AllowDbNull=true)]
-//	  public int Damage
-//	  {
-//	    get { return m_Damage; }
-//	    set { m_Damage = value; Dirty = true; }
-//	  }
-//
-//	[DataElement(AllowDbNull=true)]
-//	  public int DamageAddPerLevel
-//	  {
-//	    get { return m_DamageAddPerLevel; }
-//	    set { m_DamageAddPerLevel = value; Dirty = true; }
-//	  }
+		//		[DataElement(AllowDbNull=true)]
+		//	  public int Damage
+		//	  {
+		//	    get { return m_Damage; }
+		//	    set { m_Damage = value; Dirty = true; }
+		//	  }
+		//
+		//	[DataElement(AllowDbNull=true)]
+		//	  public int DamageAddPerLevel
+		//	  {
+		//	    get { return m_DamageAddPerLevel; }
+		//	    set { m_DamageAddPerLevel = value; Dirty = true; }
+		//	  }
 
-		[DataElement(AllowDbNull=true)]
-	  public double GrowthRate
-	  {
-	    get { return m_growthRate; }
-	    set { m_growthRate = value; Dirty = true; }
-	  }
+		/// <summary>
+		/// The Style Growth Rate
+		/// </summary>
+		[DataElement(AllowDbNull = true)]
+		public double GrowthRate
+		{
+			get { return m_growthRate; }
+			set { m_growthRate = value; Dirty = true; }
+		}
 
-	  [DataElement(AllowDbNull=true)]
-	  public int SpecialType
-	  {
-	    get { return m_SpecialType; }
-	    set { m_SpecialType = value; Dirty = true; }
-	  }
+		/// <summary>
+		/// The Style Special Type
+		/// </summary>
+		[DataElement(AllowDbNull = true)]
+		public int SpecialType
+		{
+			get { return m_SpecialType; }
+			set { m_SpecialType = value; Dirty = true; }
+		}
 
-		[DataElement(AllowDbNull=true)]
-	  public int SpecialValue
-	  {
-	    get { return m_SpecialValue; }
-	    set { m_SpecialValue = value; Dirty = true; }
-	  }
+		/// <summary>
+		/// The Style Special Value
+		/// </summary>
+		[DataElement(AllowDbNull = true)]
+		public int SpecialValue
+		{
+			get { return m_SpecialValue; }
+			set { m_SpecialValue = value; Dirty = true; }
+		}
 
-		[DataElement(AllowDbNull=true)]
-	  public int BonusToHit
-	  {
-	    get { return m_BonusToHit; }
-	    set { m_BonusToHit = value; Dirty = true; }
-	  }
+		/// <summary>
+		/// The Style Bonus To Hit
+		/// </summary>
+		[DataElement(AllowDbNull = true)]
+		public int BonusToHit
+		{
+			get { return m_BonusToHit; }
+			set { m_BonusToHit = value; Dirty = true; }
+		}
 
-		[DataElement(AllowDbNull=true)]
-	  public int BonusToDefense
-	  {
-	    get { return m_BonusToDefense; }
-	    set { m_BonusToDefense = value; Dirty = true; }
-	  }
+		/// <summary>
+		/// The Style Bonus to Defense
+		/// </summary>
+		[DataElement(AllowDbNull = true)]
+		public int BonusToDefense
+		{
+			get { return m_BonusToDefense; }
+			set { m_BonusToDefense = value; Dirty = true; }
+		}
 
-		[DataElement(AllowDbNull=true)]
+		/// <summary>
+		/// The Style Two Hand Animation
+		/// </summary>
+		[DataElement(AllowDbNull = true)]
 		public int TwoHandAnimation
 		{
 			get { return m_TwoHandAnimation; }
 			set { m_TwoHandAnimation = value; Dirty = true; }
 		}
 
+		/// <summary>
+		/// Autosave in table?
+		/// </summary>
 		override public bool AutoSave
 		{
 			get

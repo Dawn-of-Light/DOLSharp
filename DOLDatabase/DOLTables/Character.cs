@@ -1647,6 +1647,9 @@ namespace DOL
 			private int m_capturedKeeps;
 			private int m_capturedTowers;
 
+			/// <summary>
+			/// Amount of Albion Players Killed
+			/// </summary>
 			[DataElement(AllowDbNull = true)]
 			public int KillsAlbionPlayers
 			{
@@ -1654,6 +1657,9 @@ namespace DOL
 				set { m_killsAlbionPlayers = value; Dirty = true; }
 			}
 
+			/// <summary>
+			/// Amount of Midgard Players Killed
+			/// </summary>
 			[DataElement(AllowDbNull = true)]
 			public int KillsMidgardPlayers
 			{
@@ -1661,6 +1667,9 @@ namespace DOL
 				set { m_killsMidgardPlayers = value; Dirty = true; }
 			}
 
+			/// <summary>
+			/// Amount of Hibernia Players Killed
+			/// </summary>
 			[DataElement(AllowDbNull = true)]
 			public int KillsHiberniaPlayers
 			{
@@ -1668,6 +1677,9 @@ namespace DOL
 				set { m_killsHiberniaPlayers = value; Dirty = true; }
 			}
 
+			/// <summary>
+			/// Amount of Death Blows on Albion Players
+			/// </summary>
 			[DataElement(AllowDbNull = true)]
 			public int KillsAlbionDeathBlows
 			{
@@ -1675,6 +1687,9 @@ namespace DOL
 				set { m_killsAlbionDeathBlows = value; Dirty = true; }
 			}
 
+			/// <summary>
+			/// Amount of Death Blows on Midgard Players
+			/// </summary>
 			[DataElement(AllowDbNull = true)]
 			public int KillsMidgardDeathBlows
 			{
@@ -1682,6 +1697,9 @@ namespace DOL
 				set { m_killsMidgardDeathBlows = value; Dirty = true; }
 			}
 
+			/// <summary>
+			/// Amount of Death Blows on Hibernia Players
+			/// </summary>
 			[DataElement(AllowDbNull = true)]
 			public int KillsHiberniaDeathBlows
 			{
@@ -1689,6 +1707,9 @@ namespace DOL
 				set { m_killsHiberniaDeathBlows = value; Dirty = true; }
 			}
 
+			/// <summary>
+			/// Amount of Solo Albion Kills
+			/// </summary>
 			[DataElement(AllowDbNull = true)]
 			public int KillsAlbionSolo
 			{
@@ -1696,6 +1717,9 @@ namespace DOL
 				set { m_killsAlbionSolo = value; Dirty = true; }
 			}
 
+			/// <summary>
+			/// Amount of Solo Midgard Kills
+			/// </summary>
 			[DataElement(AllowDbNull = true)]
 			public int KillsMidgardSolo
 			{
@@ -1703,6 +1727,9 @@ namespace DOL
 				set { m_killsMidgardSolo = value; Dirty = true; }
 			}
 
+			/// <summary>
+			/// Amount of Solo Hibernia Kills
+			/// </summary>
 			[DataElement(AllowDbNull = true)]
 			public int KillsHiberniaSolo
 			{
@@ -1710,6 +1737,9 @@ namespace DOL
 				set { m_killsHiberniaSolo = value; Dirty = true; }
 			}
 
+			/// <summary>
+			/// Amount of Keeps Captured
+			/// </summary>
 			[DataElement(AllowDbNull = true)]
 			public int CapturedKeeps
 			{
@@ -1717,6 +1747,9 @@ namespace DOL
 				set { m_capturedKeeps = value; Dirty = true; }
 			}
 
+			/// <summary>
+			/// Amount of Towers Captured
+			/// </summary>
 			[DataElement(AllowDbNull = true)]
 			public int CapturedTowers
 			{

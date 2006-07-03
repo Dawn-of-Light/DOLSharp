@@ -262,6 +262,10 @@ namespace DOL.GS
 			/// </summary>
 			CANTTARGET		= 0x08,
 			/// <summary>
+			/// Not in nearest enemyes if different vs player realm, but can be targeted if model support this
+			/// </summary>
+			PEACE = 0x10,
+			/// <summary>
 			/// The npc is flying (z above ground permitted)
 			/// </summary>
 			FLYING			= 0x20,

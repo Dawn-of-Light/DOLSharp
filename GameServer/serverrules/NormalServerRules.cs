@@ -76,10 +76,6 @@ namespace DOL.GS.ServerRules
 				return false;
 			}
 
-			// PEACE NPCs can't be attacked/attack
-			if (defender.Realm == (int)eRealm.Peace || attacker.Realm == (int)eRealm.Peace)
-				return false;
-
 			//Don't allow attacks on same realm members on Normal Servers
 			if (attacker.Realm == defender.Realm && !(attacker is GamePlayer && ((GamePlayer)attacker).DuelTarget == defender))
 			{
@@ -117,7 +113,15 @@ namespace DOL.GS.ServerRules
 
 			// clients with priv level > 1 are considered friendly by anyone
 			if(target is GamePlayer && ((GamePlayer)target).Client.Account.PrivLevel > 1) return true;
-			if (source.Realm == (int)eRealm.Peace || target.Realm == (int)eRealm.Peace) return true;
+
+			//Peace flag NPCs are same realm
+			if (target is GameNPC)
+				if ((((GameNPC)target).Flags & (uint)GameNPC.eFlags.PEACE) != 0)
+					return true;
+
+			if (source is GameNPC)
+				if ((((GameNPC)source).Flags & (uint)GameNPC.eFlags.PEACE) != 0)
+					return true;
 
 			if(source.Realm != target.Realm)
 			{
@@ -151,8 +155,16 @@ namespace DOL.GS.ServerRules
 
 			// clients with priv level > 1 are allowed to trade with anyone
 			if(source is GamePlayer && ((GamePlayer)source).Client.Account.PrivLevel > 1) return true;
-			// Peace NPCs can  trade with everybody
-			if(source.Realm == (int) eRealm.Peace) return true;
+
+			//Peace flag NPCs can trade with everyone
+			if (target is GameNPC)
+				if ((((GameNPC)target).Flags & (uint)GameNPC.eFlags.PEACE) != 0)
+					return true;
+
+			if (source is GameNPC)
+				if ((((GameNPC)source).Flags & (uint)GameNPC.eFlags.PEACE) != 0)
+					return true;
+
 			if(source.Realm != target.Realm)
 			{
 				if(quiet == false) MessageToLiving(source, "You can't trade with enemy realm!");
@@ -168,8 +180,13 @@ namespace DOL.GS.ServerRules
 			// clients with priv level > 1 are allowed to talk and hear anyone
 			if(source is GamePlayer && ((GamePlayer)source).Client.Account.PrivLevel > 1) return true;
 			if(target.Client.Account.PrivLevel > 1) return true;
-			// Peace NPCs can be understood by everybody
-			if(source.Realm == (int) eRealm.Peace) return true;
+
+			//Peace flag NPCs can be understood by everyone
+
+			if (source is GameNPC)
+				if ((((GameNPC)source).Flags & (uint)GameNPC.eFlags.PEACE) != 0)
+					return true;
+
 			if(source.Realm != target.Realm) return false;
 			return true;
 		}
