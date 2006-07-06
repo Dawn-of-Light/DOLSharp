@@ -72,6 +72,7 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CustomMarshalers" />
     <Reference Include="ICSharpCode.SharpZipLib">
       <Name>ICSharpCode.SharpZipLib</Name>
       <HintPath>..\sharedModules\ICSharpCode.SharpZLib\ICSharpCode.SharpZipLib.dll</HintPath>
@@ -145,6 +146,9 @@
     <Compile Include="Statistics.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="UPnP\Interop.cs" />
+    <Compile Include="UPnP\PortMappingInfo.cs" />
+    <Compile Include="UPnP\UPnPNat.cs" />
     <Compile Include="WeakMulticastDelegate.cs">
       <SubType>Code</SubType>
     </Compile>

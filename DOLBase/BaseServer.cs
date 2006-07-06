@@ -21,7 +21,10 @@ using System.Collections;
 using System.Collections.Specialized;
 using System.Net;
 using System.Net.Sockets;
+using System.IO;
 using log4net;
+using DOL.NatTraversal.Interop;
+using DOL.NatTraversal;
 
 namespace DOL
 {
@@ -224,7 +227,65 @@ namespace DOL
 			//if not try  binding.
 			if(m_listen == null && !InitSocket())
 				return false;
+			if(log.IsDebugEnabled)
+				log.Debug("Checking for UPnP Router Support");
+			if(Configuration.EnableUPnP)
+			{
+				try
+				{
 
+					UPnPNat nat = new UPnPNat();
+					ArrayList list = new ArrayList();
+					foreach(PortMappingInfo info in nat.PortMappings)
+					{
+						list.Add(info);
+					}
+					if(log.IsDebugEnabled)
+					{
+						log.Debug("Current UPnP mappings:");
+						foreach(PortMappingInfo info in list)
+						{
+							log.DebugFormat("({0}) {1} - {2} -> {3}:{4}({5})", info.Enabled ? "(Enabled)" : "(Disabled)", info.Description, info.ExternalPort, info.InternalHostName, info.InternalPort, info.Protocol);
+						}
+					}
+					IPAddress localAddr = Configuration.Ip;
+					string address = "";
+					if(localAddr.ToString() == IPAddress.Any.ToString())
+					{
+						IPAddress[] addr = Dns.GetHostByName(Dns.GetHostName()).AddressList;
+						address = addr[0].ToString();
+					}
+					else
+					{
+						address = Configuration.Ip.ToString();
+					}
+
+					PortMappingInfo pmiUdp = new PortMappingInfo("DOL UDP", "UDP", address, Configuration.UDPPort, Configuration.UDPPort, true);
+					PortMappingInfo pmiTcp = new PortMappingInfo("DOL TCP", "TCP", address, Configuration.Port, Configuration.Port, true);
+					nat.AddPortMapping(pmiUdp);
+					nat.AddPortMapping(pmiTcp);
+
+					if(Configuration.DetectRegionIP)
+					{
+						try
+						{
+							Configuration.RegionIp = nat.PortMappings[0].ExternalIPAddress;
+							if(log.IsDebugEnabled)
+								log.Debug("Found the RegionIP: " + Configuration.RegionIp);
+						}
+						catch(Exception)
+						{
+							if(log.IsDebugEnabled)
+								log.Debug("Unable to detect the RegionIP, It is possible that no mappings exist yet");
+						}
+					}
+				}
+				catch(Exception)
+				{
+					if(log.IsDebugEnabled)
+						log.Debug("Unable to access the UPnP Internet Gateway Device");
+				}
+			}
 			try
 			{
 				m_listen.Listen(100);
@@ -315,13 +376,31 @@ namespace DOL
 		{
 			if(log.IsDebugEnabled)
 				log.Debug("Stopping server! - Entering method");
+			if(Configuration.EnableUPnP)
+			{
+				try
+				{
+					if(log.IsDebugEnabled)
+						log.Debug("Removing UPnP Mappings");
+					UPnPNat nat = new UPnPNat();
+					PortMappingInfo pmiUDP = new PortMappingInfo("UDP", Configuration.UDPPort);
+					PortMappingInfo pmiTCP = new PortMappingInfo("TCP", Configuration.Port);
+					nat.RemovePortMapping(pmiUDP);
+					nat.RemovePortMapping(pmiTCP);
+				}
+				catch(Exception ex)
+				{
+					if(log.IsDebugEnabled)
+						log.Debug("Failed to rmeove UPnP Mappings", ex);
+				}
+			}
 
 			try
 			{
 				if (m_listen != null)
 				{
 					m_listen.Close();
-					m_listen = null; //clear referenz
+					m_listen = null; //clear references
 					if(log.IsDebugEnabled)
 						log.Debug("Server is no longer listening for incoming connections!");
 				}
