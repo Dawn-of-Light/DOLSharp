@@ -115,29 +115,6 @@ namespace DOL.GS
 		protected string m_invalidNamesFile = "";
 
 		#endregion
-		#region Network
-
-		/// <summary>
-		/// The region IP
-		/// </summary>
-		protected IPAddress m_regionIP;
-
-		/// <summary>
-		/// The region port
-		/// </summary>
-		protected ushort m_regionPort;
-
-		/// <summary>
-		/// The UDP IP
-		/// </summary>
-		protected IPAddress m_udpIP;
-
-		/// <summary>
-		/// The UDP port
-		/// </summary>
-		protected ushort m_udpPort;
-
-		#endregion
 		#region Database
 
 		/// <summary>
@@ -215,18 +192,7 @@ namespace DOL.GS
 			m_gmActionsLoggerName = root["Server"]["GMActionLoggerName"].GetString(m_gmActionsLoggerName);
 			m_invalidNamesFile = root["Server"]["InvalidNamesFile"].GetString(m_invalidNamesFile);
 
-			string ip = root["Server"]["RegionIP"].GetString("any");
-			if (ip == "any")
-				m_regionIP = IPAddress.Any;
-			else
-				m_regionIP = IPAddress.Parse(ip);
-			m_regionPort = (ushort) root["Server"]["RegionPort"].GetInt(m_regionPort);
-			ip = root["Server"]["UdpIP"].GetString("any");
-			if (ip == "any")
-				m_udpIP = IPAddress.Any;
-			else
-				m_udpIP = IPAddress.Parse(ip);
-			m_udpPort = (ushort) root["Server"]["UdpPort"].GetInt(m_udpPort);
+
 
 			string db = root["Server"]["DBType"].GetString("XML");
 			switch (db.ToLower())
@@ -310,11 +276,6 @@ namespace DOL.GS
 			root["Server"]["GMActionLoggerName"].Set(m_gmActionsLoggerName);
 			root["Server"]["InvalidNamesFile"].Set(m_invalidNamesFile);
 
-			root["Server"]["RegionIP"].Set(m_regionIP);
-			root["Server"]["RegionPort"].Set(m_regionPort);
-			root["Server"]["UdpIP"].Set(m_udpIP);
-			root["Server"]["UdpPort"].Set(m_udpPort);
-
 			string db = "XML";
 			
 			switch (m_dbType)
@@ -370,11 +331,6 @@ namespace DOL.GS
 			m_cheatLoggerName = "cheats";
 			m_gmActionsLoggerName = "gmactions";
 			m_invalidNamesFile = "." + Path.DirectorySeparatorChar + "config" + Path.DirectorySeparatorChar + "invalidnames.txt";
-
-			m_regionIP = IPAddress.Any;
-			m_regionPort = 10400;
-			m_udpIP = IPAddress.Any;
-			m_udpPort = 10400;
 
 			m_dbType = ConnectionType.DATABASE_XML;
 			m_dbConnectionString = m_rootDirectory+Path.DirectorySeparatorChar+"xml_db";
@@ -547,42 +503,6 @@ namespace DOL.GS
 					return Path.Combine(m_rootDirectory, m_invalidNamesFile);
 			}
 			set { m_invalidNamesFile = value; }
-		}
-
-		/// <summary>
-		/// Gets or sets the region ip
-		/// </summary>
-		public IPAddress RegionIp
-		{
-			get { return m_regionIP; }
-			set { m_regionIP = value; }
-		}
-
-		/// <summary>
-		/// Gets or sets the region port
-		/// </summary>
-		public ushort RegionPort
-		{
-			get { return m_regionPort; }
-			set { m_regionPort = value; }
-		}
-    
-		/// <summary>
-		/// Gets or sets the UDP ip
-		/// </summary>
-		public IPAddress UDPIp
-		{
-			get { return m_udpIP; }
-			set { m_udpIP = value; }
-		}
-
-		/// <summary>
-		/// Gets or sets the UDP port
-		/// </summary>
-		public ushort UDPPort
-		{
-			get { return m_udpPort; }
-			set { m_udpPort = value; }
 		}
 
 		/// <summary>
