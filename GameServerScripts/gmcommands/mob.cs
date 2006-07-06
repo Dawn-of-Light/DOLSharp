@@ -928,6 +928,13 @@ namespace DOL.GS.Scripts
 						client.Out.SendMessage("Mob CANTTARGET flag is set to " + ((targetMob.Flags & (uint) GameNPC.eFlags.CANTTARGET) != 0), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}
 					break;
+				case "peace":
+					{
+						targetMob.Flags ^= (uint)GameNPC.eFlags.PEACE;
+						targetMob.SaveIntoDatabase();
+						client.Out.SendMessage("Mob PEACE flag is set to " + ((targetMob.Flags & (uint)GameNPC.eFlags.PEACE) != 0), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					}
+					break;
 				case "addloot":
 					{
 						try
