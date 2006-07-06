@@ -1227,7 +1227,7 @@ namespace DOL.GS
 				m_raceResists[(int) eRace.Avalonian] = new HybridDictionary();
 				m_raceResists[(int) eRace.Avalonian][eResist.Crush] = 2;
 				m_raceResists[(int) eRace.Avalonian][eResist.Slash] = 3;
-				m_raceResists[(int) eRace.Avalonian][eResist.Matter] = 5;
+				m_raceResists[(int) eRace.Avalonian][eResist.Spirit] = 5;
 
 				m_raceResists[(int) eRace.Briton] = new HybridDictionary();
 				m_raceResists[(int) eRace.Briton][eResist.Crush] = 2;
@@ -1292,8 +1292,7 @@ namespace DOL.GS
 				m_raceResists[(int) eRace.Dwarf][eResist.Body] = 5;
 
 				m_raceResists[(int) eRace.Kobold] = new HybridDictionary();
-				m_raceResists[(int) eRace.Kobold][eResist.Crush] = 2;
-				m_raceResists[(int) eRace.Kobold][eResist.Slash] = 3;
+				m_raceResists[(int) eRace.Kobold][eResist.Crush] = 5;
 				m_raceResists[(int) eRace.Kobold][eResist.Matter] = 5;
 
 				m_raceResists[(int) eRace.Troll] = new HybridDictionary();
