@@ -165,7 +165,7 @@ namespace DOL.GS.PacketHandler
 		/// <summary>
 		/// First player realm number, for use in all arrays
 		/// </summary>
-		_FirstPlayerRealm = 3,
+		_FirstPlayerRealm = 1,
 		/// <summary>
 		/// Albion Realm
 		/// </summary>
