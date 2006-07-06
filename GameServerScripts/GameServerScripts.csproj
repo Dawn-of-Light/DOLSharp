@@ -117,558 +117,558 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="admincommands\Account.cs">
+    <None Include="admincommands\Account.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="admincommands\code.cs">
+    </None>
+    <None Include="admincommands\code.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="admincommands\plvl.cs">
+    </None>
+    <None Include="admincommands\plvl.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="AssemblyInfo.cs">
+    </None>
+    <None Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="customnpc\Blacksmith.cs">
+    </None>
+    <None Include="customnpc\Blacksmith.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="customnpc\craft master\AlchemyMaster.cs">
+    </None>
+    <None Include="customnpc\craft master\AlchemyMaster.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="customnpc\craft master\ArmorCraftingMaster.cs">
+    </None>
+    <None Include="customnpc\craft master\ArmorCraftingMaster.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="customnpc\craft master\FletchingMaster.cs">
+    </None>
+    <None Include="customnpc\craft master\FletchingMaster.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="customnpc\craft master\SpellCraftingMaster.cs">
+    </None>
+    <None Include="customnpc\craft master\SpellCraftingMaster.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="customnpc\craft master\TailoringMaster.cs">
+    </None>
+    <None Include="customnpc\craft master\TailoringMaster.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="customnpc\craft master\WeaponCraftingMaster.cs">
+    </None>
+    <None Include="customnpc\craft master\WeaponCraftingMaster.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="customnpc\EmblemNPC.cs">
+    </None>
+    <None Include="customnpc\EmblemNPC.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="customnpc\Enchanter.cs">
+    </None>
+    <None Include="customnpc\Enchanter.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="customnpc\FaceCustomiser.cs">
+    </None>
+    <None Include="customnpc\FaceCustomiser.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="customnpc\GuildRegistrar.cs">
+    </None>
+    <None Include="customnpc\GuildRegistrar.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="customnpc\Hastener.cs">
+    </None>
+    <None Include="customnpc\Hastener.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="customnpc\Healer.cs">
+    </None>
+    <None Include="customnpc\Healer.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="customnpc\NameRegistrar.cs">
+    </None>
+    <None Include="customnpc\NameRegistrar.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="customnpc\TownCrier.cs">
+    </None>
+    <None Include="customnpc\TownCrier.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="customnpc\VaultKeeper.cs">
+    </None>
+    <None Include="customnpc\VaultKeeper.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameevents\DOLTestServer.cs">
+    </None>
+    <None Include="gameevents\DOLTestServer.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameevents\FollowingNPC.cs">
+    </None>
+    <None Include="gameevents\FollowingNPC.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameevents\HookpointInventory.cs">
+    </None>
+    <None Include="gameevents\HookpointInventory.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameevents\PlayerEnterExit.cs">
+    </None>
+    <None Include="gameevents\PlayerEnterExit.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameevents\StartupEquipment.cs">
+    </None>
+    <None Include="gameevents\StartupEquipment.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameevents\StartupLocations.cs">
+    </None>
+    <None Include="gameevents\StartupLocations.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameevents\StatPrint.cs">
+    </None>
+    <None Include="gameevents\StatPrint.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameevents\TalkingNPC.cs">
+    </None>
+    <None Include="gameevents\TalkingNPC.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="globals.cs">
+    </None>
+    <None Include="globals.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gmcommands\addbind.cs">
+    </None>
+    <None Include="gmcommands\addbind.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gmcommands\AddHookPoint.cs">
+    </None>
+    <None Include="gmcommands\AddHookPoint.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gmcommands\area.cs">
+    </None>
+    <None Include="gmcommands\area.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gmcommands\Ban.cs">
+    </None>
+    <None Include="gmcommands\Ban.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gmcommands\BroadcastMessage.cs">
+    </None>
+    <None Include="gmcommands\BroadcastMessage.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gmcommands\cast.cs">
+    </None>
+    <None Include="gmcommands\cast.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gmcommands\crafting.cs">
+    </None>
+    <None Include="gmcommands\crafting.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gmcommands\debug.cs">
+    </None>
+    <None Include="gmcommands\debug.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gmcommands\debugjump.cs">
+    </None>
+    <None Include="gmcommands\debugjump.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gmcommands\giverespec.cs">
+    </None>
+    <None Include="gmcommands\giverespec.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gmcommands\givexp.cs">
+    </None>
+    <None Include="gmcommands\givexp.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gmcommands\harm.cs">
+    </None>
+    <None Include="gmcommands\harm.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gmcommands\heal.cs">
+    </None>
+    <None Include="gmcommands\heal.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gmcommands\house.cs">
+    </None>
+    <None Include="gmcommands\house.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gmcommands\item.cs">
+    </None>
+    <None Include="gmcommands\item.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gmcommands\jump.cs">
+    </None>
+    <None Include="gmcommands\jump.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gmcommands\keep.cs">
+    </None>
+    <None Include="gmcommands\keep.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gmcommands\KeepComponent.cs">
+    </None>
+    <None Include="gmcommands\KeepComponent.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gmcommands\keepguard.cs">
+    </None>
+    <None Include="gmcommands\keepguard.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gmcommands\kick.cs">
+    </None>
+    <None Include="gmcommands\kick.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gmcommands\merchant.cs">
+    </None>
+    <None Include="gmcommands\merchant.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gmcommands\mob.cs">
+    </None>
+    <None Include="gmcommands\mob.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gmcommands\morph.cs">
+    </None>
+    <None Include="gmcommands\morph.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gmcommands\mountgm.cs">
+    </None>
+    <None Include="gmcommands\mountgm.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gmcommands\npc.cs">
+    </None>
+    <None Include="gmcommands\npc.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gmcommands\object.cs">
+    </None>
+    <None Include="gmcommands\object.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gmcommands\path.cs">
+    </None>
+    <None Include="gmcommands\path.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gmcommands\speed.cs">
+    </None>
+    <None Include="gmcommands\speed.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gmcommands\titlegm.cs">
+    </None>
+    <None Include="gmcommands\titlegm.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gmcommands\unban.cs">
+    </None>
+    <None Include="gmcommands\unban.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gmcommands\walk.cs">
+    </None>
+    <None Include="gmcommands\walk.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gmcommands\weather.cs">
+    </None>
+    <None Include="gmcommands\weather.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playercommands\afk.cs">
+    </None>
+    <None Include="playercommands\afk.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playercommands\anonymous.cs">
+    </None>
+    <None Include="playercommands\anonymous.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playercommands\assist.cs">
+    </None>
+    <None Include="playercommands\assist.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playercommands\autosplit.cs">
+    </None>
+    <None Include="playercommands\autosplit.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playercommands\bind.cs">
+    </None>
+    <None Include="playercommands\bind.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playercommands\broadcast.cs">
+    </None>
+    <None Include="playercommands\broadcast.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playercommands\cancelstyle.cs">
+    </None>
+    <None Include="playercommands\cancelstyle.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playercommands\chatgroup.cs">
+    </None>
+    <None Include="playercommands\chatgroup.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playercommands\cmdhelp.cs">
+    </None>
+    <None Include="playercommands\cmdhelp.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playercommands\control.cs">
+    </None>
+    <None Include="playercommands\control.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playercommands\disband.cs">
+    </None>
+    <None Include="playercommands\disband.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playercommands\dismount.cs">
+    </None>
+    <None Include="playercommands\dismount.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playercommands\duel.cs">
+    </None>
+    <None Include="playercommands\duel.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playercommands\email.cs">
+    </None>
+    <None Include="playercommands\email.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playercommands\emote.cs">
+    </None>
+    <None Include="playercommands\emote.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playercommands\emotes.cs">
+    </None>
+    <None Include="playercommands\emotes.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playercommands\facegloc.cs">
+    </None>
+    <None Include="playercommands\facegloc.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playercommands\faceloc.cs">
+    </None>
+    <None Include="playercommands\faceloc.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playercommands\friend.cs">
+    </None>
+    <None Include="playercommands\friend.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playercommands\gloc.cs">
+    </None>
+    <None Include="playercommands\gloc.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playercommands\GroundAssist.cs">
+    </None>
+    <None Include="playercommands\GroundAssist.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playercommands\group.cs">
+    </None>
+    <None Include="playercommands\group.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playercommands\guild.cs">
+    </None>
+    <None Include="playercommands\guild.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playercommands\guildchat.cs">
+    </None>
+    <None Include="playercommands\guildchat.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playercommands\hood.cs">
+    </None>
+    <None Include="playercommands\hood.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playercommands\invite.cs">
+    </None>
+    <None Include="playercommands\invite.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playercommands\lastname.cs">
+    </None>
+    <None Include="playercommands\lastname.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playercommands\level.cs">
+    </None>
+    <None Include="playercommands\level.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playercommands\makeleader.cs">
+    </None>
+    <None Include="playercommands\makeleader.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playercommands\noqueue.cs">
+    </None>
+    <None Include="playercommands\noqueue.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playercommands\password.cs">
+    </None>
+    <None Include="playercommands\password.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playercommands\played.cs">
+    </None>
+    <None Include="playercommands\played.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playercommands\pray.cs">
+    </None>
+    <None Include="playercommands\pray.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playercommands\quest.cs">
+    </None>
+    <None Include="playercommands\quest.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playercommands\quit.cs">
+    </None>
+    <None Include="playercommands\quit.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playercommands\random.cs">
+    </None>
+    <None Include="playercommands\random.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playercommands\range.cs">
+    </None>
+    <None Include="playercommands\range.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playercommands\release.cs">
+    </None>
+    <None Include="playercommands\release.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playercommands\Repair.cs">
+    </None>
+    <None Include="playercommands\Repair.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playercommands\respec.cs">
+    </None>
+    <None Include="playercommands\respec.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playercommands\roll.cs">
+    </None>
+    <None Include="playercommands\roll.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playercommands\safety.cs">
+    </None>
+    <None Include="playercommands\safety.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playercommands\salvage.cs">
+    </None>
+    <None Include="playercommands\salvage.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playercommands\say.cs">
+    </None>
+    <None Include="playercommands\say.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playercommands\send.cs">
+    </None>
+    <None Include="playercommands\send.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playercommands\serverinfo.cs">
+    </None>
+    <None Include="playercommands\serverinfo.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playercommands\settitle.cs">
+    </None>
+    <None Include="playercommands\settitle.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playercommands\sprint.cs">
+    </None>
+    <None Include="playercommands\sprint.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playercommands\stand.cs">
+    </None>
+    <None Include="playercommands\stand.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playercommands\stuck.cs">
+    </None>
+    <None Include="playercommands\stuck.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playercommands\target.cs">
+    </None>
+    <None Include="playercommands\target.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playercommands\task.cs">
+    </None>
+    <None Include="playercommands\task.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playercommands\time.cs">
+    </None>
+    <None Include="playercommands\time.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playercommands\version.cs">
+    </None>
+    <None Include="playercommands\version.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playercommands\where.cs">
+    </None>
+    <None Include="playercommands\where.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playercommands\whisper.cs">
+    </None>
+    <None Include="playercommands\whisper.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playercommands\who.cs">
+    </None>
+    <None Include="playercommands\who.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playercommands\yell.cs">
+    </None>
+    <None Include="playercommands\yell.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playertitles\BaneOfAlbionTitle.cs">
+    </None>
+    <None Include="playertitles\BaneOfAlbionTitle.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playertitles\BaneOfHiberniaTitle.cs">
+    </None>
+    <None Include="playertitles\BaneOfHiberniaTitle.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playertitles\BaneOfMidgardTitle.cs">
+    </None>
+    <None Include="playertitles\BaneOfMidgardTitle.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playertitles\BattleEnforcerTitle.cs">
+    </None>
+    <None Include="playertitles\BattleEnforcerTitle.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playertitles\ElderTitle.cs">
+    </None>
+    <None Include="playertitles\ElderTitle.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playertitles\Level20Title.cs">
+    </None>
+    <None Include="playertitles\Level20Title.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playertitles\LoneEnforcerTitle.cs">
+    </None>
+    <None Include="playertitles\LoneEnforcerTitle.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playertitles\VeteranTitle.cs">
+    </None>
+    <None Include="playertitles\VeteranTitle.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="quests\albion\AgainstTheGrain.cs">
+    </None>
+    <None Include="quests\albion\AgainstTheGrain.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="quests\albion\AndrewsSkins.cs">
+    </None>
+    <None Include="quests\albion\AndrewsSkins.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="quests\albion\ArrowsForYettaFletcher.cs">
+    </None>
+    <None Include="quests\albion\ArrowsForYettaFletcher.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="quests\albion\BaseFrederickQuest.cs">
+    </None>
+    <None Include="quests\albion\BaseFrederickQuest.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="quests\albion\BeginningOfWar.cs">
+    </None>
+    <None Include="quests\albion\BeginningOfWar.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="quests\albion\BuildingABetterBow.cs">
+    </None>
+    <None Include="quests\albion\BuildingABetterBow.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="quests\albion\CityOfCamelot.cs">
+    </None>
+    <None Include="quests\albion\CityOfCamelot.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="quests\albion\ClericMulgrut.cs">
+    </None>
+    <None Include="quests\albion\ClericMulgrut.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="quests\albion\Collection.cs">
+    </None>
+    <None Include="quests\albion\Collection.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="quests\albion\Culmination.cs">
+    </None>
+    <None Include="quests\albion\Culmination.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="quests\albion\epic\Academy50.cs">
+    </None>
+    <None Include="quests\albion\epic\Academy50.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="quests\albion\epic\Church50.cs">
+    </None>
+    <None Include="quests\albion\epic\Church50.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="quests\albion\epic\Defenders50.cs">
+    </None>
+    <None Include="quests\albion\epic\Defenders50.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="quests\albion\epic\Shadows50.cs">
+    </None>
+    <None Include="quests\albion\epic\Shadows50.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="quests\albion\Frontiers.cs">
+    </None>
+    <None Include="quests\albion\Frontiers.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="quests\albion\GodelevasNeed.cs">
+    </None>
+    <None Include="quests\albion\GodelevasNeed.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="quests\albion\GreenerPastures.cs">
+    </None>
+    <None Include="quests\albion\GreenerPastures.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="quests\albion\HalfOgreAllMan.cs">
+    </None>
+    <None Include="quests\albion\HalfOgreAllMan.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="quests\albion\HeartOfSephucoth.cs">
+    </None>
+    <None Include="quests\albion\HeartOfSephucoth.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="quests\albion\HuntForArachneida.cs">
+    </None>
+    <None Include="quests\albion\HuntForArachneida.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="quests\albion\HuntForSlith.cs">
+    </None>
+    <None Include="quests\albion\HuntForSlith.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="quests\albion\ImportantDelivery.cs">
+    </None>
+    <None Include="quests\albion\ImportantDelivery.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="quests\albion\IreFairyIre.cs">
+    </None>
+    <None Include="quests\albion\IreFairyIre.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="quests\albion\LawrencesOil.cs">
+    </None>
+    <None Include="quests\albion\LawrencesOil.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="quests\albion\Nuisances.cs">
+    </None>
+    <None Include="quests\albion\Nuisances.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="quests\albion\RevengeTheOtherWhiteMeat.cs">
+    </None>
+    <None Include="quests\albion\RevengeTheOtherWhiteMeat.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="quests\albion\ShakenSquire.cs">
+    </None>
+    <None Include="quests\albion\ShakenSquire.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="quests\albion\TraitorInCotswold.cs">
+    </None>
+    <None Include="quests\albion\TraitorInCotswold.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="quests\albion\TreviansBestFriend.cs">
+    </None>
+    <None Include="quests\albion\TreviansBestFriend.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="quests\albion\WolfPeltCloak.cs">
+    </None>
+    <None Include="quests\albion\WolfPeltCloak.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="quests\albion\YdeniasCrush.cs">
+    </None>
+    <None Include="quests\albion\YdeniasCrush.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="quests\examples\HelpSirQuait.cs">
+    </None>
+    <None Include="quests\examples\HelpSirQuait.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="quests\examples\SimpleGlobalQuest.cs">
+    </None>
+    <None Include="quests\examples\SimpleGlobalQuest.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="quests\hibernia\BaseAddrirQuest.cs">
+    </None>
+    <None Include="quests\hibernia\BaseAddrirQuest.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="quests\hibernia\CityOfTirnaNog.cs">
+    </None>
+    <None Include="quests\hibernia\CityOfTirnaNog.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="quests\hibernia\epic\Essence50.cs">
+    </None>
+    <None Include="quests\hibernia\epic\Essence50.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="quests\hibernia\epic\Focus50.cs">
+    </None>
+    <None Include="quests\hibernia\epic\Focus50.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="quests\hibernia\epic\Harmony50.cs">
+    </None>
+    <None Include="quests\hibernia\epic\Harmony50.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="quests\hibernia\ImportantDelivery.cs">
+    </None>
+    <None Include="quests\hibernia\ImportantDelivery.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="quests\hibernia\Nuisances.cs">
+    </None>
+    <None Include="quests\hibernia\Nuisances.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="quests\hibernia\TraitorInMagMell.cs">
+    </None>
+    <None Include="quests\hibernia\TraitorInMagMell.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="quests\midgard\BaseDalikorQuest.cs">
+    </None>
+    <None Include="quests\midgard\BaseDalikorQuest.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="quests\midgard\BeginningOfWar.cs">
+    </None>
+    <None Include="quests\midgard\BeginningOfWar.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="quests\midgard\CityOfJordheim.cs">
+    </None>
+    <None Include="quests\midgard\CityOfJordheim.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="quests\midgard\Collection.cs">
+    </None>
+    <None Include="quests\midgard\Collection.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="quests\midgard\Culmination.cs">
+    </None>
+    <None Include="quests\midgard\Culmination.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="quests\midgard\epic\MidgardRogue50.cs">
+    </None>
+    <None Include="quests\midgard\epic\MidgardRogue50.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="quests\midgard\epic\Mystic50.cs">
+    </None>
+    <None Include="quests\midgard\epic\Mystic50.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="quests\midgard\epic\Seer50.cs">
+    </None>
+    <None Include="quests\midgard\epic\Seer50.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="quests\midgard\epic\Viking50.cs">
+    </None>
+    <None Include="quests\midgard\epic\Viking50.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="quests\midgard\Frontiers.cs">
+    </None>
+    <None Include="quests\midgard\Frontiers.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="quests\midgard\ImportantDelivery.cs">
+    </None>
+    <None Include="quests\midgard\ImportantDelivery.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="quests\midgard\Nuisances.cs">
+    </None>
+    <None Include="quests\midgard\Nuisances.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="quests\midgard\StolenEggs.cs">
+    </None>
+    <None Include="quests\midgard\StolenEggs.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="quests\midgard\TraitorInMularn.cs">
+    </None>
+    <None Include="quests\midgard\TraitorInMularn.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="WebUIGenerator.cs">
+    </None>
+    <None Include="WebUIGenerator.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="XMLWebUIGenerator.cs">
+    </None>
+    <None Include="XMLWebUIGenerator.cs">
       <SubType>Code</SubType>
-    </Compile>
+    </None>
     <Content Include="quests\hibernia\BaseAddrirPathPoints.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
