@@ -554,9 +554,9 @@ namespace DOL.GS
 			{
 				banner.ChangeGuild(player.Guild);
 			}
-			foreach(GameClient client in player.GetPlayersInRadius(WorldMgr.OBJ_UPDATE_DISTANCE))
+			foreach(GamePlayer pl in player.GetPlayersInRadius(WorldMgr.OBJ_UPDATE_DISTANCE))
 			{
-				client.Out.SendKeepClaim(this);
+				pl.Out.SendKeepClaim(this);
 			}
 			GameEventMgr.Notify(KeepEvent.KeepClaimed, this, new KeepEventArgs(player));
 			m_claimTimer.Change(1, CLAIM_CALLBACK_INTERVAL);
