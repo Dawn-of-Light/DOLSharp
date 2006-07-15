@@ -56,8 +56,8 @@ namespace DOL.GS.Spells
 			effect.Owner.LastAttackedByEnemyTick = effect.Owner.CurrentRegion.Time;
 
 			effect.Owner.Disease(true);
-			effect.Owner.BuffBonusMultCategory1.Set((int)eProperty.MaxSpeed, this, 1.0 - 0.075);
-			effect.Owner.BuffBonusMultCategory1.Set((int)eProperty.Strength, this, 1.0 - 0.15);
+			effect.Owner.BuffBonusMultCategory1.Set((int)eProperty.MaxSpeed, this, 1.0 - 0.15);
+			effect.Owner.BuffBonusMultCategory1.Set((int)eProperty.Strength, this, 1.0 - 0.075);
 
 			SendUpdates(effect);
 
