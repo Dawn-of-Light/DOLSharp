@@ -622,7 +622,14 @@ namespace DOL.GS.PacketHandler
 		public virtual void SendDebugMode(bool on)
 		{
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.DebugMode));
-			pak.WriteByte((byte) (on ? 0x01 : 0x00));
+			if(m_gameClient.Account.PrivLevel == 1)
+			{
+				pak.WriteByte((byte)(0x00));
+			}
+			else
+			{
+				pak.WriteByte((byte)(on ? 0x01 : 0x00));
+			}
 			pak.WriteByte(0x00);
 			SendTCP(pak);
 		}
