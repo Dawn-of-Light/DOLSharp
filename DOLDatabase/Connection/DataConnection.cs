@@ -234,7 +234,7 @@ namespace DOL.Database.Connection
 						first = false;
 					}
 
-					columndef += table.Columns[i].ColumnName + " ";
+					columndef += "`" + table.Columns[i].ColumnName + "` ";
 					if (systype == typeof (System.Char))
 					{
 						columndef += "SMALLINT UNSIGNED";
@@ -326,7 +326,7 @@ namespace DOL.Database.Connection
 						{
 							first = false;
 						}
-						columndef += table.PrimaryKey[i].ColumnName;
+						columndef += "`" + table.PrimaryKey[i].ColumnName + "`";
 					}
 					columndef += ")";
 				}
@@ -336,7 +336,7 @@ namespace DOL.Database.Connection
 				{
 					if (table.Columns[i].Unique && primaryKeys[table.Columns[i].ColumnName] == null)
 					{
-						columndef += ", UNIQUE INDEX (" + table.Columns[i].ColumnName + ")";
+						columndef += ", UNIQUE INDEX (`" + table.Columns[i].ColumnName + "`)";
 					}
 				}
 
@@ -347,10 +347,10 @@ namespace DOL.Database.Connection
 						&& primaryKeys[table.Columns[i].ColumnName] == null
 						&& !table.Columns[i].Unique)
 					{
-						columndef += ", INDEX (" + table.Columns[i].ColumnName + ")";
+						columndef += ", INDEX (`" + table.Columns[i].ColumnName + "`)";
 					}
 				}
-				sb.Append("CREATE TABLE IF NOT EXISTS " + table.TableName + " (" + columndef + ")");
+				sb.Append("CREATE TABLE IF NOT EXISTS `" + table.TableName + "` (" + columndef + ")");
 
 				try
 				{
