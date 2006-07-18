@@ -184,7 +184,7 @@ namespace DOL.Database
 				bool hasRelations = false;
 				string dateFormat = connection.GetDBDateFormat();
 
-				columns.Append(tableName + "_ID");
+				columns.Append("`" + tableName + "_ID`");
 				values.Append("'" + Escape(dataObject.ObjectId) + "'");
 
 				for (int i = 0; i < objMembers.Length; i++)
@@ -210,7 +210,7 @@ namespace DOL.Database
 
 						columns.Append(", ");
 						values.Append(", ");
-						columns.Append(objMembers[i].Name);
+						columns.Append("`" + objMembers[i].Name + "`");
 						if (val is bool)
 						{
 							val = ((bool) val) ? (byte) 1 : (byte) 0;
@@ -232,7 +232,7 @@ namespace DOL.Database
 					}
 				}
 
-				string sql = "INSERT INTO " + tableName + " (" + columns.ToString() + ") VALUES (" + values.ToString() + ")";
+				string sql = "INSERT INTO `" + tableName + "` (" + columns.ToString() + ") VALUES (" + values.ToString() + ")";
 				if(log.IsDebugEnabled)
 					log.Debug(sql);
 				int res = connection.ExecuteNonQuery(sql);
@@ -324,7 +324,7 @@ namespace DOL.Database
 					return;
 				string tableName = dataObject.TableName;
 
-				StringBuilder sb = new StringBuilder("UPDATE " + tableName + " SET ");
+				StringBuilder sb = new StringBuilder("UPDATE `" + tableName + "` SET ");
 
 				BindingInfo[] bindingInfo = GetBindingInfo(dataObject.GetType());
 				bool hasRelations = false;
@@ -378,14 +378,14 @@ namespace DOL.Database
 							val = ((String) val).Replace("'", "\\'");
 							val = ((String) val).Replace("’", "\\’");
 						}
-						sb.Append(bind.Member.Name + " = ");
+						sb.Append("`" + bind.Member.Name + "` = ");
 						sb.Append('\'');
 						sb.Append(val);
 						sb.Append('\'');
 					}
 				}
 
-				sb.Append(" WHERE " + tableName + "_ID = '" + Escape(dataObject.ObjectId) + "'");
+				sb.Append(" WHERE `" + tableName + "_ID` = '" + Escape(dataObject.ObjectId) + "'");
 				string sql = sb.ToString();
 				if(log.IsDebugEnabled)
 					log.Debug(sql);
@@ -492,7 +492,7 @@ namespace DOL.Database
 			{
 				if (connection.IsSQLConnection)
 				{
-					string sql = "DELETE FROM " + dataObject.TableName + " WHERE " + dataObject.TableName + "_ID = '" + Escape(dataObject.ObjectId) + "'";
+					string sql = "DELETE FROM `" + dataObject.TableName + "` WHERE `" + dataObject.TableName + "_ID` = '" + Escape(dataObject.ObjectId) + "'";
 					if(log.IsDebugEnabled)
 						log.Debug(sql);
 					int res = connection.ExecuteNonQuery(sql);
@@ -558,13 +558,13 @@ namespace DOL.Database
 					val = val.Replace("\"", "\\\"");
 					val = val.Replace("'", "\\'");
 					val = val.Replace("’", "\\’");
-					whereClause = members[i].Name + " = '" + val + "'";
+					whereClause = "`" + members[i].Name + "` = '" + val + "'";
 					break;
 				}
 			}
 			if (whereClause == null)
 			{
-				whereClause = ret.TableName + "_ID = '" + key.ToString() + "'";
+				whereClause = "`" + ret.TableName + "_ID` = '" + key.ToString() + "'";
 			}
 			DataObject[] objs = SQLSelectObjects(objectType, whereClause);
 			if (objs.Length > 0)
@@ -645,7 +645,7 @@ namespace DOL.Database
 			ArrayList dataObjects = new ArrayList(500);
 
 			// build sql command
-			StringBuilder sb = new StringBuilder("SELECT " + tableName + "_ID, ");
+			StringBuilder sb = new StringBuilder("SELECT `" + tableName + "_ID`, ");
 			bool first = true;
 			BindingInfo[] bindingInfo = GetBindingInfo(objectType);
 			for (int i = 0; i < bindingInfo.Length; i++)
@@ -660,10 +660,10 @@ namespace DOL.Database
 					{
 						first = false;
 					}
-					sb.Append(bindingInfo[i].Member.Name);
+					sb.Append("`" + bindingInfo[i].Member.Name + "`");
 				}
 			}
-			sb.Append(" FROM " + tableName);
+			sb.Append(" FROM `" + tableName + "`");
 			if (whereClause != null && whereClause.Trim().Length > 0)
 			{
 				sb.Append(" WHERE " + ReplaceSpecialCharsInWhereClause(whereClause));
