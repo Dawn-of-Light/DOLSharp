@@ -8,7 +8,7 @@
 		<property name="Icon" type="Int32" not-null="true" column="`Icon`"/>
 		<property name="Description" type="String(255)" not-null="true" column="`Description`"/>
 		<bag name="Styles" table="`style`">
-			<key column="`KeyName`"/>
+			<key column="`SpecKeyName`"/>
 			<one-to-many class="DOL.GS.Database.DBStyle, GameServer"/>
 		</bag>
 	</class>
