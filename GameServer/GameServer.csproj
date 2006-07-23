@@ -116,7 +116,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Account.cs" />
     <Compile Include="ai\ABrain.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -216,6 +215,7 @@
     <Compile Include="database\ObjectDatabase.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="database\persistantClass\Account.cs" />
     <Compile Include="database\persistantClass\BindPoint.cs">
       <SubType>Code</SubType>
     </Compile>

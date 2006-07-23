@@ -39,242 +39,248 @@ namespace DOL.GS.PacketHandler.v168
 			packet.Skip(24); //Skip the account name, we don't need it
 			int charsCount = client.Version < GameClient.eClientVersion.Version173 ? 8 : 10;
 			
-			for (byte i = 0; i < charsCount; i++)
+			IEnumerator iter = client.Account.CharactersInSelectedRealm.GetEnumerator();	
+			for(byte i = 0 ; i < charsCount ; i++)
 			{
 				string charname = packet.ReadString(24);
 				if(charname.Length == 0)
 				{
 					//If the charname is empty, skip the other bytes
 					packet.Skip(160);
-					continue;
-				}
-
-				GamePlayer character = client.Account.GetCharacter(charname);
-
-				if(character != null)
-				{
-					// update old characters
-					switch(packet.ReadByte())
-					{
-						case 0x02: //player config
-						{
-							if(character.CustomisationStep == 3)
-							{
-								character.EyeSize = (byte)packet.ReadByte();
-								character.LipSize = (byte)packet.ReadByte();
-								character.EyeColor = (byte)packet.ReadByte();
-								character.HairColor = (byte)packet.ReadByte();
-								character.FaceType = (byte)packet.ReadByte();
-								character.HairStyle = (byte)packet.ReadByte();
-								packet.Skip(3);
-								character.MoodType = (byte)packet.ReadByte();
-								packet.Skip(89); // Skip location string, race string, classe string, level ,class ,realm and startRaceGender
-								character.CreationModel = packet.ReadShortLowEndian(); //read new model
-								character.Model = character.CreationModel;
-								packet.Skip(58); // skip all other things
-
-								character.CustomisationStep = 2; // disable config button
-
-								GameServer.Database.SaveObject(character);
-
-								if (log.IsInfoEnabled)
-									log.Info(String.Format("Character {0} face proprieties configured by account {1}!\n",charname,client.Account.AccountName));
-							}
-						}
-							break;
-						case 0x03:  //auto config
-						{
-							if(character.CustomisationStep == 1)
-							{
-								character.EyeSize = (byte)packet.ReadByte();
-								character.LipSize = (byte)packet.ReadByte();
-								character.EyeColor = (byte)packet.ReadByte();
-								character.HairColor = (byte)packet.ReadByte();
-								character.FaceType = (byte)packet.ReadByte();
-								character.HairStyle = (byte)packet.ReadByte();
-								packet.Skip(3);
-								character.MoodType = (byte)packet.ReadByte();
-								packet.Skip(149); // skip all other things
-
-								character.CustomisationStep = 3; // enable config button to player
-
-								GameServer.Database.SaveObject(character);
-
-								if (log.IsInfoEnabled)
-									log.Info(String.Format("Character {0} face proprieties auto updated!\n",charname));
-						
-							}
-						}
-							break;
-						default :  //do nothing
-						{
-							packet.Skip(159);
-						}
-							break;
-					}
-
 				}
 				else
 				{
-					// create new character
-					GamePlayer ch = new GamePlayer();
-					ch.Name = charname;
+					GamePlayer character = null;
+					if(iter.MoveNext()) character = (GamePlayer) iter.Current;
 
-					if(packet.ReadByte() == 0x01)
+					if(character != null && character.Name.ToLower().Equals(charname.ToLower()))
 					{
-						ch.EyeSize = (byte)packet.ReadByte();
-						ch.LipSize = (byte)packet.ReadByte();
-						ch.EyeColor = (byte)packet.ReadByte();
-						ch.HairColor = (byte)packet.ReadByte();
-						ch.FaceType = (byte)packet.ReadByte();
-						ch.HairStyle = (byte)packet.ReadByte();
-						packet.Skip(3);
-						ch.MoodType = (byte)packet.ReadByte();
+						// update old characters
+						switch(packet.ReadByte())
+						{
+							case 0x02: //player config
+							{
+								if(character.CustomisationStep == 3)
+								{
+									character.EyeSize = (byte)packet.ReadByte();
+									character.LipSize = (byte)packet.ReadByte();
+									character.EyeColor = (byte)packet.ReadByte();
+									character.HairColor = (byte)packet.ReadByte();
+									character.FaceType = (byte)packet.ReadByte();
+									character.HairStyle = (byte)packet.ReadByte();
+									packet.Skip(3);
+									character.MoodType = (byte)packet.ReadByte();
+									packet.Skip(89); // Skip location string, race string, classe string, level ,class ,realm and startRaceGender
+									character.CreationModel = packet.ReadShortLowEndian(); //read new model
+									character.Model = character.CreationModel;
+									packet.Skip(58); // skip all other things
 
-						ch.CustomisationStep = 2; // disable config button
+									character.CustomisationStep = 2; // disable config button
 
-						packet.Skip(13);
+									GameServer.Database.SaveObject(character);
+
+									if (log.IsInfoEnabled)
+										log.Info(String.Format("Character {0} face proprieties configured by account {1}!\n",charname,client.Account.AccountName));
+								}
+							}
+								break;
+							case 0x03:  //auto config
+							{
+								if(character.CustomisationStep == 1)
+								{
+									character.EyeSize = (byte)packet.ReadByte();
+									character.LipSize = (byte)packet.ReadByte();
+									character.EyeColor = (byte)packet.ReadByte();
+									character.HairColor = (byte)packet.ReadByte();
+									character.FaceType = (byte)packet.ReadByte();
+									character.HairStyle = (byte)packet.ReadByte();
+									packet.Skip(3);
+									character.MoodType = (byte)packet.ReadByte();
+									packet.Skip(149); // skip all other things
+
+									character.CustomisationStep = 3; // enable config button to player
+
+									GameServer.Database.SaveObject(character);
+
+									if (log.IsInfoEnabled)
+										log.Info(String.Format("Character {0} face proprieties auto updated!\n",charname));
+							
+								}
+							}
+								break;
+							default :  //do nothing
+							{
+								packet.Skip(159);
+							}
+								break;
+						}
+
 					}
 					else
 					{
-						packet.Skip(23);
-					}
+						// create new character
+						GamePlayer ch = new GamePlayer();
+						ch.AccountId = client.Account.AccountID;
+						ch.Name = charname;
 
-					packet.Skip(24); //Location String
-					ch.LastName = "";
-					packet.Skip(24); //Skip class name
-					packet.Skip(24); //Skip race name
-					ch.Level = (byte)packet.ReadByte(); //not safe!
-					ch.Level = 1;
-					ch.CharacterClassID = packet.ReadByte();
-					ch.Realm = (byte)packet.ReadByte();
-					ch.SlotPosition = i;
-
-					ch.MaxSpeedBase = GamePlayer.PLAYER_BASE_SPEED;
-					
-					//The following byte contains
-					//1bit=start location ... in SI you can choose ...
-					//1bit=first race bit
-					//1bit=unknown
-					//1bit=gender (0=male, 1=female)
-					//4bit=race
-					byte startRaceGender = (byte)packet.ReadByte();
-
-					ch.Race = (startRaceGender&0x0F) + ((startRaceGender&0x40)>>2);
-					ch.Gender = ((startRaceGender>>4)&0x01);
-					//DOLConsole.WriteLine("startRaceGender="+startRaceGender+"; Race="+ch.Race+"; Gender="+ch.Gender);
-
-					bool siStartLocation = ((startRaceGender>>7)!=0);
-
-					ch.CreationModel = packet.ReadShortLowEndian();
-					ch.Model = ch.CreationModel;
-					/*ch.Region =*/ packet.ReadByte();
-					packet.Skip(1); //TODO second byte of region unused currently
-					packet.Skip(4); //TODO Unknown Int / last used?
-					ch.BaseStrength = packet.ReadByte();
-					ch.BaseDexterity = packet.ReadByte();
-					ch.BaseConstitution = packet.ReadByte();
-					ch.BaseQuickness = packet.ReadByte();
-					ch.BaseIntelligence = packet.ReadByte();
-					ch.BasePiety = packet.ReadByte();
-					ch.BaseEmpathy = packet.ReadByte();
-					ch.BaseCharisma = packet.ReadByte();
-					packet.Skip(44); //TODO equipment
-
-					ch.CreationDate = DateTime.Now;
-
-					ch.Position = new Point(505603, 494709, 2463);
-					ch.Heading = 5947;
-
-					switch(ch.Realm)
-					{
-						case (byte)eRealm.Albion :
+						if(packet.ReadByte() == 0x01)
 						{
-							if(siStartLocation)//Albion SI start point (I hope)
-							{
-								ch.Position = new Point(526252, 542415, 3165);
-								ch.Heading = 5286;
-								ch.Region = WorldMgr.GetRegion(51);
-							}
-							else//Albion start point (Church outside Camelot/humberton)
-							{
-								ch.Position = new Point(505603, 494709, 2463);
-								ch.Heading = 5947;
-								ch.Region = WorldMgr.GetRegion(1);
-							}
-							break;
+							ch.EyeSize = (byte)packet.ReadByte();
+							ch.LipSize = (byte)packet.ReadByte();
+							ch.EyeColor = (byte)packet.ReadByte();
+							ch.HairColor = (byte)packet.ReadByte();
+							ch.FaceType = (byte)packet.ReadByte();
+							ch.HairStyle = (byte)packet.ReadByte();
+							packet.Skip(3);
+							ch.MoodType = (byte)packet.ReadByte();
+
+							ch.CustomisationStep = 2; // disable config button
+
+							packet.Skip(13);
 						}
-						case (byte)eRealm.Midgard :
+						else
 						{
-							if(siStartLocation)//Midgard SI start point
-							{
-								ch.Position = new Point(293720, 356408, 3488);
-								ch.Heading = 6670;
-								ch.Region = WorldMgr.GetRegion(151);
-							}
-							else//Midgard start point (Fort Atla)
-							{
-								ch.Position = new Point(749103, 815835, 4408);
-								ch.Heading = 7915;
-								ch.Region = WorldMgr.GetRegion(100);
-							}
-							break;
+							packet.Skip(23);
 						}
-						case (byte)eRealm.Hibernia :
-						{
-							if(siStartLocation)//Hibernia SI start point
-							{
-								ch.Position = new Point(426483, 440626, 5952);
-								ch.Heading = 2403;
-								ch.Region = WorldMgr.GetRegion(181);
-							}
-							else//Hibernia start point (Mag Mel)
-							{
-								ch.Position = new Point(345900, 490867, 5200);
-								ch.Heading = 4826;
-								ch.Region = WorldMgr.GetRegion(200);
-							}
-							break;
-						}
-					}
 
-                    // chars are bound on creation
-					ch.BindRegion = ch.Region;
-					ch.BindHeading = ch.Heading;
-					ch.BindPosition = ch.Position;
+						packet.Skip(24); //Location String
+						ch.LastName = "";
+						packet.Skip(24); //Skip class name
+						packet.Skip(24); //Skip race name
+						ch.Level = (byte)packet.ReadByte(); //not safe!
+						ch.Level = 1;
+						ch.CharacterClassID = packet.ReadByte();
+						ch.Realm = (byte)packet.ReadByte();
+						ch.SlotPosition = i;
 
-					ch.IsLevelRespecUsed = true;
-					ch.SafetyFlag = true;
-
-					ch.Inventory = new GamePlayerInventory();
-					((GamePlayerInventory)ch.Inventory).Owner = ch;
-
-					// check if client tried to create invalid char
-					if(CheckCharacter.IsCharacterValid(ch))
-					{
-						//Fire the character creation event
-						GameEventMgr.Notify(DatabaseEvent.CharacterCreated, null, new CharacterEventArgs(ch));
-						//Save the character in the database
-						ch.AccountId = client.Account.AccountId;
-						GameServer.Database.AddNewObject(ch);
+						ch.MaxSpeedBase = GamePlayer.PLAYER_BASE_SPEED;
 						
-						client.Account.AddCharacter(ch);
+						//The following byte contains
+						//1bit=start location ... in SI you can choose ...
+						//1bit=first race bit
+						//1bit=unknown
+						//1bit=gender (0=male, 1=female)
+						//4bit=race
+						byte startRaceGender = (byte)packet.ReadByte();
 
-						if (log.IsInfoEnabled)
-							log.Info(String.Format("Character {0} created!\n",charname));
+						ch.Race = (startRaceGender&0x0F) + ((startRaceGender&0x40)>>2);
+						ch.Gender = ((startRaceGender>>4)&0x01);
+						//DOLConsole.WriteLine("startRaceGender="+startRaceGender+"; Race="+ch.Race+"; Gender="+ch.Gender);
+
+						bool siStartLocation = ((startRaceGender>>7)!=0);
+
+						ch.CreationModel = packet.ReadShortLowEndian();
+						ch.Model = ch.CreationModel;
+						/*ch.Region =*/ packet.ReadByte();
+						packet.Skip(1); //TODO second byte of region unused currently
+						packet.Skip(4); //TODO Unknown Int / last used?
+						ch.BaseStrength = packet.ReadByte();
+						ch.BaseDexterity = packet.ReadByte();
+						ch.BaseConstitution = packet.ReadByte();
+						ch.BaseQuickness = packet.ReadByte();
+						ch.BaseIntelligence = packet.ReadByte();
+						ch.BasePiety = packet.ReadByte();
+						ch.BaseEmpathy = packet.ReadByte();
+						ch.BaseCharisma = packet.ReadByte();
+						packet.Skip(44); //TODO equipment
+
+						ch.CreationDate = DateTime.Now;
+
+						ch.Position = new Point(505603, 494709, 2463);
+						ch.Heading = 5947;
+
+						switch(ch.Realm)
+						{
+							case (byte)eRealm.Albion :
+							{
+								if(siStartLocation)//Albion SI start point (I hope)
+								{
+									ch.Position = new Point(526252, 542415, 3165);
+									ch.Heading = 5286;
+									ch.Region = WorldMgr.GetRegion(51);
+								}
+								else//Albion start point (Church outside Camelot/humberton)
+								{
+									ch.Position = new Point(505603, 494709, 2463);
+									ch.Heading = 5947;
+									ch.Region = WorldMgr.GetRegion(1);
+								}
+								break;
+							}
+							case (byte)eRealm.Midgard :
+							{
+								if(siStartLocation)//Midgard SI start point
+								{
+									ch.Position = new Point(293720, 356408, 3488);
+									ch.Heading = 6670;
+									ch.Region = WorldMgr.GetRegion(151);
+								}
+								else//Midgard start point (Fort Atla)
+								{
+									ch.Position = new Point(749103, 815835, 4408);
+									ch.Heading = 7915;
+									ch.Region = WorldMgr.GetRegion(100);
+								}
+								break;
+							}
+							case (byte)eRealm.Hibernia :
+							{
+								if(siStartLocation)//Hibernia SI start point
+								{
+									ch.Position = new Point(426483, 440626, 5952);
+									ch.Heading = 2403;
+									ch.Region = WorldMgr.GetRegion(181);
+								}
+								else//Hibernia start point (Mag Mel)
+								{
+									ch.Position = new Point(345900, 490867, 5200);
+									ch.Heading = 4826;
+									ch.Region = WorldMgr.GetRegion(200);
+								}
+								break;
+							}
+						}
+
+                        // chars are bound on creation
+						ch.BindRegion = ch.Region;
+						ch.BindHeading = ch.Heading;
+						ch.BindPosition = ch.Position;
+
+						ch.IsLevelRespecUsed = true;
+						ch.SafetyFlag = true;
+
+						ch.Inventory = new GamePlayerInventory();
+						((GamePlayerInventory)ch.Inventory).Owner = ch;
+
+						// check if client tried to create invalid char
+						if(CheckCharacter.IsCharacterValid(ch))
+						{
+							//Fire the character creation event
+							GameEventMgr.Notify(DatabaseEvent.CharacterCreated, null, new CharacterEventArgs(ch));
+							//Save the character in the database
+							GameServer.Database.AddNewObject(ch);
+							
+							if(character != null)
+								client.Account.CharactersInSelectedRealm.Insert(client.Account.CharactersInSelectedRealm.IndexOf(character), ch);
+							else
+								client.Account.CharactersInSelectedRealm.Add(ch);
+
+							if (log.IsInfoEnabled)
+								log.Info(String.Format("Character {0} created!\n",charname));
+						}
+						else
+						{
+							if (log.IsWarnEnabled)
+								log.Warn(client.Account.AccountName + " tried to create invalid character:" +
+									"\nchar name="+ch.Name+", race="+ch.Race+", realm="+ch.Realm+", class="+ch.CharacterClassID+", region="+ch.Region+
+									"\nstr="+ch.BaseStrength+", con="+ch.BaseConstitution+", dex="+ch.BaseDexterity+", qui="+ch.BaseQuickness+", int="+ch.BaseIntelligence+", pie="+ch.BasePiety+", emp="+ch.BaseEmpathy+", chr="+ch.BaseCharisma);
+							
+							if (client.Account.Realm == 0) client.Out.SendRealm(eRealm.None);
+							else client.Out.SendCharacterOverview((eRealm)client.Account.Realm);
+						}
+
+						break;
 					}
-					else
-					{
-						if (log.IsWarnEnabled)
-							log.Warn(client.Account.AccountName + " tried to create invalid character:" +
-								"\nchar name="+ch.Name+", race="+ch.Race+", realm="+ch.Realm+", class="+ch.CharacterClassID+", region="+ch.Region+
-								"\nstr="+ch.BaseStrength+", con="+ch.BaseConstitution+", dex="+ch.BaseDexterity+", qui="+ch.BaseQuickness+", int="+ch.BaseIntelligence+", pie="+ch.BasePiety+", emp="+ch.BaseEmpathy+", chr="+ch.BaseCharisma);
-
-						if (client.Account.Realm == 0) client.Out.SendRealm(eRealm.None);
-						else client.Out.SendCharacterOverview((eRealm)client.Account.Realm);
-					}
-
-					break;
 				}
 			}
 			
