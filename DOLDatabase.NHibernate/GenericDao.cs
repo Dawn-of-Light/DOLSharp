@@ -112,6 +112,14 @@ namespace DOL.Database.NHibernate
 		}
 
 		/// <summary>
+		/// Verifies DAO schema.
+		/// </summary>
+		public IList<string> VerifySchema()
+		{
+			return null;
+		}
+
+		/// <summary>
 		/// Initializes a new instance of the <see cref="GenericDao{TTransferObject, TPrimaryKey}"/> class.
 		/// </summary>
 		/// <param name="state">The state.</param>

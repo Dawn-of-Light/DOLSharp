@@ -1,0 +1,107 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{3692990D-80AE-4CE4-8B06-F0018DCD9F41}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DOL.Database.MySql</RootNamespace>
+    <AssemblyName>DOLDatabase.MySql</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="log4net, Version=1.2.9.0, Culture=neutral, PublicKeyToken=b32731d11ce58905">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\sharedModules\log4net\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="MySql.Data, Version=1.0.7.30072, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\sharedModules\MySqlConnector\MySql.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DataAccessObjects\AbilityDao.cs" />
+    <Compile Include="DataAccessObjects\AccountDao.cs" />
+    <Compile Include="DataAccessObjects\ActiveQuestDao.cs" />
+    <Compile Include="DataAccessObjects\ActiveTaskDao.cs" />
+    <Compile Include="DataAccessObjects\AllianceDao.cs" />
+    <Compile Include="DataAccessObjects\AreaDao.cs" />
+    <Compile Include="DataAccessObjects\BindPointDao.cs" />
+    <Compile Include="DataAccessObjects\BrainDao.cs" />
+    <Compile Include="DataAccessObjects\BrainTemplateDao.cs" />
+    <Compile Include="DataAccessObjects\CraftItemDataDao.cs" />
+    <Compile Include="DataAccessObjects\FactionDao.cs" />
+    <Compile Include="DataAccessObjects\GameNpcInventoryDao.cs" />
+    <Compile Include="DataAccessObjects\GameNpcTemplateDao.cs" />
+    <Compile Include="DataAccessObjects\GamePlayerDao.cs" />
+    <Compile Include="DataAccessObjects\GamePlayerInventoryDao.cs" />
+    <Compile Include="DataAccessObjects\GuildDao.cs" />
+    <Compile Include="DataAccessObjects\GuildRankDao.cs" />
+    <Compile Include="DataAccessObjects\InvalidNameDao.cs" />
+    <Compile Include="DataAccessObjects\ItemDao.cs" />
+    <Compile Include="DataAccessObjects\ItemTemplateDao.cs" />
+    <Compile Include="DataAccessObjects\JumpPointDao.cs" />
+    <Compile Include="DataAccessObjects\LineXSpellDao.cs" />
+    <Compile Include="DataAccessObjects\LootDao.cs" />
+    <Compile Include="DataAccessObjects\LootListDao.cs" />
+    <Compile Include="DataAccessObjects\MerchantItemDao.cs" />
+    <Compile Include="DataAccessObjects\MerchantPageDao.cs" />
+    <Compile Include="DataAccessObjects\MerchantWindowDao.cs" />
+    <Compile Include="MySqlState.cs" />
+    <Compile Include="DataAccessObjects\NpcEquipmentDao.cs" />
+    <Compile Include="DataAccessObjects\PathDao.cs" />
+    <Compile Include="DataAccessObjects\PathPointDao.cs" />
+    <Compile Include="DataAccessObjects\PersistantGameObjectDao.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="DataAccessObjects\RegionDao.cs" />
+    <Compile Include="DataAccessObjects\SalvageDao.cs" />
+    <Compile Include="DataAccessObjects\SinglePermissionDao.cs" />
+    <Compile Include="DataAccessObjects\SpawnGeneratorDao.cs" />
+    <Compile Include="DataAccessObjects\SpawnTemplateDao.cs" />
+    <Compile Include="DataAccessObjects\SpecializationDao.cs" />
+    <Compile Include="DataAccessObjects\SpecXAbilityDao.cs" />
+    <Compile Include="DataAccessObjects\SpellDao.cs" />
+    <Compile Include="DataAccessObjects\SpellLineDao.cs" />
+    <Compile Include="DataAccessObjects\StyleDao.cs" />
+    <Compile Include="DataAccessObjects\ZoneDao.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DOLDatabase\DOLDatabase.csproj">
+      <Project>{08330C59-24C2-494D-8AF2-327BEA6F6E24}</Project>
+      <Name>DOLDatabase</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <PropertyGroup>
+    <PostBuildEvent>xcopy "$(TargetDir)*" "$(SolutionDir)$(ConfigurationName)\lib\" /q /s /y /i
+</PostBuildEvent>
+  </PropertyGroup>
+</Project>

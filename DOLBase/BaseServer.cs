@@ -391,7 +391,7 @@ namespace DOL
 				catch(Exception ex)
 				{
 					if(log.IsDebugEnabled)
-						log.Debug("Failed to rmeove UPnP Mappings", ex);
+						log.Debug("Failed to remove UPnP Mappings", ex);
 				}
 			}
 

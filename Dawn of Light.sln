@@ -6,13 +6,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameServer", "GameServer\Ga
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DOLBase", "DOLBase\DOLBase.csproj", "{63E96E0D-10FD-4731-B029-5E66042E8C38}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{D316A715-1B4D-4B2D-9B5E-1AC7555349A5}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameServerScripts", "GameServerScripts\GameServerScripts.csproj", "{88DA0491-79F8-4750-850C-686AB862260C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DOLDatabase", "DOLDatabase\DOLDatabase.csproj", "{08330C59-24C2-494D-8AF2-327BEA6F6E24}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DOLDatabase.NHibernate", "DOLDatabase.NHibernate\DOLDatabase.NHibernate.csproj", "{BBB21EF5-BB7E-49A0-8C8C-A16F99BA2627}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DOLDatabase.MySql", "DOLDatabase.MySql\DOLDatabase.MySql.csproj", "{3692990D-80AE-4CE4-8B06-F0018DCD9F41}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,10 +32,6 @@ Global
 		{63E96E0D-10FD-4731-B029-5E66042E8C38}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{63E96E0D-10FD-4731-B029-5E66042E8C38}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{63E96E0D-10FD-4731-B029-5E66042E8C38}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D316A715-1B4D-4B2D-9B5E-1AC7555349A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D316A715-1B4D-4B2D-9B5E-1AC7555349A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D316A715-1B4D-4B2D-9B5E-1AC7555349A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D316A715-1B4D-4B2D-9B5E-1AC7555349A5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{88DA0491-79F8-4750-850C-686AB862260C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{88DA0491-79F8-4750-850C-686AB862260C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{88DA0491-79F8-4750-850C-686AB862260C}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -48,6 +44,10 @@ Global
 		{BBB21EF5-BB7E-49A0-8C8C-A16F99BA2627}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BBB21EF5-BB7E-49A0-8C8C-A16F99BA2627}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BBB21EF5-BB7E-49A0-8C8C-A16F99BA2627}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3692990D-80AE-4CE4-8B06-F0018DCD9F41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3692990D-80AE-4CE4-8B06-F0018DCD9F41}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3692990D-80AE-4CE4-8B06-F0018DCD9F41}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3692990D-80AE-4CE4-8B06-F0018DCD9F41}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
