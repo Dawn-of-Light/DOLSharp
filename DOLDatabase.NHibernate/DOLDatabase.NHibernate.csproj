@@ -42,8 +42,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AccountDao.cs" />
-    <Compile Include="BindPointDao.cs" />
     <Compile Include="GenericDao.cs" />
     <Compile Include="NHDatabaseMgr.cs" />
     <Compile Include="NHState.cs" />
