@@ -36,5 +36,10 @@ namespace DOL.Database.DataAccessInterfaces
 		/// Gets the tranfer object's type.
 		/// </summary>
 		Type TransferObjectType { get; }
+
+		/// <summary>
+		/// Verifies DAO schema.
+		/// </summary>
+		IList<string> VerifySchema();
 	}
 }

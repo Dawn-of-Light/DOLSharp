@@ -77,13 +77,13 @@ namespace DOL.NatTraversal
 					if(mapping != null)
 					{
 						portMappings.Add(new PortMappingInfo(
-						mapping.Description,
-						mapping.Protocol.ToUpper(),
-						mapping.InternalClient,
-						mapping.InternalPort,
-						IPAddress.Parse(mapping.ExternalIPAddress),
-						mapping.ExternalPort,
-						mapping.Enabled));
+							mapping.Description,
+							mapping.Protocol.ToUpper(),
+							mapping.InternalClient,
+							mapping.InternalPort,
+							IPAddress.Parse(mapping.ExternalIPAddress),
+							mapping.ExternalPort,
+							mapping.Enabled));
 					}
 				}
 

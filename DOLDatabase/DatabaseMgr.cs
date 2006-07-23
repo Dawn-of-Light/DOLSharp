@@ -29,7 +29,7 @@ namespace DOL.Database
 	/// <summary>
 	/// Base database functionality. This class is thread safe.
 	/// </summary>
-	public abstract class DatabaseMgr : IDatabaseMgr
+	public class DatabaseMgr : IDatabaseMgr
 	{
 		/// <summary>
 		/// Defines a logger for this class.
@@ -138,6 +138,16 @@ namespace DOL.Database
 			{
 				throw new ArgumentException("The DAO " + dao.FullName + " must derive from " + daoInterface.FullName, "dao");
 			}
+
+			foreach (ConstructorInfo info in dao.GetConstructors())
+			{
+				string para = "";
+				foreach (ParameterInfo parameter in info.GetParameters())
+				{
+					para += "," + parameter.ParameterType.FullName;
+				}
+				log.FatalFormat("constructor public access: {0}, params: {1}", info.IsPublic, para);
+			}
 			
 			IDataAccessObject obj = (IDataAccessObject) Activator.CreateInstance(dao, m_state);
 			Register(daoInterface, obj);
@@ -233,7 +243,21 @@ namespace DOL.Database
 			{
 				throw new ObjectDisposedException("Database manager is disposed");
 			}
-#warning route to all registered DAOs
+			
+			List<string> errors = new List<string>();
+			lock (m_registeredDaos)
+			{
+				foreach (KeyValuePair<Type, IDataAccessObject> keyValuePair in m_registeredDaos)
+				{
+					IList<string> daoErrors = keyValuePair.Value.VerifySchema();
+					if (daoErrors != null)
+					{
+						errors.Add("");
+						errors.Add("Problems with schema of " + keyValuePair.Value.GetType().FullName);
+						errors.AddRange(daoErrors);
+					}
+				}
+			}
 			return null;
 		}
 

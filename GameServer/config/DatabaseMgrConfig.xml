@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <DatabaseMgrConfiguration>
-  <IDatabaseMgr type="DOL.Database.NHibernate.NHDatabaseMgr, DOLDatabase.NHibernate" />
-  <State type="DOL.Database.NHibernate.NHState, DOLDatabase.NHibernate" config="config\NHibernateConfig.xml" />
-  <Register interface="DOL.Database.DataAccessInterfaces.IAccountDao, DOLDatabase" dao="DOL.Database.NHibernate.AccountDao, DOLDatabase.NHibernate" />
+  <IDatabaseMgr type="DOL.Database.DatabaseMgr, DOLDatabase" />
+  <State type="DOL.Database.MySql.MySqlState, DOLDatabase.MySql" connectionString="Server=localhost; Database=nhibernate; User ID=root; Password=root" />
+  <Register interface="DOL.Database.DataAccessInterfaces.IAccountDao, DOLDatabase" dao="DOL.Database.MySql.DataAccessObjects.AccountDao, DOLDatabase.MySql" />
 </DatabaseMgrConfiguration>
