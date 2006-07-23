@@ -19,8 +19,6 @@
 using System;
 using System.Reflection;
 using DOL.Database;
-using DOL.Database.DataAccessInterfaces;
-using DOL.Database.DataTransferObjects;
 using DOL.GS.PacketHandler;
 using log4net;
 using NHibernate.Expression;
@@ -43,17 +41,16 @@ namespace DOL.GS.Scripts
 		{
 			try
 			{
-				IAccountDao accountDao = GameServer.DatabaseNew.Using<IAccountDao>();
-				AccountTO accountToUnban = accountDao.FindByName(args[1]);
+				Account accountToUnban = (Account) GameServer.Database.SelectObject(typeof (Account), Expression.Eq("AccountName", args[1]));
 				if(accountToUnban != null)
 				{
 					if(accountToUnban.BanDuration > TimeSpan.Zero)
 					{
 						accountToUnban.BanDuration = TimeSpan.Zero;
+					
+						GameServer.Database.SaveObject(accountToUnban);
 
-						accountDao.Update(accountToUnban);
-
-						client.Out.SendMessage("[Unban] Ban lifted for account '" + accountToUnban.AccountName + "'", eChatType.CT_Group, eChatLoc.CL_ChatWindow);
+						client.Out.SendMessage("[Unban] Ban lifted for account '" + args[1] + "'", eChatType.CT_Group, eChatLoc.CL_ChatWindow);
 					}
 					else
 					{

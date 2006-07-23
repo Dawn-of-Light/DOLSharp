@@ -40,7 +40,7 @@ namespace DOL.GS.PacketHandler.v168
 			//GameServer.Database.FillObjectRelations(client.Account);
 
 			//reset realm if no characters
-			if(client.Account.Realm != eRealm.None && (int)GameServer.Database.SelectObject("SELECT COUNT(*) FROM GamePlayer WHERE `AccountId` = '"+ client.Account.AccountId+"'") <= 0)
+			if(client.Account.Realm != eRealm.None && (int)GameServer.Database.SelectObject("SELECT COUNT(*) FROM GamePlayer WHERE `AccountId` = '"+ client.Account.AccountID+"'") <= 0)
 			{
 				//DOLConsole.WriteLine("no chars, realm reset.");
 				client.Account.Realm = eRealm.None;
@@ -82,7 +82,7 @@ namespace DOL.GS.PacketHandler.v168
 					{
 						// save the choice
 						client.Account.Realm = chosenRealm;
-						client.Account.UpdateDatabase();
+						GameServer.Database.SaveObject(client.Account);
 					}
 				}
 				else
