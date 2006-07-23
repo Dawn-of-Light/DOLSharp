@@ -17,12 +17,14 @@
  *
  */
 using System;
+using System.IO;
+using System.Net;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using DOL.Database;
-using DOL.Database.DataAccessInterfaces;
-using DOL.Database.DataTransferObjects;
+using DOL.GS.Database;
+using NHibernate.Expression;
 using log4net;
 
 namespace DOL.GS.PacketHandler.v168
@@ -74,6 +76,7 @@ namespace DOL.GS.PacketHandler.v168
 
 			try
 			{
+				Account playerAccount;
 				// handle connection
 				lock (this)
 				{
@@ -114,11 +117,10 @@ namespace DOL.GS.PacketHandler.v168
 							return 1;
 						}
 
-						AccountTO dbAccount = GameServer.DatabaseNew.Using<IAccountDao>().FindByName(username);
-						Account account = null;
+						playerAccount = (Account) GameServer.Database.SelectObject(typeof(Account), Expression.Eq("AccountName",username));
 						client.PingTime = DateTime.Now.Ticks;
 
-						if(dbAccount == null)
+						if(playerAccount == null)
 						{
 							//check autocreate ...
 							bool goodname = true;
@@ -144,32 +146,31 @@ namespace DOL.GS.PacketHandler.v168
 									return 1;
 								}
 
-								dbAccount = new AccountTO();
-								dbAccount.AccountName = username;
-								dbAccount.Password = CryptPassword(password);
-								dbAccount.Realm = eRealm.None;
-								dbAccount.CreationDate = DateTime.Now;
-								dbAccount.LastLogin = DateTime.Now;
-								dbAccount.LastLoginIp = ipAddress;
-								dbAccount.BanDuration = TimeSpan.Zero;
-								dbAccount.BanAuthor = string.Empty;
-								dbAccount.BanReason = string.Empty;
+								playerAccount = new Account();
+								playerAccount.AccountName = username;
+								playerAccount.Password = CryptPassword(password);
+								playerAccount.Realm = eRealm.None;
+								playerAccount.CreationDate = DateTime.Now;
+								playerAccount.LastLogin = DateTime.Now;
+								playerAccount.LastLoginIP = ipAddress;
+								playerAccount.BanDuration = TimeSpan.Zero;
+								playerAccount.BanAuthor = string.Empty;
+								playerAccount.BanReason = string.Empty;
 
-								if(GameServer.DatabaseNew.Using<IAccountDao>().CountAll() == 0)
+								if(GameServer.Database.GetObjectCount(typeof (Account)) == 0)
 								{
-									dbAccount.PrivLevel = ePrivLevel.Admin;
+									playerAccount.PrivLevel = ePrivLevel.Admin;
 									if (log.IsInfoEnabled)
 										log.Info("New admin account created: " + username);
 								}
 								else
 								{
-									dbAccount.PrivLevel = ePrivLevel.Player;
+									playerAccount.PrivLevel = ePrivLevel.Player;
 									if (log.IsInfoEnabled)
 										log.Info("New account created: " + username);
 								}
 
-								GameServer.DatabaseNew.Using<IAccountDao>().Create(dbAccount);
-								account = new Account(dbAccount);
+								GameServer.Database.AddNewObject(playerAccount);
 							}
 							else
 							{
@@ -182,8 +183,6 @@ namespace DOL.GS.PacketHandler.v168
 						}
 						else
 						{
-							account = new Account(dbAccount);
-							
 //							// autoconvert all
 //							foreach (Account acc in GameServer.Database.SelectAllObjects(typeof(Account))) {
 //								if (acc.Password != null && !acc.Password.StartsWith("##")) {
@@ -193,22 +192,28 @@ namespace DOL.GS.PacketHandler.v168
 //							}
 
 							// check banned account
-							if (account.LastLogin.Add(account.BanDuration).CompareTo(DateTime.Now) > 0)
+							if(playerAccount.LastLogin.Add(playerAccount.BanDuration).CompareTo(DateTime.Now) > 0)
 							{
 								if (log.IsInfoEnabled)
-									log.InfoFormat("Banned account try to connect, denied login to " + account.AccountName);
+									log.InfoFormat("Banned account try to connect, denied login to " + playerAccount.AccountName);
 							
 								client.Out.SendLoginDenied(eLoginError.AccountIsBannedFromThisServerType);
 								GameServer.Instance.Disconnect(client);
 								return 1;
 							}
 
+							// automatically remove the ban if the account is now unban
+							playerAccount.BanDuration = TimeSpan.Zero;
+							playerAccount.BanAuthor = string.Empty;
+							playerAccount.BanReason = string.Empty;
+						
+
 							// check password
-							if (!account.Password.StartsWith("##")) 
+							if (!playerAccount.Password.StartsWith("##")) 
 							{
-								account.Password = CryptPassword(account.Password);
+								playerAccount.Password = CryptPassword(playerAccount.Password);
 							}
-							if (!CryptPassword(password).Equals(account.Password))
+							if(!CryptPassword(password).Equals(playerAccount.Password))
 							{
 								if (log.IsInfoEnabled)
 									log.Info("(" + client.TcpEndpoint + ") Wrong password!");
@@ -217,21 +222,15 @@ namespace DOL.GS.PacketHandler.v168
 								return 1;
 							}
 
-							// automatically remove the ban if the account is now unban
-							account.BanDuration = TimeSpan.Zero;
-							account.BanAuthor = string.Empty;
-							account.BanReason = string.Empty;
-
-
 							// save player infos
-							account.LastLogin = DateTime.Now;
-							account.LastLoginIp = ipAddress;
+							playerAccount.LastLogin = DateTime.Now;
+							playerAccount.LastLoginIP = ipAddress;
 
-							account.UpdateDatabase();
+							GameServer.Database.SaveObject(playerAccount);
 						}
 						
 						//Save the account table
-						client.Account = account;
+						client.Account = playerAccount;
 
 						// check if not too much client already logged in
 						// create session ID here to disable double login bug
@@ -239,7 +238,7 @@ namespace DOL.GS.PacketHandler.v168
 							|| (WorldMgr.CreateSessionID(client) < 0))
 						{
 							if (log.IsInfoEnabled)
-								log.InfoFormat("Too many clients connected, denied login to " + account.AccountName);
+								log.InfoFormat("Too many clients connected, denied login to " + playerAccount.AccountName);
 							client.Out.SendLoginDenied(eLoginError.TooManyPlayersLoggedIn);
 							GameServer.Instance.Disconnect(client);
 							return 1;

@@ -17,9 +17,6 @@
  *
  */
 using DOL.Database;
-using DOL.Database.DataAccessInterfaces;
-using DOL.Database.DataTransferObjects;
-using DOL.GS.PacketHandler.v168;
 using NHibernate.Expression;
 
 namespace DOL.GS.Scripts
@@ -58,9 +55,9 @@ namespace DOL.GS.Scripts
 							return DisplayError(client, "Account {0} not found!", accountname);
 
 						//Set new password
-						acc.Password = LoginRequestHandler.CryptPassword(newpass);
+						acc.Password = newpass;
 						//Save the changed account
-						acc.UpdateDatabase();
+						GameServer.Database.SaveObject(acc);
 
 					}
 					break;
@@ -82,7 +79,7 @@ namespace DOL.GS.Scripts
 						KickAccount(acc);
 
 						//Delete the account object
-						acc.DeleteFromDatabase();
+						GameServer.Database.DeleteObject(acc);
 						return DisplayMessage(client, "Account {0} deleted!", acc.AccountName);
 					}
 
@@ -126,10 +123,9 @@ namespace DOL.GS.Scripts
 						else
 						{
 							//Return database object
-#warning later should be FindByCharacter ?
-							AccountTO accTO = GameServer.DatabaseNew.Using<IAccountDao>().Find(cha.AccountId);
-							if (accTO != null)
-								DisplayMessage(client, "Account name for character " + cha.Name + " is : " + accTO.AccountName);
+							Account acc = (Account) GameServer.Database.SelectObject(typeof (Account), Expression.Eq("AccountId",cha.AccountId));
+							if (acc != null)
+								DisplayMessage(client, "Account name for character " + cha.Name + " is : " + acc.AccountName);
 							
 						}
 
@@ -152,12 +148,7 @@ namespace DOL.GS.Scripts
 				return client.Account;
 
 			//Return database object
-			AccountTO acc = GameServer.DatabaseNew.Using<IAccountDao>().FindByName(name);
-			if (acc == null)
-			{
-				return null;
-			}
-			return new Account(acc);
+			return (Account) GameServer.Database.SelectObject(typeof (Account), Expression.Eq("AccountName", name));
 		}
 
 		/// <summary>
