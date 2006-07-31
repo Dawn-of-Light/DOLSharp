@@ -38,7 +38,7 @@ namespace DOL.GS.Scripts
 			string name = string.Join(" ", args, 1, args.Length - 1);
 
 			int result = 0;
-			GameClient fclient = WorldMgr.GuessClientByPlayerNameAndRealm(name, 0, out result);
+			GameClient fclient = WorldMgr.GuessClientByPlayerNameAndRealm(name, 0, false, out result);
 			if (fclient != null && !GameServer.ServerRules.IsSameRealm(fclient.Player, client.Player, true))
 			{
 				fclient = null;

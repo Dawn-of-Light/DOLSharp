@@ -30,7 +30,8 @@ namespace DOL.Events
 		/// Constructs a new GameLivingEvent
 		/// </summary>
 		/// <param name="name">the event name</param>
-		protected GameLivingEvent(string name) : base(name)
+		protected GameLivingEvent(string name)
+			: base(name)
 		{
 		}
 
@@ -107,6 +108,13 @@ namespace DOL.Events
 		/// <seealso cref="EnemyHealedEventArgs"/>
 		/// </summary>
 		public static readonly GameLivingEvent EnemyHealed = new GameLivingEvent("GameLiving.EnemyHealed");
-
+		/// <summary>
+		/// The Timer event is fired whenever an previously added timer has finished
+		/// Used within questsystem
+		/// </summary>
+		public static readonly GameLivingEvent Timer = new GameLivingEvent("GameLiving.Timer");
+		/// The CastSpell event is fired whenever the living casts a spell
+		/// </summary>
+		public static readonly GameLivingEvent CastSpell = new GameLivingEvent("GameLiving.CastSpell");
 	}
 }

@@ -46,7 +46,7 @@ namespace DOL.GS.Spells
 			double spellValue = m_spell.Value;
 			GamePlayer casterPlayer = m_caster as GamePlayer;
 
-			transferHeal = (int)(casterPlayer.MaxHealth * spellValue * 0.0125);
+			transferHeal = (int)(spellValue * 1.25);
 
 			///Needed to prevent divide by zero error
 			if (transferHeal <= 0)

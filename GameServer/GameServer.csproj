@@ -104,6 +104,7 @@
     <Compile Include="ai\APlayerVicinityBrain.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ai\brain\BlankBrain.cs" />
     <Compile Include="ai\brain\ControlledNpc.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -197,6 +198,7 @@
     <Compile Include="effects\BerserkEffect.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="effects\CamouflageEffect.cs" />
     <Compile Include="effects\EngageEffect.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -275,6 +277,7 @@
     <Compile Include="events\gameobjects\AttackFinishedEventArgs.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="events\gameobjects\CastSpellEventArgs.cs" />
     <Compile Include="events\gameobjects\DyingEventArgs.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -371,6 +374,7 @@
     <Compile Include="events\gameobjects\TakeDamageEventArgs.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="events\gameobjects\TimerEventArgs.cs" />
     <Compile Include="events\gameobjects\TurnToEventArgs.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -1229,6 +1233,7 @@
     <Compile Include="propertycalc\BlockChanceCalculator.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="propertycalc\DPSCalculator.cs" />
     <Compile Include="propertycalc\EnduranceRegenerationRateCalculator.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -1319,24 +1324,39 @@
     <Compile Include="propertycalc\StunDurationPercentCalculator.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="propertycalc\StyleDamagePercentCalculator.cs" />
+    <Compile Include="propertycalc\TOABonusCalculator.cs" />
+    <Compile Include="propertycalc\ToHitCalculator.cs" />
     <Compile Include="quests\AbstractQuest.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="quests\AbstractQuestAction.cs" />
+    <Compile Include="quests\AbstractQuestRequirement.cs" />
+    <Compile Include="quests\AbstractQuestTrigger.cs" />
     <Compile Include="quests\AbstractTask.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="quests\BaseQuest.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="quests\BaseQuestAction.cs" />
+    <Compile Include="quests\BaseQuestPart.cs" />
+    <Compile Include="quests\BaseQuestRequirement.cs" />
+    <Compile Include="quests\BaseQuestTrigger.cs" />
     <Compile Include="quests\CraftTask.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="quests\IQuestAction.cs" />
+    <Compile Include="quests\IQuestRequirement.cs" />
+    <Compile Include="quests\IQuestTrigger.cs" />
     <Compile Include="quests\KillTask.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="quests\MoneyTask.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="quests\QuestBuilder.cs" />
+    <Compile Include="quests\QuestMgr.cs" />
     <Compile Include="ResourceUtil.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -1367,6 +1387,7 @@
     <Compile Include="skillhandler\BerserkAbilityHandler.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="skillhandler\CamouflageSpecHandler.cs" />
     <Compile Include="skillhandler\CriticalShotAbilityHandler.cs">
       <SubType>Code</SubType>
     </Compile>

@@ -32,7 +32,7 @@ namespace DOL.GS.Scripts
 			if (args.Length >1)
 			{
 				GameClient myclient;
-				myclient = WorldMgr.GetClientByPlayerName(args[1],true);
+				myclient = WorldMgr.GetClientByPlayerName(args[1],true, true);
 				if (myclient == null)
 				{
 					client.Player.Out.SendMessage("No player with this name in game.",eChatType.CT_Say,eChatLoc.CL_SystemWindow);

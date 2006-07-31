@@ -1,22 +1,23 @@
 /*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
 using System;
+using System.Collections;
 using DOL.Database;
 using DOL.GS.Housing;
 
@@ -29,45 +30,50 @@ namespace DOL.GS.PacketHandler.v168
 		{
 			int unkown1 = packet.ReadByte();
 			int slot = packet.ReadByte();
-			int housenumber = packet.ReadShort();
-			int unkown2 = packet.ReadByte();
-			int position = packet.ReadByte();
+			ushort housenumber = packet.ReadShort();
+			int unkown2 = (byte)packet.ReadByte();
+			int position = (byte)packet.ReadByte();
 			int method = packet.ReadByte();
 			int rotation = packet.ReadByte(); //garden items only
-			int xpos = packet.ReadShort(); //x for inside objs
-			int ypos = packet.ReadShort(); //y for inside objs.
-
+			short xpos = (short)packet.ReadShort(); //x for inside objs
+			short ypos = (short)packet.ReadShort(); //y for inside objs.
 			InventoryItem orgitem = client.Player.Inventory.GetItem((eInventorySlot) slot);
 			House house = (House) HouseMgr.GetHouse(client.Player.CurrentRegionID,housenumber);
+			if (orgitem == null)
+				return 1;
 
 			if (house == null)
 				return 1;
 
+			if (client.Player == null) return 1;
+			if (!house.IsOwner(client.Player)) return 1;
+
+			int pos;
 			switch (method)
 			{
 				case 1:
 
-					if (house.OutdoorItems.Count > 30)
+					if (house.OutdoorItems.Count >= 30)
 					{
 						client.Player.Out.SendMessage("You have already placed 30 objects. You can't place more.", eChatType.CT_Help, eChatLoc.CL_SystemWindow);
 						return 1;
 					}
-
+					pos = GetFirstFreeSlot(house.OutdoorItems);
 					client.Player.Inventory.RemoveItem(orgitem);
 
-					OutdoorItem iitem = new OutdoorItem();
-					iitem.Model = orgitem.Model;
-					iitem.BaseItem = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), orgitem.Id_nb);
-					iitem.Position = Convert.ToByte(position);
-					iitem.Rotation = Convert.ToByte(rotation);
+					OutdoorItem oitem = new OutdoorItem();
+					oitem.Model = orgitem.Model;
+					oitem.BaseItem = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), orgitem.Id_nb);
+					oitem.Position = Convert.ToByte(position);
+					oitem.Rotation = Convert.ToByte(rotation);
 
 					//add item in db
-					DBHouseOutdoorItem idbitem = iitem.CreateDBOutdoorItem(housenumber);
-					iitem.DatabaseItem = idbitem;
-					GameServer.Database.AddNewObject(idbitem);
+					DBHouseOutdoorItem odbitem = oitem.CreateDBOutdoorItem(housenumber);
+					oitem.DatabaseItem = odbitem;
+					GameServer.Database.AddNewObject(odbitem);
 
 					//add item to outdooritems
-					house.OutdoorItems.Add(iitem);
+					house.OutdoorItems.Add(pos, oitem);
 
 					client.Player.Out.SendMessage("Garden Object placed. " + (30 - house.OutdoorItems.Count) + " slots remaining.", eChatType.CT_Help, eChatLoc.CL_SystemWindow);
 					client.Player.Out.SendMessage("You drop the " + orgitem.Name + " into your into your garden!", eChatType.CT_Help, eChatLoc.CL_SystemWindow);
@@ -81,72 +87,59 @@ namespace DOL.GS.PacketHandler.v168
 				case 2:
 				case 3:
 
-					if (orgitem.Object_Type == 51 && method == 3)
+					if (orgitem.Object_Type != 50 && method == 2)
 					{
-						client.Player.Out.SendMessage("You have to put this item on the floor, not on a wall!", eChatType.CT_Help, eChatLoc.CL_SystemWindow);
+						client.Player.Out.SendMessage("This object can't be placed on a wall!", eChatType.CT_Help, eChatLoc.CL_SystemWindow);
 						return 1;
 					}
-					if (orgitem.Object_Type == 50 && method == 2)
+					if (orgitem.Object_Type != 51 && method == 3)
 					{
-						client.Player.Out.SendMessage("You have to put this item on a wall, not on the floor!", eChatType.CT_Help, eChatLoc.CL_SystemWindow);
+						client.Player.Out.SendMessage("This object can't be placed on a floor!", eChatType.CT_Help, eChatLoc.CL_SystemWindow);
 						return 1;
 					}
 
-					IndoorItem oitem = new IndoorItem();
-					oitem.Model = orgitem.Model;
-					oitem.Color = orgitem.Color;
-					oitem.X = xpos;
-					oitem.Y = ypos;
-					oitem.Rotation = 0;
-					oitem.Size = 100; //? dont know how this is defined. maybe DPS_AF or something.
-					oitem.Position = position;
-					oitem.Placemode = method;
-					oitem.BaseItem = null;
-
+					if (house.IndoorItems.Count >= 40)
+					{
+						client.Player.Out.SendMessage("You have already placed 40 objects. You can't place more.", eChatType.CT_Help, eChatLoc.CL_SystemWindow);
+						return 1;
+					}
+					IndoorItem iitem = new IndoorItem();
+					iitem.Model = orgitem.Model;
+					iitem.Color = orgitem.Color;
+					iitem.X = xpos;
+					iitem.Y = ypos;
+					iitem.Rotation = 0;
+					iitem.Size = 100; //? dont know how this is defined. maybe DPS_AF or something.
+					iitem.Position = position;
+					iitem.Placemode = method;
+					iitem.BaseItem = null;
+					pos = GetFirstFreeSlot(house.IndoorItems);
 					if (orgitem.Object_Type == 50 || orgitem.Object_Type == 51)
 					{
 						//its a housing item, so lets take it!
 						client.Player.Inventory.RemoveItem(orgitem);
 						//set right base item, so we can recreate it on take.
-						oitem.BaseItem = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), orgitem.Id_nb);
+						iitem.BaseItem = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), orgitem.Id_nb);
 					}
 
-					DBHouseIndoorItem odbitem = oitem.CreateDBIndoorItem(housenumber);
-					oitem.DatabaseItem = odbitem;
-					GameServer.Database.AddNewObject(odbitem);
-					house.IndoorItems.Add(oitem);
+					DBHouseIndoorItem idbitem = iitem.CreateDBIndoorItem(housenumber);
+					iitem.DatabaseItem = idbitem;
+					GameServer.Database.AddNewObject(idbitem);
+					house.IndoorItems.Add(pos, iitem);
 
 					switch (method)
 					{
 						case 2:
-							client.Player.Out.SendMessage("You put " + orgitem.Name + " on the wall of the house.(Position=" + position + ",X=" + xpos + ",Y=" + ypos + ")", eChatType.CT_Help, eChatLoc.CL_SystemWindow);
+							client.Player.Out.SendMessage(string.Format("You drop the {0} onto the wall of your house! (surf={1} p={2},{3},{4})", orgitem.Name, position, xpos, ypos, rotation), eChatType.CT_Help, eChatLoc.CL_SystemWindow);
 							break;
 						case 3:
-							client.Player.Out.SendMessage("You put " + orgitem.Name + " on the floor of the house.(Position=" + position + ",X=" + xpos + ",Y=" + ypos + ")", eChatType.CT_Help, eChatLoc.CL_SystemWindow);
+							client.Player.Out.SendMessage(string.Format("You drop the {0} onto the floor of your house! (surf={1} p={2},{3},{4})", orgitem.Name, position, xpos, ypos, rotation), eChatType.CT_Help, eChatLoc.CL_SystemWindow);
 							break;
 					}
-					//TODO: Move this into packetlib
-					GSTCPPacketOut pak = new GSTCPPacketOut(client.Out.GetPacketCode(ePackets.HousingItem));
-					pak.WriteShort((ushort) housenumber);
-					pak.WriteByte(0x01); //cnt
-					pak.WriteByte(0x00); //upd
-					pak.WriteByte(Convert.ToByte(house.IndoorItems.Count));
-					pak.WriteShort((ushort) oitem.Model);
-					pak.WriteShort((ushort) oitem.Color);
-					pak.WriteByte(0x00);
-					pak.WriteByte(0x00);
-					pak.WriteShort((ushort) oitem.X);
-					pak.WriteShort((ushort) oitem.Y);
-					pak.WriteShort((ushort) oitem.Rotation);
-					pak.WriteByte(Convert.ToByte(oitem.Size));
-					pak.WriteByte(Convert.ToByte(oitem.Position));
-					pak.WriteByte(Convert.ToByte(oitem.Placemode - 2));
 					foreach (GamePlayer plr in house.GetAllPlayersInHouse())
 					{
-						plr.Out.SendTCP(pak);
+						plr.Out.SendFurniture(house, pos);
 					}
-
-
 					break;
 
 				case 4:
@@ -188,8 +181,15 @@ namespace DOL.GS.PacketHandler.v168
 				default:
 					break;
 			}
-
 			return 1;
+		}
+
+		protected int GetFirstFreeSlot(Hashtable tbl)
+		{
+			int i = 0;//tbl.Count;
+			while(tbl.Contains(i))
+				i++;
+			return i;
 		}
 	}
 }

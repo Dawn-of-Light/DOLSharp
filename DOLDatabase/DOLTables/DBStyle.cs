@@ -187,12 +187,12 @@ namespace DOL.Database
 			set { m_SpecLevelRequirement = value; Dirty = true; }
 		}
 
-		//	  [DataElement(AllowDbNull=false)]
-		//	  public int Icon
-		//	  {
-		//	    get { return m_Icon; }
-		//	    set { m_Icon = value; Dirty = true; }
-		//	  }
+		[DataElement(AllowDbNull = false)]
+		public int Icon
+		{
+			get { return m_Icon; }
+			set { m_Icon = value; Dirty = true; }
+		}
 
 		/// <summary>
 		/// The Style Endurance Cost

@@ -279,7 +279,7 @@ namespace DOL.GS
 			get	{ return DBKeep.Heading; }
 			set	{ DBKeep.Heading = value; }
 		}
-		public int Realm
+		public byte Realm
 		{
 			get	{ return DBKeep.Realm; }
 			set	{ DBKeep.Realm = value; }

@@ -454,7 +454,7 @@ namespace DOL.GS.Quests.Albion
 					EnemyKilledEventArgs gArgs = (EnemyKilledEventArgs) args;
 					if (gArgs.Target.Name == "Wilbur")
 					{
-						player.Out.SendSimpleWarningDialog("You've succeeded in killing Wilbur. In the \ndistance you hear the angry voice of \na pig herder. Make your escape!");
+						player.Out.SendDialogBox(eDialogCode.SimpleWarning, 0x00, 0x00, 0x00, 0x00, eDialogType.Ok, true, "You've succeeded in killing Wilbur. In the \ndistance you hear the angry voice of \na pig herder. Make your escape!");
 						Step = 3;
 
 						player.GainExperience(player.ExperienceForNextLevel / 25, 0, 0, true);

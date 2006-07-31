@@ -436,7 +436,7 @@ namespace DOL.GS.Quests.Albion
 
 			if (quest != null && quest.Step == 1)
 			{
-				player.Out.SendSimpleWarningDialog("You've located the first field on Asma's \nMap. Turning over the map, you jot down \na few notes about your impressions. \nYour quest journal has been updated.");
+				player.Out.SendDialogBox(eDialogCode.SimpleWarning, 0x00, 0x00, 0x00, 0x00, eDialogType.Ok, true, "You've located the first field on Asma's \nMap. Turning over the map, you jot down \na few notes about your impressions. \nYour quest journal has been updated.");
 				quest.Step = 2;
 			}
 		}
@@ -449,7 +449,7 @@ namespace DOL.GS.Quests.Albion
 
 			if (quest != null && quest.Step == 2)
 			{
-				player.Out.SendSimpleWarningDialog("You've located the next field on Asma's \nMap. Turning over the map, you jot down \na few notes about your impressions. \nYour quest journal has been updated.");
+				player.Out.SendDialogBox(eDialogCode.SimpleWarning, 0x00, 0x00, 0x00, 0x00, eDialogType.Ok, true, "You've located the next field on Asma's \nMap. Turning over the map, you jot down \na few notes about your impressions. \nYour quest journal has been updated.");
 				quest.Step = 3;
 			}
 		}
@@ -462,7 +462,7 @@ namespace DOL.GS.Quests.Albion
 
 			if (quest != null && quest.Step == 3)
 			{
-				player.Out.SendSimpleWarningDialog("You've located the last field on Asma's \nMap. Turning over the map, you jot down \na few notes about your impressions. \nYour quest journal has been updated.");
+				player.Out.SendDialogBox(eDialogCode.SimpleWarning, 0x00, 0x00, 0x00, 0x00, eDialogType.Ok, true, "You've located the last field on Asma's \nMap. Turning over the map, you jot down \na few notes about your impressions. \nYour quest journal has been updated.");
 				quest.Step = 4;
 			}
 		}

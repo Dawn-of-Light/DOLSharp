@@ -18,11 +18,10 @@
  */
 #define NOENCRYPTION
 using System;
-using System.Reflection;
 using System.Collections;
+using System.Reflection;
 using DOL.AI.Brain;
 using DOL.GS.Effects;
-using DOL.GS.Styles;
 using DOL.GS.PlayerTitles;
 using log4net;
 
@@ -153,12 +152,11 @@ namespace DOL.GS.PacketHandler
 				{
 					pak.WriteByte((byte)pet.EffectList.Count); // effect count
 					foreach (IGameEffect effect in pet.EffectList)
-						pak.WriteShort(effect.Icon); // list of shorts - spell icons on pet
+						pak.WriteShort(effect.Icon); // 0x08 - null terminated - (byte) list of shorts - spell icons on pet
 				}
 			}
 			else
-				pak.WriteByte(0); // effect count
-
+				pak.WriteByte((byte)0); // effect count
 			SendTCP(pak);
 		}
 	}

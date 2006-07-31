@@ -18,19 +18,21 @@
  */
 using System;
 using DOL.Database;
+using System.Collections;
 
 namespace DOL.GS
 {
 	/// <summary>
 	/// GameMovingObject is a base class for boats and siege weapons.
 	/// </summary>
-	public  class GameSiegeCatapult : GameSiegeWeapon
+	public class GameSiegeCatapult : GameSiegeWeapon
 	{
-		public GameSiegeCatapult() : base()
+		public GameSiegeCatapult()
+			: base()
 		{
 			MeleeDamageType = eDamageType.Crush;
-			Name = "catapult";
-			AmmoType = 0x1301;
+			Name = "field catapult";
+			AmmoType = 0x13;
 			this.Effect = 0x89C;
 			this.Model = 0xA26;
 			ActionDelay = new int[]
@@ -39,13 +41,13 @@ namespace DOL.GS
 				5000,//aiming
 				10000,//arming
 				0,//loading
-				2700//fireing
+				2500//fireing
 			};//en ms
 			/*SpellLine siegeWeaponSpellLine = SkillBase.GetSpellLine(GlobalSpellsLines.SiegeWeapon_Spells);
 			IList spells = SkillBase.GetSpellList(siegeWeaponSpellLine.KeyName);
 			if (spells != null)
 			{
-				foreach (Spell spell in spells) 
+				foreach (Spell spell in spells)
 				{
 					if (spell.ID == 2430) //TODO good id for catapult
 					{
@@ -58,17 +60,50 @@ namespace DOL.GS
 				}
 			}*/
 		}
+
+		protected IList SelectTargets()
+		{
+			ArrayList list = new ArrayList(20);
+
+			foreach (GamePlayer player in WorldMgr.GetPlayersCloseToSpot(this.CurrentRegionID, GroundTarget.X, GroundTarget.Y, GroundTarget.Z, (ushort)150))
+			{
+				if (GameServer.ServerRules.IsAllowedToAttack(Owner, player, true))
+				{
+					list.Add(player);
+				}
+			}
+			foreach (GameNPC npc in WorldMgr.GetNPCsCloseToSpot(this.CurrentRegionID, GroundTarget.X, GroundTarget.Y, GroundTarget.Z, (ushort)150))
+			{
+				if (GameServer.ServerRules.IsAllowedToAttack(Owner, npc, true))
+				{
+					list.Add(npc);
+				}
+			}
+			return list;
+		}
+
 		public override void DoDamage()
 		{
-			InventoryItem ammo = this.Ammo[AmmoSlot] as InventoryItem;
+			//			InventoryItem ammo = this.Ammo[AmmoSlot] as InventoryItem;
 			//todo remove ammo + spell in db and uncomment
 			//m_spellHandler.StartSpell(player);
 			base.DoDamage();//anim mut be called after damage
+			if (GroundTarget == null) return;
+			IList targets = SelectTargets();
+
+			foreach (GameLiving living in targets)
+			{
+				int damageAmount = 50 + Util.Random(200);
+				living.TakeDamage(Owner, eDamageType.Crush, damageAmount, 0);
+				foreach (GamePlayer player in living.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+					player.Out.SendCombatAnimation(this, living, 0x0000, 0x0000, 0x00, 0x00, 0x14, living.HealthPercent);
+			}
+			return;
 		}
 		public override bool ReceiveItem(GameLiving source, DOL.Database.InventoryItem item)
 		{
 			//todo check if bullet
-			return base.ReceiveItem (source, item);
+			return base.ReceiveItem(source, item);
 		}
 	}
 }

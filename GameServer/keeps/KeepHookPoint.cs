@@ -26,22 +26,22 @@ namespace DOL.GS
 	/// </summary>
 	public class GameKeepHookPoint : IPoint3D
 	{
-		public GameKeepHookPoint(int id,GameKeepComponent component)
+		public GameKeepHookPoint(int id, GameKeepComponent component)
 		{
 			m_index = id;
 			m_component = component;
-			m_hookpointTimer = new HookpointTimer(this,this.Component);
+			m_hookpointTimer = new HookpointTimer(this, this.Component);
 			this.X = component.X;
 			this.Y = component.Y;
 			this.Z = component.Z;
 			this.Heading = component.Heading;
 		}
 
-		public GameKeepHookPoint(DBKeepHookPoint dbhookPoint,GameKeepComponent component)
+		public GameKeepHookPoint(DBKeepHookPoint dbhookPoint, GameKeepComponent component)
 		{
 			double angle = (component.Keep.Heading * 0.017453292519943295769236907684886); // angle*2pi/360;
-			switch(component.ComponentHeading)
-            {
+			switch (component.ComponentHeading)
+			{
 				case 0:
 					X = (int)(component.X + Math.Cos(angle) * dbhookPoint.X + Math.Sin(angle) * dbhookPoint.Y);
 					Y = (int)(component.Y - Math.Cos(angle) * dbhookPoint.Y + Math.Sin(angle) * dbhookPoint.X);
@@ -58,13 +58,13 @@ namespace DOL.GS
 					X = (int)(component.X - Math.Cos(angle) * dbhookPoint.Y + Math.Sin(angle) * dbhookPoint.X);
 					Y = (int)(component.Y - Math.Cos(angle) * dbhookPoint.X - Math.Sin(angle) * dbhookPoint.Y);
 					break;
-            }
+			}
 			this.Z = component.Z + dbhookPoint.Z;
-//			this.Heading = (ushort) dbhookPoint.Heading;
+			//			this.Heading = (ushort) dbhookPoint.Heading;
 			this.Heading = component.Heading;
 			this.m_index = dbhookPoint.HookPointID;
 			this.Component = component;
-			m_hookpointTimer = new HookpointTimer(this,this.Component);
+			m_hookpointTimer = new HookpointTimer(this, this.Component);
 		}
 		#region properties
 
@@ -74,17 +74,17 @@ namespace DOL.GS
 		private int m_index;
 		public int ID
 		{
-			get	{ return m_index;}
-			set	{ m_index = value;}
+			get { return m_index; }
+			set { m_index = value; }
 		}
 		private HookpointTimer m_hookpointTimer;
 		private GameKeepComponent m_component;
 		public GameKeepComponent Component
 		{
-			get	{ return m_component;}
-			set	{ m_component = value;}
+			get { return m_component; }
+			set { m_component = value; }
 		}
-		
+
 		public bool IsFree
 		{
 			get { return (m_object == null); }
@@ -93,64 +93,65 @@ namespace DOL.GS
 		private int m_z;
 		public int Z
 		{
-			get{return m_z;}
-			set{m_z = value;}
+			get { return m_z; }
+			set { m_z = value; }
 		}
 
 		private int m_x;
 		public int X
 		{
-			get{return m_x;}
-			set{m_x = value;}
+			get { return m_x; }
+			set { m_x = value; }
 		}
 
 		private int m_y;
 		public int Y
 		{
-			get{return m_y;}
-			set{m_y = value;}
+			get { return m_y; }
+			set { m_y = value; }
 		}
 
 		private ushort m_heading;
 		public ushort Heading
 		{
-			get{return m_heading;}
-			set{m_heading = value;}
+			get { return m_heading; }
+			set { m_heading = value; }
 		}
 		private GameLiving m_object;
-		
+
 		public GameLiving Object
 		{
-			get{ return m_object; }
+			get { return m_object; }
 			set
 			{
 				m_object = value;
 				if (value != null)
 				{
 					m_hookpointTimer.Start(1800000);//30*60*1000 = 30 min
-					GameEventMgr.AddHandler(value,GameLivingEvent.Dying,new DOLEventHandler(ObjectDie));
+					GameEventMgr.AddHandler(value, GameLivingEvent.Dying, new DOLEventHandler(ObjectDie));
 				}
 			}
 		}
 
 		#endregion
 
-        private void ObjectDie(DOLEvent e, object sender, EventArgs arguments)
+		private void ObjectDie(DOLEvent e, object sender, EventArgs arguments)
 		{
 			m_hookpointTimer.Start(300000);//5*60*1000 = 5 min
-			GameEventMgr.RemoveHandler(m_object,GameLivingEvent.Dying,new DOLEventHandler(ObjectDie));
+			GameEventMgr.RemoveHandler(m_object, GameLivingEvent.Dying, new DOLEventHandler(ObjectDie));
 		}
 	}
 	public class HookpointTimer : RegionAction
 	{
 		private GameKeepHookPoint m_hookpoint;
-		public HookpointTimer(GameKeepHookPoint hookpoint,GameKeepComponent component) : base(component)
+		public HookpointTimer(GameKeepHookPoint hookpoint, GameKeepComponent component)
+			: base(component)
 		{
 			m_hookpoint = hookpoint;
 		}
 		protected override void OnTick()
 		{
-			if(m_hookpoint.Object is GameSiegeWeapon)
+			if (m_hookpoint.Object is GameSiegeWeapon)
 				(m_hookpoint.Object as GameSiegeWeapon).ReleaseControl();
 			if (m_hookpoint.Object.ObjectState != GameObject.eObjectState.Deleted)
 			{

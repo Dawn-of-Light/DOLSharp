@@ -1,16 +1,16 @@
 /*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -26,7 +26,7 @@ namespace DOL.GS.Scripts
 {
 	[CmdAttribute(
 		"&path",
-		(uint) ePrivLevel.GM,
+		(uint)ePrivLevel.GM,
 		"There are several path functions",
 		"/path create - creates a temp path in ram",
 		"/path load <pathname> - loads a path from db",
@@ -52,11 +52,11 @@ namespace DOL.GS.Scripts
 			obj.CurrentRegion = client.Player.CurrentRegion;
 			obj.Heading = client.Player.Heading;
 			obj.Name = name;
-			obj.Model = 488;
+			obj.Model = 1293;
 			obj.Emblem = 0;
 			obj.AddToWorld();
 
-			ArrayList objs = (ArrayList) client.Player.TempProperties.getObjectProperty(TEMP_PATH_OBJS, null);
+			ArrayList objs = (ArrayList)client.Player.TempProperties.getObjectProperty(TEMP_PATH_OBJS, null);
 			if (objs == null)
 				objs = new ArrayList();
 			objs.Add(obj);
@@ -65,7 +65,7 @@ namespace DOL.GS.Scripts
 
 		private void RemoveAllTempPathObjects(GameClient client)
 		{
-			ArrayList objs = (ArrayList) client.Player.TempProperties.getObjectProperty(TEMP_PATH_OBJS, null);
+			ArrayList objs = (ArrayList)client.Player.TempProperties.getObjectProperty(TEMP_PATH_OBJS, null);
 			if (objs == null)
 				return;
 
@@ -78,7 +78,7 @@ namespace DOL.GS.Scripts
 		{
 			//Remove old temp objects
 			RemoveAllTempPathObjects(client);
-			
+
 			PathPoint startpoint = new PathPoint(client.Player.X, client.Player.Y, client.Player.Z, 100000, ePathType.Once);
 			client.Player.TempProperties.setProperty(TEMP_PATH_FIRST, startpoint);
 			client.Player.TempProperties.setProperty(TEMP_PATH_LAST, startpoint);
@@ -90,7 +90,7 @@ namespace DOL.GS.Scripts
 
 		private int PathAdd(GameClient client, string[] args)
 		{
-			PathPoint path = (PathPoint) client.Player.TempProperties.getObjectProperty(TEMP_PATH_LAST, null);
+			PathPoint path = (PathPoint)client.Player.TempProperties.getObjectProperty(TEMP_PATH_LAST, null);
 			if (path == null)
 			{
 				DisplayError(client, "No path created yet! Use /path create first!");
@@ -122,7 +122,7 @@ namespace DOL.GS.Scripts
 				len++;
 				path = path.Prev;
 			}
-			len+=2;
+			len += 2;
 			CreateTempPathObject(client, newpp, "TMP PP " + len);
 			DisplayMessage(client, "Pathpoint added. Current pathlength = {0}", len);
 			return 1;
@@ -130,7 +130,7 @@ namespace DOL.GS.Scripts
 
 		private int PathTravel(GameClient client)
 		{
-			PathPoint path = (PathPoint) client.Player.TempProperties.getObjectProperty(TEMP_PATH_LAST, null);
+			PathPoint path = (PathPoint)client.Player.TempProperties.getObjectProperty(TEMP_PATH_LAST, null);
 			if (client.Player.TargetObject == null || !(client.Player.TargetObject is GameNPC))
 			{
 				DisplayError(client, "You need to select a mob first!");
@@ -141,20 +141,21 @@ namespace DOL.GS.Scripts
 				DisplayError(client, "No path created yet! Use /path create first!");
 				return 0;
 			}
-			((GameNPC) client.Player.TargetObject).CurrentWayPoint = (PathPoint) client.Player.TempProperties.getObjectProperty(TEMP_PATH_FIRST, null);
-			MovementMgr.Instance.MoveOnPath(((GameNPC) client.Player.TargetObject), 150);
-			return 1;			
+			int speed = Math.Min(((GameNPC)client.Player.TargetObject).MaxSpeedBase, path.MaxSpeed);
+			((GameNPC)client.Player.TargetObject).CurrentWayPoint = (PathPoint)client.Player.TempProperties.getObjectProperty(TEMP_PATH_FIRST, null);
+			MovementMgr.Instance.MoveOnPath(((GameNPC)client.Player.TargetObject), speed);
+			return 1;
 		}
 
 		private int PathType(GameClient client, string[] args)
 		{
-			PathPoint path = (PathPoint) client.Player.TempProperties.getObjectProperty(TEMP_PATH_LAST, null);
+			PathPoint path = (PathPoint)client.Player.TempProperties.getObjectProperty(TEMP_PATH_LAST, null);
 			if (args.Length < 2)
 			{
 				DisplayError(client, "Usage: /path type <pathtype>");
-				DisplayError(client, "Current path type is '{0}'",path.Type.ToString());
+				DisplayError(client, "Current path type is '{0}'", path.Type.ToString());
 				DisplayError(client, "Possible pathtype values are:");
-				DisplayError(client, String.Join(", ",Enum.GetNames(typeof (ePathType))));
+				DisplayError(client, String.Join(", ", Enum.GetNames(typeof(ePathType))));
 				return 0;
 			}
 			if (path == null)
@@ -166,17 +167,17 @@ namespace DOL.GS.Scripts
 			ePathType pathType = ePathType.Once;
 			try
 			{
-				pathType = (ePathType) Enum.Parse(typeof(ePathType),args[2],true);
+				pathType = (ePathType)Enum.Parse(typeof(ePathType), args[2], true);
 			}
 			catch
 			{
 				DisplayError(client, "Usage: /path type <pathtype>");
-				DisplayError(client, "Current path type is '{0}'",path.Type.ToString());
+				DisplayError(client, "Current path type is '{0}'", path.Type.ToString());
 				DisplayError(client, "PathType must be one of the following:");
-				DisplayError(client, String.Join(", ",Enum.GetNames(typeof (ePathType))));
+				DisplayError(client, String.Join(", ", Enum.GetNames(typeof(ePathType))));
 				return 0;
 			}
-					
+
 			path.Type = pathType;
 			PathPoint temp = path.Prev;
 			while ((temp != null) && (temp != path))
@@ -184,7 +185,7 @@ namespace DOL.GS.Scripts
 				temp.Type = pathType;
 				temp = temp.Prev;
 			}
-			DisplayError(client, "Current path type set to '{0}'",path.Type.ToString());
+			DisplayError(client, "Current path type set to '{0}'", path.Type.ToString());
 			return 1;
 		}
 
@@ -195,7 +196,7 @@ namespace DOL.GS.Scripts
 				DisplayError(client, "Usage: /path load <pathname>");
 				return 0;
 			}
-			string pathname = String.Join(" ", args, 2, args.Length - 2);					
+			string pathname = String.Join(" ", args, 2, args.Length - 2);
 			PathPoint path = MovementMgr.Instance.LoadPath(pathname);
 			if (path != null)
 			{
@@ -215,10 +216,10 @@ namespace DOL.GS.Scripts
 			DisplayError(client, "Path '{0}' not found!", pathname);
 			return 0;
 		}
-		
+
 		private int PathSave(GameClient client, string[] args)
 		{
-			PathPoint path = (PathPoint) client.Player.TempProperties.getObjectProperty(TEMP_PATH_LAST, null);
+			PathPoint path = (PathPoint)client.Player.TempProperties.getObjectProperty(TEMP_PATH_LAST, null);
 			if (args.Length < 2)
 			{
 				DisplayError(client, "Usage: /path save <pathname>");
@@ -237,13 +238,13 @@ namespace DOL.GS.Scripts
 
 		private int PathAssignHorseroute(GameClient client, string[] args)
 		{
-			PathPoint path = (PathPoint) client.Player.TempProperties.getObjectProperty(TEMP_PATH_LAST, null);
+			PathPoint path = (PathPoint)client.Player.TempProperties.getObjectProperty(TEMP_PATH_LAST, null);
 			if (args.Length < 2)
 			{
 				DisplayError(client, "Usage: /path assignhorseroute <destination>");
 				return 0;
 			}
-					
+
 			if (path == null)
 			{
 				DisplayError(client, "No path created yet! Use /path create first!");
@@ -255,8 +256,8 @@ namespace DOL.GS.Scripts
 				DisplayError(client, "You must select a stable master to assign a horseroute!");
 				return 0;
 			}
-			string target = String.Join(" ", args, 2, args.Length - 2);					
-			GameStableMaster stable = (GameStableMaster) client.Player.TargetObject;
+			string target = String.Join(" ", args, 2, args.Length - 2);
+			GameStableMaster stable = (GameStableMaster)client.Player.TargetObject;
 			bool ticketFound = false;
 			string ticket = "ticket to " + target;
 			if (stable.TradeItems != null)
@@ -282,7 +283,7 @@ namespace DOL.GS.Scripts
 
 		public int OnCommand(GameClient client, string[] args)
 		{
-			if(args.Length < 2)
+			if (args.Length < 2)
 			{
 				DisplaySyntax(client);
 				return 0;

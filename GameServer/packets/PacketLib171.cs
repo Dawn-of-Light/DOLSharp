@@ -1,16 +1,16 @@
 /*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -78,9 +78,7 @@ namespace DOL.GS.PacketHandler
 			pak.WriteInt((uint)obj.X);
 			pak.WriteInt((uint)obj.Y);
 			pak.WriteShort(obj.Model);
-			int flag = 0;
-			if (obj is GameInventoryItem)
-				flag |= (obj.Realm&3) << 4;
+			int flag = (obj.Realm & 3) << 4;
 			if (obj is GameKeepBanner)
 				flag |= 0x08;
 			if (obj is GameStaticItemTimed && m_gameClient.Player!=null && ((GameStaticItemTimed)obj).IsOwner(m_gameClient.Player))
@@ -91,7 +89,7 @@ namespace DOL.GS.PacketHandler
 			pak.WriteByte(0x0);
 			SendTCP(pak);
 		}
-		
+
 		public override void SendDoorCreate(IDoor obj)
 		{
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.ItemCreate));//same for door and item
@@ -118,6 +116,8 @@ namespace DOL.GS.PacketHandler
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.NPCCreate));
 			int speed = 0;
 			ushort speedZ = 0;
+			if (npc == null)
+				return;
 			if(!npc.IsOnTarget())
 			{
 				speed = npc.CurrentSpeed;
@@ -135,11 +135,11 @@ namespace DOL.GS.PacketHandler
 			pak.WriteByte(npc.Level);
 
 			byte flags = (byte)(GameServer.ServerRules.GetLivingRealm(m_gameClient.Player, npc) << 6);
-			if((npc.Flags & (uint)GameNPC.eFlags.GHOST) != 0) flags |= 0x01;
+			if((npc.Flags & (uint)GameNPC.eFlags.TRANSPARENT) != 0) flags |= 0x01;
+			if(npc.Inventory != null) flags |= 0x02; //If mob has equipment, then only show it after the client gets the 0xBD packet
+			if((npc.Flags & (uint)GameNPC.eFlags.PEACE) != 0) flags |= 0x10;
 			if((npc.Flags & (uint)GameNPC.eFlags.FLYING) != 0) flags |= 0x20;
-			//If mob has equipment, then only show it after
-			//the client gets the 0xBD packet
-			if(npc.Inventory != null) flags |= 0x02;
+
 
 			pak.WriteByte(flags);
 			pak.WriteByte(0x20); //TODO this is the default maxstick distance
@@ -156,9 +156,8 @@ namespace DOL.GS.PacketHandler
 			if(npc.CanGiveOneQuest(m_gameClient.Player)) flags2 |= 0x08;
 
 			pak.WriteByte(flags2); // 4 high bits seems unused (new in 1.71)
-			pak.WriteByte(0x00); // new in 1.71
-			pak.WriteByte(0x00); // new in 1.71
-			pak.WriteByte(0x00); // new in 1.71
+			pak.WriteShort(0x00); // new in 1.71
+			pak.WriteByte(0x00); // new in 1.71 (region instance ID from StoC_0x20)
 
 			string name = npc.Name;
 			if (name.Length+add.Length+2 > 47) // clients crash with too long names
@@ -198,7 +197,7 @@ namespace DOL.GS.PacketHandler
 					{
 						pak.WriteByte(nbleader++);
 					}
-					else 
+					else
 					{
 						pak.WriteByte(nbsolo++);
 					}
@@ -229,7 +228,7 @@ namespace DOL.GS.PacketHandler
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.QuestEntry));
 
 			pak.WriteByte((byte) index);
-			if (quest.Step == -1)
+			if (quest.Step <= 0)
 			{
 				pak.WriteByte(0);
 				pak.WriteByte(0);

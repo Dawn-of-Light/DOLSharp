@@ -17,6 +17,7 @@
  *
  */
 using System;
+using System.Collections;
 using DOL.Database;
 using DOL.GS.Housing;
 
@@ -32,34 +33,30 @@ namespace DOL.GS.PacketHandler.v168
 			int housenumber = packet.ReadShort();
 			int method = packet.ReadByte();
 
+			House house = (House) HouseMgr.GetHouse(client.Player.CurrentRegionID, housenumber);
 
-			House house = (House) HouseMgr.GetHouse(client.Player.CurrentRegionID,housenumber);
-
-			if (house == null)
-				return 1;
+			if (house == null) return 1;
+			if (client.Player == null) return 1;
+			if (!house.IsOwner(client.Player)) return 1;
 
 			switch (method)
 			{
 				case 1: //garden item
 
-					for (int i = 0; i < house.OutdoorItems.Count; i++)
+					foreach(DictionaryEntry entry in house.OutdoorItems)
 					{
-						if (((OutdoorItem) house.OutdoorItems[i]).Position == position)
-						{
-							GameServer.Database.DeleteObject(((OutdoorItem) house.OutdoorItems[i]).DatabaseItem); //delete the database instance
-
-							InventoryItem invitem = new InventoryItem();
-							invitem.CopyFrom(((OutdoorItem) house.OutdoorItems[i]).BaseItem);
-							client.Player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, invitem);
-
-							house.OutdoorItems.RemoveAt(i);
-
-							client.Out.SendGarden(house);
-
-							client.Out.SendMessage("Garden Tile Removed.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							client.Out.SendMessage("You get " + invitem.Name + " and put it in your backpack.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
-						}
+						OutdoorItem oitem = (OutdoorItem)entry.Value;
+						if (oitem.Position != position) continue;
+						int i = (int)entry.Key;
+						GameServer.Database.DeleteObject(((OutdoorItem) house.OutdoorItems[i]).DatabaseItem); //delete the database instance
+						InventoryItem invitem = new InventoryItem();
+						invitem.CopyFrom(((OutdoorItem) house.OutdoorItems[i]).BaseItem);
+						client.Player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, invitem);
+						house.OutdoorItems.Remove(i);
+						client.Out.SendGarden(house);
+						client.Out.SendMessage("Garden object removed.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						client.Out.SendMessage("You get " + invitem.Name + " and put it in your backpack.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						return 1;
 					}
 					//no object @ position
 					client.Out.SendMessage("There is no Garden Tile at slot " + position + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -67,7 +64,7 @@ namespace DOL.GS.PacketHandler.v168
 
 				case 2:
 				case 3: //wall/floor mode
-					IndoorItem iitem = ((IndoorItem) house.IndoorItems[(position)]);
+					IndoorItem iitem = ((IndoorItem) house.IndoorItems[position]);
 					if (iitem == null)
 					{
 						client.Player.Out.SendMessage("error: id was null", eChatType.CT_Help, eChatLoc.CL_SystemWindow);
@@ -94,13 +91,13 @@ namespace DOL.GS.PacketHandler.v168
 					}
 
 					GameServer.Database.DeleteObject(((IndoorItem) house.IndoorItems[(position)]).DatabaseItem);
-					house.IndoorItems.RemoveAt((position));
+					house.IndoorItems.Remove(position);
 
 					GSTCPPacketOut pak = new GSTCPPacketOut(client.Out.GetPacketCode(ePackets.HousingItem));
 					pak.WriteShort((ushort) housenumber);
 					pak.WriteByte(0x01);
 					pak.WriteByte(0x00);
-					pak.WriteByte(Convert.ToByte(position));
+					pak.WriteByte((byte)position);
 					pak.WriteByte(0x00);
 					foreach (GamePlayer plr in house.GetAllPlayersInHouse())
 					{

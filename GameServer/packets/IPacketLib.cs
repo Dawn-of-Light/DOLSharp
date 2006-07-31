@@ -50,6 +50,7 @@ namespace DOL.GS.PacketHandler
 		WarMapClaimedKeeps = 0x49,
 		PlayerCreate172 = 0x4B,
 		VisualEffect = 0x4C,
+		ControlledHorse = 0x4E,
 		KeepComponentInteractResponse = 0x61,
 		KeepClaim = 0x62,
 		KeepComponentHookpointStore = 0x63,
@@ -319,13 +320,14 @@ namespace DOL.GS.PacketHandler
 	public enum eMerchantWindowType : byte
 	{
 		Normal = 0x00,
+		Bp = 0x01,
 		Count = 0x02,
 		HousingOutsideMenu = 0x04,
-		HousingInsideMenu = 0x06,
+		HousingInsideShop = 0x06,
 		HousingOutsideShop = 0x07,
 		HousingVault = 0x08,
 		HousingBindstone = 0x0A,
-		HousingInsideShop = 0x0B
+		HousingInsideMenu = 0x0B,
 	}
 
 	/// <summary>
@@ -361,7 +363,7 @@ namespace DOL.GS.PacketHandler
 	};
 
 	public delegate void CustomDialogResponse(GamePlayer player, byte response);
-	public delegate void CheckLOSResponse(GamePlayer player, ushort response);
+	public delegate void CheckLOSResponse(GamePlayer player, ushort response, ushort targetOID);
 
 	public enum eSoundType : ushort
 	{
@@ -374,6 +376,23 @@ namespace DOL.GS.PacketHandler
 		Open,
 		Update,
 		Close,
+	}
+
+	public enum eDialogType : byte
+	{
+		Ok = 0x00,
+		YesNo = 0x01,
+	}
+
+	public enum eDialogCode : byte
+	{
+		SimpleWarning = 0x00,
+		GuildInvite = 0x03,
+		GroupInvite = 0x05,
+		CustomDialog = 0x06,
+		GuildLeave = 0x08,
+		QuestSuscribe = 0x64,
+		BuyRespec = 0x20,
 	}
 
 
@@ -404,7 +423,7 @@ namespace DOL.GS.PacketHandler
 		void SendGameOpenReply();
 		void SendPlayerPositionAndObjectID();
 		void SendPlayerJump(bool headingOnly);
-		void SendPlayerInitFinished();
+		void SendPlayerInitFinished(byte mobs);
 		void SendUDPInitReply();
 		void SendTime();
 		void SendMessage(string msg, eChatType type, eChatLoc loc);
@@ -420,7 +439,7 @@ namespace DOL.GS.PacketHandler
 		void SendEmoteAnimation(GameObject obj, eEmote emote);
 		void SendNPCCreate(GameNPC npc);
 		void SendNPCUpdate(GameNPC npc);
-		void SendLivingEquipementUpdate(GameLiving living);
+		void SendLivingEquipmentUpdate(GameLiving living);
 		void SendRegionChanged();
 		void SendUpdatePoints();
 		void SendUpdateMoney();
@@ -432,12 +451,13 @@ namespace DOL.GS.PacketHandler
 		void SendRiding(GameObject rider, GameObject steed, bool dismount);
 		void SendFindGroupWindowUpdate(GamePlayer[] list);
 		void SendGroupInviteCommand(GamePlayer invitingPlayer, string inviteMessage);
-		void SendSimpleWarningDialog(string warning);
+		void SendDialogBox(eDialogCode code, ushort data1, ushort data2, ushort data3, ushort data4, eDialogType type, bool autoWarpText, string message);
 		void SendCustomDialog(string msg, DOL.GS.PacketHandler.CustomDialogResponse callback);
 		void SendCheckLOS(GameObject Checker, GameObject Target, DOL.GS.PacketHandler.CheckLOSResponse callback);
 		void SendGuildLeaveCommand(GamePlayer invitingPlayer,string inviteMessage);
 		void SendGuildInviteCommand(GamePlayer invitingPlayer,string inviteMessage);
-		void SendQuestSubscribeCommand(GameNPC invitingNPC,ushort questid, string inviteMessage);        
+		void SendQuestSubscribeCommand(GameNPC invitingNPC,ushort questid, string inviteMessage);
+		void SendQuestAbortCommand(GameNPC abortingNPC, ushort questid, string abortMessage);
 		void SendGroupWindowUpdate();
 		void SendGroupMemberUpdate(bool updateIcons, GamePlayer player);
 		void SendGroupMembersUpdate(bool updateIcons);
@@ -481,9 +501,13 @@ namespace DOL.GS.PacketHandler
 		void SendPetWindow(GameLiving pet, ePetWindowAction windowAction, eAggressionState aggroState, eWalkState walkState);
 		void SendPlaySound(eSoundType soundType, ushort soundID);
 		void SendNPCsQuestEffect(GameNPC npc, bool flag);
+
+		void SendHexEffect(GamePlayer player,byte effect1,byte effect2,byte effect3,byte effect4,byte effect5);
+
 		void SendSiegeWeaponAnimation(GameSiegeWeapon siegeWeapon);
+		void SendSiegeWeaponFireAnimation(GameSiegeWeapon siegeWeapon, int timer);
 		void SendSiegeWeaponCloseInterface();
-		void SendSiegeWeaponInterface(GameSiegeWeapon siegeWeapon);
+		void SendSiegeWeaponInterface(GameSiegeWeapon siegeWeapon, int time);
 		void SendLivingDataUpdate(GameLiving living, bool updateStrings);
 		void SendSoundEffect(ushort soundId, ushort zoneId, ushort x, ushort y, ushort z, ushort radius);
 		//keep
@@ -505,6 +529,13 @@ namespace DOL.GS.PacketHandler
 		void SendRemoveGarden(House house);
 		void SendEnterHouse(House house);
 		void SendFurniture(House house);
+		void SendFurniture(House house, int i);
 		void SendMovingObjectCreate(GameMovingObject obj);
+		void SendSetControlledHorse(GamePlayer player);
+		void SendControlledHorse(GamePlayer player, bool flag);
+		void CheckLengthHybridSkillsPacket(ref GSTCPPacketOut pak, ref int maxSkills, ref int first);
+		void SendListCastersSpell();
+		void SendInventoryItemsUpdateTest(byte preAction, ICollection itemsToUpdate);
+		void SendCrash(string str);
 	}
 }

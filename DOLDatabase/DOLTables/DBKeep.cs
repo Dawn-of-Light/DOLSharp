@@ -34,7 +34,7 @@ namespace DOL.Database
 		private int m_y;
 		private int m_z;
 		private int m_heading;
-		private int m_realm;
+		private byte m_realm;
 		private int m_level;
 		private int m_keepID;
 		//private int m_level;
@@ -196,7 +196,7 @@ namespace DOL.Database
 		/// Realm of keep
 		/// </summary>
 		[DataElement(AllowDbNull=true)]
-		public int Realm
+		public byte Realm
 		{
 			get
 			{

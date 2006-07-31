@@ -1,16 +1,16 @@
 /*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -40,7 +40,7 @@ namespace DOL.GS.PacketHandler.v168
 //			log.Warn("MoveItem, id="+id.ToString()+" toSlot="+toSlot.ToString()+" fromSlot="+fromSlot.ToString()+" itemCount="+itemCount.ToString());
 
 			//GSMessages.SendMessage(client,id.ToString()+"("+Number.ToString()+"): ["+From.ToString()+"] -> ["+To.ToString()+"]",GSMessages.eChatType.CT_Say,GSMessages.eChatLoc.CL_SystemWindow);
-					
+
 			//If our slot is > 1000 it is (objectID+1000) of target
 			if(toSlot>1000)
 			{
@@ -81,7 +81,7 @@ namespace DOL.GS.PacketHandler.v168
 				if(fromSlot>=(ushort)eInventorySlot.FirstBackpack && fromSlot<=(ushort)eInventorySlot.LastBackpack)
 				{
 					if(!WorldMgr.CheckDistance(obj, client.Player, WorldMgr.GIVE_ITEM_DISTANCE))
-					{ 
+					{
 						client.Out.SendMessage("You are too far away to give anything to " + obj.GetName(0, false) + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						client.Out.SendInventorySlotsUpdate(new int[] {fromSlot});
 						return 0;
@@ -96,16 +96,16 @@ namespace DOL.GS.PacketHandler.v168
 					}
 
 					client.Player.Notify(GamePlayerEvent.GiveItem, client.Player, new GiveItemEventArgs(client.Player, obj, item));
-					
+
 					//If the item has been removed by the event handlers, return;
 					//item = client.Player.Inventory.GetItem((eInventorySlot)fromSlot);
-					if(item == null || item.OwnerID == null) 
+					if(item == null || item.OwnerID == null)
 					{
 						client.Out.SendInventorySlotsUpdate(new int[] {fromSlot});
 						return 0;
-					}	
+					}
 
-					if(!item.IsDropable)
+					if(!item.IsDropable && !(obj is GameMob && (obj.GetType().ToString() == "DOL.GS.Scripts.Blacksmith" || obj.GetType().ToString() == "DOL.GS.Scripts.Recharger")))
 					{
 						client.Out.SendInventorySlotsUpdate(new int[] {fromSlot});
 						client.Out.SendMessage("You can not remove this item!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
@@ -118,7 +118,7 @@ namespace DOL.GS.PacketHandler.v168
 						client.Out.SendInventorySlotsUpdate(new int[] {fromSlot});
 						return 1;
 					}
-					
+
 					if(obj.ReceiveItem(client.Player, item))
 					{
 						client.Out.SendInventorySlotsUpdate(new int[] {fromSlot});
@@ -128,14 +128,14 @@ namespace DOL.GS.PacketHandler.v168
 					client.Out.SendInventorySlotsUpdate(new int[] {fromSlot});
 					return 0;
 				}
-				
+
 				//Is the "item" we want to move money? For Version 1.78+
 				if(client.Version >= GameClient.eClientVersion.Version178
 				   && fromSlot >= (int)eInventorySlot.Mithril178 && fromSlot <= (int)eInventorySlot.Copper178)
 				{
 					fromSlot -= eInventorySlot.Mithril178 - eInventorySlot.Mithril;
 				}
-				
+
 				//Is the "item" we want to move money?
 				if(fromSlot>=(ushort)eInventorySlot.Mithril && fromSlot<=(ushort)eInventorySlot.Copper)
 				{
@@ -145,9 +145,9 @@ namespace DOL.GS.PacketHandler.v168
 
 					if(client.Version >= GameClient.eClientVersion.Version178) // add it back for proper slot update...
 						fromSlot += eInventorySlot.Mithril178 - eInventorySlot.Mithril;
-					
+
 					if(!WorldMgr.CheckDistance(obj, client.Player, WorldMgr.GIVE_ITEM_DISTANCE))
-					{ 
+					{
 						client.Out.SendMessage("You are too far away to give anything to " + obj.GetName(0, false) + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						client.Out.SendInventorySlotsUpdate(new int[] {fromSlot});
 						return 0;
@@ -167,7 +167,7 @@ namespace DOL.GS.PacketHandler.v168
 						client.Out.SendInventorySlotsUpdate(new int[] {fromSlot});
 						return 1;
 					}
-					
+
 					if(obj.ReceiveMoney(client.Player, flatmoney))
 					{
 						client.Out.SendInventorySlotsUpdate(new int[] {fromSlot});
@@ -181,7 +181,7 @@ namespace DOL.GS.PacketHandler.v168
 				client.Out.SendInventoryItemsUpdate(null);
 				return 0;
 			}
-	
+
 			//Do we want to move an item from inventory/vault/quiver into inventory/vault/quiver?
 			if (((fromSlot>=(ushort)eInventorySlot.Ground && fromSlot<=(ushort)eInventorySlot.LastBackpack)
 				|| (fromSlot>=(ushort)eInventorySlot.FirstVault && fromSlot<=(ushort)eInventorySlot.LastVault))
@@ -223,29 +223,39 @@ namespace DOL.GS.PacketHandler.v168
 				return 1;
 			}
 
-			
+
 			if (((fromSlot>=(ushort)eInventorySlot.Ground && fromSlot<=(ushort)eInventorySlot.LastBackpack)
 				|| (fromSlot>=(ushort)eInventorySlot.FirstVault && fromSlot<=(ushort)eInventorySlot.LastVault))
-				&& toSlot==(ushort)eInventorySlot.PlayerPaperDoll)
+				&& (toSlot==(ushort)eInventorySlot.PlayerPaperDoll || toSlot==(ushort)eInventorySlot.NewPlayerPaperDoll))
 			{
-
-				InventoryItem item= client.Player.Inventory.GetItem((eInventorySlot)fromSlot);
+				InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)fromSlot);
 				if(item==null) return 0;
+
 				toSlot=0;
-				foreach (eEquipmentItems type in Enum.GetValues(typeof(eEquipmentItems)) )
-				{ 
-					if(item.Item_Type==(int)type) 
-					{ 
-//						client.Out.SendMessage("You moved "+item.Name+"["+item.Item_Type+"] to "+type,eChatType.CT_System,eChatLoc.CL_SystemWindow);
-						toSlot = (ushort)item.Item_Type;
-						break;
-					}
-				} 
+				if(item.Item_Type >= (int)eInventorySlot.MinEquipable &&
+					item.Item_Type <= (int)eInventorySlot.MaxEquipable)
+					toSlot = (ushort)item.Item_Type;						
 				if (toSlot==0)
 				{
 					client.Out.SendInventorySlotsUpdate(new int[] {fromSlot});
 					return 0;
 				}
+				if( toSlot == (int)eInventorySlot.LeftBracer || toSlot == (int)eInventorySlot.RightBracer)
+				{
+					if(client.Player.Inventory.GetItem(eInventorySlot.LeftBracer) == null)
+						toSlot = (int)eInventorySlot.LeftBracer;
+					else
+						toSlot = (int)eInventorySlot.RightBracer;
+				}
+
+				if( toSlot == (int)eInventorySlot.LeftRing || toSlot == (int)eInventorySlot.RightRing)
+				{
+					if(client.Player.Inventory.GetItem(eInventorySlot.LeftRing) == null)
+						toSlot = (int)eInventorySlot.LeftRing;
+					else
+						toSlot = (int)eInventorySlot.RightRing;
+				}
+
 				client.Player.Inventory.MoveItem((eInventorySlot)fromSlot,(eInventorySlot)toSlot, itemCount);
 				return 1;
 			}

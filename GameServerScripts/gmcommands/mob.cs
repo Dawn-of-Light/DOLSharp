@@ -1,16 +1,16 @@
 /*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -24,11 +24,12 @@ using DOL.AI.Brain;
 using DOL.Database;
 using DOL.GS.PacketHandler;
 using DOL.GS.Utils;
+using DOL.GS.Quests;
 
 namespace DOL.GS.Scripts
 {
 	[Cmd("&mob", //command to handle
-		(uint) ePrivLevel.GM, //minimum privelege level
+		(uint)ePrivLevel.GM, //minimum privelege level
 		"Various mob creation commands!", //command description
 		//Usage
 		"'/mob nfastcreate <Model> <Realm> <Level> <Number> <Radius> <Name>' to create n mob with fixed level,model and name placed around creator within the provided radius",
@@ -57,6 +58,7 @@ namespace DOL.GS.Scripts
 		"'/mob level' changing the mob's level",
 		"'/mob brain' changing the mob's brain",
 		"'/mob respawn <newDuration>' changing the time between each mob respawn",
+		"'/mob questinfo' to show mob quests infos",
 		"'/mob equipinfo' to show mob inventory infos",
 		"'/mob equiptemplate create' to create an empty inventory template",
 		"'/mob equiptemplate add <slot> <model> [color] [effect]' to add an item to this mob inventory template",
@@ -85,16 +87,17 @@ namespace DOL.GS.Scripts
 
 			GameNPC targetMob = null;
 			if (client.Player.TargetObject != null && client.Player.TargetObject is GameNPC)
-				targetMob = (GameNPC) client.Player.TargetObject;
+				targetMob = (GameNPC)client.Player.TargetObject;
 
-			if (args[1] != "create" 
-				&& args[1] != "fastcreate" 
-				&& args[1] != "nrandcreate" 
-				&& args[1] != "nfastcreate" 
+			if (args[1] != "create"
+				&& args[1] != "fastcreate"
+				&& args[1] != "nrandcreate"
+				&& args[1] != "nfastcreate"
 				&& targetMob == null)
 			{
-				if (client.Player.TargetObject != null) {
-					client.Out.SendMessage("Cannot use "+client.Player.TargetObject+" for /mob command.", eChatType.CT_System, eChatLoc.CL_SystemWindow);				
+				if (client.Player.TargetObject != null)
+				{
+					client.Out.SendMessage("Cannot use " + client.Player.TargetObject + " for /mob command.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return 1;
 				}
 				client.Out.SendMessage("Type /mob for command overview.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -133,13 +136,13 @@ namespace DOL.GS.Scripts
 							mob.Z = client.Player.Z;
 							mob.CurrentRegion = client.Player.CurrentRegion;
 							mob.Heading = client.Player.Heading;
-							mob.Level = (byte) DOL.GS.Util.Random(10, 50);
-							mob.Realm = (byte) DOL.GS.Util.Random(1, 3);
+							mob.Level = (byte)DOL.GS.Util.Random(10, 50);
+							mob.Realm = (byte)DOL.GS.Util.Random(1, 3);
 							mob.Name = "rand_" + i;
-							mob.Model = (byte) DOL.GS.Util.Random(100, 200);
+							mob.Model = (byte)DOL.GS.Util.Random(100, 200);
 
 							//Fill the living variables
-							if(mob.Brain is IAggressiveBrain)
+							if (mob.Brain is IAggressiveBrain)
 							{
 								((IAggressiveBrain)mob.Brain).AggroLevel = 100;
 								((IAggressiveBrain)mob.Brain).AggroRange = 1500;
@@ -198,7 +201,7 @@ namespace DOL.GS.Scripts
 							mob.Model = model;
 
 							//Fill the living variables
-							if(mob.Brain is IAggressiveBrain)
+							if (mob.Brain is IAggressiveBrain)
 							{
 								((IAggressiveBrain)mob.Brain).AggroLevel = 100;
 								((IAggressiveBrain)mob.Brain).AggroRange = 1500;
@@ -272,16 +275,23 @@ namespace DOL.GS.Scripts
 						{
 							info.Add(" + Not aggressive brain");
 						}
+						string respawn = "none";
+						if (targetMob is GameMob)
+							respawn = ((GameMob)targetMob).RespawnInterval.ToString();
+
+						info.Add(" + Respawn: " + respawn + " (Position: X=" + targetMob.SpawnX + " Y=" + targetMob.SpawnY + " Z=" + targetMob.SpawnZ + ")");
+
 						info.Add(" + Damage type: " + targetMob.MeleeDamageType);
 						info.Add(" + Position: X=" + targetMob.X + " Y=" + targetMob.Y + " Z=" + targetMob.Z);
 						info.Add(" + Guild: " + targetMob.GuildName);
 						info.Add(" + Model: " + targetMob.Model + " sized to " + targetMob.Size);
-						info.Add(string.Format(" + Flags: {0} (0x{1})", ((GameNPC.eFlags) targetMob.Flags).ToString("G"), targetMob.Flags.ToString("X")));
+						info.Add(string.Format(" + Flags: {0} (0x{1})", ((GameNPC.eFlags)targetMob.Flags).ToString("G"), targetMob.Flags.ToString("X")));
 						info.Add(" + Active weapon slot: " + targetMob.ActiveWeaponSlot);
 						info.Add(" + Visible weapon slot: " + targetMob.VisibleActiveWeaponSlots);
 						info.Add(" + MaxSpeed : " + targetMob.MaxSpeedBase);
 						info.Add(" + Equipment Template ID: " + targetMob.EquipmentTemplateID);
 						info.Add(" + Inventory: " + targetMob.Inventory);
+						info.Add(" + CanGiveQuest: " + targetMob.QuestListToGive.Count);
 
 						client.Out.SendCustomTextWindow("[ " + targetMob.Name + " ]", info);
 					}
@@ -379,8 +389,8 @@ namespace DOL.GS.Scripts
 						GameMob mob = null;
 						try
 						{
-							client.Out.SendDebugMessage(Assembly.GetAssembly(typeof (GameServer)).FullName);
-							mob = (GameMob) Assembly.GetAssembly(typeof (GameServer)).CreateInstance(theType, false);
+							client.Out.SendDebugMessage(Assembly.GetAssembly(typeof(GameServer)).FullName);
+							mob = (GameMob)Assembly.GetAssembly(typeof(GameServer)).CreateInstance(theType, false);
 						}
 						catch (Exception e)
 						{
@@ -391,7 +401,7 @@ namespace DOL.GS.Scripts
 							try
 							{
 								client.Out.SendDebugMessage(Assembly.GetExecutingAssembly().FullName);
-								mob = (GameMob) Assembly.GetExecutingAssembly().CreateInstance(theType, false);
+								mob = (GameMob)Assembly.GetExecutingAssembly().CreateInstance(theType, false);
 							}
 							catch (Exception e)
 							{
@@ -442,21 +452,21 @@ namespace DOL.GS.Scripts
 					break;
 
 				case "respawn":
-				{
-					int interval;
-					try
 					{
-						interval = Convert.ToInt16(args[2]);
-						((GameMob)targetMob).RespawnInterval = interval;
-						targetMob.SaveIntoDatabase();
-						client.Out.SendMessage("Mob respawn interval changed to: " + interval, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						int interval;
+						try
+						{
+							interval = Convert.ToInt16(args[2]);
+							((GameMob)targetMob).RespawnInterval = interval;
+							targetMob.SaveIntoDatabase();
+							client.Out.SendMessage("Mob respawn interval changed to: " + interval, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						}
+						catch (Exception)
+						{
+							client.Out.SendMessage("Type /mob for command overview.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							return 1;
+						}
 					}
-					catch (Exception)
-					{
-						client.Out.SendMessage("Type /mob for command overview.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						return 1;
-					}
-				}
 					break;
 
 				case "size":
@@ -471,7 +481,7 @@ namespace DOL.GS.Scripts
 								return 1;
 							}
 
-							targetMob.Size = (byte) size;
+							targetMob.Size = (byte)size;
 							targetMob.SaveIntoDatabase();
 							client.Out.SendMessage("Mob size changed to: " + targetMob.Size, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						}
@@ -537,7 +547,7 @@ namespace DOL.GS.Scripts
 					{
 						try
 						{
-							eDamageType damage = (eDamageType) Enum.Parse(typeof (eDamageType), args[2], true);
+							eDamageType damage = (eDamageType)Enum.Parse(typeof(eDamageType), args[2], true);
 							DisplayMessage(client, "Mob damage type changed to: {0} (was {1})", damage, targetMob.MeleeDamageType);
 							targetMob.MeleeDamageType = damage;
 							targetMob.SaveIntoDatabase();
@@ -572,8 +582,8 @@ namespace DOL.GS.Scripts
 							string brainType = args[2];
 							try
 							{
-								client.Out.SendDebugMessage(Assembly.GetAssembly(typeof (GameServer)).FullName);
-								brain = (ABrain) Assembly.GetAssembly(typeof (GameServer)).CreateInstance(brainType, false);
+								client.Out.SendDebugMessage(Assembly.GetAssembly(typeof(GameServer)).FullName);
+								brain = (ABrain)Assembly.GetAssembly(typeof(GameServer)).CreateInstance(brainType, false);
 							}
 							catch (Exception e)
 							{
@@ -584,7 +594,7 @@ namespace DOL.GS.Scripts
 								try
 								{
 									client.Out.SendDebugMessage(Assembly.GetExecutingAssembly().FullName);
-									brain = (ABrain) Assembly.GetExecutingAssembly().CreateInstance(brainType, false);
+									brain = (ABrain)Assembly.GetExecutingAssembly().CreateInstance(brainType, false);
 								}
 								catch (Exception e)
 								{
@@ -650,6 +660,20 @@ namespace DOL.GS.Scripts
 					}
 					break;
 
+				case "questinfo":
+					{
+						if (targetMob.QuestListToGive.Count == 0)
+						{
+							client.Out.SendMessage("Mob not have any quests!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							return 1;
+						}
+
+						client.Out.SendMessage("--------------------------------------------------------------", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+						foreach (AbstractQuest quest in targetMob.QuestListToGive)
+							client.Out.SendMessage("Quest Name: [" + quest.Name + "]", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+					}
+					break;
+
 				case "equipinfo":
 					{
 						if (targetMob.Inventory == null)
@@ -662,7 +686,7 @@ namespace DOL.GS.Scripts
 						string closed = "";
 						if (targetMob.Inventory is GameNpcInventoryTemplate)
 						{
-							GameNpcInventoryTemplate t = (GameNpcInventoryTemplate) targetMob.Inventory;
+							GameNpcInventoryTemplate t = (GameNpcInventoryTemplate)targetMob.Inventory;
 							closed = t.IsClosed ? " (closed)" : " (open)";
 						}
 						string message = string.Format("			         Inventory: {0}{1}, equip template ID: {2}", targetMob.Inventory.GetType().ToString(), closed, targetMob.EquipmentTemplateID);
@@ -780,7 +804,7 @@ namespace DOL.GS.Scripts
 												effect = Convert.ToInt32(args[6]);
 
 
-											if (! template.AddNPCEquipment((eInventorySlot) slot, model, color, effect))
+											if (!template.AddNPCEquipment((eInventorySlot)slot, model, color, effect))
 											{
 												client.Out.SendMessage("Couldn't add new item to slot " + slot + ". Template could be closed.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 												return 1;
@@ -815,7 +839,7 @@ namespace DOL.GS.Scripts
 												return 1;
 											}
 
-											if (!template.RemoveNPCEquipment((eInventorySlot) slot))
+											if (!template.RemoveNPCEquipment((eInventorySlot)slot))
 											{
 												client.Out.SendMessage("Couldn't remove item from slot " + slot + ". Template could be closed.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 												return 1;
@@ -862,7 +886,7 @@ namespace DOL.GS.Scripts
 									if (args.Length > 3)
 									{
 										bool replace = (args.Length > 4 && args[4].ToLower() == "replace") ? true : false;
-										if (!replace && null != GameServer.Database.SelectObject(typeof (NPCEquipment), "TemplateID = '" + args[3] + "'"))
+										if (!replace && null != GameServer.Database.SelectObject(typeof(NPCEquipment), "TemplateID = '" + args[3] + "'"))
 										{
 											client.Out.SendMessage("Template with name '" + args[3] + "' already exists. Use 'replace' flag if you want to overwrite it.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 											return 1;
@@ -892,40 +916,11 @@ namespace DOL.GS.Scripts
 						targetMob.UpdateNPCEquipmentAppearance();
 					}
 					break;
-
-				case "ghost":
-					{
-						targetMob.Flags ^= (uint) GameNPC.eFlags.GHOST;
-						targetMob.SaveIntoDatabase();
-						client.Out.SendMessage("Mob GHOST flag is set to " + ((targetMob.Flags & (uint) GameNPC.eFlags.GHOST) != 0), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					}
-					break;
 				case "transparent":
-				{
-					targetMob.Flags ^= (uint) GameNPC.eFlags.TRANSPARENT;
-					targetMob.SaveIntoDatabase();
-					client.Out.SendMessage("Mob TRANSPARENT flag is set to " + ((targetMob.Flags & (uint) GameNPC.eFlags.TRANSPARENT) != 0), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				}
-					break;
-				case "fly":
 					{
-						targetMob.Flags ^= (uint) GameNPC.eFlags.FLYING;
+						targetMob.Flags ^= (uint)GameNPC.eFlags.TRANSPARENT;
 						targetMob.SaveIntoDatabase();
-						client.Out.SendMessage("Mob FLYING flag is set to " + ((targetMob.Flags & (uint) GameNPC.eFlags.FLYING) != 0), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					}
-					break;
-				case "noname":
-					{
-						targetMob.Flags ^= (uint) GameNPC.eFlags.DONTSHOWNAME;
-						targetMob.SaveIntoDatabase();
-						client.Out.SendMessage("Mob DONTSHOWNAME flag is set to " + ((targetMob.Flags & (uint) GameNPC.eFlags.DONTSHOWNAME) != 0), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					}
-					break;
-				case "notarget":
-					{
-						targetMob.Flags ^= (uint) GameNPC.eFlags.CANTTARGET;
-						targetMob.SaveIntoDatabase();
-						client.Out.SendMessage("Mob CANTTARGET flag is set to " + ((targetMob.Flags & (uint) GameNPC.eFlags.CANTTARGET) != 0), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						client.Out.SendMessage("Mob TRANSPARENT flag is set to " + ((targetMob.Flags & (uint)GameNPC.eFlags.TRANSPARENT) != 0), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}
 					break;
 				case "peace":
@@ -933,6 +928,27 @@ namespace DOL.GS.Scripts
 						targetMob.Flags ^= (uint)GameNPC.eFlags.PEACE;
 						targetMob.SaveIntoDatabase();
 						client.Out.SendMessage("Mob PEACE flag is set to " + ((targetMob.Flags & (uint)GameNPC.eFlags.PEACE) != 0), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					}
+					break;
+				case "fly":
+					{
+						targetMob.Flags ^= (uint)GameNPC.eFlags.FLYING;
+						targetMob.SaveIntoDatabase();
+						client.Out.SendMessage("Mob FLYING flag is set to " + ((targetMob.Flags & (uint)GameNPC.eFlags.FLYING) != 0), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					}
+					break;
+				case "noname":
+					{
+						targetMob.Flags ^= (uint)GameNPC.eFlags.DONTSHOWNAME;
+						targetMob.SaveIntoDatabase();
+						client.Out.SendMessage("Mob DONTSHOWNAME flag is set to " + ((targetMob.Flags & (uint)GameNPC.eFlags.DONTSHOWNAME) != 0), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					}
+					break;
+				case "notarget":
+					{
+						targetMob.Flags ^= (uint)GameNPC.eFlags.CANTTARGET;
+						targetMob.SaveIntoDatabase();
+						client.Out.SendMessage("Mob CANTTARGET flag is set to " + ((targetMob.Flags & (uint)GameNPC.eFlags.CANTTARGET) != 0), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}
 					break;
 				case "addloot":

@@ -1,7 +1,5 @@
 /*
-*Broadcast - Etaew - Fallen Realms v1
-*
-*ToDo: Sort areas for broadcast? not zones
+*Broadcast - Etaew
 */
 using DOL.GS;
 using DOL.GS.PacketHandler;
@@ -9,10 +7,10 @@ using DOL.GS.PacketHandler;
 namespace DOL.GS.Scripts
 {
 	[CmdAttribute(
-	  "&broadcast",
-	  new string[] {"&b"},
-	  (uint)ePrivLevel.Player,
-		"Broadcast something to other players in the same zone",
+		 "&broadcast",
+		 new string[] {"&b"},
+		 (uint)ePrivLevel.Player,
+		 "Broadcast something to other players in the same zone",
 		 "/b <message>")]
 	public class BroadcastCommandHandler : ICommandHandler
 	{
@@ -28,13 +26,14 @@ namespace DOL.GS.Scripts
 
 			if (targetArea == null)
 			{
-				client.Out.SendMessage("You cannot broadcast here!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				client.Out.SendMessage("You cannot broadcast here!", 
+					eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return 1;
 			}
 
 			string message = string.Join(" ", args, 1, args.Length - 1);
 
-			Broadcast(client.Player.Name, message, targetArea, client.Player.CurrentRegionID);
+			Broadcast(client.Player, message, targetArea);
 
 			return 1;
 		}
@@ -43,17 +42,25 @@ namespace DOL.GS.Scripts
 		{
 			foreach (AbstractArea thisArea in player.CurrentAreas)
 			{
-				if (AreaMgr.BroadcastableAreas.Contains(thisArea)) return thisArea;
+				if (AreaMgr.BroadcastableAreas.Contains(thisArea)) 
+					return thisArea;
 			}
 			return null;
 		}
 
-		private void Broadcast(string name, string message, AbstractArea area, ushort regionID)
+		private void Broadcast(GamePlayer player, string message,AbstractArea area)
 		{
-			foreach (GameClient thisClient in WorldMgr.GetClientsOfRegion(regionID))
+			foreach (GameClient thisClient in 
+				WorldMgr.GetClientsOfRegion(player.CurrentRegionID))
 			{
 				if (thisClient.Player.CurrentAreas.Contains(area))
-					thisClient.Player.Out.SendMessage("[Broadcast] " + name + ": " + message, eChatType.CT_Broadcast, eChatLoc.CL_ChatWindow);
+				{
+					if 
+						(GameServer.ServerRules.IsAllowedToUnderstand(thisClient.Player, player))
+						thisClient.Player.Out.SendMessage("[Broadcast] " 
+							+ player.Name + ": " + message, eChatType.CT_Broadcast, 
+							eChatLoc.CL_ChatWindow);
+				}
 			}
 		}
 	}

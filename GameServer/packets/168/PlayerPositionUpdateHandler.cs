@@ -1,16 +1,16 @@
 /*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -23,6 +23,9 @@ using System.Collections;
 using System.Reflection;
 using System.Text;
 using DOL.GS;
+using DOL.Database;
+using System.Net;
+using DOL.GS.PacketHandler;
 using DOL.Events;
 using log4net;
 
@@ -40,7 +43,6 @@ namespace DOL.GS.PacketHandler.v168
 		private static int lastX = 0;
 		private static int lastY = 0;
 		private static int lastUpdateTick = 0;
-#endif
 		/// <summary>
 		/// The tolerance for speedhack etc. ... 180% of max speed
 		/// This might sound much, but actually it is not because even
@@ -52,12 +54,14 @@ namespace DOL.GS.PacketHandler.v168
 		/// <summary>
 		/// Stores the last update tick inside the player
 		/// </summary>
+#endif
 		public const string LASTUPDATETICK = "PLAYERPOSITION_LASTUPDATETICK";
 		/// <summary>
 		/// Stores the count of times the player is above speedhack tolerance!
 		/// If this value reaches 10 or more, a logfile entry is written.
 		/// </summary>
 		public const string SPEEDHACKCOUNTER = "SPEEDHACKCOUNTER";
+		public const string SHSPEEDCOUNTER = "MYSPEEDHACKCOUNTER";
 
 		//static int lastZ=int.MinValue;
 		public int HandlePacket(GameClient client, GSPacketIn packet)
@@ -65,6 +69,7 @@ namespace DOL.GS.PacketHandler.v168
 			if (client.Player.ObjectState != GameObject.eObjectState.Active)
 				return 1;
 
+			int EnvironmentTick = Environment.TickCount;
 			int packetVersion;
 			if (client.Version > GameClient.eClientVersion.Version171)
 			{
@@ -82,9 +87,10 @@ namespace DOL.GS.PacketHandler.v168
 			packet.Skip(2); //PID
 			ushort data = packet.ReadShort();
 			int speed = (data & 0x1FF);
+			client.Player.IsClimbing = (((data >> 10) & 7) == 7);
 
-//			if(!GameServer.ServerRules.IsAllowedDebugMode(client) 
-//				&& (speed > client.Player.MaxSpeed + SPEED_TOL))
+			//			if(!GameServer.ServerRules.IsAllowedDebugMode(client)
+			//				&& (speed > client.Player.MaxSpeed + SPEED_TOL))
 
 
 			if ((data & 0x200) != 0)
@@ -109,7 +115,7 @@ namespace DOL.GS.PacketHandler.v168
 			ushort currentZoneID;
 			if (packetVersion == 168)
 			{
-				currentZoneID = (ushort) packet.ReadByte();
+				currentZoneID = (ushort)packet.ReadByte();
 				packet.Skip(1); //0x00 padding for zoneID
 			}
 			else
@@ -130,11 +136,11 @@ namespace DOL.GS.PacketHandler.v168
 				{
 					client.Out.SendMessage("Unknown zone, moving to bind point.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 					client.Player.MoveTo(
-						(ushort) client.Player.PlayerCharacter.BindRegion,
+						(ushort)client.Player.PlayerCharacter.BindRegion,
 						client.Player.PlayerCharacter.BindXpos,
 						client.Player.PlayerCharacter.BindYpos,
-						(ushort) client.Player.PlayerCharacter.BindZpos,
-						(ushort) client.Player.PlayerCharacter.BindHeading
+						(ushort)client.Player.PlayerCharacter.BindZpos,
+						(ushort)client.Player.PlayerCharacter.BindHeading
 						);
 				}
 
@@ -145,11 +151,11 @@ namespace DOL.GS.PacketHandler.v168
 			if (realZ == 0)
 			{
 				client.Player.MoveTo(
-					(ushort) client.Player.PlayerCharacter.BindRegion,
+					(ushort)client.Player.PlayerCharacter.BindRegion,
 					client.Player.PlayerCharacter.BindXpos,
 					client.Player.PlayerCharacter.BindYpos,
-					(ushort) client.Player.PlayerCharacter.BindZpos,
-					(ushort) client.Player.PlayerCharacter.BindHeading
+					(ushort)client.Player.PlayerCharacter.BindZpos,
+					(ushort)client.Player.PlayerCharacter.BindHeading
 					);
 				return 1;
 			}
@@ -169,11 +175,12 @@ namespace DOL.GS.PacketHandler.v168
 					client.Player.MaxLastZ = int.MinValue;
 				}
 				client.Out.SendMessage("You have entered " + newZone.Description + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				client.Out.SendMessage(newZone.Description, eChatType.CT_ScreenCenterSmaller, eChatLoc.CL_SystemWindow);	
+				client.Out.SendMessage(newZone.Description, eChatType.CT_ScreenCenterSmaller, eChatLoc.CL_SystemWindow);
 				client.Player.LastPositionUpdateZone = newZone;
 			}
 
 			int lastTick = client.Player.TempProperties.getIntProperty(LASTUPDATETICK, 0);
+#if OUTPUT_DEBUG_INFO
 			if (lastTick != 0 && client.Account.PrivLevel == 1)
 			{
 				int tickDiff = Environment.TickCount - lastTick;
@@ -217,10 +224,31 @@ namespace DOL.GS.PacketHandler.v168
 					client.Player.TempProperties.setProperty(SPEEDHACKCOUNTER, counter);
 				}
 			}
+#endif
 			client.Player.TempProperties.setProperty(LASTUPDATETICK, Environment.TickCount);
 
+			ushort headingflag = packet.ReadShort();
+			client.Player.Heading = (ushort)(headingflag & 0xFFF);
+			ushort flyingflag = packet.ReadShort();
+			byte flags = (byte)packet.ReadByte();
+			/*
+			if (!client.Player.IsPlayerJump || (client.Player.IsPlayerJump & ((flags & 0x40) != 0)))
+			{
+				client.Player.IsPlayerJump = false;
+				client.Player.X = realX;
+				client.Player.Y = realY;
+				client.Player.Z = realZ;
+			}
+			 */
+			//client.Player.IsPlayerJump = false;
+			client.Player.X = realX;
+			client.Player.Y = realY;
+			client.Player.Z = realZ;
+			// used to predict current position, should be before
+			// any calculation (like fall damage)
+			client.Player.MovementStartTick = Environment.TickCount;
 
-			// Begin ---------- New Area System -----------					
+			// Begin ---------- New Area System -----------
 			if (client.Player.CurrentRegion.Time > client.Player.AreaUpdateTick) // check if update is needed
 			{
 				IList oldAreas = client.Player.CurrentAreas;
@@ -252,32 +280,83 @@ namespace DOL.GS.PacketHandler.v168
 			// End ---------- New Area System -----------
 
 
-			ushort headingflag = packet.ReadShort();
-			client.Player.Heading = (ushort) (headingflag & 0xFFF);
-			ushort flyingflag = packet.ReadShort();
-			byte flags = (byte) packet.ReadByte();
-			
-			if ((flags & 0x40) != 0)
-			{
-				client.Player.IsPlayerMoved = false;
-			}
-			// ignore position changes until client confirms that he knows that he was moved
-			if (!client.Player.IsPlayerMoved)
-			{
-				client.Player.X = realX;
-				client.Player.Y = realY;
-				client.Player.Z = realZ;
-				// used to predict current position, should be before
-				// any calculation (like fall damage)
-				client.Player.MovementStartTick = Environment.TickCount;
-			}
-			
 			client.Player.TargetInView = ((flags & 0x10) != 0);
 			client.Player.GroundTargetInView = ((flags & 0x08) != 0);
 			//7  6  5  4  3  2  1 0
 			//15 14 13 12 11 10 9 8
-			//                1 1     
+			//                1 1
 
+			const string SHLASTUPDATETICK = "SHPLAYERPOSITION_LASTUPDATETICK";
+			const string SHLASTFLY = "SHLASTFLY_STRING";
+			const string SHLASTSTATUS = "SHLASTSTATUS_STRING";
+			int SHlastTick = client.Player.TempProperties.getIntProperty(SHLASTUPDATETICK, 0);
+			int SHlastFly = client.Player.TempProperties.getIntProperty(SHLASTFLY, 0);
+			int SHlastStatus = client.Player.TempProperties.getIntProperty(SHLASTSTATUS, 0);
+			int SHcount = client.Player.TempProperties.getIntProperty(SHSPEEDCOUNTER, 0);
+			int status = (data & 0x1FF ^ data) >> 8;
+			int fly = (flyingflag & 0x1FF ^ flyingflag) >> 8;
+			if (SHlastTick != 0 && SHlastTick != EnvironmentTick)
+			{
+				if (((SHlastStatus == status || (status & 0x8) == 0)) && ((fly & 0x80) != 0x80) && (SHlastFly == fly || (SHlastFly & 0x10) == (fly & 0x10) || !((((SHlastFly & 0x10) == 0x10) && ((fly & 0x10) == 0x0) && (flyingflag & 0x7FF) > 0))))
+				{
+					if ((EnvironmentTick - SHlastTick) < 400)
+					{
+						if (client.Account.PrivLevel > 1)
+							client.Out.SendMessage(string.Format("SH ({0}) detected: {1}", 500 / (EnvironmentTick - SHlastTick), EnvironmentTick - SHlastTick), eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
+						SHcount++;
+						if (SHcount % 10 == 0)
+						{
+							StringBuilder builder = new StringBuilder();
+							builder.Append("TEST_SH_DETECT[");
+							builder.Append(SHcount);
+							builder.Append("] (");
+							builder.Append(EnvironmentTick - SHlastTick);
+							builder.Append("): CharName=");
+							builder.Append(client.Player.Name);
+							builder.Append(" Account=");
+							builder.Append(client.Account.Name);
+							builder.Append(" IP=");
+							builder.Append(client.TcpEndpoint);
+							GameServer.Instance.LogCheatAction(builder.ToString());
+							/*
+							if ((client.Account.PrivLevel == 1) && SHcount >= 20) // ~5-10 sec SH
+							{
+								Account accountToBan = client.Account;
+								client.Out.SendDialogBox(eDialogCode.SimpleWarning, 0x00, 0x00, 0x00, 0x00, eDialogType.Ok, true, "1 hour Ban for SpeedHack!");
+								client.Out.SendMessage("Ban 1 hour and disconnect after SpeedHack using.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+
+								DateTime banDuration = DateTime.Now;
+								banDuration = banDuration.AddHours(1);
+								accountToBan.BanDuration = banDuration;
+								accountToBan.BanAuthor = "SH check";
+								accountToBan.BanReason = string.Format("Autoban SH:({0},{1}) on player:{2}", SHcount, EnvironmentTick - SHlastTick, client.Player.Name); ;
+								GameServer.Database.SaveObject(accountToBan);
+								client.Out.SendPlayerQuit(true);
+								client.Disconnect();
+								return 1;
+							}
+							*/
+						}
+					}
+					else
+						SHcount = 0;
+					//					client.Out.SendMessage("SHC:"+(Environment.TickCount - SHlastTick).ToString()/**0.0001*/, eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
+					SHlastTick = EnvironmentTick;
+				}
+				else
+				{
+					//					client.Out.SendMessage("SHC : skip", eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
+				}
+
+			}
+			else
+				SHlastTick = EnvironmentTick;
+			SHlastFly = fly;
+			SHlastStatus = status;
+			client.Player.TempProperties.setProperty(SHLASTUPDATETICK, SHlastTick);
+			client.Player.TempProperties.setProperty(SHLASTFLY, SHlastFly);
+			client.Player.TempProperties.setProperty(SHLASTSTATUS, SHlastStatus);
+			client.Player.TempProperties.setProperty(SHSPEEDCOUNTER, SHcount);
 			lock (client.Player.LastUniqueLocations)
 			{
 				GameLocation[] locations = client.Player.LastUniqueLocations;
@@ -336,7 +415,7 @@ namespace DOL.GS.PacketHandler.v168
 								client.Out.SendMessage("The damage was lessened by your Safe Fall ability!", eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
 							client.Out.SendMessage("You take " + fallPercent + "% of your max hits in damage.", eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
 
-							client.Player.Endurance -= (client.Player.MaxEndurance * fallPercent) / 100;
+							client.Player.Endurance -= client.Player.MaxEndurance * fallPercent / 100;
 							client.Player.TakeDamage(null, eDamageType.Falling, (int)(0.01 * fallPercent * (client.Player.MaxHealth - 1)), 0);
 
 							//Update the player's health to all other players around
@@ -385,8 +464,8 @@ namespace DOL.GS.PacketHandler.v168
 				client.Player.Heading = client.Player.Steed.Heading;
 
 				con168[2] |= 24; //Set ride flag 00011000
-				con168[12] = (byte) (client.Player.Steed.ObjectID >> 8); //heading = steed ID
-				con168[13] = (byte) (client.Player.Steed.ObjectID & 0xFF);
+				con168[12] = (byte)(client.Player.Steed.ObjectID >> 8); //heading = steed ID
+				con168[13] = (byte)(client.Player.Steed.ObjectID & 0xFF);
 			}
 			else if (!client.Player.Alive)
 			{
@@ -397,17 +476,22 @@ namespace DOL.GS.PacketHandler.v168
 			con168[16] &= 0xFB; //11 11 10 11
 			if ((con168[16] & 0x02) != 0x00)
 			{
+				client.Player.IsDiving = true;
 				con168[16] |= 0x04;
 			}
+			else
+				client.Player.IsDiving = false;
+
 			con168[16] &= 0xFD; //11 11 11 01
-			//stealth is set here 
+			//stealth is set here
 			if (client.Player.IsStealthed)
 			{
 				con168[16] |= 0x02;
 			}
 
+			con168[17] = (byte)((con168[17] & 0x80) | client.Player.HealthPercent);
 			// zone ID has changed in 1.72, fix bytes 11 and 12
-			byte[] con172 = (byte[]) con168.Clone();
+			byte[] con172 = (byte[])con168.Clone();
 			if (packetVersion == 168)
 			{
 				// client sent v168 pos update packet, fix 172 version
@@ -430,14 +514,16 @@ namespace DOL.GS.PacketHandler.v168
 			//Now copy the whole content of the packet
 			outpak172.Write(con172, 0, con172.Length);
 			outpak172.WritePacketLength();
-			
-			byte[] pak168 = outpak168.GetBuffer();
-			byte[] pak172 = outpak172.GetBuffer();
-			outpak168 = null;
-			outpak172 = null;
+
+			//			byte[] pak168 = outpak168.GetBuffer();
+			//			byte[] pak172 = outpak172.GetBuffer();
+			//			outpak168 = null;
+			//			outpak172 = null;
 
 			foreach (GamePlayer player in client.Player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
+				if (player == null)
+					continue;
 				//No position updates for ourselves
 				if (player == client.Player)
 					continue;
@@ -447,9 +533,9 @@ namespace DOL.GS.PacketHandler.v168
 				{
 					//forward the position packet like normal!
 					if (player.Client.Version > GameClient.eClientVersion.Version171)
-						player.Out.SendUDP(pak172);
+						player.Out.SendUDPRaw(outpak172);
 					else
-						player.Out.SendUDP(pak168);
+						player.Out.SendUDPRaw(outpak168);
 				}
 				else
 					player.Out.SendObjectDelete(client.Player); //remove the stealthed player from view
@@ -457,8 +543,6 @@ namespace DOL.GS.PacketHandler.v168
 
 			//Notify the GameEventMgr of the moving player
 			GameEventMgr.Notify(GamePlayerEvent.Moving, client.Player);
-
-			//client.Player.NotifyPositionChange();
 
 			return 1;
 		}

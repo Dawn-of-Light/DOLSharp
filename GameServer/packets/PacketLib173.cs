@@ -116,47 +116,69 @@ namespace DOL.GS.PacketHandler
 
 		public override void SendRegions()
 		{
-			RegionEntry[] entries = WorldMgr.GetRegionList();
-
-			if(entries==null) return;
-			int index = 0;
-			int num = 0;
-			int count = entries.Length;
-			while(entries!=null && count > index)
+			if (m_gameClient.Player != null)
 			{
-				GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.ClientRegions));
-				for(int i=0;i<4;i++)
-				{
-					while (index < count && m_gameClient.ClientType <= entries[index].expansion)
-					{
-						index++;
-					}
-
-					if(index >= count)
-					{	//If we have no more entries
-						pak.Fill(0x0,52);
-					}
-					else
-					{
-						pak.WriteByte((byte)(++num));
-						pak.WriteByte((byte)entries[index].id);
-						pak.FillString(entries[index].name,20);
-						pak.FillString(entries[index].fromPort,5);
-						pak.FillString(entries[index].toPort,5);
-						//Try to fix the region ip so UDP is enabled!
-						string ip = entries[index].ip;
-						if(ip == "any" || ip == "0.0.0.0" || ip == "127.0.0.1" || ip.StartsWith("10.13.") || ip.StartsWith("192.168."))
-							ip = ((IPEndPoint)m_gameClient.Socket.LocalEndPoint).Address.ToString();
-						pak.FillString(ip, 20);
-
-//						DOLConsole.WriteLine(string.Format(" ip={3}; fromPort={1}; toPort={2}; num={4}; id={0}; region name={5}", entries[index].id, entries[index].fromPort, entries[index].toPort, entries[index].ip, num, entries[index].name));
-						index++;
-					}
-				}
+				if (!m_gameClient.Socket.Connected)
+					return;
+				Region region = WorldMgr.GetRegion((ushort)m_gameClient.Player.CurrentRegionID);
+				if (region == null)
+					return;
+				GSTCPPacketOut pak = new GSTCPPacketOut(0xB1);
+//				pak.WriteByte((byte)((region.Expansion + 1) << 4)); // Must be expansion
+				pak.WriteByte(0); // but this packet sended when client in old region. but this field must show expanstion for jump destanation region
+				pak.WriteByte((byte)region.ID);
+				pak.Fill(0,20);
+				pak.FillString(region.ServerPort.ToString(),5);
+				pak.FillString(region.ServerPort.ToString(),5);
+				string ip = region.ServerIP;
+				if(ip == "any" || ip == "0.0.0.0" || ip == "127.0.0.1" || ip.StartsWith("10.13.") || ip.StartsWith("192.168."))
+					ip = ((IPEndPoint)m_gameClient.Socket.LocalEndPoint).Address.ToString();
+				pak.FillString(ip, 20);
 				SendTCP(pak);
 			}
-		}
+			else
+			{
+				RegionEntry[] entries = WorldMgr.GetRegionList();
 
+				if(entries==null) return;
+				int index = 0;
+				int num = 0;
+				int count = entries.Length;
+				while(entries!=null && count > index)
+				{
+					GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.ClientRegions));
+					for(int i=0;i<4;i++)
+					{
+						while (index < count && m_gameClient.ClientType <= entries[index].expansion)
+						{
+							index++;
+						}
+
+						if(index >= count)
+						{	//If we have no more entries
+							pak.Fill(0x0,52);
+						}
+						else
+						{
+							pak.WriteByte((byte)(++num));
+							pak.WriteByte((byte)entries[index].id);
+							pak.FillString(entries[index].name,20);
+							pak.FillString(entries[index].fromPort,5);
+							pak.FillString(entries[index].toPort,5);
+							//Try to fix the region ip so UDP is enabled!
+							string ip = entries[index].ip;
+							if(ip == "any" || ip == "0.0.0.0" || ip == "127.0.0.1" || ip.StartsWith("10.13.") || ip.StartsWith("192.168."))
+								ip = ((IPEndPoint)m_gameClient.Socket.LocalEndPoint).Address.ToString();
+							pak.FillString(ip, 20);
+
+//							DOLConsole.WriteLine(string.Format(" ip={3}; fromPort={1}; toPort={2}; num={4}; id={0}; region name={5}", entries[index].id, entries[index].fromPort, entries[index].toPort, entries[index].ip, num, entries[index].name));
+							index++;
+						}
+					}
+					SendTCP(pak);
+				}
+			}
+		}
 
 		public override void SendCharacterOverview(eRealm realm)
 		{
@@ -186,7 +208,7 @@ namespace DOL.GS.PacketHandler
 						if(characters[j].AccountSlot==i)
 						{
 							pak.FillString(characters[j].Name,24);
-							items = (InventoryItem[]) GameServer.Database.SelectObjects(typeof(InventoryItem),"OwnerID = '"+characters[j].ObjectId+"'");
+							items = (InventoryItem[]) GameServer.Database.SelectObjects(typeof(InventoryItem),"OwnerID = '"+characters[j].ObjectId+"' AND SlotPosition >='10' AND SlotPosition <= '37'");
 							byte ExtensionTorso = 0;
 							byte ExtensionGloves = 0;
 							byte ExtensionBoots = 0;
@@ -241,8 +263,11 @@ namespace DOL.GS.PacketHandler
 							pak.WriteByte((byte)((((characters[j].Race & 0xF0) << 2)+(characters[j].Race & 0x0F)) | (characters[j].Gender << 4)));
 							pak.WriteShortLowEndian((ushort)characters[j].CurrentModel);
 							pak.WriteByte((byte)characters[j].Region);
-							pak.WriteByte(0x0); //second byte of region, currently unused
-							pak.WriteInt(0x0);  //Unknown, last used?
+							if (reg == null || m_gameClient.ClientType > reg.Expansion)
+								pak.WriteByte(0x00);
+							else
+								pak.WriteByte((byte)(reg.Expansion + 1)); //0x04-Cata zone, 0x05 - DR zone
+							pak.WriteInt(0x0); // Internal database ID
 							pak.WriteByte((byte)characters[j].Strength);
 							pak.WriteByte((byte)characters[j].Dexterity);
 							pak.WriteByte((byte)characters[j].Constitution);
@@ -339,7 +364,10 @@ namespace DOL.GS.PacketHandler
 								pak.WriteByte(righthand);
 								pak.WriteByte(lefthand);
 							}
-							pak.WriteByte(0x00); //0x01=char in SI zone, classic client can't "play"
+							if (reg == null || reg.Expansion != 1)
+									pak.WriteByte(0x00);
+							else
+									pak.WriteByte(0x01); //0x01=char in SI zone, classic client can't "play"
 							pak.WriteByte(0x00);
 							//pak.Fill(0x00,2);
 							written=true;
@@ -369,6 +397,22 @@ namespace DOL.GS.PacketHandler
 			pak.WriteShort(0);//unk
 			pak.WriteByte(0x52);//model
 			pak.WriteByte(0);//unk
+
+			SendTCP(pak);
+		}
+
+		public override void SendHexEffect(GamePlayer player,byte effect1,byte effect2,byte effect3,byte effect4,byte effect5)
+		{
+			if (player == null)
+				return;
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.VisualEffect));
+			pak.WriteShort((ushort)player.ObjectID);
+			pak.WriteByte(0x3); // show Hex
+			pak.WriteByte(effect1);
+			pak.WriteByte(effect2);
+			pak.WriteByte(effect3);
+			pak.WriteByte(effect4);
+			pak.WriteByte(effect5);
 
 			SendTCP(pak);
 		}
@@ -455,11 +499,99 @@ namespace DOL.GS.PacketHandler
 		{
 			if (m_gameClient.Player == null)
 				return;
+			SendRegions();
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.RegionChanged));
 			pak.WriteShort(m_gameClient.Player.CurrentRegionID);
 			pak.WriteShort(0x00); // Zone ID?
 			pak.WriteShort(0x00); // ?
 			pak.WriteShort(0x01); // cause region change ?
+			SendTCP(pak);
+		}
+
+		protected override void SendQuestPacket(AbstractQuest quest, int index)
+		{
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.QuestEntry));
+
+			pak.WriteByte((byte) index);
+			if (quest.Step <= 0)
+			{
+				pak.WriteByte(0);
+				pak.WriteByte(0);
+				pak.WriteByte(0);
+			}
+			else
+			{
+				string name = quest.Name;
+				string desc = quest.Description;
+				if (name.Length > byte.MaxValue)
+				{
+					if (log.IsWarnEnabled) log.Warn(quest.GetType().ToString() + ": name is too long for 1.71 clients ("+name.Length+") '"+name+"'");
+					name = name.Substring(0, byte.MaxValue);
+				}
+				if (desc.Length > ushort.MaxValue)
+				{
+					if (log.IsWarnEnabled) log.Warn(quest.GetType().ToString() + ": description is too long for 1.71 clients ("+desc.Length+") '"+desc+"'");
+					desc = desc.Substring(0, ushort.MaxValue);
+				}
+				if (name.Length + desc.Length > 2048-10)
+				{
+					if (log.IsWarnEnabled) log.Warn(quest.GetType().ToString() + ": name + description length is too long and would have crashed the client.\nName ("+name.Length+"): '"+name+"'\nDesc ("+desc.Length+"): '"+desc+"'");
+					name = name.Substring(0, 32);
+					desc = desc.Substring(0, 2048-10 - name.Length); // all that's left
+				}
+				pak.WriteByte((byte)name.Length);
+				pak.WriteShortLowEndian((ushort)desc.Length);
+				pak.WriteStringBytes(name); //Write Quest Name without trailing 0
+				pak.WriteStringBytes(desc); //Write Quest Description without trailing 0
+			}
+			SendTCP(pak);
+		}
+
+		public override void SendSiegeWeaponInterface(GameSiegeWeapon siegeWeapon, int time)
+		{
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.SiegeWeaponInterface));
+			ushort flag = (ushort)((siegeWeapon.EnableToMove ? 1 : 0) | siegeWeapon.AmmoType << 8);
+			pak.WriteShort(flag); //byte Ammo,  byte SiegeMoving(1/0)
+			pak.WriteByte(0);
+			pak.WriteByte(0); // Close interface(1/0)
+			pak.WriteByte((byte)(time));//time in 100ms
+			pak.WriteByte((byte)siegeWeapon.Ammo.Count); // external ammo count
+			pak.WriteByte((byte)siegeWeapon.SiegeWeaponTimer.CurrentAction);
+			pak.WriteByte((byte)siegeWeapon.AmmoSlot);
+			pak.WriteShort(siegeWeapon.Effect);
+			pak.WriteShort(0); // SiegeHelperTimer ?
+			pak.WriteShort(0); // SiegeTimer ?
+			pak.WriteShort((ushort)siegeWeapon.ObjectID);
+			pak.WritePascalString(siegeWeapon.Name+" ("+siegeWeapon.CurrentState.ToString()+")");
+			foreach (InventoryItem item in siegeWeapon.Ammo)
+			{
+				pak.WriteByte((byte) item.SlotPosition);
+				if (item == null)
+				{
+					pak.Fill(0x00, 18);
+					continue;
+				}
+				pak.WriteByte((byte) item.Level);
+				pak.WriteByte((byte) item.DPS_AF);
+				pak.WriteByte((byte) item.SPD_ABS);
+				pak.WriteByte((byte) (item.Hand*64));
+				pak.WriteByte((byte) ((item.Type_Damage*64) + item.Object_Type));
+				pak.WriteShort((ushort) item.Weight);
+				pak.WriteByte(item.ConditionPercent); // % of con
+				pak.WriteByte(item.DurabilityPercent); // % of dur
+				pak.WriteByte((byte) item.Quality); // % of qua
+				pak.WriteByte((byte) item.Bonus); // % bonus
+				pak.WriteShort((ushort) item.Model);
+				if (item.Emblem != 0)
+					pak.WriteShort((ushort) item.Emblem);
+				else
+					pak.WriteShort((ushort) item.Color);
+				pak.WriteShort((ushort) item.Effect);
+				if (item.Count > 1)
+					pak.WritePascalString(item.Count + " " + item.Name);
+				else
+					pak.WritePascalString(item.Name);
+			}
 			SendTCP(pak);
 		}
 	}

@@ -52,7 +52,7 @@ namespace DOL.GS.Scripts
 			if (args.Length == 3 && args[1] == "to") // /Jump to PlayerName
 			{
 				GameClient clientc;
-				clientc = WorldMgr.GetClientByPlayerName(args[2], false);
+				clientc = WorldMgr.GetClientByPlayerName(args[2], false, true);
 				if (clientc == null)
 				{
 					client.Out.SendMessage(args[2] + " cannot be found.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -69,7 +69,7 @@ namespace DOL.GS.Scripts
 			else if (args.Length == 4 && args[1] == "to") // /Jump to Name Realm
 			{
 				GameClient clientc;
-				clientc = WorldMgr.GetClientByPlayerName(args[2], false);
+				clientc = WorldMgr.GetClientByPlayerName(args[2], false, true);
 				if (clientc == null)
 				{
 					int realm = int.Parse(args[3]);
@@ -119,7 +119,7 @@ namespace DOL.GS.Scripts
 			else if (args.Length == 6 && args[2] == "to") // /Jump PlayerName to X Y Z
 			{
 				GameClient clientc;
-				clientc = WorldMgr.GetClientByPlayerName(args[1], false);
+				clientc = WorldMgr.GetClientByPlayerName(args[1], false, true);
 				if (clientc == null)
 				{
 					client.Out.SendMessage(args[1] + " is not in the game.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -131,7 +131,7 @@ namespace DOL.GS.Scripts
 			else if (args.Length == 7 && args[2] == "to") // /Jump PlayerName to X Y Z RegionID
 			{
 				GameClient clientc;
-				clientc = WorldMgr.GetClientByPlayerName(args[1], false);
+				clientc = WorldMgr.GetClientByPlayerName(args[1], false, true);
 				if (clientc == null)
 				{
 					client.Out.SendMessage(args[1] + " is not in the game.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -148,7 +148,7 @@ namespace DOL.GS.Scripts
 			{
 				GameClient clientc;
 				GameClient clientto;
-				clientc = WorldMgr.GetClientByPlayerName(args[1], false);
+				clientc = WorldMgr.GetClientByPlayerName(args[1], false, true);
 				if (clientc == null)
 				{
 					client.Out.SendMessage(args[1] + " is not in the game.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -160,7 +160,7 @@ namespace DOL.GS.Scripts
 				}
 				else
 				{
-					clientto = WorldMgr.GetClientByPlayerName(args[3], false);
+					clientto = WorldMgr.GetClientByPlayerName(args[3], false, false);
 				}
 
 				if (clientto == null)

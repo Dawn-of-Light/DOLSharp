@@ -468,6 +468,10 @@ namespace DOL.GS
 			{
 				foreach(GamePlayer pl in m_guildMembers)
 				{
+					if (!GotAccess(pl, eGuildRank.GcHear))
+					{
+						continue;
+					}
 					if (pl.Client.IsPlaying)
 						pl.Out.SendMessage(msg,type,loc);
 				}

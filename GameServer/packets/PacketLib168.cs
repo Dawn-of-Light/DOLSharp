@@ -20,6 +20,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Specialized;
 using System.Net;
 using System.Reflection;
 using DOL.AI.Brain;
@@ -41,11 +42,6 @@ namespace DOL.GS.PacketHandler
 		/// Defines a logger for this class.
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
-		/// <summary>
-		/// Temp property that holds the group player was invited to.
-		/// </summary>
-		public static readonly string INVITED_TO_GROUP = "InvitedToGroup";
 
 		/// <summary>
 		/// Constructs a new PacketLib for Version 1.68 clients
@@ -211,8 +207,11 @@ namespace DOL.GS.PacketHandler
 							pak.WriteByte((byte)((((characters[j].Race & 0xF0) << 2) + (characters[j].Race & 0x0F)) | (characters[j].Gender << 4)));
 							pak.WriteShortLowEndian((ushort)characters[j].CurrentModel);
 							pak.WriteByte((byte)characters[j].Region);
-							pak.WriteByte(0x0); //second byte of region, currently unused
-							pak.WriteInt(0x0); //Unknown, last used?
+							if (reg == null || m_gameClient.ClientType > reg.Expansion)
+								pak.WriteByte(0x00);
+							else
+								pak.WriteByte((byte)(reg.Expansion + 1)); //0x04-Cata zone, 0x05 - DR zone
+							pak.WriteInt(0x0); // Internal database ID
 							pak.WriteByte((byte)characters[j].Strength);
 							pak.WriteByte((byte)characters[j].Dexterity);
 							pak.WriteByte((byte)characters[j].Constitution);
@@ -222,7 +221,7 @@ namespace DOL.GS.PacketHandler
 							pak.WriteByte((byte)characters[j].Empathy);
 							pak.WriteByte((byte)characters[j].Charisma);
 
-							items = (InventoryItem[])GameServer.Database.SelectObjects(typeof(InventoryItem), "OwnerID = '" + characters[j].ObjectId + "'");
+							items = (InventoryItem[])GameServer.Database.SelectObjects(typeof(InventoryItem), "OwnerID = '" + characters[j].ObjectId + "' AND SlotPosition >='10' AND SlotPosition <= '29'");
 							int found = 0;
 							//16 bytes: armor model
 							for (int k = 0x15; k < 0x1D; k++)
@@ -310,7 +309,10 @@ namespace DOL.GS.PacketHandler
 								pak.WriteByte(righthand);
 								pak.WriteByte(lefthand);
 							}
-							pak.WriteByte(0x00); //0x01=char in SI zone, classic client can't "play"
+							if (reg == null || reg.Expansion != 1)
+								pak.WriteByte(0x00);
+							else
+								pak.WriteByte(0x01); //0x01=char in SI zone, classic client can't "play"
 							pak.WriteByte(0x00);
 							//pak.Fill(0x00,2);
 							written = true;
@@ -489,18 +491,32 @@ namespace DOL.GS.PacketHandler
 			SendTCP(pak);
 		}
 
-		public virtual void SendPlayerInitFinished()
+		public virtual void SendPlayerInitFinished(byte mobs)
 		{
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.CharacterInitFinished));
-			pak.WriteByte(0x00); // Mobs sended
+			pak.WriteByte(mobs);
 			SendTCP(pak);
 		}
 
 		public virtual void SendUDPInitReply()
 		{
 			GSUDPPacketOut pak = new GSUDPPacketOut(GetPacketCode(ePackets.UDPInitReply));
-			pak.Fill(0x0, 0x18); // TODO normaly contains the host
-			// address, but its unused by the client
+			Region playerRegion = null;
+			if (!m_gameClient.Socket.Connected)
+				return;
+			if (m_gameClient.Player != null && m_gameClient.Player.CurrentRegion != null)
+				playerRegion = m_gameClient.Player.CurrentRegion;
+			if (playerRegion == null)
+				pak.Fill(0x0, 0x18);
+			else
+			{
+				//Try to fix the region ip so UDP is enabled!
+				string ip = playerRegion.ServerIP;
+				if (ip == "any" || ip == "0.0.0.0" || ip == "127.0.0.1" || ip.StartsWith("10.13.") || ip.StartsWith("192.168."))
+					ip = ((IPEndPoint)m_gameClient.Socket.LocalEndPoint).Address.ToString();
+				pak.FillString(ip, 22);
+				pak.WriteShort(playerRegion.ServerPort);
+			}
 			SendUDP(pak);
 		}
 
@@ -584,7 +600,16 @@ namespace DOL.GS.PacketHandler
 			pak.WritePascalString(GameServer.ServerRules.GetPlayerLastName(m_gameClient.Player, playerToCreate));
 			pak.WriteByte(0x00); //Trialing 0 ... needed!
 			SendTCP(pak);
-
+			if (playerToCreate.CharacterClass.ID == (int)eCharacterClass.Warlock)
+			{
+				/*
+				ChamberEffect ce = (ChamberEffect)playerToCreate.EffectList.GetOfType(typeof(ChamberEffect));
+				if (ce != null)
+				{
+					ce.SendChamber(m_gameClient.Player);
+				}
+				 */
+			}
 			if (GameServer.ServerRules.GetColorHandling(m_gameClient) == 1) // PvP
 				SendObjectGuildID(playerToCreate, playerToCreate.Guild); //used for nearest friendly/enemy object buttons and name colors on PvP server
 		}
@@ -639,9 +664,7 @@ namespace DOL.GS.PacketHandler
 			pak.WriteInt((uint)obj.X);
 			pak.WriteInt((uint)obj.Y);
 			pak.WriteShort(obj.Model);
-			int flag = 0;
-			if (obj is GameInventoryItem)
-				flag |= (obj.Realm & 3) << 4;
+			int flag = (obj.Realm & 3) << 4;
 			if (obj is GameKeepBanner)
 				flag |= 0x08;
 			if (obj is GameStaticItemTimed && m_gameClient.Player != null && obj.IsOwner(m_gameClient.Player))
@@ -673,14 +696,7 @@ namespace DOL.GS.PacketHandler
 		public virtual void SendDebugMode(bool on)
 		{
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.DebugMode));
-			if(m_gameClient.Account.PrivLevel == 1)
-			{
-				pak.WriteByte((byte)(0x00));
-			}
-			else
-			{
-				pak.WriteByte((byte)(on ? 0x01 : 0x00));
-			}
+			pak.WriteByte((byte)(on ? 0x01 : 0x00));
 			pak.WriteByte(0x00);
 			SendTCP(pak);
 		}
@@ -727,16 +743,10 @@ namespace DOL.GS.PacketHandler
 			pak.WriteByte(npc.Level);
 
 			byte flags = (byte)(GameServer.ServerRules.GetLivingRealm(m_gameClient.Player, npc) << 6);
-			if ((npc.Flags & (uint)GameNPC.eFlags.GHOST) != 0)
-				flags |= 0x01;
-			if ((npc.Flags & (uint)GameNPC.eFlags.FLYING) != 0)
-				flags |= 0x20;
-			if ((npc.Flags & (uint)GameNPC.eFlags.PEACE) != 0)
-				flags |= 0x10;
-			//If mob has equipment, then only show it after
-			//the client gets the 0xBD packet
-			if (npc.Inventory != null)
-				flags |= 0x02;
+			if ((npc.Flags & (uint)GameNPC.eFlags.TRANSPARENT) != 0) flags |= 0x01;
+			if (npc.Inventory != null) flags |= 0x02; //If mob has equipment, then only show it after the client gets the 0xBD packet
+			if ((npc.Flags & (uint)GameNPC.eFlags.PEACE) != 0) flags |= 0x10;
+			if ((npc.Flags & (uint)GameNPC.eFlags.FLYING) != 0) flags |= 0x20;
 
 			pak.WriteByte(flags);
 			pak.WriteByte(0x20); //TODO this is the default maxstick distance
@@ -823,11 +833,11 @@ namespace DOL.GS.PacketHandler
 
 			GSUDPPacketOut pak = new GSUDPPacketOut(GetPacketCode(ePackets.NPCUpdate));
 
-			if (speed > 0x0FFF)
+			if (speed > 0x07FF)
 			{
 				if (log.IsErrorEnabled)
 					log.Error("Too high NPC speed. (" + speed + ")" + npc.Name);
-				speed = 0x0FFF;
+				speed = 0x07FF;
 			}
 			else if (speed < 0)
 			{
@@ -839,7 +849,7 @@ namespace DOL.GS.PacketHandler
 			//speed |= (ushort)(npc.m_flyTest << 13);
 
 			pak.WriteShort((ushort)speed);
-			pak.WriteShort(npc.Heading); //|((npc.m_flyTest>>3)<<13)));
+			pak.WriteShort((ushort)(npc.Heading & 0xFFF)); //|((npc.m_flyTest>>3)<<13)));
 			pak.WriteShort(XOffsetInZone);
 			pak.WriteShort(XOffsetInTargetZone); //TODO target x spot
 			pak.WriteShort(YOffsetInZone);
@@ -863,7 +873,7 @@ namespace DOL.GS.PacketHandler
 			npc.NPCUpdatedCallback();
 		}
 
-		public virtual void SendLivingEquipementUpdate(GameLiving living)
+		public virtual void SendLivingEquipmentUpdate(GameLiving living)
 		{
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.EquipmentUpdate));
 
@@ -925,7 +935,7 @@ namespace DOL.GS.PacketHandler
 			pak.WriteShort((ushort)m_gameClient.Player.SkillSpecialtyPoints);
 			pak.WriteInt((uint)m_gameClient.Player.BountyPoints);
 			pak.WriteShort((ushort)m_gameClient.Player.RealmSpecialtyPoints);
-			pak.WriteShort(0);
+			pak.WriteShort(0); // unknown
 			SendTCP(pak);
 		}
 
@@ -1064,8 +1074,6 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendGroupInviteCommand(GamePlayer invitingPlayer, string inviteMessage)
 		{
-			m_gameClient.Player.TempProperties.setProperty(INVITED_TO_GROUP, invitingPlayer.PlayerGroup);
-
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.Dialog));
 			pak.WriteByte(0x00);
 			pak.WriteByte(0x05);
@@ -1105,7 +1113,8 @@ namespace DOL.GS.PacketHandler
 			pak.WriteByte(0x00);
 			SendTCP(pak);
 		}
-
+		// i'm reusing the questsubscribe command for quest abort since its 99% the same, only different event dets fired
+		// data 3 defines wether it's subscribe or abort
 		public virtual void SendQuestSubscribeCommand(GameNPC invitingNPC, ushort questid, string inviteMessage)
 		{
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.Dialog));
@@ -1113,25 +1122,45 @@ namespace DOL.GS.PacketHandler
 			pak.WriteByte(0x64);
 			pak.WriteShort((ushort)questid); //questid, data1
 			pak.WriteShort((ushort)invitingNPC.ObjectID); //data2
-			pak.WriteShort(0x00); //data3
+			pak.WriteShort(0x00); // 0x00 means subscribe data3
 			pak.WriteShort(0x00);
 			pak.WriteByte(0x01); // yes/no response
-			pak.WriteByte(0x00);
+			pak.WriteByte(0x01); // autowrap message
 			pak.WriteString(inviteMessage, inviteMessage.Length);
 			pak.WriteByte(0x00);
 			SendTCP(pak);
 		}
 
-		public virtual void SendSimpleWarningDialog(string warning)
+		// i'm reusing the questsubscribe command for quest abort since its 99% the same, only different event dets fired
+		// data 3 defines wether it's subscribe or abort
+		public virtual void SendQuestAbortCommand(GameNPC abortingNPC, ushort questid, string abortMessage)
 		{
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.Dialog));
 			pak.WriteByte(0x00);
-			pak.WriteByte(0x00);
+			pak.WriteByte(0x64);
+			pak.WriteShort((ushort)questid); //questid, data1
+			pak.WriteShort((ushort)abortingNPC.ObjectID); //data2
+			pak.WriteShort(0x01); // 0x01 means abort data3
 			pak.WriteShort(0x00);
-			pak.Fill(0x00, 6);
+			pak.WriteByte(0x01); // yes/no response
+			pak.WriteByte(0x01); // autowrap message
+			pak.WriteString(abortMessage, abortMessage.Length);
 			pak.WriteByte(0x00);
-			pak.WriteByte(0x01);
-			pak.WriteString(warning, warning.Length);
+			SendTCP(pak);
+		}
+
+		public virtual void SendDialogBox(eDialogCode code, ushort data1, ushort data2, ushort data3, ushort data4, eDialogType type, bool autoWarpText, string message)
+		{
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.Dialog));
+			pak.WriteByte(0x00);
+			pak.WriteByte((byte)code);
+			pak.WriteShort((ushort)data1); //data1
+			pak.WriteShort((ushort)data2); //data2
+			pak.WriteShort((ushort)data3); //data3
+			pak.WriteShort((ushort)data4); //data4
+			pak.WriteByte((byte)type);
+			pak.WriteByte((byte)(autoWarpText == true ? 0x01 : 0x00));
+			pak.WriteString(message, message.Length);
 			pak.WriteByte(0x00);
 			SendTCP(pak);
 		}
@@ -1149,13 +1178,13 @@ namespace DOL.GS.PacketHandler
 
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.Dialog));
 			pak.WriteByte(0x00);
-			pak.WriteByte(0x06);
+			pak.WriteByte((byte)eDialogCode.CustomDialog);
 			pak.WriteShort((ushort)m_gameClient.SessionID); //data1
 			pak.WriteShort(0x01); //custom dialog!	  //data2
 			pak.WriteShort(0x00); //data3
 			pak.WriteShort(0x00);
 			pak.WriteByte((byte)(callback == null ? 0x00 : 0x01)); //ok or yes/no response
-			pak.WriteByte(0x00);
+			pak.WriteByte(0x01); // autowrap text
 			pak.WriteString(msg, msg.Length);
 			pak.WriteByte(0x00);
 			SendTCP(pak);
@@ -1175,7 +1204,7 @@ namespace DOL.GS.PacketHandler
 				m_gameClient.Player.TempProperties.setProperty(key, callback);
 			}
 			if (old_callback != null)
-				old_callback(m_gameClient.Player, 0); // not responded  = not in view
+				old_callback(m_gameClient.Player, 0, 0); // not sure for this,  i want targetOID there
 
 			GSTCPPacketOut pak = new GSTCPPacketOut(0xD0);
 			pak.WriteShort((ushort)Checker.ObjectID);
@@ -1190,7 +1219,7 @@ namespace DOL.GS.PacketHandler
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.QuestEntry));
 
 			pak.WriteByte((byte)index);
-			if (quest.Step == -1)
+			if (quest.Step <= 0)
 			{
 				pak.WriteByte(0);
 				pak.WriteByte(0);
@@ -1462,6 +1491,10 @@ namespace DOL.GS.PacketHandler
 							value1 = item.Type_Damage;
 							value2 = item.DPS_AF;
 							break;
+						case (int)eObjectType.GardenObject:
+							value1 = 0;
+							value2 = item.SPD_ABS;
+							break;
 						default:
 							value1 = item.DPS_AF;
 							value2 = item.SPD_ABS;
@@ -1470,8 +1503,11 @@ namespace DOL.GS.PacketHandler
 					pak.WriteByte((byte)value1);
 					pak.WriteByte((byte)value2);
 
-					pak.WriteByte((byte)(item.Hand * 64));
-					pak.WriteByte((byte)((item.Type_Damage * 64) + item.Object_Type));
+					if (item.Object_Type == (int)eObjectType.GardenObject)
+						pak.WriteByte((byte)(item.DPS_AF));
+					else
+						pak.WriteByte((byte)(item.Hand << 6));
+					pak.WriteByte((byte)((item.Type_Damage > 3 ? 0 : item.Type_Damage << 6) | item.Object_Type));
 					pak.WriteShort((ushort)item.Weight);
 					pak.WriteByte(item.ConditionPercent); // % of con
 					pak.WriteByte(item.DurabilityPercent); // % of dur
@@ -1626,6 +1662,12 @@ namespace DOL.GS.PacketHandler
 										value2 = item.Weight;
 										break;
 									}
+								case (int)eObjectType.GardenObject:
+									{
+										value1 = 0;
+										value2 = item.Weight;
+										break;
+									}
 								default:
 									{
 										value1 = item.DPS_AF;
@@ -1635,8 +1677,11 @@ namespace DOL.GS.PacketHandler
 							}
 							pak.WriteByte((byte)value1);
 							pak.WriteByte((byte)item.SPD_ABS);
-							pak.WriteByte((byte)(item.Hand << 6));
-							pak.WriteByte((byte)((item.Type_Damage << 6) + item.Object_Type));
+							if (item.Object_Type == (int)eObjectType.GardenObject)
+								pak.WriteByte((byte)(item.DPS_AF));
+							else
+								pak.WriteByte((byte)(item.Hand << 6));
+							pak.WriteByte((byte)((item.Type_Damage << 6) | item.Object_Type));
 							//1 if item cannot be used by your class (greyed out)
 							if (m_gameClient.Player.HasAbilityToUseItem(item))
 								pak.WriteByte(0x00);
@@ -1661,7 +1706,10 @@ namespace DOL.GS.PacketHandler
 			else
 			{
 				pak = new GSTCPPacketOut(GetPacketCode(ePackets.MerchantWindow));
-				pak.Fill(0x00, 4);
+				pak.WriteByte((byte)0); //Item count on this page
+				pak.WriteByte((byte)windowType); //Unknown 0x00
+				pak.WriteByte((byte)0); //Page number
+				pak.WriteByte(0x00); //Unused
 				SendTCP(pak);
 			}
 		}
@@ -1715,7 +1763,7 @@ namespace DOL.GS.PacketHandler
 						pak.WriteByte((byte)item.DPS_AF); // dps_af
 						pak.WriteByte((byte)item.SPD_ABS); //spd_abs
 						pak.WriteByte((byte)(item.Hand << 6));
-						pak.WriteByte((byte)((item.Type_Damage << 6) + item.Object_Type));
+						pak.WriteByte((byte)((item.Type_Damage > 3 ? 0 : item.Type_Damage << 6) | item.Object_Type));
 						pak.WriteShort((ushort)item.Weight); // weight
 						pak.WriteByte(item.ConditionPercent); // con %
 						pak.WriteByte(item.DurabilityPercent); // dur %
@@ -1831,6 +1879,10 @@ namespace DOL.GS.PacketHandler
 			SendTCP(pak);
 		}
 
+		public virtual void CheckLengthHybridSkillsPacket(ref GSTCPPacketOut pak, ref int maxSkills, ref int first)
+		{
+			maxSkills++;
+		}
 
 		public virtual void SendUpdatePlayerSkills()
 		{
@@ -1880,8 +1932,19 @@ namespace DOL.GS.PacketHandler
 								i++;
 								CheckLengthHybridSkillsPacket(ref pak, ref maxSkills, ref firstSkills);
 								pak.WriteByte(0);
-								if (skill.ID < 500) pak.WriteByte((byte)eSkillPage.Abilities);
-								else pak.WriteByte((byte)eSkillPage.AbilitiesSpell);
+								byte type = (byte)eSkillPage.Abilities;
+								if (skill is Ability)
+								{
+									/*
+									if (((Ability)skill).MaxLevel > 0)
+									{
+										type = (byte)eSkillPage.RealmAbilities;
+									}
+									 */
+								}
+								pak.WriteByte(type);
+								//if(skill.ID < 500) pak.WriteByte((byte) eSkillPage.Abilities);
+								//else pak.WriteByte((byte) eSkillPage.AbilitiesSpell);
 								pak.WriteShort(0);
 								pak.WriteByte(0);
 								pak.WriteShort(skill.ID);
@@ -1889,8 +1952,8 @@ namespace DOL.GS.PacketHandler
 								if (m_gameClient.Player.CharacterClass.ID == (int)eCharacterClass.Vampiir)
 								{
 									if (skill.Name == Abilities.VampiirConstitution ||
-										skill.Name == Abilities.VampiirDexterity ||
-										skill.Name == Abilities.VampiirStrength)
+											skill.Name == Abilities.VampiirDexterity ||
+											skill.Name == Abilities.VampiirStrength)
 										str = " +" + ((m_gameClient.Player.Level - 5) * 3).ToString();
 									else if (skill.Name == Abilities.VampiirQuickness)
 										str = " +" + ((m_gameClient.Player.Level - 5) * 2).ToString();
@@ -1932,7 +1995,7 @@ namespace DOL.GS.PacketHandler
 
 								pak.WriteShort((ushort)pre);
 								pak.WriteByte(0); // bonus
-								pak.WriteShort(style.ID);
+								pak.WriteShort((ushort)style.Icon);
 								pak.WritePascalString(style.Name);
 							}
 							if (flagSendHybrid)
@@ -2017,346 +2080,6 @@ namespace DOL.GS.PacketHandler
 				}
 			}
 		}
-
-		public virtual void CheckLengthHybridSkillsPacket(ref GSTCPPacketOut pak, ref int maxSkills, ref int first)
-		{
-			maxSkills++;
-		}
-
-		#region OLD
-		/*
-		public virtual void SendUpdatePlayerSkills()
-		{
-			switch (m_gameClient.Player.CharacterClass.ClassType)
-			{
-				case eClassType.PureTank:
-					SendUpdatePureTankSkills();
-					break;
-
-				case eClassType.ListCaster:
-					SendUpdateListCasterSkills();
-					break;
-
-				case eClassType.Hybrid:
-					SendUpdateHybridSkills();
-					break;
-			}
-		}
-
-		public virtual void SendUpdateHybridSkills()
-		{
-			if (m_gameClient.Player == null)
-				return;
-			IList specs = m_gameClient.Player.GetSpecList();
-			IList skills = m_gameClient.Player.GetNonTrainableSkillList();
-			IList styles = m_gameClient.Player.GetStyleList();
-			IList spelllines = m_gameClient.Player.GetSpellLines();
-			Hashtable m_styleId = new Hashtable();
-
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.VariousUpdate));
-
-			lock (skills.SyncRoot)
-			lock (styles.SyncRoot)
-			lock (specs.SyncRoot)
-			lock (spelllines.SyncRoot)
-			{
-				int spellscount = m_gameClient.Player.GetAmountOfSpell();
-
-				pak.WriteByte(0x01); //subcode
-				pak.WriteByte((byte) (specs.Count + skills.Count + styles.Count + spellscount)); //number of entry
-				pak.WriteByte(0x03); //subtype
-				pak.WriteByte(0x00); //unk
-
-				foreach (Specialization spec in specs)
-				{
-					pak.WriteByte((byte) spec.Level);
-					pak.WriteByte((byte) eSkillPage.Specialization);
-					pak.WriteShort(0);
-					pak.WriteByte((byte) (m_gameClient.Player.GetModifiedSpecLevel(spec.KeyName) - spec.Level)); // bonus
-					pak.WriteShort(spec.ID);
-					pak.WritePascalString(spec.Name);
-				}
-
-				int i=0;
-				foreach (Skill skill in skills)
-				{
-					i++;
-					pak.WriteByte((byte) 0);
-					if(skill.ID < 500) pak.WriteByte((byte) eSkillPage.Abilities);
-					else pak.WriteByte((byte) eSkillPage.AbilitiesSpell);
-					pak.WriteShort(0);
-					pak.WriteByte(0);
-					pak.WriteShort(skill.ID);
-					pak.WritePascalString(skill.Name);
-				}
-
-				foreach (Style style in styles)
-				{
-					m_styleId[(int)style.ID] = i++;
-					//DOLConsole.WriteLine("style sended "+style.Name);
-					pak.WriteByte(0); // no level for style
-					pak.WriteByte((byte) eSkillPage.Styles);
-
-					int pre = 0;
-					switch (style.OpeningRequirementType)
-					{
-						case Style.eOpening.Offensive:
-							pre = 0 + (int) style.AttackResultRequirement; // last result of our attack against enemy
-							// hit, miss, target blocked, target parried, ...
-							if (style.AttackResultRequirement==Style.eAttackResult.Style)
-								pre |= ((100 + (int)m_styleId[style.OpeningRequirementValue]) << 8);
-							break;
-						case Style.eOpening.Defensive:
-							pre = 100 + (int) style.AttackResultRequirement; // last result of enemies attack against us
-							// hit, miss, you block, you parry, ...
-							break;
-						case Style.eOpening.Positional:
-							pre = 200 + style.OpeningRequirementValue;
-							break;
-					}
-
-					// style required?
-					if (pre == 0)
-					{
-						pre = 0x100;
-					}
-
-					pak.WriteShort((ushort) pre);
-					pak.WriteByte(0); // bonus
-					pak.WriteShort(style.ID);
-					pak.WritePascalString(style.Name);
-				}
-				foreach (SpellLine spellline in spelllines)
-				{
-					int spec_index = specs.IndexOf(m_gameClient.Player.GetSpecialization(spellline.Spec));
-					if (spec_index == -1)
-						spec_index = 0xFE; // Nightshade special value
-					IList spells = m_gameClient.Player.GetUsableSpellsOfLine(spellline);
-					foreach (Spell spell in spells)
-					{
-						pak.WriteByte((byte) spell.Level);
-						if (spell.InstrumentRequirement == 0)
-						{
-							pak.WriteByte((byte) eSkillPage.Spells);
-							pak.WriteByte(0);
-							pak.WriteByte((byte) spec_index);
-						}
-						else
-						{
-							pak.WriteByte((byte) eSkillPage.Songs);
-							pak.WriteByte(0);
-							pak.WriteByte(0xFF);
-						}
-						pak.WriteByte(0);
-						pak.WriteShort(spell.Icon);
-						pak.WritePascalString(spell.Name);
-					}
-				}
-			}
-			SendTCP(pak);
-		}
-
-		public virtual void SendUpdateListCasterSkills()
-		{
-			IList specs = m_gameClient.Player.GetSpecList();
-			IList skills = m_gameClient.Player.GetNonTrainableSkillList();
-			IList styles = m_gameClient.Player.GetStyleList();
-			IList spelllines = m_gameClient.Player.GetSpellLines();
-			Hashtable m_styleId = new Hashtable();
-
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.VariousUpdate));
-
-			lock (skills.SyncRoot)
-			lock (styles.SyncRoot)
-			lock (specs.SyncRoot)
-			{
-				pak.WriteByte(0x01);//subcode
-				pak.WriteByte((byte)(specs.Count+skills.Count+styles.Count));//number of entry
-				pak.WriteByte(0x03);//subtype
-				pak.WriteByte(0);//unk
-
-				foreach (Specialization spec in specs)
-				{
-					pak.WriteByte((byte)spec.Level);
-					pak.WriteByte((byte)eSkillPage.Specialization);
-					pak.WriteShort(0);
-					pak.WriteByte((byte)(m_gameClient.Player.GetModifiedSpecLevel(spec.KeyName)-spec.Level)); // bonus
-					pak.WriteShort(spec.ID);
-					pak.WritePascalString(spec.Name);
-				}
-
-				int i=0;
-				foreach (Skill skill in skills)
-				{
-					i++;
-					pak.WriteByte(0);
-					if(skill.ID < 500) pak.WriteByte((byte) eSkillPage.Abilities);
-					else pak.WriteByte((byte) eSkillPage.AbilitiesSpell);
-					pak.WriteShort(0);
-					pak.WriteByte(0);
-					pak.WriteShort(skill.ID);
-					pak.WritePascalString(skill.Name);
-				}
-
-				foreach (Style style in styles)
-				{
-					m_styleId[(int)style.ID] = i++;
-					//DOLConsole.WriteLine("style sent "+style.Name);
-					pak.WriteByte(0); // no level for style
-					pak.WriteByte((byte)eSkillPage.Styles);
-
-					int pre = 0;
-					switch (style.OpeningRequirementType)
-					{
-						case Style.eOpening.Offensive:
-							pre = 0 + (int)style.AttackResultRequirement; // last result of our attack against enemy
-							// hit, miss, target blocked, target parried, ...
-							if (style.AttackResultRequirement==Style.eAttackResult.Style)
-								pre |= ((100 + (int)m_styleId[style.OpeningRequirementValue]) << 8);
-							break;
-						case Style.eOpening.Defensive:
-							pre = 100 + (int)style.AttackResultRequirement; // last result of enemies attack against us
-							// hit, miss, you block, you parry, ...
-							break;
-						case Style.eOpening.Positional:
-							pre = 200 + style.OpeningRequirementValue;
-							break;
-					}
-
-					// style required?
-					if (pre == 0)
-					{
-						pre = 0x100;
-					}
-
-					pak.WriteShort((ushort)pre);
-					pak.WriteByte(0); // bonus
-					pak.WriteShort(style.ID);
-					pak.WritePascalString(style.Name);
-				}
-			}
-
-			SendTCP(pak);
-
-			byte linenumber = 0;
-
-			lock (spelllines.SyncRoot)
-			{
-				foreach (SpellLine line in spelllines)
-				{
-					IList spells = SkillBase.GetSpellList(line.KeyName);
-					int spellcount = 0;
-					for (int i = 0; i < spells.Count; i++)
-					{
-						if (((Spell) spells[i]).Level <= line.Level)
-						{
-							spellcount++;
-						}
-					}
-					pak = new GSTCPPacketOut(GetPacketCode(ePackets.VariousUpdate));
-					pak.WriteByte(0x02); //subcode
-					pak.WriteByte((byte) (spellcount + 1)); //number of entry
-					pak.WriteByte(0x02); //subtype
-					pak.WriteByte(linenumber++); //number of line
-					pak.WriteByte(0); // level, not used when spell line
-					pak.WriteShort(0); // icon, not used when spell line
-					pak.WritePascalString(line.Name);
-					foreach (Spell spell in spells)
-					{
-						if (spell.Level <= line.Level)
-						{
-							pak.WriteByte((byte) spell.Level);
-							pak.WriteShort(spell.Icon);
-							pak.WritePascalString(spell.Name);
-						}
-					}
-					SendTCP(pak);
-				}
-			}
-		}
-
-		public virtual void SendUpdatePureTankSkills()
-		{
-			IList specs = m_gameClient.Player.GetSpecList();
-			IList skills = m_gameClient.Player.GetNonTrainableSkillList();
-			IList styles = m_gameClient.Player.GetStyleList();
-			Hashtable m_styleId = new Hashtable();
-
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.VariousUpdate));
-
-			lock (skills.SyncRoot)
-			lock (styles.SyncRoot)
-			lock (specs.SyncRoot)
-			{
-				pak.WriteByte(0x01); //subcode
-				pak.WriteByte((byte) (specs.Count + skills.Count + styles.Count)); //number of entry
-				pak.WriteByte(0x03); //subtype
-				pak.WriteByte(0x00); //unk
-
-				foreach (Specialization spec in specs)
-				{
-					pak.WriteByte((byte) spec.Level);
-					pak.WriteByte((byte) eSkillPage.Specialization);
-					pak.WriteShort(0);
-					pak.WriteByte((byte) (m_gameClient.Player.GetModifiedSpecLevel(spec.KeyName) - spec.Level)); // bonus
-					pak.WriteShort(spec.ID);
-					pak.WritePascalString(spec.Name);
-				}
-
-				int i=0;
-				foreach (Skill skill in skills)
-				{
-					i++;
-					pak.WriteByte((byte) 0);
-					if(skill.ID < 500) pak.WriteByte((byte) eSkillPage.Abilities);
-					else pak.WriteByte((byte) eSkillPage.AbilitiesSpell);
-					pak.WriteShort(0);
-					pak.WriteByte(0);
-					pak.WriteShort(skill.ID);
-					pak.WritePascalString(skill.Name);
-				}
-
-				foreach (Style style in styles)
-				{
-					m_styleId[(int)style.ID] = i++;
-					//DOLConsole.WriteLine("style sended "+style.Name);
-					pak.WriteByte(0); // no level for style
-					pak.WriteByte((byte) eSkillPage.Styles);
-
-					int pre = 0;
-					switch (style.OpeningRequirementType)
-					{
-						case Style.eOpening.Offensive:
-							pre = 0 + (int) style.AttackResultRequirement; // last result of our attack against enemy
-							// hit, miss, target blocked, target parried, ...
-							if (style.AttackResultRequirement==Style.eAttackResult.Style)
-								pre |= ((100 + (int)m_styleId[style.OpeningRequirementValue]) << 8);
-							break;
-						case Style.eOpening.Defensive:
-							pre = 100 + (int) style.AttackResultRequirement; // last result of enemies attack against us
-							// hit, miss, you block, you parry, ...
-							break;
-						case Style.eOpening.Positional:
-							pre = 200 + style.OpeningRequirementValue;
-							break;
-					}
-
-					// style required?
-					if (pre == 0)
-					{
-						pre = 0x100;
-					}
-
-					pak.WriteShort((ushort) pre);
-					pak.WriteByte(0); // bonus
-					pak.WriteShort(style.ID);
-					pak.WritePascalString(style.Name);
-				}
-			}
-			SendTCP(pak);
-		}
-		*/
-		#endregion
 
 		public virtual void SendUpdateCraftingSkills()
 		{
@@ -2880,14 +2603,14 @@ namespace DOL.GS.PacketHandler
 			pak.WriteShort((ushort)house.HouseNumber);
 			pak.WriteByte((byte)house.OutdoorItems.Count);
 			pak.WriteByte(0x80);
-			for (int i = 0; i < house.OutdoorItems.Count; i++)
+			foreach (DictionaryEntry entry in new SortedList(house.OutdoorItems))
 			{
-				pak.WriteByte((byte)i);
-				pak.WriteShort((ushort)((OutdoorItem)house.OutdoorItems[i]).Model);
-				pak.WriteByte((byte)((OutdoorItem)house.OutdoorItems[i]).Position);
-				pak.WriteByte((byte)((OutdoorItem)house.OutdoorItems[i]).Rotation);
+				OutdoorItem item = (OutdoorItem)entry.Value;
+				pak.WriteByte((byte)((int)entry.Key));
+				pak.WriteShort((ushort)item.Model);
+				pak.WriteByte((byte)item.Position);
+				pak.WriteByte((byte)item.Rotation);
 			}
-
 			SendTCP(pak);
 		}
 
@@ -2940,18 +2663,17 @@ namespace DOL.GS.PacketHandler
 			SendTCP(pak);
 		}
 
-		public void SendFurniture(House house)
+		public virtual void SendFurniture(House house)
 		{
 
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.HousingItem));
-
 			pak.WriteShort((ushort)house.HouseNumber);
 			pak.WriteByte(Convert.ToByte(house.IndoorItems.Count));
 			pak.WriteByte(0x80); //0x00 = update, 0x80 = complete package
-			for (int i = 0; i < house.IndoorItems.Count; i++)
+			foreach (DictionaryEntry entry in new SortedList(house.IndoorItems))
 			{
-				IndoorItem item = (IndoorItem)house.IndoorItems[i];
-				pak.WriteByte((byte)i);
+				IndoorItem item = (IndoorItem)entry.Value;
+				pak.WriteByte((byte)((int)entry.Key));
 				pak.WriteShort((ushort)item.Model);
 				pak.WriteShort((ushort)item.Color);
 				pak.WriteByte(0x00);
@@ -2959,10 +2681,31 @@ namespace DOL.GS.PacketHandler
 				pak.WriteShort((ushort)item.X);
 				pak.WriteShort((ushort)item.Y);
 				pak.WriteShort((ushort)item.Rotation);
-				pak.WriteByte(Convert.ToByte(item.Size));
-				pak.WriteByte(Convert.ToByte(item.Position));
-				pak.WriteByte(Convert.ToByte(item.Placemode - 2));
+				pak.WriteByte((byte)item.Size);
+				pak.WriteByte((byte)item.Position);
+				pak.WriteByte((byte)(item.Placemode - 2));
 			}
+			SendTCP(pak);
+		}
+
+		public virtual void SendFurniture(House house, int i)
+		{
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.HousingItem));
+			pak.WriteShort((ushort)house.HouseNumber);
+			pak.WriteByte(0x01); //cnt
+			pak.WriteByte(0x00); //upd
+			IndoorItem item = (IndoorItem)house.IndoorItems[i];
+			pak.WriteByte((byte)i);
+			pak.WriteShort((ushort)item.Model);
+			pak.WriteShort((ushort)item.Color);
+			pak.WriteByte(0x00);
+			pak.WriteByte(0x00);
+			pak.WriteShort((ushort)item.X);
+			pak.WriteShort((ushort)item.Y);
+			pak.WriteShort((ushort)item.Rotation);
+			pak.WriteByte((byte)item.Size);
+			pak.WriteByte((byte)item.Position);
+			pak.WriteByte((byte)(item.Placemode - 2));
 			SendTCP(pak);
 		}
 
@@ -3011,20 +2754,21 @@ namespace DOL.GS.PacketHandler
 			SendTCP(pak);
 		}
 
-		public virtual void SendSiegeWeaponInterface(GameSiegeWeapon siegeWeapon)
+		public virtual void SendSiegeWeaponInterface(GameSiegeWeapon siegeWeapon, int time)
 		{
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.SiegeWeaponInterface));
-			pak.WriteShort(siegeWeapon.AmmoType);
+			ushort flag = (ushort)((siegeWeapon.EnableToMove ? 1 : 0) | siegeWeapon.AmmoType << 8);
+			pak.WriteShort(flag); //byte Ammo,  byte SiegeMoving(1/0)
 			pak.WriteByte(0);
-			pak.WriteShort((ushort)(siegeWeapon.SiegeWeaponTimer.Interval / 100));//time in 100ms
-
+			pak.WriteByte(0); // Close interface(1/0)
+			pak.WriteByte((byte)(time / 10));//time in 1000ms
 			pak.WriteByte((byte)siegeWeapon.Ammo.Count); // external ammo count
 			pak.WriteByte((byte)siegeWeapon.SiegeWeaponTimer.CurrentAction);
 			pak.WriteByte((byte)siegeWeapon.AmmoSlot);
 			pak.WriteShort(siegeWeapon.Effect);
-			pak.WriteShort(0); // ?
-			pak.WriteInt((uint)siegeWeapon.ObjectID);
-
+			pak.WriteShort(0); // SiegeHelperTimer ?
+			pak.WriteShort(0); // SiegeTimer ?
+			pak.WriteShort((ushort)siegeWeapon.ObjectID);
 			pak.WritePascalString(siegeWeapon.Name + " (" + siegeWeapon.CurrentState.ToString() + ")");
 			foreach (InventoryItem item in siegeWeapon.Ammo)
 			{
@@ -3073,20 +2817,32 @@ namespace DOL.GS.PacketHandler
 				return;
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.SiegeWeaponAnimation));
 			pak.WriteInt((uint)siegeWeapon.ObjectID);
-			pak.WriteInt((uint)siegeWeapon.TargetX);
-			pak.WriteInt((uint)siegeWeapon.TargetY);
-			pak.WriteInt((uint)siegeWeapon.TargetZ);
+			pak.WriteInt((uint)(siegeWeapon.TargetObject == null ? (siegeWeapon.GroundTarget == null ? 0 : siegeWeapon.GroundTarget.X) : siegeWeapon.TargetObject.X));
+			pak.WriteInt((uint)(siegeWeapon.TargetObject == null ? (siegeWeapon.GroundTarget == null ? 0 : siegeWeapon.GroundTarget.Y) : siegeWeapon.TargetObject.Y));
+			pak.WriteInt((uint)(siegeWeapon.TargetObject == null ? (siegeWeapon.GroundTarget == null ? 0 : siegeWeapon.GroundTarget.Z) : siegeWeapon.TargetObject.Z));
 			pak.WriteInt((uint)(siegeWeapon.TargetObject == null ? 0 : siegeWeapon.TargetObject.ObjectID));
 			pak.WriteShort(siegeWeapon.Effect);
-			pak.WriteShort((ushort)(siegeWeapon.SiegeWeaponTimer.Interval / 100));
+			pak.WriteShort((ushort)(siegeWeapon.SiegeWeaponTimer.TimeUntilElapsed / 100));
 			pak.WriteByte((byte)siegeWeapon.SiegeWeaponTimer.CurrentAction);
-			if (siegeWeapon.SiegeWeaponTimer.CurrentAction == SiegeTimer.eAction.Fire)
-			{
-				pak.WriteByte((byte)0xAA);
-				pak.WriteShort(0xFFBF);
-			}
-			else
-				pak.Fill(0, 3);
+			pak.Fill(0, 3);
+			SendTCP(pak);
+		}
+
+		public virtual void SendSiegeWeaponFireAnimation(GameSiegeWeapon siegeWeapon, int timer)
+		{
+			if (siegeWeapon == null)
+				return;
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.SiegeWeaponAnimation));
+			pak.WriteInt((uint)siegeWeapon.ObjectID);
+			pak.WriteInt((uint)(siegeWeapon.TargetObject == null ? 0 : siegeWeapon.TargetObject.X));
+			pak.WriteInt((uint)(siegeWeapon.TargetObject == null ? 0 : siegeWeapon.TargetObject.Y));
+			pak.WriteInt((uint)(siegeWeapon.TargetObject == null ? 0 : siegeWeapon.TargetObject.Z + 50));
+			pak.WriteInt((uint)(siegeWeapon.TargetObject == null ? 0 : siegeWeapon.TargetObject.ObjectID));
+			pak.WriteShort(siegeWeapon.Effect);
+			pak.WriteShort((ushort)(timer / 100));
+			pak.WriteByte((byte)SiegeTimer.eAction.Fire);
+			pak.WriteByte((byte)0xAA);
+			pak.WriteShort(0xFFBF);
 			SendTCP(pak);
 		}
 		public virtual void SendComponentUpdate(GameKeepComponent keepcomponent)
@@ -3151,6 +2907,9 @@ namespace DOL.GS.PacketHandler
 		public virtual void SendNPCsQuestEffect(GameNPC npc, bool flag)
 		{ }
 
+		public virtual void SendHexEffect(GamePlayer player, byte effect1, byte effect2, byte effect3, byte effect4, byte effect5)
+		{ }
+
 		public virtual void SendLivingDataUpdate(GameLiving living, bool updateStrings)
 		{ }
 
@@ -3164,6 +2923,25 @@ namespace DOL.GS.PacketHandler
 			pak.WriteShort(z);
 			pak.WriteShort(radius);
 			SendTCP(pak);
+		}
+		public virtual void SendSetControlledHorse(GamePlayer player)
+		{
+		}
+		public virtual void SendControlledHorse(GamePlayer player, bool flag)
+		{
+		}
+
+		public virtual void SendCrash(string str)
+		{
+			GSTCPPacketOut pak = new GSTCPPacketOut((byte)0x86);
+			pak.WriteByte((byte)0xFF);
+			pak.WritePascalString(str);
+			SendTCP(pak);
+		}
+
+		public virtual void SendInventoryItemsUpdateTest(byte preAction, ICollection itemsToUpdate)
+		{
+			log.Info("168><");
 		}
 	}
 }

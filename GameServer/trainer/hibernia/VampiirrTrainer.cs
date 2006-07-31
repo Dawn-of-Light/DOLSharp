@@ -18,6 +18,7 @@
  */
 using System;
 using DOL.GS.PacketHandler;
+using DOL.Database;
 
 namespace DOL.GS.Trainer
 {
@@ -86,8 +87,23 @@ namespace DOL.GS.Trainer
 			switch (text) {
 			case "Vampiir":
 				// promote player to other class
-				if (CanPromotePlayer(player)) {
+				if (CanPromotePlayer(player))
+				{
+					player.RemoveAllSpellLines();	
+					player.RemoveAllSkills();
+					player.RemoveAllSpecs();			
+					player.RemoveAllStyles();
+					player.Out.SendUpdatePlayerSkills();
+					player.SkillSpecialtyPoints = 14;//lvl 5 skill points full
 					PromotePlayer(player, (int)eCharacterClass.Vampiir, "Very well, " + source.GetName(0, false) + ". I gladly take your training into my hands. Congratulations, from this day forth, you are a Vampiir. Here, take this gift to aid you.", null);
+					lock(player.Inventory)
+					{
+						foreach(InventoryItem item in player.Inventory.EquippedItems)
+						{
+							if(!player.HasAbilityToUseItem(item))
+								player.Inventory.MoveItem((eInventorySlot)item.SlotPosition,player.Inventory.FindFirstEmptySlot(eInventorySlot.FirstBackpack,eInventorySlot.LastBackpack),item.Count);
+						}
+					}
 				}
 				break;
 			}

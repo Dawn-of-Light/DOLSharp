@@ -50,25 +50,20 @@ namespace DOL.GS
 
 		public override int CalculateTimeToUpgrade()
 		{
-			return UpgradeTime[this.Level-1];
+			return UpgradeTime[this.Level - 1];
 		}
 		public override bool CheckForClaim(GamePlayer player)
 		{
-			if (player.PlayerGroup == null)
+			if (player.PlayerGroup == null || player.PlayerGroup.PlayerCount != PlayerGroup.MAX_GROUP_SIZE)
 			{
-				player.Out.SendMessage("You must be a full group.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
-				return false;
-			}
-			if(player.PlayerGroup.PlayerCount != PlayerGroup.MAX_GROUP_SIZE)
-			{
-				player.Out.SendMessage("You must be a full group.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage("You must be in a group to claim.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
 			return base.CheckForClaim(player);
 		}
 		public override int CalculRP()
 		{
-			return 1000*DifficultyLevel;
+			return 1000 * DifficultyLevel;
 		}
 
 		public void AddTower(GameKeepTower tower)
@@ -78,8 +73,8 @@ namespace DOL.GS
 		}
 		public ArrayList Towers
 		{
-			get{return m_towers;}
-			set{m_towers = value;}
+			get { return m_towers; }
+			set { m_towers = value; }
 		}
 	}
 }

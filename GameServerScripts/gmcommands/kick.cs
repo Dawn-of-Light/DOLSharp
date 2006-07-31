@@ -1,6 +1,6 @@
 // Kick by Akira (akira@dataloggin.com)
 //
-//			
+//
 
 using DOL.GS;
 using DOL.GS.PacketHandler;
@@ -11,13 +11,13 @@ namespace DOL.GS.Scripts
 	  "&kick",
 	  new string[] { "&k" },
 	  (int)ePrivLevel.GM,
-		"Kicks the named player off the server!",
-		 "/kick <name>")]
+		"Kicks the player offline of whom you select. USE: KICK <NAME>",
+		 "Use: KICK <NAME>")]
 	public class KickCommandHandler : ICommandHandler
 	{
 		public int OnCommand(GameClient client, string[] args)
 		{
-			GameClient clientc = WorldMgr.GetClientByPlayerName(args[1], true);
+			GameClient clientc = WorldMgr.GetClientByPlayerName(args[1], true, false);
 			if (clientc == null)
 			{
 				client.Out.SendMessage("No one with that name is online to Kick!", eChatType.CT_Help, eChatLoc.CL_SystemWindow);
@@ -25,8 +25,11 @@ namespace DOL.GS.Scripts
 			}
 			for (int i = 0; i < 8; i++)
 			{
-				clientc.Out.SendMessage("You have been removed from the server by GM " + client.Player.Name + "!", eChatType.CT_Help, eChatLoc.CL_SystemWindow);
-				clientc.Out.SendMessage("You have been removed from the server by GM " + client.Player.Name + "!", eChatType.CT_Help, eChatLoc.CL_ChatWindow);
+				string message = "You have been removed from the server";
+				if (client != null && client.Player != null)
+					message += " by GM " + client.Player.Name;
+				clientc.Out.SendMessage(message + "!", eChatType.CT_Help, eChatLoc.CL_SystemWindow);
+				clientc.Out.SendMessage(message + "!", eChatType.CT_Help, eChatLoc.CL_ChatWindow);
 			}
 
 			clientc.Out.SendPlayerQuit(true);

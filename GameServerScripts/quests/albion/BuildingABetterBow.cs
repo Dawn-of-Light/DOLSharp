@@ -508,7 +508,7 @@ namespace DOL.GS.Quests.Albion
 					{
 						if (Util.Chance(50))
 						{
-							player.Out.SendSimpleWarningDialog("You select a well-preserved bone from the \nremains and place it in your pack. \nYour journal has been updated.");
+							player.Out.SendDialogBox(eDialogCode.SimpleWarning, 0x00, 0x00, 0x00, 0x00, eDialogType.Ok, true, "You select a well-preserved bone from the \nremains and place it in your pack. \nYour journal has been updated.");
 							GiveItem(gArgs.Target, player, wellPreservedBones);
 							Step = 3;
 						}
@@ -522,7 +522,7 @@ namespace DOL.GS.Quests.Albion
 					{
 						if (Util.Chance(50))
 						{
-							player.Out.SendSimpleWarningDialog("You select a well-preserved bone from the \nremains and place it in your pack. \nYour journal has been updated.");
+							player.Out.SendDialogBox(eDialogCode.SimpleWarning, 0x00, 0x00, 0x00, 0x00, eDialogType.Ok, true, "You select a well-preserved bone from the \nremains and place it in your pack. \nYour journal has been updated.");
 							ReplaceItem(player, wellPreservedBones, twoWellPreservedBones);
 							Step = 4;
 						}

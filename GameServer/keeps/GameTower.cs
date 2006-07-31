@@ -48,30 +48,25 @@ namespace DOL.GS
 		private GameKeep m_keep;
 		public override int CalculateTimeToUpgrade()
 		{
-			return 12*60*1000;
-   		}
+			return 12 * 60 * 1000;
+		}
 		public override bool CheckForClaim(GamePlayer player)
 		{
-			if (player.PlayerGroup == null)
+			if (player.PlayerGroup == null || player.PlayerGroup.PlayerCount < PlayerGroup.MAX_GROUP_SIZE / 2)
 			{
-				player.Out.SendMessage("You must be a group of "+PlayerGroup.MAX_GROUP_SIZE/2+" members.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
-				return false;
-			}
-			if(player.PlayerGroup.PlayerCount < PlayerGroup.MAX_GROUP_SIZE/2)
-			{
-				player.Out.SendMessage("You must be a full group.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage("You must be in a group of " + PlayerGroup.MAX_GROUP_SIZE / 2 + " members to claim.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
 			return base.CheckForClaim(player);
 		}
 		public override int CalculRP()
 		{
-			return 100*DifficultyLevel;
+			return 100 * DifficultyLevel;
 		}
 
 		public GameKeep Keep
 		{
-			set { m_keep=value; }
+			set { m_keep = value; }
 			get { return m_keep; }
 		}
 	}

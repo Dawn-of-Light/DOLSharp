@@ -20,6 +20,8 @@ using System;
 using DOL.GS.PacketHandler;
 using DOL.Database;
 using DOL.AI.Brain;
+using System.Collections;
+using System.Collections.Specialized;
 
 namespace DOL.GS.Scripts
 {
@@ -27,7 +29,7 @@ namespace DOL.GS.Scripts
 		"&keep", //command to handle
 		(uint) ePrivLevel.GM, //minimum privelege level
 		"Various keep creation commands!", //command description
-		"'/keep fastcreate <type>' to create a keep with base template",
+		"'/keep fastcreate <type> <id> <name>' to create a keep with base template",
 		"'/keep fastcreate ' to show all template available in fast create",
 		"'/keep create <keepid> <name>' to create a keep ",
 		"'/keep name <Name>' to change name",
@@ -81,15 +83,15 @@ namespace DOL.GS.Scripts
 				return 1;
 			}
 			AbstractGameKeep myKeep = (AbstractGameKeep)client.Player.TempProperties.getObjectProperty(TEMP_KEEP_LAST, null);
-			if (myKeep == null) myKeep = KeepMgr.getKeepCloseToSpot(client.Player.CurrentRegionID,client.Player, WorldMgr.OBJ_UPDATE_DISTANCE );
+			if (myKeep == null) myKeep = KeepMgr.getKeepCloseToSpot(client.Player.CurrentRegionID,client.Player, 10000 );
 			switch (args[1])
 			{
 				case "fastcreate":
 				{
-					if (args.Length == 2)
+					if (args.Length < 5)
 					{
 						client.Out.SendMessage("type of keep :",eChatType.CT_System,eChatLoc.CL_SystemWindow);
-						int i =0;
+						int i=0;
 						foreach(string str in Enum.GetNames(typeof(eKeepTypes)))
 						{
 							client.Out.SendMessage("#" + i +" : "+ str,eChatType.CT_System,eChatLoc.CL_SystemWindow);
@@ -98,9 +100,13 @@ namespace DOL.GS.Scripts
 						return 1;
 					}
 					int keepType = 0;
+					int keepID = 0;
+					string keepName = "New Keep";
 					try
 					{
 						keepType = Convert.ToInt32(args[2]);
+						keepID = Convert.ToInt32(args[3]);
+						keepName = args[4];
 					}
 					catch
 					{
@@ -109,14 +115,14 @@ namespace DOL.GS.Scripts
 					}
 					GameKeep keep = new GameKeep();
 					keep.DBKeep = new DBKeep();
-					keep.Name = "blank";
-					keep.KeepID = 0;
+					keep.Name = keepName;
+					keep.KeepID = keepID;
 					keep.Level = 0;
 					keep.Region = client.Player.CurrentRegionID;
 					keep.X = client.Player.X;
 					keep.Y = client.Player.Y;
 					keep.Z = client.Player.Z;
-					keep.Heading = client.Player.Heading;
+					keep.Heading = client.Player.Heading;					
 					//todo add keep component to list in keep classB
 					GameKeepComponent keepComp = null;
 					switch ((eKeepTypes)keepType)
@@ -1819,7 +1825,12 @@ namespace DOL.GS.Scripts
 							return 1;
 					}
 					client.Player.TempProperties.setProperty(TEMP_KEEP_LAST, keep);	
-					client.Out.SendMessage("You have created a keep",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+					foreach(GameKeepComponent comp in keep.KeepComponents)
+					{
+						if(comp.InternalID != null)
+							client.Out.SendMessage("CompID="+comp.InternalID+";KeepID = "+comp.Keep.KeepID,eChatType.CT_System,eChatLoc.CL_SystemWindow);
+					}
+					client.Out.SendMessage("You have created a keep.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 				}break;
 				case "create":
 				{
@@ -1930,11 +1941,11 @@ namespace DOL.GS.Scripts
 				{
 					if (myKeep == null)
 					{
-						client.Out.SendMessage("You must create a keep first",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+						client.Out.SendMessage("You must create a keep first!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 						return 1;
 					}
 					myKeep.SaveIntoDatabase();
-					client.Out.SendMessage("Keep save in Database",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+					client.Out.SendMessage("Keep saved in database.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 				}break;
 					
 				default :

@@ -1,16 +1,16 @@
 /*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -27,7 +27,7 @@ using log4net;
 
 namespace DOL.GS.PacketHandler.v168
 {
-	[PacketHandlerAttribute(PacketHandlerType.TCP,0x0F^168,"Handles the login")]		
+	[PacketHandlerAttribute(PacketHandlerType.TCP,0x0F^168,"Handles the login")]
 	public class LoginRequestHandler : IPacketHandler
 	{
 		/// <summary>
@@ -44,8 +44,37 @@ namespace DOL.GS.PacketHandler.v168
 			byte minor = (byte)packet.ReadByte();
 			byte build = (byte)packet.ReadByte();
 			string password = packet.ReadString(20);
-			packet.Skip(50);
+			bool v174;
+			bool loggerUsing = false;
+			switch(client.Version)
+			{
+				case GameClient.eClientVersion.Version168:
+				case GameClient.eClientVersion.Version169:
+				case GameClient.eClientVersion.Version170:
+				case GameClient.eClientVersion.Version171:
+				case GameClient.eClientVersion.Version172:
+				case GameClient.eClientVersion.Version173:
+					v174 = false; break;
+				default:
+					v174 = true; break;
+			}
+			if(v174)
+				packet.Skip(11);
+			else
+				packet.Skip(7);
+			uint c2 = packet.ReadInt();
+			uint c3 = packet.ReadInt();
+			uint c4 = packet.ReadInt();
+			if(v174)
+				packet.Skip(27);
+			else
+				packet.Skip(31);
 			string username = packet.ReadString(20);
+			if (c2 == 0 && c3 == 0x05000000 && c4 == 0xF4000000)
+			{
+				loggerUsing = true;
+				log.Warn("logger detected (" + username + ")");
+			}
 
 			// check server status
 			if (GameServer.Instance.ServerStatus == eGameServerStatus.GSS_Closed)
@@ -114,7 +143,12 @@ namespace DOL.GS.PacketHandler.v168
 							GameServer.Instance.Disconnect(client);
 							return 1;
 						}
-
+						/*
+						if (loggerUsing)
+							client.LoggerUsing = true;
+						else
+							client.LoggerUsing = false;
+						 */
 						playerAccount = (Account) GameServer.Database.FindObjectByKey(typeof(Account), username);
 						client.PingTime = DateTime.Now.Ticks;
 
@@ -125,7 +159,7 @@ namespace DOL.GS.PacketHandler.v168
 							if(GameServer.Instance.Configuration.AutoAccountCreation)
 							{
 								// autocreate account
-								foreach(char c in username.ToLower().ToCharArray()) 
+								foreach(char c in username.ToLower().ToCharArray())
 								{
 									if((c < '0' || c > '9') && (c < 'a' || c > 'z'))
 									{
@@ -144,14 +178,15 @@ namespace DOL.GS.PacketHandler.v168
 									return 1;
 								}
 
-								// No! Proceeding...
-								bool first = GameServer.Database.GetObjectCount(typeof (Account)) == 0;
-
 								playerAccount = new Account();
 								playerAccount.Name = username;
 								playerAccount.Password = CryptPassword(password);
-						
-								if(first)
+								playerAccount.Realm = 0;
+								playerAccount.CreationDate = DateTime.Now;
+								playerAccount.LastLogin = DateTime.Now;
+								playerAccount.LastLoginIP = ipAddress;
+
+								if(GameServer.Database.GetObjectCount(typeof (Account)) == 0)
 								{
 									playerAccount.PrivLevel = 3;
 									if (log.IsInfoEnabled)
@@ -159,6 +194,7 @@ namespace DOL.GS.PacketHandler.v168
 								}
 								else
 								{
+									playerAccount.PrivLevel = 1;
 									if (log.IsInfoEnabled)
 										log.Info("New account created: " + username);
 								}
@@ -185,7 +221,7 @@ namespace DOL.GS.PacketHandler.v168
 //							}
 
 							// check password
-							if (!playerAccount.Password.StartsWith("##")) 
+							if (!playerAccount.Password.StartsWith("##"))
 							{
 								playerAccount.Password = CryptPassword(playerAccount.Password);
 							}
@@ -197,14 +233,15 @@ namespace DOL.GS.PacketHandler.v168
 								GameServer.Instance.Disconnect(client);
 								return 1;
 							}
+
+							// save player infos
+							playerAccount.LastLogin = DateTime.Now;
+							playerAccount.LastLoginIP = ipAddress;
+
+							GameServer.Database.SaveObject(playerAccount);
 						}
 
-						// save player infos
-						playerAccount.LastLogin = DateTime.Now;
-						playerAccount.LastLoginIP = ipAddress;
-
 						//Save the account table
-						//GameServer.Database.WriteDatabaseTable(typeof(Account));
 						client.Account = playerAccount;
 
 						// create session ID here to disable double login bug
@@ -221,9 +258,8 @@ namespace DOL.GS.PacketHandler.v168
 					}
 				}
 
-				GameServer.Database.SaveObject(playerAccount);
-			} 
-			catch (DatabaseException e) 
+			}
+			catch (DatabaseException e)
 			{
 				if (log.IsErrorEnabled)
 					log.Error("LoginRequestHandler", e);
@@ -257,7 +293,7 @@ namespace DOL.GS.PacketHandler.v168
 			}
 			return crypted.ToString();
 		}
-		
+
 /*
 
 $pass = "abc";

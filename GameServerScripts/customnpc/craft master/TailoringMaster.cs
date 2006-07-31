@@ -38,7 +38,9 @@ namespace DOL.GS.Scripts
 
 		public override eCharacterClass[] AllowedClass
 		{
-			get { return new eCharacterClass[]
+			get
+			{
+				return new eCharacterClass[]
 					{
 						eCharacterClass.Friar,
 						eCharacterClass.Scout,
@@ -63,12 +65,14 @@ namespace DOL.GS.Scripts
 						eCharacterClass.Mystic,
 						eCharacterClass.Runemaster,
 						eCharacterClass.Spiritmaster,
+						eCharacterClass.Bonedancer,
 						eCharacterClass.Heretic,
 						eCharacterClass.Necromancer,
 						eCharacterClass.Bainshee,
 						eCharacterClass.Valewalker,
 						eCharacterClass.Vampiir,
-					};
+						eCharacterClass.Warlock,
+				  };
 			}
 		}
 

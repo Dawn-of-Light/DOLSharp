@@ -23,15 +23,17 @@ namespace DOL.GS
 	/// <summary>
 	/// GameMovingObject is a base class for boats and siege weapons.
 	/// </summary>
-	public  class GameSiegeRam : GameSiegeWeapon
+	public class GameSiegeRam : GameSiegeWeapon
 	{
-		public GameSiegeRam() : base()
+		public GameSiegeRam()
+			: base()
 		{
 			MeleeDamageType = eDamageType.Body;
 			Name = "siege ram";
 
 			//AmmoType = 0x3B00;
 			//this.Effect = 0x8A1;
+			AmmoType = 0x26;
 			this.Model = 0xA2A;//0xA28
 			//TODO find all value for ram
 			ActionDelay = new int[]
@@ -43,11 +45,17 @@ namespace DOL.GS
 				1100//fireing
 			};//en ms
 		}
-		protected override void SelectObjectTarget(DOLEvent e, object sender, EventArgs arguments)
+
+		public override ushort Type()
 		{
-			InteractWithEventArgs arg = arguments as InteractWithEventArgs;
-			TargetObject = arg.Target;
+			return 0x9602;
 		}
+
+		//		protected override void SelectObjectTarget(DOLEvent e, object sender, EventArgs arguments)
+		//		{
+		//			InteractWithEventArgs arg = arguments as InteractWithEventArgs;
+		//			TargetObject = arg.Target;
+		//		}
 		public override void DoDamage()
 		{
 			GameLiving target = (TargetObject as GameLiving);
@@ -57,23 +65,21 @@ namespace DOL.GS
 				return;
 			}
 			//todo good  distance check
-			if (!WorldMgr.CheckDistance(this,target,WorldMgr.PICKUP_DISTANCE))
+			if (!WorldMgr.CheckDistance(this, target, WorldMgr.PICKUP_DISTANCE))
 			{
 				//todo msg
 				return;
 			}
 			int damageAmount = 0;
-			switch(this.Level)
+			switch (this.Level)
 			{
-				case 1:damageAmount=300;
+				case 1: damageAmount = 300;
 					break;
-				case 2:damageAmount=450;
+				case 2: damageAmount = 450;
 					break;
-				case 3:damageAmount=750;
+				case 3: damageAmount = 750;
 					break;
 			}
-			
-			target.TakeDamage(this,eDamageType.Body,damageAmount,0);
 			base.DoDamage();
 		}
 	}
