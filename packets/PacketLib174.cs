@@ -73,7 +73,7 @@ namespace DOL.GS.PacketHandler
 						if(characters[j].AccountSlot==i)
 						{
 							pak.FillString(characters[j].Name,24);
-							items = (InventoryItem[]) GameServer.Database.SelectObjects(typeof(InventoryItem),"OwnerID = '"+characters[j].ObjectId+"'");
+							items = (InventoryItem[]) GameServer.Database.SelectObjects(typeof(InventoryItem),"OwnerID = '"+characters[j].ObjectId+"' AND SlotPosition >='10' AND SlotPosition <= '37'");
 							byte ExtensionTorso = 0;
 							byte ExtensionGloves = 0;
 							byte ExtensionBoots = 0;
@@ -129,8 +129,11 @@ namespace DOL.GS.PacketHandler
 							pak.WriteByte((byte)((((characters[j].Race & 0xF0) << 2)+(characters[j].Race & 0x0F)) | (characters[j].Gender << 4)));
 							pak.WriteShortLowEndian((ushort)characters[j].CurrentModel);
 							pak.WriteByte((byte)characters[j].Region);
-							pak.WriteByte(0x0); //second byte of region, currently unused
-							pak.WriteInt(0x0);  //Unknown, last used?
+							if (reg == null || m_gameClient.ClientType > reg.Expansion)
+								pak.WriteByte(0x00);
+							else
+								pak.WriteByte((byte)(reg.Expansion + 1)); //0x04-Cata zone, 0x05 - DR zone
+							pak.WriteInt(0x0); // Internal database ID
 							pak.WriteByte((byte)characters[j].Strength);
 							pak.WriteByte((byte)characters[j].Dexterity);
 							pak.WriteByte((byte)characters[j].Constitution);
@@ -227,7 +230,10 @@ namespace DOL.GS.PacketHandler
 								pak.WriteByte(righthand);
 								pak.WriteByte(lefthand);
 							}
-							pak.WriteByte(0x00); //0x01=char in SI zone, classic client can't "play"
+							if (reg == null || reg.Expansion != 1)
+									pak.WriteByte(0x00);
+							else
+									pak.WriteByte(0x01); //0x01=char in SI zone, classic client can't "play"
 							pak.WriteByte(0x00);
 							//pak.Fill(0x00,2);
 							written=true;
@@ -295,6 +301,17 @@ namespace DOL.GS.PacketHandler
 
 			if (GameServer.ServerRules.GetColorHandling(m_gameClient) == 1) // PvP
 				SendObjectGuildID(playerToCreate, playerToCreate.Guild); //used for nearest friendly/enemy object buttons and name colors on PvP server
+
+			if (m_gameClient.Player != null && playerToCreate.CharacterClass.ID == (int)eCharacterClass.Warlock)
+			{
+				/*
+				ChamberEffect ce = (ChamberEffect)playerToCreate.EffectList.GetOfType(typeof(ChamberEffect));
+				if (ce != null)
+				{
+					ce.SendChamber(m_gameClient.Player);
+				}
+				 */
+			}
 		}
 
 		public override void SendPlayerPositionAndObjectID()
@@ -313,13 +330,19 @@ namespace DOL.GS.PacketHandler
 				flags = 0x80 | (m_gameClient.Player.IsUnderwater?0x01:0x00);
 			pak.WriteByte((byte)(flags));
 
-			pak.WriteByte(0x00);	//TODO Unknown
+			pak.WriteByte(0x00);	//TODO Unknown (Instance ID: 0xB0-0xBA, 0xAA-0xAF)
 			Zone zone = m_gameClient.Player.CurrentZone;
 			if (zone == null) return;
-//			pak.WriteShort((ushort)(zone.XOffset/0x2000));
-//			pak.WriteShort((ushort)(zone.YOffset/0x2000));
-			pak.WriteShort(0);
-			pak.WriteShort(0);
+			if (zone.IsDungeon)
+			{
+				pak.WriteShort((ushort)(zone.XOffset/0x2000));
+				pak.WriteShort((ushort)(zone.YOffset/0x2000));
+			}
+			else
+			{
+				pak.WriteShort(0);
+				pak.WriteShort(0);
+			}
 			pak.WriteShort(m_gameClient.Player.CurrentRegionID);
 			pak.WritePascalString(GameServer.Instance.Configuration.ServerNameShort); // new in 1.74, same as in SendLoginGranted
 			pak.WriteByte(0x00); //TODO: unknown, new in 1.74
@@ -343,32 +366,14 @@ namespace DOL.GS.PacketHandler
 			}
 		}
 
-		public override void CheckLengthHybridSkillsPacket(ref GSTCPPacketOut pak, ref int maxSkills, ref int first)
-		{
-			if(pak.Length > 1000)
-			{
-				pak.Position = 4;
-				pak.WriteByte((byte)(maxSkills - first));
-				pak.WriteByte(0x03); //subtype
-				pak.WriteByte((byte)first);
-				SendTCP(pak);
-				pak = new GSTCPPacketOut(GetPacketCode(ePackets.VariousUpdate));
-				pak.WriteByte(0x01); //subcode
-				pak.WriteByte((byte)maxSkills); //number of entry
-				pak.WriteByte(0x03); //subtype
-				pak.WriteByte((byte)first);
-				first = maxSkills;
-			}
-			maxSkills++;
-		}
-
 		public override void SendRegionChanged()
 		{
 			if (m_gameClient.Player == null)
 				return;
+			SendRegions();
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.RegionChanged));
 			pak.WriteShort(m_gameClient.Player.CurrentRegionID);
-			pak.WriteShort(0x00); // Zone ID?
+			pak.WriteShort(m_gameClient.Player.CurrentZone.ID); // Zone ID?
 			pak.WriteShort(0x00); // ?
 			pak.WriteShort(0x01); // cause region change ?
 			pak.WriteByte(0x0C); //Server ID
@@ -387,6 +392,25 @@ namespace DOL.GS.PacketHandler
 			pak.WriteByte((byte) (noSound ? 1 : 0));
 			pak.WriteByte(success);
 			SendTCP(pak);
+		}
+
+		public override void CheckLengthHybridSkillsPacket(ref GSTCPPacketOut pak, ref int maxSkills, ref int first)
+		{
+			if(pak.Length > 1000)
+			{
+				pak.Position = 4;
+				pak.WriteByte((byte)(maxSkills - first));
+				pak.WriteByte(0x03); //subtype
+				pak.WriteByte((byte)first);
+				SendTCP(pak);
+				pak = new GSTCPPacketOut(GetPacketCode(ePackets.VariousUpdate));
+				pak.WriteByte(0x01); //subcode
+				pak.WriteByte((byte)maxSkills); //number of entry
+				pak.WriteByte(0x03); //subtype
+				pak.WriteByte((byte)first);
+				first = maxSkills;
+			}
+			maxSkills++;
 		}
 
 		public override void SendWarmapBonuses()
@@ -467,6 +491,53 @@ namespace DOL.GS.PacketHandler
 			pak.WriteByte((byte)OwnerDF); // Relics = CountPowerRelics << 4 | CountStrenghtRelics;
 			pak.WriteByte((byte)RealmTowers);
 			pak.WriteByte((byte)OwnerDFTowers);
+			SendTCP(pak);
+		}
+		public override void SendLivingEquipmentUpdate(GameLiving living)
+		{
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.EquipmentUpdate));
+			ICollection items = null;
+			if (living.Inventory != null)
+				items = living.Inventory.VisibleItems;
+
+			pak.WriteShort((ushort) living.ObjectID);
+			pak.WriteByte((byte) ((living.IsCloakHoodUp ? 0x01 : 0x00) | (int) living.ActiveQuiverSlot)); //bit0 is hood up bit4 to 7 is active quiver
+
+			pak.WriteByte((byte) living.VisibleActiveWeaponSlots);
+			if (items != null)
+			{
+				pak.WriteByte((byte) items.Count);
+				foreach (InventoryItem item in items)
+				{
+					pak.WriteByte((byte) item.SlotPosition);
+
+					ushort model = (ushort) (item.Model & 0x1FFF);
+					int texture = (item.Emblem != 0) ? item.Emblem : item.Color;
+
+					if ((texture & ~0xFF) != 0)
+						model |= 0x8000;
+					else if ((texture & 0xFF) != 0)
+						model |= 0x4000;
+					if (item.Effect != 0)
+						model |= 0x2000;
+
+					pak.WriteShort(model);
+
+					if (item.SlotPosition > Slot.RANGED || item.SlotPosition < Slot.RIGHTHAND)
+						pak.WriteByte((byte)item.Extension);
+
+					if ((texture & ~0xFF) != 0)
+						pak.WriteShort((ushort) texture);
+					else if ((texture & 0xFF) != 0)
+						pak.WriteByte((byte) texture);
+					if (item.Effect != 0)
+						pak.WriteShort((ushort) item.Effect);
+				}
+			}
+			else
+			{
+				pak.WriteByte(0x00);
+			}
 			SendTCP(pak);
 		}
 	}

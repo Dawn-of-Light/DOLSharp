@@ -40,20 +40,21 @@ namespace DOL.GS
 		/// the keep door constructor
 		/// </summary>
 		/// <param name="keep"></param>
-		public GameKeepDoor(AbstractGameKeep keep) : base()
-		{	
+		public GameKeepDoor(AbstractGameKeep keep)
+			: base()
+		{
 			Level = 0;
 			Keep = keep;
-			Health = MaxHealth;			
-			Name = "Keep Door";			
-			GameEventMgr.AddHandler(this,GameLivingEvent.Dying,new DOLEventHandler(OpenDoor));
+			Health = MaxHealth;
+			Name = "Keep Door";
+			GameEventMgr.AddHandler(this, GameLivingEvent.Dying, new DOLEventHandler(OpenDoor));
 			keep.Doors.Add(this);
 			CurrentRegion = keep.CurrentRegion;
-			Realm = (byte)keep.Realm;			
+			Realm = (byte)keep.Realm;
 			m_oldHealthPercent = HealthPercent;
 			m_healthRegenerationPeriod = 3600000; //3600000 ms = 3600 seconds = 1 hour
 		}
-		
+
 		#region properties
 
 		private byte m_oldHealthPercent;
@@ -69,14 +70,14 @@ namespace DOL.GS
 		{
 			get
 			{
-				return m_doorID;	
+				return m_doorID;
 			}
 			set
 			{
 				m_doorID = value;
 			}
 		}
-		
+
 		/// <summary>
 		/// This flag is send in packet(keep door =4, regular door = 0)
 		/// </summary>
@@ -84,7 +85,7 @@ namespace DOL.GS
 		{
 			get
 			{
-				return 4;	
+				return 4;
 			}
 		}
 
@@ -103,7 +104,7 @@ namespace DOL.GS
 		/// This hold keep owner
 		/// </summary>
 		private AbstractGameKeep m_keep;
-		
+
 		/// <summary>
 		/// Keep owner of the door 
 		/// </summary>
@@ -123,7 +124,7 @@ namespace DOL.GS
 		/// door state (open or closed)
 		/// </summary>
 		private eDoorState m_state;
-		
+
 		/// <summary>
 		/// door state (open or closed)
 		/// call the broadcast of state in area
@@ -137,7 +138,8 @@ namespace DOL.GS
 				else
 					return eDoorState.Open;
 			}
-			set	{
+			set
+			{
 				if (m_state != value)
 				{
 					m_state = value;
@@ -181,15 +183,15 @@ namespace DOL.GS
 			if (m_oldHealthPercent != HealthPercent)
 			{
 				m_oldHealthPercent = HealthPercent;
-				foreach(GamePlayer player in this.GetPlayersInRadius(WorldMgr.OBJ_UPDATE_DISTANCE))
+				foreach (GamePlayer player in this.GetPlayersInRadius(WorldMgr.OBJ_UPDATE_DISTANCE))
 					player.Out.SendKeepDoorUpdate(this);
 			}
 
 			//Work around the XP system
-			if(Alive)
+			if (Alive)
 			{
-				Health -= (damageAmount	+ criticalAmount);
-				if(!Alive)
+				Health -= (damageAmount + criticalAmount);
+				if (!Alive)
 				{
 					Health = 0;
 					Die(source);
@@ -220,7 +222,7 @@ namespace DOL.GS
 			int keepPiece = (DoorID - 700000000 - keepId * 100000) / 10000;
 			int componentId = (DoorID - 700000000 - keepId * 100000 - keepPiece * 10000) / 100;
 			int doorIndex = (DoorID - 700000000 - keepId * 100000 - keepPiece * 10000 - componentId * 100);
-			
+
 			if (!WorldMgr.CheckDistance(this, player, WorldMgr.INTERACT_DISTANCE) && player.Client.Account.PrivLevel == 1) return false;
 
 			if (player.Mez)
@@ -262,7 +264,7 @@ namespace DOL.GS
 				else
 				{
 					//when entering a keeps inner door, we need to raise Z
-					if (IsObjectInFront(player, 180)) 
+					if (IsObjectInFront(player, 180))
 					{
 						//To find out if a door is the keeps inner door, we compare the distance between
 						//the component for the keep and the component for the gate
@@ -325,8 +327,8 @@ namespace DOL.GS
 		/// <returns>true when created</returns>
 		public override bool AddToWorld()
 		{
-			if(!base.AddToWorld()) return false;
-			foreach(GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+			if (!base.AddToWorld()) return false;
+			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 				player.Out.SendDoorCreate(this);
 			return true;
 		}
@@ -359,11 +361,11 @@ namespace DOL.GS
 			DBDoor obj = null;
 			bool New = false;
 			if (InternalID != null)
-				obj = (DBDoor) GameServer.Database.FindObjectByKey(typeof (DBDoor), InternalID);			
+				obj = (DBDoor)GameServer.Database.FindObjectByKey(typeof(DBDoor), InternalID);
 
 			if (obj == null)
 			{
-				obj = new DBDoor();				
+				obj = new DBDoor();
 				New = true;
 			}
 
@@ -378,7 +380,7 @@ namespace DOL.GS
 			obj.KeepID = Keep.KeepID;
 			if (New)
 			{
-				GameServer.Database.AddNewObject(obj);				
+				GameServer.Database.AddNewObject(obj);
 			}
 			else
 				GameServer.Database.SaveObject(obj);
@@ -392,7 +394,7 @@ namespace DOL.GS
 		{
 			base.LoadFromDatabase(obj);
 			DBDoor dbdoor = obj as DBDoor;
-			if (dbdoor == null)return;
+			if (dbdoor == null) return;
 			Name = dbdoor.Name;
 			Health = dbdoor.Health;
 			m_oldHealthPercent = HealthPercent;
@@ -430,7 +432,7 @@ namespace DOL.GS
 		{
 			foreach (GamePlayer player in this.GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
 				player.Out.SendMessage("The Keep Gate is broken!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			lock(this)
+			lock (this)
 			{
 				m_state = eDoorState.Open;
 			}
@@ -442,7 +444,7 @@ namespace DOL.GS
 		/// </summary>
 		public virtual void CloseDoor()
 		{
-			lock(this)
+			lock (this)
 			{
 				m_state = eDoorState.Closed;
 			}
@@ -454,8 +456,8 @@ namespace DOL.GS
 		/// </summary>
 		public virtual void BroadcastDoorStatus()
 		{
-			foreach(GameClient client in WorldMgr.GetClientsOfRegion(CurrentRegionID))
-			{	
+			foreach (GameClient client in WorldMgr.GetClientsOfRegion(CurrentRegionID))
+			{
 				client.Out.SendDoorState(this);
 			}
 		}

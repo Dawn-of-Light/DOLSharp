@@ -23,27 +23,31 @@ namespace DOL.GS
 	/// <summary>
 	/// GameMovingObject is a base class for boats and siege weapons.
 	/// </summary>
-	public  class GameSiegeCauldron : GameSiegeWeapon
+	public class GameSiegeCauldron : GameSiegeWeapon
 	{
-		public GameSiegeCauldron() : base()
+		public GameSiegeCauldron()
+			: base()
 		{
 			MeleeDamageType = eDamageType.Heat;
 			Name = "cauldron of boiling oil";
-			AmmoType = 0x3B00;;
-			this.Effect = 0x8A1;
-			this.Model = 0xA2F;
+			AmmoType = 0x3B; ;
+			EnableToMove = false;
+			Effect = 0x8A1;
+			Model = 0xA2F;
+			CurrentState = eState.Aimed;
+			SetGroundTarget(X, Y, Z - 100);
 			ActionDelay = new int[]{
 				0,//none
-				5000,//aiming
-				10000,//arming
+				0,//aiming
+				15000,//arming
 				0,//loading
-				1100//fireing
+				1000//fireing
 			};//en ms
 			/*SpellLine siegeWeaponSpellLine = SkillBase.GetSpellLine(GlobalSpellsLines.SiegeWeapon_Spells);
 			IList spells = SkillBase.GetSpellList(siegeWeaponSpellLine.KeyName);
 			if (spells != null)
 			{
-				foreach (Spell spell in spells) 
+				foreach (Spell spell in spells)
 				{
 					if (spell.ID == 2430) //TODO good id for cauldron
 					{
@@ -61,7 +65,7 @@ namespace DOL.GS
 
 			//todo remove ammo + spell in db and uncomment
 			//m_spellHandler.StartSpell(player);
-            base.DoDamage();//anim mut be called after damage
+			base.DoDamage();//anim mut be called after damage
 		}
 	}
 }

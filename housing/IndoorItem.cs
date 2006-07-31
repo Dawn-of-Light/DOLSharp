@@ -41,14 +41,14 @@ namespace DOL.GS.Housing
 			get { return m_color; }
 			set { m_color = value;}
 		}
-		int m_x;
-		public int X
+		short m_x;
+		public short X
 		{
 			get { return m_x; }
 			set { m_x = value;}
 		}
-		int m_y;
-		public int Y
+		short m_y;
+		public short Y
 		{
 			get { return m_y; }
 			set { m_y = value;}
@@ -91,14 +91,14 @@ namespace DOL.GS.Housing
 		}
 		public void CopyFrom(DBHouseIndoorItem dbitem)
 		{
-	    	this.Model = dbitem.Model;
-	    	this.Color = dbitem.Color;
-	    	this.X = dbitem.X;
-	    	this.Y = dbitem.Y;
-	    	this.Rotation = dbitem.Rotation;
-	    	this.Size = dbitem.Size;
-	    	this.Position = dbitem.Position;
-	    	this.Placemode = dbitem.Placemode;
+			this.Model = dbitem.Model;
+			this.Color = dbitem.Color;
+			this.X = (short)dbitem.X;
+			this.Y = (short)dbitem.Y;
+			this.Rotation = dbitem.Rotation;
+			this.Size = dbitem.Size;
+			this.Position = dbitem.Position;
+			this.Placemode = dbitem.Placemode;
 			this.BaseItem = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), dbitem.BaseItemID);
 			this.DatabaseItem = dbitem;
 		}

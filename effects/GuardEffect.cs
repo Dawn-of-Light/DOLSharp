@@ -1,16 +1,16 @@
 /*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -49,7 +49,7 @@ namespace DOL.GS.Effects
 
 		/// <summary>
 		/// Holds guarded player
-		/// </summary>  
+		/// </summary>
 		private GamePlayer m_guardTarget;
 
 		/// <summary>
@@ -95,7 +95,7 @@ namespace DOL.GS.Effects
 			m_guardSource.EffectList.Add(this);
 			m_guardTarget.EffectList.Add(this);
 
-			if (!WorldMgr.CheckDistance(guardSource, guardTarget,GuardAbilityHandler.GUARD_DISTANCE))
+			if (!WorldMgr.CheckDistance(guardSource, guardTarget, GuardAbilityHandler.GUARD_DISTANCE))
 			{
 				guardSource.Out.SendMessage(string.Format("You are now guarding {0}, but you must stand closer.", guardTarget.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				guardTarget.Out.SendMessage(string.Format("{0} is now guarding you, but you must stand closer.", guardSource.GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -128,6 +128,7 @@ namespace DOL.GS.Effects
 		/// </summary>
 		public void Cancel(bool playerCancel)
 		{
+			GameEventMgr.RemoveHandler(m_playerGroup, PlayerGroupEvent.PlayerDisbanded, new DOLEventHandler(GroupDisbandCallback));
 			m_guardSource.EffectList.Remove(this);
 			m_guardTarget.EffectList.Remove(this);
 
@@ -144,8 +145,8 @@ namespace DOL.GS.Effects
 		{
 			get
 			{
-				if (m_guardSource != null)
-					return "Guard: " + m_guardSource.GetName(0, false);
+				if (m_guardSource != null && m_guardTarget != null)
+					return m_guardTarget.GetName(0, false) + " guarded by " + m_guardSource.GetName(0, false);
 				return "Guard";
 			}
 		}

@@ -27,86 +27,96 @@ namespace DOL.GS.Scripts
 	[PlayerClassAttribute((int)eCharacterClass.Vampiir, "Vampiir", "Stalker")]
 	public class ClassVampiir : ClassStalker
 	{
-		public ClassVampiir() : base() 
+		public ClassVampiir()
+			: base()
 		{
 			m_profession = "Path of Affinity";
 			m_specializationMultiplier = 15;
 			m_primaryStat = eStat.CON;
 			m_secondaryStat = eStat.STR;
 			m_tertiaryStat = eStat.DEX;
-			m_manaStat = eStat.INT; //TODO: not sure
+			m_manaStat = eStat.STR;
+			m_wsbase = 440;
 		}
 
-		public override string GetTitle(int level) 
+		public override string GetTitle(int level)
 		{
-			if (level>=50) return "TODO";
-			if (level>=45) return "TODO";
-			if (level>=40) return "Vampiir Hunter";
-			if (level>=35) return "Vampiir Stalker";
-			if (level>=30) return "TODO";
-			if (level>=25) return "Vampiir Seeker";
-			if (level>=20) return "Vampiir Protector";
-			if (level>=15) return "Vampiir Adept";
-			if (level>=10) return "Vampiir Apprentice"; 
-			if (level>=5) return "Vampiir Initiate"; 
-			return "None"; 
+			if (level >= 50) return "TODO";
+			if (level >= 45) return "TODO";
+			if (level >= 40) return "Vampiir Hunter";
+			if (level >= 35) return "Vampiir Stalker";
+			if (level >= 30) return "TODO";
+			if (level >= 25) return "Vampiir Seeker";
+			if (level >= 20) return "Vampiir Protector";
+			if (level >= 15) return "Vampiir Adept";
+			if (level >= 10) return "Vampiir Apprentice";
+			if (level >= 5) return "Vampiir Initiate";
+			return "None";
 		}
 
 		public override eClassType ClassType
 		{
-			get { return eClassType.Hybrid; }
+			get { return eClassType.ListCaster; }
 		}
 
 		/// <summary>
 		/// Update all skills and add new for current level
 		/// </summary>
 		/// <param name="player"></param>
-		public override void OnLevelUp(GamePlayer player) 
+		public override void OnLevelUp(GamePlayer player)
 		{
-			base.OnLevelUp(player);	
-		
-			if (player.Level >= 5) 
-			{							
+			base.OnLevelUp(player);
+
+			player.RemoveSpecialization(Specs.Blades);
+			player.RemoveSpecialization(Specs.Stealth);
+			player.RemoveAbility(Abilities.Evade);
+			player.RemoveAbility(Abilities.Weapon_Blades);
+			player.RemoveAbility(Abilities.Weapon_Staves);
+
+
+			if (player.Level >= 5)
+			{
 				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Piercing));
 				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Dementia));
 				player.AddSpecialization(SkillBase.GetSpecialization(Specs.ShadowMastery));
 				player.AddSpecialization(SkillBase.GetSpecialization(Specs.VampiiricEmbrace));
 				player.AddSpellLine(SkillBase.GetSpellLine("Dementia"));
 				player.AddSpellLine(SkillBase.GetSpellLine("Shadow Mastery"));
-				player.AddSpellLine(SkillBase.GetSpellLine("Vampiiric Embrace"));				
+				player.AddSpellLine(SkillBase.GetSpellLine("Vampiiric Embrace"));
+				//player.AddAbility(SkillBase.GetAbility(Abilities.VampiirBolt));
 			}
-			if (player.Level >= 6) 
+			if (player.Level >= 6)
 			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.VampiirConstitution));
 				player.AddAbility(SkillBase.GetAbility(Abilities.VampiirDexterity));
 				player.AddAbility(SkillBase.GetAbility(Abilities.VampiirQuickness));
 				player.AddAbility(SkillBase.GetAbility(Abilities.VampiirStrength));
 			}
-			if (player.Level >= 10) 
+			if (player.Level >= 10)
 			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.SafeFall, 1));
 			}
-			if (player.Level >= 15) 
+			if (player.Level >= 15)
 			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.Tireless));
 			}
-			if (player.Level >= 20) 
+			if (player.Level >= 20)
 			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.SafeFall, 2));
 			}
-			if (player.Level >= 25) 
+			if (player.Level >= 25)
 			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.ClimbWalls));
 			}
-			if (player.Level >= 30) 
+			if (player.Level >= 30)
 			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.SafeFall, 3));
 			}
-			if (player.Level >= 40) 
+			if (player.Level >= 40)
 			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.SafeFall, 4));
 			}
-			if (player.Level >= 50) 
+			if (player.Level >= 50)
 			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.SafeFall, 5));
 			}

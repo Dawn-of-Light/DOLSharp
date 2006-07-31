@@ -79,12 +79,33 @@ namespace DOL.GS
 		AlchemyTincture = 47,
 		SpellcraftGem = 48,
 		GardenObject = 49,
-		SiegeBalista = 50,
-		SiegeCatapult = 51,
-		SiegeCauldron = 52,
-		SiegeRam = 53,
-		SiegeTrebuchet = 54,
-	}//64 max
+		HouseWallObject = 50,
+		HouseFloorObject = 51,
+		HouseCarpetFirst = 52,
+		HouseNPC = 53,
+		HouseVault = 54,
+		HouseInteriorObject = 55, //Lathe, forge, alchemy table
+		HouseTentColor = 56,
+		HouseExteriorBanner = 57,
+		HouseExteriorShield = 58,
+		HouseRoofMaterial = 59,
+		HouseWallMaterial = 60,
+		HouseDoorMaterial = 61,
+		HousePorchMaterial = 62,
+		HouseWoodMaterial = 63,
+		HouseShutterMaterial = 64,
+		HouseInteriorBanner = 66,
+		HouseInteriorShield = 67,
+		HouseBindstone = 68,
+		HouseCarpetSecond = 69,
+		HouseCarpetThird = 70,
+		HouseCarpetFourth = 71,
+		SiegeBalista = 80, // need log
+		SiegeCatapult = 81, // need log
+		SiegeCauldron = 82, // need log
+		SiegeRam = 83, // need log
+		SiegeTrebuchet = 84, // need log
+	}
 
 	/// <summary>
 	/// This enumeration holds all equipment
@@ -201,6 +222,13 @@ namespace DOL.GS
 		Crush = 1,
 		Slash = 2,
 		Thrust = 3,
+
+		Body = 10,
+		Cold = 11,
+		Energy = 12,
+		Heat = 13,
+		Matter = 14,
+		Spirit = 15,
 	}
 
 	public enum eStat : byte
@@ -491,7 +519,7 @@ namespace DOL.GS
 		Focus_Enchantments = 135,
 		Focus_Mentalism = 136,
 		Focus_Summoning = 137,
-        // SI Focii
+		// SI Focii
 		// Mid
 		Focus_BoneArmy = 138,
 		// Alb
@@ -524,8 +552,9 @@ namespace DOL.GS
 		ArcheryRange = 154,
 
 		MeleeSpeed = 155,
-		FatigueConsumption = 172,
 		Acuity = 156,
+		DPS = 157,
+		MagicAbsorbtion = 158,
 
 		AllMagicSkills = 163,
 		AllMeleeWeaponSkills = 164,
@@ -538,6 +567,7 @@ namespace DOL.GS
 		EvadeChance = 169,
 		BlockChance = 170,
 		ParryChance = 171,
+		FatigueConsumption = 172,
 		FumbleChance = 175,
 
 		MeleeDamage = 173,
@@ -586,6 +616,9 @@ namespace DOL.GS
 		AcuCapBonus = 209,
 		MaxHealthCapBonus = 210,
 		PowerPoolCapBonus = 211,
+
+		WeaponSkill = 212,
+		AllSkills = 213,
 
 		MaxProperty = 212,
 	}
@@ -812,13 +845,19 @@ namespace DOL.GS
 
 		public static string WeaponDamageTypeToName(int weaponDamageTypeID)
 		{
-			switch(weaponDamageTypeID)
+			return ((eWeaponDamageType)weaponDamageTypeID).ToString();
+		}
+
+		public static string NameToShortName(string name)
+		{
+			string[] values = name.Trim().ToLower().Split(' ');
+			for (int i = 0; i < values.Length; i++)
 			{
-				case 1: return "crush";
-				case 2: return "slash";
-				case 3: return "thrust";
+				if (values[i].Length == 0) continue;
+				if (i > 0 && values[i] == "of")
+					return values[i - 1];
 			}
-			return "elemental";
+			return values[values.Length - 1];
 		}
 
 		public static string ItemHandToName(int handFlag)

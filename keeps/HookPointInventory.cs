@@ -221,7 +221,7 @@ namespace DOL.GS
 			hookPointObj.Realm = (byte)hookpoint.Component.Keep.Realm;
 			hookPointObj.Heading = hookpoint.Component.Heading;
 			if (hookPointObj is GameSiegeWeapon)
-				((GameSiegeWeapon)hookPointObj).EnableToMoove = false;
+				((GameSiegeWeapon)hookPointObj).EnableToMove = false;
 			//TODO find good hp place from id and type of  component
 			hookPointObj.X = hookpoint.X;
 			hookPointObj.Y = hookpoint.Y;

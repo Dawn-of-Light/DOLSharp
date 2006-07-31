@@ -1,16 +1,16 @@
 /*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -152,11 +152,11 @@ namespace DOL.GS.PacketHandler
 							break;
 						case (int) eObjectType.GardenObject:
 							value1 = 0;
-							value2 = 0;
+							value2 = item.SPD_ABS;
 							/*
 							Value2 byte sets the width, only lower 4 bits 'seem' to be used (so 1-15 only)
 
-							The byte used for "Hand" (IE: Mini-delve showing a weapon as Left-Hand 
+							The byte used for "Hand" (IE: Mini-delve showing a weapon as Left-Hand
 							usabe/TwoHanded), the lower 4 bits store the height (1-15 only)
 							*/
 							break;
@@ -169,8 +169,11 @@ namespace DOL.GS.PacketHandler
 					pak.WriteByte((byte) value1);
 					pak.WriteByte((byte) value2);
 
-					pak.WriteByte((byte) (item.Hand*64));
-					pak.WriteByte((byte) ((item.Type_Damage*64) + item.Object_Type));
+					if (item.Object_Type == (int)eObjectType.GardenObject)
+						pak.WriteByte((byte) (item.DPS_AF));
+					else
+						pak.WriteByte((byte) (item.Hand << 6));
+					pak.WriteByte((byte) ((item.Type_Damage > 3 ? 0 : item.Type_Damage << 6) | item.Object_Type));
 					pak.WriteShort((ushort) item.Weight);
 					pak.WriteByte(item.ConditionPercent); // % of con
 					pak.WriteByte(item.DurabilityPercent); // % of dur
@@ -192,7 +195,7 @@ namespace DOL.GS.PacketHandler
 			SendTCP(pak);
 		}
 
-		public override void SendLivingEquipementUpdate(GameLiving living)
+		public override void SendLivingEquipmentUpdate(GameLiving living)
 		{
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.EquipmentUpdate));
 			ICollection items = null;
@@ -211,6 +214,9 @@ namespace DOL.GS.PacketHandler
 					pak.WriteByte((byte) item.SlotPosition);
 
 					ushort model = (ushort) (item.Model & 0x1FFF);
+					if (model > 2952)
+						model = 0;
+
 					int texture = (item.Emblem != 0) ? item.Emblem : item.Color;
 
 					if ((texture & ~0xFF) != 0)
@@ -289,7 +295,7 @@ namespace DOL.GS.PacketHandler
 						pak.WriteByte((byte) item.DPS_AF); // dps_af
 						pak.WriteByte((byte) item.SPD_ABS); //spd_abs
 						pak.WriteByte((byte) (item.Hand << 6));
-						pak.WriteByte((byte) ((item.Type_Damage << 6) + item.Object_Type));
+						pak.WriteByte((byte) ((item.Type_Damage > 3 ? 0 : item.Type_Damage << 6) | item.Object_Type));
 						pak.WriteShort((ushort) item.Weight); // weight
 						pak.WriteByte(item.ConditionPercent); // con %
 						pak.WriteByte(item.DurabilityPercent); // dur %
@@ -302,7 +308,10 @@ namespace DOL.GS.PacketHandler
 
 						pak.WriteShort((ushort) item.Color); //color
 						pak.WriteShort((ushort) item.Effect); //weaponproc
-						pak.WritePascalString(item.Name); //size and name item
+						if (item.Count > 1)
+							pak.WritePascalString(item.Count + " " + item.Name);
+						else
+							pak.WritePascalString(item.Name); //size and name item
 					}
 				}
 				if (m_gameClient.Player.TradeWindow.Partner != null)

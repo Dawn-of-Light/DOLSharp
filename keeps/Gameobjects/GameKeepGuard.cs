@@ -29,23 +29,25 @@ namespace DOL.GS
 	/// </summary>
 	public class GameKeepGuard : GameMob
 	{
-		public GameKeepGuard(AbstractGameKeep keep) : this()
-		{		
+		public GameKeepGuard(AbstractGameKeep keep)
+			: this()
+		{
 			KeepGuardBrain brain = new KeepGuardBrain();
 			brain.Keep = keep;
 			brain.AggroLevel = 100;//todo : find good aggro level and range
 			brain.AggroRange = 50;
-            SetOwnBrain(brain);
+			SetOwnBrain(brain);
 		}
-		public GameKeepGuard() : base()
-		{		
+		public GameKeepGuard()
+			: base()
+		{
 			Model = 486;
 			Size = 50;
 			Level = 55;
 			Name = "Blank Guard";
 			if (this.Brain == null)
 			{
-				KeepGuardBrain brain= new KeepGuardBrain();
+				KeepGuardBrain brain = new KeepGuardBrain();
 				brain.AggroLevel = 10;
 				brain.AggroRange = 50;
 				SetOwnBrain(brain);
@@ -60,9 +62,9 @@ namespace DOL.GS
 		public override void SaveIntoDatabase()
 		{
 			DBKeepObject dbKeepGuard = null;
-			if(InternalID != null)
-				dbKeepGuard = (DBKeepObject) GameServer.Database.FindObjectByKey(typeof(DBKeepObject), InternalID);
-			if(dbKeepGuard == null)
+			if (InternalID != null)
+				dbKeepGuard = (DBKeepObject)GameServer.Database.FindObjectByKey(typeof(DBKeepObject), InternalID);
+			if (dbKeepGuard == null)
 			{
 				dbKeepGuard = new DBKeepObject();
 				dbKeepGuard.ClassType = this.GetType().ToString();
@@ -74,15 +76,15 @@ namespace DOL.GS
 			dbKeepGuard.Z = Z;
 			dbKeepGuard.Heading = Heading;
 			dbKeepGuard.EquipmentID = EquipmentTemplateID;
-			
-			AbstractGameKeep mykeep = (Brain as KeepGuardBrain ).Keep;
+
+			AbstractGameKeep mykeep = (Brain as KeepGuardBrain).Keep;
 			if (mykeep != null)
 				dbKeepGuard.KeepID = mykeep.KeepID;
 
-			dbKeepGuard.Model=Model;
-			dbKeepGuard.Realm=Realm;
+			dbKeepGuard.Model = Model;
+			dbKeepGuard.Realm = Realm;
 
-			if(InternalID == null)
+			if (InternalID == null)
 			{
 				GameServer.Database.AddNewObject(dbKeepGuard);
 				InternalID = dbKeepGuard.ObjectId;
@@ -99,31 +101,31 @@ namespace DOL.GS
 		{
 			base.LoadFromDatabase(obj);
 			DBKeepObject dbkeepobj = obj as DBKeepObject;
-			if (dbkeepobj == null)return;
+			if (dbkeepobj == null) return;
 
 			KeepGuardBrain brain = this.Brain as KeepGuardBrain;
 			if (brain == null) return;
-			
+
 			this.Name = dbkeepobj.Name;
 			this.Realm = (byte)dbkeepobj.Realm;
 			this.Model = (ushort)dbkeepobj.Model;
-			this.Size= 50;
+			this.Size = 50;
 			this.X = dbkeepobj.X;
 			this.Y = dbkeepobj.Y;
 			this.Z = dbkeepobj.Z;
 			this.Heading = (ushort)dbkeepobj.Heading;
 			this.LoadEquipmentTemplateFromDatabase(dbkeepobj.EquipmentID);
-			AbstractGameKeep keep = brain.Keep ;
+			AbstractGameKeep keep = brain.Keep;
 			if (keep != null)
-			{	
+			{
 				this.CurrentRegion = keep.CurrentRegion;
 				this.Level = (byte)(dbkeepobj.BaseLevel + keep.Level);
 				if (!this.AddToKeep(keep))
 					return;
 				if (keep.Guild != null)
 				{
-					GameEventMgr.AddHandler(this,GameLivingEvent.AttackedByEnemy,new DOLEventHandler(WarnGuild));
-					GameEventMgr.AddHandler(this,GameLivingEvent.Dying,new DOLEventHandler(WarnGuild));
+					GameEventMgr.AddHandler(this, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(WarnGuild));
+					GameEventMgr.AddHandler(this, GameLivingEvent.Dying, new DOLEventHandler(WarnGuild));
 					//emblem ever set before so is in db.
 				}
 				//because if keep not set the current region is not set so can not been add.
@@ -149,8 +151,8 @@ namespace DOL.GS
 				}
 				else
 				{
-//					if (log.IsDebugEnabled)
-//						log.Debug("Error loading NPC inventory: InventoryID="+npc.EquipmentTemplateID+", NPC name="+npc.Name+".");
+					//					if (log.IsDebugEnabled)
+					//						log.Debug("Error loading NPC inventory: InventoryID="+npc.EquipmentTemplateID+", NPC name="+npc.Name+".");
 				}
 				if (Inventory != null)
 				{
@@ -162,7 +164,7 @@ namespace DOL.GS
 						SwitchWeapon(eActiveWeaponSlot.Distance);
 					else SwitchWeapon(eActiveWeaponSlot.Standard); // sets visible left and right hand slots
 				}
-			}	
+			}
 		}
 
 		/// <summary>
@@ -179,8 +181,8 @@ namespace DOL.GS
 			if (cloak != null)
 				cloak.Emblem = guild.theGuildDB.Emblem;
 			this.UpdateNPCEquipmentAppearance();
-			GameEventMgr.AddHandler(this,GameLivingEvent.AttackedByEnemy,new DOLEventHandler(WarnGuild));
-			GameEventMgr.AddHandler(this,GameLivingEvent.Dying,new DOLEventHandler(WarnGuild));
+			GameEventMgr.AddHandler(this, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(WarnGuild));
+			GameEventMgr.AddHandler(this, GameLivingEvent.Dying, new DOLEventHandler(WarnGuild));
 		}
 
 		/// <summary>
@@ -189,9 +191,9 @@ namespace DOL.GS
 		//TODO : use event delete
 		public override void Delete()
 		{
-			GameEventMgr.RemoveHandler(this,GameLivingEvent.AttackedByEnemy,new DOLEventHandler(WarnGuild));
-			GameEventMgr.RemoveHandler(this,GameLivingEvent.Dying,new DOLEventHandler(WarnGuild));
-			base.Delete ();
+			GameEventMgr.RemoveHandler(this, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(WarnGuild));
+			GameEventMgr.RemoveHandler(this, GameLivingEvent.Dying, new DOLEventHandler(WarnGuild));
+			base.Delete();
 		}
 
 		/// <summary>
@@ -204,7 +206,7 @@ namespace DOL.GS
 		{
 			if (e == GameLivingEvent.AttackedByEnemy)
 			{
-				((KeepGuardBrain)Brain).Keep.Guild.SendMessageToGuildMembers(this.Name + "is under attack in " + this.CurrentZone.Description + "!",eChatType.CT_Advise,eChatLoc.CL_SystemWindow);//
+				((KeepGuardBrain)Brain).Keep.Guild.SendMessageToGuildMembers(this.Name + "is under attack in " + this.CurrentZone.Description + "!", eChatType.CT_Advise, eChatLoc.CL_SystemWindow);//
 			}
 			if (e == GameLivingEvent.Dying)
 			{
@@ -217,11 +219,11 @@ namespace DOL.GS
 					}
 				}
 				string message = "[Guild] [ " + this.Name + " has been killed in " + this.CurrentZone.Description + " with " + m_inArea + " enemy player(s) in the area! ]";
-				((KeepGuardBrain)Brain).Keep.Guild.SendMessageToGuildMembers(message,eChatType.CT_Guild,eChatLoc.CL_ChatWindow);
+				((KeepGuardBrain)Brain).Keep.Guild.SendMessageToGuildMembers(message, eChatType.CT_Guild, eChatLoc.CL_ChatWindow);
 			}
 		}
 
-		public virtual bool AddToKeep( AbstractGameKeep keep)
+		public virtual bool AddToKeep(AbstractGameKeep keep)
 		{
 			keep.Guards.Add(this);
 			return true;

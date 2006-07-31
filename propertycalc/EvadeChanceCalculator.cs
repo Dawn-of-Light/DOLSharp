@@ -37,7 +37,14 @@ namespace DOL.GS.PropertyCalc
 			GamePlayer player = living as GamePlayer;
 			if (player != null)
 			{
-				return (1000+player.Quickness+player.Dexterity-100) * player.GetAbilityLevel(Abilities.Evade) * 5 / 100;
+				int evadechance = 0;
+				if (player.HasAbility(Abilities.Evade))
+					evadechance += (1000 + player.Quickness + player.Dexterity - 100) * player.GetAbilityLevel(Abilities.Evade) * 5 / 100;
+				evadechance += player.BuffBonusCategory1[(int)property] * 10
+								+ player.BuffBonusCategory2[(int)property] * 10
+								- player.BuffBonusCategory3[(int)property] * 10
+								+ player.BuffBonusCategory4[(int)property] * 10;
+				return evadechance;
 			}
 
 			GameNPC npc = living as GameNPC;

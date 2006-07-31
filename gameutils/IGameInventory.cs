@@ -16,8 +16,13 @@ namespace DOL.GS
 		Invalid           = 0,
 		Ground            = 1,
 
-		Min_Inv           = 10,
+		Min_Inv           = 7,
 
+		HorseArmor        = 7, // Equipment, horse armor
+		HorseBarding      = 8, // Equipment, horse barding
+		Horse             = 9, // Equipment, horse
+
+		MinEquipable	  = 10,
 		RightHandWeapon   = 10,//Equipment, Visible
 		LeftHandWeapon    = 11,//Equipment, Visible
 		TwoHandWeapon     = 12,//Equipment, Visible
@@ -40,6 +45,7 @@ namespace DOL.GS
 		RightBracer       = 34,//Equipment
 		LeftRing          = 35,//Equipment
 		RightRing         = 36,//Equipment
+		MaxEquipable	  = 36,
 
 		FirstBackpack     = 40,
 		LastBackpack      = 79,
@@ -66,6 +72,7 @@ namespace DOL.GS
 		Gold178			  = 502,
 		Silver178		  = 503,
 		Copper178		  = 504,
+		NewPlayerPaperDoll= 600,
 	}
 
 	/// <summary>

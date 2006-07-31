@@ -21,7 +21,7 @@ using System;
 using System.Reflection;
 using System.Collections;
 using DOL.Database;
-using DOL.GS.Quests;
+using DOL.GS.Housing;
 using log4net;
 
 namespace DOL.GS.PacketHandler
@@ -83,7 +83,7 @@ namespace DOL.GS.PacketHandler
 			SendTCP(pak);
 		}
 
-		public override void SendLivingEquipementUpdate(GameLiving living)
+		public override void SendLivingEquipmentUpdate(GameLiving living)
 		{
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.EquipmentUpdate));
 			ICollection items = null;
@@ -130,43 +130,45 @@ namespace DOL.GS.PacketHandler
 			}
 			SendTCP(pak);
 		}
-		
-		protected override void SendQuestPacket(AbstractQuest quest, int index)
+		public override  void SendFurniture(House house)
 		{
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.QuestEntry));
 
-			pak.WriteByte((byte) index);
-			if (quest.Step == -1)
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.HousingItem));
+			pak.WriteShort((ushort)house.HouseNumber);
+			pak.WriteByte(Convert.ToByte(house.IndoorItems.Count));
+			pak.WriteByte(0x80); //0x00 = update, 0x80 = complete package
+			foreach(DictionaryEntry entry in new SortedList(house.IndoorItems))
 			{
-				pak.WriteByte(0);
-				pak.WriteByte(0);
-				pak.WriteByte(0);
+				IndoorItem item = (IndoorItem)entry.Value;
+				pak.WriteByte((byte)((int)entry.Key));
+				pak.WriteByte(0x01); // type item ?
+				pak.WriteShort((ushort)item.Model);
+				pak.WriteByte((byte)item.Color);
+				pak.WriteShort((ushort)item.X);
+				pak.WriteShort((ushort)item.Y);
+				pak.WriteShort((ushort)item.Rotation);
+				pak.WriteByte((byte)item.Position);
+				pak.WriteByte((byte)(item.Placemode-2));
 			}
-			else
-			{
-				string name = quest.Name;
-				string desc = quest.Description;
-				if (name.Length > byte.MaxValue)
-				{
-					if (log.IsWarnEnabled) log.Warn(quest.GetType().ToString() + ": name is too long for 1.71 clients ("+name.Length+") '"+name+"'");
-					name = name.Substring(0, byte.MaxValue);
-				}
-				if (desc.Length > ushort.MaxValue)
-				{
-					if (log.IsWarnEnabled) log.Warn(quest.GetType().ToString() + ": description is too long for 1.71 clients ("+desc.Length+") '"+desc+"'");
-					desc = desc.Substring(0, ushort.MaxValue);
-				}
-				if (name.Length + desc.Length > 2048-10)
-				{
-					if (log.IsWarnEnabled) log.Warn(quest.GetType().ToString() + ": name + description length is too long and would have crashed the client.\nName ("+name.Length+"): '"+name+"'\nDesc ("+desc.Length+"): '"+desc+"'");
-					name = name.Substring(0, 32);
-					desc = desc.Substring(0, 2048-10 - name.Length); // all that's left
-				}
-				pak.WriteByte((byte)name.Length);
-				pak.WriteShortLowEndian((ushort)desc.Length);
-				pak.WriteStringBytes(name); //Write Quest Name without trailing 0 
-				pak.WriteStringBytes(desc); //Write Quest Description without trailing 0
-			}
+			SendTCP(pak);
+		}
+
+		public override void SendFurniture(House house, int i)
+		{
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.HousingItem));
+			pak.WriteShort((ushort)house.HouseNumber);
+			pak.WriteByte(0x01); //cnt
+			pak.WriteByte(0x00); //upd
+			IndoorItem item = (IndoorItem)house.IndoorItems[i];
+			pak.WriteByte((byte)i);
+			pak.WriteByte(0x01); // type item ?
+			pak.WriteShort((ushort)item.Model);
+			pak.WriteByte((byte)item.Color);
+			pak.WriteShort((ushort)item.X);
+			pak.WriteShort((ushort)item.Y);
+			pak.WriteShort((ushort)item.Rotation);
+			pak.WriteByte((byte)item.Position);
+			pak.WriteByte((byte)(item.Placemode-2));
 			SendTCP(pak);
 		}
 	}

@@ -22,6 +22,7 @@ using System.Reflection;
 using System.Text;
 using DOL.AI.Brain;
 using DOL.Database;
+using DOL.Events;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 using DOL.GS.SkillHandler;
@@ -183,6 +184,7 @@ namespace DOL.GS.Spells
 		/// </summary>
 		public virtual void CastSpell()
 		{
+			m_caster.Notify(GameLivingEvent.CastSpell, m_caster, new CastSpellEventArgs(this));
 			// nightshade is unstealthed even if no target, target is same realm, target is too far
 			if (Caster is GamePlayer)
 			{
@@ -219,17 +221,20 @@ namespace DOL.GS.Spells
 					m_castTimer.Start(1 + CalculateCastingTime());
 					SendCastAnimation();
 
-					if (m_caster is GamePlayer)
+					if (m_caster is GamePlayer && ((GamePlayer)m_caster).Strafing)
 					{
-						if (m_caster.IsMoving || ((GamePlayer) m_caster).Strafing)
-						{
-							CasterMoves();
-						}
+						CasterMoves();
+					}
+
+					if (m_caster.IsMoving)
+					{
+						CasterMoves();
 					}
 				}
 				else
 				{
 					// instant cast
+					SendCastAnimation(0);
 					FinishSpellCast(target);
 				}
 			}
@@ -428,7 +433,7 @@ namespace DOL.GS.Spells
 				}
 
 				//heals/buffs/rez need LOS only to start casting
-				if (!m_caster.TargetInView)
+				if (!m_caster.TargetInView && m_spell.Target.ToLower() != "pet")
 				{
 					MessageToCaster("Your target is not in view.", eChatType.CT_SpellResisted);
 					return false;
@@ -490,7 +495,7 @@ namespace DOL.GS.Spells
 			return true;
 		}
 
-		public virtual void CheckLOSYouToPet(GamePlayer player, ushort response)
+		public virtual void CheckLOSYouToPet(GamePlayer player, ushort response, ushort targetOID)
 		{
 			if (player == null) // Hmm
 				return;
@@ -500,7 +505,7 @@ namespace DOL.GS.Spells
 			InterruptCasting(); // break;
 		}
 
-		public virtual void CheckLOSYouToTarget(GamePlayer player, ushort response)
+		public virtual void CheckLOSYouToTarget(GamePlayer player, ushort response, ushort targetOID)
 		{
 			if (player == null) // Hmm
 				return;
@@ -510,7 +515,7 @@ namespace DOL.GS.Spells
 			InterruptCasting(); // break;
 		}
 
-		public virtual void CheckLOSPetToTarget(GamePlayer player, ushort response)
+		public virtual void CheckLOSPetToTarget(GamePlayer player, ushort response, ushort targetOID)
 		{
 			if (player == null) // Hmm
 				return;
@@ -576,6 +581,13 @@ namespace DOL.GS.Spells
 			else if (m_spell.Target != "Self" && m_spell.Target != "Group" && m_spell.Range > 0)
 			{
 				//all spells that need a target
+
+				if (m_spell.Target == "Pet" && m_caster is GamePlayer &&
+					((GamePlayer)m_caster).ControlledNpc != null)
+				{
+					if (((GamePlayer)m_caster).ControlledNpc.Body != null)
+						target = ((GamePlayer)Caster).ControlledNpc.Body;
+				}
 
 				if (target == null || target.ObjectState != GameLiving.eObjectState.Active)
 				{
@@ -671,6 +683,17 @@ namespace DOL.GS.Spells
 		public virtual int CalculateNeededPower(GameLiving target)
 		{
 			double power = m_spell.Power*1.2;
+
+			// percent of maxPower if less than zero
+			if (power < 0)
+				if (Caster is GamePlayer && ((GamePlayer)Caster).CharacterClass.ManaStat != eStat.UNDEFINED)
+				{
+					GamePlayer player = Caster as GamePlayer;
+					power = player.CalculateMaxMana(player.Level, player.GetBaseStat(player.CharacterClass.ManaStat)) * power * -0.01;
+				}
+				else
+					power = Caster.MaxMana * power * -0.01;
+
 			eProperty focusProp = SkillBase.SpecToFocus(SpellLine.Spec);
 			if (focusProp != eProperty.Undefined)
 			{
@@ -683,9 +706,15 @@ namespace DOL.GS.Spells
 					focusBonus = 0;
 				power -= m_spell.Power*focusBonus;
 			}
-			// percent of maxPower if less than zero
-			if (power < 0)
-				power = Caster.MaxMana*power*-0.01;
+			else if (Caster is GamePlayer && ((GamePlayer)Caster).CharacterClass.ClassType == eClassType.Hybrid)
+			{
+				double specBonus = ((GamePlayer)Caster).GetBaseSpecLevel(SpellLine.Spec) * 0.4 / Spell.Level;
+				if (specBonus > 0.4)
+					specBonus = 0.4;
+				else if (specBonus < 0)
+					specBonus = 0;
+				power -= Spell.Power * specBonus;
+			}
 			// doubled power usage if quickcasting
 			if (Caster.EffectList.GetOfType(typeof (QuickCastEffect)) != null && Spell.CastTime > 0)
 				power *= 2;
@@ -799,14 +828,39 @@ namespace DOL.GS.Spells
 		public virtual int CalculateCastingTime()
 		{
 			int ticks = m_spell.CastTime;
-			if (m_caster is GamePlayer && Spell.InstrumentRequirement == 0) // dex has no effect on songs - can't play a song faster, right?
+			if (Spell.InstrumentRequirement != 0)
 			{
-				if (m_caster.EffectList.GetOfType(typeof (QuickCastEffect)) != null)
-				{
-					return 2000; //always 2 sec
-				}
-				ticks = (int)(ticks * (1.0 - Math.Min(0.6, (((GamePlayer)m_caster).Dexterity - 60)/600.0)));
+				return ticks;
 			}
+			double percent = 1.0;
+			int dex = m_caster.GetModified(eProperty.Dexterity);
+
+			if (m_caster.EffectList.GetOfType(typeof(QuickCastEffect)) != null)
+			{
+				return 2000; //always 2 sec
+			}
+			//http://daoc.nisrv.com/modules.php?name=DD_DMG_Calculator
+			//Q: Would you please give more detail as to how dex affects a caster?
+			//For instance, I understand that when I have my dex maxed I will cast 25% faster.
+			//How does this work incrementally? And will a lurikeen be able to cast faster in the end than another race?
+			//A: From a dex of 50 to a dex of 250, the formula lets you cast 1% faster for each ten points.
+			//From a dex of 250 to the maximum possible (which as you know depends on your starting total),
+			//your speed increases 1% for every twenty points.
+
+			if (dex < 60)
+			{
+				//do nothing.  THis may prove inaccurate for level 10 trolls
+			}
+			else if (dex < 250)
+			{
+				percent = 1.0 - (dex - 60) * 0.15 * 0.01;
+			}
+			else
+			{
+				percent = 1.0 - ((dex - 60) * 0.15 + (dex - 250) * 0.05) * 0.01;
+			}
+			percent *= 1.0 - m_caster.GetModified(eProperty.CastingSpeed) * 0.01;
+			ticks = (int)(ticks * Math.Max(0.4, percent));
 			if (ticks < 1)
 				ticks = 1; // at least 1 tick
 			return ticks;
@@ -817,8 +871,15 @@ namespace DOL.GS.Spells
 		public virtual void SendCastAnimation()
 		{
 			ushort castTime = (ushort)(CalculateCastingTime()/100);
+			SendCastAnimation(castTime);
+		}
+
+		public virtual void SendCastAnimation(ushort castTime)
+		{
 			foreach (GamePlayer player in m_caster.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
+				if (player == null)
+					continue;
 				player.Out.SendSpellCastAnimation(m_caster, m_spell.ClientEffect, castTime);
 			}
 		}
@@ -869,7 +930,7 @@ namespace DOL.GS.Spells
 				PulsingSpellEffect effect = new PulsingSpellEffect(this);
 				effect.Start();
 				// show animation on caster for positive spells, negative shows on every StartSpell
-				if (m_spell.Target == "Self" || m_spell.Target == "Group")
+				if (m_spell.Target == "Self" || m_spell.Target == "Group" || m_spell.Target == "Pet")
 					SendEffectAnimation(Caster, 0, false, 1);
 			}
 
@@ -1016,6 +1077,8 @@ namespace DOL.GS.Spells
 						GamePlayer casterPlayer = (GamePlayer)Caster;
 						PlayerGroup group = casterPlayer.PlayerGroup;
 						int spellRange = CalculateSpellRange();
+						if (spellRange == 0)
+							spellRange = m_spell.Radius;
 						if (group == null)
 						{
 							list.Add(casterPlayer);
@@ -1106,6 +1169,7 @@ namespace DOL.GS.Spells
 		protected virtual int CalculateEffectDuration(GameLiving target, double effectiveness)
 		{
 			double duration = Spell.Duration;
+			duration *= (1.0 + m_caster.GetModified(eProperty.SpellDuration) * 0.01);
 			if (Spell.InstrumentRequirement != 0)
 			{
 				InventoryItem instrument = Caster.AttackWeapon;
@@ -1141,6 +1205,8 @@ namespace DOL.GS.Spells
 		/// <param name="effectiveness">factor from 0..1 (0%-100%)</param>
 		public virtual void ApplyEffectOnTarget(GameLiving target, double effectiveness)
 		{
+			if (m_spellLine.KeyName == GlobalSpellsLines.Item_Effects || m_spellLine.KeyName == GlobalSpellsLines.Combat_Styles_Effect || m_spellLine.KeyName == GlobalSpellsLines.Potions_Effects || m_spellLine.KeyName == Specs.Savagery || m_spellLine.KeyName == GlobalSpellsLines.Character_Abilities || m_spellLine.KeyName == "OffensiveProc")
+				effectiveness = 1.0; // TODO player.PlayerEffectiveness
 			if (effectiveness <= 0)
 				return; // no effect
 
@@ -1317,6 +1383,8 @@ namespace DOL.GS.Spells
 		/// <returns>chance that spell will be resisted for specific target</returns>
 		public virtual int CalculateSpellResistChance(GameLiving target)
 		{
+			if (m_spellLine.KeyName == GlobalSpellsLines.Combat_Styles_Effect)
+				return 0;
 			if (HasPositiveEffect)
 				return 0;
 			return 100 - CalculateToHitChance(target);
@@ -1441,7 +1509,6 @@ namespace DOL.GS.Spells
 			get
 			{
 				ArrayList list = new ArrayList();
-
 				list.Add("Function: " + (Spell.SpellType == "" ? "(not implemented)" : Spell.SpellType));
 				list.Add(" "); //empty line
 				list.Add(Spell.Description);
@@ -1574,6 +1641,12 @@ namespace DOL.GS.Spells
 		/// <param name="max">returns max variance</param>
 		public virtual void CalculateDamageVariance(GameLiving target, out double min, out double max)
 		{
+			if (m_spellLine.KeyName == GlobalSpellsLines.Item_Effects || m_spellLine.KeyName == GlobalSpellsLines.Combat_Styles_Effect)
+			{
+				min = max = 1.0;
+				return;
+			}
+
 			int speclevel = 1;
 			if (m_caster is GamePlayer)
 			{
@@ -1612,10 +1685,41 @@ namespace DOL.GS.Spells
 		public virtual double CalculateDamageBase()
 		{
 			double spellDamage = Spell.Damage;
-			GamePlayer player = Caster as GamePlayer;
-			if (player != null && player.CharacterClass.ManaStat != eStat.UNDEFINED)
+			int speclevel = m_caster.GetModifiedSpecLevel(m_spellLine.Spec);
+			GamePlayer player = null;
+			if (m_caster is GamePlayer)
+				player = m_caster as GamePlayer;
+			//A: Now I understand (and I suspected I was missing something, which was why I replied to
+			//the player personally, something I don’t usually have the luxury of doing) – the question
+			//required information from someone on the design team, not me. The answer I received from
+			//that team surprised me: “There is no stat that affects the Vampiir's power pool or the damage
+			//done by its power based spells.  The Vampiir is not a focus based class like, say, an Enchanter.
+			//"The Vampiir is a lot more cut and dried than the typical casting class.
+			//EDIT, 12/13/04 - I was told today that this answer is not entirely accurate.
+			//While there is no stat that affects the damage dealt (in the way that intelligence or piety
+			//affects how much damage a more traditional caster can do), the Vampiir's power pool capacity
+			//is intended to be increased as the Vampiir's strength increases.
+			if (player != null && player.CharacterClass.ManaStat != eStat.UNDEFINED &&
+				player.CharacterClass.ID != (int)eCharacterClass.Vampiir)
 			{
-				int manaStatValue = player.GetModified((eProperty) player.CharacterClass.ManaStat);
+				if (player.CharacterClass.ClassType == eClassType.ListCaster)
+				{
+					int manaStatValue = player.GetModified((eProperty)player.CharacterClass.ManaStat);
+					spellDamage *= (0.845 + (speclevel - 50) * 0.01 + manaStatValue / spellDamage);
+					if (spellDamage < 0)
+						spellDamage = 0;
+				}
+				else
+				{
+					int manaStatValue = player.GetModified((eProperty)player.CharacterClass.ManaStat);
+					spellDamage *= (manaStatValue + 200) / 275.0;
+					if (spellDamage < 0)
+						spellDamage = 0;
+				}
+			}
+			else if (m_caster is GameNPC)
+			{
+				int manaStatValue = m_caster.GetModified(eProperty.Intelligence);
 				spellDamage *= (manaStatValue + 200) / 275.0;
 				if (spellDamage < 0)
 					spellDamage = 0;
@@ -1631,11 +1735,36 @@ namespace DOL.GS.Spells
 		/// <returns>chance that the spell lands on target</returns>
 		public virtual int CalculateToHitChance(GameLiving target)
 		{
-			int hitchance = 85 + ((Spell.Level - target.Level) >> 1);
-			if (!(m_caster is GamePlayer && target is GamePlayer))
+			int SpellLevel = Spell.Level;
+			GamePlayer player = null;
+			if (m_caster is GamePlayer)
+				player = m_caster as GamePlayer;
+			else if (m_caster is GameNPC && (m_caster as GameNPC).Brain is ControlledNpc)
+				player = ((ControlledNpc)((GameNPC)m_caster).Brain).Owner;
+
+			//Cap on lvl 50 for spell level
+			if (SpellLevel > 50)
+				SpellLevel = 50;
+
+			int speclevel = 1;
+			int manastat = 0;
+			int bonustohit = m_caster.GetModified(eProperty.ToHitBonus);
+			if (player != null)
+			{
+				speclevel = player.GetBaseSpecLevel(m_spellLine.Spec);
+				if (player.CharacterClass.ManaStat != eStat.UNDEFINED)
+					manastat = player.GetModified((eProperty)player.CharacterClass.ManaStat);
+				bonustohit += (int)(speclevel * 0.1 + manastat * 0.01);
+			}
+			//Piercing Magic affects to-hit bonus too
+			GameSpellEffect resPierce = SpellHandler.FindEffectOnTarget(m_caster, "PenetrateResists");
+			if (resPierce != null)
+				bonustohit += (int)resPierce.Spell.Value;
+			int hitchance = 85 + ((SpellLevel - target.Level) >> 1) + bonustohit;
+			if (!(player != null && target is GamePlayer))
 			{
 				// level mod
-				hitchance -= (int) (m_caster.GetConLevel(target)*10);
+				hitchance -= (int)(m_caster.GetConLevel(target) * 10);
 			}
 			return hitchance;
 		}
@@ -1665,13 +1794,21 @@ namespace DOL.GS.Spells
 
 			double minVariance;
 			double maxVariance;
+			bool casterIsControlled = false;
 
 			CalculateDamageVariance(target, out minVariance, out maxVariance);
 			double spellDamage = CalculateDamageBase();
-			if (Caster is GamePlayer)
-				spellDamage *= ((GamePlayer)Caster).PlayerEffectiveness;
-
-//			log.Info("100% damage="+spellDamage+"; minDamage="+(spellDamage*minVariance)+"; maxDamage="+(spellDamage*maxVariance));
+			GamePlayer player = null;
+			if (m_caster is GamePlayer)
+				player = m_caster as GamePlayer;
+			else if (m_caster is GameNPC && (m_caster as GameNPC).Brain is ControlledNpc)
+			{
+				player = ((ControlledNpc)((GameNPC)m_caster).Brain).Owner;
+				if (player != null && (player.ControlledNpc != null))
+					casterIsControlled = true;
+			}
+			if (player != null)
+				spellDamage *= player.PlayerEffectiveness;
 
 			int finalDamage = Util.Random((int) (minVariance*spellDamage), (int) (maxVariance*spellDamage));
 
@@ -1686,22 +1823,40 @@ namespace DOL.GS.Spells
 				finalDamage += (int) (finalDamage*(hitChance - 100)*0.01);
 				hitChance = 100;
 			}
+
+			double TOADmg = 1.0 + m_caster.GetModified(eProperty.SpellDamage) * 0.01;
+
+			bool targetIsControlled = false;
+			if (target is GameNPC)
+			{
+				GameNPC npc = target as GameNPC;
+				ControlledNpc brain = npc.Brain as ControlledNpc;
+				if (brain != null)
+					targetIsControlled = true;
+			}
+
 			// apply effectiveness
-			finalDamage = (int) (finalDamage*effectiveness);
+			finalDamage = (int)(finalDamage * effectiveness * TOADmg);
+			GameSpellEffect resPierce = SpellHandler.FindEffectOnTarget(m_caster, "PenetrateResists");
+			if (resPierce != null)
+				finalDamage = (int)(finalDamage * (1.0 + resPierce.Spell.Value / 100.0));
 
 			int resistModifier = 0;
 			int cdamage = 0;
 			if (finalDamage < 0)
 				finalDamage = 0;
 
-			resistModifier = finalDamage*ad.Target.GetResist(Spell.DamageType)/-100;
+			resistModifier = (int)(finalDamage * ad.Target.GetResist(Spell.DamageType) * -0.01);
 			finalDamage += resistModifier;
 			
 			// cap to +200% of base damage
-			if (finalDamage > Spell.Damage*3)
+			if (finalDamage > Spell.Damage * 3 * effectiveness * TOADmg)
 			{
-				finalDamage = (int) (Spell.Damage*3);
+				finalDamage = (int)(Spell.Damage * 3 * effectiveness * TOADmg);
 			}
+
+			if (finalDamage < 0)
+				finalDamage = 0;
 
 			if (Util.Chance(m_caster.SpellCriticalChance) && (finalDamage >= 1))
 			{

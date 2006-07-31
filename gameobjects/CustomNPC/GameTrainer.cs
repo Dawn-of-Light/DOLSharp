@@ -46,10 +46,10 @@ namespace DOL.GS
 		public override IList GetExamineMessages(GamePlayer player)
 		{
 			IList list = new ArrayList();
-//			IList list = base.GetExamineMessages(player, messageList);
-			list.Add("You target ["+GetName(0, false)+"]");
-			list.Add("You examine "+GetName(0, false)+".  "+GetPronoun(0, true)+" is "+GetAggroLevelString(player, false)+" and trains members of the "+TrainerClassName+" class.");
-//			list.Add("[Right click to display a train window]");
+			//			IList list = base.GetExamineMessages(player, messageList);
+			list.Add("You target [" + GetName(0, false) + "]");
+			list.Add("You examine " + GetName(0, false) + ".  " + GetPronoun(0, true) + " is " + GetAggroLevelString(player, false) + " and trains members of the " + TrainerClassName + " class.");
+			//			list.Add("[Right click to display a train window]");
 			return list;
 		}
 		/// <summary>
@@ -62,19 +62,19 @@ namespace DOL.GS
 		{
 			// TODO: findout if trainers can be aggro at all
 
-			if(GameServer.ServerRules.IsSameRealm(this, player, true))
+			if (GameServer.ServerRules.IsSameRealm(this, player, true))
 			{
-				if(firstLetterUppercase) return "Friendly";
+				if (firstLetterUppercase) return "Friendly";
 				else return "friendly";
 			}
 			IAggressiveBrain aggroBrain = Brain as IAggressiveBrain;
-			if(aggroBrain != null && aggroBrain.AggroLevel > 0)
+			if (aggroBrain != null && aggroBrain.AggroLevel > 0)
 			{
-				if(firstLetterUppercase) return "Aggressive";
+				if (firstLetterUppercase) return "Aggressive";
 				else return "aggressive";
 			}
 
-			if(firstLetterUppercase) return "Neutral";
+			if (firstLetterUppercase) return "Neutral";
 			else return "neutral";
 
 		}
@@ -85,10 +85,10 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="player"></param>
 		/// <returns></returns>
- 		public override bool Interact(GamePlayer player) 
+		public override bool Interact(GamePlayer player)
 		{
 			player.GainExperience(0, 0, 0, false); // leveup
- 			if (!base.Interact(player)) return false;
+			if (!base.Interact(player)) return false;
 
 			// Turn to face player
 			TurnTo(player, 10000);
@@ -106,7 +106,7 @@ namespace DOL.GS
 		{
 			if (!base.WhisperReceive(source, text)) return false;
 			GamePlayer player = source as GamePlayer;
-			if (player==null) return false;
+			if (player == null) return false;
 
 			//Now we turn the npc into the direction of the person
 			TurnTo(player, 10000);
@@ -122,12 +122,13 @@ namespace DOL.GS
 		/// <returns></returns>
 		public override bool ReceiveItem(GameLiving source, InventoryItem item)
 		{
-			if(source==null || item==null) return false;
+			if (source == null || item == null) return false;
 
 			GamePlayer player = source as GamePlayer;
-			if(player != null && item != null && item.Id_nb == "respec_stone")
+			if (player != null && item != null && item.Id_nb == "respec_stone")
 			{
 				player.RespecAmountAllSkill++;
+				player.Inventory.RemoveCountFromStack(item, 1);
 				player.Out.SendMessage("Thanks, I'll add an extra respec to your account.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return true;
 			}
@@ -143,16 +144,18 @@ namespace DOL.GS
 		/// <param name="messageToPlayer">the message for the player</param>
 		/// <param name="gifts">Array of inventory items as promotion gifts</param>
 		/// <returns>true if successfull</returns>
-		public bool PromotePlayer(GamePlayer player, int classid, string messageToPlayer, InventoryItem[] gifts) {
+		public bool PromotePlayer(GamePlayer player, int classid, string messageToPlayer, InventoryItem[] gifts)
+		{
 
-			if(player == null) return false;
+			if (player == null) return false;
 
 			IClassSpec oldClass = player.CharacterClass;
 
 			// Player was promoted
-			if (player.SetCharacterClass(classid)) {
-				player.Out.SendMessage(this.Name +" says, \""+ messageToPlayer +"\"",eChatType.CT_System,eChatLoc.CL_PopupWindow);
-				player.Out.SendMessage("You have been upgraded to the "+player.CharacterClass.Name+" class!",eChatType.CT_Important,eChatLoc.CL_SystemWindow);
+			if (player.SetCharacterClass(classid))
+			{
+				player.Out.SendMessage(this.Name + " says, \"" + messageToPlayer + "\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+				player.Out.SendMessage("You have been upgraded to the " + player.CharacterClass.Name + " class!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 
 				player.CharacterClass.OnLevelUp(player);
 				player.UpdateSpellLineLevels(true);
@@ -160,17 +163,19 @@ namespace DOL.GS
 				player.StartPowerRegeneration();
 				//player.Out.SendUpdatePlayerSpells();
 				player.Out.SendUpdatePlayerSkills();
-				player.Out.SendUpdatePlayer();	
-				
+				player.Out.SendUpdatePlayer();
+
 				// Initiate equipment
-				if (gifts!=null && gifts.Length>0) {
-					for (int i=0; i<gifts.Length; i++) {
+				if (gifts != null && gifts.Length > 0)
+				{
+					for (int i = 0; i < gifts.Length; i++)
+					{
 						player.ReceiveItem(this, gifts[i]);
 					}
 				}
 
 				// after gifts
-				player.Out.SendMessage("You have been accepted by the "+player.CharacterClass.Profession+"!",eChatType.CT_Important,eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage("You have been accepted by the " + player.CharacterClass.Profession + "!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 
 				Notify(GameTrainerEvent.PlayerPromoted, this, new PlayerPromotedEventArgs(player, oldClass));
 
@@ -192,7 +197,7 @@ namespace DOL.GS
 		{
 			get { return m_trainerClassName; }
 		}
-		
+
 		/// <summary>
 		/// Get class name from guild name
 		/// </summary>

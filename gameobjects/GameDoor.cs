@@ -1,16 +1,16 @@
 /*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -23,7 +23,7 @@ namespace DOL.GS
 {
 	/// <summary>
 	/// GameDoor is class for regular door
-	/// </summary>		
+	/// </summary>
 	public class GameDoor : GameObject, IDoor
 	{
 		/// <summary>
@@ -38,7 +38,8 @@ namespace DOL.GS
 		/// <summary>
 		/// Creates a new GameDoor object
 		/// </summary>
-		public GameDoor() : base()
+		public GameDoor()
+			: base()
 		{
 			m_state = eDoorState.Closed;
 			this.Realm = 0;
@@ -51,13 +52,13 @@ namespace DOL.GS
 		public override void LoadFromDatabase(DataObject obj)
 		{
 			base.LoadFromDatabase(obj);
-            DBDoor m_dbdoor = obj as DBDoor;
-			if (m_dbdoor == null)return;
-			Zone curZone = WorldMgr.GetZone((ushort)(m_dbdoor.InternalID/100000));
+			DBDoor m_dbdoor = obj as DBDoor;
+			if (m_dbdoor == null) return;
+			Zone curZone = WorldMgr.GetZone((ushort)(m_dbdoor.InternalID / 1000000));
 			if (curZone == null) return;
 			this.CurrentRegion = curZone.ZoneRegion;
 			this.Name = m_dbdoor.Name;
-			this.Heading = (ushort) m_dbdoor.Heading;
+			this.Heading = (ushort)m_dbdoor.Heading;
 			this.X = m_dbdoor.X;
 			this.Y = m_dbdoor.Y;
 			this.Z = m_dbdoor.Z;
@@ -70,7 +71,7 @@ namespace DOL.GS
 		{
 			DBDoor obj = null;
 			if (InternalID != null)
-				obj = (DBDoor) GameServer.Database.FindObjectByKey(typeof (DBDoor), InternalID);
+				obj = (DBDoor)GameServer.Database.FindObjectByKey(typeof(DBDoor), InternalID);
 			if (obj == null)
 				obj = new DBDoor();
 			obj.Name = this.Name;
@@ -147,7 +148,7 @@ namespace DOL.GS
 		public void Open()
 		{
 			this.State = eDoorState.Open;
-			lock(this)
+			lock (this)
 			{
 				if (m_closeDoorAction == null)
 				{
@@ -177,7 +178,8 @@ namespace DOL.GS
 			/// Constructs a new close door action
 			/// </summary>
 			/// <param name="door">The door that should be closed</param>
-			public CloseDoorAction(GameDoor door) : base(door)
+			public CloseDoorAction(GameDoor door)
+				: base(door)
 			{
 			}
 

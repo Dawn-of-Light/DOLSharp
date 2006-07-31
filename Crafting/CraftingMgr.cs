@@ -69,10 +69,8 @@ namespace DOL.GS
 		/// <returns></returns>
 		public static AbstractCraftingSkill getSkillbyEnum(eCraftingSkill skill)
 		{
-			int index = (int)skill - 1;
-			if (index < 0 || index >= m_craftingskills.Length)
-				return null;
-			return m_craftingskills[index] as AbstractCraftingSkill;
+			if (skill == eCraftingSkill.NoCrafting) return null;
+			return m_craftingskills[(int)skill - 1] as AbstractCraftingSkill;
 		}
 
 		/// <summary>
@@ -110,7 +108,7 @@ namespace DOL.GS
 		/// </summary>
 		public static eCraftingSkill GetSecondaryCraftingSkillToWorkOnItem(InventoryItem item)
 		{
-			switch(item.Object_Type)
+			switch (item.Object_Type)
 			{
 				case (int)eObjectType.Cloth:
 					return eCraftingSkill.ClothWorking;
@@ -118,8 +116,8 @@ namespace DOL.GS
 				case (int)eObjectType.Leather:
 				case (int)eObjectType.Studded:
 					return eCraftingSkill.LeatherCrafting;
-			
-					// all weapon
+
+				// all weapon
 				case (int)eObjectType.Axe:
 				case (int)eObjectType.Blades:
 				case (int)eObjectType.Blunt:
@@ -139,7 +137,7 @@ namespace DOL.GS
 				case (int)eObjectType.Sword:
 				case (int)eObjectType.ThrustWeapon:
 				case (int)eObjectType.TwoHandedWeapon:
-					// all other armor
+				// all other armor
 				case (int)eObjectType.Chain:
 				case (int)eObjectType.Plate:
 				case (int)eObjectType.Reinforced:
@@ -155,9 +153,9 @@ namespace DOL.GS
 				case (int)eObjectType.Staff:
 					return eCraftingSkill.WoodWorking;
 
-				default : 
+				default:
 					return eCraftingSkill.NoCrafting;
-			}	
+			}
 		}
 
 		/// <summary>
@@ -165,7 +163,7 @@ namespace DOL.GS
 		/// </summary>
 		public static int GetItemCraftLevel(InventoryItem item)
 		{
-			switch(item.Object_Type)
+			switch (item.Object_Type)
 			{
 				case (int)eObjectType.Cloth:
 				case (int)eObjectType.Leather:
@@ -174,30 +172,30 @@ namespace DOL.GS
 				case (int)eObjectType.Plate:
 				case (int)eObjectType.Reinforced:
 				case (int)eObjectType.Scale:
-				{
-					int baseLevel = 15 + item.Level * 20; // gloves
-					switch(item.Item_Type)
 					{
-						case (int)eInventorySlot.HeadArmor: // head
-							return baseLevel + 15;
+						int baseLevel = 15 + item.Level * 20; // gloves
+						switch (item.Item_Type)
+						{
+							case (int)eInventorySlot.HeadArmor: // head
+								return baseLevel + 15;
 
-						case (int)eInventorySlot.FeetArmor: // feet
-							return baseLevel + 30;
+							case (int)eInventorySlot.FeetArmor: // feet
+								return baseLevel + 30;
 
-						case (int)eInventorySlot.LegsArmor: // legs
-							return baseLevel + 50;
+							case (int)eInventorySlot.LegsArmor: // legs
+								return baseLevel + 50;
 
-						case (int)eInventorySlot.ArmsArmor: // arms
-							return baseLevel + 65;
+							case (int)eInventorySlot.ArmsArmor: // arms
+								return baseLevel + 65;
 
-						case (int)eInventorySlot.TorsoArmor: // torso
-							return baseLevel + 80;
+							case (int)eInventorySlot.TorsoArmor: // torso
+								return baseLevel + 80;
 
-						default:
-							return baseLevel;
+							default:
+								return baseLevel;
+						}
 					}
-				}
-					
+
 				case (int)eObjectType.Axe:
 				case (int)eObjectType.Blades:
 				case (int)eObjectType.Blunt:
@@ -227,7 +225,7 @@ namespace DOL.GS
 				case (int)eObjectType.Staff:
 					return 15 + (item.Level - 1) * 20;
 
-				default :
+				default:
 					return 0;
 			}
 		}

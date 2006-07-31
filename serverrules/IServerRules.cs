@@ -180,6 +180,14 @@ namespace DOL.GS.ServerRules
 		int GetObjectSpecLevel(GamePlayer player, eObjectType objectType);
 
 		/// <summary>
+		/// Get object specialization level based on server type
+		/// </summary>
+		/// <param name="player">player whom specializations are checked</param>
+		/// <param name="objectType">object type</param>
+		/// <returns>specialization in object or 0</returns>
+		int GetBaseObjectSpecLevel(GamePlayer player, eObjectType objectType);
+
+		/// <summary>
 		/// Invoked on NPC death and deals out
 		/// experience/realm points if needed
 		/// </summary>

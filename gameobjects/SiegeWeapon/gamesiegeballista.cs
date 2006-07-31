@@ -42,13 +42,14 @@ namespace DOL.GS
 	/// <summary>
 	/// GameMovingObject is a base class for boats and siege weapons.
 	/// </summary>
-	public  class GameSiegeBallista : GameSiegeWeapon
+	public class GameSiegeBallista : GameSiegeWeapon
 	{
-		public GameSiegeBallista() : base()
+		public GameSiegeBallista()
+			: base()
 		{
 			MeleeDamageType = eDamageType.Thrust;
 			Name = "field ballista";
-			AmmoType = 0x1801;
+			AmmoType = 0x18;
 			this.Model = 0x0A55;
 			this.Effect = 0x089A;
 			ActionDelay = new int[]{
@@ -62,7 +63,7 @@ namespace DOL.GS
 			IList spells = SkillBase.GetSpellList(siegeWeaponSpellLine.KeyName);
 			if (spells != null)
 			{
-				foreach (Spell spell in spells) 
+				foreach (Spell spell in spells)
 				{
 					if (spell.ID == 2430) //TODO good id for balista
 					{
@@ -86,7 +87,7 @@ namespace DOL.GS
 		public override bool ReceiveItem(GameLiving source, DOL.Database.InventoryItem item)
 		{
 			//todo check if bullet
-			return base.ReceiveItem (source, item);
+			return base.ReceiveItem(source, item);
 		}
 
 	}
