@@ -58,6 +58,12 @@ namespace DOL.GS.Effects
 		/// </summary>
 		public void Stop()
 		{
+			if (m_player.HasAbility(Abilities.Camouflage))
+			{
+				IGameEffect camouflage = m_player.EffectList.GetOfType(typeof(CamouflageEffect));
+				if (camouflage!=null)
+					camouflage.Cancel(false);
+			}
 			m_player.EffectList.Remove(this);
 		}
 

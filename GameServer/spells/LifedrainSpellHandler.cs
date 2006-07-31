@@ -82,7 +82,8 @@ namespace DOL.GS.Spells
 			if (player != null && player.CharacterClass.ManaStat != eStat.UNDEFINED)
 			{
 				int manaStatValue = player.GetModified((eProperty) player.CharacterClass.ManaStat);
-				spellDamage *= (manaStatValue + 180) / 250.0;
+				int speclevel = m_caster.GetModifiedSpecLevel(m_spellLine.Spec);
+				spellDamage *= (0.845 + (speclevel-50)*0.01 + manaStatValue/spellDamage);
 				if (spellDamage < 0)
 					spellDamage = 0;
 			}

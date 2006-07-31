@@ -233,6 +233,153 @@ namespace DOL.GS
 
 		#region properties
 
+		public eRealm GetRealm()
+		{
+			return GetRealmByZoneID(ID);
+		}
+
+		/// <summary>
+		/// Gets the Zones Realm by passing the ZoneID
+		/// </summary>
+		/// <param name="id"></param>
+		/// <returns></returns>
+		public static eRealm GetRealmByZoneID(ushort id)
+		{
+			//nice website here http://www.teatromusica.it/valmerwolf/varie/mappe/numzones.htm
+			//wish there was a better way to do this
+
+			//classic
+			if (id >= 0 && id <= 26) return eRealm.Albion;
+			else if (id >= 100 && id <= 129) return eRealm.Midgard;
+			else if (id >= 200 && id <= 224) return eRealm.Hibernia;
+			//SI
+			else if (id >= 51 && id <= 62) return eRealm.Albion;
+			else if (id >= 151 && id <= 161) return eRealm.Midgard;
+			else if (id >= 181 && id <= 191) return eRealm.Hibernia;
+			//foundations
+			else if (id >= 13 && id <= 20) return eRealm.Albion;
+			else if (id == 64) return eRealm.Albion;
+			else if (id >= 260 && id <= 261) return eRealm.Albion;
+			else if (id >= 114 && id <= 122) return eRealm.Midgard;
+			else if (id >= 266 && id <= 267) return eRealm.Midgard;
+			else if (id >= 213 && id <= 219) return eRealm.Hibernia;
+			else if (id >= 272 && id <= 273) return eRealm.Hibernia;
+			//old frontiers
+			else if (id >= 11 && id <= 15) return eRealm.Albion;
+			else if (id >= 111 & id <= 115) return eRealm.Midgard;
+			else if (id >= 210 && id <= 214) return eRealm.Hibernia;
+			//others
+			else if (id == 27) return eRealm.Albion;
+			else if (id == 28 || id == 157) return eRealm.Midgard;
+			else if (id == 29) return eRealm.Hibernia;
+			//TOA
+			else if (id == 70) return eRealm.Albion;
+			else if (id >= 30 && id <= 47) return eRealm.Albion;
+			else if (id == 71) return eRealm.Midgard;
+			else if (id >= 73 && id <= 90) return eRealm.Midgard;
+			else if (id == 72) return eRealm.Hibernia;
+			else if (id >= 130 && id <= 147) return eRealm.Hibernia;
+			//catacombs
+			else if (id == 59) return eRealm.Albion;
+			else if (id == 61) return eRealm.Hibernia;
+			else if (id >= 63 && id <= 69) return eRealm.Albion;
+			else if (id == 109 || id == 196 || id == 227) return eRealm.Albion;
+			else if (id == 58) return eRealm.Midgard;
+			else if (id == 148 || id == 149 || id == 162 || id == 188 || id == 189 ||
+				id == 195 || id == 226 || id == 229 || id == 243) return eRealm.Midgard;
+			else if (id >= 92 && id <= 99) return eRealm.Hibernia;
+			else if (id == 197 || id == 228) return eRealm.Hibernia;
+			//instanced dungeons
+			else if (id == 343 || id == 498) return eRealm.Albion;
+			else if (id >= 376 && id <= 436) return eRealm.Albion;
+			else if (id >= 300 && id <= 375) return eRealm.Midgard;
+			else if (id == 439 || id == 440 || id == 497) return eRealm.Midgard;
+			else if (id == 49 || id == 344) return eRealm.Hibernia;
+			else if (id >= 437 && id <= 499) return eRealm.Hibernia;
+			//new frontier & common
+			else if (id >= 167 && id <= 170) return eRealm.Midgard;
+			else if (id >= 171 && id <= 174) return eRealm.Hibernia;
+			else if (id >= 175 && id <= 178) return eRealm.Albion;
+			else if (id == 234) return eRealm.Albion;
+			else if (id == 235) return eRealm.Midgard;
+			else if (id == 236) return eRealm.Hibernia;
+			else if (id >= 167 && id <= 170) return eRealm.Midgard;
+			else if (id >= 171 && id <= 174) return eRealm.Hibernia;
+			else if (id >= 175 && id <= 178) return eRealm.Albion;
+			//new frontier and common
+			//bg1 Fort Brolorn 
+			else if (id == 234) return eRealm.Midgard;
+			//bg5 Leonis Keep 
+			else if (id == 235) return eRealm.Hibernia;
+			//bg10 Caer Claret 
+			else if (id == 236) return eRealm.Albion;
+			//bg15 Dun Killaloe 
+			else if (id == 237) return eRealm.Hibernia;
+			//bg20 Thidranki Faste 
+			else if (id == 238) return eRealm.Midgard;
+			//bg25 Dun Braemer 
+			else if (id == 239) return eRealm.Hibernia;
+			//bg30 Caer Wilton 
+			else if (id == 240) return eRealm.Albion;
+			//bg35 Molvik Faste 
+			else if (id == 241) return eRealm.Midgard;
+			//bg40 Leirvik Castle 
+			else if (id == 242) return eRealm.Hibernia;
+
+			//todo get the base realm for the other bgs not just the first 3
+			return eRealm.None;
+		}
+
+		public bool IsDungeon
+		{
+			get
+			{
+				switch (m_Region.ID)
+				{
+					case 24:
+					case 65:
+					case 66:
+					case 67:
+					case 68:
+					case 92:
+					case 93:
+					case 109:
+					case 149:
+					case 196:
+					case 221:
+					case 227:
+					case 228:
+					case 229:
+					case 244:
+					case 249:
+					case 296:
+					case 297:
+					case 298:
+					case 326:
+					case 335:
+					case 352:
+					case 356:
+					case 376:
+					case 377:
+					case 379:
+					case 382:
+					case 383:
+					case 386:
+					case 387:
+					case 388:
+					case 390:
+					case 395:
+					case 396:
+					case 397:
+					case 415:
+					case 443:
+						return true;
+					default:
+						return false;
+				}
+			}
+		}
+
 		/// <summary>
 		/// Returns the region of this zone
 		/// </summary>
@@ -1107,97 +1254,5 @@ namespace DOL.GS
 		}
 
 		#endregion
-
-		/// <summary>
-		/// Gets the Zones Realm by passing the ZoneID
-		/// </summary>
-		/// <param name="id"></param>
-		/// <returns></returns>
-		public eRealm GetRealmByZoneID(ushort id)
-		{
-			//nice website here http://www.teatromusica.it/valmerwolf/varie/mappe/numzones.htm
-			//wish there was a better way to do this
-
-			//classic
-			if (id >= 0 && id <= 26) return eRealm.Albion;
-			else if (id >= 100 && id <= 129) return eRealm.Midgard;
-			else if (id >= 200 && id <= 224) return eRealm.Hibernia;
-			//SI
-			else if (id >= 51 && id <= 62) return eRealm.Albion;
-			else if (id >= 151 && id <= 161) return eRealm.Midgard;
-			else if (id >= 181 && id <= 191) return eRealm.Hibernia;
-			//foundations
-			else if (id >= 13 && id <= 20) return eRealm.Albion;
-			else if (id == 64) return eRealm.Albion;
-			else if (id >= 260 && id <= 261) return eRealm.Albion;
-			else if (id >= 114 && id <= 122) return eRealm.Midgard;
-			else if (id >= 266 && id <= 267) return eRealm.Midgard;
-			else if (id >= 213 && id <= 219) return eRealm.Hibernia;
-			else if (id >= 272 && id <= 273) return eRealm.Hibernia;
-			//old frontiers
-			else if (id >= 11 && id <= 15) return eRealm.Albion;
-			else if (id >= 111 & id <= 115) return eRealm.Midgard;
-			else if (id >= 210 && id <= 214) return eRealm.Hibernia;
-			//others
-			else if (id == 27) return eRealm.Albion;
-			else if (id == 28 || id == 157) return eRealm.Midgard;
-			else if (id == 29) return eRealm.Hibernia;
-			//TOA
-			else if (id == 70) return eRealm.Albion;
-			else if (id >= 30 && id <= 47) return eRealm.Albion;
-			else if (id == 71) return eRealm.Midgard;
-			else if (id >= 73 && id <= 90) return eRealm.Midgard;
-			else if (id == 72) return eRealm.Hibernia;
-			else if (id >= 130 && id <= 147) return eRealm.Hibernia;
-			//catacombs
-			else if (id == 59) return eRealm.Albion;
-			else if (id == 61) return eRealm.Hibernia;
-			else if (id >= 63 && id <= 69) return eRealm.Albion;
-			else if (id == 109 || id == 196 || id == 227) return eRealm.Albion;
-			else if (id == 58) return eRealm.Midgard;
-			else if (id == 148 || id == 149 || id == 162 || id == 188 || id == 189 ||
-				id == 195 || id == 226 || id == 229 || id == 243) return eRealm.Midgard;
-			else if (id >= 92 && id <= 99) return eRealm.Hibernia;
-			else if (id == 197 || id == 228) return eRealm.Hibernia;
-			//instanced dungeons
-			else if (id == 343 || id == 498) return eRealm.Albion;
-			else if (id >= 376 && id <= 436) return eRealm.Albion;
-			else if (id >= 300 && id <= 375) return eRealm.Midgard;
-			else if (id == 439 || id == 440 || id == 497) return eRealm.Midgard;
-			else if (id == 49 || id == 344) return eRealm.Hibernia;
-			else if (id >= 437 && id <= 499) return eRealm.Hibernia;
-			//new frontier & common
-			else if (id >= 167 && id <= 170) return eRealm.Midgard;
-			else if (id >= 171 && id <= 174) return eRealm.Hibernia;
-			else if (id >= 175 && id <= 178) return eRealm.Albion;
-			else if (id == 234) return eRealm.Albion;
-			else if (id == 235) return eRealm.Midgard;
-			else if (id == 236) return eRealm.Hibernia;
-			else if (id >= 167 && id <= 170) return eRealm.Midgard; 
-			else if (id >= 171 && id <= 174) return eRealm.Hibernia; 
-			else if (id >= 175 && id <= 178) return eRealm.Albion; 
-			//new frontier and common
-			//bg1 Fort Brolorn 
-			else if (id == 234) return eRealm.Midgard; 
-			//bg5 Leonis Keep 
-			else if (id == 235) return eRealm.Hibernia; 
-			//bg10 Caer Claret 
-			else if (id == 236) return eRealm.Albion; 
-			//bg15 Dun Killaloe 
-			else if (id == 247) return eRealm.Hibernia; 
-			//bg20 Thidranki Faste 
-			else if (id == 248) return eRealm.Midgard; 
-			//bg25 Dun Braemer 
-			else if (id == 249) return eRealm.Hibernia; 
-			//bg30 Caer Wilton 
-			else if (id == 250) return eRealm.Albion; 
-			//bg35 Molvik Faste 
-			else if (id == 241) return eRealm.Midgard; 
-			//bg40 Leirvik Castle 
-			else if (id == 242) return eRealm.Hibernia;
-
-			//todo get the base realm for the other bgs not just the first 3
-			return eRealm.None;
-		}
 	}
 }

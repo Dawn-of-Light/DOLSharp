@@ -22,6 +22,7 @@ using System.Collections;
 using DOL.AI.Brain;
 using DOL.Database;
 using DOL.GS.PacketHandler;
+using DOL.GS.Styles;
 using log4net;
 
 namespace DOL.GS
@@ -37,6 +38,9 @@ namespace DOL.GS
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
+		#region Spell/Style
+
+		#endregion
 		#region Database
 		/// <summary>
 		/// Saves a mob into the db if it exists, it is
@@ -45,37 +49,37 @@ namespace DOL.GS
 		public override void SaveIntoDatabase()
 		{
 			Mob mob = null;
-			if(InternalID != null)
-				mob = (Mob) GameServer.Database.FindObjectByKey(typeof(Mob), InternalID);
-			if(mob == null)
+			if (InternalID != null)
+				mob = (Mob)GameServer.Database.FindObjectByKey(typeof(Mob), InternalID);
+			if (mob == null)
 				mob = new Mob();
 
-			mob.Name=Name;
-			mob.Guild=GuildName;
-			mob.X=X;
-			mob.Y=Y;
-			mob.Z=Z;
-			mob.Heading=Heading;
-			mob.Speed=MaxSpeedBase;
-			mob.Region=CurrentRegionID;
-			mob.Realm=Realm;
-			mob.Model=Model;
-			mob.Size=Size;
-			mob.Level=Level;
+			mob.Name = Name;
+			mob.Guild = GuildName;
+			mob.X = X;
+			mob.Y = Y;
+			mob.Z = Z;
+			mob.Heading = Heading;
+			mob.Speed = MaxSpeedBase;
+			mob.Region = CurrentRegionID;
+			mob.Realm = Realm;
+			mob.Model = Model;
+			mob.Size = Size;
+			mob.Level = Level;
 			mob.ClassType = this.GetType().ToString();
-			mob.Flags=Flags;
+			mob.Flags = Flags;
 			IAggressiveBrain aggroBrain = Brain as IAggressiveBrain;
 			if (aggroBrain != null)
 			{
 				mob.AggroLevel = aggroBrain.AggroLevel;
 				mob.AggroRange = aggroBrain.AggroRange;
 			}
-			mob.EquipmentTemplateID=EquipmentTemplateID;
+			mob.EquipmentTemplateID = EquipmentTemplateID;
 			if (m_faction != null)
 				mob.FactionID = m_faction.ID;
 			mob.MeleeDamageType = (int)MeleeDamageType;
 
-			if(InternalID == null)
+			if (InternalID == null)
 			{
 				GameServer.Database.AddNewObject(mob);
 				InternalID = mob.ObjectId;
@@ -91,8 +95,8 @@ namespace DOL.GS
 		public override void LoadFromDatabase(DataObject mobobject)
 		{
 			base.LoadFromDatabase(mobobject);
-			if(!(mobobject is Mob)) return;
-			Mob currentMob = (Mob) mobobject;
+			if (!(mobobject is Mob)) return;
+			Mob currentMob = (Mob)mobobject;
 
 			m_respawnInterval = currentMob.RespawnInterval * 1000;
 		}
@@ -102,10 +106,10 @@ namespace DOL.GS
 		/// </summary>
 		public override void DeleteFromDatabase()
 		{
-			if(InternalID != null)
+			if (InternalID != null)
 			{
-				Mob mob = (Mob) GameServer.Database.FindObjectByKey(typeof(Mob), InternalID);
-				if(mob != null)
+				Mob mob = (Mob)GameServer.Database.FindObjectByKey(typeof(Mob), InternalID);
+				if (mob != null)
 					GameServer.Database.DeleteObject(mob);
 			}
 		}
@@ -131,18 +135,18 @@ namespace DOL.GS
 		{
 			get
 			{
-				if(m_respawnInterval >= 0)
+				if (m_respawnInterval >= 0)
 					return m_respawnInterval;
 
 				//Standard 5-8 mins
 				if (Level <= 65 || Realm != 0)
 				{
-					return Util.Random(5*60000)+3*60000;
+					return Util.Random(5 * 60000) + 3 * 60000;
 				}
 				else
 				{
 					int minutes = Level - 65 + 15;
-					return minutes*60000;
+					return minutes * 60000;
 				}
 			}
 			set
@@ -155,12 +159,12 @@ namespace DOL.GS
 		/// </summary>
 		public virtual void StartRespawn()
 		{
-			if(Alive) return;
+			if (Alive) return;
 
 			int respawnInt = RespawnInterval;
-			if(respawnInt > 0)
+			if (respawnInt > 0)
 			{
-				lock(m_respawnTimerLock)
+				lock (m_respawnTimerLock)
 				{
 					if (m_respawnTimer == null)
 					{
@@ -193,23 +197,23 @@ namespace DOL.GS
 
 			//DOLConsole.WriteLine("respawn");
 			//TODO some real respawn handling
-			if(Alive) return 0;
-			if(ObjectState == eObjectState.Active) return 0;
+			if (Alive) return 0;
+			if (ObjectState == eObjectState.Active) return 0;
 
 			//Heal this mob, move it to the spawnlocation
 			Health = MaxHealth;
 			Mana = MaxMana;
 			Endurance = MaxEndurance;
-			int origSpawnX=m_spawnX;
-			int origSpawnY=m_spawnY;
+			int origSpawnX = m_spawnX;
+			int origSpawnY = m_spawnY;
 			//X=(m_spawnX+Random(750)-350); //new SpawnX = oldSpawn +- 350 coords
 			//Y=(m_spawnY+Random(750)-350);	//new SpawnX = oldSpawn +- 350 coords
-			X=m_spawnX;
-			Y=m_spawnY;
-			Z=m_spawnZ;
+			X = m_spawnX;
+			Y = m_spawnY;
+			Z = m_spawnZ;
 			AddToWorld();
-			m_spawnX=origSpawnX;
-			m_spawnY=origSpawnY;
+			m_spawnX = origSpawnX;
+			m_spawnY = origSpawnY;
 			return 0;
 		}
 
@@ -225,7 +229,7 @@ namespace DOL.GS
 			{
 				period = base.HealthRegenerationTimerCallback(selfRegenerationTimer);
 				BroadcastUpdate();
-			}			
+			}
 			return (Health < MaxHealth) ? period : 0;
 		}
 
@@ -262,11 +266,14 @@ namespace DOL.GS
 		/// <param name="attackTarget">the target to attack</param>
 		public override void StartAttack(GameObject attackTarget)
 		{
-			//DOLConsole.WriteLine(this.Name+".StartAttack("+attackTarget.Name+")");
-			//DOLConsole.WriteStackTrace();
-			base.StartAttack (attackTarget);
+			base.StartAttack(attackTarget);
 			if (AttackState)
-				Follow(attackTarget, 90, 2500);	// follow at stickrange
+			{
+				if (ActiveWeaponSlot == eActiveWeaponSlot.Distance)
+					Follow(attackTarget, 1000, 5000);	// follow at archery range
+				else
+					Follow(attackTarget, 90, 5000);	// follow at stickrange
+			}
 		}
 
 		/// <summary>
@@ -274,9 +281,7 @@ namespace DOL.GS
 		/// </summary>
 		public override void StopAttack()
 		{
-			//DOLConsole.WriteLine(this.Name+".StopAttack("+(TargetObject!=null?TargetObject.Name:"null")+")");
-			//DOLConsole.WriteStackTrace();
-			base.StopAttack ();
+			base.StopAttack();
 			StopFollow();
 		}
 
@@ -289,9 +294,9 @@ namespace DOL.GS
 			// TODO: mobs drop "a small chest" sometimes
 			ArrayList dropMessages = new ArrayList();
 			//DOLConsole.WriteLine("In DropLoot");
-			lock(m_xpGainers.SyncRoot)
+			lock (m_xpGainers.SyncRoot)
 			{
-				if(m_xpGainers.Keys.Count==0) return;
+				if (m_xpGainers.Keys.Count == 0) return;
 
 				ItemTemplate[] lootTemplates = LootMgr.GetLoot(this, killer);
 
@@ -300,25 +305,33 @@ namespace DOL.GS
 					GameStaticItem loot;
 					if (GameMoney.IsItemMoney(lootTemplate.Name))
 					{
-						loot = new GameMoney(lootTemplate.Value,this);
+						loot = new GameMoney(lootTemplate.Value, this);
 						loot.Name = lootTemplate.Name;
 						loot.Model = (ushort)lootTemplate.Model;
-					} 
-					else 
+					}
+					else
 					{
 						loot = new GameInventoryItem(new InventoryItem(lootTemplate));
 						loot.X = X;
 						loot.Y = Y;
 						loot.Z = Z;
 						loot.Heading = Heading;
-						loot.CurrentRegion = CurrentRegion;					
+						loot.CurrentRegion = CurrentRegion;
+						if (((GameInventoryItem)loot).Item.Id_nb == "aurulite")
+						{
+							((GameInventoryItem)loot).Item.Count = ((GameInventoryItem)loot).Item.PackSize;
+						}
 					}
 
 					bool playerAttacker = false;
-					foreach(GameObject gainer in m_xpGainers.Keys)
+					foreach (GameObject gainer in m_xpGainers.Keys)
 					{
-						if(gainer is GamePlayer)
+						if (gainer is GamePlayer)
+						{
 							playerAttacker = true;
+							if (loot.Realm == 0)
+								loot.Realm = ((GamePlayer)gainer).Realm;
+						}
 						loot.AddOwner(gainer);
 						if (gainer is GameNPC)
 						{
@@ -330,26 +343,26 @@ namespace DOL.GS
 							}
 						}
 					}
-					if(!playerAttacker) return; // no loot if mob kills another mob
+					if (!playerAttacker) return; // no loot if mob kills another mob
 
 					//Only add money loot if not killing grays
-					dropMessages.Add(GetName(0, true) +" drops "+ loot.GetName(1, false) +".");
+					dropMessages.Add(GetName(0, true) + " drops " + loot.GetName(1, false) + ".");
 					loot.AddToWorld();
 				}
 			}
 
-			if(dropMessages.Count > 0)
+			if (dropMessages.Count > 0)
 			{
 				GamePlayer killerPlayer = killer as GamePlayer;
 				if (killerPlayer != null)
 				{
-					foreach(string str in dropMessages)
+					foreach (string str in dropMessages)
 						killerPlayer.Out.SendMessage(str, eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
 				}
-				foreach(GamePlayer player in GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
+				foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
 				{
 					if (player == killer) continue;
-					foreach(string str in dropMessages)
+					foreach (string str in dropMessages)
 						player.Out.SendMessage(str, eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
 				}
 			}
@@ -369,14 +382,14 @@ namespace DOL.GS
 			// TODO: correct aggro strings
 			string aggroLevelString = "";
 			int aggroLevel;
-			if ( Faction != null )
+			if (Faction != null)
 			{
 				aggroLevel = Faction.GetAggroToFaction(player);
-				if (aggroLevel >75)
+				if (aggroLevel > 75)
 					aggroLevelString = "aggressive";
-				else if (aggroLevel >50)
+				else if (aggroLevel > 50)
 					aggroLevelString = "hostile";
-				else if (aggroLevel >25)
+				else if (aggroLevel > 25)
 					aggroLevelString = "neutral";
 				else
 					aggroLevelString = "friendly";
@@ -417,18 +430,19 @@ namespace DOL.GS
 		}
 
 		#endregion
-		
+
 		/// <summary>
 		/// Constructor to create a new mob
 		/// </summary>
-		public GameMob() : base()
+		public GameMob()
+			: base()
 		{
 			Level = 1; // health changes when GameNPC.Level changes
 			Realm = 0;
 			Name = "new Mob";
 			Model = 408;
 			//Fill the living variables
-//			CurrentSpeed = 0; // cause position addition recalculation
+			//			CurrentSpeed = 0; // cause position addition recalculation
 			MaxSpeedBase = 100;
 			GuildName = "";
 			Size = 50;
@@ -440,7 +454,8 @@ namespace DOL.GS
 		/// instance for spawn generator
 		/// </summary>
 		/// <param name="template">template of generator</param>
-		public GameMob(INpcTemplate template) : this()
+		public GameMob(INpcTemplate template)
+			: this()
 		{
 			this.Name = template.Name;
 			this.GuildName = template.GuildName;

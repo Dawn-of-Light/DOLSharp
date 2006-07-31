@@ -66,7 +66,7 @@ namespace DOL.GS.PacketHandler
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.QuestEntry));
 
 			pak.WriteByte((byte) index);
-			if (quest == null)
+			if (quest.Step <= 0)
 			{
 				pak.WriteByte(0);
 				pak.WriteByte(0);
@@ -79,13 +79,19 @@ namespace DOL.GS.PacketHandler
 				string desc = quest.Description;
 				if (name.Length > byte.MaxValue)
 				{
-					if (log.IsWarnEnabled) log.Warn(quest.GetType().ToString() + ": name is too long for 1.68+ clients (" + name.Length + ") '" + name + "'");
+					if (log.IsWarnEnabled) log.Warn(quest.GetType().ToString() + ": name is too long for 1.71 clients ("+name.Length+") '"+name+"'");
 					name = name.Substring(0, byte.MaxValue);
 				}
-				if (desc.Length > byte.MaxValue)
+				if (desc.Length > ushort.MaxValue)
 				{
-					if (log.IsWarnEnabled) log.Warn(quest.GetType().ToString() + ": description is too long for 1.68+ clients (" + desc.Length + ") '" + desc + "'");
-					desc = desc.Substring(0, byte.MaxValue);
+					if (log.IsWarnEnabled) log.Warn(quest.GetType().ToString() + ": description is too long for 1.71 clients ("+desc.Length+") '"+desc+"'");
+					desc = desc.Substring(0, ushort.MaxValue);
+				}
+				if (name.Length + desc.Length > 2048-10)
+				{
+					if (log.IsWarnEnabled) log.Warn(quest.GetType().ToString() + ": name + description length is too long and would have crashed the client.\nName ("+name.Length+"): '"+name+"'\nDesc ("+desc.Length+"): '"+desc+"'");
+					name = name.Substring(0, 32);
+					desc = desc.Substring(0, 2048-10 - name.Length); // all that's left
 				}
 				pak.WriteByte((byte)name.Length);
 				pak.WriteShortLowEndian((ushort)desc.Length);
@@ -103,7 +109,7 @@ namespace DOL.GS.PacketHandler
 			base.SendUpdatePlayerSkills();
 			if(m_gameClient.Player.CharacterClass.ClassType != eClassType.ListCaster)
 			{
-				//				SendListCastersSpell();
+//				SendListCastersSpell();
 				GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.VariousUpdate));
 				pak.WriteByte(0x02); //subcode
 				pak.WriteByte(0x00);

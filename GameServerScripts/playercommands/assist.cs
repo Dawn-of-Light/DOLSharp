@@ -28,7 +28,7 @@ namespace DOL.GS.Scripts
 			GamePlayer assistPlayer = null;
 			if (args.Length > 1)
 			{
-				GameClient assistClient = WorldMgr.GetClientByPlayerName(args[1], true);
+				GameClient assistClient = WorldMgr.GetClientByPlayerName(args[1], true, true);
 				if (assistClient != null)
 				{
 					if (!WorldMgr.CheckDistance(client.Player, assistClient.Player, 2048))

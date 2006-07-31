@@ -1,16 +1,16 @@
 /*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -83,19 +83,21 @@ namespace DOL.GS.Spells
 		public override void CalculateDamageVariance(GameLiving target, out double min, out double max)
 		{
 			int speclevel = 1;
-			if (m_caster is GamePlayer) 
+			if (m_caster is GamePlayer)
 			{
 				speclevel = ((GamePlayer)m_caster).GetModifiedSpecLevel(m_spellLine.Spec);
 			}
 			min = 1;
 			max = 1;
 
-			if (target.Level>0) {
-				min = 0.5 + (speclevel-1) / (double)target.Level * 0.5;
+			if (target.Level > 0)
+			{
+				min = 0.75 + (speclevel - 1) / (double)target.Level * 0.5;
 			}
 
-			if (speclevel-1 > target.Level) {
-				double overspecBonus = (speclevel-1 - target.Level) * 0.005;
+			if (speclevel - 1 > target.Level)
+			{
+				double overspecBonus = (speclevel - 1 - target.Level) * 0.005;
 				min += overspecBonus;
 				max += overspecBonus;
 			}
@@ -110,21 +112,23 @@ namespace DOL.GS.Spells
 		/// <param name="ad"></param>
 		public override void SendDamageMessages(AttackData ad)
 		{
-			MessageToCaster("You hit "+ad.Target.GetName(0, false)+" for " + ad.Damage + " damage!", eChatType.CT_Spell);
+			MessageToCaster("You hit " + ad.Target.GetName(0, false) + " for " + ad.Damage + " damage!", eChatType.CT_Spell);
+			if (ad.CriticalDamage > 0)
+				MessageToCaster("Your dot criticals for an additional " + ad.CriticalDamage + " points!", eChatType.CT_YouHit);
 
-//			if (ad.Damage > 0) 
-//			{
-//				string modmessage = "";
-//				if (ad.Modifier > 0) modmessage = " (+"+ad.Modifier+")";
-//				if (ad.Modifier < 0) modmessage = " ("+ad.Modifier+")";
-//				MessageToCaster("You hit "+ad.Target.GetName(0, false)+" for " + ad.Damage + " damage!", eChatType.CT_Spell);
-//			}
-//			else 
-//			{
-//				MessageToCaster("You hit "+ad.Target.GetName(0, false)+" for " + ad.Damage + " damage!", eChatType.CT_Spell);
-//				MessageToCaster(ad.Target.GetName(0, true) + " resists the effect!", eChatType.CT_SpellResisted);
-//				MessageToLiving(ad.Target, "You resist the effect!", eChatType.CT_SpellResisted);
-//			}
+			//			if (ad.Damage > 0)
+			//			{
+			//				string modmessage = "";
+			//				if (ad.Modifier > 0) modmessage = " (+"+ad.Modifier+")";
+			//				if (ad.Modifier < 0) modmessage = " ("+ad.Modifier+")";
+			//				MessageToCaster("You hit "+ad.Target.GetName(0, false)+" for " + ad.Damage + " damage!", eChatType.CT_Spell);
+			//			}
+			//			else
+			//			{
+			//				MessageToCaster("You hit "+ad.Target.GetName(0, false)+" for " + ad.Damage + " damage!", eChatType.CT_Spell);
+			//				MessageToCaster(ad.Target.GetName(0, true) + " resists the effect!", eChatType.CT_SpellResisted);
+			//				MessageToLiving(ad.Target, "You resist the effect!", eChatType.CT_SpellResisted);
+			//			}
 		}
 
 		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
@@ -141,7 +145,7 @@ namespace DOL.GS.Spells
 		}
 
 		public override void OnEffectStart(GameSpellEffect effect)
-		{			
+		{
 			SendEffectAnimation(effect.Owner, 0, false, 1);
 		}
 
@@ -165,7 +169,8 @@ namespace DOL.GS.Spells
 		public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
 		{
 			base.OnEffectExpires(effect, noMessages);
-			if (!noMessages) {
+			if (!noMessages)
+			{
 				// The acidic mist around you dissipates.
 				MessageToLiving(effect.Owner, Spell.Message3, eChatType.CT_SpellExpires);
 				// The acidic mist around {0} dissipates.
@@ -177,7 +182,7 @@ namespace DOL.GS.Spells
 		public override void OnDirectEffect(GameLiving target, double effectiveness)
 		{
 			if (target == null) return;
-			if (!target.Alive || target.ObjectState!=GameLiving.eObjectState.Active) return;
+			if (!target.Alive || target.ObjectState != GameLiving.eObjectState.Active) return;
 
 			// no interrupts on DoT direct effect
 			// calc damage
@@ -192,12 +197,37 @@ namespace DOL.GS.Spells
 			ad.AttackResult = GameLiving.eAttackResult.HitUnstyled;
 			ad.Target.OnAttackedByEnemy(ad);
 			ad.Attacker.DealDamage(ad);
-			foreach(GamePlayer player in ad.Attacker.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE)) {
-				player.Out.SendCombatAnimation(null, ad.Target, 0, 0, 0, 0, 0x0A, ad.Target.HealthPercent);
+			foreach (GamePlayer player in ad.Attacker.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+			{
+				if (player != null)
+					player.Out.SendCombatAnimation(null, ad.Target, 0, 0, 0, 0, 0x0A, ad.Target.HealthPercent);
 			}
 		}
 
+		public override double CalculateDamageBase()
+		{
+			double spellDamage = Spell.Damage;
+			GamePlayer player = null;
+			if (m_caster is GamePlayer)
+				player = m_caster as GamePlayer;
+			if (player != null && player.CharacterClass.ManaStat != eStat.UNDEFINED)
+			{
+				int manaStatValue = player.GetModified((eProperty)player.CharacterClass.ManaStat);
+				spellDamage *= (manaStatValue + 200) / 275.0;
+				if (spellDamage < 0)
+					spellDamage = 0;
+			}
+			else if (m_caster is GameNPC)
+			{
+				int manaStatValue = m_caster.GetModified(eProperty.Intelligence);
+				spellDamage *= (manaStatValue + 200) / 275.0;
+				if (spellDamage < 0)
+					spellDamage = 0;
+			}
+			return spellDamage;
+		}
+
 		// constructor
-		public DoTSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
+		public DoTSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 	}
 }

@@ -68,8 +68,8 @@ namespace DOL.GS
 		/// </summary>
 		public AbstractGameKeep Keep
 		{
-			get	{ return m_keep; }
-			set	{ m_keep = value; }
+			get { return m_keep; }
+			set { m_keep = value; }
 		}
 
 		/// <summary>
@@ -81,8 +81,8 @@ namespace DOL.GS
 		/// </summary>
 		public int ID
 		{
-			get	{ return m_id; }
-			set	{ m_id = value; }
+			get { return m_id; }
+			set { m_id = value; }
 		}
 
 		/// <summary>
@@ -94,8 +94,8 @@ namespace DOL.GS
 		/// </summary>
 		public int Height
 		{
-			get	{ return m_height; }
-			set	{ m_height = value; }
+			get { return m_height; }
+			set { m_height = value; }
 		}
 
 		/// <summary>
@@ -104,17 +104,16 @@ namespace DOL.GS
 		private int m_skin;
 		public int Skin
 		{
-			get	{ return m_skin; }
-			set	{ m_skin = value; }
+			get { return m_skin; }
+			set { m_skin = value; }
 		}
 
 		public bool Climbing
 		{
 			get
 			{
-// TODO add climbable flag for component in database
-//				if (m_skin == (int)eComponentSkin.Wall)
-//					return true;
+				if (m_skin == (int)eComponentSkin.Wall)
+					return true;
 				return false;
 			}
 		}
@@ -128,8 +127,8 @@ namespace DOL.GS
 		/// </summary>
 		public int ComponentX
 		{
-			get	{ return m_componentx; }
-			set	{ m_componentx = value; }
+			get { return m_componentx; }
+			set { m_componentx = value; }
 		}
 
 		/// <summary>
@@ -141,8 +140,8 @@ namespace DOL.GS
 		/// </summary>
 		public int ComponentY
 		{
-			get	{ return m_componenty; }
-			set	{ m_componenty = value; }
+			get { return m_componenty; }
+			set { m_componenty = value; }
 		}
 
 		/// <summary>
@@ -154,8 +153,8 @@ namespace DOL.GS
 		/// </summary>
 		public int ComponentHeading
 		{
-			get	{ return m_componentHeading; }
-			set	{ m_componentHeading = value; }
+			get { return m_componentHeading; }
+			set { m_componentHeading = value; }
 		}
 
 		/// <summary>
@@ -165,7 +164,7 @@ namespace DOL.GS
 		{
 			get
 			{
-				return (byte)(40+ Keep.Level);
+				return (byte)(40 + Keep.Level);
 			}
 		}
 		private Hashtable m_hookPoints;
@@ -174,8 +173,8 @@ namespace DOL.GS
 
 		public Hashtable HookPoints
 		{
-			get	{ return m_hookPoints; }
-			set	{ m_hookPoints = value; }
+			get { return m_hookPoints; }
+			set { m_hookPoints = value; }
 		}
 		#endregion
 
@@ -199,13 +198,13 @@ namespace DOL.GS
 		public GameKeepComponent()
 		{
 			m_hookPoints = new Hashtable(41);
-			GameEventMgr.AddHandler(this,GameObjectEvent.TakeDamage, new DOLEventHandler(SendComponentUpdate));
+			GameEventMgr.AddHandler(this, GameObjectEvent.TakeDamage, new DOLEventHandler(SendComponentUpdate));
 		}
 
 		/// <summary>
 		/// load component from db object
 		/// </summary>
-		public void LoadFromDatabase(DBKeepComponent component,AbstractGameKeep keep)
+		public void LoadFromDatabase(DBKeepComponent component, AbstractGameKeep keep)
 		{
 			Region myregion = WorldMgr.GetRegion((ushort)keep.Region);
 			if (myregion == null)
@@ -215,8 +214,8 @@ namespace DOL.GS
 			base.LoadFromDatabase(component);
 			//this x and y is for get object in radius
 			double angle = (keep.Heading * 0.017453292519943295769236907684886); // angle*2pi/360;
-			X = (int) (keep.X + ((sbyte)component.X * 148 * Math.Cos(angle) + (sbyte)component.Y * 148 * Math.Sin(angle)));
-			Y = (int) (keep.Y - ((sbyte)component.Y * 148 * Math.Cos(angle) - (sbyte)component.X * 148 * Math.Sin(angle)));
+			X = (int)(keep.X + ((sbyte)component.X * 148 * Math.Cos(angle) + (sbyte)component.Y * 148 * Math.Sin(angle)));
+			Y = (int)(keep.Y - ((sbyte)component.Y * 148 * Math.Cos(angle) - (sbyte)component.X * 148 * Math.Sin(angle)));
 			this.Z = keep.Z;
 			// and this one for packet sent
 			this.ComponentX = component.X;
@@ -230,8 +229,8 @@ namespace DOL.GS
 			this.Model = INVISIBLE_MODEL;
 			this.Skin = component.Skin;
 			this.Level = (byte)keep.Level;
-//			this.Health = MaxHealth;
-			this.Health = component.Health;
+			this.Health = MaxHealth;
+			//			this.Health = component.Health;
 			this.m_oldHealthPercent = this.HealthPercent;
 			this.CurrentRegion = myregion;
 			this.Height = component.Height;
@@ -247,10 +246,15 @@ namespace DOL.GS
 		public override void SaveIntoDatabase()
 		{
 			DBKeepComponent obj = null;
-			if(InternalID != null)
-				obj = (DBKeepComponent) GameServer.Database.FindObjectByKey(typeof(DBKeepComponent), InternalID);
-			if(obj == null)
+			bool New = false;
+			if (InternalID != null)
+				obj = (DBKeepComponent)GameServer.Database.FindObjectByKey(typeof(DBKeepComponent), InternalID);
+			if (obj == null)
+			{
 				obj = new DBKeepComponent();
+				New = true;
+			}
+			obj.KeepID = Keep.KeepID;
 			obj.Heading = ComponentHeading;
 			obj.Health = Health;
 			obj.X = this.ComponentX;
@@ -259,7 +263,7 @@ namespace DOL.GS
 			obj.Height = this.Height;
 			obj.Skin = this.Skin;
 
-			if(InternalID == null)
+			if (New)
 			{
 				GameServer.Database.AddNewObject(obj);
 				InternalID = obj.ObjectId;
@@ -268,7 +272,7 @@ namespace DOL.GS
 			{
 				GameServer.Database.SaveObject(obj);
 			}
-			base.SaveIntoDatabase ();
+			base.SaveIntoDatabase();
 		}
 
 		/// <summary>
@@ -283,18 +287,25 @@ namespace DOL.GS
 			if (m_oldHealthPercent == this.HealthPercent) return;
 			m_oldHealthPercent = this.HealthPercent;
 
-			foreach(GameClient client in WorldMgr.GetClientsOfRegion(this.CurrentRegionID))
-				client.Out.SendKeepComponentDetailUpdate(this);
+			foreach (GamePlayer player in this.GetPlayersInRadius(WorldMgr.OBJ_UPDATE_DISTANCE))
+				player.Out.SendKeepComponentDetailUpdate(this);
+		}
+
+		public override void Die(GameObject killer)
+		{
+			base.Die(killer);
+			foreach (GameClient cln in WorldMgr.GetClientsOfRegion(CurrentRegion.ID))
+				cln.Out.SendKeepComponentDetailUpdate(this);
 		}
 
 		public override void Delete()
 		{
 			StopHealthRegeneration();
 			base.Delete();
-			GameEventMgr.RemoveHandler(this,GameObjectEvent.TakeDamage, new DOLEventHandler(SendComponentUpdate));
+			GameEventMgr.RemoveHandler(this, GameObjectEvent.TakeDamage, new DOLEventHandler(SendComponentUpdate));
 			DBKeepComponent obj = null;
-			if(this.InternalID != null)
-				obj = (DBKeepComponent) GameServer.Database.FindObjectByKey(typeof(DBKeepComponent), this.InternalID);
+			if (this.InternalID != null)
+				obj = (DBKeepComponent)GameServer.Database.FindObjectByKey(typeof(DBKeepComponent), this.InternalID);
 			if (obj != null)
 				GameServer.Database.DeleteObject(obj);
 			//todo find a packet to remove the keep
@@ -305,7 +316,7 @@ namespace DOL.GS
 		/// </summary>
 		public int CompareTo(object obj)
 		{
-			if(obj is GameKeepComponent)
+			if (obj is GameKeepComponent)
 				return (this.ID - ((GameKeepComponent)obj).ID);
 			else
 				return 0;
@@ -315,9 +326,9 @@ namespace DOL.GS
 		{
 			get
 			{
-				if(Keep is GameKeepTower)
-					if (HealthPercent<25) return 0x01;//broken
-				if(Keep is GameKeep)
+				if (this.Keep is GameKeepTower)
+					if (this.HealthPercent < 25) return 0x01;//broken
+				if (this.Keep is GameKeep)
 					if (!Alive) return 0x01;//broken
 
 				return 0x00;
@@ -327,11 +338,11 @@ namespace DOL.GS
 
 		public void Update()
 		{
-			if (this.Keep.Level>7)
+			if (this.Keep.Level > 7)
 				this.Height = 3;
-			else if (this.Keep.Level>4)
+			else if (this.Keep.Level > 4)
 				this.Height = 2;
-			else if (this.Keep.Level>1)
+			else if (this.Keep.Level > 1)
 				this.Height = 1;
 			else
 				this.Height = 0;
@@ -341,8 +352,8 @@ namespace DOL.GS
 
 		public bool Rized
 		{
-			get{return m_rized;}
-			set{m_rized=value;}
+			get { return m_rized; }
+			set { m_rized = value; }
 		}
 
 		public void Repair(int amount)
@@ -351,7 +362,7 @@ namespace DOL.GS
 			Health += amount;
 			m_oldHealthPercent = HealthPercent;
 			if (oldStatus != Status)
-				foreach(GameClient client in WorldMgr.GetClientsOfRegion(this.CurrentRegionID))
+				foreach (GameClient client in WorldMgr.GetClientsOfRegion(this.CurrentRegionID))
 					client.Out.SendKeepComponentDetailUpdate(this);
 		}
 

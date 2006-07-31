@@ -29,7 +29,8 @@ namespace DOL.GS
 		/// <summary>
 		/// Constructor
 		/// </summary>
-		public SiegeCrafting() : base()
+		public SiegeCrafting()
+			: base()
 		{
 			Icon = 0x03;
 			Name = "Siegecraft";
@@ -44,64 +45,49 @@ namespace DOL.GS
 		/// <returns>true if the player hold all needed tools</returns>
 		public override bool CheckTool(GamePlayer player, DBCraftedItem craftItemData)
 		{
-			bool result = false;
-			foreach (GameStaticItem item in player.GetItemsInRadius(CRAFT_DISTANCE))
-			{
-				if(item.Model == 481) // Lathe
-				{
-					result = true;
-				}
-			}
-
-			if(result == false)
-			{
-				player.Out.SendMessage("You do not have the tools to make the "+craftItemData.ItemTemplate.Name+".",eChatType.CT_System,eChatLoc.CL_SystemWindow);
-				player.Out.SendMessage("You must find a lathe!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
-				return false;
-			}
 
 			byte flags = 0;
 			foreach (InventoryItem item in player.Inventory.GetItemRange(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
 			{
-				if(item == null || item.Object_Type != 0) continue;
+				if (item == null || item.Object_Type != 0) continue;
 
-				if(item.Name == "planing tool")
+				if (item.Name == "planing tool")
 				{
-					if((flags & 0x01) == 0) flags |= 0x01;
-					if(flags >= 0x07) break;
+					if ((flags & 0x01) == 0) flags |= 0x01;
+					if (flags >= 0x07) break;
 				}
-				else if(item.Name == "smith's hammer")
+				else if (item.Name == "smith's hammer")
 				{
-					if((flags & 0x02) == 0) flags |= 0x02;
-					if(flags >= 0x07) break;
+					if ((flags & 0x02) == 0) flags |= 0x02;
+					if (flags >= 0x07) break;
 				}
-				else if(item.Name == "sewing kit")
+				else if (item.Name == "sewing kit")
 				{
-					if((flags & 0x04) == 0) flags |= 0x04;
-					if(flags >= 0x07) break;
+					if ((flags & 0x04) == 0) flags |= 0x04;
+					if (flags >= 0x07) break;
 				}
 			}
 
-			if(flags < 0x07)
+			if (flags < 0x07)
 			{
-				if((flags & 0x01) == 0)
+				if ((flags & 0x01) == 0)
 				{
-					player.Out.SendMessage("You do not have the tools to make the "+craftItemData.ItemTemplate.Name+".",eChatType.CT_System,eChatLoc.CL_SystemWindow);
-					player.Out.SendMessage("You must find a planing tool!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage("You do not have the tools to make the " + craftItemData.ItemTemplate.Name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage("You must find a planing tool!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return false;
 				}
 
-				if((flags & 0x02) == 0)
+				if ((flags & 0x02) == 0)
 				{
-					player.Out.SendMessage("You do not have the tools to make the "+craftItemData.ItemTemplate.Name+".",eChatType.CT_System,eChatLoc.CL_SystemWindow);
-					player.Out.SendMessage("You must find a smith tool!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage("You do not have the tools to make the " + craftItemData.ItemTemplate.Name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage("You must find a smith tool!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return false;
 				}
 
-				if((flags & 0x04) == 0)
+				if ((flags & 0x04) == 0)
 				{
-					player.Out.SendMessage("You do not have the tools to make the "+craftItemData.ItemTemplate.Name+".",eChatType.CT_System,eChatLoc.CL_SystemWindow);
-					player.Out.SendMessage("You must find a sewing kit!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage("You do not have the tools to make the " + craftItemData.ItemTemplate.Name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage("You must find a sewing kit!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return false;
 				}
 			}
@@ -120,54 +106,54 @@ namespace DOL.GS
 			switch (player.CraftingPrimarySkill)
 			{
 				case eCraftingSkill.WeaponCrafting:
-				{
-					maxAchivableLevel = (int)(player.GetCraftingSkillValue(eCraftingSkill.WeaponCrafting) * 0.75);
-					break;
-				}
+					{
+						maxAchivableLevel = (int)(player.GetCraftingSkillValue(eCraftingSkill.WeaponCrafting) * 0.75);
+						break;
+					}
 
 				case eCraftingSkill.ArmorCrafting:
-				{
-					maxAchivableLevel = (int)(player.GetCraftingSkillValue(eCraftingSkill.ArmorCrafting) * 0.40);
-					break;
-				}
+					{
+						maxAchivableLevel = (int)(player.GetCraftingSkillValue(eCraftingSkill.ArmorCrafting) * 0.40);
+						break;
+					}
 
 				case eCraftingSkill.Tailoring:
-				{
-					maxAchivableLevel = (int)(player.GetCraftingSkillValue(eCraftingSkill.Tailoring) * 0.40);
-					break;
-				}
+					{
+						maxAchivableLevel = (int)(player.GetCraftingSkillValue(eCraftingSkill.Tailoring) * 0.40);
+						break;
+					}
 
 				case eCraftingSkill.Fletching:
-				{
-					maxAchivableLevel = (int)(player.GetCraftingSkillValue(eCraftingSkill.Fletching) * 0.75);
-					break;
-				}
+					{
+						maxAchivableLevel = (int)(player.GetCraftingSkillValue(eCraftingSkill.Fletching) * 0.75);
+						break;
+					}
 
 				case eCraftingSkill.Alchemy:
-				{
-					maxAchivableLevel = (int)(player.GetCraftingSkillValue(eCraftingSkill.Alchemy) * 0.02);
-					break;
-				}
+					{
+						maxAchivableLevel = (int)(player.GetCraftingSkillValue(eCraftingSkill.Alchemy) * 0.02);
+						break;
+					}
 
 				case eCraftingSkill.SpellCrafting:
-				{
-					maxAchivableLevel = (int)(player.GetCraftingSkillValue(eCraftingSkill.SpellCrafting) * 0.02);
-					break;
-				}
+					{
+						maxAchivableLevel = (int)(player.GetCraftingSkillValue(eCraftingSkill.SpellCrafting) * 0.02);
+						break;
+					}
 
 				default:
-				{
-					maxAchivableLevel = 0;
-					break;
-				}
+					{
+						maxAchivableLevel = 0;
+						break;
+					}
 			}
 
-			if(player.GetCraftingSkillValue(eCraftingSkill.SiegeCrafting) >= maxAchivableLevel)
+			if (player.GetCraftingSkillValue(eCraftingSkill.SiegeCrafting) >= maxAchivableLevel)
 			{
 				return;
 			}
 
-			if(Util.Chance( CalculateChanceToGainPoint(player, item)))
+			if (Util.Chance(CalculateChanceToGainPoint(player, item)))
 			{
 				player.IncreaseCraftingSkill(eCraftingSkill.SiegeCrafting, 1);
 				player.Out.SendUpdateCraftingSkills();
@@ -178,36 +164,36 @@ namespace DOL.GS
 			GameSiegeWeapon siegeweapon = null;
 			switch ((eObjectType)craftItemData.ItemTemplate.Object_Type)
 			{
-				case eObjectType.SiegeBalista :
-				{
-					siegeweapon = new GameSiegeBallista();
-				}
-			break;
-				case eObjectType.SiegeCatapult :
-				{
-					siegeweapon = new GameSiegeCatapult();
-				}
-				break;
-				case eObjectType.SiegeCauldron :
-				{
-					siegeweapon = new GameSiegeCauldron();
-				}
-				break;
-				case eObjectType.SiegeRam :
-				{
-					siegeweapon = new GameSiegeRam();
-				}
-				break;
-				case eObjectType.SiegeTrebuchet :
-				{
-					siegeweapon = new GameSiegeTrebuchet();
-				}
-				break;
+				case eObjectType.SiegeBalista:
+					{
+						siegeweapon = new GameSiegeBallista();
+					}
+					break;
+				case eObjectType.SiegeCatapult:
+					{
+						siegeweapon = new GameSiegeCatapult();
+					}
+					break;
+				case eObjectType.SiegeCauldron:
+					{
+						siegeweapon = new GameSiegeCauldron();
+					}
+					break;
+				case eObjectType.SiegeRam:
+					{
+						siegeweapon = new GameSiegeRam();
+					}
+					break;
+				case eObjectType.SiegeTrebuchet:
+					{
+						siegeweapon = new GameSiegeTrebuchet();
+					}
+					break;
 				default:
-				{
-					base.BuildCraftedItem(player,craftItemData);
-					return;
-				}
+					{
+						base.BuildCraftedItem(player, craftItemData);
+						return;
+					}
 			}
 			siegeweapon.LoadFromDatabase(craftItemData.ItemTemplate);
 			siegeweapon.CurrentRegion = player.CurrentRegion;

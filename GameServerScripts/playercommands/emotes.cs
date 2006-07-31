@@ -1,16 +1,16 @@
 /*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -53,6 +53,17 @@ namespace DOL.GS.Scripts
 	[CmdAttribute("&victory", (uint) ePrivLevel.Player, "Make a victory cheer", "/victory")]
 	[CmdAttribute("&wave", (uint) ePrivLevel.Player, "Makes a waving gesture", "/wave")]
 	[CmdAttribute("&yes", (uint) ePrivLevel.Player, "Nod your head", "/yes")]
+	//New
+	[CmdAttribute("&sweat", (uint) ePrivLevel.Player, "sweat", "/sweat")]
+	[CmdAttribute("&stagger", (uint) ePrivLevel.Player, "stagger", "/stagger")]
+	[CmdAttribute("&yawn", (uint) ePrivLevel.Player, "yawn", "/yawn")]
+	[CmdAttribute("&doh", (uint) ePrivLevel.Player, "doh", "/doh")]
+	[CmdAttribute("&confuse", (uint) ePrivLevel.Player, "Confused", "/confuse")]
+	[CmdAttribute("&shiver", (uint) ePrivLevel.Player, "shiver", "/shiver")]
+	[CmdAttribute("&rofl", (uint) ePrivLevel.Player, "rofl", "/rofl")]
+	[CmdAttribute("&mememe", (uint) ePrivLevel.Player, "mememe", "/mememe")]
+	[CmdAttribute("&worship", (uint) ePrivLevel.Player, "worship", "/worship")]
+	[CmdAttribute("&drink", (uint) ePrivLevel.Player, "drink", "/drink")]
 	public class EmoteCommandHandler : ICommandHandler
 	{
 		private const ushort EMOTE_RANGE_TO_TARGET = 2048; // 2064 was out of range and 2020 in range;
@@ -225,7 +236,46 @@ namespace DOL.GS.Scripts
 					emoteID = eEmote.Yes;
 					emoteMessages = EMOTE_MESSAGES_YES;
 					break;
-
+				case "&sweat":
+					emoteID = eEmote.Sweat;
+					emoteMessages = EMOTE_MESSAGES_SWEAT;
+					break;
+				case "&stagger":
+					emoteID = eEmote.Stagger;
+					emoteMessages = EMOTE_MESSAGES_STAGGER;
+					break;
+				case "&yawn":
+					emoteID = eEmote.Yawn;
+					emoteMessages = EMOTE_MESSAGES_YAWN;
+					break;
+				case "&doh":
+					emoteID = eEmote.Doh;
+					emoteMessages = EMOTE_MESSAGES_DOH;
+					break;
+				case "&confuse":
+					emoteID = eEmote.Confused;
+					emoteMessages = EMOTE_MESSAGES_CONFUSE;
+					break;
+				case "&shiver":
+					emoteID = eEmote.Shiver;
+					emoteMessages = EMOTE_MESSAGES_SHIVER;
+					break;
+				case "&rofl":
+					emoteID = eEmote.Rofl;
+					emoteMessages = EMOTE_MESSAGES_ROFL;
+					break;
+				case "&mememe":
+					emoteID = eEmote.Mememe;
+					emoteMessages = EMOTE_MESSAGES_MEMEME;
+					break;
+				case "&worship":
+					emoteID = eEmote.Kowtow;
+					emoteMessages = EMOTE_MESSAGES_WORSHIP;
+					break;
+				case "&drink":
+					emoteID = eEmote.Drink;
+					emoteMessages = EMOTE_MESSAGES_DRINK;
+					break;
 				default:
 					return 0;
 			}
@@ -269,9 +319,9 @@ namespace DOL.GS.Scripts
 		// send emote messages to all players in range
 		private void SendEmoteMessages(GamePlayer sourcePlayer, GamePlayer targetPlayer, string messageToSource, string messageToTarget, string messageToOthers)
 		{
-//			sourcePlayer.Client.Out.SendMessage("sending messages", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-//			SendEmoteMessage(sourcePlayer, "to target: \""+messageToTarget+"\"");
-//			SendEmoteMessage(sourcePlayer, "to others: \""+messageToOthers+"\"");
+			//			sourcePlayer.Client.Out.SendMessage("sending messages", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			//			SendEmoteMessage(sourcePlayer, "to target: \""+messageToTarget+"\"");
+			//			SendEmoteMessage(sourcePlayer, "to others: \""+messageToOthers+"\"");
 
 			SendEmoteMessage(sourcePlayer, messageToSource);
 
@@ -530,6 +580,66 @@ namespace DOL.GS.Scripts
 			"{0} nods his head yes.",
 			"You nod your head yes at {0}.",
 			"{0} nods his head yes at {1}.",
+		};
+		private readonly string[] EMOTE_MESSAGES_SWEAT = {
+			"You break into a sweat.",
+			"{0} breaks into a sweat.",
+			"You break into a sweat at the sight of {0}.",
+			"{0} breaks into a sweat at the sight of {1}.",
+		};
+		private readonly string[] EMOTE_MESSAGES_STAGGER = {
+			"You stagger.",
+			"{0} staggers.",
+			"You stagger towards {0}.",
+			"{0} staggers towards {1}.",
+		};
+		private readonly string[] EMOTE_MESSAGES_YAWN = {
+			"You yawn.",
+			"{0} yanws.",
+			"You yawn at {0}.",
+			"{0} yawns at {1}.",
+		};
+		private readonly string[] EMOTE_MESSAGES_DOH = {
+			"You slap your head in confusion.",
+			"{0} slaps your head in confusion.",
+			"You slap your head in confusion at {0}.",
+			"{0} slaps his head in confusion at {1}.",
+		};
+		private readonly string[] EMOTE_MESSAGES_CONFUSE = {
+			"You look at yourself, clearly confused.",
+			"{0} looks at you, clearly confused.",
+			"You look at {0}, clearly confused.",
+			"{0} looks at {1}, clearly confused.",
+		};
+		private readonly string[] EMOTE_MESSAGES_SHIVER = {
+			"You shiver.",
+			"{0} shivers.",
+			"You shiver at the sight of {0}.",
+			"{0} shivers at the sight of {1}.",
+		};
+		private readonly string[] EMOTE_MESSAGES_ROFL = {
+			"You roll on the floor laughing.",
+			"{0} rolls on the floor laughing at.",
+			"You roll on the floor laughing at {0}.",
+			"{0} rolls on the floor laughing at {1}.",
+		};
+		private readonly string[] EMOTE_MESSAGES_MEMEME = {
+			"You beg to pick you.",
+			"{0} begs to pick him.",
+			"You beg {0} to pick you.",
+			"{0} begs {1} to pick them.",
+		};
+		private readonly string[] EMOTE_MESSAGES_WORSHIP = {
+			"You worship everything, and yet nothing.",
+			"{0} worships nothing in particular.",
+			"You worship {0}!",
+			"{0} worships {1}!",
+		};
+		private readonly string[] EMOTE_MESSAGES_DRINK = {
+			"You take a drink.",
+			"{0} takes a drink.",
+			"You toast {0} and take a drink.",
+			"{0} toasts {1}!",
 		};
 	}
 }

@@ -50,7 +50,7 @@ namespace DOL.GS.Scripts
 				GamePlayer target;
 				string name = args[1];
 
-				GameClient targetClient = WorldMgr.GetClientByPlayerNameAndRealm(name, client.Player.Realm);
+				GameClient targetClient = WorldMgr.GetClientByPlayerNameAndRealm(name, client.Player.Realm, false);
 				if (targetClient == null)
 					target = null;				
 				else

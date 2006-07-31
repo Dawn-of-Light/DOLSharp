@@ -71,16 +71,30 @@ namespace DOL.GS.Housing
 						Hashtable hash = (Hashtable)m_houselists[house.RegionID];
 						if (hash==null) continue;
 						if (hash.ContainsKey(newHouse.HouseNumber)) continue;
+						int i = 0;
+						foreach(DBHouseIndoorItem dbiitem in GameServer.Database.SelectObjects(typeof(DBHouseIndoorItem), "HouseNumber = '" + newHouse.HouseNumber + "'"))
+						{
+							IndoorItem iitem = new IndoorItem();
+							iitem.CopyFrom(dbiitem);
+							newHouse.IndoorItems.Add(i++, iitem);
+						}
+						i = 0;
+						foreach(DBHouseOutdoorItem dboitem in GameServer.Database.SelectObjects(typeof(DBHouseOutdoorItem), "HouseNumber = '" + newHouse.HouseNumber + "'"))
+						{
+							OutdoorItem oitem = new OutdoorItem();
+							oitem.CopyFrom(dboitem);
+							newHouse.OutdoorItems.Add(i++, oitem);
+						}
 						hash.Add(newHouse.HouseNumber,newHouse);
 						houses++;
 					} 
-						else
+					else
 					{
 						if(log.IsWarnEnabled)
 							log.Warn("Failed to get a unique id, cant load house! More than "+HouseMgr.MAXHOUSES+" houses in region "+house.RegionID+" or region not loaded // housing not enabled?");
 					}
 				}
-					else
+				else
 				{
 					if(!m_idlist.ContainsKey(house.RegionID)) continue;
 					GameLotMarker.SpawnLotMarker(house);
@@ -164,7 +178,7 @@ namespace DOL.GS.Housing
 		public static bool IsOwner(DBHouse house, GamePlayer player)
 		{
 			if (house == null || player == null) return false;
-			if (house.OwnerIDs == null) return false;
+			if (house.OwnerIDs == null || house.OwnerIDs == "") return false;
 
 			return (house.OwnerIDs.IndexOf(player.PlayerCharacter.ObjectId)>=0);
 		}
@@ -172,7 +186,7 @@ namespace DOL.GS.Housing
 		public static void AddOwner(DBHouse house, GamePlayer player)
 		{
 			if (house == null || player == null) return;
-			if (house.OwnerIDs!=null)
+			if (house.OwnerIDs != null && house.OwnerIDs != "")
 			{
 				if(house.OwnerIDs.IndexOf(player.InternalID)<0)
 					return;
@@ -184,7 +198,7 @@ namespace DOL.GS.Housing
 		public static void DeleteOwner(DBHouse house, GamePlayer player)
 		{
 			if (house == null || player == null) return;
-			if (house.OwnerIDs==null) return;
+			if (house.OwnerIDs == null || house.OwnerIDs == "") return;
 
 			house.OwnerIDs = house.OwnerIDs.Replace(player.InternalID+";","");
 			GameServer.Database.SaveObject(house);
@@ -193,7 +207,7 @@ namespace DOL.GS.Housing
 		public static ArrayList GetOwners(DBHouse house)
 		{
 			if(house==null) return null;
-			if(house.OwnerIDs==null) return null;
+			if(house.OwnerIDs == null || house.OwnerIDs == "") return null;
 
 			ArrayList owners = new ArrayList();
 			string[] ids = house.OwnerIDs.Split(';');

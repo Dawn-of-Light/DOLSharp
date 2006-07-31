@@ -98,7 +98,7 @@ namespace DOL.GS.Scripts
 							client.Out.SendMessage("Usage: /cg invite <playername>", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return 1;
 						}
-						GameClient inviteeclient = WorldMgr.GetClientByPlayerName(args[2], false);
+						GameClient inviteeclient = WorldMgr.GetClientByPlayerName(args[2], false, true);
 						if (inviteeclient == null || !GameServer.ServerRules.IsSameRealm(inviteeclient.Player, client.Player, true)) // allow priv level>1 to invite anyone
 						{
 							client.Out.SendMessage("There is no player with this name.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -170,7 +170,7 @@ namespace DOL.GS.Scripts
 						{
 							PrintHelp(client);
 						}
-						GameClient inviteeclient = WorldMgr.GetClientByPlayerName(args[2], false);
+						GameClient inviteeclient = WorldMgr.GetClientByPlayerName(args[2], false, false);
 						if (inviteeclient == null)
 						{
 							client.Out.SendMessage("There is no player with this name.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -229,7 +229,7 @@ namespace DOL.GS.Scripts
 							PrintHelp(client);
 						}
 						string invitename = String.Join(" ", args, 2, args.Length - 2);
-						GameClient inviteeclient = WorldMgr.GetClientByPlayerName(invitename, false);
+						GameClient inviteeclient = WorldMgr.GetClientByPlayerName(invitename, false, false);
 						if (inviteeclient == null)
 						{
 							client.Out.SendMessage("There is no player with this name.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -291,7 +291,7 @@ namespace DOL.GS.Scripts
 						{
 							PrintHelp(client);
 						}
-						GameClient inviteeclient = WorldMgr.GetClientByPlayerName(args[2], false);
+						GameClient inviteeclient = WorldMgr.GetClientByPlayerName(args[2], false, false);
 						if (inviteeclient == null || !GameServer.ServerRules.IsSameRealm(client.Player, inviteeclient.Player, true)) // allow priv level>1 to join anywhere
 						{
 							client.Out.SendMessage("There is no player with this name.", eChatType.CT_System, eChatLoc.CL_SystemWindow);

@@ -1,16 +1,16 @@
 /*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -33,7 +33,8 @@ namespace DOL.GS.Scripts
 		/// <summary>
 		/// Constructor
 		/// </summary>
-		public GameHastener() : base()
+		public GameHastener()
+			: base()
 		{
 			//load spell handler at start
 			SpellLine reservedSpellLine = SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells);
@@ -42,11 +43,11 @@ namespace DOL.GS.Scripts
 				IList spells = SkillBase.GetSpellList(reservedSpellLine.KeyName);
 				if (spells != null)
 				{
-					foreach (Spell spell in spells) 
+					foreach (Spell spell in spells)
 					{
 						if (spell.ID == 2430) //Speed of the Realm
 						{
-							if(spell.Level <= Level)
+							if (spell.Level <= Level)
 							{
 								m_hasteSpellHandler = ScriptMgr.CreateSpellHandler(this, spell, reservedSpellLine);
 							}
@@ -80,12 +81,13 @@ namespace DOL.GS.Scripts
 
 			TurnTo(player.X, player.Y);
 
-			if (!WorldMgr.CheckDistance(this, player,WorldMgr.INTERACT_DISTANCE))
+			if (!WorldMgr.CheckDistance(this, player, WorldMgr.INTERACT_DISTANCE))
 			{
 				player.Out.SendMessage("You are too far away to speak with " + GetName(0, false) + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
-			foreach(GamePlayer players in this.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE)) 
+			TargetObject = player;
+			foreach (GamePlayer players in this.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
 				players.Out.SendSpellCastAnimation(this, 1, 20);
 			}

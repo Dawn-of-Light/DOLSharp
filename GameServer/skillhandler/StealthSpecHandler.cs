@@ -152,6 +152,8 @@ namespace DOL.GS.SkillHandler
 		{
 			float enemyLevel = Math.Max(1f, obj.Level);
 			float stealthLevel = player.GetModifiedSpecLevel(Specs.Stealth);
+			if(stealthLevel > 50)
+				stealthLevel = 50;
 			float radius;
 
 			if(obj is GamePlayer && ((GamePlayer)obj).HasAbility(Abilities.DetectHidden))

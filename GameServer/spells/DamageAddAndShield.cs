@@ -1,16 +1,16 @@
 /*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -42,6 +42,11 @@ namespace DOL.GS.Spells
 		/// </summary>
 		protected override DOLEvent EventType { get { return GameLivingEvent.AttackFinished; } }
 
+		public virtual double DPSCap(int Level)
+		{
+			return (1.2 + 0.3 * Level)*0.7;
+		}
+
 		/// <summary>
 		/// Handler fired on every melee attack by effect target
 		/// </summary>
@@ -59,6 +64,7 @@ namespace DOL.GS.Spells
 			if (target == null) return;
 			if (target.ObjectState != GameObject.eObjectState.Active) return;
 			if (target.Alive == false) return;
+			if (target is GameKeepComponent || target is GameKeepDoor) return;
 			GameLiving attacker = sender as GameLiving;
 			if (attacker == null) return;
 			if (attacker.ObjectState != GameObject.eObjectState.Active) return;
@@ -66,10 +72,16 @@ namespace DOL.GS.Spells
 
 			int spread = m_minDamageSpread;
 			spread += Util.Random(50);
-			double dpsCap = (1.2 + 0.3*attacker.Level)*0.7;
+			double dpsCap = DPSCap(attacker.Level);
 			double dps = Math.Min(Spell.Damage, dpsCap);
 			double damage = dps * atkArgs.AttackData.WeaponSpeed * spread * 0.001; // attack speed is 10 times higher (2.5spd=25)
 			double damageResisted = damage * target.GetResist(Spell.DamageType) * -0.01;
+
+			if(Spell.Damage < 0)
+			{
+				damage = atkArgs.AttackData.Damage * Spell.Damage / -100.0;
+				damageResisted =  damage * target.GetResist(Spell.DamageType) * -0.01;
+			}
 
 			AttackData ad = new AttackData();
 			ad.Attacker = attacker;
@@ -88,19 +100,23 @@ namespace DOL.GS.Spells
 					GamePlayer owner = brain.Owner;
 					if (owner != null && owner.ControlledNpc != null && ad.Attacker == owner.ControlledNpc.Body)
 					{
-						MessageToLiving(owner, String.Format("Your {0} hit {1} for {2} damage!", ad.Attacker.Name, target.GetName(0, false), ad.Damage), eChatType.CT_Spell); 
+						MessageToLiving(owner, String.Format("Your {0} hit {1} for {2} damage!", ad.Attacker.Name, target.GetName(0, false), ad.Damage), eChatType.CT_Spell);
 					}
 				}
 			}
 			else
 			{
-				MessageToLiving(attacker, String.Format("You hit {0} for {1} damage!", target.GetName(0, false), ad.Damage), eChatType.CT_Spell);
+				if (Spell.Pulse != 0)
+					MessageToLiving(attacker, String.Format("You hit {0} for {1} extra damage!", target.GetName(0, false), ad.Damage), eChatType.CT_Spell);
+				else
+					MessageToLiving(attacker, String.Format("You hit {0} for {1} damage!", target.GetName(0, false), ad.Damage), eChatType.CT_Spell);
 			}
 			MessageToLiving(target, String.Format("{0} does {1} extra damage to you!", attacker.GetName(0, false), ad.Damage), eChatType.CT_Spell);
 			target.OnAttackedByEnemy(ad);
 			attacker.DealDamage(ad);
-			foreach(GamePlayer player in ad.Attacker.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE)) 
+			foreach(GamePlayer player in ad.Attacker.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
+				if(player == null) continue;
 				player.Out.SendCombatAnimation(null, target, 0, 0, 0, 0, 0x0A, target.HealthPercent);
 			}
 //			log.Debug(String.Format("spell damage: {0}; damage: {1}; resisted damage: {2}; damage type {3}; minSpread {4}.", Spell.Damage, ad.Damage, ad.Modifier, ad.DamageType, m_minDamageSpread));
@@ -154,6 +170,12 @@ namespace DOL.GS.Spells
 			double damage = Spell.Damage * target.AttackSpeed(target.AttackWeapon) * spread * 0.00001;
 			double damageResisted = damage * target.GetResist(Spell.DamageType) * -0.01;
 
+			if(Spell.Damage < 0)
+			{
+				damage = args.AttackData.Damage * Spell.Damage / -100.0;
+				damageResisted =  damage * target.GetResist(Spell.DamageType) * -0.01;
+			}
+
 			AttackData ad = new AttackData();
 			ad.Attacker = attacker;
 			ad.Target = target;
@@ -171,7 +193,7 @@ namespace DOL.GS.Spells
 					GamePlayer owner = brain.Owner;
 					if (owner != null && owner.ControlledNpc != null && ad.Attacker == owner.ControlledNpc.Body)
 					{
-						MessageToLiving(owner, String.Format("Your {0} hit {1} for {2} damage!", ad.Attacker.Name, target.GetName(0, false), ad.Damage), eChatType.CT_Spell); 
+						MessageToLiving(owner, String.Format("Your {0} hit {1} for {2} damage!", ad.Attacker.Name, target.GetName(0, false), ad.Damage), eChatType.CT_Spell);
 					}
 				}
 			}
@@ -183,8 +205,10 @@ namespace DOL.GS.Spells
 			MessageToLiving(target, String.Format("{0} does {1} extra damage to you!", attacker.GetName(0, false), ad.Damage), eChatType.CT_Spell);
 			target.OnAttackedByEnemy(ad);
 			attacker.DealDamage(ad);
-			foreach(GamePlayer player in attacker.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE)) 
+			foreach(GamePlayer player in attacker.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
+				if(player == null)
+					continue;
 				player.Out.SendCombatAnimation(null, target, 0, 0, 0, 0, 0x14, target.HealthPercent);
 			}
 //			log.Debug(String.Format("spell damage: {0}; damage: {1}; resisted damage: {2}; damage type {3}; minSpread {4}.", Spell.Damage, ad.Damage, ad.Modifier, ad.DamageType, m_minDamageSpread));

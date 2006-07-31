@@ -59,7 +59,7 @@ namespace DOL.GS.Scripts
 			}
 			else
 			{ // Inviting by name
-				GameClient targetClient = WorldMgr.GetClientByPlayerNameAndRealm(targetName, 0);
+				GameClient targetClient = WorldMgr.GetClientByPlayerNameAndRealm(targetName, 0, true);
 				if (targetClient == null)
 					target = null;
 				else

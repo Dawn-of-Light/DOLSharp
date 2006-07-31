@@ -102,7 +102,7 @@ namespace DOL.GS.Scripts
 							}
 							if (!GuildMgr.DoesGuildExist(args[2]))
 							{
-								GameClient guildLeader = WorldMgr.GetClientByPlayerName(args[3], false);
+								GameClient guildLeader = WorldMgr.GetClientByPlayerName(args[3], false, false);
 								if (guildLeader == null)
 								{
 									client.Out.SendMessage("Player \"" + args[3] + "\"  not found.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -220,7 +220,7 @@ namespace DOL.GS.Scripts
 							string playername = String.Join(" ", args, 2, i - 2);
 							string guildname = String.Join(" ", args, i + 1, args.Length - i - 1);
 
-							GuildMgr.GetGuildByName(guildname).AddPlayer(WorldMgr.GetClientByPlayerName(playername, true).Player);
+							GuildMgr.GetGuildByName(guildname).AddPlayer(WorldMgr.GetClientByPlayerName(playername, true, false ).Player);
 						}
 						break;
 						// --------------------------------------------------------------------------------
@@ -253,7 +253,7 @@ namespace DOL.GS.Scripts
 								return 1;
 							}
 
-							GuildMgr.GetGuildByName(guildname).RemovePlayer("gamemaster", WorldMgr.GetClientByPlayerName(playername, true).Player);
+							GuildMgr.GetGuildByName(guildname).RemovePlayer("gamemaster", WorldMgr.GetClientByPlayerName(playername, true, false).Player);
 						}
 						break;
 
@@ -278,7 +278,7 @@ namespace DOL.GS.Scripts
 							GamePlayer obj = client.Player.TargetObject as GamePlayer;
 							if (args.Length > 2)
 							{
-								GameClient temp = WorldMgr.GetClientByPlayerName(args[2], true);
+								GameClient temp = WorldMgr.GetClientByPlayerName(args[2], true, true);
 								if (temp != null)
 									obj = temp.Player;
 							}
@@ -357,7 +357,7 @@ namespace DOL.GS.Scripts
 								return 1;
 							}
 							string playername = String.Join(" ", args, 2, args.Length - 2);
-							GameClient myclient = WorldMgr.GetClientByPlayerName(playername, true);
+							GameClient myclient = WorldMgr.GetClientByPlayerName(playername, true, false);
 							if (myclient == null)
 							{
 								client.Out.SendMessage("This player name does not exist", eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -548,7 +548,7 @@ namespace DOL.GS.Scripts
 							GamePlayer obj = client.Player.TargetObject as GamePlayer;
 							if (args.Length > 3)
 							{
-								GameClient temp = WorldMgr.GetClientByPlayerName(args[3], true);
+								GameClient temp = WorldMgr.GetClientByPlayerName(args[3], true, false);
 								if (temp != null && GameServer.ServerRules.IsAllowedToGroup(client.Player, temp.Player, true))
 									obj = temp.Player;
 							}
@@ -605,7 +605,7 @@ namespace DOL.GS.Scripts
 							GamePlayer obj = client.Player.TargetObject as GamePlayer;
 							if (args.Length > 3)
 							{
-								GameClient temp = WorldMgr.GetClientByPlayerName(args[3], true);
+								GameClient temp = WorldMgr.GetClientByPlayerName(args[3], true, false);
 								if (temp != null && GameServer.ServerRules.IsAllowedToGroup(client.Player, temp.Player, true))
 									obj = temp.Player;
 							}
@@ -696,7 +696,7 @@ namespace DOL.GS.Scripts
 							GamePlayer obj = client.Player.TargetObject as GamePlayer;
 							if (args.Length > 2)
 							{
-								GameClient temp = WorldMgr.GetClientByPlayerName(args[2], true);
+								GameClient temp = WorldMgr.GetClientByPlayerName(args[2], true, false);
 								if (temp != null && GameServer.ServerRules.IsAllowedToGroup(client.Player, temp.Player, true))
 									obj = temp.Player;
 							}

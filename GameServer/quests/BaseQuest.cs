@@ -31,6 +31,7 @@ using System.Reflection;
 using DOL.Database;
 using DOL.GS.PacketHandler;
 using log4net;
+using DOL.Events;
 /* I suggest you declare yourself some namespaces for your quests
  * Like: DOL.GS.Quests.Albion
  *       DOL.GS.Quests.Midgard
@@ -42,12 +43,12 @@ using log4net;
 
 namespace DOL.GS.Quests
 {
-	/* The first thing we do, is to declare the class we create
-	 * as Quest. To do this, we derive from the abstract class
-	 * AbstractQuest
-	 *
-	 */
 
+	/// <summary>
+	/// BaseQuest provides some helper classes for writing quests and
+	/// integrates a new QuestPart Based QuestSystem.
+	/// </summary>
+	/// <seealso cref="DOL.GS.Quests.BaseQuestPart"/>
 	public abstract class BaseQuest : AbstractQuest
 	{
 		/// <summary>
@@ -55,17 +56,10 @@ namespace DOL.GS.Quests
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		/* Declare the variables we need inside our quest.
-		 * You can declare static variables here, which will be available in
-		 * ALL instance of your quest and should be initialized ONLY ONCE inside
-		 * the OnScriptLoaded method.
-		 *
-		 * Or declare nonstatic variables here which can be unique for each Player
-		 * and change through the quest journey...
-		 *
-		 */
 
-		// Global Constant for all quests to define wether npcs should be saved in db or not.
+		/// <summary>
+		/// Global Constant for all quests to define wether npcs should be saved in db or not.
+		/// </summary>
 		public static bool SAVE_INTO_DATABASE = false;
 
 		public static Queue m_sayTimerQueue = new Queue();
@@ -83,25 +77,153 @@ namespace DOL.GS.Quests
 		public Queue m_portTeleportTimerQueue = new Queue();
 		public Queue m_portObjectQueue = new Queue();
 		public Queue m_portDestinationQueue = new Queue();
-		/* We need to define the constructors from the base class here, else there might be problems
-		 * when loading this quest...
-		 */
 
-		public BaseQuest() : base()
+		/// <summary>
+		/// List of all QuestParts that can be fired on interact Events.
+		/// </summary>
+		//private static IDictionary interactQuestParts = new HybridDictionary();
+
+		/// <summary>
+		/// List of all QuestParts that can be fired on notify method of quest.
+		/// </summary>
+		private static IList questParts = null;
+
+		/// <summary>
+		/// Create an empty Quest
+		/// </summary>
+		public BaseQuest()
+			: base()
 		{
 		}
 
-		public BaseQuest(GamePlayer questingPlayer) : base(questingPlayer)
+		/// <summary>
+		/// Constructs a new empty Quest
+		/// </summary>
+		public BaseQuest(GamePlayer questingPlayer)
+			: base(questingPlayer)
 		{
 		}
 
-		public BaseQuest(GamePlayer questingPlayer, int step) : base(questingPlayer, step)
+		/// <summary>
+		/// Constructs a new Quest
+		/// </summary>
+		/// <param name="questingPlayer">The player doing this quest</param>
+		/// <param name="step">The current step the player is on</param>
+		public BaseQuest(GamePlayer questingPlayer, int step)
+			: base(questingPlayer, step)
 		{
 		}
 
-		public BaseQuest(GamePlayer questingPlayer, DBQuest dbQuest) : base(questingPlayer, dbQuest)
+		/// <summary>
+		/// Constructs a new Quest from a database Object
+		/// </summary>
+		/// <param name="questingPlayer">The player doing the quest</param>
+		/// <param name="dbQuest">The database object</param>
+		public BaseQuest(GamePlayer questingPlayer, DBQuest dbQuest)
+			: base(questingPlayer, dbQuest)
 		{
 		}
+
+
+		[ScriptUnloadedEvent]
+		public static void ScriptUnloadedBase(DOLEvent e, object sender, EventArgs args)
+		{
+			if (questParts != null)
+			{
+				for (int i = questParts.Count - 1; i >= 0; i--)
+				{
+					RemoveQuestPart((BaseQuestPart)questParts[i]);
+				}
+			}
+			questParts = null;
+		}
+
+		// Base QuestPart methods
+
+		/// <summary>
+		/// Registers all needed handlers for the given questPart,
+		/// this will not add the questpart to the quest. For this case use AddQuestPart
+		/// </summary>
+		/// <param name="questPart">QuestPart to register handlers for</param>
+		protected static void RegisterQuestPart(BaseQuestPart questPart)
+		{
+			if (questPart.Triggers == null)
+				log.Warn("QuestPart without any triggers added, this questpart will never be notified.\n Details: " + questPart);
+
+			foreach (IQuestTrigger trigger in questPart.Triggers)
+			{
+				trigger.Register();
+			}
+		}
+
+		/// <summary>
+		/// Remove all registered handlers for this quest,
+		/// this will not remove the questPart from the quest.
+		/// </summary>
+		/// <param name="questPart">QuestPart to remove handlers from</param>
+		protected static void UnRegisterQuestPart(BaseQuestPart questPart)
+		{
+			if (questPart.Triggers == null)
+				return;
+
+			foreach (IQuestTrigger trigger in questPart.Triggers)
+			{
+				trigger.Unregister();
+			}
+		}
+		/// <summary>
+		/// Adds the given questpart to the quest depending on the added triggers it will either
+		/// be added as InteractQuestPart as NotifyQuestPart or both and also register the needed event handler.
+		/// </summary>
+		/// <param name="questPart">QuestPart to be added</param>
+		public static void AddQuestPart(BaseQuestPart questPart)
+		{
+			if (questPart.QuestPartAdded)
+				log.Error("QuestPart " + questPart + " was already added to Quest.");
+
+			RegisterQuestPart(questPart);
+
+			if (questParts == null)
+				questParts = new ArrayList();
+
+			if (!questParts.Contains(questPart))
+				questParts.Add(questPart);
+
+			questPart.QuestPartAdded = true;
+		}
+
+		/// <summary>
+		/// Remove the given questpart from the quest and also unregister the handlers
+		/// </summary>
+		/// <param name="questPart">QuestPart to be removed</param>
+		public static void RemoveQuestPart(BaseQuestPart questPart)
+		{
+			if (questParts == null)
+				return;
+
+			UnRegisterQuestPart(questPart);
+			questParts.Remove(questPart);
+			questPart.QuestPartAdded = false;
+		}
+
+		/// <summary>
+		/// Quest internal Notify method only fires if player already has the quest assigned
+		/// </summary>
+		/// <param name="e"></param>
+		/// <param name="sender"></param>
+		/// <param name="args"></param>
+		public override void Notify(DOLEvent e, object sender, EventArgs args)
+		{
+			if (questParts == null)
+				return;
+
+			foreach (BaseQuestPart questPart in questParts)
+			{
+				questPart.Notify(e, sender, args);
+			}
+		}
+
+		#region Items
 
 		protected static void RemoveItem(GamePlayer player, ItemTemplate itemTemplate)
 		{
@@ -145,14 +267,15 @@ namespace DOL.GS.Quests
 				}
 			}
 		}
+		#endregion
 
 		protected static int MakeSaySequence(RegionTimer callingTimer)
 		{
 			m_sayTimerQueue.Dequeue();
-			GamePlayer player = (GamePlayer) m_sayObjectQueue.Dequeue();
-			String message = (String) m_sayMessageQueue.Dequeue();
-			eChatType chatType = (eChatType) m_sayChatTypeQueue.Dequeue();
-			eChatLoc chatLoc = (eChatLoc) m_sayChatLocQueue.Dequeue();
+			GamePlayer player = (GamePlayer)m_sayObjectQueue.Dequeue();
+			String message = (String)m_sayMessageQueue.Dequeue();
+			eChatType chatType = (eChatType)m_sayChatTypeQueue.Dequeue();
+			eChatLoc chatLoc = (eChatLoc)m_sayChatLocQueue.Dequeue();
 
 			player.Out.SendMessage(message, chatType, chatLoc);
 
@@ -168,11 +291,6 @@ namespace DOL.GS.Quests
 		protected void SendEmoteMessage(String msg)
 		{
 			SendEmoteMessage(m_questPlayer, msg, 0);
-		}
-
-		protected void SendReply(String msg, uint delay)
-		{
-			SendReply(m_questPlayer, msg, delay);
 		}
 
 		protected static void SendSystemMessage(GamePlayer player, String msg)
@@ -200,11 +318,6 @@ namespace DOL.GS.Quests
 			SendMessage(player, msg, 0, eChatType.CT_Say, eChatLoc.CL_PopupWindow);
 		}
 
-		protected static void SendReply(GamePlayer player, String msg, uint delay)
-		{
-			SendMessage(player, msg, delay, eChatType.CT_Say, eChatLoc.CL_PopupWindow);
-		}
-
 		protected static void SendMessage(GamePlayer player, String msg, uint delay, eChatType chatType, eChatLoc chatLoc)
 		{
 			if (delay == 0)
@@ -215,7 +328,7 @@ namespace DOL.GS.Quests
 				m_sayObjectQueue.Enqueue(player);
 				m_sayChatLocQueue.Enqueue(chatLoc);
 				m_sayChatTypeQueue.Enqueue(chatType);
-				m_sayTimerQueue.Enqueue(new RegionTimer(player, new RegionTimerCallback(MakeSaySequence), (int)delay*100));
+				m_sayTimerQueue.Enqueue(new RegionTimer(player, new RegionTimerCallback(MakeSaySequence), (int)delay * 100));
 			}
 		}
 
@@ -229,7 +342,7 @@ namespace DOL.GS.Quests
 			InventoryItem item = new InventoryItem(itemTemplate);
 			if (player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, item))
 			{
-				if(source == null)
+				if (source == null)
 				{
 					player.Out.SendMessage("You receive the " + itemTemplate.Name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
@@ -247,7 +360,7 @@ namespace DOL.GS.Quests
 
 		protected static ItemTemplate CreateTicketTo(String location)
 		{
-			ItemTemplate ticket = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ticket_to_" + GameServer.Database.Escape(location.ToLower()));
+			ItemTemplate ticket = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ticket_to_" + GameServer.Database.Escape(location.ToLower()));
 			if (ticket == null)
 			{
 				if (log.IsWarnEnabled)
@@ -258,7 +371,7 @@ namespace DOL.GS.Quests
 				ticket.Weight = 0;
 				ticket.Model = 498;
 
-				ticket.Object_Type = (int) eObjectType.GenericItem;
+				ticket.Object_Type = (int)eObjectType.GenericItem;
 				ticket.Item_Type = 40;
 
 				ticket.Id_nb = "ticket_to_" + location.ToLower();
@@ -285,7 +398,7 @@ namespace DOL.GS.Quests
 			if (m_animSpellTeleportTimerQueue.Count > 0)
 			{
 				m_animSpellTeleportTimerQueue.Dequeue();
-				GameLiving animObject = (GameLiving) m_animSpellObjectQueue.Dequeue();
+				GameLiving animObject = (GameLiving)m_animSpellObjectQueue.Dequeue();
 				foreach (GamePlayer player in animObject.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 				{
 					player.Out.SendSpellCastAnimation(animObject, 1, 20);
@@ -299,7 +412,7 @@ namespace DOL.GS.Quests
 			if (m_animEmoteTeleportTimerQueue.Count > 0)
 			{
 				m_animEmoteTeleportTimerQueue.Dequeue();
-				GameLiving animObject = (GameLiving) m_animEmoteObjectQueue.Dequeue();
+				GameLiving animObject = (GameLiving)m_animEmoteObjectQueue.Dequeue();
 				foreach (GamePlayer player in animObject.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 				{
 					player.Out.SendEmoteAnimation(animObject, eEmote.Bind);
@@ -349,8 +462,8 @@ namespace DOL.GS.Quests
 			if (m_portTeleportTimerQueue.Count > 0)
 			{
 				m_portTeleportTimerQueue.Dequeue();
-				GameObject gameObject = (GameObject) m_portObjectQueue.Dequeue();
-				GameLocation location = (GameLocation) m_portDestinationQueue.Dequeue();
+				GameObject gameObject = (GameObject)m_portObjectQueue.Dequeue();
+				GameLocation location = (GameLocation)m_portDestinationQueue.Dequeue();
 				gameObject.MoveTo(location.RegionID, location.X, location.Y, location.Z, location.Heading);
 			}
 			return 0;

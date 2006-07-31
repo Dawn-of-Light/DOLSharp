@@ -25,8 +25,8 @@ namespace DOL.GS
 {
 	public interface IKeep
 	{
-		ArrayList KeepComponents{get;}
-		ArrayList Guards	{get;}
+		ArrayList KeepComponents { get;}
+		ArrayList Guards { get;}
 		void Load(DBKeep keep);
 		void LoadFromDatabase(DataObject keep);
 		void SaveIntoDatabase();

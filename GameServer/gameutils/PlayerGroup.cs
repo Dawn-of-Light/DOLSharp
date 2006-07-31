@@ -60,7 +60,7 @@ namespace DOL.GS
 			get { return m_leader; }
 			set { m_leader = value; }
 		}
-		
+
 		/// <summary>
 		/// Adds a player to the group
 		/// </summary>
@@ -92,27 +92,27 @@ namespace DOL.GS
 		/// <returns>True if the function succeeded, otherwise false</returns>
 		public override bool RemovePlayer(GamePlayer player)
 		{
-			if(base.RemovePlayer(player))
-			{				
+			if (base.RemovePlayer(player))
+			{
 				player.PlayerGroup = null;
 				player.PlayerGroupIndex = -1;
 				player.Out.SendGroupWindowUpdate();
 				UpdateGroupWindow();
-				player.Out.SendMessage("You leave your group.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
-				SendMessageToGroupMembers(player.Name+" has left the group.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage("You leave your group.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				SendMessageToGroupMembers(player.Name + " has left the group.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 				// only one player left?
-				if (PlayerCount==1)
+				if (PlayerCount == 1)
 				{
 					RemovePlayer((GamePlayer)m_groupMembers[0]);
 				}
-				else if(Leader == player && PlayerCount > 0)
+				else if (Leader == player && PlayerCount > 0)
 				{
 					Leader = (GamePlayer)m_groupMembers[0];
 					SendMessageToGroupMembers(null, Leader.Name + " is the new group leader.");
 				}
 				UpdatePlayerIndexes();
-				GameEventMgr.Notify(PlayerGroupEvent.PlayerDisbanded, this, new PlayerDisbandedEventArgs(player));				
+				GameEventMgr.Notify(PlayerGroupEvent.PlayerDisbanded, this, new PlayerDisbandedEventArgs(player));
 
 				return true;
 			}
@@ -126,17 +126,17 @@ namespace DOL.GS
 		/// <returns></returns>
 		public bool MakeLeader(GamePlayer player)
 		{
-			if(!m_groupMembers.Contains(player))
+			if (!m_groupMembers.Contains(player))
 				return false;
 
 			int ind;
-			lock(this)
+			lock (this)
 			{
 				ind = player.PlayerGroupIndex;
 				m_groupMembers[ind] = m_groupMembers[0];
 				m_groupMembers[0] = player;
 				Leader = player;
-			}	
+			}
 			((GamePlayer)m_groupMembers[0]).PlayerGroupIndex = 0;
 			((GamePlayer)m_groupMembers[ind]).PlayerGroupIndex = ind;
 			UpdateGroupWindow();
@@ -161,7 +161,7 @@ namespace DOL.GS
 		{
 			lock (this)
 			{
-				for(int i = 0; i < m_groupMembers.Count; ++i)
+				for (int i = 0; i < m_groupMembers.Count; ++i)
 				{
 					((GamePlayer)m_groupMembers[i]).Out.SendGroupWindowUpdate();
 				}
@@ -176,12 +176,12 @@ namespace DOL.GS
 		/// <param name="updateOtherRegions">Should updates be sent to players in other regions</param>
 		public void UpdateMember(GamePlayer player, bool updateIcons, bool updateOtherRegions)
 		{
-			lock(this)
+			lock (this)
 			{
 				if (player.PlayerGroup != this)
 					return;
 
-				for(int i=0; i < m_groupMembers.Count; i++)
+				for (int i = 0; i < m_groupMembers.Count; i++)
 				{
 					GamePlayer member = (GamePlayer)m_groupMembers[i];
 					if (updateOtherRegions || member.CurrentRegion == player.CurrentRegion)
@@ -205,7 +205,7 @@ namespace DOL.GS
 				if (player.PlayerGroup != this)
 					return;
 
-				for(int i=0; i < m_groupMembers.Count; i++)
+				for (int i = 0; i < m_groupMembers.Count; i++)
 				{
 					GamePlayer member = (GamePlayer)m_groupMembers[i];
 					if (updateOtherRegions || member.CurrentRegion == player.CurrentRegion)
@@ -224,10 +224,13 @@ namespace DOL.GS
 		public void SendMessageToGroupMembers(GameLiving from, string msg)
 		{
 			string message = msg;
-			if (from!=null) {
-				message = "[Party] "+from.GetName(0, true)+": \""+message+"\"";
-			} else {
-				message = "[Party] "+message;
+			if (from != null)
+			{
+				message = "[Party] " + from.GetName(0, true) + ": \"" + message + "\"";
+			}
+			else
+			{
+				message = "[Party] " + message;
 			}
 			base.SendMessageToGroupMembers(message, eChatType.CT_Group, eChatLoc.CL_ChatWindow);
 		}
@@ -240,9 +243,9 @@ namespace DOL.GS
 		{
 			lock (this)
 			{
-				foreach(GamePlayer player in m_groupMembers)
+				foreach (GamePlayer player in m_groupMembers)
 				{
-					if(player.InCombat)
+					if (player.InCombat)
 						return true;
 				}
 			}

@@ -28,34 +28,38 @@ namespace DOL.GS.PacketHandler.v168
 		{
 			int housenumber = packet.ReadShort();
 			int menuid = packet.ReadByte();
-			int unkown = packet.ReadByte();
+			int flag = packet.ReadByte();
+//			client.Out.SendDebugMessage("CtoS_0x00 (houseNumber:0x{0:X4} menuid:{1} flag:0x{2:X2})", housenumber, menuid, flag);
 
 			House house = (House)HouseMgr.GetHouse(client.Player.CurrentRegionID,housenumber);
-			if(house==null) { return 1; }
+			if(house == null) { return 1; }
+
+			if (client.Player == null) return 1;
+			if (!house.IsOwner(client.Player)) return 1;
 
 			client.Player.CurrentHouse = house;
 
 			switch(menuid)
 			{
-				case 0:
-					//client.Player.Out.SendMerchantWindow(HouseTemplateMgr.HiberniaOutdoorShopItems,eMerchantWindowType.HousingOutsideShop);
+				case 0: // Exterior decoration (Garden)
+					client.Player.Out.SendMerchantWindow(HouseTemplateMgr.OutdoorShopItems, eMerchantWindowType.HousingOutsideShop);
 					break;
 
-				case 1:
-					//client.Player.Out.SendMerchantWindow(HouseTemplateMgr.HiberniaIndoorMenuItems,eMerchantWindowType.HousingInsideMenu);
+				case 1: // Interior decoration
+					client.Player.Out.SendMerchantWindow(HouseTemplateMgr.IndoorShopItems, eMerchantWindowType.HousingInsideShop);
 					break;
 
-				case 2:
-					client.Player.Out.SendMerchantWindow(HouseTemplateMgr.OutdoorMenuItems,eMerchantWindowType.HousingOutsideMenu);
-					return 1;
+				case 2: // Exterior menu
+					client.Player.Out.SendMerchantWindow(HouseTemplateMgr.OutdoorMenuItems, eMerchantWindowType.HousingOutsideMenu);
+					break;
 
 				case 7:
 					house.SendHouseInfo(client.Player);
-					return 1;
+					break;
 
-				case 8:
-					client.Player.Out.SendMerchantWindow(HouseTemplateMgr.IndoorMenuItems,eMerchantWindowType.HousingInsideShop);
-					return 1;
+				case 8: // Interior menu (flag = 0x00 - roof, 0xFF - floor or wall)
+					client.Player.Out.SendMerchantWindow(HouseTemplateMgr.IndoorMenuItems, eMerchantWindowType.HousingInsideMenu);
+					break;
 
 				default:
 					client.Out.SendMessage("Invalid menu id "+menuid+" (hookpoint?).",eChatType.CT_System,eChatLoc.CL_SystemWindow);
