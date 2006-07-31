@@ -21,6 +21,7 @@ using System.Reflection;
 using DOL.Database;
 using DOL.GS.Scripts;
 using log4net;
+using DOL.GS.Styles;
 using System.Collections;
 
 namespace DOL.GS
@@ -76,11 +77,11 @@ namespace DOL.GS
 			m_spells = new ArrayList();
 			if (spells != null)
 			{
-				foreach (string str in splitedSpells)
+				foreach (string id in splitedSpells)
 				{
 					foreach (Spell spell in spells) 
 					{
-						if (spell.Name == str)
+						if (Convert.ToString(spell.ID) == id)
 						{
 							m_spells.Add(spell);
 							break;
@@ -90,11 +91,24 @@ namespace DOL.GS
 			}
 
 			//TODO : style system for mob
-			m_styles=data.Styles.Split('|');
+			if (data.Styles!=null && data.Styles!="")
+			{
+				string[] splitedStyles=data.Styles.Split('|');
+				m_styles = new ArrayList();
+				Style style=null;
+				foreach(string st in splitedStyles)
+				{
+					style=SkillBase.GetStyleByID(Convert.ToInt32(st),0);
+					if (style!=null)
+					{
+						m_styles.Add(style);
+					}
+				}
+			}
 			
 			if (data.Ghost)
 			{
-				m_flags |= (int)GameNPC.eFlags.GHOST;
+				m_flags |= (int)GameNPC.eFlags.TRANSPARENT;
 			}
 
 			m_meleeDamageType = (eDamageType)data.MeleeDamageType;

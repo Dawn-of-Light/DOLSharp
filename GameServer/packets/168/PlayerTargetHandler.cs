@@ -116,9 +116,12 @@ namespace DOL.GS.PacketHandler.v168
 					GameKeepComponent keepcomponent = myTarget as GameKeepComponent;
 					if (keepcomponent != null)
 						player.Out.SendComponentUpdate(keepcomponent);
-					GameKeepDoor door = myTarget as GameKeepDoor;
-					if (door != null)
-						player.Out.SendKeepDoorUpdate(door);
+					else
+                    {
+						GameKeepDoor door = myTarget as GameKeepDoor;
+						if (door != null)
+							player.Out.SendKeepDoorUpdate(door);							
+                    }
 				}
 
 				if (player.PrayState)

@@ -35,7 +35,7 @@ namespace DOL.GS.PacketHandler.v168
 			{
 				client.Out.SendNPCCreate(npc);
 				if(npc.Inventory != null)
-					client.Out.SendLivingEquipementUpdate(npc);
+					client.Out.SendLivingEquipmentUpdate(npc);
 				
 				//DO NOT SEND A NPC UPDATE, it is done in Create anyway
 				//Sending a Update causes a UDP packet to be sent and

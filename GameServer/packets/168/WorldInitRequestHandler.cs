@@ -1,16 +1,16 @@
 /*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -125,27 +125,17 @@ namespace DOL.GS.PacketHandler.v168
 				// this is bind stuff
 				// make sure that players doesnt start dead when coming in
 				// thats important since if client moves the player it requests player creation
-				if (player.Health <= 0) 
+				if (player.Health <= 0)
 				{
 					player.Health = player.MaxHealth;
 				}
 				player.Out.SendPlayerPositionAndObjectID();
-				//Now find the friends that are online
-				ArrayList friends = player.Friends;			
-				ArrayList onlineFriends = new ArrayList();
-				foreach(string friendName in friends)
-				{
-					GameClient friendClient = WorldMgr.GetClientByPlayerName(friendName, true);
-					if (friendClient == null) continue;
-					if (!friendClient.IsPlaying) continue;
-					if (friendClient.Player != null && friendClient.Player.IsAnonymous) continue;
-					onlineFriends.Add(friendName);
-				}
-				player.Out.SendAddFriends((string[])onlineFriends.ToArray(typeof(string)));
 				player.Out.SendEncumberance(); // Send only max encumberance without used
 				player.Out.SendUpdateMaxSpeed();
-				//TODO 0xDD - Shared Buffs // 0 0 0 0
-				player.Out.SendUpdateMaxSpeed(); // Speed after shared buffs
+				//TODO 0xDD - Conc Buffs // 0 0 0 0
+				//Now find the friends that are online
+				player.Out.SendUpdateMaxSpeed(); // Speed after conc buffs
+				player.Out.SendStatusUpdate();
 				player.Out.SendInventoryItemsUpdate(0x01, player.Inventory.EquippedItems);
 				player.Out.SendInventoryItemsUpdate(0x02, player.Inventory.GetItemRange(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack));
 				player.Out.SendUpdatePlayerSkills();   //TODO Insert 0xBE - 08 Various in SendUpdatePlayerSkills() before send spells
@@ -153,6 +143,16 @@ namespace DOL.GS.PacketHandler.v168
 				player.Out.SendUpdatePlayer();
 				player.Out.SendUpdateMoney();
 				player.Out.SendCharStatsUpdate();
+				ArrayList friends = player.Friends;
+				ArrayList onlineFriends = new ArrayList();
+				foreach(string friendName in friends)
+				{
+					GameClient friendClient = WorldMgr.GetClientByPlayerName(friendName, true, false);
+					if (friendClient == null) continue;
+					if (friendClient.Player != null && friendClient.Player.IsAnonymous) continue;
+					onlineFriends.Add(friendName);
+				}
+				player.Out.SendAddFriends((string[])onlineFriends.ToArray(typeof(string)));
 				player.Out.SendCharResistsUpdate();
 				int effectsCount = 0;
 				player.Out.SendUpdateIcons(null, ref effectsCount);
@@ -161,17 +161,15 @@ namespace DOL.GS.PacketHandler.v168
 				player.Out.SendStatusUpdate();
 				player.Out.SendUpdatePoints();
 				player.Out.SendEncumberance();
-				//TODO 0xBE - 06 Various ? 
-				// 0xE4 - ??  (0 0 5 0 0 0 0 0)
+				// Visual 0x4C - Color Name style (0 0 5 0 0 0 0 0) for RvR or (0 0 5 1 0 0 0 0) for PvP
 				// 0xBE - 0 1 0 0
 				//used only on PvP, sets THIS players ID for nearest friend/enemy buttons and "friendly" name colors
 				if (GameServer.ServerRules.GetColorHandling(player.Client) == 1) // PvP
 					player.Out.SendObjectGuildID(player, player.Guild);
 				player.Out.SendDebugMode(player.TempProperties.getObjectProperty(GamePlayer.DEBUG_MODE_PROPERTY, null) != null);
+				player.Out.SendUpdateMaxSpeed(); // Speed in debug mode ?
 				//WARNING: This would change problems if a scripter changed the values for plvl
 				//GSMessages.SendDebugMode(client,client.Account.PrivLevel>1);
-				//TODO 0x1E - Speed again?
-				//TODO 0x25
 				player.Stealth(false);
 				//check item at world load
 				if (log.IsDebugEnabled)

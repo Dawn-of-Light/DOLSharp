@@ -157,7 +157,7 @@ namespace DOL.GS.Scripts
 							return DisplayError(client, "Account {0} has no free character slots for this realm anymore!", accountname);
 
 						//Check if the player is online
-						GameClient playingclient = WorldMgr.GetClientByPlayerName(cha.Name, true);
+						GameClient playingclient = WorldMgr.GetClientByPlayerName(cha.Name, true, false);
 						if (playingclient != null)
 						{
 							//IF the player is online, kick him out
@@ -214,7 +214,7 @@ namespace DOL.GS.Scripts
 		private Character GetCharacter(string charname)
 		{
 			//Seek players ingame first
-			GameClient client = WorldMgr.GetClientByPlayerName(charname, true);
+			GameClient client = WorldMgr.GetClientByPlayerName(charname, true, false);
 			if (client != null)
 				return client.Player.PlayerCharacter;
 
@@ -245,7 +245,7 @@ namespace DOL.GS.Scripts
 		private void KickCharacter(Character cha)
 		{
 			//Check if the player is online
-			GameClient playingclient = WorldMgr.GetClientByPlayerName(cha.Name, true);
+			GameClient playingclient = WorldMgr.GetClientByPlayerName(cha.Name, true, false);
 			if (playingclient != null)
 			{
 				//IF the player is online, kick him out
@@ -262,7 +262,7 @@ namespace DOL.GS.Scripts
 		private string GetAccountName(string charname)
 		{
 			//Seek players ingame first
-			GameClient client = WorldMgr.GetClientByPlayerName(charname, true);
+			GameClient client = WorldMgr.GetClientByPlayerName(charname, true, false);
 			if (client != null)
 				return client.Account.Name;
 

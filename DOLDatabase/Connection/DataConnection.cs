@@ -103,7 +103,7 @@ namespace DOL.Database.Connection
 		{
 			if (!IsSQLConnection)
 			{
-				s = s.Replace("'","''");
+				s = s.Replace("'", "''");
 			}
 			else
 			{
@@ -111,6 +111,71 @@ namespace DOL.Database.Connection
 				//s = s.Replace("’", "\\’");//have it now in the mysqlstring object
 			}
 			return s;
+		}
+
+		private ArrayList m_connectionPool = new ArrayList();
+		private IList m_dataReaderConnections = new ArrayList();
+
+		private MySqlConnection GetMySqlConnection()
+		{
+			MySqlConnection conn = null;
+			lock (m_connectionPool)
+			{
+				if (m_connectionPool.Count > 0)
+				{
+					conn = (MySqlConnection)m_connectionPool[m_connectionPool.Count - 1];
+					m_connectionPool.RemoveAt(m_connectionPool.Count - 1);
+				}
+			}
+
+			if (conn == null)
+			{ // try to find one in data reader connection list
+				lock (m_dataReaderConnections)
+				{
+					if (m_dataReaderConnections.Count > 0)
+					{
+						for (int i = 0; i < m_dataReaderConnections.Count; i++)
+						{
+							DataReaderConnection readercon = (DataReaderConnection)m_dataReaderConnections[i];
+							if (readercon.Reader.IsClosed)
+							{
+								m_dataReaderConnections.RemoveAt(i);
+								conn = readercon.Connection;
+								break;
+							}
+						}
+					}
+				}
+			}
+
+			if (conn == null)
+			{
+				conn = new MySqlConnection(connString);
+				long start1 = Environment.TickCount;
+				conn.Open();
+				if (Environment.TickCount - start1 > 1000)
+				{
+					if (log.IsWarnEnabled)
+						log.Warn("Gaining SQL connection took " + (Environment.TickCount - start1) + "ms");
+				}
+				log.Info("New DB connection created, pooled connections: " + m_connectionPool.Count + "  pooled datareaders: " + m_dataReaderConnections.Count);
+			}
+			return conn;
+		}
+
+		protected struct DataReaderConnection
+		{
+			MySqlConnection m_connection;
+			MySqlDataReader m_reader;
+
+			public DataReaderConnection(MySqlDataReader reader, MySqlConnection conn)
+			{
+				m_reader = reader;
+				m_connection = conn;
+			}
+
+			public MySqlConnection Connection { get { return m_connection; } }
+			public MySqlDataReader Reader { get { return m_reader; } }
 		}
 
 		/// <summary>
@@ -122,31 +187,29 @@ namespace DOL.Database.Connection
 		{
 			if (connType == ConnectionType.DATABASE_MYSQL)
 			{
-				if (log.IsDebugEnabled) {
-					log.Debug("SQL: "+sqlcommand);
-				}
-				MySqlConnection conn = new MySqlConnection(connString);
-				MySqlCommand cmd = new MySqlCommand(sqlcommand, conn);
-				long start1 = Environment.TickCount;
-				conn.Open();
-				if (Environment.TickCount - start1 > 1000)
+				if (log.IsDebugEnabled)
 				{
-					if(log.IsWarnEnabled)
-						log.Warn("Gaining SQL connection took " + (Environment.TickCount - start1) + "ms");
+					log.Debug("SQL: " + sqlcommand);
 				}
+
+				MySqlConnection conn = GetMySqlConnection();
+				MySqlCommand cmd = new MySqlCommand(sqlcommand, conn);
 
 				int affected = 0;
 				try
 				{
 					long start = Environment.TickCount;
 					affected = cmd.ExecuteNonQuery();
-					
-					if(log.IsDebugEnabled)
+
+					if (log.IsDebugEnabled)
 						log.Debug("SQL NonQuery exec time " + (Environment.TickCount - start) + "ms");
 					else if (Environment.TickCount - start > 500 && log.IsWarnEnabled)
-						log.Warn("SQL NonQuery took " + (Environment.TickCount - start1) + "ms!\n"+sqlcommand);
+						log.Warn("SQL NonQuery took " + (Environment.TickCount - start) + "ms!\n" + sqlcommand);
 
-					conn.Close();
+					lock (m_connectionPool)
+					{
+						m_connectionPool.Add(conn);
+					}
 				}
 				catch (Exception e)
 				{
@@ -155,7 +218,7 @@ namespace DOL.Database.Connection
 				}
 				return affected;
 			}
-			if(log.IsWarnEnabled)
+			if (log.IsWarnEnabled)
 				log.Warn("SQL NonQuery's not supported for this connection type");
 			return 0;
 		}
@@ -170,37 +233,38 @@ namespace DOL.Database.Connection
 		{
 			if (connType == ConnectionType.DATABASE_MYSQL)
 			{
-				if (log.IsDebugEnabled) {
-					log.Debug("SQL: "+sqlcommand);
-				}
-				MySqlConnection conn = new MySqlConnection(connString);
-				MySqlCommand cmd = new MySqlCommand(sqlcommand, conn);
-				long start1 = Environment.TickCount;
-				conn.Open();
-				if (Environment.TickCount - start1 > 1000)
+				if (log.IsDebugEnabled)
 				{
-					if(log.IsWarnEnabled)
-						log.Warn("Gaining SQL connection took " + (Environment.TickCount - start1) + "ms");
+					log.Debug("SQL: " + sqlcommand);
 				}
+				MySqlConnection conn = GetMySqlConnection();
+				MySqlCommand cmd = new MySqlCommand(sqlcommand, conn);
+
 				try
 				{
 					long start = Environment.TickCount;
-					MySqlDataReader reader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
-					if(log.IsDebugEnabled)
+					MySqlDataReader reader = cmd.ExecuteReader(/*CommandBehavior.CloseConnection*/);
+
+					if (log.IsDebugEnabled)
 						log.Debug("SQL Select exec time " + (Environment.TickCount - start) + "ms");
 					else if (Environment.TickCount - start > 500 && log.IsWarnEnabled)
-						log.Warn("SQL Select took " + (Environment.TickCount - start1) + "ms!\n"+sqlcommand);
+						log.Warn("SQL Select took " + (Environment.TickCount - start) + "ms!\n" + sqlcommand);
+
+					lock (m_dataReaderConnections)
+					{
+						m_dataReaderConnections.Add(new DataReaderConnection(reader, conn));
+					}
 					return reader;
 				}
 				catch (Exception e)
 				{
 					if (log.IsErrorEnabled)
-						log.Error("ExecuteSelect: \""+sqlcommand+"\"\n", e);
+						log.Error("ExecuteSelect: \"" + sqlcommand + "\"\n", e);
 					conn.Close();
 					throw e;
 				}
 			}
-			if(log.IsWarnEnabled)
+			if (log.IsWarnEnabled)
 				log.Warn("SQL Selects not supported for this connection type");
 			return null;
 		}
@@ -213,109 +277,131 @@ namespace DOL.Database.Connection
 		{
 			if (connType == ConnectionType.DATABASE_MYSQL)
 			{
+				ArrayList currentTableColumns = new ArrayList();
+				try
+				{
+					using (IDataReader reader = ExecuteSelect("DESCRIBE " + table.TableName))
+					{
+						while (reader.Read())
+						{
+							currentTableColumns.Add(reader.GetString(0).ToLower());
+							log.Debug(reader.GetString(0).ToLower());
+						}
+						log.Debug(currentTableColumns.Count + " in table");
+					}
+				}
+				catch (Exception e)
+				{
+					log.Warn(e.ToString());
+				}
+
 				StringBuilder sb = new StringBuilder();
 				Hashtable primaryKeys = new Hashtable();
 				for (int i = 0; i < table.PrimaryKey.Length; i++)
 				{
 					primaryKeys[table.PrimaryKey[i].ColumnName] = table.PrimaryKey[i];
 				}
-				bool first = true;
-				string columndef = "";
+
+				ArrayList columnDefs = new ArrayList();
+				ArrayList alterAddColumnDefs = new ArrayList();
 				for (int i = 0; i < table.Columns.Count; i++)
 				{
 					Type systype = table.Columns[i].DataType;
 
-					if (!first)
-					{
-						columndef += ", ";
-					}
-					else
-					{
-						first = false;
-					}
+					string column = "";
 
-					columndef += "`" + table.Columns[i].ColumnName + "` ";
-					if (systype == typeof (System.Char))
+					column += table.Columns[i].ColumnName + " ";
+					if (systype == typeof(System.Char))
 					{
-						columndef += "SMALLINT UNSIGNED";
+						column += "SMALLINT UNSIGNED";
 					}
-					else if (systype == typeof (DateTime))
+					else if (systype == typeof(DateTime))
 					{
-						columndef += "DATETIME";
+						column += "DATETIME";
 					}
-					else if (systype == typeof (System.SByte))
+					else if (systype == typeof(System.SByte))
 					{
-						columndef += "TINYINT";
+						column += "TINYINT";
 					}
-					else if (systype == typeof (System.Int16))
+					else if (systype == typeof(System.Int16))
 					{
-						columndef += "SMALLINT";
+						column += "SMALLINT";
 					}
-					else if (systype == typeof (System.Int32))
+					else if (systype == typeof(System.Int32))
 					{
-						columndef += "INT";
+						column += "INT";
 					}
-					else if (systype == typeof (System.Int64))
+					else if (systype == typeof(System.Int64))
 					{
-						columndef += "BIGINT";
+						column += "BIGINT";
 					}
-					else if (systype == typeof (System.Byte))
+					else if (systype == typeof(System.Byte))
 					{
-						columndef += "TINYINT UNSIGNED";
+						column += "TINYINT UNSIGNED";
 					}
-					else if (systype == typeof (System.UInt16))
+					else if (systype == typeof(System.UInt16))
 					{
-						columndef += "SMALLINT UNSIGNED";
+						column += "SMALLINT UNSIGNED";
 					}
-					else if (systype == typeof (System.UInt32))
+					else if (systype == typeof(System.UInt32))
 					{
-						columndef += "INT UNSIGNED";
+						column += "INT UNSIGNED";
 					}
-					else if (systype == typeof (System.UInt64))
+					else if (systype == typeof(System.UInt64))
 					{
-						columndef += "BIGINT UNSIGNED";
+						column += "BIGINT UNSIGNED";
 					}
-					else if (systype == typeof (System.Single))
+					else if (systype == typeof(System.Single))
 					{
-						columndef += "FLOAT";
+						column += "FLOAT";
 					}
-					else if (systype == typeof (System.Double))
+					else if (systype == typeof(System.Double))
 					{
-						columndef += "DOUBLE";
+						column += "DOUBLE";
 					}
-					else if (systype == typeof (System.Boolean))
+					else if (systype == typeof(System.Boolean))
 					{
-						columndef += "TINYINT(1)";
+						column += "TINYINT(1)";
 					}
-					else if (systype == typeof (System.String))
+					else if (systype == typeof(System.String))
 					{
 						if (primaryKeys[table.Columns[i].ColumnName] != null ||
 							table.Columns[i].ExtendedProperties.ContainsKey("INDEX") ||
 							table.Columns[i].Unique)
 						{
-							columndef += "VARCHAR(255)";
+							column += "VARCHAR(255)";
 						}
 						else
 						{
-							columndef += "TEXT";
+							column += "TEXT";
 						}
 					}
 					else
 					{
-						columndef += "BLOB";
+						column += "BLOB";
 					}
 					if (!table.Columns[i].AllowDBNull)
 					{
-						columndef += " NOT NULL";
+						column += " NOT NULL";
+					}
+
+					columnDefs.Add(column);
+
+					// if the column doesnt exist but the table, then alter table
+					if (currentTableColumns.Count > 0 && !currentTableColumns.Contains(table.Columns[i].ColumnName.ToLower()))
+					{
+						log.Debug("added for alteration " + table.Columns[i].ColumnName.ToLower());
+						alterAddColumnDefs.Add(column);
 					}
 				}
 
+				string columndef = string.Join(", ", (string[])columnDefs.ToArray(typeof(string)));
 
 				// create primary keys
 				if (table.PrimaryKey.Length > 0)
 				{
 					columndef += ", PRIMARY KEY (";
-					first = true;
+					bool first = true;
 					for (int i = 0; i < table.PrimaryKey.Length; i++)
 					{
 						if (!first)
@@ -354,14 +440,33 @@ namespace DOL.Database.Connection
 
 				try
 				{
-					if(log.IsDebugEnabled)
+					if (log.IsDebugEnabled)
 						log.Debug(sb.ToString());
 					ExecuteNonQuery(sb.ToString());
 				}
 				catch (Exception e)
 				{
-					if(log.IsErrorEnabled)
-						log.Error("Error while creating table " + table.TableName,e);
+					if (log.IsErrorEnabled)
+						log.Error("Error while creating table " + table.TableName, e);
+				}
+
+
+				// alter table if needed
+				if (alterAddColumnDefs.Count > 0)
+				{
+					columndef = string.Join(", ", (string[])alterAddColumnDefs.ToArray(typeof(string)));
+					string alterTable = "ALTER TABLE " + table.TableName + " ADD (" + columndef + ")";
+					try
+					{
+						if (log.IsDebugEnabled)
+							log.Debug(alterTable);
+						ExecuteNonQuery(alterTable);
+					}
+					catch (Exception e)
+					{
+						if (log.IsErrorEnabled)
+							log.Error("Error while altering table table " + table.TableName, e);
+					}
 				}
 			}
 		}
@@ -414,8 +519,8 @@ namespace DOL.Database.Connection
 						}
 						catch (System.Data.ConstraintException e)
 						{
-							if(log.IsErrorEnabled)
-								log.Error("At least one item in the table \"" + tableName + "\" violated a constraint (non-null, unique or foreign-key)!",e);
+							if (log.IsErrorEnabled)
+								log.Error("At least one item in the table \"" + tableName + "\" violated a constraint (non-null, unique or foreign-key)!", e);
 							throw e;
 						}
 						break;
@@ -577,59 +682,59 @@ namespace DOL.Database.Connection
 				case ConnectionType.DATABASE_MYSQL:
 					{
 						return; // not needed anymore
-/*
-					MySqlConnection conn = null;
-					try
-					{
-						DOLConsole.LogLine("write "+tableName);
-						conn = new MySqlConnection(connString);
+						/*
+											MySqlConnection conn = null;
+											try
+											{
+												DOLConsole.LogLine("write "+tableName);
+												conn = new MySqlConnection(connString);
 
-						DOLConsole.LogLine("open connection "+tableName);
-						conn.Open();
-						MySqlDataAdapter adapter = m_mysqladapter[tableName] as MySqlDataAdapter;
-						if (adapter == null) 	// only create if previous not exist, saves time
-						{
-							DOLConsole.LogLine("build adapter "+tableName);
-							adapter = new MySqlDataAdapter("SELECT * from `" + tableName + "`", conn);
-							DOLConsole.LogLine("build commandbuilder "+tableName);
-							MySqlCommandBuilder builder = new MySqlCommandBuilder(adapter, true);	// last one wins
-							DOLConsole.LogLine("create delete command "+tableName);
-							adapter.DeleteCommand = builder.GetDeleteCommand();
-							DOLConsole.LogLine("create update command "+tableName);
-							adapter.UpdateCommand = builder.GetUpdateCommand();
-							DOLConsole.LogLine("create insert command "+tableName);
-							adapter.InsertCommand = builder.GetInsertCommand();
-							m_mysqladapter[tableName] = adapter;
-						}
+												DOLConsole.LogLine("open connection "+tableName);
+												conn.Open();
+												MySqlDataAdapter adapter = m_mysqladapter[tableName] as MySqlDataAdapter;
+												if (adapter == null) 	// only create if previous not exist, saves time
+												{
+													DOLConsole.LogLine("build adapter "+tableName);
+													adapter = new MySqlDataAdapter("SELECT * from `" + tableName + "`", conn);
+													DOLConsole.LogLine("build commandbuilder "+tableName);
+													MySqlCommandBuilder builder = new MySqlCommandBuilder(adapter, true);	// last one wins
+													DOLConsole.LogLine("create delete command "+tableName);
+													adapter.DeleteCommand = builder.GetDeleteCommand();
+													DOLConsole.LogLine("create update command "+tableName);
+													adapter.UpdateCommand = builder.GetUpdateCommand();
+													DOLConsole.LogLine("create insert command "+tableName);
+													adapter.InsertCommand = builder.GetInsertCommand();
+													m_mysqladapter[tableName] = adapter;
+												}
 
-						DOLConsole.LogLine("commit changes "+tableName);
-						DataSet changes;
-						// last one wins means we dont have to bother with concurrency modification
-						//lock (dataSet)  // lock dataset to prevent changes to it
-						//{ 
-							adapter.ContinueUpdateOnError = true;
-							DOLConsole.LogLine("get changes "+tableName);
-							changes = dataSet.GetChanges();
-							DOLConsole.LogLine(changes.Tables[tableName].Rows.Count+" "+tableName+" to commit");
-							DOLConsole.LogLine("commit changes"+tableName);
-							int count = adapter.Update(changes, tableName);
-							DOLConsole.LogLine(count+" changes committed "+tableName);
-							DOLConsole.LogLine("accept changes "+tableName);
-							dataSet.AcceptChanges(); 
-							DOLConsole.LogLine("changes accepted "+tableName);
-						//}
-						DOLConsole.LogLine("changes complete "+tableName);
-						PrintDatasetErrors(changes);
-						conn.Close();
-					}
-					catch (Exception ex)
-					{
-						try { if (conn!=null) conn.Close(); } catch {}
-						throw new DatabaseException("Could not save the Database-Table", ex);
-					}
+												DOLConsole.LogLine("commit changes "+tableName);
+												DataSet changes;
+												// last one wins means we dont have to bother with concurrency modification
+												//lock (dataSet)  // lock dataset to prevent changes to it
+												//{ 
+													adapter.ContinueUpdateOnError = true;
+													DOLConsole.LogLine("get changes "+tableName);
+													changes = dataSet.GetChanges();
+													DOLConsole.LogLine(changes.Tables[tableName].Rows.Count+" "+tableName+" to commit");
+													DOLConsole.LogLine("commit changes"+tableName);
+													int count = adapter.Update(changes, tableName);
+													DOLConsole.LogLine(count+" changes committed "+tableName);
+													DOLConsole.LogLine("accept changes "+tableName);
+													dataSet.AcceptChanges(); 
+													DOLConsole.LogLine("changes accepted "+tableName);
+												//}
+												DOLConsole.LogLine("changes complete "+tableName);
+												PrintDatasetErrors(changes);
+												conn.Close();
+											}
+											catch (Exception ex)
+											{
+												try { if (conn!=null) conn.Close(); } catch {}
+												throw new DatabaseException("Could not save the Database-Table", ex);
+											}
 					
 
-					break;*/
+											break;*/
 					}
 				case ConnectionType.DATABASE_OLEDB:
 					{
@@ -679,7 +784,7 @@ namespace DOL.Database.Connection
 						{
 							if (row.HasErrors && row.RowState == DataRowState.Deleted)
 							{
-								if(log.IsErrorEnabled)
+								if (log.IsErrorEnabled)
 								{
 									log.Error("Error deleting row in table " + table.TableName + ": " + row.RowError);
 									StringBuilder sb = new StringBuilder();
@@ -692,7 +797,7 @@ namespace DOL.Database.Connection
 							}
 							else if (row.HasErrors)
 							{
-								if(log.IsErrorEnabled)
+								if (log.IsErrorEnabled)
 								{
 									log.Error("Error updating table " + table.TableName + ": " + row.RowError + row.GetColumnsInError());
 									StringBuilder sb = new StringBuilder();

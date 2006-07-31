@@ -50,8 +50,8 @@ namespace DOL.GS.Spells
 
 			// calc damage
 			AttackData ad = CalculateDamageToTarget(target, effectiveness);
-			SendDamageMessages(ad);
 			DamageTarget(ad, true);
+			SendDamageMessages(ad);			
 			target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, ad.AttackType, Caster);
 		}
 

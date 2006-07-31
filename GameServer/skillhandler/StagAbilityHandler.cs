@@ -11,9 +11,9 @@ namespace DOL.GS.SkillHandler
 	/// <summary>
 	/// Handler for Stag Ability clicks
 	/// </summary>
-    [SkillHandler(Abilities.Stag)]
-    public class StagAbilityHandler : IAbilityActionHandler
-    {
+	[SkillHandler(Abilities.Stag)]
+	public class StagAbilityHandler : IAbilityActionHandler
+	{
 		/// <summary>
 		/// Defines a logger for this class.
 		/// </summary>
@@ -38,9 +38,29 @@ namespace DOL.GS.SkillHandler
 				return;
 			}
 
+			if (!player.Alive)
+			{
+				player.Out.SendMessage("You cannot use this while Dead!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return;
+			}
+			if (player.Mez)
+			{
+				player.Out.SendMessage("You cannot use this while Mezzed!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return;
+			}
+			if (player.Stun)
+			{
+				player.Out.SendMessage("You cannot use this while Stunned!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return;
+			}
+			if (player.Sitting)
+			{
+				player.Out.SendMessage("You must be standing to use this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return;
+			}
 			//Cancel old stag effects on player
-			StagEffect stag = (StagEffect) player.EffectList.GetOfType(typeof(StagEffect));
-			if (stag!=null)
+			StagEffect stag = (StagEffect)player.EffectList.GetOfType(typeof(StagEffect));
+			if (stag != null)
 			{
 				player.Out.SendMessage("That ability is already active, wait until it expires.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
@@ -48,6 +68,6 @@ namespace DOL.GS.SkillHandler
 			player.DisableSkill(ab, REUSE_TIMER);
 
 			new StagEffect().Start(player, ab);
-		}                       
-    }
+		}
+	}
 }

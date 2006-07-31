@@ -69,18 +69,28 @@ namespace DOL.GS.PacketHandler.v168
 
 				if (mydoor != null)
 				{
-					if (!WorldMgr.CheckDistance(player, mydoor, WorldMgr.PICKUP_DISTANCE))
+					if (mydoor is GameKeepDoor)
 					{
-						player.Out.SendMessage("You are too far away to open this door!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-						return;
-					}
-					if (m_doorState == 0x01)
-					{
-						mydoor.Open();
+						GameKeepDoor door = mydoor as GameKeepDoor;
+						//portal keeps left click = right click
+						if (door.Keep is GameKeepTower && door.Keep.KeepComponents.Count > 1)
+							door.Interact(player);
 					}
 					else
 					{
-						mydoor.Close();
+						if (!WorldMgr.CheckDistance(player, mydoor, WorldMgr.PICKUP_DISTANCE))
+						{
+							player.Out.SendMessage("You are too far away to open this door!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+							return;
+						}
+						if (m_doorState == 0x01)
+						{
+							mydoor.Open();
+						}
+						else
+						{
+							mydoor.Close();
+						}
 					}
 				}
 				else

@@ -399,5 +399,18 @@ namespace DOL.GS
 				}
 			}
 		}
+
+		public static ArrayList GetAllGuilds()
+		{
+			ArrayList guilds = new ArrayList();
+			lock (m_guilds.SyncRoot)
+			{
+				foreach (Guild guild in m_guilds.Values)
+				{					
+					guilds.Add(guild);
+				}
+			}
+			return guilds;
+		}
 	}
 }

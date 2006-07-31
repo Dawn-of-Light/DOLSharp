@@ -1,16 +1,16 @@
 /*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -223,9 +223,9 @@ namespace DOL.GS
 		/// Initializes the most important things that is needed for some code
 		/// </summary>
 		/// <param name="regionsData">The loaded regions data</param>
-		public static bool EarlyInit(out RegionData[] regionsData) 
+		public static bool EarlyInit(out RegionData[] regionsData)
 		{
-			log.Debug(GC.GetTotalMemory(true)/1000+"kb - w1");
+			log.Debug(GC.GetTotalMemory(true) / 1000 + "kb - w1");
 
 			lock (m_regions.SyncRoot)
 				m_regions.Clear();
@@ -239,7 +239,7 @@ namespace DOL.GS
 			XMLConfigFile zoneCfg = XMLConfigFile.ParseXMLFile(new FileInfo(GameServer.Instance.Configuration.ZoneConfigFile));
 			XMLConfigFile regionCfg = XMLConfigFile.ParseXMLFile(new FileInfo(GameServer.Instance.Configuration.RegionConfigFile));
 
-			if(log.IsDebugEnabled)
+			if (log.IsDebugEnabled)
 			{
 				log.Debug(string.Format("{0} blocks read from {1}", regionCfg.Children.Count, GameServer.Instance.Configuration.RegionConfigFile));
 				log.Debug(string.Format("{0} blocks read from {1}", zoneCfg.Children.Count, GameServer.Instance.Configuration.ZoneConfigFile));
@@ -264,10 +264,10 @@ namespace DOL.GS
 			objs = null;
 
 			ArrayList regions = new ArrayList(512);
-			foreach(DictionaryEntry entry in regionCfg.Children)
+			foreach (DictionaryEntry entry in regionCfg.Children)
 			{
-				string name = (string) entry.Key;
-				ConfigElement config = (ConfigElement) entry.Value;
+				string name = (string)entry.Key;
+				ConfigElement config = (ConfigElement)entry.Value;
 
 				RegionData data = new RegionData();
 				data.Id = (ushort)config[ENTRY_REG_ID].GetInt();
@@ -279,7 +279,7 @@ namespace DOL.GS
 				data.DivingEnabled = config[ENTRY_REG_DIVING_ENABLE].GetBoolean(false);
 				data.HousingEnabled = config[ENTRY_REG_HOUSING_ENABLE].GetBoolean(false);
 				data.Expansion = config[ENTRY_REG_EXPANSION].GetInt();
-//				data.Mobs = (Mob[])GameServer.Database.SelectObjects(typeof(Mob), "Region = '" + data.Id + "'");
+				//				data.Mobs = (Mob[])GameServer.Database.SelectObjects(typeof(Mob), "Region = '" + data.Id + "'");
 				ArrayList mobs = (ArrayList)mobsByRegionId[data.Id];
 				if (mobs == null)
 					data.Mobs = new Mob[0];
@@ -293,7 +293,7 @@ namespace DOL.GS
 
 			/////
 
-			log.Debug(GC.GetTotalMemory(true)/1000+"kb - w2");
+			log.Debug(GC.GetTotalMemory(true) / 1000 + "kb - w2");
 
 			int cpuCount = GameServer.Instance.Configuration.CpuCount;
 			if (cpuCount < 1)
@@ -302,23 +302,23 @@ namespace DOL.GS
 			GameTimer.TimeManager[] timers = new GameTimer.TimeManager[cpuCount];
 			for (int i = 0; i < cpuCount; i++)
 			{
-				timers[i] = new GameTimer.TimeManager("RegionTime" + (i+1).ToString());
+				timers[i] = new GameTimer.TimeManager("RegionTime" + (i + 1).ToString());
 			}
-			
+
 			m_regionTimeManagers = timers;
 
 			for (int i = 0; i < regions.Count; i++)
 			{
 				RegionData region = (RegionData)regions[i];
-				RegisterRegion(timers[FastMath.Abs(i%(cpuCount*2)-cpuCount)%cpuCount], region);
+				RegisterRegion(timers[FastMath.Abs(i % (cpuCount * 2) - cpuCount) % cpuCount], region);
 			}
 
-			log.Debug(GC.GetTotalMemory(true)/1000+"kb - w3");
+			log.Debug(GC.GetTotalMemory(true) / 1000 + "kb - w3");
 
-			foreach(DictionaryEntry entry in zoneCfg.Children)
+			foreach (DictionaryEntry entry in zoneCfg.Children)
 			{
 				//string name = (string) entry.Key;
-				ConfigElement config = (ConfigElement) entry.Value;
+				ConfigElement config = (ConfigElement)entry.Value;
 
 				RegisterZone(
 					(ushort)config[ENTRY_ZONE_ZONEID].GetInt(),
@@ -330,7 +330,7 @@ namespace DOL.GS
 					(byte)config[ENTRY_ZONE_HEIGHT].GetInt());
 			}
 
-			log.Debug(GC.GetTotalMemory(true)/1000+"kb - w4");
+			log.Debug(GC.GetTotalMemory(true) / 1000 + "kb - w4");
 
 			regionsData = (RegionData[])regions.ToArray(typeof(RegionData));
 
@@ -346,13 +346,13 @@ namespace DOL.GS
 			try
 			{
 				m_clients = new GameClient[GameServer.Instance.Configuration.MaxClientCount];
-				
+
 				LootMgr.Init();
 
 				long mobs = 0;
 				long merchants = 0;
 				long items = 0;
-				foreach(RegionData data in regionsData)
+				foreach (RegionData data in regionsData)
 				{
 					Region reg = (Region)m_regions[data.Id];
 					reg.LoadFromDatabase(data.Mobs, ref mobs, ref merchants, ref items);
@@ -371,10 +371,10 @@ namespace DOL.GS
 				m_NPCUpdateThread.Start();
 
 				m_dayIncrement = 24;
-				m_dayStartTick = Environment.TickCount - (int) (DAY/m_dayIncrement/2); // set start time to 12am
-				m_dayResetTimer = new Timer(new TimerCallback(DayReset), null, DAY/m_dayIncrement/2, DAY/m_dayIncrement);
+				m_dayStartTick = Environment.TickCount - (int)(DAY / m_dayIncrement / 2); // set start time to 12am
+				m_dayResetTimer = new Timer(new TimerCallback(DayReset), null, DAY / m_dayIncrement / 2, DAY / m_dayIncrement);
 
-				m_pingCheckTimer = new Timer(new TimerCallback(PingCheck), null, 10*1000, 0); // every 10s a check
+				m_pingCheckTimer = new Timer(new TimerCallback(PingCheck), null, 10 * 1000, 0); // every 10s a check
 
 				m_relocationThread = new Thread(new ThreadStart(RelocateRegions));
 				m_relocationThread.Name = "RelocateReg";
@@ -400,7 +400,7 @@ namespace DOL.GS
 			if (timers == null) return new GameTimer.TimeManager[0];
 			return (GameTimer.TimeManager[])timers.Clone();
 		}
-		
+
 		/// <summary>
 		/// perform the ping timeout check and disconnect clients that timed out
 		/// </summary>
@@ -415,9 +415,9 @@ namespace DOL.GS
 					{
 						// check ping timeout if we are in charscreen or in playing state
 						if (client.ClientState == GameClient.eClientState.CharScreen ||
-						    client.ClientState == GameClient.eClientState.Playing)
+							client.ClientState == GameClient.eClientState.Playing)
 						{
-							if (client.PingTime + PING_TIMEOUT*1000*1000*10 < DateTime.Now.Ticks)
+							if (client.PingTime + PING_TIMEOUT * 1000 * 1000 * 10 < DateTime.Now.Ticks)
 							{
 								if (log.IsWarnEnabled)
 									log.Warn("Ping timeout for client " + client.Account.Name);
@@ -426,8 +426,8 @@ namespace DOL.GS
 						}
 						else
 						{
-							// in all other cases client gets 10min to get wether in charscreen or playing state					
-							if (client.PingTime + 10*60*10000000L < DateTime.Now.Ticks)
+							// in all other cases client gets 10min to get wether in charscreen or playing state
+							if (client.PingTime + 10 * 60 * 10000000L < DateTime.Now.Ticks)
 							{
 								if (log.IsWarnEnabled)
 									log.Warn("Hard timeout for client " + client.Account.Name + " (" + client.ClientState + ")");
@@ -449,7 +449,7 @@ namespace DOL.GS
 			}
 			finally
 			{
-				m_pingCheckTimer.Change(10*1000, Timeout.Infinite);
+				m_pingCheckTimer.Change(10 * 1000, Timeout.Infinite);
 			}
 		}
 
@@ -462,16 +462,18 @@ namespace DOL.GS
 			return Util.GetThreadStack(m_relocationThread);
 		}
 
-		private static void RelocateRegions() {
+		private static void RelocateRegions()
+		{
 			log.InfoFormat("started RelocateRegions() thread ID:{0}", AppDomain.GetCurrentThreadId());
-			while (m_relocationThread != null && m_relocationThread.IsAlive) {
-				try 
+			while (m_relocationThread != null && m_relocationThread.IsAlive)
+			{
+				try
 				{
 					Thread.Sleep(200); // check every 200ms for needed relocs
 					int start = Environment.TickCount;
-					foreach (Region region in m_regions.Values) 
+					foreach (Region region in m_regions.Values)
 					{
-						if (region.NumPlayers > 0 && (region.LastRelocation+Zone.MAX_REFRESH_INTERVAL)*10*1000 < DateTime.Now.Ticks) 
+						if (region.NumPlayers > 0 && (region.LastRelocation + Zone.MAX_REFRESH_INTERVAL) * 10 * 1000 < DateTime.Now.Ticks)
 						{
 							region.Relocate();
 						}
@@ -483,16 +485,16 @@ namespace DOL.GS
 							log.WarnFormat("RelocateRegions() took {0}ms", took);
 					}
 				}
-				catch(ThreadAbortException)
+				catch (ThreadAbortException)
 				{
 					//On Threadabort exit!
 					return;
 				}
-				catch(ThreadInterruptedException)
+				catch (ThreadInterruptedException)
 				{
 					//On sleep interrupt do nothing
 				}
-				catch (Exception e) 
+				catch (Exception e)
 				{
 					log.Error(e.ToString());
 				}
@@ -518,8 +520,8 @@ namespace DOL.GS
 		public static void StartDay(uint dayInc, uint dayStart)
 		{
 			m_dayIncrement = dayInc;
-			m_dayStartTick = Environment.TickCount - (int) (dayStart/m_dayIncrement); // set start time to ...
-			m_dayResetTimer.Change((DAY - dayStart)/m_dayIncrement, Timeout.Infinite);
+			m_dayStartTick = Environment.TickCount - (int)(dayStart / m_dayIncrement); // set start time to ...
+			m_dayResetTimer.Change((DAY - dayStart) / m_dayIncrement, Timeout.Infinite);
 			foreach (GameClient client in GetAllPlayingClients())
 				client.Out.SendTime();
 		}
@@ -531,8 +533,8 @@ namespace DOL.GS
 		public static uint GetCurrentDayTime()
 		{
 			long diff = Environment.TickCount - m_dayStartTick;
-			long curTime = diff*m_dayIncrement;
-			return (uint) (curTime%DAY);
+			long curTime = diff * m_dayIncrement;
+			return (uint)(curTime % DAY);
 		}
 
 		/// <summary>
@@ -598,21 +600,22 @@ namespace DOL.GS
 								{
 									try
 									{
-										narray[npc.ObjectID-1] = true;
+										if (npc == null) continue;
+										narray[npc.ObjectID - 1] = true;
 										/*
-										if(npc.IsMoving 
+										if(npc.IsMoving
 											&& npc.IsOnTarget()
 											&& !npc.HasArriveOnTargetHandlers()
 											&& !npc.HasCloseToTargetHandlers())
 										{
 											npc.StopMoving();
-										} 
+										}
 										else*/
 										if ((uint)Environment.TickCount - npc.LastUpdateTickCount > 30000)
 										{
 											npc.BroadcastUpdate();
 										}
-										else if (carray[npc.ObjectID-1] == false)
+										else if (carray[npc.ObjectID - 1] == false)
 										{
 											client.Out.SendNPCUpdate(npc);
 										}
@@ -721,12 +724,12 @@ namespace DOL.GS
 
 				string port = string.Format("{0:D00000}", GameServer.Instance.Configuration.RegionPort);
 				string ip = GameServer.Instance.Configuration.RegionIp.ToString();
-	
+
 				int i = 0;
 
 				while (iter.MoveNext())
 				{
-					Region reg = (Region) iter.Value;
+					Region reg = (Region)iter.Value;
 					regs[i].id = reg.ID;
 					regs[i].ip = ip;
 					regs[i].toPort = port;
@@ -764,10 +767,10 @@ namespace DOL.GS
 				reg,
 				zoneID,
 				desc,
-				offx*8192,
-				offy*8192,
-				width*8192,
-				height*8192);
+				offx * 8192,
+				offy * 8192,
+				width * 8192,
+				height * 8192);
 
 			lock (reg.Zones.SyncRoot)
 			{
@@ -820,7 +823,7 @@ namespace DOL.GS
 		/// <returns>Region or null if not found</returns>
 		public static Region GetRegion(ushort regionID)
 		{
-			return (Region) m_regions[regionID];
+			return (Region)m_regions[regionID];
 		}
 
 		/// <summary>
@@ -830,7 +833,7 @@ namespace DOL.GS
 		/// <returns>the zone object or null</returns>
 		public static Zone GetZone(ushort zoneID)
 		{
-			return (Zone) m_zones[zoneID];
+			return (Zone)m_zones[zoneID];
 		}
 
 
@@ -864,7 +867,7 @@ namespace DOL.GS
 		/// <returns>All objects with the specified parameters</returns>
 		public static GameObject[] GetObjectsByNameFromRegion(string name, ushort regionID, eRealm realm, Type objectType)
 		{
-			Region reg = (Region) m_regions[regionID];
+			Region reg = (Region)m_regions[regionID];
 			if (reg == null)
 				return new GameObject[0];
 			GameObject[] objs = reg.Objects;
@@ -872,10 +875,10 @@ namespace DOL.GS
 			for (int i = 0; i < objs.Length; i++)
 			{
 				GameObject obj = objs[i];
-				if (obj != null && objectType.IsInstanceOfType(obj) && obj.Realm == (byte) realm && obj.Name == name)
+				if (obj != null && objectType.IsInstanceOfType(obj) && obj.Realm == (byte)realm && obj.Name == name)
 					returnObjs.Add(obj);
 			}
-			return (GameObject[]) returnObjs.ToArray(objectType);
+			return (GameObject[])returnObjs.ToArray(objectType);
 		}
 
 		/// <summary>
@@ -890,7 +893,7 @@ namespace DOL.GS
 			ArrayList returnObjs = new ArrayList();
 			foreach (Region reg in m_regions.Values)
 				returnObjs.AddRange(GetObjectsByNameFromRegion(name, reg.ID, realm, objectType));
-			return (GameObject[]) returnObjs.ToArray(objectType);
+			return (GameObject[])returnObjs.ToArray(objectType);
 		}
 
 		/// <summary>
@@ -902,7 +905,7 @@ namespace DOL.GS
 		/// <returns>All NPCs with the specified parameters</returns>
 		public static GameNPC[] GetNPCsByNameFromRegion(string name, ushort regionID, eRealm realm)
 		{
-			return (GameNPC[]) GetObjectsByNameFromRegion(name, regionID, realm, typeof (GameNPC));
+			return (GameNPC[])GetObjectsByNameFromRegion(name, regionID, realm, typeof(GameNPC));
 		}
 
 		/// <summary>
@@ -913,7 +916,7 @@ namespace DOL.GS
 		/// <returns>All NPCs with the specified parameters</returns>b
 		public static GameNPC[] GetNPCsByName(string name, eRealm realm)
 		{
-			return (GameNPC[]) GetObjectsByName(name, realm, typeof (GameNPC));
+			return (GameNPC[])GetObjectsByName(name, realm, typeof(GameNPC));
 		}
 
 		/// <summary>
@@ -991,7 +994,7 @@ namespace DOL.GS
 		/// <returns>The distance in units or -1 if they are not the same Region</returns>
 		public static int GetDistance(GameObject obj1, GameObject obj2)
 		{
-			if (obj1.CurrentRegion != obj2.CurrentRegion)
+			if (obj1 == null || obj2 == null || obj1.CurrentRegion != obj2.CurrentRegion)
 				return -1;
 			return GetDistance(obj1.X, obj1.Y, obj1.Z, obj2.X, obj2.Y, obj2.Z);
 		}
@@ -1005,7 +1008,7 @@ namespace DOL.GS
 		/// <returns>The distance in units or -1 if they are not the same Region</returns>
 		public static int GetDistance(GameObject obj1, GameObject obj2, double zfactor)
 		{
-			if (obj1.CurrentRegion != obj2.CurrentRegion)
+			if (obj1 == null || obj2 == null || obj1.CurrentRegion != obj2.CurrentRegion)
 				return -1;
 			return GetDistance(obj1.X, obj1.Y, obj1.Z, obj2.X, obj2.Y, obj2.Z, zfactor);
 		}
@@ -1022,14 +1025,14 @@ namespace DOL.GS
 		/// <returns>The distance</returns>
 		public static int GetDistance(int x1, int y1, int z1, int x2, int y2, int z2)
 		{
-			long xdiff = (long) x1 - x2;
-			long ydiff = (long) y1 - y2;
+			long xdiff = (long)x1 - x2;
+			long ydiff = (long)y1 - y2;
 			//SH: Removed Z checks when one of the two Z values is zero(on ground)
 			if (z1 == 0 || z2 == 0)
-				return (int) Math.Sqrt(xdiff*xdiff + ydiff*ydiff);
+				return (int)Math.Sqrt(xdiff * xdiff + ydiff * ydiff);
 
-			long zdiff = (long) z1 - z2;
-			return (int) Math.Sqrt(xdiff*xdiff + ydiff*ydiff + zdiff*zdiff);
+			long zdiff = (long)z1 - z2;
+			return (int)Math.Sqrt(xdiff * xdiff + ydiff * ydiff + zdiff * zdiff);
 		}
 
 		/// <summary>
@@ -1045,14 +1048,14 @@ namespace DOL.GS
 		/// <returns>The distance</returns>
 		public static int GetDistance(int x1, int y1, int z1, int x2, int y2, int z2, double zfactor)
 		{
-			long xdiff = (long) x1 - x2;
-			long ydiff = (long) y1 - y2;
+			long xdiff = (long)x1 - x2;
+			long ydiff = (long)y1 - y2;
 			//SH: Removed Z checks when one of the two Z values is zero(on ground)
 			if (z1 == 0 || z2 == 0)
-				return (int) Math.Sqrt(xdiff*xdiff + ydiff*ydiff);
+				return (int)Math.Sqrt(xdiff * xdiff + ydiff * ydiff);
 
-			long zdiff = (long) ((z1 - z2)*zfactor);
-			return (int) Math.Sqrt(xdiff*xdiff + ydiff*ydiff + zdiff*zdiff);
+			long zdiff = (long)((z1 - z2) * zfactor);
+			return (int)Math.Sqrt(xdiff * xdiff + ydiff * ydiff + zdiff * zdiff);
 		}
 
 		/// <summary>
@@ -1069,49 +1072,49 @@ namespace DOL.GS
 		}
 		#endregion
 		#region check distance
-		public static bool CheckDistance(int x1, int y1, int z1, int x2, int y2, int z2,int radius)
+		public static bool CheckDistance(int x1, int y1, int z1, int x2, int y2, int z2, int radius)
 		{
-			return CheckSquareDistance(x1, y1, z1, x2, y2, z2,radius*radius);
+			return CheckSquareDistance(x1, y1, z1, x2, y2, z2, radius * radius);
 		}
-		public static bool CheckDistance(IPoint3D obj, IPoint3D obj2,int radius)
+		public static bool CheckDistance(IPoint3D obj, IPoint3D obj2, int radius)
 		{
-			return CheckDistance(obj.X, obj.Y,obj.Z,obj2.X,obj2.Y,obj2.Z,radius);
+			return CheckDistance(obj.X, obj.Y, obj.Z, obj2.X, obj2.Y, obj2.Z, radius);
 		}
-		public static bool CheckDistance(GameObject obj, int x2, int y2, int z2,int radius)
+		public static bool CheckDistance(GameObject obj, int x2, int y2, int z2, int radius)
 		{
-			return CheckDistance(obj.X, obj.Y,obj.Z,x2,y2,z2,radius);
+			return CheckDistance(obj.X, obj.Y, obj.Z, x2, y2, z2, radius);
 		}
-		public static bool CheckDistance(GameObject obj, GameObject obj2,int radius)
+		public static bool CheckDistance(GameObject obj, GameObject obj2, int radius)
 		{
 			if (obj.CurrentRegion != obj2.CurrentRegion)
 				return false;
-			return CheckDistance(obj.X, obj.Y,obj.Z,obj2.X,obj2.Y,obj2.Z,radius);
+			return CheckDistance(obj.X, obj.Y, obj.Z, obj2.X, obj2.Y, obj2.Z, radius);
 		}
 		#endregion
 		#region check square distance
-		public static bool CheckSquareDistance(int x1, int y1, int z1, int x2, int y2, int z2,int squareRadius)
+		public static bool CheckSquareDistance(int x1, int y1, int z1, int x2, int y2, int z2, int squareRadius)
 		{
-			long xdiff = (long) x1 - x2;
-			long ydiff = (long) y1 - y2;
+			long xdiff = (long)x1 - x2;
+			long ydiff = (long)y1 - y2;
 			//SH: Removed Z checks when one of the two Z values is zero(on ground)
 			if (z1 == 0 || z2 == 0)
-				return (xdiff*xdiff + ydiff*ydiff <= squareRadius);
-			long zdiff = (long) z1 - z2;
-			return (xdiff*xdiff + ydiff*ydiff + zdiff*zdiff <= squareRadius);
+				return (xdiff * xdiff + ydiff * ydiff <= squareRadius);
+			long zdiff = (long)z1 - z2;
+			return (xdiff * xdiff + ydiff * ydiff + zdiff * zdiff <= squareRadius);
 		}
-		public static bool CheckSquareDistance(IPoint3D obj, IPoint3D obj2,int squareRadius)
+		public static bool CheckSquareDistance(IPoint3D obj, IPoint3D obj2, int squareRadius)
 		{
-			return CheckSquareDistance(obj.X, obj.Y,obj.Z,obj2.X,obj2.Y,obj2.Z,squareRadius);
+			return CheckSquareDistance(obj.X, obj.Y, obj.Z, obj2.X, obj2.Y, obj2.Z, squareRadius);
 		}
-		public static bool CheckSquareDistance(GameObject obj, int x2, int y2, int z2,int squareRadius)
+		public static bool CheckSquareDistance(GameObject obj, int x2, int y2, int z2, int squareRadius)
 		{
-			return CheckSquareDistance(obj.X, obj.Y,obj.Z,x2,y2,z2,squareRadius);
+			return CheckSquareDistance(obj.X, obj.Y, obj.Z, x2, y2, z2, squareRadius);
 		}
-		public static bool CheckSquareDistance(GameObject obj, GameObject obj2,int squareRadius)
+		public static bool CheckSquareDistance(GameObject obj, GameObject obj2, int squareRadius)
 		{
 			if (obj.CurrentRegion != obj2.CurrentRegion)
 				return false;
-			return CheckSquareDistance(obj.X, obj.Y,obj.Z,obj2.X,obj2.Y,obj2.Z,squareRadius);
+			return CheckSquareDistance(obj.X, obj.Y, obj.Z, obj2.X, obj2.Y, obj2.Z, squareRadius);
 		}
 		#endregion
 
@@ -1130,9 +1133,9 @@ namespace DOL.GS
 					if (client != null)
 					{
 						if (client.IsPlaying
-						    && client.Player != null
-						    && client.Player.ObjectState == GameObject.eObjectState.Active
-						    && client.Player.Realm == realmID)
+							&& client.Player != null
+							&& client.Player.ObjectState == GameObject.eObjectState.Active
+							&& client.Player.Realm == realmID)
 							count++;
 					}
 				}
@@ -1155,9 +1158,9 @@ namespace DOL.GS
 					if (client != null)
 					{
 						if (client.IsPlaying
-						    && client.Player != null
-						    && client.Player.ObjectState == GameObject.eObjectState.Active
-						    && client.Player.Realm == realmID)
+							&& client.Player != null
+							&& client.Player.ObjectState == GameObject.eObjectState.Active
+							&& client.Player.Realm == realmID)
 							targetClients.Add(client);
 					}
 				}
@@ -1180,9 +1183,9 @@ namespace DOL.GS
 					if (client != null)
 					{
 						if (client.IsPlaying
-						    && client.Player != null
-						    && client.Player.ObjectState == GameObject.eObjectState.Active
-						    && client.Player.CurrentRegionID == regionID)
+							&& client.Player != null
+							&& client.Player.ObjectState == GameObject.eObjectState.Active
+							&& client.Player.CurrentRegionID == regionID)
 							count++;
 					}
 				}
@@ -1205,9 +1208,9 @@ namespace DOL.GS
 					if (client != null)
 					{
 						if (client.IsPlaying
-						    && client.Player != null
-						    && client.Player.ObjectState == GameObject.eObjectState.Active
-						    && client.Player.CurrentRegionID == regionID)
+							&& client.Player != null
+							&& client.Player.ObjectState == GameObject.eObjectState.Active
+							&& client.Player.CurrentRegionID == regionID)
 							targetClients.Add(client);
 					}
 				}
@@ -1229,11 +1232,13 @@ namespace DOL.GS
 				foreach (GameClient client in m_clients)
 				{
 					if (client != null)
+					{
 						if ((exactMatch && client.Account.Name.ToLower() == accountName)
-						    || (!exactMatch && client.Account.Name.ToLower().StartsWith(accountName)))
+							|| (!exactMatch && client.Account.Name.ToLower().StartsWith(accountName)))
 						{
 							return client;
 						}
+					}
 				}
 			}
 			return null;
@@ -1246,16 +1251,16 @@ namespace DOL.GS
 		/// <param name="playerName">Name to search</param>
 		/// <param name="exactMatch">true if AccountName match exactly</param>
 		/// <returns>The found GameClient or null</returns>
-		public static GameClient GetClientByPlayerName(string playerName, bool exactMatch)
+		public static GameClient GetClientByPlayerName(string playerName, bool exactMatch, bool activeRequired)
 		{
 			if (exactMatch)
 			{
-				return GetClientByPlayerNameAndRealm(playerName, 0);
+				return GetClientByPlayerNameAndRealm(playerName, 0, activeRequired);
 			}
 			else
 			{
 				int x = 0;
-				return GuessClientByPlayerNameAndRealm(playerName, 0, out x);
+				return GuessClientByPlayerNameAndRealm(playerName, 0, activeRequired, out x);
 			}
 		}
 
@@ -1266,21 +1271,21 @@ namespace DOL.GS
 		/// <param name="playerName">Name to search</param>
 		/// <param name="realmID">search in: 0=all realms or player.Realm</param>
 		/// <returns>The found GameClient or null</returns>
-		public static GameClient GetClientByPlayerNameAndRealm(string playerName, int realmID)
+		public static GameClient GetClientByPlayerNameAndRealm(string playerName, int realmID, bool activeRequired)
 		{
 			lock (m_clients.SyncRoot)
 			{
 				foreach (GameClient client in m_clients)
 				{
-					if (client != null
-					    && client.IsPlaying
-					    && client.Player != null
-					    && client.Player.ObjectState == GameObject.eObjectState.Active
-					    && (realmID == 0 || client.Player.Realm == realmID))
+					if (client != null && client.Player != null && (realmID == 0 || client.Player.Realm == realmID))
+					{
+						if (activeRequired && (!client.IsPlaying || client.Player.ObjectState != GameObject.eObjectState.Active))
+							continue;
 						if (0 == string.Compare(client.Player.Name, playerName, true)) // case insensitive comapre
 						{
 							return client;
 						}
+					}
 				}
 			}
 			return null;
@@ -1294,11 +1299,11 @@ namespace DOL.GS
 		/// <param name="realmID">search in: 0=all realms or player.Realm</param>
 		/// <param name="result">returns: 1=no name found, 2=name is not unique, 3=exact match, 4=guessed name</param>
 		/// <returns>The found GameClient or null</returns>
-		public static GameClient GuessClientByPlayerNameAndRealm(string playerName, int realmID, out int result)
+		public static GameClient GuessClientByPlayerNameAndRealm(string playerName, int realmID, bool activeRequired, out int result)
 		{
 			// first try exact match in case player with "abcde" name is
 			// before "abc" in list and user typed "abc"
-			GameClient guessedClient = GetClientByPlayerNameAndRealm(playerName, realmID);
+			GameClient guessedClient = GetClientByPlayerNameAndRealm(playerName, realmID, activeRequired);
 			if (guessedClient != null)
 			{
 				result = 3; // exact match
@@ -1312,24 +1317,27 @@ namespace DOL.GS
 			{
 				foreach (GameClient client in m_clients)
 				{
-					if (client != null
-					    && client.IsPlaying
-					    && client.Player != null
-					    && client.Player.ObjectState == GameObject.eObjectState.Active
-					    && (realmID == 0 || client.Player.Realm == realmID))
-						if (client.Player.Name.ToLower().StartsWith(compareName))
+					if (client != null && client.Player != null)
+					{
+						if (activeRequired && (!client.IsPlaying || client.Player.ObjectState != GameObject.eObjectState.Active))
+							continue;
+						if (realmID == 0 || client.Player.Realm == realmID)
 						{
-							if (result == 4) // keep looking to be sure that name is unique
+							if (client.Player.Name.ToLower().StartsWith(compareName))
 							{
-								result = 2; // name not unique
-								break;
-							}
-							else
-							{
-								result = 4; // guessed name
-								guessedClient = client;
+								if (result == 4) // keep looking to be sure that name is unique
+								{
+									result = 2; // name not unique
+									break;
+								}
+								else
+								{
+									result = 4; // guessed name
+									guessedClient = client;
+								}
 							}
 						}
+					}
 				}
 			}
 			return guessedClient;
@@ -1342,9 +1350,9 @@ namespace DOL.GS
 		/// <param name="regionID">Region ID of region to search through</param>
 		/// <param name="exactMatch">true if the Name must match exactly</param>
 		/// <returns>The first found GameClient or null</returns>
-		public static GameClient GetClientByPlayerNameFromRegion(string playerName, ushort regionID, bool exactMatch)
+		public static GameClient GetClientByPlayerNameFromRegion(string playerName, ushort regionID, bool exactMatch, bool activeRequired)
 		{
-			GameClient client = GetClientByPlayerName(playerName, exactMatch);
+			GameClient client = GetClientByPlayerName(playerName, exactMatch, activeRequired);
 			if (client == null || client.Player.CurrentRegionID != regionID)
 				return null;
 			return client;
@@ -1383,9 +1391,9 @@ namespace DOL.GS
 				foreach (GameClient client in m_clients)
 				{
 					if (client != null
-					    && client.IsPlaying
-					    && client.Player != null
-					    && client.Player.ObjectState == GameObject.eObjectState.Active)
+						&& client.IsPlaying
+						&& client.Player != null
+						&& client.Player.ObjectState == GameObject.eObjectState.Active)
 						count++;
 				}
 			}
@@ -1625,30 +1633,30 @@ namespace DOL.GS
 			//lock(m_regions.SyncRoot)
 			//{
 			IDictionaryEnumerator iter = m_regions.GetEnumerator();
-/*
-				using(WorldSaveProgress dlg = new WorldSaveProgress())
-				{
-					dlg.progBar.Minimum = 0;
-					dlg.progBar.Minimum = m_regions.Count;
-					dlg.progBar.Step = 1;
-					dlg.lblTxt.Select(dlg.lblTxt.Text.Length-1, 0);
+			/*
+							using(WorldSaveProgress dlg = new WorldSaveProgress())
+							{
+								dlg.progBar.Minimum = 0;
+								dlg.progBar.Minimum = m_regions.Count;
+								dlg.progBar.Step = 1;
+								dlg.lblTxt.Select(dlg.lblTxt.Text.Length-1, 0);
 
-					dlg.Show();
+								dlg.Show();
 
-					while(iter.MoveNext())
-					{
-						Region reg = (Region)iter.Value;
+								while(iter.MoveNext())
+								{
+									Region reg = (Region)iter.Value;
 
-						reg.SaveToDatabase();
-						dlg.progBar.PerformStep();
-					}
+									reg.SaveToDatabase();
+									dlg.progBar.PerformStep();
+								}
 
-					dlg.Close();
-				}
-				*/
+								dlg.Close();
+							}
+							*/
 			while (iter.MoveNext())
 			{
-				Region reg = (Region) iter.Value;
+				Region reg = (Region)iter.Value;
 				if (log.IsDebugEnabled)
 					log.Debug("saving region " + reg.Description + " " + reg.Name + " " + iter.Key);
 				reg.SaveToDatabase();
@@ -1663,9 +1671,9 @@ namespace DOL.GS
 		{
 			FileInfo regionConfigFile = new FileInfo(GameServer.Instance.Configuration.RegionConfigFile);
 			FileInfo zoneConfigFile = new FileInfo(GameServer.Instance.Configuration.ZoneConfigFile);
-			if(!regionConfigFile.Exists)
+			if (!regionConfigFile.Exists)
 				ResourceUtil.ExtractResource(regionConfigFile.Name, regionConfigFile.FullName);
-			if(!zoneConfigFile.Exists)
+			if (!zoneConfigFile.Exists)
 				ResourceUtil.ExtractResource(zoneConfigFile.Name, zoneConfigFile.FullName);
 		}
 
@@ -1678,7 +1686,7 @@ namespace DOL.GS
 			GameClient[] clientsCopy = null;
 			lock (m_clients.SyncRoot)
 			{
-				clientsCopy = (GameClient[]) m_clients.Clone();
+				clientsCopy = (GameClient[])m_clients.Clone();
 			}
 
 			int savedCount = 0;

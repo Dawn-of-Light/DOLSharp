@@ -45,7 +45,7 @@ namespace DOL.GS.PacketHandler.v168
 			if(target.IsPlaying && target.Player!=null && target.Player.ObjectState==GameObject.eObjectState.Active)
 			{
 				client.Out.SendPlayerCreate(target.Player);
-				client.Out.SendLivingEquipementUpdate(target.Player);
+				client.Out.SendLivingEquipmentUpdate(target.Player);
 			}
 
 			return 1;

@@ -1,22 +1,23 @@
 /*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
 
+using System;
 using System.Collections;
 using System.Reflection;
 
@@ -71,7 +72,7 @@ namespace DOL.GS.Housing
 			set { m_databaseItem.Name = value; }
 		}
 
-		
+
 		public string OwnerIDs
 		{
 			get { return m_databaseItem.OwnerIDs; }
@@ -194,17 +195,17 @@ namespace DOL.GS.Housing
 			set { m_uniqueID = value; }
 		}
 
-		ArrayList m_indooritems;
+		Hashtable m_indooritems;
 
-		public ArrayList IndoorItems
+		public Hashtable IndoorItems
 		{
 			get { return m_indooritems; }
 			set { m_indooritems = value; }
 		}
 
-		ArrayList m_outdooritems;
+		Hashtable m_outdooritems;
 
-		public ArrayList OutdoorItems
+		public Hashtable OutdoorItems
 		{
 			get { return m_outdooritems; }
 			set { m_outdooritems = value; }
@@ -315,13 +316,16 @@ namespace DOL.GS.Housing
 		/// <param name="silent">text or not</param>
 		public void Exit(GamePlayer player, bool silent)
 		{
-			player.MoveTo(RegionID, X, Y, Z, (ushort)Heading);
-				
+			double angle = (Heading * 0.017453292519943295769236907684886); // angle*2pi/360;
+			int x = (int) (X + (0 * Math.Cos(angle) + 500 * Math.Sin(angle)));
+			int y = (int) (Y - (500 * Math.Cos(angle) - 0 * Math.Sin(angle)));
+			ushort heading = (ushort)((Heading < 180 ? Heading + 180 : Heading - 180) / 0.08789);
+			player.MoveTo(RegionID, x, y, Z, heading);
 			if(!silent) player.Out.SendMessage("You have left house number " + HouseNumber + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-		
+
 		}
 
-		
+
 		/// <summary>
 		/// Sends the house info window to a player
 		/// </summary>
@@ -331,11 +335,7 @@ namespace DOL.GS.Housing
 			ArrayList text = new ArrayList();
 			text.Add("Owner: " + this.Name);
 			text.Add("Lotnum: " + HouseNumber);
-			int level = Model;
-			while (level > 4)
-			{
-				level -= 4;
-			}
+			int level = Model - (int)((Model - 1) / 4) * 4;
 			text.Add("Level: " + level);
 			text.Add(" ");
 			text.Add("Porch: ");
@@ -397,25 +397,23 @@ namespace DOL.GS.Housing
 
 		public int GetPorchAndGuildEmblemFlags()
 		{
-			//TODO: do with << and >> ;p
 			int flag = 0;
-
-			if ((OutdoorGuildBanner) && (OutdoorGuildShield)) { flag = 6; }
-			else if (OutdoorGuildBanner) { flag = 2; }
-			else if (OutdoorGuildShield) { flag = 4; }
-			
-			if (Porch) { flag += 1; }
-
+			if (Porch)
+				flag |= 1;
+			if (OutdoorGuildBanner)
+				flag |= 2;
+			if (OutdoorGuildShield)
+				flag |= 4;
 			return flag;
 		}
 
 		public int GetGuildEmblemFlags()
 		{
 			int flag = 0;
-
-			if (IndoorGuildShield) { flag = 2; }
-			if (IndoorGuildBanner) { flag += 1; }
-
+			if (IndoorGuildBanner)
+				flag |= 1;
+			if (IndoorGuildShield)
+				flag |= 2;
 			return flag;
 		}
 
@@ -481,29 +479,58 @@ namespace DOL.GS.Housing
 				int pslot = slot % 30;
 
 				ItemTemplate item = items.GetItem(page,(eMerchantWindowSlot)pslot);
-				
-				if(item!=null)
+
+				if(item != null)
 				{
-					switch(item.Object_Type)
+					switch((eObjectType)item.Object_Type)
 					{
-						case 2: IndoorGuildBanner = (item.DPS_AF == 1 ? true : false); break;
-						case 3: IndoorGuildShield = (item.DPS_AF == 1 ? true : false); break;
-
-						case 52: Rug1Color = item.DPS_AF; break;
-						case 5: Rug2Color = item.DPS_AF; break;
-						case 6: Rug3Color = item.DPS_AF; break;
-						case 7: Rug1Color = item.DPS_AF; break;
-
-						case 56: PorchRoofColor = item.DPS_AF; break;
-						case 57: OutdoorGuildBanner = (item.DPS_AF == 1 ? true : false); break;
-						case 58: OutdoorGuildShield = (item.DPS_AF == 1 ? true : false); break;
-						case 59: RoofMaterial = item.DPS_AF; break;
-						case 60: WallMaterial = item.DPS_AF; break;
-						case 61: DoorMaterial = item.DPS_AF; break;
-						case 62: PorchMaterial = item.DPS_AF; break;
-						case 63: TrussMaterial = item.DPS_AF; break;
-
-						default: WindowMaterial = (item.Gold-1); break; //dirty work a round - dont know how mythic did it, hardcoded? but it works.
+						case eObjectType.HouseInteriorBanner:
+							IndoorGuildBanner = (item.DPS_AF == 1 ? true : false);
+							break;
+						case eObjectType.HouseInteriorShield:
+							IndoorGuildShield = (item.DPS_AF == 1 ? true : false);
+							break;
+						case eObjectType.HouseCarpetFirst:
+							Rug1Color = item.DPS_AF;
+							break;
+						case eObjectType.HouseCarpetSecond:
+							Rug2Color = item.DPS_AF;
+							break;
+						case eObjectType.HouseCarpetThird:
+							Rug3Color = item.DPS_AF;
+							break;
+						case eObjectType.HouseCarpetFourth:
+							Rug4Color = item.DPS_AF;
+							break;
+						case eObjectType.HouseTentColor:
+							PorchRoofColor = item.DPS_AF;
+							break;
+						case eObjectType.HouseExteriorBanner:
+							OutdoorGuildBanner = (item.DPS_AF == 1 ? true : false);
+							break;
+						case eObjectType.HouseExteriorShield:
+							OutdoorGuildShield = (item.DPS_AF == 1 ? true : false);
+							break;
+						case eObjectType.HouseRoofMaterial:
+							RoofMaterial = item.DPS_AF;
+							break;
+						case eObjectType.HouseWallMaterial:
+							WallMaterial = item.DPS_AF;
+							break;
+						case eObjectType.HouseDoorMaterial:
+							DoorMaterial = item.DPS_AF;
+							break;
+						case eObjectType.HousePorchMaterial:
+							PorchMaterial = item.DPS_AF;
+							break;
+						case eObjectType.HouseWoodMaterial:
+							TrussMaterial = item.DPS_AF;
+							break;
+						case eObjectType.HouseShutterMaterial:
+							WindowMaterial = item.DPS_AF;
+							break;
+						default: 
+							break; //dirty work a round - dont know how mythic did it, hardcoded? but it works
 					}
 				}
 			}
@@ -530,8 +557,8 @@ namespace DOL.GS.Housing
 		public House(DBHouse house)
 		{
 			m_databaseItem = house;
-			m_indooritems = new ArrayList();
-			m_outdooritems = new ArrayList();
+			m_indooritems = new Hashtable();
+			m_outdooritems = new Hashtable();
 		}
 	}
 }

@@ -48,7 +48,7 @@ namespace DOL.GS.PacketHandler
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.KeepInfo));
 
 			pak.WriteShort((ushort)keep.KeepID);
-			pak.WriteShort(keep.CurrentZone.ID);//zone id not sure
+			pak.WriteShort(0);//zone id not sure
 			pak.WriteInt((uint)keep.X);
 			pak.WriteInt((uint)keep.Y);
 			pak.WriteShort((ushort)keep.Heading);
@@ -221,7 +221,7 @@ namespace DOL.GS.PacketHandler
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.QuestEntry));
 
 			pak.WriteByte((byte) index);
-			if (quest.Step == -1)
+			if (quest.Step <= 0)
 			{
 				pak.WriteByte(0);
 				pak.WriteByte(0);

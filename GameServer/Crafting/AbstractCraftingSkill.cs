@@ -56,7 +56,7 @@ namespace DOL.GS
 		/// The crafting skill id of this craft
 		/// </summary>
 		private eCraftingSkill m_eskill;
-		
+
 		/// <summary>
 		/// The player currently crafting
 		/// </summary>
@@ -70,7 +70,7 @@ namespace DOL.GS
 		/// <summary>
 		/// The enum index of this crafting skill
 		/// </summary>
-		public eCraftingSkill eSkill 
+		public eCraftingSkill eSkill
 		{
 			get
 			{
@@ -85,7 +85,7 @@ namespace DOL.GS
 		/// <summary>
 		/// The icon of this crafting skill
 		/// </summary>
-		public byte Icon 
+		public byte Icon
 		{
 			get
 			{
@@ -100,7 +100,7 @@ namespace DOL.GS
 		/// <summary>
 		/// The name of this crafting skill
 		/// </summary>
-		public string Name 
+		public string Name
 		{
 			get
 			{
@@ -123,46 +123,48 @@ namespace DOL.GS
 		/// <returns></returns>
 		public int CraftItem(DBCraftedItem item, GamePlayer player)
 		{
-			if( !GameServer.ServerRules.IsAllowedToCraft(player, item.ItemTemplate))
+			if (!GameServer.ServerRules.IsAllowedToCraft(player, item.ItemTemplate))
 			{
 				return 0;
 			}
 
-			if(	!CheckTool(player, item))
+			if (!CheckTool(player, item))
 			{
 				return 0;
 			}
 
-			if( !CheckSecondCraftingSkillRequirement(player, item))
+			if (!CheckSecondCraftingSkillRequirement(player, item))
 			{
 				return 0;
 			}
 
-			if(	!CheckRawMaterial(player, item))
+			if (!CheckRawMaterial(player, item))
 			{
 				return 0;
 			}
-			
+
 			if (player.IsCrafting)
 			{
 				player.CraftTimer.Stop();
-				player.Out.SendMessage("You stop your current work.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+				player.Out.SendCloseTimerWindow();
+				player.Out.SendMessage("You stop your current work.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return 0;
 			}
 
 			if (player.IsMoving || player.Strafing)
 			{
-				player.Out.SendMessage("You move and interrupt your crafting.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage("You move and interrupt your crafting.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return 0;
 			}
 
-			int craftingTime = GetCraftingTime(player,item);
-			player.Out.SendMessage("You begin work on the "+item.ItemTemplate.Name+".",eChatType.CT_System,eChatLoc.CL_SystemWindow);
-			player.Out.SendTimerWindow("Currently Making: "+item.ItemTemplate.Name, craftingTime);
+			int craftingTime = GetCraftingTime(player, item);
+			player.Out.SendMessage("You begin work on the " + item.ItemTemplate.Name + " (" + CalculateChanceToMakeItem(player, item).ToString() + "%).", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			player.Out.SendMessage("Chance to gain point in your primary crafting skill is " + CalculateChanceToGainPoint(player, item) + "%.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			player.Out.SendTimerWindow("Currently Making: " + item.ItemTemplate.Name, craftingTime);
 			player.CraftTimer = new RegionTimer(player);
 			player.CraftTimer.Callback = new RegionTimerCallback(MakeItem);
-			player.CraftTimer.Properties.setProperty(PLAYER_CRAFTER,player);
-			player.CraftTimer.Properties.setProperty(ITEM_CRAFTER,item);
+			player.CraftTimer.Properties.setProperty(PLAYER_CRAFTER, player);
+			player.CraftTimer.Properties.setProperty(ITEM_CRAFTER, item);
 			player.CraftTimer.Start(craftingTime * 1000);
 			return 1;
 		}
@@ -174,8 +176,8 @@ namespace DOL.GS
 		/// <returns></returns>
 		protected virtual int MakeItem(RegionTimer timer)
 		{
-			GamePlayer player = (GamePlayer)timer.Properties.getObjectProperty( PLAYER_CRAFTER,null );
-			DBCraftedItem item = (DBCraftedItem)timer.Properties.getObjectProperty( ITEM_CRAFTER,null );
+			GamePlayer player = (GamePlayer)timer.Properties.getObjectProperty(PLAYER_CRAFTER, null);
+			DBCraftedItem item = (DBCraftedItem)timer.Properties.getObjectProperty(ITEM_CRAFTER, null);
 			if (player == null || item == null)
 			{
 				if (log.IsWarnEnabled)
@@ -185,37 +187,37 @@ namespace DOL.GS
 
 			player.CraftTimer.Stop();
 			player.Out.SendCloseTimerWindow();
-			
+
 			if (Util.Chance(CalculateChanceToMakeItem(player, item)))
 			{
-				if(! RemoveUsedMaterials(player,item))
+				if (!RemoveUsedMaterials(player, item))
 				{
-					player.Out.SendMessage("You have not all needed raw materials to create this item.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage("You have not all needed raw materials to create this item.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return 0;
 				}
-				
-				BuildCraftedItem(player,item);
-			
-				GainCraftingSkillPoints(player,item);
+
+				BuildCraftedItem(player, item);
+
+				GainCraftingSkillPoints(player, item);
 			}
-			else if (Util.Chance(CalculateChanceToLooseMaterial(player,item)))
-			{	
-				if(!LooseRawMaterial(player,item))
+			else if (Util.Chance(CalculateChanceToLooseMaterial(player, item)))
+			{
+				if (!LooseRawMaterial(player, item))
 				{
-					player.Out.SendMessage("You have not all needed raw materials to create this item.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage("You have not all needed raw materials to create this item.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 
 				player.Out.SendPlaySound(eSoundType.Craft, 0x01);
 			}
 			else
 			{
-				player.Out.SendMessage("You fail to make the "+item.ItemTemplate.Name+" but lose no materials!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage("You fail to make the " + item.ItemTemplate.Name + " but lose no materials!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				player.Out.SendPlaySound(eSoundType.Craft, 0x02);
 			}
 
 			return 0;
 		}
-		
+
 		#endregion
 
 		#region Requirement check
@@ -238,52 +240,52 @@ namespace DOL.GS
 		{
 			int minimumLevel = CalculateSecondCraftingSkillMinimumLevel(craftItemData);
 
-			if(minimumLevel <= 0) return true; // no requirement needed
-	
+			if (minimumLevel <= 0) return true; // no requirement needed
+
 			foreach (DBCraftedXItem rawmaterial in craftItemData.RawMaterials)
 			{
-				switch(rawmaterial.ItemTemplate.Model)
+				switch (rawmaterial.ItemTemplate.Model)
 				{
-					case 522 :	//"cloth square"
-					case 537 :	//"heavy thread"
-					{
-						if (player.GetCraftingSkillValue(eCraftingSkill.ClothWorking) < minimumLevel)
+					case 522:	//"cloth square"
+					case 537:	//"heavy thread"
 						{
-							player.Out.SendMessage("You don't have the minimum necessary Clothworking skill ("+minimumLevel+") to create the "+craftItemData.ItemTemplate.Name+"!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
-							return false;
+							if (player.GetCraftingSkillValue(eCraftingSkill.ClothWorking) < minimumLevel)
+							{
+								player.Out.SendMessage("You don't have the minimum necessary Clothworking skill (" + minimumLevel + ") to create the " + craftItemData.ItemTemplate.Name + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return false;
+							}
+							break;
 						}
-						break;
-					}
 
-					case 521 :	//"leather square"
-					{
-						if (player.GetCraftingSkillValue(eCraftingSkill.LeatherCrafting) < minimumLevel)
+					case 521:	//"leather square"
 						{
-							player.Out.SendMessage("You don't have the minimum necessary Leathercrafting skill ("+minimumLevel+") to create the "+craftItemData.ItemTemplate.Name+"!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
-							return false;
+							if (player.GetCraftingSkillValue(eCraftingSkill.LeatherCrafting) < minimumLevel)
+							{
+								player.Out.SendMessage("You don't have the minimum necessary Leathercrafting skill (" + minimumLevel + ") to create the " + craftItemData.ItemTemplate.Name + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return false;
+							}
+							break;
 						}
-						break;
-					}
 
-					case 519 :	//"metal bars"
-					{
-						if (player.GetCraftingSkillValue(eCraftingSkill.MetalWorking) < minimumLevel)
+					case 519:	//"metal bars"
 						{
-							player.Out.SendMessage("You don't have the minimum necessary Metalworking skill ("+minimumLevel+") to create the "+craftItemData.ItemTemplate.Name+"!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
-							return false;
+							if (player.GetCraftingSkillValue(eCraftingSkill.MetalWorking) < minimumLevel)
+							{
+								player.Out.SendMessage("You don't have the minimum necessary Metalworking skill (" + minimumLevel + ") to create the " + craftItemData.ItemTemplate.Name + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return false;
+							}
+							break;
 						}
-						break;
-					}
 
-					case 520 :	//"wooden boards"
-					{
-						if (player.GetCraftingSkillValue(eCraftingSkill.WoodWorking) < minimumLevel)
+					case 520:	//"wooden boards"
 						{
-							player.Out.SendMessage("You don't have the minimum necessary Woodworking skill ("+minimumLevel+") to create the "+craftItemData.ItemTemplate.Name+"!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
-							return false;
+							if (player.GetCraftingSkillValue(eCraftingSkill.WoodWorking) < minimumLevel)
+							{
+								player.Out.SendMessage("You don't have the minimum necessary Woodworking skill (" + minimumLevel + ") to create the " + craftItemData.ItemTemplate.Name + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return false;
+							}
+							break;
 						}
-						break;
-					}
 				}
 			}
 			return true;
@@ -299,47 +301,47 @@ namespace DOL.GS
 		{
 			ArrayList missingMaterials = null;
 
-			lock(player.Inventory)
+			lock (player.Inventory)
 			{
 				foreach (DBCraftedXItem rawmaterial in craftItemData.RawMaterials)
 				{
 					bool result = false;
-					int count = rawmaterial.Count;		
+					int count = rawmaterial.Count;
 					foreach (InventoryItem item in player.Inventory.GetItemRange(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
 					{
-						if (item!=null && item.Name == rawmaterial.ItemTemplate.Name)
+						if (item != null && item.Name == rawmaterial.ItemTemplate.Name)
 						{
-							if(item.Count >= count)
+							if (item.Count >= count)
 							{
 								result = true;
 								break;
 							}
 							else
 							{
-								count-= item.Count;
+								count -= item.Count;
 							}
 						}
 					}
-					if(result == false)
+					if (result == false)
 					{
-						if(missingMaterials == null) missingMaterials = new ArrayList(5);
+						if (missingMaterials == null) missingMaterials = new ArrayList(5);
 						missingMaterials.Add(rawmaterial);
 					}
 				}
 
-				if(missingMaterials != null)
+				if (missingMaterials != null)
 				{
-					player.Out.SendMessage("You do not have the ingredients to make the "+craftItemData.ItemTemplate.Name+".",eChatType.CT_System,eChatLoc.CL_SystemWindow);
-					player.Out.SendMessage("You are missing :",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage("You do not have the ingredients to make the " + craftItemData.ItemTemplate.Name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage("You are missing :", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					foreach (DBCraftedXItem rawmaterial in missingMaterials)
 					{
-						player.Out.SendMessage("("+rawmaterial.Count+") "+rawmaterial.ItemTemplate.Name,eChatType.CT_System,eChatLoc.CL_SystemWindow);
+						player.Out.SendMessage("(" + rawmaterial.Count + ") " + rawmaterial.ItemTemplate.Name, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}
 					return false;
 				}
-				
+
 				return true;
-			}	
+			}
 		}
 		#endregion
 
@@ -356,46 +358,46 @@ namespace DOL.GS
 
 			foreach (DBCraftedXItem rawmaterial in item.RawMaterials)
 			{
-				if(Util.Chance(gainPointChance))
+				if (Util.Chance(gainPointChance))
 				{
-					switch(rawmaterial.ItemTemplate.Model)
+					switch (rawmaterial.ItemTemplate.Model)
 					{
-						case 522 :	//"cloth square"
-						case 537 :	//"heavy thread"
-						{
-							if (player.GetCraftingSkillValue(eCraftingSkill.ClothWorking) < player.GetCraftingSkillValue(player.CraftingPrimarySkill)) // max secondary skill cap == primary skill
+						case 522:	//"cloth square"
+						case 537:	//"heavy thread"
 							{
-								player.IncreaseCraftingSkill(eCraftingSkill.ClothWorking, 1);
+								if (player.GetCraftingSkillValue(eCraftingSkill.ClothWorking) < player.GetCraftingSkillValue(player.CraftingPrimarySkill)) // max secondary skill cap == primary skill
+								{
+									player.IncreaseCraftingSkill(eCraftingSkill.ClothWorking, 1);
+								}
+								break;
 							}
-							break;
-						}
 
-						case 521 :	//"leather square"
-						{
-							if (player.GetCraftingSkillValue(eCraftingSkill.LeatherCrafting) < player.GetCraftingSkillValue(player.CraftingPrimarySkill)) // max secondary skill cap == primary skill
+						case 521:	//"leather square"
 							{
-								player.IncreaseCraftingSkill(eCraftingSkill.LeatherCrafting, 1);
+								if (player.GetCraftingSkillValue(eCraftingSkill.LeatherCrafting) < player.GetCraftingSkillValue(player.CraftingPrimarySkill)) // max secondary skill cap == primary skill
+								{
+									player.IncreaseCraftingSkill(eCraftingSkill.LeatherCrafting, 1);
+								}
+								break;
 							}
-							break;
-						}
 
-						case 519 :	//"metal bars"
-						{
-							if (player.GetCraftingSkillValue(eCraftingSkill.MetalWorking) < player.GetCraftingSkillValue(player.CraftingPrimarySkill)) // max secondary skill == primary skill
+						case 519:	//"metal bars"
 							{
-								player.IncreaseCraftingSkill(eCraftingSkill.MetalWorking, 1);
+								if (player.GetCraftingSkillValue(eCraftingSkill.MetalWorking) < player.GetCraftingSkillValue(player.CraftingPrimarySkill)) // max secondary skill == primary skill
+								{
+									player.IncreaseCraftingSkill(eCraftingSkill.MetalWorking, 1);
+								}
+								break;
 							}
-							break;
-						}
 
-						case 520 :	//"wooden boards"
-						{
-							if (player.GetCraftingSkillValue(eCraftingSkill.WoodWorking) < player.GetCraftingSkillValue(player.CraftingPrimarySkill)) // max secondary skill == primary skill
+						case 520:	//"wooden boards"
 							{
-								player.IncreaseCraftingSkill(eCraftingSkill.WoodWorking, 1);
+								if (player.GetCraftingSkillValue(eCraftingSkill.WoodWorking) < player.GetCraftingSkillValue(player.CraftingPrimarySkill)) // max secondary skill == primary skill
+								{
+									player.IncreaseCraftingSkill(eCraftingSkill.WoodWorking, 1);
+								}
+								break;
 							}
-							break;
-						}
 					}
 				}
 			}
@@ -414,7 +416,7 @@ namespace DOL.GS
 		public bool RemoveUsedMaterials(GamePlayer player, DBCraftedItem craftItemData)
 		{
 			Hashtable dataSlots = new Hashtable(10);
-			lock(player.Inventory)
+			lock (player.Inventory)
 			{
 				foreach (DBCraftedXItem rawmaterial in craftItemData.RawMaterials)
 				{
@@ -422,11 +424,11 @@ namespace DOL.GS
 					int count = rawmaterial.Count;
 					foreach (InventoryItem item in player.Inventory.GetItemRange(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
 					{
-						if (item!=null && item.Name == rawmaterial.ItemTemplate.Name)
+						if (item != null && item.Name == rawmaterial.ItemTemplate.Name)
 						{
-							if(item.Count >= count)
+							if (item.Count >= count)
 							{
-								if(item.Count == count)
+								if (item.Count == count)
 								{
 									dataSlots.Add(item.SlotPosition, null);
 								}
@@ -440,23 +442,23 @@ namespace DOL.GS
 							else
 							{
 								dataSlots.Add(item.SlotPosition, null);
-								count-= item.Count;
+								count -= item.Count;
 							}
 						}
 					}
-					if(result == false)
+					if (result == false)
 					{
 						return false;
 					}
 				}
 
 				player.Inventory.BeginChanges();
-				foreach(DictionaryEntry de in dataSlots)
+				foreach (DictionaryEntry de in dataSlots)
 				{
 					InventoryItem item = player.Inventory.GetItem((eInventorySlot)de.Key);
-					if(item != null)
+					if (item != null)
 					{
-						if(de.Value == null)
+						if (de.Value == null)
 						{
 							player.Inventory.RemoveItem(item);
 						}
@@ -477,11 +479,11 @@ namespace DOL.GS
 		/// <param name="player"></param>
 		/// <param name="craftItemData"></param>
 		/// <returns></returns>
-		protected virtual void BuildCraftedItem(GamePlayer player ,DBCraftedItem craftItemData)
+		protected virtual void BuildCraftedItem(GamePlayer player, DBCraftedItem craftItemData)
 		{
 			Hashtable changedSlots = new Hashtable(5); // key : > 0 inventory ; < 0 groud || value: < 0 = new item count; > 0 = add to old
-			
-			lock(player.Inventory)
+
+			lock (player.Inventory)
 			{
 				int count = craftItemData.ItemTemplate.PackSize < 1 ? 1 : craftItemData.ItemTemplate.PackSize;
 				foreach (InventoryItem item in player.Inventory.GetItemRange(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
@@ -504,10 +506,10 @@ namespace DOL.GS
 					}
 				}
 
-				if(count > 0) // Add new object
+				if (count > 0) // Add new object
 				{
 					eInventorySlot firstEmptySlot = player.Inventory.FindFirstEmptySlot(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
-					if(firstEmptySlot == eInventorySlot.Invalid)
+					if (firstEmptySlot == eInventorySlot.Invalid)
 					{
 						changedSlots.Add(-1, -count); // Create the item on the ground
 					}
@@ -521,10 +523,10 @@ namespace DOL.GS
 				InventoryItem newItem = null;
 
 				player.Inventory.BeginChanges();
-				foreach(DictionaryEntry de in changedSlots)
+				foreach (DictionaryEntry de in changedSlots)
 				{
-					int countToAdd = (int) de.Value;
-					if(countToAdd > 0)	// Add to exiting item
+					int countToAdd = (int)de.Value;
+					if (countToAdd > 0)	// Add to exiting item
 					{
 						newItem = player.Inventory.GetItem((eInventorySlot)de.Key);
 						player.Inventory.AddCountToStack(newItem, countToAdd);
@@ -533,28 +535,28 @@ namespace DOL.GS
 					{
 						newItem = new InventoryItem(craftItemData.ItemTemplate);
 						newItem.CrafterName = player.Name;
-						newItem.Quality = GetQuality(player,craftItemData);
+						newItem.Quality = GetQuality(player, craftItemData);
 						newItem.Count = -countToAdd;
 						newItem.Weight *= -countToAdd;
-							
-						if((int)de.Key > 0)		// Create new item in the backpack
+
+						if ((int)de.Key > 0)		// Create new item in the backpack
 						{
 							player.Inventory.AddItem((eInventorySlot)de.Key, newItem);
 						}
 						else					// Create new item on the ground
 						{
 							player.CreateItemOnTheGround(newItem);
-							player.Out.SendSimpleWarningDialog("Your backpack is full. "+craftItemData.ItemTemplate.Name+" is created on the ground.");
+							player.Out.SendDialogBox(eDialogCode.SimpleWarning, 0, 0, 0, 0, eDialogType.Ok, true, "Your backpack is full. " + craftItemData.ItemTemplate.Name + " is created on the ground.");
 						}
 					}
 				}
 				player.Inventory.CommitChanges();
-			
-				player.Out.SendMessage("You successfully make the "+craftItemData.ItemTemplate.Name+"! (" +newItem.Quality+ ")",eChatType.CT_Important,eChatLoc.CL_SystemWindow);
-			
-				if(newItem.Quality == 100)
+
+				player.Out.SendMessage("You successfully make the " + craftItemData.ItemTemplate.Name + "! (" + newItem.Quality + ")", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+
+				if (newItem.Quality == 100)
 				{
-					player.Out.SendMessage("Congratulation, you make a masterpiece !",eChatType.CT_Skill,eChatLoc.CL_SystemWindow);	
+					player.Out.SendMessage("Congratulation, you make a masterpiece !", eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
 					player.Out.SendPlaySound(eSoundType.Craft, 0x04);
 				}
 				else
@@ -570,13 +572,13 @@ namespace DOL.GS
 		/// <param name="player"></param>
 		/// <param name="craftItemData"></param>
 		/// <returns></returns>
-		public bool LooseRawMaterial(GamePlayer player,DBCraftedItem craftItemData)
+		public bool LooseRawMaterial(GamePlayer player, DBCraftedItem craftItemData)
 		{
-			player.Out.SendMessage("You fail to make the " +craftItemData.ItemTemplate.Name+ ", and lose some materials!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
-			
+			player.Out.SendMessage("You fail to make the " + craftItemData.ItemTemplate.Name + ", and lose some materials!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
 			Hashtable dataSlots = new Hashtable(5);
 
-			lock(player.Inventory)
+			lock (player.Inventory)
 			{
 				foreach (DBCraftedXItem itemMaterial in craftItemData.RawMaterials)
 				{
@@ -587,48 +589,48 @@ namespace DOL.GS
 						if (count <= 0) count = 1;
 					}
 
-					if(count <= 0) continue; // don't remove this material
+					if (count <= 0) continue; // don't remove this material
 
-					player.Out.SendMessage("You lose ("+count+") "+itemMaterial.ItemTemplate.Name+".",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage("You lose (" + count + ") " + itemMaterial.ItemTemplate.Name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 					bool result = false;
 					foreach (InventoryItem item in player.Inventory.GetItemRange(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
 					{
-						if (item!=null && item.Name == itemMaterial.ItemTemplate.Name)
+						if (item != null && item.Name == itemMaterial.ItemTemplate.Name)
 						{
-							if(item.Count >= count)
+							if (item.Count >= count)
 							{
-								if(item.Count == count)
+								if (item.Count == count)
 								{
-									dataSlots.Add(item.SlotPosition ,null);
+									dataSlots.Add(item.SlotPosition, null);
 								}
 								else
 								{
-									dataSlots.Add(item.SlotPosition ,count);
+									dataSlots.Add(item.SlotPosition, count);
 								}
 								result = true;
 								break;
 							}
 							else
 							{
-								dataSlots.Add(item.SlotPosition ,null);
-								count-= item.Count;
+								dataSlots.Add(item.SlotPosition, null);
+								count -= item.Count;
 							}
 						}
 					}
-					if(result == false)
+					if (result == false)
 					{
 						return false;
 					}
 				}
 
 				player.Inventory.BeginChanges();
-				foreach(DictionaryEntry de in dataSlots)
+				foreach (DictionaryEntry de in dataSlots)
 				{
 					InventoryItem item = player.Inventory.GetItem((eInventorySlot)de.Key);
-					if(item!= null)
+					if (item != null)
 					{
-						if(de.Value == null)
+						if (de.Value == null)
 						{
 							player.Inventory.RemoveItem(item);
 						}
@@ -652,9 +654,9 @@ namespace DOL.GS
 		public virtual int CalculateChanceToMakeItem(GamePlayer player, DBCraftedItem item)
 		{
 			//int[] basesTable = new int[12] { 90, 84, 78, 72, 68, 66, 57, 54, 52, 51, 50, 50 }; Where do you find that ? (seems very more big than on official server)
-			
+
 			int[] basesTable = new int[12] { 70, 68, 66, 64, 62, 60, 58, 56, 54, 52, 50, 50 };
-			
+
 			int playerCraftLevel = player.GetCraftingSkillValue(m_eskill) / 100;
 			if (playerCraftLevel > 11) playerCraftLevel = 11;
 
@@ -662,21 +664,21 @@ namespace DOL.GS
 
 			//modificator based on difficulty of item and current player's level
 			int chanceModifier = player.GetCraftingSkillValue(m_eskill) - item.CraftingLevel;
-			if(chanceModifier > 0) chanceModifier /= 2;
+			if (chanceModifier > 0) chanceModifier /= 2;
 			else chanceModifier *= 2;
 
 			int finalChances = baseChance + chanceModifier;
 
-			if(finalChances < 2) finalChances = 2;
-			else if(finalChances > 100) finalChances = 100;
-				
+			if (finalChances < 2) finalChances = 2;
+			else if (finalChances > 100) finalChances = 100;
+
 			return finalChances;  // red 20, orange 45 ,yellow 70 ,bleu 80, green 90 
 		}
 
 		/// <summary>
 		/// Calculate chance to gain point
 		/// </summary>
-		public virtual int CalculateChanceToGainPoint(GamePlayer player,DBCraftedItem item)
+		public virtual int CalculateChanceToGainPoint(GamePlayer player, DBCraftedItem item)
 		{
 			/*int delta = item.CraftingLevel - (ushort)player.GetCraftingSkillValue(m_eskill);
 			// take care about extremes
@@ -694,20 +696,18 @@ namespace DOL.GS
 			
 			return finalChances;*/
 
-			int[] basesTable = new int[12] { 80, 80, 75, 70, 65, 60, 55, 50, 45, 40, 35, 35 };
-			
+			int[] basesTable = new int[12] { 80, 80, 75, 70, 65, 60, 55, 50, 45, 45, 45, 45 };
+
 			int playerCraftLevel = player.GetCraftingSkillValue(m_eskill) / 100;
 			if (playerCraftLevel > 11) playerCraftLevel = 11;
 
 			int baseChance = basesTable[playerCraftLevel];
 
 			int chanceModifier = item.CraftingLevel - player.GetCraftingSkillValue(m_eskill);
-			if (chanceModifier > 0) chanceModifier /=2;
-			else chanceModifier *=2;
-			
+
 			int finalChances = baseChance + chanceModifier;
-			if(finalChances < 0) finalChances = 0;
-			else if(finalChances > 98) finalChances = 98;
+			if (finalChances < 0) finalChances = 0;
+			else if (finalChances > 98) finalChances = 98;
 
 			return finalChances;
 
@@ -718,7 +718,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Calculate crafting time
 		/// </summary>
-		public virtual int GetCraftingTime(GamePlayer player,DBCraftedItem ItemCraft)
+		public virtual int GetCraftingTime(GamePlayer player, DBCraftedItem ItemCraft)
 		{
 			double baseMultiplier = (ItemCraft.CraftingLevel / 100) + 1;
 
@@ -733,7 +733,7 @@ namespace DOL.GS
 
 			//at least 1s
 			int craftingTime = (int)(baseMultiplier * materialsCount / 4);
-			if(craftingTime < 1) craftingTime = 1;
+			if (craftingTime < 1) craftingTime = 1;
 
 			return craftingTime;
 		}
@@ -759,21 +759,24 @@ namespace DOL.GS
 		/// <summary>
 		/// Calculate crafted item quality
 		/// </summary>
-		public int GetQuality(GamePlayer player,DBCraftedItem item)
+		public int GetQuality(GamePlayer player, DBCraftedItem item)
 		{
 			// 2% chance to get masterpiece, 1:6 chance to get 94-99%, if legendary or if grey con
 			// otherwise moving the most load towards 94%, the higher the item con to the crafter skill
 
 			// legendary
-			if (player.GetCraftingSkillValue(m_eskill) >= 1000) {
-				if (Util.Chance(2)) {
+			if (player.GetCraftingSkillValue(m_eskill) >= 1000)
+			{
+				if (Util.Chance(2))
+				{
 					return 100;	// 2% chance for master piece
 				}
 				return 94 + Util.Random(5);
 			}
 
 			int delta = GetItemCon(player.GetCraftingSkillValue(m_eskill), item.CraftingLevel);
-			if (delta < -2) {
+			if (delta < -2)
+			{
 				if (Util.Chance(2)) return 100; // grey items get 2% chance to be master piece
 				return 94 + Util.Random(5); // handle grey items like legendary
 			}
@@ -790,20 +793,22 @@ namespace DOL.GS
 			// 95: ooo
 			// 94: oooo
 			// where one 'o' marks 100 size, this example results in 10% chance for yellow items to be 97% quality
-			
+
 			delta = delta * 100;
 
 			int[] chancePart = new int[6]; // index ranges from 94%(0) to 99%(5)
 			int sum = 0;
-			for (int i=0; i<6; i++) {
-				chancePart[i] = Math.Max((4-i)*100 - delta, 0);	// 0 minimum
+			for (int i = 0; i < 6; i++)
+			{
+				chancePart[i] = Math.Max((4 - i) * 100 - delta, 0);	// 0 minimum
 				sum += chancePart[i];
 			}
-			
+
 			// selection
 			int rand = Util.Random(sum);
-			for (int i=5; i>=0; i--) {
-				if (rand < chancePart[i]) return 94+i;
+			for (int i = 5; i >= 0; i--)
+			{
+				if (rand < chancePart[i]) return 94 + i;
 				rand -= chancePart[i];
 			}
 
@@ -819,7 +824,8 @@ namespace DOL.GS
 		/// <param name="crafterSkill"></param>
 		/// <param name="itemCraftingLevel"></param>
 		/// <returns></returns>
-		public int GetItemCon(int crafterSkill, int itemCraftingLevel) {
+		public int GetItemCon(int crafterSkill, int itemCraftingLevel)
+		{
 			int diff = itemCraftingLevel - crafterSkill;
 			if (diff <= -50) return -3; // grey
 			else if (diff <= -31) return -2; // green

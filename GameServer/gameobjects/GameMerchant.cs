@@ -275,4 +275,108 @@ namespace DOL.GS
 
 		#endregion
 	}
+
+	/* 
+ * Author:   Avithan 
+ * Date:   22.12.2005 
+ * Bounty merchant 
+ */ 
+
+	public class GameBountyMerchant : GameMerchant
+	{
+		protected override void SendMerchatWindowCallback(object state)
+		{
+			((GamePlayer)state).Out.SendMerchantWindow(m_tradeItems, eMerchantWindowType.Bp);
+		}
+	}
+
+	public class GameChampionMerchant : GameMerchant
+	{
+		public override bool OnPlayerBuy(GamePlayer player, int item_slot, int number)
+		{
+			/*
+			int page = item_slot / MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
+			if (player.ChampionLevel >= page + 2)
+				return base.OnPlayerBuy(player, item_slot, number);
+			else
+			{
+				player.Out.SendMessage("You must be Champion Level " + (page + 2) + " or higher to be able to buy this horse!", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+				return false;
+			}
+			 */
+			return false;
+		}
+
+	}
+
+	public abstract class GameCountMerchant : GameMerchant
+	{
+		protected GameInventoryItem m_moneyItem;
+
+		public GameInventoryItem moneyItem
+		{
+			get { return m_moneyItem; }
+		}
+
+		public override IList GetExamineMessages(GamePlayer player)
+		{
+			IList list = base.GetExamineMessages(player);
+			list.Add("You examine " + GetName(0, false) + ".  " + GetPronoun(0, true) + " is " + GetAggroLevelString(player, false) + " and is a merchant.");
+			list.Add("You can buy items here for " + moneyItem.Item.Name + ".");
+			list.Add("[Right click to display a shop window]");
+			return list;
+		}
+
+		protected override void SendMerchatWindowCallback(object state)
+		{
+			((GamePlayer)state).Out.SendMerchantWindow(m_tradeItems, eMerchantWindowType.Count);
+		}
+	}
+
+	public class GameDiamondSealsMerchant : GameCountMerchant
+	{
+		public override bool AddToWorld()
+		{
+			if (!base.AddToWorld())
+				return false;
+			m_moneyItem = GameInventoryItem.CreateFromTemplate("dias");
+			return true;
+		}
+	}
+
+	public class GameSapphireSealsMerchant : GameCountMerchant
+	{
+		public override bool AddToWorld()
+		{
+			if (!base.AddToWorld())
+				return false;
+			m_moneyItem = GameInventoryItem.CreateFromTemplate("saphir");
+			return true;
+		}
+
+	}
+
+	public class GameEmeraldSealsMerchant : GameCountMerchant
+	{
+		public override bool AddToWorld()
+		{
+			if (!base.AddToWorld())
+				return false;
+			m_moneyItem = GameInventoryItem.CreateFromTemplate("smaras");
+			return true;
+		}
+
+	}
+
+	public class GameAuruliteMerchant : GameCountMerchant
+	{
+		public override bool AddToWorld()
+		{
+			if (!base.AddToWorld())
+				return false;
+			m_moneyItem = GameInventoryItem.CreateFromTemplate("aurulite");
+			return true;
+		}
+
+	}
 }

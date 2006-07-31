@@ -18,13 +18,14 @@
  */
 using System;
 using log4net;
+using DOL.Database;
 
 namespace DOL.GS.DatabaseConverters
 {
 	/// <summary>
 	/// Converts the database format to the version 2
 	/// </summary>
-//	[DatabaseConverter(2)]
+	[DatabaseConverter(2)]
 	public class Version002 : IDatabaseConverter
 	{
 		/// <summary>
@@ -33,11 +34,50 @@ namespace DOL.GS.DatabaseConverters
 		private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
 		/// <summary>
-		/// 
+		/// style icon field added this should copy the ID value
+		/// realm 6 should be peace flag and realm changed
 		/// </summary>
 		public void ConvertDatabase()
 		{
-			// sample
+			log.Info("Database Version 2 Convert Started");
+
+			log.Info("Converting Styles");
+			DBStyle[] styles = (DBStyle[])GameServer.Database.SelectAllObjects(typeof(DBStyle));
+			foreach (DBStyle style in styles)
+			{
+				style.Icon = style.ID;
+
+				GameServer.Database.SaveObject(style);
+			}
+			log.Info(styles.Length + " Styles Processed");
+
+			log.Info("Converting Mobs");
+			Mob[] mobs = (Mob[])GameServer.Database.SelectAllObjects(typeof(Mob));
+			foreach (Mob mob in mobs)
+			{
+				if (mob.Realm == 6)
+				{
+					if ((mob.Flags & (uint)GameNPC.eFlags.PEACE) == 0)
+					{
+						mob.Flags ^= (uint)GameNPC.eFlags.PEACE;
+					}
+
+					Region region = WorldMgr.GetRegion(mob.Region);
+					if (region != null)
+					{
+						Zone zone = region.GetZone(mob.X, mob.Y);
+						if (zone != null)
+						{
+							mob.Realm = (byte)zone.GetRealm();
+						}
+					}
+
+					GameServer.Database.SaveObject(mob);
+				}
+			}
+			log.Info(mobs.Length + " Mobs Processed");
+
+			log.Info("Database Version 2 Convert Finished");
 		}
 	}
 }

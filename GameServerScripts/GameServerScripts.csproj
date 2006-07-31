@@ -412,6 +412,7 @@
     <Compile Include="playercommands\Repair.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="playercommands\report.cs" />
     <Compile Include="playercommands\respec.cs">
       <SubType>Code</SubType>
     </Compile>

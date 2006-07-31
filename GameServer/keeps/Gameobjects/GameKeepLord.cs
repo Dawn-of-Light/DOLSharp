@@ -30,17 +30,19 @@ namespace DOL.GS
 	/// </summary>
 	public class GameKeepLord : GameKeepGuard
 	{
-		public GameKeepLord() : base()
+		public GameKeepLord()
+			: base()
 		{
 
 		}
-		public GameKeepLord(AbstractGameKeep keep) : base(keep)
-		{}
+		public GameKeepLord(AbstractGameKeep keep)
+			: base(keep)
+		{ }
 		public GameKeepLord(GameKeepGuard m_guard)
 		{
 			this.Realm = m_guard.Realm;
 			this.Level = m_guard.Level;
-			this.CurrentRegion  = m_guard.CurrentRegion;
+			this.CurrentRegion = m_guard.CurrentRegion;
 			this.X = m_guard.X;
 			this.Y = m_guard.Y;
 			this.Z = m_guard.Z;
@@ -58,14 +60,14 @@ namespace DOL.GS
 
 		public override bool AddToKeep(AbstractGameKeep keep)
 		{
-			this.Level+= 20;
+			this.Level += 20;
 			if (keep.Lord != null)
 			{
-				log.Error("the keep "+keep.Name + " have ever a lord");
+				log.Error("the keep " + keep.Name + " have ever a lord");
 				return false;
 			}
 			keep.Lord = this;
-			GameEventMgr.AddHandler(this,GameNPCEvent.Dying,new DOLEventHandler((Brain as KeepGuardBrain).Keep.LordKilled));
+			GameEventMgr.AddHandler(this, GameNPCEvent.Dying, new DOLEventHandler((Brain as KeepGuardBrain).Keep.LordKilled));
 			return true;
 		}
 
@@ -79,7 +81,7 @@ namespace DOL.GS
 				return false;
 
 			this.TurnTo(player.X, player.Y);
-			if ( myBrain.Keep.Guild == null)
+			if (myBrain.Keep.Guild == null)
 				this.SayTo(player, eChatLoc.CL_PopupWindow, "Do you want to [Claim] this keep?");
 			else
 			{
@@ -91,7 +93,7 @@ namespace DOL.GS
 		}
 		public override bool WhisperReceive(GameLiving source, string str)
 		{
-			if (!base.WhisperReceive(source,str))
+			if (!base.WhisperReceive(source, str))
 				return false;
 
 			KeepGuardBrain myBrain = this.Brain as KeepGuardBrain;
@@ -108,29 +110,29 @@ namespace DOL.GS
 				myBrain.Keep.Claim(player);
 			}
 			if (myBrain.Keep.Guild == null) return false;
-			switch(str)
+			switch (str)
 			{
-				case "upgrade":	
-				{
-					
-					string msg =  "what is the target level you want to upgradethis keep?";
-					for (int i = myBrain.Keep.Level+1;i<=10;i++)
-						msg += " ["+i+"]";
-					this.SayTo(player, eChatLoc.CL_PopupWindow, "what is the target level you want to upgradethis keep?");
-				}break;
-				case "melee": 
-				{
-					myBrain.Keep.KeepType = GameKeep.eKeepType.Melee;
-				}break;
-				case "scout": 
-				{
-					myBrain.Keep.KeepType = GameKeep.eKeepType.Stealth;
-				}break;
-				case "caster": 
-				{
-					myBrain.Keep.KeepType = GameKeep.eKeepType.Magic;
-				}break;
-				case "1": 
+				case "upgrade":
+					{
+
+						string msg = "what is the target level you want to upgradethis keep?";
+						for (int i = myBrain.Keep.Level + 1; i <= 10; i++)
+							msg += " [" + i + "]";
+						this.SayTo(player, eChatLoc.CL_PopupWindow, "what is the target level you want to upgradethis keep?");
+					} break;
+				case "melee":
+					{
+						myBrain.Keep.KeepType = GameKeep.eKeepType.Melee;
+					} break;
+				case "scout":
+					{
+						myBrain.Keep.KeepType = GameKeep.eKeepType.Stealth;
+					} break;
+				case "caster":
+					{
+						myBrain.Keep.KeepType = GameKeep.eKeepType.Magic;
+					} break;
+				case "1":
 				case "2":
 				case "3":
 				case "4":
@@ -140,10 +142,10 @@ namespace DOL.GS
 				case "8":
 				case "9":
 				case "10":
-				{
-					int targetlevel = Convert.ToInt32(str);
-					myBrain.Keep.Upgrade(targetlevel);
-				}break;
+					{
+						int targetlevel = Convert.ToInt32(str);
+						myBrain.Keep.Upgrade(targetlevel);
+					} break;
 			}
 			return true;
 		}

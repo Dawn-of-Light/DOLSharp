@@ -1,16 +1,16 @@
 /*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -90,10 +90,16 @@ namespace DOL.GS.Scripts
 			{
 				GamePlayer addPlayer = serverClient.Player;
                 if (addPlayer == null) continue;
+				if (serverClient.Account.PrivLevel > (int)ePrivLevel.Player && serverClient.Player.IsAnonymous == false)
+				{
+					clientsList.Add(addPlayer.Client);
+					continue;
+				}
 				if (addPlayer.Client != client // allways add self
-					&& client.Account.PrivLevel < (int)ePrivLevel.GM
+					&& client.Account.PrivLevel==(int)ePrivLevel.Player
 					&& (addPlayer.IsAnonymous
-					|| !GameServer.ServerRules.IsSameRealm(addPlayer, client.Player, true))) continue;
+					|| !GameServer.ServerRules.IsSameRealm(addPlayer, client.Player, true)))
+					continue;
 				clientsList.Add(addPlayer.Client);
 			}
 
@@ -114,6 +120,12 @@ namespace DOL.GS.Scripts
 			{
 				case "all": // display all players, no filter
 					filters = null;
+					break;
+
+				case "gm":
+				case "admin":
+					filters = new ArrayList(1);
+					filters.Add(new GMFilter());
 					break;
 
 				default:
@@ -208,6 +220,11 @@ namespace DOL.GS.Scripts
 				if (log.IsErrorEnabled)
 					log.Error("no currentzone in who commandhandler for player " + player.Name);
 			}
+			ChatGroup mychatgroup = (ChatGroup) player.TempProperties.getObjectProperty(ChatGroup.CHATGROUP_PROPERTY, null);
+			if (mychatgroup != null && ((bool) mychatgroup.Members[player]) == true)
+			{
+				result.Append(" [CG]");
+			}
 			if (player.IsAnonymous)
 			{
 				result.Append(" <ANON>");
@@ -215,6 +232,14 @@ namespace DOL.GS.Scripts
 			if (player.TempProperties.getProperty(GamePlayer.AFK_MESSAGE, null) != null)
 			{
 				result.Append(" <AFK>");
+			}
+			if(player.Client.Account.PrivLevel == (int)ePrivLevel.GM)
+			{
+				result.Append(" <GM>");
+			}
+			if(player.Client.Account.PrivLevel == (int)ePrivLevel.Admin)
+			{
+				result.Append(" <Admin>");
 			}
 
 			return result.ToString();
@@ -334,6 +359,17 @@ namespace DOL.GS.Scripts
 					return false;
 				return true;
 			}
+		}
+
+		private class GMFilter : IWhoFilter
+		{
+			public bool ApplyFilter(GamePlayer player)
+			{
+				if(!player.IsAnonymous && player.Client.Account.PrivLevel > (int)ePrivLevel.Player)
+					return true;
+				return false;
+			}
+			public GMFilter() {}
 		}
 
 		private interface IWhoFilter

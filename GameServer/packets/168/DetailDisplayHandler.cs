@@ -19,10 +19,12 @@
 using System;
 using DOL.Database;
 using System.Collections;
+using System.Collections.Specialized;
 using DOL.GS.Effects;
 using DOL.GS.Scripts;
 using DOL.GS.Spells;
 using DOL.GS.Styles;
+using DOL.GS.SkillHandler;
 
 namespace DOL.GS.PacketHandler.v168
 {
@@ -63,7 +65,8 @@ namespace DOL.GS.PacketHandler.v168
 					//**********************************
 					//show info for all types of weapons
 					//**********************************
-					if ((item.Object_Type >= (int)eObjectType.GenericWeapon) && (item.Object_Type<= (int)eObjectType.Scythe))
+					if ((item.Object_Type >= (int)eObjectType.GenericWeapon) && (item.Object_Type<= (int)eObjectType.Scythe) ||
+						item.Object_Type == (int)eObjectType.Instrument)
 					{
 
 						//						objectInfo.Add("Usable by:");
@@ -150,63 +153,25 @@ namespace DOL.GS.PacketHandler.v168
 						WritePoisonInfo(objectInfo, item, client);
 					}
 
+					if (item.Object_Type == (int)eObjectType.Magical && item.Item_Type == 40) // potion
+						WritePotionInfo(objectInfo, item, client);
+
+					if (!item.IsDropable || !item.IsPickable)
+						objectInfo.Add(" ");//empty line
+					if (!item.IsDropable)
+					{
+						objectInfo.Add("Cannot be dropped or put in your bank");
+						objectInfo.Add("Cannot be sold to merchants.");
+					}
+					if (!item.IsPickable)
+						objectInfo.Add("Cannot be traded to other players.");
+//				objectInfo.Add("Cannot be destroyed.");
 
 					//Add admin info
 					if (client.Account.PrivLevel > 1 )
 					{
-						objectInfo.Add("----------Technical informations----------");
-						objectInfo.Add("Item Template: "+item.Id_nb);
-						objectInfo.Add("         Name: "+item.Name);
-						objectInfo.Add("        Level: "+item.Level);
-						objectInfo.Add("        Model: "+item.Model);
-						objectInfo.Add("         Type: "+GlobalConstants.ObjectTypeToName(item.Object_Type));
-						objectInfo.Add("         Slot: "+GlobalConstants.SlotToName(item.Item_Type));
-						objectInfo.Add("       Emblem: "+item.Emblem);
-						objectInfo.Add("       Effect: "+item.Effect);
-						objectInfo.Add("  Value/Price: "+item.Gold+"g "+item.Silver+"s "+item.Copper+"c");
-						objectInfo.Add("       Weight: "+(item.Weight/10.0f)+"lbs");
-						objectInfo.Add("      Quality: "+item.Quality+"/"+item.MaxQuality+"(max)");
-						objectInfo.Add("   Durability: "+item.Durability+"/"+item.MaxDurability+"(max)");
-						objectInfo.Add("    Condition: "+item.Condition+"/"+item.MaxCondition+"(max)");
-						objectInfo.Add("        Realm: "+item.Realm);
-						objectInfo.Add("  Is dropable: "+(item.IsDropable?"yes":"no"));
-						objectInfo.Add("  Is pickable: "+(item.IsPickable?"yes":"no"));
-						objectInfo.Add(" Is stackable: "+(item.IsStackable?"yes":"no"));
-						if(GlobalConstants.IsWeapon(item.Object_Type))
-						{
-							objectInfo.Add("         Hand: "+GlobalConstants.ItemHandToName(item.Hand));
-							objectInfo.Add("Damage/Second: "+(item.DPS_AF/10.0f));
-							objectInfo.Add("        Speed: "+(item.SPD_ABS/10.0f));
-							objectInfo.Add("  Damage type: "+GlobalConstants.WeaponDamageTypeToName(item.Type_Damage));
-							objectInfo.Add("        Bonus: "+item.Bonus);
-						}
-						else if(GlobalConstants.IsArmor(item.Object_Type))
-						{
-							objectInfo.Add("  Armorfactor: "+item.DPS_AF);
-							objectInfo.Add("    Absorbage: "+item.SPD_ABS);
-							objectInfo.Add("        Bonus: "+item.Bonus);
-						}
-						else if(item.Object_Type==(int)eObjectType.Shield)
-						{
-							objectInfo.Add("Damage/Second: "+(item.DPS_AF/10.0f));
-							objectInfo.Add("        Speed: "+(item.SPD_ABS/10.0f));
-							objectInfo.Add("  Shield type: "+GlobalConstants.ShieldTypeToName(item.Type_Damage));
-							objectInfo.Add("        Bonus: "+item.Bonus);
-						}
-						else if(item.Object_Type==(int)eObjectType.Arrow || item.Object_Type==(int)eObjectType.Bolt)
-						{
-							objectInfo.Add(" Ammunition #: "+item.DPS_AF);
-							objectInfo.Add("       Damage: "+GlobalConstants.AmmunitionTypeToDamageName(item.SPD_ABS));
-							objectInfo.Add("        Range: "+GlobalConstants.AmmunitionTypeToRangeName(item.SPD_ABS));
-							objectInfo.Add("     Accuracy: "+GlobalConstants.AmmunitionTypeToAccuracyName(item.SPD_ABS));
-							objectInfo.Add("        Bonus: "+item.Bonus);
-						}
-						else if(item.Object_Type==(int)eObjectType.Instrument)
-						{
-							objectInfo.Add("   Instrument: "+GlobalConstants.InstrumentTypeToName(item.DPS_AF));
-						}
+						WriteTechnicalInfo(objectInfo, item);
 					}
-
 
 					break;
 				}
@@ -242,6 +207,12 @@ namespace DOL.GS.PacketHandler.v168
 					else
 					{
 						objectInfo.AddRange(spellHandler.DelveInfo);
+						if (client.Account.PrivLevel > 1 )
+						{
+							objectInfo.Add("----------Technical informations----------");
+							objectInfo.Add("Line             :" + spellHandler.SpellLine.Name);
+							objectInfo.Add("HasPositiveEffect:" + spellHandler.HasPositiveEffect);
+						}
 					}
 					break;
 				}
@@ -303,10 +274,29 @@ namespace DOL.GS.PacketHandler.v168
 						return 1;
 
 					caption = item.Name;
+
+					//**********************************
+					//show crafter name
+					//**********************************
+					/*
+					if (item.Item_Type == (int)eInventorySlot.Horse)
+					{
+						WriteHorseInfo(objectInfo, item, client, "");
+					}
+
+					if ((item.Item_Type == (int)eInventorySlot.HorseBarding || item.Item_Type == (int)eInventorySlot.HorseArmor) && item.Level > 0)
+					{
+						objectInfo.Add(" ");//empty line
+						objectInfo.Add(" ");//empty line
+						objectInfo.Add(" - Requires: Champion Level "+item.Level);
+					}
+					*/
+
 					//**********************************
 					//show info for all weapons
 					//**********************************
-					if ((item.Object_Type >= (int)eObjectType.GenericWeapon) && (item.Object_Type<= (int)eObjectType.Scythe))
+					if ((item.Object_Type >= (int)eObjectType.GenericWeapon) && (item.Object_Type<= (int)eObjectType.Scythe) ||
+						item.Object_Type == (int)eObjectType.Instrument)
 					{
 
 						//						objectInfo.Add("Usable by:");
@@ -350,7 +340,7 @@ namespace DOL.GS.PacketHandler.v168
 					//***********************************
 					//shows info for Magic Items
 					//***********************************
-					if (item.Object_Type == (int)eObjectType.Magical || item.Object_Type == (int)eObjectType.AlchemyTincture || item.Object_Type == (int)eObjectType.SpellcraftGem)
+					if (/*(item.Item_Type != (int)eInventorySlot.Horse && item.Object_Type == (int)eObjectType.Magical) ||*/ item.Object_Type == (int)eObjectType.AlchemyTincture || item.Object_Type == (int)eObjectType.SpellcraftGem)
 					{
 						WriteMagicalBonuses(objectInfo, item, client, false);
 					}
@@ -361,6 +351,15 @@ namespace DOL.GS.PacketHandler.v168
 					if (item.Object_Type == (int)eObjectType.Poison)
 					{
 						WritePoisonInfo(objectInfo, item, client);
+					}
+
+					if (item.Object_Type == (int)eObjectType.Magical && item.Item_Type == 40) // potion
+						WritePotionInfo(objectInfo, item, client);
+
+					//Add admin info
+					if (client.Account.PrivLevel > 1 )
+					{
+						WriteTechnicalInfo(objectInfo, item);
 					}
 					break;
 				}
@@ -390,6 +389,7 @@ namespace DOL.GS.PacketHandler.v168
 					IList styleList = client.Player.GetStyleList();
 					IList skillList = client.Player.GetNonTrainableSkillList();
 					Style style = null;
+					string temp;
 					int styleID = objectID - skillList.Count - 100;
 					//DOLConsole.WriteLine("style id="+styleID+"; skills count="+skillList.Count);
 
@@ -400,29 +400,26 @@ namespace DOL.GS.PacketHandler.v168
 
 
 					caption = style.Name;
-					objectInfo.Add("Weapon Type:");
-					objectInfo.Add("-" + style.GetRequiredWeaponName());
-					objectInfo.Add(" "); //empty line
-
-
-					objectInfo.Add("Opening:");
+					objectInfo.Add("Weapon Type: " + style.GetRequiredWeaponName());
+					temp = "Opening: ";
 					if(Style.eOpening.Offensive == style.OpeningRequirementType)
 					{
 						//attacker action result is opening
 						switch(style.AttackResultRequirement)
 						{
-							case Style.eAttackResult.Hit:    objectInfo.Add("-You Hit"); break;
-							case Style.eAttackResult.Miss:   objectInfo.Add("-You Miss"); break;
-							case Style.eAttackResult.Parry:  objectInfo.Add("-Target Parrys"); break;
-							case Style.eAttackResult.Block:  objectInfo.Add("-Target Blocks"); break;
-							case Style.eAttackResult.Evade:  objectInfo.Add("-Target Evades"); break;
-							case Style.eAttackResult.Fumble: objectInfo.Add("-You Fumble"); break;
+							case Style.eAttackResult.Hit:    temp += "You Hit"; break;
+							case Style.eAttackResult.Miss:   temp += "You Miss"; break;
+							case Style.eAttackResult.Parry:  temp += "Target Parrys"; break;
+							case Style.eAttackResult.Block:  temp += "Target Blocks"; break;
+							case Style.eAttackResult.Evade:  temp += "Target Evades"; break;
+							case Style.eAttackResult.Fumble: temp += "You Fumble"; break;
 							case Style.eAttackResult.Style:
 								Style reqStyle = SkillBase.GetStyleByID(style.OpeningRequirementValue, client.Player.CharacterClass.ID);
-								if(reqStyle == null)         objectInfo.Add("-(style not found " + style.OpeningRequirementValue + ")");
-								else                         objectInfo.Add("-"+reqStyle.Name);
+								temp = "Opening Style: ";
+								if(reqStyle == null)         temp += "(style not found " + style.OpeningRequirementValue + ")";
+								else                         temp += reqStyle.Name;
 								break;
-							default: objectInfo.Add(" - None"); break;
+							default: temp += "Any"; break;
 						}
 					}
 					else if(Style.eOpening.Defensive == style.OpeningRequirementType)
@@ -430,32 +427,82 @@ namespace DOL.GS.PacketHandler.v168
 						//defender action result is opening
 						switch(style.AttackResultRequirement)
 						{
-							case Style.eAttackResult.Miss:   objectInfo.Add("-Target Misses"); break;
-							case Style.eAttackResult.Hit:    objectInfo.Add("-Target Hits"); break;
-							case Style.eAttackResult.Parry:  objectInfo.Add("-You Parry"); break;
-							case Style.eAttackResult.Block:  objectInfo.Add("-You Block"); break;
-							case Style.eAttackResult.Evade:  objectInfo.Add("-You Evade"); break;
-							case Style.eAttackResult.Fumble: objectInfo.Add("-Target Fumbles"); break;
-							case Style.eAttackResult.Style:  objectInfo.Add("-Target Style"); break;
-							default: objectInfo.Add(" - None"); break;
+							case Style.eAttackResult.Miss:   temp += "Target Misses"; break;
+							case Style.eAttackResult.Hit:    temp += "Target Hits"; break;
+							case Style.eAttackResult.Parry:  temp += "You Parry"; break;
+							case Style.eAttackResult.Block:  temp += "You Block"; break;
+							case Style.eAttackResult.Evade:  temp += "You Evade"; break;
+							case Style.eAttackResult.Fumble: temp += "Target Fumbles"; break;
+							case Style.eAttackResult.Style:  temp += "Target Style"; break;
+							default: temp += "Any"; break;
 						}
 					}
 					else if(Style.eOpening.Positional == style.OpeningRequirementType)
 					{
 						//attacker position to target is opening
-						objectInfo.Add(" - Position Based");
+						temp += "Positional ";
 						switch(style.OpeningRequirementValue)
 						{
-							case (int)Style.eOpeningPosition.Front: objectInfo.Add("-Front"); break;
-							case (int)Style.eOpeningPosition.Back:  objectInfo.Add("-Back"); break;
-							case (int)Style.eOpeningPosition.Side:  objectInfo.Add("-Side"); break;
+							case (int)Style.eOpeningPosition.Front: temp += "(Front)"; break;
+							case (int)Style.eOpeningPosition.Back:  temp += "(Back)"; break;
+							case (int)Style.eOpeningPosition.Side:  temp += "(Side)"; break;
 						}
 					}
-					objectInfo.Add(" "); //empty line
+					objectInfo.Add(temp);
+
+					temp = "";
+					foreach (Style st in SkillBase.GetStyleList(style.Spec, client.Player.CharacterClass.ID))
+					{
+						if (st.AttackResultRequirement == Style.eAttackResult.Style && st.OpeningRequirementValue == style.ID)
+							temp = (temp == "" ? st.Name : temp + " or " + st.Name);
+					}
+					if (temp != "")
+						objectInfo.Add("Followup Style: " + temp);
+
+					temp = "Fatigue Cost: ";
+					if(style.EnduranceCost < 5)       temp += "Very Low";
+					else if(style.EnduranceCost < 10) temp += "Low";
+					else if(style.EnduranceCost < 15) temp += "Medium";
+					else if(style.EnduranceCost < 20) temp += "High";
+					else                              temp += "Very High";
+					objectInfo.Add(temp);
+
+					temp = "Damage: ";
+					if(style.GrowthRate == 0) temp += "No Bonus";
+					else temp += style.GrowthRate;
+					objectInfo.Add(temp);
+
+					temp = "To Hit: ";
+					if(style.BonusToHit <= -20)      temp += "Very High Penalty";
+					else if(style.BonusToHit <= -15) temp += "High Penalty";
+					else if(style.BonusToHit <= -10) temp += "Medium Penalty";
+					else if(style.BonusToHit <= -5)  temp += "Low Penalty";
+					else if(style.BonusToHit < 0)    temp += "Very Low Penalty";
+					else if(style.BonusToHit == 0)   temp += "No Bonus";
+					else if(style.BonusToHit < 5)    temp += "Very Low Bonus";
+					else if(style.BonusToHit < 10)   temp += "Low Bonus";
+					else if(style.BonusToHit < 15)   temp += "Medium Bonus";
+					else if(style.BonusToHit < 20)   temp += "High Bonus";
+					else                             temp += "Very High Bonus";
+					objectInfo.Add(temp);
+
+					temp = "Defense: ";
+					if(style.BonusToDefense <= -20)      temp += "Very High Penalty";
+					else if(style.BonusToDefense <= -15) temp += "High Penalty";
+					else if(style.BonusToDefense <= -10) temp += "Medium Penalty";
+					else if(style.BonusToDefense <= -5)  temp += "Low Penalty";
+					else if(style.BonusToDefense < 0)    temp += "Very Low Penalty";
+					else if(style.BonusToDefense == 0)   temp += "No Bonus";
+					else if(style.BonusToDefense < 5)    temp += "Very Low Bonus";
+					else if(style.BonusToDefense < 10)   temp += "Low Bonus";
+					else if(style.BonusToDefense < 15)   temp += "Medium Bonus";
+					else if(style.BonusToDefense < 20)   temp += "High Bonus";
+					else                                 temp += "Very High Bonus";
+					objectInfo.Add(temp);
 
 					if(style.SpecialType != Style.eSpecialType.None)
 					{
-						objectInfo.Add("Target Effect");
+						temp = "Target Effect: ";
 						if(style.SpecialType == Style.eSpecialType.Effect)
 						{
 							SpellLine styleLine = SkillBase.GetSpellLine(GlobalSpellsLines.Combat_Styles_Effect);
@@ -477,11 +524,15 @@ namespace DOL.GS.PacketHandler.v168
 										ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, spell, styleLine);
 										if(spellHandler == null)
 										{
-											objectInfo.Add("-"+ spell.Name +" (Not implemented yet)");
+											temp += spell.Name + " (Not implemented yet)";
+											objectInfo.Add(temp);
 										}
 										else
 										{
-											objectInfo.Add("-"+ spell.Name);
+											temp += spell.Name;
+											objectInfo.Add(temp);
+											objectInfo.Add(" ");//empty line
+											objectInfo.AddRange(spellHandler.DelveInfo);
 										}
 									}
 								}
@@ -489,56 +540,11 @@ namespace DOL.GS.PacketHandler.v168
 						}
 						else if(style.SpecialType == Style.eSpecialType.Taunt && style.SpecialValue != 0)
 						{
-//							objectInfo.Add("Target Effect");
-							if(style.SpecialValue < 0) objectInfo.Add("-Detaunt");
-							else                       objectInfo.Add("-Taunt");
+							if(style.SpecialValue < 0) temp += "Detaunt";
+							else                       temp += "Taunt";
+							objectInfo.Add(temp);
 						}
-						objectInfo.Add(" "); //empty line
 					}
-
-
-					objectInfo.Add("Fatigue Cost");
-					if(style.EnduranceCost < 5)       objectInfo.Add(" - Very Low");
-					else if(style.EnduranceCost < 10) objectInfo.Add(" - Low");
-					else if(style.EnduranceCost < 15) objectInfo.Add(" - Medium");
-					else if(style.EnduranceCost < 20) objectInfo.Add(" - High");
-					else                              objectInfo.Add(" - Very High");
-					objectInfo.Add(" "); //empty line
-
-
-					objectInfo.Add("Damage");
-					if(style.GrowthRate == 0) objectInfo.Add(" - None");
-					else objectInfo.Add(" - " + style.GrowthRate);
-					objectInfo.Add(" "); //empty line
-
-
-					objectInfo.Add("To-Hit Bonus");
-					if(style.BonusToHit <= -20)      objectInfo.Add(" - Very High Penalty");
-					else if(style.BonusToHit <= -15) objectInfo.Add(" - High Penalty");
-					else if(style.BonusToHit <= -10) objectInfo.Add(" - Med Penalty");
-					else if(style.BonusToHit <= -5)  objectInfo.Add(" - Low Penalty");
-					else if(style.BonusToHit < 0)    objectInfo.Add(" - Very Low Penalty");
-					else if(style.BonusToHit == 0)   objectInfo.Add(" - None");
-					else if(style.BonusToHit < 5)    objectInfo.Add(" - Very Low Bonus");
-					else if(style.BonusToHit < 10)   objectInfo.Add(" - Low Bonus");
-					else if(style.BonusToHit < 15)   objectInfo.Add(" - Med Bonus");
-					else if(style.BonusToHit < 20)   objectInfo.Add(" - High Bonus");
-					else                             objectInfo.Add(" - Very High Bonus");
-					objectInfo.Add(" "); //empty line
-
-
-					objectInfo.Add("Defense Bonus");
-					if(style.BonusToDefense <= -20)      objectInfo.Add(" - Very High Penalty");
-					else if(style.BonusToDefense <= -15) objectInfo.Add(" - High Penalty");
-					else if(style.BonusToDefense <= -10) objectInfo.Add(" - Med Penalty");
-					else if(style.BonusToDefense <= -5)  objectInfo.Add(" - Low Penalty");
-					else if(style.BonusToDefense < 0)    objectInfo.Add(" - Very Low Penalty");
-					else if(style.BonusToDefense == 0)   objectInfo.Add(" - None");
-					else if(style.BonusToDefense < 5)    objectInfo.Add(" - Very Low Bonus");
-					else if(style.BonusToDefense < 10)   objectInfo.Add(" - Low Bonus");
-					else if(style.BonusToDefense < 15)   objectInfo.Add(" - Med Bonus");
-					else if(style.BonusToDefense < 20)   objectInfo.Add(" - High Bonus");
-					else                                 objectInfo.Add(" - Very High Bonus");
 					break;
 				}
 
@@ -561,16 +567,24 @@ namespace DOL.GS.PacketHandler.v168
 					//**********************************
 					//show crafter name
 					//**********************************
-					if (item.CrafterName != null && item.CrafterName != "")
+					/*
+					if (item.Item_Type == (int)eInventorySlot.Horse)
 					{
-						objectInfo.Add(" ");//empty line
-						objectInfo.Add("Crafter : "+item.CrafterName);
+						WriteHorseInfo(objectInfo, item, client, "");
 					}
 
+					if ((item.Item_Type == (int)eInventorySlot.HorseBarding || item.Item_Type == (int)eInventorySlot.HorseArmor) && item.Level > 0)
+					{
+						objectInfo.Add(" ");//empty line
+						objectInfo.Add(" ");//empty line
+						objectInfo.Add(" - Requires: Champion Level "+item.Level);
+					}
+					*/
 					//**********************************
 					//show info for all types of weapons
 					//**********************************
-					if ((item.Object_Type >= (int)eObjectType.GenericWeapon) && (item.Object_Type<= (int)eObjectType.Scythe))
+					if ((item.Object_Type >= (int)eObjectType.GenericWeapon) && (item.Object_Type<= (int)eObjectType.Scythe) ||
+						item.Object_Type == (int)eObjectType.Instrument)
 					{
 
 						//						objectInfo.Add("Usable by:");
@@ -635,11 +649,12 @@ namespace DOL.GS.PacketHandler.v168
 					//***********************************
 					//shows info for Magic Items
 					//***********************************
-					if (item.Object_Type == (int)eObjectType.Magical || item.Object_Type == (int)eObjectType.AlchemyTincture || item.Object_Type == (int)eObjectType.SpellcraftGem)
+					/*
+					if ((item.Item_Type != (int)eInventorySlot.Horse && item.Object_Type == (int)eObjectType.Magical) || item.Object_Type == (int)eObjectType.AlchemyTincture || item.Object_Type == (int)eObjectType.SpellcraftGem)
 					{
 						WriteMagicalBonuses(objectInfo, item, client, false);
 					}
-
+					*/
 					//***********************************
 					//shows info for Poison Potions
 					//***********************************
@@ -647,10 +662,75 @@ namespace DOL.GS.PacketHandler.v168
 					{
 						WritePoisonInfo(objectInfo, item, client);
 					}
+
+					if (item.Object_Type == (int)eObjectType.Magical && item.Item_Type == 40) // potion
+						WritePotionInfo(objectInfo, item, client);
+
+					//Add admin info
+					if (client.Account.PrivLevel > 1 )
+					{
+						WriteTechnicalInfo(objectInfo, item);
+					}
+
 					break;
-
 				}
+/*
+				case 8://abilities
+				{
+					int index = objectID - 100;
+					IList skillList = client.Player.GetNonTrainableSkillList();
+					Ability ab = (Ability)skillList[index];
 
+					if(ab != null)
+					{
+						caption = ab.Name;
+
+						IAbilityActionHandler handler = SkillBase.GetAbilityActionHandler (ab.KeyName);
+						if(handler is BaseCastingAbilityHandler)
+						{
+							int spellID = ((BaseCastingAbilityHandler)handler).GetSpellID(client.Player.GetAbilityLevel(ab.KeyName));
+							SpellLine spline = SkillBase.GetSpellLine(((BaseCastingAbilityHandler)handler).GetAbilitiesSpellLine());
+							Spell abSpell = null;
+							if (spline != null)
+							{
+								IList spells = SkillBase.GetSpellList(spline.KeyName);
+								if (spells != null)
+								{
+									foreach (Spell spell in spells)
+									{
+										if (spell.ID == spellID)
+										{
+											abSpell = spell;
+											break;
+										}
+									}
+								}
+							}
+
+							if(abSpell == null)
+								return 1;
+
+							ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, abSpell, spline);
+							if(spellHandler == null)
+							{
+								objectInfo.Add(" ");
+								objectInfo.Add("Spell type (" + abSpell.SpellType + ") is not implemented.");
+							}
+							else
+							{
+								objectInfo.AddRange(spellHandler.DelveInfo);
+							}
+							break;
+
+						}
+						else
+						{
+							objectInfo.Add(ab.Description);
+						}
+					}
+					break;
+				}
+*/
 				case 9: //trainer window "info" button
 				{
 					IList specList = client.Player.GetSpecList();
@@ -661,6 +741,19 @@ namespace DOL.GS.PacketHandler.v168
 					}
 					else
 					{
+						/*
+						if (objectID >= 50)
+						{
+							IList ra_list = client.Player.CharacterClass.PlayerClassRealmAbilities(client.Player.Level);
+							Ability ab = (Ability)ra_list[objectID-50];
+							if (ab != null)
+							{
+								caption = ab.Name;
+								objectInfo.Add(ab.Description);
+								break;
+							}
+						}
+						 */
 						caption = "Specialization not found";
 						objectInfo.Add("that specialization is not found, id=" + objectID);
 						break;
@@ -701,13 +794,13 @@ namespace DOL.GS.PacketHandler.v168
 					objectInfo.Add("Lev   Name");
 					foreach(Style style in styles)
 					{
-						objectInfo.Add(" ");
-						objectInfo.Add(style.Level + " - " + style.Name);
+//						objectInfo.Add(" ");
+						objectInfo.Add(style.Level + ": " + style.Name);
 					}
 					foreach(Spell spell in spells)
 					{
-						objectInfo.Add(" ");
-						objectInfo.Add(spell.Level + " - " + spell.Name);
+//						objectInfo.Add(" ");
+						objectInfo.Add(spell.Level + ": " + spell.Name);
 					}
 					break;
 				}
@@ -831,6 +924,67 @@ Type    Description           Id
 			*/
 		}
 
+		public void WriteTechnicalInfo(ArrayList output, ItemTemplate item)
+		{
+			output.Add("----------Technical informations----------");
+			output.Add("Item Template: "+item.Id_nb);
+			output.Add("         Name: "+item.Name);
+			output.Add("        Level: "+item.Level);
+			output.Add("        Model: "+item.Model);
+			output.Add("    Extension: "+item.Extension);
+			output.Add("         Type: "+GlobalConstants.ObjectTypeToName(item.Object_Type)+" ("+item.Object_Type+")");
+			output.Add("         Slot: "+GlobalConstants.SlotToName(item.Item_Type)+" ("+item.Item_Type+")");
+			output.Add("        Color: "+item.Color);
+			output.Add("       Emblem: "+item.Emblem);
+			output.Add("       Effect: "+item.Effect);
+			output.Add("  Value/Price: "+item.Gold+"g "+item.Silver+"s "+item.Copper+"c");
+			output.Add("       Weight: "+(item.Weight/10.0f)+"lbs");
+			output.Add("      Quality: "+item.Quality+"/"+item.MaxQuality+"(max)");
+			output.Add("   Durability: "+item.Durability+"/"+item.MaxDurability+"(max)");
+			output.Add("    Condition: "+item.Condition+"/"+item.MaxCondition+"(max)");
+			output.Add("        Realm: "+item.Realm);
+			output.Add("  Is dropable: "+(item.IsDropable?"yes":"no"));
+			output.Add("  Is pickable: "+(item.IsPickable?"yes":"no"));
+			output.Add(" Is stackable: "+(item.IsStackable?"yes":"no"));
+			output.Add("  ProcSpellID: "+item.ProcSpellID);
+			//output.Add(" ProcSpellID1: "+item.ProcSpellID1);
+			output.Add("      SpellID: "+item.SpellID+" ("+item.Charges+"/"+item.MaxCharges+")");
+			//output.Add("     SpellID1: "+item.SpellID1+" ("+item.Charges1+"/"+item.MaxCharges1+")");
+			if(GlobalConstants.IsWeapon(item.Object_Type))
+			{
+				output.Add("         Hand: "+GlobalConstants.ItemHandToName(item.Hand));
+				output.Add("Damage/Second: "+(item.DPS_AF/10.0f));
+				output.Add("        Speed: "+(item.SPD_ABS/10.0f));
+				output.Add("  Damage type: "+GlobalConstants.WeaponDamageTypeToName(item.Type_Damage));
+				output.Add("        Bonus: "+item.Bonus);
+			}
+			else if(GlobalConstants.IsArmor(item.Object_Type))
+			{
+				output.Add("  Armorfactor: "+item.DPS_AF);
+				output.Add("    Absorbage: "+item.SPD_ABS);
+				output.Add("        Bonus: "+item.Bonus);
+			}
+			else if(item.Object_Type==(int)eObjectType.Shield)
+			{
+				output.Add("Damage/Second: "+(item.DPS_AF/10.0f));
+				output.Add("        Speed: "+(item.SPD_ABS/10.0f));
+				output.Add("  Shield type: "+GlobalConstants.ShieldTypeToName(item.Type_Damage));
+				output.Add("        Bonus: "+item.Bonus);
+			}
+			else if(item.Object_Type==(int)eObjectType.Arrow || item.Object_Type==(int)eObjectType.Bolt)
+			{
+				output.Add(" Ammunition #: "+item.DPS_AF);
+				output.Add("       Damage: "+GlobalConstants.AmmunitionTypeToDamageName(item.SPD_ABS));
+				output.Add("        Range: "+GlobalConstants.AmmunitionTypeToRangeName(item.SPD_ABS));
+				output.Add("     Accuracy: "+GlobalConstants.AmmunitionTypeToAccuracyName(item.SPD_ABS));
+				output.Add("        Bonus: "+item.Bonus);
+			}
+			else if(item.Object_Type==(int)eObjectType.Instrument)
+			{
+				output.Add("   Instrument: "+GlobalConstants.InstrumentTypeToName(item.DPS_AF));
+			}
+		}
+
 		protected string GetShortItemInfo(InventoryItem item, GameClient client)
 		{
 			// TODO: correct info format if anyone is interested...
@@ -878,6 +1032,17 @@ Type    Description           Id
 			{
 				WritePoisonInfo(objectInfo, item, client);
 			}
+
+			if (item.Object_Type == (int)eObjectType.Magical && item.Item_Type == 40) // potion
+				WritePotionInfo(objectInfo, item, client);
+
+			if (!item.IsDropable)
+			{
+				objectInfo.Add(" No Drop.");
+				objectInfo.Add(" No Sell.");
+			}
+			if (!item.IsPickable)
+				objectInfo.Add(" No Trade.");
 
 			foreach(string s in objectInfo)
 				str+=" "+s;
@@ -929,17 +1094,7 @@ Type    Description           Id
 				output.Add("- " + item.ConditionPercent + "% Condition");
 			}
 
-			string damageType = "None";
-			if(item.Type_Damage != 0)
-			{
-				switch(item.Type_Damage)
-				{
-					case (int)eDamageType.Crush:  damageType="Crush"; break;
-					case (int)eDamageType.Slash:  damageType="Slash"; break;
-					case (int)eDamageType.Thrust: damageType="Thrust"; break;
-				}
-				output.Add("Damage Type: " + damageType);
-			}
+			output.Add("Damage Type: " + (item.Type_Damage == 0 ? "None" : GlobalConstants.WeaponDamageTypeToName(item.Type_Damage)));
 			output.Add(" ");
 
 			output.Add("Effective Damage:");
@@ -1055,6 +1210,13 @@ Type    Description           Id
 			WriteBonusLine(output, item.Bonus3Type, item.Bonus3);
 			WriteBonusLine(output, item.Bonus4Type, item.Bonus4);
 			WriteBonusLine(output, item.Bonus5Type, item.Bonus5);
+			/*
+			WriteBonusLine(output, item.Bonus6Type, item.Bonus6);
+			WriteBonusLine(output, item.Bonus7Type, item.Bonus7);
+			WriteBonusLine(output, item.Bonus8Type, item.Bonus8);
+			WriteBonusLine(output, item.Bonus9Type, item.Bonus9);
+			WriteBonusLine(output, item.Bonus10Type, item.Bonus10);
+			*/
 			WriteBonusLine(output, item.ExtraBonusType, item.ExtraBonus);
 
 			if (output.Count > oldCount)
@@ -1071,7 +1233,14 @@ Type    Description           Id
 			WriteFocusLine(output, item.Bonus3Type, item.Bonus3);
 			WriteFocusLine(output, item.Bonus4Type, item.Bonus4);
 			WriteFocusLine(output, item.Bonus5Type, item.Bonus5);
+			/*
+			WriteFocusLine(output, item.Bonus6Type, item.Bonus6);
+			WriteFocusLine(output, item.Bonus7Type, item.Bonus7);
+			WriteFocusLine(output, item.Bonus8Type, item.Bonus8);
+			WriteFocusLine(output, item.Bonus9Type, item.Bonus9);
+			WriteFocusLine(output, item.Bonus10Type, item.Bonus10);
 			WriteFocusLine(output, item.ExtraBonusType, item.ExtraBonus);
+			*/
 
 			if (output.Count > oldCount)
 			{
@@ -1128,28 +1297,36 @@ Type    Description           Id
 					}
 				}
 
-				if(item.SpellID != 0)
+				/*
+				if(item.ProcSpellID1 != 0)
 				{
-					SpellLine poisonLine = SkillBase.GetSpellLine(GlobalSpellsLines.Mundane_Poisons);
-					if (poisonLine != null)
+					string spellNote = "";
+					output.Add(" ");
+					output.Add("Magical Ability:");
+					if (GlobalConstants.IsWeapon(item.Object_Type))
 					{
-						IList spells = SkillBase.GetSpellList(poisonLine.KeyName);
+						spellNote = "- Spell has a chance of casting when this weapon strikes an enemy.";
+					}
+					else if (GlobalConstants.IsArmor(item.Object_Type))
+					{
+						spellNote = "- Spell has a chance of casting when enemy strikes at this armor.";
+					}
+
+					SpellLine line = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
+					if (line != null)
+					{
+						IList spells = SkillBase.GetSpellList(line.KeyName);
 						if (spells != null)
 						{
 							foreach(Spell spl in spells)
 							{
-								if(spl.ID == item.SpellID)
+								if(spl.ID == item.ProcSpellID1)
 								{
 									output.Add(" ");
 									output.Add("Level Requirement:");
 									output.Add("- " + spl.Level + " Level");
 									output.Add(" ");
-									output.Add("Charged Magic Ability:");
-									output.Add("- " + item.Charges+ " Charges");
-									output.Add("- " + item.MaxCharges+ " Max");
-									output.Add(" ");
-
-									ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, spl, poisonLine);
+									ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, spl, line);
 									if(spellHandler != null)
 									{
 										output.AddRange(spellHandler.DelveInfo);
@@ -1159,9 +1336,89 @@ Type    Description           Id
 									{
 										output.Add("-"+ spl.Name +"(Not implemented yet)");
 									}
-									output.Add("- Spell has a chance of casting when this weapon strikes an enemy.");
+									output.Add(spellNote);
+									break;
+								}
+							}
+						}
+					}
+				}
 
-									return;
+				if(item.SpellID1 != 0)
+				{
+					SpellLine chargeEffectsLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
+					if (chargeEffectsLine != null)
+					{
+						IList spells = SkillBase.GetSpellList(chargeEffectsLine.KeyName);
+						if (spells != null)
+						{
+							foreach(Spell spl in spells)
+							{
+								if(spl.ID == item.SpellID1)
+								{
+									output.Add(" ");
+									output.Add("Level Requirement:");
+									output.Add("- " + spl.Level + " Level");
+									output.Add(" ");
+									output.Add("Charged Magic Ability:");
+									output.Add("- " + item.Charges1+ " Charges");
+									output.Add("- " + item.MaxCharges1+ " Max");
+									output.Add(" ");
+
+									ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, spl, chargeEffectsLine);
+									if(spellHandler != null)
+									{
+										output.AddRange(spellHandler.DelveInfo);
+										output.Add(" ");
+									}
+									else
+									{
+										output.Add("-"+ spl.Name +"(Not implemented yet)");
+									}
+									output.Add("- Spell has a chance of casting when this item is used.");
+									break;
+								}
+							}
+						}
+					}
+				}
+				*/
+				if(item.SpellID != 0)
+				{
+					if(GlobalConstants.IsWeapon(item.Object_Type))// Poisoned Weapon
+					{
+						SpellLine poisonLine = SkillBase.GetSpellLine(GlobalSpellsLines.Mundane_Poisons);
+						if (poisonLine != null)
+						{
+							IList spells = SkillBase.GetSpellList(poisonLine.KeyName);
+							if (spells != null)
+							{
+								foreach(Spell spl in spells)
+								{
+									if(spl.ID == item.SpellID)
+									{
+										output.Add(" ");
+										output.Add("Level Requirement:");
+										output.Add("- " + spl.Level + " Level");
+										output.Add(" ");
+										output.Add("Charged Magic Ability:");
+										output.Add("- " + item.Charges+ " Charges");
+										output.Add("- " + item.MaxCharges+ " Max");
+										output.Add(" ");
+
+										ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, spl, poisonLine);
+										if(spellHandler != null)
+										{
+											output.AddRange(spellHandler.DelveInfo);
+											output.Add(" ");
+										}
+										else
+										{
+											output.Add("-"+ spl.Name +"(Not implemented yet)");
+										}
+										output.Add("- Spell has a chance of casting when this weapon strikes an enemy.");
+										return;
+									}
 								}
 							}
 						}
@@ -1181,9 +1438,16 @@ Type    Description           Id
 									output.Add("Level Requirement:");
 									output.Add("- " + spl.Level + " Level");
 									output.Add(" ");
-									output.Add("Charged Magic Ability:");
-									output.Add("- " + item.Charges+ " Charges");
-									output.Add("- " + item.MaxCharges+ " Max");
+									if(item.MaxCharges > 0)
+									{
+										output.Add("Charged Magic Ability:");
+										output.Add("- " + item.Charges+ " Charges");
+										output.Add("- " + item.MaxCharges+ " Max");
+									}
+									else
+									{
+										output.Add("Magical Ability:");
+									}
 									output.Add(" ");
 
 									ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, spl, chargeEffectsLine);
@@ -1197,7 +1461,16 @@ Type    Description           Id
 										output.Add("-"+ spl.Name +"(Not implemented yet)");
 									}
 									output.Add("- Spell has a chance of casting when this item is used.");
-
+									output.Add(" ");
+									if(spl.RecastDelay > 0)
+										output.Add("Can use item every: " + Util.FormatTime(spl.RecastDelay/1000));
+									else
+										output.Add("Can use item every: 3:00 min");
+									long lastChargedItemUseTick = client.Player.TempProperties.getLongProperty(GamePlayer.LAST_CHARGED_ITEM_USE_TICK, 0L);
+									long changeTime = client.Player.CurrentRegion.Time - lastChargedItemUseTick;
+									long recastDelay = (spl.RecastDelay > 0) ? spl.RecastDelay : 60000 * 3;
+									if(changeTime < recastDelay) //3 minutes reuse timer
+										output.Add("Can use again in: " + Util.FormatTime((recastDelay - changeTime)/1000));
 									return;
 								}
 							}
@@ -1240,6 +1513,38 @@ Type    Description           Id
 			}
 		}
 
+		protected void WriteHorseInfo(ArrayList list, ItemTemplate item, GameClient client, string horseName)
+		{
+			list.Add(" ");
+			list.Add(" ");
+			if (item.Level <= 35)
+			{
+				list.Add("This is a basic horse.");
+				list.Add("(+35% speed)");
+				list.Add(" ");
+				list.Add("To make this horse your active mount, place this icon in the appropriate slot of your Mount window.");
+				list.Add(" ");
+				list.Add("To summon this horse, from your Mount window drag the horse icon to your quickbar, and summon by using the quickbar icon.");
+				list.Add(" ");
+				list.Add("Can't be summoned in RvR zones.");
+			}
+			else
+			{
+				list.Add("This is an advanced horse.");
+				list.Add("(+45% speed)");
+				list.Add(" ");
+				list.Add(" ");
+				list.Add("Click this icon in your quickbar to summon (or dismount) your horse.");
+				list.Add(" ");
+				list.Add("- Name: " + ((horseName == null || horseName == "" ) ? "None" : horseName) + ".");
+				list.Add("  (Use /namemount to name your horse.)");
+			}
+			list.Add(" ");
+			list.Add("- Armor: " + (item.DPS_AF == 0 ? "None" : item.DPS_AF.ToString()));
+			list.Add("- Barding: None");
+			list.Add("- Favorite food: Hay and the occasional apple");
+		}
+
 		protected void WritePoisonInfo(ArrayList list, ItemTemplate item, GameClient client)
 		{
 			if (item.SpellID != 0)
@@ -1267,6 +1572,55 @@ Type    Description           Id
 								if(spellHandler != null)
 								{
 									list.AddRange(spellHandler.DelveInfo);
+								}
+								else
+								{
+									list.Add("-"+ spl.Name +" (Not implemented yet)");
+								}
+								break;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		protected void WritePotionInfo(ArrayList list, ItemTemplate item, GameClient client)
+		{
+			if (item.SpellID != 0)
+			{
+				SpellLine potionLine = SkillBase.GetSpellLine(GlobalSpellsLines.Potions_Effects);
+				if (potionLine != null)
+				{
+					IList spells = SkillBase.GetSpellList(potionLine.KeyName);
+					if (spells != null)
+					{
+						foreach(Spell spl in spells)
+						{
+							if(spl.ID == item.SpellID)
+							{
+								list.Add(" ");
+								list.Add("Level Requirement:");
+								list.Add("- " + spl.Level + " Level");
+								list.Add(" ");
+								list.Add("Charged Magic Ability:");
+								list.Add("- " + item.Charges+ " Charges");
+								list.Add("- " + item.MaxCharges+ " Max");
+								list.Add(" ");
+
+								ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, spl, potionLine);
+								if(spellHandler != null)
+									list.AddRange(spellHandler.DelveInfo);
+								list.Add(" ");
+								list.Add("Can use item every: 1:00 min");
+								long lastPotionItemUseTick = client.Player.TempProperties.getLongProperty(GamePlayer.LAST_POTION_ITEM_USE_TICK, 0L);
+								long changeTime = client.Player.CurrentRegion.Time - lastPotionItemUseTick;
+								if(changeTime < 60000) //1 minutes reuse timer
+									list.Add("Can use again in: " + Util.FormatTime((60000 - changeTime)/1000));
+								if (spl.CastTime > 0)
+								{
+									list.Add(" ");
+									list.Add("Cannot be used in combat");
 								}
 								else
 								{

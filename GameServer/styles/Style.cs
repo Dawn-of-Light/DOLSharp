@@ -174,13 +174,13 @@ namespace DOL.GS.Styles
 			get { return baseStyle.SpecLevelRequirement; }
 		}
 
-//		/// <summary>
-//		/// (readonly) The icon of this style
-//		/// </summary>
-//		public int Icon
-//		{
-//			get { return baseStyle.Icon; }
-//		}
+		/// <summary>
+		/// (readonly) The icon of this style
+		/// </summary>
+		public int Icon
+		{
+			get { return baseStyle.Icon; }
+		}
 
 		/// <summary>
 		/// (readonly) The fatique cost of this style in % of player's total fatique

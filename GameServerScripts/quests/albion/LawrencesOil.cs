@@ -516,8 +516,7 @@ namespace DOL.GS.Quests.Albion
 					{
 						if (Util.Chance(50))
 						{
-							player.Out.SendSimpleWarningDialog("You gather oil from the spriteling in Brother \nLawrence's Flask. Your journal \nhas been updated.");
-							
+							player.Out.SendDialogBox(eDialogCode.SimpleWarning, 0x00, 0x00, 0x00, 0x00, eDialogType.Ok, true, "You gather oil from the spriteling in Brother \nLawrence's Flask. Your journal \nhas been updated.");
 							InventoryItem item = player.Inventory.GetFirstItemByID(lawrencesEmptyFlask.Id_nb, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
 							if (item != null)
 							{
@@ -537,7 +536,7 @@ namespace DOL.GS.Quests.Albion
 					{
 						if (Util.Chance(50))
 						{
-							player.Out.SendSimpleWarningDialog("You gather oil from the spriteling in Brother \nLawrence's Flask. Your journal \nhas been updated.");
+							player.Out.SendDialogBox(eDialogCode.SimpleWarning, 0x00, 0x00, 0x00, 0x00, eDialogType.Ok, true, "You gather oil from the spriteling in Brother \nLawrence's Flask. Your journal \nhas been updated.");
 							ReplaceItem(player, lawrencesEmptyFlask, lawrencesFilledFlask);
 							Step = 4;
 						}

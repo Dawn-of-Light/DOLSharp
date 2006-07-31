@@ -42,7 +42,7 @@ namespace DOL.GS.Housing
 		{
 			IList list = new ArrayList();
 			list.Add("You target lot number " + DatabaseItem.HouseNumber + ".");
-			if (DatabaseItem.OwnerIDs == null)
+			if (DatabaseItem.OwnerIDs == null || DatabaseItem.OwnerIDs == "")
 			{
 				list.Add(" It can be bought for " + Money.GetString(HouseTemplateMgr.GetLotPrice(DatabaseItem)) + ".");
 			}
@@ -55,7 +55,7 @@ namespace DOL.GS.Housing
 			{
 				return false;
 			}
-			if (DatabaseItem.OwnerIDs == null)
+			if (DatabaseItem.OwnerIDs == null || DatabaseItem.OwnerIDs == "")
 			{
 				player.Out.SendCustomDialog("Do you want to buy this lot?\r\n It costs " + Money.GetString(HouseTemplateMgr.GetLotPrice(DatabaseItem)) + "!", new CustomDialogResponse(BuyLot));
 			}
@@ -78,7 +78,7 @@ namespace DOL.GS.Housing
 			if (response != 0x01) return;
 			lock (this)
 			{
-				if (DatabaseItem.OwnerIDs != null) return;
+				if (DatabaseItem.OwnerIDs != null && DatabaseItem.OwnerIDs != "") return;
 				if (player.PlayerCharacter.LotNumber != 0 && player.Client.Account.PrivLevel <= 1)
 				{
 					player.Out.SendMessage("You do already own another lot or house (Number " + player.PlayerCharacter.LotNumber + ").", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);

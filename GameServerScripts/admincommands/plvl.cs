@@ -1,16 +1,16 @@
 /*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -23,7 +23,7 @@ namespace DOL.GS.Scripts
 {
 	[CmdAttribute(
 		"&plvl",
-		(uint) ePrivLevel.Admin,
+		(uint)ePrivLevel.Admin,
 		"Change privilege level and add single permision to player",
 		"/plvl <newPlvl>",
 		"/plvl single <command>",
@@ -39,78 +39,82 @@ namespace DOL.GS.Scripts
 			}
 
 			uint plvl;
-			switch(args[1])
+			switch (args[1])
 			{
 				case "single":
-				{
-					GamePlayer player = client.Player.TargetObject as GamePlayer;
-					if (player == null)
 					{
-						client.Out.SendMessage("You must select a player to add single permission on him",eChatType.CT_System,eChatLoc.CL_SystemWindow);
-						return 0;
-					}
-					if (args.Length != 3)
-					{
-						DisplaySyntax(client);
-						return 0;
-					}
-					SinglePermission.setPermission(player,args[2]);
-						client.Out.SendMessage("You add the single permission to " + player.Name + "for " + args[2] + " command.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
-					return 1;
-				}
-				case "remove":
-				{
-					GamePlayer player = client.Player.TargetObject as GamePlayer;
-					if (player == null)
-					{
-						client.Out.SendMessage("You must select a player to add single permission on him",eChatType.CT_System,eChatLoc.CL_SystemWindow);
-						return 0;
-					}
-					if (args.Length != 3)
-					{
-						DisplaySyntax(client);
-						return 0;
-					}
-					if (SinglePermission.removePermission(player,args[2]))
-						client.Out.SendMessage("You remove the single permission of " + player.Name + "for " + args[2] + " command.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
-					else
-						client.Out.SendMessage("there is no permission of " + player.Name + "for " + args[2] + " command.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
-					return 1;
-				}
-				default:
-				{
-					try
-					{
-						plvl = Convert.ToUInt16(args[1]);
-
-						GamePlayer obj = (GamePlayer) client.Player.TargetObject;
-
-						if (obj != null)
+						GamePlayer player = client.Player.TargetObject as GamePlayer;
+						if (player == null)
 						{
-							if (obj.Client.Account != null)
+							client.Out.SendMessage("You must select a player to add single permission on him", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							return 0;
+						}
+						if (args.Length != 3)
+						{
+							DisplaySyntax(client);
+							return 0;
+						}
+						SinglePermission.setPermission(player, args[2]);
+						client.Out.SendMessage("You add the single permission to " + player.Name + " for " + args[2] + " command.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						return 1;
+					}
+				case "remove":
+					{
+						GamePlayer player = client.Player.TargetObject as GamePlayer;
+						if (player == null)
+						{
+							client.Out.SendMessage("You must select a player to remove single permission on him", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							return 0;
+						}
+						if (args.Length != 3)
+						{
+							DisplaySyntax(client);
+							return 0;
+						}
+						if (SinglePermission.removePermission(player, args[2]))
+							client.Out.SendMessage("You remove the single permission of " + player.Name + " for " + args[2] + " command.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						else
+							client.Out.SendMessage("there is no permission of " + player.Name + " for " + args[2] + " command.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						return 1;
+					}
+				default:
+					{
+						try
+						{
+							plvl = Convert.ToUInt16(args[1]);
+
+							GamePlayer obj = (GamePlayer)client.Player.TargetObject;
+
+							if (obj != null)
 							{
-								obj.Client.Account.PrivLevel = plvl;
-								GameServer.Database.SaveObject(obj.Client.Account);
-								foreach (GameNPC npc in client.Player.GetNPCsInRadius(WorldMgr.VISIBILITY_DISTANCE))
+								if (obj.Client.Account != null)
 								{
-									if ((npc.Flags & (int) GameNPC.eFlags.CANTTARGET) != 0 || (npc.Flags & (int) GameNPC.eFlags.DONTSHOWNAME) != 0)
+									obj.Client.Account.PrivLevel = plvl;
+									GameServer.Database.SaveObject(obj.Client.Account);
+									foreach (GameNPC npc in client.Player.GetNPCsInRadius(WorldMgr.VISIBILITY_DISTANCE))
 									{
-										client.Out.SendNPCCreate(npc);
-										//client.Out.SendNPCUpdate(npc); <-- BIG NO NO causes a racing condition!
+										if ((npc.Flags & (int)GameNPC.eFlags.CANTTARGET) != 0 || (npc.Flags & (int)GameNPC.eFlags.DONTSHOWNAME) != 0)
+										{
+											client.Out.SendNPCCreate(npc);
+											//client.Out.SendNPCUpdate(npc); <-- BIG NO NO causes a racing condition!
+										}
 									}
+									obj.Client.Out.SendMessage("Your privilege level has been set to " + plvl.ToString(),
+										eChatType.CT_Important,
+										eChatLoc.CL_SystemWindow);
+									if (obj != client.Player)
+										client.Out.SendMessage(obj.Name + " privilege level has been set to " + plvl.ToString(),
+										eChatType.CT_Important,
+										eChatLoc.CL_SystemWindow);
 								}
-								obj.Client.Out.SendMessage("Your privilege level has been set to " + plvl.ToString(),
-									eChatType.CT_Important,
-									eChatLoc.CL_SystemWindow);
 							}
 						}
+						catch (Exception)
+						{
+							DisplaySyntax(client);
+						}
+						return 1;
 					}
-					catch (Exception)
-					{
-						DisplaySyntax(client);
-					}
-					return 1;
-				}
 			}
 		}
 	}

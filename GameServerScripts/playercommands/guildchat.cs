@@ -41,14 +41,7 @@ namespace DOL.GS.Scripts
 				return 1;
 			}
 			string message = "[Guild] " + client.Player.Name + ": \"" + string.Join(" ", args, 1, args.Length - 1) + "\"";
-			foreach (GamePlayer ply in client.Player.Guild.ListOnlineMembers())
-			{
-				if (!client.Player.Guild.GotAccess(ply, eGuildRank.GcHear))
-				{
-					continue;
-				}
-				ply.Out.SendMessage(message, eChatType.CT_Guild, eChatLoc.CL_ChatWindow);
-			}
+			client.Player.Guild.SendMessageToGuildMembers(message, eChatType.CT_Guild, eChatLoc.CL_ChatWindow);
 			return 1;
 		}
 	}

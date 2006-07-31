@@ -1,16 +1,16 @@
 /*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -31,34 +31,35 @@ namespace DOL.GS
 		/// <summary>
 		/// Holds the random number generator instance
 		/// </summary>
-		[ThreadStatic] private static Random m_random;
+		[ThreadStatic]
+		private static Random m_random;
 
 		/// <summary>
 		/// Generates a random number between 0..max inclusive 0 AND max
 		/// </summary>
 		/// <param name="max"></param>
 		/// <returns></returns>
-		public static int Random(int max) 
+		public static int Random(int max)
 		{
-			return RandomGen.Next(max+1);
+			return RandomGen.Next(max + 1);
 		}
 		/// <summary>
 		/// Generates a random number between min..max inclusive min AND max
 		/// </summary>
 		/// <param name="max"></param>
 		/// <returns></returns>
-		public static int Random(int min, int max) 
+		public static int Random(int min, int max)
 		{
-			return RandomGen.Next(min, max+1);
+			return RandomGen.Next(min, max + 1);
 		}
 		/// <summary>
 		/// Generates a random number between 0.0 and 1.0.
 		/// </summary>
 		/// <returns>
-		/// A double-precision floating point number greater than 
+		/// A double-precision floating point number greater than
 		/// or equal to 0.0, and less than 1.0.
 		/// </returns>
-		public static double RandomDouble() 
+		public static double RandomDouble()
 		{
 			return RandomGen.NextDouble();
 		}
@@ -68,9 +69,9 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="chancePercent">0 .. 100</param>
 		/// <returns></returns>
-		public static bool Chance(int chancePercent) 
+		public static bool Chance(int chancePercent)
 		{
-			return  chancePercent >= Random(1, 100);
+			return chancePercent >= Random(1, 100);
 		}
 
 		/// <summary>
@@ -78,7 +79,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="chancePercent">0.0 .. 1.0</param>
 		/// <returns></returns>
-		public static bool ChanceDouble(double chancePercent) 
+		public static bool ChanceDouble(double chancePercent)
 		{
 			return chancePercent > RandomGen.NextDouble();
 		}
@@ -107,21 +108,22 @@ namespace DOL.GS
 		{
 			if (message == null || message.Length == 0) return message;
 			string res = string.Format(message, args);
-			if (res.Length>0 && char.IsLower(res[0])) {
+			if (res.Length > 0 && char.IsLower(res[0]))
+			{
 				res = char.ToUpper(res[0]) + res.Substring(1);
 			}
 			return res;
 		}
 
 		/// <summary>
-		/// Checks wether string is empty. 
+		/// Checks wether string is empty.
 		/// empty means either null or ""
 		/// </summary>
 		/// <param name="str"></param>
 		/// <returns></returns>
 		public static bool IsEmpty(string str)
 		{
-			return (str==null || str.Length==0);
+			return (str == null || str.Length == 0);
 		}
 
 		/// <summary>
@@ -136,7 +138,7 @@ namespace DOL.GS
 			thread.Resume();
 			return trace;
 		}
-		
+
 		/// <summary>
 		/// Formats the stacktrace
 		/// </summary>
@@ -157,6 +159,23 @@ namespace DOL.GS
 					.Append(" col:").Append(frame.GetFileColumnNumber())
 					.Append("\n");
 			}
+			return str.ToString();
+		}
+
+		public static string FormatTime(long seconds)
+		{
+			StringBuilder str = new StringBuilder(10);
+			long minutes = seconds / 60;
+			if (minutes > 0)
+			{
+				str.Append(minutes)
+					.Append(":")
+					.Append((seconds - (minutes * 60)).ToString("D2"))
+					.Append(" min");
+			}
+			else
+				str.Append(seconds)
+					.Append(" sec");
 			return str.ToString();
 		}
 	}

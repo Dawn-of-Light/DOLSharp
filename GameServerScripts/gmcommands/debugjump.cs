@@ -21,47 +21,49 @@ using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Scripts
 {
-	[CmdAttribute("]jump",(uint)ePrivLevel.GM,"Teleports yourself to the specified location",
-  			"]jump <zoneID> <locX> <locY> <locZ> <heading>",
-  			"Autoused for *jump in debug mode")]
-	public class OnDebugJump: ICommandHandler
+	[Cmd("]jump", (uint)ePrivLevel.GM, "Teleports yourself to the specified location",
+			"']jump <zoneID> <locX> <locY> <locZ> <heading>' (Autoused for *jump in debug mode)")]
+	public class OnDebugJump : AbstractCommandHandler, ICommandHandler
 	{
 		public int OnCommand(GameClient client, string[] args)
 		{
-			if(args.Length==6)
+			if (args.Length == 6)
 			{
 				try
 				{
-		        	Zone z=WorldMgr.GetZone(Convert.ToUInt16(args[1]));
+					Zone z = WorldMgr.GetZone(Convert.ToUInt16(args[1]));
 					if (z == null)
+					{
 						client.Out.SendMessage("Unknown zone ID: " + args[1], eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					ushort RegionID=z.ZoneRegion.ID;
-					int X=z.XOffset+Convert.ToInt32(args[2]);
-					int Y=z.YOffset+Convert.ToInt32(args[3]);
-					int Z=Convert.ToInt32(args[4]);
-					ushort Heading=Convert.ToUInt16(args[5]);
-					if(!CheckExpansion(client,RegionID)) return 0;
-					client.Player.MoveTo(RegionID,X,Y,Z,Heading);
-					return 1;
+						return 1;
+					}
+					ushort RegionID = z.ZoneRegion.ID;
+					int X = z.XOffset + Convert.ToInt32(args[2]);
+					int Y = z.YOffset + Convert.ToInt32(args[3]);
+					int Z = Convert.ToInt32(args[4]);
+					ushort Heading = Convert.ToUInt16(args[5]);
+					if (!CheckExpansion(client, RegionID)) return 0;
+					client.Player.MoveTo(RegionID, X, Y, Z, Heading);
+					return 0;
 				}
 				catch
 				{
-	  				return 0;
+					return 1;
 				}
 			}
 			else
-  			{
-	  			client.Out.SendMessage("Usage : ]Jump RegionID X Y Z Heading",eChatType.CT_System,eChatLoc.CL_SystemWindow);
-  				return 0;
-  			}
-	  	}
+			{
+				DisplaySyntax(client);
+				return 0;
+			}
+		}
 
 		public bool CheckExpansion(GameClient client, ushort RegionID)
 		{
 			Region reg = WorldMgr.GetRegion(RegionID);
-			if (reg == null )
+			if (reg == null)
 			{
-				client.Out.SendMessage("Unknown region (" + RegionID.ToString()+ ").", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				client.Out.SendMessage("Unknown region (" + RegionID.ToString() + ").", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
 			else if (reg.Expansion >= client.ClientType)

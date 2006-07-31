@@ -62,6 +62,9 @@ namespace DOL.GS.PacketHandler.v168
 				return 1;
 			}
 
+			if(client.Account.PrivLevel > 1)
+				client.Out.SendMessage("JumpSpotID = "+JumpSpotID, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
 			IJumpPointHandler check = null;
 			if (zonePoint.ClassType != null && zonePoint.ClassType != "")
 			{

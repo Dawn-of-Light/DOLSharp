@@ -1,16 +1,16 @@
 /*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -18,6 +18,7 @@
  */
 using System;
 using System.Reflection;
+using DOL.Database;
 using DOL.Events;
 using DOL.GS;
 using log4net;
@@ -77,11 +78,13 @@ namespace DOL.GS.PacketHandler.v168
 				player.CurrentRegion.Notify(RegionEvent.PlayerEnter, player.CurrentRegion, new RegionPlayerEventArgs(player));
 
 				//Send npcs in view a 0x72 message
+				int mobs = 0;
 				foreach (GameNPC npc in player.GetNPCsInRadius(WorldMgr.VISIBILITY_DISTANCE))
 				{
 					player.Out.SendNPCCreate(npc);
+					mobs++;
 					if (npc.Inventory != null)
-						player.Out.SendLivingEquipementUpdate(npc);
+						player.Out.SendLivingEquipmentUpdate(npc);
 					player.CurrentUpdateArray[npc.ObjectID - 1] = true;
 
 					//The following line can cause a racing condition
@@ -92,7 +95,6 @@ namespace DOL.GS.PacketHandler.v168
 				player.Out.SendTime();
 				//Update the weather for the player
 				WeatherMgr.UpdatePlayerWeather(player);
-
 
 				if (!player.EnteredGame)
 				{
@@ -129,10 +131,8 @@ namespace DOL.GS.PacketHandler.v168
 					player.PlayerGroup.UpdateAllToMember(player, true, false);
 					player.PlayerGroup.UpdateMember(player, true, true);
 				}
-				
-				player.IsPlayerMoved = false;
 
-				player.Out.SendPlayerInitFinished();
+				player.Out.SendPlayerInitFinished((byte)mobs);
 				player.TargetObject = null;
 //				player.Out.SendChangeTarget(null); // don't work like expected - prints "can't assist..."
 
@@ -140,12 +140,14 @@ namespace DOL.GS.PacketHandler.v168
 				player.StartHealthRegeneration();
 				player.StartPowerRegeneration();
 				player.StartEnduranceRegeneration();
-				
+
 				player.SetPvPInvulnerability(10*1000, null);
 
 				AssemblyName an = Assembly.GetExecutingAssembly().GetName();
 				player.Out.SendMessage("Dawn of Light " + an.Name + " Version: " + an.Version, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
+				if (player.Guild != null && player.Guild.theGuildDB.Motd != null && player.Guild.theGuildDB.Motd!= "")
+					player.Out.SendMessage(player.Guild.theGuildDB.Motd, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				player.Client.ClientState = GameClient.eClientState.Playing;
 			}
 		}

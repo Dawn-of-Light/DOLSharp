@@ -30,7 +30,8 @@ namespace DOL.GS
 		/// Constructor of GameKeepBanner
 		/// </summary>
 		/// <param name="keep"></param>
-		public GameKeepBanner(AbstractGameKeep keep) : base()
+		public GameKeepBanner(AbstractGameKeep keep)
+			: base()
 		{
 			this.Keep = keep;
 		}
@@ -39,9 +40,10 @@ namespace DOL.GS
 		/// Constructor of GameKeepBanner without keep linked
 		/// be careful with this. Try to add always keep.
 		/// </summary>
-		public GameKeepBanner() : base()
+		public GameKeepBanner()
+			: base()
 		{
-			
+
 		}
 
 		#region Properties
@@ -53,10 +55,10 @@ namespace DOL.GS
 		/// <summary>
 		/// The keep owner
 		/// </summary>
-		public AbstractGameKeep Keep 
-		{ 
-			get{return m_keep;}
-			set{m_keep=value;} 
+		public AbstractGameKeep Keep
+		{
+			get { return m_keep; }
+			set { m_keep = value; }
 		}
 		#endregion
 
@@ -70,7 +72,7 @@ namespace DOL.GS
 			//keep must been add before loadfromDB
 			base.LoadFromDatabase(obj);
 			DBKeepObject dbkeepobj = obj as DBKeepObject;
-			if (dbkeepobj == null)return;
+			if (dbkeepobj == null) return;
 			this.Name = dbkeepobj.Name;
 			this.Realm = (byte)dbkeepobj.Realm;
 			this.Model = (ushort)dbkeepobj.Model;
@@ -91,9 +93,9 @@ namespace DOL.GS
 		public override void SaveIntoDatabase()
 		{
 			DBKeepObject obj = null;
-			if(InternalID != null)
-				obj = (DBKeepObject) GameServer.Database.FindObjectByKey(typeof(DBKeepObject), InternalID);
-			if(obj == null)
+			if (InternalID != null)
+				obj = (DBKeepObject)GameServer.Database.FindObjectByKey(typeof(DBKeepObject), InternalID);
+			if (obj == null)
 				obj = new DBKeepObject();
 			obj.Name = Name;
 			obj.Model = Model;
@@ -108,7 +110,7 @@ namespace DOL.GS
 			obj.Z = Z;
 			obj.ClassType = this.GetType().ToString();
 
-			if(InternalID == null)
+			if (InternalID == null)
 			{
 				GameServer.Database.AddNewObject(obj);
 				InternalID = obj.ObjectId;
@@ -127,13 +129,13 @@ namespace DOL.GS
 		public void ChangeGuild(Guild guild)
 		{
 			this.Emblem = guild.theGuildDB.Emblem;
-			ushort model = 679 ;
+			ushort model = 679;
 			switch (Keep.Realm)
 			{
-				case 0: model=679; break;
-				case 1: model=679; break;
-				case 2: model=680; break;
-				case 3: model=681; break;
+				case 0: model = 679; break;
+				case 1: model = 679; break;
+				case 2: model = 680; break;
+				case 3: model = 681; break;
 			}
 			this.Model = model;
 			this.Name = GlobalConstants.RealmToName((eRealm)Keep.Realm) + " Guild Banner";
@@ -151,11 +153,11 @@ namespace DOL.GS
 			}
 			switch (this.Realm)
 			{
-				case 0: return 0; 
-				case 1: return 464; 
-				case 2: return 465; 
+				case 0: return 0;
+				case 1: return 464;
+				case 2: return 465;
 				case 3: return 466;
-				default : return 0;
+				default: return 0;
 			}
 		}
 	}

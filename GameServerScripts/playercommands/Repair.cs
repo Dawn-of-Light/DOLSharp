@@ -1,16 +1,16 @@
  /*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -62,6 +62,17 @@ namespace DOL.GS.Scripts
 
 		public static bool PreFireChecks(GamePlayer player, GameLiving obj)
 		{
+			if (obj == null)
+				return false;
+			if (player.Realm != obj.Realm)
+				return false;
+
+			if ((obj as GameLiving).InCombat)
+			{
+				player.Out.SendMessage("The can't repair object while it under attack!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return false;
+			}
+
 			if ((obj as GameLiving).HealthPercent == 100)
 			{
 				player.Out.SendMessage("The component is already at full health!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -81,6 +92,12 @@ namespace DOL.GS.Scripts
 			if (!player.Alive)
 			{
 				player.Out.SendMessage("You can't repair while dead.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return false;
+			}
+
+			if (player.Sitting)
+			{
+				player.Out.SendMessage("You can't repair while sit.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
 

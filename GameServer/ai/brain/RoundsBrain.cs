@@ -39,7 +39,7 @@ namespace DOL.AI.Brain
 		{
 			if (!base.Start()) return false;
 			Body.CurrentWayPoint = MovementMgr.Instance.LoadPath(Body.InternalID + " Rounds");
-			MovementMgr.Instance.MoveOnPath(Body,Body.MaxSpeed);
+			MovementMgr.Instance.MoveOnPath(Body, Body.MaxSpeed);
 			return true;
 		}
 		/// <summary>
@@ -52,12 +52,12 @@ namespace DOL.AI.Brain
 		{
 			//save current position in path go to here and reload path point
 			//insert path in pathpoint
-			PathPoint temporaryPathPoint = new PathPoint(Body.X,Body.Y,Body.Z,Body.CurrentSpeed,Body.CurrentWayPoint.Type);
-			temporaryPathPoint.Next = Body.CurrentWayPoint; 
+			PathPoint temporaryPathPoint = new PathPoint(Body.X, Body.Y, Body.Z, Body.CurrentSpeed, Body.CurrentWayPoint.Type);
+			temporaryPathPoint.Next = Body.CurrentWayPoint;
 			temporaryPathPoint.Prev = Body.CurrentWayPoint.Prev;
 			Body.CurrentWayPoint = temporaryPathPoint;
 			//this path point will be not available after the following point because no link to itself
-			base.AddToAggroList (living, aggroamount);
+			base.AddToAggroList(living, aggroamount);
 		}
 
 		/// <summary>
@@ -67,9 +67,9 @@ namespace DOL.AI.Brain
 		/// <returns>the best target</returns>
 		protected override GameLiving CalculateNextAttackTarget()
 		{
-			GameLiving living = base.CalculateNextAttackTarget ();
+			GameLiving living = base.CalculateNextAttackTarget();
 			if (living == null)
-				MovementMgr.Instance.MoveOnPath(Body,Body.MaxSpeed);
+				MovementMgr.Instance.MoveOnPath(Body, Body.MaxSpeed);
 			return living;
 		}
 	}

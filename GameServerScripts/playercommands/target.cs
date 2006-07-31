@@ -30,7 +30,7 @@ namespace DOL.GS.Scripts
 			if (args.Length == 2)
 			{
 				int result = 0;
-				GameClient targetClient = WorldMgr.GuessClientByPlayerNameAndRealm(args[1], 0, out result);
+				GameClient targetClient = WorldMgr.GuessClientByPlayerNameAndRealm(args[1], 0, true, out result);
 				if (targetClient != null)
 				{
 					targetPlayer = targetClient.Player;
