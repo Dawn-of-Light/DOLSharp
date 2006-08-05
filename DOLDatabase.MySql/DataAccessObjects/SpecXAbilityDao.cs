@@ -28,36 +28,46 @@ namespace DOL.Database.MySql.DataAccessObjects
 {
 	public class SpecXAbilityDao : ISpecXAbilityDao
 	{
+		protected static readonly string c_rowFields = "`SpecXAbilityId`,`AbilityKey`,`AbilityLevel`,`Spec`,`SpecLevel`";
 		private readonly MySqlState m_state;
 
 		public virtual SpecXAbilityEntity Find(int key)
 		{
 			SpecXAbilityEntity result = new SpecXAbilityEntity();
+
 			m_state.ExecuteQuery(
-				"SELECT `SpecXAbilityId`,`AbilityKey`,`AbilityLevel`,`Spec`,`SpecLevel` FROM `specxability` WHERE `SpecXAbilityId`='" + m_state.EscapeString(key.ToString()) + "'",
+				"SELECT " + c_rowFields + " FROM `specxability` WHERE `SpecXAbilityId`='" + m_state.EscapeString(key.ToString()) + "'",
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
 					FillEntityWithRow(ref result, reader);
 				}
 			);
+
 			return result;
 		}
 
 		public virtual void Create(SpecXAbilityEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"INSERT INTO `specxability` VALUES (`" + obj.Id.ToString() + "`,`" + obj.AbilityKey.ToString() + "`,`" + obj.AbilityLevel.ToString() + "`,`" + obj.Spec.ToString() + "`,`" + obj.SpecLevel.ToString() + "`);");
 		}
 
 		public virtual void Update(SpecXAbilityEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"UPDATE `specxability` SET `SpecXAbilityId`='" + m_state.EscapeString(obj.Id.ToString()) + "', `AbilityKey`='" + m_state.EscapeString(obj.AbilityKey.ToString()) + "', `AbilityLevel`='" + m_state.EscapeString(obj.AbilityLevel.ToString()) + "', `Spec`='" + m_state.EscapeString(obj.Spec.ToString()) + "', `SpecLevel`='" + m_state.EscapeString(obj.SpecLevel.ToString()) + "' WHERE `SpecXAbilityId`='" + m_state.EscapeString(obj.Id.ToString()) + "'");
 		}
 
 		public virtual void Delete(SpecXAbilityEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"DELETE FROM `specxability` WHERE `SpecXAbilityId`='" + m_state.EscapeString(obj.Id.ToString()) + "'");
 		}
 
 		public virtual void SaveAll()
 		{
+			// not used by this implementation
 		}
 
 		public virtual int CountAll()
@@ -65,7 +75,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return -1;
 		}
 
-		protected void FillEntityWithRow(ref SpecXAbilityEntity entity, MySqlDataReader reader)
+		protected virtual void FillEntityWithRow(ref SpecXAbilityEntity entity, MySqlDataReader reader)
 		{
 			entity.Id = reader.GetInt32(0);
 			entity.AbilityKey = reader.GetString(1);

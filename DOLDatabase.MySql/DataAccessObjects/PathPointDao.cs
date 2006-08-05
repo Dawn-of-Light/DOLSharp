@@ -28,36 +28,46 @@ namespace DOL.Database.MySql.DataAccessObjects
 {
 	public class PathPointDao : IPathPointDao
 	{
+		protected static readonly string c_rowFields = "`PathPointId`,`NextPoint`,`Speed`,`X`,`Y`,`Z`";
 		private readonly MySqlState m_state;
 
 		public virtual PathPointEntity Find(int key)
 		{
 			PathPointEntity result = new PathPointEntity();
+
 			m_state.ExecuteQuery(
-				"SELECT `PathPointId`,`NextPoint`,`Speed`,`X`,`Y`,`Z` FROM `pathpoint` WHERE `PathPointId`='" + m_state.EscapeString(key.ToString()) + "'",
+				"SELECT " + c_rowFields + " FROM `pathpoint` WHERE `PathPointId`='" + m_state.EscapeString(key.ToString()) + "'",
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
 					FillEntityWithRow(ref result, reader);
 				}
 			);
+
 			return result;
 		}
 
 		public virtual void Create(PathPointEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"INSERT INTO `pathpoint` VALUES (`" + obj.Id.ToString() + "`,`" + obj.NextPoint.ToString() + "`,`" + obj.Speed.ToString() + "`,`" + obj.X.ToString() + "`,`" + obj.Y.ToString() + "`,`" + obj.Z.ToString() + "`);");
 		}
 
 		public virtual void Update(PathPointEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"UPDATE `pathpoint` SET `PathPointId`='" + m_state.EscapeString(obj.Id.ToString()) + "', `NextPoint`='" + m_state.EscapeString(obj.NextPoint.ToString()) + "', `Speed`='" + m_state.EscapeString(obj.Speed.ToString()) + "', `X`='" + m_state.EscapeString(obj.X.ToString()) + "', `Y`='" + m_state.EscapeString(obj.Y.ToString()) + "', `Z`='" + m_state.EscapeString(obj.Z.ToString()) + "' WHERE `PathPointId`='" + m_state.EscapeString(obj.Id.ToString()) + "'");
 		}
 
 		public virtual void Delete(PathPointEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"DELETE FROM `pathpoint` WHERE `PathPointId`='" + m_state.EscapeString(obj.Id.ToString()) + "'");
 		}
 
 		public virtual void SaveAll()
 		{
+			// not used by this implementation
 		}
 
 		public virtual int CountAll()
@@ -65,7 +75,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return -1;
 		}
 
-		protected void FillEntityWithRow(ref PathPointEntity entity, MySqlDataReader reader)
+		protected virtual void FillEntityWithRow(ref PathPointEntity entity, MySqlDataReader reader)
 		{
 			entity.Id = reader.GetInt32(0);
 			entity.NextPoint = reader.GetInt32(1);

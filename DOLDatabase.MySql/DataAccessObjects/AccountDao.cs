@@ -28,36 +28,46 @@ namespace DOL.Database.MySql.DataAccessObjects
 {
 	public class AccountDao : IAccountDao
 	{
+		protected static readonly string c_rowFields = "`AccountId`,`AccountName`,`BanAuthor`,`BanDuration`,`BanReason`,`CreationDate`,`LastLogin`,`LastLoginIp`,`Mail`,`Password`,`PrivLevel`,`Realm`";
 		private readonly MySqlState m_state;
 
 		public virtual AccountEntity Find(int key)
 		{
 			AccountEntity result = new AccountEntity();
+
 			m_state.ExecuteQuery(
-				"SELECT `AccountId`,`AccountName`,`BanAuthor`,`BanDuration`,`BanReason`,`CreationDate`,`LastLogin`,`LastLoginIp`,`Mail`,`Password`,`PrivLevel`,`Realm` FROM `account` WHERE `AccountId`='" + m_state.EscapeString(key.ToString()) + "'",
+				"SELECT " + c_rowFields + " FROM `account` WHERE `AccountId`='" + m_state.EscapeString(key.ToString()) + "'",
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
 					FillEntityWithRow(ref result, reader);
 				}
 			);
+
 			return result;
 		}
 
 		public virtual void Create(AccountEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"INSERT INTO `account` VALUES (`" + obj.Id.ToString() + "`,`" + obj.AccountName.ToString() + "`,`" + obj.BanAuthor.ToString() + "`,`" + obj.BanDuration.ToString() + "`,`" + obj.BanReason.ToString() + "`,`" + obj.CreationDate.ToString() + "`,`" + obj.LastLogin.ToString() + "`,`" + obj.LastLoginIp.ToString() + "`,`" + obj.Mail.ToString() + "`,`" + obj.Password.ToString() + "`,`" + obj.PrivLevel.ToString() + "`,`" + obj.Realm.ToString() + "`);");
 		}
 
 		public virtual void Update(AccountEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"UPDATE `account` SET `AccountId`='" + m_state.EscapeString(obj.Id.ToString()) + "', `AccountName`='" + m_state.EscapeString(obj.AccountName.ToString()) + "', `BanAuthor`='" + m_state.EscapeString(obj.BanAuthor.ToString()) + "', `BanDuration`='" + m_state.EscapeString(obj.BanDuration.ToString()) + "', `BanReason`='" + m_state.EscapeString(obj.BanReason.ToString()) + "', `CreationDate`='" + m_state.EscapeString(obj.CreationDate.ToString()) + "', `LastLogin`='" + m_state.EscapeString(obj.LastLogin.ToString()) + "', `LastLoginIp`='" + m_state.EscapeString(obj.LastLoginIp.ToString()) + "', `Mail`='" + m_state.EscapeString(obj.Mail.ToString()) + "', `Password`='" + m_state.EscapeString(obj.Password.ToString()) + "', `PrivLevel`='" + m_state.EscapeString(obj.PrivLevel.ToString()) + "', `Realm`='" + m_state.EscapeString(obj.Realm.ToString()) + "' WHERE `AccountId`='" + m_state.EscapeString(obj.Id.ToString()) + "'");
 		}
 
 		public virtual void Delete(AccountEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"DELETE FROM `account` WHERE `AccountId`='" + m_state.EscapeString(obj.Id.ToString()) + "'");
 		}
 
 		public virtual void SaveAll()
 		{
+			// not used by this implementation
 		}
 
 		public virtual int CountAll()
@@ -65,7 +75,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return -1;
 		}
 
-		protected void FillEntityWithRow(ref AccountEntity entity, MySqlDataReader reader)
+		protected virtual void FillEntityWithRow(ref AccountEntity entity, MySqlDataReader reader)
 		{
 			entity.Id = reader.GetInt32(0);
 			entity.AccountName = reader.GetString(1);

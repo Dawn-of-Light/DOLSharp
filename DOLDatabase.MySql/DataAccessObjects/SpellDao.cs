@@ -28,36 +28,46 @@ namespace DOL.Database.MySql.DataAccessObjects
 {
 	public class SpellDao : ISpellDao
 	{
+		protected static readonly string c_rowFields = "`SpellId`,`AmnesiaChance`,`CastTime`,`ClientEffect`,`Concentration`,`Damage`,`DamageType`,`Description`,`Duration`,`EffectGroup`,`Frequency`,`Icon`,`InstrumentRequirement`,`LifeDrainReturn`,`Message1`,`Message2`,`Message3`,`Message4`,`Name`,`Power`,`Pulse`,`PulsePower`,`Radius`,`Range`,`RecastDelay`,`ResurrectHealth`,`ResurrectMana`,`SpellGroup`,`Target`,`Type`,`Value`";
 		private readonly MySqlState m_state;
 
 		public virtual SpellEntity Find(int key)
 		{
 			SpellEntity result = new SpellEntity();
+
 			m_state.ExecuteQuery(
-				"SELECT `SpellId`,`AmnesiaChance`,`CastTime`,`ClientEffect`,`Concentration`,`Damage`,`DamageType`,`Description`,`Duration`,`EffectGroup`,`Frequency`,`Icon`,`InstrumentRequirement`,`LifeDrainReturn`,`Message1`,`Message2`,`Message3`,`Message4`,`Name`,`Power`,`Pulse`,`PulsePower`,`Radius`,`Range`,`RecastDelay`,`ResurrectHealth`,`ResurrectMana`,`SpellGroup`,`Target`,`Type`,`Value` FROM `spell` WHERE `SpellId`='" + m_state.EscapeString(key.ToString()) + "'",
+				"SELECT " + c_rowFields + " FROM `spell` WHERE `SpellId`='" + m_state.EscapeString(key.ToString()) + "'",
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
 					FillEntityWithRow(ref result, reader);
 				}
 			);
+
 			return result;
 		}
 
 		public virtual void Create(SpellEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"INSERT INTO `spell` VALUES (`" + obj.Id.ToString() + "`,`" + obj.AmnesiaChance.ToString() + "`,`" + obj.CastTime.ToString() + "`,`" + obj.ClientEffect.ToString() + "`,`" + obj.Concentration.ToString() + "`,`" + obj.Damage.ToString() + "`,`" + obj.DamageType.ToString() + "`,`" + obj.Description.ToString() + "`,`" + obj.Duration.ToString() + "`,`" + obj.EffectGroup.ToString() + "`,`" + obj.Frequency.ToString() + "`,`" + obj.Icon.ToString() + "`,`" + obj.InstrumentRequirement.ToString() + "`,`" + obj.LifeDrainReturn.ToString() + "`,`" + obj.Message1.ToString() + "`,`" + obj.Message2.ToString() + "`,`" + obj.Message3.ToString() + "`,`" + obj.Message4.ToString() + "`,`" + obj.Name.ToString() + "`,`" + obj.Power.ToString() + "`,`" + obj.Pulse.ToString() + "`,`" + obj.PulsePower.ToString() + "`,`" + obj.Radius.ToString() + "`,`" + obj.Range.ToString() + "`,`" + obj.RecastDelay.ToString() + "`,`" + obj.ResurrectHealth.ToString() + "`,`" + obj.ResurrectMana.ToString() + "`,`" + obj.SpellGroup.ToString() + "`,`" + obj.Target.ToString() + "`,`" + obj.Type.ToString() + "`,`" + obj.Value.ToString() + "`);");
 		}
 
 		public virtual void Update(SpellEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"UPDATE `spell` SET `SpellId`='" + m_state.EscapeString(obj.Id.ToString()) + "', `AmnesiaChance`='" + m_state.EscapeString(obj.AmnesiaChance.ToString()) + "', `CastTime`='" + m_state.EscapeString(obj.CastTime.ToString()) + "', `ClientEffect`='" + m_state.EscapeString(obj.ClientEffect.ToString()) + "', `Concentration`='" + m_state.EscapeString(obj.Concentration.ToString()) + "', `Damage`='" + m_state.EscapeString(obj.Damage.ToString()) + "', `DamageType`='" + m_state.EscapeString(obj.DamageType.ToString()) + "', `Description`='" + m_state.EscapeString(obj.Description.ToString()) + "', `Duration`='" + m_state.EscapeString(obj.Duration.ToString()) + "', `EffectGroup`='" + m_state.EscapeString(obj.EffectGroup.ToString()) + "', `Frequency`='" + m_state.EscapeString(obj.Frequency.ToString()) + "', `Icon`='" + m_state.EscapeString(obj.Icon.ToString()) + "', `InstrumentRequirement`='" + m_state.EscapeString(obj.InstrumentRequirement.ToString()) + "', `LifeDrainReturn`='" + m_state.EscapeString(obj.LifeDrainReturn.ToString()) + "', `Message1`='" + m_state.EscapeString(obj.Message1.ToString()) + "', `Message2`='" + m_state.EscapeString(obj.Message2.ToString()) + "', `Message3`='" + m_state.EscapeString(obj.Message3.ToString()) + "', `Message4`='" + m_state.EscapeString(obj.Message4.ToString()) + "', `Name`='" + m_state.EscapeString(obj.Name.ToString()) + "', `Power`='" + m_state.EscapeString(obj.Power.ToString()) + "', `Pulse`='" + m_state.EscapeString(obj.Pulse.ToString()) + "', `PulsePower`='" + m_state.EscapeString(obj.PulsePower.ToString()) + "', `Radius`='" + m_state.EscapeString(obj.Radius.ToString()) + "', `Range`='" + m_state.EscapeString(obj.Range.ToString()) + "', `RecastDelay`='" + m_state.EscapeString(obj.RecastDelay.ToString()) + "', `ResurrectHealth`='" + m_state.EscapeString(obj.ResurrectHealth.ToString()) + "', `ResurrectMana`='" + m_state.EscapeString(obj.ResurrectMana.ToString()) + "', `SpellGroup`='" + m_state.EscapeString(obj.SpellGroup.ToString()) + "', `Target`='" + m_state.EscapeString(obj.Target.ToString()) + "', `Type`='" + m_state.EscapeString(obj.Type.ToString()) + "', `Value`='" + m_state.EscapeString(obj.Value.ToString()) + "' WHERE `SpellId`='" + m_state.EscapeString(obj.Id.ToString()) + "'");
 		}
 
 		public virtual void Delete(SpellEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"DELETE FROM `spell` WHERE `SpellId`='" + m_state.EscapeString(obj.Id.ToString()) + "'");
 		}
 
 		public virtual void SaveAll()
 		{
+			// not used by this implementation
 		}
 
 		public virtual int CountAll()
@@ -65,7 +75,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return -1;
 		}
 
-		protected void FillEntityWithRow(ref SpellEntity entity, MySqlDataReader reader)
+		protected virtual void FillEntityWithRow(ref SpellEntity entity, MySqlDataReader reader)
 		{
 			entity.Id = reader.GetInt32(0);
 			entity.AmnesiaChance = reader.GetInt32(1);

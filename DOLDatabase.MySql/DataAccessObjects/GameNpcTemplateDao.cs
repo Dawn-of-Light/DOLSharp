@@ -28,36 +28,46 @@ namespace DOL.Database.MySql.DataAccessObjects
 {
 	public class GameNpcTemplateDao : IGameNpcTemplateDao
 	{
+		protected static readonly string c_rowFields = "`GameNPCTemplateId`,`BlockChance`,`EvadeChance`,`FactionId`,`Flags`,`GameNPCTemplateType`,`GuildName`,`InventoryId`,`LeftHandSwingChance`,`LootListId`,`MaxLevel`,`MaxSize`,`MaxSpeedBase`,`MeleeDamageType`,`MinLevel`,`MinSize`,`Model`,`Name`,`ParryChance`,`Realm`,`RespawnInterval`";
 		private readonly MySqlState m_state;
 
 		public virtual GameNpcTemplateEntity Find(int key)
 		{
 			GameNpcTemplateEntity result = new GameNpcTemplateEntity();
+
 			m_state.ExecuteQuery(
-				"SELECT `GameNPCTemplateId`,`BlockChance`,`EvadeChance`,`FactionId`,`Flags`,`GameNPCTemplateType`,`GuildName`,`InventoryId`,`LeftHandSwingChance`,`LootListId`,`MaxLevel`,`MaxSize`,`MaxSpeedBase`,`MeleeDamageType`,`MinLevel`,`MinSize`,`Model`,`Name`,`ParryChance`,`Realm`,`RespawnInterval` FROM `gamenpctemplate` WHERE `GameNPCTemplateId`='" + m_state.EscapeString(key.ToString()) + "'",
+				"SELECT " + c_rowFields + " FROM `gamenpctemplate` WHERE `GameNPCTemplateId`='" + m_state.EscapeString(key.ToString()) + "'",
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
 					FillEntityWithRow(ref result, reader);
 				}
 			);
+
 			return result;
 		}
 
 		public virtual void Create(GameNpcTemplateEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"INSERT INTO `gamenpctemplate` VALUES (`" + obj.Id.ToString() + "`,`" + obj.BlockChance.ToString() + "`,`" + obj.EvadeChance.ToString() + "`,`" + obj.FactionId.ToString() + "`,`" + obj.Flags.ToString() + "`,`" + obj.GameNPCTemplateType.ToString() + "`,`" + obj.GuildName.ToString() + "`,`" + obj.InventoryId.ToString() + "`,`" + obj.LeftHandSwingChance.ToString() + "`,`" + obj.LootListId.ToString() + "`,`" + obj.MaxLevel.ToString() + "`,`" + obj.MaxSize.ToString() + "`,`" + obj.MaxSpeedBase.ToString() + "`,`" + obj.MeleeDamageType.ToString() + "`,`" + obj.MinLevel.ToString() + "`,`" + obj.MinSize.ToString() + "`,`" + obj.Model.ToString() + "`,`" + obj.Name.ToString() + "`,`" + obj.ParryChance.ToString() + "`,`" + obj.Realm.ToString() + "`,`" + obj.RespawnInterval.ToString() + "`);");
 		}
 
 		public virtual void Update(GameNpcTemplateEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"UPDATE `gamenpctemplate` SET `GameNPCTemplateId`='" + m_state.EscapeString(obj.Id.ToString()) + "', `BlockChance`='" + m_state.EscapeString(obj.BlockChance.ToString()) + "', `EvadeChance`='" + m_state.EscapeString(obj.EvadeChance.ToString()) + "', `FactionId`='" + m_state.EscapeString(obj.FactionId.ToString()) + "', `Flags`='" + m_state.EscapeString(obj.Flags.ToString()) + "', `GameNPCTemplateType`='" + m_state.EscapeString(obj.GameNPCTemplateType.ToString()) + "', `GuildName`='" + m_state.EscapeString(obj.GuildName.ToString()) + "', `InventoryId`='" + m_state.EscapeString(obj.InventoryId.ToString()) + "', `LeftHandSwingChance`='" + m_state.EscapeString(obj.LeftHandSwingChance.ToString()) + "', `LootListId`='" + m_state.EscapeString(obj.LootListId.ToString()) + "', `MaxLevel`='" + m_state.EscapeString(obj.MaxLevel.ToString()) + "', `MaxSize`='" + m_state.EscapeString(obj.MaxSize.ToString()) + "', `MaxSpeedBase`='" + m_state.EscapeString(obj.MaxSpeedBase.ToString()) + "', `MeleeDamageType`='" + m_state.EscapeString(obj.MeleeDamageType.ToString()) + "', `MinLevel`='" + m_state.EscapeString(obj.MinLevel.ToString()) + "', `MinSize`='" + m_state.EscapeString(obj.MinSize.ToString()) + "', `Model`='" + m_state.EscapeString(obj.Model.ToString()) + "', `Name`='" + m_state.EscapeString(obj.Name.ToString()) + "', `ParryChance`='" + m_state.EscapeString(obj.ParryChance.ToString()) + "', `Realm`='" + m_state.EscapeString(obj.Realm.ToString()) + "', `RespawnInterval`='" + m_state.EscapeString(obj.RespawnInterval.ToString()) + "' WHERE `GameNPCTemplateId`='" + m_state.EscapeString(obj.Id.ToString()) + "'");
 		}
 
 		public virtual void Delete(GameNpcTemplateEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"DELETE FROM `gamenpctemplate` WHERE `GameNPCTemplateId`='" + m_state.EscapeString(obj.Id.ToString()) + "'");
 		}
 
 		public virtual void SaveAll()
 		{
+			// not used by this implementation
 		}
 
 		public virtual int CountAll()
@@ -65,7 +75,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return -1;
 		}
 
-		protected void FillEntityWithRow(ref GameNpcTemplateEntity entity, MySqlDataReader reader)
+		protected virtual void FillEntityWithRow(ref GameNpcTemplateEntity entity, MySqlDataReader reader)
 		{
 			entity.Id = reader.GetInt32(0);
 			entity.BlockChance = reader.GetByte(1);

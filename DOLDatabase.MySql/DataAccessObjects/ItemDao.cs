@@ -28,36 +28,46 @@ namespace DOL.Database.MySql.DataAccessObjects
 {
 	public class ItemDao : IItemDao
 	{
+		protected static readonly string c_rowFields = "`ItemId`,`ArmorFactor`,`ArmorLevel`,`Bonus`,`BonusType`,`Charge`,`ChargeEffectType`,`ChargeSpellId`,`Color`,`Condition`,`Count`,`CrafterName`,`Damage`,`DamagePerSecond`,`DamageType`,`Durability`,`GenericItemType`,`GlowEffect`,`HandNeeded`,`Heading`,`InventoryId`,`IsDropable`,`IsSaleable`,`IsTradable`,`Level`,`MaterialLevel`,`MaxCharge`,`MaxCount`,`Model`,`ModelExtension`,`Name`,`Owner`,`Precision`,`ProcEffectType`,`ProcSpellId`,`Quality`,`QuestName`,`Range`,`Realm`,`Region`,`RespecType`,`Size`,`SlotPosition`,`Speed`,`SpellId`,`TripPathId`,`Type`,`Value`,`WeaponRange`,`Weight`,`X`,`Y`,`Z`";
 		private readonly MySqlState m_state;
 
 		public virtual ItemEntity Find(int key)
 		{
 			ItemEntity result = new ItemEntity();
+
 			m_state.ExecuteQuery(
-				"SELECT `ItemId`,`ArmorFactor`,`ArmorLevel`,`Bonus`,`BonusType`,`Charge`,`ChargeEffectType`,`ChargeSpellId`,`Color`,`Condition`,`Count`,`CrafterName`,`Damage`,`DamagePerSecond`,`DamageType`,`Durability`,`GenericItemType`,`GlowEffect`,`HandNeeded`,`Heading`,`InventoryId`,`IsDropable`,`IsSaleable`,`IsTradable`,`Level`,`MaterialLevel`,`MaxCharge`,`MaxCount`,`Model`,`ModelExtension`,`Name`,`Owner`,`Precision`,`ProcEffectType`,`ProcSpellId`,`Quality`,`QuestName`,`Range`,`Realm`,`Region`,`RespecType`,`Size`,`SlotPosition`,`Speed`,`SpellId`,`TripPathId`,`Type`,`Value`,`WeaponRange`,`Weight`,`X`,`Y`,`Z` FROM `item` WHERE `ItemId`='" + m_state.EscapeString(key.ToString()) + "'",
+				"SELECT " + c_rowFields + " FROM `item` WHERE `ItemId`='" + m_state.EscapeString(key.ToString()) + "'",
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
 					FillEntityWithRow(ref result, reader);
 				}
 			);
+
 			return result;
 		}
 
 		public virtual void Create(ItemEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"INSERT INTO `item` VALUES (`" + obj.Id.ToString() + "`,`" + obj.ArmorFactor.ToString() + "`,`" + obj.ArmorLevel.ToString() + "`,`" + obj.Bonus.ToString() + "`,`" + obj.BonusType.ToString() + "`,`" + obj.Charge.ToString() + "`,`" + obj.ChargeEffectType.ToString() + "`,`" + obj.ChargeSpellId.ToString() + "`,`" + obj.Condition.ToString() + "`,`" + obj.Count.ToString() + "`,`" + obj.CrafterName.ToString() + "`,`" + obj.Damage.ToString() + "`,`" + obj.DamagePerSecond.ToString() + "`,`" + obj.DamageType.ToString() + "`,`" + obj.Durability.ToString() + "`,`" + obj.GenericItemType.ToString() + "`,`" + obj.GlowEffect.ToString() + "`,`" + obj.HandNeeded.ToString() + "`,`" + obj.Heading.ToString() + "`,`" + obj.IsDropable.ToString() + "`,`" + obj.IsSaleable.ToString() + "`,`" + obj.IsTradable.ToString() + "`,`" + obj.Level.ToString() + "`,`" + obj.MaterialLevel.ToString() + "`,`" + obj.MaxCharge.ToString() + "`,`" + obj.MaxCount.ToString() + "`,`" + obj.Model.ToString() + "`,`" + obj.ModelExtension.ToString() + "`,`" + obj.Name.ToString() + "`,`" + obj.or1.ToString() + "`,`" + obj.Precision.ToString() + "`,`" + obj.ProcEffectType.ToString() + "`,`" + obj.ProcSpellId.ToString() + "`,`" + obj.Quality.ToString() + "`,`" + obj.QuestName.ToString() + "`,`" + obj.Range.ToString() + "`,`" + obj.Realm.ToString() + "`,`" + obj.Region.ToString() + "`,`" + obj.RespecType.ToString() + "`,`" + obj.Size.ToString() + "`,`" + obj.SlotPosition.ToString() + "`,`" + obj.Speed.ToString() + "`,`" + obj.SpellId.ToString() + "`,`" + obj.TripPathId.ToString() + "`,`" + obj.Type.ToString() + "`,`" + obj.Value.ToString() + "`,`" + obj.WeaponRange.ToString() + "`,`" + obj.Weight.ToString() + "`,`" + obj.X.ToString() + "`,`" + obj.Y.ToString() + "`,`" + obj.Z.ToString() + "`);");
 		}
 
 		public virtual void Update(ItemEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"UPDATE `item` SET `ItemId`='" + m_state.EscapeString(obj.Id.ToString()) + "', `ArmorFactor`='" + m_state.EscapeString(obj.ArmorFactor.ToString()) + "', `ArmorLevel`='" + m_state.EscapeString(obj.ArmorLevel.ToString()) + "', `Bonus`='" + m_state.EscapeString(obj.Bonus.ToString()) + "', `BonusType`='" + m_state.EscapeString(obj.BonusType.ToString()) + "', `Charge`='" + m_state.EscapeString(obj.Charge.ToString()) + "', `ChargeEffectType`='" + m_state.EscapeString(obj.ChargeEffectType.ToString()) + "', `ChargeSpellId`='" + m_state.EscapeString(obj.ChargeSpellId.ToString()) + "', `Condition`='" + m_state.EscapeString(obj.Condition.ToString()) + "', `Count`='" + m_state.EscapeString(obj.Count.ToString()) + "', `CrafterName`='" + m_state.EscapeString(obj.CrafterName.ToString()) + "', `Damage`='" + m_state.EscapeString(obj.Damage.ToString()) + "', `DamagePerSecond`='" + m_state.EscapeString(obj.DamagePerSecond.ToString()) + "', `DamageType`='" + m_state.EscapeString(obj.DamageType.ToString()) + "', `Durability`='" + m_state.EscapeString(obj.Durability.ToString()) + "', `GenericItemType`='" + m_state.EscapeString(obj.GenericItemType.ToString()) + "', `GlowEffect`='" + m_state.EscapeString(obj.GlowEffect.ToString()) + "', `HandNeeded`='" + m_state.EscapeString(obj.HandNeeded.ToString()) + "', `Heading`='" + m_state.EscapeString(obj.Heading.ToString()) + "', `IsDropable`='" + m_state.EscapeString(obj.IsDropable.ToString()) + "', `IsSaleable`='" + m_state.EscapeString(obj.IsSaleable.ToString()) + "', `IsTradable`='" + m_state.EscapeString(obj.IsTradable.ToString()) + "', `Level`='" + m_state.EscapeString(obj.Level.ToString()) + "', `MaterialLevel`='" + m_state.EscapeString(obj.MaterialLevel.ToString()) + "', `MaxCharge`='" + m_state.EscapeString(obj.MaxCharge.ToString()) + "', `MaxCount`='" + m_state.EscapeString(obj.MaxCount.ToString()) + "', `Model`='" + m_state.EscapeString(obj.Model.ToString()) + "', `ModelExtension`='" + m_state.EscapeString(obj.ModelExtension.ToString()) + "', `Name`='" + m_state.EscapeString(obj.Name.ToString()) + "', `Color`='" + m_state.EscapeString(obj.or1.ToString()) + "', `Precision`='" + m_state.EscapeString(obj.Precision.ToString()) + "', `ProcEffectType`='" + m_state.EscapeString(obj.ProcEffectType.ToString()) + "', `ProcSpellId`='" + m_state.EscapeString(obj.ProcSpellId.ToString()) + "', `Quality`='" + m_state.EscapeString(obj.Quality.ToString()) + "', `QuestName`='" + m_state.EscapeString(obj.QuestName.ToString()) + "', `Range`='" + m_state.EscapeString(obj.Range.ToString()) + "', `Realm`='" + m_state.EscapeString(obj.Realm.ToString()) + "', `Region`='" + m_state.EscapeString(obj.Region.ToString()) + "', `RespecType`='" + m_state.EscapeString(obj.RespecType.ToString()) + "', `Size`='" + m_state.EscapeString(obj.Size.ToString()) + "', `SlotPosition`='" + m_state.EscapeString(obj.SlotPosition.ToString()) + "', `Speed`='" + m_state.EscapeString(obj.Speed.ToString()) + "', `SpellId`='" + m_state.EscapeString(obj.SpellId.ToString()) + "', `TripPathId`='" + m_state.EscapeString(obj.TripPathId.ToString()) + "', `Type`='" + m_state.EscapeString(obj.Type.ToString()) + "', `Value`='" + m_state.EscapeString(obj.Value.ToString()) + "', `WeaponRange`='" + m_state.EscapeString(obj.WeaponRange.ToString()) + "', `Weight`='" + m_state.EscapeString(obj.Weight.ToString()) + "', `X`='" + m_state.EscapeString(obj.X.ToString()) + "', `Y`='" + m_state.EscapeString(obj.Y.ToString()) + "', `Z`='" + m_state.EscapeString(obj.Z.ToString()) + "' WHERE `ItemId`='" + m_state.EscapeString(obj.Id.ToString()) + "'");
 		}
 
 		public virtual void Delete(ItemEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"DELETE FROM `item` WHERE `ItemId`='" + m_state.EscapeString(obj.Id.ToString()) + "'");
 		}
 
 		public virtual void SaveAll()
 		{
+			// not used by this implementation
 		}
 
 		public virtual int CountAll()
@@ -65,7 +75,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return -1;
 		}
 
-		protected void FillEntityWithRow(ref ItemEntity entity, MySqlDataReader reader)
+		protected virtual void FillEntityWithRow(ref ItemEntity entity, MySqlDataReader reader)
 		{
 			entity.Id = reader.GetInt32(0);
 			entity.ArmorFactor = reader.GetByte(1);

@@ -121,12 +121,14 @@ namespace DOL.Database.MySql
 			}
 			
 			MySqlConnection connection = AcquireConnection();
+			MySqlDataReader reader = null;
 			try
 			{
 				MySqlCommand cmd = connection.CreateCommand();
 				cmd.CommandText = sqlCommand;
 				cmd.CommandType = CommandType.Text;
-				MySqlDataReader reader = cmd.ExecuteReader(behaviour);
+				reader = cmd.ExecuteReader(behaviour);
+				
 				callback(reader);
 			}
 			catch (Exception e)
@@ -136,6 +138,10 @@ namespace DOL.Database.MySql
 			finally
 			{
 				ReleaseConnection(connection);
+				if (reader != null && !reader.IsClosed)
+				{
+					reader.Close();
+				}
 			}
 		}
 

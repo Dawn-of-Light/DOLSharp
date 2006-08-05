@@ -28,36 +28,46 @@ namespace DOL.Database.MySql.DataAccessObjects
 {
 	public class MerchantItemDao : IMerchantItemDao
 	{
+		protected static readonly string c_rowFields = "`MerchantItemId`,`ItemTemplateId`,`MerchantPageId`,`Position`";
 		private readonly MySqlState m_state;
 
 		public virtual MerchantItemEntity Find(int key)
 		{
 			MerchantItemEntity result = new MerchantItemEntity();
+
 			m_state.ExecuteQuery(
-				"SELECT `MerchantItemId`,`ItemTemplateId`,`MerchantPageId`,`Position` FROM `merchantitem` WHERE `MerchantItemId`='" + m_state.EscapeString(key.ToString()) + "'",
+				"SELECT " + c_rowFields + " FROM `merchantitem` WHERE `MerchantItemId`='" + m_state.EscapeString(key.ToString()) + "'",
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
 					FillEntityWithRow(ref result, reader);
 				}
 			);
+
 			return result;
 		}
 
 		public virtual void Create(MerchantItemEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"INSERT INTO `merchantitem` VALUES (`" + obj.Id.ToString() + "`,`" + obj.ItemTemplate.ToString() + "`,`" + obj.MerchantPage.ToString() + "`,`" + obj.Position.ToString() + "`);");
 		}
 
 		public virtual void Update(MerchantItemEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"UPDATE `merchantitem` SET `MerchantItemId`='" + m_state.EscapeString(obj.Id.ToString()) + "', `ItemTemplateId`='" + m_state.EscapeString(obj.ItemTemplate.ToString()) + "', `MerchantPageId`='" + m_state.EscapeString(obj.MerchantPage.ToString()) + "', `Position`='" + m_state.EscapeString(obj.Position.ToString()) + "' WHERE `MerchantItemId`='" + m_state.EscapeString(obj.Id.ToString()) + "'");
 		}
 
 		public virtual void Delete(MerchantItemEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"DELETE FROM `merchantitem` WHERE `MerchantItemId`='" + m_state.EscapeString(obj.Id.ToString()) + "'");
 		}
 
 		public virtual void SaveAll()
 		{
+			// not used by this implementation
 		}
 
 		public virtual int CountAll()
@@ -65,7 +75,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return -1;
 		}
 
-		protected void FillEntityWithRow(ref MerchantItemEntity entity, MySqlDataReader reader)
+		protected virtual void FillEntityWithRow(ref MerchantItemEntity entity, MySqlDataReader reader)
 		{
 			entity.Id = reader.GetInt32(0);
 			entity.ItemTemplate = reader.GetString(1);

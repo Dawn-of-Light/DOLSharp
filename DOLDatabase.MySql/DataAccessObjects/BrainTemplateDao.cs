@@ -28,36 +28,46 @@ namespace DOL.Database.MySql.DataAccessObjects
 {
 	public class BrainTemplateDao : IBrainTemplateDao
 	{
+		protected static readonly string c_rowFields = "`ABrainTemplateId`,`ABrainTemplateType`,`AggroLevel`,`AggroRange`";
 		private readonly MySqlState m_state;
 
 		public virtual BrainTemplateEntity Find(int key)
 		{
 			BrainTemplateEntity result = new BrainTemplateEntity();
+
 			m_state.ExecuteQuery(
-				"SELECT `ABrainTemplateId`,`ABrainTemplateType`,`AggroLevel`,`AggroRange` FROM `braintemplate` WHERE `ABrainTemplateId`='" + m_state.EscapeString(key.ToString()) + "'",
+				"SELECT " + c_rowFields + " FROM `braintemplate` WHERE `ABrainTemplateId`='" + m_state.EscapeString(key.ToString()) + "'",
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
 					FillEntityWithRow(ref result, reader);
 				}
 			);
+
 			return result;
 		}
 
 		public virtual void Create(BrainTemplateEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"INSERT INTO `braintemplate` VALUES (`" + obj.ABrainTemplate.ToString() + "`,`" + obj.ABrainTemplateType.ToString() + "`,`" + obj.AggroLevel.ToString() + "`,`" + obj.AggroRange.ToString() + "`);");
 		}
 
 		public virtual void Update(BrainTemplateEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"UPDATE `braintemplate` SET `ABrainTemplateId`='" + m_state.EscapeString(obj.ABrainTemplate.ToString()) + "', `ABrainTemplateType`='" + m_state.EscapeString(obj.ABrainTemplateType.ToString()) + "', `AggroLevel`='" + m_state.EscapeString(obj.AggroLevel.ToString()) + "', `AggroRange`='" + m_state.EscapeString(obj.AggroRange.ToString()) + "' WHERE `ABrainTemplateId`='" + m_state.EscapeString(obj.ABrainTemplate.ToString()) + "'");
 		}
 
 		public virtual void Delete(BrainTemplateEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"DELETE FROM `braintemplate` WHERE `ABrainTemplateId`='" + m_state.EscapeString(obj.ABrainTemplate.ToString()) + "'");
 		}
 
 		public virtual void SaveAll()
 		{
+			// not used by this implementation
 		}
 
 		public virtual int CountAll()
@@ -65,7 +75,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return -1;
 		}
 
-		protected void FillEntityWithRow(ref BrainTemplateEntity entity, MySqlDataReader reader)
+		protected virtual void FillEntityWithRow(ref BrainTemplateEntity entity, MySqlDataReader reader)
 		{
 			entity.ABrainTemplate = reader.GetInt32(0);
 			entity.ABrainTemplateType = reader.GetString(1);

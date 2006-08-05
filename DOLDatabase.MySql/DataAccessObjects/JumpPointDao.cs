@@ -28,36 +28,46 @@ namespace DOL.Database.MySql.DataAccessObjects
 {
 	public class JumpPointDao : IJumpPointDao
 	{
+		protected static readonly string c_rowFields = "`JumpPointId`,`AllowedRealm`,`Heading`,`JumpPointType`,`Region`,`X`,`Y`,`Z`";
 		private readonly MySqlState m_state;
 
 		public virtual JumpPointEntity Find(int key)
 		{
 			JumpPointEntity result = new JumpPointEntity();
+
 			m_state.ExecuteQuery(
-				"SELECT `JumpPointId`,`AllowedRealm`,`Heading`,`JumpPointType`,`Region`,`X`,`Y`,`Z` FROM `jumppoint` WHERE `JumpPointId`='" + m_state.EscapeString(key.ToString()) + "'",
+				"SELECT " + c_rowFields + " FROM `jumppoint` WHERE `JumpPointId`='" + m_state.EscapeString(key.ToString()) + "'",
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
 					FillEntityWithRow(ref result, reader);
 				}
 			);
+
 			return result;
 		}
 
 		public virtual void Create(JumpPointEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"INSERT INTO `jumppoint` VALUES (`" + obj.Id.ToString() + "`,`" + obj.AllowedRealm.ToString() + "`,`" + obj.Heading.ToString() + "`,`" + obj.JumpPointType.ToString() + "`,`" + obj.Region.ToString() + "`,`" + obj.X.ToString() + "`,`" + obj.Y.ToString() + "`,`" + obj.Z.ToString() + "`);");
 		}
 
 		public virtual void Update(JumpPointEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"UPDATE `jumppoint` SET `JumpPointId`='" + m_state.EscapeString(obj.Id.ToString()) + "', `AllowedRealm`='" + m_state.EscapeString(obj.AllowedRealm.ToString()) + "', `Heading`='" + m_state.EscapeString(obj.Heading.ToString()) + "', `JumpPointType`='" + m_state.EscapeString(obj.JumpPointType.ToString()) + "', `Region`='" + m_state.EscapeString(obj.Region.ToString()) + "', `X`='" + m_state.EscapeString(obj.X.ToString()) + "', `Y`='" + m_state.EscapeString(obj.Y.ToString()) + "', `Z`='" + m_state.EscapeString(obj.Z.ToString()) + "' WHERE `JumpPointId`='" + m_state.EscapeString(obj.Id.ToString()) + "'");
 		}
 
 		public virtual void Delete(JumpPointEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"DELETE FROM `jumppoint` WHERE `JumpPointId`='" + m_state.EscapeString(obj.Id.ToString()) + "'");
 		}
 
 		public virtual void SaveAll()
 		{
+			// not used by this implementation
 		}
 
 		public virtual int CountAll()
@@ -65,7 +75,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return -1;
 		}
 
-		protected void FillEntityWithRow(ref JumpPointEntity entity, MySqlDataReader reader)
+		protected virtual void FillEntityWithRow(ref JumpPointEntity entity, MySqlDataReader reader)
 		{
 			entity.Id = reader.GetInt32(0);
 			entity.AllowedRealm = reader.GetByte(1);

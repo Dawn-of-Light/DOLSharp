@@ -28,36 +28,46 @@ namespace DOL.Database.MySql.DataAccessObjects
 {
 	public class BindPointDao : IBindPointDao
 	{
+		protected static readonly string c_rowFields = "`BindPointId`,`Radius`,`Realm`,`Region`,`X`,`Y`,`Z`";
 		private readonly MySqlState m_state;
 
 		public virtual BindPointEntity Find(int key)
 		{
 			BindPointEntity result = new BindPointEntity();
+
 			m_state.ExecuteQuery(
-				"SELECT `BindPointId`,`Radius`,`Realm`,`Region`,`X`,`Y`,`Z` FROM `bindpoint` WHERE `BindPointId`='" + m_state.EscapeString(key.ToString()) + "'",
+				"SELECT " + c_rowFields + " FROM `bindpoint` WHERE `BindPointId`='" + m_state.EscapeString(key.ToString()) + "'",
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
 					FillEntityWithRow(ref result, reader);
 				}
 			);
+
 			return result;
 		}
 
 		public virtual void Create(BindPointEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"INSERT INTO `bindpoint` VALUES (`" + obj.Id.ToString() + "`,`" + obj.Radius.ToString() + "`,`" + obj.Realm.ToString() + "`,`" + obj.Region.ToString() + "`,`" + obj.X.ToString() + "`,`" + obj.Y.ToString() + "`,`" + obj.Z.ToString() + "`);");
 		}
 
 		public virtual void Update(BindPointEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"UPDATE `bindpoint` SET `BindPointId`='" + m_state.EscapeString(obj.Id.ToString()) + "', `Radius`='" + m_state.EscapeString(obj.Radius.ToString()) + "', `Realm`='" + m_state.EscapeString(obj.Realm.ToString()) + "', `Region`='" + m_state.EscapeString(obj.Region.ToString()) + "', `X`='" + m_state.EscapeString(obj.X.ToString()) + "', `Y`='" + m_state.EscapeString(obj.Y.ToString()) + "', `Z`='" + m_state.EscapeString(obj.Z.ToString()) + "' WHERE `BindPointId`='" + m_state.EscapeString(obj.Id.ToString()) + "'");
 		}
 
 		public virtual void Delete(BindPointEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"DELETE FROM `bindpoint` WHERE `BindPointId`='" + m_state.EscapeString(obj.Id.ToString()) + "'");
 		}
 
 		public virtual void SaveAll()
 		{
+			// not used by this implementation
 		}
 
 		public virtual int CountAll()
@@ -65,7 +75,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return -1;
 		}
 
-		protected void FillEntityWithRow(ref BindPointEntity entity, MySqlDataReader reader)
+		protected virtual void FillEntityWithRow(ref BindPointEntity entity, MySqlDataReader reader)
 		{
 			entity.Id = reader.GetInt32(0);
 			entity.Radius = reader.GetInt32(1);

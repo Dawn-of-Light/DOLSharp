@@ -28,36 +28,46 @@ namespace DOL.Database.MySql.DataAccessObjects
 {
 	public class AbilityDao : IAbilityDao
 	{
+		protected static readonly string c_rowFields = "`KeyName`,`Description`,`IconId`,`Name`";
 		private readonly MySqlState m_state;
 
 		public virtual AbilityEntity Find(string key)
 		{
 			AbilityEntity result = new AbilityEntity();
+
 			m_state.ExecuteQuery(
-				"SELECT `KeyName`,`Description`,`IconId`,`Name` FROM `ability` WHERE `KeyName`='" + m_state.EscapeString(key.ToString()) + "'",
+				"SELECT " + c_rowFields + " FROM `ability` WHERE `KeyName`='" + m_state.EscapeString(key.ToString()) + "'",
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
 					FillEntityWithRow(ref result, reader);
 				}
 			);
+
 			return result;
 		}
 
 		public virtual void Create(AbilityEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"INSERT INTO `ability` VALUES (`" + obj.KeyName.ToString() + "`,`" + obj.Description.ToString() + "`,`" + obj.IconId.ToString() + "`,`" + obj.Name.ToString() + "`);");
 		}
 
 		public virtual void Update(AbilityEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"UPDATE `ability` SET `KeyName`='" + m_state.EscapeString(obj.KeyName.ToString()) + "', `Description`='" + m_state.EscapeString(obj.Description.ToString()) + "', `IconId`='" + m_state.EscapeString(obj.IconId.ToString()) + "', `Name`='" + m_state.EscapeString(obj.Name.ToString()) + "' WHERE `KeyName`='" + m_state.EscapeString(obj.KeyName.ToString()) + "'");
 		}
 
 		public virtual void Delete(AbilityEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"DELETE FROM `ability` WHERE `KeyName`='" + m_state.EscapeString(obj.KeyName.ToString()) + "'");
 		}
 
 		public virtual void SaveAll()
 		{
+			// not used by this implementation
 		}
 
 		public virtual int CountAll()
@@ -65,7 +75,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return -1;
 		}
 
-		protected void FillEntityWithRow(ref AbilityEntity entity, MySqlDataReader reader)
+		protected virtual void FillEntityWithRow(ref AbilityEntity entity, MySqlDataReader reader)
 		{
 			entity.KeyName = reader.GetString(0);
 			entity.Description = reader.GetString(1);
