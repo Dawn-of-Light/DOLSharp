@@ -28,36 +28,46 @@ namespace DOL.Database.MySql.DataAccessObjects
 {
 	public class CraftItemDataDao : ICraftItemDataDao
 	{
+		protected static readonly string c_rowFields = "`CraftItemDataId`,`CraftingLevel`,`CraftingSkill`,`TemplateToCraft`";
 		private readonly MySqlState m_state;
 
 		public virtual CraftItemDataEntity Find(int key)
 		{
 			CraftItemDataEntity result = new CraftItemDataEntity();
+
 			m_state.ExecuteQuery(
-				"SELECT `CraftItemDataId`,`CraftingLevel`,`CraftingSkill`,`TemplateToCraft` FROM `craftitemdata` WHERE `CraftItemDataId`='" + m_state.EscapeString(key.ToString()) + "'",
+				"SELECT " + c_rowFields + " FROM `craftitemdata` WHERE `CraftItemDataId`='" + m_state.EscapeString(key.ToString()) + "'",
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
 					FillEntityWithRow(ref result, reader);
 				}
 			);
+
 			return result;
 		}
 
 		public virtual void Create(CraftItemDataEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"INSERT INTO `craftitemdata` VALUES (`" + obj.Id.ToString() + "`,`" + obj.CraftingLevel.ToString() + "`,`" + obj.CraftingSkill.ToString() + "`,`" + obj.TemplateToCraft.ToString() + "`);");
 		}
 
 		public virtual void Update(CraftItemDataEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"UPDATE `craftitemdata` SET `CraftItemDataId`='" + m_state.EscapeString(obj.Id.ToString()) + "', `CraftingLevel`='" + m_state.EscapeString(obj.CraftingLevel.ToString()) + "', `CraftingSkill`='" + m_state.EscapeString(obj.CraftingSkill.ToString()) + "', `TemplateToCraft`='" + m_state.EscapeString(obj.TemplateToCraft.ToString()) + "' WHERE `CraftItemDataId`='" + m_state.EscapeString(obj.Id.ToString()) + "'");
 		}
 
 		public virtual void Delete(CraftItemDataEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"DELETE FROM `craftitemdata` WHERE `CraftItemDataId`='" + m_state.EscapeString(obj.Id.ToString()) + "'");
 		}
 
 		public virtual void SaveAll()
 		{
+			// not used by this implementation
 		}
 
 		public virtual int CountAll()
@@ -65,7 +75,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return -1;
 		}
 
-		protected void FillEntityWithRow(ref CraftItemDataEntity entity, MySqlDataReader reader)
+		protected virtual void FillEntityWithRow(ref CraftItemDataEntity entity, MySqlDataReader reader)
 		{
 			entity.Id = reader.GetInt32(0);
 			entity.CraftingLevel = reader.GetInt32(1);

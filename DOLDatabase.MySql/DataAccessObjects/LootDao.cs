@@ -28,36 +28,46 @@ namespace DOL.Database.MySql.DataAccessObjects
 {
 	public class LootDao : ILootDao
 	{
+		protected static readonly string c_rowFields = "`LootId`,`Chance`,`GenericItemTemplateId`,`LootListId`,`LootType`";
 		private readonly MySqlState m_state;
 
 		public virtual LootEntity Find(int key)
 		{
 			LootEntity result = new LootEntity();
+
 			m_state.ExecuteQuery(
-				"SELECT `LootId`,`Chance`,`GenericItemTemplateId`,`LootListId`,`LootType` FROM `loot` WHERE `LootId`='" + m_state.EscapeString(key.ToString()) + "'",
+				"SELECT " + c_rowFields + " FROM `loot` WHERE `LootId`='" + m_state.EscapeString(key.ToString()) + "'",
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
 					FillEntityWithRow(ref result, reader);
 				}
 			);
+
 			return result;
 		}
 
 		public virtual void Create(LootEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"INSERT INTO `loot` VALUES (`" + obj.Id.ToString() + "`,`" + obj.Chance.ToString() + "`,`" + obj.GenericItemTemplate.ToString() + "`,`" + obj.LootListId.ToString() + "`,`" + obj.LootType.ToString() + "`);");
 		}
 
 		public virtual void Update(LootEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"UPDATE `loot` SET `LootId`='" + m_state.EscapeString(obj.Id.ToString()) + "', `Chance`='" + m_state.EscapeString(obj.Chance.ToString()) + "', `GenericItemTemplateId`='" + m_state.EscapeString(obj.GenericItemTemplate.ToString()) + "', `LootListId`='" + m_state.EscapeString(obj.LootListId.ToString()) + "', `LootType`='" + m_state.EscapeString(obj.LootType.ToString()) + "' WHERE `LootId`='" + m_state.EscapeString(obj.Id.ToString()) + "'");
 		}
 
 		public virtual void Delete(LootEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"DELETE FROM `loot` WHERE `LootId`='" + m_state.EscapeString(obj.Id.ToString()) + "'");
 		}
 
 		public virtual void SaveAll()
 		{
+			// not used by this implementation
 		}
 
 		public virtual int CountAll()
@@ -65,7 +75,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return -1;
 		}
 
-		protected void FillEntityWithRow(ref LootEntity entity, MySqlDataReader reader)
+		protected virtual void FillEntityWithRow(ref LootEntity entity, MySqlDataReader reader)
 		{
 			entity.Id = reader.GetInt32(0);
 			entity.Chance = reader.GetInt32(1);

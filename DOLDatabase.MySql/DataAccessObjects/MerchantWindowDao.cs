@@ -28,36 +28,46 @@ namespace DOL.Database.MySql.DataAccessObjects
 {
 	public class MerchantWindowDao : IMerchantWindowDao
 	{
+		protected static readonly string c_rowFields = "`MerchantWindowId`";
 		private readonly MySqlState m_state;
 
 		public virtual MerchantWindowEntity Find(int key)
 		{
 			MerchantWindowEntity result = new MerchantWindowEntity();
+
 			m_state.ExecuteQuery(
-				"SELECT `MerchantWindowId` FROM `merchantwindow` WHERE `MerchantWindowId`='" + m_state.EscapeString(key.ToString()) + "'",
+				"SELECT " + c_rowFields + " FROM `merchantwindow` WHERE `MerchantWindowId`='" + m_state.EscapeString(key.ToString()) + "'",
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
 					FillEntityWithRow(ref result, reader);
 				}
 			);
+
 			return result;
 		}
 
 		public virtual void Create(MerchantWindowEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"INSERT INTO `merchantwindow` VALUES (`" + obj.Id.ToString() + "`);");
 		}
 
 		public virtual void Update(MerchantWindowEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"UPDATE `merchantwindow` SET `MerchantWindowId`='" + m_state.EscapeString(obj.Id.ToString()) + "' WHERE `MerchantWindowId`='" + m_state.EscapeString(obj.Id.ToString()) + "'");
 		}
 
 		public virtual void Delete(MerchantWindowEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"DELETE FROM `merchantwindow` WHERE `MerchantWindowId`='" + m_state.EscapeString(obj.Id.ToString()) + "'");
 		}
 
 		public virtual void SaveAll()
 		{
+			// not used by this implementation
 		}
 
 		public virtual int CountAll()
@@ -65,7 +75,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return -1;
 		}
 
-		protected void FillEntityWithRow(ref MerchantWindowEntity entity, MySqlDataReader reader)
+		protected virtual void FillEntityWithRow(ref MerchantWindowEntity entity, MySqlDataReader reader)
 		{
 			entity.Id = reader.GetInt32(0);
 		}

@@ -28,36 +28,46 @@ namespace DOL.Database.MySql.DataAccessObjects
 {
 	public class MerchantPageDao : IMerchantPageDao
 	{
+		protected static readonly string c_rowFields = "`MerchantPageId`,`Currency`,`MerchantWindowId`,`Position`";
 		private readonly MySqlState m_state;
 
 		public virtual MerchantPageEntity Find(int key)
 		{
 			MerchantPageEntity result = new MerchantPageEntity();
+
 			m_state.ExecuteQuery(
-				"SELECT `MerchantPageId`,`Currency`,`MerchantWindowId`,`Position` FROM `merchantpage` WHERE `MerchantPageId`='" + m_state.EscapeString(key.ToString()) + "'",
+				"SELECT " + c_rowFields + " FROM `merchantpage` WHERE `MerchantPageId`='" + m_state.EscapeString(key.ToString()) + "'",
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
 					FillEntityWithRow(ref result, reader);
 				}
 			);
+
 			return result;
 		}
 
 		public virtual void Create(MerchantPageEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"INSERT INTO `merchantpage` VALUES (`" + obj.Id.ToString() + "`,`" + obj.Currency.ToString() + "`,`" + obj.MerchantWindow.ToString() + "`,`" + obj.Position.ToString() + "`);");
 		}
 
 		public virtual void Update(MerchantPageEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"UPDATE `merchantpage` SET `MerchantPageId`='" + m_state.EscapeString(obj.Id.ToString()) + "', `Currency`='" + m_state.EscapeString(obj.Currency.ToString()) + "', `MerchantWindowId`='" + m_state.EscapeString(obj.MerchantWindow.ToString()) + "', `Position`='" + m_state.EscapeString(obj.Position.ToString()) + "' WHERE `MerchantPageId`='" + m_state.EscapeString(obj.Id.ToString()) + "'");
 		}
 
 		public virtual void Delete(MerchantPageEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"DELETE FROM `merchantpage` WHERE `MerchantPageId`='" + m_state.EscapeString(obj.Id.ToString()) + "'");
 		}
 
 		public virtual void SaveAll()
 		{
+			// not used by this implementation
 		}
 
 		public virtual int CountAll()
@@ -65,7 +75,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return -1;
 		}
 
-		protected void FillEntityWithRow(ref MerchantPageEntity entity, MySqlDataReader reader)
+		protected virtual void FillEntityWithRow(ref MerchantPageEntity entity, MySqlDataReader reader)
 		{
 			entity.Id = reader.GetInt32(0);
 			entity.Currency = reader.GetByte(1);

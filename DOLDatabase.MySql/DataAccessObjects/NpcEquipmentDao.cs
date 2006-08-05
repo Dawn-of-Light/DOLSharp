@@ -28,36 +28,46 @@ namespace DOL.Database.MySql.DataAccessObjects
 {
 	public class NpcEquipmentDao : INpcEquipmentDao
 	{
+		protected static readonly string c_rowFields = "`ItemId`,`Color`,`GlowEffect`,`InventoryId`,`Model`,`ModelExtension`,`NPCEquipmentType`,`SlotPosition`";
 		private readonly MySqlState m_state;
 
 		public virtual NpcEquipmentEntity Find(int key)
 		{
 			NpcEquipmentEntity result = new NpcEquipmentEntity();
+
 			m_state.ExecuteQuery(
-				"SELECT `ItemId`,`Color`,`GlowEffect`,`InventoryId`,`Model`,`ModelExtension`,`NPCEquipmentType`,`SlotPosition` FROM `npcequipment` WHERE `ItemId`='" + m_state.EscapeString(key.ToString()) + "'",
+				"SELECT " + c_rowFields + " FROM `npcequipment` WHERE `ItemId`='" + m_state.EscapeString(key.ToString()) + "'",
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
 					FillEntityWithRow(ref result, reader);
 				}
 			);
+
 			return result;
 		}
 
 		public virtual void Create(NpcEquipmentEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"INSERT INTO `npcequipment` VALUES (`" + obj.Id.ToString() + "`,`" + obj.GlowEffect.ToString() + "`,`" + obj.Inventory.ToString() + "`,`" + obj.Model.ToString() + "`,`" + obj.ModelExtension.ToString() + "`,`" + obj.NPCEquipmentType.ToString() + "`,`" + obj.or1.ToString() + "`,`" + obj.SlotPosition.ToString() + "`);");
 		}
 
 		public virtual void Update(NpcEquipmentEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"UPDATE `npcequipment` SET `ItemId`='" + m_state.EscapeString(obj.Id.ToString()) + "', `GlowEffect`='" + m_state.EscapeString(obj.GlowEffect.ToString()) + "', `InventoryId`='" + m_state.EscapeString(obj.Inventory.ToString()) + "', `Model`='" + m_state.EscapeString(obj.Model.ToString()) + "', `ModelExtension`='" + m_state.EscapeString(obj.ModelExtension.ToString()) + "', `NPCEquipmentType`='" + m_state.EscapeString(obj.NPCEquipmentType.ToString()) + "', `Color`='" + m_state.EscapeString(obj.or1.ToString()) + "', `SlotPosition`='" + m_state.EscapeString(obj.SlotPosition.ToString()) + "' WHERE `ItemId`='" + m_state.EscapeString(obj.Id.ToString()) + "'");
 		}
 
 		public virtual void Delete(NpcEquipmentEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"DELETE FROM `npcequipment` WHERE `ItemId`='" + m_state.EscapeString(obj.Id.ToString()) + "'");
 		}
 
 		public virtual void SaveAll()
 		{
+			// not used by this implementation
 		}
 
 		public virtual int CountAll()
@@ -65,7 +75,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return -1;
 		}
 
-		protected void FillEntityWithRow(ref NpcEquipmentEntity entity, MySqlDataReader reader)
+		protected virtual void FillEntityWithRow(ref NpcEquipmentEntity entity, MySqlDataReader reader)
 		{
 			entity.Id = reader.GetInt32(0);
 			entity.GlowEffect = reader.GetInt32(1);

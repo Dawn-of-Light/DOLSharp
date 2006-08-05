@@ -28,36 +28,46 @@ namespace DOL.Database.MySql.DataAccessObjects
 {
 	public class PathDao : IPathDao
 	{
+		protected static readonly string c_rowFields = "`PathId`,`PathType`,`RegionId`,`StartingPoint`,`SteedModel`,`SteedName`";
 		private readonly MySqlState m_state;
 
 		public virtual PathEntity Find(int key)
 		{
 			PathEntity result = new PathEntity();
+
 			m_state.ExecuteQuery(
-				"SELECT `PathId`,`PathType`,`RegionId`,`StartingPoint`,`SteedModel`,`SteedName` FROM `path` WHERE `PathId`='" + m_state.EscapeString(key.ToString()) + "'",
+				"SELECT " + c_rowFields + " FROM `path` WHERE `PathId`='" + m_state.EscapeString(key.ToString()) + "'",
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
 					FillEntityWithRow(ref result, reader);
 				}
 			);
+
 			return result;
 		}
 
 		public virtual void Create(PathEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"INSERT INTO `path` VALUES (`" + obj.Id.ToString() + "`,`" + obj.PathType.ToString() + "`,`" + obj.RegionId.ToString() + "`,`" + obj.StartingPoint.ToString() + "`,`" + obj.SteedModel.ToString() + "`,`" + obj.SteedName.ToString() + "`);");
 		}
 
 		public virtual void Update(PathEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"UPDATE `path` SET `PathId`='" + m_state.EscapeString(obj.Id.ToString()) + "', `PathType`='" + m_state.EscapeString(obj.PathType.ToString()) + "', `RegionId`='" + m_state.EscapeString(obj.RegionId.ToString()) + "', `StartingPoint`='" + m_state.EscapeString(obj.StartingPoint.ToString()) + "', `SteedModel`='" + m_state.EscapeString(obj.SteedModel.ToString()) + "', `SteedName`='" + m_state.EscapeString(obj.SteedName.ToString()) + "' WHERE `PathId`='" + m_state.EscapeString(obj.Id.ToString()) + "'");
 		}
 
 		public virtual void Delete(PathEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"DELETE FROM `path` WHERE `PathId`='" + m_state.EscapeString(obj.Id.ToString()) + "'");
 		}
 
 		public virtual void SaveAll()
 		{
+			// not used by this implementation
 		}
 
 		public virtual int CountAll()
@@ -65,7 +75,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return -1;
 		}
 
-		protected void FillEntityWithRow(ref PathEntity entity, MySqlDataReader reader)
+		protected virtual void FillEntityWithRow(ref PathEntity entity, MySqlDataReader reader)
 		{
 			entity.Id = reader.GetInt32(0);
 			entity.PathType = reader.GetString(1);

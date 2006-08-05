@@ -28,36 +28,46 @@ namespace DOL.Database.MySql.DataAccessObjects
 {
 	public class GamePlayerInventoryDao : IGamePlayerInventoryDao
 	{
+		protected static readonly string c_rowFields = "`InventoryId`,`IsCloakHoodUp`";
 		private readonly MySqlState m_state;
 
 		public virtual GamePlayerInventoryEntity Find(int key)
 		{
 			GamePlayerInventoryEntity result = new GamePlayerInventoryEntity();
+
 			m_state.ExecuteQuery(
-				"SELECT `InventoryId`,`IsCloakHoodUp` FROM `gameplayerinventory` WHERE `InventoryId`='" + m_state.EscapeString(key.ToString()) + "'",
+				"SELECT " + c_rowFields + " FROM `gameplayerinventory` WHERE `InventoryId`='" + m_state.EscapeString(key.ToString()) + "'",
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
 					FillEntityWithRow(ref result, reader);
 				}
 			);
+
 			return result;
 		}
 
 		public virtual void Create(GamePlayerInventoryEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"INSERT INTO `gameplayerinventory` VALUES (`" + obj.Inventory.ToString() + "`,`" + obj.IsCloakHoodUp.ToString() + "`);");
 		}
 
 		public virtual void Update(GamePlayerInventoryEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"UPDATE `gameplayerinventory` SET `InventoryId`='" + m_state.EscapeString(obj.Inventory.ToString()) + "', `IsCloakHoodUp`='" + m_state.EscapeString(obj.IsCloakHoodUp.ToString()) + "' WHERE `InventoryId`='" + m_state.EscapeString(obj.Inventory.ToString()) + "'");
 		}
 
 		public virtual void Delete(GamePlayerInventoryEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"DELETE FROM `gameplayerinventory` WHERE `InventoryId`='" + m_state.EscapeString(obj.Inventory.ToString()) + "'");
 		}
 
 		public virtual void SaveAll()
 		{
+			// not used by this implementation
 		}
 
 		public virtual int CountAll()
@@ -65,7 +75,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return -1;
 		}
 
-		protected void FillEntityWithRow(ref GamePlayerInventoryEntity entity, MySqlDataReader reader)
+		protected virtual void FillEntityWithRow(ref GamePlayerInventoryEntity entity, MySqlDataReader reader)
 		{
 			entity.Inventory = reader.GetInt32(0);
 			entity.IsCloakHoodUp = reader.GetString(1);

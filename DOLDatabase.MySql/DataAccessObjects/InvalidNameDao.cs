@@ -28,36 +28,46 @@ namespace DOL.Database.MySql.DataAccessObjects
 {
 	public class InvalidNameDao : IInvalidNameDao
 	{
+		protected static readonly string c_rowFields = "`InvalidNameId`,`Name`";
 		private readonly MySqlState m_state;
 
 		public virtual InvalidNameEntity Find(int key)
 		{
 			InvalidNameEntity result = new InvalidNameEntity();
+
 			m_state.ExecuteQuery(
-				"SELECT `InvalidNameId`,`Name` FROM `invalidname` WHERE `InvalidNameId`='" + m_state.EscapeString(key.ToString()) + "'",
+				"SELECT " + c_rowFields + " FROM `invalidname` WHERE `InvalidNameId`='" + m_state.EscapeString(key.ToString()) + "'",
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
 					FillEntityWithRow(ref result, reader);
 				}
 			);
+
 			return result;
 		}
 
 		public virtual void Create(InvalidNameEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"INSERT INTO `invalidname` VALUES (`" + obj.Id.ToString() + "`,`" + obj.Name.ToString() + "`);");
 		}
 
 		public virtual void Update(InvalidNameEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"UPDATE `invalidname` SET `InvalidNameId`='" + m_state.EscapeString(obj.Id.ToString()) + "', `Name`='" + m_state.EscapeString(obj.Name.ToString()) + "' WHERE `InvalidNameId`='" + m_state.EscapeString(obj.Id.ToString()) + "'");
 		}
 
 		public virtual void Delete(InvalidNameEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"DELETE FROM `invalidname` WHERE `InvalidNameId`='" + m_state.EscapeString(obj.Id.ToString()) + "'");
 		}
 
 		public virtual void SaveAll()
 		{
+			// not used by this implementation
 		}
 
 		public virtual int CountAll()
@@ -65,7 +75,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return -1;
 		}
 
-		protected void FillEntityWithRow(ref InvalidNameEntity entity, MySqlDataReader reader)
+		protected virtual void FillEntityWithRow(ref InvalidNameEntity entity, MySqlDataReader reader)
 		{
 			entity.Id = reader.GetInt32(0);
 			entity.Name = reader.GetString(1);

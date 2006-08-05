@@ -28,36 +28,46 @@ namespace DOL.Database.MySql.DataAccessObjects
 {
 	public class SpawnTemplateDao : ISpawnTemplateDao
 	{
+		protected static readonly string c_rowFields = "`SpawnTemplateBaseId`,`Count`,`GameNPCTemplateId`,`SpawnGeneratorBaseId`,`SpawnTemplateBaseType`";
 		private readonly MySqlState m_state;
 
 		public virtual SpawnTemplateEntity Find(int key)
 		{
 			SpawnTemplateEntity result = new SpawnTemplateEntity();
+
 			m_state.ExecuteQuery(
-				"SELECT `SpawnTemplateBaseId`,`Count`,`GameNPCTemplateId`,`SpawnGeneratorBaseId`,`SpawnTemplateBaseType` FROM `spawntemplate` WHERE `SpawnTemplateBaseId`='" + m_state.EscapeString(key.ToString()) + "'",
+				"SELECT " + c_rowFields + " FROM `spawntemplate` WHERE `SpawnTemplateBaseId`='" + m_state.EscapeString(key.ToString()) + "'",
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
 					FillEntityWithRow(ref result, reader);
 				}
 			);
+
 			return result;
 		}
 
 		public virtual void Create(SpawnTemplateEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"INSERT INTO `spawntemplate` VALUES (`" + obj.Id.ToString() + "`,`" + obj.Count.ToString() + "`,`" + obj.GameNPCTemplate.ToString() + "`,`" + obj.SpawnGeneratorBase.ToString() + "`,`" + obj.SpawnTemplateBaseType.ToString() + "`);");
 		}
 
 		public virtual void Update(SpawnTemplateEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"UPDATE `spawntemplate` SET `SpawnTemplateBaseId`='" + m_state.EscapeString(obj.Id.ToString()) + "', `Count`='" + m_state.EscapeString(obj.Count.ToString()) + "', `GameNPCTemplateId`='" + m_state.EscapeString(obj.GameNPCTemplate.ToString()) + "', `SpawnGeneratorBaseId`='" + m_state.EscapeString(obj.SpawnGeneratorBase.ToString()) + "', `SpawnTemplateBaseType`='" + m_state.EscapeString(obj.SpawnTemplateBaseType.ToString()) + "' WHERE `SpawnTemplateBaseId`='" + m_state.EscapeString(obj.Id.ToString()) + "'");
 		}
 
 		public virtual void Delete(SpawnTemplateEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"DELETE FROM `spawntemplate` WHERE `SpawnTemplateBaseId`='" + m_state.EscapeString(obj.Id.ToString()) + "'");
 		}
 
 		public virtual void SaveAll()
 		{
+			// not used by this implementation
 		}
 
 		public virtual int CountAll()
@@ -65,7 +75,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return -1;
 		}
 
-		protected void FillEntityWithRow(ref SpawnTemplateEntity entity, MySqlDataReader reader)
+		protected virtual void FillEntityWithRow(ref SpawnTemplateEntity entity, MySqlDataReader reader)
 		{
 			entity.Id = reader.GetInt32(0);
 			entity.Count = reader.GetInt32(1);

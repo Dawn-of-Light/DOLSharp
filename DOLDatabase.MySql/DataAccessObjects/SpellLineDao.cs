@@ -28,36 +28,46 @@ namespace DOL.Database.MySql.DataAccessObjects
 {
 	public class SpellLineDao : ISpellLineDao
 	{
+		protected static readonly string c_rowFields = "`KeyName`,`IsBaseLine`,`Name`,`Spec`";
 		private readonly MySqlState m_state;
 
 		public virtual SpellLineEntity Find(string key)
 		{
 			SpellLineEntity result = new SpellLineEntity();
+
 			m_state.ExecuteQuery(
-				"SELECT `KeyName`,`IsBaseLine`,`Name`,`Spec` FROM `spellline` WHERE `KeyName`='" + m_state.EscapeString(key.ToString()) + "'",
+				"SELECT " + c_rowFields + " FROM `spellline` WHERE `KeyName`='" + m_state.EscapeString(key.ToString()) + "'",
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
 					FillEntityWithRow(ref result, reader);
 				}
 			);
+
 			return result;
 		}
 
 		public virtual void Create(SpellLineEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"INSERT INTO `spellline` VALUES (`" + obj.KeyName.ToString() + "`,`" + obj.IsBaseLine.ToString() + "`,`" + obj.Name.ToString() + "`,`" + obj.Spec.ToString() + "`);");
 		}
 
 		public virtual void Update(SpellLineEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"UPDATE `spellline` SET `KeyName`='" + m_state.EscapeString(obj.KeyName.ToString()) + "', `IsBaseLine`='" + m_state.EscapeString(obj.IsBaseLine.ToString()) + "', `Name`='" + m_state.EscapeString(obj.Name.ToString()) + "', `Spec`='" + m_state.EscapeString(obj.Spec.ToString()) + "' WHERE `KeyName`='" + m_state.EscapeString(obj.KeyName.ToString()) + "'");
 		}
 
 		public virtual void Delete(SpellLineEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"DELETE FROM `spellline` WHERE `KeyName`='" + m_state.EscapeString(obj.KeyName.ToString()) + "'");
 		}
 
 		public virtual void SaveAll()
 		{
+			// not used by this implementation
 		}
 
 		public virtual int CountAll()
@@ -65,7 +75,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return -1;
 		}
 
-		protected void FillEntityWithRow(ref SpellLineEntity entity, MySqlDataReader reader)
+		protected virtual void FillEntityWithRow(ref SpellLineEntity entity, MySqlDataReader reader)
 		{
 			entity.KeyName = reader.GetString(0);
 			entity.IsBaseLine = reader.GetString(1);

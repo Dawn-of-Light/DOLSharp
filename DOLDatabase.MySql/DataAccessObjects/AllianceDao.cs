@@ -28,36 +28,46 @@ namespace DOL.Database.MySql.DataAccessObjects
 {
 	public class AllianceDao : IAllianceDao
 	{
+		protected static readonly string c_rowFields = "`AllianceId`,`AllianceLeader`,`AMotd`";
 		private readonly MySqlState m_state;
 
 		public virtual AllianceEntity Find(int key)
 		{
 			AllianceEntity result = new AllianceEntity();
+
 			m_state.ExecuteQuery(
-				"SELECT `AllianceId`,`AllianceLeader`,`AMotd` FROM `alliance` WHERE `AllianceId`='" + m_state.EscapeString(key.ToString()) + "'",
+				"SELECT " + c_rowFields + " FROM `alliance` WHERE `AllianceId`='" + m_state.EscapeString(key.ToString()) + "'",
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
 					FillEntityWithRow(ref result, reader);
 				}
 			);
+
 			return result;
 		}
 
 		public virtual void Create(AllianceEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"INSERT INTO `alliance` VALUES (`" + obj.Id.ToString() + "`,`" + obj.AllianceLeader.ToString() + "`,`" + obj.AMotd.ToString() + "`);");
 		}
 
 		public virtual void Update(AllianceEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"UPDATE `alliance` SET `AllianceId`='" + m_state.EscapeString(obj.Id.ToString()) + "', `AllianceLeader`='" + m_state.EscapeString(obj.AllianceLeader.ToString()) + "', `AMotd`='" + m_state.EscapeString(obj.AMotd.ToString()) + "' WHERE `AllianceId`='" + m_state.EscapeString(obj.Id.ToString()) + "'");
 		}
 
 		public virtual void Delete(AllianceEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"DELETE FROM `alliance` WHERE `AllianceId`='" + m_state.EscapeString(obj.Id.ToString()) + "'");
 		}
 
 		public virtual void SaveAll()
 		{
+			// not used by this implementation
 		}
 
 		public virtual int CountAll()
@@ -65,7 +75,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return -1;
 		}
 
-		protected void FillEntityWithRow(ref AllianceEntity entity, MySqlDataReader reader)
+		protected virtual void FillEntityWithRow(ref AllianceEntity entity, MySqlDataReader reader)
 		{
 			entity.Id = reader.GetInt32(0);
 			entity.AllianceLeader = reader.GetInt32(1);

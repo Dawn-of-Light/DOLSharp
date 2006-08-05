@@ -28,36 +28,46 @@ namespace DOL.Database.MySql.DataAccessObjects
 {
 	public class RegionDao : IRegionDao
 	{
+		protected static readonly string c_rowFields = "`RegionId`,`Description`,`Expansion`,`IsDivingEnabled`,`IsDungeon`,`IsInstance`,`Type`";
 		private readonly MySqlState m_state;
 
 		public virtual RegionEntity Find(int key)
 		{
 			RegionEntity result = new RegionEntity();
+
 			m_state.ExecuteQuery(
-				"SELECT `RegionId`,`Description`,`Expansion`,`IsDivingEnabled`,`IsDungeon`,`IsInstance`,`Type` FROM `region` WHERE `RegionId`='" + m_state.EscapeString(key.ToString()) + "'",
+				"SELECT " + c_rowFields + " FROM `region` WHERE `RegionId`='" + m_state.EscapeString(key.ToString()) + "'",
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
 					FillEntityWithRow(ref result, reader);
 				}
 			);
+
 			return result;
 		}
 
 		public virtual void Create(RegionEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"INSERT INTO `region` VALUES (`" + obj.Id.ToString() + "`,`" + obj.Description.ToString() + "`,`" + obj.Expansion.ToString() + "`,`" + obj.IsDivingEnabled.ToString() + "`,`" + obj.IsDungeon.ToString() + "`,`" + obj.IsInstance.ToString() + "`,`" + obj.Type.ToString() + "`);");
 		}
 
 		public virtual void Update(RegionEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"UPDATE `region` SET `RegionId`='" + m_state.EscapeString(obj.Id.ToString()) + "', `Description`='" + m_state.EscapeString(obj.Description.ToString()) + "', `Expansion`='" + m_state.EscapeString(obj.Expansion.ToString()) + "', `IsDivingEnabled`='" + m_state.EscapeString(obj.IsDivingEnabled.ToString()) + "', `IsDungeon`='" + m_state.EscapeString(obj.IsDungeon.ToString()) + "', `IsInstance`='" + m_state.EscapeString(obj.IsInstance.ToString()) + "', `Type`='" + m_state.EscapeString(obj.Type.ToString()) + "' WHERE `RegionId`='" + m_state.EscapeString(obj.Id.ToString()) + "'");
 		}
 
 		public virtual void Delete(RegionEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"DELETE FROM `region` WHERE `RegionId`='" + m_state.EscapeString(obj.Id.ToString()) + "'");
 		}
 
 		public virtual void SaveAll()
 		{
+			// not used by this implementation
 		}
 
 		public virtual int CountAll()
@@ -65,7 +75,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return -1;
 		}
 
-		protected void FillEntityWithRow(ref RegionEntity entity, MySqlDataReader reader)
+		protected virtual void FillEntityWithRow(ref RegionEntity entity, MySqlDataReader reader)
 		{
 			entity.Id = reader.GetInt32(0);
 			entity.Description = reader.GetString(1);

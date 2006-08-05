@@ -28,36 +28,46 @@ namespace DOL.Database.MySql.DataAccessObjects
 {
 	public class GuildDao : IGuildDao
 	{
+		protected static readonly string c_rowFields = "`GuildId`,`Alliance`,`BountyPoints`,`Due`,`Email`,`Emblem`,`GuildName`,`Level`,`MeritPoints`,`Motd`,`OMotd`,`RealmPoints`,`TotalMoney`,`Webpage`";
 		private readonly MySqlState m_state;
 
 		public virtual GuildEntity Find(int key)
 		{
 			GuildEntity result = new GuildEntity();
+
 			m_state.ExecuteQuery(
-				"SELECT `GuildId`,`Alliance`,`BountyPoints`,`Due`,`Email`,`Emblem`,`GuildName`,`Level`,`MeritPoints`,`Motd`,`OMotd`,`RealmPoints`,`TotalMoney`,`Webpage` FROM `guild` WHERE `GuildId`='" + m_state.EscapeString(key.ToString()) + "'",
+				"SELECT " + c_rowFields + " FROM `guild` WHERE `GuildId`='" + m_state.EscapeString(key.ToString()) + "'",
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
 					FillEntityWithRow(ref result, reader);
 				}
 			);
+
 			return result;
 		}
 
 		public virtual void Create(GuildEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"INSERT INTO `guild` VALUES (`" + obj.Id.ToString() + "`,`" + obj.Alliance.ToString() + "`,`" + obj.BountyPoints.ToString() + "`,`" + obj.Due.ToString() + "`,`" + obj.Email.ToString() + "`,`" + obj.Emblem.ToString() + "`,`" + obj.GuildName.ToString() + "`,`" + obj.Level.ToString() + "`,`" + obj.MeritPoints.ToString() + "`,`" + obj.Motd.ToString() + "`,`" + obj.OMotd.ToString() + "`,`" + obj.RealmPoints.ToString() + "`,`" + obj.TotalMoney.ToString() + "`,`" + obj.Webpage.ToString() + "`);");
 		}
 
 		public virtual void Update(GuildEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"UPDATE `guild` SET `GuildId`='" + m_state.EscapeString(obj.Id.ToString()) + "', `Alliance`='" + m_state.EscapeString(obj.Alliance.ToString()) + "', `BountyPoints`='" + m_state.EscapeString(obj.BountyPoints.ToString()) + "', `Due`='" + m_state.EscapeString(obj.Due.ToString()) + "', `Email`='" + m_state.EscapeString(obj.Email.ToString()) + "', `Emblem`='" + m_state.EscapeString(obj.Emblem.ToString()) + "', `GuildName`='" + m_state.EscapeString(obj.GuildName.ToString()) + "', `Level`='" + m_state.EscapeString(obj.Level.ToString()) + "', `MeritPoints`='" + m_state.EscapeString(obj.MeritPoints.ToString()) + "', `Motd`='" + m_state.EscapeString(obj.Motd.ToString()) + "', `OMotd`='" + m_state.EscapeString(obj.OMotd.ToString()) + "', `RealmPoints`='" + m_state.EscapeString(obj.RealmPoints.ToString()) + "', `TotalMoney`='" + m_state.EscapeString(obj.TotalMoney.ToString()) + "', `Webpage`='" + m_state.EscapeString(obj.Webpage.ToString()) + "' WHERE `GuildId`='" + m_state.EscapeString(obj.Id.ToString()) + "'");
 		}
 
 		public virtual void Delete(GuildEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"DELETE FROM `guild` WHERE `GuildId`='" + m_state.EscapeString(obj.Id.ToString()) + "'");
 		}
 
 		public virtual void SaveAll()
 		{
+			// not used by this implementation
 		}
 
 		public virtual int CountAll()
@@ -65,7 +75,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return -1;
 		}
 
-		protected void FillEntityWithRow(ref GuildEntity entity, MySqlDataReader reader)
+		protected virtual void FillEntityWithRow(ref GuildEntity entity, MySqlDataReader reader)
 		{
 			entity.Id = reader.GetInt32(0);
 			entity.Alliance = reader.GetInt32(1);

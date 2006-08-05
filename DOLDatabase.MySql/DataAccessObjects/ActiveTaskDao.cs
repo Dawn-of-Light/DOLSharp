@@ -28,36 +28,46 @@ namespace DOL.Database.MySql.DataAccessObjects
 {
 	public class ActiveTaskDao : IActiveTaskDao
 	{
+		protected static readonly string c_rowFields = "`AbstractTaskId`,`ItemName`,`RewardGiverName`,`StartingPlayedTime`,`TargetKilled`,`TargetMobName`,`TaskType`";
 		private readonly MySqlState m_state;
 
 		public virtual ActiveTaskEntity Find(int key)
 		{
 			ActiveTaskEntity result = new ActiveTaskEntity();
+
 			m_state.ExecuteQuery(
-				"SELECT `AbstractTaskId`,`ItemName`,`RewardGiverName`,`StartingPlayedTime`,`TargetKilled`,`TargetMobName`,`TaskType` FROM `activetasks` WHERE `AbstractTaskId`='" + m_state.EscapeString(key.ToString()) + "'",
+				"SELECT " + c_rowFields + " FROM `activetasks` WHERE `AbstractTaskId`='" + m_state.EscapeString(key.ToString()) + "'",
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
 					FillEntityWithRow(ref result, reader);
 				}
 			);
+
 			return result;
 		}
 
 		public virtual void Create(ActiveTaskEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"INSERT INTO `activetasks` VALUES (`" + obj.AbstractTask.ToString() + "`,`" + obj.ItemName.ToString() + "`,`" + obj.RewardGiverName.ToString() + "`,`" + obj.StartingPlayedTime.ToString() + "`,`" + obj.TargetKilled.ToString() + "`,`" + obj.TargetMobName.ToString() + "`,`" + obj.TaskType.ToString() + "`);");
 		}
 
 		public virtual void Update(ActiveTaskEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"UPDATE `activetasks` SET `AbstractTaskId`='" + m_state.EscapeString(obj.AbstractTask.ToString()) + "', `ItemName`='" + m_state.EscapeString(obj.ItemName.ToString()) + "', `RewardGiverName`='" + m_state.EscapeString(obj.RewardGiverName.ToString()) + "', `StartingPlayedTime`='" + m_state.EscapeString(obj.StartingPlayedTime.ToString()) + "', `TargetKilled`='" + m_state.EscapeString(obj.TargetKilled.ToString()) + "', `TargetMobName`='" + m_state.EscapeString(obj.TargetMobName.ToString()) + "', `TaskType`='" + m_state.EscapeString(obj.TaskType.ToString()) + "' WHERE `AbstractTaskId`='" + m_state.EscapeString(obj.AbstractTask.ToString()) + "'");
 		}
 
 		public virtual void Delete(ActiveTaskEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"DELETE FROM `activetasks` WHERE `AbstractTaskId`='" + m_state.EscapeString(obj.AbstractTask.ToString()) + "'");
 		}
 
 		public virtual void SaveAll()
 		{
+			// not used by this implementation
 		}
 
 		public virtual int CountAll()
@@ -65,7 +75,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return -1;
 		}
 
-		protected void FillEntityWithRow(ref ActiveTaskEntity entity, MySqlDataReader reader)
+		protected virtual void FillEntityWithRow(ref ActiveTaskEntity entity, MySqlDataReader reader)
 		{
 			entity.AbstractTask = reader.GetInt32(0);
 			entity.ItemName = reader.GetString(1);

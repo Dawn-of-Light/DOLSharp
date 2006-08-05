@@ -28,36 +28,46 @@ namespace DOL.Database.MySql.DataAccessObjects
 {
 	public class ActiveQuestDao : IActiveQuestDao
 	{
+		protected static readonly string c_rowFields = "`AbstractQuestId`,`PersistantGameObjectId`,`QuestType`,`Step`";
 		private readonly MySqlState m_state;
 
 		public virtual ActiveQuestEntity Find(int key)
 		{
 			ActiveQuestEntity result = new ActiveQuestEntity();
+
 			m_state.ExecuteQuery(
-				"SELECT `AbstractQuestId`,`PersistantGameObjectId`,`QuestType`,`Step` FROM `activequests` WHERE `AbstractQuestId`='" + m_state.EscapeString(key.ToString()) + "'",
+				"SELECT " + c_rowFields + " FROM `activequests` WHERE `AbstractQuestId`='" + m_state.EscapeString(key.ToString()) + "'",
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
 					FillEntityWithRow(ref result, reader);
 				}
 			);
+
 			return result;
 		}
 
 		public virtual void Create(ActiveQuestEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"INSERT INTO `activequests` VALUES (`" + obj.Id.ToString() + "`,`" + obj.PersistantGameObject.ToString() + "`,`" + obj.QuestType.ToString() + "`,`" + obj.Step1.ToString() + "`);");
 		}
 
 		public virtual void Update(ActiveQuestEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"UPDATE `activequests` SET `AbstractQuestId`='" + m_state.EscapeString(obj.Id.ToString()) + "', `PersistantGameObjectId`='" + m_state.EscapeString(obj.PersistantGameObject.ToString()) + "', `QuestType`='" + m_state.EscapeString(obj.QuestType.ToString()) + "', `Step`='" + m_state.EscapeString(obj.Step1.ToString()) + "' WHERE `AbstractQuestId`='" + m_state.EscapeString(obj.Id.ToString()) + "'");
 		}
 
 		public virtual void Delete(ActiveQuestEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"DELETE FROM `activequests` WHERE `AbstractQuestId`='" + m_state.EscapeString(obj.Id.ToString()) + "'");
 		}
 
 		public virtual void SaveAll()
 		{
+			// not used by this implementation
 		}
 
 		public virtual int CountAll()
@@ -65,7 +75,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return -1;
 		}
 
-		protected void FillEntityWithRow(ref ActiveQuestEntity entity, MySqlDataReader reader)
+		protected virtual void FillEntityWithRow(ref ActiveQuestEntity entity, MySqlDataReader reader)
 		{
 			entity.Id = reader.GetInt32(0);
 			entity.PersistantGameObject = reader.GetInt32(1);

@@ -28,36 +28,46 @@ namespace DOL.Database.MySql.DataAccessObjects
 {
 	public class SpawnGeneratorDao : ISpawnGeneratorDao
 	{
+		protected static readonly string c_rowFields = "`SpawnGeneratorBaseId`,`Height`,`Radius`,`RegionId`,`SpawnGeneratorBaseType`,`Width`,`X`,`Y`";
 		private readonly MySqlState m_state;
 
 		public virtual SpawnGeneratorEntity Find(int key)
 		{
 			SpawnGeneratorEntity result = new SpawnGeneratorEntity();
+
 			m_state.ExecuteQuery(
-				"SELECT `SpawnGeneratorBaseId`,`Height`,`Radius`,`RegionId`,`SpawnGeneratorBaseType`,`Width`,`X`,`Y` FROM `spawngenerator` WHERE `SpawnGeneratorBaseId`='" + m_state.EscapeString(key.ToString()) + "'",
+				"SELECT " + c_rowFields + " FROM `spawngenerator` WHERE `SpawnGeneratorBaseId`='" + m_state.EscapeString(key.ToString()) + "'",
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
 					FillEntityWithRow(ref result, reader);
 				}
 			);
+
 			return result;
 		}
 
 		public virtual void Create(SpawnGeneratorEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"INSERT INTO `spawngenerator` VALUES (`" + obj.Id.ToString() + "`,`" + obj.Height.ToString() + "`,`" + obj.Radius.ToString() + "`,`" + obj.RegionId.ToString() + "`,`" + obj.SpawnGeneratorBaseType.ToString() + "`,`" + obj.Width.ToString() + "`,`" + obj.X.ToString() + "`,`" + obj.Y.ToString() + "`);");
 		}
 
 		public virtual void Update(SpawnGeneratorEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"UPDATE `spawngenerator` SET `SpawnGeneratorBaseId`='" + m_state.EscapeString(obj.Id.ToString()) + "', `Height`='" + m_state.EscapeString(obj.Height.ToString()) + "', `Radius`='" + m_state.EscapeString(obj.Radius.ToString()) + "', `RegionId`='" + m_state.EscapeString(obj.RegionId.ToString()) + "', `SpawnGeneratorBaseType`='" + m_state.EscapeString(obj.SpawnGeneratorBaseType.ToString()) + "', `Width`='" + m_state.EscapeString(obj.Width.ToString()) + "', `X`='" + m_state.EscapeString(obj.X.ToString()) + "', `Y`='" + m_state.EscapeString(obj.Y.ToString()) + "' WHERE `SpawnGeneratorBaseId`='" + m_state.EscapeString(obj.Id.ToString()) + "'");
 		}
 
 		public virtual void Delete(SpawnGeneratorEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"DELETE FROM `spawngenerator` WHERE `SpawnGeneratorBaseId`='" + m_state.EscapeString(obj.Id.ToString()) + "'");
 		}
 
 		public virtual void SaveAll()
 		{
+			// not used by this implementation
 		}
 
 		public virtual int CountAll()
@@ -65,7 +75,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return -1;
 		}
 
-		protected void FillEntityWithRow(ref SpawnGeneratorEntity entity, MySqlDataReader reader)
+		protected virtual void FillEntityWithRow(ref SpawnGeneratorEntity entity, MySqlDataReader reader)
 		{
 			entity.Id = reader.GetInt32(0);
 			entity.Height = reader.GetInt32(1);
