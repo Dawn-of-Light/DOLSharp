@@ -28,36 +28,46 @@ namespace DOL.Database.MySql.DataAccessObjects
 {
 	public class LineXSpellDao : ILineXSpellDao
 	{
+		protected static readonly string c_rowFields = "`LineXSpellId`,`Level`,`LineName`,`SpellId`";
 		private readonly MySqlState m_state;
 
 		public virtual LineXSpellEntity Find(int key)
 		{
 			LineXSpellEntity result = new LineXSpellEntity();
+
 			m_state.ExecuteQuery(
-				"SELECT `LineXSpellId`,`Level`,`LineName`,`SpellId` FROM `linexspell` WHERE `LineXSpellId`='" + m_state.EscapeString(key.ToString()) + "'",
+				"SELECT " + c_rowFields + " FROM `linexspell` WHERE `LineXSpellId`='" + m_state.EscapeString(key.ToString()) + "'",
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
 					FillEntityWithRow(ref result, reader);
 				}
 			);
+
 			return result;
 		}
 
 		public virtual void Create(LineXSpellEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"INSERT INTO `linexspell` VALUES (`" + obj.Id.ToString() + "`,`" + obj.Level.ToString() + "`,`" + obj.LineName.ToString() + "`,`" + obj.SpellId.ToString() + "`);");
 		}
 
 		public virtual void Update(LineXSpellEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"UPDATE `linexspell` SET `LineXSpellId`='" + m_state.EscapeString(obj.Id.ToString()) + "', `Level`='" + m_state.EscapeString(obj.Level.ToString()) + "', `LineName`='" + m_state.EscapeString(obj.LineName.ToString()) + "', `SpellId`='" + m_state.EscapeString(obj.SpellId.ToString()) + "' WHERE `LineXSpellId`='" + m_state.EscapeString(obj.Id.ToString()) + "'");
 		}
 
 		public virtual void Delete(LineXSpellEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"DELETE FROM `linexspell` WHERE `LineXSpellId`='" + m_state.EscapeString(obj.Id.ToString()) + "'");
 		}
 
 		public virtual void SaveAll()
 		{
+			// not used by this implementation
 		}
 
 		public virtual int CountAll()
@@ -65,7 +75,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return -1;
 		}
 
-		protected void FillEntityWithRow(ref LineXSpellEntity entity, MySqlDataReader reader)
+		protected virtual void FillEntityWithRow(ref LineXSpellEntity entity, MySqlDataReader reader)
 		{
 			entity.Id = reader.GetInt32(0);
 			entity.Level = reader.GetInt32(1);

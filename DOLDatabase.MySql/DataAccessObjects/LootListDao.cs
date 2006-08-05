@@ -28,36 +28,46 @@ namespace DOL.Database.MySql.DataAccessObjects
 {
 	public class LootListDao : ILootListDao
 	{
+		protected static readonly string c_rowFields = "`LootListId`";
 		private readonly MySqlState m_state;
 
 		public virtual LootListEntity Find(int key)
 		{
 			LootListEntity result = new LootListEntity();
+
 			m_state.ExecuteQuery(
-				"SELECT `LootListId` FROM `lootlist` WHERE `LootListId`='" + m_state.EscapeString(key.ToString()) + "'",
+				"SELECT " + c_rowFields + " FROM `lootlist` WHERE `LootListId`='" + m_state.EscapeString(key.ToString()) + "'",
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
 					FillEntityWithRow(ref result, reader);
 				}
 			);
+
 			return result;
 		}
 
 		public virtual void Create(LootListEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"INSERT INTO `lootlist` VALUES (`" + obj.Id.ToString() + "`);");
 		}
 
 		public virtual void Update(LootListEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"UPDATE `lootlist` SET `LootListId`='" + m_state.EscapeString(obj.Id.ToString()) + "' WHERE `LootListId`='" + m_state.EscapeString(obj.Id.ToString()) + "'");
 		}
 
 		public virtual void Delete(LootListEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"DELETE FROM `lootlist` WHERE `LootListId`='" + m_state.EscapeString(obj.Id.ToString()) + "'");
 		}
 
 		public virtual void SaveAll()
 		{
+			// not used by this implementation
 		}
 
 		public virtual int CountAll()
@@ -65,7 +75,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return -1;
 		}
 
-		protected void FillEntityWithRow(ref LootListEntity entity, MySqlDataReader reader)
+		protected virtual void FillEntityWithRow(ref LootListEntity entity, MySqlDataReader reader)
 		{
 			entity.Id = reader.GetInt32(0);
 		}

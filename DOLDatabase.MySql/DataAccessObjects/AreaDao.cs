@@ -28,36 +28,46 @@ namespace DOL.Database.MySql.DataAccessObjects
 {
 	public class AreaDao : IAreaDao
 	{
+		protected static readonly string c_rowFields = "`AreaId`,`AreaType`,`Description`,`Height`,`IsBroadcastEnabled`,`Radius`,`RegionId`,`Sound`,`Width`,`X`,`Y`";
 		private readonly MySqlState m_state;
 
 		public virtual AreaEntity Find(int key)
 		{
 			AreaEntity result = new AreaEntity();
+
 			m_state.ExecuteQuery(
-				"SELECT `AreaId`,`AreaType`,`Description`,`Height`,`IsBroadcastEnabled`,`Radius`,`RegionId`,`Sound`,`Width`,`X`,`Y` FROM `area` WHERE `AreaId`='" + m_state.EscapeString(key.ToString()) + "'",
+				"SELECT " + c_rowFields + " FROM `area` WHERE `AreaId`='" + m_state.EscapeString(key.ToString()) + "'",
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
 					FillEntityWithRow(ref result, reader);
 				}
 			);
+
 			return result;
 		}
 
 		public virtual void Create(AreaEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"INSERT INTO `area` VALUES (`" + obj.Id.ToString() + "`,`" + obj.AreaType.ToString() + "`,`" + obj.Description.ToString() + "`,`" + obj.Height.ToString() + "`,`" + obj.IsBroadcastEnabled.ToString() + "`,`" + obj.Radius.ToString() + "`,`" + obj.RegionId.ToString() + "`,`" + obj.Sound.ToString() + "`,`" + obj.Width.ToString() + "`,`" + obj.X.ToString() + "`,`" + obj.Y.ToString() + "`);");
 		}
 
 		public virtual void Update(AreaEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"UPDATE `area` SET `AreaId`='" + m_state.EscapeString(obj.Id.ToString()) + "', `AreaType`='" + m_state.EscapeString(obj.AreaType.ToString()) + "', `Description`='" + m_state.EscapeString(obj.Description.ToString()) + "', `Height`='" + m_state.EscapeString(obj.Height.ToString()) + "', `IsBroadcastEnabled`='" + m_state.EscapeString(obj.IsBroadcastEnabled.ToString()) + "', `Radius`='" + m_state.EscapeString(obj.Radius.ToString()) + "', `RegionId`='" + m_state.EscapeString(obj.RegionId.ToString()) + "', `Sound`='" + m_state.EscapeString(obj.Sound.ToString()) + "', `Width`='" + m_state.EscapeString(obj.Width.ToString()) + "', `X`='" + m_state.EscapeString(obj.X.ToString()) + "', `Y`='" + m_state.EscapeString(obj.Y.ToString()) + "' WHERE `AreaId`='" + m_state.EscapeString(obj.Id.ToString()) + "'");
 		}
 
 		public virtual void Delete(AreaEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"DELETE FROM `area` WHERE `AreaId`='" + m_state.EscapeString(obj.Id.ToString()) + "'");
 		}
 
 		public virtual void SaveAll()
 		{
+			// not used by this implementation
 		}
 
 		public virtual int CountAll()
@@ -65,7 +75,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return -1;
 		}
 
-		protected void FillEntityWithRow(ref AreaEntity entity, MySqlDataReader reader)
+		protected virtual void FillEntityWithRow(ref AreaEntity entity, MySqlDataReader reader)
 		{
 			entity.Id = reader.GetInt32(0);
 			entity.AreaType = reader.GetString(1);

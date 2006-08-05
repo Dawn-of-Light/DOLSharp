@@ -18,6 +18,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using DOL.Database.DataTransferObjects;
 
 namespace DOL.Database.DataAccessInterfaces

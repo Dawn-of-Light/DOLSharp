@@ -28,36 +28,46 @@ namespace DOL.Database.MySql.DataAccessObjects
 {
 	public class BrainDao : IBrainDao
 	{
+		protected static readonly string c_rowFields = "`ABrainId`,`ABrainType`,`AggroLevel`,`AggroRange`";
 		private readonly MySqlState m_state;
 
 		public virtual BrainEntity Find(int key)
 		{
 			BrainEntity result = new BrainEntity();
+
 			m_state.ExecuteQuery(
-				"SELECT `ABrainId`,`ABrainType`,`AggroLevel`,`AggroRange` FROM `brain` WHERE `ABrainId`='" + m_state.EscapeString(key.ToString()) + "'",
+				"SELECT " + c_rowFields + " FROM `brain` WHERE `ABrainId`='" + m_state.EscapeString(key.ToString()) + "'",
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
 					FillEntityWithRow(ref result, reader);
 				}
 			);
+
 			return result;
 		}
 
 		public virtual void Create(BrainEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"INSERT INTO `brain` VALUES (`" + obj.ABrain.ToString() + "`,`" + obj.ABrainType.ToString() + "`,`" + obj.AggroLevel.ToString() + "`,`" + obj.AggroRange.ToString() + "`);");
 		}
 
 		public virtual void Update(BrainEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"UPDATE `brain` SET `ABrainId`='" + m_state.EscapeString(obj.ABrain.ToString()) + "', `ABrainType`='" + m_state.EscapeString(obj.ABrainType.ToString()) + "', `AggroLevel`='" + m_state.EscapeString(obj.AggroLevel.ToString()) + "', `AggroRange`='" + m_state.EscapeString(obj.AggroRange.ToString()) + "' WHERE `ABrainId`='" + m_state.EscapeString(obj.ABrain.ToString()) + "'");
 		}
 
 		public virtual void Delete(BrainEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"DELETE FROM `brain` WHERE `ABrainId`='" + m_state.EscapeString(obj.ABrain.ToString()) + "'");
 		}
 
 		public virtual void SaveAll()
 		{
+			// not used by this implementation
 		}
 
 		public virtual int CountAll()
@@ -65,7 +75,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return -1;
 		}
 
-		protected void FillEntityWithRow(ref BrainEntity entity, MySqlDataReader reader)
+		protected virtual void FillEntityWithRow(ref BrainEntity entity, MySqlDataReader reader)
 		{
 			entity.ABrain = reader.GetInt32(0);
 			entity.ABrainType = reader.GetString(1);

@@ -28,36 +28,46 @@ namespace DOL.Database.MySql.DataAccessObjects
 {
 	public class SalvageDao : ISalvageDao
 	{
+		protected static readonly string c_rowFields = "`SalvageId`,`MaterialItemtemplate`,`ObjectType`,`SalvageLevel`";
 		private readonly MySqlState m_state;
 
 		public virtual SalvageEntity Find(int key)
 		{
 			SalvageEntity result = new SalvageEntity();
+
 			m_state.ExecuteQuery(
-				"SELECT `SalvageId`,`MaterialItemtemplate`,`ObjectType`,`SalvageLevel` FROM `salvage` WHERE `SalvageId`='" + m_state.EscapeString(key.ToString()) + "'",
+				"SELECT " + c_rowFields + " FROM `salvage` WHERE `SalvageId`='" + m_state.EscapeString(key.ToString()) + "'",
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
 					FillEntityWithRow(ref result, reader);
 				}
 			);
+
 			return result;
 		}
 
 		public virtual void Create(SalvageEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"INSERT INTO `salvage` VALUES (`" + obj.Id.ToString() + "`,`" + obj.MaterialItemtemplate.ToString() + "`,`" + obj.ObjectType.ToString() + "`,`" + obj.SalvageLevel.ToString() + "`);");
 		}
 
 		public virtual void Update(SalvageEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"UPDATE `salvage` SET `SalvageId`='" + m_state.EscapeString(obj.Id.ToString()) + "', `MaterialItemtemplate`='" + m_state.EscapeString(obj.MaterialItemtemplate.ToString()) + "', `ObjectType`='" + m_state.EscapeString(obj.ObjectType.ToString()) + "', `SalvageLevel`='" + m_state.EscapeString(obj.SalvageLevel.ToString()) + "' WHERE `SalvageId`='" + m_state.EscapeString(obj.Id.ToString()) + "'");
 		}
 
 		public virtual void Delete(SalvageEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"DELETE FROM `salvage` WHERE `SalvageId`='" + m_state.EscapeString(obj.Id.ToString()) + "'");
 		}
 
 		public virtual void SaveAll()
 		{
+			// not used by this implementation
 		}
 
 		public virtual int CountAll()
@@ -65,7 +75,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return -1;
 		}
 
-		protected void FillEntityWithRow(ref SalvageEntity entity, MySqlDataReader reader)
+		protected virtual void FillEntityWithRow(ref SalvageEntity entity, MySqlDataReader reader)
 		{
 			entity.Id = reader.GetInt32(0);
 			entity.MaterialItemtemplate = reader.GetString(1);

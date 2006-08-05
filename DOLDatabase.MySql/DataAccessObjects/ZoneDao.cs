@@ -28,36 +28,46 @@ namespace DOL.Database.MySql.DataAccessObjects
 {
 	public class ZoneDao : IZoneDao
 	{
+		protected static readonly string c_rowFields = "`ZoneId`,`Description`,`RegionId`,`XOffset`,`YOffset`";
 		private readonly MySqlState m_state;
 
 		public virtual ZoneEntity Find(int key)
 		{
 			ZoneEntity result = new ZoneEntity();
+
 			m_state.ExecuteQuery(
-				"SELECT `ZoneId`,`Description`,`RegionId`,`XOffset`,`YOffset` FROM `zone` WHERE `ZoneId`='" + m_state.EscapeString(key.ToString()) + "'",
+				"SELECT " + c_rowFields + " FROM `zone` WHERE `ZoneId`='" + m_state.EscapeString(key.ToString()) + "'",
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
 					FillEntityWithRow(ref result, reader);
 				}
 			);
+
 			return result;
 		}
 
 		public virtual void Create(ZoneEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"INSERT INTO `zone` VALUES (`" + obj.Id.ToString() + "`,`" + obj.Description.ToString() + "`,`" + obj.Region.ToString() + "`,`" + obj.XOffset.ToString() + "`,`" + obj.YOffset.ToString() + "`);");
 		}
 
 		public virtual void Update(ZoneEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"UPDATE `zone` SET `ZoneId`='" + m_state.EscapeString(obj.Id.ToString()) + "', `Description`='" + m_state.EscapeString(obj.Description.ToString()) + "', `RegionId`='" + m_state.EscapeString(obj.Region.ToString()) + "', `XOffset`='" + m_state.EscapeString(obj.XOffset.ToString()) + "', `YOffset`='" + m_state.EscapeString(obj.YOffset.ToString()) + "' WHERE `ZoneId`='" + m_state.EscapeString(obj.Id.ToString()) + "'");
 		}
 
 		public virtual void Delete(ZoneEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"DELETE FROM `zone` WHERE `ZoneId`='" + m_state.EscapeString(obj.Id.ToString()) + "'");
 		}
 
 		public virtual void SaveAll()
 		{
+			// not used by this implementation
 		}
 
 		public virtual int CountAll()
@@ -65,7 +75,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return -1;
 		}
 
-		protected void FillEntityWithRow(ref ZoneEntity entity, MySqlDataReader reader)
+		protected virtual void FillEntityWithRow(ref ZoneEntity entity, MySqlDataReader reader)
 		{
 			entity.Id = reader.GetInt32(0);
 			entity.Description = reader.GetString(1);

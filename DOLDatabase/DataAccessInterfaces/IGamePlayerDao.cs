@@ -18,12 +18,13 @@
  */
 
 using System;
+using System.Collections.Generic;
 using DOL.Database.DataTransferObjects;
 
 namespace DOL.Database.DataAccessInterfaces
 {
 	public interface IGamePlayerDao : IGenericDao<GamePlayerEntity, int>
 	{
-		GamePlayerEntity FindByAccountAndRealm(int account, byte realm);
+		IList<GamePlayerEntity> FindByAccountAndRealm(int account, byte realm);
 	}
 }

@@ -28,36 +28,46 @@ namespace DOL.Database.MySql.DataAccessObjects
 {
 	public class FactionDao : IFactionDao
 	{
+		protected static readonly string c_rowFields = "`FactionId`,`Name`";
 		private readonly MySqlState m_state;
 
 		public virtual FactionEntity Find(int key)
 		{
 			FactionEntity result = new FactionEntity();
+
 			m_state.ExecuteQuery(
-				"SELECT `FactionId`,`Name` FROM `faction` WHERE `FactionId`='" + m_state.EscapeString(key.ToString()) + "'",
+				"SELECT " + c_rowFields + " FROM `faction` WHERE `FactionId`='" + m_state.EscapeString(key.ToString()) + "'",
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
 					FillEntityWithRow(ref result, reader);
 				}
 			);
+
 			return result;
 		}
 
 		public virtual void Create(FactionEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"INSERT INTO `faction` VALUES (`" + obj.Faction1.ToString() + "`,`" + obj.Name.ToString() + "`);");
 		}
 
 		public virtual void Update(FactionEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"UPDATE `faction` SET `FactionId`='" + m_state.EscapeString(obj.Faction1.ToString()) + "', `Name`='" + m_state.EscapeString(obj.Name.ToString()) + "' WHERE `FactionId`='" + m_state.EscapeString(obj.Faction1.ToString()) + "'");
 		}
 
 		public virtual void Delete(FactionEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"DELETE FROM `faction` WHERE `FactionId`='" + m_state.EscapeString(obj.Faction1.ToString()) + "'");
 		}
 
 		public virtual void SaveAll()
 		{
+			// not used by this implementation
 		}
 
 		public virtual int CountAll()
@@ -65,7 +75,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return -1;
 		}
 
-		protected void FillEntityWithRow(ref FactionEntity entity, MySqlDataReader reader)
+		protected virtual void FillEntityWithRow(ref FactionEntity entity, MySqlDataReader reader)
 		{
 			entity.Faction1 = reader.GetInt32(0);
 			entity.Name = reader.GetString(1);

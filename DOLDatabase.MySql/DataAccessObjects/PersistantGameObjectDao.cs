@@ -28,36 +28,46 @@ namespace DOL.Database.MySql.DataAccessObjects
 {
 	public class PersistantGameObjectDao : IPersistantGameObjectDao
 	{
+		protected static readonly string c_rowFields = "`PersistantGameObjectId`,`BlockChance`,`DoorId`,`EvadeChance`,`FactionId`,`Flags`,`GuildName`,`Heading`,`InventoryId`,`LeftHandSwingChance`,`Level`,`LootListId`,`MaxSpeedBase`,`MeleeDamageType`,`MerchantWindowId`,`Model`,`Name`,`ParryChance`,`PersistantGameObjectType`,`Realm`,`RegionId`,`RespawnInterval`,`Size`,`ToolType`,`X`,`Y`,`Z`";
 		private readonly MySqlState m_state;
 
 		public virtual PersistantGameObjectEntity Find(int key)
 		{
 			PersistantGameObjectEntity result = new PersistantGameObjectEntity();
+
 			m_state.ExecuteQuery(
-				"SELECT `PersistantGameObjectId`,`BlockChance`,`DoorId`,`EvadeChance`,`FactionId`,`Flags`,`GuildName`,`Heading`,`InventoryId`,`LeftHandSwingChance`,`Level`,`LootListId`,`MaxSpeedBase`,`MeleeDamageType`,`MerchantWindowId`,`Model`,`Name`,`ParryChance`,`PersistantGameObjectType`,`Realm`,`RegionId`,`RespawnInterval`,`Size`,`ToolType`,`X`,`Y`,`Z` FROM `persistantgameobject` WHERE `PersistantGameObjectId`='" + m_state.EscapeString(key.ToString()) + "'",
+				"SELECT " + c_rowFields + " FROM `persistantgameobject` WHERE `PersistantGameObjectId`='" + m_state.EscapeString(key.ToString()) + "'",
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
 					FillEntityWithRow(ref result, reader);
 				}
 			);
+
 			return result;
 		}
 
 		public virtual void Create(PersistantGameObjectEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"INSERT INTO `persistantgameobject` VALUES (`" + obj.Id.ToString() + "`,`" + obj.BlockChance.ToString() + "`,`" + obj.DoorId.ToString() + "`,`" + obj.EvadeChance.ToString() + "`,`" + obj.FactionId.ToString() + "`,`" + obj.Flags.ToString() + "`,`" + obj.GuildName.ToString() + "`,`" + obj.Heading.ToString() + "`,`" + obj.InventoryId.ToString() + "`,`" + obj.LeftHandSwingChance.ToString() + "`,`" + obj.Level.ToString() + "`,`" + obj.LootListId.ToString() + "`,`" + obj.MaxSpeedBase.ToString() + "`,`" + obj.MeleeDamageType.ToString() + "`,`" + obj.MerchantWindowId.ToString() + "`,`" + obj.Model.ToString() + "`,`" + obj.Name.ToString() + "`,`" + obj.ParryChance.ToString() + "`,`" + obj.PersistantGameObjectType.ToString() + "`,`" + obj.Realm.ToString() + "`,`" + obj.RegionId.ToString() + "`,`" + obj.RespawnInterval.ToString() + "`,`" + obj.Size.ToString() + "`,`" + obj.ToolType.ToString() + "`,`" + obj.X.ToString() + "`,`" + obj.Y.ToString() + "`,`" + obj.Z.ToString() + "`);");
 		}
 
 		public virtual void Update(PersistantGameObjectEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"UPDATE `persistantgameobject` SET `PersistantGameObjectId`='" + m_state.EscapeString(obj.Id.ToString()) + "', `BlockChance`='" + m_state.EscapeString(obj.BlockChance.ToString()) + "', `DoorId`='" + m_state.EscapeString(obj.DoorId.ToString()) + "', `EvadeChance`='" + m_state.EscapeString(obj.EvadeChance.ToString()) + "', `FactionId`='" + m_state.EscapeString(obj.FactionId.ToString()) + "', `Flags`='" + m_state.EscapeString(obj.Flags.ToString()) + "', `GuildName`='" + m_state.EscapeString(obj.GuildName.ToString()) + "', `Heading`='" + m_state.EscapeString(obj.Heading.ToString()) + "', `InventoryId`='" + m_state.EscapeString(obj.InventoryId.ToString()) + "', `LeftHandSwingChance`='" + m_state.EscapeString(obj.LeftHandSwingChance.ToString()) + "', `Level`='" + m_state.EscapeString(obj.Level.ToString()) + "', `LootListId`='" + m_state.EscapeString(obj.LootListId.ToString()) + "', `MaxSpeedBase`='" + m_state.EscapeString(obj.MaxSpeedBase.ToString()) + "', `MeleeDamageType`='" + m_state.EscapeString(obj.MeleeDamageType.ToString()) + "', `MerchantWindowId`='" + m_state.EscapeString(obj.MerchantWindowId.ToString()) + "', `Model`='" + m_state.EscapeString(obj.Model.ToString()) + "', `Name`='" + m_state.EscapeString(obj.Name.ToString()) + "', `ParryChance`='" + m_state.EscapeString(obj.ParryChance.ToString()) + "', `PersistantGameObjectType`='" + m_state.EscapeString(obj.PersistantGameObjectType.ToString()) + "', `Realm`='" + m_state.EscapeString(obj.Realm.ToString()) + "', `RegionId`='" + m_state.EscapeString(obj.RegionId.ToString()) + "', `RespawnInterval`='" + m_state.EscapeString(obj.RespawnInterval.ToString()) + "', `Size`='" + m_state.EscapeString(obj.Size.ToString()) + "', `ToolType`='" + m_state.EscapeString(obj.ToolType.ToString()) + "', `X`='" + m_state.EscapeString(obj.X.ToString()) + "', `Y`='" + m_state.EscapeString(obj.Y.ToString()) + "', `Z`='" + m_state.EscapeString(obj.Z.ToString()) + "' WHERE `PersistantGameObjectId`='" + m_state.EscapeString(obj.Id.ToString()) + "'");
 		}
 
 		public virtual void Delete(PersistantGameObjectEntity obj)
 		{
+			m_state.ExecuteNonQuery(
+				"DELETE FROM `persistantgameobject` WHERE `PersistantGameObjectId`='" + m_state.EscapeString(obj.Id.ToString()) + "'");
 		}
 
 		public virtual void SaveAll()
 		{
+			// not used by this implementation
 		}
 
 		public virtual int CountAll()
@@ -65,7 +75,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return -1;
 		}
 
-		protected void FillEntityWithRow(ref PersistantGameObjectEntity entity, MySqlDataReader reader)
+		protected virtual void FillEntityWithRow(ref PersistantGameObjectEntity entity, MySqlDataReader reader)
 		{
 			entity.Id = reader.GetInt32(0);
 			entity.BlockChance = reader.GetByte(1);
