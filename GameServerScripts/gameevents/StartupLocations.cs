@@ -315,21 +315,21 @@ namespace DOL.GS.GameEvents
 				//1.82
 				MainTownStartingLocations = new HybridDictionary();
 
-				MainTownStartingLocations.Add(eCharacterClass.Acolyte, new StartLocation(562418, 512268, 2500, 2980));
-				MainTownStartingLocations.Add(eCharacterClass.AlbionRogue, new StartLocation(561956, 512226, 2516, 2116));
-				MainTownStartingLocations.Add(eCharacterClass.Disciple, new StartLocation(562334, 512160, 2500, 2252));
-				MainTownStartingLocations.Add(eCharacterClass.Elementalist, new StartLocation(561952, 512651, 2500, 3936));
-				MainTownStartingLocations.Add(eCharacterClass.Fighter, new StartLocation(562099, 512472, 2500, 3606));
-				MainTownStartingLocations.Add(eCharacterClass.Forester, new StartLocation(348494, 492021, 5176, 3572));
-				MainTownStartingLocations.Add(eCharacterClass.Guardian, new StartLocation(347279, 489681, 5200, 2332));
-				MainTownStartingLocations.Add(eCharacterClass.Mage, new StartLocation(561750, 512694, 2500, 1058));
-				MainTownStartingLocations.Add(eCharacterClass.Magician, new StartLocation(348457, 491103, 5270, 3174));
-				MainTownStartingLocations.Add(eCharacterClass.MidgardRogue, new StartLocation(802825, 726238, 4703, 1194));
-				MainTownStartingLocations.Add(eCharacterClass.Mystic, new StartLocation(802726, 726512, 4694, 1103));
-				MainTownStartingLocations.Add(eCharacterClass.Naturalist, new StartLocation(348877, 490997, 5414, 2863));
-				MainTownStartingLocations.Add(eCharacterClass.Seer, new StartLocation(802671, 726752, 4690, 944));
-				MainTownStartingLocations.Add(eCharacterClass.Stalker, new StartLocation(349404, 489469, 5282, 3003));
-				MainTownStartingLocations.Add(eCharacterClass.Viking, new StartLocation(802869, 726016, 4699, 1399));
+				MainTownStartingLocations[(int)eCharacterClass.Acolyte] =  new StartLocation(562418, 512268, 2500, 2980);
+				MainTownStartingLocations[(int)eCharacterClass.AlbionRogue] =  new StartLocation(561956, 512226, 2516, 2116);
+				MainTownStartingLocations[(int)eCharacterClass.Disciple] =  new StartLocation(562334, 512160, 2500, 2252);
+				MainTownStartingLocations[(int)eCharacterClass.Elementalist] =  new StartLocation(561952, 512651, 2500, 3936);
+				MainTownStartingLocations[(int)eCharacterClass.Fighter] =  new StartLocation(562099, 512472, 2500, 3606);
+				MainTownStartingLocations[(int)eCharacterClass.Forester] =  new StartLocation(348494, 492021, 5176, 3572);
+				MainTownStartingLocations[(int)eCharacterClass.Guardian] =  new StartLocation(347279, 489681, 5200, 2332);
+				MainTownStartingLocations[(int)eCharacterClass.Mage] =  new StartLocation(561750, 512694, 2500, 1058);
+				MainTownStartingLocations[(int)eCharacterClass.Magician] =  new StartLocation(348457, 491103, 5270, 3174);
+				MainTownStartingLocations[(int)eCharacterClass.MidgardRogue] =  new StartLocation(802825, 726238, 4703, 1194);
+				MainTownStartingLocations[(int)eCharacterClass.Mystic] =  new StartLocation(802726, 726512, 4694, 1103);
+				MainTownStartingLocations[(int)eCharacterClass.Naturalist] =  new StartLocation(348877, 490997, 5414, 2863);
+				MainTownStartingLocations[(int)eCharacterClass.Seer] =  new StartLocation(802671, 726752, 4690, 944);
+				MainTownStartingLocations[(int)eCharacterClass.Stalker] =  new StartLocation(349404, 489469, 5282, 3003);
+				MainTownStartingLocations[(int)eCharacterClass.Viking] = new StartLocation(802869, 726016, 4699, 1399);
 
 			}
 			catch (Exception e)

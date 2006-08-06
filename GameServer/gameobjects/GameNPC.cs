@@ -1031,7 +1031,6 @@ namespace DOL.GS
 		/// </summary>
 		protected virtual int FollowTimerCallback(RegionTimer callingTimer)
 		{
-			//			log.Debug(this.Name+":FollowTimerCallback("+followTimer+")");
 			bool wasInRange = m_followTimer.Properties.getProperty(FOLLOW_TARGET_IN_RANGE, false);
 			m_followTimer.Properties.removeProperty(FOLLOW_TARGET_IN_RANGE);
 
@@ -1047,7 +1046,6 @@ namespace DOL.GS
 			//Stop following if we have no target
 			if (followTarget == null || followTarget.ObjectState != eObjectState.Active || CurrentRegionID != followTarget.CurrentRegionID)
 			{
-				//DOLConsole.WriteLine("Target not active or region doesn't match ... stop following!");
 				StopFollow();
 				Notify(GameNPCEvent.FollowLostTarget, this, new FollowLostTargetEventArgs(followTarget));
 				return 0;
@@ -1065,13 +1063,28 @@ namespace DOL.GS
 			else
 				distance = (float)Math.Sqrt(diffx * diffx + diffy * diffy + diffz * diffz);
 
-			//			log.Debug(this.Name+": Follow -> DX="+diffx+" DY="+diffy+" D="+distance+" MXD="+m_followMaxDist+" MID="+m_followMinDist);
+			//if distance is greater then the max follow distance, stop following and return home
 			if (distance > m_followMaxDist)
 			{
-				//				log.Debug("Distance>MaxDistance ... stop following!");
 				StopFollow();
 				Notify(GameNPCEvent.FollowLostTarget, this, new FollowLostTargetEventArgs(followTarget));
-				return 0;
+				this.WalkToSpawn();
+			}
+
+			//if the npc hasn't hit or been hit in a while, stop following and return home
+			StandardMobBrain brain = this.Brain as StandardMobBrain;
+			if (AttackState && brain != null && followLiving != null)
+			{
+				long seconds = 10 + ((brain.GetAggroAmountForLiving(followLiving) / (MaxHealth + 1)) * 100);
+				long lastattacked = m_lastAttackTick;
+				long lasthit = m_lastAttackedByEnemyTick;
+				if (CurrentRegion.Time - lastattacked > seconds * 1000 && CurrentRegion.Time - lasthit > seconds * 1000)
+				{
+					StopFollow();
+					Notify(GameNPCEvent.FollowLostTarget, this, new FollowLostTargetEventArgs(followTarget));
+					this.WalkToSpawn();
+					return 0;
+				}
 			}
 
 			//Are we in range yet?
@@ -1086,24 +1099,6 @@ namespace DOL.GS
 				}
 				return FOLLOWCHECKTICKS;
 			}
-
-			//			if(followLiving!=null && followLiving.CurrentSpeed>0)
-			//			{
-			//				//If the target is moving, directly follow closer
-			//				diffx=(diffx/distance)*m_followMinDist/4;
-			//				diffy=(diffy/distance)*m_followMinDist/4;
-			//				diffz=(diffz/distance)*m_followMinDist/4;
-			//			}
-			//			else
-			//			{
-			//				//Calculate the offset to the target we will be walking to
-			//				//Our spot will be mindistance coordinates from the target,
-			//				//so we calculate how much x and how much y we need to
-			//				//subtract from the player to get the right x and y to walk to
-			//				diffx=(diffx/distance)*m_followMinDist/2;
-			//				diffy=(diffy/distance)*m_followMinDist/2;
-			//				diffz=(diffz/distance)*m_followMinDist/2;
-			//			}
 
 			// follow on distance
 			diffx = (diffx / distance) * m_followMinDist;
@@ -1836,6 +1831,7 @@ namespace DOL.GS
 		public override void StartAttack(GameObject attackTarget)
 		{
 			TargetObject = attackTarget;
+			m_lastAttackTick = m_CurrentRegion.Time;
 			base.StartAttack(attackTarget);
 		}
 

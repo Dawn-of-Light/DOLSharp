@@ -21,6 +21,7 @@ using System.Reflection;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS;
+using DOL.GS.ServerProperties;
 using log4net;
 
 namespace DOL.GS.PacketHandler.v168
@@ -110,6 +111,15 @@ namespace DOL.GS.PacketHandler.v168
 								pclient.Out.SendAddFriends(friendList);
 						}
 					}
+
+					if (player.Level > 1 && Properties.MOTD != "")
+					{
+						player.Out.SendMessage(Properties.MOTD, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+					}
+					else if (player.Level == 1 && Properties.STARTING_MSG != "")
+					{
+						player.Out.SendMessage(Properties.STARTING_MSG, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+					}
 				}
 				else
 				{
@@ -146,8 +156,6 @@ namespace DOL.GS.PacketHandler.v168
 				AssemblyName an = Assembly.GetExecutingAssembly().GetName();
 				player.Out.SendMessage("Dawn of Light " + an.Name + " Version: " + an.Version, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
-				if (player.Guild != null && player.Guild.theGuildDB.Motd != null && player.Guild.theGuildDB.Motd!= "")
-					player.Out.SendMessage(player.Guild.theGuildDB.Motd, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				player.Client.ClientState = GameClient.eClientState.Playing;
 			}
 		}

@@ -1,7 +1,25 @@
 /*
-*Broadcast - Etaew
-*/
+ * DAWN OF LIGHT - The first free open source DAoC server emulator
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
+ */
+
+using System.Collections;
 using DOL.GS;
+using DOL.GS.ServerProperties;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Scripts
@@ -22,46 +40,102 @@ namespace DOL.GS.Scripts
 				return 1;
 			}
 
-			AbstractArea targetArea = CheckArea(client.Player);
-
-			if (targetArea == null)
-			{
-				client.Out.SendMessage("You cannot broadcast here!", 
-					eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 1;
-			}
-
 			string message = string.Join(" ", args, 1, args.Length - 1);
 
-			Broadcast(client.Player, message, targetArea);
+			Broadcast(client.Player, message);
 
 			return 1;
 		}
 
-		private AbstractArea CheckArea(GamePlayer player)
+		private void Broadcast(GamePlayer player, string message)
 		{
-			foreach (AbstractArea thisArea in player.CurrentAreas)
+			foreach (GamePlayer p in GetTargets(player))
 			{
-				if (AreaMgr.BroadcastableAreas.Contains(thisArea)) 
-					return thisArea;
-			}
-			return null;
-		}
-
-		private void Broadcast(GamePlayer player, string message,AbstractArea area)
-		{
-			foreach (GameClient thisClient in 
-				WorldMgr.GetClientsOfRegion(player.CurrentRegionID))
-			{
-				if (thisClient.Player.CurrentAreas.Contains(area))
+				if (GameServer.ServerRules.IsAllowedToUnderstand(p, player))
 				{
-					if 
-						(GameServer.ServerRules.IsAllowedToUnderstand(thisClient.Player, player))
-						thisClient.Player.Out.SendMessage("[Broadcast] " 
-							+ player.Name + ": " + message, eChatType.CT_Broadcast, 
-							eChatLoc.CL_ChatWindow);
+					p.Out.SendMessage("[Broadcast] "
+						+ player.Name + ": " + message, eChatType.CT_Broadcast,
+						eChatLoc.CL_ChatWindow);
 				}
 			}
+				
+		}
+
+		private ArrayList GetTargets(GamePlayer player)
+		{
+			ArrayList list = new ArrayList();
+			BroadcastTypeServerProperty.eBroadcastType type = (BroadcastTypeServerProperty.eBroadcastType)BroadcastTypeServerProperty.Value;
+			switch (type)
+			{
+				case BroadcastTypeServerProperty.eBroadcastType.Area:
+					{
+						bool found = false;
+						foreach (AbstractArea area in player.CurrentAreas)
+						{
+							if (area.CanBroadcast)
+							{
+								found = true;
+								foreach (GameClient thisClient in WorldMgr.GetClientsOfRegion(player.CurrentRegionID))
+								{
+									if (thisClient.Player.CurrentAreas.Contains(area))
+									{
+										list.Add(thisClient.Player);
+									}
+								}
+							}
+						}
+						if (!found)
+						{
+							player.Out.SendMessage("You cannot broadcast here.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						}
+						break;
+					}
+				case BroadcastTypeServerProperty.eBroadcastType.Realm:
+					{
+						foreach (GameClient thisClient in WorldMgr.GetClientsOfRealm(player.Realm))
+						{
+							list.Add(thisClient.Player);
+						}
+						break;
+					}
+				case BroadcastTypeServerProperty.eBroadcastType.Region:
+					{
+						foreach (GameClient thisClient in WorldMgr.GetClientsOfRegion(player.CurrentRegionID))
+						{
+							list.Add(thisClient.Player);
+						}
+						break;
+					}
+				case BroadcastTypeServerProperty.eBroadcastType.Server:
+					{
+						foreach (GameClient thisClient in WorldMgr.GetAllPlayingClients())
+						{
+							list.Add(thisClient.Player);
+						}
+						break;
+					}
+				case BroadcastTypeServerProperty.eBroadcastType.Visible:
+					{
+						foreach (GamePlayer p in player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+						{
+							list.Add(p);
+						}
+						break;
+					}
+				case BroadcastTypeServerProperty.eBroadcastType.Zone:
+					{
+						foreach (GameClient thisClient in WorldMgr.GetClientsOfRegion(player.CurrentRegionID))
+						{
+							if (thisClient.Player.CurrentZone == player.CurrentZone)
+							{
+								list.Add(thisClient.Player);
+							}
+						}
+						break;
+					}
+			}
+
+			return list;
 		}
 	}
 }
