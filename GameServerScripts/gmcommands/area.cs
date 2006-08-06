@@ -85,8 +85,7 @@ namespace DOL.GS.Scripts
 							newArea = new Area.Square(area.Description, area.X, area.Y, area.Radius, area.Radius);
 						}
 						newArea.Sound = area.Sound;
-						if (area.CanBroadcast)
-							AreaMgr.BroadcastableAreas.Add(newArea);
+						newArea.CanBroadcast = area.CanBroadcast;
 						WorldMgr.GetRegion(client.Player.CurrentRegionID).AddArea(newArea);
 						GameServer.Database.AddNewObject(area);
 						SendMessage(client.Player, "Area created - Description:" + area.Description + " X:" + area.X +

@@ -20,6 +20,7 @@ using System;
 using System.Collections;
 using System.Reflection;
 using DOL.Database;
+using DOL.GS.ServerProperties;
 using DOL.GS.PacketHandler;
 using log4net;
 
@@ -27,8 +28,8 @@ namespace DOL.GS.Scripts
 {
 	[Cmd(
 		"&gc",
-		new string[] {"&guildcommand"},
-		(uint) ePrivLevel.Player,
+		new string[] { "&guildcommand" },
+		(uint)ePrivLevel.Player,
 		"Guild command (use /gc help for options)",
 		"/gc <option>")]
 	public class GuildCommandHandler : ICommandHandler
@@ -88,12 +89,12 @@ namespace DOL.GS.Scripts
 
 				switch (args[1])
 				{
-						// --------------------------------------------------------------------------------
-						// CREATE
-						// --------------------------------------------------------------------------------
+					// --------------------------------------------------------------------------------
+					// CREATE
+					// --------------------------------------------------------------------------------
 					case "create":
 						{
-							if (client.Account.PrivLevel == (uint) ePrivLevel.Player)
+							if (client.Account.PrivLevel == (uint)ePrivLevel.Player)
 								return 1;
 							if (args.Length != 4)
 							{
@@ -130,12 +131,12 @@ namespace DOL.GS.Scripts
 							}
 						}
 						break;
-						// --------------------------------------------------------------------------------
-						// PURGE
-						// --------------------------------------------------------------------------------
+					// --------------------------------------------------------------------------------
+					// PURGE
+					// --------------------------------------------------------------------------------
 					case "purge":
 						{
-							if (client.Account.PrivLevel == (uint) ePrivLevel.Player)
+							if (client.Account.PrivLevel == (uint)ePrivLevel.Player)
 								return 1;
 
 							if (args.Length < 3)
@@ -153,12 +154,12 @@ namespace DOL.GS.Scripts
 								client.Out.SendMessage(guildname + " purged!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						}
 						break;
-						// --------------------------------------------------------------------------------
-						// RENAME
-						// --------------------------------------------------------------------------------
+					// --------------------------------------------------------------------------------
+					// RENAME
+					// --------------------------------------------------------------------------------
 					case "rename":
 						{
-							if (client.Account.PrivLevel == (uint) ePrivLevel.Player)
+							if (client.Account.PrivLevel == (uint)ePrivLevel.Player)
 								return 1;
 
 							if (args.Length < 5)
@@ -184,11 +185,11 @@ namespace DOL.GS.Scripts
 							myguild.theGuildDB.GuildName = newguildname;
 							myguild.Name = newguildname;
 							GuildMgr.AddGuild(myguild);
-							foreach (GamePlayer ply in  myguild.ListOnlineMembers())
+							foreach (GamePlayer ply in myguild.ListOnlineMembers())
 							{
 								ply.GuildName = newguildname;
 							}
-							Character[] objs = (Character[]) GameServer.Database.SelectObjects(typeof (Character), "GuildName = '" + GameServer.Database.Escape(oldguildname) + "'");
+							Character[] objs = (Character[])GameServer.Database.SelectObjects(typeof(Character), "GuildName = '" + GameServer.Database.Escape(oldguildname) + "'");
 							foreach (Character chr in objs)
 							{
 								chr.GuildName = newguildname;
@@ -196,12 +197,12 @@ namespace DOL.GS.Scripts
 							}
 						}
 						break;
-						// --------------------------------------------------------------------------------
-						// ADDPLAYER
-						// --------------------------------------------------------------------------------
+					// --------------------------------------------------------------------------------
+					// ADDPLAYER
+					// --------------------------------------------------------------------------------
 					case "addplayer":
 						{
-							if (client.Account.PrivLevel == (uint) ePrivLevel.Player)
+							if (client.Account.PrivLevel == (uint)ePrivLevel.Player)
 								return 1;
 
 							if (args.Length < 5)
@@ -220,15 +221,15 @@ namespace DOL.GS.Scripts
 							string playername = String.Join(" ", args, 2, i - 2);
 							string guildname = String.Join(" ", args, i + 1, args.Length - i - 1);
 
-							GuildMgr.GetGuildByName(guildname).AddPlayer(WorldMgr.GetClientByPlayerName(playername, true, false ).Player);
+							GuildMgr.GetGuildByName(guildname).AddPlayer(WorldMgr.GetClientByPlayerName(playername, true, false).Player);
 						}
 						break;
-						// --------------------------------------------------------------------------------
-						// REMOVEPLAYER
-						// --------------------------------------------------------------------------------
+					// --------------------------------------------------------------------------------
+					// REMOVEPLAYER
+					// --------------------------------------------------------------------------------
 					case "removeplayer":
 						{
-							if (client.Account.PrivLevel == (uint) ePrivLevel.Player)
+							if (client.Account.PrivLevel == (uint)ePrivLevel.Player)
 								return 1;
 
 							if (args.Length < 5)
@@ -257,10 +258,10 @@ namespace DOL.GS.Scripts
 						}
 						break;
 
-/****************************************guild member command***********************************************/
-						// --------------------------------------------------------------------------------
-						// INVITE
-						// --------------------------------------------------------------------------------
+					/****************************************guild member command***********************************************/
+					// --------------------------------------------------------------------------------
+					// INVITE
+					// --------------------------------------------------------------------------------
 					case "invite":
 						{
 							if (client.Player.Guild == null)
@@ -313,30 +314,30 @@ namespace DOL.GS.Scripts
 
 						}
 						break;
-						// --------------------------------------------------------------------------------
-						// ACCEPT
-						// --------------------------------------------------------------------------------
-						/*case "accept":
-				{//TODO
-					//it must be other player guild not player who accept
-					GameObject TargetObject = WorldMgr.GetObjectByIDFromRegion(client.Player.CurrentRegionID,data1);
-					client.Player.Guild.AddPlayer(client.Player.Name, (GamePlayer)obj);
-				}	break;*/
-						//need to know what is send to close window ans say yes
-						// --------------------------------------------------------------------------------
-						// DECLINE
-						// --------------------------------------------------------------------------------
-						/*case "decline":
-				{//TODO
-					//it must be other player guild not player who accept
-					GameObject TargetObject = WorldMgr.GetObjectByIDFromRegion(client.Player.CurrentRegionID,data1);
-					client.Player.Guild.AddPlayer(client.Player.Name, (GamePlayer)obj);
-				}	break;*/
-						//need to know what is send to close window ans say no
+					// --------------------------------------------------------------------------------
+					// ACCEPT
+					// --------------------------------------------------------------------------------
+					/*case "accept":
+			{//TODO
+				//it must be other player guild not player who accept
+				GameObject TargetObject = WorldMgr.GetObjectByIDFromRegion(client.Player.CurrentRegionID,data1);
+				client.Player.Guild.AddPlayer(client.Player.Name, (GamePlayer)obj);
+			}	break;*/
+					//need to know what is send to close window ans say yes
+					// --------------------------------------------------------------------------------
+					// DECLINE
+					// --------------------------------------------------------------------------------
+					/*case "decline":
+			{//TODO
+				//it must be other player guild not player who accept
+				GameObject TargetObject = WorldMgr.GetObjectByIDFromRegion(client.Player.CurrentRegionID,data1);
+				client.Player.Guild.AddPlayer(client.Player.Name, (GamePlayer)obj);
+			}	break;*/
+					//need to know what is send to close window ans say no
 
-						// --------------------------------------------------------------------------------
-						// REMOVE
-						// --------------------------------------------------------------------------------
+					// --------------------------------------------------------------------------------
+					// REMOVE
+					// --------------------------------------------------------------------------------
 					case "remove":
 						{
 							if (client.Player.Guild == null)
@@ -382,34 +383,51 @@ namespace DOL.GS.Scripts
 						}
 						break;
 
-						// --------------------------------------------------------------------------------
-						// INFO
-						// --------------------------------------------------------------------------------
+					// --------------------------------------------------------------------------------
+					// INFO
+					// --------------------------------------------------------------------------------
 					case "info":
 						{
+							bool typed = false;
+							if (args.Length != 3)
+								typed = true;
+
 							if (client.Player.Guild == null)
 							{
-								client.Out.SendMessage("You have to be a member of a guild, before you can use any of the commands!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								if (typed)
+									client.Out.SendMessage("You have to be a member of a guild, before you can use any of the commands!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return 1;
 							}
-							client.Out.SendMessage("info of guild :", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							string mesg = client.Player.Guild.Name + "  " + client.Player.Guild.MemberOnlineCount + " members ";
-							client.Out.SendMessage(mesg, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							client.Out.SendMessage("MOTD :" + client.Player.Guild.theGuildDB.Motd, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							foreach (DBRank rank in client.Player.Guild.theGuildDB.Ranks)
+
+							if (typed)
 							{
-								client.Out.SendMessage("RANK :" + rank.RankLevel.ToString() + "Name :" + rank.Title, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								client.Out.SendMessage("AcHear :" + (rank.AcHear ? "y" : "n") + " AcSpeak :" + (rank.AcSpeak ? "y" : "n"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								client.Out.SendMessage("OcHear :" + (rank.OcHear ? "y" : "n") + " OcSpeak :" + (rank.OcSpeak ? "y" : "n"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								client.Out.SendMessage("GcHear :" + (rank.GcHear ? "y" : "n") + " GcSpeak :" + (rank.GcSpeak ? "y" : "n"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								client.Out.SendMessage("Emblem :" + (rank.Emblem ? "y" : "n") + " Promote :" + (rank.Promote ? "y" : "n"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								client.Out.SendMessage("Remove :" + (rank.Remove ? "y" : "n") + " View :" + (rank.View ? "y" : "n"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								client.Out.SendMessage("info of guild :", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								string mesg = client.Player.Guild.Name + "  " + client.Player.Guild.MemberOnlineCount + " members ";
+								client.Out.SendMessage(mesg, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							}
+
+							if (client.Player.Guild.theGuildDB.Motd != null && client.Player.Guild.theGuildDB.Motd != "")
+								client.Player.Out.SendMessage("Guild Message: " + client.Player.Guild.theGuildDB.Motd, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							if (client.Player.Guild.theGuildDB.oMotd != null && client.Player.Guild.theGuildDB.oMotd != "" && client.Player.GuildRank.OcHear)
+								client.Player.Out.SendMessage("Officer Message: " + client.Player.Guild.theGuildDB.oMotd, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
+							if (typed)
+							{
+								foreach (DBRank rank in client.Player.Guild.theGuildDB.Ranks)
+								{
+									client.Out.SendMessage("RANK :" + rank.RankLevel.ToString() + "Name :" + rank.Title, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									client.Out.SendMessage("AcHear :" + (rank.AcHear ? "y" : "n") + " AcSpeak :" + (rank.AcSpeak ? "y" : "n"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									client.Out.SendMessage("OcHear :" + (rank.OcHear ? "y" : "n") + " OcSpeak :" + (rank.OcSpeak ? "y" : "n"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									client.Out.SendMessage("GcHear :" + (rank.GcHear ? "y" : "n") + " GcSpeak :" + (rank.GcSpeak ? "y" : "n"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									client.Out.SendMessage("Emblem :" + (rank.Emblem ? "y" : "n") + " Promote :" + (rank.Promote ? "y" : "n"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									client.Out.SendMessage("Remove :" + (rank.Remove ? "y" : "n") + " View :" + (rank.View ? "y" : "n"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								}
 							}
 						}
 						break;
-						// --------------------------------------------------------------------------------
-						// LIST
-						// --------------------------------------------------------------------------------
+					// --------------------------------------------------------------------------------
+					// LIST
+					// --------------------------------------------------------------------------------
 					case "list":
 						{
 							ICollection guildList = GuildMgr.ListGuild();
@@ -423,9 +441,9 @@ namespace DOL.GS.Scripts
 							}
 						}
 						break;
-						// --------------------------------------------------------------------------------
-						// EDIT
-						// --------------------------------------------------------------------------------
+					// --------------------------------------------------------------------------------
+					// EDIT
+					// --------------------------------------------------------------------------------
 					case "edit":
 						{
 							if (client.Player.Guild == null)
@@ -436,21 +454,21 @@ namespace DOL.GS.Scripts
 							SetCmd(client, args);
 						}
 						break;
-						// --------------------------------------------------------------------------------
-						// FORM
-						// --------------------------------------------------------------------------------
+					// --------------------------------------------------------------------------------
+					// FORM
+					// --------------------------------------------------------------------------------
 					case "form":
-					//Fooljam fix begin. Players can not create guild names with other characters than Alpha anymore.
-					{
-					foreach(char c in args[2])
-					{
-						if( (int)c<65 || ((int)c>90 && (int)c<97) || (int)c>122)
 						{
-							client.Out.SendMessage("You can not create a guild with a such name. Only A-Z,a-z characters are allowed!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 0;
-						}
-					}
-					//Fooljam fix end. Players can not create guild names with other characters than Alpha anymore.
+							//Fooljam fix begin. Players can not create guild names with other characters than Alpha anymore.
+							foreach (char c in args[2])
+							{
+								if ((int)c < 65 || ((int)c > 90 && (int)c < 97) || (int)c > 122)
+								{
+									client.Out.SendMessage("You can not create a guild with a such name. Only A-Z,a-z characters are allowed!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									return 0;
+								}
+							}
+							//Fooljam fix end. Players can not create guild names with other characters than Alpha anymore.
 							if (args.Length < 3)
 							{
 								client.Out.SendMessage("Syntax error! /gc form <guildname>", eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -470,9 +488,9 @@ namespace DOL.GS.Scripts
 
 								lock (group)
 								{
-									if (group.PlayerCount < PlayerGroup.MAX_GROUP_SIZE)
+									if (group.PlayerCount < Properties.GUILD_NUM)
 									{
-										client.Out.SendMessage(PlayerGroup.MAX_GROUP_SIZE + " members must be in group to create a guild.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+										client.Out.SendMessage(Properties.GUILD_NUM + " members must be in the group to create a guild.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 										return 0;
 									}
 
@@ -511,9 +529,9 @@ namespace DOL.GS.Scripts
 							}
 						}
 						break;
-						// --------------------------------------------------------------------------------
-						// QUIT
-						// --------------------------------------------------------------------------------
+					// --------------------------------------------------------------------------------
+					// QUIT
+					// --------------------------------------------------------------------------------
 					case "quit":
 						{
 							if (client.Player.Guild == null)
@@ -524,9 +542,9 @@ namespace DOL.GS.Scripts
 							client.Out.SendGuildLeaveCommand(client.Player, "Do you really want to leave\n" + client.Player.Guild.Name + "?");
 						}
 						break;
-						// --------------------------------------------------------------------------------
-						// PROMOTE
-						// --------------------------------------------------------------------------------
+					// --------------------------------------------------------------------------------
+					// PROMOTE
+					// --------------------------------------------------------------------------------
 					case "promote":
 						{
 							if (args.Length < 3)
@@ -565,7 +583,7 @@ namespace DOL.GS.Scripts
 							int newrank = obj.GuildRank.RankLevel;
 							try
 							{
-								newrank = Convert.ToInt32( args[2] );
+								newrank = Convert.ToInt32(args[2]);
 							}
 							catch
 							{
@@ -581,9 +599,9 @@ namespace DOL.GS.Scripts
 							obj.Out.SendMessage("You are promoted to " + newrank.ToString(), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						}
 						break;
-						// --------------------------------------------------------------------------------
-						// DEMOTE
-						// --------------------------------------------------------------------------------
+					// --------------------------------------------------------------------------------
+					// DEMOTE
+					// --------------------------------------------------------------------------------
 					case "demote":
 						{
 							if (args.Length < 3)
@@ -631,9 +649,9 @@ namespace DOL.GS.Scripts
 							obj.Out.SendMessage("You are demoted to " + newrank.ToString(), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						}
 						break;
-						// --------------------------------------------------------------------------------
-						// WHO
-						// --------------------------------------------------------------------------------
+					// --------------------------------------------------------------------------------
+					// WHO
+					// --------------------------------------------------------------------------------
 					case "who":
 						{
 							if (client.Player.Guild == null)
@@ -642,11 +660,11 @@ namespace DOL.GS.Scripts
 								return 1;
 							}
 							int ind = 0;
-							if (args.Length == 3 )
+							if (args.Length == 3)
 							{
-								if (args[2] == "alliance" || args[2] == "a" )
+								if (args[2] == "alliance" || args[2] == "a")
 								{
-									foreach( Guild guild in client.Player.Guild.alliance.Guilds )
+									foreach (Guild guild in client.Player.Guild.alliance.Guilds)
 									{
 										foreach (GamePlayer ply in guild.ListOnlineMembers())
 										{
@@ -664,7 +682,7 @@ namespace DOL.GS.Scripts
 									client.Out.SendMessage("alliance list usage: /gc who alliance or /gc who a ", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return 1;
 							}
-							
+
 							foreach (GamePlayer ply in client.Player.Guild.ListOnlineMembers())
 							{
 								if (ply.Client.IsPlaying && !ply.IsAnonymous)
@@ -675,12 +693,12 @@ namespace DOL.GS.Scripts
 									client.Out.SendMessage(mesg, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								}
 							}
-							client.Out.SendMessage("total member online:        " + ind.ToString(),eChatType.CT_System,eChatLoc.CL_SystemWindow);
+							client.Out.SendMessage("total member online:        " + ind.ToString(), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						}
 						break;
-						// --------------------------------------------------------------------------------
-						// LEADER
-						// --------------------------------------------------------------------------------
+					// --------------------------------------------------------------------------------
+					// LEADER
+					// --------------------------------------------------------------------------------
 					case "leader":
 						{
 							if (client.Player.Guild == null)
@@ -721,9 +739,9 @@ namespace DOL.GS.Scripts
 							}
 						}
 						break;
-						// --------------------------------------------------------------------------------
-						// EMBLEM
-						// --------------------------------------------------------------------------------
+					// --------------------------------------------------------------------------------
+					// EMBLEM
+					// --------------------------------------------------------------------------------
 					case "emblem":
 						{
 							if (client.Player.Guild == null)
@@ -754,9 +772,9 @@ namespace DOL.GS.Scripts
 							client.Out.SendEmblemDialogue();
 						}
 						break;
-						// --------------------------------------------------------------------------------
-						// MOTD
-						// --------------------------------------------------------------------------------
+					// --------------------------------------------------------------------------------
+					// MOTD
+					// --------------------------------------------------------------------------------
 					case "motd":
 						{
 							if (client.Player.Guild == null)
@@ -775,9 +793,9 @@ namespace DOL.GS.Scripts
 							client.Out.SendMessage("You have set the motd", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						}
 						break;
-						// --------------------------------------------------------------------------------
-						// AMOTD
-						// --------------------------------------------------------------------------------
+					// --------------------------------------------------------------------------------
+					// AMOTD
+					// --------------------------------------------------------------------------------
 					case "amotd":
 						{
 							if (client.Player.Guild == null)
@@ -796,9 +814,9 @@ namespace DOL.GS.Scripts
 							client.Out.SendMessage("You have set the motd of alliance", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						}
 						break;
-						// --------------------------------------------------------------------------------
-						// OMOTD
-						// --------------------------------------------------------------------------------
+					// --------------------------------------------------------------------------------
+					// OMOTD
+					// --------------------------------------------------------------------------------
 					case "omotd":
 						{
 							if (client.Player.Guild == null)
@@ -816,9 +834,9 @@ namespace DOL.GS.Scripts
 							GameServer.Database.SaveObject(client.Player.Guild.theGuildDB);
 						}
 						break;
-						// --------------------------------------------------------------------------------
-						// AINVITE
-						// --------------------------------------------------------------------------------
+					// --------------------------------------------------------------------------------
+					// AINVITE
+					// --------------------------------------------------------------------------------
 					case "ainvite":
 						{
 							if (client.Player.Guild == null)
@@ -847,22 +865,38 @@ namespace DOL.GS.Scripts
 								client.Out.SendMessage("The guild has already an alliance", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return 1;
 							}
+							if (ServerProperties.AllianceMaxServerProperty.AlliancesDisabled)
+							{
+								client.Player.Out.SendMessage("Alliances are disabled on this server", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return 1;
+							}
+							if (!ServerProperties.AllianceMaxServerProperty.UnlimitedGuilds)
+							{
+								if (client.Player.Guild.alliance != null)
+								{
+									if (client.Player.Guild.alliance.Guilds.Count + 1 > ServerProperties.AllianceMaxServerProperty.Value)
+									{
+										client.Player.Out.SendMessage("You are unable to invite that guild to your alliance, as your alliance already has the max number of guilds.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+										return 1;
+									}
+								}
+							}
 							obj.TempProperties.setProperty("allianceinvite", client.Player); //finish that
 							client.Out.SendMessage("you invite a guild to join your alliance", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							obj.Out.SendMessage("you have been invited to join the alliance of " + client.Player.Guild.Name, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return 1;
 						}
-						// --------------------------------------------------------------------------------
-						// AINVITE
-						// --------------------------------------------------------------------------------
+					// --------------------------------------------------------------------------------
+					// AINVITE
+					// --------------------------------------------------------------------------------
 					case "aaccept":
 						{
 							AllianceInvite(client.Player, 0x01);
 							return 1;
 						}
-						// --------------------------------------------------------------------------------
-						// AINVITE
-						// --------------------------------------------------------------------------------
+					// --------------------------------------------------------------------------------
+					// AINVITE
+					// --------------------------------------------------------------------------------
 					case "acancel":
 						{
 							if (client.Player.Guild == null)
@@ -888,9 +922,9 @@ namespace DOL.GS.Scripts
 							obj.Out.SendMessage("The alliance answer has been cancelled", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return 1;
 						}
-						// --------------------------------------------------------------------------------
-						// ADECLINE
-						// --------------------------------------------------------------------------------
+					// --------------------------------------------------------------------------------
+					// ADECLINE
+					// --------------------------------------------------------------------------------
 					case "adecline":
 						{
 							if (client.Player.Guild == null)
@@ -909,9 +943,9 @@ namespace DOL.GS.Scripts
 							inviter.Out.SendMessage("The alliance's proposal have been declined", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return 1;
 						}
-						// --------------------------------------------------------------------------------
-						// AREMOVE
-						// --------------------------------------------------------------------------------
+					// --------------------------------------------------------------------------------
+					// AREMOVE
+					// --------------------------------------------------------------------------------
 					case "aremove":
 						{
 							if (client.Player.Guild == null)
@@ -941,7 +975,7 @@ namespace DOL.GS.Scripts
 									try
 									{
 										int index = Convert.ToInt32(args[3]);
-										Guild myguild = (Guild) client.Player.Guild.alliance.Guilds[index];
+										Guild myguild = (Guild)client.Player.Guild.alliance.Guilds[index];
 										if (myguild != null)
 											client.Player.Guild.alliance.RemoveGuild(myguild);
 									}
@@ -978,92 +1012,92 @@ namespace DOL.GS.Scripts
 							}
 							return 1;
 						}
-						// --------------------------------------------------------------------------------
-						//ClAIM
-						// --------------------------------------------------------------------------------
+					// --------------------------------------------------------------------------------
+					//ClAIM
+					// --------------------------------------------------------------------------------
 					case "claim":
-					{
-						if (client.Player.Guild == null)
 						{
-							client.Out.SendMessage("You have to be a member of a guild, before you can use any of the commands!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							if (client.Player.Guild == null)
+							{
+								client.Out.SendMessage("You have to be a member of a guild, before you can use any of the commands!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return 1;
+							}
+							AbstractGameKeep keep = KeepMgr.getKeepCloseToSpot(client.Player.CurrentRegionID, client.Player, WorldMgr.VISIBILITY_DISTANCE);
+							if (keep == null)
+							{
+								client.Out.SendMessage("You have to be near the keep to claim it.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return 1;
+							}
+							if (keep.CheckForClaim(client.Player))
+							{
+								keep.Claim(client.Player);
+							}
+							client.Player.Guild.SendMessageToGuildMembers("Your guild have claim " + keep.Name, eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
 							return 1;
 						}
-						AbstractGameKeep keep = KeepMgr.getKeepCloseToSpot(client.Player.CurrentRegionID,client.Player,WorldMgr.VISIBILITY_DISTANCE);
-						if (keep == null)
-						{
-							client.Out.SendMessage("You have to be near the keep to claim it.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
-						}
-						if (keep.CheckForClaim(client.Player))
-						{
-							keep.Claim(client.Player);
-						}
-						client.Player.Guild.SendMessageToGuildMembers("Your guild have claim "+ keep.Name,eChatType.CT_Guild,eChatLoc.CL_SystemWindow);
-						return 1;
-					}
-						// --------------------------------------------------------------------------------
-						//RELEASE
-						// --------------------------------------------------------------------------------
+					// --------------------------------------------------------------------------------
+					//RELEASE
+					// --------------------------------------------------------------------------------
 					case "release":
-					{
-						if(client.Player.Guild == null)
 						{
-							client.Out.SendMessage("You must have a guild to release a claimed keep.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+							if (client.Player.Guild == null)
+							{
+								client.Out.SendMessage("You must have a guild to release a claimed keep.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return 1;
+							}
+							if (client.Player.Guild.ClaimedKeep == null)
+							{
+								client.Out.SendMessage("You must have a keep to release.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return 1;
+							}
+							if (!client.Player.Guild.GotAccess(client.Player, eGuildRank.Release))
+							{
+								client.Out.SendMessage("You have not enough priviledge to do that.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return 1;
+							}
+							client.Player.Guild.ClaimedKeep.Release();
 							return 1;
 						}
-						if (client.Player.Guild.ClaimedKeep == null)
-						{
-							client.Out.SendMessage("You must have a keep to release.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
-							return 1;
-						}
-						if (!client.Player.Guild.GotAccess(client.Player, eGuildRank.Release))
-						{
-							client.Out.SendMessage("You have not enough priviledge to do that.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
-						}
-						client.Player.Guild.ClaimedKeep.Release();
-						return 1;
-					}
-						// --------------------------------------------------------------------------------
-						//UPGRADE
-						// --------------------------------------------------------------------------------
+					// --------------------------------------------------------------------------------
+					//UPGRADE
+					// --------------------------------------------------------------------------------
 					case "upgrade":
-					{
-						if(client.Player.Guild == null)
 						{
-							client.Out.SendMessage("You must have a guild to release a claimed keep.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
-							return 1;
-						}
-						if (client.Player.Guild.ClaimedKeep == null)
-						{
-							client.Out.SendMessage("You must have a keep to upgrate it.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
-							return 1;
-						}
-						if (!client.Player.Guild.GotAccess(client.Player, eGuildRank.Upgrade))
-						{
-							client.Out.SendMessage("You have not enough priviledge to do that.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
-						}
-						if (args.Length != 3)
-						{
-							client.Out.SendMessage("You must specify a level to target for upgrade.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
-						}
-						int targetlevel = 0;
-						try
-						{
-							targetlevel = Convert.ToInt32(args[2]);
-							if (targetlevel > 10 || targetlevel < 1)
+							if (client.Player.Guild == null)
+							{
+								client.Out.SendMessage("You must have a guild to release a claimed keep.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return 1;
+							}
+							if (client.Player.Guild.ClaimedKeep == null)
+							{
+								client.Out.SendMessage("You must have a keep to upgrate it.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return 1;
+							}
+							if (!client.Player.Guild.GotAccess(client.Player, eGuildRank.Upgrade))
+							{
+								client.Out.SendMessage("You have not enough priviledge to do that.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return 1;
+							}
+							if (args.Length != 3)
+							{
+								client.Out.SendMessage("You must specify a level to target for upgrade.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return 1;
+							}
+							int targetlevel = 0;
+							try
+							{
+								targetlevel = Convert.ToInt32(args[2]);
+								if (targetlevel > 10 || targetlevel < 1)
+									return 0;
+							}
+							catch
+							{
+								client.Out.SendMessage("the 2e argument must be a number", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return 0;
+							}
+							client.Player.Guild.ClaimedKeep.Upgrade(targetlevel);
+							return 1;
 						}
-						catch
-						{
-							client.Out.SendMessage("the 2e argument must be a number", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 0;
-						}
-						client.Player.Guild.ClaimedKeep.Upgrade(targetlevel);
-						return 1;
-					}
 					default:
 						{
 							client.Out.SendMessage("Unknown command \"" + args[1] + "\", please type /gc for a command list.", eChatType.CT_System, eChatLoc.CL_SystemWindow);

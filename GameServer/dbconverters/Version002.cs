@@ -52,28 +52,25 @@ namespace DOL.GS.DatabaseConverters
 			log.Info(styles.Length + " Styles Processed");
 
 			log.Info("Converting Mobs");
-			Mob[] mobs = (Mob[])GameServer.Database.SelectAllObjects(typeof(Mob));
+			Mob[] mobs = (Mob[])GameServer.Database.SelectObjects(typeof(GameMob),"`Realm` = '6'");
 			foreach (Mob mob in mobs)
 			{
-				if (mob.Realm == 6)
+				if ((mob.Flags & (uint)GameNPC.eFlags.PEACE) == 0)
 				{
-					if ((mob.Flags & (uint)GameNPC.eFlags.PEACE) == 0)
-					{
-						mob.Flags ^= (uint)GameNPC.eFlags.PEACE;
-					}
-
-					Region region = WorldMgr.GetRegion(mob.Region);
-					if (region != null)
-					{
-						Zone zone = region.GetZone(mob.X, mob.Y);
-						if (zone != null)
-						{
-							mob.Realm = (byte)zone.GetRealm();
-						}
-					}
-
-					GameServer.Database.SaveObject(mob);
+					mob.Flags ^= (uint)GameNPC.eFlags.PEACE;
 				}
+
+				Region region = WorldMgr.GetRegion(mob.Region);
+				if (region != null)
+				{
+					Zone zone = region.GetZone(mob.X, mob.Y);
+					if (zone != null)
+					{
+						mob.Realm = (byte)zone.GetRealm();
+					}
+				}
+
+				GameServer.Database.SaveObject(mob);
 			}
 			log.Info(mobs.Length + " Mobs Processed");
 

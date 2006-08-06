@@ -21,6 +21,7 @@ using System.Collections;
 using System.Collections.Specialized;
 using System.Reflection;
 using DOL.Database;
+using DOL.GS.ServerProperties;
 using DOL.GS.PacketHandler;
 using log4net;
 
@@ -730,6 +731,8 @@ namespace DOL.GS
 
 			//if the item is gray con, crafting process will be almost two times faster
 			if (((ushort)player.GetCraftingSkillValue(m_eskill) - ItemCraft.CraftingLevel) > 45) baseMultiplier *= 0.55;
+
+			baseMultiplier *= CraftingSpeedServerProperty.Value;
 
 			//at least 1s
 			int craftingTime = (int)(baseMultiplier * materialsCount / 4);

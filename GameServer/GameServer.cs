@@ -33,6 +33,7 @@ using DOL.GS.PacketHandler;
 using DOL.GS.PlayerTitles;
 using DOL.GS.Scripts;
 using DOL.GS.ServerRules;
+using DOL.GS.ServerProperties;
 using DOL.Config;
 using log4net;
 using log4net.Config;
@@ -621,6 +622,11 @@ namespace DOL
 				//---------------------------------------------------------------
 				//Load player titles manager
 				if (!InitComponent(PlayerTitleMgr.Init(), "Player Titles Manager"))
+					return false;
+
+				//---------------------------------------------------------------
+				//Load server settings manager
+				if (!InitComponent(ServerPropertyMgr.Init(), "Server Settings Manager"))
 					return false;
 
 				//---------------------------------------------------------------

@@ -16,102 +16,101 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-
 using System;
-using System.Text;
+
+using DOL.Database;
 using DOL.Database.Attributes;
 
 namespace DOL.Database
 {
-	[DataTable(TableName = "BugReport")]
-	public class BugReport : DataObject
+	[DataTable(TableName = "ServerProperty")]
+	public class ServerProperty: DataObject
 	{
-		private int m_reportID;
-		private string m_message;
-		private string m_submitter;
-		private DateTime m_dateSubmitted;
-		private string m_closedBy;
-		private DateTime m_dateClosed;
-		private bool m_autoSave;
+		private string m_key;
+		private string m_description;
+		private string m_defaultValue;
+		private string m_value;
 
-		public BugReport()
+		private static bool m_autoSave;
+
+		public ServerProperty()
 		{
-			m_message = "";
-			m_submitter = "";
-			m_dateSubmitted = DateTime.Now;
-			m_closedBy = "";
+			m_key = "";
+			m_description = "";
+
+			m_defaultValue = ""; ;
+			m_value = "";
 			m_autoSave = true;
 		}
 
+		/// <summary>
+		/// Auto save this table
+		/// </summary>
 		public override bool AutoSave
 		{
-			get { return m_autoSave; }
-			set { m_autoSave = value; }
-		}
-
-		[DataElement(AllowDbNull = false, Unique = true)]
-		public int ID
-		{
-			get { return m_reportID; }
+			get
+			{
+				return m_autoSave;
+			}
 			set
 			{
-				m_reportID = value;
+				m_autoSave = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = false)]
+		public string Key
+		{
+			get
+			{
+				return m_key;
+			}
+			set
+			{
+				m_key = value;
 				Dirty = true;
 			}
 		}
 
 		[DataElement(AllowDbNull = false)]
-		public string Message
+		public string Description
 		{
-			get { return m_message; }
+			get
+			{
+				return m_description;
+			}
 			set
 			{
+				m_description = value;
 				Dirty = true;
-				m_message = value;
 			}
 		}
 
 		[DataElement(AllowDbNull = false)]
-		public string Submitter
+		public string DefaultValue
 		{
-			get { return m_submitter; }
+			get
+			{
+				return m_defaultValue;
+			}
 			set
 			{
+				m_defaultValue = value;
 				Dirty = true;
-				m_submitter = value;
 			}
 		}
 
 		[DataElement(AllowDbNull = false)]
-		public DateTime DateSubmitted
+		public string Value
 		{
-			get { return m_dateSubmitted; }
-			set
+			get
 			{
-				Dirty = true;
-				m_dateSubmitted = value;
+				return m_value;
 			}
-		}
-
-		[DataElement(AllowDbNull = false)]
-		public string ClosedBy
-		{
-			get { return m_closedBy; }
 			set
 			{
+				m_value = value;
 				Dirty = true;
-				m_closedBy = value;
-			}
-		}
-
-		[DataElement(AllowDbNull = false)]
-		public DateTime DateClosed
-		{
-			get { return m_dateClosed; }
-			set
-			{
-				Dirty = true;
-				m_dateClosed = value;
 			}
 		}
 	}
