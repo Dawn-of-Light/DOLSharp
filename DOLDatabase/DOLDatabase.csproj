@@ -142,6 +142,7 @@
     <Compile Include="DOLTables\Character.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DOLTables\ServerProperty.cs" />
     <Compile Include="DOLTables\DBAbility.cs">
       <SubType>Code</SubType>
     </Compile>

@@ -2613,6 +2613,11 @@ namespace DOL.GS
 		/// <param name="amount">The amount of realm points gained</param>
 		public override void GainRealmPoints(long amount)
 		{
+			//rp rate modifier
+			double modifier = ServerProperties.Properties.RP_RATE;
+			if (modifier != -1)
+				amount = (long)((double)amount * modifier);
+
 			base.GainRealmPoints(amount);
 			RealmPoints += amount;
 			if (m_guild != null)
@@ -2687,7 +2692,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Holds realm points needed for special realm level
 		/// </summary>
-		protected static readonly long[] REALMPOINTS_FOR_LEVEL =
+		public static readonly long[] REALMPOINTS_FOR_LEVEL =
 			{
 				0,	// for level 0
 				0,	// for level 1
@@ -3001,6 +3006,13 @@ namespace DOL.GS
 		/// <param name="sendMessage">should exp gain message be sent</param>
 		public override void GainExperience(long expBase, long expCampBonus, long expGroupBonus, bool sendMessage)
 		{
+			//xp rate modifier
+			if (expBase > 0)
+			{
+				double modifier = ServerProperties.Properties.XP_RATE;
+				expBase = (long)((double)expBase * modifier);
+			}
+
 			base.GainExperience(expBase, expCampBonus, expGroupBonus, sendMessage);
 
 			long totalExp = expBase + expCampBonus + expGroupBonus;

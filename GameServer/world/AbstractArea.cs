@@ -28,7 +28,11 @@ namespace DOL.GS
 	/// For examples see Area.Cricle, Area.Square
 	/// </summary>
 	public abstract class AbstractArea : IArea
-	{						
+	{
+		/// <summary>
+		/// Variable holding weather or not players can broadcast in this area
+		/// </summary>
+		public bool CanBroadcast = false;
 		/// <summary>
 		/// Constant holding max number of areas per zone, increase if more ares are needed,
 		/// this will slightly increase memory usage on server

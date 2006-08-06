@@ -165,9 +165,8 @@
     <Compile Include="customnpc\VaultKeeper.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="gameevents\DOLTestServer.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="gameevents\DOLTestServer.cs" />
+    <Compile Include="gameevents\StartupGuilds.cs" />
     <Compile Include="gameevents\FightingNPC.cs">
       <SubType>Code</SubType>
     </Compile>

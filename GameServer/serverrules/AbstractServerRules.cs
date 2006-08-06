@@ -21,6 +21,7 @@ using System.Collections;
 using System.Reflection;
 using DOL.Database;
 using DOL.GS;
+using DOL.GS.ServerProperties;
 using DOL.GS.PacketHandler;
 using System.Net;
 using log4net;
@@ -101,22 +102,38 @@ namespace DOL.GS.ServerRules
 			}
 			*/
 
-			/* Example on how to limit the number of players
-			if(WorldMgr.GetAllClients().Count > 150)
+			if (Properties.MAX_PLAYERS > 0)
+			{
+				if (WorldMgr.GetAllClients().Count > Properties.MAX_PLAYERS)
+				{
+					// GMs are still allowed to enter server
+					objs = GameServer.Database.SelectObjects(typeof(Account), string.Format("Name = '{0}'", GameServer.Database.Escape(username)));
+					if (objs.Length > 0)
+					{
+						Account account = objs[0] as Account;
+						if (account.PrivLevel > 1) return true;
+					}
+
+					// Normal Players will not be allowed over the max
+					client.Out.SendLoginDenied(eLoginError.TooManyPlayersLoggedIn);
+					return false;
+				}
+			}
+
+			if (Properties.STAFF_LOGIN)
 			{
 				// GMs are still allowed to enter server
-				DataObject[] objs = GameServer.Database.SelectObjects ( typeof ( Account ) , string.Format ( "Name = '{0}'" , GameServer.Database.Escape(username) ) ) ;
-				if ( objs.Length > 0 )
+				objs = GameServer.Database.SelectObjects(typeof(Account), string.Format("Name = '{0}'", GameServer.Database.Escape(username)));
+				if (objs.Length > 0)
 				{
-					Account account = objs[0] as Account ;
-					if ( account.PrivLevel > 1 ) return true ;
+					Account account = objs[0] as Account;
+					if (account.PrivLevel > 1) return true;
 				}
 
-				// Normal Players will not be allowed over 150.
-				client.Out.SendLoginDenied(eLoginError.TooManyPlayersLoggedIn);
+				// Normal Players will not be allowed to log in
+				client.Out.SendLoginDenied(eLoginError.GameCurrentlyClosed);
 				return false;
 			}
-			*/
 
 			return true;
 		}
@@ -620,7 +637,7 @@ namespace DOL.GS.ServerRules
 		{
 			killedPlayer.LastDeathRealmPoints = 0;
 			// "player has been killed recently"
-			const long noExpSeconds = 5 * 60;
+			long noExpSeconds = ServerProperties.Properties.RP_WORTH_SECONDS;
 			if (killedPlayer.PlayerCharacter.DeathTime + noExpSeconds > killedPlayer.PlayedTime)
 			{
 				lock (killedPlayer.XPGainers.SyncRoot)

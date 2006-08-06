@@ -310,7 +310,7 @@ namespace DOL.Database.Connection
 
 					string column = "";
 
-					column += table.Columns[i].ColumnName + " ";
+					column += "`" + table.Columns[i].ColumnName + "` ";
 					if (systype == typeof(System.Char))
 					{
 						column += "SMALLINT UNSIGNED";
@@ -455,7 +455,7 @@ namespace DOL.Database.Connection
 				if (alterAddColumnDefs.Count > 0)
 				{
 					columndef = string.Join(", ", (string[])alterAddColumnDefs.ToArray(typeof(string)));
-					string alterTable = "ALTER TABLE " + table.TableName + " ADD (" + columndef + ")";
+					string alterTable = "ALTER TABLE `" + table.TableName + "` ADD (" + columndef + ")";
 					try
 					{
 						if (log.IsDebugEnabled)

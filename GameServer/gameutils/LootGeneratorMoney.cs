@@ -27,7 +27,7 @@ namespace DOL.GS
 	/// At the moment this generaotr only adds money to the loot
 	/// </summary>
 	public class LootGeneratorMoney : LootGeneratorBase
-	{		
+	{
 		/// <summary>
 		/// Generate loot for given mob
 		/// </summary>
@@ -37,20 +37,21 @@ namespace DOL.GS
 		{
 			LootList loot = base.GenerateLoot(mob, killer);
 
-			int lvl = mob.Level+1;
+			int lvl = mob.Level + 1;
 			if (lvl < 1) lvl = 1;
-			int minLoot = 2+((lvl*lvl*lvl)>>3);
-			
-			long moneyCount = minLoot+Util.Random(minLoot>>1);
-			
+			int minLoot = 2 + ((lvl * lvl * lvl) >> 3);
+
+			long moneyCount = minLoot + Util.Random(minLoot >> 1);
+			moneyCount = (long)((double)moneyCount * ServerProperties.Properties.MONEY_DROP);
+
 			ItemTemplate money = new ItemTemplate();
 			money.Model = 488;
 			money.Name = "bag of coins";
 			money.Level = 0;
 
-			money.Copper=(byte) Money.GetCopper(moneyCount);
-			money.Silver=(byte) Money.GetSilver(moneyCount);
-			money.Gold=(byte) Money.GetGold(moneyCount);
+			money.Copper = (byte)Money.GetCopper(moneyCount);
+			money.Silver = (byte)Money.GetSilver(moneyCount);
+			money.Gold = (byte)Money.GetGold(moneyCount);
 
 			loot.AddFixed(money);
 			return loot;
