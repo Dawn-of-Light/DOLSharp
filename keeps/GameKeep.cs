@@ -54,9 +54,14 @@ namespace DOL.GS
 		}
 		public override bool CheckForClaim(GamePlayer player)
 		{
-			if (player.PlayerGroup == null || player.PlayerGroup.PlayerCount != PlayerGroup.MAX_GROUP_SIZE)
+			if (player.PlayerGroup == null)
 			{
 				player.Out.SendMessage("You must be in a group to claim.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return false;
+			}
+			if (player.PlayerGroup.PlayerCount < ServerProperties.ClaimNumServerProperty.Value)
+			{
+				player.Out.SendMessage("You need " + ServerProperties.ClaimNumServerProperty.Value + " players to claim.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
 			return base.CheckForClaim(player);

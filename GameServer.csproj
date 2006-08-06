@@ -540,6 +540,28 @@
     <Compile Include="gameutils\CmdAttribute.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="serverproperty\properties\AllianceMaxServerProperty.cs" />
+    <Compile Include="serverproperty\properties\ClaimNumServerProperty.cs" />
+    <Compile Include="serverproperty\properties\RPWorthSecondsServerProperty.cs" />
+    <Compile Include="serverproperty\properties\GuildNumServerProperty.cs" />
+    <Compile Include="serverproperty\properties\StaffLoginServerProperty.cs" />
+    <Compile Include="serverproperty\properties\MaxPlayersServerProperty.cs" />
+    <Compile Include="serverproperty\properties\XPRateServerProperty.cs" />
+    <Compile Include="serverproperty\properties\RPRateServerProperty.cs" />
+    <Compile Include="serverproperty\properties\ServerMOTDServerProperty.cs" />
+    <Compile Include="serverproperty\properties\StartingMsgServerProperty.cs" />
+    <Compile Include="serverproperty\properties\PvEDamageServerProperty.cs" />
+    <Compile Include="serverproperty\properties\PvPDamageServerProperty.cs" />
+    <Compile Include="serverproperty\properties\StartingMoneyServerProperty.cs" />
+    <Compile Include="serverproperty\properties\StartingLevelServerProperty.cs" />
+    <Compile Include="serverproperty\properties\StartingRealmLevelServerProperty.cs" />
+    <Compile Include="serverproperty\properties\CraftingSpeedServerProperty.cs" />
+    <Compile Include="serverproperty\properties\MoneyDropServerProperty.cs" />
+    <Compile Include="serverproperty\properties\BroadcastTypeServerProperty.cs" />
+    <Compile Include="serverproperty\properties\StartingGuildServerProperty.cs" />
+    <Compile Include="serverproperty\ServerProperties.cs" />
+    <Compile Include="serverproperty\ServerPropertyConstants.cs" />
+    <Compile Include="serverproperty\ServerPropertyMgr.cs" />
     <Compile Include="gameutils\DoorMgr.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -672,6 +694,9 @@
     <Compile Include="gameutils\SelfCraftWindow.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="serverproperty\AbstractServerProperty.cs" />
+    <Compile Include="serverproperty\IServerProperty.cs" />
+    <Compile Include="serverproperty\ServerPropertyAttribute.cs" />
     <Compile Include="gameutils\SinglePermission.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -1457,6 +1482,7 @@
     <Compile Include="spells\Curemezz.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="spells\CureNearsight.cs" />
     <Compile Include="spells\CurePoisonSpellHandler.cs">
       <SubType>Code</SubType>
     </Compile>

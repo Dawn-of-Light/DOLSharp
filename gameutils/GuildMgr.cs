@@ -53,7 +53,7 @@ namespace DOL.GS
 		/// The cost in copper to reemblem the guild
 		/// </summary>
 		public const long COST_RE_EMBLEM = 2000000; //200 gold
-		
+
 		/// <summary>
 		/// Adds a guild to the list of guilds
 		/// </summary>
@@ -64,9 +64,9 @@ namespace DOL.GS
 			if (guild == null)
 				return false;
 
-			lock(m_guilds.SyncRoot)
+			lock (m_guilds.SyncRoot)
 			{
-				if(!m_guilds.Contains(guild.Name))
+				if (!m_guilds.Contains(guild.Name))
 				{
 					m_guilds.Add(guild.Name, guild);
 					guild.ID = ++m_lastID;
@@ -88,7 +88,7 @@ namespace DOL.GS
 				return false;
 
 			guild.RemoveAllMembers();
-			lock(m_guilds.SyncRoot)
+			lock (m_guilds.SyncRoot)
 			{
 				m_guilds.Remove(guild.Name);
 			}
@@ -104,7 +104,7 @@ namespace DOL.GS
 		{
 			lock (m_guilds.SyncRoot)
 			{
-				if(m_guilds.Contains(guildName))
+				if (m_guilds.Contains(guildName))
 					return true;
 				return false;
 			}
@@ -117,7 +117,7 @@ namespace DOL.GS
 		public static Guild CreateGuild(GamePlayer creator, string guildName)
 		{
 			if (log.IsDebugEnabled)
-				log.Debug("Create guild; guild name=\""+guildName+"\"");
+				log.Debug("Create guild; guild name=\"" + guildName + "\"");
 			try
 			{
 				// Does guild exist, if so return null
@@ -139,12 +139,12 @@ namespace DOL.GS
 				newguild.Name = guildName;
 				newguild.theGuildDB.GuildName = guildName;
 				CreateRanks(newguild);
-				
+
 				AddGuild(newguild);
-				GameServer.Database.AddNewObject(newguild.theGuildDB);				
+				GameServer.Database.AddNewObject(newguild.theGuildDB);
 				return newguild;
 			}
-			catch(Exception e)
+			catch (Exception e)
 			{
 				if (log.IsErrorEnabled)
 					log.Error("CreateGuild", e);
@@ -176,63 +176,63 @@ namespace DOL.GS
 				rank.Upgrade = false;
 				rank.View = false;
 
-				if (i<9)
+				if (i < 9)
 				{
 					rank.GcSpeak = true;
 					rank.View = true;
-					if (i<8)
+					if (i < 8)
 					{
 						rank.Emblem = true;
-						if (i<7)
+						if (i < 7)
 						{
 							rank.AcHear = true;
-							if (i<6)
+							if (i < 6)
 							{
 								rank.AcSpeak = true;
-								if (i<5)
+								if (i < 5)
 								{
 									rank.OcHear = true;
-									if (i<4)
+									if (i < 4)
 									{
 										rank.OcSpeak = true;
-										if (i<3)
+										if (i < 3)
 										{
 											rank.Invite = true;
 											rank.Promote = true;
-											
-											if (i<2)
+
+											if (i < 2)
 											{
 												rank.Release = true;
 												rank.Upgrade = true;
 												rank.Claim = true;
-												if (i<1)
+												if (i < 1)
 												{
 													rank.Remove = true;
 													rank.Alli = true;
-					
+
 												}
-					
+
 											}
-					
+
 										}
-					
+
 									}
-					
+
 								}
-					
+
 							}
-					
+
 						}
-					
+
 					}
-						
+
 				}
 				GameServer.Database.AddNewObject(rank);
 				GameServer.Database.SaveObject(rank);
 				newguild.theGuildDB.Ranks[i] = rank;
 			}
 		}
-		
+
 		/// <summary>
 		/// Delete's a guild
 		/// </summary>
@@ -247,16 +247,16 @@ namespace DOL.GS
 				{
 					return false;
 				}
-	
-				DBguild[] guilds = (DBguild[]) GameServer.Database.SelectObjects(typeof(DBguild),"GuildName='"+GameServer.Database.Escape(guildName)+"'");
-				foreach(DBguild guild in guilds)
+
+				DBguild[] guilds = (DBguild[])GameServer.Database.SelectObjects(typeof(DBguild), "GuildName='" + GameServer.Database.Escape(guildName) + "'");
+				foreach (DBguild guild in guilds)
 				{
 					foreach (Character cha in guild.Characters)
-						cha.GuildName="";
+						cha.GuildName = "";
 					GameServer.Database.DeleteObject(guild);
 				}
 
-				foreach(GamePlayer ply in removeGuild.ListOnlineMembers())
+				foreach (GamePlayer ply in removeGuild.ListOnlineMembers())
 				{
 					ply.Guild = null;
 					ply.GuildName = "";
@@ -267,7 +267,7 @@ namespace DOL.GS
 
 				return true;
 			}
-			catch(Exception e)
+			catch (Exception e)
 			{
 				if (log.IsErrorEnabled)
 					log.Error("DeleteGuild", e);
@@ -287,7 +287,7 @@ namespace DOL.GS
 			}
 		}
 
-		
+
 		/// <summary>
 		/// Returns a list of guilds by their status
 		/// </summary>
@@ -302,7 +302,7 @@ namespace DOL.GS
 		/// </summary>
 		public static void LoadAllGuilds()
 		{
-			lock(m_guilds.SyncRoot)
+			lock (m_guilds.SyncRoot)
 			{
 				m_guilds.Clear(); //clear guild list before loading!
 			}
@@ -310,24 +310,24 @@ namespace DOL.GS
 
 			//load guilds
 			DataObject[] objs = GameServer.Database.SelectAllObjects(typeof(DBguild));
-			foreach(DataObject obj in objs)
+			foreach (DataObject obj in objs)
 			{
 				Guild myguild = new Guild();
 				myguild.LoadFromDatabase(obj);
 				AddGuild(myguild);
-				if (((DBguild)obj).Ranks.Length == 0 )
+				if (((DBguild)obj).Ranks.Length == 0)
 					CreateRanks(myguild);
 			}
 
 			//load alliances
 			objs = GameServer.Database.SelectAllObjects(typeof(DBAlliance));
-			foreach(DBAlliance dball in objs)
+			foreach (DBAlliance dball in objs)
 			{
 				Alliance myalliance = new Alliance();
 				myalliance.LoadFromDatabase(dball);
-				if (dball != null && dball.DBguilds != null) 
+				if (dball != null && dball.DBguilds != null)
 				{
-					foreach(DBguild mydbgui in dball.DBguilds)
+					foreach (DBguild mydbgui in dball.DBguilds)
 					{
 						Guild gui = GetGuildByName(mydbgui.GuildName);
 						myalliance.Guilds.Add(gui);
@@ -406,7 +406,7 @@ namespace DOL.GS
 			lock (m_guilds.SyncRoot)
 			{
 				foreach (Guild guild in m_guilds.Values)
-				{					
+				{
 					guilds.Add(guild);
 				}
 			}

@@ -342,7 +342,7 @@ namespace DOL.GS
 			m_difficultyLevel[0] = m_dbkeep.AlbionDifficultyLevel;
 			m_difficultyLevel[1] = m_dbkeep.MidgardDifficultyLevel;
 			m_difficultyLevel[2] = m_dbkeep.HiberniaDifficultyLevel;
-			if (m_dbkeep.ClaimedGuildName != "")
+			if (m_dbkeep.ClaimedGuildName != null && m_dbkeep.ClaimedGuildName != "")
 			{
 				Guild myguild = GuildMgr.GetGuildByName(m_dbkeep.ClaimedGuildName);
 				if (myguild != null)

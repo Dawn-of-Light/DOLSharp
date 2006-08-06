@@ -1307,6 +1307,11 @@ namespace DOL.GS
 				ad.UncappedDamage = ad.Damage;
 				ad.Damage = Math.Min(ad.Damage, (int)(UnstyledDamageCap(weapon) * effectiveness));
 
+				if (target is GamePlayer)
+					ad.Damage = (int)((double)ad.Damage * ServerProperties.Properties.PVP_DAMAGE);
+				else if (target is GameNPC)
+					ad.Damage = (int)((double)ad.Damage * ServerProperties.Properties.PVE_DAMAGE);
+
 				// patch to missed when 0 damage
 				if (ad.Damage == 0)
 				{
@@ -2117,6 +2122,44 @@ namespace DOL.GS
 							owner.StopAttack();
 							Stop();
 							return;
+						}
+					case eAttackResult.OutOfRange:
+						{
+							if (owner is GameNPC == false)
+								break;
+
+							GameNPC ownerNPC = owner as GameNPC;
+							StandardMobBrain brain = ownerNPC.Brain as StandardMobBrain;
+
+							if (brain == null)
+								break;
+
+							bool hit = false;
+
+							foreach (GameNPC npc in owner.GetNPCsInRadius((ushort)owner.AttackRange))
+							{
+								if (brain.GetAggroAmountForLiving(npc) > 0)
+								{
+									new WeaponOnTargetAction(owner, npc, mainWeapon, leftWeapon, leftHandSwingCount, 1, owner.AttackSpeed(mainWeapon, leftWeapon), style);
+									hit = true;
+									break;
+								}
+							}
+
+							if (hit)
+								break;
+
+							foreach (GamePlayer player in owner.GetPlayersInRadius((ushort)owner.AttackRange))
+							{
+								if (brain.GetAggroAmountForLiving(player) > 0)
+								{
+									new WeaponOnTargetAction(owner, player, mainWeapon, leftWeapon, leftHandSwingCount, 1, owner.AttackSpeed(mainWeapon, leftWeapon), style);
+									hit = true;
+									break;
+								}
+							}
+
+							break;
 						}
 				}
 

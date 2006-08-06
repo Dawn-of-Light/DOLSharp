@@ -1,5 +1,4 @@
 using DOL.Database;
-using System.Collections;
 using System;
 using log4net;
 using System.Reflection;
@@ -13,7 +12,6 @@ namespace DOL.GS
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		public static ArrayList BroadcastableAreas = new ArrayList();
 		public static bool LoadAllAreas()
 		{
 			try
@@ -28,12 +26,11 @@ namespace DOL.GS
 						area = new Area.Circle(thisArea.Description, thisArea.X, thisArea.Y, thisArea.Z, thisArea.Radius);
 					if (area == null) throw new Exception("area is null");
 					area.Sound = thisArea.Sound;
+					area.CanBroadcast = thisArea.CanBroadcast;
 					Region region = WorldMgr.GetRegion(thisArea.Region);
 					if (region == null)
 						continue;
 					region.AddArea(area);
-					if (thisArea.CanBroadcast)
-						BroadcastableAreas.Add(area);
 					log.Info("Area added: " + thisArea.Description);
 				}
 				return true;
