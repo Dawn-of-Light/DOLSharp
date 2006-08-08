@@ -85,7 +85,6 @@
     <Compile Include="DataAccessInterfaces\IZoneDao.cs" />
     <Compile Include="DataTransferObjects\AbilityEntity.cs" />
     <Compile Include="DataTransferObjects\AccountEntity.cs" />
-    <Compile Include="DataTransferObjects\AccountTO.cs" />
     <Compile Include="DataTransferObjects\ActiveQuestEntity.cs" />
     <Compile Include="DataTransferObjects\ActiveTaskEntity.cs" />
     <Compile Include="DataTransferObjects\AllianceEntity.cs" />
