@@ -40,6 +40,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
+					reader.Read();
 					FillEntityWithRow(ref result, reader);
 				}
 			);
@@ -70,9 +71,34 @@ namespace DOL.Database.MySql.DataAccessObjects
 			// not used by this implementation
 		}
 
+		public virtual IList<AbilityEntity> SelectAll()
+		{
+			AbilityEntity entity;
+			List<AbilityEntity> results = null;
+
+			m_state.ExecuteQuery(
+				"SELECT " + c_rowFields + " FROM `ability`",
+				CommandBehavior.Default,
+				delegate(MySqlDataReader reader)
+				{
+					results = new List<AbilityEntity>(reader.FieldCount);
+					while (reader.Read())
+					{
+						entity = new AbilityEntity();
+						FillEntityWithRow(ref entity, reader);
+						results.Add(entity);
+					}
+				}
+			);
+
+			return results;
+		}
+
 		public virtual int CountAll()
 		{
-			return -1;
+			return (int)m_state.ExecuteScalar(
+			"SELECT COUNT(*) FROM `ability`");
+
 		}
 
 		protected virtual void FillEntityWithRow(ref AbilityEntity entity, MySqlDataReader reader)

@@ -113,7 +113,7 @@ namespace DOL.Database.MySql
 		/// </summary>
 		/// <param name="sqlCommand">The SQL command.</param>
 		/// <returns>The scalar.</returns>
-		public int ExecuteScalar(string sqlCommand)
+		public object ExecuteScalar(string sqlCommand)
 		{
 			MySqlConnection connection = AcquireConnection();
 			try

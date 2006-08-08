@@ -40,6 +40,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
+					reader.Read();
 					FillEntityWithRow(ref result, reader);
 				}
 			);
@@ -70,9 +71,34 @@ namespace DOL.Database.MySql.DataAccessObjects
 			// not used by this implementation
 		}
 
+		public virtual IList<BrainEntity> SelectAll()
+		{
+			BrainEntity entity;
+			List<BrainEntity> results = null;
+
+			m_state.ExecuteQuery(
+				"SELECT " + c_rowFields + " FROM `brain`",
+				CommandBehavior.Default,
+				delegate(MySqlDataReader reader)
+				{
+					results = new List<BrainEntity>(reader.FieldCount);
+					while (reader.Read())
+					{
+						entity = new BrainEntity();
+						FillEntityWithRow(ref entity, reader);
+						results.Add(entity);
+					}
+				}
+			);
+
+			return results;
+		}
+
 		public virtual int CountAll()
 		{
-			return -1;
+			return (int)m_state.ExecuteScalar(
+			"SELECT COUNT(*) FROM `brain`");
+
 		}
 
 		protected virtual void FillEntityWithRow(ref BrainEntity entity, MySqlDataReader reader)

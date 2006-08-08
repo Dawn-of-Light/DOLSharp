@@ -40,6 +40,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
+					reader.Read();
 					FillEntityWithRow(ref result, reader);
 				}
 			);
@@ -70,9 +71,34 @@ namespace DOL.Database.MySql.DataAccessObjects
 			// not used by this implementation
 		}
 
+		public virtual IList<GameNpcInventoryEntity> SelectAll()
+		{
+			GameNpcInventoryEntity entity;
+			List<GameNpcInventoryEntity> results = null;
+
+			m_state.ExecuteQuery(
+				"SELECT " + c_rowFields + " FROM `gamenpcinventory`",
+				CommandBehavior.Default,
+				delegate(MySqlDataReader reader)
+				{
+					results = new List<GameNpcInventoryEntity>(reader.FieldCount);
+					while (reader.Read())
+					{
+						entity = new GameNpcInventoryEntity();
+						FillEntityWithRow(ref entity, reader);
+						results.Add(entity);
+					}
+				}
+			);
+
+			return results;
+		}
+
 		public virtual int CountAll()
 		{
-			return -1;
+			return (int)m_state.ExecuteScalar(
+			"SELECT COUNT(*) FROM `gamenpcinventory`");
+
 		}
 
 		protected virtual void FillEntityWithRow(ref GameNpcInventoryEntity entity, MySqlDataReader reader)
