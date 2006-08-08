@@ -40,6 +40,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
+					reader.Read();
 					FillEntityWithRow(ref result, reader);
 				}
 			);
@@ -49,16 +50,18 @@ namespace DOL.Database.MySql.DataAccessObjects
 
 		public virtual IList<GamePlayerEntity> FindByAccountAndRealm(int account, byte realm)
 		{
-			GamePlayerEntity entity = new GamePlayerEntity();
-			List<GamePlayerEntity> results = new List<GamePlayerEntity>(128);
+			GamePlayerEntity entity;
+			List<GamePlayerEntity> results = null;
 
 			m_state.ExecuteQuery(
 				"SELECT  " + c_rowFields + " FROM `gameplayer` WHERE `AccountId`='" + m_state.EscapeString(account.ToString()) + "' AND `Realm`='" + m_state.EscapeString(realm.ToString()) + "'",
 				CommandBehavior.Default,
 				delegate(MySqlDataReader reader)
 				{
+					results = new List<GamePlayerEntity>(reader.FieldCount);
 					while (reader.Read())
 					{
+						entity = new GamePlayerEntity();
 						FillEntityWithRow(ref entity, reader);
 						results.Add(entity);
 					}
@@ -66,6 +69,14 @@ namespace DOL.Database.MySql.DataAccessObjects
 			);
 
 			return results;
+		}
+
+		public virtual int CountByAccountAndRealm(int account, byte realm)
+		{
+
+			return (int)m_state.ExecuteScalar(
+				"SELECT  count(*) FROM `gameplayer` WHERE `AccountId`='" + m_state.EscapeString(account.ToString()) + "' AND `Realm`='" + m_state.EscapeString(realm.ToString()) + "'");
+
 		}
 
 		public virtual void Create(GamePlayerEntity obj)
@@ -91,9 +102,34 @@ namespace DOL.Database.MySql.DataAccessObjects
 			// not used by this implementation
 		}
 
+		public virtual IList<GamePlayerEntity> SelectAll()
+		{
+			GamePlayerEntity entity;
+			List<GamePlayerEntity> results = null;
+
+			m_state.ExecuteQuery(
+				"SELECT " + c_rowFields + " FROM `gameplayer`",
+				CommandBehavior.Default,
+				delegate(MySqlDataReader reader)
+				{
+					results = new List<GamePlayerEntity>(reader.FieldCount);
+					while (reader.Read())
+					{
+						entity = new GamePlayerEntity();
+						FillEntityWithRow(ref entity, reader);
+						results.Add(entity);
+					}
+				}
+			);
+
+			return results;
+		}
+
 		public virtual int CountAll()
 		{
-			return -1;
+			return (int)m_state.ExecuteScalar(
+			"SELECT COUNT(*) FROM `gameplayer`");
+
 		}
 
 		protected virtual void FillEntityWithRow(ref GamePlayerEntity entity, MySqlDataReader reader)
