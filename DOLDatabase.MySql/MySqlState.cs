@@ -109,6 +109,31 @@ namespace DOL.Database.MySql
 		}
 
 		/// <summary>
+		/// Executes the scalar SQL command.
+		/// </summary>
+		/// <param name="sqlCommand">The SQL command.</param>
+		/// <returns>The scalar.</returns>
+		public int ExecuteScalar(string sqlCommand)
+		{
+			MySqlConnection connection = AcquireConnection();
+			try
+			{
+				MySqlCommand cmd = connection.CreateCommand();
+				cmd.CommandText = sqlCommand;
+				cmd.CommandType = CommandType.Text;
+				return cmd.ExecuteScalar();
+			}
+			catch(Exception e)
+			{
+				throw new DolDatabaseException("scalar command: " + sqlCommand, e);
+			}
+			finally
+			{
+				ReleaseConnection(connection);
+			}
+		}
+
+		/// <summary>
 		/// Executes the query.
 		/// </summary>
 		/// <param name="sqlCommand">The SQL command.</param>
