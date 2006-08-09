@@ -26,5 +26,6 @@ namespace DOL.Database.DataAccessInterfaces
 	public interface IGamePlayerDao : IGenericDao<GamePlayerEntity, int>
 	{
 		IList<GamePlayerEntity> FindByAccountAndRealm(int account, byte realm);
+		int CountByAccountAndRealm(int account, byte realm);
 	}
 }
