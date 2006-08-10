@@ -7838,10 +7838,15 @@ namespace DOL.GS
 					else
 					{
 						bool good = false;
-						if (floorItem.Item.IsStackable) // poison ID is lost here
-							good = Inventory.AddTemplate(floorItem.Item, floorItem.Item.Count, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
-						else
-							good = Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, floorItem.Item);
+
+                        if (floorItem.Item.IsStackable)
+                        {
+                            InventoryItem item = Inventory.GetFirstItemByID(floorItem.Item.Id_nb, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
+                            if (item != null)
+                                good = Inventory.AddCountToStack(item, floorItem.Item.Count);
+                        }
+                        if (!good)
+                            good = Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, floorItem.Item);
 
 						if (!good)
 						{
