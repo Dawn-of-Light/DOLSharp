@@ -104,6 +104,19 @@ namespace DOL.Database.NHibernate
 		}
 
 		/// <summary>
+		/// Gets the count of all stored objects.
+		/// </summary>
+		public virtual IList<TTransferObject> SelectAll()
+		{
+			IList<TTransferObject> mygenericList = new List<TTransferObject>();
+			//TODO : BAD but nothing better:
+			System.Collections.IList myList = Database.SelectAllObjects(typeof(TTransferObject));
+			foreach (TTransferObject obj in myList)
+				mygenericList.Add(obj);
+			return mygenericList;
+		}
+
+		/// <summary>
 		/// Gets the tranfer object's type.
 		/// </summary>
 		public Type TransferObjectType
