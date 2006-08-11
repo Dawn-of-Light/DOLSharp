@@ -113,69 +113,17 @@ namespace DOL.Database.Connection
 			return s;
 		}
 
-		private ArrayList m_connectionPool = new ArrayList();
-		private IList m_dataReaderConnections = new ArrayList();
-
 		private MySqlConnection GetMySqlConnection()
 		{
-			MySqlConnection conn = null;
-			lock (m_connectionPool)
+			MySqlConnection conn = new MySqlConnection(connString);
+			long start1 = Environment.TickCount;
+			conn.Open();
+			if (Environment.TickCount - start1 > 1000)
 			{
-				if (m_connectionPool.Count > 0)
-				{
-					conn = (MySqlConnection)m_connectionPool[m_connectionPool.Count - 1];
-					m_connectionPool.RemoveAt(m_connectionPool.Count - 1);
-				}
-			}
-
-			if (conn == null)
-			{ // try to find one in data reader connection list
-				lock (m_dataReaderConnections)
-				{
-					if (m_dataReaderConnections.Count > 0)
-					{
-						for (int i = 0; i < m_dataReaderConnections.Count; i++)
-						{
-							DataReaderConnection readercon = (DataReaderConnection)m_dataReaderConnections[i];
-							if (readercon.Reader.IsClosed)
-							{
-								m_dataReaderConnections.RemoveAt(i);
-								conn = readercon.Connection;
-								break;
-							}
-						}
-					}
-				}
-			}
-
-			if (conn == null)
-			{
-				conn = new MySqlConnection(connString);
-				long start1 = Environment.TickCount;
-				conn.Open();
-				if (Environment.TickCount - start1 > 1000)
-				{
-					if (log.IsWarnEnabled)
-						log.Warn("Gaining SQL connection took " + (Environment.TickCount - start1) + "ms");
-				}
-				log.Info("New DB connection created, pooled connections: " + m_connectionPool.Count + "  pooled datareaders: " + m_dataReaderConnections.Count);
+				if (log.IsWarnEnabled)
+					log.Warn("Gaining SQL connection took " + (Environment.TickCount - start1) + "ms");
 			}
 			return conn;
-		}
-
-		protected struct DataReaderConnection
-		{
-			MySqlConnection m_connection;
-			MySqlDataReader m_reader;
-
-			public DataReaderConnection(MySqlDataReader reader, MySqlConnection conn)
-			{
-				m_reader = reader;
-				m_connection = conn;
-			}
-
-			public MySqlConnection Connection { get { return m_connection; } }
-			public MySqlDataReader Reader { get { return m_reader; } }
 		}
 
 		/// <summary>
@@ -206,15 +154,15 @@ namespace DOL.Database.Connection
 					else if (Environment.TickCount - start > 500 && log.IsWarnEnabled)
 						log.Warn("SQL NonQuery took " + (Environment.TickCount - start) + "ms!\n" + sqlcommand);
 
-					lock (m_connectionPool)
-					{
-						m_connectionPool.Add(conn);
-					}
 				}
 				catch (Exception e)
 				{
-					conn.Close();
 					throw e;
+				}
+				finally 
+				{
+					if (conn != null && conn.State != ConnectionState.Closed)
+						conn.Close();
 				}
 				return affected;
 			}
@@ -249,11 +197,6 @@ namespace DOL.Database.Connection
 						log.Debug("SQL Select exec time " + (Environment.TickCount - start) + "ms");
 					else if (Environment.TickCount - start > 500 && log.IsWarnEnabled)
 						log.Warn("SQL Select took " + (Environment.TickCount - start) + "ms!\n" + sqlcommand);
-
-					lock (m_dataReaderConnections)
-					{
-						m_dataReaderConnections.Add(new DataReaderConnection(reader, conn));
-					}
 					return reader;
 				}
 				catch (Exception e)
@@ -262,6 +205,11 @@ namespace DOL.Database.Connection
 						log.Error("ExecuteSelect: \"" + sqlcommand + "\"\n", e);
 					conn.Close();
 					throw e;
+				}
+				finally
+				{
+					if (conn != null && conn.State != ConnectionState.Closed)
+						conn.Close();
 				}
 			}
 			if (log.IsWarnEnabled)
