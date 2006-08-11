@@ -228,19 +228,24 @@ namespace DOL.Database.Connection
 				ArrayList currentTableColumns = new ArrayList();
 				try
 				{
-					using (IDataReader reader = ExecuteSelect("DESCRIBE " + table.TableName))
+					using (IDataReader reader = ExecuteSelect("DESCRIBE `" + table.TableName + "`"))
 					{
 						while (reader.Read())
 						{
 							currentTableColumns.Add(reader.GetString(0).ToLower());
 							log.Debug(reader.GetString(0).ToLower());
 						}
-						log.Debug(currentTableColumns.Count + " in table");
+                        if (log.IsDebugEnabled)
+						    log.Debug(currentTableColumns.Count + " in table");
 					}
 				}
 				catch (Exception e)
 				{
-					log.Warn(e.ToString());
+					if (log.IsDebugEnabled)
+                        log.Debug(e.ToString());
+
+                    if (log.IsWarnEnabled)
+                        log.Warn("Table " + table.TableName + " doesn't exist, creating it...");
 				}
 
 				StringBuilder sb = new StringBuilder();
