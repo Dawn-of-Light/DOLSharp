@@ -58,7 +58,6 @@
 			<Reference name="log4net" path="..\sharedModules\log4net"/>
 			<Reference name="ICSharpCode.SharpZipLib" path="..\sharedModules\ICSharpCode.SharpZLib"/>
 			<Reference name="System.Data"/>
-			<Reference name="CustomMarshalers"/>
 			<Files>
 				<Match path="." pattern="*.cs" recurse="true"/>
 			</Files>
