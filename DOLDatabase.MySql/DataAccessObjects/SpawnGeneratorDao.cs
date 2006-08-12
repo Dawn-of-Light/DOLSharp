@@ -31,12 +31,12 @@ namespace DOL.Database.MySql.DataAccessObjects
 		protected static readonly string c_rowFields = "`SpawnGeneratorBaseId`,`Height`,`Radius`,`RegionId`,`SpawnGeneratorBaseType`,`Width`,`X`,`Y`";
 		private readonly MySqlState m_state;
 
-		public virtual SpawnGeneratorEntity Find(int key)
+		public virtual SpawnGeneratorEntity Find(int id)
 		{
 			SpawnGeneratorEntity result = new SpawnGeneratorEntity();
 
 			m_state.ExecuteQuery(
-				"SELECT " + c_rowFields + " FROM `spawngenerator` WHERE `SpawnGeneratorBaseId`='" + m_state.EscapeString(key.ToString()) + "'",
+				"SELECT " + c_rowFields + " FROM `spawngenerator` WHERE `SpawnGeneratorBaseId`='" + m_state.EscapeString(id.ToString()) + "'",
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{

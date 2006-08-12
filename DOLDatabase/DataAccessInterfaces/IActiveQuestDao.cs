@@ -23,7 +23,8 @@ using DOL.Database.DataTransferObjects;
 
 namespace DOL.Database.DataAccessInterfaces
 {
-	public interface IActiveQuestDao : IGenericDao<ActiveQuestEntity, int>
+	public interface IActiveQuestDao : IGenericDao<ActiveQuestEntity>
 	{
+		ActiveQuestEntity Find(int id);
 	}
 }

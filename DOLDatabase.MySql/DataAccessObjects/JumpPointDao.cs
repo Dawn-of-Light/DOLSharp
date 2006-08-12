@@ -31,12 +31,12 @@ namespace DOL.Database.MySql.DataAccessObjects
 		protected static readonly string c_rowFields = "`JumpPointId`,`AllowedRealm`,`Heading`,`JumpPointType`,`Region`,`X`,`Y`,`Z`";
 		private readonly MySqlState m_state;
 
-		public virtual JumpPointEntity Find(int key)
+		public virtual JumpPointEntity Find(int id)
 		{
 			JumpPointEntity result = new JumpPointEntity();
 
 			m_state.ExecuteQuery(
-				"SELECT " + c_rowFields + " FROM `jumppoint` WHERE `JumpPointId`='" + m_state.EscapeString(key.ToString()) + "'",
+				"SELECT " + c_rowFields + " FROM `jumppoint` WHERE `JumpPointId`='" + m_state.EscapeString(id.ToString()) + "'",
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{

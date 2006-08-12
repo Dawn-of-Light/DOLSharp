@@ -31,12 +31,12 @@ namespace DOL.Database.MySql.DataAccessObjects
 		protected static readonly string c_rowFields = "`LootListId`";
 		private readonly MySqlState m_state;
 
-		public virtual LootListEntity Find(int key)
+		public virtual LootListEntity Find(int id)
 		{
 			LootListEntity result = new LootListEntity();
 
 			m_state.ExecuteQuery(
-				"SELECT " + c_rowFields + " FROM `lootlist` WHERE `LootListId`='" + m_state.EscapeString(key.ToString()) + "'",
+				"SELECT " + c_rowFields + " FROM `lootlist` WHERE `LootListId`='" + m_state.EscapeString(id.ToString()) + "'",
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{

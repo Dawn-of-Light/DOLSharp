@@ -23,7 +23,8 @@ using DOL.Database.DataTransferObjects;
 
 namespace DOL.Database.DataAccessInterfaces
 {
-	public interface ISpecXAbilityDao : IGenericDao<SpecXAbilityEntity, int>
+	public interface ISpecXAbilityDao : IGenericDao<SpecXAbilityEntity>
 	{
+		SpecXAbilityEntity Find(int id);
 	}
 }

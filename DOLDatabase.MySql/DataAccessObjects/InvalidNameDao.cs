@@ -31,12 +31,12 @@ namespace DOL.Database.MySql.DataAccessObjects
 		protected static readonly string c_rowFields = "`InvalidNameId`,`Name`";
 		private readonly MySqlState m_state;
 
-		public virtual InvalidNameEntity Find(int key)
+		public virtual InvalidNameEntity Find(int id)
 		{
 			InvalidNameEntity result = new InvalidNameEntity();
 
 			m_state.ExecuteQuery(
-				"SELECT " + c_rowFields + " FROM `invalidname` WHERE `InvalidNameId`='" + m_state.EscapeString(key.ToString()) + "'",
+				"SELECT " + c_rowFields + " FROM `invalidname` WHERE `InvalidNameId`='" + m_state.EscapeString(id.ToString()) + "'",
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{

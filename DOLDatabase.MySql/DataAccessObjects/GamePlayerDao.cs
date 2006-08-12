@@ -31,12 +31,12 @@ namespace DOL.Database.MySql.DataAccessObjects
 		protected static readonly string c_rowFields = "`PersistantGameObjectId`,`AccountId`,`ActiveQuiverSlot`,`ActiveWeaponSlot`,`BaseCharisma`,`BaseConstitution`,`BaseDexterity`,`BaseEmpathy`,`BaseIntelligence`,`BasePiety`,`BaseQuickness`,`BaseStrength`,`BindHeading`,`BindRegionId`,`BindX`,`BindY`,`BindZ`,`BountyPoints`,`CancelStyle`,`CapturedKeeps`,`CapturedTowers`,`CharacterClassId`,`CraftingPrimarySkill`,`CreationDate`,`CreationModel`,`CurrentTitleType`,`CustomisationStep`,`DeathCount`,`DeathTime`,`DisabledAbilities`,`DisabledSpells`,`EndurancePercent`,`Experience`,`EyeColor`,`EyeSize`,`FaceType`,`Gender`,`GuildName`,`GuildNameFlag`,`GuildRank`,`HairColor`,`HairStyle`,`Heading`,`Health`,`IsAnonymous`,`IsLevelRespecUsed`,`IsLevelSecondStage`,`KillsAlbionDeathBlows`,`KillsAlbionPlayers`,`KillsAlbionSolo`,`KillsHiberniaDeathBlows`,`KillsHiberniaPlayers`,`KillsHiberniaSolo`,`KillsMidgardDeathBlows`,`KillsMidgardPlayers`,`KillsMidgardSolo`,`LastName`,`LastPlayed`,`Level`,`LipSize`,`LotNumber`,`Mana`,`MaxSpeedBase`,`Model`,`Money`,`MoodType`,`Name`,`PlayedTime`,`Race`,`Realm`,`RealmLevel`,`RealmPoints`,`RealmSpecialtyPoints`,`RegionId`,`RespecAmountAllSkill`,`RespecAmountSingleSkill`,`RespecBought`,`SafetyFlag`,`SerializedAbilities`,`SerializedCraftingSkills`,`SerializedFriendsList`,`SerializedSpecs`,`SerializedSpellLines`,`SkillSpecialtyPoints`,`SlotPosition`,`SpellQueue`,`Styles`,`TaskDone`,`TotalConstitutionLostAtDeath`,`UsedLevelCommand`,`X`,`Y`,`Z`";
 		private readonly MySqlState m_state;
 
-		public virtual GamePlayerEntity Find(int key)
+		public virtual GamePlayerEntity Find(int id)
 		{
 			GamePlayerEntity result = new GamePlayerEntity();
 
 			m_state.ExecuteQuery(
-				"SELECT " + c_rowFields + " FROM `gameplayer` WHERE `PersistantGameObjectId`='" + m_state.EscapeString(key.ToString()) + "'",
+				"SELECT " + c_rowFields + " FROM `gameplayer` WHERE `PersistantGameObjectId`='" + m_state.EscapeString(id.ToString()) + "'",
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{

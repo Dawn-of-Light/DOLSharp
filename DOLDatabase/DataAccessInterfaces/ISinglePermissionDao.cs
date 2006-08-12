@@ -23,7 +23,8 @@ using DOL.Database.DataTransferObjects;
 
 namespace DOL.Database.DataAccessInterfaces
 {
-	public interface ISinglePermissionDao : IGenericDao<SinglePermissionEntity, int>
+	public interface ISinglePermissionDao : IGenericDao<SinglePermissionEntity>
 	{
+		SinglePermissionEntity Find(int id);
 	}
 }

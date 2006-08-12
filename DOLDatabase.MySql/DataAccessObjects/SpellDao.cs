@@ -31,12 +31,12 @@ namespace DOL.Database.MySql.DataAccessObjects
 		protected static readonly string c_rowFields = "`SpellId`,`AmnesiaChance`,`CastTime`,`ClientEffect`,`Concentration`,`Damage`,`DamageType`,`Description`,`Duration`,`EffectGroup`,`Frequency`,`Icon`,`InstrumentRequirement`,`LifeDrainReturn`,`Message1`,`Message2`,`Message3`,`Message4`,`Name`,`Power`,`Pulse`,`PulsePower`,`Radius`,`Range`,`RecastDelay`,`ResurrectHealth`,`ResurrectMana`,`SpellGroup`,`Target`,`Type`,`Value`";
 		private readonly MySqlState m_state;
 
-		public virtual SpellEntity Find(int key)
+		public virtual SpellEntity Find(int id)
 		{
 			SpellEntity result = new SpellEntity();
 
 			m_state.ExecuteQuery(
-				"SELECT " + c_rowFields + " FROM `spell` WHERE `SpellId`='" + m_state.EscapeString(key.ToString()) + "'",
+				"SELECT " + c_rowFields + " FROM `spell` WHERE `SpellId`='" + m_state.EscapeString(id.ToString()) + "'",
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{

@@ -23,7 +23,8 @@ using DOL.Database.DataTransferObjects;
 
 namespace DOL.Database.DataAccessInterfaces
 {
-	public interface ISpawnTemplateDao : IGenericDao<SpawnTemplateEntity, int>
+	public interface ISpawnTemplateDao : IGenericDao<SpawnTemplateEntity>
 	{
+		SpawnTemplateEntity Find(int id);
 	}
 }

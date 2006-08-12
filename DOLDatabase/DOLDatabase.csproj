@@ -51,7 +51,9 @@
     <Compile Include="DataAccessInterfaces\IBrainDao.cs" />
     <Compile Include="DataAccessInterfaces\IBrainTemplateDao.cs" />
     <Compile Include="DataAccessInterfaces\ICraftItemDataDao.cs" />
+    <Compile Include="DataAccessInterfaces\IFactionAggroLevelDao.cs" />
     <Compile Include="DataAccessInterfaces\IFactionDao.cs" />
+    <Compile Include="DataAccessInterfaces\IFinishedQuestDao.cs" />
     <Compile Include="DataAccessInterfaces\IGameNpcInventoryDao.cs" />
     <Compile Include="DataAccessInterfaces\IGameNpcTemplateDao.cs" />
     <Compile Include="DataAccessInterfaces\IGamePlayerDao.cs" />
@@ -60,8 +62,11 @@
     <Compile Include="DataAccessInterfaces\IGuildRankDao.cs" />
     <Compile Include="DataAccessInterfaces\IInvalidNameDao.cs" />
     <Compile Include="DataAccessInterfaces\IItemDao.cs" />
+    <Compile Include="DataAccessInterfaces\IItemMagicalBonusDao.cs" />
+    <Compile Include="DataAccessInterfaces\IItemMagicalBonusTemplateDao.cs" />
     <Compile Include="DataAccessInterfaces\IItemTemplateDao.cs" />
     <Compile Include="DataAccessInterfaces\IJumpPointDao.cs" />
+    <Compile Include="DataAccessInterfaces\IJumpPointMultiTargetLocationDao.cs" />
     <Compile Include="DataAccessInterfaces\ILineXSpellDao.cs" />
     <Compile Include="DataAccessInterfaces\ILootDao.cs" />
     <Compile Include="DataAccessInterfaces\ILootListDao.cs" />
@@ -72,6 +77,7 @@
     <Compile Include="DataAccessInterfaces\IPathDao.cs" />
     <Compile Include="DataAccessInterfaces\IPathPointDao.cs" />
     <Compile Include="DataAccessInterfaces\IPersistantGameObjectDao.cs" />
+    <Compile Include="DataAccessInterfaces\IRawMaterialDao.cs" />
     <Compile Include="DataAccessInterfaces\IRegionDao.cs" />
     <Compile Include="DataAccessInterfaces\ISalvageDao.cs" />
     <Compile Include="DataAccessInterfaces\ISinglePermissionDao.cs" />

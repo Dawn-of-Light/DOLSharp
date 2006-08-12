@@ -23,7 +23,8 @@ using DOL.Database.DataTransferObjects;
 
 namespace DOL.Database.DataAccessInterfaces
 {
-	public interface IBrainDao : IGenericDao<BrainEntity, int>
+	public interface IBrainDao : IGenericDao<BrainEntity>
 	{
+		BrainEntity Find(int aBrain);
 	}
 }

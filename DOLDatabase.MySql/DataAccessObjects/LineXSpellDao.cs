@@ -31,12 +31,12 @@ namespace DOL.Database.MySql.DataAccessObjects
 		protected static readonly string c_rowFields = "`LineXSpellId`,`Level`,`LineName`,`SpellId`";
 		private readonly MySqlState m_state;
 
-		public virtual LineXSpellEntity Find(int key)
+		public virtual LineXSpellEntity Find(int id)
 		{
 			LineXSpellEntity result = new LineXSpellEntity();
 
 			m_state.ExecuteQuery(
-				"SELECT " + c_rowFields + " FROM `linexspell` WHERE `LineXSpellId`='" + m_state.EscapeString(key.ToString()) + "'",
+				"SELECT " + c_rowFields + " FROM `linexspell` WHERE `LineXSpellId`='" + m_state.EscapeString(id.ToString()) + "'",
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
