@@ -31,12 +31,12 @@ namespace DOL.Database.MySql.DataAccessObjects
 		protected static readonly string c_rowFields = "`KeyName`,`Description`,`Icon`,`Name`";
 		private readonly MySqlState m_state;
 
-		public virtual SpecializationEntity Find(string key)
+		public virtual SpecializationEntity Find(string keyName)
 		{
 			SpecializationEntity result = new SpecializationEntity();
 
 			m_state.ExecuteQuery(
-				"SELECT " + c_rowFields + " FROM `specialization` WHERE `KeyName`='" + m_state.EscapeString(key.ToString()) + "'",
+				"SELECT " + c_rowFields + " FROM `specialization` WHERE `KeyName`='" + m_state.EscapeString(keyName.ToString()) + "'",
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{

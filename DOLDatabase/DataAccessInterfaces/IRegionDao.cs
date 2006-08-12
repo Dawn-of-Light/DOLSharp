@@ -23,7 +23,8 @@ using DOL.Database.DataTransferObjects;
 
 namespace DOL.Database.DataAccessInterfaces
 {
-	public interface IRegionDao : IGenericDao<RegionEntity, int>
+	public interface IRegionDao : IGenericDao<RegionEntity>
 	{
+		RegionEntity Find(int id);
 	}
 }

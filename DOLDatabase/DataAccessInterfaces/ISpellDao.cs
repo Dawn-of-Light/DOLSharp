@@ -23,7 +23,8 @@ using DOL.Database.DataTransferObjects;
 
 namespace DOL.Database.DataAccessInterfaces
 {
-	public interface ISpellDao : IGenericDao<SpellEntity, int>
+	public interface ISpellDao : IGenericDao<SpellEntity>
 	{
+		SpellEntity Find(int id);
 	}
 }

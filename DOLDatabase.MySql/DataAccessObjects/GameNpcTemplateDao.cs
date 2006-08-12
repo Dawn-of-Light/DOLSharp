@@ -31,12 +31,12 @@ namespace DOL.Database.MySql.DataAccessObjects
 		protected static readonly string c_rowFields = "`GameNPCTemplateId`,`BlockChance`,`EvadeChance`,`FactionId`,`Flags`,`GameNPCTemplateType`,`GuildName`,`InventoryId`,`LeftHandSwingChance`,`LootListId`,`MaxLevel`,`MaxSize`,`MaxSpeedBase`,`MeleeDamageType`,`MinLevel`,`MinSize`,`Model`,`Name`,`ParryChance`,`Realm`,`RespawnInterval`";
 		private readonly MySqlState m_state;
 
-		public virtual GameNpcTemplateEntity Find(int key)
+		public virtual GameNpcTemplateEntity Find(int id)
 		{
 			GameNpcTemplateEntity result = new GameNpcTemplateEntity();
 
 			m_state.ExecuteQuery(
-				"SELECT " + c_rowFields + " FROM `gamenpctemplate` WHERE `GameNPCTemplateId`='" + m_state.EscapeString(key.ToString()) + "'",
+				"SELECT " + c_rowFields + " FROM `gamenpctemplate` WHERE `GameNPCTemplateId`='" + m_state.EscapeString(id.ToString()) + "'",
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{

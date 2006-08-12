@@ -23,7 +23,8 @@ using DOL.Database.DataTransferObjects;
 
 namespace DOL.Database.DataAccessInterfaces
 {
-	public interface IPersistantGameObjectDao : IGenericDao<PersistantGameObjectEntity, int>
+	public interface IPersistantGameObjectDao : IGenericDao<PersistantGameObjectEntity>
 	{
+		PersistantGameObjectEntity Find(int id);
 	}
 }

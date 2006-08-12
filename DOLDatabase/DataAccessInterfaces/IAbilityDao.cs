@@ -23,7 +23,8 @@ using DOL.Database.DataTransferObjects;
 
 namespace DOL.Database.DataAccessInterfaces
 {
-	public interface IAbilityDao : IGenericDao<AbilityEntity, string>
+	public interface IAbilityDao : IGenericDao<AbilityEntity>
 	{
+		AbilityEntity Find(string keyName);
 	}
 }

@@ -23,7 +23,8 @@ using DOL.Database.DataTransferObjects;
 
 namespace DOL.Database.DataAccessInterfaces
 {
-	public interface IGuildDao : IGenericDao<GuildEntity, int>
+	public interface IGuildDao : IGenericDao<GuildEntity>
 	{
+		GuildEntity Find(int id);
 	}
 }

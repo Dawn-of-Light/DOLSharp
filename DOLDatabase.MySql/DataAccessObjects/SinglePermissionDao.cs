@@ -31,12 +31,12 @@ namespace DOL.Database.MySql.DataAccessObjects
 		protected static readonly string c_rowFields = "`SinglePermissionId`,`Command`,`PlayerId`";
 		private readonly MySqlState m_state;
 
-		public virtual SinglePermissionEntity Find(int key)
+		public virtual SinglePermissionEntity Find(int id)
 		{
 			SinglePermissionEntity result = new SinglePermissionEntity();
 
 			m_state.ExecuteQuery(
-				"SELECT " + c_rowFields + " FROM `singlepermission` WHERE `SinglePermissionId`='" + m_state.EscapeString(key.ToString()) + "'",
+				"SELECT " + c_rowFields + " FROM `singlepermission` WHERE `SinglePermissionId`='" + m_state.EscapeString(id.ToString()) + "'",
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{

@@ -31,12 +31,12 @@ namespace DOL.Database.MySql.DataAccessObjects
 		protected static readonly string c_rowFields = "`AllianceId`,`AllianceLeader`,`AMotd`";
 		private readonly MySqlState m_state;
 
-		public virtual AllianceEntity Find(int key)
+		public virtual AllianceEntity Find(int id)
 		{
 			AllianceEntity result = new AllianceEntity();
 
 			m_state.ExecuteQuery(
-				"SELECT " + c_rowFields + " FROM `alliance` WHERE `AllianceId`='" + m_state.EscapeString(key.ToString()) + "'",
+				"SELECT " + c_rowFields + " FROM `alliance` WHERE `AllianceId`='" + m_state.EscapeString(id.ToString()) + "'",
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{

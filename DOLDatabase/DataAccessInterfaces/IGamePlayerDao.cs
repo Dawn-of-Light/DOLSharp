@@ -23,8 +23,9 @@ using DOL.Database.DataTransferObjects;
 
 namespace DOL.Database.DataAccessInterfaces
 {
-	public interface IGamePlayerDao : IGenericDao<GamePlayerEntity, int>
+	public interface IGamePlayerDao : IGenericDao<GamePlayerEntity>
 	{
+		GamePlayerEntity Find(int id);
 		IList<GamePlayerEntity> FindByAccountAndRealm(int account, byte realm);
 		int CountByAccountAndRealm(int account, byte realm);
 	}

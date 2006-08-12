@@ -23,7 +23,8 @@ using DOL.Database.DataTransferObjects;
 
 namespace DOL.Database.DataAccessInterfaces
 {
-	public interface IJumpPointDao : IGenericDao<JumpPointEntity, int>
+	public interface IJumpPointDao : IGenericDao<JumpPointEntity>
 	{
+		JumpPointEntity Find(int id);
 	}
 }

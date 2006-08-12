@@ -31,12 +31,12 @@ namespace DOL.Database.MySql.DataAccessObjects
 		protected static readonly string c_rowFields = "`ItemTemplateId`,`ArmorFactor`,`ArmorLevel`,`Bonus`,`BonusType`,`Charge`,`ChargeEffectType`,`ChargeSpellId`,`Color`,`Condition`,`Damage`,`DamagePerSecond`,`DamageType`,`Durability`,`GlowEffect`,`HandNeeded`,`Heading`,`IsDropable`,`IsSaleable`,`IsTradable`,`ItemTemplateType`,`Level`,`MaterialLevel`,`MaxCharge`,`MaxCount`,`Model`,`ModelExtension`,`Name`,`PackSize`,`Precision`,`ProcEffectType`,`ProcSpellId`,`Quality`,`Range`,`Realm`,`Region`,`RespecType`,`Size`,`Speed`,`SpellId`,`TripPathId`,`Type`,`Value`,`WeaponRange`,`Weight`,`X`,`Y`,`Z`";
 		private readonly MySqlState m_state;
 
-		public virtual ItemTemplateEntity Find(string key)
+		public virtual ItemTemplateEntity Find(string id)
 		{
 			ItemTemplateEntity result = new ItemTemplateEntity();
 
 			m_state.ExecuteQuery(
-				"SELECT " + c_rowFields + " FROM `itemtemplate` WHERE `ItemTemplateId`='" + m_state.EscapeString(key.ToString()) + "'",
+				"SELECT " + c_rowFields + " FROM `itemtemplate` WHERE `ItemTemplateId`='" + m_state.EscapeString(id.ToString()) + "'",
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{

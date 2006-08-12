@@ -31,12 +31,12 @@ namespace DOL.Database.MySql.DataAccessObjects
 		protected static readonly string c_rowFields = "`GuildId`,`Alliance`,`BountyPoints`,`Due`,`Email`,`Emblem`,`GuildName`,`Level`,`MeritPoints`,`Motd`,`OMotd`,`RealmPoints`,`TotalMoney`,`Webpage`";
 		private readonly MySqlState m_state;
 
-		public virtual GuildEntity Find(int key)
+		public virtual GuildEntity Find(int id)
 		{
 			GuildEntity result = new GuildEntity();
 
 			m_state.ExecuteQuery(
-				"SELECT " + c_rowFields + " FROM `guild` WHERE `GuildId`='" + m_state.EscapeString(key.ToString()) + "'",
+				"SELECT " + c_rowFields + " FROM `guild` WHERE `GuildId`='" + m_state.EscapeString(id.ToString()) + "'",
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{

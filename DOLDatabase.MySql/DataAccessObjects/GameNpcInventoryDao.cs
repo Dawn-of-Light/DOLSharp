@@ -31,12 +31,12 @@ namespace DOL.Database.MySql.DataAccessObjects
 		protected static readonly string c_rowFields = "`InventoryId`,`IsCloakHoodUp`";
 		private readonly MySqlState m_state;
 
-		public virtual GameNpcInventoryEntity Find(int key)
+		public virtual GameNpcInventoryEntity Find(int id)
 		{
 			GameNpcInventoryEntity result = new GameNpcInventoryEntity();
 
 			m_state.ExecuteQuery(
-				"SELECT " + c_rowFields + " FROM `gamenpcinventory` WHERE `InventoryId`='" + m_state.EscapeString(key.ToString()) + "'",
+				"SELECT " + c_rowFields + " FROM `gamenpcinventory` WHERE `InventoryId`='" + m_state.EscapeString(id.ToString()) + "'",
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{

@@ -23,7 +23,8 @@ using DOL.Database.DataTransferObjects;
 
 namespace DOL.Database.DataAccessInterfaces
 {
-	public interface IItemDao : IGenericDao<ItemEntity, int>
+	public interface IItemDao : IGenericDao<ItemEntity>
 	{
+		ItemEntity Find(int id);
 	}
 }

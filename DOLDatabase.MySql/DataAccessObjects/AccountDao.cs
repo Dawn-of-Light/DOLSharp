@@ -31,12 +31,12 @@ namespace DOL.Database.MySql.DataAccessObjects
 		protected static readonly string c_rowFields = "`AccountId`,`AccountName`,`BanAuthor`,`BanDuration`,`BanReason`,`CreationDate`,`LastLogin`,`LastLoginIp`,`Mail`,`Password`,`PrivLevel`,`Realm`";
 		private readonly MySqlState m_state;
 
-		public virtual AccountEntity Find(int key)
+		public virtual AccountEntity Find(int id)
 		{
 			AccountEntity result = new AccountEntity();
 
 			m_state.ExecuteQuery(
-				"SELECT " + c_rowFields + " FROM `account` WHERE `AccountId`='" + m_state.EscapeString(key.ToString()) + "'",
+				"SELECT " + c_rowFields + " FROM `account` WHERE `AccountId`='" + m_state.EscapeString(id.ToString()) + "'",
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{

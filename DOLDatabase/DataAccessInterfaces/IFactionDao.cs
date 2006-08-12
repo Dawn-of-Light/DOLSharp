@@ -23,7 +23,8 @@ using DOL.Database.DataTransferObjects;
 
 namespace DOL.Database.DataAccessInterfaces
 {
-	public interface IFactionDao : IGenericDao<FactionEntity, int>
+	public interface IFactionDao : IGenericDao<FactionEntity>
 	{
+		FactionEntity Find(int faction1);
 	}
 }

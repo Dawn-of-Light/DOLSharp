@@ -23,7 +23,8 @@ using DOL.Database.DataTransferObjects;
 
 namespace DOL.Database.DataAccessInterfaces
 {
-	public interface ISpawnGeneratorDao : IGenericDao<SpawnGeneratorEntity, int>
+	public interface ISpawnGeneratorDao : IGenericDao<SpawnGeneratorEntity>
 	{
+		SpawnGeneratorEntity Find(int id);
 	}
 }

@@ -23,7 +23,8 @@ using DOL.Database.DataTransferObjects;
 
 namespace DOL.Database.DataAccessInterfaces
 {
-	public interface IActiveTaskDao : IGenericDao<ActiveTaskEntity, int>
+	public interface IActiveTaskDao : IGenericDao<ActiveTaskEntity>
 	{
+		ActiveTaskEntity Find(int abstractTask);
 	}
 }

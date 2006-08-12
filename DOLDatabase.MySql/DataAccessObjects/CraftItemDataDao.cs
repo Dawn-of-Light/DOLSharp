@@ -31,12 +31,12 @@ namespace DOL.Database.MySql.DataAccessObjects
 		protected static readonly string c_rowFields = "`CraftItemDataId`,`CraftingLevel`,`CraftingSkill`,`TemplateToCraft`";
 		private readonly MySqlState m_state;
 
-		public virtual CraftItemDataEntity Find(int key)
+		public virtual CraftItemDataEntity Find(int id)
 		{
 			CraftItemDataEntity result = new CraftItemDataEntity();
 
 			m_state.ExecuteQuery(
-				"SELECT " + c_rowFields + " FROM `craftitemdata` WHERE `CraftItemDataId`='" + m_state.EscapeString(key.ToString()) + "'",
+				"SELECT " + c_rowFields + " FROM `craftitemdata` WHERE `CraftItemDataId`='" + m_state.EscapeString(id.ToString()) + "'",
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{

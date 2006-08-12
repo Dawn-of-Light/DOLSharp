@@ -31,12 +31,12 @@ namespace DOL.Database.MySql.DataAccessObjects
 		protected static readonly string c_rowFields = "`PathPointId`,`NextPoint`,`Speed`,`X`,`Y`,`Z`";
 		private readonly MySqlState m_state;
 
-		public virtual PathPointEntity Find(int key)
+		public virtual PathPointEntity Find(int id)
 		{
 			PathPointEntity result = new PathPointEntity();
 
 			m_state.ExecuteQuery(
-				"SELECT " + c_rowFields + " FROM `pathpoint` WHERE `PathPointId`='" + m_state.EscapeString(key.ToString()) + "'",
+				"SELECT " + c_rowFields + " FROM `pathpoint` WHERE `PathPointId`='" + m_state.EscapeString(id.ToString()) + "'",
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{

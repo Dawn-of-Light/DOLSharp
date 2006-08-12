@@ -23,7 +23,8 @@ using DOL.Database.DataTransferObjects;
 
 namespace DOL.Database.DataAccessInterfaces
 {
-	public interface ILootListDao : IGenericDao<LootListEntity, int>
+	public interface ILootListDao : IGenericDao<LootListEntity>
 	{
+		LootListEntity Find(int id);
 	}
 }

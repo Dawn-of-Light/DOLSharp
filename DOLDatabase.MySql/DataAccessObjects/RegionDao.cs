@@ -31,12 +31,12 @@ namespace DOL.Database.MySql.DataAccessObjects
 		protected static readonly string c_rowFields = "`RegionId`,`Description`,`Expansion`,`IsDivingEnabled`,`IsDungeon`,`IsInstance`,`Type`";
 		private readonly MySqlState m_state;
 
-		public virtual RegionEntity Find(int key)
+		public virtual RegionEntity Find(int id)
 		{
 			RegionEntity result = new RegionEntity();
 
 			m_state.ExecuteQuery(
-				"SELECT " + c_rowFields + " FROM `region` WHERE `RegionId`='" + m_state.EscapeString(key.ToString()) + "'",
+				"SELECT " + c_rowFields + " FROM `region` WHERE `RegionId`='" + m_state.EscapeString(id.ToString()) + "'",
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{

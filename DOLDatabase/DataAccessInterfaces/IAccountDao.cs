@@ -23,7 +23,8 @@ using DOL.Database.DataTransferObjects;
 
 namespace DOL.Database.DataAccessInterfaces
 {
-	public interface IAccountDao : IGenericDao<AccountEntity, int>
+	public interface IAccountDao : IGenericDao<AccountEntity>
 	{
+		AccountEntity Find(int id);
 	}
 }

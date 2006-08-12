@@ -23,7 +23,8 @@ using DOL.Database.DataTransferObjects;
 
 namespace DOL.Database.DataAccessInterfaces
 {
-	public interface IStyleDao : IGenericDao<StyleEntity, int>
+	public interface IStyleDao : IGenericDao<StyleEntity>
 	{
+		StyleEntity Find(int id);
 	}
 }
