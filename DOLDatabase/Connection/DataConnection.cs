@@ -30,6 +30,12 @@ using MySql.Data.MySqlClient;
 namespace DOL.Database.Connection
 {
 	/// <summary>
+	/// Called after mysql query.
+	/// </summary>
+	/// <param name="reader">The reader.</param>
+	public delegate void QueryCallback (MySqlDataReader reader);
+
+	/// <summary>
 	/// Class for Handling the Connection to the ADO.Net Layer of the Databases.
 	/// Funktions for loading and storing the complete Dataset are in there.
 	/// </summary>
@@ -42,7 +48,7 @@ namespace DOL.Database.Connection
 
 		private string connString;
 		private ConnectionType connType;
-
+	
 		/// <summary>
 		/// Constructor to set up a Database
 		/// </summary>
@@ -177,7 +183,7 @@ namespace DOL.Database.Connection
 		/// </summary>
 		/// <param name="sqlcommand"></param>
 		/// <returns></returns>
-		public IDataReader ExecuteSelect(string sqlcommand)
+		public void ExecuteSelect(string sqlcommand,QueryCallback callback)
 		{
 			if (connType == ConnectionType.DATABASE_MYSQL)
 			{
@@ -197,7 +203,6 @@ namespace DOL.Database.Connection
 						log.Debug("SQL Select exec time " + (Environment.TickCount - start) + "ms");
 					else if (Environment.TickCount - start > 500 && log.IsWarnEnabled)
 						log.Warn("SQL Select took " + (Environment.TickCount - start) + "ms!\n" + sqlcommand);
-					return reader;
 				}
 				catch (Exception e)
 				{
@@ -211,9 +216,55 @@ namespace DOL.Database.Connection
 					if (conn != null && conn.State != ConnectionState.Closed)
 						conn.Close();
 				}
+				return;
 			}
 			if (log.IsWarnEnabled)
 				log.Warn("SQL Selects not supported for this connection type");
+		}
+
+		/// <summary>
+		/// Execute scalar on sql database
+		/// </summary>
+		/// <param name="sqlcommand"></param>
+		/// <returns></returns>
+		public object ExecuteScalar (string sqlcommand)
+		{
+			if (connType == ConnectionType.DATABASE_MYSQL)
+			{
+				if (log.IsDebugEnabled)
+				{
+					log.Debug("SQL: " + sqlcommand);
+				}
+				MySqlConnection conn = GetMySqlConnection();
+				MySqlCommand cmd = new MySqlCommand(sqlcommand, conn);
+				object obj = null;
+
+				try
+				{
+					long start = Environment.TickCount;
+					obj = cmd.ExecuteScalar();
+
+					if (log.IsDebugEnabled)
+						log.Debug("SQL Select exec time " + (Environment.TickCount - start) + "ms");
+					else if (Environment.TickCount - start > 500 && log.IsWarnEnabled)
+						log.Warn("SQL Select took " + (Environment.TickCount - start) + "ms!\n" + sqlcommand);
+				}
+				catch (Exception e)
+				{
+					if (log.IsErrorEnabled)
+						log.Error("ExecuteSelect: \"" + sqlcommand + "\"\n", e);
+					conn.Close();
+					throw e;
+				}
+				finally
+				{
+					if (conn != null && conn.State != ConnectionState.Closed)
+						conn.Close();
+				}
+				return obj;
+			}
+			if (log.IsWarnEnabled)
+				log.Warn("SQL Scalar not supported for this connection type");
 			return null;
 		}
 
@@ -228,16 +279,16 @@ namespace DOL.Database.Connection
 				ArrayList currentTableColumns = new ArrayList();
 				try
 				{
-					using (IDataReader reader = ExecuteSelect("DESCRIBE `" + table.TableName + "`"))
+					ExecuteSelect("DESCRIBE `" + table.TableName + "`", delegate(MySqlDataReader reader)
 					{
 						while (reader.Read())
 						{
 							currentTableColumns.Add(reader.GetString(0).ToLower());
 							log.Debug(reader.GetString(0).ToLower());
 						}
-                        if (log.IsDebugEnabled)
-						    log.Debug(currentTableColumns.Count + " in table");
-					}
+						if (log.IsDebugEnabled)
+							log.Debug(currentTableColumns.Count + " in table");
+					});
 				}
 				catch (Exception e)
 				{
