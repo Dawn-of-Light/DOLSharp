@@ -23,8 +23,8 @@ using System.Net;
 using System.Net.Sockets;
 using System.IO;
 using log4net;
-using DOL.NatTraversal.Interop;
-using DOL.NatTraversal;
+/*using DOL.NatTraversal.Interop;
+using DOL.NatTraversal;*/
 
 namespace DOL
 {
@@ -227,7 +227,7 @@ namespace DOL
 			//if not try  binding.
 			if(m_listen == null && !InitSocket())
 				return false;
-			if(log.IsDebugEnabled)
+			/*if(log.IsDebugEnabled)
 				log.Debug("Checking for UPnP Router Support");
 			if(Configuration.EnableUPnP)
 			{
@@ -285,7 +285,7 @@ namespace DOL
 					if(log.IsDebugEnabled)
 						log.Debug("Unable to access the UPnP Internet Gateway Device");
 				}
-			}
+			}*/
 			try
 			{
 				m_listen.Listen(100);
@@ -376,7 +376,7 @@ namespace DOL
 		{
 			if(log.IsDebugEnabled)
 				log.Debug("Stopping server! - Entering method");
-			if(Configuration.EnableUPnP)
+			/*if(Configuration.EnableUPnP)
 			{
 				try
 				{
@@ -393,7 +393,7 @@ namespace DOL
 					if(log.IsDebugEnabled)
 						log.Debug("Failed to remove UPnP Mappings", ex);
 				}
-			}
+			}*/
 
 			try
 			{
