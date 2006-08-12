@@ -22,8 +22,8 @@ using System.Collections.Specialized;
 using System.Net;
 using System.Net.Sockets;
 using log4net;
-using DOL.NatTraversal.Interop;
-using DOL.NatTraversal;
+/*using DOL.NatTraversal.Interop;
+using DOL.NatTraversal;*/
 
 namespace DOL
 {
@@ -222,7 +222,7 @@ namespace DOL
 		/// <returns>True if the server was successfully started</returns>
 		public virtual bool Start()
 		{
-			if(Configuration.EnableUPnP)
+			/*if(Configuration.EnableUPnP)
 			{
 				try
 				{
@@ -277,7 +277,7 @@ namespace DOL
 					if(log.IsDebugEnabled)
 						log.Debug("Unable to access the UPnP Internet Gateway Device");
 				}
-			}
+			}*/
 			//Test if we have a valid port yet
 			//if not try  binding.
 			if(m_listen == null && !InitSocket())
@@ -374,7 +374,7 @@ namespace DOL
 			if(log.IsDebugEnabled)
 				log.Debug("Stopping server! - Entering method");
 			
-			if(Configuration.EnableUPnP)
+			/*if(Configuration.EnableUPnP)
 			{
 				try
 				{
@@ -391,7 +391,7 @@ namespace DOL
 					if(log.IsDebugEnabled)
 						log.Debug("Failed to rmeove UPnP Mappings", ex);
 				}
-			}
+			}*/
 
 			try
 			{
