@@ -31,12 +31,12 @@ namespace DOL.Database.MySql.DataAccessObjects
 		protected static readonly string c_rowFields = "`SpecXAbilityId`,`AbilityKey`,`AbilityLevel`,`Spec`,`SpecLevel`";
 		private readonly MySqlState m_state;
 
-		public virtual SpecXAbilityEntity Find(int key)
+		public virtual SpecXAbilityEntity Find(int id)
 		{
 			SpecXAbilityEntity result = new SpecXAbilityEntity();
 
 			m_state.ExecuteQuery(
-				"SELECT " + c_rowFields + " FROM `specxability` WHERE `SpecXAbilityId`='" + m_state.EscapeString(key.ToString()) + "'",
+				"SELECT " + c_rowFields + " FROM `specxability` WHERE `SpecXAbilityId`='" + m_state.EscapeString(id.ToString()) + "'",
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{

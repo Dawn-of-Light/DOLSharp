@@ -23,7 +23,8 @@ using DOL.Database.DataTransferObjects;
 
 namespace DOL.Database.DataAccessInterfaces
 {
-	public interface IAllianceDao : IGenericDao<AllianceEntity, int>
+	public interface IAllianceDao : IGenericDao<AllianceEntity>
 	{
+		AllianceEntity Find(int id);
 	}
 }

@@ -31,12 +31,12 @@ namespace DOL.Database.MySql.DataAccessObjects
 		protected static readonly string c_rowFields = "`ItemId`,`ArmorFactor`,`ArmorLevel`,`Bonus`,`BonusType`,`Charge`,`ChargeEffectType`,`ChargeSpellId`,`Color`,`Condition`,`Count`,`CrafterName`,`Damage`,`DamagePerSecond`,`DamageType`,`Durability`,`GenericItemType`,`GlowEffect`,`HandNeeded`,`Heading`,`InventoryId`,`IsDropable`,`IsSaleable`,`IsTradable`,`Level`,`MaterialLevel`,`MaxCharge`,`MaxCount`,`Model`,`ModelExtension`,`Name`,`Owner`,`Precision`,`ProcEffectType`,`ProcSpellId`,`Quality`,`QuestName`,`Range`,`Realm`,`Region`,`RespecType`,`Size`,`SlotPosition`,`Speed`,`SpellId`,`TripPathId`,`Type`,`Value`,`WeaponRange`,`Weight`,`X`,`Y`,`Z`";
 		private readonly MySqlState m_state;
 
-		public virtual ItemEntity Find(int key)
+		public virtual ItemEntity Find(int id)
 		{
 			ItemEntity result = new ItemEntity();
 
 			m_state.ExecuteQuery(
-				"SELECT " + c_rowFields + " FROM `item` WHERE `ItemId`='" + m_state.EscapeString(key.ToString()) + "'",
+				"SELECT " + c_rowFields + " FROM `item` WHERE `ItemId`='" + m_state.EscapeString(id.ToString()) + "'",
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{

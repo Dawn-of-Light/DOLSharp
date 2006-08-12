@@ -31,12 +31,12 @@ namespace DOL.Database.MySql.DataAccessObjects
 		protected static readonly string c_rowFields = "`AbstractTaskId`,`ItemName`,`RewardGiverName`,`StartingPlayedTime`,`TargetKilled`,`TargetMobName`,`TaskType`";
 		private readonly MySqlState m_state;
 
-		public virtual ActiveTaskEntity Find(int key)
+		public virtual ActiveTaskEntity Find(int abstractTask)
 		{
 			ActiveTaskEntity result = new ActiveTaskEntity();
 
 			m_state.ExecuteQuery(
-				"SELECT " + c_rowFields + " FROM `activetasks` WHERE `AbstractTaskId`='" + m_state.EscapeString(key.ToString()) + "'",
+				"SELECT " + c_rowFields + " FROM `activetasks` WHERE `AbstractTaskId`='" + m_state.EscapeString(abstractTask.ToString()) + "'",
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{

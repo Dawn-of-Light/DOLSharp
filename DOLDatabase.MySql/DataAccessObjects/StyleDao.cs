@@ -31,12 +31,12 @@ namespace DOL.Database.MySql.DataAccessObjects
 		protected static readonly string c_rowFields = "`Id`,`AttackResultRequirement`,`BonusToDefense`,`BonusToHit`,`EnduranceCost`,`GrowthRate`,`KeyName`,`Name`,`OpeningRequirementType`,`OpeningRequirementValue`,`SpecialType`,`SpecialValue`,`SpecKeyName`,`SpecLevelRequirement`,`StealthRequirement`,`TwoHandAnimation`,`WeaponTypeRequirement`";
 		private readonly MySqlState m_state;
 
-		public virtual StyleEntity Find(int key)
+		public virtual StyleEntity Find(int id)
 		{
 			StyleEntity result = new StyleEntity();
 
 			m_state.ExecuteQuery(
-				"SELECT " + c_rowFields + " FROM `style` WHERE `Id`='" + m_state.EscapeString(key.ToString()) + "'",
+				"SELECT " + c_rowFields + " FROM `style` WHERE `Id`='" + m_state.EscapeString(id.ToString()) + "'",
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{

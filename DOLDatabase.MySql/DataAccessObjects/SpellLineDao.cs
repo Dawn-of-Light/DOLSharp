@@ -31,12 +31,12 @@ namespace DOL.Database.MySql.DataAccessObjects
 		protected static readonly string c_rowFields = "`KeyName`,`IsBaseLine`,`Name`,`Spec`";
 		private readonly MySqlState m_state;
 
-		public virtual SpellLineEntity Find(string key)
+		public virtual SpellLineEntity Find(string keyName)
 		{
 			SpellLineEntity result = new SpellLineEntity();
 
 			m_state.ExecuteQuery(
-				"SELECT " + c_rowFields + " FROM `spellline` WHERE `KeyName`='" + m_state.EscapeString(key.ToString()) + "'",
+				"SELECT " + c_rowFields + " FROM `spellline` WHERE `KeyName`='" + m_state.EscapeString(keyName.ToString()) + "'",
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{

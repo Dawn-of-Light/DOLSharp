@@ -31,12 +31,12 @@ namespace DOL.Database.MySql.DataAccessObjects
 		protected static readonly string c_rowFields = "`FactionId`,`Name`";
 		private readonly MySqlState m_state;
 
-		public virtual FactionEntity Find(int key)
+		public virtual FactionEntity Find(int faction1)
 		{
 			FactionEntity result = new FactionEntity();
 
 			m_state.ExecuteQuery(
-				"SELECT " + c_rowFields + " FROM `faction` WHERE `FactionId`='" + m_state.EscapeString(key.ToString()) + "'",
+				"SELECT " + c_rowFields + " FROM `faction` WHERE `FactionId`='" + m_state.EscapeString(faction1.ToString()) + "'",
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{

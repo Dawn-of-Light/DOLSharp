@@ -23,7 +23,8 @@ using DOL.Database.DataTransferObjects;
 
 namespace DOL.Database.DataAccessInterfaces
 {
-	public interface IAreaDao : IGenericDao<AreaEntity, int>
+	public interface IAreaDao : IGenericDao<AreaEntity>
 	{
+		AreaEntity Find(int id);
 	}
 }

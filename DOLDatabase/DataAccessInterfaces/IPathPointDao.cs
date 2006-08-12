@@ -23,7 +23,8 @@ using DOL.Database.DataTransferObjects;
 
 namespace DOL.Database.DataAccessInterfaces
 {
-	public interface IPathPointDao : IGenericDao<PathPointEntity, int>
+	public interface IPathPointDao : IGenericDao<PathPointEntity>
 	{
+		PathPointEntity Find(int id);
 	}
 }

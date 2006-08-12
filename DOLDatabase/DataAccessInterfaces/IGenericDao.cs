@@ -26,15 +26,8 @@ namespace DOL.Database.DataAccessInterfaces
 	/// Generic interface with base DAO methods.
 	/// </summary>
 	/// <typeparam name="TTransferObject">The transfer object's type.</typeparam>
-	/// <typeparam name="TPrimaryKey">The transfer object's primary key type.</typeparam>
-	public interface IGenericDao<TTransferObject, TPrimaryKey> : IDataAccessObject
+	public interface IGenericDao<TTransferObject> : IDataAccessObject
 	{
-		/// <summary>
-		/// Finds an object by its primary key.
-		/// </summary>
-		/// <param name="key">The primary key.</param>
-		/// <returns>The found object or null.</returns>
-		TTransferObject Find(TPrimaryKey key);
 
 		/// <summary>
 		/// Creates an object in a database.

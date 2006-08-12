@@ -31,12 +31,12 @@ namespace DOL.Database.MySql.DataAccessObjects
 		protected static readonly string c_rowFields = "`ItemId`,`Color`,`GlowEffect`,`InventoryId`,`Model`,`ModelExtension`,`NPCEquipmentType`,`SlotPosition`";
 		private readonly MySqlState m_state;
 
-		public virtual NpcEquipmentEntity Find(int key)
+		public virtual NpcEquipmentEntity Find(int id)
 		{
 			NpcEquipmentEntity result = new NpcEquipmentEntity();
 
 			m_state.ExecuteQuery(
-				"SELECT " + c_rowFields + " FROM `npcequipment` WHERE `ItemId`='" + m_state.EscapeString(key.ToString()) + "'",
+				"SELECT " + c_rowFields + " FROM `npcequipment` WHERE `ItemId`='" + m_state.EscapeString(id.ToString()) + "'",
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{

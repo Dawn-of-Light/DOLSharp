@@ -31,12 +31,12 @@ namespace DOL.Database.MySql.DataAccessObjects
 		protected static readonly string c_rowFields = "`PersistantGameObjectId`,`BlockChance`,`DoorId`,`EvadeChance`,`FactionId`,`Flags`,`GuildName`,`Heading`,`InventoryId`,`LeftHandSwingChance`,`Level`,`LootListId`,`MaxSpeedBase`,`MeleeDamageType`,`MerchantWindowId`,`Model`,`Name`,`ParryChance`,`PersistantGameObjectType`,`Realm`,`RegionId`,`RespawnInterval`,`Size`,`ToolType`,`X`,`Y`,`Z`";
 		private readonly MySqlState m_state;
 
-		public virtual PersistantGameObjectEntity Find(int key)
+		public virtual PersistantGameObjectEntity Find(int id)
 		{
 			PersistantGameObjectEntity result = new PersistantGameObjectEntity();
 
 			m_state.ExecuteQuery(
-				"SELECT " + c_rowFields + " FROM `persistantgameobject` WHERE `PersistantGameObjectId`='" + m_state.EscapeString(key.ToString()) + "'",
+				"SELECT " + c_rowFields + " FROM `persistantgameobject` WHERE `PersistantGameObjectId`='" + m_state.EscapeString(id.ToString()) + "'",
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{

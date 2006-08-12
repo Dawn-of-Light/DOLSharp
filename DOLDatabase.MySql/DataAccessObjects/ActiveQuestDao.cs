@@ -31,12 +31,12 @@ namespace DOL.Database.MySql.DataAccessObjects
 		protected static readonly string c_rowFields = "`AbstractQuestId`,`PersistantGameObjectId`,`QuestType`,`Step`";
 		private readonly MySqlState m_state;
 
-		public virtual ActiveQuestEntity Find(int key)
+		public virtual ActiveQuestEntity Find(int id)
 		{
 			ActiveQuestEntity result = new ActiveQuestEntity();
 
 			m_state.ExecuteQuery(
-				"SELECT " + c_rowFields + " FROM `activequests` WHERE `AbstractQuestId`='" + m_state.EscapeString(key.ToString()) + "'",
+				"SELECT " + c_rowFields + " FROM `activequests` WHERE `AbstractQuestId`='" + m_state.EscapeString(id.ToString()) + "'",
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{

@@ -31,12 +31,12 @@ namespace DOL.Database.MySql.DataAccessObjects
 		protected static readonly string c_rowFields = "`AreaId`,`AreaType`,`Description`,`Height`,`IsBroadcastEnabled`,`Radius`,`RegionId`,`Sound`,`Width`,`X`,`Y`";
 		private readonly MySqlState m_state;
 
-		public virtual AreaEntity Find(int key)
+		public virtual AreaEntity Find(int id)
 		{
 			AreaEntity result = new AreaEntity();
 
 			m_state.ExecuteQuery(
-				"SELECT " + c_rowFields + " FROM `area` WHERE `AreaId`='" + m_state.EscapeString(key.ToString()) + "'",
+				"SELECT " + c_rowFields + " FROM `area` WHERE `AreaId`='" + m_state.EscapeString(id.ToString()) + "'",
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{

@@ -23,7 +23,8 @@ using DOL.Database.DataTransferObjects;
 
 namespace DOL.Database.DataAccessInterfaces
 {
-	public interface IBindPointDao : IGenericDao<BindPointEntity, int>
+	public interface IBindPointDao : IGenericDao<BindPointEntity>
 	{
+		BindPointEntity Find(int id);
 	}
 }

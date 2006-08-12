@@ -23,7 +23,8 @@ using DOL.Database.DataTransferObjects;
 
 namespace DOL.Database.DataAccessInterfaces
 {
-	public interface IInvalidNameDao : IGenericDao<InvalidNameEntity, int>
+	public interface IInvalidNameDao : IGenericDao<InvalidNameEntity>
 	{
+		InvalidNameEntity Find(int id);
 	}
 }

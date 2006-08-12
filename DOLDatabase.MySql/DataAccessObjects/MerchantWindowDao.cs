@@ -31,12 +31,12 @@ namespace DOL.Database.MySql.DataAccessObjects
 		protected static readonly string c_rowFields = "`MerchantWindowId`";
 		private readonly MySqlState m_state;
 
-		public virtual MerchantWindowEntity Find(int key)
+		public virtual MerchantWindowEntity Find(int id)
 		{
 			MerchantWindowEntity result = new MerchantWindowEntity();
 
 			m_state.ExecuteQuery(
-				"SELECT " + c_rowFields + " FROM `merchantwindow` WHERE `MerchantWindowId`='" + m_state.EscapeString(key.ToString()) + "'",
+				"SELECT " + c_rowFields + " FROM `merchantwindow` WHERE `MerchantWindowId`='" + m_state.EscapeString(id.ToString()) + "'",
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{

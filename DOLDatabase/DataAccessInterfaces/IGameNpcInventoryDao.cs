@@ -23,7 +23,8 @@ using DOL.Database.DataTransferObjects;
 
 namespace DOL.Database.DataAccessInterfaces
 {
-	public interface IGameNpcInventoryDao : IGenericDao<GameNpcInventoryEntity, int>
+	public interface IGameNpcInventoryDao : IGenericDao<GameNpcInventoryEntity>
 	{
+		GameNpcInventoryEntity Find(int id);
 	}
 }

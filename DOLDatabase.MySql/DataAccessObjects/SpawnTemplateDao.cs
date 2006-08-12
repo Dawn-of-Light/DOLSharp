@@ -31,12 +31,12 @@ namespace DOL.Database.MySql.DataAccessObjects
 		protected static readonly string c_rowFields = "`SpawnTemplateBaseId`,`Count`,`GameNPCTemplateId`,`SpawnGeneratorBaseId`,`SpawnTemplateBaseType`";
 		private readonly MySqlState m_state;
 
-		public virtual SpawnTemplateEntity Find(int key)
+		public virtual SpawnTemplateEntity Find(int id)
 		{
 			SpawnTemplateEntity result = new SpawnTemplateEntity();
 
 			m_state.ExecuteQuery(
-				"SELECT " + c_rowFields + " FROM `spawntemplate` WHERE `SpawnTemplateBaseId`='" + m_state.EscapeString(key.ToString()) + "'",
+				"SELECT " + c_rowFields + " FROM `spawntemplate` WHERE `SpawnTemplateBaseId`='" + m_state.EscapeString(id.ToString()) + "'",
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{

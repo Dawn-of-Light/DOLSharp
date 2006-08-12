@@ -23,7 +23,8 @@ using DOL.Database.DataTransferObjects;
 
 namespace DOL.Database.DataAccessInterfaces
 {
-	public interface ISalvageDao : IGenericDao<SalvageEntity, int>
+	public interface ISalvageDao : IGenericDao<SalvageEntity>
 	{
+		SalvageEntity Find(int id);
 	}
 }

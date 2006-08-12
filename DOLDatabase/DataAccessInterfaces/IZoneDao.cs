@@ -23,7 +23,8 @@ using DOL.Database.DataTransferObjects;
 
 namespace DOL.Database.DataAccessInterfaces
 {
-	public interface IZoneDao : IGenericDao<ZoneEntity, int>
+	public interface IZoneDao : IGenericDao<ZoneEntity>
 	{
+		ZoneEntity Find(int id);
 	}
 }

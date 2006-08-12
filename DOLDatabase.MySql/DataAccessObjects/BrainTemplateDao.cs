@@ -31,12 +31,12 @@ namespace DOL.Database.MySql.DataAccessObjects
 		protected static readonly string c_rowFields = "`ABrainTemplateId`,`ABrainTemplateType`,`AggroLevel`,`AggroRange`";
 		private readonly MySqlState m_state;
 
-		public virtual BrainTemplateEntity Find(int key)
+		public virtual BrainTemplateEntity Find(int aBrainTemplate)
 		{
 			BrainTemplateEntity result = new BrainTemplateEntity();
 
 			m_state.ExecuteQuery(
-				"SELECT " + c_rowFields + " FROM `braintemplate` WHERE `ABrainTemplateId`='" + m_state.EscapeString(key.ToString()) + "'",
+				"SELECT " + c_rowFields + " FROM `braintemplate` WHERE `ABrainTemplateId`='" + m_state.EscapeString(aBrainTemplate.ToString()) + "'",
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{

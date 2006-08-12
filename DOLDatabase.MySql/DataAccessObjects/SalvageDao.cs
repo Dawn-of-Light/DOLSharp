@@ -31,12 +31,12 @@ namespace DOL.Database.MySql.DataAccessObjects
 		protected static readonly string c_rowFields = "`SalvageId`,`MaterialItemtemplate`,`ObjectType`,`SalvageLevel`";
 		private readonly MySqlState m_state;
 
-		public virtual SalvageEntity Find(int key)
+		public virtual SalvageEntity Find(int id)
 		{
 			SalvageEntity result = new SalvageEntity();
 
 			m_state.ExecuteQuery(
-				"SELECT " + c_rowFields + " FROM `salvage` WHERE `SalvageId`='" + m_state.EscapeString(key.ToString()) + "'",
+				"SELECT " + c_rowFields + " FROM `salvage` WHERE `SalvageId`='" + m_state.EscapeString(id.ToString()) + "'",
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
