@@ -29,6 +29,8 @@ using DOL.Database.UniqueID;
 using log4net;
 using MySql.Data.Types;
 using DataTable = System.Data.DataTable;
+using MySql.Data.MySqlClient;
+using DOL.Database.Connection;
 
 namespace DOL.Database
 {
@@ -153,14 +155,10 @@ namespace DOL.Database
 			string tableName = DataObject.GetTableName(objectType);
 			if (connection.IsSQLConnection)
 			{
-				IDataReader reader = connection.ExecuteSelect("SELECT COUNT(*) FROM " + tableName);
-				using (reader)
-				{
-					reader.Read();
-					object count = reader.GetValue(0);
-					if (count is Int64) return (int)((Int64)count);
-					return (int)count;
-				}
+				object count = connection.ExecuteScalar("SELECT COUNT(*) FROM " + tableName);
+						if (count is Int64)
+							return (int)((Int64)count);
+						return (int)count;
 			}
 			DataTable table = GetDataSet(tableName).Tables[tableName];
 			return table.Rows.Count;
@@ -674,93 +672,94 @@ namespace DOL.Database
 				log.Debug(sql);
 
 			// read data and fill objects
-			using (IDataReader reader = connection.ExecuteSelect(sql))
-			{
-				object[] data = new object[reader.FieldCount];
-				while (reader.Read())
+			connection.ExecuteSelect(sql, delegate(MySqlDataReader reader)
 				{
-					reader.GetValues(data);
-					string id = (string) data[0];
-					DataObject cache = GetObjectInCache(tableName, id);
-
-					if (cache != null)
+					object [] data = new object [reader.FieldCount];
+					while (reader.Read())
 					{
-						dataObjects.Add(cache);
-					}
-					else
-					{ // fill new data object
-						DataObject obj = (DataObject) (Activator.CreateInstance(objectType));
-						obj.ObjectId = id;
+						reader.GetValues(data);
+						string id = (string)data [0];
+						DataObject cache = GetObjectInCache(tableName, id);
 
-						bool hasRelations = false;
-						int field = 1; // we can use hard index access because we iterate the same order here
-						for (int i = 0; i < bindingInfo.Length; i++)
+						if (cache != null)
 						{
-							BindingInfo bind = bindingInfo[i];
-							if (!hasRelations)
-							{
-								hasRelations = bind.HasRelation;
-							}
+							dataObjects.Add(cache);
+						}
+						else
+						{ // fill new data object
+							DataObject obj = (DataObject)(Activator.CreateInstance(objectType));
+							obj.ObjectId = id;
 
-							if (!bind.HasRelation)
+							bool hasRelations = false;
+							int field = 1; // we can use hard index access because we iterate the same order here
+							for (int i = 0; i < bindingInfo.Length; i++)
 							{
-								object val = data[field++];
-								if (val != null && !val.GetType().IsInstanceOfType(DBNull.Value))
+								BindingInfo bind = bindingInfo [i];
+								if (!hasRelations)
 								{
-									if (bind.Member is PropertyInfo)
-									{
-										Type type = ((PropertyInfo) bind.Member).PropertyType;
+									hasRelations = bind.HasRelation;
+								}
 
-										try
+								if (!bind.HasRelation)
+								{
+									object val = data [field++];
+									if (val != null && !val.GetType().IsInstanceOfType(DBNull.Value))
+									{
+										if (bind.Member is PropertyInfo)
 										{
-											if (type == typeof (bool))
+											Type type = ((PropertyInfo)bind.Member).PropertyType;
+
+											try
 											{
-												// special handling for bool
-												((PropertyInfo) bind.Member).SetValue(obj, (val.ToString() == "0") ? false : true, null);
-											}
-											else if (type == typeof (DateTime))
-											{
-												// special handling for datetime
-												if (val is MySqlDateTime)
+												if (type == typeof(bool))
 												{
-													((PropertyInfo) bind.Member).SetValue(obj, ((MySqlDateTime) val).GetDateTime(), null);
+													// special handling for bool
+													((PropertyInfo)bind.Member).SetValue(obj, (val.ToString() == "0") ? false : true, null);
+												}
+												else if (type == typeof(DateTime))
+												{
+													// special handling for datetime
+													if (val is MySqlDateTime)
+													{
+														((PropertyInfo)bind.Member).SetValue(obj, ((MySqlDateTime)val).GetDateTime(), null);
+													}
+													else
+													{
+														((PropertyInfo)bind.Member).SetValue(obj, ((IConvertible)val).ToDateTime(null), null);
+													}
 												}
 												else
 												{
-													((PropertyInfo) bind.Member).SetValue(obj, ((IConvertible) val).ToDateTime(null), null);
+													((PropertyInfo)bind.Member).SetValue(obj, val, null);
 												}
 											}
-											else
+											catch (Exception e)
 											{
-												((PropertyInfo) bind.Member).SetValue(obj, val, null);
+												if (log.IsErrorEnabled)
+													log.Error(tableName + ": " + bind.Member.Name + " = " + val.GetType().FullName + " doesnt fit to " + bind.Member.DeclaringType.FullName, e);
+												continue;
 											}
 										}
-										catch (Exception e)
+										else if (bind.Member is FieldInfo)
 										{
-											if (log.IsErrorEnabled)
-												log.Error(tableName + ": " + bind.Member.Name + " = " + val.GetType().FullName + " doesnt fit to " + bind.Member.DeclaringType.FullName, e);
-											continue;
+											((FieldInfo)bind.Member).SetValue(obj, val);
 										}
-									}
-									else if (bind.Member is FieldInfo)
-									{
-										((FieldInfo) bind.Member).SetValue(obj, val);
 									}
 								}
 							}
-						}
 
-						dataObjects.Add(obj);
-						obj.Dirty = false;
-						if (hasRelations)
-						{
-							FillLazyObjectRelations(obj, true);
+							dataObjects.Add(obj);
+							obj.Dirty = false;
+							if (hasRelations)
+							{
+								FillLazyObjectRelations(obj, true);
+							}
+							PutObjectInCache(tableName, obj);
+							obj.IsValid = true;
 						}
-						PutObjectInCache(tableName, obj);
-						obj.IsValid = true;
 					}
 				}
-			}
+			);
 			return (DataObject[]) dataObjects.ToArray(objectType);
 		}
 
