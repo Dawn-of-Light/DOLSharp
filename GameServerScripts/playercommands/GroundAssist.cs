@@ -47,7 +47,7 @@ namespace DOL.GS.Scripts
                 return 0;
             }
 
-            if (!GameServer.ServerRules.IsSameRealm(client.Player, obj, false))
+            if (!GameServer.ServerRules.IsSameRealm(client.Player, obj as GameLiving, false))
                 return 0;
 
             if (!WorldMgr.CheckDistance(client.Player, obj, 2048))
