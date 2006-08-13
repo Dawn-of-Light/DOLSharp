@@ -20,12 +20,14 @@ using System;
 using System.Reflection;
 using System.Collections;
 using System.Text;
+
 using DOL.AI.Brain;
 using DOL.GS;
 using DOL.Events;
 using DOL.Database;
 using DOL.GS.Effects;
 using DOL.GS.Housing;
+using DOL.GS.Keeps;
 using DOL.GS.PacketHandler.v168;
 using DOL.GS.PlayerTitles;
 using DOL.GS.PropertyCalc;
@@ -35,6 +37,7 @@ using DOL.GS.SkillHandler;
 using DOL.GS.PacketHandler;
 using DOL.GS.Spells;
 using DOL.GS.Styles;
+
 using log4net;
 
 namespace DOL.GS
@@ -7838,15 +7841,10 @@ namespace DOL.GS
 					else
 					{
 						bool good = false;
-
-                        if (floorItem.Item.IsStackable)
-                        {
-                            InventoryItem item = Inventory.GetFirstItemByID(floorItem.Item.Id_nb, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
-                            if (item != null)
-                                good = Inventory.AddCountToStack(item, floorItem.Item.Count);
-                        }
-                        if (!good)
-                            good = Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, floorItem.Item);
+						if (floorItem.Item.IsStackable) // poison ID is lost here
+							good = Inventory.AddTemplate(floorItem.Item, floorItem.Item.Count, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
+						else
+							good = Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, floorItem.Item);
 
 						if (!good)
 						{

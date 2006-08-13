@@ -1210,7 +1210,7 @@ namespace DOL.GS.Spells
 			if (effectiveness <= 0)
 				return; // no effect
 
-            if ((Spell.Duration > 0 && Spell.Target != "Area") || Spell.Concentration > 0)
+			if (Spell.Duration > 0 || Spell.Concentration > 0)
 			{
 				if (!target.Alive)
 					return;

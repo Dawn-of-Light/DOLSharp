@@ -18,8 +18,11 @@
  */
 #define NOENCRYPTION
 using System.Reflection;
-using DOL.GS.Quests;
 using System.Collections;
+
+using DOL.GS.Keeps;
+using DOL.GS.Quests;
+
 using log4net;
 
 
@@ -119,18 +122,20 @@ namespace DOL.GS.PacketHandler
 			pak.WriteByte((byte)0);//unk
 			SendTCP(pak);
 		}
-		public override void SendKeepClaim(AbstractGameKeep keep)
+
+		public override void SendKeepClaim(AbstractGameKeep keep, byte flag)
 		{
-			if (m_gameClient.Player==null) return;
+			if (m_gameClient.Player == null || keep == null) return;
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.KeepClaim));
 
 			pak.WriteShort((ushort)keep.KeepID);
-			pak.WriteByte(7);//todo find what is this 7 maybe group member count who claimed
-			pak.WriteByte((byte)keep.Realm);
-			pak.WriteByte((byte)keep.Level);//target level not suported for moment
-			pak.WriteByte((byte)keep.TargetLevel);
+			pak.WriteByte(flag);//0-Info,1-KeepTargetLevel,2-KeepLordType,4-Release
+			pak.WriteByte((byte)1/*keep.KeepType*/);//Keep Lord Type: 1-Melee,2-Magic,4-Stealth
+			pak.WriteByte((byte)keep.TargetLevel);//target level not suported for moment
+			pak.WriteByte((byte)keep.Level);
 			SendTCP(pak);
 		}
+
 		public override void SendKeepComponentInteract(GameKeepComponent component)
 		{
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.KeepComponentInteractResponse));

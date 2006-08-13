@@ -53,6 +53,8 @@ namespace DOL.GS
 		/// <param name="spot"></param>
 		/// <returns></returns>
 		bool IsContaining(IPoint3D spot);
+
+		bool IsContaining(IPoint3D spot, bool checkZ);
 		
 		/// <summary>
 		/// Called whenever a player leaves the given area

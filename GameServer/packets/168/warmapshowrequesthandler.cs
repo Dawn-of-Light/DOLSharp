@@ -19,9 +19,11 @@
 using System;
 using System.Collections;
 
+using DOL.GS.Keeps;
+
 namespace DOL.GS.PacketHandler.v168
 {
-	[PacketHandler(PacketHandlerType.TCP,0xE0^168,"Show warmap")]
+	[PacketHandler(PacketHandlerType.TCP, 0xE0 ^ 168, "Show warmap")]
 	public class WarmapShowRequestHandler : IPacketHandler
 	{
 		public int HandlePacket(GameClient client, GSPacketIn packet)
@@ -29,22 +31,36 @@ namespace DOL.GS.PacketHandler.v168
 			int code = packet.ReadByte();
 			int RealmMap = packet.ReadByte();
 			int keepId = packet.ReadByte();
-			if (code == 0)
+
+			switch (code)
 			{
-			client.Out.SendWarmapUpdate(KeepMgr.getKeepsByRealmMap(RealmMap));
+				//warmap open
+				case 0:
+					{
+						client.Out.SendWarmapUpdate(KeepMgr.getKeepsByRealmMap(RealmMap));
+						break;
+					}
+				//warmap update
+				case 1:
+					{
+						client.Out.SendWarmapUpdate(KeepMgr.getKeepsByRealmMap(RealmMap));
+						break;
+					}
+				//teleport
+				case 2:
+					{
+						if (keepId == 1 || keepId == 2) // Border Keep
+							return 0;
+						AbstractGameKeep keep = KeepMgr.getKeepByID(keepId);
+						if (keep == null) return 1;
+						client.Player.MoveTo((ushort)keep.Region, keep.X, keep.Y, keep.Z, (ushort)keep.Heading);
+						break;
+					}
 			}
-			else if (code == 2) // Teleport
-			{
-				if(keepId == 1 || keepId == 2) // Border Keep
-					return 0;
-				AbstractGameKeep keep = KeepMgr.getKeepByID(keepId);
-				if (keep == null) return 1;
-				client.Player.MoveTo((ushort)keep.Region, keep.X, keep.Y, keep.Z, (ushort)keep.Heading);
-			}
-			else if (code == 1) // TODO Warmap Update
-				return 0;
-//			client.Out.SendMessage(string.Format("you try request warmap:{0} {1} 0x{2:X4}",RealmMapBefore,RealmMap, unk1), eChatType.CT_Advise, eChatLoc.CL_SystemWindow);
+
+			//			client.Out.SendMessage(string.Format("you try request warmap:{0} {1} 0x{2:X4}",RealmMapBefore,RealmMap, unk1), eChatType.CT_Advise, eChatLoc.CL_SystemWindow);
 			return 1;
 		}
 	}
+
 }

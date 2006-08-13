@@ -109,6 +109,11 @@ namespace DOL.GS
 		/// </summary>
 		protected readonly ArrayList m_Areas;
 
+		public ArrayList Areas
+		{
+			get { return m_Areas; }
+		}
+
 		/// <summary>
 		/// Cache for zone area mapping to quickly access all areas within a certain zone
 		/// </summary>
@@ -1001,12 +1006,17 @@ namespace DOL.GS
 			return GetAreasOfZone(zone, p);
 		}
 
+		public IList GetAreasOfZone(Zone zone, IPoint3D p)
+		{
+			return GetAreasOfZone(zone, p, true);
+		}
+
 		/// <summary>
 		/// Gets the areas for a certain spot
 		/// </summary>
 		/// <param name="p"></param>
 		/// <returns></returns>
-		public IList GetAreasOfZone(Zone zone, IPoint3D p)
+		public IList GetAreasOfZone(Zone zone, IPoint3D p, bool checkZ)
 		{
 			lock (m_Areas.SyncRoot)
 			{
@@ -1020,7 +1030,7 @@ namespace DOL.GS
 						for (int i = 0; i < m_ZoneAreasCount[zoneIndex]; i++)
 						{
 							IArea area = (IArea)m_Areas[m_ZoneAreas[zoneIndex][i]];
-							if (area.IsContaining(p))
+							if (area.IsContaining(p, checkZ))
 								areas.Add(area);
 						}
 					}

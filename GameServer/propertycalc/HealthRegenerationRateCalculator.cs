@@ -18,6 +18,8 @@
  */
 using System;
 
+using DOL.GS.Keeps;
+
 namespace DOL.GS.PropertyCalc
 {
 	/// <summary>

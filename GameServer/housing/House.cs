@@ -316,7 +316,7 @@ namespace DOL.GS.Housing
 		/// <param name="silent">text or not</param>
 		public void Exit(GamePlayer player, bool silent)
 		{
-			double angle = (Heading * 0.017453292519943295769236907684886); // angle*2pi/360;
+			double angle = Heading * ((Math.PI * 2) / 360); // angle*2pi/360;
 			int x = (int) (X + (0 * Math.Cos(angle) + 500 * Math.Sin(angle)));
 			int y = (int) (Y - (500 * Math.Cos(angle) - 0 * Math.Sin(angle)));
 			ushort heading = (ushort)((Heading < 180 ? Heading + 180 : Heading - 180) / 0.08789);

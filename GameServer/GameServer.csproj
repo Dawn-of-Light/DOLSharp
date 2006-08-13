@@ -111,13 +111,14 @@
     <Compile Include="ai\brain\GuardBrain.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ai\brain\Guards\Caster.cs" />
+    <Compile Include="ai\brain\Guards\KeepGuardBrain.cs" />
+    <Compile Include="ai\brain\Guards\Healer.cs" />
+    <Compile Include="ai\brain\Guards\Lord.cs" />
     <Compile Include="ai\brain\IAggressiveBrain.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ai\brain\IControlledBrain.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ai\brain\KeepGuardBrain.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ai\brain\RoundsBrain.cs">
@@ -540,28 +541,23 @@
     <Compile Include="gameutils\CmdAttribute.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="serverproperty\properties\AllianceMaxServerProperty.cs" />
-    <Compile Include="serverproperty\properties\ClaimNumServerProperty.cs" />
-    <Compile Include="serverproperty\properties\RPWorthSecondsServerProperty.cs" />
-    <Compile Include="serverproperty\properties\GuildNumServerProperty.cs" />
-    <Compile Include="serverproperty\properties\StaffLoginServerProperty.cs" />
-    <Compile Include="serverproperty\properties\MaxPlayersServerProperty.cs" />
-    <Compile Include="serverproperty\properties\XPRateServerProperty.cs" />
-    <Compile Include="serverproperty\properties\RPRateServerProperty.cs" />
-    <Compile Include="serverproperty\properties\ServerMOTDServerProperty.cs" />
-    <Compile Include="serverproperty\properties\StartingMsgServerProperty.cs" />
-    <Compile Include="serverproperty\properties\PvEDamageServerProperty.cs" />
-    <Compile Include="serverproperty\properties\PvPDamageServerProperty.cs" />
-    <Compile Include="serverproperty\properties\StartingMoneyServerProperty.cs" />
-    <Compile Include="serverproperty\properties\StartingLevelServerProperty.cs" />
-    <Compile Include="serverproperty\properties\StartingRealmLevelServerProperty.cs" />
-    <Compile Include="serverproperty\properties\CraftingSpeedServerProperty.cs" />
-    <Compile Include="serverproperty\properties\MoneyDropServerProperty.cs" />
-    <Compile Include="serverproperty\properties\BroadcastTypeServerProperty.cs" />
-    <Compile Include="serverproperty\properties\StartingGuildServerProperty.cs" />
+    <Compile Include="gameutils\GameNPCInventory.cs" />
+    <Compile Include="keeps\Gameobjects\Guards\Archer.cs" />
+    <Compile Include="keeps\Gameobjects\Guards\Caster.cs" />
+    <Compile Include="keeps\Gameobjects\Guards\Fighter.cs" />
+    <Compile Include="keeps\Gameobjects\Guards\Healer.cs" />
+    <Compile Include="keeps\Gameobjects\Guards\Lord.cs" />
+    <Compile Include="keeps\Gameobjects\Guards\Static Archer.cs" />
+    <Compile Include="keeps\Gameobjects\Guards\Static Caster.cs" />
+    <Compile Include="keeps\Gameobjects\Guards\Stealther.cs" />
+    <Compile Include="keeps\Managers\Clothing Manager.cs" />
+    <Compile Include="keeps\Managers\Template Manager.cs" />
+    <Compile Include="keeps\Managers\Guild Manager.cs" />
+    <Compile Include="keeps\Managers\Player Manager.cs" />
+    <Compile Include="keeps\Managers\Position Manager.cs" />
+    <Compile Include="keeps\Managers\Spell Manager.cs" />
     <Compile Include="serverproperty\ServerProperties.cs" />
     <Compile Include="serverproperty\ServerPropertyConstants.cs" />
-    <Compile Include="serverproperty\ServerPropertyMgr.cs" />
     <Compile Include="gameutils\DoorMgr.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -694,8 +690,6 @@
     <Compile Include="gameutils\SelfCraftWindow.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="serverproperty\AbstractServerProperty.cs" />
-    <Compile Include="serverproperty\IServerProperty.cs" />
     <Compile Include="serverproperty\ServerPropertyAttribute.cs" />
     <Compile Include="gameutils\SinglePermission.cs">
       <SubType>Code</SubType>
@@ -760,10 +754,7 @@
     <Compile Include="keeps\Gameobjects\GameKeepDoor.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="keeps\Gameobjects\GameKeepGuard.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="keeps\Gameobjects\GameKeepLord.cs">
+    <Compile Include="keeps\Gameobjects\Guards\GameKeepGuard.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="keeps\GameTower.cs">

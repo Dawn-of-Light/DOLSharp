@@ -23,18 +23,21 @@ using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
 using System.Threading;
+
 using DOL.Database;
 using DOL.Database.Attributes;
 using DOL.Database.Connection;
 using DOL.Events;
 using DOL.GS.DatabaseConverters;
 using DOL.GS.Housing;
+using DOL.GS.Keeps;
 using DOL.GS.PacketHandler;
 using DOL.GS.PlayerTitles;
 using DOL.GS.Scripts;
 using DOL.GS.ServerRules;
 using DOL.GS.ServerProperties;
 using DOL.Config;
+
 using log4net;
 using log4net.Config;
 using log4net.Core;
@@ -622,11 +625,6 @@ namespace DOL
 				//---------------------------------------------------------------
 				//Load player titles manager
 				if (!InitComponent(PlayerTitleMgr.Init(), "Player Titles Manager"))
-					return false;
-
-				//---------------------------------------------------------------
-				//Load server settings manager
-				if (!InitComponent(ServerPropertyMgr.Init(), "Server Settings Manager"))
 					return false;
 
 				//---------------------------------------------------------------

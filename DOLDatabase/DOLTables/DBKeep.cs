@@ -35,9 +35,8 @@ namespace DOL.Database
 		private int m_z;
 		private int m_heading;
 		private byte m_realm;
-		private int m_level;
+		private byte m_level;
 		private int m_keepID;
-		//private int m_level;
 		private string m_guildName;
 		private int m_albionDifficultyLevel;
 		private int m_midgardDifficultyLevel;
@@ -213,7 +212,7 @@ namespace DOL.Database
 		/// Level of keep
 		/// </summary>
 		[DataElement(AllowDbNull=false)]
-		public int Level
+		public byte Level
 		{
 			get
 			{

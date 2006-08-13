@@ -20,7 +20,7 @@
 using System.Collections;
 using DOL.GS.PacketHandler;
 
-namespace DOL.GS
+namespace DOL.GS.Keeps
 {
 	/// <summary>
 	/// GameKeep is the keep in New Frontiere
@@ -50,18 +50,24 @@ namespace DOL.GS
 
 		public override int CalculateTimeToUpgrade()
 		{
-			return UpgradeTime[this.Level - 1];
+			if (TargetLevel > Level)
+				return UpgradeTime[this.Level + 1];
+			else return UpgradeTime[this.Level - 1];
 		}
 		public override bool CheckForClaim(GamePlayer player)
 		{
+			//let gms do everything
+			if (player.Client.Account.PrivLevel > 1)
+				return true;
+
 			if (player.PlayerGroup == null)
 			{
 				player.Out.SendMessage("You must be in a group to claim.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
-			if (player.PlayerGroup.PlayerCount < ServerProperties.ClaimNumServerProperty.Value)
+			if (player.PlayerGroup.PlayerCount < ServerProperties.Properties.CLAIM_NUM)
 			{
-				player.Out.SendMessage("You need " + ServerProperties.ClaimNumServerProperty.Value + " players to claim.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage("You need " + ServerProperties.Properties.CLAIM_NUM + " players to claim.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
 			return base.CheckForClaim(player);

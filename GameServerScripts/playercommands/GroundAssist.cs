@@ -20,31 +20,47 @@ using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Scripts
 {
-	[CmdAttribute("&groundassist", //command to handle
-		 (uint) ePrivLevel.Player, //minimum privelege level
-		 "Show the current coordinates", //command description
-		 "/groundassist")] //command usage
-	public class GroundAssistCommandHandler : ICommandHandler
-	{
-		public int OnCommand(GameClient client, string[] args)
-		{
-			GameObject obj = client.Player.TargetObject;
-			if (args.Length >1)
-			{
-				GameClient myclient;
-				myclient = WorldMgr.GetClientByPlayerName(args[1],true, true);
-				if (myclient == null)
-				{
-					client.Player.Out.SendMessage("No player with this name in game.",eChatType.CT_Say,eChatLoc.CL_SystemWindow);
-					return 1;
-				}
-				obj = myclient.Player;
-			}
-			if (obj != null)
-				client.Player.SetGroundTarget(obj.X, obj.Y, obj.Z);
-			else
-				client.Player.Out.SendMessage("You must select a target before use this command.",eChatType.CT_Say,eChatLoc.CL_SystemWindow);
-			return 1;
-		}
-	}
+    [CmdAttribute("&groundassist", //command to handle
+         (uint)ePrivLevel.Player, //minimum privelege level
+         "Show the current coordinates", //command description
+         "/groundassist")] //command usage
+    public class GroundAssistCommandHandler : ICommandHandler
+    {
+        public int OnCommand(GameClient client, string[] args)
+        {
+            GameObject obj = client.Player.TargetObject;
+            if (args.Length > 1)
+            {
+                GameClient myclient;
+                myclient = WorldMgr.GetClientByPlayerName(args[1], true, true);
+                if (myclient == null)
+                {
+                    client.Player.Out.SendMessage("No player with this name in game.", eChatType.CT_Say, eChatLoc.CL_SystemWindow);
+                    return 1;
+                }
+                obj = myclient.Player;
+            }
+
+            if (obj == client.Player)
+            {
+                client.Out.SendMessage("You can't groundassist yourself.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return 0;
+            }
+
+            if (!GameServer.ServerRules.IsSameRealm(client.Player, obj, false))
+                return 0;
+
+            if (!WorldMgr.CheckDistance(client.Player, obj, 2048))
+            {
+                client.Out.SendMessage("You don't see " + args[1] + " around here!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return 0;
+            }
+
+            if (obj != null)
+                client.Player.SetGroundTarget(obj.X, obj.Y, obj.Z);
+            else
+                client.Player.Out.SendMessage("You must select a target before use this command.", eChatType.CT_Say, eChatLoc.CL_SystemWindow);
+            return 1;
+        }
+    }
 }

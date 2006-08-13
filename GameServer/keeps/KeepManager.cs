@@ -23,7 +23,7 @@ using DOL.Database;
 using DOL.GS.PacketHandler;
 using log4net;
 
-namespace DOL.GS
+namespace DOL.GS.Keeps
 {
 	/// <summary>
 	/// KeepManager
@@ -40,7 +40,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Defines a logger for this class.
 		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		public static readonly ILog Logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		/// <summary>
 		/// load all keep from DB
@@ -48,6 +48,8 @@ namespace DOL.GS
 		/// <returns></returns>
 		public static bool Load()
 		{
+			ClothingMgr.LoadTemplates();
+
 			lock (m_keeps.SyncRoot)
 			{
 				m_keeps.Clear();
@@ -82,8 +84,8 @@ namespace DOL.GS
 					AbstractGameKeep keep = getKeepByID(component.KeepID);
 					if (keep == null)
 					{
-						if (log.IsWarnEnabled)
-							log.WarnFormat("No keep with ID {0} for component ID {1}", component.KeepID, component.ID);
+						if (Logger.IsWarnEnabled)
+							Logger.WarnFormat("No keep with ID {0} for component ID {1}", component.KeepID, component.ID);
 						continue;
 					}
 					GameKeepComponent gamecomponent = new GameKeepComponent();
@@ -96,6 +98,7 @@ namespace DOL.GS
 					{
 						if (keep.KeepComponents.Count != 0)
 							keep.KeepComponents.Sort();
+						keep.LoadObjects();
 					}
 				}
 				LoadHookPoints();
@@ -324,6 +327,42 @@ namespace DOL.GS
 			{
 				return (Hashtable)m_keeps.Clone();
 			}
+		}
+
+		public static bool IsEnemy(GameKeepGuard checker, GameLiving target)
+		{
+			if (target is GamePlayer)
+			{
+				if ((target as GamePlayer).Client.Account.PrivLevel != 1)
+					return false;
+			}
+			switch (GameServer.Instance.Configuration.ServerType)
+			{
+				case eGameServerType.GST_Normal:
+					return checker.Realm != target.Realm;
+				case eGameServerType.GST_PvP:
+					return checker.GuildName != target.GuildName;
+				case eGameServerType.GST_PvE:
+					return !(target is GamePlayer);
+			}
+			return true;
+		}
+
+		/// <summary>
+		/// Gets a component height from a level
+		/// </summary>
+		/// <param name="level">The level</param>
+		/// <returns>The height</returns>
+		public static byte GetHeightFromLevel(byte level)
+		{
+			if (level > 7)
+				return 3;
+			else if (level > 4)
+				return 2;
+			else if (level > 1)
+				return 1;
+			else
+				return 0;
 		}
 	}
 }

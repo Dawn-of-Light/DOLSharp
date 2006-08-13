@@ -91,7 +91,7 @@ namespace DOL.GS.PacketHandler.v168
 					if (client.Account.Characters == null || client.Account.Characters.Length == 0)
 					{
 						if (log.IsInfoEnabled)
-							log.Info(string.Format("Account {0} has no more chars. Realm resetted!", client.Account.Name));
+							log.Info(string.Format("Account {0} has no more chars. Realm reset!", client.Account.Name));
 						//Client has no more characters, so the client can choose
 						//the realm again!
 						client.Account.Realm = 0;

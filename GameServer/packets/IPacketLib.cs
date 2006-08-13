@@ -20,6 +20,7 @@ using System.Collections;
 using DOL.AI.Brain;
 using DOL.GS;
 using DOL.GS.Housing;
+using DOL.GS.Keeps;
 using DOL.GS.Quests;
 using DOL.Database;
 
@@ -391,6 +392,7 @@ namespace DOL.GS.PacketHandler
 		GroupInvite = 0x05,
 		CustomDialog = 0x06,
 		GuildLeave = 0x08,
+		KeepClaim = 0x26,
 		QuestSuscribe = 0x64,
 		BuyRespec = 0x20,
 	}
@@ -514,7 +516,7 @@ namespace DOL.GS.PacketHandler
 		void SendKeepInfo(AbstractGameKeep keep );
 		void SendKeepComponentInfo(GameKeepComponent keepComponent);
 		void SendKeepComponentDetailUpdate(GameKeepComponent keepComponent);
-		void SendKeepClaim(AbstractGameKeep keep);
+		void SendKeepClaim(AbstractGameKeep keep, byte flag);
 		void SendKeepComponentUpdate(AbstractGameKeep keep,bool LevelUp);
 		void SendKeepComponentInteract(GameKeepComponent component);
 		void SendKeepComponentHookPoint(GameKeepComponent component,int selectedHookPointIndex);

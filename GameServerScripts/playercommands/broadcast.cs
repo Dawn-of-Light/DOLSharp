@@ -18,6 +18,7 @@
  */
 
 using System.Collections;
+using System.Reflection;
 using DOL.GS;
 using DOL.GS.ServerProperties;
 using DOL.GS.PacketHandler;
@@ -32,6 +33,16 @@ namespace DOL.GS.Scripts
 		 "/b <message>")]
 	public class BroadcastCommandHandler : ICommandHandler
 	{
+		private enum eBroadcastType : int
+		{
+			Area = 1,
+			Visible = 2,
+			Zone = 3,
+			Region = 4,
+			Realm = 5,
+			Server = 6,
+		}
+
 		public int OnCommand(GameClient client, string[] args)
 		{
 			if(args.Length<2)
@@ -64,10 +75,10 @@ namespace DOL.GS.Scripts
 		private ArrayList GetTargets(GamePlayer player)
 		{
 			ArrayList list = new ArrayList();
-			BroadcastTypeServerProperty.eBroadcastType type = (BroadcastTypeServerProperty.eBroadcastType)BroadcastTypeServerProperty.Value;
+			eBroadcastType type = (eBroadcastType)ServerProperties.Properties.BROADCAST_TYPE;
 			switch (type)
 			{
-				case BroadcastTypeServerProperty.eBroadcastType.Area:
+				case eBroadcastType.Area:
 					{
 						bool found = false;
 						foreach (AbstractArea area in player.CurrentAreas)
@@ -90,7 +101,7 @@ namespace DOL.GS.Scripts
 						}
 						break;
 					}
-				case BroadcastTypeServerProperty.eBroadcastType.Realm:
+				case eBroadcastType.Realm:
 					{
 						foreach (GameClient thisClient in WorldMgr.GetClientsOfRealm(player.Realm))
 						{
@@ -98,7 +109,7 @@ namespace DOL.GS.Scripts
 						}
 						break;
 					}
-				case BroadcastTypeServerProperty.eBroadcastType.Region:
+				case eBroadcastType.Region:
 					{
 						foreach (GameClient thisClient in WorldMgr.GetClientsOfRegion(player.CurrentRegionID))
 						{
@@ -106,7 +117,7 @@ namespace DOL.GS.Scripts
 						}
 						break;
 					}
-				case BroadcastTypeServerProperty.eBroadcastType.Server:
+				case eBroadcastType.Server:
 					{
 						foreach (GameClient thisClient in WorldMgr.GetAllPlayingClients())
 						{
@@ -114,7 +125,7 @@ namespace DOL.GS.Scripts
 						}
 						break;
 					}
-				case BroadcastTypeServerProperty.eBroadcastType.Visible:
+				case eBroadcastType.Visible:
 					{
 						foreach (GamePlayer p in player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 						{
@@ -122,7 +133,7 @@ namespace DOL.GS.Scripts
 						}
 						break;
 					}
-				case BroadcastTypeServerProperty.eBroadcastType.Zone:
+				case eBroadcastType.Zone:
 					{
 						foreach (GameClient thisClient in WorldMgr.GetClientsOfRegion(player.CurrentRegionID))
 						{

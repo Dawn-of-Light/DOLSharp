@@ -23,12 +23,12 @@ namespace DOL.GS.ServerProperties
 	/// <summary>
 	/// The server property attribute
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
+	[AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
 	public class ServerPropertyAttribute : Attribute
 	{
 		private string m_key;
 		private string m_description;
-		private string m_defaultValue;
+		private object m_defaultValue;
 
 		/// <summary>
 		/// The constructor
@@ -36,7 +36,7 @@ namespace DOL.GS.ServerProperties
 		/// <param name="key">The property key</param>
 		/// <param name="description">The property description</param>
 		/// <param name="defaultValue">The property default value</param>
-		public ServerPropertyAttribute(string key, string description, string defaultValue)
+		public ServerPropertyAttribute(string key, string description, object defaultValue)
 		{
 			m_key = key;
 			m_description = description;
@@ -68,7 +68,7 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// The property default value
 		/// </summary>
-		public string DefaultValue
+		public object DefaultValue
 		{
 			get
 			{

@@ -19,9 +19,11 @@
 using System;
 using System.Collections;
 
+using DOL.GS.Keeps;
+
 namespace DOL.GS.PacketHandler.v168
 {
-	[PacketHandler(PacketHandlerType.TCP,0xC7^168,"Keep component interact")]
+	[PacketHandler(PacketHandlerType.TCP, 0xC7 ^ 168, "Keep component interact")]
 	public class KeepComponentInteractHandler : IPacketHandler
 	{
 		public int HandlePacket(GameClient client, GSPacketIn packet)
@@ -30,20 +32,23 @@ namespace DOL.GS.PacketHandler.v168
 			ushort wallId = packet.ReadShort();
 			ushort responce = packet.ReadShort();
 			int HPindex = packet.ReadShort();
+
 			AbstractGameKeep keep = KeepMgr.getKeepByID(keepId);
+
 			if (keep == null || !(GameServer.ServerRules.IsSameRealm(client.Player, (GameKeepComponent)keep.KeepComponents[wallId], true) || client.Account.PrivLevel > 1))
 				return 0;
+
 			if (responce == 0x00)//show info
 				client.Out.SendKeepComponentInteract(((GameKeepComponent)keep.KeepComponents[wallId]));
 			else if (responce == 0x01)// click on hookpoint button
-				client.Out.SendKeepComponentHookPoint(((GameKeepComponent)keep.KeepComponents[wallId]),HPindex);
+				client.Out.SendKeepComponentHookPoint(((GameKeepComponent)keep.KeepComponents[wallId]), HPindex);
 			else if (responce == 0x02)//select an hookpoint
 			{
 				if (client.Account.PrivLevel > 1)
-					client.Out.SendMessage("DEBUG : selected hookpoint id "+HPindex, eChatType.CT_Say , eChatLoc.CL_SystemWindow);
+					client.Out.SendMessage("DEBUG : selected hookpoint id " + HPindex, eChatType.CT_Say, eChatLoc.CL_SystemWindow);
 
 				GameKeepComponent hp = keep.KeepComponents[wallId] as GameKeepComponent;
-				client.Out.SendClearKeepComponentHookPoint(hp,HPindex);
+				client.Out.SendClearKeepComponentHookPoint(hp, HPindex);
 				client.Out.SendHookPointStore(hp.HookPoints[HPindex] as GameKeepHookPoint);
 			}
 			return 1;
