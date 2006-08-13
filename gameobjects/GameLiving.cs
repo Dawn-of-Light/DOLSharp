@@ -24,6 +24,7 @@ using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.Effects;
+using DOL.GS.Keeps;
 using DOL.GS.PacketHandler;
 using DOL.GS.PropertyCalc;
 using DOL.GS.Scripts;
@@ -4637,7 +4638,6 @@ namespace DOL.GS
 					((GameLiving)obj).EnemyKilled(this);
 
 			CancelAllConcentrationEffects();
-			ConcentrationEffects.CancelAll();
 			EffectList.CancelAll();
 			StopHealthRegeneration();
 			StopPowerRegeneration();

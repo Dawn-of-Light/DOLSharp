@@ -115,12 +115,17 @@ namespace DOL.GS
 			/// <param name="p"></param>
 			/// <returns></returns>
 			public override bool IsContaining(IPoint3D p)
-			{							
-				long m_xdiff = (long) p.X - X;
+			{
+				return IsContaining(p, true);
+			}
+
+			public override bool IsContaining(IPoint3D p, bool checkZ)
+			{
+				long m_xdiff = (long)p.X - X;
 				if (m_xdiff < 0 || m_xdiff > Width)
 					return false;
 
-				long m_ydiff = (long) p.Y - Y;
+				long m_ydiff = (long)p.Y - Y;
 				if (m_ydiff < 0 || m_ydiff > Height)
 					return false;
 
@@ -230,14 +235,19 @@ namespace DOL.GS
 					return false;
 
 				return true;
-			}	
+			}
+
+			public override bool IsContaining(IPoint3D spot)
+			{
+				return IsContaining(spot, true);
+			}
 
 			/// <summary>
 			/// Checks wether given point is within area boundaries
 			/// </summary>
 			/// <param name="p"></param>
 			/// <returns></returns>
-			public override bool IsContaining(IPoint3D p)
+			public override bool IsContaining(IPoint3D p, bool checkZ)
 			{						
 				// spot is not in square around circle no need to check for circle...
 				long m_xdiff = (long) p.X - X;
@@ -253,7 +263,7 @@ namespace DOL.GS
 				m_distSq = m_xdiff*m_xdiff + m_ydiff*m_ydiff;
 
 				//SH: Removed Z checks when one of the two Z values is zero(on ground)
-				if (Z != 0 && p.Z != 0)
+				if (Z != 0 && p.Z != 0 && checkZ == true)
 				{
 					long m_zdiff = (long) p.Z - Z;
 					m_distSq += m_zdiff*m_zdiff;

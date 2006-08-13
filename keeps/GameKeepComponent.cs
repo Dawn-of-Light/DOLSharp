@@ -22,7 +22,7 @@ using System.Text;
 using DOL.Database;
 using DOL.Events;
 
-namespace DOL.GS
+namespace DOL.GS.Keeps
 {
 	//TODO : find all skin of keep door to load it from here
 	/// <summary>
@@ -213,7 +213,7 @@ namespace DOL.GS
 			//this.DBKeepComponent = component;
 			base.LoadFromDatabase(component);
 			//this x and y is for get object in radius
-			double angle = (keep.Heading * 0.017453292519943295769236907684886); // angle*2pi/360;
+			double angle = keep.Heading * ((Math.PI * 2) / 360); // angle*2pi/360;
 			X = (int)(keep.X + ((sbyte)component.X * 148 * Math.Cos(angle) + (sbyte)component.Y * 148 * Math.Sin(angle)));
 			Y = (int)(keep.Y - ((sbyte)component.Y * 148 * Math.Cos(angle) - (sbyte)component.X * 148 * Math.Sin(angle)));
 			this.Z = keep.Z;

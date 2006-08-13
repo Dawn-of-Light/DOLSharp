@@ -1150,7 +1150,12 @@ namespace DOL.GS
 		/// <returns></returns>
 		public IList GetAreasOfSpot(IPoint3D spot)
 		{
-			return m_Region.GetAreasOfZone(this, spot);
+			return GetAreasOfSpot(spot, true);
+		}
+
+		public IList GetAreasOfSpot(IPoint3D spot, bool checkZ)
+		{
+			return m_Region.GetAreasOfZone(this, spot, checkZ);
 		}
 
 		#endregion

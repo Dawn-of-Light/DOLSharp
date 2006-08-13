@@ -18,13 +18,16 @@
  */
 #define NOENCRYPTION
 using System;
-using System.Reflection;
-using DOL.GS.Effects;
 using System.Collections;
+using System.Reflection;
+
+using DOL.GS.Effects;
 using DOL.Database;
+using DOL.GS.Keeps;
 using DOL.GS.Spells;
 using DOL.GS.Styles;
 using DOL.GS.PlayerTitles;
+
 using log4net;
 
 namespace DOL.GS.PacketHandler
