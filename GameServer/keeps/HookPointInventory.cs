@@ -23,7 +23,7 @@ using DOL.GS.PacketHandler;
 using DOL.GS.Scripts;
 using log4net;
 
-namespace DOL.GS
+namespace DOL.GS.Keeps
 {
 	public class HookPointInventory
 	{

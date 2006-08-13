@@ -17,6 +17,8 @@
  *
  */
 
+using DOL.GS.Keeps;
+
 namespace DOL.GS.PacketHandler.v168
 {
 	[PacketHandler(PacketHandlerType.TCP,0xCC^168,"buy hookpoint siege weapon/mob")]

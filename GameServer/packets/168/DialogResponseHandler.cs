@@ -18,7 +18,9 @@
  */
 using System;
 using System.Collections;
+
 using DOL.Events;
+using DOL.GS.Keeps;
 
 namespace DOL.GS.PacketHandler.v168
 {
@@ -93,143 +95,178 @@ namespace DOL.GS.PacketHandler.v168
 			{
 				GamePlayer player = (GamePlayer)m_actionSource;
 
-				if (m_messageType == 0x06 && m_data2 == 0x01) //Custom dialog
+				switch ((eDialogCode)m_messageType)
 				{
-					CustomDialogResponse callback = null;
-					lock (player)
-					{
-						callback = player.CustomDialogCallback;
-						player.CustomDialogCallback = null;
-					}
-					if (callback == null) return;
-					callback(player, (byte)m_response);
-					return;
-				}
-				else if (m_messageType == 0x03)// if Message is guild invit
-				{
-					GamePlayer guildLeader = WorldMgr.GetObjectByIDFromRegion(player.CurrentRegionID, (ushort)m_data1) as GamePlayer;
-					if (m_response == 0x01)//accepte
-					{
-						if (guildLeader == null)
+					case eDialogCode.CustomDialog:
 						{
-							return;
+							if (m_data2 == 0x01)
+							{
+								CustomDialogResponse callback = null;
+								lock (player)
+								{
+									callback = player.CustomDialogCallback;
+									player.CustomDialogCallback = null;
+								}
+								if (callback == null) return;
+								callback(player, (byte)m_response);
+							}
+							break;
 						}
-						if (player.Guild != null)
+					case eDialogCode.GuildInvite:
 						{
-							player.Out.SendMessage("You are still in a guild.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return;
+							GamePlayer guildLeader = WorldMgr.GetObjectByIDFromRegion(player.CurrentRegionID, (ushort)m_data1) as GamePlayer;
+							if (m_response == 0x01)//accepte
+							{
+								if (guildLeader == null)
+								{
+									return;
+								}
+								if (player.Guild != null)
+								{
+									player.Out.SendMessage("You are still in a guild.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									return;
+								}
+								if (guildLeader.Guild != null)
+								{
+									guildLeader.Guild.AddPlayer(player);
+									return;
+								}
+								else
+								{
+									player.Out.SendMessage("You are not in a guild.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									return;
+								}
+							}
+							else
+							{
+								if (guildLeader != null)
+									guildLeader.Out.SendMessage(player.Name + " declined your invite.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return;
+							}
+							break;
 						}
-						if (guildLeader.Guild != null)
+					case eDialogCode.GuildLeave:
 						{
-							guildLeader.Guild.AddPlayer(player);
-							return;
+							if (m_response == 0x01)//accepte
+							{
+								if (player.Guild == null)
+								{
+									player.Out.SendMessage("You are not in a guild.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									return;
+								}
+								else
+								{
+									player.Guild.RemovePlayer(player.Name, player);
+								}
+							}
+							else
+							{
+								player.Out.SendMessage("You decline to quit your guild.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return;
+							}
+							break;
 						}
-						else
+					case eDialogCode.QuestSuscribe:
 						{
-							player.Out.SendMessage("You are not in a guild.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return;
-						}
-					}
-					else
-					{
-						if (guildLeader != null)
-							guildLeader.Out.SendMessage(player.Name + " declined your invite.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						return;
-					}
-				}
-				else if (m_messageType == 0x08)// if Message is guild leave
-				{
-					if (m_response == 0x01)//accepte
-					{
-						if (player.Guild == null)
-						{
-							player.Out.SendMessage("You are not in a guild.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return;
-						}
-						else
-						{
-							player.Guild.RemovePlayer(player.Name, player);
-						}
-					}
-					else
-					{
-						player.Out.SendMessage("You decline to quit your guild.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						return;
-					}
-				}
-				else if (m_messageType == 0x64)// if Message is quest dialogue
-				{
-					GameLiving questNPC = (GameLiving)WorldMgr.GetObjectByIDFromRegion(player.CurrentRegionID, (ushort)m_data2);
-					if (questNPC == null)
-						return;
+							GameLiving questNPC = (GameLiving)WorldMgr.GetObjectByIDFromRegion(player.CurrentRegionID, (ushort)m_data2);
+							if (questNPC == null)
+								return;
 
-					QuestEventArgs args = new QuestEventArgs(questNPC, player, (ushort)m_data1);
-					if (m_response == 0x01)//accept
-					{
-						//TODO add quest to player
-						//Note: This is done withing quest code since we have to check requirements, etc for each quest individually
-						// i'm reusing the questsubscribe command for quest abort since its 99% the same, only different event dets fired
-						if (m_data3 == 0x01)
-							player.Notify(GamePlayerEvent.AbortQuest, player, args);
-						else
-							player.Notify(GamePlayerEvent.AcceptQuest, player, args);
-						return;
-					}
-					else
-					{
-						if (m_data3 == 0x01)
-							player.Notify(GamePlayerEvent.ContinueQuest, player, args);
-						else
-							player.Notify(GamePlayerEvent.DeclineQuest, player, args);
-						//player.Out.SendMessage("You decline to subcribe to quest", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						return;
-					}
-				}
-				else if (m_messageType == 0x05 && m_response == 0x01)// if Message is group invit and Response is Yes
-				{
-					GameClient cln = WorldMgr.GetClientFromID(m_data1);
-					if (cln == null) return;
-					GamePlayer groupLeader = cln.Player;
-					if (groupLeader == null) return;
-					if (player.PlayerGroup != null)
-					{
-						player.Out.SendMessage("You are still in a group.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						return;
-					}
-					if (!GameServer.ServerRules.IsAllowedToGroup(groupLeader, player, false))
-					{
-						return;
-					}
-					if (player.InCombat && !player.CurrentRegion.IsRvR)
-					{
-						player.Out.SendMessage("You can't join a group while in combat!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						return;
-					}
-					if (groupLeader.PlayerGroup != null)
-					{
-						if (groupLeader.PlayerGroup.Leader != groupLeader) return;
-						if (groupLeader.PlayerGroup.PlayerCount >= PlayerGroup.MAX_GROUP_SIZE)
-						{
-							player.Out.SendMessage("The group is full.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return;
+							QuestEventArgs args = new QuestEventArgs(questNPC, player, (ushort)m_data1);
+							if (m_response == 0x01)//accept
+							{
+								//TODO add quest to player
+								//Note: This is done withing quest code since we have to check requirements, etc for each quest individually
+								// i'm reusing the questsubscribe command for quest abort since its 99% the same, only different event dets fired
+								if (m_data3 == 0x01)
+									player.Notify(GamePlayerEvent.AbortQuest, player, args);
+								else
+									player.Notify(GamePlayerEvent.AcceptQuest, player, args);
+								return;
+							}
+							else
+							{
+								if (m_data3 == 0x01)
+									player.Notify(GamePlayerEvent.ContinueQuest, player, args);
+								else
+									player.Notify(GamePlayerEvent.DeclineQuest, player, args);
+								//player.Out.SendMessage("You decline to subcribe to quest", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return;
+							}
 						}
-						if (groupLeader.PlayerGroup.IsGroupInCombat())
+					case eDialogCode.GroupInvite:
 						{
-							player.Out.SendMessage("You can't join a group that is in combat!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return;
+							if (m_response == 0x01)
+							{
+								GameClient cln = WorldMgr.GetClientFromID(m_data1);
+								if (cln == null) return;
+								GamePlayer groupLeader = cln.Player;
+								if (groupLeader == null) return;
+								if (player.PlayerGroup != null)
+								{
+									player.Out.SendMessage("You are still in a group.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									return;
+								}
+								if (!GameServer.ServerRules.IsAllowedToGroup(groupLeader, player, false))
+								{
+									return;
+								}
+								if (player.InCombat && !player.CurrentRegion.IsRvR)
+								{
+									player.Out.SendMessage("You can't join a group while in combat!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									return;
+								}
+								if (groupLeader.PlayerGroup != null)
+								{
+									if (groupLeader.PlayerGroup.Leader != groupLeader) return;
+									if (groupLeader.PlayerGroup.PlayerCount >= PlayerGroup.MAX_GROUP_SIZE)
+									{
+										player.Out.SendMessage("The group is full.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+										return;
+									}
+									if (groupLeader.PlayerGroup.IsGroupInCombat())
+									{
+										player.Out.SendMessage("You can't join a group that is in combat!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+										return;
+									}
+									groupLeader.PlayerGroup.AddPlayer(player);
+									return;
+								}
+								else
+								{
+									PlayerGroup group = new PlayerGroup(groupLeader);
+									GroupMgr.AddGroup(group, group);
+									groupLeader.PlayerGroup = group;
+									group.AddPlayer(groupLeader);
+									group.AddPlayer(player);
+									return;
+								}
+							}
+							break;
 						}
-						groupLeader.PlayerGroup.AddPlayer(player);
-						return;
-					}
-					else
-					{
-						PlayerGroup group = new PlayerGroup(groupLeader);
-						GroupMgr.AddGroup(group, group);
-						groupLeader.PlayerGroup = group;
-						group.AddPlayer(groupLeader);
-						group.AddPlayer(player);
-						return;
-					}
+					case eDialogCode.KeepClaim:
+						{
+							if (m_response == 0x01)
+							{
+								if (player.Guild == null)
+								{
+									player.Out.SendMessage("You have to be a member of a guild, before you can use any of the commands!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									return;
+								}
+								AbstractGameKeep keep = KeepMgr.getKeepCloseToSpot(player.CurrentRegionID, player, WorldMgr.VISIBILITY_DISTANCE);
+								if (keep == null)
+								{
+									player.Out.SendMessage("You have to be near the keep to claim it.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									return;
+								}
+								if (keep.CheckForClaim(player))
+								{
+									keep.Claim(player);
+								}
+								break;
+							}
+							break;
+						}
 				}
 			}
 		}

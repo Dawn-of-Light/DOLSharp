@@ -17,13 +17,16 @@
  *
  */
 using System;
+using System.Collections;
 using System.Reflection;
+
 using DOL.AI.Brain;
 using DOL.Database;
+using DOL.GS.Keeps;
 using DOL.GS.PacketHandler;
 using DOL.GS.Spells;
-using System.Collections;
 using DOL.GS.Scripts;
+
 using log4net;
 
 namespace DOL.GS.Styles

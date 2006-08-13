@@ -20,8 +20,11 @@
 
 using System;
 using System.Reflection;
+
 using DOL.AI.Brain;
+using DOL.GS.Keeps;
 using DOL.GS.Quests;
+
 using log4net;
 
 namespace DOL.GS.PacketHandler

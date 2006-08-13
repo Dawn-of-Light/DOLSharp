@@ -17,11 +17,13 @@
  *
  */
 using System;
-using DOL.GS.PacketHandler;
-using DOL.Database;
-using DOL.AI.Brain;
 using System.Collections;
 using System.Collections.Specialized;
+
+using DOL.AI.Brain;
+using DOL.Database;
+using DOL.GS.Keeps;
+using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Scripts
 {
@@ -1915,10 +1917,10 @@ namespace DOL.GS.Scripts
 						client.Out.SendMessage("You must create a keep first",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 						return 1;
 					}
-					int keepLevel = 0;
+					byte keepLevel = 0;
 					try
 					{
-						keepLevel = Convert.ToInt32(args[2]);
+						keepLevel = Convert.ToByte(args[2]);
 					}
 					catch
 					{

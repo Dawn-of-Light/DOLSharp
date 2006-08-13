@@ -19,9 +19,12 @@
 using System;
 using System.Collections;
 using System.Reflection;
+
 using DOL.Database;
+using DOL.GS.Keeps;
 using DOL.GS.ServerProperties;
 using DOL.GS.PacketHandler;
+
 using log4net;
 
 namespace DOL.GS.Scripts
@@ -865,16 +868,16 @@ namespace DOL.GS.Scripts
 								client.Out.SendMessage("The guild has already an alliance", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return 1;
 							}
-							if (ServerProperties.AllianceMaxServerProperty.AlliancesDisabled)
+							if (ServerProperties.Properties.ALLIANCE_MAX == 0)
 							{
 								client.Player.Out.SendMessage("Alliances are disabled on this server", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return 1;
 							}
-							if (!ServerProperties.AllianceMaxServerProperty.UnlimitedGuilds)
+							if (ServerProperties.Properties.ALLIANCE_MAX != -1)
 							{
 								if (client.Player.Guild.alliance != null)
 								{
-									if (client.Player.Guild.alliance.Guilds.Count + 1 > ServerProperties.AllianceMaxServerProperty.Value)
+									if (client.Player.Guild.alliance.Guilds.Count + 1 > ServerProperties.Properties.ALLIANCE_MAX)
 									{
 										client.Player.Out.SendMessage("You are unable to invite that guild to your alliance, as your alliance already has the max number of guilds.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 										return 1;
@@ -1032,7 +1035,6 @@ namespace DOL.GS.Scripts
 							{
 								keep.Claim(client.Player);
 							}
-							client.Player.Guild.SendMessageToGuildMembers("Your guild have claim " + keep.Name, eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
 							return 1;
 						}
 					// --------------------------------------------------------------------------------
@@ -1070,12 +1072,12 @@ namespace DOL.GS.Scripts
 							}
 							if (client.Player.Guild.ClaimedKeep == null)
 							{
-								client.Out.SendMessage("You must have a keep to upgrate it.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								client.Out.SendMessage("You must have a keep to upgrade it.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return 1;
 							}
 							if (!client.Player.Guild.GotAccess(client.Player, eGuildRank.Upgrade))
 							{
-								client.Out.SendMessage("You have not enough priviledge to do that.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								client.Out.SendMessage("You do not have enough priviledges to do that.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return 1;
 							}
 							if (args.Length != 3)
@@ -1092,10 +1094,45 @@ namespace DOL.GS.Scripts
 							}
 							catch
 							{
-								client.Out.SendMessage("the 2e argument must be a number", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								client.Out.SendMessage("the 2nd argument must be a number", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return 0;
 							}
-							client.Player.Guild.ClaimedKeep.Upgrade(targetlevel);
+							client.Out.SendMessage("Upgrading is disabled at this time.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							//client.Player.Guild.ClaimedKeep.StartChangeLevel(targetlevel);
+							return 1;
+						}
+					//TYPE
+					// --------------------------------------------------------------------------------
+					case "type":
+						{
+							if (client.Player.Guild == null)
+							{
+								client.Out.SendMessage("You must have a guild to change type a claimed keep.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return 1;
+							}
+							if (client.Player.Guild.ClaimedKeep == null)
+							{
+								client.Out.SendMessage("You must have a keep to change type.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return 1;
+							}
+							if (!client.Player.Guild.GotAccess(client.Player, eGuildRank.Upgrade))
+							{
+								client.Out.SendMessage("You have not enough priviledge to do that.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return 1;
+							}
+							int type = 0;
+							try
+							{
+								type = Convert.ToInt32(args[2]);
+								if (type != 1 || type != 2 || type != 4)
+									return 0;
+							}
+							catch
+							{
+								client.Out.SendMessage("the 2nd argument must be a number", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return 0;
+							}
+							//client.Player.Guild.ClaimedKeep.Release();
 							return 1;
 						}
 					default:

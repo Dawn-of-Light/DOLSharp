@@ -136,6 +136,11 @@ namespace DOL.GS
 		void OnSkillTrained(GamePlayer player, Specialization skill);
 		bool CanUseLefthandedWeapon(GamePlayer player);
 		IList AutoTrainableSkills();
+		IList AllowedRaces();
+		bool BaseClass
+		{
+			get;
+		}
 	}
 
 	/// <summary>
@@ -326,6 +331,16 @@ namespace DOL.GS
 		public virtual IList AutoTrainableSkills()
 		{
 			return new ArrayList(0);
+		}
+
+		public virtual IList AllowedRaces()
+		{
+			return new ArrayList(0);
+		}
+
+		public virtual bool BaseClass
+		{
+			get { return true; }
 		}
 
 

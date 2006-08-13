@@ -17,7 +17,9 @@
  *
  */
 using System;
+
 using DOL.Events;
+using DOL.GS.Keeps;
 
 namespace DOL.GS.GameEvents
 {

@@ -732,7 +732,7 @@ namespace DOL.GS
 			//if the item is gray con, crafting process will be almost two times faster
 			if (((ushort)player.GetCraftingSkillValue(m_eskill) - ItemCraft.CraftingLevel) > 45) baseMultiplier *= 0.55;
 
-			baseMultiplier *= CraftingSpeedServerProperty.Value;
+			baseMultiplier *= Properties.CRAFTING_SPEED;
 
 			//at least 1s
 			int craftingTime = (int)(baseMultiplier * materialsCount / 4);

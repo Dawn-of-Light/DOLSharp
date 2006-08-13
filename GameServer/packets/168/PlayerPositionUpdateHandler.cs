@@ -66,9 +66,11 @@ namespace DOL.GS.PacketHandler.v168
 		//static int lastZ=int.MinValue;
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
-			if (client.Player.ObjectState != GameObject.eObjectState.Active)
+			//Tiv: in very rare cases client send 0xA9 packet before sending S<=C 0xE8 player wolrd initialize 
+			if ((client.Player.ObjectState != GameObject.eObjectState.Active) ||
+				(client.ClientState != GameClient.eClientState.Playing))
 				return 1;
-
+				
 			int EnvironmentTick = Environment.TickCount;
 			int packetVersion;
 			if (client.Version > GameClient.eClientVersion.Version171)

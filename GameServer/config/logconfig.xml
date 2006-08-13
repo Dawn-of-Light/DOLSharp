@@ -38,7 +38,7 @@
 	<!-- Define our file output -->
 	<appender name="GameServerLogFile" type="log4net.Appender.RollingFileAppender" >
 		<appendtofile value="true" />
-		<file value="./logs/gameserver.log" />
+		<file value="./logs/GameServer.log" />
 		<rollingStyle value="Date" />
 		<maximumFileSize value="100MB" />
 		<datePattern value="yyyy-MM-dd" />
@@ -69,7 +69,7 @@
 	<!-- Define our file output -->
 	<appender name="GMActionFileAppender" type="log4net.Appender.RollingFileAppender" >
 		<appendtofile value="true" />
-		<file value="./logs/gmactions.log" />
+		<file value="./logs/GMActions.log" />
 		<Layout type="log4net.Layout.PatternLayout">
 			<param name="ConversionPattern" value="%d - %m%n" />
 		</Layout>
@@ -84,7 +84,7 @@
 	<!-- Define our file output -->
 	<appender name="CheatFileAppender" type="log4net.Appender.RollingFileAppender" >
 		<appendtofile value="true" />
-		<file value="./logs/cheats.log" />
+		<file value="./logs/Cheats.log" />
 		<Layout type="log4net.Layout.PatternLayout">
 			<param name="ConversionPattern" value="%d - %m%n" />
 		</Layout>
