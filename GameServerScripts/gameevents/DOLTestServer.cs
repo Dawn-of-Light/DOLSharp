@@ -66,8 +66,7 @@ namespace DOL.GS.GameEvents
 			*/
 			//Output success message
 			if (log.IsInfoEnabled)
-				if (log.IsInfoEnabled)
-					log.Info("DOLTestServer initialized");
+				log.Info("DOLTestServer initialized");
 		}
 
 		[ScriptUnloadedEvent]

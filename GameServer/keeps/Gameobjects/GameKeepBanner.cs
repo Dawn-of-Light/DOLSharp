@@ -19,71 +19,62 @@
 using DOL.Database;
 using DOL.GS.PacketHandler;
 
-namespace DOL.GS
+namespace DOL.GS.Keeps
 {
-	/// <summary>
-	/// GameKeep is the keep in game in RVR
-	/// </summary>
 	public class GameKeepBanner : GameStaticItem
 	{
 		/// <summary>
-		/// Constructor of GameKeepBanner
+		/// Albion unclaimed banner model
 		/// </summary>
-		/// <param name="keep"></param>
-		public GameKeepBanner(AbstractGameKeep keep)
-			: base()
+		public const ushort AlbionModel = 464;
+		/// <summary>
+		/// Midgard unclaimed banner model
+		/// </summary>
+		public const ushort MidgardModel = 465;
+		/// <summary>
+		/// Hibernia unclaimed banner model
+		/// </summary>
+		public const ushort HiberniaModel = 466;
+		/// <summary>
+		/// Albion claimed banner model
+		/// </summary>
+		public const ushort AlbionGuildModel = 679;
+		/// <summary>
+		/// Midgard claimed banner model
+		/// </summary>
+		public const ushort MidgardGuildModel = 681;
+		/// <summary>
+		/// Hibernia claimed banner model
+		/// </summary>
+		public const ushort HiberniaGuildModel = 680;
+
+		private string m_templateID = "";
+		public string TemplateID
 		{
-			this.Keep = keep;
+			get { return m_templateID; }
 		}
 
-		/// <summary>
-		/// Constructor of GameKeepBanner without keep linked
-		/// be careful with this. Try to add always keep.
-		/// </summary>
-		public GameKeepBanner()
-			: base()
+		private GameKeepComponent m_component;
+		public GameKeepComponent Component
 		{
-
+			get { return m_component; }
 		}
 
-		#region Properties
-
-		/// <summary>
-		/// This hold the keep owner
-		/// </summary>
-		protected AbstractGameKeep m_keep;
-		/// <summary>
-		/// The keep owner
-		/// </summary>
-		public AbstractGameKeep Keep
-		{
-			get { return m_keep; }
-			set { m_keep = value; }
-		}
-		#endregion
-
-		/// <summary>
-		/// load GameKeepBanner from db object
-		/// </summary>
-		/// <param name="obj"></param>
 		public override void LoadFromDatabase(DataObject obj)
 		{
-			//todo make command to make banner
-			//keep must been add before loadfromDB
-			base.LoadFromDatabase(obj);
-			DBKeepObject dbkeepobj = obj as DBKeepObject;
-			if (dbkeepobj == null) return;
-			this.Name = dbkeepobj.Name;
-			this.Realm = (byte)dbkeepobj.Realm;
-			this.Model = (ushort)dbkeepobj.Model;
-			this.Emblem = (ushort)GetEmblem();
-			this.X = dbkeepobj.X;
-			this.Y = dbkeepobj.Y;
-			this.Z = dbkeepobj.Z;
-			this.Heading = (ushort)dbkeepobj.Heading;
-			this.CurrentRegion = this.Keep.CurrentRegion;
-			this.Level = (byte)(dbkeepobj.BaseLevel);
-			this.Keep.Banners.Add(this);
+			
+		}
+
+		public void LoadFromPosition(DBKeepPosition pos, GameKeepComponent component)
+		{
+			m_templateID = pos.TemplateID;
+			m_component = component;
+
+			PositionMgr.LoadBannerPosition(pos, this);
+			component.Keep.Banners.Add(this);
+			ChangeRealm();
+			if (component.Keep.Guild != null)
+				ChangeGuild();
 			this.AddToWorld();
 		}
 
@@ -92,53 +83,52 @@ namespace DOL.GS
 		/// </summary>
 		public override void SaveIntoDatabase()
 		{
-			DBKeepObject obj = null;
-			if (InternalID != null)
-				obj = (DBKeepObject)GameServer.Database.FindObjectByKey(typeof(DBKeepObject), InternalID);
-			if (obj == null)
-				obj = new DBKeepObject();
-			obj.Name = Name;
-			obj.Model = Model;
-			obj.BaseLevel = Level;
-			obj.ClassType = this.GetType().ToString();
-			obj.EquipmentID = "";
-			obj.Heading = Heading;
-			obj.KeepID = Keep.KeepID;
-			obj.Realm = Realm;
-			obj.X = X;
-			obj.Y = Y;
-			obj.Z = Z;
-			obj.ClassType = this.GetType().ToString();
 
-			if (InternalID == null)
+		}
+
+		public void ChangeRealm()
+		{
+			this.Realm = this.Component.Keep.Realm;
+
+			switch ((eRealm)this.Realm)
 			{
-				GameServer.Database.AddNewObject(obj);
-				InternalID = obj.ObjectId;
+				case eRealm.None:
+				case eRealm.Albion:
+					{
+						this.Model = AlbionModel;
+						break;
+					}
+				case eRealm.Midgard:
+					{
+						this.Model = MidgardModel;
+						break;
+					}
+				case eRealm.Hibernia:
+					{
+						this.Model = HiberniaModel;
+						break;
+					}
 			}
-			else
-			{
-				obj.ObjectId = this.InternalID;
-				GameServer.Database.SaveObject(obj);
-			}
+			this.Name = GlobalConstants.RealmToName((eRealm)this.Component.Keep.Realm) + " Banner";
 		}
 
 		/// <summary>
 		/// This function when keep is claimed to change guild for banner
 		/// </summary>
-		/// <param name="guild"></param>
-		public void ChangeGuild(Guild guild)
+		public void ChangeGuild()
 		{
+			Guild guild = Component.Keep.Guild;
 			this.Emblem = guild.theGuildDB.Emblem;
-			ushort model = 679;
-			switch (Keep.Realm)
+			ushort model = AlbionGuildModel;
+			switch (this.Component.Keep.Realm)
 			{
-				case 0: model = 679; break;
-				case 1: model = 679; break;
-				case 2: model = 680; break;
-				case 3: model = 681; break;
+				case 0: model = AlbionGuildModel; break;
+				case 1: model = AlbionGuildModel; break;
+				case 2: model = MidgardGuildModel; break;
+				case 3: model = HiberniaGuildModel; break;
 			}
 			this.Model = model;
-			this.Name = GlobalConstants.RealmToName((eRealm)Keep.Realm) + " Guild Banner";
+			this.Name = GlobalConstants.RealmToName((eRealm)this.Component.Keep.Realm) + " Guild Banner";
 		}
 
 		/// <summary>
@@ -147,9 +137,9 @@ namespace DOL.GS
 		/// <returns></returns>
 		public int GetEmblem()
 		{
-			if (this.Keep.Guild != null)
+			if (this.Component.Keep.Guild != null)
 			{
-				return this.Keep.Guild.theGuildDB.Emblem;
+				return this.Component.Keep.Guild.theGuildDB.Emblem;
 			}
 			switch (this.Realm)
 			{

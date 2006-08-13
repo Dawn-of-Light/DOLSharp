@@ -19,14 +19,14 @@
 using System;
 using System.Reflection;
 using System.Collections;
-using System.Threading;
+using System.Timers;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using DOL.GS.Scripts;
 using log4net;
 
-namespace DOL.GS
+namespace DOL.GS.Keeps
 {
 	/// <summary>
 	/// AbstractGameKeep is the keep or a tower in game in RVR
@@ -47,12 +47,12 @@ namespace DOL.GS
 		/// <summary>
 		/// Timer to remove bounty point and add realm point to guild which own keep
 		/// </summary>
-		private readonly Timer m_claimTimer;
+		private RegionTimer m_claimTimer;
 
 		/// <summary>
 		/// Timerto upgrade the keep level
 		/// </summary>
-		private readonly Timer m_upgradeTimer;
+		private RegionTimer m_changeLevelTimer;
 
 		/// <summary>
 		///
@@ -241,7 +241,7 @@ namespace DOL.GS
 			get	{ return DBKeep.KeepID; }
 			set	{ DBKeep.KeepID = value; }
 		}
-		public int Level
+		public byte Level
 		{
 			get	{ return DBKeep.Level; }
 			set	{ DBKeep.Level = value; }
@@ -314,8 +314,6 @@ namespace DOL.GS
 			m_keepComponents = new ArrayList(1);
 			m_banners = new ArrayList(1);
 			m_doors = new ArrayList(1);
-			m_claimTimer = new Timer(new TimerCallback(ClaimCallBack), null, Timeout.Infinite, Timeout.Infinite);
-			m_upgradeTimer = new Timer(new TimerCallback(UpgradeTimerCallback), null, Timeout.Infinite, Timeout.Infinite);
 		}
 
 		#region LOAD/UNLOAD
@@ -326,9 +324,23 @@ namespace DOL.GS
 		/// <param name="keep"></param>
 		public void Load(DBKeep keep)
 		{
+			KeepMgr.Logger.Info("Loading: " + keep.Name);
+			CurrentRegion = WorldMgr.GetRegion((ushort)keep.Region);
+			InitialiseTimers();
 			LoadFromDatabase(keep);
-			LoadObjects();
-			GameEventMgr.AddHandler(CurrentRegion,RegionEvent.PlayerEnter,new DOLEventHandler(SendKeepInit));
+			GameEventMgr.AddHandler(CurrentRegion, RegionEvent.PlayerEnter, new DOLEventHandler(SendKeepInit));
+			int radius;
+			if (this is GameKeep)
+			{
+				radius = 3000;
+			}
+			else
+			{
+				radius = 1500;
+			}
+			Area.Circle circle = new Area.Circle(this.Name, this.X, this.Y, 0, radius);
+			circle.CanBroadcast = true;
+			CurrentRegion.AddArea(circle);
 		}
 
 		/// <summary>
@@ -349,7 +361,7 @@ namespace DOL.GS
 				{
 					this.m_guild = myguild;
 					this.m_guild.ClaimedKeep = this;
-					m_claimTimer.Change(CLAIM_CALLBACK_INTERVAL, CLAIM_CALLBACK_INTERVAL);
+					StartDeductionTimer();
 				}
 			}
 			if (m_targetLevel< Level)
@@ -383,73 +395,33 @@ namespace DOL.GS
 		/// </summary>
 		public void LoadObjects()
 		{
-			eRealm realm = (eRealm)Realm;
-			DataObject[] objs = GameServer.Database.SelectObjects(typeof(DBKeepObject),"KeepID = " + this.KeepID + " AND Realm = " + (int)realm + " AND KeepType = " + (int)KeepType);
-			CurrentRegion = WorldMgr.GetRegion((ushort)this.DBKeep.Region);
-
-			GameObject gameObject = null;
-			foreach(DBKeepObject dbkeepObject in objs)
+			foreach (GameKeepComponent component in this.KeepComponents)
 			{
-				if (dbkeepObject.ClassType != null && dbkeepObject.ClassType != "")
+				DBKeepPosition[] Positions = (DBKeepPosition[])GameServer.Database.SelectObjects(typeof(DBKeepPosition), "ComponentSkin = '" + component.Skin + "' and Height <= " + component.Height + " order by Height desc, TemplateID");
+				Hashtable UsedPositions = new Hashtable();
+				ArrayList UsablePositions = new ArrayList();
+				foreach (DBKeepPosition pos in Positions)
 				{
-					Type keepObjType = null;
-					foreach (Assembly asm in ScriptMgr.Scripts)
+					if (UsedPositions[pos.TemplateID] == null)
 					{
-						keepObjType = asm.GetType(dbkeepObject.ClassType);
-						if (keepObjType != null)
-							break;
-					}
-					if(keepObjType==null)
-						keepObjType = Assembly.GetAssembly(typeof(GameServer)).GetType(dbkeepObject.ClassType);
-					if(keepObjType==null)
-					{
-						if (log.IsErrorEnabled)
-							log.Error("Could not find keepobject: "+dbkeepObject.ClassType+"!!!");
-						continue;
-					}
-					try
-					{
-						gameObject = (GameObject) Activator.CreateInstance(keepObjType,new object[] {this});
-					}
-					catch
-					{
-						try
-						{
-							gameObject = (GameObject) Activator.CreateInstance(keepObjType);//with no param else
-						}
-						catch
-						{
-
-						}
-					}
-
-					if (gameObject == null)
-					{
-						if (log.IsWarnEnabled)
-							log.Warn("DBKeepObject have a wrong class type which must inherite from GameObject");
-						continue;
+						UsedPositions.Add(pos.TemplateID, pos);
+						UsablePositions.Add(pos);
 					}
 				}
-				else
+				foreach (DBKeepPosition position in UsablePositions)
 				{
-					if (log.IsWarnEnabled)
-						log.Warn("DBKeepObject have a wrong class type which must inherite from GameObject");
-					continue;
-				}
+					if (position.Height > component.Height) continue;
+					Assembly asm = Assembly.GetExecutingAssembly();
+					GameObject obj = (GameObject)asm.CreateInstance(position.ClassType, true);
 
-				if (gameObject != null)
-				{
-					try
+					if (obj is GameKeepBanner)
 					{
-						gameObject.LoadFromDatabase(dbkeepObject);
+						(obj as GameKeepBanner).LoadFromPosition(position, component);
 					}
-					catch (Exception e)
+					else if (obj is GameKeepGuard)
 					{
-						if (log.IsErrorEnabled)
-							log.Error("Failed: " + gameObject.GetType().FullName + ":LoadFromDatabase(DBKeepObject);", e);
-						throw e;
+						(obj as GameKeepGuard).LoadFromPosition(position, component);
 					}
-					gameObject.AddToWorld();
 				}
 			}
 		}
@@ -464,6 +436,7 @@ namespace DOL.GS
 		/// </summary>
 		public static readonly int[] ClaimBountyPointCost =
 		{
+			0,
 			50,
 			50,
 			50,
@@ -516,71 +489,72 @@ namespace DOL.GS
 		/// <param name="player">the player who have claim the keep</param>
 		public void Claim(GamePlayer player)
 		{
-			if(player.Guild == null)
-			{
-				return;
-			}
-			if((int)player.Realm != this.Realm)
-			{
-				return;
-			}
-			player.Out.SendCustomDialog("Do you want to claim " + this.Name, new CustomDialogResponse(ClaimDialogResponse));
-
-		}
-
-		//TODO : check if keep is underattack if yes keep can not been claim
-
-		/// <summary>
-		/// this function is called when the player hit yes or no on dialogue which ask for claim
-		/// </summary>
-		/// <param name="player"></param>
-		/// <param name="response"></param>
-		private void ClaimDialogResponse(GamePlayer player, byte response)
-		{
-			if (response == 0x00)return;
-
 			this.m_guild = player.Guild;
 			player.Guild.ClaimedKeep = this;
-			Lord.Say(Lord.Name + " has accepted your request to claim the outpost.");
-			foreach(GameClient client in WorldMgr.GetClientsOfRealm(player.Realm))
+
+			ChangeLevel(1);
+
+			PlayerMgr.BroadcastClaim(this);
+
+			foreach (GameKeepGuard guard in Guards)
 			{
-				client.Out.SendMessage(player.GuildName+" has taken control of "+this.DBKeep.Name+"!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+				guard.ChangeGuild();
 			}
-			foreach( GameKeepGuard guard in Guards)
+
+			foreach (GameKeepBanner banner in Banners)
 			{
-				guard.ChangeGuild(player.Guild);
+				banner.ChangeGuild();
 			}
-			foreach(GameKeepBanner banner in Banners)
-			{
-				banner.ChangeGuild(player.Guild);
-			}
-			foreach(GamePlayer pl in player.GetPlayersInRadius(WorldMgr.OBJ_UPDATE_DISTANCE))
-			{
-				pl.Out.SendKeepClaim(this);
-			}
+			/*			foreach(GamePlayer plr in player.GetPlayersInRadius(WorldMgr.OBJ_UPDATE_DISTANCE))
+						{
+							if (plr == null)
+								continue;
+							plr.Out.SendKeepClaim(this);
+						}*/
 			GameEventMgr.Notify(KeepEvent.KeepClaimed, this, new KeepEventArgs(player));
-			m_claimTimer.Change(1, CLAIM_CALLBACK_INTERVAL);
+			StartDeductionTimer();
 			this.SaveIntoDatabase();
+
+		}
+
+		/// Starts the deduction timer
+		/// </summary>
+		public void StartDeductionTimer()
+		{
+			m_claimTimer.Start(1);
 		}
 
 		/// <summary>
-		/// take cost of claim to guild
+		/// Stops the deduction timer
 		/// </summary>
-		/// <param name="state"></param>
-		public void ClaimCallBack(object state)
+		public void StopDeductionTimer()
+		{
+			m_claimTimer.Stop();
+		}
+
+		private void InitialiseTimers()
+		{
+			m_changeLevelTimer = new RegionTimer(CurrentRegion.TimeManager);
+			m_changeLevelTimer.Callback = new RegionTimerCallback(ChangeLevelTimerCallback);
+			m_claimTimer = new RegionTimer(CurrentRegion.TimeManager);
+			m_claimTimer.Callback = new RegionTimerCallback(ClaimCallBack);
+		}
+
+		public int ClaimCallBack(RegionTimer timer)
 		{
 			if (Guild == null)
-				return;
-			if (this.Guild.BountyPoints < 50*this.Level)
+				return 0;
+			if (this.Guild.BountyPoints < 50 * this.Level)
 			{
 				this.Release();
-				return;
+				return 0;
 			}
 			int amount = CalculRP();
 			this.Guild.GainRealmPoints(amount);
 
-			int cost = ClaimBountyPointCost[this.Level-1];
+			int cost = ClaimBountyPointCost[this.Level];
 			this.Guild.GainBountyPoints(-cost);
+			return timer.Interval;
 		}
 
 		public virtual int CalculRP()
@@ -598,66 +572,119 @@ namespace DOL.GS
 		public void Release()
 		{
 			this.Guild.ClaimedKeep = null;
-			this.Guild.SendMessageToGuildMembers("You loose the claim of the keep :" + this.Name,eChatType.CT_Guild,eChatLoc.CL_SystemWindow);
+			PlayerMgr.BroadcastRelease(this);
 			this.m_guild = null;
-			m_claimTimer.Change(Timeout.Infinite, Timeout.Infinite);
-			this.Level = 0;
+			StopDeductionTimer();
+			StopChangeLevelTimer();
+			ChangeLevel(0);
 			this.SaveIntoDatabase();
 		}
 		#endregion
-
 		#region upgrade
 
 		/// <summary>
 		/// upgrade keep to a target level
 		/// </summary>
 		/// <param name="targetLevel">the target level</param>
-		public void Upgrade(int targetLevel)
+		public void ChangeLevel(byte targetLevel)
 		{
-			TargetLevel = targetLevel;
-			this.Level++ ;
-			m_upgradeTimer.Change(CalculateTimeToUpgrade(), Timeout.Infinite);
-			//todo : refresh guard
-			this.Guild.SendMessageToGuildMembers(this.Name + " is being upgraded to level " + targetLevel,eChatType.CT_Guild,eChatLoc.CL_SystemWindow);
+			this.Level = targetLevel;
+			foreach (GameKeepGuard guard in this.Guards)
+			{
+				TemplateMgr.RefreshTemplate(guard);
+			}
+			foreach (GameKeepComponent comp in this.KeepComponents)
+			{
+				comp.Update();
+				foreach (GameClient cln in WorldMgr.GetClientsOfRegion(this.CurrentRegion.ID))
+					cln.Out.SendKeepComponentDetailUpdate(comp);
+			}
+			KeepGuildMgr.SendLevelChangeMessage(this);
+			ResetPlayersOfKeep();
 			this.SaveIntoDatabase();
 		}
 
-		/// <summary>
-		/// call back called to increase the level by one
-		/// </summary>
-		/// <param name="state"></param>
-		public void UpgradeTimerCallback(object state)
+		public void StartChangeLevel(int targetLevel)
 		{
-			if ((TargetLevel < 0) || (TargetLevel > 9))
-			{
-				return ;
-			}
+			if (this.Level == targetLevel)
+				return;
+			this.TargetLevel = targetLevel;
+			StartChangeLevelTimer();
+			if (this.Guild != null)
+				KeepGuildMgr.SendChangeLevelTimeMessage(this);
+		}
 
-			this.Level++;
-			this.SaveIntoDatabase();
-			//refresh guard level
+		public TimeSpan ChangeLevelTimeRemaining
+		{
+			get
+			{
+				return new TimeSpan(m_changeLevelTimer.TimeUntilElapsed);
+			}
+		}
 
-			foreach(GameClient client in WorldMgr.GetAllPlayingClients())
-			{
-				client.Out.SendMessage("The keep "+this.Name+" is upgraded to level "+(this.Level+1)+"!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-			}
+		/// <summary>
+		/// Starts the Change Level Timer
+		/// </summary>
+		public void StartChangeLevelTimer()
+		{
+			int modifier = 1;
+			if (TargetLevel < Level)
+				modifier = -1;
 
-			foreach(GameKeepComponent comp in this.KeepComponents)
+			int newinterval = CalculateTimeToUpgrade();
+
+			if (m_changeLevelTimer.IsAlive)
 			{
-				comp.Update();
+				int timeelapsed = m_changeLevelTimer.Interval - m_changeLevelTimer.TimeUntilElapsed;
+				//if timer has run for more then we need, run event instantly
+				if (timeelapsed > m_changeLevelTimer.Interval)
+					newinterval = 1;
+				//change timer to the value we need
+				else if (timeelapsed < newinterval)
+					newinterval = m_changeLevelTimer.Interval - timeelapsed;
+				m_changeLevelTimer.Interval = newinterval;
 			}
-			foreach (GameClient client in WorldMgr.GetClientsOfRegion(this.CurrentRegion.ID))
+			m_changeLevelTimer.Stop();
+			m_changeLevelTimer.Start(newinterval);
+		}
+
+		/// <summary>
+		/// Stops the Change Level Timer
+		/// </summary>
+		public void StopChangeLevelTimer()
+		{
+			m_changeLevelTimer.Stop();
+			m_changeLevelTimer.Interval = 1;
+		}
+
+		/// <summary>
+		/// Destroys the Change Level Timer
+		/// </summary>
+		public void DestroyChangeLevelTimer()
+		{
+			if (m_changeLevelTimer != null)
 			{
-				client.Out.SendKeepComponentUpdate(this,true);
+				m_changeLevelTimer.Stop();
+				m_changeLevelTimer = null;
 			}
-			if(this.Level >= TargetLevel)
+		}
+
+		public int ChangeLevelTimerCallback(RegionTimer timer)
+		{
+			if (TargetLevel > Level)
+				ChangeLevel((byte)(this.Level + 1));
+			else
+				ChangeLevel((byte)(this.Level - 1));
+
+			if (this.Level != this.TargetLevel)
 			{
-				return ;
+				return CalculateTimeToUpgrade();
 			}
 			else
 			{
-				m_upgradeTimer.Change(this.CalculateTimeToUpgrade(), Timeout.Infinite);
-				return ;
+				this.TargetLevel = 0;
+				this.SaveIntoDatabase();
+				return 0;
 			}
 		}
 
@@ -683,34 +710,17 @@ namespace DOL.GS
 		#region reset
 
 		/// <summary>
-		/// delete all guard of keep
-		/// </summary>
-		public void DeleteAllGuard()
-		{
-			foreach( GameKeepGuard guard in Guards)
-			{
-				guard.Delete();
-			}
-			Lord.Delete();
-		}
-
-		/// <summary>
-		/// delete all banner of keep
-		/// </summary>
-		public void DeleteAllBanner()
-		{
-			foreach( GameStaticItem banner in Banners)
-			{
-				banner.Delete();
-			}
-		}
-
-		/// <summary>
 		/// reset the realm when the lord have been killed
 		/// </summary>
 		/// <param name="realm"></param>
 		public void Reset(eRealm realm)
 		{
+			string realmstr = GlobalConstants.RealmToName(realm);
+			foreach (GameClient cl in WorldMgr.GetAllPlayingClients())
+			{
+				cl.Player.Out.SendMessage("The Forces of " + realmstr + " have captured " + this.Name + "!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+			}
+
 			Realm = (byte)realm;
 			Level = 0;
 			KeepType = eKeepType.Melee;
@@ -718,10 +728,6 @@ namespace DOL.GS
 			{
 				Release();
 			}
-			m_claimTimer.Change(Timeout.Infinite, Timeout.Infinite);
-			DeleteAllGuard();
-			DeleteAllBanner();
-			LoadObjects();
 			foreach(GameKeepDoor door in Doors)
 			{
 				door.Reset(realm);
@@ -730,29 +736,72 @@ namespace DOL.GS
 			{
 				client.Player.Out.SendKeepComponentUpdate(this,false);
 			}
+
+			ResetPlayersOfKeep();
+
+			foreach (GameKeepGuard guard in Guards)
+			{
+				TemplateMgr.RefreshTemplate(guard);
+			}
+
+			foreach (GameKeepBanner banner in Banners)
+			{
+				banner.ChangeRealm();
+			}
 			SaveIntoDatabase();
 		}
 
-		/// <summary>
-		/// function called when lord is killed
-		/// to warn that the loard have been taken
-		/// </summary>
-		/// <param name="e"></param>
-		/// <param name="sender"></param>
-		/// <param name="args"></param>
-		public void LordKilled(DOLEvent e, object sender, EventArgs args)
+		private void ResetPlayersOfKeep()
 		{
-			DyingEventArgs dyingarg = args as DyingEventArgs;
-			if(dyingarg == null) return;
-
-			string realm = GlobalConstants.RealmToName((eRealm)dyingarg.Killer.Realm);
-			foreach (GameClient cl in WorldMgr.GetAllPlayingClients())
+			ushort distance = 0;
+			int id = 0;
+			if (this is GameKeepTower)
 			{
-				cl.Player.Out.SendMessage("The Forces of " + realm + " have captured " + this.Name+"!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+				distance = 750;
+				id = 11;
 			}
-			GameEventMgr.Notify(KeepEvent.KeepTaken,this,new KeepEventArgs(dyingarg.Killer as GamePlayer));
+			else
+			{
+				distance = 1500;
+				id = 10;
+			}
 
-			Reset((eRealm)dyingarg.Killer.Realm);
+
+			GameKeepComponent component = null;
+			foreach (GameKeepComponent c in this.KeepComponents)
+			{
+				if (c.Skin == id)
+				{
+					component = c;
+					break;
+				}
+			}
+			if (component == null)
+				return;
+
+			GameKeepHookPoint hookpoint = component.HookPoints[97] as GameKeepHookPoint;
+
+			if (hookpoint == null)
+				return;
+
+			//calculate target height
+			int height = KeepMgr.GetHeightFromLevel(this.Level);
+
+			//predict Z
+			DBKeepHookPoint hp = (DBKeepHookPoint)GameServer.Database.SelectObject(typeof(DBKeepHookPoint), "HookPointID = '97' and Height = '" + height + "'");
+			if (hp == null)
+				return;
+			int z = component.Z + hp.Z;
+
+			foreach (GamePlayer player in component.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+			{
+				int d = WorldMgr.GetDistance(player.X, player.Y, 0, hookpoint.X, hookpoint.Y, 0, 0);
+				if (d > distance)
+					continue;
+
+				if (player.Z > z)
+					player.MoveTo(player.CurrentRegionID, player.X, player.Y, z, player.Heading);
+			}
 		}
 		#endregion
 

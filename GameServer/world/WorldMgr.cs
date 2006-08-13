@@ -105,10 +105,20 @@ namespace DOL.GS
 		/// </summary>
 		private static readonly Hashtable m_regions = new Hashtable();
 
+		public static Hashtable Regions
+		{
+			get { return m_regions; }
+		}
+
 		/// <summary>
 		/// This hashtable holds all zones in the world, for easy access
 		/// </summary>
 		private static readonly Hashtable m_zones = new Hashtable();
+
+		public static Hashtable Zones
+		{
+			get { return m_zones; }
+		}
 
 		/// <summary>
 		/// This array holds all gameclients connected to the game

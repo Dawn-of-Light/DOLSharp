@@ -21,7 +21,7 @@ using System.Collections;
 using DOL.Database;
 
 
-namespace DOL.GS
+namespace DOL.GS.Keeps
 {
 	public interface IKeep
 	{

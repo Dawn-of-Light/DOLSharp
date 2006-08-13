@@ -124,7 +124,9 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="spot"></param>
 		/// <returns></returns>
-		public abstract bool IsContaining(IPoint3D spot);			
+		public abstract bool IsContaining(IPoint3D spot);
+
+		public abstract bool IsContaining(IPoint3D spot, bool checkZ);
 
 		/// <summary>
 		/// Called whenever a player leaves the given area

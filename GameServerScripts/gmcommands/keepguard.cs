@@ -17,10 +17,12 @@
  *
  */
 using System;
-using DOL.GS.PacketHandler;
-using DOL.Database;
+
 using DOL.AI.Brain;
+using DOL.Database;
 using DOL.Events;
+using DOL.GS.Keeps;
+using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Scripts
 {
@@ -55,6 +57,8 @@ namespace DOL.GS.Scripts
 		};
 		public int OnCommand(GameClient client, string[] args)
 		{
+			return 1;
+			/*
 			if (args.Length == 1)
 			{
 				DisplaySyntax(client);
@@ -193,10 +197,8 @@ namespace DOL.GS.Scripts
 									m_guard.Name = "Armswoman";
 									m_guard.Model = 477;
 									//todo gender
-									/*
 										m_guard.Name = "Armswoman";
-										m_guard.Model = 486;
-									*/
+										//m_guard.Model = 486;
 									m_guard.Inventory = ArmsmanTemplate.CloseTemplate();
 									m_guard.SwitchWeapon(GameLiving.eActiveWeaponSlot.Standard);
 								} break;
@@ -349,6 +351,7 @@ namespace DOL.GS.Scripts
 					}
 			}
 			return 1;
+			 */
 		}
 		private string CheckName(string name, GameClient client)
 		{

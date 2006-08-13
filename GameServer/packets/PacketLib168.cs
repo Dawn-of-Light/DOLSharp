@@ -27,6 +27,7 @@ using DOL.AI.Brain;
 using DOL.Database;
 using DOL.GS.Effects;
 using DOL.GS.Housing;
+using DOL.GS.Keeps;
 using DOL.GS.PlayerTitles;
 using DOL.GS.Quests;
 using DOL.GS.Spells;
@@ -2718,7 +2719,7 @@ namespace DOL.GS.PacketHandler
 			SendTCP(pak);
 		}
 
-		public virtual void SendKeepClaim(AbstractGameKeep keep)
+		public virtual void SendKeepClaim(AbstractGameKeep keep, byte flag)
 		{ }
 
 		public virtual void SendKeepComponentUpdate(AbstractGameKeep keep, bool LevelUp)

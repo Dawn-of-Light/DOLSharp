@@ -24,7 +24,7 @@ using System.Reflection;
 using log4net;
 
 
-namespace DOL.GS
+namespace DOL.GS.Keeps
 {
 	/// <summary>
 	/// keep door in world

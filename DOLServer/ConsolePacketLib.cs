@@ -19,11 +19,14 @@
 using System;
 using System.Collections;
 using System.Reflection;
+
 using DOL.AI.Brain;
 using DOL.GS;
 using DOL.GS.Housing;
+using DOL.GS.Keeps;
 using DOL.GS.PacketHandler;
 using DOL.GS.Quests;
+
 using log4net;
 
 namespace DOLGameServerConsole
@@ -162,7 +165,7 @@ namespace DOLGameServerConsole
 		public void SendKeepComponentInfo(GameKeepComponent keepComponent) { }
 		public void SendKeepComponentDetailUpdate(GameKeepComponent keepComponent) { }
 		public void SendKeepComponentUpdate(AbstractGameKeep keep, bool levelup) { }
-		public void SendKeepClaim(AbstractGameKeep keep) { }
+		public void SendKeepClaim(AbstractGameKeep keep, byte flag) { }
 		public void SendKeepComponentInteract(GameKeepComponent component) { }
 		public void SendKeepComponentHookPoint(GameKeepComponent component, int selectedHookPointIndex) { }
 		public void SendKeepDoorUpdate(GameKeepDoor door) { }

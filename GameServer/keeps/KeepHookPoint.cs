@@ -19,7 +19,7 @@
 using System;
 using DOL.Database;
 using DOL.Events;
-namespace DOL.GS
+namespace DOL.GS.Keeps
 {
 	/// <summary>
 	/// A keepComponent
@@ -39,7 +39,7 @@ namespace DOL.GS
 
 		public GameKeepHookPoint(DBKeepHookPoint dbhookPoint, GameKeepComponent component)
 		{
-			double angle = (component.Keep.Heading * 0.017453292519943295769236907684886); // angle*2pi/360;
+			double angle = component.Keep.Heading * ((Math.PI * 2) / 360); // angle*2pi/360;
 			switch (component.ComponentHeading)
 			{
 				case 0:

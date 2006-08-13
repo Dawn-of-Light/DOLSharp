@@ -47,15 +47,15 @@ namespace DOL.GS.DatabaseConverters
 			{
 				style.Icon = style.ID;
 
-                if (log.IsDebugEnabled)
-                    log.Debug("GrowthRate = " + style.GrowthRate);
+				if (log.IsDebugEnabled)
+					log.Debug("GrowthRate = " + style.GrowthRate);
 
 				GameServer.Database.SaveObject(style);
 			}
 			log.Info(styles.Length + " Styles Processed");
 
 			log.Info("Converting Mobs");
-			Mob[] mobs = (Mob[])GameServer.Database.SelectObjects(typeof(Mob),"`Realm` = '6'");
+			Mob[] mobs = (Mob[])GameServer.Database.SelectObjects(typeof(Mob), "`Realm` = '6'");
 			foreach (Mob mob in mobs)
 			{
 				if ((mob.Flags & (uint)GameNPC.eFlags.PEACE) == 0)
