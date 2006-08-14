@@ -30,7 +30,7 @@ namespace DOL.Database.NHibernate
 	/// </summary>
 	/// <typeparam name="TTransferObject">The transfer object's type.</typeparam>
 	/// <typeparam name="TPrimaryKey">The transfer object's primary key.</typeparam>
-	public class GenericDao<TTransferObject, TPrimaryKey> : IGenericDao<TTransferObject, TPrimaryKey>
+	public class GenericDao<TTransferObject> : IGenericDao<TTransferObject>
 	{
 		/// <summary>
 		/// Defines a logger for this class.
@@ -56,9 +56,9 @@ namespace DOL.Database.NHibernate
 		/// </summary>
 		/// <param name="key">The primary key.</param>
 		/// <returns>The found object or null.</returns>
-		public virtual TTransferObject Find(TPrimaryKey key)
+		public virtual TTransferObject Find(object key)
 		{
-			return (TTransferObject) Database.FindObjectByKey(typeof(TTransferObject), key);
+			return (TTransferObject)Database.FindObjectByKey(key.GetType(), key);
 		}
 
 		/// <summary>
