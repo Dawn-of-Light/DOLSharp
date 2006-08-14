@@ -203,6 +203,8 @@ namespace DOL.Database.Connection
 						log.Debug("SQL Select exec time " + (Environment.TickCount - start) + "ms");
 					else if (Environment.TickCount - start > 500 && log.IsWarnEnabled)
 						log.Warn("SQL Select took " + (Environment.TickCount - start) + "ms!\n" + sqlcommand);
+
+					callback(reader);
 				}
 				catch (Exception e)
 				{
