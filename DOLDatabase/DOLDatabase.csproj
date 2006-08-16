@@ -51,9 +51,11 @@
     <Compile Include="DataAccessInterfaces\IBrainDao.cs" />
     <Compile Include="DataAccessInterfaces\IBrainTemplateDao.cs" />
     <Compile Include="DataAccessInterfaces\ICraftItemDataDao.cs" />
+    <Compile Include="DataAccessInterfaces\IEnemyFactionDao.cs" />
     <Compile Include="DataAccessInterfaces\IFactionAggroLevelDao.cs" />
     <Compile Include="DataAccessInterfaces\IFactionDao.cs" />
     <Compile Include="DataAccessInterfaces\IFinishedQuestDao.cs" />
+    <Compile Include="DataAccessInterfaces\IFriendFactionDao.cs" />
     <Compile Include="DataAccessInterfaces\IGameNpcInventoryDao.cs" />
     <Compile Include="DataAccessInterfaces\IGameNpcTemplateDao.cs" />
     <Compile Include="DataAccessInterfaces\IGamePlayerDao.cs" />
@@ -99,9 +101,11 @@
     <Compile Include="DataTransferObjects\BrainEntity.cs" />
     <Compile Include="DataTransferObjects\BrainTemplateEntity.cs" />
     <Compile Include="DataTransferObjects\CraftItemDataEntity.cs" />
+    <Compile Include="DataTransferObjects\EnemyFactionEntity.cs" />
     <Compile Include="DataTransferObjects\FactionAggroLevelEntity.cs" />
     <Compile Include="DataTransferObjects\FactionEntity.cs" />
     <Compile Include="DataTransferObjects\FinishedQuestEntity.cs" />
+    <Compile Include="DataTransferObjects\FriendFactionEntity.cs" />
     <Compile Include="DataTransferObjects\GameNpcInventoryEntity.cs" />
     <Compile Include="DataTransferObjects\GameNpcTemplateEntity.cs" />
     <Compile Include="DataTransferObjects\GamePlayerEntity.cs" />

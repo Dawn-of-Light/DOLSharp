@@ -51,9 +51,11 @@
     <Compile Include="DataAccessObjects\BrainDao.cs" />
     <Compile Include="DataAccessObjects\BrainTemplateDao.cs" />
     <Compile Include="DataAccessObjects\CraftItemDataDao.cs" />
+    <Compile Include="DataAccessObjects\EnemyFactionDao.cs" />
     <Compile Include="DataAccessObjects\FactionAggroLevelDao.cs" />
     <Compile Include="DataAccessObjects\FactionDao.cs" />
     <Compile Include="DataAccessObjects\FinishedQuestDao.cs" />
+    <Compile Include="DataAccessObjects\FriendFactionDao.cs" />
     <Compile Include="DataAccessObjects\GameNpcInventoryDao.cs" />
     <Compile Include="DataAccessObjects\GameNpcTemplateDao.cs" />
     <Compile Include="DataAccessObjects\GamePlayerDao.cs" />
