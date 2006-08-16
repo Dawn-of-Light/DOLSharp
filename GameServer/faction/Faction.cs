@@ -17,10 +17,10 @@
  *
  */
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using DOL.GS.Database;
+using DOL.Database.DataTransferObjects;
 using DOL.GS.PacketHandler;
-using NHibernate.Expression;
 
 namespace DOL.GS
 {
@@ -29,7 +29,12 @@ namespace DOL.GS
 	/// </summary>
 	public class Faction
 	{
-		#region Persistant datas
+
+		public Faction(FactionEntity dbfaction)
+		{
+			this.FactionID = dbfaction.FactionId;
+			this.Name = dbfaction.Name;
+		}
 
 		/// <summary>
 		/// Store the unique db id of the faction
@@ -62,39 +67,51 @@ namespace DOL.GS
 		/// <summary>
 		/// The list of all friend faction with this one
 		/// </summary>
-		private Iesi.Collections.ISet m_friendFactions;
+		private List<Faction> m_friendFactions;
 
 		/// <summary>
 		/// Gets or sets the list of all friend faction with this one
 		/// </summary>
-		public Iesi.Collections.ISet FriendFactions
+		public List<Faction> FriendFactions
 		{
-			get
-			{
-				if(m_friendFactions == null) m_friendFactions = new Iesi.Collections.HybridSet();
-				return m_friendFactions;
-			}
+			get { return m_friendFactions; }
 			set	{ m_friendFactions = value; }
 		}
 
 		/// <summary>
-		/// The list of all anemy faction with this one
+		/// The list of all enemy faction with this one
 		/// </summary>
-		private Iesi.Collections.ISet m_enemyFactions;
+		private List<Faction> m_enemyFactions;
 		
 		/// <summary>
 		/// Gets or sets the list of all friend faction with this one
 		/// </summary>
-		public Iesi.Collections.ISet EnemyFactions
+		public List<Faction> EnemyFactions
 		{
-			get
-			{
-				if(m_enemyFactions == null) m_enemyFactions = new Iesi.Collections.HybridSet();
-				return m_enemyFactions;
-			}
+			get { return m_enemyFactions; }
 			set	{ m_enemyFactions = value; }
 		}
 
-		#endregion
+		public void AddFriendFaction(Faction faction)
+		{
+			if ( !this.FriendFactions.Contains(faction) ) 
+				this.FriendFactions.Add(faction);
+		}
+
+		public void RemoveFriendFaction(Faction faction)
+		{
+			this.FriendFactions.Remove(faction);
+		}
+
+		public void AddEnemyFaction(Faction faction)
+		{
+			if ( !this.EnemyFactions.Contains(faction) )
+				this.EnemyFactions.Add(faction);
+		}
+
+		public void RemoveEnemyFaction(Faction faction)
+		{
+			this.EnemyFactions.Remove(faction);
+		}
 	}
 }

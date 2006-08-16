@@ -22,20 +22,20 @@ using System;
 namespace DOL.Database.DataTransferObjects
 {
 	[Serializable]
-	public struct FactionEntity
+	public struct FriendFactionEntity
 	{
 		private int m_factionId;
-		private string m_name;
+		private int m_friendFactionId;
 
 		public int FactionId
 		{
 			get { return m_factionId; }
 			set { m_factionId = value; }
 		}
-		public string Name
+		public int FriendFactionId
 		{
-			get { return m_name; }
-			set { m_name = value; }
+			get { return m_friendFactionId; }
+			set { m_friendFactionId = value; }
 		}
 	}
 }
