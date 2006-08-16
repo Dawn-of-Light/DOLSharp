@@ -25,6 +25,6 @@ namespace DOL.Database.DataAccessInterfaces
 {
 	public interface IFactionDao : IGenericDao<FactionEntity>
 	{
-		FactionEntity Find(int faction1);
+		FactionEntity Find(int factionId);
 	}
 }

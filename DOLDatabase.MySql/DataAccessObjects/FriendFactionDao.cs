@@ -26,17 +26,17 @@ using MySql.Data.MySqlClient;
 
 namespace DOL.Database.MySql.DataAccessObjects
 {
-	public class FactionDao : IFactionDao
+	public class FriendFactionDao : IFriendFactionDao
 	{
-		protected static readonly string c_rowFields = "`FactionId`,`Name`";
+		protected static readonly string c_rowFields = "`FactionId`,`FriendFactionID`";
 		private readonly MySqlState m_state;
 
-		public virtual FactionEntity Find(int factionId)
+		public virtual FriendFactionEntity Find()
 		{
-			FactionEntity result = new FactionEntity();
+			FriendFactionEntity result = new FriendFactionEntity();
 
 			m_state.ExecuteQuery(
-				"SELECT " + c_rowFields + " FROM `faction` WHERE `FactionId`='" + m_state.EscapeString(factionId.ToString()) + "'",
+				"SELECT " + c_rowFields + " FROM `friendfactions` WHERE ",
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
@@ -48,22 +48,22 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return result;
 		}
 
-		public virtual void Create(FactionEntity obj)
+		public virtual void Create(FriendFactionEntity obj)
 		{
 			m_state.ExecuteNonQuery(
-				"INSERT INTO `faction` VALUES (`" + obj.FactionId.ToString() + "`,`" + obj.Name.ToString() + "`);");
+				"INSERT INTO `friendfactions` VALUES (`" + obj.FactionId.ToString() + "`,`" + obj.FriendFactionId.ToString() + "`);");
 		}
 
-		public virtual void Update(FactionEntity obj)
+		public virtual void Update(FriendFactionEntity obj)
 		{
 			m_state.ExecuteNonQuery(
-				"UPDATE `faction` SET `FactionId`='" + m_state.EscapeString(obj.FactionId.ToString()) + "', `Name`='" + m_state.EscapeString(obj.Name.ToString()) + "' WHERE `FactionId`='" + m_state.EscapeString(obj.FactionId.ToString()) + "'");
+				"UPDATE `friendfactions` SET `FactionId`='" + m_state.EscapeString(obj.FactionId.ToString()) + "', `FriendFactionID`='" + m_state.EscapeString(obj.FriendFactionId.ToString()) + "' WHERE ");
 		}
 
-		public virtual void Delete(FactionEntity obj)
+		public virtual void Delete(FriendFactionEntity obj)
 		{
 			m_state.ExecuteNonQuery(
-				"DELETE FROM `faction` WHERE `FactionId`='" + m_state.EscapeString(obj.FactionId.ToString()) + "'");
+				"DELETE FROM `friendfactions` WHERE ");
 		}
 
 		public virtual void SaveAll()
@@ -71,20 +71,20 @@ namespace DOL.Database.MySql.DataAccessObjects
 			// not used by this implementation
 		}
 
-		public virtual IList<FactionEntity> SelectAll()
+		public virtual IList<FriendFactionEntity> SelectAll()
 		{
-			FactionEntity entity;
-			List<FactionEntity> results = null;
+			FriendFactionEntity entity;
+			List<FriendFactionEntity> results = null;
 
 			m_state.ExecuteQuery(
-				"SELECT " + c_rowFields + " FROM `faction`",
+				"SELECT " + c_rowFields + " FROM `friendfactions`",
 				CommandBehavior.Default,
 				delegate(MySqlDataReader reader)
 				{
-					results = new List<FactionEntity>(reader.FieldCount);
+					results = new List<FriendFactionEntity>(reader.FieldCount);
 					while (reader.Read())
 					{
-						entity = new FactionEntity();
+						entity = new FriendFactionEntity();
 						FillEntityWithRow(ref entity, reader);
 						results.Add(entity);
 					}
@@ -97,32 +97,32 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public virtual int CountAll()
 		{
 			return (int)m_state.ExecuteScalar(
-			"SELECT COUNT(*) FROM `faction`");
+			"SELECT COUNT(*) FROM `friendfactions`");
 
 		}
 
-		protected virtual void FillEntityWithRow(ref FactionEntity entity, MySqlDataReader reader)
+		protected virtual void FillEntityWithRow(ref FriendFactionEntity entity, MySqlDataReader reader)
 		{
 			entity.FactionId = reader.GetInt32(0);
-			entity.Name = reader.GetString(1);
+			entity.FriendFactionId = reader.GetInt32(1);
 		}
 
 		public virtual Type TransferObjectType
 		{
-			get { return typeof(FactionEntity); }
+			get { return typeof(FriendFactionEntity); }
 		}
 
 		public IList<string> VerifySchema()
 		{
 			return null;
-			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `faction` ("
+			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `friendfactions` ("
 				+"`FactionId` int,"
-				+"`Name` varchar(510) character set unicode"
-				+", primary key `FactionId` (`FactionId`)"
+				+"`FriendFactionID` int"
+
 			);
 		}
 
-		public FactionDao(MySqlState state)
+		public FriendFactionDao(MySqlState state)
 		{
 			if (state == null)
 			{

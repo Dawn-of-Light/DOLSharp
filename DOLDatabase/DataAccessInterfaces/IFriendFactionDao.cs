@@ -18,24 +18,13 @@
  */
 
 using System;
+using System.Collections.Generic;
+using DOL.Database.DataTransferObjects;
 
-namespace DOL.Database.DataTransferObjects
+namespace DOL.Database.DataAccessInterfaces
 {
-	[Serializable]
-	public struct FactionEntity
+	public interface IFriendFactionDao : IGenericDao<FriendFactionEntity>
 	{
-		private int m_factionId;
-		private string m_name;
-
-		public int FactionId
-		{
-			get { return m_factionId; }
-			set { m_factionId = value; }
-		}
-		public string Name
-		{
-			get { return m_name; }
-			set { m_name = value; }
-		}
+		FriendFactionEntity Find();
 	}
 }
