@@ -19,8 +19,10 @@
 
 using System;
 using System.Reflection;
-using System.Collections;
+using System.Collections.Generic;
 using DOL.GS.Database;
+using DOL.Database.DataAccessInterfaces;
+using DOL.Database.DataTransferObjects;
 using log4net;
 
 namespace DOL.GS
@@ -41,26 +43,36 @@ namespace DOL.GS
 		/// <summary>
 		/// This hash store all Factions of the game by unique id
 		/// </summary>
-		private static Hashtable m_factions = new Hashtable();
+		private static IDictionary<int, Faction> m_factions = new Dictionary<int, Faction>();
 
 		/// <summary>
 		/// This method load all the factions from the DB
 		/// </summary>	
 		public static bool LoadAllFactions()
 		{
-			IList allFactions = GameServer.Database.SelectAllObjects(typeof(Faction));
-			foreach (Faction currentFaction in allFactions)
+			IList<FactionEntity> allFactions = GameServer.DatabaseNew.Using<IFactionDao>().SelectAll();
+
+			foreach (FactionEntity currentFaction in allFactions)
 			{
-				if(m_factions.Contains(currentFaction.FactionID))
-				{	
-					if(log.IsWarnEnabled)
-						log.Warn("Faction unique id defined twice (FactionID : "+currentFaction.FactionID+")");	
-				}
-				else
-				{
-					m_factions.Add(currentFaction.FactionID, currentFaction);
-				}
+				m_factions.Add(currentFaction.FactionId, new Faction(currentFaction));
 			}
+
+			IList<FriendFactionEntity> friendFactions = GameServer.DatabaseNew.Using<IFriendFactionDao>().SelectAll();
+			foreach (FriendFactionEntity currentFriendFaction in friendFactions)
+			{
+				Faction myFaction = GetFaction(currentFriendFaction.FactionId);
+				Faction myFriendFaction = GetFaction(currentFriendFaction.FriendFactionId);
+				myFaction.AddFriendFaction(myFriendFaction);
+			}
+
+			IList<EnemyFactionEntity> enemyFactions = GameServer.DatabaseNew.Using<IEnemyFactionDao>().SelectAll();
+			foreach (EnemyFactionEntity currentEnemyFaction in enemyFactions)
+			{
+				Faction myFaction = GetFaction(currentEnemyFaction.FactionId);
+				Faction myEnemyFaction = GetFaction(currentEnemyFaction.EnemyFactionId);
+				myFaction.AddEnemyFaction(myEnemyFaction);
+			}
+
 			return true;
 		}
 
@@ -70,7 +82,7 @@ namespace DOL.GS
 		/// <param name="uniqueID">The id of the jump point to get</param>
 		public static Faction GetFaction(int uniqueID)
 		{
-			return (m_factions[uniqueID] as Faction);
+			return m_factions[uniqueID] ;
 		}
 	}
 }
