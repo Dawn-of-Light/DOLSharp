@@ -160,6 +160,7 @@ namespace DOLGameServerConsole
 		public void SendConcentrationList() { }
 		public void SendUpdateCraftingSkills() { }
 		public void SendChangeTarget(GameObject newTarget) { }
+		public void SendChangeGroundTarget(Point3D newTarget) { }
 		public void SendPetWindow(GameLiving pet, ePetWindowAction windowAction, eAggressionState aggroState, eWalkState walkState) { }
 		public void SendKeepInfo(AbstractGameKeep keep) { }
 		public void SendKeepComponentInfo(GameKeepComponent keepComponent) { }

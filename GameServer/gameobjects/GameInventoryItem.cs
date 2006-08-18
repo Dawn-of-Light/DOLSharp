@@ -69,6 +69,18 @@ namespace DOL.GS
 		/// InventoryTemplateID. Will disappear after 3 minutes if
 		/// added to the world
 		/// </summary>
+		/// <param name="item">The InventoryItem to load and create an item from</param>
+		/// <returns>Found item or null</returns>
+		public static GameInventoryItem CreateFromTemplate(InventoryItem item)
+		{
+			return CreateFromTemplate(item.Id_nb);
+		}
+
+		/// <summary>
+		/// Creates a new GameInventoryItem based on an
+		/// InventoryTemplateID. Will disappear after 3 minutes if
+		/// added to the world
+		/// </summary>
 		/// <param name="templateID">the templateID to load and create an item</param>
 		/// <returns>Found item or null</returns>
 		public static GameInventoryItem CreateFromTemplate(string templateID)

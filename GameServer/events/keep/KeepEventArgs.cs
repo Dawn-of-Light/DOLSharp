@@ -17,7 +17,10 @@
  *
  */
 using System;
+
 using DOL.GS;
+using DOL.GS.Keeps;
+
 namespace DOL.Events
 {
 	/// <summary>
@@ -27,24 +30,24 @@ namespace DOL.Events
 	{
 
 		/// <summary>
-		/// The player
+		/// The keep
 		/// </summary>
-		private GamePlayer m_player;
+		private AbstractGameKeep m_keep;
 
 		/// <summary>
 		/// Constructs a new KeepEventArgs
 		/// </summary>
-		public KeepEventArgs(GamePlayer player)
+		public KeepEventArgs(AbstractGameKeep keep)
 		{
-			this.m_player=player;
+			this.m_keep = keep;
 		}
 
 		/// <summary>
-		/// Gets the player
+		/// Gets the Keep
 		/// </summary>
-		public GamePlayer Player
+		public AbstractGameKeep Keep
 		{
-			get { return m_player; }
+			get { return m_keep; }
 		}
 	}
 }

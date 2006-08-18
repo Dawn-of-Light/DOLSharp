@@ -47,9 +47,6 @@ namespace DOL.GS.DatabaseConverters
 			{
 				style.Icon = style.ID;
 
-				if (log.IsDebugEnabled)
-					log.Debug("GrowthRate = " + style.GrowthRate);
-
 				GameServer.Database.SaveObject(style);
 			}
 			log.Info(styles.Length + " Styles Processed");

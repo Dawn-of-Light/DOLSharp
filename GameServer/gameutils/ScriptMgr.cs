@@ -22,6 +22,7 @@ using System.Collections;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using DOL.AI.Brain;
 using DOL.Config;
 using DOL.GS.PacketHandler;
 using DOL.GS.ServerRules;
@@ -517,16 +518,15 @@ namespace DOL
 					CompilerResults res = null;
 					try
 					{
-						ICodeCompiler compiler = null;
+						CodeDomProvider compiler;
+
 						if (compileVB)
 						{
-							VBCodeProvider prov = new VBCodeProvider();
-							compiler = prov.CreateCompiler();
+							compiler = new VBCodeProvider();
 						}
 						else
 						{
-							CSharpCodeProvider prov = new CSharpCodeProvider();
-							compiler = prov.CreateCompiler();
+							compiler = new CSharpCodeProvider();
 						}
 						CompilerParameters param = new CompilerParameters(asm_names, dllName, true);
 						param.GenerateExecutable = false;
@@ -538,7 +538,7 @@ namespace DOL
 						for (int i = 0; i < files.Count; i++)
 							filepaths[i] = ((FileInfo)files[i]).FullName;
 
-						res = compiler.CompileAssemblyFromFileBatch(param, filepaths);
+						res = compiler.CompileAssemblyFromFile(param, filepaths);
 
 						//After compiling, collect
 						GC.Collect();
@@ -839,6 +839,26 @@ namespace DOL
 						type = m_gs_guilds[(int)realm][guild] as Type;
 
 					return type;
+				}
+
+
+				private static Type m_defaultControlledBrainType = typeof(ControlledNpc);
+				public static Type DefaultControlledBrainType
+				{
+					get { return m_defaultControlledBrainType; }
+					set { m_defaultControlledBrainType = value; }
+				}
+
+				/// <summary>
+				/// Constructs a new brain for player controlled npcs
+				/// </summary>
+				/// <param name="owner"></param>
+				/// <returns></returns>
+				public static IControlledBrain CreateControlledBrain(GamePlayer owner)
+				{
+					Type[] constructorParams = new Type[] { typeof(GamePlayer) };
+					ConstructorInfo handlerConstructor = m_defaultControlledBrainType.GetConstructor(constructorParams);
+					return (IControlledBrain)handlerConstructor.Invoke(new object[] { owner });
 				}
 
 

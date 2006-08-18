@@ -7,23 +7,35 @@ namespace DOL.GS.Keeps
 	{
 		public static void RefreshTemplate(GameKeepGuard guard)
 		{
-			guard.Realm = guard.Component.Keep.Realm;
-			if (guard.Component.Keep.Guild == null)
-				guard.GuildName = "";
-			else guard.GuildName = guard.Component.Keep.Guild.Name;
+			SetGuardRealm(guard);
+			SetGuardGuild(guard);
 			SetGuardRespawn(guard);
-			ChangeGuardLevel(guard);
 			SetGuardGender(guard);
 			SetGuardModel(guard);
 			SetGuardName(guard);
 			SetBlockEvadeParryChance(guard);
 			SetGuardBrain(guard);
 			SetGuardSpeed(guard);
-			ChangeGuardLevel(guard);
+			SetGuardLevel(guard);
 			SetGuardResists(guard);
 			ClothingMgr.EquipGuard(guard);
 			ClothingMgr.SetEmblem(guard);
 			guard.ChangePosition(null);
+		}
+
+		private static void SetGuardRealm(GameKeepGuard guard)
+		{
+			if (guard.Component != null)
+				guard.Realm = guard.Component.Keep.Realm;
+		}
+
+		private static void SetGuardGuild(GameKeepGuard guard)
+		{
+			if (guard.Component == null)
+				guard.GuildName = "";
+			else if (guard.Component.Keep.Guild == null)
+				guard.GuildName = "";
+			else guard.GuildName = guard.Component.Keep.Guild.Name;
 		}
 
 		private static void SetGuardRespawn(GameKeepGuard guard)
@@ -35,6 +47,14 @@ namespace DOL.GS.Keeps
 
 		private static byte GetBaseLevel(GameKeepGuard guard)
 		{
+			if (guard.Component == null)
+			{
+				if (guard is GuardLord)
+					return 65;
+				else return 55;
+			}
+			if (guard.Component.Keep is GameKeepTower && guard.Component.Keep.KeepComponents.Count > 1)
+				return 255;
 			if (guard is GuardLord)
 			{
 				if (guard.Component.Keep is GameKeep)
@@ -44,9 +64,12 @@ namespace DOL.GS.Keeps
 			return 50;
 		}
 
-		public static void ChangeGuardLevel(GameKeepGuard guard)
+		public static void SetGuardLevel(GameKeepGuard guard)
 		{
-			guard.Level = (byte)(GetBaseLevel(guard) + guard.Component.Keep.Level);
+			int bonusLevel = 0;
+			if (guard.Component != null)
+				bonusLevel = guard.Component.Keep.Level;
+			guard.Level = (byte)(GetBaseLevel(guard) + bonusLevel);
 		}
 
 		private static void SetGuardGender(GameKeepGuard guard)
@@ -537,10 +560,18 @@ namespace DOL.GS.Keeps
 		/// <param name="guard">The guard object</param>
 		private static void SetGuardName(GameKeepGuard guard)
 		{
-			if (guard is GuardLord && guard.Component.Keep is GameKeepTower)
+			if (guard is GuardLord)
 			{
-				guard.Name = "Tower Captain";
-				return;
+				if (guard.Component == null)
+				{
+					guard.Name = guard.CurrentZone.Description + " Commander";
+					return;
+				}
+				else if (guard.Component.Keep is GameKeepTower)
+				{
+					guard.Name = "Tower Captain";
+					return;
+				}
 			}
 			switch ((eRealm)guard.Realm)
 			{
@@ -702,7 +733,9 @@ namespace DOL.GS.Keeps
 		/// <param name="guard">The guard object</param>
 		public static void SetGuardSpeed(GameKeepGuard guard)
 		{
-			if (guard is GuardLord ||
+			if (guard.Component.Keep is GameKeepTower && guard.Component.Keep.KeepComponents.Count > 1)
+				guard.MaxSpeedBase = 750;
+			if ((guard is GuardLord && guard.Component != null)||
 	guard is GuardStaticArcher ||
 	guard is GuardStaticCaster)
 				guard.MaxSpeedBase = 0;

@@ -29,12 +29,16 @@ namespace DOL.GS.Keeps
 		/// <param name="guild">The guild</param>
 		public static void SendMessageToGuild(string message, Guild guild)
 		{
+			if (guild == null)
+				return;
+
 			message = "[Guild] [" + message +"]";
 			guild.SendMessageToGuildMembers(message, eChatType.CT_Guild, eChatLoc.CL_ChatWindow);
 		}
 
 		public static void SendLevelChangeMessage(AbstractGameKeep keep)
 		{
+
 			int amount = 0;
 			if (keep is GameKeep)
 				amount = GameKeep.ClaimBountyPointCost[keep.Level];
