@@ -24,7 +24,7 @@ using log4net;
 
 namespace DOL.GS.PacketHandler.v168
 {
-	[PacketHandler (PacketHandlerType.TCP, 0x13^168, "Skill action request")]
+	[PacketHandler(PacketHandlerType.TCP, 0x13 ^ 168, "Skill action request")]
 	public class UseSkillHandler : DOL.GS.PacketHandler.IPacketHandler
 	{
 		/// <summary>
@@ -32,11 +32,11 @@ namespace DOL.GS.PacketHandler.v168
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		public int HandlePacket (GameClient client, GSPacketIn packet)
+		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
-			int flagSpeedData = packet.ReadShort ();
-			int index = packet.ReadByte ();
-			int type = packet.ReadByte ();
+			int flagSpeedData = packet.ReadShort();
+			int index = packet.ReadByte();
+			int type = packet.ReadByte();
 
 			new UseSkillAction(client.Player, flagSpeedData, index, type).Start(1);
 
@@ -68,7 +68,8 @@ namespace DOL.GS.PacketHandler.v168
 			/// <param name="flagSpeedData">The skill type</param>
 			/// <param name="index">The skill index</param>
 			/// <param name="type">The skill type</param>
-			public UseSkillAction(GamePlayer actionSource, int flagSpeedData, int index, int type) : base(actionSource)
+			public UseSkillAction(GamePlayer actionSource, int flagSpeedData, int index, int type)
+				: base(actionSource)
 			{
 				m_flagSpeedData = flagSpeedData;
 				m_index = index;
@@ -83,11 +84,11 @@ namespace DOL.GS.PacketHandler.v168
 				GamePlayer player = (GamePlayer)m_actionSource;
 				int index = m_index;
 
-				if ((m_flagSpeedData & 0x200) != 0) 
+				if ((m_flagSpeedData & 0x200) != 0)
 				{
 					player.CurrentSpeed = -(m_flagSpeedData & 0x1ff);	// backward movement
-				} 
-				else 
+				}
+				else
 				{
 					player.CurrentSpeed = m_flagSpeedData & 0x1ff;	// forwardmovement
 				}
@@ -99,15 +100,15 @@ namespace DOL.GS.PacketHandler.v168
 				Skill sk = null;
 				if (m_type > 0)
 				{
-					IList skillList = player.GetNonTrainableSkillList ();
+					IList skillList = player.GetNonTrainableSkillList();
 					if (index < skillList.Count)
 					{
 						sk = skillList[index] as Skill;
 					}
-					else 
+					else
 					{
-						IList styles = player.GetStyleList ();
-						if(index < skillList.Count+styles.Count)
+						IList styles = player.GetStyleList();
+						if (index < skillList.Count + styles.Count)
 						{
 							index -= skillList.Count;
 							sk = styles[index] as Skill;
@@ -115,24 +116,32 @@ namespace DOL.GS.PacketHandler.v168
 						else
 						{
 							IList spelllines = player.GetSpellLines();
-							if (index < skillList.Count+styles.Count+player.GetAmountOfSpell())
+							if (index < skillList.Count + styles.Count + player.GetAmountOfSpell())
 							{
-								index -= (skillList.Count+styles.Count);
+								index -= (skillList.Count + styles.Count);
+								Spell spell = null;
+								SpellLine spellline = null;
 								lock (spelllines.SyncRoot)
 								{
-									foreach (SpellLine spellline in spelllines) 
+									foreach (SpellLine line in spelllines)
 									{
-										IList spells = player.GetUsableSpellsOfLine(spellline);
-										if( index >= spells.Count )
+										IList spells = player.GetUsableSpellsOfLine(line);
+										if (index >= spells.Count)
 										{
 											index -= spells.Count;
 										}
 										else
 										{
-											player.CastSpell((Spell)spells[index], spellline);
-											return;
+											spell = (Spell)spells[index];
+											spellline = line;
+											break;
 										}
 									}
+								}
+								if (spell != null)
+								{
+									player.CastSpell(spell, spellline);
+									return;
 								}
 							}
 							// TODO   Song and RA
@@ -141,7 +150,7 @@ namespace DOL.GS.PacketHandler.v168
 				}
 				else
 				{
-					IList specs = player.GetSpecList ();
+					IList specs = player.GetSpecList();
 					if (index < specs.Count)
 					{
 						sk = specs[index] as Skill;
@@ -152,7 +161,7 @@ namespace DOL.GS.PacketHandler.v168
 				{
 					if (sk is Style)
 					{
-						StyleProcessor.TryToUseStyle(player,(Style) sk);
+						StyleProcessor.TryToUseStyle(player, (Style)sk);
 						return;
 					}
 					//player.Out.SendMessage("you triggered skill "+sk.Name, eChatType.CT_Advise, eChatLoc.CL_SystemWindow);
@@ -160,32 +169,36 @@ namespace DOL.GS.PacketHandler.v168
 					int reuseTime = player.GetSkillDisabledDuration(sk);
 					if (reuseTime > 60000)
 					{
-						player.Out.SendMessage(string.Format("You must wait {0} minutes {1} seconds to use this ability!", reuseTime/60000, reuseTime%60000/1000), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						return;
+						player.Out.SendMessage(string.Format("You must wait {0} minutes {1} seconds to use this ability!", reuseTime / 60000, reuseTime % 60000 / 1000), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						if (player.Client.Account.PrivLevel < 2) return;
 					}
 					else if (reuseTime > 0)
 					{
-						player.Out.SendMessage(string.Format("You must wait {0} seconds to use this ability!", reuseTime/1000+1), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						return;
+						player.Out.SendMessage(string.Format("You must wait {0} seconds to use this ability!", reuseTime / 1000 + 1), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						if (player.Client.Account.PrivLevel < 2) return;
 					}
 
 					if (sk is Ability)
 					{
 						Ability ab = sk as Ability;
-						IAbilityActionHandler handler = SkillBase.GetAbilityActionHandler (ab.KeyName);
+						IAbilityActionHandler handler = SkillBase.GetAbilityActionHandler(ab.KeyName);
 						if (handler != null)
 						{
-							handler.Execute (ab, player);
+							handler.Execute(ab, player);
 							return;
+						}
+						else
+						{
+							ab.Execute(player);
 						}
 					}
 					if (sk is Specialization)
 					{
 						Specialization spec = sk as Specialization;
-						ISpecActionHandler handler = SkillBase.GetSpecActionHandler (spec.KeyName);
+						ISpecActionHandler handler = SkillBase.GetSpecActionHandler(spec.KeyName);
 						if (handler != null)
 						{
-							handler.Execute (spec, player);
+							handler.Execute(spec, player);
 							return;
 						}
 					}
@@ -197,7 +210,7 @@ namespace DOL.GS.PacketHandler.v168
 				}
 				if (sk == null)
 				{
-					player.Out.SendMessage ("Skill is not implemented.", eChatType.CT_Advise, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage("Skill is not implemented.", eChatType.CT_Advise, eChatLoc.CL_SystemWindow);
 				}
 			}
 		}

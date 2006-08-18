@@ -30,14 +30,6 @@ namespace DOL.GS.Scripts
 	{
 		public int OnCommand(GameClient client, string[] args)
 		{
-			if (args.Length == 1)
-			{
-				client.Out.SendMessage("Usage: /heal",
-				                       eChatType.CT_System,
-				                       eChatLoc.CL_SystemWindow);
-				return 1;
-			}
-
 			try
 			{
 				GameLiving living = client.Player.TargetObject as GameLiving;

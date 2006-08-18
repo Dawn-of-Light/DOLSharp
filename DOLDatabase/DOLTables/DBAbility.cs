@@ -31,7 +31,7 @@ namespace DOL.Database
 		protected int	m_iconID = 0;		// 0 if no icon, ability icons start at 0x190
 		protected string m_name = "unknown";
 		protected string m_description = "no description";
-//		protected string m_handlerClass = null;
+		protected string m_implementation = null;
 
 		static bool			m_autoSave;
 
@@ -112,15 +112,18 @@ namespace DOL.Database
 			}
 		}
 
-//		[DataElement(AllowDbNull=true)]
-//		public string Handler
-//		{
-//			get {	return m_handlerClass;	}
-//			set	
-//			{
-//				Dirty = true;
-//				m_handlerClass = value;
-//			}
-//		}
+		/// <summary>
+		/// Implementierungsklasse
+		/// </summary>
+		[DataElement(AllowDbNull=true)]
+		public string Implementation
+		{
+			get {	return m_implementation;	}
+			set	
+			{
+				Dirty = true;
+				m_implementation = value;
+			}
+		}
 	}
 }

@@ -57,6 +57,7 @@ namespace DOL.GS.Scripts
 			text.Append("using DOL.GS;\n");
 			text.Append("using DOL.GS.Movement;\n");
 			text.Append("using DOL.GS.Housing;\n");
+			text.Append("using DOL.GS.Keeps;\n");
 			text.Append("using DOL.GS.Quests;\n");
 			text.Append("using DOL.GS.Scripts;\n");
 			text.Append("using DOL.GS.PacketHandler;\n");

@@ -20,12 +20,15 @@ using System;
 using System.Collections;
 using System.Reflection;
 using System.Text;
+
 using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
+using DOL.GS.RealmAbilities;
 using DOL.GS.SkillHandler;
+
 using log4net;
 
 namespace DOL.GS.Spells
@@ -1210,7 +1213,7 @@ namespace DOL.GS.Spells
 			if (effectiveness <= 0)
 				return; // no effect
 
-			if (Spell.Duration > 0 || Spell.Concentration > 0)
+			if ((Spell.Duration > 0 && Spell.Target != "Area") || Spell.Concentration > 0)
 			{
 				if (!target.Alive)
 					return;
@@ -1822,6 +1825,23 @@ namespace DOL.GS.Spells
 			{
 				finalDamage += (int) (finalDamage*(hitChance - 100)*0.01);
 				hitChance = 100;
+			}
+
+			double MoM = 1.0;
+			if (player != null)
+			{
+				if (player.HasAbility(MasteryOfMageryAbility.KEY))
+				{
+					switch (player.GetAbilityLevel(MasteryOfMageryAbility.KEY))
+					{
+						case 1: MoM = 1.02; break;
+						case 2: MoM = 1.04; break;
+						case 3: MoM = 1.07; break;
+						case 4: MoM = 1.27; break;
+						case 5: MoM = 1.39; break;
+						default: break;
+					}
+				}
 			}
 
 			double TOADmg = 1.0 + m_caster.GetModified(eProperty.SpellDamage) * 0.01;

@@ -58,6 +58,8 @@ namespace DOL.GS
 		private ISpellHandler m_styleEffect;
 		private int m_animationId;
 		private int m_weaponSpeed;
+		private bool m_isOffHand;
+		private InventoryItem m_weapon;
 
 		/// <summary>
 		/// Constructs new AttackData
@@ -194,6 +196,18 @@ namespace DOL.GS
 					|| m_attackType == eAttackType.MeleeTwoHand
 					|| m_attackType == eAttackType.MeleeDualWield;
 			}
+		}
+
+		public bool IsOffHand
+		{
+			get { return m_isOffHand; }
+			set { m_isOffHand = value; }
+		}
+
+		public InventoryItem Weapon
+		{
+			get { return m_weapon; }
+			set { m_weapon = value; }
 		}
 
 		/// <summary>
@@ -1221,6 +1235,9 @@ namespace DOL.GS
 			ad.WeaponSpeed = (weapon == null ? AttackSpeed(null) / 100 : AttackSpeed(weapon) / 100);
 			ad.DamageType = AttackDamageType(weapon);
 			ad.ArmorHitLocation = eArmorSlot.UNKNOWN;
+			ad.Weapon = weapon;
+			ad.IsOffHand = weapon == null ? false : weapon.Hand == 2;
+
 
 			if (dualWield)
 				ad.AttackType = AttackData.eAttackType.MeleeDualWield;
@@ -4602,6 +4619,15 @@ namespace DOL.GS
 			return new GameEffectList(this);
 		}
 
+		#endregion
+		#region Abilities
+		/// </summary>
+		/// <param name="keyName">KeyName of ability</param>
+		/// <returns>Has player this ability</returns>
+		public virtual bool HasAbility(string keyName)
+		{
+			return false;
+		}
 		#endregion
 		#region Region
 

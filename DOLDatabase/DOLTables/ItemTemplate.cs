@@ -24,10 +24,10 @@ using System.Collections;
 
 namespace DOL.Database
 {
-	[DataTable(TableName="ItemTemplate", PreCache=true)]
+	[DataTable(TableName = "ItemTemplate", PreCache = true)]
 	public class ItemTemplate : DataObject
 	{
-		protected string  m_id_nb;
+		protected string m_id_nb;
 		protected string m_name;
 		protected int m_level;
 		protected int m_durability;
@@ -67,6 +67,7 @@ namespace DOL.Database
 		protected byte m_copper;
 		protected bool m_isDropable;
 		protected bool m_isPickable;
+		protected bool m_isTradable;
 		protected int m_maxCount;
 		protected int m_packSize;
 		protected int m_charges;
@@ -74,21 +75,21 @@ namespace DOL.Database
 		protected int m_spellID;
 		protected int m_procSpellID;
 		protected int m_realm;
-        
-		static bool			m_autoSave;
+
+		static bool m_autoSave;
 
 		public ItemTemplate()
 		{
 			m_id_nb = "XXX_useless_junk_XXX";
-            m_name = "Some usless junk";
-            m_level = 0;
-            m_durability = 1;
-            m_maxdurability = 1;
-            m_condition = 1;
-            m_maxcondition = 1;
-            m_quality = 1;
-            m_maxquality = 1;
-            m_dps_af = 0;
+			m_name = "Some usless junk";
+			m_level = 0;
+			m_durability = 1;
+			m_maxdurability = 1;
+			m_condition = 1;
+			m_maxcondition = 1;
+			m_quality = 1;
+			m_maxquality = 1;
+			m_dps_af = 0;
 			m_spd_abs = 0;
 			m_hand = 0;
 			m_type_damage = 0;
@@ -125,7 +126,7 @@ namespace DOL.Database
 			m_maxCharges = 0;
 			m_spellID = 0;//when no spell link to item
 			m_procSpellID = 0;
-			m_autoSave=false;
+			m_autoSave = false;
 		}
 
 		[PrimaryKey]
@@ -154,7 +155,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull=false)]
+		[DataElement(AllowDbNull = false)]
 		public string Name
 		{
 			get
@@ -167,7 +168,7 @@ namespace DOL.Database
 				m_name = value;
 			}
 		}
-		[DataElement(AllowDbNull=false)]
+		[DataElement(AllowDbNull = false)]
 		public int Level
 		{
 			get
@@ -180,7 +181,7 @@ namespace DOL.Database
 				m_level = value;
 			}
 		}
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public int Durability
 		{
 			get
@@ -197,11 +198,11 @@ namespace DOL.Database
 		{
 			get
 			{
-				return (byte)((m_maxdurability>0) ? m_durability * 100 / m_maxdurability : 0);
+				return (byte)((m_maxdurability > 0) ? m_durability * 100 / m_maxdurability : 0);
 			}
 		}
 
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public int MaxDurability
 		{
 			get
@@ -214,7 +215,7 @@ namespace DOL.Database
 				m_maxdurability = value;
 			}
 		}
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public int Condition
 		{
 			get
@@ -231,10 +232,10 @@ namespace DOL.Database
 		{
 			get
 			{
-				return (byte)Math.Round((m_maxcondition>0) ? (double)m_condition / m_maxcondition * 100 : 0);
+				return (byte)Math.Round((m_maxcondition > 0) ? (double)m_condition / m_maxcondition * 100 : 0);
 			}
 		}
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public int MaxCondition
 		{
 			get
@@ -247,7 +248,7 @@ namespace DOL.Database
 				m_maxcondition = value;
 			}
 		}
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public int Quality
 		{
 			get
@@ -259,21 +260,21 @@ namespace DOL.Database
 				Dirty = true;
 				m_quality = value;
 			}
-		}		
-		[DataElement(AllowDbNull=true)]
+		}
+		[DataElement(AllowDbNull = true)]
 		public int MaxQuality
-				{
-					get
-					{
-						return m_maxquality;
-					}
-					set
-					{
-						Dirty = true;
-						m_maxquality = value;
-					}
-				}
-		[DataElement(AllowDbNull=true)]
+		{
+			get
+			{
+				return m_maxquality;
+			}
+			set
+			{
+				Dirty = true;
+				m_maxquality = value;
+			}
+		}
+		[DataElement(AllowDbNull = true)]
 		public int DPS_AF
 		{
 			get
@@ -286,7 +287,7 @@ namespace DOL.Database
 				m_dps_af = value;
 			}
 		}
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public int SPD_ABS
 		{
 			get
@@ -299,7 +300,7 @@ namespace DOL.Database
 				m_spd_abs = value;
 			}
 		}
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public int Hand
 		{
 			get
@@ -312,7 +313,7 @@ namespace DOL.Database
 				m_hand = value;
 			}
 		}
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public int Type_Damage
 		{
 			get
@@ -325,7 +326,7 @@ namespace DOL.Database
 				m_type_damage = value;
 			}
 		}
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public int Object_Type
 		{
 			get
@@ -338,7 +339,7 @@ namespace DOL.Database
 				m_object_type = value;
 			}
 		}
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public int Item_Type
 		{
 			get
@@ -351,7 +352,7 @@ namespace DOL.Database
 				m_item_type = value;
 			}
 		}
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public int Color
 		{
 			get
@@ -364,7 +365,7 @@ namespace DOL.Database
 				m_color = value;
 			}
 		}
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public int Emblem
 		{
 			get
@@ -377,7 +378,7 @@ namespace DOL.Database
 				m_emblem = value;
 			}
 		}
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public int Effect
 		{
 			get
@@ -390,7 +391,7 @@ namespace DOL.Database
 				m_effect = value;
 			}
 		}
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public int Weight
 		{
 			get
@@ -403,7 +404,7 @@ namespace DOL.Database
 				m_weight = value;
 			}
 		}
-		[DataElement(AllowDbNull=false)]
+		[DataElement(AllowDbNull = false)]
 		public int Model
 		{
 			get
@@ -416,7 +417,7 @@ namespace DOL.Database
 				m_model = value;
 			}
 		}
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public byte Extension
 		{
 			get
@@ -426,10 +427,10 @@ namespace DOL.Database
 			set
 			{
 				Dirty = true;
-				m_extension= value;
+				m_extension = value;
 			}
 		}
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public int Bonus
 		{
 			get
@@ -442,7 +443,7 @@ namespace DOL.Database
 				m_bonus = value;
 			}
 		}
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public int Bonus1
 		{
 			get
@@ -455,7 +456,7 @@ namespace DOL.Database
 				m_bonus1 = value;
 			}
 		}
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public int Bonus2
 		{
 			get
@@ -468,7 +469,7 @@ namespace DOL.Database
 				m_bonus2 = value;
 			}
 		}
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public int Bonus3
 		{
 			get
@@ -481,7 +482,7 @@ namespace DOL.Database
 				m_bonus3 = value;
 			}
 		}
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public int Bonus4
 		{
 			get
@@ -494,7 +495,7 @@ namespace DOL.Database
 				m_bonus4 = value;
 			}
 		}
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public int Bonus5
 		{
 			get
@@ -507,7 +508,7 @@ namespace DOL.Database
 				m_bonus5 = value;
 			}
 		}
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public int ExtraBonus
 		{
 			get
@@ -520,7 +521,7 @@ namespace DOL.Database
 				m_extrabonus = value;
 			}
 		}
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public int Bonus1Type
 		{
 			get
@@ -533,7 +534,7 @@ namespace DOL.Database
 				m_bonus1Type = value;
 			}
 		}
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public int Bonus2Type
 		{
 			get
@@ -546,7 +547,7 @@ namespace DOL.Database
 				m_bonus2Type = value;
 			}
 		}
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public int Bonus3Type
 		{
 			get
@@ -559,7 +560,7 @@ namespace DOL.Database
 				m_bonus3Type = value;
 			}
 		}
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public int Bonus4Type
 		{
 			get
@@ -572,7 +573,7 @@ namespace DOL.Database
 				m_bonus4Type = value;
 			}
 		}
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public int Bonus5Type
 		{
 			get
@@ -585,7 +586,7 @@ namespace DOL.Database
 				m_bonus5Type = value;
 			}
 		}
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public int ExtraBonusType
 		{
 			get
@@ -598,7 +599,7 @@ namespace DOL.Database
 				m_extrabonusType = value;
 			}
 		}
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public bool IsPickable
 		{
 			get
@@ -606,12 +607,12 @@ namespace DOL.Database
 				return m_isPickable;
 			}
 			set
-			{   
+			{
 				Dirty = true;
 				m_isPickable = value;
 			}
 		}
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public bool IsDropable
 		{
 			get
@@ -619,19 +620,34 @@ namespace DOL.Database
 				return m_isDropable;
 			}
 			set
-			{   
+			{
 				Dirty = true;
 				m_isDropable = value;
 			}
 		}
-		
-		public long Value
+
+		[DataElement(AllowDbNull = true)]
+		public bool IsTradable
 		{
-			get {	
-				return (((0*1000L+0)*1000L+Gold)*100L+Silver)*100L+Copper;	
+			get
+			{
+				return m_isTradable;
+			}
+			set
+			{
+				Dirty = true;
+				m_isTradable = value;
 			}
 		}
-		[DataElement(AllowDbNull=true)]
+
+		public long Value
+		{
+			get
+			{
+				return (((0 * 1000L + 0) * 1000L + Gold) * 100L + Silver) * 100L + Copper;
+			}
+		}
+		[DataElement(AllowDbNull = true)]
 		public short Gold
 		{
 			get
@@ -639,12 +655,12 @@ namespace DOL.Database
 				return m_gold;
 			}
 			set
-			{   
+			{
 				Dirty = true;
 				m_gold = value;
 			}
 		}
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public byte Silver
 		{
 			get
@@ -652,13 +668,13 @@ namespace DOL.Database
 				return m_silver;
 			}
 			set
-			{   
+			{
 				Dirty = true;
 				m_silver = value;
 			}
 		}
 
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public byte Copper
 		{
 			get
@@ -666,7 +682,7 @@ namespace DOL.Database
 				return m_copper;
 			}
 			set
-			{   
+			{
 				Dirty = true;
 				m_copper = value;
 			}
@@ -675,7 +691,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Max amount allowed in one stack
 		/// </summary>
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public int MaxCount
 		{
 			get { return m_maxCount; }
@@ -697,7 +713,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Amount of items sold at once
 		/// </summary>
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public int PackSize
 		{
 			get { return m_packSize; }
@@ -711,7 +727,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Charge of item when he have some charge of a spell
 		/// </summary>
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public int Charges
 		{
 			get { return m_charges; }
@@ -725,7 +741,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Max charge of item when he have some charge of a spell
 		/// </summary>
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public int MaxCharges
 		{
 			get { return m_maxCharges; }
@@ -739,7 +755,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Spell id for items with charge
 		/// </summary>
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public int SpellID
 		{
 			get { return m_spellID; }
@@ -753,7 +769,7 @@ namespace DOL.Database
 		/// <summary>
 		/// ProcSpell id for items
 		/// </summary>
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public int ProcSpellID
 		{
 			get { return m_procSpellID; }
@@ -764,7 +780,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public int Realm
 		{
 			get { return m_realm; }
@@ -798,35 +814,35 @@ namespace DOL.Database
 		/// <returns>name of this object (includes article if needed)</returns>
 		public virtual string GetName(int article, bool firstLetterUppercase)
 		{
-/*			if(char.IsUpper(Name[0]))
+			/*			if(char.IsUpper(Name[0]))
+						{
+							// proper name
+							if(firstLetterUppercase) return "The "+Name; else return "the "+Name;
+						}
+						else // common noun*/
+			if (article == 0)
 			{
-				// proper name
-				if(firstLetterUppercase) return "The "+Name; else return "the "+Name;
-			}
-			else // common noun*/
-			if(article == 0)
-			{
-				if(firstLetterUppercase)
-					return "The "+Name;
+				if (firstLetterUppercase)
+					return "The " + Name;
 				else
-					return "the "+Name;
+					return "the " + Name;
 			}
 			else
 			{
 				// if first letter is a vowel
-				if(m_vowels.IndexOf(Name[0]) != -1)
+				if (m_vowels.IndexOf(Name[0]) != -1)
 				{
-					if(firstLetterUppercase)
-						return "An "+Name;
+					if (firstLetterUppercase)
+						return "An " + Name;
 					else
-						return "an "+Name;
+						return "an " + Name;
 				}
 				else
 				{
-					if(firstLetterUppercase)
-						return "A "+Name;
+					if (firstLetterUppercase)
+						return "A " + Name;
 					else
-						return "a "+Name;
+						return "a " + Name;
 				}
 			}
 		}

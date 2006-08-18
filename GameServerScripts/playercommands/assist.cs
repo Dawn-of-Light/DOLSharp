@@ -20,7 +20,7 @@ using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Scripts
 {
-	[CmdAttribute("&assist", (uint) ePrivLevel.Player, "Assist your target", "/assist [playerName]")]
+	[CmdAttribute("&assist", (uint)ePrivLevel.Player, "Assist your target", "/assist [playerName]")]
 	public class AssistCommandHandler : ICommandHandler
 	{
 		public int OnCommand(GameClient client, string[] args)
@@ -31,15 +31,14 @@ namespace DOL.GS.Scripts
 				GameClient assistClient = WorldMgr.GetClientByPlayerName(args[1], true, true);
 				if (assistClient != null)
 				{
-					if (!GameServer.ServerRules.IsSameRealm(client.Player, assistClient.Player, false))
+					assistPlayer = assistClient.Player;
+					if (!GameServer.ServerRules.IsSameRealm(client.Player, assistPlayer, false))
 						return 0;
-
 					if (!WorldMgr.CheckDistance(client.Player, assistClient.Player, 2048))
 					{
 						client.Out.SendMessage("You don't see " + args[1] + " around here!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						return 0;
 					}
-					assistPlayer = assistClient.Player;
 				}
 			}
 			else if (client.Player.TargetObject == null)
