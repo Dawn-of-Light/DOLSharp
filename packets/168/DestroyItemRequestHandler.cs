@@ -32,11 +32,18 @@ namespace DOL.GS.PacketHandler.v168
 			InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)slot);
 			if (item != null)
 			{
+				if (item.Id_nb == "ARelic")
+				{
+					client.Out.SendMessage("You cannot destroy a relic!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					return 0;
+				}
+
 				if ((new ArrayList(client.Player.Inventory.EquippedItems).Contains(item)))
 				{
 					client.Out.SendMessage("You cannot destroy an equipped item!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return 0;
 				}
+
 				if (client.Player.Inventory.RemoveItem(item))
 					client.Out.SendMessage("You destroy the " + item.Name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}

@@ -27,8 +27,11 @@ namespace DOL.GS.Keeps
 		/// <param name="killer"The killer object></param>
 		public override void Die(GameObject killer)
 		{
-			PlayerMgr.UpdateStats(this);
-			this.Component.Keep.Reset((eRealm)killer.Realm);
+			if (this.Component != null)
+			{
+				PlayerMgr.UpdateStats(this);
+				this.Component.Keep.Reset((eRealm)killer.Realm);
+			}
 			base.Die(killer);
 		}
 
@@ -39,6 +42,9 @@ namespace DOL.GS.Keeps
 		/// <returns></returns>
 		public override bool Interact(GamePlayer player)
 		{
+			if (this.Component == null)
+				return false;
+
 			byte flag = 0;
 			if (PlayerMgr.IsAllowedToInteract(player, this.Component.Keep, eInteractType.Claim))
 			{
@@ -68,7 +74,7 @@ namespace DOL.GS.Keeps
 		public override void TakeDamage(GameObject source, eDamageType damageType, int damageAmount, int criticalAmount)
 		{
 			int distance = 0;
-			if (this.Component.Keep != null && this.Component.Keep is GameKeep)
+			if (this.Component != null && this.Component.Keep != null && this.Component.Keep is GameKeep)
 				distance = 750;
 			else distance = 350;
 			if (WorldMgr.GetDistance(source, this) > distance)

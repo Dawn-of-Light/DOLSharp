@@ -25,11 +25,13 @@ using System.Net;
 using System.Reflection;
 using DOL.AI.Brain;
 using DOL.Database;
+using DOL.Events;
 using DOL.GS.Effects;
 using DOL.GS.Housing;
 using DOL.GS.Keeps;
 using DOL.GS.PlayerTitles;
 using DOL.GS.Quests;
+using DOL.GS.RealmAbilities;
 using DOL.GS.Spells;
 using DOL.GS.Styles;
 using log4net;
@@ -697,7 +699,14 @@ namespace DOL.GS.PacketHandler
 		public virtual void SendDebugMode(bool on)
 		{
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.DebugMode));
-			pak.WriteByte((byte)(on ? 0x01 : 0x00));
+			if (m_gameClient.Account.PrivLevel == 1)
+			{
+				pak.WriteByte((byte)(0x00));
+			}
+			else
+			{
+				pak.WriteByte((byte)(on ? 0x01 : 0x00));
+			}
 			pak.WriteByte(0x00);
 			SendTCP(pak);
 		}
@@ -1934,18 +1943,11 @@ namespace DOL.GS.PacketHandler
 								CheckLengthHybridSkillsPacket(ref pak, ref maxSkills, ref firstSkills);
 								pak.WriteByte(0);
 								byte type = (byte)eSkillPage.Abilities;
-								if (skill is Ability)
+								if (skill is RealmAbility)
 								{
-									/*
-									if (((Ability)skill).MaxLevel > 0)
-									{
-										type = (byte)eSkillPage.RealmAbilities;
-									}
-									 */
+									type = (byte)eSkillPage.RealmAbilities;
 								}
 								pak.WriteByte(type);
-								//if(skill.ID < 500) pak.WriteByte((byte) eSkillPage.Abilities);
-								//else pak.WriteByte((byte) eSkillPage.AbilitiesSpell);
 								pak.WriteShort(0);
 								pak.WriteByte(0);
 								pak.WriteShort(skill.ID);
@@ -2240,6 +2242,59 @@ namespace DOL.GS.PacketHandler
 				pak.WritePascalString(spec.Name);
 			}
 			SendTCP(pak);
+
+			// realm abilities
+			IList raList = SkillBase.GetClassRealmAbilities(m_gameClient.Player.CharacterClass.ID);
+			if (raList != null && raList.Count > 0)
+			{
+
+				ArrayList offeredRA = new ArrayList();
+				foreach (RealmAbility ra in raList)
+				{
+					RealmAbility playerRA = (RealmAbility)m_gameClient.Player.GetAbility(ra.KeyName);
+					if (playerRA != null)
+					{
+						if (playerRA.Level < playerRA.MaxLevel)
+						{
+							RealmAbility ab = SkillBase.GetAbility(playerRA.KeyName, playerRA.Level + 1) as RealmAbility;
+							if (ab != null)
+							{
+								offeredRA.Add(ab);
+							}
+							else
+							{
+								log.Error("Ability " + ab.Name + " not found unexpectly");
+							}
+						}
+					}
+					else
+					{
+						if (ra.Level < ra.MaxLevel)
+						{
+							offeredRA.Add(ra);
+						}
+					}
+				}
+
+				pak = new GSTCPPacketOut(GetPacketCode(ePackets.TrainerWindow));
+				pak.WriteByte((byte)offeredRA.Count);
+				pak.WriteByte((byte)m_gameClient.Player.RealmSpecialtyPoints);
+				pak.WriteByte((byte)1);
+				pak.WriteByte((byte)0);
+
+				i = 0;
+				foreach (RealmAbility ra in offeredRA)
+				{
+					pak.WriteByte((byte)i++);
+					pak.WriteByte((byte)ra.Level);
+					pak.WriteByte((byte)ra.CostForUpgrade(ra.Level - 1));
+					bool canBeUsed = ra.CheckRequirement(m_gameClient.Player);
+					pak.WritePascalString((canBeUsed ? "" : "[") + ra.Name + (canBeUsed ? "" : "]"));
+				}
+
+				m_gameClient.Player.TempProperties.setProperty("OFFERED_RA", offeredRA);
+				SendTCP(pak);
+			}
 		}
 
 		public virtual void SendInterruptAnimation(GameLiving living)
@@ -2255,7 +2310,7 @@ namespace DOL.GS.PacketHandler
 			if (m_gameClient.Player == null)
 				return;
 
-			if (skill.SkillType == eSkillPage.Abilities)
+			if (skill.SkillType == eSkillPage.Abilities || skill.SkillType == eSkillPage.RealmAbilities)
 			{
 				GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.DisableSkills));
 				pak.WriteShort((ushort)duration);
@@ -2265,7 +2320,7 @@ namespace DOL.GS.PacketHandler
 				{
 					foreach (Skill skl in skillList)
 					{
-						if (skl.SkillType == eSkillPage.Abilities)
+						if (skl.SkillType == eSkillPage.Abilities || skl.SkillType == eSkillPage.RealmAbilities)
 							id++;
 						if (skl == skill)
 							break;
@@ -2380,7 +2435,7 @@ namespace DOL.GS.PacketHandler
 				{
 					if (effect.Icon != 0)
 					{
-						pak.WriteByte((effect is GameSpellEffect) ? i++ : (byte)0xff);
+						pak.WriteByte((effect is GameSpellEffect || effect.Icon > 5000) ? i++ : (byte)0xff);
 						pak.WriteByte(0);
 						pak.WriteShort(effect.Icon);
 						pak.WriteShort((ushort)(effect.RemainingTime / 1000));
@@ -2506,6 +2561,15 @@ namespace DOL.GS.PacketHandler
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.ChangeTarget));
 			pak.WriteShort((ushort)(newTarget == null ? 0 : newTarget.ObjectID));
 			pak.WriteShort(0); // unknown
+			SendTCP(pak);
+		}
+
+		public void SendChangeGroundTarget(Point3D newTarget)
+		{
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.ChangeGroundTarget));
+			pak.WriteInt((uint)(newTarget == null ? 0 : newTarget.X));
+			pak.WriteInt((uint)(newTarget == null ? 0 : newTarget.Y));
+			pak.WriteInt((uint)(newTarget == null ? 0 : newTarget.Z));
 			SendTCP(pak);
 		}
 
@@ -2767,9 +2831,9 @@ namespace DOL.GS.PacketHandler
 			pak.WriteByte((byte)siegeWeapon.SiegeWeaponTimer.CurrentAction);
 			pak.WriteByte((byte)siegeWeapon.AmmoSlot);
 			pak.WriteShort(siegeWeapon.Effect);
-			pak.WriteShort(0); // SiegeHelperTimer ?
-			pak.WriteShort(0); // SiegeTimer ?
-			pak.WriteShort((ushort)siegeWeapon.ObjectID);
+			pak.WriteShort((ushort)time); // time (?)
+			pak.WriteInt((uint)siegeWeapon.ObjectID);
+
 			pak.WritePascalString(siegeWeapon.Name + " (" + siegeWeapon.CurrentState.ToString() + ")");
 			foreach (InventoryItem item in siegeWeapon.Ammo)
 			{

@@ -32,6 +32,7 @@ using DOL.GS.PacketHandler.v168;
 using DOL.GS.PlayerTitles;
 using DOL.GS.PropertyCalc;
 using DOL.GS.Quests;
+using DOL.GS.RealmAbilities;
 using DOL.GS.Scripts;
 using DOL.GS.SkillHandler;
 using DOL.GS.PacketHandler;
@@ -232,6 +233,13 @@ namespace DOL.GS
 			//Gms can quit instantly
 			if (Client.Account.PrivLevel == 1)
 			{
+				if (CraftTimer != null && CraftTimer.IsAlive)
+				{
+					Out.SendMessage("You must finish your crafting work before you quit!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+					m_quitTimer = null;
+					return 0;
+				}
+
 				long lastCombatAction = LastAttackedByEnemyTick;
 				if (lastCombatAction < LastAttackTick)
 				{
@@ -248,9 +256,9 @@ namespace DOL.GS
 				}
 			}
 
+			SaveIntoDatabase();
 			Out.SendPlayerQuit(false);
 			Quit(true);
-			SaveIntoDatabase();
 			m_quitTimer = null;
 			return 0;
 		}
@@ -300,6 +308,55 @@ namespace DOL.GS
 			return 0;
 		}
 
+
+		#region Combat timer
+		RegionTimer noCombatTimer = null;
+
+		public override long LastAttackedByEnemyTick
+		{
+			set
+			{
+				bool wasInCombat = InCombat;
+				base.LastAttackedByEnemyTick = value;
+				if (!wasInCombat && InCombat)
+				{
+					Out.SendUpdateMaxSpeed();
+				}
+				ResetInCombatTimer();
+			}
+		}
+
+		public override long LastAttackTick
+		{
+			set
+			{
+				bool wasInCombat = InCombat;
+				base.LastAttackTick = value;
+				if (!wasInCombat && InCombat)
+				{
+					Out.SendUpdateMaxSpeed();
+				}
+				ResetInCombatTimer();
+			}
+		}
+
+		protected void ResetInCombatTimer()
+		{
+			if (noCombatTimer == null)
+			{
+				noCombatTimer = new RegionTimer(this, new RegionTimerCallback(InCombatTimerExpired));
+			}
+			noCombatTimer.Stop();
+			noCombatTimer.Start(11000);
+		}
+
+		public int InCombatTimerExpired(RegionTimer timer)
+		{
+			Out.SendUpdateMaxSpeed();
+			return 0;
+		}
+		#endregion
+
 		public void OnLinkdeath()
 		{
 			//DOLConsole.WriteSystem("OnLinkdeath "+Client.ClientState.ToString());
@@ -317,7 +374,17 @@ namespace DOL.GS
 				return;
 			}
 
+			//Stop player if he's running....
 			CurrentSpeed = 0;
+			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
+			{
+				//Maybe there is a better solution?
+				player.Out.SendRemoveObject(this);
+				player.Out.SendPlayerCreate(this);
+			}
+
+			UpdateEquipementAppearance();
+
 			SaveIntoDatabase();
 
 			if (m_quitTimer != null)
@@ -389,7 +456,14 @@ namespace DOL.GS
 			CommandNpcRelease();
 
 			// cancel all effects until saving of running effects is done
-			EffectList.CancelAll();
+			try
+			{
+				EffectList.CancelAll();
+			}
+			catch (Exception e)
+			{
+				log.Error("Cannot cancel all effects, " + e.ToString());
+			}
 		}
 
 		/// <summary>
@@ -419,6 +493,11 @@ namespace DOL.GS
 				if (InHouse && CurrentHouse != null)
 				{
 					Out.SendMessage("You can't quit while being in a house.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					return false;
+				}
+				if (CraftTimer != null && CraftTimer.IsAlive)
+				{
+					Out.SendMessage("You can't quit while you're crafting.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return false;
 				}
 				if (!Sitting)
@@ -630,6 +709,33 @@ namespace DOL.GS
 		/// <param name="forced">if true, will release even if not dead</param>
 		public virtual void Release(eReleaseType releaseCommand, bool forced)
 		{
+			if ((Level > 30 && m_character.BindRegion == 239) ||
+				(Level > 40 && m_character.BindRegion == 240))
+			{
+				switch (Realm)
+				{
+					case 1: m_character.BindRegion = 1;
+						m_character.BindXpos = 560372;
+						m_character.BindYpos = 511823;
+						m_character.BindZpos = 2280;
+						m_character.BindHeading = 3006;
+						break;
+					case 2: m_character.BindRegion = 100;
+						m_character.BindXpos = 804577;
+						m_character.BindYpos = 723946;
+						m_character.BindZpos = 4680;
+						m_character.BindHeading = 3580;
+						break;
+					case 3: m_character.BindHeading = 200;
+						m_character.BindXpos = 345869;
+						m_character.BindYpos = 490556;
+						m_character.BindZpos = 5200;
+						m_character.BindHeading = 756;
+						break;
+				}
+			}
+
+
 			if (Alive)
 			{
 				Out.SendMessage("You are not dead!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -714,11 +820,120 @@ namespace DOL.GS
 					break;
 
 				default:
-					relRegion = m_character.BindRegion;
-					relX = m_character.BindXpos;
-					relY = m_character.BindYpos;
-					relZ = m_character.BindZpos;
-					relHeading = m_character.BindHeading;
+					switch (CurrentRegionID)
+					{
+						case 239:
+							if (Realm == 1 && Level < 31)
+							{
+								relRegion = 239;
+								relX = 554286;
+								relY = 585101;
+								relZ = 6952;
+								relHeading = 2054;
+								break;
+							}
+							else if (Realm == 2 && Level < 31)
+							{
+								relRegion = 239;
+								relX = 581962;
+								relY = 538463;
+								relZ = 6776;
+								relHeading = 1020;
+								break;
+							}
+							else if (Realm == 3 && Level < 31)
+							{
+								relRegion = 239;
+								relX = 533554;
+								relY = 533948;
+								relZ = 6768;
+								relHeading = 3432;
+								break;
+							}
+							relRegion = m_character.BindRegion;
+							relX = m_character.BindXpos;
+							relY = m_character.BindYpos;
+							relZ = m_character.BindZpos;
+							relHeading = m_character.BindHeading;
+							break;
+
+						case 240:
+							if (Realm == 1 && Level < 41)
+							{
+								relRegion = 240;
+								relX = 554459;
+								relY = 583463;
+								relZ = 6952;
+								relHeading = 2043;
+								break;
+							}
+							else if (Realm == 2 && Level < 41)
+							{
+								relRegion = 240;
+								relX = 533983;
+								relY = 535384;
+								relZ = 6728;
+								relHeading = 3585;
+								break;
+							}
+							else if (Realm == 3 && Level < 41)
+							{
+								relRegion = 240;
+								relX = 580495;
+								relY = 538801;
+								relZ = 6736;
+								relHeading = 518;
+								break;
+							}
+							relRegion = m_character.BindRegion;
+							relX = m_character.BindXpos;
+							relY = m_character.BindYpos;
+							relZ = m_character.BindZpos;
+							relHeading = m_character.BindHeading;
+							break;
+
+						case 163:
+							relRegion = 163;
+							if (Realm == 1)
+							{
+								relX = 430639;
+								relY = 508015;
+								relZ = 8835;
+								relHeading = 2053;
+								break;
+							}
+							else if (Realm == 2)
+							{
+								relX = 487859;
+								relY = 496808;
+								relZ = 8016;
+								relHeading = 945;
+								break;
+							}
+							else if (Realm == 3)
+							{
+								relX = 469920;
+								relY = 520520;
+								relZ = 8211;
+								relHeading = 2044;
+								break;
+							}
+							relRegion = m_character.BindRegion;
+							relX = m_character.BindXpos;
+							relY = m_character.BindYpos;
+							relZ = m_character.BindZpos;
+							relHeading = m_character.BindHeading;
+							break;
+
+						default:
+							relRegion = m_character.BindRegion;
+							relX = m_character.BindXpos;
+							relY = m_character.BindYpos;
+							relZ = m_character.BindZpos;
+							relHeading = m_character.BindHeading;
+							break;
+
+					}
 					break;
 			}
 
@@ -1348,7 +1563,8 @@ namespace DOL.GS
 		{
 			if (Client.ClientState != GameClient.eClientState.Playing)
 				return m_powerRegenerationPeriod;
-			return base.PowerRegenerationTimerCallback(selfRegenerationTimer);
+			int interval = base.PowerRegenerationTimerCallback(selfRegenerationTimer);
+			return interval;
 		}
 
 		/// <summary>
@@ -1896,8 +2112,35 @@ namespace DOL.GS
 		/// <param name="ability"></param>
 		public void AddAbility(Ability ability)
 		{
+			AddAbility(ability, true);
+		}
+
+		/// <summary>
+		/// Adds a new Ability to the player
+		/// </summary>
+		/// <param name="ability"></param>
+		public void AddAbility(Ability ability, bool sendUpdates)
+		{
 			if (ability == null)
 				return;
+
+			if (CharacterClass.ID != 49 &&
+				CharacterClass.ID != 23 &&
+				CharacterClass.ID != 9 &&
+				ability.KeyName == Abilities.DetectHidden)
+			{
+				return;
+			}
+
+			if (CharacterClass.ID != 4 &&
+					CharacterClass.ID != 9 &&
+					CharacterClass.ID != 49 &&
+					CharacterClass.ID != 23 &&
+					ability.KeyName == Abilities.ClimbWalls)
+			{
+				return;
+			}
+
 			bool newAbility = false;
 			lock (m_abilities.SyncRoot)
 			{
@@ -1909,12 +2152,12 @@ namespace DOL.GS
 						newAbility = true;
 						m_abilities[ability.KeyName] = ability;
 						m_skillList.Add(ability);
+						ability.Activate(this, sendUpdates);
 					}
 					else if (oldability.Level < ability.Level)
 					{
 						newAbility = true;
-						m_abilities[ability.KeyName] = ability;
-						m_skillList[m_skillList.IndexOf(oldability)] = ability;
+						oldability.Level = ability.Level;
 					}
 					if (newAbility)
 					{
@@ -2012,7 +2255,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="keyName">KeyName of ability</param>
 		/// <returns>Has player this ability</returns>
-		public bool HasAbility(string keyName)
+		public virtual bool HasAbility(string keyName)
 		{
 			return m_abilities[keyName] is Ability;
 		}
@@ -2025,6 +2268,20 @@ namespace DOL.GS
 		public bool HasSpecialization(string keyName)
 		{
 			return m_specialization[keyName] is Specialization;
+		}
+
+		/// <summary>
+		/// returns all abilities in a copied list
+		/// </summary>
+		/// <returns></returns>
+		public IList GetAllAbilities()
+		{
+			lock (m_abilities.SyncRoot)
+			{
+				ArrayList list = new ArrayList();
+				list.AddRange(m_abilities.Values);
+				return list;
+			}
 		}
 
 		/// <summary>
@@ -2092,6 +2349,17 @@ namespace DOL.GS
 			}
 
 			return 0;
+		}
+
+
+		/// <summary>
+		/// returns ability of player or null if non existent
+		/// </summary>
+		/// <param name="abilityKey"></param>
+		/// <returns></returns>
+		public Ability GetAbility(string abilityKey)
+		{
+			return m_abilities[abilityKey] as Ability;
 		}
 
 		/// <summary>
@@ -2258,6 +2526,10 @@ namespace DOL.GS
 							key = spell.SpellType + "+" + spell.Target + "+" + spell.CastTime + "+" + spell.RecastDelay + spell.Radius + spell.Level;
 						else
 							key = spell.SpellType + "+" + spell.Target + "+" + spell.CastTime + "+" + spell.RecastDelay + spell.Radius;
+						if (spell.Radius > 0)
+						{
+							key = key + "+AOE";
+						}
 					}
 					else
 						key = spell.Group;
@@ -2643,7 +2915,10 @@ namespace DOL.GS
 					Out.SendMessage("You gain a +" + m_realmLevel / 10 + " bonus to all specializations!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					foreach (GamePlayer plr in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 						plr.Out.SendLivingDataUpdate(this, true);
+					Notify(GamePlayerEvent.RRLevelUp, this);
 				}
+				else
+					Notify(GamePlayerEvent.RLLevelUp, this);
 			}
 			Out.SendUpdatePoints();
 		}
@@ -3003,39 +3278,37 @@ namespace DOL.GS
 		/// <summary>
 		/// Called whenever this player gains experience
 		/// </summary>
-		/// <param name="expBase">base amount of xp to gain</param>
-		/// <param name="expCampBonus">camp bonus to base exp</param>
-		/// <param name="expGroupBonus">group bonus to base exp</param>
+		/// <param name="expTotal">amount of xp to gain</param>
+		/// <param name="expCampBonus">camp bonus to included in total exp</param>
+		/// <param name="expGroupBonus">group bonus included in total exp</param>
 		/// <param name="sendMessage">should exp gain message be sent</param>
-		public override void GainExperience(long expBase, long expCampBonus, long expGroupBonus, bool sendMessage)
+		public override void GainExperience(long expTotal, long expCampBonus, long expGroupBonus, bool sendMessage)
 		{
 			//xp rate modifier
-			if (expBase > 0)
+			if (expTotal > 0)
 			{
 				double modifier = ServerProperties.Properties.XP_RATE;
-				expBase = (long)((double)expBase * modifier);
+				expTotal = (long)((double)expTotal * modifier);
 			}
 
-			base.GainExperience(expBase, expCampBonus, expGroupBonus, sendMessage);
-
-			long totalExp = expBase + expCampBonus + expGroupBonus;
+			base.GainExperience(expTotal, expCampBonus, expGroupBonus, sendMessage);
 
 			if (IsLevelSecondStage)
 			{
-				if (Experience + totalExp < ExperienceForCurrentLevelSecondStage)
+				if (Experience + expTotal < ExperienceForCurrentLevelSecondStage)
 				{
-					totalExp = ExperienceForCurrentLevelSecondStage - m_currentXP;
+					expTotal = ExperienceForCurrentLevelSecondStage - m_currentXP;
 				}
 			}
-			else if (Experience + totalExp < ExperienceForCurrentLevel)
+			else if (Experience + expTotal < ExperienceForCurrentLevel)
 			{
-				totalExp = ExperienceForCurrentLevel - m_currentXP;
+				expTotal = ExperienceForCurrentLevel - m_currentXP;
 			}
 
-			if (sendMessage && totalExp > 0)
+			if (sendMessage && expTotal > 0)
 			{
 				System.Globalization.NumberFormatInfo format = System.Globalization.NumberFormatInfo.InvariantInfo;
-				string totalExpStr = totalExp.ToString("N0", format);
+				string totalExpStr = expTotal.ToString("N0", format);
 				string expCampBonusStr = "";
 				string expGroupBonusStr = "";
 
@@ -3052,14 +3325,14 @@ namespace DOL.GS
 			}
 
 			//DOLConsole.WriteLine("XP="+Experience);
-			m_currentXP += totalExp; // force usage of this method, Experience property cannot be set
+			m_currentXP += expTotal; // force usage of this method, Experience property cannot be set
 			m_character.Experience = m_currentXP;
 			//DOLConsole.WriteLine("XP="+Experience+" NL="+ExperienceForNextLevel+" LP="+LevelPermill);
 
 			//Level up
 			if (Level >= 5 && CharacterClass.BaseName == CharacterClass.Name)
 			{
-				if (totalExp > 0)
+				if (expTotal > 0)
 				{
 					Out.SendMessage("You cannot raise to the 6th level until you join an advanced guild!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 					Out.SendMessage("Talk to your trainer for more information.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
@@ -3611,6 +3884,20 @@ namespace DOL.GS
 				return;
 			}
 
+			long vanishTimeout = TempProperties.getLongProperty(VanishAbility.VANISH_BLOCK_ATTACK_TIME_KEY, 0);
+			if (vanishTimeout > 0)
+			{
+				if (vanishTimeout > CurrentRegion.Time)
+				{
+					Out.SendMessage("You must wait " + (vanishTimeout - CurrentRegion.Time + 1000) / 1000 + " more seconds before attacking again.", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+					return;
+				}
+				else
+				{
+					TempProperties.removeProperty(VanishAbility.VANISH_BLOCK_ATTACK_TIME_KEY);
+				}
+			}
+
 			if (Sitting)
 			{
 				Sit(false);
@@ -3658,6 +3945,12 @@ namespace DOL.GS
 						if (effect is RapidFireEffect)
 						{
 							RangeAttackType = eRangeAttackType.RapidFire;
+							break;
+						}
+
+						if (effect is TrueshotEffect)
+						{
+							RangeAttackType = eRangeAttackType.Long;
 							break;
 						}
 					}
@@ -4102,7 +4395,7 @@ namespace DOL.GS
 					//durability percent can reach zero
 					// if item durability reachs 0, item is useless and become broken item
 
-					if (weapon != null && weapon.ConditionPercent > 70)
+					if (weapon != null && weapon.ConditionPercent > 70 && Util.Chance(15))
 					{
 						int oldPercent = weapon.ConditionPercent;
 						double con = GetConLevel(Level, weapon.Level);
@@ -4211,6 +4504,9 @@ namespace DOL.GS
 		{
 			if (Util.Chance(AttackCriticalChance(weapon)))
 			{
+				// triple wield prevents critical hits
+				if (ad.Target.EffectList.GetOfType(typeof(TripleWieldEffect)) != null) return 0;
+
 				int critMin;
 				int critMax;
 				BerserkEffect berserk = (BerserkEffect)EffectList.GetOfType(typeof(BerserkEffect));
@@ -4237,6 +4533,9 @@ namespace DOL.GS
 					else
 						critMax = ad.Damage;
 				}
+				critMin = Math.Max(critMin, 0);
+				critMax = Math.Max(critMin, critMax);
+
 				return Util.Random(critMin, critMax);
 			}
 			return 0;
@@ -4573,6 +4872,22 @@ namespace DOL.GS
 			return GameServer.ServerRules.GetObjectSpecLevel(this, (eObjectType)weapon.Object_Type);
 		}
 
+		public virtual String getWeaponSpec(InventoryItem weapon)
+		{
+			if (weapon == null)
+				return null;
+			// use axe spec if left hand axe is not in the left hand slot
+			if (weapon.Object_Type == (int)eObjectType.LeftAxe && weapon.SlotPosition != Slot.LEFTHAND)
+				return SkillBase.ObjectTypeToSpec(eObjectType.Axe);
+			// use left axe spec if axe is in the left hand slot
+			if (weapon.SlotPosition == Slot.LEFTHAND
+				&& (weapon.Object_Type == (int)eObjectType.Axe
+					|| weapon.Object_Type == (int)eObjectType.Sword
+					|| weapon.Object_Type == (int)eObjectType.Hammer))
+				return SkillBase.ObjectTypeToSpec(eObjectType.LeftAxe);
+			return SkillBase.ObjectTypeToSpec((eObjectType)weapon.Object_Type);
+		}
+
 		/// <summary>
 		/// determines current weaponspeclevel
 		/// </summary>
@@ -4774,7 +5089,8 @@ namespace DOL.GS
 				DPS = (int)(DPS * (1 + (GetModified(eProperty.DPS) * 0.01)));
 				// beware to use always ConditionPercent, because Condition is abolute value
 				//				return (int) ((DPS/10.0)*(weapon.Quality/100.0)*(weapon.Condition/(double)weapon.MaxCondition)*100.0);
-				return (0.001 * DPS * weapon.Quality * weapon.Condition) / weapon.MaxCondition;
+				double wdamage = (0.001 * DPS * weapon.Quality * weapon.Condition) / weapon.MaxCondition;
+				return wdamage;
 			}
 			else
 			{
@@ -4839,14 +5155,16 @@ namespace DOL.GS
 			if (weapon != null && weapon.Item_Type == Slot.RANGED && RangeAttackType == eRangeAttackType.Critical)
 				return 0; // no crit damage for crit shots
 
-			// no berserk for ranged weapons
+			// check for melee attack
 			if (weapon != null && weapon.Item_Type != Slot.RANGED)
 			{
-				BerserkEffect berserk = (BerserkEffect)EffectList.GetOfType(typeof(BerserkEffect));
-				if (berserk != null)
-				{
-					return 100;
-				}
+				return GetModified(eProperty.CriticalMeleeHitChance);
+			}
+
+			// check for ranged attack
+			if (weapon != null && weapon.Item_Type == Slot.RANGED)
+			{
+				return GetModified(eProperty.CriticalArcheryHitChance);
 			}
 
 			// base 10% chance of critical for all with melee weapons
@@ -4860,9 +5178,22 @@ namespace DOL.GS
 		{
 			get
 			{
+				int chance = 0;
 				if (CharacterClass.ClassType == eClassType.ListCaster)
-					return 10;
-				return 0;
+					chance += 10;
+				if (HasAbility(WildPowerAbility.KEY))
+				{
+					switch (GetAbilityLevel(WildPowerAbility.KEY))
+					{
+						case 1: chance += 3; break;
+						case 2: chance += 9; break;
+						case 3: chance += 17; break;
+						case 4: chance += 27; break;
+						case 5: chance += 39; break;
+						default: break;
+					}
+				}
+				return chance;
 			}
 		}
 
@@ -4938,8 +5269,7 @@ namespace DOL.GS
 							case 2: range *= 1.15; break; //doesn't exist on live
 							case 3: range *= 1.25; break; //Flight +25%
 						}
-
-					if (livingTarget != null) range += (Z - livingTarget.Z) / 2.0;
+					if(livingTarget != null) range += (Z - livingTarget.Z) / 2.0;
 					if (range < 32) range = 32;
 
 					return (int)(range);
@@ -5698,6 +6028,11 @@ namespace DOL.GS
 						}
 						return false;
 					}
+					if (item.IsTradable == false && source.Client.Account.PrivLevel < 2 && TradeWindow.Partner.Client.Account.PrivLevel < 2)
+					{
+						source.Out.SendMessage("You can't trade this item!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						return false;
+					}
 
 					if (!source.TradeWindow.AddItemToTrade(item))
 					{
@@ -5900,8 +6235,20 @@ namespace DOL.GS
 				switch (slot)
 				{
 					case Slot.RIGHTHAND:
-					case Slot.LEFTHAND: SwitchWeapon(eActiveWeaponSlot.Standard); break;
-					case Slot.TWOHAND: SwitchWeapon(eActiveWeaponSlot.TwoHanded); break;
+					case Slot.LEFTHAND:
+						if (ActiveWeaponSlot == eActiveWeaponSlot.Standard)
+							break;
+						SwitchWeapon(eActiveWeaponSlot.Standard);
+						Notify(GamePlayerEvent.UseSlot, this, new UseSlotEventArgs(slot, type));
+						return;
+
+					case Slot.TWOHAND:
+						if (ActiveWeaponSlot == eActiveWeaponSlot.TwoHanded)
+							break;
+						SwitchWeapon(eActiveWeaponSlot.TwoHanded);
+						Notify(GamePlayerEvent.UseSlot, this, new UseSlotEventArgs(slot, type));
+						return;
+
 					case Slot.RANGED:
 						bool newAttack = false;
 						if (ActiveWeaponSlot != eActiveWeaponSlot.Distance)
@@ -5967,17 +6314,19 @@ namespace DOL.GS
 
 				if (useItem.SpellID != 0) // don't return without firing events
 				{
-					if (useItem.Charges < 1)
+					if (useItem.Charges < 1 && useItem.Object_Type != (int)eObjectType.Poison)
 					{
-						Out.SendMessage("Your item have no more charges.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						Out.SendMessage("Your item has no more charges.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						return;
 					}
 					else
 					{
-						if (useItem.Object_Type == (int)eObjectType.Poison)
+						InventoryItem mainHand = AttackWeapon;
+						InventoryItem leftHand = Inventory.GetItem(eInventorySlot.LeftHandWeapon);
+
+						if (useItem.Object_Type == (int)eObjectType.Poison)  // poison
 						{
-							InventoryItem mainHand = AttackWeapon;
-							InventoryItem leftHand = Inventory.GetItem(eInventorySlot.LeftHandWeapon);
-							if (mainHand != null && mainHand.SpellID == 0)
+							if (mainHand != null && mainHand.SpellID == 0 || (leftHand != null && leftHand.SpellID != 0))
 							{
 								ApplyPoison(useItem, mainHand);
 							}
@@ -5986,29 +6335,40 @@ namespace DOL.GS
 								ApplyPoison(useItem, leftHand);
 							}
 						}
-						else if (useItem.Object_Type == (int)eObjectType.Magical) // potion
+						else if (useItem.Object_Type == (int)eObjectType.Magical && useItem.Item_Type == (int)eInventorySlot.FirstBackpack) // potion
 						{
+							long lastUsed = TempProperties.getLongProperty("LAST_POTION_USAGE", 0);
+							long now = CurrentRegion.Time;
+							if (now - lastUsed < 10 * 60 * 1000)
+							{
+								Out.SendMessage("You have to wait " + ((lastUsed + 10 * 60 * 1000) - now) / 1000 + " more seconds to use that again.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return;
+							}
+
 							SpellLine potionEffectLine = SkillBase.GetSpellLine(GlobalSpellsLines.Potions_Effects);
 							if (potionEffectLine != null)
 							{
 								IList spells = SkillBase.GetSpellList(potionEffectLine.KeyName);
 								if (spells != null)
 								{
+									bool found = false;
 									foreach (Spell spell in spells)
 									{
 										if (spell.ID == useItem.SpellID)
 										{
+											found = true;
 											if (spell.Level <= Level)
 											{
-												if (spell.CastTime > 0 && InCombat)
+												if (spell.CastTime > 0 && AttackState)
 												{
-													Out.SendMessage("You can't use this item in combat!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+													Out.SendMessage("You can't use " + useItem.Name + " in combat!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 												}
 												else
 												{
 													ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, potionEffectLine);
 													if (spellHandler != null)
 													{
+														TempProperties.setProperty("LAST_POTION_USAGE", now);
 														Emote(eEmote.Drink);
 														spellHandler.StartSpell(TargetObject as GameLiving);
 														useItem.Charges--;
@@ -6021,10 +6381,22 @@ namespace DOL.GS
 													}
 												}
 											}
+											else
+											{
+												Out.SendMessage("You can't use " + useItem.Name + " at your level!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+											}
 											break;
 										}
 									}
+									if (!found)
+									{
+										log.Error("Potion " + useItem.Name + " spell " + useItem.SpellID + " not found! Cannot use potion.");
+									}
 								}
+							}
+							else
+							{
+								log.Error("Potions spell line not found, potions cannot be used!");
 							}
 						}
 						else
@@ -7740,7 +8112,7 @@ namespace DOL.GS
 		/// <returns>the GameInventoryItem on the ground</returns>
 		public GameInventoryItem CreateItemOnTheGround(InventoryItem item)
 		{
-			GameInventoryItem gameItem = new GameInventoryItem(item);
+			GameInventoryItem gameItem = GameInventoryItem.CreateFromTemplate(item);
 
 			int x, y;
 			GetSpotFromHeading(30, out x, out y);
@@ -8078,7 +8450,7 @@ namespace DOL.GS
 							string[] values = ability.Split('|');
 							if (values.Length < 2) continue;
 							if (!HasAbility(values[0]))
-								AddAbility(SkillBase.GetAbility(values[0], int.Parse(values[1])));
+								AddAbility(SkillBase.GetAbility(values[0], int.Parse(values[1])), true);
 						}
 						foreach (Skill skill in m_skillList)
 						{
@@ -8708,6 +9080,12 @@ namespace DOL.GS
 				if (ObjectState == eObjectState.Active)
 					Out.SendMessage("You are no longer hidden!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
+				CamouflageEffect cam = (CamouflageEffect)EffectList.GetOfType(typeof(CamouflageEffect));
+				if (cam != null)
+				{
+					cam.Stop();
+				}
+
 				Out.SendPlayerModelTypeChange(this, 2);
 				m_stealthEffect.Stop();
 				m_stealthEffect = null;
@@ -8836,6 +9214,8 @@ namespace DOL.GS
 				return false;
 			if (!Alive)
 				return false;
+			if (enemy.EffectList.GetOfType(typeof(VanishEffect)) != null)
+				return false;
 			if (this.Client.Account.PrivLevel > 1)
 				return true;
 			if (enemy.Client.Account.PrivLevel > 1)
@@ -8857,10 +9237,28 @@ namespace DOL.GS
 			if (levelDiff < 0) levelDiff = 0;
 
 			int range;
-			if (HasAbility(Abilities.DetectHidden) && !enemy.HasAbility(Abilities.DetectHidden))
+			if (!(HasAbility(Abilities.DetectHidden) && enemy.HasAbility(Abilities.DetectHidden))) // not both have DetectHidden
 			{
+				bool enemyHasCamouflage = enemy.EffectList.GetOfType(typeof(CamouflageEffect)) != null;
+
 				// we have detect hidden and enemy don't = higher range
-				range = levelDiff * 50 + 250;
+				if (HasAbility(Abilities.DetectHidden) && !enemyHasCamouflage)
+				{
+					range = levelDiff * 50 + 250;
+				}
+				else
+				{
+					range = levelDiff * 20 + 125;
+				}
+
+				if (!enemyHasCamouflage)
+				{
+					RAPropertyEnhancer mos = GetAbility(MasteryOfStealthAbility.KEY) as RAPropertyEnhancer;
+					if (mos != null)
+					{
+						range += mos.GetAmountForLevel(mos.Level);
+					}
+				}
 			}
 			else
 			{

@@ -117,6 +117,14 @@ namespace DOL.Events
 		/// The UseAbility event is fired whenever the player uses ability
 		/// </summary>
 		public static readonly GamePlayerEvent UseAbility = new GamePlayerEvent("GamePlayer.UseAbility");
+		/// <summary>
+		/// The RRLevelUp event is fired whenever the player gains a realm rank
+		/// </summary>
+		public static readonly GamePlayerEvent RRLevelUp = new GamePlayerEvent("GamePlayer.RRLevelUp");
+		/// <summary>
+		/// The RLLevelUp event is fired whenever the player gains a realm level
+		/// </summary>
+		public static readonly GamePlayerEvent RLLevelUp = new GamePlayerEvent("GamePlayer.RLLevelUp");
 
 		#region Statistics
 

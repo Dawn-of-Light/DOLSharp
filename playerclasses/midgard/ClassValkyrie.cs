@@ -81,7 +81,7 @@ namespace DOL.GS.Scripts
 			}
 			if (player.Level >= 10)
 			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Medium));
+				player.AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Large));
 				player.AddAbility(SkillBase.GetAbility(Abilities.Guard, 2));
 			}
 			if (player.Level >= 12)

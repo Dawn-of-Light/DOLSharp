@@ -107,6 +107,7 @@ namespace DOL.GS.PacketHandler
 		NPCCreate = 0xDA,
 		ModelChange = 0xDB,
 		ObjectGuildID = 0xDE,
+		ChangeGroundTarget = 0xDF,
 		ObjectDelete = 0xE1,
 		EmblemDialogue = 0xE2,
 		SiegeWeaponAnimation = 0xE3,
@@ -500,6 +501,7 @@ namespace DOL.GS.PacketHandler
 		void SendConcentrationList();
 		void SendUpdateCraftingSkills();
 		void SendChangeTarget(GameObject newTarget);
+		void SendChangeGroundTarget(Point3D newTarget);
 		void SendPetWindow(GameLiving pet, ePetWindowAction windowAction, eAggressionState aggroState, eWalkState walkState);
 		void SendPlaySound(eSoundType soundType, ushort soundID);
 		void SendNPCsQuestEffect(GameNPC npc, bool flag);

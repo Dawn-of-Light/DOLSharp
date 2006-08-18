@@ -27,7 +27,8 @@ namespace DOL.GS
 	/// <summary>
 	/// callback handler for an ability that is activated by clicking on an associated icon
 	/// </summary>
-	public interface IAbilityActionHandler {
+	public interface IAbilityActionHandler
+	{
 		void Execute(Ability ab, GamePlayer player);
 	}
 
@@ -36,7 +37,8 @@ namespace DOL.GS
 	/// nontrainable abilities have level 0
 	/// trainable abilities have level > 0, level is displayed in roman numbers	
 	/// </summary>
-	public class Ability : NamedSkill {
+	public class Ability : NamedSkill
+	{
 
 		/// <summary>
 		/// Defines a logger for this class.
@@ -45,24 +47,38 @@ namespace DOL.GS
 
 		protected string m_spec;
 		protected string m_serializedNames;
+		protected string m_description;
 		protected int m_speclevel;
+		protected GameLiving activeOnLiving = null;
 
-		public Ability(DBAbility dba) :	this(dba, 0) {
+
+		public Ability(DBAbility dba)
+			: this(dba, 0)
+		{
 		}
 
-		public Ability(DBAbility dba, int level) : this(dba.KeyName, dba.Name, (ushort)dba.IconID, level) {
+		public Ability(DBAbility dba, int level)
+			: this(dba.KeyName, dba.Name, dba.Description, (ushort)dba.IconID, level)
+		{
 		}
 
-		public Ability(DBAbility dba, int level, string spec, int speclevel) : this(dba.KeyName, dba.Name, (ushort)dba.IconID, level, spec, speclevel) {
+		public Ability(DBAbility dba, int level, string spec, int speclevel)
+			: this(dba.KeyName, dba.Name, dba.Description, (ushort)dba.IconID, level, spec, speclevel)
+		{
 		}
 
-		public Ability(string keyname, string displayname, ushort icon, int level) : this(keyname, displayname, icon, level, "", 0) {
+		public Ability(string keyname, string displayname, string description, ushort icon, int level)
+			: this(keyname, displayname, description, icon, level, "", 0)
+		{
 		}
 
-		public Ability(string keyname, string displayname, ushort icon, int level, string spec, int speclevel) : base(keyname, displayname, icon, level) {
+		public Ability(string keyname, string displayname, string description, ushort icon, int level, string spec, int speclevel)
+			: base(keyname, displayname, icon, level)
+		{
 			m_spec = spec;
 			m_speclevel = speclevel;
 			m_serializedNames = displayname;
+			m_description = description;
 			UpdateCurrentName();
 		}
 
@@ -92,10 +108,41 @@ namespace DOL.GS
 				string roman = getRomanLevel();
 				m_name = name.Replace("%n", roman);
 			}
-			catch(Exception e)
+			catch (Exception e)
 			{
-				log.Error("Parsing ability display name: keyname='"+KeyName+"' m_serializedNames='"+m_serializedNames+"'", e);
+				log.Error("Parsing ability display name: keyname='" + KeyName + "' m_serializedNames='" + m_serializedNames + "'", e);
 			}
+		}
+
+		/// <summary>
+		/// this is called when the ability should do its modifications (passive effects)
+		/// </summary>
+		/// <param name="living"></param>
+		public virtual void Activate(GameLiving living, bool sendUpdates)
+		{
+			activeOnLiving = living;
+		}
+
+		/// <summary>
+		/// Called when an ability level is changed while the ability is activated on a living
+		/// </summary>
+		public virtual void OnLevelChange(int oldLevel)
+		{
+		}
+
+		/// <summary>
+		/// called when all modifications should be taken back
+		/// </summary>
+		/// <param name="living"></param>
+		//public virtual void Deactivate(GameLiving living) {			
+		//}
+
+		/// <summary>
+		/// active abilities (clicked by icon) are called back here
+		/// </summary>
+		/// <param name="living"></param>
+		public virtual void Execute(GameLiving living)
+		{
 		}
 
 		/// <summary>
@@ -117,7 +164,8 @@ namespace DOL.GS
 		/// <summary>
 		/// icon id (>=0x190) or 0 if ability is not activatable
 		/// </summary>
-		public virtual ushort Icon {
+		public virtual ushort Icon
+		{
 			get { return base.ID; }
 		}
 
@@ -127,15 +175,22 @@ namespace DOL.GS
 		public override int Level
 		{
 			get { return base.Level; }
-			set {}
+			set
+			{
+				int oldLevel = m_level;
+				m_level = value;
+				if (activeOnLiving != null) OnLevelChange(oldLevel);
+			}
 		}
 
 		/// <summary>
 		/// get the level represented as roman numbers
 		/// </summary>
 		/// <returns></returns>
-		protected string getRomanLevel() {
-			switch (Level) {
+		protected string getRomanLevel()
+		{
+			switch (Level)
+			{
 				case 1: return "I";
 				case 2: return "II";
 				case 3: return "III";
@@ -152,8 +207,23 @@ namespace DOL.GS
 			return "";
 		}
 
-		public override eSkillPage SkillType {
-			get {
+		public virtual IList DelveInfo
+		{
+			get
+			{
+				IList list = new ArrayList();
+				foreach (string part in m_description.Split(new char[] { '|' }))
+				{
+					list.Add(part);
+				}
+				return list;
+			}
+		}
+
+		public override eSkillPage SkillType
+		{
+			get
+			{
 				return eSkillPage.Abilities;
 			}
 		}

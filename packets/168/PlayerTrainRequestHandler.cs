@@ -18,6 +18,7 @@
  */
 using System.Collections;
 using System.Reflection;
+using DOL.GS.RealmAbilities;
 using log4net;
 
 namespace DOL.GS.PacketHandler.v168
@@ -25,7 +26,7 @@ namespace DOL.GS.PacketHandler.v168
 	/// <summary>
 	/// handles Train clicks from Trainer Window
 	/// </summary>
-	[PacketHandlerAttribute(PacketHandlerType.TCP,0xD4^168,"Handles Player Train Requests")]
+	[PacketHandlerAttribute(PacketHandlerType.TCP, 0xD4 ^ 168, "Handles Player Train Requests")]
 	public class PlayerTrainRequestHandler : IPacketHandler
 	{
 		/// <summary>
@@ -42,14 +43,17 @@ namespace DOL.GS.PacketHandler.v168
 			int skillindex = packet.ReadByte();
 
 			IList speclist = client.Player.GetSpecList();
-			if (skillindex < speclist.Count) {
+			if (skillindex < speclist.Count)
+			{
 				Specialization spec = (Specialization)speclist[skillindex];
-				if (spec.Level >= client.Player.Level) {
-					client.Out.SendMessage("You can't train in this specialization again this level!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+				if (spec.Level >= client.Player.Level)
+				{
+					client.Out.SendMessage("You can't train in this specialization again this level!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return 1;
 				}
-				if (client.Player.SkillSpecialtyPoints >= spec.Level+1) {
-					client.Player.SkillSpecialtyPoints -= (ushort)(spec.Level+1);
+				if (client.Player.SkillSpecialtyPoints >= spec.Level + 1)
+				{
+					client.Player.SkillSpecialtyPoints -= (ushort)(spec.Level + 1);
 					spec.Level++;
 					client.Player.OnSkillTrained(spec);
 					client.Out.SendUpdatePoints();
@@ -58,15 +62,55 @@ namespace DOL.GS.PacketHandler.v168
 					//client.Out.SendUpdatePlayerSkills();
 					client.Out.SendTrainerWindow();
 					return 1;
-				} else {					
-					client.Out.SendMessage("That specialization costs "+(spec.Level+1)+" specialization points!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
-					client.Out.SendMessage("You don't have that many specialization points left for this level.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+				}
+				else
+				{
+					client.Out.SendMessage("That specialization costs " + (spec.Level + 1) + " specialization points!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					client.Out.SendMessage("You don't have that many specialization points left for this level.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return 1;
 				}
-			} else {
-				if (log.IsErrorEnabled)
-					log.Error("Player <"+client.Player.Name+"> requested to train incorrect skill index");
-			}	
+			}
+			else if (skillindex >= 100)
+			{
+				IList offeredRA = (IList)client.Player.TempProperties.getObjectProperty("OFFERED_RA", null);
+				if (offeredRA != null && skillindex < offeredRA.Count + 100)
+				{
+					RealmAbility ra = (RealmAbility)offeredRA[skillindex - 100];
+					int cost = ra.CostForUpgrade(ra.Level - 1);
+					if (client.Player.RealmSpecialtyPoints < cost)
+					{
+						client.Out.SendMessage(ra.Name + " costs " + (cost) + " realm ability points!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						client.Out.SendMessage("You don't have that many realm ability points left to get this.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						return 1;
+					}
+					if (!ra.CheckRequirement(client.Player))
+					{
+						client.Out.SendMessage("You are not experienced enough to get " + ra.Name + " now. Come back later.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						return 1;
+					}
+					// get a copy of the ability since we use prototypes
+					RealmAbility ability = SkillBase.GetAbility(ra.KeyName, ra.Level) as RealmAbility;
+					if (ability != null)
+					{
+						client.Player.RealmSpecialtyPoints -= cost;
+						client.Player.AddAbility(ability);
+						client.Out.SendUpdatePoints();
+						client.Out.SendUpdatePlayer();
+						client.Out.SendUpdatePlayerSkills();
+						client.Out.SendTrainerWindow();
+					}
+					else
+					{
+						client.Out.SendMessage("Unfortunately your training failed. Please report that to admins or game master. Thank you.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						log.Error("Realm Ability " + ra.Name + "(" + ra.KeyName + ") unexpected not found");
+					}
+					return 1;
+				}
+			}
+
+			if (log.IsErrorEnabled)
+				log.Error("Player <" + client.Player.Name + "> requested to train incorrect skill index");
+
 			return 1;
 		}
 	}

@@ -40,5 +40,9 @@ namespace DOL.Events
 		/// The item was just unequipped
 		/// </summary>
 		public static readonly PlayerInventoryEvent ItemUnequipped = new PlayerInventoryEvent("PlayerInventory.ItemUnequipped");
+		/// <summary>
+		/// The item was just dropped
+		/// </summary>
+		public static readonly PlayerInventoryEvent ItemDropped = new PlayerInventoryEvent("PlayerInventory.ItemDropped");
 	}
 }
