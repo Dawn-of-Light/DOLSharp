@@ -6,8 +6,7 @@
     <ProjectGuid>{6DDF274A-91A3-4EAF-B0E3-30FD559ABD51}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ApplicationIcon>
-    </ApplicationIcon>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
     <AssemblyKeyContainerName>
     </AssemblyKeyContainerName>
     <AssemblyName>DOLServer</AssemblyName>
@@ -153,6 +152,9 @@
     <EmbeddedResource Include="GameServerServiceInstaller.resx">
       <DependentUpon>GameServerServiceInstaller.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="icon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

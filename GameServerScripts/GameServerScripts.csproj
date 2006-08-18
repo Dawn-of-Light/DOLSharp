@@ -237,6 +237,8 @@
     <Compile Include="gmcommands\givexp.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="gmcommands\gmrelic.cs" />
+    <Compile Include="gmcommands\gmrelicpad.cs" />
     <Compile Include="gmcommands\harm.cs">
       <SubType>Code</SubType>
     </Compile>

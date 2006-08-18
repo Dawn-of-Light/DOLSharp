@@ -1,0 +1,213 @@
+using System.Collections;
+using DOL.Events;
+using DOL.Database;
+using DOL.GS;
+using DOL.GS.PacketHandler;
+using System;
+
+namespace DOL.GS
+{
+	public class GameRelicPad : GameStaticItem
+	{
+
+		const int PAD_AREA_RADIUS = 200;
+
+		PadArea m_area;
+		ArrayList m_mountedRelics = new ArrayList();
+
+		#region constructor
+		public GameRelicPad()
+			: base()
+		{
+		}
+		#endregion
+
+		#region Add/remove from world
+		/// <summary>
+		/// add the relicpad to world
+		/// </summary>
+		/// <returns></returns>
+		public override bool AddToWorld()
+		{
+			m_area = new PadArea(this);
+			CurrentRegion.AddArea(m_area);
+			bool success = base.AddToWorld();
+			if (success)
+			{
+				/*
+				 * <[RF][BF]Cerian> mid: mjolnerr faste (str)
+					<[RF][BF]Cerian> mjollnerr
+					<[RF][BF]Cerian> grallarhorn faste (magic)
+					<[RF][BF]Cerian> alb: Castle Excalibur (str)
+					<[RF][BF]Cerian> Castle Myrddin (magic)
+					<[RF][BF]Cerian> Hib: Dun Lamfhota (str), Dun Dagda (magic)
+				 */
+				//Name = GlobalConstants.RealmToName((DOL.GS.PacketHandler.eRealm)Realm)+ " Relic Pad";
+				RelicMgr.AddRelicPad(this);
+			}
+
+			return success;
+		}
+
+		public override ushort Model
+		{
+			get
+			{
+				return 2655;
+			}
+			set
+			{
+				base.Model = value;
+			}
+		}
+
+		public override byte Realm
+		{
+			get
+			{
+				switch (Emblem)
+				{
+					case 1:
+					case 11:
+						return 1;
+					case 2:
+					case 12:
+						return 2;
+					case 3:
+					case 13:
+						return 3;
+					default:
+						return 0;
+
+				}
+			}
+			set
+			{
+				base.Realm = value;
+			}
+		}
+
+		public virtual eRelicType PadType
+		{
+			get
+			{
+				switch (Emblem)
+				{
+					case 1:
+					case 2:
+					case 3:
+						return eRelicType.Strength;
+					case 11:
+					case 12:
+					case 13:
+						return eRelicType.Magic;
+					default:
+						return eRelicType.Invalid;
+
+				}
+			}
+		}
+
+		/// <summary>
+		/// removes the relicpad from the world
+		/// </summary>
+		/// <returns></returns>
+		public override bool RemoveFromWorld()
+		{
+			if (m_area != null)
+				CurrentRegion.RemoveArea(m_area);
+
+			return base.RemoveFromWorld();
+		}
+		#endregion
+
+		/// <summary>
+		/// Checks if a GameRelic is mounted at this GameRelicPad
+		/// </summary>
+		/// <param name="Relic"></param>
+		/// <returns></returns>
+		public bool IsMountedHere(GameRelic relic)
+		{
+			return m_mountedRelics.Contains(relic);
+		}
+
+		public void MountRelic(GameRelic relic)
+		{
+			m_mountedRelics.Add(relic);
+
+			if (relic.CurrentCarrier != null)
+			{
+				/* Sending broadcast */
+				string message = relic.CurrentCarrier.Name + " from " + GlobalConstants.RealmToName((eRealm)relic.CurrentCarrier.Realm) + " has stored the " + relic.Name + " to the " + Name;
+				foreach (GameClient cl in WorldMgr.GetAllPlayingClients())
+				{
+					if (cl.Player.ObjectState != eObjectState.Active) continue;
+					cl.Out.SendMessage(GlobalConstants.RealmToName((eRealm)relic.CurrentCarrier.Realm) + " has captured the " + relic.Name, eChatType.CT_ScreenCenterSmaller, eChatLoc.CL_SystemWindow);
+					cl.Out.SendMessage(message + "\n" + message + "\n" + message, eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+				}
+
+				/* Increasing of CapturedRelics */
+				//select targets to increase CapturedRelics
+				//TODO increase stats
+				/*
+				ArrayList targets = new ArrayList();
+				if (relic.CurrentCarrier.PlayerGroup != null)
+					targets.AddRange(relic.CurrentCarrier.PlayerGroup.GetPlayersInTheGroup());
+				else targets.Add(relic.CurrentCarrier);
+				foreach (GamePlayer target in targets)
+					target.CapturedRelics++;
+				 */
+
+				Notify(RelicPadEvent.RelicMounted, this, new RelicPadEventArgs(relic.CurrentCarrier, relic));
+			}
+		}
+
+		public void RemoveRelic(GameRelic relic)
+		{
+			m_mountedRelics.Remove(relic);
+
+			if (relic.CurrentCarrier != null)
+			{
+				string message = relic.CurrentCarrier.Name + " from " + GlobalConstants.RealmToName((eRealm)relic.CurrentCarrier.Realm) + " has removed the " + relic.Name + " from the " + Name;
+				foreach (GameClient cl in WorldMgr.GetAllPlayingClients())
+				{
+					if (cl.Player.ObjectState != eObjectState.Active) continue;
+					cl.Out.SendMessage(message + "\n" + message + "\n" + message, eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+				}
+
+				Notify(RelicPadEvent.RelicStolen, this, new RelicPadEventArgs(relic.CurrentCarrier, relic));
+			}
+		}
+
+		public void RemoveAllRelics()
+		{
+			lock (m_mountedRelics.SyncRoot)
+			{
+				m_mountedRelics.Clear();
+			}
+		}
+
+		/// <summary>
+		/// Area around the pit that checks if a player brings a GameRelic
+		/// </summary>
+		public class PadArea : Area.Circle
+		{
+			GameRelicPad m_parent;
+
+			public PadArea(GameRelicPad parentPad)
+				: base("", parentPad.X, parentPad.Y, parentPad.Z, PAD_AREA_RADIUS)
+			{
+				m_parent = parentPad;
+			}
+
+			public override void OnPlayerEnter(GamePlayer player)
+			{
+				GameRelic relicOnPlayer = player.TempProperties.getObjectProperty(GameRelic.PLAYER_CARRY_RELIC_WEAK, null) as GameRelic;
+				if (relicOnPlayer != null && player.Realm == m_parent.Realm
+					&& relicOnPlayer.RelicType == m_parent.PadType)
+					relicOnPlayer.RelicPadTakesOver(m_parent);
+			}
+		}
+
+	}
+}

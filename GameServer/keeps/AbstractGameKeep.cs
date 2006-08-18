@@ -511,7 +511,7 @@ namespace DOL.GS.Keeps
 								continue;
 							plr.Out.SendKeepClaim(this);
 						}*/
-			GameEventMgr.Notify(KeepEvent.KeepClaimed, this, new KeepEventArgs(player));
+			GameEventMgr.Notify(KeepEvent.KeepClaimed, this, new KeepEventArgs(this));
 			StartDeductionTimer();
 			this.SaveIntoDatabase();
 
@@ -748,7 +748,10 @@ namespace DOL.GS.Keeps
 			{
 				banner.ChangeRealm();
 			}
+
 			SaveIntoDatabase();
+
+			GameEventMgr.Notify(KeepEvent.KeepTaken, new KeepEventArgs(this));
 		}
 
 		private void ResetPlayersOfKeep()

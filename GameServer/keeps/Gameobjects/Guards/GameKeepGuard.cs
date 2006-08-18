@@ -431,6 +431,7 @@ result == GameLiving.eAttackResult.Parried)
 		/// <param name="guard">The guard object</param>
 		public static void GuardSpam(GameKeepGuard guard)
 		{
+			if (guard.Component == null) return;
 			if (guard.Component.Keep == null) return;
 			if (guard.Component.Keep.Guild == null) return;
 
@@ -502,6 +503,8 @@ result == GameLiving.eAttackResult.Parried)
 		/// <param name="pos"></param>
 		public void ChangePosition(DBKeepPosition pos)
 		{
+			if (this.Component == null)
+				return;
 			if (pos == null)
 				pos = GetPosition();
 			if (pos == null)
@@ -549,8 +552,11 @@ result == GameLiving.eAttackResult.Parried)
 			IList list = new ArrayList(4);
 			list.Add("You target [" + GetName(0, false) + "]");
 			list.Add("You examine " + GetName(0, false) + ".  " + GetPronoun(0, true) + " is " + GetAggroLevelString(player, false) + " and is a realm guard.");
-			if (this.Component.Keep.Level > 1 && GameServer.ServerRules.IsSameRealm(player, this, true))
-				list.Add(GetPronoun(0, true) + " has upgraded equipment (" + this.Component.Keep.Level + ").");
+			if (this.Component != null)
+			{
+				if (this.Component.Keep.Level > 1 && GameServer.ServerRules.IsSameRealm(player, this, true))
+					list.Add(GetPronoun(0, true) + " has upgraded equipment (" + this.Component.Keep.Level + ").");
+			}
 			return list;
 		}
 
@@ -614,17 +620,11 @@ result == GameLiving.eAttackResult.Parried)
 		}
 
 		#region Database
-		/// <summary>
-		/// Save the keep guard to Db table
-		/// only called when create in command
-		/// </summary>
-		public override void SaveIntoDatabase()
-		{
-		}
 
 		public override void LoadFromDatabase(DataObject mobobject)
 		{
-			
+			base.LoadFromDatabase(mobobject);
+			TemplateMgr.RefreshTemplate(this);
 		}
 
 		public void LoadFromPosition(DBKeepPosition pos, GameKeepComponent component)

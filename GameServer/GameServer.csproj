@@ -199,7 +199,6 @@
     <Compile Include="effects\BerserkEffect.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="effects\CamouflageEffect.cs" />
     <Compile Include="effects\EngageEffect.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -248,12 +247,15 @@
     <Compile Include="effects\StagEffect.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="effects\StaticEffect.cs" />
     <Compile Include="effects\StealthEffect.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="effects\SureShotEffect.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="effects\TimedEffect.cs" />
+    <Compile Include="effects\TripleWieldEffect.cs" />
     <Compile Include="events\database\AccountEventArgs.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -324,6 +326,7 @@
     <Compile Include="events\gameobjects\InteractWithEventArgs.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="events\gameobjects\ItemDroppedEventArgs.cs" />
     <Compile Include="events\gameobjects\ItemEquippedArgs.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -409,6 +412,8 @@
     <Compile Include="events\keep\KeepEventArgs.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="events\keep\RelicPadEvent.cs" />
+    <Compile Include="events\keep\RelicPadEventArgs.cs" />
     <Compile Include="events\scripts\ScriptEvent.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -551,11 +556,20 @@
     <Compile Include="keeps\Gameobjects\Guards\Static Caster.cs" />
     <Compile Include="keeps\Gameobjects\Guards\Stealther.cs" />
     <Compile Include="keeps\Managers\Clothing Manager.cs" />
+    <Compile Include="keeps\Managers\RelicMgr.cs" />
     <Compile Include="keeps\Managers\Template Manager.cs" />
     <Compile Include="keeps\Managers\Guild Manager.cs" />
     <Compile Include="keeps\Managers\Player Manager.cs" />
     <Compile Include="keeps\Managers\Position Manager.cs" />
     <Compile Include="keeps\Managers\Spell Manager.cs" />
+    <Compile Include="keeps\Relics\GameRelic.cs" />
+    <Compile Include="keeps\Relics\GameRelicPad.cs" />
+    <Compile Include="realmabilities\handlers\CamouflageSpecHandler.cs" />
+    <Compile Include="realmabilities\handlers\ConcentrationAbility.cs" />
+    <Compile Include="realmabilities\handlers\RagingPowerAbility.cs" />
+    <Compile Include="realmabilities\handlers\VehementRenewalHandler.cs" />
+    <Compile Include="realmabilities\handlers\MysticCrystalLoreAbility.cs" />
+    <Compile Include="realmabilities\handlers\FirstAidAbility.cs" />
     <Compile Include="serverproperty\ServerProperties.cs" />
     <Compile Include="serverproperty\ServerPropertyConstants.cs" />
     <Compile Include="gameutils\DoorMgr.cs">
@@ -1371,6 +1385,20 @@
     <Compile Include="quests\MoneyTask.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="realmabilities\handlers\AvoidanceOfMagicAbility.cs" />
+    <Compile Include="realmabilities\effects\CamouflageEffect.cs" />
+    <Compile Include="realmabilities\effects\TrueshotEffect.cs" />
+    <Compile Include="realmabilities\effects\VanishEffect.cs" />
+    <Compile Include="realmabilities\handlers\IgnorePainAbility.cs" />
+    <Compile Include="realmabilities\handlers\MasteryOfPain.cs" />
+    <Compile Include="realmabilities\handlers\PurgeAbility.cs" />
+    <Compile Include="realmabilities\handlers\RAPropertyEnhancer.cs" />
+    <Compile Include="realmabilities\handlers\RAStatEnhancer.cs" />
+    <Compile Include="realmabilities\handlers\RealmAbility.cs" />
+    <Compile Include="realmabilities\handlers\SecondWindAbility.cs" />
+    <Compile Include="realmabilities\handlers\SerenityAbility.cs" />
+    <Compile Include="realmabilities\handlers\TrueshotAbility.cs" />
+    <Compile Include="realmabilities\handlers\WildPowerAbility.cs" />
     <Compile Include="quests\QuestBuilder.cs" />
     <Compile Include="quests\QuestMgr.cs" />
     <Compile Include="ResourceUtil.cs">
@@ -1403,7 +1431,6 @@
     <Compile Include="skillhandler\BerserkAbilityHandler.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="skillhandler\CamouflageSpecHandler.cs" />
     <Compile Include="skillhandler\CriticalShotAbilityHandler.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -1419,6 +1446,7 @@
     <Compile Include="skillhandler\InterceptAbilityHandler.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="realmabilities\handlers\MasteryOfStealthAbility.cs" />
     <Compile Include="skillhandler\ProtectAbilityHandler.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -1440,6 +1468,7 @@
     <Compile Include="skillhandler\SureShotAbilityHandler.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="realmabilities\handlers\VanishAbility.cs" />
     <Compile Include="spells\AblativeArmorSpellHandler.cs">
       <SubType>Code</SubType>
     </Compile>

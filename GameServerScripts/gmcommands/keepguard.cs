@@ -29,7 +29,9 @@ namespace DOL.GS.Scripts
 	[CmdAttribute(
 		"&keepguard", //command to handle
 		(uint)ePrivLevel.GM, //minimum privelege level
-		"Various keep guard creation commands!", //command description
+		"Various keep guard commands!", //command description
+		"'/keepguard create <lord/fighter/archer/healer/stealther/caster> (optional for archer and caster)static'",
+		/*
 		"'/keepguard fastcreate <type>' to create a guard for the keep with base template",
 		"'/keepguard fastcreate ' to show all template available in fast create",
 		"'/keepguard create ' to create a guard for the closed keep ",
@@ -39,332 +41,173 @@ namespace DOL.GS.Scripts
 		"'/keepguard equipment <equipmentid>' to put equipment on guard",
 		"'/keepguard level <level>' to change base level of guard",
 		"'/keepguard save' to save guard into DB",
+		 */
 		"Use '/mob' command if you want to change other param of guard")] //usage
 	public class KeepGuardCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public enum eGuardType : int
-		{
-			None = 0,//maybe for random later
-			Archer = 1,
-			Warior = 2,
-			Wizard = 3,
-			Healer = 4,
-			Enter_Gatekeeper = 5,
-			Exit_Gatekeeper = 6,
-			Enter_PosternKeeper = 7,
-			Exit_PosternKeeper = 8,
-			Lord = 9,
-		};
 		public int OnCommand(GameClient client, string[] args)
 		{
-			return 1;
-			/*
 			if (args.Length == 1)
 			{
 				DisplaySyntax(client);
 				return 1;
 			}
-			GameKeepGuard guardTarget = client.Player.TargetObject as GameKeepGuard;
+
 			switch (args[1])
 			{
-				case "fastcreate":
-					{
-						if (args.Length == 2)
-						{
-							client.Out.SendMessage("type :", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							int index = 0;
-							foreach (string str in Enum.GetNames(typeof(eGuardType)))
-							{
-								client.Out.SendMessage(index + " : " + str, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								index++;
-							}
-							return 1;
-						}
-						//TODO : create guard for mid and hib too (not only albion)
-						//todo : template for mid and hib
-						GameNpcInventoryTemplate clericTemplate = new GameNpcInventoryTemplate();
-						clericTemplate.AddNPCEquipment(eInventorySlot.RightHandWeapon, 14);
-						clericTemplate.AddNPCEquipment(eInventorySlot.LeftHandWeapon, 61);//emblem
-						clericTemplate.AddNPCEquipment(eInventorySlot.HandsArmor, 184);
-						clericTemplate.AddNPCEquipment(eInventorySlot.FeetArmor, 185);
-						clericTemplate.AddNPCEquipment(eInventorySlot.TorsoArmor, 181);
-						clericTemplate.AddNPCEquipment(eInventorySlot.Cloak, 164);//emblem
-						clericTemplate.AddNPCEquipment(eInventorySlot.LegsArmor, 182);
-						clericTemplate.AddNPCEquipment(eInventorySlot.ArmsArmor, 183);
-
-						GameNpcInventoryTemplate ArmsmanTemplate = new GameNpcInventoryTemplate();
-						ArmsmanTemplate.AddNPCEquipment(eInventorySlot.RightHandWeapon, 310);
-						ArmsmanTemplate.AddNPCEquipment(eInventorySlot.LeftHandWeapon, 61);
-						ArmsmanTemplate.AddNPCEquipment(eInventorySlot.HeadArmor, 95);
-						ArmsmanTemplate.AddNPCEquipment(eInventorySlot.HandsArmor, 153);
-						ArmsmanTemplate.AddNPCEquipment(eInventorySlot.FeetArmor, 154);
-						ArmsmanTemplate.AddNPCEquipment(eInventorySlot.TorsoArmor, 150);
-						ArmsmanTemplate.AddNPCEquipment(eInventorySlot.Cloak, 164);
-						ArmsmanTemplate.AddNPCEquipment(eInventorySlot.LegsArmor, 151);
-						ArmsmanTemplate.AddNPCEquipment(eInventorySlot.ArmsArmor, 152);
-
-						GameNpcInventoryTemplate scoutTemplate = new GameNpcInventoryTemplate();
-						scoutTemplate.AddNPCEquipment(eInventorySlot.DistanceWeapon, 58);
-						scoutTemplate.AddNPCEquipment(eInventorySlot.HeadArmor, 312);
-						scoutTemplate.AddNPCEquipment(eInventorySlot.HandsArmor, 85);
-						scoutTemplate.AddNPCEquipment(eInventorySlot.FeetArmor, 84);
-						scoutTemplate.AddNPCEquipment(eInventorySlot.TorsoArmor, 81);
-						scoutTemplate.AddNPCEquipment(eInventorySlot.Cloak, 164);
-						scoutTemplate.AddNPCEquipment(eInventorySlot.LegsArmor, 82);
-						scoutTemplate.AddNPCEquipment(eInventorySlot.ArmsArmor, 83);
-
-						GameNpcInventoryTemplate wizardTemplate = new GameNpcInventoryTemplate();
-						wizardTemplate.AddNPCEquipment(eInventorySlot.TwoHandWeapon, 327);
-						wizardTemplate.AddNPCEquipment(eInventorySlot.TorsoArmor, 58);
-						wizardTemplate.AddNPCEquipment(eInventorySlot.Cloak, 164);
-
-						GameNpcInventoryTemplate lordTemplate = new GameNpcInventoryTemplate();
-						lordTemplate.AddNPCEquipment(eInventorySlot.RightHandWeapon, 412);
-						lordTemplate.AddNPCEquipment(eInventorySlot.DistanceWeapon, 58);
-						lordTemplate.AddNPCEquipment(eInventorySlot.HeadArmor, 94);
-						lordTemplate.AddNPCEquipment(eInventorySlot.HandsArmor, 153);
-						lordTemplate.AddNPCEquipment(eInventorySlot.FeetArmor, 154);
-						lordTemplate.AddNPCEquipment(eInventorySlot.TorsoArmor, 150);
-						lordTemplate.AddNPCEquipment(eInventorySlot.Cloak, 164);
-						lordTemplate.AddNPCEquipment(eInventorySlot.LegsArmor, 151);
-						//todo make constant for radius
-						AbstractGameKeep keep = KeepMgr.getKeepCloseToSpot(client.Player.CurrentRegionID, client.Player, 10000);
-						if (keep == null)
-						{
-							client.Out.SendMessage("No keep found near!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
-						}
-						GameKeepGuard m_guard = new GameKeepGuard(keep);
-						m_guard.Realm = keep.Realm;
-						m_guard.Level = 50;
-						m_guard.CurrentRegion = client.Player.CurrentRegion;
-						m_guard.X = client.Player.X;
-						m_guard.Y = client.Player.Y;
-						m_guard.Z = client.Player.Z;
-						m_guard.Heading = client.Player.Heading;
-						m_guard.CurrentSpeed = 0;
-						m_guard.MaxSpeedBase = 200;
-						m_guard.GuildName = "";
-						m_guard.Size = 50;
-						eGuardType classtype = eGuardType.Warior;
-						try
-						{
-							classtype = (eGuardType)Convert.ToInt32(args[2]);
-						}
-						catch
-						{
-							client.Out.SendMessage("Wrong type of keep guard : " + args[2] + "hit /keepguard fastcreate to know all type.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
-						}
-						switch (classtype)
-						{
-							case eGuardType.Archer:
-								{
-									m_guard.Name = "Scout";
-									m_guard.Inventory = scoutTemplate.CloseTemplate();
-									m_guard.Model = 486;
-									m_guard.SwitchWeapon(GameLiving.eActiveWeaponSlot.Distance);
-								} break;
-							case eGuardType.Healer:
-								{
-									m_guard.Name = "Cleric";
-									m_guard.Inventory = clericTemplate.CloseTemplate();
-									m_guard.Model = 492;
-									m_guard.SwitchWeapon(GameLiving.eActiveWeaponSlot.Standard);
-								} break;
-							case eGuardType.Lord:
-								{
-									m_guard = new GameKeepLord(m_guard);
-									m_guard.Name = "Lord ";//+keep.LordName
-									m_guard.Inventory = lordTemplate.CloseTemplate();
-									m_guard.Model = 726;
-									m_guard.Level = 74;//todo : find level for lord with formulat							
-									if (keep.Lord != null)
-									{
-										keep.Lord.Delete();
-										keep.Lord = null;
-									}
-								} break;
-							case eGuardType.Wizard:
-								{
-									m_guard.Name = "Wizard";
-									m_guard.Inventory = wizardTemplate.CloseTemplate();
-									m_guard.Model = 477;
-									m_guard.SwitchWeapon(GameLiving.eActiveWeaponSlot.TwoHanded);
-								} break;
-							case eGuardType.Warior:
-								{
-									m_guard.Name = "Armswoman";
-									m_guard.Model = 477;
-									//todo gender
-										m_guard.Name = "Armswoman";
-										//m_guard.Model = 486;
-									m_guard.Inventory = ArmsmanTemplate.CloseTemplate();
-									m_guard.SwitchWeapon(GameLiving.eActiveWeaponSlot.Standard);
-								} break;
-							case eGuardType.Enter_Gatekeeper:
-								{
-									m_guard.Name = "Albion Enter Gatekeeper";
-									m_guard.Model = 666;
-								} break;
-							case eGuardType.Exit_Gatekeeper:
-								{
-									m_guard.Name = "Albion Exit Gatekeeper";
-									m_guard.Model = 666;
-								} break;
-							case eGuardType.Enter_PosternKeeper:
-								{
-									m_guard.Name = "Albion Enter PosternKeeper";
-									m_guard.Model = 666;
-								} break;
-							case eGuardType.Exit_PosternKeeper:
-								{
-									m_guard.Name = "Albion Exit PosternKeeper";
-									m_guard.Model = 666;
-								} break;
-						}
-						m_guard.AddToKeep(keep);
-						m_guard.SaveIntoDatabase();
-						m_guard.AddToWorld();
-						client.Out.SendMessage("You have created keep guard.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					} break;
 				case "create":
 					{
-						AbstractGameKeep keep = KeepMgr.getKeepCloseToSpot(client.Player.CurrentRegionID, client.Player, 10000);
-						if (keep == null)
+						GameKeepGuard guard = null;
+						switch (args[2])
 						{
-							client.Out.SendMessage("No keep found near!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
+							case "lord":
+								{
+									if (client.Player.TargetObject is GameKeepComponent)
+									{ }
+									else
+									{
+										guard = new GuardLord();
+									}
+									break;
+								}
+							case "fighter":
+								{
+									if (client.Player.TargetObject is GameKeepComponent)
+									{ }
+									else
+									{
+										guard = new GuardFighter();
+									}
+									break;
+								}
+							case "archer":
+								{
+									if (client.Player.TargetObject is GameKeepComponent)
+									{ }
+									else
+									{
+										if (args.Length == 4)
+											guard = new GuardStaticArcher();
+										guard = new GuardArcher();
+									}
+									break;
+								}
+							case "healer":
+								{
+									if (client.Player.TargetObject is GameKeepComponent)
+									{ }
+									else
+									{
+										guard = new GuardHealer();
+									}
+									break;
+								}
+							case "stealther":
+								{
+									if (client.Player.TargetObject is GameKeepComponent)
+									{ }
+									else
+									{
+										guard = new GuardStealther();
+									}
+									break;
+								}
+							case "caster":
+								{
+									if (client.Player.TargetObject is GameKeepComponent)
+									{ }
+									else
+									{
+										if (args.Length == 4)
+											guard = new GuardStaticCaster();
+										else guard = new GuardCaster();
+									}
+									break;
+								}
 						}
-						GameKeepGuard m_guard = new GameKeepGuard(keep);
-						if (args.Length > 2)
+						if (guard == null)
 						{
-							if (args[2] == "lord")
-								m_guard = new GameKeepLord(keep);
+							DisplaySyntax(client);
+							return 0;
 						}
-						//Fill the object variables
-						m_guard.X = client.Player.X;
-						m_guard.Y = client.Player.Y;
-						m_guard.Z = client.Player.Z;
-						m_guard.CurrentRegion = client.Player.CurrentRegion;
-						m_guard.Heading = client.Player.Heading;
-						m_guard.Level = 50;
-						m_guard.Realm = keep.Realm;
-						m_guard.Name = "Guard";
-						m_guard.Model = 486;
-						//Fill the living variables
-						m_guard.CurrentSpeed = 0;
-						m_guard.MaxSpeedBase = 200;
-						m_guard.GuildName = "";
-						m_guard.Size = 50;
-						if (m_guard is GameKeepLord && keep.Lord != null)
-						{
-							keep.Lord.Delete();
-							keep.Lord = null;
-						}
-						m_guard.AddToKeep(keep);
-						m_guard.AddToWorld();
-						client.Out.SendMessage("You have created keep guard.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					} break;
-				case "keep":
+						guard.CurrentRegion = client.Player.CurrentRegion;
+						guard.X = client.Player.X;
+						guard.Y = client.Player.Y;
+						guard.Z = client.Player.Z;
+						guard.Heading = client.Player.Heading;
+						guard.Realm = (byte)guard.CurrentZone.GetRealm();
+						TemplateMgr.RefreshTemplate(guard);
+						guard.AddToWorld();
+						guard.SaveIntoDatabase();
+						break;
+					}
+				case "addposition":
 					{
-						if (guardTarget == null)
+						if (client.Player.TargetObject is GameKeepGuard == false)
+						{
+							DisplayError(client, "Target a guard first!", null);
+							return 1;
+						}
+						if (args.Length != 3)
 						{
 							DisplaySyntax(client);
 							return 1;
 						}
-						if (!(guardTarget.Brain is KeepGuardBrain))
+						byte height = byte.Parse(args[2]);
+						height = KeepMgr.GetHeightFromLevel(height);
+						if (height > 3)
 						{
-							DisplaySyntax(client);
+							DisplayError(client, "Keep levels range from 0 to 10", null);
 							return 1;
 						}
-						AbstractGameKeep mykeep = null;
-						if (args.Length < 3)
-						{
-							mykeep = KeepMgr.getKeepCloseToSpot(client.Player.CurrentRegionID, client.Player, WorldMgr.VISIBILITY_DISTANCE);
-						}
-						else
-						{
-							try
-							{
-								int keepid = Convert.ToInt32(args[2]);
-								mykeep = KeepMgr.getKeepByID(keepid);
-							}
-							catch
-							{
-								DisplayError(client, "keep id must be a number");
-								return 1;
-							}
-						}
-						(guardTarget.Brain as KeepGuardBrain).Keep = mykeep;
 
-						client.Out.SendMessage("You have change the keep of guard to " + mykeep.KeepID, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					} break;
-				case "equipment":
+						GameKeepGuard guard = client.Player.TargetObject as GameKeepGuard;
+						if (PositionMgr.GetPosition(guard) != null)
+						{
+							DisplayError(client, "You already have a position assigned for height " + height + ", remove first!", null);
+							return 1;
+						}
+
+						DBKeepPosition pos = PositionMgr.CreatePosition(guard.GetType(), height, client.Player, guard.TemplateID, guard.Component);
+
+						PositionMgr.UpdatePositions(pos.TemplateID);
+
+						DisplayMessage(client, "Guard position added", null);
+						break;
+					}
+				case "removeposition":
 					{
-						if (args.Length < 3)
+						if (client.Player.TargetObject is GameKeepGuard == false)
+						{
+							DisplayError(client, "Target a Guard first", null);
+							return 1;
+						}
+						if (args.Length != 3)
 						{
 							DisplaySyntax(client);
 							return 1;
 						}
-						if (guardTarget == null)
+						byte height = byte.Parse(args[2]);
+						if (height > 3)
 						{
-							DisplaySyntax(client);
+							DisplayError(client, "Choose a height between 0 and 3", null);
 							return 1;
 						}
-						guardTarget.EquipmentTemplateID = args[2];
-						client.Out.SendMessage("You have put a equipment on a guard", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					} break;
-				case "level":
-					{
-						if (guardTarget == null)
-						{
-							DisplaySyntax(client);
-							return 1;
-						}
-						try
-						{
-							byte level = Convert.ToByte(args[2]);
-							guardTarget.Level = level;
-						}
-						catch
-						{
-							DisplayError(client, "guard level must be a number.");
-							return 1;
-						}
-						client.Out.SendMessage("You have changed the level of guard to " + args[2], eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					} break;
-				case "save":
-					{
-						if (guardTarget == null)
-						{
-							DisplaySyntax(client);
-							return 1;
-						}
-						guardTarget.SaveIntoDatabase();
-						client.Out.SendMessage("You have saved the current guard", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					} break;
-				default:
-					{
-						DisplaySyntax(client);
-						return 1;
+
+						GameKeepGuard guard = client.Player.TargetObject as GameKeepGuard;
+
+						DBKeepPosition pos = PositionMgr.GetPosition(guard);
+						if (pos != null)
+							GameServer.Database.DeleteObject(pos);
+
+						PositionMgr.UpdatePositions(guard.TemplateID);
+
+						DisplayMessage(client, "Guard position removed", null);
+						break;
 					}
 			}
-			return 1;
-			 */
-		}
-		private string CheckName(string name, GameClient client)
-		{
-			if (name.Length > 47)
-				client.Out.SendMessage("WARNING: name length=" + name.Length + " but only first 47 chars will be shown.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			return name;
-		}
 
-		private string CheckGuildName(string name, GameClient client)
-		{
-			if (name.Length > 47)
-				client.Out.SendMessage("WARNING: guild name length=" + name.Length + " but only first 47 chars will be shown.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			return name;
+			return 1;
 		}
 	}
 }

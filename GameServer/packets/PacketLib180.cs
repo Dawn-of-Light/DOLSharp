@@ -20,8 +20,11 @@
 using System;
 using System.Collections;
 using System.Reflection;
+
+using DOL.GS.RealmAbilities;
 using DOL.GS.Styles;
 using DOL.GS.Effects;
+
 using log4net;
 
 namespace DOL.GS.PacketHandler
@@ -183,18 +186,11 @@ namespace DOL.GS.PacketHandler
 					CheckLengthHybridSkillsPacket(ref pak, ref maxSkills, ref firstSkills);
 					pak.WriteByte(0);
 					byte type = (byte) eSkillPage.Abilities;
-					/*
-					if (skill is Ability)
+					if (skill is RealmAbility)
 					{
-						if (((Ability)skill).MaxLevel > 0)
-						{
-							type = (byte) eSkillPage.RealmAbilities;
-						}
+						type = (byte)eSkillPage.RealmAbilities;
 					}
-					*/
 					pak.WriteByte(type);
-					//if(skill.ID < 500) pak.WriteByte((byte) eSkillPage.Abilities);
-					//else pak.WriteByte((byte) eSkillPage.AbilitiesSpell);
 					pak.WriteShort(0);
 					pak.WriteByte(0);
 					pak.WriteShort(skill.ID);

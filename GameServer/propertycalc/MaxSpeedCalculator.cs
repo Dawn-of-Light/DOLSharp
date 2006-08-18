@@ -19,6 +19,8 @@
 using System;
 using DOL.AI.Brain;
 using DOL.GS.PacketHandler;
+using DOL.GS.Effects;
+using DOL.GS.RealmAbilities;
 
 namespace DOL.GS.PropertyCalc
 {
@@ -34,6 +36,12 @@ namespace DOL.GS.PropertyCalc
 	[PropertyCalculator(eProperty.MaxSpeed)]
 	public class MaxSpeedCalculator : PropertyCalculator
 	{
+		public static readonly double SPEED1 = 1.753;
+		public static readonly double SPEED2 = 1.816;
+		public static readonly double SPEED3 = 1.91;
+		public static readonly double SPEED4 = 1.989;
+		public static readonly double SPEED5 = 2.068;
+
 		public override int CalcValue(GameLiving living, eProperty property)
 		{
 			if (living.Mez || living.Stun) return 0;
@@ -76,6 +84,9 @@ namespace DOL.GS.PropertyCalc
 				{
 					double stealthSpec = player.GetModifiedSpecLevel(Specs.Stealth);
 					speed *= 0.3 + (stealthSpec + 10) * 0.3 / (player.Level + 10);
+					VanishEffect vanish = player.EffectList.GetOfType(typeof(VanishEffect)) as VanishEffect;
+					if (vanish != null)
+						speed *= vanish.SpeedBonus;
 				}
 				if (player.IsSprinting) speed *= 1.3;
 			}

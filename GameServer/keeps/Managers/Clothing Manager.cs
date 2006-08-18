@@ -455,6 +455,8 @@ namespace DOL.GS.Keeps
 		{
 			if (guard.Inventory == null)
 				return;
+			if (guard.Component == null)
+				return;
 			ushort emblem = 0;
 			if (guard.Component.Keep.Guild != null) emblem = guard.Component.Keep.Guild.theGuildDB.Emblem;
 			InventoryItem cloak = guard.Inventory.GetItem(eInventorySlot.Cloak);

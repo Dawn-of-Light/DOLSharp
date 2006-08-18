@@ -69,6 +69,11 @@ namespace DOL
 			protected ILog m_cheatLog;
 
 			/// <summary>
+			/// Holds the startSystemTick when server is up.
+			/// </summary>
+			protected int m_startTick = 0;
+
+			/// <summary>
 			/// Minute conversion from milliseconds
 			/// </summary>
 			protected const int MINUTE_CONV = 60000;
@@ -121,7 +126,7 @@ namespace DOL
 			#endregion
 
 			#region Properties
-			
+
 			/// <summary>
 			/// Returns the instance
 			/// </summary>
@@ -137,7 +142,7 @@ namespace DOL
 			{
 				get { return (GameServerConfiguration)m_config; }
 			}
-			
+
 			/// <summary>
 			/// Gets the server status
 			/// </summary>
@@ -177,9 +182,10 @@ namespace DOL
 				{
 					Configuration.SaveInterval = value;
 					if (m_timer != null)
-						m_timer.Change(value*MINUTE_CONV, Timeout.Infinite);
+						m_timer.Change(value * MINUTE_CONV, Timeout.Infinite);
 				}
 			}
+
 
 			/// <summary>
 			/// Gets an array of invalid player names
@@ -200,6 +206,17 @@ namespace DOL
 				}
 			}
 
+			/// <summary>
+			/// Gets the number of millisecounds elapsed since the GameServer started.
+			/// </summary>
+			public int TickCount
+			{
+				get
+				{
+					return System.Environment.TickCount - m_startTick;
+				}
+			}
+
 			#endregion
 
 			#region Initialization
@@ -211,15 +228,15 @@ namespace DOL
 			public static void CreateInstance(GameServerConfiguration config)
 			{
 				//Only one intance
-				if(Instance!=null)
+				if (Instance != null)
 					return;
 
 				//Try to find the log.config file, if it doesn't exist
 				//we create it
 				FileInfo logConfig = new FileInfo(config.LogConfigFile);
-				if(!logConfig.Exists)
+				if (!logConfig.Exists)
 				{
-					ResourceUtil.ExtractResource(logConfig.Name,logConfig.FullName);
+					ResourceUtil.ExtractResource(logConfig.Name, logConfig.FullName);
 				}
 				//Configure and watch the config file
 				XmlConfigurator.ConfigureAndWatch(logConfig);
@@ -276,7 +293,7 @@ namespace DOL
 
 			#endregion
 
-			#region UDP 
+			#region UDP
 
 			/// <summary>
 			/// Gets the UDP Socket of this server instance
@@ -336,7 +353,7 @@ namespace DOL
 			protected void RecvFromCallback(IAsyncResult ar)
 			{
 				if (ar == null) return;
-				GameServer server = (GameServer) (ar.AsyncState);
+				GameServer server = (GameServer)(ar.AsyncState);
 				Socket s = server.UDPSocket;
 				GameClient client = null;
 
@@ -361,13 +378,13 @@ namespace DOL
 								if (log.IsWarnEnabled)
 									log.WarnFormat("Bad UDP packet checksum (packet:0x{0:X4} calculated:0x{1:X4}) -> ignored", pakCheck, calcCheck);
 								if (log.IsDebugEnabled)
-									log.Debug(Marshal.ToHexDump("UDP buffer dump, received "+read+"bytes", server.UDPBuffer));
+									log.Debug(Marshal.ToHexDump("UDP buffer dump, received " + read + "bytes", server.UDPBuffer));
 							}
 							else
 							{
-								IPEndPoint sender = (IPEndPoint) (tempRemoteEP);
+								IPEndPoint sender = (IPEndPoint)(tempRemoteEP);
 
-								GSPacketIn pakin = new GSPacketIn(read-GSPacketIn.HDR_SIZE);
+								GSPacketIn pakin = new GSPacketIn(read - GSPacketIn.HDR_SIZE);
 								pakin.Load(server.UDPBuffer, read);
 
 								client = WorldMgr.GetClientFromID(pakin.SessionID);
@@ -441,7 +458,7 @@ namespace DOL
 			{
 				SendUDP(bytes, count, clientEndpoint, null);
 			}
-			
+
 			/// <summary>
 			/// Sends a UDP packet
 			/// </summary>
@@ -450,13 +467,24 @@ namespace DOL
 			/// <param name="clientEndpoint">Address of receiving client</param>
 			public void SendUDP(byte[] bytes, int count, EndPoint clientEndpoint, AsyncCallback callback)
 			{
-				int start = Environment.TickCount;
+				try
+				{
+					int start = Environment.TickCount;
 
-				m_udplisten.BeginSendTo(bytes, 0, count, SocketFlags.None, clientEndpoint, callback, m_udplisten);
+					m_udplisten.BeginSendTo(bytes, 0, count, SocketFlags.None, clientEndpoint, callback, m_udplisten);
 
-				int took = Environment.TickCount - start;
-				if (took > 100 && log.IsWarnEnabled)
-					log.WarnFormat("m_udplisten.BeginSendTo took {0}ms! (UDP to {1})", took, clientEndpoint.ToString());
+					int took = Environment.TickCount - start;
+					if (took > 100 && log.IsWarnEnabled)
+						log.WarnFormat("m_udplisten.BeginSendTo took {0}ms! (UDP to {1})", took, clientEndpoint.ToString());
+				}
+				catch (SocketException)
+				{
+				}
+				catch (Exception e)
+				{
+					if (log.IsErrorEnabled)
+						log.Error("SendUDP", e);
+				}
 			}
 
 			/// <summary>
@@ -468,7 +496,7 @@ namespace DOL
 				if (ar == null) return;
 				try
 				{
-					Socket s = (Socket) (ar.AsyncState);
+					Socket s = (Socket)(ar.AsyncState);
 					s.EndSendTo(ar);
 				}
 				catch (ObjectDisposedException)
@@ -495,7 +523,7 @@ namespace DOL
 			public override bool Start()
 			{
 				m_status = eGameServerStatus.GSS_Closed;
-				//Thread.CurrentThread.Priority = ThreadPriority.AboveNormal;
+				Thread.CurrentThread.Priority = ThreadPriority.Normal;
 
 				AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
 
@@ -565,12 +593,6 @@ namespace DOL
 					return false;
 
 				//---------------------------------------------------------------
-				//Try to initialize the WorldMgr
-				if (!InitComponent(WorldMgr.Init(regionsData), "World Manager Initialization"))
-					return false;
-				regionsData = null;
-
-				//---------------------------------------------------------------
 				//Load the house manager
 				if (!InitComponent(HouseMgr.Start(), "House Manager"))
 					return false;
@@ -592,7 +614,7 @@ namespace DOL
 					m_timer.Change(Timeout.Infinite, Timeout.Infinite);
 					m_timer.Dispose();
 				}
-				m_timer = new Timer(new TimerCallback(SaveTimerProc), null, SaveInterval*MINUTE_CONV, Timeout.Infinite);
+				m_timer = new Timer(new TimerCallback(SaveTimerProc), null, SaveInterval * MINUTE_CONV, Timeout.Infinite);
 				if (log.IsInfoEnabled)
 					log.Info("World save timer: true");
 
@@ -608,9 +630,20 @@ namespace DOL
 					return false;
 
 				//---------------------------------------------------------------
+				//Load the relic manager
+				if (!InitComponent(RelicMgr.Init(), "Relic Manager"))
+					return false;
+
+				//---------------------------------------------------------------
 				//Load the door manager
 				if (!InitComponent(DoorMgr.Init(), "Door Manager"))
 					return false;
+
+				//---------------------------------------------------------------
+				//Try to initialize the WorldMgr
+				if (!InitComponent(WorldMgr.Init(regionsData), "World Manager Initialization"))
+					return false;
+				regionsData = null;
 
 				//---------------------------------------------------------------
 				//Load all weather managers
@@ -631,6 +664,9 @@ namespace DOL
 				//Notify our scripts that everything went fine!
 				GameEventMgr.Notify(ScriptEvent.Loaded);
 
+				//---------------------------------------------------------------
+				//Set the GameServer StartTick
+				m_startTick = System.Environment.TickCount;
 				//---------------------------------------------------------------
 				//Notify everyone that the server is now started!
 				GameEventMgr.Notify(GameServerEvent.Started, this);
@@ -672,7 +708,7 @@ namespace DOL
 			public bool RecompileScripts()
 			{
 				string scriptDirectory = Configuration.RootDirectory + Path.DirectorySeparatorChar + "scripts";
-				if(!Directory.Exists(scriptDirectory))
+				if (!Directory.Exists(scriptDirectory))
 					Directory.CreateDirectory(scriptDirectory);
 
 				string[] parameters = Configuration.ScriptAssemblies.Split(',');
@@ -705,10 +741,10 @@ namespace DOL
 					scripts.Insert(0, typeof(GameServer).Assembly);
 					foreach (Assembly asm in scripts)
 					{
-						GameEventMgr.RegisterGlobalEvents(asm, typeof (GameServerStartedEventAttribute), GameServerEvent.Started);
-						GameEventMgr.RegisterGlobalEvents(asm, typeof (GameServerStoppedEventAttribute), GameServerEvent.Stopped);
-						GameEventMgr.RegisterGlobalEvents(asm, typeof (ScriptLoadedEventAttribute), ScriptEvent.Loaded);
-						GameEventMgr.RegisterGlobalEvents(asm, typeof (ScriptUnloadedEventAttribute), ScriptEvent.Unloaded);
+						GameEventMgr.RegisterGlobalEvents(asm, typeof(GameServerStartedEventAttribute), GameServerEvent.Started);
+						GameEventMgr.RegisterGlobalEvents(asm, typeof(GameServerStoppedEventAttribute), GameServerEvent.Stopped);
+						GameEventMgr.RegisterGlobalEvents(asm, typeof(ScriptLoadedEventAttribute), ScriptEvent.Loaded);
+						GameEventMgr.RegisterGlobalEvents(asm, typeof(ScriptUnloadedEventAttribute), ScriptEvent.Unloaded);
 					}
 					if (log.IsInfoEnabled)
 						log.Info("Registering global event handlers: true");
@@ -748,7 +784,7 @@ namespace DOL
 
 					if (currentVersion < 0)
 					{
-						log.FatalFormat("There were errors converting database to version {0}. Please inspect the problem and change the version number to a positive value in {1}", -(currentVersion-1), versionFile.Name);
+						log.FatalFormat("There were errors converting database to version {0}. Please inspect the problem and change the version number to a positive value in {1}", -(currentVersion - 1), versionFile.Name);
 						string lastError = xmlConfig[errorKey].GetString(null);
 						if (lastError != null)
 							log.FatalFormat("last error:\n{0}", lastError);
@@ -791,7 +827,7 @@ namespace DOL
 						prevVersion = version;
 					}
 
-					for (int i = currentVersion+1;; i++)
+					for (int i = currentVersion + 1; ; i++)
 					{
 						IDatabaseConverter conv = (IDatabaseConverter)convertersByVersion[i];
 						if (conv == null)
@@ -912,17 +948,17 @@ namespace DOL
 			#endregion
 
 			#region Packet buffer pool
-			
+
 			/// <summary>
 			/// The size of all packet buffers.
 			/// </summary>
 			private const int BUF_SIZE = 2048;
-			
+
 			/// <summary>
 			/// Holds all packet buffers.
 			/// </summary>
 			private Queue m_packetBufPool;
-			
+
 			/// <summary>
 			/// Allocates all packet buffers.
 			/// </summary>
@@ -930,7 +966,7 @@ namespace DOL
 			private bool AllocatePacketBuffers()
 			{
 				int count = Configuration.MaxClientCount * 3;
-				count += Math.Max(10*3, count*3/8);
+				count += Math.Max(10 * 3, count * 3 / 8);
 				m_packetBufPool = new Queue(count);
 				for (int i = 0; i < count; i++)
 				{
@@ -940,7 +976,7 @@ namespace DOL
 					log.DebugFormat("allocated packet buffers: {0}", count.ToString());
 				return true;
 			}
-			
+
 			/// <summary>
 			/// Gets the count of packet buffers in the pool.
 			/// </summary>
@@ -948,7 +984,7 @@ namespace DOL
 			{
 				get { return m_packetBufPool.Count; }
 			}
-			
+
 			/// <summary>
 			/// Gets packet buffer from the pool.
 			/// </summary>
@@ -958,12 +994,12 @@ namespace DOL
 				lock (m_packetBufPool.SyncRoot)
 				{
 					if (m_packetBufPool.Count > 0)
-						return (byte[]) m_packetBufPool.Dequeue();
+						return (byte[])m_packetBufPool.Dequeue();
 				}
 				log.Warn("packet buffer pool is empty!");
 				return new byte[BUF_SIZE];
 			}
-			
+
 			/// <summary>
 			/// Releases previously acquired packet buffer.
 			/// </summary>
@@ -979,7 +1015,7 @@ namespace DOL
 			}
 
 			#endregion
-			
+
 			#region Client
 
 			/// <summary>
@@ -1041,7 +1077,7 @@ namespace DOL
 								// Pick up a class
 								if (type.IsClass != true)
 									continue;
-								object[] attrib = type.GetCustomAttributes(typeof (DataTable), true);
+								object[] attrib = type.GetCustomAttributes(typeof(DataTable), true);
 								if (attrib.Length > 0)
 								{
 									if (log.IsInfoEnabled)
@@ -1130,7 +1166,7 @@ namespace DOL
 				finally
 				{
 					if (m_timer != null)
-						m_timer.Change(SaveInterval*MINUTE_CONV, Timeout.Infinite);
+						m_timer.Change(SaveInterval * MINUTE_CONV, Timeout.Infinite);
 				}
 			}
 
@@ -1140,7 +1176,8 @@ namespace DOL
 			/// <summary>
 			/// Default game server constructor
 			/// </summary>
-			protected GameServer() : this(new GameServerConfiguration())
+			protected GameServer()
+				: this(new GameServerConfiguration())
 			{
 			}
 
@@ -1148,17 +1185,18 @@ namespace DOL
 			/// Constructor with a given configuration
 			/// </summary>
 			/// <param name="config">A valid game server configuration</param>
-			protected GameServer(GameServerConfiguration config) : base(config)
+			protected GameServer(GameServerConfiguration config)
+				: base(config)
 			{
 				m_gmLog = LogManager.GetLogger(Configuration.GMActionsLoggerName);
 				m_cheatLog = LogManager.GetLogger(Configuration.CheatLoggerName);
 
 				if (log.IsDebugEnabled)
 				{
-					log.Debug("Current directory is: "+Directory.GetCurrentDirectory());
-					log.Debug("Gameserver root directory is: "+Configuration.RootDirectory);
+					log.Debug("Current directory is: " + Directory.GetCurrentDirectory());
+					log.Debug("Gameserver root directory is: " + Configuration.RootDirectory);
 					log.Debug("Changing directory to root directory");
-				}				
+				}
 				Directory.SetCurrentDirectory(Configuration.RootDirectory);
 
 				try

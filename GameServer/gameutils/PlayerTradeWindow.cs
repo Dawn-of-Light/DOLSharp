@@ -415,6 +415,39 @@ namespace DOL.GS
 
 				bool logTrade = (m_owner.Client.Account.PrivLevel == 1 || partner.Client.Account.PrivLevel == 1);
 
+				//Test if we and our partner have enough money
+				bool enoughMoney        = m_owner.RemoveMoney(TradeMoney);
+				bool partnerEnoughMoney = partner.RemoveMoney(m_partnerWindow.TradeMoney);
+
+				//Check the preconditions
+				if (!enoughMoney || !partnerEnoughMoney)
+				{
+					if (!enoughMoney)
+					{
+						//Reset the money if we don't have enough
+						TradeMoney = 0;
+						if (partnerEnoughMoney)
+							partner.AddMoney(m_partnerWindow.TradeMoney);
+
+						m_owner.Out.SendMessage("You don't have enought money.", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
+						partner.Out.SendMessage(m_owner.Name + " doesn't have enought money.", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
+					}
+					if (!partnerEnoughMoney)
+					{
+						//Reset the money if our partner doesn't have enough
+						m_partnerWindow.TradeMoney = 0;
+						if (enoughMoney)
+							m_owner.AddMoney(TradeMoney);
+
+						partner.Out.SendMessage("You don't have enought money.", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
+						m_owner.Out.SendMessage(partner.Name + " doesn't have enought money.", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
+					}
+
+					//Update our tradewindow and return
+					TradeUpdate();
+					return false;
+				}
+
 				if(m_combine == true)
 				{
 					GamePlayer crafter = (m_recipiant == true ? m_owner : partner);
@@ -445,12 +478,8 @@ namespace DOL.GS
 					bool enoughSpace        = m_owner.Inventory.IsSlotsFree(mySpaceNeeded, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
 					bool partnerEnoughSpace = partner.Inventory.IsSlotsFree(partnerSpaceNeeded, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
 
-					//Test if we and our partner have enough money
-					bool enoughMoney        = m_owner.RemoveMoney(TradeMoney);
-					bool partnerEnoughMoney = partner.RemoveMoney(m_partnerWindow.TradeMoney);
-
 					//Check the preconditions
-					if (!enoughSpace || !partnerEnoughSpace || !enoughMoney || !partnerEnoughMoney)
+					if (!enoughSpace || !partnerEnoughSpace)
 					{
 						if (!enoughSpace)
 						{
@@ -461,26 +490,6 @@ namespace DOL.GS
 						{
 							partner.Out.SendMessage("You don't have enought space in your inventory.", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
 							m_owner.Out.SendMessage(partner.Name + " doesn't have enought space in his inventory.", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
-						}
-						if (!enoughMoney)
-						{
-							//Reset the money if we don't have enough
-							TradeMoney = 0;
-							if (partnerEnoughMoney)
-								partner.AddMoney(m_partnerWindow.TradeMoney);
-
-							m_owner.Out.SendMessage("You don't have enought money.", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
-							partner.Out.SendMessage(m_owner.Name + " doesn't have enought money.", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
-						}
-						if (!partnerEnoughMoney)
-						{
-							//Reset the money if our partner doesn't have enough
-							m_partnerWindow.TradeMoney = 0;
-							if (enoughMoney)
-								m_owner.AddMoney(TradeMoney);
-
-							partner.Out.SendMessage("You don't have enought money.", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
-							m_owner.Out.SendMessage(partner.Name + " doesn't have enought money.", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
 						}
 
 						//Update our tradewindow and return

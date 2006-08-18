@@ -110,7 +110,7 @@ namespace DOL.GS.ServerRules
 		public static void OnKeepTaken(DOLEvent e, object sender, EventArgs arguments)
 		{
 			KeepEventArgs args = arguments as KeepEventArgs;
-			eRealm realm = (eRealm) args.Player.Realm ;
+			eRealm realm = (eRealm) args.Keep.Realm ;
 			if (realm != DarknessFallOwner )
 			{
 				int currentDFOwnerTowerCount = KeepMgr.GetTowerCountByRealm(DarknessFallOwner);

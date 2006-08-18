@@ -142,7 +142,9 @@
     <Compile Include="DOLTables\Character.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DOLTables\ClassXRealmAbility.cs" />
     <Compile Include="DOLTables\DBKeepPosition.cs" />
+    <Compile Include="DOLTables\DBRelic.cs" />
     <Compile Include="DOLTables\ServerProperty.cs" />
     <Compile Include="DOLTables\DBAbility.cs">
       <SubType>Code</SubType>

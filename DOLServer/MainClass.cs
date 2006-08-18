@@ -163,8 +163,9 @@ namespace DOL.DOLServer
 
 			if (args.Length == 0)
 			{
-				ShowSyntax();
-				return;
+				args = new string[] { "--start", };
+				//ShowSyntax();
+				//return;
 			}
 
 			string actionName;
