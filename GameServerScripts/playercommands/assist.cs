@@ -31,10 +31,10 @@ namespace DOL.GS.Scripts
 				GameClient assistClient = WorldMgr.GetClientByPlayerName(args[1], true, true);
 				if (assistClient != null)
 				{
-                    if (!GameServer.ServerRules.IsSameRealm(client.Player, assistPlayer, false))
-                        return 0;
+					if (!GameServer.ServerRules.IsSameRealm(client.Player, assistClient.Player, false))
+						return 0;
 
-                    if (!WorldMgr.CheckDistance(client.Player, assistClient.Player, 2048))
+					if (!WorldMgr.CheckDistance(client.Player, assistClient.Player, 2048))
 					{
 						client.Out.SendMessage("You don't see " + args[1] + " around here!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						return 0;
