@@ -443,11 +443,9 @@ namespace DOL.GS
 			}
 
 			if (m_guild != null)
-				if (!m_guild.RemoveOnlineMember(this))
-				{
-					if (log.IsWarnEnabled)
-						log.Warn("Do not succeed to remove " + Name + " in GamePlayer.CleanupOnDisconnect()");
-				}
+			{
+				m_guild.RemoveOnlineMember(this);
+			}
 
 			ChatGroup mychatgroup = (ChatGroup)TempProperties.getObjectProperty(ChatGroup.CHATGROUP_PROPERTY, null);
 			if (mychatgroup != null)
@@ -6960,11 +6958,7 @@ namespace DOL.GS
 			}
 			if (m_guild != null)
 			{
-				if (!m_guild.RemoveOnlineMember(this))
-				{
-					if (log.IsWarnEnabled)
-						log.Warn("Do not succeed to remove " + Name + " in Delete function.");
-				}
+				m_guild.RemoveOnlineMember(this);
 			}
 			GroupMgr.RemovePlayerLooking(this);
 			if (log.IsDebugEnabled)
@@ -7093,8 +7087,9 @@ namespace DOL.GS
 			set
 			{
 				if (m_guild != null)
-					if (!m_guild.RemoveOnlineMember(this))
-						log.Warn("Do not succeed to remove " + Name + " in get/set guild.");
+				{
+					m_guild.RemoveOnlineMember(this);
+				}
 				m_guild = value;
 			}
 		}

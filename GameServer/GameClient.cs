@@ -65,7 +65,7 @@ namespace DOL
 			/// <summary>
 			/// This variable holds all info about the active player
 			/// </summary>
-			protected volatile GamePlayer m_player;
+			protected GamePlayer m_player;
 			/// <summary>
 			/// This variable holds the active charindex
 			/// </summary>
@@ -191,7 +191,6 @@ namespace DOL
 			{
 				m_activeCharIndex = accountindex;
 				GamePlayer player = null;
-				m_player = null;
 				Character car = m_account.Characters[m_activeCharIndex];
 
 				Assembly gasm = Assembly.GetAssembly(typeof(GameServer));
@@ -234,8 +233,7 @@ namespace DOL
 					player = new GamePlayer(this,m_account.Characters[m_activeCharIndex]);
 				}
 				Thread.MemoryBarrier();
-				m_player = player;
-				GameEventMgr.Notify(GameClientEvent.PlayerLoaded,this);
+				Player = player;
 			}
 
 			/// <summary>
@@ -403,7 +401,12 @@ namespace DOL
 				get { return m_player; }
 				set
 				{
-					m_player = value;
+					GamePlayer oldPlayer = Interlocked.Exchange(ref m_player, value);
+					if (oldPlayer != null)
+					{
+						oldPlayer.CleanupOnDisconnect();
+						oldPlayer.Delete();
+					}
 					GameEventMgr.Notify(GameClientEvent.PlayerLoaded, this); // hmm seems not right
 				}
 			}
