@@ -114,12 +114,13 @@ namespace DOL.Database.MySql.DataAccessObjects
 
 		public IList<string> VerifySchema()
 		{
-			return null;
+//			return null;
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `friendfactions` ("
 				+"`FactionId` int,"
-				+"`FriendFactionID` int"
+				+"`FriendFactionID` int)"
 
 			);
+			return null;
 		}
 
 		public FriendFactionDao(MySqlState state)

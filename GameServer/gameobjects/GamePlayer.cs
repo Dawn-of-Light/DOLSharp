@@ -8079,10 +8079,9 @@ namespace DOL.GS
 					TradeWindow.CloseTrade();
 			}
 
-			if (Guild != null && !Guild.RemoveOnlineMember(this))
+			if (Guild != null)
 			{
-				if (log.IsWarnEnabled)
-					log.Warn("Do not succeed to remove " + Name + " in GamePlayer.CleanupOnDisconnect()");
+				Guild.RemoveOnlineMember(this);
 			}
 
 			ChatGroup mychatgroup = (ChatGroup)TempProperties.getObjectProperty(ChatGroup.CHATGROUP_PROPERTY, null);

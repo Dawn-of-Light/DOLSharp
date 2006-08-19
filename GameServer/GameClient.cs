@@ -20,6 +20,7 @@ using System;
 using System.Text;
 using System.Net;
 using System.Reflection;
+using System.Threading;
 using DOL.Events;
 using DOL.GS.Database;
 using DOL.GS.PacketHandler;
@@ -64,7 +65,7 @@ namespace DOL
 			/// <summary>
 			/// This variable holds all info about the active player
 			/// </summary>
-			protected volatile GamePlayer m_player;
+			protected GamePlayer m_player;
 			/// <summary>
 			/// This variable holds the accountdata
 			/// </summary>
@@ -349,7 +350,12 @@ namespace DOL
 				get { return m_player; }
 				set
 				{
-					m_player = value;
+					GamePlayer oldPlayer = Interlocked.Exchange(ref m_player, value);
+					if (oldPlayer != null)
+					{
+						oldPlayer.CleanupOnDisconnect();
+						oldPlayer.RemoveFromWorld();
+					}
 					GameEventMgr.Notify(GameClientEvent.PlayerLoaded, this); // hmm seems not right
 				}
 			}
