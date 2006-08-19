@@ -53,7 +53,10 @@ namespace DOL.Database.MySql
 		/// <returns></returns>
 		public MySqlConnection AcquireConnection()
 		{
-			return new MySqlConnection(m_connectionString);
+			MySqlConnection connection = new MySqlConnection(m_connectionString);
+			connection.Open();
+			
+			return connection;
 		}
 
 		/// <summary>
