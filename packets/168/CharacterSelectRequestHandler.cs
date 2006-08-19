@@ -60,11 +60,9 @@ namespace DOL.GS.PacketHandler.v168
 					{
 						if(player.Name == charName)
 						{
-							client.Player = player;
 							player.Client = client;
 							player.InitOnConnect();
-
-							GameEventMgr.Notify(GameClientEvent.PlayerLoaded,this);
+							client.Player = player; // fires "player loaded" event
 							break;
 						}
 					}

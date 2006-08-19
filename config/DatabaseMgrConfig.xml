@@ -1,6 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <DatabaseMgrConfiguration>
-  <IDatabaseMgr type="DOL.Database.DatabaseMgr, DOLDatabase" />
-  <State type="DOL.Database.MySql.MySqlState, DOLDatabase.MySql" connectionString="Server=localhost; Database=nhibernate; User ID=root; Password=root" />
-  <Register interface="DOL.Database.DataAccessInterfaces.IAccountDao, DOLDatabase" dao="DOL.Database.MySql.DataAccessObjects.AccountDao, DOLDatabase.MySql" />
+	<IDatabaseMgr type="DOL.Database.DatabaseMgr, DOLDatabase" />
+	<State type="DOL.Database.MySql.MySqlState, DOLDatabase.MySql" connectionString="Server=localhost; Database=nhibernate; User ID=root; Password=root" />
+	<Register interface="DOL.Database.DataAccessInterfaces.IAccountDao, DOLDatabase" dao="DOL.Database.MySql.DataAccessObjects.AccountDao, DOLDatabase.MySql" />
+	<Register interface="DOL.Database.DataAccessInterfaces.IFactionDao, DOLDatabase" dao="DOL.Database.MySql.DataAccessObjects.FactionDao, DOLDatabase.MySql" />
+	<Register interface="DOL.Database.DataAccessInterfaces.IFriendFactionDao, DOLDatabase" dao="DOL.Database.MySql.DataAccessObjects.FriendFactionDao, DOLDatabase.MySql" />
+	<Register interface="DOL.Database.DataAccessInterfaces.IEnemyFactionDao, DOLDatabase" dao="DOL.Database.MySql.DataAccessObjects.EnemyFactionDao, DOLDatabase.MySql" />
 </DatabaseMgrConfiguration>
