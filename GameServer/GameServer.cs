@@ -943,6 +943,8 @@ namespace DOL
 
 				if (log.IsInfoEnabled)
 					log.Info("Server Stopped");
+				
+				LogManager.Shutdown();
 			}
 
 			#endregion
