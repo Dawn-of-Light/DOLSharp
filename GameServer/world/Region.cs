@@ -414,9 +414,12 @@ namespace DOL.GS
 				if (m_objects.Length > count) return;
 				GameObject[] newObj = new GameObject[count];
 				Array.Copy(m_objects, newObj, m_objects.Length);
-				uint[] slotarray = new uint[count / 32 + 1];
-				Array.Copy(m_objectsAllocatedSlots, slotarray, m_objectsAllocatedSlots.Length);
-				m_objectsAllocatedSlots = slotarray;
+				if (count / 32 + 1 > m_objectsAllocatedSlots.Length)
+				{
+					uint[] slotarray = new uint[count / 32 + 1];
+					Array.Copy(m_objectsAllocatedSlots, slotarray, m_objectsAllocatedSlots.Length);
+					m_objectsAllocatedSlots = slotarray;
+				}
 				m_objects = newObj;
 			}
 		}
