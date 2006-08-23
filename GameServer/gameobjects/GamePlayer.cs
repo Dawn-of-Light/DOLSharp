@@ -1788,7 +1788,8 @@ namespace DOL.GS
 				"Sylvan",
 				"Half Ogre",
 				"Frostalf",
-				"Shar"
+				"Shar",
+				"Menotaur"
 			};
 
 		/// <summary>

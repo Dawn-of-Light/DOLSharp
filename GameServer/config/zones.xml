@@ -126,6 +126,15 @@
 		<offsetx>69</offsetx>
 		<regionID>1</regionID>
 	</Zone14>
+	<Zone245>
+		<description>Labyrinth</description>
+		<width>8</width>
+		<zoneID>245</zoneID>
+		<height>8</height>
+		<offsety>1</offsety>
+		<offsetx>1</offsetx>
+		<regionID>245</regionID>
+	</Zone245>
 	<Zone15>
 		<description>Hadrian's Wall</description>
 		<width>8</width>
