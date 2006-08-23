@@ -462,7 +462,9 @@ namespace DOL.GS.PacketHandler.v168
 				new int[8] { 90, 70, 40, 40, 60, 60, 60, 60 }, // Half Ogre
 				new int[8] { 55, 55, 55, 60, 60, 75, 60, 60 }, // Frostalf
 				new int[8] { 60, 80, 50, 50, 60, 60, 60, 60 }, // Shar
-				new int[8] { 80, 80, 50, 60, 50, 50, 50, 60 }, // Menotaur
+				new int[8] { 80, 80, 50, 60, 50, 50, 50, 60 }, // AlbionMenotaur
+				new int[8] { 80, 80, 50, 60, 50, 50, 50, 60 }, // MidgardMenotaur
+				new int[8] { 80, 80, 50, 60, 50, 50, 50, 60 }, // HiberniaMenotaur
 			};
 
 			/// <summary>
@@ -560,11 +562,11 @@ namespace DOL.GS.PacketHandler.v168
 							(int)eCharacterClass.Stalker,
 							(int)eCharacterClass.Magician }, // Shar
 				new int[] { (int)eCharacterClass.Fighter,
-							(int)eCharacterClass.Acolyte,
-							(int)eCharacterClass.Disciple,
-							(int)eCharacterClass.Naturalist,
-							(int)eCharacterClass.Viking,
-							(int)eCharacterClass.Seer}, //Menotaur
+							(int)eCharacterClass.Acolyte },//AlbionMenotaur
+				new int[] {	(int)eCharacterClass.Viking,
+							(int)eCharacterClass.Seer }, //MidgardMenotaur
+			    new int[] { (int)eCharacterClass.Guardian,
+							(int)eCharacterClass.Naturalist }, //HiberniaMenotaur
 			};
 		}
 
