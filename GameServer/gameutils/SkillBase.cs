@@ -1312,7 +1312,7 @@ namespace DOL.GS
 			// when first called create the resist table
 			if (m_raceResists == null)
 			{
-				m_raceResists = new HybridDictionary[20];
+				m_raceResists = new HybridDictionary[(int)eRace._Last + 3];
 
 				#region init the table
 
@@ -1410,8 +1410,14 @@ namespace DOL.GS
 				m_raceResists[(int)eRace.Frostalf][eResist.Thrust] = 3;
 				m_raceResists[(int)eRace.Frostalf][eResist.Spirit] = 5;
 
-				m_raceResists[(int)eRace.Minotaur] = new HybridDictionary();
-				m_raceResists[(int)eRace.Minotaur][eResist.Slash] = 0; //placeholder
+				m_raceResists[(int)eRace.AlbionMinotaur] = new HybridDictionary();
+				m_raceResists[(int)eRace.AlbionMinotaur][eResist.Slash] = 0; //placeholder
+
+				m_raceResists[(int)eRace.MidgardMinotaur] = new HybridDictionary();
+				m_raceResists[(int)eRace.MidgardMinotaur][eResist.Slash] = 0; //placeholder
+
+				m_raceResists[(int)eRace.HiberniaMinotaur] = new HybridDictionary();
+				m_raceResists[(int)eRace.HiberniaMinotaur][eResist.Slash] = 0; //placeholder
 				#endregion
 			}
 

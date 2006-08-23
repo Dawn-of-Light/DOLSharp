@@ -1789,7 +1789,9 @@ namespace DOL.GS
 				"Half Ogre",
 				"Frostalf",
 				"Shar",
-				"Menotaur"
+				"AlbionMenotaur",
+				"MidgardMenotaur",
+				"HiberniaMenotaur"
 			};
 
 		/// <summary>
