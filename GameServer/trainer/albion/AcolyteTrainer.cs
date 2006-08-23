@@ -52,7 +52,7 @@ namespace DOL.GS.Trainer
 							
 				// player can be promoted
 				if (player.Level>=5) {
-					player.Out.SendMessage(this.Name + " says, \"You must now seek your training elsewhere. Which path would you like to follow? [Cleric] or [Friar]?\"", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+					player.Out.SendMessage(this.Name + " says, \"You must now seek your training elsewhere. Which path would you like to follow? [Cleric], [Heretic], or [Friar]?\"", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
 				} else {
 					//player.Out.SendMessage(this.Name + " says, \"Select what you like to train.\"", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
 				}
@@ -96,6 +96,16 @@ namespace DOL.GS.Trainer
 				}
 				else{
 					this.SayTo(player,"The path of a Friar is not available to your race. Please choose another.");
+				}
+				return true;
+			case "Heretec":
+			if(player.Race == (int)eRace.Briton || player.Race == (int)eRace.Avalonian || player.Race == (int)eRace.Inconnu || player.Race == (int)eRace.Minotaur)
+				{
+					this.SayTo(player, "Members of a brotherhood, you will find more than a community should you join ranks with the Defenders of Albion. Deadly with a Quarterstaff, and proficient with the healing of wounds, the army is in constant need of new recruits such as you.");
+				}
+				else
+				{
+					this.SayTo(player, "The path of a Friar is not available to your race. Please choose another.");
 				}
 				return true;
 			case "practice weapon":
