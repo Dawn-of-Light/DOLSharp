@@ -1410,6 +1410,8 @@ namespace DOL.GS
 				m_raceResists[(int)eRace.Frostalf][eResist.Thrust] = 3;
 				m_raceResists[(int)eRace.Frostalf][eResist.Spirit] = 5;
 
+				m_raceResists[(int)eRace.Minotaur] = new HybridDictionary();
+				m_raceResists[(int)eRace.Minotaur][eResist.Slash] = 0; //placeholder
 				#endregion
 			}
 

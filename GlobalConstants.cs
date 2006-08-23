@@ -657,8 +657,9 @@ namespace DOL.GS
 		HalfOgre = 16,
 		Frostalf = 17,
 		Shar = 18,
+		Minotaur = 19,
 
-		_Last = 18,
+		_Last = 19,
 	}
 
 	/// <summary>

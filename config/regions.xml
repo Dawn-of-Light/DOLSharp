@@ -28,6 +28,15 @@
 		<ip>127.0.0.1</ip>
 		<expansion>0</expansion>
 	</Region010>
+	<Region245>
+		<description>Labyrinth</description>
+		<isDivingEnabled>True</isDivingEnabled>
+		<waterLevel>0</waterLevel>
+		<id>245</id>
+		<port>10400</port>
+		<ip>127.0.0.1</ip>
+		<expansion>0</expansion>
+	</Region245>
 	<Region020>
 		<description>Stonehenge Barrows</description>
 		<isDivingEnabled>False</isDivingEnabled>
