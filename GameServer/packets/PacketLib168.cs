@@ -1005,7 +1005,7 @@ namespace DOL.GS.PacketHandler
 			pak.WriteByte(m_gameClient.Player.HealthPercent);
 			pak.WriteByte(m_gameClient.Player.ManaPercent);
 			pak.WriteShort((byte)(m_gameClient.Player.Alive ? 0x00 : 0x0f)); // 0x0F if dead
-			pak.WriteByte((byte)(m_gameClient.Player.Sitting ? 0x02 : 0x00));
+			pak.WriteByte((byte)(m_gameClient.Player.IsSitting ? 0x02 : 0x00));
 			pak.WriteByte(m_gameClient.Player.EndurancePercent);
 			pak.WriteByte(m_gameClient.Player.ConcentrationPercent);
 			pak.WriteByte(0x00);
@@ -1332,7 +1332,7 @@ namespace DOL.GS.PacketHandler
 							byte playerStatus = 0;
 							if (!updatePlayer.Alive)
 								playerStatus |= 0x01;
-							if (updatePlayer.Mez)
+							if (updatePlayer.IsMezzed)
 								playerStatus |= 0x02;
 							if (updatePlayer.IsDiseased)
 								playerStatus |= 0x04;
@@ -1411,7 +1411,7 @@ namespace DOL.GS.PacketHandler
 				byte playerStatus = 0;
 				if (!player.Alive)
 					playerStatus |= 0x01;
-				if (player.Mez)
+				if (player.IsMezzed)
 					playerStatus |= 0x02;
 				if (player.IsDiseased)
 					playerStatus |= 0x04;

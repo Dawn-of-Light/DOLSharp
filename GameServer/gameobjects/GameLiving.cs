@@ -258,6 +258,29 @@ namespace DOL.GS
 			get { return m_animationId; }
 			set { m_animationId = value; }
 		}
+
+		/// <summary>
+		/// Method to determine if an attack result, resulted in a hit
+		/// </summary>
+		/// <param name="result">eAttackResult</param>
+		/// <returns>true if it was a hit</returns>
+		public bool IsHit
+		{
+			get
+			{
+				switch (m_attackResult)
+				{
+					case GameLiving.eAttackResult.HitUnstyled:
+					case GameLiving.eAttackResult.HitStyle:
+					case GameLiving.eAttackResult.Missed:
+					case GameLiving.eAttackResult.Blocked:
+					case GameLiving.eAttackResult.Evaded:
+					case GameLiving.eAttackResult.Fumbled:
+					case GameLiving.eAttackResult.Parried: return true;
+					default: return false;
+				}
+			}
+		}
 	}
 
 	#endregion
@@ -426,11 +449,7 @@ namespace DOL.GS
 		public eRangeAttackState RangeAttackState
 		{
 			get { return m_rangeAttackState; }
-			set
-			{
-				m_rangeAttackState = value;
-				//DOLConsole.WriteLine("("+this.Name+") RangeAttackState="+value);
-			}
+			set { m_rangeAttackState = value; }
 		}
 
 		/// <summary>
@@ -574,14 +593,14 @@ namespace DOL.GS
 		/// <summary>
 		/// say if player is stun or not
 		/// </summary>
-		protected bool m_stuned;
+		protected bool m_stunned;
 		/// <summary>
 		/// Gets the stunned flag of this living
 		/// </summary>
-		public bool Stun
+		public bool IsStunned
 		{
-			get { return m_stuned; }
-			set { m_stuned = value; }
+			get { return m_stunned; }
+			set { m_stunned = value; }
 		}
 		/// <summary>
 		/// say if player is mez or not
@@ -590,7 +609,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets the mesmerized flag of this living
 		/// </summary>
-		public bool Mez
+		public bool IsMezzed
 		{
 			get { return m_mezzed; }
 			set { m_mezzed = value; }
@@ -1693,7 +1712,7 @@ namespace DOL.GS
 			{
 				GameLiving owner = (GameLiving)m_actionSource;
 
-				if (owner.Mez || owner.Stun)
+				if (owner.IsMezzed || owner.IsStunned)
 				{
 					Interval = 100;
 					return;
@@ -1864,7 +1883,7 @@ namespace DOL.GS
 
 					// Damage is doubled on sitting players
 					// but only with melee weapons; arrows and magic does normal damage.
-					if (attackTarget is GamePlayer && ((GamePlayer)attackTarget).Sitting)
+					if (attackTarget is GamePlayer && ((GamePlayer)attackTarget).IsSitting)
 					{
 						effectiveness *= 2;
 					}
@@ -2285,7 +2304,7 @@ namespace DOL.GS
 		/// <param name="attackTarget">The object to attack</param>
 		public virtual void StartAttack(GameObject attackTarget)
 		{
-			if (Mez || Stun) return;
+			if (IsMezzed || IsStunned) return;
 			//			if (AttackState)
 			//				StopAttack(); // interrupts range attack animation
 
@@ -2407,7 +2426,7 @@ namespace DOL.GS
 			GameSpellEffect bladeturn = null;
 			EngageEffect engage = null;
 			AttackData lastAD = (AttackData)TempProperties.getObjectProperty(LAST_ATTACK_DATA, null);
-			bool defenceDisabled = ad.Target.Mez | ad.Target.Stun | ad.Target.Sitting;
+			bool defenceDisabled = ad.Target.IsMezzed | ad.Target.IsStunned | ad.Target.IsSitting;
 
 			// If berserk is on, no defensive skills may be used: evade, parry, ...
 			// unfortunately this as to be check for every action itself to kepp oder of actions the same.
@@ -2433,9 +2452,9 @@ namespace DOL.GS
 					InterceptEffect inter = effect as InterceptEffect;
 					if (inter == null) continue;
 					if (inter.InterceptTarget != this) continue;
-					if (inter.InterceptSource.Stun) continue;
-					if (inter.InterceptSource.Mez) continue;
-					if (inter.InterceptSource.Sitting) continue;
+					if (inter.InterceptSource.IsStunned) continue;
+					if (inter.InterceptSource.IsMezzed) continue;
+					if (inter.InterceptSource.IsSitting) continue;
 					if (inter.InterceptSource.ObjectState != eObjectState.Active) continue;
 					if (inter.InterceptSource.Alive == false) continue;
 					if (!WorldMgr.CheckDistance(this, inter.InterceptSource, InterceptAbilityHandler.INTERCEPT_DISTANCE)) continue;
@@ -2644,8 +2663,8 @@ namespace DOL.GS
 			// Guard
 			if (guard != null &&
 				guard.GuardSource.ObjectState == eObjectState.Active &&
-				guard.GuardSource.Stun == false &&
-				guard.GuardSource.Mez == false &&
+				guard.GuardSource.IsStunned == false &&
+				guard.GuardSource.IsMezzed == false &&
 				guard.GuardSource.ActiveWeaponSlot != eActiveWeaponSlot.Distance &&
 				//				guard.GuardSource.AttackState &&
 				guard.GuardSource.Alive &&
@@ -2747,7 +2766,7 @@ namespace DOL.GS
 						case 3: missrate -= 25; break; // Footed
 					}
 			}
-			if (this is GamePlayer && ((GamePlayer)this).Sitting)
+			if (this is GamePlayer && ((GamePlayer)this).IsSitting)
 			{
 				missrate >>= 1; //halved
 			}
@@ -2871,24 +2890,6 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Method to determine if an attack result, resulted in a hit
-		/// </summary>
-		/// <param name="result">eAttackResult</param>
-		/// <returns>true if it was a hit</returns>
-		public static bool IsHit(eAttackResult result)
-		{
-			if (result == GameLiving.eAttackResult.HitUnstyled ||
-				result == GameLiving.eAttackResult.HitStyle ||
-				result == GameLiving.eAttackResult.Missed ||
-				result == GameLiving.eAttackResult.Blocked ||
-				result == GameLiving.eAttackResult.Evaded ||
-				result == GameLiving.eAttackResult.Fumbled ||
-				result == GameLiving.eAttackResult.Parried)
-				return true;
-			return false;
-		}
-
-		/// <summary>
 		/// This method is called at the end of the attack sequence to
 		/// notify objects if they have been attacked/hit by an attack
 		/// </summary>
@@ -2897,23 +2898,15 @@ namespace DOL.GS
 		{
 			Notify(GameLivingEvent.AttackedByEnemy, this, new AttackedByEnemyEventArgs(ad));
 
-			if (this is GameNPC && ActiveWeaponSlot == eActiveWeaponSlot.Distance && IsHit(ad.AttackResult) &&
-	WorldMgr.GetDistance(this, ad.Attacker) < 150)
-				((GameNPC)this).SwitchToMelee(ad.Attacker);
-
-			switch (ad.AttackResult)
+			if (ad.IsHit)
 			{
-				case eAttackResult.Blocked:
-				case eAttackResult.Evaded:
-				case eAttackResult.HitUnstyled:
-				case eAttackResult.HitStyle:
-				case eAttackResult.Missed:
-				case eAttackResult.Parried:
-				case eAttackResult.Fumbled:
-					AddAttacker(ad.Attacker);
-					LastAttackedByEnemyTick = CurrentRegion.Time;
-					ad.Attacker.LastAttackTick = CurrentRegion.Time;
-					break;
+				if (this is GameNPC && ActiveWeaponSlot == eActiveWeaponSlot.Distance &&
+WorldMgr.GetDistance(this, ad.Attacker) < 150)
+					((GameNPC)this).SwitchToMelee(ad.Attacker);
+
+				AddAttacker(ad.Attacker);
+				LastAttackedByEnemyTick = CurrentRegion.Time;
+				ad.Attacker.LastAttackTick = CurrentRegion.Time;
 			}
 		}
 
@@ -3753,7 +3746,7 @@ namespace DOL.GS
 			}
 
 			//Sitting livings heal faster
-			if (Sitting)
+			if (IsSitting)
 			{
 				return m_healthRegenerationPeriod / 2 + periodVariance;
 			}
@@ -3805,7 +3798,7 @@ namespace DOL.GS
 			}
 
 			//Sitting livings regen faster
-			if (Sitting)
+			if (IsSitting)
 			{
 				return m_powerRegenerationPeriod / 2 + periodVariance;
 			}
@@ -4184,15 +4177,10 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets the current sit state
 		/// </summary>
-		public virtual bool Sitting
+		public virtual bool IsSitting
 		{
-			get
-			{
-				return false;
-			}
-			set
-			{
-			}
+			get { return false; }
+			set { }
 		}
 		/// <summary>
 		/// Gets the Living's ground-target Coordinate inside the current Region
@@ -4733,7 +4721,7 @@ namespace DOL.GS
 		/// <param name="line">Spell line of the spell (for bonus calculations)</param>
 		public virtual void CastSpell(Spell spell, SpellLine line)
 		{
-			if (this.Stun || this.Mez) return;
+			if (this.IsStunned || this.IsMezzed) return;
 			if (m_runningSpellHandler != null && spell.CastTime > 0) return;
 
 			ISpellHandler spellhandler = ScriptMgr.CreateSpellHandler(this, spell, line);

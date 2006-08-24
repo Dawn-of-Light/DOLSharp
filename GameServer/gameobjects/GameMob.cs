@@ -154,6 +154,28 @@ namespace DOL.GS
 				m_respawnInterval = value;
 			}
 		}
+
+		public override bool Alive
+		{
+			get
+			{
+				bool alive = base.Alive;
+				if (alive && IsRespawning)
+					return false;
+				return alive;
+			}
+		}
+
+		public bool IsRespawning
+		{
+			get
+			{
+				if (m_respawnTimer == null)
+					return false;
+				return m_respawnTimer.IsAlive;
+			}
+		}
+
 		/// <summary>
 		/// Starts the Respawn Timer
 		/// </summary>
@@ -293,7 +315,6 @@ namespace DOL.GS
 		{
 			// TODO: mobs drop "a small chest" sometimes
 			ArrayList dropMessages = new ArrayList();
-			//DOLConsole.WriteLine("In DropLoot");
 			lock (m_xpGainers.SyncRoot)
 			{
 				if (m_xpGainers.Keys.Count == 0) return;

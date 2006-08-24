@@ -15,11 +15,10 @@ namespace DOL.GS.Keeps
 		/// Sends a message to the guild informing them that a door has been destroyed
 		/// </summary>
 		/// <param name="door">The door object</param>
-		/// <param name="area">The area object</param>
 		public static void SendDoorDestroyedMessage(GameKeepDoor door)
 		{
-			string message = door.Name + " in your area " + door.Keep.Name + " has been destroyed";
-			SendMessageToGuild(message, door.Keep.Guild);
+			string message = door.Name + " in your area " + door.Component.Keep.Name + " has been destroyed";
+			SendMessageToGuild(message, door.Component.Keep.Guild);
 		}
 
 		/// <summary>
@@ -38,7 +37,6 @@ namespace DOL.GS.Keeps
 
 		public static void SendLevelChangeMessage(AbstractGameKeep keep)
 		{
-
 			int amount = 0;
 			if (keep is GameKeep)
 				amount = GameKeep.ClaimBountyPointCost[keep.Level];

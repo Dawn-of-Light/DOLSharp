@@ -761,10 +761,10 @@ namespace DOL.GS.Scripts
 							{
 								if (client.Player.TargetObject is EmblemNPC == false)
 								{
-									client.Out.SendMessage("Your guild already has an emblem but you may change it for a hefty fee of 200 gold. You must select the EmblemNPC again for this proceedure to happen.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									client.Out.SendMessage("Your guild already has an emblem but you may change it for a hefty fee of 100 gold. You must select the EmblemNPC again for this proceedure to happen.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 									return 1;
 								}
-								client.Out.SendCustomDialog("Would you like to re-emblem your guild for 200 gold?", new CustomDialogResponse(EmblemChange));
+								client.Out.SendCustomDialog("Would you like to re-emblem your guild for 100 gold?", new CustomDialogResponse(EmblemChange));
 								return 1;
 							}
 							if (client.Player.TargetObject is EmblemNPC == false)
@@ -1097,8 +1097,7 @@ namespace DOL.GS.Scripts
 								client.Out.SendMessage("the 2nd argument must be a number", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return 0;
 							}
-							client.Out.SendMessage("Upgrading is disabled at this time.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							//client.Player.Guild.ClaimedKeep.StartChangeLevel(targetlevel);
+							client.Player.Guild.ClaimedKeep.StartChangeLevel(targetlevel);
 							return 1;
 						}
 					//TYPE

@@ -79,13 +79,13 @@ namespace DOL.GS.SkillHandler
 
 				//HasVanishRealmAbilityActivated -> Allow stealthing, Stop further checks ...
 
-				if (player.Mez)
+				if (player.IsMezzed)
 				{
 					player.Out.SendMessage("You can't hide while mesmerized!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return;
 				}
 
-				if (player.Stun)
+				if (player.IsStunned)
 				{
 					player.Out.SendMessage("You can't hide while stunned!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return;

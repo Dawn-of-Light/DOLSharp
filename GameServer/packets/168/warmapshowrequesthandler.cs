@@ -35,12 +35,8 @@ namespace DOL.GS.PacketHandler.v168
 			switch (code)
 			{
 				//warmap open
-				case 0:
-					{
-						client.Out.SendWarmapUpdate(KeepMgr.getKeepsByRealmMap(RealmMap));
-						break;
-					}
 				//warmap update
+				case 0:
 				case 1:
 					{
 						client.Out.SendWarmapUpdate(KeepMgr.getKeepsByRealmMap(RealmMap));
@@ -49,16 +45,81 @@ namespace DOL.GS.PacketHandler.v168
 				//teleport
 				case 2:
 					{
-						if (keepId == 1 || keepId == 2) // Border Keep
-							return 0;
-						AbstractGameKeep keep = KeepMgr.getKeepByID(keepId);
-						if (keep == null) return 1;
-						client.Player.MoveTo((ushort)keep.Region, keep.X, keep.Y, keep.Z, (ushort)keep.Heading);
+						int x = 0;
+						int y = 0;
+						int z = 0;
+						ushort heading = 0;
+						switch (keepId)
+						{ 
+								//sauvage
+							case 1:
+								//snowdonia
+							case 2:
+								//svas
+							case 3:
+								//vind
+							case 4:
+								//ligen
+							case 5:
+								//cain
+							case 6:
+								{
+									KeepMgr.GetBorderKeepLocation(keepId, out x, out y, out z, out heading);
+									break;
+								}
+							default:
+								{
+									AbstractGameKeep keep = KeepMgr.getKeepByID(keepId);
+									if (keep == null) return 1;
+
+									//we redo our checks here
+									bool good = true;
+									if (client.Account.PrivLevel == 1)
+									{
+										//check realm
+										if (keep.Realm != client.Player.Realm)
+											return 0;
+										bool found = false;
+										foreach (GameStaticItem item in client.Player.GetItemsInRadius(WorldMgr.INTERACT_DISTANCE))
+										{
+											if (item is FrontiersPortalStone)
+											{
+												found = true;
+												break;
+											}
+										}
+										if (!found)
+										{
+											client.Player.Out.SendMessage("You cannot teleport unless you are near a valid portal stone.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+											return 0;
+										}
+										//does keep have all towers intact?
+										GameKeep theKeep = keep as GameKeep;
+										foreach (GameKeepTower tower in theKeep.Towers)
+										{
+											if (tower.Realm != theKeep.Realm)
+											{
+												good = false;
+												break;
+											}
+										}
+									}
+									//todo 5 second teleport
+									if (good)
+									{
+										FrontiersPortalStone stone = keep.TeleportStone;
+										heading = stone.Heading;
+										z = stone.Z;
+										stone.GetTeleportLocation(out x, out y);
+									}
+									break;
+								}
+						}
+						if (x!= 0)
+							client.Player.MoveTo(163, x, y, z, heading);
 						break;
 					}
 			}
-
-			//			client.Out.SendMessage(string.Format("you try request warmap:{0} {1} 0x{2:X4}",RealmMapBefore,RealmMap, unk1), eChatType.CT_Advise, eChatLoc.CL_SystemWindow);
 			return 1;
 		}
 	}

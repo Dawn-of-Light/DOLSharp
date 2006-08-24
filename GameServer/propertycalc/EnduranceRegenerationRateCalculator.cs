@@ -57,7 +57,7 @@ namespace DOL.GS.PropertyCalc
 			}
 			if (!living.IsMoving && !living.InCombat)
 			{
-				regen += (living.Sitting ? 4 : 1);
+				regen += (living.IsSitting ? 4 : 1);
 			}
 
 			regen -= debuff;

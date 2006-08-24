@@ -19,6 +19,7 @@
 using System;
 using DOL.Database;
 using DOL.Events;
+
 namespace DOL.GS.Keeps
 {
 	/// <summary>
@@ -66,6 +67,7 @@ namespace DOL.GS.Keeps
 			this.Component = component;
 			m_hookpointTimer = new HookpointTimer(this, this.Component);
 		}
+
 		#region properties
 
 		/// <summary>
@@ -141,14 +143,17 @@ namespace DOL.GS.Keeps
 			GameEventMgr.RemoveHandler(m_object, GameLivingEvent.Dying, new DOLEventHandler(ObjectDie));
 		}
 	}
+
 	public class HookpointTimer : RegionAction
 	{
 		private GameKeepHookPoint m_hookpoint;
+
 		public HookpointTimer(GameKeepHookPoint hookpoint, GameKeepComponent component)
 			: base(component)
 		{
 			m_hookpoint = hookpoint;
 		}
+
 		protected override void OnTick()
 		{
 			if (m_hookpoint.Object is GameSiegeWeapon)

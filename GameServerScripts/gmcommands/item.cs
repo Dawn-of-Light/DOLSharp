@@ -344,7 +344,7 @@ namespace DOL.GS.Scripts
 								item.Model = Convert.ToUInt16(args[2]);
 								client.Out.SendInventoryItemsUpdate(new InventoryItem[] {item});
 								if (item.SlotPosition < (int) eInventorySlot.FirstBackpack)
-									client.Player.UpdateEquipementAppearance();
+									client.Player.UpdateEquipmentAppearance();
 							}
 							catch
 							{
@@ -380,7 +380,7 @@ namespace DOL.GS.Scripts
 								item.Extension = Convert.ToByte(args[2]);
 								client.Out.SendInventoryItemsUpdate(new InventoryItem[] {item});
 								if (item.SlotPosition < (int) eInventorySlot.FirstBackpack)
-									client.Player.UpdateEquipementAppearance();
+									client.Player.UpdateEquipmentAppearance();
 							}
 							catch
 							{
@@ -417,7 +417,7 @@ namespace DOL.GS.Scripts
 								item.Color = Convert.ToUInt16(args[2]);
 								client.Out.SendInventoryItemsUpdate(new InventoryItem[] {item});
 								if (item.SlotPosition < (int) eInventorySlot.FirstBackpack)
-									client.Player.UpdateEquipementAppearance();
+									client.Player.UpdateEquipmentAppearance();
 							}
 							catch
 							{
@@ -453,7 +453,7 @@ namespace DOL.GS.Scripts
 								item.Effect = Convert.ToUInt16(args[2]);
 								client.Out.SendInventoryItemsUpdate(new InventoryItem[] {item});
 								if (item.SlotPosition < (int) eInventorySlot.FirstBackpack)
-									client.Player.UpdateEquipementAppearance();
+									client.Player.UpdateEquipmentAppearance();
 							}
 							catch
 							{
@@ -693,7 +693,7 @@ namespace DOL.GS.Scripts
 								item.Emblem = Convert.ToUInt16(args[2]);
 								client.Out.SendInventoryItemsUpdate(new InventoryItem[] {item});
 								if (item.SlotPosition < (int) eInventorySlot.FirstBackpack)
-									client.Player.UpdateEquipementAppearance();
+									client.Player.UpdateEquipmentAppearance();
 							}
 							catch
 							{

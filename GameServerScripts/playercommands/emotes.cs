@@ -80,7 +80,7 @@ namespace DOL.GS.Scripts
 			}
 
 			// no emotes in combat / mez / stun
-			if (client.Player.AttackState || client.Player.Mez || client.Player.Stun)
+			if (client.Player.AttackState || client.Player.IsMezzed || client.Player.IsStunned)
 			{
 				client.Out.SendMessage("You can't do that, you're busy!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return 1;

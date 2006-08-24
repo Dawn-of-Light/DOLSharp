@@ -37,7 +37,7 @@ namespace DOL.GS.PacketHandler.v168
 				client.Out.SendMessage("You can't control a siege weapon while hidden!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return 1;
 			}
-			if(client.Player.Sitting)
+			if(client.Player.IsSitting)
 			{
 				client.Out.SendMessage("You can't fire a siege weapon while sitting!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return 1;

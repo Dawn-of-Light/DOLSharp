@@ -125,7 +125,7 @@ namespace DOL.GS.Spells
 			GamePlayer player = effect.Owner as GamePlayer;
 			if (player != null)
 			{
-				if (!player.Mez && !player.Stun)
+				if (!player.IsMezzed && !player.IsStunned)
 					player.Out.SendUpdateMaxSpeed();
 				player.Out.SendCharStatsUpdate();
 				player.Out.SendUpdateWeaponAndArmorStats();

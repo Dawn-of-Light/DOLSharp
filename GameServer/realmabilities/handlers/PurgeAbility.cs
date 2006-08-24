@@ -21,8 +21,6 @@ namespace DOL.GS.RealmAbilities
 		{
 			if (CheckPreconditions(living, DEAD | SITTING)) return;
 
-			SendCastMessage(living);
-
 			if (Level < 2)
 			{
 				PurgeTimer timer = new PurgeTimer(living, this);
@@ -32,6 +30,7 @@ namespace DOL.GS.RealmAbilities
 			}
 			else
 			{
+				SendCastMessage(living);
 				if (RemoveNegativeEffects(living, this))
 				{
 					DisableSkill(living);
@@ -123,6 +122,7 @@ namespace DOL.GS.RealmAbilities
 					counter--;
 					return;
 				}
+				m_purge.SendCastMessage(m_caster);
 				RemoveNegativeEffects(m_caster, m_purge);
 				Stop();
 			}

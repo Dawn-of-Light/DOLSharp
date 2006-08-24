@@ -967,7 +967,7 @@ namespace DOL.GS
 					{
 						if (updatedSlot != (int)visibleSlot) continue;
 
-						m_player.UpdateEquipementAppearance();
+						m_player.UpdateEquipmentAppearance();
 						appearanceUpdated = true;
 						break;
 					}
