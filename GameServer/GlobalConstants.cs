@@ -114,6 +114,7 @@ namespace DOL.GS
 	/// </summary>
 	public enum eEquipmentItems : byte
 	{
+		HORSE = 0x09,
 		RIGHT_HAND = 0x0A,
 		LEFT_HAND = 0x0B,
 		TWO_HANDED = 0x0C,
@@ -139,6 +140,9 @@ namespace DOL.GS
 	/// </summary>
 	public class Slot
 	{
+		public const int HORSEARMOR = 7;
+		public const int HORSEBARDING = 8;
+		public const int HORSE = 9;
 		public const int RIGHTHAND = 10;
 		public const int LEFTHAND = 11;
 		public const int TWOHAND = 12;
@@ -976,6 +980,8 @@ namespace DOL.GS
 		{
 			switch (name)
 			{
+				//Horses
+				case "mount": return 0xA9;
 				//Righthand Weapon Type
 				case "righthand": return 0x0A;
 				case "right": return 0x0A;

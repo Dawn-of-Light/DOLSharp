@@ -72,13 +72,19 @@ namespace DOL.GS.ServerRules
 				return false;
 			}
 
-			/* Example to limit the connections to a certain client version!
-			if(client.Version != GameClient.eClientVersion.Version169)
+			GameClient.eClientVersion min = (GameClient.eClientVersion)Properties.CLIENT_VERSION_MIN;
+			if (min != GameClient.eClientVersion.VersionNotChecked && client.Version < min)
 			{
 				client.Out.SendLoginDenied(eLoginError.ClientVersionTooLow);
 				return false;
 			}
-			*/
+
+			GameClient.eClientVersion max = (GameClient.eClientVersion)Properties.CLIENT_VERSION_MAX;
+			if (max != GameClient.eClientVersion.VersionNotChecked && client.Version > max)
+			{
+				client.Out.SendLoginDenied(eLoginError.ClientVersionTooLow);
+				return false;
+			}
 
 			/* Example to limit the connections from a certain IP range!
 			if(client.Socket.RemoteEndPoint.ToString().StartsWith("192.168.0."))

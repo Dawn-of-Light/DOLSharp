@@ -54,6 +54,9 @@ namespace DOL.GS
 		//Defines all the slots that hold equipment
 		protected static readonly eInventorySlot[] EQUIP_SLOTS = 
 		{ 
+			eInventorySlot.Horse,
+			eInventorySlot.HorseArmor,
+			eInventorySlot.HorseBarding,
 			eInventorySlot.RightHandWeapon,
 			eInventorySlot.LeftHandWeapon,
 			eInventorySlot.TwoHandWeapon,
@@ -135,6 +138,7 @@ namespace DOL.GS
 		{
 			if(    ( slot >= eInventorySlot.RightHandWeapon && slot <= eInventorySlot.FourthQuiver)
 				|| ( slot >= eInventorySlot.HeadArmor && slot <= eInventorySlot.Neck)
+				|| ( slot >= eInventorySlot.HorseArmor && slot <= eInventorySlot.Horse)
 				|| ( slot >= eInventorySlot.Waist && slot <= eInventorySlot.RightRing)
 				|| ( slot == eInventorySlot.Ground))
 				return slot;
