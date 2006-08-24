@@ -100,5 +100,13 @@ namespace DOL.GS.ServerProperties
 		/// The key for the time until a player is worth rps again after death
 		/// </summary>
 		public const string RP_WORTH_SECONDS = "rp_worth_seconds";
+		/// <summary>
+		/// The key for listing the minimum client version required to connect
+		/// </summary>
+		public const string CLIENT_VERSION_MIN = "client_version_min";
+		/// <summary>
+		/// The key for listing the maximum client version required to connect
+		/// </summary>
+		public const string CLIENT_VERSION_MAX = "client_version_max";
 	}
 }
