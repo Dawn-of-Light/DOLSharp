@@ -301,6 +301,7 @@ namespace DOL.GS
 
 			if(    ( slot >= eInventorySlot.FirstBackpack && slot <= eInventorySlot.LastBackpack )
 //				|| ( slot >= eInventorySlot.Mithril && slot <= eInventorySlot.Copper ) // can't place items in money slots, is it?
+				|| (slot >= eInventorySlot.HorseArmor && slot <= eInventorySlot.Horse)
 				|| ( slot >= eInventorySlot.FirstVault && slot <= eInventorySlot.LastVault )
 				|| ( slot == eInventorySlot.PlayerPaperDoll ))
 				return slot;
@@ -366,10 +367,53 @@ namespace DOL.GS
 					goto apply_poison;
 				}
 
+				if (valid && (fromItem.Realm > 0 && m_player.Realm != fromItem.Realm) && ((int)toSlot >= (int)eInventorySlot.HorseArmor && (int)toSlot <= (int)eInventorySlot.HorseBarding))
+				{
+					if (m_player.Client.Account.PrivLevel == 1)
+						valid = false;
+					m_player.Out.SendMessage("You cannot put an item from this realm!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				}
+
 				if (valid==true)
 				{
 					switch(toSlot)
 					{
+						//horse slots
+						case eInventorySlot.HorseBarding:
+							if (fromItem.Item_Type != (int)eInventorySlot.HorseBarding)
+							{
+								valid = false;
+								m_player.Out.SendMessage("You can't put " + fromItem.GetName(0, true) + " in your active barding slot!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							}
+							/*
+							if (valid && fromItem.Level > 0 && fromItem.Level >= m_player.ChampionLevel)
+							{
+								valid = false;
+								m_player.Out.SendMessage("You can't put " + fromItem.GetName(0, true) + " in your active barding slot!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							}
+							 */
+							break;
+						case eInventorySlot.HorseArmor:
+							if (fromItem.Item_Type != (int)eInventorySlot.HorseArmor)
+							{
+								valid = false;
+								m_player.Out.SendMessage("You can't put " + fromItem.GetName(0, true) + " in your active horse armor slot!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							}
+							/*
+							if (valid && fromItem.Level > 0 && fromItem.Level >= m_player.ChampionLevel)
+							{
+								valid = false;
+								m_player.Out.SendMessage("You can't put " + fromItem.GetName(0, true) + " in your active barding slot!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							}
+							 */
+							break;
+						case eInventorySlot.Horse:
+							if (fromItem.Item_Type != (int)eInventorySlot.Horse)
+							{
+								valid = false;
+								m_player.Out.SendMessage("You can't put " + fromItem.GetName(0, true) + " in your active mount slot!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							}
+							break;
 							//weapon slots
 						case eInventorySlot.RightHandWeapon:
 							if (fromItem.Object_Type== (int)eObjectType.Shield //shield can't be used in right hand slot
@@ -484,11 +528,55 @@ namespace DOL.GS
 							break;
 					}
 					//"The Lute of the Initiate must be readied in the 2-handed slot!"
-				}	
+				}
+
+				if (valid && (fromItem.Realm > 0 && m_player.Realm != fromItem.Realm) && ((int)toSlot >= (int)eInventorySlot.HorseArmor && (int)toSlot <= (int)eInventorySlot.HorseBarding))
+				{
+					if (m_player.Client.Account.PrivLevel == 1)
+						valid = false;
+					m_player.Out.SendMessage("You cannot put an item from this realm!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				}
+
 				if (valid && toItem!=null)
 				{
 					switch(fromSlot)
 					{
+						//horse slots
+						case eInventorySlot.HorseBarding:
+							if (fromItem.Item_Type != (int)eInventorySlot.HorseBarding)
+							{
+								valid = false;
+								m_player.Out.SendMessage("You can't put " + fromItem.GetName(0, true) + " in your active barding slot!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							}
+							/*
+							if (valid && fromItem.Level > 0 && fromItem.Level >= m_player.ChampionLevel)
+							{
+								valid = false;
+								m_player.Out.SendMessage("You can't put " + fromItem.GetName(0, true) + " in your active barding slot!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							}
+							 */
+							break;
+						case eInventorySlot.HorseArmor:
+							if (fromItem.Item_Type != (int)eInventorySlot.HorseArmor)
+							{
+								valid = false;
+								m_player.Out.SendMessage("You can't put " + fromItem.GetName(0, true) + " in your active horse armor slot!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							}
+							/*
+							if (valid && fromItem.Level > 0 && fromItem.Level >= m_player.ChampionLevel)
+							{
+								valid = false;
+								m_player.Out.SendMessage("You can't put " + fromItem.GetName(0, true) + " in your active barding slot!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							}
+							 */
+							break;
+						case eInventorySlot.Horse:
+							if (fromItem.Item_Type != (int)eInventorySlot.Horse)
+							{
+								valid = false;
+								m_player.Out.SendMessage("You can't put " + fromItem.GetName(0, true) + " in your active mount slot!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							}
+							break;
 							//weapon slots
 						case eInventorySlot.RightHandWeapon:
 							if (toItem.Object_Type== (int)eObjectType.Shield //shield can't be used in right hand slot

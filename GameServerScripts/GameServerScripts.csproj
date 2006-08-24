@@ -372,6 +372,7 @@
     <Compile Include="playercommands\hood.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="playercommands\horsesummon.cs" />
     <Compile Include="playercommands\invite.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -384,6 +385,7 @@
     <Compile Include="playercommands\makeleader.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="playercommands\namemount.cs" />
     <Compile Include="playercommands\noqueue.cs">
       <SubType>Code</SubType>
     </Compile>

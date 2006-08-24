@@ -61,7 +61,11 @@ namespace DOL.GS.PropertyCalc
 //				- The new run speed does not work if the player is in any form of combat. All combat timers must also be expired.
 //				- The new run speed will not stack with any other run speed spell or ability, except for Sprint.
 //				- Pets that are not in combat have also received the new run speed, only when they are following, to allow them to keep up with their owners.
-				if(speed == 1 && !player.InCombat) speed *= 1.25; // new run speed is 125% when no buff
+				double horseSpeed = (player.IsOnHorse ? player.ActiveHorse.Speed * 0.01 : 1.0);
+				if (speed > horseSpeed)
+					horseSpeed = 1.0;
+				if (speed == 1 && !player.InCombat && !player.IsStealthed && !player.CurrentRegion.IsRvR)
+					speed *= 1.25; // new run speed is 125% when no buff
 
 				if (player.IsOverencumbered && player.Client.Account.PrivLevel < 2)
 				{
@@ -89,6 +93,7 @@ namespace DOL.GS.PropertyCalc
 						speed *= vanish.SpeedBonus;
 				}
 				if (player.IsSprinting) speed *= 1.3;
+				speed *= horseSpeed;
 			}
 			else if (living is GameNPC)
 			{
