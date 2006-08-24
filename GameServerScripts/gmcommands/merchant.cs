@@ -18,9 +18,11 @@
  */
 using System;
 using System.Collections;
+using System.Reflection;
 using DOL.GS;
 using DOL.Database;
 using DOL.GS.PacketHandler;
+
 
 namespace DOL.GS.Scripts
 {
@@ -74,8 +76,38 @@ namespace DOL.GS.Scripts
 			{
 				case "create":
 					{
+						string theType = "DOL.GS.GameMerchant";
+						if(args.Length > 2)
+							theType = args[2];
+
 						//Create a new merchant
-						GameMerchant merchant = new GameMerchant();
+						GameMerchant merchant = null;
+						try
+						{
+							client.Out.SendDebugMessage(Assembly.GetAssembly(typeof(GameServer)).FullName);
+							merchant = (GameMerchant)Assembly.GetAssembly(typeof(GameServer)).CreateInstance(theType, false);
+						}
+						catch(Exception e)
+						{
+							client.Out.SendMessage(e.ToString(), eChatType.CT_System, eChatLoc.CL_PopupWindow);
+						}
+						if(merchant == null)
+						{
+							try
+							{
+								client.Out.SendDebugMessage(Assembly.GetExecutingAssembly().FullName);
+								merchant = (GameMerchant)Assembly.GetExecutingAssembly().CreateInstance(theType, false);
+							}
+							catch(Exception e)
+							{
+								client.Out.SendMessage(e.ToString(), eChatType.CT_System, eChatLoc.CL_PopupWindow);
+							}
+						}
+						if(merchant == null)
+						{
+							client.Out.SendMessage("There was an error creating an instance of "+theType+"!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							return 0;
+						}
 						//Fill the object variables
 						merchant.X = client.Player.X;
 						merchant.Y = client.Player.Y;
