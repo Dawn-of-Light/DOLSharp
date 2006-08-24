@@ -21,28 +21,17 @@ using System.Collections;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 using DOL.GS.Spells;
-using DOL.GS.Keeps;
 
-namespace DOL.GS.Scripts
+namespace DOL.GS.Keeps
 {
 	/// <summary>
-	/// Represents an in-game Game Hastener NPC
+	/// Represents a keep hastener
 	/// </summary>
-	[NPCGuildScript("Hastener")]
-	public class GameHastener : GameMob
+	public class FrontierHastener : GameKeepGuard
 	{
 		public override uint Flags
 		{
 			get { return (uint)GameNPC.eFlags.PEACE; }
-		}
-
-		/// <summary>
-		/// Constructor
-		/// </summary>
-		public GameHastener()
-			: base()
-		{
-
 		}
 
 		#region Examine/Interact Message

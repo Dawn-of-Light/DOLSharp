@@ -23,13 +23,17 @@ using DOL.Database;
 
 namespace DOL.GS.Keeps
 {
-	public interface IKeep
+	public interface IKeepItem
 	{
-		ArrayList KeepComponents { get;}
-		Hashtable Guards { get;}
-		Hashtable Banners { get;}
-		void Load(DBKeep keep);
-		void LoadFromDatabase(DataObject keep);
-		void SaveIntoDatabase();
+		ushort CurrentRegionID { get;set;}
+		int X { get;set;}
+		int Y { get;set;}
+		int Z { get;set;}
+		ushort Heading { get;set;}
+		string TemplateID { get;}
+		GameKeepComponent Component { get;}
+		DBKeepPosition Position { get;set;}
+		void LoadFromPosition(DBKeepPosition position, GameKeepComponent component);
+		void MoveToPosition(DBKeepPosition position);
 	}
 }

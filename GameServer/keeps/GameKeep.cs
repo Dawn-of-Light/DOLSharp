@@ -47,13 +47,31 @@ namespace DOL.GS.Keeps
 			960*60*1000, // 10 960min 16h
 		};
 		private ArrayList m_towers = new ArrayList(4);
+		/// <summary>
+		/// The Keep Towers
+		/// </summary>
+		public ArrayList Towers
+		{
+			get { return m_towers; }
+			set { m_towers = value; }
+		}
 
+		/// <summary>
+		/// The time to upgrade a keep
+		/// </summary>
+		/// <returns></returns>
 		public override int CalculateTimeToUpgrade()
 		{
 			if (TargetLevel > Level)
 				return UpgradeTime[this.Level + 1];
 			else return UpgradeTime[this.Level - 1];
 		}
+
+		/// <summary>
+		/// The checks we need to run before allowing claim
+		/// </summary>
+		/// <param name="player"></param>
+		/// <returns></returns>
 		public override bool CheckForClaim(GamePlayer player)
 		{
 			//let gms do everything
@@ -72,20 +90,24 @@ namespace DOL.GS.Keeps
 			}
 			return base.CheckForClaim(player);
 		}
+
+		/// <summary>
+		/// The RP reward for claiming based on difficulty level
+		/// </summary>
+		/// <returns></returns>
 		public override int CalculRP()
 		{
 			return 1000 * DifficultyLevel;
 		}
 
+		/// <summary>
+		/// Add a tower to the keep
+		/// </summary>
+		/// <param name="tower"></param>
 		public void AddTower(GameKeepTower tower)
 		{
 			if (!m_towers.Contains(tower))
 				m_towers.Add(tower);
-		}
-		public ArrayList Towers
-		{
-			get { return m_towers; }
-			set { m_towers = value; }
 		}
 	}
 }

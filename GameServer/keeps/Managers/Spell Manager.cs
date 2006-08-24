@@ -380,6 +380,31 @@ namespace DOL.GS.Keeps
 		private static Spell m_albGuardMezSpell;
 		private static Spell m_midGuardMezSpell;
 		private static Spell m_hibGuardMezSpell;
+
+		private static Spell m_hastenerSpell;
+		public static Spell HastenerSpell
+		{
+			get
+			{
+				if (m_hastenerSpell == null)
+				{
+					DBSpell spell = new DBSpell();
+					spell.AutoSave = false;
+					spell.CastTime = 1;
+					spell.ClientEffect = 2430;
+					spell.Value = 120;
+					spell.Name = "Speed of the Realm";
+					spell.Range = 0;
+					spell.SpellID = 2430;
+					spell.Target = "Self";
+					spell.Type = "SpeedEnhancement";
+					spell.Duration = 600;
+					spell.Radius = 350;
+					m_hastenerSpell = new Spell(spell, 50);
+				}
+				return m_hastenerSpell;
+			}
+		}
 		#endregion
 	}
 }

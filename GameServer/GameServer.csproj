@@ -55,9 +55,9 @@
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
     <ConfigurationOverrideFile>
     </ConfigurationOverrideFile>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DocumentationFile>GameServer.xml</DocumentationFile>
-    <DebugSymbols>false</DebugSymbols>
+    <DebugSymbols>true</DebugSymbols>
     <FileAlignment>4096</FileAlignment>
     <NoStdLib>false</NoStdLib>
     <NoWarn>
@@ -67,7 +67,7 @@
     <RemoveIntegerChecks>false</RemoveIntegerChecks>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <WarningLevel>4</WarningLevel>
-    <DebugType>none</DebugType>
+    <DebugType>full</DebugType>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
@@ -547,14 +547,17 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="gameutils\GameNPCInventory.cs" />
+    <Compile Include="keeps\Gameobjects\FrontiersPortalStone.cs" />
     <Compile Include="keeps\Gameobjects\Guards\Archer.cs" />
     <Compile Include="keeps\Gameobjects\Guards\Caster.cs" />
     <Compile Include="keeps\Gameobjects\Guards\Fighter.cs" />
+    <Compile Include="keeps\Gameobjects\Guards\Hastener.cs" />
     <Compile Include="keeps\Gameobjects\Guards\Healer.cs" />
     <Compile Include="keeps\Gameobjects\Guards\Lord.cs" />
     <Compile Include="keeps\Gameobjects\Guards\Static Archer.cs" />
     <Compile Include="keeps\Gameobjects\Guards\Static Caster.cs" />
     <Compile Include="keeps\Gameobjects\Guards\Stealther.cs" />
+    <Compile Include="keeps\Gameobjects\IKeepItem.cs" />
     <Compile Include="keeps\Managers\Clothing Manager.cs" />
     <Compile Include="keeps\Managers\RelicMgr.cs" />
     <Compile Include="keeps\Managers\Template Manager.cs" />

@@ -35,7 +35,7 @@ namespace DOL.GS.SkillHandler
 				player.Out.SendMessage("You must ready a ranged weapon in your hands!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 				return;
 			}
-			if(player.Sitting)
+			if(player.IsSitting)
 			{
 				player.Out.SendMessage("You must be standing to attempt a ranged attack!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 				return;

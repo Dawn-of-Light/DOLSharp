@@ -24,35 +24,31 @@ namespace DOL.Database
 	/// <summary>
 	/// DBDoor is database of door with state of door and X,Y,Z
 	/// </summary>
-	[DataTable(TableName="Door")]
+	[DataTable(TableName = "Door")]
 	public class DBDoor : DataObject
 	{
-		static bool		m_autoSave;
+		static bool m_autoSave;
 
-		private int	m_xpos;
-		private int	m_ypos;
-		private int	m_zpos;
+		private int m_xpos;
+		private int m_ypos;
+		private int m_zpos;
 		private int m_heading;
 		private string m_name;
 		private int m_internalID;
-		//all following variable is for keep door
-		private int m_health;
-		private int m_keepid;
 
 		/// <summary>
 		/// Create a door row
 		/// </summary>
 		public DBDoor()
 		{
-			m_autoSave=false;
-			ObjectId="";
-			m_zpos=0;
-			m_ypos=0;
-			m_xpos=0;
-			m_heading=0;
-			m_name="";
-			m_internalID=0;
-			m_keepid = 0;
+			m_autoSave = false;
+			ObjectId = "";
+			m_zpos = 0;
+			m_ypos = 0;
+			m_xpos = 0;
+			m_heading = 0;
+			m_name = "";
+			m_internalID = 0;
 		}
 
 		/// <summary>
@@ -169,40 +165,6 @@ namespace DOL.Database
 			{
 				Dirty = true;
 				m_internalID = value;
-			}
-		}
-
-		/// <summary>
-		/// Keep id when it is keep door
-		/// </summary>
-		[DataElement(AllowDbNull = true)]
-		public int KeepID
-		{
-			get
-			{
-				return m_keepid;
-			}
-			set
-			{
-				Dirty = true;
-				m_keepid = value;
-			}
-		}
-
-		/// <summary>
-		/// Health of door when keep door
-		/// </summary>
-		[DataElement(AllowDbNull = true)]
-		public int Health
-		{
-			get
-			{
-				return m_health;
-			}
-			set
-			{
-				Dirty = true;
-				m_health = value;
 			}
 		}
 	}

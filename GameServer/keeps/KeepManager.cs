@@ -98,13 +98,10 @@ namespace DOL.GS.Keeps
 					{
 						if (keep.KeepComponents.Count != 0)
 							keep.KeepComponents.Sort();
-						keep.LoadObjects();
 					}
 				}
 				LoadHookPoints();
-				//todo :to think : maybe done a better system with keep mgr in each region instanciate and list only in each region
-				//GameEventMgr.AddHandler(RegionEvent.RegionStart,new DOLEventHandler(LoadKeep));
-				//GamePlayerEvent.RegionChanged
+				Logger.Info("Loaded " + m_keeps.Count + " keeps successfully");
 			}
 			return true;
 		}
@@ -363,6 +360,71 @@ namespace DOL.GS.Keeps
 				return 1;
 			else
 				return 0;
+		}
+
+		public static void GetBorderKeepLocation(int keepid, out int x, out int y, out int z, out ushort heading)
+		{
+			x = 0;
+			y = 0;
+			z = 0;
+			heading = 0;
+			switch (keepid)
+			{
+				//sauvage
+				case 1:
+					{
+						x = 653811;
+						y = 616998;
+						z = 9560;
+						heading = 2040;
+						break;
+					}
+				//snowdonia
+				case 2:
+					{
+						x = 616149;
+						y = 679042;
+						z = 9560;
+						heading = 1611;
+						break;
+					}
+				//svas
+				case 3:
+					{
+						x = 651460;
+						y = 313758;
+						z = 9432;
+						heading = 1004;
+						break;
+					}
+				//vind
+				case 4:
+					{
+						x = 715179;
+						y = 365101;
+						z = 9432;
+						heading = 314;
+						break;
+					}
+				//ligen
+				case 5:
+					{
+						x = 396519;
+						y = 618017;
+						z = 9838;
+						heading = 2159;
+						break;
+					}
+				//cain
+				case 6:
+					{
+						x = 432841;
+						y = 680032;
+						z = 9747;
+						heading = 2585;
+						break;
+					}
+			}
 		}
 	}
 }

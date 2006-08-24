@@ -65,6 +65,8 @@ namespace DOL.GS.Keeps
 		{
 			foreach (GameClient client in WorldMgr.GetAllClients())
 			{
+				if (client.Player == null)
+					continue;
 				if ((client.Account.PrivLevel != 1 || realm == eRealm.None) || client.Player.Realm == (int)realm)
 				{
 					client.Out.SendMessage(message, eChatType.CT_Important, eChatLoc.CL_SystemWindow);

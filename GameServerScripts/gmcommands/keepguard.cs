@@ -62,66 +62,41 @@ namespace DOL.GS.Scripts
 						{
 							case "lord":
 								{
-									if (client.Player.TargetObject is GameKeepComponent)
-									{ }
-									else
-									{
-										guard = new GuardLord();
-									}
+									guard = new GuardLord();
 									break;
 								}
 							case "fighter":
 								{
-									if (client.Player.TargetObject is GameKeepComponent)
-									{ }
-									else
-									{
-										guard = new GuardFighter();
-									}
+									guard = new GuardFighter();
 									break;
 								}
 							case "archer":
 								{
-									if (client.Player.TargetObject is GameKeepComponent)
-									{ }
-									else
-									{
-										if (args.Length == 4)
-											guard = new GuardStaticArcher();
-										guard = new GuardArcher();
-									}
+									if (args.Length == 4)
+										guard = new GuardStaticArcher();
+									guard = new GuardArcher();
 									break;
 								}
 							case "healer":
 								{
-									if (client.Player.TargetObject is GameKeepComponent)
-									{ }
-									else
-									{
-										guard = new GuardHealer();
-									}
+									guard = new GuardHealer();
 									break;
 								}
 							case "stealther":
 								{
-									if (client.Player.TargetObject is GameKeepComponent)
-									{ }
-									else
-									{
-										guard = new GuardStealther();
-									}
+									guard = new GuardStealther();
 									break;
 								}
 							case "caster":
 								{
-									if (client.Player.TargetObject is GameKeepComponent)
-									{ }
-									else
-									{
-										if (args.Length == 4)
-											guard = new GuardStaticCaster();
-										else guard = new GuardCaster();
-									}
+									if (args.Length == 4)
+										guard = new GuardStaticCaster();
+									else guard = new GuardCaster();
+									break;
+								}
+							case "hastener":
+								{
+									guard = new FrontierHastener();
 									break;
 								}
 						}
@@ -130,22 +105,33 @@ namespace DOL.GS.Scripts
 							DisplaySyntax(client);
 							return 0;
 						}
-						guard.CurrentRegion = client.Player.CurrentRegion;
-						guard.X = client.Player.X;
-						guard.Y = client.Player.Y;
-						guard.Z = client.Player.Z;
-						guard.Heading = client.Player.Heading;
-						guard.Realm = (byte)guard.CurrentZone.GetRealm();
-						TemplateMgr.RefreshTemplate(guard);
-						guard.AddToWorld();
-						guard.SaveIntoDatabase();
+
+						GameKeepComponent component = client.Player.TargetObject as GameKeepComponent;
+						if (component != null)
+						{
+							DBKeepPosition pos = PositionMgr.CreatePosition(guard.GetType(), component.Height, client.Player, Guid.NewGuid().ToString(), component);
+							PositionMgr.AddPosition(pos);
+							PositionMgr.FillPositions();
+						}
+						else
+						{
+							guard.CurrentRegion = client.Player.CurrentRegion;
+							guard.X = client.Player.X;
+							guard.Y = client.Player.Y;
+							guard.Z = client.Player.Z;
+							guard.Heading = client.Player.Heading;
+							guard.Realm = (byte)guard.CurrentZone.GetRealm();
+							TemplateMgr.RefreshTemplate(guard);
+							guard.AddToWorld();
+							guard.SaveIntoDatabase();
+						}
 						break;
 					}
 				case "addposition":
 					{
 						if (client.Player.TargetObject is GameKeepGuard == false)
 						{
-							DisplayError(client, "Target a guard first!", null);
+							DisplayError(client, "Target a guard first!", new object[] { });
 							return 1;
 						}
 						if (args.Length != 3)
@@ -157,7 +143,7 @@ namespace DOL.GS.Scripts
 						height = KeepMgr.GetHeightFromLevel(height);
 						if (height > 3)
 						{
-							DisplayError(client, "Keep levels range from 0 to 10", null);
+							DisplayError(client, "Keep levels range from 0 to 10", new object[] { });
 							return 1;
 						}
 
@@ -170,9 +156,10 @@ namespace DOL.GS.Scripts
 
 						DBKeepPosition pos = PositionMgr.CreatePosition(guard.GetType(), height, client.Player, guard.TemplateID, guard.Component);
 
-						PositionMgr.UpdatePositions(pos.TemplateID);
+						PositionMgr.AddPosition(pos);
+						PositionMgr.FillPositions();
 
-						DisplayMessage(client, "Guard position added", null);
+						DisplayMessage(client, "Guard position added", new object[] { });
 						break;
 					}
 				case "removeposition":
@@ -190,19 +177,19 @@ namespace DOL.GS.Scripts
 						byte height = byte.Parse(args[2]);
 						if (height > 3)
 						{
-							DisplayError(client, "Choose a height between 0 and 3", null);
+							DisplayError(client, "Choose a height between 0 and 3", new object[] { });
 							return 1;
 						}
 
 						GameKeepGuard guard = client.Player.TargetObject as GameKeepGuard;
 
-						DBKeepPosition pos = PositionMgr.GetPosition(guard);
-						if (pos != null)
-							GameServer.Database.DeleteObject(pos);
+						DBKeepPosition pos = guard.Position;
 
-						PositionMgr.UpdatePositions(guard.TemplateID);
+						PositionMgr.RemovePosition(pos);
 
-						DisplayMessage(client, "Guard position removed", null);
+						PositionMgr.FillPositions();
+
+						DisplayMessage(client, "Guard position removed", new object[] { });
 						break;
 					}
 			}

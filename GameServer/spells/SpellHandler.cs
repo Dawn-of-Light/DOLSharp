@@ -98,7 +98,7 @@ namespace DOL.GS.Spells
 			}
 			if (Caster.ObjectState != GameObject.eObjectState.Active)
 				return;
-			if (Caster.Stun || Caster.Mez)
+			if (Caster.IsStunned || Caster.IsMezzed)
 				return;
 
 			// no instrument anymore = stop the song
@@ -315,7 +315,7 @@ namespace DOL.GS.Spells
 					return false;
 				}
 			}
-			else if (m_caster.Sitting) // songs can be played if sitting
+			else if (m_caster.IsSitting) // songs can be played if sitting
 			{
 				//Purge can be cast while sitting but only if player has negative effect that
 				//don't allow standing up (like stun or mez)
@@ -560,7 +560,7 @@ namespace DOL.GS.Spells
 					return false;
 				}
 			}
-			else if (m_caster.Sitting) // songs can be played if sitting
+			else if (m_caster.IsSitting) // songs can be played if sitting
 			{
 				//Purge can be cast while sitting but only if player has negative effect that
 				//don't allow standing up (like stun or mez)
@@ -1071,9 +1071,32 @@ namespace DOL.GS.Spells
 					break;
 
 				case "self":
-					list.Add(Caster);
-					break;
-
+					{
+						if (Spell.Radius > 0)
+						{
+							if (target == null || Spell.Range == 0)
+								target = Caster;
+							foreach (GamePlayer player in target.GetPlayersInRadius((ushort)Spell.Radius))
+							{
+								if (GameServer.ServerRules.IsSameRealm(Caster, player, true))
+								{
+									list.Add(player);
+								}
+							}
+							foreach (GameNPC npc in target.GetNPCsInRadius((ushort)Spell.Radius))
+							{
+								if (GameServer.ServerRules.IsSameRealm(Caster, npc, true))
+								{
+									list.Add(npc);
+								}
+							}
+						}
+						else
+						{
+							list.Add(Caster);
+						}
+						break;
+					}
 				case "group":
 					if (Caster is GamePlayer)
 					{
@@ -1844,7 +1867,7 @@ namespace DOL.GS.Spells
 				}
 			}
 
-			double TOADmg = 1.0 + m_caster.GetModified(eProperty.SpellDamage) * 0.01;
+			double TOADmg = m_caster.GetModified(eProperty.SpellDamage) * 0.01;
 
 			bool targetIsControlled = false;
 			if (target is GameNPC)

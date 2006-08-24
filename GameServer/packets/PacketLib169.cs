@@ -77,7 +77,7 @@ namespace DOL.GS.PacketHandler
 							byte playerStatus = 0;
 							if (!updatePlayer.Alive)
 								playerStatus |= 0x01;
-							if (updatePlayer.Mez)
+							if (updatePlayer.IsMezzed)
 								playerStatus |= 0x02;
 							if (updatePlayer.IsDiseased)
 								playerStatus |= 0x04;
@@ -120,7 +120,7 @@ namespace DOL.GS.PacketHandler
 				byte playerStatus = 0;
 				if (!player.Alive)
 					playerStatus |= 0x01;
-				if (player.Mez)
+				if (player.IsMezzed)
 					playerStatus |= 0x02;
 				if (player.IsDiseased)
 					playerStatus |= 0x04;

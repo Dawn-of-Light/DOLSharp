@@ -1459,13 +1459,13 @@
 		<regionID>163</regionID>
 	</Zone164>
 	<Zone165>
-		<description>Unamed Sea 1</description>
+		<description>Cathal Valley</description>
 		<width>8</width>
 		<zoneID>165</zoneID>
 		<height>8</height>
-		<offsety>52</offsety>
-		<offsetx>52</offsetx>
-		<regionID>163</regionID>
+		<offsety>64</offsety>
+		<offsetx>64</offsetx>
+		<regionID>165</regionID>
 	</Zone165>
 	<Zone166>
 		<description>Unamed Sea 2</description>

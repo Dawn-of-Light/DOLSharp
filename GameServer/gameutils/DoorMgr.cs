@@ -34,25 +34,23 @@ namespace DOL.GS
 	{
 		private static Hashtable m_doors;
 
+		public static Hashtable Doors
+		{
+			get { return m_doors; }
+		}
+
 		/// <summary>
 		/// this function load all door from DB
 		/// </summary>	
 		public static bool Init()
 		{
 			m_doors = new Hashtable();
-			DataObject[] dbdoors =	GameServer.Database.SelectAllObjects(typeof(DBDoor));
-			foreach(DBDoor door in dbdoors)
+			DataObject[] dbdoors = GameServer.Database.SelectAllObjects(typeof(DBDoor));
+			foreach (DBDoor door in dbdoors)
 			{
-				GameObject mydoor;
-				if (door.KeepID != 0) 
-				{
-					AbstractGameKeep keep = KeepMgr.getKeepByID(door.KeepID);
-					mydoor = new GameKeepDoor(keep);
-				}
-				else
-					mydoor = new GameDoor();
+				GameDoor mydoor = new GameDoor();
 				mydoor.LoadFromDatabase(door);
-				m_doors.Add(door.InternalID,mydoor);
+				m_doors.Add(door.InternalID, mydoor);
 			}
 			return true;
 		}
