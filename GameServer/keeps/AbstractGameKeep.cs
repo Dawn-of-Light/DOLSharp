@@ -38,11 +38,13 @@ namespace DOL.GS.Keeps
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
+		public FrontiersPortalStone TeleportStone;
+
 		/// <summary>
 		/// The time interval in milliseconds that defines how
 		/// often guild bounty points should be removed
 		/// </summary>
-		private readonly int CLAIM_CALLBACK_INTERVAL = 60*60*1000;
+		private readonly int CLAIM_CALLBACK_INTERVAL = 60 * 60 * 1000;
 
 		/// <summary>
 		/// Timer to remove bounty point and add realm point to guild which own keep
@@ -54,8 +56,25 @@ namespace DOL.GS.Keeps
 		/// </summary>
 		private RegionTimer m_changeLevelTimer;
 
+		private long m_lastAttackedByEnemyTick = 0;
+		public long LastAttackedByEnemyTick
+		{
+			get { return m_lastAttackedByEnemyTick; }
+			set { m_lastAttackedByEnemyTick = value; }
+		}
+
+		public bool InCombat
+		{
+			get
+			{
+				if (m_lastAttackedByEnemyTick == 0)
+					return false;
+				return m_currentRegion.Time - m_lastAttackedByEnemyTick < (5 * 60 * 1000); 
+			}
+		}
+
 		/// <summary>
-		///
+		/// The Keep Type
 		/// </summary>
 		public enum eKeepType: byte
 		{
@@ -77,7 +96,7 @@ namespace DOL.GS.Keeps
 			Stealth = 0x04,
 		}
 
-		#region properties
+		#region Properties
 
 		/// <summary>
 		/// This hold all keep components
@@ -96,12 +115,14 @@ namespace DOL.GS.Keeps
 		/// <summary>
 		/// This hold list of all keep doors
 		/// </summary>
-		private ArrayList m_doors;
+		//private ArrayList m_doors;
+		private Hashtable m_doors;
 
 		/// <summary>
 		/// keep doors
 		/// </summary>
-		public ArrayList Doors
+		//public ArrayList Doors
+		public Hashtable Doors
 		{
 			get	{ return m_doors; }
 			set { m_doors = value; }
@@ -124,39 +145,25 @@ namespace DOL.GS.Keeps
 		/// <summary>
 		/// This hold list of all guards of keep
 		/// </summary>
-		private ArrayList m_guards;
+		private Hashtable m_guards;
 
 		/// <summary>
 		/// List of all guards of keep
 		/// </summary>
-		public ArrayList Guards
+		public Hashtable Guards
 		{
 			get	{ return m_guards; }
 		}
 
 		/// <summary>
-		/// This lord of keep
+		/// List of all banners
 		/// </summary>
-		private GameKeepGuard m_lord;
-
-		/// <summary>
-		/// Lord of keep or captain of tower which must be killed to take control of keep
-		/// </summary>
-		public GameKeepGuard Lord
-		{
-			get	{ return m_lord; }
-			set	{ m_lord = value; }
-		}
+		private Hashtable m_banners;
 
 		/// <summary>
 		/// List of all banners
 		/// </summary>
-		private ArrayList m_banners;
-
-		/// <summary>
-		/// List of all banners
-		/// </summary>
-		public ArrayList Banners
+		public Hashtable Banners
 		{
 			get	{ return m_banners; }
 			set	{ m_banners = value; }
@@ -192,12 +199,12 @@ namespace DOL.GS.Keeps
 		}
 
 		/// <summary>
-		/// This hold the guild which have claimed the keep
+		/// This hold the guild which has claimed the keep
 		/// </summary>
 		private Guild m_guild = null;
 
 		/// <summary>
-		/// The guild which have claimed the keep
+		/// The guild which has claimed the keep
 		/// </summary>
 		public Guild Guild
 		{
@@ -223,6 +230,10 @@ namespace DOL.GS.Keeps
 			}
 		}
 		private int m_targetLevel;
+
+		/// <summary>
+		/// The target level for upgrading or downgrading
+		/// </summary>
 		public int TargetLevel
 		{
 			get
@@ -234,66 +245,110 @@ namespace DOL.GS.Keeps
 				m_targetLevel = value;
 			}
 		}
-		#region DBkeep properties
 
+		#region DBKeep Properties
+		/// <summary>
+		/// The Keep ID linked to the DBKeep
+		/// </summary>
 		public int KeepID
 		{
 			get	{ return DBKeep.KeepID; }
 			set	{ DBKeep.KeepID = value; }
 		}
+
+		/// <summary>
+		/// The Keep Level linked to the DBKeep
+		/// </summary>
 		public byte Level
 		{
 			get	{ return DBKeep.Level; }
 			set	{ DBKeep.Level = value; }
 		}
+
+		/// <summary>
+		/// The Keep Name linked to the DBKeep
+		/// </summary>
 		public string Name
 		{
 			get	{ return DBKeep.Name; }
 			set	{ DBKeep.Name = value; }
 		}
 
+		/// <summary>
+		/// The Keep Region ID linked to the DBKeep
+		/// </summary>
 		public int Region
 		{
 			get	{ return DBKeep.Region; }
 			set	{ DBKeep.Region = value; }
 		}
 
+		/// <summary>
+		/// The Keep X linked to the DBKeep
+		/// </summary>
 		public int X
 		{
 			get	{ return DBKeep.X; }
 			set	{ DBKeep.X = value; }
 		}
 
+		/// <summary>
+		/// The Keep Y linked to the DBKeep
+		/// </summary>
 		public int Y
 		{
 			get	{ return DBKeep.Y; }
 			set	{ DBKeep.Y = value; }
 		}
+
+		/// <summary>
+		/// The Keep Z linked to the DBKeep
+		/// </summary>
 		public int Z
 		{
 			get	{ return DBKeep.Z; }
 			set	{ DBKeep.Z = value; }
 		}
+
+		/// <summary>
+		/// The Keep Heading linked to the DBKeep
+		/// </summary>
 		public int Heading
 		{
 			get	{ return DBKeep.Heading; }
 			set	{ DBKeep.Heading = value; }
 		}
+
+		/// <summary>
+		/// The Keep Realm linked to the DBKeep
+		/// </summary>
 		public byte Realm
 		{
 			get	{ return DBKeep.Realm; }
 			set	{ DBKeep.Realm = value; }
 		}
+
+		/// <summary>
+		/// The Original Keep Realm linked to the DBKeep
+		/// </summary>
 		public eRealm OriginalRealm
 		{
 			get	{ return (eRealm)DBKeep.OriginalRealm; }
 		}
+
 		private string m_InternalID;
+		/// <summary>
+		/// The Keep Internal ID
+		/// </summary>
 		public string InternalID
 		{
 			get { return m_InternalID; }
 			set { m_InternalID = value; }
 		}
+
+		/// <summary>
+		/// The Keep Type
+		/// </summary>
 		public eKeepType KeepType
 		{
 			get	{ return (eKeepType)DBKeep.KeepType; }
@@ -308,12 +363,15 @@ namespace DOL.GS.Keeps
 
 		#endregion
 
+		/// <summary>
+		/// AbstractGameKeep constructor
+		/// </summary>
 		public AbstractGameKeep()
 		{
-			m_guards = new ArrayList(1);
+			m_guards = new Hashtable();
 			m_keepComponents = new ArrayList(1);
-			m_banners = new ArrayList(1);
-			m_doors = new ArrayList(1);
+			m_banners = new Hashtable();
+			m_doors = new Hashtable();
 		}
 
 		#region LOAD/UNLOAD
@@ -324,7 +382,6 @@ namespace DOL.GS.Keeps
 		/// <param name="keep"></param>
 		public void Load(DBKeep keep)
 		{
-			KeepMgr.Logger.Info("Loading: " + keep.Name);
 			CurrentRegion = WorldMgr.GetRegion((ushort)keep.Region);
 			InitialiseTimers();
 			LoadFromDatabase(keep);
@@ -389,47 +446,10 @@ namespace DOL.GS.Keeps
 				comp.SaveIntoDatabase();
 		}
 
-		/// <summary>
-		/// load the object of keep which must inherit of GameObject
-		/// This can be banner, guard, static item like catapult,...
-		/// </summary>
-		public void LoadObjects()
-		{
-			foreach (GameKeepComponent component in this.KeepComponents)
-			{
-				DBKeepPosition[] Positions = (DBKeepPosition[])GameServer.Database.SelectObjects(typeof(DBKeepPosition), "ComponentSkin = '" + component.Skin + "' and Height <= " + component.Height + " order by Height desc, TemplateID");
-				Hashtable UsedPositions = new Hashtable();
-				ArrayList UsablePositions = new ArrayList();
-				foreach (DBKeepPosition pos in Positions)
-				{
-					if (UsedPositions[pos.TemplateID] == null)
-					{
-						UsedPositions.Add(pos.TemplateID, pos);
-						UsablePositions.Add(pos);
-					}
-				}
-				foreach (DBKeepPosition position in UsablePositions)
-				{
-					if (position.Height > component.Height) continue;
-					Assembly asm = Assembly.GetExecutingAssembly();
-					GameObject obj = (GameObject)asm.CreateInstance(position.ClassType, true);
-
-					if (obj is GameKeepBanner)
-					{
-						(obj as GameKeepBanner).LoadFromPosition(position, component);
-					}
-					else if (obj is GameKeepGuard)
-					{
-						(obj as GameKeepGuard).LoadFromPosition(position, component);
-					}
-				}
-			}
-		}
-
 
 		#endregion
 
-		#region claim
+		#region Claim
 
 		/// <summary>
 		/// table of claim bounty point take from guild each cycle
@@ -483,6 +503,7 @@ namespace DOL.GS.Keeps
 			}
 			return true;
 		}
+
 		/// <summary>
 		/// claim the keep to a guild
 		/// </summary>
@@ -496,25 +517,18 @@ namespace DOL.GS.Keeps
 
 			PlayerMgr.BroadcastClaim(this);
 
-			foreach (GameKeepGuard guard in Guards)
+			foreach (GameKeepGuard guard in Guards.Values)
 			{
 				guard.ChangeGuild();
 			}
 
-			foreach (GameKeepBanner banner in Banners)
+			foreach (GameKeepBanner banner in Banners.Values)
 			{
 				banner.ChangeGuild();
 			}
-			/*			foreach(GamePlayer plr in player.GetPlayersInRadius(WorldMgr.OBJ_UPDATE_DISTANCE))
-						{
-							if (plr == null)
-								continue;
-							plr.Out.SendKeepClaim(this);
-						}*/
 			GameEventMgr.Notify(KeepEvent.KeepClaimed, this, new KeepEventArgs(this));
 			StartDeductionTimer();
 			this.SaveIntoDatabase();
-
 		}
 
 		/// Starts the deduction timer
@@ -540,10 +554,16 @@ namespace DOL.GS.Keeps
 			m_claimTimer.Callback = new RegionTimerCallback(ClaimCallBack);
 		}
 
+		/// <summary>
+		/// Callback method for the claim timer, it deducts bounty points and gains realm points for a guild
+		/// </summary>
+		/// <param name="timer"></param>
+		/// <returns></returns>
 		public int ClaimCallBack(RegionTimer timer)
 		{
 			if (Guild == null)
 				return 0;
+
 			if (this.Guild.BountyPoints < 50 * this.Level)
 			{
 				this.Release();
@@ -554,6 +574,7 @@ namespace DOL.GS.Keeps
 
 			int cost = ClaimBountyPointCost[this.Level];
 			this.Guild.GainBountyPoints(-cost);
+
 			return timer.Interval;
 		}
 
@@ -564,7 +585,7 @@ namespace DOL.GS.Keeps
 
 		#endregion
 
-		#region release
+		#region Release
 
 		/// <summary>
 		/// released the keep of the guild
@@ -580,7 +601,8 @@ namespace DOL.GS.Keeps
 			this.SaveIntoDatabase();
 		}
 		#endregion
-		#region upgrade
+
+		#region Upgrade
 
 		/// <summary>
 		/// upgrade keep to a target level
@@ -589,21 +611,26 @@ namespace DOL.GS.Keeps
 		public void ChangeLevel(byte targetLevel)
 		{
 			this.Level = targetLevel;
-			foreach (GameKeepGuard guard in this.Guards)
+			foreach (GameKeepGuard guard in this.Guards.Values)
 			{
-				TemplateMgr.RefreshTemplate(guard);
+				TemplateMgr.SetGuardLevel(guard);
 			}
 			foreach (GameKeepComponent comp in this.KeepComponents)
 			{
 				comp.Update();
 				foreach (GameClient cln in WorldMgr.GetClientsOfRegion(this.CurrentRegion.ID))
 					cln.Out.SendKeepComponentDetailUpdate(comp);
+				comp.FillPositions();
 			}
 			KeepGuildMgr.SendLevelChangeMessage(this);
 			ResetPlayersOfKeep();
 			this.SaveIntoDatabase();
 		}
 
+		/// <summary>
+		/// Start changing the keeps level to a target level
+		/// </summary>
+		/// <param name="targetLevel">The target level</param>
 		public void StartChangeLevel(int targetLevel)
 		{
 			if (this.Level == targetLevel)
@@ -614,11 +641,26 @@ namespace DOL.GS.Keeps
 				KeepGuildMgr.SendChangeLevelTimeMessage(this);
 		}
 
+		/// <summary>
+		/// Time remaining for the single level change
+		/// </summary>
 		public TimeSpan ChangeLevelTimeRemaining
 		{
 			get
 			{
 				return new TimeSpan(m_changeLevelTimer.TimeUntilElapsed);
+			}
+		}
+
+		/// <summary>
+		/// Time remaining for total level change
+		/// </summary>
+		public TimeSpan TotalChangeLevelTimeRemaining
+		{
+			get
+			{
+				//TODO
+				return new TimeSpan();
 			}
 		}
 
@@ -669,6 +711,11 @@ namespace DOL.GS.Keeps
 			}
 		}
 
+		/// <summary>
+		/// Change Level Timer Callback, this method handles the the action part of the change level timer
+		/// </summary>
+		/// <param name="timer"></param>
+		/// <returns></returns>
 		public int ChangeLevelTimerCallback(RegionTimer timer)
 		{
 			if (TargetLevel > Level)
@@ -707,7 +754,7 @@ namespace DOL.GS.Keeps
 		}
 		#endregion
 
-		#region reset
+		#region Reset
 
 		/// <summary>
 		/// reset the realm when the lord have been killed
@@ -728,6 +775,10 @@ namespace DOL.GS.Keeps
 			{
 				Release();
 			}
+			foreach (GameKeepComponent component in this.KeepComponents)
+			{
+				component.Repair(component.MaxHealth - component.Health);
+			}
 			foreach(GameKeepDoor door in Doors)
 			{
 				door.Reset(realm);
@@ -739,12 +790,13 @@ namespace DOL.GS.Keeps
 
 			ResetPlayersOfKeep();
 
-			foreach (GameKeepGuard guard in Guards)
+			foreach (GameKeepGuard guard in Guards.Values)
 			{
-				TemplateMgr.RefreshTemplate(guard);
+				if (guard is GuardLord == false)
+					guard.Die(guard);
 			}
 
-			foreach (GameKeepBanner banner in Banners)
+			foreach (GameKeepBanner banner in Banners.Values)
 			{
 				banner.ChangeRealm();
 			}
@@ -754,6 +806,11 @@ namespace DOL.GS.Keeps
 			GameEventMgr.Notify(KeepEvent.KeepTaken, new KeepEventArgs(this));
 		}
 
+		/// <summary>
+		/// This method is important, because players could fall through air
+		/// if they are on the top of a keep when it is captured because
+		/// the keep size will reset
+		/// </summary>
 		private void ResetPlayersOfKeep()
 		{
 			ushort distance = 0;
@@ -826,5 +883,3 @@ namespace DOL.GS.Keeps
 		}
 	}
 }
-//todo : patrol
-//TODO : keep bonus link to server rules

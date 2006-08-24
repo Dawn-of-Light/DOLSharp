@@ -1949,7 +1949,26 @@ namespace DOL.GS.Scripts
 						myKeep.SaveIntoDatabase();
 						client.Out.SendMessage("Keep saved in database.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					} break;
-
+				case "addteleporter":
+					{
+						GameKeepComponent component = client.Player.TargetObject as GameKeepComponent;
+						if (component != null)
+						{
+							PositionMgr.CreatePosition(typeof(FrontiersPortalStone), 0, client.Player, Guid.NewGuid().ToString(), component);
+						}
+						else
+						{
+							FrontiersPortalStone stone = new FrontiersPortalStone();
+							stone.CurrentRegion = client.Player.CurrentRegion;
+							stone.X = client.Player.X;
+							stone.Y = client.Player.Y;
+							stone.Z = client.Player.Z;
+							stone.Heading = client.Player.Heading;
+							stone.SaveIntoDatabase();
+							stone.AddToWorld();
+						}
+						break;
+					}
 				default:
 					{
 						DisplaySyntax(client);

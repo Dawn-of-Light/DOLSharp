@@ -55,17 +55,17 @@ namespace DOL.GS.SkillHandler
 				return;
 			}
 
-			if (player.Mez)
+			if (player.IsMezzed)
 			{
 				player.Out.SendMessage("You cannot use this while Mezzed!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
-			if (player.Stun)
+			if (player.IsStunned)
 			{
 				player.Out.SendMessage("You cannot use this while Stunned!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
-			if (player.Sitting)
+			if (player.IsSitting)
 			{
 				player.Out.SendMessage("You must be standing to use this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;

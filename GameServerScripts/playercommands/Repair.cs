@@ -98,7 +98,7 @@ namespace DOL.GS.Scripts
 				return false;
 			}
 
-			if (player.Sitting)
+			if (player.IsSitting)
 			{
 				player.Out.SendMessage("You can't repair while sit.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;

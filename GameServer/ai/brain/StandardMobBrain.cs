@@ -202,9 +202,9 @@ namespace DOL.AI.Brain
 
 					//if (protect==null) continue;
 					if (protect.ProtectTarget != living) continue;
-					if (protect.ProtectSource.Stun) continue;
-					if (protect.ProtectSource.Mez) continue;
-					if (protect.ProtectSource.Sitting) continue;
+					if (protect.ProtectSource.IsStunned) continue;
+					if (protect.ProtectSource.IsMezzed) continue;
+					if (protect.ProtectSource.IsSitting) continue;
 					if (protect.ProtectSource.ObjectState != GameObject.eObjectState.Active) continue;
 					if (!protect.ProtectSource.Alive) continue;
 					if (!protect.ProtectSource.InCombat) continue;

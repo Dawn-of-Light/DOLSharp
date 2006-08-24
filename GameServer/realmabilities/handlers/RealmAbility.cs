@@ -203,7 +203,7 @@ namespace DOL.GS.RealmAbilities
 				}
 				return true;
 			}
-			if ((bitmask & MEZZED) != 0 && living.Mez)
+			if ((bitmask & MEZZED) != 0 && living.IsMezzed)
 			{
 				if (player != null)
 				{
@@ -211,7 +211,7 @@ namespace DOL.GS.RealmAbilities
 				}
 				return true;
 			}
-			if ((bitmask & STUNNED) != 0 && living.Stun)
+			if ((bitmask & STUNNED) != 0 && living.IsStunned)
 			{
 				if (player != null)
 				{
@@ -219,7 +219,7 @@ namespace DOL.GS.RealmAbilities
 				}
 				return true;
 			}
-			if ((bitmask & SITTING) != 0 && living.Sitting)
+			if ((bitmask & SITTING) != 0 && living.IsSitting)
 			{
 				if (player != null)
 				{

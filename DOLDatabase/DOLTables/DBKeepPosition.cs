@@ -18,6 +18,7 @@ namespace DOL.Database
 		private int m_z;
 		private int m_h;
 		private string m_classType;
+		private int m_templateType;
 
 		private bool m_autoSave;
 
@@ -175,6 +176,23 @@ namespace DOL.Database
 			{
 				Dirty = true;
 				m_classType = value;
+			}
+		}
+
+		/// <summary>
+		/// The type of object
+		/// </summary>
+		[DataElement(AllowDbNull = true)]
+		public int TemplateType
+		{
+			get
+			{
+				return m_templateType;
+			}
+			set
+			{
+				Dirty = true;
+				m_templateType = value;
 			}
 		}
 	}

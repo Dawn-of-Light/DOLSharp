@@ -725,6 +725,15 @@
 		<ip>127.0.0.1</ip>
 		<expansion>0</expansion>
 	</Region163>
+	<Region165>
+		<description>Cathal Valley</description>
+		<isDivingEnabled>True</isDivingEnabled>
+		<waterLevel>4323</waterLevel>
+		<id>165</id>
+		<port>10400</port>
+		<ip>127.0.0.1</ip>
+		<expansion>0</expansion>
+	</Region165>
 	<Region180>
 		<description>Fomor City</description>
 		<isDivingEnabled>False</isDivingEnabled>

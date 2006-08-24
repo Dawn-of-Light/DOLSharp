@@ -18,6 +18,7 @@
  */
 using System;
 using System.Collections;
+using System.Reflection;
 using DOL.GS;
 using DOL.Database;
 using DOL.GS.PacketHandler;
@@ -27,7 +28,7 @@ namespace DOL.GS.Scripts
 	[CmdAttribute("&object", //command to handle
 		 (uint)ePrivLevel.GM, //minimum privelege level
 		"Various Object commands!", //command description
-		 //usage
+		//usage
 		 "'/object create' to create a default object",
 		 "'/object model <newModel>' to set the model to newModel",
 		 "'/object emblem <newEmblem>' to set the emblem to newEmblem",
@@ -38,118 +39,154 @@ namespace DOL.GS.Scripts
 	{
 		public int OnCommand(GameClient client, string[] args)
 		{
-			if(args.Length==1)
+			if (args.Length == 1)
 			{
-				client.Out.SendMessage("Usage:",eChatType.CT_System,eChatLoc.CL_SystemWindow);
-				client.Out.SendMessage("'/object create' to create an default",eChatType.CT_System,eChatLoc.CL_SystemWindow);
-				client.Out.SendMessage("'/object model newModel' to set the model to newModel",eChatType.CT_System,eChatLoc.CL_SystemWindow);
-				client.Out.SendMessage("'/object model newModel' to set the emblem to newEmblem",eChatType.CT_System,eChatLoc.CL_SystemWindow);
-				client.Out.SendMessage("'/object name newName' to set the name to newName",eChatType.CT_System,eChatLoc.CL_SystemWindow);
-				client.Out.SendMessage("'/object remove' to remove the Object",eChatType.CT_System,eChatLoc.CL_SystemWindow);
-				client.Out.SendMessage("'/object save' to save the Object",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+				client.Out.SendMessage("Usage:", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				client.Out.SendMessage("'/object create' to create an default", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				client.Out.SendMessage("'/object model newModel' to set the model to newModel", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				client.Out.SendMessage("'/object model newModel' to set the emblem to newEmblem", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				client.Out.SendMessage("'/object name newName' to set the name to newName", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				client.Out.SendMessage("'/object remove' to remove the Object", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				client.Out.SendMessage("'/object save' to save the Object", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return 1;
 			}
-			string param="";
-			if(args.Length>2)
-				param=String.Join(" ",args,2,args.Length-2);
+			string param = "";
+			if (args.Length > 2)
+				param = String.Join(" ", args, 2, args.Length - 2);
 
-			GameStaticItem targetObject=client.Player.TargetObject as GameStaticItem;
+			GameStaticItem targetObject = client.Player.TargetObject as GameStaticItem;
 
-			if(args[1]!="create" && targetObject==null)
+			if (args[1] != "create" && targetObject == null)
 			{
-				client.Out.SendMessage("Type /object for command overview",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+				client.Out.SendMessage("Type /object for command overview", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return 1;
 			}
 
-			switch(args[1])
+			switch (args[1])
 			{
 				case "info":
-				{
-					client.Out.SendMessage("[ "+" "+targetObject.Name+" "+" ]",eChatType.CT_System,eChatLoc.CL_SystemWindow);
-					client.Out.SendMessage(" + Model: "+targetObject.Model,eChatType.CT_System,eChatLoc.CL_SystemWindow);
-					client.Out.SendMessage(" + Emblem: "+targetObject.Emblem,eChatType.CT_System,eChatLoc.CL_SystemWindow);
-					client.Out.SendMessage(" + [X]: "+targetObject.X + " [Y]: "+targetObject.Y + " [Z]: "+targetObject.Z,eChatType.CT_System,eChatLoc.CL_SystemWindow);
-					break;
-				}
+					{
+						client.Out.SendMessage("[ " + " " + targetObject.Name + " " + " ]", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						client.Out.SendMessage(" + Model: " + targetObject.Model, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						client.Out.SendMessage(" + Emblem: " + targetObject.Emblem, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						client.Out.SendMessage(" + [X]: " + targetObject.X + " [Y]: " + targetObject.Y + " [Z]: " + targetObject.Z, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						break;
+					}
 				case "movehere":
-				{
-					targetObject.X = client.Player.X;
-					targetObject.Y = client.Player.Y;
-					targetObject.Z = client.Player.Z;
-					targetObject.Heading = client.Player.Heading;
-					break;
-				}
+					{
+						targetObject.X = client.Player.X;
+						targetObject.Y = client.Player.Y;
+						targetObject.Z = client.Player.Z;
+						targetObject.Heading = client.Player.Heading;
+						break;
+					}
 				case "create":
-				{
-					//Create a new object
-					GameStaticItem obj = new GameStaticItem();
-					//Fill the object variables
-					obj.X=client.Player.X;
-					obj.Y=client.Player.Y;
-					obj.Z=client.Player.Z;
-					obj.CurrentRegion=client.Player.CurrentRegion;
-					obj.Heading=client.Player.Heading;
-					obj.Name="New Object";
-					obj.Model=100;
-					obj.Emblem=0;
-					obj.AddToWorld();
-					client.Out.SendMessage("Obj created: OID="+obj.ObjectID,eChatType.CT_System,eChatLoc.CL_SystemWindow);
-					break;
-				}
+					{
+						string theType = "DOL.GS.GameStaticItem";
+						if (args.Length > 2)
+							theType = args[2];
+
+						//Create a new object
+						GameStaticItem obj = new GameStaticItem();
+						try
+						{
+							client.Out.SendDebugMessage(Assembly.GetAssembly(typeof(GameServer)).FullName);
+							obj = (GameStaticItem)Assembly.GetAssembly(typeof(GameServer)).CreateInstance(theType, false);
+						}
+						catch (Exception e)
+						{
+							client.Out.SendMessage(e.ToString(), eChatType.CT_System, eChatLoc.CL_PopupWindow);
+						}
+						if (obj == null)
+						{
+							try
+							{
+								client.Out.SendDebugMessage(Assembly.GetExecutingAssembly().FullName);
+								obj = (GameStaticItem)Assembly.GetExecutingAssembly().CreateInstance(theType, false);
+							}
+							catch (Exception e)
+							{
+								client.Out.SendMessage(e.ToString(), eChatType.CT_System, eChatLoc.CL_PopupWindow);
+							}
+						}
+						if (obj == null)
+						{
+							client.Out.SendMessage("There was an error creating an instance of " + theType + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							return 0;
+						}
+
+						//Fill the object variables
+						obj.X = client.Player.X;
+						obj.Y = client.Player.Y;
+						obj.Z = client.Player.Z;
+						obj.CurrentRegion = client.Player.CurrentRegion;
+						obj.Heading = client.Player.Heading;
+						obj.Name = "New Object";
+						obj.Model = 100;
+						obj.Emblem = 0;
+						obj.AddToWorld();
+						client.Out.SendMessage("Obj created: OID=" + obj.ObjectID, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						break;
+					}
 				case "model":
-				{
-					ushort model;
-					try
 					{
-						model = Convert.ToUInt16(args[2]);
-						targetObject.Model=model;
-						client.Out.SendMessage("Object model changed to: "+targetObject.Model,eChatType.CT_System,eChatLoc.CL_SystemWindow);
-					} 
-					catch(Exception)
-					{
-						client.Out.SendMessage("Type /object for command overview",eChatType.CT_System,eChatLoc.CL_SystemWindow);
-						return 1;
+						ushort model;
+						try
+						{
+							model = Convert.ToUInt16(args[2]);
+							targetObject.Model = model;
+							client.Out.SendMessage("Object model changed to: " + targetObject.Model, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						}
+						catch (Exception)
+						{
+							client.Out.SendMessage("Type /object for command overview", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							return 1;
+						}
+						break;
 					}
-					break;
-				}
 				case "emblem":
-				{
-					ushort emblem;
-					try
 					{
-						emblem = Convert.ToUInt16(args[2]);
-						targetObject.Emblem=emblem;
-						client.Out.SendMessage("Object emblem changed to: "+targetObject.Emblem,eChatType.CT_System,eChatLoc.CL_SystemWindow);
-					} 
-					catch(Exception)
-					{
-						client.Out.SendMessage("Type /object for command overview",eChatType.CT_System,eChatLoc.CL_SystemWindow);
-						return 1;
+						ushort emblem;
+						try
+						{
+							emblem = Convert.ToUInt16(args[2]);
+							targetObject.Emblem = emblem;
+							client.Out.SendMessage("Object emblem changed to: " + targetObject.Emblem, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						}
+						catch (Exception)
+						{
+							client.Out.SendMessage("Type /object for command overview", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							return 1;
+						}
+						break;
 					}
-					break;
-				}
 				case "name":
-				{
-					if(param!="")
 					{
-						targetObject.Name=param;
-						client.Out.SendMessage("Object name changed to: "+targetObject.Name,eChatType.CT_System,eChatLoc.CL_SystemWindow);
-  				}
-  				break;
-				}
+						if (param != "")
+						{
+							targetObject.Name = param;
+							client.Out.SendMessage("Object name changed to: " + targetObject.Name, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						}
+						break;
+					}
 				case "save":
-				{
-					targetObject.SaveIntoDatabase();
-					client.Out.SendMessage("Object saved to Database",eChatType.CT_System,eChatLoc.CL_SystemWindow);
-					break;
-				}
+					{
+						targetObject.SaveIntoDatabase();
+						client.Out.SendMessage("Object saved to Database", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						break;
+					}
 				case "remove":
-				{
-					targetObject.DeleteFromDatabase();
-					targetObject.Delete();
-					client.Out.SendMessage("Object removed from Clients and Database",eChatType.CT_System,eChatLoc.CL_SystemWindow);
-					break;
-				}
+					{
+						targetObject.DeleteFromDatabase();
+						targetObject.Delete();
+						client.Out.SendMessage("Object removed from Clients and Database", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						break;
+					}
+				case "target":
+					{
+						//todo targets the nearest object
+						break;
+					}
 			}
 			return 1;
 		}

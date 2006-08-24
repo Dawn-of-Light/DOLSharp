@@ -111,7 +111,7 @@ namespace DOL.GS.Spells
 		/// <param name="owner"></param>
 		protected virtual void SendUpdates(GameLiving owner)
 		{
-			if (owner.Mez || owner.Stun)
+			if (owner.IsMezzed || owner.IsStunned)
 				return;
 
 			if (owner is GamePlayer)

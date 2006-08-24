@@ -102,7 +102,7 @@ namespace DOL.GS.Spells
 		/// <param name="owner"></param>
 		protected static void SendUpdates(GameLiving owner)
 		{
-			if (owner.Mez || owner.Stun)
+			if (owner.IsMezzed || owner.IsStunned)
 				return;
 
 			GamePlayer player = owner as GamePlayer;

@@ -35,7 +35,7 @@ namespace DOL.GS.Keeps
 		/// Defines a logger for this class.
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-		
+
 		private ArrayList hookpointItemList;
 		private const int MAX_ITEM = 10;
 		public static HookPointInventory BlueHPInventory = new HookPointInventory();
@@ -57,7 +57,7 @@ namespace DOL.GS.Keeps
 			if (slot > MAX_ITEM)
 			{
 				if (log.IsErrorEnabled)
-					log.Error("item add to slot ever used");
+					log.Error("item add to slot already used");
 				return null;
 			}
 			return hookpointItemList[slot] as HookPointItem;
@@ -73,7 +73,7 @@ namespace DOL.GS.Keeps
 			if (hookpointItemList[slot] != null)
 			{
 				if (log.IsErrorEnabled)
-					log.Error("item add to slot ever used");
+					log.Error("item add to slot already used");
 				return;
 			}
 			if ((slot > MAX_ITEM) || (slot < 0))
@@ -91,7 +91,7 @@ namespace DOL.GS.Keeps
 		/// <returns>Item template or null</returns>
 		public virtual void AddFirstFreeSlot(HookPointItem item)
 		{
-			if (hookpointItemList.Count <10) 
+			if (hookpointItemList.Count < 10)
 				hookpointItemList.Add(item);
 
 			else if (log.IsErrorEnabled)
@@ -118,8 +118,8 @@ namespace DOL.GS.Keeps
 		/// Defines a logger for this class.
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-		
-		public HookPointItem(string name,byte gold ,ushort icon,string objectType,ushort flag)
+
+		public HookPointItem(string name, byte gold, ushort icon, string objectType, ushort flag)
 		{
 			m_name = name;
 			m_gold = gold;
@@ -127,7 +127,7 @@ namespace DOL.GS.Keeps
 			m_objectType = objectType;
 			m_flag = flag;
 		}
-		
+
 		protected short m_gold;
 		protected byte m_silver;
 		protected byte m_copper;
@@ -138,39 +138,39 @@ namespace DOL.GS.Keeps
 
 		public short Gold
 		{
-			get{return m_gold;}
-			set{m_gold = value;}
+			get { return m_gold; }
+			set { m_gold = value; }
 		}
 
-		public ushort Icon 
+		public ushort Icon
 		{
 			get { return m_icon; }
-			set{ m_icon = value; }
+			set { m_icon = value; }
 		}
 
 		public string GameObjectType
 		{
 			get { return m_objectType; }
-			set{ m_objectType = value; }
+			set { m_objectType = value; }
 		}
 
 		public string Name
 		{
 			get { return m_name; }
-			set{ m_name = value; }
+			set { m_name = value; }
 		}
 
 		public ushort Flag
 		{
 			get { return m_flag; }
-			set{ m_flag = value; }
+			set { m_flag = value; }
 		}
 
 		public void Invoke(GamePlayer player, int payType, GameKeepHookPoint hookpoint)
 		{
-			if(!hookpoint.IsFree)
+			if (!hookpoint.IsFree)
 			{
-				player.Out.SendMessage("The hookpoint is ever used!", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage("The hookpoint is already used!", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
 				return;
 			}
 			//1=or 2=BP 3=GuildBP 4=contract
@@ -178,38 +178,38 @@ namespace DOL.GS.Keeps
 			switch (payType)
 			{
 				case 1:
-				{
-					if(!player.RemoveMoney(Gold*100*100,"You buy "+this.GetName(1,false)+"."))
 					{
-						player.Out.SendMessage("You dont have enough money!", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
-						return;
-					}
-				}break;
+						if (!player.RemoveMoney(Gold * 100 * 100, "You buy " + this.GetName(1, false) + "."))
+						{
+							player.Out.SendMessage("You dont have enough money!", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
+							return;
+						}
+					} break;
 				case 2:
-				{
-					if(!player.RemoveBountyPoints(Gold,"You buy "+this.GetName(1,false)+"."))
 					{
-						player.Out.SendMessage("You dont have enough bounty point!", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
-						return;
-					}
-				}break;
+						if (!player.RemoveBountyPoints(Gold, "You buy " + this.GetName(1, false) + "."))
+						{
+							player.Out.SendMessage("You dont have enough bounty point!", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
+							return;
+						}
+					} break;
 				case 3:
-				{
-					if (player.Guild == null)return;
-					if(!player.Guild.RemoveBountyPoints(Gold))
 					{
-						player.Out.SendMessage("You dont have enough bounty point!", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
+						if (player.Guild == null) return;
+						if (!player.Guild.RemoveBountyPoints(Gold))
+						{
+							player.Out.SendMessage("You dont have enough bounty point!", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
+							return;
+						}
+						else
+							player.Out.SendMessage("You buy " + this.GetName(1, false) + ".", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
+
+					} break;
+				case 4:
+					{
+						player.Out.SendMessage("NOT IMPLEMENTED YET, SORRY", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
 						return;
 					}
-					else
-						player.Out.SendMessage("You buy "+this.GetName(1,false)+".", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
-
-				}break;
-				case 4:
-				{
-					player.Out.SendMessage("NOT IMPLEMENTED YET, SORRY", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
-					return;
-				}
 
 			}
 
@@ -227,7 +227,7 @@ namespace DOL.GS.Keeps
 			hookPointObj.Y = hookpoint.Y;
 			hookPointObj.Z = hookpoint.Z;
 			if (hookPointObj is GameMob)
-				((GameMob)hookPointObj).RespawnInterval =0;//do not respawn
+				((GameMob)hookPointObj).RespawnInterval = 0;//do not respawn
 			hookPointObj.AddToWorld();
 			hookpoint.Object = hookPointObj;
 		}
@@ -244,12 +244,12 @@ namespace DOL.GS.Keeps
 					if (objType != null)
 						break;
 				}
-				if(objType == null)
+				if (objType == null)
 					objType = Assembly.GetAssembly(typeof(GameServer)).GetType(objTypeName);
-				if(objType == null)
+				if (objType == null)
 				{
 					if (log.IsErrorEnabled)
-						log.Error("Could not find keepobject: "+objTypeName+"!!!");
+						log.Error("Could not find keepobject: " + objTypeName + "!!!");
 					return null;
 				}
 				try
@@ -259,7 +259,7 @@ namespace DOL.GS.Keeps
 				catch (Exception e)
 				{
 					if (log.IsWarnEnabled)
-						log.Warn("Hookpoint object can not been instanciate :"+e.ToString());
+						log.Warn("Hookpoint object can not been instanciate :" + e.ToString());
 				}
 
 				if (hookPointObj == null)
@@ -272,10 +272,10 @@ namespace DOL.GS.Keeps
 			else
 			{
 				if (log.IsWarnEnabled)
-				log.Warn("Hookpoint object have a wrong class type which must inherite from GameLiving.");
+					log.Warn("Hookpoint object have a wrong class type which must inherite from GameLiving.");
 				return null;
 			}
-			
+
 		}
 
 		private const string m_vowels = "aeuio";
@@ -303,30 +303,30 @@ namespace DOL.GS.Keeps
 			}
 			else // common noun
 				if (article == 0)
-			{
-				if (firstLetterUppercase)
-					return "The " + Name;
-				else
-					return "the " + Name;
-			}
-			else
-			{
-				// if first letter is a vowel
-				if (m_vowels.IndexOf(Name[0]) != -1)
 				{
 					if (firstLetterUppercase)
-						return "An " + Name;
+						return "The " + Name;
 					else
-						return "an " + Name;
+						return "the " + Name;
 				}
 				else
 				{
-					if (firstLetterUppercase)
-						return "A " + Name;
+					// if first letter is a vowel
+					if (m_vowels.IndexOf(Name[0]) != -1)
+					{
+						if (firstLetterUppercase)
+							return "An " + Name;
+						else
+							return "an " + Name;
+					}
 					else
-						return "a " + Name;
+					{
+						if (firstLetterUppercase)
+							return "A " + Name;
+						else
+							return "a " + Name;
+					}
 				}
-			}
 		}
 
 		/// <summary>
