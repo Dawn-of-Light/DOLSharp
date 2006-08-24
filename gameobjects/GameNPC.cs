@@ -640,7 +640,7 @@ namespace DOL.GS
 		/// <param name="ty">Target Y</param>
 		public virtual void TurnTo(int tx, int ty)
 		{
-			if (this.Stun || this.Mez) return;
+			if (this.IsStunned || this.IsMezzed) return;
 			Notify(GameNPCEvent.TurnTo, this, new TurnToEventArgs(tx, ty));
 			Heading = GetHeadingToSpot(tx, ty);
 		}
@@ -651,7 +651,7 @@ namespace DOL.GS
 		/// <param name="newHeading">the new heading</param>
 		public virtual void TurnTo(ushort newHeading)
 		{
-			if (this.Stun || this.Mez) return;
+			if (this.IsStunned || this.IsMezzed) return;
 			Notify(GameNPCEvent.TurnToHeading, this, new TurnToHeadingEventArgs(newHeading));
 			Heading = newHeading;
 		}
@@ -843,10 +843,9 @@ namespace DOL.GS
 			//we call WalkTo, we set TargetZ to Zero, this results in a HUGE
 			//distance bug, makeing the mobs move totally weird!
 			//So we have to test if our targetZ == 0
-			//duff answer : ever test in get distance so do not need it!
+			//duff answer : already test in get distance so do not need it!
 			double dist = WorldMgr.GetDistance(m_X, m_Y, m_Z, m_targetX, m_targetY, m_targetZ);
 
-			//DOLConsole.WriteLine("DX="+diffx+" DY="+diffy+" DIST="+dist);
 			int timeToTarget = 0;
 			if (speed > 0)
 			{

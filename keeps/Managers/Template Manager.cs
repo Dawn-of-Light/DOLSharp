@@ -20,13 +20,13 @@ namespace DOL.GS.Keeps
 			SetGuardResists(guard);
 			ClothingMgr.EquipGuard(guard);
 			ClothingMgr.SetEmblem(guard);
-			guard.ChangePosition(null);
 		}
 
 		private static void SetGuardRealm(GameKeepGuard guard)
 		{
 			if (guard.Component != null)
 				guard.Realm = guard.Component.Keep.Realm;
+			else guard.Realm = (byte)guard.CurrentZone.GetRealm();
 		}
 
 		private static void SetGuardGuild(GameKeepGuard guard)
@@ -40,7 +40,7 @@ namespace DOL.GS.Keeps
 
 		private static void SetGuardRespawn(GameKeepGuard guard)
 		{
-			if (guard is GuardLord)
+			if (guard is GuardLord || guard is FrontierHastener)
 				guard.RespawnInterval = 1000;
 			else guard.RespawnInterval = Util.Random(5, 25) * 60 * 1000;
 		}
@@ -53,7 +53,7 @@ namespace DOL.GS.Keeps
 					return 65;
 				else return 55;
 			}
-			if (guard.Component.Keep is GameKeepTower && guard.Component.Keep.KeepComponents.Count > 1)
+			if (guard.IsPortalKeepGuard)
 				return 255;
 			if (guard is GuardLord)
 			{
@@ -66,10 +66,17 @@ namespace DOL.GS.Keeps
 
 		public static void SetGuardLevel(GameKeepGuard guard)
 		{
-			int bonusLevel = 0;
-			if (guard.Component != null)
-				bonusLevel = guard.Component.Keep.Level;
-			guard.Level = (byte)(GetBaseLevel(guard) + bonusLevel);
+			if (guard is FrontierHastener)
+			{
+				guard.Level = 1;
+			}
+			else
+			{
+				int bonusLevel = 0;
+				if (guard.Component != null)
+					bonusLevel = guard.Component.Keep.Level;
+				guard.Level = (byte)(GetBaseLevel(guard) + bonusLevel);
+			}
 		}
 
 		private static void SetGuardGender(GameKeepGuard guard)
@@ -85,6 +92,38 @@ namespace DOL.GS.Keeps
 		/// <param name="guard">The guard object</param>
 		private static void SetGuardModel(GameKeepGuard guard)
 		{
+			ushort AlbionHastener = 244;
+			ushort MidgardHastener = 16;
+			ushort HiberniaHastener = 1910;
+
+			if (guard is FrontierHastener)
+			{
+				switch (guard.Realm)
+				{
+					case 0:
+					case 1:
+						{
+							guard.Model = AlbionHastener;
+							guard.Size = 35;
+							break;
+						}
+					case 2:
+						{
+							guard.Model = MidgardHastener;
+							guard.Size = 30;
+							guard.Flags ^= (uint)GameNPC.eFlags.TRANSPARENT;
+							break;
+						}
+					case 3:
+						{
+							guard.Model = HiberniaHastener;
+							guard.Size = 50;
+							break;
+						}
+				}
+				return;
+			}
+
 			#region AlbionClassModels
 			ushort BritonMale = 32;
 			ushort BritonFemale = 35;
@@ -560,6 +599,11 @@ namespace DOL.GS.Keeps
 		/// <param name="guard">The guard object</param>
 		private static void SetGuardName(GameKeepGuard guard)
 		{
+			if (guard is FrontierHastener)
+			{
+				guard.Name = "Hastener";
+				return;
+			}
 			if (guard is GuardLord)
 			{
 				if (guard.Component == null)
@@ -567,7 +611,7 @@ namespace DOL.GS.Keeps
 					guard.Name = guard.CurrentZone.Description + " Commander";
 					return;
 				}
-				else if (guard.Component.Keep is GameKeepTower)
+				else if (guard.IsTowerGuard)
 				{
 					guard.Name = "Tower Captain";
 					return;
@@ -673,6 +717,8 @@ namespace DOL.GS.Keeps
 			}
 			if ((eRealm)guard.Realm == eRealm.None)
 				guard.Name = "Renegade " + guard.Name;
+			if (guard.IsPortalKeepGuard)
+				guard.Name = "Master " + guard.Name;
 		}
 
 		/// <summary>
@@ -733,7 +779,7 @@ namespace DOL.GS.Keeps
 		/// <param name="guard">The guard object</param>
 		public static void SetGuardSpeed(GameKeepGuard guard)
 		{
-			if (guard.Component.Keep is GameKeepTower && guard.Component.Keep.KeepComponents.Count > 1)
+			if (guard.IsPortalKeepGuard)
 				guard.MaxSpeedBase = 750;
 			if ((guard is GuardLord && guard.Component != null)||
 	guard is GuardStaticArcher ||

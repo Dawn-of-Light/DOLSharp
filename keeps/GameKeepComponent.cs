@@ -17,6 +17,7 @@
  *
  */
 using System;
+using System.Reflection;
 using System.Collections;
 using System.Text;
 using DOL.Database;
@@ -167,6 +168,12 @@ namespace DOL.GS.Keeps
 				return (byte)(40 + Keep.Level);
 			}
 		}
+
+		public override byte Realm
+		{
+			get { return Keep.Realm; }
+		}
+
 		private Hashtable m_hookPoints;
 		private byte m_oldHealthPercent;
 		private bool m_rized;
@@ -175,6 +182,13 @@ namespace DOL.GS.Keeps
 		{
 			get { return m_hookPoints; }
 			set { m_hookPoints = value; }
+		}
+
+
+		private Hashtable m_positions;
+		public Hashtable Positions
+		{
+			get { return m_positions; }
 		}
 		#endregion
 
@@ -198,7 +212,7 @@ namespace DOL.GS.Keeps
 		public GameKeepComponent()
 		{
 			m_hookPoints = new Hashtable(41);
-			GameEventMgr.AddHandler(this, GameObjectEvent.TakeDamage, new DOLEventHandler(SendComponentUpdate));
+			m_positions = new Hashtable();
 		}
 
 		/// <summary>
@@ -237,7 +251,115 @@ namespace DOL.GS.Keeps
 			this.ID = component.ID;
 			this.SaveInDB = false;
 			this.Rized = false;
+			LoadPositions();
 			this.AddToWorld();
+			FillPositions();
+		}
+
+		public void LoadPositions()
+		{
+			DBKeepPosition[] DBPositions = (DBKeepPosition[])GameServer.Database.SelectObjects(typeof(DBKeepPosition), "`ComponentSkin` = '" + this.Skin + "'");
+			foreach (DBKeepPosition position in DBPositions)
+			{
+				DBKeepPosition[] list = this.Positions[position.TemplateID] as DBKeepPosition[];
+				if (list == null)
+				{
+					list = new DBKeepPosition[4];
+					this.Positions[position.TemplateID] = list;
+				}
+				//list.SetValue(position, position.Height);
+				list[position.Height] = position;
+			}
+		}
+
+		public void FillPositions()
+		{
+			foreach (DBKeepPosition[] positionGroup in this.Positions.Values)
+			{
+				for (int i = this.Height; i >= 0; i--)
+				{
+					DBKeepPosition position = positionGroup[i] as DBKeepPosition;
+					if (position != null)
+					{
+						bool create = false;
+						if (position.ClassType == "DOL.GS.Keeps.GameKeepBanner")
+						{
+							if (this.Keep.Banners[position.TemplateID] == null)
+								create = true;
+						}
+						else if (position.ClassType == "DOL.GS.Keeps.GameKeepDoor")
+						{
+							if (this.Keep.Doors[position.TemplateID] == null)
+								create = true;
+						}
+						else
+						{
+							if (this.Keep.Guards[position.TemplateID] == null)
+								create = true;
+						}
+						if (create)
+						{
+							//create the object
+							Assembly asm = Assembly.GetExecutingAssembly();
+							IKeepItem obj = (IKeepItem)asm.CreateInstance(position.ClassType, true);
+							obj.LoadFromPosition(position, this);
+						}
+						else
+						{
+							//move the object
+							if (position.ClassType == "DOL.GS.Keeps.GameKeepBanner")
+							{
+								IKeepItem banner = this.Keep.Banners[position.TemplateID] as IKeepItem;
+								if (banner.Position != position)
+								{
+									banner.MoveToPosition(position);
+								}
+							}
+							else if (position.ClassType == "DOL.GS.Keeps.GameKeepDoor")
+							{
+								//doors dont move
+							}
+							else if (position.ClassType == "DOL.GS.Keeps.FrontierPortalStone")
+							{ 
+								//these dont move
+							}
+							else
+							{
+								IKeepItem guard = this.Keep.Guards[position.TemplateID] as IKeepItem;
+								if (guard.Position != position)
+								{
+									guard.MoveToPosition(position);
+								}
+							}
+						}
+						break;
+					}
+				}
+			}
+
+			foreach (GameKeepGuard guard in this.Keep.Guards.Values)
+			{
+				if (guard.Position.Height > guard.Component.Height)
+					guard.RemoveFromWorld();
+				else
+				{
+					if (guard.Position.Height <= guard.Component.Height &&
+						guard.ObjectState != GameObject.eObjectState.Active && !guard.IsRespawning)
+						guard.AddToWorld();
+				}
+			}
+
+			foreach (GameKeepBanner banner in this.Keep.Banners.Values)
+			{
+				if (banner.Position.Height > banner.Component.Height)
+					banner.RemoveFromWorld();
+				else
+				{
+					if (banner.Position.Height <= banner.Component.Height &&
+						banner.ObjectState != GameObject.eObjectState.Active)
+						banner.AddToWorld();
+				}
+			}
 		}
 
 		/// <summary>
@@ -278,11 +400,10 @@ namespace DOL.GS.Keeps
 		/// <summary>
 		/// broadcast life of keep component
 		/// </summary>
-		/// <param name="e"></param>
-		/// <param name="sender"></param>
-		/// <param name="args"></param>
-		public void SendComponentUpdate(DOLEvent e, object sender, EventArgs args)
+		public override void  TakeDamage(GameObject source, eDamageType damageType, int damageAmount, int criticalAmount)
 		{
+			this.Keep.LastAttackedByEnemyTick = this.CurrentRegion.Time;
+			base.TakeDamage(source, damageType, damageAmount, criticalAmount);
 			//only on hp change
 			if (m_oldHealthPercent == this.HealthPercent) return;
 			m_oldHealthPercent = this.HealthPercent;
@@ -302,7 +423,6 @@ namespace DOL.GS.Keeps
 		{
 			StopHealthRegeneration();
 			base.Delete();
-			GameEventMgr.RemoveHandler(this, GameObjectEvent.TakeDamage, new DOLEventHandler(SendComponentUpdate));
 			DBKeepComponent obj = null;
 			if (this.InternalID != null)
 				obj = (DBKeepComponent)GameServer.Database.FindObjectByKey(typeof(DBKeepComponent), this.InternalID);
@@ -338,15 +458,7 @@ namespace DOL.GS.Keeps
 
 		public void Update()
 		{
-			if (this.Keep.Level > 7)
-				this.Height = 3;
-			else if (this.Keep.Level > 4)
-				this.Height = 2;
-			else if (this.Keep.Level > 1)
-				this.Height = 1;
-			else
-				this.Height = 0;
-
+			this.Height = KeepMgr.GetHeightFromLevel(this.Keep.Level);
 			this.Health = this.MaxHealth;
 		}
 
@@ -362,8 +474,12 @@ namespace DOL.GS.Keeps
 			Health += amount;
 			m_oldHealthPercent = HealthPercent;
 			if (oldStatus != Status)
+			{
 				foreach (GameClient client in WorldMgr.GetClientsOfRegion(this.CurrentRegionID))
+				{
 					client.Out.SendKeepComponentDetailUpdate(this);
+				}
+			}
 		}
 
 		public override string ToString()

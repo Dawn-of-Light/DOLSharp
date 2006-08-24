@@ -56,7 +56,7 @@ namespace DOL.GS.PropertyCalc
 			else if ( living is GameKeepDoor )
 			{
 				GameKeepDoor keepdoor = living as GameKeepDoor;
-				return (keepdoor.Keep.Level+1)*10000;//todo : use material too to calculate maxhealth
+				return (keepdoor.Component.Keep.Level+1)*10000;//todo : use material too to calculate maxhealth
 			}
 			else
 			{

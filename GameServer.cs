@@ -467,24 +467,13 @@ namespace DOL
 			/// <param name="clientEndpoint">Address of receiving client</param>
 			public void SendUDP(byte[] bytes, int count, EndPoint clientEndpoint, AsyncCallback callback)
 			{
-				try
-				{
-					int start = Environment.TickCount;
+				int start = Environment.TickCount;
 
-					m_udplisten.BeginSendTo(bytes, 0, count, SocketFlags.None, clientEndpoint, callback, m_udplisten);
+				m_udplisten.BeginSendTo(bytes, 0, count, SocketFlags.None, clientEndpoint, callback, m_udplisten);
 
-					int took = Environment.TickCount - start;
-					if (took > 100 && log.IsWarnEnabled)
-						log.WarnFormat("m_udplisten.BeginSendTo took {0}ms! (UDP to {1})", took, clientEndpoint.ToString());
-				}
-				catch (SocketException)
-				{
-				}
-				catch (Exception e)
-				{
-					if (log.IsErrorEnabled)
-						log.Error("SendUDP", e);
-				}
+				int took = Environment.TickCount - start;
+				if (took > 100 && log.IsWarnEnabled)
+					log.WarnFormat("m_udplisten.BeginSendTo took {0}ms! (UDP to {1})", took, clientEndpoint.ToString());
 			}
 
 			/// <summary>
@@ -625,6 +614,11 @@ namespace DOL
 					log.Info("GuildMgr initialized: true");
 
 				//---------------------------------------------------------------
+				//Load the door manager
+				if (!InitComponent(DoorMgr.Init(), "Door Manager"))
+					return false;
+
+				//---------------------------------------------------------------
 				//Load the keep manager
 				if (!InitComponent(KeepMgr.Load(), "Keep Manager"))
 					return false;
@@ -632,11 +626,6 @@ namespace DOL
 				//---------------------------------------------------------------
 				//Load the relic manager
 				if (!InitComponent(RelicMgr.Init(), "Relic Manager"))
-					return false;
-
-				//---------------------------------------------------------------
-				//Load the door manager
-				if (!InitComponent(DoorMgr.Init(), "Door Manager"))
 					return false;
 
 				//---------------------------------------------------------------

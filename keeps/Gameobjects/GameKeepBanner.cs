@@ -21,7 +21,7 @@ using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Keeps
 {
-	public class GameKeepBanner : GameStaticItem
+	public class GameKeepBanner : GameStaticItem , IKeepItem
 	{
 		/// <summary>
 		/// Albion unclaimed banner model
@@ -60,6 +60,13 @@ namespace DOL.GS.Keeps
 			get { return m_component; }
 		}
 
+		private DBKeepPosition m_position;
+		public DBKeepPosition Position
+		{
+			get { return m_position; }
+			set { m_position = value; }
+		}
+
 		public override void LoadFromDatabase(DataObject obj)
 		{
 			
@@ -70,12 +77,18 @@ namespace DOL.GS.Keeps
 			m_templateID = pos.TemplateID;
 			m_component = component;
 
-			PositionMgr.LoadBannerPosition(pos, this);
-			component.Keep.Banners.Add(this);
+			PositionMgr.LoadKeepItemPosition(pos, this);
+			component.Keep.Banners[m_templateID] = this;
 			ChangeRealm();
 			if (component.Keep.Guild != null)
 				ChangeGuild();
 			this.AddToWorld();
+		}
+
+		public void MoveToPosition(DBKeepPosition position)
+		{
+			PositionMgr.LoadKeepItemPosition(position, this);
+			this.MoveTo(this.CurrentRegionID, this.X, this.Y, this.Z, this.Heading);
 		}
 
 		/// <summary>

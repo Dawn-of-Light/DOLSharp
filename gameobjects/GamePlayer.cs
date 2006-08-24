@@ -383,7 +383,7 @@ namespace DOL.GS
 				player.Out.SendPlayerCreate(this);
 			}
 
-			UpdateEquipementAppearance();
+			UpdateEquipmentAppearance();
 
 			SaveIntoDatabase();
 
@@ -498,7 +498,7 @@ namespace DOL.GS
 					Out.SendMessage("You can't quit while you're crafting.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return false;
 				}
-				if (!Sitting)
+				if (!IsSitting)
 				{
 					Sit(true);
 				}
@@ -781,11 +781,12 @@ namespace DOL.GS
 				m_releaseType = releaseCommand;
 			}
 
-			int relRegion, relX, relY, relZ, relHeading;
+			int relX = 0, relY = 0, relZ = 0;
+			ushort relRegion = 0, relHeading = 0;
 			switch (m_releaseType)
 			{
 				case eReleaseType.Duel:
-					relRegion = m_character.Region;
+					relRegion = (ushort)m_character.Region;
 					relX = m_character.Xpos;
 					relY = m_character.Ypos;
 					relZ = m_character.Zpos;
@@ -848,11 +849,11 @@ namespace DOL.GS
 								relHeading = 3432;
 								break;
 							}
-							relRegion = m_character.BindRegion;
+							relRegion = (ushort)m_character.BindRegion;
 							relX = m_character.BindXpos;
 							relY = m_character.BindYpos;
 							relZ = m_character.BindZpos;
-							relHeading = m_character.BindHeading;
+							relHeading = (ushort)m_character.BindHeading;
 							break;
 
 						case 240:
@@ -883,52 +884,38 @@ namespace DOL.GS
 								relHeading = 518;
 								break;
 							}
-							relRegion = m_character.BindRegion;
+							relRegion = (ushort)m_character.BindRegion;
 							relX = m_character.BindXpos;
 							relY = m_character.BindYpos;
 							relZ = m_character.BindZpos;
-							relHeading = m_character.BindHeading;
+							relHeading = (ushort)m_character.BindHeading;
 							break;
 
 						case 163:
 							relRegion = 163;
 							if (Realm == 1)
 							{
-								relX = 430639;
-								relY = 508015;
-								relZ = 8835;
-								relHeading = 2053;
+								KeepMgr.GetBorderKeepLocation(1, out relX, out relY, out relZ, out relHeading);
 								break;
 							}
 							else if (Realm == 2)
 							{
-								relX = 487859;
-								relY = 496808;
-								relZ = 8016;
-								relHeading = 945;
+								KeepMgr.GetBorderKeepLocation(3, out relX, out relY, out relZ, out relHeading);
 								break;
 							}
 							else if (Realm == 3)
 							{
-								relX = 469920;
-								relY = 520520;
-								relZ = 8211;
-								relHeading = 2044;
+								KeepMgr.GetBorderKeepLocation(5, out relX, out relY, out relZ, out relHeading);
 								break;
 							}
-							relRegion = m_character.BindRegion;
-							relX = m_character.BindXpos;
-							relY = m_character.BindYpos;
-							relZ = m_character.BindZpos;
-							relHeading = m_character.BindHeading;
 							break;
 
 						default:
-							relRegion = m_character.BindRegion;
+							relRegion = (ushort)m_character.BindRegion;
 							relX = m_character.BindXpos;
 							relY = m_character.BindYpos;
 							relZ = m_character.BindZpos;
-							relHeading = m_character.BindHeading;
+							relHeading = (ushort)m_character.BindHeading;
 							break;
 
 					}
@@ -1008,7 +995,7 @@ namespace DOL.GS
 
 			//Call MoveTo after new GameGravestone(this...
 			//or the GraveStone will be located at the player's bindpoint
-			MoveTo((ushort)relRegion, relX, relY, relZ, (ushort)relHeading);
+			MoveTo(relRegion, relX, relY, relZ, relHeading);
 			//It is enough if we revive the player on this client only here
 			//because for other players the player will be removed in the MoveTo
 			//method and added back again (if in view) with full health ... so no
@@ -3694,7 +3681,7 @@ namespace DOL.GS
 				PlayerCharacter.IsCloakHoodUp = value;
 
 				Out.SendInventoryItemsUpdate(null);
-				UpdateEquipementAppearance();
+				UpdateEquipmentAppearance();
 
 				if (value)
 				{
@@ -3815,7 +3802,7 @@ namespace DOL.GS
 				Out.SendInventorySlotsUpdate(null);
 				// Update active weapon appearence (has to be done with all
 				// equipment in the packet else player is naked)
-				UpdateEquipementAppearance();
+				UpdateEquipmentAppearance();
 				//Send new weapon stats
 				Out.SendUpdateWeaponAndArmorStats();
 			}
@@ -3874,12 +3861,12 @@ namespace DOL.GS
 			//				Out.SendMessage("You cannot enter combat mode in shade mode!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 			//				return;
 			//			}
-			if (Stun)
+			if (IsStunned)
 			{
 				Out.SendMessage("You can't attack when you are stunned!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 				return;
 			}
-			if (Mez)
+			if (IsMezzed)
 			{
 				Out.SendMessage("You can't attack when you are mesmerized!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 				return;
@@ -3899,7 +3886,7 @@ namespace DOL.GS
 				}
 			}
 
-			if (Sitting)
+			if (IsSitting)
 			{
 				Sit(false);
 			}
@@ -4482,7 +4469,7 @@ namespace DOL.GS
 								}
 							foreach (GameObject obj in targets)
 							{
-								if (obj is GamePlayer && ((GamePlayer)obj).Sitting)
+								if (obj is GamePlayer && ((GamePlayer)obj).IsSitting)
 								{
 									effectiveness *= 2;
 								}
@@ -5501,9 +5488,9 @@ namespace DOL.GS
 			if (Steed != null)
 				DismountSteed(true);
 			//Dead ppl. don't sit ...
-			if (Sitting)
+			if (IsSitting)
 			{
-				Sitting = false;
+				IsSitting = false;
 				UpdatePlayerStatus();
 			}
 
@@ -5924,12 +5911,12 @@ namespace DOL.GS
 		/// <param name="line">Spell line of the spell (for bonus calculations)</param>
 		public override void CastSpell(Spell spell, SpellLine line)
 		{
-			if (Stun)
+			if (IsStunned)
 			{
 				Out.SendMessage("You can't cast while stunned!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
 				return;
 			}
-			if (Mez)
+			if (IsMezzed)
 			{
 				Out.SendMessage("You can't cast while mesmerized!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
 				return;
@@ -6912,7 +6899,7 @@ namespace DOL.GS
 				if (player != this)
 					player.Out.SendPlayerCreate(this);
 			}
-			UpdateEquipementAppearance();
+			UpdateEquipmentAppearance();
 			return true;
 		}
 
@@ -7032,6 +7019,9 @@ namespace DOL.GS
 			//Current Speed = 0 when moved ... else X,Y,Z continue to be modified
 			CurrentSpeed = 0;
 			MovementStartTick = Environment.TickCount;
+			int m_originalX = X;
+			int m_originalY = Y;
+			int m_originalZ = Z;
 			X = x;
 			Y = y;
 			Z = z;
@@ -7053,6 +7043,9 @@ namespace DOL.GS
 				CurrentUpdateArray.SetAll(false);
 				foreach (GameNPC npc in GetNPCsInRadius(WorldMgr.VISIBILITY_DISTANCE))
 				{
+					if (WorldMgr.GetDistance(npc.X, npc.Y, npc.Z, m_originalX, m_originalY, m_originalZ) <= WorldMgr.VISIBILITY_DISTANCE)
+						continue;
+
 					Out.SendNPCCreate(npc);
 					if (npc.Inventory != null)
 						Out.SendLivingEquipmentUpdate(npc);
@@ -7069,7 +7062,7 @@ namespace DOL.GS
 						player.Out.SendPlayerCreate(this);
 					}
 				}
-				UpdateEquipementAppearance();
+				UpdateEquipmentAppearance();
 			}
 			return true;
 		}
@@ -7298,7 +7291,7 @@ namespace DOL.GS
 				base.CurrentSpeed = value;
 				if (value != 0)
 				{
-					if (Sitting)
+					if (IsSitting)
 					{
 						Sit(false);
 					}
@@ -7578,7 +7571,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets/sets the current sit state
 		/// </summary>
-		public override bool Sitting
+		public override bool IsSitting
 		{
 			get { return m_sitting; }
 			set
@@ -7721,7 +7714,7 @@ namespace DOL.GS
 		/// <param name="sit">True if sitting, otherwise false</param>
 		public virtual void Sit(bool sit)
 		{
-			if (Sitting == sit)
+			if (IsSitting == sit)
 			{
 				if (sit)
 					Out.SendMessage("You are already sitting!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -7736,13 +7729,13 @@ namespace DOL.GS
 				return;
 			}
 
-			if (Stun)
+			if (IsStunned)
 			{
 				Out.SendMessage("You can't rest when you are stunned!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
-			if (Mez)
+			if (IsMezzed)
 			{
 				Out.SendMessage("You can't rest when you are mesmerized!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
@@ -7791,7 +7784,7 @@ namespace DOL.GS
 				}
 			}
 			//Update the client
-			Sitting = sit;
+			IsSitting = sit;
 			UpdatePlayerStatus();
 		}
 
@@ -7856,7 +7849,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Updates the appearance of the equipment this player is using
 		/// </summary>
-		public virtual void UpdateEquipementAppearance()
+		public virtual void UpdateEquipmentAppearance()
 		{
 			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{

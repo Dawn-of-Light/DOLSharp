@@ -44,7 +44,7 @@ namespace DOL.GS.PropertyCalc
 
 		public override int CalcValue(GameLiving living, eProperty property)
 		{
-			if (living.Mez || living.Stun) return 0;
+			if (living.IsMezzed || living.IsStunned) return 0;
 
 			double speed = living.BuffBonusMultCategory1.Get((int)property);
 

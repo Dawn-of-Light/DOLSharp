@@ -46,15 +46,7 @@ namespace DOL.GS.Keeps
 
 		public static void LoadGuardPosition(DBKeepPosition pos, GameKeepGuard guard)
 		{
-			guard.CurrentRegionID = guard.Component.CurrentRegionID;
-			int x, y;
-			LoadXY(guard.Component, pos.XOff, pos.YOff, out x, out y);
-			guard.X = x;
-			guard.Y = y;
-
-			guard.Z = guard.Component.Keep.Z + pos.ZOff;
-
-			guard.Heading = (ushort)(guard.Component.Heading + pos.HOff);
+			LoadKeepItemPosition(pos, guard);
 
 			guard.SpawnX = guard.X;
 			guard.SpawnY = guard.Y;
@@ -62,21 +54,19 @@ namespace DOL.GS.Keeps
 			guard.SpawnHeading = guard.Heading;
 		}
 
-		/// <summary>
-		/// Loads a Banner's Position
-		/// </summary>
-		/// <param name="banner">The banner object</param>
-		public static void LoadBannerPosition(DBKeepPosition pos, GameKeepBanner banner)
+		public static void LoadKeepItemPosition(DBKeepPosition pos, IKeepItem item)
 		{
-			banner.CurrentRegionID = banner.Component.CurrentRegionID;
+			item.CurrentRegionID = item.Component.CurrentRegionID;
 			int x, y;
-			LoadXY(banner.Component, pos.XOff, pos.YOff, out x, out y);
-			banner.X = x;
-			banner.Y = y;
+			LoadXY(item.Component, pos.XOff, pos.YOff, out x, out y);
+			item.X = x;
+			item.Y = y;
 
-			banner.Z = banner.Component.Keep.Z + pos.ZOff;
+			item.Z = item.Component.Keep.Z + pos.ZOff;
 
-			banner.Heading = (ushort)(banner.Component.Heading + pos.HOff);
+			item.Heading = (ushort)(item.Component.Heading + pos.HOff);
+
+			item.Position = pos;
 		}
 
 		/// <summary>
@@ -233,20 +223,50 @@ namespace DOL.GS.Keeps
 			return pos;
 		}
 
-		public static void UpdatePositions(string templateID)
+		public static void AddPosition(DBKeepPosition position)
 		{
-			DBKeepPosition pos = null;
 			foreach (AbstractGameKeep keep in KeepMgr.GetAllKeeps().Values)
 			{
-				foreach (GameKeepGuard guard in keep.Guards)
+				foreach (GameKeepComponent component in keep.KeepComponents)
 				{
-					if (guard.TemplateID == templateID)
+					DBKeepPosition[] list = component.Positions[position.TemplateID] as DBKeepPosition[];
+					if (list == null)
 					{
-						//I do this to stop every guard querying the database
-						if (pos == null)
-							pos = guard.GetPosition();
-						guard.ChangePosition(pos);
+						list = new DBKeepPosition[4];
+						component.Positions[position.TemplateID] = list;
 					}
+					//list.SetValue(position, position.Height);
+					list[position.Height] = position;
+				}
+			}
+		}
+
+		public static void RemovePosition(DBKeepPosition position)
+		{
+			foreach (AbstractGameKeep keep in KeepMgr.GetAllKeeps().Values)
+			{
+				foreach (GameKeepComponent component in keep.KeepComponents)
+				{
+					DBKeepPosition[] list = component.Positions[position.TemplateID] as DBKeepPosition[];
+					if (list == null)
+					{
+						list = new DBKeepPosition[4];
+						component.Positions[position.TemplateID] = list;
+					}
+					//list.SetValue(position, position.Height);
+					list[position.Height] = null;
+				}
+			}
+			GameServer.Database.DeleteObject(position);
+		}
+
+		public static void FillPositions()
+		{
+			foreach (AbstractGameKeep keep in KeepMgr.GetAllKeeps().Values)
+			{
+				foreach (GameKeepComponent component in keep.KeepComponents)
+				{
+					component.FillPositions();
 				}
 			}
 		}
@@ -354,6 +374,54 @@ namespace DOL.GS.Keeps
 				GameServer.Database.AddNewObject(dbpp);
 				path = path.Next;
 			} while (path != null && path != root);
+		}
+
+		public static void CreateDoor(int doorID, GamePlayer player)
+		{
+			int ownerKeepId = (doorID / 100000) % 1000;
+			int towerNum = (doorID / 10000) % 10;
+			int keepID = ownerKeepId + towerNum * 256;
+			int componentID = (doorID / 100) % 100;
+			int doorIndex = doorID % 10;
+
+			AbstractGameKeep keep = KeepMgr.getKeepByID(keepID);
+			if (keep == null)
+			{
+				player.Out.SendMessage("Cannot create door as keep is null!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return;
+			}
+			GameKeepComponent component = null;
+			foreach (GameKeepComponent c in keep.KeepComponents)
+			{
+				if (c.ID == componentID)
+				{
+					component = c;
+					break;
+				}
+			}
+			if (component == null)
+			{
+				player.Out.SendMessage("Cannot create door as component is null!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return;
+			}
+			DBKeepPosition pos = new DBKeepPosition();
+			pos.ClassType = "DOL.GS.Keeps.GameKeepDoor";
+			pos.TemplateType = doorIndex;
+			pos.ComponentSkin = component.Skin;
+			pos.TemplateID = Guid.NewGuid().ToString();
+			int x, y;
+
+			SaveXY(component, player.X, player.Y, out x, out y);
+			pos.XOff = x;
+			pos.YOff = y;
+
+			pos.ZOff = player.Z - component.Z;
+
+			pos.HOff = player.Heading - component.Heading;
+
+			GameServer.Database.AddNewObject(pos);
+
+			player.Out.SendMessage("Added door successfully, restart the server", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}
 	}
 }

@@ -29,7 +29,7 @@ namespace DOL.GS.Keeps
 	/// <summary>
 	/// Keep guard is gamemob with just different brain and load from other DB table
 	/// </summary>
-	public class GameKeepGuard : GameMob
+	public class GameKeepGuard : GameMob, IKeepItem
 	{
 		private string m_templateID = "";
 		public string TemplateID
@@ -43,9 +43,33 @@ namespace DOL.GS.Keeps
 			get { return m_component; }
 		}
 
-		public DBKeepPosition GetPosition()
+		private DBKeepPosition m_position;
+		public DBKeepPosition Position
 		{
-			return PositionMgr.GetUsablePosition(this);
+			get { return m_position; }
+			set { m_position = value; }
+		}
+
+		public bool IsTowerGuard
+		{
+			get
+			{
+				if (this.Component != null && this.Component.Keep != null)
+				{
+					return this.Component.Keep is GameKeepTower;
+				}
+				return false;
+			}
+		}
+
+		public bool IsPortalKeepGuard
+		{
+			get
+			{
+				if (this.IsTowerGuard && this.Component.Keep.KeepComponents.Count > 1)
+					return true;
+				return false;
+			}
 		}
 
 		/// <summary>
@@ -61,7 +85,7 @@ namespace DOL.GS.Keeps
 			}
 			set
 			{
-				if (m_respawnTimer != null && m_respawnTimer.IsAlive)
+				if (this.IsRespawning)
 					m_Level = value;
 				else
 					base.Level = value;
@@ -397,6 +421,11 @@ result == GameLiving.eAttackResult.Parried)
 		/// <param name="ad"></param>
 		public override void OnAttackedByEnemy(AttackData ad)
 		{
+			if (this.Component != null && this.Component.Keep != null)
+			{
+					this.Component.Keep.LastAttackedByEnemyTick = this.CurrentRegion.Time;
+			}
+
 			if (MaxSpeedBase == 0)
 			{
 				if (ActiveWeaponSlot == eActiveWeaponSlot.Standard ||
@@ -493,37 +522,8 @@ result == GameLiving.eAttackResult.Parried)
 		/// </summary>
 		public void StopRespawn()
 		{
-			if (m_respawnTimer != null && m_respawnTimer.IsAlive)
+			if (IsRespawning)
 				m_respawnTimer.Stop();
-		}
-
-		/// <summary>
-		/// Method to change the position of a guard by area level
-		/// </summary>
-		/// <param name="pos"></param>
-		public void ChangePosition(DBKeepPosition pos)
-		{
-			if (this.Component == null)
-				return;
-			if (pos == null)
-				pos = GetPosition();
-			if (pos == null)
-			{
-				if (ObjectState == GameObject.eObjectState.Active)
-					RemoveFromWorld();
-				StopRespawn();
-				return;
-			}
-
-			PositionMgr.LoadGuardPosition(pos, this);
-
-			//Here we will start respawn timers for all guards not respawning and need to be
-			if (ObjectState != GameObject.eObjectState.Active)
-			{
-				if (m_respawnTimer == null || !m_respawnTimer.IsAlive)
-					StartRespawn();
-			}
-			else MoveTo(CurrentRegionID, SpawnX, SpawnY, SpawnZ, SpawnHeading);
 		}
 
 		/// <summary>
@@ -631,9 +631,17 @@ result == GameLiving.eAttackResult.Parried)
 		{
 			m_templateID = pos.TemplateID;
 			m_component = component;
+			component.Keep.Guards[m_templateID] = this;
+			PositionMgr.LoadGuardPosition(pos, this);
 			TemplateMgr.RefreshTemplate(this);
-			component.Keep.Guards.Add(this);
 			this.AddToWorld();
+		}
+
+		public void MoveToPosition(DBKeepPosition position)
+		{
+			PositionMgr.LoadGuardPosition(position, this);
+			if (!this.InCombat)
+				this.MoveTo(this.CurrentRegionID, this.X, this.Y, this.Z, this.Heading);
 		}
 		#endregion
 

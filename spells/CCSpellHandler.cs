@@ -97,7 +97,7 @@ namespace DOL.GS.Spells
 	{
 		public override void OnEffectStart(GameSpellEffect effect)
 		{			
-			effect.Owner.Mez = true;
+			effect.Owner.IsMezzed = true;
 			effect.Owner.StopCurrentSpellcast();
 			effect.Owner.DisableTurning(true);
 			GameEventMgr.AddHandler(effect.Owner, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnAttacked));
@@ -114,7 +114,7 @@ namespace DOL.GS.Spells
 		public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
 		{
 			GameEventMgr.RemoveHandler(effect.Owner, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnAttacked));
-			effect.Owner.Mez = false;
+			effect.Owner.IsMezzed = false;
 			effect.Owner.DisableTurning(false);
 			return base.OnEffectExpires(effect,noMessages);
 		}
@@ -171,7 +171,7 @@ namespace DOL.GS.Spells
 	{
 		public override void OnEffectStart(GameSpellEffect effect)
 		{			
-			effect.Owner.Stun=true;
+			effect.Owner.IsStunned=true;
 			effect.Owner.StopAttack();
 			effect.Owner.StopCurrentSpellcast();
 			effect.Owner.DisableTurning(true);
@@ -187,7 +187,7 @@ namespace DOL.GS.Spells
 		/// <returns>immunity duration in milliseconds</returns>
 		public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
 		{
-			effect.Owner.Stun=false;
+			effect.Owner.IsStunned=false;
 			effect.Owner.DisableTurning(false);
 			return base.OnEffectExpires(effect,noMessages);
 		}

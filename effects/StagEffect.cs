@@ -95,17 +95,17 @@ namespace DOL.GS.Effects
 				player.Out.SendMessage("You cannot use this ability while Dead!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
-			if (player.Mez)
+			if (player.IsMezzed)
 			{
 				player.Out.SendMessage("You cannot use this ability while Mezzed!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
-			if (player.Stun)
+			if (player.IsStunned)
 			{
 				player.Out.SendMessage("You cannot use this ability while Stunned!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
-			if (player.Sitting)
+			if (player.IsSitting)
 			{
 				player.Out.SendMessage("You cannot use this ability while Sitting!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;

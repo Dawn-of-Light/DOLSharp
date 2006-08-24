@@ -29,11 +29,13 @@ namespace DOL.GS.Keeps
 		public GameKeepTower()
 		{
 		}
+
 		/// <summary>
 		/// table of claim bounty point take from guild each cycle
 		/// </summary>
 		public new static readonly int[] ClaimBountyPointCost =
 		{
+			0,
 			5,
 			5,
 			5,
@@ -45,11 +47,31 @@ namespace DOL.GS.Keeps
 			50,
 			100,
 		};
+
 		private GameKeep m_keep;
+		/// <summary>
+		/// The towers keep
+		/// </summary>
+		public GameKeep Keep
+		{
+			set { m_keep = value; }
+			get { return m_keep; }
+		}
+
+		/// <summary>
+		/// The time for a tower to upgrade
+		/// </summary>
+		/// <returns></returns>
 		public override int CalculateTimeToUpgrade()
 		{
 			return 12 * 60 * 1000;
 		}
+
+		/// <summary>
+		/// The checks we need to run before we allow a player to claim
+		/// </summary>
+		/// <param name="player"></param>
+		/// <returns></returns>
 		public override bool CheckForClaim(GamePlayer player)
 		{
 			//let gms do everything
@@ -69,15 +91,14 @@ namespace DOL.GS.Keeps
 			}
 			return base.CheckForClaim(player);
 		}
+
+		/// <summary>
+		/// The RP reward for claiming based on difficulty level
+		/// </summary>
+		/// <returns></returns>
 		public override int CalculRP()
 		{
 			return 100 * DifficultyLevel;
-		}
-
-		public GameKeep Keep
-		{
-			set { m_keep = value; }
-			get { return m_keep; }
 		}
 	}
 }

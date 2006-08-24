@@ -52,7 +52,7 @@ namespace DOL.GS
 		/// <summary>
 		/// The cost in copper to reemblem the guild
 		/// </summary>
-		public const long COST_RE_EMBLEM = 2000000; //200 gold
+		public const long COST_RE_EMBLEM = 1000000; //200 gold
 
 		/// <summary>
 		/// Adds a guild to the list of guilds
