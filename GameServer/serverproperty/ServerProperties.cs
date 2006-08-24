@@ -159,6 +159,18 @@ namespace DOL.GS.ServerProperties
 		public static readonly int RP_WORTH_SECONDS;
 
 		/// <summary>
+		/// The minimum client version required to connect
+		/// </summary>
+		[ServerProperty(ServerPropertyConstants.CLIENT_VERSION_MIN, "Minimum Client Version - Edit this to change which client version at the least have to be used: -1 = any, 1.80 = 180", -1)]
+		public static readonly int CLIENT_VERSION_MIN;
+
+		/// <summary>
+		/// The maximum client version required to connect
+		/// </summary>
+		[ServerProperty(ServerPropertyConstants.CLIENT_VERSION_MAX, "Maximum Client Version - Edit this to change which client version at the most have to be used: -1 = any, 1.80 = 180", -1)]
+		public static readonly int CLIENT_VERSION_MAX;
+
+		/// <summary>
 		/// This method loads the property from the database and returns
 		/// the value of the property as strongly typed object based on the
 		/// type of the default value

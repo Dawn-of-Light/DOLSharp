@@ -31,9 +31,10 @@ namespace DOL.GS.Scripts
 		{
 			if (!client.Player.IsRiding())
 			{
-				client.Out.SendMessage("You are not riding any steed!",
-				                       eChatType.CT_System,
-				                       eChatLoc.CL_SystemWindow);
+				if (client.Player.IsOnHorse)
+					client.Player.IsOnHorse = false;
+				else
+					client.Out.SendMessage("You are not riding any steed!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return 1;
 			}
 			client.Player.DismountSteed(false);

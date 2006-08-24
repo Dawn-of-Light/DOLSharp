@@ -427,6 +427,8 @@ namespace DOL.GS
 			StopAttack();
 			// remove all stealth handlers
 			Stealth(false);
+			if (IsOnHorse)
+				IsOnHorse = false;
 			GameEventMgr.RemoveHandler(this, GameLivingEvent.AttackFinished, new DOLEventHandler(RangeAttackHandler));
 
 			//TODO perhaps pull out the whole group-handing from
@@ -452,6 +454,8 @@ namespace DOL.GS
 				mychatgroup.RemovePlayer(this);
 
 			CommandNpcRelease();
+			if (SiegeWeapon != null)
+				SiegeWeapon.ReleaseControl();
 
 			// cancel all effects until saving of running effects is done
 			try
@@ -478,7 +482,7 @@ namespace DOL.GS
 					Out.SendMessage("You can't quit now, you're dead.  Type '/release' to release your corpse.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return false;
 				}
-				if (Steed != null)
+				if (Steed != null || IsOnHorse)
 				{
 					Out.SendMessage("You have to dismount before you can quit.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return false;
@@ -583,7 +587,7 @@ namespace DOL.GS
 			}
 			long lastBindTick = TempProperties.getLongProperty(LAST_BIND_TICK, 0L);
 			long changeTime = CurrentRegion.Time - lastBindTick;
-			if (changeTime < 60000) //60 second rebind timer
+			if (Client.Account.PrivLevel == 1 && changeTime < 60000) //60 second rebind timer
 			{
 				Out.SendMessage("You must wait " + (1 + (60000 - changeTime) / 1000) + " seconds to bind again!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
@@ -3317,25 +3321,28 @@ namespace DOL.GS
 			m_character.Experience = m_currentXP;
 			//DOLConsole.WriteLine("XP="+Experience+" NL="+ExperienceForNextLevel+" LP="+LevelPermill);
 
-			//Level up
-			if (Level >= 5 && CharacterClass.BaseName == CharacterClass.Name)
+			if (expTotal > 0)
 			{
-				if (expTotal > 0)
+				//Level up
+				if (Level >= 5 && CharacterClass.BaseName == CharacterClass.Name)
 				{
-					Out.SendMessage("You cannot raise to the 6th level until you join an advanced guild!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-					Out.SendMessage("Talk to your trainer for more information.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+					if (expTotal > 0)
+					{
+						Out.SendMessage("You cannot raise to the 6th level until you join an advanced guild!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+						Out.SendMessage("Talk to your trainer for more information.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+					}
 				}
-			}
-			else if (Level >= 40 && Level < MAX_LEVEL && !IsLevelSecondStage && Experience >= ExperienceForCurrentLevelSecondStage)
-			{
-				OnLevelSecondStage();
-				Notify(GamePlayerEvent.LevelSecondStage, this);
-				SaveIntoDatabase(); // save char on levelup
-			}
-			else if (Level < MAX_LEVEL && Experience >= ExperienceForNextLevel)
-			{
-				Level++;
-				SaveIntoDatabase(); // save char on levelup
+				else if (Level >= 40 && Level < MAX_LEVEL && !IsLevelSecondStage && Experience >= ExperienceForCurrentLevelSecondStage)
+				{
+					OnLevelSecondStage();
+					Notify(GamePlayerEvent.LevelSecondStage, this);
+					SaveIntoDatabase(); // save char on levelup
+				}
+				else if (Level < MAX_LEVEL && Experience >= ExperienceForNextLevel)
+				{
+					Level++;
+					SaveIntoDatabase(); // save char on levelup
+				}
 			}
 			Out.SendUpdatePoints();
 		}
@@ -3849,6 +3856,16 @@ namespace DOL.GS
 		/// <param name="attackTarget">the target to attack</param>
 		public override void StartAttack(GameObject attackTarget)
 		{
+			if (IsOnHorse)
+				IsOnHorse = false;
+
+			long VanishTick = this.TempProperties.getLongProperty(VanishAbility.VANISH_BLOCK_ATTACK_TIME_KEY, 0);
+			long changeTime = this.CurrentRegion.Time - VanishTick;
+			if (changeTime < 30000 && VanishTick > 0)
+			{
+				this.Out.SendMessage("You must wait " + ((30000 - changeTime) / 1000).ToString() + " more second to attempt to attack!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+				return;
+			}
 
 			if (!Alive)
 			{
@@ -4536,6 +4553,9 @@ namespace DOL.GS
 		/// <param name="ad">information about the attack</param>
 		public override void OnAttackedByEnemy(AttackData ad)
 		{
+			if (IsOnHorse && ad.IsHit)
+				IsOnHorse = false;
+
 			switch (ad.AttackResult)
 			{
 				// is done in game living because of guard
@@ -5410,6 +5430,8 @@ namespace DOL.GS
 		{
 			TargetObject = null;
 			Diving(waterBreath.Normal);
+			if (IsOnHorse)
+				IsOnHorse = false;
 
 			// cancel task if active
 			if (Task != null && Task.TaskActive)
@@ -6215,13 +6237,78 @@ namespace DOL.GS
 					}
 					return;
 				}
-				if (useItem.Item_Type != Slot.RANGED)
+				if (useItem.Item_Type != Slot.RANGED && (slot != Slot.HORSE || type != 0))
 				{
 					Out.SendMessage("You attempt to use " + useItem.GetName(0, false), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 
 				switch (slot)
 				{
+					case Slot.HORSEARMOR:
+					case Slot.HORSEBARDING:
+						return;
+					case Slot.HORSE:
+						if (type == 0)
+						{
+							if (IsOnHorse)
+								IsOnHorse = false;
+							else
+							{
+								if (Level < useItem.Level)
+								{
+									Out.SendMessage("You must have " + useItem.Level + " level for summon this horse", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									return;
+								}
+								if (!Alive)
+								{
+									Out.SendMessage("You can't mount while you're dead.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									return;
+								}
+								if (Steed != null)
+								{
+									Out.SendMessage("You must to dismount before.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									return;
+								}
+								if (CurrentRegion.IsRvR && !ActiveHorse.IsSummonRvR)
+								{
+									Out.SendMessage("You cannot summon that mount in RvR zones.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									return;
+								}
+								if (IsMoving)
+								{
+									Out.SendMessage("You can't mount while you're moving.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									return;
+								}
+								if (IsSitting)
+								{
+									Out.SendMessage("You cannot call your mount while seated.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									return;
+								}
+								if (IsStealthed)
+								{
+									Out.SendMessage("You can't mount while you're in stealth.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									return;
+								}
+								if (InCombat)
+								{
+									Out.SendMessage("You are in combat and cannot call your mount.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									return;
+								}
+								if (m_whistleMountTimer != null)
+								{
+									StopWhistleTimers();
+								}
+								GameEventMgr.AddHandler(this, GamePlayerEvent.Moving, new DOLEventHandler(WhistleOnMove));
+								Out.SendTimerWindow("Summoning Mount", 5);
+								foreach (GamePlayer plr in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+									plr.Out.SendEmoteAnimation(this, eEmote.Horse_whistle);
+								Out.SendMessage("You whistle for your mount.", eChatType.CT_Emote, eChatLoc.CL_SystemWindow);
+								m_whistleMountTimer = new RegionTimer(this);
+								m_whistleMountTimer.Callback = new RegionTimerCallback(WhistleMountTimerCallback);
+								m_whistleMountTimer.Start(5000);
+							}
+						}
+						break;
 					case Slot.RIGHTHAND:
 					case Slot.LEFTHAND:
 						if (ActiveWeaponSlot == eActiveWeaponSlot.Standard)
@@ -6925,6 +7012,9 @@ namespace DOL.GS
 				m_pvpInvulnerabilityTimer.Stop();
 				m_pvpInvulnerabilityTimer = null;
 			}
+			Diving(waterBreath.Normal);
+			if (IsOnHorse)
+				IsOnHorse = false;
 			return true;
 		}
 
@@ -6973,6 +7063,8 @@ namespace DOL.GS
 		/// <returns>true if move succeeded, false if failed</returns>
 		public override bool MoveTo(ushort regionID, int x, int y, int z, ushort heading)
 		{
+			if (IsOnHorse)
+				IsOnHorse = false;
 			//Get the destination region based on the ID
 			Region rgn = WorldMgr.GetRegion(regionID);
 			//If the region doesn't exist, return false
@@ -7714,6 +7806,11 @@ namespace DOL.GS
 		/// <param name="sit">True if sitting, otherwise false</param>
 		public virtual void Sit(bool sit)
 		{
+			if (m_whistleMountTimer != null && m_whistleMountTimer.IsAlive)
+			{
+				Out.SendMessage("You attempt to sit down and interrupt your call for your mount!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				StopWhistleTimers();
+			}
 			if (IsSitting == sit)
 			{
 				if (sit)
@@ -7747,7 +7844,7 @@ namespace DOL.GS
 				return;
 			}
 
-			if (Steed != null)
+			if (Steed != null || IsOnHorse)
 			{
 				Out.SendMessage("You must dismount first.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
@@ -7914,6 +8011,34 @@ namespace DOL.GS
 				}
 			}
 
+			if (item.Item_Type == (int)eInventorySlot.Horse)
+			{
+				if (item.SlotPosition == Slot.HORSE)
+				{
+					ActiveHorse.ID = (byte)(item.SPD_ABS == 0 ? 1 : item.SPD_ABS);
+					ActiveHorse.Name = item.CrafterName;
+				}
+				return;
+			}
+			else if (item.Item_Type == (int)eInventorySlot.HorseArmor)
+			{
+				if (item.SlotPosition == Slot.HORSEARMOR)
+				{
+					//					Out.SendDebugMessage("Try apply horse armor.");
+					ActiveHorse.Saddle = (byte)(item.DPS_AF);
+				}
+				return;
+			}
+			else if (item.Item_Type == (int)eInventorySlot.HorseBarding)
+			{
+				if (item.SlotPosition == Slot.HORSEBARDING)
+				{
+					//					Out.SendDebugMessage("Try apply horse barding.");
+					ActiveHorse.Barding = (byte)(item.DPS_AF);
+				}
+				return;
+			}
+
 			if (!item.IsMagical) return;
 
 			Out.SendMessage(string.Format("The magic of {0} flows through you.", item.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -7981,6 +8106,28 @@ namespace DOL.GS
 				{
 					Out.SendMessage(string.Format("You sheathe {0} from your right hand.", item.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
+			}
+
+			if (item.Item_Type == (int)eInventorySlot.Horse)
+			{
+				if (IsOnHorse)
+					IsOnHorse = false;
+				ActiveHorse.ID = 0;
+				ActiveHorse.Name = "";
+				//				Out.SendDebugMessage("Try unapply horse.");
+				return;
+			}
+			else if (item.Item_Type == (int)eInventorySlot.HorseArmor)
+			{
+				ActiveHorse.Saddle = 0;
+				//				Out.SendDebugMessage("Try unapply saddle.");
+				return;
+			}
+			else if (item.Item_Type == (int)eInventorySlot.HorseBarding)
+			{
+				ActiveHorse.Barding = 0;
+				//				Out.SendDebugMessage("Try unapply barding.");
+				return;
 			}
 
 			if (!item.IsMagical) return;
@@ -10516,6 +10663,232 @@ namespace DOL.GS
 
 		#endregion
 
+		#region Controlled Mount
+
+		protected RegionTimer m_whistleMountTimer;
+		protected ControlledHorse m_controlledHorse;
+
+		public bool HasHorse
+		{
+			get
+			{
+				if (ActiveHorse == null || ActiveHorse.ID == 0)
+					return false;
+				return true;
+			}
+		}
+		protected bool m_isOnHorse;
+		public bool IsOnHorse
+		{
+			get { return m_isOnHorse; }
+			set
+			{
+				if (m_whistleMountTimer != null)
+					StopWhistleTimers();
+				m_isOnHorse = value;
+				Out.SendControlledHorse(this, value); // fix very rare bug when this player not in GetPlayersInRadius;
+				foreach (GamePlayer plr in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+				{
+					if (plr == this)
+						continue;
+					plr.Out.SendControlledHorse(this, value);
+				}
+				if (m_isOnHorse)
+					Out.SendMessage("You mount your steed.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				else
+					Out.SendMessage("You dismount your steed.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Out.SendUpdateMaxSpeed();
+			}
+		}
+
+		protected void WhistleOnMove(DOLEvent e, object sender, EventArgs arguments)
+		{
+			GamePlayer player = sender as GamePlayer;
+			if (player == null) return;
+			if (player != this) return;
+			if (player.IsMoving)
+			{
+				Out.SendMessage("You are moving and cannot call your mount.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				StopWhistleTimers();
+			}
+		}
+
+		protected void StopWhistleTimers()
+		{
+			if (m_whistleMountTimer != null)
+			{
+				m_whistleMountTimer.Stop();
+				GameEventMgr.RemoveHandler(this, GamePlayerEvent.Moving, new DOLEventHandler(WhistleOnMove));
+				Out.SendCloseTimerWindow();
+			}
+			m_whistleMountTimer = null;
+		}
+
+		protected int WhistleMountTimerCallback(RegionTimer callingTimer)
+		{
+			StopWhistleTimers();
+			IsOnHorse = true;
+			return 0;
+		}
+
+		public ControlledHorse ActiveHorse
+		{
+			get { return m_controlledHorse; }
+		}
+
+		public class ControlledHorse
+		{
+			protected byte h_id;
+			protected byte h_bardingId;
+			protected ushort h_bardingColor;
+			protected byte h_saddleId;
+			protected byte h_saddleColor;
+			protected byte h_slots;
+			protected byte h_armor;
+			protected string h_name;
+			protected int m_level;
+			protected GamePlayer h_player;
+
+			public ControlledHorse(GamePlayer player)
+			{
+				h_name = "";
+				h_player = player;
+			}
+
+			public byte ID
+			{
+				get { return h_id; }
+				set
+				{
+					h_id = value;
+					InventoryItem item = h_player.Inventory.GetItem(eInventorySlot.Horse);
+					if (item != null)
+						m_level = item.Level;
+					else
+						m_level = 35;//base horse by default
+					h_player.Out.SendSetControlledHorse(h_player);
+				}
+			}
+
+			public byte Barding
+			{
+				get
+				{
+					InventoryItem barding = h_player.Inventory.GetItem(eInventorySlot.HorseBarding);
+					if (barding != null)
+						return (byte)barding.DPS_AF;
+					return h_bardingId;
+				}
+				set
+				{
+					h_bardingId = value;
+					h_player.Out.SendSetControlledHorse(h_player);
+				}
+			}
+
+			public ushort BardingColor
+			{
+				get
+				{
+					InventoryItem barding = h_player.Inventory.GetItem(eInventorySlot.HorseBarding);
+					if (barding != null)
+						return (ushort)barding.Color;
+					return h_bardingColor;
+				}
+				set
+				{
+					h_bardingColor = value;
+					h_player.Out.SendSetControlledHorse(h_player);
+				}
+			}
+
+			public byte Saddle
+			{
+				get
+				{
+					InventoryItem armor = h_player.Inventory.GetItem(eInventorySlot.HorseArmor);
+					if (armor != null)
+						return (byte)armor.DPS_AF;
+					return h_saddleId;
+				}
+				set
+				{
+					h_saddleId = value;
+					h_player.Out.SendSetControlledHorse(h_player);
+				}
+			}
+
+			public byte SaddleColor
+			{
+				get
+				{
+					InventoryItem armor = h_player.Inventory.GetItem(eInventorySlot.HorseArmor);
+					if (armor != null)
+						return (byte)armor.Color;
+					return h_saddleColor;
+				}
+				set
+				{
+					h_saddleColor = value;
+					h_player.Out.SendSetControlledHorse(h_player);
+				}
+			}
+
+			public byte Slots
+			{
+				get { return h_slots; }
+			}
+
+			public byte Armor
+			{
+				get { return h_armor; }
+			}
+
+			public string Name
+			{
+				get { return h_name; }
+				set
+				{
+					h_name = value;
+					InventoryItem item = h_player.Inventory.GetItem(eInventorySlot.Horse);
+					if (item != null)
+						item.CrafterName = Name;
+					h_player.Out.SendSetControlledHorse(h_player);
+				}
+			}
+
+			public short Speed
+			{
+				get
+				{
+					if (m_level <= 35)
+						return 135;
+					else
+						return 145;
+				}
+			}
+
+			public bool IsSummonRvR
+			{
+				get
+				{
+					if (m_level <= 35)
+						return false;
+					else
+						return true;
+				}
+			}
+
+			public bool IsCombatHorse
+			{
+				get
+				{
+					return false;
+				}
+			}
+		}
+		#endregion
+
 		/// <summary>
 		/// Returns the string representation of the GamePlayer
 		/// </summary>
@@ -10541,6 +10914,7 @@ namespace DOL.GS
 			m_rangeAttackTarget = new WeakRef(null);
 			m_client = client;
 			m_character = theChar;
+			m_controlledHorse = new ControlledHorse(this);
 			m_buff1Bonus = new PropertyIndexer((int)eProperty.MaxProperty); // set up a fixed indexer for players
 			m_buff2Bonus = new PropertyIndexer((int)eProperty.MaxProperty);
 			m_buff3Bonus = new PropertyIndexer((int)eProperty.MaxProperty);
