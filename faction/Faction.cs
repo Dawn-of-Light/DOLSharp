@@ -18,7 +18,7 @@
  */
 using System;
 using System.Collections.Generic;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.Database.DataTransferObjects;
 using DOL.GS.PacketHandler;
 
@@ -27,13 +27,12 @@ namespace DOL.GS
 	/// <summary>
 	/// Faction of mob
 	/// </summary>
-	public class Faction
+	public class Faction : IPersistentBusinessObject<FactionEntity>
 	{
 
 		public Faction(FactionEntity dbfaction)
 		{
-			this.FactionID = dbfaction.FactionId;
-			this.Name = dbfaction.Name;
+			this.LoadFromTransferObject(dbfaction);
 		}
 
 		/// <summary>
@@ -113,5 +112,23 @@ namespace DOL.GS
 		{
 			this.EnemyFactions.Remove(faction);
 		}
+
+		#region IPersistentBusinessObject
+
+		public void LoadFromTransferObject(FactionEntity dbfaction)
+		{
+			this.FactionID = dbfaction.FactionId;
+			this.Name = dbfaction.Name;
+		}
+
+		public FactionEntity GetTransferObject()
+		{
+			FactionEntity dbFaction= new FactionEntity();
+			dbFaction.FactionId = this.FactionID;
+			dbFaction.Name = this.Name;
+			return dbFaction;
+		}
+
+		#endregion
 	}
 }

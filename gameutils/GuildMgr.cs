@@ -18,10 +18,12 @@
  */
 
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Reflection;
-using DOL.GS.Database;
+using DOL.Database;
+using DOL.Database.DataAccessInterfaces;
+using DOL.Database.DataTransferObjects;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using NHibernate.Expression;
@@ -44,7 +46,7 @@ namespace DOL.GS
 		/// <summary>
 		/// ArrayList of all guilds in the game
 		/// </summary>
-		static private readonly IList m_allGuilds = new ArrayList();
+		static private readonly IList<Guild> m_allGuilds = new List<Guild>();
 
 		/// <summary>
 		/// The cost in copper to reemblem the guild
@@ -55,7 +57,7 @@ namespace DOL.GS
 		/// Returns a list of all guilds
 		/// </summary>
 		/// <returns>ArrayList of guilds</returns>
-		public static IList AllGuilds
+		public static IList<Guild> AllGuilds
 		{
 			get { return m_allGuilds; }
 		}
@@ -71,37 +73,34 @@ namespace DOL.GS
 		{
 			try
 			{	
-				lock(m_allGuilds.SyncRoot)
-				{
-					if(GetGuildByName(guildName) != null) return null; // Another guild with that name
+				if(GetGuildByName(guildName) != null) return null; // Another guild with that name
+			
+				if (log.IsDebugEnabled)
+					log.Debug("Creating new guild ("+guildName+")");
+
+				Guild newguild = new Guild();
+				newguild.GuildName = guildName;
+				newguild.BountyPoints = 0;
+				newguild.RealmPoints = 0;
+				newguild.MeritPoints = 0;
+				newguild.Due = false;
+				newguild.TotalMoney = 0;
+				newguild.Level = 0;
+				newguild.Emblem = 0;
+				newguild.Motd = "Welcome to the new guild "+newguild.GuildName+".";
+				newguild.OMotd = "";
+				newguild.Webpage = "";
+				newguild.Email = "";
+				newguild.Alliance = new Alliance();			// create a new empty alliance
+				newguild.Alliance.AMotd = "Your guild have no alliances.";
+				newguild.Alliance.AllianceLeader = newguild;
+				newguild.Alliance.AllianceGuilds.Add(newguild);
+
+				GameServer.Database.AddNewObject(newguild);	// save the new guild and its empty alliance
 				
-					if (log.IsDebugEnabled)
-						log.Debug("Creating new guild ("+guildName+")");
+				m_allGuilds.Add(newguild);
 
-					Guild newguild = new Guild();
-					newguild.GuildName = guildName;
-					newguild.BountyPoints = 0;
-					newguild.RealmPoints = 0;
-					newguild.MeritPoints = 0;
-					newguild.Due = false;
-					newguild.TotalMoney = 0;
-					newguild.Level = 0;
-					newguild.Emblem = 0;
-					newguild.Motd = "Welcome to the new guild "+newguild.GuildName+".";
-					newguild.OMotd = "";
-					newguild.Webpage = "";
-					newguild.Email = "";
-					newguild.Alliance = new Alliance();			// create a new empty alliance
-					newguild.Alliance.AMotd = "Your guild have no alliances.";
-					newguild.Alliance.AllianceLeader = newguild;
-					newguild.Alliance.AllianceGuilds.Add(newguild);
-
-					GameServer.Database.AddNewObject(newguild);	// save the new guild and its empty alliance
-					
-					m_allGuilds.Add(newguild);
-
-					return newguild;
-				}
+				return newguild;
 			}
 			catch(Exception e)
 			{
@@ -116,17 +115,32 @@ namespace DOL.GS
 		/// </summary>
 		public static bool LoadAllGuilds()
 		{
-			//all guild are at least in 1 empty alliance or are part of a real alliance so all alliances are automatically loaded
-			lock(m_allGuilds.SyncRoot)
+			IList<GuildEntity> guilds = GameServer.DatabaseNew.Using<IGuildDao>().SelectAll();
+
+			foreach (GuildEntity dbGuild in guilds)
 			{
-				foreach(Guild guild in GameServer.Database.SelectAllObjects(typeof(Guild)))
+				Guild myguild = new Guild(dbGuild);// not ok because missing alliance to load 
+				if (!m_allGuilds.Contains(myguild))
 				{
-					if(!m_allGuilds.Contains(guild))
-					{
-						m_allGuilds.Add(guild);
-					}
+					m_allGuilds.Add(myguild);
 				}
 			}
+
+			IList<AllianceEntity> alliances = GameServer.DatabaseNew.Using<IAllianceDao>().SelectAll();
+			IDictionary<int, Alliance> allianceList = new Dictionary<int, Alliance>();
+			foreach (AllianceEntity dballi in alliances)
+			{
+				Alliance myalli = new Alliance(dballi); // ok here guild ever loaded
+				allianceList.Add(dballi.Id, myalli);
+			}
+
+			//second pass to put alliance
+			foreach (GuildEntity dbGuild in guilds)
+			{
+				Guild myguilde = GetGuildById(dbGuild.Id);
+				myguilde.Alliance = allianceList[dbGuild.Alliance];
+			}
+
 			return true;
 		}
 		#endregion
@@ -138,13 +152,10 @@ namespace DOL.GS
 		/// <returns>Guild</returns>
 		public static Guild GetGuildByName(string guildName)
 		{
-			lock (m_allGuilds.SyncRoot)
+			foreach (Guild guild in m_allGuilds)
 			{
-				foreach (Guild guild in m_allGuilds)
-				{
-					if (guild.GuildName == guildName)
-						return guild;
-				}
+				if (guild.GuildName == guildName)
+					return guild;
 			}
 			return null;
 		}
@@ -158,13 +169,10 @@ namespace DOL.GS
 		/// <returns></returns>
 		public static bool IsEmblemUsed(ushort emblem)
 		{
-			lock (m_allGuilds.SyncRoot)
+			foreach (Guild guild in m_allGuilds)
 			{
-				foreach (Guild guild in m_allGuilds)
-				{
-					if (guild.Emblem == emblem)
-						return true;
-				}
+				if (guild.Emblem == emblem)
+					return true;
 			}
 			return false;
 		}
@@ -185,5 +193,15 @@ namespace DOL.GS
 			}
 		}
 		#endregion
+
+		public static Guild GetGuildById(int index)
+		{
+			foreach (Guild guild in m_allGuilds)
+			{
+				if (guild.GuildID == index)
+					return guild;
+			}
+			return null;
+		}
 	}
 }
