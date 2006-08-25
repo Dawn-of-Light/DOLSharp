@@ -104,33 +104,33 @@ namespace DOL.Database.MySql.DataAccessObjects
 		protected virtual void FillEntityWithRow(ref GuildRankEntity entity, MySqlDataReader reader)
 		{
 			entity.Id = reader.GetInt32(0);
-			entity.AcHear = reader.GetString(1);
-			entity.AcSpeak = reader.GetString(2);
-			entity.Alli = reader.GetString(3);
-			entity.Buff = reader.GetString(4);
-			entity.BuyBanner = reader.GetString(5);
-			entity.Claim = reader.GetString(6);
-			entity.Deposit = reader.GetString(7);
-			entity.Dues = reader.GetString(8);
-			entity.Emblem = reader.GetString(9);
-			entity.GcHear = reader.GetString(10);
-			entity.GcSpeak = reader.GetString(11);
-			entity.GetMission = reader.GetString(12);
+			entity.AcHear = reader.GetBoolean(1);
+			entity.AcSpeak = reader.GetBoolean(2);
+			entity.Alli = reader.GetBoolean(3);
+			entity.Buff = reader.GetBoolean(4);
+			entity.BuyBanner = reader.GetBoolean(5);
+			entity.Claim = reader.GetBoolean(6);
+			entity.Deposit = reader.GetBoolean(7);
+			entity.Dues = reader.GetBoolean(8);
+			entity.Emblem = reader.GetBoolean(9);
+			entity.GcHear = reader.GetBoolean(10);
+			entity.GcSpeak = reader.GetBoolean(11);
+			entity.GetMission = reader.GetBoolean(12);
 			entity.Guild = reader.GetInt32(13);
-			entity.Invite = reader.GetString(14);
-			entity.Motd = reader.GetString(15);
-			entity.OcHear = reader.GetString(16);
-			entity.OcSpeak = reader.GetString(17);
-			entity.Promote = reader.GetString(18);
+			entity.Invite = reader.GetBoolean(14);
+			entity.Motd = reader.GetBoolean(15);
+			entity.OcHear = reader.GetBoolean(16);
+			entity.OcSpeak = reader.GetBoolean(17);
+			entity.Promote = reader.GetBoolean(18);
 			entity.RankLevel = reader.GetByte(19);
-			entity.Release = reader.GetString(20);
-			entity.Remove = reader.GetString(21);
-			entity.SetNote = reader.GetString(22);
-			entity.SummonBanner = reader.GetString(23);
+			entity.Release = reader.GetBoolean(20);
+			entity.Remove = reader.GetBoolean(21);
+			entity.SetNote = reader.GetBoolean(22);
+			entity.SummonBanner = reader.GetBoolean(23);
 			entity.Title = reader.GetString(24);
-			entity.Upgrade = reader.GetString(25);
-			entity.View = reader.GetString(26);
-			entity.Withdraw = reader.GetString(27);
+			entity.Upgrade = reader.GetBoolean(25);
+			entity.View = reader.GetBoolean(26);
+			entity.Withdraw = reader.GetBoolean(27);
 		}
 
 		public virtual Type TransferObjectType
@@ -143,33 +143,33 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return null;
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `guildrank` ("
 				+"`GuildRankId` int,"
-				+"`AcHear` char(1) character set ascii,"
-				+"`AcSpeak` char(1) character set ascii,"
-				+"`Alli` char(1) character set ascii,"
-				+"`Buff` char(1) character set ascii,"
-				+"`BuyBanner` char(1) character set ascii,"
-				+"`Claim` char(1) character set ascii,"
-				+"`Deposit` char(1) character set ascii,"
-				+"`Dues` char(1) character set ascii,"
-				+"`Emblem` char(1) character set ascii,"
-				+"`GcHear` char(1) character set ascii,"
-				+"`GcSpeak` char(1) character set ascii,"
-				+"`GetMission` char(1) character set ascii,"
+				+"`AcHear` bit,"
+				+"`AcSpeak` bit,"
+				+"`Alli` bit,"
+				+"`Buff` bit,"
+				+"`BuyBanner` bit,"
+				+"`Claim` bit,"
+				+"`Deposit` bit,"
+				+"`Dues` bit,"
+				+"`Emblem` bit,"
+				+"`GcHear` bit,"
+				+"`GcSpeak` bit,"
+				+"`GetMission` bit,"
 				+"`GuildId` int,"
-				+"`Invite` char(1) character set ascii,"
-				+"`Motd` char(1) character set ascii,"
-				+"`OcHear` char(1) character set ascii,"
-				+"`OcSpeak` char(1) character set ascii,"
-				+"`Promote` char(1) character set ascii,"
+				+"`Invite` bit,"
+				+"`Motd` bit,"
+				+"`OcHear` bit,"
+				+"`OcSpeak` bit,"
+				+"`Promote` bit,"
 				+"`RankLevel` tinyint unsigned,"
-				+"`Release` char(1) character set ascii,"
-				+"`Remove` char(1) character set ascii,"
-				+"`SetNote` char(1) character set ascii,"
-				+"`SummonBanner` char(1) character set ascii,"
+				+"`Release` bit,"
+				+"`Remove` bit,"
+				+"`SetNote` bit,"
+				+"`SummonBanner` bit,"
 				+"`Title` varchar(510) character set unicode,"
-				+"`Upgrade` char(1) character set ascii,"
-				+"`View` char(1) character set ascii,"
-				+"`Withdraw` char(1) character set ascii"
+				+"`Upgrade` bit,"
+				+"`View` bit,"
+				+"`Withdraw` bit"
 				+", primary key `GuildRankId` (`GuildRankId`)"
 			);
 		}

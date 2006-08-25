@@ -104,7 +104,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 		protected virtual void FillEntityWithRow(ref GamePlayerInventoryEntity entity, MySqlDataReader reader)
 		{
 			entity.Inventory = reader.GetInt32(0);
-			entity.IsCloakHoodUp = reader.GetString(1);
+			entity.IsCloakHoodUp = reader.GetBoolean(1);
 		}
 
 		public virtual Type TransferObjectType
@@ -117,7 +117,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return null;
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `gameplayerinventory` ("
 				+"`InventoryId` int,"
-				+"`IsCloakHoodUp` char(1) character set ascii"
+				+"`IsCloakHoodUp` bit"
 				+", primary key `InventoryId` (`InventoryId`)"
 			);
 		}

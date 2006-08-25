@@ -43,9 +43,9 @@ namespace DOL.Database.DataTransferObjects
 		private int m_glowEffect;
 		private byte m_handNeeded;
 		private int m_heading;
-		private string m_isDropable;
-		private string m_isSaleable;
-		private string m_isTradable;
+		private bool m_isDropable;
+		private bool m_isSaleable;
+		private bool m_isTradable;
 		private byte m_level;
 		private byte m_materialLevel;
 		private byte m_maxCharge;
@@ -171,17 +171,17 @@ namespace DOL.Database.DataTransferObjects
 			get { return m_heading; }
 			set { m_heading = value; }
 		}
-		public string IsDropable
+		public bool IsDropable
 		{
 			get { return m_isDropable; }
 			set { m_isDropable = value; }
 		}
-		public string IsSaleable
+		public bool IsSaleable
 		{
 			get { return m_isSaleable; }
 			set { m_isSaleable = value; }
 		}
-		public string IsTradable
+		public bool IsTradable
 		{
 			get { return m_isTradable; }
 			set { m_isTradable = value; }

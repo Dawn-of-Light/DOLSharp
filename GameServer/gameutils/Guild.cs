@@ -20,7 +20,8 @@ using System.Collections;
 using System;
 using System.Reflection;
 using DOL.Database;
-using DOL.GS.Database;
+using DOL.Database.DataAccessInterfaces;
+using DOL.Database.DataTransferObjects;
 using DOL.GS.PacketHandler;
 using log4net;
 
@@ -141,12 +142,21 @@ namespace DOL.GS
 	/// <summary>
 	/// Summary description for a Guild
 	/// </summary> 
-	public class Guild
+	public class Guild : IPersistentBusinessObject<GuildEntity>
 	{
 		/// <summary>
 		/// Defines a logger for this class.
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
+		public Guild(GuildEntity dbGuild)
+		{
+			this.LoadFromTransferObject(dbGuild);
+		}
+		public Guild()
+		{
+
+		}
 
 		#region Declaraction
 
@@ -228,7 +238,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Holds all guild ranks with their permissions
 		/// </summary>
-		private DBGuildRank[] m_guildRanks;
+		private GuildRankEntity[] m_guildRanks;
 
 		/// <summary>
 		/// Holds the guild claimed keep
@@ -370,17 +380,17 @@ namespace DOL.GS
 		/// Returns a array of all guild ranks with their permissions
 		/// </summary>
 		/// <returns>ArrayList of members</returns>
-		public DBGuildRank[] GuildRanks
+		public GuildRankEntity[] GuildRanks
 		{
 			get
 			{
 				if(m_guildRanks == null)
 				{
 					// create default guild ranks perm
-					m_guildRanks =  new DBGuildRank[10];
+					m_guildRanks = new GuildRankEntity[10];
 					for (byte i = 0 ; i < m_guildRanks.Length ; i++)
 					{
-						DBGuildRank rank = new DBGuildRank();
+						GuildRankEntity rank = new GuildRankEntity();
 						rank.RankLevel = i;
 						rank.Title = "";
 						
@@ -410,7 +420,7 @@ namespace DOL.GS
 						if(i < 1) rank.BuyBanner = true;	else rank.BuyBanner = false;
 						m_guildRanks[rank.RankLevel] = rank;
 						
-						GameServer.Database.AddNewObject(rank);
+						GameServer.DatabaseNew.Using<IGuildRankDao>().Create(rank);
 					}
 				}
 				return m_guildRanks;
@@ -652,6 +662,48 @@ namespace DOL.GS
 				}
 			}
 		}
+		#endregion
+
+		#region IPersistentBusinessObject
+
+		public void LoadFromTransferObject(GuildEntity obj)
+		{
+			this.GuildID = obj.Id;
+			//obj.Alliance set at the 2cd pass
+			this.BountyPoints = obj.BountyPoints;
+			this.Due = obj.Due;
+			this.Email = obj.Email;
+			this.Emblem = obj.Emblem;
+			this.GuildName = obj.GuildName;
+			this.Level = obj.Level;
+			this.MeritPoints = obj.MeritPoints;
+			this.Motd = obj.Motd;
+			this.OMotd = obj.OMotd;
+			this.RealmPoints = obj.RealmPoints;
+			this.TotalMoney = obj.TotalMoney;
+			this.Webpage = obj.Webpage;
+		}
+
+		public GuildEntity GetTransferObject()
+		{
+			GuildEntity guildobj = new GuildEntity();
+			guildobj.Id = this.GuildID;
+			guildobj.Alliance = this.Alliance.AllianceID;
+			guildobj.BountyPoints = this.BountyPoints;
+			guildobj.Due = this.Due;
+			guildobj.Email = this.Email;
+			guildobj.Emblem = this.Emblem;
+			guildobj.GuildName = this.GuildName;
+			guildobj.Level = this.Level;
+			guildobj.MeritPoints = this.MeritPoints;
+			guildobj.Motd = this.Motd;
+			guildobj.OMotd = this.OMotd;
+			guildobj.RealmPoints = this.RealmPoints;
+			guildobj.TotalMoney = this.TotalMoney;
+			guildobj.Webpage = this.Webpage;
+			return guildobj;
+		}
+
 		#endregion
 	}
 }

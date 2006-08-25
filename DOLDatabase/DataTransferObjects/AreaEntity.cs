@@ -28,7 +28,7 @@ namespace DOL.Database.DataTransferObjects
 		private string m_areaType;
 		private string m_description;
 		private int m_height;
-		private string m_isBroadcastEnabled;
+		private bool m_isBroadcastEnabled;
 		private int m_radius;
 		private int m_regionId;
 		private byte m_sound;
@@ -56,7 +56,7 @@ namespace DOL.Database.DataTransferObjects
 			get { return m_height; }
 			set { m_height = value; }
 		}
-		public string IsBroadcastEnabled
+		public bool IsBroadcastEnabled
 		{
 			get { return m_isBroadcastEnabled; }
 			set { m_isBroadcastEnabled = value; }

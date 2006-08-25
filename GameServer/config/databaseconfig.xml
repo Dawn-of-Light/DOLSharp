@@ -23,7 +23,6 @@
 		<mapping file="mapping\AbstractQuest.hbm.xml" />
 		<mapping file="mapping\AbstractTask.hbm.xml" />
 		<mapping file="mapping\Account.hbm.xml" />
-		<mapping file="mapping\Alliance.hbm.xml" />
 	  <mapping file="mapping\BaseLoot.hbm.xml" />
 	  <mapping file="mapping\BindPoint.hbm.xml" />
 	  <mapping file="mapping\CraftItemData.hbm.xml" />
@@ -41,7 +40,6 @@
 	  <mapping file="mapping\GameNpcTemplate.hbm.xml" />
 	  <mapping file="mapping\GamePlayer.hbm.xml" />
 	  <mapping file="mapping\GamePlayerInventory.hbm.xml" />
-	  <mapping file="mapping\Guild.hbm.xml" />
 	  <mapping file="mapping\InvalidName.hbm.xml" />
 	  <mapping file="mapping\Item.hbm.xml" />
 	  <mapping file="mapping\ItemTemplate.hbm.xml" />

@@ -6,4 +6,6 @@
 	<Register interface="DOL.Database.DataAccessInterfaces.IFactionDao, DOLDatabase" dao="DOL.Database.MySql.DataAccessObjects.FactionDao, DOLDatabase.MySql" />
 	<Register interface="DOL.Database.DataAccessInterfaces.IFriendFactionDao, DOLDatabase" dao="DOL.Database.MySql.DataAccessObjects.FriendFactionDao, DOLDatabase.MySql" />
 	<Register interface="DOL.Database.DataAccessInterfaces.IEnemyFactionDao, DOLDatabase" dao="DOL.Database.MySql.DataAccessObjects.EnemyFactionDao, DOLDatabase.MySql" />
+	<Register interface="DOL.Database.DataAccessInterfaces.IAllianceDao, DOLDatabase" dao="DOL.Database.MySql.DataAccessObjects.AllianceDao, DOLDatabase.MySql" />
+	<Register interface="DOL.Database.DataAccessInterfaces.IGuildDao, DOLDatabase" dao="DOL.Database.MySql.DataAccessObjects.GuildDao, DOLDatabase.MySql" />
 </DatabaseMgrConfiguration>

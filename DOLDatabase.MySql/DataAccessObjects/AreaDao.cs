@@ -107,7 +107,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 			entity.AreaType = reader.GetString(1);
 			entity.Description = reader.GetString(2);
 			entity.Height = reader.GetInt32(3);
-			entity.IsBroadcastEnabled = reader.GetString(4);
+			entity.IsBroadcastEnabled = reader.GetBoolean(4);
 			entity.Radius = reader.GetInt32(5);
 			entity.RegionId = reader.GetInt32(6);
 			entity.Sound = reader.GetByte(7);
@@ -129,7 +129,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 				+"`AreaType` varchar(510) character set unicode,"
 				+"`Description` varchar(510) character set unicode,"
 				+"`Height` int,"
-				+"`IsBroadcastEnabled` char(1) character set ascii,"
+				+"`IsBroadcastEnabled` bit,"
 				+"`Radius` int,"
 				+"`RegionId` int,"
 				+"`Sound` tinyint unsigned,"

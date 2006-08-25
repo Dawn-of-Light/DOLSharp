@@ -25,14 +25,14 @@ namespace DOL.Database.DataTransferObjects
 	public struct GameNpcInventoryEntity
 	{
 		private int m_id;
-		private string m_isCloakHoodUp;
+		private bool m_isCloakHoodUp;
 
 		public int Id
 		{
 			get { return m_id; }
 			set { m_id = value; }
 		}
-		public string IsCloakHoodUp
+		public bool IsCloakHoodUp
 		{
 			get { return m_isCloakHoodUp; }
 			set { m_isCloakHoodUp = value; }

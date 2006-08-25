@@ -104,7 +104,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 		protected virtual void FillEntityWithRow(ref SpellLineEntity entity, MySqlDataReader reader)
 		{
 			entity.KeyName = reader.GetString(0);
-			entity.IsBaseLine = reader.GetString(1);
+			entity.IsBaseLine = reader.GetBoolean(1);
 			entity.Name = reader.GetString(2);
 			entity.Spec = reader.GetString(3);
 		}
@@ -119,7 +119,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return null;
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `spellline` ("
 				+"`KeyName` varchar(510) character set unicode,"
-				+"`IsBaseLine` char(1) character set ascii,"
+				+"`IsBaseLine` bit,"
 				+"`Name` varchar(510) character set unicode,"
 				+"`Spec` varchar(510) character set unicode"
 				+", primary key `KeyName` (`KeyName`)"

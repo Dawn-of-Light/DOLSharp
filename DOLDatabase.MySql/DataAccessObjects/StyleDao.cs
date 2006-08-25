@@ -117,7 +117,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 			entity.SpecialValue = reader.GetInt32(11);
 			entity.SpecKeyName = reader.GetString(12);
 			entity.SpecLevelRequirement = reader.GetInt32(13);
-			entity.StealthRequirement = reader.GetString(14);
+			entity.StealthRequirement = reader.GetBoolean(14);
 			entity.TwoHandAnimation = reader.GetInt32(15);
 			entity.WeaponTypeRequirement = reader.GetInt32(16);
 		}
@@ -145,7 +145,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 				+"`SpecialValue` int,"
 				+"`SpecKeyName` varchar(510) character set unicode,"
 				+"`SpecLevelRequirement` int,"
-				+"`StealthRequirement` char(1) character set ascii,"
+				+"`StealthRequirement` bit,"
 				+"`TwoHandAnimation` int,"
 				+"`WeaponTypeRequirement` int"
 				+", primary key `Id` (`Id`)"

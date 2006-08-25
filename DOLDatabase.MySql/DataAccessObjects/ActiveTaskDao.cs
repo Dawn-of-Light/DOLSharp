@@ -107,7 +107,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 			entity.ItemName = reader.GetString(1);
 			entity.RewardGiverName = reader.GetString(2);
 			entity.StartingPlayedTime = reader.GetInt64(3);
-			entity.TargetKilled = reader.GetString(4);
+			entity.TargetKilled = reader.GetBoolean(4);
 			entity.TargetMobName = reader.GetString(5);
 			entity.TaskType = reader.GetString(6);
 		}
@@ -125,7 +125,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 				+"`ItemName` varchar(510) character set unicode,"
 				+"`RewardGiverName` varchar(510) character set unicode,"
 				+"`StartingPlayedTime` bigint,"
-				+"`TargetKilled` char(1) character set ascii,"
+				+"`TargetKilled` bit,"
 				+"`TargetMobName` varchar(510) character set unicode,"
 				+"`TaskType` varchar(510) character set unicode"
 				+", primary key `AbstractTaskId` (`AbstractTaskId`)"
