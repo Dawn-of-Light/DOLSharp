@@ -141,6 +141,7 @@
     <Compile Include="DataTransferObjects\SpellLineEntity.cs" />
     <Compile Include="DataTransferObjects\StyleEntity.cs" />
     <Compile Include="DataTransferObjects\ZoneEntity.cs" />
+    <Compile Include="IPersistentBusinessObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DatabaseMgr.cs" />
     <Compile Include="Configuration.cs" />

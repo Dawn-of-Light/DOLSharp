@@ -42,7 +42,7 @@ namespace DOL.Database.DataTransferObjects
 		private int m_bindY;
 		private int m_bindZ;
 		private long m_bountyPoints;
-		private string m_cancelStyle;
+		private bool m_cancelStyle;
 		private int m_capturedKeeps;
 		private int m_capturedTowers;
 		private int m_characterClassId;
@@ -62,15 +62,15 @@ namespace DOL.Database.DataTransferObjects
 		private byte m_faceType;
 		private int m_gender;
 		private string m_guildName;
-		private string m_guildNameFlag;
+		private bool m_guildNameFlag;
 		private byte m_guildRank;
 		private byte m_hairColor;
 		private byte m_hairStyle;
 		private int m_heading;
 		private int m_health;
-		private string m_isAnonymous;
-		private string m_isLevelRespecUsed;
-		private string m_isLevelSecondStage;
+		private bool m_isAnonymous;
+		private bool m_isLevelRespecUsed;
+		private bool m_isLevelSecondStage;
 		private int m_killsAlbionDeathBlows;
 		private int m_killsAlbionPlayers;
 		private int m_killsAlbionSolo;
@@ -101,7 +101,7 @@ namespace DOL.Database.DataTransferObjects
 		private int m_respecAmountAllSkill;
 		private int m_respecAmountSingleSkill;
 		private int m_respecBought;
-		private string m_safetyFlag;
+		private bool m_safetyFlag;
 		private string m_serializedAbilities;
 		private string m_serializedCraftingSkills;
 		private string m_serializedFriendsList;
@@ -109,11 +109,11 @@ namespace DOL.Database.DataTransferObjects
 		private string m_serializedSpellLines;
 		private int m_skillSpecialtyPoints;
 		private byte m_slotPosition;
-		private string m_spellQueue;
+		private bool m_spellQueue;
 		private string m_styles;
 		private byte m_taskDone;
 		private int m_totalConstitutionLostAtDeath;
-		private string m_usedLevelCommand;
+		private bool m_usedLevelCommand;
 		private int m_x;
 		private int m_y;
 		private int m_z;
@@ -208,7 +208,7 @@ namespace DOL.Database.DataTransferObjects
 			get { return m_bountyPoints; }
 			set { m_bountyPoints = value; }
 		}
-		public string CancelStyle
+		public bool CancelStyle
 		{
 			get { return m_cancelStyle; }
 			set { m_cancelStyle = value; }
@@ -308,7 +308,7 @@ namespace DOL.Database.DataTransferObjects
 			get { return m_guildName; }
 			set { m_guildName = value; }
 		}
-		public string GuildNameFlag
+		public bool GuildNameFlag
 		{
 			get { return m_guildNameFlag; }
 			set { m_guildNameFlag = value; }
@@ -338,17 +338,17 @@ namespace DOL.Database.DataTransferObjects
 			get { return m_health; }
 			set { m_health = value; }
 		}
-		public string IsAnonymous
+		public bool IsAnonymous
 		{
 			get { return m_isAnonymous; }
 			set { m_isAnonymous = value; }
 		}
-		public string IsLevelRespecUsed
+		public bool IsLevelRespecUsed
 		{
 			get { return m_isLevelRespecUsed; }
 			set { m_isLevelRespecUsed = value; }
 		}
-		public string IsLevelSecondStage
+		public bool IsLevelSecondStage
 		{
 			get { return m_isLevelSecondStage; }
 			set { m_isLevelSecondStage = value; }
@@ -503,7 +503,7 @@ namespace DOL.Database.DataTransferObjects
 			get { return m_respecBought; }
 			set { m_respecBought = value; }
 		}
-		public string SafetyFlag
+		public bool SafetyFlag
 		{
 			get { return m_safetyFlag; }
 			set { m_safetyFlag = value; }
@@ -543,7 +543,7 @@ namespace DOL.Database.DataTransferObjects
 			get { return m_slotPosition; }
 			set { m_slotPosition = value; }
 		}
-		public string SpellQueue
+		public bool SpellQueue
 		{
 			get { return m_spellQueue; }
 			set { m_spellQueue = value; }
@@ -563,7 +563,7 @@ namespace DOL.Database.DataTransferObjects
 			get { return m_totalConstitutionLostAtDeath; }
 			set { m_totalConstitutionLostAtDeath = value; }
 		}
-		public string UsedLevelCommand
+		public bool UsedLevelCommand
 		{
 			get { return m_usedLevelCommand; }
 			set { m_usedLevelCommand = value; }

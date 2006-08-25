@@ -25,95 +25,95 @@ namespace DOL.Database.DataTransferObjects
 	public struct GuildRankEntity
 	{
 		private int m_id;
-		private string m_acHear;
-		private string m_acSpeak;
-		private string m_alli;
-		private string m_buff;
-		private string m_buyBanner;
-		private string m_claim;
-		private string m_deposit;
-		private string m_dues;
-		private string m_emblem;
-		private string m_gcHear;
-		private string m_gcSpeak;
-		private string m_getMission;
+		private bool m_acHear;
+		private bool m_acSpeak;
+		private bool m_alli;
+		private bool m_buff;
+		private bool m_buyBanner;
+		private bool m_claim;
+		private bool m_deposit;
+		private bool m_dues;
+		private bool m_emblem;
+		private bool m_gcHear;
+		private bool m_gcSpeak;
+		private bool m_getMission;
 		private int m_guild;
-		private string m_invite;
-		private string m_motd;
-		private string m_ocHear;
-		private string m_ocSpeak;
-		private string m_promote;
+		private bool m_invite;
+		private bool m_motd;
+		private bool m_ocHear;
+		private bool m_ocSpeak;
+		private bool m_promote;
 		private byte m_rankLevel;
-		private string m_release;
-		private string m_remove;
-		private string m_setNote;
-		private string m_summonBanner;
+		private bool m_release;
+		private bool m_remove;
+		private bool m_setNote;
+		private bool m_summonBanner;
 		private string m_title;
-		private string m_upgrade;
-		private string m_view;
-		private string m_withdraw;
+		private bool m_upgrade;
+		private bool m_view;
+		private bool m_withdraw;
 
 		public int Id
 		{
 			get { return m_id; }
 			set { m_id = value; }
 		}
-		public string AcHear
+		public bool AcHear
 		{
 			get { return m_acHear; }
 			set { m_acHear = value; }
 		}
-		public string AcSpeak
+		public bool AcSpeak
 		{
 			get { return m_acSpeak; }
 			set { m_acSpeak = value; }
 		}
-		public string Alli
+		public bool Alli
 		{
 			get { return m_alli; }
 			set { m_alli = value; }
 		}
-		public string Buff
+		public bool Buff
 		{
 			get { return m_buff; }
 			set { m_buff = value; }
 		}
-		public string BuyBanner
+		public bool BuyBanner
 		{
 			get { return m_buyBanner; }
 			set { m_buyBanner = value; }
 		}
-		public string Claim
+		public bool Claim
 		{
 			get { return m_claim; }
 			set { m_claim = value; }
 		}
-		public string Deposit
+		public bool Deposit
 		{
 			get { return m_deposit; }
 			set { m_deposit = value; }
 		}
-		public string Dues
+		public bool Dues
 		{
 			get { return m_dues; }
 			set { m_dues = value; }
 		}
-		public string Emblem
+		public bool Emblem
 		{
 			get { return m_emblem; }
 			set { m_emblem = value; }
 		}
-		public string GcHear
+		public bool GcHear
 		{
 			get { return m_gcHear; }
 			set { m_gcHear = value; }
 		}
-		public string GcSpeak
+		public bool GcSpeak
 		{
 			get { return m_gcSpeak; }
 			set { m_gcSpeak = value; }
 		}
-		public string GetMission
+		public bool GetMission
 		{
 			get { return m_getMission; }
 			set { m_getMission = value; }
@@ -123,27 +123,27 @@ namespace DOL.Database.DataTransferObjects
 			get { return m_guild; }
 			set { m_guild = value; }
 		}
-		public string Invite
+		public bool Invite
 		{
 			get { return m_invite; }
 			set { m_invite = value; }
 		}
-		public string Motd
+		public bool Motd
 		{
 			get { return m_motd; }
 			set { m_motd = value; }
 		}
-		public string OcHear
+		public bool OcHear
 		{
 			get { return m_ocHear; }
 			set { m_ocHear = value; }
 		}
-		public string OcSpeak
+		public bool OcSpeak
 		{
 			get { return m_ocSpeak; }
 			set { m_ocSpeak = value; }
 		}
-		public string Promote
+		public bool Promote
 		{
 			get { return m_promote; }
 			set { m_promote = value; }
@@ -153,22 +153,22 @@ namespace DOL.Database.DataTransferObjects
 			get { return m_rankLevel; }
 			set { m_rankLevel = value; }
 		}
-		public string Release
+		public bool Release
 		{
 			get { return m_release; }
 			set { m_release = value; }
 		}
-		public string Remove
+		public bool Remove
 		{
 			get { return m_remove; }
 			set { m_remove = value; }
 		}
-		public string SetNote
+		public bool SetNote
 		{
 			get { return m_setNote; }
 			set { m_setNote = value; }
 		}
-		public string SummonBanner
+		public bool SummonBanner
 		{
 			get { return m_summonBanner; }
 			set { m_summonBanner = value; }
@@ -178,17 +178,17 @@ namespace DOL.Database.DataTransferObjects
 			get { return m_title; }
 			set { m_title = value; }
 		}
-		public string Upgrade
+		public bool Upgrade
 		{
 			get { return m_upgrade; }
 			set { m_upgrade = value; }
 		}
-		public string View
+		public bool View
 		{
 			get { return m_view; }
 			set { m_view = value; }
 		}
-		public string Withdraw
+		public bool Withdraw
 		{
 			get { return m_withdraw; }
 			set { m_withdraw = value; }

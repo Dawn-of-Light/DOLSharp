@@ -38,7 +38,7 @@ namespace DOL.Database.DataTransferObjects
 		private int m_specialValue;
 		private string m_specKeyName;
 		private int m_specLevelRequirement;
-		private string m_stealthRequirement;
+		private bool m_stealthRequirement;
 		private int m_twoHandAnimation;
 		private int m_weaponTypeRequirement;
 
@@ -112,7 +112,7 @@ namespace DOL.Database.DataTransferObjects
 			get { return m_specLevelRequirement; }
 			set { m_specLevelRequirement = value; }
 		}
-		public string StealthRequirement
+		public bool StealthRequirement
 		{
 			get { return m_stealthRequirement; }
 			set { m_stealthRequirement = value; }

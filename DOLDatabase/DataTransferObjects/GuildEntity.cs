@@ -27,7 +27,7 @@ namespace DOL.Database.DataTransferObjects
 		private int m_id;
 		private int m_alliance;
 		private long m_bountyPoints;
-		private string m_due;
+		private bool m_due;
 		private string m_email;
 		private int m_emblem;
 		private string m_guildName;
@@ -54,7 +54,7 @@ namespace DOL.Database.DataTransferObjects
 			get { return m_bountyPoints; }
 			set { m_bountyPoints = value; }
 		}
-		public string Due
+		public bool Due
 		{
 			get { return m_due; }
 			set { m_due = value; }

@@ -28,7 +28,7 @@ namespace DOL.Database.DataTransferObjects
 		private string m_itemName;
 		private string m_rewardGiverName;
 		private long m_startingPlayedTime;
-		private string m_targetKilled;
+		private bool m_targetKilled;
 		private string m_targetMobName;
 		private string m_taskType;
 
@@ -52,7 +52,7 @@ namespace DOL.Database.DataTransferObjects
 			get { return m_startingPlayedTime; }
 			set { m_startingPlayedTime = value; }
 		}
-		public string TargetKilled
+		public bool TargetKilled
 		{
 			get { return m_targetKilled; }
 			set { m_targetKilled = value; }

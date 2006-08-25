@@ -119,9 +119,9 @@ namespace DOL.Database.MySql.DataAccessObjects
 			entity.GlowEffect = reader.GetInt32(13);
 			entity.HandNeeded = reader.GetByte(14);
 			entity.Heading = reader.GetInt32(15);
-			entity.IsDropable = reader.GetString(16);
-			entity.IsSaleable = reader.GetString(17);
-			entity.IsTradable = reader.GetString(18);
+			entity.IsDropable = reader.GetBoolean(16);
+			entity.IsSaleable = reader.GetBoolean(17);
+			entity.IsTradable = reader.GetBoolean(18);
 			entity.ItemTemplateType = reader.GetString(19);
 			entity.Level = reader.GetByte(20);
 			entity.MaterialLevel = reader.GetByte(21);
@@ -178,9 +178,9 @@ namespace DOL.Database.MySql.DataAccessObjects
 				+"`GlowEffect` int,"
 				+"`HandNeeded` tinyint unsigned,"
 				+"`Heading` int,"
-				+"`IsDropable` char(1) character set ascii,"
-				+"`IsSaleable` char(1) character set ascii,"
-				+"`IsTradable` char(1) character set ascii,"
+				+"`IsDropable` bit,"
+				+"`IsSaleable` bit,"
+				+"`IsTradable` bit,"
 				+"`ItemTemplateType` varchar(510) character set unicode,"
 				+"`Level` tinyint unsigned,"
 				+"`MaterialLevel` tinyint unsigned,"

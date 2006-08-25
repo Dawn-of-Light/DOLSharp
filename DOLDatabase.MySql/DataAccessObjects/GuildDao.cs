@@ -106,7 +106,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 			entity.Id = reader.GetInt32(0);
 			entity.Alliance = reader.GetInt32(1);
 			entity.BountyPoints = reader.GetInt64(2);
-			entity.Due = reader.GetString(3);
+			entity.Due = reader.GetBoolean(3);
 			entity.Email = reader.GetString(4);
 			entity.Emblem = reader.GetInt32(5);
 			entity.GuildName = reader.GetString(6);
@@ -131,7 +131,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 				+"`GuildId` int,"
 				+"`Alliance` int,"
 				+"`BountyPoints` bigint,"
-				+"`Due` char(1) character set ascii,"
+				+"`Due` bit,"
 				+"`Email` varchar(510) character set unicode,"
 				+"`Emblem` int,"
 				+"`GuildName` varchar(510) character set unicode,"

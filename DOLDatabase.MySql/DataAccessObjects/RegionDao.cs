@@ -106,9 +106,9 @@ namespace DOL.Database.MySql.DataAccessObjects
 			entity.Id = reader.GetInt32(0);
 			entity.Description = reader.GetString(1);
 			entity.Expansion = reader.GetByte(2);
-			entity.IsDivingEnabled = reader.GetString(3);
-			entity.IsDungeon = reader.GetString(4);
-			entity.IsInstance = reader.GetString(5);
+			entity.IsDivingEnabled = reader.GetBoolean(3);
+			entity.IsDungeon = reader.GetBoolean(4);
+			entity.IsInstance = reader.GetBoolean(5);
 			entity.Type = reader.GetByte(6);
 		}
 
@@ -124,9 +124,9 @@ namespace DOL.Database.MySql.DataAccessObjects
 				+"`RegionId` int,"
 				+"`Description` varchar(510) character set unicode,"
 				+"`Expansion` tinyint unsigned,"
-				+"`IsDivingEnabled` char(1) character set ascii,"
-				+"`IsDungeon` char(1) character set ascii,"
-				+"`IsInstance` char(1) character set ascii,"
+				+"`IsDivingEnabled` bit,"
+				+"`IsDungeon` bit,"
+				+"`IsInstance` bit,"
 				+"`Type` tinyint unsigned"
 				+", primary key `RegionId` (`RegionId`)"
 			);

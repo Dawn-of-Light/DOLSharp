@@ -152,7 +152,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 			entity.BindY = reader.GetInt32(15);
 			entity.BindZ = reader.GetInt32(16);
 			entity.BountyPoints = reader.GetInt64(17);
-			entity.CancelStyle = reader.GetString(18);
+			entity.CancelStyle = reader.GetBoolean(18);
 			entity.CapturedKeeps = reader.GetInt32(19);
 			entity.CapturedTowers = reader.GetInt32(20);
 			entity.CharacterClassId = reader.GetInt32(21);
@@ -172,15 +172,15 @@ namespace DOL.Database.MySql.DataAccessObjects
 			entity.FaceType = reader.GetByte(35);
 			entity.Gender = reader.GetInt32(36);
 			entity.GuildName = reader.GetString(37);
-			entity.GuildNameFlag = reader.GetString(38);
+			entity.GuildNameFlag = reader.GetBoolean(38);
 			entity.GuildRank = reader.GetByte(39);
 			entity.HairColor = reader.GetByte(40);
 			entity.HairStyle = reader.GetByte(41);
 			entity.Heading = reader.GetInt32(42);
 			entity.Health = reader.GetInt32(43);
-			entity.IsAnonymous = reader.GetString(44);
-			entity.IsLevelRespecUsed = reader.GetString(45);
-			entity.IsLevelSecondStage = reader.GetString(46);
+			entity.IsAnonymous = reader.GetBoolean(44);
+			entity.IsLevelRespecUsed = reader.GetBoolean(45);
+			entity.IsLevelSecondStage = reader.GetBoolean(46);
 			entity.KillsAlbionDeathBlows = reader.GetInt32(47);
 			entity.KillsAlbionPlayers = reader.GetInt32(48);
 			entity.KillsAlbionSolo = reader.GetInt32(49);
@@ -211,7 +211,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 			entity.RespecAmountAllSkill = reader.GetInt32(74);
 			entity.RespecAmountSingleSkill = reader.GetInt32(75);
 			entity.RespecBought = reader.GetInt32(76);
-			entity.SafetyFlag = reader.GetString(77);
+			entity.SafetyFlag = reader.GetBoolean(77);
 			entity.SerializedAbilities = reader.GetString(78);
 			entity.SerializedCraftingSkills = reader.GetString(79);
 			entity.SerializedFriendsList = reader.GetString(80);
@@ -219,11 +219,11 @@ namespace DOL.Database.MySql.DataAccessObjects
 			entity.SerializedSpellLines = reader.GetString(82);
 			entity.SkillSpecialtyPoints = reader.GetInt32(83);
 			entity.SlotPosition = reader.GetByte(84);
-			entity.SpellQueue = reader.GetString(85);
+			entity.SpellQueue = reader.GetBoolean(85);
 			entity.Styles = reader.GetString(86);
 			entity.TaskDone = reader.GetByte(87);
 			entity.TotalConstitutionLostAtDeath = reader.GetInt32(88);
-			entity.UsedLevelCommand = reader.GetString(89);
+			entity.UsedLevelCommand = reader.GetBoolean(89);
 			entity.X = reader.GetInt32(90);
 			entity.Y = reader.GetInt32(91);
 			entity.Z = reader.GetInt32(92);
@@ -256,7 +256,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 				+"`BindY` int,"
 				+"`BindZ` int,"
 				+"`BountyPoints` bigint,"
-				+"`CancelStyle` char(1) character set ascii,"
+				+"`CancelStyle` bit,"
 				+"`CapturedKeeps` int,"
 				+"`CapturedTowers` int,"
 				+"`CharacterClassId` int,"
@@ -276,15 +276,15 @@ namespace DOL.Database.MySql.DataAccessObjects
 				+"`FaceType` tinyint unsigned,"
 				+"`Gender` int,"
 				+"`GuildName` varchar(510) character set unicode,"
-				+"`GuildNameFlag` char(1) character set ascii,"
+				+"`GuildNameFlag` bit,"
 				+"`GuildRank` tinyint unsigned,"
 				+"`HairColor` tinyint unsigned,"
 				+"`HairStyle` tinyint unsigned,"
 				+"`Heading` int,"
 				+"`Health` int,"
-				+"`IsAnonymous` char(1) character set ascii,"
-				+"`IsLevelRespecUsed` char(1) character set ascii,"
-				+"`IsLevelSecondStage` char(1) character set ascii,"
+				+"`IsAnonymous` bit,"
+				+"`IsLevelRespecUsed` bit,"
+				+"`IsLevelSecondStage` bit,"
 				+"`KillsAlbionDeathBlows` int,"
 				+"`KillsAlbionPlayers` int,"
 				+"`KillsAlbionSolo` int,"
@@ -315,7 +315,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 				+"`RespecAmountAllSkill` int,"
 				+"`RespecAmountSingleSkill` int,"
 				+"`RespecBought` int,"
-				+"`SafetyFlag` char(1) character set ascii,"
+				+"`SafetyFlag` bit,"
 				+"`SerializedAbilities` varchar(510) character set unicode,"
 				+"`SerializedCraftingSkills` varchar(510) character set unicode,"
 				+"`SerializedFriendsList` varchar(510) character set unicode,"
@@ -323,11 +323,11 @@ namespace DOL.Database.MySql.DataAccessObjects
 				+"`SerializedSpellLines` varchar(510) character set unicode,"
 				+"`SkillSpecialtyPoints` int,"
 				+"`SlotPosition` tinyint unsigned,"
-				+"`SpellQueue` char(1) character set ascii,"
+				+"`SpellQueue` bit,"
 				+"`Styles` varchar(510) character set unicode,"
 				+"`TaskDone` tinyint unsigned,"
 				+"`TotalConstitutionLostAtDeath` int,"
-				+"`UsedLevelCommand` char(1) character set ascii,"
+				+"`UsedLevelCommand` bit,"
 				+"`X` int,"
 				+"`Y` int,"
 				+"`Z` int"
