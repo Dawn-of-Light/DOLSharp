@@ -16,10 +16,12 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System.Collections;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System;
-using DOL.GS.Database;
+using DOL.Database;
+using DOL.Database.DataAccessInterfaces;
+using DOL.Database.DataTransferObjects;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS
@@ -27,8 +29,16 @@ namespace DOL.GS
 	/// <summary>
 	/// Alliance are the alliance between guild in game
 	/// </summary>
-	public class Alliance
+	public class Alliance : IPersistentBusinessObject<AllianceEntity>
 	{
+		public Alliance(AllianceEntity obj)
+		{
+			this.LoadFromTransferObject(obj);
+		}
+
+		public Alliance()
+		{ }
+
 		#region Declaraction
 		/// <summary>
 		/// The unique alliance identifier
@@ -43,7 +53,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Holds all alliance guilds
 		/// </summary>
-		protected IList m_allianceGuilds;
+		protected IList<Guild> m_allianceGuilds = new List<Guild>();
 
 		/// <summary>
 		/// Holds the alliance leader
@@ -71,11 +81,10 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets or sets all alliances guilds
 		/// </summary>
-		public IList AllianceGuilds
+		public IList<Guild> AllianceGuilds
 		{
 			get
 			{
-				if(m_allianceGuilds == null) m_allianceGuilds = new ArrayList();
 				return m_allianceGuilds;
 			}
 			set
@@ -114,10 +123,7 @@ namespace DOL.GS
 			GameServer.Database.DeleteObject(guildToAdd.Alliance);  //delete the empty alliance
 
 			guildToAdd.Alliance = this;
-			lock(m_allianceGuilds.SyncRoot)
-			{
-				m_allianceGuilds.Add(guildToAdd);
-			}
+			m_allianceGuilds.Add(guildToAdd);
 			GameServer.Database.SaveObject(guildToAdd);
 			return true;
 		}
@@ -130,19 +136,17 @@ namespace DOL.GS
 		{
 			if(m_allianceLeader == guildToRemove) return false; //can't leave your own alliance
 
-			lock(m_allianceGuilds.SyncRoot)
-			{
-				if(!m_allianceGuilds.Contains(guildToRemove)) return false;// guild not in the alliance
-			
-				m_allianceGuilds.Remove(guildToRemove);
-			}
+			if(!m_allianceGuilds.Contains(guildToRemove)) 
+				return false;// guild not in the alliance
+			m_allianceGuilds.Remove(guildToRemove);
+
 
 			guildToRemove.Alliance = new Alliance();
 			guildToRemove.Alliance.AMotd = "Your guild have no alliances.";
 			guildToRemove.Alliance.AllianceLeader = guildToRemove;
 			guildToRemove.Alliance.AllianceGuilds.Add(guildToRemove);
 			
-			GameServer.Database.SaveObject(guildToRemove);	// save the guild in a new empty alliance
+			GameServer.DatabaseNew.Using<IGuildDao>().Update(guildToRemove.GetTransferObject());	// save the guild in a new empty alliance
 			
 			if(m_allianceGuilds.Count <= 1) // only the leader guild stay in the alliance => empty alliance
 			{
@@ -171,6 +175,26 @@ namespace DOL.GS
 				}
 			}
 		}
+		#endregion
+
+		#region Persistent
+
+		public void LoadFromTransferObject(AllianceEntity obj)
+		{
+			this.AllianceID = obj.Id;
+			this.AMotd = obj.AMotd;
+			this.AllianceLeader = GuildMgr.GetGuildById(obj.AllianceLeader);
+		}
+
+		public AllianceEntity GetTransferObject()
+		{
+			AllianceEntity obj = new AllianceEntity();
+			obj.AllianceLeader = this.AllianceLeader.GuildID;
+			obj.AMotd = this.AMotd;
+			obj.Id = this.AllianceID;
+			return obj;
+		}
+
 		#endregion
 	}
 }

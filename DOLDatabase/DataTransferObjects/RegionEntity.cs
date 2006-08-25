@@ -27,9 +27,9 @@ namespace DOL.Database.DataTransferObjects
 		private int m_id;
 		private string m_description;
 		private byte m_expansion;
-		private string m_isDivingEnabled;
-		private string m_isDungeon;
-		private string m_isInstance;
+		private bool m_isDivingEnabled;
+		private bool m_isDungeon;
+		private bool m_isInstance;
 		private byte m_type;
 
 		public int Id
@@ -47,17 +47,17 @@ namespace DOL.Database.DataTransferObjects
 			get { return m_expansion; }
 			set { m_expansion = value; }
 		}
-		public string IsDivingEnabled
+		public bool IsDivingEnabled
 		{
 			get { return m_isDivingEnabled; }
 			set { m_isDivingEnabled = value; }
 		}
-		public string IsDungeon
+		public bool IsDungeon
 		{
 			get { return m_isDungeon; }
 			set { m_isDungeon = value; }
 		}
-		public string IsInstance
+		public bool IsInstance
 		{
 			get { return m_isInstance; }
 			set { m_isInstance = value; }

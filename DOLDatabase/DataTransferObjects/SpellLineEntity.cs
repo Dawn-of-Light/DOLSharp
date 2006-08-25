@@ -25,7 +25,7 @@ namespace DOL.Database.DataTransferObjects
 	public struct SpellLineEntity
 	{
 		private string m_keyName;
-		private string m_isBaseLine;
+		private bool m_isBaseLine;
 		private string m_name;
 		private string m_spec;
 
@@ -34,7 +34,7 @@ namespace DOL.Database.DataTransferObjects
 			get { return m_keyName; }
 			set { m_keyName = value; }
 		}
-		public string IsBaseLine
+		public bool IsBaseLine
 		{
 			get { return m_isBaseLine; }
 			set { m_isBaseLine = value; }
