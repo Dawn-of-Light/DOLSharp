@@ -64,48 +64,19 @@ namespace DOL.GS.PacketHandler.v168
 			{
 				GamePlayer player = (GamePlayer)m_actionSource;
 
-				if(player.TargetObject==null)
+				if (player.TargetObject == null)
 					return;
 
-				InventoryItem item=player.Inventory.GetItem((eInventorySlot)m_slot);
+				InventoryItem item = player.Inventory.GetItem((eInventorySlot)m_slot);
 
-				if(!item.IsDropable)
+				if (player.TargetObject is GameMerchant)
 				{
-					player.Out.SendMessage("This item can't be sold.", eChatType.CT_Merchant,eChatLoc.CL_SystemWindow);
-					return;
-				}
-
-				long val = 0;
-				if(player.TargetObject is GameMerchant)
-				{
-					val = ((GameMerchant)player.TargetObject).OnPlayerAppraise(player,item);
+					((GameMerchant)player.TargetObject).OnPlayerAppraise(player, item, false);
 				}
 				else if (player.TargetObject is GameLotMarker)
 				{
-					val = ((GameLotMarker)player.TargetObject).OnPlayerAppraise(player,item);
+					((GameLotMarker)player.TargetObject).OnPlayerAppraise(player, item, false);
 				}
-				else
-				{
-					//If the player is apraising with another target, add the handling here in else if blocks
-					return;
-				}
-
-				string message;
-				if(val == 0)
-				{
-					if(player.TargetObject is GameLiving)
-						message = player.TargetObject.GetName(0, true)+" isn't interested in "+item.GetName(0, false);
-					else
-						message = item.GetName(0, true) + " isn't worth any value!";
-				}
-				else
-				{
-					if(player.TargetObject is GameLiving)
-						message = player.TargetObject.GetName(0, true)+" offers you "+Money.GetString(val)+" for "+item.GetName(0, false);
-					else
-						message = "You would gain "+Money.GetString(val)+" for "+item.GetName(0, false);
-				}
-				player.Out.SendMessage(message, eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
 			}
 		}
 	}
