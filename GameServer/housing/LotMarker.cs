@@ -25,7 +25,8 @@ namespace DOL.GS.Housing
 {
 	public class GameLotMarker : GameStaticItem
 	{
-		public GameLotMarker() : base()
+		public GameLotMarker()
+			: base()
 		{
 			SaveInDB = false;
 		}
@@ -42,7 +43,7 @@ namespace DOL.GS.Housing
 		{
 			IList list = new ArrayList();
 			list.Add("You target lot number " + DatabaseItem.HouseNumber + ".");
-			if (DatabaseItem.OwnerIDs == null || DatabaseItem.OwnerIDs == "")
+			if (DatabaseItem.OwnerIDs == null)
 			{
 				list.Add(" It can be bought for " + Money.GetString(HouseTemplateMgr.GetLotPrice(DatabaseItem)) + ".");
 			}
@@ -55,7 +56,7 @@ namespace DOL.GS.Housing
 			{
 				return false;
 			}
-			if (DatabaseItem.OwnerIDs == null || DatabaseItem.OwnerIDs == "")
+			if (DatabaseItem.OwnerIDs == null)
 			{
 				player.Out.SendCustomDialog("Do you want to buy this lot?\r\n It costs " + Money.GetString(HouseTemplateMgr.GetLotPrice(DatabaseItem)) + "!", new CustomDialogResponse(BuyLot));
 			}
@@ -78,7 +79,7 @@ namespace DOL.GS.Housing
 			if (response != 0x01) return;
 			lock (this)
 			{
-				if (DatabaseItem.OwnerIDs != null && DatabaseItem.OwnerIDs != "") return;
+				if (DatabaseItem.OwnerIDs != null) return;
 				if (player.PlayerCharacter.LotNumber != 0 && player.Client.Account.PrivLevel <= 1)
 				{
 					player.Out.SendMessage("You do already own another lot or house (Number " + player.PlayerCharacter.LotNumber + ").", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
@@ -88,7 +89,7 @@ namespace DOL.GS.Housing
 				{
 					player.PlayerCharacter.LotNumber = DatabaseItem.HouseNumber;
 					GameServer.Database.SaveObject(player.PlayerCharacter);
-					HouseMgr.AddOwner(DatabaseItem,player);
+					HouseMgr.AddOwner(DatabaseItem, player);
 				}
 				else
 				{
@@ -102,7 +103,7 @@ namespace DOL.GS.Housing
 			if (source == null || item == null) return false;
 			if (!(source is GamePlayer)) return false;
 
-			GamePlayer player = (GamePlayer) source;
+			GamePlayer player = (GamePlayer)source;
 			if (HouseMgr.IsOwner(DatabaseItem, player))
 			{
 				switch (item.Id_nb)
@@ -145,7 +146,7 @@ namespace DOL.GS.Housing
 						break;
 					default:
 						player.Out.SendMessage("That would make no sense!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return false;
+						return false;
 				}
 				player.Inventory.RemoveItem(item);
 				return true;
@@ -179,28 +180,65 @@ namespace DOL.GS.Housing
 			this.Delete();
 		}
 
-		public virtual bool OnPlayerBuy(GamePlayer player, int item_slot, int number)
+		public virtual void OnPlayerBuy(GamePlayer player, int item_slot, int number)
 		{
-			return true;
+			return;
 		}
 
-		public virtual bool OnPlayerSell(GamePlayer player, InventoryItem item)
+		public virtual void OnPlayerSell(GamePlayer player, InventoryItem item)
 		{
 			if (!item.IsDropable)
 			{
 				player.Out.SendMessage("This item can't be sold.", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
-				return false;
+				return;
 			}
-			return true;
+
+
+			long itemValue = OnPlayerAppraise(player, item, true);
+
+			string message;
+			if (player.TargetObject is GameLiving)
+				message = ((GameLiving)player.TargetObject).GetName(0, true) + " gives you {0} for " + item.GetName(0, false) + ".";
+			else
+				message = "You gain {0} for " + item.GetName(0, false) + ".";
+
+			if (player.Inventory.RemoveItem(item))
+			{
+				player.AddMoney(itemValue, message, eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
+				return;
+			}
+			else
+				player.Out.SendMessage("This item can't be sold.", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
+
+
+
+			return;
 		}
 
-		public long OnPlayerAppraise(GamePlayer player, InventoryItem item)
+		public long OnPlayerAppraise(GamePlayer player, InventoryItem item, bool silent)
 		{
 			if (item == null)
 				return 0;
 
 			int itemCount = Math.Max(1, item.Count);
-			return item.Value*itemCount/2;
+
+			long val = item.Value * item.Count / 2;
+
+			if (!silent)
+			{
+				string message;
+				if (val == 0)
+				{
+					message = item.GetName(0, true) + " isn't worth any value!";
+				}
+				else
+				{
+					message = "You would gain " + Money.GetString(val) + " for " + item.GetName(0, false);
+				}
+				player.Out.SendMessage(message, eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
+			}
+
+			return val;
 		}
 
 		public static void SpawnLotMarker(DBHouse house)
@@ -210,7 +248,7 @@ namespace DOL.GS.Housing
 			obj.Y = house.Y;
 			obj.Z = house.Z;
 			obj.CurrentRegionID = (ushort)house.RegionID;
-			obj.Heading = (ushort) house.Heading;
+			obj.Heading = (ushort)house.Heading;
 			obj.Name = "Lot Marker";
 			obj.Model = 1308;
 			obj.DatabaseItem = house;
