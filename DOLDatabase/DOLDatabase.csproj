@@ -151,6 +151,7 @@
     <Compile Include="DataAccessInterfaces\IDataAccessObject.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="IDatabaseMgr.cs" />
+    <Compile Include="RowNotFoundException.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -29,18 +29,22 @@ namespace DOL.Database.MySql.DataAccessObjects
 	public class NpcEquipmentDao : INpcEquipmentDao
 	{
 		protected static readonly string c_rowFields = "`ItemId`,`Color`,`GlowEffect`,`InventoryId`,`Model`,`ModelExtension`,`NPCEquipmentType`,`SlotPosition`";
-		private readonly MySqlState m_state;
+		protected readonly MySqlState m_state;
 
 		public virtual NpcEquipmentEntity Find(int id)
 		{
 			NpcEquipmentEntity result = new NpcEquipmentEntity();
+			string command = "SELECT " + c_rowFields + " FROM `npcequipment` WHERE `ItemId`='" + m_state.EscapeString(id.ToString()) + "'";
 
 			m_state.ExecuteQuery(
-				"SELECT " + c_rowFields + " FROM `npcequipment` WHERE `ItemId`='" + m_state.EscapeString(id.ToString()) + "'",
+				command,
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
-					reader.Read();
+					if (!reader.Read())
+					{
+						throw new RowNotFoundException();
+					}
 					FillEntityWithRow(ref result, reader);
 				}
 			);
@@ -51,7 +55,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public virtual void Create(NpcEquipmentEntity obj)
 		{
 			m_state.ExecuteNonQuery(
-				"INSERT INTO `npcequipment` VALUES (`" + obj.Id.ToString() + "`,`" + obj.GlowEffect.ToString() + "`,`" + obj.Inventory.ToString() + "`,`" + obj.Model.ToString() + "`,`" + obj.ModelExtension.ToString() + "`,`" + obj.NPCEquipmentType.ToString() + "`,`" + obj.or1.ToString() + "`,`" + obj.SlotPosition.ToString() + "`);");
+				"INSERT INTO `npcequipment` VALUES ('" + m_state.EscapeString(obj.Id.ToString()) + "','" + m_state.EscapeString(obj.GlowEffect.ToString()) + "','" + m_state.EscapeString(obj.Inventory.ToString()) + "','" + m_state.EscapeString(obj.Model.ToString()) + "','" + m_state.EscapeString(obj.ModelExtension.ToString()) + "','" + m_state.EscapeString(obj.NPCEquipmentType.ToString()) + "','" + m_state.EscapeString(obj.or1.ToString()) + "','" + m_state.EscapeString(obj.SlotPosition.ToString()) + "');");
 		}
 
 		public virtual void Update(NpcEquipmentEntity obj)
@@ -94,11 +98,9 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return results;
 		}
 
-		public virtual int CountAll()
+		public virtual long CountAll()
 		{
-			return (int)m_state.ExecuteScalar(
-			"SELECT COUNT(*) FROM `npcequipment`");
-
+			return (long) m_state.ExecuteScalar("SELECT COUNT(*) FROM `npcequipment`");
 		}
 
 		protected virtual void FillEntityWithRow(ref NpcEquipmentEntity entity, MySqlDataReader reader)
@@ -120,18 +122,20 @@ namespace DOL.Database.MySql.DataAccessObjects
 
 		public IList<string> VerifySchema()
 		{
-			return null;
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `npcequipment` ("
 				+"`ItemId` int,"
 				+"`GlowEffect` int,"
 				+"`InventoryId` int,"
 				+"`Model` int,"
 				+"`ModelExtension` tinyint unsigned,"
-				+"`NPCEquipmentType` varchar(510) character set unicode,"
+				+"`NPCEquipmentType` varchar(255) character set utf8,"
 				+"`Color` int,"
 				+"`SlotPosition` int"
 				+", primary key `ItemId` (`ItemId`)"
+				+")"
 			);
+			m_state.ExecuteNonQuery("OPTIMIZE TABLE `npcequipment`");
+			return null;
 		}
 
 		public NpcEquipmentDao(MySqlState state)

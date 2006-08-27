@@ -29,18 +29,22 @@ namespace DOL.Database.MySql.DataAccessObjects
 	public class SpellDao : ISpellDao
 	{
 		protected static readonly string c_rowFields = "`SpellId`,`AmnesiaChance`,`CastTime`,`ClientEffect`,`Concentration`,`Damage`,`DamageType`,`Description`,`Duration`,`EffectGroup`,`Frequency`,`Icon`,`InstrumentRequirement`,`LifeDrainReturn`,`Message1`,`Message2`,`Message3`,`Message4`,`Name`,`Power`,`Pulse`,`PulsePower`,`Radius`,`Range`,`RecastDelay`,`ResurrectHealth`,`ResurrectMana`,`SpellGroup`,`Target`,`Type`,`Value`";
-		private readonly MySqlState m_state;
+		protected readonly MySqlState m_state;
 
 		public virtual SpellEntity Find(int id)
 		{
 			SpellEntity result = new SpellEntity();
+			string command = "SELECT " + c_rowFields + " FROM `spell` WHERE `SpellId`='" + m_state.EscapeString(id.ToString()) + "'";
 
 			m_state.ExecuteQuery(
-				"SELECT " + c_rowFields + " FROM `spell` WHERE `SpellId`='" + m_state.EscapeString(id.ToString()) + "'",
+				command,
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
-					reader.Read();
+					if (!reader.Read())
+					{
+						throw new RowNotFoundException();
+					}
 					FillEntityWithRow(ref result, reader);
 				}
 			);
@@ -51,7 +55,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public virtual void Create(SpellEntity obj)
 		{
 			m_state.ExecuteNonQuery(
-				"INSERT INTO `spell` VALUES (`" + obj.Id.ToString() + "`,`" + obj.AmnesiaChance.ToString() + "`,`" + obj.CastTime.ToString() + "`,`" + obj.ClientEffect.ToString() + "`,`" + obj.Concentration.ToString() + "`,`" + obj.Damage.ToString() + "`,`" + obj.DamageType.ToString() + "`,`" + obj.Description.ToString() + "`,`" + obj.Duration.ToString() + "`,`" + obj.EffectGroup.ToString() + "`,`" + obj.Frequency.ToString() + "`,`" + obj.Icon.ToString() + "`,`" + obj.InstrumentRequirement.ToString() + "`,`" + obj.LifeDrainReturn.ToString() + "`,`" + obj.Message1.ToString() + "`,`" + obj.Message2.ToString() + "`,`" + obj.Message3.ToString() + "`,`" + obj.Message4.ToString() + "`,`" + obj.Name.ToString() + "`,`" + obj.Power.ToString() + "`,`" + obj.Pulse.ToString() + "`,`" + obj.PulsePower.ToString() + "`,`" + obj.Radius.ToString() + "`,`" + obj.Range.ToString() + "`,`" + obj.RecastDelay.ToString() + "`,`" + obj.ResurrectHealth.ToString() + "`,`" + obj.ResurrectMana.ToString() + "`,`" + obj.SpellGroup.ToString() + "`,`" + obj.Target.ToString() + "`,`" + obj.Type.ToString() + "`,`" + obj.Value.ToString() + "`);");
+				"INSERT INTO `spell` VALUES ('" + m_state.EscapeString(obj.Id.ToString()) + "','" + m_state.EscapeString(obj.AmnesiaChance.ToString()) + "','" + m_state.EscapeString(obj.CastTime.ToString()) + "','" + m_state.EscapeString(obj.ClientEffect.ToString()) + "','" + m_state.EscapeString(obj.Concentration.ToString()) + "','" + m_state.EscapeString(obj.Damage.ToString()) + "','" + m_state.EscapeString(obj.DamageType.ToString()) + "','" + m_state.EscapeString(obj.Description.ToString()) + "','" + m_state.EscapeString(obj.Duration.ToString()) + "','" + m_state.EscapeString(obj.EffectGroup.ToString()) + "','" + m_state.EscapeString(obj.Frequency.ToString()) + "','" + m_state.EscapeString(obj.Icon.ToString()) + "','" + m_state.EscapeString(obj.InstrumentRequirement.ToString()) + "','" + m_state.EscapeString(obj.LifeDrainReturn.ToString()) + "','" + m_state.EscapeString(obj.Message1.ToString()) + "','" + m_state.EscapeString(obj.Message2.ToString()) + "','" + m_state.EscapeString(obj.Message3.ToString()) + "','" + m_state.EscapeString(obj.Message4.ToString()) + "','" + m_state.EscapeString(obj.Name.ToString()) + "','" + m_state.EscapeString(obj.Power.ToString()) + "','" + m_state.EscapeString(obj.Pulse.ToString()) + "','" + m_state.EscapeString(obj.PulsePower.ToString()) + "','" + m_state.EscapeString(obj.Radius.ToString()) + "','" + m_state.EscapeString(obj.Range.ToString()) + "','" + m_state.EscapeString(obj.RecastDelay.ToString()) + "','" + m_state.EscapeString(obj.ResurrectHealth.ToString()) + "','" + m_state.EscapeString(obj.ResurrectMana.ToString()) + "','" + m_state.EscapeString(obj.SpellGroup.ToString()) + "','" + m_state.EscapeString(obj.Target.ToString()) + "','" + m_state.EscapeString(obj.Type.ToString()) + "','" + m_state.EscapeString(obj.Value.ToString()) + "');");
 		}
 
 		public virtual void Update(SpellEntity obj)
@@ -94,11 +98,9 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return results;
 		}
 
-		public virtual int CountAll()
+		public virtual long CountAll()
 		{
-			return (int)m_state.ExecuteScalar(
-			"SELECT COUNT(*) FROM `spell`");
-
+			return (long) m_state.ExecuteScalar("SELECT COUNT(*) FROM `spell`");
 		}
 
 		protected virtual void FillEntityWithRow(ref SpellEntity entity, MySqlDataReader reader)
@@ -143,7 +145,6 @@ namespace DOL.Database.MySql.DataAccessObjects
 
 		public IList<string> VerifySchema()
 		{
-			return null;
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `spell` ("
 				+"`SpellId` int,"
 				+"`AmnesiaChance` int,"
@@ -152,18 +153,18 @@ namespace DOL.Database.MySql.DataAccessObjects
 				+"`Concentration` int,"
 				+"`Damage` double,"
 				+"`DamageType` int,"
-				+"`Description` varchar(510) character set unicode,"
+				+"`Description` varchar(255) character set utf8,"
 				+"`Duration` int,"
 				+"`EffectGroup` int,"
 				+"`Frequency` int,"
 				+"`Icon` int,"
 				+"`InstrumentRequirement` int,"
 				+"`LifeDrainReturn` int,"
-				+"`Message1` varchar(510) character set unicode,"
-				+"`Message2` varchar(510) character set unicode,"
-				+"`Message3` varchar(510) character set unicode,"
-				+"`Message4` varchar(510) character set unicode,"
-				+"`Name` varchar(510) character set unicode,"
+				+"`Message1` varchar(255) character set utf8,"
+				+"`Message2` varchar(255) character set utf8,"
+				+"`Message3` varchar(255) character set utf8,"
+				+"`Message4` varchar(255) character set utf8,"
+				+"`Name` varchar(255) character set utf8,"
 				+"`Power` int,"
 				+"`Pulse` int,"
 				+"`PulsePower` int,"
@@ -173,11 +174,14 @@ namespace DOL.Database.MySql.DataAccessObjects
 				+"`ResurrectHealth` int,"
 				+"`ResurrectMana` int,"
 				+"`SpellGroup` int,"
-				+"`Target` varchar(510) character set unicode,"
-				+"`Type` varchar(510) character set unicode,"
+				+"`Target` varchar(255) character set utf8,"
+				+"`Type` varchar(255) character set utf8,"
 				+"`Value` double"
 				+", primary key `SpellId` (`SpellId`)"
+				+")"
 			);
+			m_state.ExecuteNonQuery("OPTIMIZE TABLE `spell`");
+			return null;
 		}
 
 		public SpellDao(MySqlState state)

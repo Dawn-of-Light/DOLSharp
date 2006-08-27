@@ -29,18 +29,22 @@ namespace DOL.Database.MySql.DataAccessObjects
 	public class SalvageDao : ISalvageDao
 	{
 		protected static readonly string c_rowFields = "`SalvageId`,`MaterialItemtemplate`,`ObjectType`,`SalvageLevel`";
-		private readonly MySqlState m_state;
+		protected readonly MySqlState m_state;
 
 		public virtual SalvageEntity Find(int id)
 		{
 			SalvageEntity result = new SalvageEntity();
+			string command = "SELECT " + c_rowFields + " FROM `salvage` WHERE `SalvageId`='" + m_state.EscapeString(id.ToString()) + "'";
 
 			m_state.ExecuteQuery(
-				"SELECT " + c_rowFields + " FROM `salvage` WHERE `SalvageId`='" + m_state.EscapeString(id.ToString()) + "'",
+				command,
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
-					reader.Read();
+					if (!reader.Read())
+					{
+						throw new RowNotFoundException();
+					}
 					FillEntityWithRow(ref result, reader);
 				}
 			);
@@ -51,7 +55,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public virtual void Create(SalvageEntity obj)
 		{
 			m_state.ExecuteNonQuery(
-				"INSERT INTO `salvage` VALUES (`" + obj.Id.ToString() + "`,`" + obj.MaterialItemtemplate.ToString() + "`,`" + obj.ObjectType.ToString() + "`,`" + obj.SalvageLevel.ToString() + "`);");
+				"INSERT INTO `salvage` VALUES ('" + m_state.EscapeString(obj.Id.ToString()) + "','" + m_state.EscapeString(obj.MaterialItemtemplate.ToString()) + "','" + m_state.EscapeString(obj.ObjectType.ToString()) + "','" + m_state.EscapeString(obj.SalvageLevel.ToString()) + "');");
 		}
 
 		public virtual void Update(SalvageEntity obj)
@@ -94,11 +98,9 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return results;
 		}
 
-		public virtual int CountAll()
+		public virtual long CountAll()
 		{
-			return (int)m_state.ExecuteScalar(
-			"SELECT COUNT(*) FROM `salvage`");
-
+			return (long) m_state.ExecuteScalar("SELECT COUNT(*) FROM `salvage`");
 		}
 
 		protected virtual void FillEntityWithRow(ref SalvageEntity entity, MySqlDataReader reader)
@@ -116,14 +118,16 @@ namespace DOL.Database.MySql.DataAccessObjects
 
 		public IList<string> VerifySchema()
 		{
-			return null;
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `salvage` ("
 				+"`SalvageId` int,"
-				+"`MaterialItemtemplate` varchar(510) character set unicode,"
+				+"`MaterialItemtemplate` varchar(255) character set utf8,"
 				+"`ObjectType` int,"
 				+"`SalvageLevel` int"
 				+", primary key `SalvageId` (`SalvageId`)"
+				+")"
 			);
+			m_state.ExecuteNonQuery("OPTIMIZE TABLE `salvage`");
+			return null;
 		}
 
 		public SalvageDao(MySqlState state)

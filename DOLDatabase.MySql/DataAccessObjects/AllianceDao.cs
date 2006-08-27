@@ -29,18 +29,22 @@ namespace DOL.Database.MySql.DataAccessObjects
 	public class AllianceDao : IAllianceDao
 	{
 		protected static readonly string c_rowFields = "`AllianceId`,`AllianceLeader`,`AMotd`";
-		private readonly MySqlState m_state;
+		protected readonly MySqlState m_state;
 
 		public virtual AllianceEntity Find(int id)
 		{
 			AllianceEntity result = new AllianceEntity();
+			string command = "SELECT " + c_rowFields + " FROM `alliance` WHERE `AllianceId`='" + m_state.EscapeString(id.ToString()) + "'";
 
 			m_state.ExecuteQuery(
-				"SELECT " + c_rowFields + " FROM `alliance` WHERE `AllianceId`='" + m_state.EscapeString(id.ToString()) + "'",
+				command,
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
-					reader.Read();
+					if (!reader.Read())
+					{
+						throw new RowNotFoundException();
+					}
 					FillEntityWithRow(ref result, reader);
 				}
 			);
@@ -51,7 +55,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public virtual void Create(AllianceEntity obj)
 		{
 			m_state.ExecuteNonQuery(
-				"INSERT INTO `alliance` VALUES (`" + obj.Id.ToString() + "`,`" + obj.AllianceLeader.ToString() + "`,`" + obj.AMotd.ToString() + "`);");
+				"INSERT INTO `alliance` VALUES ('" + m_state.EscapeString(obj.Id.ToString()) + "','" + m_state.EscapeString(obj.AllianceLeader.ToString()) + "','" + m_state.EscapeString(obj.AMotd.ToString()) + "');");
 		}
 
 		public virtual void Update(AllianceEntity obj)
@@ -94,11 +98,9 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return results;
 		}
 
-		public virtual int CountAll()
+		public virtual long CountAll()
 		{
-			return (int)m_state.ExecuteScalar(
-			"SELECT COUNT(*) FROM `alliance`");
-
+			return (long) m_state.ExecuteScalar("SELECT COUNT(*) FROM `alliance`");
 		}
 
 		protected virtual void FillEntityWithRow(ref AllianceEntity entity, MySqlDataReader reader)
@@ -115,13 +117,15 @@ namespace DOL.Database.MySql.DataAccessObjects
 
 		public IList<string> VerifySchema()
 		{
-			return null;
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `alliance` ("
 				+"`AllianceId` int,"
 				+"`AllianceLeader` int,"
-				+"`AMotd` varchar(510) character set unicode"
+				+"`AMotd` varchar(255) character set utf8"
 				+", primary key `AllianceId` (`AllianceId`)"
+				+")"
 			);
+			m_state.ExecuteNonQuery("OPTIMIZE TABLE `alliance`");
+			return null;
 		}
 
 		public AllianceDao(MySqlState state)

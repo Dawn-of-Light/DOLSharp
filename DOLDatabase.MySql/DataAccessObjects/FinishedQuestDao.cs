@@ -29,18 +29,22 @@ namespace DOL.Database.MySql.DataAccessObjects
 	public class FinishedQuestDao : IFinishedQuestDao
 	{
 		protected static readonly string c_rowFields = "`Count`,`FinishedQuestType`,`PersistantGameObjectId`";
-		private readonly MySqlState m_state;
+		protected readonly MySqlState m_state;
 
 		public virtual FinishedQuestEntity Find(byte count, string finishedQuestType, int persistantGameObject)
 		{
 			FinishedQuestEntity result = new FinishedQuestEntity();
+			string command = "SELECT " + c_rowFields + " FROM `finishedquests` WHERE `Count`='" + m_state.EscapeString(count.ToString()) + "', `FinishedQuestType`='" + m_state.EscapeString(finishedQuestType.ToString()) + "', `PersistantGameObjectId`='" + m_state.EscapeString(persistantGameObject.ToString()) + "'";
 
 			m_state.ExecuteQuery(
-				"SELECT " + c_rowFields + " FROM `finishedquests` WHERE `Count`='" + m_state.EscapeString(count.ToString()) + "', `FinishedQuestType`='" + m_state.EscapeString(finishedQuestType.ToString()) + "', `PersistantGameObjectId`='" + m_state.EscapeString(persistantGameObject.ToString()) + "'",
+				command,
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
-					reader.Read();
+					if (!reader.Read())
+					{
+						throw new RowNotFoundException();
+					}
 					FillEntityWithRow(ref result, reader);
 				}
 			);
@@ -51,7 +55,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public virtual void Create(FinishedQuestEntity obj)
 		{
 			m_state.ExecuteNonQuery(
-				"INSERT INTO `finishedquests` VALUES (`" + obj.Count.ToString() + "`,`" + obj.FinishedQuestType.ToString() + "`,`" + obj.PersistantGameObject.ToString() + "`);");
+				"INSERT INTO `finishedquests` VALUES ('" + m_state.EscapeString(obj.Count.ToString()) + "','" + m_state.EscapeString(obj.FinishedQuestType.ToString()) + "','" + m_state.EscapeString(obj.PersistantGameObject.ToString()) + "');");
 		}
 
 		public virtual void Update(FinishedQuestEntity obj)
@@ -94,11 +98,9 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return results;
 		}
 
-		public virtual int CountAll()
+		public virtual long CountAll()
 		{
-			return (int)m_state.ExecuteScalar(
-			"SELECT COUNT(*) FROM `finishedquests`");
-
+			return (long) m_state.ExecuteScalar("SELECT COUNT(*) FROM `finishedquests`");
 		}
 
 		protected virtual void FillEntityWithRow(ref FinishedQuestEntity entity, MySqlDataReader reader)
@@ -115,13 +117,15 @@ namespace DOL.Database.MySql.DataAccessObjects
 
 		public IList<string> VerifySchema()
 		{
-			return null;
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `finishedquests` ("
 				+"`Count` tinyint unsigned,"
-				+"`FinishedQuestType` varchar(510) character set unicode,"
+				+"`FinishedQuestType` varchar(255) character set utf8,"
 				+"`PersistantGameObjectId` int"
-				+", primary key `Count` (`Count`,`FinishedQuestType`,`PersistantGameObjectId`)"
+				+", primary key `CountFinishedQuestTypePersistantGameObjectId` (`Count`,`FinishedQuestType`,`PersistantGameObjectId`)"
+				+")"
 			);
+			m_state.ExecuteNonQuery("OPTIMIZE TABLE `finishedquests`");
+			return null;
 		}
 
 		public FinishedQuestDao(MySqlState state)

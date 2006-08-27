@@ -29,18 +29,22 @@ namespace DOL.Database.MySql.DataAccessObjects
 	public class SpawnTemplateDao : ISpawnTemplateDao
 	{
 		protected static readonly string c_rowFields = "`SpawnTemplateBaseId`,`Count`,`GameNPCTemplateId`,`SpawnGeneratorBaseId`,`SpawnTemplateBaseType`";
-		private readonly MySqlState m_state;
+		protected readonly MySqlState m_state;
 
 		public virtual SpawnTemplateEntity Find(int id)
 		{
 			SpawnTemplateEntity result = new SpawnTemplateEntity();
+			string command = "SELECT " + c_rowFields + " FROM `spawntemplate` WHERE `SpawnTemplateBaseId`='" + m_state.EscapeString(id.ToString()) + "'";
 
 			m_state.ExecuteQuery(
-				"SELECT " + c_rowFields + " FROM `spawntemplate` WHERE `SpawnTemplateBaseId`='" + m_state.EscapeString(id.ToString()) + "'",
+				command,
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
-					reader.Read();
+					if (!reader.Read())
+					{
+						throw new RowNotFoundException();
+					}
 					FillEntityWithRow(ref result, reader);
 				}
 			);
@@ -51,7 +55,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public virtual void Create(SpawnTemplateEntity obj)
 		{
 			m_state.ExecuteNonQuery(
-				"INSERT INTO `spawntemplate` VALUES (`" + obj.Id.ToString() + "`,`" + obj.Count.ToString() + "`,`" + obj.GameNPCTemplate.ToString() + "`,`" + obj.SpawnGeneratorBase.ToString() + "`,`" + obj.SpawnTemplateBaseType.ToString() + "`);");
+				"INSERT INTO `spawntemplate` VALUES ('" + m_state.EscapeString(obj.Id.ToString()) + "','" + m_state.EscapeString(obj.Count.ToString()) + "','" + m_state.EscapeString(obj.GameNPCTemplate.ToString()) + "','" + m_state.EscapeString(obj.SpawnGeneratorBase.ToString()) + "','" + m_state.EscapeString(obj.SpawnTemplateBaseType.ToString()) + "');");
 		}
 
 		public virtual void Update(SpawnTemplateEntity obj)
@@ -94,11 +98,9 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return results;
 		}
 
-		public virtual int CountAll()
+		public virtual long CountAll()
 		{
-			return (int)m_state.ExecuteScalar(
-			"SELECT COUNT(*) FROM `spawntemplate`");
-
+			return (long) m_state.ExecuteScalar("SELECT COUNT(*) FROM `spawntemplate`");
 		}
 
 		protected virtual void FillEntityWithRow(ref SpawnTemplateEntity entity, MySqlDataReader reader)
@@ -117,15 +119,17 @@ namespace DOL.Database.MySql.DataAccessObjects
 
 		public IList<string> VerifySchema()
 		{
-			return null;
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `spawntemplate` ("
 				+"`SpawnTemplateBaseId` int,"
 				+"`Count` int,"
 				+"`GameNPCTemplateId` int,"
 				+"`SpawnGeneratorBaseId` int,"
-				+"`SpawnTemplateBaseType` varchar(510) character set unicode"
+				+"`SpawnTemplateBaseType` varchar(255) character set utf8"
 				+", primary key `SpawnTemplateBaseId` (`SpawnTemplateBaseId`)"
+				+")"
 			);
+			m_state.ExecuteNonQuery("OPTIMIZE TABLE `spawntemplate`");
+			return null;
 		}
 
 		public SpawnTemplateDao(MySqlState state)

@@ -29,18 +29,22 @@ namespace DOL.Database.MySql.DataAccessObjects
 	public class InvalidNameDao : IInvalidNameDao
 	{
 		protected static readonly string c_rowFields = "`InvalidNameId`,`Name`";
-		private readonly MySqlState m_state;
+		protected readonly MySqlState m_state;
 
 		public virtual InvalidNameEntity Find(int id)
 		{
 			InvalidNameEntity result = new InvalidNameEntity();
+			string command = "SELECT " + c_rowFields + " FROM `invalidname` WHERE `InvalidNameId`='" + m_state.EscapeString(id.ToString()) + "'";
 
 			m_state.ExecuteQuery(
-				"SELECT " + c_rowFields + " FROM `invalidname` WHERE `InvalidNameId`='" + m_state.EscapeString(id.ToString()) + "'",
+				command,
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
-					reader.Read();
+					if (!reader.Read())
+					{
+						throw new RowNotFoundException();
+					}
 					FillEntityWithRow(ref result, reader);
 				}
 			);
@@ -51,7 +55,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public virtual void Create(InvalidNameEntity obj)
 		{
 			m_state.ExecuteNonQuery(
-				"INSERT INTO `invalidname` VALUES (`" + obj.Id.ToString() + "`,`" + obj.Name.ToString() + "`);");
+				"INSERT INTO `invalidname` VALUES ('" + m_state.EscapeString(obj.Id.ToString()) + "','" + m_state.EscapeString(obj.Name.ToString()) + "');");
 		}
 
 		public virtual void Update(InvalidNameEntity obj)
@@ -94,11 +98,9 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return results;
 		}
 
-		public virtual int CountAll()
+		public virtual long CountAll()
 		{
-			return (int)m_state.ExecuteScalar(
-			"SELECT COUNT(*) FROM `invalidname`");
-
+			return (long) m_state.ExecuteScalar("SELECT COUNT(*) FROM `invalidname`");
 		}
 
 		protected virtual void FillEntityWithRow(ref InvalidNameEntity entity, MySqlDataReader reader)
@@ -114,12 +116,14 @@ namespace DOL.Database.MySql.DataAccessObjects
 
 		public IList<string> VerifySchema()
 		{
-			return null;
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `invalidname` ("
 				+"`InvalidNameId` int,"
-				+"`Name` varchar(510) character set unicode"
+				+"`Name` varchar(255) character set utf8"
 				+", primary key `InvalidNameId` (`InvalidNameId`)"
+				+")"
 			);
+			m_state.ExecuteNonQuery("OPTIMIZE TABLE `invalidname`");
+			return null;
 		}
 
 		public InvalidNameDao(MySqlState state)

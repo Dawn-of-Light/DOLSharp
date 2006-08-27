@@ -124,7 +124,9 @@ namespace DOL.Database.MySql
 				MySqlCommand cmd = connection.CreateCommand();
 				cmd.CommandText = sqlCommand;
 				cmd.CommandType = CommandType.Text;
-				return cmd.ExecuteScalar();
+				object scalar = cmd.ExecuteScalar();
+//				log.FatalFormat("scalar type: {0}  toString: {1}", scalar.GetType().FullName, scalar.ToString());
+				return scalar;
 			}
 			catch(Exception e)
 			{

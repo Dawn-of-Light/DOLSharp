@@ -29,18 +29,22 @@ namespace DOL.Database.MySql.DataAccessObjects
 	public class RegionDao : IRegionDao
 	{
 		protected static readonly string c_rowFields = "`RegionId`,`Description`,`Expansion`,`IsDivingEnabled`,`IsDungeon`,`IsInstance`,`Type`";
-		private readonly MySqlState m_state;
+		protected readonly MySqlState m_state;
 
 		public virtual RegionEntity Find(int id)
 		{
 			RegionEntity result = new RegionEntity();
+			string command = "SELECT " + c_rowFields + " FROM `region` WHERE `RegionId`='" + m_state.EscapeString(id.ToString()) + "'";
 
 			m_state.ExecuteQuery(
-				"SELECT " + c_rowFields + " FROM `region` WHERE `RegionId`='" + m_state.EscapeString(id.ToString()) + "'",
+				command,
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
-					reader.Read();
+					if (!reader.Read())
+					{
+						throw new RowNotFoundException();
+					}
 					FillEntityWithRow(ref result, reader);
 				}
 			);
@@ -51,7 +55,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public virtual void Create(RegionEntity obj)
 		{
 			m_state.ExecuteNonQuery(
-				"INSERT INTO `region` VALUES (`" + obj.Id.ToString() + "`,`" + obj.Description.ToString() + "`,`" + obj.Expansion.ToString() + "`,`" + obj.IsDivingEnabled.ToString() + "`,`" + obj.IsDungeon.ToString() + "`,`" + obj.IsInstance.ToString() + "`,`" + obj.Type.ToString() + "`);");
+				"INSERT INTO `region` VALUES ('" + m_state.EscapeString(obj.Id.ToString()) + "','" + m_state.EscapeString(obj.Description.ToString()) + "','" + m_state.EscapeString(obj.Expansion.ToString()) + "','" + m_state.EscapeString(obj.IsDivingEnabled.ToString()) + "','" + m_state.EscapeString(obj.IsDungeon.ToString()) + "','" + m_state.EscapeString(obj.IsInstance.ToString()) + "','" + m_state.EscapeString(obj.Type.ToString()) + "');");
 		}
 
 		public virtual void Update(RegionEntity obj)
@@ -94,11 +98,9 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return results;
 		}
 
-		public virtual int CountAll()
+		public virtual long CountAll()
 		{
-			return (int)m_state.ExecuteScalar(
-			"SELECT COUNT(*) FROM `region`");
-
+			return (long) m_state.ExecuteScalar("SELECT COUNT(*) FROM `region`");
 		}
 
 		protected virtual void FillEntityWithRow(ref RegionEntity entity, MySqlDataReader reader)
@@ -119,17 +121,19 @@ namespace DOL.Database.MySql.DataAccessObjects
 
 		public IList<string> VerifySchema()
 		{
-			return null;
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `region` ("
 				+"`RegionId` int,"
-				+"`Description` varchar(510) character set unicode,"
+				+"`Description` varchar(255) character set utf8,"
 				+"`Expansion` tinyint unsigned,"
 				+"`IsDivingEnabled` bit,"
 				+"`IsDungeon` bit,"
 				+"`IsInstance` bit,"
 				+"`Type` tinyint unsigned"
 				+", primary key `RegionId` (`RegionId`)"
+				+")"
 			);
+			m_state.ExecuteNonQuery("OPTIMIZE TABLE `region`");
+			return null;
 		}
 
 		public RegionDao(MySqlState state)

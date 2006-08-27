@@ -29,18 +29,22 @@ namespace DOL.Database.MySql.DataAccessObjects
 	public class JumpPointDao : IJumpPointDao
 	{
 		protected static readonly string c_rowFields = "`JumpPointId`,`AllowedRealm`,`Heading`,`JumpPointType`,`Region`,`X`,`Y`,`Z`";
-		private readonly MySqlState m_state;
+		protected readonly MySqlState m_state;
 
 		public virtual JumpPointEntity Find(int id)
 		{
 			JumpPointEntity result = new JumpPointEntity();
+			string command = "SELECT " + c_rowFields + " FROM `jumppoint` WHERE `JumpPointId`='" + m_state.EscapeString(id.ToString()) + "'";
 
 			m_state.ExecuteQuery(
-				"SELECT " + c_rowFields + " FROM `jumppoint` WHERE `JumpPointId`='" + m_state.EscapeString(id.ToString()) + "'",
+				command,
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
-					reader.Read();
+					if (!reader.Read())
+					{
+						throw new RowNotFoundException();
+					}
 					FillEntityWithRow(ref result, reader);
 				}
 			);
@@ -51,7 +55,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public virtual void Create(JumpPointEntity obj)
 		{
 			m_state.ExecuteNonQuery(
-				"INSERT INTO `jumppoint` VALUES (`" + obj.Id.ToString() + "`,`" + obj.AllowedRealm.ToString() + "`,`" + obj.Heading.ToString() + "`,`" + obj.JumpPointType.ToString() + "`,`" + obj.Region.ToString() + "`,`" + obj.X.ToString() + "`,`" + obj.Y.ToString() + "`,`" + obj.Z.ToString() + "`);");
+				"INSERT INTO `jumppoint` VALUES ('" + m_state.EscapeString(obj.Id.ToString()) + "','" + m_state.EscapeString(obj.AllowedRealm.ToString()) + "','" + m_state.EscapeString(obj.Heading.ToString()) + "','" + m_state.EscapeString(obj.JumpPointType.ToString()) + "','" + m_state.EscapeString(obj.Region.ToString()) + "','" + m_state.EscapeString(obj.X.ToString()) + "','" + m_state.EscapeString(obj.Y.ToString()) + "','" + m_state.EscapeString(obj.Z.ToString()) + "');");
 		}
 
 		public virtual void Update(JumpPointEntity obj)
@@ -94,11 +98,9 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return results;
 		}
 
-		public virtual int CountAll()
+		public virtual long CountAll()
 		{
-			return (int)m_state.ExecuteScalar(
-			"SELECT COUNT(*) FROM `jumppoint`");
-
+			return (long) m_state.ExecuteScalar("SELECT COUNT(*) FROM `jumppoint`");
 		}
 
 		protected virtual void FillEntityWithRow(ref JumpPointEntity entity, MySqlDataReader reader)
@@ -120,18 +122,20 @@ namespace DOL.Database.MySql.DataAccessObjects
 
 		public IList<string> VerifySchema()
 		{
-			return null;
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `jumppoint` ("
 				+"`JumpPointId` int,"
 				+"`AllowedRealm` tinyint unsigned,"
 				+"`Heading` int,"
-				+"`JumpPointType` varchar(510) character set unicode,"
+				+"`JumpPointType` varchar(255) character set utf8,"
 				+"`Region` int,"
 				+"`X` int,"
 				+"`Y` int,"
 				+"`Z` int"
 				+", primary key `JumpPointId` (`JumpPointId`)"
+				+")"
 			);
+			m_state.ExecuteNonQuery("OPTIMIZE TABLE `jumppoint`");
+			return null;
 		}
 
 		public JumpPointDao(MySqlState state)

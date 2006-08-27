@@ -29,18 +29,22 @@ namespace DOL.Database.MySql.DataAccessObjects
 	public class SpellLineDao : ISpellLineDao
 	{
 		protected static readonly string c_rowFields = "`KeyName`,`IsBaseLine`,`Name`,`Spec`";
-		private readonly MySqlState m_state;
+		protected readonly MySqlState m_state;
 
 		public virtual SpellLineEntity Find(string keyName)
 		{
 			SpellLineEntity result = new SpellLineEntity();
+			string command = "SELECT " + c_rowFields + " FROM `spellline` WHERE `KeyName`='" + m_state.EscapeString(keyName.ToString()) + "'";
 
 			m_state.ExecuteQuery(
-				"SELECT " + c_rowFields + " FROM `spellline` WHERE `KeyName`='" + m_state.EscapeString(keyName.ToString()) + "'",
+				command,
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
-					reader.Read();
+					if (!reader.Read())
+					{
+						throw new RowNotFoundException();
+					}
 					FillEntityWithRow(ref result, reader);
 				}
 			);
@@ -51,7 +55,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public virtual void Create(SpellLineEntity obj)
 		{
 			m_state.ExecuteNonQuery(
-				"INSERT INTO `spellline` VALUES (`" + obj.KeyName.ToString() + "`,`" + obj.IsBaseLine.ToString() + "`,`" + obj.Name.ToString() + "`,`" + obj.Spec.ToString() + "`);");
+				"INSERT INTO `spellline` VALUES ('" + m_state.EscapeString(obj.KeyName.ToString()) + "','" + m_state.EscapeString(obj.IsBaseLine.ToString()) + "','" + m_state.EscapeString(obj.Name.ToString()) + "','" + m_state.EscapeString(obj.Spec.ToString()) + "');");
 		}
 
 		public virtual void Update(SpellLineEntity obj)
@@ -94,11 +98,9 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return results;
 		}
 
-		public virtual int CountAll()
+		public virtual long CountAll()
 		{
-			return (int)m_state.ExecuteScalar(
-			"SELECT COUNT(*) FROM `spellline`");
-
+			return (long) m_state.ExecuteScalar("SELECT COUNT(*) FROM `spellline`");
 		}
 
 		protected virtual void FillEntityWithRow(ref SpellLineEntity entity, MySqlDataReader reader)
@@ -116,14 +118,16 @@ namespace DOL.Database.MySql.DataAccessObjects
 
 		public IList<string> VerifySchema()
 		{
-			return null;
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `spellline` ("
-				+"`KeyName` varchar(510) character set unicode,"
+				+"`KeyName` varchar(255) character set utf8,"
 				+"`IsBaseLine` bit,"
-				+"`Name` varchar(510) character set unicode,"
-				+"`Spec` varchar(510) character set unicode"
+				+"`Name` varchar(255) character set utf8,"
+				+"`Spec` varchar(255) character set utf8"
 				+", primary key `KeyName` (`KeyName`)"
+				+")"
 			);
+			m_state.ExecuteNonQuery("OPTIMIZE TABLE `spellline`");
+			return null;
 		}
 
 		public SpellLineDao(MySqlState state)

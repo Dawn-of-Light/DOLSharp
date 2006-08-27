@@ -29,18 +29,22 @@ namespace DOL.Database.MySql.DataAccessObjects
 	public class PathPointDao : IPathPointDao
 	{
 		protected static readonly string c_rowFields = "`PathPointId`,`NextPoint`,`Speed`,`X`,`Y`,`Z`";
-		private readonly MySqlState m_state;
+		protected readonly MySqlState m_state;
 
 		public virtual PathPointEntity Find(int id)
 		{
 			PathPointEntity result = new PathPointEntity();
+			string command = "SELECT " + c_rowFields + " FROM `pathpoint` WHERE `PathPointId`='" + m_state.EscapeString(id.ToString()) + "'";
 
 			m_state.ExecuteQuery(
-				"SELECT " + c_rowFields + " FROM `pathpoint` WHERE `PathPointId`='" + m_state.EscapeString(id.ToString()) + "'",
+				command,
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
-					reader.Read();
+					if (!reader.Read())
+					{
+						throw new RowNotFoundException();
+					}
 					FillEntityWithRow(ref result, reader);
 				}
 			);
@@ -51,7 +55,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public virtual void Create(PathPointEntity obj)
 		{
 			m_state.ExecuteNonQuery(
-				"INSERT INTO `pathpoint` VALUES (`" + obj.Id.ToString() + "`,`" + obj.NextPoint.ToString() + "`,`" + obj.Speed.ToString() + "`,`" + obj.X.ToString() + "`,`" + obj.Y.ToString() + "`,`" + obj.Z.ToString() + "`);");
+				"INSERT INTO `pathpoint` VALUES ('" + m_state.EscapeString(obj.Id.ToString()) + "','" + m_state.EscapeString(obj.NextPoint.ToString()) + "','" + m_state.EscapeString(obj.Speed.ToString()) + "','" + m_state.EscapeString(obj.X.ToString()) + "','" + m_state.EscapeString(obj.Y.ToString()) + "','" + m_state.EscapeString(obj.Z.ToString()) + "');");
 		}
 
 		public virtual void Update(PathPointEntity obj)
@@ -94,11 +98,9 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return results;
 		}
 
-		public virtual int CountAll()
+		public virtual long CountAll()
 		{
-			return (int)m_state.ExecuteScalar(
-			"SELECT COUNT(*) FROM `pathpoint`");
-
+			return (long) m_state.ExecuteScalar("SELECT COUNT(*) FROM `pathpoint`");
 		}
 
 		protected virtual void FillEntityWithRow(ref PathPointEntity entity, MySqlDataReader reader)
@@ -118,7 +120,6 @@ namespace DOL.Database.MySql.DataAccessObjects
 
 		public IList<string> VerifySchema()
 		{
-			return null;
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `pathpoint` ("
 				+"`PathPointId` int,"
 				+"`NextPoint` int,"
@@ -127,7 +128,10 @@ namespace DOL.Database.MySql.DataAccessObjects
 				+"`Y` int,"
 				+"`Z` int"
 				+", primary key `PathPointId` (`PathPointId`)"
+				+")"
 			);
+			m_state.ExecuteNonQuery("OPTIMIZE TABLE `pathpoint`");
+			return null;
 		}
 
 		public PathPointDao(MySqlState state)

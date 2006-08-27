@@ -29,18 +29,22 @@ namespace DOL.Database.MySql.DataAccessObjects
 	public class AccountDao : IAccountDao
 	{
 		protected static readonly string c_rowFields = "`AccountId`,`AccountName`,`BanAuthor`,`BanDuration`,`BanReason`,`CreationDate`,`LastLogin`,`LastLoginIp`,`Mail`,`Password`,`PrivLevel`,`Realm`";
-		private readonly MySqlState m_state;
+		protected readonly MySqlState m_state;
 
 		public virtual AccountEntity Find(int id)
 		{
 			AccountEntity result = new AccountEntity();
+			string command = "SELECT " + c_rowFields + " FROM `account` WHERE `AccountId`='" + m_state.EscapeString(id.ToString()) + "'";
 
 			m_state.ExecuteQuery(
-				"SELECT " + c_rowFields + " FROM `account` WHERE `AccountId`='" + m_state.EscapeString(id.ToString()) + "'",
+				command,
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
-					reader.Read();
+					if (!reader.Read())
+					{
+						throw new RowNotFoundException();
+					}
 					FillEntityWithRow(ref result, reader);
 				}
 			);
@@ -51,7 +55,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public virtual void Create(AccountEntity obj)
 		{
 			m_state.ExecuteNonQuery(
-				"INSERT INTO `account` VALUES (`" + obj.Id.ToString() + "`,`" + obj.AccountName.ToString() + "`,`" + obj.BanAuthor.ToString() + "`,`" + obj.BanDuration.ToString() + "`,`" + obj.BanReason.ToString() + "`,`" + obj.CreationDate.ToString() + "`,`" + obj.LastLogin.ToString() + "`,`" + obj.LastLoginIp.ToString() + "`,`" + obj.Mail.ToString() + "`,`" + obj.Password.ToString() + "`,`" + obj.PrivLevel.ToString() + "`,`" + obj.Realm.ToString() + "`);");
+				"INSERT INTO `account` VALUES ('" + m_state.EscapeString(obj.Id.ToString()) + "','" + m_state.EscapeString(obj.AccountName.ToString()) + "','" + m_state.EscapeString(obj.BanAuthor.ToString()) + "','" + m_state.EscapeString(obj.BanDuration.ToString()) + "','" + m_state.EscapeString(obj.BanReason.ToString()) + "','" + m_state.EscapeString(obj.CreationDate.ToString()) + "','" + m_state.EscapeString(obj.LastLogin.ToString()) + "','" + m_state.EscapeString(obj.LastLoginIp.ToString()) + "','" + m_state.EscapeString(obj.Mail.ToString()) + "','" + m_state.EscapeString(obj.Password.ToString()) + "','" + m_state.EscapeString(obj.PrivLevel.ToString()) + "','" + m_state.EscapeString(obj.Realm.ToString()) + "');");
 		}
 
 		public virtual void Update(AccountEntity obj)
@@ -94,11 +98,9 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return results;
 		}
 
-		public virtual int CountAll()
+		public virtual long CountAll()
 		{
-			return (int)m_state.ExecuteScalar(
-			"SELECT COUNT(*) FROM `account`");
-
+			return (long) m_state.ExecuteScalar("SELECT COUNT(*) FROM `account`");
 		}
 
 		protected virtual void FillEntityWithRow(ref AccountEntity entity, MySqlDataReader reader)
@@ -124,22 +126,24 @@ namespace DOL.Database.MySql.DataAccessObjects
 
 		public IList<string> VerifySchema()
 		{
-			return null;
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `account` ("
 				+"`AccountId` int,"
-				+"`AccountName` varchar(40) character set unicode,"
-				+"`BanAuthor` varchar(510) character set unicode,"
+				+"`AccountName` varchar(40) character set utf8,"
+				+"`BanAuthor` varchar(255) character set utf8,"
 				+"`BanDuration` bigint,"
-				+"`BanReason` varchar(510) character set unicode,"
+				+"`BanReason` varchar(255) character set utf8,"
 				+"`CreationDate` datetime,"
 				+"`LastLogin` datetime,"
-				+"`LastLoginIp` varchar(510) character set unicode,"
-				+"`Mail` varchar(510) character set unicode,"
-				+"`Password` varchar(510) character set unicode,"
+				+"`LastLoginIp` varchar(255) character set utf8,"
+				+"`Mail` varchar(255) character set utf8,"
+				+"`Password` varchar(255) character set utf8,"
 				+"`PrivLevel` tinyint unsigned,"
 				+"`Realm` tinyint unsigned"
 				+", primary key `AccountId` (`AccountId`)"
+				+")"
 			);
+			m_state.ExecuteNonQuery("OPTIMIZE TABLE `account`");
+			return null;
 		}
 
 		public AccountDao(MySqlState state)

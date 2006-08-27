@@ -29,18 +29,22 @@ namespace DOL.Database.MySql.DataAccessObjects
 	public class RawMaterialDao : IRawMaterialDao
 	{
 		protected static readonly string c_rowFields = "`CountNeeded`,`CraftItemDataId`,`MaterialTemplate`";
-		private readonly MySqlState m_state;
+		protected readonly MySqlState m_state;
 
 		public virtual RawMaterialEntity Find(byte countNeeded, int craftItemData, string materialTemplate)
 		{
 			RawMaterialEntity result = new RawMaterialEntity();
+			string command = "SELECT " + c_rowFields + " FROM `rawmaterials` WHERE `CountNeeded`='" + m_state.EscapeString(countNeeded.ToString()) + "', `CraftItemDataId`='" + m_state.EscapeString(craftItemData.ToString()) + "', `MaterialTemplate`='" + m_state.EscapeString(materialTemplate.ToString()) + "'";
 
 			m_state.ExecuteQuery(
-				"SELECT " + c_rowFields + " FROM `rawmaterials` WHERE `CountNeeded`='" + m_state.EscapeString(countNeeded.ToString()) + "', `CraftItemDataId`='" + m_state.EscapeString(craftItemData.ToString()) + "', `MaterialTemplate`='" + m_state.EscapeString(materialTemplate.ToString()) + "'",
+				command,
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
-					reader.Read();
+					if (!reader.Read())
+					{
+						throw new RowNotFoundException();
+					}
 					FillEntityWithRow(ref result, reader);
 				}
 			);
@@ -51,7 +55,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public virtual void Create(RawMaterialEntity obj)
 		{
 			m_state.ExecuteNonQuery(
-				"INSERT INTO `rawmaterials` VALUES (`" + obj.CountNeeded.ToString() + "`,`" + obj.CraftItemData.ToString() + "`,`" + obj.MaterialTemplate.ToString() + "`);");
+				"INSERT INTO `rawmaterials` VALUES ('" + m_state.EscapeString(obj.CountNeeded.ToString()) + "','" + m_state.EscapeString(obj.CraftItemData.ToString()) + "','" + m_state.EscapeString(obj.MaterialTemplate.ToString()) + "');");
 		}
 
 		public virtual void Update(RawMaterialEntity obj)
@@ -94,11 +98,9 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return results;
 		}
 
-		public virtual int CountAll()
+		public virtual long CountAll()
 		{
-			return (int)m_state.ExecuteScalar(
-			"SELECT COUNT(*) FROM `rawmaterials`");
-
+			return (long) m_state.ExecuteScalar("SELECT COUNT(*) FROM `rawmaterials`");
 		}
 
 		protected virtual void FillEntityWithRow(ref RawMaterialEntity entity, MySqlDataReader reader)
@@ -115,13 +117,15 @@ namespace DOL.Database.MySql.DataAccessObjects
 
 		public IList<string> VerifySchema()
 		{
-			return null;
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `rawmaterials` ("
 				+"`CountNeeded` tinyint unsigned,"
 				+"`CraftItemDataId` int,"
-				+"`MaterialTemplate` varchar(510) character set unicode"
-				+", primary key `CountNeeded` (`CountNeeded`,`CraftItemDataId`,`MaterialTemplate`)"
+				+"`MaterialTemplate` varchar(255) character set utf8"
+				+", primary key `CountNeededCraftItemDataIdMaterialTemplate` (`CountNeeded`,`CraftItemDataId`,`MaterialTemplate`)"
+				+")"
 			);
+			m_state.ExecuteNonQuery("OPTIMIZE TABLE `rawmaterials`");
+			return null;
 		}
 
 		public RawMaterialDao(MySqlState state)

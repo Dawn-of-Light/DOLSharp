@@ -29,18 +29,22 @@ namespace DOL.Database.MySql.DataAccessObjects
 	public class SinglePermissionDao : ISinglePermissionDao
 	{
 		protected static readonly string c_rowFields = "`SinglePermissionId`,`Command`,`PlayerId`";
-		private readonly MySqlState m_state;
+		protected readonly MySqlState m_state;
 
 		public virtual SinglePermissionEntity Find(int id)
 		{
 			SinglePermissionEntity result = new SinglePermissionEntity();
+			string command = "SELECT " + c_rowFields + " FROM `singlepermission` WHERE `SinglePermissionId`='" + m_state.EscapeString(id.ToString()) + "'";
 
 			m_state.ExecuteQuery(
-				"SELECT " + c_rowFields + " FROM `singlepermission` WHERE `SinglePermissionId`='" + m_state.EscapeString(id.ToString()) + "'",
+				command,
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
-					reader.Read();
+					if (!reader.Read())
+					{
+						throw new RowNotFoundException();
+					}
 					FillEntityWithRow(ref result, reader);
 				}
 			);
@@ -51,7 +55,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public virtual void Create(SinglePermissionEntity obj)
 		{
 			m_state.ExecuteNonQuery(
-				"INSERT INTO `singlepermission` VALUES (`" + obj.Id.ToString() + "`,`" + obj.Command.ToString() + "`,`" + obj.PlayerId.ToString() + "`);");
+				"INSERT INTO `singlepermission` VALUES ('" + m_state.EscapeString(obj.Id.ToString()) + "','" + m_state.EscapeString(obj.Command.ToString()) + "','" + m_state.EscapeString(obj.PlayerId.ToString()) + "');");
 		}
 
 		public virtual void Update(SinglePermissionEntity obj)
@@ -94,11 +98,9 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return results;
 		}
 
-		public virtual int CountAll()
+		public virtual long CountAll()
 		{
-			return (int)m_state.ExecuteScalar(
-			"SELECT COUNT(*) FROM `singlepermission`");
-
+			return (long) m_state.ExecuteScalar("SELECT COUNT(*) FROM `singlepermission`");
 		}
 
 		protected virtual void FillEntityWithRow(ref SinglePermissionEntity entity, MySqlDataReader reader)
@@ -115,13 +117,15 @@ namespace DOL.Database.MySql.DataAccessObjects
 
 		public IList<string> VerifySchema()
 		{
-			return null;
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `singlepermission` ("
 				+"`SinglePermissionId` int,"
-				+"`Command` varchar(510) character set unicode,"
-				+"`PlayerId` varchar(510) character set unicode"
+				+"`Command` varchar(255) character set utf8,"
+				+"`PlayerId` varchar(255) character set utf8"
 				+", primary key `SinglePermissionId` (`SinglePermissionId`)"
+				+")"
 			);
+			m_state.ExecuteNonQuery("OPTIMIZE TABLE `singlepermission`");
+			return null;
 		}
 
 		public SinglePermissionDao(MySqlState state)

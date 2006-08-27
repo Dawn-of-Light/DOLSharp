@@ -29,18 +29,22 @@ namespace DOL.Database.MySql.DataAccessObjects
 	public class FactionDao : IFactionDao
 	{
 		protected static readonly string c_rowFields = "`FactionId`,`Name`";
-		private readonly MySqlState m_state;
+		protected readonly MySqlState m_state;
 
 		public virtual FactionEntity Find(int factionId)
 		{
 			FactionEntity result = new FactionEntity();
+			string command = "SELECT " + c_rowFields + " FROM `faction` WHERE `FactionId`='" + m_state.EscapeString(factionId.ToString()) + "'";
 
 			m_state.ExecuteQuery(
-				"SELECT " + c_rowFields + " FROM `faction` WHERE `FactionId`='" + m_state.EscapeString(factionId.ToString()) + "'",
+				command,
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
-					reader.Read();
+					if (!reader.Read())
+					{
+						throw new RowNotFoundException();
+					}
 					FillEntityWithRow(ref result, reader);
 				}
 			);
@@ -51,7 +55,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public virtual void Create(FactionEntity obj)
 		{
 			m_state.ExecuteNonQuery(
-				"INSERT INTO `faction` VALUES (`" + obj.FactionId.ToString() + "`,`" + obj.Name.ToString() + "`);");
+				"INSERT INTO `faction` VALUES ('" + m_state.EscapeString(obj.FactionId.ToString()) + "','" + m_state.EscapeString(obj.Name.ToString()) + "');");
 		}
 
 		public virtual void Update(FactionEntity obj)
@@ -94,11 +98,9 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return results;
 		}
 
-		public virtual int CountAll()
+		public virtual long CountAll()
 		{
-			return (int)m_state.ExecuteScalar(
-			"SELECT COUNT(*) FROM `faction`");
-
+			return (long) m_state.ExecuteScalar("SELECT COUNT(*) FROM `faction`");
 		}
 
 		protected virtual void FillEntityWithRow(ref FactionEntity entity, MySqlDataReader reader)
@@ -114,12 +116,14 @@ namespace DOL.Database.MySql.DataAccessObjects
 
 		public IList<string> VerifySchema()
 		{
-			return null;
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `faction` ("
 				+"`FactionId` int,"
-				+"`Name` varchar(510) character set unicode"
+				+"`Name` varchar(255) character set utf8"
 				+", primary key `FactionId` (`FactionId`)"
+				+")"
 			);
+			m_state.ExecuteNonQuery("OPTIMIZE TABLE `faction`");
+			return null;
 		}
 
 		public FactionDao(MySqlState state)

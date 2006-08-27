@@ -29,18 +29,22 @@ namespace DOL.Database.MySql.DataAccessObjects
 	public class LootDao : ILootDao
 	{
 		protected static readonly string c_rowFields = "`LootId`,`Chance`,`GenericItemTemplateId`,`LootListId`,`LootType`";
-		private readonly MySqlState m_state;
+		protected readonly MySqlState m_state;
 
 		public virtual LootEntity Find(int id)
 		{
 			LootEntity result = new LootEntity();
+			string command = "SELECT " + c_rowFields + " FROM `loot` WHERE `LootId`='" + m_state.EscapeString(id.ToString()) + "'";
 
 			m_state.ExecuteQuery(
-				"SELECT " + c_rowFields + " FROM `loot` WHERE `LootId`='" + m_state.EscapeString(id.ToString()) + "'",
+				command,
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
-					reader.Read();
+					if (!reader.Read())
+					{
+						throw new RowNotFoundException();
+					}
 					FillEntityWithRow(ref result, reader);
 				}
 			);
@@ -51,7 +55,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public virtual void Create(LootEntity obj)
 		{
 			m_state.ExecuteNonQuery(
-				"INSERT INTO `loot` VALUES (`" + obj.Id.ToString() + "`,`" + obj.Chance.ToString() + "`,`" + obj.GenericItemTemplate.ToString() + "`,`" + obj.LootListId.ToString() + "`,`" + obj.LootType.ToString() + "`);");
+				"INSERT INTO `loot` VALUES ('" + m_state.EscapeString(obj.Id.ToString()) + "','" + m_state.EscapeString(obj.Chance.ToString()) + "','" + m_state.EscapeString(obj.GenericItemTemplate.ToString()) + "','" + m_state.EscapeString(obj.LootListId.ToString()) + "','" + m_state.EscapeString(obj.LootType.ToString()) + "');");
 		}
 
 		public virtual void Update(LootEntity obj)
@@ -94,11 +98,9 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return results;
 		}
 
-		public virtual int CountAll()
+		public virtual long CountAll()
 		{
-			return (int)m_state.ExecuteScalar(
-			"SELECT COUNT(*) FROM `loot`");
-
+			return (long) m_state.ExecuteScalar("SELECT COUNT(*) FROM `loot`");
 		}
 
 		protected virtual void FillEntityWithRow(ref LootEntity entity, MySqlDataReader reader)
@@ -117,15 +119,17 @@ namespace DOL.Database.MySql.DataAccessObjects
 
 		public IList<string> VerifySchema()
 		{
-			return null;
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `loot` ("
 				+"`LootId` int,"
 				+"`Chance` int,"
-				+"`GenericItemTemplateId` varchar(510) character set unicode,"
+				+"`GenericItemTemplateId` varchar(255) character set utf8,"
 				+"`LootListId` int,"
-				+"`LootType` varchar(510) character set unicode"
+				+"`LootType` varchar(255) character set utf8"
 				+", primary key `LootId` (`LootId`)"
+				+")"
 			);
+			m_state.ExecuteNonQuery("OPTIMIZE TABLE `loot`");
+			return null;
 		}
 
 		public LootDao(MySqlState state)
