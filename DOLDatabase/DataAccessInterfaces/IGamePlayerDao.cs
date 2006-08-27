@@ -27,6 +27,6 @@ namespace DOL.Database.DataAccessInterfaces
 	{
 		GamePlayerEntity Find(int id);
 		IList<GamePlayerEntity> FindByAccountAndRealm(int account, byte realm);
-		int CountByAccountAndRealm(int account, byte realm);
+		long CountByAccountAndRealm(int account, byte realm);
 	}
 }

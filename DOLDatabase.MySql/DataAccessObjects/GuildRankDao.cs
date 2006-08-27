@@ -29,18 +29,22 @@ namespace DOL.Database.MySql.DataAccessObjects
 	public class GuildRankDao : IGuildRankDao
 	{
 		protected static readonly string c_rowFields = "`GuildRankId`,`AcHear`,`AcSpeak`,`Alli`,`Buff`,`BuyBanner`,`Claim`,`Deposit`,`Dues`,`Emblem`,`GcHear`,`GcSpeak`,`GetMission`,`GuildId`,`Invite`,`Motd`,`OcHear`,`OcSpeak`,`Promote`,`RankLevel`,`Release`,`Remove`,`SetNote`,`SummonBanner`,`Title`,`Upgrade`,`View`,`Withdraw`";
-		private readonly MySqlState m_state;
+		protected readonly MySqlState m_state;
 
 		public virtual GuildRankEntity Find(int id)
 		{
 			GuildRankEntity result = new GuildRankEntity();
+			string command = "SELECT " + c_rowFields + " FROM `guildrank` WHERE `GuildRankId`='" + m_state.EscapeString(id.ToString()) + "'";
 
 			m_state.ExecuteQuery(
-				"SELECT " + c_rowFields + " FROM `guildrank` WHERE `GuildRankId`='" + m_state.EscapeString(id.ToString()) + "'",
+				command,
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
-					reader.Read();
+					if (!reader.Read())
+					{
+						throw new RowNotFoundException();
+					}
 					FillEntityWithRow(ref result, reader);
 				}
 			);
@@ -51,7 +55,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public virtual void Create(GuildRankEntity obj)
 		{
 			m_state.ExecuteNonQuery(
-				"INSERT INTO `guildrank` VALUES (`" + obj.Id.ToString() + "`,`" + obj.AcHear.ToString() + "`,`" + obj.AcSpeak.ToString() + "`,`" + obj.Alli.ToString() + "`,`" + obj.Buff.ToString() + "`,`" + obj.BuyBanner.ToString() + "`,`" + obj.Claim.ToString() + "`,`" + obj.Deposit.ToString() + "`,`" + obj.Dues.ToString() + "`,`" + obj.Emblem.ToString() + "`,`" + obj.GcHear.ToString() + "`,`" + obj.GcSpeak.ToString() + "`,`" + obj.GetMission.ToString() + "`,`" + obj.Guild.ToString() + "`,`" + obj.Invite.ToString() + "`,`" + obj.Motd.ToString() + "`,`" + obj.OcHear.ToString() + "`,`" + obj.OcSpeak.ToString() + "`,`" + obj.Promote.ToString() + "`,`" + obj.RankLevel.ToString() + "`,`" + obj.Release.ToString() + "`,`" + obj.Remove.ToString() + "`,`" + obj.SetNote.ToString() + "`,`" + obj.SummonBanner.ToString() + "`,`" + obj.Title.ToString() + "`,`" + obj.Upgrade.ToString() + "`,`" + obj.View.ToString() + "`,`" + obj.Withdraw.ToString() + "`);");
+				"INSERT INTO `guildrank` VALUES ('" + m_state.EscapeString(obj.Id.ToString()) + "','" + m_state.EscapeString(obj.AcHear.ToString()) + "','" + m_state.EscapeString(obj.AcSpeak.ToString()) + "','" + m_state.EscapeString(obj.Alli.ToString()) + "','" + m_state.EscapeString(obj.Buff.ToString()) + "','" + m_state.EscapeString(obj.BuyBanner.ToString()) + "','" + m_state.EscapeString(obj.Claim.ToString()) + "','" + m_state.EscapeString(obj.Deposit.ToString()) + "','" + m_state.EscapeString(obj.Dues.ToString()) + "','" + m_state.EscapeString(obj.Emblem.ToString()) + "','" + m_state.EscapeString(obj.GcHear.ToString()) + "','" + m_state.EscapeString(obj.GcSpeak.ToString()) + "','" + m_state.EscapeString(obj.GetMission.ToString()) + "','" + m_state.EscapeString(obj.Guild.ToString()) + "','" + m_state.EscapeString(obj.Invite.ToString()) + "','" + m_state.EscapeString(obj.Motd.ToString()) + "','" + m_state.EscapeString(obj.OcHear.ToString()) + "','" + m_state.EscapeString(obj.OcSpeak.ToString()) + "','" + m_state.EscapeString(obj.Promote.ToString()) + "','" + m_state.EscapeString(obj.RankLevel.ToString()) + "','" + m_state.EscapeString(obj.Release.ToString()) + "','" + m_state.EscapeString(obj.Remove.ToString()) + "','" + m_state.EscapeString(obj.SetNote.ToString()) + "','" + m_state.EscapeString(obj.SummonBanner.ToString()) + "','" + m_state.EscapeString(obj.Title.ToString()) + "','" + m_state.EscapeString(obj.Upgrade.ToString()) + "','" + m_state.EscapeString(obj.View.ToString()) + "','" + m_state.EscapeString(obj.Withdraw.ToString()) + "');");
 		}
 
 		public virtual void Update(GuildRankEntity obj)
@@ -94,11 +98,9 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return results;
 		}
 
-		public virtual int CountAll()
+		public virtual long CountAll()
 		{
-			return (int)m_state.ExecuteScalar(
-			"SELECT COUNT(*) FROM `guildrank`");
-
+			return (long) m_state.ExecuteScalar("SELECT COUNT(*) FROM `guildrank`");
 		}
 
 		protected virtual void FillEntityWithRow(ref GuildRankEntity entity, MySqlDataReader reader)
@@ -140,7 +142,6 @@ namespace DOL.Database.MySql.DataAccessObjects
 
 		public IList<string> VerifySchema()
 		{
-			return null;
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `guildrank` ("
 				+"`GuildRankId` int,"
 				+"`AcHear` bit,"
@@ -166,12 +167,15 @@ namespace DOL.Database.MySql.DataAccessObjects
 				+"`Remove` bit,"
 				+"`SetNote` bit,"
 				+"`SummonBanner` bit,"
-				+"`Title` varchar(510) character set unicode,"
+				+"`Title` varchar(255) character set utf8,"
 				+"`Upgrade` bit,"
 				+"`View` bit,"
 				+"`Withdraw` bit"
 				+", primary key `GuildRankId` (`GuildRankId`)"
+				+")"
 			);
+			m_state.ExecuteNonQuery("OPTIMIZE TABLE `guildrank`");
+			return null;
 		}
 
 		public GuildRankDao(MySqlState state)

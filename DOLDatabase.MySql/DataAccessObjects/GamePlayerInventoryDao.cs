@@ -29,18 +29,22 @@ namespace DOL.Database.MySql.DataAccessObjects
 	public class GamePlayerInventoryDao : IGamePlayerInventoryDao
 	{
 		protected static readonly string c_rowFields = "`InventoryId`,`IsCloakHoodUp`";
-		private readonly MySqlState m_state;
+		protected readonly MySqlState m_state;
 
 		public virtual GamePlayerInventoryEntity Find(int inventory)
 		{
 			GamePlayerInventoryEntity result = new GamePlayerInventoryEntity();
+			string command = "SELECT " + c_rowFields + " FROM `gameplayerinventory` WHERE `InventoryId`='" + m_state.EscapeString(inventory.ToString()) + "'";
 
 			m_state.ExecuteQuery(
-				"SELECT " + c_rowFields + " FROM `gameplayerinventory` WHERE `InventoryId`='" + m_state.EscapeString(inventory.ToString()) + "'",
+				command,
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
-					reader.Read();
+					if (!reader.Read())
+					{
+						throw new RowNotFoundException();
+					}
 					FillEntityWithRow(ref result, reader);
 				}
 			);
@@ -51,7 +55,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public virtual void Create(GamePlayerInventoryEntity obj)
 		{
 			m_state.ExecuteNonQuery(
-				"INSERT INTO `gameplayerinventory` VALUES (`" + obj.Inventory.ToString() + "`,`" + obj.IsCloakHoodUp.ToString() + "`);");
+				"INSERT INTO `gameplayerinventory` VALUES ('" + m_state.EscapeString(obj.Inventory.ToString()) + "','" + m_state.EscapeString(obj.IsCloakHoodUp.ToString()) + "');");
 		}
 
 		public virtual void Update(GamePlayerInventoryEntity obj)
@@ -94,11 +98,9 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return results;
 		}
 
-		public virtual int CountAll()
+		public virtual long CountAll()
 		{
-			return (int)m_state.ExecuteScalar(
-			"SELECT COUNT(*) FROM `gameplayerinventory`");
-
+			return (long) m_state.ExecuteScalar("SELECT COUNT(*) FROM `gameplayerinventory`");
 		}
 
 		protected virtual void FillEntityWithRow(ref GamePlayerInventoryEntity entity, MySqlDataReader reader)
@@ -114,12 +116,14 @@ namespace DOL.Database.MySql.DataAccessObjects
 
 		public IList<string> VerifySchema()
 		{
-			return null;
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `gameplayerinventory` ("
 				+"`InventoryId` int,"
 				+"`IsCloakHoodUp` bit"
 				+", primary key `InventoryId` (`InventoryId`)"
+				+")"
 			);
+			m_state.ExecuteNonQuery("OPTIMIZE TABLE `gameplayerinventory`");
+			return null;
 		}
 
 		public GamePlayerInventoryDao(MySqlState state)

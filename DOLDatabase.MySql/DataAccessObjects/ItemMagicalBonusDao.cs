@@ -29,18 +29,22 @@ namespace DOL.Database.MySql.DataAccessObjects
 	public class ItemMagicalBonusDao : IItemMagicalBonusDao
 	{
 		protected static readonly string c_rowFields = "`Bonus`,`BonusType`,`ItemId`";
-		private readonly MySqlState m_state;
+		protected readonly MySqlState m_state;
 
 		public virtual ItemMagicalBonusEntity Find(short bonus, byte bonusType, int item)
 		{
 			ItemMagicalBonusEntity result = new ItemMagicalBonusEntity();
+			string command = "SELECT " + c_rowFields + " FROM `itemmagicalbonus` WHERE `Bonus`='" + m_state.EscapeString(bonus.ToString()) + "', `BonusType`='" + m_state.EscapeString(bonusType.ToString()) + "', `ItemId`='" + m_state.EscapeString(item.ToString()) + "'";
 
 			m_state.ExecuteQuery(
-				"SELECT " + c_rowFields + " FROM `itemmagicalbonus` WHERE `Bonus`='" + m_state.EscapeString(bonus.ToString()) + "', `BonusType`='" + m_state.EscapeString(bonusType.ToString()) + "', `ItemId`='" + m_state.EscapeString(item.ToString()) + "'",
+				command,
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
-					reader.Read();
+					if (!reader.Read())
+					{
+						throw new RowNotFoundException();
+					}
 					FillEntityWithRow(ref result, reader);
 				}
 			);
@@ -51,7 +55,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public virtual void Create(ItemMagicalBonusEntity obj)
 		{
 			m_state.ExecuteNonQuery(
-				"INSERT INTO `itemmagicalbonus` VALUES (`" + obj.Bonus.ToString() + "`,`" + obj.BonusType.ToString() + "`,`" + obj.Item.ToString() + "`);");
+				"INSERT INTO `itemmagicalbonus` VALUES ('" + m_state.EscapeString(obj.Bonus.ToString()) + "','" + m_state.EscapeString(obj.BonusType.ToString()) + "','" + m_state.EscapeString(obj.Item.ToString()) + "');");
 		}
 
 		public virtual void Update(ItemMagicalBonusEntity obj)
@@ -94,11 +98,9 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return results;
 		}
 
-		public virtual int CountAll()
+		public virtual long CountAll()
 		{
-			return (int)m_state.ExecuteScalar(
-			"SELECT COUNT(*) FROM `itemmagicalbonus`");
-
+			return (long) m_state.ExecuteScalar("SELECT COUNT(*) FROM `itemmagicalbonus`");
 		}
 
 		protected virtual void FillEntityWithRow(ref ItemMagicalBonusEntity entity, MySqlDataReader reader)
@@ -115,13 +117,15 @@ namespace DOL.Database.MySql.DataAccessObjects
 
 		public IList<string> VerifySchema()
 		{
-			return null;
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `itemmagicalbonus` ("
 				+"`Bonus` smallint,"
 				+"`BonusType` tinyint unsigned,"
 				+"`ItemId` int"
-				+", primary key `Bonus` (`Bonus`,`BonusType`,`ItemId`)"
+				+", primary key `BonusBonusTypeItemId` (`Bonus`,`BonusType`,`ItemId`)"
+				+")"
 			);
+			m_state.ExecuteNonQuery("OPTIMIZE TABLE `itemmagicalbonus`");
+			return null;
 		}
 
 		public ItemMagicalBonusDao(MySqlState state)

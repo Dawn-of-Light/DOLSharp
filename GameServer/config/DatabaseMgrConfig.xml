@@ -1,11 +1,55 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <DatabaseMgrConfiguration>
-	<IDatabaseMgr type="DOL.Database.DatabaseMgr, DOLDatabase" />
-	<State type="DOL.Database.MySql.MySqlState, DOLDatabase.MySql" connectionString="Server=localhost; Database=nhibernate; User ID=root; Password=root" />
-	<Register interface="DOL.Database.DataAccessInterfaces.IAccountDao, DOLDatabase" dao="DOL.Database.MySql.DataAccessObjects.AccountDao, DOLDatabase.MySql" />
-	<Register interface="DOL.Database.DataAccessInterfaces.IFactionDao, DOLDatabase" dao="DOL.Database.MySql.DataAccessObjects.FactionDao, DOLDatabase.MySql" />
-	<Register interface="DOL.Database.DataAccessInterfaces.IFriendFactionDao, DOLDatabase" dao="DOL.Database.MySql.DataAccessObjects.FriendFactionDao, DOLDatabase.MySql" />
-	<Register interface="DOL.Database.DataAccessInterfaces.IEnemyFactionDao, DOLDatabase" dao="DOL.Database.MySql.DataAccessObjects.EnemyFactionDao, DOLDatabase.MySql" />
-	<Register interface="DOL.Database.DataAccessInterfaces.IAllianceDao, DOLDatabase" dao="DOL.Database.MySql.DataAccessObjects.AllianceDao, DOLDatabase.MySql" />
-	<Register interface="DOL.Database.DataAccessInterfaces.IGuildDao, DOLDatabase" dao="DOL.Database.MySql.DataAccessObjects.GuildDao, DOLDatabase.MySql" />
+  <IDatabaseMgr type="DOL.Database.DatabaseMgr, DOLDatabase" />
+  <State connectionString="Server=localhost; Database=nhibernate; User ID=root; Password=root" type="DOL.Database.MySql.MySqlState, DOLDatabase.MySql" />
+  <Register interface="DOL.Database.DataAccessInterfaces.IAbilityDao, DOLDatabase" dao="DOL.Database.MySql.DataAccessObjects.AbilityDao, DOLDatabase.MySql" />
+  <Register interface="DOL.Database.DataAccessInterfaces.IAccountDao, DOLDatabase" dao="DOL.Database.MySql.DataAccessObjects.AccountDao, DOLDatabase.MySql" />
+  <Register interface="DOL.Database.DataAccessInterfaces.IActiveQuestDao, DOLDatabase" dao="DOL.Database.MySql.DataAccessObjects.ActiveQuestDao, DOLDatabase.MySql" />
+  <Register interface="DOL.Database.DataAccessInterfaces.IActiveTaskDao, DOLDatabase" dao="DOL.Database.MySql.DataAccessObjects.ActiveTaskDao, DOLDatabase.MySql" />
+  <Register interface="DOL.Database.DataAccessInterfaces.IAllianceDao, DOLDatabase" dao="DOL.Database.MySql.DataAccessObjects.AllianceDao, DOLDatabase.MySql" />
+  <Register interface="DOL.Database.DataAccessInterfaces.IAreaDao, DOLDatabase" dao="DOL.Database.MySql.DataAccessObjects.AreaDao, DOLDatabase.MySql" />
+  <Register interface="DOL.Database.DataAccessInterfaces.IBindPointDao, DOLDatabase" dao="DOL.Database.MySql.DataAccessObjects.BindPointDao, DOLDatabase.MySql" />
+  <Register interface="DOL.Database.DataAccessInterfaces.IBrainDao, DOLDatabase" dao="DOL.Database.MySql.DataAccessObjects.BrainDao, DOLDatabase.MySql" />
+  <Register interface="DOL.Database.DataAccessInterfaces.IBrainTemplateDao, DOLDatabase" dao="DOL.Database.MySql.DataAccessObjects.BrainTemplateDao, DOLDatabase.MySql" />
+  <Register interface="DOL.Database.DataAccessInterfaces.ICraftItemDataDao, DOLDatabase" dao="DOL.Database.MySql.DataAccessObjects.CraftItemDataDao, DOLDatabase.MySql" />
+  <Register interface="DOL.Database.DataAccessInterfaces.IEnemyFactionDao, DOLDatabase" dao="DOL.Database.MySql.DataAccessObjects.EnemyFactionDao, DOLDatabase.MySql" />
+  <Register interface="DOL.Database.DataAccessInterfaces.IFactionDao, DOLDatabase" dao="DOL.Database.MySql.DataAccessObjects.FactionDao, DOLDatabase.MySql" />
+  <Register interface="DOL.Database.DataAccessInterfaces.IFactionAggroLevelDao, DOLDatabase" dao="DOL.Database.MySql.DataAccessObjects.FactionAggroLevelDao, DOLDatabase.MySql" />
+  <Register interface="DOL.Database.DataAccessInterfaces.IFinishedQuestDao, DOLDatabase" dao="DOL.Database.MySql.DataAccessObjects.FinishedQuestDao, DOLDatabase.MySql" />
+  <Register interface="DOL.Database.DataAccessInterfaces.IFriendFactionDao, DOLDatabase" dao="DOL.Database.MySql.DataAccessObjects.FriendFactionDao, DOLDatabase.MySql" />
+  <Register interface="DOL.Database.DataAccessInterfaces.IGameNpcInventoryDao, DOLDatabase" dao="DOL.Database.MySql.DataAccessObjects.GameNpcInventoryDao, DOLDatabase.MySql" />
+  <Register interface="DOL.Database.DataAccessInterfaces.IGameNpcTemplateDao, DOLDatabase" dao="DOL.Database.MySql.DataAccessObjects.GameNpcTemplateDao, DOLDatabase.MySql" />
+  <Register interface="DOL.Database.DataAccessInterfaces.IGamePlayerDao, DOLDatabase" dao="DOL.Database.MySql.DataAccessObjects.GamePlayerDao, DOLDatabase.MySql" />
+  <Register interface="DOL.Database.DataAccessInterfaces.IGamePlayerInventoryDao, DOLDatabase" dao="DOL.Database.MySql.DataAccessObjects.GamePlayerInventoryDao, DOLDatabase.MySql" />
+  <Register interface="DOL.Database.DataAccessInterfaces.IGuildDao, DOLDatabase" dao="DOL.Database.MySql.DataAccessObjects.GuildDao, DOLDatabase.MySql" />
+  <Register interface="DOL.Database.DataAccessInterfaces.IGuildRankDao, DOLDatabase" dao="DOL.Database.MySql.DataAccessObjects.GuildRankDao, DOLDatabase.MySql" />
+  <Register interface="DOL.Database.DataAccessInterfaces.IInvalidNameDao, DOLDatabase" dao="DOL.Database.MySql.DataAccessObjects.InvalidNameDao, DOLDatabase.MySql" />
+  <Register interface="DOL.Database.DataAccessInterfaces.IItemDao, DOLDatabase" dao="DOL.Database.MySql.DataAccessObjects.ItemDao, DOLDatabase.MySql" />
+  <Register interface="DOL.Database.DataAccessInterfaces.IItemMagicalBonusDao, DOLDatabase" dao="DOL.Database.MySql.DataAccessObjects.ItemMagicalBonusDao, DOLDatabase.MySql" />
+  <Register interface="DOL.Database.DataAccessInterfaces.IItemMagicalBonusTemplateDao, DOLDatabase" dao="DOL.Database.MySql.DataAccessObjects.ItemMagicalBonusTemplateDao, DOLDatabase.MySql" />
+  <Register interface="DOL.Database.DataAccessInterfaces.IItemTemplateDao, DOLDatabase" dao="DOL.Database.MySql.DataAccessObjects.ItemTemplateDao, DOLDatabase.MySql" />
+  <Register interface="DOL.Database.DataAccessInterfaces.IJumpPointDao, DOLDatabase" dao="DOL.Database.MySql.DataAccessObjects.JumpPointDao, DOLDatabase.MySql" />
+  <Register interface="DOL.Database.DataAccessInterfaces.IJumpPointMultiTargetLocationDao, DOLDatabase" dao="DOL.Database.MySql.DataAccessObjects.JumpPointMultiTargetLocationDao, DOLDatabase.MySql" />
+  <Register interface="DOL.Database.DataAccessInterfaces.ILineXSpellDao, DOLDatabase" dao="DOL.Database.MySql.DataAccessObjects.LineXSpellDao, DOLDatabase.MySql" />
+  <Register interface="DOL.Database.DataAccessInterfaces.ILootDao, DOLDatabase" dao="DOL.Database.MySql.DataAccessObjects.LootDao, DOLDatabase.MySql" />
+  <Register interface="DOL.Database.DataAccessInterfaces.ILootListDao, DOLDatabase" dao="DOL.Database.MySql.DataAccessObjects.LootListDao, DOLDatabase.MySql" />
+  <Register interface="DOL.Database.DataAccessInterfaces.IMerchantItemDao, DOLDatabase" dao="DOL.Database.MySql.DataAccessObjects.MerchantItemDao, DOLDatabase.MySql" />
+  <Register interface="DOL.Database.DataAccessInterfaces.IMerchantPageDao, DOLDatabase" dao="DOL.Database.MySql.DataAccessObjects.MerchantPageDao, DOLDatabase.MySql" />
+  <Register interface="DOL.Database.DataAccessInterfaces.IMerchantWindowDao, DOLDatabase" dao="DOL.Database.MySql.DataAccessObjects.MerchantWindowDao, DOLDatabase.MySql" />
+  <Register interface="DOL.Database.DataAccessInterfaces.INpcEquipmentDao, DOLDatabase" dao="DOL.Database.MySql.DataAccessObjects.NpcEquipmentDao, DOLDatabase.MySql" />
+  <Register interface="DOL.Database.DataAccessInterfaces.IPathDao, DOLDatabase" dao="DOL.Database.MySql.DataAccessObjects.PathDao, DOLDatabase.MySql" />
+  <Register interface="DOL.Database.DataAccessInterfaces.IPathPointDao, DOLDatabase" dao="DOL.Database.MySql.DataAccessObjects.PathPointDao, DOLDatabase.MySql" />
+  <Register interface="DOL.Database.DataAccessInterfaces.IPersistantGameObjectDao, DOLDatabase" dao="DOL.Database.MySql.DataAccessObjects.PersistantGameObjectDao, DOLDatabase.MySql" />
+  <Register interface="DOL.Database.DataAccessInterfaces.IRawMaterialDao, DOLDatabase" dao="DOL.Database.MySql.DataAccessObjects.RawMaterialDao, DOLDatabase.MySql" />
+  <Register interface="DOL.Database.DataAccessInterfaces.IRegionDao, DOLDatabase" dao="DOL.Database.MySql.DataAccessObjects.RegionDao, DOLDatabase.MySql" />
+  <Register interface="DOL.Database.DataAccessInterfaces.ISalvageDao, DOLDatabase" dao="DOL.Database.MySql.DataAccessObjects.SalvageDao, DOLDatabase.MySql" />
+  <Register interface="DOL.Database.DataAccessInterfaces.ISinglePermissionDao, DOLDatabase" dao="DOL.Database.MySql.DataAccessObjects.SinglePermissionDao, DOLDatabase.MySql" />
+  <Register interface="DOL.Database.DataAccessInterfaces.ISpawnGeneratorDao, DOLDatabase" dao="DOL.Database.MySql.DataAccessObjects.SpawnGeneratorDao, DOLDatabase.MySql" />
+  <Register interface="DOL.Database.DataAccessInterfaces.ISpawnTemplateDao, DOLDatabase" dao="DOL.Database.MySql.DataAccessObjects.SpawnTemplateDao, DOLDatabase.MySql" />
+  <Register interface="DOL.Database.DataAccessInterfaces.ISpecializationDao, DOLDatabase" dao="DOL.Database.MySql.DataAccessObjects.SpecializationDao, DOLDatabase.MySql" />
+  <Register interface="DOL.Database.DataAccessInterfaces.ISpecXAbilityDao, DOLDatabase" dao="DOL.Database.MySql.DataAccessObjects.SpecXAbilityDao, DOLDatabase.MySql" />
+  <Register interface="DOL.Database.DataAccessInterfaces.ISpellDao, DOLDatabase" dao="DOL.Database.MySql.DataAccessObjects.SpellDao, DOLDatabase.MySql" />
+  <Register interface="DOL.Database.DataAccessInterfaces.ISpellLineDao, DOLDatabase" dao="DOL.Database.MySql.DataAccessObjects.SpellLineDao, DOLDatabase.MySql" />
+  <Register interface="DOL.Database.DataAccessInterfaces.IStyleDao, DOLDatabase" dao="DOL.Database.MySql.DataAccessObjects.StyleDao, DOLDatabase.MySql" />
+  <Register interface="DOL.Database.DataAccessInterfaces.IZoneDao, DOLDatabase" dao="DOL.Database.MySql.DataAccessObjects.ZoneDao, DOLDatabase.MySql" />
 </DatabaseMgrConfiguration>

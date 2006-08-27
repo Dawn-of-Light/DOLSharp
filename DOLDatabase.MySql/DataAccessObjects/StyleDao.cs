@@ -29,18 +29,22 @@ namespace DOL.Database.MySql.DataAccessObjects
 	public class StyleDao : IStyleDao
 	{
 		protected static readonly string c_rowFields = "`Id`,`AttackResultRequirement`,`BonusToDefense`,`BonusToHit`,`EnduranceCost`,`GrowthRate`,`KeyName`,`Name`,`OpeningRequirementType`,`OpeningRequirementValue`,`SpecialType`,`SpecialValue`,`SpecKeyName`,`SpecLevelRequirement`,`StealthRequirement`,`TwoHandAnimation`,`WeaponTypeRequirement`";
-		private readonly MySqlState m_state;
+		protected readonly MySqlState m_state;
 
 		public virtual StyleEntity Find(int id)
 		{
 			StyleEntity result = new StyleEntity();
+			string command = "SELECT " + c_rowFields + " FROM `style` WHERE `Id`='" + m_state.EscapeString(id.ToString()) + "'";
 
 			m_state.ExecuteQuery(
-				"SELECT " + c_rowFields + " FROM `style` WHERE `Id`='" + m_state.EscapeString(id.ToString()) + "'",
+				command,
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
-					reader.Read();
+					if (!reader.Read())
+					{
+						throw new RowNotFoundException();
+					}
 					FillEntityWithRow(ref result, reader);
 				}
 			);
@@ -51,7 +55,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public virtual void Create(StyleEntity obj)
 		{
 			m_state.ExecuteNonQuery(
-				"INSERT INTO `style` VALUES (`" + obj.Id.ToString() + "`,`" + obj.AttackResultRequirement.ToString() + "`,`" + obj.BonusToDefense.ToString() + "`,`" + obj.BonusToHit.ToString() + "`,`" + obj.EnduranceCost.ToString() + "`,`" + obj.GrowthRate.ToString() + "`,`" + obj.KeyName.ToString() + "`,`" + obj.Name.ToString() + "`,`" + obj.OpeningRequirementType.ToString() + "`,`" + obj.OpeningRequirementValue.ToString() + "`,`" + obj.SpecialType.ToString() + "`,`" + obj.SpecialValue.ToString() + "`,`" + obj.SpecKeyName.ToString() + "`,`" + obj.SpecLevelRequirement.ToString() + "`,`" + obj.StealthRequirement.ToString() + "`,`" + obj.TwoHandAnimation.ToString() + "`,`" + obj.WeaponTypeRequirement.ToString() + "`);");
+				"INSERT INTO `style` VALUES ('" + m_state.EscapeString(obj.Id.ToString()) + "','" + m_state.EscapeString(obj.AttackResultRequirement.ToString()) + "','" + m_state.EscapeString(obj.BonusToDefense.ToString()) + "','" + m_state.EscapeString(obj.BonusToHit.ToString()) + "','" + m_state.EscapeString(obj.EnduranceCost.ToString()) + "','" + m_state.EscapeString(obj.GrowthRate.ToString()) + "','" + m_state.EscapeString(obj.KeyName.ToString()) + "','" + m_state.EscapeString(obj.Name.ToString()) + "','" + m_state.EscapeString(obj.OpeningRequirementType.ToString()) + "','" + m_state.EscapeString(obj.OpeningRequirementValue.ToString()) + "','" + m_state.EscapeString(obj.SpecialType.ToString()) + "','" + m_state.EscapeString(obj.SpecialValue.ToString()) + "','" + m_state.EscapeString(obj.SpecKeyName.ToString()) + "','" + m_state.EscapeString(obj.SpecLevelRequirement.ToString()) + "','" + m_state.EscapeString(obj.StealthRequirement.ToString()) + "','" + m_state.EscapeString(obj.TwoHandAnimation.ToString()) + "','" + m_state.EscapeString(obj.WeaponTypeRequirement.ToString()) + "');");
 		}
 
 		public virtual void Update(StyleEntity obj)
@@ -94,11 +98,9 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return results;
 		}
 
-		public virtual int CountAll()
+		public virtual long CountAll()
 		{
-			return (int)m_state.ExecuteScalar(
-			"SELECT COUNT(*) FROM `style`");
-
+			return (long) m_state.ExecuteScalar("SELECT COUNT(*) FROM `style`");
 		}
 
 		protected virtual void FillEntityWithRow(ref StyleEntity entity, MySqlDataReader reader)
@@ -129,7 +131,6 @@ namespace DOL.Database.MySql.DataAccessObjects
 
 		public IList<string> VerifySchema()
 		{
-			return null;
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `style` ("
 				+"`Id` int,"
 				+"`AttackResultRequirement` int,"
@@ -137,19 +138,22 @@ namespace DOL.Database.MySql.DataAccessObjects
 				+"`BonusToHit` int,"
 				+"`EnduranceCost` int,"
 				+"`GrowthRate` double,"
-				+"`KeyName` varchar(510) character set unicode,"
-				+"`Name` varchar(510) character set unicode,"
+				+"`KeyName` varchar(255) character set utf8,"
+				+"`Name` varchar(255) character set utf8,"
 				+"`OpeningRequirementType` int,"
 				+"`OpeningRequirementValue` int,"
 				+"`SpecialType` int,"
 				+"`SpecialValue` int,"
-				+"`SpecKeyName` varchar(510) character set unicode,"
+				+"`SpecKeyName` varchar(255) character set utf8,"
 				+"`SpecLevelRequirement` int,"
 				+"`StealthRequirement` bit,"
 				+"`TwoHandAnimation` int,"
 				+"`WeaponTypeRequirement` int"
 				+", primary key `Id` (`Id`)"
+				+")"
 			);
+			m_state.ExecuteNonQuery("OPTIMIZE TABLE `style`");
+			return null;
 		}
 
 		public StyleDao(MySqlState state)

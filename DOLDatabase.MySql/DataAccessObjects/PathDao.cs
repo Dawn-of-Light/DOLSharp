@@ -29,18 +29,22 @@ namespace DOL.Database.MySql.DataAccessObjects
 	public class PathDao : IPathDao
 	{
 		protected static readonly string c_rowFields = "`PathId`,`PathType`,`RegionId`,`StartingPoint`,`SteedModel`,`SteedName`";
-		private readonly MySqlState m_state;
+		protected readonly MySqlState m_state;
 
 		public virtual PathEntity Find(int id)
 		{
 			PathEntity result = new PathEntity();
+			string command = "SELECT " + c_rowFields + " FROM `path` WHERE `PathId`='" + m_state.EscapeString(id.ToString()) + "'";
 
 			m_state.ExecuteQuery(
-				"SELECT " + c_rowFields + " FROM `path` WHERE `PathId`='" + m_state.EscapeString(id.ToString()) + "'",
+				command,
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
-					reader.Read();
+					if (!reader.Read())
+					{
+						throw new RowNotFoundException();
+					}
 					FillEntityWithRow(ref result, reader);
 				}
 			);
@@ -51,7 +55,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public virtual void Create(PathEntity obj)
 		{
 			m_state.ExecuteNonQuery(
-				"INSERT INTO `path` VALUES (`" + obj.Id.ToString() + "`,`" + obj.PathType.ToString() + "`,`" + obj.RegionId.ToString() + "`,`" + obj.StartingPoint.ToString() + "`,`" + obj.SteedModel.ToString() + "`,`" + obj.SteedName.ToString() + "`);");
+				"INSERT INTO `path` VALUES ('" + m_state.EscapeString(obj.Id.ToString()) + "','" + m_state.EscapeString(obj.PathType.ToString()) + "','" + m_state.EscapeString(obj.RegionId.ToString()) + "','" + m_state.EscapeString(obj.StartingPoint.ToString()) + "','" + m_state.EscapeString(obj.SteedModel.ToString()) + "','" + m_state.EscapeString(obj.SteedName.ToString()) + "');");
 		}
 
 		public virtual void Update(PathEntity obj)
@@ -94,11 +98,9 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return results;
 		}
 
-		public virtual int CountAll()
+		public virtual long CountAll()
 		{
-			return (int)m_state.ExecuteScalar(
-			"SELECT COUNT(*) FROM `path`");
-
+			return (long) m_state.ExecuteScalar("SELECT COUNT(*) FROM `path`");
 		}
 
 		protected virtual void FillEntityWithRow(ref PathEntity entity, MySqlDataReader reader)
@@ -118,16 +120,18 @@ namespace DOL.Database.MySql.DataAccessObjects
 
 		public IList<string> VerifySchema()
 		{
-			return null;
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `path` ("
 				+"`PathId` int,"
-				+"`PathType` varchar(510) character set unicode,"
+				+"`PathType` varchar(255) character set utf8,"
 				+"`RegionId` int,"
 				+"`StartingPoint` int,"
 				+"`SteedModel` int,"
-				+"`SteedName` varchar(510) character set unicode"
+				+"`SteedName` varchar(255) character set utf8"
 				+", primary key `PathId` (`PathId`)"
+				+")"
 			);
+			m_state.ExecuteNonQuery("OPTIMIZE TABLE `path`");
+			return null;
 		}
 
 		public PathDao(MySqlState state)

@@ -29,18 +29,22 @@ namespace DOL.Database.MySql.DataAccessObjects
 	public class ActiveQuestDao : IActiveQuestDao
 	{
 		protected static readonly string c_rowFields = "`AbstractQuestId`,`PersistantGameObjectId`,`QuestType`,`Step`";
-		private readonly MySqlState m_state;
+		protected readonly MySqlState m_state;
 
 		public virtual ActiveQuestEntity Find(int id)
 		{
 			ActiveQuestEntity result = new ActiveQuestEntity();
+			string command = "SELECT " + c_rowFields + " FROM `activequests` WHERE `AbstractQuestId`='" + m_state.EscapeString(id.ToString()) + "'";
 
 			m_state.ExecuteQuery(
-				"SELECT " + c_rowFields + " FROM `activequests` WHERE `AbstractQuestId`='" + m_state.EscapeString(id.ToString()) + "'",
+				command,
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
-					reader.Read();
+					if (!reader.Read())
+					{
+						throw new RowNotFoundException();
+					}
 					FillEntityWithRow(ref result, reader);
 				}
 			);
@@ -51,7 +55,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public virtual void Create(ActiveQuestEntity obj)
 		{
 			m_state.ExecuteNonQuery(
-				"INSERT INTO `activequests` VALUES (`" + obj.Id.ToString() + "`,`" + obj.PersistantGameObject.ToString() + "`,`" + obj.QuestType.ToString() + "`,`" + obj.Step1.ToString() + "`);");
+				"INSERT INTO `activequests` VALUES ('" + m_state.EscapeString(obj.Id.ToString()) + "','" + m_state.EscapeString(obj.PersistantGameObject.ToString()) + "','" + m_state.EscapeString(obj.QuestType.ToString()) + "','" + m_state.EscapeString(obj.Step1.ToString()) + "');");
 		}
 
 		public virtual void Update(ActiveQuestEntity obj)
@@ -94,11 +98,9 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return results;
 		}
 
-		public virtual int CountAll()
+		public virtual long CountAll()
 		{
-			return (int)m_state.ExecuteScalar(
-			"SELECT COUNT(*) FROM `activequests`");
-
+			return (long) m_state.ExecuteScalar("SELECT COUNT(*) FROM `activequests`");
 		}
 
 		protected virtual void FillEntityWithRow(ref ActiveQuestEntity entity, MySqlDataReader reader)
@@ -116,14 +118,16 @@ namespace DOL.Database.MySql.DataAccessObjects
 
 		public IList<string> VerifySchema()
 		{
-			return null;
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `activequests` ("
 				+"`AbstractQuestId` int,"
 				+"`PersistantGameObjectId` int,"
-				+"`QuestType` varchar(510) character set unicode,"
+				+"`QuestType` varchar(255) character set utf8,"
 				+"`Step` tinyint unsigned"
 				+", primary key `AbstractQuestId` (`AbstractQuestId`)"
+				+")"
 			);
+			m_state.ExecuteNonQuery("OPTIMIZE TABLE `activequests`");
+			return null;
 		}
 
 		public ActiveQuestDao(MySqlState state)

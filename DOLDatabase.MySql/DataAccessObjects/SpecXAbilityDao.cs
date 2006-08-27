@@ -29,18 +29,22 @@ namespace DOL.Database.MySql.DataAccessObjects
 	public class SpecXAbilityDao : ISpecXAbilityDao
 	{
 		protected static readonly string c_rowFields = "`SpecXAbilityId`,`AbilityKey`,`AbilityLevel`,`Spec`,`SpecLevel`";
-		private readonly MySqlState m_state;
+		protected readonly MySqlState m_state;
 
 		public virtual SpecXAbilityEntity Find(int id)
 		{
 			SpecXAbilityEntity result = new SpecXAbilityEntity();
+			string command = "SELECT " + c_rowFields + " FROM `specxability` WHERE `SpecXAbilityId`='" + m_state.EscapeString(id.ToString()) + "'";
 
 			m_state.ExecuteQuery(
-				"SELECT " + c_rowFields + " FROM `specxability` WHERE `SpecXAbilityId`='" + m_state.EscapeString(id.ToString()) + "'",
+				command,
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
-					reader.Read();
+					if (!reader.Read())
+					{
+						throw new RowNotFoundException();
+					}
 					FillEntityWithRow(ref result, reader);
 				}
 			);
@@ -51,7 +55,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public virtual void Create(SpecXAbilityEntity obj)
 		{
 			m_state.ExecuteNonQuery(
-				"INSERT INTO `specxability` VALUES (`" + obj.Id.ToString() + "`,`" + obj.AbilityKey.ToString() + "`,`" + obj.AbilityLevel.ToString() + "`,`" + obj.Spec.ToString() + "`,`" + obj.SpecLevel.ToString() + "`);");
+				"INSERT INTO `specxability` VALUES ('" + m_state.EscapeString(obj.Id.ToString()) + "','" + m_state.EscapeString(obj.AbilityKey.ToString()) + "','" + m_state.EscapeString(obj.AbilityLevel.ToString()) + "','" + m_state.EscapeString(obj.Spec.ToString()) + "','" + m_state.EscapeString(obj.SpecLevel.ToString()) + "');");
 		}
 
 		public virtual void Update(SpecXAbilityEntity obj)
@@ -94,11 +98,9 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return results;
 		}
 
-		public virtual int CountAll()
+		public virtual long CountAll()
 		{
-			return (int)m_state.ExecuteScalar(
-			"SELECT COUNT(*) FROM `specxability`");
-
+			return (long) m_state.ExecuteScalar("SELECT COUNT(*) FROM `specxability`");
 		}
 
 		protected virtual void FillEntityWithRow(ref SpecXAbilityEntity entity, MySqlDataReader reader)
@@ -117,15 +119,17 @@ namespace DOL.Database.MySql.DataAccessObjects
 
 		public IList<string> VerifySchema()
 		{
-			return null;
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `specxability` ("
 				+"`SpecXAbilityId` int,"
-				+"`AbilityKey` varchar(510) character set unicode,"
+				+"`AbilityKey` varchar(255) character set utf8,"
 				+"`AbilityLevel` int,"
-				+"`Spec` varchar(510) character set unicode,"
+				+"`Spec` varchar(255) character set utf8,"
 				+"`SpecLevel` int"
 				+", primary key `SpecXAbilityId` (`SpecXAbilityId`)"
+				+")"
 			);
+			m_state.ExecuteNonQuery("OPTIMIZE TABLE `specxability`");
+			return null;
 		}
 
 		public SpecXAbilityDao(MySqlState state)

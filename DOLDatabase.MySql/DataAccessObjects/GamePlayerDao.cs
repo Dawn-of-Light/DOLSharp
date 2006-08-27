@@ -29,18 +29,22 @@ namespace DOL.Database.MySql.DataAccessObjects
 	public class GamePlayerDao : IGamePlayerDao
 	{
 		protected static readonly string c_rowFields = "`PersistantGameObjectId`,`AccountId`,`ActiveQuiverSlot`,`ActiveWeaponSlot`,`BaseCharisma`,`BaseConstitution`,`BaseDexterity`,`BaseEmpathy`,`BaseIntelligence`,`BasePiety`,`BaseQuickness`,`BaseStrength`,`BindHeading`,`BindRegionId`,`BindX`,`BindY`,`BindZ`,`BountyPoints`,`CancelStyle`,`CapturedKeeps`,`CapturedTowers`,`CharacterClassId`,`CraftingPrimarySkill`,`CreationDate`,`CreationModel`,`CurrentTitleType`,`CustomisationStep`,`DeathCount`,`DeathTime`,`DisabledAbilities`,`DisabledSpells`,`EndurancePercent`,`Experience`,`EyeColor`,`EyeSize`,`FaceType`,`Gender`,`GuildName`,`GuildNameFlag`,`GuildRank`,`HairColor`,`HairStyle`,`Heading`,`Health`,`IsAnonymous`,`IsLevelRespecUsed`,`IsLevelSecondStage`,`KillsAlbionDeathBlows`,`KillsAlbionPlayers`,`KillsAlbionSolo`,`KillsHiberniaDeathBlows`,`KillsHiberniaPlayers`,`KillsHiberniaSolo`,`KillsMidgardDeathBlows`,`KillsMidgardPlayers`,`KillsMidgardSolo`,`LastName`,`LastPlayed`,`Level`,`LipSize`,`LotNumber`,`Mana`,`MaxSpeedBase`,`Model`,`Money`,`MoodType`,`Name`,`PlayedTime`,`Race`,`Realm`,`RealmLevel`,`RealmPoints`,`RealmSpecialtyPoints`,`RegionId`,`RespecAmountAllSkill`,`RespecAmountSingleSkill`,`RespecBought`,`SafetyFlag`,`SerializedAbilities`,`SerializedCraftingSkills`,`SerializedFriendsList`,`SerializedSpecs`,`SerializedSpellLines`,`SkillSpecialtyPoints`,`SlotPosition`,`SpellQueue`,`Styles`,`TaskDone`,`TotalConstitutionLostAtDeath`,`UsedLevelCommand`,`X`,`Y`,`Z`";
-		private readonly MySqlState m_state;
+		protected readonly MySqlState m_state;
 
 		public virtual GamePlayerEntity Find(int id)
 		{
 			GamePlayerEntity result = new GamePlayerEntity();
+			string command = "SELECT " + c_rowFields + " FROM `gameplayer` WHERE `PersistantGameObjectId`='" + m_state.EscapeString(id.ToString()) + "'";
 
 			m_state.ExecuteQuery(
-				"SELECT " + c_rowFields + " FROM `gameplayer` WHERE `PersistantGameObjectId`='" + m_state.EscapeString(id.ToString()) + "'",
+				command,
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
-					reader.Read();
+					if (!reader.Read())
+					{
+						throw new RowNotFoundException();
+					}
 					FillEntityWithRow(ref result, reader);
 				}
 			);
@@ -71,10 +75,10 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return results;
 		}
 
-		public virtual int CountByAccountAndRealm(int account, byte realm)
+		public virtual long CountByAccountAndRealm(int account, byte realm)
 		{
 
-			return (int)m_state.ExecuteScalar(
+			return (long) m_state.ExecuteScalar(
 				"SELECT  count(*) FROM `gameplayer` WHERE `AccountId`='" + m_state.EscapeString(account.ToString()) + "' AND `Realm`='" + m_state.EscapeString(realm.ToString()) + "'");
 
 		}
@@ -82,7 +86,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public virtual void Create(GamePlayerEntity obj)
 		{
 			m_state.ExecuteNonQuery(
-				"INSERT INTO `gameplayer` VALUES (`" + obj.Id.ToString() + "`,`" + obj.Account.ToString() + "`,`" + obj.ActiveQuiverSlot.ToString() + "`,`" + obj.ActiveWeaponSlot.ToString() + "`,`" + obj.BaseCharisma.ToString() + "`,`" + obj.BaseConstitution.ToString() + "`,`" + obj.BaseDexterity.ToString() + "`,`" + obj.BaseEmpathy.ToString() + "`,`" + obj.BaseIntelligence.ToString() + "`,`" + obj.BasePiety.ToString() + "`,`" + obj.BaseQuickness.ToString() + "`,`" + obj.BaseStrength.ToString() + "`,`" + obj.BindHeading.ToString() + "`,`" + obj.BindRegionId.ToString() + "`,`" + obj.BindX.ToString() + "`,`" + obj.BindY.ToString() + "`,`" + obj.BindZ.ToString() + "`,`" + obj.BountyPoints.ToString() + "`,`" + obj.CancelStyle.ToString() + "`,`" + obj.CapturedKeeps.ToString() + "`,`" + obj.CapturedTowers.ToString() + "`,`" + obj.CharacterClassId.ToString() + "`,`" + obj.CraftingPrimarySkill.ToString() + "`,`" + obj.CreationDate.ToString() + "`,`" + obj.CreationModel.ToString() + "`,`" + obj.CurrentTitleType.ToString() + "`,`" + obj.CustomisationStep.ToString() + "`,`" + obj.DeathCount.ToString() + "`,`" + obj.DeathTime.ToString() + "`,`" + obj.DisabledAbilities.ToString() + "`,`" + obj.DisabledSpells.ToString() + "`,`" + obj.EndurancePercent.ToString() + "`,`" + obj.Experience.ToString() + "`,`" + obj.EyeColor.ToString() + "`,`" + obj.EyeSize.ToString() + "`,`" + obj.FaceType.ToString() + "`,`" + obj.Gender.ToString() + "`,`" + obj.GuildName.ToString() + "`,`" + obj.GuildNameFlag.ToString() + "`,`" + obj.GuildRank.ToString() + "`,`" + obj.HairColor.ToString() + "`,`" + obj.HairStyle.ToString() + "`,`" + obj.Heading.ToString() + "`,`" + obj.Health.ToString() + "`,`" + obj.IsAnonymous.ToString() + "`,`" + obj.IsLevelRespecUsed.ToString() + "`,`" + obj.IsLevelSecondStage.ToString() + "`,`" + obj.KillsAlbionDeathBlows.ToString() + "`,`" + obj.KillsAlbionPlayers.ToString() + "`,`" + obj.KillsAlbionSolo.ToString() + "`,`" + obj.KillsHiberniaDeathBlows.ToString() + "`,`" + obj.KillsHiberniaPlayers.ToString() + "`,`" + obj.KillsHiberniaSolo.ToString() + "`,`" + obj.KillsMidgardDeathBlows.ToString() + "`,`" + obj.KillsMidgardPlayers.ToString() + "`,`" + obj.KillsMidgardSolo.ToString() + "`,`" + obj.LastName.ToString() + "`,`" + obj.LastPlayed.ToString() + "`,`" + obj.Level.ToString() + "`,`" + obj.LipSize.ToString() + "`,`" + obj.LotNumber.ToString() + "`,`" + obj.Mana.ToString() + "`,`" + obj.MaxSpeedBase.ToString() + "`,`" + obj.Model.ToString() + "`,`" + obj.Money.ToString() + "`,`" + obj.MoodType.ToString() + "`,`" + obj.Name.ToString() + "`,`" + obj.PlayedTime.ToString() + "`,`" + obj.Race.ToString() + "`,`" + obj.Realm.ToString() + "`,`" + obj.RealmLevel.ToString() + "`,`" + obj.RealmPoints.ToString() + "`,`" + obj.RealmSpecialtyPoints.ToString() + "`,`" + obj.RegionId.ToString() + "`,`" + obj.RespecAmountAllSkill.ToString() + "`,`" + obj.RespecAmountSingleSkill.ToString() + "`,`" + obj.RespecBought.ToString() + "`,`" + obj.SafetyFlag.ToString() + "`,`" + obj.SerializedAbilities.ToString() + "`,`" + obj.SerializedCraftingSkills.ToString() + "`,`" + obj.SerializedFriendsList.ToString() + "`,`" + obj.SerializedSpecs.ToString() + "`,`" + obj.SerializedSpellLines.ToString() + "`,`" + obj.SkillSpecialtyPoints.ToString() + "`,`" + obj.SlotPosition.ToString() + "`,`" + obj.SpellQueue.ToString() + "`,`" + obj.Styles.ToString() + "`,`" + obj.TaskDone.ToString() + "`,`" + obj.TotalConstitutionLostAtDeath.ToString() + "`,`" + obj.UsedLevelCommand.ToString() + "`,`" + obj.X.ToString() + "`,`" + obj.Y.ToString() + "`,`" + obj.Z.ToString() + "`);");
+				"INSERT INTO `gameplayer` VALUES ('" + m_state.EscapeString(obj.Id.ToString()) + "','" + m_state.EscapeString(obj.Account.ToString()) + "','" + m_state.EscapeString(obj.ActiveQuiverSlot.ToString()) + "','" + m_state.EscapeString(obj.ActiveWeaponSlot.ToString()) + "','" + m_state.EscapeString(obj.BaseCharisma.ToString()) + "','" + m_state.EscapeString(obj.BaseConstitution.ToString()) + "','" + m_state.EscapeString(obj.BaseDexterity.ToString()) + "','" + m_state.EscapeString(obj.BaseEmpathy.ToString()) + "','" + m_state.EscapeString(obj.BaseIntelligence.ToString()) + "','" + m_state.EscapeString(obj.BasePiety.ToString()) + "','" + m_state.EscapeString(obj.BaseQuickness.ToString()) + "','" + m_state.EscapeString(obj.BaseStrength.ToString()) + "','" + m_state.EscapeString(obj.BindHeading.ToString()) + "','" + m_state.EscapeString(obj.BindRegionId.ToString()) + "','" + m_state.EscapeString(obj.BindX.ToString()) + "','" + m_state.EscapeString(obj.BindY.ToString()) + "','" + m_state.EscapeString(obj.BindZ.ToString()) + "','" + m_state.EscapeString(obj.BountyPoints.ToString()) + "','" + m_state.EscapeString(obj.CancelStyle.ToString()) + "','" + m_state.EscapeString(obj.CapturedKeeps.ToString()) + "','" + m_state.EscapeString(obj.CapturedTowers.ToString()) + "','" + m_state.EscapeString(obj.CharacterClassId.ToString()) + "','" + m_state.EscapeString(obj.CraftingPrimarySkill.ToString()) + "','" + m_state.EscapeString(obj.CreationDate.ToString()) + "','" + m_state.EscapeString(obj.CreationModel.ToString()) + "','" + m_state.EscapeString(obj.CurrentTitleType.ToString()) + "','" + m_state.EscapeString(obj.CustomisationStep.ToString()) + "','" + m_state.EscapeString(obj.DeathCount.ToString()) + "','" + m_state.EscapeString(obj.DeathTime.ToString()) + "','" + m_state.EscapeString(obj.DisabledAbilities.ToString()) + "','" + m_state.EscapeString(obj.DisabledSpells.ToString()) + "','" + m_state.EscapeString(obj.EndurancePercent.ToString()) + "','" + m_state.EscapeString(obj.Experience.ToString()) + "','" + m_state.EscapeString(obj.EyeColor.ToString()) + "','" + m_state.EscapeString(obj.EyeSize.ToString()) + "','" + m_state.EscapeString(obj.FaceType.ToString()) + "','" + m_state.EscapeString(obj.Gender.ToString()) + "','" + m_state.EscapeString(obj.GuildName.ToString()) + "','" + m_state.EscapeString(obj.GuildNameFlag.ToString()) + "','" + m_state.EscapeString(obj.GuildRank.ToString()) + "','" + m_state.EscapeString(obj.HairColor.ToString()) + "','" + m_state.EscapeString(obj.HairStyle.ToString()) + "','" + m_state.EscapeString(obj.Heading.ToString()) + "','" + m_state.EscapeString(obj.Health.ToString()) + "','" + m_state.EscapeString(obj.IsAnonymous.ToString()) + "','" + m_state.EscapeString(obj.IsLevelRespecUsed.ToString()) + "','" + m_state.EscapeString(obj.IsLevelSecondStage.ToString()) + "','" + m_state.EscapeString(obj.KillsAlbionDeathBlows.ToString()) + "','" + m_state.EscapeString(obj.KillsAlbionPlayers.ToString()) + "','" + m_state.EscapeString(obj.KillsAlbionSolo.ToString()) + "','" + m_state.EscapeString(obj.KillsHiberniaDeathBlows.ToString()) + "','" + m_state.EscapeString(obj.KillsHiberniaPlayers.ToString()) + "','" + m_state.EscapeString(obj.KillsHiberniaSolo.ToString()) + "','" + m_state.EscapeString(obj.KillsMidgardDeathBlows.ToString()) + "','" + m_state.EscapeString(obj.KillsMidgardPlayers.ToString()) + "','" + m_state.EscapeString(obj.KillsMidgardSolo.ToString()) + "','" + m_state.EscapeString(obj.LastName.ToString()) + "','" + m_state.EscapeString(obj.LastPlayed.ToString()) + "','" + m_state.EscapeString(obj.Level.ToString()) + "','" + m_state.EscapeString(obj.LipSize.ToString()) + "','" + m_state.EscapeString(obj.LotNumber.ToString()) + "','" + m_state.EscapeString(obj.Mana.ToString()) + "','" + m_state.EscapeString(obj.MaxSpeedBase.ToString()) + "','" + m_state.EscapeString(obj.Model.ToString()) + "','" + m_state.EscapeString(obj.Money.ToString()) + "','" + m_state.EscapeString(obj.MoodType.ToString()) + "','" + m_state.EscapeString(obj.Name.ToString()) + "','" + m_state.EscapeString(obj.PlayedTime.ToString()) + "','" + m_state.EscapeString(obj.Race.ToString()) + "','" + m_state.EscapeString(obj.Realm.ToString()) + "','" + m_state.EscapeString(obj.RealmLevel.ToString()) + "','" + m_state.EscapeString(obj.RealmPoints.ToString()) + "','" + m_state.EscapeString(obj.RealmSpecialtyPoints.ToString()) + "','" + m_state.EscapeString(obj.RegionId.ToString()) + "','" + m_state.EscapeString(obj.RespecAmountAllSkill.ToString()) + "','" + m_state.EscapeString(obj.RespecAmountSingleSkill.ToString()) + "','" + m_state.EscapeString(obj.RespecBought.ToString()) + "','" + m_state.EscapeString(obj.SafetyFlag.ToString()) + "','" + m_state.EscapeString(obj.SerializedAbilities.ToString()) + "','" + m_state.EscapeString(obj.SerializedCraftingSkills.ToString()) + "','" + m_state.EscapeString(obj.SerializedFriendsList.ToString()) + "','" + m_state.EscapeString(obj.SerializedSpecs.ToString()) + "','" + m_state.EscapeString(obj.SerializedSpellLines.ToString()) + "','" + m_state.EscapeString(obj.SkillSpecialtyPoints.ToString()) + "','" + m_state.EscapeString(obj.SlotPosition.ToString()) + "','" + m_state.EscapeString(obj.SpellQueue.ToString()) + "','" + m_state.EscapeString(obj.Styles.ToString()) + "','" + m_state.EscapeString(obj.TaskDone.ToString()) + "','" + m_state.EscapeString(obj.TotalConstitutionLostAtDeath.ToString()) + "','" + m_state.EscapeString(obj.UsedLevelCommand.ToString()) + "','" + m_state.EscapeString(obj.X.ToString()) + "','" + m_state.EscapeString(obj.Y.ToString()) + "','" + m_state.EscapeString(obj.Z.ToString()) + "');");
 		}
 
 		public virtual void Update(GamePlayerEntity obj)
@@ -125,11 +129,9 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return results;
 		}
 
-		public virtual int CountAll()
+		public virtual long CountAll()
 		{
-			return (int)m_state.ExecuteScalar(
-			"SELECT COUNT(*) FROM `gameplayer`");
-
+			return (long) m_state.ExecuteScalar("SELECT COUNT(*) FROM `gameplayer`");
 		}
 
 		protected virtual void FillEntityWithRow(ref GamePlayerEntity entity, MySqlDataReader reader)
@@ -236,7 +238,6 @@ namespace DOL.Database.MySql.DataAccessObjects
 
 		public IList<string> VerifySchema()
 		{
-			return null;
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `gameplayer` ("
 				+"`PersistantGameObjectId` int,"
 				+"`AccountId` int,"
@@ -263,19 +264,19 @@ namespace DOL.Database.MySql.DataAccessObjects
 				+"`CraftingPrimarySkill` int,"
 				+"`CreationDate` datetime,"
 				+"`CreationModel` int,"
-				+"`CurrentTitleType` varchar(510) character set unicode,"
+				+"`CurrentTitleType` varchar(255) character set utf8,"
 				+"`CustomisationStep` tinyint unsigned,"
 				+"`DeathCount` tinyint unsigned,"
 				+"`DeathTime` bigint,"
-				+"`DisabledAbilities` varchar(510) character set unicode,"
-				+"`DisabledSpells` varchar(510) character set unicode,"
+				+"`DisabledAbilities` varchar(255) character set utf8,"
+				+"`DisabledSpells` varchar(255) character set utf8,"
 				+"`EndurancePercent` tinyint unsigned,"
 				+"`Experience` bigint,"
 				+"`EyeColor` tinyint unsigned,"
 				+"`EyeSize` tinyint unsigned,"
 				+"`FaceType` tinyint unsigned,"
 				+"`Gender` int,"
-				+"`GuildName` varchar(510) character set unicode,"
+				+"`GuildName` varchar(255) character set utf8,"
 				+"`GuildNameFlag` bit,"
 				+"`GuildRank` tinyint unsigned,"
 				+"`HairColor` tinyint unsigned,"
@@ -294,7 +295,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 				+"`KillsMidgardDeathBlows` int,"
 				+"`KillsMidgardPlayers` int,"
 				+"`KillsMidgardSolo` int,"
-				+"`LastName` varchar(46) character set unicode,"
+				+"`LastName` varchar(46) character set utf8,"
 				+"`LastPlayed` datetime,"
 				+"`Level` tinyint unsigned,"
 				+"`LipSize` tinyint unsigned,"
@@ -304,7 +305,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 				+"`Model` int,"
 				+"`Money` bigint,"
 				+"`MoodType` tinyint unsigned,"
-				+"`Name` varchar(510) character set unicode,"
+				+"`Name` varchar(255) character set utf8,"
 				+"`PlayedTime` bigint,"
 				+"`Race` int,"
 				+"`Realm` tinyint unsigned,"
@@ -316,15 +317,15 @@ namespace DOL.Database.MySql.DataAccessObjects
 				+"`RespecAmountSingleSkill` int,"
 				+"`RespecBought` int,"
 				+"`SafetyFlag` bit,"
-				+"`SerializedAbilities` varchar(510) character set unicode,"
-				+"`SerializedCraftingSkills` varchar(510) character set unicode,"
-				+"`SerializedFriendsList` varchar(510) character set unicode,"
-				+"`SerializedSpecs` varchar(510) character set unicode,"
-				+"`SerializedSpellLines` varchar(510) character set unicode,"
+				+"`SerializedAbilities` varchar(255) character set utf8,"
+				+"`SerializedCraftingSkills` varchar(255) character set utf8,"
+				+"`SerializedFriendsList` varchar(255) character set utf8,"
+				+"`SerializedSpecs` varchar(255) character set utf8,"
+				+"`SerializedSpellLines` varchar(255) character set utf8,"
 				+"`SkillSpecialtyPoints` int,"
 				+"`SlotPosition` tinyint unsigned,"
 				+"`SpellQueue` bit,"
-				+"`Styles` varchar(510) character set unicode,"
+				+"`Styles` varchar(255) character set utf8,"
 				+"`TaskDone` tinyint unsigned,"
 				+"`TotalConstitutionLostAtDeath` int,"
 				+"`UsedLevelCommand` bit,"
@@ -332,7 +333,10 @@ namespace DOL.Database.MySql.DataAccessObjects
 				+"`Y` int,"
 				+"`Z` int"
 				+", primary key `PersistantGameObjectId` (`PersistantGameObjectId`)"
+				+")"
 			);
+			m_state.ExecuteNonQuery("OPTIMIZE TABLE `gameplayer`");
+			return null;
 		}
 
 		public GamePlayerDao(MySqlState state)

@@ -29,18 +29,22 @@ namespace DOL.Database.MySql.DataAccessObjects
 	public class FactionAggroLevelDao : IFactionAggroLevelDao
 	{
 		protected static readonly string c_rowFields = "`FactionId`,`PersistantGameObjectId`,`AggroLevel`";
-		private readonly MySqlState m_state;
+		protected readonly MySqlState m_state;
 
 		public virtual FactionAggroLevelEntity Find(int factionId, int persistantGameObject)
 		{
 			FactionAggroLevelEntity result = new FactionAggroLevelEntity();
+			string command = "SELECT " + c_rowFields + " FROM `factionaggrolevel` WHERE `FactionId`='" + m_state.EscapeString(factionId.ToString()) + "', `PersistantGameObjectId`='" + m_state.EscapeString(persistantGameObject.ToString()) + "'";
 
 			m_state.ExecuteQuery(
-				"SELECT " + c_rowFields + " FROM `factionaggrolevel` WHERE `FactionId`='" + m_state.EscapeString(factionId.ToString()) + "', `PersistantGameObjectId`='" + m_state.EscapeString(persistantGameObject.ToString()) + "'",
+				command,
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
-					reader.Read();
+					if (!reader.Read())
+					{
+						throw new RowNotFoundException();
+					}
 					FillEntityWithRow(ref result, reader);
 				}
 			);
@@ -51,7 +55,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public virtual void Create(FactionAggroLevelEntity obj)
 		{
 			m_state.ExecuteNonQuery(
-				"INSERT INTO `factionaggrolevel` VALUES (`" + obj.FactionId.ToString() + "`,`" + obj.PersistantGameObject.ToString() + "`,`" + obj.AggroLevel.ToString() + "`);");
+				"INSERT INTO `factionaggrolevel` VALUES ('" + m_state.EscapeString(obj.FactionId.ToString()) + "','" + m_state.EscapeString(obj.PersistantGameObject.ToString()) + "','" + m_state.EscapeString(obj.AggroLevel.ToString()) + "');");
 		}
 
 		public virtual void Update(FactionAggroLevelEntity obj)
@@ -94,11 +98,9 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return results;
 		}
 
-		public virtual int CountAll()
+		public virtual long CountAll()
 		{
-			return (int)m_state.ExecuteScalar(
-			"SELECT COUNT(*) FROM `factionaggrolevel`");
-
+			return (long) m_state.ExecuteScalar("SELECT COUNT(*) FROM `factionaggrolevel`");
 		}
 
 		protected virtual void FillEntityWithRow(ref FactionAggroLevelEntity entity, MySqlDataReader reader)
@@ -115,13 +117,15 @@ namespace DOL.Database.MySql.DataAccessObjects
 
 		public IList<string> VerifySchema()
 		{
-			return null;
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `factionaggrolevel` ("
 				+"`FactionId` int,"
 				+"`PersistantGameObjectId` int,"
 				+"`AggroLevel` int"
-				+", primary key `FactionId` (`FactionId`,`PersistantGameObjectId`)"
+				+", primary key `FactionIdPersistantGameObjectId` (`FactionId`,`PersistantGameObjectId`)"
+				+")"
 			);
+			m_state.ExecuteNonQuery("OPTIMIZE TABLE `factionaggrolevel`");
+			return null;
 		}
 
 		public FactionAggroLevelDao(MySqlState state)

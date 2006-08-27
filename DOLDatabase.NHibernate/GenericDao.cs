@@ -98,7 +98,7 @@ namespace DOL.Database.NHibernate
 		/// <summary>
 		/// Gets the count of all stored objects.
 		/// </summary>
-		public virtual int CountAll()
+		public virtual long CountAll()
 		{
 			return Database.GetObjectCount(typeof (TTransferObject));
 		}

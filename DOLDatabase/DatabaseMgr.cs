@@ -116,6 +116,7 @@ namespace DOL.Database
 		/// <seealso cref="Register(Type, IDataAccessObject)"/>
 		public void Register(Type daoInterface, Type dao, IDictionary<string, string> param)
 		{
+#warning TODO: use factory instead of these 2 methods
 			if (IsDisposed)
 			{
 				throw new ObjectDisposedException("Database manager is disposed");
@@ -139,16 +140,6 @@ namespace DOL.Database
 				throw new ArgumentException("The DAO " + dao.FullName + " must derive from " + daoInterface.FullName, "dao");
 			}
 
-			foreach (ConstructorInfo info in dao.GetConstructors())
-			{
-				string para = "";
-				foreach (ParameterInfo parameter in info.GetParameters())
-				{
-					para += "," + parameter.ParameterType.FullName;
-				}
-				log.FatalFormat("constructor public access: {0}, params: {1}", info.IsPublic, para);
-			}
-			
 			IDataAccessObject obj = (IDataAccessObject) Activator.CreateInstance(dao, m_state);
 			Register(daoInterface, obj);
 		}

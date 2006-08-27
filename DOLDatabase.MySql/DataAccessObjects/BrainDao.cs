@@ -29,18 +29,22 @@ namespace DOL.Database.MySql.DataAccessObjects
 	public class BrainDao : IBrainDao
 	{
 		protected static readonly string c_rowFields = "`ABrainId`,`ABrainType`,`AggroLevel`,`AggroRange`";
-		private readonly MySqlState m_state;
+		protected readonly MySqlState m_state;
 
 		public virtual BrainEntity Find(int aBrain)
 		{
 			BrainEntity result = new BrainEntity();
+			string command = "SELECT " + c_rowFields + " FROM `brain` WHERE `ABrainId`='" + m_state.EscapeString(aBrain.ToString()) + "'";
 
 			m_state.ExecuteQuery(
-				"SELECT " + c_rowFields + " FROM `brain` WHERE `ABrainId`='" + m_state.EscapeString(aBrain.ToString()) + "'",
+				command,
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
-					reader.Read();
+					if (!reader.Read())
+					{
+						throw new RowNotFoundException();
+					}
 					FillEntityWithRow(ref result, reader);
 				}
 			);
@@ -51,7 +55,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public virtual void Create(BrainEntity obj)
 		{
 			m_state.ExecuteNonQuery(
-				"INSERT INTO `brain` VALUES (`" + obj.ABrain.ToString() + "`,`" + obj.ABrainType.ToString() + "`,`" + obj.AggroLevel.ToString() + "`,`" + obj.AggroRange.ToString() + "`);");
+				"INSERT INTO `brain` VALUES ('" + m_state.EscapeString(obj.ABrain.ToString()) + "','" + m_state.EscapeString(obj.ABrainType.ToString()) + "','" + m_state.EscapeString(obj.AggroLevel.ToString()) + "','" + m_state.EscapeString(obj.AggroRange.ToString()) + "');");
 		}
 
 		public virtual void Update(BrainEntity obj)
@@ -94,11 +98,9 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return results;
 		}
 
-		public virtual int CountAll()
+		public virtual long CountAll()
 		{
-			return (int)m_state.ExecuteScalar(
-			"SELECT COUNT(*) FROM `brain`");
-
+			return (long) m_state.ExecuteScalar("SELECT COUNT(*) FROM `brain`");
 		}
 
 		protected virtual void FillEntityWithRow(ref BrainEntity entity, MySqlDataReader reader)
@@ -116,14 +118,16 @@ namespace DOL.Database.MySql.DataAccessObjects
 
 		public IList<string> VerifySchema()
 		{
-			return null;
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `brain` ("
 				+"`ABrainId` int,"
-				+"`ABrainType` varchar(510) character set unicode,"
+				+"`ABrainType` varchar(255) character set utf8,"
 				+"`AggroLevel` int,"
 				+"`AggroRange` int"
 				+", primary key `ABrainId` (`ABrainId`)"
+				+")"
 			);
+			m_state.ExecuteNonQuery("OPTIMIZE TABLE `brain`");
+			return null;
 		}
 
 		public BrainDao(MySqlState state)

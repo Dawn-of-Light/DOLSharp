@@ -29,18 +29,22 @@ namespace DOL.Database.MySql.DataAccessObjects
 	public class LineXSpellDao : ILineXSpellDao
 	{
 		protected static readonly string c_rowFields = "`LineXSpellId`,`Level`,`LineName`,`SpellId`";
-		private readonly MySqlState m_state;
+		protected readonly MySqlState m_state;
 
 		public virtual LineXSpellEntity Find(int id)
 		{
 			LineXSpellEntity result = new LineXSpellEntity();
+			string command = "SELECT " + c_rowFields + " FROM `linexspell` WHERE `LineXSpellId`='" + m_state.EscapeString(id.ToString()) + "'";
 
 			m_state.ExecuteQuery(
-				"SELECT " + c_rowFields + " FROM `linexspell` WHERE `LineXSpellId`='" + m_state.EscapeString(id.ToString()) + "'",
+				command,
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
-					reader.Read();
+					if (!reader.Read())
+					{
+						throw new RowNotFoundException();
+					}
 					FillEntityWithRow(ref result, reader);
 				}
 			);
@@ -51,7 +55,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public virtual void Create(LineXSpellEntity obj)
 		{
 			m_state.ExecuteNonQuery(
-				"INSERT INTO `linexspell` VALUES (`" + obj.Id.ToString() + "`,`" + obj.Level.ToString() + "`,`" + obj.LineName.ToString() + "`,`" + obj.SpellId.ToString() + "`);");
+				"INSERT INTO `linexspell` VALUES ('" + m_state.EscapeString(obj.Id.ToString()) + "','" + m_state.EscapeString(obj.Level.ToString()) + "','" + m_state.EscapeString(obj.LineName.ToString()) + "','" + m_state.EscapeString(obj.SpellId.ToString()) + "');");
 		}
 
 		public virtual void Update(LineXSpellEntity obj)
@@ -94,11 +98,9 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return results;
 		}
 
-		public virtual int CountAll()
+		public virtual long CountAll()
 		{
-			return (int)m_state.ExecuteScalar(
-			"SELECT COUNT(*) FROM `linexspell`");
-
+			return (long) m_state.ExecuteScalar("SELECT COUNT(*) FROM `linexspell`");
 		}
 
 		protected virtual void FillEntityWithRow(ref LineXSpellEntity entity, MySqlDataReader reader)
@@ -116,14 +118,16 @@ namespace DOL.Database.MySql.DataAccessObjects
 
 		public IList<string> VerifySchema()
 		{
-			return null;
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `linexspell` ("
 				+"`LineXSpellId` int,"
 				+"`Level` int,"
-				+"`LineName` varchar(500) character set unicode,"
+				+"`LineName` varchar(500) character set utf8,"
 				+"`SpellId` int"
 				+", primary key `LineXSpellId` (`LineXSpellId`)"
+				+")"
 			);
+			m_state.ExecuteNonQuery("OPTIMIZE TABLE `linexspell`");
+			return null;
 		}
 
 		public LineXSpellDao(MySqlState state)

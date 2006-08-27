@@ -57,7 +57,7 @@ namespace DOL.Database.DataAccessInterfaces
 		/// Gets the count of all stored objects.
 		/// </summary>
 		/// <value>The count of all objects.</value>
-		int CountAll();
+		long CountAll();
 	}
 }
 
