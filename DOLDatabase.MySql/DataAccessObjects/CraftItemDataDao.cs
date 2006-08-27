@@ -29,18 +29,22 @@ namespace DOL.Database.MySql.DataAccessObjects
 	public class CraftItemDataDao : ICraftItemDataDao
 	{
 		protected static readonly string c_rowFields = "`CraftItemDataId`,`CraftingLevel`,`CraftingSkill`,`TemplateToCraft`";
-		private readonly MySqlState m_state;
+		protected readonly MySqlState m_state;
 
 		public virtual CraftItemDataEntity Find(int id)
 		{
 			CraftItemDataEntity result = new CraftItemDataEntity();
+			string command = "SELECT " + c_rowFields + " FROM `craftitemdata` WHERE `CraftItemDataId`='" + m_state.EscapeString(id.ToString()) + "'";
 
 			m_state.ExecuteQuery(
-				"SELECT " + c_rowFields + " FROM `craftitemdata` WHERE `CraftItemDataId`='" + m_state.EscapeString(id.ToString()) + "'",
+				command,
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
-					reader.Read();
+					if (!reader.Read())
+					{
+						throw new RowNotFoundException();
+					}
 					FillEntityWithRow(ref result, reader);
 				}
 			);
@@ -51,7 +55,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public virtual void Create(CraftItemDataEntity obj)
 		{
 			m_state.ExecuteNonQuery(
-				"INSERT INTO `craftitemdata` VALUES (`" + obj.Id.ToString() + "`,`" + obj.CraftingLevel.ToString() + "`,`" + obj.CraftingSkill.ToString() + "`,`" + obj.TemplateToCraft.ToString() + "`);");
+				"INSERT INTO `craftitemdata` VALUES ('" + m_state.EscapeString(obj.Id.ToString()) + "','" + m_state.EscapeString(obj.CraftingLevel.ToString()) + "','" + m_state.EscapeString(obj.CraftingSkill.ToString()) + "','" + m_state.EscapeString(obj.TemplateToCraft.ToString()) + "');");
 		}
 
 		public virtual void Update(CraftItemDataEntity obj)
@@ -94,11 +98,9 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return results;
 		}
 
-		public virtual int CountAll()
+		public virtual long CountAll()
 		{
-			return (int)m_state.ExecuteScalar(
-			"SELECT COUNT(*) FROM `craftitemdata`");
-
+			return (long) m_state.ExecuteScalar("SELECT COUNT(*) FROM `craftitemdata`");
 		}
 
 		protected virtual void FillEntityWithRow(ref CraftItemDataEntity entity, MySqlDataReader reader)
@@ -116,14 +118,16 @@ namespace DOL.Database.MySql.DataAccessObjects
 
 		public IList<string> VerifySchema()
 		{
-			return null;
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `craftitemdata` ("
 				+"`CraftItemDataId` int,"
 				+"`CraftingLevel` int,"
 				+"`CraftingSkill` int,"
-				+"`TemplateToCraft` varchar(510) character set unicode"
+				+"`TemplateToCraft` varchar(255) character set utf8"
 				+", primary key `CraftItemDataId` (`CraftItemDataId`)"
+				+")"
 			);
+			m_state.ExecuteNonQuery("OPTIMIZE TABLE `craftitemdata`");
+			return null;
 		}
 
 		public CraftItemDataDao(MySqlState state)

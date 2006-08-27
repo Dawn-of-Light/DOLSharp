@@ -29,18 +29,22 @@ namespace DOL.Database.MySql.DataAccessObjects
 	public class BrainTemplateDao : IBrainTemplateDao
 	{
 		protected static readonly string c_rowFields = "`ABrainTemplateId`,`ABrainTemplateType`,`AggroLevel`,`AggroRange`";
-		private readonly MySqlState m_state;
+		protected readonly MySqlState m_state;
 
 		public virtual BrainTemplateEntity Find(int aBrainTemplate)
 		{
 			BrainTemplateEntity result = new BrainTemplateEntity();
+			string command = "SELECT " + c_rowFields + " FROM `braintemplate` WHERE `ABrainTemplateId`='" + m_state.EscapeString(aBrainTemplate.ToString()) + "'";
 
 			m_state.ExecuteQuery(
-				"SELECT " + c_rowFields + " FROM `braintemplate` WHERE `ABrainTemplateId`='" + m_state.EscapeString(aBrainTemplate.ToString()) + "'",
+				command,
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
-					reader.Read();
+					if (!reader.Read())
+					{
+						throw new RowNotFoundException();
+					}
 					FillEntityWithRow(ref result, reader);
 				}
 			);
@@ -51,7 +55,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public virtual void Create(BrainTemplateEntity obj)
 		{
 			m_state.ExecuteNonQuery(
-				"INSERT INTO `braintemplate` VALUES (`" + obj.ABrainTemplate.ToString() + "`,`" + obj.ABrainTemplateType.ToString() + "`,`" + obj.AggroLevel.ToString() + "`,`" + obj.AggroRange.ToString() + "`);");
+				"INSERT INTO `braintemplate` VALUES ('" + m_state.EscapeString(obj.ABrainTemplate.ToString()) + "','" + m_state.EscapeString(obj.ABrainTemplateType.ToString()) + "','" + m_state.EscapeString(obj.AggroLevel.ToString()) + "','" + m_state.EscapeString(obj.AggroRange.ToString()) + "');");
 		}
 
 		public virtual void Update(BrainTemplateEntity obj)
@@ -94,11 +98,9 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return results;
 		}
 
-		public virtual int CountAll()
+		public virtual long CountAll()
 		{
-			return (int)m_state.ExecuteScalar(
-			"SELECT COUNT(*) FROM `braintemplate`");
-
+			return (long) m_state.ExecuteScalar("SELECT COUNT(*) FROM `braintemplate`");
 		}
 
 		protected virtual void FillEntityWithRow(ref BrainTemplateEntity entity, MySqlDataReader reader)
@@ -116,14 +118,16 @@ namespace DOL.Database.MySql.DataAccessObjects
 
 		public IList<string> VerifySchema()
 		{
-			return null;
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `braintemplate` ("
 				+"`ABrainTemplateId` int,"
-				+"`ABrainTemplateType` varchar(510) character set unicode,"
+				+"`ABrainTemplateType` varchar(255) character set utf8,"
 				+"`AggroLevel` int,"
 				+"`AggroRange` int"
 				+", primary key `ABrainTemplateId` (`ABrainTemplateId`)"
+				+")"
 			);
+			m_state.ExecuteNonQuery("OPTIMIZE TABLE `braintemplate`");
+			return null;
 		}
 
 		public BrainTemplateDao(MySqlState state)

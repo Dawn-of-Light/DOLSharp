@@ -29,18 +29,22 @@ namespace DOL.Database.MySql.DataAccessObjects
 	public class JumpPointMultiTargetLocationDao : IJumpPointMultiTargetLocationDao
 	{
 		protected static readonly string c_rowFields = "`Heading`,`JumpPointId`,`Realm`,`Region`,`X`,`Y`,`Z`";
-		private readonly MySqlState m_state;
+		protected readonly MySqlState m_state;
 
 		public virtual JumpPointMultiTargetLocationEntity Find(int heading, int jumpPoint, byte realm, int region, int x, int y, int z)
 		{
 			JumpPointMultiTargetLocationEntity result = new JumpPointMultiTargetLocationEntity();
+			string command = "SELECT " + c_rowFields + " FROM `jumppointmultitargetlocation` WHERE `Heading`='" + m_state.EscapeString(heading.ToString()) + "', `JumpPointId`='" + m_state.EscapeString(jumpPoint.ToString()) + "', `Realm`='" + m_state.EscapeString(realm.ToString()) + "', `Region`='" + m_state.EscapeString(region.ToString()) + "', `X`='" + m_state.EscapeString(x.ToString()) + "', `Y`='" + m_state.EscapeString(y.ToString()) + "', `Z`='" + m_state.EscapeString(z.ToString()) + "'";
 
 			m_state.ExecuteQuery(
-				"SELECT " + c_rowFields + " FROM `jumppointmultitargetlocation` WHERE `Heading`='" + m_state.EscapeString(heading.ToString()) + "', `JumpPointId`='" + m_state.EscapeString(jumpPoint.ToString()) + "', `Realm`='" + m_state.EscapeString(realm.ToString()) + "', `Region`='" + m_state.EscapeString(region.ToString()) + "', `X`='" + m_state.EscapeString(x.ToString()) + "', `Y`='" + m_state.EscapeString(y.ToString()) + "', `Z`='" + m_state.EscapeString(z.ToString()) + "'",
+				command,
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
-					reader.Read();
+					if (!reader.Read())
+					{
+						throw new RowNotFoundException();
+					}
 					FillEntityWithRow(ref result, reader);
 				}
 			);
@@ -51,7 +55,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public virtual void Create(JumpPointMultiTargetLocationEntity obj)
 		{
 			m_state.ExecuteNonQuery(
-				"INSERT INTO `jumppointmultitargetlocation` VALUES (`" + obj.Heading.ToString() + "`,`" + obj.JumpPoint.ToString() + "`,`" + obj.Realm.ToString() + "`,`" + obj.Region.ToString() + "`,`" + obj.X.ToString() + "`,`" + obj.Y.ToString() + "`,`" + obj.Z.ToString() + "`);");
+				"INSERT INTO `jumppointmultitargetlocation` VALUES ('" + m_state.EscapeString(obj.Heading.ToString()) + "','" + m_state.EscapeString(obj.JumpPoint.ToString()) + "','" + m_state.EscapeString(obj.Realm.ToString()) + "','" + m_state.EscapeString(obj.Region.ToString()) + "','" + m_state.EscapeString(obj.X.ToString()) + "','" + m_state.EscapeString(obj.Y.ToString()) + "','" + m_state.EscapeString(obj.Z.ToString()) + "');");
 		}
 
 		public virtual void Update(JumpPointMultiTargetLocationEntity obj)
@@ -94,11 +98,9 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return results;
 		}
 
-		public virtual int CountAll()
+		public virtual long CountAll()
 		{
-			return (int)m_state.ExecuteScalar(
-			"SELECT COUNT(*) FROM `jumppointmultitargetlocation`");
-
+			return (long) m_state.ExecuteScalar("SELECT COUNT(*) FROM `jumppointmultitargetlocation`");
 		}
 
 		protected virtual void FillEntityWithRow(ref JumpPointMultiTargetLocationEntity entity, MySqlDataReader reader)
@@ -119,7 +121,6 @@ namespace DOL.Database.MySql.DataAccessObjects
 
 		public IList<string> VerifySchema()
 		{
-			return null;
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `jumppointmultitargetlocation` ("
 				+"`Heading` int,"
 				+"`JumpPointId` int,"
@@ -128,8 +129,11 @@ namespace DOL.Database.MySql.DataAccessObjects
 				+"`X` int,"
 				+"`Y` int,"
 				+"`Z` int"
-				+", primary key `Heading` (`Heading`,`JumpPointId`,`Realm`,`Region`,`X`,`Y`,`Z`)"
+				+", primary key `HeadingJumpPointIdRealmRegionXYZ` (`Heading`,`JumpPointId`,`Realm`,`Region`,`X`,`Y`,`Z`)"
+				+")"
 			);
+			m_state.ExecuteNonQuery("OPTIMIZE TABLE `jumppointmultitargetlocation`");
+			return null;
 		}
 
 		public JumpPointMultiTargetLocationDao(MySqlState state)

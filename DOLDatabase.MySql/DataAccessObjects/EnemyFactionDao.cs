@@ -29,18 +29,22 @@ namespace DOL.Database.MySql.DataAccessObjects
 	public class EnemyFactionDao : IEnemyFactionDao
 	{
 		protected static readonly string c_rowFields = "`EnemyFactionId`,`FactionId`";
-		private readonly MySqlState m_state;
+		protected readonly MySqlState m_state;
 
 		public virtual EnemyFactionEntity Find()
 		{
 			EnemyFactionEntity result = new EnemyFactionEntity();
+			string command = "SELECT " + c_rowFields + " FROM `enemyfactions` WHERE ";
 
 			m_state.ExecuteQuery(
-				"SELECT " + c_rowFields + " FROM `enemyfactions` WHERE ",
+				command,
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
-					reader.Read();
+					if (!reader.Read())
+					{
+						throw new RowNotFoundException();
+					}
 					FillEntityWithRow(ref result, reader);
 				}
 			);
@@ -51,7 +55,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public virtual void Create(EnemyFactionEntity obj)
 		{
 			m_state.ExecuteNonQuery(
-				"INSERT INTO `enemyfactions` VALUES (`" + obj.FactionId.ToString() + "`,`" + obj.EnemyFactionId.ToString() + "`);");
+				"INSERT INTO `enemyfactions` VALUES ('" + m_state.EscapeString(obj.FactionId.ToString()) + "','" + m_state.EscapeString(obj.EnemyFactionId.ToString()) + "');");
 		}
 
 		public virtual void Update(EnemyFactionEntity obj)
@@ -94,11 +98,9 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return results;
 		}
 
-		public virtual int CountAll()
+		public virtual long CountAll()
 		{
-			return (int)m_state.ExecuteScalar(
-			"SELECT COUNT(*) FROM `enemyfactions`");
-
+			return (long) m_state.ExecuteScalar("SELECT COUNT(*) FROM `enemyfactions`");
 		}
 
 		protected virtual void FillEntityWithRow(ref EnemyFactionEntity entity, MySqlDataReader reader)
@@ -114,12 +116,13 @@ namespace DOL.Database.MySql.DataAccessObjects
 
 		public IList<string> VerifySchema()
 		{
-			return null;
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `enemyfactions` ("
 				+"`FactionId` int,"
 				+"`EnemyFactionId` int"
-
+				+")"
 			);
+			m_state.ExecuteNonQuery("OPTIMIZE TABLE `enemyfactions`");
+			return null;
 		}
 
 		public EnemyFactionDao(MySqlState state)

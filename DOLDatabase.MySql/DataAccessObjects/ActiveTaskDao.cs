@@ -29,18 +29,22 @@ namespace DOL.Database.MySql.DataAccessObjects
 	public class ActiveTaskDao : IActiveTaskDao
 	{
 		protected static readonly string c_rowFields = "`AbstractTaskId`,`ItemName`,`RewardGiverName`,`StartingPlayedTime`,`TargetKilled`,`TargetMobName`,`TaskType`";
-		private readonly MySqlState m_state;
+		protected readonly MySqlState m_state;
 
 		public virtual ActiveTaskEntity Find(int abstractTask)
 		{
 			ActiveTaskEntity result = new ActiveTaskEntity();
+			string command = "SELECT " + c_rowFields + " FROM `activetasks` WHERE `AbstractTaskId`='" + m_state.EscapeString(abstractTask.ToString()) + "'";
 
 			m_state.ExecuteQuery(
-				"SELECT " + c_rowFields + " FROM `activetasks` WHERE `AbstractTaskId`='" + m_state.EscapeString(abstractTask.ToString()) + "'",
+				command,
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
-					reader.Read();
+					if (!reader.Read())
+					{
+						throw new RowNotFoundException();
+					}
 					FillEntityWithRow(ref result, reader);
 				}
 			);
@@ -51,7 +55,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public virtual void Create(ActiveTaskEntity obj)
 		{
 			m_state.ExecuteNonQuery(
-				"INSERT INTO `activetasks` VALUES (`" + obj.AbstractTask.ToString() + "`,`" + obj.ItemName.ToString() + "`,`" + obj.RewardGiverName.ToString() + "`,`" + obj.StartingPlayedTime.ToString() + "`,`" + obj.TargetKilled.ToString() + "`,`" + obj.TargetMobName.ToString() + "`,`" + obj.TaskType.ToString() + "`);");
+				"INSERT INTO `activetasks` VALUES ('" + m_state.EscapeString(obj.AbstractTask.ToString()) + "','" + m_state.EscapeString(obj.ItemName.ToString()) + "','" + m_state.EscapeString(obj.RewardGiverName.ToString()) + "','" + m_state.EscapeString(obj.StartingPlayedTime.ToString()) + "','" + m_state.EscapeString(obj.TargetKilled.ToString()) + "','" + m_state.EscapeString(obj.TargetMobName.ToString()) + "','" + m_state.EscapeString(obj.TaskType.ToString()) + "');");
 		}
 
 		public virtual void Update(ActiveTaskEntity obj)
@@ -94,11 +98,9 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return results;
 		}
 
-		public virtual int CountAll()
+		public virtual long CountAll()
 		{
-			return (int)m_state.ExecuteScalar(
-			"SELECT COUNT(*) FROM `activetasks`");
-
+			return (long) m_state.ExecuteScalar("SELECT COUNT(*) FROM `activetasks`");
 		}
 
 		protected virtual void FillEntityWithRow(ref ActiveTaskEntity entity, MySqlDataReader reader)
@@ -119,17 +121,19 @@ namespace DOL.Database.MySql.DataAccessObjects
 
 		public IList<string> VerifySchema()
 		{
-			return null;
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `activetasks` ("
 				+"`AbstractTaskId` int,"
-				+"`ItemName` varchar(510) character set unicode,"
-				+"`RewardGiverName` varchar(510) character set unicode,"
+				+"`ItemName` varchar(255) character set utf8,"
+				+"`RewardGiverName` varchar(255) character set utf8,"
 				+"`StartingPlayedTime` bigint,"
 				+"`TargetKilled` bit,"
-				+"`TargetMobName` varchar(510) character set unicode,"
-				+"`TaskType` varchar(510) character set unicode"
+				+"`TargetMobName` varchar(255) character set utf8,"
+				+"`TaskType` varchar(255) character set utf8"
 				+", primary key `AbstractTaskId` (`AbstractTaskId`)"
+				+")"
 			);
+			m_state.ExecuteNonQuery("OPTIMIZE TABLE `activetasks`");
+			return null;
 		}
 
 		public ActiveTaskDao(MySqlState state)

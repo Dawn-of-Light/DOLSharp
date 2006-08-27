@@ -29,18 +29,22 @@ namespace DOL.Database.MySql.DataAccessObjects
 	public class BindPointDao : IBindPointDao
 	{
 		protected static readonly string c_rowFields = "`BindPointId`,`Radius`,`Realm`,`Region`,`X`,`Y`,`Z`";
-		private readonly MySqlState m_state;
+		protected readonly MySqlState m_state;
 
 		public virtual BindPointEntity Find(int id)
 		{
 			BindPointEntity result = new BindPointEntity();
+			string command = "SELECT " + c_rowFields + " FROM `bindpoint` WHERE `BindPointId`='" + m_state.EscapeString(id.ToString()) + "'";
 
 			m_state.ExecuteQuery(
-				"SELECT " + c_rowFields + " FROM `bindpoint` WHERE `BindPointId`='" + m_state.EscapeString(id.ToString()) + "'",
+				command,
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
-					reader.Read();
+					if (!reader.Read())
+					{
+						throw new RowNotFoundException();
+					}
 					FillEntityWithRow(ref result, reader);
 				}
 			);
@@ -51,7 +55,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public virtual void Create(BindPointEntity obj)
 		{
 			m_state.ExecuteNonQuery(
-				"INSERT INTO `bindpoint` VALUES (`" + obj.Id.ToString() + "`,`" + obj.Radius.ToString() + "`,`" + obj.Realm.ToString() + "`,`" + obj.Region.ToString() + "`,`" + obj.X.ToString() + "`,`" + obj.Y.ToString() + "`,`" + obj.Z.ToString() + "`);");
+				"INSERT INTO `bindpoint` VALUES ('" + m_state.EscapeString(obj.Id.ToString()) + "','" + m_state.EscapeString(obj.Radius.ToString()) + "','" + m_state.EscapeString(obj.Realm.ToString()) + "','" + m_state.EscapeString(obj.Region.ToString()) + "','" + m_state.EscapeString(obj.X.ToString()) + "','" + m_state.EscapeString(obj.Y.ToString()) + "','" + m_state.EscapeString(obj.Z.ToString()) + "');");
 		}
 
 		public virtual void Update(BindPointEntity obj)
@@ -94,11 +98,9 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return results;
 		}
 
-		public virtual int CountAll()
+		public virtual long CountAll()
 		{
-			return (int)m_state.ExecuteScalar(
-			"SELECT COUNT(*) FROM `bindpoint`");
-
+			return (long) m_state.ExecuteScalar("SELECT COUNT(*) FROM `bindpoint`");
 		}
 
 		protected virtual void FillEntityWithRow(ref BindPointEntity entity, MySqlDataReader reader)
@@ -119,7 +121,6 @@ namespace DOL.Database.MySql.DataAccessObjects
 
 		public IList<string> VerifySchema()
 		{
-			return null;
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `bindpoint` ("
 				+"`BindPointId` int,"
 				+"`Radius` int,"
@@ -129,7 +130,10 @@ namespace DOL.Database.MySql.DataAccessObjects
 				+"`Y` int,"
 				+"`Z` int"
 				+", primary key `BindPointId` (`BindPointId`)"
+				+")"
 			);
+			m_state.ExecuteNonQuery("OPTIMIZE TABLE `bindpoint`");
+			return null;
 		}
 
 		public BindPointDao(MySqlState state)

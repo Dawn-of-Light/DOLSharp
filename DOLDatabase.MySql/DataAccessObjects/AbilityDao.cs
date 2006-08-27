@@ -29,18 +29,22 @@ namespace DOL.Database.MySql.DataAccessObjects
 	public class AbilityDao : IAbilityDao
 	{
 		protected static readonly string c_rowFields = "`KeyName`,`Description`,`IconId`,`Name`";
-		private readonly MySqlState m_state;
+		protected readonly MySqlState m_state;
 
 		public virtual AbilityEntity Find(string keyName)
 		{
 			AbilityEntity result = new AbilityEntity();
+			string command = "SELECT " + c_rowFields + " FROM `ability` WHERE `KeyName`='" + m_state.EscapeString(keyName.ToString()) + "'";
 
 			m_state.ExecuteQuery(
-				"SELECT " + c_rowFields + " FROM `ability` WHERE `KeyName`='" + m_state.EscapeString(keyName.ToString()) + "'",
+				command,
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
-					reader.Read();
+					if (!reader.Read())
+					{
+						throw new RowNotFoundException();
+					}
 					FillEntityWithRow(ref result, reader);
 				}
 			);
@@ -51,7 +55,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public virtual void Create(AbilityEntity obj)
 		{
 			m_state.ExecuteNonQuery(
-				"INSERT INTO `ability` VALUES (`" + obj.KeyName.ToString() + "`,`" + obj.Description.ToString() + "`,`" + obj.IconId.ToString() + "`,`" + obj.Name.ToString() + "`);");
+				"INSERT INTO `ability` VALUES ('" + m_state.EscapeString(obj.KeyName.ToString()) + "','" + m_state.EscapeString(obj.Description.ToString()) + "','" + m_state.EscapeString(obj.IconId.ToString()) + "','" + m_state.EscapeString(obj.Name.ToString()) + "');");
 		}
 
 		public virtual void Update(AbilityEntity obj)
@@ -94,11 +98,9 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return results;
 		}
 
-		public virtual int CountAll()
+		public virtual long CountAll()
 		{
-			return (int)m_state.ExecuteScalar(
-			"SELECT COUNT(*) FROM `ability`");
-
+			return (long) m_state.ExecuteScalar("SELECT COUNT(*) FROM `ability`");
 		}
 
 		protected virtual void FillEntityWithRow(ref AbilityEntity entity, MySqlDataReader reader)
@@ -116,14 +118,16 @@ namespace DOL.Database.MySql.DataAccessObjects
 
 		public IList<string> VerifySchema()
 		{
-			return null;
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `ability` ("
-				+"`KeyName` varchar(100) character set unicode,"
-				+"`Description` varchar(510) character set unicode,"
+				+"`KeyName` varchar(100) character set utf8,"
+				+"`Description` varchar(255) character set utf8,"
 				+"`IconId` int,"
-				+"`Name` varchar(510) character set unicode"
+				+"`Name` varchar(255) character set utf8"
 				+", primary key `KeyName` (`KeyName`)"
+				+")"
 			);
+			m_state.ExecuteNonQuery("OPTIMIZE TABLE `ability`");
+			return null;
 		}
 
 		public AbilityDao(MySqlState state)

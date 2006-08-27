@@ -29,18 +29,22 @@ namespace DOL.Database.MySql.DataAccessObjects
 	public class MerchantItemDao : IMerchantItemDao
 	{
 		protected static readonly string c_rowFields = "`MerchantItemId`,`ItemTemplateId`,`MerchantPageId`,`Position`";
-		private readonly MySqlState m_state;
+		protected readonly MySqlState m_state;
 
 		public virtual MerchantItemEntity Find(int id)
 		{
 			MerchantItemEntity result = new MerchantItemEntity();
+			string command = "SELECT " + c_rowFields + " FROM `merchantitem` WHERE `MerchantItemId`='" + m_state.EscapeString(id.ToString()) + "'";
 
 			m_state.ExecuteQuery(
-				"SELECT " + c_rowFields + " FROM `merchantitem` WHERE `MerchantItemId`='" + m_state.EscapeString(id.ToString()) + "'",
+				command,
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
-					reader.Read();
+					if (!reader.Read())
+					{
+						throw new RowNotFoundException();
+					}
 					FillEntityWithRow(ref result, reader);
 				}
 			);
@@ -51,7 +55,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public virtual void Create(MerchantItemEntity obj)
 		{
 			m_state.ExecuteNonQuery(
-				"INSERT INTO `merchantitem` VALUES (`" + obj.Id.ToString() + "`,`" + obj.ItemTemplate.ToString() + "`,`" + obj.MerchantPage.ToString() + "`,`" + obj.Position.ToString() + "`);");
+				"INSERT INTO `merchantitem` VALUES ('" + m_state.EscapeString(obj.Id.ToString()) + "','" + m_state.EscapeString(obj.ItemTemplate.ToString()) + "','" + m_state.EscapeString(obj.MerchantPage.ToString()) + "','" + m_state.EscapeString(obj.Position.ToString()) + "');");
 		}
 
 		public virtual void Update(MerchantItemEntity obj)
@@ -94,11 +98,9 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return results;
 		}
 
-		public virtual int CountAll()
+		public virtual long CountAll()
 		{
-			return (int)m_state.ExecuteScalar(
-			"SELECT COUNT(*) FROM `merchantitem`");
-
+			return (long) m_state.ExecuteScalar("SELECT COUNT(*) FROM `merchantitem`");
 		}
 
 		protected virtual void FillEntityWithRow(ref MerchantItemEntity entity, MySqlDataReader reader)
@@ -116,14 +118,16 @@ namespace DOL.Database.MySql.DataAccessObjects
 
 		public IList<string> VerifySchema()
 		{
-			return null;
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `merchantitem` ("
 				+"`MerchantItemId` int,"
-				+"`ItemTemplateId` varchar(510) character set unicode,"
+				+"`ItemTemplateId` varchar(255) character set utf8,"
 				+"`MerchantPageId` int,"
 				+"`Position` int"
 				+", primary key `MerchantItemId` (`MerchantItemId`)"
+				+")"
 			);
+			m_state.ExecuteNonQuery("OPTIMIZE TABLE `merchantitem`");
+			return null;
 		}
 
 		public MerchantItemDao(MySqlState state)

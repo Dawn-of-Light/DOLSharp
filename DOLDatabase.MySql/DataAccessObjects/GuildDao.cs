@@ -29,18 +29,22 @@ namespace DOL.Database.MySql.DataAccessObjects
 	public class GuildDao : IGuildDao
 	{
 		protected static readonly string c_rowFields = "`GuildId`,`Alliance`,`BountyPoints`,`Due`,`Email`,`Emblem`,`GuildName`,`Level`,`MeritPoints`,`Motd`,`OMotd`,`RealmPoints`,`TotalMoney`,`Webpage`";
-		private readonly MySqlState m_state;
+		protected readonly MySqlState m_state;
 
 		public virtual GuildEntity Find(int id)
 		{
 			GuildEntity result = new GuildEntity();
+			string command = "SELECT " + c_rowFields + " FROM `guild` WHERE `GuildId`='" + m_state.EscapeString(id.ToString()) + "'";
 
 			m_state.ExecuteQuery(
-				"SELECT " + c_rowFields + " FROM `guild` WHERE `GuildId`='" + m_state.EscapeString(id.ToString()) + "'",
+				command,
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
-					reader.Read();
+					if (!reader.Read())
+					{
+						throw new RowNotFoundException();
+					}
 					FillEntityWithRow(ref result, reader);
 				}
 			);
@@ -51,7 +55,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public virtual void Create(GuildEntity obj)
 		{
 			m_state.ExecuteNonQuery(
-				"INSERT INTO `guild` VALUES (`" + obj.Id.ToString() + "`,`" + obj.Alliance.ToString() + "`,`" + obj.BountyPoints.ToString() + "`,`" + obj.Due.ToString() + "`,`" + obj.Email.ToString() + "`,`" + obj.Emblem.ToString() + "`,`" + obj.GuildName.ToString() + "`,`" + obj.Level.ToString() + "`,`" + obj.MeritPoints.ToString() + "`,`" + obj.Motd.ToString() + "`,`" + obj.OMotd.ToString() + "`,`" + obj.RealmPoints.ToString() + "`,`" + obj.TotalMoney.ToString() + "`,`" + obj.Webpage.ToString() + "`);");
+				"INSERT INTO `guild` VALUES ('" + m_state.EscapeString(obj.Id.ToString()) + "','" + m_state.EscapeString(obj.Alliance.ToString()) + "','" + m_state.EscapeString(obj.BountyPoints.ToString()) + "','" + m_state.EscapeString(obj.Due.ToString()) + "','" + m_state.EscapeString(obj.Email.ToString()) + "','" + m_state.EscapeString(obj.Emblem.ToString()) + "','" + m_state.EscapeString(obj.GuildName.ToString()) + "','" + m_state.EscapeString(obj.Level.ToString()) + "','" + m_state.EscapeString(obj.MeritPoints.ToString()) + "','" + m_state.EscapeString(obj.Motd.ToString()) + "','" + m_state.EscapeString(obj.OMotd.ToString()) + "','" + m_state.EscapeString(obj.RealmPoints.ToString()) + "','" + m_state.EscapeString(obj.TotalMoney.ToString()) + "','" + m_state.EscapeString(obj.Webpage.ToString()) + "');");
 		}
 
 		public virtual void Update(GuildEntity obj)
@@ -94,11 +98,9 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return results;
 		}
 
-		public virtual int CountAll()
+		public virtual long CountAll()
 		{
-			return (int)m_state.ExecuteScalar(
-			"SELECT COUNT(*) FROM `guild`");
-
+			return (long) m_state.ExecuteScalar("SELECT COUNT(*) FROM `guild`");
 		}
 
 		protected virtual void FillEntityWithRow(ref GuildEntity entity, MySqlDataReader reader)
@@ -126,24 +128,26 @@ namespace DOL.Database.MySql.DataAccessObjects
 
 		public IList<string> VerifySchema()
 		{
-			return null;
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `guild` ("
 				+"`GuildId` int,"
 				+"`Alliance` int,"
 				+"`BountyPoints` bigint,"
 				+"`Due` bit,"
-				+"`Email` varchar(510) character set unicode,"
+				+"`Email` varchar(255) character set utf8,"
 				+"`Emblem` int,"
-				+"`GuildName` varchar(510) character set unicode,"
+				+"`GuildName` varchar(255) character set utf8,"
 				+"`Level` int,"
 				+"`MeritPoints` bigint,"
-				+"`Motd` varchar(510) character set unicode,"
-				+"`OMotd` varchar(510) character set unicode,"
+				+"`Motd` varchar(255) character set utf8,"
+				+"`OMotd` varchar(255) character set utf8,"
 				+"`RealmPoints` bigint,"
 				+"`TotalMoney` bigint,"
-				+"`Webpage` varchar(510) character set unicode"
+				+"`Webpage` varchar(255) character set utf8"
 				+", primary key `GuildId` (`GuildId`)"
+				+")"
 			);
+			m_state.ExecuteNonQuery("OPTIMIZE TABLE `guild`");
+			return null;
 		}
 
 		public GuildDao(MySqlState state)

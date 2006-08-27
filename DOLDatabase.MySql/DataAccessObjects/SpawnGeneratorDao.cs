@@ -29,18 +29,22 @@ namespace DOL.Database.MySql.DataAccessObjects
 	public class SpawnGeneratorDao : ISpawnGeneratorDao
 	{
 		protected static readonly string c_rowFields = "`SpawnGeneratorBaseId`,`Height`,`Radius`,`RegionId`,`SpawnGeneratorBaseType`,`Width`,`X`,`Y`";
-		private readonly MySqlState m_state;
+		protected readonly MySqlState m_state;
 
 		public virtual SpawnGeneratorEntity Find(int id)
 		{
 			SpawnGeneratorEntity result = new SpawnGeneratorEntity();
+			string command = "SELECT " + c_rowFields + " FROM `spawngenerator` WHERE `SpawnGeneratorBaseId`='" + m_state.EscapeString(id.ToString()) + "'";
 
 			m_state.ExecuteQuery(
-				"SELECT " + c_rowFields + " FROM `spawngenerator` WHERE `SpawnGeneratorBaseId`='" + m_state.EscapeString(id.ToString()) + "'",
+				command,
 				CommandBehavior.SingleRow,
 				delegate(MySqlDataReader reader)
 				{
-					reader.Read();
+					if (!reader.Read())
+					{
+						throw new RowNotFoundException();
+					}
 					FillEntityWithRow(ref result, reader);
 				}
 			);
@@ -51,7 +55,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public virtual void Create(SpawnGeneratorEntity obj)
 		{
 			m_state.ExecuteNonQuery(
-				"INSERT INTO `spawngenerator` VALUES (`" + obj.Id.ToString() + "`,`" + obj.Height.ToString() + "`,`" + obj.Radius.ToString() + "`,`" + obj.RegionId.ToString() + "`,`" + obj.SpawnGeneratorBaseType.ToString() + "`,`" + obj.Width.ToString() + "`,`" + obj.X.ToString() + "`,`" + obj.Y.ToString() + "`);");
+				"INSERT INTO `spawngenerator` VALUES ('" + m_state.EscapeString(obj.Id.ToString()) + "','" + m_state.EscapeString(obj.Height.ToString()) + "','" + m_state.EscapeString(obj.Radius.ToString()) + "','" + m_state.EscapeString(obj.RegionId.ToString()) + "','" + m_state.EscapeString(obj.SpawnGeneratorBaseType.ToString()) + "','" + m_state.EscapeString(obj.Width.ToString()) + "','" + m_state.EscapeString(obj.X.ToString()) + "','" + m_state.EscapeString(obj.Y.ToString()) + "');");
 		}
 
 		public virtual void Update(SpawnGeneratorEntity obj)
@@ -94,11 +98,9 @@ namespace DOL.Database.MySql.DataAccessObjects
 			return results;
 		}
 
-		public virtual int CountAll()
+		public virtual long CountAll()
 		{
-			return (int)m_state.ExecuteScalar(
-			"SELECT COUNT(*) FROM `spawngenerator`");
-
+			return (long) m_state.ExecuteScalar("SELECT COUNT(*) FROM `spawngenerator`");
 		}
 
 		protected virtual void FillEntityWithRow(ref SpawnGeneratorEntity entity, MySqlDataReader reader)
@@ -120,18 +122,20 @@ namespace DOL.Database.MySql.DataAccessObjects
 
 		public IList<string> VerifySchema()
 		{
-			return null;
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `spawngenerator` ("
 				+"`SpawnGeneratorBaseId` int,"
 				+"`Height` int,"
 				+"`Radius` int,"
 				+"`RegionId` int,"
-				+"`SpawnGeneratorBaseType` varchar(510) character set unicode,"
+				+"`SpawnGeneratorBaseType` varchar(255) character set utf8,"
 				+"`Width` int,"
 				+"`X` int,"
 				+"`Y` int"
 				+", primary key `SpawnGeneratorBaseId` (`SpawnGeneratorBaseId`)"
+				+")"
 			);
+			m_state.ExecuteNonQuery("OPTIMIZE TABLE `spawngenerator`");
+			return null;
 		}
 
 		public SpawnGeneratorDao(MySqlState state)
