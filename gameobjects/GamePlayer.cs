@@ -8250,7 +8250,7 @@ namespace DOL.GS
 		/// <returns>the GameInventoryItem on the ground</returns>
 		public GameInventoryItem CreateItemOnTheGround(InventoryItem item)
 		{
-			GameInventoryItem gameItem = GameInventoryItem.CreateFromTemplate(item);
+			GameInventoryItem gameItem = new GameInventoryItem(item); // fixed
 
 			int x, y;
 			GetSpotFromHeading(30, out x, out y);
