@@ -90,7 +90,7 @@ namespace DOL.GS.Spells
 		{
 			if (target==null || target.ObjectState!=GameLiving.eObjectState.Active) return false;
 
-			if (!target.Alive) 
+			if (!target.IsAlive) 
 			{
 				//"You cannot heal the dead!" sshot550.tga
 				MessageToCaster(target.GetName(0, true) + " is dead!", eChatType.CT_SpellResisted);

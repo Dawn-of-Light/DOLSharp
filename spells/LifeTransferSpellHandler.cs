@@ -108,7 +108,7 @@ namespace DOL.GS.Spells
 		{
 			if (target==null || target.ObjectState!=GameLiving.eObjectState.Active) return false;
 
-			if (!target.Alive) 
+			if (!target.IsAlive) 
 			{
 				MessageToCaster(target.GetName(0, true) + " is dead!", eChatType.CT_SpellResisted);
 				return false;

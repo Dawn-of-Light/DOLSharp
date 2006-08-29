@@ -37,7 +37,7 @@ namespace DOL.GS.SkillHandler
 				return;
 			}
 
-			if(!player.Alive)
+			if(!player.IsAlive)
 			{
 				player.Out.SendMessage("You can't switch to sure shot when dead!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;

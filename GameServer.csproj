@@ -187,6 +187,7 @@
     <Compile Include="Crafting\WoodWorking.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="dbconverters\Version003.cs" />
     <Compile Include="dbconverters\DatabaseConverterAttribute.cs">
       <SubType>Code</SubType>
     </Compile>

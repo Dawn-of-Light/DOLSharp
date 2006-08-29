@@ -58,7 +58,7 @@ namespace DOL.GS.SkillHandler
 				return;
 			}
 
-            if (!player.Alive)
+            if (!player.IsAlive)
             {
                 player.Out.SendMessage("You cannot use this while Dead!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 return;

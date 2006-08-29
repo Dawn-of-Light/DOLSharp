@@ -75,7 +75,7 @@ namespace DOL.GS.PacketHandler
 							pak.WriteByte(updatePlayer.EndurancePercent); //new in 1.69
 
 							byte playerStatus = 0;
-							if (!updatePlayer.Alive)
+							if (!updatePlayer.IsAlive)
 								playerStatus |= 0x01;
 							if (updatePlayer.IsMezzed)
 								playerStatus |= 0x02;
@@ -118,7 +118,7 @@ namespace DOL.GS.PacketHandler
 				pak.WriteByte(player.EndurancePercent); // new in 1.69
 
 				byte playerStatus = 0;
-				if (!player.Alive)
+				if (!player.IsAlive)
 					playerStatus |= 0x01;
 				if (player.IsMezzed)
 					playerStatus |= 0x02;

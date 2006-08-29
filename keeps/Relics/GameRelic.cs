@@ -116,7 +116,7 @@ namespace DOL.GS
 		{
 			if (!base.Interact(player)) return false;
 
-			if (!player.Alive)
+			if (!player.IsAlive)
 			{
 				player.Out.SendMessage("You cannot pickup " + GetName(0, false) + ". You are dead!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
@@ -184,7 +184,7 @@ namespace DOL.GS
 				return;
 			}
 
-			if (!player.Alive)
+			if (!player.IsAlive)
 			{
 				player.Out.SendMessage("You are dead ! Release.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;

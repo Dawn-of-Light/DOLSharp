@@ -48,7 +48,7 @@ namespace DOL.GS.Spells
 		public override void OnDirectEffect(GameLiving target, double effectiveness)
 		{
 			base.OnDirectEffect(target, effectiveness);
-			if (target == null || !target.Alive)
+			if (target == null || !target.IsAlive)
 				return;
 
 			target.LastAttackedByEnemyTick = target.CurrentRegion.Time; //have to do it here because OnAttackedByEnemy is not called to not get aggro

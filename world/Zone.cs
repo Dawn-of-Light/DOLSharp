@@ -1153,6 +1153,11 @@ namespace DOL.GS
 			return GetAreasOfSpot(spot, true);
 		}
 
+		public IList GetAreasOfSpot(int x, int y, int z)
+		{
+			return m_Region.GetAreasOfZone(this, x, y, z);
+		}
+
 		public IList GetAreasOfSpot(IPoint3D spot, bool checkZ)
 		{
 			return m_Region.GetAreasOfZone(this, spot, checkZ);

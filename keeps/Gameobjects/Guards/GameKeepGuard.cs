@@ -209,7 +209,7 @@ namespace DOL.GS.Keeps
 			if (attackTarget is GameLiving == false)
 				return;
 			GameLiving target = attackTarget as GameLiving;
-			if (target == null || target.Alive == false)
+			if (target == null || target.IsAlive == false)
 				return;
 
 			//we dont send LOS checks for people we cant attack
