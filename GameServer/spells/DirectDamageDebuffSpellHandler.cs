@@ -45,7 +45,7 @@ namespace DOL.GS.Spells
 			DamageTarget(ad, true);
 			target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, ad.AttackType, Caster);
 
-			if (target.Alive)
+			if (target.IsAlive)
 				base.ApplyEffectOnTarget(target, effectiveness);
 		}
 

@@ -83,7 +83,7 @@ namespace DOL.GS.PacketHandler.v168
 				{
 					player.CurrentSpeed = m_flagSpeedData & 0x1ff;     // forwardmovement
 				}
-				player.Strafing = (m_flagSpeedData & 0x4000) != 0;
+				player.IsStrafing = (m_flagSpeedData & 0x4000) != 0;
 				player.TargetInView = (m_flagSpeedData & 0xa000) != 0;     // why 2 bits? that has to be figured out
 				player.GroundTargetInView = ((m_flagSpeedData & 0x1000) != 0);
 				player.UseSlot(m_slot, m_useType);

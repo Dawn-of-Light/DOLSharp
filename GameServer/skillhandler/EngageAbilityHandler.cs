@@ -66,7 +66,7 @@ namespace DOL.GS.SkillHandler
 				return;
 			}
 
-			if (!player.Alive)
+			if (!player.IsAlive)
 			{
 				player.Out.SendMessage("You can't enter combat mode while lying down!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 				return;

@@ -538,7 +538,7 @@ namespace DOL.GS.Quests.Albion
 			GameMob fairyDragonflyHandler = (GameMob) sender;
 
 			// if princess is dead no ned to checks ...
-			if (!fairyDragonflyHandler.Alive || fairyDragonflyHandler.ObjectState != GameObject.eObjectState.Active)
+			if (!fairyDragonflyHandler.IsAlive || fairyDragonflyHandler.ObjectState != GameObject.eObjectState.Active)
 				return;
 
 			foreach (GamePlayer player in fairyDragonflyHandler.GetPlayersInRadius(1500))

@@ -39,7 +39,6 @@ namespace DOL.GS.PacketHandler.v168
 			//reset realm if no characters
 			if((client.Account.Characters == null || client.Account.Characters.Length <= 0) && client.Account.Realm != (int)eRealm.None)
 			{
-				//DOLConsole.WriteLine("no chars, realm reset.");
 				client.Account.Realm = (int)eRealm.None;
 			}
 

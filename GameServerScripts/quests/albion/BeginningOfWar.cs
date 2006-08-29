@@ -644,7 +644,7 @@ namespace DOL.GS.Quests.Albion
 			GameMob princessObera = (GameMob) sender;
 
 			// if princess is dead no ned to checks ...
-			if (!princessObera.Alive || princessObera.ObjectState != GameObject.eObjectState.Active)
+			if (!princessObera.IsAlive || princessObera.ObjectState != GameObject.eObjectState.Active)
 				return;
 
 			foreach (GamePlayer player in princessObera.GetPlayersInRadius(1000))
@@ -976,7 +976,7 @@ namespace DOL.GS.Quests.Albion
 
 		protected virtual void ResetMasterDunwyn()
 		{
-			if (dunwynClone != null && (dunwynClone.Alive || dunwynClone.ObjectState == GameObject.eObjectState.Active))
+			if (dunwynClone != null && (dunwynClone.IsAlive || dunwynClone.ObjectState == GameObject.eObjectState.Active))
 			{
 				m_animSpellObjectQueue.Enqueue(dunwynClone);
 				m_animSpellTeleportTimerQueue.Enqueue(new RegionTimer(dunwynClone, new RegionTimerCallback(MakeAnimEmoteSequence), 500));

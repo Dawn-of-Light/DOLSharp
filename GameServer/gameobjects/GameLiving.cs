@@ -952,7 +952,7 @@ namespace DOL.GS
 		/// <summary>
 		/// returns if this living is alive
 		/// </summary>
-		public virtual bool Alive
+		public virtual bool IsAlive
 		{
 			get { return Health > 0; }
 		}
@@ -1293,7 +1293,7 @@ namespace DOL.GS
 			}
 
 			//Target is dead already
-			if (!ad.Target.Alive)
+			if (!ad.Target.IsAlive)
 			{
 				ad.AttackResult = eAttackResult.TargetDead;
 				return ad;
@@ -1585,7 +1585,7 @@ namespace DOL.GS
 			protected override void OnTick()
 			{
 				GameLiving target = (GameLiving)m_actionSource;
-				if (!target.Alive || target.ObjectState != eObjectState.Active)
+				if (!target.IsAlive || target.ObjectState != eObjectState.Active)
 				{
 					Stop();
 					return;
@@ -2112,7 +2112,7 @@ namespace DOL.GS
 						case eAttackResult.Parried:
 							for (int i = 0; i < leftHandSwingCount; i++)
 							{
-								if (m_target is GameLiving && (((GameLiving)m_target).Alive == false || ((GameLiving)m_target).ObjectState != eObjectState.Active))
+								if (m_target is GameLiving && (((GameLiving)m_target).IsAlive == false || ((GameLiving)m_target).ObjectState != eObjectState.Active))
 									break;
 
 								leftHandAD = (i % 2 == 0) ? //Savage swings - main,left,main,left.
@@ -2230,12 +2230,9 @@ namespace DOL.GS
 		{
 			if (weapon != null)
 			{
-				if (weapon.ProcSpellID != 0)
+				// random chance (4.0spd = 10%)
+				if (weapon.ProcSpellID != 0 && Util.ChanceDouble(weapon.SPD_ABS * 0.0025))
 				{
-					// random chance (4.0spd = 10%)
-					if (!Util.ChanceDouble(weapon.SPD_ABS * 0.0025))
-						return;
-
 					SpellLine procEffectLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
 					if (procEffectLine != null)
 					{
@@ -2261,8 +2258,38 @@ namespace DOL.GS
 					}
 				}
 
+				// random chance (4.0spd = 10%)
+				if (weapon.ProcSpellID1 != 0 && Util.ChanceDouble(weapon.SPD_ABS * 0.0025))
+				{
+					SpellLine procEffectLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
+					if (procEffectLine != null)
+					{
+						IList spells = SkillBase.GetSpellList(procEffectLine.KeyName);
+						if (spells != null)
+						{
+							foreach (Spell spell in spells)
+							{
+								if (spell.ID == weapon.ProcSpellID1)
+								{
+									if (spell.Level <= Level)
+									{
+										ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(ad.Attacker, spell, procEffectLine);
+										if (spellHandler != null)
+										{
+											spellHandler.StartSpell(ad.Target);
+										}
+									}
+									else if (this is GamePlayer)
+										((GamePlayer)this).Out.SendMessage("You are not powerful enough to use this item's spell.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									break;
+								}
+							}
+						}
+					}
+				}
+
 				// poison
-				if (weapon.SpellID != 0)
+				if (weapon.PoisonSpellID != 0)
 				{
 					SpellLine poisonLine = SkillBase.GetSpellLine(GlobalSpellsLines.Mundane_Poisons);
 					if (poisonLine != null)
@@ -2272,7 +2299,7 @@ namespace DOL.GS
 						{
 							foreach (Spell spell in spells)
 							{
-								if (spell.ID == weapon.SpellID)
+								if (spell.ID == weapon.PoisonSpellID)
 								{
 									if (spell.Level <= Level)
 									{
@@ -2292,8 +2319,8 @@ namespace DOL.GS
 							}
 						}
 					}
-					weapon.Charges--;
-					if (weapon.Charges <= 0) { weapon.MaxCharges = 0; weapon.SpellID = 0; }
+					weapon.PoisonCharges--;
+					if (weapon.PoisonCharges <= 0) { weapon.PoisonMaxCharges = 0; weapon.PoisonSpellID = 0; }
 				}
 			}
 		}
@@ -2308,7 +2335,7 @@ namespace DOL.GS
 			//			if (AttackState)
 			//				StopAttack(); // interrupts range attack animation
 
-			if (!Alive || ObjectState != eObjectState.Active) return;
+			if (!IsAlive || ObjectState != eObjectState.Active) return;
 
 			m_attackState = true;
 
@@ -2456,7 +2483,7 @@ namespace DOL.GS
 					if (inter.InterceptSource.IsMezzed) continue;
 					if (inter.InterceptSource.IsSitting) continue;
 					if (inter.InterceptSource.ObjectState != eObjectState.Active) continue;
-					if (inter.InterceptSource.Alive == false) continue;
+					if (inter.InterceptSource.IsAlive == false) continue;
 					if (!WorldMgr.CheckDistance(this, inter.InterceptSource, InterceptAbilityHandler.INTERCEPT_DISTANCE)) continue;
 					if (Util.Chance(50)) continue; // TODO: proper chance formula?
 					intercept = inter;
@@ -2667,7 +2694,7 @@ namespace DOL.GS
 				guard.GuardSource.IsMezzed == false &&
 				guard.GuardSource.ActiveWeaponSlot != eActiveWeaponSlot.Distance &&
 				//				guard.GuardSource.AttackState &&
-				guard.GuardSource.Alive &&
+				guard.GuardSource.IsAlive &&
 				!stealthStyle)
 			{
 				// check distance
@@ -2853,7 +2880,7 @@ namespace DOL.GS
 						for (int i = 0; i < attackerGroup.PlayerCount; i++)
 						{
 							GamePlayer player = attackerGroup[i];
-							if (WorldMgr.CheckDistance(player, this, WorldMgr.MAX_EXPFORKILL_DISTANCE) && player.Alive && player.ObjectState == eObjectState.Active)
+							if (WorldMgr.CheckDistance(player, this, WorldMgr.MAX_EXPFORKILL_DISTANCE) && player.IsAlive && player.ObjectState == eObjectState.Active)
 								xpGainers.Add(player);
 						}
 					}
@@ -2874,9 +2901,9 @@ namespace DOL.GS
 				AddXPGainer(source, (float)damageAmount + criticalAmount);
 			}
 
-			bool oldAlive = Alive;
+			bool oldAlive = IsAlive;
 			Health -= damageAmount + criticalAmount;
-			if (!Alive)
+			if (!IsAlive)
 			{
 				if (oldAlive) // check if living was already dead
 				{
@@ -2994,17 +3021,13 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		/// <param name="damageAmount">the amount of damage, float because for groups it can be split</param>
 		public virtual void AddXPGainer(GameObject xpGainer, float damageAmount)
 		{
-			//DOLConsole.WriteLine(this.Name+":AddXPGainer("+xpGainer+","+damageAmount+")");
 			lock (m_xpGainers.SyncRoot)
 			{
 				if (m_xpGainers[xpGainer] == null)
 				{
-					//DOLConsole.WriteLine(this.Name+":create - m_xpGainers[xpGainer]=0");
 					m_xpGainers[xpGainer] = (float)0;
 				}
-				//DOLConsole.WriteLine(this.Name+":alt - m_xpGainers[xpGainer]="+m_xpGainers[xpGainer]);
 				m_xpGainers[xpGainer] = (float)m_xpGainers[xpGainer] + damageAmount;
-				//DOLConsole.WriteLine(this.Name+":neu - m_xpGainers[xpGainer]="+m_xpGainers[xpGainer]);
 			}
 		}
 		/// <summary>
@@ -3079,7 +3102,7 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		/// <param name="healAmount">the healamount</param>
 		public virtual void EnemyHealed(GameLiving enemy, GameObject healSource, eHealthChangeType changeType, int healAmount)
 		{
-			//TODO fire event
+			Notify(GameLivingEvent.EnemyHealed, this, new EnemyHealedEventArgs(enemy, healSource, changeType, healAmount));
 		}
 
 		/// <summary>
@@ -3121,8 +3144,6 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		/// </summary>
 		public virtual void Die(GameObject killer)
 		{
-			//			log.Debug(this.Name+": Die()");
-
 			Notify(GameLivingEvent.Dying, this, new DyingEventArgs(killer));
 
 			//Stop attacks
@@ -3885,7 +3906,7 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 					m_health = 0;
 				}
 
-				if (Alive && m_health < maxhealth)
+				if (IsAlive && m_health < maxhealth)
 				{
 					StartHealthRegeneration();
 				}
@@ -3928,7 +3949,7 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 				m_mana = Math.Min(value, maxmana);
 				m_mana = Math.Max(m_mana, 0);
 
-				if (Alive && m_mana < maxmana)
+				if (IsAlive && m_mana < maxmana)
 				{
 					StartPowerRegeneration();
 				}
@@ -3972,7 +3993,7 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 			{
 				m_endurance = Math.Min(value, m_maxEndurance);
 				m_endurance = Math.Max(m_endurance, 0);
-				if (Alive && m_endurance < m_maxEndurance)
+				if (IsAlive && m_endurance < m_maxEndurance)
 				{
 					StartEnduranceRegeneration();
 				}
@@ -4437,11 +4458,15 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 			if (str == null) return false;
 			Notify(GameLivingEvent.Say, this, new SayEventArgs(str));
 			foreach (GameNPC npc in GetNPCsInRadius(WorldMgr.SAY_DISTANCE))
+			{
 				if (npc != this)
 					npc.SayReceive(this, str);
+			}
 			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.SAY_DISTANCE))
+			{
 				if (player != this)
 					player.SayReceive(this, str);
+			}
 			return true;
 		}
 
@@ -4468,11 +4493,15 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 			if (str == null) return false;
 			Notify(GameLivingEvent.Yell, this, new YellEventArgs(str));
 			foreach (GameNPC npc in GetNPCsInRadius(WorldMgr.YELL_DISTANCE))
+			{
 				if (npc != this)
 					npc.YellReceive(this, str);
+			}
 			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.YELL_DISTANCE))
+			{
 				if (player != this)
 					player.YellReceive(this, str);
+			}
 			return true;
 		}
 
@@ -4682,6 +4711,11 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		//		{
 		//			get { return m_activeSpellHandlers; }
 		//		}
+
+		public virtual bool IsCasting
+		{
+			get { return m_runningSpellHandler != null && m_runningSpellHandler.IsCasting; }
+		}
 
 		/// <summary>
 		/// Holds the currently running spell handler

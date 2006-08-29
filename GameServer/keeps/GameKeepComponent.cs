@@ -449,7 +449,7 @@ namespace DOL.GS.Keeps
 				if (this.Keep is GameKeepTower)
 					if (this.HealthPercent < 25) return 0x01;//broken
 				if (this.Keep is GameKeep)
-					if (!Alive) return 0x01;//broken
+					if (!IsAlive) return 0x01;//broken
 
 				return 0x00;
 

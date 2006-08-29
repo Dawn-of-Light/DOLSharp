@@ -36,7 +36,7 @@ namespace DOL.GS.Spells
         public override void OnDirectEffect(GameLiving target, double effectiveness)
         {
             if (target == null) return;
-            if (!target.Alive || target.ObjectState != GameLiving.eObjectState.Active) return;
+            if (!target.IsAlive || target.ObjectState != GameLiving.eObjectState.Active) return;
 
             // calc damage and healing
             AttackData ad = CalculateDamageToTarget(target, effectiveness);
@@ -52,7 +52,7 @@ namespace DOL.GS.Spells
         public virtual void StealLife(AttackData ad)
         {
             if (ad == null) return;
-            if (!m_caster.Alive) return;
+            if (!m_caster.IsAlive) return;
 
             int heal = (ad.Damage + ad.CriticalDamage) * m_spell.LifeDrainReturn / 100;
             if (m_caster.IsDiseased)

@@ -81,7 +81,7 @@ namespace DOL.GS.Spells
 		public override void OnDirectEffect(GameLiving target, double effectiveness)
 		{
 			if (target.ObjectState != GameObject.eObjectState.Active) return;
-			if (target.Alive == false) return;
+			if (target.IsAlive == false) return;
 
 			base.OnDirectEffect(target, effectiveness);
 			double heal = Spell.Value * effectiveness;

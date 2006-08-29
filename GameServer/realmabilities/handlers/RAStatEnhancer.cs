@@ -69,7 +69,7 @@ namespace DOL.GS.RealmAbilities
 				player.UpdatePlayerStatus();
 			}
 
-			if (target.Alive)
+			if (target.IsAlive)
 			{
 				if (target.Health < target.MaxHealth) target.StartHealthRegeneration();
 				else if (target.Health > target.MaxHealth) target.Health = target.MaxHealth;

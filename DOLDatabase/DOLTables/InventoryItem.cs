@@ -382,6 +382,11 @@ namespace DOL.Database
 			Bonus3 = template.Bonus3;
 			Bonus4 = template.Bonus4;
 			Bonus5 = template.Bonus5;
+			Bonus6 = template.Bonus6;
+			Bonus7 = template.Bonus7;
+			Bonus8 = template.Bonus8;
+			Bonus9 = template.Bonus9;
+			Bonus10 = template.Bonus10;
 			Color = template.Color;
 			Condition = template.Condition;
 			DPS_AF = template.DPS_AF;
@@ -416,11 +421,23 @@ namespace DOL.Database
 			Bonus3Type = template.Bonus3Type;
 			Bonus4Type = template.Bonus4Type;
 			Bonus5Type = template.Bonus5Type;
+			Bonus6Type = template.Bonus6Type;
+			Bonus7Type = template.Bonus7Type;
+			Bonus8Type = template.Bonus8Type;
+			Bonus9Type = template.Bonus9Type;
+			Bonus10Type = template.Bonus10Type;
 			ExtraBonusType = template.ExtraBonusType;
 			Charges = template.Charges;
 			MaxCharges = template.MaxCharges;
+			Charges1 = template.Charges1;
+			MaxCharges1 = template.MaxCharges1;
 			SpellID = template.SpellID;
+			SpellID1 = template.SpellID1;
 			ProcSpellID = template.ProcSpellID;
+			ProcSpellID1 = template.ProcSpellID1;
+			PoisonSpellID = template.PoisonSpellID;
+			PoisonCharges = template.PoisonCharges;
+			PoisonMaxCharges = template.PoisonMaxCharges;
 			Realm = template.Realm;
 		}
 	}

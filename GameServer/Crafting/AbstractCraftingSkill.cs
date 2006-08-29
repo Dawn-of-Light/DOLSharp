@@ -152,7 +152,7 @@ namespace DOL.GS
 				return 0;
 			}
 
-			if (player.IsMoving || player.Strafing)
+			if (player.IsMoving || player.IsStrafing)
 			{
 				player.Out.SendMessage("You move and interrupt your crafting.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return 0;

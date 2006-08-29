@@ -86,13 +86,13 @@ namespace DOL.GS.Scripts
 				player.Out.SendMessage("You must end your current action before you repair anything!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
-			if (player.IsMoving || player.Strafing)
+			if (player.IsMoving || player.IsStrafing)
 			{
 				player.Out.SendMessage("You move and stop repairing.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
 
-			if (!player.Alive)
+			if (!player.IsAlive)
 			{
 				player.Out.SendMessage("You can't repair while dead.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;

@@ -55,7 +55,7 @@ namespace DOL.GS.SkillHandler
 			}			
 
 			// Dead can't quick cast
-			if(!player.Alive)
+			if(!player.IsAlive)
 			{
 				player.Out.SendMessage("You can't quick cast when dead!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;

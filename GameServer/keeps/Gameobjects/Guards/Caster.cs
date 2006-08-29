@@ -14,7 +14,7 @@ namespace DOL.GS.Keeps
 			if (attackTarget is GameLiving == false)
 				return;
 			GameLiving target = attackTarget as GameLiving;
-			if (target == null || target.Alive == false)
+			if (target == null || target.IsAlive == false)
 				return;
 
 			if (CanUseRanged)
@@ -63,7 +63,7 @@ namespace DOL.GS.Keeps
 			{
 				if (TargetObject is GameLiving)
 				{
-					if ((TargetObject as GameLiving).Alive == false)
+					if ((TargetObject as GameLiving).IsAlive == false)
 						return;
 					if (!GameServer.ServerRules.IsAllowedToAttack(this, TargetObject as GameLiving, false))
 						return;

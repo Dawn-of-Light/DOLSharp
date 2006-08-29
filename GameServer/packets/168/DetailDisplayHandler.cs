@@ -278,7 +278,6 @@ namespace DOL.GS.PacketHandler.v168
 						//**********************************
 						//show crafter name
 						//**********************************
-						/*
 						if (item.Item_Type == (int)eInventorySlot.Horse)
 						{
 							WriteHorseInfo(objectInfo, item, client, "");
@@ -290,7 +289,6 @@ namespace DOL.GS.PacketHandler.v168
 							objectInfo.Add(" ");//empty line
 							objectInfo.Add(" - Requires: Champion Level "+item.Level);
 						}
-						*/
 
 						//**********************************
 						//show info for all weapons
@@ -567,7 +565,6 @@ namespace DOL.GS.PacketHandler.v168
 						//**********************************
 						//show crafter name
 						//**********************************
-						/*
 						if (item.Item_Type == (int)eInventorySlot.Horse)
 						{
 							WriteHorseInfo(objectInfo, item, client, "");
@@ -579,7 +576,6 @@ namespace DOL.GS.PacketHandler.v168
 							objectInfo.Add(" ");//empty line
 							objectInfo.Add(" - Requires: Champion Level "+item.Level);
 						}
-						*/
 						//**********************************
 						//show info for all types of weapons
 						//**********************************
@@ -649,12 +645,10 @@ namespace DOL.GS.PacketHandler.v168
 						//***********************************
 						//shows info for Magic Items
 						//***********************************
-						/*
 						if ((item.Item_Type != (int)eInventorySlot.Horse && item.Object_Type == (int)eObjectType.Magical) || item.Object_Type == (int)eObjectType.AlchemyTincture || item.Object_Type == (int)eObjectType.SpellcraftGem)
 						{
 							WriteMagicalBonuses(objectInfo, item, client, false);
 						}
-						*/
 						//***********************************
 						//shows info for Poison Potions
 						//***********************************
@@ -947,9 +941,9 @@ Type    Description           Id
 			output.Add("  Is pickable: " + (item.IsPickable ? "yes" : "no"));
 			output.Add(" Is stackable: " + (item.IsStackable ? "yes" : "no"));
 			output.Add("  ProcSpellID: " + item.ProcSpellID);
-			//output.Add(" ProcSpellID1: "+item.ProcSpellID1);
+			output.Add(" ProcSpellID1: "+item.ProcSpellID1);
 			output.Add("      SpellID: " + item.SpellID + " (" + item.Charges + "/" + item.MaxCharges + ")");
-			//output.Add("     SpellID1: "+item.SpellID1+" ("+item.Charges1+"/"+item.MaxCharges1+")");
+			output.Add("     SpellID1: "+item.SpellID1+" ("+item.Charges1+"/"+item.MaxCharges1+")");
 			if (GlobalConstants.IsWeapon(item.Object_Type))
 			{
 				output.Add("         Hand: " + GlobalConstants.ItemHandToName(item.Hand));
@@ -1210,13 +1204,11 @@ Type    Description           Id
 			WriteBonusLine(output, item.Bonus3Type, item.Bonus3);
 			WriteBonusLine(output, item.Bonus4Type, item.Bonus4);
 			WriteBonusLine(output, item.Bonus5Type, item.Bonus5);
-			/*
 			WriteBonusLine(output, item.Bonus6Type, item.Bonus6);
 			WriteBonusLine(output, item.Bonus7Type, item.Bonus7);
 			WriteBonusLine(output, item.Bonus8Type, item.Bonus8);
 			WriteBonusLine(output, item.Bonus9Type, item.Bonus9);
 			WriteBonusLine(output, item.Bonus10Type, item.Bonus10);
-			*/
 			WriteBonusLine(output, item.ExtraBonusType, item.ExtraBonus);
 
 			if (output.Count > oldCount)
@@ -1233,14 +1225,12 @@ Type    Description           Id
 			WriteFocusLine(output, item.Bonus3Type, item.Bonus3);
 			WriteFocusLine(output, item.Bonus4Type, item.Bonus4);
 			WriteFocusLine(output, item.Bonus5Type, item.Bonus5);
-			/*
 			WriteFocusLine(output, item.Bonus6Type, item.Bonus6);
 			WriteFocusLine(output, item.Bonus7Type, item.Bonus7);
 			WriteFocusLine(output, item.Bonus8Type, item.Bonus8);
 			WriteFocusLine(output, item.Bonus9Type, item.Bonus9);
 			WriteFocusLine(output, item.Bonus10Type, item.Bonus10);
 			WriteFocusLine(output, item.ExtraBonusType, item.ExtraBonus);
-			*/
 
 			if (output.Count > oldCount)
 			{
@@ -1297,7 +1287,6 @@ Type    Description           Id
 					}
 				}
 
-				/*
 				if(item.ProcSpellID1 != 0)
 				{
 					string spellNote = "";
@@ -1382,8 +1371,7 @@ Type    Description           Id
 						}
 					}
 				}
-				*/
-				if (item.SpellID != 0)
+				if (item.PoisonSpellID != 0)
 				{
 					if (GlobalConstants.IsWeapon(item.Object_Type))// Poisoned Weapon
 					{
@@ -1395,15 +1383,15 @@ Type    Description           Id
 							{
 								foreach (Spell spl in spells)
 								{
-									if (spl.ID == item.SpellID)
+									if (spl.ID == item.PoisonSpellID)
 									{
 										output.Add(" ");
 										output.Add("Level Requirement:");
 										output.Add("- " + spl.Level + " Level");
 										output.Add(" ");
 										output.Add("Charged Magic Ability:");
-										output.Add("- " + item.Charges + " Charges");
-										output.Add("- " + item.MaxCharges + " Max");
+										output.Add("- " + item.PoisonCharges + " Charges");
+										output.Add("- " + item.PoisonMaxCharges + " Max");
 										output.Add(" ");
 
 										ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, spl, poisonLine);
@@ -1547,7 +1535,7 @@ Type    Description           Id
 
 		protected void WritePoisonInfo(ArrayList list, ItemTemplate item, GameClient client)
 		{
-			if (item.SpellID != 0)
+			if (item.PoisonSpellID != 0)
 			{
 				SpellLine poisonLine = SkillBase.GetSpellLine(GlobalSpellsLines.Mundane_Poisons);
 				if (poisonLine != null)
@@ -1557,15 +1545,15 @@ Type    Description           Id
 					{
 						foreach (Spell spl in spells)
 						{
-							if (spl.ID == item.SpellID)
+							if (spl.ID == item.PoisonSpellID)
 							{
 								list.Add(" ");
 								list.Add("Level Requirement:");
 								list.Add("- " + spl.Level + " Level");
 								list.Add(" ");
 								list.Add("Offensive Proc Ability:");
-								list.Add("- " + item.Charges + " Charges");
-								list.Add("- " + item.MaxCharges + " Max");
+								list.Add("- " + item.PoisonCharges + " Charges");
+								list.Add("- " + item.PoisonMaxCharges + " Max");
 								list.Add(" ");
 
 								ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, spl, poisonLine);

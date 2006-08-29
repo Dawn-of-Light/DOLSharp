@@ -33,7 +33,7 @@ namespace DOL.GS.Styles
 		/// <summary>
 		/// The opening type of a style
 		/// </summary>
-		public enum eOpening: int
+		public enum eOpening : int
 		{
 			/// <summary>
 			/// Offensive opening, depending on the attacker's actions
@@ -52,7 +52,7 @@ namespace DOL.GS.Styles
 		/// <summary>
 		/// The opening positions if the style is a position based style
 		/// </summary>
-		public enum eOpeningPosition: int
+		public enum eOpeningPosition : int
 		{
 			/// <summary>
 			/// Towards back of the target
@@ -71,7 +71,7 @@ namespace DOL.GS.Styles
 		/// <summary>
 		/// The required attack result of the style 
 		/// </summary>
-		public enum eAttackResult: int
+		public enum eAttackResult : int
 		{
 			/// <summary>
 			/// Any attack result is fine
@@ -111,7 +111,7 @@ namespace DOL.GS.Styles
 		/// The type of special effect applied on the target if
 		/// the style gets executed successfully
 		/// </summary>
-		public enum eSpecialType: int
+		public enum eSpecialType : int
 		{
 			/// <summary>
 			/// No special effect
@@ -153,7 +153,8 @@ namespace DOL.GS.Styles
 		/// Constructs a new Style object based on a database Style object
 		/// </summary>
 		/// <param name="style">The database style object this object is based on</param>
-		public Style (DBStyle style) : base(style.Name, (ushort)style.ID, style.SpecLevelRequirement)
+		public Style(DBStyle style)
+			: base(style.Name, (ushort)style.ID, style.SpecLevelRequirement)
 		{
 			baseStyle = style;
 		}
@@ -230,7 +231,7 @@ namespace DOL.GS.Styles
 		/// </summary>
 		public eAttackResult AttackResultRequirement
 		{
-			get { return (eAttackResult) baseStyle.AttackResultRequirement; }
+			get { return (eAttackResult)baseStyle.AttackResultRequirement; }
 		}
 
 		/// <summary>
@@ -241,23 +242,6 @@ namespace DOL.GS.Styles
 		{
 			get { return baseStyle.WeaponTypeRequirement; }
 		}
-
-//		/// <summary>
-//		/// The damage this style will add to the regular unstyled damage
-//		/// </summary>
-//		public int Damage
-//		{
-//			get { return baseStyle.Damage; }
-//		}
-
-//		/// <summary>
-//		/// (readonly) The addition to damage if the skill required for
-//		/// this style is below the level trained by the attacker.
-//		/// </summary>
-//		public int DamageAddPerLevel
-//		{
-//			get { return baseStyle.DamageAddPerLevel; }
-//		}
 
 		public double GrowthRate
 		{
@@ -322,12 +306,12 @@ namespace DOL.GS.Styles
 		/// <returns>name of required weapon type</returns>
 		public virtual string GetRequiredWeaponName()
 		{
-			switch(WeaponTypeRequirement)
+			switch (WeaponTypeRequirement)
 			{
 				case SpecialWeaponType.DualWield:
 					// style line spec name
 					Specialization dwSpec = SkillBase.GetSpecialization(Spec);
-					if(dwSpec == null) return "unknown DW spec";
+					if (dwSpec == null) return "unknown DW spec";
 					else return dwSpec.Name;
 
 				case SpecialWeaponType.AnyWeapon:
@@ -336,7 +320,7 @@ namespace DOL.GS.Styles
 				default:
 					// spec name needed to use weapon type
 					string specKeyName = SkillBase.ObjectTypeToSpec((eObjectType)WeaponTypeRequirement);
-					if(specKeyName == null)
+					if (specKeyName == null)
 						return "unknown weapon type";
 					Specialization spec = SkillBase.GetSpecialization(specKeyName);
 					return spec.Name;

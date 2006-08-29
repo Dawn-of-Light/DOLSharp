@@ -119,13 +119,23 @@ namespace DOL.GS
 				return IsContaining(p, true);
 			}
 
+			public override bool IsContaining(int x, int y, int z)
+			{
+				return IsContaining(x, y, z, true);
+			}
+
 			public override bool IsContaining(IPoint3D p, bool checkZ)
 			{
-				long m_xdiff = (long)p.X - X;
+				return IsContaining(p.X, p.Y, p.Z, checkZ);
+			}
+
+			public override bool IsContaining(int x, int y, int z, bool checkZ)
+			{
+				long m_xdiff = (long)x - X;
 				if (m_xdiff < 0 || m_xdiff > Width)
 					return false;
 
-				long m_ydiff = (long)p.Y - Y;
+				long m_ydiff = (long)y - Y;
 				if (m_ydiff < 0 || m_ydiff > Height)
 					return false;
 
@@ -242,34 +252,44 @@ namespace DOL.GS
 				return IsContaining(spot, true);
 			}
 
+			public override bool IsContaining(int x, int y, int z, bool checkZ)
+			{
+				// spot is not in square around circle no need to check for circle...
+				long m_xdiff = (long)x - X;
+				if (m_xdiff > Radius)
+					return false;
+
+				long m_ydiff = (long)y - Y;
+				if (m_ydiff > Radius)
+					return false;
+
+
+				// check if spot is in circle
+				m_distSq = m_xdiff * m_xdiff + m_ydiff * m_ydiff;
+
+				//SH: Removed Z checks when one of the two Z values is zero(on ground)
+				if (Z != 0 && z != 0 && checkZ)
+				{
+					long m_zdiff = (long)z - Z;
+					m_distSq += m_zdiff * m_zdiff;
+				}
+
+				return (m_distSq <= m_RadiusRadius);
+			}
+
+			public override bool IsContaining(int x, int y, int z)
+			{
+				return IsContaining(x, y, z, true);
+			}
+
 			/// <summary>
 			/// Checks wether given point is within area boundaries
 			/// </summary>
 			/// <param name="p"></param>
 			/// <returns></returns>
 			public override bool IsContaining(IPoint3D p, bool checkZ)
-			{						
-				// spot is not in square around circle no need to check for circle...
-				long m_xdiff = (long) p.X - X;
-				if (m_xdiff > Radius)
-					return false;
-
-				long m_ydiff = (long) p.Y - Y;
-				if (m_ydiff > Radius)
-					return false;
-
-
-				// check if spot is in circle
-				m_distSq = m_xdiff*m_xdiff + m_ydiff*m_ydiff;
-
-				//SH: Removed Z checks when one of the two Z values is zero(on ground)
-				if (Z != 0 && p.Z != 0 && checkZ == true)
-				{
-					long m_zdiff = (long) p.Z - Z;
-					m_distSq += m_zdiff*m_zdiff;
-				}
-
-				return (m_distSq <= m_RadiusRadius);
+			{
+				return IsContaining(p.X, p.Y, p.Z, checkZ);
 			}
 		}
 	}

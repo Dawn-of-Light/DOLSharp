@@ -73,7 +73,7 @@ namespace DOL.GS.Effects
 		/// <returns>true if the effect was added</returns>
 		public virtual bool Add(IGameEffect effect) 
 		{
-			if (!m_owner.Alive || m_owner.ObjectState!=GameObject.eObjectState.Active)
+			if (!m_owner.IsAlive || m_owner.ObjectState!=GameObject.eObjectState.Active)
 					return false;	// dead owners don't get effects
 
 			lock(this) 

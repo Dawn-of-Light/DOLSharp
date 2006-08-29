@@ -1009,6 +1009,36 @@ namespace DOL.GS.Scripts
 											item.Bonus5Type = bonusType;
 											break;
 										}
+									case 6:
+										{
+											item.Bonus6 = bonusValue;
+											item.Bonus6Type = bonusType;
+											break;
+										}
+									case 7:
+										{
+											item.Bonus7 = bonusValue;
+											item.Bonus7Type = bonusType;
+											break;
+										}
+									case 8:
+										{
+											item.Bonus8 = bonusValue;
+											item.Bonus8Type = bonusType;
+											break;
+										}
+									case 9:
+										{
+											item.Bonus9 = bonusValue;
+											item.Bonus9Type = bonusType;
+											break;
+										}
+									case 10:
+										{
+											item.Bonus10 = bonusValue;
+											item.Bonus10Type = bonusType;
+											break;
+										}
 									default:
 										client.Out.SendMessage("Unknown bonus number: " + num, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 										return 1;
@@ -1376,11 +1406,21 @@ namespace DOL.GS.Scripts
 							temp.Bonus3 = item.Bonus3;
 							temp.Bonus4 = item.Bonus4;
 							temp.Bonus5 = item.Bonus5;
+							temp.Bonus6 = item.Bonus6;
+							temp.Bonus7 = item.Bonus7;
+							temp.Bonus8 = item.Bonus8;
+							temp.Bonus9 = item.Bonus9;
+							temp.Bonus10 = item.Bonus10;
 							temp.Bonus1Type = item.Bonus1Type;
 							temp.Bonus2Type = item.Bonus2Type;
 							temp.Bonus3Type = item.Bonus3Type;
 							temp.Bonus4Type = item.Bonus4Type;
 							temp.Bonus5Type = item.Bonus5Type;
+							temp.Bonus6Type = item.Bonus6Type;
+							temp.Bonus7Type = item.Bonus7Type;
+							temp.Bonus8Type = item.Bonus8Type;
+							temp.Bonus9Type = item.Bonus9Type;
+							temp.Bonus10Type = item.Bonus10Type;
 							temp.Gold = item.Gold;
 							temp.Silver = item.Silver;
 							temp.Copper = item.Copper;

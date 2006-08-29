@@ -506,7 +506,7 @@ namespace DOL.GS.Quests.Midgard
 			GameMob m_askefruerTrainer = (GameMob) sender;
 
 			// if princess is dead no ned to checks ...
-			if (!m_askefruerTrainer.Alive || m_askefruerTrainer.ObjectState != GameObject.eObjectState.Active)
+			if (!m_askefruerTrainer.IsAlive || m_askefruerTrainer.ObjectState != GameObject.eObjectState.Active)
 				return;
 
 			foreach (GamePlayer player in m_askefruerTrainer.GetPlayersInRadius(1500))

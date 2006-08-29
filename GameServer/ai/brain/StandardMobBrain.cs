@@ -87,7 +87,7 @@ namespace DOL.AI.Brain
 			{
 				if (m_aggroTable.ContainsKey(npc))
 					continue; // add only new NPCs
-				if (!npc.Alive || npc.ObjectState != GameObject.eObjectState.Active)
+				if (!npc.IsAlive || npc.ObjectState != GameObject.eObjectState.Active)
 					continue;
 				if (npc is GameHorse)
 					continue; //do not attack horses
@@ -111,7 +111,7 @@ namespace DOL.AI.Brain
 			{
 				if (m_aggroTable.ContainsKey(player))
 					continue; // add only new players
-				if (!player.Alive || player.ObjectState != GameObject.eObjectState.Active || player.IsStealthed)
+				if (!player.IsAlive || player.ObjectState != GameObject.eObjectState.Active || player.IsStealthed)
 					continue;
 				if (player.Steed != null)
 					continue; //do not attack players on steed
@@ -206,7 +206,7 @@ namespace DOL.AI.Brain
 					if (protect.ProtectSource.IsMezzed) continue;
 					if (protect.ProtectSource.IsSitting) continue;
 					if (protect.ProtectSource.ObjectState != GameObject.eObjectState.Active) continue;
-					if (!protect.ProtectSource.Alive) continue;
+					if (!protect.ProtectSource.IsAlive) continue;
 					if (!protect.ProtectSource.InCombat) continue;
 																			
 					if (!WorldMgr.CheckDistance(living,protect.ProtectSource,ProtectAbilityHandler.PROTECT_DISTANCE))	
@@ -362,7 +362,7 @@ namespace DOL.AI.Brain
 					long amount = (long)aggros.Value;
 					//DOLConsole.WriteLine(this.Name+": check aggro "+living.Name+" "+amount);
 
-					if(living.Alive 
+					if(living.IsAlive 
 						&& amount > maxAggro
 						&& living.CurrentRegion == Body.CurrentRegion
 						&& living.ObjectState == GameObject.eObjectState.Active)
@@ -556,7 +556,7 @@ namespace DOL.AI.Brain
 		/// <param name="ad"></param>
 		protected virtual void OnAttackedByEnemy(AttackData ad)
 		{
-			if (!Body.AttackState && Body.Alive && Body.ObjectState==GameObject.eObjectState.Active &&																									
+			if (!Body.AttackState && Body.IsAlive && Body.ObjectState==GameObject.eObjectState.Active &&																									
 				(ad.AttackResult == GameLiving.eAttackResult.HitUnstyled || 
 				ad.AttackResult == GameLiving.eAttackResult.HitStyle || 
 				ad.AttackResult == GameLiving.eAttackResult.Missed || 

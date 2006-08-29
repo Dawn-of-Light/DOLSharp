@@ -226,7 +226,7 @@ namespace DOL.GS.ServerRules
 
 		public virtual bool IsAllowedToSpeak(GamePlayer source, string communicationType)
 		{
-			if (source.Alive == false)
+			if (source.IsAlive == false)
 			{
 				MessageToLiving(source, "Hmmmm...you can't " + communicationType + " while dead!");
 				return false;
@@ -620,7 +620,7 @@ namespace DOL.GS.ServerRules
 					else if (campBonus > fullCampBonus)
 						campBonus = fullCampBonus;
 
-					if (!living.Alive)//Dead living gets 25% exp only
+					if (!living.IsAlive)//Dead living gets 25% exp only
 					{
 						campBonus = (long)(campBonus * 0.25);
 						xpReward = (long)(xpReward * 0.25);
@@ -728,7 +728,7 @@ namespace DOL.GS.ServerRules
 
 
 					double damagePercent = (float)de.Value / totalDamage;
-					if (!living.Alive)//Dead living gets 25% exp only
+					if (!living.IsAlive)//Dead living gets 25% exp only
 						damagePercent *= 0.25;
 
 					// realm points
