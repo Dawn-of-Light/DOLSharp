@@ -224,7 +224,7 @@ namespace DOL.GS
 		/// <returns>the new intervall</returns>
 		protected int QuitTimerCallback(RegionTimer callingTimer)
 		{
-			if (!Alive || ObjectState != eObjectState.Active)
+			if (!IsAlive || ObjectState != eObjectState.Active)
 			{
 				m_quitTimer = null;
 				return 0;
@@ -295,7 +295,7 @@ namespace DOL.GS
 		protected int LinkdeathTimerCallback(RegionTimer callingTimer)
 		{
 			//If we died during our callback time we release
-			if (!Alive)
+			if (!IsAlive)
 			{
 				Release(m_releaseType, true);
 				if (log.IsInfoEnabled)
@@ -364,7 +364,7 @@ namespace DOL.GS
 				log.Info("Player " + Name + "(" + Client.Account.Name + ") went linkdead!");
 
 			// Dead link-dead players release on live servers
-			if (!Alive)
+			if (!IsAlive)
 			{
 				Release(m_releaseType, true);
 				if (log.IsInfoEnabled)
@@ -477,7 +477,7 @@ namespace DOL.GS
 		{
 			if (!forced)
 			{
-				if (!Alive)
+				if (!IsAlive)
 				{
 					Out.SendMessage("You can't quit now, you're dead.  Type '/release' to release your corpse.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return false;
@@ -580,7 +580,7 @@ namespace DOL.GS
 				Out.SendMessage("Last Bind Point : " + reg.Description + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 
-			if (!Alive)
+			if (!IsAlive)
 			{
 				Out.SendMessage("You can not bind while dead!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
@@ -738,7 +738,7 @@ namespace DOL.GS
 			}
 
 
-			if (Alive)
+			if (IsAlive)
 			{
 				Out.SendMessage("You are not dead!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
@@ -1047,7 +1047,7 @@ namespace DOL.GS
 		/// <returns></returns>
 		protected virtual int ReleaseTimerCallback(RegionTimer callingTimer)
 		{
-			if (Alive)
+			if (IsAlive)
 				return 0;
 			int diffToRelease = Environment.TickCount - m_deathTick;
 			if (m_automaticRelease && diffToRelease > RELEASE_MINIMUM_WAIT * 1000)
@@ -1108,7 +1108,7 @@ namespace DOL.GS
 		/// </summary>
 		public virtual void Pray()
 		{
-			if (!Alive)
+			if (!IsAlive)
 			{
 				Out.SendMessage("You can't pray now!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
@@ -2824,6 +2824,9 @@ namespace DOL.GS
 					"Unicorn Knight",
 					"Lion Knight",
 					"Dragon Knight",
+					"Lord",
+					"Baronet",
+					"Baron",
 				},
 				// Mid
 				new string[]
@@ -2838,6 +2841,9 @@ namespace DOL.GS
 					"Elding Herra",
 					"Stormur Herra",
 					"Einherjar",
+					"Herra",
+					"Hersir",
+					"Vicomte",
 				},
 				// Hib
 				new string[]
@@ -2852,6 +2858,9 @@ namespace DOL.GS
 					"Gilded Spear",
 					"Tiarna",
 					"Emerald Ridere",
+					"Barun",
+					"Ard Tiarna",
+					"Ciann Cath",
 				},
 			};
 
@@ -3065,6 +3074,26 @@ namespace DOL.GS
 				7723625,	// for level 98
 				7963725,	// for level 99
 				8208750,	// for level 100
+				9111713,	// for level 101
+				10114001,	// for level 102
+				11226541,	// for level 103
+				12461460,	// for level 104
+				13832221,	// for level 105
+				15353765,	// for level 106
+				17042680,	// for level 107
+				18917374,	// for level 108
+				20998286,	// for level 109
+				23308097,	// for level 110
+				25871988,	// for level 111
+				28717906,	// for level 112
+				31876876,	// for level 113
+				35383333,	// for level 114
+				39275499,	// for level 115
+				43595804,	// for level 116
+				48391343,	// for level 117
+				53714390,	// for level 118
+				59622973,	// for level 119
+				66181501,	// for level 120
 			};
 
 		/// <summary>
@@ -3316,10 +3345,8 @@ namespace DOL.GS
 				Out.SendMessage("You get " + totalExpStr + " experience points." + expCampBonusStr + expGroupBonusStr, eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 			}
 
-			//DOLConsole.WriteLine("XP="+Experience);
 			m_currentXP += expTotal; // force usage of this method, Experience property cannot be set
 			m_character.Experience = m_currentXP;
-			//DOLConsole.WriteLine("XP="+Experience+" NL="+ExperienceForNextLevel+" LP="+LevelPermill);
 
 			if (expTotal > 0)
 			{
@@ -3867,7 +3894,7 @@ namespace DOL.GS
 				return;
 			}
 
-			if (!Alive)
+			if (!IsAlive)
 			{
 				Out.SendMessage("You can't enter combat mode while lying down!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 				return;
@@ -4042,7 +4069,7 @@ namespace DOL.GS
 			NextCombatStyle = null;
 			NextCombatBackupStyle = null;
 			base.StopAttack();
-			if (Alive)
+			if (IsAlive)
 				Out.SendAttackMode(AttackState);
 		}
 
@@ -4348,7 +4375,7 @@ namespace DOL.GS
 					{
 						//only miss when strafing when attacking a player
 						//30% chance to miss
-						if (Strafing && ad.Target is GamePlayer && Util.Chance(30))
+						if (IsStrafing && ad.Target is GamePlayer && Util.Chance(30))
 						{
 							ad.AttackResult = eAttackResult.Missed;
 							Out.SendMessage("You were strafing in combat and miss!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
@@ -4655,43 +4682,77 @@ namespace DOL.GS
 						{
 							InventoryItem reactiveitem = Inventory.GetItem((eInventorySlot)ad.ArmorHitLocation);
 
-							if (reactiveitem != null && reactiveitem.ProcSpellID != 0)
+							if (reactiveitem != null && reactiveitem.ProcSpellID != 0 && Util.Chance(10))
 							{
-								// random chance
-								if (!Util.Chance(10))
-									break;
-
 								// reactive effect on shield only proc again player
-								if (reactiveitem.Object_Type == (int)eObjectType.Shield && !(ad.Attacker is GamePlayer))
-									break;
-
-								SpellLine reactiveEffectLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
-								if (reactiveEffectLine != null)
+								if (reactiveitem.Object_Type != (int)eObjectType.Shield || (reactiveitem.Object_Type == (int)eObjectType.Shield && ad.Attacker is GamePlayer))
 								{
-									IList spells = SkillBase.GetSpellList(reactiveEffectLine.KeyName);
-									if (spells != null)
+
+									SpellLine reactiveEffectLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
+									if (reactiveEffectLine != null)
 									{
-										foreach (Spell spell in spells)
+										IList spells = SkillBase.GetSpellList(reactiveEffectLine.KeyName);
+										if (spells != null)
 										{
-											if (spell.ID == reactiveitem.ProcSpellID)
+											foreach (Spell spell in spells)
 											{
-												if (spell.Level <= Level)
+												if (spell.ID == reactiveitem.ProcSpellID)
 												{
-													ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, reactiveEffectLine);
-													if (spellHandler != null)
+													if (spell.Level <= Level)
 													{
-														spellHandler.StartSpell(ad.Attacker);
+														ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, reactiveEffectLine);
+														if (spellHandler != null)
+														{
+															spellHandler.StartSpell(ad.Attacker);
+														}
+														else
+														{
+															Out.SendMessage("Reactive effect ID " + reactiveitem.ProcSpellID + " is not implemented yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+														}
 													}
 													else
 													{
-														Out.SendMessage("Reactive effect ID " + reactiveitem.ProcSpellID + " is not implemented yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+														Out.SendMessage("You are not powerful enough to use this item's spell.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 													}
+													break;
 												}
-												else
+											}
+										}
+									}
+								}
+							}
+							if (reactiveitem != null && reactiveitem.ProcSpellID1 != 0 && Util.Chance(10))
+							{
+								// reactive effect on shield only proc again player
+								if (reactiveitem.Object_Type != (int)eObjectType.Shield || (reactiveitem.Object_Type == (int)eObjectType.Shield && ad.Attacker is GamePlayer))
+								{
+
+									SpellLine reactiveEffectLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
+									if (reactiveEffectLine != null)
+									{
+										IList spells = SkillBase.GetSpellList(reactiveEffectLine.KeyName);
+										if (spells != null)
+										{
+											foreach (Spell spell in spells)
+											{
+												if (spell.ID == reactiveitem.ProcSpellID1)
 												{
-													Out.SendMessage("You are not powerful enough to use this item's spell.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+													if (spell.Level <= Level)
+													{
+														ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, reactiveEffectLine);
+														if (spellHandler != null)
+														{
+															spellHandler.StartSpell(ad.Attacker);
+														}
+														else
+														{
+															Out.SendMessage("Reactive effect ID " + reactiveitem.ProcSpellID1 + " is not implemented yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+														}
+													}
+													else
+														Out.SendMessage("You are not powerful enough to use this item's spell.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+													break;
 												}
-												break;
 											}
 										}
 									}
@@ -4708,6 +4769,7 @@ namespace DOL.GS
 		/// Does needed interrupt checks and interrupts if needed
 		/// </summary>
 		/// <param name="attacker">the attacker that is interrupting</param>
+		/// <param name="attacktype">The attack type</param>
 		/// <returns>true if interrupted successfully</returns>
 		protected override bool OnInterruptTick(GameLiving attacker, AttackData.eAttackType attackType)
 		{
@@ -6215,7 +6277,7 @@ namespace DOL.GS
 		/// <param name="type">Which /use command was used (0=simple click on icon, 1=use, 2=/use2)</param>
 		public virtual void UseSlot(int slot, int type)
 		{
-			if (!Alive)
+			if (!IsAlive)
 			{
 				Out.SendMessage("You can't fire or use this item!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
@@ -6259,7 +6321,7 @@ namespace DOL.GS
 									Out.SendMessage("You must have " + useItem.Level + " level for summon this horse", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 									return;
 								}
-								if (!Alive)
+								if (!IsAlive)
 								{
 									Out.SendMessage("You can't mount while you're dead.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 									return;
@@ -6298,7 +6360,6 @@ namespace DOL.GS
 								{
 									StopWhistleTimers();
 								}
-								GameEventMgr.AddHandler(this, GamePlayerEvent.Moving, new DOLEventHandler(WhistleOnMove));
 								Out.SendTimerWindow("Summoning Mount", 5);
 								foreach (GamePlayer plr in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 									plr.Out.SendEmoteAnimation(this, eEmote.Horse_whistle);
@@ -6387,21 +6448,19 @@ namespace DOL.GS
 					case Slot.FOURTHQUIVER: SwitchQuiver(eActiveQuiverSlot.Fourth, false); break;
 				}
 
-				if (useItem.SpellID != 0) // don't return without firing events
+				if (useItem.SpellID != 0 || useItem.SpellID1 != 0) // don't return without firing events
 				{
-					if (useItem.Charges < 1 && useItem.Object_Type != (int)eObjectType.Poison)
+					if ((type < 2 && useItem.SpellID > 0 && useItem.Charges < 1) || (type == 2 && useItem.SpellID1 > 0 && useItem.Charges1 < 1))
 					{
-						Out.SendMessage("Your item has no more charges.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						return;
+						Out.SendMessage("The " + useItem.Name + " is out of charges.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}
 					else
 					{
-						InventoryItem mainHand = AttackWeapon;
-						InventoryItem leftHand = Inventory.GetItem(eInventorySlot.LeftHandWeapon);
-
-						if (useItem.Object_Type == (int)eObjectType.Poison)  // poison
+						if (useItem.Object_Type == (int)eObjectType.Poison)
 						{
-							if (mainHand != null && mainHand.SpellID == 0 || (leftHand != null && leftHand.SpellID != 0))
+							InventoryItem mainHand = AttackWeapon;
+							InventoryItem leftHand = Inventory.GetItem(eInventorySlot.LeftHandWeapon);
+							if (mainHand != null && mainHand.SpellID == 0)
 							{
 								ApplyPoison(useItem, mainHand);
 							}
@@ -6410,71 +6469,66 @@ namespace DOL.GS
 								ApplyPoison(useItem, leftHand);
 							}
 						}
-						else if (useItem.Object_Type == (int)eObjectType.Magical && useItem.Item_Type == (int)eInventorySlot.FirstBackpack) // potion
+						else if (useItem.Object_Type == (int)eObjectType.Magical &&
+							(useItem.Item_Type == 40 || useItem.Item_Type == 41))
 						{
-							long lastUsed = TempProperties.getLongProperty("LAST_POTION_USAGE", 0);
-							long now = CurrentRegion.Time;
-							if (now - lastUsed < 10 * 60 * 1000)
+							long lastPotionItemUseTick = TempProperties.getLongProperty(LAST_POTION_ITEM_USE_TICK, 0L);
+							long changeTime = CurrentRegion.Time - lastPotionItemUseTick;
+							if (Client.Account.PrivLevel == 1 && changeTime < 60000) //1 minutes reuse timer
 							{
-								Out.SendMessage("You have to wait " + ((lastUsed + 10 * 60 * 1000) - now) / 1000 + " more seconds to use that again.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								Out.SendMessage("You must wait " + (60000 - changeTime) / 1000 + " more second before use potion!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return;
-							}
-
-							SpellLine potionEffectLine = SkillBase.GetSpellLine(GlobalSpellsLines.Potions_Effects);
-							if (potionEffectLine != null)
-							{
-								IList spells = SkillBase.GetSpellList(potionEffectLine.KeyName);
-								if (spells != null)
-								{
-									bool found = false;
-									foreach (Spell spell in spells)
-									{
-										if (spell.ID == useItem.SpellID)
-										{
-											found = true;
-											if (spell.Level <= Level)
-											{
-												if (spell.CastTime > 0 && AttackState)
-												{
-													Out.SendMessage("You can't use " + useItem.Name + " in combat!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-												}
-												else
-												{
-													ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, potionEffectLine);
-													if (spellHandler != null)
-													{
-														TempProperties.setProperty("LAST_POTION_USAGE", now);
-														Emote(eEmote.Drink);
-														spellHandler.StartSpell(TargetObject as GameLiving);
-														useItem.Charges--;
-														if (useItem.Charges < 1) Inventory.RemoveCountFromStack(useItem, 1);
-														Out.SendMessage(useItem.GetName(0, false) + " has been used.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-													}
-													else
-													{
-														Out.SendMessage("Potion effect ID " + spell.ID + " is not implemented yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-													}
-												}
-											}
-											else
-											{
-												Out.SendMessage("You can't use " + useItem.Name + " at your level!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-											}
-											break;
-										}
-									}
-									if (!found)
-									{
-										log.Error("Potion " + useItem.Name + " spell " + useItem.SpellID + " not found! Cannot use potion.");
-									}
-								}
 							}
 							else
 							{
-								log.Error("Potions spell line not found, potions cannot be used!");
+								SpellLine potionEffectLine = SkillBase.GetSpellLine(GlobalSpellsLines.Potions_Effects);
+								if (useItem.Item_Type == 41)
+									potionEffectLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
+								if (potionEffectLine != null)
+								{
+									IList spells = SkillBase.GetSpellList(potionEffectLine.KeyName);
+									if (spells != null)
+									{
+										foreach (Spell spell in spells)
+										{
+											if (spell.ID == useItem.SpellID)
+											{
+												if (spell.Level <= Level)
+												{
+													if (spell.CastTime > 0 && AttackState)
+													{
+														Out.SendMessage("You can't use this item in combat!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+													}
+													else
+													{
+														ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, potionEffectLine);
+														if (spellHandler != null)
+														{
+															Stealth(false);
+															if (useItem.Item_Type == 40)
+																Emote(eEmote.Drink);
+															spellHandler.StartSpell(TargetObject as GameLiving);
+															useItem.Charges--;
+															if (useItem.Charges < 1) Inventory.RemoveCountFromStack(useItem, 1);
+															Out.SendMessage(useItem.GetName(0, false) + " has been used.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+															TempProperties.setProperty(LAST_POTION_ITEM_USE_TICK, CurrentRegion.Time);
+														}
+														else
+														{
+															Out.SendMessage("Potion effect ID " + spell.ID + " is not implemented yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+														}
+													}
+												}
+												else
+													Out.SendMessage("You are not powerful enough to use this item's spell.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+												break;
+											}
+										}
+									}
+								}
 							}
 						}
-						else
+						else if (type > 0)
 						{
 							if (!(new ArrayList(Inventory.EquippedItems).Contains(useItem)))
 							{
@@ -6485,9 +6539,10 @@ namespace DOL.GS
 								long lastChargedItemUseTick = TempProperties.getLongProperty(LAST_CHARGED_ITEM_USE_TICK, 0L);
 								long changeTime = CurrentRegion.Time - lastChargedItemUseTick;
 								long delay = TempProperties.getLongProperty(ITEM_USE_DELAY, 0L);
-								if (this.Client.Account.PrivLevel == 1 && changeTime < 60000 * 3) //3 minutes reuse timer
+								if (Client.Account.PrivLevel == 1 && changeTime < delay) //3 minutes reuse timer
 								{
-									Out.SendMessage("You must wait " + (60000 * 3 - changeTime) / 1000 + " more second before discharge another object!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									Out.SendMessage("You must wait " + (delay - changeTime) / 1000 + " more second before discharge another object!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									return;
 								}
 								else
 								{
@@ -6508,6 +6563,8 @@ namespace DOL.GS
 															ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, chargeEffectLine);
 															if (spellHandler != null)
 															{
+																if (IsOnHorse && !spellHandler.HasPositiveEffect)
+																	IsOnHorse = false;
 																Stealth(false);
 																spellHandler.CastSpell();
 																if (useItem.MaxCharges > 0)
@@ -6529,7 +6586,6 @@ namespace DOL.GS
 													}
 												}
 											}
-											/*
 											else if (type == 2) //use2
 											{
 												foreach (Spell spell in spells)
@@ -6541,6 +6597,8 @@ namespace DOL.GS
 															ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, chargeEffectLine);
 															if (spellHandler != null)
 															{
+																if (IsOnHorse && !spellHandler.HasPositiveEffect)
+																	IsOnHorse = false;
 																Stealth(false);
 																spellHandler.CastSpell();
 																if (useItem.MaxCharges1 > 0)
@@ -6562,7 +6620,6 @@ namespace DOL.GS
 													}
 												}
 											}
-											*/
 										}
 									}
 								}
@@ -6570,7 +6627,6 @@ namespace DOL.GS
 						}
 					}
 				}
-
 				// notify event handlers about used slot
 				Notify(GamePlayerEvent.UseSlot, this, new UseSlotEventArgs(slot, type));
 			}
@@ -6612,7 +6668,7 @@ namespace DOL.GS
 				return false;
 			}
 
-			if (toItem.SpellID != 0)
+			if (toItem.PoisonSpellID != 0)
 			{
 				bool canApply = false;
 				SpellLine poisonLine = SkillBase.GetSpellLine(GlobalSpellsLines.Mundane_Poisons);
@@ -6623,7 +6679,7 @@ namespace DOL.GS
 					{
 						foreach (Spell spl in spells)
 						{
-							if (spl.ID == toItem.SpellID)
+							if (spl.ID == toItem.PoisonSpellID)
 							{
 								canApply = true;
 								break;
@@ -6639,9 +6695,9 @@ namespace DOL.GS
 			}
 
 			//			Apply poison effect to weapon
-			toItem.Charges = poisonPotion.Charges;
-			toItem.MaxCharges = poisonPotion.MaxCharges;
-			toItem.SpellID = poisonPotion.SpellID;
+			toItem.PoisonCharges = poisonPotion.PoisonCharges;
+			toItem.PoisonMaxCharges = poisonPotion.PoisonMaxCharges;
+			toItem.PoisonSpellID = poisonPotion.PoisonSpellID;
 			Inventory.RemoveCountFromStack(poisonPotion, 1);
 			Out.SendMessage(string.Format("You apply {0} to {1}.", poisonPotion.GetName(0, false), toItem.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
@@ -7383,43 +7439,7 @@ namespace DOL.GS
 				base.CurrentSpeed = value;
 				if (value != 0)
 				{
-					if (IsSitting)
-					{
-						Sit(false);
-					}
-					// copy/pasted to Strafing property
-					if (m_runningSpellHandler != null && m_runningSpellHandler.IsCasting)
-					{
-						m_runningSpellHandler.CasterMoves();
-					}
-					if (IsCrafting)
-					{
-						Out.SendMessage("You move and interrupt your crafting.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						CraftTimer.Stop();
-						CraftTimer = null;
-						Out.SendCloseTimerWindow();
-					}
-					if (AttackState)
-					{
-						if (ActiveWeaponSlot == eActiveWeaponSlot.Distance)
-						{
-							string attackTypeMsg = (AttackWeapon.Object_Type == (int)eObjectType.Thrown ? "throw" : "shot");
-							Out.SendMessage("You move and interrupt your " + attackTypeMsg + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							StopAttack();
-						}
-						else
-						{
-							AttackData ad = TempProperties.getObjectProperty(LAST_ATTACK_DATA, null) as AttackData;
-							if (ad != null && ad.IsMeleeAttack && (ad.AttackResult == eAttackResult.TargetNotVisible || ad.AttackResult == eAttackResult.OutOfRange))
-							{
-								//Does the target can be attacked ?
-								if (ad.Target != null && IsObjectInFront(ad.Target, 120) && WorldMgr.CheckDistance(this, ad.Target, AttackRange) && m_attackAction != null)
-								{
-									m_attackAction.Start(1);
-								}
-							}
-						}
-					}
+					OnPlayerMove();
 				}
 			}
 		}
@@ -7546,7 +7566,7 @@ namespace DOL.GS
 
 		protected int DrowningTimerCallback(RegionTimer callingTimer)
 		{
-			if (!Alive || ObjectState != eObjectState.Active)
+			if (!IsAlive || ObjectState != eObjectState.Active)
 				return 0;
 			if (this.Client.Account.PrivLevel == 1)
 			{
@@ -7703,7 +7723,7 @@ namespace DOL.GS
 		/// </summary>
 		public override bool IsMoving
 		{
-			get { return base.IsMoving || Strafing; }
+			get { return base.IsMoving || IsStrafing; }
 		}
 		/// <summary>
 		/// The sprint effect of this player
@@ -7739,7 +7759,7 @@ namespace DOL.GS
 					Out.SendMessage("You can't sprint while you are hidden!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return false;
 				}
-				if (!Alive)
+				if (!IsAlive)
 				{
 					Out.SendMessage("You can't sprint when dead!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return false;
@@ -7768,36 +7788,64 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets/sets the current strafing mode
 		/// </summary>
-		public virtual bool Strafing
+		public virtual bool IsStrafing
 		{
 			set
 			{
 				m_strafing = value;
 				if (value)
 				{
-					// copy/pasted to CurrentSpeed property
-					if (m_runningSpellHandler != null && m_runningSpellHandler.IsCasting)
-					{
-						m_runningSpellHandler.CasterMoves();
-					}
-					if (IsCrafting)
-					{
-						Out.SendMessage("You move and interrupt your crafting.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						CraftTimer.Stop();
-						CraftTimer = null;
-						Out.SendCloseTimerWindow();
-					}
-					if (AttackState && ActiveWeaponSlot == eActiveWeaponSlot.Distance)
-					{
-						string attackTypeMsg = "shot";
-						if (AttackWeapon.Object_Type == (int)eObjectType.Thrown)
-							attackTypeMsg = "throw";
-						Out.SendMessage("You move and interrupt your " + attackTypeMsg + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						StopAttack();
-					}
+					OnPlayerMove();
 				}
 			}
 			get { return m_strafing; }
+		}
+
+		public virtual void OnPlayerMove()
+		{
+			if (IsSitting)
+			{
+				Sit(false);
+			}
+			if (IsCasting)
+			{
+				m_runningSpellHandler.CasterMoves();
+			}
+			if (IsCrafting)
+			{
+				Out.SendMessage("You move and interrupt your crafting.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				CraftTimer.Stop();
+				CraftTimer = null;
+				Out.SendCloseTimerWindow();
+			}
+			if (IsSummoningMount)
+			{
+				Out.SendMessage("You are moving and cannot call your mount.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				StopWhistleTimers();
+			}
+			if (AttackState)
+			{
+				if (ActiveWeaponSlot == eActiveWeaponSlot.Distance)
+				{
+					string attackTypeMsg = (AttackWeapon.Object_Type == (int)eObjectType.Thrown ? "throw" : "shot");
+					Out.SendMessage("You move and interrupt your " + attackTypeMsg + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					StopAttack();
+				}
+				else
+				{
+					AttackData ad = TempProperties.getObjectProperty(LAST_ATTACK_DATA, null) as AttackData;
+					if (ad != null && ad.IsMeleeAttack && (ad.AttackResult == eAttackResult.TargetNotVisible || ad.AttackResult == eAttackResult.OutOfRange))
+					{
+						//Does the target can be attacked ?
+						if (ad.Target != null && IsObjectInFront(ad.Target, 120) && WorldMgr.CheckDistance(this, ad.Target, AttackRange) && m_attackAction != null)
+						{
+							m_attackAction.Start(1);
+						}
+					}
+				}
+			}
+			//Notify the GameEventMgr of the moving player
+			GameEventMgr.Notify(GamePlayerEvent.Moving, this);
 		}
 
 		/// <summary>
@@ -7806,7 +7854,7 @@ namespace DOL.GS
 		/// <param name="sit">True if sitting, otherwise false</param>
 		public virtual void Sit(bool sit)
 		{
-			if (m_whistleMountTimer != null && m_whistleMountTimer.IsAlive)
+			if (IsSummoningMount)
 			{
 				Out.SendMessage("You attempt to sit down and interrupt your call for your mount!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				StopWhistleTimers();
@@ -7820,7 +7868,7 @@ namespace DOL.GS
 				return; // already done
 			}
 
-			if (!Alive)
+			if (!IsAlive)
 			{
 				Out.SendMessage("You can't sit down now, you're dead!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
@@ -7993,8 +8041,6 @@ namespace DOL.GS
 			InventoryItem item = ((ItemEquippedArgs)arguments).Item;
 			if (item == null) return;
 
-			//			DOLConsole.WriteLine("equipped item '" + item.Name + "' !");
-
 			if (item.Item_Type >= Slot.RIGHTHAND && item.Item_Type <= Slot.RANGED)
 			{
 				if (item.Hand == 1) // 2h
@@ -8043,14 +8089,16 @@ namespace DOL.GS
 
 			Out.SendMessage(string.Format("The magic of {0} flows through you.", item.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
-			//			DOLConsole.WriteSystem(string.Format("item '{0}': bonus1={1}, bonus2={2}, bonus3={3}, bonus4={4}, bonus5={5}", item.Name,  item.Bonus1, item.Bonus2, item.Bonus3, item.Bonus4, item.Bonus5));
-			//			DOLConsole.WriteLine(string.Format("  bonus type: bonus1={0}, bonus2={1}, bonus3={2}, bonus4={3}, bonus5={4}", (eProperty)item.Bonus1Type, (eProperty)item.Bonus2Type, (eProperty)item.Bonus3Type, (eProperty)item.Bonus4Type, (eProperty)item.Bonus5Type));
-
 			if (item.Bonus1 != 0) ItemBonus[item.Bonus1Type] += item.Bonus1;
 			if (item.Bonus2 != 0) ItemBonus[item.Bonus2Type] += item.Bonus2;
 			if (item.Bonus3 != 0) ItemBonus[item.Bonus3Type] += item.Bonus3;
 			if (item.Bonus4 != 0) ItemBonus[item.Bonus4Type] += item.Bonus4;
 			if (item.Bonus5 != 0) ItemBonus[item.Bonus5Type] += item.Bonus5;
+			if (item.Bonus6 != 0) ItemBonus[item.Bonus6Type] += item.Bonus6;
+			if (item.Bonus7 != 0) ItemBonus[item.Bonus7Type] += item.Bonus7;
+			if (item.Bonus8 != 0) ItemBonus[item.Bonus8Type] += item.Bonus8;
+			if (item.Bonus9 != 0) ItemBonus[item.Bonus9Type] += item.Bonus9;
+			if (item.Bonus10 != 0) ItemBonus[item.Bonus10Type] += item.Bonus10;
 			if (item.ExtraBonus != 0) ItemBonus[item.ExtraBonusType] += item.ExtraBonus;
 
 			if (ObjectState == eObjectState.Active)
@@ -8063,7 +8111,7 @@ namespace DOL.GS
 				Out.SendUpdatePlayerSkills();
 				UpdatePlayerStatus();
 
-				if (Alive)
+				if (IsAlive)
 				{
 					if (Health < MaxHealth) StartHealthRegeneration();
 					else if (Health > MaxHealth) Health = MaxHealth;
@@ -8137,6 +8185,11 @@ namespace DOL.GS
 			if (item.Bonus3 != 0) ItemBonus[item.Bonus3Type] -= item.Bonus3;
 			if (item.Bonus4 != 0) ItemBonus[item.Bonus4Type] -= item.Bonus4;
 			if (item.Bonus5 != 0) ItemBonus[item.Bonus5Type] -= item.Bonus5;
+			if (item.Bonus6 != 0) ItemBonus[item.Bonus6Type] -= item.Bonus6;
+			if (item.Bonus7 != 0) ItemBonus[item.Bonus7Type] -= item.Bonus7;
+			if (item.Bonus8 != 0) ItemBonus[item.Bonus8Type] -= item.Bonus8;
+			if (item.Bonus9 != 0) ItemBonus[item.Bonus9Type] -= item.Bonus9;
+			if (item.Bonus10 != 0) ItemBonus[item.Bonus10Type] -= item.Bonus10;
 			if (item.ExtraBonus != 0) ItemBonus[item.ExtraBonusType] -= item.ExtraBonus;
 
 			if (ObjectState == eObjectState.Active)
@@ -8149,7 +8202,7 @@ namespace DOL.GS
 				Out.SendUpdatePlayerSkills();
 				UpdatePlayerStatus();
 
-				if (Alive)
+				if (IsAlive)
 				{
 					if (Health < MaxHealth) StartHealthRegeneration();
 					else if (Health > MaxHealth) Health = MaxHealth;
@@ -8314,7 +8367,7 @@ namespace DOL.GS
 						{
 							foreach (GamePlayer ply in group)
 							{
-								if (ply.Alive
+								if (ply.IsAlive
 								   && (ply.CurrentRegionID == CurrentRegionID)
 								   && (WorldMgr.GetDistance(this, ply) < WorldMgr.MAX_EXPFORKILL_DISTANCE)
 								   && (ply.ObjectState == eObjectState.Active)
@@ -8386,7 +8439,7 @@ namespace DOL.GS
 						{
 							foreach (GamePlayer ply in group)
 							{
-								if (ply.Alive
+								if (ply.IsAlive
 								   && (ply.CurrentRegionID == CurrentRegionID)
 								   && (ply.ObjectState == eObjectState.Active))
 								{
@@ -9350,7 +9403,7 @@ namespace DOL.GS
 		{
 			if (enemy.CurrentRegionID != CurrentRegionID)
 				return false;
-			if (!Alive)
+			if (!IsAlive)
 				return false;
 			if (enemy.EffectList.GetOfType(typeof(VanishEffect)) != null)
 				return false;
@@ -10677,6 +10730,12 @@ namespace DOL.GS
 				return true;
 			}
 		}
+
+		public bool IsSummoningMount
+		{
+			get { return m_whistleMountTimer != null && m_whistleMountTimer.IsAlive; }
+		}
+
 		protected bool m_isOnHorse;
 		public bool IsOnHorse
 		{
@@ -10701,24 +10760,11 @@ namespace DOL.GS
 			}
 		}
 
-		protected void WhistleOnMove(DOLEvent e, object sender, EventArgs arguments)
-		{
-			GamePlayer player = sender as GamePlayer;
-			if (player == null) return;
-			if (player != this) return;
-			if (player.IsMoving)
-			{
-				Out.SendMessage("You are moving and cannot call your mount.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				StopWhistleTimers();
-			}
-		}
-
 		protected void StopWhistleTimers()
 		{
 			if (m_whistleMountTimer != null)
 			{
 				m_whistleMountTimer.Stop();
-				GameEventMgr.RemoveHandler(this, GamePlayerEvent.Moving, new DOLEventHandler(WhistleOnMove));
 				Out.SendCloseTimerWindow();
 			}
 			m_whistleMountTimer = null;

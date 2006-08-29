@@ -54,6 +54,11 @@ namespace DOL.Database
 		protected int m_bonus3;
 		protected int m_bonus4;
 		protected int m_bonus5;
+		protected int m_bonus6;
+		protected int m_bonus7;
+		protected int m_bonus8;
+		protected int m_bonus9;
+		protected int m_bonus10;
 		protected int m_extrabonus;
 		protected int m_bonusType;
 		protected int m_bonus1Type;
@@ -61,6 +66,11 @@ namespace DOL.Database
 		protected int m_bonus3Type;
 		protected int m_bonus4Type;
 		protected int m_bonus5Type;
+		protected int m_bonus6Type;
+		protected int m_bonus7Type;
+		protected int m_bonus8Type;
+		protected int m_bonus9Type;
+		protected int m_bonus10Type;
 		protected int m_extrabonusType;
 		protected short m_gold;
 		protected byte m_silver;
@@ -70,10 +80,17 @@ namespace DOL.Database
 		protected bool m_isTradable;
 		protected int m_maxCount;
 		protected int m_packSize;
-		protected int m_charges;
-		protected int m_maxCharges;
 		protected int m_spellID;
 		protected int m_procSpellID;
+		protected int m_maxCharges;
+		protected int m_charges;
+		protected int m_spellID1;
+		protected int m_procSpellID1;
+		protected int m_charges1;
+		protected int m_maxCharges1;
+		protected int m_poisonSpellID;
+		protected int m_poisonMaxCharges;
+		protected int m_poisonCharges;
 		protected int m_realm;
 
 		static bool m_autoSave;
@@ -107,6 +124,11 @@ namespace DOL.Database
 			m_bonus3 = 0;
 			m_bonus4 = 0;
 			m_bonus5 = 0;
+			m_bonus6 = 0;
+			m_bonus7 = 0;
+			m_bonus8 = 0;
+			m_bonus9 = 0;
+			m_bonus10 = 0;
 			m_extrabonus = 0;
 			m_bonusType = 0;
 			m_bonus1Type = 0;
@@ -114,6 +136,11 @@ namespace DOL.Database
 			m_bonus3Type = 0;
 			m_bonus4Type = 0;
 			m_bonus5Type = 0;
+			m_bonus6Type = 0;
+			m_bonus7Type = 0;
+			m_bonus8Type = 0;
+			m_bonus9Type = 0;
+			m_bonus10Type = 0;
 			m_extrabonusType = 0;
 			m_gold = 0;
 			m_silver = 0;
@@ -509,6 +536,71 @@ namespace DOL.Database
 			}
 		}
 		[DataElement(AllowDbNull = true)]
+		public int Bonus6
+		{
+			get
+			{
+				return m_bonus6;
+			}
+			set
+			{
+				Dirty = true;
+				m_bonus6 = value;
+			}
+		}
+		[DataElement(AllowDbNull = true)]
+		public int Bonus7
+		{
+			get
+			{
+				return m_bonus7;
+			}
+			set
+			{
+				Dirty = true;
+				m_bonus7 = value;
+			}
+		}
+		[DataElement(AllowDbNull = true)]
+		public int Bonus8
+		{
+			get
+			{
+				return m_bonus8;
+			}
+			set
+			{
+				Dirty = true;
+				m_bonus8 = value;
+			}
+		}
+		[DataElement(AllowDbNull = true)]
+		public int Bonus9
+		{
+			get
+			{
+				return m_bonus9;
+			}
+			set
+			{
+				Dirty = true;
+				m_bonus9 = value;
+			}
+		}
+		[DataElement(AllowDbNull = true)]
+		public int Bonus10
+		{
+			get
+			{
+				return m_bonus10;
+			}
+			set
+			{
+				Dirty = true;
+				m_bonus10 = value;
+			}
+		}
+		[DataElement(AllowDbNull = true)]
 		public int ExtraBonus
 		{
 			get
@@ -584,6 +676,71 @@ namespace DOL.Database
 			{
 				Dirty = true;
 				m_bonus5Type = value;
+			}
+		}
+		[DataElement(AllowDbNull = true)]
+		public int Bonus6Type
+		{
+			get
+			{
+				return m_bonus6Type;
+			}
+			set
+			{
+				Dirty = true;
+				m_bonus6Type = value;
+			}
+		}
+		[DataElement(AllowDbNull = true)]
+		public int Bonus7Type
+		{
+			get
+			{
+				return m_bonus7Type;
+			}
+			set
+			{
+				Dirty = true;
+				m_bonus7Type = value;
+			}
+		}
+		[DataElement(AllowDbNull = true)]
+		public int Bonus8Type
+		{
+			get
+			{
+				return m_bonus8Type;
+			}
+			set
+			{
+				Dirty = true;
+				m_bonus8Type = value;
+			}
+		}
+		[DataElement(AllowDbNull = true)]
+		public int Bonus9Type
+		{
+			get
+			{
+				return m_bonus9Type;
+			}
+			set
+			{
+				Dirty = true;
+				m_bonus9Type = value;
+			}
+		}
+		[DataElement(AllowDbNull = true)]
+		public int Bonus10Type
+		{
+			get
+			{
+				return m_bonus10Type;
+			}
+			set
+			{
+				Dirty = true;
+				m_bonus10Type = value;
 			}
 		}
 		[DataElement(AllowDbNull = true)]
@@ -739,6 +896,10 @@ namespace DOL.Database
 		}
 
 		/// <summary>
+		/// Charge of item when he have some charge of a spell
+		/// </summary>
+
+		/// <summary>
 		/// Max charge of item when he have some charge of a spell
 		/// </summary>
 		[DataElement(AllowDbNull = true)]
@@ -749,6 +910,31 @@ namespace DOL.Database
 			{
 				Dirty = true;
 				m_maxCharges = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public int Charges1
+		{
+			get { return m_charges1; }
+			set
+			{
+				Dirty = true;
+				m_charges1 = value;
+			}
+		}
+
+		/// <summary>
+		/// Max charge of item when he have some charge of a spell
+		/// </summary>
+		[DataElement(AllowDbNull = true)]
+		public int MaxCharges1
+		{
+			get { return m_maxCharges1; }
+			set
+			{
+				Dirty = true;
+				m_maxCharges1 = value;
 			}
 		}
 
@@ -767,6 +953,20 @@ namespace DOL.Database
 		}
 
 		/// <summary>
+		/// Spell id for items with charge
+		/// </summary>
+		[DataElement(AllowDbNull = true)]
+		public int SpellID1
+		{
+			get { return m_spellID1; }
+			set
+			{
+				Dirty = true;
+				m_spellID1 = value;
+			}
+		}
+
+		/// <summary>
 		/// ProcSpell id for items
 		/// </summary>
 		[DataElement(AllowDbNull = true)]
@@ -777,6 +977,50 @@ namespace DOL.Database
 			{
 				Dirty = true;
 				m_procSpellID = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public int ProcSpellID1
+		{
+			get { return m_procSpellID1; }
+			set
+			{
+				Dirty = true;
+				m_procSpellID1 = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public int PoisonSpellID
+		{
+			get { return m_poisonSpellID; }
+			set
+			{
+				Dirty = true;
+				m_poisonSpellID = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public int PoisonMaxCharges
+		{
+			get { return m_poisonMaxCharges; }
+			set
+			{
+				Dirty = true;
+				m_poisonMaxCharges = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public int PoisonCharges
+		{
+			get { return m_poisonCharges; }
+			set
+			{
+				Dirty = true;
+				m_poisonCharges = value;
 			}
 		}
 
@@ -801,6 +1045,11 @@ namespace DOL.Database
 					(Bonus3 != 0 && Bonus3Type != 0) ||
 					(Bonus4 != 0 && Bonus4Type != 0) ||
 					(Bonus5 != 0 && Bonus5Type != 0) ||
+					(Bonus6 != 0 && Bonus6Type != 0) ||
+					(Bonus7 != 0 && Bonus7Type != 0) ||
+					(Bonus8 != 0 && Bonus8Type != 0) ||
+					(Bonus9 != 0 && Bonus9Type != 0) ||
+					(Bonus10 != 0 && Bonus10Type != 0) ||
 					(ExtraBonus != 0 && ExtraBonusType != 0);
 			}
 		}

@@ -112,7 +112,7 @@ namespace DOL.GS.Keeps
 		{
 			get
 			{
-				if (Alive)
+				if (IsAlive)
 					return eDoorState.Closed;
 				else
 					return eDoorState.Open;
@@ -237,10 +237,10 @@ namespace DOL.GS.Keeps
 			}
 
 			//Work around the XP system
-			if (Alive)
+			if (IsAlive)
 			{
 				Health -= (damageAmount + criticalAmount);
-				if (!Alive)
+				if (!IsAlive)
 				{
 					Health = 0;
 					Die(source);

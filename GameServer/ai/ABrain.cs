@@ -105,7 +105,7 @@ namespace DOL.AI
 		public virtual bool Start()
 		{
 			//Do not start brain if we are dead or inactive
-			if (!m_body.Alive || m_body.ObjectState != GameObject.eObjectState.Active)
+			if (!m_body.IsAlive || m_body.ObjectState != GameObject.eObjectState.Active)
 				return false;
 
 			lock(this)
@@ -140,7 +140,7 @@ namespace DOL.AI
 		/// <returns>the new tick intervall</returns>
 		protected virtual int BrainTimerCallback(RegionTimer callingTimer)
 		{
-			if(!m_body.Alive || m_body.ObjectState!=GameObject.eObjectState.Active)
+			if(!m_body.IsAlive || m_body.ObjectState!=GameObject.eObjectState.Active)
 			{
 				//Stop the brain for dead or inactive bodies
 				Stop();

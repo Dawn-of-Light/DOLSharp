@@ -127,6 +127,14 @@ namespace DOL.GS.PacketHandler.v168
 				}
 				else
 				{
+					//create a bug report
+					BugReport report = new BugReport();
+					report.DateSubmitted = DateTime.Now;
+					report.ID = GameServer.Database.GetObjectCount(typeof(BugReport)) + 1;
+					report.Message = "There is a missing door at location Region: " + player.CurrentRegionID + " X:" + player.X + " Y: " + player.Y;
+					report.Submitter = player.Name;
+					GameServer.Database.AddNewObject(report);
+
 					//new frontiers we don't want this, i.e. relic gates etc
 					if (player.CurrentRegionID == 163 && player.Client.Account.PrivLevel == 1)
 						return;
@@ -175,7 +183,7 @@ namespace DOL.GS.PacketHandler.v168
 				else
 				{
 
-					DOL.Database.DBDoor door = new DOL.Database.DBDoor();
+					DBDoor door = new DBDoor();
 					door.ObjectId = null;
 					door.InternalID = m_doorId;
 					door.X = player.X;

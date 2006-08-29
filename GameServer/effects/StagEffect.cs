@@ -90,7 +90,7 @@ namespace DOL.GS.Effects
 			m_ability = ab;
 			m_player = player;
 
-			if (!(player.Alive))
+			if (!(player.IsAlive))
 			{
 				player.Out.SendMessage("You cannot use this ability while Dead!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
@@ -145,7 +145,7 @@ namespace DOL.GS.Effects
 			double m_amountPercent = m_amount / m_player.GetModified(eProperty.MaxHealth);
 			int playerHealthPercent = m_player.HealthPercent;
 			m_player.BuffBonusCategory1[(int)eProperty.MaxHealth] -= m_amount;
-			if (m_player.Alive)
+			if (m_player.IsAlive)
 				m_player.Health = (int)Math.Max(1, 0.01 * m_player.MaxHealth * playerHealthPercent);
 			m_player.Out.SendUpdatePlayer();
 

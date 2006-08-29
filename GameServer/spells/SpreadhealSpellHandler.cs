@@ -82,7 +82,7 @@ namespace DOL.GS.Spells
 
 						foreach (GamePlayer player in group)
 						{
-							if (!player.Alive) continue;
+							if (!player.IsAlive) continue;
 							//heal only if target is in range
 							if (WorldMgr.CheckDistance(target, player,SPREADHEAL_RANGE))
 							{

@@ -128,6 +128,10 @@ namespace DOL.GS
 
 		public abstract bool IsContaining(IPoint3D spot, bool checkZ);
 
+		public abstract bool IsContaining(int x, int y, int z);
+
+		public abstract bool IsContaining(int x, int y, int z, bool checkZ);
+
 		/// <summary>
 		/// Called whenever a player leaves the given area
 		/// </summary>

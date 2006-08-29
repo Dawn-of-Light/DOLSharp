@@ -401,7 +401,7 @@ namespace DOL.GS.Scripts
 				//Alive
 				m_js.Append("document.write(\"<td bgcolor=\\\"#333333\\\">\")");
 				m_js.Append(nl.NewLine);
-				m_js.AppendFormat("document.write(\"{0}\")", plr.Alive ? "yes" : "no");
+				m_js.AppendFormat("document.write(\"{0}\")", plr.IsAlive ? "yes" : "no");
 				m_js.Append(nl.NewLine);
 				m_js.Append("document.write(\"</td>\")");
 				m_js.Append(nl.NewLine);

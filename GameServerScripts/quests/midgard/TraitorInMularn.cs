@@ -453,7 +453,7 @@ namespace DOL.GS.Quests.Midgard
 						SendSystemMessage(player, "You change into a new form!");
 						new RegionTimer(player, new RegionTimerCallback(quest.ResetPlayerModel), 60000); // call after 10 minutes                    
 
-						if (!ladyHinda.Alive || ladyHinda.ObjectState != GameObject.eObjectState.Active)
+						if (!ladyHinda.IsAlive || ladyHinda.ObjectState != GameObject.eObjectState.Active)
 						{
 							ladyHinda.X = hindaStart.X;
 							ladyHinda.Y = hindaStart.Y;
@@ -480,7 +480,7 @@ namespace DOL.GS.Quests.Midgard
 				GameEventMgr.AddHandler(player, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
 				GameEventMgr.AddHandler(player, GamePlayerEvent.UseSlot, new DOLEventHandler(PlayerUseSlot));
 
-				if (quest.Step == 3 && (!ladyHinda.Alive || ladyHinda.ObjectState != GameObject.eObjectState.Active))
+				if (quest.Step == 3 && (!ladyHinda.IsAlive || ladyHinda.ObjectState != GameObject.eObjectState.Active))
 				{
 					ladyHinda.X = hindaEnd.X;
 					ladyHinda.Y = hindaEnd.Y;

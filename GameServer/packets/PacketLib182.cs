@@ -196,8 +196,7 @@ namespace DOL.GS.PacketHandler
 							}
 						}
 					}
-					/*
-					if (item.SpellID1 > 0 && item.Charges1 > 0*)
+					if (item.SpellID1 > 0 && item.Charges1 > 0)
 					{
 						SpellLine chargeEffectsLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
 						if (chargeEffectsLine != null)
@@ -218,7 +217,6 @@ namespace DOL.GS.PacketHandler
 							}
 						}
 					}
-					*/
 					pak.WriteByte((byte) flag);
 					if ((flag & 0x08) == 0x08)
 					{

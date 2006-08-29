@@ -51,11 +51,11 @@ namespace DOL.GS.Effects
 			GameLiving target = atkArgs.AttackData.Target;
 			if (target == null) return;
 			if (target.ObjectState != GameObject.eObjectState.Active) return;
-			if (target.Alive == false) return;
+			if (target.IsAlive == false) return;
 			GameLiving attacker = sender as GameLiving;
 			if (attacker == null) return;
 			if (attacker.ObjectState != GameObject.eObjectState.Active) return;
-			if (attacker.Alive == false) return;
+			if (attacker.IsAlive == false) return;
 			if (atkArgs.AttackData.IsOffHand) return; // only react to main hand
 			if (atkArgs.AttackData.Weapon == null) return; // no weapon attack
 

@@ -37,7 +37,7 @@ namespace DOL.AI.Brain
 			{
 				if (m_aggroTable.ContainsKey(player))
 					continue; // add only new players
-				if (!player.Alive || player.ObjectState != GameObject.eObjectState.Active || player.IsStealthed)
+				if (!player.IsAlive || player.ObjectState != GameObject.eObjectState.Active || player.IsStealthed)
 					continue;
 				if (player.Steed != null)
 					continue; //do not attack players on steed

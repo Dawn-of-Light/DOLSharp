@@ -61,10 +61,10 @@ namespace DOL.GS
 		public override void TakeDamage(GameObject source, eDamageType damageType, int damageAmount, int criticalAmount)
 		{
 			//Work around the XP system
-			if (Alive)
+			if (IsAlive)
 			{
 				Health -= (damageAmount + criticalAmount);
-				if (!Alive)
+				if (!IsAlive)
 				{
 					Health = 0;
 					Die(source);

@@ -550,7 +550,7 @@ namespace DOL.GS.Quests.Midgard
 			GameMob queenTatiana = (GameMob) sender;
 
 			// if princess is dead no ned to checks ...
-			if (!queenTatiana.Alive || queenTatiana.ObjectState != GameObject.eObjectState.Active)
+			if (!queenTatiana.IsAlive || queenTatiana.ObjectState != GameObject.eObjectState.Active)
 				return;
 
 			foreach (GamePlayer player in queenTatiana.GetPlayersInRadius(1000))
@@ -780,7 +780,7 @@ namespace DOL.GS.Quests.Midgard
 
 		protected virtual void ResetMasterBriedi()
 		{
-			if (briediClone != null && (briediClone.Alive || briediClone.ObjectState == GameObject.eObjectState.Active))
+			if (briediClone != null && (briediClone.IsAlive || briediClone.ObjectState == GameObject.eObjectState.Active))
 			{
 				m_animSpellObjectQueue.Enqueue(briediClone);
 				m_animSpellTeleportTimerQueue.Enqueue(new RegionTimer(briediClone, new RegionTimerCallback(MakeAnimSpellSequence), 4000));

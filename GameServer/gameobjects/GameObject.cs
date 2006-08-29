@@ -924,7 +924,7 @@ namespace DOL.GS
 				neededTick = m_lastUpdate[type];
 
 				// check if the gameobject is dead
-				isAlive = p_obj is GameLiving && ((GameLiving)p_obj).Alive;
+				isAlive = p_obj is GameLiving && ((GameLiving)p_obj).IsAlive;
 
 				int i = (type << 1) + index;
 				// check that we must update data

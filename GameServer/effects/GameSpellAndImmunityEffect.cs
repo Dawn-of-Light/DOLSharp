@@ -106,7 +106,7 @@ namespace DOL.GS.Effects
 				if (m_expired)
 				{
 					// do not allow removing immunity on alive living
-					if (!m_owner.Alive)
+					if (!m_owner.IsAlive)
 						m_owner.EffectList.Remove(this);
 					return;
 				}

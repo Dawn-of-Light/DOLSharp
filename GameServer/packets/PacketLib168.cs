@@ -197,7 +197,13 @@ namespace DOL.GS.PacketHandler
 							if (reg != null)
 								zon = reg.GetZone(characters[j].Xpos, characters[j].Ypos);
 							if (zon != null)
-								pak.FillString(zon.Description, 24);
+							{
+								IList areas = zon.GetAreasOfSpot(characters[j].Xpos, characters[j].Ypos, characters[j].Zpos);
+								if (areas.Count > 0)
+									pak.FillString((areas[0] as AbstractArea).Description, 24);
+								else
+									pak.FillString(zon.Description, 24);
+							}
 							else
 								pak.Fill(0x0, 24); //No known location
 
@@ -592,7 +598,7 @@ namespace DOL.GS.PacketHandler
 			pak.WriteShort(playerToCreate.Heading);
 			pak.WriteShort(playerToCreate.Model);
 			//DOLConsole.WriteLine("send created player "+target.Player.Name+" to "+client.Player.Name+" alive="+target.Player.Alive);
-			pak.WriteByte((byte)(playerToCreate.Alive ? 0x1 : 0x0));
+			pak.WriteByte((byte)(playerToCreate.IsAlive ? 0x1 : 0x0));
 			pak.WriteByte(0x00);
 			pak.WriteByte(GameServer.ServerRules.GetLivingRealm(m_gameClient.Player, playerToCreate));
 			pak.WriteByte(playerToCreate.Level);
@@ -649,7 +655,7 @@ namespace DOL.GS.PacketHandler
 			if (obj is GamePlayer)
 				oType = 2;
 			else if (obj is GameNPC)
-				oType = (((GameLiving)obj).Alive ? 1 : 0);
+				oType = (((GameLiving)obj).IsAlive ? 1 : 0);
 
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.RemoveObject));
 			pak.WriteShort((ushort)obj.ObjectID);
@@ -1004,7 +1010,7 @@ namespace DOL.GS.PacketHandler
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.CharacterStatusUpdate));
 			pak.WriteByte(m_gameClient.Player.HealthPercent);
 			pak.WriteByte(m_gameClient.Player.ManaPercent);
-			pak.WriteShort((byte)(m_gameClient.Player.Alive ? 0x00 : 0x0f)); // 0x0F if dead
+			pak.WriteShort((byte)(m_gameClient.Player.IsAlive ? 0x00 : 0x0f)); // 0x0F if dead
 			pak.WriteByte((byte)(m_gameClient.Player.IsSitting ? 0x02 : 0x00));
 			pak.WriteByte(m_gameClient.Player.EndurancePercent);
 			pak.WriteByte(m_gameClient.Player.ConcentrationPercent);
@@ -1330,7 +1336,7 @@ namespace DOL.GS.PacketHandler
 							pak.WriteByte(updatePlayer.ManaPercent);
 
 							byte playerStatus = 0;
-							if (!updatePlayer.Alive)
+							if (!updatePlayer.IsAlive)
 								playerStatus |= 0x01;
 							if (updatePlayer.IsMezzed)
 								playerStatus |= 0x02;
@@ -1409,7 +1415,7 @@ namespace DOL.GS.PacketHandler
 				pak.WriteByte(player.ManaPercent);
 
 				byte playerStatus = 0;
-				if (!player.Alive)
+				if (!player.IsAlive)
 					playerStatus |= 0x01;
 				if (player.IsMezzed)
 					playerStatus |= 0x02;

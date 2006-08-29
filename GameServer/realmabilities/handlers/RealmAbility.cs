@@ -195,7 +195,7 @@ namespace DOL.GS.RealmAbilities
 		public bool CheckPreconditions(GameLiving living, long bitmask)
 		{
 			GamePlayer player = living as GamePlayer;
-			if ((bitmask & DEAD) != 0 && !living.Alive)
+			if ((bitmask & DEAD) != 0 && !living.IsAlive)
 			{
 				if (player != null)
 				{

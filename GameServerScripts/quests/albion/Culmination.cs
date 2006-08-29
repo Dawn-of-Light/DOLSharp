@@ -548,7 +548,7 @@ namespace DOL.GS.Quests.Albion
 			GameMob queenTatiana = (GameMob) sender;
 
 			// if princess is dead no ned to checks ...
-			if (!queenTatiana.Alive || queenTatiana.ObjectState != GameObject.eObjectState.Active)
+			if (!queenTatiana.IsAlive || queenTatiana.ObjectState != GameObject.eObjectState.Active)
 				return;
 
 			foreach (GamePlayer player in queenTatiana.GetPlayersInRadius(1000))
@@ -776,7 +776,7 @@ namespace DOL.GS.Quests.Albion
 
 		protected virtual void ResetMasterDunwyn()
 		{
-			if (dunwynClone != null && (dunwynClone.Alive || dunwynClone.ObjectState == GameObject.eObjectState.Active))
+			if (dunwynClone != null && (dunwynClone.IsAlive || dunwynClone.ObjectState == GameObject.eObjectState.Active))
 			{
 				m_animSpellObjectQueue.Enqueue(dunwynClone);
 				m_animSpellTeleportTimerQueue.Enqueue(new RegionTimer(dunwynClone, new RegionTimerCallback(MakeAnimSpellSequence), 4000));

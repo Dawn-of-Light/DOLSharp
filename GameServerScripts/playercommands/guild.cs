@@ -302,7 +302,7 @@ namespace DOL.GS.Scripts
 								client.Out.SendMessage("Target is already member of a guild!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return 1;
 							}
-							if (!obj.Alive)
+							if (!obj.IsAlive)
 							{
 								client.Out.SendMessage("You cannot invite a dead member to your guild.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return 1;

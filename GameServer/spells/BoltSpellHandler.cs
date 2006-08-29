@@ -97,7 +97,7 @@ namespace DOL.GS.Spells
 				if (target == null) return;
 				if (target.CurrentRegionID != caster.CurrentRegionID) return;
 				if (target.ObjectState != GameObject.eObjectState.Active) return;
-				if (!target.Alive) return;
+				if (!target.IsAlive) return;
 
 // TODO: find out how exactly this works
 //				if (target is GamePlayer && target.AttackState && target.InCombat)

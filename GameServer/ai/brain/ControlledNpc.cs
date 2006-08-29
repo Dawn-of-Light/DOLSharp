@@ -309,7 +309,7 @@ namespace DOL.AI.Brain
 				return null;
 			if (m_orderAttackTarget != null)
 			{
-				if (m_orderAttackTarget.Alive && m_orderAttackTarget.ObjectState == GameObject.eObjectState.Active)
+				if (m_orderAttackTarget.IsAlive && m_orderAttackTarget.ObjectState == GameObject.eObjectState.Active)
 					return m_orderAttackTarget;
 				m_orderAttackTarget = null;
 			}

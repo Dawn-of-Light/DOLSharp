@@ -1046,6 +1046,33 @@ namespace DOL.GS
 			}
 		}
 
+		public IList GetAreasOfZone(Zone zone, int x, int y, int z)
+		{
+			lock (m_Areas.SyncRoot)
+			{
+				int zoneIndex = Zones.IndexOf(zone);
+				IList areas = new ArrayList(1);
+
+				if (zoneIndex >= 0)
+				{
+					try
+					{
+						for (int i = 0; i < m_ZoneAreasCount[zoneIndex]; i++)
+						{
+							IArea area = (IArea)m_Areas[m_ZoneAreas[zoneIndex][i]];
+							if (area.IsContaining(x, y, z))
+								areas.Add(area);
+						}
+					}
+					catch (Exception e)
+					{
+						log.Error("GetArea exception.Area count " + m_ZoneAreasCount[zoneIndex]);
+					}
+				}
+				return areas;
+			}
+		}
+
 		#endregion
 
 		#region Notify

@@ -55,7 +55,7 @@ namespace DOL.GS.SkillHandler
 				player.Out.SendMessage("You can't use camouflage while not stealthed!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
-			if (!player.Alive)
+			if (!player.IsAlive)
 			{
 				player.Out.SendMessage("You can't use camouflage when dead!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;

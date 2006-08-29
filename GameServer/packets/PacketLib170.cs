@@ -116,7 +116,7 @@ namespace DOL.GS.PacketHandler
 					m_flag |= 0x10;
 				if (LevelUp)
 					m_flag |= 0x20;
-				if (!component.Alive)
+				if (!component.IsAlive)
 					m_flag |= 0x40;
 				pak.WriteByte(m_flag);
 			}

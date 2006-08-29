@@ -729,7 +729,7 @@ namespace DOL.GS
 				npc.TempProperties.removeProperty(RESTORE_HEADING_ACTION_PROP);
 
 				if (npc.ObjectState != eObjectState.Active) return;
-				if (!npc.Alive) return;
+				if (!npc.IsAlive) return;
 				if (npc.AttackState) return;
 				if (npc.IsMoving) return;
 				if (npc.Equals(m_oldPosition)) return;
@@ -1035,7 +1035,7 @@ namespace DOL.GS
 
 			GameObject followTarget = (GameObject)m_followTarget.Target;
 			GameLiving followLiving = followTarget as GameLiving;
-			if (followLiving != null && !followLiving.Alive)
+			if (followLiving != null && !followLiving.IsAlive)
 			{
 				StopFollow();
 				Notify(GameNPCEvent.FollowLostTarget, this, new FollowLostTargetEventArgs(followTarget));
