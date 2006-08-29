@@ -417,7 +417,7 @@ namespace DOL.GS.PacketHandler
 			pak.WriteByte(playerToCreate.GetFaceAttribute(eCharFacePart.HairStyle)); //1-4 = Unknown / 5-8 = Hair Style
 
 			int flags = (GameServer.ServerRules.GetLivingRealm(m_gameClient.Player, playerToCreate) & 0x03) << 2;
-			if (playerToCreate.Alive == false) flags |= 0x01;
+			if (playerToCreate.IsAlive == false) flags |= 0x01;
 			if (playerToCreate.IsUnderwater) flags |= 0x02; //swimming
 			if (playerToCreate.IsStealthed)  flags |= 0x10;
 			// 0x20 = wireframe

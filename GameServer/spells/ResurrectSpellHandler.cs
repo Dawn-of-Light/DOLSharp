@@ -53,7 +53,7 @@ namespace DOL.GS.Spells
 		public override void OnDirectEffect(GameLiving target, double effectiveness)
 		{
 			base.OnDirectEffect(target, effectiveness);
-			if(target == null || target.Alive) return;
+			if(target == null || target.IsAlive) return;
 
 			SendEffectAnimation(target, 0, false, 1);
 			GamePlayer targetPlayer = target as GamePlayer;
@@ -112,7 +112,7 @@ namespace DOL.GS.Spells
 			}
 
 			GameLiving rezzer = (GameLiving)player.TempProperties.getObjectProperty(RESURRECT_CASTER_PROPERTY, null);
-			if (!player.Alive)
+			if (!player.IsAlive)
 			{
 				if (rezzer == null)
 				{

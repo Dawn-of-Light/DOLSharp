@@ -71,7 +71,7 @@ namespace DOL.GS
 			GamePlayer tradePartner = null;
 			if (player.TradeWindow != null) tradePartner = player.TradeWindow.Partner;
 
-			if (player.IsMoving || player.Strafing)
+			if (player.IsMoving || player.IsStrafing)
 			{
 				player.Out.SendMessage("You move and stop to repair the " + item.Name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				if (tradePartner != null) tradePartner.Out.SendMessage(player.Name + " move and stop to repair the " + item.Name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -236,7 +236,7 @@ namespace DOL.GS
 				return 0;
 			}
 			//chance with Woodworking 
-			if (player.IsMoving || player.Strafing)
+			if (player.IsMoving || player.IsStrafing)
 			{
 				player.Out.SendMessage("You move and stop to repair the " + siegeWeapon.Name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return 0;

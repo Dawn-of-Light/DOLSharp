@@ -92,7 +92,7 @@ namespace DOL.GS.Spells
 			ad.Target.OnAttackedByEnemy(ad);
 			ad.Attacker.DealDamage(ad);
 
-			if (--bleedValue <= 0 || !effect.Owner.Alive)
+			if (--bleedValue <= 0 || !effect.Owner.IsAlive)
 				effect.Cancel(false);
 			else effect.Owner.TempProperties.setProperty(BLEED_VALUE_PROPERTY, bleedValue);
 		}

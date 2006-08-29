@@ -139,7 +139,7 @@ namespace DOL.GS.Spells
 		{
 			base.OnDirectEffect(target, effectiveness);
 			if (target == null) return;
-			if (!target.Alive || target.ObjectState!=GameLiving.eObjectState.Active) return;
+			if (!target.IsAlive || target.ObjectState!=GameLiving.eObjectState.Active) return;
 
 			target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, AttackData.eAttackType.Spell, Caster);
 			if (target is GameNPC)

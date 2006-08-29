@@ -54,7 +54,7 @@ namespace DOL.GS.SkillHandler
 			if (!player.IsStealthed)
 			{
 				// Dead can't stealth
-				if(!player.Alive)
+				if(!player.IsAlive)
 				{
 					player.Out.SendMessage("You can't hide when dead!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return;
@@ -98,7 +98,7 @@ namespace DOL.GS.SkillHandler
 					if (ply.ObjectState != GameObject.eObjectState.Active) continue;
 
 					//Dead players don't prevent stealth!
-					if (!ply.Alive) continue;
+					if (!ply.IsAlive) continue;
 
 					//TODO: "True Seeing" realm ability check
 					//True Seeing denies restealthing for VISIBILITY_DISTANCE!
@@ -125,7 +125,7 @@ namespace DOL.GS.SkillHandler
 					if (npc.ObjectState != GameObject.eObjectState.Active) continue;
 
 					//Dead npc don't prevent stealth!
-					if (!npc.Alive) continue;
+					if (!npc.IsAlive) continue;
 
 					//Friendly players/mobs don't prevent stealth!
 					if (!GameServer.ServerRules.IsAllowedToAttack(npc, player, true)) continue;

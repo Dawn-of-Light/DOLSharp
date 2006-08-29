@@ -451,7 +451,7 @@ namespace DOL.GS.Quests.Albion
 						SendSystemMessage(player, "You change into a new form!");
 						new RegionTimer(player, new RegionTimerCallback(quest.ResetPlayerModel), 60000); // call after 10 minutes                    
 
-						if (!ladyFelin.Alive || ladyFelin.ObjectState != GameObject.eObjectState.Active)
+						if (!ladyFelin.IsAlive || ladyFelin.ObjectState != GameObject.eObjectState.Active)
 						{
 							ladyFelin.X = felinStart.X;
 							ladyFelin.Y = felinStart.Y;
@@ -478,7 +478,7 @@ namespace DOL.GS.Quests.Albion
 				GameEventMgr.AddHandler(player, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
 				GameEventMgr.AddHandler(player, GamePlayerEvent.UseSlot, new DOLEventHandler(PlayerUseSlot));
 
-				if (quest.Step == 3 && (!ladyFelin.Alive || ladyFelin.ObjectState != GameObject.eObjectState.Active))
+				if (quest.Step == 3 && (!ladyFelin.IsAlive || ladyFelin.ObjectState != GameObject.eObjectState.Active))
 				{
 					ladyFelin.X = felinEnd.X;
 					ladyFelin.Y = felinEnd.Y;

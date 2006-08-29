@@ -660,7 +660,7 @@ namespace DOL.GS.Quests.Midgard
 			GameMob m_princessAyir = (GameMob) sender;
 
 			// if princess is dead no ned to checks ...
-			if (!m_princessAyir.Alive || m_princessAyir.ObjectState != GameObject.eObjectState.Active)
+			if (!m_princessAyir.IsAlive || m_princessAyir.ObjectState != GameObject.eObjectState.Active)
 				return;
 
 			foreach (GamePlayer player in m_princessAyir.GetPlayersInRadius(1000))
@@ -967,7 +967,7 @@ namespace DOL.GS.Quests.Midgard
 
 		protected virtual void ResetMasterBriedi()
 		{
-			if (briediClone != null && (briediClone.Alive || briediClone.ObjectState == GameObject.eObjectState.Active))
+			if (briediClone != null && (briediClone.IsAlive || briediClone.ObjectState == GameObject.eObjectState.Active))
 			{
 				m_animSpellObjectQueue.Enqueue(briediClone);
 				m_animSpellTeleportTimerQueue.Enqueue(new RegionTimer(briediClone, new RegionTimerCallback(MakeAnimEmoteSequence), 500));

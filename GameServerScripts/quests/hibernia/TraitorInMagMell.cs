@@ -448,7 +448,7 @@ namespace DOL.GS.Quests.Hibernia
 						SendSystemMessage(player, "You change into a new form!");
 						RegionTimer resetTimer = new RegionTimer(player, new RegionTimerCallback(quest.ResetPlayerModel), 60000); // call after 10 minutes                    
 
-						if (!ladyLegada.Alive || ladyLegada.ObjectState != GameObject.eObjectState.Active)
+						if (!ladyLegada.IsAlive || ladyLegada.ObjectState != GameObject.eObjectState.Active)
 						{
 							ladyLegada.X = legadaStart.X;
 							ladyLegada.Y = legadaStart.Y;
@@ -475,7 +475,7 @@ namespace DOL.GS.Quests.Hibernia
 				GameEventMgr.AddHandler(player, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
 				GameEventMgr.AddHandler(player, GamePlayerEvent.UseSlot, new DOLEventHandler(PlayerUseSlot));
 
-				if (quest.Step == 3 && (!ladyLegada.Alive || ladyLegada.ObjectState != GameObject.eObjectState.Active))
+				if (quest.Step == 3 && (!ladyLegada.IsAlive || ladyLegada.ObjectState != GameObject.eObjectState.Active))
 				{
 					ladyLegada.X = legadaEnd.X;
 					ladyLegada.Y = legadaEnd.Y;

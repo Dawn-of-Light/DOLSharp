@@ -66,12 +66,12 @@ namespace DOL.GS.Spells
 			GameLiving target = atkArgs.AttackData.Target;
 			if (target == null) return;
 			if (target.ObjectState != GameObject.eObjectState.Active) return;
-			if (target.Alive == false) return;
+			if (target.IsAlive == false) return;
 			if (target is GameKeepComponent || target is GameKeepDoor) return;
 			GameLiving attacker = sender as GameLiving;
 			if (attacker == null) return;
 			if (attacker.ObjectState != GameObject.eObjectState.Active) return;
-			if (attacker.Alive == false) return;
+			if (attacker.IsAlive == false) return;
 
 			int spread = m_minDamageSpread;
 			spread += Util.Random(50);
@@ -162,11 +162,11 @@ namespace DOL.GS.Spells
 			GameLiving attacker = sender as GameLiving; //sender is target of attack, becomes attacker for damage shield
 			if (attacker == null) return;
 			if (attacker.ObjectState != GameObject.eObjectState.Active) return;
-			if (attacker.Alive == false) return;
+			if (attacker.IsAlive == false) return;
 			GameLiving target = args.AttackData.Attacker; //attacker becomes target for damage shield
 			if (target == null) return;
 			if (target.ObjectState != GameObject.eObjectState.Active) return;
-			if (target.Alive == false) return;
+			if (target.IsAlive == false) return;
 
 			int spread = m_minDamageSpread;
 			spread += Util.Random(50);

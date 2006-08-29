@@ -155,11 +155,11 @@ namespace DOL.GS
 			}
 		}
 
-		public override bool Alive
+		public override bool IsAlive
 		{
 			get
 			{
-				bool alive = base.Alive;
+				bool alive = base.IsAlive;
 				if (alive && IsRespawning)
 					return false;
 				return alive;
@@ -181,7 +181,7 @@ namespace DOL.GS
 		/// </summary>
 		public virtual void StartRespawn()
 		{
-			if (Alive) return;
+			if (IsAlive) return;
 
 			int respawnInt = RespawnInterval;
 			if (respawnInt > 0)
@@ -219,7 +219,7 @@ namespace DOL.GS
 
 			//DOLConsole.WriteLine("respawn");
 			//TODO some real respawn handling
-			if (Alive) return 0;
+			if (IsAlive) return 0;
 			if (ObjectState == eObjectState.Active) return 0;
 
 			//Heal this mob, move it to the spawnlocation

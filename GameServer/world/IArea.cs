@@ -55,6 +55,10 @@ namespace DOL.GS
 		bool IsContaining(IPoint3D spot);
 
 		bool IsContaining(IPoint3D spot, bool checkZ);
+
+		bool IsContaining(int x, int y, int z);
+
+		bool IsContaining(int x, int y, int z, bool checkZ);
 		
 		/// <summary>
 		/// Called whenever a player leaves the given area

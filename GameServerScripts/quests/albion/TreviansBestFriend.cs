@@ -1480,7 +1480,7 @@ namespace DOL.GS.Quests.Albion
 			else
 			{
 				// if lilybet is alive move here to origial position
-				if (lilybet.Alive)
+				if (lilybet.IsAlive)
 				{
 					lilybet.MoveTo(1, banditAbductorLeader.X - 300, banditAbductorLeader.Y - 500, banditAbductorLeader.Z, 330);
 				}
@@ -1503,7 +1503,7 @@ namespace DOL.GS.Quests.Albion
 
 		private void CheckFreeLylibet()
 		{
-			if ((Step == 4 || Step == 5) && !banditAbductor1.Alive && !banditAbductor1.Alive && !banditAbductor2.Alive)
+			if ((Step == 4 || Step == 5) && !banditAbductor1.IsAlive && !banditAbductor1.IsAlive && !banditAbductor2.IsAlive)
 			{
 				SendSystemMessage("As the last of her captors are defeated, Lilybet creeps from out of hiding. ");
 				AddLilybet();

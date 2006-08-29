@@ -103,7 +103,7 @@ namespace DOL.GS.RealmAbilities
 			}
 			protected override void OnTick()
 			{
-				if (!m_caster.Alive)
+				if (!m_caster.IsAlive)
 				{
 					Stop();
 					if (m_caster is GamePlayer)

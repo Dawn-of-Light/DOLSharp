@@ -59,7 +59,7 @@ namespace DOL.GS.Spells
 		public override void OnDirectEffect(GameLiving target, double effectiveness)
 		{
 			base.OnDirectEffect(target, effectiveness);
-			if (target == null || !target.Alive)
+			if (target == null || !target.IsAlive)
 				return;
 
 			GameSpellEffect effect = SpellHandler.FindEffectOnTarget(target, SpellTypeToRemove);

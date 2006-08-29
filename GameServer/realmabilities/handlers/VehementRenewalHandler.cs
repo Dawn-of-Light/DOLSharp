@@ -44,7 +44,7 @@ namespace DOL.GS.RealmAbilities
 				{
 					if (p == player) continue;
 					if (!WorldMgr.CheckDistance(player, p, 2000)) continue;
-					if (!p.Alive) continue;
+					if (!p.IsAlive) continue;
 					int healed = p.ChangeHealth(living, GameLiving.eHealthChangeType.Spell, heal);
 					if (healed > 0)
 						used = true;

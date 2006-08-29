@@ -32,7 +32,7 @@ namespace DOL.GS
 	/// </summary>		
 	public sealed class DoorMgr
 	{
-		private static Hashtable m_doors;
+		private static Hashtable m_doors = new Hashtable();
 
 		public static Hashtable Doors
 		{
@@ -44,13 +44,16 @@ namespace DOL.GS
 		/// </summary>	
 		public static bool Init()
 		{
-			m_doors = new Hashtable();
 			DataObject[] dbdoors = GameServer.Database.SelectAllObjects(typeof(DBDoor));
 			foreach (DBDoor door in dbdoors)
 			{
 				GameDoor mydoor = new GameDoor();
 				mydoor.LoadFromDatabase(door);
-				m_doors.Add(door.InternalID, mydoor);
+				if (m_doors[door.InternalID] == null)
+				{
+					m_doors.Add(door.InternalID, mydoor);
+					mydoor.AddToWorld();
+				}
 			}
 			return true;
 		}

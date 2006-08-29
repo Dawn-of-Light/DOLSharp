@@ -73,7 +73,7 @@ namespace DOL.GS.Scripts
 		public int OnCommand(GameClient client, string[] args)
 		{
 			// no emotes if dead
-			if (!client.Player.Alive)
+			if (!client.Player.IsAlive)
 			{
 				client.Out.SendMessage("You can't do that, you're dead!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return 1;

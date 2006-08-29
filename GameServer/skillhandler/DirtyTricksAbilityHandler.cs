@@ -49,7 +49,7 @@ namespace DOL.GS.SkillHandler
 				return;
 			}
 
-			if (!player.Alive)
+			if (!player.IsAlive)
 			{
 				player.Out.SendMessage("You are dead and can't use that ability!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 				return;

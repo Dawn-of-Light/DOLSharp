@@ -108,7 +108,7 @@ namespace DOL.GS.PacketHandler.v168
 			//if(client.Player.CurrentSpeed!=0 && client.Player.Sitting)
 			//	client.Player.Sit(false);
 
-			client.Player.Strafing = ((data & 0xe000) != 0);
+			client.Player.IsStrafing = ((data & 0xe000) != 0);
 
 
 			int realZ = packet.ReadShort();
@@ -469,7 +469,7 @@ namespace DOL.GS.PacketHandler.v168
 				con168[12] = (byte)(client.Player.Steed.ObjectID >> 8); //heading = steed ID
 				con168[13] = (byte)(client.Player.Steed.ObjectID & 0xFF);
 			}
-			else if (!client.Player.Alive)
+			else if (!client.Player.IsAlive)
 			{
 				con168[2] &= 0xE3; //11100011
 				con168[2] |= 0x14; //Set dead flag 00010100
@@ -542,9 +542,6 @@ namespace DOL.GS.PacketHandler.v168
 				else
 					player.Out.SendObjectDelete(client.Player); //remove the stealthed player from view
 			}
-
-			//Notify the GameEventMgr of the moving player
-			GameEventMgr.Notify(GamePlayerEvent.Moving, client.Player);
 
 			return 1;
 		}
