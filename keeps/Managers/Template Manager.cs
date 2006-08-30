@@ -608,7 +608,14 @@ namespace DOL.GS.Keeps
 			{
 				if (guard.Component == null)
 				{
-					guard.Name = guard.CurrentZone.Description + " Commander";
+					if (guard.CurrentAreas.Count > 1)
+					{
+						guard.Name = (guard.CurrentAreas[0] as AbstractArea).Description + " Commander";
+					}
+					else
+					{
+						guard.Name = guard.CurrentZone.Description + " Commander";
+					}
 					return;
 				}
 				else if (guard.IsTowerGuard)

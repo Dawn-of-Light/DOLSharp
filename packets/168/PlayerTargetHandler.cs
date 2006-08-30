@@ -99,7 +99,7 @@ namespace DOL.GS.PacketHandler.v168
 				player.TargetObject = myTarget;
 				player.TargetInView = m_targetInView;
 
-				if(myTarget != null)
+				if (myTarget != null)
 				{
 					// Send target message text only if 'examine' bit is set.
 					if (m_examineTarget)
@@ -115,15 +115,8 @@ namespace DOL.GS.PacketHandler.v168
 					{
 						player.Out.SendMessage("Target is not in view.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}
-					GameKeepComponent keepcomponent = myTarget as GameKeepComponent;
-					if (keepcomponent != null)
-						player.Out.SendComponentUpdate(keepcomponent);
-					else
-                    {
-						GameKeepDoor door = myTarget as GameKeepDoor;
-						if (door != null)
-							player.Out.SendKeepDoorUpdate(door);							
-                    }
+
+					player.Out.SendObjectUpdate(myTarget);
 				}
 
 				if (player.PrayState)

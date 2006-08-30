@@ -685,7 +685,7 @@ namespace DOL.GS
 		/// <returns>false if interaction is prevented</returns>
 		public virtual bool Interact(GamePlayer player)
 		{
-			if (!WorldMgr.CheckDistance(this, player, WorldMgr.INTERACT_DISTANCE))
+			if (player.Client.Account.PrivLevel == 1 && !WorldMgr.CheckDistance(this, player, WorldMgr.INTERACT_DISTANCE))
 			{
 				player.Out.SendMessage("You are too far away to interact with " + GetName(0, false) + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;

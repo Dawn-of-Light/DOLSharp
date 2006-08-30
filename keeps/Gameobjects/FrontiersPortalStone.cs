@@ -97,22 +97,30 @@ namespace DOL.GS.Keeps
 			m_Heading = originalHeading;
 		}
 
+		public class TeleporterEffect : GameNPC
+		{
+			public TeleporterEffect()
+				: base()
+			{
+				m_Name = "teleport spell effect";
+				m_flags = (uint)GameNPC.eFlags.PEACE + (uint)GameNPC.eFlags.DONTSHOWNAME;
+				m_size = 255;
+				m_Model = 0x783;
+			}
+		}
+
 		#region Teleporter Effect
 
-		protected GameMob sfx;
+		protected TeleporterEffect sfx;
 
 		public override bool AddToWorld()
 		{
 			if (!base.AddToWorld()) return false;
-			GameMob mob = new GameMob();
-			mob.Name = "teleport spell effect";
-			mob.Flags = (uint)GameNPC.eFlags.PEACE + (uint)GameNPC.eFlags.DONTSHOWNAME;
-			mob.Size = 255;
+			TeleporterEffect mob = new TeleporterEffect();
 			mob.CurrentRegion = this.CurrentRegion;
 			mob.X = this.X;
 			mob.Y = this.Y;
 			mob.Z = this.Z;
-			mob.Model = 0x783;
 			mob.Heading = this.Heading;
 			if (mob.AddToWorld())
 				sfx = mob;

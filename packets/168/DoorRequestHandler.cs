@@ -152,8 +152,7 @@ namespace DOL.GS.PacketHandler.v168
 						int doorType = m_doorId / 100000000;
 						if (doorType == 7)
 						{
-							if (DoorMgr.getDoorByID(m_doorId) == null)
-								player.Out.SendCustomDialog("Add this door to the database?", new CustomDialogResponse(AddingDoor));
+							player.Out.SendCustomDialog("Add this door to the database?", new CustomDialogResponse(AddingDoor));
 						}
 						else
 						{
