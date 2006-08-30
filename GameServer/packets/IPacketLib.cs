@@ -508,7 +508,7 @@ namespace DOL.GS.PacketHandler
 		void SendNPCsQuestEffect(GameNPC npc, bool flag);
 
 		void SendHexEffect(GamePlayer player,byte effect1,byte effect2,byte effect3,byte effect4,byte effect5);
-
+		void SendRvrGuildBanner(GamePlayer player, bool show);
 		void SendSiegeWeaponAnimation(GameSiegeWeapon siegeWeapon);
 		void SendSiegeWeaponFireAnimation(GameSiegeWeapon siegeWeapon, int timer);
 		void SendSiegeWeaponCloseInterface();

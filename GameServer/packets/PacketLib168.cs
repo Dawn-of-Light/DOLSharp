@@ -2988,5 +2988,8 @@ namespace DOL.GS.PacketHandler
 		{
 			log.Info("168><");
 		}
+		public virtual void SendRvrGuildBanner(GamePlayer player, bool show)
+		{
+		}
 	}
 }

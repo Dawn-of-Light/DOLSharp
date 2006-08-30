@@ -171,5 +171,28 @@ namespace DOL.GS.PacketHandler
 			pak.WriteByte((byte)(item.Placemode-2));
 			SendTCP(pak);
 		}
+
+		public override void SendRvrGuildBanner(GamePlayer player, bool show)
+		{
+			if (player == null) return;
+
+			//cannot show banners for players that have no guild.
+			if (show && player.Guild == null)
+				return;
+			GSTCPPacketOut pak = new GSTCPPacketOut((byte)ePackets.VisualEffect);
+			pak.WriteShort((ushort)player.ObjectID);
+			pak.WriteByte(0xC); // show Banner
+			pak.WriteByte((byte)((show) ? 0 : 1)); // 0-enable, 1-disable
+			pak.WriteInt(player.Guild.theGuildDB.Emblem);
+			SendTCP(pak);
+		}
+
+		public override void SendPlayerCreate(GamePlayer playerToCreate)
+		{
+			base.SendPlayerCreate(playerToCreate);
+			if (playerToCreate.IsCarryingGuildBanner)
+				playerToCreate.Out.SendRvrGuildBanner(playerToCreate, true);
+		}
+
 	}
 }
