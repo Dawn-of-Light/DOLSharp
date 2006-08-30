@@ -172,6 +172,11 @@ namespace DOL.GS.PacketHandler
 //				pak.WriteInt(playerToCreate.Guild.theGuildDB.Emblem);
 //				SendTCP(pak);
 //			}
+
+			if (playerToCreate.IsCarryingGuildBanner)
+			{
+				SendRvrGuildBanner(playerToCreate, true);
+			}
 		}
 
 		public override void CheckLengthHybridSkillsPacket(ref GSTCPPacketOut pak, ref int maxSkills, ref int first)

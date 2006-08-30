@@ -10937,6 +10937,34 @@ namespace DOL.GS
 		}
 		#endregion
 
+		#region GuildBanner
+		protected bool m_isCarryingGuildBanner = false;
+
+		/// <summary>
+		/// Gets/Sets the visibility of the carryable RvrGuildBanner. Wont work if the player has no guild.
+		/// </summary>
+		public bool IsCarryingGuildBanner
+		{
+			get { return m_isCarryingGuildBanner; }
+			set
+			{
+				//cant send guildbanner for players without guild.
+				if (value == true && Guild == null)
+					return;
+				if (value != m_isCarryingGuildBanner)
+				{
+					foreach (GamePlayer playerToUpdate in GetPlayersInRadius(WorldMgr.OBJ_UPDATE_DISTANCE))
+					{
+						if (playerToUpdate != null && playerToUpdate.Client.IsPlaying)
+							playerToUpdate.Out.SendRvrGuildBanner(this, value);
+					}
+					m_isCarryingGuildBanner = value;
+				}
+			}
+		}
+
+		#endregion
+
 		/// <summary>
 		/// Returns the string representation of the GamePlayer
 		/// </summary>
