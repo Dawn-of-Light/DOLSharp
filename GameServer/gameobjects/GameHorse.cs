@@ -33,9 +33,7 @@ namespace DOL.GS
 			Size = 63;
 			Level = 55;
 			Name = "horse";
-			StandardMobBrain brain = new StandardMobBrain();
-			brain.AggroLevel = 0;
-			brain.AggroRange = 0;
+			BlankBrain brain = new BlankBrain();
 			SetOwnBrain(brain);
 		}
 	}

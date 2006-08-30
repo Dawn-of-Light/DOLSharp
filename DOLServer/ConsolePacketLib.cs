@@ -155,6 +155,7 @@ namespace DOLGameServerConsole
 		public void SendWeather(uint x, uint width, ushort speed, ushort fogdiffusion, ushort intensity) { }
 		public void SendPlayerModelTypeChange(GamePlayer player, byte modelType) { }
 		public void SendObjectDelete(GameObject obj) { }
+		public void SendObjectUpdate(GameObject obj) { }
 		public void SendQuestListUpdate() { }
 		public void SendQuestUpdate(AbstractQuest quest) { }
 		public void SendConcentrationList() { }

@@ -333,6 +333,8 @@ namespace DOL.GS.Keeps
 				if ((target as GamePlayer).Client.Account.PrivLevel != 1)
 					return false;
 			}
+			if (target.Realm == 0)
+				return false;
 			switch (GameServer.Instance.Configuration.ServerType)
 			{
 				case eGameServerType.GST_Normal:

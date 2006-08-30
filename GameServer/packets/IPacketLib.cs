@@ -79,7 +79,7 @@ namespace DOL.GS.PacketHandler
 		Weather = 0x92,
 		DoorState = 0x99,
 		ClientRegions = 0x9E,
-		NPCUpdate = 0xA1,
+		ObjectUpdate = 0xA1,
 		RemoveObject = 0xA2,
 		Quit = 0xA4,
 		PlayerPosition = 0xA9,
@@ -437,7 +437,6 @@ namespace DOL.GS.PacketHandler
 		void SendRemoveObject(GameObject obj);
 		void SendItemCreate(GameStaticItem obj);
 		void SendDoorCreate(IDoor obj);
-		void SendComponentUpdate(GameKeepComponent keepcomponent);
 		void SendDebugMode(bool on);
 		void SendModelChange(GameObject obj, ushort newModel);
 		void SendEmoteAnimation(GameObject obj, eEmote emote);
@@ -497,6 +496,7 @@ namespace DOL.GS.PacketHandler
 		void SendWeather(uint x, uint width, ushort speed, ushort fogdiffusion, ushort intensity);
 		void SendPlayerModelTypeChange(GamePlayer player, byte modelType);
 		void SendObjectDelete(GameObject obj);
+		void SendObjectUpdate(GameObject obj);
 		void SendQuestListUpdate();
 		void SendQuestUpdate(AbstractQuest quest);
 		void SendConcentrationList();
@@ -523,7 +523,6 @@ namespace DOL.GS.PacketHandler
 		void SendKeepComponentUpdate(AbstractGameKeep keep,bool LevelUp);
 		void SendKeepComponentInteract(GameKeepComponent component);
 		void SendKeepComponentHookPoint(GameKeepComponent component,int selectedHookPointIndex);
-		void SendKeepDoorUpdate(GameKeepDoor door);
 		void SendClearKeepComponentHookPoint(GameKeepComponent component,int selectedHookPointIndex);
 		void SendHookPointStore(GameKeepHookPoint hookPoint);
 		void SendWarmapUpdate(IList list);

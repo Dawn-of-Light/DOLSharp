@@ -6356,9 +6356,11 @@ namespace DOL.GS
 									Out.SendMessage("You are in combat and cannot call your mount.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 									return;
 								}
-								if (m_whistleMountTimer != null)
+								if (IsSummoningMount)
 								{
+									Out.SendMessage("You stop calling your mount.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 									StopWhistleTimers();
+									return;
 								}
 								Out.SendTimerWindow("Summoning Mount", 5);
 								foreach (GamePlayer plr in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))

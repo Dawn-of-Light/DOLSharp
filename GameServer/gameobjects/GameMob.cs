@@ -99,6 +99,29 @@ namespace DOL.GS
 			Mob currentMob = (Mob)mobobject;
 
 			m_respawnInterval = currentMob.RespawnInterval * 1000;
+
+			IAggressiveBrain aggroBrain = Brain as IAggressiveBrain;
+			if (aggroBrain != null)
+			{
+				if (currentMob.AggroRange == 0)
+				{
+					if (Char.IsLower(Name[0]))
+					{ // make some default on basic mobs
+						aggroBrain.AggroRange = 450;
+						aggroBrain.AggroLevel = (Level > 3) ? 30 : 0;
+					}
+					else if (Realm != 0)
+					{
+						aggroBrain.AggroRange = 500;
+						aggroBrain.AggroLevel = 60;
+					}
+				}
+				else
+				{
+					aggroBrain.AggroLevel = currentMob.AggroLevel;
+					aggroBrain.AggroRange = currentMob.AggroRange;
+				}
+			}
 		}
 
 		/// <summary>
@@ -467,7 +490,6 @@ namespace DOL.GS
 			MaxSpeedBase = 100;
 			GuildName = "";
 			Size = 50;
-
 			m_healthRegenerationPeriod = 20000;
 		}
 

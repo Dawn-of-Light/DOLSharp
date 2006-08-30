@@ -638,6 +638,38 @@ namespace DOL.GS.PacketHandler
 			SendTCP(pak);
 		}
 
+		public virtual void SendObjectUpdate(GameObject obj)
+		{
+			Zone z = obj.CurrentZone;
+			if (z == null)
+			{
+				if (log.IsWarnEnabled)
+					log.Warn("SendObjectUpdate: obj zone == null:" + obj.InternalID);
+				return;
+			}
+			ushort XOffsetInZone = (ushort)(obj.X - z.XOffset);
+			ushort YOffsetInZone = (ushort)(obj.Y - z.YOffset);
+			GSUDPPacketOut pak = new GSUDPPacketOut(GetPacketCode(ePackets.ObjectUpdate));
+			pak.WriteShort(0);
+			pak.WriteShort(obj.Heading);
+			pak.WriteShort(XOffsetInZone);
+			pak.WriteShort(0);
+			pak.WriteShort(YOffsetInZone);
+			pak.WriteShort(0);
+			pak.WriteShort((ushort)obj.Z);
+			pak.WriteShort(0);
+			pak.WriteShort((ushort)obj.ObjectID);
+			pak.WriteShort(0x00);
+			//health
+			if (obj is GameLiving)
+				pak.WriteByte((obj as GameLiving).HealthPercent);
+			else pak.WriteByte(0);
+			pak.WriteByte(0);
+			pak.WriteByte((byte)z.ID);
+			pak.WriteByte(0);
+			SendUDP(pak);
+		}
+
 		public virtual void SendPlayerQuit(bool totalOut)
 		{
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.Quit));
@@ -847,7 +879,7 @@ namespace DOL.GS.PacketHandler
 				//flags|=0x10;
 			}
 
-			GSUDPPacketOut pak = new GSUDPPacketOut(GetPacketCode(ePackets.NPCUpdate));
+			GSUDPPacketOut pak = new GSUDPPacketOut(GetPacketCode(ePackets.ObjectUpdate));
 
 			if (speed > 0x07FF)
 			{
@@ -2915,64 +2947,6 @@ namespace DOL.GS.PacketHandler
 			pak.WriteByte((byte)0xAA);
 			pak.WriteShort(0xFFBF);
 			SendTCP(pak);
-		}
-		public virtual void SendComponentUpdate(GameKeepComponent keepcomponent)
-		{
-			Zone z = keepcomponent.CurrentZone;
-			if (z == null)
-			{
-				if (log.IsWarnEnabled)
-					log.Warn("SendComponentUpdate: component zone == null. component ID:" + keepcomponent.InternalID);
-				return;
-			}
-			ushort XOffsetInZone = (ushort)(keepcomponent.X - z.XOffset);
-			ushort YOffsetInZone = (ushort)(keepcomponent.Y - z.YOffset);
-
-			GSUDPPacketOut pak = new GSUDPPacketOut(GetPacketCode(ePackets.NPCUpdate));
-			pak.WriteShort(0);
-			pak.WriteShort(keepcomponent.Heading);
-			pak.WriteShort(XOffsetInZone);
-			pak.WriteShort(0);
-			pak.WriteShort(YOffsetInZone);
-			pak.WriteShort(0);
-			pak.WriteShort((ushort)keepcomponent.Z);
-			pak.WriteShort(0);
-			pak.WriteShort((ushort)keepcomponent.ObjectID);
-			pak.WriteShort(0x00);
-			pak.WriteByte(keepcomponent.HealthPercent);
-			pak.WriteByte(0);
-			pak.WriteByte((byte)z.ID);
-			pak.WriteByte(0);
-			SendUDP(pak);
-		}
-
-		public virtual void SendKeepDoorUpdate(GameKeepDoor door)
-		{
-			Zone z = door.CurrentZone;
-			if (z == null)
-			{
-				if (log.IsWarnEnabled)
-					log.Warn("SendDoorUpdate: Door zone == null:" + door.InternalID);
-				return;
-			}
-			ushort XOffsetInZone = (ushort)(door.X - z.XOffset);
-			ushort YOffsetInZone = (ushort)(door.Y - z.YOffset);
-			GSUDPPacketOut pak = new GSUDPPacketOut(GetPacketCode(ePackets.NPCUpdate));
-			pak.WriteShort(0);
-			pak.WriteShort(door.Heading);
-			pak.WriteShort(XOffsetInZone);
-			pak.WriteShort(0);
-			pak.WriteShort(YOffsetInZone);
-			pak.WriteShort(0);
-			pak.WriteShort((ushort)door.Z);
-			pak.WriteShort(0);
-			pak.WriteShort((ushort)door.ObjectID);
-			pak.WriteShort(0x00);
-			pak.WriteByte(door.HealthPercent);
-			pak.WriteByte(0);
-			pak.WriteByte((byte)z.ID);
-			pak.WriteByte(0);
-			SendUDP(pak);
 		}
 
 		public virtual void SendNPCsQuestEffect(GameNPC npc, bool flag)
