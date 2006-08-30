@@ -779,7 +779,7 @@ namespace DOL.GS.Keeps
 			{
 				component.Repair(component.MaxHealth - component.Health);
 			}
-			foreach(GameKeepDoor door in Doors)
+			foreach(GameKeepDoor door in Doors.Values)
 			{
 				door.Reset(realm);
 			}
@@ -787,7 +787,6 @@ namespace DOL.GS.Keeps
 			{
 				client.Player.Out.SendKeepComponentUpdate(this,false);
 			}
-
 			ResetPlayersOfKeep();
 
 			foreach (GameKeepGuard guard in Guards.Values)

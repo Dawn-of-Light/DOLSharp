@@ -1071,18 +1071,21 @@ namespace DOL.GS
 			}
 
 			//if the npc hasn't hit or been hit in a while, stop following and return home
-			StandardMobBrain brain = this.Brain as StandardMobBrain;
-			if (AttackState && brain != null && followLiving != null)
+			if (this.Brain is StandardMobBrain)
 			{
-				long seconds = 10 + ((brain.GetAggroAmountForLiving(followLiving) / (MaxHealth + 1)) * 100);
-				long lastattacked = m_lastAttackTick;
-				long lasthit = m_lastAttackedByEnemyTick;
-				if (CurrentRegion.Time - lastattacked > seconds * 1000 && CurrentRegion.Time - lasthit > seconds * 1000)
+				StandardMobBrain brain = this.Brain as StandardMobBrain;
+				if (AttackState && brain != null && followLiving != null)
 				{
-					StopFollow();
-					Notify(GameNPCEvent.FollowLostTarget, this, new FollowLostTargetEventArgs(followTarget));
-					this.WalkToSpawn();
-					return 0;
+					long seconds = 10 + ((brain.GetAggroAmountForLiving(followLiving) / (MaxHealth + 1)) * 100);
+					long lastattacked = m_lastAttackTick;
+					long lasthit = m_lastAttackedByEnemyTick;
+					if (CurrentRegion.Time - lastattacked > seconds * 1000 && CurrentRegion.Time - lasthit > seconds * 1000)
+					{
+						StopFollow();
+						Notify(GameNPCEvent.FollowLostTarget, this, new FollowLostTargetEventArgs(followTarget));
+						this.WalkToSpawn();
+						return 0;
+					}
 				}
 			}
 
@@ -1192,28 +1195,6 @@ namespace DOL.GS
 			if (MeleeDamageType == 0)
 			{
 				MeleeDamageType = eDamageType.Slash;
-			}
-			IAggressiveBrain aggroBrain = Brain as IAggressiveBrain;
-			if (aggroBrain != null)
-			{
-				if (npc.AggroRange == 0)
-				{
-					if (Char.IsLower(Name[0]))
-					{ // make some default on basic mobs
-						aggroBrain.AggroRange = 450;
-						aggroBrain.AggroLevel = (Level > 3) ? 30 : 0;
-					}
-					else if (Realm != 0)
-					{
-						aggroBrain.AggroRange = 500;
-						aggroBrain.AggroLevel = 60;
-					}
-				}
-				else
-				{
-					aggroBrain.AggroLevel = npc.AggroLevel;
-					aggroBrain.AggroRange = npc.AggroRange;
-				}
 			}
 			m_activeWeaponSlot = eActiveWeaponSlot.Standard;
 			ActiveQuiverSlot = eActiveQuiverSlot.None;
