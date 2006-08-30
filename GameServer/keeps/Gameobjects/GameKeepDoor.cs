@@ -233,7 +233,7 @@ namespace DOL.GS.Keeps
 			{
 				m_oldHealthPercent = HealthPercent;
 				foreach (GamePlayer player in this.GetPlayersInRadius(WorldMgr.OBJ_UPDATE_DISTANCE))
-					player.Out.SendKeepDoorUpdate(this);
+					player.Out.SendObjectUpdate(this);
 			}
 
 			//Work around the XP system
@@ -267,7 +267,8 @@ namespace DOL.GS.Keeps
 		/// <returns>false if interaction is prevented</returns>
 		public override bool Interact(GamePlayer player)
 		{
-			if (!WorldMgr.CheckDistance(this, player, WorldMgr.INTERACT_DISTANCE) && player.Client.Account.PrivLevel == 1) return false;
+			if (!base.Interact(player))
+				return false;
 
 			if (player.IsMezzed)
 			{

@@ -24,7 +24,7 @@ namespace DOL.GS.Keeps
 		/// When Lord dies, we update Area Mgr to call the various functions we need
 		/// And update the player stats
 		/// </summary>
-		/// <param name="killer"The killer object></param>
+		/// <param name="killer">The killer object</param>
 		public override void Die(GameObject killer)
 		{
 			if (this.Component != null)
@@ -42,6 +42,9 @@ namespace DOL.GS.Keeps
 		/// <returns></returns>
 		public override bool Interact(GamePlayer player)
 		{
+			if (!base.Interact(player))
+				return false;
+
 			if (this.Component == null)
 				return false;
 
@@ -61,7 +64,7 @@ namespace DOL.GS.Keeps
 			}
 			if (flag > 0)
 				player.Out.SendKeepClaim(this.Component.Keep, flag);
-			return base.Interact(player);
+			return true;
 		}
 
 		/// <summary>

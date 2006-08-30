@@ -47,10 +47,10 @@ namespace DOL.GS
 			DataObject[] dbdoors = GameServer.Database.SelectAllObjects(typeof(DBDoor));
 			foreach (DBDoor door in dbdoors)
 			{
-				GameDoor mydoor = new GameDoor();
-				mydoor.LoadFromDatabase(door);
 				if (m_doors[door.InternalID] == null)
 				{
+					GameDoor mydoor = new GameDoor();
+					mydoor.LoadFromDatabase(door);
 					m_doors.Add(door.InternalID, mydoor);
 					mydoor.AddToWorld();
 				}
