@@ -54,9 +54,9 @@ namespace DOL.GS.Movement
 		/// </summary>
 		public static MovementMgr Instance
 		{
-			get 
-			{ 
-				if (m_instance==null)
+			get
+			{
+				if (m_instance == null)
 				{
 					m_instance = new MovementMgr();
 				}
@@ -73,36 +73,38 @@ namespace DOL.GS.Movement
 		{
 			SortedList sorted = new SortedList();
 			pathID.Replace('\'', '/'); // we must replace the ', found no other way yet
-			DBPath dbpath = (DBPath) GameServer.Database.SelectObject(typeof(DBPath), "PathID='"+GameServer.Database.Escape(pathID)+"'");
+			DBPath dbpath = (DBPath)GameServer.Database.SelectObject(typeof(DBPath), "PathID='" + GameServer.Database.Escape(pathID) + "'");
 			DBPathPoint[] pathpoints = null;
 			ePathType pathType = ePathType.Once;
 
-			if (dbpath != null) {
-				pathpoints = dbpath.PathPoints;	
+			if (dbpath != null)
+			{
+				pathpoints = dbpath.PathPoints;
 				pathType = (ePathType)dbpath.PathType;
 			}
-			if (pathpoints == null) {
-				pathpoints = (DBPathPoint[]) GameServer.Database.SelectObjects(typeof(DBPathPoint), "PathID='"+GameServer.Database.Escape(pathID)+"'");				
+			if (pathpoints == null)
+			{
+				pathpoints = (DBPathPoint[])GameServer.Database.SelectObjects(typeof(DBPathPoint), "PathID='" + GameServer.Database.Escape(pathID) + "'");
 			}
 
 			foreach (DBPathPoint point in pathpoints)
 			{
 				sorted.Add(point.Step, point);
-			}	
+			}
 			PathPoint prev = null;
 			PathPoint first = null;
-			for (int i=0; i<sorted.Count; i++)
+			for (int i = 0; i < sorted.Count; i++)
 			{
 				DBPathPoint pp = (DBPathPoint)sorted.GetByIndex(i);
-				PathPoint p = new PathPoint(pp.X, pp.Y, pp.Z, pp.MaxSpeed,pathType);
+				PathPoint p = new PathPoint(pp.X, pp.Y, pp.Z, pp.MaxSpeed, pathType);
 				p.WaitTime = pp.WaitTime;
 
-				if (first==null) 
+				if (first == null)
 				{
 					first = p;
 				}
 				p.Prev = prev;
-				if (prev!=null) 
+				if (prev != null)
 				{
 					prev.Next = p;
 				}
@@ -123,32 +125,32 @@ namespace DOL.GS.Movement
 		/// <param name="path">The path waypoint</param>
 		public void SavePath(string pathID, PathPoint path)
 		{
-			if ( path == null )
+			if (path == null)
 				return;
 
 			pathID.Replace('\'', '/'); // we must replace the ', found no other way yet
-			foreach (DBPath pp in GameServer.Database.SelectObjects(typeof(DBPath), "PathID='"+GameServer.Database.Escape(pathID)+"'")) 
+			foreach (DBPath pp in GameServer.Database.SelectObjects(typeof(DBPath), "PathID='" + GameServer.Database.Escape(pathID) + "'"))
 			{
 				GameServer.Database.DeleteObject(pp);
 			}
 
 			PathPoint root = FindFirstPathPoint(path);
-			
+
 			//Set the current pathpoint to the rootpoint!
 			path = root;
 			DBPath dbp = new DBPath(pathID, root.Type);
 			GameServer.Database.AddNewObject(dbp);
 
-			int i=1;
-			do 
-			{			
+			int i = 1;
+			do
+			{
 				DBPathPoint dbpp = new DBPathPoint(path.X, path.Y, path.Z, path.MaxSpeed);
 				dbpp.Step = i++;
 				dbpp.PathID = pathID;
 				dbpp.WaitTime = path.WaitTime;
 				GameServer.Database.AddNewObject(dbpp);
 				path = path.Next;
-			} while (path!=null && path!=root);
+			} while (path != null && path != root);
 		}
 
 		/// <summary>
@@ -184,13 +186,13 @@ namespace DOL.GS.Movement
 			if (npc.CurrentWayPoint == null)
 			{
 				if (log.IsWarnEnabled)
-					log.Warn("No path to travel on for "+npc.Name);
+					log.Warn("No path to travel on for " + npc.Name);
 				return;
-			} 
+			}
 			npc.PathingNormalSpeed = speed;
 			//if (Point3D.GetDistance(npc.CurrentWayPoint, npc)<100)
 			//not sure because here use point3D get distance but why??
-			if (WorldMgr.CheckDistance(npc.CurrentWayPoint, npc,100))
+			if (WorldMgr.CheckDistance(npc.CurrentWayPoint, npc, 100))
 			{
 				if (npc.CurrentWayPoint.Type == ePathType.Path_Reverse && npc.CurrentWayPoint.FiredFlag)
 					npc.CurrentWayPoint = npc.CurrentWayPoint.Prev;
@@ -201,15 +203,15 @@ namespace DOL.GS.Movement
 					npc.CurrentWayPoint = FindFirstPathPoint(npc.CurrentWayPoint);
 				}
 			}
-			if (npc.CurrentWayPoint != null) 
+			if (npc.CurrentWayPoint != null)
 			{
 				GameEventMgr.AddHandler(npc, GameNPCEvent.CloseToTarget, new DOLEventHandler(OnCloseToWaypoint));
 				npc.WalkTo(npc.CurrentWayPoint, Math.Min(speed, npc.CurrentWayPoint.MaxSpeed));
-			} 
-			else 
+			}
+			else
 			{
 				npc.Notify(GameNPCEvent.PathMoveEnds, npc);
-			}					
+			}
 		}
 
 		/// <summary>
@@ -223,19 +225,19 @@ namespace DOL.GS.Movement
 		/// <param name="e"></param>
 		/// <param name="n"></param>
 		/// <param name="args"></param>
-		protected void OnCloseToWaypoint(DOLEvent e, object n, EventArgs args) 
+		protected void OnCloseToWaypoint(DOLEvent e, object n, EventArgs args)
 		{
 			GameNPC npc = (GameNPC)n;
 			if (npc.CurrentWayPoint != null)
 			{
 				WaypointDelayAction waitTimer = new WaypointDelayAction(npc);
-				waitTimer.Start(Math.Max(1, npc.CurrentWayPoint.WaitTime*100));
+				waitTimer.Start(Math.Max(1, npc.CurrentWayPoint.WaitTime * 100));
 			}
 			else
 			{
 				GameEventMgr.RemoveHandler(npc, GameNPCEvent.CloseToTarget, m_closeToWaypointEvent);
 				npc.Notify(GameNPCEvent.PathMoveEnds, npc);
-			}			
+			}
 		}
 
 		/// <summary>
@@ -247,7 +249,8 @@ namespace DOL.GS.Movement
 			/// Constructs a new WaypointDelayAction
 			/// </summary>
 			/// <param name="actionSource"></param>
-			public WaypointDelayAction(GameObject actionSource) : base(actionSource)
+			public WaypointDelayAction(GameObject actionSource)
+				: base(actionSource)
 			{
 			}
 
@@ -262,22 +265,22 @@ namespace DOL.GS.Movement
 				if ((npc.CurrentWayPoint.Type == ePathType.Path_Reverse) && (npc.CurrentWayPoint.FiredFlag))
 					nextPathPoint = npc.CurrentWayPoint.Prev;
 
-				if ( nextPathPoint == null)
+				if (nextPathPoint == null)
 				{
-					switch(npc.CurrentWayPoint.Type)
+					switch (npc.CurrentWayPoint.Type)
 					{
-					case ePathType.Loop :
-						npc.CurrentWayPoint = Instance.FindFirstPathPoint(npc.CurrentWayPoint);
-						break;
-					case ePathType.Once :
-						npc.CurrentWayPoint = null;//to stop
-						break;
-					case ePathType.Path_Reverse ://invert sens when go to end of path
-						if (oldPathPoint.FiredFlag)
-							npc.CurrentWayPoint = npc.CurrentWayPoint.Next;
-						else
-							npc.CurrentWayPoint = npc.CurrentWayPoint.Prev;
-						break;
+						case ePathType.Loop:
+							npc.CurrentWayPoint = Instance.FindFirstPathPoint(npc.CurrentWayPoint);
+							break;
+						case ePathType.Once:
+							npc.CurrentWayPoint = null;//to stop
+							break;
+						case ePathType.Path_Reverse://invert sens when go to end of path
+							if (oldPathPoint.FiredFlag)
+								npc.CurrentWayPoint = npc.CurrentWayPoint.Next;
+							else
+								npc.CurrentWayPoint = npc.CurrentWayPoint.Prev;
+							break;
 					}
 				}
 				else
@@ -288,8 +291,8 @@ namespace DOL.GS.Movement
 						npc.CurrentWayPoint = npc.CurrentWayPoint.Next;
 				}
 				oldPathPoint.FiredFlag = !oldPathPoint.FiredFlag;
-					 
-				if (npc.CurrentWayPoint != null) 
+
+				if (npc.CurrentWayPoint != null)
 				{
 					npc.WalkTo(npc.CurrentWayPoint, Math.Min(npc.PathingNormalSpeed, npc.CurrentWayPoint.MaxSpeed));
 				}

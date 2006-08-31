@@ -95,8 +95,7 @@ namespace DOL.GS.Keeps
 		/// </summary>
 		public int Height
 		{
-			get { return m_height; }
-			set { m_height = value; }
+			get { return KeepMgr.GetHeightFromLevel(this.Keep.Level); }
 		}
 
 		/// <summary>
@@ -176,7 +175,7 @@ namespace DOL.GS.Keeps
 
 		private Hashtable m_hookPoints;
 		private byte m_oldHealthPercent;
-		private bool m_rized;
+		private bool m_isRaized;
 
 		public Hashtable HookPoints
 		{
@@ -247,10 +246,9 @@ namespace DOL.GS.Keeps
 			//			this.Health = component.Health;
 			this.m_oldHealthPercent = this.HealthPercent;
 			this.CurrentRegion = myregion;
-			this.Height = component.Height;
 			this.ID = component.ID;
 			this.SaveInDB = false;
-			this.Rized = false;
+			this.IsRaized = false;
 			LoadPositions();
 			this.AddToWorld();
 			FillPositions();
@@ -408,15 +406,30 @@ namespace DOL.GS.Keeps
 			if (m_oldHealthPercent == this.HealthPercent) return;
 			m_oldHealthPercent = this.HealthPercent;
 
-			foreach (GamePlayer player in this.GetPlayersInRadius(WorldMgr.OBJ_UPDATE_DISTANCE))
-				player.Out.SendKeepComponentDetailUpdate(this);
+			foreach (GameClient client in WorldMgr.GetClientsOfRegion(this.CurrentRegionID))
+				client.Out.SendKeepComponentDetailUpdate(this);
 		}
 
 		public override void Die(GameObject killer)
 		{
 			base.Die(killer);
-			foreach (GameClient cln in WorldMgr.GetClientsOfRegion(CurrentRegion.ID))
-				cln.Out.SendKeepComponentDetailUpdate(this);
+			if (this.Keep is GameKeepTower && ServerProperties.Properties.CLIENT_VERSION_MIN >= (int)GameClient.eClientVersion.Version175)
+			{
+				if (IsRaized == false)
+				{
+					PlayerMgr.BroadcastRaize(this.Keep, killer.Realm);
+					IsRaized = true;
+
+					foreach (GameKeepGuard guard in this.Keep.Guards.Values)
+					{
+						guard.MoveTo(guard.CurrentRegionID, guard.X, guard.Y, this.Keep.Z, guard.Heading);
+						guard.SpawnZ = this.Keep.Z;
+					}
+
+					foreach (GameClient client in WorldMgr.GetClientsOfRegion(this.CurrentRegionID))
+						client.Out.SendKeepComponentDetailUpdate(this);
+				}
+			}
 		}
 
 		public override void Delete()
@@ -447,7 +460,17 @@ namespace DOL.GS.Keeps
 			get
 			{
 				if (this.Keep is GameKeepTower)
-					if (this.HealthPercent < 25) return 0x01;//broken
+				{
+					if (this.m_isRaized)
+					{
+						if (this.HealthPercent >= 25)
+						{
+							IsRaized = false;
+						}
+						else return 0x02;
+					}
+					if (this.HealthPercent < 35) return 0x01;//broken
+				}
 				if (this.Keep is GameKeep)
 					if (!IsAlive) return 0x01;//broken
 
@@ -456,16 +479,47 @@ namespace DOL.GS.Keeps
 			}
 		}
 
-		public void Update()
+		public void UpdateLevel()
 		{
-			this.Height = KeepMgr.GetHeightFromLevel(this.Keep.Level);
-			this.Health = this.MaxHealth;
+			if (HealthPercent == 100)
+				this.Health = this.MaxHealth;
 		}
 
-		public bool Rized
+		public bool IsRaized
 		{
-			get { return m_rized; }
-			set { m_rized = value; }
+			get { return m_isRaized; }
+			set
+			{
+				if (value == true)
+				{
+					StartRebuildTimer();
+					Keep.ChangeLevel(1);
+				}
+				else
+				{
+					FillPositions();
+				}
+				m_isRaized = value;
+			}
+		}
+
+		private RegionTimer m_rebuildTimer;
+		private static int rebuildInterval = 10 * 1000;
+		//private static long rebuildInterval = 30 * 60 * 1000;
+		private void StartRebuildTimer()
+		{
+			m_rebuildTimer = new RegionTimer(CurrentRegion.TimeManager);
+			m_rebuildTimer.Callback = new RegionTimerCallback(RebuildTimerCallback);
+			m_rebuildTimer.Interval = rebuildInterval;
+			m_rebuildTimer.Start(1);
+		}
+
+		public int RebuildTimerCallback(RegionTimer timer)
+		{
+			Repair((MaxHealth / 100) * 5);
+			if (HealthPercent >= 25)
+				return 0;
+			return rebuildInterval;
 		}
 
 		public void Repair(int amount)

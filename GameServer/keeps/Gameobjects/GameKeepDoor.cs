@@ -78,7 +78,7 @@ namespace DOL.GS.Keeps
 		}
 
 		/// <summary>
-		/// This flag is send in packet(keep door =4, regular door = 0)
+		/// This flag is send in packet(keep door = 4, regular door = 0)
 		/// </summary>
 		public int Flag
 		{
@@ -189,6 +189,14 @@ namespace DOL.GS.Keeps
 			}
 		}
 
+		public override ushort Model
+		{
+			get
+			{
+				return 0xFFFF;
+			}
+		}
+
 		private string m_templateID;
 		public string TemplateID
 		{
@@ -232,7 +240,7 @@ namespace DOL.GS.Keeps
 			if (m_oldHealthPercent != HealthPercent)
 			{
 				m_oldHealthPercent = HealthPercent;
-				foreach (GamePlayer player in this.GetPlayersInRadius(WorldMgr.OBJ_UPDATE_DISTANCE))
+				foreach (GamePlayer player in WorldMgr.GetClientsOfRegion(CurrentRegionID))
 					player.Out.SendObjectUpdate(this);
 			}
 
@@ -386,7 +394,7 @@ namespace DOL.GS.Keeps
 		{
 			if (!base.AddToWorld()) return false;
 			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-				player.Out.SendDoorCreate(this);
+				player.Out.SendObjectCreate(this);
 			return true;
 		}
 

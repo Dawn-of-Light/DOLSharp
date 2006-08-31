@@ -379,7 +379,7 @@ namespace DOL.GS
 			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
 			{
 				//Maybe there is a better solution?
-				player.Out.SendRemoveObject(this);
+				player.Out.SendObjectRemove(this);
 				player.Out.SendPlayerCreate(this);
 			}
 
@@ -1251,12 +1251,14 @@ namespace DOL.GS
 				{
 					Out.SendUpdatePlayer();
 					foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+					{
 						if (player != this)
 						{
-							player.Out.SendRemoveObject(this);
+							player.Out.SendObjectRemove(this);
 							player.Out.SendPlayerCreate(this);
 							player.Out.SendLivingEquipmentUpdate(this);
 						}
+					}
 				}
 			}
 		}
@@ -1275,12 +1277,14 @@ namespace DOL.GS
 				{
 					Out.SendUpdatePlayer();
 					foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+					{
 						if (player != this)
 						{
-							player.Out.SendRemoveObject(this);
+							player.Out.SendObjectRemove(this);
 							player.Out.SendPlayerCreate(this);
 							player.Out.SendLivingEquipmentUpdate(this);
 						}
+					}
 				}
 			}
 		}
@@ -1301,12 +1305,14 @@ namespace DOL.GS
 					if (PlayerGroup != null)
 						Out.SendGroupWindowUpdate();
 					foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+					{
 						if (player != this)
 						{
-							player.Out.SendRemoveObject(this);
+							player.Out.SendObjectRemove(this);
 							player.Out.SendPlayerCreate(this);
 							player.Out.SendLivingEquipmentUpdate(this);
 						}
+					}
 				}
 			}
 		}
@@ -7061,7 +7067,7 @@ namespace DOL.GS
 				foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 				{
 					if (player != this)
-						player.Out.SendRemoveObject(this);
+						player.Out.SendObjectRemove(this);
 				}
 			}
 			if (!base.RemoveFromWorld()) return false;
@@ -7157,7 +7163,7 @@ namespace DOL.GS
 				{
 					if (player != this)
 					{
-						player.Out.SendRemoveObject(this);
+						player.Out.SendObjectRemove(this);
 					}
 				}
 			}
@@ -10956,7 +10962,7 @@ namespace DOL.GS
 					foreach (GamePlayer playerToUpdate in GetPlayersInRadius(WorldMgr.OBJ_UPDATE_DISTANCE))
 					{
 						if (playerToUpdate != null && playerToUpdate.Client.IsPlaying)
-							playerToUpdate.Out.SendRvrGuildBanner(this, value);
+							playerToUpdate.Out.SendRvRGuildBanner(this, value);
 					}
 					m_isCarryingGuildBanner = value;
 				}

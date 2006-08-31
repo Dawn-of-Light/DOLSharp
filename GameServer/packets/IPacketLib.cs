@@ -103,7 +103,7 @@ namespace DOL.GS.PacketHandler
 		PlaySound = 0xD3,
 		PlayerCreate = 0xD4,
 		DisableSkills = 0xD6,
-		ItemCreate = 0xD9,
+		ObjectCreate = 0xD9,
 		NPCCreate = 0xDA,
 		ModelChange = 0xDB,
 		ObjectGuildID = 0xDE,
@@ -434,9 +434,8 @@ namespace DOL.GS.PacketHandler
 		void SendPlayerCreate(GamePlayer playerToCreate);
 		void SendObjectGuildID(GameObject obj, Guild guild);
 		void SendPlayerQuit(bool totalOut);
-		void SendRemoveObject(GameObject obj);
-		void SendItemCreate(GameStaticItem obj);
-		void SendDoorCreate(IDoor obj);
+		void SendObjectRemove(GameObject obj);
+		void SendObjectCreate(GameObject obj);
 		void SendDebugMode(bool on);
 		void SendModelChange(GameObject obj, ushort newModel);
 		void SendEmoteAnimation(GameObject obj, eEmote emote);
@@ -508,7 +507,7 @@ namespace DOL.GS.PacketHandler
 		void SendNPCsQuestEffect(GameNPC npc, bool flag);
 
 		void SendHexEffect(GamePlayer player,byte effect1,byte effect2,byte effect3,byte effect4,byte effect5);
-		void SendRvrGuildBanner(GamePlayer player, bool show);
+		void SendRvRGuildBanner(GamePlayer player, bool show);
 		void SendSiegeWeaponAnimation(GameSiegeWeapon siegeWeapon);
 		void SendSiegeWeaponFireAnimation(GameSiegeWeapon siegeWeapon, int timer);
 		void SendSiegeWeaponCloseInterface();

@@ -36,11 +36,14 @@ namespace DOL.GS.PacketHandler.v168
 		{
 			foreach(GameStaticItem item in client.Player.GetItemsInRadius(WorldMgr.OBJ_UPDATE_DISTANCE))
 			{
-				client.Out.SendItemCreate(item);
+				client.Out.SendObjectCreate(item);
 			}
 			foreach(IDoor door in DoorMgr.getDoorsCloseToSpot(client.Player.CurrentRegionID,client.Player,WorldMgr.OBJ_UPDATE_DISTANCE))
 			{
-				client.Out.SendDoorCreate(door);
+				if (door is GameDoor)
+					client.Out.SendObjectCreate(door as GameDoor);
+				if (door is Keeps.GameKeepDoor)
+					client.Out.SendObjectCreate(door as Keeps.GameKeepDoor);
 			}
 			
 			//housing

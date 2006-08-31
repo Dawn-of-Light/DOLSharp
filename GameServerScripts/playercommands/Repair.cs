@@ -81,14 +81,24 @@ namespace DOL.GS.Scripts
 				player.Out.SendMessage("The component is already at full health!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
+			if (obj is GameKeepComponent)
+			{
+				GameKeepComponent component = obj as GameKeepComponent;
+				if (component.IsRaized)
+				{
+					player.Out.SendMessage("You cannot repair a raized tower!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					return false;
+				}
+			}
+
 			if (player.IsCrafting)
 			{
 				player.Out.SendMessage("You must end your current action before you repair anything!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
-			if (player.IsMoving || player.IsStrafing)
+			if (player.IsMoving)
 			{
-				player.Out.SendMessage("You move and stop repairing.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage("You can't repair while moving", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
 

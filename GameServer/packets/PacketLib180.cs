@@ -175,7 +175,7 @@ namespace DOL.GS.PacketHandler
 
 			if (playerToCreate.IsCarryingGuildBanner)
 			{
-				SendRvrGuildBanner(playerToCreate, true);
+				SendRvRGuildBanner(playerToCreate, true);
 			}
 		}
 
