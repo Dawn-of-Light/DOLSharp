@@ -1854,19 +1854,94 @@ namespace DOL.GS.Spells
 			// apply effectiveness
 			finalDamage = (int)((finalDamage * effectiveness) * TOADmg);
 
-			GameSpellEffect resPierce = SpellHandler.FindEffectOnTarget(m_caster, "PenetrateResists");
-			if (resPierce != null)
+			// Well the PenetrateResistBuff is NOT ResistPierce
+			GameSpellEffect penPierce = SpellHandler.FindEffectOnTarget(m_caster, "PenetrateResists");
+			if (penPierce != null)
 			{
-				finalDamage = (int)(finalDamage * (1.0 + resPierce.Spell.Value / 100.0));
+				finalDamage = (int)(finalDamage * (1.0 + penPierce.Spell.Value / 100.0));
 
 			}
-			int resistModifier = 0;
+			
+
+			
 			int cdamage = 0;
 			if (finalDamage < 0)
 				finalDamage = 0;
 
-			resistModifier = (int)(finalDamage * ad.Target.GetResist(Spell.DamageType) * -0.01);
-			finalDamage += resistModifier;
+			int resistModifier = 0;
+
+			#region Resists
+			double afterResistDamage = finalDamage;
+			eProperty property = target.GetResistTypeForDamage(Spell.DamageType);
+			// The Daoc resistsystem is since 1.65 a 2category system.
+			// - First category are Item/Race/Buff/RvrBanners resists that are displayed in the characteroverview.
+			// - Second category are resists that are given through RAs like avoidance of magic, brilliance aura of deflection.
+			//   Those resist affect ONLY the spelldamage. Not the duration, not the effectiveness of debuffs.
+			// so calculation is (finaldamage * Category1Modification) * Category2Modification
+			// -> Remark for the future: VampirResistBuff is Category2 too.
+			// - avi
+
+			#region Primary Resists
+			int primaryResistModifier = (int)(finalDamage * ad.Target.GetResist(Spell.DamageType) * -0.01);
+
+			/* Resist Pierce	
+			 * Resipierce is a special bonus which has been introduced with ToA.
+			 * At the calculation of SpellDamage, it reduces the resistance that the victim recives
+			 * through ITEMBONUSES for the specified percentage.
+			 * http://de.daocpedia.eu/index.php/Resistenz_durchdringen (translated) 
+			 */
+			int resiPierce = Caster.GetModified(eProperty.ResistPierce);
+			if (resiPierce > 0) // dont pierce if there is nothing to pierce
+			{
+				//substract max ItemBonus of property of target, but atleast 0.
+				primaryResistModifier -= Math.Max(0, Math.Min(ad.Target.ItemBonus[(int)property], resiPierce));
+			}
+			#endregion
+
+			#region Secondary Resists
+			//Using the resist BuffBonusCategory2 - its unused in ResistCalculator
+			int secondaryResistModifier = target.BuffBonusCategory2[(int)property];
+
+			if (ad.Target is GamePlayer)
+			{
+				GamePlayer tPlayer = ad.Target as GamePlayer;
+				int AoMLevel = tPlayer.GetAbilityLevel(AvoidanceOfMagicAbility.KEY);
+				switch (AoMLevel)
+				{
+					case 1: secondaryResistModifier += 2; break;
+					case 2: secondaryResistModifier += 5; break;
+					case 3: secondaryResistModifier += 10; break;
+					case 4: secondaryResistModifier += 15; break;
+					case 5: secondaryResistModifier += 20; break;
+					default: break;
+				}
+			}
+
+			/*Variance by Memories of War				
+			 * - Memories of War: Upon reaching level 41, the Hero, Warrior and Armsman 
+			 * will begin to gain more magic resistance (spell damage reduction only) 
+			 * as they progress towards level 50. At each level beyond 41 they gain 
+			 * 2%-3% extra resistance per level. At level 50, they will have the full 15% benefit.
+			 * from http://www.camelotherald.com/article.php?id=208
+			 * 
+			 * - assume that "spell damage reduction only" indicates resistcategory 2
+			 */
+			
+			if (ad.Target is GamePlayer && (ad.Target as GamePlayer).HasAbility(Abilities.MemoriesOfWar) && ad.Target.Level >= 40)
+			{
+				int levelbonus = Math.Min(target.Level - 40, 10);
+				secondaryResistModifier += (int)((levelbonus * 0.1 * 15));
+			}
+			#endregion
+
+			afterResistDamage = afterResistDamage * (1.0 -  primaryResistModifier * 0.01);
+			afterResistDamage = afterResistDamage * (1.0 - secondaryResistModifier * 0.01);
+			
+			#endregion
+
+			resistModifier = -(int)(finalDamage - afterResistDamage);
+			finalDamage += resistModifier; 
+
 
 			// cap to +200% of base damage
 			if (finalDamage > Spell.Damage * 3 * effectiveness * TOADmg)

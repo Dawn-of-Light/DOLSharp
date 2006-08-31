@@ -115,6 +115,10 @@ namespace DOL.GS
 		public const string VampiirStrength = "Vampiir Strength";
 		public const string Volley = "Volley";
 
+		//new maintank skills with 1.81
+		public const string ScarsOfBattle = "Scars of Battle";
+		public const string MemoriesOfWar = "Memories of War";
+
 	}
 
 	/// <summary>
