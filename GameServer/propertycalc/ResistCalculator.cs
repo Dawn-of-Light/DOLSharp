@@ -24,7 +24,7 @@ namespace DOL.GS.PropertyCalc
 	/// The Resistance Property calculator
 	/// 
 	/// BuffBonusCategory1 is used for all capped buffs
-	/// BuffBonusCategory2 unused
+	/// BuffBonusCategory2 external used for only damagemodifiing resists (1.65 Category2 Resists)
 	/// BuffBonusCategory3 is used for all debuffs (positive values expected here)
 	/// BuffBonusCategory4 is used for all uncapped modifications
 	///                    category 4 kicks in at last
