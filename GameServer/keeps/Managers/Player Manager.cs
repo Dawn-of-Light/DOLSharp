@@ -29,18 +29,28 @@ namespace DOL.GS.Keeps
 	public class PlayerMgr
 	{
 		/// <summary>
-		/// Sends a message to all players to notify them of the area capture
+		/// Sends a message to all players to notify them of the keep capture
 		/// </summary>
-		/// <param name="area">The area object</param>
+		/// <param name="keep">The keep object</param>
 		public static void BroadcastCapture(AbstractGameKeep keep)
 		{
 			BroadcastMessage(string.Format("The forces of {0} have captured {1}!", GlobalConstants.RealmToName((eRealm)keep.Realm), keep.Name), eRealm.None);
 		}
 
 		/// <summary>
+		/// Sends a message to all players to notify them of the raize
+		/// </summary>
+		/// <param name="keep">The keep object</param>
+		/// <param name="realm">The raizing realm</param>
+		public static void BroadcastRaize(AbstractGameKeep keep, byte realm)
+		{
+			BroadcastMessage(string.Format("{1} has been razed by the forces of {0}!", GlobalConstants.RealmToName((eRealm)realm), keep.Name), eRealm.None);
+		}
+
+		/// <summary>
 		/// Sends a message to all players of a realm, to notify them of a claim
 		/// </summary>
-		/// <param name="area">The area object</param>
+		/// <param name="keep">The keep object</param>
 		public static void BroadcastClaim(AbstractGameKeep keep)
 		{
 			BroadcastMessage(string.Format("{0} has claimed {1}!", keep.Guild.Name, keep.Name), (eRealm)keep.Realm);
@@ -49,7 +59,7 @@ namespace DOL.GS.Keeps
 		/// <summary>
 		/// Sends a message to all players of a realm, to notify them of a release
 		/// </summary>
-		/// <param name="area">The area object</param>
+		/// <param name="keep">The keep object</param>
 		public static void BroadcastRelease(AbstractGameKeep keep)
 		{
 			BroadcastMessage(string.Format("{0} has lost control of {1}!", keep.Guild.Name, keep.Name), (eRealm)keep.Realm);

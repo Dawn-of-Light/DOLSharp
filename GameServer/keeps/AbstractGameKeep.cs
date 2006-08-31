@@ -617,7 +617,7 @@ namespace DOL.GS.Keeps
 			}
 			foreach (GameKeepComponent comp in this.KeepComponents)
 			{
-				comp.Update();
+				comp.UpdateLevel();
 				foreach (GameClient cln in WorldMgr.GetClientsOfRegion(this.CurrentRegion.ID))
 					cln.Out.SendKeepComponentDetailUpdate(comp);
 				comp.FillPositions();
@@ -718,6 +718,19 @@ namespace DOL.GS.Keeps
 		/// <returns></returns>
 		public int ChangeLevelTimerCallback(RegionTimer timer)
 		{
+			if (this is GameKeepTower)
+			{
+				foreach (GameKeepComponent component in this.KeepComponents)
+				{
+					/*
+					 *  - A realm can claim a razed tower, and may even set it to raise to level 10,
+					 * but will have to wait until the tower is repaired to 75% before 
+					 * it will begin upgrading normally.
+					 */
+					if (component.HealthPercent < 75)
+						return 5 * 60 * 1000;
+				}
+			}
 			if (TargetLevel > Level)
 				ChangeLevel((byte)(this.Level + 1));
 			else
@@ -762,6 +775,7 @@ namespace DOL.GS.Keeps
 		/// <param name="realm"></param>
 		public void Reset(eRealm realm)
 		{
+			//we announce the change of realm
 			string realmstr = GlobalConstants.RealmToName(realm);
 			foreach (GameClient cl in WorldMgr.GetAllPlayingClients())
 			{
@@ -771,30 +785,34 @@ namespace DOL.GS.Keeps
 			Realm = (byte)realm;
 			Level = 0;
 			KeepType = eKeepType.Melee;
+			//if a guild holds the keep, we release it
 			if (Guild != null)
 			{
 				Release();
 			}
+			//we repair all keep components, but not if it is a tower and is raised
 			foreach (GameKeepComponent component in this.KeepComponents)
 			{
-				component.Repair(component.MaxHealth - component.Health);
+				if (!component.IsRaized)
+					component.Repair(component.MaxHealth - component.Health);
 			}
+			//we reset all doors
 			foreach(GameKeepDoor door in Doors.Values)
 			{
 				door.Reset(realm);
 			}
-			foreach (GameClient client in WorldMgr.GetClientsOfRegion(CurrentRegion.ID))
-			{
-				client.Player.Out.SendKeepComponentUpdate(this,false);
-			}
+
+			//we make sure all players are not in the air
 			ResetPlayersOfKeep();
 
+			//we reset the guards
 			foreach (GameKeepGuard guard in Guards.Values)
 			{
 				if (guard is GuardLord == false)
 					guard.Die(guard);
 			}
 
+			//we reset the banners
 			foreach (GameKeepBanner banner in Banners.Values)
 			{
 				banner.ChangeRealm();

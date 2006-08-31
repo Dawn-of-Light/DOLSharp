@@ -681,7 +681,7 @@ namespace DOL.GS.PacketHandler
 			SendTCP(pak);
 		}
 
-		public virtual void SendRemoveObject(GameObject obj)
+		public virtual void SendObjectRemove(GameObject obj)
 		{
 			int oType = 0;
 			if (obj is GamePlayer)
@@ -695,11 +695,13 @@ namespace DOL.GS.PacketHandler
 			SendTCP(pak);
 		}
 
-		public virtual void SendItemCreate(GameStaticItem obj)
+		public virtual void SendObjectCreate(GameObject obj)
 		{
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.ItemCreate));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.ObjectCreate));
 			pak.WriteShort((ushort)obj.ObjectID);
-			pak.WriteShort(obj.Emblem);
+			if (obj is GameStaticItem)
+				pak.WriteShort((obj as GameStaticItem).Emblem);
+			else pak.WriteShort(0);
 			pak.WriteShort(obj.Heading);
 			pak.WriteShort((ushort)obj.Z);
 			pak.WriteInt((uint)obj.X);
@@ -708,30 +710,20 @@ namespace DOL.GS.PacketHandler
 			int flag = (obj.Realm & 3) << 4;
 			if (obj is GameKeepBanner)
 				flag |= 0x08;
-			if (obj is GameStaticItemTimed && m_gameClient.Player != null && obj.IsOwner(m_gameClient.Player))
+			if (obj is GameStaticItemTimed && m_gameClient.Player != null && (obj as GameStaticItemTimed).IsOwner(m_gameClient.Player))
 				flag |= 0x04;
 			pak.WriteShort((ushort)flag);
 			pak.WritePascalString(obj.Name);
-			pak.WriteByte(0x0);
+			if (obj is GameKeepDoor)
+				pak.WriteByte(0x04);
+			else pak.WriteByte(0x00);
+			if (obj is GameKeepDoor)
+				pak.WriteInt((uint)(obj as GameKeepDoor).DoorID);
 			SendTCP(pak);
-		}
-
-		public virtual void SendDoorCreate(IDoor obj)
-		{
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.ItemCreate)); //same for door and item
-			pak.WriteShort((ushort)obj.ObjectID);
-			pak.WriteShort(0); // emblem?
-			pak.WriteShort(obj.Heading);
-			pak.WriteShort((ushort)obj.Z);
-			pak.WriteInt((uint)obj.X);
-			pak.WriteInt((uint)obj.Y);
-			pak.WriteShort(0xFFFF); //model is FFFF for door
-			pak.WriteShort((ushort)((obj.Realm & 3) << 4)); // 0x30;
-			pak.WritePascalString(obj.Name);
-			pak.WriteByte(0x04);
-			pak.WriteInt((uint)obj.DoorID);
-			SendTCP(pak);
-			SendDoorState(obj);
+			/*
+			if (obj is GameKeepDoor)
+				SendDoorState(obj as GameKeepDoor);
+			 */
 		}
 
 		public virtual void SendDebugMode(bool on)
@@ -2988,7 +2980,7 @@ namespace DOL.GS.PacketHandler
 		{
 			log.Info("168><");
 		}
-		public virtual void SendRvrGuildBanner(GamePlayer player, bool show)
+		public virtual void SendRvRGuildBanner(GamePlayer player, bool show)
 		{
 		}
 	}

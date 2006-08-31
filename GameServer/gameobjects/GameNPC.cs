@@ -1500,7 +1500,7 @@ namespace DOL.GS
 			if (ObjectState == eObjectState.Active)
 			{
 				foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-					player.Out.SendRemoveObject(this);
+					player.Out.SendObjectRemove(this);
 			}
 			if (!base.RemoveFromWorld()) return false;
 			lock (BrainSync)

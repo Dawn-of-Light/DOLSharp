@@ -172,7 +172,7 @@ namespace DOL.GS.PacketHandler
 			SendTCP(pak);
 		}
 
-		public override void SendRvrGuildBanner(GamePlayer player, bool show)
+		public override void SendRvRGuildBanner(GamePlayer player, bool show)
 		{
 			if (player == null) return;
 
@@ -191,7 +191,7 @@ namespace DOL.GS.PacketHandler
 		{
 			base.SendPlayerCreate(playerToCreate);
 			if (playerToCreate.IsCarryingGuildBanner)
-				playerToCreate.Out.SendRvrGuildBanner(playerToCreate, true);
+				playerToCreate.Out.SendRvRGuildBanner(playerToCreate, true);
 		}
 
 	}
