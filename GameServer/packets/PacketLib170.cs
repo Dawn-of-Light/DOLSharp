@@ -78,6 +78,8 @@ namespace DOL.GS.PacketHandler
 			pak.WriteByte((byte)keepComponent.Height);
 			pak.WriteByte(keepComponent.HealthPercent);
 			byte flag = keepComponent.Status;
+			if (keepComponent.IsRaized) // Only for towers
+				flag |= 0x04;
 			if (flag == 0x00 && keepComponent.Climbing)
 				flag = 0x02;
 			pak.WriteByte(flag);
@@ -93,6 +95,8 @@ namespace DOL.GS.PacketHandler
 			pak.WriteByte((byte)keepComponent.Height);
 			pak.WriteByte(keepComponent.HealthPercent);
 			byte flag = keepComponent.Status;
+			if (keepComponent.IsRaized) // Only for towers
+				flag |= 0x04;
 			if (flag == 0x00 && keepComponent.Climbing)
 				flag = 0x02;
 			pak.WriteByte(flag);
@@ -112,7 +116,7 @@ namespace DOL.GS.PacketHandler
 				byte m_flag = (byte)component.Height;
 				if (component.Status == 0 && component.Climbing)
 					m_flag |= 0x80;
-				if (component.Rized) // Only for towers
+				if (component.IsRaized) // Only for towers
 					m_flag |= 0x10;
 				if (LevelUp)
 					m_flag |= 0x20;

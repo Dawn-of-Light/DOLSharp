@@ -96,9 +96,6 @@ namespace DOLGameServerConsole
 		public void SendPlayerCreate(GamePlayer playerToCreate) { }
 		public void SendObjectGuildID(GameObject obj, Guild guild) { }
 		public void SendPlayerQuit(bool totalOut) { }
-		public void SendRemoveObject(GameObject obj) { }
-		public void SendItemCreate(GameStaticItem obj) { }
-		public void SendDoorCreate(IDoor obj) { }
 		public void SendDebugMode(bool on) { }
 		public void SendModelChange(GameObject obj, ushort newModel) { }
 		public void SendEmoteAnimation(GameObject obj, eEmote emote) { }
@@ -156,6 +153,8 @@ namespace DOLGameServerConsole
 		public void SendPlayerModelTypeChange(GamePlayer player, byte modelType) { }
 		public void SendObjectDelete(GameObject obj) { }
 		public void SendObjectUpdate(GameObject obj) { }
+		public void SendObjectRemove(GameObject obj) { }
+		public void SendObjectCreate(GameObject obj) { }
 		public void SendQuestListUpdate() { }
 		public void SendQuestUpdate(AbstractQuest quest) { }
 		public void SendConcentrationList() { }
@@ -202,5 +201,6 @@ namespace DOLGameServerConsole
 		public void SendListCastersSpell() { }
 		public void SendInventoryItemsUpdateTest(byte preAction, ICollection itemsToUpdate) { }
 		public void SendCrash(string str) { }
+		public void SendRvRGuildBanner(GamePlayer player, bool show) { }
 	}
 }

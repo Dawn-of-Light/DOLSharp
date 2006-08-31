@@ -121,7 +121,6 @@ namespace DOL.GS.Scripts
 					component.Level = (byte)myKeep.Level;
 					component.Health = 100;
 					component.CurrentRegion = client.Player.CurrentRegion;
-					component.Height = 0;
 					component.ID = myKeep.KeepComponents.Count;
 					component.SaveInDB = true;
 					component.AddToWorld();

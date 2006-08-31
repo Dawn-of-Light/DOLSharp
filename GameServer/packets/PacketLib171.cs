@@ -71,11 +71,13 @@ namespace DOL.GS.PacketHandler
 			SendTCP(pak);
 		}
 
-		public override void SendItemCreate(GameStaticItem obj)
+		public override void SendObjectCreate(GameObject obj)
 		{
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.ItemCreate));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.ObjectCreate));
 			pak.WriteShort((ushort)obj.ObjectID);
-			pak.WriteShort((ushort)obj.Emblem);
+			if (obj is GameStaticItem)
+				pak.WriteShort((ushort)(obj as GameStaticItem).Emblem);
+			else pak.WriteShort(0);
 			pak.WriteShort(obj.Heading);
 			pak.WriteShort((ushort)obj.Z);
 			pak.WriteInt((uint)obj.X);
@@ -89,27 +91,16 @@ namespace DOL.GS.PacketHandler
 			pak.WriteShort((ushort)flag);
 			pak.WriteInt(0x0); //TODO: unknown, new in 1.71
 			pak.WritePascalString(obj.Name);
-			pak.WriteByte(0x0);
+			if (obj is GameKeepDoor)
+				pak.WriteByte(0x04);
+			else pak.WriteByte(0x00);
+			if (obj is GameKeepDoor)
+				pak.WriteInt((uint)(obj as GameKeepDoor).DoorID);
 			SendTCP(pak);
-		}
-
-		public override void SendDoorCreate(IDoor obj)
-		{
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.ItemCreate));//same for door and item
-			pak.WriteShort((ushort)obj.ObjectID);
-			pak.WriteShort(0); // emblem?
-			pak.WriteShort((ushort)obj.Heading);
-			pak.WriteShort((ushort)obj.Z);
-			pak.WriteInt((uint)obj.X);
-			pak.WriteInt((uint)obj.Y);
-			pak.WriteShort(0xFFFF);//model is FFFF for door
-			pak.WriteShort((ushort)((obj.Realm&3) << 4)); // 0x30;
-			pak.WriteInt(0x0); //TODO: unknown, new in 1.71 maybe life for keep door NF?
-			pak.WritePascalString(obj.Name);
-			pak.WriteByte(0x04);
-			pak.WriteInt((uint)obj.DoorID);
-			SendTCP(pak);
-			SendDoorState(obj);
+			/*
+			if (obj is GameKeepDoor)
+				SendDoorState(obj as GameKeepDoor);
+			 */
 		}
 
 		public override void SendNPCCreate(GameNPC npc)
