@@ -113,7 +113,7 @@ namespace DOL.GS.Scripts
 
 			if (res = base.Interact(player))
 			{
-				TurnTo(player.X, player.Y);
+				TurnTo(player, 5000);
 
 				player.Out.SendMessage(this.Name + " says, \"" + m_msg + "\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
 			}

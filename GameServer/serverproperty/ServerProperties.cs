@@ -180,7 +180,6 @@ namespace DOL.GS.ServerProperties
 		public static object Load(ServerPropertyAttribute attrib)
 		{
 			string key = attrib.Key;
-			log.Info("Loading " + key);
 			ServerProperty property = GameServer.Database.SelectObject(typeof(ServerProperty), "`Key` = '" + key + "'") as ServerProperty;
 			if (property == null)
 			{
@@ -191,7 +190,7 @@ namespace DOL.GS.ServerProperties
 				property.Value = attrib.DefaultValue.ToString();
 				GameServer.Database.AddNewObject(property);
 			}
-			log.Info("Value is " + property.Value + " Type is " + attrib.DefaultValue.GetType().ToString());
+			log.Info("Loading " + key + " Value is " + property.Value);
 			return Convert.ChangeType(property.Value, attrib.DefaultValue.GetType());
 		}
 
@@ -202,7 +201,6 @@ namespace DOL.GS.ServerProperties
 		/// <param name="type">The type to analyze</param>
 		protected static void Init(Type type)
 		{
-			log.Info("Init called for type:" + type);
 			foreach (FieldInfo f in type.GetFields())
 			{
 				if (!f.IsStatic)

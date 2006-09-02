@@ -129,7 +129,7 @@ namespace DOL.GS.Spells
 		protected bool CheckInstrument()
 		{
 			InventoryItem instrument = Caster.AttackWeapon;
-			if (instrument == null || instrument.Object_Type != (int)eObjectType.Instrument || instrument.DPS_AF != m_spell.InstrumentRequirement)
+			if (instrument == null || instrument.Object_Type != (int)eObjectType.Instrument || (instrument.DPS_AF != 4 && instrument.DPS_AF != m_spell.InstrumentRequirement))
 			{
 				return false;
 			}

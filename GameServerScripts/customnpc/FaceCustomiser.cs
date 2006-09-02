@@ -55,7 +55,7 @@ namespace DOL.GS.Scripts
 			if (!base.Interact(player))
 				return false;
 
-			TurnTo(player.X, player.Y);
+			TurnTo(player, 5000);
 
 			if(player.PlayerCharacter.CustomisationStep == 2)
 			{

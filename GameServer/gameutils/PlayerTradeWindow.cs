@@ -538,6 +538,9 @@ namespace DOL.GS
 
 					m_owner.Out.SendMessage("Trade Completed. " + myTradeItemsCount + " items for " + partnerTradeItemsCount + " items.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					partner.Out.SendMessage("Trade Completed. " + partnerTradeItemsCount + " items for " + myTradeItemsCount + " items.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
+					m_owner.Inventory.SaveIntoDatabase(m_owner.InternalID);
+					partner.Inventory.SaveIntoDatabase(partner.InternalID);
 				}
 
 				if(logTrade)
@@ -547,9 +550,15 @@ namespace DOL.GS
 					if(TradeMoney > 0)
 						GameServer.Instance.LogGMAction("  Money: "+m_owner.Name+"("+m_owner.Client.Account.Name+") -> "+partner.Name+"("+partner.Client.Account.Name+") : "+TradeMoney+"coppers");
 				}
-				//Now add the money
-				m_owner.AddMoney(m_partnerWindow.TradeMoney, "You get {0}.");
-				partner.AddMoney(TradeMoney, "You get {0}.");
+
+				if (TradeMoney > 0)
+				{
+					//Now add the money
+					m_owner.AddMoney(m_partnerWindow.TradeMoney, "You get {0}.");
+					partner.AddMoney(TradeMoney, "You get {0}.");
+					m_owner.SaveIntoDatabase();
+					partner.SaveIntoDatabase();
+				}
 
 				CloseTrade();// Close the Trade Window
 

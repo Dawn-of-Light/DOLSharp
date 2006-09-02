@@ -105,6 +105,14 @@ namespace DOL.GS
 			set { m_doorID = value; }
 		}
 
+		public override ushort Model
+		{
+			get
+			{
+				return 0xFFFF;
+			}
+		}
+
 		/// <summary>
 		/// this is flag for packet (0 for regular door and 4 for keep door)
 		/// </summary>

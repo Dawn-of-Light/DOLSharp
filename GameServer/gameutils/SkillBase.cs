@@ -1260,6 +1260,11 @@ namespace DOL.GS
 			return list;
 		}
 
+		public static Style GetStyleByID(int styleID)
+		{
+			return m_stylesByID[styleID] as Style;
+		}
+
 		/// <summary>
 		/// find style with specific id
 		/// </summary>
@@ -1271,7 +1276,7 @@ namespace DOL.GS
 			long key = ((long)styleID << 32) | (uint)ClassId;
 			Style style = (Style)m_stylesByIDClass[key];
 			if (style == null)
-				style = (Style)m_stylesByID[styleID];
+				style = GetStyleByID(styleID);
 			return style;
 		}
 
