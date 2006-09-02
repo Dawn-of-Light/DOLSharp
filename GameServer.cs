@@ -551,11 +551,6 @@ namespace DOL
 					return false;
 
 				//---------------------------------------------------------------
-				//Try to start the Npc Templates Manager
-				if (!InitComponent(NpcTemplateMgr.Init(), "Npc Templates Manager"))
-					return false;
-
-				//---------------------------------------------------------------
 				//Try to initialize the WorldMgr in early state
 				RegionData[] regionsData;
 				if (!InitComponent(WorldMgr.EarlyInit(out regionsData), "World Manager PreInitialization"))
@@ -626,6 +621,11 @@ namespace DOL
 				//---------------------------------------------------------------
 				//Load the relic manager
 				if (!InitComponent(RelicMgr.Init(), "Relic Manager"))
+					return false;
+
+				//---------------------------------------------------------------
+				//Try to start the Npc Templates Manager
+				if (!InitComponent(NpcTemplateMgr.Init(), "Npc Templates Manager"))
 					return false;
 
 				//---------------------------------------------------------------

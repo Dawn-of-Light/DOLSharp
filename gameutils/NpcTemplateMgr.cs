@@ -38,6 +38,12 @@ namespace DOL.GS
 		/// Holds all NPC templates
 		/// </summary>
 		private static readonly Hashtable m_mobTemplates = new Hashtable(1024);
+		private static readonly Hashtable m_mobTemplatesByName = new Hashtable(1024);
+
+		public Hashtable MobTemplates
+		{
+			get { return m_mobTemplatesByName; }
+		}
 
 		/// <summary>
 		/// Initializes NPC templates manager
@@ -99,23 +105,25 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="templateId">The mob template ID</param>
 		/// <returns>The mob template or null if nothing is found</returns>
-		public static INpcTemplate GetTemplate(int templateId)
+		public static NpcTemplate GetTemplate(int templateId)
 		{
+			if (templateId == -1)
+				return null;
 			lock (m_mobTemplates.SyncRoot)
 			{
 				object entry = m_mobTemplates[templateId];
 				if (entry is ArrayList)
 				{
 					ArrayList array = (ArrayList)entry;
-					return (INpcTemplate)array[Util.Random(array.Count-1)];
+					return (NpcTemplate)array[Util.Random(array.Count - 1)];
 				}
 				else if (entry == null)
 				{
 					if (log.IsWarnEnabled)
-						log.Warn("no mob template with ID " + templateId + " found.\n"+Environment.StackTrace);
+						log.Warn("no mob template with ID " + templateId + " found.\n" + Environment.StackTrace);
 					return null;
 				}
-				return (INpcTemplate)entry;
+				return (NpcTemplate)entry;
 			}
 		}
 	}
