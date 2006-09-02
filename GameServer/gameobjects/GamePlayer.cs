@@ -790,140 +790,159 @@ namespace DOL.GS
 			switch (m_releaseType)
 			{
 				case eReleaseType.Duel:
-					relRegion = (ushort)m_character.Region;
-					relX = m_character.Xpos;
-					relY = m_character.Ypos;
-					relZ = m_character.Zpos;
-					relHeading = 2048;
-					break;
-
+					{
+						relRegion = (ushort)m_character.Region;
+						relX = m_character.Xpos;
+						relY = m_character.Ypos;
+						relZ = m_character.Zpos;
+						relHeading = 2048;
+						break;
+					}
 				case eReleaseType.City:
-					if (Realm == (byte)eRealm.Hibernia)
 					{
-						relRegion = 201; // Tir Na Nog
-						relX = 8192 + 15780;
-						relY = 8192 + 22727;
-						relZ = 7060;
+						if (Realm == (byte)eRealm.Hibernia)
+						{
+							relRegion = 201; // Tir Na Nog
+							relX = 8192 + 15780;
+							relY = 8192 + 22727;
+							relZ = 7060;
+						}
+						else if (Realm == (byte)eRealm.Midgard)
+						{
+							relRegion = 101; // Jordheim
+							relX = 8192 + 24664;
+							relY = 8192 + 21402;
+							relZ = 8759;
+						}
+						else
+						{
+							relRegion = 10; // City of Camelot
+							relX = 8192 + 26315;
+							relY = 8192 + 21177;
+							relZ = 8256;
+						}
+						relHeading = 2048;
+						break;
 					}
-					else if (Realm == (byte)eRealm.Midgard)
-					{
-						relRegion = 101; // Jordheim
-						relX = 8192 + 24664;
-						relY = 8192 + 21402;
-						relZ = 8759;
-					}
-					else
-					{
-						relRegion = 10; // City of Camelot
-						relX = 8192 + 26315;
-						relY = 8192 + 21177;
-						relZ = 8256;
-					}
-					relHeading = 2048;
-					break;
-
 				default:
-					switch (CurrentRegionID)
 					{
-						case 239:
-							if (Realm == 1 && Level < 31)
-							{
-								relRegion = 239;
-								relX = 554286;
-								relY = 585101;
-								relZ = 6952;
-								relHeading = 2054;
-								break;
-							}
-							else if (Realm == 2 && Level < 31)
-							{
-								relRegion = 239;
-								relX = 581962;
-								relY = 538463;
-								relZ = 6776;
-								relHeading = 1020;
-								break;
-							}
-							else if (Realm == 3 && Level < 31)
-							{
-								relRegion = 239;
-								relX = 533554;
-								relY = 533948;
-								relZ = 6768;
-								relHeading = 3432;
-								break;
-							}
-							relRegion = (ushort)m_character.BindRegion;
-							relX = m_character.BindXpos;
-							relY = m_character.BindYpos;
-							relZ = m_character.BindZpos;
-							relHeading = (ushort)m_character.BindHeading;
-							break;
-
-						case 240:
-							if (Realm == 1 && Level < 41)
-							{
-								relRegion = 240;
-								relX = 554459;
-								relY = 583463;
-								relZ = 6952;
-								relHeading = 2043;
-								break;
-							}
-							else if (Realm == 2 && Level < 41)
-							{
-								relRegion = 240;
-								relX = 533983;
-								relY = 535384;
-								relZ = 6728;
-								relHeading = 3585;
-								break;
-							}
-							else if (Realm == 3 && Level < 41)
-							{
-								relRegion = 240;
-								relX = 580495;
-								relY = 538801;
-								relZ = 6736;
-								relHeading = 518;
-								break;
-							}
-							relRegion = (ushort)m_character.BindRegion;
-							relX = m_character.BindXpos;
-							relY = m_character.BindYpos;
-							relZ = m_character.BindZpos;
-							relHeading = (ushort)m_character.BindHeading;
-							break;
-
-						case 163:
-							relRegion = 163;
-							if (Realm == 1)
-							{
-								KeepMgr.GetBorderKeepLocation(1, out relX, out relY, out relZ, out relHeading);
-								break;
-							}
-							else if (Realm == 2)
-							{
-								KeepMgr.GetBorderKeepLocation(3, out relX, out relY, out relZ, out relHeading);
-								break;
-							}
-							else if (Realm == 3)
-							{
-								KeepMgr.GetBorderKeepLocation(5, out relX, out relY, out relZ, out relHeading);
-								break;
-							}
-							break;
-
-						default:
-							relRegion = (ushort)m_character.BindRegion;
-							relX = m_character.BindXpos;
-							relY = m_character.BindYpos;
-							relZ = m_character.BindZpos;
-							relHeading = (ushort)m_character.BindHeading;
-							break;
-
+						switch (CurrentRegionID)
+						{
+							case 239:
+								{
+									if (Realm == 1 && Level < 31)
+									{
+										relRegion = 239;
+										relX = 554286;
+										relY = 585101;
+										relZ = 6952;
+										relHeading = 2054;
+										break;
+									}
+									else if (Realm == 2 && Level < 31)
+									{
+										relRegion = 239;
+										relX = 581962;
+										relY = 538463;
+										relZ = 6776;
+										relHeading = 1020;
+										break;
+									}
+									else if (Realm == 3 && Level < 31)
+									{
+										relRegion = 239;
+										relX = 533554;
+										relY = 533948;
+										relZ = 6768;
+										relHeading = 3432;
+										break;
+									}
+									relRegion = (ushort)m_character.BindRegion;
+									relX = m_character.BindXpos;
+									relY = m_character.BindYpos;
+									relZ = m_character.BindZpos;
+									relHeading = (ushort)m_character.BindHeading;
+									break;
+								}
+							case 240:
+								{
+									if (Realm == 1 && Level < 41)
+									{
+										relRegion = 240;
+										relX = 554459;
+										relY = 583463;
+										relZ = 6952;
+										relHeading = 2043;
+										break;
+									}
+									else if (Realm == 2 && Level < 41)
+									{
+										relRegion = 240;
+										relX = 533983;
+										relY = 535384;
+										relZ = 6728;
+										relHeading = 3585;
+										break;
+									}
+									else if (Realm == 3 && Level < 41)
+									{
+										relRegion = 240;
+										relX = 580495;
+										relY = 538801;
+										relZ = 6736;
+										relHeading = 518;
+										break;
+									}
+									relRegion = (ushort)m_character.BindRegion;
+									relX = m_character.BindXpos;
+									relY = m_character.BindYpos;
+									relZ = m_character.BindZpos;
+									relHeading = (ushort)m_character.BindHeading;
+									break;
+								}
+							case 163:
+								{
+									if (m_character.BindRegion != 163)
+									{
+										relRegion = 163;
+										if (Realm == 1)
+										{
+											KeepMgr.GetBorderKeepLocation(1, out relX, out relY, out relZ, out relHeading);
+											break;
+										}
+										else if (Realm == 2)
+										{
+											KeepMgr.GetBorderKeepLocation(3, out relX, out relY, out relZ, out relHeading);
+											break;
+										}
+										else if (Realm == 3)
+										{
+											KeepMgr.GetBorderKeepLocation(5, out relX, out relY, out relZ, out relHeading);
+											break;
+										}
+									}
+									else
+									{
+										relRegion = (ushort)m_character.BindRegion;
+										relX = m_character.BindXpos;
+										relY = m_character.BindYpos;
+										relZ = m_character.BindZpos;
+										relHeading = (ushort)m_character.BindHeading;
+									}
+									break;
+								}
+							default:
+								{
+									relRegion = (ushort)m_character.BindRegion;
+									relX = m_character.BindXpos;
+									relY = m_character.BindYpos;
+									relZ = m_character.BindZpos;
+									relHeading = (ushort)m_character.BindHeading;
+									break;
+								}
+						}
+						break;
 					}
-					break;
 			}
 
 			Out.SendMessage("You release your corpse unto death.", eChatType.CT_YouDied, eChatLoc.CL_SystemWindow);
@@ -6218,7 +6237,7 @@ namespace DOL.GS
 
 			Out.SendUpdateMoney();
 
-			if (messageFormat != null && money != 0)
+			if (messageFormat != null)
 			{
 				Out.SendMessage(string.Format(messageFormat, Money.GetString(money)), ct, cl);
 			}

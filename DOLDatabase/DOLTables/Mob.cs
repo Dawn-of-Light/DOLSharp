@@ -27,43 +27,46 @@ namespace DOL.Database
 	/// <summary>
 	/// The database side of GameMob
 	/// </summary>
-	[DataTable(TableName="Mob")]
- 	public class Mob : DataObject
+	[DataTable(TableName = "Mob")]
+	public class Mob : DataObject
 	{
-		private string		m_type;
-		private string		m_name;
-		private string		m_guild;		
-		private int		m_x;
-		private int		m_y;
-		private int		m_z;
-		private int			m_speed;
-		private ushort		m_heading;
-		private ushort		m_region;
-		private ushort		m_model;
-		private byte		m_size;
-		private byte		m_level;
-		private byte		m_realm;
-		private uint		m_flags;
-		private int			m_aggrolevel;
-		private int			m_aggrorange;
-		private int			m_meleeDamageType;
-		private int			m_respawnInterval;
-		private int			m_faction;
+		private string m_type;
+		private string m_name;
+		private string m_guild;
+		private int m_x;
+		private int m_y;
+		private int m_z;
+		private int m_speed;
+		private ushort m_heading;
+		private ushort m_region;
+		private ushort m_model;
+		private byte m_size;
+		private byte m_level;
+		private byte m_realm;
+		private uint m_flags;
+		private int m_aggrolevel;
+		private int m_aggrorange;
+		private int m_meleeDamageType;
+		private int m_respawnInterval;
+		private int m_faction;
 
-		private string		m_equipmentTemplateID;
+		private string m_equipmentTemplateID;
 
-		private string		m_itemsListTemplateID;
+		private string m_itemsListTemplateID;
 
-		static bool			m_autoSave;
+		private int m_npcTemplateID;
+
+		static bool m_autoSave;
 
 		/// <summary>
 		/// The Constructor
 		/// </summary>
 		public Mob()
 		{
-			m_autoSave=false;
+			m_autoSave = false;
 			m_type = "DOL.GS.GameMob";
 			m_equipmentTemplateID = "";
+			m_npcTemplateID = -1;
 			m_meleeDamageType = 2; // slash by default
 			m_respawnInterval = -1; // randow respawn by default
 		}
@@ -103,7 +106,7 @@ namespace DOL.Database
 		/// <summary>
 		/// The Mob's Name
 		/// </summary>
-		[DataElement(AllowDbNull=false)]
+		[DataElement(AllowDbNull = false)]
 		public string Name
 		{
 			get
@@ -116,11 +119,11 @@ namespace DOL.Database
 				m_name = value;
 			}
 		}
-			
+
 		/// <summary>
 		/// The Mob's Guild Name
 		/// </summary>
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public string Guild
 		{
 			get
@@ -137,7 +140,7 @@ namespace DOL.Database
 		/// <summary>
 		/// The Mob's X Position
 		/// </summary>
-		[DataElement(AllowDbNull=false)]
+		[DataElement(AllowDbNull = false)]
 		public int X
 		{
 			get
@@ -145,16 +148,16 @@ namespace DOL.Database
 				return m_x;
 			}
 			set
-			{   
+			{
 				Dirty = true;
 				m_x = value;
 			}
 		}
-		
+
 		/// <summary>
 		/// The Mob's Y Position
 		/// </summary>
-		[DataElement(AllowDbNull=false)]
+		[DataElement(AllowDbNull = false)]
 		public int Y
 		{
 			get
@@ -162,7 +165,7 @@ namespace DOL.Database
 				return m_y;
 			}
 			set
-			{   
+			{
 				Dirty = true;
 				m_y = value;
 			}
@@ -171,7 +174,7 @@ namespace DOL.Database
 		/// <summary>
 		/// The Mob's Z Position
 		/// </summary>
-		[DataElement(AllowDbNull=false)]
+		[DataElement(AllowDbNull = false)]
 		public int Z
 		{
 			get
@@ -179,16 +182,16 @@ namespace DOL.Database
 				return m_z;
 			}
 			set
-			{   
+			{
 				Dirty = true;
 				m_z = value;
 			}
 		}
-		
+
 		/// <summary>
 		/// The Mob's Max Speed
 		/// </summary>
-		[DataElement(AllowDbNull=false)]
+		[DataElement(AllowDbNull = false)]
 		public int Speed
 		{
 			get
@@ -196,7 +199,7 @@ namespace DOL.Database
 				return m_speed;
 			}
 			set
-			{   
+			{
 				Dirty = true;
 				m_speed = value;
 			}
@@ -205,7 +208,7 @@ namespace DOL.Database
 		/// <summary>
 		/// The Mob's Heading
 		/// </summary>
-		[DataElement(AllowDbNull=false)]
+		[DataElement(AllowDbNull = false)]
 		public ushort Heading
 		{
 			get
@@ -213,7 +216,7 @@ namespace DOL.Database
 				return m_heading;
 			}
 			set
-			{   
+			{
 				Dirty = true;
 				m_heading = value;
 			}
@@ -222,7 +225,7 @@ namespace DOL.Database
 		/// <summary>
 		/// The Mob's Region ID
 		/// </summary>
-		[DataElement(AllowDbNull=false)]
+		[DataElement(AllowDbNull = false)]
 		public ushort Region
 		{
 			get
@@ -230,16 +233,16 @@ namespace DOL.Database
 				return m_region;
 			}
 			set
-			{   
+			{
 				Dirty = true;
 				m_region = value;
 			}
 		}
-		
+
 		/// <summary>
 		/// The Mob's Model
 		/// </summary>
-		[DataElement(AllowDbNull=false)]
+		[DataElement(AllowDbNull = false)]
 		public ushort Model
 		{
 			get
@@ -247,16 +250,16 @@ namespace DOL.Database
 				return m_model;
 			}
 			set
-			{   
+			{
 				Dirty = true;
 				m_model = value;
 			}
 		}
-		
+
 		/// <summary>
 		/// The Mob's Size
 		/// </summary>
-		[DataElement(AllowDbNull=false)]
+		[DataElement(AllowDbNull = false)]
 		public byte Size
 		{
 			get
@@ -264,16 +267,16 @@ namespace DOL.Database
 				return m_size;
 			}
 			set
-			{   
+			{
 				Dirty = true;
 				m_size = value;
 			}
 		}
-		
+
 		/// <summary>
 		/// The Mob's Level
 		/// </summary>
-		[DataElement(AllowDbNull=false)]
+		[DataElement(AllowDbNull = false)]
 		public byte Level
 		{
 			get
@@ -281,16 +284,16 @@ namespace DOL.Database
 				return m_level;
 			}
 			set
-			{   
+			{
 				Dirty = true;
 				m_level = value;
 			}
 		}
-		
+
 		/// <summary>
 		/// The Mob's Realm
 		/// </summary>
-		[DataElement(AllowDbNull=false)]
+		[DataElement(AllowDbNull = false)]
 		public byte Realm
 		{
 			get
@@ -298,16 +301,16 @@ namespace DOL.Database
 				return m_realm;
 			}
 			set
-			{   
+			{
 				Dirty = true;
 				m_realm = value;
 			}
 		}
-			
+
 		/// <summary>
 		/// The Mob's Equipment Template ID
 		/// </summary>
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public string EquipmentTemplateID
 		{
 			get
@@ -315,7 +318,7 @@ namespace DOL.Database
 				return m_equipmentTemplateID;
 			}
 			set
-			{   
+			{
 				Dirty = true;
 				m_equipmentTemplateID = value;
 			}
@@ -324,7 +327,7 @@ namespace DOL.Database
 		/// <summary>
 		/// The Mob's Items List Template ID
 		/// </summary>
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public string ItemsListTemplateID
 		{
 			get
@@ -332,16 +335,30 @@ namespace DOL.Database
 				return m_itemsListTemplateID;
 			}
 			set
-			{   
+			{
 				Dirty = true;
 				m_itemsListTemplateID = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public int NPCTemplateID
+		{
+			get
+			{
+				return m_npcTemplateID;
+			}
+			set
+			{
+				Dirty = true;
+				m_npcTemplateID = value;
 			}
 		}
 
 		/// <summary>
 		/// The Mob's Flags
 		/// </summary>
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public uint Flags
 		{
 			get
@@ -349,7 +366,7 @@ namespace DOL.Database
 				return m_flags;
 			}
 			set
-			{   
+			{
 				Dirty = true;
 				m_flags = value;
 			}
@@ -358,27 +375,27 @@ namespace DOL.Database
 		/// <summary>
 		/// The Mob's Aggro Level
 		/// </summary>
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public int AggroLevel
 		{
-			get	{ return m_aggrolevel;}
-			set { Dirty = true;	m_aggrolevel = value;	}
+			get { return m_aggrolevel; }
+			set { Dirty = true; m_aggrolevel = value; }
 		}
 
 		/// <summary>
 		/// The Mob's Aggro Range
 		/// </summary>
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public int AggroRange
 		{
-			get	{ return m_aggrorange;}
-			set { Dirty = true;	m_aggrorange = value;	}
+			get { return m_aggrorange; }
+			set { Dirty = true; m_aggrorange = value; }
 		}
 
 		/// <summary>
 		/// The Mob's Melee Damage Type
 		/// </summary>
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public int MeleeDamageType
 		{
 			get { return m_meleeDamageType; }
@@ -388,7 +405,7 @@ namespace DOL.Database
 		/// <summary>
 		/// The Mob's Respawn Interval
 		/// </summary>
-		[DataElement(AllowDbNull=false)]
+		[DataElement(AllowDbNull = false)]
 		public int RespawnInterval
 		{
 			get { return m_respawnInterval; }
@@ -398,7 +415,7 @@ namespace DOL.Database
 		/// <summary>
 		/// The Mob's Faction ID
 		/// </summary>
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public int FactionID
 		{
 			get { return m_faction; }

@@ -493,33 +493,8 @@ namespace DOL.GS
 			m_healthRegenerationPeriod = 20000;
 		}
 
-		/// <summary>
-		/// instance for spawn generator
-		/// </summary>
-		/// <param name="template">template of generator</param>
 		public GameMob(INpcTemplate template)
-			: this()
-		{
-			this.Name = template.Name;
-			this.GuildName = template.GuildName;
-			this.Model = template.Model;
-			this.Size = template.Size;
-			this.MaxSpeedBase = template.MaxSpeed;
-			this.Flags = template.Flags;
-			this.Inventory = template.Inventory;
-			this.MeleeDamageType = template.MeleeDamageType;
-			this.ParryChance = template.ParryChance;
-			this.EvadeChance = template.EvadeChance;
-			this.BlockChance = template.BlockChance;
-			this.LeftHandSwingChance = template.LeftHandSwingChance;
-			if (this.Inventory != null)
-			{
-				if (this.Inventory.GetItem(eInventorySlot.DistanceWeapon) != null)
-					this.SwitchWeapon(eActiveWeaponSlot.Distance);
-				else if (Inventory.GetItem(eInventorySlot.TwoHandWeapon) != null)
-					this.SwitchWeapon(eActiveWeaponSlot.TwoHanded);
-			}
-			this.Spells = template.Spells;
-		}
+			: base(template)
+		{ }
 	}
 }

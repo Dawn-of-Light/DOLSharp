@@ -122,6 +122,7 @@ namespace DOL.GS.Keeps
 			mob.Y = this.Y;
 			mob.Z = this.Z;
 			mob.Heading = this.Heading;
+			mob.Health = mob.MaxHealth;
 			if (mob.AddToWorld())
 				sfx = mob;
 			return true;

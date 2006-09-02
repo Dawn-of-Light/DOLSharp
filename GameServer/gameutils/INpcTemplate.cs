@@ -98,6 +98,60 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets the template npc styles
 		/// </summary>
-		IList Styles{ get; }
+		IList Styles { get; }
+
+		/// <summary>
+		/// Gets the template npc spelllines
+		/// </summary>
+		IList SpellLines { get; }
+		/// <summary>
+		/// Gets the template npc abilities
+		/// </summary>
+		IList Abilities { get; }
+
+		/// <summary>
+		/// Gets the template npc Strength 
+		///</summary>
+		int Strength { get; }
+
+		/// <summary>
+		/// Gets the template npc Constitution 
+		///</summary>
+		int Constitution { get; }
+
+		/// <summary>
+		/// Gets the template npc Dexterity 
+		///</summary>
+		int Dexterity { get; }
+
+		/// <summary>
+		/// Gets the template npc Quickness 
+		///</summary>
+		int Quickness { get; }
+
+		/// <summary>
+		/// Gets the template npc Piety 
+		///</summary>
+		int Piety { get; }
+
+		/// <summary>
+		/// Gets the template npc Intelligence 
+		///</summary>
+		int Intelligence { get; }
+
+		/// <summary>
+		/// Gets the template npc Empathy 
+		///</summary>
+		int Empathy { get; }
+
+		/// <summary>
+		/// Gets the template npc Charisma 
+		///</summary>
+		int Charisma { get; }
+
+		/// <summary>
+		/// Gets the SkillCap of the npc
+		/// </summary>
+		byte SkillCap { get; }
 	}
 }

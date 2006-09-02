@@ -66,6 +66,8 @@ namespace DOL.AI.Brain
 		/// </summary>
 		public override void Think()
 		{
+			if (!Body.IsCasting)
+				CheckSpells();
 			if (AggroLevel > 0)
 			{
 				CheckPlayerAggro();
@@ -663,6 +665,144 @@ namespace DOL.AI.Brain
 			return null;
 		}
 
+		#endregion
+
+		#region Spells
+		private void CheckSpells()
+		{
+			if (!Body.AttackState)
+			{
+				CheckCastingSpells();
+			}
+			else
+			{
+				CheckInstantSpells();
+				CheckAbilities();
+			}
+		}
+		public void CheckCastingSpells()
+		{
+			//heals
+			//heal self
+			if (Body.HealthPercent < 100)
+				CheckSpellsByType("Heal");
+			//heal group
+
+			//buffs
+			//self and group buffs
+			CheckSpellsByType("StrengthBuff");
+			CheckSpellsByType("DexterityBuff");
+			CheckSpellsByType("ConstitutionBuff");
+			CheckSpellsByType("ArmorFactorBuff");
+			CheckSpellsByType("ArmorAbsorbtionBuff");
+			CheckSpellsByType("StrengthConstitutionBuff");
+			CheckSpellsByType("DexterityQuicknessBuff");
+			CheckSpellsByType("DamageAdd");
+			CheckSpellsByType("CombatSpeedBuff");
+			//single bladeturn
+			CheckSpellsByType("Bladeturn");
+
+
+			//Summon a pet
+			//summon and buff pet if needed
+			//if (Body.ControlledNPC == null)
+			CheckSpellsByType("Summon");
+		}
+
+		//Direct Damage Shouts, Chants etc
+		public void CheckInstantSpells()
+		{
+			//direct damage shouts
+			CheckSpellsByType("DirectDamage");
+			//stun shout
+			CheckSpellsByType("Stun");
+			//mez shout
+			CheckSpellsByType("Mez");
+			//snare shout
+			//instant debuffs
+			//chants
+			//heal chant
+			if (Body.HealthPercent < 100)
+				CheckSpellsByType("CombatHeal");
+			//damage add chant
+			CheckSpellsByType("DamageAdd");
+			//armor factor chant
+			CheckSpellsByType("ArmorFactorBuff");
+			//endurance chant
+			CheckSpellsByType("EnduranceRegenBuff");
+			//melee haste chant
+			CheckSpellsByType("CombatSpeedBuff");
+			//resist chants
+			//ablative chant
+			CheckSpellsByType("AblativeArmor");
+			//pulsing blade turn chant
+			CheckSpellsByType("Bladeturn");
+		}
+
+		//useless without disable abilities
+		public void CheckAbilities()
+		{
+			//Berserk
+			//Stag
+		}
+
+		private static SpellLine spellline = SkillBase.GetSpellLine(GlobalSpellsLines.Mob_Spells);
+
+		private void CheckSpellsByType(string type)
+		{
+			//if no spells exist, return
+			if (Body.Spells.Count == 0)
+				return;
+			//currently this stops all spells after a pulsing spell is called
+			//i need to find a way to cancel the pulsing spells properly
+			if (Body.IsCasting)
+				return;
+
+			foreach (Spell spell in this.Body.Spells)
+			{
+				if (spell.SpellType == type)
+				{
+					//if we are attacking, we don't want spells with a cast time
+					if (Body.AttackState && spell.CastTime > 0)
+						continue;
+					//if we are not attacking, we don't want the pulsing bladeturn spell
+					if (!Body.AttackState && spell.SpellType == "Bladeturn" && spell.CastTime > 0)
+						continue;
+
+					//if the spell is friendly
+					if (spell.Target == "Realm")
+					{
+						//check if the effect is already active
+						bool already = false;
+						foreach (IGameEffect effect in Body.EffectList)
+						{
+							if (effect is GameSpellEffect)
+							{
+								GameSpellEffect speffect = effect as GameSpellEffect;
+								if (speffect.Spell.SpellType == type)
+								{
+									already = true;
+									break;
+								}
+							}
+						}
+
+						if (already)
+							return;
+
+						Body.TargetObject = Body;
+					}
+
+					if (Body.IsMoving)
+						Body.StopMoving();
+
+					log.Error("attempting to cast spell " + spell.Name + " type " + spell.SpellType);
+					//todo GameLiving.DisableSkill, currently only GamePlayer to allow for proper recast timers
+					Body.CastSpell(spell, spellline);
+					break;
+				}
+			}
+		}
 		#endregion
 	}
 }
