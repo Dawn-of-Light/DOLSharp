@@ -33,7 +33,7 @@ namespace DOL.GS.Scripts
 			if (!base.Interact(player))
 				return false;
 
-			TurnTo(player.X, player.Y);
+			TurnTo(player, 5000);
 			SayTo(player, eChatLoc.CL_ChatWindow, "For a 5 gold, I can put the emblem of your guild on the item. Just hand me the item.");
 
 			return true;

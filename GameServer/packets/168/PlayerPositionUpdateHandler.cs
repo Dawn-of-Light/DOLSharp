@@ -89,7 +89,6 @@ namespace DOL.GS.PacketHandler.v168
 			packet.Skip(2); //PID
 			ushort data = packet.ReadShort();
 			int speed = (data & 0x1FF);
-			client.Player.IsClimbing = (((data >> 10) & 7) == 7);
 
 			//			if(!GameServer.ServerRules.IsAllowedDebugMode(client)
 			//				&& (speed > client.Player.MaxSpeed + SPEED_TOL))
@@ -333,11 +332,17 @@ namespace DOL.GS.PacketHandler.v168
 								accountToBan.BanAuthor = "SH check";
 								accountToBan.BanReason = string.Format("Autoban SH:({0},{1}) on player:{2}", SHcount, EnvironmentTick - SHlastTick, client.Player.Name); ;
 								GameServer.Database.SaveObject(accountToBan);
-								client.Out.SendPlayerQuit(true);
-								client.Disconnect();
 								return 1;
 							}
 							*/
+							string message = "Speed Hack Detected!!!";
+							for (int i = 0; i < 6; i++)
+							{
+								client.Out.SendMessage(message, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								client.Out.SendMessage(message, eChatType.CT_System, eChatLoc.CL_ChatWindow);
+							}
+							client.Out.SendPlayerQuit(true);
+							client.Disconnect();
 						}
 					}
 					else
@@ -353,6 +358,44 @@ namespace DOL.GS.PacketHandler.v168
 			}
 			else
 				SHlastTick = EnvironmentTick;
+
+			int state = ((data >> 10) & 7);
+			client.Player.IsClimbing = (state == 7);
+			if (state == 3 && client.Player.TempProperties.getObjectProperty(GamePlayer.DEBUG_MODE_PROPERTY, null) == null) //debugFly on, but player not do /debug on (hack)
+			{
+				StringBuilder builder = new StringBuilder();
+				builder.Append("HACK_FLY");
+				builder.Append(": CharName=");
+				builder.Append(client.Player.Name);
+				builder.Append(" Account=");
+				builder.Append(client.Account.Name);
+				builder.Append(" IP=");
+				builder.Append(client.TcpEndpoint);
+				GameServer.Instance.LogCheatAction(builder.ToString());
+				{
+					/*
+					Account accountToBan = client.Account;
+					client.Out.SendDialogBox(eDialogCode.SimpleWarning, 0x00, 0x00, 0x00, 0x00, eDialogType.Ok, true, "Ban account for hack client!");
+					client.Out.SendMessage("Ban accout for hack client", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+					DateTime banDuration = DateTime.Now;
+					banDuration = banDuration.AddDays(30);
+					accountToBan.BanDuration = banDuration;
+					accountToBan.BanAuthor = "Fly check";
+					accountToBan.BanReason = string.Format("Autoban Fly hack on player:{0}", client.Player.Name);
+					GameServer.Database.SaveObject(accountToBan);
+					 */
+					string message = "Client Hack Detected!!!";
+					for (int i = 0; i < 6; i++)
+					{
+						client.Out.SendMessage(message, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						client.Out.SendMessage(message, eChatType.CT_System, eChatLoc.CL_ChatWindow);
+					}
+					client.Out.SendPlayerQuit(true);
+					client.Disconnect();
+					return 1;
+				}
+			} 
+
 			SHlastFly = fly;
 			SHlastStatus = status;
 			client.Player.TempProperties.setProperty(SHLASTUPDATETICK, SHlastTick);

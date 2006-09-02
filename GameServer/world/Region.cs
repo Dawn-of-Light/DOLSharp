@@ -452,7 +452,18 @@ namespace DOL.GS
 						{
 							try
 							{
-								myMob = (GameNPC)type.Assembly.CreateInstance(type.FullName);
+								Type[] constructorParams;
+								if (mob.NPCTemplateID != -1)
+								{
+									constructorParams = new Type[] { typeof(INpcTemplate) };
+									ConstructorInfo handlerConstructor = typeof(GameNPC).GetConstructor(constructorParams);
+									INpcTemplate template = NpcTemplateMgr.GetTemplate(mob.NPCTemplateID);
+									myMob = (GameNPC)handlerConstructor.Invoke(new object[] { template });
+								}
+								else
+								{
+									myMob = (GameNPC)type.Assembly.CreateInstance(type.FullName);
+								}
 							}
 							catch (Exception e)
 							{

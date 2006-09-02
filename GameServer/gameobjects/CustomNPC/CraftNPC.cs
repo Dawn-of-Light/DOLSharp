@@ -49,7 +49,7 @@ namespace DOL.GS
 			if (player.CharacterClass == null)
 				return false;
 
-			TurnTo(player.X, player.Y);
+			TurnTo(player, 5000);
 
 			bool eligible = false;
 			foreach(eCharacterClass currentClass in AllowedClass)

@@ -1175,6 +1175,9 @@ namespace DOL.GS
 			base.LoadFromDatabase(obj);
 			if (!(obj is Mob)) return;
 			Mob npc = (Mob)obj;
+			INpcTemplate npcTemplate = NpcTemplateMgr.GetTemplate(npc.NPCTemplateID);
+			if (npcTemplate != null)
+				LoadTemplate(npcTemplate);
 			Name = npc.Name;
 			GuildName = npc.Guild;
 			m_X = npc.X;
@@ -1201,6 +1204,40 @@ namespace DOL.GS
 
 			m_faction = FactionMgr.GetFactionByID(npc.FactionID);
 			LoadEquipmentTemplateFromDatabase(npc.EquipmentTemplateID);
+		}
+
+		public void LoadTemplate(INpcTemplate template)
+		{
+			this.Name = template.Name;
+			this.GuildName = template.GuildName;
+			this.Model = template.Model;
+			this.Size = template.Size;
+			this.MaxSpeedBase = template.MaxSpeed;
+			this.Flags = template.Flags;
+			this.MeleeDamageType = template.MeleeDamageType;
+			this.ParryChance = template.ParryChance;
+			this.EvadeChance = template.EvadeChance;
+			this.BlockChance = template.BlockChance;
+			this.LeftHandSwingChance = template.LeftHandSwingChance;
+			this.Inventory = template.Inventory;
+			if (this.Inventory != null)
+			{
+				if (this.Inventory.GetItem(eInventorySlot.DistanceWeapon) != null)
+					this.SwitchWeapon(eActiveWeaponSlot.Distance);
+				else if (Inventory.GetItem(eInventorySlot.TwoHandWeapon) != null)
+					this.SwitchWeapon(eActiveWeaponSlot.TwoHanded);
+			}
+			this.Spells = template.Spells;
+			this.Styles = template.Styles;
+			this.Abilities = template.Abilities;
+			BuffBonusCategory4[(int)eStat.STR] += template.Strength;
+			BuffBonusCategory4[(int)eStat.DEX] += template.Dexterity;
+			BuffBonusCategory4[(int)eStat.CON] += template.Constitution;
+			BuffBonusCategory4[(int)eStat.QUI] += template.Quickness;
+			BuffBonusCategory4[(int)eStat.INT] += template.Intelligence;
+			BuffBonusCategory4[(int)eStat.PIE] += template.Piety;
+			BuffBonusCategory4[(int)eStat.EMP] += template.Empathy;
+			BuffBonusCategory4[(int)eStat.CHR] += template.Charisma;
 		}
 
 		/// <summary>
@@ -1835,6 +1872,25 @@ namespace DOL.GS
 		}
 
 		/// <summary>
+		/// npcs can always have mana to cast
+		/// </summary>
+		public override int Mana
+		{
+			get
+			{
+				return 5000;
+			}
+		}
+
+		public override int Concentration
+		{
+			get
+			{
+				return 500;
+			}
+		}
+
+		/// <summary>
 		/// Tests if this MOB should give XP and loot based on the XPGainers
 		/// </summary>
 		/// <returns>true if it should deal XP and give loot</returns>
@@ -2040,6 +2096,16 @@ namespace DOL.GS
 		}
 
 		/// <summary>
+		/// npcs abilities
+		/// </summary>
+		private IList m_abilities = new ArrayList(1);
+		public IList Abilities
+		{
+			get { return m_abilities; }
+			set { m_abilities = value; }
+		}
+
+		/// <summary>
 		/// start to cast spell attack in continue until takken melee damage
 		/// </summary>
 		/// <param name="attackTarget"></param>
@@ -2165,6 +2231,16 @@ namespace DOL.GS
 			LinkedFactions = new ArrayList(1);
 			m_ownBrain = new StandardMobBrain();
 			m_ownBrain.Body = this;
+		}
+
+		/// <summary>
+		/// create npc from template
+		/// </summary>
+		/// <param name="template">template of generator</param>
+		public GameNPC(INpcTemplate template)
+			: this()
+		{
+			LoadTemplate(template);
 		}
 	}
 }

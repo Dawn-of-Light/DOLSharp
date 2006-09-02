@@ -32,26 +32,36 @@ namespace DOL.Database
 	/// <summary>
 	/// DataTable class for NPC Templates
 	/// </summary>
-	[DataTable(TableName="NpcTemplate")]
- 	public class DBNpcTemplate : DataObject
+	[DataTable(TableName = "NpcTemplate")]
+	public class DBNpcTemplate : DataObject
 	{
- 		private int 		m_templateId;
- 		private string		m_name = "";
- 		private string		m_guildName = "";
-		private ushort		m_model;
-		private byte		m_size=50;
-		private short		m_maxSpeed=50;
-		private string		m_equipmentTemplateID = "";
-		private bool		m_ghost;
-		private byte		m_meleeDamageType = 1;
-		private byte 		m_parryChance;
-		private byte 		m_evadeChance;
-		private byte 		m_blockChance;
-		private byte 		m_leftHandSwingChance;
-		private string		m_spells = "";
-		private string		m_styles = "";
+		private int m_templateId;
+		private string m_name = "";
+		private string m_guildName = "";
+		private ushort m_model;
+		private byte m_size = 50;
+		private short m_maxSpeed = 50;
+		private string m_equipmentTemplateID = "";
+		private bool m_ghost;
+		private byte m_meleeDamageType = 1;
+		private byte m_parryChance;
+		private byte m_evadeChance;
+		private byte m_blockChance;
+		private byte m_leftHandSwingChance;
+		private string m_spells = "";
+		private string m_styles = "";
+		private int m_strength = 0;
+		private int m_constitution = 0;
+		private int m_dexterity = 0;
+		private int m_quickness = 0;
+		private int m_intelligence = 0;
+		private int m_piety = 0;
+		private int m_empathy = 0;
+		private int m_charisma = 0;
+		private byte m_skillCap;
+		private string m_abilities = "";
 
-		private static bool	m_autoSave;
+		private static bool m_autoSave;
 
 		/// <summary>
 		/// Constructor
@@ -73,7 +83,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Template ID
 		/// </summary>
-		[DataElement(AllowDbNull = false)]
+		[DataElement(AllowDbNull = false, Unique = true)]
 		public int TemplateId
 		{
 			get { return m_templateId; }
@@ -87,7 +97,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Name
 		/// </summary>
-		[DataElement(AllowDbNull=false)]
+		[DataElement(AllowDbNull = false)]
 		public string Name
 		{
 			get { return m_name; }
@@ -101,7 +111,7 @@ namespace DOL.Database
 		/// <summary>
 		/// GuildName
 		/// </summary>
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public string GuildName
 		{
 			get { return m_guildName; }
@@ -115,7 +125,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Model
 		/// </summary>
-		[DataElement(AllowDbNull=false)]
+		[DataElement(AllowDbNull = false)]
 		public ushort Model
 		{
 			get { return m_model; }
@@ -129,7 +139,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Size
 		/// </summary>
-		[DataElement(AllowDbNull=false)]
+		[DataElement(AllowDbNull = false)]
 		public byte Size
 		{
 			get { return m_size; }
@@ -143,7 +153,7 @@ namespace DOL.Database
 		/// <summary>
 		/// MaxSpeed
 		/// </summary>
-		[DataElement(AllowDbNull=false)]
+		[DataElement(AllowDbNull = false)]
 		public short MaxSpeed
 		{
 			get { return m_maxSpeed; }
@@ -157,7 +167,7 @@ namespace DOL.Database
 		/// <summary>
 		/// EquipmentTemplateID
 		/// </summary>
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public string EquipmentTemplateID
 		{
 			get { return m_equipmentTemplateID; }
@@ -171,7 +181,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Ghost
 		/// </summary>
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public bool Ghost
 		{
 			get { return m_ghost; }
@@ -185,7 +195,7 @@ namespace DOL.Database
 		/// <summary>
 		/// MeleeDamageType
 		/// </summary>
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public byte MeleeDamageType
 		{
 			get { return m_meleeDamageType; }
@@ -277,6 +287,116 @@ namespace DOL.Database
 			{
 				Dirty = true;
 				m_styles = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public int Strength
+		{
+			get { return m_strength; }
+			set
+			{
+				Dirty = true;
+				m_strength = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public int Constitution
+		{
+			get { return m_constitution; }
+			set
+			{
+				Dirty = true;
+				m_constitution = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public int Dexterity
+		{
+			get { return m_dexterity; }
+			set
+			{
+				Dirty = true;
+				m_dexterity = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public int Quickness
+		{
+			get { return m_quickness; }
+			set
+			{
+				Dirty = true;
+				m_quickness = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public int Intelligence
+		{
+			get { return m_intelligence; }
+			set
+			{
+				Dirty = true;
+				m_intelligence = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public int Piety
+		{
+			get { return m_piety; }
+			set
+			{
+				Dirty = true;
+				m_piety = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public int Charisma
+		{
+			get { return m_charisma; }
+			set
+			{
+				Dirty = true;
+				m_charisma = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public int Empathy
+		{
+			get { return m_empathy; }
+			set
+			{
+				Dirty = true;
+				m_empathy = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public byte SkillCap
+		{
+			get { return m_skillCap; }
+			set
+			{
+				Dirty = true;
+				m_skillCap = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public string Abilities
+		{
+			get { return m_abilities; }
+			set
+			{
+				Dirty = true;
+				m_abilities = value;
 			}
 		}
 	}

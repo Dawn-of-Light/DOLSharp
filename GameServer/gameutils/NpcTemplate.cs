@@ -20,13 +20,14 @@ using System;
 using System.Reflection;
 using DOL.Database;
 using DOL.GS.Scripts;
-using log4net;
 using DOL.GS.Styles;
+using DOL.GS.Spells;
+using log4net;
 using System.Collections;
 
 namespace DOL.GS
 {
-	/// <summary>
+
 	/// A npc template
 	/// </summary>
 	public class NpcTemplate : INpcTemplate
@@ -36,21 +37,33 @@ namespace DOL.GS
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		protected int 			m_templateId;
-		protected string		m_name;
-		protected string		m_guildName;
-		protected ushort		m_model;
-		protected byte			m_size;
-		protected short			m_maxSpeed;
-		protected byte 			m_parryChance;
-		protected byte 			m_evadeChance;
-		protected byte 			m_blockChance;
-		protected byte 			m_leftHandSwingChance;
-		protected uint			m_flags;
-		protected IGameInventory	m_inventory;
-		protected eDamageType	m_meleeDamageType;
-		protected readonly IList m_styles;
-		protected readonly IList m_spells;
+		protected int m_templateId;
+		protected string m_name;
+		protected string m_guildName;
+		protected ushort m_model;
+		protected byte m_size;
+		protected short m_maxSpeed;
+		protected byte m_parryChance;
+		protected byte m_evadeChance;
+		protected byte m_blockChance;
+		protected byte m_leftHandSwingChance;
+		protected uint m_flags;
+		protected IGameInventory m_inventory;
+		protected eDamageType m_meleeDamageType;
+		protected int m_strength;
+		protected int m_constitution;
+		protected int m_dexterity;
+		protected int m_quickness;
+		protected int m_piety;
+		protected int m_intelligence;
+		protected int m_empathy;
+		protected int m_charisma;
+		protected byte m_skillcap;
+		protected IList m_styles;
+		protected IList m_spells;
+		protected IList b_spells;
+		protected IList m_spelllines;
+		protected IList m_abilities;
 
 		/// <summary>
 		/// Constructs a new NpcTemplate
@@ -71,44 +84,64 @@ namespace DOL.GS
 			m_evadeChance = data.EvadeChance;
 			m_blockChance = data.BlockChance;
 			m_leftHandSwingChance = data.LeftHandSwingChance;
+			m_strength = data.Strength;
+			m_constitution = data.Constitution;
+			m_dexterity = data.Dexterity;
+			m_quickness = data.Quickness;
+			m_intelligence = data.Intelligence;
+			m_piety = data.Piety;
+			m_charisma = data.Charisma;
+			m_empathy = data.Empathy;
+			m_skillcap = data.SkillCap;
 
-			string[] splitedSpells=data.Spells.Split('|');
-			IList spells = SkillBase.GetSpellList(GlobalSpellsLines.Mob_Spells);
+			//Time to add Spells/Styles and Abilties to the templates
+			m_abilities = new ArrayList();
+			m_spelllines = new ArrayList();
 			m_spells = new ArrayList();
-			if (spells != null)
+			//Adding the spells to an Arraylist here
+			if (data.Spells != null && data.Spells.Length > 0)
 			{
-				foreach (string id in splitedSpells)
+				string[] spells = data.Spells.Split(';');
+				for (int k = 0; k < spells.Length; k++)
 				{
-					foreach (Spell spell in spells) 
-					{
-						if (Convert.ToString(spell.ID) == id)
-						{
-							m_spells.Add(spell);
-							break;
-						}
-					}
+					int id = int.Parse(spells[k]);
+					Spell sp = SkillBase.GetSpellByID(id);
+					m_spells.Add(sp);
 				}
 			}
 
-			//TODO : style system for mob
-			if (data.Styles!=null && data.Styles!="")
+			// Adding Style list to Template NPC
+			m_styles = new ArrayList();
+			if (data.Styles != null && data.Styles.Length > 0)
 			{
-				string[] splitedStyles=data.Styles.Split('|');
-				m_styles = new ArrayList();
-				Style style=null;
-				foreach(string st in splitedStyles)
+				string[] styles = data.Styles.Split(';');
+				for (int i = 0; i < styles.Length; i++)
 				{
-					style=SkillBase.GetStyleByID(Convert.ToInt32(st),0);
-					if (style!=null)
-					{
-						m_styles.Add(style);
-					}
+					if (styles[i].Trim().Length == 0) continue;
+					int id = int.Parse(styles[i]);
+					Style style = SkillBase.GetStyleByID(id);
+					m_styles.Add(style);
 				}
 			}
-			
+			//Adding Abilities to Template NPC.
+			//Certain Abilities have levels will need to fix that down the road. -Batlas
+
+			if (data.Abilities != null && data.Abilities.Length > 0)
+			{
+				string[] serializedab = data.Abilities.Split('|');
+				for (int k = 0; k < serializedab.Length; k++)
+				{
+					string[] ab = serializedab[k].Split(';');
+					if (serializedab[k].Trim().Length == 0) continue;
+					int id = int.Parse(ab[1]);
+					Ability abil = SkillBase.GetAbility(ab[0], id);
+					m_abilities.Add(abil);
+				}
+			}
+
 			if (data.Ghost)
 			{
-				m_flags |= (int)GameNPC.eFlags.TRANSPARENT;
+				m_flags |= 0;
 			}
 
 			m_meleeDamageType = (eDamageType)data.MeleeDamageType;
@@ -129,71 +162,255 @@ namespace DOL.GS
 			m_inventory = temp;
 		}
 
+		public NpcTemplate(GameMob mob)
+		{
+			if (mob == null)
+				throw new ArgumentNullException("data");
+			m_templateId = GameServer.Database.GetObjectCount(typeof(DBNpcTemplate));
+			m_name = mob.Name;
+			m_guildName = mob.GuildName;
+			m_model = mob.Model;
+			m_size = mob.Size;
+			m_maxSpeed = (short)mob.MaxSpeed;
+			m_parryChance = mob.ParryChance;
+			m_evadeChance = mob.EvadeChance;
+			m_blockChance = mob.BlockChance;
+			m_leftHandSwingChance = mob.LeftHandSwingChance;
+			//Now for mob stats			
+			m_strength = 30;
+			m_constitution = 30;
+			m_quickness = 30;
+			m_intelligence = 30;
+			m_piety = 30;
+			m_charisma = 30;
+			m_empathy = 30;
+			m_skillcap = 0;
+			m_meleeDamageType = (eDamageType)mob.MeleeDamageType;
+		}
+
+
 		/// <summary>
 		/// Gets the npc template ID
 		/// </summary>
-		public int TemplateId { get { return m_templateId; } }
+		public int TemplateId
+		{
+			get { return m_templateId; }
+			set { m_templateId = value; }
+		}
 		/// <summary>
 		/// Gets the template npc name
 		/// </summary>
-		public string Name { get { return m_name; } }
+		public string Name
+		{
+			get { return m_name; }
+			set { m_name = value; }
+		}
+
 		/// <summary>
 		/// Gets the template npc guild name
 		/// </summary>
-		public string GuildName { get { return m_guildName; } }
+		public string GuildName
+		{
+			get { return m_guildName; }
+			set { m_guildName = value; }
+		}
 		/// <summary>
 		/// Gets the template npc model
 		/// </summary>
-		public ushort Model { get { return m_model; } }
+		public ushort Model
+		{
+			get { return m_model; }
+			set { m_model = value; }
+		}
 		/// <summary>
 		/// Gets the template npc size
 		/// </summary>
-		public byte Size { get { return m_size; } }
-
+		public byte Size
+		{
+			get { return m_size; }
+			set { m_size = value; }
+		}
 		/// <summary>
 		/// Gets the template npc max speed
 		/// </summary>
-		public short MaxSpeed { get { return m_maxSpeed; } }
-
+		public short MaxSpeed
+		{
+			get { return m_maxSpeed; }
+			set { m_maxSpeed = value; }
+		}
 		/// <summary>
 		/// Gets the template npc flags
 		/// </summary>
-		public uint Flags { get { return m_flags; } }
+		public uint Flags
+		{
+			get { return m_flags; }
+			set { m_flags = value; }
+		}
 		/// <summary>
 		/// Gets the template npc inventory
 		/// </summary>
-		public IGameInventory Inventory { get { return m_inventory; } }
+		public IGameInventory Inventory
+		{
+			get { return m_inventory; }
+			set { m_inventory = value; }
+		}
 		/// <summary>
 		/// Gets the template npc melee damage type
 		/// </summary>
-		public eDamageType MeleeDamageType { get { return m_meleeDamageType; } }
+		public eDamageType MeleeDamageType
+		{
+			get { return m_meleeDamageType; }
+			set { m_meleeDamageType = value; }
+		}
 		/// <summary>
 		/// Gets the template npc parry chance
 		/// </summary>
-		public byte ParryChance { get { return m_parryChance; } }
+		public byte ParryChance
+		{
+			get { return m_parryChance; }
+			set { m_parryChance = value; }
+		}
 		/// <summary>
 		/// Gets the template npc evade chance
 		/// </summary>
-		public byte EvadeChance { get { return m_evadeChance; } }
+		public byte EvadeChance
+		{
+			get { return m_evadeChance; }
+			set { m_evadeChance = value; }
+		}
 		/// <summary>
 		/// Gets the template npc block chance
 		/// </summary>
-		public byte BlockChance { get { return m_blockChance; } }
-
+		public byte BlockChance
+		{
+			get { return m_blockChance; }
+			set { m_blockChance = value; }
+		}
 		/// <summary>
 		/// Gets the template npc left hand swing chance
 		/// </summary>
-		public byte LeftHandSwingChance { get { return m_leftHandSwingChance; } }
-
+		public byte LeftHandSwingChance
+		{
+			get { return m_leftHandSwingChance; }
+			set { m_leftHandSwingChance = value; }
+		}
 		/// <summary>
 		/// Gets the template npc spells name array 
 		/// </summary>
-		public IList Spells{ get { return m_spells; } }
-
+		public IList Spells
+		{
+			get { return m_spells; }
+			set { m_spells = value; }
+		}
 		/// <summary>
 		/// Gets the template npc styles name array 
 		/// </summary>
-		public IList Styles{ get { return m_styles; } }
+		public IList Styles
+		{
+			get { return m_styles; }
+			set { m_styles = value; }
+		}
+		/// <summary>
+		/// Gets the template npc spellLines
+		/// </summary>
+		public IList SpellLines
+		{
+			get { return m_spelllines; }
+			set { m_spelllines = value; }
+		}
+		///<summary>
+		///Gets the template npc Abilities
+		///</summary>
+		public IList Abilities
+		{
+			get { return m_abilities; }
+			set { m_abilities = value; }
+		}
 
+		public int Strength
+		{
+			get { return m_strength; }
+			set { m_strength = value; }
+		}
+
+		public int Constitution
+		{
+			get { return m_constitution; }
+			set { m_constitution = value; }
+		}
+
+		public int Dexterity
+		{
+			get { return m_dexterity; }
+			set { m_dexterity = value; }
+		}
+
+		public int Quickness
+		{
+			get { return m_quickness; }
+			set { m_quickness = value; }
+		}
+
+		public int Piety
+		{
+			get { return m_piety; }
+			set { m_piety = value; }
+		}
+
+		public int Intelligence
+		{
+			get { return m_intelligence; }
+			set { m_intelligence = value; }
+		}
+
+		public int Empathy
+		{
+			get { return m_empathy; }
+			set { m_empathy = value; }
+		}
+
+		public int Charisma
+		{
+			get { return m_charisma; }
+			set { m_charisma = value; }
+		}
+
+		public byte SkillCap
+		{
+			get { return m_skillcap; }
+			set { m_skillcap = value; }
+		}
+
+		public virtual void SaveIntoDatabase()
+		{
+			DBNpcTemplate tmp = tmp = (DBNpcTemplate)GameServer.Database.FindObjectByKey(typeof(DBNpcTemplate), TemplateId);
+			bool add = false;
+			if (tmp == null)
+			{
+				tmp = new DBNpcTemplate();
+				add = true;
+			}
+			tmp.TemplateId = GameServer.Database.GetObjectCount(typeof(DBNpcTemplate));
+			tmp.Model = Model;
+			tmp.Size = Size;
+			tmp.Name = Name;
+			tmp.MaxSpeed = MaxSpeed;
+			tmp.GuildName = GuildName;
+			tmp.ParryChance = ParryChance;
+			tmp.EvadeChance = EvadeChance;
+			tmp.BlockChance = BlockChance;
+			tmp.LeftHandSwingChance = LeftHandSwingChance;
+			tmp.Strength = Strength;
+			tmp.Constitution = Constitution;
+			tmp.Dexterity = Dexterity;
+			tmp.Quickness = Quickness;
+			tmp.Piety = Piety;
+			tmp.Empathy = Empathy;
+			tmp.Intelligence = Intelligence;
+			tmp.Charisma = Charisma;
+			if (add)
+				GameServer.Database.AddNewObject(tmp);
+			else GameServer.Database.SaveObject(tmp);
+		}
 	}
 }

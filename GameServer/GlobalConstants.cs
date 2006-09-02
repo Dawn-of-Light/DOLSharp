@@ -823,6 +823,7 @@ namespace DOL.GS
 				case 1: return "drum";
 				case 2: return "lute";
 				case 3: return "flute";
+				case 4: return "harp";
 			}
 			return "unknown";
 		}

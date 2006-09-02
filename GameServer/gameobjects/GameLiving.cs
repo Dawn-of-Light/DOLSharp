@@ -3435,8 +3435,10 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 			{
 				if (log.IsInfoEnabled)
 					log.Info("No calculator for requested Property found: " + property.ToString());
-				if (log.IsDebugEnabled)
+				/*
+				 * if (log.IsDebugEnabled)
 					log.Debug(Environment.StackTrace);
+				 */
 			}
 			return 0;
 		}

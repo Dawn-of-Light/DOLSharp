@@ -70,7 +70,8 @@ namespace DOL.GS.Scripts
 		"'/mob addloot <ItemTemplateID> [chance]' to add loot to the mob's unique drop table",
 		"'/mob viewloot' to view the selected mob's loot table",
 		"'/mob removeloot <ItemTemplateID>' to remove loot from the mob's unique drop table",
-		"'/mob copy' copies a mob exactly and places it at your location"
+		"'/mob copy' copies a mob exactly and places it at your location",
+	    "'/mob npctemplate <NPCTemplateID>' creates a mob with npc template, or modifies target"
 		)]
 	public class MobCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
@@ -93,6 +94,7 @@ namespace DOL.GS.Scripts
 				&& args[1] != "fastcreate"
 				&& args[1] != "nrandcreate"
 				&& args[1] != "nfastcreate"
+				&& args[1] != "npctemplate"
 				&& targetMob == null)
 			{
 				if (client.Player.TargetObject != null)
@@ -1102,8 +1104,35 @@ namespace DOL.GS.Scripts
 						mob.AddToWorld();
 						mob.SaveIntoDatabase();
 						client.Out.SendMessage("Mob created: OID=" + mob.ObjectID, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						break;
 					}
-					break;
+				case "npctemplate":
+					{
+						int id = Convert.ToInt32(args[2]);
+						INpcTemplate template = NpcTemplateMgr.GetTemplate(id);
+						if (template == null)
+						{
+							DisplayError(client, "no template found for " + id, new object[] { });
+							break;
+						}
+						if (targetMob == null)
+						{
+							GameMob mob = new GameMob(template);
+							mob.X = client.Player.X;
+							mob.Y = client.Player.Y;
+							mob.Z = client.Player.Z;
+							mob.Heading = client.Player.Heading;
+							mob.CurrentRegion = client.Player.CurrentRegion;
+							mob.AddToWorld();
+							DisplayMessage(client, "created npc based on template " + id, new object[] { });
+						}
+						else
+						{
+							targetMob.LoadTemplate(template);
+							DisplayMessage(client, "updated npc based on template " + id, new object[] { });
+						}
+						break;
+					}
 			}
 			return 1;
 		}

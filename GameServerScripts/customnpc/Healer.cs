@@ -122,7 +122,7 @@ namespace DOL.GS.Scripts
 			if (!base.Interact(player))
 				return false;
 
-			TurnTo(player.X, player.Y);
+			TurnTo(player, 5000);
 
 			GameSpellEffect effect = SpellHandler.FindEffectOnTarget(player, CURRED_SPELL_TYPE);
 			if (effect != null)
