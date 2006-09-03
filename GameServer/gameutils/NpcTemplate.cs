@@ -101,7 +101,7 @@ namespace DOL.GS
 			//Adding the spells to an Arraylist here
 			if (data.Spells != null && data.Spells.Length > 0)
 			{
-				string[] spells = data.Spells.Split(';');
+				string[] spells = data.Spells.Split('|');
 				for (int k = 0; k < spells.Length; k++)
 				{
 					int id = int.Parse(spells[k]);
@@ -114,7 +114,7 @@ namespace DOL.GS
 			m_styles = new ArrayList();
 			if (data.Styles != null && data.Styles.Length > 0)
 			{
-				string[] styles = data.Styles.Split(';');
+				string[] styles = data.Styles.Split('|');
 				for (int i = 0; i < styles.Length; i++)
 				{
 					if (styles[i].Trim().Length == 0) continue;
@@ -131,7 +131,7 @@ namespace DOL.GS
 				string[] serializedab = data.Abilities.Split('|');
 				for (int k = 0; k < serializedab.Length; k++)
 				{
-					string[] ab = serializedab[k].Split(';');
+					string[] ab = serializedab[k].Split('|');
 					if (serializedab[k].Trim().Length == 0) continue;
 					int id = int.Parse(ab[1]);
 					Ability abil = SkillBase.GetAbility(ab[0], id);
