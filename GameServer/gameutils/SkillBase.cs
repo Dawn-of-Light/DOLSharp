@@ -689,6 +689,7 @@ namespace DOL.GS
 			m_propertyTypes[(int)eProperty.Focus_Cursing] = ePropertyType.Focus;
 			m_propertyTypes[(int)eProperty.Focus_Hexing] = ePropertyType.Focus;
 			m_propertyTypes[(int)eProperty.Focus_Witchcraft] = ePropertyType.Focus;
+			m_propertyTypes[(int)eProperty.AllFocusLevels] = ePropertyType.Focus;
 
 
 			/*
@@ -1416,13 +1417,30 @@ namespace DOL.GS
 				m_raceResists[(int)eRace.Frostalf][eResist.Spirit] = 5;
 
 				m_raceResists[(int)eRace.AlbionMinotaur] = new HybridDictionary();
-				m_raceResists[(int)eRace.AlbionMinotaur][eResist.Slash] = 0; //placeholder
+				m_raceResists[(int)eRace.AlbionMinotaur][eResist.Body] = 5; //unofficial
+				m_raceResists[(int)eRace.AlbionMinotaur][eResist.Cold] = 5; //unofficial
+				m_raceResists[(int)eRace.AlbionMinotaur][eResist.Energy] = 5; //unofficial
+				m_raceResists[(int)eRace.AlbionMinotaur][eResist.Heat] = 5; //unofficial
+				m_raceResists[(int)eRace.AlbionMinotaur][eResist.Matter] = 5; //unofficial
+				m_raceResists[(int)eRace.AlbionMinotaur][eResist.Spirit] = 5; //unofficial
+				
 
 				m_raceResists[(int)eRace.MidgardMinotaur] = new HybridDictionary();
-				m_raceResists[(int)eRace.MidgardMinotaur][eResist.Slash] = 0; //placeholder
-
+				m_raceResists[(int)eRace.MidgardMinotaur][eResist.Body] = 5; //unofficial
+				m_raceResists[(int)eRace.MidgardMinotaur][eResist.Cold] = 5; //unofficial
+				m_raceResists[(int)eRace.MidgardMinotaur][eResist.Energy] = 5; //unofficial
+				m_raceResists[(int)eRace.MidgardMinotaur][eResist.Heat] = 5; //unofficial
+				m_raceResists[(int)eRace.MidgardMinotaur][eResist.Matter] = 5; //unofficial
+				m_raceResists[(int)eRace.MidgardMinotaur][eResist.Spirit] = 5; //unofficial
+				
 				m_raceResists[(int)eRace.HiberniaMinotaur] = new HybridDictionary();
-				m_raceResists[(int)eRace.HiberniaMinotaur][eResist.Slash] = 0; //placeholder
+				m_raceResists[(int)eRace.HiberniaMinotaur][eResist.Body] = 5; //unofficial
+				m_raceResists[(int)eRace.HiberniaMinotaur][eResist.Cold] = 5; //unofficial
+				m_raceResists[(int)eRace.HiberniaMinotaur][eResist.Energy] = 5; //unofficial
+				m_raceResists[(int)eRace.HiberniaMinotaur][eResist.Heat] = 5; //unofficial
+				m_raceResists[(int)eRace.HiberniaMinotaur][eResist.Matter] = 5; //unofficial
+				m_raceResists[(int)eRace.HiberniaMinotaur][eResist.Spirit] = 5; //unofficial
+				
 				#endregion
 			}
 
