@@ -245,8 +245,17 @@ namespace DOL.GS
 			m_maxClientCount = 500;
 
 			m_useReflectionOptimizer = true;
-			
-			m_cpuCount = Environment.ProcessorCount;
+
+			try
+			{
+				m_cpuCount = Environment.ProcessorCount;
+			}
+			catch (NotImplementedException e)
+			{
+				m_cpuCount = 1;
+			}
+
+
 			if (m_cpuCount < 1)
 				m_cpuCount = 1;
 		}
