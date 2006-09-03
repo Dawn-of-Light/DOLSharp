@@ -686,6 +686,10 @@ namespace DOL.AI.Brain
 			//heal self
 			if (Body.HealthPercent < 100)
 				CheckSpellsByType("Heal");
+			if (Body.IsDiseased)
+				CheckSpellsByType("CureDisease");
+			//cure poison
+
 			//heal group
 
 			//buffs
@@ -714,6 +718,7 @@ namespace DOL.AI.Brain
 		{
 			//direct damage shouts
 			CheckSpellsByType("DirectDamage");
+			CheckSpellsByType("Lifedrain");
 			//stun shout
 			CheckSpellsByType("Stun");
 			//mez shout
@@ -770,7 +775,7 @@ namespace DOL.AI.Brain
 						continue;
 
 					//if the spell is friendly
-					if (spell.Target == "Realm")
+					if (spell.Target == "Realm" || spell.Target == "Self")
 					{
 						//check if the effect is already active
 						bool already = false;
@@ -796,7 +801,6 @@ namespace DOL.AI.Brain
 					if (Body.IsMoving)
 						Body.StopMoving();
 
-					log.Error("attempting to cast spell " + spell.Name + " type " + spell.SpellType);
 					//todo GameLiving.DisableSkill, currently only GamePlayer to allow for proper recast timers
 					Body.CastSpell(spell, spellline);
 					break;
