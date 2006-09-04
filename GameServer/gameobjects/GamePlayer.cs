@@ -2680,7 +2680,7 @@ namespace DOL.GS
 
 			if (messageFormat != null && money != 0)
 			{
-				Out.SendMessage(string.Format(messageFormat, DOL.GS.Money.GetString(Money)), ct, cl);
+				Out.SendMessage(string.Format(messageFormat, DOL.GS.Money.GetString(money)), ct, cl);
 			}
 		}
 
