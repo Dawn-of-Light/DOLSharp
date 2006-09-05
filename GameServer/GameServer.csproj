@@ -569,6 +569,7 @@
     <Compile Include="keeps\Managers\Spell Manager.cs" />
     <Compile Include="keeps\Relics\GameRelic.cs" />
     <Compile Include="keeps\Relics\GameRelicPad.cs" />
+    <Compile Include="packets\PacketLib185.cs" />
     <Compile Include="propertycalc\CriticalArcheryHitChanceCalculator.cs" />
     <Compile Include="propertycalc\CriticalMeleeHitChanceCalculator.cs" />
     <Compile Include="propertycalc\ResistPiercePropertyCalculator.cs" />
