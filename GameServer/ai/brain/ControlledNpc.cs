@@ -236,7 +236,7 @@ namespace DOL.AI.Brain
 		{
 			if (!Owner.CurrentUpdateArray[Body.ObjectID-1])
 			{
-				Owner.Out.SendNPCUpdate(Body);
+				Owner.Out.SendObjectUpdate(Body);
 				Owner.CurrentUpdateArray[Body.ObjectID-1] = true;
 			}
 

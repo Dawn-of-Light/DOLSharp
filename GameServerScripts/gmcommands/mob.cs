@@ -356,7 +356,7 @@ namespace DOL.GS.Scripts
 							targetMob.Health = targetMob.
 								MaxHealth;
 							targetMob.SaveIntoDatabase();
-							client.Out.SendNPCUpdate(targetMob);
+							client.Out.SendObjectUpdate(targetMob);
 							client.Out.SendMessage("Mob health regenerated (" + targetMob.Health + "/" + targetMob.MaxHealth + ")", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						}
 						catch (Exception)

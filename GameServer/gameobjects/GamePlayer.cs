@@ -7226,7 +7226,7 @@ namespace DOL.GS
 						Out.SendLivingEquipmentUpdate(npc);
 					//Send health update only if mob-health is not 100%
 					if (npc.HealthPercent != 100)
-						Out.SendNPCUpdate(npc);
+						Out.SendObjectUpdate(npc);
 					CurrentUpdateArray[npc.ObjectID - 1] = true;
 				}
 				//Create player visible to all others
