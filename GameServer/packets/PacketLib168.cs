@@ -649,25 +649,94 @@ namespace DOL.GS.PacketHandler
 			}
 			ushort XOffsetInZone = (ushort)(obj.X - z.XOffset);
 			ushort YOffsetInZone = (ushort)(obj.Y - z.YOffset);
+			ushort XOffsetInTargetZone = 0;
+			ushort YOffsetInTargetZone = 0;
+			ushort ZOffsetInTargetZone = 0;
+
+			int speed = 0;
+			byte targetZone = 0;
+			byte flags = 0;
+			int targetOID = 0;
+			if (obj is GameNPC)
+			{
+				GameNPC npc = obj as GameNPC;
+				flags = (byte)(GameServer.ServerRules.GetLivingRealm(m_gameClient.Player, npc) << 6);
+
+				if (m_gameClient.Account.PrivLevel < 2)
+				{
+					// no name only if normal player
+					if ((npc.Flags & (uint)GameNPC.eFlags.CANTTARGET) != 0)
+						flags |= 0x01;
+					if ((npc.Flags & (uint)GameNPC.eFlags.DONTSHOWNAME) != 0)
+						flags |= 0x02;
+				}
+				if (npc.IsUnderwater)
+					flags |= 0x10;
+				if ((npc.Flags & (uint)GameNPC.eFlags.FLYING) != 0)
+					flags |= 0x20;
+
+				if (npc.IsMoving && !npc.IsOnTarget())
+				{
+					speed = npc.CurrentSpeed;
+					if (npc.TargetX != 0 || npc.TargetY != 0 || npc.TargetZ != 0)
+					{
+						Zone tz = npc.CurrentRegion.GetZone(npc.TargetX, npc.TargetY);
+						if (tz != null)
+						{
+							XOffsetInTargetZone = (ushort)(npc.TargetX - tz.XOffset);
+							YOffsetInTargetZone = (ushort)(npc.TargetY - tz.YOffset);
+							ZOffsetInTargetZone = (ushort)(npc.TargetZ);
+							targetZone = (byte)tz.ID;
+						}
+					}
+
+					if (speed > 0x07FF)
+					{
+						if (log.IsErrorEnabled)
+							log.Error("Too high NPC speed. (" + speed + ")" + npc.Name);
+						speed = 0x07FF;
+					}
+					else if (speed < 0)
+					{
+						if (log.IsErrorEnabled)
+							log.Error("NPC speed can't be negative. (" + speed + ")" + npc.Name);
+						speed = 0;
+					}
+
+					//flags|=0x10;
+				}
+
+				GameObject target = npc.TargetObject;
+				if (npc.AttackState && target != null && target.ObjectState == GameObject.eObjectState.Active && !npc.IsTurningDisabled)
+					targetOID = (ushort)target.ObjectID;
+			}
+
 			GSUDPPacketOut pak = new GSUDPPacketOut(GetPacketCode(ePackets.ObjectUpdate));
-			pak.WriteShort(0);
-			pak.WriteShort(obj.Heading);
+			pak.WriteShort((ushort)speed);
+			if (obj is GameNPC)
+				pak.WriteShort((ushort)(obj.Heading & 0xFFF));
+			else pak.WriteShort(obj.Heading);
 			pak.WriteShort(XOffsetInZone);
-			pak.WriteShort(0);
+			pak.WriteShort(XOffsetInTargetZone);
 			pak.WriteShort(YOffsetInZone);
-			pak.WriteShort(0);
+			pak.WriteShort(YOffsetInZone);
 			pak.WriteShort((ushort)obj.Z);
-			pak.WriteShort(0);
+			pak.WriteShort(ZOffsetInTargetZone);
 			pak.WriteShort((ushort)obj.ObjectID);
-			pak.WriteShort(0x00);
+			pak.WriteShort((ushort)targetOID);
 			//health
 			if (obj is GameLiving)
 				pak.WriteByte((obj as GameLiving).HealthPercent);
 			else pak.WriteByte(0);
-			pak.WriteByte(0);
+			pak.WriteByte(flags);
 			pak.WriteByte((byte)z.ID);
-			pak.WriteByte(0);
+			pak.WriteByte(targetZone);
 			SendUDP(pak);
+
+			if (obj is GameNPC)
+			{
+				(obj as GameNPC).NPCUpdatedCallback();
+			}
 		}
 
 		public virtual void SendPlayerQuit(bool totalOut)
@@ -820,97 +889,6 @@ namespace DOL.GS.PacketHandler
 				if (brain != null)
 					SendObjectGuildID(npc, brain.Owner.Guild); //used for nearest friendly/enemy object buttons and name colors on PvP server
 			}
-		}
-
-		public virtual void SendNPCUpdate(GameNPC npc)
-		{
-			Zone z = npc.CurrentZone;
-			if (z == null)
-			{
-				if (log.IsWarnEnabled)
-					log.Warn("SendNPCUpdate: npc zone == null. npcID:" + npc.InternalID);
-				return;
-			}
-			ushort XOffsetInZone = (ushort)(npc.X - z.XOffset);
-			ushort YOffsetInZone = (ushort)(npc.Y - z.YOffset);
-			ushort XOffsetInTargetZone = 0;
-			ushort YOffsetInTargetZone = 0;
-			ushort ZOffsetInTargetZone = 0;
-
-			int speed = 0;
-			byte targetZone = 0;
-			byte flags = (byte)(GameServer.ServerRules.GetLivingRealm(m_gameClient.Player, npc) << 6);
-
-			if (m_gameClient.Account.PrivLevel < 2)
-			{
-				// no name only if normal player
-				if ((npc.Flags & (uint)GameNPC.eFlags.CANTTARGET) != 0)
-					flags |= 0x01;
-				if ((npc.Flags & (uint)GameNPC.eFlags.DONTSHOWNAME) != 0)
-					flags |= 0x02;
-			}
-			if (npc.IsUnderwater)
-				flags |= 0x10;
-			if ((npc.Flags & (uint)GameNPC.eFlags.FLYING) != 0)
-				flags |= 0x20;
-
-			if (npc.IsMoving && !npc.IsOnTarget())
-			{
-				speed = npc.CurrentSpeed;
-				if (npc.TargetX != 0 || npc.TargetY != 0 || npc.TargetZ != 0)
-				{
-					Zone tz = npc.CurrentRegion.GetZone(npc.TargetX, npc.TargetY);
-					if (tz != null)
-					{
-						XOffsetInTargetZone = (ushort)(npc.TargetX - tz.XOffset);
-						YOffsetInTargetZone = (ushort)(npc.TargetY - tz.YOffset);
-						ZOffsetInTargetZone = (ushort)(npc.TargetZ);
-						targetZone = (byte)tz.ID;
-					}
-				}
-				//flags|=0x10;
-			}
-
-			GSUDPPacketOut pak = new GSUDPPacketOut(GetPacketCode(ePackets.ObjectUpdate));
-
-			if (speed > 0x07FF)
-			{
-				if (log.IsErrorEnabled)
-					log.Error("Too high NPC speed. (" + speed + ")" + npc.Name);
-				speed = 0x07FF;
-			}
-			else if (speed < 0)
-			{
-				if (log.IsErrorEnabled)
-					log.Error("NPC speed can't be negative. (" + speed + ")" + npc.Name);
-				speed = 0;
-			}
-
-			//speed |= (ushort)(npc.m_flyTest << 13);
-
-			pak.WriteShort((ushort)speed);
-			pak.WriteShort((ushort)(npc.Heading & 0xFFF)); //|((npc.m_flyTest>>3)<<13)));
-			pak.WriteShort(XOffsetInZone);
-			pak.WriteShort(XOffsetInTargetZone); //TODO target x spot
-			pak.WriteShort(YOffsetInZone);
-			pak.WriteShort(YOffsetInTargetZone); //TODO target y spot
-			pak.WriteShort((ushort)npc.Z);
-			pak.WriteShort(ZOffsetInTargetZone); //TODO target z spot
-			pak.WriteShort((ushort)npc.ObjectID);
-
-			GameObject target = npc.TargetObject;
-			if (npc.AttackState && target != null && target.ObjectState == GameObject.eObjectState.Active && !npc.IsTurningDisabled)
-				pak.WriteShort((ushort)target.ObjectID);
-			else
-				pak.WriteShort(0x00);
-
-			pak.WriteByte(npc.HealthPercent);
-			pak.WriteByte(flags);
-			pak.WriteByte((byte)z.ID);
-			pak.WriteByte(targetZone);
-			SendUDP(pak);
-
-			npc.NPCUpdatedCallback();
 		}
 
 		public virtual void SendLivingEquipmentUpdate(GameLiving living)
@@ -1942,8 +1920,11 @@ namespace DOL.GS.PacketHandler
 				flagSendHybrid = false;
 
 			lock (skills.SyncRoot)
+			{
 				lock (styles.SyncRoot)
+				{
 					lock (specs.SyncRoot)
+					{
 						lock (spelllines.SyncRoot)
 						{
 							int skillCount = specs.Count + skills.Count + styles.Count;
@@ -2062,6 +2043,9 @@ namespace DOL.GS.PacketHandler
 								}
 							}
 						}
+					}
+				}
+			}
 			if (pak.Length > 7)
 			{
 				pak.Position = 4;

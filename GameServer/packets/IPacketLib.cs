@@ -440,7 +440,6 @@ namespace DOL.GS.PacketHandler
 		void SendModelChange(GameObject obj, ushort newModel);
 		void SendEmoteAnimation(GameObject obj, eEmote emote);
 		void SendNPCCreate(GameNPC npc);
-		void SendNPCUpdate(GameNPC npc);
 		void SendLivingEquipmentUpdate(GameLiving living);
 		void SendRegionChanged();
 		void SendUpdatePoints();

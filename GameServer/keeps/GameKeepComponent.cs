@@ -504,8 +504,7 @@ namespace DOL.GS.Keeps
 		}
 
 		private RegionTimer m_rebuildTimer;
-		private static int rebuildInterval = 10 * 1000;
-		//private static long rebuildInterval = 30 * 60 * 1000;
+		private static int rebuildInterval = 30 * 60 * 1000;
 		private void StartRebuildTimer()
 		{
 			m_rebuildTimer = new RegionTimer(CurrentRegion.TimeManager);
@@ -518,7 +517,10 @@ namespace DOL.GS.Keeps
 		{
 			Repair((MaxHealth / 100) * 5);
 			if (HealthPercent >= 25)
+			{
+				FillPositions();
 				return 0;
+			}
 			return rebuildInterval;
 		}
 
