@@ -278,7 +278,7 @@ namespace DOL.GS
 			siegeWeapon.Health = siegeWeapon.MaxHealth;
 			player.CraftTimer.Stop();
 			player.Out.SendCloseTimerWindow();
-			player.Out.SendNPCUpdate(siegeWeapon);//not sure if good packet for update
+			player.Out.SendObjectUpdate(siegeWeapon);//not sure if good packet for update
 			player.Out.SendMessage("You have fully repaired the " + siegeWeapon.Name + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			return 0;
 		}

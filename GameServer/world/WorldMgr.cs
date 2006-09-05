@@ -627,7 +627,7 @@ namespace DOL.GS
 										}
 										else if (carray[npc.ObjectID - 1] == false)
 										{
-											client.Out.SendNPCUpdate(npc);
+											client.Out.SendObjectUpdate(npc);
 										}
 									}
 									catch (Exception e)

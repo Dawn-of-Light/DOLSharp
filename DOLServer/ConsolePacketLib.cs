@@ -100,7 +100,6 @@ namespace DOLGameServerConsole
 		public void SendModelChange(GameObject obj, ushort newModel) { }
 		public void SendEmoteAnimation(GameObject obj, eEmote emote) { }
 		public void SendNPCCreate(GameNPC npc) { }
-		public void SendNPCUpdate(GameNPC npc) { }
 		public void SendLivingEquipmentUpdate(GameLiving living) { }
 		public void SendRegionChanged() { }
 		public void SendUpdatePoints() { }

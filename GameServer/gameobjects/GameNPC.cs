@@ -1475,7 +1475,7 @@ namespace DOL.GS
 			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
 				if (player == null) continue;
-				player.Out.SendNPCUpdate(this);
+				player.Out.SendObjectUpdate(this);
 				player.CurrentUpdateArray[ObjectID - 1] = true;
 			}
 			m_lastUpdateTickCount = (uint)Environment.TickCount;
