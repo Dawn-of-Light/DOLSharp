@@ -25,7 +25,7 @@ namespace DOL.Geometry
 	/// Vector3 is a class to represent any 3D vector
 	/// Uses active approach so recalculates data on change
 	/// </summary>
-	public class Vector3: Vector2, IVector
+	public class Vector3: Vector2, IVector, IPoint3D
 	{
 		#region Private Properties
 

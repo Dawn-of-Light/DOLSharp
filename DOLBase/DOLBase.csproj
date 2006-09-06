@@ -127,6 +127,7 @@
     <Compile Include="Geometry\IMatrix.cs" />
     <Compile Include="Geometry\IMesh.cs" />
     <Compile Include="Geometry\IPoint.cs" />
+    <Compile Include="Geometry\IPoint3D.cs" />
     <Compile Include="Geometry\IVector.cs" />
     <Compile Include="Geometry\LineMesh.cs" />
     <Compile Include="Geometry\Matrix.cs" />
@@ -138,6 +139,7 @@
     <Compile Include="Geometry\MatrixTranslation.cs" />
     <Compile Include="Geometry\Point2D.cs" />
     <Compile Include="Geometry\Point3D.cs" />
+    <Compile Include="Geometry\PointF3D.cs" />
     <Compile Include="Geometry\PointMesh.cs" />
     <Compile Include="Geometry\Quaternion.cs" />
     <Compile Include="Geometry\TriangleMesh.cs" />
