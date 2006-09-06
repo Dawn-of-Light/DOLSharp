@@ -124,6 +124,25 @@
     <Compile Include="FTP\FTPMode.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Geometry\IMatrix.cs" />
+    <Compile Include="Geometry\IMesh.cs" />
+    <Compile Include="Geometry\IPoint.cs" />
+    <Compile Include="Geometry\IVector.cs" />
+    <Compile Include="Geometry\LineMesh.cs" />
+    <Compile Include="Geometry\Matrix.cs" />
+    <Compile Include="Geometry\MatrixIdentity.cs" />
+    <Compile Include="Geometry\MatrixRotationX.cs" />
+    <Compile Include="Geometry\MatrixRotationY.cs" />
+    <Compile Include="Geometry\MatrixRotationZ.cs" />
+    <Compile Include="Geometry\MatrixScaling.cs" />
+    <Compile Include="Geometry\MatrixTranslation.cs" />
+    <Compile Include="Geometry\Point2D.cs" />
+    <Compile Include="Geometry\Point3D.cs" />
+    <Compile Include="Geometry\PointMesh.cs" />
+    <Compile Include="Geometry\Quaternion.cs" />
+    <Compile Include="Geometry\TriangleMesh.cs" />
+    <Compile Include="Geometry\Vector2.cs" />
+    <Compile Include="Geometry\Vector3.cs" />
     <Compile Include="Marshal.cs">
       <SubType>Code</SubType>
     </Compile>
