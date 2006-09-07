@@ -189,9 +189,18 @@ namespace DOL.GS.ServerProperties
 				property.DefaultValue = attrib.DefaultValue.ToString();
 				property.Value = attrib.DefaultValue.ToString();
 				GameServer.Database.AddNewObject(property);
+				log.Info("Cannot find server property " + key + " creating it");
 			}
 			log.Info("Loading " + key + " Value is " + property.Value);
-			return Convert.ChangeType(property.Value, attrib.DefaultValue.GetType());
+			try
+			{
+				return Convert.ChangeType(property.Value, attrib.DefaultValue.GetType());
+			}
+			catch(Exception e)
+			{
+				log.Error("Exception in ServerProperties Load: ", e);
+				return null;
+			}
 		}
 
 		/// <summary>

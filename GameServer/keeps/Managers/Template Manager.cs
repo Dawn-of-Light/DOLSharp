@@ -50,8 +50,8 @@ namespace DOL.GS.Keeps
 			if (guard.Component == null)
 			{
 				if (guard is GuardLord)
-					return 65;
-				else return 55;
+					return 75;
+				else return 65;
 			}
 			if (guard.IsPortalKeepGuard)
 				return 255;
