@@ -551,7 +551,7 @@ namespace DOL.GS
 						GameServer.Instance.LogGMAction("  Money: "+m_owner.Name+"("+m_owner.Client.Account.Name+") -> "+partner.Name+"("+partner.Client.Account.Name+") : "+TradeMoney+"coppers");
 				}
 
-				if (TradeMoney > 0)
+				if (TradeMoney > 0 || m_partnerWindow.TradeMoney > 0)
 				{
 					//Now add the money
 					m_owner.AddMoney(m_partnerWindow.TradeMoney, "You get {0}.");
