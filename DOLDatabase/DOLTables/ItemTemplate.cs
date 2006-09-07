@@ -153,6 +153,12 @@ namespace DOL.Database
 			m_maxCharges = 0;
 			m_spellID = 0;//when no spell link to item
 			m_procSpellID = 0;
+			m_procSpellID1 = 0;
+			m_charges1 = 0;
+			m_maxCharges1 = 0;
+			m_poisonCharges = 0;
+			m_poisonMaxCharges = 0;
+			m_poisonSpellID = 0;
 			m_autoSave = false;
 		}
 

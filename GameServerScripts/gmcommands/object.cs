@@ -29,10 +29,11 @@ namespace DOL.GS.Scripts
 		 (uint)ePrivLevel.GM, //minimum privelege level
 		"Various Object commands!", //command description
 		//usage
+		 "'/object info' to get information about the object",
 		 "'/object create' to create a default object",
 		 "'/object model <newModel>' to set the model to newModel",
 		 "'/object emblem <newEmblem>' to set the emblem to newEmblem",
-		 "'/object name <newName>' set the targeted object name to newName",
+		 "'/object name <newName>' to set the targeted object name to newName",
 		 "'/object remove' to remove the targeted object",
 		 "'/object save' to save the object")]
 	public class ObjectCommandHandler : ICommandHandler
@@ -125,6 +126,7 @@ namespace DOL.GS.Scripts
 						obj.Model = 100;
 						obj.Emblem = 0;
 						obj.AddToWorld();
+						obj.SaveIntoDatabase();
 						client.Out.SendMessage("Obj created: OID=" + obj.ObjectID, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						break;
 					}
@@ -135,6 +137,7 @@ namespace DOL.GS.Scripts
 						{
 							model = Convert.ToUInt16(args[2]);
 							targetObject.Model = model;
+							targetObject.SaveIntoDatabase();
 							client.Out.SendMessage("Object model changed to: " + targetObject.Model, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						}
 						catch (Exception)
@@ -151,6 +154,7 @@ namespace DOL.GS.Scripts
 						{
 							emblem = Convert.ToUInt16(args[2]);
 							targetObject.Emblem = emblem;
+							targetObject.SaveIntoDatabase();
 							client.Out.SendMessage("Object emblem changed to: " + targetObject.Emblem, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						}
 						catch (Exception)
@@ -165,6 +169,7 @@ namespace DOL.GS.Scripts
 						if (param != "")
 						{
 							targetObject.Name = param;
+							targetObject.SaveIntoDatabase();
 							client.Out.SendMessage("Object name changed to: " + targetObject.Name, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						}
 						break;
