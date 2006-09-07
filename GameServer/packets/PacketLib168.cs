@@ -719,7 +719,7 @@ namespace DOL.GS.PacketHandler
 			pak.WriteShort(XOffsetInZone);
 			pak.WriteShort(XOffsetInTargetZone);
 			pak.WriteShort(YOffsetInZone);
-			pak.WriteShort(YOffsetInZone);
+			pak.WriteShort(YOffsetInTargetZone);
 			pak.WriteShort((ushort)obj.Z);
 			pak.WriteShort(ZOffsetInTargetZone);
 			pak.WriteShort((ushort)obj.ObjectID);
@@ -2958,11 +2958,6 @@ namespace DOL.GS.PacketHandler
 			pak.WriteByte((byte)0xFF);
 			pak.WritePascalString(str);
 			SendTCP(pak);
-		}
-
-		public virtual void SendInventoryItemsUpdateTest(byte preAction, ICollection itemsToUpdate)
-		{
-			log.Info("168><");
 		}
 		public virtual void SendRvRGuildBanner(GamePlayer player, bool show)
 		{

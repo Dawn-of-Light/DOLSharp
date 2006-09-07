@@ -198,7 +198,6 @@ namespace DOLGameServerConsole
 		public void SendControlledHorse(GamePlayer player, bool flag) { }
 		public void CheckLengthHybridSkillsPacket(ref GSTCPPacketOut pak, ref int maxSkills, ref int first) { }
 		public void SendListCastersSpell() { }
-		public void SendInventoryItemsUpdateTest(byte preAction, ICollection itemsToUpdate) { }
 		public void SendCrash(string str) { }
 		public void SendRvRGuildBanner(GamePlayer player, bool show) { }
 	}

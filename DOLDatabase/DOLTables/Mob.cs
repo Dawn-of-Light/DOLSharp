@@ -69,6 +69,7 @@ namespace DOL.Database
 			m_npcTemplateID = -1;
 			m_meleeDamageType = 2; // slash by default
 			m_respawnInterval = -1; // randow respawn by default
+			m_guild = "";
 		}
 
 		/// <summary>
