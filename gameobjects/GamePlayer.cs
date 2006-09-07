@@ -3373,7 +3373,7 @@ namespace DOL.GS
 			m_currentXP += expTotal; // force usage of this method, Experience property cannot be set
 			m_character.Experience = m_currentXP;
 
-			if (expTotal > 0)
+			if (expTotal >= 0)
 			{
 				//Level up
 				if (Level >= 5 && CharacterClass.BaseName == CharacterClass.Name)

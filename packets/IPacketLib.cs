@@ -537,7 +537,6 @@ namespace DOL.GS.PacketHandler
 		void SendControlledHorse(GamePlayer player, bool flag);
 		void CheckLengthHybridSkillsPacket(ref GSTCPPacketOut pak, ref int maxSkills, ref int first);
 		void SendListCastersSpell();
-		void SendInventoryItemsUpdateTest(byte preAction, ICollection itemsToUpdate);
 		void SendCrash(string str);
 	}
 }
