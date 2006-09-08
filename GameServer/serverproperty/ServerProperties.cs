@@ -17,6 +17,7 @@
  *
  */
 using System.Collections;
+using System.Globalization;
 using System;
 using System.Reflection;
 using DOL.Database;
@@ -194,7 +195,10 @@ namespace DOL.GS.ServerProperties
 			log.Info("Loading " + key + " Value is " + property.Value);
 			try
 			{
-				return Convert.ChangeType(property.Value, attrib.DefaultValue.GetType());
+				//we do this because we need "1.0" to be considered double sometimes its "1,0" in other countries
+				CultureInfo myCIintl = new CultureInfo("en-US", false);
+				IFormatProvider provider = myCIintl.NumberFormat; 
+				return Convert.ChangeType(property.Value, attrib.DefaultValue.GetType(), provider);
 			}
 			catch(Exception e)
 			{

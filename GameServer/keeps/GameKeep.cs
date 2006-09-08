@@ -56,6 +56,19 @@ namespace DOL.GS.Keeps
 			set { m_towers = value; }
 		}
 
+		public bool OwnsAllTowers
+		{
+			get
+			{
+				foreach (GameKeepTower tower in this.Towers)
+				{
+					if (tower.Realm != this.Realm)
+						return false;
+				}
+				return true;
+			}
+		}
+
 		/// <summary>
 		/// The time to upgrade a keep
 		/// </summary>

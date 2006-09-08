@@ -225,7 +225,7 @@ namespace DOL.GS.Keeps
 
 		public static void AddPosition(DBKeepPosition position)
 		{
-			foreach (AbstractGameKeep keep in KeepMgr.GetAllKeeps().Values)
+			foreach (AbstractGameKeep keep in KeepMgr.Keeps.Values)
 			{
 				foreach (GameKeepComponent component in keep.KeepComponents)
 				{
@@ -243,7 +243,7 @@ namespace DOL.GS.Keeps
 
 		public static void RemovePosition(DBKeepPosition position)
 		{
-			foreach (AbstractGameKeep keep in KeepMgr.GetAllKeeps().Values)
+			foreach (AbstractGameKeep keep in KeepMgr.Keeps.Values)
 			{
 				foreach (GameKeepComponent component in keep.KeepComponents)
 				{
@@ -262,7 +262,7 @@ namespace DOL.GS.Keeps
 
 		public static void FillPositions()
 		{
-			foreach (AbstractGameKeep keep in KeepMgr.GetAllKeeps().Values)
+			foreach (AbstractGameKeep keep in KeepMgr.Keeps.Values)
 			{
 				foreach (GameKeepComponent component in keep.KeepComponents)
 				{

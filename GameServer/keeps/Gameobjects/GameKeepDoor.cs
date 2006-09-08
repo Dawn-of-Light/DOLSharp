@@ -240,8 +240,8 @@ namespace DOL.GS.Keeps
 			if (m_oldHealthPercent != HealthPercent)
 			{
 				m_oldHealthPercent = HealthPercent;
-				foreach (GamePlayer player in WorldMgr.GetClientsOfRegion(CurrentRegionID))
-					player.Out.SendObjectUpdate(this);
+				foreach (GameClient client in WorldMgr.GetClientsOfRegion(CurrentRegionID))
+					client.Out.SendObjectUpdate(this);
 			}
 
 			//Work around the XP system
