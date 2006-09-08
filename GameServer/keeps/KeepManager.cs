@@ -318,11 +318,14 @@ namespace DOL.GS.Keeps
 		/// Gets a copy of the current keeps table
 		/// </summary>
 		/// <returns></returns>
-		public static Hashtable GetAllKeeps()
+		public static Hashtable Keeps
 		{
-			lock (m_keeps.SyncRoot)
+			get
 			{
-				return (Hashtable)m_keeps.Clone();
+				lock (m_keeps.SyncRoot)
+				{
+					return (Hashtable)m_keeps.Clone();
+				}
 			}
 		}
 

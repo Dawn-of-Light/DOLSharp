@@ -425,11 +425,11 @@ namespace DOL.GS.Keeps
 						guard.MoveTo(guard.CurrentRegionID, guard.X, guard.Y, this.Keep.Z, guard.Heading);
 						guard.SpawnZ = this.Keep.Z;
 					}
-
-					foreach (GameClient client in WorldMgr.GetClientsOfRegion(this.CurrentRegionID))
-						client.Out.SendKeepComponentDetailUpdate(this);
 				}
 			}
+
+			foreach (GameClient client in WorldMgr.GetClientsOfRegion(this.CurrentRegionID))
+				client.Out.SendKeepComponentDetailUpdate(this);
 		}
 
 		public override void Delete()

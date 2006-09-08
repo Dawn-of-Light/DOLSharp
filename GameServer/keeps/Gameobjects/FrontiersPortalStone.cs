@@ -67,14 +67,11 @@ namespace DOL.GS.Keeps
 			}
 		}
 
-		public override ushort Model
+		public FrontiersPortalStone()
+			: base()
 		{
-			get { return 2603; }
-		}
-
-		public override string Name
-		{
-			get { return "Frontiers Portal Stone"; }
+			m_Model = 2603;
+			m_Name = "Frontiers Portal Stone";
 		}
 
 		public override bool Interact(GamePlayer player)
@@ -82,8 +79,16 @@ namespace DOL.GS.Keeps
 			if (!base.Interact(player))
 				return false;
 
-			if (player.Realm != this.Realm && player.Client.Account.PrivLevel == 1)
-				return false;
+			if (player.Client.Account.PrivLevel == 1)
+			{
+				if (player.Realm != this.Realm)
+					return false;
+				if (Component != null && Component.Keep is GameKeep)
+				{
+					if ((Component.Keep as GameKeep).OwnsAllTowers == false)
+						return false;
+				}
+			}
 
 			player.Out.SendDialogBox(eDialogCode.WarmapWindow, 0, 0, 0, 0, eDialogType.YesNo, false, "");
 

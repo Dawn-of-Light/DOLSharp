@@ -93,19 +93,11 @@ namespace DOL.GS.PacketHandler.v168
 											client.Player.Out.SendMessage("You cannot teleport unless you are near a valid portal stone.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 											return 0;
 										}
-										//does keep have all towers intact?
-										GameKeep theKeep = keep as GameKeep;
-										foreach (GameKeepTower tower in theKeep.Towers)
-										{
-											if (tower.Realm != theKeep.Realm)
-											{
-												good = false;
-												break;
-											}
-										}
 									}
+
+									//does keep have all towers intact?
 									//todo 5 second teleport
-									if (good)
+									if (client.Account.PrivLevel > 1 || (keep as GameKeep).OwnsAllTowers)
 									{
 										FrontiersPortalStone stone = keep.TeleportStone;
 										heading = stone.Heading;

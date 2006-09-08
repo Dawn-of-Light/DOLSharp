@@ -187,7 +187,6 @@ namespace DOLGameServerConsole
 		public void SendFurniture(House house) { }
 		public void SendFurniture(House house, int i) { }
 		public void SendMovingObjectCreate(GameMovingObject obj) { }
-		public void SendComponentUpdate(GameKeepComponent keepcomponent) { }
 		public void SendWarmapUpdate(IList list) { }
 		public void SendWarmapBonuses() { }
 		public void SendCheckLOS(GameObject Checker, GameObject Target, DOL.GS.PacketHandler.CheckLOSResponse callback) { }

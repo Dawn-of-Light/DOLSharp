@@ -216,7 +216,7 @@ namespace DOL.GS
 		public const string PhantasmalWail = "Phantasmal Wail"; //Bainshee
 		public const string ShadowMastery = "Shadow Mastery"; //Vampiir
 		public const string Soulrending   = "Soulrending"; //Reaver
-		public const string SpectralForce = "Spectral Force"; //Bainshee
+		public const string SpectralGuard = "Spectral Guard"; //Bainshee
 		public const string VampiiricEmbrace = "Vampiiric Embrace"; //Vampiir
 		public const string Verdant_Path  = "Verdant Path"; //Animist
 		public const string Witchcraft  = "Witchcraft"; //Warlock

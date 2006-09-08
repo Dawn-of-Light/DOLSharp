@@ -1268,7 +1268,7 @@ namespace DOL.GS
 				case Specs.Creeping_Path: return 0x81;
 				case Specs.Verdant_Path: return 0x82;
 				case Specs.OdinsWill: return 0x85;
-				case Specs.SpectralForce: return 0x86; // Spectral Guard ?
+				case Specs.SpectralGuard: return 0x86; // Spectral Guard ?
 				case Specs.PhantasmalWail: return 0x87;
 				case Specs.EtherealShriek: return 0x88;
 				case Specs.ShadowMastery: return 0x89;
