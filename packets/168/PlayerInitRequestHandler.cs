@@ -114,7 +114,7 @@ namespace DOL.GS.PacketHandler.v168
 
 					if (player.Level > 1 && Properties.MOTD != "")
 					{
-						player.Out.SendMessage(Properties.MOTD, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+						player.Out.SendMessage(Properties.MOTD, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}
 					else if (player.Level == 1 && Properties.STARTING_MSG != "")
 					{
