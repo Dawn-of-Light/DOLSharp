@@ -2042,20 +2042,29 @@ namespace DOL.GS
 		/// <summary>
 		/// Removes the existing specialization from the player
 		/// </summary>
+		/// <param name="line">The spell line to remove</param>
+		/// <returns>true if removed</returns>
+		public bool RemoveSpellLine(SpellLine line)
+		{
+			lock (m_specialization.SyncRoot)
+			{
+				m_spelllines.Remove(line);
+			}
+			Out.SendMessage("You lose the " + line.Name + " spell line!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			return true;
+		}
+
+		/// <summary>
+		/// Removes the existing specialization from the player
+		/// </summary>
 		/// <param name="lineKeyName">The spell line keyname to remove</param>
 		/// <returns>true if removed</returns>
 		public bool RemoveSpellLine(string lineKeyName)
 		{
-			SpellLine line = null;
-			lock (m_specialization.SyncRoot)
-			{
-				line = GetSpellLine(lineKeyName);
-				if (line == null)
-					return false;
-				m_spelllines.Remove(line);
-			}
-			Out.SendMessage("You lose the " + lineKeyName + " spell line!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			return true;
+			SpellLine line = GetSpellLine(lineKeyName);
+			if (line == null)
+				return false;
+			return RemoveSpellLine(line);
 		}
 
 		/// <summary>

@@ -305,20 +305,18 @@ namespace DOL.GS.PacketHandler
 						bool good = true;
 						GameKeep theKeep = keep as GameKeep;
 						if (theKeep == null)
+						{
 							good = false;
+						}
 						else
 						{
-							foreach (GameKeepTower t in theKeep.Towers)
-							{
-								if (t.Realm != theKeep.Realm)
-								{
-									good = false;
-									break;
-								}
-							}
+							good = theKeep.OwnsAllTowers;
 						}
+
 						if (good)
+						{
 							flag |= 0x10;
+						}
 					}
 					if (keep.InCombat)
 						flag |= 0x08;

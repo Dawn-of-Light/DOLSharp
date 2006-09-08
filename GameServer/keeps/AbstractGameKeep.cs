@@ -795,6 +795,11 @@ namespace DOL.GS.Keeps
 			{
 				if (!component.IsRaized)
 					component.Repair(component.MaxHealth - component.Health);
+				//change realm
+				foreach (GameClient client in WorldMgr.GetClientsOfRegion(component.CurrentRegionID))
+				{
+					client.Out.SendKeepComponentDetailUpdate(component);
+				}
 			}
 			//we reset all doors
 			foreach(GameKeepDoor door in Doors.Values)

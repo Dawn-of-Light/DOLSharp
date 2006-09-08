@@ -41,7 +41,7 @@ namespace DOL.GS.DatabaseConverters
 		{
 			log.Info("Database Version 3 Convert Started");
 
-			ItemTemplate[] templates = (ItemTemplate[])GameServer.Database.SelectObjects(typeof(ItemTemplate), "SpellID != 0");
+			ItemTemplate[] templates = (ItemTemplate[])GameServer.Database.SelectObjects(typeof(ItemTemplate), "`SpellID` != '0'");
 
 			int count = 0;
 			foreach (ItemTemplate template in templates)
