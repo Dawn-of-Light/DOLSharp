@@ -399,6 +399,11 @@ namespace DOL.GS.ServerRules
 				case eObjectType.Bolt: otherCheck = new string[] { Abilities.Weapon_Crossbow }; break;
 				case eObjectType.Poison: return player.GetModifiedSpecLevel(Specs.Envenom) > 0;
 				case eObjectType.Instrument: return player.HasAbility(Abilities.Weapon_Instruments);
+
+				//housing
+				case eObjectType.GardenObject: return true;
+				case eObjectType.HouseWallObject: return true;
+				case eObjectType.HouseFloorObject: return true;
 				//TODO: different shield sizes
 			}
 

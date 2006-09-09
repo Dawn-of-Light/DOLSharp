@@ -158,6 +158,7 @@ namespace DOL.GS.Housing
 				templateitem.Copper = (byte) Money.GetCopper(copper);
 				templateitem.Silver = (byte) Money.GetSilver(copper);
 				templateitem.Gold = (short) Money.GetGold(copper);
+                templateitem.Platinum = (short)Money.GetPlatinum(copper);
 				GameServer.Database.AddNewObject(templateitem);
 			}
 		}

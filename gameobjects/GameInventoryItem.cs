@@ -62,6 +62,7 @@ namespace DOL.GS
 			this.Level = (byte)item.Level;
 			this.Model = (ushort)item.Model;
 			this.Name = item.Name;
+			m_item.CopyFrom(item);
 		}
 
 		/// <summary>

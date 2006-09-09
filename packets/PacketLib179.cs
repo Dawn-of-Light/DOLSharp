@@ -21,6 +21,7 @@ using System;
 using System.Reflection;
 using DOL.GS.PlayerTitles;
 using log4net;
+using DOL.GS.Housing;
 
 namespace DOL.GS.PacketHandler
 {
@@ -75,9 +76,9 @@ namespace DOL.GS.PacketHandler
 
 			pak.WritePascalString(player.CharacterClass.BaseName); // base class
 
-			pak.WriteByte((byte) (player.PlayerCharacter.LotNumber >> 8)); // personal house high byte
+			pak.WriteByte((byte)(HouseMgr.GetHouseNumberByPlayer(player) >> 8)); // personal house high byte
 			pak.WritePascalString(player.GuildName);
-			pak.WriteByte((byte) (player.PlayerCharacter.LotNumber & 0xFF)); // personal house low byte
+			pak.WriteByte((byte)(HouseMgr.GetHouseNumberByPlayer(player) & 0xFF)); // personal house low byte
 
 			pak.WritePascalString(player.LastName);
 
