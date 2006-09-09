@@ -28,6 +28,18 @@ using log4net;
 
 namespace DOL.GS.Housing
 {
+
+	public enum ePermsTypes
+	{
+		Player = 0x01,
+        Guild = 0x02,
+        GuildRank = 0x03,
+		Account = 0x04,
+		All = 0x05,
+        Class = 0x06,
+        Race = 0x07
+	}
+
 	public class House : IPoint3D
 	{
 		public int HouseNumber
@@ -187,6 +199,18 @@ namespace DOL.GS.Housing
 			set { m_databaseItem.Rug4Color = value; }
 		}
 
+		public DateTime LastPaid
+		{
+			get { return m_databaseItem.LastPaid; }
+			set { m_databaseItem.LastPaid = value; }
+		}
+
+		public long KeptMoney
+		{
+			get { return m_databaseItem.KeptMoney; }
+			set { m_databaseItem.KeptMoney = value; }
+		}
+
 		private int m_uniqueID;
 
 		public int UniqueID
@@ -211,8 +235,26 @@ namespace DOL.GS.Housing
 			set { m_outdooritems = value; }
 		}
 
+		public DBHouse DatabaseItem
+		{
+			get { return m_databaseItem; }
+		}
+
+		ArrayList m_charspermissions;
+		public ArrayList CharsPermissions
+		{
+			get { return m_charspermissions; }
+			set { m_charspermissions = value; }
+		}
+
 		DBHouse m_databaseItem;
 
+		DBHousePermissions[] m_houseAccess;
+
+		public DBHousePermissions[] HouseAccess
+		{
+			get { return m_houseAccess; }
+		}
 		/// <summary>
 		/// Sends a update of the house and the garden to all players in range
 		/// </summary>
@@ -229,10 +271,190 @@ namespace DOL.GS.Housing
 		{
 			if (Porch == add_porch) //we cannot remove if removed, or add if added
 				return false;
-
 			Porch = add_porch;
 			this.SendUpdate();
 
+			return true;
+		}
+
+		public bool IsInPerm(string name, ePermsTypes type, int lvl)
+		{
+			// todo modify when type is account, to check if name == one of charnames on the account
+			foreach (DBHouseCharsXPerms perm in CharsPermissions)
+				if (perm.Name == name && perm.Type == (byte)type && perm.PermLevel == lvl)
+					return true;
+			return false;
+		}
+
+        public bool CanPayRent(GamePlayer p)
+        {
+            if (IsOwner(p) || p.Client.Account.PrivLevel > 1)
+                return true;
+            foreach (DBHousePermissions perm in HouseAccess)
+            {
+                if (perm.PayRent == 0)// optim
+                    continue;
+                if (IsInPerm(p.Name, ePermsTypes.Player, perm.PermLevel))
+                    return true;
+                if (IsInPerm(p.Name, ePermsTypes.Account, perm.PermLevel))
+                    return true;
+            }
+            return false;
+        }
+	    
+		public bool CanEnter(GamePlayer p)
+		{
+			if (IsOwner(p) || p.Client.Account.PrivLevel > 1)
+				return true;
+			foreach (DBHousePermissions perm in HouseAccess)
+			{
+				if (perm.Enter == 0)// optim
+					continue;
+				if (IsInPerm(p.Name, ePermsTypes.Player, perm.PermLevel))
+					return true;
+				if (IsInPerm(p.Name, ePermsTypes.Account, perm.PermLevel))
+					return true;
+			}
+			return false;
+		}
+
+        public bool CanAddInterior(GamePlayer p)
+        {
+            if (IsOwner(p) || p.Client.Account.PrivLevel > 1)
+                return true;
+            foreach (DBHousePermissions perm in HouseAccess)
+            {
+                if ((perm.Interior & 0x01) == 0)// optim
+                    continue;
+                if (IsInPerm(p.Name, ePermsTypes.Player, perm.PermLevel))
+                    return true;
+                if (IsInPerm(p.Name, ePermsTypes.Account, perm.PermLevel))
+                    return true;
+            }
+            return false;
+        }
+
+        public bool CanRemoveInterior(GamePlayer p)
+        {
+            if (IsOwner(p) || p.Client.Account.PrivLevel > 1)
+                return true;
+            foreach (DBHousePermissions perm in HouseAccess)
+            {
+                if ((perm.Interior & 0x02) == 0)// optim
+                    continue;
+                if (IsInPerm(p.Name, ePermsTypes.Player, perm.PermLevel))
+                    return true;
+                if (IsInPerm(p.Name, ePermsTypes.Account, perm.PermLevel))
+                    return true;
+            }
+            return false;
+        }
+
+        public bool CanAddGarden(GamePlayer p)
+        {
+            if (IsOwner(p) || p.Client.Account.PrivLevel > 1)
+                return true;
+            foreach (DBHousePermissions perm in HouseAccess)
+            {
+                if ((perm.Garden & 0x01) == 0)// optim
+                    continue;
+                if (IsInPerm(p.Name, ePermsTypes.Player, perm.PermLevel))
+                    return true;
+                if (IsInPerm(p.Name, ePermsTypes.Account, perm.PermLevel))
+                    return true;
+            }
+            return false;
+        }
+
+        public bool CanRemoveGarden(GamePlayer p)
+        {
+            if (IsOwner(p) || p.Client.Account.PrivLevel > 1)
+                return true;
+            foreach (DBHousePermissions perm in HouseAccess)
+            {
+                if ((perm.Garden & 0x02) == 0)// optim
+                    continue;
+                if (IsInPerm(p.Name, ePermsTypes.Player, perm.PermLevel))
+                    return true;
+                if (IsInPerm(p.Name, ePermsTypes.Account, perm.PermLevel))
+                    return true;
+            }
+            return false;
+        }
+
+        public bool CanEditAppearance(GamePlayer p)
+        {
+            if (IsOwner(p) || p.Client.Account.PrivLevel > 1)
+                return true;
+            foreach (DBHousePermissions perm in HouseAccess)
+            {
+                if (perm.Appearance == 0)// optim
+                    continue;
+                if (IsInPerm(p.Name, ePermsTypes.Player, perm.PermLevel))
+                    return true;
+                if (IsInPerm(p.Name, ePermsTypes.Account, perm.PermLevel))
+                    return true;
+            }
+            return false;
+        }
+
+   
+	    
+		public void RemoveFromPerm(int slot)
+		{
+			DBHouseCharsXPerms todel = null;
+			foreach (DBHouseCharsXPerms perm in CharsPermissions)
+				if (perm.Slot == slot)
+				{
+					todel = perm;
+					break;
+				}
+			if (todel == null)
+				return;
+			CharsPermissions.Remove(todel);
+			GameServer.Database.DeleteObject(todel);
+		}
+
+        public void ChangePerm(int slot, int nlvl)
+        {
+            foreach (DBHouseCharsXPerms perm in CharsPermissions)
+                if (perm.Slot == slot)
+                {
+                    perm.PermLevel = nlvl;
+                    GameServer.Database.SaveObject(perm);
+                    break;
+                }     
+        }
+
+		public bool AddToPerm(GamePlayer p, ePermsTypes type, int lvl)
+		{
+			if (IsInPerm(p.Name, type, lvl))
+				return false;
+			DBHouseCharsXPerms perm = new DBHouseCharsXPerms();
+			perm.HouseNumber = HouseNumber;
+			perm.Type = (byte)type;
+			perm.Name = p.Name;
+			perm.PermLevel = lvl;
+            int slot = 0;
+            bool ok = false;
+            while (!ok)
+            {
+                ok = true;
+                foreach (DBHouseCharsXPerms pe in CharsPermissions)
+                {
+                    if (pe.Slot == slot)
+                    {
+                        ok = false;
+                        slot++;
+                        break;
+                    }
+                }
+            }
+            if (!ok)
+                return false;
+            perm.Slot = slot;
+			CharsPermissions.Add(perm);
+			GameServer.Database.AddNewObject(perm);
 			return true;
 		}
 
@@ -321,7 +543,33 @@ namespace DOL.GS.Housing
 			int y = (int) (Y - (500 * Math.Cos(angle) - 0 * Math.Sin(angle)));
 			ushort heading = (ushort)((Heading < 180 ? Heading + 180 : Heading - 180) / 0.08789);
 			player.MoveTo(RegionID, x, y, Z, heading);
-			if(!silent) player.Out.SendMessage("You have left house number " + HouseNumber + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			if(!silent)
+			{
+			    player.Out.SendMessage("You have left house number " + HouseNumber + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                GSTCPPacketOut pak = new GSTCPPacketOut(player.Client.Out.GetPacketCode(ePackets.HouseEnter));
+
+                pak.WriteShort((ushort)this.HouseNumber);
+                pak.WriteShort((ushort)25000);         //constant!
+                pak.WriteInt((uint)this.X);
+                pak.WriteInt((uint)this.Y);
+                pak.WriteShort(0x00); //useless/ignored by client.
+                pak.WriteByte(0x00);
+                pak.WriteByte(0x00); //emblem style
+                pak.WriteShort(0x00);	//emblem
+                pak.WriteByte(0x00);
+                pak.WriteByte(0x00);
+                pak.WriteByte(0x00);
+                pak.WriteByte(0x00);
+                pak.WriteByte(0x00);
+                pak.WriteByte(0x00);
+                pak.WriteByte(0x00);
+                pak.WriteByte(0x00);
+                pak.WriteByte(0x00);
+                pak.WriteByte(0x00);
+                pak.WriteByte(0x00);
+
+                player.Client.Out.SendTCP(pak);
+			}
 
 		}
 
@@ -364,10 +612,11 @@ namespace DOL.GS.Housing
 			text.Add("-Third Color: " + Rug3Color);
 			text.Add("-Fourth Color: " + Rug4Color);
 			text.Add(" ");
-			text.Add("Lockbox: (todo)");
-			text.Add("Rental Price: (todo)");
-			text.Add("Max in Lockbox: (todo)");
-			text.Add("Rent due in: (todo)");
+			text.Add("Lockbox: " + Money.GetString(KeptMoney));
+			text.Add("Rental Price: " + Money.GetString(HouseMgr.GetRentByModel(Model)));
+			text.Add("Max in Lockbox: " + Money.GetString(HouseMgr.GetRentByModel(Model) * 4));
+			TimeSpan due = (LastPaid.AddDays(7).AddHours(1) - DateTime.Now);
+			text.Add("Rent due in: " + due.Days + " days, " + due.Hours + " hours");
 			text.Add(" ");
 			text.Add("Owners:");
 			foreach (Character character in HouseMgr.GetOwners(this.m_databaseItem))
@@ -435,10 +684,8 @@ namespace DOL.GS.Housing
 
 		public void Edit(GamePlayer player, ArrayList changes)
 		{
-			//TODO: access check here
-
-			//TODO: remove this bloody access check :p
-			if(!this.IsOwner(player)) return;
+			if (!CanEditAppearance(player))
+			    return;
 
 			MerchantTradeItems items;
 
@@ -549,6 +796,7 @@ namespace DOL.GS.Housing
 				foreach(GamePlayer p in WorldMgr.GetPlayersCloseToSpot((ushort)this.RegionID, this.X, this.Y, this.Z, HouseMgr.HOUSE_DISTANCE))
 				{
 					p.Out.SendHouse(this); //update wall look
+					p.Out.SendGarden(this);
 				}
 			}
 		}
@@ -557,8 +805,10 @@ namespace DOL.GS.Housing
 		public House(DBHouse house)
 		{
 			m_databaseItem = house;
+			m_houseAccess = new DBHousePermissions[10];
 			m_indooritems = new Hashtable();
 			m_outdooritems = new Hashtable();
+			m_charspermissions = new ArrayList();
 		}
 	}
 }

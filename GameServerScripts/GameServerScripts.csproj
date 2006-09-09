@@ -373,6 +373,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="playercommands\horsesummon.cs" />
+    <Compile Include="playercommands\housefriend.cs" />
     <Compile Include="playercommands\invite.cs">
       <SubType>Code</SubType>
     </Compile>

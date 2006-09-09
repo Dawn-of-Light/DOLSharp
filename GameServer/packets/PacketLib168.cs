@@ -1867,9 +1867,9 @@ namespace DOL.GS.PacketHandler
 
 			pak.WritePascalString(m_gameClient.Player.CharacterClass.BaseName); // base class
 
-			pak.WriteByte((byte)(m_gameClient.Player.PlayerCharacter.LotNumber >> 8)); // personal house high byte
+			pak.WriteByte((byte)(HouseMgr.GetHouseNumberByPlayer(m_gameClient.Player) >> 8)); // personal house high byte
 			pak.WritePascalString(m_gameClient.Player.GuildName);
-			pak.WriteByte((byte)(m_gameClient.Player.PlayerCharacter.LotNumber & 0xFF)); // personal house low byte
+			pak.WriteByte((byte)(HouseMgr.GetHouseNumberByPlayer(m_gameClient.Player) & 0xFF)); // personal house low byte
 
 			pak.WritePascalString(m_gameClient.Player.LastName);
 
@@ -2676,6 +2676,62 @@ namespace DOL.GS.PacketHandler
 			SendTCP(pak);
 		}
 
+		public virtual void SendRemoveHouse(House house)
+		{
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.HouseCreate));
+			pak.WriteShort((ushort)house.HouseNumber);
+			pak.WriteShort((ushort)house.Z);
+			pak.WriteInt((uint)house.X);
+			pak.WriteInt((uint)house.Y);
+			pak.Fill(0x00, 15);
+			pak.WriteByte(0x03);
+			pak.WritePascalString("");
+
+			SendTCP(pak);
+		}
+
+		public virtual void SendHousePermissions(House house)
+		{
+			GSTCPPacketOut pak = new GSTCPPacketOut((byte)ePackets.HousingPersmissions);
+			pak.WriteByte(10); // number of permissions ?
+			pak.WriteByte(0x00); // ??
+			pak.WriteShort((ushort)house.HouseNumber);
+			byte i;
+			for (i = 0; i < 10; i++)
+			{
+				pak.WriteByte(i);
+				pak.WriteByte(house.HouseAccess[i].Enter);
+				pak.WriteByte(house.HouseAccess[i].Vault1);
+				pak.WriteByte(house.HouseAccess[i].Vault2);
+				pak.WriteByte(house.HouseAccess[i].Vault3);
+				pak.WriteByte(house.HouseAccess[i].Vault4);
+				pak.WriteByte(house.HouseAccess[i].Appearance);
+				pak.WriteByte(house.HouseAccess[i].Interior);
+				pak.WriteByte(house.HouseAccess[i].Garden);
+				pak.WriteByte(house.HouseAccess[i].Banish);
+				pak.WriteByte(house.HouseAccess[i].UseMerchant);
+				pak.WriteByte(house.HouseAccess[i].Tools);
+				pak.WriteByte(house.HouseAccess[i].Bind);
+				pak.WriteByte(house.HouseAccess[i].Merchant);
+				pak.WriteByte(house.HouseAccess[i].PayRent);
+				pak.WriteByte(0x00); // ??
+			}
+			SendTCP(pak);
+		}
+
+		public virtual void SendHousePayRentDialog(string title)
+		{
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.Dialog));
+			pak.WriteByte(0x00);
+			pak.WriteByte((byte)eDialogCode.HousePayRent);
+			pak.Fill(0x00, 8); // empty
+			pak.WriteByte(0x02); // type
+			pak.WriteByte(0x01); // wrap
+			pak.WriteString(title); // title ??
+			pak.WriteByte(0x00);
+			SendTCP(pak);
+		}
+		
 		public virtual void SendGarden(House house)
 		{
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.HouseChangeGarden));

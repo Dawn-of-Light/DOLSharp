@@ -156,8 +156,6 @@ namespace DOL
 			private byte m_facetype = 0;
 			private byte m_hairstyle = 0;
 			private byte m_moodtype = 0;
-			
-			private int m_lotNumber;
 
 			static bool m_autoSave;
 
@@ -1585,23 +1583,6 @@ namespace DOL
 				set
 				{
 					m_moodtype = value;
-					Dirty = true;
-				}
-			}
-
-			/// <summary>
-			/// Gets/sets character LotNumber
-			/// </summary>
-			[DataElement(AllowDbNull=true, Index=true)]
-			public int LotNumber
-			{
-				get
-				{
-					return m_lotNumber;
-				}
-				set
-				{
-					m_lotNumber = value;
 					Dirty = true;
 				}
 			}

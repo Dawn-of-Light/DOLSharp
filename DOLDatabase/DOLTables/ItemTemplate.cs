@@ -72,6 +72,7 @@ namespace DOL.Database
 		protected int m_bonus9Type;
 		protected int m_bonus10Type;
 		protected int m_extrabonusType;
+		protected short m_platinum;
 		protected short m_gold;
 		protected byte m_silver;
 		protected byte m_copper;
@@ -142,6 +143,7 @@ namespace DOL.Database
 			m_bonus9Type = 0;
 			m_bonus10Type = 0;
 			m_extrabonusType = 0;
+			m_platinum = 0;
 			m_gold = 0;
 			m_silver = 0;
 			m_copper = 0;
@@ -807,9 +809,24 @@ namespace DOL.Database
 		{
 			get
 			{
-				return (((0 * 1000L + 0) * 1000L + Gold) * 100L + Silver) * 100L + Copper;
+				return (((0 * 1000L + Platinum) * 1000L + Gold) * 100L + Silver) * 100L + Copper;
 			}
 		}
+
+		[DataElement(AllowDbNull = true)]
+		public short Platinum
+		{
+			get
+			{
+				return m_platinum;
+			}
+			set
+			{
+				Dirty = true;
+				m_platinum = value;
+			}
+		}
+		
 		[DataElement(AllowDbNull = true)]
 		public short Gold
 		{

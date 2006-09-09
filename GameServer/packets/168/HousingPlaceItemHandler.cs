@@ -20,39 +20,65 @@ using System;
 using System.Collections;
 using DOL.Database;
 using DOL.GS.Housing;
+using System.Reflection;
+using log4net;
 
 namespace DOL.GS.PacketHandler.v168
 {
 	[PacketHandler(PacketHandlerType.TCP, 0x0C, "Handles things like placing indoor/outdoor items")]
 	public class HousingPlaceItemHandler : IPacketHandler
 	{
+        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
-			int unkown1 = packet.ReadByte();
-			int slot = packet.ReadByte();
-			ushort housenumber = packet.ReadShort();
-			int unkown2 = (byte)packet.ReadByte();
-			int position = (byte)packet.ReadByte();
-			int method = packet.ReadByte();
-			int rotation = packet.ReadByte(); //garden items only
-			short xpos = (short)packet.ReadShort(); //x for inside objs
-			short ypos = (short)packet.ReadShort(); //y for inside objs.
+			int unknow1	= packet.ReadByte();		// 1=Money 0=Item (?)
+			int slot		= packet.ReadByte();		// Item/money slot
+			ushort housenumber = packet.ReadShort();	// N° of house
+			int unknow2	= (byte)packet.ReadByte();
+			int position	= (byte)packet.ReadByte();
+			int method	= packet.ReadByte();		// 2=Wall 3=Floor
+			int rotation	= packet.ReadByte();		// garden items only
+			short xpos	= (short)packet.ReadShort();	// x for inside objs
+			short ypos	= (short)packet.ReadShort();	// y for inside objs.
+
+			//log.Info("U1: " + unknow1 + " - U2: " + unknow2);
+
 			InventoryItem orgitem = client.Player.Inventory.GetItem((eInventorySlot) slot);
 			House house = (House) HouseMgr.GetHouse(client.Player.CurrentRegionID,housenumber);
-			if (orgitem == null)
-				return 1;
 
-			if (house == null)
+			if ((slot >= 244) && (slot <= 248)) 
+			{
+                if (!house.CanPayRent(client.Player))
+                    return 1;
+				long MoneyToAdd = position;
+				switch (slot)
+				{
+					case 248: MoneyToAdd *= 1; break;
+					case 247: MoneyToAdd *= 100; break;
+					case 246: MoneyToAdd *= 10000; break;
+					case 245: MoneyToAdd *= 10000000; break;
+					case 244: MoneyToAdd *= 10000000000; break;
+				}
+				client.Player.TempProperties.setProperty("MoneyForHouseRent", MoneyToAdd);
+				client.Player.TempProperties.setProperty("HouseForHouseRent", house);
+				client.Player.Out.SendInventorySlotsUpdate(null);
+				client.Player.Out.SendHousePayRentDialog("Housing07");
+				
 				return 1;
+			}
 
-			if (client.Player == null) return 1;
-			if (!house.IsOwner(client.Player)) return 1;
+			//log.Info("position: " + position + " - rotation: " + rotation);
+			if (orgitem == null)	return 1;
+			if (house == null)		return 1;
+			if (client.Player == null)          return 1;
 
 			int pos;
 			switch (method)
 			{
 				case 1:
-
+                    if (!house.CanAddGarden(client.Player))
+                        return 1;
 					if (house.OutdoorItems.Count >= 30)
 					{
 						client.Player.Out.SendMessage("You have already placed 30 objects. You can't place more.", eChatType.CT_Help, eChatLoc.CL_SystemWindow);
@@ -74,27 +100,26 @@ namespace DOL.GS.PacketHandler.v168
 
 					//add item to outdooritems
 					house.OutdoorItems.Add(pos, oitem);
-
-					client.Player.Out.SendMessage("Garden Object placed. " + (30 - house.OutdoorItems.Count) + " slots remaining.", eChatType.CT_Help, eChatLoc.CL_SystemWindow);
-					client.Player.Out.SendMessage("You drop the " + orgitem.Name + " into your into your garden!", eChatType.CT_Help, eChatLoc.CL_SystemWindow);
+					client.Player.Out.SendMessage(string.Format("Garden Object placed. {0} slots remaining.", (30 - house.OutdoorItems.Count)), eChatType.CT_Help, eChatLoc.CL_SystemWindow);
+					client.Player.Out.SendMessage(string.Format("You drop the {0} onto your garden !", orgitem.Name), eChatType.CT_Help, eChatLoc.CL_SystemWindow);
 
 					foreach (GamePlayer player in WorldMgr.GetPlayersCloseToSpot((ushort) house.RegionID, house.X, house.Y, house.Z, WorldMgr.OBJ_UPDATE_DISTANCE))
-					{
 						player.Out.SendGarden(house);
-					}
+
 					break;
 
 				case 2:
 				case 3:
-
+                    if (!house.CanAddInterior(client.Player))
+                        return 1;
 					if (orgitem.Object_Type != 50 && method == 2)
 					{
-						client.Player.Out.SendMessage("This object can't be placed on a wall!", eChatType.CT_Help, eChatLoc.CL_SystemWindow);
+						client.Player.Out.SendMessage("This object can't be placed on a wall !", eChatType.CT_Help, eChatLoc.CL_SystemWindow);
 						return 1;
 					}
 					if (orgitem.Object_Type != 51 && method == 3)
 					{
-						client.Player.Out.SendMessage("This object can't be placed on a floor!", eChatType.CT_Help, eChatLoc.CL_SystemWindow);
+						client.Player.Out.SendMessage("This object can't be placed on the floor !", eChatType.CT_Help, eChatLoc.CL_SystemWindow);
 						return 1;
 					}
 
@@ -108,7 +133,8 @@ namespace DOL.GS.PacketHandler.v168
 					iitem.Color = orgitem.Color;
 					iitem.X = xpos;
 					iitem.Y = ypos;
-					iitem.Rotation = 0;
+		            iitem.Rotation = 0;
+
 					iitem.Size = 100; //? dont know how this is defined. maybe DPS_AF or something.
 					iitem.Position = position;
 					iitem.Placemode = method;
@@ -126,46 +152,37 @@ namespace DOL.GS.PacketHandler.v168
 					iitem.DatabaseItem = idbitem;
 					GameServer.Database.AddNewObject(idbitem);
 					house.IndoorItems.Add(pos, iitem);
+					client.Player.Out.SendMessage(string.Format("Indoor Object placed. {0} slots remaining.", (40 - house.IndoorItems.Count)), eChatType.CT_Help, eChatLoc.CL_SystemWindow);
 
 					switch (method)
 					{
 						case 2:
-							client.Player.Out.SendMessage(string.Format("You drop the {0} onto the wall of your house! (surf={1} p={2},{3},{4})", orgitem.Name, position, xpos, ypos, rotation), eChatType.CT_Help, eChatLoc.CL_SystemWindow);
+							client.Player.Out.SendMessage(string.Format("You drop the {0} onto the wall of your house !", orgitem.Name), eChatType.CT_Help, eChatLoc.CL_SystemWindow);
 							break;
 						case 3:
-							client.Player.Out.SendMessage(string.Format("You drop the {0} onto the floor of your house! (surf={1} p={2},{3},{4})", orgitem.Name, position, xpos, ypos, rotation), eChatType.CT_Help, eChatLoc.CL_SystemWindow);
+							client.Player.Out.SendMessage(string.Format("You drop the {0} onto the floor of your house !", orgitem.Name), eChatType.CT_Help, eChatLoc.CL_SystemWindow);
 							break;
 					}
 					foreach (GamePlayer plr in house.GetAllPlayersInHouse())
-					{
 						plr.Out.SendFurniture(house, pos);
-					}
+
 					break;
 
 				case 4:
-
+                    if (!house.IsOwner(client.Player))
+                        return 1;
 					switch (orgitem.Id_nb)
 					{
 						case "porch_deed":
 							if (house.EditPorch(true))
-							{
 								client.Player.Inventory.RemoveItem(orgitem);
-							}
-							else
-							{
-								client.Player.Out.SendMessage("This house HAS a porch!", eChatType.CT_Help, eChatLoc.CL_SystemWindow);
-							}
+							else	client.Player.Out.SendMessage("This house already has a porch !", eChatType.CT_Help, eChatLoc.CL_SystemWindow);
 							return 1;
 
 						case "porch_remove_deed":
 							if (house.EditPorch(false))
-							{
 								client.Player.Inventory.RemoveItem(orgitem);
-							}
-							else
-							{
-								client.Player.Out.SendMessage("This house HAS NO a porch!", eChatType.CT_Help, eChatLoc.CL_SystemWindow);
-							}
+							else client.Player.Out.SendMessage("This house has no porch !", eChatType.CT_Help, eChatLoc.CL_SystemWindow);
 							return 1;
 
 						default:
@@ -175,7 +192,7 @@ namespace DOL.GS.PacketHandler.v168
 					}
 
 				case 5:
-					client.Player.Out.SendMessage("No hookpoints now!", eChatType.CT_Help, eChatLoc.CL_SystemWindow);
+					client.Player.Out.SendMessage("No hookpoints now !", eChatType.CT_Help, eChatLoc.CL_SystemWindow);
 					break;
 
 				default:

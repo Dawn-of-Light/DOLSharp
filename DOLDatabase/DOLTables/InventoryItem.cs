@@ -413,6 +413,7 @@ namespace DOL.Database
 			SPD_ABS = template.SPD_ABS;
 			Type_Damage = template.Type_Damage;
 			Weight = template.Weight;
+			Platinum = template.Platinum;
 			Gold = template.Gold;
 			Silver = template.Silver;
 			Copper = template.Copper;

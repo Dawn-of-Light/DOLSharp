@@ -39,23 +39,29 @@ namespace DOL.GS.PacketHandler.v168
 			ushort id = packet.ReadShort();
 			ushort item_slot = packet.ReadShort();
 			byte item_count = (byte)packet.ReadByte();
-
-			if (client.Player.TargetObject == null)
-				return 0;
-
-
-			//--------------------------------------------------------------------------
-			//Forward the buy process to the merchant
-			if (client.Player.TargetObject is GameMerchant)
+			byte menu_id = (byte)packet.ReadByte();
+			
+			if (menu_id == (byte)eMerchantWindowType.HousingInsideShop || menu_id == (byte)eMerchantWindowType.HousingOutsideShop)
 			{
-				//Let merchant choose what happens
-				((GameMerchant)client.Player.TargetObject).OnPlayerBuy(client.Player, item_slot, item_count);
-
+				HouseMgr.SpecialBuy(client.Player, item_slot, item_count, menu_id);
 			}
-			else if (client.Player.TargetObject is GameLotMarker)
+			else 
 			{
-				((GameLotMarker)client.Player.TargetObject).OnPlayerBuy(client.Player, item_slot, item_count);
+				if (client.Player.TargetObject == null)
+					return 0;
+				//--------------------------------------------------------------------------
+				//Forward the buy process to the merchant
+				if (client.Player.TargetObject is GameMerchant)
+				{
+					//Let merchant choose what happens
+					((GameMerchant)client.Player.TargetObject).OnPlayerBuy(client.Player, item_slot, item_count);
 
+				}
+				else if (client.Player.TargetObject is GameLotMarker)
+				{
+					((GameLotMarker)client.Player.TargetObject).OnPlayerBuy(client.Player, item_slot, item_count);
+
+				}
 			}
 			//--------------------------------------------------------------------------
 
