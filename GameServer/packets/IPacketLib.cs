@@ -29,7 +29,9 @@ namespace DOL.GS.PacketHandler
 	public enum ePackets : byte
 	{
 		InventoryUpdate	= 0x02,
+		HouseUserPermissions = 0x03,
 		CharacterJump = 0x04,
+		HousingPersmissions = 0x05,
 		HouseEnter = 0x08,
 		HousingItem = 0x09,
 		HouseTogglePoints = 0x0F,
@@ -37,6 +39,7 @@ namespace DOL.GS.PacketHandler
 		EquipmentUpdate = 0x15,
 		VariousUpdate = 0x16,
 		MerchantWindow = 0x17,
+		HouseDecorationRotate = 0x18,
 		SpellEffectAnimation = 0x1B,
 		PositionAndObjectID = 0x20,
 		DebugMode = 0x21,
@@ -393,6 +396,7 @@ namespace DOL.GS.PacketHandler
 		GroupInvite = 0x05,
 		CustomDialog = 0x06,
 		GuildLeave = 0x08,
+		HousePayRent = 0x14,
 		KeepClaim = 0x26,
 		QuestSuscribe = 0x64,
 		BuyRespec = 0x20,
@@ -527,11 +531,16 @@ namespace DOL.GS.PacketHandler
 		void SendWarmapBonuses();
 		//housing
 		void SendHouse(House house);
+		void SendRemoveHouse(House house);
 		void SendGarden(House house);
 		void SendRemoveGarden(House house);
 		void SendEnterHouse(House house);
 		void SendFurniture(House house);
 		void SendFurniture(House house, int i);
+		void SendHousePermissions(House house);
+		void SendHousePayRentDialog(string title);
+		
+		
 		void SendMovingObjectCreate(GameMovingObject obj);
 		void SendSetControlledHorse(GamePlayer player);
 		void SendControlledHorse(GamePlayer player, bool flag);

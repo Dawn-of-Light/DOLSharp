@@ -37,16 +37,17 @@ namespace DOL.GS.PacketHandler.v168
 
 			if (house == null) return 1;
 			if (client.Player == null) return 1;
-			if (!house.IsOwner(client.Player)) return 1;
 
 			switch (method)
 			{
 				case 1: //garden item
-
+                    if (!house.CanRemoveGarden(client.Player))
+                        return 1;
 					foreach(DictionaryEntry entry in house.OutdoorItems)
 					{
 						OutdoorItem oitem = (OutdoorItem)entry.Value;
-						if (oitem.Position != position) continue;
+						if (oitem.Position != position) 
+						    continue;
 						int i = (int)entry.Key;
 						GameServer.Database.DeleteObject(((OutdoorItem) house.OutdoorItems[i]).DatabaseItem); //delete the database instance
 						InventoryItem invitem = new InventoryItem();
@@ -55,7 +56,7 @@ namespace DOL.GS.PacketHandler.v168
 						house.OutdoorItems.Remove(i);
 						client.Out.SendGarden(house);
 						client.Out.SendMessage("Garden object removed.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						client.Out.SendMessage("You get " + invitem.Name + " and put it in your backpack.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						client.Out.SendMessage(string.Format("You get {0} and put it in your backpack.", invitem.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						return 1;
 					}
 					//no object @ position
@@ -64,6 +65,8 @@ namespace DOL.GS.PacketHandler.v168
 
 				case 2:
 				case 3: //wall/floor mode
+                    if (!house.CanRemoveInterior(client.Player))
+                        return 1;
 					IndoorItem iitem = ((IndoorItem) house.IndoorItems[position]);
 					if (iitem == null)
 					{
@@ -77,18 +80,20 @@ namespace DOL.GS.PacketHandler.v168
 						item.CopyFrom(((IndoorItem) house.IndoorItems[(position)]).BaseItem);
 						if (client.Player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, item))
 						{
-							client.Player.Out.SendMessage("The " + item.Name + " is cleared from the wall surface.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							if (method == 2)
+								client.Player.Out.SendMessage("The " + item.Name + " is cleared from the wall surface.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							else client.Player.Out.SendMessage("The " + item.Name + " is cleared from the floor.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						}
 						else
 						{
-							//you need free slot :p
+							client.Player.Out.SendMessage("You need place in your inventory !", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return 1;
 						}
 					}
 					else
-					{
-						client.Player.Out.SendMessage("The decoration item is cleared from the wall surface.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					}
+						if (method == 2)
+							client.Player.Out.SendMessage("The decoration item is cleared from the wall surface.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						else client.Player.Out.SendMessage("The decoration item is cleared from the floor.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 					GameServer.Database.DeleteObject(((IndoorItem) house.IndoorItems[(position)]).DatabaseItem);
 					house.IndoorItems.Remove(position);
@@ -100,9 +105,7 @@ namespace DOL.GS.PacketHandler.v168
 					pak.WriteByte((byte)position);
 					pak.WriteByte(0x00);
 					foreach (GamePlayer plr in house.GetAllPlayersInHouse())
-					{
 						plr.Out.SendTCP(pak);
-					}
 
 					break;
 			}

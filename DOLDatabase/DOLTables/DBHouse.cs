@@ -56,6 +56,8 @@ namespace DOL
 			private bool m_outdoorguildbanner;
 			private bool m_porch;
 			private string m_ownerids;
+			private DateTime m_lastpaid;
+			private long m_keptmoney;
 
 			static bool m_autoSave;
 
@@ -414,6 +416,34 @@ namespace DOL
 				{
 					Dirty = true;
 					m_ownerids = value;
+				}
+			}
+
+			[DataElement(AllowDbNull = true)]
+			public DateTime LastPaid
+			{
+				get
+				{
+					return m_lastpaid;
+				}
+				set
+				{
+					Dirty = true;
+					m_lastpaid = value;
+				}
+			}
+
+			[DataElement(AllowDbNull = true)]
+			public long KeptMoney
+			{
+				get
+				{
+					return m_keptmoney;
+				}
+				set
+				{
+					Dirty = true;
+					m_keptmoney = value;
 				}
 			}
 

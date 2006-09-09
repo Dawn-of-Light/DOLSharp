@@ -169,6 +169,63 @@ namespace DOL.GS
 			}
 		}
 
+
+		/// <summary>
+		/// Called when a player buys an item
+		/// </summary>
+		/// <param name="player">The player making the purchase</param>
+		/// <param name="item_slot">slot of the item to be bought</param>
+		/// <param name="number">Number to be bought</param>
+		/// <returns>true if buying is allowed, false if buying should be prevented</returns>
+		public static void OnPlayerBuy(GamePlayer player, int item_slot, int number, MerchantTradeItems TradeItems)
+		{
+			//Get the template
+			int pagenumber = item_slot / MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
+			int slotnumber = item_slot % MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
+
+			ItemTemplate template = TradeItems.GetItem(pagenumber, (eMerchantWindowSlot)slotnumber);
+			if (template == null) return;
+
+			//Calculate the amout of items
+			int amountToBuy = number;
+			if (template.PackSize > 0)
+				amountToBuy *= template.PackSize;
+
+			if (amountToBuy <= 0) return;
+
+			//Calculate the value of items
+			long totalValue = number * template.Value;
+
+			lock (player.Inventory)
+			{
+
+				if (player.GetCurrentMoney() < totalValue)
+				{
+					player.Out.SendMessage("You need " + Money.GetString(totalValue) + " to buy this.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					return;
+				}
+
+				if (!player.Inventory.AddTemplate(template, amountToBuy, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+				{
+					player.Out.SendMessage("Not enough inventory space to buy that.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					return;
+				}
+
+				//Generate the buy message
+				string message;
+				if (amountToBuy > 1)
+					message = "You just bought " + amountToBuy + " pieces of " + template.GetName(1, false) + " for {0}.";
+				else
+					message = "You just bought " + template.GetName(1, false) + " for {0}.";
+
+				// Check if player has enough money and subtract the money
+				if (!player.RemoveMoney(totalValue, message, eChatType.CT_Merchant, eChatLoc.CL_SystemWindow))
+				{
+					throw new Exception("Money amount changed while adding items.");
+				}
+			}
+		}
+		
 		/// <summary>
 		/// Called when a player sells something
 		/// </summary>
