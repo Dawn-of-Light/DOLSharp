@@ -25,8 +25,7 @@ namespace DOL.GS.Housing
 {
 	public class GameLotMarker : GameStaticItem
 	{
-		public GameLotMarker()
-			: base()
+		public GameLotMarker() : base()
 		{
 			SaveInDB = false;
 		}
@@ -43,7 +42,7 @@ namespace DOL.GS.Housing
 		{
 			IList list = new ArrayList();
 			list.Add("You target lot number " + DatabaseItem.HouseNumber + ".");
-			if (DatabaseItem.OwnerIDs == null)
+			if (DatabaseItem.OwnerIDs == null || DatabaseItem.OwnerIDs == "")
 			{
 				list.Add(" It can be bought for " + Money.GetString(HouseTemplateMgr.GetLotPrice(DatabaseItem)) + ".");
 			}
@@ -56,7 +55,7 @@ namespace DOL.GS.Housing
 			{
 				return false;
 			}
-			if (DatabaseItem.OwnerIDs == null)
+			if (DatabaseItem.OwnerIDs == null || DatabaseItem.OwnerIDs == "")
 			{
 				player.Out.SendCustomDialog("Do you want to buy this lot?\r\n It costs " + Money.GetString(HouseTemplateMgr.GetLotPrice(DatabaseItem)) + "!", new CustomDialogResponse(BuyLot));
 			}
@@ -79,17 +78,16 @@ namespace DOL.GS.Housing
 			if (response != 0x01) return;
 			lock (this)
 			{
-				if (DatabaseItem.OwnerIDs != null) return;
-				if (player.PlayerCharacter.LotNumber != 0 && player.Client.Account.PrivLevel <= 1)
+				if (DatabaseItem.OwnerIDs != null && DatabaseItem.OwnerIDs != "") return;
+				if (HouseMgr.GetHouseNumberByPlayer(player) != 0 && player.Client.Account.PrivLevel <= 1)
 				{
-					player.Out.SendMessage("You do already own another lot or house (Number " + player.PlayerCharacter.LotNumber + ").", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage("You do already own another lot or house (Number " + HouseMgr.GetHouseNumberByPlayer(player) + ").", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
 					return;
 				}
 				if (player.RemoveMoney(HouseTemplateMgr.GetLotPrice(DatabaseItem), "You just bought this lot for {0}.", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow))
 				{
-					player.PlayerCharacter.LotNumber = DatabaseItem.HouseNumber;
-					GameServer.Database.SaveObject(player.PlayerCharacter);
-					HouseMgr.AddOwner(DatabaseItem, player);
+					DatabaseItem.LastPaid = DateTime.Now;
+					HouseMgr.AddOwner(DatabaseItem,player);
 				}
 				else
 				{
@@ -103,7 +101,7 @@ namespace DOL.GS.Housing
 			if (source == null || item == null) return false;
 			if (!(source is GamePlayer)) return false;
 
-			GamePlayer player = (GamePlayer)source;
+			GamePlayer player = (GamePlayer) source;
 			if (HouseMgr.IsOwner(DatabaseItem, player))
 			{
 				switch (item.Id_nb)
@@ -146,7 +144,7 @@ namespace DOL.GS.Housing
 						break;
 					default:
 						player.Out.SendMessage("That would make no sense!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						return false;
+					return false;
 				}
 				player.Inventory.RemoveItem(item);
 				return true;
@@ -176,43 +174,25 @@ namespace DOL.GS.Housing
 
 			House house = new House(DatabaseItem);
 			HouseMgr.AddHouse(house);
+			house.Exit(player, true); // move player outisde the mesh
 			this.RemoveFromWorld();
 			this.Delete();
 		}
 
-		public virtual void OnPlayerBuy(GamePlayer player, int item_slot, int number)
+		public virtual bool OnPlayerBuy(GamePlayer player, int item_slot, int number)
 		{
-			return;
+			GameMerchant.OnPlayerBuy(player, item_slot,number, HouseTemplateMgr.GetLotMarkerItems(this));
+			return true;
 		}
 
-		public virtual void OnPlayerSell(GamePlayer player, InventoryItem item)
+		public virtual bool OnPlayerSell(GamePlayer player, InventoryItem item)
 		{
 			if (!item.IsDropable)
 			{
 				player.Out.SendMessage("This item can't be sold.", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
-				return;
+				return false;
 			}
-
-
-			long itemValue = OnPlayerAppraise(player, item, true);
-
-			string message;
-			if (player.TargetObject is GameLiving)
-				message = ((GameLiving)player.TargetObject).GetName(0, true) + " gives you {0} for " + item.GetName(0, false) + ".";
-			else
-				message = "You gain {0} for " + item.GetName(0, false) + ".";
-
-			if (player.Inventory.RemoveItem(item))
-			{
-				player.AddMoney(itemValue, message, eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
-				return;
-			}
-			else
-				player.Out.SendMessage("This item can't be sold.", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
-
-
-
-			return;
+			return true;
 		}
 
 		public long OnPlayerAppraise(GamePlayer player, InventoryItem item, bool silent)
@@ -221,24 +201,12 @@ namespace DOL.GS.Housing
 				return 0;
 
 			int itemCount = Math.Max(1, item.Count);
+			return item.Value*itemCount/2;
+		}
 
-			long val = item.Value * item.Count / 2;
-
-			if (!silent)
-			{
-				string message;
-				if (val == 0)
-				{
-					message = item.GetName(0, true) + " isn't worth any value!";
-				}
-				else
-				{
-					message = "You would gain " + Money.GetString(val) + " for " + item.GetName(0, false);
-				}
-				player.Out.SendMessage(message, eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
-			}
-
-			return val;
+		public override void SaveIntoDatabase()
+		{
+			// do nothing !!!
 		}
 
 		public static void SpawnLotMarker(DBHouse house)
@@ -248,7 +216,7 @@ namespace DOL.GS.Housing
 			obj.Y = house.Y;
 			obj.Z = house.Z;
 			obj.CurrentRegionID = (ushort)house.RegionID;
-			obj.Heading = (ushort)house.Heading;
+			obj.Heading = (ushort) house.Heading;
 			obj.Name = "Lot Marker";
 			obj.Model = 1308;
 			obj.DatabaseItem = house;

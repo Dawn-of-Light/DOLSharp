@@ -20,8 +20,10 @@
 using System;
 using System.Collections;
 using System.Reflection;
+using System.Threading;
 using DOL.Database;
 using DOL.GS.PacketHandler;
+using DOL.GS.Housing;
 using log4net;
 
 namespace DOL.GS.Housing
@@ -32,7 +34,8 @@ namespace DOL.GS.Housing
 
 		public const int MAXHOUSES = 2000; 
 		public const int HOUSE_DISTANCE = 5120; //guessed, but i'm sure its > vis dist.
-
+		
+		private static Timer CheckRentTimer = null;
 		private static Hashtable m_houselists;
 		private static Hashtable m_idlist;
 
@@ -85,13 +88,25 @@ namespace DOL.GS.Housing
 							oitem.CopyFrom(dboitem);
 							newHouse.OutdoorItems.Add(i++, oitem);
 						}
+
+						foreach (DBHouseCharsXPerms d in GameServer.Database.SelectObjects(typeof(DBHouseCharsXPerms), "HouseNumber = '" + newHouse.HouseNumber + "'"))
+						{
+							newHouse.CharsPermissions.Add(d);
+						}
+
+						foreach (DBHousePermissions dbperm in GameServer.Database.SelectObjects(typeof(DBHousePermissions), "HouseNumber = '" + newHouse.HouseNumber + "'"))
+						{
+								newHouse.HouseAccess[dbperm.PermLevel] = dbperm;
+						}
+						
+					
 						hash.Add(newHouse.HouseNumber,newHouse);
 						houses++;
 					} 
 					else
 					{
 						if(log.IsWarnEnabled)
-							log.Warn("Failed to get a unique id, cant load house! More than "+HouseMgr.MAXHOUSES+" houses in region "+house.RegionID+" or region not loaded // housing not enabled?");
+							log.Warn("Failed to get a unique id, cant load house! More than "+MAXHOUSES+" houses in region "+house.RegionID+" or region not loaded // housing not enabled?");
 					}
 				}
 				else
@@ -104,14 +119,13 @@ namespace DOL.GS.Housing
 
 			if(log.IsInfoEnabled)
 				log.Info("loaded "+houses+" houses and "+lotmarkers+" lotmarkers in "+regions+" regions!");
-			
+
+			CheckRentTimer = new Timer(new TimerCallback(CheckRents), null, 10000, 1000 * 3600);
 			return true;
 		}
-
 		public static void Stop()
 		{
 		}
-
 
 		public static int GetUniqueID(ushort regionid)
 		{
@@ -125,12 +139,10 @@ namespace DOL.GS.Housing
 
 			return -1;
 		}
-
 		public static Hashtable GetHouses(ushort regionid)
 		{
 			return (Hashtable)m_houselists[regionid];
 		}
-
 		public static House GetHouse(ushort regionid, int housenumber)
 		{
 			Hashtable hash = (Hashtable)m_houselists[regionid];
@@ -138,42 +150,65 @@ namespace DOL.GS.Housing
 
 			return (House)hash[housenumber];
 		}
-
 		public static House GetHouse(int housenumber)
 		{
 			foreach(Hashtable hash in m_houselists.Values)
-			{
 				if(hash.ContainsKey(housenumber))
-				{
 					return (House)hash[housenumber];
-				}
-			}
 			return null;
 		}
-
 
 		public static void AddHouse(House house)
 		{
 			Hashtable hash = (Hashtable)m_houselists[house.RegionID];
 			if (hash==null) return;
-			if (hash.ContainsKey(house.HouseNumber)) return;
+			if (hash.ContainsKey(house.HouseNumber))
+			{
+				log.Warn("House ID exists !");
+				return;
+			}
 			hash.Add(house.HouseNumber,house);
+			int i = 0;
+			for (i = 0; i < 10; i++) // we add missing permissions
+			{
+				if (house.HouseAccess[i] == null)
+				{
+					house.HouseAccess[i] = new DBHousePermissions(house.HouseNumber, i);
+
+					GameServer.Database.AddNewObject(house.HouseAccess[i]);
+				}
+			}	
 			house.SaveIntoDatabase();
 			house.SendUpdate();
 		}
 
+
 		public static void RemoveHouse(House house)
 		{
+			log.Debug("House " + house.UniqueID + " removed");
 			Hashtable hash = (Hashtable)m_houselists[house.RegionID];
 			if (hash==null) return;
 			foreach (GamePlayer player in WorldMgr.GetPlayersCloseToSpot((ushort) house.RegionID, house.X, house.Y, house.Z, WorldMgr.OBJ_UPDATE_DISTANCE))
 			{
-				//player.Out.SendRemoveHouse(house);
+				player.Out.SendRemoveHouse(house);
 				player.Out.SendRemoveGarden(house);
+				
 			}
-			hash.Remove(house);
-		}
+			
+			house.OwnerIDs = null;
+			
+			//house.LastPaid = null;
+			house.KeptMoney = 0;
+			house.Name = ""; // not null !
+			house.Emblem = 0;
+			house.Model = 0;
+			house.DatabaseItem.CreationTime = DateTime.Now;
+			house.SaveIntoDatabase();
+			hash.Remove(house.HouseNumber);
+			GameLotMarker.SpawnLotMarker(house.DatabaseItem);
+			
 
+		}
 
 		public static bool IsOwner(DBHouse house, GamePlayer player)
 		{
@@ -182,7 +217,6 @@ namespace DOL.GS.Housing
 
 			return (house.OwnerIDs.IndexOf(player.PlayerCharacter.ObjectId)>=0);
 		}
-
 		public static void AddOwner(DBHouse house, GamePlayer player)
 		{
 			if (house == null || player == null) return;
@@ -191,10 +225,11 @@ namespace DOL.GS.Housing
 				if(house.OwnerIDs.IndexOf(player.InternalID)<0)
 					return;
 			}
-			house.OwnerIDs += player.InternalID+";";
+			//house.OwnerIDs += player.InternalID+";";
+			house.OwnerIDs = player.InternalID; // unique owner
+			
 			GameServer.Database.SaveObject(house);
 		}
-
 		public static void DeleteOwner(DBHouse house, GamePlayer player)
 		{
 			if (house == null || player == null) return;
@@ -203,7 +238,23 @@ namespace DOL.GS.Housing
 			house.OwnerIDs = house.OwnerIDs.Replace(player.InternalID+";","");
 			GameServer.Database.SaveObject(house);
 		}
-		
+
+		public static int GetHouseNumberByPlayer(GamePlayer p)
+		{
+			foreach (DictionaryEntry regs in m_houselists)
+			{
+				foreach (DictionaryEntry Entry in (Hashtable)(regs.Value))
+				{
+					House house = (House)Entry.Value;
+					if (house.OwnerIDs == null)
+						continue;
+					if (house.IsOwner(p))
+						return house.HouseNumber;
+				}
+			}
+			return 0; // no house
+		}
+
 		public static ArrayList GetOwners(DBHouse house)
 		{
 			if(house==null) return null;
@@ -221,5 +272,64 @@ namespace DOL.GS.Housing
 			return owners;
 		}
 
+		public static long GetRentByModel(int Model)
+		{
+			if ((Model == 1) || (Model == 5) || (Model == 9))
+				return 20 * 10000;
+			if ((Model == 2) || (Model == 6) || (Model == 10))
+				return 200 * 10000;
+			if ((Model == 3) || (Model == 7) || (Model == 11))
+				return 800 * 10000;
+			//if ((Model == 4) || (Model == 8) || (Model == 12))
+			return 2000 * 10000;
+		}
+
+		public static void CheckRents(object state)
+		{
+			log.Debug("Time to check Rents !");
+			TimeSpan Diff;
+			ArrayList todel = new ArrayList();
+
+			foreach (DictionaryEntry regs in m_houselists)
+			{	
+				foreach (DictionaryEntry Entry in (Hashtable)(regs.Value))
+				{
+					House house = (House)Entry.Value;
+					if (house.OwnerIDs == null)
+						continue;
+					Diff = DateTime.Now - house.LastPaid;
+					if (Diff.Days >= 7)
+					{
+						log.Debug("House " + house.UniqueID + " must pay !");
+						long Rent = GetRentByModel(house.Model);
+						if (house.KeptMoney >= Rent)
+						{
+							house.KeptMoney -= Rent;
+							house.LastPaid = DateTime.Now;
+							house.SaveIntoDatabase();
+						}
+						else todel.Add(house); //  to permit to delete house and continue the foreach
+					}
+				}
+			}
+			foreach (House h in todel) // here we remove houses
+			{
+				RemoveHouse(h);
+			}
+		}
+
+		internal static void SpecialBuy(GamePlayer gamePlayer, ushort item_slot, byte item_count, byte menu_id)
+		{
+			MerchantTradeItems items = null;
+
+			//--------------------------------------------------------------------------
+			//Retrieve the item list, the list can be retrieved from any object. Usually
+			//a merchant but could be anything eg. Housing Lot Markers etc.
+			if (menu_id == (byte)eMerchantWindowType.HousingInsideShop)
+				items = HouseTemplateMgr.IndoorShopItems;
+			else if (menu_id == (byte)eMerchantWindowType.HousingOutsideShop)
+				items = HouseTemplateMgr.OutdoorShopItems;
+			GameMerchant.OnPlayerBuy(gamePlayer, item_slot, item_count, items);
+		}
 	}
 }

@@ -569,6 +569,12 @@
     <Compile Include="keeps\Managers\Spell Manager.cs" />
     <Compile Include="keeps\Relics\GameRelic.cs" />
     <Compile Include="keeps\Relics\GameRelicPad.cs" />
+    <Compile Include="packets\168\HousePermissionsRequestHandler.cs" />
+    <Compile Include="packets\168\HousePermissionsSetHandler.cs" />
+    <Compile Include="packets\168\HouseUsersPermissionsRequestHandler.cs" />
+    <Compile Include="packets\168\HouseUsersPermissionsSetHandler.cs" />
+    <Compile Include="packets\168\HousingDecorationRotate.cs" />
+    <Compile Include="packets\168\HousingDecorationRotateRequestHandler.cs" />
     <Compile Include="packets\PacketLib185.cs" />
     <Compile Include="propertycalc\CriticalArcheryHitChanceCalculator.cs" />
     <Compile Include="propertycalc\CriticalMeleeHitChanceCalculator.cs" />

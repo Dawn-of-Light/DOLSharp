@@ -20,7 +20,6 @@ using System;
 using System.Reflection;
 using DOL.GS;
 using DOL.GS.Housing;
-
 using log4net;
 
 namespace DOL.GS.PacketHandler.v168
@@ -88,14 +87,18 @@ namespace DOL.GS.PacketHandler.v168
 					case 0: player.LeaveHouse(); break;
 
 					case 1:
-
-						if (player.CurrentRegionID != m_house.RegionID) //no "beaming" any more.
-						{ 
-							player.Out.SendMessage("You are too far away to enter house "+m_house.HouseNumber+".",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+						if (!(WorldMgr.CheckDistance(player, m_house, WorldMgr.VISIBILITY_DISTANCE)) || (player.CurrentRegionID != m_house.RegionID))	
+						{
+							player.Out.SendMessage(string.Format("You are too far away to enter house {0}.", m_house.HouseNumber), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return; 
-						} 
-
-						m_house.Enter(player);
+						}
+						if (m_house.CanEnter(player))
+							m_house.Enter(player);
+						else
+						{
+							player.Out.SendMessage(string.Format("You can't enter house {0}.", m_house.HouseNumber), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							return;
+						}
 
 						break;
 				}
