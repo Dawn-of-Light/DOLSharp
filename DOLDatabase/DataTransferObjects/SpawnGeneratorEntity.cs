@@ -22,7 +22,7 @@ using System;
 namespace DOL.Database.DataTransferObjects
 {
 	[Serializable]
-	public struct SpawnGeneratorEntity
+	public class SpawnGeneratorEntity
 	{
 		private int m_id;
 		private int m_height;

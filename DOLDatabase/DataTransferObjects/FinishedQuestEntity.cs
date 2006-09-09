@@ -22,7 +22,7 @@ using System;
 namespace DOL.Database.DataTransferObjects
 {
 	[Serializable]
-	public struct FinishedQuestEntity
+	public class FinishedQuestEntity
 	{
 		private byte m_count;
 		private string m_finishedQuestType;

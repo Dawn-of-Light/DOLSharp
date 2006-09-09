@@ -22,7 +22,7 @@ using System;
 namespace DOL.Database.DataTransferObjects
 {
 	[Serializable]
-	public struct SpellLineEntity
+	public class SpellLineEntity
 	{
 		private string m_keyName;
 		private bool m_isBaseLine;

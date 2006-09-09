@@ -249,7 +249,7 @@ namespace DOL.Database
 					}
 				}
 			}
-			return null;
+			return errors.Count > 0 ? errors : null;
 		}
 
 		#region IDispose methods

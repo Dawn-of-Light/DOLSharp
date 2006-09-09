@@ -22,7 +22,7 @@ using System;
 namespace DOL.Database.DataTransferObjects
 {
 	[Serializable]
-	public struct LineXSpellEntity
+	public class LineXSpellEntity
 	{
 		private int m_id;
 		private int m_level;

@@ -43,19 +43,24 @@ namespace DOL.Database.MySql.DataAccessObjects
 				{
 					if (!reader.Read())
 					{
-						throw new RowNotFoundException();
+						result = null;
 					}
-					FillEntityWithRow(ref result, reader);
+					else
+					{
+						FillEntityWithRow(ref result, reader);
+					}
 				}
 			);
 
 			return result;
 		}
 
-		public virtual void Create(GameNpcTemplateEntity obj)
+		public virtual void Create(ref GameNpcTemplateEntity obj)
 		{
 			m_state.ExecuteNonQuery(
 				"INSERT INTO `gamenpctemplate` VALUES ('" + m_state.EscapeString(obj.Id.ToString()) + "','" + m_state.EscapeString(obj.BlockChance.ToString()) + "','" + m_state.EscapeString(obj.EvadeChance.ToString()) + "','" + m_state.EscapeString(obj.FactionId.ToString()) + "','" + m_state.EscapeString(obj.Flags.ToString()) + "','" + m_state.EscapeString(obj.GameNPCTemplateType.ToString()) + "','" + m_state.EscapeString(obj.GuildName.ToString()) + "','" + m_state.EscapeString(obj.InventoryId.ToString()) + "','" + m_state.EscapeString(obj.LeftHandSwingChance.ToString()) + "','" + m_state.EscapeString(obj.LootListId.ToString()) + "','" + m_state.EscapeString(obj.MaxLevel.ToString()) + "','" + m_state.EscapeString(obj.MaxSize.ToString()) + "','" + m_state.EscapeString(obj.MaxSpeedBase.ToString()) + "','" + m_state.EscapeString(obj.MeleeDamageType.ToString()) + "','" + m_state.EscapeString(obj.MinLevel.ToString()) + "','" + m_state.EscapeString(obj.MinSize.ToString()) + "','" + m_state.EscapeString(obj.Model.ToString()) + "','" + m_state.EscapeString(obj.Name.ToString()) + "','" + m_state.EscapeString(obj.ParryChance.ToString()) + "','" + m_state.EscapeString(obj.Realm.ToString()) + "','" + m_state.EscapeString(obj.RespawnInterval.ToString()) + "');");
+			object insertedId = m_state.ExecuteScalar("SELECT LAST_INSERT_ID();");
+			obj.Id = (int) (long) insertedId;
 		}
 
 		public virtual void Update(GameNpcTemplateEntity obj)
@@ -85,7 +90,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 				CommandBehavior.Default,
 				delegate(MySqlDataReader reader)
 				{
-					results = new List<GameNpcTemplateEntity>(reader.FieldCount);
+					results = new List<GameNpcTemplateEntity>();
 					while (reader.Read())
 					{
 						entity = new GameNpcTemplateEntity();
@@ -136,27 +141,27 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public IList<string> VerifySchema()
 		{
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `gamenpctemplate` ("
-				+"`GameNPCTemplateId` int,"
-				+"`BlockChance` tinyint unsigned,"
-				+"`EvadeChance` tinyint unsigned,"
-				+"`FactionId` int,"
-				+"`Flags` tinyint unsigned,"
-				+"`GameNPCTemplateType` varchar(255) character set utf8,"
-				+"`GuildName` varchar(255) character set utf8,"
-				+"`InventoryId` int,"
-				+"`LeftHandSwingChance` tinyint unsigned,"
-				+"`LootListId` int,"
-				+"`MaxLevel` tinyint unsigned,"
-				+"`MaxSize` tinyint unsigned,"
-				+"`MaxSpeedBase` int,"
-				+"`MeleeDamageType` tinyint unsigned,"
-				+"`MinLevel` tinyint unsigned,"
-				+"`MinSize` tinyint unsigned,"
-				+"`Model` int,"
-				+"`Name` varchar(255) character set utf8,"
-				+"`ParryChance` tinyint unsigned,"
-				+"`Realm` tinyint unsigned,"
-				+"`RespawnInterval` int"
+				+"`GameNPCTemplateId` int NOT NULL auto_increment,"
+				+"`BlockChance` tinyint unsigned NOT NULL,"
+				+"`EvadeChance` tinyint unsigned NOT NULL,"
+				+"`FactionId` int NOT NULL,"
+				+"`Flags` tinyint unsigned NOT NULL,"
+				+"`GameNPCTemplateType` char(255) character set latin1 NOT NULL,"
+				+"`GuildName` char(255) character set latin1 NOT NULL,"
+				+"`InventoryId` int NOT NULL,"
+				+"`LeftHandSwingChance` tinyint unsigned NOT NULL,"
+				+"`LootListId` int NOT NULL,"
+				+"`MaxLevel` tinyint unsigned NOT NULL,"
+				+"`MaxSize` tinyint unsigned NOT NULL,"
+				+"`MaxSpeedBase` int NOT NULL,"
+				+"`MeleeDamageType` tinyint unsigned NOT NULL,"
+				+"`MinLevel` tinyint unsigned NOT NULL,"
+				+"`MinSize` tinyint unsigned NOT NULL,"
+				+"`Model` int NOT NULL,"
+				+"`Name` char(255) character set latin1 NOT NULL,"
+				+"`ParryChance` tinyint unsigned NOT NULL,"
+				+"`Realm` tinyint unsigned NOT NULL,"
+				+"`RespawnInterval` int NOT NULL"
 				+", primary key `GameNPCTemplateId` (`GameNPCTemplateId`)"
 				+")"
 			);

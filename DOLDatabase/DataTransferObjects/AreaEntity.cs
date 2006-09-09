@@ -22,7 +22,7 @@ using System;
 namespace DOL.Database.DataTransferObjects
 {
 	[Serializable]
-	public struct AreaEntity
+	public class AreaEntity
 	{
 		private int m_id;
 		private string m_areaType;

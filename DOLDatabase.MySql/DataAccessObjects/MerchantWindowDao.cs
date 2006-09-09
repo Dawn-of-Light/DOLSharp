@@ -43,19 +43,24 @@ namespace DOL.Database.MySql.DataAccessObjects
 				{
 					if (!reader.Read())
 					{
-						throw new RowNotFoundException();
+						result = null;
 					}
-					FillEntityWithRow(ref result, reader);
+					else
+					{
+						FillEntityWithRow(ref result, reader);
+					}
 				}
 			);
 
 			return result;
 		}
 
-		public virtual void Create(MerchantWindowEntity obj)
+		public virtual void Create(ref MerchantWindowEntity obj)
 		{
 			m_state.ExecuteNonQuery(
 				"INSERT INTO `merchantwindow` VALUES ('" + m_state.EscapeString(obj.Id.ToString()) + "');");
+			object insertedId = m_state.ExecuteScalar("SELECT LAST_INSERT_ID();");
+			obj.Id = (int) (long) insertedId;
 		}
 
 		public virtual void Update(MerchantWindowEntity obj)
@@ -85,7 +90,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 				CommandBehavior.Default,
 				delegate(MySqlDataReader reader)
 				{
-					results = new List<MerchantWindowEntity>(reader.FieldCount);
+					results = new List<MerchantWindowEntity>();
 					while (reader.Read())
 					{
 						entity = new MerchantWindowEntity();
@@ -116,7 +121,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public IList<string> VerifySchema()
 		{
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `merchantwindow` ("
-				+"`MerchantWindowId` int"
+				+"`MerchantWindowId` int NOT NULL auto_increment"
 				+", primary key `MerchantWindowId` (`MerchantWindowId`)"
 				+")"
 			);

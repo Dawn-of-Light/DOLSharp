@@ -22,7 +22,7 @@ using System;
 namespace DOL.Database.DataTransferObjects
 {
 	[Serializable]
-	public struct StyleEntity
+	public class StyleEntity
 	{
 		private int m_id;
 		private int m_attackResultRequirement;

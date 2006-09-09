@@ -22,7 +22,7 @@ using System;
 namespace DOL.Database.DataTransferObjects
 {
 	[Serializable]
-	public struct SpellEntity
+	public class SpellEntity
 	{
 		private int m_id;
 		private int m_amnesiaChance;

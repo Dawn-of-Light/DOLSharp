@@ -43,19 +43,24 @@ namespace DOL.Database.MySql.DataAccessObjects
 				{
 					if (!reader.Read())
 					{
-						throw new RowNotFoundException();
+						result = null;
 					}
-					FillEntityWithRow(ref result, reader);
+					else
+					{
+						FillEntityWithRow(ref result, reader);
+					}
 				}
 			);
 
 			return result;
 		}
 
-		public virtual void Create(SalvageEntity obj)
+		public virtual void Create(ref SalvageEntity obj)
 		{
 			m_state.ExecuteNonQuery(
 				"INSERT INTO `salvage` VALUES ('" + m_state.EscapeString(obj.Id.ToString()) + "','" + m_state.EscapeString(obj.MaterialItemtemplate.ToString()) + "','" + m_state.EscapeString(obj.ObjectType.ToString()) + "','" + m_state.EscapeString(obj.SalvageLevel.ToString()) + "');");
+			object insertedId = m_state.ExecuteScalar("SELECT LAST_INSERT_ID();");
+			obj.Id = (int) (long) insertedId;
 		}
 
 		public virtual void Update(SalvageEntity obj)
@@ -85,7 +90,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 				CommandBehavior.Default,
 				delegate(MySqlDataReader reader)
 				{
-					results = new List<SalvageEntity>(reader.FieldCount);
+					results = new List<SalvageEntity>();
 					while (reader.Read())
 					{
 						entity = new SalvageEntity();
@@ -119,10 +124,10 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public IList<string> VerifySchema()
 		{
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `salvage` ("
-				+"`SalvageId` int,"
-				+"`MaterialItemtemplate` varchar(255) character set utf8,"
-				+"`ObjectType` int,"
-				+"`SalvageLevel` int"
+				+"`SalvageId` int NOT NULL auto_increment,"
+				+"`MaterialItemtemplate` char(255) character set latin1 NOT NULL,"
+				+"`ObjectType` int NOT NULL,"
+				+"`SalvageLevel` int NOT NULL"
 				+", primary key `SalvageId` (`SalvageId`)"
 				+")"
 			);

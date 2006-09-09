@@ -43,19 +43,24 @@ namespace DOL.Database.MySql.DataAccessObjects
 				{
 					if (!reader.Read())
 					{
-						throw new RowNotFoundException();
+						result = null;
 					}
-					FillEntityWithRow(ref result, reader);
+					else
+					{
+						FillEntityWithRow(ref result, reader);
+					}
 				}
 			);
 
 			return result;
 		}
 
-		public virtual void Create(AreaEntity obj)
+		public virtual void Create(ref AreaEntity obj)
 		{
 			m_state.ExecuteNonQuery(
 				"INSERT INTO `area` VALUES ('" + m_state.EscapeString(obj.Id.ToString()) + "','" + m_state.EscapeString(obj.AreaType.ToString()) + "','" + m_state.EscapeString(obj.Description.ToString()) + "','" + m_state.EscapeString(obj.Height.ToString()) + "','" + m_state.EscapeString(obj.IsBroadcastEnabled.ToString()) + "','" + m_state.EscapeString(obj.Radius.ToString()) + "','" + m_state.EscapeString(obj.RegionId.ToString()) + "','" + m_state.EscapeString(obj.Sound.ToString()) + "','" + m_state.EscapeString(obj.Width.ToString()) + "','" + m_state.EscapeString(obj.X.ToString()) + "','" + m_state.EscapeString(obj.Y.ToString()) + "');");
+			object insertedId = m_state.ExecuteScalar("SELECT LAST_INSERT_ID();");
+			obj.Id = (int) (long) insertedId;
 		}
 
 		public virtual void Update(AreaEntity obj)
@@ -85,7 +90,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 				CommandBehavior.Default,
 				delegate(MySqlDataReader reader)
 				{
-					results = new List<AreaEntity>(reader.FieldCount);
+					results = new List<AreaEntity>();
 					while (reader.Read())
 					{
 						entity = new AreaEntity();
@@ -126,17 +131,17 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public IList<string> VerifySchema()
 		{
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `area` ("
-				+"`AreaId` int,"
-				+"`AreaType` varchar(255) character set utf8,"
-				+"`Description` varchar(255) character set utf8,"
-				+"`Height` int,"
-				+"`IsBroadcastEnabled` bit,"
-				+"`Radius` int,"
-				+"`RegionId` int,"
-				+"`Sound` tinyint unsigned,"
-				+"`Width` int,"
-				+"`X` int,"
-				+"`Y` int"
+				+"`AreaId` int NOT NULL auto_increment,"
+				+"`AreaType` char(255) character set latin1 NOT NULL,"
+				+"`Description` char(255) character set latin1 NOT NULL,"
+				+"`Height` int NOT NULL,"
+				+"`IsBroadcastEnabled` bit NOT NULL,"
+				+"`Radius` int NOT NULL,"
+				+"`RegionId` int NOT NULL,"
+				+"`Sound` tinyint unsigned NOT NULL,"
+				+"`Width` int NOT NULL,"
+				+"`X` int NOT NULL,"
+				+"`Y` int NOT NULL"
 				+", primary key `AreaId` (`AreaId`)"
 				+")"
 			);

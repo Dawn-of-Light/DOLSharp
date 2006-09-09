@@ -43,16 +43,19 @@ namespace DOL.Database.MySql.DataAccessObjects
 				{
 					if (!reader.Read())
 					{
-						throw new RowNotFoundException();
+						result = null;
 					}
-					FillEntityWithRow(ref result, reader);
+					else
+					{
+						FillEntityWithRow(ref result, reader);
+					}
 				}
 			);
 
 			return result;
 		}
 
-		public virtual void Create(RegionEntity obj)
+		public virtual void Create(ref RegionEntity obj)
 		{
 			m_state.ExecuteNonQuery(
 				"INSERT INTO `region` VALUES ('" + m_state.EscapeString(obj.Id.ToString()) + "','" + m_state.EscapeString(obj.Description.ToString()) + "','" + m_state.EscapeString(obj.Expansion.ToString()) + "','" + m_state.EscapeString(obj.IsDivingEnabled.ToString()) + "','" + m_state.EscapeString(obj.IsDungeon.ToString()) + "','" + m_state.EscapeString(obj.IsInstance.ToString()) + "','" + m_state.EscapeString(obj.Type.ToString()) + "');");
@@ -85,7 +88,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 				CommandBehavior.Default,
 				delegate(MySqlDataReader reader)
 				{
-					results = new List<RegionEntity>(reader.FieldCount);
+					results = new List<RegionEntity>();
 					while (reader.Read())
 					{
 						entity = new RegionEntity();
@@ -122,13 +125,13 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public IList<string> VerifySchema()
 		{
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `region` ("
-				+"`RegionId` int,"
-				+"`Description` varchar(255) character set utf8,"
-				+"`Expansion` tinyint unsigned,"
-				+"`IsDivingEnabled` bit,"
-				+"`IsDungeon` bit,"
-				+"`IsInstance` bit,"
-				+"`Type` tinyint unsigned"
+				+"`RegionId` int NOT NULL,"
+				+"`Description` char(255) character set latin1 NOT NULL,"
+				+"`Expansion` tinyint unsigned NOT NULL,"
+				+"`IsDivingEnabled` bit NOT NULL,"
+				+"`IsDungeon` bit NOT NULL,"
+				+"`IsInstance` bit NOT NULL,"
+				+"`Type` tinyint unsigned NOT NULL"
 				+", primary key `RegionId` (`RegionId`)"
 				+")"
 			);

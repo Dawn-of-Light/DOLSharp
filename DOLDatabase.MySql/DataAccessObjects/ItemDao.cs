@@ -43,19 +43,24 @@ namespace DOL.Database.MySql.DataAccessObjects
 				{
 					if (!reader.Read())
 					{
-						throw new RowNotFoundException();
+						result = null;
 					}
-					FillEntityWithRow(ref result, reader);
+					else
+					{
+						FillEntityWithRow(ref result, reader);
+					}
 				}
 			);
 
 			return result;
 		}
 
-		public virtual void Create(ItemEntity obj)
+		public virtual void Create(ref ItemEntity obj)
 		{
 			m_state.ExecuteNonQuery(
 				"INSERT INTO `item` VALUES ('" + m_state.EscapeString(obj.Id.ToString()) + "','" + m_state.EscapeString(obj.ArmorFactor.ToString()) + "','" + m_state.EscapeString(obj.ArmorLevel.ToString()) + "','" + m_state.EscapeString(obj.Bonus.ToString()) + "','" + m_state.EscapeString(obj.BonusType.ToString()) + "','" + m_state.EscapeString(obj.Charge.ToString()) + "','" + m_state.EscapeString(obj.ChargeEffectType.ToString()) + "','" + m_state.EscapeString(obj.ChargeSpellId.ToString()) + "','" + m_state.EscapeString(obj.Condition.ToString()) + "','" + m_state.EscapeString(obj.Count.ToString()) + "','" + m_state.EscapeString(obj.CrafterName.ToString()) + "','" + m_state.EscapeString(obj.Damage.ToString()) + "','" + m_state.EscapeString(obj.DamagePerSecond.ToString()) + "','" + m_state.EscapeString(obj.DamageType.ToString()) + "','" + m_state.EscapeString(obj.Durability.ToString()) + "','" + m_state.EscapeString(obj.GenericItemType.ToString()) + "','" + m_state.EscapeString(obj.GlowEffect.ToString()) + "','" + m_state.EscapeString(obj.HandNeeded.ToString()) + "','" + m_state.EscapeString(obj.Heading.ToString()) + "','" + m_state.EscapeString(obj.IsDropable.ToString()) + "','" + m_state.EscapeString(obj.IsSaleable.ToString()) + "','" + m_state.EscapeString(obj.IsTradable.ToString()) + "','" + m_state.EscapeString(obj.Level.ToString()) + "','" + m_state.EscapeString(obj.MaterialLevel.ToString()) + "','" + m_state.EscapeString(obj.MaxCharge.ToString()) + "','" + m_state.EscapeString(obj.MaxCount.ToString()) + "','" + m_state.EscapeString(obj.Model.ToString()) + "','" + m_state.EscapeString(obj.ModelExtension.ToString()) + "','" + m_state.EscapeString(obj.Name.ToString()) + "','" + m_state.EscapeString(obj.or1.ToString()) + "','" + m_state.EscapeString(obj.Precision.ToString()) + "','" + m_state.EscapeString(obj.ProcEffectType.ToString()) + "','" + m_state.EscapeString(obj.ProcSpellId.ToString()) + "','" + m_state.EscapeString(obj.Quality.ToString()) + "','" + m_state.EscapeString(obj.QuestName.ToString()) + "','" + m_state.EscapeString(obj.Range.ToString()) + "','" + m_state.EscapeString(obj.Realm.ToString()) + "','" + m_state.EscapeString(obj.Region.ToString()) + "','" + m_state.EscapeString(obj.RespecType.ToString()) + "','" + m_state.EscapeString(obj.Size.ToString()) + "','" + m_state.EscapeString(obj.SlotPosition.ToString()) + "','" + m_state.EscapeString(obj.Speed.ToString()) + "','" + m_state.EscapeString(obj.SpellId.ToString()) + "','" + m_state.EscapeString(obj.TripPathId.ToString()) + "','" + m_state.EscapeString(obj.Type.ToString()) + "','" + m_state.EscapeString(obj.Value.ToString()) + "','" + m_state.EscapeString(obj.WeaponRange.ToString()) + "','" + m_state.EscapeString(obj.Weight.ToString()) + "','" + m_state.EscapeString(obj.X.ToString()) + "','" + m_state.EscapeString(obj.Y.ToString()) + "','" + m_state.EscapeString(obj.Z.ToString()) + "');");
+			object insertedId = m_state.ExecuteScalar("SELECT LAST_INSERT_ID();");
+			obj.Id = (int) (long) insertedId;
 		}
 
 		public virtual void Update(ItemEntity obj)
@@ -85,7 +90,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 				CommandBehavior.Default,
 				delegate(MySqlDataReader reader)
 				{
-					results = new List<ItemEntity>(reader.FieldCount);
+					results = new List<ItemEntity>();
 					while (reader.Read())
 					{
 						entity = new ItemEntity();
@@ -166,57 +171,57 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public IList<string> VerifySchema()
 		{
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `item` ("
-				+"`ItemId` int,"
-				+"`ArmorFactor` tinyint unsigned,"
-				+"`ArmorLevel` tinyint unsigned,"
-				+"`Bonus` int,"
-				+"`BonusType` tinyint unsigned,"
-				+"`Charge` tinyint unsigned,"
-				+"`ChargeEffectType` tinyint unsigned,"
-				+"`ChargeSpellId` int,"
-				+"`Condition` double,"
-				+"`Count` int,"
-				+"`CrafterName` varchar(255) character set utf8,"
-				+"`Damage` tinyint unsigned,"
-				+"`DamagePerSecond` tinyint unsigned,"
-				+"`DamageType` tinyint unsigned,"
-				+"`Durability` tinyint unsigned,"
-				+"`GenericItemType` varchar(255) character set utf8,"
-				+"`GlowEffect` int,"
-				+"`HandNeeded` tinyint unsigned,"
-				+"`Heading` int,"
-				+"`IsDropable` bit,"
-				+"`IsSaleable` bit,"
-				+"`IsTradable` bit,"
-				+"`Level` tinyint unsigned,"
-				+"`MaterialLevel` tinyint unsigned,"
-				+"`MaxCharge` tinyint unsigned,"
-				+"`MaxCount` int,"
-				+"`Model` int,"
-				+"`ModelExtension` tinyint unsigned,"
-				+"`Name` varchar(255) character set utf8,"
-				+"`Color` int,"
-				+"`Precision` tinyint unsigned,"
-				+"`ProcEffectType` tinyint unsigned,"
-				+"`ProcSpellId` int,"
-				+"`Quality` int,"
-				+"`QuestName` varchar(255) character set utf8,"
-				+"`Range` tinyint unsigned,"
-				+"`Realm` tinyint unsigned,"
-				+"`Region` int,"
-				+"`RespecType` tinyint unsigned,"
-				+"`Size` tinyint unsigned,"
-				+"`SlotPosition` int,"
-				+"`Speed` int,"
-				+"`SpellId` int,"
-				+"`TripPathId` int,"
-				+"`Type` tinyint unsigned,"
-				+"`Value` bigint,"
-				+"`WeaponRange` int,"
-				+"`Weight` int,"
-				+"`X` int,"
-				+"`Y` int,"
-				+"`Z` int"
+				+"`ItemId` int NOT NULL auto_increment,"
+				+"`ArmorFactor` tinyint unsigned NOT NULL,"
+				+"`ArmorLevel` tinyint unsigned NOT NULL,"
+				+"`Bonus` int NOT NULL,"
+				+"`BonusType` tinyint unsigned NOT NULL,"
+				+"`Charge` tinyint unsigned NOT NULL,"
+				+"`ChargeEffectType` tinyint unsigned NOT NULL,"
+				+"`ChargeSpellId` int NOT NULL,"
+				+"`Condition` double NOT NULL,"
+				+"`Count` int NOT NULL,"
+				+"`CrafterName` char(255) character set latin1 NOT NULL,"
+				+"`Damage` tinyint unsigned NOT NULL,"
+				+"`DamagePerSecond` tinyint unsigned NOT NULL,"
+				+"`DamageType` tinyint unsigned NOT NULL,"
+				+"`Durability` tinyint unsigned NOT NULL,"
+				+"`GenericItemType` char(255) character set latin1 NOT NULL,"
+				+"`GlowEffect` int NOT NULL,"
+				+"`HandNeeded` tinyint unsigned NOT NULL,"
+				+"`Heading` int NOT NULL,"
+				+"`IsDropable` bit NOT NULL,"
+				+"`IsSaleable` bit NOT NULL,"
+				+"`IsTradable` bit NOT NULL,"
+				+"`Level` tinyint unsigned NOT NULL,"
+				+"`MaterialLevel` tinyint unsigned NOT NULL,"
+				+"`MaxCharge` tinyint unsigned NOT NULL,"
+				+"`MaxCount` int NOT NULL,"
+				+"`Model` int NOT NULL,"
+				+"`ModelExtension` tinyint unsigned NOT NULL,"
+				+"`Name` char(255) character set latin1 NOT NULL,"
+				+"`Color` int NOT NULL,"
+				+"`Precision` tinyint unsigned NOT NULL,"
+				+"`ProcEffectType` tinyint unsigned NOT NULL,"
+				+"`ProcSpellId` int NOT NULL,"
+				+"`Quality` int NOT NULL,"
+				+"`QuestName` char(255) character set latin1 NOT NULL,"
+				+"`Range` tinyint unsigned NOT NULL,"
+				+"`Realm` tinyint unsigned NOT NULL,"
+				+"`Region` int NOT NULL,"
+				+"`RespecType` tinyint unsigned NOT NULL,"
+				+"`Size` tinyint unsigned NOT NULL,"
+				+"`SlotPosition` int NOT NULL,"
+				+"`Speed` int NOT NULL,"
+				+"`SpellId` int NOT NULL,"
+				+"`TripPathId` int NOT NULL,"
+				+"`Type` tinyint unsigned NOT NULL,"
+				+"`Value` bigint NOT NULL,"
+				+"`WeaponRange` int NOT NULL,"
+				+"`Weight` int NOT NULL,"
+				+"`X` int NOT NULL,"
+				+"`Y` int NOT NULL,"
+				+"`Z` int NOT NULL"
 				+", primary key `ItemId` (`ItemId`)"
 				+")"
 			);

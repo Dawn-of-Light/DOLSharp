@@ -43,16 +43,19 @@ namespace DOL.Database.MySql.DataAccessObjects
 				{
 					if (!reader.Read())
 					{
-						throw new RowNotFoundException();
+						result = null;
 					}
-					FillEntityWithRow(ref result, reader);
+					else
+					{
+						FillEntityWithRow(ref result, reader);
+					}
 				}
 			);
 
 			return result;
 		}
 
-		public virtual void Create(JumpPointMultiTargetLocationEntity obj)
+		public virtual void Create(ref JumpPointMultiTargetLocationEntity obj)
 		{
 			m_state.ExecuteNonQuery(
 				"INSERT INTO `jumppointmultitargetlocation` VALUES ('" + m_state.EscapeString(obj.Heading.ToString()) + "','" + m_state.EscapeString(obj.JumpPoint.ToString()) + "','" + m_state.EscapeString(obj.Realm.ToString()) + "','" + m_state.EscapeString(obj.Region.ToString()) + "','" + m_state.EscapeString(obj.X.ToString()) + "','" + m_state.EscapeString(obj.Y.ToString()) + "','" + m_state.EscapeString(obj.Z.ToString()) + "');");
@@ -85,7 +88,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 				CommandBehavior.Default,
 				delegate(MySqlDataReader reader)
 				{
-					results = new List<JumpPointMultiTargetLocationEntity>(reader.FieldCount);
+					results = new List<JumpPointMultiTargetLocationEntity>();
 					while (reader.Read())
 					{
 						entity = new JumpPointMultiTargetLocationEntity();
@@ -122,13 +125,13 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public IList<string> VerifySchema()
 		{
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `jumppointmultitargetlocation` ("
-				+"`Heading` int,"
-				+"`JumpPointId` int,"
-				+"`Realm` tinyint unsigned,"
-				+"`Region` int,"
-				+"`X` int,"
-				+"`Y` int,"
-				+"`Z` int"
+				+"`Heading` int NOT NULL,"
+				+"`JumpPointId` int NOT NULL,"
+				+"`Realm` tinyint unsigned NOT NULL,"
+				+"`Region` int NOT NULL,"
+				+"`X` int NOT NULL,"
+				+"`Y` int NOT NULL,"
+				+"`Z` int NOT NULL"
 				+", primary key `HeadingJumpPointIdRealmRegionXYZ` (`Heading`,`JumpPointId`,`Realm`,`Region`,`X`,`Y`,`Z`)"
 				+")"
 			);

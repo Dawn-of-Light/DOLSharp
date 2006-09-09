@@ -22,7 +22,7 @@ using System;
 namespace DOL.Database.DataTransferObjects
 {
 	[Serializable]
-	public struct JumpPointMultiTargetLocationEntity
+	public class JumpPointMultiTargetLocationEntity
 	{
 		private int m_heading;
 		private int m_jumpPoint;

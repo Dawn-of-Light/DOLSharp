@@ -420,7 +420,7 @@ namespace DOL.GS
 						if(i < 1) rank.BuyBanner = true;	else rank.BuyBanner = false;
 						m_guildRanks[rank.RankLevel] = rank;
 						
-						GameServer.DatabaseNew.Using<IGuildRankDao>().Create(rank);
+						GameServer.DatabaseNew.Using<IGuildRankDao>().Create(ref rank);
 					}
 				}
 				return m_guildRanks;

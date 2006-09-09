@@ -22,7 +22,7 @@ using System;
 namespace DOL.Database.DataTransferObjects
 {
 	[Serializable]
-	public struct MerchantItemEntity
+	public class MerchantItemEntity
 	{
 		private int m_id;
 		private string m_itemTemplate;

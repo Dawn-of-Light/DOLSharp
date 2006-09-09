@@ -43,19 +43,24 @@ namespace DOL.Database.MySql.DataAccessObjects
 				{
 					if (!reader.Read())
 					{
-						throw new RowNotFoundException();
+						result = null;
 					}
-					FillEntityWithRow(ref result, reader);
+					else
+					{
+						FillEntityWithRow(ref result, reader);
+					}
 				}
 			);
 
 			return result;
 		}
 
-		public virtual void Create(LootEntity obj)
+		public virtual void Create(ref LootEntity obj)
 		{
 			m_state.ExecuteNonQuery(
 				"INSERT INTO `loot` VALUES ('" + m_state.EscapeString(obj.Id.ToString()) + "','" + m_state.EscapeString(obj.Chance.ToString()) + "','" + m_state.EscapeString(obj.GenericItemTemplate.ToString()) + "','" + m_state.EscapeString(obj.LootListId.ToString()) + "','" + m_state.EscapeString(obj.LootType.ToString()) + "');");
+			object insertedId = m_state.ExecuteScalar("SELECT LAST_INSERT_ID();");
+			obj.Id = (int) (long) insertedId;
 		}
 
 		public virtual void Update(LootEntity obj)
@@ -85,7 +90,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 				CommandBehavior.Default,
 				delegate(MySqlDataReader reader)
 				{
-					results = new List<LootEntity>(reader.FieldCount);
+					results = new List<LootEntity>();
 					while (reader.Read())
 					{
 						entity = new LootEntity();
@@ -120,11 +125,11 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public IList<string> VerifySchema()
 		{
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `loot` ("
-				+"`LootId` int,"
-				+"`Chance` int,"
-				+"`GenericItemTemplateId` varchar(255) character set utf8,"
+				+"`LootId` int NOT NULL auto_increment,"
+				+"`Chance` int NOT NULL,"
+				+"`GenericItemTemplateId` char(255) character set latin1,"
 				+"`LootListId` int,"
-				+"`LootType` varchar(255) character set utf8"
+				+"`LootType` char(255) character set latin1 NOT NULL"
 				+", primary key `LootId` (`LootId`)"
 				+")"
 			);

@@ -43,16 +43,19 @@ namespace DOL.Database.MySql.DataAccessObjects
 				{
 					if (!reader.Read())
 					{
-						throw new RowNotFoundException();
+						result = null;
 					}
-					FillEntityWithRow(ref result, reader);
+					else
+					{
+						FillEntityWithRow(ref result, reader);
+					}
 				}
 			);
 
 			return result;
 		}
 
-		public virtual void Create(SpawnGeneratorEntity obj)
+		public virtual void Create(ref SpawnGeneratorEntity obj)
 		{
 			m_state.ExecuteNonQuery(
 				"INSERT INTO `spawngenerator` VALUES ('" + m_state.EscapeString(obj.Id.ToString()) + "','" + m_state.EscapeString(obj.Height.ToString()) + "','" + m_state.EscapeString(obj.Radius.ToString()) + "','" + m_state.EscapeString(obj.RegionId.ToString()) + "','" + m_state.EscapeString(obj.SpawnGeneratorBaseType.ToString()) + "','" + m_state.EscapeString(obj.Width.ToString()) + "','" + m_state.EscapeString(obj.X.ToString()) + "','" + m_state.EscapeString(obj.Y.ToString()) + "');");
@@ -85,7 +88,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 				CommandBehavior.Default,
 				delegate(MySqlDataReader reader)
 				{
-					results = new List<SpawnGeneratorEntity>(reader.FieldCount);
+					results = new List<SpawnGeneratorEntity>();
 					while (reader.Read())
 					{
 						entity = new SpawnGeneratorEntity();
@@ -123,14 +126,14 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public IList<string> VerifySchema()
 		{
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `spawngenerator` ("
-				+"`SpawnGeneratorBaseId` int,"
-				+"`Height` int,"
-				+"`Radius` int,"
-				+"`RegionId` int,"
-				+"`SpawnGeneratorBaseType` varchar(255) character set utf8,"
-				+"`Width` int,"
-				+"`X` int,"
-				+"`Y` int"
+				+"`SpawnGeneratorBaseId` int NOT NULL,"
+				+"`Height` int NOT NULL,"
+				+"`Radius` int NOT NULL,"
+				+"`RegionId` int NOT NULL,"
+				+"`SpawnGeneratorBaseType` char(255) character set latin1 NOT NULL,"
+				+"`Width` int NOT NULL,"
+				+"`X` int NOT NULL,"
+				+"`Y` int NOT NULL"
 				+", primary key `SpawnGeneratorBaseId` (`SpawnGeneratorBaseId`)"
 				+")"
 			);
