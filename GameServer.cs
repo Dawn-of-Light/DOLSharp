@@ -945,7 +945,7 @@ namespace DOL
 
 					try
 					{
-						if(Configuration.DBAutoCreate)
+						if (Configuration.DBAutoCreate)
 						{
 							if (log.IsInfoEnabled)
 								log.Info("Creating database tables ...");
@@ -958,20 +958,6 @@ namespace DOL
 						{
 							if (log.IsInfoEnabled)
 								log.Info("Testing actual database structure ...");
-
-							IList<string> errors = m_databaseMgr.VerifySchemas();
-							if (errors != null)
-							{
-								if (log.IsErrorEnabled)
-								{
-									log.Error("Problems with database schemas:");
-									for (int i = 0; i < errors.Count; i++)
-									{
-										string s = errors[i];
-										log.Error(String.Format("{0,3}) {1}", i + 1, s));
-									}
-								}
-							}
 
 							// Test the database structure
 							ArrayList errorsOld = new ArrayList();
@@ -989,6 +975,24 @@ namespace DOL
 									}
 								}
 								return false;
+							}
+						}
+						
+						// verify schemas
+						if (log.IsInfoEnabled)
+							log.Info("Verifying database schemas...");
+
+						IList<string> errors = m_databaseMgr.VerifySchemas();
+						if (errors != null)
+						{
+							if (log.IsErrorEnabled)
+							{
+								log.Error("Problems with database schemas:");
+								for (int i = 0; i < errors.Count; i++)
+								{
+									string s = errors[i];
+									log.Error(String.Format("{0,3}) {1}", i + 1, s));
+								}
 							}
 						}
 					}
