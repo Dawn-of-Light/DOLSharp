@@ -43,19 +43,24 @@ namespace DOL.Database.MySql.DataAccessObjects
 				{
 					if (!reader.Read())
 					{
-						throw new RowNotFoundException();
+						result = null;
 					}
-					FillEntityWithRow(ref result, reader);
+					else
+					{
+						FillEntityWithRow(ref result, reader);
+					}
 				}
 			);
 
 			return result;
 		}
 
-		public virtual void Create(LootListEntity obj)
+		public virtual void Create(ref LootListEntity obj)
 		{
 			m_state.ExecuteNonQuery(
 				"INSERT INTO `lootlist` VALUES ('" + m_state.EscapeString(obj.Id.ToString()) + "');");
+			object insertedId = m_state.ExecuteScalar("SELECT LAST_INSERT_ID();");
+			obj.Id = (int) (long) insertedId;
 		}
 
 		public virtual void Update(LootListEntity obj)
@@ -85,7 +90,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 				CommandBehavior.Default,
 				delegate(MySqlDataReader reader)
 				{
-					results = new List<LootListEntity>(reader.FieldCount);
+					results = new List<LootListEntity>();
 					while (reader.Read())
 					{
 						entity = new LootListEntity();
@@ -116,7 +121,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public IList<string> VerifySchema()
 		{
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `lootlist` ("
-				+"`LootListId` int"
+				+"`LootListId` int NOT NULL auto_increment"
 				+", primary key `LootListId` (`LootListId`)"
 				+")"
 			);

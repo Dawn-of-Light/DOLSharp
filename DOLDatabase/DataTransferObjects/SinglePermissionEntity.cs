@@ -22,7 +22,7 @@ using System;
 namespace DOL.Database.DataTransferObjects
 {
 	[Serializable]
-	public struct SinglePermissionEntity
+	public class SinglePermissionEntity
 	{
 		private int m_id;
 		private string m_command;

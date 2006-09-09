@@ -43,16 +43,19 @@ namespace DOL.Database.MySql.DataAccessObjects
 				{
 					if (!reader.Read())
 					{
-						throw new RowNotFoundException();
+						result = null;
 					}
-					FillEntityWithRow(ref result, reader);
+					else
+					{
+						FillEntityWithRow(ref result, reader);
+					}
 				}
 			);
 
 			return result;
 		}
 
-		public virtual void Create(BrainEntity obj)
+		public virtual void Create(ref BrainEntity obj)
 		{
 			m_state.ExecuteNonQuery(
 				"INSERT INTO `brain` VALUES ('" + m_state.EscapeString(obj.ABrain.ToString()) + "','" + m_state.EscapeString(obj.ABrainType.ToString()) + "','" + m_state.EscapeString(obj.AggroLevel.ToString()) + "','" + m_state.EscapeString(obj.AggroRange.ToString()) + "');");
@@ -85,7 +88,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 				CommandBehavior.Default,
 				delegate(MySqlDataReader reader)
 				{
-					results = new List<BrainEntity>(reader.FieldCount);
+					results = new List<BrainEntity>();
 					while (reader.Read())
 					{
 						entity = new BrainEntity();
@@ -119,10 +122,10 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public IList<string> VerifySchema()
 		{
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `brain` ("
-				+"`ABrainId` int,"
-				+"`ABrainType` varchar(255) character set utf8,"
-				+"`AggroLevel` int,"
-				+"`AggroRange` int"
+				+"`ABrainId` int NOT NULL,"
+				+"`ABrainType` char(255) character set latin1 NOT NULL,"
+				+"`AggroLevel` int NOT NULL,"
+				+"`AggroRange` int NOT NULL"
 				+", primary key `ABrainId` (`ABrainId`)"
 				+")"
 			);

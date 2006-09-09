@@ -22,7 +22,7 @@ using System;
 namespace DOL.Database.DataTransferObjects
 {
 	[Serializable]
-	public struct ActiveQuestEntity
+	public class ActiveQuestEntity
 	{
 		private int m_id;
 		private int m_persistantGameObject;

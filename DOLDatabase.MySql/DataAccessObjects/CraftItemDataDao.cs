@@ -43,16 +43,19 @@ namespace DOL.Database.MySql.DataAccessObjects
 				{
 					if (!reader.Read())
 					{
-						throw new RowNotFoundException();
+						result = null;
 					}
-					FillEntityWithRow(ref result, reader);
+					else
+					{
+						FillEntityWithRow(ref result, reader);
+					}
 				}
 			);
 
 			return result;
 		}
 
-		public virtual void Create(CraftItemDataEntity obj)
+		public virtual void Create(ref CraftItemDataEntity obj)
 		{
 			m_state.ExecuteNonQuery(
 				"INSERT INTO `craftitemdata` VALUES ('" + m_state.EscapeString(obj.Id.ToString()) + "','" + m_state.EscapeString(obj.CraftingLevel.ToString()) + "','" + m_state.EscapeString(obj.CraftingSkill.ToString()) + "','" + m_state.EscapeString(obj.TemplateToCraft.ToString()) + "');");
@@ -85,7 +88,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 				CommandBehavior.Default,
 				delegate(MySqlDataReader reader)
 				{
-					results = new List<CraftItemDataEntity>(reader.FieldCount);
+					results = new List<CraftItemDataEntity>();
 					while (reader.Read())
 					{
 						entity = new CraftItemDataEntity();
@@ -119,10 +122,10 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public IList<string> VerifySchema()
 		{
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `craftitemdata` ("
-				+"`CraftItemDataId` int,"
-				+"`CraftingLevel` int,"
-				+"`CraftingSkill` int,"
-				+"`TemplateToCraft` varchar(255) character set utf8"
+				+"`CraftItemDataId` int NOT NULL,"
+				+"`CraftingLevel` int NOT NULL,"
+				+"`CraftingSkill` int NOT NULL,"
+				+"`TemplateToCraft` char(255) character set latin1 NOT NULL"
 				+", primary key `CraftItemDataId` (`CraftItemDataId`)"
 				+")"
 			);

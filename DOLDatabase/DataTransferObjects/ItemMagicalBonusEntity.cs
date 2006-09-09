@@ -22,7 +22,7 @@ using System;
 namespace DOL.Database.DataTransferObjects
 {
 	[Serializable]
-	public struct ItemMagicalBonusEntity
+	public class ItemMagicalBonusEntity
 	{
 		private short m_bonus;
 		private byte m_bonusType;

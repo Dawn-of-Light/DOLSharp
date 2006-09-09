@@ -43,16 +43,19 @@ namespace DOL.Database.MySql.DataAccessObjects
 				{
 					if (!reader.Read())
 					{
-						throw new RowNotFoundException();
+						result = null;
 					}
-					FillEntityWithRow(ref result, reader);
+					else
+					{
+						FillEntityWithRow(ref result, reader);
+					}
 				}
 			);
 
 			return result;
 		}
 
-		public virtual void Create(SpawnTemplateEntity obj)
+		public virtual void Create(ref SpawnTemplateEntity obj)
 		{
 			m_state.ExecuteNonQuery(
 				"INSERT INTO `spawntemplate` VALUES ('" + m_state.EscapeString(obj.Id.ToString()) + "','" + m_state.EscapeString(obj.Count.ToString()) + "','" + m_state.EscapeString(obj.GameNPCTemplate.ToString()) + "','" + m_state.EscapeString(obj.SpawnGeneratorBase.ToString()) + "','" + m_state.EscapeString(obj.SpawnTemplateBaseType.ToString()) + "');");
@@ -85,7 +88,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 				CommandBehavior.Default,
 				delegate(MySqlDataReader reader)
 				{
-					results = new List<SpawnTemplateEntity>(reader.FieldCount);
+					results = new List<SpawnTemplateEntity>();
 					while (reader.Read())
 					{
 						entity = new SpawnTemplateEntity();
@@ -120,11 +123,11 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public IList<string> VerifySchema()
 		{
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `spawntemplate` ("
-				+"`SpawnTemplateBaseId` int,"
-				+"`Count` int,"
+				+"`SpawnTemplateBaseId` int NOT NULL,"
+				+"`Count` int NOT NULL,"
 				+"`GameNPCTemplateId` int,"
 				+"`SpawnGeneratorBaseId` int,"
-				+"`SpawnTemplateBaseType` varchar(255) character set utf8"
+				+"`SpawnTemplateBaseType` char(255) character set latin1 NOT NULL"
 				+", primary key `SpawnTemplateBaseId` (`SpawnTemplateBaseId`)"
 				+")"
 			);

@@ -22,7 +22,7 @@ using System;
 namespace DOL.Database.DataTransferObjects
 {
 	[Serializable]
-	public struct SalvageEntity
+	public class SalvageEntity
 	{
 		private int m_id;
 		private string m_materialItemtemplate;

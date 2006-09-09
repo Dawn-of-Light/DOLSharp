@@ -43,19 +43,24 @@ namespace DOL.Database.MySql.DataAccessObjects
 				{
 					if (!reader.Read())
 					{
-						throw new RowNotFoundException();
+						result = null;
 					}
-					FillEntityWithRow(ref result, reader);
+					else
+					{
+						FillEntityWithRow(ref result, reader);
+					}
 				}
 			);
 
 			return result;
 		}
 
-		public virtual void Create(GuildRankEntity obj)
+		public virtual void Create(ref GuildRankEntity obj)
 		{
 			m_state.ExecuteNonQuery(
 				"INSERT INTO `guildrank` VALUES ('" + m_state.EscapeString(obj.Id.ToString()) + "','" + m_state.EscapeString(obj.AcHear.ToString()) + "','" + m_state.EscapeString(obj.AcSpeak.ToString()) + "','" + m_state.EscapeString(obj.Alli.ToString()) + "','" + m_state.EscapeString(obj.Buff.ToString()) + "','" + m_state.EscapeString(obj.BuyBanner.ToString()) + "','" + m_state.EscapeString(obj.Claim.ToString()) + "','" + m_state.EscapeString(obj.Deposit.ToString()) + "','" + m_state.EscapeString(obj.Dues.ToString()) + "','" + m_state.EscapeString(obj.Emblem.ToString()) + "','" + m_state.EscapeString(obj.GcHear.ToString()) + "','" + m_state.EscapeString(obj.GcSpeak.ToString()) + "','" + m_state.EscapeString(obj.GetMission.ToString()) + "','" + m_state.EscapeString(obj.Guild.ToString()) + "','" + m_state.EscapeString(obj.Invite.ToString()) + "','" + m_state.EscapeString(obj.Motd.ToString()) + "','" + m_state.EscapeString(obj.OcHear.ToString()) + "','" + m_state.EscapeString(obj.OcSpeak.ToString()) + "','" + m_state.EscapeString(obj.Promote.ToString()) + "','" + m_state.EscapeString(obj.RankLevel.ToString()) + "','" + m_state.EscapeString(obj.Release.ToString()) + "','" + m_state.EscapeString(obj.Remove.ToString()) + "','" + m_state.EscapeString(obj.SetNote.ToString()) + "','" + m_state.EscapeString(obj.SummonBanner.ToString()) + "','" + m_state.EscapeString(obj.Title.ToString()) + "','" + m_state.EscapeString(obj.Upgrade.ToString()) + "','" + m_state.EscapeString(obj.View.ToString()) + "','" + m_state.EscapeString(obj.Withdraw.ToString()) + "');");
+			object insertedId = m_state.ExecuteScalar("SELECT LAST_INSERT_ID();");
+			obj.Id = (int) (long) insertedId;
 		}
 
 		public virtual void Update(GuildRankEntity obj)
@@ -85,7 +90,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 				CommandBehavior.Default,
 				delegate(MySqlDataReader reader)
 				{
-					results = new List<GuildRankEntity>(reader.FieldCount);
+					results = new List<GuildRankEntity>();
 					while (reader.Read())
 					{
 						entity = new GuildRankEntity();
@@ -143,34 +148,34 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public IList<string> VerifySchema()
 		{
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `guildrank` ("
-				+"`GuildRankId` int,"
-				+"`AcHear` bit,"
-				+"`AcSpeak` bit,"
-				+"`Alli` bit,"
-				+"`Buff` bit,"
-				+"`BuyBanner` bit,"
-				+"`Claim` bit,"
-				+"`Deposit` bit,"
-				+"`Dues` bit,"
-				+"`Emblem` bit,"
-				+"`GcHear` bit,"
-				+"`GcSpeak` bit,"
-				+"`GetMission` bit,"
+				+"`GuildRankId` int NOT NULL auto_increment,"
+				+"`AcHear` bit NOT NULL,"
+				+"`AcSpeak` bit NOT NULL,"
+				+"`Alli` bit NOT NULL,"
+				+"`Buff` bit NOT NULL,"
+				+"`BuyBanner` bit NOT NULL,"
+				+"`Claim` bit NOT NULL,"
+				+"`Deposit` bit NOT NULL,"
+				+"`Dues` bit NOT NULL,"
+				+"`Emblem` bit NOT NULL,"
+				+"`GcHear` bit NOT NULL,"
+				+"`GcSpeak` bit NOT NULL,"
+				+"`GetMission` bit NOT NULL,"
 				+"`GuildId` int,"
-				+"`Invite` bit,"
-				+"`Motd` bit,"
-				+"`OcHear` bit,"
-				+"`OcSpeak` bit,"
-				+"`Promote` bit,"
-				+"`RankLevel` tinyint unsigned,"
-				+"`Release` bit,"
-				+"`Remove` bit,"
-				+"`SetNote` bit,"
-				+"`SummonBanner` bit,"
-				+"`Title` varchar(255) character set utf8,"
-				+"`Upgrade` bit,"
-				+"`View` bit,"
-				+"`Withdraw` bit"
+				+"`Invite` bit NOT NULL,"
+				+"`Motd` bit NOT NULL,"
+				+"`OcHear` bit NOT NULL,"
+				+"`OcSpeak` bit NOT NULL,"
+				+"`Promote` bit NOT NULL,"
+				+"`RankLevel` tinyint unsigned NOT NULL,"
+				+"`Release` bit NOT NULL,"
+				+"`Remove` bit NOT NULL,"
+				+"`SetNote` bit NOT NULL,"
+				+"`SummonBanner` bit NOT NULL,"
+				+"`Title` char(255) character set latin1 NOT NULL,"
+				+"`Upgrade` bit NOT NULL,"
+				+"`View` bit NOT NULL,"
+				+"`Withdraw` bit NOT NULL"
 				+", primary key `GuildRankId` (`GuildRankId`)"
 				+")"
 			);

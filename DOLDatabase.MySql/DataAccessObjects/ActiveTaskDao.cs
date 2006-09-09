@@ -43,16 +43,19 @@ namespace DOL.Database.MySql.DataAccessObjects
 				{
 					if (!reader.Read())
 					{
-						throw new RowNotFoundException();
+						result = null;
 					}
-					FillEntityWithRow(ref result, reader);
+					else
+					{
+						FillEntityWithRow(ref result, reader);
+					}
 				}
 			);
 
 			return result;
 		}
 
-		public virtual void Create(ActiveTaskEntity obj)
+		public virtual void Create(ref ActiveTaskEntity obj)
 		{
 			m_state.ExecuteNonQuery(
 				"INSERT INTO `activetasks` VALUES ('" + m_state.EscapeString(obj.AbstractTask.ToString()) + "','" + m_state.EscapeString(obj.ItemName.ToString()) + "','" + m_state.EscapeString(obj.RewardGiverName.ToString()) + "','" + m_state.EscapeString(obj.StartingPlayedTime.ToString()) + "','" + m_state.EscapeString(obj.TargetKilled.ToString()) + "','" + m_state.EscapeString(obj.TargetMobName.ToString()) + "','" + m_state.EscapeString(obj.TaskType.ToString()) + "');");
@@ -85,7 +88,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 				CommandBehavior.Default,
 				delegate(MySqlDataReader reader)
 				{
-					results = new List<ActiveTaskEntity>(reader.FieldCount);
+					results = new List<ActiveTaskEntity>();
 					while (reader.Read())
 					{
 						entity = new ActiveTaskEntity();
@@ -122,13 +125,13 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public IList<string> VerifySchema()
 		{
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `activetasks` ("
-				+"`AbstractTaskId` int,"
-				+"`ItemName` varchar(255) character set utf8,"
-				+"`RewardGiverName` varchar(255) character set utf8,"
-				+"`StartingPlayedTime` bigint,"
-				+"`TargetKilled` bit,"
-				+"`TargetMobName` varchar(255) character set utf8,"
-				+"`TaskType` varchar(255) character set utf8"
+				+"`AbstractTaskId` int NOT NULL,"
+				+"`ItemName` char(255) character set latin1 NOT NULL,"
+				+"`RewardGiverName` char(255) character set latin1 NOT NULL,"
+				+"`StartingPlayedTime` bigint NOT NULL,"
+				+"`TargetKilled` bit NOT NULL,"
+				+"`TargetMobName` char(255) character set latin1 NOT NULL,"
+				+"`TaskType` char(255) character set latin1 NOT NULL"
 				+", primary key `AbstractTaskId` (`AbstractTaskId`)"
 				+")"
 			);

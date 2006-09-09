@@ -43,16 +43,19 @@ namespace DOL.Database.MySql.DataAccessObjects
 				{
 					if (!reader.Read())
 					{
-						throw new RowNotFoundException();
+						result = null;
 					}
-					FillEntityWithRow(ref result, reader);
+					else
+					{
+						FillEntityWithRow(ref result, reader);
+					}
 				}
 			);
 
 			return result;
 		}
 
-		public virtual void Create(RawMaterialEntity obj)
+		public virtual void Create(ref RawMaterialEntity obj)
 		{
 			m_state.ExecuteNonQuery(
 				"INSERT INTO `rawmaterials` VALUES ('" + m_state.EscapeString(obj.CountNeeded.ToString()) + "','" + m_state.EscapeString(obj.CraftItemData.ToString()) + "','" + m_state.EscapeString(obj.MaterialTemplate.ToString()) + "');");
@@ -85,7 +88,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 				CommandBehavior.Default,
 				delegate(MySqlDataReader reader)
 				{
-					results = new List<RawMaterialEntity>(reader.FieldCount);
+					results = new List<RawMaterialEntity>();
 					while (reader.Read())
 					{
 						entity = new RawMaterialEntity();
@@ -118,9 +121,9 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public IList<string> VerifySchema()
 		{
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `rawmaterials` ("
-				+"`CountNeeded` tinyint unsigned,"
-				+"`CraftItemDataId` int,"
-				+"`MaterialTemplate` varchar(255) character set utf8"
+				+"`CountNeeded` tinyint unsigned NOT NULL,"
+				+"`CraftItemDataId` int NOT NULL,"
+				+"`MaterialTemplate` char(255) character set latin1 NOT NULL"
 				+", primary key `CountNeededCraftItemDataIdMaterialTemplate` (`CountNeeded`,`CraftItemDataId`,`MaterialTemplate`)"
 				+")"
 			);

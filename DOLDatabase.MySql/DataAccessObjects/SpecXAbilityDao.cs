@@ -43,19 +43,24 @@ namespace DOL.Database.MySql.DataAccessObjects
 				{
 					if (!reader.Read())
 					{
-						throw new RowNotFoundException();
+						result = null;
 					}
-					FillEntityWithRow(ref result, reader);
+					else
+					{
+						FillEntityWithRow(ref result, reader);
+					}
 				}
 			);
 
 			return result;
 		}
 
-		public virtual void Create(SpecXAbilityEntity obj)
+		public virtual void Create(ref SpecXAbilityEntity obj)
 		{
 			m_state.ExecuteNonQuery(
 				"INSERT INTO `specxability` VALUES ('" + m_state.EscapeString(obj.Id.ToString()) + "','" + m_state.EscapeString(obj.AbilityKey.ToString()) + "','" + m_state.EscapeString(obj.AbilityLevel.ToString()) + "','" + m_state.EscapeString(obj.Spec.ToString()) + "','" + m_state.EscapeString(obj.SpecLevel.ToString()) + "');");
+			object insertedId = m_state.ExecuteScalar("SELECT LAST_INSERT_ID();");
+			obj.Id = (int) (long) insertedId;
 		}
 
 		public virtual void Update(SpecXAbilityEntity obj)
@@ -85,7 +90,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 				CommandBehavior.Default,
 				delegate(MySqlDataReader reader)
 				{
-					results = new List<SpecXAbilityEntity>(reader.FieldCount);
+					results = new List<SpecXAbilityEntity>();
 					while (reader.Read())
 					{
 						entity = new SpecXAbilityEntity();
@@ -120,11 +125,11 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public IList<string> VerifySchema()
 		{
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `specxability` ("
-				+"`SpecXAbilityId` int,"
-				+"`AbilityKey` varchar(255) character set utf8,"
-				+"`AbilityLevel` int,"
-				+"`Spec` varchar(255) character set utf8,"
-				+"`SpecLevel` int"
+				+"`SpecXAbilityId` int NOT NULL auto_increment,"
+				+"`AbilityKey` char(255) character set latin1 NOT NULL,"
+				+"`AbilityLevel` int NOT NULL,"
+				+"`Spec` char(255) character set latin1 NOT NULL,"
+				+"`SpecLevel` int NOT NULL"
 				+", primary key `SpecXAbilityId` (`SpecXAbilityId`)"
 				+")"
 			);

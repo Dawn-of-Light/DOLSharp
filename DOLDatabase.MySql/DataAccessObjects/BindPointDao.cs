@@ -43,19 +43,24 @@ namespace DOL.Database.MySql.DataAccessObjects
 				{
 					if (!reader.Read())
 					{
-						throw new RowNotFoundException();
+						result = null;
 					}
-					FillEntityWithRow(ref result, reader);
+					else
+					{
+						FillEntityWithRow(ref result, reader);
+					}
 				}
 			);
 
 			return result;
 		}
 
-		public virtual void Create(BindPointEntity obj)
+		public virtual void Create(ref BindPointEntity obj)
 		{
 			m_state.ExecuteNonQuery(
 				"INSERT INTO `bindpoint` VALUES ('" + m_state.EscapeString(obj.Id.ToString()) + "','" + m_state.EscapeString(obj.Radius.ToString()) + "','" + m_state.EscapeString(obj.Realm.ToString()) + "','" + m_state.EscapeString(obj.Region.ToString()) + "','" + m_state.EscapeString(obj.X.ToString()) + "','" + m_state.EscapeString(obj.Y.ToString()) + "','" + m_state.EscapeString(obj.Z.ToString()) + "');");
+			object insertedId = m_state.ExecuteScalar("SELECT LAST_INSERT_ID();");
+			obj.Id = (int) (long) insertedId;
 		}
 
 		public virtual void Update(BindPointEntity obj)
@@ -85,7 +90,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 				CommandBehavior.Default,
 				delegate(MySqlDataReader reader)
 				{
-					results = new List<BindPointEntity>(reader.FieldCount);
+					results = new List<BindPointEntity>();
 					while (reader.Read())
 					{
 						entity = new BindPointEntity();
@@ -122,13 +127,13 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public IList<string> VerifySchema()
 		{
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `bindpoint` ("
-				+"`BindPointId` int,"
-				+"`Radius` int,"
-				+"`Realm` int,"
-				+"`Region` int,"
-				+"`X` int,"
-				+"`Y` int,"
-				+"`Z` int"
+				+"`BindPointId` int NOT NULL auto_increment,"
+				+"`Radius` int NOT NULL,"
+				+"`Realm` int NOT NULL,"
+				+"`Region` int NOT NULL,"
+				+"`X` int NOT NULL,"
+				+"`Y` int NOT NULL,"
+				+"`Z` int NOT NULL"
 				+", primary key `BindPointId` (`BindPointId`)"
 				+")"
 			);

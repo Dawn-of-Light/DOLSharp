@@ -22,7 +22,7 @@ using System;
 namespace DOL.Database.DataTransferObjects
 {
 	[Serializable]
-	public struct SpecializationEntity
+	public class SpecializationEntity
 	{
 		private string m_keyName;
 		private string m_description;

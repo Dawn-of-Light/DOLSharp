@@ -22,7 +22,7 @@ using System;
 namespace DOL.Database.DataTransferObjects
 {
 	[Serializable]
-	public struct GamePlayerInventoryEntity
+	public class GamePlayerInventoryEntity
 	{
 		private int m_inventory;
 		private bool m_isCloakHoodUp;

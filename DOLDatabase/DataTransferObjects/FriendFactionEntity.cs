@@ -22,7 +22,7 @@ using System;
 namespace DOL.Database.DataTransferObjects
 {
 	[Serializable]
-	public struct FriendFactionEntity
+	public class FriendFactionEntity
 	{
 		private int m_factionId;
 		private int m_friendFactionId;

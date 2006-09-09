@@ -22,7 +22,7 @@ using System;
 namespace DOL.Database.DataTransferObjects
 {
 	[Serializable]
-	public struct RawMaterialEntity
+	public class RawMaterialEntity
 	{
 		private byte m_countNeeded;
 		private int m_craftItemData;

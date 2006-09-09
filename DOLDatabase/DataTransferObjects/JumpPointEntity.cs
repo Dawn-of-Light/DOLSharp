@@ -22,7 +22,7 @@ using System;
 namespace DOL.Database.DataTransferObjects
 {
 	[Serializable]
-	public struct JumpPointEntity
+	public class JumpPointEntity
 	{
 		private int m_id;
 		private byte m_allowedRealm;

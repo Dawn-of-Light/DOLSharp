@@ -22,7 +22,7 @@ using System;
 namespace DOL.Database.DataTransferObjects
 {
 	[Serializable]
-	public struct PersistantGameObjectEntity
+	public class PersistantGameObjectEntity
 	{
 		private int m_id;
 		private byte m_blockChance;

@@ -22,7 +22,7 @@ using System;
 namespace DOL.Database.DataTransferObjects
 {
 	[Serializable]
-	public struct BindPointEntity
+	public class BindPointEntity
 	{
 		private int m_id;
 		private int m_radius;

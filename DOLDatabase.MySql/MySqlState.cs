@@ -93,6 +93,12 @@ namespace DOL.Database.MySql
 		/// <returns>The count of rows affected.</returns>
 		public int ExecuteNonQuery(string sqlCommand)
 		{
+			// log the command
+			if (log.IsDebugEnabled)
+			{
+				log.DebugFormat("ExecuteNonQuery: " + sqlCommand);
+			}
+
 			MySqlConnection connection = AcquireConnection();
 			try
 			{
@@ -118,6 +124,12 @@ namespace DOL.Database.MySql
 		/// <returns>The scalar.</returns>
 		public object ExecuteScalar(string sqlCommand)
 		{
+			// log the command
+			if (log.IsDebugEnabled)
+			{
+				log.DebugFormat("ExecuteScalar: " + sqlCommand);
+			}
+
 			MySqlConnection connection = AcquireConnection();
 			try
 			{
@@ -125,7 +137,6 @@ namespace DOL.Database.MySql
 				cmd.CommandText = sqlCommand;
 				cmd.CommandType = CommandType.Text;
 				object scalar = cmd.ExecuteScalar();
-//				log.FatalFormat("scalar type: {0}  toString: {1}", scalar.GetType().FullName, scalar.ToString());
 				return scalar;
 			}
 			catch(Exception e)
@@ -142,7 +153,7 @@ namespace DOL.Database.MySql
 		/// Executes the query.
 		/// </summary>
 		/// <param name="sqlCommand">The SQL command.</param>
-		/// <param name="callback">The callback.</param>
+		/// <param name="callback">The callback which is called after query.</param>
 		public void ExecuteQuery(string sqlCommand, CommandBehavior behaviour, QueryCallback callback)
 		{
 			if (callback == null)
@@ -150,10 +161,18 @@ namespace DOL.Database.MySql
 				throw new ArgumentNullException("callback");
 			}
 			
+			// log the command
+			if (log.IsDebugEnabled)
+			{
+				log.DebugFormat("ExecuteQuery: " + sqlCommand);
+			}
+			
+			// get the connection
 			MySqlConnection connection = AcquireConnection();
 			MySqlDataReader reader = null;
 			try
 			{
+				// execute the command
 				MySqlCommand cmd = connection.CreateCommand();
 				cmd.CommandText = sqlCommand;
 				cmd.CommandType = CommandType.Text;

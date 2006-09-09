@@ -43,19 +43,24 @@ namespace DOL.Database.MySql.DataAccessObjects
 				{
 					if (!reader.Read())
 					{
-						throw new RowNotFoundException();
+						result = null;
 					}
-					FillEntityWithRow(ref result, reader);
+					else
+					{
+						FillEntityWithRow(ref result, reader);
+					}
 				}
 			);
 
 			return result;
 		}
 
-		public virtual void Create(MerchantPageEntity obj)
+		public virtual void Create(ref MerchantPageEntity obj)
 		{
 			m_state.ExecuteNonQuery(
 				"INSERT INTO `merchantpage` VALUES ('" + m_state.EscapeString(obj.Id.ToString()) + "','" + m_state.EscapeString(obj.Currency.ToString()) + "','" + m_state.EscapeString(obj.MerchantWindow.ToString()) + "','" + m_state.EscapeString(obj.Position.ToString()) + "');");
+			object insertedId = m_state.ExecuteScalar("SELECT LAST_INSERT_ID();");
+			obj.Id = (int) (long) insertedId;
 		}
 
 		public virtual void Update(MerchantPageEntity obj)
@@ -85,7 +90,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 				CommandBehavior.Default,
 				delegate(MySqlDataReader reader)
 				{
-					results = new List<MerchantPageEntity>(reader.FieldCount);
+					results = new List<MerchantPageEntity>();
 					while (reader.Read())
 					{
 						entity = new MerchantPageEntity();
@@ -119,10 +124,10 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public IList<string> VerifySchema()
 		{
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `merchantpage` ("
-				+"`MerchantPageId` int,"
-				+"`Currency` tinyint unsigned,"
+				+"`MerchantPageId` int NOT NULL auto_increment,"
+				+"`Currency` tinyint unsigned NOT NULL,"
 				+"`MerchantWindowId` int,"
-				+"`Position` int"
+				+"`Position` int NOT NULL"
 				+", primary key `MerchantPageId` (`MerchantPageId`)"
 				+")"
 			);

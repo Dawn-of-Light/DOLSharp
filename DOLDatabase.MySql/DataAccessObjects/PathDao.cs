@@ -43,19 +43,24 @@ namespace DOL.Database.MySql.DataAccessObjects
 				{
 					if (!reader.Read())
 					{
-						throw new RowNotFoundException();
+						result = null;
 					}
-					FillEntityWithRow(ref result, reader);
+					else
+					{
+						FillEntityWithRow(ref result, reader);
+					}
 				}
 			);
 
 			return result;
 		}
 
-		public virtual void Create(PathEntity obj)
+		public virtual void Create(ref PathEntity obj)
 		{
 			m_state.ExecuteNonQuery(
 				"INSERT INTO `path` VALUES ('" + m_state.EscapeString(obj.Id.ToString()) + "','" + m_state.EscapeString(obj.PathType.ToString()) + "','" + m_state.EscapeString(obj.RegionId.ToString()) + "','" + m_state.EscapeString(obj.StartingPoint.ToString()) + "','" + m_state.EscapeString(obj.SteedModel.ToString()) + "','" + m_state.EscapeString(obj.SteedName.ToString()) + "');");
+			object insertedId = m_state.ExecuteScalar("SELECT LAST_INSERT_ID();");
+			obj.Id = (int) (long) insertedId;
 		}
 
 		public virtual void Update(PathEntity obj)
@@ -85,7 +90,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 				CommandBehavior.Default,
 				delegate(MySqlDataReader reader)
 				{
-					results = new List<PathEntity>(reader.FieldCount);
+					results = new List<PathEntity>();
 					while (reader.Read())
 					{
 						entity = new PathEntity();
@@ -121,12 +126,12 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public IList<string> VerifySchema()
 		{
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `path` ("
-				+"`PathId` int,"
-				+"`PathType` varchar(255) character set utf8,"
-				+"`RegionId` int,"
+				+"`PathId` int NOT NULL auto_increment,"
+				+"`PathType` char(255) character set latin1 NOT NULL,"
+				+"`RegionId` int NOT NULL,"
 				+"`StartingPoint` int,"
-				+"`SteedModel` int,"
-				+"`SteedName` varchar(255) character set utf8"
+				+"`SteedModel` int NOT NULL,"
+				+"`SteedName` char(255) character set latin1 NOT NULL"
 				+", primary key `PathId` (`PathId`)"
 				+")"
 			);

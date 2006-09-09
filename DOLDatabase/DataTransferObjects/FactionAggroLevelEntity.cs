@@ -22,7 +22,7 @@ using System;
 namespace DOL.Database.DataTransferObjects
 {
 	[Serializable]
-	public struct FactionAggroLevelEntity
+	public class FactionAggroLevelEntity
 	{
 		private int m_factionId;
 		private int m_persistantGameObject;

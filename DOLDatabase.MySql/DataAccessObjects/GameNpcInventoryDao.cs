@@ -43,19 +43,24 @@ namespace DOL.Database.MySql.DataAccessObjects
 				{
 					if (!reader.Read())
 					{
-						throw new RowNotFoundException();
+						result = null;
 					}
-					FillEntityWithRow(ref result, reader);
+					else
+					{
+						FillEntityWithRow(ref result, reader);
+					}
 				}
 			);
 
 			return result;
 		}
 
-		public virtual void Create(GameNpcInventoryEntity obj)
+		public virtual void Create(ref GameNpcInventoryEntity obj)
 		{
 			m_state.ExecuteNonQuery(
 				"INSERT INTO `gamenpcinventory` VALUES ('" + m_state.EscapeString(obj.Id.ToString()) + "','" + m_state.EscapeString(obj.IsCloakHoodUp.ToString()) + "');");
+			object insertedId = m_state.ExecuteScalar("SELECT LAST_INSERT_ID();");
+			obj.Id = (int) (long) insertedId;
 		}
 
 		public virtual void Update(GameNpcInventoryEntity obj)
@@ -85,7 +90,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 				CommandBehavior.Default,
 				delegate(MySqlDataReader reader)
 				{
-					results = new List<GameNpcInventoryEntity>(reader.FieldCount);
+					results = new List<GameNpcInventoryEntity>();
 					while (reader.Read())
 					{
 						entity = new GameNpcInventoryEntity();
@@ -117,8 +122,8 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public IList<string> VerifySchema()
 		{
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `gamenpcinventory` ("
-				+"`InventoryId` int,"
-				+"`IsCloakHoodUp` bit"
+				+"`InventoryId` int NOT NULL auto_increment,"
+				+"`IsCloakHoodUp` bit NOT NULL"
 				+", primary key `InventoryId` (`InventoryId`)"
 				+")"
 			);

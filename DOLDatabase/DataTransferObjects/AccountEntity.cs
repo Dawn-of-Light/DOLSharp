@@ -22,7 +22,7 @@ using System;
 namespace DOL.Database.DataTransferObjects
 {
 	[Serializable]
-	public struct AccountEntity
+	public class AccountEntity
 	{
 		private int m_id;
 		private string m_accountName;

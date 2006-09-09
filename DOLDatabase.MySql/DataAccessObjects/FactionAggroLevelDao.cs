@@ -43,16 +43,19 @@ namespace DOL.Database.MySql.DataAccessObjects
 				{
 					if (!reader.Read())
 					{
-						throw new RowNotFoundException();
+						result = null;
 					}
-					FillEntityWithRow(ref result, reader);
+					else
+					{
+						FillEntityWithRow(ref result, reader);
+					}
 				}
 			);
 
 			return result;
 		}
 
-		public virtual void Create(FactionAggroLevelEntity obj)
+		public virtual void Create(ref FactionAggroLevelEntity obj)
 		{
 			m_state.ExecuteNonQuery(
 				"INSERT INTO `factionaggrolevel` VALUES ('" + m_state.EscapeString(obj.FactionId.ToString()) + "','" + m_state.EscapeString(obj.PersistantGameObject.ToString()) + "','" + m_state.EscapeString(obj.AggroLevel.ToString()) + "');");
@@ -85,7 +88,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 				CommandBehavior.Default,
 				delegate(MySqlDataReader reader)
 				{
-					results = new List<FactionAggroLevelEntity>(reader.FieldCount);
+					results = new List<FactionAggroLevelEntity>();
 					while (reader.Read())
 					{
 						entity = new FactionAggroLevelEntity();
@@ -118,8 +121,8 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public IList<string> VerifySchema()
 		{
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `factionaggrolevel` ("
-				+"`FactionId` int,"
-				+"`PersistantGameObjectId` int,"
+				+"`FactionId` int NOT NULL,"
+				+"`PersistantGameObjectId` int NOT NULL,"
 				+"`AggroLevel` int"
 				+", primary key `FactionIdPersistantGameObjectId` (`FactionId`,`PersistantGameObjectId`)"
 				+")"

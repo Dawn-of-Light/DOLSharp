@@ -43,16 +43,19 @@ namespace DOL.Database.MySql.DataAccessObjects
 				{
 					if (!reader.Read())
 					{
-						throw new RowNotFoundException();
+						result = null;
 					}
-					FillEntityWithRow(ref result, reader);
+					else
+					{
+						FillEntityWithRow(ref result, reader);
+					}
 				}
 			);
 
 			return result;
 		}
 
-		public virtual void Create(EnemyFactionEntity obj)
+		public virtual void Create(ref EnemyFactionEntity obj)
 		{
 			m_state.ExecuteNonQuery(
 				"INSERT INTO `enemyfactions` VALUES ('" + m_state.EscapeString(obj.FactionId.ToString()) + "','" + m_state.EscapeString(obj.EnemyFactionId.ToString()) + "');");
@@ -85,7 +88,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 				CommandBehavior.Default,
 				delegate(MySqlDataReader reader)
 				{
-					results = new List<EnemyFactionEntity>(reader.FieldCount);
+					results = new List<EnemyFactionEntity>();
 					while (reader.Read())
 					{
 						entity = new EnemyFactionEntity();
