@@ -22,7 +22,7 @@ using System;
 namespace DOL.Database.DataTransferObjects
 {
 	[Serializable]
-	public struct LootEntity
+	public class LootEntity
 	{
 		private int m_id;
 		private int m_chance;

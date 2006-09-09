@@ -22,7 +22,7 @@ using System;
 namespace DOL.Database.DataTransferObjects
 {
 	[Serializable]
-	public struct ItemEntity
+	public class ItemEntity
 	{
 		private int m_id;
 		private byte m_armorFactor;

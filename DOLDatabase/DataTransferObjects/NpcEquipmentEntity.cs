@@ -22,7 +22,7 @@ using System;
 namespace DOL.Database.DataTransferObjects
 {
 	[Serializable]
-	public struct NpcEquipmentEntity
+	public class NpcEquipmentEntity
 	{
 		private int m_id;
 		private int m_glowEffect;

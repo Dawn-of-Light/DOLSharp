@@ -43,16 +43,19 @@ namespace DOL.Database.MySql.DataAccessObjects
 				{
 					if (!reader.Read())
 					{
-						throw new RowNotFoundException();
+						result = null;
 					}
-					FillEntityWithRow(ref result, reader);
+					else
+					{
+						FillEntityWithRow(ref result, reader);
+					}
 				}
 			);
 
 			return result;
 		}
 
-		public virtual void Create(StyleEntity obj)
+		public virtual void Create(ref StyleEntity obj)
 		{
 			m_state.ExecuteNonQuery(
 				"INSERT INTO `style` VALUES ('" + m_state.EscapeString(obj.Id.ToString()) + "','" + m_state.EscapeString(obj.AttackResultRequirement.ToString()) + "','" + m_state.EscapeString(obj.BonusToDefense.ToString()) + "','" + m_state.EscapeString(obj.BonusToHit.ToString()) + "','" + m_state.EscapeString(obj.EnduranceCost.ToString()) + "','" + m_state.EscapeString(obj.GrowthRate.ToString()) + "','" + m_state.EscapeString(obj.KeyName.ToString()) + "','" + m_state.EscapeString(obj.Name.ToString()) + "','" + m_state.EscapeString(obj.OpeningRequirementType.ToString()) + "','" + m_state.EscapeString(obj.OpeningRequirementValue.ToString()) + "','" + m_state.EscapeString(obj.SpecialType.ToString()) + "','" + m_state.EscapeString(obj.SpecialValue.ToString()) + "','" + m_state.EscapeString(obj.SpecKeyName.ToString()) + "','" + m_state.EscapeString(obj.SpecLevelRequirement.ToString()) + "','" + m_state.EscapeString(obj.StealthRequirement.ToString()) + "','" + m_state.EscapeString(obj.TwoHandAnimation.ToString()) + "','" + m_state.EscapeString(obj.WeaponTypeRequirement.ToString()) + "');");
@@ -85,7 +88,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 				CommandBehavior.Default,
 				delegate(MySqlDataReader reader)
 				{
-					results = new List<StyleEntity>(reader.FieldCount);
+					results = new List<StyleEntity>();
 					while (reader.Read())
 					{
 						entity = new StyleEntity();
@@ -132,23 +135,23 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public IList<string> VerifySchema()
 		{
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `style` ("
-				+"`Id` int,"
-				+"`AttackResultRequirement` int,"
-				+"`BonusToDefense` int,"
-				+"`BonusToHit` int,"
-				+"`EnduranceCost` int,"
-				+"`GrowthRate` double,"
-				+"`KeyName` varchar(255) character set utf8,"
-				+"`Name` varchar(255) character set utf8,"
-				+"`OpeningRequirementType` int,"
-				+"`OpeningRequirementValue` int,"
-				+"`SpecialType` int,"
-				+"`SpecialValue` int,"
-				+"`SpecKeyName` varchar(255) character set utf8,"
-				+"`SpecLevelRequirement` int,"
-				+"`StealthRequirement` bit,"
-				+"`TwoHandAnimation` int,"
-				+"`WeaponTypeRequirement` int"
+				+"`Id` int NOT NULL,"
+				+"`AttackResultRequirement` int NOT NULL,"
+				+"`BonusToDefense` int NOT NULL,"
+				+"`BonusToHit` int NOT NULL,"
+				+"`EnduranceCost` int NOT NULL,"
+				+"`GrowthRate` double NOT NULL,"
+				+"`KeyName` char(255) character set latin1,"
+				+"`Name` char(255) character set latin1 NOT NULL,"
+				+"`OpeningRequirementType` int NOT NULL,"
+				+"`OpeningRequirementValue` int NOT NULL,"
+				+"`SpecialType` int NOT NULL,"
+				+"`SpecialValue` int NOT NULL,"
+				+"`SpecKeyName` char(255) character set latin1 NOT NULL,"
+				+"`SpecLevelRequirement` int NOT NULL,"
+				+"`StealthRequirement` bit NOT NULL,"
+				+"`TwoHandAnimation` int NOT NULL,"
+				+"`WeaponTypeRequirement` int NOT NULL"
 				+", primary key `Id` (`Id`)"
 				+")"
 			);

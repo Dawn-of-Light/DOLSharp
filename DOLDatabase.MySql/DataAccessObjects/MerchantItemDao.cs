@@ -43,19 +43,24 @@ namespace DOL.Database.MySql.DataAccessObjects
 				{
 					if (!reader.Read())
 					{
-						throw new RowNotFoundException();
+						result = null;
 					}
-					FillEntityWithRow(ref result, reader);
+					else
+					{
+						FillEntityWithRow(ref result, reader);
+					}
 				}
 			);
 
 			return result;
 		}
 
-		public virtual void Create(MerchantItemEntity obj)
+		public virtual void Create(ref MerchantItemEntity obj)
 		{
 			m_state.ExecuteNonQuery(
 				"INSERT INTO `merchantitem` VALUES ('" + m_state.EscapeString(obj.Id.ToString()) + "','" + m_state.EscapeString(obj.ItemTemplate.ToString()) + "','" + m_state.EscapeString(obj.MerchantPage.ToString()) + "','" + m_state.EscapeString(obj.Position.ToString()) + "');");
+			object insertedId = m_state.ExecuteScalar("SELECT LAST_INSERT_ID();");
+			obj.Id = (int) (long) insertedId;
 		}
 
 		public virtual void Update(MerchantItemEntity obj)
@@ -85,7 +90,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 				CommandBehavior.Default,
 				delegate(MySqlDataReader reader)
 				{
-					results = new List<MerchantItemEntity>(reader.FieldCount);
+					results = new List<MerchantItemEntity>();
 					while (reader.Read())
 					{
 						entity = new MerchantItemEntity();
@@ -119,10 +124,10 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public IList<string> VerifySchema()
 		{
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `merchantitem` ("
-				+"`MerchantItemId` int,"
-				+"`ItemTemplateId` varchar(255) character set utf8,"
+				+"`MerchantItemId` int NOT NULL auto_increment,"
+				+"`ItemTemplateId` char(255) character set latin1,"
 				+"`MerchantPageId` int,"
-				+"`Position` int"
+				+"`Position` int NOT NULL"
 				+", primary key `MerchantItemId` (`MerchantItemId`)"
 				+")"
 			);

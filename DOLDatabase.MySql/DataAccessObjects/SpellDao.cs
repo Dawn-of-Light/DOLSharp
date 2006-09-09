@@ -43,16 +43,19 @@ namespace DOL.Database.MySql.DataAccessObjects
 				{
 					if (!reader.Read())
 					{
-						throw new RowNotFoundException();
+						result = null;
 					}
-					FillEntityWithRow(ref result, reader);
+					else
+					{
+						FillEntityWithRow(ref result, reader);
+					}
 				}
 			);
 
 			return result;
 		}
 
-		public virtual void Create(SpellEntity obj)
+		public virtual void Create(ref SpellEntity obj)
 		{
 			m_state.ExecuteNonQuery(
 				"INSERT INTO `spell` VALUES ('" + m_state.EscapeString(obj.Id.ToString()) + "','" + m_state.EscapeString(obj.AmnesiaChance.ToString()) + "','" + m_state.EscapeString(obj.CastTime.ToString()) + "','" + m_state.EscapeString(obj.ClientEffect.ToString()) + "','" + m_state.EscapeString(obj.Concentration.ToString()) + "','" + m_state.EscapeString(obj.Damage.ToString()) + "','" + m_state.EscapeString(obj.DamageType.ToString()) + "','" + m_state.EscapeString(obj.Description.ToString()) + "','" + m_state.EscapeString(obj.Duration.ToString()) + "','" + m_state.EscapeString(obj.EffectGroup.ToString()) + "','" + m_state.EscapeString(obj.Frequency.ToString()) + "','" + m_state.EscapeString(obj.Icon.ToString()) + "','" + m_state.EscapeString(obj.InstrumentRequirement.ToString()) + "','" + m_state.EscapeString(obj.LifeDrainReturn.ToString()) + "','" + m_state.EscapeString(obj.Message1.ToString()) + "','" + m_state.EscapeString(obj.Message2.ToString()) + "','" + m_state.EscapeString(obj.Message3.ToString()) + "','" + m_state.EscapeString(obj.Message4.ToString()) + "','" + m_state.EscapeString(obj.Name.ToString()) + "','" + m_state.EscapeString(obj.Power.ToString()) + "','" + m_state.EscapeString(obj.Pulse.ToString()) + "','" + m_state.EscapeString(obj.PulsePower.ToString()) + "','" + m_state.EscapeString(obj.Radius.ToString()) + "','" + m_state.EscapeString(obj.Range.ToString()) + "','" + m_state.EscapeString(obj.RecastDelay.ToString()) + "','" + m_state.EscapeString(obj.ResurrectHealth.ToString()) + "','" + m_state.EscapeString(obj.ResurrectMana.ToString()) + "','" + m_state.EscapeString(obj.SpellGroup.ToString()) + "','" + m_state.EscapeString(obj.Target.ToString()) + "','" + m_state.EscapeString(obj.Type.ToString()) + "','" + m_state.EscapeString(obj.Value.ToString()) + "');");
@@ -85,7 +88,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 				CommandBehavior.Default,
 				delegate(MySqlDataReader reader)
 				{
-					results = new List<SpellEntity>(reader.FieldCount);
+					results = new List<SpellEntity>();
 					while (reader.Read())
 					{
 						entity = new SpellEntity();
@@ -146,37 +149,37 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public IList<string> VerifySchema()
 		{
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `spell` ("
-				+"`SpellId` int,"
-				+"`AmnesiaChance` int,"
-				+"`CastTime` double,"
-				+"`ClientEffect` int,"
-				+"`Concentration` int,"
-				+"`Damage` double,"
-				+"`DamageType` int,"
-				+"`Description` varchar(255) character set utf8,"
-				+"`Duration` int,"
-				+"`EffectGroup` int,"
-				+"`Frequency` int,"
-				+"`Icon` int,"
-				+"`InstrumentRequirement` int,"
-				+"`LifeDrainReturn` int,"
-				+"`Message1` varchar(255) character set utf8,"
-				+"`Message2` varchar(255) character set utf8,"
-				+"`Message3` varchar(255) character set utf8,"
-				+"`Message4` varchar(255) character set utf8,"
-				+"`Name` varchar(255) character set utf8,"
-				+"`Power` int,"
-				+"`Pulse` int,"
-				+"`PulsePower` int,"
-				+"`Radius` int,"
-				+"`Range` int,"
-				+"`RecastDelay` int,"
-				+"`ResurrectHealth` int,"
-				+"`ResurrectMana` int,"
-				+"`SpellGroup` int,"
-				+"`Target` varchar(255) character set utf8,"
-				+"`Type` varchar(255) character set utf8,"
-				+"`Value` double"
+				+"`SpellId` int NOT NULL,"
+				+"`AmnesiaChance` int NOT NULL,"
+				+"`CastTime` double NOT NULL,"
+				+"`ClientEffect` int NOT NULL,"
+				+"`Concentration` int NOT NULL,"
+				+"`Damage` double NOT NULL,"
+				+"`DamageType` int NOT NULL,"
+				+"`Description` char(255) character set latin1 NOT NULL,"
+				+"`Duration` int NOT NULL,"
+				+"`EffectGroup` int NOT NULL,"
+				+"`Frequency` int NOT NULL,"
+				+"`Icon` int NOT NULL,"
+				+"`InstrumentRequirement` int NOT NULL,"
+				+"`LifeDrainReturn` int NOT NULL,"
+				+"`Message1` char(255) character set latin1 NOT NULL,"
+				+"`Message2` char(255) character set latin1 NOT NULL,"
+				+"`Message3` char(255) character set latin1 NOT NULL,"
+				+"`Message4` char(255) character set latin1 NOT NULL,"
+				+"`Name` char(255) character set latin1 NOT NULL,"
+				+"`Power` int NOT NULL,"
+				+"`Pulse` int NOT NULL,"
+				+"`PulsePower` int NOT NULL,"
+				+"`Radius` int NOT NULL,"
+				+"`Range` int NOT NULL,"
+				+"`RecastDelay` int NOT NULL,"
+				+"`ResurrectHealth` int NOT NULL,"
+				+"`ResurrectMana` int NOT NULL,"
+				+"`SpellGroup` int NOT NULL,"
+				+"`Target` char(255) character set latin1 NOT NULL,"
+				+"`Type` char(255) character set latin1 NOT NULL,"
+				+"`Value` double NOT NULL"
 				+", primary key `SpellId` (`SpellId`)"
 				+")"
 			);

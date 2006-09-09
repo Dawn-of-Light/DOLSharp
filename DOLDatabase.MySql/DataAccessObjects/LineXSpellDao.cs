@@ -43,19 +43,24 @@ namespace DOL.Database.MySql.DataAccessObjects
 				{
 					if (!reader.Read())
 					{
-						throw new RowNotFoundException();
+						result = null;
 					}
-					FillEntityWithRow(ref result, reader);
+					else
+					{
+						FillEntityWithRow(ref result, reader);
+					}
 				}
 			);
 
 			return result;
 		}
 
-		public virtual void Create(LineXSpellEntity obj)
+		public virtual void Create(ref LineXSpellEntity obj)
 		{
 			m_state.ExecuteNonQuery(
 				"INSERT INTO `linexspell` VALUES ('" + m_state.EscapeString(obj.Id.ToString()) + "','" + m_state.EscapeString(obj.Level.ToString()) + "','" + m_state.EscapeString(obj.LineName.ToString()) + "','" + m_state.EscapeString(obj.SpellId.ToString()) + "');");
+			object insertedId = m_state.ExecuteScalar("SELECT LAST_INSERT_ID();");
+			obj.Id = (int) (long) insertedId;
 		}
 
 		public virtual void Update(LineXSpellEntity obj)
@@ -85,7 +90,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 				CommandBehavior.Default,
 				delegate(MySqlDataReader reader)
 				{
-					results = new List<LineXSpellEntity>(reader.FieldCount);
+					results = new List<LineXSpellEntity>();
 					while (reader.Read())
 					{
 						entity = new LineXSpellEntity();
@@ -119,10 +124,10 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public IList<string> VerifySchema()
 		{
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `linexspell` ("
-				+"`LineXSpellId` int,"
-				+"`Level` int,"
-				+"`LineName` varchar(500) character set utf8,"
-				+"`SpellId` int"
+				+"`LineXSpellId` int NOT NULL auto_increment,"
+				+"`Level` int NOT NULL,"
+				+"`LineName` char(255) character set latin1 NOT NULL,"
+				+"`SpellId` int NOT NULL"
 				+", primary key `LineXSpellId` (`LineXSpellId`)"
 				+")"
 			);

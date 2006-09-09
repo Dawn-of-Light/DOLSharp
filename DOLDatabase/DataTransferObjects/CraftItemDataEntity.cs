@@ -22,7 +22,7 @@ using System;
 namespace DOL.Database.DataTransferObjects
 {
 	[Serializable]
-	public struct CraftItemDataEntity
+	public class CraftItemDataEntity
 	{
 		private int m_id;
 		private int m_craftingLevel;

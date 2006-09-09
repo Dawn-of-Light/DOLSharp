@@ -43,19 +43,24 @@ namespace DOL.Database.MySql.DataAccessObjects
 				{
 					if (!reader.Read())
 					{
-						throw new RowNotFoundException();
+						result = null;
 					}
-					FillEntityWithRow(ref result, reader);
+					else
+					{
+						FillEntityWithRow(ref result, reader);
+					}
 				}
 			);
 
 			return result;
 		}
 
-		public virtual void Create(GuildEntity obj)
+		public virtual void Create(ref GuildEntity obj)
 		{
 			m_state.ExecuteNonQuery(
 				"INSERT INTO `guild` VALUES ('" + m_state.EscapeString(obj.Id.ToString()) + "','" + m_state.EscapeString(obj.Alliance.ToString()) + "','" + m_state.EscapeString(obj.BountyPoints.ToString()) + "','" + m_state.EscapeString(obj.Due.ToString()) + "','" + m_state.EscapeString(obj.Email.ToString()) + "','" + m_state.EscapeString(obj.Emblem.ToString()) + "','" + m_state.EscapeString(obj.GuildName.ToString()) + "','" + m_state.EscapeString(obj.Level.ToString()) + "','" + m_state.EscapeString(obj.MeritPoints.ToString()) + "','" + m_state.EscapeString(obj.Motd.ToString()) + "','" + m_state.EscapeString(obj.OMotd.ToString()) + "','" + m_state.EscapeString(obj.RealmPoints.ToString()) + "','" + m_state.EscapeString(obj.TotalMoney.ToString()) + "','" + m_state.EscapeString(obj.Webpage.ToString()) + "');");
+			object insertedId = m_state.ExecuteScalar("SELECT LAST_INSERT_ID();");
+			obj.Id = (int) (long) insertedId;
 		}
 
 		public virtual void Update(GuildEntity obj)
@@ -85,7 +90,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 				CommandBehavior.Default,
 				delegate(MySqlDataReader reader)
 				{
-					results = new List<GuildEntity>(reader.FieldCount);
+					results = new List<GuildEntity>();
 					while (reader.Read())
 					{
 						entity = new GuildEntity();
@@ -129,20 +134,20 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public IList<string> VerifySchema()
 		{
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `guild` ("
-				+"`GuildId` int,"
+				+"`GuildId` int NOT NULL auto_increment,"
 				+"`Alliance` int,"
-				+"`BountyPoints` bigint,"
-				+"`Due` bit,"
-				+"`Email` varchar(255) character set utf8,"
-				+"`Emblem` int,"
-				+"`GuildName` varchar(255) character set utf8,"
-				+"`Level` int,"
-				+"`MeritPoints` bigint,"
-				+"`Motd` varchar(255) character set utf8,"
-				+"`OMotd` varchar(255) character set utf8,"
-				+"`RealmPoints` bigint,"
-				+"`TotalMoney` bigint,"
-				+"`Webpage` varchar(255) character set utf8"
+				+"`BountyPoints` bigint NOT NULL,"
+				+"`Due` bit NOT NULL,"
+				+"`Email` char(255) character set latin1 NOT NULL,"
+				+"`Emblem` int NOT NULL,"
+				+"`GuildName` char(255) character set latin1 NOT NULL,"
+				+"`Level` int NOT NULL,"
+				+"`MeritPoints` bigint NOT NULL,"
+				+"`Motd` char(255) character set latin1 NOT NULL,"
+				+"`OMotd` char(255) character set latin1 NOT NULL,"
+				+"`RealmPoints` bigint NOT NULL,"
+				+"`TotalMoney` bigint NOT NULL,"
+				+"`Webpage` char(255) character set latin1 NOT NULL"
 				+", primary key `GuildId` (`GuildId`)"
 				+")"
 			);

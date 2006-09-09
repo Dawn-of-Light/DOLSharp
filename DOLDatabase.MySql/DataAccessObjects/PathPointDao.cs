@@ -43,19 +43,24 @@ namespace DOL.Database.MySql.DataAccessObjects
 				{
 					if (!reader.Read())
 					{
-						throw new RowNotFoundException();
+						result = null;
 					}
-					FillEntityWithRow(ref result, reader);
+					else
+					{
+						FillEntityWithRow(ref result, reader);
+					}
 				}
 			);
 
 			return result;
 		}
 
-		public virtual void Create(PathPointEntity obj)
+		public virtual void Create(ref PathPointEntity obj)
 		{
 			m_state.ExecuteNonQuery(
 				"INSERT INTO `pathpoint` VALUES ('" + m_state.EscapeString(obj.Id.ToString()) + "','" + m_state.EscapeString(obj.NextPoint.ToString()) + "','" + m_state.EscapeString(obj.Speed.ToString()) + "','" + m_state.EscapeString(obj.X.ToString()) + "','" + m_state.EscapeString(obj.Y.ToString()) + "','" + m_state.EscapeString(obj.Z.ToString()) + "');");
+			object insertedId = m_state.ExecuteScalar("SELECT LAST_INSERT_ID();");
+			obj.Id = (int) (long) insertedId;
 		}
 
 		public virtual void Update(PathPointEntity obj)
@@ -85,7 +90,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 				CommandBehavior.Default,
 				delegate(MySqlDataReader reader)
 				{
-					results = new List<PathPointEntity>(reader.FieldCount);
+					results = new List<PathPointEntity>();
 					while (reader.Read())
 					{
 						entity = new PathPointEntity();
@@ -121,12 +126,12 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public IList<string> VerifySchema()
 		{
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `pathpoint` ("
-				+"`PathPointId` int,"
+				+"`PathPointId` int NOT NULL auto_increment,"
 				+"`NextPoint` int,"
-				+"`Speed` int,"
-				+"`X` int,"
-				+"`Y` int,"
-				+"`Z` int"
+				+"`Speed` int NOT NULL,"
+				+"`X` int NOT NULL,"
+				+"`Y` int NOT NULL,"
+				+"`Z` int NOT NULL"
 				+", primary key `PathPointId` (`PathPointId`)"
 				+")"
 			);

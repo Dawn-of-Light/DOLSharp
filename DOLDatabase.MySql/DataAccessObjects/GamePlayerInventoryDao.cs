@@ -43,16 +43,19 @@ namespace DOL.Database.MySql.DataAccessObjects
 				{
 					if (!reader.Read())
 					{
-						throw new RowNotFoundException();
+						result = null;
 					}
-					FillEntityWithRow(ref result, reader);
+					else
+					{
+						FillEntityWithRow(ref result, reader);
+					}
 				}
 			);
 
 			return result;
 		}
 
-		public virtual void Create(GamePlayerInventoryEntity obj)
+		public virtual void Create(ref GamePlayerInventoryEntity obj)
 		{
 			m_state.ExecuteNonQuery(
 				"INSERT INTO `gameplayerinventory` VALUES ('" + m_state.EscapeString(obj.Inventory.ToString()) + "','" + m_state.EscapeString(obj.IsCloakHoodUp.ToString()) + "');");
@@ -85,7 +88,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 				CommandBehavior.Default,
 				delegate(MySqlDataReader reader)
 				{
-					results = new List<GamePlayerInventoryEntity>(reader.FieldCount);
+					results = new List<GamePlayerInventoryEntity>();
 					while (reader.Read())
 					{
 						entity = new GamePlayerInventoryEntity();
@@ -117,8 +120,8 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public IList<string> VerifySchema()
 		{
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `gameplayerinventory` ("
-				+"`InventoryId` int,"
-				+"`IsCloakHoodUp` bit"
+				+"`InventoryId` int NOT NULL,"
+				+"`IsCloakHoodUp` bit NOT NULL"
 				+", primary key `InventoryId` (`InventoryId`)"
 				+")"
 			);

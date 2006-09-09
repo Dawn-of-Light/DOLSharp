@@ -29,7 +29,6 @@ namespace DOL.Database.NHibernate
 	/// Provides basic NHibernate DAO functionality.
 	/// </summary>
 	/// <typeparam name="TTransferObject">The transfer object's type.</typeparam>
-	/// <typeparam name="TPrimaryKey">The transfer object's primary key.</typeparam>
 	public class GenericDao<TTransferObject> : IGenericDao<TTransferObject>
 	{
 		/// <summary>
@@ -65,7 +64,7 @@ namespace DOL.Database.NHibernate
 		/// Creates an object in a database.
 		/// </summary>
 		/// <param name="obj">The object to save.</param>
-		public virtual void Create(TTransferObject obj)
+		public virtual void Create(ref TTransferObject obj)
 		{
 			Database.AddNewObject(obj);
 		}

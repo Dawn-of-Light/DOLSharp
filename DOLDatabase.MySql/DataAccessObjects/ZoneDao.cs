@@ -43,16 +43,19 @@ namespace DOL.Database.MySql.DataAccessObjects
 				{
 					if (!reader.Read())
 					{
-						throw new RowNotFoundException();
+						result = null;
 					}
-					FillEntityWithRow(ref result, reader);
+					else
+					{
+						FillEntityWithRow(ref result, reader);
+					}
 				}
 			);
 
 			return result;
 		}
 
-		public virtual void Create(ZoneEntity obj)
+		public virtual void Create(ref ZoneEntity obj)
 		{
 			m_state.ExecuteNonQuery(
 				"INSERT INTO `zone` VALUES ('" + m_state.EscapeString(obj.Id.ToString()) + "','" + m_state.EscapeString(obj.Description.ToString()) + "','" + m_state.EscapeString(obj.Region.ToString()) + "','" + m_state.EscapeString(obj.XOffset.ToString()) + "','" + m_state.EscapeString(obj.YOffset.ToString()) + "');");
@@ -85,7 +88,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 				CommandBehavior.Default,
 				delegate(MySqlDataReader reader)
 				{
-					results = new List<ZoneEntity>(reader.FieldCount);
+					results = new List<ZoneEntity>();
 					while (reader.Read())
 					{
 						entity = new ZoneEntity();
@@ -120,11 +123,11 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public IList<string> VerifySchema()
 		{
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `zone` ("
-				+"`ZoneId` int,"
-				+"`Description` varchar(255) character set utf8,"
+				+"`ZoneId` int NOT NULL,"
+				+"`Description` char(255) character set latin1 NOT NULL,"
 				+"`RegionId` int,"
-				+"`XOffset` int,"
-				+"`YOffset` int"
+				+"`XOffset` int NOT NULL,"
+				+"`YOffset` int NOT NULL"
 				+", primary key `ZoneId` (`ZoneId`)"
 				+")"
 			);

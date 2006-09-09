@@ -43,19 +43,24 @@ namespace DOL.Database.MySql.DataAccessObjects
 				{
 					if (!reader.Read())
 					{
-						throw new RowNotFoundException();
+						result = null;
 					}
-					FillEntityWithRow(ref result, reader);
+					else
+					{
+						FillEntityWithRow(ref result, reader);
+					}
 				}
 			);
 
 			return result;
 		}
 
-		public virtual void Create(FactionEntity obj)
+		public virtual void Create(ref FactionEntity obj)
 		{
 			m_state.ExecuteNonQuery(
 				"INSERT INTO `faction` VALUES ('" + m_state.EscapeString(obj.FactionId.ToString()) + "','" + m_state.EscapeString(obj.Name.ToString()) + "');");
+			object insertedId = m_state.ExecuteScalar("SELECT LAST_INSERT_ID();");
+			obj.FactionId = (int) (long) insertedId;
 		}
 
 		public virtual void Update(FactionEntity obj)
@@ -85,7 +90,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 				CommandBehavior.Default,
 				delegate(MySqlDataReader reader)
 				{
-					results = new List<FactionEntity>(reader.FieldCount);
+					results = new List<FactionEntity>();
 					while (reader.Read())
 					{
 						entity = new FactionEntity();
@@ -117,8 +122,8 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public IList<string> VerifySchema()
 		{
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `faction` ("
-				+"`FactionId` int,"
-				+"`Name` varchar(255) character set utf8"
+				+"`FactionId` int NOT NULL auto_increment,"
+				+"`Name` char(255) character set latin1 NOT NULL"
 				+", primary key `FactionId` (`FactionId`)"
 				+")"
 			);

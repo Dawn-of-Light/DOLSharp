@@ -43,16 +43,19 @@ namespace DOL.Database.MySql.DataAccessObjects
 				{
 					if (!reader.Read())
 					{
-						throw new RowNotFoundException();
+						result = null;
 					}
-					FillEntityWithRow(ref result, reader);
+					else
+					{
+						FillEntityWithRow(ref result, reader);
+					}
 				}
 			);
 
 			return result;
 		}
 
-		public virtual void Create(SpellLineEntity obj)
+		public virtual void Create(ref SpellLineEntity obj)
 		{
 			m_state.ExecuteNonQuery(
 				"INSERT INTO `spellline` VALUES ('" + m_state.EscapeString(obj.KeyName.ToString()) + "','" + m_state.EscapeString(obj.IsBaseLine.ToString()) + "','" + m_state.EscapeString(obj.Name.ToString()) + "','" + m_state.EscapeString(obj.Spec.ToString()) + "');");
@@ -85,7 +88,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 				CommandBehavior.Default,
 				delegate(MySqlDataReader reader)
 				{
-					results = new List<SpellLineEntity>(reader.FieldCount);
+					results = new List<SpellLineEntity>();
 					while (reader.Read())
 					{
 						entity = new SpellLineEntity();
@@ -119,10 +122,10 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public IList<string> VerifySchema()
 		{
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `spellline` ("
-				+"`KeyName` varchar(255) character set utf8,"
-				+"`IsBaseLine` bit,"
-				+"`Name` varchar(255) character set utf8,"
-				+"`Spec` varchar(255) character set utf8"
+				+"`KeyName` char(255) character set latin1 NOT NULL,"
+				+"`IsBaseLine` bit NOT NULL,"
+				+"`Name` char(255) character set latin1 NOT NULL,"
+				+"`Spec` char(255) character set latin1 NOT NULL"
 				+", primary key `KeyName` (`KeyName`)"
 				+")"
 			);

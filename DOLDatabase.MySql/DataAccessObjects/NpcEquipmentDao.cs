@@ -43,19 +43,24 @@ namespace DOL.Database.MySql.DataAccessObjects
 				{
 					if (!reader.Read())
 					{
-						throw new RowNotFoundException();
+						result = null;
 					}
-					FillEntityWithRow(ref result, reader);
+					else
+					{
+						FillEntityWithRow(ref result, reader);
+					}
 				}
 			);
 
 			return result;
 		}
 
-		public virtual void Create(NpcEquipmentEntity obj)
+		public virtual void Create(ref NpcEquipmentEntity obj)
 		{
 			m_state.ExecuteNonQuery(
 				"INSERT INTO `npcequipment` VALUES ('" + m_state.EscapeString(obj.Id.ToString()) + "','" + m_state.EscapeString(obj.GlowEffect.ToString()) + "','" + m_state.EscapeString(obj.Inventory.ToString()) + "','" + m_state.EscapeString(obj.Model.ToString()) + "','" + m_state.EscapeString(obj.ModelExtension.ToString()) + "','" + m_state.EscapeString(obj.NPCEquipmentType.ToString()) + "','" + m_state.EscapeString(obj.or1.ToString()) + "','" + m_state.EscapeString(obj.SlotPosition.ToString()) + "');");
+			object insertedId = m_state.ExecuteScalar("SELECT LAST_INSERT_ID();");
+			obj.Id = (int) (long) insertedId;
 		}
 
 		public virtual void Update(NpcEquipmentEntity obj)
@@ -85,7 +90,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 				CommandBehavior.Default,
 				delegate(MySqlDataReader reader)
 				{
-					results = new List<NpcEquipmentEntity>(reader.FieldCount);
+					results = new List<NpcEquipmentEntity>();
 					while (reader.Read())
 					{
 						entity = new NpcEquipmentEntity();
@@ -123,14 +128,14 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public IList<string> VerifySchema()
 		{
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `npcequipment` ("
-				+"`ItemId` int,"
-				+"`GlowEffect` int,"
+				+"`ItemId` int NOT NULL auto_increment,"
+				+"`GlowEffect` int NOT NULL,"
 				+"`InventoryId` int,"
-				+"`Model` int,"
-				+"`ModelExtension` tinyint unsigned,"
-				+"`NPCEquipmentType` varchar(255) character set utf8,"
-				+"`Color` int,"
-				+"`SlotPosition` int"
+				+"`Model` int NOT NULL,"
+				+"`ModelExtension` tinyint unsigned NOT NULL,"
+				+"`NPCEquipmentType` char(255) character set latin1 NOT NULL,"
+				+"`Color` int NOT NULL,"
+				+"`SlotPosition` int NOT NULL"
 				+", primary key `ItemId` (`ItemId`)"
 				+")"
 			);

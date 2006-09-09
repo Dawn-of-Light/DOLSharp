@@ -22,7 +22,7 @@ using System;
 namespace DOL.Database.DataTransferObjects
 {
 	[Serializable]
-	public struct InvalidNameEntity
+	public class InvalidNameEntity
 	{
 		private int m_id;
 		private string m_name;

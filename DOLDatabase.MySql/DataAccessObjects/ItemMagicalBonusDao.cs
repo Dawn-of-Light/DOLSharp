@@ -43,16 +43,19 @@ namespace DOL.Database.MySql.DataAccessObjects
 				{
 					if (!reader.Read())
 					{
-						throw new RowNotFoundException();
+						result = null;
 					}
-					FillEntityWithRow(ref result, reader);
+					else
+					{
+						FillEntityWithRow(ref result, reader);
+					}
 				}
 			);
 
 			return result;
 		}
 
-		public virtual void Create(ItemMagicalBonusEntity obj)
+		public virtual void Create(ref ItemMagicalBonusEntity obj)
 		{
 			m_state.ExecuteNonQuery(
 				"INSERT INTO `itemmagicalbonus` VALUES ('" + m_state.EscapeString(obj.Bonus.ToString()) + "','" + m_state.EscapeString(obj.BonusType.ToString()) + "','" + m_state.EscapeString(obj.Item.ToString()) + "');");
@@ -85,7 +88,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 				CommandBehavior.Default,
 				delegate(MySqlDataReader reader)
 				{
-					results = new List<ItemMagicalBonusEntity>(reader.FieldCount);
+					results = new List<ItemMagicalBonusEntity>();
 					while (reader.Read())
 					{
 						entity = new ItemMagicalBonusEntity();
@@ -118,9 +121,9 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public IList<string> VerifySchema()
 		{
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `itemmagicalbonus` ("
-				+"`Bonus` smallint,"
-				+"`BonusType` tinyint unsigned,"
-				+"`ItemId` int"
+				+"`Bonus` smallint NOT NULL,"
+				+"`BonusType` tinyint unsigned NOT NULL,"
+				+"`ItemId` int NOT NULL"
 				+", primary key `BonusBonusTypeItemId` (`Bonus`,`BonusType`,`ItemId`)"
 				+")"
 			);

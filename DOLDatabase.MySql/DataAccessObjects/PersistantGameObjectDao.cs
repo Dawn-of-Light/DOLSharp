@@ -43,19 +43,24 @@ namespace DOL.Database.MySql.DataAccessObjects
 				{
 					if (!reader.Read())
 					{
-						throw new RowNotFoundException();
+						result = null;
 					}
-					FillEntityWithRow(ref result, reader);
+					else
+					{
+						FillEntityWithRow(ref result, reader);
+					}
 				}
 			);
 
 			return result;
 		}
 
-		public virtual void Create(PersistantGameObjectEntity obj)
+		public virtual void Create(ref PersistantGameObjectEntity obj)
 		{
 			m_state.ExecuteNonQuery(
 				"INSERT INTO `persistantgameobject` VALUES ('" + m_state.EscapeString(obj.Id.ToString()) + "','" + m_state.EscapeString(obj.BlockChance.ToString()) + "','" + m_state.EscapeString(obj.DoorId.ToString()) + "','" + m_state.EscapeString(obj.EvadeChance.ToString()) + "','" + m_state.EscapeString(obj.FactionId.ToString()) + "','" + m_state.EscapeString(obj.Flags.ToString()) + "','" + m_state.EscapeString(obj.GuildName.ToString()) + "','" + m_state.EscapeString(obj.Heading.ToString()) + "','" + m_state.EscapeString(obj.InventoryId.ToString()) + "','" + m_state.EscapeString(obj.LeftHandSwingChance.ToString()) + "','" + m_state.EscapeString(obj.Level.ToString()) + "','" + m_state.EscapeString(obj.LootListId.ToString()) + "','" + m_state.EscapeString(obj.MaxSpeedBase.ToString()) + "','" + m_state.EscapeString(obj.MeleeDamageType.ToString()) + "','" + m_state.EscapeString(obj.MerchantWindowId.ToString()) + "','" + m_state.EscapeString(obj.Model.ToString()) + "','" + m_state.EscapeString(obj.Name.ToString()) + "','" + m_state.EscapeString(obj.ParryChance.ToString()) + "','" + m_state.EscapeString(obj.PersistantGameObjectType.ToString()) + "','" + m_state.EscapeString(obj.Realm.ToString()) + "','" + m_state.EscapeString(obj.RegionId.ToString()) + "','" + m_state.EscapeString(obj.RespawnInterval.ToString()) + "','" + m_state.EscapeString(obj.Size.ToString()) + "','" + m_state.EscapeString(obj.ToolType.ToString()) + "','" + m_state.EscapeString(obj.X.ToString()) + "','" + m_state.EscapeString(obj.Y.ToString()) + "','" + m_state.EscapeString(obj.Z.ToString()) + "');");
+			object insertedId = m_state.ExecuteScalar("SELECT LAST_INSERT_ID();");
+			obj.Id = (int) (long) insertedId;
 		}
 
 		public virtual void Update(PersistantGameObjectEntity obj)
@@ -85,7 +90,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 				CommandBehavior.Default,
 				delegate(MySqlDataReader reader)
 				{
-					results = new List<PersistantGameObjectEntity>(reader.FieldCount);
+					results = new List<PersistantGameObjectEntity>();
 					while (reader.Read())
 					{
 						entity = new PersistantGameObjectEntity();
@@ -142,33 +147,33 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public IList<string> VerifySchema()
 		{
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `persistantgameobject` ("
-				+"`PersistantGameObjectId` int,"
-				+"`BlockChance` tinyint unsigned,"
-				+"`DoorId` int,"
-				+"`EvadeChance` tinyint unsigned,"
-				+"`FactionId` int,"
-				+"`Flags` tinyint unsigned,"
-				+"`GuildName` varchar(255) character set utf8,"
-				+"`Heading` int,"
-				+"`InventoryId` int,"
-				+"`LeftHandSwingChance` tinyint unsigned,"
-				+"`Level` tinyint unsigned,"
-				+"`LootListId` int,"
-				+"`MaxSpeedBase` int,"
-				+"`MeleeDamageType` tinyint unsigned,"
-				+"`MerchantWindowId` int,"
-				+"`Model` int,"
-				+"`Name` varchar(255) character set utf8,"
-				+"`ParryChance` tinyint unsigned,"
-				+"`PersistantGameObjectType` varchar(255) character set utf8,"
-				+"`Realm` tinyint unsigned,"
-				+"`RegionId` int,"
-				+"`RespawnInterval` int,"
-				+"`Size` tinyint unsigned,"
-				+"`ToolType` tinyint unsigned,"
-				+"`X` int,"
-				+"`Y` int,"
-				+"`Z` int"
+				+"`PersistantGameObjectId` int NOT NULL auto_increment,"
+				+"`BlockChance` tinyint unsigned NOT NULL,"
+				+"`DoorId` int NOT NULL,"
+				+"`EvadeChance` tinyint unsigned NOT NULL,"
+				+"`FactionId` int NOT NULL,"
+				+"`Flags` tinyint unsigned NOT NULL,"
+				+"`GuildName` char(255) character set latin1 NOT NULL,"
+				+"`Heading` int NOT NULL,"
+				+"`InventoryId` int NOT NULL,"
+				+"`LeftHandSwingChance` tinyint unsigned NOT NULL,"
+				+"`Level` tinyint unsigned NOT NULL,"
+				+"`LootListId` int NOT NULL,"
+				+"`MaxSpeedBase` int NOT NULL,"
+				+"`MeleeDamageType` tinyint unsigned NOT NULL,"
+				+"`MerchantWindowId` int NOT NULL,"
+				+"`Model` int NOT NULL,"
+				+"`Name` char(255) character set latin1 NOT NULL,"
+				+"`ParryChance` tinyint unsigned NOT NULL,"
+				+"`PersistantGameObjectType` char(255) character set latin1 NOT NULL,"
+				+"`Realm` tinyint unsigned NOT NULL,"
+				+"`RegionId` int NOT NULL,"
+				+"`RespawnInterval` int NOT NULL,"
+				+"`Size` tinyint unsigned NOT NULL,"
+				+"`ToolType` tinyint unsigned NOT NULL,"
+				+"`X` int NOT NULL,"
+				+"`Y` int NOT NULL,"
+				+"`Z` int NOT NULL"
 				+", primary key `PersistantGameObjectId` (`PersistantGameObjectId`)"
 				+")"
 			);

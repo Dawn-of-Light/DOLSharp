@@ -43,19 +43,24 @@ namespace DOL.Database.MySql.DataAccessObjects
 				{
 					if (!reader.Read())
 					{
-						throw new RowNotFoundException();
+						result = null;
 					}
-					FillEntityWithRow(ref result, reader);
+					else
+					{
+						FillEntityWithRow(ref result, reader);
+					}
 				}
 			);
 
 			return result;
 		}
 
-		public virtual void Create(AccountEntity obj)
+		public virtual void Create(ref AccountEntity obj)
 		{
 			m_state.ExecuteNonQuery(
 				"INSERT INTO `account` VALUES ('" + m_state.EscapeString(obj.Id.ToString()) + "','" + m_state.EscapeString(obj.AccountName.ToString()) + "','" + m_state.EscapeString(obj.BanAuthor.ToString()) + "','" + m_state.EscapeString(obj.BanDuration.ToString()) + "','" + m_state.EscapeString(obj.BanReason.ToString()) + "','" + m_state.EscapeString(obj.CreationDate.ToString()) + "','" + m_state.EscapeString(obj.LastLogin.ToString()) + "','" + m_state.EscapeString(obj.LastLoginIp.ToString()) + "','" + m_state.EscapeString(obj.Mail.ToString()) + "','" + m_state.EscapeString(obj.Password.ToString()) + "','" + m_state.EscapeString(obj.PrivLevel.ToString()) + "','" + m_state.EscapeString(obj.Realm.ToString()) + "');");
+			object insertedId = m_state.ExecuteScalar("SELECT LAST_INSERT_ID();");
+			obj.Id = (int) (long) insertedId;
 		}
 
 		public virtual void Update(AccountEntity obj)
@@ -85,7 +90,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 				CommandBehavior.Default,
 				delegate(MySqlDataReader reader)
 				{
-					results = new List<AccountEntity>(reader.FieldCount);
+					results = new List<AccountEntity>();
 					while (reader.Read())
 					{
 						entity = new AccountEntity();
@@ -127,18 +132,18 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public IList<string> VerifySchema()
 		{
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `account` ("
-				+"`AccountId` int,"
-				+"`AccountName` varchar(40) character set utf8,"
-				+"`BanAuthor` varchar(255) character set utf8,"
-				+"`BanDuration` bigint,"
-				+"`BanReason` varchar(255) character set utf8,"
-				+"`CreationDate` datetime,"
-				+"`LastLogin` datetime,"
-				+"`LastLoginIp` varchar(255) character set utf8,"
-				+"`Mail` varchar(255) character set utf8,"
-				+"`Password` varchar(255) character set utf8,"
-				+"`PrivLevel` tinyint unsigned,"
-				+"`Realm` tinyint unsigned"
+				+"`AccountId` int NOT NULL auto_increment,"
+				+"`AccountName` char(40) character set latin1 NOT NULL,"
+				+"`BanAuthor` char(255) character set latin1 NOT NULL,"
+				+"`BanDuration` bigint NOT NULL,"
+				+"`BanReason` char(255) character set latin1 NOT NULL,"
+				+"`CreationDate` datetime NOT NULL,"
+				+"`LastLogin` datetime NOT NULL,"
+				+"`LastLoginIp` char(255) character set latin1 NOT NULL,"
+				+"`Mail` char(255) character set latin1,"
+				+"`Password` char(255) character set latin1 NOT NULL,"
+				+"`PrivLevel` tinyint unsigned NOT NULL,"
+				+"`Realm` tinyint unsigned NOT NULL"
 				+", primary key `AccountId` (`AccountId`)"
 				+")"
 			);

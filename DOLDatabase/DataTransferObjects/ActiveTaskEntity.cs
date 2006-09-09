@@ -22,7 +22,7 @@ using System;
 namespace DOL.Database.DataTransferObjects
 {
 	[Serializable]
-	public struct ActiveTaskEntity
+	public class ActiveTaskEntity
 	{
 		private int m_abstractTask;
 		private string m_itemName;

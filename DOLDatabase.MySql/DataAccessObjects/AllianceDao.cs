@@ -43,19 +43,24 @@ namespace DOL.Database.MySql.DataAccessObjects
 				{
 					if (!reader.Read())
 					{
-						throw new RowNotFoundException();
+						result = null;
 					}
-					FillEntityWithRow(ref result, reader);
+					else
+					{
+						FillEntityWithRow(ref result, reader);
+					}
 				}
 			);
 
 			return result;
 		}
 
-		public virtual void Create(AllianceEntity obj)
+		public virtual void Create(ref AllianceEntity obj)
 		{
 			m_state.ExecuteNonQuery(
 				"INSERT INTO `alliance` VALUES ('" + m_state.EscapeString(obj.Id.ToString()) + "','" + m_state.EscapeString(obj.AllianceLeader.ToString()) + "','" + m_state.EscapeString(obj.AMotd.ToString()) + "');");
+			object insertedId = m_state.ExecuteScalar("SELECT LAST_INSERT_ID();");
+			obj.Id = (int) (long) insertedId;
 		}
 
 		public virtual void Update(AllianceEntity obj)
@@ -85,7 +90,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 				CommandBehavior.Default,
 				delegate(MySqlDataReader reader)
 				{
-					results = new List<AllianceEntity>(reader.FieldCount);
+					results = new List<AllianceEntity>();
 					while (reader.Read())
 					{
 						entity = new AllianceEntity();
@@ -118,9 +123,9 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public IList<string> VerifySchema()
 		{
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `alliance` ("
-				+"`AllianceId` int,"
+				+"`AllianceId` int NOT NULL auto_increment,"
 				+"`AllianceLeader` int,"
-				+"`AMotd` varchar(255) character set utf8"
+				+"`AMotd` char(255) character set latin1 NOT NULL"
 				+", primary key `AllianceId` (`AllianceId`)"
 				+")"
 			);

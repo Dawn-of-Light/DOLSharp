@@ -43,16 +43,19 @@ namespace DOL.Database.MySql.DataAccessObjects
 				{
 					if (!reader.Read())
 					{
-						throw new RowNotFoundException();
+						result = null;
 					}
-					FillEntityWithRow(ref result, reader);
+					else
+					{
+						FillEntityWithRow(ref result, reader);
+					}
 				}
 			);
 
 			return result;
 		}
 
-		public virtual void Create(FinishedQuestEntity obj)
+		public virtual void Create(ref FinishedQuestEntity obj)
 		{
 			m_state.ExecuteNonQuery(
 				"INSERT INTO `finishedquests` VALUES ('" + m_state.EscapeString(obj.Count.ToString()) + "','" + m_state.EscapeString(obj.FinishedQuestType.ToString()) + "','" + m_state.EscapeString(obj.PersistantGameObject.ToString()) + "');");
@@ -85,7 +88,7 @@ namespace DOL.Database.MySql.DataAccessObjects
 				CommandBehavior.Default,
 				delegate(MySqlDataReader reader)
 				{
-					results = new List<FinishedQuestEntity>(reader.FieldCount);
+					results = new List<FinishedQuestEntity>();
 					while (reader.Read())
 					{
 						entity = new FinishedQuestEntity();
@@ -118,9 +121,9 @@ namespace DOL.Database.MySql.DataAccessObjects
 		public IList<string> VerifySchema()
 		{
 			m_state.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS `finishedquests` ("
-				+"`Count` tinyint unsigned,"
-				+"`FinishedQuestType` varchar(255) character set utf8,"
-				+"`PersistantGameObjectId` int"
+				+"`Count` tinyint unsigned NOT NULL,"
+				+"`FinishedQuestType` char(255) character set latin1 NOT NULL,"
+				+"`PersistantGameObjectId` int NOT NULL"
 				+", primary key `CountFinishedQuestTypePersistantGameObjectId` (`Count`,`FinishedQuestType`,`PersistantGameObjectId`)"
 				+")"
 			);

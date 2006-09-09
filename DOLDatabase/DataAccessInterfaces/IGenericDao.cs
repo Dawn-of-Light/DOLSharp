@@ -33,7 +33,7 @@ namespace DOL.Database.DataAccessInterfaces
 		/// Creates an object in a database.
 		/// </summary>
 		/// <param name="obj">The object to save.</param>
-		void Create(TTransferObject obj);
+		void Create(ref TTransferObject obj);
 
 		/// <summary>
 		/// Updates the persistent instance with data from transfer object.
