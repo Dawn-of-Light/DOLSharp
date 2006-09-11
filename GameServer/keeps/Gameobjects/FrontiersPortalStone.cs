@@ -90,7 +90,7 @@ namespace DOL.GS.Keeps
 				}
 			}
 
-			player.Out.SendDialogBox(eDialogCode.WarmapWindow, 0, 0, 0, 0, eDialogType.YesNo, false, "");
+			player.Out.SendDialogBox((eDialogCode)(0x30 + player.Realm), 0, 0, 0, 0, eDialogType.YesNo, false, "");
 
 			return true;
 		}

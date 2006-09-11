@@ -783,11 +783,12 @@ namespace DOL.GS.PacketHandler
 				flag |= 0x04;
 			pak.WriteShort((ushort)flag);
 			pak.WritePascalString(obj.Name);
-			if (obj is GameKeepDoor)
-				pak.WriteByte(0x04);
+			if (obj is IDoor)
+			{
+				pak.WriteByte((byte)(obj as IDoor).Flag);
+				pak.WriteInt((uint)(obj as IDoor).DoorID);
+			}
 			else pak.WriteByte(0x00);
-			if (obj is GameKeepDoor)
-				pak.WriteInt((uint)(obj as GameKeepDoor).DoorID);
 			SendTCP(pak);
 			/*
 			if (obj is GameKeepDoor)

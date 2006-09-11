@@ -57,12 +57,17 @@ namespace DOL.GS
 			Zone curZone = WorldMgr.GetZone((ushort)(m_dbdoor.InternalID / 1000000));
 			if (curZone == null) return;
 			this.CurrentRegion = curZone.ZoneRegion;
-			this.Name = m_dbdoor.Name;
-			this.Heading = (ushort)m_dbdoor.Heading;
-			this.X = m_dbdoor.X;
-			this.Y = m_dbdoor.Y;
-			this.Z = m_dbdoor.Z;
-			this.DoorID = m_dbdoor.InternalID;
+			m_Name = m_dbdoor.Name;
+			m_Heading = (ushort)m_dbdoor.Heading;
+			m_X = m_dbdoor.X;
+			m_Y = m_dbdoor.Y;
+			m_Z = m_dbdoor.Z;
+			m_Level = 0;
+			m_Model = 0xFFFF;
+			m_doorID = m_dbdoor.InternalID;
+
+			DoorMgr.Doors[m_doorID] = this;
+			this.AddToWorld();
 		}
 		/// <summary>
 		/// save this door to a door table slot
@@ -103,14 +108,6 @@ namespace DOL.GS
 		{
 			get { return m_doorID; }
 			set { m_doorID = value; }
-		}
-
-		public override ushort Model
-		{
-			get
-			{
-				return 0xFFFF;
-			}
 		}
 
 		/// <summary>

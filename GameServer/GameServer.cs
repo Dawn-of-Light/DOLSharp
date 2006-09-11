@@ -772,13 +772,7 @@ namespace DOL
 					}
 
 					if (currentVersion < 0)
-					{
-						log.FatalFormat("There were errors converting database to version {0}. Please inspect the problem and change the version number to a positive value in {1}", -(currentVersion - 1), versionFile.Name);
-						string lastError = xmlConfig[errorKey].GetString(null);
-						if (lastError != null)
-							log.FatalFormat("last error:\n{0}", lastError);
-						return false;
-					}
+						currentVersion = 0;
 
 					SortedList convertersByVersion = new SortedList();
 					foreach (Type type in typeof(GameServer).Assembly.GetTypes())
