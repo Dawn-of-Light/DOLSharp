@@ -189,14 +189,6 @@ namespace DOL.GS.Keeps
 			}
 		}
 
-		public override ushort Model
-		{
-			get
-			{
-				return 0xFFFF;
-			}
-		}
-
 		private string m_templateID;
 		public string TemplateID
 		{
@@ -308,7 +300,7 @@ namespace DOL.GS.Keeps
 				{
 					//when entering a tower, we need to raise Z
 					//portal keeps are considered towers too, so we check component count
-					if (IsObjectInFront(player, 180))
+					if (IsObjectInFront(player, 180, false))
 					{
 						if (this.Component.Keep.KeepComponents.Count == 1 && DoorIndex == 1)
 							keepz = Z + 83;
@@ -317,7 +309,7 @@ namespace DOL.GS.Keeps
 				else
 				{
 					//when entering a keeps inner door, we need to raise Z
-					if (IsObjectInFront(player, 180))
+					if (IsObjectInFront(player, 180, false))
 					{
 						//To find out if a door is the keeps inner door, we compare the distance between
 						//the component for the keep and the component for the gate
@@ -343,7 +335,7 @@ namespace DOL.GS.Keeps
 				}
 
 				//calculate x y
-				if (IsObjectInFront(player, 180))
+				if (IsObjectInFront(player, 180, false))
 					GetSpotFromHeading(-distance, out keepx, out keepy);
 				else
 					GetSpotFromHeading(distance, out keepx, out keepy);
@@ -443,13 +435,15 @@ namespace DOL.GS.Keeps
 			PositionMgr.LoadKeepItemPosition(pos, this);
 			component.Keep.Doors[m_templateID] = this;
 
-			Level = 0;
-			Health = MaxHealth;
-			Name = "Keep Door";
+			m_Level = 0;
+			m_health = MaxHealth;
+			m_Name = "Keep Door";
 			m_oldHealthPercent = HealthPercent;
 			m_healthRegenerationPeriod = 3600000; //3600000 ms = 3600 seconds = 1 hour
 			m_doorID = GenerateDoorID();
-			DoorMgr.Doors.Add(m_doorID, this);
+			this.m_Model = 0xFFFF;
+
+			DoorMgr.Doors[m_doorID] = this;
 			this.AddToWorld();
 		}
 

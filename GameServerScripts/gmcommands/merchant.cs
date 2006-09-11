@@ -38,26 +38,17 @@ namespace DOL.GS.Scripts
 		 "'/merchant sellremove' to remove the articles list template from merchant",
 		 "'/merchant articles add <itemTemplateID> <pageNumber> [slot]' to add an item to the merchant articles list template",
 		 "'/merchant articles remove <slot>' to remove item from the specified slot in this merchant inventory articles list template",
-		 "'/merchant articles delete' to delete the inventory articles list template of the merchant")]
-
-
-	public class MerchantCommandHandler : ICommandHandler
+		 "'/merchant articles delete' to delete the inventory articles list template of the merchant",
+		 "'/merchant type <classtype>")]
+	public class MerchantCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		public int OnCommand(GameClient client, string[] args)
 		{
 			if (args.Length == 1)
 			{
-				client.Out.SendMessage("Usage:", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				client.Out.SendMessage("'/merchant create' to create an new merchant", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				client.Out.SendMessage("'/merchant save' to save this merchant as new object in the DB", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				client.Out.SendMessage("'/merchant remove' to remove this merchant from the DB", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				client.Out.SendMessage("'/merchant sell <itemsListID>' to assign this merchant with an articles list template", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				client.Out.SendMessage("'/merchant sellremove' to remove the articles list template from merchant", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				client.Out.SendMessage("'/merchant articles add <itemTemplateID> <pageNumber> [slot]' to add an item to the merchant articles list template", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				client.Out.SendMessage("'/merchant articles remove <pageNumber> <slot>' to remove item from the specified slot in this merchant inventory articles list template", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				client.Out.SendMessage("'/merchant articles delete' to delete the inventory articles list template of the merchant", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 1;
+				DisplaySyntax(client);
 			}
+
 			string param = "";
 			if (args.Length > 2)
 				param = String.Join(" ", args, 2, args.Length - 2);
@@ -347,6 +338,65 @@ namespace DOL.GS.Scripts
 								client.Out.SendMessage("Type /merchant for command overview", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								break;
 						}
+						break;
+					}
+				case "type":
+					{
+						string theType = param;
+						if (args.Length > 2)
+							theType = args[2];
+
+						//Create a new merchant
+						GameMerchant merchant = null;
+						try
+						{
+							client.Out.SendDebugMessage(Assembly.GetAssembly(typeof(GameServer)).FullName);
+							merchant = (GameMerchant)Assembly.GetAssembly(typeof(GameServer)).CreateInstance(theType, false);
+						}
+						catch (Exception e)
+						{
+							client.Out.SendMessage(e.ToString(), eChatType.CT_System, eChatLoc.CL_PopupWindow);
+						}
+						if (merchant == null)
+						{
+							try
+							{
+								client.Out.SendDebugMessage(Assembly.GetExecutingAssembly().FullName);
+								merchant = (GameMerchant)Assembly.GetExecutingAssembly().CreateInstance(theType, false);
+							}
+							catch (Exception e)
+							{
+								client.Out.SendMessage(e.ToString(), eChatType.CT_System, eChatLoc.CL_PopupWindow);
+							}
+						}
+						if (merchant == null)
+						{
+							client.Out.SendMessage("There was an error creating an instance of " + theType + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							return 0;
+						}
+						//Fill the object variables
+						merchant.X = targetMerchant.X;
+						merchant.Y = targetMerchant.Y;
+						merchant.Z = targetMerchant.Z;
+						merchant.CurrentRegion = targetMerchant.CurrentRegion;
+						merchant.Heading = targetMerchant.Heading;
+						merchant.Level = targetMerchant.Level;
+						merchant.Realm = targetMerchant.Realm;
+						merchant.Name = targetMerchant.Name;
+						merchant.Model = targetMerchant.Model;
+						//Fill the living variables
+						merchant.CurrentSpeed = targetMerchant.CurrentSpeed; ;
+						merchant.MaxSpeedBase = targetMerchant.MaxSpeedBase; ;
+						merchant.GuildName = targetMerchant.GuildName;
+						merchant.Size = targetMerchant.Size;
+						merchant.Inventory = targetMerchant.Inventory;
+						merchant.EquipmentTemplateID = targetMerchant.EquipmentTemplateID;
+						merchant.TradeItems = targetMerchant.TradeItems;
+						merchant.AddToWorld();
+						merchant.SaveIntoDatabase();
+						targetMerchant.Delete();
+						targetMerchant.DeleteFromDatabase();
+						client.Out.SendMessage("Merchant type changed to " + param, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						break;
 					}
 			}

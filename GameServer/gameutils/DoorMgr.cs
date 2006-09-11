@@ -51,8 +51,6 @@ namespace DOL.GS
 				{
 					GameDoor mydoor = new GameDoor();
 					mydoor.LoadFromDatabase(door);
-					m_doors.Add(door.InternalID, mydoor);
-					mydoor.AddToWorld();
 				}
 			}
 			return true;
