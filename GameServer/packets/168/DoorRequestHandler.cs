@@ -112,7 +112,7 @@ namespace DOL.GS.PacketHandler.v168
 					{
 						if (!WorldMgr.CheckDistance(player, mydoor, WorldMgr.PICKUP_DISTANCE))
 						{
-							player.Out.SendMessage("You are too far away to open this door!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+							player.Out.SendMessage("The " + mydoor.Name + " is too far away!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return;
 						}
 						if (m_doorState == 0x01)
@@ -127,6 +127,10 @@ namespace DOL.GS.PacketHandler.v168
 				}
 				else
 				{
+					//new frontiers we don't want this, i.e. relic gates etc
+					if (player.CurrentRegionID == 163 && player.Client.Account.PrivLevel == 1)
+						return;
+
 					//create a bug report
 					BugReport report = new BugReport();
 					report.DateSubmitted = DateTime.Now;
@@ -134,10 +138,6 @@ namespace DOL.GS.PacketHandler.v168
 					report.Message = "There is a missing door at location Region: " + player.CurrentRegionID + " X:" + player.X + " Y: " + player.Y;
 					report.Submitter = player.Name;
 					GameServer.Database.AddNewObject(report);
-
-					//new frontiers we don't want this, i.e. relic gates etc
-					if (player.CurrentRegionID == 163 && player.Client.Account.PrivLevel == 1)
-						return;
 
 					//else basic quick hack
 					GameDoor door = new GameDoor();

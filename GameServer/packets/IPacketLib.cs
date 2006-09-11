@@ -400,7 +400,9 @@ namespace DOL.GS.PacketHandler
 		KeepClaim = 0x26,
 		QuestSuscribe = 0x64,
 		BuyRespec = 0x20,
-		WarmapWindow = 0x31,
+		WarmapWindowAlbion = 0x31,
+		WarmapWindowMidgard = 0x32,
+		WarmapWindowHibernia = 0x33,
 	}
 
 

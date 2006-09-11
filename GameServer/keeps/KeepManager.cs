@@ -288,6 +288,7 @@ namespace DOL.GS.Keeps
 			{
 				foreach (AbstractGameKeep keep in m_keeps.Values)
 				{
+					if (keep.Region != 163) continue;
 					if (((eRealm)keep.Realm == realm) && (keep is GameKeepTower))
 						index++;
 				}
@@ -307,6 +308,7 @@ namespace DOL.GS.Keeps
 			{
 				foreach (AbstractGameKeep keep in m_keeps.Values)
 				{
+					if (keep.Region != 163) continue;
 					if (((eRealm)keep.Realm == realm) && (keep is GameKeep))
 						index++;
 				}
