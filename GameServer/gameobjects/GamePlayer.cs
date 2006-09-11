@@ -4059,7 +4059,7 @@ namespace DOL.GS
 
 			base.StartAttack(attackTarget);
 
-			if (m_runningSpellHandler != null && m_runningSpellHandler.IsCasting)
+			if (IsCasting)
 			{
 				StopCurrentSpellcast();
 				Out.SendMessage("Your spell is cancelled!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
@@ -7727,7 +7727,7 @@ namespace DOL.GS
 				m_sitting = value;
 				if (value)
 				{
-					if (m_runningSpellHandler != null && m_runningSpellHandler.IsCasting)
+					if (IsCasting)
 						m_runningSpellHandler.CasterMoves();
 					if (AttackState && ActiveWeaponSlot == eActiveWeaponSlot.Distance)
 					{
@@ -9321,7 +9321,11 @@ namespace DOL.GS
 				{
 					//TODO: more correct way to do it
 					if (player == this) continue;
-					player.Out.SendPlayerCreate(this);
+					//if a player could see us stealthed, we just update our model to avoid untargetting.
+					if (player.CanDetect(this))
+						player.Out.SendPlayerModelTypeChange(this, 2);
+					else
+						player.Out.SendPlayerCreate(this);
 					player.Out.SendLivingEquipmentUpdate(this);
 				}
 			}
