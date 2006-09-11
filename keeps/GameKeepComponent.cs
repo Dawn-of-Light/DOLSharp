@@ -417,6 +417,7 @@ namespace DOL.GS.Keeps
 			{
 				if (IsRaized == false)
 				{
+					Notify(KeepEvent.TowerRaized, this.Keep, new KeepEventArgs(this.Keep, killer.Realm));
 					PlayerMgr.BroadcastRaize(this.Keep, killer.Realm);
 					IsRaized = true;
 

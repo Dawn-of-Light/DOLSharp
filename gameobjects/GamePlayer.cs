@@ -8255,7 +8255,7 @@ namespace DOL.GS
 		#endregion
 
 		#region ReceiveItem/DropItem/PickupObject
-		/*/// <summary>
+		/// <summary>
 		/// Receive an item from another living
 		/// </summary>
 		/// <param name="source"></param>
@@ -8289,7 +8289,7 @@ namespace DOL.GS
 				}
 			}
 			return true;
-		}*/
+		}
 
 		/// <summary>
 		/// Called to drop an Item from the Inventory to the floor

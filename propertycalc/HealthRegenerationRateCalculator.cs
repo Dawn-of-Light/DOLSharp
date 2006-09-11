@@ -61,6 +61,8 @@ namespace DOL.GS.PropertyCalc
 				regen += 1;	// compensate int rounding error
 			}
 
+			regen += living.ItemBonus[(int)property];
+
 			int debuff = living.BuffBonusCategory2[(int)property];
 			if (debuff < 0)
 				debuff = -debuff;
