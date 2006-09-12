@@ -505,6 +505,7 @@ namespace DOL.GS.Keeps
 			get { return m_isRaized; }
 			set
 			{
+				m_isRaized = value;
 				if (value == true)
 				{
 					StartRebuildTimer();
@@ -514,7 +515,6 @@ namespace DOL.GS.Keeps
 				{
 					FillPositions();
 				}
-				m_isRaized = value;
 			}
 		}
 
