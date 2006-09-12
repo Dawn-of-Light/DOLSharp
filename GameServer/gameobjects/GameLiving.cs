@@ -3144,6 +3144,12 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		/// </summary>
 		public virtual void Die(GameObject killer)
 		{
+			if (this is GameNPC == false && this is GamePlayer == false)
+			{
+				// deal out exp and realm points based on server rules
+				GameServer.ServerRules.OnLivingKilled(this, killer);
+			}
+
 			Notify(GameLivingEvent.Dying, this, new DyingEventArgs(killer));
 
 			//Stop attacks
@@ -3159,8 +3165,12 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 			}
 
 			foreach (GameObject obj in temp)
+			{
 				if (obj is GameLiving)
+				{
 					((GameLiving)obj).EnemyKilled(this);
+				}
+			}
 
 			// cancel all concentration effects
 			ConcentrationEffects.CancelAll();

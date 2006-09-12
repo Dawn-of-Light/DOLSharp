@@ -89,6 +89,13 @@ namespace DOL.GS.Keeps
 				player.Out.SendMessage("You need " + ServerProperties.Properties.CLAIM_NUM / 2 + " players to claim.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
+
+			if (player.Guild.BountyPoints < 50)
+			{
+				player.Out.SendMessage("Your guild must have at least 50 guild bounty points to claim.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return false;
+			}
+
 			return base.CheckForClaim(player);
 		}
 
