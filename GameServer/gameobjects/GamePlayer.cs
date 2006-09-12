@@ -3460,7 +3460,8 @@ namespace DOL.GS
 			IsLevelSecondStage = false;
 
 			Out.SendMessage("You raise to level " + Level + "!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-			Out.SendMessage("You have achieved level " + Level + "!", eChatType.CT_ScreenCenter, eChatLoc.CL_SystemWindow);
+			if (Experience < GameServer.ServerRules.GetExperienceForLevel(Level + 1))
+				Out.SendMessage("You have achieved level " + Level + "!", eChatType.CT_ScreenCenter, eChatLoc.CL_SystemWindow);
 
 			switch (Level)
 			{

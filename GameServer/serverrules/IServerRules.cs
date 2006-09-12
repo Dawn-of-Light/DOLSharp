@@ -204,6 +204,14 @@ namespace DOL.GS.ServerRules
 		void OnPlayerKilled(GamePlayer killedPlayer, GameObject killer);
 
 		/// <summary>
+		/// Invoked on a livings death and deals out
+		/// experience / rps if needed
+		/// </summary>
+		/// <param name="living">the living that died</param>
+		/// <param name="killer"></param>
+		void OnLivingKilled(GameLiving living, GameObject killer);
+
+		/// <summary>
 		/// Gets the Realm of an living for name text coloring
 		/// </summary>
 		/// <param name="player"></param>

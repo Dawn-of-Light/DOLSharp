@@ -90,7 +90,15 @@ namespace DOL.GS.Keeps
 				}
 			}
 
-			player.Out.SendDialogBox((eDialogCode)(0x30 + player.Realm), 0, 0, 0, 0, eDialogType.YesNo, false, "");
+			eDialogCode code = eDialogCode.SimpleWarning;
+			switch (player.Realm)
+			{
+				case 1: code = eDialogCode.WarmapWindowAlbion; break;
+				case 2: code = eDialogCode.WarmapWindowMidgard; break;
+				case 3: code = eDialogCode.WarmapWindowHibernia; break;
+			}
+
+			player.Out.SendDialogBox(code, 0, 0, 0, 0, eDialogType.YesNo, false, "");
 
 			return true;
 		}

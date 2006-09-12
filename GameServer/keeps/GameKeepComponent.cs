@@ -191,17 +191,31 @@ namespace DOL.GS.Keeps
 		}
 		#endregion
 
+		public override int RealmPointsValue
+		{
+			get
+			{
+				foreach (GameKeepComponent component in this.Keep.KeepComponents)
+				{
+					if (component.IsAlive == false && component != this)
+						return MaxHealth / 100;
+				}
+				return MaxHealth / 10;
+			}
+		}
+
+		public override long ExperienceValue
+		{
+			get
+			{
+				return 0;
+			}
+		}
+
 		/// <summary>
 		/// do not regen
 		/// </summary>
 		public override void StartHealthRegeneration()
-		{
-		}
-
-		/// <summary>
-		/// do not gain xp
-		/// </summary>
-		public override void AddXPGainer(GameObject xpGainer, float damageAmount)
 		{
 		}
 
@@ -482,7 +496,7 @@ namespace DOL.GS.Keeps
 
 		public void UpdateLevel()
 		{
-			if (HealthPercent == 100)
+			if (IsRaized == false)
 				this.Health = this.MaxHealth;
 		}
 
