@@ -138,6 +138,11 @@ namespace DOL.GS.Keeps
 			}
 		}
 
+		public void UpdateLevel()
+		{
+			Health = MaxHealth;
+		}
+
 		public bool IsAttackableDoor
 		{
 			get
@@ -176,6 +181,24 @@ namespace DOL.GS.Keeps
 			set
 			{
 				base.Health = value;
+			}
+		}
+
+		public override int RealmPointsValue
+		{
+			get
+			{
+				if (IsAttackableDoor)
+					return MaxHealth / 10;
+				else return MaxHealth / 100;
+			}
+		}
+
+		public override long ExperienceValue
+		{
+			get
+			{
+				return 0;
 			}
 		}
 
@@ -236,16 +259,7 @@ namespace DOL.GS.Keeps
 					client.Out.SendObjectUpdate(this);
 			}
 
-			//Work around the XP system
-			if (IsAlive)
-			{
-				Health -= (damageAmount + criticalAmount);
-				if (!IsAlive)
-				{
-					Health = 0;
-					Die(source);
-				}
-			}
+			base.TakeDamage(source, damageType, damageAmount, criticalAmount);
 		}
 
 		public override int ChangeHealth(GameObject changeSource, GameLiving.eHealthChangeType healthChangeType, int changeAmount)
@@ -498,6 +512,7 @@ namespace DOL.GS.Keeps
 		/// </summary>
 		public override void  Die(GameObject killer)
 		{
+			base.Die(killer);
 			foreach (GamePlayer player in this.GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
 				player.Out.SendMessage("The Keep Gate is broken!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			lock (this)

@@ -20,6 +20,22 @@ namespace DOL.GS.Keeps
 			}
 		}
 
+		public override int RealmPointsValue
+		{
+			get
+			{
+				if (this.Component.Keep == null)
+					return 5000;
+				else
+				{ 
+					int value = 1000 * (this.Component.Keep.Level + 1);
+					if (this.Component.Keep is GameKeep)
+						value *= 4;
+					return value;
+				}
+			}
+		}
+
 		/// <summary>
 		/// When Lord dies, we update Area Mgr to call the various functions we need
 		/// And update the player stats

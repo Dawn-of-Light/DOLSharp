@@ -45,23 +45,47 @@ namespace DOL.GS.PacketHandler.v168
 				//teleport
 				case 2:
 					{
+						AbstractGameKeep keep = KeepMgr.getKeepByID(keepId);
+						if (keep == null && keepId > 6) return 1;
+
+						//we redo our checks here
+						if (client.Account.PrivLevel == 1)
+						{
+							//check realm
+							if (keep != null && keep.Realm != client.Player.Realm)
+								return 0;
+							bool found = false;
+							foreach (GameStaticItem item in client.Player.GetItemsInRadius(WorldMgr.INTERACT_DISTANCE))
+							{
+								if (item is FrontiersPortalStone)
+								{
+									found = true;
+									break;
+								}
+							}
+							if (!found)
+							{
+								client.Player.Out.SendMessage("You cannot teleport unless you are near a valid portal stone.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return 0;
+							}
+						}
 						int x = 0;
 						int y = 0;
 						int z = 0;
 						ushort heading = 0;
 						switch (keepId)
-						{ 
-								//sauvage
+						{
+							//sauvage
 							case 1:
-								//snowdonia
+							//snowdonia
 							case 2:
-								//svas
+							//svas
 							case 3:
-								//vind
+							//vind
 							case 4:
-								//ligen
+							//ligen
 							case 5:
-								//cain
+							//cain
 							case 6:
 								{
 									KeepMgr.GetBorderKeepLocation(keepId, out x, out y, out z, out heading);
@@ -69,32 +93,6 @@ namespace DOL.GS.PacketHandler.v168
 								}
 							default:
 								{
-									AbstractGameKeep keep = KeepMgr.getKeepByID(keepId);
-									if (keep == null) return 1;
-
-									//we redo our checks here
-									bool good = true;
-									if (client.Account.PrivLevel == 1)
-									{
-										//check realm
-										if (keep.Realm != client.Player.Realm)
-											return 0;
-										bool found = false;
-										foreach (GameStaticItem item in client.Player.GetItemsInRadius(WorldMgr.INTERACT_DISTANCE))
-										{
-											if (item is FrontiersPortalStone)
-											{
-												found = true;
-												break;
-											}
-										}
-										if (!found)
-										{
-											client.Player.Out.SendMessage("You cannot teleport unless you are near a valid portal stone.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-											return 0;
-										}
-									}
-
 									//does keep have all towers intact?
 									//todo 5 second teleport
 									if (client.Account.PrivLevel > 1 || (keep as GameKeep).OwnsAllTowers)
@@ -107,7 +105,7 @@ namespace DOL.GS.PacketHandler.v168
 									break;
 								}
 						}
-						if (x!= 0)
+						if (x != 0)
 							client.Player.MoveTo(163, x, y, z, heading);
 						break;
 					}

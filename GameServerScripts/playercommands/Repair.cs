@@ -168,6 +168,7 @@ namespace DOL.GS.Scripts
 
 			if (Util.ChanceDouble(CalculateRepairChance(player,obj)))
 			{
+				int start = obj.Health;
 				if (obj is GameKeepDoor)
 				{
 					GameKeepDoor door = obj as GameKeepDoor;
@@ -178,8 +179,16 @@ namespace DOL.GS.Scripts
 					GameKeepComponent component = obj as GameKeepComponent;
 					component.Repair((int)(component.MaxHealth * 0.15));
 				}
+				int finish = obj.Health;
 				CalculatePlayersWood(player, (GetTotalWoodForLevel(obj.Level + 1)));
 				player.Out.SendMessage("You successfully repair the component by 15%!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				/*
+				 * - Realm points will now be awarded for successfully repairing a door or outpost piece.
+				 * Players will receive approximately 10% of the amount repaired in realm points. 
+				 * (Note that realm points for repairing a door or outpost piece will not work in the battlegrounds.)
+				 */
+				int amount = finish - start;
+				player.GainRealmPoints(amount / 10);
 			}
 			else
 			{

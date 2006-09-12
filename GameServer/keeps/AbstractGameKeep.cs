@@ -486,11 +486,6 @@ namespace DOL.GS.Keeps
 				player.Out.SendMessage("You do not have permission to claim for your guild.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
-			if (player.Guild.BountyPoints < 500)
-			{
-				player.Out.SendMessage("Your guild must have at least 500 guild bounty points to claim.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
-				return false;
-			}
 			if (this.Guild != null)
 			{
 				player.Out.SendMessage("The keep is already claimed.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
@@ -622,6 +617,12 @@ namespace DOL.GS.Keeps
 					cln.Out.SendKeepComponentDetailUpdate(comp);
 				comp.FillPositions();
 			}
+
+			foreach (GameKeepDoor door in this.Doors.Values)
+			{
+				door.UpdateLevel();
+			}
+
 			KeepGuildMgr.SendLevelChangeMessage(this);
 			ResetPlayersOfKeep();
 			this.SaveIntoDatabase();
@@ -775,6 +776,8 @@ namespace DOL.GS.Keeps
 		/// <param name="realm"></param>
 		public void Reset(eRealm realm)
 		{
+
+			LastAttackedByEnemyTick = 0;
 			//we announce the change of realm
 			string realmstr = GlobalConstants.RealmToName(realm);
 			foreach (GameClient cl in WorldMgr.GetAllPlayingClients())
@@ -798,7 +801,7 @@ namespace DOL.GS.Keeps
 				//change realm
 				foreach (GameClient client in WorldMgr.GetClientsOfRegion(component.CurrentRegionID))
 				{
-					client.Out.SendKeepComponentDetailUpdate(component);
+					client.Out.SendKeepComponentUpdate(this, false);
 				}
 			}
 			//we reset all doors

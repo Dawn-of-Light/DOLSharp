@@ -423,6 +423,7 @@ result == GameLiving.eAttackResult.Parried)
 		{
 			if (this.Component != null && this.Component.Keep != null)
 			{
+				if (ad.IsHit)
 					this.Component.Keep.LastAttackedByEnemyTick = this.CurrentRegion.Time;
 			}
 

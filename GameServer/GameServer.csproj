@@ -1511,6 +1511,9 @@
     <Compile Include="spells\ConcentrationList.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="spells\EnduranceHealSpellHandler.cs" />
+    <Compile Include="spells\PowerHealSpellHandler.cs" />
+    <Compile Include="spells\WaterBreathingSpellHandler.cs" />
     <Compile Include="spells\CureDiseaseSpellHandler.cs">
       <SubType>Code</SubType>
     </Compile>
