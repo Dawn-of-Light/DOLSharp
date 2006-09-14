@@ -98,8 +98,10 @@ namespace DOL.GS
 			{
 				if (IsTurningDisabled)
 					return;
+				ushort oldHeading = base.Heading;
 				base.Heading = value;
-				BroadcastUpdate();
+				if (base.Heading != oldHeading)
+					BroadcastUpdate();
 			}
 		}
 
@@ -1068,6 +1070,7 @@ namespace DOL.GS
 				StopFollow();
 				Notify(GameNPCEvent.FollowLostTarget, this, new FollowLostTargetEventArgs(followTarget));
 				this.WalkToSpawn();
+				return 0;
 			}
 
 			//if the npc hasn't hit or been hit in a while, stop following and return home

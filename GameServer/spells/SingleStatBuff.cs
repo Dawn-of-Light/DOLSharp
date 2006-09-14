@@ -303,19 +303,6 @@ namespace DOL.GS.Spells
 		public DPSBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
 	}
 
-
-	/// <summary>
-	/// Mezz dampening buff
-	/// </summary>
-/*	[SpellHandlerAttribute("MezzDampening")]
-	public class MezzDampeningBuff : SingleStatBuff
-	{
-		public override eProperty Property1 { get { return eProperty.MezzReduction; } }
-
-		// constructor
-		public MezzDampeningBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
-	}
-*/
 	/// <summary>
 	/// Evade chance buff
 	/// </summary>

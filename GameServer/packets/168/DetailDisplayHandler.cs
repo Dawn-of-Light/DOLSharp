@@ -1241,6 +1241,7 @@ Type    Description           Id
 
 			if (!shortInfo)
 			{
+				#region Proc1
 				if (item.ProcSpellID != 0)
 				{
 					string spellNote = "";
@@ -1286,8 +1287,9 @@ Type    Description           Id
 						}
 					}
 				}
-
-				if(item.ProcSpellID1 != 0)
+				#endregion
+				#region Proc2
+				if (item.ProcSpellID1 != 0)
 				{
 					string spellNote = "";
 					output.Add(" ");
@@ -1332,8 +1334,49 @@ Type    Description           Id
 						}
 					}
 				}
+				#endregion
+				#region Charge1
+				if (item.SpellID != 0)
+				{
+					SpellLine chargeEffectsLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
+					if (chargeEffectsLine != null)
+					{
+						IList spells = SkillBase.GetSpellList(chargeEffectsLine.KeyName);
+						if (spells != null)
+						{
+							foreach (Spell spl in spells)
+							{
+								if (spl.ID == item.SpellID)
+								{
+									output.Add(" ");
+									output.Add("Level Requirement:");
+									output.Add("- " + spl.Level + " Level");
+									output.Add(" ");
+									output.Add("Charged Magic Ability:");
+									output.Add("- " + item.Charges + " Charges");
+									output.Add("- " + item.MaxCharges + " Max");
+									output.Add(" ");
 
-				if(item.SpellID1 != 0)
+									ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, spl, chargeEffectsLine);
+									if (spellHandler != null)
+									{
+										output.AddRange(spellHandler.DelveInfo);
+										output.Add(" ");
+									}
+									else
+									{
+										output.Add("-" + spl.Name + "(Not implemented yet)");
+									}
+									output.Add("- Spell has a chance of casting when this item is used.");
+									break;
+								}
+							}
+						}
+					}
+				}
+				#endregion
+				#region Charge2
+				if (item.SpellID1 != 0)
 				{
 					SpellLine chargeEffectsLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
 					if (chargeEffectsLine != null)
@@ -1371,6 +1414,8 @@ Type    Description           Id
 						}
 					}
 				}
+				#endregion
+				#region Poison
 				if (item.PoisonSpellID != 0)
 				{
 					if (GlobalConstants.IsWeapon(item.Object_Type))// Poisoned Weapon
@@ -1465,6 +1510,7 @@ Type    Description           Id
 						}
 					}
 				}
+				#endregion
 			}
 		}
 
