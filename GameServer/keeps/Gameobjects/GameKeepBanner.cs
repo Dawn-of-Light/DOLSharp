@@ -130,8 +130,12 @@ namespace DOL.GS.Keeps
 		/// </summary>
 		public void ChangeGuild()
 		{
-			Guild guild = Component.Keep.Guild;
-			this.Emblem = guild.theGuildDB.Emblem;
+			Guild guild = this.Component.Keep.Guild;
+
+			ushort emblem = 0;
+			if (guild != null)
+				emblem = guild.theGuildDB.Emblem;
+
 			ushort model = AlbionGuildModel;
 			switch (this.Component.Keep.Realm)
 			{
@@ -141,6 +145,7 @@ namespace DOL.GS.Keeps
 				case 3: model = HiberniaGuildModel; break;
 			}
 			this.Model = model;
+			this.Emblem = emblem;
 			this.Name = GlobalConstants.RealmToName((eRealm)this.Component.Keep.Realm) + " Guild Banner";
 		}
 
