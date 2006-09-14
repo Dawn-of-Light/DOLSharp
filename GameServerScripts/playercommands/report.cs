@@ -17,6 +17,8 @@
  *
  */
 
+using System;
+
 using DOL.GS.PacketHandler;
 using DOL.GS.GameEvents;
 using DOL.Database;
@@ -40,7 +42,7 @@ namespace DOL.GS.Scripts
 
 			string message = string.Join(" ", args, 1, args.Length - 1);
 			BugReport report = new BugReport();
-			report.ID = GenerateID();
+			report.ID = GameServer.Database.GetObjectCount(typeof(BugReport)) + 1;
 			report.Message = message;
 			report.Submitter = client.Player.Name + " [" + client.Account.Name + "]";
 			GameServer.Database.AddNewObject(report);
@@ -52,12 +54,6 @@ namespace DOL.GS.Scripts
 		public static void DisplaySyntax(GamePlayer player)
 		{
 			player.Out.SendMessage("Invalid use: Usage /report <message>", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-		}
-
-		private static int GenerateID()
-		{
-			int count = GameServer.Database.GetObjectCount(typeof(BugReport));
-			return count;
 		}
 	}
 }

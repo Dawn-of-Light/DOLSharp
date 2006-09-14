@@ -593,6 +593,17 @@ namespace DOL.GS.Keeps
 			StopDeductionTimer();
 			StopChangeLevelTimer();
 			ChangeLevel(0);
+
+			foreach (GameKeepGuard guard in Guards.Values)
+			{
+				guard.ChangeGuild();
+			}
+
+			foreach (GameKeepBanner banner in Banners.Values)
+			{
+				banner.ChangeGuild();
+			}
+
 			this.SaveIntoDatabase();
 		}
 		#endregion

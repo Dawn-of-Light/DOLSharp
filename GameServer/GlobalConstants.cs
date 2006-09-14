@@ -19,6 +19,7 @@
 using System;
 using System.Collections;
 using DOL.GS.PacketHandler;
+using DOL.Database;
 
 namespace DOL.GS
 {
@@ -372,7 +373,7 @@ namespace DOL.GS
 	/// All property types for check using SkillBase.CheckPropertyType. Must be unique bits set.
 	/// </summary>
 	[Flags]
-	public enum ePropertyType : byte
+	public enum ePropertyType : ushort
 	{
 		Focus = 1,
 		Resist = 1 << 1,
@@ -381,6 +382,12 @@ namespace DOL.GS
 		SkillMagical = 1 << 4,
 		SkillDualWield = 1 << 5,
 		SkillArchery = 1 << 6,
+		ResistMagical = 1 << 7,
+		Albion = 1 << 8,
+		Midgard = 1 << 9,
+		Hibernia = 1 << 10,
+		Common = 1 << 11,
+		CapIncrease = 1 << 12,
 	}
 
 	/// <summary>
@@ -1188,6 +1195,125 @@ namespace DOL.GS
 				case 11: return "Legendary Grandmaster";
 				default: return "";
 			}
+		}
+
+		public static eRealm GetBonusRealm(eProperty bonus)
+		{
+			if (SkillBase.CheckPropertyType(bonus, ePropertyType.Albion))
+				return eRealm.Albion;
+			if (SkillBase.CheckPropertyType(bonus, ePropertyType.Midgard))
+				return eRealm.Midgard;
+			if (SkillBase.CheckPropertyType(bonus, ePropertyType.Hibernia))
+				return eRealm.Hibernia;
+			return eRealm.None;
+		}
+
+		public static eRealm[] GetItemTemplateRealm(ItemTemplate item)
+		{
+			switch ((eObjectType)item.Object_Type)
+			{
+				//Albion
+				case eObjectType.CrushingWeapon:
+				case eObjectType.SlashingWeapon:
+				case eObjectType.ThrustWeapon:
+				case eObjectType.TwoHandedWeapon:
+				case eObjectType.PolearmWeapon:
+				case eObjectType.Staff:
+				case eObjectType.Longbow:
+				case eObjectType.Crossbow:
+				case eObjectType.Flexible:
+				case eObjectType.Plate:
+				case eObjectType.Bolt:
+					return new eRealm[] { eRealm.Albion };
+
+				//Midgard
+				case eObjectType.Sword:
+				case eObjectType.Hammer:
+				case eObjectType.Axe:
+				case eObjectType.Spear:
+				case eObjectType.CompositeBow:
+				case eObjectType.Thrown:
+				case eObjectType.LeftAxe:
+				case eObjectType.HandToHand:
+					return new eRealm[] { eRealm.Midgard };
+
+				//Hibernia
+				case eObjectType.Fired:
+				case eObjectType.RecurvedBow:
+				case eObjectType.Blades:
+				case eObjectType.Blunt:
+				case eObjectType.Piercing:
+				case eObjectType.LargeWeapons:
+				case eObjectType.CelticSpear:
+				case eObjectType.Scythe:
+				case eObjectType.Reinforced:
+				case eObjectType.Scale:
+					return new eRealm[] { eRealm.Hibernia };
+
+				//Special
+				case eObjectType.Studded:
+				case eObjectType.Chain:
+					return new eRealm[] { eRealm.Albion, eRealm.Midgard };
+
+				case eObjectType.Instrument:
+					return new eRealm[] { eRealm.Albion, eRealm.Hibernia };
+
+				//Common Armor
+				case eObjectType.Cloth:
+				case eObjectType.Leather:
+				//Misc
+				case eObjectType.GenericItem:
+				case eObjectType.GenericWeapon:
+				case eObjectType.GenericArmor:
+				case eObjectType.Magical:
+				case eObjectType.Shield:
+				case eObjectType.Arrow:
+				case eObjectType.Poison:
+				case eObjectType.AlchemyTincture:
+				case eObjectType.SpellcraftGem:
+				case eObjectType.GardenObject:
+				case eObjectType.SiegeBalista:
+				case eObjectType.SiegeCatapult:
+				case eObjectType.SiegeCauldron:
+				case eObjectType.SiegeRam:
+				case eObjectType.SiegeTrebuchet:
+					break;
+			}
+
+			eRealm realm = eRealm.None;
+
+			if (item.Bonus1Type > 0 && (realm = GetBonusRealm((eProperty)item.Bonus1Type)) != eRealm.None)
+				return new eRealm[] { realm };
+
+			if (item.Bonus2Type > 0 && (realm = GetBonusRealm((eProperty)item.Bonus2Type)) != eRealm.None)
+				return new eRealm[] { realm };
+
+			if (item.Bonus3Type > 0 && (realm = GetBonusRealm((eProperty)item.Bonus3Type)) != eRealm.None)
+				return new eRealm[] { realm };
+
+			if (item.Bonus4Type > 0 && (realm = GetBonusRealm((eProperty)item.Bonus4Type)) != eRealm.None)
+				return new eRealm[] { realm };
+
+			if (item.Bonus5Type > 0 && (realm = GetBonusRealm((eProperty)item.Bonus5Type)) != eRealm.None)
+				return new eRealm[] { realm };
+
+			if (item.Bonus6Type > 0 && (realm = GetBonusRealm((eProperty)item.Bonus6Type)) != eRealm.None)
+				return new eRealm[] { realm };
+
+			if (item.Bonus7Type > 0 && (realm = GetBonusRealm((eProperty)item.Bonus7Type)) != eRealm.None)
+				return new eRealm[] { realm };
+
+			if (item.Bonus8Type > 0 && (realm = GetBonusRealm((eProperty)item.Bonus8Type)) != eRealm.None)
+				return new eRealm[] { realm };
+
+			if (item.Bonus9Type > 0 && (realm = GetBonusRealm((eProperty)item.Bonus9Type)) != eRealm.None)
+				return new eRealm[] { realm };
+
+			if (item.Bonus10Type > 0 && (realm = GetBonusRealm((eProperty)item.Bonus10Type)) != eRealm.None)
+				return new eRealm[] { realm };
+
+			return new eRealm[] { realm };
+
 		}
 
 		public static byte GetSpecToInternalIndex(string name)

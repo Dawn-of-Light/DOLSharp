@@ -89,6 +89,7 @@ namespace DOL.AI.Brain
 				return;
 			foreach (GameNPC npc in Body.GetNPCsInRadius((ushort)AggroRange))
 			{
+				if (npc is GameKeepGuard) continue;
 				if (GameServer.ServerRules.IsAllowedToAttack(Body, npc, false))
 				{
 					if (npc is GameSiegeWeapon) continue;
