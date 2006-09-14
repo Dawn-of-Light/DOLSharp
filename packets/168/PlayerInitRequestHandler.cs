@@ -21,6 +21,7 @@ using System.Reflection;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS;
+using DOL.GS.Keeps;
 using DOL.GS.ServerProperties;
 using log4net;
 
@@ -155,6 +156,26 @@ namespace DOL.GS.PacketHandler.v168
 
 				AssemblyName an = Assembly.GetExecutingAssembly().GetName();
 				player.Out.SendMessage("Dawn of Light " + an.Name + " Version: " + an.Version, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
+				//we check here if we are near any enemy keeps
+				AbstractGameKeep keep = KeepMgr.getKeepCloseToSpot(player.CurrentRegionID, player, WorldMgr.VISIBILITY_DISTANCE);
+				if (keep != null && player.Client.Account.PrivLevel == 1 && keep.Realm != player.Realm)
+				{
+					int keepid = 1, x = 0, y = 0, z = 0;
+					ushort heading = 0;
+					switch (player.Realm)
+					{
+						case 1: keepid = 1; break;
+						case 2: keepid = 3; break;
+						case 3: keepid = 5; break;
+					}
+					KeepMgr.GetBorderKeepLocation(keepid, out x, out y, out z, out heading);
+					if (x != 0)
+					{
+						player.Out.SendMessage("This area is unsafe, moving you to a safe location!", eChatType.CT_YouWereHit, eChatLoc.CL_SystemWindow);
+						player.MoveTo(163, x, y, z, heading);
+					}
+				}
 
 				player.Client.ClientState = GameClient.eClientState.Playing;
 			}

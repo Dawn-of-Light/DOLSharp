@@ -653,14 +653,22 @@ result == GameLiving.eAttackResult.Parried)
 		public void ChangeGuild()
 		{
 			Guild guild = this.Component.Keep.Guild;
+			string guildname = "";
+			if (guild != null)
+				guildname = guild.Name;
 
-			this.GuildName = guild.Name;
+			this.GuildName = guildname;
+
+			ushort emblem = 0;
+			if (guild != null)
+				emblem = guild.theGuildDB.Emblem;
 			InventoryItem lefthand = this.Inventory.GetItem(eInventorySlot.LeftHandWeapon);
 			if (lefthand != null)
-				lefthand.Emblem = guild.theGuildDB.Emblem;
+				lefthand.Emblem = emblem;
+
 			InventoryItem cloak = this.Inventory.GetItem(eInventorySlot.Cloak);
 			if (cloak != null)
-				cloak.Emblem = guild.theGuildDB.Emblem;
+				cloak.Emblem = emblem;
 			this.UpdateNPCEquipmentAppearance();
 		}
 	}

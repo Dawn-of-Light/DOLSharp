@@ -30,7 +30,7 @@ namespace DOL.GS.Scripts
 		public ClassWarden() : base() 
 		{
 			m_profession = "Path of Focus";
-			m_specializationMultiplier = 15;
+			m_specializationMultiplier = 18;
 			m_primaryStat = eStat.EMP;
 			m_secondaryStat = eStat.STR;
 			m_tertiaryStat = eStat.CON;
@@ -64,6 +64,7 @@ namespace DOL.GS.Scripts
 			// Specializations
 			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Blades));
 			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Blunt));
+			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Shields));
 
 			// Spell lines
 			player.AddSpellLine(SkillBase.GetSpellLine("Nurture Warden Spec"));

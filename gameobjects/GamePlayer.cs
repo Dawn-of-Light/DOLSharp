@@ -7932,6 +7932,7 @@ namespace DOL.GS
 			if (Steed != null || IsOnHorse)
 			{
 				Out.SendMessage("You must dismount first.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return;
 			}
 
 			if (sit)
