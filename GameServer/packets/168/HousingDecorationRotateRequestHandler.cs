@@ -41,7 +41,7 @@ namespace DOL.GS.PacketHandler.v168
 				return 1;
 			if (client.Player == null) return 1;
 
-			if (!house.IsOwner(client.Player))
+			if (!house.IsOwner(client.Player) && !house.CanAddInterior(client.Player))
 				return 1;
 
 			GSTCPPacketOut pak = new GSTCPPacketOut(client.Out.GetPacketCode(ePackets.HouseDecorationRotate));

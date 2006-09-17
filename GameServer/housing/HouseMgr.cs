@@ -194,6 +194,10 @@ namespace DOL.GS.Housing
 				player.Out.SendRemoveGarden(house);
 				
 			}
+			foreach (GamePlayer player in house.GetAllPlayersInHouse())
+			{
+				player.LeaveHouse();
+			}
 			
 			house.OwnerIDs = null;
 			
@@ -295,7 +299,7 @@ namespace DOL.GS.Housing
 				foreach (DictionaryEntry Entry in (Hashtable)(regs.Value))
 				{
 					House house = (House)Entry.Value;
-					if (house.OwnerIDs == null)
+					if (house.OwnerIDs == null || house.OwnerIDs == "")
 						continue;
 					Diff = DateTime.Now - house.LastPaid;
 					if (Diff.Days >= 7)
