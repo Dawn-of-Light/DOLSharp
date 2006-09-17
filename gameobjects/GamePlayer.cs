@@ -6995,7 +6995,8 @@ namespace DOL.GS
 				return false;
 			if (!steed.RiderMount(this, forced) && !forced)
 				return false;
-
+			if (IsOnHorse)
+				IsOnHorse = false;
 			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
 				player.Out.SendRiding(this, steed, false);
