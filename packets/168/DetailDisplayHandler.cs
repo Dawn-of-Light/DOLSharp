@@ -153,7 +153,7 @@ namespace DOL.GS.PacketHandler.v168
 							WritePoisonInfo(objectInfo, item, client);
 						}
 
-						if (item.Object_Type == (int)eObjectType.Magical && item.Item_Type == 40) // potion
+						if (item.Object_Type == (int)eObjectType.Magical &&  item.Item_Type == (int)eInventorySlot.FirstBackpack) // potion
 							WritePotionInfo(objectInfo, item, client);
 
 						if (!item.IsDropable || !item.IsPickable)
@@ -287,7 +287,7 @@ namespace DOL.GS.PacketHandler.v168
 						{
 							objectInfo.Add(" ");//empty line
 							objectInfo.Add(" ");//empty line
-							objectInfo.Add(" - Requires: Champion Level "+item.Level);
+							objectInfo.Add(" - Requires: Champion Level " + item.Level);
 						}
 
 						//**********************************
@@ -511,11 +511,13 @@ namespace DOL.GS.PacketHandler.v168
 									{
 										Spell spell = null;
 										foreach (Spell spl in spells)
+										{
 											if (spl.ID == style.SpecialValue)
 											{
 												spell = spl;
 												break;
 											}
+										}
 
 										if (spell != null)
 										{
@@ -574,7 +576,7 @@ namespace DOL.GS.PacketHandler.v168
 						{
 							objectInfo.Add(" ");//empty line
 							objectInfo.Add(" ");//empty line
-							objectInfo.Add(" - Requires: Champion Level "+item.Level);
+							objectInfo.Add(" - Requires: Champion Level " + item.Level);
 						}
 						//**********************************
 						//show info for all types of weapons
@@ -941,9 +943,10 @@ Type    Description           Id
 			output.Add("  Is pickable: " + (item.IsPickable ? "yes" : "no"));
 			output.Add(" Is stackable: " + (item.IsStackable ? "yes" : "no"));
 			output.Add("  ProcSpellID: " + item.ProcSpellID);
-			output.Add(" ProcSpellID1: "+item.ProcSpellID1);
+			output.Add(" ProcSpellID1: " + item.ProcSpellID1);
 			output.Add("      SpellID: " + item.SpellID + " (" + item.Charges + "/" + item.MaxCharges + ")");
-			output.Add("     SpellID1: "+item.SpellID1+" ("+item.Charges1+"/"+item.MaxCharges1+")");
+			output.Add("     SpellID1: " + item.SpellID1 + " (" + item.Charges1 + "/" + item.MaxCharges1 + ")");
+			output.Add("PoisonSpellID: " + item.PoisonSpellID + " (" + item.PoisonCharges + "/" + item.PoisonMaxCharges + ") ");
 			if (GlobalConstants.IsWeapon(item.Object_Type))
 			{
 				output.Add("         Hand: " + GlobalConstants.ItemHandToName(item.Hand));
@@ -1309,23 +1312,23 @@ Type    Description           Id
 						IList spells = SkillBase.GetSpellList(line.KeyName);
 						if (spells != null)
 						{
-							foreach(Spell spl in spells)
+							foreach (Spell spl in spells)
 							{
-								if(spl.ID == item.ProcSpellID1)
+								if (spl.ID == item.ProcSpellID1)
 								{
 									output.Add(" ");
 									output.Add("Level Requirement:");
 									output.Add("- " + spl.Level + " Level");
 									output.Add(" ");
 									ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, spl, line);
-									if(spellHandler != null)
+									if (spellHandler != null)
 									{
 										output.AddRange(spellHandler.DelveInfo);
 										output.Add(" ");
 									}
 									else
 									{
-										output.Add("-"+ spl.Name +"(Not implemented yet)");
+										output.Add("-" + spl.Name + "(Not implemented yet)");
 									}
 									output.Add(spellNote);
 									break;
@@ -1384,28 +1387,28 @@ Type    Description           Id
 						IList spells = SkillBase.GetSpellList(chargeEffectsLine.KeyName);
 						if (spells != null)
 						{
-							foreach(Spell spl in spells)
+							foreach (Spell spl in spells)
 							{
-								if(spl.ID == item.SpellID1)
+								if (spl.ID == item.SpellID1)
 								{
 									output.Add(" ");
 									output.Add("Level Requirement:");
 									output.Add("- " + spl.Level + " Level");
 									output.Add(" ");
 									output.Add("Charged Magic Ability:");
-									output.Add("- " + item.Charges1+ " Charges");
-									output.Add("- " + item.MaxCharges1+ " Max");
+									output.Add("- " + item.Charges1 + " Charges");
+									output.Add("- " + item.MaxCharges1 + " Max");
 									output.Add(" ");
 
 									ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, spl, chargeEffectsLine);
-									if(spellHandler != null)
+									if (spellHandler != null)
 									{
 										output.AddRange(spellHandler.DelveInfo);
 										output.Add(" ");
 									}
 									else
 									{
-										output.Add("-"+ spl.Name +"(Not implemented yet)");
+										output.Add("-" + spl.Name + "(Not implemented yet)");
 									}
 									output.Add("- Spell has a chance of casting when this item is used.");
 									break;
