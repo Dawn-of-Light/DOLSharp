@@ -721,6 +721,20 @@ namespace DOL.GS
 			get { return m_lastAttackTick; }
 			set { m_lastAttackTick = value; }
 		}
+
+		/// <summary>
+		/// gets the last attack or attackedbyenemy tick
+		/// </summary>
+		public long LastCombatTick
+		{
+			get
+			{
+				if (m_lastAttackTick > m_lastAttackedByEnemyTick)
+					return m_lastAttackTick;
+				else return m_lastAttackedByEnemyTick;
+			}
+		}
+
 		/// <summary>
 		/// last attacked by enemy tick
 		/// </summary>
@@ -966,7 +980,7 @@ namespace DOL.GS
 				Region region = CurrentRegion;
 				if (region == null)
 					return false;
-				return LastAttackTick + 10000 >= region.Time || LastAttackedByEnemyTick + 10000 >= region.Time;
+				return LastCombatTick + 10000 >= region.Time;
 			}
 		}
 		/// <summary>

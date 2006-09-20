@@ -390,33 +390,95 @@ namespace DOL.GS.Items
 				if (log.IsDebugEnabled)
 					log.Debug("Added " + training_shield_template.Id_nb);
 			}
-			ItemTemplate respec_stone_template = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "respec_stone");
-			if (respec_stone_template == null)
+			#region Respec Stones
+			#region Respec Realm
+			ItemTemplate respec_realm = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "respec_realm");
+			if (respec_realm == null)
 			{
-				respec_stone_template = new ItemTemplate();
-				respec_stone_template.Name = "respec stone";
-				respec_stone_template.Level = 0;
-				respec_stone_template.Durability = 100;
-				respec_stone_template.MaxDurability = 100;
-				respec_stone_template.Condition = 50000;
-				respec_stone_template.MaxCondition = 50000;
-				respec_stone_template.Quality = 100;
-				respec_stone_template.MaxQuality = 100;
-				respec_stone_template.DPS_AF = 0;
-				respec_stone_template.SPD_ABS = 0;
-				respec_stone_template.Hand = 0;
-				respec_stone_template.Type_Damage = 0;
-				respec_stone_template.Object_Type = 0;
-				respec_stone_template.Item_Type = 0;
-				respec_stone_template.Weight = 10;
-				respec_stone_template.Model = 116;
-				respec_stone_template.IsPickable = true;
-				respec_stone_template.IsDropable = true;
-				respec_stone_template.Id_nb = "respec_stone";
-				GameServer.Database.AddNewObject(respec_stone_template);
+				respec_realm = new ItemTemplate();
+				respec_realm.Name = "Luminescent Abrogo Stone";
+				respec_realm.Level = 80;
+				respec_realm.Durability = 80;
+				respec_realm.MaxDurability = 100;
+				respec_realm.Condition = 50000;
+				respec_realm.MaxCondition = 50000;
+				respec_realm.Quality = 70;
+				respec_realm.MaxQuality = 100;
+				respec_realm.DPS_AF = 0;
+				respec_realm.SPD_ABS = 0;
+				respec_realm.Hand = 0;
+				respec_realm.Type_Damage = 0;
+				respec_realm.Object_Type = (int)eObjectType.Magical;
+				respec_realm.Item_Type = 0;
+				respec_realm.Weight = 10;
+				respec_realm.Model = 514;
+				respec_realm.IsPickable = true;
+				respec_realm.IsDropable = true;
+				respec_realm.Id_nb = "respec_realm";
+				GameServer.Database.AddNewObject(respec_realm);
 				if (log.IsDebugEnabled)
-					log.Debug("Added " + respec_stone_template.Id_nb);
+					log.Debug("Added " + respec_realm.Id_nb);
 			}
+			#endregion
+			#region Respec Single
+			ItemTemplate respec_single = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "respec_single");
+			if (respec_single == null)
+			{
+				respec_single = new ItemTemplate();
+				respec_single.Name = "Luminescent Ceriac Stone";
+				respec_single.Level = 80;
+				respec_single.Durability = 80;
+				respec_single.MaxDurability = 100;
+				respec_single.Condition = 50000;
+				respec_single.MaxCondition = 50000;
+				respec_single.Quality = 70;
+				respec_single.MaxQuality = 100;
+				respec_single.DPS_AF = 0;
+				respec_single.SPD_ABS = 0;
+				respec_single.Hand = 0;
+				respec_single.Type_Damage = 0;
+				respec_single.Object_Type = (int)eObjectType.Magical;
+				respec_single.Item_Type = 0;
+				respec_single.Weight = 10;
+				respec_single.Model = 514;
+				respec_single.IsPickable = true;
+				respec_single.IsDropable = true;
+				respec_single.Id_nb = "respec_single";
+				GameServer.Database.AddNewObject(respec_single);
+				if (log.IsDebugEnabled)
+					log.Debug("Added " + respec_single.Id_nb);
+			}
+			#endregion
+			#region Respec Full
+			ItemTemplate respec_full = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "respec_full");
+			if (respec_full == null)
+			{
+				respec_full = new ItemTemplate();
+				respec_full.Name = "Luminescent Exerpise Stone";
+				respec_full.Level = 80;
+				respec_full.Durability = 80;
+				respec_full.MaxDurability = 100;
+				respec_full.Condition = 50000;
+				respec_full.MaxCondition = 50000;
+				respec_full.Quality = 70;
+				respec_full.MaxQuality = 100;
+				respec_full.DPS_AF = 0;
+				respec_full.SPD_ABS = 0;
+				respec_full.Hand = 0;
+				respec_full.Type_Damage = 0;
+				respec_full.Object_Type = (int)eObjectType.Magical;
+				respec_full.Item_Type = 0;
+				respec_full.Weight = 10;
+				respec_full.Model = 514;
+				respec_full.IsPickable = true;
+				respec_full.IsDropable = true;
+				respec_full.Id_nb = "respec_full";
+				GameServer.Database.AddNewObject(respec_full);
+				if (log.IsDebugEnabled)
+					log.Debug("Added " + respec_full.Id_nb);
+			}
+			#endregion
+			#endregion
 		}
 	}
 }

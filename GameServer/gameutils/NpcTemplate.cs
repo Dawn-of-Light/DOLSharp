@@ -58,7 +58,6 @@ namespace DOL.GS
 		protected int m_intelligence;
 		protected int m_empathy;
 		protected int m_charisma;
-		protected byte m_skillcap;
 		protected IList m_styles;
 		protected IList m_spells;
 		protected IList b_spells;
@@ -92,7 +91,6 @@ namespace DOL.GS
 			m_piety = data.Piety;
 			m_charisma = data.Charisma;
 			m_empathy = data.Empathy;
-			m_skillcap = data.SkillCap;
 
 			//Time to add Spells/Styles and Abilties to the templates
 			m_abilities = new ArrayList();
@@ -184,7 +182,6 @@ namespace DOL.GS
 			m_piety = 30;
 			m_charisma = 30;
 			m_empathy = 30;
-			m_skillcap = 0;
 			m_meleeDamageType = (eDamageType)mob.MeleeDamageType;
 		}
 
@@ -373,12 +370,6 @@ namespace DOL.GS
 		{
 			get { return m_charisma; }
 			set { m_charisma = value; }
-		}
-
-		public byte SkillCap
-		{
-			get { return m_skillcap; }
-			set { m_skillcap = value; }
 		}
 
 		public virtual void SaveIntoDatabase()

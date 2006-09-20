@@ -407,15 +407,12 @@ namespace DOL.GS.Scripts
 								client.Out.SendMessage("info of guild :", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								string mesg = client.Player.Guild.Name + "  " + client.Player.Guild.MemberOnlineCount + " members ";
 								client.Out.SendMessage(mesg, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							}
 
 							if (client.Player.Guild.theGuildDB.Motd != null && client.Player.Guild.theGuildDB.Motd != "")
 								client.Player.Out.SendMessage("Guild Message: " + client.Player.Guild.theGuildDB.Motd, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							if (client.Player.Guild.theGuildDB.oMotd != null && client.Player.Guild.theGuildDB.oMotd != "" && client.Player.GuildRank.OcHear)
 								client.Player.Out.SendMessage("Officer Message: " + client.Player.Guild.theGuildDB.oMotd, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
-							if (typed)
-							{
 								foreach (DBRank rank in client.Player.Guild.theGuildDB.Ranks)
 								{
 									client.Out.SendMessage("RANK :" + rank.RankLevel.ToString() + "Name :" + rank.Title, eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -425,6 +422,41 @@ namespace DOL.GS.Scripts
 									client.Out.SendMessage("Emblem :" + (rank.Emblem ? "y" : "n") + " Promote :" + (rank.Promote ? "y" : "n"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 									client.Out.SendMessage("Remove :" + (rank.Remove ? "y" : "n") + " View :" + (rank.View ? "y" : "n"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								}
+							}
+							else
+							{
+								switch (args[2])
+								{
+									case "1": // show guild info
+										{
+											if (client.Player.Guild == null)
+												return 1;
+											string mes = "I";
+											mes += ",0"; // Guild Level
+											mes += ",0"; // Guild Bank money
+											mes += ",0"; // Guild Dues enable/disable
+											mes += ',' + client.Player.Guild.BountyPoints.ToString(); // Guild Bounty
+											mes += ',' + client.Player.Guild.RealmPoints.ToString(); // Guild Experience
+											mes += ",0"; // Guild Merit Points
+											mes += ",0"; // Guild houseLot ?
+											mes += ',' + (client.Player.Guild.MemberOnlineCount + 1).ToString(); // online Guild member ?
+											mes += ",\"not implemented\""; //"Banner available for purchase", "Missing banner buying permissions"
+											mes += ",\"" + client.Player.Guild.theGuildDB.Motd + '\"'; // Guild Motd
+											mes += ",\"" + client.Player.Guild.theGuildDB.oMotd + '\"'; // Guild oMotd
+											client.Out.SendMessage(mes, eChatType.CT_SocialInterface, eChatLoc.CL_SystemWindow);
+											break;
+										}
+									case "2": //enable/disable social windows
+										{
+											// "P,ShowGuildWindow,ShowAllianceWindow,?,ShowLFGuildWindow(only with guild),0,0" // news and friend windows always showed
+											client.Out.SendMessage("P," + (client.Player.Guild == null ? "0" : "1") + ",0,0,0,0,0", eChatType.CT_SocialInterface, eChatLoc.CL_SystemWindow);
+											break;
+										}
+									default:
+										break;
+								}
+								return 1;
+
 							}
 						}
 						break;
@@ -657,12 +689,86 @@ namespace DOL.GS.Scripts
 					// --------------------------------------------------------------------------------
 					case "who":
 						{
+							int ind = 0;
+							if (args.Length == 6 && args[2] == "window" && (client.Player.Guild != null))
+							{
+								int page = 1;
+								int sort = 1;
+								bool showOffline = false;
+								SortedList onlineMembers = new SortedList();
+								try
+								{
+									sort = Convert.ToInt32(args[3]); // Sort(0:unsorted, -1:names, 2:level, -3:class, 4:rank, -5:grp/solo, 6:zone,-7:note)
+									page = Convert.ToInt32(args[4]);
+									showOffline = (Convert.ToInt32(args[4]) == 0 ? false : true); // 0 - online, 1 - offline
+								}
+								catch { }
+								int i = 0;
+								foreach (GamePlayer ply in client.Player.Guild.ListOnlineMembers())
+								{
+									if (ply.Client.IsPlaying && (!ply.IsAnonymous || ply == client.Player))
+									{
+										string keyStr = "";
+										switch (sort)
+										{
+											case -1:
+											case 1:
+												keyStr = "N:" + ply.Name;
+												break;
+											case -2:
+											case 2:
+												keyStr = "L:" + ply.Level.ToString() + "_N:" + ply.Name;
+												break;
+											case -3:
+											case 3:
+												keyStr = "C:" + ply.CharacterClass.ID.ToString() + "_N:" + ply.Name;
+												break;
+											case -4:
+											case 4:
+												keyStr = "R:" + ply.GuildRank.RankLevel.ToString() + "_N:" + ply.Name;
+												break;
+											case -5:
+											case 5:
+												keyStr = "G:" + (ply.PlayerGroup == null ? "s" : "g") + "_N:" + ply.Name;
+												break;
+											case -6:
+											case 6:
+												keyStr = "Z:" + (ply.CurrentZone == null ? "null" : ply.CurrentZone.Description) + "_N:" + ply.Name;
+												break;
+											//											case -7:
+											//												keyStr = ply.GuildNote;
+											//												break;
+											default:
+												keyStr = (i++).ToString();
+												break;
+										}
+										if (!onlineMembers.ContainsKey(keyStr))
+											onlineMembers.Add(keyStr, ply);
+									}
+								}
+								const int MaxOnPage = 10;
+								//OnlyForCheck					for (i = 1 ; i < 19 ; i++)
+								//OnlyForCheck						onlineMembers.Add(i.ToString(), client.Player);
+								int maxShowed = onlineMembers.Count % MaxOnPage;
+								if (onlineMembers.Count > 1 && maxShowed == 0)
+									maxShowed = MaxOnPage;
+								page = Math.Max(1, Math.Min((onlineMembers.Count - 1) / MaxOnPage + 1, page));
+								if (onlineMembers.Count > page * MaxOnPage)
+									maxShowed = MaxOnPage;
+								client.Out.SendMessage(string.Format("TE,{0},{1},{2}", page, onlineMembers.Count, maxShowed), eChatType.CT_SocialInterface, eChatLoc.CL_SystemWindow);
+								for (i = 0; i < maxShowed; i++)
+								{
+									GamePlayer ply = (GamePlayer)onlineMembers.GetByIndex((page - 1) * MaxOnPage + i);
+									client.Out.SendMessage(string.Format("E,{0},{1},{2},{3},{4},{5},{6},\"{7}\",\"{8}\"",
+										(i + 1), 0, ply.Name, ply.Level, ply.CharacterClass.ID, ply.GuildRank.RankLevel, (ply.PlayerGroup == null ? 1 : 2), (ply.CurrentZone == null ? "" : ply.CurrentZone.Description), ""/*Note*/), eChatType.CT_SocialInterface, eChatLoc.CL_SystemWindow);
+								}
+								return 1;
+							}
 							if (client.Player.Guild == null)
 							{
 								client.Out.SendMessage("You have to be a member of a guild, before you can use any of the commands!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return 1;
 							}
-							int ind = 0;
 							if (args.Length == 3)
 							{
 								if (args[2] == "alliance" || args[2] == "a")
@@ -697,8 +803,9 @@ namespace DOL.GS.Scripts
 								}
 							}
 							client.Out.SendMessage("total member online:        " + ind.ToString(), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
+							break;
 						}
-						break;
 					// --------------------------------------------------------------------------------
 					// LEADER
 					// --------------------------------------------------------------------------------
@@ -773,6 +880,82 @@ namespace DOL.GS.Scripts
 								return 1;
 							}
 							client.Out.SendEmblemDialogue();
+
+							break;
+						}
+					case "autoremove":
+						{
+							if (client.Player.Guild == null)
+							{
+								client.Out.SendMessage("You must be in a guild to use this command.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return 1;
+							}
+							if (!client.Player.Guild.GotAccess(client.Player, eGuildRank.Remove))
+							{
+								client.Out.SendMessage("You dont have the priviledges to remove players!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return 1;
+							}
+
+							if (args.Length == 4 && args[3].ToLower() == "account")
+							{
+								string playername = args[3];
+								string accountname = "";
+
+								GameClient targetClient = WorldMgr.GetClientByPlayerName(args[3], false, true);
+								if (targetClient != null)
+								{
+									OnCommand(client, new string[] { "gc", "remove", args[3] });
+									accountname = targetClient.Account.Name;
+								}
+								else
+								{
+									Character c = (Character)GameServer.Database.SelectObject(typeof(Character), "Name = '" + playername + "'");
+									if (c == null)
+									{
+										client.Out.SendMessage("No player by the name " + playername + " found.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+										return 1;
+									}
+									accountname = c.AccountName;
+								}
+								Character[] chars = (Character[])GameServer.Database.SelectObjects(typeof(Character), "AccountName = '" + accountname + "'");
+								foreach (Character c in chars)
+								{
+									c.GuildName = "";
+									c.GuildRank = 0;
+									GameServer.Database.SaveObject(c);
+								}
+								break;
+							}
+							else if (args.Length == 3)
+							{
+								GameClient targetClient =
+									WorldMgr.GetClientByPlayerName(args[2], false, true);
+								if (targetClient != null)
+								{
+									return OnCommand(client, new string[] { "gc", "remove", args[2] });
+								}
+								else
+								{
+									Character c = (Character)GameServer.Database.SelectObject(typeof(Character), "Name = '" + args[2] + "'");
+									if (c.GuildName != client.Player.GuildName)
+									{
+										client.Out.SendMessage(c.Name + " is not a member of your guild.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+										return 1;
+									}
+									else
+									{
+										c.GuildName = "";
+										c.GuildRank = 0;
+										GameServer.Database.SaveObject(c);
+									}
+								}
+								break;
+							}
+							else
+							{
+								client.Player.Out.SendMessage("Usage: /gc autoremove account <playername>", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								client.Player.Out.SendMessage("Usage: /gc autoremove <playername>", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							}
 						}
 						break;
 					// --------------------------------------------------------------------------------

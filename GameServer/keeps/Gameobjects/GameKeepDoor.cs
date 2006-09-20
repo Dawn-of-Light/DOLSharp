@@ -393,18 +393,6 @@ namespace DOL.GS.Keeps
 		}
 
 		/// <summary>
-		/// Called to create an keep door in the world
-		/// </summary>
-		/// <returns>true when created</returns>
-		public override bool AddToWorld()
-		{
-			if (!base.AddToWorld()) return false;
-			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-				player.Out.SendObjectCreate(this);
-			return true;
-		}
-
-		/// <summary>
 		/// Starts the power regeneration
 		/// </summary>
 		public override void StartPowerRegeneration()
@@ -565,6 +553,40 @@ namespace DOL.GS.Keeps
 			Health = MaxHealth;
 			m_oldHealthPercent = HealthPercent;
 			CloseDoor();
+		}
+
+		/*
+		 * Note that 'enter' and 'exit' commands will also work at these doors.
+		 */
+
+		public override bool WhisperReceive(GameLiving source, string str)
+		{
+			if (!base.WhisperReceive(source, str))
+				return false;
+
+			if (source is GamePlayer == false)
+				return false;
+
+			str = str.ToLower();
+
+			if (str.Contains("enter") || str.Contains("exit"))
+				Interact(source as GamePlayer);
+			return true;
+		}
+
+		public override bool SayReceive(GameLiving source, string str)
+		{
+			if (!base.SayReceive(source, str))
+				return false;
+
+			if (source is GamePlayer == false)
+				return false;
+
+			str = str.ToLower();
+
+			if (str.Contains("enter") || str.Contains("exit"))
+				Interact(source as GamePlayer);
+			return true;
 		}
 	}
 }

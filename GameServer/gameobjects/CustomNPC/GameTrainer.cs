@@ -126,48 +126,35 @@ namespace DOL.GS
 			if (source == null || item == null) return false;
 
 			GamePlayer player = source as GamePlayer;
-			if (player != null && item != null && item.Id_nb == "respec_stone")
+			if (player != null)
 			{
-				player.Inventory.RemoveCountFromStack(item, 1);
-				player.RespecAmountSingleSkill++;
-				player.Out.SendMessage("Thanks, I added a single spec respec to use /respec", eChatType.CT_System, eChatLoc.CL_PopupWindow);				
-				return true;
-			}
-
-			if (player != null && item != null && item.Id_nb == "luminescent_exerpise_stone")
-			{
-				player.Inventory.RemoveCountFromStack(item, 1);				
-				player.RespecAmountAllSkill++;
-				player.Out.SendMessage("A nice "+item.Name+"! I added a full respec to use /respec", eChatType.CT_System, eChatLoc.CL_PopupWindow);
-				return true;
-			}
-
-			if (player != null && item != null && item.Id_nb == "luminescent_exeregum_stone")
-			{
-				player.Inventory.RemoveCountFromStack(item, 1);
-				
-				int respecPoints = 0;
-				foreach (Ability ab in player.GetAllAbilities()) {
-					if (ab is RealmAbility) {
-						for (int i=0; i<ab.Level; i++) {
-							respecPoints += ((RealmAbility)ab).CostForUpgrade(i);
+				switch (item.Id_nb)
+				{
+					case "respec_single":
+						{
+							player.Inventory.RemoveCountFromStack(item, 1);
+							player.RespecAmountSingleSkill++;
+							player.Out.SendMessage("Thanks, I added a single spec respec to use /respec <linename>", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+							return true;
 						}
-						player.RemoveAbility(ab.KeyName);
-					}
+					case "respec_full":
+						{
+							player.Inventory.RemoveCountFromStack(item, 1);
+							player.RespecAmountAllSkill++;
+							player.Out.SendMessage("A nice " + item.Name + "! I added a full respec to use /respec all", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+							return true;
+						}
+					case "respec_realm":
+						{
+							player.Inventory.RemoveCountFromStack(item, 1);
+							player.RespecAmountRealmSkill++;
+							player.Out.SendMessage("Thanks, I added a realm respec to use /respec realm", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+							return true;
+						}
 				}
-				
-				
-				player.RealmSpecialtyPoints += respecPoints;
-				player.Out.SendUpdatePlayerSkills();
-				player.Out.SendUpdatePoints();
-				player.Out.SendUpdatePlayer();
-				player.Out.SendTrainerWindow();
-				player.Out.SendMessage("Oh what a nice "+item.Name+"! I was able to remove all your realm abilities with the help of that stone! You get "+respecPoints+" realm ability points back.", eChatType.CT_System, eChatLoc.CL_SystemWindow);				
-				player.SaveIntoDatabase();
-				return true;
-			}			
-			
-			
+			}
+
+
 			return base.ReceiveItem(source, item);
 		}
 
@@ -194,7 +181,7 @@ namespace DOL.GS
 
 				player.CharacterClass.OnLevelUp(player);
 				player.UpdateSpellLineLevels(true);
-				player.RefreshSpecDependendSkills(true);
+				player.RefreshSpecDependantSkills(true);
 				player.StartPowerRegeneration();
 				//player.Out.SendUpdatePlayerSpells();
 				player.Out.SendUpdatePlayerSkills();
@@ -235,15 +222,15 @@ namespace DOL.GS
 
 		public virtual bool addGift(String template, GamePlayer player)
 		{
-			ItemTemplate temp = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof(ItemTemplate), template);
+			ItemTemplate temp = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), template);
 			if (!player.Inventory.AddTemplate(temp, 1, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
 			{
 				player.Out.SendMessage("Not enough inventory space to receive your gift. Please make room.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
-			return true; 
+			return true;
 		}
-		
+
 		/// <summary>
 		/// Get class name from guild name
 		/// </summary>

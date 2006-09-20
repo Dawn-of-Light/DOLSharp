@@ -1941,6 +1941,10 @@ namespace DOL.GS
 		/// </summary>
 		protected int m_respecAmountSingleSkill;
 		/// <summary>
+		/// Holds amount of realm skill respecs
+		/// </summary>
+		protected int m_respecAmountRealmSkill;
+		/// <summary>
 		/// Holds level respec usage flag
 		/// </summary>
 		protected bool m_isLevelRespecUsed;
@@ -1968,6 +1972,19 @@ namespace DOL.GS
 			{
 				m_character.RespecAmountSingleSkill = value;
 				m_respecAmountSingleSkill = value;
+			}
+		}
+
+		/// <summary>
+		/// Gets/Sets amount of realm skill respecs
+		/// </summary>
+		public int RespecAmountRealmSkill
+		{
+			get { return m_respecAmountRealmSkill; }
+			set 
+			{
+				m_character.RespecAmountRealmSkill = value;
+				m_respecAmountRealmSkill = value;
 			}
 		}
 
@@ -2065,6 +2082,100 @@ namespace DOL.GS
 			if (line == null)
 				return false;
 			return RemoveSpellLine(line);
+		}
+
+		public int RespecAll()
+		{
+			int specPoints = RespecAllLines(); // Wipe skills and styles.
+
+			RespecAmountAllSkill--; // Decriment players respecs available.
+
+			if (Level == 5)
+				IsLevelRespecUsed = true;
+			return specPoints;
+		}
+
+		public int RespecSingle(Specialization specLine)
+		{
+			int specPoints = RespecSingleLine(specLine); // Wipe skills and styles.
+			RespecAmountSingleSkill--; // Decriment players respecs available.
+			if (Level == 20 || Level == 40)
+			{
+				IsLevelRespecUsed = true;
+			}
+			return specPoints;
+		}
+
+		public int RespecRealm()
+		{
+			int respecPoints = 0;
+			foreach (Ability ab in GetAllAbilities())
+			{
+				if (ab is RealmAbility)
+				{
+					for (int i = 0; i < ab.Level; i++)
+					{
+						respecPoints += ((RealmAbility)ab).CostForUpgrade(i);
+					}
+					RemoveAbility(ab.KeyName);
+				}
+			}
+			Client.Player.RespecAmountRealmSkill--;
+			return respecPoints;
+		}
+
+		private int RespecAllLines()
+		{
+			int specPoints = 0;
+			IList specList = GetSpecList();
+			lock (specList.SyncRoot)
+			{
+				foreach (Specialization cspec in specList)
+				{
+					if (cspec.Level < 2)
+						continue;
+					specPoints += RespecSingleLine(cspec);
+				}
+			}
+			return specPoints;
+		}
+
+		/// <summary>
+		/// Respec single line
+		/// </summary>
+		/// <param name="player">Player that is doing respec</param>
+		/// <returns>Amount of points spent in that line</returns>
+		private int RespecSingleLine(Specialization specLine)
+		{
+			/*
+			//Autotrain...
+			//get total spec points
+			int currentSpecPoints = (specLine.Level * specLine.Level + specLine.Level - 2) / 2;
+			//get normal spec points
+			int normalSpecPoints = 1;
+			//calculate if there has been any autotraining
+			int autotrainPool = currentSpecPoints - normalSpecPoints;
+			if (autotrainPool != 0)
+			{
+				//calculate the level, and spec back up to the level
+			}
+			 */
+			int specPoints = (specLine.Level * (specLine.Level + 1) - 2) / 2;
+			specLine.Level = 1;
+			if (!PlayerCharacter.UsedLevelCommand)
+			{
+				foreach (string lineKey in CharacterClass.AutoTrainableSkills())
+				{
+					if (lineKey == specLine.KeyName)
+					{
+						specLine.Level = Level / 4;
+						specPoints -= (specLine.Level * (specLine.Level + 1) - 2) / 2;
+						break;
+					}
+				}
+			}
+
+			return specPoints;
 		}
 
 		/// <summary>
@@ -2593,7 +2704,7 @@ namespace DOL.GS
 		/// updates the list of available styles
 		/// </summary>
 		/// <param="sendMessages">sends "you learn" messages if true</param="sendMessages">
-		public void RefreshSpecDependendSkills(bool sendMessages)
+		public void RefreshSpecDependantSkills(bool sendMessages)
 		{
 			IList newStyles = new ArrayList();
 			lock (m_styles.SyncRoot)
@@ -2715,7 +2826,7 @@ namespace DOL.GS
 			Out.SendMessage("You have " + SkillSpecialtyPoints + " specialization points left this level.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			Message.SystemToOthers(this, GetName(0, true) + " trains in various specializations.", eChatType.CT_System);
 			CharacterClass.OnSkillTrained(this, skill);
-			RefreshSpecDependendSkills(true);
+			RefreshSpecDependantSkills(true);
 			UpdateSpellLineLevels(true);
 
 			Out.SendUpdatePlayerSkills();
@@ -3548,7 +3659,7 @@ namespace DOL.GS
 			StartPowerRegeneration();
 
 			UpdateSpellLineLevels(true);
-			RefreshSpecDependendSkills(true);
+			RefreshSpecDependantSkills(true);
 
 			// Echostorm - Code for display of new title on level up
 			// Get old and current rank titles
@@ -3593,10 +3704,12 @@ namespace DOL.GS
 
 			// update color on levelup
 			if (ObjectState == eObjectState.Active)
+			{
 				foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 				{
 					player.Out.SendEmoteAnimation(this, eEmote.LvlUp);
 				}
+			}
 
 			// Reset taskDone per level.
 			if (Task != null)
@@ -6485,6 +6598,7 @@ namespace DOL.GS
 					case Slot.FOURTHQUIVER: SwitchQuiver(eActiveQuiverSlot.Fourth, false); break;
 				}
 
+
 				if (useItem.SpellID != 0 || useItem.SpellID1 != 0) // don't return without firing events
 				{
 					if ((type < 2 && useItem.SpellID > 0 && useItem.Charges < 1) || (type == 2 && useItem.SpellID1 > 0 && useItem.Charges1 < 1))
@@ -6507,7 +6621,7 @@ namespace DOL.GS
 							}
 						}
 						else if (useItem.Object_Type == (int)eObjectType.Magical &&
-							(useItem.Item_Type == 40 || useItem.Item_Type == 41))
+							(useItem.Item_Type == (int)eInventorySlot.FirstBackpack || useItem.Item_Type == 41))
 						{
 							long lastPotionItemUseTick = TempProperties.getLongProperty(LAST_POTION_ITEM_USE_TICK, 0L);
 							long changeTime = CurrentRegion.Time - lastPotionItemUseTick;
@@ -6521,6 +6635,7 @@ namespace DOL.GS
 								SpellLine potionEffectLine = SkillBase.GetSpellLine(GlobalSpellsLines.Potions_Effects);
 								if (useItem.Item_Type == 41)
 									potionEffectLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
+
 								if (potionEffectLine != null)
 								{
 									IList spells = SkillBase.GetSpellList(potionEffectLine.KeyName);
@@ -6773,8 +6888,13 @@ namespace DOL.GS
 		{
 			if (OnSendReceive != null && !OnSendReceive(source, this, str))
 				return false;
+
+			eChatType type = eChatType.CT_Send;
+			if (source.Client.Account.PrivLevel > 1)
+				type = eChatType.CT_Staff;
+
 			if (GameServer.ServerRules.IsAllowedToUnderstand(source, this))
-				Out.SendMessage(source.Name + LanguageMgr.GetString("GamePlayer.SendReceive.sends", " sends, ") + "\"" + str + "\"", eChatType.CT_Send, eChatLoc.CL_ChatWindow);
+				Out.SendMessage(source.Name + LanguageMgr.GetString("GamePlayer.SendReceive.sends", " sends, ") + "\"" + str + "\"", type, eChatLoc.CL_ChatWindow);
 			else
 			{
 				Out.SendMessage(source.Name + " sends something in a language you don't understand.", eChatType.CT_Send, eChatLoc.CL_ChatWindow);
@@ -8828,7 +8948,7 @@ namespace DOL.GS
 				}
 			}
 			CharacterClass.OnLevelUp(this); // load all skills from DB first to keep the order
-			RefreshSpecDependendSkills(false);
+			RefreshSpecDependantSkills(false);
 			UpdateSpellLineLevels(false);
 			try
 			{
@@ -8973,6 +9093,7 @@ namespace DOL.GS
 
 			m_respecAmountAllSkill = m_character.RespecAmountAllSkill;
 			m_respecAmountSingleSkill = m_character.RespecAmountSingleSkill;
+			m_respecAmountRealmSkill = m_character.RespecAmountRealmSkill;
 			m_isLevelRespecUsed = m_character.IsLevelRespecUsed;
 
 			if (m_character.PlayedTime == 0)
