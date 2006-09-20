@@ -154,6 +154,7 @@ namespace DOL.Database
 			m_charges = 0;
 			m_maxCharges = 0;
 			m_spellID = 0;//when no spell link to item
+			m_spellID1 = 0;
 			m_procSpellID = 0;
 			m_procSpellID1 = 0;
 			m_charges1 = 0;

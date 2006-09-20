@@ -58,7 +58,6 @@ namespace DOL.Database
 		private int m_piety = 0;
 		private int m_empathy = 0;
 		private int m_charisma = 0;
-		private byte m_skillCap;
 		private string m_abilities = "";
 
 		private static bool m_autoSave;
@@ -375,17 +374,6 @@ namespace DOL.Database
 			{
 				Dirty = true;
 				m_empathy = value;
-			}
-		}
-
-		[DataElement(AllowDbNull = true)]
-		public byte SkillCap
-		{
-			get { return m_skillCap; }
-			set
-			{
-				Dirty = true;
-				m_skillCap = value;
 			}
 		}
 

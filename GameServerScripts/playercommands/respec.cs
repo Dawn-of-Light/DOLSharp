@@ -66,6 +66,11 @@ namespace DOL.GS.Scripts
 					client.Out.SendMessage("You have " + client.Player.RespecAmountSingleSkill + " single-line respecs available.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					client.Out.SendMessage("Target any trainer and use /respec <line name>", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
+				if (client.Player.RespecAmountRealmSkill > 0)
+				{
+					client.Out.SendMessage("You have " + client.Player.RespecAmountRealmSkill + " realm skill respecs available.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					client.Out.SendMessage("Target any trainer and use /respec REALM", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				}
 				return 1;
 			}
 
@@ -78,124 +83,84 @@ namespace DOL.GS.Scripts
 
 			//total specpoints returned
 			int specPoints = 0;
+			int realmSpecPoints = 0;
 
-			if (args[1].ToLower() == "all")
+			switch (args[1].ToLower())
 			{
-				// Check for full respecs.
-				if (client.Player.RespecAmountAllSkill < 1)
-				{
-					client.Out.SendMessage("You don't seem to have any full skill respecs available.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return 1;
-				}
+				case "all":
+					{
+						// Check for full respecs.
+						if (client.Player.RespecAmountAllSkill < 1)
+						{
+							client.Out.SendMessage("You don't seem to have any full skill respecs available.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							return 1;
+						}
 
-				specPoints = RespecAllLines(client.Player); // Wipe skills and styles.
+						specPoints = client.Player.RespecAll();
+						break;
+					}
+				case "realm":
+					{
+						if (client.Player.RespecAmountRealmSkill < 1)
+						{
+							client.Out.SendMessage("You don't seem to have any realm skill respecs available.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							return 1;
+						}
 
-				client.Player.RespecAmountAllSkill--; // Decriment players respecs available.
+						realmSpecPoints = client.Player.RespecRealm();
+						break;
+					}
+				default:
+					{
+						// Check for single-line respecs.
+						if (client.Player.RespecAmountSingleSkill < 1)
+						{
+							client.Out.SendMessage("You don't seem to have any single-line respecs available.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							return 1;
+						}
 
-				if (client.Player.Level == 5)
-					client.Player.IsLevelRespecUsed = true;
-			}
-			else
-			{
-				// Check for single-line respecs.
-				if (client.Player.RespecAmountSingleSkill < 1)
-				{
-					client.Out.SendMessage("You don't seem to have any single-line respecs available.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return 1;
-				}
+						string lineName = string.Join(" ", args, 1, args.Length - 1);
+						Specialization specLine = client.Player.GetSpecializationByName(lineName, false);
+						if (specLine == null)
+						{
+							client.Out.SendMessage("No line with name '" + lineName + "' found.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							return 1;
+						}
+						if (specLine.Level < 2)
+						{
+							client.Out.SendMessage("Level of " + specLine.Name + " line is less than 2. ", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							return 1;
+						}
 
-				string lineName = string.Join(" ", args, 1, args.Length - 1);
-				Specialization specLine = client.Player.GetSpecializationByName(lineName, false);
-				if (specLine == null)
-				{
-					client.Out.SendMessage("No line with name '" + lineName + "' found.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return 1;
-				}
-				if (specLine.Level < 2)
-				{
-					client.Out.SendMessage("Level of " + specLine.Name + " line is less than 2. ", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return 1;
-				}
-
-				specPoints = RespecSingleLine(client.Player, specLine); // Wipe skills and styles.
-				client.Player.RespecAmountSingleSkill--; // Decriment players respecs available.
-				if (client.Player.Level == 20 || client.Player.Level == 40)
-				{
-					client.Player.IsLevelRespecUsed = true;
-				}
+						specPoints = client.Player.RespecSingle(specLine);
+						break;
+					}
 			}
 
 			// Assign full points returned
-			client.Player.SkillSpecialtyPoints += specPoints;
-			lock (client.Player.GetStyleList().SyncRoot)
+			if (specPoints > 0)
 			{
-				client.Player.GetStyleList().Clear(); // Kill styles
+				client.Player.SkillSpecialtyPoints += specPoints;
+				lock (client.Player.GetStyleList().SyncRoot)
+				{
+					client.Player.GetStyleList().Clear(); // Kill styles
+				}
+				client.Player.UpdateSpellLineLevels(false);
+				client.Out.SendMessage("You regain " + specPoints + " specialization points!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
-			client.Player.RefreshSpecDependendSkills(false);
-			client.Player.UpdateSpellLineLevels(false);
+			if (realmSpecPoints > 0)
+			{
+				client.Player.RealmSpecialtyPoints += realmSpecPoints;
+				client.Out.SendMessage("You regain " + realmSpecPoints + " realm specialization points!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			}
+			client.Player.RefreshSpecDependantSkills(false);
 			// Notify Player of points
-			client.Out.SendMessage("You regain " + specPoints + " specialization points!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			client.Out.SendUpdatePlayerSkills();
 			client.Out.SendUpdatePoints();
 			client.Out.SendTrainerWindow();
 			client.Player.SaveIntoDatabase();
 
 			return 1;
-		}
-
-		protected int RespecAllLines(GamePlayer player)
-		{
-			int specPoints = 0;
-			IList specList = player.GetSpecList();
-			lock (specList.SyncRoot)
-			{
-				foreach (Specialization cspec in specList)
-				{
-					if (cspec.Level < 2)
-						continue;
-					specPoints += RespecSingleLine(player, cspec);
-				}
-			}
-
-			return specPoints;
-		}
-
-		/// <summary>
-		/// Respec single line
-		/// </summary>
-		/// <param name="player">Player that is doing respec</param>
-		/// <returns>Amount of points spent in that line</returns>
-		protected int RespecSingleLine(GamePlayer player, Specialization specLine)
-		{
-			/*
-			//Autotrain...
-			//get total spec points
-			int currentSpecPoints = (specLine.Level * specLine.Level + specLine.Level - 2) / 2;
-			//get normal spec points
-			int normalSpecPoints = 1;
-			//calculate if there has been any autotraining
-			int autotrainPool = currentSpecPoints - normalSpecPoints;
-			if (autotrainPool != 0)
-			{
-				//calculate the level, and spec back up to the level
-			}
-			 */
-			int specPoints = (specLine.Level*(specLine.Level + 1) - 2)/2;
-			specLine.Level = 1;
-			if (!player.PlayerCharacter.UsedLevelCommand)
-			{
-				foreach (string lineKey in player.CharacterClass.AutoTrainableSkills())
-				{
-					if (lineKey == specLine.KeyName)
-					{
-						specLine.Level = player.Level/4;
-						specPoints -= (specLine.Level*(specLine.Level + 1) - 2)/2;
-						break;
-					}
-				}
-			}
-
-			return specPoints;
 		}
 	}
 }

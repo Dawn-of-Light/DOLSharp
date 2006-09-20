@@ -40,10 +40,8 @@ namespace DOL.GS.PacketHandler.v168
 			}
 			foreach(IDoor door in DoorMgr.getDoorsCloseToSpot(client.Player.CurrentRegionID,client.Player,WorldMgr.OBJ_UPDATE_DISTANCE))
 			{
-				if (door is GameDoor)
-					client.Out.SendObjectCreate(door as GameDoor);
-				if (door is Keeps.GameKeepDoor)
-					client.Out.SendObjectCreate(door as Keeps.GameKeepDoor);
+				client.Out.SendObjectCreate(door as GameObject);
+				client.Out.SendObjectUpdate(door as GameObject);
 			}
 			
 			//housing

@@ -195,10 +195,20 @@ namespace DOL.GS.Keeps
 		{
 			get
 			{
+				if (IsRaized)
+					return 0;
+
+				if (Skin == (int)eComponentSkin.Tower)
+				{
+					return RepairedHealth / 100;
+				}
+
 				foreach (GameKeepComponent component in this.Keep.KeepComponents)
 				{
 					if (component.IsAlive == false && component != this)
+					{
 						return MaxHealth / 100;
+					}
 				}
 				return MaxHealth / 10;
 			}
@@ -266,6 +276,7 @@ namespace DOL.GS.Keeps
 			LoadPositions();
 			this.AddToWorld();
 			FillPositions();
+			this.RepairedHealth = this.MaxHealth;
 		}
 
 		public void LoadPositions()
@@ -505,6 +516,7 @@ namespace DOL.GS.Keeps
 			get { return m_isRaized; }
 			set
 			{
+				RepairedHealth = 0;
 				m_isRaized = value;
 				if (value == true)
 				{
@@ -517,6 +529,8 @@ namespace DOL.GS.Keeps
 				}
 			}
 		}
+
+		public int RepairedHealth = 0;
 
 		private RegionTimer m_rebuildTimer;
 		private static int rebuildInterval = 30 * 60 * 1000;
@@ -551,6 +565,7 @@ namespace DOL.GS.Keeps
 					client.Out.SendKeepComponentDetailUpdate(this);
 				}
 			}
+			RepairedHealth = Health;
 		}
 
 		public override string ToString()
