@@ -421,12 +421,6 @@ result == GameLiving.eAttackResult.Parried)
 		/// <param name="ad"></param>
 		public override void OnAttackedByEnemy(AttackData ad)
 		{
-			if (this.Component != null && this.Component.Keep != null)
-			{
-				if (ad.IsHit)
-					this.Component.Keep.LastAttackedByEnemyTick = this.CurrentRegion.Time;
-			}
-
 			if (MaxSpeedBase == 0)
 			{
 				if (ActiveWeaponSlot == eActiveWeaponSlot.Standard ||

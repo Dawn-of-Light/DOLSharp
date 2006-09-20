@@ -72,7 +72,7 @@ namespace DOL.GS.Scripts
 								}
 							case "archer":
 								{
-									if (args.Length == 4)
+									if (args.Length == 5)
 										guard = new GuardStaticArcher();
 									guard = new GuardArcher();
 									break;
@@ -89,7 +89,7 @@ namespace DOL.GS.Scripts
 								}
 							case "caster":
 								{
-									if (args.Length == 4)
+									if (args.Length == 5)
 										guard = new GuardStaticCaster();
 									else guard = new GuardCaster();
 									break;

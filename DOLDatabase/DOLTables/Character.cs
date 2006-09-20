@@ -139,8 +139,9 @@ namespace DOL
 			private long m_playedTime;  // character /played in seconds.
 			private long m_deathTime; // character /played death time
 
-			private int m_respecAmountAllSkill;  // Respecs available.
+			private int m_respecAmountAllSkill;  // full Respecs.
 			private int m_respecAmountSingleSkill; // Single-Line Respecs
+			private int m_respecAmountRealmSkill; //realm respecs
 			private bool	m_isLevelRespecUsed;
 			private bool	m_safetyFlag;
 			private int m_craftingPrimarySkill =0;
@@ -179,6 +180,7 @@ namespace DOL
 				m_deathTime = long.MinValue;
 				m_respecAmountAllSkill = 0;
 				m_respecAmountSingleSkill = 0;
+				m_respecAmountRealmSkill = 0;
 				m_isLevelRespecUsed = true;
 				m_safetyFlag = true;
 				m_craftingPrimarySkill = 0;
@@ -1386,6 +1388,23 @@ namespace DOL
 					m_respecAmountSingleSkill = value;
 				}
 			}
+
+			/// <summary>
+			/// Gets/Sets the characters realm respecs available
+			/// </summary>
+			public int RespecAmountRealmSkill
+			{
+				get
+				{
+					return m_respecAmountRealmSkill;
+				}
+				set
+				{
+					Dirty = true;
+					m_respecAmountRealmSkill = value;
+				}
+			}
+
 			/// <summary>
 			/// Gets/Sets level respec flag
 			/// </summary>

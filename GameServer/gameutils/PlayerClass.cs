@@ -359,7 +359,7 @@ namespace DOL.GS
 				}
 				if (found)
 				{
-					player.RefreshSpecDependendSkills(true);
+					player.RefreshSpecDependantSkills(true);
 					player.UpdateSpellLineLevels(true);
 					if (player.ObjectState == GameObject.eObjectState.Active)
 					{

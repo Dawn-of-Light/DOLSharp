@@ -30,12 +30,12 @@ namespace DOL.GS.SkillHandler
 	{
 		public void Execute(Ability ab, GamePlayer player)
 		{
-			if(player.ActiveWeaponSlot != GameLiving.eActiveWeaponSlot.Distance)
+			if (player.ActiveWeaponSlot != GameLiving.eActiveWeaponSlot.Distance)
 			{
 				player.Out.SendMessage("You must ready a ranged weapon in your hands!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 				return;
 			}
-			if(player.IsSitting)
+			if (player.IsSitting)
 			{
 				player.Out.SendMessage("You must be standing to attempt a ranged attack!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 				return;
@@ -43,21 +43,21 @@ namespace DOL.GS.SkillHandler
 
 			// cancel rapid fire effect
 			RapidFireEffect rapidFire = (RapidFireEffect)player.EffectList.GetOfType(typeof(RapidFireEffect));
-			if (rapidFire!=null)
+			if (rapidFire != null)
 			{
 				rapidFire.Cancel(false);
 			}
 
 			// cancel sure shot effect
 			SureShotEffect sureShot = (SureShotEffect)player.EffectList.GetOfType(typeof(SureShotEffect));
-			if (sureShot!=null)
+			if (sureShot != null)
 			{
 				sureShot.Cancel(false);
 			}
 
-			if(player.AttackState)
+			if (player.AttackState)
 			{
-				if(player.RangeAttackType == GameLiving.eRangeAttackType.Critical)
+				if (player.RangeAttackType == GameLiving.eRangeAttackType.Critical)
 				{
 					player.Out.SendMessage("You switch to a regular shot!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					player.RangeAttackType = GameLiving.eRangeAttackType.Normal;

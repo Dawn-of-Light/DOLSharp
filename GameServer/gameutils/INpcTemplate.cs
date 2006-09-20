@@ -148,10 +148,5 @@ namespace DOL.GS
 		/// Gets the template npc Charisma 
 		///</summary>
 		int Charisma { get; }
-
-		/// <summary>
-		/// Gets the SkillCap of the npc
-		/// </summary>
-		byte SkillCap { get; }
 	}
 }
