@@ -1472,6 +1472,7 @@
     <Compile Include="skillhandler\RapidFireAbilityHandler.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="skillhandler\SavageConstants.cs" />
     <Compile Include="skillhandler\SprintAbilityHandler.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -1514,6 +1515,13 @@
     </Compile>
     <Compile Include="spells\EnduranceHealSpellHandler.cs" />
     <Compile Include="spells\PowerHealSpellHandler.cs" />
+    <Compile Include="spells\Savage\SavageCrushResistHandler.cs" />
+    <Compile Include="spells\Savage\SavageDamageHandler.cs" />
+    <Compile Include="spells\Savage\SavageEvadeHandler.cs" />
+    <Compile Include="spells\Savage\SavageHasteHandler.cs" />
+    <Compile Include="spells\Savage\SavageParryHandler.cs" />
+    <Compile Include="spells\Savage\SavageSlashResistHandler.cs" />
+    <Compile Include="spells\Savage\SavageThrustResistHandler.cs" />
     <Compile Include="spells\WaterBreathingSpellHandler.cs" />
     <Compile Include="spells\CureDiseaseSpellHandler.cs">
       <SubType>Code</SubType>
