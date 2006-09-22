@@ -19,6 +19,8 @@
 using System;
 using System.Collections;
 
+using DOL.GS.RealmAbilities;
+
 namespace DOL.GS.Effects
 {
 	/// <summary>
@@ -107,12 +109,11 @@ namespace DOL.GS.Effects
 				if (m_player.IsMoving)
 				{
 					int amount = 5;
-					/*
-					if (m_player.HasAbility(Abilities.LongWind))
-					{
-						amount = 5 - m_player.GetAbilityLevel(Abilities.LongWind);
-					}
-					*/
+
+					LongWindAbility ra = m_player.GetAbility(LongWindAbility.KEY) as LongWindAbility;
+					if (ra != null)
+						amount = 5 - ra.GetAmountForLevel(ra.Level);
+
 					m_player.Endurance -= amount;
 				}
 			}

@@ -581,6 +581,10 @@
     <Compile Include="propertycalc\ResistPiercePropertyCalculator.cs" />
     <Compile Include="realmabilities\handlers\CamouflageSpecHandler.cs" />
     <Compile Include="realmabilities\handlers\ConcentrationAbility.cs" />
+    <Compile Include="realmabilities\handlers\ToughnessAbility.cs" />
+    <Compile Include="realmabilities\handlers\LongWindAbility.cs" />
+    <Compile Include="realmabilities\handlers\EtherealBondAbility.cs" />
+    <Compile Include="realmabilities\handlers\DeterminationAbility.cs" />
     <Compile Include="realmabilities\handlers\FalconsEyeAbility.cs" />
     <Compile Include="realmabilities\handlers\RagingPowerAbility.cs" />
     <Compile Include="realmabilities\handlers\VehementRenewalHandler.cs" />
