@@ -694,6 +694,11 @@ namespace DOL.GS.ServerRules
 			}
 		}
 
+		/// <summary>
+		/// Called on living death that is not gameplayer or gamenpc
+		/// </summary>
+		/// <param name="killedLiving">The living object</param>
+		/// <param name="killer">The killer object</param>
 		public virtual void OnLivingKilled(GameLiving killedLiving, GameObject killer)
 		{
 			lock (killedLiving.XPGainers.SyncRoot)
@@ -829,11 +834,13 @@ namespace DOL.GS.ServerRules
 				lock (killedPlayer.XPGainers.SyncRoot)
 				{
 					foreach (DictionaryEntry de in killedPlayer.XPGainers)
+					{
 						if (de.Key is GamePlayer)
 						{
 							((GamePlayer)de.Key).Out.SendMessage(killedPlayer.Name + " has been killed recently and is worth no realm points!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 							((GamePlayer)de.Key).Out.SendMessage(killedPlayer.Name + " has been killed recently and is worth no experience!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 						}
+					}
 				}
 				return;
 			}
