@@ -17,6 +17,7 @@
  *
  */
 using System;
+using DOL.GS.RealmAbilities;
 
 namespace DOL.GS.PropertyCalc
 {
@@ -39,9 +40,16 @@ namespace DOL.GS.PropertyCalc
 				+living.BuffBonusCategory3[(int)property]
 				-living.ItemBonus[(int)property];
 
-			if(living is GamePlayer && ((GamePlayer)living).HasAbility(Abilities.Stoicism))
+			if (living is GamePlayer)
 			{
-				percent -= 25;
+				GamePlayer player = living as GamePlayer;
+
+				if (player.HasAbility(Abilities.Stoicism))
+					percent -= 25;
+
+				DeterminationAbility ra = player.GetAbility(DeterminationAbility.KEY) as DeterminationAbility;
+				if (ra != null)
+					percent -= ra.GetAmountForLevel(ra.Level);
 			}
 
 			return Math.Max(1, percent);
