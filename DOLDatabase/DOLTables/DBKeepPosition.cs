@@ -5,12 +5,13 @@ using System;
 namespace DOL.Database
 {
 	/// <summary>
-	/// Table to hold positions of various Area Capture objects
+	/// Table to hold positions of various Keep objects
 	/// </summary>
 	[DataTable(TableName = "KeepPosition")]
 	public class DBKeepPosition : DataObject
 	{
 		private int m_componentSkin;
+		private int m_componentRotation;
 		private string m_templateID;
 		private int m_height;
 		private int m_x;
@@ -56,6 +57,23 @@ namespace DOL.Database
 			{
 				Dirty = true;
 				m_componentSkin = value;
+			}
+		}
+
+		/// <summary>
+		/// The Rotation of the Keep Component the Position is assigned to
+		/// </summary>
+		[DataElement(AllowDbNull = true)]
+		public int ComponentRotation
+		{
+			get
+			{
+				return m_componentRotation;
+			}
+			set
+			{
+				Dirty = true;
+				m_componentRotation = value;
 			}
 		}
 

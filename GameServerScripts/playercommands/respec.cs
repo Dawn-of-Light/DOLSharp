@@ -157,6 +157,7 @@ namespace DOL.GS.Scripts
 			// Notify Player of points
 			client.Out.SendUpdatePlayerSkills();
 			client.Out.SendUpdatePoints();
+			client.Out.SendUpdatePlayer();
 			client.Out.SendTrainerWindow();
 			client.Player.SaveIntoDatabase();
 
