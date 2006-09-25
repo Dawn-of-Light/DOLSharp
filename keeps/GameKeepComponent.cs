@@ -281,7 +281,13 @@ namespace DOL.GS.Keeps
 
 		public void LoadPositions()
 		{
-			DBKeepPosition[] DBPositions = (DBKeepPosition[])GameServer.Database.SelectObjects(typeof(DBKeepPosition), "`ComponentSkin` = '" + this.Skin + "'");
+			this.Positions.Clear();
+
+			string query = "`ComponentSkin` = '" + this.Skin + "'";
+			if (Skin != (int)eComponentSkin.Keep && Skin != (int)eComponentSkin.Tower && Skin != (int)eComponentSkin.Gate)
+				query = query + " AND `ComponentRotation` = '" + this.ComponentHeading + "'";
+
+			DBKeepPosition[] DBPositions = (DBKeepPosition[])GameServer.Database.SelectObjects(typeof(DBKeepPosition), query);
 			foreach (DBKeepPosition position in DBPositions)
 			{
 				DBKeepPosition[] list = this.Positions[position.TemplateID] as DBKeepPosition[];
@@ -313,6 +319,11 @@ namespace DOL.GS.Keeps
 						else if (position.ClassType == "DOL.GS.Keeps.GameKeepDoor")
 						{
 							if (this.Keep.Doors[position.TemplateID] == null)
+								create = true;
+						}
+						else if (position.ClassType == "DOL.GS.Keeps.FrontierTeleportStone")
+						{
+							if (this.Keep.TeleportStone == null)
 								create = true;
 						}
 						else

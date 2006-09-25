@@ -24,8 +24,8 @@ using System.Reflection;
 
 namespace DOL.GS.PacketHandler
 {
-	[PacketLib(185, GameClient.eClientVersion.Version185)]
-	public class PacketLib185 : PacketLib184
+	[PacketLib(186, GameClient.eClientVersion.Version186)]
+	public class PacketLib186 : PacketLib185
 	{
 		/// <summary>
 		/// Defines a logger for this class.
@@ -33,10 +33,10 @@ namespace DOL.GS.PacketHandler
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		/// <summary>
-		/// Constructs a new PacketLib for Version 1.85 clients
+		/// Constructs a new PacketLib for Version 1.86 clients
 		/// </summary>
 		/// <param name="client">the gameclient this lib is associated with</param>
-		public PacketLib185(GameClient client):base(client)
+		public PacketLib186(GameClient client):base(client)
 		{
 		}
 	}
