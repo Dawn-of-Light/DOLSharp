@@ -125,6 +125,8 @@ namespace DOL.GS.Scripts
 							guard.AddToWorld();
 							guard.SaveIntoDatabase();
 						}
+
+						DisplayMessage(client, "Guard added!", new object[] { });
 						break;
 					}
 				case "addposition":
@@ -150,7 +152,7 @@ namespace DOL.GS.Scripts
 						GameKeepGuard guard = client.Player.TargetObject as GameKeepGuard;
 						if (PositionMgr.GetPosition(guard) != null)
 						{
-							DisplayError(client, "You already have a position assigned for height " + height + ", remove first!", null);
+							DisplayError(client, "You already have a position assigned for height " + height + ", remove first!", new object[] { });
 							return 1;
 						}
 

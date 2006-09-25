@@ -1954,7 +1954,9 @@ namespace DOL.GS.Scripts
 						GameKeepComponent component = client.Player.TargetObject as GameKeepComponent;
 						if (component != null)
 						{
-							PositionMgr.CreatePosition(typeof(FrontiersPortalStone), 0, client.Player, Guid.NewGuid().ToString(), component);
+							DBKeepPosition pos = PositionMgr.CreatePosition(typeof(FrontiersPortalStone), 0, client.Player, Guid.NewGuid().ToString(), component);
+							PositionMgr.AddPosition(pos);
+							PositionMgr.FillPositions();
 						}
 						else
 						{
@@ -1967,6 +1969,30 @@ namespace DOL.GS.Scripts
 							stone.SaveIntoDatabase();
 							stone.AddToWorld();
 						}
+						DisplayMessage(client, "Teleport Stone added!", new object[] { });
+						break;
+					}
+				case "addbanner":
+					{
+						GameKeepComponent component = client.Player.TargetObject as GameKeepComponent;
+						if (component != null)
+						{
+							DBKeepPosition pos = PositionMgr.CreatePosition(typeof(GameKeepBanner), 0, client.Player, Guid.NewGuid().ToString(), component);
+							PositionMgr.AddPosition(pos);
+							PositionMgr.FillPositions();
+						}
+						else
+						{
+							GameKeepBanner banner = new GameKeepBanner();
+							banner.CurrentRegion = client.Player.CurrentRegion;
+							banner.X = client.Player.X;
+							banner.Y = client.Player.Y;
+							banner.Z = client.Player.Z;
+							banner.Heading = client.Player.Heading;
+							banner.SaveIntoDatabase();
+							banner.AddToWorld();
+						}
+						DisplayMessage(client, "Banner added!", new object[] { });
 						break;
 					}
 				default:

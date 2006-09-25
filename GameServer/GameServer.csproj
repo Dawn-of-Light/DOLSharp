@@ -575,6 +575,7 @@
     <Compile Include="packets\168\HouseUsersPermissionsSetHandler.cs" />
     <Compile Include="packets\168\HousingDecorationRotate.cs" />
     <Compile Include="packets\168\HousingDecorationRotateRequestHandler.cs" />
+    <Compile Include="packets\PacketLib186.cs" />
     <Compile Include="packets\PacketLib185.cs" />
     <Compile Include="propertycalc\CriticalArcheryHitChanceCalculator.cs" />
     <Compile Include="propertycalc\CriticalMeleeHitChanceCalculator.cs" />
