@@ -5638,6 +5638,8 @@ namespace DOL.GS
 		/// <param name="killer">the killer</param>
 		public override void Die(GameObject killer)
 		{
+			bool realmDeath = killer != null && killer.Realm != (byte)eRealm.None;
+
 			TargetObject = null;
 			Diving(waterBreath.Normal);
 			if (IsOnHorse)
@@ -5650,9 +5652,18 @@ namespace DOL.GS
 			string message;
 			ushort messageDistance = WorldMgr.DEATH_MESSAGE_DISTANCE;
 			m_releaseType = eReleaseType.Normal;
+
+			string location = "";
+			if (CurrentAreas.Count > 0)
+				location = (CurrentAreas[0] as AbstractArea).Description;
+			else
+				location = CurrentZone.Description;
+
 			if (killer == null)
 			{
-				message = GetName(0, true) + " was just killed!";
+				if (realmDeath)
+					message = GetName(0, true) + " was just killed in " + location + "!";
+				else message = GetName(0, true) + " was just killed!";
 			}
 			else
 			{
@@ -5664,7 +5675,10 @@ namespace DOL.GS
 				}
 				else
 				{
-					message = GetName(0, true) + " was just killed by " + killer.GetName(1, false) + ".";
+					messageDistance = 0;
+					if (realmDeath)
+						message = GetName(0, true) + " was just killed by " + killer.GetName(1, false) + " in " + location + ".";
+					else message = GetName(0, true) + " was just killed by " + killer.GetName(1, false) + ".";
 				}
 			}
 
@@ -5704,7 +5718,23 @@ namespace DOL.GS
 				((GamePlayer)killer).Out.SendMessage("You just killed " + GetName(0, false) + "!", eChatType.CT_PlayerDied, eChatLoc.CL_SystemWindow);
 			}
 
-			foreach (GamePlayer player in GetPlayersInRadius(messageDistance))
+			ArrayList players = new ArrayList();
+			if (messageDistance == 0)
+			{
+				foreach (GameClient client in WorldMgr.GetClientsOfRegion(CurrentRegionID))
+				{
+					players.Add(client.Player);
+				}
+			}
+			else
+			{
+				foreach (GamePlayer player in GetPlayersInRadius(messageDistance))
+				{
+					players.Add(player);
+				}
+			}
+
+			foreach (GamePlayer player in players)
 			{
 				// on normal server type send messages only to the killer and dead players realm
 				// check for gameplayer is needed because killers realm don't see deaths by guards
@@ -5770,7 +5800,7 @@ namespace DOL.GS
 					xpLossPercent = MAX_LEVEL - 40;
 				}
 
-				if (killer != null && killer.Realm != (byte)eRealm.None)
+				if (realmDeath)
 				{
 					Out.SendMessage("You died fighting for your realm and lose no experience!", eChatType.CT_YouDied, eChatLoc.CL_SystemWindow);
 					xpLossPercent = 0;

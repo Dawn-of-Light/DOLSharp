@@ -210,6 +210,7 @@ namespace DOL.GS.Keeps
 		{
 			DBKeepPosition pos = new DBKeepPosition();
 			pos.ComponentSkin = component.Skin;
+			pos.ComponentRotation = component.ComponentHeading;
 			pos.TemplateID = templateID;
 			int x, y;
 
@@ -266,6 +267,7 @@ namespace DOL.GS.Keeps
 			{
 				foreach (GameKeepComponent component in keep.KeepComponents)
 				{
+					component.LoadPositions();
 					component.FillPositions();
 				}
 			}
