@@ -18,6 +18,8 @@
  */
 using System;
 using DOL.Events;
+using DOL.GS.PacketHandler;
+
 namespace DOL.GS
 {
 	/// <summary>
@@ -51,36 +53,146 @@ namespace DOL.GS
 			return 0x9602;
 		}
 
-		//		protected override void SelectObjectTarget(DOLEvent e, object sender, EventArgs arguments)
-		//		{
-		//			InteractWithEventArgs arg = arguments as InteractWithEventArgs;
-		//			TargetObject = arg.Target;
-		//		}
+		public override int MAX_PASSENGERS
+		{
+			get
+			{
+				switch (Level)
+				{
+					case 0:
+						return 2;
+					case 1:
+						return 6;
+					case 2:
+						return 8;
+					case 3:
+						return 12;
+				}
+				return Level * 3;
+			}
+		}
+
+		public override int SLOT_OFFSET
+		{
+			get
+			{
+				return 1;
+			}
+		}
+
 		public override void DoDamage()
 		{
 			GameLiving target = (TargetObject as GameLiving);
 			if (target == null)
 			{
-				//todo msg
+				Owner.Out.SendMessage("Select a target first.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 			//todo good  distance check
-			if (!WorldMgr.CheckDistance(this, target, WorldMgr.PICKUP_DISTANCE))
+			if (!WorldMgr.CheckDistance(this, target, AttackRange))
 			{
-				//todo msg
+				Owner.Out.SendMessage("You are too far away to attack " + target.Name, eChatType.CT_System,
+									  eChatLoc.CL_SystemWindow);
 				return;
 			}
-			int damageAmount = 0;
-			switch (this.Level)
-			{
-				case 1: damageAmount = 300;
-					break;
-				case 2: damageAmount = 450;
-					break;
-				case 3: damageAmount = 750;
-					break;
-			}
+			int damageAmount = RamDamage;
+
+			//TODO: dps change by number
+			target.TakeDamage(this, eDamageType.Crush, damageAmount, 0);
+			Owner.Out.SendMessage("The Ram hits " + target.Name + " for " + damageAmount + " dmg!", eChatType.CT_YouHit,
+								  eChatLoc.CL_SystemWindow);
+			Message.SystemToArea(this, GetName(0, false) + " hits " + target.GetName(0, true), eChatType.CT_OthersCombat,
+								 Owner);
 			base.DoDamage();
+		}
+
+		public override bool RiderMount(GamePlayer rider, bool forced)
+		{
+			if (!base.RiderMount(rider, forced))
+				return false;
+			UpdateRamStatus();
+			return true;
+		}
+
+		public override bool RiderDismount(bool forced, GamePlayer player)
+		{
+			if (!base.RiderDismount(forced, player))
+				return false;
+			if (player.SiegeWeapon == this)
+				ReleaseControl();
+			UpdateRamStatus();
+			return true;
+		}
+
+		public void UpdateRamStatus()
+		{
+			//speed of reload changed by number
+			ActionDelay[1] = GetReloadDelay;
+		}
+
+		private int GetReloadDelay
+		{
+			get
+			{
+				//custom formula
+				return 10000 + ((Level + 1) * 2000) - 10000 * (int)((double)CurrentRiders.Count / (double)MAX_PASSENGERS);
+			}
+		}
+
+		private int RamDamage
+		{
+			get
+			{
+				return BaseRamDamage + (int)(((double)BaseRamDamage / 2.0) * (double)((double)CurrentRiders.Count / (double)MAX_PASSENGERS));
+			}
+		}
+
+		private int BaseRamDamage
+		{
+			get
+			{
+				int damageAmount = 0;
+				switch (Level)
+				{
+					case 0:
+						damageAmount = 200;
+						break;
+					case 1:
+						damageAmount = 300;
+						break;
+					case 2:
+						damageAmount = 450;
+						break;
+					case 3:
+						damageAmount = 750;
+						break;
+				}
+				return damageAmount;
+			}
+		}
+
+		public override int AttackRange
+		{
+			get
+			{
+				switch (Level)
+				{
+					case 0: return 250;
+					case 1:
+					case 2:
+					case 3: return 500;
+					default: return 500;
+				}
+			}
+		}
+
+		public override int MaxSpeed
+		{
+			get
+			{
+				//custom formula
+				return (int)(10.0 + (5.0 * (double)Level) + 100.0 * ((double)CurrentRiders.Count / (double)MAX_PASSENGERS));
+			}
 		}
 	}
 }

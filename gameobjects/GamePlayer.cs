@@ -3065,6 +3065,16 @@ namespace DOL.GS
 				}
 				else
 					Notify(GamePlayerEvent.RLLevelUp, this);
+				if ((m_realmLevel >= 20 && m_realmLevel % 10 == 0) || m_realmLevel >= 60)
+				{
+					string message = string.Format("{0} reached realm rank {1:#L#} in {2}!", Name, m_realmLevel + 10, LastPositionUpdateZone.Description);
+					NewsMgr.CreateNews(message, 0, eNewsType.RvRLocal, true);
+				}
+				if (m_realmPts >= 1000000 && m_realmPts - amount < 1000000)
+				{
+					string message = string.Format("{0} has earned 1,000,000 realm points in {1}", Name, LastPositionUpdateZone.Description);
+					NewsMgr.CreateNews(message, 0, eNewsType.RvRLocal, true);
+				}
 			}
 			Out.SendUpdatePoints();
 		}
@@ -3589,14 +3599,24 @@ namespace DOL.GS
 				// single line respec
 				case 20:
 				case 40:
-					RespecAmountSingleSkill++; // Give character their free respecs at 20 and 40
-					IsLevelRespecUsed = false;
-					break;
+					{
+						RespecAmountSingleSkill++; // Give character their free respecs at 20 and 40
+						IsLevelRespecUsed = false;
+						break;
+					}
 				case 21:
 				case 41:
-					if (IsLevelRespecUsed) break;
-					RespecAmountSingleSkill--; // Remove free respecs if it wasn't used
-					break;
+					{
+						if (IsLevelRespecUsed) break;
+						RespecAmountSingleSkill--; // Remove free respecs if it wasn't used
+						break;
+					}
+				case 50:
+					{
+						string message = string.Format("{0} reached level {1} in {2}!", Name, Level, LastPositionUpdateZone.Description);
+						NewsMgr.CreateNews(message, Realm, eNewsType.PvE, true);
+						break;
+					}
 			}
 
 			// old hp
@@ -7141,12 +7161,16 @@ namespace DOL.GS
 				if (!DismountSteed(forced))
 					return false;
 			}
+
 			if (OnMountSteed != null && !OnMountSteed(this, steed, forced) && !forced)
 				return false;
+
 			if (!steed.RiderMount(this, forced) && !forced)
 				return false;
+
 			if (IsOnHorse)
 				IsOnHorse = false;
+
 			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
 				player.Out.SendRiding(this, steed, false);
@@ -7185,7 +7209,7 @@ namespace DOL.GS
 			if (OnDismountSteed != null && !OnDismountSteed(this, Steed, forced) && !forced)
 				return false;
 			GameObject steed = Steed;
-			if (!Steed.RiderDismount(forced) && !forced)
+			if (!Steed.RiderDismount(forced, this) && !forced)
 				return false;
 
 			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
@@ -7199,9 +7223,9 @@ namespace DOL.GS
 		/// Returns if the player is riding or not
 		/// </summary>
 		/// <returns>true if on a steed, false if not</returns>
-		public virtual bool IsRiding()
+		public virtual bool IsRiding
 		{
-			return Steed != null;
+			get	{ return Steed != null;	}
 		}
 
 		#endregion
@@ -9859,7 +9883,7 @@ namespace DOL.GS
 		/// <param name="skill">Crafting skill to increase</param>
 		/// <param name="count">How much increase or decrase</param>
 		/// <returns>true if the skill is valid and -1 if not</returns>
-		public virtual bool IncreaseCraftingSkill(eCraftingSkill skill, int count)
+		public virtual bool GainCraftingSkill(eCraftingSkill skill, int count)
 		{
 			if (skill == eCraftingSkill.NoCrafting) return false;
 
@@ -9870,6 +9894,12 @@ namespace DOL.GS
 				{
 					craftingSkills[(int)skill] = count + Convert.ToInt32(craftingSkills[(int)skill]);
 					Out.SendMessage("You gain skill in " + craftingSkill.Name + "! (" + craftingSkills[(int)skill] + ").", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+					int amount = GetCraftingSkillValue(skill);
+					if (amount >= 1000 && amount - count < 1000)
+					{
+						string message = string.Format("{0} reached 1000 skill in {1}", Name, craftingSkill.Name);
+						NewsMgr.CreateNews(message, Realm, eNewsType.PvE, true);
+					}
 				}
 				return true;
 			}

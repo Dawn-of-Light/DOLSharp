@@ -52,7 +52,7 @@ namespace DOL.GS.PacketHandler.v168
 			{
 				GamePlayer player = (GamePlayer)m_actionSource;
 
-				if(!player.IsRiding())
+				if(!player.IsRiding)
 				{
 					player.Out.SendMessage("You are not riding any steed!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return;

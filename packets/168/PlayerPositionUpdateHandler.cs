@@ -502,15 +502,16 @@ namespace DOL.GS.PacketHandler.v168
 
 
 			byte[] con168 = packet.ToArray();
-
 			//Riding is set here!
 			if (client.Player.Steed != null && client.Player.Steed.ObjectState == GameObject.eObjectState.Active)
 			{
 				client.Player.Heading = client.Player.Steed.Heading;
 
 				con168[2] |= 24; //Set ride flag 00011000
-				con168[12] = (byte)(client.Player.Steed.ObjectID >> 8); //heading = steed ID
-				con168[13] = (byte)(client.Player.Steed.ObjectID & 0xFF);
+				con168[12] = (byte) (client.Player.Steed.ObjectID >> 8); //heading = steed ID
+				con168[13] = (byte) (client.Player.Steed.ObjectID & 0xFF);
+				con168[14] = (byte)0;
+				con168[15] = (byte) (client.Player.Steed.RiderSlot(client.Player)); // there rider slot this player
 			}
 			else if (!client.Player.IsAlive)
 			{

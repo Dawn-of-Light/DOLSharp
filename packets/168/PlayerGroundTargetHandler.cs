@@ -81,8 +81,21 @@ namespace DOL.GS.PacketHandler.v168
 				GamePlayer player = (GamePlayer)m_actionSource;
 				player.GroundTargetInView = ((m_flag & 0x100) != 0);
 				player.SetGroundTarget(m_x, m_y, (ushort)m_z);
+
 				if(!player.GroundTargetInView)
 					player.Out.SendMessage("Your ground target is not visible!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+
+				if (player.SiegeWeapon != null)
+				{
+					player.SiegeWeapon.Move();
+					return;
+				}
+				if (player.Steed != null && player.Steed.MAX_PASSENGERS > 1)
+				{
+					if (player.Steed is GameHorseBoat) return;
+					player.Steed.WalkTo(player.GroundTarget, player.Steed.MaxSpeed);
+					return;
+				}
 			}
 		}
 	}
