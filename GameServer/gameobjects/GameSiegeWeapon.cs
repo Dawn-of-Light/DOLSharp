@@ -40,8 +40,7 @@ namespace DOL.GS
 			m_ammo = new ArrayList();
 
 			m_ammoSlot = 0x14;
-			ActionDelay
-			= new int[]
+			ActionDelay	= new int[]
 				{
 					0,//none
 					10000,//aiming
@@ -415,7 +414,7 @@ namespace DOL.GS
 				this.Owner.Out.SendMessage("The siegeweapon needs to be repaired!", eChatType.CT_Say, eChatLoc.CL_SystemWindow);
 				return false;
 			}
-			if (!WorldMgr.CheckDistance(this, this.Owner, WorldMgr.INTERACT_DISTANCE))
+			if (!WorldMgr.CheckDistance(this, this.Owner, SIEGE_WEAPON_CONTROLE_DISTANCE))
 			{
 				Owner.Out.SendMessage("You are too far from your siege equipment to control it any longer!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
@@ -456,17 +455,12 @@ namespace DOL.GS
 		}
 		public override bool Interact(GamePlayer player)
 		{
+			if (!base.Interact(player))
+				return false;
+
 			if (Owner == player)
 				return false;
 
-			if (!GameServer.ServerRules.IsSameRealm(player, this, true))
-				return false;
-
-			if (!WorldMgr.CheckDistance(this, player, WorldMgr.INTERACT_DISTANCE))
-			{
-				player.Out.SendMessage("You are too far from siege equipment to control it!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return false;
-			}
 			TakeControl(player);
 			return true;
 		}

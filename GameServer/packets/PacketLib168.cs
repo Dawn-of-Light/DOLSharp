@@ -1046,11 +1046,18 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendRiding(GameObject rider, GameObject steed, bool dismount)
 		{
+			int slot = 0;
+			if (steed is GameNPC && rider is GamePlayer && dismount == false)
+			{
+				slot = (steed as GameNPC).RiderSlot(rider as GamePlayer);
+			}
+			if (slot == -1)
+				log.Error("SendRiding error, slot is -1 with rider " + rider.Name + " steed " + steed.Name);
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.Riding));
 			pak.WriteShort((ushort)rider.ObjectID);
 			pak.WriteShort((ushort)steed.ObjectID);
 			pak.WriteByte((byte)(dismount ? 0x00 : 0x01));
-			pak.WriteByte(0x00);
+			pak.WriteByte((byte)slot);
 			pak.WriteShort(0x00);
 			SendTCP(pak);
 		}
@@ -2882,7 +2889,8 @@ namespace DOL.GS.PacketHandler
 			pak.WriteInt((uint)obj.X);
 			pak.WriteInt((uint)obj.Y);
 			pak.WriteShort(obj.Model);
-			pak.WriteShort(obj.Type());
+			int flag = (obj.Type() | (obj.Realm == 3 ? 0x40 : obj.Realm << 4) | obj.Level << 9);
+			pak.WriteShort((ushort)flag);
 			pak.WriteInt(0);//(0x0002-for Ship,0x7D42-for catapult,0x9602,0x9612,0x9622-for ballista)
 			pak.WriteInt(0);
 			pak.WritePascalString(obj.Name);

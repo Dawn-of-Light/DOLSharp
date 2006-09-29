@@ -789,14 +789,11 @@ namespace DOL.GS.Keeps
 		{
 
 			LastAttackedByEnemyTick = 0;
-			//we announce the change of realm
-			string realmstr = GlobalConstants.RealmToName(realm);
-			foreach (GameClient cl in WorldMgr.GetAllPlayingClients())
-			{
-				cl.Player.Out.SendMessage("The Forces of " + realmstr + " have captured " + this.Name + "!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-			}
 
 			Realm = (byte)realm;
+
+			PlayerMgr.BroadcastCapture(this);
+
 			Level = 0;
 			KeepType = eKeepType.Melee;
 			//if a guild holds the keep, we release it
