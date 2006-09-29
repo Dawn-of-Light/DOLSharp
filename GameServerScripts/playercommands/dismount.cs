@@ -29,7 +29,7 @@ namespace DOL.GS.Scripts
 	{
 		public int OnCommand(GameClient client, string[] args)
 		{
-			if (!client.Player.IsRiding())
+			if (!client.Player.IsRiding)
 			{
 				if (client.Player.IsOnHorse)
 					client.Player.IsOnHorse = false;

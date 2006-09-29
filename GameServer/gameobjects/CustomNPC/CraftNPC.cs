@@ -81,7 +81,7 @@ namespace DOL.GS
 
 			if (player.GetCraftingSkillValue(TheCraftingSkill)%100 == 99)
 			{
-				player.IncreaseCraftingSkill(TheCraftingSkill, 1);
+				player.GainCraftingSkill(TheCraftingSkill, 1);
 				SayTo(player, eChatLoc.CL_PopupWindow, "You have been promoted to "+player.CraftTitle+".");
 				player.Out.SendUpdateCraftingSkills();
 			}

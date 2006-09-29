@@ -368,7 +368,7 @@ namespace DOL.GS
 							{
 								if (player.GetCraftingSkillValue(eCraftingSkill.ClothWorking) < player.GetCraftingSkillValue(player.CraftingPrimarySkill)) // max secondary skill cap == primary skill
 								{
-									player.IncreaseCraftingSkill(eCraftingSkill.ClothWorking, 1);
+									player.GainCraftingSkill(eCraftingSkill.ClothWorking, 1);
 								}
 								break;
 							}
@@ -377,7 +377,7 @@ namespace DOL.GS
 							{
 								if (player.GetCraftingSkillValue(eCraftingSkill.LeatherCrafting) < player.GetCraftingSkillValue(player.CraftingPrimarySkill)) // max secondary skill cap == primary skill
 								{
-									player.IncreaseCraftingSkill(eCraftingSkill.LeatherCrafting, 1);
+									player.GainCraftingSkill(eCraftingSkill.LeatherCrafting, 1);
 								}
 								break;
 							}
@@ -386,7 +386,7 @@ namespace DOL.GS
 							{
 								if (player.GetCraftingSkillValue(eCraftingSkill.MetalWorking) < player.GetCraftingSkillValue(player.CraftingPrimarySkill)) // max secondary skill == primary skill
 								{
-									player.IncreaseCraftingSkill(eCraftingSkill.MetalWorking, 1);
+									player.GainCraftingSkill(eCraftingSkill.MetalWorking, 1);
 								}
 								break;
 							}
@@ -395,7 +395,7 @@ namespace DOL.GS
 							{
 								if (player.GetCraftingSkillValue(eCraftingSkill.WoodWorking) < player.GetCraftingSkillValue(player.CraftingPrimarySkill)) // max secondary skill == primary skill
 								{
-									player.IncreaseCraftingSkill(eCraftingSkill.WoodWorking, 1);
+									player.GainCraftingSkill(eCraftingSkill.WoodWorking, 1);
 								}
 								break;
 							}

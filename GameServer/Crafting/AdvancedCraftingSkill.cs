@@ -70,7 +70,7 @@ namespace DOL.GS
 					{
 						if (player.GetCraftingSkillValue(eCraftingSkill.GemCutting) < player.GetCraftingSkillValue(player.CraftingPrimarySkill)) // max secondary skill cap == primary skill
 						{
-							if(Util.Chance(gainPointChance)) player.IncreaseCraftingSkill(eCraftingSkill.GemCutting, 1);
+							if(Util.Chance(gainPointChance)) player.GainCraftingSkill(eCraftingSkill.GemCutting, 1);
 						}
 						break;
 					}

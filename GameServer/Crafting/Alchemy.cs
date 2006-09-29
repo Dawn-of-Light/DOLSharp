@@ -132,7 +132,7 @@ namespace DOL.GS
 
 			if(Util.Chance( CalculateChanceToGainPoint(player, item)))
 			{
-				player.IncreaseCraftingSkill(eCraftingSkill.Alchemy, 1);
+				player.GainCraftingSkill(eCraftingSkill.Alchemy, 1);
 				player.Out.SendUpdateCraftingSkills();
 			}
 		}

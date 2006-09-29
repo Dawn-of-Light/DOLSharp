@@ -64,7 +64,7 @@ namespace DOL.GS
 			{
 				if(Util.Chance( CalculateChanceToGainPoint(player, item)))
 				{
-					player.IncreaseCraftingSkill(eCraftingSkill.HerbalCrafting, 1);
+					player.GainCraftingSkill(eCraftingSkill.HerbalCrafting, 1);
 					player.Out.SendUpdateCraftingSkills();
 				}
 			}

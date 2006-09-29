@@ -17,31 +17,53 @@
  *
  */
 using System;
+using System.Collections;
+using System.Reflection;
+
 using DOL.AI.Brain;
+using DOL.GS.PacketHandler;
+
+using log4net;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// 
-	/// </summary>
-	public class GameHorse : GameMob
+	/*
+	 * These boats are very fast, and can carry up to sixteen passengers.
+	 * You have thirty seconds to board the boat before it sets sail.
+	 * You can board the boat by double clicking on it,
+	 * typing /vboard or using your `Get key' with the boat targeted. 
+	 * You will automatically leave the boat when it reaches its destination,
+	 * but if you wish to leave before then, just type `/disembark'.
+	 * or press the jump key
+	 */
+	public class GameHorseBoat : GameMovingObject
 	{
-		public GameHorse() : base()
-		{			
-			Model = 450;
-			MaxSpeedBase = 600;
-			Size = 63;
-			Level = 55;
-			Name = "horse";
+		/// <summary>
+		/// Defines a logger for this class.
+		/// </summary>
+		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
+		public GameHorseBoat()
+			: base()
+		{
+			Model = 2650;
+			Level = 0;
+			Name = "boat";
+			MaxSpeedBase = 1000;
 			BlankBrain brain = new BlankBrain();
 			SetOwnBrain(brain);
+		}
+
+		public override ushort Type()
+		{
+			return 2;
 		}
 
 		public override int MAX_PASSENGERS
 		{
 			get
 			{
-				return 1;
+				return 16;
 			}
 		}
 
@@ -49,7 +71,15 @@ namespace DOL.GS
 		{
 			get
 			{
-				return 0;
+				return 1;
+			}
+		}
+
+		public override int MaxSpeed
+		{
+			get
+			{
+				return 1000;
 			}
 		}
 	}

@@ -452,6 +452,8 @@
     <Compile Include="GameClient.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="gameobjects\CustomNPC\GameBoatStableMaster.cs" />
+    <Compile Include="gameobjects\GameHorseBoat.cs" />
     <Compile Include="gameobjects\CustomNPC\CraftNPC.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -549,6 +551,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="gameutils\GameNPCInventory.cs" />
+    <Compile Include="gameutils\NewsMgr.cs" />
     <Compile Include="keeps\Gameobjects\FrontiersPortalStone.cs" />
     <Compile Include="keeps\Gameobjects\Guards\Archer.cs" />
     <Compile Include="keeps\Gameobjects\Guards\Caster.cs" />

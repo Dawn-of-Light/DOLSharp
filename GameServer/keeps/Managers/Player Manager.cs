@@ -34,7 +34,9 @@ namespace DOL.GS.Keeps
 		/// <param name="keep">The keep object</param>
 		public static void BroadcastCapture(AbstractGameKeep keep)
 		{
-			BroadcastMessage(string.Format("The forces of {0} have captured {1}!", GlobalConstants.RealmToName((eRealm)keep.Realm), keep.Name), eRealm.None);
+			string message = string.Format("The forces of {0} have captured {1}!", GlobalConstants.RealmToName((eRealm)keep.Realm), keep.Name);
+			BroadcastMessage(message, eRealm.None);
+			NewsMgr.CreateNews(message, 0, eNewsType.RvRGlobal, false);
 		}
 
 		/// <summary>
@@ -44,7 +46,9 @@ namespace DOL.GS.Keeps
 		/// <param name="realm">The raizing realm</param>
 		public static void BroadcastRaize(AbstractGameKeep keep, byte realm)
 		{
-			BroadcastMessage(string.Format("{1} has been razed by the forces of {0}!", GlobalConstants.RealmToName((eRealm)realm), keep.Name), eRealm.None);
+			string message = string.Format("{1} has been razed by the forces of {0}!", GlobalConstants.RealmToName((eRealm)realm), keep.Name);
+			BroadcastMessage(message, eRealm.None);
+			NewsMgr.CreateNews(message, 0, eNewsType.RvRGlobal, false);
 		}
 
 		/// <summary>

@@ -1421,17 +1421,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Holds the rider of this NPC as weak reference
 		/// </summary>
-		protected WeakReference m_rider;
-		/// <summary>
-		/// Gets the rider of this mob
-		/// </summary>
-		public GamePlayer Rider
-		{
-			get
-			{
-				return m_rider.Target as GamePlayer;
-			}
-		}
+		public GamePlayer[] Riders;
 
 		/// <summary>
 		/// This function is called when a rider mounts this npc
@@ -1444,10 +1434,14 @@ namespace DOL.GS
 		/// <returns>true if mounted successfully</returns>
 		public virtual bool RiderMount(GamePlayer rider, bool forced)
 		{
-			if (Rider != null) return false;
+			int exists = RiderArrayLocation(rider);
+			if (exists != -1)
+				return false;
+
 			Notify(GameNPCEvent.RiderMount, this, new RiderMountEventArgs(rider, this));
-			m_rider.Target = rider;
-			Rider.Steed = this;
+			int slot = GetFreeArrayLocation();
+			Riders[slot] = rider;
+			rider.Steed = this;
 			return true;
 		}
 
@@ -1459,13 +1453,75 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="forced">if true, the dismounting can't be prevented by handlers</param>
 		/// <returns>true if dismounted successfully</returns>
-		public virtual bool RiderDismount(bool forced)
+		public virtual bool RiderDismount(bool forced, GamePlayer player)
 		{
-			if (Rider == null) return false;
-			Notify(GameNPCEvent.RiderDismount, this, new RiderDismountEventArgs(Rider, this));
-			Rider.Steed = null;
-			m_rider.Target = null;
+			if (Riders.Length <= 0)
+				return false;
+
+			int slot = RiderArrayLocation(player);
+			if (slot < 0)
+			{
+				return false;
+			}
+			Riders[slot] = null;
+
+			Notify(GameNPCEvent.RiderDismount, this, new RiderDismountEventArgs(player, this));
+			player.Steed = null;
+
 			return true;
+		}
+
+		public int GetFreeArrayLocation()
+		{
+			for (int i = 0; i < MAX_PASSENGERS; i++)
+			{
+				if (Riders[i] == null)
+					return i;
+			}
+			return -1;
+		}
+
+		public int RiderArrayLocation(GamePlayer player)
+		{
+			for (int i = 0; i < MAX_PASSENGERS; i++)
+			{
+				if (Riders[i] == player)
+					return i;
+			}
+			return -1;
+		}
+
+		public int RiderSlot(GamePlayer player)
+		{
+			int location = RiderArrayLocation(player);
+			if (location == -1)
+				return location;
+			return location + SLOT_OFFSET;
+		}
+
+		public virtual int MAX_PASSENGERS
+		{
+			get { return 0; }
+		}
+
+		public virtual int SLOT_OFFSET
+		{
+			get { return 0; }
+		}
+
+		public ArrayList CurrentRiders
+		{
+			get
+			{
+				ArrayList list = new ArrayList();
+				for (int i = 0; i < MAX_PASSENGERS; i++)
+				{
+					GamePlayer player = Riders[i];
+					if (player != null)
+						list.Add(player);
+				}
+				return list;
+			}
 		}
 		#endregion
 		#region Add/Remove/Create/Remove/Update
@@ -1480,6 +1536,14 @@ namespace DOL.GS
 				if (player == null) continue;
 				player.Out.SendObjectUpdate(this);
 				player.CurrentUpdateArray[ObjectID - 1] = true;
+
+				if (MAX_PASSENGERS > 0)
+				{
+					foreach (GamePlayer rider in CurrentRiders)
+					{
+						player.Out.SendRiding(rider, this, false);
+					}
+				}
 			}
 			m_lastUpdateTickCount = (uint)Environment.TickCount;
 		}
@@ -1505,6 +1569,9 @@ namespace DOL.GS
 		public override bool AddToWorld()
 		{
 			if (!base.AddToWorld()) return false;
+			if (MAX_PASSENGERS > 0)
+				Riders = new GamePlayer[MAX_PASSENGERS];
+
 			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
 				if (player == null) continue;
@@ -1528,6 +1595,7 @@ namespace DOL.GS
 				Mana = MaxMana;
 			else if (Mana > 0 && MaxMana > 0)
 				StartPowerRegeneration();
+
 			return true;
 		}
 
@@ -1537,6 +1605,14 @@ namespace DOL.GS
 		/// <returns>true if the npc has been successfully removed</returns>
 		public override bool RemoveFromWorld()
 		{
+			if (MAX_PASSENGERS > 0)
+			{
+				foreach (GamePlayer player in CurrentRiders)
+				{
+					player.DismountSteed(true);
+				}
+			}
+
 			if (ObjectState == eObjectState.Active)
 			{
 				foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
@@ -1548,6 +1624,7 @@ namespace DOL.GS
 				ABrain brain = Brain;
 				brain.Stop();
 			}
+
 			return true;
 		}
 
@@ -1794,9 +1871,40 @@ namespace DOL.GS
 				player.Out.SendMessage(GetName(0, true) + " gives you a dirty look.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
+			if (MAX_PASSENGERS > 1)
+			{
+				string name = "";
+				if (this is GameHorseBoat)
+					name = "boat";
+				if (this is GameSiegeRam)
+					name = "ram";
+
+				if (RiderSlot(player) != -1)
+				{
+					player.Out.SendMessage("You are already riding this " + name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					return false;
+				}
+
+				if (GetFreeArrayLocation() == -1)
+				{
+					player.Out.SendMessage("This " + name + " is full.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					return false;
+				}
+
+				if (player.IsRiding)
+				{
+					player.DismountSteed(true);
+				}
+
+				if (player.IsOnHorse)
+				{
+					player.IsOnHorse = false;
+				}
+
+				player.MountSteed(this, true);
+			}
 			return true;
 		}
-
 		/// <summary>
 		/// Format "say" message and send it to target in popup window
 		/// </summary>
@@ -2222,7 +2330,6 @@ namespace DOL.GS
 		{
 			m_brainSync = m_brains.SyncRoot;
 			m_followTarget = new WeakRef(null);
-			m_rider = new WeakRef(null);
 
 			m_size = 50; //Default size
 			m_targetX = 0;

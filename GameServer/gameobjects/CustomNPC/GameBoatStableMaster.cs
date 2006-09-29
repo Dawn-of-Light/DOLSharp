@@ -29,8 +29,7 @@ namespace DOL.GS
 	/// <summary>
 	/// Stable master that sells and takes horse route tickes
 	/// </summary>
-	[NPCGuildScript("Stable Master", eRealm.None)]
-	public class GameStableMaster : GameMerchant
+	public class GameBoatStableMaster : GameMerchant
 	{
 		/// <summary>
 		/// Defines a logger for this class.
@@ -40,8 +39,9 @@ namespace DOL.GS
 		/// <summary>
 		/// Constructs a new stable master
 		/// </summary>
-		public GameStableMaster()
+		public GameBoatStableMaster()
 		{
+			Flags ^= (int)eFlags.PEACE;
 		}
 
 		/// <summary>
@@ -53,49 +53,49 @@ namespace DOL.GS
 		/// <returns>true if the item was successfully received</returns>
 		public override bool ReceiveItem(GameLiving source, InventoryItem item)
 		{
-			if(source==null || item==null) return false;
+			if (source == null || item == null) return false;
 
-			if(source is GamePlayer)
+			if (source is GamePlayer)
 			{
 				GamePlayer player = (GamePlayer)source;
 
-				if (item.Name.StartsWith("ticket to ") && item.Item_Type==40)
+				if (item.Name.StartsWith("Ticket to ") && item.Item_Type == 40)
 				{
+					foreach (GameNPC npc in GetNPCsInRadius(1500))
+					{
+						if (npc is GameHorseBoat)
+						{
+							player.Out.SendMessage("Please wait until the boat has departed before ordering a new one", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+							return false;
+						}
+					}
+
 					String destination = item.Name.Substring(10);
-					PathPoint path = MovementMgr.Instance.LoadPath(this.Name+"=>"+destination);
+					PathPoint path = MovementMgr.Instance.LoadPath(this.Name + "=>" + destination);
 					if (path != null)
-					{	
+					{
 						player.Inventory.RemoveCountFromStack(item, 1);
 
-						GameHorse horse = new GameHorse();
-						foreach (GameNPC npc in GetNPCsInRadius(400))
-						{ // Allow for SI mounts -Echostorm
-							if (npc.Name == "horse" || npc.Name == "Dragon Fly" || npc.Name == "Ampheretere" || npc.Name == "Gryphon")
-							{
-								horse.Model = npc.Model;
-								horse.Size = npc.Size;
-								horse.Name = npc.Name;
-								horse.Level = npc.Level;
-								//horse.Realm = npc.Realm;
-								break;
-							}
-						}
-						horse.Realm = source.Realm;
-						horse.X = path.X;
-						horse.Y = path.Y;
-						horse.Z = path.Z;
-						horse.CurrentRegion = CurrentRegion;
-						horse.Heading = Point2D.GetHeadingToLocation(path, path.Next);
-						horse.AddToWorld();
-						horse.CurrentWayPoint = path;
-						GameEventMgr.AddHandler(horse, GameNPCEvent.PathMoveEnds, new DOLEventHandler(OnHorseAtPathEnd));					
-						new MountHorseAction(player, horse).Start(400);
-						new HorseRideAction(horse).Start(4000);
+						GameHorseBoat boat = new GameHorseBoat();
+						boat.Name = "Boat to " + destination;
+						boat.Realm = source.Realm;
+						boat.X = path.X;
+						boat.Y = path.Y;
+						boat.Z = path.Z;
+						boat.CurrentRegion = CurrentRegion;
+						boat.Heading = Point2D.GetHeadingToLocation(path, path.Next);
+						boat.AddToWorld();
+						boat.CurrentWayPoint = path;
+						GameEventMgr.AddHandler(boat, GameNPCEvent.PathMoveEnds, new DOLEventHandler(OnHorseAtPathEnd));
+						//new MountHorseAction(player, boat).Start(400);
+						new HorseRideAction(boat).Start(30 * 1000);
+
+						player.Out.SendMessage("I have summoned a boat to travel to " + destination + " you have 30 seconds to board before it departs.", eChatType.CT_System, eChatLoc.CL_PopupWindow);
 						return true;
 					}
 					else
 					{
-						player.Out.SendMessage("My horse doesn't know the way to "+destination+" yet.", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+						player.Out.SendMessage("I don't know the way to " + destination + " yet.", eChatType.CT_System, eChatLoc.CL_PopupWindow);
 					}
 				}
 			}
@@ -114,13 +114,6 @@ namespace DOL.GS
 			if (!(o is GameNPC)) return;
 			GameNPC npc = (GameNPC)o;
 			npc.StopMoving();
-			foreach (GamePlayer player in Riders)
-			{
-				if (player != null)
-				{
-					player.DismountSteed(true);
-				}
-			}
 			npc.RemoveFromWorld();
 		}
 
@@ -139,7 +132,8 @@ namespace DOL.GS
 			/// </summary>
 			/// <param name="actionSource">The action source</param>
 			/// <param name="horse">The target horse</param>
-			public MountHorseAction(GamePlayer actionSource, GameNPC horse) : base(actionSource)
+			public MountHorseAction(GamePlayer actionSource, GameNPC horse)
+				: base(actionSource)
 			{
 				if (horse == null)
 					throw new ArgumentNullException("horse");
@@ -165,7 +159,8 @@ namespace DOL.GS
 			/// Constructs a new HorseStartAction
 			/// </summary>
 			/// <param name="actionSource"></param>
-			public HorseRideAction(GameNPC actionSource) : base(actionSource)
+			public HorseRideAction(GameNPC actionSource)
+				: base(actionSource)
 			{
 			}
 

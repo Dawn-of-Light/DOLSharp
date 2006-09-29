@@ -166,7 +166,7 @@ namespace DOL.GS.Keeps
 			set { m_flag = value; }
 		}
 
-		public void Invoke(GamePlayer player, int payType, GameKeepHookPoint hookpoint)
+		public void Invoke(GamePlayer player, int payType, GameKeepHookPoint hookpoint, GameKeepComponent component)
 		{
 			if (!hookpoint.IsFree)
 			{
@@ -226,6 +226,8 @@ namespace DOL.GS.Keeps
 			hookPointObj.X = hookpoint.X;
 			hookPointObj.Y = hookpoint.Y;
 			hookPointObj.Z = hookpoint.Z;
+			if (hookPointObj is GameSiegeCauldron)
+				(hookPointObj as GameSiegeCauldron).Component = component;
 			if (hookPointObj is GameMob)
 				((GameMob)hookPointObj).RespawnInterval = 0;//do not respawn
 			hookPointObj.AddToWorld();

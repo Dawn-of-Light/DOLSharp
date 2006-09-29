@@ -251,20 +251,24 @@ namespace DOL.GS.Scripts
 				return 0;
 			}
 
-			if (client.Player.TargetObject == null || !(client.Player.TargetObject is GameStableMaster))
+			GameMerchant merchant = null;
+			if (client.Player.TargetObject is GameStableMaster)
+				merchant = client.Player.TargetObject as GameStableMaster;
+			if (client.Player.TargetObject is GameBoatStableMaster)
+				merchant = client.Player.TargetObject as GameBoatStableMaster;
+			if (merchant == null)
 			{
 				DisplayError(client, "You must select a stable master to assign a horseroute!");
 				return 0;
 			}
-			string target = String.Join(" ", args, 2, args.Length - 2);
-			GameStableMaster stable = (GameStableMaster)client.Player.TargetObject;
+			string target = String.Join(" ", args, 2, args.Length - 2);;
 			bool ticketFound = false;
-			string ticket = "ticket to " + target;
-			if (stable.TradeItems != null)
+			string ticket = "Ticket to " + target;
+			if (merchant.TradeItems != null)
 			{
-				foreach (ItemTemplate template in stable.TradeItems.GetAllItems().Values)
+				foreach (ItemTemplate template in merchant.TradeItems.GetAllItems().Values)
 				{
-					if (template != null && template.Name == ticket)
+					if (template != null && template.Name.ToLower() == ticket.ToLower())
 					{
 						ticketFound = true;
 						break;
@@ -277,7 +281,7 @@ namespace DOL.GS.Scripts
 				DisplayError(client, "Stablemaster has no {0}!", ticket);
 				return 0;
 			}
-			MovementMgr.Instance.SavePath(stable.Name + "=>" + target, path);
+			MovementMgr.Instance.SavePath(merchant.Name + "=>" + target, path);
 			return 1;
 		}
 
