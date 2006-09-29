@@ -49,7 +49,7 @@ namespace DOL.GS.PacketHandler.v168
 			else if (hookpointID > 0x20) inventory = HookPointInventory.BlueHPInventory;//npc
 			else inventory = HookPointInventory.RedHPInventory;//guard
 
-			inventory.GetItem(itemslot).Invoke(client.Player,payType, component.HookPoints[hookpointID] as GameKeepHookPoint);
+			inventory.GetItem(itemslot).Invoke(client.Player,payType, component.HookPoints[hookpointID] as GameKeepHookPoint, component);
 
 			return 1;
 		}

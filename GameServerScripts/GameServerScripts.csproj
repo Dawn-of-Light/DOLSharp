@@ -290,6 +290,7 @@
     <Compile Include="gmcommands\path.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="gmcommands\siegeweapon.cs" />
     <Compile Include="gmcommands\speed.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -387,6 +388,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="playercommands\namemount.cs" />
+    <Compile Include="playercommands\news.cs" />
     <Compile Include="playercommands\noqueue.cs">
       <SubType>Code</SubType>
     </Compile>

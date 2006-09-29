@@ -177,7 +177,7 @@ namespace DOL.GS
 
 			if(Util.Chance( CalculateChanceToGainPoint(player, item)))
 			{
-				player.IncreaseCraftingSkill(eCraftingSkill.Fletching, 1);
+				player.GainCraftingSkill(eCraftingSkill.Fletching, 1);
 				player.Out.SendUpdateCraftingSkills();
 			}
 		}

@@ -105,6 +105,22 @@ namespace DOL.GS.GameEvents
 				GuildName = "Race Horse";
 			}
 
+			public override int MAX_PASSENGERS
+			{
+				get
+				{
+					return 1;
+				}
+			}
+
+			public override int SLOT_OFFSET
+			{
+				get
+				{
+					return 0;
+				}
+			}
+
 			//Property HorseState
 			public RaceHorseState HorseState
 			{
@@ -117,7 +133,7 @@ namespace DOL.GS.GameEvents
 			{
 				if (!base.Interact(player))
 					return false;
-				if (Rider != null)
+				if (Riders.Length >= 1)
 					return false;
 
 				player.MountSteed(this, false);
@@ -181,13 +197,13 @@ namespace DOL.GS.GameEvents
 			//Called when our rider wants to dismount
 			//If it returns true, the dismounting is allowed
 			//else the dismounting is prevented
-			public override bool RiderDismount(bool forced)
+			public override bool RiderDismount(bool forced, GamePlayer player)
 			{
 				//If the race has started and our horse is racing we 
 				//prevent the dismounting and print a message
-				if (!forced && Rider != null && IsRaceStarted() && HorseState == RaceHorseState.Racing)
+				if (!forced && player != null && IsRaceStarted() && HorseState == RaceHorseState.Racing)
 				{
-					Rider.Out.SendMessage(
+					player.Out.SendMessage(
 						"You can't dismount during the race! Do you want to break all your bones?",
 						eChatType.CT_System,
 						eChatLoc.CL_SystemWindow);
@@ -203,7 +219,7 @@ namespace DOL.GS.GameEvents
 				//Set our horsestate correctly
 				m_horseState = RaceHorseState.WalkingToGrazing;
 				//Return true -> allow the dismounting
-				return base.RiderDismount(forced);
+				return base.RiderDismount(forced, player);
 			}
 
 			public override void Notify(DOLEvent e, object sender, EventArgs args)
@@ -468,8 +484,10 @@ namespace DOL.GS.GameEvents
 			for (int i = 0; i < m_horses.Length; i++)
 				if (m_horses[i] != null)
 				{
-					if (m_horses[i].Rider != null)
-						m_horses[i].Rider.DismountSteed(true);
+					foreach (GamePlayer player in m_horses[i].Riders)
+					{
+						player.DismountSteed(true);
+					}
 					m_horses[i].Delete();
 				}
 		}
@@ -547,39 +565,41 @@ namespace DOL.GS.GameEvents
 		{
 			lock (m_horses)
 			{
-				GamePlayer ply = horse.Rider;
-				//Dismount the rider
-				horse.Rider.DismountSteed(true);
-				//Unregister the horse from the race and free
-				//the startnumber
-				UnregisterRacingHorse(horse);
-				//If a player was sitting on the horse
-				//(could be that player /quit while on horse)
-				if (ply != null)
+				foreach (GamePlayer ply in horse.Riders)
 				{
-					//increase the ranking and output message
-					m_currentRanking++;
-					foreach (GamePlayer player in horse.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-						player.Out.SendMessage(
-							ply.Name + " has finished the horse race and came in at " + m_currentRanking + ". position!",
-							eChatType.CT_Broadcast,
-							eChatLoc.CL_SystemWindow);
-				}
+					//Dismount the rider
+					ply.DismountSteed(true);
+					//Unregister the horse from the race and free
+					//the startnumber
+					UnregisterRacingHorse(horse);
+					//If a player was sitting on the horse
+					//(could be that player /quit while on horse)
+					if (ply != null)
+					{
+						//increase the ranking and output message
+						m_currentRanking++;
+						foreach (GamePlayer player in horse.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+							player.Out.SendMessage(
+								ply.Name + " has finished the horse race and came in at " + m_currentRanking + ". position!",
+								eChatType.CT_Broadcast,
+								eChatLoc.CL_SystemWindow);
+					}
 
 
-				//Check if all horses are back in finish yet
-				int count = 0;
-				for (int i = 0; i < 4; i++)
-				{
-					if (m_horses[i].HorseState != RaceHorse.RaceHorseState.Racing)
-						count++;
-				}
+					//Check if all horses are back in finish yet
+					int count = 0;
+					for (int i = 0; i < 4; i++)
+					{
+						if (m_horses[i].HorseState != RaceHorse.RaceHorseState.Racing)
+							count++;
+					}
 
-				//If all horses have finished, reset the race
-				if (count == 4)
-				{
-					m_raceStarted = false;
-					m_currentRanking = 0;
+					//If all horses have finished, reset the race
+					if (count == 4)
+					{
+						m_raceStarted = false;
+						m_currentRanking = 0;
+					}
 				}
 			}
 		}

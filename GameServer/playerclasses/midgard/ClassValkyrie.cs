@@ -28,7 +28,8 @@ namespace DOL.GS.Scripts
 	public class ClassValkyrie : ClassViking
 	{
 
-		public ClassValkyrie() : base()
+		public ClassValkyrie()
+			: base()
 		{
 			m_profession = "House of Odin";
 			m_specializationMultiplier = 20;
@@ -40,17 +41,18 @@ namespace DOL.GS.Scripts
 			m_baseHP = 720;
 		}
 
-		public override string GetTitle(int level) {
-			if (level>=50) return "Odin's Valkyrie";
-			if (level>=45) return "TODO";
-			if (level>=40) return "TODO";
-			if (level>=35) return "Protector of Valhalla ";
-			if (level>=30) return "TODO";
-			if (level>=25) return "TODO";
-			if (level>=20) return "TODO";
-			if (level>=15) return "Servant of Midgard ";
-			if (level>=10) return "Handmaiden ";
-			if (level>=5) return "Apprentice Handmaiden";
+		public override string GetTitle(int level)
+		{
+			if (level >= 50) return "Odin's Valkyrie";
+			if (level >= 45) return "TODO";
+			if (level >= 40) return "TODO";
+			if (level >= 35) return "Protector of Valhalla ";
+			if (level >= 30) return "TODO";
+			if (level >= 25) return "TODO";
+			if (level >= 20) return "TODO";
+			if (level >= 15) return "Servant of Midgard ";
+			if (level >= 10) return "Handmaiden ";
+			if (level >= 5) return "Apprentice Handmaiden";
 			return "None";
 		}
 
@@ -66,14 +68,19 @@ namespace DOL.GS.Scripts
 
 			if (player.Level >= 5)
 			{
+				player.RemoveSpecialization(Specs.Axe);
+				player.RemoveSpecialization(Specs.Hammer);
 				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Shields));
 				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Spear));
 				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Sword));
+				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Mending));
 				player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Swords));
 				player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Spears));
 				player.AddAbility(SkillBase.GetAbility(Abilities.Guard, 1));
 				player.AddSpecialization(SkillBase.GetSpecialization(Specs.OdinsWill));
 				player.AddSpellLine(SkillBase.GetSpellLine("Odin's Will"));
+				player.AddSpellLine(SkillBase.GetSpellLine("Mending"));
+				player.AddSpellLine(SkillBase.GetSpellLine("Valkyrie Mending Spec"));
 			}
 			if (player.Level >= 7)
 			{

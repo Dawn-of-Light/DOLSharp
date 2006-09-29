@@ -155,7 +155,7 @@ namespace DOL.GS
 
 			if (Util.Chance(CalculateChanceToGainPoint(player, item)))
 			{
-				player.IncreaseCraftingSkill(eCraftingSkill.SiegeCrafting, 1);
+				player.GainCraftingSkill(eCraftingSkill.SiegeCrafting, 1);
 				player.Out.SendUpdateCraftingSkills();
 			}
 		}

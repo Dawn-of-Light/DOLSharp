@@ -62,7 +62,7 @@ namespace DOL.GS
 			{
 				if(Util.Chance( CalculateChanceToGainPoint(player, item)))
 				{
-					player.IncreaseCraftingSkill(eCraftingSkill.Jewellery, 1);
+					player.GainCraftingSkill(eCraftingSkill.Jewellery, 1);
 					player.Out.SendUpdateCraftingSkills();
 				}
 			}
