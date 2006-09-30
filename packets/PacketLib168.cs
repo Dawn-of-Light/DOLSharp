@@ -654,7 +654,7 @@ namespace DOL.GS.PacketHandler
 			ushort ZOffsetInTargetZone = 0;
 
 			int speed = 0;
-			byte targetZone = 0;
+			ushort targetZone = 0;
 			byte flags = 0;
 			int targetOID = 0;
 			if (obj is GameNPC)
@@ -686,7 +686,7 @@ namespace DOL.GS.PacketHandler
 							XOffsetInTargetZone = (ushort)(npc.TargetX - tz.XOffset);
 							YOffsetInTargetZone = (ushort)(npc.TargetY - tz.YOffset);
 							ZOffsetInTargetZone = (ushort)(npc.TargetZ);
-							targetZone = (byte)tz.ID;
+							targetZone = tz.ID;
 						}
 					}
 
@@ -728,9 +728,10 @@ namespace DOL.GS.PacketHandler
 			if (obj is GameLiving)
 				pak.WriteByte((obj as GameLiving).HealthPercent);
 			else pak.WriteByte(0);
+			flags |= (byte)(((z.ID & 0x100) >> 6) | ((targetZone & 0x100) >> 5)); 
 			pak.WriteByte(flags);
 			pak.WriteByte((byte)z.ID);
-			pak.WriteByte(targetZone);
+			pak.WriteByte((byte)targetZone);
 			SendUDP(pak);
 
 			if (obj is GameNPC)
