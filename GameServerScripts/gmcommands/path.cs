@@ -30,7 +30,7 @@ namespace DOL.GS.Scripts
 		"There are several path functions",
 		"/path create - creates a temp path in ram",
 		"/path load <pathname> - loads a path from db",
-		"/path add [speedlimit] - adds a point at the end of the current path",
+		"/path add [speedlimit] [wait time in second] - adds a point at the end of the current path",
 		"/path save <pathname> - saves a path to db",
 		"/path travel - makes a target mob travel the current path",
 		"/path assignhorseroute <Destination> - sets the current path as horseroute on stablemaster",
@@ -98,6 +98,7 @@ namespace DOL.GS.Scripts
 			}
 
 			int speedlimit = 1000;
+            int waittime = 0;
 			if (args.Length > 2)
 			{
 				try
@@ -109,9 +110,22 @@ namespace DOL.GS.Scripts
 					DisplayError(client, "No valid speedlimit '{0}'!", args[2]);
 					return 0;
 				}
+
+                if (args.Length > 3)
+                {
+                    try
+                    {
+                        waittime = int.Parse(args[3]);
+                    }
+                    catch
+                    {
+                        DisplayError(client, "No valid wait time '{0}'!", args[3]);
+                    }
+                }
 			}
 
 			PathPoint newpp = new PathPoint(client.Player.X, client.Player.Y, client.Player.Z, speedlimit, path.Type);
+            newpp.WaitTime = waittime*10;
 			path.Next = newpp;
 			newpp.Prev = path;
 			client.Player.TempProperties.setProperty(TEMP_PATH_LAST, newpp);
