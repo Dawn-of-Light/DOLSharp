@@ -43,7 +43,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets the template npc model
 		/// </summary>
-		ushort Model { get; }
+		string Model { get; }
 
 		/// <summary>
 		/// Gets the template npc size
@@ -63,7 +63,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets the template npc inventory
 		/// </summary>
-		IGameInventory Inventory { get; }
+		string Inventory { get; }
 
 		/// <summary>
 		/// Gets the template npc melee damage type

@@ -12,8 +12,8 @@ namespace DOL.GS
 
 		const int PAD_AREA_RADIUS = 200;
 
-		PadArea m_area;
-		ArrayList m_mountedRelics = new ArrayList();
+		PadArea m_area = null;
+		GameRelic m_mountedRelic = null;
 
 		#region constructor
 		public GameRelicPad()
@@ -128,12 +128,12 @@ namespace DOL.GS
 		/// <returns></returns>
 		public bool IsMountedHere(GameRelic relic)
 		{
-			return m_mountedRelics.Contains(relic);
+			return m_mountedRelic == relic;
 		}
 
 		public void MountRelic(GameRelic relic)
 		{
-			m_mountedRelics.Add(relic);
+			m_mountedRelic = relic;
 
 			if (relic.CurrentCarrier != null)
 			{
@@ -145,6 +145,7 @@ namespace DOL.GS
 					cl.Out.SendMessage(GlobalConstants.RealmToName((eRealm)relic.CurrentCarrier.Realm) + " has captured the " + relic.Name, eChatType.CT_ScreenCenterSmaller, eChatLoc.CL_SystemWindow);
 					cl.Out.SendMessage(message + "\n" + message + "\n" + message, eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 				}
+				NewsMgr.CreateNews(message, 0, eNewsType.RvRGlobal, false);
 
 				/* Increasing of CapturedRelics */
 				//select targets to increase CapturedRelics
@@ -164,7 +165,7 @@ namespace DOL.GS
 
 		public void RemoveRelic(GameRelic relic)
 		{
-			m_mountedRelics.Remove(relic);
+			m_mountedRelic = null;
 
 			if (relic.CurrentCarrier != null)
 			{
@@ -174,17 +175,20 @@ namespace DOL.GS
 					if (cl.Player.ObjectState != eObjectState.Active) continue;
 					cl.Out.SendMessage(message + "\n" + message + "\n" + message, eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 				}
+				NewsMgr.CreateNews(message, 0, eNewsType.RvRGlobal, false);
 
 				Notify(RelicPadEvent.RelicStolen, this, new RelicPadEventArgs(relic.CurrentCarrier, relic));
 			}
 		}
 
-		public void RemoveAllRelics()
+		public void RemoveRelic()
 		{
-			lock (m_mountedRelics.SyncRoot)
-			{
-				m_mountedRelics.Clear();
-			}
+			m_mountedRelic = null;
+		}
+
+		public GameRelic MountedRelic
+		{
+			get { return m_mountedRelic; }
 		}
 
 		/// <summary>
@@ -203,9 +207,14 @@ namespace DOL.GS
 			public override void OnPlayerEnter(GamePlayer player)
 			{
 				GameRelic relicOnPlayer = player.TempProperties.getObjectProperty(GameRelic.PLAYER_CARRY_RELIC_WEAK, null) as GameRelic;
-				if (relicOnPlayer != null && player.Realm == m_parent.Realm
-					&& relicOnPlayer.RelicType == m_parent.PadType)
+				if (relicOnPlayer == null)
+					return;
+				if (player.Realm == m_parent.Realm
+					&& relicOnPlayer.RelicType == m_parent.PadType
+					&& m_parent.MountedRelic == null)
+				{
 					relicOnPlayer.RelicPadTakesOver(m_parent);
+				}
 			}
 		}
 

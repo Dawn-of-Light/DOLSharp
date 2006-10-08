@@ -40,7 +40,7 @@ namespace DOL.GS
 		protected int m_templateId;
 		protected string m_name;
 		protected string m_guildName;
-		protected ushort m_model;
+		protected string m_model;
 		protected byte m_size;
 		protected short m_maxSpeed;
 		protected byte m_parryChance;
@@ -48,7 +48,7 @@ namespace DOL.GS
 		protected byte m_blockChance;
 		protected byte m_leftHandSwingChance;
 		protected uint m_flags;
-		protected IGameInventory m_inventory;
+		protected string m_inventory;
 		protected eDamageType m_meleeDamageType;
 		protected int m_strength;
 		protected int m_constitution;
@@ -139,25 +139,14 @@ namespace DOL.GS
 
 			if (data.Ghost)
 			{
-				m_flags |= 0;
+				m_flags = (uint)GameNPC.eFlags.TRANSPARENT;
 			}
 
 			m_meleeDamageType = (eDamageType)data.MeleeDamageType;
 			if (data.MeleeDamageType == 0)
 				m_meleeDamageType = eDamageType.Slash;
 
-			GameNpcInventoryTemplate temp = new GameNpcInventoryTemplate();
-			if (data.EquipmentTemplateID != "" && !temp.LoadFromDatabase(data.EquipmentTemplateID))
-			{
-				temp = null;
-				if (log.IsErrorEnabled)
-					log.ErrorFormat("Failed to load mob template equipment '{0}'", data.EquipmentTemplateID);
-			}
-			else
-			{
-				temp = temp.CloseTemplate();
-			}
-			m_inventory = temp;
+            m_inventory = data.EquipmentTemplateID;
 		}
 
 		public NpcTemplate(GameMob mob)
@@ -167,7 +156,7 @@ namespace DOL.GS
 			m_templateId = GameServer.Database.GetObjectCount(typeof(DBNpcTemplate));
 			m_name = mob.Name;
 			m_guildName = mob.GuildName;
-			m_model = mob.Model;
+			m_model = mob.Model.ToString();
 			m_size = mob.Size;
 			m_maxSpeed = (short)mob.MaxSpeed;
 			m_parryChance = mob.ParryChance;
@@ -214,7 +203,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets the template npc model
 		/// </summary>
-		public ushort Model
+		public string Model
 		{
 			get { return m_model; }
 			set { m_model = value; }
@@ -246,10 +235,10 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets the template npc inventory
 		/// </summary>
-		public IGameInventory Inventory
+        // We want Inventory to be readonly so that it cannot be messed up. 
+		public string Inventory
 		{
 			get { return m_inventory; }
-			set { m_inventory = value; }
 		}
 		/// <summary>
 		/// Gets the template npc melee damage type

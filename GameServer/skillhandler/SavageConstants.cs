@@ -28,7 +28,7 @@ namespace DOL.GS.SkillHandler
 
             double max = player.MaxHealth;
             int take = (int)(max * penalty);
-            if (player.Health - take < player.MaxHealth / 10)
+            if (player.Health - take < 1)
                 return;
             player.TakeDamage(player, eDamageType.Natural, take, 0);
 		}
@@ -38,9 +38,9 @@ namespace DOL.GS.SkillHandler
             double penalty = 0;
             switch (level)
             {
-                case -1:
-                case -2: penalty = 0.03; break;
-                case -3:
+                case -1: penalty = 0.01; break;
+                case -2: penalty = 0.02; break;
+                case -3: penalty = 0.03; break;
                 case -4: penalty = 0.04; break;
                 case -5: penalty = 0.05; break;
             }
