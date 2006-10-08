@@ -73,7 +73,7 @@ namespace DOL.GS
 				//then we remove all relics from the pads
 				foreach (GameRelicPad pad in m_relicPads)
 				{
-					pad.RemoveAllRelics();
+					pad.RemoveRelic();
 				}
 
 
@@ -276,8 +276,10 @@ namespace DOL.GS
 				return true;
 			IEnumerable list = getRelics(player.Realm, relic.RelicType);
 			foreach (GameRelic curRelic in list)
+			{
 				if (curRelic.Realm == curRelic.OriginalRealm)
 					return true;
+			}
 
 			return false;
 		}

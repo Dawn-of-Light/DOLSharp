@@ -496,6 +496,19 @@ namespace DOL.GS.Keeps
 				player.Out.SendMessage("Your guild already owns a keep.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 				return false;
 			}
+
+			if (player.PlayerGroup != null)
+			{
+				foreach (GamePlayer p in player.PlayerGroup)
+				{
+					AbstractGameKeep keep = KeepMgr.getKeepCloseToSpot(player.CurrentRegionID, player, WorldMgr.VISIBILITY_DISTANCE);
+					if (keep == null || keep != this)
+					{
+						player.Out.SendMessage("Not all group members are near the keep.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						return false;
+					}
+				}
+			}
 			return true;
 		}
 

@@ -1523,6 +1523,7 @@
     </Compile>
     <Compile Include="spells\EnduranceHealSpellHandler.cs" />
     <Compile Include="spells\PowerHealSpellHandler.cs" />
+    <Compile Include="spells\Savage\HealthToFatigue.cs" />
     <Compile Include="spells\Savage\SavageCrushResistHandler.cs" />
     <Compile Include="spells\Savage\SavageDamageHandler.cs" />
     <Compile Include="spells\Savage\SavageEvadeHandler.cs" />

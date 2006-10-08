@@ -43,7 +43,7 @@ namespace DOL.GS
 			for (int type = 0; type <= 2; type++)
 			{
 				int index = 0;
-				DBNews[] newsList = (DBNews[])GameServer.Database.SelectObjects(typeof(DBNews), "`Type` = '" + type + "' AND (`Realm` = '0' OR `Realm` = '" + client.Player.Realm + "') ORDER BY `Type`, `CreationDate` DESC LIMIT 5");
+				DBNews[] newsList = (DBNews[])GameServer.Database.SelectObjects(typeof(DBNews), "`Type` = '" + type + "' AND (`Realm` = '0' OR `Realm` = '" + client.Player.Realm + "') ORDER BY `CreationDate` DESC LIMIT 5");
 
 				foreach (DBNews news in newsList)
 				{
