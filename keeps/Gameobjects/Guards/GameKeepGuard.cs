@@ -167,6 +167,17 @@ namespace DOL.GS.Keeps
 				if (result == eAttackResult.OutOfRange)
 				{
 					guard.StopAttack();
+					lock (guard.Attackers.SyncRoot)
+					{
+						foreach (GameLiving living in guard.Attackers)
+						{
+							if (WorldMgr.GetDistance(guard, living) <= guard.AttackRange)
+							{
+								guard.StartAttack(living);
+								return;
+							}
+						}
+					}
 					if (WorldMgr.GetDistance(guard, guard.TargetObject) <= 2000)
 					{
 						if (guard.MaxSpeedBase == 0 || (guard is GuardArcher && !guard.BeenAttackedRecently))
@@ -421,16 +432,24 @@ result == GameLiving.eAttackResult.Parried)
 		/// <param name="ad"></param>
 		public override void OnAttackedByEnemy(AttackData ad)
 		{
+			//this is for static archers only
 			if (MaxSpeedBase == 0)
 			{
+				//if we are currently fighting in melee
 				if (ActiveWeaponSlot == eActiveWeaponSlot.Standard ||
 	ActiveWeaponSlot == eActiveWeaponSlot.TwoHanded)
 				{
+					//if we are targeting something, and the distance to the target object is greater than the attack range
 					if (TargetObject != null && WorldMgr.GetDistance(TargetObject, this) > AttackRange)
 					{
+						//stop the attack
 						StopAttack();
+						//if the distance to the attacker is less than the attack range
 						if (WorldMgr.GetDistance(this, ad.Attacker) <= AttackRange)
+						{
+							//attack it
 							StartAttack(ad.Attacker);
+						}
 					}
 				}
 			}
