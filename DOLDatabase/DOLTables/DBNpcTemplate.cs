@@ -38,7 +38,7 @@ namespace DOL.Database
 		private int m_templateId;
 		private string m_name = "";
 		private string m_guildName = "";
-		private ushort m_model;
+		private string m_model;
 		private byte m_size = 50;
 		private short m_maxSpeed = 50;
 		private string m_equipmentTemplateID = "";
@@ -125,7 +125,7 @@ namespace DOL.Database
 		/// Model
 		/// </summary>
 		[DataElement(AllowDbNull = false)]
-		public ushort Model
+		public string Model
 		{
 			get { return m_model; }
 			set
