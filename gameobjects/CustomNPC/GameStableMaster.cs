@@ -114,13 +114,6 @@ namespace DOL.GS
 			if (!(o is GameNPC)) return;
 			GameNPC npc = (GameNPC)o;
 			npc.StopMoving();
-			foreach (GamePlayer player in Riders)
-			{
-				if (player != null)
-				{
-					player.DismountSteed(true);
-				}
-			}
 			npc.RemoveFromWorld();
 		}
 
