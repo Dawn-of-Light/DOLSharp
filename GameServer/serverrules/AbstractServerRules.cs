@@ -216,10 +216,17 @@ namespace DOL.GS.ServerRules
 		{
 			if (target is GameKeepDoor || target is GameKeepComponent)
 			{
-				if (spell.Target != "Self" && spell.Target != "Group")
+				switch (spell.Target.ToLower())
 				{
-					MessageToLiving(caster, "You can't cast on a keep component!");
-					return false;
+					case "self":
+					case "group":
+					case "area":
+					case "summon": break;
+					default:
+						{
+							MessageToLiving(caster, "You can't cast on a keep component!");
+							return false;
+						}
 				}
 			}
 			return true;

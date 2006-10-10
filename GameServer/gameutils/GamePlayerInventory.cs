@@ -543,38 +543,38 @@ namespace DOL.GS
 					{
 						//horse slots
 						case eInventorySlot.HorseBarding:
-							if (fromItem.Item_Type != (int)eInventorySlot.HorseBarding)
+							if (toItem.Item_Type != (int)eInventorySlot.HorseBarding)
 							{
 								valid = false;
-								m_player.Out.SendMessage("You can't put " + fromItem.GetName(0, true) + " in your active barding slot!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								m_player.Out.SendMessage("You can't put " + toItem.GetName(0, true) + " in your active barding slot!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							}
 							/*
-							if (valid && fromItem.Level > 0 && fromItem.Level >= m_player.ChampionLevel)
+							if (valid && toItem.Level > 0 && toItem.Level >= m_player.ChampionLevel)
 							{
 								valid = false;
-								m_player.Out.SendMessage("You can't put " + fromItem.GetName(0, true) + " in your active barding slot!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								m_player.Out.SendMessage("You can't put " + toItem.GetName(0, true) + " in your active barding slot!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							}
 							 */
 							break;
 						case eInventorySlot.HorseArmor:
-							if (fromItem.Item_Type != (int)eInventorySlot.HorseArmor)
+							if (toItem.Item_Type != (int)eInventorySlot.HorseArmor)
 							{
 								valid = false;
-								m_player.Out.SendMessage("You can't put " + fromItem.GetName(0, true) + " in your active horse armor slot!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								m_player.Out.SendMessage("You can't put " + toItem.GetName(0, true) + " in your active horse armor slot!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							}
 							/*
-							if (valid && fromItem.Level > 0 && fromItem.Level >= m_player.ChampionLevel)
+							if (valid && toItem.Level > 0 && toItem.Level >= m_player.ChampionLevel)
 							{
 								valid = false;
-								m_player.Out.SendMessage("You can't put " + fromItem.GetName(0, true) + " in your active barding slot!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								m_player.Out.SendMessage("You can't put " + toItem.GetName(0, true) + " in your active barding slot!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							}
 							 */
 							break;
 						case eInventorySlot.Horse:
-							if (fromItem.Item_Type != (int)eInventorySlot.Horse)
+							if (toItem.Item_Type != (int)eInventorySlot.Horse)
 							{
 								valid = false;
-								m_player.Out.SendMessage("You can't put " + fromItem.GetName(0, true) + " in your active mount slot!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								m_player.Out.SendMessage("You can't put " + toItem.GetName(0, true) + " in your active mount slot!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							}
 							break;
 						//weapon slots

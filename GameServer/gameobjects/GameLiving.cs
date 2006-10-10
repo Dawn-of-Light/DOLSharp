@@ -719,7 +719,17 @@ namespace DOL.GS
 		public virtual long LastAttackTick
 		{
 			get { return m_lastAttackTick; }
-			set { m_lastAttackTick = value; }
+			set
+			{ 
+				m_lastAttackTick = value;
+				if (this is GameNPC)
+				{
+					if ((this as GameNPC).Brain is IControlledBrain)
+					{
+						((this as GameNPC).Brain as IControlledBrain).Owner.LastAttackTick = value;
+					}
+				}
+			}
 		}
 
 		/// <summary>
@@ -745,7 +755,17 @@ namespace DOL.GS
 		public virtual long LastAttackedByEnemyTick
 		{
 			get { return m_lastAttackedByEnemyTick; }
-			set { m_lastAttackedByEnemyTick = value; }
+			set 
+			{
+				m_lastAttackedByEnemyTick = value;
+				if (this is GameNPC)
+				{
+					if ((this as GameNPC).Brain is IControlledBrain)
+					{
+						((this as GameNPC).Brain as IControlledBrain).Owner.LastAttackedByEnemyTick = value;
+					}
+				}
+			}
 		}
 		/// <summary>
 		/// Gets the swing time left
@@ -1460,7 +1480,8 @@ namespace DOL.GS
 				if (brain != null)
 				{
 					GamePlayer owner = brain.Owner;
-					if (owner != null && owner.ControlledNpc != null && ad.Attacker == owner.ControlledNpc.Body)
+					//theurgists and animists need the following commented out
+					if (owner != null /*&& owner.ControlledNpc != null && ad.Attacker == owner.ControlledNpc.Body*/)
 					{
 						excludes.Add(owner);
 						switch (ad.AttackResult)

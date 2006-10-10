@@ -105,11 +105,12 @@ namespace DOL.GS.Spells
 			GameSpellEffect effect = CreateSpellEffect(target, effectiveness);
 			if (Spell.Duration < 65535)
 			{
-                Caster.GetSpotFromHeading(64, out x, out y);
+				Caster.GetSpotFromHeading(64, out x, out y);
 
-				BlankBrain controlledBrain = new BlankBrain();
+				ControlledNpc controlledBrain = new ControlledNpc(player);
 
-				GameMob summoned = new GameMob(template);
+				GameSummonedPet summoned = new GameSummonedPet(template);
+				controlledBrain.WalkState = eWalkState.Stay;
 				summoned.SetOwnBrain(controlledBrain);
 				summoned.X = x;
 				summoned.Y = y;
@@ -127,7 +128,7 @@ namespace DOL.GS.Spells
 			}
 			else
 			{
-                target.GetSpotFromHeading(64, out x, out y);
+				target.GetSpotFromHeading(64, out x, out y);
 
 				ControlledNpc controlledBrain = new ControlledNpc(player);
 
@@ -165,10 +166,10 @@ namespace DOL.GS.Spells
 			return 0;
 		}
 
-        public override int CalculateSpellResistChance(GameLiving target)
-        {
-            return 0;
-        }
+		public override int CalculateSpellResistChance(GameLiving target)
+		{
+			return 0;
+		}
 
 		/// <summary>
 		/// Called when owner release NPC
