@@ -1275,6 +1275,54 @@ namespace DOL.GS.PacketHandler
 			SendTCP(pak);
 		}
 
+		protected virtual void SendTaskInfo()
+		{ }
+
+		protected string BuildTaskString()
+		{
+			AbstractTask task = m_gameClient.Player.Task;
+			AbstractMission pMission = m_gameClient.Player.Mission;
+
+			AbstractMission gMission = null;
+			if (m_gameClient.Player.PlayerGroup != null)
+				gMission = m_gameClient.Player.PlayerGroup.Mission;
+
+			AbstractMission rMission = null;
+
+			//all the task info is sent in name field
+
+			string taskStr = "";
+			if (task == null)
+				taskStr = "You have no current personal task.\n";
+			else taskStr = "[" + task.Name + "] " + task.Description + ".\n";
+
+			string personalMission = "";
+			if (pMission != null)
+				personalMission = "[" + pMission.Name + "] " + pMission.Description + ".\n";
+
+			string groupMission = "";
+			if (gMission != null)
+				groupMission = "[" + gMission.Name + "] " + gMission.Description + ".\n";
+
+			string realmMission = "";
+			if (rMission != null)
+				realmMission = "[" + rMission.Name + "]" + " " + rMission.Description + ".\n";
+
+			string name = taskStr + personalMission + groupMission + realmMission;
+
+			if (name.Length > ushort.MaxValue)
+			{
+				if (log.IsWarnEnabled) log.Warn("Task packet name is too long for 1.71 clients (" + name.Length + ") '" + name + "'");
+				name = name.Substring(0, byte.MaxValue);
+			}
+			if (name.Length > 2048 - 10)
+			{
+				name = name.Substring(0, 2048 - 10 - name.Length);
+			}
+
+			return name;
+		}
+
 		public virtual void SendQuestUpdate(AbstractQuest quest)
 		{
 			int questIndex = 0;

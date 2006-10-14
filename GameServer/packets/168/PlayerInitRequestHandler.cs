@@ -177,6 +177,9 @@ namespace DOL.GS.PacketHandler.v168
 					}
 				}
 
+				if (player.IsUnderwater)
+					player.IsDiving = true;
+
 				player.Client.ClientState = GameClient.eClientState.Playing;
 			}
 		}

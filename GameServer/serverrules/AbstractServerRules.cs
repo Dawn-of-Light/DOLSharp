@@ -220,12 +220,15 @@ namespace DOL.GS.ServerRules
 				{
 					case "self":
 					case "group":
-					case "area":
-					case "summon": break;
+					case "area": break;
 					default:
 						{
-							MessageToLiving(caster, "You can't cast on a keep component!");
-							return false;
+							if (spell.SpellType.ToLower() != "summon")
+							{
+								MessageToLiving(caster, "You can't cast on a keep component!");
+								return false;
+							}
+							break;
 						}
 				}
 			}

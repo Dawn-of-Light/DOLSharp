@@ -42,6 +42,17 @@ namespace DOL.GS
 		GamePlayer m_leader = null;
 		bool m_autosplitLoot = true;
 		bool m_autosplitCoins = true;
+		private Quests.AbstractMission m_mission = null;
+		public Quests.AbstractMission Mission
+		{
+			get { return m_mission; }
+			set
+			{
+				m_mission = value;
+				foreach (GamePlayer player in this.m_groupMembers)
+					player.Out.SendQuestListUpdate();
+			}
+		}
 
 		/// <summary>
 		/// Constructs a new PlayerGroup

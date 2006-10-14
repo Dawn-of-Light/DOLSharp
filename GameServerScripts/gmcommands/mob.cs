@@ -370,6 +370,7 @@ namespace DOL.GS.Scripts
 					{
 						try
 						{
+							targetMob.AddAttacker(client.Player);
 							targetMob.Die(client.Player);
 							targetMob.XPGainers.Clear();
 							client.Out.SendMessage("Mob '" + targetMob.Name + "' killed", eChatType.CT_System, eChatLoc.CL_SystemWindow);
