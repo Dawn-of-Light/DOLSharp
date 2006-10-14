@@ -31,11 +31,6 @@ namespace DOL.GS.Scripts
 		{
 			if (client.Player.TargetObject != null)
 			{
-//				if (client.Player.TargetObject is GameLiving)
-//				{
-//					client.Out.SendMessage("This command only works on objects.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-//					return 1;
-//				}
 				int range = WorldMgr.GetDistance(client.Player, client.Player.TargetObject);
 				client.Out.SendMessage("Range to target: " + range + " units." + (client.Player.TargetInView ? "" : " (Target not visible)"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}

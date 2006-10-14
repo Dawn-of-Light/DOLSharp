@@ -42,7 +42,7 @@ namespace DOL.GS
 		/// <summary>
 		/// The ID of the Area eg. 15 ( == index in Region.m_areas array)
 		/// </summary>
-		protected ushort m_ID;		
+		protected ushort m_ID;
 
 		/// <summary>
 		/// The description of the Area eg. "Camelot Hills"
@@ -59,10 +59,10 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="desc"></param>
 		public AbstractArea(string desc)
-		{			
-			m_Description = desc;			
-		}		
-	
+		{
+			m_Description = desc;
+		}
+
 		/// <summary>
 		/// Returns the ID of this Area
 		/// </summary>
@@ -77,7 +77,7 @@ namespace DOL.GS
 		/// </summary>
 		public string Description
 		{
-			get { return m_Description; }			
+			get { return m_Description; }
 		}
 
 		/// <summary>
@@ -93,31 +93,31 @@ namespace DOL.GS
 
 		public void UnRegisterPlayerEnter(DOLEventHandler callback)
 		{
-			GameEventMgr.RemoveHandler(this,AreaEvent.PlayerEnter,callback);
+			GameEventMgr.RemoveHandler(this, AreaEvent.PlayerEnter, callback);
 		}
 
 		public void UnRegisterPlayerLeave(DOLEventHandler callback)
-		{	
-			GameEventMgr.RemoveHandler(this,AreaEvent.PlayerLeave,callback);
+		{
+			GameEventMgr.RemoveHandler(this, AreaEvent.PlayerLeave, callback);
 		}
 
 		public void RegisterPlayerEnter(DOLEventHandler callback)
 		{
-			GameEventMgr.AddHandler(this,AreaEvent.PlayerEnter,callback);
-		}		
+			GameEventMgr.AddHandler(this, AreaEvent.PlayerEnter, callback);
+		}
 
 		public void RegisterPlayerLeave(DOLEventHandler callback)
-		{	
-			GameEventMgr.AddHandler(this,AreaEvent.PlayerLeave,callback);
-		}	
+		{
+			GameEventMgr.AddHandler(this, AreaEvent.PlayerLeave, callback);
+		}
 		#endregion
-		
+
 		/// <summary>
 		/// Checks wether area intersects with given zone
 		/// </summary>
 		/// <param name="zone"></param>
 		/// <returns></returns>
-		public abstract bool IsIntersectingZone(Zone zone);	
+		public abstract bool IsIntersectingZone(Zone zone);
 
 		/// <summary>
 		/// Checks wether given spot is within areas boundaries or not
@@ -138,10 +138,10 @@ namespace DOL.GS
 		/// <param name="player"></param>
 		public virtual void OnPlayerLeave(GamePlayer player)
 		{
-			if (Description!=null && Description!="")
-				player.Out.SendMessage("(Region) You have left "+Description+"!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+			if (Description != null && Description != "")
+				player.Out.SendMessage("(Region) You have left " + Description + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
-			player.Notify(AreaEvent.PlayerLeave,this,new AreaEventArgs(this,player));
+			player.Notify(AreaEvent.PlayerLeave, this, new AreaEventArgs(this, player));
 		}
 
 		/// <summary>
@@ -150,9 +150,9 @@ namespace DOL.GS
 		/// <param name="player"></param>
 		public virtual void OnPlayerEnter(GamePlayer player)
 		{
-			if (Description!=null && Description!="")
+			if (Description != null && Description != "")
 			{
-				player.Out.SendMessage("(Region) You have entered "+Description+"!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage("(Region) You have entered " + Description + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				player.Out.SendMessage(Description, eChatType.CT_ScreenCenterSmaller, eChatLoc.CL_SystemWindow);
 			}
 			if (Sound != 0)

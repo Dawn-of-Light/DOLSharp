@@ -62,7 +62,7 @@ namespace DOL.Database
 			}
 		}
 
-		[PrimaryKey]
+		[DataElement(AllowDbNull = false)]
 		public DateTime CreationDate
 		{
 			get
@@ -76,7 +76,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull = false, Index = true)]
+		[DataElement(AllowDbNull = false)]
 		public byte Type
 		{
 			get

@@ -206,6 +206,9 @@ namespace DOL.GS
 		{
 			if (IsAlive) return;
 
+			if (this.Brain is IControlledBrain)
+				return;
+
 			int respawnInt = RespawnInterval;
 			if (respawnInt > 0)
 			{

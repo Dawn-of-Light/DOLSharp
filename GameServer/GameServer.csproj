@@ -511,9 +511,6 @@
     <Compile Include="gameobjects\GameStaticItemTimed.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="gameobjects\GameSummonedPet.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="gameobjects\SiegeWeapon\gameSiegeBallista.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -583,6 +580,8 @@
     <Compile Include="propertycalc\CriticalArcheryHitChanceCalculator.cs" />
     <Compile Include="propertycalc\CriticalMeleeHitChanceCalculator.cs" />
     <Compile Include="propertycalc\ResistPiercePropertyCalculator.cs" />
+    <Compile Include="quests\Missions\AbstractKillMission.cs" />
+    <Compile Include="quests\Missions\AbstractMission.cs" />
     <Compile Include="realmabilities\handlers\CamouflageSpecHandler.cs" />
     <Compile Include="realmabilities\handlers\ConcentrationAbility.cs" />
     <Compile Include="realmabilities\handlers\ToughnessAbility.cs" />
@@ -1381,32 +1380,32 @@
     <Compile Include="propertycalc\StyleDamagePercentCalculator.cs" />
     <Compile Include="propertycalc\TOABonusCalculator.cs" />
     <Compile Include="propertycalc\ToHitCalculator.cs" />
-    <Compile Include="quests\AbstractQuest.cs">
+    <Compile Include="quests\Quests\AbstractQuest.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="quests\AbstractQuestAction.cs" />
-    <Compile Include="quests\AbstractQuestRequirement.cs" />
-    <Compile Include="quests\AbstractQuestTrigger.cs" />
-    <Compile Include="quests\AbstractTask.cs">
+    <Compile Include="quests\Quests\AbstractQuestAction.cs" />
+    <Compile Include="quests\Quests\AbstractQuestRequirement.cs" />
+    <Compile Include="quests\Quests\AbstractQuestTrigger.cs" />
+    <Compile Include="quests\Tasks\AbstractTask.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="quests\BaseQuest.cs">
+    <Compile Include="quests\Quests\BaseQuest.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="quests\BaseQuestAction.cs" />
-    <Compile Include="quests\BaseQuestPart.cs" />
-    <Compile Include="quests\BaseQuestRequirement.cs" />
-    <Compile Include="quests\BaseQuestTrigger.cs" />
-    <Compile Include="quests\CraftTask.cs">
+    <Compile Include="quests\Quests\BaseQuestAction.cs" />
+    <Compile Include="quests\Quests\BaseQuestPart.cs" />
+    <Compile Include="quests\Quests\BaseQuestRequirement.cs" />
+    <Compile Include="quests\Quests\BaseQuestTrigger.cs" />
+    <Compile Include="quests\Tasks\CraftTask.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="quests\IQuestAction.cs" />
-    <Compile Include="quests\IQuestRequirement.cs" />
-    <Compile Include="quests\IQuestTrigger.cs" />
-    <Compile Include="quests\KillTask.cs">
+    <Compile Include="quests\Quests\IQuestAction.cs" />
+    <Compile Include="quests\Quests\IQuestRequirement.cs" />
+    <Compile Include="quests\Quests\IQuestTrigger.cs" />
+    <Compile Include="quests\Tasks\KillTask.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="quests\MoneyTask.cs">
+    <Compile Include="quests\Tasks\MoneyTask.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="realmabilities\handlers\AvoidanceOfMagicAbility.cs" />
@@ -1423,8 +1422,8 @@
     <Compile Include="realmabilities\handlers\SerenityAbility.cs" />
     <Compile Include="realmabilities\handlers\TrueshotAbility.cs" />
     <Compile Include="realmabilities\handlers\WildPowerAbility.cs" />
-    <Compile Include="quests\QuestBuilder.cs" />
-    <Compile Include="quests\QuestMgr.cs" />
+    <Compile Include="quests\Quests\QuestBuilder.cs" />
+    <Compile Include="quests\Quests\QuestMgr.cs" />
     <Compile Include="ResourceUtil.cs">
       <SubType>Code</SubType>
     </Compile>
