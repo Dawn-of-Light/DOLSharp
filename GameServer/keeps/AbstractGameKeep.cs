@@ -560,6 +560,7 @@ namespace DOL.GS.Keeps
 			m_changeLevelTimer.Callback = new RegionTimerCallback(ChangeLevelTimerCallback);
 			m_claimTimer = new RegionTimer(CurrentRegion.TimeManager);
 			m_claimTimer.Callback = new RegionTimerCallback(ClaimCallBack);
+			m_claimTimer.Interval = 60 * 60 * 1000;
 		}
 
 		/// <summary>
@@ -574,6 +575,7 @@ namespace DOL.GS.Keeps
 
 			if (this.Guild.BountyPoints < 50 * this.Level)
 			{
+				this.Guild.GainBountyPoints(-this.Guild.BountyPoints);
 				this.Release();
 				return 0;
 			}

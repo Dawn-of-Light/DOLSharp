@@ -44,7 +44,7 @@ namespace DOL.GS.Quests
 		/// <summary>
 		/// The temp property name for next check task millisecond
 		/// </summary>
-		protected const string CHECK_TASK_TICK = "checkTastTick";
+		protected const string CHECK_TASK_TICK = "checkTaskTick";
 
 		/// <summary>
 		/// Time player must wait after failed task check to get new chance for a task, in milliseconds

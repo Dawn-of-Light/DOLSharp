@@ -1392,6 +1392,7 @@ namespace DOL
 			/// <summary>
 			/// Gets/Sets the characters realm respecs available
 			/// </summary>
+			[DataElement(AllowDbNull = true)]
 			public int RespecAmountRealmSkill
 			{
 				get
@@ -1408,6 +1409,7 @@ namespace DOL
 			/// <summary>
 			/// Gets/Sets level respec flag
 			/// </summary>
+			[DataElement(AllowDbNull = true)]
 			public bool IsLevelRespecUsed
 			{
 				get { return m_isLevelRespecUsed; }

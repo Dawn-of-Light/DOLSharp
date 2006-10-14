@@ -485,11 +485,9 @@ namespace DOL.GS.PacketHandler
 
 		public override void SendQuestListUpdate()
 		{
-			int questIndex = 0;
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.QuestEntry));
-			pak.WriteInt(0);
-			SendTCP(pak);
-			questIndex++;
+			SendTaskInfo();
+
+			int questIndex = 1;
 			lock (m_gameClient.Player.QuestList)
 			{
 				foreach (AbstractQuest quest in m_gameClient.Player.QuestList)
@@ -552,6 +550,19 @@ namespace DOL.GS.PacketHandler
 				pak.WriteStringBytes(name); //Write Quest Name without trailing 0
 				pak.WriteStringBytes(desc); //Write Quest Description without trailing 0
 			}
+			SendTCP(pak);
+		}
+
+		protected override void SendTaskInfo()
+		{
+			string name = BuildTaskString();
+
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.QuestEntry));
+			pak.WriteByte(0); //index
+			pak.WriteShortLowEndian((ushort)name.Length);
+			pak.WriteByte((byte)0);
+			pak.WriteStringBytes(name); //Write Quest Name without trailing 0
+			pak.WriteStringBytes(""); //Write Quest Description without trailing 0
 			SendTCP(pak);
 		}
 

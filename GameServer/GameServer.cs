@@ -827,8 +827,10 @@ namespace DOL
 				}
 				catch (Exception e)
 				{
+					if (currentVersion == -1)
+						currentVersion = 1;
 					log.Error("Error checking/converting database version:", e);
-					xmlConfig[versionKey].Set(-Math.Abs(currentVersion));
+					xmlConfig[versionKey].Set(currentVersion);
 					xmlConfig[errorKey].Set(e.ToString());
 					versionFile.Refresh();
 					xmlConfig.Save(versionFile);
