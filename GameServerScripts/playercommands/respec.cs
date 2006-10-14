@@ -50,7 +50,8 @@ namespace DOL.GS.Scripts
 			{
 				// Check for respecs.
 				if (client.Player.RespecAmountAllSkill < 1
-					&& client.Player.RespecAmountSingleSkill < 1)
+					&& client.Player.RespecAmountSingleSkill < 1
+					&& client.Player.RespecAmountRealmSkill < 1)
 				{
 					client.Out.SendMessage("You don't seem to have any respecs available.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return 1;
