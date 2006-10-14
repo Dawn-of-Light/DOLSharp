@@ -109,7 +109,7 @@ namespace DOL.GS.Spells
 
 				ControlledNpc controlledBrain = new ControlledNpc(player);
 
-				GameSummonedPet summoned = new GameSummonedPet(template);
+				GameMob summoned = new GameMob(template);
 				controlledBrain.WalkState = eWalkState.Stay;
 				summoned.SetOwnBrain(controlledBrain);
 				summoned.X = x;
@@ -132,7 +132,7 @@ namespace DOL.GS.Spells
 
 				ControlledNpc controlledBrain = new ControlledNpc(player);
 
-				GameSummonedPet summoned = new GameSummonedPet(template);
+				GameMob summoned = new GameMob(template);
 				summoned.SetOwnBrain(controlledBrain);
 				summoned.X = x;
 				summoned.Y = y;

@@ -180,6 +180,8 @@ namespace DOL.GS
 			set { m_id = value; }
 		}
 
+		public Quests.AbstractMission Mission = null;
+
 		/// <summary>
 		/// Adds a player to the guild
 		/// </summary>

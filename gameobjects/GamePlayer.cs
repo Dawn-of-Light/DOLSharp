@@ -359,7 +359,6 @@ namespace DOL.GS
 
 		public void OnLinkdeath()
 		{
-			//DOLConsole.WriteSystem("OnLinkdeath "+Client.ClientState.ToString());
 			if (log.IsInfoEnabled)
 				log.Info("Player " + Name + "(" + Client.Account.Name + ") went linkdead!");
 
@@ -376,7 +375,7 @@ namespace DOL.GS
 
 			//Stop player if he's running....
 			CurrentSpeed = 0;
-			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
+			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
 				//Maybe there is a better solution?
 				player.Out.SendObjectRemove(this);
@@ -408,8 +407,10 @@ namespace DOL.GS
 
 			//Notify players in close proximity!
 			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
+			{
 				if (GameServer.ServerRules.IsAllowedToUnderstand(this, player))
 					player.Out.SendMessage(Name + " went linkdead!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+			}
 
 			//Notify other group members of this linkdead
 			if (PlayerGroup != null)
@@ -536,7 +537,6 @@ namespace DOL.GS
 		/// </summary>
 		public void UpdatePlayerStatus()
 		{
-			//DOLConsole.WriteLine("StatusUpdate: Health="+HealthPercent+" Mana="+ManaPercent+" Sitting="+Sitting+" Endu="+EndurancePercent+" Conc="+ConcentrationPercent+" Alive="+Alive);
 			Out.SendStatusUpdate();
 		}
 
@@ -7423,6 +7423,9 @@ namespace DOL.GS
 					}
 				}
 				UpdateEquipmentAppearance();
+
+				if (this.IsUnderwater)
+					this.IsDiving = true;
 			}
 			return true;
 		}
@@ -9718,6 +9721,25 @@ namespace DOL.GS
 
 		#endregion
 
+		#region Mission
+
+		private AbstractMission m_mission = null;
+
+		/// <summary>
+		/// Gets the personal mission
+		/// </summary>
+		public AbstractMission Mission
+		{
+			get { return m_mission; }
+			set 
+			{ 
+				m_mission = value;
+				this.Out.SendQuestListUpdate();
+			}
+		}
+
+		#endregion
+
 		#region Quest
 
 		/// <summary>
@@ -9816,6 +9838,13 @@ namespace DOL.GS
 			if (Task != null)
 				Task.Notify(e, sender, args);
 
+			if (Mission != null)
+				Mission.Notify(e, sender, args);
+
+			if (PlayerGroup != null && PlayerGroup.Mission != null)
+				PlayerGroup.Mission.Notify(e, sender, args);
+
+			//Realm mission will be handled on the capture event args
 		}
 
 		public override void Notify(DOLEvent e, object sender)

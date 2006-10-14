@@ -318,6 +318,8 @@ namespace DOL.GS.PacketHandler.v168
 							ch.RealmLevel = realmLevel;
 							ch.RealmSpecialtyPoints = realmLevel;
 						}
+						
+						ch.RespecAmountRealmSkill += 2;
 
 						//Save the character in the database
 						GameServer.Database.AddNewObject(ch);
