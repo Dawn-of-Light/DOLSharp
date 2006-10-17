@@ -41,6 +41,12 @@ namespace DOL.GS.DatabaseConverters
 		{
 			log.Info("Database Version 3 Convert Started");
 
+			if (GameServer.Instance.Configuration.DBType == DOL.Database.Connection.ConnectionType.DATABASE_XML)
+			{
+				log.Info("You have an XML database loaded, this converter will only work with MySQL, skipping");
+				return;
+			}
+
 			ItemTemplate[] templates = (ItemTemplate[])GameServer.Database.SelectObjects(typeof(ItemTemplate), "`SpellID` != '0'");
 
 			int count = 0;

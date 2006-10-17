@@ -550,6 +550,10 @@ namespace DOL
 				if (!InitComponent(LanguageMgr.Initialize(), "Multi Language Initialization"))
 					return false;
 
+				//Init the mail manager
+				InitComponent(Mail.MailMgr.Init(), "Mail Manager Initialization");
+
+
 				//---------------------------------------------------------------
 				//Try to initialize the WorldMgr in early state
 				RegionData[] regionsData;
@@ -1175,6 +1179,8 @@ namespace DOL
 			protected GameServer(GameServerConfiguration config)
 				: base(config)
 			{
+				
+
 				m_gmLog = LogManager.GetLogger(Configuration.GMActionsLoggerName);
 				m_cheatLog = LogManager.GetLogger(Configuration.CheatLoggerName);
 

@@ -64,18 +64,18 @@ namespace DOL.DOLServer.Actions
 
 		private static bool StartServer()
 		{
-			Console.WriteLine("Starting the server");			
+			Console.WriteLine("Starting the server");
 			bool start = GameServer.Instance.Start();
 			return start;
 		}
-		
+
 		public void OnAction(Hashtable parameters)
 		{
 			Console.WriteLine("Starting GameServer ... please wait a moment!");
 			FileInfo configFile;
-			if(parameters["-config"]!=null)
+			if (parameters["-config"] != null)
 			{
-				Console.WriteLine("Using config file: "+parameters["-config"]);
+				Console.WriteLine("Using config file: " + parameters["-config"]);
 				configFile = new FileInfo((String)parameters["-config"]);
 			}
 			else
@@ -83,15 +83,15 @@ namespace DOL.DOLServer.Actions
 				FileInfo currentAssembly = new FileInfo(Assembly.GetEntryAssembly().Location);
 				configFile = new FileInfo(currentAssembly.DirectoryName + Path.DirectorySeparatorChar + "config" + Path.DirectorySeparatorChar + "serverconfig.xml");
 			}
-			
+
 			GameServerConfiguration config = new GameServerConfiguration();
-			if(configFile.Exists)
+			if (configFile.Exists)
 			{
 				config.LoadFromXMLFile(configFile);
 			}
 			else
 			{
-				if(!configFile.Directory.Exists)
+				if (!configFile.Directory.Exists)
 					configFile.Directory.Create();
 				config.SaveToXMLFile(configFile);
 			}
@@ -99,15 +99,15 @@ namespace DOL.DOLServer.Actions
 			GameServer.CreateInstance(config);
 			StartServer();
 
-			bool run = true;				
-			while(run)
+			bool run = true;
+			while (run)
 			{
 				Console.Write("> ");
 				string line = Console.ReadLine();
 
 				switch (line.ToLower())
 				{
-					case "exit" : run = false; break;
+					case "exit": run = false; break;
 					case "stacktrace": log.Debug(PacketProcessor.GetConnectionThreadpoolStacks()); break;
 					default:
 						if (line.Length <= 0) break;
@@ -125,15 +125,15 @@ namespace DOL.DOLServer.Actions
 							{
 								Console.WriteLine("Unknown command: " + line);
 							}
-						} 
-						catch(Exception e)
+						}
+						catch (Exception e)
 						{
 							Console.WriteLine(e.ToString());
 						}
 						break;
 				}
 			}
-			if(GameServer.Instance!=null)
+			if (GameServer.Instance != null)
 				GameServer.Instance.Stop();
 		}
 	}
