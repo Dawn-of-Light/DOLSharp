@@ -672,6 +672,9 @@ result == GameLiving.eAttackResult.Parried)
 
 			this.GuildName = guildname;
 
+			if (this.Inventory == null)
+				return;
+
 			ushort emblem = 0;
 			if (guild != null)
 				emblem = guild.theGuildDB.Emblem;

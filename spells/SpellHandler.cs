@@ -1823,6 +1823,8 @@ namespace DOL.GS.Spells
 
 			}
 
+			#region this does nothing yet
+
 			double MoM = 1.0;
 			if (player != null)
 			{
@@ -1840,8 +1842,11 @@ namespace DOL.GS.Spells
 				}
 			}
 
+			#endregion
+
 			double TOADmg = m_caster.GetModified(eProperty.SpellDamage) * 0.01;
 
+			#region this does nothing yet
 			bool targetIsControlled = false;
 			if (target is GameNPC)
 			{
@@ -1850,6 +1855,7 @@ namespace DOL.GS.Spells
 				if (brain != null)
 					targetIsControlled = true;
 			}
+			#endregion
 
 			// apply effectiveness
 			finalDamage = (int)((finalDamage * effectiveness) * TOADmg);
@@ -1862,16 +1868,11 @@ namespace DOL.GS.Spells
 
 			}
 			
-
-			
 			int cdamage = 0;
 			if (finalDamage < 0)
 				finalDamage = 0;
 
-			int resistModifier = 0;
-
 			#region Resists
-			double afterResistDamage = finalDamage;
 			eProperty property = target.GetResistTypeForDamage(Spell.DamageType);
 			// The Daoc resistsystem is since 1.65 a 2category system.
 			// - First category are Item/Race/Buff/RvrBanners resists that are displayed in the characteroverview.
@@ -1882,7 +1883,7 @@ namespace DOL.GS.Spells
 			// - avi
 
 			#region Primary Resists
-			int primaryResistModifier = (int)(finalDamage * ad.Target.GetResist(Spell.DamageType) * -0.01);
+			int primaryResistModifier = -ad.Target.GetResist(Spell.DamageType);
 
 			/* Resist Pierce	
 			 * Resipierce is a special bonus which has been introduced with ToA.
@@ -1934,13 +1935,15 @@ namespace DOL.GS.Spells
 			}
 			#endregion
 
-			afterResistDamage = afterResistDamage * (1.0 -  primaryResistModifier * 0.01);
-			afterResistDamage = afterResistDamage * (1.0 - secondaryResistModifier * 0.01);
+			int resistModifier = 0;
+			//primary resists
+			resistModifier += (int)(finalDamage * (double)primaryResistModifier * - 0.01);
+			//secondary resists
+			resistModifier += (int)((finalDamage + (double)resistModifier) * (double)secondaryResistModifier * - 0.01);
+			//apply resists
+			finalDamage += resistModifier;
 			
 			#endregion
-
-			resistModifier = -(int)(finalDamage - afterResistDamage);
-			finalDamage += resistModifier; 
 
 
 			// cap to +200% of base damage
