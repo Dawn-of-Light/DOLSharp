@@ -494,6 +494,12 @@ namespace DOL.GS.Scripts
 					// --------------------------------------------------------------------------------
 					case "form":
 						{
+							//Fooljam fix end. Players can not create guild names with other characters than Alpha anymore.
+							if (args.Length < 3)
+							{
+								client.Out.SendMessage("Syntax error! /gc form <guildname>", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return 0;
+							}
 							//Fooljam fix begin. Players can not create guild names with other characters than Alpha anymore.
 							foreach (char c in args[2])
 							{
@@ -502,12 +508,6 @@ namespace DOL.GS.Scripts
 									client.Out.SendMessage("You can not create a guild with a such name. Only A-Z,a-z characters are allowed!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 									return 0;
 								}
-							}
-							//Fooljam fix end. Players can not create guild names with other characters than Alpha anymore.
-							if (args.Length < 3)
-							{
-								client.Out.SendMessage("Syntax error! /gc form <guildname>", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return 0;
 							}
 							string guildname = String.Join(" ", args, 2, args.Length - 2);
 							guildname = GameServer.Database.Escape(guildname);

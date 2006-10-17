@@ -143,6 +143,9 @@ namespace DOL.GS.Spells
 			Spell oldProcSpell = GetSpellFromLine(SubSpellLineName, (ushort)oldeffect.Spell.Value);
 			Spell newProcSpell = GetSpellFromLine(SubSpellLineName, (ushort)neweffect.Spell.Value);
 
+			if (oldProcSpell == null || newProcSpell == null)
+				return true;
+
 			// do not replace active proc with different type proc
 			if (oldProcSpell.SpellType != newProcSpell.SpellType) return false;
 
@@ -170,6 +173,8 @@ namespace DOL.GS.Spells
 				return false;
 			Spell oldProcSpell = GetSpellFromLine(SubSpellLineName, (ushort)Spell.Value);
 			Spell newProcSpell = GetSpellFromLine(SubSpellLineName, (ushort)compare.Spell.Value);
+			if (oldProcSpell == null || newProcSpell == null)
+				return true;
 			if (oldProcSpell.SpellType != newProcSpell.SpellType)
 				return false;
 			return true;

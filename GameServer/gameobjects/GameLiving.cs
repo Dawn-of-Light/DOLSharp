@@ -1790,7 +1790,7 @@ namespace DOL.GS
 						Interval = 100;
 						return; //Hold the shot another second
 					}
-					else if (rangeCheckresult == eCheckRangeAttackStateResult.Stop)
+					else if (rangeCheckresult == eCheckRangeAttackStateResult.Stop || attackTarget == null)
 					{
 						owner.StopAttack(); //Stop the attack
 						Stop();
@@ -4281,6 +4281,8 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 				{
 					foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 					{
+						if (player == null)
+							continue;
 						player.Out.SendLivingDataUpdate(this, false);
 					}
 				}

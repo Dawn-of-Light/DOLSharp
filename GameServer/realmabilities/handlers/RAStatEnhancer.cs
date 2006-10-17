@@ -19,6 +19,11 @@ namespace DOL.GS.RealmAbilities
 
 		eProperty m_property = eProperty.Undefined;
 
+		public eProperty Property
+		{
+			get { return m_property; }
+		}
+
 		public RAStatEnhancer(DBAbility dba, int level, eProperty property)
 			: base(dba, level)
 		{
@@ -58,7 +63,7 @@ namespace DOL.GS.RealmAbilities
 		/// send updates about the changes
 		/// </summary>
 		/// <param name="target"></param>
-		protected virtual void SendUpdates(GameLiving target)
+		public virtual void SendUpdates(GameLiving target)
 		{
 			GamePlayer player = target as GamePlayer;	// need new prop system to not worry about updates
 			if (player != null)
