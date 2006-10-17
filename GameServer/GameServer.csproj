@@ -548,6 +548,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="gameutils\GameNPCInventory.cs" />
+    <Compile Include="gameutils\MailMgr.cs" />
     <Compile Include="gameutils\NewsMgr.cs" />
     <Compile Include="keeps\Gameobjects\FrontiersPortalStone.cs" />
     <Compile Include="keeps\Gameobjects\Guards\Archer.cs" />

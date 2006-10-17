@@ -1280,6 +1280,8 @@ namespace DOL.GS.PacketHandler
 
 		protected string BuildTaskString()
 		{
+			if (m_gameClient.Player == null)
+				return "";
 			AbstractTask task = m_gameClient.Player.Task;
 			AbstractMission pMission = m_gameClient.Player.Mission;
 
@@ -1764,7 +1766,7 @@ namespace DOL.GS.PacketHandler
 								pak.WriteByte(0x01);
 							pak.WriteShort((ushort)value2);
 							//Item Price
-							pak.WriteInt((uint)((item.Gold * 10000) + (item.Silver * 100) + item.Copper));
+							pak.WriteInt((uint)item.Value);
 							pak.WriteShort((ushort)item.Model);
 							pak.WritePascalString(item.Name);
 						}

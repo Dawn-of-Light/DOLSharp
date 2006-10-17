@@ -52,17 +52,20 @@ namespace DOL.GS.Spells
 		public override void OnEffectStart(GameSpellEffect effect)
 		{
 			IPropertyIndexer bonuscat = GetBonusCategory(effect.Owner, BonusCategory1);
-			bonuscat[(int) Property1] += (int) (Spell.Value*effect.Effectiveness);
+
+			int amount = (int)(Spell.Value * effect.Effectiveness);
+
+			bonuscat[(int)Property1] += amount;
 
 			if (Property2 != eProperty.Undefined)
 			{
 				bonuscat = GetBonusCategory(effect.Owner, BonusCategory2);
-				bonuscat[(int) Property2] += (int) (Spell.Value*effect.Effectiveness);
+				bonuscat[(int)Property2] += amount;
 			}
 			if (Property3 != eProperty.Undefined)
 			{
 				bonuscat = GetBonusCategory(effect.Owner, BonusCategory3);
-				bonuscat[(int) Property3] += (int) (Spell.Value*effect.Effectiveness);
+				bonuscat[(int)Property3] += amount;
 			}
 
 			SendUpdates(effect.Owner);

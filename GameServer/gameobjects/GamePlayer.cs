@@ -2117,6 +2117,15 @@ namespace DOL.GS
 					{
 						respecPoints += ((RealmAbility)ab).CostForUpgrade(i);
 					}
+					if (ab is RAStatEnhancer)
+					{
+						RAStatEnhancer ra = ab as RAStatEnhancer;
+						for (int i = ab.Level; i > 0; i--)
+						{
+							BuffBonusCategory4[(int)ra.Property] -= ra.GetAmountForLevel(i);
+						}
+						ra.SendUpdates(this);
+					}
 					RemoveAbility(ab.KeyName);
 				}
 			}
