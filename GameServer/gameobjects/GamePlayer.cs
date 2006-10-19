@@ -5882,8 +5882,23 @@ namespace DOL.GS
 			// no other way to keep correct message order...
 			GameServer.ServerRules.OnPlayerKilled(this, killer);
 			m_character.DeathTime = PlayedTime;
+		}
 
-			// DOLConsole.WriteLine("Die();");
+		public override void EnemyKilled(GameLiving enemy)
+		{
+			if (PlayerGroup != null)
+			{
+				foreach (GamePlayer player in PlayerGroup.GetPlayersInTheGroup())
+				{ 
+					if (player == this) continue;
+					if (enemy.Attackers.Contains(player)) continue;
+					if (WorldMgr.CheckDistance(this,player, WorldMgr.MAX_EXPFORKILL_DISTANCE))
+					{
+						Notify(GameLivingEvent.EnemyKilled, player, new EnemyKilledEventArgs(enemy));
+					}
+				}
+			}
+			base.EnemyKilled(enemy);
 		}
 
 

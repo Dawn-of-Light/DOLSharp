@@ -112,9 +112,8 @@ namespace DOL.GS.PropertyCalc
 
 			if (living is GamePlayer)
 			{
-				//Relic bonnus is calculated before ra bonus
+				//Relic bonus is calculated before ra bonus
 				percent = (int)(percent * RelicMgr.GetRelicBonusModifier(living.Realm, eRelicType.Magic));
-
 			}
 
 			return Math.Max(1, percent);

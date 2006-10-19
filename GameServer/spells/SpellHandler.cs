@@ -1790,7 +1790,6 @@ namespace DOL.GS.Spells
 
 			double minVariance;
 			double maxVariance;
-			bool casterIsControlled = false;
 
 			CalculateDamageVariance(target, out minVariance, out maxVariance);
 			double spellDamage = CalculateDamageBase();
@@ -1798,12 +1797,7 @@ namespace DOL.GS.Spells
 			GamePlayer player = null;
 			if (m_caster is GamePlayer)
 				player = m_caster as GamePlayer;
-			else if (m_caster is GameNPC && (m_caster as GameNPC).Brain is ControlledNpc)
-			{
-				player = ((ControlledNpc)((GameNPC)m_caster).Brain).Owner;
-				if (player != null && (player.ControlledNpc != null))
-					casterIsControlled = true;
-			}
+
 			if (player != null)
 				spellDamage *= player.PlayerEffectiveness;
 
@@ -1823,39 +1817,16 @@ namespace DOL.GS.Spells
 
 			}
 
-			#region this does nothing yet
+			double TOADmg = 1 + m_caster.GetModified(eProperty.SpellDamage) * 0.01;
 
-			double MoM = 1.0;
-			if (player != null)
+			if (m_caster.HasAbility(MasteryOfMageryAbility.KEY) && this is DoTSpellHandler == false)
 			{
-				if (player.HasAbility(MasteryOfMageryAbility.KEY))
+				RAPropertyEnhancer ra = (m_caster as GamePlayer).GetAbility(MasteryOfMageryAbility.KEY) as RAPropertyEnhancer;
+				if (ra != null)
 				{
-					switch (player.GetAbilityLevel(MasteryOfMageryAbility.KEY))
-					{
-						case 1: MoM = 1.02; break;
-						case 2: MoM = 1.04; break;
-						case 3: MoM = 1.07; break;
-						case 4: MoM = 1.27; break;
-						case 5: MoM = 1.39; break;
-						default: break;
-					}
+					TOADmg += ra.Amount * 0.01;
 				}
 			}
-
-			#endregion
-
-			double TOADmg = m_caster.GetModified(eProperty.SpellDamage) * 0.01;
-
-			#region this does nothing yet
-			bool targetIsControlled = false;
-			if (target is GameNPC)
-			{
-				GameNPC npc = target as GameNPC;
-				ControlledNpc brain = npc.Brain as ControlledNpc;
-				if (brain != null)
-					targetIsControlled = true;
-			}
-			#endregion
 
 			// apply effectiveness
 			finalDamage = (int)((finalDamage * effectiveness) * TOADmg);
@@ -1865,7 +1836,6 @@ namespace DOL.GS.Spells
 			if (penPierce != null)
 			{
 				finalDamage = (int)(finalDamage * (1.0 + penPierce.Spell.Value / 100.0));
-
 			}
 			
 			int cdamage = 0;
@@ -1883,7 +1853,7 @@ namespace DOL.GS.Spells
 			// - avi
 
 			#region Primary Resists
-			int primaryResistModifier = -ad.Target.GetResist(Spell.DamageType);
+			int primaryResistModifier = ad.Target.GetResist(Spell.DamageType);
 
 			/* Resist Pierce	
 			 * Resipierce is a special bonus which has been introduced with ToA.
@@ -1903,19 +1873,11 @@ namespace DOL.GS.Spells
 			//Using the resist BuffBonusCategory2 - its unused in ResistCalculator
 			int secondaryResistModifier = target.BuffBonusCategory2[(int)property];
 
-			if (ad.Target is GamePlayer)
+			if (ad.Target is GamePlayer && ad.Target.HasAbility(AvoidanceOfMagicAbility.KEY))
 			{
 				GamePlayer tPlayer = ad.Target as GamePlayer;
-				int AoMLevel = tPlayer.GetAbilityLevel(AvoidanceOfMagicAbility.KEY);
-				switch (AoMLevel)
-				{
-					case 1: secondaryResistModifier += 2; break;
-					case 2: secondaryResistModifier += 5; break;
-					case 3: secondaryResistModifier += 10; break;
-					case 4: secondaryResistModifier += 15; break;
-					case 5: secondaryResistModifier += 20; break;
-					default: break;
-				}
+				RAPropertyEnhancer ra = tPlayer.GetAbility(AvoidanceOfMagicAbility.KEY) as RAPropertyEnhancer;
+				secondaryResistModifier += ra.Amount;
 			}
 
 			/*Variance by Memories of War				

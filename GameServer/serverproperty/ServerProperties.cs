@@ -171,6 +171,9 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty(ServerPropertyConstants.CLIENT_VERSION_MAX, "Maximum Client Version - Edit this to change which client version at the most have to be used: -1 = any, 1.80 = 180", -1)]
 		public static readonly int CLIENT_VERSION_MAX;
 
+		[ServerProperty(ServerPropertyConstants.LOAD_QUESTS, "Should the server load quests, values True,False", true)]
+		public static readonly bool LOAD_QUESTS;
+
 		/// <summary>
 		/// This method loads the property from the database and returns
 		/// the value of the property as strongly typed object based on the

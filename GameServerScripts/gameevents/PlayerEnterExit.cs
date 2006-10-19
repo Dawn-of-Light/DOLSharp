@@ -60,6 +60,8 @@ namespace DOL.GS.GameEvents
 			if (player.IsAnonymous) return;
 
 			string message = player.Name + " just entered the game!";
+			if (player.Client.Account.PrivLevel > 1)
+				message = "Staff member " + message;
 			foreach (GameClient pclient in WorldMgr.GetAllPlayingClients())
 			{
 				if (player.Client != pclient)

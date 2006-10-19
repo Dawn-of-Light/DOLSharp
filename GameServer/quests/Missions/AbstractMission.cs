@@ -121,14 +121,7 @@ namespace DOL.GS.Quests
 		{
 			get 
 			{
-				switch (MissionType)
-				{
-					case eMissionType.Personal: return 1500;
-					case eMissionType.Group:
-					case eMissionType.Realm:
-					case eMissionType.None:
-					default: return 0;
-				}
+				return 1500;
 			}
 		}
 
