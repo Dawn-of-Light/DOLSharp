@@ -108,5 +108,9 @@ namespace DOL.GS.ServerProperties
 		/// The key for listing the maximum client version required to connect
 		/// </summary>
 		public const string CLIENT_VERSION_MAX = "client_version_max";
+		/// <summary>
+		/// The key for whether the server should load quests
+		/// </summary>
+		public const string LOAD_QUESTS = "load_quests";
 	}
 }

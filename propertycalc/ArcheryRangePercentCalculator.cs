@@ -18,6 +18,8 @@
  */
 using System;
 
+using DOL.GS.Effects;
+
 namespace DOL.GS.PropertyCalc
 {
 	/// <summary>
@@ -34,9 +36,20 @@ namespace DOL.GS.PropertyCalc
 	{
 		public override int CalcValue(GameLiving living, eProperty property)
 		{
-			return Math.Max(0, 100
+			int item = Math.Max(0, 100
 				- living.BuffBonusCategory3[(int)property]
 				+ Math.Min(10, living.ItemBonus[(int)property]));// http://www.camelotherald.com/more/1325.shtml
+
+			int ra = 0;
+			if (living.RangeAttackType == GameLiving.eRangeAttackType.Long)
+			{
+				ra = 50;
+				IGameEffect effect = living.EffectList.GetOfType(typeof(TrueshotEffect));
+				if (effect != null)
+					effect.Cancel(false);
+			}
+
+			return item + ra;
 		}
 	}
 }
