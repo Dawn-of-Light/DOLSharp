@@ -532,7 +532,8 @@ namespace DOL.GS.Keeps
 				if (value == true)
 				{
 					StartRebuildTimer();
-					Keep.ChangeLevel(1);
+					if (this.Keep.Level > 1)
+						Keep.ChangeLevel(1);
 				}
 				else
 				{

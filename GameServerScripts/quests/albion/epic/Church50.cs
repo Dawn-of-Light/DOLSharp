@@ -87,9 +87,10 @@ namespace DOL.GS.Quests.Albion
 		[ScriptLoadedEvent]
 		public static void ScriptLoaded(DOLEvent e, object sender, EventArgs args)
 		{
+			if (!ServerProperties.Properties.LOAD_QUESTS)
+				return;
 			if (log.IsInfoEnabled)
-				if (log.IsInfoEnabled)
-					log.Info("Quest \"" + questTitle + "\" initializing ...");
+				log.Info("Quest \"" + questTitle + "\" initializing ...");
 
 			#region defineNPCs
 
@@ -747,6 +748,8 @@ namespace DOL.GS.Quests.Albion
 		[ScriptUnloadedEvent]
 		public static void ScriptUnloaded(DOLEvent e, object sender, EventArgs args)
 		{
+			if (!ServerProperties.Properties.LOAD_QUESTS)
+				return;
 			//if not loaded, don't worry
 			if (Roben == null)
 				return;

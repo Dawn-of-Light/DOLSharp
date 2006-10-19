@@ -459,7 +459,7 @@ namespace DOL.GS.Scripts
 						int interval;
 						try
 						{
-							interval = Convert.ToInt16(args[2]);
+							interval = Convert.ToInt32(args[2]);
 							((GameMob)targetMob).RespawnInterval = interval;
 							targetMob.SaveIntoDatabase();
 							client.Out.SendMessage("Mob respawn interval changed to: " + interval, eChatType.CT_System, eChatLoc.CL_SystemWindow);

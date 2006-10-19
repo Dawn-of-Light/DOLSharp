@@ -151,9 +151,10 @@ namespace DOL.GS.Quests.Albion
 		[ScriptLoadedEvent]
 		public static void ScriptLoaded(DOLEvent e, object sender, EventArgs args)
 		{
+			if (!ServerProperties.Properties.LOAD_QUESTS)
+				return;
 			if (log.IsInfoEnabled)
-				if (log.IsInfoEnabled)
-					log.Info("Quest \"" + questTitle + "\" initializing ...");
+				log.Info("Quest \"" + questTitle + "\" initializing ...");
 			/* First thing we do in here is to search for the NPCs inside
 			* the world who comes from the certain Realm. If we find a the players,
 			* this means we don't have to create a new one.
@@ -601,8 +602,7 @@ namespace DOL.GS.Quests.Albion
 			masterFrederick.AddQuestToGive(typeof (BeginningOfWar));
 
 			if (log.IsInfoEnabled)
-				if (log.IsInfoEnabled)
-					log.Info("Quest \"" + questTitle + "\" initialized");
+				log.Info("Quest \"" + questTitle + "\" initialized");
 
 		}
 

@@ -3193,19 +3193,15 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 			ArrayList temp;
 
 			//Send our attackers some note
-			lock (m_attackers.SyncRoot)
-			{
-				temp = (ArrayList)m_attackers.Clone();
-				m_attackers.Clear();
-			}
-
-			foreach (GameObject obj in temp)
+			foreach (GameObject obj in m_attackers.Clone() as ArrayList)
 			{
 				if (obj is GameLiving)
 				{
 					((GameLiving)obj).EnemyKilled(this);
 				}
 			}
+
+			m_attackers.Clear();
 
 			// cancel all concentration effects
 			ConcentrationEffects.CancelAll();

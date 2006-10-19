@@ -9,16 +9,18 @@ namespace DOL.GS.Effects
 	/// </summary>
 	public class TrueshotEffect : StaticEffect
 	{
-		public TrueshotEffect() : base()
+		public TrueshotEffect()
+			: base()
 		{
 		}
 
 		public override void Start(GameLiving target)
 		{
-			base.Start (target);
+			base.Start(target);
 			GamePlayer player = target as GamePlayer;
-			if (player != null) {
-				player.Out.SendMessage("You switch to sure shot mode!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			if (player != null)
+			{
+				player.Out.SendMessage("You prepare a Trueshot!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 		}
 
