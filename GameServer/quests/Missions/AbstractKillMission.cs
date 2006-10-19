@@ -29,6 +29,18 @@ namespace DOL.GS.Quests
 			if (eargs.Target.GetType().Equals(m_targetType))
 				return;
 
+			//we dont allow events triggered by non group leaders
+			if (MissionType == eMissionType.Group && sender is GamePlayer)
+			{
+				GamePlayer player = sender as GamePlayer;
+
+				if (player.PlayerGroup == null)
+					return;
+
+				if (player.PlayerGroup.Leader != player)
+					return;
+			}
+
 			m_current++;
 			UpdateMission();
 			if (m_current == m_total)

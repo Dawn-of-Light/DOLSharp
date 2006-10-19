@@ -126,6 +126,8 @@ namespace DOL.GS.Quests.Examples
 		[ScriptLoadedEvent]
 		public static void ScriptLoaded(DOLEvent e, object sender, EventArgs args)
 		{
+			if (!ServerProperties.Properties.LOAD_QUESTS)
+				return;
 			/* First thing we do in here is to search for a Sir Quait NPC inside
 				* the world who comes from the Albion realm. If we find a Sir Quait,
 				* this means we don't have to create a new one. 

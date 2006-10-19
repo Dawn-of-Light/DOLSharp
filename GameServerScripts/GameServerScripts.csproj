@@ -366,6 +366,7 @@
     <Compile Include="playercommands\group.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="playercommands\gtrange.cs" />
     <Compile Include="playercommands\guild.cs" />
     <Compile Include="playercommands\guildchat.cs">
       <SubType>Code</SubType>
