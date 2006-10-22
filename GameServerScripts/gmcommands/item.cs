@@ -690,7 +690,7 @@ namespace DOL.GS.Scripts
 							}
 							try
 							{
-								item.Emblem = Convert.ToUInt16(args[2]);
+								item.Emblem = Convert.ToInt32(args[2]);
 								client.Out.SendInventoryItemsUpdate(new InventoryItem[] {item});
 								if (item.SlotPosition < (int) eInventorySlot.FirstBackpack)
 									client.Player.UpdateEquipmentAppearance();

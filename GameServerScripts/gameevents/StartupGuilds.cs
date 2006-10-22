@@ -60,7 +60,7 @@ namespace DOL.GS.GameEvents
 			{
 				//create table of rank in guild
 				Guild newguild = new Guild();
-				newguild.theGuildDB = new DBguild();
+				newguild.theGuildDB = new DBGuild();
 				newguild.Name = guildName;
 				newguild.theGuildDB.GuildName = guildName;
 				newguild.theGuildDB.Motd = "Use /gu <text> to talk in this starter guild.";

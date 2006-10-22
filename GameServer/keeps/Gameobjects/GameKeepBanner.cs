@@ -132,7 +132,7 @@ namespace DOL.GS.Keeps
 		{
 			Guild guild = this.Component.Keep.Guild;
 
-			ushort emblem = 0;
+			int emblem = 0;
 			if (guild != null)
 				emblem = guild.theGuildDB.Emblem;
 

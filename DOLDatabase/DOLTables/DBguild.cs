@@ -27,7 +27,7 @@ namespace DOL.Database
 	/// Guild table
 	/// </summary>
 	[DataTable(TableName="Guild")]
-	public class DBguild : DataObject
+	public class DBGuild : DataObject
 	{
 		static bool		m_autoSave;
 
@@ -36,14 +36,14 @@ namespace DOL.Database
 		private string	m_omotd;//officier motd
 
 		private string m_allianceID;
-		private ushort m_emblem;
+		private int m_emblem;
 		private long m_realmPoints;
 		private long m_bountyPoints;
 
 		/// <summary>
 		/// Create a guild
 		/// </summary>
-		public DBguild()
+		public DBGuild()
 		{
 			m_guildname = "default guild name";
 			m_autoSave=false;
@@ -138,7 +138,7 @@ namespace DOL.Database
 		/// emblem of guild
 		/// </summary>
 		[DataElement(AllowDbNull = true)]
-		public ushort Emblem
+		public int Emblem
 		{
 			get
 			{

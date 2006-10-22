@@ -54,6 +54,7 @@ namespace DOL.GS.PacketHandler
 				foreach (int updatedSlot in slots)
 				{
 					pak.WriteByte((byte)updatedSlot);
+
 					InventoryItem item = null;
 					item = m_gameClient.Player.Inventory.GetItem((eInventorySlot)updatedSlot);
 
@@ -62,7 +63,6 @@ namespace DOL.GS.PacketHandler
 						pak.Fill(0x00, 19);
 						continue;
 					}
-
 					pak.WriteByte((byte)item.Level);
 
 					int value1; // some object types use this field to display count
@@ -96,6 +96,8 @@ namespace DOL.GS.PacketHandler
 							must contain the quality of gem for spell craft and think same for tincture
 							*/
 							break;
+						case (int)eObjectType.HouseWallObject:
+						case (int)eObjectType.HouseFloorObject:
 						case (int)eObjectType.GardenObject:
 							value1 = 0;
 							value2 = item.SPD_ABS;
@@ -127,13 +129,15 @@ namespace DOL.GS.PacketHandler
 					pak.WriteByte((byte)item.Bonus); // % bonus
 					pak.WriteShort((ushort)item.Model);
 					pak.WriteByte((byte)item.Extension);
+					int flag = 0;
 					if (item.Emblem != 0)
+					{
 						pak.WriteShort((ushort)item.Emblem);
+						flag |= (item.Emblem & 0x010000) >> 16; // = 1 for newGuildEmblem
+					}
 					else
 						pak.WriteShort((ushort)item.Color);
-					byte flag = 0;
-					//					if (item.ConditionPercent < 100 && DOL.GS.Repair.IsAllowedToBeginWork(m_gameClient.Player, item, 50))
-					//						flag |= 0x01; // enable repair button ? (always enabled if condition < 100)
+					//						flag |= 0x01; // newGuildEmblem
 					//						flag |= 0x02; // enable salvage button
 					//					AbstractCraftingSkill skill = CraftingMgr.getSkillbyEnum(m_gameClient.Player.CraftingPrimarySkill);
 					//					if (skill != null && skill is AdvancedCraftingSkill/* && ((AdvancedCraftingSkill)skill).IsAllowedToCombine(m_gameClient.Player, item)*/)
@@ -142,50 +146,51 @@ namespace DOL.GS.PacketHandler
 					ushort icon2 = 0;
 					string spell_name1 = "";
 					string spell_name2 = "";
-					if (item.SpellID > 0/* && item.Charges > 0*/)
+					if (item.Object_Type != (int)eObjectType.AlchemyTincture)
 					{
-						SpellLine chargeEffectsLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
-						if (chargeEffectsLine != null)
+						if (item.SpellID > 0/* && item.Charges > 0*/)
 						{
-							IList spells = SkillBase.GetSpellList(chargeEffectsLine.KeyName);
-							if (spells != null)
+							SpellLine chargeEffectsLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
+							if (chargeEffectsLine != null)
 							{
-								foreach (Spell spl in spells)
+								IList spells = SkillBase.GetSpellList(chargeEffectsLine.KeyName);
+								if (spells != null)
 								{
-									if (spl.ID == item.SpellID)
+									foreach (Spell spl in spells)
 									{
-										flag |= 0x08;
-										icon1 = spl.Icon;
-										spell_name1 = spl.SpellType; // or best spl.Name ?
-										break;
+										if (spl.ID == item.SpellID)
+										{
+											flag |= 0x08;
+											icon1 = spl.Icon;
+											spell_name1 = spl.SpellType; // or best spl.Name ?
+											break;
+										}
+									}
+								}
+							}
+						}
+						if (item.SpellID1 > 0/* && item.Charges > 0*/)
+						{
+							SpellLine chargeEffectsLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
+							if (chargeEffectsLine != null)
+							{
+								IList spells = SkillBase.GetSpellList(chargeEffectsLine.KeyName);
+								if (spells != null)
+								{
+									foreach (Spell spl in spells)
+									{
+										if (spl.ID == item.SpellID1)
+										{
+											flag |= 0x10;
+											icon2 = spl.Icon;
+											spell_name2 = spl.SpellType; // or best spl.Name ?
+											break;
+										}
 									}
 								}
 							}
 						}
 					}
-
-					if (item.SpellID1 > 0 && item.Charges1 > 0)
-					{
-						SpellLine chargeEffectsLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
-						if (chargeEffectsLine != null)
-						{
-							IList spells = SkillBase.GetSpellList(chargeEffectsLine.KeyName);
-							if (spells != null)
-							{
-								foreach (Spell spl in spells)
-								{
-									if (spl.ID == item.SpellID1)
-									{
-										flag |= 0x10;
-										icon2 = spl.Icon;
-										spell_name2 = spl.SpellType; // or best spl.Name ?
-										break;
-									}
-								}
-							}
-						}
-					}
-
 					pak.WriteByte((byte)flag);
 					if ((flag & 0x08) == 0x08)
 					{
@@ -198,7 +203,6 @@ namespace DOL.GS.PacketHandler
 						pak.WritePascalString(spell_name2);
 					}
 					pak.WriteByte((byte)item.Effect);
-					//					pak.WriteShort((ushort) item.Effect);
 					if (item.Count > 1)
 						pak.WritePascalString(item.Count + " " + item.Name);
 					else
