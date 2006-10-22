@@ -101,12 +101,12 @@ namespace DOL.Database
 		/// Guild leader of alliance
 		/// </summary>
 		[Relation(LocalField = "AllianceName", RemoteField = "GuildName", AutoLoad = true, AutoDelete=false)]
-		public DBguild DBguildleader;
+		public DBGuild DBguildleader;
 
 		/// <summary>
 		/// All guild in this alliance
 		/// </summary>
 		[Relation(LocalField = "ObjectId", RemoteField = "AllianceID", AutoLoad = true, AutoDelete=false)]
-		public DBguild[] DBguilds;
+		public DBGuild[] DBguilds;
 	}
 }

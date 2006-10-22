@@ -98,10 +98,6 @@ namespace DOL.GS.PacketHandler
 			}
 			else pak.WriteByte(0x00);
 			SendTCP(pak);
-			/*
-			if (obj is GameKeepDoor)
-				SendDoorState(obj as GameKeepDoor);
-			 */
 		}
 
 		public override void SendNPCCreate(GameNPC npc)

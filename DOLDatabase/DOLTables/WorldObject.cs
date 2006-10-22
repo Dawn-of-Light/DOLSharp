@@ -37,7 +37,7 @@ namespace DOL.Database
 		private ushort		m_heading;
 		private ushort		m_model;
 		private ushort		m_region;
-		private ushort		m_emblem;
+		private int		m_emblem;
 
 		static bool			m_autoSave;
 
@@ -171,7 +171,7 @@ namespace DOL.Database
 			}
 		}
 		[DataElement(AllowDbNull=false)]
-		public ushort Emblem
+		public int Emblem
 		{
 			get
 			{

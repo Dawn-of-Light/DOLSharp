@@ -149,10 +149,10 @@ namespace DOL.GS.Scripts
 					}
 				case "emblem":
 					{
-						ushort emblem;
+						int emblem;
 						try
 						{
-							emblem = Convert.ToUInt16(args[2]);
+							emblem = Convert.ToInt32(args[2]);
 							targetObject.Emblem = emblem;
 							targetObject.SaveIntoDatabase();
 							client.Out.SendMessage("Object emblem changed to: " + targetObject.Emblem, eChatType.CT_System, eChatLoc.CL_SystemWindow);
