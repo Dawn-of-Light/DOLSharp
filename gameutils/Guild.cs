@@ -73,7 +73,7 @@ namespace DOL.GS
 		/// <summary>
 		/// This holds the DB instance of the guild
 		/// </summary>
-		protected DBguild m_DBguild;
+		protected DBGuild m_DBguild;
 
 		/// <summary>
 		/// the name of the guild
@@ -111,7 +111,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets or sets the guild db
 		/// </summary>
-		public DBguild theGuildDB
+		public DBGuild theGuildDB
 		{
 			get	{	return m_DBguild; }
 			set	{	m_DBguild = value;	}
@@ -546,10 +546,10 @@ namespace DOL.GS
 		/// <param name="obj"></param>
 		public void LoadFromDatabase(DataObject obj)
 		{
-			if(!(obj is DBguild))
+			if(!(obj is DBGuild))
 				return;
 
-			m_DBguild = (DBguild)obj;
+			m_DBguild = (DBGuild)obj;
 			m_name = m_DBguild.GuildName;
 			m_realmPoints = m_DBguild.RealmPoints;
 			m_bountyPoints = m_DBguild.BountyPoints;

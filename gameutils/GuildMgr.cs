@@ -135,7 +135,7 @@ namespace DOL.GS
 
 				//create table of rank in guild
 				Guild newguild = new Guild();
-				newguild.theGuildDB = new DBguild();
+				newguild.theGuildDB = new DBGuild();
 				newguild.Name = guildName;
 				newguild.theGuildDB.GuildName = guildName;
 				CreateRanks(newguild);
@@ -248,8 +248,8 @@ namespace DOL.GS
 					return false;
 				}
 
-				DBguild[] guilds = (DBguild[])GameServer.Database.SelectObjects(typeof(DBguild), "GuildName='" + GameServer.Database.Escape(guildName) + "'");
-				foreach (DBguild guild in guilds)
+				DBGuild[] guilds = (DBGuild[])GameServer.Database.SelectObjects(typeof(DBGuild), "GuildName='" + GameServer.Database.Escape(guildName) + "'");
+				foreach (DBGuild guild in guilds)
 				{
 					foreach (Character cha in guild.Characters)
 						cha.GuildName = "";
@@ -309,13 +309,13 @@ namespace DOL.GS
 			m_lastID = 0;
 
 			//load guilds
-			DataObject[] objs = GameServer.Database.SelectAllObjects(typeof(DBguild));
+			DataObject[] objs = GameServer.Database.SelectAllObjects(typeof(DBGuild));
 			foreach (DataObject obj in objs)
 			{
 				Guild myguild = new Guild();
 				myguild.LoadFromDatabase(obj);
 				AddGuild(myguild);
-				if (((DBguild)obj).Ranks.Length == 0)
+				if (((DBGuild)obj).Ranks.Length == 0)
 					CreateRanks(myguild);
 			}
 
@@ -327,7 +327,7 @@ namespace DOL.GS
 				myalliance.LoadFromDatabase(dball);
 				if (dball != null && dball.DBguilds != null)
 				{
-					foreach (DBguild mydbgui in dball.DBguilds)
+					foreach (DBGuild mydbgui in dball.DBguilds)
 					{
 						Guild gui = GetGuildByName(mydbgui.GuildName);
 						myalliance.Guilds.Add(gui);
@@ -365,7 +365,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="emblem"></param>
 		/// <returns></returns>
-		public static bool IsEmblemUsed(ushort emblem)
+		public static bool IsEmblemUsed(int emblem)
 		{
 			lock (m_guilds.SyncRoot)
 			{
@@ -384,7 +384,7 @@ namespace DOL.GS
 		/// <param name="player"></param>
 		/// <param name="oldemblem"></param>
 		/// <param name="newemblem"></param>
-		public static void ChangeEmblem(GamePlayer player, ushort oldemblem, ushort newemblem)
+		public static void ChangeEmblem(GamePlayer player, int oldemblem, int newemblem)
 		{
 			player.Guild.theGuildDB.Emblem = newemblem;
 			GameServer.Database.SaveObject(player.Guild.theGuildDB);

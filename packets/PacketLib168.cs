@@ -770,7 +770,7 @@ namespace DOL.GS.PacketHandler
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.ObjectCreate));
 			pak.WriteShort((ushort)obj.ObjectID);
 			if (obj is GameStaticItem)
-				pak.WriteShort((obj as GameStaticItem).Emblem);
+				pak.WriteShort((ushort)(obj as GameStaticItem).Emblem);
 			else pak.WriteShort(0);
 			pak.WriteShort(obj.Heading);
 			pak.WriteShort((ushort)obj.Z);
