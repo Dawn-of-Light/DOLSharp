@@ -675,7 +675,7 @@ result == GameLiving.eAttackResult.Parried)
 			if (this.Inventory == null)
 				return;
 
-			ushort emblem = 0;
+			int emblem = 0;
 			if (guild != null)
 				emblem = guild.theGuildDB.Emblem;
 			InventoryItem lefthand = this.Inventory.GetItem(eInventorySlot.LeftHandWeapon);

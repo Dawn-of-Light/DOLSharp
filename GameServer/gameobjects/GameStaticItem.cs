@@ -30,7 +30,7 @@ namespace DOL.GS
 		/// <summary>
 		/// The emblem of the Object
 		/// </summary>
-		protected ushort m_Emblem;
+		protected int m_Emblem;
 
 		/// <summary>
 		/// Constructs a new GameStaticItem
@@ -70,7 +70,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets or Sets the current Emblem of the Object
 		/// </summary>
-		public virtual ushort Emblem
+		public virtual int Emblem
 		{
 			get { return m_Emblem; }
 			set

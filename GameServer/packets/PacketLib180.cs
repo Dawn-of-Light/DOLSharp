@@ -47,16 +47,24 @@ namespace DOL.GS.PacketHandler
 
 		public override void SendSetControlledHorse(GamePlayer player)
 		{
+			if (player == null || player.ObjectState != GameObject.eObjectState.Active)
+				return;
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.ControlledHorse));
 			if (player.HasHorse)
 			{
 				pak.WriteShort(0); // for set self horse OID must be zero
 				pak.WriteByte(player.ActiveHorse.ID);
-				pak.WriteByte(player.ActiveHorse.Barding);
 				if (player.ActiveHorse.BardingColor == 0 && player.ActiveHorse.Barding != 0 && player.Guild != null)
+				{
+					int newGuildBitMask = (player.Guild.theGuildDB.Emblem & 0x010000) >> 9;
+					pak.WriteByte((byte)(player.ActiveHorse.Barding | newGuildBitMask));
 					pak.WriteShort((ushort)player.Guild.theGuildDB.Emblem);
+				}
 				else
+				{
+					pak.WriteByte(player.ActiveHorse.Barding);
 					pak.WriteShort(player.ActiveHorse.BardingColor);
+				}
 				pak.WriteByte(player.ActiveHorse.Saddle);
 				pak.WriteByte(player.ActiveHorse.SaddleColor);
 				pak.WriteByte(player.ActiveHorse.Slots); // 0 - no slots aviable
@@ -72,6 +80,8 @@ namespace DOL.GS.PacketHandler
 
 		public override void SendControlledHorse(GamePlayer player, bool flag)
 		{
+			if (player == null || player.ObjectState != GameObject.eObjectState.Active)
+				return;
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.ControlledHorse));
 			if (!flag || !player.HasHorse)
 			{
@@ -82,11 +92,17 @@ namespace DOL.GS.PacketHandler
 			{
 				pak.WriteShort((ushort)player.ObjectID);
 				pak.WriteByte(player.ActiveHorse.ID);
-				pak.WriteByte(player.ActiveHorse.Barding);
 				if (player.ActiveHorse.BardingColor == 0 && player.ActiveHorse.Barding != 0 && player.Guild != null)
+				{
+					int newGuildBitMask = (player.Guild.theGuildDB.Emblem & 0x010000) >> 9;
+					pak.WriteByte((byte)(player.ActiveHorse.Barding | newGuildBitMask));
 					pak.WriteShort((ushort)player.Guild.theGuildDB.Emblem);
+				}
 				else
+				{
+					pak.WriteByte(player.ActiveHorse.Barding);
 					pak.WriteShort(player.ActiveHorse.BardingColor);
+				}
 
 				pak.WriteByte(player.ActiveHorse.Saddle);
 				pak.WriteByte(player.ActiveHorse.SaddleColor);
@@ -132,7 +148,7 @@ namespace DOL.GS.PacketHandler
 			int flags = (GameServer.ServerRules.GetLivingRealm(m_gameClient.Player, playerToCreate) & 0x03) << 2;
 			if (playerToCreate.IsAlive == false) flags |= 0x01;
 			if (playerToCreate.IsUnderwater) flags |= 0x02; //swimming
-			if (playerToCreate.IsStealthed)  flags |= 0x10;
+			if (playerToCreate.IsStealthed) flags |= 0x10;
 			// 0x20 = wireframe
 			// 0x40 = blueface (for underground race)
 			pak.WriteByte((byte)flags);
@@ -146,11 +162,17 @@ namespace DOL.GS.PacketHandler
 			if (playerToCreate.IsOnHorse)
 			{
 				pak.WriteByte(playerToCreate.ActiveHorse.ID);
-				pak.WriteByte(playerToCreate.ActiveHorse.Barding);
 				if (playerToCreate.ActiveHorse.BardingColor == 0 && playerToCreate.ActiveHorse.Barding != 0 && playerToCreate.Guild != null)
+				{
+					int newGuildBitMask = (playerToCreate.Guild.theGuildDB.Emblem & 0x010000) >> 9;
+					pak.WriteByte((byte)(playerToCreate.ActiveHorse.Barding | newGuildBitMask));
 					pak.WriteShortLowEndian((ushort)playerToCreate.Guild.theGuildDB.Emblem);
+				}
 				else
+				{
+					pak.WriteByte(playerToCreate.ActiveHorse.Barding);
 					pak.WriteShort(playerToCreate.ActiveHorse.BardingColor);
+				}
 				pak.WriteByte(playerToCreate.ActiveHorse.Saddle);
 				pak.WriteByte(playerToCreate.ActiveHorse.SaddleColor);
 			}
@@ -158,20 +180,32 @@ namespace DOL.GS.PacketHandler
 			{
 				pak.WriteByte(0); // trailing zero
 			}
+
 			SendTCP(pak);
 
-			if(GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvP)
+			if (GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvP)
 				SendObjectGuildID(playerToCreate, playerToCreate.Guild); //used for nearest friendly/enemy object buttons and name colors on PvP server
 
-//			if(ShowAllOnHorseWithBanners && playerToCreate.Guild != null)
-//			{
-//				pak = new GSTCPPacketOut(GetPacketCode(ePackets.VisualEffect));
-//				pak.WriteShort((ushort)playerToCreate.ObjectID);
-//				pak.WriteByte(0xC); // show Banner
-//				pak.WriteByte((byte)0); // 0-enable, 1-disable
-//				pak.WriteInt(playerToCreate.Guild.theGuildDB.Emblem);
-//				SendTCP(pak);
-//			}
+			/*
+			if (m_gameClient.Player != null && playerToCreate.CharacterClass.ID == (int)eCharacterClass.Warlock)
+			{
+				ChamberEffect ce = (ChamberEffect)playerToCreate.EffectList.GetOfType(typeof(ChamberEffect));
+				if (ce != null)
+				{
+					ce.SendChamber(m_gameClient.Player);
+				}
+			}
+			 */
+			//			if(ShowAllOnHorseWithBanners && playerToCreate.Guild != null)
+			//			{
+			//				pak = new GSTCPPacketOut(GetPacketCode(ePackets.VisualEffect));
+			//				pak.WriteShort((ushort)playerToCreate.ObjectID);
+			//				pak.WriteByte(0xC); // show Banner
+			//				pak.WriteByte((byte)0); // 0-enable, 1-disable
+			//				pak.WriteInt(playerToCreate.Guild.theGuildDB.Emblem);
+			//				SendTCP(pak);
+			//			}
+
 
 			if (playerToCreate.IsCarryingGuildBanner)
 			{

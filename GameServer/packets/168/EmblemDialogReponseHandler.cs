@@ -33,19 +33,12 @@ namespace DOL.GS.PacketHandler.v168
 				return 0;
 			if(!client.Player.Guild.GotAccess(client.Player, eGuildRank.Leader))
 				return 0;
-			int primarycolor   = packet.ReadByte() & 0x0F; //4bits
+			int primarycolor = packet.ReadByte() & 0x0F; //4bits
 			int secondarycolor = packet.ReadByte() & 0x07; //3bits
-			int pattern        = packet.ReadByte() & 0x03; //2bits
-			int logo           = packet.ReadByte() & 0x7F; //7bits
-
-			/*for 1.76+ if logo > 0x7F for some field added 0x80 bit
-			 * example
-			 * StoC_0x15 item.Slot & 0x80 = Logo & 0x80
-			 * StoC_0x4E horse.Barding & 0x80 = Logo 0x80
-			 */
-
-			ushort oldemblem = client.Player.Guild.theGuildDB.Emblem;
-			ushort newemblem = (ushort)((logo << 9) | (pattern << 7) | (primarycolor << 3) | secondarycolor);
+			int pattern = packet.ReadByte() & 0x03; //2bits
+			int logo = packet.ReadByte(); //8bits
+			int oldemblem = client.Player.Guild.theGuildDB.Emblem;
+			int newemblem = ((logo << 9) | (pattern << 7) | (primarycolor << 3) | secondarycolor);
 			if (GuildMgr.IsEmblemUsed(newemblem))
 			{
 				client.Player.Out.SendMessage("This emblem is already in use by another guild, please choose another!", eChatType.CT_System, eChatLoc.CL_SystemWindow );
