@@ -207,6 +207,11 @@ namespace DOL.GS.Spells
 			}
 			else if (GameServer.ServerRules.IsAllowedToCastSpell(Caster, target, Spell, m_spellLine) && CheckBeginCast(target))
 			{
+				if (m_caster is GamePlayer && (m_caster as GamePlayer).IsOnHorse && !HasPositiveEffect)
+				{
+					(m_caster as GamePlayer).IsOnHorse = false;
+				}
+
 				if (Spell.CastTime > 0)
 				{
 					// no instant cast
