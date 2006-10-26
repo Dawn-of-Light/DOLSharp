@@ -1821,8 +1821,15 @@ namespace DOL.GS.Spells
 				hitChance = 100;
 
 			}
+			/*
 
 			double TOADmg = 1 + m_caster.GetModified(eProperty.SpellDamage) * 0.01;
+			double RelicDmg = 0;
+			if (living is GamePlayer)
+			{
+				//Relic bonus is calculated before ra bonus
+				RelicDmg = RelicMgr.GetRelicBonusModifier(living.Realm, eRelicType.Magic);
+			}
 
 			if (m_caster.HasAbility(MasteryOfMageryAbility.KEY) && this is DoTSpellHandler == false)
 			{
@@ -1833,8 +1840,9 @@ namespace DOL.GS.Spells
 				}
 			}
 
+			*/
 			// apply effectiveness
-			finalDamage = (int)((finalDamage * effectiveness) * TOADmg);
+			finalDamage = (int)(finalDamage * effectiveness);
 
 			// Well the PenetrateResistBuff is NOT ResistPierce
 			GameSpellEffect penPierce = SpellHandler.FindEffectOnTarget(m_caster, "PenetrateResists");
@@ -1914,9 +1922,9 @@ namespace DOL.GS.Spells
 
 
 			// cap to +200% of base damage
-			if (finalDamage > Spell.Damage * 3 * effectiveness * TOADmg)
+			if (finalDamage > Spell.Damage * 3 * effectiveness)
 			{
-				finalDamage = (int)(Spell.Damage * 3 * effectiveness * TOADmg);
+				finalDamage = (int)(Spell.Damage * 3 * effectiveness);
 			}
 
 			if (finalDamage < 0)

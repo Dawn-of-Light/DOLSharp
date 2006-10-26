@@ -42,14 +42,15 @@ namespace DOL.GS.PacketHandler.v168
 			/*GameKeepHookPoint hookpoint = component.HookPoints[hookpointID] as GameKeepHookPoint;
 			if (hookpoint == null) return 1;
 			*/
-			HookPointInventory inventory;
+			HookPointInventory inventory = null;
 			if(hookpointID > 0x80) inventory = HookPointInventory.YellowHPInventory; //oil
 			else if(hookpointID > 0x60) inventory = HookPointInventory.GreenHPInventory;//big siege
 			else if(hookpointID > 0x40) inventory = HookPointInventory.LightGreenHPInventory; //small siege
 			else if (hookpointID > 0x20) inventory = HookPointInventory.BlueHPInventory;//npc
 			else inventory = HookPointInventory.RedHPInventory;//guard
 
-			inventory.GetItem(itemslot).Invoke(client.Player,payType, component.HookPoints[hookpointID] as GameKeepHookPoint, component);
+			if (inventory != null)
+				inventory.GetItem(itemslot).Invoke(client.Player,payType, component.HookPoints[hookpointID] as GameKeepHookPoint, component);
 
 			return 1;
 		}

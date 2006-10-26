@@ -33,33 +33,33 @@ namespace DOL.GS.Spells
 
 		public override bool CheckBeginCast(GameLiving selectedTarget)
 		{
-            if (m_caster.Mana < CalculateNeededPower(selectedTarget))
-            {
-                if (!HasEnoughHealth()) 
-			    {
-				MessageToCaster("You don't have enough health to use this spell!" , eChatType.CT_Spell);
-				return false;
-			    }
-                else if (m_caster.Endurance == m_caster.MaxEndurance)
-                {
-                    MessageToCaster("You already have full endurance!", eChatType.CT_Spell);
-                    return false;
-                }
-                else
-                    return true;
-            }
+			if (m_caster.Mana < CalculateNeededPower(selectedTarget))
+			{
+				if (!HasEnoughHealth())
+				{
+					MessageToCaster("You don't have enough health to use this spell!", eChatType.CT_Spell);
+					return false;
+				}
+				else if (m_caster.Endurance == m_caster.MaxEndurance)
+				{
+					MessageToCaster("You already have full endurance!", eChatType.CT_Spell);
+					return false;
+				}
+				else
+					return true;
+			}
 
-			
 
-			return base.CheckBeginCast (selectedTarget);
+
+			return base.CheckBeginCast(selectedTarget);
 		}
 
 		protected virtual bool HasEnoughHealth()
 		{
-            int HealthLost = Convert.ToInt32(m_caster.MaxHealth * (Spell.Power *0.01));
-            if(m_caster.Health <= HealthLost)
-                return false;
-            return true;
+			int HealthLost = Convert.ToInt32(m_caster.MaxHealth * (Spell.Power * 0.01));
+			if (m_caster.Health <= HealthLost)
+				return false;
+			return true;
 		}
 
 		/// <summary>
@@ -70,28 +70,22 @@ namespace DOL.GS.Spells
 		{
 			base.FinishSpellCast(target);
 
-            m_caster.Endurance += 5;
+			SkillHandler.SavageAbilities.ApplyHPPenalty((GamePlayer)m_caster, m_spell.Power);
 
-            int HealthLost = Convert.ToInt32(m_caster.MaxHealth * (Spell.Power * 0.01));
-			if (m_caster.Health < HealthLost) 
-				HealthLost = m_caster.MaxHealth - m_caster.Health; 
-			
-			m_caster.ChangeHealth(m_caster, GameLiving.eHealthChangeType.Spell, -HealthLost);
-			GiveEndurance(m_caster, (int)m_spell.Value);			
+			GiveEndurance(m_caster, (int)m_spell.Value);
 		}
-		
+
 		protected virtual void GiveEndurance(GameLiving target, int amount)
 		{
-			
 			if (target.Endurance >= amount)
 				amount = target.MaxEndurance - target.Endurance;
 
 			target.ChangeEndurance(target, GameLiving.eEnduranceChangeType.Spell, amount);
-			MessageToCaster("You transfer "+amount+ " life to Endurance!" , eChatType.CT_Spell);
-			
+			MessageToCaster("You transfer " + amount + " life to Endurance!", eChatType.CT_Spell);
+
 		}
 
 		// constructor
-		public HealthToEndurance(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
+		public HealthToEndurance(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 	}
 }

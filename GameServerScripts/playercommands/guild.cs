@@ -1375,6 +1375,12 @@ namespace DOL.GS.Scripts
 				player.Out.SendMessage("You have to be a member of a guild, before you can use any of the commands!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
+
+			if (inviter == null || inviter.Guild == null)
+			{
+				return;
+			}
+
 			if (!player.Guild.GotAccess(player, eGuildRank.Alli))
 			{
 				player.Out.SendMessage("You have not enough privilege to accept an alliance", eChatType.CT_System, eChatLoc.CL_SystemWindow);

@@ -42,6 +42,9 @@ namespace DOL.GS.PacketHandler
 
 		public override void SendQuestListUpdate()
 		{
+			if (m_gameClient == null || m_gameClient.Player == null)
+				return;
+
 			SendTaskInfo();
 
 			int questIndex = 1;
