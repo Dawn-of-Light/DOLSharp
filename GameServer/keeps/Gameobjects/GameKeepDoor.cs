@@ -310,14 +310,13 @@ namespace DOL.GS.Keeps
 					distance = 100;
 
 				//calculate Z
-				if (this.Component.Keep is GameKeepTower)
+				if (this.Component.Keep is GameKeepTower && !this.Component.Keep.IsPortalKeep)
 				{
 					//when entering a tower, we need to raise Z
 					//portal keeps are considered towers too, so we check component count
-					if (IsObjectInFront(player, 180, false))
+					if (IsObjectInFront(player, 180, false) && DoorIndex == 1)
 					{
-						if (this.Component.Keep.KeepComponents.Count == 1 && DoorIndex == 1)
-							keepz = Z + 83;
+						keepz = Z + 83;
 					}
 				}
 				else

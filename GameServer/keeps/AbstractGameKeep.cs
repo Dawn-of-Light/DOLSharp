@@ -73,6 +73,14 @@ namespace DOL.GS.Keeps
 			}
 		}
 
+		public bool IsPortalKeep
+		{
+			get
+			{
+				return this is GameKeepTower && this.KeepComponents.Count > 1;
+			}
+		}
+
 		/// <summary>
 		/// The Keep Type
 		/// </summary>

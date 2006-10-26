@@ -7424,6 +7424,7 @@ namespace DOL.GS
 			{
 				//Add the player to the new coordinates
 				Out.SendPlayerJump(false);
+				LastNPCUpdate = Environment.TickCount;
 				CurrentUpdateArray.SetAll(false);
 				foreach (GameNPC npc in GetNPCsInRadius(WorldMgr.VISIBILITY_DISTANCE))
 				{
@@ -10582,11 +10583,11 @@ namespace DOL.GS
 		}
 		public void RepairSiegeWeapon(GameSiegeWeapon siegeWeapon)
 		{
-			throw new NotImplementedException();
+			Out.SendMessage("Repairing Siege Weapons is not yet implemented", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}
 		public void SalvageSiegeWeapon(GameSiegeWeapon siegeWeapon)
 		{
-			throw new NotImplementedException();
+			Out.SendMessage("Repairing Siege Weapons is not yet implemented", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}
 		#endregion
 

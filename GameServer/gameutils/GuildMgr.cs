@@ -256,11 +256,14 @@ namespace DOL.GS
 					GameServer.Database.DeleteObject(guild);
 				}
 
-				foreach (GamePlayer ply in removeGuild.ListOnlineMembers())
+				lock (removeGuild.ListOnlineMembers())
 				{
-					ply.Guild = null;
-					ply.GuildName = "";
-					ply.GuildRank = null;
+					foreach (GamePlayer ply in removeGuild.ListOnlineMembers())
+					{
+						ply.Guild = null;
+						ply.GuildName = "";
+						ply.GuildRank = null;
+					}
 				}
 
 				RemoveGuild(removeGuild);
