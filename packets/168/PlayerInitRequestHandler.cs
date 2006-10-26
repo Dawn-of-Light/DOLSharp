@@ -74,6 +74,8 @@ namespace DOL.GS.PacketHandler.v168
 				player.TargetObject = null;
 //				player.AddToWorld(); // won't work because player is already in the region
 
+				player.LastNPCUpdate = Environment.TickCount; 
+
 				player.CurrentUpdateArray.SetAll(false);
 				//KeepMgr.broadcastKeeps(player.Player);
 
