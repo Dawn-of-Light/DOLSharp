@@ -24,7 +24,7 @@ namespace DOL.GS.Keeps
 		{
 			get
 			{
-				if (this.Component.Keep == null)
+				if (this.Component == null || this.Component.Keep == null)
 					return 5000;
 				else
 				{ 
