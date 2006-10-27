@@ -10,10 +10,21 @@ namespace DOL.GS.Scripts
 		{
 			if (client.Player == null)
 				return 1;
-			if (args.Length > 1 && Convert.ToInt16(args[1]) == 0)
-				client.Player.IsOnHorse = false;
-			else if (client.Account.PrivLevel > 1)
-				client.Player.IsOnHorse = true;
+			short num = -1;
+			try
+			{
+				if (args.Length > 1 && Convert.ToInt16(args[1]) == 0)
+					client.Player.IsOnHorse = false;
+			}
+			catch
+			{
+				client.Player.Out.SendMessage("Incorrect format of the command", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			}
+			finally
+			{
+				if (client.Account.PrivLevel > 1 && client.Player.IsOnHorse == false)
+					client.Player.IsOnHorse = true;
+			}
 			return 1;
 		}
 	}
