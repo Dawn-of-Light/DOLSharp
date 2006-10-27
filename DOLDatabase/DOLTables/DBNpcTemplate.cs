@@ -82,7 +82,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Template ID
 		/// </summary>
-		[DataElement(AllowDbNull = false, Unique = true)]
+		[DataElement(AllowDbNull = false)]
 		public int TemplateId
 		{
 			get { return m_templateId; }

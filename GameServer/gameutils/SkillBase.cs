@@ -77,6 +77,7 @@ namespace DOL.GS
 		public virtual string Name
 		{
 			get { return m_name; }
+			set { m_name = value; }
 		}
 
 		public virtual int Level

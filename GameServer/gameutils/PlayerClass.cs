@@ -367,7 +367,7 @@ namespace DOL.GS
 					}
 //					player.SaveIntoDatabase(); // saved in game player
 				}
-			} 
+			}
 		}
 
 		/// <summary>
