@@ -1,16 +1,16 @@
 /*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -28,10 +28,10 @@ namespace DOL.GS
 	/// </summary>
 	public class Faction
 	{
-		private const int DICREASE_VALUE = 1;
-		private const int INCREASE_VALUE = 1;
-		private const int MAX_VALUE = 100;
-		private const int MIN_VALUE = -100;
+		private const int DECREASE_AGGRO_AMOUNT = -1;
+		private const int INCREASE_AGGRO_AMOUNT = 1;
+		private const int MAX_AGGRO_VALUE = 100;
+		private const int MIN_AGGRO_VALUE = -100;
 
 		public Faction()
 		{
@@ -49,9 +49,9 @@ namespace DOL.GS
 		/// <param name="dbfaction"></param>
 		public void LoadFromDatabase(DBFaction dbfaction)
 		{
-			m_name= dbfaction.Name;
-			m_id=dbfaction.ID;
-			m_baseFriendship=dbfaction.BaseFriendShip;
+			m_name = dbfaction.Name;
+			m_id = dbfaction.ID;
+			m_baseAggroLevel = dbfaction.BaseAggroLevel;
 		}
 		public void SaveAggroToFaction()
 		{
@@ -63,7 +63,7 @@ namespace DOL.GS
 		}
 		public void SaveAggroToFaction(string charID)
 		{
-			DBFactionAggroLevel dbfactionAggroLevel = (DBFactionAggroLevel)GameServer.Database.SelectObject(typeof(DBFactionAggroLevel),"CharacterID = '" + charID + "' AND FactionID ="+this.ID);
+			DBFactionAggroLevel dbfactionAggroLevel = (DBFactionAggroLevel)GameServer.Database.SelectObject(typeof(DBFactionAggroLevel), "CharacterID = '" + charID + "' AND FactionID =" + this.ID);
 			if (dbfactionAggroLevel == null)
 			{
 				dbfactionAggroLevel = new DBFactionAggroLevel();
@@ -81,8 +81,8 @@ namespace DOL.GS
 		#endregion
 
 		#region Properties
-		
-		
+
+
 		/// <summary>
 		/// hold name of faction
 		/// </summary>
@@ -92,7 +92,7 @@ namespace DOL.GS
 		/// </summary>
 		public string Name
 		{
-			get{ return m_name; }
+			get { return m_name; }
 		}
 
 		/// <summary>
@@ -104,7 +104,7 @@ namespace DOL.GS
 		/// </summary>
 		public ArrayList FriendFactions
 		{
-			get{ return m_friendFactions; }
+			get { return m_friendFactions; }
 		}
 
 		/// <summary>
@@ -116,7 +116,7 @@ namespace DOL.GS
 		/// </summary>
 		public ArrayList EnemyFactions
 		{
-			get{ return m_enemyFactions; }
+			get { return m_enemyFactions; }
 		}
 
 		/// <summary>
@@ -132,19 +132,19 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// hold basefriendship
+		/// hold base aggro level
 		/// </summary>
-		private int m_baseFriendship;
+		private int m_baseAggroLevel;
 		/// <summary>
-		/// base friendship when player have never meet faction before
+		/// base aggro when player have never meet faction before
 		/// </summary>
-		private int BaseFriendShip
+		public int BaseAggroLevel
 		{
-			get { return m_baseFriendship; }
+			get { return m_baseAggroLevel; }
 		}
 
 		/// <summary>
-		/// this is the table of player aggrolevel 
+		/// this is the table of player aggrolevel
 		/// </summary>
 		private Hashtable m_playerxFaction;
 
@@ -201,78 +201,87 @@ namespace DOL.GS
 		}
 		#endregion
 
-		#region Killmember/direase/increase/get friendship
+		#region changes for interactions with faction members
 		/// <summary>
-		/// methode call when player kill a mob with faction
+		/// called when a player kills a mob from the faction
 		/// </summary>
 		/// <param name="killer"></param>
 		public void KillMember(GamePlayer killer)
 		{
-			this.DicreaseFriendship(killer);
-			foreach(Faction faction in m_friendFactions)
+			this.ChangeAggroLevel(killer, INCREASE_AGGRO_AMOUNT);
+			foreach (Faction faction in m_friendFactions)
 			{
-				faction.DicreaseFriendship(killer);
+				faction.ChangeAggroLevel(killer, INCREASE_AGGRO_AMOUNT);
 			}
-			foreach(Faction faction in m_enemyFactions)
+			foreach (Faction faction in m_enemyFactions)
 			{
-				faction.IncreaseFriendship(killer);
+				faction.ChangeAggroLevel(killer, DECREASE_AGGRO_AMOUNT);
 			}
 		}
-		/// <summary>
-		/// dicrease friendship of player with faction
-		/// </summary>
-		/// <param name="killer"></param>
-		public void DicreaseFriendship(GamePlayer killer)
-		{
-			if (!m_updatePlayer.Contains(killer.PlayerCharacter.ObjectId))
-				m_updatePlayer.Add(killer.PlayerCharacter.ObjectId);
-			if(m_playerxFaction.ContainsKey(killer.PlayerCharacter.ObjectId))
-			{
-				int friendship = (int)m_playerxFaction[killer.PlayerCharacter.ObjectId];
-				if (friendship > MIN_VALUE)
-					m_playerxFaction[killer.PlayerCharacter.ObjectId] = friendship -DICREASE_VALUE;
-			}
-			else
-			{
-				m_playerxFaction.Add(killer.PlayerCharacter.ObjectId, BaseFriendShip - DICREASE_VALUE);
-			}
-			killer.Out.SendMessage("Your relationship with "+this.Name+" has decrease.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			
-		}
-		
-		/// <summary>
-		/// increase friendship of player with faction
-		/// </summary>
-		/// <param name="killer"></param>
-		public void IncreaseFriendship(GamePlayer killer)
-		{
-			if (!m_updatePlayer.Contains(killer.PlayerCharacter.ObjectId))
-				m_updatePlayer.Add(killer.PlayerCharacter.ObjectId);
-			if(m_playerxFaction.ContainsKey(killer.PlayerCharacter.ObjectId))
-			{
-				int friendship = (int)m_playerxFaction[killer.PlayerCharacter.ObjectId];
-				if (friendship < MAX_VALUE)
-					m_playerxFaction[killer.PlayerCharacter.ObjectId] = friendship + INCREASE_VALUE;
-			}
-			else
-			{
-				m_playerxFaction.Add(killer.PlayerCharacter.ObjectId, BaseFriendShip + INCREASE_VALUE);
-			}
-			killer.Out.SendMessage("Your relationship with "+this.Name+" has increase.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-		}
-		
 
 		/// <summary>
-		/// get aggro level of player with faction
+		/// changes aggro of faction and related factions to player
+		/// </summary>
+		/// <param name="player"></param>
+		public void ChangeAggroLevel(GamePlayer player, int amount)
+		{
+			// remember the player
+			if (!m_updatePlayer.Contains(player.PlayerCharacter.ObjectId))
+			{
+				m_updatePlayer.Add(player.PlayerCharacter.ObjectId);
+			}
+			int oldAggro;
+			// remember the player's relation to the faction
+			if (m_playerxFaction.ContainsKey(player.PlayerCharacter.ObjectId))
+			{
+				oldAggro = (int)m_playerxFaction[player.PlayerCharacter.ObjectId];
+			}
+			else
+			{
+				oldAggro = BaseAggroLevel;
+				m_playerxFaction.Add(player.PlayerCharacter.ObjectId, BaseAggroLevel);
+			}
+			// get the new relation
+			int newAggro = oldAggro + amount;
+			// clamp it between MIN and MAX
+			if (newAggro < MIN_AGGRO_VALUE)
+			{
+				newAggro = MIN_AGGRO_VALUE;
+			}
+			else if (newAggro > MAX_AGGRO_VALUE)
+			{
+				newAggro = MAX_AGGRO_VALUE;
+			}
+			// check if changed
+			if (newAggro != oldAggro)
+			{
+				// save the change
+				m_playerxFaction[player.PlayerCharacter.ObjectId] = newAggro;
+				// tell the player
+				string msg = "Your relationship with " + this.Name + " has ";
+				if (amount > 0)
+				{
+					msg += "decreased.";
+				}
+				else
+				{
+					msg += "increased.";
+				}
+				player.Out.SendMessage(msg, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			}
+		}
+
+		/// <summary>
+		/// gets aggro level of player with faction
 		/// </summary>
 		/// <param name="player"></param>
 		/// <returns></returns>
 		public int GetAggroToFaction(GamePlayer player)
 		{
-			if(m_playerxFaction.ContainsKey(player.PlayerCharacter.ObjectId))
+			if (m_playerxFaction.ContainsKey(player.PlayerCharacter.ObjectId))
 				return (int)m_playerxFaction[player.PlayerCharacter.ObjectId];
 			else
-				return BaseFriendShip;
+				return BaseAggroLevel;
 		}
 		#endregion
 	}
