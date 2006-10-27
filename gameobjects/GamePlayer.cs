@@ -2304,6 +2304,7 @@ namespace DOL.GS
 					{
 						newAbility = true;
 						oldability.Level = ability.Level;
+						oldability.Name = ability.Name;
 					}
 					if (newAbility)
 					{
