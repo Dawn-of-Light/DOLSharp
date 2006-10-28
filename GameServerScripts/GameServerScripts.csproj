@@ -484,12 +484,16 @@
     <Compile Include="playertitles\VeteranTitle.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="quests\albion\AFewRepairs.cs" />
     <Compile Include="quests\albion\AgainstTheGrain.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="quests\albion\AMessageToTheManes.cs" />
     <Compile Include="quests\albion\AndrewsSkins.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="quests\albion\ArgussArrows.cs" />
+    <Compile Include="quests\albion\ArleighsAssistant.cs" />
     <Compile Include="quests\albion\ArrowsForYettaFletcher.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -499,6 +503,9 @@
     <Compile Include="quests\albion\BeginningOfWar.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="quests\albion\BoarStew.cs" />
+    <Compile Include="quests\albion\BoulderlingBalm.cs" />
+    <Compile Include="quests\albion\BreakingTheBandits.cs" />
     <Compile Include="quests\albion\BuildingABetterBow.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -514,6 +521,7 @@
     <Compile Include="quests\albion\Culmination.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="quests\albion\Disenchanted.cs" />
     <Compile Include="quests\albion\epic\Academy50.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -556,6 +564,7 @@
     <Compile Include="quests\albion\LawrencesOil.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="quests\albion\MarlinsSalesPitch.cs" />
     <Compile Include="quests\albion\Nuisances.cs">
       <SubType>Code</SubType>
     </Compile>
