@@ -327,6 +327,37 @@ namespace DOL.GS
 			{
 				if (CurrentRegion == null)
 					return false;
+				// Special land areas below the waterlevel in NF
+				if (CurrentRegion.ID == 163)
+				{
+					// Mount Collory
+					if ((Y > 664000) && (Y < 670000) && (X > 479000) && (X < 488000)) return false;
+					if ((Y > 656000) && (Y < 664000) && (X > 472000) && (X < 488000)) return false;
+					if ((Y > 624000) && (Y < 654000) && (X > 468500) && (X < 488000)) return false;
+					if ((Y > 659000) && (Y < 683000) && (X > 431000) && (X < 466000)) return false;
+					if ((Y > 646000) && (Y < 659001) && (X > 431000) && (X < 460000)) return false;
+					if ((Y > 624000) && (Y < 646001) && (X > 431000) && (X < 455000)) return false;
+					if ((Y > 671000) && (Y < 683000) && (X > 431000) && (X < 471000)) return false;
+					// Breifine
+					if ((Y > 558000) && (Y < 618000) && (X > 456000) && (X < 479000)) return false;
+					// Cruachan Gorge
+					if ((Y > 586000) && (Y < 618000) && (X > 360000) && (X < 424000)) return false;
+					if ((Y > 563000) && (Y < 578000) && (X > 360000) && (X < 424000)) return false;
+					// Emain Macha
+					if ((Y > 505000) && (Y < 555000) && (X > 428000) && (X < 444000)) return false;
+					// Hadrian's Wall
+					if ((Y > 500000) && (Y < 553000) && (X > 603000) && (X < 620000)) return false;
+					// Snowdonia
+					if ((Y > 633000) && (Y < 678000) && (X > 592000) && (X < 617000)) return false;
+					if ((Y > 662000) && (Y < 678000) && (X > 581000) && (X < 617000)) return false;
+					// Sauvage Forrest
+					if ((Y > 584000) && (Y < 615000) && (X > 626000) && (X < 681000)) return false;
+					// Uppland
+					if ((Y > 297000) && (Y < 353000) && (X > 610000) && (X < 652000)) return false;
+					// Yggdra
+					if ((Y > 408000) && (Y < 421000) && (X > 671000) && (X < 693000)) return false;
+					if ((Y > 364000) && (Y < 394000) && (X > 674000) && (X < 716000)) return false;
+				}
 				return Z < CurrentRegion.WaterLevel;
 			}
 		}

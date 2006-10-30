@@ -60,7 +60,10 @@ namespace DOL.GS
 		FirstVault        = 110,
 		LastVault         = 149,
 
-		Max_Inv			  = 150,
+		Max_Inv			  = 149,
+
+		//Consignment_First = 150,
+		//Consignment_last = 249,
 
 		//FirstFixLoot      = 256, //You can define drops that will ALWAYS occur (eg quest drops etc.)
 		//LastFixLoot       = 356, //100 drops should be enough ... if not, just raise this var, we have thousands free

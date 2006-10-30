@@ -27,6 +27,7 @@ namespace DOL.GS
 					if (area == null) throw new Exception("area is null");
 					area.Sound = thisArea.Sound;
 					area.CanBroadcast = thisArea.CanBroadcast;
+					area.CheckLOS = thisArea.CheckLOS;
 					Region region = WorldMgr.GetRegion(thisArea.Region);
 					if (region == null)
 						continue;

@@ -260,37 +260,37 @@ namespace DOL.GS.Items
 				if (log.IsDebugEnabled)
 					log.Debug("Added "+slash_sword_item_template.Id_nb);
 			}
-			ItemTemplate chrush_sword_item_template = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "chrush_sword_item");
-			if (chrush_sword_item_template==null)
+			ItemTemplate crush_sword_item_template = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "crush_sword_item");
+			if (crush_sword_item_template==null)
 			{
-				chrush_sword_item_template = new ItemTemplate();
-				chrush_sword_item_template.Name = "Mace of the Initiate";
-				chrush_sword_item_template.Level = 5;
-				chrush_sword_item_template.Durability=100;
-				chrush_sword_item_template.MaxDurability=100;
-				chrush_sword_item_template.Condition = 50000;
-				chrush_sword_item_template.MaxCondition = 50000;
-				chrush_sword_item_template.Quality = 90;
-				chrush_sword_item_template.MaxQuality = 90;
-				chrush_sword_item_template.DPS_AF = 30;
-				chrush_sword_item_template.SPD_ABS = 30;
-				chrush_sword_item_template.Hand = 2;
-				chrush_sword_item_template.Type_Damage = 1;
-				chrush_sword_item_template.Object_Type = 2;
-				chrush_sword_item_template.Item_Type = 10;
-				chrush_sword_item_template.Weight = 32;
-				chrush_sword_item_template.Model = 13;
-				chrush_sword_item_template.Realm = (int)eRealm.Albion;
-				chrush_sword_item_template.IsPickable = true; 
-				chrush_sword_item_template.IsDropable = false; 
-				chrush_sword_item_template.Id_nb = "chrush_sword_item";
+				crush_sword_item_template = new ItemTemplate();
+				crush_sword_item_template.Name = "Mace of the Initiate";
+				crush_sword_item_template.Level = 5;
+				crush_sword_item_template.Durability=100;
+				crush_sword_item_template.MaxDurability=100;
+				crush_sword_item_template.Condition = 50000;
+				crush_sword_item_template.MaxCondition = 50000;
+				crush_sword_item_template.Quality = 90;
+				crush_sword_item_template.MaxQuality = 90;
+				crush_sword_item_template.DPS_AF = 30;
+				crush_sword_item_template.SPD_ABS = 30;
+				crush_sword_item_template.Hand = 2;
+				crush_sword_item_template.Type_Damage = 1;
+				crush_sword_item_template.Object_Type = 2;
+				crush_sword_item_template.Item_Type = 10;
+				crush_sword_item_template.Weight = 32;
+				crush_sword_item_template.Model = 13;
+				crush_sword_item_template.Realm = (int)eRealm.Albion;
+				crush_sword_item_template.IsPickable = true; 
+				crush_sword_item_template.IsDropable = false; 
+				crush_sword_item_template.Id_nb = "crush_sword_item";
 
-				chrush_sword_item_template.Bonus1=1;
-				chrush_sword_item_template.Bonus1Type= (int) eProperty.Skill_Rejuvenation;
+				crush_sword_item_template.Bonus1=1;
+				crush_sword_item_template.Bonus1Type= (int) eProperty.Skill_Rejuvenation;
 
-				GameServer.Database.AddNewObject(chrush_sword_item_template);
+				GameServer.Database.AddNewObject(crush_sword_item_template);
 				if (log.IsDebugEnabled)
-					log.Debug("Added "+chrush_sword_item_template.Id_nb);
+					log.Debug("Added "+crush_sword_item_template.Id_nb);
 			}
 			ItemTemplate thrust_sword_item_template = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "thrust_sword_item");
 			if (thrust_sword_item_template==null)

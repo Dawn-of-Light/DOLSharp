@@ -3078,12 +3078,12 @@ namespace DOL.GS
 				if ((m_realmLevel >= 20 && m_realmLevel % 10 == 0) || m_realmLevel >= 60)
 				{
 					string message = string.Format("{0} reached realm rank {1:#L#} in {2}!", Name, m_realmLevel + 10, LastPositionUpdateZone.Description);
-					NewsMgr.CreateNews(message, 0, eNewsType.RvRLocal, true);
+					NewsMgr.CreateNews(message, this.Realm, eNewsType.RvRLocal, true);
 				}
 				if (m_realmPts >= 1000000 && m_realmPts - amount < 1000000)
 				{
 					string message = string.Format("{0} has earned 1,000,000 realm points in {1}", Name, LastPositionUpdateZone.Description);
-					NewsMgr.CreateNews(message, 0, eNewsType.RvRLocal, true);
+					NewsMgr.CreateNews(message, this.Realm, eNewsType.RvRLocal, true);
 				}
 			}
 			Out.SendUpdatePoints();

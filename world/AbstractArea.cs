@@ -30,9 +30,13 @@ namespace DOL.GS
 	public abstract class AbstractArea : IArea
 	{
 		/// <summary>
-		/// Variable holding weather or not players can broadcast in this area
+		/// Variable holding whether or not players can broadcast in this area
 		/// </summary>
 		public bool CanBroadcast = false;
+		/// <summary>
+		/// Variable holding whether or not to check for LOS for spells in this area
+		/// </summary>
+		public bool CheckLOS = false;
 		/// <summary>
 		/// Constant holding max number of areas per zone, increase if more ares are needed,
 		/// this will slightly increase memory usage on server

@@ -21,6 +21,7 @@ using DOL.Database;
 using System.Collections;
 using System.Collections.Specialized;
 using DOL.GS.Effects;
+using DOL.GS.RealmAbilities;
 using DOL.GS.Scripts;
 using DOL.GS.Spells;
 using DOL.GS.Styles;
@@ -737,19 +738,18 @@ namespace DOL.GS.PacketHandler.v168
 						}
 						else
 						{
-							/*
+							//realm abilities
 							if (objectID >= 50)
 							{
-								IList ra_list = client.Player.CharacterClass.PlayerClassRealmAbilities(client.Player.Level);
-								Ability ab = (Ability)ra_list[objectID-50];
+								IList ra_list = SkillBase.GetClassRealmAbilities(client.Player.CharacterClass.ID);
+								RealmAbility ab = (RealmAbility)ra_list[objectID - 50];
 								if (ab != null)
 								{
 									caption = ab.Name;
-									objectInfo.Add(ab.Description);
+									objectInfo.AddRange(ab.DelveInfo);
 									break;
 								}
 							}
-							 */
 							caption = "Specialization not found";
 							objectInfo.Add("that specialization is not found, id=" + objectID);
 							break;
