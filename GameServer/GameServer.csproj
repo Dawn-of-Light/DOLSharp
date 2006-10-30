@@ -561,6 +561,7 @@
     <Compile Include="keeps\Gameobjects\Guards\Static Caster.cs" />
     <Compile Include="keeps\Gameobjects\Guards\Stealther.cs" />
     <Compile Include="keeps\Gameobjects\IKeepItem.cs" />
+    <Compile Include="keeps\KeepArea.cs" />
     <Compile Include="keeps\Managers\Clothing Manager.cs" />
     <Compile Include="keeps\Managers\RelicMgr.cs" />
     <Compile Include="keeps\Managers\Template Manager.cs" />
@@ -583,6 +584,7 @@
     <Compile Include="propertycalc\ResistPiercePropertyCalculator.cs" />
     <Compile Include="quests\Missions\AbstractKillMission.cs" />
     <Compile Include="quests\Missions\AbstractMission.cs" />
+    <Compile Include="quests\Missions\AbstractCaptureMission.cs" />
     <Compile Include="realmabilities\handlers\CamouflageSpecHandler.cs" />
     <Compile Include="realmabilities\handlers\ConcentrationAbility.cs" />
     <Compile Include="realmabilities\handlers\ToughnessAbility.cs" />
@@ -1521,6 +1523,7 @@
     <Compile Include="spells\ConcentrationList.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="spells\ConvertPet.cs" />
     <Compile Include="spells\EnduranceHealSpellHandler.cs" />
     <Compile Include="spells\PowerHealSpellHandler.cs" />
     <Compile Include="spells\Savage\HealthToFatigue.cs" />

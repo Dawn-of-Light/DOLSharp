@@ -202,6 +202,8 @@ namespace DOL.GS.Keeps
 				return;
 
 			GamePlayer player = guard.TargetObject as GamePlayer;
+			if (guard is GuardLord)
+				return;
 			player.Out.SendCheckLOS(guard, player, new CheckLOSResponse(guard.GuardStopAttackCheckLOS));
 		}
 
@@ -226,6 +228,12 @@ namespace DOL.GS.Keeps
 			//we dont send LOS checks for people we cant attack
 			if (!GameServer.ServerRules.IsAllowedToAttack(this, target, true))
 				return;
+
+			if (this is GuardLord)
+			{
+				base.StartAttack(attackTarget);
+				return;
+			}
 
 			//Prevent spam for LOS checks multiple times..
 			GameObject lastTarget = (GameObject)this.TempProperties.getObjectProperty(Last_LOS_Target_Property, null);
@@ -257,7 +265,7 @@ namespace DOL.GS.Keeps
 			this.TempProperties.setProperty(Last_LOS_Tick_Property, CurrentRegion.Time);
 			TargetObject = attackTarget;
 			LOSChecker.Out.SendCheckLOS(this, attackTarget, new CheckLOSResponse(this.GuardStartAttackCheckLOS));
-		
+
 		}
 
 		/// <summary>
@@ -330,7 +338,7 @@ result == GameLiving.eAttackResult.Parried)
 			return false;
 		}
 
-				/// <summary>
+		/// <summary>
 		/// Method to see if the Guard has been left alone long enough to use Ranged attacks
 		/// </summary>
 		/// <param name="npc">The guard object</param>
