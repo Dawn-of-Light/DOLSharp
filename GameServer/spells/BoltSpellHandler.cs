@@ -21,6 +21,7 @@ using DOL.AI.Brain;
 using DOL.Database;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
+using DOL.GS.Keeps;
 using DOL.GS.SkillHandler;
 
 namespace DOL.GS.Spells
@@ -41,21 +42,58 @@ namespace DOL.GS.Spells
 			base.FinishSpellCast(target);
 		}
 
+		#region LOS Checks for Keeps
 		/// <summary>
 		/// called when spell effect has to be started and applied to targets
 		/// </summary>
 		public override void StartSpell(GameLiving target)
 		{
-			if (target == null) return;
+			foreach (GameLiving targ in SelectTargets(target))
+			{
+				if (targ is GamePlayer && Spell.Target == "Frontal" && CheckLOS(Caster))
+				{
+					GamePlayer player = targ as GamePlayer;
+					player.Out.SendCheckLOS(Caster, player, new CheckLOSResponse(DealDamageCheckLOS));
+				}
+				else
+				{
+					DealDamage(targ);
+				}
+			}
+		}
+
+		private bool CheckLOS(GameLiving living)
+		{
+			foreach (AbstractArea area in living.CurrentAreas)
+			{
+				if (area is KeepArea || area.CheckLOS)
+					return true;
+			}
+			return false;
+		}
+
+		private void DealDamageCheckLOS(GamePlayer player, ushort response, ushort targetOID)
+		{
+			if ((response & 0x100) == 0x100)
+			{
+				GameLiving target = (GameLiving)(Caster.CurrentRegion.GetObject(targetOID));
+				if (target != null)
+					DealDamage(target);
+			}
+		}
+
+		private void DealDamage(GameLiving target)
+		{
 			int ticksToTarget = WorldMgr.GetDistance(m_caster, target) * 100 / 85; // 85 units per 1/10s
 			int delay = 1 + ticksToTarget / 100;
-			foreach (GamePlayer player in target.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE)) 
+			foreach (GamePlayer player in target.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
 				player.Out.SendSpellEffectAnimation(m_caster, target, m_spell.ClientEffect, (ushort)(delay), false, 1);
 			}
 			BoltOnTargetAction bolt = new BoltOnTargetAction(Caster, target, this);
 			bolt.Start(1 + ticksToTarget);
 		}
+		#endregion
 
 		/// <summary>
 		/// Delayed action when bolt reach the target

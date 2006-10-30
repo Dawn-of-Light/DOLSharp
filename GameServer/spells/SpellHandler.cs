@@ -42,7 +42,7 @@ namespace DOL.GS.Spells
 		/// <summary>
 		/// Defines a logger for this class.
 		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		protected static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		private DelayedCastTimer m_castTimer;
 		protected Spell m_spell;

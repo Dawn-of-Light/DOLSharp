@@ -26,7 +26,7 @@ namespace DOL.GS.Quests
 
 			EnemyKilledEventArgs eargs = args as EnemyKilledEventArgs;
 
-			if (eargs.Target.GetType().Equals(m_targetType))
+			if (m_targetType.IsInstanceOfType(eargs.Target) == false)
 				return;
 
 			//we dont allow events triggered by non group leaders

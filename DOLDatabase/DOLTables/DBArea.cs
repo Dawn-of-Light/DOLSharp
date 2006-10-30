@@ -4,24 +4,26 @@ using DOL.Database.Attributes;
 
 namespace DOL.Database
 {
-	[DataTable(TableName="Area")]
+	[DataTable(TableName = "Area")]
 	public class DBArea : DataObject
 	{
 		private string m_description;
-		private int	m_x;
-		private int	m_y;
+		private int m_x;
+		private int m_y;
 		private int m_z;
 		private int m_radius;
-		private ushort	m_region;
-		private string	m_classType = "";
+		private ushort m_region;
+		private string m_classType = "";
 		private static bool m_autoSave;
 		private bool m_canBroadcast;
 		private byte m_sound;
+		private bool m_checkLOS;
 
 		public DBArea()
 		{
-			m_autoSave=false;
+			m_autoSave = false;
 		}
+
 		override public bool AutoSave
 		{
 			get
@@ -33,6 +35,7 @@ namespace DOL.Database
 				m_autoSave = value;
 			}
 		}
+
 		[DataElement(AllowDbNull = false)]
 		public string Description
 		{
@@ -46,7 +49,8 @@ namespace DOL.Database
 				m_description = value;
 			}
 		}
-		[DataElement(AllowDbNull=true)]
+
+		[DataElement(AllowDbNull = true)]
 		public int X
 		{
 			get
@@ -59,7 +63,8 @@ namespace DOL.Database
 				m_x = value;
 			}
 		}
-		[DataElement(AllowDbNull=false)]
+
+		[DataElement(AllowDbNull = false)]
 		public int Y
 		{
 			get
@@ -72,6 +77,7 @@ namespace DOL.Database
 				m_y = value;
 			}
 		}
+
 		[DataElement(AllowDbNull = false)]
 		public int Z
 		{
@@ -85,6 +91,7 @@ namespace DOL.Database
 				m_z = value;
 			}
 		}
+
 		[DataElement(AllowDbNull = false)]
 		public int Radius
 		{
@@ -98,7 +105,8 @@ namespace DOL.Database
 				m_radius = value;
 			}
 		}
-		[DataElement(AllowDbNull=false)]
+
+		[DataElement(AllowDbNull = false)]
 		public ushort Region
 		{
 			get
@@ -111,7 +119,8 @@ namespace DOL.Database
 				m_region = value;
 			}
 		}
-		[DataElement(AllowDbNull=true)]
+
+		[DataElement(AllowDbNull = true)]
 		public string ClassType
 		{
 			get
@@ -124,6 +133,7 @@ namespace DOL.Database
 				m_classType = value;
 			}
 		}
+
 		[DataElement(AllowDbNull = true)]
 		public bool CanBroadcast
 		{
@@ -137,6 +147,7 @@ namespace DOL.Database
 				m_canBroadcast = value;
 			}
 		}
+
 		[DataElement(AllowDbNull = true)]
 		public byte Sound
 		{
@@ -148,6 +159,20 @@ namespace DOL.Database
 			{
 				Dirty = true;
 				m_sound = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public bool CheckLOS
+		{
+			get
+			{
+				return m_checkLOS;
+			}
+			set
+			{
+				Dirty = true;
+				m_checkLOS = value;
 			}
 		}
 	}

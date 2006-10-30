@@ -225,7 +225,7 @@ namespace DOL.GS
 			/// Cache for radius*radius to increase performance of circle check,
 			/// radius is still needed for square check
 			/// </summary>
-			private int m_RadiusRadius;
+			protected int m_RadiusRadius;
 			
 
 			/// <summary>
