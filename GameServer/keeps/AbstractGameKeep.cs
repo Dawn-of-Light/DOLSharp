@@ -403,9 +403,11 @@ namespace DOL.GS.Keeps
 			{
 				radius = 1500;
 			}
-			Area.Circle circle = new Area.Circle(this.Name, this.X, this.Y, 0, radius);
-			circle.CanBroadcast = true;
-			CurrentRegion.AddArea(circle);
+			KeepArea area = new KeepArea(this.Name, this.X, this.Y, 0, radius);
+			area.CanBroadcast = true;
+			area.CheckLOS = true;
+			area.Keep = this;
+			CurrentRegion.AddArea(area);
 		}
 
 		/// <summary>
