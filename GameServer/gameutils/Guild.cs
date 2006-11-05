@@ -506,11 +506,8 @@ namespace DOL.GS
 		/// <param name="amount">The amount of realm points gained</param>
 		public virtual void GainRealmPoints(long amount)
 		{
-			lock (this)
-			{
-				m_realmPoints += amount;
-				m_DBguild.RealmPoints = m_realmPoints;
-			}
+			m_realmPoints += amount;
+			m_DBguild.RealmPoints = m_realmPoints;
 		}
 
 		/// <summary>
@@ -519,25 +516,22 @@ namespace DOL.GS
 		/// <param name="amount">The amount of bounty points gained</param>
 		public virtual void GainBountyPoints(long amount)
 		{
-			lock (this)
-			{
-				m_bountyPoints += amount;
-				m_DBguild.BountyPoints = m_bountyPoints;
-			}
+			m_bountyPoints += amount;
+			m_DBguild.BountyPoints = m_bountyPoints;
 		}
+
 		/// <summary>
 		/// Called when this guild loose bounty points
 		/// </summary>
 		/// <param name="amount">The amount of bounty points gained</param>
 		public virtual bool RemoveBountyPoints(long amount)
 		{
-			lock (this)
-			{
-				if (amount > m_bountyPoints) return false;
-				m_bountyPoints -= amount;
-				m_DBguild.BountyPoints = m_bountyPoints;
-				return true;
-			}
+			if (amount > m_bountyPoints)
+				amount = m_bountyPoints;
+
+			m_bountyPoints -= amount;
+			m_DBguild.BountyPoints = m_bountyPoints;
+			return true;
 		}
 
 		/// <summary>

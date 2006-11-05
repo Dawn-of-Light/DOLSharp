@@ -201,6 +201,7 @@ namespace DOL.GS
 			siegeweapon.X = player.X;
 			siegeweapon.Y = player.Y;
 			siegeweapon.Z = player.Z;
+			siegeweapon.Realm = player.Realm;
 			siegeweapon.AddToWorld();
 		}
 	}

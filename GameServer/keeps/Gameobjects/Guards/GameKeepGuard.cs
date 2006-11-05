@@ -118,7 +118,7 @@ namespace DOL.GS.Keeps
 			int speed = 0;
 			switch (ActiveWeaponSlot)
 			{
-				case eActiveWeaponSlot.Distance: speed = 60; break;
+				case eActiveWeaponSlot.Distance: speed = 45; break;
 				case eActiveWeaponSlot.TwoHanded: speed = 40; break;
 				default: speed = 24; break;
 			}
@@ -143,6 +143,18 @@ namespace DOL.GS.Keeps
 				base.AttackRange = value;
 			}
 		}
+
+		/// <summary>
+		/// The distance attack range
+		/// </summary>
+		public virtual int AttackRangeDistance
+		{
+			get
+			{
+				return 0;
+			}
+		}
+
 		/// <summary>
 		/// We need an event after an attack is finished so we know when players are unreachable by archery
 		/// </summary>
@@ -178,7 +190,7 @@ namespace DOL.GS.Keeps
 							}
 						}
 					}
-					if (WorldMgr.GetDistance(guard, guard.TargetObject) <= 2000)
+					if (WorldMgr.GetDistance(guard, guard.TargetObject) <= guard.AttackRangeDistance)
 					{
 						if (guard.MaxSpeedBase == 0 || (guard is GuardArcher && !guard.BeenAttackedRecently))
 							guard.SwitchToRanged(guard.TargetObject);
@@ -202,8 +214,16 @@ namespace DOL.GS.Keeps
 				return;
 
 			GamePlayer player = guard.TargetObject as GamePlayer;
-			if (guard is GuardLord)
-				return;
+			if (guard is GuardLord && guard.Component != null && guard.Component.Keep != null)
+			{
+				if (!guard.Component.IsAlive)
+					return;
+				foreach (GameKeepDoor door in guard.Component.Keep.Doors.Values)
+				{
+					if (!door.IsAlive)
+						return;
+				}
+			}
 			player.Out.SendCheckLOS(guard, player, new CheckLOSResponse(guard.GuardStopAttackCheckLOS));
 		}
 
@@ -229,10 +249,21 @@ namespace DOL.GS.Keeps
 			if (!GameServer.ServerRules.IsAllowedToAttack(this, target, true))
 				return;
 
-			if (this is GuardLord)
+			if (this is GuardLord && this.Component != null && this.Component.Keep != null)
 			{
-				base.StartAttack(attackTarget);
-				return;
+				if (!this.Component.IsAlive)
+				{
+					base.StartAttack(attackTarget);
+					return;
+				}
+				foreach (GameKeepDoor door in this.Component.Keep.Doors.Values)
+				{
+					if (!door.IsAlive)
+					{
+						base.StartAttack(attackTarget);
+						return;
+					}
+				}
 			}
 
 			//Prevent spam for LOS checks multiple times..
@@ -258,6 +289,7 @@ namespace DOL.GS.Keeps
 					break;
 				}
 			}
+
 			if (LOSChecker == null)
 				return;
 

@@ -945,6 +945,18 @@ namespace DOL.GS.Spells
 
 			StartSpell(target); // and action
 
+			//Subspells
+			if (m_spell.SubSpellID > 0)
+			{
+				Spell spell = SkillBase.GetSpellByID(m_spell.SubSpellID);
+				//we need subspell ID to be 0, we don't want spells linking off the subspell
+				if (spell != null && spell.SubSpellID == 0)
+				{
+					ISpellHandler spellhandler = Scripts.ScriptMgr.CreateSpellHandler(m_caster, spell, SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells));
+					spellhandler.StartSpell(target);
+				}
+			}
+
 			//the quick cast is unallowed whenever you miss the spell	
 			//set the time when casting to can not quickcast during a minimum time
 			if (m_caster is GamePlayer)

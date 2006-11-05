@@ -50,7 +50,10 @@ namespace DOL.GS
 			{
 				m_mission = value;
 				foreach (GamePlayer player in this.m_groupMembers)
+				{
 					player.Out.SendQuestListUpdate();
+					if (value != null) player.Out.SendMessage(m_mission.Description, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				}
 			}
 		}
 
@@ -137,19 +140,20 @@ namespace DOL.GS
 		/// <returns></returns>
 		public bool MakeLeader(GamePlayer player)
 		{
-			if (!m_groupMembers.Contains(player))
-				return false;
-
-			int ind;
-			lock (this)
+			lock (m_groupMembers) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
+				if (!m_groupMembers.Contains(player))
+					return false;
+
+				int ind;
+
 				ind = player.PlayerGroupIndex;
 				m_groupMembers[ind] = m_groupMembers[0];
 				m_groupMembers[0] = player;
 				Leader = player;
+				((GamePlayer)m_groupMembers[0]).PlayerGroupIndex = 0;
+				((GamePlayer)m_groupMembers[ind]).PlayerGroupIndex = ind;
 			}
-			((GamePlayer)m_groupMembers[0]).PlayerGroupIndex = 0;
-			((GamePlayer)m_groupMembers[ind]).PlayerGroupIndex = ind;
 			UpdateGroupWindow();
 			return true;
 		}
@@ -159,9 +163,12 @@ namespace DOL.GS
 		/// </summary>
 		private void UpdatePlayerIndexes()
 		{
-			for (int i = 0; i < m_groupMembers.Count; i++)
+			lock (m_groupMembers)
 			{
-				((GamePlayer)m_groupMembers[i]).PlayerGroupIndex = i;
+				for (int i = 0; i < m_groupMembers.Count; i++)
+				{
+					((GamePlayer)m_groupMembers[i]).PlayerGroupIndex = i;
+				}
 			}
 		}
 
@@ -170,7 +177,7 @@ namespace DOL.GS
 		/// </summary>
 		public void UpdateGroupWindow()
 		{
-			lock (this)
+			lock (m_groupMembers) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
 				for (int i = 0; i < m_groupMembers.Count; ++i)
 				{
@@ -187,7 +194,7 @@ namespace DOL.GS
 		/// <param name="updateOtherRegions">Should updates be sent to players in other regions</param>
 		public void UpdateMember(GamePlayer player, bool updateIcons, bool updateOtherRegions)
 		{
-			lock (this)
+			lock (m_groupMembers) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
 				if (player.PlayerGroup != this)
 					return;
@@ -211,7 +218,7 @@ namespace DOL.GS
 		/// <param name="updateOtherRegions">Should updates be sent to players in other regions</param>
 		public void UpdateAllToMember(GamePlayer player, bool updateIcons, bool updateOtherRegions)
 		{
-			lock (this)
+			lock (m_groupMembers) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
 				if (player.PlayerGroup != this)
 					return;
@@ -252,7 +259,7 @@ namespace DOL.GS
 		/// <returns>true if group in combat</returns>
 		public bool IsGroupInCombat()
 		{
-			lock (this)
+			lock (m_groupMembers) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
 				foreach (GamePlayer player in m_groupMembers)
 				{

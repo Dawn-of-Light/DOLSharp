@@ -399,11 +399,8 @@ namespace DOL.GS
 			timer.Callback = new RegionTimerCallback(LinkdeathTimerCallback);
 			timer.Start(1 + secondsToQuit * 1000);
 
-			lock (this)
-			{
-				if (TradeWindow != null)
-					TradeWindow.CloseTrade();
-			}
+			if (TradeWindow != null)
+				TradeWindow.CloseTrade();
 
 			//Notify players in close proximity!
 			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
@@ -439,22 +436,18 @@ namespace DOL.GS
 			if (PlayerGroup != null)
 				PlayerGroup.RemovePlayer(this);
 
-			lock (this)
-			{
-				if (TradeWindow != null)
-					TradeWindow.CloseTrade();
-			}
+			if (TradeWindow != null)
+				TradeWindow.CloseTrade();
 
 			if (m_guild != null)
-			{
 				m_guild.RemoveOnlineMember(this);
-			}
 
 			ChatGroup mychatgroup = (ChatGroup)TempProperties.getObjectProperty(ChatGroup.CHATGROUP_PROPERTY, null);
 			if (mychatgroup != null)
 				mychatgroup.RemovePlayer(this);
 
 			CommandNpcRelease();
+
 			if (SiegeWeapon != null)
 				SiegeWeapon.ReleaseControl();
 
@@ -5796,6 +5789,7 @@ namespace DOL.GS
 					m_releaseTimer.Stop();
 					m_releaseTimer = null;
 				}
+				
 				if (m_quitTimer != null)
 				{
 					m_quitTimer.Stop();
@@ -6291,6 +6285,7 @@ namespace DOL.GS
 		{
 			if (source == null || item == null || source == this)
 				return false;
+
 			lock (this)
 			{
 				lock (source)
@@ -9761,6 +9756,7 @@ namespace DOL.GS
 			{ 
 				m_mission = value;
 				this.Out.SendQuestListUpdate();
+				if (value != null) Out.SendMessage(m_mission.Description, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 		}
 
@@ -10581,10 +10577,6 @@ namespace DOL.GS
 		{
 			get { return m_siegeWeapon; }
 			set { m_siegeWeapon = value; }
-		}
-		public void RepairSiegeWeapon(GameSiegeWeapon siegeWeapon)
-		{
-			Out.SendMessage("Repairing Siege Weapons is not yet implemented", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}
 		public void SalvageSiegeWeapon(GameSiegeWeapon siegeWeapon)
 		{

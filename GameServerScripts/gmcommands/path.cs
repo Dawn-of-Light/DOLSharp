@@ -34,7 +34,8 @@ namespace DOL.GS.Scripts
 		"/path save <pathname> - saves a path to db",
 		"/path travel - makes a target mob travel the current path",
 		"/path assignhorseroute <Destination> - sets the current path as horseroute on stablemaster",
-		"/path hide - removes the temporary objects shown when a path is loaded or created")]
+		"/path hide - removes the temporary objects shown when a path is loaded or created",
+		"/path type - changes the path's type")]
 	public class PathCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		protected string TEMP_PATH_FIRST = "TEMP_PATH_FIRST";

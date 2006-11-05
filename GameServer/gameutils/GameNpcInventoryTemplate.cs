@@ -133,7 +133,7 @@ namespace DOL.GS
 		/// <returns>true if added</returns>
 		public bool AddNPCEquipment(eInventorySlot slot, int model, int color, int effect, int extension)
 		{
-			lock (this)
+			lock (m_items)
 			{
 				lock (m_usedInventoryItems.SyncRoot)
 				{
@@ -167,7 +167,7 @@ namespace DOL.GS
 		/// <returns>true if removed</returns>
 		public bool RemoveNPCEquipment(eInventorySlot slot)
 		{
-			lock (this)
+			lock (m_items)
 			{
 				slot = GetValidInventorySlot(slot);
 				if (slot == eInventorySlot.Invalid) return false;
@@ -186,7 +186,7 @@ namespace DOL.GS
 		/// <returns>Invetory template instance that should be used</returns>
 		public GameNpcInventoryTemplate CloseTemplate()
 		{
-			lock (this)
+			lock (m_items)
 			{
 				lock (m_usedInventoryTemplates.SyncRoot)
 				{

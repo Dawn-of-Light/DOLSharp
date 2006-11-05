@@ -997,7 +997,7 @@ namespace DOL.GS
 		public IEnumerable GetPlayersInRadius(ushort radiusToCheck)
 		{
 			/******* MODIFIED BY KONIK & WITCHKING FOR NEW ZONE SYSTEM *********/
-			return GetPlayersInRadius(true, radiusToCheck, false);
+			return GetPlayersInRadius(false, radiusToCheck, false);
 			/***************************************************************/
 		}
 

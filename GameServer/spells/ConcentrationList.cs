@@ -73,10 +73,12 @@ namespace DOL.GS.Spells
 		public void Add(IConcentrationEffect effect)
 		{
 			BeginChanges();
-			lock (this)
+
+			if (m_concSpells == null)
+				m_concSpells = new ArrayList(20);
+
+			lock (m_concSpells) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
-				if (m_concSpells == null)
-					m_concSpells = new ArrayList(20);
 				if (m_concSpells.Contains(effect))
 				{
 					if (log.IsWarnEnabled)
@@ -87,7 +89,7 @@ namespace DOL.GS.Spells
 					// no conc spells are always last in the list
 					if (m_concSpells.Count > 0)
 					{
-						IConcentrationEffect lastEffect = (IConcentrationEffect) m_concSpells[m_concSpells.Count - 1];
+						IConcentrationEffect lastEffect = (IConcentrationEffect)m_concSpells[m_concSpells.Count - 1];
 						if (lastEffect.Concentration > 0)
 						{
 							m_concSpells.Add(effect);
@@ -107,7 +109,6 @@ namespace DOL.GS.Spells
 						m_usedConcPoints += effect.Concentration;
 						m_concSpellsCount++;
 					}
-					//DOLConsole.WriteLine("("+m_owner.Name+") added effect "+effect.Name+" conc "+effect.SpellHandler.Spell.Concentration+"  pool "+m_usedConcPoints+"/"+m_owner.MaxConcentration);
 				}
 			}
 			CommitChanges();
@@ -119,10 +120,11 @@ namespace DOL.GS.Spells
 		/// <param name="effect">The effect to remove</param>
 		public void Remove(IConcentrationEffect effect)
 		{
-			lock (this)
+			if (m_concSpells == null)
+				return;
+
+			lock (m_concSpells) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
-				if (m_concSpells == null)
-					return;
 				if (m_concSpells.Contains(effect))
 				{
 					BeginChanges();
@@ -132,7 +134,6 @@ namespace DOL.GS.Spells
 						m_usedConcPoints -= effect.Concentration;
 						m_concSpellsCount--;
 					}
-					//DOLConsole.WriteLine("("+m_owner.Name+") removed effect "+effect.Name+" conc "+effect.SpellHandler.Spell.Concentration+"  pool "+m_usedConcPoints+"/"+m_owner.MaxConcentration);
 					CommitChanges();
 				}
 			}
@@ -146,15 +147,14 @@ namespace DOL.GS.Spells
 			if (log.IsDebugEnabled)
 				log.Debug("(" + m_owner.Name + ") cancels all conc spells");
 			ArrayList spells = null;
-			lock (this)
-			{
-				if (m_concSpells == null) return;
-				spells = (ArrayList)m_concSpells.Clone();
-			}
+			if (m_concSpells == null) return;
+			spells = (ArrayList)m_concSpells.Clone();
 			BeginChanges();
 			if (spells != null)
-				foreach(IConcentrationEffect fx in spells)
+			{
+				foreach (IConcentrationEffect fx in spells)
 					fx.Cancel(false);
+			}
 			CommitChanges();
 		}
 
@@ -163,10 +163,7 @@ namespace DOL.GS.Spells
 		/// </summary>
 		public void BeginChanges()
 		{
-			lock (this)
-			{
-				m_changeCounter++;
-			}
+			m_changeCounter++;
 		}
 
 		/// <summary>
@@ -174,19 +171,17 @@ namespace DOL.GS.Spells
 		/// </summary>
 		public void CommitChanges()
 		{
-			lock (this)
+			m_changeCounter--;
+			if (m_changeCounter < 0)
 			{
-				m_changeCounter--;
-				if (m_changeCounter < 0)
-				{
-					if (log.IsErrorEnabled)
-						log.Error("Change counter below 0 in conc spell list, forgotten to use BeginChanges?");
-					m_changeCounter = 0;
-				}
+				if (log.IsErrorEnabled)
+					log.Error("Change counter below 0 in conc spell list, forgotten to use BeginChanges?");
+				m_changeCounter = 0;
 			}
+
 			if (m_changeCounter <= 0 && m_owner is GamePlayer)
 			{
-				((GamePlayer) m_owner).Out.SendConcentrationList();
+				((GamePlayer)m_owner).Out.SendConcentrationList();
 			}
 		}
 
@@ -197,13 +192,15 @@ namespace DOL.GS.Spells
 		/// <returns>effect or null</returns>
 		public IConcentrationEffect GetOfType(Type effectType)
 		{
-			lock (this)
+			if (m_concSpells == null)
+				return null;
+			lock (m_concSpells) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
-				if (m_concSpells == null)
-					return null;
 				foreach (IConcentrationEffect effect in m_concSpells)
+				{
 					if (effect.GetType().Equals(effectType))
 						return effect;
+				}
 			}
 			return null;
 		}
@@ -216,12 +213,15 @@ namespace DOL.GS.Spells
 		public IList GetAllOfType(Type effectType)
 		{
 			ArrayList list = new ArrayList();
-			lock (this)
+
+			if (m_concSpells == null) return list;
+			lock (m_concSpells) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
-				if (m_concSpells == null) return list;
 				foreach (IConcentrationEffect effect in m_concSpells)
+				{
 					if (effect.GetType().Equals(effectType))
 						list.Add(effect);
+				}
 			}
 			return list;
 		}

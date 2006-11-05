@@ -60,6 +60,12 @@ namespace DOL.GS.Scripts
 				if (!PreFireChecks(client.Player, component)) return 1;
 				StartRepair(client.Player, component);
 			}
+			GameSiegeWeapon weapon = client.Player.TargetObject as GameSiegeWeapon;
+			if (weapon != null)
+			{
+				if (!PreFireChecks(client.Player, weapon)) return 1;
+				StartRepair(client.Player, weapon);
+			}
 			return 1;
 		}
 
@@ -178,6 +184,11 @@ namespace DOL.GS.Scripts
 				{
 					GameKeepComponent component = obj as GameKeepComponent;
 					component.Repair((int)(component.MaxHealth * 0.15));
+				}
+				if (obj is GameSiegeWeapon)
+				{
+					GameSiegeWeapon weapon = obj as GameSiegeWeapon;
+					weapon.Repair();
 				}
 				int finish = obj.Health;
 				CalculatePlayersWood(player, (GetTotalWoodForLevel(obj.Level + 1)));

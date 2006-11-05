@@ -49,15 +49,15 @@ namespace DOL
 				Connecting = 0x01,
 				CharScreen = 0x02,
 				WorldEnter = 0x03,
-				Playing	   = 0x04,
-				Linkdead   = 0x05,
+				Playing = 0x04,
+				Linkdead = 0x05,
 				Disconnected = 0x06,
 			};
 
 			/// <summary>
 			/// This variable holds the UDP endpoint of this client
 			/// </summary>
-			protected IPEndPoint	m_udpEndpoint;
+			protected IPEndPoint m_udpEndpoint;
 			/// <summary>
 			/// Holds the current clientstate
 			/// </summary>
@@ -69,11 +69,11 @@ namespace DOL
 			/// <summary>
 			/// This variable holds the active charindex
 			/// </summary>
-			protected int			m_activeCharIndex;
+			protected int m_activeCharIndex;
 			/// <summary>
 			/// This variable holds the accountdata
 			/// </summary>
-			protected Account		 m_account;
+			protected Account m_account;
 			/// <summary>
 			/// Holds the time of the last ping
 			/// </summary>
@@ -81,16 +81,17 @@ namespace DOL
 			/// <summary>
 			/// This variable holds the sessionid
 			/// </summary>
-			protected int			m_sessionID = 0;
+			protected int m_sessionID = 0;
 			/// <summary>
 			/// Constructor for a game client
 			/// </summary>
 			/// <param name="srvr">The server that's communicating with this client</param>
-			public GameClient(BaseServer srvr) : base(srvr)
+			public GameClient(BaseServer srvr)
+				: base(srvr)
 			{
 				m_clientVersion = eClientVersion.VersionNotChecked;
 				m_player = null;
-				m_activeCharIndex=-1; //No character loaded yet!
+				m_activeCharIndex = -1; //No character loaded yet!
 			}
 
 			/// <summary>
@@ -101,15 +102,15 @@ namespace DOL
 			public override void OnRecv(int num_bytes)
 			{
 				//This is the first received packet ...
-				if(Version==eClientVersion.VersionNotChecked)
+				if (Version == eClientVersion.VersionNotChecked)
 				{
 					//Disconnect if the packet seems wrong
-					if(num_bytes<17) // 17 is correct bytes count for 0xF4 packet
+					if (num_bytes < 17) // 17 is correct bytes count for 0xF4 packet
 					{
 						if (log.IsWarnEnabled)
 						{
 							log.WarnFormat("Disconnected {0} in login phase because wrong packet size {1}", TcpEndpoint, num_bytes);
-							log.Warn("num_bytes="+num_bytes);
+							log.Warn("num_bytes=" + num_bytes);
 							log.Warn(Marshal.ToHexDump("packet buffer:", m_pbuf, 0, num_bytes));
 						}
 						GameServer.Instance.Disconnect(this);
@@ -118,16 +119,16 @@ namespace DOL
 
 					//Currently, the version is sent with the first packet, no
 					//matter what packet code it is
-					int version = (m_pbuf[12]*100)+(m_pbuf[13]*10)+m_pbuf[14];
-					
+					int version = (m_pbuf[12] * 100) + (m_pbuf[13] * 10) + m_pbuf[14];
+
 					eClientVersion ver;
 					IPacketLib lib = AbstractPacketLib.CreatePacketLibForVersion(version, this, out ver);
-					
+
 					if (lib == null)
 					{
 						Version = eClientVersion.VersionUnknown;
 						if (log.IsErrorEnabled)
-							log.Error(TcpEndpoint+" Client Version "+version+" not handled in this server!");
+							log.Error(TcpEndpoint + " Client Version " + version + " not handled in this server!");
 						GameServer.Instance.Disconnect(this);
 					}
 					else
@@ -138,7 +139,7 @@ namespace DOL
 					}
 				}
 
-				if(Version!=eClientVersion.VersionUnknown)
+				if (Version != eClientVersion.VersionUnknown)
 				{
 					m_packetProcessor.ReceiveBytes(num_bytes);
 				}
@@ -153,10 +154,10 @@ namespace DOL
 				{
 					if (PacketProcessor != null)
 						PacketProcessor.OnDisconnect();
-					
+
 					//If we went linkdead and we were inside the game
 					//we don't let the player disappear!
-					if(ClientState == eClientState.Playing)
+					if (ClientState == eClientState.Playing)
 					{
 						OnLinkdeath();
 						return;
@@ -168,7 +169,7 @@ namespace DOL
 
 					Quit();
 				}
-				catch(Exception e)
+				catch (Exception e)
 				{
 					if (log.IsErrorEnabled)
 						log.Error("OnDisconnect", e);
@@ -195,7 +196,7 @@ namespace DOL
 
 				Assembly gasm = Assembly.GetAssembly(typeof(GameServer));
 
-				if(car.ClassType!=null && car.ClassType.Length>0)
+				if (car.ClassType != null && car.ClassType.Length > 0)
 				{
 					try
 					{
@@ -206,7 +207,7 @@ namespace DOL
 						if (log.IsErrorEnabled)
 							log.Error("LoadPlayer", e);
 					}
-					if(player==null)
+					if (player == null)
 					{
 						foreach (Assembly asm in DOL.GS.Scripts.ScriptMgr.Scripts)
 						{
@@ -223,14 +224,14 @@ namespace DOL
 								break;
 						}
 					}
-					if(player==null)
+					if (player == null)
 					{
-						player = new GamePlayer(this,m_account.Characters[m_activeCharIndex]);
+						player = new GamePlayer(this, m_account.Characters[m_activeCharIndex]);
 					}
-				} 
+				}
 				else
 				{
-					player = new GamePlayer(this,m_account.Characters[m_activeCharIndex]);
+					player = new GamePlayer(this, m_account.Characters[m_activeCharIndex]);
 				}
 				Thread.MemoryBarrier();
 				Player = player;
@@ -243,12 +244,12 @@ namespace DOL
 			{
 				try
 				{
-					if(m_activeCharIndex!=-1 && m_player!=null)
+					if (m_activeCharIndex != -1 && m_player != null)
 					{
 						m_player.SaveIntoDatabase();
 					}
 				}
-				catch(Exception e)
+				catch (Exception e)
 				{
 					if (log.IsErrorEnabled)
 						log.Error("SavePlayer", e);
@@ -261,10 +262,10 @@ namespace DOL
 			protected void OnLinkdeath()
 			{
 				if (log.IsDebugEnabled)
-					log.Debug("Linkdeath called ("+Account.Name+")  client state="+ClientState);
+					log.Debug("Linkdeath called (" + Account.Name + ")  client state=" + ClientState);
 
 				//If we have no sessionid we simply disconnect
-				if(m_sessionID==0 || Player==null)
+				if (m_sessionID == 0 || Player == null)
 				{
 					Quit();
 					return;
@@ -287,9 +288,9 @@ namespace DOL
 					try
 					{
 						eClientState oldClientState = ClientState;
-						if(m_sessionID!=0)
+						if (m_sessionID != 0)
 						{
-							if(oldClientState==eClientState.Playing || oldClientState==eClientState.WorldEnter || oldClientState==eClientState.Linkdead)
+							if (oldClientState == eClientState.Playing || oldClientState == eClientState.WorldEnter || oldClientState == eClientState.Linkdead)
 							{
 								try
 								{
@@ -311,24 +312,24 @@ namespace DOL
 							{
 								log.Error("client cleanup on quit", e);
 							}
-						}					
+						}
 						ClientState = eClientState.Disconnected;
 						Player = null;
 
 						GameEventMgr.Notify(GameClientEvent.Disconnected, this);
 
-						if(Account != null)
+						if (Account != null)
 						{
 							if (log.IsInfoEnabled)
 							{
-								if (m_udpEndpoint!=null)
+								if (m_udpEndpoint != null)
 									log.Info("(" + m_udpEndpoint.Address.ToString() + ") " + Account.Name + " just disconnected!");
 								else
 									log.Info("(" + TcpEndpoint + ") " + Account.Name + " just disconnected!");
 							}
 						}
 					}
-					catch(Exception e)
+					catch (Exception e)
 					{
 						if (log.IsErrorEnabled)
 							log.Error("Quit", e);
@@ -342,7 +343,7 @@ namespace DOL
 			public IPEndPoint UDPEndPoint
 			{
 				get { return m_udpEndpoint; }
-				set { m_udpEndpoint=value; }
+				set { m_udpEndpoint = value; }
 			}
 
 			/// <summary>
@@ -356,13 +357,13 @@ namespace DOL
 					eClientState oldState = m_clientState;
 
 					// refresh ping timeouts immediately when we change into playing state or charscreen
-					if ((oldState!=eClientState.Playing && value==eClientState.Playing) ||
-					    (oldState!=eClientState.CharScreen && value==eClientState.CharScreen)) 
+					if ((oldState != eClientState.Playing && value == eClientState.Playing) ||
+						(oldState != eClientState.CharScreen && value == eClientState.CharScreen))
 					{
 						PingTime = DateTime.Now.Ticks;
-					}					
+					}
 
-					m_clientState=value;
+					m_clientState = value;
 					GameEventMgr.Notify(GameClientEvent.StateChanged, this);
 					//DOLConsole.WriteSystem("New State="+value.ToString());
 				}
@@ -376,7 +377,7 @@ namespace DOL
 				get
 				{
 					//Linkdead players also count as playing :)
-					return m_clientState==eClientState.Playing || m_clientState==eClientState.Linkdead;
+					return m_clientState == eClientState.Playing || m_clientState == eClientState.Linkdead;
 				}
 			}
 
@@ -417,7 +418,7 @@ namespace DOL
 			public int ActiveCharIndex
 			{
 				get { return m_activeCharIndex; }
-				set { m_activeCharIndex=value; }
+				set { m_activeCharIndex = value; }
 			}
 
 			/// <summary>
@@ -437,12 +438,12 @@ namespace DOL
 				get { return m_pingTime; }
 				set { m_pingTime = value; }
 			}
-			
+
 			/// <summary>
 			/// The packetsender of this client
 			/// </summary>
 			protected IPacketLib m_packetLib;
-			
+
 			/// <summary>
 			/// Gets or sets the packet sender
 			/// </summary>
@@ -471,33 +472,33 @@ namespace DOL
 			/// </summary>
 			public enum eClientVersion : int
 			{
-				VersionNotChecked=-1,
-				VersionUnknown=0,
-				_FirstVersion=168,
-				Version168=168,
-				Version169=169,
-				Version170=170,
-				Version171=171,
-				Version172=172,
-				Version173=173,
-				Version174=174,
-				Version175=175,
-				Version176=176,
-				Version177=177,
-				Version178=178,
-				Version179=179,
-				Version180=180,
-				Version181=181,
-				Version182=182,
-				Version183=183,
-				Version184=184,
-				Version185=185,
-				Version186=186,
-				Version187=187,
-				Version188=188,
-				Version189=189,
-				Version190=190,
-				_LastVersion=190,
+				VersionNotChecked = -1,
+				VersionUnknown = 0,
+				_FirstVersion = 168,
+				Version168 = 168,
+				Version169 = 169,
+				Version170 = 170,
+				Version171 = 171,
+				Version172 = 172,
+				Version173 = 173,
+				Version174 = 174,
+				Version175 = 175,
+				Version176 = 176,
+				Version177 = 177,
+				Version178 = 178,
+				Version179 = 179,
+				Version180 = 180,
+				Version181 = 181,
+				Version182 = 182,
+				Version183 = 183,
+				Version184 = 184,
+				Version185 = 185,
+				Version186 = 186,
+				Version187 = 187,
+				Version188 = 188,
+				Version189 = 189,
+				Version190 = 190,
+				_LastVersion = 190,
 			}
 			protected eClientVersion m_clientVersion;
 			/// <summary>
@@ -564,7 +565,7 @@ namespace DOL
 			{
 				return new StringBuilder(128)
 					.Append(Version.ToString())
-					.Append(" pakLib:").Append(Out==null ? "(null)" : Out.GetType().FullName)
+					.Append(" pakLib:").Append(Out == null ? "(null)" : Out.GetType().FullName)
 					.Append(" type:").Append(ClientType)
 					.Append('(').Append((eClientType)ClientType).Append(')')
 					.Append(" addons:").Append(ClientAddons.ToString("G"))

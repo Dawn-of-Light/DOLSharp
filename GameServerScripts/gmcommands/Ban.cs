@@ -119,8 +119,7 @@ namespace DOL.GS.Scripts
 				GameServer.Database.AddNewObject(b);
 				GameServer.Database.SaveObject(b);
 				if (log.IsInfoEnabled)
-					if (log.IsInfoEnabled)
-						log.Info("Ban added [" + TypeOfBan + "]: " + accname + "(" + accip + ")");
+					log.Info("Ban added [" + TypeOfBan + "]: " + accname + "(" + accip + ")");
 			}
 			catch (Exception e)
 			{
