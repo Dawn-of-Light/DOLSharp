@@ -91,6 +91,9 @@ namespace DOL.GS.PropertyCalc
 					VanishEffect vanish = player.EffectList.GetOfType(typeof(VanishEffect)) as VanishEffect;
 					if (vanish != null)
 						speed *= vanish.SpeedBonus;
+					MasteryOfStealthAbility mos = player.GetAbility(MasteryOfStealthAbility.KEY) as MasteryOfStealthAbility;
+					if (mos != null)
+						speed *= 1 + MasteryOfStealthAbility.GetSpeedBonusForLevel(mos.Level);
 				}
 				if (player.IsSprinting) speed *= 1.3;
 				speed *= horseSpeed;

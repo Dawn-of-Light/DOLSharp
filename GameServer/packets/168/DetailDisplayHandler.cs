@@ -181,7 +181,6 @@ namespace DOL.GS.PacketHandler.v168
 					{
 						int lineID = objectID / 100;
 						int spellID = objectID % 100;
-						//DOLConsole.WriteLine("lineID="+lineID+"; spellID="+spellID);
 
 						SpellLine spellLine = client.Player.GetSpellLines()[lineID] as SpellLine;
 						if (spellLine == null)
@@ -208,6 +207,17 @@ namespace DOL.GS.PacketHandler.v168
 						else
 						{
 							objectInfo.AddRange(spellHandler.DelveInfo);
+							//Subspells
+							if (spell.SubSpellID > 0)
+							{
+								Spell s = SkillBase.GetSpellByID(spell.SubSpellID);
+								if (spell != null)
+								{
+									objectInfo.Add(" ");
+									ISpellHandler sh = Scripts.ScriptMgr.CreateSpellHandler(client.Player, s, SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells));
+									objectInfo.AddRange(sh.DelveInfo);
+								}
+							}
 							if (client.Account.PrivLevel > 1)
 							{
 								objectInfo.Add("----------Technical informations----------");

@@ -67,7 +67,7 @@ namespace DOL.Config
 		{
 			get
 			{
-				lock(this)
+				lock (m_children) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 				{
 					if(!m_children.Contains(key))
 					{
@@ -78,7 +78,7 @@ namespace DOL.Config
 			}
 			set
 			{
-				lock(this)
+				lock (m_children) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 				{
 					m_children[key] = value;
 				}

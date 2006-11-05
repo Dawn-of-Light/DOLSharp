@@ -31,8 +31,10 @@ namespace DOL.GS.Effects
 		/// <param name="target">The effect target</param>
 		public override void Start(GameLiving target)
 		{
-			lock (this) {
-				if (m_expireTimer == null) {
+			lock (this)
+			{
+				if (m_expireTimer == null)
+				{
 					m_expireTimer = new RegionTimer(target, new RegionTimerCallback(ExpiredCallback), m_duration);
 				}
 				base.Start(target);
@@ -42,10 +44,12 @@ namespace DOL.GS.Effects
 		/// <summary>
 		/// Stop the timed effect on owner
 		/// </summary>
-		public override void Stop() 
+		public override void Stop()
 		{
-			lock (this) {
-				if (m_expireTimer != null) {
+			lock (this)
+			{
+				if (m_expireTimer != null)
+				{
 					m_expireTimer.Stop();
 					m_expireTimer = null;
 				}
@@ -53,7 +57,7 @@ namespace DOL.GS.Effects
 			}
 		}
 
-		private int ExpiredCallback(RegionTimer timer) 
+		private int ExpiredCallback(RegionTimer timer)
 		{
 			Stop();
 			return 0;
@@ -73,15 +77,17 @@ namespace DOL.GS.Effects
 			}
 		}
 
-		public override IList DelveInfo {
-			get {
+		public override IList DelveInfo
+		{
+			get
+			{
 				ArrayList list = new ArrayList();
 				int seconds = RemainingTime / 1000;
 				if (seconds > 0)
 				{
 					list.Add(" "); //empty line
-					if(seconds > 60)
-						list.Add("- " + seconds/60 + ":" + (seconds%60).ToString("00") + " minutes remaining.");
+					if (seconds > 60)
+						list.Add("- " + seconds / 60 + ":" + (seconds % 60).ToString("00") + " minutes remaining.");
 					else
 						list.Add("- " + seconds + " seconds remaining.");
 				}

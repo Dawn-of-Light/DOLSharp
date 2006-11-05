@@ -110,13 +110,7 @@ namespace DOL.GS.Keeps
 		/// </summary>
 		public eDoorState State
 		{
-			get
-			{
-				if (IsAlive)
-					return eDoorState.Closed;
-				else
-					return eDoorState.Open;
-			}
+			get { return m_state; }
 			set
 			{
 				if (m_state != value)
@@ -132,10 +126,7 @@ namespace DOL.GS.Keeps
 		/// </summary>
 		public override byte Level
 		{
-			get
-			{
-				return (byte)this.Component.Keep.Level;
-			}
+			get { return (byte)this.Component.Keep.Level; }
 		}
 
 		public void UpdateLevel()
@@ -443,6 +434,7 @@ namespace DOL.GS.Keeps
 			m_healthRegenerationPeriod = 3600000; //3600000 ms = 3600 seconds = 1 hour
 			m_doorID = GenerateDoorID();
 			this.m_Model = 0xFFFF;
+			m_state = eDoorState.Closed;
 
 			DoorMgr.Doors[m_doorID] = this;
 			this.AddToWorld();
@@ -497,15 +489,14 @@ namespace DOL.GS.Keeps
 		/// <summary>
 		/// This function is called when door "die" to open door
 		/// </summary>
-		public override void  Die(GameObject killer)
+		public override void Die(GameObject killer)
 		{
 			base.Die(killer);
+
 			foreach (GamePlayer player in this.GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
 				player.Out.SendMessage("The Keep Gate is broken!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			lock (this)
-			{
-				m_state = eDoorState.Open;
-			}
+
+			m_state = eDoorState.Open;
 			BroadcastDoorStatus();
 		}
 
@@ -514,10 +505,8 @@ namespace DOL.GS.Keeps
 		/// </summary>
 		public virtual void CloseDoor()
 		{
-			lock (this)
-			{
-				m_state = eDoorState.Closed;
-			}
+			m_state = eDoorState.Closed;
+
 			BroadcastDoorStatus();
 		}
 

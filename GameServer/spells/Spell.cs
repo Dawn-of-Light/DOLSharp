@@ -56,6 +56,7 @@ namespace DOL.GS
 		protected readonly int m_instrumentRequirement = 0;
 		protected readonly int m_spellGroup = 0;
 		protected readonly int m_effectGroup = 0;
+		protected readonly int m_subSpellID = 0;
 
 
 		#region member access properties
@@ -196,6 +197,11 @@ namespace DOL.GS
 			get { return m_effectGroup; }
 		}
 
+		public int SubSpellID
+		{
+			get { return m_subSpellID; }
+		}
+
 		#endregion
 
 		/// <summary>
@@ -242,6 +248,7 @@ namespace DOL.GS
 			m_instrumentRequirement = dbspell.InstrumentRequirement;
 			m_spellGroup = dbspell.SpellGroup;
 			m_effectGroup = dbspell.EffectGroup;
+			m_subSpellID = dbspell.SubSpellID;
 		}
 	}
 }

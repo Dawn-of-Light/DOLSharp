@@ -86,22 +86,6 @@ namespace DOL.GS.Quests
 		public AbstractMission(object owner)
 		{
 			m_owner = owner;
-
-			switch (MissionType)
-			{
-				case eMissionType.Personal:
-					{
-						GamePlayer player = owner as GamePlayer;
-						player.Mission = this;
-						break;
-					}
-				case eMissionType.Group:
-					{
-						PlayerGroup group = owner as PlayerGroup;
-						group.Mission = this;
-						break;
-					}
-			}
 		}
 
 		public virtual long RewardXP

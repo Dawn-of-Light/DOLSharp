@@ -164,7 +164,7 @@ namespace DOL.GS
 
 			int result = 0;
 
-			lock (this)
+			lock (m_items) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
 				for(int i = (int)minSlot; i <= (int)(maxSlot); i++)
 				{
@@ -191,20 +191,24 @@ namespace DOL.GS
 		/// <param name="minSlot">first slot</param>
 		/// <param name="maxSlot">last slot</param>
 		/// <returns>number of matched items found</returns>
-		public int CountItemTemplate(string itemtemplateID, eInventorySlot minSlot, eInventorySlot maxSlot) {
-			lock (this) {
+		public int CountItemTemplate(string itemtemplateID, eInventorySlot minSlot, eInventorySlot maxSlot)
+		{
+			lock (m_items)// Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
+			{ 
 				int count = 0;
-				if(minSlot > maxSlot) {
+				if (minSlot > maxSlot)
+				{
 					eInventorySlot tmp = minSlot;
 					minSlot = maxSlot;
 					maxSlot = tmp;
 				}
 
-				for (int i = (int)minSlot; i <= (int)(maxSlot); i++) {
+				for (int i = (int)minSlot; i <= (int)(maxSlot); i++)
+				{
 					InventoryItem item = (InventoryItem)m_items[i];
-					if (item != null && item.Id_nb == itemtemplateID) count+=item.Count;
+					if (item != null && item.Id_nb == itemtemplateID) count += item.Count;
 				}
-				return count++;			
+				return count++;
 			}
 		}
 
@@ -225,7 +229,7 @@ namespace DOL.GS
 				maxSlot = tmp;
 			}
 
-			lock (this)
+			lock (m_items) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
 				for(int i = (int)minSlot; i <= (int)(maxSlot); i++)
 				{
@@ -249,7 +253,7 @@ namespace DOL.GS
 		/// <returns></returns>
 		protected virtual eInventorySlot FindSlot(eInventorySlot first, eInventorySlot last, bool searchFirst, bool searchNull)
 		{
-			lock (this)
+			lock (m_items) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
 				first = GetValidInventorySlot(first);
 				last = GetValidInventorySlot(last);
@@ -335,29 +339,29 @@ namespace DOL.GS
 		/// <returns>all items found</returns>
 		public virtual ICollection GetItemRange(eInventorySlot minSlot, eInventorySlot maxSlot)
 		{
-			lock (this)
+			minSlot = GetValidInventorySlot(minSlot);
+			maxSlot = GetValidInventorySlot(maxSlot);
+			if (minSlot == eInventorySlot.Invalid || maxSlot == eInventorySlot.Invalid)
+				return null;
+
+			if (minSlot > maxSlot)
 			{
-				minSlot = GetValidInventorySlot(minSlot);
-				maxSlot = GetValidInventorySlot(maxSlot);
-				if(minSlot == eInventorySlot.Invalid || maxSlot == eInventorySlot.Invalid)
-					return null;
+				eInventorySlot tmp = minSlot;
+				minSlot = maxSlot;
+				maxSlot = tmp;
+			}
 
-				if(minSlot > maxSlot)
-				{
-					eInventorySlot tmp = minSlot;
-					minSlot = maxSlot;
-					maxSlot = tmp;
-				}
-
-				ArrayList items = new ArrayList();
-				for(int i=(int)minSlot; i<=(int)maxSlot;i++)
+			ArrayList items = new ArrayList();
+			lock (m_items)
+			{
+				for (int i = (int)minSlot; i <= (int)maxSlot; i++)
 				{
 					InventoryItem item = m_items[i] as InventoryItem;
-					if (item!=null)
+					if (item != null)
 						items.Add(item);
 				}
-				return items;
 			}
+			return items;
 		}
 
 		/// <summary>
@@ -370,26 +374,26 @@ namespace DOL.GS
 		/// <returns>found item or null</returns>
 		public InventoryItem GetFirstItemByID(string uniqueID, eInventorySlot minSlot, eInventorySlot maxSlot)
 		{
-			lock (this)
-			{		
-				minSlot = GetValidInventorySlot(minSlot);
-				maxSlot = GetValidInventorySlot(maxSlot);
-				if(minSlot == eInventorySlot.Invalid || maxSlot == eInventorySlot.Invalid)
-					return null;
+			minSlot = GetValidInventorySlot(minSlot);
+			maxSlot = GetValidInventorySlot(maxSlot);
+			if (minSlot == eInventorySlot.Invalid || maxSlot == eInventorySlot.Invalid)
+				return null;
 
-				if(minSlot > maxSlot)
-				{
-					eInventorySlot tmp = minSlot;
-					minSlot = maxSlot;
-					maxSlot = tmp;
-				}
+			if (minSlot > maxSlot)
+			{
+				eInventorySlot tmp = minSlot;
+				minSlot = maxSlot;
+				maxSlot = tmp;
+			}
 
-				for(int i=(int)minSlot; i<=(int)maxSlot;i++)
+			lock (m_items)
+			{
+				for (int i = (int)minSlot; i <= (int)maxSlot; i++)
 				{
 					InventoryItem item = m_items[i] as InventoryItem;
-					if (item!=null)
+					if (item != null)
 					{
-						if(item.Id_nb == uniqueID)
+						if (item.Id_nb == uniqueID)
 							return item;
 					}
 				}
@@ -405,33 +409,33 @@ namespace DOL.GS
 		/// <param name="minSlot">fist slot for search</param>
 		/// <param name="maxSlot">last slot for search</param>
 		/// <returns>found item or null</returns>
-		public InventoryItem GetFirstItemByObjectType(int objectType ,eInventorySlot minSlot, eInventorySlot maxSlot)
+		public InventoryItem GetFirstItemByObjectType(int objectType, eInventorySlot minSlot, eInventorySlot maxSlot)
 		{
-			lock (this)
-			{		
-				minSlot = GetValidInventorySlot(minSlot);
-				maxSlot = GetValidInventorySlot(maxSlot);
-				if(minSlot == eInventorySlot.Invalid || maxSlot == eInventorySlot.Invalid)
-					return null;
+			minSlot = GetValidInventorySlot(minSlot);
+			maxSlot = GetValidInventorySlot(maxSlot);
+			if (minSlot == eInventorySlot.Invalid || maxSlot == eInventorySlot.Invalid)
+				return null;
 
-				if(minSlot > maxSlot)
-				{
-					eInventorySlot tmp = minSlot;
-					minSlot = maxSlot;
-					maxSlot = tmp;
-				}
+			if (minSlot > maxSlot)
+			{
+				eInventorySlot tmp = minSlot;
+				minSlot = maxSlot;
+				maxSlot = tmp;
+			}
 
-				for(int i=(int)minSlot; i<=(int)maxSlot;i++)
+			lock (m_items)
+			{
+				for (int i = (int)minSlot; i <= (int)maxSlot; i++)
 				{
 					InventoryItem item = m_items[i] as InventoryItem;
-					if (item!=null)
+					if (item != null)
 					{
 						if (item.Object_Type == objectType)
 							return item;
 					}
 				}
 			}
-			return null;			
+			return null;
 		}
 
 		/// <summary>
@@ -442,33 +446,33 @@ namespace DOL.GS
 		/// <param name="minSlot">fist slot for search</param>
 		/// <param name="maxSlot">last slot for search</param>
 		/// <returns>found item or null</returns>
-		public InventoryItem GetFirstItemByName(string name ,eInventorySlot minSlot, eInventorySlot maxSlot)
+		public InventoryItem GetFirstItemByName(string name, eInventorySlot minSlot, eInventorySlot maxSlot)
 		{
-			lock (this)
-			{		
-				minSlot = GetValidInventorySlot(minSlot);
-				maxSlot = GetValidInventorySlot(maxSlot);
-				if(minSlot == eInventorySlot.Invalid || maxSlot == eInventorySlot.Invalid)
-					return null;
+			minSlot = GetValidInventorySlot(minSlot);
+			maxSlot = GetValidInventorySlot(maxSlot);
+			if (minSlot == eInventorySlot.Invalid || maxSlot == eInventorySlot.Invalid)
+				return null;
 
-				if(minSlot > maxSlot)
-				{
-					eInventorySlot tmp = minSlot;
-					minSlot = maxSlot;
-					maxSlot = tmp;
-				}
+			if (minSlot > maxSlot)
+			{
+				eInventorySlot tmp = minSlot;
+				minSlot = maxSlot;
+				maxSlot = tmp;
+			}
 
-				for(int i=(int)minSlot; i<=(int)maxSlot;i++)
+			lock (m_items)
+			{
+				for (int i = (int)minSlot; i <= (int)maxSlot; i++)
 				{
 					InventoryItem item = m_items[i] as InventoryItem;
-					if (item!=null)
+					if (item != null)
 					{
 						if (item.Name == name)
 							return item;
 					}
 				}
 			}
-			return null;				
+			return null;
 		}
 		#endregion
 
@@ -482,7 +486,7 @@ namespace DOL.GS
 		public virtual bool AddItem(eInventorySlot slot, InventoryItem item)
 		{
 			if (item == null) return false;
-			lock (this)
+			lock (m_items) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
 				slot = GetValidInventorySlot(slot);
 				if (slot == eInventorySlot.Invalid) return false;
@@ -514,7 +518,7 @@ namespace DOL.GS
 		/// <returns>true if successfull</returns>
 		public virtual bool RemoveItem(InventoryItem item)
 		{
-			lock(this)
+			lock (m_items) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
 				if (item == null) return false;
 				if (m_items.Contains(item.SlotPosition))
@@ -545,7 +549,7 @@ namespace DOL.GS
 		{
 			if (item == null) return false;
 			if (count <= 0) return false;
-			lock(this)
+			lock (m_items) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
 				if (m_items.Contains(item.SlotPosition))
 				{
@@ -574,7 +578,7 @@ namespace DOL.GS
 		{
 			if (item == null) return false;
 			if (count <= 0) return false;
-			lock(this)
+			lock (m_items) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
 				if (m_items.Contains(item.SlotPosition))
 				{
@@ -610,10 +614,10 @@ namespace DOL.GS
 		/// <returns>the item in the specified slot if the slot is valid and null if not</returns>
 		public virtual InventoryItem GetItem(eInventorySlot slot)
 		{
-			lock (this)
+			slot = GetValidInventorySlot(slot);
+			if (slot == eInventorySlot.Invalid) return null;
+			lock (m_items) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
-				slot = GetValidInventorySlot(slot);
-				if (slot == eInventorySlot.Invalid) return null;
 				return (m_items[(int)slot] as InventoryItem);
 			}
 		}
@@ -626,7 +630,7 @@ namespace DOL.GS
 		/// <returns>true if successfull false if not</returns>
 		public virtual bool MoveItem(eInventorySlot fromSlot,eInventorySlot toSlot, int itemCount)
 		{
-			lock (this)
+			lock (m_changedSlots) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
 				fromSlot = GetValidInventorySlot(fromSlot);
 				toSlot = GetValidInventorySlot(toSlot);
@@ -657,7 +661,7 @@ namespace DOL.GS
 			get
 			{
 				ArrayList items = new ArrayList(VISIBLE_SLOTS.Length);
-				lock (this)
+				lock (m_items) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 				{
 					foreach(eInventorySlot slot in VISIBLE_SLOTS)
 					{
@@ -677,7 +681,7 @@ namespace DOL.GS
 			get
 			{
 				ArrayList items = new ArrayList();
-				lock (this)
+				lock (m_items) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 				{
 					foreach(eInventorySlot slot in EQUIP_SLOTS)
 					{
@@ -722,8 +726,7 @@ namespace DOL.GS
 			}
 			if (minSlot < eInventorySlot.Min_Inv) return false;
 			if (maxSlot > eInventorySlot.Max_Inv) return false;
-
-			lock (this)
+			lock (m_items) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
 				Hashtable changedSlots = new Hashtable(); // value: <0 = new item count; >0 = add to old
 				bool fits = false;
@@ -837,7 +840,7 @@ namespace DOL.GS
 			if (minSlot < eInventorySlot.Min_Inv) return false;
 			if (maxSlot > eInventorySlot.Max_Inv) return false;
 
-			lock (this)
+			lock (m_items) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
 				Hashtable changedSlots = new Hashtable(); // value: null = remove item completely; >0 = remove count from stack
 				bool remove = false;
@@ -962,7 +965,7 @@ namespace DOL.GS
 			{
 				InventoryItem item = null;
 				int weight=0;
-				lock (this)
+				lock (m_items) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 				{
 					foreach(eInventorySlot slot in EQUIP_SLOTS)
 					{
@@ -982,10 +985,7 @@ namespace DOL.GS
 		/// </summary>
 		public void BeginChanges()
 		{
-			lock (this)
-			{
-				m_changesCounter++;
-			}
+			System.Threading.Interlocked.Increment(ref m_changesCounter);
 		}
 
 		/// <summary>
@@ -993,19 +993,16 @@ namespace DOL.GS
 		/// </summary>
 		public void CommitChanges()
 		{
-			lock (this)
+			System.Threading.Interlocked.Decrement(ref m_changesCounter);
+			if (m_changesCounter < 0)
 			{
-				m_changesCounter--;
-				if (m_changesCounter < 0)
-				{
-					if (log.IsErrorEnabled)
-						log.Error("Inventory changes counter is bellow zero (forgot to use BeginChanges?)!\n\n" + Environment.StackTrace);
-					m_changesCounter = 0;
-				}
-				if (m_changesCounter <= 0 && m_changedSlots.Count > 0)
-				{
-					UpdateChangedSlots();
-				}
+				if (log.IsErrorEnabled)
+					log.Error("Inventory changes counter is bellow zero (forgot to use BeginChanges?)!\n\n" + Environment.StackTrace);
+				m_changesCounter = 0;
+			}
+			if (m_changesCounter <= 0 && m_changedSlots.Count > 0)
+			{
+				UpdateChangedSlots();
 			}
 		}
 
