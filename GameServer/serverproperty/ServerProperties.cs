@@ -171,8 +171,17 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty(ServerPropertyConstants.CLIENT_VERSION_MAX, "Maximum Client Version - Edit this to change which client version at the most have to be used: -1 = any, 1.80 = 180", -1)]
 		public static readonly int CLIENT_VERSION_MAX;
 
+		/// <summary>
+		/// Should the server load quests
+		/// </summary>
 		[ServerProperty(ServerPropertyConstants.LOAD_QUESTS, "Should the server load quests, values True,False", true)]
 		public static readonly bool LOAD_QUESTS;
+
+		/// <summary>
+		/// Should the server log trades
+		/// </summary>
+		[ServerProperty(ServerPropertyConstants.LOG_TRADES, "Should the server log all trades a player makes, values True,False", false)]
+		public static readonly bool LOG_TRADES;
 
 		/// <summary>
 		/// This method loads the property from the database and returns

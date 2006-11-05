@@ -70,7 +70,7 @@ namespace DOL.GS
 		/// <returns>success</returns>
 		public override bool LoadFromDatabase(string inventoryID)
 		{
-			lock (this)
+			lock (m_items) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
 				try
 				{
@@ -121,7 +121,7 @@ namespace DOL.GS
 		/// <returns>success</returns>
 		public override bool SaveIntoDatabase(string inventoryID)
 		{
-			lock (this)
+			lock (m_items) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
 				try
 				{
@@ -184,12 +184,10 @@ namespace DOL.GS
 		/// <returns></returns>
 		public override bool AddItem(eInventorySlot slot, InventoryItem item)
 		{
-			lock (this)
-			{
-				if (!base.AddItem(slot, item)) return false;
-				item.OwnerID = m_player.InternalID;
-				GameServer.Database.AddNewObject(item);
-			}
+			if (!base.AddItem(slot, item)) return false;
+			item.OwnerID = m_player.InternalID;
+			GameServer.Database.AddNewObject(item);
+
 			if (IsEquippedSlot((eInventorySlot)item.SlotPosition))
 				Player.Notify(PlayerInventoryEvent.ItemEquipped, this, new ItemEquippedArgs(item, (int)eInventorySlot.Invalid));
 			return true;
@@ -205,21 +203,18 @@ namespace DOL.GS
 			if (item == null) return false;
 			int oldSlot;
 
-			lock (this)
+			if (item.OwnerID != m_player.InternalID)
 			{
-				if (item.OwnerID != m_player.InternalID)
-				{
-					if (log.IsErrorEnabled)
-						log.Error(m_player.Name + ": PlayerInventory -> tried to remove item with wrong owner (" + item.OwnerID + ")\n\n" + Environment.StackTrace);
-					return false;
-				}
-
-				oldSlot = item.SlotPosition;
-
-				if (!base.RemoveItem(item)) return false;
-
-				GameServer.Database.DeleteObject(item);
+				if (log.IsErrorEnabled)
+					log.Error(m_player.Name + ": PlayerInventory -> tried to remove item with wrong owner (" + item.OwnerID + ")\n\n" + Environment.StackTrace);
+				return false;
 			}
+
+			oldSlot = item.SlotPosition;
+
+			if (!base.RemoveItem(item)) return false;
+
+			GameServer.Database.DeleteObject(item);
 
 			ITradeWindow window = m_player.TradeWindow;
 			if (window != null)
@@ -333,7 +328,7 @@ namespace DOL.GS
 			InventoryItem fromItem, toItem;
 			int[] updatedSlots;
 
-			lock (this)
+			lock (m_items) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
 				fromSlot = GetValidInventorySlot(fromSlot);
 				toSlot = GetValidInventorySlot(toSlot);
@@ -942,7 +937,7 @@ namespace DOL.GS
 			get
 			{
 				int weight = 0;
-				lock (this)
+				lock (m_items) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 				{
 					for (int slot = (int)eInventorySlot.FirstBackpack; slot <= (int)eInventorySlot.LastBackpack; slot++)
 					{

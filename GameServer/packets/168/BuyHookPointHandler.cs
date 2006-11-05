@@ -50,7 +50,11 @@ namespace DOL.GS.PacketHandler.v168
 			else inventory = HookPointInventory.RedHPInventory;//guard
 
 			if (inventory != null)
-				inventory.GetItem(itemslot).Invoke(client.Player,payType, component.HookPoints[hookpointID] as GameKeepHookPoint, component);
+			{
+				HookPointItem item = inventory.GetItem(itemslot);
+				if (item != null)
+					item.Invoke(client.Player, payType, component.HookPoints[hookpointID] as GameKeepHookPoint, component);
+			}
 
 			return 1;
 		}

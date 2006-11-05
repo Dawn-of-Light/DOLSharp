@@ -334,13 +334,13 @@ namespace DOL.GS
 		{
 			if (TimesRepaired <= 3)
 			{
-				if (Owner.GetCraftingSkillValue(eCraftingSkill.WeaponCrafting) < 301)
+				if (Owner.GetCraftingSkillValue(eCraftingSkill.WoodWorking) < 301)
 				{
-					Owner.Out.SendMessage("You must be a Siege weapon crafter to repair it.", eChatType.CT_Say, eChatLoc.CL_SystemWindow);
+					Owner.Out.SendMessage("You must have woodworking skill to repair a siege weapon.", eChatType.CT_Say, eChatLoc.CL_SystemWindow);
 					return;
 				}
-				Owner.RepairSiegeWeapon(this);
 				TimesRepaired = TimesRepaired + 1;
+				Health += (int)(this.MaxHealth * 0.15);
 			}
 			else
 			{

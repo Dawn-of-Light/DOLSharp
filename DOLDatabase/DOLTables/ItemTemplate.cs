@@ -149,6 +149,7 @@ namespace DOL.Database
 			m_copper = 0;
 			m_isDropable = true;
 			m_isPickable = true;
+			m_isTradable = true;
 			m_maxCount = 1;
 			m_packSize = 1;
 			m_charges = 0;

@@ -70,7 +70,7 @@ namespace DOL.GS
 		public virtual bool AddPlayer(GamePlayer player,bool leader) 
 		{
 			if (player == null) return false;
-			lock(this)
+			lock (m_chatgroupMembers)
 			{
 				if (m_chatgroupMembers.Contains(player))
 					return false;
@@ -93,7 +93,7 @@ namespace DOL.GS
 		public virtual bool RemovePlayer(GamePlayer player)
 		{
 			if (player == null) return false;
-			lock(this)
+			lock (m_chatgroupMembers)
 			{
 				if (!m_chatgroupMembers.Contains(player))
 					return false;

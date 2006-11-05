@@ -413,7 +413,7 @@ namespace DOL.GS
 				// Check if the tradepartner has also agreed to the trade
 				if (!m_partnerWindow.m_tradeAccept) return false;
 
-				bool logTrade = (m_owner.Client.Account.PrivLevel == 1 || partner.Client.Account.PrivLevel == 1);
+				bool logTrade = ServerProperties.Properties.LOG_TRADES;
 
 				//Test if we and our partner have enough money
 				bool enoughMoney        = m_owner.RemoveMoney(TradeMoney);

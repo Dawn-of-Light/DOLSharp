@@ -101,7 +101,7 @@ namespace DOL.GS.Effects
 				return;
 			}
 
-			lock (this)
+			lock (m_owner.EffectList) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
 				if (m_expired)
 				{

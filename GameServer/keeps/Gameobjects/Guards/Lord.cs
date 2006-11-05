@@ -36,6 +36,14 @@ namespace DOL.GS.Keeps
 			}
 		}
 
+		public override int AttackRangeDistance
+		{
+			get
+			{
+				return 1200;
+			}
+		}
+
 		/// <summary>
 		/// When Lord dies, we update Area Mgr to call the various functions we need
 		/// And update the player stats

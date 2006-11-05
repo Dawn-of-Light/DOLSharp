@@ -24,7 +24,7 @@ namespace DOL.Database
 	/// <summary>
 	/// 
 	/// </summary>
-	[DataTable(TableName="Spell")]
+	[DataTable(TableName = "Spell")]
 	public class DBSpell : DataObject
 	{
 		protected string m_id_unique;
@@ -33,35 +33,36 @@ namespace DOL.Database
 		protected int m_icon;
 		protected string m_name;
 		protected string m_description;
-		protected string m_target="";
+		protected string m_target = "";
 
-		protected string m_spelltype="";
-		protected int m_range=0;
-		protected int m_radius=0;
-		protected double m_value=0;
-		protected double m_damage=0;
-		protected int m_damageType=0;
-		protected int m_concentration=0;
-		protected int m_duration=0;
-		protected int m_pulse=0;
-		protected int m_frequency=0;
-		protected int m_pulse_power=0;
-		protected int m_power=0;
-		protected double m_casttime=0;
-		protected int m_recastdelay=0;
-		protected int m_reshealth=1;
-		protected int m_resmana=0;
-		protected int m_lifedrain_return=0;
-		protected int m_amnesia_chance=0;
-		protected string m_message1="";
-		protected string m_message2="";
-		protected string m_message3="";
-		protected string m_message4="";
+		protected string m_spelltype = "";
+		protected int m_range = 0;
+		protected int m_radius = 0;
+		protected double m_value = 0;
+		protected double m_damage = 0;
+		protected int m_damageType = 0;
+		protected int m_concentration = 0;
+		protected int m_duration = 0;
+		protected int m_pulse = 0;
+		protected int m_frequency = 0;
+		protected int m_pulse_power = 0;
+		protected int m_power = 0;
+		protected double m_casttime = 0;
+		protected int m_recastdelay = 0;
+		protected int m_reshealth = 1;
+		protected int m_resmana = 0;
+		protected int m_lifedrain_return = 0;
+		protected int m_amnesia_chance = 0;
+		protected string m_message1 = "";
+		protected string m_message2 = "";
+		protected string m_message3 = "";
+		protected string m_message4 = "";
 		protected int m_instrumentRequirement;
 		protected int m_spellGroup;
 		protected int m_effectGroup;
+		protected int m_subSpellID = 0;
 
-		static bool	m_autoSave;
+		static bool m_autoSave;
 
 		public DBSpell()
 		{
@@ -80,7 +81,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull=false,Unique=true)]
+		[DataElement(AllowDbNull = false, Unique = true)]
 		public int SpellID
 		{
 			get
@@ -94,7 +95,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull=false)]
+		[DataElement(AllowDbNull = false)]
 		public int ClientEffect
 		{
 			get
@@ -108,7 +109,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull=false)]
+		[DataElement(AllowDbNull = false)]
 		public int Icon
 		{
 			get
@@ -122,7 +123,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull=false)]
+		[DataElement(AllowDbNull = false)]
 		public string Name
 		{
 			get
@@ -136,7 +137,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull=false)]
+		[DataElement(AllowDbNull = false)]
 		public string Description
 		{
 			get
@@ -150,7 +151,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull=false)]
+		[DataElement(AllowDbNull = false)]
 		public string Target
 		{
 			get
@@ -164,7 +165,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public int Range
 		{
 			get
@@ -178,7 +179,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public int Power
 		{
 			get
@@ -192,7 +193,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public double CastTime
 		{
 			get
@@ -206,7 +207,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public double Damage
 		{
 			get
@@ -221,7 +222,7 @@ namespace DOL.Database
 		}
 
 
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public int DamageType
 		{
 			get
@@ -235,7 +236,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public string Type
 		{
 			get
@@ -249,7 +250,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public int Duration
 		{
 			get
@@ -263,7 +264,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public int Frequency
 		{
 			get
@@ -277,7 +278,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public int Pulse
 		{
 			get
@@ -291,7 +292,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public int PulsePower
 		{
 			get
@@ -305,7 +306,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public int Radius
 		{
 			get
@@ -319,7 +320,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public int RecastDelay
 		{
 			get
@@ -333,7 +334,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public int ResurrectHealth
 		{
 			get
@@ -347,7 +348,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public int ResurrectMana
 		{
 			get
@@ -361,7 +362,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public double Value
 		{
 			get
@@ -375,7 +376,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public int Concentration
 		{
 			get
@@ -389,7 +390,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public int LifeDrainReturn
 		{
 			get
@@ -403,7 +404,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public int AmnesiaChance
 		{
 			get
@@ -417,7 +418,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public string Message1
 		{
 			get { return m_message1; }
@@ -428,7 +429,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public string Message2
 		{
 			get { return m_message2; }
@@ -439,7 +440,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public string Message3
 		{
 			get { return m_message3; }
@@ -450,7 +451,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public string Message4
 		{
 			get { return m_message4; }
@@ -461,7 +462,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public int InstrumentRequirement
 		{
 			get { return m_instrumentRequirement; }
@@ -472,7 +473,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public int SpellGroup
 		{
 			get
@@ -486,7 +487,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public int EffectGroup
 		{
 			get
@@ -497,6 +498,21 @@ namespace DOL.Database
 			{
 				Dirty = true;
 				m_effectGroup = value;
+			}
+		}
+
+		//Multiple spells
+		[DataElement(AllowDbNull = true)]
+		public int SubSpellID
+		{
+			get
+			{
+				return m_subSpellID;
+			}
+			set
+			{
+				Dirty = true;
+				m_subSpellID = value;
 			}
 		}
 	}
