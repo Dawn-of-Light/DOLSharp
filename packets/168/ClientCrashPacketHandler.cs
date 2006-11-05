@@ -22,7 +22,7 @@ using log4net;
 
 namespace DOL.GS.PacketHandler.v168
 {
-	[PacketHandlerAttribute (PacketHandlerType.TCP, 0x9F^168, "Handles client crash packets")]
+	[PacketHandlerAttribute(PacketHandlerType.TCP, 0x9F ^ 168, "Handles client crash packets")]
 	public class ClientCrashPacketHandler : IPacketHandler
 	{
 		/// <summary>
@@ -30,7 +30,7 @@ namespace DOL.GS.PacketHandler.v168
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		public int HandlePacket (GameClient client, GSPacketIn packet)
+		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			lock (this)
 			{
@@ -41,21 +41,6 @@ namespace DOL.GS.PacketHandler.v168
 				if (log.IsErrorEnabled)
 					log.Error(text);
 
-//				if(log.IsDebugEnabled)
-//				{
-//					log.Debug("Last Server => Client packets (from older to newer, first 3 bytes are size and code):");
-//					foreach (PacketOut pak in client.PacketProcessor.GetSentPackets())
-//					{
-//						byte[] buff = pak.GetBuffer();
-//						log.Debug(Marshal.ToHexDump(string.Format("Sent packet code=0x{0:X2} pak type:{1}", buff[2], pak.GetType().Name), buff));
-//					}
-//					log.Debug("Last Client => Server packets (from older to newer):");
-//					foreach (GSPacketIn pak in client.PacketProcessor.GetReceivedPackets())
-//					{
-//						pak.LogDump();
-//					}
-//				}
-				
 				if (log.IsDebugEnabled)
 				{
 					log.Debug("Last client sent/received packets (from older to newer):");

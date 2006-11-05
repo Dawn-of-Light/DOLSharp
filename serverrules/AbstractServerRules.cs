@@ -60,7 +60,7 @@ namespace DOL.GS.ServerRules
 			objs = GameServer.Database.SelectObjects(typeof(DBBannedAccount), "(Type ='Account' AND Account ='" + GameServer.Database.Escape(username) + "') OR (Type ='Account+Ip' AND Account ='" + GameServer.Database.Escape(username) + "')");
 			if (objs.Length > 0)
 			{
-				client.Out.SendLoginDenied(eLoginError.AccountNoAccessAnyGame);
+				client.Out.SendLoginDenied(eLoginError.AccountIsBannedFromThisServerType);
 				return false;
 			}
 
@@ -68,7 +68,7 @@ namespace DOL.GS.ServerRules
 			objs = GameServer.Database.SelectObjects(typeof(DBBannedAccount), "(Type = 'Ip' AND Ip ='" + accip + "') OR (Type ='Account+Ip' AND Ip ='" + accip + "')");
 			if (objs.Length > 0)
 			{
-				client.Out.SendLoginDenied(eLoginError.AccountNoAccessAnyGame);
+				client.Out.SendLoginDenied(eLoginError.AccountIsBannedFromThisServerType);
 				return false;
 			}
 
@@ -1093,6 +1093,7 @@ namespace DOL.GS.ServerRules
 		{
 			ArrayList stat = new ArrayList();
 			int total = 0;
+			#region Players Killed
 			stat.Add("Kill report");
 			switch ((eRealm)player.Realm)
 			{
@@ -1113,7 +1114,9 @@ namespace DOL.GS.ServerRules
 					break;
 			}
 			stat.Add("Total Players Killed: " + total.ToString("N0"));
+			#endregion
 			stat.Add(" ");
+			#region Players Deathblows
 			total = 0;
 			switch ((eRealm)player.Realm)
 			{
@@ -1134,7 +1137,9 @@ namespace DOL.GS.ServerRules
 					break;
 			}
 			stat.Add("Total Deathblows: " + total.ToString("N0"));
+			#endregion
 			stat.Add(" ");
+			#region Players Solo Kills
 			total = 0;
 			switch ((eRealm)player.Realm)
 			{
@@ -1155,11 +1160,26 @@ namespace DOL.GS.ServerRules
 					break;
 			}
 			stat.Add("Total Solo Kills: " + total.ToString("N0"));
+			#endregion
 			stat.Add(" ");
+			#region Keeps
 			stat.Add("Capture Report");
-			stat.Add("Keeps Captured: " + player.CapturedKeeps.ToString("N0"));
-			stat.Add("Towers Captured: " + player.CapturedTowers.ToString("N0"));
-
+			//stat.Add("Relics Taken: " + player.RelicsTaken.ToString("N0"));
+			//stat.Add("Albion Keeps Captured: " + player.CapturedAlbionKeeps.ToString("N0"));
+			//stat.Add("Midgard Keeps Captured: " + player.CapturedMidgardKeeps.ToString("N0"));
+			//stat.Add("Hibernia Keeps Captured: " + player.CapturedHiberniaKeeps.ToString("N0"));
+			stat.Add("Total Keeps Captured: " + player.CapturedKeeps.ToString("N0"));
+			//stat.Add("Keep Lords Slain: " + player.KeepLordsSlain.ToString("N0"));
+			//stat.Add("Albion Towers Captured: " + player.CapturedAlbionTowers.ToString("N0"));
+			//stat.Add("Midgard Towers Captured: " + player.CapturedMidgardTowers.ToString("N0"));
+			//stat.Add("Hibernia Towers Captured: " + player.CapturedHiberniaTowers.ToString("N0"));
+			stat.Add("Total Towers Captured: " + player.CapturedTowers.ToString("N0"));
+			//stat.Add("Tower Captains Slain: " + player.TowerCaptainsSlain.ToString("N0"));
+			//stat.Add("Realm Guard Kills Albion: " + player.RealmGuardTotalKills.ToString("N0"));
+			//stat.Add("Realm Guard Kills Midgard: " + player.RealmGuardTotalKills.ToString("N0"));
+			//stat.Add("Realm Guard Kills Hibernia: " + player.RealmGuardTotalKills.ToString("N0"));
+			//stat.Add("Total Realm Guard Kills: " + player.RealmGuardTotalKills.ToString("N0"));
+			#endregion
 			return stat;
 		}
 

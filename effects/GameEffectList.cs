@@ -53,7 +53,7 @@ namespace DOL.GS.Effects
 		/// <summary>
 		/// The count of started changes to the list
 		/// </summary>
-		protected sbyte m_changesCount;
+		protected volatile sbyte m_changesCount;
 
 		/// <summary>
 		/// constructor
@@ -71,15 +71,18 @@ namespace DOL.GS.Effects
 		/// </summary>
 		/// <param name="effect">The effect to add to the list</param>
 		/// <returns>true if the effect was added</returns>
-		public virtual bool Add(IGameEffect effect) 
+		public virtual bool Add(IGameEffect effect)
 		{
-			if (!m_owner.IsAlive || m_owner.ObjectState!=GameObject.eObjectState.Active)
-					return false;	// dead owners don't get effects
+			if (!m_owner.IsAlive || m_owner.ObjectState != GameObject.eObjectState.Active)
+				return false;	// dead owners don't get effects
 
-			lock(this) 
+			lock (this)
 			{
 				if (m_effects == null)
 					m_effects = new ArrayList(5);
+			}
+			lock (m_effects)
+			{
 				effect.InternalID = m_runningID++;
 				if (m_runningID == 0)
 					m_runningID = 1;
@@ -96,13 +99,15 @@ namespace DOL.GS.Effects
 		/// </summary>
 		/// <param name="effect">The effect to remove from the list</param>
 		/// <returns>true if the effect was removed</returns>
-		public virtual bool Remove(IGameEffect effect) 
+		public virtual bool Remove(IGameEffect effect)
 		{
 			ArrayList changedEffects = new ArrayList();
-			lock(this) 
+
+			if (m_effects == null)
+				return false;
+			
+			lock (m_effects) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this) 
 			{
-				if (m_effects == null)
-					return false;
 				int index = m_effects.IndexOf(effect);
 				if (index < 0)
 					return false;
@@ -128,10 +133,10 @@ namespace DOL.GS.Effects
 		public virtual void CancelAll()
 		{
 			IList fx = null;
-			lock(this)
+
+			if (m_effects == null)
+				return; lock (m_effects)
 			{
-				if (m_effects == null)
-					return;
 				fx = (ArrayList)m_effects.Clone();
 				m_effects.Clear();
 			}
@@ -144,7 +149,7 @@ namespace DOL.GS.Effects
 		/// <summary>
 		/// Called when an effect changed
 		/// </summary>
-		public virtual void OnEffectsChanged(IGameEffect changedEffect) 
+		public virtual void OnEffectsChanged(IGameEffect changedEffect)
 		{
 			if (m_changesCount > 0)
 				return;
@@ -156,10 +161,7 @@ namespace DOL.GS.Effects
 		/// </summary>
 		public void BeginChanges()
 		{
-			lock (this)
-			{
-				m_changesCount++;
-			}
+			m_changesCount++;
 		}
 
 		/// <summary>
@@ -168,16 +170,16 @@ namespace DOL.GS.Effects
 		public virtual void CommitChanges()
 		{
 			bool update;
-			lock (this)
+
+			if (--m_changesCount < 0)
 			{
-				if (--m_changesCount < 0)
-				{
-					if (log.IsWarnEnabled)
-						log.Warn("changes count is less than zero, forgot BeginChanges()?\n"+Environment.StackTrace);
-					m_changesCount = 0;
-				}
-				update = m_changesCount == 0;
+				if (log.IsWarnEnabled)
+					log.Warn("changes count is less than zero, forgot BeginChanges()?\n" + Environment.StackTrace);
+				m_changesCount = 0;
 			}
+
+			update = m_changesCount == 0;
+
 			if (update)
 				UpdateChangedEffects();
 		}
@@ -202,13 +204,13 @@ namespace DOL.GS.Effects
 		/// <returns>effect or null</returns>
 		public virtual IGameEffect GetOfType(Type effectType)
 		{
-			lock(this) 
+			if (m_effects == null) return null;
+			lock (m_effects)
 			{
-				if (m_effects == null) return null;
-				foreach (IGameEffect effect in m_effects) 
+				foreach (IGameEffect effect in m_effects)
 					if (effect.GetType().Equals(effectType)) return effect;
 			}
-			return null;			
+			return null;
 		}
 
 		/// <summary>
@@ -219,9 +221,11 @@ namespace DOL.GS.Effects
 		public virtual IList GetAllOfType(Type effectType)
 		{
 			ArrayList list = new ArrayList();
-			lock(this) 
+
+			if (m_effects == null) return list;
+
+			lock (m_effects) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this) 
 			{
-				if (m_effects == null) return list;
 				foreach (IGameEffect effect in m_effects)
 					if (effect.GetType().Equals(effectType)) list.Add(effect);
 			}
@@ -233,12 +237,13 @@ namespace DOL.GS.Effects
 		/// </summary>
 		/// <param name="effectType"></param>
 		/// <returns></returns>
-		public int CountOfType(Type effectType) 
+		public int CountOfType(Type effectType)
 		{
 			int count = 0;
-			lock(this) 
+
+			if (m_effects == null) return count;
+			lock (m_effects) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this) 
 			{
-				if (m_effects == null) return count;
 				foreach (IGameEffect effect in m_effects)
 					if (effect.GetType().Equals(effectType)) count++;
 			}
@@ -253,7 +258,7 @@ namespace DOL.GS.Effects
 			get { return m_effects == null ? 0 : m_effects.Count; }
 		}
 
-		#region IEnumerable Member	
+		#region IEnumerable Member
 		/// <summary>
 		/// Returns an enumerator for the effects
 		/// </summary>

@@ -157,8 +157,8 @@ namespace DOL.GS.Keeps
 							return false;
 						if (!player.GuildRank.Claim)
 							return false;
+						break;
 					}
-					return false;
 			}
 			return true;
 		}

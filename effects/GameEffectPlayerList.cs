@@ -59,7 +59,7 @@ namespace DOL.GS.Effects
 		{
 			if (changedEffect.Icon == 0)
 				return;
-			lock (this)
+			lock (m_changedEffects) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
 				if (!m_changedEffects.Contains(changedEffect))
 					m_changedEffects.Add(changedEffect);

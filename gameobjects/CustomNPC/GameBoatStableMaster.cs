@@ -1,3 +1,4 @@
+
 /*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
  * 
@@ -35,14 +36,6 @@ namespace DOL.GS
 		/// Defines a logger for this class.
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
-		/// <summary>
-		/// Constructs a new stable master
-		/// </summary>
-		public GameBoatStableMaster()
-		{
-			Flags ^= (int)eFlags.PEACE;
-		}
 
 		/// <summary>
 		/// Called when the living is about to get an item from someone

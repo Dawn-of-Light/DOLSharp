@@ -53,17 +53,24 @@ namespace DOL.GS.PropertyCalc
 		{
 			get
 			{
-				if (m_staticArray != null) {
-					if (index < m_staticArray.Length) {
+				if (m_staticArray != null)
+				{
+					if (index < m_staticArray.Length)
+					{
 						return m_staticArray[index];
-					} else {
+					}
+					else
+					{
 						return 0;
 					}
 				}
-				if (count==0) return 0;
-				lock (this) {
-					for (int i=0; i<m_entries.Length; i++) {
-						if (m_entries[i].key == index) {
+				if (count == 0) return 0;
+				lock (this)
+				{
+					for (int i = 0; i < m_entries.Length; i++)
+					{
+						if (m_entries[i].key == index)
+						{
 							return m_entries[i].value;
 						}
 					}
@@ -72,37 +79,46 @@ namespace DOL.GS.PropertyCalc
 			}
 			set
 			{
-				if (m_staticArray != null) {
-					if (index < m_staticArray.Length) {
+				if (m_staticArray != null)
+				{
+					if (index < m_staticArray.Length)
+					{
 						m_staticArray[index] = value;
 					}
 					return;
 				}
 
-				lock (this) {
-					
+				lock (this)
+				{
+
 					// find entry
 					int arrayIndex = -1;
 					if (m_entries != null)
 					{
-						for (int i=0; i<m_entries.Length; i++) {
-							if (m_entries[i].key == index) {
+						for (int i = 0; i < m_entries.Length; i++)
+						{
+							if (m_entries[i].key == index)
+							{
 								arrayIndex = i;
 								break;
 							}
 						}
 					}
 
-					if (value==0 && arrayIndex >= 0) {
+					if (value == 0 && arrayIndex >= 0)
+					{
 						m_entries[arrayIndex].key = 0;
 						m_entries[arrayIndex].value = 0;
 						count--;
-					} 
-					else {
-						if (arrayIndex >= 0) {
+					}
+					else
+					{
+						if (arrayIndex >= 0)
+						{
 							m_entries[arrayIndex].value = value;
-						} 
-						else {
+						}
+						else
+						{
 							if (m_entries == null)
 							{
 								m_entries = new PropEntry[REALLOCATE_COUNT];
@@ -112,8 +128,10 @@ namespace DOL.GS.PropertyCalc
 								return;
 							}
 
-							for (int i=0; i<m_entries.Length; i++) {
-								if (m_entries[i].key == 0) {
+							for (int i = 0; i < m_entries.Length; i++)
+							{
+								if (m_entries[i].key == 0)
+								{
 									m_entries[i].key = index;
 									m_entries[i].value = value;
 									count++;
@@ -122,7 +140,7 @@ namespace DOL.GS.PropertyCalc
 							}
 
 							// reallocate
-							PropEntry[] newdata = new PropEntry[m_entries.Length+REALLOCATE_COUNT];
+							PropEntry[] newdata = new PropEntry[m_entries.Length + REALLOCATE_COUNT];
 							Array.Copy(m_entries, newdata, m_entries.Length);
 							newdata[m_entries.Length].key = index;
 							newdata[m_entries.Length].value = value;

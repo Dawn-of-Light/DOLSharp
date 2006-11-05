@@ -112,5 +112,9 @@ namespace DOL.GS.ServerProperties
 		/// The key for whether the server should load quests
 		/// </summary>
 		public const string LOAD_QUESTS = "load_quests";
+		/// <summary>
+		/// The key for whether the server should log all the player trades
+		/// </summary>
+		public const string LOG_TRADES = "log_trades";
 	}
 }

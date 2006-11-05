@@ -11,19 +11,35 @@ namespace DOL.GS.RealmAbilities
 	{
 		public const string KEY = "Mastery of Stealth";
 
-		public MasteryOfStealthAbility(DBAbility dba, int level) : base(dba, level, eProperty.Undefined) {
+		public MasteryOfStealthAbility(DBAbility dba, int level)
+			: base(dba, level, eProperty.Undefined)
+		{
 		}
 
-		public override int GetAmountForLevel(int level) 
+		public override int GetAmountForLevel(int level)
 		{
 			if (level < 1) return 0;
-			switch (level) {
+			switch (level)
+			{
 				case 1: return 75;
 				case 2: return 175;
 				case 3: return 300;
 				case 4: return 450;
 				case 5: return 625;
 				default: return 75;
+			}
+		}
+
+		public static double GetSpeedBonusForLevel(int level)
+		{
+			switch (level)
+			{
+				case 1: return 0.05;
+				case 2: return 0.10;
+				case 3: return 0.15;
+				case 4: return 0.20;
+				case 5: return 0.25;
+				default: return 0;
 			}
 		}
 
@@ -34,8 +50,9 @@ namespace DOL.GS.RealmAbilities
 				ArrayList list = new ArrayList();
 				list.Add(m_description);
 				list.Add("");
-				for (int i=1; i<=MaxLevel; i++) {
-					list.Add("Level "+i+": Amount: "+Level*5+"% / "+GetAmountForLevel(i));
+				for (int i = 1; i <= MaxLevel; i++)
+				{
+					list.Add("Level " + i + ": Amount: " + Level * 5 + "% / " + GetAmountForLevel(i));
 				}
 				return list;
 			}

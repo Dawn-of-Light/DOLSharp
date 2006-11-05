@@ -38,7 +38,8 @@ namespace DOL.GS.Effects
 		/// <param name="target">The effect target</param>
 		public virtual void Start(GameLiving target)
 		{
-			lock (this) {
+			lock (this)
+			{
 				m_owner = target;
 				target.EffectList.Add(this);
 			}
@@ -47,10 +48,12 @@ namespace DOL.GS.Effects
 		/// <summary>
 		/// Stop the effect on owner
 		/// </summary>
-		public virtual void Stop() 
+		public virtual void Stop()
 		{
-			lock (this) {
-				if(m_owner != null) {
+			lock (this)
+			{
+				if (m_owner != null)
+				{
 					m_owner.EffectList.Remove(this);
 				}
 			}

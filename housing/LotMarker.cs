@@ -76,7 +76,7 @@ namespace DOL.GS.Housing
 		private void BuyLot(GamePlayer player, byte response)
 		{
 			if (response != 0x01) return;
-			lock (this)
+			lock (DatabaseItem) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
 				if (DatabaseItem.OwnerIDs != null && DatabaseItem.OwnerIDs != "") return;
 				if (HouseMgr.GetHouseNumberByPlayer(player) != 0 && player.Client.Account.PrivLevel <= 1)

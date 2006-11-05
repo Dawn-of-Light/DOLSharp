@@ -776,7 +776,9 @@ namespace DOL.GS.PacketHandler
 			pak.WriteShort((ushort)obj.Z);
 			pak.WriteInt((uint)obj.X);
 			pak.WriteInt((uint)obj.Y);
-			pak.WriteShort(obj.Model);
+			if (obj is GameNPC && obj.IsUnderwater)
+				pak.WriteShort(obj.Model | 0x8000);
+			else pak.WriteShort(obj.Model);
 			int flag = (obj.Realm & 3) << 4;
 			if (obj is GameKeepBanner)
 				flag |= 0x08;
