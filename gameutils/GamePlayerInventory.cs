@@ -70,7 +70,7 @@ namespace DOL.GS
 		/// <returns>success</returns>
 		public override bool LoadFromDatabase(string inventoryID)
 		{
-			lock (m_items) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
+			lock (m_items.SyncRoot) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
 				try
 				{
@@ -121,7 +121,7 @@ namespace DOL.GS
 		/// <returns>success</returns>
 		public override bool SaveIntoDatabase(string inventoryID)
 		{
-			lock (m_items) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
+			lock (m_items.SyncRoot) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
 				try
 				{
@@ -328,7 +328,7 @@ namespace DOL.GS
 			InventoryItem fromItem, toItem;
 			int[] updatedSlots;
 
-			lock (m_items) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
+			lock (m_items.SyncRoot) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
 				fromSlot = GetValidInventorySlot(fromSlot);
 				toSlot = GetValidInventorySlot(toSlot);
@@ -937,7 +937,7 @@ namespace DOL.GS
 			get
 			{
 				int weight = 0;
-				lock (m_items) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
+				lock (m_items.SyncRoot) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 				{
 					for (int slot = (int)eInventorySlot.FirstBackpack; slot <= (int)eInventorySlot.LastBackpack; slot++)
 					{
