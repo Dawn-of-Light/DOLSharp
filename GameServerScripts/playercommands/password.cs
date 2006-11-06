@@ -13,7 +13,7 @@
 using System;
 using DOL.GS;
 using DOL.GS.PacketHandler;
-using DOL.GS.PacketHandler.v168;
+using DOL.GS.PacketHandler.Client;
 
 using log4net;
 

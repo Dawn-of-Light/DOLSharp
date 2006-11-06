@@ -571,14 +571,105 @@
     <Compile Include="keeps\Managers\Spell Manager.cs" />
     <Compile Include="keeps\Relics\GameRelic.cs" />
     <Compile Include="keeps\Relics\GameRelicPad.cs" />
-    <Compile Include="packets\168\HousePermissionsRequestHandler.cs" />
-    <Compile Include="packets\168\HousePermissionsSetHandler.cs" />
-    <Compile Include="packets\168\HouseUsersPermissionsRequestHandler.cs" />
-    <Compile Include="packets\168\HouseUsersPermissionsSetHandler.cs" />
-    <Compile Include="packets\168\HousingDecorationRotate.cs" />
-    <Compile Include="packets\168\HousingDecorationRotateRequestHandler.cs" />
-    <Compile Include="packets\PacketLib186.cs" />
-    <Compile Include="packets\PacketLib185.cs" />
+    <Compile Include="packets\Client\BadNameCheckRequestHandler.cs" />
+    <Compile Include="packets\Client\BuyHookPointHandler.cs" />
+    <Compile Include="packets\Client\CharacterDeleteRequestHandler.cs" />
+    <Compile Include="packets\Client\CharacterListUpdateRequestHandler.cs" />
+    <Compile Include="packets\Client\CharacterOverviewRequestHandler.cs" />
+    <Compile Include="packets\Client\CharacterSelectRequestHandler.cs" />
+    <Compile Include="packets\Client\checklosrequesthandler.cs" />
+    <Compile Include="packets\Client\ClientCrashPacketHandler.cs" />
+    <Compile Include="packets\Client\CryptKeyRequestHandler.cs" />
+    <Compile Include="packets\Client\DestroyItemRequestHandler.cs" />
+    <Compile Include="packets\Client\DetailDisplayHandler.cs" />
+    <Compile Include="packets\Client\DialogResponseHandler.cs" />
+    <Compile Include="packets\Client\DisbandFromGroupHandler.cs" />
+    <Compile Include="packets\Client\DoorRequestHandler.cs" />
+    <Compile Include="packets\Client\DuplicateNameCheckRequestHandler.cs" />
+    <Compile Include="packets\Client\EmblemDialogReponseHandler.cs" />
+    <Compile Include="packets\Client\GameOpenRequestHandler.cs" />
+    <Compile Include="packets\Client\HouseEditHandler.cs" />
+    <Compile Include="packets\Client\HouseEnterLeaveRequestHandler.cs" />
+    <Compile Include="packets\Client\HousePermissionsRequestHandler.cs" />
+    <Compile Include="packets\Client\HousePermissionsSetHandler.cs" />
+    <Compile Include="packets\Client\HouseUsersPermissionsRequestHandler.cs" />
+    <Compile Include="packets\Client\HouseUsersPermissionsSetHandler.cs" />
+    <Compile Include="packets\Client\HousingDecorationRotate.cs" />
+    <Compile Include="packets\Client\HousingDecorationRotateRequestHandler.cs" />
+    <Compile Include="packets\Client\HousingMenuRequestHandler.cs" />
+    <Compile Include="packets\Client\HousingPickupItemHandler.cs" />
+    <Compile Include="packets\Client\HousingPlaceItemHandler.cs" />
+    <Compile Include="packets\Client\InviteToGroupHandler.cs" />
+    <Compile Include="packets\Client\KeepComponentInteractHandler.cs" />
+    <Compile Include="packets\Client\LoginRequestHandler.cs" />
+    <Compile Include="packets\Client\LookingForAGroupFlagHandler.cs" />
+    <Compile Include="packets\Client\LookingForAGroupHandler.cs" />
+    <Compile Include="packets\Client\MakeProductHandler.cs" />
+    <Compile Include="packets\Client\NPCCreationRequestHandler.cs" />
+    <Compile Include="packets\Client\ObjectInteractRequestHandler.cs" />
+    <Compile Include="packets\Client\ObjectUpdateRequestHandler.cs" />
+    <Compile Include="packets\Client\PetWindowHandler.cs" />
+    <Compile Include="packets\Client\PingRequestHandler.cs" />
+    <Compile Include="packets\Client\PlayerAppraiseItemRequestHandler.cs" />
+    <Compile Include="packets\Client\PlayerAttackRequestHandler.cs" />
+    <Compile Include="packets\Client\PlayerBonusesListRequestHandler.cs" />
+    <Compile Include="packets\Client\PlayerBuyRequestHandler.cs" />
+    <Compile Include="packets\Client\PlayerCancelsEffectHandler.cs" />
+    <Compile Include="packets\Client\PlayerCommandHandler.cs" />
+    <Compile Include="packets\Client\PlayerCreationRequestHandler.cs" />
+    <Compile Include="packets\Client\PlayerDismountRequestHandler.cs" />
+    <Compile Include="packets\Client\PlayerGroundTargetHandler.cs" />
+    <Compile Include="packets\Client\PlayerHeadingUpdateHandler.cs" />
+    <Compile Include="packets\Client\PlayerInitRequestHandler.cs" />
+    <Compile Include="packets\Client\PlayerModifyTradeHandler.cs" />
+    <Compile Include="packets\Client\PlayerMoveItemRequestHandler.cs" />
+    <Compile Include="packets\Client\PlayerPickUpRequestHandler.cs" />
+    <Compile Include="packets\Client\PlayerPositionUpdateHandler.cs" />
+    <Compile Include="packets\Client\PlayerSellRequestHandler.cs" />
+    <Compile Include="packets\Client\PlayerSitRequest.cs" />
+    <Compile Include="packets\Client\PlayerTargetHandler.cs" />
+    <Compile Include="packets\Client\PlayerTrainRequestHandler.cs" />
+    <Compile Include="packets\Client\RegionChangeRequestHandler.cs" />
+    <Compile Include="packets\Client\RegionListRequestHandler.cs" />
+    <Compile Include="packets\Client\RemoveConcentrationEffectHandler.cs" />
+    <Compile Include="packets\Client\SiegeWeaponActionHandler.cs" />
+    <Compile Include="packets\Client\UDPInitRequestHandler.cs" />
+    <Compile Include="packets\Client\UseSkillHandler.cs" />
+    <Compile Include="packets\Client\UseSlotHandler.cs" />
+    <Compile Include="packets\Client\UseSpellHandler.cs" />
+    <Compile Include="packets\Client\warmapbonusesrequesthandler.cs" />
+    <Compile Include="packets\Client\warmapshowrequesthandler.cs" />
+    <Compile Include="packets\Client\WorldInitRequestHandler.cs" />
+    <Compile Include="packets\Server\AbstractPacketLib.cs" />
+    <Compile Include="packets\Server\CryptLib168.cs" />
+    <Compile Include="packets\Server\GSTCPPacketOut.cs" />
+    <Compile Include="packets\Server\GSUDPPacketOut.cs" />
+    <Compile Include="packets\Server\IPacketEncoding.cs" />
+    <Compile Include="packets\Server\IPacketHandler.cs" />
+    <Compile Include="packets\Server\IPacketLib.cs" />
+    <Compile Include="packets\Server\PacketEncoding168.cs" />
+    <Compile Include="packets\Server\PacketHandlerAttribute.cs" />
+    <Compile Include="packets\Server\PacketLib168.cs" />
+    <Compile Include="packets\Server\PacketLib169.cs" />
+    <Compile Include="packets\Server\PacketLib170.cs" />
+    <Compile Include="packets\Server\PacketLib171.cs" />
+    <Compile Include="packets\Server\PacketLib172.cs" />
+    <Compile Include="packets\Server\PacketLib173.cs" />
+    <Compile Include="packets\Server\PacketLib174.cs" />
+    <Compile Include="packets\Server\PacketLib175.cs" />
+    <Compile Include="packets\Server\PacketLib176.cs" />
+    <Compile Include="packets\Server\PacketLib177.cs" />
+    <Compile Include="packets\Server\PacketLib178.cs" />
+    <Compile Include="packets\Server\PacketLib179.cs" />
+    <Compile Include="packets\Server\PacketLib180.cs" />
+    <Compile Include="packets\Server\PacketLib181.cs" />
+    <Compile Include="packets\Server\PacketLib182.cs" />
+    <Compile Include="packets\Server\PacketLib183.cs" />
+    <Compile Include="packets\Server\PacketLib184.cs" />
+    <Compile Include="packets\Server\PacketLib185.cs" />
+    <Compile Include="packets\Server\PacketLib186.cs" />
+    <Compile Include="packets\Server\PacketLibAttribute.cs" />
+    <Compile Include="packets\Server\PacketProcessor.cs" />
     <Compile Include="propertycalc\CriticalArcheryHitChanceCalculator.cs" />
     <Compile Include="propertycalc\CriticalMeleeHitChanceCalculator.cs" />
     <Compile Include="propertycalc\ResistPiercePropertyCalculator.cs" />
@@ -815,276 +906,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="keeps\KeepManager.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\168\BadNameCheckRequestHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\168\BuyHookPointHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\168\CharacterDeleteRequestHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\168\CharacterListUpdateRequestHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\168\CharacterOverviewRequestHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\168\CharacterSelectRequestHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\168\CheckLosRequesthandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\168\ClientCrashPacketHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\168\CryptKeyRequestHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\168\DestroyItemRequestHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\168\DetailDisplayHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\168\DialogResponseHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\168\DisbandFromGroupHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\168\DoorRequestHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\168\DuplicateNameCheckRequestHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\168\EmblemDialogReponseHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\168\GameOpenRequestHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\168\HouseEditHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\168\HouseEnterLeaveRequestHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\168\HousingMenuRequestHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\168\HousingPickupItemHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\168\HousingPlaceItemHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\168\InviteToGroupHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\168\KeepComponentInteractHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\168\LoginRequestHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\168\LookingForAGroupFlagHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\168\LookingForAGroupHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\168\MakeProductHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\168\NPCCreationRequestHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\168\ObjectInteractRequestHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\168\ObjectUpdateRequestHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\168\PetWindowHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\168\PingRequestHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\168\PlayerAppraiseItemRequestHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\168\PlayerAttackRequestHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\168\PlayerBonusesListRequestHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\168\PlayerBuyRequestHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\168\PlayerCancelsEffectHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\168\PlayerCommandHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\168\PlayerCreationRequestHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\168\PlayerDismountRequestHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\168\PlayerGroundTargetHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\168\PlayerHeadingUpdateHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\168\PlayerInitRequestHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\168\PlayerModifyTradeHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\168\PlayerMoveItemRequestHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\168\PlayerPickUpRequestHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\168\PlayerPositionUpdateHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\168\PlayerSellRequestHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\168\PlayerSitRequest.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\168\PlayerTargetHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\168\PlayerTrainRequestHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\168\RegionChangeRequestHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\168\RegionListRequestHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\168\RemoveConcentrationEffectHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\168\SiegeWeaponActionHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\168\UDPInitRequestHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\168\UseSkillHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\168\UseSlotHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\168\UseSpellHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\168\WarmapBonusesRequestHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\168\WarmapShowRequestHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\168\WorldInitRequestHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\AbstractPacketLib.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\GSTCPPacketOut.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\GSUDPPacketOut.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\IPacketEncoding.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\IPacketHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\IPacketLib.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\PacketEncoding168.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\PacketHandlerAttribute.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\PacketLib168.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\PacketLib169.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\PacketLib170.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\PacketLib171.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\PacketLib172.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\PacketLib173.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\PacketLib174.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\PacketLib175.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\PacketLib176.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\PacketLib177.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\PacketLib178.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\PacketLib179.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\PacketLib180.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\PacketLib181.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\PacketLib182.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\PacketLib183.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\PacketLib184.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\PacketLibAttribute.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="packets\PacketProcessor.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="playerclasses\albion\ClassArmsman.cs">

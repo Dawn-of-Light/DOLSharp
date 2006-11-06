@@ -57,41 +57,41 @@ namespace DOL.GS
 				m_dballiance = value;
 			}
 		}
-		
+
 		#region IList
 		public void AddGuild(Guild myguild)
 		{
-			lock (Guilds)
+			lock (Guilds.SyncRoot)
 			{
 				myguild.alliance = this;
 				Guilds.Add(myguild);
 				myguild.theGuildDB.AllianceID = m_dballiance.ObjectId;
-				m_dballiance.DBguilds=null;
+				m_dballiance.DBguilds = null;
 				GameServer.Database.SaveObject(m_dballiance);
 				GameServer.Database.FillObjectRelations(m_dballiance);
-				SendMessageToAllianceMembers(myguild.Name +" has joined the alliance of "+m_dballiance.AllianceName, PacketHandler.eChatType.CT_System, PacketHandler.eChatLoc.CL_SystemWindow);
+				SendMessageToAllianceMembers(myguild.Name + " has joined the alliance of " + m_dballiance.AllianceName, PacketHandler.eChatType.CT_System, PacketHandler.eChatLoc.CL_SystemWindow);
 			}
 		}
 		public void RemoveGuild(Guild myguild)
 		{
-			lock (Guilds)
+			lock (Guilds.SyncRoot)
 			{
 				myguild.alliance = null;
 				Guilds.Remove(myguild);
 				myguild.theGuildDB.AllianceID = "";
-				m_dballiance.DBguilds=null;
+				m_dballiance.DBguilds = null;
 				GameServer.Database.SaveObject(m_dballiance);
 				GameServer.Database.FillObjectRelations(m_dballiance);
-				SendMessageToAllianceMembers(myguild.Name +" has left the alliance of "+m_dballiance.AllianceName, PacketHandler.eChatType.CT_System, PacketHandler.eChatLoc.CL_SystemWindow);
+				SendMessageToAllianceMembers(myguild.Name + " has left the alliance of " + m_dballiance.AllianceName, PacketHandler.eChatType.CT_System, PacketHandler.eChatLoc.CL_SystemWindow);
 			}
 		}
 		public void Clear()
 		{
-			lock (Guilds)
+			lock (Guilds.SyncRoot)
 			{
-				foreach(Guild guild in Guilds)
+				foreach (Guild guild in Guilds)
 				{
-					guild.alliance=null;
+					guild.alliance = null;
 					guild.theGuildDB.AllianceID = "";
 				}
 				Guilds.Clear();
@@ -99,36 +99,36 @@ namespace DOL.GS
 		}
 		public bool Contains(Guild myguild)
 		{
-			lock (Guilds)
+			lock (Guilds.SyncRoot)
 			{
 				return Guilds.Contains(myguild);
 			}
 		}
 
 		#endregion
-		
+
 		/// <summary>
 		/// send message to all member of alliance
 		/// </summary>
 		/// <param name="obj"></param>
 		public void SendMessageToAllianceMembers(string msg, PacketHandler.eChatType type, PacketHandler.eChatLoc loc)
 		{
-			lock (Guilds)
+			lock (Guilds.SyncRoot)
 			{
-				foreach(Guild guild in Guilds)
+				foreach (Guild guild in Guilds)
 				{
 					guild.SendMessageToGuildMembers(msg, type, loc);
 				}
 			}
 		}
-		
+
 		/// <summary>
 		/// Loads this alliance from an alliance table
 		/// </summary>
 		/// <param name="obj"></param>
 		public void LoadFromDatabase(DataObject obj)
 		{
-			if(!(obj is DBAlliance))
+			if (!(obj is DBAlliance))
 				return;
 
 			m_dballiance = (DBAlliance)obj;
@@ -140,9 +140,9 @@ namespace DOL.GS
 		public void SaveIntoDatabase()
 		{
 			GameServer.Database.SaveObject(m_dballiance);
-			lock (Guilds)
+			lock (Guilds.SyncRoot)
 			{
-				foreach(Guild guild in Guilds)
+				foreach (Guild guild in Guilds)
 				{
 					guild.SaveIntoDatabase();
 				}

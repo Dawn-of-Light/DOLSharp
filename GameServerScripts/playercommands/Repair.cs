@@ -131,7 +131,7 @@ namespace DOL.GS.Scripts
 
 			if (playerswood < repairamount)
 			{
-				player.Out.SendMessage("You need another " + (playerswood - repairamount) + " units of wood!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage("You need another " + (repairamount - playerswood) + " units of wood!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
 
