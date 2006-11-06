@@ -28,7 +28,7 @@ using DOL.Database;
 using DOL.GS.Effects;
 using DOL.GS.Housing;
 using DOL.GS.Keeps;
-using DOL.GS.PacketHandler.v168;
+using DOL.GS.PacketHandler.Client;
 using DOL.GS.PlayerTitles;
 using DOL.GS.PropertyCalc;
 using DOL.GS.Quests;
