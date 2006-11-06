@@ -51,6 +51,7 @@ namespace DOL.GS.Scripts
 		"'/item durability <dur> <maxDur> [slot #]' - change the durability of an item",
 		"'/item ispickable <true or false> [slot #]' - sets whether or not an item can be picked up",
 		"'/item isdropable <true or false> [slot #]' - sets whether or not an item can be dropped",
+	   "'/item istradable <true or false> [slot #]' - sets whether or not an item can be traded",
 		"'/item bonus <bonus> [slot #]' - sets the item bonus",
 		"'/item mbonus <num> <bonus type> <value> [slot #]' - sets the item magical bonus (num 0 = ExtraBonus)",
 		"'/item weight <weight> [slot #]' - sets the item weight",
@@ -1230,6 +1231,41 @@ namespace DOL.GS.Scripts
 
 							break;
 						}
+					case "istradable":
+						{
+							int slot = (int)eInventorySlot.LastBackpack;
+
+							if (args.Length >= 4)
+							{
+								try
+								{
+									slot = Convert.ToInt32(args[3]);
+								}
+								catch
+								{
+									slot = (int)eInventorySlot.LastBackpack;
+								}
+							}
+
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)slot);
+
+							if (item == null)
+							{
+								client.Out.SendMessage("No item in slot " + slot + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return 0;
+							}
+
+							try
+							{
+								item.IsTradable = Convert.ToBoolean(args[2]);
+							}
+							catch
+							{
+								client.Out.SendMessage("'/item ispickable <true or false> <slot #>' to change allow item to be picked or not", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							}
+
+							break;
+						}
 					case "spell":
 						{
 							int slot = (int) eInventorySlot.LastBackpack;
@@ -1436,6 +1472,7 @@ namespace DOL.GS.Scripts
 							temp.Id_nb = item.Id_nb;
 							temp.IsDropable = item.IsDropable;
 							temp.IsPickable = item.IsPickable;
+							temp.IsTradable = item.IsTradable;
 							temp.Item_Type = item.Item_Type;
 							temp.Level = item.Level;
 							temp.MaxCondition = item.MaxCondition;
