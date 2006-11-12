@@ -24,29 +24,41 @@ namespace DOL.Database
 	/// <summary>
 	/// TODO: add neccessary fields for styles
 	/// </summary>
-	[DataTable(TableName="StyleSubstitute")]
+	[DataTable(TableName = "StyleSubstitute")]
 	public class DBStyleSubstitute : DBStyle
 	{
-		static bool	m_autoSave = false;
-		private int	m_classId;
+		static bool m_autoSave = false;
+		private int m_classId;
 
 		/// <summary>
 		/// The Constructor
 		/// </summary>
-		public DBStyleSubstitute() : base()
+		public DBStyleSubstitute()
+			: base()
 		{
+		}
+
+		/// <summary>
+		/// The Style Substitute ID, must not be unique to be able to reuse a style 
+		/// more than once.
+		/// </summary>
+		[DataElement(AllowDbNull = false, Unique = false)]
+		public override int ID
+		{
+			get { return m_ID; }
+			set { m_ID = value; }
 		}
 
 		/// <summary>
 		/// The Style Substitute Class ID
 		/// </summary>
-		[DataElement(AllowDbNull=false)]
+		[DataElement(AllowDbNull = false)]
 		public int ClassId
 		{
 			get { return m_classId; }
 			set { m_classId = value; Dirty = true; }
 		}
-		
+
 		/// <summary>
 		/// AutoSave in table?
 		/// </summary>

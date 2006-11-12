@@ -151,7 +151,6 @@ namespace DOL.GS
 		/// The lock object for lazy regen timers initialization
 		/// </summary>
 		protected readonly object m_decayTimerLock = new object();
-		protected GameObject m_decayObject = null;
 
 		private ushort m_ammoSlot;
 		public ushort AmmoSlot
@@ -208,8 +207,8 @@ namespace DOL.GS
 
 		public override void Die(GameObject killer)
 		{
-			if (Owner != null)
-				ReleaseControl();
+			StopDecay();
+			ReleaseControl();
 			Delete();
 		}
 
@@ -453,6 +452,7 @@ namespace DOL.GS
 			}
 			base.TakeDamage(source, damageType, damageAmount, criticalAmount);
 		}
+
 		public override bool Interact(GamePlayer player)
 		{
 			if (!base.Interact(player))
@@ -530,13 +530,7 @@ namespace DOL.GS
 
 		private int DecayTimerCallback(RegionTimer callingTimer)
 		{
-			if (Health <= 0)
-			{
-				StopDecay();
-				Die(m_decayObject);
-				return 0;
-			}
-			ChangeHealth(this, eHealthChangeType.Unknown, DeductHp);
+			TakeDamage(this, eDamageType.Natural, DeductHp, 0);
 			return DECAYPERIOD;
 		}
 

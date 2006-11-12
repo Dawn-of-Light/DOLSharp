@@ -18,6 +18,7 @@
  */
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Reflection;
 using DOL.AI.Brain;
@@ -55,7 +56,8 @@ namespace DOL.GS
 		private Style m_style = null;
 		private eAttackType m_attackType = eAttackType.Unknown;
 		private GameLiving.eAttackResult m_attackResult = GameLiving.eAttackResult.Any;
-		private ISpellHandler m_styleEffect;
+		//private ISpellHandler m_styleEffect;
+		private List<ISpellHandler> m_styleEffects;
 		private int m_animationId;
 		private int m_weaponSpeed;
 		private bool m_isOffHand;
@@ -66,6 +68,7 @@ namespace DOL.GS
 		/// </summary>
 		public AttackData()
 		{
+			m_styleEffects = new List<ISpellHandler>();
 		}
 
 		/// <summary>
@@ -167,13 +170,21 @@ namespace DOL.GS
 			set { m_attackResult = value; }
 		}
 
+		///// <summary>
+		///// Sets or gets the style effect
+		///// </summary>
+		//public ISpellHandler StyleEffect
+		//{
+		//    get { return m_styleEffect; }
+		//    set { m_styleEffect = value; }
+		//}
+
 		/// <summary>
-		/// Sets or gets the style effect
+		/// (procs) Gets the style effects
 		/// </summary>
-		public ISpellHandler StyleEffect
+		public List<ISpellHandler> StyleEffects
 		{
-			get { return m_styleEffect; }
-			set { m_styleEffect = value; }
+			get { return m_styleEffects; }
 		}
 
 		/// <summary>
@@ -720,7 +731,7 @@ namespace DOL.GS
 		{
 			get { return m_lastAttackTick; }
 			set
-			{ 
+			{
 				m_lastAttackTick = value;
 				if (this is GameNPC)
 				{
@@ -755,7 +766,7 @@ namespace DOL.GS
 		public virtual long LastAttackedByEnemyTick
 		{
 			get { return m_lastAttackedByEnemyTick; }
-			set 
+			set
 			{
 				m_lastAttackedByEnemyTick = value;
 				if (this is GameNPC)
@@ -2245,10 +2256,21 @@ namespace DOL.GS
 				else
 					owner.ShowAttackAnimation(mainHandAD, mainWeapon);
 
-				// start style effect after any damage
-				if (mainHandAD.StyleEffect != null && mainHandAD.AttackResult == eAttackResult.HitStyle)
+				// (procs) start style effect after any damage
+				if (mainHandAD.StyleEffects.Count > 0 && mainHandAD.AttackResult == eAttackResult.HitStyle)
 				{
-					mainHandAD.StyleEffect.StartSpell(mainHandAD.Target);
+					foreach (ISpellHandler proc in mainHandAD.StyleEffects)
+					{
+						proc.StartSpell(mainHandAD.Target);
+					}
+				}
+
+				if (leftHandAD.StyleEffects.Count > 0 && leftHandAD.AttackResult == eAttackResult.HitStyle)
+				{
+					foreach (ISpellHandler proc in leftHandAD.StyleEffects)
+					{
+						proc.StartSpell(leftHandAD.Target);
+					}
 				}
 
 				Stop();
@@ -4689,6 +4711,70 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		public virtual bool HasAbility(string keyName)
 		{
 			return false;
+		}
+
+		/// <summary>
+		/// Table of skills currently disabled
+		/// skill => disabletimeout (ticks) or 0 when endless
+		/// </summary>
+		protected readonly Hashtable m_disabledSkills = new Hashtable();
+
+		/// <summary>
+		/// Gets the time left for disabling this skill in milliseconds
+		/// </summary>
+		/// <param name="skill"></param>
+		/// <returns>milliseconds left for disable</returns>
+		public virtual int GetSkillDisabledDuration(Skill skill)
+		{
+			lock (m_disabledSkills.SyncRoot)
+			{
+				object time = m_disabledSkills[skill];
+				if (time != null)
+				{
+					long timeout = (long)time;
+					long left = timeout - CurrentRegion.Time;
+					if (left <= 0)
+					{
+						left = 0;
+						m_disabledSkills.Remove(skill);
+					}
+					return (int)left;
+				}
+			}
+			return 0;
+		}
+
+		/// <summary>
+		/// Gets a copy of all disabled skills
+		/// </summary>
+		/// <returns></returns>
+		public virtual ICollection GetAllDisabledSkills()
+		{
+			lock (m_disabledSkills.SyncRoot)
+			{
+				return ((Hashtable)m_disabledSkills.Clone()).Keys;
+			}
+		}
+
+		/// <summary>
+		/// Grey out some skills on client for specified duration
+		/// </summary>
+		/// <param name="skill">the skill to disable</param>
+		/// <param name="duration">duration of disable in milliseconds</param>
+		public virtual void DisableSkill(Skill skill, int duration)
+		{
+			lock (m_disabledSkills.SyncRoot)
+			{
+				if (duration > 0)
+				{
+					m_disabledSkills[skill] = CurrentRegion.Time + duration;
+				}
+				else
+				{
+					m_disabledSkills.Remove(skill);
+					duration = 0;
+				}
+			}
 		}
 		#endregion
 		#region Region

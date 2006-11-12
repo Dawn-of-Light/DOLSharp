@@ -243,6 +243,9 @@ namespace DOL.AI.Brain
 			if (!WorldMgr.CheckDistance(Body, Owner, MAX_OWNER_FOLLOW_DIST))
 				Owner.CommandNpcRelease();
 
+			if (!Body.IsCasting && Body.Spells.Count > 0)
+				CheckSpells();
+
 			if (AggressionState == eAggressionState.Aggressive)
 			{
 				CheckPlayerAggro();

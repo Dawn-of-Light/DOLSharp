@@ -99,7 +99,7 @@ namespace DOL.GS
 			//Adding the spells to an Arraylist here
 			if (data.Spells != null && data.Spells.Length > 0)
 			{
-				string[] spells = data.Spells.Split('|');
+				string[] spells = data.Spells.Split(';');
 				for (int k = 0; k < spells.Length; k++)
 				{
 					int id = int.Parse(spells[k]);

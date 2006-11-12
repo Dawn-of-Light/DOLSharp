@@ -134,6 +134,8 @@ namespace DOL.GS.Quests.Albion
         [ScriptLoadedEvent]
         public static void ScriptLoaded(DOLEvent e, object sender, EventArgs args)
         {
+			if (!ServerProperties.Properties.LOAD_QUESTS)
+				return;
             if (log.IsInfoEnabled)
                 log.Info("Quest \"" + questTitle + "\" initializing ...");
             /* First thing we do in here is to search for the NPCs inside
@@ -305,15 +307,15 @@ namespace DOL.GS.Quests.Albion
                  */
                 GameEventMgr.RemoveHandler(briceYarley, GameObjectEvent.Interact, new DOLEventHandler(TalkToBriceYarley));
                 GameEventMgr.RemoveHandler(briceYarley, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToBriceYarley));
+
+				/* Now we remove to arleighPenn the possibility to give this quest to players */
+				briceYarley.RemoveQuestToGive(typeof(AFewRepairs));
             }
             if (patrickYarley != null)
             {
                 GameEventMgr.RemoveHandler(patrickYarley, GameObjectEvent.Interact, new DOLEventHandler(TalkToPatrickYarley));
                 GameEventMgr.RemoveHandler(patrickYarley, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToPatrickYarley));
             }
-            
-            /* Now we remove to arleighPenn the possibility to give this quest to players */
-            briceYarley.RemoveQuestToGive(typeof(AFewRepairs));
         }
 
         /* This is the method we declared as callback for the hooks we set to

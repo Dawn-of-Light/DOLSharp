@@ -1974,7 +1974,7 @@ namespace DOL.GS
 		public int RespecAmountRealmSkill
 		{
 			get { return m_respecAmountRealmSkill; }
-			set 
+			set
 			{
 				m_character.RespecAmountRealmSkill = value;
 				m_respecAmountRealmSkill = value;
@@ -5510,7 +5510,7 @@ namespace DOL.GS
 							case 2: range *= 1.15; break; //doesn't exist on live
 							case 3: range *= 1.25; break; //Flight +25%
 						}
-					if(livingTarget != null) range += (Z - livingTarget.Z) / 2.0;
+					if (livingTarget != null) range += (Z - livingTarget.Z) / 2.0;
 					if (range < 32) range = 32;
 
 					return (int)(range);
@@ -5789,7 +5789,7 @@ namespace DOL.GS
 					m_releaseTimer.Stop();
 					m_releaseTimer = null;
 				}
-				
+
 				if (m_quitTimer != null)
 				{
 					m_quitTimer.Stop();
@@ -5884,10 +5884,10 @@ namespace DOL.GS
 			if (PlayerGroup != null)
 			{
 				foreach (GamePlayer player in PlayerGroup.GetPlayersInTheGroup())
-				{ 
+				{
 					if (player == this) continue;
 					if (enemy.Attackers.Contains(player)) continue;
-					if (WorldMgr.CheckDistance(this,player, WorldMgr.MAX_EXPFORKILL_DISTANCE))
+					if (WorldMgr.CheckDistance(this, player, WorldMgr.MAX_EXPFORKILL_DISTANCE))
 					{
 						Notify(GameLivingEvent.EnemyKilled, player, new EnemyKilledEventArgs(enemy));
 					}
@@ -6077,70 +6077,17 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Table of skills currently disabled
-		/// skill => disabletimeout (ticks) or 0 when endless
-		/// </summary>
-		protected readonly Hashtable m_disabledSkills = new Hashtable();
-
-		/// <summary>
-		/// Gets the time left for disabling this skill in milliseconds
-		/// </summary>
-		/// <param name="skill"></param>
-		/// <returns>milliseconds left for disable</returns>
-		public virtual int GetSkillDisabledDuration(Skill skill)
-		{
-			lock (m_disabledSkills.SyncRoot)
-			{
-				object time = m_disabledSkills[skill];
-				if (time != null)
-				{
-					long timeout = (long)time;
-					long left = timeout - CurrentRegion.Time;
-					if (left <= 0)
-					{
-						left = 0;
-						m_disabledSkills.Remove(skill);
-					}
-					return (int)left;
-				}
-			}
-			return 0;
-		}
-
-		/// <summary>
-		/// Gets a copy of all disabled skills
-		/// </summary>
-		/// <returns></returns>
-		public virtual ICollection GetAllDisabledSkills()
-		{
-			lock (m_disabledSkills.SyncRoot)
-			{
-				return ((Hashtable)m_disabledSkills.Clone()).Keys;
-			}
-		}
-
-		/// <summary>
 		/// Grey out some skills on client for specified duration
 		/// </summary>
 		/// <param name="skill">the skill to disable</param>
 		/// <param name="duration">duration of disable in milliseconds</param>
-		public virtual void DisableSkill(Skill skill, int duration)
+		public override void DisableSkill(Skill skill, int duration)
 		{
 			if (this.Client.Account.PrivLevel > 1)
 				return;
 
-			lock (m_disabledSkills.SyncRoot)
-			{
-				if (duration > 0)
-				{
-					m_disabledSkills[skill] = CurrentRegion.Time + duration;
-				}
-				else
-				{
-					m_disabledSkills.Remove(skill);
-					duration = 0;
-				}
-			}
+			base.DisableSkill(skill, duration);
+
 			Out.SendDisableSkill(skill, duration / 1000 + 1);
 		}
 
@@ -7023,7 +6970,10 @@ namespace DOL.GS
 			}
 			else
 			{
-				Out.SendMessage("You send, " + "\"" + str + "\" to " + target.Name, eChatType.CT_Send, eChatLoc.CL_ChatWindow);
+				eChatType type = eChatType.CT_Send;
+				if (this.Client.Account.PrivLevel > 1)
+					type = eChatType.CT_Staff;
+				Out.SendMessage("You send, " + "\"" + str + "\" to " + target.Name, type, eChatLoc.CL_ChatWindow);
 			}
 			return true;
 		}
@@ -7245,7 +7195,7 @@ namespace DOL.GS
 		/// <returns>true if on a steed, false if not</returns>
 		public virtual bool IsRiding
 		{
-			get	{ return Steed != null;	}
+			get { return Steed != null; }
 		}
 
 		#endregion
@@ -8464,7 +8414,7 @@ namespace DOL.GS
 		/// <returns>true if player took the item</returns>
 		public override bool ReceiveItem(GameLiving source, InventoryItem item)
 		{
-			if (source == null || item == null)	return false;
+			if (source == null || item == null) return false;
 
 			if (!Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, item))
 			{
@@ -8477,15 +8427,15 @@ namespace DOL.GS
 			if (source is GamePlayer)
 			{
 				GamePlayer sourcePlayer = source as GamePlayer;
-				if(sourcePlayer!=null)
+				if (sourcePlayer != null)
 				{
 					uint privLevel1 = Client.Account.PrivLevel;
 					uint privLevel2 = sourcePlayer.Client.Account.PrivLevel;
-					if(privLevel1 != privLevel2
+					if (privLevel1 != privLevel2
 						&& (privLevel1 > 1 || privLevel2 > 1)
 						&& (privLevel1 == 1 || privLevel2 == 1))
 					{
-						GameServer.Instance.LogGMAction("   Item: "+source.Name+"("+sourcePlayer.Client.Account.Name+") -> "+Name+"("+Client.Account.Name+") : "+item.Name+"("+item.Id_nb+")");
+						GameServer.Instance.LogGMAction("   Item: " + source.Name + "(" + sourcePlayer.Client.Account.Name + ") -> " + Name + "(" + Client.Account.Name + ") : " + item.Name + "(" + item.Id_nb + ")");
 					}
 				}
 			}
@@ -9560,42 +9510,43 @@ namespace DOL.GS
 			protected override void OnTick()
 			{
 				GamePlayer player = (GamePlayer)m_actionSource;
+				if (player.Client.Account.PrivLevel > 1) return;
 
-				foreach (GameNPC npc in player.GetNPCsInRadius(2048))
+				bool checklos = false;
+				foreach (AbstractArea area in player.CurrentAreas)
+				{
+					if (area is KeepArea || area.CheckLOS)
+					{
+						checklos = true;
+						break;
+					}
+				}
+
+				foreach (GameNPC npc in player.GetNPCsInRadius(1024))
 				{
 					// Friendly mobs do not uncover stealthed players
 					if (!GameServer.ServerRules.IsAllowedToAttack(npc, player, true)) continue;
 
 					double npcLevel = Math.Max(npc.Level, 1.0);
 					double stealthLevel = player.GetModifiedSpecLevel(Specs.Stealth);
-					//  if(npc.hasDetectHidden)
-					//    detectRadius = 2048f - (1792.0 * stealthLevel / npcLevel);
-					//  else
-					double detectRadius = 1024f - (896.0 * stealthLevel / npcLevel);
+					double detectRadius = 125.0 + ((npcLevel - stealthLevel) * 20.0);
 
-					//Don't check for radius <= 0
-					if (detectRadius <= 0) continue;
+					if (detectRadius < 126) detectRadius = 126;
 
 					double distanceToPlayer = WorldMgr.GetDistance(npc, player);
-					//If player is out of detection distance, continue
 					if (distanceToPlayer > detectRadius) continue;
 
 					double fieldOfView = 90.0;  //90 degrees  = standard FOV
 					double fieldOfListen = 120.0; //120 degrees = standard field of listening
-
-					//NPC's with Level > 50 get some bonuses!
-					if (npcLevel > 50)
+					if (npc.Level > 50)
 					{
-						fieldOfView = 4050.0 / 2048.0 * npc.Level; //=oldFOV*npc.Level*45/2048
-						fieldOfListen = 5400.0 / 2048.0 * npc.Level; //=oldFOL*npc.Level*45/2048
+						fieldOfListen += (npc.Level - player.Level) * 3;
 					}
-
 					double angle = npc.GetAngleToTarget(player);
+
 					//player in front
 					fieldOfView /= 2.0;
 					bool canSeePlayer = (angle >= 360 - fieldOfView || angle < fieldOfView);
-
-					//					DOLConsole.WriteLine(npc.Name + ": angle="+angle+"; distance="+distanceToPlayer+"; radius="+detectRadius+"; canSee="+canSeePlayer);
 
 					//If npc can not see nor hear the player, continue the loop
 					fieldOfListen /= 2.0;
@@ -9605,34 +9556,50 @@ namespace DOL.GS
 						continue;
 
 					double chanceMod = 1.0;
-					//Chance to detect player decreases after 128 coordinates!
-					if (distanceToPlayer > 128)
-						chanceMod = 1f - (distanceToPlayer - 128.0) / (detectRadius - 128.0);
 
-					double chanceToUncover = (npc.Level * 10.0 + 100.0) / (stealthLevel + 100.0) * chanceMod;
+					//Chance to detect player decreases after 125 coordinates!
+					if (distanceToPlayer > 125)
+						chanceMod = 1f - (distanceToPlayer - 125.0) / (detectRadius - 125.0);
 
-					//Mobs above 50 have a higher chance to uncover/turn towards players
-					if (npcLevel > 50)
-						chanceToUncover *= (npc.Level - 40.0) / 10.0;
-					else
-						chanceToUncover /= 10.0;
+					double chanceToUncover = 0.1 + (npc.Level - stealthLevel) * 0.03 * chanceMod;
+					if (chanceToUncover < 0.01) chanceToUncover = 0.01;
 
-					//					DOLConsole.WriteLine(npc.Name + ": chance="+chanceToUncover.ToString("R"));
 					if (Util.ChanceDouble(chanceToUncover))
 					{
 						if (canSeePlayer)
 						{
-							player.Out.SendMessage(npc.GetName(0, true) + " uncovers you!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							player.Stealth(false);
-							break; //No more detecting needed, since uncovered already!
+							if (checklos)
+							{
+								player.Out.SendCheckLOS(player, npc, new CheckLOSResponse(player.UncoverLOSHandler));
+							}
+							else
+							{
+								player.Out.SendMessage(npc.GetName(0, true) + " uncovers you!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								player.Stealth(false);
+								break;
+							}
 						}
 						else
 						{
-							//On live server, npc turns to player only for 5 seconds (?)
 							npc.TurnTo(player, 10000);
 						}
 					}
 				}
+			}
+		}
+		/// <summary>
+		/// This handler is called by the unstealth check of mobs
+		/// </summary>   
+		public void UncoverLOSHandler(GamePlayer player, ushort response, ushort targetOID)
+		{
+			GameObject target = CurrentRegion.GetObject(targetOID);
+
+			if ((target == null) || (player.IsStealthed == false)) return;
+
+			if ((response & 0x100) == 0x100)
+			{
+				player.Out.SendMessage(target.GetName(0, true) + " uncovers you!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Stealth(false);
 			}
 		}
 
@@ -9752,8 +9719,8 @@ namespace DOL.GS
 		public AbstractMission Mission
 		{
 			get { return m_mission; }
-			set 
-			{ 
+			set
+			{
 				m_mission = value;
 				this.Out.SendQuestListUpdate();
 				if (value != null) Out.SendMessage(m_mission.Description, eChatType.CT_System, eChatLoc.CL_SystemWindow);

@@ -113,14 +113,6 @@ namespace DOL.Database
 		/// </summary>
 		protected int m_SpecialType;
 		/// <summary>
-		/// The value for the special effect of this style
-		///		For taunt:
-		///			less than 0 = detaunt
-		///			greater than 0 = taunt
-		///		For effects it is the effectID
-		/// </summary>
-		protected int m_SpecialValue;
-		/// <summary>
 		/// The bonus to hit value for this style
 		/// below 0 = penalty
 		/// above 0 = bonus
@@ -137,6 +129,11 @@ namespace DOL.Database
 		/// </summary>
 		protected int m_TwoHandAnimation;
 
+		/// <summary>
+		/// Randomly cast a proc
+		/// </summary>
+		protected bool m_RandomProc;
+
 		static bool m_autoSave;
 
 		/// <summary>
@@ -151,7 +148,7 @@ namespace DOL.Database
 		/// The Style ID
 		/// </summary>
 		[DataElement(AllowDbNull = false, Unique = true)]
-		public int ID
+		public virtual int ID
 		{
 			get { return m_ID; }
 			set { m_ID = value; }
@@ -289,16 +286,6 @@ namespace DOL.Database
 		}
 
 		/// <summary>
-		/// The Style Special Value
-		/// </summary>
-		[DataElement(AllowDbNull = true)]
-		public int SpecialValue
-		{
-			get { return m_SpecialValue; }
-			set { m_SpecialValue = value; Dirty = true; }
-		}
-
-		/// <summary>
 		/// The Style Bonus To Hit
 		/// </summary>
 		[DataElement(AllowDbNull = true)]
@@ -326,6 +313,16 @@ namespace DOL.Database
 		{
 			get { return m_TwoHandAnimation; }
 			set { m_TwoHandAnimation = value; Dirty = true; }
+		}
+
+		/// <summary>
+		///(procs) The Style should Randomly cast a proc 
+		/// </summary>
+		[DataElement(AllowDbNull = true)]
+		public bool RandomProc
+		{
+			get { return m_RandomProc; }
+			set { m_RandomProc = value; Dirty = true; }
 		}
 
 		/// <summary>

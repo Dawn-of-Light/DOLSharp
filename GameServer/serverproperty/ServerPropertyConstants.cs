@@ -116,5 +116,9 @@ namespace DOL.GS.ServerProperties
 		/// The key for whether the server should log all the player trades
 		/// </summary>
 		public const string LOG_TRADES = "log_trades";
+		/// <summary>
+		/// The key for the players class
+		/// </summary>
+		public const string PLAYER_CLASS = "player_class";
 	}
 }

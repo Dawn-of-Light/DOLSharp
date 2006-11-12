@@ -1360,6 +1360,7 @@
     <Compile Include="spells\Savage\SavageParryHandler.cs" />
     <Compile Include="spells\Savage\SavageSlashResistHandler.cs" />
     <Compile Include="spells\Savage\SavageThrustResistHandler.cs" />
+    <Compile Include="spells\StyleTaunt.cs" />
     <Compile Include="spells\WaterBreathingSpellHandler.cs" />
     <Compile Include="spells\CureDiseaseSpellHandler.cs">
       <SubType>Code</SubType>
