@@ -24,6 +24,7 @@ using DOL.AI;
 using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
+using DOL.GS.Effects;
 using DOL.GS.Movement;
 using DOL.GS.Quests;
 using DOL.GS.PacketHandler;
@@ -1032,6 +1033,8 @@ namespace DOL.GS
 		/// </summary>
 		protected virtual int FollowTimerCallback(RegionTimer callingTimer)
 		{
+			if (IsCasting)
+				return FOLLOWCHECKTICKS;
 			bool wasInRange = m_followTimer.Properties.getProperty(FOLLOW_TARGET_IN_RANGE, false);
 			m_followTimer.Properties.removeProperty(FOLLOW_TARGET_IN_RANGE);
 
@@ -1492,6 +1495,8 @@ namespace DOL.GS
 			if (exists != -1)
 				return false;
 
+			rider.MoveTo(CurrentRegionID, X, Y, Z, Heading);
+
 			Notify(GameNPCEvent.RiderMount, this, new RiderMountEventArgs(rider, this));
 			int slot = GetFreeArrayLocation();
 			Riders[slot] = rider;
@@ -1591,13 +1596,13 @@ namespace DOL.GS
 				player.Out.SendObjectUpdate(this);
 				player.CurrentUpdateArray[ObjectID - 1] = true;
 
-				if (MAX_PASSENGERS > 0)
-				{
-					foreach (GamePlayer rider in CurrentRiders)
-					{
-						player.Out.SendRiding(rider, this, false);
-					}
-				}
+				//if (MAX_PASSENGERS > 0)
+				//{
+				//    foreach (GamePlayer rider in CurrentRiders)
+				//    {
+				//        player.Out.SendRiding(rider, this, false);
+				//    }
+				//}
 			}
 			m_lastUpdateTickCount = (uint)Environment.TickCount;
 		}
@@ -2013,6 +2018,11 @@ namespace DOL.GS
 		{
 			TargetObject = attackTarget;
 			m_lastAttackTick = m_CurrentRegion.Time;
+			if (m_attackers.Count == 0 && this.Spells.Count > 0 && this.CurrentRegion.Time - LastAttackedByEnemyTick > 10 * 1000)
+			{
+				if (StartSpellAttack(attackTarget))
+					return;
+			}
 			base.StartAttack(attackTarget);
 		}
 
@@ -2280,18 +2290,20 @@ namespace DOL.GS
 		/// <returns></returns>
 		public virtual bool StartSpellAttack(GameObject attackTarget)
 		{
+			if (Spells == null || Spells.Count < 1)
+				return false;
 			if (!WorldMgr.CheckDistance(attackTarget, this, AttackRange))
 			{
-				if (this.Spells != null)
+				foreach (Spell spell in this.Spells)
 				{
-					foreach (Spell spell in this.Spells)
+					if (spell.CastTime == 0) continue;
+					if (spell.SpellType == "DirectDamage" || spell.SpellType == "Lifedrain")
 					{
-						if (spell.SpellType == "DirectDamage")
-						{
-							SpellLine spellline = SkillBase.GetSpellLine(GlobalSpellsLines.Mob_Spells);
-							this.CastSpell(spell, spellline);
-							return true;
-						}
+						this.TargetObject = attackTarget;
+						TurnTo(this.TargetObject);
+						SpellLine spellline = SkillBase.GetSpellLine(GlobalSpellsLines.Mob_Spells);
+						this.CastSpell(spell, spellline);
+						return true;
 					}
 				}
 			}
@@ -2303,7 +2315,7 @@ namespace DOL.GS
 		/// </summary>
 		public virtual void StopSpellAttack()
 		{
-			if (m_runningSpellHandler != null && m_runningSpellHandler.Spell.SpellType == "DirectDamage")
+			if (m_runningSpellHandler != null)
 			{
 				//prevent from relaunch
 				m_runningSpellHandler.CastingCompleteEvent -= new CastingCompleteCallback(OnAfterSpellCastSequence);
@@ -2315,53 +2327,101 @@ namespace DOL.GS
 		/// Callback after spell execution finished and next spell can be processed
 		/// </summary>
 		/// <param name="handler"></param>
-		//	public override void OnAfterSpellCastSequence(ISpellHandler handler)
-		//	{
-		//		if (handler.Spell.SpellType == "DirectDamage")
-		//		{
-		//			m_runningSpellHandler = handler;
-		//			handler.CastSpell();
-		//		}
-		//	}
+		public override void OnAfterSpellCastSequence(ISpellHandler handler)
+		{
+			if (TargetObject is GameLiving == false)
+			{
+				StopSpellAttack();
+				return;
+			}
+
+			//we don't want procs to cast again
+			if (handler.Spell.CastTime == 0)
+			{
+				StopSpellAttack();
+				return;
+			}
+
+			//we make sure we are allowed to cast
+			if (handler is SpellHandler && ((handler as SpellHandler).CheckBeginCast(TargetObject as GameLiving)) == false)
+			{
+				StopSpellAttack();
+				return;
+			}
+
+			//we allow spells that inherit from directdamage only to repeat
+			if (typeof(DirectDamageSpellHandler).IsInstanceOfType(handler) == false)
+			{
+				StopSpellAttack();
+				return;
+			}
+
+			m_runningSpellHandler = handler;
+			handler.CastSpell();
+		}
 
 		/// <summary>
 		///
 		/// </summary>
-		/// <param name="body"></param>
-		public void Buff(GameNPC body)
+		public void Buff()
 		{
-			if (this.Spells != null)
+			if (this.Spells == null || this.Spells.Count == 0)
+				return;
+
+			foreach (Spell spell in this.Spells)
 			{
-				foreach (Spell spell in this.Spells)
+				//todo find a way to get it by inherit of PropertyChangingSpell or not
+				switch (spell.SpellType)
 				{
-					//todo find a way to get it by inherit of PropertyChangingSpell or not
-					switch (spell.SpellType)
-					{
-						case "StrengthConstitutionBuff":
-						case "DexterityQuicknessBuff":
-						case "StrengthBuff":
-						case "DexterityBuff":
-						case "ConstitutionBuff":
-						case "ArmorFactorBuff":
-						case "ArmorAbsorbtionBuff":
-						case "CombatSpeedBuff":
-						case "MeleeDamageBuff":
-						case "AcuityBuff":
-						case "BodyResistBuff":
-						case "ColdResistBuff":
-						case "EnergyResistBuff":
-						case "HeatResistBuff":
-						case "MatterResistBuff":
-						case "SpiritResistBuff":
-						case "BodySpiritEnergyBuff":
-						case "HeatColdMatterBuff":
-						case "CrushSlashThrustBuff":
+					case "StrengthConstitutionBuff":
+					case "DexterityQuicknessBuff":
+					case "StrengthBuff":
+					case "DexterityBuff":
+					case "ConstitutionBuff":
+					case "ArmorFactorBuff":
+					case "ArmorAbsorbtionBuff":
+					case "CombatSpeedBuff":
+					case "MeleeDamageBuff":
+					case "AcuityBuff":
+					case "HealthRegenBuff":
+					case "DamageAdd":
+					case "DamageShield":
+					case "BodyResistBuff":
+					case "ColdResistBuff":
+					case "EnergyResistBuff":
+					case "HeatResistBuff":
+					case "MatterResistBuff":
+					case "SpiritResistBuff":
+					case "BodySpiritEnergyBuff":
+					case "HeatColdMatterBuff":
+					case "CrushSlashThrustBuff":
+					case "OffensiveProc":
+					case "DefensiveProc":
+						{
+							if (this.AttackState && spell.CastTime > 0)
+								continue;
+
+							bool already = false;
+							foreach (IGameEffect effect in this.EffectList)
 							{
-								SpellLine spellline = SkillBase.GetSpellLine(GlobalSpellsLines.Mob_Spells);
-								this.CastSpell(spell, spellline);
-								return;
+								if (effect is GameSpellEffect)
+								{
+									GameSpellEffect speffect = effect as GameSpellEffect;
+									if (speffect.Spell.SpellType == spell.SpellType)
+									{
+										already = true;
+										break;
+									}
+								}
 							}
-					}
+							if (already)
+								continue;
+
+							this.TargetObject = this;
+							SpellLine spellline = SkillBase.GetSpellLine(GlobalSpellsLines.Mob_Spells);
+							this.CastSpell(spell, spellline);
+							return;
+						}
 				}
 			}
 		}

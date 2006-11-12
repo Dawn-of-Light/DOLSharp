@@ -148,6 +148,9 @@
     <Compile Include="DOLTables\DBKeepPosition.cs" />
     <Compile Include="DOLTables\DBNews.cs" />
     <Compile Include="DOLTables\DBRelic.cs" />
+    <Compile Include="DOLTables\DBStyleXSpell.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DOLTables\ServerProperty.cs" />
     <Compile Include="DOLTables\DBAbility.cs">
       <SubType>Code</SubType>

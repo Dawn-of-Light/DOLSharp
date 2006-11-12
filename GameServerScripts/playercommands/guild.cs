@@ -35,12 +35,30 @@ namespace DOL.GS.Scripts
 		(uint)ePrivLevel.Player,
 		"Guild command (use /gc help for options)",
 		"/gc <option>")]
-	public class GuildCommandHandler : ICommandHandler
+	public class GuildCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
+		/// <summary>
+		/// Contains all characters that are valid in a guild name.
+		/// </summary>
+		public static string AllowedGuildNameChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ ·ÈÌÛ˙¡…Õ”⁄";
+
 		/// <summary>
 		/// Defines a logger for this class.
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
+		public static bool IsValidGuildName(string guildName)
+		{
+			foreach (char c in guildName)
+			{
+				if (AllowedGuildNameChars.IndexOf(c) < 0)
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
 
 		public int OnCommand(GameClient client, string[] args)
 		{
@@ -104,6 +122,7 @@ namespace DOL.GS.Scripts
 								client.Out.SendMessage("Syntax error! /gc create guildname leadername with no long name", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return 0;
 							}
+
 							if (!GuildMgr.DoesGuildExist(args[2]))
 							{
 								GameClient guildLeader = WorldMgr.GetClientByPlayerName(args[3], false, false);
@@ -112,20 +131,31 @@ namespace DOL.GS.Scripts
 									client.Out.SendMessage("Player \"" + args[3] + "\"  not found.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 									return 0;
 								}
-								Guild newGuild = GuildMgr.CreateGuild(client.Player, args[2]);
-								if (newGuild == null)
+
+								if (!IsValidGuildName(args[2]))
 								{
-									message = "Unable to create guild \"" + args[2] + "\".";
+									// Mannen doesn't know the live server message, so someone needs to enter it . ;-)
+									message = "Some characters are invalid.";
 									client.Out.SendMessage(message, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									return 0;
 								}
 								else
 								{
-									newGuild.AddPlayer(guildLeader.Player);
-									guildLeader.Player.GuildRank = guildLeader.Player.Guild.GetRankByID(0);
-									message = "Create guild \"" + args[2] + "\" with player " + args[3] + " as leader!";
-									client.Out.SendMessage(message, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									Guild newGuild = GuildMgr.CreateGuild(client.Player, args[2]);
+									if (newGuild == null)
+									{
+										message = "Unable to create guild \"" + args[2] + "\".";
+										client.Out.SendMessage(message, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									}
+									else
+									{
+										newGuild.AddPlayer(guildLeader.Player);
+										guildLeader.Player.GuildRank = guildLeader.Player.Guild.GetRankByID(0);
+										message = "Created guild \"" + args[2] + "\" with player " + args[3] + " as leader!";
+										client.Out.SendMessage(message, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									}
+									return 1;
 								}
-								return 1;
 							}
 							else
 							{
@@ -408,10 +438,10 @@ namespace DOL.GS.Scripts
 								string mesg = client.Player.Guild.Name + "  " + client.Player.Guild.MemberOnlineCount + " members ";
 								client.Out.SendMessage(mesg, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
-							if (client.Player.Guild.theGuildDB.Motd != null && client.Player.Guild.theGuildDB.Motd != "")
-								client.Player.Out.SendMessage("Guild Message: " + client.Player.Guild.theGuildDB.Motd, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							if (client.Player.Guild.theGuildDB.oMotd != null && client.Player.Guild.theGuildDB.oMotd != "" && client.Player.GuildRank.OcHear)
-								client.Player.Out.SendMessage("Officer Message: " + client.Player.Guild.theGuildDB.oMotd, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								if (client.Player.Guild.theGuildDB.Motd != null && client.Player.Guild.theGuildDB.Motd != "")
+									client.Player.Out.SendMessage("Guild Message: " + client.Player.Guild.theGuildDB.Motd, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								if (client.Player.Guild.theGuildDB.oMotd != null && client.Player.Guild.theGuildDB.oMotd != "" && client.Player.GuildRank.OcHear)
+									client.Player.Out.SendMessage("Officer Message: " + client.Player.Guild.theGuildDB.oMotd, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 								foreach (DBRank rank in client.Player.Guild.theGuildDB.Ranks)
 								{
@@ -494,27 +524,25 @@ namespace DOL.GS.Scripts
 					// --------------------------------------------------------------------------------
 					case "form":
 						{
-							//Fooljam fix end. Players can not create guild names with other characters than Alpha anymore.
 							if (args.Length < 3)
 							{
 								client.Out.SendMessage("Syntax error! /gc form <guildname>", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return 0;
 							}
-							//Fooljam fix begin. Players can not create guild names with other characters than Alpha anymore.
-							foreach (char c in args[2])
-							{
-								if ((int)c < 65 || ((int)c > 90 && (int)c < 97) || (int)c > 122)
-								{
-									client.Out.SendMessage("You can not create a guild with a such name. Only A-Z,a-z characters are allowed!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-									return 0;
-								}
-							}
+
 							string guildname = String.Join(" ", args, 2, args.Length - 2);
 							guildname = GameServer.Database.Escape(guildname);
-							if (!GuildMgr.DoesGuildExist(guildname))
+
+							if (!IsValidGuildName(guildname))
 							{
-								bool checkGroup = Properties.GUILD_NUM > 1;
-								if (checkGroup)
+								// Mannen doesn't know the live server message, so someone needs to enter it . ;-)
+								message = "Some characters are invalid.";
+								client.Out.SendMessage(message, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return 0;
+							}
+							else
+							{
+								if (!GuildMgr.DoesGuildExist(guildname))
 								{
 									PlayerGroup group = client.Player.PlayerGroup;
 
@@ -531,34 +559,40 @@ namespace DOL.GS.Scripts
 											client.Out.SendMessage(Properties.GUILD_NUM + " members must be in the group to create a guild.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 											return 0;
 										}
-									}
-								}
 
-								Guild newGuild = GuildMgr.CreateGuild(client.Player, guildname);
-								if (newGuild == null)
-								{
-									message = "Unable to create guild \"" + guildname + "\" with player " + client.Player.Name + " as leader!";
-									client.Out.SendMessage(message, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+										// a member of group have a guild already, so quit!
+										foreach (GamePlayer ply in group)
+										{
+											if (ply.Guild != null)
+											{
+												client.Player.PlayerGroup.SendMessageToGroupMembers(ply.Name + " is already member of a guild!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+												return 0;
+											}
+										}
+
+										Guild newGuild = GuildMgr.CreateGuild(client.Player, guildname);
+										if (newGuild == null)
+										{
+											message = "Unable to create guild \"" + guildname + "\" with player " + client.Player.Name + " as leader!";
+											client.Out.SendMessage(message, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+										}
+										else
+										{
+											foreach (GamePlayer ply in group)
+											{
+												newGuild.AddPlayer(ply);
+											}
+											client.Player.GuildRank = client.Player.Guild.GetRankByID(0); //creator is leader
+											message = "Create guild \"" + guildname + "\" with player " + client.Player.Name + " as leader!";
+											client.Out.SendMessage(message, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+										}
+									}
 								}
 								else
 								{
-									if (checkGroup)
-									{
-										foreach (GamePlayer ply in client.Player.PlayerGroup)
-										{
-											newGuild.AddPlayer(ply);
-										}
-									}
-									else newGuild.AddPlayer(client.Player);
-									client.Player.GuildRank = client.Player.Guild.GetRankByID(0); //creator is leader
-									message = "Create guild \"" + guildname + "\" with player " + client.Player.Name + " as leader!";
+									message = "Guild " + guildname + " cannot be created because it already exsists!";
 									client.Out.SendMessage(message, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								}
-							}
-							else
-							{
-								message = "Guild " + guildname + " cannot be created because it already exsists!";
-								client.Out.SendMessage(message, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							}
 						}
 						break;
@@ -935,11 +969,6 @@ namespace DOL.GS.Scripts
 								else
 								{
 									Character c = (Character)GameServer.Database.SelectObject(typeof(Character), "Name = '" + args[2] + "'");
-									if (c == null)
-									{
-										client.Out.SendMessage(args[2] + " not found.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-										return 1;
-									}
 									if (c.GuildName != client.Player.GuildName)
 									{
 										client.Out.SendMessage(c.Name + " is not a member of your guild.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -1498,9 +1527,16 @@ namespace DOL.GS.Scripts
 							client.Out.SendMessage("You dont have the priviledges for that!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return 1;
 						}
-						byte lvl = Convert.ToByte(args[4]);
-						client.Player.Guild.GetRankByID(number).RankLevel = lvl;
-						client.Out.SendMessage("you have change the level of the rank " + number.ToString() + " to " + lvl.ToString(), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						if (args.Length >= 5)
+						{
+							byte lvl = Convert.ToByte(args[4]);
+							client.Player.Guild.GetRankByID(number).RankLevel = lvl;
+							client.Out.SendMessage("you have change the level of the rank " + number.ToString() + " to " + lvl.ToString(), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						}
+						else
+						{
+							DisplaySyntax(client);
+						}
 					}
 					break;
 

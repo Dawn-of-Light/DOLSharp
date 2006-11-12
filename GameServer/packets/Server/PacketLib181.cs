@@ -160,7 +160,11 @@ namespace DOL.GS.PacketHandler
 				{
 					pak.WriteByte((byte)pet.EffectList.Count); // effect count
 					foreach (IGameEffect effect in pet.EffectList)
+					{
+						if (effect.Icon == 0)
+							continue;
 						pak.WriteShort(effect.Icon); // 0x08 - null terminated - (byte) list of shorts - spell icons on pet
+					}
 				}
 			}
 			else
