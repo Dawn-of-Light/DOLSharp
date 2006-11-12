@@ -352,7 +352,12 @@ namespace DOL
 			/// <param name="ar"></param>
 			protected void RecvFromCallback(IAsyncResult ar)
 			{
-				if (ar == null) return;
+				if (m_status != eGameServerStatus.GSS_Open)
+					return;
+
+				if (ar == null)
+					return;
+
 				GameServer server = (GameServer)(ar.AsyncState);
 				Socket s = server.UDPSocket;
 				GameClient client = null;

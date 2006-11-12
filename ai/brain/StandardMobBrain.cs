@@ -25,6 +25,7 @@ using DOL.GS;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 using DOL.GS.SkillHandler;
+using DOL.GS.Spells;
 using log4net;
 
 namespace DOL.AI.Brain
@@ -44,7 +45,8 @@ namespace DOL.AI.Brain
 		/// <summary>
 		/// Constructs a new StandardMobBrain
 		/// </summary>
-		public StandardMobBrain() : base()
+		public StandardMobBrain()
+			: base()
 		{
 			m_aggroLevel = 0;
 			m_aggroMaxRange = 0;
@@ -66,14 +68,16 @@ namespace DOL.AI.Brain
 		/// </summary>
 		public override void Think()
 		{
-			if (!Body.IsCasting)
+			if (!Body.IsCasting && Body.Spells.Count > 0)
 				CheckSpells();
+
 			if (AggroLevel > 0)
 			{
 				CheckPlayerAggro();
 				CheckNPCAggro();
 			}
-			if (!Body.AttackState && !Body.IsMoving
+
+			if (!Body.AttackState && !Body.IsCasting && !Body.IsMoving
 				&& Body.Heading != Body.SpawnHeading)
 				Body.TurnTo(Body.SpawnHeading);
 		}
@@ -85,7 +89,7 @@ namespace DOL.AI.Brain
 		{
 			if (Body.AttackState)
 				return;
-			foreach (GameNPC npc in Body.GetNPCsInRadius((ushort) AggroRange))
+			foreach (GameNPC npc in Body.GetNPCsInRadius((ushort)AggroRange))
 			{
 				if (m_aggroTable.ContainsKey(npc))
 					continue; // add only new NPCs
@@ -96,7 +100,7 @@ namespace DOL.AI.Brain
 
 				if (CalculateAggroLevelToTarget(npc) > 0)
 				{
-					AddToAggroList(npc, (npc.Level+1)<<1);
+					AddToAggroList(npc, (npc.Level + 1) << 1);
 				}
 			}
 		}
@@ -109,7 +113,7 @@ namespace DOL.AI.Brain
 			//Check if we are already attacking, return if yes
 			if (Body.AttackState)
 				return;
-			foreach (GamePlayer player in Body.GetPlayersInRadius((ushort) AggroRange))
+			foreach (GamePlayer player in Body.GetPlayersInRadius((ushort)AggroRange))
 			{
 				if (m_aggroTable.ContainsKey(player))
 					continue; // add only new players
@@ -120,7 +124,7 @@ namespace DOL.AI.Brain
 
 				if (CalculateAggroLevelToTarget(player) > 0)
 				{
-					AddToAggroList(player, player.EffectiveLevel<<1);
+					AddToAggroList(player, player.EffectiveLevel << 1);
 				}
 			}
 		}
@@ -131,7 +135,7 @@ namespace DOL.AI.Brain
 		/// </summary>
 		public override int ThinkInterval
 		{
-			get { return Math.Max(1500, 10000 - AggroLevel*100); }
+			get { return Math.Max(1500, 10000 - AggroLevel * 100); }
 		}
 
 		#endregion
@@ -149,7 +153,7 @@ namespace DOL.AI.Brain
 		/// <summary>
 		/// List of livings that this npc has aggro on, living => aggroamount
 		/// </summary>
-		protected readonly Hashtable	m_aggroTable = new Hashtable();
+		protected readonly Hashtable m_aggroTable = new Hashtable();
 
 		/// <summary>
 		/// Aggressive Level in % 0..100, 0 means not Aggressive
@@ -178,18 +182,21 @@ namespace DOL.AI.Brain
 		public virtual void AddToAggroList(GameLiving living, int aggroamount)
 		{
 			if (living == null) return;
-//			log.Debug(Body.Name + ": AddToAggroList="+(living==null?"(null)":living.Name)+", "+aggroamount);
+			//			log.Debug(Body.Name + ": AddToAggroList="+(living==null?"(null)":living.Name)+", "+aggroamount);
 
 			// only protect if gameplayer and aggroamout > 0
 			if (living is GamePlayer && aggroamount > 0)
 			{
 				GamePlayer player = (GamePlayer)living;
-				
-				if (player.PlayerGroup != null) { // player is in group, add whole group to aggro list
-					lock(m_aggroTable.SyncRoot) 
+
+				if (player.PlayerGroup != null)
+				{ // player is in group, add whole group to aggro list
+					lock (m_aggroTable.SyncRoot)
 					{
-						foreach (GamePlayer groupPlayer in player.PlayerGroup.GetPlayersInTheGroup()) {
-							if (m_aggroTable[groupPlayer] == null) {
+						foreach (GamePlayer groupPlayer in player.PlayerGroup.GetPlayersInTheGroup())
+						{
+							if (m_aggroTable[groupPlayer] == null)
+							{
 								m_aggroTable[groupPlayer] = 1L;	// add the missing group member on aggro table
 							}
 						}
@@ -197,10 +204,10 @@ namespace DOL.AI.Brain
 				}
 
 				//ProtectEffect protect = (ProtectEffect) player.EffectList.GetOfType(typeof(ProtectEffect));
-				foreach (ProtectEffect protect in player.EffectList.GetAllOfType(typeof(ProtectEffect))) 
+				foreach (ProtectEffect protect in player.EffectList.GetAllOfType(typeof(ProtectEffect)))
 				{
 					// if no aggro left => break
-					if (aggroamount <=0) break;
+					if (aggroamount <= 0) break;
 
 					//if (protect==null) continue;
 					if (protect.ProtectTarget != living) continue;
@@ -210,9 +217,9 @@ namespace DOL.AI.Brain
 					if (protect.ProtectSource.ObjectState != GameObject.eObjectState.Active) continue;
 					if (!protect.ProtectSource.IsAlive) continue;
 					if (!protect.ProtectSource.InCombat) continue;
-																			
-					if (!WorldMgr.CheckDistance(living,protect.ProtectSource,ProtectAbilityHandler.PROTECT_DISTANCE))	
-						continue;		                                            												
+
+					if (!WorldMgr.CheckDistance(living, protect.ProtectSource, ProtectAbilityHandler.PROTECT_DISTANCE))
+						continue;
 					// P I: prevents 10% of aggro amount
 					// P II: prevents 20% of aggro amount
 					// P III: prevents 30% of aggro amount
@@ -224,11 +231,11 @@ namespace DOL.AI.Brain
 					{
 						aggroamount -= protectAmount;
 						protect.ProtectSource.Out.SendMessage("You are protecting " + player.GetName(0, false) + " and distract " + Body.GetName(0, false) + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-//						player.Out.SendMessage("You are protected by " + protect.ProtectSource.GetName(0, false) + " from " + Body.GetName(0, false) + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						//						player.Out.SendMessage("You are protected by " + protect.ProtectSource.GetName(0, false) + " from " + Body.GetName(0, false) + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
-						lock(m_aggroTable.SyncRoot) 
+						lock (m_aggroTable.SyncRoot)
 						{
-							if(m_aggroTable[protect.ProtectSource] != null) 
+							if (m_aggroTable[protect.ProtectSource] != null)
 							{
 								long amount = (long)m_aggroTable[protect.ProtectSource];
 								amount += protectAmount;
@@ -236,31 +243,31 @@ namespace DOL.AI.Brain
 							}
 							else
 							{
-								m_aggroTable[protect.ProtectSource] =(long) protectAmount;
+								m_aggroTable[protect.ProtectSource] = (long)protectAmount;
 							}
-						}					
-					}                                              
+						}
+					}
 				}
 			}
 
-			lock(m_aggroTable.SyncRoot) 
+			lock (m_aggroTable.SyncRoot)
 			{
-				if(m_aggroTable[living] != null) 
+				if (m_aggroTable[living] != null)
 				{
 					long amount = (long)m_aggroTable[living];
 					amount += aggroamount;
-					if (amount <= 0) 
+					if (amount <= 0)
 					{
 						m_aggroTable.Remove(living);
-					} 
-					else 
+					}
+					else
 					{
 						m_aggroTable[living] = amount;
 					}
-				} 
-				else 
+				}
+				else
 				{
-					if(aggroamount > 0) 
+					if (aggroamount > 0)
 					{
 						m_aggroTable[living] = (long)aggroamount;
 					}
@@ -277,9 +284,9 @@ namespace DOL.AI.Brain
 		/// <returns></returns>
 		public virtual long GetAggroAmountForLiving(GameLiving living)
 		{
-			lock (m_aggroTable.SyncRoot) 
+			lock (m_aggroTable.SyncRoot)
 			{
-				if (m_aggroTable[living] != null) 
+				if (m_aggroTable[living] != null)
 				{
 					return (long)m_aggroTable[living];
 				}
@@ -330,19 +337,18 @@ namespace DOL.AI.Brain
 		{
 			if (!IsActive)
 				return;
-			Body.Buff(Body);
 			GameLiving target = CalculateNextAttackTarget();
-			if (target!=null)
+			if (target != null)
 			{
-				if (!Body.AttackState || target!=Body.TargetObject) 
+				if (!Body.AttackState || target != Body.TargetObject)
 				{
 					if (!Body.StartSpellAttack(target))
 						Body.StartAttack(target);
 				}
 			}
-			else 
+			else
 			{
-				Body.WalkToSpawn();	
+				Body.WalkToSpawn();
 			}
 		}
 
@@ -353,7 +359,7 @@ namespace DOL.AI.Brain
 		protected virtual GameLiving CalculateNextAttackTarget()
 		{
 			//DOLConsole.WriteLine(this.Name+": CalculateAttackObject()");
-			GameLiving maxAggroObject=null;
+			GameLiving maxAggroObject = null;
 			lock (m_aggroTable.SyncRoot)
 			{
 				double maxAggro = 0;
@@ -364,16 +370,16 @@ namespace DOL.AI.Brain
 					long amount = (long)aggros.Value;
 					//DOLConsole.WriteLine(this.Name+": check aggro "+living.Name+" "+amount);
 
-					if(living.IsAlive 
+					if (living.IsAlive
 						&& amount > maxAggro
 						&& living.CurrentRegion == Body.CurrentRegion
 						&& living.ObjectState == GameObject.eObjectState.Active)
 					{
 						int distance = WorldMgr.GetDistance(Body, living);
-						if (distance < MAX_AGGRO_DISTANCE) 
+						if (distance < MAX_AGGRO_DISTANCE)
 						{
 							double aggro = amount * Math.Min(500.0 / distance, 1);
-							if (aggro > maxAggro) 
+							if (aggro > maxAggro)
 							{
 								maxAggroObject = living;
 								maxAggro = aggro;
@@ -384,10 +390,10 @@ namespace DOL.AI.Brain
 				}
 			}
 
-			if (maxAggroObject==null) 
+			if (maxAggroObject == null)
 			{	// nobody left
 				m_aggroTable.Clear();
-			}			
+			}
 			return maxAggroObject;
 		}
 
@@ -396,7 +402,7 @@ namespace DOL.AI.Brain
 		/// </summary>
 		/// <param name="target"></param>
 		/// <returns></returns>
-		public virtual int CalculateAggroLevelToTarget(GameLiving target) 
+		public virtual int CalculateAggroLevelToTarget(GameLiving target)
 		{
 			if (GameServer.ServerRules.IsSameRealm(Body, target, true)) return 0;
 			if (AggroLevel >= 100) return 100;
@@ -427,7 +433,7 @@ namespace DOL.AI.Brain
 				if (e == GameObjectEvent.TakeDamage)
 				{
 					TakeDamageEventArgs eArgs = args as TakeDamageEventArgs;
-					if (eArgs == null || eArgs.DamageSource is GameLiving==false) return;
+					if (eArgs == null || eArgs.DamageSource is GameLiving == false) return;
 
 					int aggro = eArgs.DamageAmount + eArgs.CriticalAmount;
 					if (eArgs.DamageSource is GameNPC)
@@ -436,7 +442,7 @@ namespace DOL.AI.Brain
 						IControlledBrain brain = ((GameNPC)eArgs.DamageSource).Brain as IControlledBrain;
 						if (brain != null)
 						{
-							AddToAggroList(brain.Owner, (int)Math.Max(1, aggro*0.25));
+							AddToAggroList(brain.Owner, (int)Math.Max(1, aggro * 0.25));
 							aggro = (int)Math.Max(1, aggro * 0.75);
 						}
 					}
@@ -460,48 +466,48 @@ namespace DOL.AI.Brain
 					return;
 				}
 
-//				if (e == GameLivingEvent.EnemyHealed)
-//				{
-//					EnemyHealedEventArgs eArgs = args as EnemyHealedEventArgs;
-//					if (eArgs != null && eArgs.HealSource is GameLiving)
-//					{
-//						int aggro = eArgs.HealAmount;
-//
-//						// check protect only if gameplayer and aggro > 0
-//						if (eArgs.HealSource is GamePlayer && aggro > 0)
-//						{
-//							GamePlayer player = (GamePlayer)eArgs.HealSource;
-//							foreach (ProtectEffect protect in player.EffectList.GetAllOfType(typeof(ProtectEffect))) 
-//							{
-//								// max 2 protect by player (1 active protect by player is possible cf: "X is already protecting Y")
-//								// check all requirement to transfer the aggro
-//								if (protect.ProtectTarget == player
-//									&& !protect.ProtectSource.Stun && !protect.ProtectSource.Mez && !protect.ProtectSource.Sitting
-//									&& protect.ProtectSource.ObjectState == GameObject.eObjectState.Active
-//									&& protect.ProtectSource.InCombat && protect.ProtectSource.Alive											
-//									&& WorldMgr.CheckDistance(player, protect.ProtectSource, ProtectAbilityHandler.PROTECT_DISTANCE))	
-//								{
-//									// P I: prevent 10-20% of aggro amount
-//									// P II: prevent 20-30% of aggro amount
-//									// P III: prevent 30-40% of aggro amount
-//									int abilityLevel = protect.ProtectSource.GetAbilityLevel(Abilities.Protect);
-//									int protectAmount = (int)((abilityLevel * 0.10 + DOL.GS.Util.RandomDouble() * 0.10) * aggro);
-//									if (protectAmount > 0)
-//									{
-//										aggro -= protectAmount;
-//										AddToAggroList(protect.ProtectSource, protectAmount);
-//
-//										protect.ProtectSource.Out.SendMessage("You are protecting " + player.GetName(0, false) + " and distract " + Body.GetName(0, false) + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-//										player.Out.SendMessage("You are protected by " + protect.ProtectSource.GetName(0, false) + " from " + Body.GetName(0, false) + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);				
-//									}    
-//								}
-//							}		
-//						}
-//
-//						AddToAggroList((GameLiving)eArgs.HealSource, aggro);
-//					}
-//					return;
-//				}
+				//				if (e == GameLivingEvent.EnemyHealed)
+				//				{
+				//					EnemyHealedEventArgs eArgs = args as EnemyHealedEventArgs;
+				//					if (eArgs != null && eArgs.HealSource is GameLiving)
+				//					{
+				//						int aggro = eArgs.HealAmount;
+				//
+				//						// check protect only if gameplayer and aggro > 0
+				//						if (eArgs.HealSource is GamePlayer && aggro > 0)
+				//						{
+				//							GamePlayer player = (GamePlayer)eArgs.HealSource;
+				//							foreach (ProtectEffect protect in player.EffectList.GetAllOfType(typeof(ProtectEffect))) 
+				//							{
+				//								// max 2 protect by player (1 active protect by player is possible cf: "X is already protecting Y")
+				//								// check all requirement to transfer the aggro
+				//								if (protect.ProtectTarget == player
+				//									&& !protect.ProtectSource.Stun && !protect.ProtectSource.Mez && !protect.ProtectSource.Sitting
+				//									&& protect.ProtectSource.ObjectState == GameObject.eObjectState.Active
+				//									&& protect.ProtectSource.InCombat && protect.ProtectSource.Alive											
+				//									&& WorldMgr.CheckDistance(player, protect.ProtectSource, ProtectAbilityHandler.PROTECT_DISTANCE))	
+				//								{
+				//									// P I: prevent 10-20% of aggro amount
+				//									// P II: prevent 20-30% of aggro amount
+				//									// P III: prevent 30-40% of aggro amount
+				//									int abilityLevel = protect.ProtectSource.GetAbilityLevel(Abilities.Protect);
+				//									int protectAmount = (int)((abilityLevel * 0.10 + DOL.GS.Util.RandomDouble() * 0.10) * aggro);
+				//									if (protectAmount > 0)
+				//									{
+				//										aggro -= protectAmount;
+				//										AddToAggroList(protect.ProtectSource, protectAmount);
+				//
+				//										protect.ProtectSource.Out.SendMessage("You are protecting " + player.GetName(0, false) + " and distract " + Body.GetName(0, false) + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				//										player.Out.SendMessage("You are protected by " + protect.ProtectSource.GetName(0, false) + " from " + Body.GetName(0, false) + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);				
+				//									}    
+				//								}
+				//							}		
+				//						}
+				//
+				//						AddToAggroList((GameLiving)eArgs.HealSource, aggro);
+				//					}
+				//					return;
+				//				}
 
 				if (e == GameLivingEvent.EnemyKilled)
 				{
@@ -558,13 +564,13 @@ namespace DOL.AI.Brain
 		/// <param name="ad"></param>
 		protected virtual void OnAttackedByEnemy(AttackData ad)
 		{
-			if (!Body.AttackState && Body.IsAlive && Body.ObjectState==GameObject.eObjectState.Active &&																									
-				(ad.AttackResult == GameLiving.eAttackResult.HitUnstyled || 
-				ad.AttackResult == GameLiving.eAttackResult.HitStyle || 
-				ad.AttackResult == GameLiving.eAttackResult.Missed || 
-				ad.AttackResult == GameLiving.eAttackResult.Blocked || 
-				ad.AttackResult == GameLiving.eAttackResult.Evaded || 
-				ad.AttackResult == GameLiving.eAttackResult.Fumbled || 
+			if (!Body.AttackState && Body.IsAlive && Body.ObjectState == GameObject.eObjectState.Active &&
+				(ad.AttackResult == GameLiving.eAttackResult.HitUnstyled ||
+				ad.AttackResult == GameLiving.eAttackResult.HitStyle ||
+				ad.AttackResult == GameLiving.eAttackResult.Missed ||
+				ad.AttackResult == GameLiving.eAttackResult.Blocked ||
+				ad.AttackResult == GameLiving.eAttackResult.Evaded ||
+				ad.AttackResult == GameLiving.eAttackResult.Fumbled ||
 				ad.AttackResult == GameLiving.eAttackResult.Parried))
 			{
 				Body.StartAttack(ad.Attacker);
@@ -576,23 +582,23 @@ namespace DOL.AI.Brain
 		{
 			// some experimental code workaround for bring a friend
 			/////////////////////////////////////////////////////////////
-			if (ad.Attacker is GamePlayer) 
+			if (ad.Attacker is GamePlayer)
 			{
 				GamePlayer player = (GamePlayer)ad.Attacker;
 				ArrayList nearPlayers = new ArrayList();
-				foreach (GamePlayer p in ad.Attacker.GetPlayersInRadius(500)) 
+				foreach (GamePlayer p in ad.Attacker.GetPlayersInRadius(500))
 				{
-					if (p != player) 
+					if (p != player)
 					{
 						nearPlayers.Add(p);
 					}
 				}
 				ArrayList inRangeGroupPlayers = new ArrayList();
-				if (player.PlayerGroup != null) 
-				{ 
-					foreach (GamePlayer p in ad.Attacker.GetPlayersInRadius(1500)) 
+				if (player.PlayerGroup != null)
+				{
+					foreach (GamePlayer p in ad.Attacker.GetPlayersInRadius(1500))
 					{
-						if (p.PlayerGroup == player.PlayerGroup && p != player) 
+						if (p.PlayerGroup == player.PlayerGroup && p != player)
 						{
 							inRangeGroupPlayers.Add(p);
 						}
@@ -600,46 +606,46 @@ namespace DOL.AI.Brain
 				}
 				GamePlayer victim = null;
 				GamePlayer victim2 = null;
-				if (nearPlayers.Count>=3) 
+				if (nearPlayers.Count >= 3)
 				{
 
 					// roulette selection
-					int i = DOL.GS.Util.Random(nearPlayers.Count-1);
+					int i = DOL.GS.Util.Random(nearPlayers.Count - 1);
 					victim = (GamePlayer)nearPlayers[i];
-					if (nearPlayers.Count>=6) 
+					if (nearPlayers.Count >= 6)
 					{
 						nearPlayers.RemoveAt(i);
-						i = DOL.GS.Util.Random(nearPlayers.Count-1);
+						i = DOL.GS.Util.Random(nearPlayers.Count - 1);
 						victim2 = (GamePlayer)nearPlayers[i];
 					}
 
-				}	
-				else if (player.PlayerGroup != null && player.PlayerGroup.PlayerCount >= 4 && inRangeGroupPlayers.Count > 0) 
+				}
+				else if (player.PlayerGroup != null && player.PlayerGroup.PlayerCount >= 4 && inRangeGroupPlayers.Count > 0)
 				{
 
 					// roulette selection
-					int i = DOL.GS.Util.Random(inRangeGroupPlayers.Count-1);
+					int i = DOL.GS.Util.Random(inRangeGroupPlayers.Count - 1);
 					victim = (GamePlayer)inRangeGroupPlayers[i];
-					if (player.PlayerGroup.PlayerCount>=7 && inRangeGroupPlayers.Count > 1) 
+					if (player.PlayerGroup.PlayerCount >= 7 && inRangeGroupPlayers.Count > 1)
 					{
 						inRangeGroupPlayers.RemoveAt(i);
-						i = DOL.GS.Util.Random(inRangeGroupPlayers.Count-1);
+						i = DOL.GS.Util.Random(inRangeGroupPlayers.Count - 1);
 						victim2 = (GamePlayer)inRangeGroupPlayers[i];
 					}
 
 				}
 
 				// find a friend to attack selected player
-				if (victim != null) 
+				if (victim != null)
 				{
 					GameNPC npc = FindFriendForAttack();
-					if (npc != null) 
+					if (npc != null)
 					{
 						npc.StartAttack(victim);
-						if (victim2 != null) 
+						if (victim2 != null)
 						{
 							npc = FindFriendForAttack();
-							if (npc != null) 
+							if (npc != null)
 							{
 								npc.StartAttack(victim2);
 							}
@@ -655,9 +661,9 @@ namespace DOL.AI.Brain
 		/// <returns></returns>
 		protected GameNPC FindFriendForAttack()
 		{
-			foreach (GameNPC npc in Body.GetNPCsInRadius(600)) 
+			foreach (GameNPC npc in Body.GetNPCsInRadius(600))
 			{
-				if (npc is GameMob && npc.Name == Body.Name && !npc.InCombat && npc.Brain is IControlledBrain==false) 
+				if (npc is GameMob && npc.Name == Body.Name && !npc.InCombat && npc.Brain is IControlledBrain == false)
 				{
 					return npc;
 				}
@@ -668,19 +674,31 @@ namespace DOL.AI.Brain
 		#endregion
 
 		#region Spells
-		private void CheckSpells()
+		/// <summary>
+		/// Checks the Spells list the NPC has for useable spells and casts them
+		/// </summary>
+		protected void CheckSpells()
 		{
-			if (!Body.AttackState)
-			{
-				CheckCastingSpells();
-			}
-			else
+			//buffing is always a priority
+			Body.Buff();
+			//if attacking we check instant spells and abilities
+			if (Body.AttackState)
 			{
 				CheckInstantSpells();
 				CheckAbilities();
 			}
+			//otherwise we check casting spells which are positive
+			//negative ones are handled in GameNPC.StartSpellAttack
+			else
+			{
+				CheckPositiveCastingSpells();
+			}
 		}
-		public void CheckCastingSpells()
+
+		/// <summary>
+		/// Checks for positive spells which need casting
+		/// </summary>
+		protected void CheckPositiveCastingSpells()
 		{
 			//heals
 			//heal self
@@ -692,17 +710,6 @@ namespace DOL.AI.Brain
 
 			//heal group
 
-			//buffs
-			//self and group buffs
-			CheckSpellsByType("StrengthBuff");
-			CheckSpellsByType("DexterityBuff");
-			CheckSpellsByType("ConstitutionBuff");
-			CheckSpellsByType("ArmorFactorBuff");
-			CheckSpellsByType("ArmorAbsorbtionBuff");
-			CheckSpellsByType("StrengthConstitutionBuff");
-			CheckSpellsByType("DexterityQuicknessBuff");
-			CheckSpellsByType("DamageAdd");
-			CheckSpellsByType("CombatSpeedBuff");
 			//single bladeturn
 			CheckSpellsByType("Bladeturn");
 
@@ -713,18 +720,23 @@ namespace DOL.AI.Brain
 			CheckSpellsByType("Summon");
 		}
 
-		//Direct Damage Shouts, Chants etc
-		public void CheckInstantSpells()
+		/// <summary>
+		/// Checks for instant spells, both positive and negative
+		/// </summary>
+		protected void CheckInstantSpells()
 		{
-			//direct damage shouts
+			//negative shouts
 			CheckSpellsByType("DirectDamage");
 			CheckSpellsByType("Lifedrain");
+			CheckSpellsByType("DamageOverTime");
+			CheckSpellsByType("Disease");
 			//stun shout
 			CheckSpellsByType("Stun");
 			//mez shout
 			CheckSpellsByType("Mez");
 			//snare shout
 			//instant debuffs
+
 			//chants
 			//heal chant
 			if (Body.HealthPercent < 100)
@@ -744,8 +756,10 @@ namespace DOL.AI.Brain
 			CheckSpellsByType("Bladeturn");
 		}
 
-		//useless without disable abilities
-		public void CheckAbilities()
+		/// <summary>
+		/// Checks for Abilities the NPC can use
+		/// </summary>
+		protected void CheckAbilities()
 		{
 			//Berserk
 			//Stag
@@ -760,52 +774,75 @@ namespace DOL.AI.Brain
 				return;
 			//currently this stops all spells after a pulsing spell is called
 			//i need to find a way to cancel the pulsing spells properly
+			//or even allow casting during a pulsing spell
 			if (Body.IsCasting)
 				return;
 
+			ArrayList procs = new ArrayList();
+
 			foreach (Spell spell in this.Body.Spells)
 			{
-				if (spell.SpellType == type)
+				if (spell.SpellType != type)
+					continue;
+
+				//instant spells are handled by GameNPC.Buff
+				/* 
+				 * at some stage id like to change this,
+				 * for example if creating a minstrel npc, it would need to
+				 * intelligently use it's direct damage shouts, they are not
+				 * offensive procs
+				 */
+				if (spell.CastTime == 0)
+					continue;
+
+				//if we are attacking, we don't want spells with a cast time
+				if (Body.AttackState)
+					continue;
+
+				//if we are not attacking, we don't want the pulsing bladeturn spell
+				if (!Body.AttackState && spell.SpellType == "Bladeturn")
+					continue;
+
+				//check if the effect is already active
+				if (LivingHasEffect(spell))
+					continue;
+
+				//if the spell is friendly
+				if (spell.Target != "Enemy")
+					Body.TargetObject = Body;
+				if (spell.Target == "Enemy" && Body.TargetObject == Body)
+					Body.TargetObject = CalculateNextAttackTarget();
+
+				if (Body.IsMoving)
+					Body.StopMoving();
+
+				Body.CastSpell(spell, spellline);
+				break;
+			}
+		}
+
+		private bool LivingHasEffect(Spell spell)
+		{
+			GameLiving target = null;
+			if (spell.Target == "Enemy")
+				target = Body.TargetObject as GameLiving;
+			else target = Body;
+
+			if (target == null)
+				return true;
+
+			foreach (IGameEffect effect in target.EffectList)
+			{
+				if (effect is GameSpellEffect)
 				{
-					//if we are attacking, we don't want spells with a cast time
-					if (Body.AttackState && spell.CastTime > 0)
-						continue;
-					//if we are not attacking, we don't want the pulsing bladeturn spell
-					if (!Body.AttackState && spell.SpellType == "Bladeturn" && spell.CastTime > 0)
-						continue;
-
-					//if the spell is friendly
-					if (spell.Target == "Realm" || spell.Target == "Self")
+					GameSpellEffect speffect = effect as GameSpellEffect;
+					if (speffect.Spell.SpellType == spell.SpellType)
 					{
-						//check if the effect is already active
-						bool already = false;
-						foreach (IGameEffect effect in Body.EffectList)
-						{
-							if (effect is GameSpellEffect)
-							{
-								GameSpellEffect speffect = effect as GameSpellEffect;
-								if (speffect.Spell.SpellType == type)
-								{
-									already = true;
-									break;
-								}
-							}
-						}
-
-						if (already)
-							return;
-
-						Body.TargetObject = Body;
+						return true;
 					}
-
-					if (Body.IsMoving)
-						Body.StopMoving();
-
-					//todo GameLiving.DisableSkill, currently only GamePlayer to allow for proper recast timers
-					Body.CastSpell(spell, spellline);
-					break;
 				}
 			}
+			return false;
 		}
 		#endregion
 	}

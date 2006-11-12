@@ -441,30 +441,44 @@ namespace DOL.GS.Styles
 						}
 					}
 
-					// Effects on target! Eg.
-					if (attackData.Style.SpecialValue != 0)
+					switch (attackData.Style.SpecialType)
 					{
-						switch (attackData.Style.SpecialType)
-						{
-							case Style.eSpecialType.Effect:
-								attackData.StyleEffect = CreateMagicEffect(living, attackData.Target, attackData.Style.SpecialValue);
-								break;
-
-							case Style.eSpecialType.Taunt:
-								if (attackData.Target is GameNPC)
+						case Style.eSpecialType.Effect:
+							if (attackData.Style.Procs.Count > 0)
+							{
+								ISpellHandler effect;
+								if (!attackData.Style.RandomProc)
 								{
-									IAggressiveBrain aggroBrain = ((GameNPC)attackData.Target).Brain as IAggressiveBrain;
-									if (aggroBrain != null)
-										aggroBrain.AddToAggroList(living, attackData.Damage * attackData.Style.SpecialValue * living.AttackSpeed(weapon) / 4000);
+									foreach (DBStyleXSpell proc in attackData.Style.Procs)
+									{
+										//Add the procs to the styleEffects
+										if (Util.Chance(proc.Chance))
+										{
+											effect = CreateMagicEffect(player, attackData.Target, proc.SpellID);
+											//effect could be null if the SpellID is bigger than ushort
+											if (effect != null)
+												attackData.StyleEffects.Add(effect);
+										}
+									}
 								}
-								break;
+								else
+								{
+									//Add one proc randomly
+									int random = Util.Random(attackData.Style.Procs.Count - 1);
+									//effect could be null if the SpellID is bigger than ushort
+									effect = CreateMagicEffect(player, attackData.Target, attackData.Style.Procs[random].SpellID);
+									if (effect != null)
+										attackData.StyleEffects.Add(effect);
+								}
+							}
+							break;
 
-							default:
-								if (log.IsWarnEnabled)
-									log.Warn(string.Format("Unknown style special type: style={0} (id={1}), special={2})", attackData.Style.Name, attackData.Style.ID, attackData.Style.SpecialType));
-								break;
-						}
+						default:
+							if (log.IsWarnEnabled)
+								log.Warn(string.Format("Unknown style special type: style={0} (id={1}), special={2})", attackData.Style.Name, attackData.Style.ID, attackData.Style.SpecialType));
+							break;
 					}
+					
 
 					if (weapon != null)
 						attackData.AnimationId = (weapon.Hand != 1) ? attackData.Style.Icon : attackData.Style.TwoHandAnimation; // special animation for two-hand

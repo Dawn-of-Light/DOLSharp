@@ -509,51 +509,40 @@ namespace DOL.GS.PacketHandler.Client.v168
 						else temp += "Very High Bonus";
 						objectInfo.Add(temp);
 
-						if (style.SpecialType != Style.eSpecialType.None)
+                        if (style.SpecialType != Style.eSpecialType.None)
 						{
-							temp = "Target Effect: ";
-							if (style.SpecialType == Style.eSpecialType.Effect)
+                            if (style.SpecialType == Style.eSpecialType.Effect)
 							{
-								SpellLine styleLine = SkillBase.GetSpellLine(GlobalSpellsLines.Combat_Styles_Effect);
-								if (styleLine != null)
-								{
-									IList spells = SkillBase.GetSpellList(styleLine.KeyName);
-									if (spells != null)
-									{
-										Spell spell = null;
-										foreach (Spell spl in spells)
-										{
-											if (spl.ID == style.SpecialValue)
-											{
-												spell = spl;
-												break;
-											}
-										}
+								if (style.Procs.Count > 0)
+                                {
+									temp = "Target Effect: ";
+									objectInfo.Add(temp);
 
-										if (spell != null)
-										{
-											ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, spell, styleLine);
-											if (spellHandler == null)
-											{
-												temp += spell.Name + " (Not implemented yet)";
-												objectInfo.Add(temp);
-											}
-											else
-											{
-												temp += spell.Name;
-												objectInfo.Add(temp);
-												objectInfo.Add(" ");//empty line
-												objectInfo.AddRange(spellHandler.DelveInfo);
-											}
-										}
-									}
-								}
-							}
-							else if (style.SpecialType == Style.eSpecialType.Taunt && style.SpecialValue != 0)
-							{
-								if (style.SpecialValue < 0) temp += "Detaunt";
-								else temp += "Taunt";
-								objectInfo.Add(temp);
+                                    SpellLine styleLine = SkillBase.GetSpellLine(GlobalSpellsLines.Combat_Styles_Effect);
+                                    if (styleLine != null)
+                                    {
+                                        foreach (DBStyleXSpell proc in style.Procs)
+                                        {
+                                            Spell spell = SkillBase.GetSpellByID(proc.SpellID);
+                                            if (spell != null)
+                                            {
+                                                ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, spell, styleLine);
+                                                if (spellHandler == null)
+                                                {
+                                                    temp = spell.Name + " (Not implemented yet)";
+                                                    objectInfo.Add(temp);
+                                                }
+                                                else
+                                                {
+                                                    temp = spell.Name;
+                                                    objectInfo.Add(temp);
+                                                    objectInfo.Add(" ");//empty line
+                                                    objectInfo.AddRange(spellHandler.DelveInfo);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
 							}
 						}
 						break;
