@@ -133,7 +133,9 @@ namespace DOL.GS.Quests.Albion
 
         [ScriptLoadedEvent]
         public static void ScriptLoaded(DOLEvent e, object sender, EventArgs args)
-        {
+		{
+			if (!ServerProperties.Properties.LOAD_QUESTS)
+				return;
             if (log.IsInfoEnabled)
                 log.Info("Quest \"" + questTitle + "\" initializing ...");
             /* First thing we do in here is to search for the NPCs inside
@@ -283,11 +285,10 @@ namespace DOL.GS.Quests.Albion
 
                 GameEventMgr.RemoveHandler(guardCynon, GameObjectEvent.Interact, new DOLEventHandler(TalkToGuardCynon));
                 GameEventMgr.RemoveHandler(guardCynon, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToGuardCynon));
+
+				/* Now we remove to arleighPenn the possibility to give this quest to players */
+				palune.RemoveQuestToGive(typeof(Disenchanted));
             }
-
-
-            /* Now we remove to arleighPenn the possibility to give this quest to players */
-            palune.RemoveQuestToGive(typeof(Disenchanted));
         }
 
         /* This is the method we declared as callback for the hooks we set to

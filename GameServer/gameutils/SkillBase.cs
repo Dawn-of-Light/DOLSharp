@@ -19,6 +19,7 @@
 using System;
 using System.Collections;
 using System.Collections.Specialized;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 using DOL.Database;
@@ -227,6 +228,13 @@ namespace DOL.GS
 		// global table for spec => list of spec dependend abilities
 		protected static readonly Hashtable m_specAbilities = new Hashtable();
 
+		/// <summary>
+		/// (procs) global table for style => list of styles dependend spells
+		/// [StyleID, [ClassID, DBStyleXSpell]]
+		/// ClassID for normal style is 0
+		/// </summary>
+		protected static readonly Dictionary<int, Dictionary<int, List<DBStyleXSpell>>> m_styleSpells = new Dictionary<int, Dictionary<int, List<DBStyleXSpell>>>();
+
 		// lookup table for styles
 		protected static readonly Hashtable m_stylesByID = new Hashtable();
 		protected static readonly Hashtable m_stylesByIDClass = new Hashtable();
@@ -373,6 +381,39 @@ namespace DOL.GS
 			}
 			log.Info("Realm Abilities assigned to classes: " + count);
 
+			//(procs) load all Procs
+			if (log.IsInfoEnabled)
+				log.Info("Loading procs...");
+			DataObject[] stylespells = GameServer.Database.SelectAllObjects(typeof(DBStyleXSpell));
+			if (stylespells != null)
+			{
+				foreach (DBStyleXSpell proc in stylespells)
+				{
+					Dictionary<int, List<DBStyleXSpell>> styleClasses;
+					if (m_styleSpells.ContainsKey(proc.StyleID))
+						styleClasses = m_styleSpells[proc.StyleID];
+					else
+					{
+						styleClasses = new Dictionary<int, List<DBStyleXSpell>>();
+						m_styleSpells.Add(proc.StyleID, styleClasses);
+					}
+
+					List<DBStyleXSpell> classSpells;
+					if (styleClasses.ContainsKey(proc.ClassID))
+						classSpells = styleClasses[proc.ClassID];
+					else
+					{
+						classSpells = new List<DBStyleXSpell>();
+						styleClasses.Add(proc.ClassID, classSpells);
+					}
+
+					classSpells.Add(proc);
+
+				}
+			}
+			if (log.IsInfoEnabled)
+				log.Info("Total procs loaded: " + ((stylespells != null) ? stylespells.Length : 0));
+
 			// load Specialization & styles
 			if (log.IsInfoEnabled)
 				log.Info("Loading specialization & styles...");
@@ -418,6 +459,14 @@ namespace DOL.GS
 									break;
 							}
 							Style st = new Style(style);
+
+							//(procs) Add procs to the style, 0 is used for normal style
+							if (m_styleSpells.ContainsKey(st.ID) && m_styleSpells[st.ID].ContainsKey(0))
+							{
+								foreach (DBStyleXSpell styleSpells in m_styleSpells[st.ID][0])
+									st.Procs.Add(styleSpells);
+							}
+
 							styleList.Insert(insertpos, st);
 							m_stylesByID[(int)st.ID] = st;
 						}
@@ -440,7 +489,16 @@ namespace DOL.GS
 			foreach (DBStyleSubstitute style in stylesByClass)
 			{
 				Style st = new Style((DBStyle)style);
+
+				//(procs) Add procs to the style
+				if (m_styleSpells.ContainsKey(st.ID) && m_styleSpells[st.ID].ContainsKey(style.ClassId))
+				{
+					foreach (DBStyleXSpell styleSpells in m_styleSpells[st.ID][style.ClassId])
+						st.Procs.Add(styleSpells);
+				}
+
 				m_stylesByIDClass[((long)st.ID << 32) | (uint)style.ClassId] = st;
+
 			}
 			if (log.IsInfoEnabled)
 				log.Info("Total style substitue loaded: " + ((stylesByClass != null) ? stylesByClass.Length : 0));
@@ -1029,6 +1087,10 @@ namespace DOL.GS
 			m_propertyNames[eProperty.AcuCapBonus] = "Bonus to Acuity attribute bonus cap";
 			m_propertyNames[eProperty.MaxHealthCapBonus] = "Bonus to hit points bonus cap";
 			m_propertyNames[eProperty.PowerPoolCapBonus] = "Bonus to power bonus cap";
+			m_propertyNames[eProperty.WeaponSkill] = "Bonus to Weaponskill";
+			m_propertyNames[eProperty.AllSkills] = "All Skills";
+			m_propertyNames[eProperty.CriticalArcheryHitChance] = "Bonus to critical archery hit chance";
+			m_propertyNames[eProperty.CriticalMeleeHitChance] = "Bonus to critical melee hit chance";
 			#endregion
 		}
 
@@ -1228,6 +1290,16 @@ namespace DOL.GS
 				Style st = GetStyleByID(style.ID, classId);
 				newStyles.Add(st);
 			}
+
+			foreach (Style style in m_stylesByIDClass.Values)
+			{
+				long key = ((long)style.ID << 32) | (uint)classId;
+				Style subStyle = (Style)m_stylesByIDClass[key];
+
+				if (subStyle != null && !newStyles.Contains(subStyle))
+					newStyles.Add(subStyle);
+			}
+
 			return newStyles;
 		}
 
@@ -1424,7 +1496,7 @@ namespace DOL.GS
 				m_raceResists[(int)eRace.AlbionMinotaur][eResist.Heat] = 5; //unofficial
 				m_raceResists[(int)eRace.AlbionMinotaur][eResist.Matter] = 5; //unofficial
 				m_raceResists[(int)eRace.AlbionMinotaur][eResist.Spirit] = 5; //unofficial
-				
+
 
 				m_raceResists[(int)eRace.MidgardMinotaur] = new HybridDictionary();
 				m_raceResists[(int)eRace.MidgardMinotaur][eResist.Body] = 5; //unofficial
@@ -1433,7 +1505,7 @@ namespace DOL.GS
 				m_raceResists[(int)eRace.MidgardMinotaur][eResist.Heat] = 5; //unofficial
 				m_raceResists[(int)eRace.MidgardMinotaur][eResist.Matter] = 5; //unofficial
 				m_raceResists[(int)eRace.MidgardMinotaur][eResist.Spirit] = 5; //unofficial
-				
+
 				m_raceResists[(int)eRace.HiberniaMinotaur] = new HybridDictionary();
 				m_raceResists[(int)eRace.HiberniaMinotaur][eResist.Body] = 5; //unofficial
 				m_raceResists[(int)eRace.HiberniaMinotaur][eResist.Cold] = 5; //unofficial
@@ -1441,7 +1513,7 @@ namespace DOL.GS
 				m_raceResists[(int)eRace.HiberniaMinotaur][eResist.Heat] = 5; //unofficial
 				m_raceResists[(int)eRace.HiberniaMinotaur][eResist.Matter] = 5; //unofficial
 				m_raceResists[(int)eRace.HiberniaMinotaur][eResist.Spirit] = 5; //unofficial
-				
+
 				#endregion
 			}
 

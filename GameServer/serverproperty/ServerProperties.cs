@@ -184,6 +184,12 @@ namespace DOL.GS.ServerProperties
 		public static readonly bool LOG_TRADES;
 
 		/// <summary>
+		/// What class should the server use for players
+		/// </summary>
+		[ServerProperty(ServerPropertyConstants.PLAYER_CLASS, "What class should the server use for players", "DOL.GS.GamePlayer")]
+		public static readonly string PLAYER_CLASS;
+
+		/// <summary>
 		/// This method loads the property from the database and returns
 		/// the value of the property as strongly typed object based on the
 		/// type of the default value

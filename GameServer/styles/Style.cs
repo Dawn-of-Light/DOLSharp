@@ -17,6 +17,7 @@
  *
  */
 using System;
+using System.Collections.Generic;
 using DOL.Database.Attributes;
 using DOL.GS;
 using DOL.Database;
@@ -149,6 +150,11 @@ namespace DOL.GS.Styles
 		/// </summary>
 		protected DBStyle baseStyle = null;
 
+        /// <summary>
+        /// (readonly) The list of procs available for this style
+        /// </summary>
+        protected List<DBStyleXSpell> m_Procs;
+
 		/// <summary>
 		/// Constructs a new Style object based on a database Style object
 		/// </summary>
@@ -157,7 +163,16 @@ namespace DOL.GS.Styles
 			: base(style.Name, (ushort)style.ID, style.SpecLevelRequirement)
 		{
 			baseStyle = style;
+            m_Procs = new List<DBStyleXSpell>();
 		}
+
+        /// <summary>
+        /// (readonly)(procs) The list of procs available for this style
+        /// </summary>
+        public List<DBStyleXSpell> Procs
+        {
+            get { return m_Procs;  }
+        }
 
 		/// <summary>
 		/// (readonly) The Specialization's name required to execute this style
@@ -258,17 +273,6 @@ namespace DOL.GS.Styles
 		}
 
 		/// <summary>
-		/// (readonly) Depending on the SpecialType. If the SpecialType
-		/// is an effect, then this contains the effect id to apply.
-		/// If the SpecialType is Taunt/Detaunt, then this contains the
-		/// strength of the taunt(above 0)/detaunt(below 0)
-		/// </summary>
-		public int SpecialValue
-		{
-			get { return baseStyle.SpecialValue; }
-		}
-
-		/// <summary>
 		/// (readonly) The bonus to hit if this style get's executed successfully
 		/// </summary>
 		public int BonusToHit
@@ -299,6 +303,14 @@ namespace DOL.GS.Styles
 		{
 			get { return baseStyle.TwoHandAnimation; }
 		}
+
+        /// <summary>
+        /// (readonly) (procs) Tell if the proc should be select randomly
+        /// </summary>
+        public bool RandomProc
+        {
+            get { return baseStyle.RandomProc; }
+        }
 
 		/// <summary>
 		/// Gets name of required weapon type

@@ -350,9 +350,9 @@ namespace DOL.GS.Spells
 				Caster.TempProperties.removeProperty(INTERRUPT_TIMEOUT_PROPERTY);
 			}
 
-			if (m_spell.RecastDelay > 0 && m_caster is GamePlayer)
+			if (m_spell.RecastDelay > 0)
 			{
-				int left = ((GamePlayer)m_caster).GetSkillDisabledDuration(m_spell);
+				int left = m_caster.GetSkillDisabledDuration(m_spell);
 				if (left > 0)
 				{
 					MessageToCaster("You must wait " + (left / 1000 + 1).ToString() + " seconds to use this spell!", eChatType.CT_System);
@@ -923,7 +923,7 @@ namespace DOL.GS.Spells
 			m_caster.Endurance -= 5;
 
 			// messages
-			if (Spell.InstrumentRequirement == 0)
+			if (Spell.InstrumentRequirement == 0 && Spell.ClientEffect != 0)
 			{
 				MessageToCaster("You cast a " + m_spell.Name + " spell!", eChatType.CT_Spell);
 				foreach (GamePlayer player in m_caster.GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
@@ -971,13 +971,13 @@ namespace DOL.GS.Spells
 			}
 
 			// disable spells with recasttimer (Disables group of same type with same delay)
-			if (m_spell.RecastDelay > 0 && m_startReuseTimer && m_caster is GamePlayer)
+			if (m_spell.RecastDelay > 0 && m_startReuseTimer)
 			{
 				foreach (Spell sp in SkillBase.GetSpellList(m_spellLine.KeyName))
 				{
 					if (sp.SpellType == m_spell.SpellType && sp.RecastDelay == m_spell.RecastDelay && sp.Group == m_spell.Group)
 					{
-						((GamePlayer)m_caster).DisableSkill(sp, sp.RecastDelay);
+						m_caster.DisableSkill(sp, sp.RecastDelay);
 					}
 				}
 			}
@@ -1497,6 +1497,13 @@ namespace DOL.GS.Spells
 			if (m_caster is GamePlayer)
 			{
 				((GamePlayer)m_caster).Out.SendMessage(message, type, eChatLoc.CL_SystemWindow);
+			}
+			if (m_caster is GameNPC)
+			{
+				if ((m_caster as GameNPC).Brain is IControlledBrain)
+				{
+					((m_caster as GameNPC).Brain as IControlledBrain).Owner.Out.SendMessage(message, type, eChatLoc.CL_SystemWindow);
+				}
 			}
 		}
 

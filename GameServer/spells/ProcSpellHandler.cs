@@ -41,7 +41,7 @@ namespace DOL.GS.Spells
 			: base(caster, spell, spellLine)
 		{
 			m_procSpellLine = SkillBase.GetSpellLine(SubSpellLineName);
-			m_procSpell = GetSpellFromLine(SubSpellLineName, (ushort)Spell.Value);
+			m_procSpell = SkillBase.GetSpellByID((int)spell.Value);
 		}
 
 		/// <summary>
@@ -99,24 +99,6 @@ namespace DOL.GS.Spells
 		}
 
 		/// <summary>
-		/// Get a spell using the linename and its id
-		/// </summary>
-		/// <param name="lineName">The SpellLine name</param>
-		/// <param name="spellID">The Spell ID</param>
-		/// <returns>The Spell if found null either</returns>
-		protected Spell GetSpellFromLine(string lineName, ushort spellID)
-		{
-			foreach (Spell spell in SkillBase.GetSpellList(lineName))
-			{
-				if (spell.ID == spellID)
-				{
-					return spell;
-				}
-			}
-			return null;
-		}
-
-		/// <summary>
 		/// When an applied effect expires.
 		/// Duration spells only.
 		/// </summary>
@@ -140,8 +122,8 @@ namespace DOL.GS.Spells
 		/// <returns>true if this spell is better version than compare spell</returns>
 		public override bool IsNewEffectBetter(GameSpellEffect oldeffect, GameSpellEffect neweffect)
 		{
-			Spell oldProcSpell = GetSpellFromLine(SubSpellLineName, (ushort)oldeffect.Spell.Value);
-			Spell newProcSpell = GetSpellFromLine(SubSpellLineName, (ushort)neweffect.Spell.Value);
+			Spell oldProcSpell = SkillBase.GetSpellByID((int)oldeffect.Spell.Value);
+			Spell newProcSpell = SkillBase.GetSpellByID((int)neweffect.Spell.Value);
 
 			if (oldProcSpell == null || newProcSpell == null)
 				return true;
@@ -171,8 +153,8 @@ namespace DOL.GS.Spells
 				return Spell.Group == compare.Spell.Group;
 			if (compare.Spell.SpellType != Spell.SpellType)
 				return false;
-			Spell oldProcSpell = GetSpellFromLine(SubSpellLineName, (ushort)Spell.Value);
-			Spell newProcSpell = GetSpellFromLine(SubSpellLineName, (ushort)compare.Spell.Value);
+			Spell oldProcSpell = SkillBase.GetSpellByID((int)Spell.Value);
+			Spell newProcSpell = SkillBase.GetSpellByID((int)compare.Spell.Value);
 			if (oldProcSpell == null || newProcSpell == null)
 				return true;
 			if (oldProcSpell.SpellType != newProcSpell.SpellType)
@@ -263,14 +245,10 @@ namespace DOL.GS.Spells
 			if (ad.AttackResult != GameLiving.eAttackResult.HitUnstyled && ad.AttackResult != GameLiving.eAttackResult.HitStyle)
 				return;
 
-			int baseChance = 0;
-			if (ad.AttackType == AttackData.eAttackType.Ranged)
+			int baseChance = (int)(Spell.Frequency * 0.01);
+			
+			if (ad.IsMeleeAttack)
 			{
-				baseChance = (int)(Spell.Frequency * 0.01);
-			}
-			else if (ad.IsMeleeAttack)
-			{
-				baseChance = (int)(Spell.Frequency * 0.01);
 				if (sender is GamePlayer)
 				{
 					GamePlayer player = (GamePlayer)sender;

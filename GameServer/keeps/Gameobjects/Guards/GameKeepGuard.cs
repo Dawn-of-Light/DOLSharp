@@ -220,6 +220,7 @@ namespace DOL.GS.Keeps
 					return;
 				foreach (GameKeepDoor door in guard.Component.Keep.Doors.Values)
 				{
+					if (!door.IsAttackableDoor) continue;
 					if (!door.IsAlive)
 						return;
 				}
@@ -258,6 +259,7 @@ namespace DOL.GS.Keeps
 				}
 				foreach (GameKeepDoor door in this.Component.Keep.Doors.Values)
 				{
+					if (!door.IsAttackableDoor) continue;
 					if (!door.IsAlive)
 					{
 						base.StartAttack(attackTarget);
