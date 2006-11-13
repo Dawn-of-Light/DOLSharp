@@ -2265,7 +2265,7 @@ namespace DOL.GS
 					}
 				}
 
-				if (leftHandAD.StyleEffects.Count > 0 && leftHandAD.AttackResult == eAttackResult.HitStyle)
+				if (leftHandAD != null && leftHandAD.StyleEffects.Count > 0 && leftHandAD.AttackResult == eAttackResult.HitStyle)
 				{
 					foreach (ISpellHandler proc in leftHandAD.StyleEffects)
 					{
