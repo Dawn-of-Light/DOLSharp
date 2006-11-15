@@ -31,6 +31,8 @@ namespace DOL.AI
 	/// </summary>
 	public abstract class ABrain
 	{
+		private readonly object m_LockObject = new object(); // dummy object for locking - Mannen. // use this object for locking, instead of locking on 'this'
+
 		/// <summary>
 		/// Defines a logger for this class.
 		/// </summary>
@@ -107,10 +109,11 @@ namespace DOL.AI
 			//Do not start brain if we are dead or inactive
 			if (!m_body.IsAlive || m_body.ObjectState != GameObject.eObjectState.Active)
 				return false;
-
-			lock(this)
+			
+			lock (m_LockObject)
 			{
-				if(IsActive) return false;
+				if (IsActive) return false;
+
 				m_brainTimer = new RegionTimer(m_body);
 				m_brainTimer.Callback = new RegionTimerCallback(BrainTimerCallback);
 				m_brainTimer.Start(ThinkInterval);
@@ -124,7 +127,7 @@ namespace DOL.AI
 		/// <returns>true if stopped</returns>
 		public virtual bool Stop()
 		{
-			lock(this)
+			lock (m_LockObject)
 			{
 				if(!IsActive) return false;
 				m_brainTimer.Stop();

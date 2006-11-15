@@ -59,6 +59,12 @@ namespace DOL.GS
 		protected string m_name;
 		protected int m_level;
 
+		/// <summary>
+		/// Construct a Skill from the name, an id, and a level
+		/// </summary>
+		/// <param name="name"></param>
+		/// <param name="id"></param>
+		/// <param name="level"></param>
 		public Skill(string name, ushort id, int level)
 		{
 			m_id = id;
@@ -75,12 +81,18 @@ namespace DOL.GS
 			get { return m_id; }
 		}
 
+		/// <summary>
+		/// The Skill Name
+		/// </summary>
 		public virtual string Name
 		{
 			get { return m_name; }
 			set { m_name = value; }
 		}
 
+		/// <summary>
+		/// The Skill Level
+		/// </summary>
 		public virtual int Level
 		{
 			get { return m_level; }
@@ -95,6 +107,10 @@ namespace DOL.GS
 			get { return eSkillPage.Abilities; }
 		}
 
+		/// <summary>
+		/// Clone a skill
+		/// </summary>
+		/// <returns></returns>
 		public virtual Skill Clone()
 		{
 			return (Skill)MemberwiseClone();
@@ -110,6 +126,13 @@ namespace DOL.GS
 	{
 		private string m_keyName;
 
+		/// <summary>
+		/// Construct a named skill from the keyname, name, id and level
+		/// </summary>
+		/// <param name="keyName">The keyname</param>
+		/// <param name="name">The name</param>
+		/// <param name="id">The ID</param>
+		/// <param name="level">The level</param>
 		public NamedSkill(string keyName, string name, ushort id, int level)
 			: base(name, id, level)
 		{

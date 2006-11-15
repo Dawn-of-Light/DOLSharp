@@ -65,7 +65,7 @@ namespace DOL.GS.PropertyCalc
 					}
 				}
 				if (count == 0) return 0;
-				lock (this)
+				lock (m_entries)
 				{
 					for (int i = 0; i < m_entries.Length; i++)
 					{

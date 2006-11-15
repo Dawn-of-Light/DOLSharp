@@ -37,10 +37,6 @@ namespace DOL.GS.Spells
 	public class DamageAddSpellHandler : AbstractDamageAddSpellHandler
 	{
 		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-		/// <summary>
 		/// The event type to hook on
 		/// </summary>
 		protected override DOLEvent EventType { get { return GameLivingEvent.AttackFinished; } }
@@ -137,10 +133,6 @@ namespace DOL.GS.Spells
 	[SpellHandler("DamageShield")]
 	public class DamageShieldSpellHandler : AbstractDamageAddSpellHandler
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 		/// <summary>
 		/// The event type to hook on
 		/// </summary>

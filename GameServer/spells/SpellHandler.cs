@@ -50,9 +50,18 @@ namespace DOL.GS.Spells
 		protected GameLiving m_caster;
 		protected bool m_interrupted = false;
 		protected bool m_startReuseTimer = true;
+		/// <summary>
+		/// The property key for the interrupt timeout
+		/// </summary>
 		protected const string INTERRUPT_TIMEOUT_PROPERTY = "CAST_INTERRUPT_TIMEOUT";
+		/// <summary>
+		/// The duration for the spell interrupt duration
+		/// </summary>
 		protected const int SPELL_INTERRUPT_DURATION = 2000; //2 sec for all spells?
 
+		/// <summary>
+		/// The CastingCompleteEvent
+		/// </summary>
 		public event CastingCompleteCallback CastingCompleteEvent;
 		//public event SpellEndsCallback SpellEndsEvent;
 
@@ -503,6 +512,12 @@ namespace DOL.GS.Spells
 			return true;
 		}
 
+		/// <summary>
+		/// Check the Line of Sight from you to your pet
+		/// </summary>
+		/// <param name="player">The player</param>
+		/// <param name="response">The result</param>
+		/// <param name="targetOID">The target OID</param>
 		public virtual void CheckLOSYouToPet(GamePlayer player, ushort response, ushort targetOID)
 		{
 			if (player == null) // Hmm
@@ -513,6 +528,12 @@ namespace DOL.GS.Spells
 			InterruptCasting(); // break;
 		}
 
+		/// <summary>
+		/// Check the Line of Sight from you to your target
+		/// </summary>
+		/// <param name="player">The player</param>
+		/// <param name="response">The result</param>
+		/// <param name="targetOID">The target OID</param>
 		public virtual void CheckLOSYouToTarget(GamePlayer player, ushort response, ushort targetOID)
 		{
 			if (player == null) // Hmm
@@ -523,6 +544,12 @@ namespace DOL.GS.Spells
 			InterruptCasting(); // break;
 		}
 
+		/// <summary>
+		/// Check the Line of Sight from your pet to your target
+		/// </summary>
+		/// <param name="player">The player</param>
+		/// <param name="response">The result</param>
+		/// <param name="targetOID">The target OID</param>
 		public virtual void CheckLOSPetToTarget(GamePlayer player, ushort response, ushort targetOID)
 		{
 			if (player == null) // Hmm
@@ -877,12 +904,19 @@ namespace DOL.GS.Spells
 
 		#region animations
 
+		/// <summary>
+		/// Sends the cast animation
+		/// </summary>
 		public virtual void SendCastAnimation()
 		{
 			ushort castTime = (ushort)(CalculateCastingTime() / 100);
 			SendCastAnimation(castTime);
 		}
 
+		/// <summary>
+		/// Sends the cast animation
+		/// </summary>
+		/// <param name="castTime">The cast time</param>
 		public virtual void SendCastAnimation(ushort castTime)
 		{
 			foreach (GamePlayer player in m_caster.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
@@ -893,6 +927,13 @@ namespace DOL.GS.Spells
 			}
 		}
 
+		/// <summary>
+		/// Send the Effect Animation
+		/// </summary>
+		/// <param name="target">The target object</param>
+		/// <param name="boltDuration">The duration of a bolt</param>
+		/// <param name="noSound">sound?</param>
+		/// <param name="success">spell success?</param>
 		public virtual void SendEffectAnimation(GameLiving target, ushort boltDuration, bool noSound, byte success)
 		{
 			if (target == null)
@@ -904,6 +945,9 @@ namespace DOL.GS.Spells
 			}
 		}
 
+		/// <summary>
+		/// Send the Interrupt Cast Animation
+		/// </summary>
 		public virtual void SendInterruptCastAnimation()
 		{
 			foreach (GamePlayer player in m_caster.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
@@ -1337,6 +1381,7 @@ namespace DOL.GS.Spells
 		/// Determines wether this spell is better than given one
 		/// </summary>
 		/// <param name="oldeffect"></param>
+		/// <param name="neweffect"></param>
 		/// <returns>true if this spell is better version than compare spell</returns>
 		public virtual bool IsNewEffectBetter(GameSpellEffect oldeffect, GameSpellEffect neweffect)
 		{
@@ -1510,6 +1555,7 @@ namespace DOL.GS.Spells
 		/// <summary>
 		/// sends a message to a living
 		/// </summary>
+		/// <param name="living"></param>
 		/// <param name="message"></param>
 		/// <param name="type"></param>
 		public void MessageToLiving(GameLiving living, string message, eChatType type)
@@ -1522,26 +1568,41 @@ namespace DOL.GS.Spells
 
 		#endregion
 
+		/// <summary>
+		/// The Spell
+		/// </summary>
 		public Spell Spell
 		{
 			get { return m_spell; }
 		}
 
+		/// <summary>
+		/// The Spell Line
+		/// </summary>
 		public SpellLine SpellLine
 		{
 			get { return m_spellLine; }
 		}
 
+		/// <summary>
+		/// The Caster
+		/// </summary>
 		public GameLiving Caster
 		{
 			get { return m_caster; }
 		}
 
+		/// <summary>
+		/// Is the spell being cast?
+		/// </summary>
 		public bool IsCasting
 		{
 			get { return m_castTimer != null && m_castTimer.IsAlive; }
 		}
 
+		/// <summary>
+		/// Does the spell have a positive effect?
+		/// </summary>
 		public virtual bool HasPositiveEffect
 		{
 			get

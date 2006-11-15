@@ -25,7 +25,13 @@ namespace DOL.GS
 	/// </summary>
 	public interface IPoint2D
 	{
+		/// <summary>
+		/// X
+		/// </summary>
 		int X { get; }
+		/// <summary>
+		/// Y
+		/// </summary>
 		int Y { get; }
 	}
 }

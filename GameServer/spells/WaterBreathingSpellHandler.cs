@@ -29,11 +29,6 @@ namespace DOL.GS.Spells
 	[SpellHandlerAttribute("WaterBreathing")]
 	public class WaterBreathingSpellHandler : SpellHandler
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
 		public WaterBreathingSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
 
 		public override void OnEffectStart(GameSpellEffect effect)

@@ -30,8 +30,6 @@ namespace DOL.GS.Spells
 	/// </summary>
 	public abstract class SingleStatBuff : PropertyChangingSpell
 	{
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
 		// bonus category
 		public override int BonusCategory1 { get { return 1; } }
 

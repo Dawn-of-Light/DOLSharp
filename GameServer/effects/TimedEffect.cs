@@ -9,6 +9,8 @@ namespace DOL.GS.Effects
 	/// </summary>
 	public class TimedEffect : StaticEffect
 	{
+		private readonly object m_LockObject = new object();
+
 		protected int m_duration;
 
 		/// <summary>
@@ -31,7 +33,7 @@ namespace DOL.GS.Effects
 		/// <param name="target">The effect target</param>
 		public override void Start(GameLiving target)
 		{
-			lock (this)
+			lock (m_LockObject)
 			{
 				if (m_expireTimer == null)
 				{
@@ -46,7 +48,7 @@ namespace DOL.GS.Effects
 		/// </summary>
 		public override void Stop()
 		{
-			lock (this)
+			lock (m_LockObject)
 			{
 				if (m_expireTimer != null)
 				{

@@ -28,11 +28,10 @@ namespace DOL.GS.Trainer
 	[NPCGuildScript("Stalker Trainer", eRealm.Hibernia)]		// this attribute instructs DOL to use this script for all "Stalker Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class StalkerTrainer : GameTrainer
 	{
+		/// <summary>
+		/// The practice weaopon template ID
+		/// </summary>
 		public const string PRACTICE_WEAPON_ID = "training_dirk";
-		
-		public StalkerTrainer() : base()
-		{
-		}
 
 		/// <summary>
 		/// Interact with trainer
