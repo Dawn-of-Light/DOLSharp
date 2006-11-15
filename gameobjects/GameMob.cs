@@ -178,6 +178,9 @@ namespace DOL.GS
 			}
 		}
 
+		/// <summary>
+		/// Is the mob alive
+		/// </summary>
 		public override bool IsAlive
 		{
 			get
@@ -189,6 +192,9 @@ namespace DOL.GS
 			}
 		}
 
+		/// <summary>
+		/// Is the mob respawning
+		/// </summary>
 		public bool IsRespawning
 		{
 			get
@@ -496,6 +502,10 @@ namespace DOL.GS
 			m_healthRegenerationPeriod = 20000;
 		}
 
+		/// <summary>
+		/// Create a GameMob from a NPC template
+		/// </summary>
+		/// <param name="template"></param>
 		public GameMob(INpcTemplate template)
 			: base(template)
 		{ }

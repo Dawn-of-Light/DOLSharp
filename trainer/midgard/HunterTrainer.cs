@@ -27,10 +27,6 @@ namespace DOL.GS.Trainer
 	[NPCGuildScript("Hunter Trainer", eRealm.Midgard)]		// this attribute instructs DOL to use this script for all "Hunter Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class HunterTrainer : GameTrainer
 	{
-		public HunterTrainer() : base()
-		{
-		}
-
 		/// <summary>
 		/// Interact with trainer
 		/// </summary>

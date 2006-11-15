@@ -29,11 +29,6 @@ namespace DOL.GS.Spells
 	[SpellHandlerAttribute("AblativeArmor")]
 	public class AblativeArmorSpellHandler : SpellHandler
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
 		public const string ABLATIVE_HP = "ablative hp";
 
 		public override void OnEffectStart(GameSpellEffect effect)

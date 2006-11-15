@@ -28,6 +28,8 @@ namespace DOL.GS
 {
 	public class GameNpcInventoryTemplate : GameLivingInventory
 	{
+		private readonly object m_LockObject = new object();
+
 		/// <summary>
 		/// Defines a logger for this class.
 		/// </summary>
@@ -225,7 +227,7 @@ namespace DOL.GS
 		/// <returns>Open copy of this template</returns>
 		public GameNpcInventoryTemplate CloneTemplate()
 		{
-			lock (this)
+			lock (m_LockObject)
 			{
 				GameNpcInventoryTemplate clone = new GameNpcInventoryTemplate();
 				clone.m_changedSlots = (ArrayList)m_changedSlots.Clone();
@@ -240,19 +242,19 @@ namespace DOL.GS
 		#endregion
 
 		#region LoadFromDatabase/SaveIntoDatabase
-
+		
 		/// <summary>
 		/// Cache for fast loading of npc equipment
 		/// </summary>
 		protected static Hashtable m_npcEquipmentCache = null;
-
+		
 		/// <summary>
 		/// Loads the inventory template from the Database
 		/// </summary>
 		/// <returns>success</returns>
 		public override bool LoadFromDatabase(string templateID)
 		{
-			lock (this)
+			lock (m_LockObject)
 			{
 				try
 				{
@@ -301,7 +303,7 @@ namespace DOL.GS
 		/// <returns>success</returns>
 		public override bool SaveIntoDatabase(string templateID)
 		{
-			lock (this)
+			lock (m_LockObject)
 			{
 				try
 				{

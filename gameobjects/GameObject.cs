@@ -303,6 +303,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="target"></param>
 		/// <param name="viewangle"></param>
+		/// <param name="rangeCheck"></param>
 		/// <returns></returns>
 		public virtual bool IsObjectInFront(GameObject target, double viewangle, bool rangeCheck)
 		{
@@ -907,6 +908,8 @@ namespace DOL.GS
 			/// <summary>
 			/// This function will check if the data cache must be recomputed or if we can use the cache
 			/// </summary>
+			/// <param name="p_obj">The GameObject object instance</param>
+			/// <param name="p_useCache">use the cache</param>
 			/// <param name="p_currentRegion">The current region</param>
 			/// <param name="p_type">Type of object to retreive</param>
 			/// <param name="p_X">X position in region</param>
@@ -1065,6 +1068,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets all npcs close to this object inside a certain radius
 		/// </summary>
+		/// <param name="useCache">use the cache</param>
 		/// <param name="radiusToCheck">the radius to check</param>
 		/// <returns>An enumerator</returns>
 		public IEnumerable GetNPCsInRadius(bool useCache, ushort radiusToCheck)
@@ -1082,6 +1086,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets all npcs close to this object inside a certain radius
 		/// </summary>
+		/// <param name="useCache">use the cache</param>
 		/// <param name="radiusToCheck">the radius to check</param>
 		/// <param name="withDistance">if the objects are to be returned with distance</param>
 		/// <returns>An enumerator</returns>

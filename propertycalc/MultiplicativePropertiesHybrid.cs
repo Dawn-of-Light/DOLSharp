@@ -28,6 +28,8 @@ namespace DOL.GS.PropertyCalc
 	/// </summary>
 	public sealed class MultiplicativePropertiesHybrid : IMultiplicativeProperties
 	{
+		private readonly object m_LockObject = new object();
+
 		private sealed class PropertyEntry
 		{
 			public double cachedValue = 1.0;
@@ -60,7 +62,7 @@ namespace DOL.GS.PropertyCalc
 		/// <param name="value">The value added</param>
 		public void Set(int index, object key, double value)
 		{
-			lock (this)
+			lock (m_LockObject)
 			{
 				PropertyEntry entry = (PropertyEntry)m_properties[index];
 				if (entry == null)
@@ -84,7 +86,7 @@ namespace DOL.GS.PropertyCalc
 		/// <param name="key">The key use to add the value</param>
 		public void Remove(int index, object key)
 		{
-			lock (this)
+			lock (m_LockObject)
 			{
 				PropertyEntry entry = (PropertyEntry)m_properties[index];
 				if (entry == null) return;

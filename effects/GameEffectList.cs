@@ -76,7 +76,7 @@ namespace DOL.GS.Effects
 			if (!m_owner.IsAlive || m_owner.ObjectState != GameObject.eObjectState.Active)
 				return false;	// dead owners don't get effects
 
-			lock (this)
+			//lock (this)
 			{
 				if (m_effects == null)
 					m_effects = new ArrayList(5);
@@ -106,7 +106,7 @@ namespace DOL.GS.Effects
 			if (m_effects == null)
 				return false;
 			
-			lock (m_effects) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this) 
+			lock (m_effects) // Mannen 10:56 PM 10/30/2006 - Fixing every lock ('this') 
 			{
 				int index = m_effects.IndexOf(effect);
 				if (index < 0)
@@ -224,7 +224,7 @@ namespace DOL.GS.Effects
 
 			if (m_effects == null) return list;
 
-			lock (m_effects) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this) 
+			lock (m_effects) // Mannen 10:56 PM 10/30/2006 - Fixing every lock ('this') 
 			{
 				foreach (IGameEffect effect in m_effects)
 					if (effect.GetType().Equals(effectType)) list.Add(effect);
@@ -242,7 +242,7 @@ namespace DOL.GS.Effects
 			int count = 0;
 
 			if (m_effects == null) return count;
-			lock (m_effects) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this) 
+			lock (m_effects) // Mannen 10:56 PM 10/30/2006 - Fixing every lock ('this') 
 			{
 				foreach (IGameEffect effect in m_effects)
 					if (effect.GetType().Equals(effectType)) count++;

@@ -1286,6 +1286,7 @@ namespace DOL.GS
 		/// <param name="weapon">the weapon used for attack</param>
 		/// <param name="style">the style used for attack</param>
 		/// <param name="effectiveness">damage effectiveness (0..1)</param>
+		/// <param name="interruptDuration">the interrupt duration</param>
 		/// <param name="dualWield">indicates if both weapons are used for attack</param>
 		/// <returns>the object where we collect and modifiy all parameters about the attack</returns>
 		protected virtual AttackData MakeAttack(GameObject target, InventoryItem weapon, Style style, double effectiveness, int interruptDuration, bool dualWield)
@@ -1343,13 +1344,17 @@ namespace DOL.GS
 				ad.AttackResult = eAttackResult.TargetDead;
 				return ad;
 			}
-
 			//We have no attacking distance!
 			if (!WorldMgr.CheckDistance(this, ad.Target, AttackRange))
 			{
 				//DOLConsole.LogLine(this.Name+"("+X+","+Y+","+Z+") attacks but "+ad.Target.Name+"("+ad.Target.X+","+ad.Target.Y+","+ad.Target.Z+") out of range "+dist+" > "+AttackRange);
 				ad.AttackResult = eAttackResult.OutOfRange;
 				return ad;
+			}
+
+			if (RangeAttackType == eRangeAttackType.Long)
+			{
+				RangeAttackType = eRangeAttackType.Normal;
 			}
 
 			if (!GameServer.ServerRules.IsAllowedToAttack(ad.Attacker, ad.Target, false))
@@ -1584,6 +1589,7 @@ namespace DOL.GS
 		/// Starts interrupt timer on this living
 		/// </summary>
 		/// <param name="duration">The full interrupt duration in milliseconds</param>
+		/// <param name="attackType">The type of attack</param>
 		/// <param name="attacker">The source of interrupts</param>
 		public virtual void StartInterruptTimer(int duration, AttackData.eAttackType attackType, GameLiving attacker)
 		{
@@ -1614,6 +1620,7 @@ namespace DOL.GS
 			/// <param name="target">The interrupt target</param>
 			/// <param name="attacker">The attacker that is interrupting</param>
 			/// <param name="duration">The interrupt duration in milliseconds</param>
+			/// <param name="attackType">the type of attack</param>
 			public InterruptAction(GameLiving target, GameLiving attacker, int duration, AttackData.eAttackType attackType)
 				: base(target)
 			{
@@ -1652,6 +1659,7 @@ namespace DOL.GS
 		/// Does needed interrupt checks and interrupts this living
 		/// </summary>
 		/// <param name="attacker">the attacker that is interrupting</param>
+		/// <param name="attackType">the attack type</param>
 		/// <returns>true if interrupted successfully</returns>
 		protected virtual bool OnInterruptTick(GameLiving attacker, AttackData.eAttackType attackType)
 		{
@@ -1968,20 +1976,23 @@ namespace DOL.GS
 					}
 					else
 					{
-						owner.RangeAttackType = eRangeAttackType.Normal;
-						lock (owner.EffectList)
+						if (!(owner is GamePlayer) || (owner.RangeAttackType != eRangeAttackType.Long))
 						{
-							foreach (IGameEffect effect in owner.EffectList) // switch to the correct range attack type
+							owner.RangeAttackType = eRangeAttackType.Normal;
+							lock (owner.EffectList)
 							{
-								if (effect is SureShotEffect)
+								foreach (IGameEffect effect in owner.EffectList) // switch to the correct range attack type
 								{
-									owner.RangeAttackType = eRangeAttackType.SureShot;
-									break;
-								}
-								else if (effect is RapidFireEffect)
-								{
-									owner.RangeAttackType = eRangeAttackType.RapidFire;
-									break;
+									if (effect is SureShotEffect)
+									{
+										owner.RangeAttackType = eRangeAttackType.SureShot;
+										break;
+									}
+									else if (effect is RapidFireEffect)
+									{
+										owner.RangeAttackType = eRangeAttackType.RapidFire;
+										break;
+									}
 								}
 							}
 						}
@@ -2067,6 +2078,13 @@ namespace DOL.GS
 			/// Constructs a new attack action
 			/// </summary>
 			/// <param name="owner">The action source</param>
+			/// <param name="attackWeapon">the weapon used to attack</param>
+			/// <param name="combatStyle">the style used</param>
+			/// <param name="effectiveness">the effectiveness</param>
+			/// <param name="interruptDuration">the interrupt duration</param>
+			/// <param name="leftHandSwingCount">the left hand swing count</param>
+			/// <param name="leftWeapon">the left hand weapon used to attack</param>
+			/// <param name="target">the target of the attack</param>
 			public WeaponOnTargetAction(GameLiving owner, GameObject target, InventoryItem attackWeapon, InventoryItem leftWeapon, int leftHandSwingCount, double effectiveness, int interruptDuration, Style combatStyle)
 				: base(owner)
 			{
@@ -3212,8 +3230,6 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 			//Stop attacks
 			StopAttack();
 
-			ArrayList temp;
-
 			//Send our attackers some note
 			foreach (GameObject obj in m_attackers.Clone() as ArrayList)
 			{
@@ -3609,18 +3625,28 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		/// <summary>
 		/// gets the resistance value by damage types
 		/// </summary>
-		/// <param name="damageType"></param>
-		/// <returns></returns>
+		/// <param name="damageType">the damag etype</param>
+		/// <returns>the resist value</returns>
 		public virtual int GetResist(eDamageType damageType)
 		{
 			return GetModified(GetResistTypeForDamage(damageType));
 		}
 
+		/// <summary>
+		/// get the resistance to damage by type
+		/// </summary>
+		/// <param name="property">the property type</param>
+		/// <returns>the resist value</returns>
 		public virtual int GetDamageResist(eProperty property)
 		{
 			return 0;
 		}
 
+		/// <summary>
+		/// Gets the Damage Resist for a damage type
+		/// </summary>
+		/// <param name="damageType"></param>
+		/// <returns></returns>
 		public virtual int GetDamageResist(eDamageType damageType)
 		{
 			return GetDamageResist(GetResistTypeForDamage(damageType));
@@ -4705,9 +4731,10 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 
 		#endregion
 		#region Abilities
-		/// </summary>
+		/// <summary>
 		/// <param name="keyName">KeyName of ability</param>
 		/// <returns>Has player this ability</returns>
+		/// </summary>
 		public virtual bool HasAbility(string keyName)
 		{
 			return false;
@@ -4912,6 +4939,10 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 
 		#endregion
 		#region LoadCalculators
+		/// <summary>
+		/// Load the property calculations
+		/// </summary>
+		/// <returns></returns>
 		public static bool LoadCalculators()
 		{
 			try

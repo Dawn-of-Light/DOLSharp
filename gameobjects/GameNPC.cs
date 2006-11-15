@@ -234,6 +234,9 @@ namespace DOL.GS
 
 		protected ArrayList m_linkedFactions;
 
+		/// <summary>
+		/// The linked factions for this NPC
+		/// </summary>
 		public ArrayList LinkedFactions
 		{
 			get { return m_linkedFactions; }
@@ -1212,6 +1215,10 @@ namespace DOL.GS
 			LoadEquipmentTemplateFromDatabase(npc.EquipmentTemplateID);
 		}
 
+		/// <summary>
+		/// Load a NPC template onto this NPC
+		/// </summary>
+		/// <param name="template"></param>
 		public void LoadTemplate(INpcTemplate template)
 		{
 			IList m_models = new ArrayList();
@@ -1511,6 +1518,7 @@ namespace DOL.GS
 		/// callbacks are called correctly
 		/// </summary>
 		/// <param name="forced">if true, the dismounting can't be prevented by handlers</param>
+		/// <param name="player">the player that is dismounting</param>
 		/// <returns>true if dismounted successfully</returns>
 		public virtual bool RiderDismount(bool forced, GamePlayer player)
 		{
@@ -1530,6 +1538,10 @@ namespace DOL.GS
 			return true;
 		}
 
+		/// <summary>
+		/// Get a free array location on the NPC
+		/// </summary>
+		/// <returns></returns>
 		public int GetFreeArrayLocation()
 		{
 			for (int i = 0; i < MAX_PASSENGERS; i++)
@@ -1540,6 +1552,11 @@ namespace DOL.GS
 			return -1;
 		}
 
+		/// <summary>
+		/// Get the riders array location
+		/// </summary>
+		/// <param name="player">the player to get location of</param>
+		/// <returns></returns>
 		public int RiderArrayLocation(GamePlayer player)
 		{
 			for (int i = 0; i < MAX_PASSENGERS; i++)
@@ -1550,6 +1567,11 @@ namespace DOL.GS
 			return -1;
 		}
 
+		/// <summary>
+		/// Get the riders slot on the npc
+		/// </summary>
+		/// <param name="player"></param>
+		/// <returns></returns>
 		public int RiderSlot(GamePlayer player)
 		{
 			int location = RiderArrayLocation(player);
@@ -1558,16 +1580,25 @@ namespace DOL.GS
 			return location + SLOT_OFFSET;
 		}
 
+		/// <summary>
+		/// The maximum passengers the NPC can take
+		/// </summary>
 		public virtual int MAX_PASSENGERS
 		{
 			get { return 0; }
 		}
 
+		/// <summary>
+		/// The slot offset for this NPC
+		/// </summary>
 		public virtual int SLOT_OFFSET
 		{
 			get { return 0; }
 		}
 
+		/// <summary>
+		/// Gets a list of the current riders
+		/// </summary>
 		public ArrayList CurrentRiders
 		{
 			get
@@ -2053,11 +2084,17 @@ namespace DOL.GS
 			get { return 5000; }
 		}
 
+		/// <summary>
+		/// The Max Mana for this NPC
+		/// </summary>
 		public override int MaxMana
 		{
 			get { return 1000; }
 		}
 
+		/// <summary>
+		/// The Concentration for this NPC
+		/// </summary>
 		public override int Concentration
 		{
 			get
@@ -2185,8 +2222,17 @@ namespace DOL.GS
 		/// </summary>
 		public virtual byte BlockChance
 		{
-			get { return m_blockChance; }
-			set { m_blockChance = value; }
+			get
+			{
+				//When npcs have two handed weapons, we don't want them to block
+				if (ActiveWeaponSlot != eActiveWeaponSlot.Standard)
+					return 0;
+				return m_blockChance;
+			}
+			set
+			{
+				m_blockChance = value;
+			}
 		}
 
 		/// <summary>
@@ -2244,17 +2290,48 @@ namespace DOL.GS
 				else SwitchWeapon(eActiveWeaponSlot.Standard);
 			}
 			else SwitchWeapon(eActiveWeaponSlot.Standard);
-			Follow(target, 90, 5000);	// follow at stickrange
+			StopAttack();
+			StopMoving();
 			StartAttack(target);
+		}
+
+		/// <summary>
+		/// Method to switch the guard to Ranged attacks
+		/// </summary>
+		/// <param name="target"></param>
+		public void SwitchToRanged(GameObject target)
+		{
+			SwitchWeapon(eActiveWeaponSlot.Distance);
+			StartAttack(target);
+			StopFollow();
+		}
+
+		/// <summary>
+		/// If npcs cant move, they cant be interupted from range attack
+		/// </summary>
+		/// <param name="attacker"></param>
+		/// <param name="attackType"></param>
+		/// <returns></returns>
+		protected override bool OnInterruptTick(GameLiving attacker, AttackData.eAttackType attackType)
+		{
+			if (this.MaxSpeedBase == 0)
+			{
+				if (attackType == AttackData.eAttackType.Ranged || attackType == AttackData.eAttackType.Spell)
+				{
+					if (WorldMgr.GetDistance(this, attacker) > 150)
+						return false;
+				}
+			}
+
+			StopAttack();
+			SwitchToMelee(attacker);
+
+			return base.OnInterruptTick(attacker, attackType);
 		}
 
 		#endregion
 		#region Spell
-		/// <summary>
-		/// array of spell
-		/// </summary>
 		private IList m_spells = new ArrayList(1);
-
 		/// <summary>
 		/// property of spell array of NPC
 		/// </summary>
@@ -2263,20 +2340,21 @@ namespace DOL.GS
 			get { return m_spells; }
 			set { m_spells = value; }
 		}
-		/// <summary>
-		/// property of style array of NPC
-		/// </summary>
+
 		private IList m_styles = new ArrayList(1);
+		/// <summary>
+		/// The Styles for this NPC
+		/// </summary>
 		public IList Styles
 		{
 			get { return m_styles; }
 			set { m_styles = value; }
 		}
 
-		/// <summary>
-		/// npcs abilities
-		/// </summary>
 		private IList m_abilities = new ArrayList(1);
+		/// <summary>
+		/// The Abilities for this NPC
+		/// </summary>
 		public IList Abilities
 		{
 			get { return m_abilities; }
@@ -2428,6 +2506,12 @@ namespace DOL.GS
 		#endregion
 		#region Notify
 
+		/// <summary>
+		/// Handle event notifications
+		/// </summary>
+		/// <param name="e">The event</param>
+		/// <param name="sender">The sender</param>
+		/// <param name="args">The arguements</param>
 		public override void Notify(DOLEvent e, object sender, EventArgs args)
 		{
 			base.Notify(e, sender, args);

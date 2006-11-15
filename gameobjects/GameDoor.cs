@@ -26,6 +26,7 @@ namespace DOL.GS
 	/// </summary>
 	public class GameDoor : GameObject, IDoor
 	{
+		private readonly object m_LockObject = new object();
 		/// <summary>
 		/// The time interval after which door will be closed, in milliseconds
 		/// </summary>
@@ -133,7 +134,7 @@ namespace DOL.GS
 			{
 				if (m_state != value)
 				{
-					lock (this)
+					lock (m_LockObject)
 					{
 						m_state = value;
 						foreach (GamePlayer player in this.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
@@ -153,7 +154,7 @@ namespace DOL.GS
 		public void Open()
 		{
 			this.State = eDoorState.Open;
-			lock (this)
+			lock (m_LockObject)
 			{
 				if (m_closeDoorAction == null)
 				{
@@ -168,10 +169,7 @@ namespace DOL.GS
 		public void Close()
 		{
 			this.State = eDoorState.Closed;
-			lock (this)
-			{
-				m_closeDoorAction = null;
-			}
+			m_closeDoorAction = null;
 		}
 
 		/// <summary>
