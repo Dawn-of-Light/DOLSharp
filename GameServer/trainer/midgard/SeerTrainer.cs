@@ -28,12 +28,14 @@ namespace DOL.GS.Trainer
 	[NPCGuildScript("Seer Trainer", eRealm.Midgard)]		// this attribute instructs DOL to use this script for all "Acolyte Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class SeerTrainer : GameTrainer
 	{
+		/// <summary>
+		/// The practice weapon template ID
+		/// </summary>
 		public const string PRACTICE_WEAPON_ID = "training_hammer";
+		/// <summary>
+		/// The practice shield template ID
+		/// </summary>
 		public const string PRACTICE_SHIELD_ID = "small_training_shield";
-
-		public SeerTrainer() : base()
-		{
-		}
 
 		/// <summary>
 		/// Interact with trainer

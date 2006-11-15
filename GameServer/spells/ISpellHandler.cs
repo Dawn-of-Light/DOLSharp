@@ -87,7 +87,16 @@ namespace DOL.GS.Spells
 		/// <returns></returns>
 		bool IsOverwritable(GameSpellEffect compare);
 
+		/// <summary>
+		/// Actions to take when the effect starts
+		/// </summary>
+		/// <param name="effect"></param>
 		void OnEffectStart(GameSpellEffect effect);
+
+		/// <summary>
+		/// Actions to take when the effect stops
+		/// </summary>
+		/// <param name="effect"></param>
 		void OnEffectPulse(GameSpellEffect effect);
 
 		/// <summary>
@@ -105,9 +114,24 @@ namespace DOL.GS.Spells
 		/// <param name="effect">The effect doing the pulses</param>
 		void OnSpellPulse(PulsingSpellEffect effect);
 
+		/// <summary>
+		/// The Spell Caster
+		/// </summary>
 		GameLiving Caster { get; }
+
+		/// <summary>
+		/// The Spell
+		/// </summary>
 		Spell Spell { get; }
+
+		/// <summary>
+		/// The SpellLine
+		/// </summary>
 		SpellLine SpellLine { get; }
+
+		/// <summary>
+		/// The DelveInfo
+		/// </summary>
 		IList DelveInfo{ get; }
 
 		/// <summary>

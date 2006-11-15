@@ -27,11 +27,11 @@ namespace DOL.GS.Trainer
 	[NPCGuildScript("Cleric Trainer", eRealm.Albion)]		// this attribute instructs DOL to use this script for all "Cleric Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class ClericTrainer : GameTrainer
 	{
-	public const string WEAPON_ID1="chrush_sword_item";
+		/// <summary>
+		/// The crush sword template ID
+		/// </summary>
+		public const string WEAPON_ID1 = "crush_sword_item";
 
-		public ClericTrainer() : base()
-		{
-		}
 
 		/// <summary>
 		/// Interact with trainer

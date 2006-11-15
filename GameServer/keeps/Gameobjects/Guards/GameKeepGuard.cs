@@ -355,24 +355,6 @@ namespace DOL.GS.Keeps
 		}
 
 		/// <summary>
-		/// Easy method to determine if the attack result was a hit
-		/// </summary>
-		/// <param name="result"></param>
-		/// <returns></returns>
-		public static bool IsHit(GameLiving.eAttackResult result)
-		{
-			if (result == GameLiving.eAttackResult.HitUnstyled ||
-result == GameLiving.eAttackResult.HitStyle ||
-result == GameLiving.eAttackResult.Missed ||
-result == GameLiving.eAttackResult.Blocked ||
-result == GameLiving.eAttackResult.Evaded ||
-result == GameLiving.eAttackResult.Fumbled ||
-result == GameLiving.eAttackResult.Parried)
-				return true;
-			return false;
-		}
-
-		/// <summary>
 		/// Method to see if the Guard has been left alone long enough to use Ranged attacks
 		/// </summary>
 		/// <param name="npc">The guard object</param>
@@ -398,74 +380,14 @@ result == GameLiving.eAttackResult.Parried)
 		}
 
 		/// <summary>
-		/// Method to switch the guard to Melee attacks
-		/// </summary>
-		/// <param name="target"></param>
-		public void SwitchToMelee(GameObject target)
-		{
-			InventoryItem twohand = Inventory.GetItem(eInventorySlot.TwoHandWeapon);
-			InventoryItem righthand = Inventory.GetItem(eInventorySlot.RightHandWeapon);
-
-			if (twohand != null && righthand == null)
-				SwitchWeapon(eActiveWeaponSlot.TwoHanded);
-			else if (twohand != null && righthand != null)
-			{
-				if (Util.Chance(50))
-					SwitchWeapon(eActiveWeaponSlot.TwoHanded);
-				else SwitchWeapon(eActiveWeaponSlot.Standard);
-			}
-			else SwitchWeapon(eActiveWeaponSlot.Standard);
-			StopAttack();
-			StopFollow();
-			//Follow(target, 90, 2000);	// follow at stickrange
-			StartAttack(target);
-		}
-
-		/// <summary>
-		/// Method to switch the guard to Ranged attacks
-		/// </summary>
-		/// <param name="target"></param>
-		public void SwitchToRanged(GameObject target)
-		{
-			SwitchWeapon(eActiveWeaponSlot.Distance);
-			//Follow(target, 2000, 2000);	// follow at stickrange
-			StartAttack(target);
-			StopFollow();
-		}
-
-		/// <summary>
 		/// Because of Spell issues, we will always return this true
 		/// </summary>
 		/// <param name="target"></param>
 		/// <param name="viewangle"></param>
-		/// <param name="rangeCheck"></param>
 		/// <returns></returns>
 		public override bool IsObjectInFront(GameObject target, double viewangle)
 		{
 			return true;
-		}
-
-		/// <summary>
-		/// If guards cant move, they cant be interupted from range attack
-		/// </summary>
-		/// <param name="attacker"></param>
-		/// <param name="attackType"></param>
-		/// <returns></returns>
-		protected override bool OnInterruptTick(GameLiving attacker, AttackData.eAttackType attackType)
-		{
-			if (this.MaxSpeedBase == 0)
-			{
-				if (attackType == AttackData.eAttackType.Ranged || attackType == AttackData.eAttackType.Spell)
-				{
-					if (WorldMgr.GetDistance(this, attacker) > 150)
-						return false;
-				}
-			}
-
-			StopAttack();
-			SwitchToMelee(attacker);
-
-			return base.OnInterruptTick(attacker, attackType);
 		}
 
 		/// <summary>
@@ -555,6 +477,11 @@ result == GameLiving.eAttackResult.Parried)
 		}
 		#endregion
 
+		/// <summary>
+		/// When we add a guard to the world, we also attach an AttackFinished handler
+		/// We use this to check LOS and range issues for our ranged guards
+		/// </summary>
+		/// <returns></returns>
 		public override bool AddToWorld()
 		{
 			if (!base.AddToWorld())
@@ -661,28 +588,23 @@ result == GameLiving.eAttackResult.Parried)
 			return s;
 		}
 
-		public override byte BlockChance
-		{
-			get
-			{
-				if (ActiveWeaponSlot != eActiveWeaponSlot.Standard)
-					return 0;
-				return base.BlockChance;
-			}
-			set
-			{
-				base.BlockChance = value;
-			}
-		}
-
 		#region Database
 
+		/// <summary>
+		/// Load the guard from the database
+		/// </summary>
+		/// <param name="mobobject">The database mobobject</param>
 		public override void LoadFromDatabase(DataObject mobobject)
 		{
 			base.LoadFromDatabase(mobobject);
 			TemplateMgr.RefreshTemplate(this);
 		}
 
+		/// <summary>
+		/// Load the guard from a position
+		/// </summary>
+		/// <param name="pos">The position for the guard</param>
+		/// <param name="component">The component it is being spawned on</param>
 		public void LoadFromPosition(DBKeepPosition pos, GameKeepComponent component)
 		{
 			m_templateID = pos.TemplateID;
@@ -693,6 +615,10 @@ result == GameLiving.eAttackResult.Parried)
 			this.AddToWorld();
 		}
 
+		/// <summary>
+		/// Move a guard to a position
+		/// </summary>
+		/// <param name="position">The new position for the guard</param>
 		public void MoveToPosition(DBKeepPosition position)
 		{
 			PositionMgr.LoadGuardPosition(position, this);
@@ -704,7 +630,6 @@ result == GameLiving.eAttackResult.Parried)
 		/// <summary>
 		/// Change guild of guard (emblem on equipment) when keep is claimed
 		/// </summary>
-		/// <param name="guild"> the guild owner of the keep</param>
 		public void ChangeGuild()
 		{
 			Guild guild = this.Component.Keep.Guild;

@@ -23,8 +23,10 @@ namespace DOL.GS.Effects
 		/// Cancel effect
 		/// </summary>
 		/// <param name="playerCanceled"></param>
-		public virtual void Cancel(bool playerCanceled) {
-			if (playerCanceled && HasNegativeEffect) {
+		public virtual void Cancel(bool playerCanceled)
+		{
+			if (playerCanceled && HasNegativeEffect)
+			{
 				if (Owner is GamePlayer)
 					((GamePlayer)Owner).Out.SendMessage("You can't remove this effect!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
@@ -38,11 +40,8 @@ namespace DOL.GS.Effects
 		/// <param name="target">The effect target</param>
 		public virtual void Start(GameLiving target)
 		{
-			lock (this)
-			{
-				m_owner = target;
-				target.EffectList.Add(this);
-			}
+			m_owner = target;
+			target.EffectList.Add(this);
 		}
 
 		/// <summary>
@@ -50,13 +49,10 @@ namespace DOL.GS.Effects
 		/// </summary>
 		public virtual void Stop()
 		{
-			lock (this)
-			{
-				if (m_owner != null)
-				{
-					m_owner.EffectList.Remove(this);
-				}
-			}
+			if (m_owner == null)
+				return;
+
+			m_owner.EffectList.Remove(this);
 		}
 
 		/// <summary>
@@ -67,18 +63,23 @@ namespace DOL.GS.Effects
 		/// <summary>
 		/// Remaining Time of the effect in milliseconds
 		/// </summary>
-		public virtual int RemainingTime {
-			get {
+		public virtual int RemainingTime
+		{
+			get
+			{
 				return 0; // unlimited
 			}
 		}
 
-		public GameLiving Owner {
+		public GameLiving Owner
+		{
 			get { return m_owner; }
 		}
 
-		public virtual ushort Icon { 
-			get { return 0; } }
+		public virtual ushort Icon
+		{
+			get { return 0; }
+		}
 
 		/// <summary>
 		/// unique id for identification in effect list
@@ -89,12 +90,15 @@ namespace DOL.GS.Effects
 			set { m_id = value; }
 		}
 
-		public virtual bool HasNegativeEffect {
+		public virtual bool HasNegativeEffect
+		{
 			get { return false; }
 		}
 
-		public virtual IList DelveInfo {
-			get {
+		public virtual IList DelveInfo
+		{
+			get
+			{
 				return new ArrayList(0);
 			}
 		}

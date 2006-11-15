@@ -52,6 +52,9 @@ namespace DOL.GS.Scripts
 			get { return "Alchemists"; }
 		}
 
+		/// <summary>
+		/// The classes allowed to be this crafter
+		/// </summary>
 		public override eCharacterClass[] AllowedClass
 		{
 			get
@@ -82,11 +85,17 @@ namespace DOL.GS.Scripts
 			}
 		}
 
+		/// <summary>
+		/// The eCraftingSkill
+		/// </summary>
 		public override eCraftingSkill TheCraftingSkill
 		{
 			get { return eCraftingSkill.Alchemy; }
 		}
 
+		/// <summary>
+		/// The text for join order
+		/// </summary>
 		public override string InitialEntersentence
 		{
 			get { return "Would you like to join the Order of [" + GUILD_ORDER + "]? As a Alchemist, you have the ability to make dyes, poisons, and various magical potions. You also have the ability to make magical tinctures that can add both offensive and defensive magical effects to crafted items. You have some skill in Spellcraft, as well as being able to Jewelcraft with great skill"; }

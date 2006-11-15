@@ -29,6 +29,8 @@ namespace DOL.GS.Effects
 	/// </summary>
 	public sealed class PulsingSpellEffect : IConcentrationEffect
 	{
+		private readonly object m_LockObject = new object();
+
 		/// <summary>
 		/// The spell handler of this pulsing effect
 		/// </summary>
@@ -69,7 +71,7 @@ namespace DOL.GS.Effects
 		/// </summary>
 		public void Start()
 		{
-			lock (this)
+			lock (m_LockObject)
 			{
 				if (m_spellPulseAction != null)
 					m_spellPulseAction.Stop();
@@ -86,7 +88,7 @@ namespace DOL.GS.Effects
 		/// <param name="playerCanceled">true if player decided to cancel that effect by shift + rightclick</param>
 		public void Cancel(bool playerCanceled)
 		{
-			lock (this)
+			lock (m_LockObject)
 			{
 				if (m_spellPulseAction != null)
 				{

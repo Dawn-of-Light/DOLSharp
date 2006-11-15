@@ -220,6 +220,12 @@ namespace DOL.GS
 			get { return m_trainerClassName; }
 		}
 
+		/// <summary>
+		/// Add a gift to the player
+		/// </summary>
+		/// <param name="template">the template ID of the item</param>
+		/// <param name="player">the player to give it to</param>
+		/// <returns>true if succesful</returns>
 		public virtual bool addGift(String template, GamePlayer player)
 		{
 			ItemTemplate temp = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), template);

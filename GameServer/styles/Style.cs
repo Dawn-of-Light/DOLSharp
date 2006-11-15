@@ -258,6 +258,9 @@ namespace DOL.GS.Styles
 			get { return baseStyle.WeaponTypeRequirement; }
 		}
 
+		/// <summary>
+		/// (readonly) The growth rate of the style
+		/// </summary>
 		public double GrowthRate
 		{
 			get { return baseStyle.GrowthRate; }
