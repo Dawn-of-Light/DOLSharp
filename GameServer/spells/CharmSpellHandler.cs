@@ -39,11 +39,6 @@ namespace DOL.GS.Spells
 	public class CharmSpellHandler : SpellHandler
 	{
 		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
-		/// <summary>
 		/// Holds the charmed Npc for pulsing spells
 		/// </summary>
 		protected GameNPC m_charmedNpc;

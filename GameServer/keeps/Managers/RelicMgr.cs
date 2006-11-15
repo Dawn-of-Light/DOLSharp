@@ -184,7 +184,10 @@ namespace DOL.GS
 			lock (m_relics)
 			{
 				foreach (GameRelic relic in m_relics.Values)
-					if (relic.Realm == Realm && relic.IsMounted) realmRelics.Add(relic);
+				{
+					if (relic.Realm == Realm && relic.IsMounted)
+						realmRelics.Add(relic);
+				}
 			}
 			return realmRelics;
 		}
@@ -200,7 +203,10 @@ namespace DOL.GS
 		{
 			ArrayList realmTypeRelics = new ArrayList();
 			foreach (GameRelic relic in getRelics(Realm))
-				if (relic.RelicType == RelicType) realmTypeRelics.Add(relic);
+			{
+				if (relic.RelicType == RelicType)
+					realmTypeRelics.Add(relic);
+			}
 			return realmTypeRelics;
 		}
 
@@ -257,8 +263,10 @@ namespace DOL.GS
 			double value = 1.0;
 			//only playerrealms can get bonus
 			foreach (GameRelic rel in getRelics(realm, type))
+			{
 				if (rel.Realm != rel.OriginalRealm)
 					value += 0.1;
+			}
 			return Math.Max(1.0, value);
 		}
 

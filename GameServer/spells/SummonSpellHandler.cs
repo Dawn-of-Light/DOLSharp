@@ -44,11 +44,6 @@ namespace DOL.GS.Spells
 	[SpellHandler("Summon")]
 	public class SummonSpellHandler : SpellHandler
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
 		public SummonSpellHandler(GameLiving caster, Spell spell, SpellLine line)
 			: base(caster, spell, line)
 		{

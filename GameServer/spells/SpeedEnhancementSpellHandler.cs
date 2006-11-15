@@ -198,7 +198,12 @@ namespace DOL.GS.Spells
 			}
 		}
 
-		// constructor
+		/// <summary>
+		/// The spell handler constructor
+		/// </summary>
+		/// <param name="caster"></param>
+		/// <param name="spell"></param>
+		/// <param name="line"></param>
 		public SpeedEnhancementSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
 	}
 }

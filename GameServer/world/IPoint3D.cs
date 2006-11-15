@@ -25,6 +25,9 @@ namespace DOL.GS
 	/// </summary>
 	public interface IPoint3D : IPoint2D
 	{
+		/// <summary>
+		/// Height Position
+		/// </summary>
 		int Z { get; }
 	}
 }

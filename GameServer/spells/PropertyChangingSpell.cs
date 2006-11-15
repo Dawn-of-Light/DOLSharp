@@ -31,11 +31,6 @@ namespace DOL.GS.Spells
 	public abstract class PropertyChangingSpell : SpellHandler
 	{
 		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
-		/// <summary>
 		/// Execute property changing spell
 		/// </summary>
 		/// <param name="target"></param>

@@ -30,13 +30,6 @@ namespace DOL.GS.Spells
 	[SpellHandlerAttribute("SpreadHeal")]
 	public class SpreadhealSpellHandler : HealSpellHandler
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
-		private const int SPREADHEAL_RANGE = 2000;
-
 		// constructor
 		public SpreadhealSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
 
@@ -84,7 +77,7 @@ namespace DOL.GS.Spells
 						{
 							if (!player.IsAlive) continue;
 							//heal only if target is in range
-							if (WorldMgr.CheckDistance(target, player,SPREADHEAL_RANGE))
+							if (WorldMgr.CheckDistance(target, player, m_spell.Range))
 							{
 								double playerHealthPercent = player.Health / (double)player.MaxHealth;
 								if (playerHealthPercent < 1)
@@ -95,8 +88,6 @@ namespace DOL.GS.Spells
 										mostInjuredLiving = player;
 										mostInjuredPercent = playerHealthPercent;
 									}
-
-									//DOLConsole.WriteLine("SpreadHeal: adding injured target " + player.Name + "; playerHealthPercent=" + playerHealthPercent);
 								}
 							}
 						}

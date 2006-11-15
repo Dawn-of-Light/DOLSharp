@@ -27,14 +27,22 @@ namespace DOL.GS.Trainer
 	[NPCGuildScript("Armsman Trainer", eRealm.Albion)]		// this attribute instructs DOL to use this script for all "Fighter Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class ArmsmanTrainer : GameTrainer
 	{
+		/// <summary>
+		/// The slash sword item template ID
+		/// </summary>
 		public const string WEAPON_ID1 = "slash_sword_item";
+		/// <summary>
+		/// The crush sword item template ID
+		/// </summary>
 		public const string WEAPON_ID2 = "crush_sword_item";
+		/// <summary>
+		/// The thrust sword item template ID
+		/// </summary>
 		public const string WEAPON_ID3 = "thrust_sword_item";
+		/// <summary>
+		/// The pike polearm item template ID
+		/// </summary>
 		public const string WEAPON_ID4 = "pike_polearm_item";
-
-		public ArmsmanTrainer() : base()
-		{
-		}
 
 		/// <summary>
 		/// Interact with trainer

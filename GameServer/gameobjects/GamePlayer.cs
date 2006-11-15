@@ -48,6 +48,7 @@ namespace DOL.GS
 	/// </summary>
 	public class GamePlayer : GameLiving
 	{
+		private readonly object m_LockObject = new object();
 		/// <summary>
 		/// Defines a logger for this class.
 		/// </summary>
@@ -2395,7 +2396,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="keyName">KeyName of ability</param>
 		/// <returns>Has player this ability</returns>
-		public virtual bool HasAbility(string keyName)
+		public override bool HasAbility(string keyName)
 		{
 			return m_abilities[keyName] is Ability;
 		}
@@ -5782,7 +5783,7 @@ namespace DOL.GS
 			// then buffs drop messages
 			base.Die(killer);
 
-			lock (this)
+			lock (m_LockObject)
 			{
 				if (m_releaseTimer != null)
 				{
@@ -6233,7 +6234,7 @@ namespace DOL.GS
 			if (source == null || item == null || source == this)
 				return false;
 
-			lock (this)
+			lock (m_LockObject)
 			{
 				lock (source)
 				{
@@ -6291,7 +6292,7 @@ namespace DOL.GS
 			if (source == null || source == this || money == 0)
 				return false;
 
-			lock (this)
+			lock (m_LockObject)
 			{
 				lock (source)
 				{
@@ -10191,7 +10192,7 @@ namespace DOL.GS
 		/// <returns>true if trade has started</returns>
 		public bool OpenTrade(GamePlayer tradePartner)
 		{
-			lock (this)
+			lock (m_LockObject)
 			{
 				lock (tradePartner)
 				{
@@ -10222,7 +10223,7 @@ namespace DOL.GS
 		{
 			if (item == null) return false;
 
-			lock (this)
+			lock (m_LockObject)
 			{
 				if (TradeWindow != null)
 				{

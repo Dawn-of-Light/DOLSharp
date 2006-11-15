@@ -31,6 +31,8 @@ namespace DOL.GS.Effects
 	/// </summary>
 	public class GameSpellEffect : IGameEffect, IConcentrationEffect
 	{
+		private readonly object m_LockObject = new object(); // dummy object for thread sync - Mannen
+
 		/// <summary>
 		/// Defines a logger for this class.
 		/// </summary>
@@ -118,7 +120,7 @@ namespace DOL.GS.Effects
 		/// <param name="target">the target</param>
 		public void Start(GameLiving target)
 		{
-			lock (this)
+			lock (m_LockObject)
 			{
 				if (!m_expired)
 				{
@@ -170,7 +172,7 @@ namespace DOL.GS.Effects
 				return;
 			}
 
-			lock(this)
+			lock (m_LockObject)
 			{				
 				if (m_expired)
 					return;
@@ -208,7 +210,7 @@ namespace DOL.GS.Effects
 				return;
 			}
 
-			lock (this)
+			lock (m_LockObject)
 			{
 				// immunity effects in immunity state are already expired
 				if (!m_expired)
@@ -265,7 +267,7 @@ namespace DOL.GS.Effects
 		/// </summary>
 		protected virtual void ExpiredCallback()
 		{
-			lock (this)
+			lock (m_LockObject)
 			{
 				if (m_expired)
 					return;
