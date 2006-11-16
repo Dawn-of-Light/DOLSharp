@@ -537,16 +537,13 @@ namespace DOL.GS
 				if (m_timeThread != null)
 					return false;
 
-				lock (m_timeThread)
-				{
-					m_running = true;
-					m_timeThread = new Thread(new ThreadStart(TimeThread));
-					m_timeThread.Name = m_name;
-					m_timeThread.Priority = ThreadPriority.AboveNormal;
-					m_timeThread.IsBackground = true;
-					m_timeThread.Start();
-					return true;
-				}
+				m_running = true;
+				m_timeThread = new Thread(new ThreadStart(TimeThread));
+				m_timeThread.Name = m_name;
+				m_timeThread.Priority = ThreadPriority.AboveNormal;
+				m_timeThread.IsBackground = true;
+				m_timeThread.Start();
+				return true;
 			}
 
 			/// <summary>
