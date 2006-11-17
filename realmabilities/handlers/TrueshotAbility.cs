@@ -21,8 +21,15 @@ namespace DOL.GS.RealmAbilities
 			GamePlayer player = living as GamePlayer;
 			if (player != null)
 			{
-				TrueshotEffect effect = new TrueshotEffect();
-				effect.Start(player);
+				SureShotEffect sureShot = (SureShotEffect)player.EffectList.GetOfType(typeof(SureShotEffect));
+				if (sureShot != null)
+					sureShot.Cancel(false);
+
+				RapidFireEffect rapidFire = (RapidFireEffect)player.EffectList.GetOfType(typeof(RapidFireEffect));
+				if (rapidFire != null)
+					rapidFire.Cancel(false);
+
+				new TrueshotEffect().Start(player);
 			}
 			DisableSkill(living);
 		}

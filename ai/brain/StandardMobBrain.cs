@@ -40,7 +40,7 @@ namespace DOL.AI.Brain
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		public const int MAX_AGGRO_DISTANCE = 2400;
+		public const int MAX_AGGRO_DISTANCE = 3600;
 
 		/// <summary>
 		/// Constructs a new StandardMobBrain
