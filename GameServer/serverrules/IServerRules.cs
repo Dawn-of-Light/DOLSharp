@@ -155,12 +155,12 @@ namespace DOL.GS.ServerRules
 		long GetExperienceForLiving(int level);
 
 		/// <summary>
-		/// Checks if player has ability to use items of this type
+		/// Checks if living has ability to use items of this type
 		/// </summary>
 		/// <param name="player"></param>
 		/// <param name="item"></param>
 		/// <returns>true if player has ability to use item</returns>
-		bool CheckAbilityToUseItem(GamePlayer player, ItemTemplate item);
+		bool CheckAbilityToUseItem(GameLiving living, ItemTemplate item);
 
 		/// <summary>
 		/// Checks whether one object type is equal to another

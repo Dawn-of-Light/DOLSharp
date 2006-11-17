@@ -482,14 +482,16 @@ namespace DOL.GS.GameEvents
 
 			//If we have riders on our horse, dismount them
 			for (int i = 0; i < m_horses.Length; i++)
+			{
 				if (m_horses[i] != null)
 				{
-					foreach (GamePlayer player in m_horses[i].Riders)
+					foreach (GamePlayer player in m_horses[i].CurrentRiders)
 					{
 						player.DismountSteed(true);
 					}
 					m_horses[i].Delete();
 				}
+			}
 		}
 
 		//Called every 30 seconds to test if we can start the race

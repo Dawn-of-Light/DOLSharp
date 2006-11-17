@@ -202,5 +202,13 @@ namespace DOLGameServerConsole
 		public void SendListCastersSpell() { }
 		public void SendCrash(string str) { }
 		public void SendRvRGuildBanner(GamePlayer player, bool show) { }
+		/// <summary>
+		/// The bow prepare animation
+		/// </summary>
+		public int BowPrepare { get { return 0; } }
+		/// <summary>
+		/// The bow shoot animation
+		/// </summary>
+		public int BowShoot { get { return 0; } }
 	}
 }

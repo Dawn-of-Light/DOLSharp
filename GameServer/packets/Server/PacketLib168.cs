@@ -3082,5 +3082,21 @@ namespace DOL.GS.PacketHandler
 		public virtual void SendRvRGuildBanner(GamePlayer player, bool show)
 		{
 		}
+
+		/// <summary>
+		/// The bow prepare animation
+		/// </summary>
+		public virtual int BowPrepare 
+		{
+			get { return 0x01F4; } 
+		}
+
+		/// <summary>
+		/// The bow shoot animation
+		/// </summary>
+		public virtual int BowShoot
+		{
+			get { return 0x1F7; }
+		}
 	}
 }
