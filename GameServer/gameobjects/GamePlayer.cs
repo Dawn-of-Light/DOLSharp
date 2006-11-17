@@ -213,6 +213,34 @@ namespace DOL.GS
 			}
 		}
 
+		private bool m_gainXP = true;
+		/// <summary>
+		/// Gets or sets the gain XP flag for this player
+		/// </summary>
+		public bool GainXP
+		{
+			get { return m_gainXP; }
+			set 
+			{
+				m_gainXP = value;
+				m_character.GainXP = value;
+			}
+		}
+
+		private bool m_gainRP = true;
+		/// <summary>
+		/// Gets or sets the gain RP flag for this player
+		/// </summary>
+		public bool GainRP
+		{
+			get { return m_gainRP; }
+			set 
+			{
+				m_gainRP = value;
+				m_character.GainXP = value;
+			}
+		}
+
 		/// <summary>
 		/// quit timer
 		/// </summary>
@@ -1897,10 +1925,6 @@ namespace DOL.GS
 		/// </summary>
 		protected readonly ArrayList m_specList = new ArrayList();
 		/// <summary>
-		/// Holds all abilities of the player (KeyName -> Ability)
-		/// </summary>
-		protected readonly Hashtable m_abilities = new Hashtable();
-		/// <summary>
 		/// Holds the Spell lines the player can use
 		/// </summary>
 		protected readonly ArrayList m_spelllines = new ArrayList();
@@ -2392,16 +2416,6 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Asks for existence of specific ability
-		/// </summary>
-		/// <param name="keyName">KeyName of ability</param>
-		/// <returns>Has player this ability</returns>
-		public override bool HasAbility(string keyName)
-		{
-			return m_abilities[keyName] is Ability;
-		}
-
-		/// <summary>
 		/// Asks for existance of specific specialization
 		/// </summary>
 		/// <param name="keyName"></param>
@@ -2409,30 +2423,6 @@ namespace DOL.GS
 		public bool HasSpecialization(string keyName)
 		{
 			return m_specialization[keyName] is Specialization;
-		}
-
-		/// <summary>
-		/// returns all abilities in a copied list
-		/// </summary>
-		/// <returns></returns>
-		public IList GetAllAbilities()
-		{
-			lock (m_abilities.SyncRoot)
-			{
-				ArrayList list = new ArrayList();
-				list.AddRange(m_abilities.Values);
-				return list;
-			}
-		}
-
-		/// <summary>
-		/// Checks if player has ability to use items of this type
-		/// </summary>
-		/// <param name="item"></param>
-		/// <returns>true if player has ability to use item</returns>
-		public virtual bool HasAbilityToUseItem(ItemTemplate item)
-		{
-			return GameServer.ServerRules.CheckAbilityToUseItem(this, item);
 		}
 
 		/// <summary>
@@ -2490,33 +2480,6 @@ namespace DOL.GS
 			}
 
 			return 0;
-		}
-
-
-		/// <summary>
-		/// returns ability of player or null if non existent
-		/// </summary>
-		/// <param name="abilityKey"></param>
-		/// <returns></returns>
-		public Ability GetAbility(string abilityKey)
-		{
-			return m_abilities[abilityKey] as Ability;
-		}
-
-		/// <summary>
-		/// returns the level of ability
-		/// if 0 is returned, the ability is non existent on player
-		/// </summary>
-		/// <param name="keyName"></param>
-		/// <returns></returns>
-		public int GetAbilityLevel(string keyName)
-		{
-			Ability ab = m_abilities[keyName] as Ability;
-			if (ab == null)
-				return 0;
-			if (ab.Level == 0)
-				return 1; // at least level 1 if ab has level 0
-			return ab.Level;
 		}
 
 		/// <summary>
@@ -3038,6 +3001,9 @@ namespace DOL.GS
 		/// <param name="amount">The amount of realm points gained</param>
 		public override void GainRealmPoints(long amount)
 		{
+			if (!GainRP)
+				return;
+
 			//rp rate modifier
 			double modifier = ServerProperties.Properties.RP_RATE;
 			if (modifier != -1)
@@ -3464,6 +3430,9 @@ namespace DOL.GS
 		/// <param name="sendMessage">should exp gain message be sent</param>
 		public override void GainExperience(long expTotal, long expCampBonus, long expGroupBonus, bool sendMessage)
 		{
+			if (!GainXP)
+				return;
+
 			//xp rate modifier
 			if (expTotal > 0)
 			{

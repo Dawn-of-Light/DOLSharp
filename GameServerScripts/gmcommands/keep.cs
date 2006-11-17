@@ -39,7 +39,9 @@ namespace DOL.GS.Scripts
 		"'/keep level <level>' to change base level of keep",
 		//"'/keep movehere' to move keep to player position",
 		//"'/keep addcomponent <compx> <compy> <comphead> <skin> <height>' to add component to current keep",
-		"'/keep save' to save keep into DB")]
+		"'/keep save' to save keep into DB",
+		"'/keep addteleporter' to create a teleporter stone",
+		"'/keep addbanner' to create a banner")]
 	public class KeepCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		protected string TEMP_KEEP_LAST = "TEMP_KEEP_LAST";

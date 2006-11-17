@@ -158,6 +158,9 @@ namespace DOL
 			private byte m_hairstyle = 0;
 			private byte m_moodtype = 0;
 
+			private bool m_gainXP;
+			private bool m_gainRP;
+
 			static bool m_autoSave;
 
 			/// <summary>
@@ -186,6 +189,8 @@ namespace DOL
 				m_craftingPrimarySkill = 0;
 				m_usedLevelCommand = false;
 				m_spellQueue = true;
+				m_gainXP = true;
+				m_gainRP = true;
 			}
 
 			/// <summary>
@@ -1760,6 +1765,36 @@ namespace DOL
 			}
 
 			#endregion
+
+			/// <summary>
+			/// can gain experience points
+			/// /xp to toggle
+			/// </summary>
+			[DataElement(AllowDbNull = true)]
+			public bool GainXP
+			{
+				get { return m_gainXP; }
+				set
+				{
+					Dirty = true;
+					m_gainXP = value;
+				}
+			}
+
+			/// <summary>
+			/// can gain realm points
+			/// /rp to toggle
+			/// </summary>
+			[DataElement(AllowDbNull = true)]
+			public bool GainRP
+			{
+				get { return m_gainRP; }
+				set
+				{
+					Dirty = true;
+					m_gainRP = value;
+				}
+			}
 		}
 	}
 }
