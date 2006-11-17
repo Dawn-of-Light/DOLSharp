@@ -424,6 +424,7 @@
     <Compile Include="playercommands\roll.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="playercommands\rp.cs" />
     <Compile Include="playercommands\safety.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -472,6 +473,7 @@
     <Compile Include="playercommands\who.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="playercommands\xp.cs" />
     <Compile Include="playercommands\yell.cs">
       <SubType>Code</SubType>
     </Compile>

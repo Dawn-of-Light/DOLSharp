@@ -1820,7 +1820,7 @@ namespace DOL.GS
 					foreach (GamePlayer player in owner.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 					{
 						if (player == null) continue;
-						player.Out.SendCombatAnimation(owner, attackTarget, (ushort)model, 0x00, 0x01F7, 0x01, 0x80, ((GameLiving)attackTarget).HealthPercent);
+						player.Out.SendCombatAnimation(owner, attackTarget, (ushort)model, 0x00, player.Out.BowShoot, 0x01, 0x80, ((GameLiving)attackTarget).HealthPercent);
 					}
 
 					interruptDuration = owner.AttackSpeed(attackWeapon);
@@ -1867,10 +1867,10 @@ namespace DOL.GS
 					}
 
 					// calculate Penetrating Arrow damage reduction
-					if (owner is GamePlayer && attackTarget is GameLiving)
+					if (attackTarget is GameLiving)
 					{
-						int PALevel = ((GamePlayer)owner).GetAbilityLevel(Abilities.PenetratingArrow);
-						if (PALevel > 0)
+						int PALevel = owner.GetAbilityLevel(Abilities.PenetratingArrow);
+						if ((PALevel > 0) && (owner.RangeAttackType != eRangeAttackType.Long))
 						{
 							GameSpellEffect bladeturn = null;
 							lock (((GameLiving)attackTarget).EffectList)
@@ -2008,7 +2008,7 @@ namespace DOL.GS
 						int model = (attackWeapon == null ? 0 : attackWeapon.Model);
 						foreach (GamePlayer player in owner.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 						{
-							player.Out.SendCombatAnimation(owner, null, (ushort)model, 0x00, 0x01F4, attackSpeed, 0x80, 0x00);
+							player.Out.SendCombatAnimation(owner, null, (ushort)model, 0x00, player.Out.BowPrepare, attackSpeed, 0x80, 0x00);
 						}
 
 						if (owner.RangeAttackType == eRangeAttackType.RapidFire)
@@ -2900,7 +2900,7 @@ namespace DOL.GS
 			// "The blow penetrated the magical barrier!"
 			if (bladeturn != null)
 			{
-				if (stealthStyle // stealth styles pierce bladeturn
+				if (stealthStyle || ad.Attacker.RangeAttackType == eRangeAttackType.Long // stealth styles pierce bladeturn
 				|| (ad.AttackType == AttackData.eAttackType.Ranged && ad.Target != bladeturn.SpellHandler.Caster && ad.Attacker is GamePlayer && ((GamePlayer)ad.Attacker).HasAbility(Abilities.PenetratingArrow)))  // penetrating arrow attack pierce bladeturn
 				{
 					if (ad.Target is GamePlayer) ((GamePlayer)ad.Target).Out.SendMessage("The blow penetrated the magical barrier!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
@@ -4732,12 +4732,68 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		#endregion
 		#region Abilities
 		/// <summary>
+		/// Holds all abilities of the player (KeyName -> Ability)
+		/// </summary>
+		protected readonly Hashtable m_abilities = new Hashtable();
+
+		/// <summary>
+		/// Asks for existence of specific ability
+		/// </summary>
 		/// <param name="keyName">KeyName of ability</param>
 		/// <returns>Has player this ability</returns>
-		/// </summary>
 		public virtual bool HasAbility(string keyName)
 		{
-			return false;
+			return m_abilities[keyName] is Ability;
+		}
+
+		/// <summary>
+		/// Checks if player has ability to use items of this type
+		/// </summary>
+		/// <param name="item"></param>
+		/// <returns>true if player has ability to use item</returns>
+		public virtual bool HasAbilityToUseItem(ItemTemplate item)
+		{
+			return GameServer.ServerRules.CheckAbilityToUseItem(this, item);
+		}
+
+		/// <summary>
+		/// returns ability of player or null if non existent
+		/// </summary>
+		/// <param name="abilityKey"></param>
+		/// <returns></returns>
+		public Ability GetAbility(string abilityKey)
+		{
+			return m_abilities[abilityKey] as Ability;
+		}
+
+		/// <summary>
+		/// returns the level of ability
+		/// if 0 is returned, the ability is non existent on player
+		/// </summary>
+		/// <param name="keyName"></param>
+		/// <returns></returns>
+		public int GetAbilityLevel(string keyName)
+		{
+			Ability ab = m_abilities[keyName] as Ability;
+			if (ab == null)
+				return 0;
+			if (ab.Level == 0)
+				return 1; // at least level 1 if ab has level 0
+			return ab.Level;
+		}
+
+		/// <summary>
+		/// returns all abilities in a copied list
+		/// </summary>
+		/// <returns></returns>
+		public IList GetAllAbilities()
+		{
+			lock (m_abilities.SyncRoot)
+			{
+				ArrayList list = new ArrayList();
+				list.AddRange(m_abilities.Values);
+				return list;
+			}
 		}
 
 		/// <summary>

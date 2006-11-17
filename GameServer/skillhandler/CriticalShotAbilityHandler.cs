@@ -44,16 +44,16 @@ namespace DOL.GS.SkillHandler
 			// cancel rapid fire effect
 			RapidFireEffect rapidFire = (RapidFireEffect)player.EffectList.GetOfType(typeof(RapidFireEffect));
 			if (rapidFire != null)
-			{
 				rapidFire.Cancel(false);
-			}
 
 			// cancel sure shot effect
 			SureShotEffect sureShot = (SureShotEffect)player.EffectList.GetOfType(typeof(SureShotEffect));
 			if (sureShot != null)
-			{
 				sureShot.Cancel(false);
-			}
+
+			TrueshotEffect trueshot = (TrueshotEffect)player.EffectList.GetOfType(typeof(TrueshotEffect));
+			if (trueshot != null)
+				trueshot.Cancel(false);
 
 			if (player.AttackState)
 			{

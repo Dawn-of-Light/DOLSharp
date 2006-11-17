@@ -188,6 +188,7 @@ namespace DOL.GS
 		/// </summary>
 		public sealed class TimeManager
 		{
+			private readonly object m_lockObject = new object();
 			/// <summary>
 			/// Defines a logger for this class.
 			/// </summary>
@@ -520,7 +521,7 @@ namespace DOL.GS
 				if (m_timeThread == null)
 					return null;
 				
-				lock (m_timeThread)
+				lock (m_lockObject)
 				{
 					return Util.GetThreadStack(m_timeThread);
 				}
@@ -555,7 +556,7 @@ namespace DOL.GS
 				if (m_timeThread == null)
 					return false;
 
-				lock (m_timeThread)
+				lock (m_lockObject)
 				{
 					m_running = false;
 

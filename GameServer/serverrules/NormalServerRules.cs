@@ -214,12 +214,18 @@ namespace DOL.GS.ServerRules
 			return player.Realm == item.Realm;
 		}
 
-		public override bool CheckAbilityToUseItem(GamePlayer player, ItemTemplate item)
+		/// <summary>
+		/// Check a living has the ability to use an item
+		/// </summary>
+		/// <param name="living"></param>
+		/// <param name="item"></param>
+		/// <returns></returns>
+		public override bool CheckAbilityToUseItem(GameLiving living, ItemTemplate item)
 		{
-			if(player == null || item == null)
+			if(living == null || item == null)
 				return false;
 
-			if(item.Realm != 0 && item.Realm != player.Realm)
+			if(item.Realm != 0 && item.Realm != living.Realm)
 				return false;
 
 			//armor
@@ -228,13 +234,13 @@ namespace DOL.GS.ServerRules
 				int armorAbility = -1;
 				switch ((eRealm)item.Realm)
 				{
-					case eRealm.Albion   : armorAbility = player.GetAbilityLevel(Abilities.AlbArmor); break;
-					case eRealm.Hibernia : armorAbility = player.GetAbilityLevel(Abilities.HibArmor); break;
-					case eRealm.Midgard  : armorAbility = player.GetAbilityLevel(Abilities.MidArmor); break;
+					case eRealm.Albion   : armorAbility = living.GetAbilityLevel(Abilities.AlbArmor); break;
+					case eRealm.Hibernia : armorAbility = living.GetAbilityLevel(Abilities.HibArmor); break;
+					case eRealm.Midgard  : armorAbility = living.GetAbilityLevel(Abilities.MidArmor); break;
 					default: // use old system
-						armorAbility = Math.Max(armorAbility, player.GetAbilityLevel(Abilities.AlbArmor));
-						armorAbility = Math.Max(armorAbility, player.GetAbilityLevel(Abilities.HibArmor));
-						armorAbility = Math.Max(armorAbility, player.GetAbilityLevel(Abilities.MidArmor));
+						armorAbility = Math.Max(armorAbility, living.GetAbilityLevel(Abilities.AlbArmor));
+						armorAbility = Math.Max(armorAbility, living.GetAbilityLevel(Abilities.HibArmor));
+						armorAbility = Math.Max(armorAbility, living.GetAbilityLevel(Abilities.MidArmor));
 						break;
 				}
 				switch ((eObjectType)item.Object_Type)
@@ -295,21 +301,23 @@ namespace DOL.GS.ServerRules
 
 					//misc
 				case eObjectType.Magical         : return true;
-				case eObjectType.Shield          : return player.GetAbilityLevel(Abilities.Shield) >= item.Type_Damage;
+				case eObjectType.Shield          : return living.GetAbilityLevel(Abilities.Shield) >= item.Type_Damage;
 				case eObjectType.Bolt            : abilityCheck = Abilities.Weapon_Crossbow; break;
 				case eObjectType.Arrow           : otherCheck = new string[] { Abilities.Weapon_CompositeBows, Abilities.Weapon_Longbows, Abilities.Weapon_RecurvedBows, Abilities.Weapon_Shortbows }; break;
-				case eObjectType.Poison          : return player.GetModifiedSpecLevel(Specs.Envenom) > 0;
-				case eObjectType.Instrument      : return player.HasAbility(Abilities.Weapon_Instruments);
+				case eObjectType.Poison          : return living.GetModifiedSpecLevel(Specs.Envenom) > 0;
+				case eObjectType.Instrument      : return living.HasAbility(Abilities.Weapon_Instruments);
 				//TODO: different shield sizes
 			}
 
 			//player.Out.SendMessage("ability: \""+abilityCheck+"\"; type: "+item.Object_Type, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			if(abilityCheck != null && player.HasAbility(abilityCheck))
+			if(abilityCheck != null && living.HasAbility(abilityCheck))
 				return true;
 
-			foreach(string str in otherCheck)
-				if(player.HasAbility(str))
+			foreach (string str in otherCheck)
+			{
+				if (living.HasAbility(str))
 					return true;
+			}
 
 			return false;
 		}

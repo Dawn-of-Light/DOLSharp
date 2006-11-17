@@ -36,8 +36,25 @@ namespace DOL.GS.PacketHandler
 		/// Constructs a new PacketLib for Version 1.86 clients
 		/// </summary>
 		/// <param name="client">the gameclient this lib is associated with</param>
-		public PacketLib186(GameClient client):base(client)
+		public PacketLib186(GameClient client)
+			: base(client)
 		{
+		}
+
+		/// <summary>
+		/// The bow prepare animation
+		/// </summary>
+		public override int BowPrepare
+		{
+			get { return 16000; }
+		}
+
+		/// <summary>
+		/// The bow shoot animation
+		/// </summary>
+		public override int BowShoot
+		{
+			get { return 16003; }
 		}
 	}
 }

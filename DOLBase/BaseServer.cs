@@ -316,7 +316,8 @@ namespace DOL
 			Socket sock = null;
 			try
 			{
-				if (m_listen == null) {
+				if (m_listen == null)
+				{
 					return;
 				}
 				sock = m_listen.EndAccept(ar);
@@ -356,11 +357,13 @@ namespace DOL
 			catch
 			{
 				if (sock != null) // don't leave the socket open on exception
-					try {sock.Close();} catch {}
+					try { sock.Close(); }
+					catch { }
 			}
 			finally
 			{
-				if (m_listen != null) {
+				if (m_listen != null)
+				{
 					m_listen.BeginAccept(m_asyncAcceptCallback, this);
 				}
 			}
@@ -397,16 +400,17 @@ namespace DOL
 			{
 				if (m_listen != null)
 				{
-					m_listen.Close();
-					m_listen = null; //clear referenz
-					if(log.IsDebugEnabled)
+					Socket socket = m_listen;
+					m_listen = null;
+					socket.Close();
+					if (log.IsDebugEnabled)
 						log.Debug("Server is no longer listening for incoming connections!");
 				}
 			}
-			catch(Exception e)
+			catch (Exception e)
 			{
-				if(log.IsErrorEnabled)
-					log.Error("Stop",e);
+				if (log.IsErrorEnabled)
+					log.Error("Stop", e);
 			}
 			
 			if(m_clients != null)

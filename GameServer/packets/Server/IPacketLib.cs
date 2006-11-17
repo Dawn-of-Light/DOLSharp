@@ -549,5 +549,13 @@ namespace DOL.GS.PacketHandler
 		void CheckLengthHybridSkillsPacket(ref GSTCPPacketOut pak, ref int maxSkills, ref int first);
 		void SendListCastersSpell();
 		void SendCrash(string str);
+		/// <summary>
+		/// The bow prepare animation
+		/// </summary>
+		int BowPrepare { get;}
+		/// <summary>
+		/// The bow shoot animation
+		/// </summary>
+		int BowShoot { get;}
 	}
 }

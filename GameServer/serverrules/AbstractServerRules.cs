@@ -336,18 +336,18 @@ namespace DOL.GS.ServerRules
 			return exp;
 		}
 
-		public virtual bool CheckAbilityToUseItem(GamePlayer player, ItemTemplate item)
+		public virtual bool CheckAbilityToUseItem(GameLiving living, ItemTemplate item)
 		{
-			if (player == null || item == null)
+			if (living == null || item == null)
 				return false;
 
 			//armor
 			if (item.Object_Type >= (int)eObjectType._FirstArmor && item.Object_Type <= (int)eObjectType._LastArmor)
 			{
 				int bestLevel = -1;
-				bestLevel = Math.Max(bestLevel, player.GetAbilityLevel(Abilities.AlbArmor));
-				bestLevel = Math.Max(bestLevel, player.GetAbilityLevel(Abilities.HibArmor));
-				bestLevel = Math.Max(bestLevel, player.GetAbilityLevel(Abilities.MidArmor));
+				bestLevel = Math.Max(bestLevel, living.GetAbilityLevel(Abilities.AlbArmor));
+				bestLevel = Math.Max(bestLevel, living.GetAbilityLevel(Abilities.HibArmor));
+				bestLevel = Math.Max(bestLevel, living.GetAbilityLevel(Abilities.MidArmor));
 
 				switch ((eObjectType)item.Object_Type)
 				{
@@ -407,11 +407,11 @@ namespace DOL.GS.ServerRules
 
 				//misc
 				case eObjectType.Magical: return true;
-				case eObjectType.Shield: return player.GetAbilityLevel(Abilities.Shield) >= item.Type_Damage;
+				case eObjectType.Shield: return living.GetAbilityLevel(Abilities.Shield) >= item.Type_Damage;
 				case eObjectType.Arrow: otherCheck = new string[] { Abilities.Weapon_CompositeBows, Abilities.Weapon_Longbows, Abilities.Weapon_RecurvedBows, Abilities.Weapon_Shortbows }; break;
 				case eObjectType.Bolt: otherCheck = new string[] { Abilities.Weapon_Crossbow }; break;
-				case eObjectType.Poison: return player.GetModifiedSpecLevel(Specs.Envenom) > 0;
-				case eObjectType.Instrument: return player.HasAbility(Abilities.Weapon_Instruments);
+				case eObjectType.Poison: return living.GetModifiedSpecLevel(Specs.Envenom) > 0;
+				case eObjectType.Instrument: return living.HasAbility(Abilities.Weapon_Instruments);
 
 				//housing
 				case eObjectType.GardenObject: return true;
@@ -423,19 +423,25 @@ namespace DOL.GS.ServerRules
 			if (item.Item_Type == Slot.RIGHTHAND || item.Item_Type == Slot.LEFTHAND)
 			{
 				foreach (string check in oneHandCheck)
-					if (player.HasAbility(check))
+				{
+					if (living.HasAbility(check))
 						return true;
+				}
 			}
 			else if (item.Item_Type == Slot.TWOHAND)
 			{
 				foreach (string check in twoHandCheck)
-					if (player.HasAbility(check))
+				{
+					if (living.HasAbility(check))
 						return true;
+				}
 			}
 
 			foreach (string check in otherCheck)
-				if (player.HasAbility(check))
+			{
+				if (living.HasAbility(check))
 					return true;
+			}
 
 			return false;
 		}
