@@ -76,7 +76,7 @@ namespace DOL.GS.Quests
         /// <returns>generated BaseQuestPart be altered further via AddTrigger, AddRequirement, AddAction</returns>
         public BaseQuestPart AddInteraction(GameNPC npc, int minstep, int maxstep, eTextType textType, String triggerKeyword, String message)
         {            
-            BaseQuestPart questPart = new BaseQuestPart(questType, npc, textType, message);
+            BaseQuestPart questPart = new BaseQuestPart(questType, npc);
 
             eTriggerType triggerType = (triggerKeyword == null) ? eTriggerType.Interact : eTriggerType.Whisper;
             questPart.AddTrigger(triggerType, triggerKeyword);            
@@ -100,13 +100,15 @@ namespace DOL.GS.Quests
                 }
             }
 
+			questPart.AddAction(eActionType.Message, textType, message);
+
             AddQuestPart(questPart);
             return questPart;
         }
 
         public BaseQuestPart AddOnGiveItem(GameNPC npc, int minstep, int maxstep, ItemTemplate item, eTextType textType, String message)
         {
-            BaseQuestPart questPart = new BaseQuestPart(questType, npc, textType, message);
+            BaseQuestPart questPart = new BaseQuestPart(questType, npc);
 
             questPart.AddTrigger(eTriggerType.GiveItem, null, item);            
 
@@ -128,6 +130,9 @@ namespace DOL.GS.Quests
                     questPart.AddRequirement(eRequirementType.QuestGivable, questType);
                 }
             }
+
+			questPart.AddAction(eActionType.Message, textType, message);
+
             AddQuestPart(questPart);
             return questPart;
         }
@@ -139,22 +144,23 @@ namespace DOL.GS.Quests
 
         public BaseQuestPart AddOnQuestContinue(GameNPC npc, eTextType textType, String message)
         {           
-            BaseQuestPart questPart = new BaseQuestPart(questType, npc, textType, message);
+            BaseQuestPart questPart = new BaseQuestPart(questType, npc);
 
             questPart.AddTrigger(eTriggerType.ContinueQuest, null, QuestType);
             questPart.AddRequirement(eRequirementType.QuestPending, QuestType);
-
+			questPart.AddAction(eActionType.Message, textType, message);
             AddQuestPart(questPart);
             return questPart;
         }
 
         public BaseQuestPart AddOnQuestAbort(GameNPC npc, eTextType textType, String message)
         {
-            BaseQuestPart questPart = new BaseQuestPart(questType, npc, textType, message);
+            BaseQuestPart questPart = new BaseQuestPart(questType, npc);
 
             questPart.AddTrigger(eTriggerType.AbortQuest, null, QuestType);
             questPart.AddRequirement(eRequirementType.QuestPending, QuestType);            
             questPart.AddAction(eActionType.AbortQuest, QuestType);
+			questPart.AddAction(eActionType.Message, textType, message);
 
             AddQuestPart(questPart);
             return questPart;
@@ -162,12 +168,13 @@ namespace DOL.GS.Quests
 
         public BaseQuestPart AddOnQuestAccept(GameNPC npc, eTextType textType, String message)
         {
-            BaseQuestPart questPart = new BaseQuestPart(questType, npc, textType, message);
+            BaseQuestPart questPart = new BaseQuestPart(questType, npc);
 
             questPart.AddRequirement(eRequirementType.QuestPending, QuestType, eComparator.Not);
             questPart.AddRequirement(eRequirementType.QuestGivable, QuestType);
             questPart.AddTrigger(eTriggerType.AcceptQuest, null, QuestType);
             questPart.AddAction(eActionType.GiveQuest, QuestType);
+			questPart.AddAction(eActionType.Message, textType, message);
 
             AddQuestPart(questPart);
             return questPart;
@@ -175,10 +182,11 @@ namespace DOL.GS.Quests
 
         public BaseQuestPart AddOnQuestDecline(GameNPC npc, eTextType textType, String message)
         {
-            BaseQuestPart questPart = new BaseQuestPart(questType, npc, textType, message);
+            BaseQuestPart questPart = new BaseQuestPart(questType, npc);
 
             questPart.AddRequirement(eRequirementType.QuestPending, QuestType, eComparator.Not);
             questPart.AddTrigger(eTriggerType.DeclineQuest, null, QuestType);
+			questPart.AddAction(eActionType.Message, textType, message);
 
             AddQuestPart(questPart);
             return questPart;
@@ -203,13 +211,14 @@ namespace DOL.GS.Quests
 
         public BaseQuestPart CreateQuestPart(GameNPC npc, eTextType textType, string message)
         {
-            BaseQuestPart questPart = new BaseQuestPart(questType, npc,textType,message);            
+            BaseQuestPart questPart = new BaseQuestPart(questType, npc);
+			questPart.AddAction(eActionType.Message, textType, message);
             return questPart;
         }
 
         public BaseQuestPart CreateQuestPart(GameNPC npc, int step, eTextType textType, string message)
         {
-            BaseQuestPart questPart = new BaseQuestPart(questType, npc, textType, message);                        
+            BaseQuestPart questPart = new BaseQuestPart(questType, npc);                        
 
             if (step > 0)            
                 questPart.AddRequirement(eRequirementType.QuestStep, questType, step, eComparator.Equal);            
@@ -220,6 +229,8 @@ namespace DOL.GS.Quests
                 questPart.AddRequirement(eRequirementType.QuestPending, questType, null, eComparator.Not);
                 questPart.AddRequirement(eRequirementType.QuestGivable, questType);
             }
+			questPart.AddAction(eActionType.Message, textType, message);
+
             return questPart;
         }
     }
