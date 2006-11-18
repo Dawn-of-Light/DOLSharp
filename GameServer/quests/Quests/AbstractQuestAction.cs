@@ -16,17 +16,11 @@ namespace DOL.GS.Quests
         private eActionType actionType;
         private Object q;
         private Object p;
-        private BaseQuestPart questPart;
-
+		private GameNPC defaultNPC;
+		private Type questType;
+        
         /// <summary>
-        /// QuestPart of action
-        /// </summary>
-        public BaseQuestPart QuestPart
-        {
-            get { return questPart; }
-        }
-        /// <summary>
-        /// a#: action type
+        /// The action type
         /// </summary>
         public eActionType ActionType
         {
@@ -38,6 +32,7 @@ namespace DOL.GS.Quests
         public Object P
         {
             get { return p; }
+			set { p = value; }
         }
         /// <summary>
         /// Second Action Variable
@@ -45,23 +40,58 @@ namespace DOL.GS.Quests
         public Object Q
         {
             get { return q; }
+			set { q = value; }
         }
 
-        /// <summary>
-        /// returns the NPC of the action
-        /// </summary>
-        public GameNPC NPC
-        {
-            get { return QuestPart.NPC; }
-        }
+		/// <summary>
+		/// returns the NPC of the action
+		/// </summary>
+		public GameNPC NPC
+		{
+			get { return defaultNPC; }
+		}
 
+		/// <summary>
+		/// Gets the type of the quest.
+		/// </summary>
+		/// <value>The type of the quest.</value>
+		public Type QuestType
+		{
+			get { return questType; }
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AbstractQuestAction"/> class.
+		/// </summary>
+		/// <param name="questPart">The quest part.</param>
+		/// <param name="actionType">Type of the action.</param>
+		/// <param name="p">The parameter p.</param>
+		/// <param name="q">The parameter q.</param>
         public AbstractQuestAction(BaseQuestPart questPart, eActionType actionType, Object p, Object q)
         {
-            this.questPart = questPart;
+            this.defaultNPC = questPart.NPC;
+			this.questType = questPart.QuestType;
             this.actionType = actionType;
             this.q = q;
             this.p = p;
         }
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AbstractQuestAction"/> class.
+		/// </summary>
+		/// <param name="npc">The default NPC.</param>
+		/// <param name="questType">Default Type of the quest.</param>
+		/// <param name="actionType">Type of the action.</param>
+		/// <param name="p">The parameter p.</param>
+		/// <param name="q">The parameter q.</param>
+		public AbstractQuestAction(GameNPC npc,Type questType, eActionType actionType, Object p, Object q)
+		{
+			this.defaultNPC = npc;
+			this.questType = questType;
+			this.actionType = actionType;
+			this.q = q;
+			this.p = p;
+		}
 
         /// <summary>
         /// Action performed 

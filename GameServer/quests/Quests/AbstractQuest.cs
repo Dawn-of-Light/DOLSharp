@@ -152,6 +152,15 @@ namespace DOL.GS.Quests
 		}
 
 		/// <summary>
+		/// Gets or sets the player doing the quest
+		/// </summary>
+		public GamePlayer QuestPlayer
+		{
+			get	{ return m_questPlayer; }
+			set	{ m_questPlayer = value; }
+		}
+
+		/// <summary>
 		/// Retrieves the name of the quest
 		/// </summary>
 		public virtual string Name

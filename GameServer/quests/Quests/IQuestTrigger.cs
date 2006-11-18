@@ -28,9 +28,7 @@ namespace DOL.GS.Quests
         /// <remarks>
         /// This method will be called multiple times, so use AddHandlerUnique to make
         /// sure only one handler is actually registered
-        /// </remarks>
-        /// <param name="HandleInteractEvents"></param>
-        /// <param name="HandleNotifyEvents"></param>
+        /// </remarks>        
         void Register();
         
         /// <summary>
@@ -39,9 +37,7 @@ namespace DOL.GS.Quests
         /// <remarks>
         /// Don't remove handlers that will be used by other triggers etc.
         /// This is rather difficult since we don't know which events other triggers use.
-        /// </remarks>
-        /// <param name="HandleInteractEvents"></param>
-        /// <param name="HandleNotifyEvents"></param>
+        /// </remarks>        
         void Unregister();
     }
 }

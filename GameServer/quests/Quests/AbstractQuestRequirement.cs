@@ -11,19 +11,13 @@ namespace DOL.GS.Quests
     /// </summary>
     public abstract class AbstractQuestRequirement : IQuestRequirement
     {
-        private eRequirementType type;
+
+		private eRequirementType type;
         private Object n;
         private Object v;
         private eComparator comparator;
-        private BaseQuestPart questPart;
-
-        /// <summary>
-        /// QuestPart of requirement
-        /// </summary>
-        public BaseQuestPart QuestPart
-        {
-            get { return questPart; }
-        }
+		private GameNPC defaultNPC;
+		private Type questType;
 
         /// <summary>
         /// R: RequirmentType
@@ -38,6 +32,7 @@ namespace DOL.GS.Quests
         public Object N
         {
             get { return n; }
+			set { n = value; }
         }
         /// <summary>
         /// V: Secoond Requirmenet Variable
@@ -45,6 +40,7 @@ namespace DOL.GS.Quests
         public Object V
         {
             get { return v; }
+			set { v = value; }
         }
         /// <summary>
         /// C: Requirement Comparator
@@ -59,8 +55,13 @@ namespace DOL.GS.Quests
         /// </summary>
         public GameNPC NPC
         {
-            get { return QuestPart.NPC; }
+            get { return defaultNPC; }
         }
+
+		public Type QuestType
+		{
+			get { return questType; }
+		}
 
         /// <summary>
         /// Creates a new QuestRequirement and does some basich compativilite checks for the parameters
@@ -71,7 +72,25 @@ namespace DOL.GS.Quests
         /// <param name="comp">Comparator used if some values are veeing compared</param>
         public AbstractQuestRequirement(BaseQuestPart questPart, eRequirementType type, Object n, Object v, eComparator comp)
         {
-            this.questPart = questPart;
+            this.defaultNPC = questPart.NPC;
+			this.questType = questPart.QuestType;
+            this.type = type;
+            this.n = n;
+            this.v = v;
+            this.comparator = comp;
+        }
+
+		/// <summary>
+        /// Creates a new QuestRequirement and does some basich compativilite checks for the parameters
+        /// </summary>
+        /// <param name="type">RequirementType</param>
+        /// <param name="n">First Requirement Variable, meaning depends on RequirementType</param>
+        /// <param name="v">Second Requirement Variable, meaning depends on RequirementType</param>
+        /// <param name="comp">Comparator used if some values are veeing compared</param>
+        public AbstractQuestRequirement(GameNPC defaultNPC, Type questType, eRequirementType type, Object n, Object v, eComparator comp)
+        {
+            this.defaultNPC = defaultNPC;
+			this.questType = questType;
             this.type = type;
             this.n = n;
             this.v = v;
