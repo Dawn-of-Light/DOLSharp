@@ -1,211 +1,243 @@
 using System;
-using System.Text;
+using System.Collections;
 using DOL.Events;
 using DOL.Database;
 using DOL.GS.PacketHandler;
 using DOL.AI.Brain;
 using log4net;
 using System.Reflection;
+using DOL.GS.Scripts;
 
 namespace DOL.GS.Quests
-{    
-    /// <summary>
-    /// Actiontype defines a list of actiontypes to be used qith questparts.
-    /// Depending on actiontype P and Q will have special
-    /// meaning look at documentation of each actiontype for details       
-    /// </summary>
-    ///<remarks>
-    /// Syntax: ... P:eEmote(eEmote.Yes) ... Parameter P must be of Type
-    /// eEmote and has the default value of "eEmote.Yes" (used if no value is passed).
-    /// If no default value is defined value must be passed along with action.
-    /// </remarks>
-    public enum eActionType : byte
-    {
-        /// <summary>
-        /// ANIM : emote P:eEmote is performed by GameLiving:Q(Player)
-        /// </summary>
-        /// <remarks>TO let player perform animation Q must be null.
-        /// Tested</remarks>
-        Animation,
-        /// <summary>
-        /// ATTA : Player is attacked with aggroamount P:int by monster Q:GameNPC(NPC)
-        /// </summary>
-        /// <remarks>Tested</remarks>
-        Attack,
-        /// <summary>
-        /// GameNPC Q:GameNPC(NPC) walks to point P:GameLocation(player)
-        /// </summary>        
-        WalkTo,
-        /// <summary>
-        /// BROA : Message P:string is broadcasted to all players
-        /// </summary>        
-        Broadcast,
-        /*
-        CAST : monster's p## spell is casted, or entire q## monster index casts its        
-        CINV : p## item is created and placed in player's backback  // q## (functional ?)         
-        CLAS : class is set to p##
-        DEGE : p## monster index degenerates
-         * */
-        /// <summary>
-        /// DIAG : displays message P :string in a dialog box with an OK button
-        /// </summary>
-        Dialog,
-        /// <summary>
-        /// Displays a custom dialog with message P:string and CustomDialogresponse Q:CustomDialogResponse
-        /// To Accept/Abort Quests use OfferQuest/OfferQuestAbort
-        /// </summary>
-        /// <remarks>Tested</remarks>
-        CustomDialog,
-        /// <summary>
-        /// DINV : destroys Q:int(1) instances of item P:ItemTemplate in inventory        
-        /// </summary>
-        DestroyItem,
-        //DORM : enters dormant mode (unused)        
-        /// <summary>
-        /// DROP : item P:ItemTemplate is dropped on the ground
-        /// </summary>
-        DropItem,
-        /// <summary>
-        ///  EMOT : displays message P:string localy without monster's name (local channel)
-        /// </summary>
-        /// <remarks>Tested</remarks>
-        Emote,
-        // FGEN : forces monster index p## to spawn one monster from slot q## (uncheck max)        
-        /// <summary>
-        /// FQST : quest P:Type is set as completed for player
-        /// </summary>
-        /// <remarks>Tested</remarks>
-        FinishQuest,
-        /// <summary>
-        /// GCAP : gives cap experience p## times (q## should be set to 1 to avoid bugs)                         
-        /// </summary>
-        //GiveXPCap,
-        /// <summary>
-        /// GCPR : gives P:long coppers
-        /// </summary>
-        GiveGold,
-        /// <summary>
-        /// TCPR : takes P:long coppers
-        /// </summary>
-        TakeGold,
-        /// <summary>
-        /// GEXP : gives P:long experience points
-        /// </summary>
-        GiveXP,
-        /// <summary>
-        /// GIVE : NPC gives item P:ItemTemplate to player
-        /// if NPC!= null NPC will give item to player, otherwise it appears mysteriously :)
-        /// </summary>
-        /// <remarks>Tested</remarks>
-        GiveItem,
-        /// <summary>
-        /// NPC takes Q:int instances of item P:ItemTemplate from player
-        /// default for q## is 1
-        /// </summary>
-        /// <remarks>Tested</remarks>
-        TakeItem,
-        /// <summary>
-        /// QST : NPC assigns quest P:Type to player        
-        /// </summary>
-        /// <remarks>Tested</remarks>
-        GiveQuest,
-        /// <summary>
-        /// Quest P:Type is offered to player via customdialog with message Q:string
-        /// if player accepts GamePlayerEvent.AcceptQuest is fired, else GamePlayerEvent.RejectQuest
-        /// </summary>
-        /// <remarks>Tested</remarks>
-        OfferQuest,
-        /// <summary>
-        /// Quest P:Type abort is offered to player via customdialog with message Q:string
-        /// if player accepts GamePlayerEvent.AbortQuest is fired, else GamePlayerEvent.ContinueQuest
-        /// </summary>
-        /// <remarks>Tested</remarks>
-        OfferQuestAbort,
-        /*
-            GSPE : monster index p## speed is set to q##
-            GUIL : guild is set to p## (not player's guilds)
-            IATK : monster index p## attacks player, or first monster from monster index q##
-            INFC : reduces faction p## by q## points
-            IPFC : increases faction p## by q## points
-            IPTH : monster index p## is assigned to path q##
-         * */
-        /// <summary>
-        /// IQST : Quest P:Type is set to step Q:int
-        /// </summary>
-        /// <remarks>Tested</remarks>
-        SetQuestStep,
-        /// <summary>
-        /// KQST : Aborts quest P:Type
-        /// </summary>  
-        /// <remarks>Tested</remarks>
-        AbortQuest,
+{
+	/// <summary>
+	/// Type of textoutput this one is used for general text messages within questpart.   
+	/// </summary>
+	public enum eTextType : byte
+	{
+		/// <summary>
+		/// No output at all
+		/// </summary>
+		None = 0x00,
+		/// <summary>
+		/// EMOT : display the text localy without monster's name (local channel)
+		/// </summary>
+		/// <remarks>Tested</remarks>
+		Emote = 0x01,
+		/// <summary>
+		/// BROA : broadcast the text in the entire zone (broadcast channel)
+		/// </summary>
+		Broadcast = 0x02,
+		/// <summary>
+		/// DIAG : display the text in a dialog box with an OK button
+		/// </summary>
+		Dialog = 0x03,		
+		/// <summary>
+		/// READ : open a description (bracket) windows saying what is written on the item
+		/// </summary>
+		Read = 0x05,		
+	}
 
-        //    LIST : activates action list p## (action lists described in a following section)
-        /// <summary>
-        /// MGEN : Monster P:GameNPC will spawn considering all its requirements
-        /// </summary>
-        /// <remarks>Tested</remarks>
-        MonsterSpawn,
-        /// <summary>
-        /// Monster P:GameNPC will unspawn considering all its requirements
-        /// </summary>
-        /// <remarks>Tested</remarks>
-        MonsterUnspawn,
-        /*
-            NFAC : sets faction p## to a negative value specified by q##
-            ORDE : changes trade order to p## one (???)
-            PATH : path is set to p##
-            PFAC : sets faction p## to a positive value specified by q##
-         * */
-        /// <summary>
-        /// READ : open a description (bracket) windows reading message:P
-        /// </summary>
-        Read,
-        /*
-            RUMO : says a random quest teaser from zones p## and q##
-            UOUT : set the fort p## to the realm q##
-            SGEN : monster index p## will spawn slot q## up to its max        
-         * */
-        /// <summary>
-        /// SINV : Item P:ItemTemplate is replaceb by item Q:ItemTemplate in inventory of player
-        /// </summary>
-        /// <remarks>Tested</remarks>
-        ReplaceItem,
-        /// <summary>
-        /// SQST : Increments queststep of quest P:Type
-        /// </summary>
-        /// <remarks>Tested</remarks>
-        IncQuestStep,
-        /// <summary>
-        /// TALK : says message P:string locally (local channel)
-        /// </summary>
-        /// <remarks>Tested</remarks>
-        Talk,
-        /// <summary>
-        /// TELE : teleports player to destination P:GameLocation with a random distance of Q:int(0)
-        /// Default for radius is 0
-        /// </summary>
-        Teleport,
-        /// <summary>
-        /// TIMR : regiontimer P:RegionTimer starts to count Q:int milliseconds        
-        /// </summary>
-        CustomTimer,
-        /// <summary>
-        /// TMR# :  timer P:string starts to count Q:int milliseconds
-        /// </summary>
-        /// <remarks>Tested</remarks>
-        Timer,
-        /*                
-            TREA : drops treasure index p##
-            * */
-        /// <summary>
-        /// WHIS : etalk p## appears in a window, words with brackets are keywords
-        /// </summary>
-        //Whisper        
-        /*
-            XFER : changes to talk index p##. MUST be placed in entry 19 !
-            */
-    }
+	/// <summary>
+	/// Actiontype defines a list of actiontypes to be used qith questparts.
+	/// Depending on actiontype P and Q will have special
+	/// meaning look at documentation of each actiontype for details       
+	/// </summary>
+	///<remarks>
+	/// Syntax: ... P:eEmote(eEmote.Yes) ... Parameter P must be of Type
+	/// eEmote and has the default value of "eEmote.Yes" (used if no value is passed).
+	/// If no default value is defined value must be passed along with action.
+	/// </remarks>
+	public enum eActionType : byte
+	{
+		/// <summary>
+		/// ANIM : emote P:eEmote is performed by GameLiving:Q(Player)[NPC's ID:string]
+		/// </summary>
+		/// <remarks>TO let player perform animation Q must be null.
+		/// Tested</remarks>
+		Animation,
+		/// <summary>
+		/// ATTA : Player is attacked with aggroamount P:int(Player.Level/2)[string] by monster Q:GameNPC(NPC)[NPC's ID:string]
+		/// </summary>
+		/// <remarks>Tested</remarks>
+		Attack,
+		/// <summary>
+		/// GameNPC Q:GameNPC(NPC)[NPC's ID:string] walks to point P:GameLocation(player)
+		/// </summary>        
+		WalkTo,
+		/// <summary>
+		/// GameNPC Q:GameNPC(NPC)[NPC's ID:string] walks to spawnpoint
+		/// </summary>        
+		WalkToSpawn,
+		/// <summary>
+		/// GameLiving Q:GameLiving(NPC)[NPC's ID:string] jumps immediatly to point P:GameLocation(player)
+		/// </summary>        
+		MoveTo,		
+		/*
+		CAST : monster's p## spell is casted, or entire q## monster index casts its        
+		CINV : p## item is created and placed in player's backback  // q## (functional ?)         
+		CLAS : class is set to p##
+		DEGE : p## monster index degenerates
+		 * */		
+		/// <summary>
+		/// Displays a custom dialog with message P:string and CustomDialogresponse Q:CustomDialogResponse
+		/// To Accept/Abort Quests use OfferQuest/OfferQuestAbort
+		/// </summary>
+		/// <remarks>Tested</remarks>
+		CustomDialog,
+		/// <summary>
+		/// DINV : destroys Q:int(1)[string] instances of item P:ItemTemplate[Item's ID_nb:string] in inventory        
+		/// </summary>
+		DestroyItem,
+		//DORM : enters dormant mode (unused)        
+		/// <summary>
+		/// DROP : item P:ItemTemplate[Item's ID_nb:string] is dropped on the ground
+		/// </summary>
+		DropItem,		
+		// FGEN : forces monster index p## to spawn one monster from slot q## (uncheck max)        
+		/// <summary>
+		/// FQST : quest P:Type[Typename:string](Current Quest) is set as completed for player
+		/// </summary>
+		/// <remarks>Tested</remarks>
+		FinishQuest,
+		/// <summary>
+		/// GCAP : gives cap experience p## times (q## should be set to 1 to avoid bugs)                         
+		/// </summary>
+		//GiveXPCap,
+		/// <summary>
+		/// GCPR : gives P:long[string] coppers
+		/// </summary>
+		GiveGold,
+		/// <summary>
+		/// TCPR : takes P:long[string] coppers
+		/// </summary>
+		TakeGold,
+		/// <summary>
+		/// GEXP : gives P:long[string] experience points
+		/// </summary>
+		GiveXP,
+		/// <summary>
+		/// GIVE : NPC Q gives item P:ItemTemplate[Item's ID_nb:string] to player
+		/// if NPC!= null NPC will give item to player, otherwise it appears mysteriously :)
+		/// </summary>
+		/// <remarks>Tested</remarks>
+		GiveItem,
+		/// <summary>
+		/// NPC takes Q:int[string] instances of item P:ItemTemplate[Item's ID_nb:string] from player
+		/// default for q## is 1
+		/// </summary>
+		/// <remarks>Tested</remarks>
+		TakeItem,
+		/// <summary>
+		/// QST : Q:GameNPC(NPC) assigns quest P:Type[Typename:string](Current Quest) to player        
+		/// </summary>
+		/// <remarks>Tested</remarks>
+		GiveQuest,
+		/// <summary>
+		/// Quest P:Type[Typename:string](Current Quest) is offered to player via customdialog with message Q:string ny NPC
+		/// if player accepts GamePlayerEvent.AcceptQuest is fired, else GamePlayerEvent.RejectQuest
+		/// </summary>
+		/// <remarks>Tested</remarks>
+		OfferQuest,
+		/// <summary>
+		/// Quest P:Type[Typename:string](Current Quest) abort is offered to player via customdialog with message Q:string by NPC
+		/// if player accepts GamePlayerEvent.AbortQuest is fired, else GamePlayerEvent.ContinueQuest
+		/// </summary>
+		/// <remarks>Tested</remarks>
+		OfferQuestAbort,
+		/*
+			GSPE : monster index p## speed is set to q##            
+			IATK : monster index p## attacks player, or first monster from monster index q##
+			INFC : reduces faction p## by q## points
+			IPFC : increases faction p## by q## points            
+		 * */
+		/// <summary>
+		/// GUIL : guild of Q:GameLiving(NPC)[NPC's ID:string] is set to P:string (not player's guilds)
+		/// </summary>
+		SetGuildName,
+		/// <summary>
+		/// IPTH : monster Q:GameNPC(NPC)[NPC's ID:string] is assigned to path P:PathPoint
+		/// </summary>
+		SetMonsterPath,
+		/// <summary>
+		/// IQST : Quest P:Type[Typename:string](Current Quest) is set to step Q:int[string]
+		/// </summary>
+		/// <remarks>Tested</remarks>
+		SetQuestStep,
+		/// <summary>
+		/// KQST : Aborts quest P:Type[Typename:string](Current Quest)
+		/// </summary>  
+		/// <remarks>Tested</remarks>
+		AbortQuest,
+		/// <summary>
+		/// MES : Displays a message P:string of Texttype Q:TextType(Emote)
+		/// </summary>
+		Message,
+		//    LIST : activates action list p## (action lists described in a following section)
+		/// <summary>
+		/// MGEN : Monster P:GameLiving[NPC's ID:string] will spawn considering all its requirements
+		/// </summary>
+		/// <remarks>Tested</remarks>
+		MonsterSpawn,
+		/// <summary>
+		/// Monster P:GameLiving[NPC's ID:string] will unspawn considering all its requirements
+		/// </summary>
+		/// <remarks>Tested</remarks>
+		MonsterUnspawn,
+		/*
+			NFAC : sets faction p## to a negative value specified by q##
+			ORDE : changes trade order to p## one (???)
+			PATH : path is set to p##
+			PFAC : sets faction p## to a positive value specified by q##		
+			RUMO : says a random quest teaser from zones p## and q##
+			UOUT : set the fort p## to the realm q##
+			SGEN : monster index p## will spawn slot q## up to its max        
+		 * */
+		/// <summary>
+		/// SINV : Item P:ItemTemplate[Item's Id_nb:string] is replaceb by item Q:ItemTemplate[Item's Id_nb:string] in inventory of player
+		/// </summary>
+		/// <remarks>Tested</remarks>
+		ReplaceItem,
+		/// <summary>
+		/// SQST : Increments queststep of quest P:Type[TypeName:string](Current Quest)
+		/// </summary>
+		/// <remarks>Tested</remarks>
+		IncQuestStep,
+		/// <summary>
+		/// TALK : Q:GameLiving(NPC) says message P:string locally (local channel)
+		/// </summary>
+		/// <remarks>Tested</remarks>
+		Talk,
+		/// <summary>
+		/// TELE : teleports player to destination P:GameLocation with a random distance of Q:int(0)[string]
+		/// </summary>
+		Teleport,
+		/// <summary>
+		/// TIMR : regiontimer P:RegionTimer starts to count Q:int[string] milliseconds        
+		/// </summary>
+		CustomTimer,
+		/// <summary>
+		/// TMR# :  timer P:string starts to count Q:int[string] milliseconds
+		/// </summary>
+		/// <remarks>Tested</remarks>
+		Timer,                        
+		//TREA : drops treasure index p##        
+		/// <summary>
+		/// WHIS : Q:GameLiving(NPC) whispers message P:string to player
+		/// </summary>
+		Whisper
+		//XFER : changes to talk index p##. MUST be placed in entry 19 !            
+	}
+
+
+	public enum eSelectorType : byte {
+		QuestType,
+		GameLiving,
+		GameNPC,
+		Item,
+		Location,
+		Area
+	}		
 
     /// <summary>
     /// If one trigger and all requirements are fulfilled the corresponding actions of
@@ -218,6 +250,10 @@ namespace DOL.GS.Quests
 
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
+		/// <summary>
+		/// Player Constant will be replaced by players name in output messages.
+		/// </summary>
+		const string PLAYER = "{Player}";
         /// <summary>
         /// Constant used to store timerid in RegionTimer.Properties
         /// </summary>
@@ -226,15 +262,29 @@ namespace DOL.GS.Quests
         /// Constant used to store GameLiving Source in RegionTimer.Properties
         /// </summary>
         const string TIMER_SOURCE = "timersource";
-
+		
+		/// 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="BaseQuestAction"/> class.
+		/// </summary>
+		/// <param name="questPart">Parent QuestPart of this Action</param>
+		/// <param name="actionType">Type of action</param>
+		/// <param name="p">Action Parameter</param>
+		/// <param name="q">Action Parameter</param>
         public BaseQuestAction(BaseQuestPart questPart,eActionType actionType, Object p, Object q): base(questPart, actionType, p, q)
         {            
             switch (ActionType)
             {
                 case eActionType.SetQuestStep:
                     {
-                        if (!(P is Type))
-                            throw new ArgumentException("Variable P must be questType for quest based actions. ActionType:" + ActionType, "P");
+                        if (P is string && ((string)P).Length > 0)
+							P = ScriptMgr.GetType(Convert.ToString(P));
+
+						if (!(P is Type))
+							P = QuestType;
+
+						if (Q is string)
+							Q = Convert.ToInt32(Q);
 
                         if (!(Q is int))
                             throw new ArgumentException("Variable Q must be queststep for quest based actions. ActionType:" + ActionType, "Q");
@@ -242,18 +292,35 @@ namespace DOL.GS.Quests
                     }
                 case eActionType.IncQuestStep:
                 case eActionType.FinishQuest:
-                case eActionType.AbortQuest:
-                case eActionType.GiveQuest:
+                case eActionType.AbortQuest:                
                     {
+                        if (P is string && ((string)P).Length > 0)
+							P = ScriptMgr.GetType(Convert.ToString(P));
+
                         if (!(P is Type))
-                            throw new ArgumentException("Variable P must be questType for quest based actions. ActionType:" + ActionType, "P");
+							P = QuestType;
                         break;
                     }
+				case eActionType.GiveQuest:
+					{
+                        if (P is string && ((string)P).Length > 0)
+							P = ScriptMgr.GetType(Convert.ToString(P));
+
+						if (!(P is Type))
+							P = QuestType;
+
+						Q = QuestMgr.ResolveNPC(Q, NPC);
+
+						break;
+					}
                 case eActionType.OfferQuest:
                 case eActionType.OfferQuestAbort:
                     {
+                        if (P is string && ((string)P).Length > 0)
+							P = ScriptMgr.GetType(Convert.ToString(P));
+
                         if (!(P is Type))
-                            throw new ArgumentException("Variable P must be questType for for quest based actions. ActionType:" + ActionType, "P");
+							P = QuestType;
 
                         if (!(Q is string))
                             throw new ArgumentException("Variable Q must be message(string) for quest based actions. ActionType:" + ActionType, "Q");
@@ -264,34 +331,52 @@ namespace DOL.GS.Quests
                 case eActionType.DropItem:
                 case eActionType.DestroyItem:
                     {
+						if (P is string)
+							P = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), Convert.ToString(P));
+
                         if (!(P is ItemTemplate))
                             throw new ArgumentException("Variable P must be itemtemplate for actionType:" + ActionType, "P");
                         break;
                     }
                 case eActionType.ReplaceItem:
                     {
+						if (P is string)
+							P = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), Convert.ToString(P));
+
                         if (!(P is ItemTemplate))
                             throw new ArgumentException("Variable P must be itemtemplate for actionType:" + ActionType, "P");
-                        if (!(Q is ItemTemplate))
-                            throw new ArgumentException("Variable Q must be itemtemplate for actionType:" + ActionType, "P");
+
+						if (Q is string)
+							Q = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), Convert.ToString(Q));
+
+						if (!(Q is ItemTemplate))
+                            throw new ArgumentException("Variable Q must be itemtemplate for actionType:" + ActionType, "Q");
                         break;
                     }
                 case eActionType.GiveXP:
                     {
-                        if (!(Q is Int64))
-                            throw new ArgumentException("Variable Q must be xp(long) for actionType:" + ActionType, "Q");
+						if (P is string)
+							P = Convert.ToInt64(P);
+
+                        if (!(P is Int64))
+                            throw new ArgumentException("Variable P must be xp(long) for actionType:" + ActionType, "P");
                         break;
                     }
 
                 case eActionType.GiveGold:
                 case eActionType.TakeGold:
                     {
+						if (P is string)
+							P = Convert.ToInt64(P);
+
                         if (!(P is Int64))
                             throw new ArgumentException("Variable P must be copper(long) for actionType:" + ActionType, "P");
                         break;
                     }
                 case eActionType.Talk:
                     {
+						Q = QuestMgr.ResolveLiving(Q, NPC);
+
                         if (!(P is string))
                             throw new ArgumentException("Variable P must be string for actionType:" + ActionType, "P");
                         break;
@@ -307,43 +392,44 @@ namespace DOL.GS.Quests
 
                         break;
                     }
-                case eActionType.Dialog:
-                case eActionType.Emote:
+                case eActionType.Message:                
                     {
+						if (!(Q is eTextType))
+							throw new ArgumentException("Variable Q must be eTextType for actionType:" + ActionType, "Q");
+
                         if (!(P is string))
                             throw new ArgumentException("Variable P must be string for actionType:" + ActionType, "P");
                         break;
                     }
                 case eActionType.Animation:
                     {
+						if (P is string)
+							P = (eEmote) Convert.ToInt32(P);
+
                         if (!(P is eEmote))
                             throw new ArgumentException("Variable P must be eEmote for actionType:" + ActionType, "P");
-                        break;
-                    }
-                case eActionType.Attack:
-                    {
-                        if (!(P is int))
-                            throw new ArgumentException("Variable P must be int for actionType:" + ActionType, "P");
-                        break;
+
+						Q = QuestMgr.ResolveLiving(Q);						
+
+						break;
                     }                
-                case eActionType.Broadcast:
-                case eActionType.Read:
-                    {
-                        if (!(P is string))
-                            throw new ArgumentException("Variable P must be string for actionType:" + ActionType, "P");
-                        break;
-                    }
                 case eActionType.Teleport:
                     {
                         if (!(P is GameLocation))
                             throw new ArgumentException("Variable P must be GameLocation for actionType:" + ActionType, "P");
-                        break;
+                        
+						if (Q is string)
+							Q = Convert.ToInt32(Q);
+						break;
+
                     }
                 case eActionType.CustomTimer:
                     {
                         if (!(P is RegionTimer))
                             throw new ArgumentException("Variable P must be RegionTimer for actionType:" + ActionType, "P");
 
+						if (Q is string)
+							Q = Convert.ToInt32(Q);
                         if (!(Q is int))
                             throw new ArgumentException("Variable Q must be delay(int) for actionType:" + ActionType, "Q");
 
@@ -351,22 +437,383 @@ namespace DOL.GS.Quests
                     }
                 case eActionType.Timer:
                     {
+						if (Q is string)
+							Q = Convert.ToInt32(Q);
+
                         if (!(Q is int))
                             throw new ArgumentException("Variable Q must be delay(int) for actionType:" + ActionType, "Q");
                         if (!(P is string))
                             throw new ArgumentException("Variable P must be timername(string) for actionType:" + ActionType, "P");
                         break;
                     }
-                case eActionType.MonsterSpawn:
-                    if (!(P is GameNPC))
-                        throw new ArgumentException("Variable P must be GameNPC for actionType:" + ActionType, "P");
-                    break;
-                case eActionType.MonsterUnspawn:
-                    if (!(P is GameNPC))
-                        throw new ArgumentException("Variable P must be GameNPC for actionType:" + ActionType, "P");
-                    break;
-            }            
+                case eActionType.MonsterSpawn:					
+					// we have to fetch the mob from database since it doesn't exist in the region yet.
+					P = QuestMgr.ResolveLiving(P,NPC,true);
+					break;
+                case eActionType.MonsterUnspawn:					
+					P = QuestMgr.ResolveLiving(P,NPC);
+					break;
+				case eActionType.SetMonsterPath:
+					//if (!(P is PathPoint))
+					//	throw new ArgumentException("Variable P must be PathPoint for actionType:" + ActionType, "P");
+
+					Q = QuestMgr.ResolveNPC(Q,NPC);
+					break;
+				case eActionType.SetGuildName:									
+					if (!(P is string))
+						throw new ArgumentException("Variable P must be string for actionType:" + ActionType, "P");
+
+					Q = QuestMgr.ResolveLiving(Q,NPC);
+					break;
+				case eActionType.Whisper:
+					
+					Q = QuestMgr.ResolveLiving(Q, NPC);
+
+					if (!(P is string))
+						throw new ArgumentException("Variable P must be string for actionType:" + ActionType, "P");
+					break;
+            }
         }
+		
+		public static bool IncreaseQuestStep(GamePlayer player, Type questType)
+		{
+			AbstractQuest playerQuest = player.IsDoingQuest(questType) as AbstractQuest;
+			if (playerQuest != null)
+			{
+				playerQuest.Step = playerQuest.Step++;
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		public static bool SetQuestStep(GamePlayer player, Type questType, byte step)
+		{
+			AbstractQuest playerQuest = player.IsDoingQuest(questType) as AbstractQuest;
+			if (playerQuest != null)
+			{
+				playerQuest.Step = step;
+				return true;
+			}
+			else
+				return false;
+		}
+
+		public static bool GiveItem(GamePlayer player, ItemTemplate item, GameNPC npc)
+		{
+            InventoryItem inventoryItem = new InventoryItem(item);
+			player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, inventoryItem);
+			if (npc == null)
+			{
+				player.Out.SendMessage("You receive " + item.Name + ".", eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
+			}
+			else
+			{
+				player.Out.SendMessage("You receive " + item.Name + " from " + npc.GetName(0, false) + ".", eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
+			}
+			return true;
+		}
+
+		public static bool ReplaceItem(GamePlayer player, ItemTemplate oldItem, ItemTemplate newItem)
+		{
+            if (player.Inventory.RemoveTemplate(oldItem.Id_nb, 1, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+            {
+                InventoryItem inventoryItem = new InventoryItem(newItem);
+                return player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, inventoryItem);                
+            }
+            else
+                return false;
+		}
+
+		public static bool TakeItem(GamePlayer player, ItemTemplate itemToRemove, int count, GameNPC npc)
+		{
+			Hashtable dataSlots = new Hashtable(10);
+			lock(player.Inventory)
+			{
+				ICollection allBackpackItems = player.Inventory.GetItemRange(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
+				
+				bool result = false;
+				foreach (InventoryItem item in allBackpackItems)
+				{
+					if (item.Name == itemToRemove.Name)
+					{
+						
+						if(item.IsStackable) // is the item is stackable
+						{
+							if(item.Count >= count)
+							{
+								if(item.Count == count)
+								{
+									dataSlots.Add(item, null);
+								}
+								else
+								{
+									dataSlots.Add(item, count);
+								}
+								result = true;
+								break;
+							}
+							else
+							{
+								dataSlots.Add(item, null);
+								count-= item.Count;
+							}
+						}
+						else
+						{
+							dataSlots.Add(item, null);
+							if(count <= 1)
+							{
+								result = true;
+								break;
+							}
+							else
+							{
+								count--;
+							}
+						}
+					}
+				}
+				if(result == false)
+				{
+					return false;
+				}
+			}
+
+			GamePlayerInventory playerInventory = player.Inventory as GamePlayerInventory;
+			playerInventory.BeginChanges();
+			foreach(DictionaryEntry de in dataSlots)
+			{
+				if(de.Value == null)
+				{
+					playerInventory.RemoveItem((InventoryItem)de.Key);
+				}
+				else
+				{
+					playerInventory.RemoveCountFromStack((InventoryItem)de.Key, (int)de.Value);
+				}
+			}
+			playerInventory.CommitChanges();
+			
+			if (npc != null)
+			{
+				player.Out.SendMessage("You give " + itemToRemove.Name + " to " + npc.GetName(0, false) + ".", eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
+			}
+			else
+			{
+				player.Out.SendMessage("You give " + itemToRemove.Name + ".", eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
+			}
+			
+			return true;
+		}
+
+		public static bool DropItem(GamePlayer player, ItemTemplate item)
+		{
+            InventoryItem inventoryItem = new InventoryItem(item);
+			player.CreateItemOnTheGround(inventoryItem);
+			player.Out.SendMessage(item.Name + " drops in front of you.", eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
+			return true;
+		}
+
+		public static bool DestroyItem(GamePlayer player, ItemTemplate itemToDestroy, int count)
+		{	
+			Hashtable dataSlots = new Hashtable(10);
+			lock(player.Inventory)
+			{
+				ICollection allBackpackItems = player.Inventory.GetItemRange(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
+				
+				bool result = false;
+				foreach (InventoryItem item in allBackpackItems)
+				{
+					if (item.Name == itemToDestroy.Name)
+					{
+
+						if(item.IsStackable) // is the item is stackable
+						{
+							if(item.Count >= count)
+							{
+								if(item.Count == count)
+								{
+									dataSlots.Add(item, null);
+								}
+								else
+								{
+									dataSlots.Add(item, count);
+								}
+								result = true;
+								break;
+							}
+							else
+							{
+								dataSlots.Add(item, null);
+								count-= item.Count;
+							}
+						}
+						else
+						{
+							dataSlots.Add(item, null);
+							if(count <= 1)
+							{
+								result = true;
+								break;
+							}
+							else
+							{
+								count--;
+							}
+						}
+					}
+				}
+				if(result == false)
+				{
+					return false;
+				}
+			}
+
+			GamePlayerInventory playerInventory = player.Inventory as GamePlayerInventory;
+			playerInventory.BeginChanges();
+			foreach(DictionaryEntry de in dataSlots)
+			{
+				if(de.Value == null)
+				{
+					playerInventory.RemoveItem((InventoryItem)de.Key);
+				}
+				else
+				{
+					playerInventory.RemoveCountFromStack((InventoryItem)de.Key, (int)de.Value);
+				}
+			}
+			playerInventory.CommitChanges();
+
+
+			player.Out.SendMessage(itemToDestroy.Name + " is destroyed.", eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
+			
+			return true;
+		}
+
+		public static bool SendMessage(GamePlayer player, string message, eTextType textType)
+		{
+			message = GetPersonalizedMessage(message, player);
+			switch (textType)
+			{
+				case eTextType.Dialog:
+					player.Out.SendCustomDialog(message, null);
+					break;
+				case eTextType.Emote:
+					player.Out.SendMessage(message, eChatType.CT_Emote, eChatLoc.CL_SystemWindow);
+					break;
+				case eTextType.Broadcast:
+					foreach (GameClient clientz in WorldMgr.GetAllPlayingClients())
+					{
+						clientz.Player.Out.SendMessage(message, eChatType.CT_Broadcast, eChatLoc.CL_SystemWindow);
+					}
+					break;
+				case eTextType.Read:
+					player.Out.SendMessage("You read: \"" + message + "\"", eChatType.CT_Emote, eChatLoc.CL_PopupWindow);
+					break;
+				default:
+					return false;
+			}
+			return true;
+		}
+
+		public static bool Animation(GameLiving actor, eEmote emote)
+		{
+			foreach (GamePlayer nearPlayer in WorldMgr.GetPlayersCloseToObject(actor, WorldMgr.VISIBILITY_DISTANCE,false))
+			{
+				nearPlayer.Out.SendEmoteAnimation(actor, emote);
+			}
+			return true;
+		}
+
+		public static bool Attack(GamePlayer player, GameNPC attacker, int aggroAmount)
+		{
+			if (attacker.Brain is IAggressiveBrain)
+			{
+				IAggressiveBrain brain = (IAggressiveBrain)attacker.Brain;
+				brain.AddToAggroList(player, aggroAmount);
+				return true;
+			}
+			else
+			{
+				log.Warn("Non agressive mob " + attacker.Name + " was order to attack player. This goes against the first directive and will not happen");
+				return false;
+			}
+		}
+
+		public static bool Teleport(GamePlayer player, GameLocation location, int radius) {
+			if (location.Name != null)
+            {
+                player.Out.SendMessage(player + " is being teleported to " + location.Name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+            }
+        	
+        	location.X += Util.Random(-radius, radius);
+        	location.Y += Util.Random(-radius, radius);
+            return player.MoveTo(location.RegionID, location.X,location.Y,location.Z, location.Heading);			
+		}
+
+		public static bool Talk(GamePlayer player, GameNPC npc, string message)
+		{
+			message = GetPersonalizedMessage(message, player);
+			npc.TurnTo(player);
+			npc.SayTo(player, message);
+			return true;
+		}
+
+		public static bool Whisper(GamePlayer player, GameNPC npc, string message)
+		{
+			message = GetPersonalizedMessage(message, player);
+			npc.TurnTo(player);
+			npc.Whisper(player, message);
+			return true;
+		}
+
+		/*public static bool SetMovementPath(GameNPC npc, PathPoint p)
+		{
+			if (npc.Brain is RoundsBrain)
+			{
+				npc.CurrentWayPoint = p;
+				MovementMgr.Instance.MoveOnPath(npc, npc.MaxSpeed);
+				return true;
+			}
+			else
+			{
+				log.Warn("Mob without RoundsBrain was assigned to walk along Path");
+				return false;
+			}
+		}*/
+
+		public static bool MonsterSpawn(GameLiving living)
+		{
+			if (living.AddToWorld())
+			{
+				// appear with a big buff of magic
+				foreach (GamePlayer visPlayer in WorldMgr.GetPlayersCloseToObject(living, WorldMgr.VISIBILITY_DISTANCE,false))
+				{
+					visPlayer.Out.SendSpellCastAnimation(living, 1, 20);
+				}
+				return true;
+			}
+			else
+				return false;
+
+		}
+
+		public static bool MonsterUnspawn(GameLiving living)
+		{
+			return living.RemoveFromWorld();			
+		}
+
+		public static bool Timer(GamePlayer player, string timername, int delay)
+		{
+			RegionTimer timer = new RegionTimer(player, new RegionTimerCallback(QuestTimerCallBack));
+			timer.Properties.setProperty(TIMER_ID, timername);
+			timer.Properties.setProperty(TIMER_SOURCE, player);
+			timer.Start(delay);
+			return true;
+		}
 
         /// <summary>
         /// Action performed 
@@ -381,173 +828,80 @@ namespace DOL.GS.Quests
             switch (ActionType)
             {
                 case eActionType.IncQuestStep:
-                    {
-                        Type requirementQuestType = (Type)P;
-                        AbstractQuest playerQuest = player.IsDoingQuest(requirementQuestType) as AbstractQuest;
-                        playerQuest.Step++;
+                    {                        
+						IncreaseQuestStep(player, (Type)P);                        
                         break;
                     }
                 case eActionType.SetQuestStep:
                     {
-                        Type requirementQuestType = (Type)P;
-                        AbstractQuest playerQuest = player.IsDoingQuest(requirementQuestType) as AbstractQuest;
-                        playerQuest.Step = Convert.ToInt16(Q);
+						SetQuestStep(player, (Type)P, Convert.ToByte(Q));                        
                         break;
                     }
                 case eActionType.FinishQuest:
-                    {
-                        Type requirementQuestType = (Type)P;
-                        AbstractQuest playerQuest = player.IsDoingQuest(requirementQuestType) as AbstractQuest;
-                        if (playerQuest != null)
-                        {
-                            playerQuest.FinishQuest();
-                        }
+                    {                        
+						AbstractQuest quest = player.IsDoingQuest((Type)P);
+						if (quest != null)
+							quest.FinishQuest();						
                         break;
                     }
                 case eActionType.GiveQuest:
-                    {
-                        Type requirementQuestType = (Type)P;
-                        if (NPC.CanGiveQuest(requirementQuestType, player) > 0)
-                            NPC.GiveQuest(requirementQuestType, player, 1);
+                    {                        						
+						QuestMgr.GiveQuestToPlayer((Type)P, player, (GameNPC)Q);
                         break;
                     }
                 case eActionType.OfferQuest:
                     {
-                        string message = BaseQuestPart.GetPersonalizedMessage(Convert.ToString(Q),player);
-                        Type questType = (Type)P;
-                        player.Out.SendQuestSubscribeCommand(NPC, QuestMgr.GetIDForQuestType(questType), message);
+                        string message = GetPersonalizedMessage(Convert.ToString(Q),player);                        
+						QuestMgr.ProposeQuestToPlayer((Type)P, message, player,NPC);
                         break;
                     }
                 case eActionType.OfferQuestAbort:
                     {
-                        string message = BaseQuestPart.GetPersonalizedMessage(Convert.ToString(Q),player);
-                        Type questType = (Type)P;
-                        player.Out.SendQuestAbortCommand(NPC, QuestMgr.GetIDForQuestType(questType), message);
+                        string message = GetPersonalizedMessage(Convert.ToString(Q),player);                        
+						QuestMgr.AbortQuestToPlayer((Type)P, message, player, NPC);
                         break;
                     }
                 case eActionType.AbortQuest:
-                    {
-                        Type questType = (Type)P;
-                        AbstractQuest quest = player.IsDoingQuest(questType);
-                        if (quest != null)
-                        {
-                            quest.AbortQuest();
-                        }
+                    {                        
+						AbstractQuest quest = player.IsDoingQuest((Type)P);
+						if (quest != null)
+							quest.AbortQuest();
                         break;
                     }
                 case eActionType.GiveItem:
                     {
-                        ItemTemplate itemTemplate = (ItemTemplate)P;
-
-                        InventoryItem item = new InventoryItem(itemTemplate);
-                        if (player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, item))
-                        {
-                            if (NPC == null)
-                            {
-                                player.Out.SendMessage("You receive " + itemTemplate.GetName(0, false) + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                            }
-                            else
-                            {
-                                player.Out.SendMessage("You receive " + itemTemplate.GetName(0, false) + " from " + NPC.GetName(0, false) + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                            }
-                        }
-                        else
-                        {
-                            player.CreateItemOnTheGround(item);
-                            player.Out.SendMessage("Your Inventory is full. You couldn't recieve " + itemTemplate.GetName(0, false) + ", so it's been placed on the ground. Pick it up as soon as possible or it will vanish in a few minutes.", eChatType.CT_Important, eChatLoc.CL_PopupWindow);
-                        }
+                        ItemTemplate item = (ItemTemplate)P;
+						GameNPC npc = Q is GameNPC ? (GameNPC) Q : NPC;
+						GiveItem(player, item, npc);
                         break;
                     }
 
                 case eActionType.ReplaceItem:
                     {
-                        ItemTemplate newItemTemplate = (ItemTemplate)Q;
-                        ItemTemplate oldItemTemplate = (ItemTemplate)P;
-
-                        InventoryItem item = new InventoryItem(newItemTemplate);
-                        lock (player.Inventory)
-                        {
-                            if (player.Inventory.RemoveTemplate(oldItemTemplate.Id_nb, 1, eInventorySlot.Min_Inv, eInventorySlot.Max_Inv))
-                            {
-                                if (!player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, item))
-                                {
-                                    //if inventory was full
-                                    player.CreateItemOnTheGround(item);
-                                    player.Out.SendMessage(item.GetName(1, true) + " drops in front of you.", eChatType.CT_Important, eChatLoc.CL_PopupWindow);
-                                }
-                            }
-                        }
-                        break;
+                        ItemTemplate newItem = (ItemTemplate)Q;
+                        ItemTemplate oldItem = (ItemTemplate)P;
+					   ReplaceItem(player, oldItem, newItem);
+                  
+                       break;
                     }
                 case eActionType.TakeItem:
                     {
-                        ItemTemplate itemTemplate = (ItemTemplate)P;
+                        ItemTemplate itemToRemove = (ItemTemplate)P;
                         int amount = Q != null ? Convert.ToInt32(Q) : 1;
-
-                        lock (player.Inventory)
-                        {
-                            InventoryItem item = player.Inventory.GetFirstItemByID(itemTemplate.Id_nb, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
-                            //remove item/s from player
-                            while (amount > 0 && item != null)
-                            {
-                                if (item.Count > amount)
-                                {
-                                    player.Inventory.RemoveCountFromStack(item, amount);
-                                    amount = 0;
-                                }
-                                else
-                                {
-                                    amount -= item.Count;
-                                    player.Inventory.RemoveItem(item);
-                                    item = player.Inventory.GetFirstItemByID(itemTemplate.Id_nb, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
-                                }
-                            }
-
-                            if (NPC != null)
-                            {
-                                player.Out.SendMessage("You give " + itemTemplate.GetName(0, false) + " to " + NPC.GetName(0, false) + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                            }
-                            else
-                            {
-                                player.Out.SendMessage("You give " + itemTemplate.GetName(0, false) + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                            }
-                        }
+						TakeItem(player, itemToRemove, amount,NPC);                        
                         break;
                     }
                 case eActionType.DropItem:
                     {
-                        ItemTemplate itemTemplate = (ItemTemplate)P;
-
-                        InventoryItem item = new InventoryItem(itemTemplate);
-                        player.CreateItemOnTheGround(item);
-                        player.Out.SendMessage(itemTemplate.GetName(1, true) + " drops in front of you.", eChatType.CT_Important, eChatLoc.CL_PopupWindow);
-
+                        ItemTemplate item = (ItemTemplate)P;
+						DropItem(player, item);                        
                         break;
                     }
                 case eActionType.DestroyItem:
                     {
-                        ItemTemplate itemTemplate = (ItemTemplate)P;
+                        ItemTemplate itemToDestroy = (ItemTemplate)P;
                         int amount = Q != null ? Convert.ToInt32(Q) : 1;
-
-                        lock (player.Inventory)
-                        {
-                            InventoryItem item = player.Inventory.GetFirstItemByID(itemTemplate.Id_nb, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
-                            while (amount > 0 && item != null)
-                            {
-                                if (item.Count > amount)
-                                {
-                                    player.Inventory.RemoveCountFromStack(item, amount);
-                                    amount = 0;
-                                }
-                                else
-                                {
-                                    amount -= item.Count;
-                                    player.Inventory.RemoveItem(item);
-                                    item = player.Inventory.GetFirstItemByID(itemTemplate.Id_nb, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
-                                }
-                            }
-                        }
-                        player.Out.SendMessage(itemTemplate.GetName(0, true) + " is destroyed.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						DestroyItem(player, itemToDestroy, amount);
                         break;
                     }
                 case eActionType.GiveXP:
@@ -570,130 +924,107 @@ namespace DOL.GS.Quests
                         break;
                     }
                 case eActionType.Talk:
-                    {
-                        string message =BaseQuestPart.GetPersonalizedMessage(Convert.ToString(P),player);
-                        NPC.TurnTo(player);
-                        NPC.SayTo(player, message);
+                    {						                
+						Talk(player, (GameNPC)Q,Convert.ToString(P));
                         break;
                     }
-
+				case eActionType.Whisper:
+					{									
+						Whisper(player, (GameNPC)Q, Convert.ToString(P));						
+						break;
+					}
                 case eActionType.CustomDialog:
                     {
-                        string message = BaseQuestPart.GetPersonalizedMessage(Convert.ToString(P),player);
+                        string message = GetPersonalizedMessage(Convert.ToString(P),player);
                         CustomDialogResponse response = Q as CustomDialogResponse;
                         player.Out.SendCustomDialog(message, response);
                         break;
                     }
-                case eActionType.Dialog:
-                    {
-                        string message = BaseQuestPart.GetPersonalizedMessage(Convert.ToString(P),player);
-                        player.Out.SendCustomDialog(message, null);
+                case eActionType.Message:
+                    {						                        
+						SendMessage(player,Convert.ToString(P), (eTextType) Q);
                         break;
-                    }
-                case eActionType.Emote:
-                    {
-                        string message = BaseQuestPart.GetPersonalizedMessage(Convert.ToString(P),player);
-                        player.Out.SendMessage(message, eChatType.CT_Emote, eChatLoc.CL_SystemWindow);
-                        break;
-                    }
+                    }                
                 case eActionType.Animation:
-                    {
-                        eEmote emote = (eEmote)P;
+                    {                        
                         GameLiving actor = Q is GameLiving ? (GameLiving)Q : player;
-                        foreach (GamePlayer nearPlayer in actor.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-                        {
-                            nearPlayer.Out.SendEmoteAnimation(actor, emote);
-                        }
+                        Animation(actor, (eEmote)P);
                         break;
                     }
                 case eActionType.Attack:
                     {
-                        GameNPC attacker = (Q is GameNPC) ? (GameNPC)Q : NPC;
-                        if (attacker.Brain is IAggressiveBrain)
-                        {
-                            int aggroAmount = P != null ? Convert.ToInt32(P) : 10;
-                            IAggressiveBrain brain = (IAggressiveBrain)attacker.Brain;
-                            brain.AddToAggroList(player, aggroAmount);
-                        }
-                        else
-                        {
-                            log.Warn("Non agressive mob " + attacker.Name + " was order to attack player in Quest " + QuestPart.QuestType + ". This goes against the first directive and will not happen");
-                        }
+						GameNPC attacker = (GameNPC)Q;
+						int aggroAmount = P != null ? Convert.ToInt32(P) : player.Level << 1;
+						Attack(player, attacker, aggroAmount);
                         break;
                     }
                 case eActionType.WalkTo:
                     {
-                        GameNPC npc = (Q is GameNPC) ? (GameNPC)Q : NPC;
-                        IPoint3D location = (P is IPoint3D) ? (IPoint3D)P : new Point3D(player.X, player.Y, player.Z);
+						GameNPC npc = (GameNPC)Q;
+                        IPoint3D location = (P is IPoint3D) ? (IPoint3D)P : player;
                         npc.WalkTo(location, npc.CurrentSpeed);
                         break;
                     }
-                case eActionType.Broadcast:
-                    {
-                        string message =BaseQuestPart.GetPersonalizedMessage(Convert.ToString(P),player);
-                        foreach (GameClient clientz in WorldMgr.GetAllPlayingClients())
-                        {
-                            clientz.Player.Out.SendMessage(message, eChatType.CT_Broadcast, eChatLoc.CL_SystemWindow);
-                        }
-                        break;
-                    }
-                case eActionType.Read:
-                    {
-                        string message = BaseQuestPart.GetPersonalizedMessage(Convert.ToString(P),player);
-                        player.Out.SendMessage("[ " + message + " ]", eChatType.CT_Emote, eChatLoc.CL_PopupWindow);
-                        break;
-                    }
+				case eActionType.WalkToSpawn:
+					{
+						GameNPC npc = (GameNPC)Q;
+						npc.WalkToSpawn();
+						break;
+					}
+				case eActionType.MoveTo:
+					{
+						GameLiving npc = (GameLiving)Q;
+						if (P is GameLocation)
+						{
+							GameLocation location = (GameLocation)P;
+							npc.MoveTo(location.RegionID, location.X,location.Y,location.Z, location.Heading);
+						}
+						else
+						{
+							npc.MoveTo(player.CurrentRegionID, player.X,player.Y,player.Z, (ushort)player.Heading);							
+						}						
+						
+						break;
+					}                                
                 case eActionType.Teleport:
-                    {
-                        GameLocation location = (GameLocation)P;
+                    {                        
                         int radius = Q != null ? Convert.ToInt32(Q) : 0;
-
-                        if (location.Name != null)
-                        {
-                            player.Out.SendMessage(player + " is being teleported to " + location.Name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                        }
-                        player.MoveTo(location.RegionID, location.X + Util.Random(0 - radius, radius), location.Y + Util.Random(0 - radius, radius), location.Z, location.Heading);
+                        Teleport(player, (GameLocation)P, radius);
                         break;
                     }
                 case eActionType.CustomTimer:
                     {
-                        RegionTimer timer = (RegionTimer)P;
-                        int delay = Convert.ToInt32(Q);
-                        timer.Start(delay);
+                        RegionTimer timer = (RegionTimer)P;                        
+                        timer.Start(Convert.ToInt32(Q));
                         break;
                     }
                 case eActionType.Timer:
-                    {
-                        int delay = Convert.ToInt32(Q);
-                        string timername = Convert.ToString(P);
-                        RegionTimer timer = new RegionTimer(player, new RegionTimerCallback(QuestTimerCallBack));
-                        timer.Properties.setProperty(TIMER_ID, timername);
-                        timer.Properties.setProperty(TIMER_SOURCE, player);
-                        timer.Start(delay);
+                    {                        
+						Timer(player, Convert.ToString(P), Convert.ToInt32(Q));                        
                         break;
                     }
                 case eActionType.MonsterSpawn:
-                    {
-                        GameNPC npc = (GameNPC)P;
-                        if (npc.ObjectState == GameObject.eObjectState.Inactive)
-                        {
-                            npc.AddToWorld();
-
-                            // appear with a big buff of magic
-                            foreach (GamePlayer visPlayer in npc.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-                            {
-                                visPlayer.Out.SendSpellCastAnimation(npc, 1, 20);
-                            }
-                        }
+                    {                        
+						MonsterSpawn((GameLiving)P);
                         break;
                     }
 
                 case eActionType.MonsterUnspawn:
-                    {
-                        GameNPC npc = (GameNPC)P;
-                        npc.RemoveFromWorld();
+                    {						
+						MonsterUnspawn((GameLiving)P);
                         break;
                     }
+				case eActionType.SetMonsterPath:
+					{
+						//SetMovementPath((GameNPC)Q,(PathPoint)P);
+						break;
+					}
+				case eActionType.SetGuildName:
+					{
+						GameLiving npc = (GameLiving)Q;
+						npc.GuildName = Convert.ToString(P);
+						break;
+					}
             }
         }
 
@@ -719,6 +1050,27 @@ namespace DOL.GS.Quests
             return 0;
         }
 
-        
+		/// <summary>
+		/// Personalizes the given message by replacing all instances of PLAYER with the actual name of the player
+		/// </summary>
+		/// <param name="message">message to personalize</param>
+		/// <param name="player">Player's name to insert</param>
+		/// <returns>message with actual name of player instead of PLAYER</returns>
+		public static string GetPersonalizedMessage(string message, GamePlayer player)
+		{
+			if (message == null || player == null)
+				return message;
+
+			string playerMessage;
+			int playerIndex = message.IndexOf(PLAYER);
+			if (playerIndex == 0)
+				playerMessage = message.Replace(PLAYER, player.GetName(0, true));
+			else if (playerIndex > 0)
+				playerMessage = message.Replace(PLAYER, player.GetName(0, false));
+			else
+				playerMessage = message;
+
+			return playerMessage;
+		}
     }
 }

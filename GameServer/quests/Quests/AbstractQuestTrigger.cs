@@ -12,25 +12,20 @@ namespace DOL.GS.Quests
     public abstract class AbstractQuestTrigger : IQuestTrigger
     {
 
-        private String k; //trigger keyword 
+        private object k; //trigger keyword 
         private eTriggerType triggerType; // t## : trigger type, see following description (NONE:no trigger)
-        private object i;
-        private BaseQuestPart questPart;
-        
-        /// <summary>
-        /// QuestPart of trigger
-        /// </summary>
-        public BaseQuestPart QuestPart
-        {
-            get { return questPart; }
-        }
+        private object i;        
+		private GameLiving defaultNPC;
+		private DOLEventHandler notifyHandler;
+		private Type questType;
 
         /// <summary>
         /// Trigger Keyword
         /// </summary>
-        public String K
+        public Object K
         {
             get { return k; }
+			set { k = value; }
         }
 
         /// <summary>
@@ -39,6 +34,7 @@ namespace DOL.GS.Quests
         public object I
         {
             get { return i; }
+			set { i = value; }
         }
 
         /// <summary>
@@ -49,30 +45,56 @@ namespace DOL.GS.Quests
             get { return triggerType; }
         }
 
-        /// <summary>
+    	/// <summary>
         /// returns the NPC of the trigger
         /// </summary>
-        public GameNPC NPC
+        public GameLiving NPC
         {
-            get { return QuestPart.NPC; }
+            get { return defaultNPC; }
         }
 
-        /// <summary>
-        /// Creates a new questtrigger and does some simple triggertype parameter compatibility checking
-        /// </summary>
-        /// <param name="type">Triggertype</param>
-        /// <param name="keyword">keyword (K), meaning depends on triggertype</param>
-        /// <param name="var">variable (I), meaning depends on triggertype</param>
-        public AbstractQuestTrigger(BaseQuestPart questPart,eTriggerType type, String keyword, object var)
-        {
-            this.questPart = questPart;
-            this.triggerType = type;
-            this.i = var;
-            this.k = keyword;
-            
-        }
+		public DOLEventHandler NotifyHandler
+		{
+			get { return notifyHandler; }
+		}
 
-        /// <summary>
+		public Type QuestType
+		{
+			get { return questType; }
+		}
+
+    	/// <summary>
+    	/// Creates a new questtrigger and does some simple triggertype parameter compatibility checking
+    	/// </summary>
+    	/// <param name="type">Triggertype</param>
+    	/// <param name="keyword">keyword (K), meaning depends on triggertype</param>
+    	/// <param name="var">variable (I), meaning depends on triggertype</param>
+    	public AbstractQuestTrigger(BaseQuestPart questPart,eTriggerType type, String keyword, object var)
+    	{
+    		this.defaultNPC = questPart.NPC;
+			this.notifyHandler = new DOLEventHandler(questPart.Notify);
+			this.questType = questPart.QuestType;
+    		this.triggerType = type;
+    		this.i = var;
+    		this.k = keyword;
+    	}
+
+		/// <summary>
+		/// Creates a new questtrigger and does some simple triggertype parameter compatibility checking
+		/// </summary>
+		/// <param name="type">Triggertype</param>
+		/// <param name="keyword">keyword (K), meaning depends on triggertype</param>
+		/// <param name="var">variable (I), meaning depends on triggertype</param>
+		public AbstractQuestTrigger(GameLiving defaultNPC,DOLEventHandler notifyHandler, eTriggerType type, String keyword, object var)
+		{
+			this.defaultNPC = defaultNPC;
+			this.notifyHandler = notifyHandler;
+			this.triggerType = type;
+			this.i = var;
+			this.k = keyword;
+		}
+
+    	/// <summary>
         /// Checks the trigger, this method is called whenever a event associated with this questparts quest
         /// or a manualy associated eventhandler is notified.
         /// </summary>
@@ -83,8 +105,22 @@ namespace DOL.GS.Quests
         /// <returns>true if QuestPart should be executes, else false</returns>
         public abstract bool Check(DOLEvent e, object sender, EventArgs args, GamePlayer player);
 
+		/// <summary>
+		/// Registers the needed EventHandler for this Trigger
+		/// </summary>
+		/// <remarks>
+		/// This method will be called multiple times, so use AddHandlerUnique to make
+		/// sure only one handler is actually registered
+		/// </remarks>
         public abstract void Register();
-        
+
+		/// <summary>
+		/// Unregisters the needed EventHandler for this Trigger
+		/// </summary>
+		/// <remarks>
+		/// Don't remove handlers that will be used by other triggers etc.
+		/// This is rather difficult since we don't know which events other triggers use.
+		/// </remarks>
         public abstract void Unregister();
     }
 

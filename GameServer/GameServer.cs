@@ -41,6 +41,7 @@ using DOL.Config;
 using log4net;
 using log4net.Config;
 using log4net.Core;
+using DOL.GS.Quests;
 
 namespace DOL
 {
@@ -658,6 +659,12 @@ namespace DOL
 				if (!InitComponent(PlayerTitleMgr.Init(), "Player Titles Manager"))
 					return false;
 
+                //Load the quest managers if enabled
+                if (ServerProperties.Properties.LOAD_QUESTS)
+                {
+                    if (!InitComponent(QuestMgr.Init(), "Quest Managers"))
+                        return false;
+                }
 				//---------------------------------------------------------------
 				//Notify our scripts that everything went fine!
 				GameEventMgr.Notify(ScriptEvent.Loaded);

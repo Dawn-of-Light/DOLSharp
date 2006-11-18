@@ -18,48 +18,7 @@ using System.Reflection;
 
 namespace DOL.GS.Quests
 {    
-    
-    /// <summary>
-    /// Type of textoutput this one is used for general text messages within questpart.   
-    /// </summary>
-    public enum eTextType : byte
-    {
-        /// <summary>
-        /// No output at all
-        /// </summary>
-        None = 0x00,
-        /// <summary>
-        /// EMOT : display the text localy without monster's name (local channel)
-        /// </summary>
-        /// <remarks>Tested</remarks>
-        Emote = 0x01,
-        /// <summary>
-        /// BROA : broadcast the text in the entire zone (broadcast channel)
-        /// </summary>
-        Broadcast = 0x02,
-        /// <summary>
-        /// DIAG : display the text in a dialog box with an OK button
-        /// </summary>
-        Dialog = 0x03,  
-        /// <summary>
-        /// DSAY : only the player will hear localy what the monster say (local channel)
-        /// </summary>
-        DirectSay = 0x04, 
-        /// <summary>
-        /// READ : open a description (bracket) windows saying what is written on the item
-        /// </summary>
-        Read = 0x05, 
-        /// <summary>
-        /// TALK : monster will talk locally (local channel)
-        /// </summary>
-        /// <remarks>Tested</remarks>
-        Talk = 0x06, 
-        /// <summary>
-        /// WHIS : text appears in a description window, words with brackets are keywords
-        /// </summary>
-        Whisper = 0x07
-    }
-			
+        			
 	/// <summary>
 	/// BaseQuestParts are the core element of the new questsystem,
     /// you can add as many QuestAction to a quest as you want. 
@@ -81,18 +40,12 @@ namespace DOL.GS.Quests
 	/// </summary>
 	public class BaseQuestPart
     {
-        /// <summary>
-        /// Player Constant will be replaced by players name in output messages.
-        /// </summary>
-        const string PLAYER = "{Player}";
 
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         #region Variables
                 
-        private Type questType;               
-        private eTextType textType;               
-        private String actionMessage;        
+        private Type questType;
 		private GameNPC npc;
 		
 		private IList requirements;              
@@ -121,15 +74,6 @@ namespace DOL.GS.Quests
         {
             get { return npc; }
             set { npc = value; }
-        }
-
-        /// <summary>
-        /// Type of textoutput this questpart shall use
-        /// </summary>
-        public eTextType TextType
-        {
-            get { return textType; }
-            set { textType = value; }
         }
 
         /// <summary>
@@ -167,38 +111,19 @@ namespace DOL.GS.Quests
             get { return requirements; }
         }
 
-        /// <summary>
-        /// Text to display
-        /// </summary>
-        public String TextMessage
-        {
-            get { return actionMessage; }
-            set { actionMessage = value; }
-        }
-
         #endregion
-        /// <summary>
-        /// Creates a more or less empty QuestPart, use AddTrigger, AddRequirement and AddAction to fill it properly
-        /// </summary>
-        /// <param name="questType">type of Quest this QuestPart will belong to.</param>
-        /// <param name="npc">NPC associated with his questpart typically NPC talking to or mob killing, etc...</param>
-        public BaseQuestPart(Type questType, GameNPC npc) : this(questType,npc,eTextType.None,null) {}
+        
 
         /// <summary>
-        /// Creates a QuestPart that will display the defined message, whenever it fires.
+        /// Creates a QuestPart for the given questtype with the default npc.
         /// </summary>
         /// <param name="questType">type of Quest this QuestPart will belong to.</param>
-        /// <param name="npc">NPC associated with his questpart typically NPC talking to or mob killing, etc...</param>
-        /// <param name="textType">type of Textoutput, one of eTextType</param>
-        /// <param name="actionMessage">Message to display</param>
-        public BaseQuestPart(Type questType, GameNPC npc, eTextType textType, String actionMessage)
+        /// <param name="npc">NPC associated with his questpart typically NPC talking to or mob killing, etc...</param>        
+        public BaseQuestPart(Type questType, GameNPC npc)
         {
             this.QuestType = questType;
             this.NPC = npc;
-            this.TextType = textType;
-            this.TextMessage = actionMessage;
-        }        
-        
+        }
 
         #region Triggers         
 
@@ -407,7 +332,7 @@ namespace DOL.GS.Quests
             
             if (sender is GamePlayer)
                 player = sender as GamePlayer;
-            else if (e == GameLivingEvent.WhisperReceive || e==GameLivingEvent.Interact )
+            else if (e == GameLivingEvent.WhisperReceive || e == GameObjectEvent.Interact )
             {
                 player = ((SourceEventArgs)args).Source as GamePlayer;
             }
@@ -421,7 +346,7 @@ namespace DOL.GS.Quests
                 //all players in visible distance will get notify.
                 GameLiving living = sender as GameLiving;
                 if (sender!=null){
-                    foreach (GamePlayer vizPlayer in living.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+                    foreach (GamePlayer vizPlayer in WorldMgr.GetPlayersCloseToObject(living, WorldMgr.VISIBILITY_DISTANCE, false))
                     {
                         Notify(e, sender, args, vizPlayer);
                     }
@@ -445,71 +370,17 @@ namespace DOL.GS.Quests
         /// <param name="player">GamePlayer this call is related to, can be null</param>
         public void Notify(DOLEvent e, object sender, EventArgs args, GamePlayer player)
         {
+			// if we have no actions simply skip it, nothing to do so nothing to check...
+			if (actions == null)
+				return;
+
             if (CheckTriggers(e,sender,args,player) && CheckRequirements(e, sender, args, player))
             {
-                string playerMessage = GetPersonalizedMessage(TextMessage,player);
-                switch (TextType)
-                {
-                    case eTextType.None: break;
-                    case eTextType.Emote:
-                        player.Out.SendMessage(playerMessage, eChatType.CT_Emote, eChatLoc.CL_SystemWindow);
-                        break;
-                    case eTextType.Broadcast:                         
-                        foreach (GameClient clientz in WorldMgr.GetAllPlayingClients())
-                        {
-                            clientz.Player.Out.SendMessage(playerMessage, eChatType.CT_Broadcast, eChatLoc.CL_SystemWindow);
-                        }
-                        break;
-                    case eTextType.Dialog:                             
-                        player.Out.SendCustomDialog(playerMessage, null);
-                        break;
-                    case eTextType.DirectSay:
-                        NPC.TurnTo(player);
-                        NPC.SayTo(player, playerMessage);
-                        break;
-                    case eTextType.Read:
-                        player.Out.SendMessage("[ " + playerMessage + " ]", eChatType.CT_Emote, eChatLoc.CL_PopupWindow);
-                        break;
-                    case eTextType.Talk:
-                        NPC.TurnTo(player);
-                        NPC.SayTo(player, playerMessage);
-                        break;
-                    case eTextType.Whisper:
-                        NPC.TurnTo(player);
-                        NPC.SayTo(player, playerMessage);
-                        break;
-                }                
-                
-                if (actions == null)
-                    return;
                 foreach (IQuestAction action in actions)
                 {
                     action.Perform(e, sender, args, player);
                 }
             }            
-		}
-
-        /// <summary>
-        /// Personalizes the given message by replacing all instances of PLAYER with the actual name of the player
-        /// </summary>
-        /// <param name="message">message to personalize</param>
-        /// <param name="player">Player's name to insert</param>
-        /// <returns>message with actual name of player instead of PLAYER</returns>
-        public static string GetPersonalizedMessage(string message, GamePlayer player)
-        {
-            if (message == null || player == null)
-                return message;
-
-            string playerMessage;
-            int playerIndex = message.IndexOf(PLAYER);
-            if (playerIndex == 0)
-                playerMessage = message.Replace(PLAYER, player.GetName(0, true));
-            else if (playerIndex > 0)
-                playerMessage = message.Replace(PLAYER, player.GetName(0, false));
-            else
-                playerMessage = message;
-
-            return playerMessage;
-        }
+		}        
 	}
 }
