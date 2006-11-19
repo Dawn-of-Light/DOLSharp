@@ -3413,6 +3413,17 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		}
 		#endregion
 		#region Property/Bonus/Buff/PropertyCalculator fields
+		/// <summary>
+		/// Array for property boni for abilities
+		/// </summary>
+		protected IPropertyIndexer m_abilityBonus = new PropertyIndexer();
+		/// <summary>
+		/// Ability bonus property
+		/// </summary>
+		public IPropertyIndexer AbilityBonus
+		{
+			get { return m_abilityBonus; }
+		}
 
 		/// <summary>
 		/// Array for property boni by items

@@ -42,6 +42,7 @@ namespace DOL.GS.PropertyCalc
 				GamePlayer player = living as GamePlayer;
 				int baseStat = player.GetBaseStat((eStat)property);
 				int itemBonus = living.ItemBonus[(int)property];
+				int abilityBonus = living.AbilityBonus[(int)property];
 				int singleStatBonus = living.BuffBonusCategory1[(int)property];
 				int dualStatBonus = living.BuffBonusCategory2[(int)property];
 				int debuff = living.BuffBonusCategory3[(int)property];
@@ -77,7 +78,7 @@ namespace DOL.GS.PropertyCalc
 				//50% debuff effectiveness for item and base stats
 				if (stat < 0)
 					stat >>= 1;
-				stat += baseStat + itemBonus;
+				stat += baseStat + itemBonus + abilityBonus;
 				stat = (int)(stat * living.BuffBonusMultCategory1.Get((int)property));
 
 				if (property == eProperty.Constitution && player.TotalConstitutionLostAtDeath > 0)
