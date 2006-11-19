@@ -1966,13 +1966,6 @@ namespace DOL.GS.Spells
 			//Using the resist BuffBonusCategory2 - its unused in ResistCalculator
 			int secondaryResistModifier = target.BuffBonusCategory2[(int)property];
 
-			if (ad.Target is GamePlayer && ad.Target.HasAbility(AvoidanceOfMagicAbility.KEY))
-			{
-				GamePlayer tPlayer = ad.Target as GamePlayer;
-				RAPropertyEnhancer ra = tPlayer.GetAbility(AvoidanceOfMagicAbility.KEY) as RAPropertyEnhancer;
-				secondaryResistModifier += ra.Amount;
-			}
-
 			/*Variance by Memories of War				
 			 * - Memories of War: Upon reaching level 41, the Hero, Warrior and Armsman 
 			 * will begin to gain more magic resistance (spell damage reduction only) 

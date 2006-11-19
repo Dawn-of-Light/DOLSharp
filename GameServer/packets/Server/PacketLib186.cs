@@ -56,5 +56,27 @@ namespace DOL.GS.PacketHandler
 		{
 			get { return 16003; }
 		}
+
+		public override void SendCombatAnimation(GameObject attacker, GameObject defender, ushort weaponID, ushort shieldID, int style, byte stance, byte result, byte targetHealthPercent)
+		{
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.CombatAnimation));
+			if (attacker != null)
+				pak.WriteShort((ushort)attacker.ObjectID);
+			else
+				pak.WriteShort(0x00);
+			if (defender != null)
+				pak.WriteShort((ushort)defender.ObjectID);
+			else
+				pak.WriteShort(0x00);
+			pak.WriteShort(weaponID);
+			pak.WriteShort(shieldID);
+			pak.WriteShortLowEndian((ushort)style);
+			pak.WriteByte(stance);
+			pak.WriteByte(result);
+			pak.WriteByte(targetHealthPercent);
+			pak.WriteByte(0);//unk
+			SendTCP(pak);
+		}
+
 	}
 }

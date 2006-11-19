@@ -21,28 +21,58 @@ using System.IO;
 
 namespace DOL.GS.Scripts
 {
+	/// <summary>
+	/// The priveledge level of the client
+	/// </summary>
 	public enum ePrivLevel : uint
 	{
+		/// <summary>
+		/// Normal player
+		/// </summary>
 		Player = 1,
+		/// <summary>
+		/// A GM
+		/// </summary>
 		GM = 2,
+		/// <summary>
+		/// An Admin
+		/// </summary>
 		Admin = 3,
 	}
 
+	/// <summary>
+	/// The hand flag for an item
+	/// </summary>
 	public enum eHandFlag : int
 	{
+		/// <summary>
+		/// Standard or Right hand
+		/// </summary>
 		Right = 0,
+		/// <summary>
+		/// Two handed
+		/// </summary>
 		Two = 1,
+		/// <summary>
+		/// Left handed
+		/// </summary>
 		Left = 2,
 	}
 
-	//This class is used to read commaseperated files!
-	//Can be used to parse userdefined tables by index (first value in row).
-	//(eg. from Excel or *hint* the tables from the gamedata.mpk file)
-	//Values are cached, so it only needs to read the file once! 
+	/// <summary>
+	///This class is used to read commaseperated files!
+	///Can be used to parse userdefined tables by index (first value in row).
+	///(eg. from Excel or *hint* the tables from the gamedata.mpk file)
+	///Values are cached, so it only needs to read the file once! 
+	/// </summary>
 	public class CSVFileTableReader
 	{
 		private Hashtable table = null;
 
+		/// <summary>
+		/// Creates an instance of the CSVFileTableReader from a csvfile
+		/// </summary>
+		/// <param name="csvFile"></param>
 		public CSVFileTableReader(string csvFile)
 		{
 			StreamReader reader = null;
@@ -71,11 +101,19 @@ namespace DOL.GS.Scripts
 			}
 		}
 
+		/// <summary>
+		/// Is the table ready
+		/// </summary>
 		public bool IsReady
 		{
 			get { return table != null; }
 		}
 
+		/// <summary>
+		/// Find a CSV Entry by a firstvalue
+		/// </summary>
+		/// <param name="firstvalue"></param>
+		/// <returns></returns>
 		public string[] FindCSVEntry(string firstvalue)
 		{
 			if (table == null)

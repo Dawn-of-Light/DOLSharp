@@ -18,12 +18,18 @@ namespace DOL.GS.RealmAbilities
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		// property to modify
-		eProperty m_property = eProperty.Undefined;
+		eProperty[] m_property;
+
+		public RAPropertyEnhancer(DBAbility dba, int level, eProperty[] property)
+			: base(dba, level)
+		{
+			m_property = property;
+		}
 
 		public RAPropertyEnhancer(DBAbility dba, int level, eProperty property)
 			: base(dba, level)
 		{
-			m_property = property;
+			m_property = new eProperty[] { property };
 		}
 
 		public override System.Collections.IList DelveInfo
@@ -82,14 +88,17 @@ namespace DOL.GS.RealmAbilities
 		/// <returns></returns>
 		protected virtual IPropertyIndexer GetBonusCategory(GameLiving living)
 		{
-			return living.BuffBonusCategory4;
+			return living.AbilityBonus;
 		}
 
 		public override void Activate(GameLiving living, bool sendUpdates)
 		{
 			if (activeOnLiving == null)
 			{
-				GetBonusCategory(living)[(int)m_property] += GetAmountForLevel(Level);
+				foreach (eProperty property in m_property)
+				{
+					GetBonusCategory(living)[(int)property] += GetAmountForLevel(Level);
+				}
 				activeOnLiving = living;
 				if (sendUpdates) SendUpdates(living);
 			}
@@ -99,9 +108,29 @@ namespace DOL.GS.RealmAbilities
 			}
 		}
 
+		public override void Deactivate(GameLiving living, bool sendUpdates)
+		{
+			if (activeOnLiving != null)
+			{
+				foreach (eProperty property in m_property)
+				{
+					GetBonusCategory(living)[(int)property] -= GetAmountForLevel(Level);
+				}
+				if (sendUpdates) SendUpdates(living);
+				activeOnLiving = null;
+			}
+			else
+			{
+				log.Warn("ability " + Name + " already deactivated on " + living.Name);
+			}
+		}
+
 		public override void OnLevelChange(int oldLevel)
 		{
-			GetBonusCategory(activeOnLiving)[(int)m_property] += GetAmountForLevel(Level) - GetAmountForLevel(oldLevel);
+			foreach (eProperty property in m_property)
+			{
+				GetBonusCategory(activeOnLiving)[(int)property] += GetAmountForLevel(Level) - GetAmountForLevel(oldLevel);
+			}
 			SendUpdates(activeOnLiving);
 		}
 	}

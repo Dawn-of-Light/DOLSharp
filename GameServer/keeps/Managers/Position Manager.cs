@@ -410,6 +410,7 @@ namespace DOL.GS.Keeps
 			pos.ClassType = "DOL.GS.Keeps.GameKeepDoor";
 			pos.TemplateType = doorIndex;
 			pos.ComponentSkin = component.Skin;
+			pos.ComponentRotation = component.ComponentHeading;
 			pos.TemplateID = Guid.NewGuid().ToString();
 			int x, y;
 

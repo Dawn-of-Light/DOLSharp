@@ -37,7 +37,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 	{
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
+			uint unk_186 = 0;
 			ushort objectType = packet.ReadShort();
+			if (client.Version >= GameClient.eClientVersion.Version186)
+				unk_186 = packet.ReadInt();
 			ushort objectID = packet.ReadShort();
 			string caption = "";
 			ArrayList objectInfo = new ArrayList();

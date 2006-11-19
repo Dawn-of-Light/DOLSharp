@@ -101,6 +101,20 @@ namespace DOL.GS.RealmAbilities
 			}
 		}
 
+		public override void Deactivate(GameLiving living, bool sendUpdates)
+		{
+			if (activeOnLiving != null)
+			{
+				living.BuffBonusCategory4[(int)m_property] -= GetAmountForLevel(Level);
+				if (sendUpdates) SendUpdates(living);
+				activeOnLiving = null;
+			}
+			else
+			{
+				log.Warn("ability " + Name + " already deactivated on " + living.Name);
+			}
+		}
+
 		public override void OnLevelChange(int oldLevel)
 		{
 			activeOnLiving.BuffBonusCategory4[(int)m_property] += GetAmountForLevel(Level) - GetAmountForLevel(oldLevel);

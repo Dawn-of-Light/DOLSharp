@@ -26,6 +26,9 @@ using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Scripts
 {
+	/// <summary>
+	/// Various keep guard commands
+	/// </summary>
 	[CmdAttribute(
 		"&keepguard", //command to handle
 		(uint)ePrivLevel.GM, //minimum privelege level
@@ -45,6 +48,12 @@ namespace DOL.GS.Scripts
 		"Use '/mob' command if you want to change other param of guard")] //usage
 	public class KeepGuardCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
+		/// <summary>
+		/// The command handler itself
+		/// </summary>
+		/// <param name="client">The client using the command</param>
+		/// <param name="args">The command arguments</param>
+		/// <returns></returns>
 		public int OnCommand(GameClient client, string[] args)
 		{
 			if (args.Length == 1)
