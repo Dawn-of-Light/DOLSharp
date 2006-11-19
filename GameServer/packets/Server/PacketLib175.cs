@@ -304,9 +304,18 @@ namespace DOL.GS.PacketHandler
 			pak.WriteByte(0);
 
 			// RA bonuses
-			pak.Fill(0, 9);
-
-			pak.WriteByte(0x00); // FF if resists packet
+			for (int i = 0; i < updateStats.Length; i++)
+			{
+				int acuityItemBonus = 0;
+				if (m_gameClient.Player.CharacterClass.ClassType == eClassType.ListCaster && (int)updateStats[i] == (int)m_gameClient.Player.CharacterClass.ManaStat)
+					acuityItemBonus = m_gameClient.Player.AbilityBonus[(int)eProperty.Acuity];
+				pak.WriteShort((ushort)(m_gameClient.Player.AbilityBonus[(int)updateStats[i]] + acuityItemBonus));
+			}
+			//pak.Fill(0, 9);
+			if (m_gameClient.Player.CharacterClass.ID == (int)eCharacterClass.Vampiir)
+				pak.WriteByte((byte)(m_gameClient.Player.Level - 5)); // Vampire bonuses
+			else
+				pak.WriteByte(0x00); // FF if resists packet
 			pak.WriteByte((byte) m_gameClient.Player.TotalConstitutionLostAtDeath);
 			pak.WriteShort((ushort) m_gameClient.Player.MaxHealth);
 			pak.WriteShort(0);
@@ -355,7 +364,7 @@ namespace DOL.GS.PacketHandler
 			for (int i = 0; i < updateResists.Length; i++)
 			{
 				int mod = m_gameClient.Player.GetModified((eProperty)updateResists[i]);
-				int buff = mod - racial[i] - Math.Min(caps[i], m_gameClient.Player.ItemBonus[(int)updateResists[i]]);
+				int buff = mod - racial[i] - m_gameClient.Player.AbilityBonus[(int)((eProperty)updateResists[i])] - Math.Min(caps[i], m_gameClient.Player.ItemBonus[(int)updateResists[i]]);
 				pak.WriteShort((ushort)buff);
 			}
 
@@ -372,7 +381,10 @@ namespace DOL.GS.PacketHandler
 			}
 
 			// RA bonuses
-			pak.Fill(0, 9);
+			for (int i = 0; i < updateResists.Length; i++)
+			{
+				pak.WriteByte((byte)(m_gameClient.Player.AbilityBonus[(int)updateResists[i]]));
+			}
 
 			pak.WriteByte(0xFF); // FF if resists packet
 			pak.WriteByte(0);

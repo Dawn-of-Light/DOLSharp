@@ -29,6 +29,9 @@ using log4net;
 
 namespace DOL.GS.Scripts
 {
+	/// <summary>
+	/// command handler for /gc command
+	/// </summary>
 	[Cmd(
 		"&gc",
 		new string[] { "&guildcommand" },
@@ -47,6 +50,11 @@ namespace DOL.GS.Scripts
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
+		/// <summary>
+		/// Checks if a guildname has valid characters
+		/// </summary>
+		/// <param name="guildName"></param>
+		/// <returns></returns>
 		public static bool IsValidGuildName(string guildName)
 		{
 			foreach (char c in guildName)
@@ -60,6 +68,12 @@ namespace DOL.GS.Scripts
 			return true;
 		}
 
+		/// <summary>
+		/// method to handle /gc commands from a client
+		/// </summary>
+		/// <param name="client"></param>
+		/// <param name="args"></param>
+		/// <returns></returns>
 		public int OnCommand(GameClient client, string[] args)
 		{
 			try
@@ -1395,6 +1409,11 @@ namespace DOL.GS.Scripts
 			}
 		}
 
+		/// <summary>
+		/// method to handle the aliance invite
+		/// </summary>
+		/// <param name="player"></param>
+		/// <param name="response"></param>
 		protected void AllianceInvite(GamePlayer player, byte response)
 		{
 			if (response != 0x01)
@@ -1437,6 +1456,11 @@ namespace DOL.GS.Scripts
 			inviter.Guild.alliance.SaveIntoDatabase();
 		}
 
+		/// <summary>
+		/// method to handle the emblem change
+		/// </summary>
+		/// <param name="player"></param>
+		/// <param name="response"></param>
 		public static void EmblemChange(GamePlayer player, byte response)
 		{
 			if (response != 0x01)
@@ -1454,6 +1478,12 @@ namespace DOL.GS.Scripts
 			player.Out.SendEmblemDialogue();
 		}
 
+		/// <summary>
+		/// method to handle commands for /gc edit
+		/// </summary>
+		/// <param name="client"></param>
+		/// <param name="args"></param>
+		/// <returns></returns>
 		public int SetCmd(GameClient client, string[] args)
 		{
 			if (args.Length < 4)
