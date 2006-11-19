@@ -28,8 +28,15 @@ namespace DOL.GS.GameEvents
 	/// </summary>
 	public class HookpointInventoryEvent
 	{
+		/// <summary>
+		/// Code to call when the server is started
+		/// Here we add the items to the hookpoint inventory
+		/// </summary>
+		/// <param name="e">the event</param>
+		/// <param name="sender">the object sender</param>
+		/// <param name="args">the event arguments</param>
 		[GameServerStartedEvent]
-		public static void OnserverStarted(DOLEvent e, object sender, EventArgs args)
+		public static void OnServerStarted(DOLEvent e, object sender, EventArgs args)
 		{
 			//TODO : good type in code
 			//todo make new class like guard with special brain for each class

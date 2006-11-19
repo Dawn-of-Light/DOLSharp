@@ -73,7 +73,7 @@ namespace DOL.GS.Scripts
 		/// This function is called when the Living receives a whispered text
 		/// </summary>
 		/// <param name="source">GameLiving that was whispering</param>
-		/// <param name="str">string that was whispered</param>
+		/// <param name="text">string that was whispered</param>
 		/// <returns>true if the string correctly processed</returns>
 		public override bool WhisperReceive(GameLiving source, string text)
 		{

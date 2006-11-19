@@ -2347,6 +2347,7 @@ namespace DOL.GS
 					ability = (Ability)m_abilities[abilityKeyName];
 					if (ability == null)
 						return false;
+					ability.Deactivate(this, true);
 					m_abilities.Remove(ability.KeyName);
 					m_skillList.Remove(ability);
 				}
@@ -5523,6 +5524,7 @@ namespace DOL.GS
 					count++;
 					switch (weapons[i].Object_Type)
 					{
+						case (int)eObjectType.Fired:
 						case (int)eObjectType.Longbow:
 						case (int)eObjectType.Crossbow:
 						case (int)eObjectType.RecurvedBow:

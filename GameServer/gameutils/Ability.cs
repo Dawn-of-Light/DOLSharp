@@ -118,9 +118,19 @@ namespace DOL.GS
 		/// this is called when the ability should do its modifications (passive effects)
 		/// </summary>
 		/// <param name="living"></param>
+		/// <param name="sendUpdates"></param>
 		public virtual void Activate(GameLiving living, bool sendUpdates)
 		{
 			activeOnLiving = living;
+		}
+
+		/// <summary>
+		/// this is called when the ability should remove its modifications
+		/// </summary>
+		/// <param name="living"></param>
+		/// <param name="sendUpdates"></param>
+		public virtual void Deactivate(GameLiving living, bool sendUpdates)
+		{ 
 		}
 
 		/// <summary>
@@ -225,6 +235,87 @@ namespace DOL.GS
 			get
 			{
 				return eSkillPage.Abilities;
+			}
+		}
+	}
+
+	public class PropertyChangingAbility : Ability 
+	{
+		/// <summary>
+		/// Defines a logger for this class.
+		/// </summary>
+		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
+		// properties to modify
+		eProperty[] m_properties;
+
+		public PropertyChangingAbility(DBAbility dba, int level, eProperty[] properties)
+			: base(dba, level)
+		{
+			m_properties = properties;
+		}
+
+		public virtual int Amount 
+		{
+			get { return 0; }
+		}
+
+		public override void Activate(GameLiving living, bool sendUpdates)
+		{
+			if (activeOnLiving == null)
+			{
+				foreach (eProperty property in m_properties)
+					living.AbilityBonus[(int)property] += Amount;
+				activeOnLiving = living;
+				if (sendUpdates) SendUpdates(living);
+			}
+			else
+			{
+				log.Warn("ability " + Name + " already activated on " + living.Name);
+			}
+		}
+
+		public override void Deactivate(GameLiving living, bool sendUpdates)
+		{
+			if (activeOnLiving != null)
+			{
+				foreach (eProperty property in m_properties)
+					living.AbilityBonus[(int)property] -= Amount;
+				if (sendUpdates) SendUpdates(living);
+				activeOnLiving = null;
+			}
+			else
+			{
+				log.Warn("ability " + Name + " already deactivated on " + living.Name);
+			}
+		}
+
+		/// <summary>
+		/// send updates about the changes
+		/// </summary>
+		/// <param name="target"></param>
+		public virtual void SendUpdates(GameLiving target)
+		{
+			GamePlayer player = target as GamePlayer;	// need new prop system to not worry about updates
+			if (player != null)
+			{
+				player.Out.SendCharStatsUpdate();
+				player.Out.SendCharResistsUpdate();
+				player.Out.SendUpdateWeaponAndArmorStats();
+				player.UpdateEncumberance();
+				player.UpdatePlayerStatus();
+			}
+
+			if (target.IsAlive)
+			{
+				if (target.Health < target.MaxHealth) target.StartHealthRegeneration();
+				else if (target.Health > target.MaxHealth) target.Health = target.MaxHealth;
+
+				if (target.Mana < target.MaxMana) target.StartPowerRegeneration();
+				else if (target.Mana > target.MaxMana) target.Mana = target.MaxMana;
+
+				if (target.Endurance < target.MaxEndurance) target.StartEnduranceRegeneration();
+				else if (target.Endurance > target.MaxEndurance) target.Endurance = target.MaxEndurance;
 			}
 		}
 	}
