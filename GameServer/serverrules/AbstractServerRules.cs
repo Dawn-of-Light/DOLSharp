@@ -86,6 +86,16 @@ namespace DOL.GS.ServerRules
 				return false;
 			}
 
+			if (Properties.CLIENT_TYPE_MAX > -1)
+			{
+				GameClient.eClientType type = (GameClient.eClientType)Properties.CLIENT_TYPE_MAX;
+				if ((int)client.ClientType > (int)type )
+				{
+					client.Out.SendLoginDenied(eLoginError.ExpansionPacketNotAllowed);
+					return false;
+				}
+			}
+
 			/* Example to limit the connections from a certain IP range!
 			if(client.Socket.RemoteEndPoint.ToString().StartsWith("192.168.0."))
 			{

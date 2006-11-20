@@ -3018,7 +3018,7 @@ namespace DOL.GS
 			Out.SendMessage("You get " + amount.ToString() + " realm points!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 			//"You earn 4 extra realm points!"
 
-			while (RealmPoints >= CalculateRPsFromRealmLevel(m_realmLevel + 1) && m_realmLevel < 99)
+			while (RealmPoints >= CalculateRPsFromRealmLevel(m_realmLevel + 1) && m_realmLevel < 120)
 			{
 				RealmLevel++;
 				RealmSpecialtyPoints++;
@@ -3253,8 +3253,8 @@ namespace DOL.GS
 					break;
 			}
 
-			if (i > 99)
-				return 99;
+			if (i > 120)
+				return 120;
 			return i;
 
 
@@ -3593,16 +3593,6 @@ namespace DOL.GS
 					}
 			}
 
-			// old hp
-			int oldhp = CalculateMaxHealth(previouslevel, GetBaseStat(eStat.CON));
-
-			// old power
-			int oldpow = 0;
-			if (CharacterClass.ManaStat != eStat.UNDEFINED)
-			{
-				oldpow = CalculateMaxMana(previouslevel, GetBaseStat(CharacterClass.ManaStat));
-			}
-
 			// Adjust stats
 			bool statsChanged = false;
 			for (int i = Level; i > previouslevel; i--)
@@ -3624,33 +3614,13 @@ namespace DOL.GS
 				}
 			}
 
-			CharacterClass.OnLevelUp(this);
-
-			// hp upgrade
-			int newhp = CalculateMaxHealth(Level, GetBaseStat(eStat.CON));
-			if (oldhp > 0 && oldhp < newhp)
-			{
-				Out.SendMessage("Your hits raise by " + (newhp - oldhp) + " points.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-			}
-
-			// power upgrade
-			if (CharacterClass.ManaStat != eStat.UNDEFINED)
-			{
-				int newpow = CalculateMaxMana(Level, GetBaseStat(CharacterClass.ManaStat));
-				if (newpow > 0 && oldpow < newpow)
-				{
-					Out.SendMessage("Your power raises by " + (newpow - oldpow) + " points.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-				}
-			}
 
 			if (statsChanged)
 			{
 				Out.SendMessage("Your stats raise!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 			}
 
-			// workaround for starting regeneration
-			StartHealthRegeneration();
-			StartPowerRegeneration();
+			CharacterClass.OnLevelUp(this);
 
 			UpdateSpellLineLevels(true);
 			RefreshSpecDependantSkills(true);
@@ -3679,6 +3649,37 @@ namespace DOL.GS
 			}
 
 			SkillSpecialtyPoints += specpoints;
+
+			// old hp
+			int oldhp = CalculateMaxHealth(previouslevel, GetBaseStat(eStat.CON));
+
+			// old power
+			int oldpow = 0;
+			if (CharacterClass.ManaStat != eStat.UNDEFINED)
+			{
+				oldpow = CalculateMaxMana(previouslevel, GetBaseStat(CharacterClass.ManaStat));
+			}
+
+			// hp upgrade
+			int newhp = CalculateMaxHealth(Level, GetBaseStat(eStat.CON));
+			if (oldhp > 0 && oldhp < newhp)
+			{
+				Out.SendMessage("Your hits raise by " + (newhp - oldhp) + " points.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+			}
+
+			// power upgrade
+			if (CharacterClass.ManaStat != eStat.UNDEFINED)
+			{
+				int newpow = CalculateMaxMana(Level, GetBaseStat(CharacterClass.ManaStat));
+				if (newpow > 0 && oldpow < newpow)
+				{
+					Out.SendMessage("Your power raises by " + (newpow - oldpow) + " points.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+				}
+			}
+
+			// workaround for starting regeneration
+			StartHealthRegeneration();
+			StartPowerRegeneration();
 
 			m_character.DeathCount = 0;
 
