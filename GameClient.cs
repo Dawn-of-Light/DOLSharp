@@ -522,6 +522,7 @@ namespace DOL
 				TrialsOfAtlantis = 3,
 				Catacombs = 4,
 				DarknessRising = 5,
+				LabyrinthOfTheMinotaur = 6,
 			}
 			/// <summary>
 			/// The client addons enum

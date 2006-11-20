@@ -157,6 +157,8 @@ namespace DOL.GS.Keeps
 			set { m_componentHeading = value; }
 		}
 
+		private byte m_oldLevel;
+
 		/// <summary>
 		/// Level of component
 		/// </summary>
@@ -265,7 +267,7 @@ namespace DOL.GS.Keeps
 			this.Name = keep.Name;
 			this.Model = INVISIBLE_MODEL;
 			this.Skin = component.Skin;
-			this.Level = (byte)keep.Level;
+			m_oldLevel = this.Level;
 			this.Health = MaxHealth;
 			//			this.Health = component.Health;
 			this.m_oldHealthPercent = this.HealthPercent;
@@ -518,8 +520,11 @@ namespace DOL.GS.Keeps
 
 		public void UpdateLevel()
 		{
-			if (IsRaized == false)
-				this.Health = this.MaxHealth;
+			if (IsRaized == false && Level != m_oldLevel)
+			{
+				Health = Health * (Level + 1) / (m_oldLevel + 1);
+				m_oldLevel = Level;
+			}
 		}
 
 		public bool IsRaized
