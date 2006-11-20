@@ -91,7 +91,7 @@ namespace DOL.GS.RealmAbilities
 		{
 			if (activeOnLiving == null)
 			{
-				living.BuffBonusCategory4[(int)m_property] += GetAmountForLevel(Level);
+				living.AbilityBonus[(int)m_property] += GetAmountForLevel(Level);
 				activeOnLiving = living;
 				if (sendUpdates) SendUpdates(living);
 			}
@@ -105,7 +105,7 @@ namespace DOL.GS.RealmAbilities
 		{
 			if (activeOnLiving != null)
 			{
-				living.BuffBonusCategory4[(int)m_property] -= GetAmountForLevel(Level);
+				living.AbilityBonus[(int)m_property] -= GetAmountForLevel(Level);
 				if (sendUpdates) SendUpdates(living);
 				activeOnLiving = null;
 			}
@@ -117,7 +117,7 @@ namespace DOL.GS.RealmAbilities
 
 		public override void OnLevelChange(int oldLevel)
 		{
-			activeOnLiving.BuffBonusCategory4[(int)m_property] += GetAmountForLevel(Level) - GetAmountForLevel(oldLevel);
+			activeOnLiving.AbilityBonus[(int)m_property] += GetAmountForLevel(Level) - GetAmountForLevel(oldLevel);
 			SendUpdates(activeOnLiving);
 		}
 	}

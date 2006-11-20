@@ -681,6 +681,8 @@
     <Compile Include="quests\Missions\RaizeMission.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="realmabilities\effects\AmelioratingMelodiesEffect.cs" />
+    <Compile Include="realmabilities\handlers\AmelioratingMelodiesAbility.cs" />
     <Compile Include="realmabilities\handlers\CamouflageSpecHandler.cs" />
     <Compile Include="realmabilities\handlers\ConcentrationAbility.cs" />
     <Compile Include="realmabilities\handlers\ToughnessAbility.cs" />
