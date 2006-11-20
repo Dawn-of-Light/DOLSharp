@@ -159,6 +159,20 @@ namespace DOL.GS.PacketHandler.Client.v168
 						byte startRaceGender = (byte)packet.ReadByte();
 
 						ch.Race = (startRaceGender & 0x0F) + ((startRaceGender & 0x40) >> 2);
+						if (Properties.DISABLE_MINOTAURS)
+						{
+							switch ((eRace)ch.Race)
+							{
+								case eRace.AlbionMinotaur:
+								case eRace.HiberniaMinotaur:
+								case eRace.MidgardMinotaur:
+									{
+										log.Error(client.Account.Name + " tried to create a minotaur, creation of them is disabled");
+										client.Out.SendCharacterOverview((eRealm)ch.Realm);
+										return 1;
+									}
+							}
+						}
 						ch.Gender = ((startRaceGender >> 4) & 0x01);
 						//DOLConsole.WriteLine("startRaceGender="+startRaceGender+"; Race="+ch.Race+"; Gender="+ch.Gender);
 
@@ -331,7 +345,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						client.Account.Characters = null;
 
 						if (log.IsInfoEnabled)
-							log.Info(String.Format("Character {0} created!\n", charname));
+							log.Info(String.Format("Character {0} created!", charname));
 					}
 				}
 			}

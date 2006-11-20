@@ -190,6 +190,18 @@ namespace DOL.GS.ServerProperties
 		public static readonly string PLAYER_CLASS;
 
 		/// <summary>
+		/// What is the maximum client type allowed to connect
+		/// </summary>
+		[ServerProperty(ServerPropertyConstants.CLIENT_TYPE_MAX, "What is the maximum client type allowed to connect", -1)]
+		public static readonly int CLIENT_TYPE_MAX;
+
+		/// <summary>
+		/// Disable minotaurs from being created
+		/// </summary>
+		[ServerProperty(ServerPropertyConstants.DISABLE_MINOTAURS, "Disable minotaurs from being created", false)]
+		public static readonly bool DISABLE_MINOTAURS;
+
+		/// <summary>
 		/// This method loads the property from the database and returns
 		/// the value of the property as strongly typed object based on the
 		/// type of the default value
@@ -215,7 +227,7 @@ namespace DOL.GS.ServerProperties
 			{
 				//we do this because we need "1.0" to be considered double sometimes its "1,0" in other countries
 				CultureInfo myCIintl = new CultureInfo("en-US", false);
-				IFormatProvider provider = myCIintl.NumberFormat; 
+				IFormatProvider provider = myCIintl.NumberFormat;
 				return Convert.ChangeType(property.Value, attrib.DefaultValue.GetType(), provider);
 			}
 			catch(Exception e)

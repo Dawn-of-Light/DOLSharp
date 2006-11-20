@@ -120,5 +120,13 @@ namespace DOL.GS.ServerProperties
 		/// The key for the players class
 		/// </summary>
 		public const string PLAYER_CLASS = "player_class";
+		/// <summary>
+		/// The key for the maximum client type (expansion)
+		/// </summary>
+		public const string CLIENT_TYPE_MAX = "client_type_max";
+		/// <summary>
+		/// The key for disabling minotaurs
+		/// </summary>
+		public const string DISABLE_MINOTAURS = "disable_minotaurs";
 	}
 }

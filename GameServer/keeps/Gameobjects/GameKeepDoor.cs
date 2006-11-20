@@ -41,6 +41,8 @@ namespace DOL.GS.Keeps
 
 		#region properties
 
+		private byte m_oldLevel;
+
 		private byte m_oldHealthPercent;
 
 		private int m_doorID;
@@ -131,7 +133,11 @@ namespace DOL.GS.Keeps
 
 		public void UpdateLevel()
 		{
-			Health = MaxHealth;
+			if (Level != m_oldLevel)
+			{
+				Health = Health * (Level + 1) / (m_oldLevel + 1);
+				m_oldLevel = Level;
+			}
 		}
 
 		public bool IsAttackableDoor
@@ -427,7 +433,7 @@ namespace DOL.GS.Keeps
 			PositionMgr.LoadKeepItemPosition(pos, this);
 			component.Keep.Doors[m_templateID] = this;
 
-			m_Level = 0;
+			m_oldLevel = Level;
 			m_health = MaxHealth;
 			m_Name = "Keep Door";
 			m_oldHealthPercent = HealthPercent;
