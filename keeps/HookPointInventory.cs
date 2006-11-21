@@ -66,6 +66,7 @@ namespace DOL.GS.Keeps
 		/// <summary>
 		/// add the item to the slot
 		/// </summary>
+		/// <param name="item"></param>
 		/// <param name="slot">The item slot</param>
 		/// <returns>Item template or null</returns>
 		public virtual void AddItem(HookPointItem item, int slot)

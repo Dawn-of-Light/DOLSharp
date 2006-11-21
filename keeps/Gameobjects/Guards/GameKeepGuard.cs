@@ -357,7 +357,6 @@ namespace DOL.GS.Keeps
 		/// <summary>
 		/// Method to see if the Guard has been left alone long enough to use Ranged attacks
 		/// </summary>
-		/// <param name="npc">The guard object</param>
 		/// <returns></returns>
 		public bool CanUseRanged
 		{
