@@ -721,7 +721,7 @@ namespace DOL.GS.Quests
 
 		public static bool Animation(GameLiving actor, eEmote emote)
 		{
-			foreach (GamePlayer nearPlayer in WorldMgr.GetPlayersCloseToObject(actor, WorldMgr.VISIBILITY_DISTANCE,false))
+			foreach (GamePlayer nearPlayer in actor.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
 				nearPlayer.Out.SendEmoteAnimation(actor, emote);
 			}
@@ -790,7 +790,7 @@ namespace DOL.GS.Quests
 			if (living.AddToWorld())
 			{
 				// appear with a big buff of magic
-				foreach (GamePlayer visPlayer in WorldMgr.GetPlayersCloseToObject(living, WorldMgr.VISIBILITY_DISTANCE,false))
+				foreach (GamePlayer visPlayer in living.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 				{
 					visPlayer.Out.SendSpellCastAnimation(living, 1, 20);
 				}

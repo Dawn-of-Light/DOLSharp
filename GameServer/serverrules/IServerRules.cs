@@ -123,7 +123,7 @@ namespace DOL.GS.ServerRules
 		/// Is player allowed to make the item
 		/// </summary>
 		/// <param name="player"></param>
-		/// <param name="point"></param>
+		/// <param name="item"></param>
 		/// <returns></returns>
 		bool IsAllowedToCraft(GamePlayer player, ItemTemplate item);
 
@@ -157,7 +157,7 @@ namespace DOL.GS.ServerRules
 		/// <summary>
 		/// Checks if living has ability to use items of this type
 		/// </summary>
-		/// <param name="player"></param>
+		/// <param name="living"></param>
 		/// <param name="item"></param>
 		/// <returns>true if player has ability to use item</returns>
 		bool CheckAbilityToUseItem(GameLiving living, ItemTemplate item);

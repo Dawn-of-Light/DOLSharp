@@ -334,7 +334,6 @@ namespace DOL.GS.Quests.Albion
                     }
                     if (quest.Step == 6)
                         arleighPenn.SayTo(player, "Now, do you have the worm rot for me? I'm getting very low on dark gray dye.");
-                    return;
                     if (quest.Step == 7)
                         arleighPenn.SayTo(player, "Now for the final item, the green skin.");
                     return;
