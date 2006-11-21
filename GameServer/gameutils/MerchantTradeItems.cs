@@ -71,7 +71,7 @@ namespace DOL.GS
 			m_itemsListID = itemsListId;
 		}
 
-		/// </summary>
+		/// <summary>
 		/// Item list id
 		/// </summary>
 		protected string m_itemsListID;

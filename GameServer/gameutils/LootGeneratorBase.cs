@@ -44,6 +44,7 @@ namespace DOL.GS
 		/// Generate loot for given mob
 		/// </summary>
 		/// <param name="mob"></param>
+		/// <param name="killer"></param>
 		/// <returns></returns>
 		public virtual LootList GenerateLoot(GameMob mob, GameObject killer)
 		{

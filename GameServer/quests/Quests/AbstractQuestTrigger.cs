@@ -66,6 +66,7 @@ namespace DOL.GS.Quests
     	/// <summary>
     	/// Creates a new questtrigger and does some simple triggertype parameter compatibility checking
     	/// </summary>
+		/// <param name="questPart"></param>
     	/// <param name="type">Triggertype</param>
     	/// <param name="keyword">keyword (K), meaning depends on triggertype</param>
     	/// <param name="var">variable (I), meaning depends on triggertype</param>
@@ -82,6 +83,8 @@ namespace DOL.GS.Quests
 		/// <summary>
 		/// Creates a new questtrigger and does some simple triggertype parameter compatibility checking
 		/// </summary>
+		/// <param name="defaultNPC"></param>
+		/// <param name="notifyHandler"></param>
 		/// <param name="type">Triggertype</param>
 		/// <param name="keyword">keyword (K), meaning depends on triggertype</param>
 		/// <param name="var">variable (I), meaning depends on triggertype</param>

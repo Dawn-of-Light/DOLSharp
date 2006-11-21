@@ -176,6 +176,7 @@ namespace DOL.GS
 		/// <param name="player">The player making the purchase</param>
 		/// <param name="item_slot">slot of the item to be bought</param>
 		/// <param name="number">Number to be bought</param>
+		/// <param name="TradeItems"></param>
 		/// <returns>true if buying is allowed, false if buying should be prevented</returns>
 		public static void OnPlayerBuy(GamePlayer player, int item_slot, int number, MerchantTradeItems TradeItems)
 		{
@@ -269,6 +270,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="player">The player whose item needs appraising</param>
 		/// <param name="item">The item to be appraised</param>
+		/// <param name="silent"></param>
 		/// <returns>The price this merchant will pay for the offered items</returns>
 		public virtual long OnPlayerAppraise(GamePlayer player, InventoryItem item, bool silent)
 		{
