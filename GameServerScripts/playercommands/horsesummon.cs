@@ -10,7 +10,6 @@ namespace DOL.GS.Scripts
 		{
 			if (client.Player == null)
 				return 1;
-			short num = -1;
 			try
 			{
 				if (args.Length > 1 && Convert.ToInt16(args[1]) == 0)

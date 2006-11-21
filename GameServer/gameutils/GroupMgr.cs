@@ -42,6 +42,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Adds a group to the list of groups
 		/// </summary>
+		/// <param name="key"></param>
 		/// <param name="group">The group to add</param>
 		/// <returns>True if the function succeeded, otherwise false</returns>
 		public static bool AddGroup(object key, Group group)

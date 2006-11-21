@@ -549,6 +549,7 @@ namespace DOL.GS.Keeps
 			this.SaveIntoDatabase();
 		}
 
+		/// <summary>
 		/// Starts the deduction timer
 		/// </summary>
 		public void StartDeductionTimer()
@@ -706,10 +707,6 @@ namespace DOL.GS.Keeps
 		/// </summary>
 		public void StartChangeLevelTimer()
 		{
-			int modifier = 1;
-			if (TargetLevel < Level)
-				modifier = -1;
-
 			int newinterval = CalculateTimeToUpgrade();
 
 			if (m_changeLevelTimer.IsAlive)

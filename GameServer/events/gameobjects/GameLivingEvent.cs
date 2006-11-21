@@ -113,6 +113,7 @@ namespace DOL.Events
 		/// Used within questsystem
 		/// </summary>
 		public static readonly GameLivingEvent Timer = new GameLivingEvent("GameLiving.Timer");
+		/// <summary>
 		/// The CastSpell event is fired whenever the living casts a spell
 		/// </summary>
 		public static readonly GameLivingEvent CastSpell = new GameLivingEvent("GameLiving.CastSpell");
