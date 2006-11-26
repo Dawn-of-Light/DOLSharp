@@ -121,6 +121,8 @@ namespace DOL.AI.Brain
 			{
 				m_aggressionState = value;
 				m_orderAttackTarget = null;
+				if (m_aggressionState == eAggressionState.Passive)
+					ClearAggroList();
 				AttackMostWanted();
 				UpdatePetWindow();
 			}
@@ -286,7 +288,7 @@ namespace DOL.AI.Brain
 				return;
 			}
 
-			AttackMostWanted();
+			FollowOwner();
 		}
 
 		/// <summary>

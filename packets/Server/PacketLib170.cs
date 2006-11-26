@@ -150,12 +150,8 @@ namespace DOL.GS.PacketHandler
 			pak.WriteByte((byte)component.Keep.Realm);
 			pak.WriteByte(component.HealthPercent);
 
-			int level = Math.Max(0, component.Keep.Level - 1);
-			int targetLevel = Math.Max(0, component.Keep.TargetLevel - 1);
-
-
-			pak.WriteByte((byte)level);
-			pak.WriteByte((byte)targetLevel);
+			pak.WriteByte(component.Keep.EffectiveLevel(component.Keep.Level));
+			pak.WriteByte(component.Keep.EffectiveLevel(component.Keep.TargetLevel));
 			//guild
 			pak.WriteByte((byte)component.Keep.KeepType);
 

@@ -27,9 +27,10 @@ namespace DOL.GS.Trainer
 	[NPCGuildScript("Heretic Trainer", eRealm.Albion)]		// this attribute instructs DOL to use this script for all "Heretic Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class HereticTrainer : GameTrainer
 	{
-	public const string WEAPON_ID1="chrush_sword_item";
+		public const string WEAPON_ID1 = "chrush_sword_item";
 
-		public HereticTrainer() : base()
+		public HereticTrainer()
+			: base()
 		{
 		}
 
@@ -38,27 +39,33 @@ namespace DOL.GS.Trainer
 		/// </summary>
 		/// <param name="player"></param>
 		/// <returns></returns>
- 		public override bool Interact(GamePlayer player)
- 		{		
- 			if (!base.Interact(player)) return false;
-								
+		public override bool Interact(GamePlayer player)
+		{
+			if (!base.Interact(player)) return false;
+
 			// check if class matches.				
-			if (player.CharacterClass.ID == (int) eCharacterClass.Heretic) {
+			if (player.CharacterClass.ID == (int)eCharacterClass.Heretic)
+			{
 
 				// popup the training window
 				player.Out.SendTrainerWindow();
 				//player.Out.SendMessage(this.Name + " says, \"Select what you like to train.\"", eChatType.CT_Say, eChatLoc.CL_PopupWindow);												
 
-			} else {
+			}
+			else
+			{
 				// perhaps player can be promoted
-				if (CanPromotePlayer(player)) {
-					player.Out.SendMessage(this.Name + " says, \"Do you desire to [join the Temple of Arawn] and defend our realm as a Heretic?\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
-				} else {
-					player.Out.SendMessage(this.Name + " says, \"You must seek elsewhere for your training.\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);							
+				if (CanPromotePlayer(player))
+				{
+					player.Out.SendMessage(this.Name + " says, \"Do you desire to [join the Temple of Arawn] and defend our realm as a Heretic?\"", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+				}
+				else
+				{
+					player.Out.SendMessage(this.Name + " says, \"You must seek elsewhere for your training.\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
 				}
 			}
 			return true;
- 		}
+		}
 
 		/// <summary>
 		/// checks wether a player can be promoted or not
@@ -67,7 +74,7 @@ namespace DOL.GS.Trainer
 		/// <returns></returns>
 		public bool CanPromotePlayer(GamePlayer player)
 		{
-			return (player.Level>=5 && player.CharacterClass.ID == (int) eCharacterClass.Acolyte && (player.Race == (int) eRace.Briton || player.Race == (int) eRace.Avalonian
+			return (player.Level >= 5 && player.CharacterClass.ID == (int)eCharacterClass.Acolyte && (player.Race == (int)eRace.Briton || player.Race == (int)eRace.Avalonian
 				|| player.Race == (int)eRace.Inconnu || player.Race == (int)eRace.AlbionMinotaur));
 		}
 
@@ -78,19 +85,28 @@ namespace DOL.GS.Trainer
 		/// <param name="text"></param>
 		/// <returns></returns>
 		public override bool WhisperReceive(GameLiving source, string text)
-		{				
-			if (!base.WhisperReceive(source, text)) return false;			
-			GamePlayer player = source as GamePlayer;			
-	
-			switch (text) {
-			case "join the Temple of Arawn":
-				// promote player to other class
-				if (CanPromotePlayer(player)) {
-					PromotePlayer(player, (int)eCharacterClass.Heretic, "Welcome to the Temple of Arawn, " + player.Name + ".", null);
-				}
-				break;
+		{
+			if (!base.WhisperReceive(source, text)) return false;
+			GamePlayer player = source as GamePlayer;
+
+			switch (text)
+			{
+				case "join the Temple of Arawn":
+					// promote player to other class
+					if (CanPromotePlayer(player))
+					{
+						PromotePlayer(player, (int)eCharacterClass.Heretic, "Welcome to the Temple of Arawn, " + player.Name + ".", null);
+					}
+					break;
 			}
-			return true;		
+			return true;
+		}
+
+		public override bool AddToWorld()
+		{
+			if (ServerProperties.Properties.DISABLE_CATACOMBS_CLASSES)
+				return false;
+			return base.AddToWorld();
 		}
 	}
 }

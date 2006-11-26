@@ -3,7 +3,6 @@ using System.Collections;
 using System.Reflection;
 using DOL.Database;
 using DOL.GS.PropertyCalc;
-using log4net;
 
 namespace DOL.GS.RealmAbilities
 {
@@ -12,11 +11,6 @@ namespace DOL.GS.RealmAbilities
 	/// </summary>
 	public abstract class RAPropertyEnhancer : L5RealmAbility
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
 		// property to modify
 		eProperty[] m_property;
 
@@ -81,23 +75,13 @@ namespace DOL.GS.RealmAbilities
 		/// </summary>
 		protected virtual string ValueUnit { get { return ""; } }
 
-		/// <summary>
-		/// in what bonus category should the modifications take place?
-		/// </summary>
-		/// <param name="living"></param>
-		/// <returns></returns>
-		protected virtual IPropertyIndexer GetBonusCategory(GameLiving living)
-		{
-			return living.AbilityBonus;
-		}
-
 		public override void Activate(GameLiving living, bool sendUpdates)
 		{
 			if (activeOnLiving == null)
 			{
 				foreach (eProperty property in m_property)
 				{
-					GetBonusCategory(living)[(int)property] += GetAmountForLevel(Level);
+					living.AbilityBonus[(int)property] += GetAmountForLevel(Level);
 				}
 				activeOnLiving = living;
 				if (sendUpdates) SendUpdates(living);
@@ -114,7 +98,7 @@ namespace DOL.GS.RealmAbilities
 			{
 				foreach (eProperty property in m_property)
 				{
-					GetBonusCategory(living)[(int)property] -= GetAmountForLevel(Level);
+					living.AbilityBonus[(int)property] -= GetAmountForLevel(Level);
 				}
 				if (sendUpdates) SendUpdates(living);
 				activeOnLiving = null;
@@ -129,7 +113,7 @@ namespace DOL.GS.RealmAbilities
 		{
 			foreach (eProperty property in m_property)
 			{
-				GetBonusCategory(activeOnLiving)[(int)property] += GetAmountForLevel(Level) - GetAmountForLevel(oldLevel);
+				activeOnLiving.AbilityBonus[(int)property] += GetAmountForLevel(Level) - GetAmountForLevel(oldLevel);
 			}
 			SendUpdates(activeOnLiving);
 		}
@@ -140,6 +124,11 @@ namespace DOL.GS.RealmAbilities
 		public L3RAPropertyEnhancer(DBAbility dba, int level, eProperty property)
 			: base(dba, level, property)
 		{
+		}
+
+		public L3RAPropertyEnhancer(DBAbility dba, int level, eProperty[] properties)
+			: base(dba, level, properties)
+		{ 
 		}
 
 		public override int CostForUpgrade(int level)

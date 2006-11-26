@@ -9,8 +9,6 @@ namespace DOL.GS.RealmAbilities
 	/// </summary>
 	public class MasteryOfStealthAbility : RAPropertyEnhancer
 	{
-		public const string KEY = "Mastery of Stealth";
-
 		public MasteryOfStealthAbility(DBAbility dba, int level)
 			: base(dba, level, eProperty.Undefined)
 		{

@@ -13,8 +13,6 @@ namespace DOL.GS.RealmAbilities
 	{
 		public LongWindAbility(DBAbility dba, int level) : base(dba, level, eProperty.Undefined) { }
 
-		public const string KEY = "Long Wind";
-
 		public override int GetAmountForLevel(int level)
 		{
 			return level;

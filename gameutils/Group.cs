@@ -85,7 +85,7 @@ namespace DOL.GS
 		public GamePlayer[] GetPlayersInTheGroup()
 		{
 			ArrayList players = new ArrayList(8);
-			lock (m_groupMembers) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
+			lock (m_groupMembers.SyncRoot) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
 				for(int i=0; i < m_groupMembers.Count; i++)
 				{

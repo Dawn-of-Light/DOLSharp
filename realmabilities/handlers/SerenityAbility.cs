@@ -23,10 +23,5 @@ namespace DOL.GS.RealmAbilities
 				default: return 7;
 			}
 		}
-
-		protected override DOL.GS.PropertyCalc.IPropertyIndexer GetBonusCategory(GameLiving living)
-		{
-			return living.BuffBonusCategory1;
-		}
 	}
 }

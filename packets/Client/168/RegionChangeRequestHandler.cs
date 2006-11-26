@@ -43,6 +43,12 @@ namespace DOL.GS.PacketHandler.Client.v168
 			ushort JumpSpotID = packet.ReadShort();
 			ZonePoint zonePoint = (ZonePoint)GameServer.Database.SelectObject(typeof(ZonePoint), "Id = " + JumpSpotID + " AND Realm = " + client.Player.Realm);
 
+			if (zonePoint == null)
+			{
+				client.Out.SendMessage("Invalid Jump : [" + JumpSpotID + "]", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return 1;
+			}
+
 			//tutorial zone
 			if (client.Player.CurrentRegionID == 27)
 			{
@@ -56,14 +62,15 @@ namespace DOL.GS.PacketHandler.Client.v168
 				zonePoint.ClassType = "DOL.GS.GameEvents.TutorialJumpPointHandler";
 			}
 
-			if (zonePoint == null)
+			if (client.Account.PrivLevel > 1)
+				client.Out.SendMessage("JumpSpotID = " + JumpSpotID, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
+			Region reg = WorldMgr.GetRegion(zonePoint.Region);
+			if (reg != null && reg.IsDisabled)
 			{
-				client.Out.SendMessage("Invalid Jump : [" + JumpSpotID + "]", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				client.Out.SendMessage("This region has been disabled", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return 1;
 			}
-
-			if(client.Account.PrivLevel > 1)
-				client.Out.SendMessage("JumpSpotID = "+JumpSpotID, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 			IJumpPointHandler check = null;
 			if (zonePoint.ClassType != null && zonePoint.ClassType != "")

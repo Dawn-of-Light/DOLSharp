@@ -9,8 +9,6 @@ namespace DOL.GS.RealmAbilities
 	/// </summary>
 	public class FalconsEyeAbility : RAPropertyEnhancer
 	{
-		public const string KEY = "Falcons Eye";
-
 		public FalconsEyeAbility(DBAbility dba, int level)
 			: base(dba, level, eProperty.CriticalArcheryHitChance)
 		{
