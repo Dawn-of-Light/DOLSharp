@@ -200,6 +200,7 @@
     <Compile Include="effects\BerserkEffect.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="effects\CamouflageEffect.cs" />
     <Compile Include="effects\EngageEffect.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -670,6 +671,7 @@
     <Compile Include="packets\Server\PacketLib186.cs" />
     <Compile Include="packets\Server\PacketLibAttribute.cs" />
     <Compile Include="packets\Server\PacketProcessor.cs" />
+    <Compile Include="propertycalc\CriticalSpellHitChanceCalculator.cs" />
     <Compile Include="propertycalc\CriticalArcheryHitChanceCalculator.cs" />
     <Compile Include="propertycalc\CriticalMeleeHitChanceCalculator.cs" />
     <Compile Include="propertycalc\ResistPiercePropertyCalculator.cs" />
@@ -681,10 +683,42 @@
     <Compile Include="quests\Missions\RaizeMission.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="realmabilities\effects\AdrenalineRushEffect.cs" />
     <Compile Include="realmabilities\effects\AmelioratingMelodiesEffect.cs" />
+    <Compile Include="realmabilities\effects\BarrierOfFortitudeEffect.cs" />
+    <Compile Include="realmabilities\effects\BedazzlingAuraEffect.cs" />
+    <Compile Include="realmabilities\effects\ChargeEffect.cs" />
+    <Compile Include="realmabilities\effects\DivineInterventionEffect.cs" />
+    <Compile Include="realmabilities\effects\JuggernautEffect.cs" />
+    <Compile Include="realmabilities\effects\MasteryOfConcentrationEffect.cs" />
+    <Compile Include="realmabilities\effects\SoldiersBarricadeEffect.cs" />
+    <Compile Include="realmabilities\effects\SpeedOfSoundEffect.cs" />
+    <Compile Include="realmabilities\effects\StrikePredictionEffect.cs" />
+    <Compile Include="realmabilities\effects\TheEmptyMindEffect.cs" />
+    <Compile Include="realmabilities\handlers\AdrenalineRushAbility.cs" />
     <Compile Include="realmabilities\handlers\AmelioratingMelodiesAbility.cs" />
-    <Compile Include="realmabilities\handlers\CamouflageSpecHandler.cs" />
+    <Compile Include="realmabilities\handlers\AngerOfTheGodsAbility.cs" />
+    <Compile Include="realmabilities\handlers\ArrowSummoningAbility.cs" />
+    <Compile Include="realmabilities\handlers\BarrierOfFortitudeAbility.cs" />
+    <Compile Include="realmabilities\handlers\BedazzlingAuraAbility.cs" />
+    <Compile Include="realmabilities\handlers\L3RAPropertyEnhancerAbilities.cs" />
+    <Compile Include="realmabilities\handlers\WildMinionAbility.cs" />
+    <Compile Include="realmabilities\handlers\LifterAbility.cs" />
+    <Compile Include="realmabilities\handlers\VeilRecoveryAbility.cs" />
+    <Compile Include="skillhandler\CamouflageSpecHandler.cs" />
+    <Compile Include="realmabilities\handlers\ChargeAbility.cs" />
     <Compile Include="realmabilities\handlers\ConcentrationAbility.cs" />
+    <Compile Include="realmabilities\handlers\DivineInterventionAbility.cs" />
+    <Compile Include="realmabilities\handlers\JuggernautAbility.cs" />
+    <Compile Include="realmabilities\handlers\MasteryOfConcentrationAbility.cs" />
+    <Compile Include="realmabilities\handlers\NegativeMaelstromAbility.cs" />
+    <Compile Include="realmabilities\handlers\PerfectRecoveryAbility.cs" />
+    <Compile Include="realmabilities\handlers\SoldiersBarricadeAbility.cs" />
+    <Compile Include="realmabilities\handlers\SpeedOfSoundAbility.cs" />
+    <Compile Include="realmabilities\handlers\StaticTempestAbility.cs" />
+    <Compile Include="realmabilities\handlers\StrikePredictionAbility.cs" />
+    <Compile Include="realmabilities\handlers\TheEmptyMindAbility.cs" />
+    <Compile Include="realmabilities\handlers\ThornweedFieldAbility.cs" />
     <Compile Include="realmabilities\handlers\ToughnessAbility.cs" />
     <Compile Include="realmabilities\handlers\LongWindAbility.cs" />
     <Compile Include="realmabilities\handlers\EtherealBondAbility.cs" />
@@ -694,8 +728,14 @@
     <Compile Include="realmabilities\handlers\VehementRenewalHandler.cs" />
     <Compile Include="realmabilities\handlers\MysticCrystalLoreAbility.cs" />
     <Compile Include="realmabilities\handlers\FirstAidAbility.cs" />
+    <Compile Include="realmabilities\handlers\VolcanicPillarAbility.cs" />
+    <Compile Include="realmabilities\handlers\WrathOfChampionsAbility.cs" />
+    <Compile Include="realmabilities\Statics\GenericBase.cs" />
+    <Compile Include="realmabilities\Statics\NegativeMaelstromBase.cs" />
+    <Compile Include="realmabilities\Statics\StaticTempestBase.cs" />
+    <Compile Include="realmabilities\Statics\ThornweedFieldBase.cs" />
+    <Compile Include="realmabilities\Statics\WallOfFlameBase.cs" />
     <Compile Include="serverproperty\ServerProperties.cs" />
-    <Compile Include="serverproperty\ServerPropertyConstants.cs" />
     <Compile Include="gameutils\DoorMgr.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -1240,7 +1280,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="realmabilities\handlers\AvoidanceOfMagicAbility.cs" />
-    <Compile Include="realmabilities\effects\CamouflageEffect.cs" />
     <Compile Include="realmabilities\effects\TrueshotEffect.cs" />
     <Compile Include="realmabilities\effects\VanishEffect.cs" />
     <Compile Include="realmabilities\handlers\IgnorePainAbility.cs" />
@@ -1294,6 +1333,7 @@
     <Compile Include="skillhandler\EngageAbilityHandler.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="skillhandler\FlurryAbilityHandler.cs" />
     <Compile Include="skillhandler\GuardAbilityHandler.cs">
       <SubType>Code</SubType>
     </Compile>

@@ -362,10 +362,11 @@ namespace DOL.GS
 				long mobs = 0;
 				long merchants = 0;
 				long items = 0;
+				long bindpoints = 0;
 				foreach (RegionData data in regionsData)
 				{
 					Region reg = (Region)m_regions[data.Id];
-					reg.LoadFromDatabase(data.Mobs, ref mobs, ref merchants, ref items);
+					reg.LoadFromDatabase(data.Mobs, ref mobs, ref merchants, ref items, ref bindpoints);
 				}
 
 				if (log.IsInfoEnabled)
@@ -373,6 +374,7 @@ namespace DOL.GS
 					log.Info("Total Mobs: " + mobs);
 					log.Info("Total Merchants: " + merchants);
 					log.Info("Total Items: " + items);
+					log.Info("Total Bind Points: " + bindpoints);
 				}
 
 				m_NPCUpdateThread = new Thread(new ThreadStart(NPCUpdateThreadStart));

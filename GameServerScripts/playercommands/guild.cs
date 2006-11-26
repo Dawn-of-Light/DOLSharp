@@ -1314,10 +1314,10 @@ namespace DOL.GS.Scripts
 								client.Out.SendMessage("You must specify a level to target for upgrade.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return 1;
 							}
-							int targetlevel = 0;
+							byte targetlevel = 0;
 							try
 							{
-								targetlevel = Convert.ToInt32(args[2]);
+								targetlevel = Convert.ToByte(args[2]);
 								if (targetlevel > 10 || targetlevel < 1)
 									return 0;
 							}

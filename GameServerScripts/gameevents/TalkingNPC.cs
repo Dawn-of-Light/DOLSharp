@@ -162,6 +162,8 @@ namespace DOL.GS.GameEvents
 		[ScriptLoadedEvent]
 		public static void OnScriptCompiled(DOLEvent e, object sender, EventArgs args)
 		{
+			if (!ServerProperties.Properties.LOAD_EXAMPLES)
+				return;
 			//Here we create an instance of our talking NPC
 			m_npc = new TalkingNPC();
 			//And add it to the world (the position and all
@@ -169,8 +171,7 @@ namespace DOL.GS.GameEvents
 			//of the NPC
 			bool good = m_npc.AddToWorld();
 			if (log.IsInfoEnabled)
-				if (log.IsInfoEnabled)
-					log.Info("TalkingNPCEvent initialized");
+				log.Info("TalkingNPCEvent initialized");
 		}
 
 		//This function is implemented from the IGameEvent
@@ -179,6 +180,8 @@ namespace DOL.GS.GameEvents
 		[ScriptUnloadedEvent]
 		public static void OnScriptUnloaded(DOLEvent e, object sender, EventArgs args)
 		{
+			if (!ServerProperties.Properties.LOAD_EXAMPLES)
+				return;
 			//To stop this event, we simply delete
 			//(remove from world completly) the npc
 			if (m_npc != null)

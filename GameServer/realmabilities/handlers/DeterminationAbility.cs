@@ -15,8 +15,6 @@ namespace DOL.GS.RealmAbilities
 
 		protected override string ValueUnit { get { return "%"; } }
 
-		public const string KEY = "Determination";
-
 		public override int GetAmountForLevel(int level)
 		{
 			if (level < 1) return 0;

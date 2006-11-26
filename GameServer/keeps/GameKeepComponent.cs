@@ -229,6 +229,10 @@ namespace DOL.GS.Keeps
 		/// </summary>
 		public override void StartHealthRegeneration()
 		{
+			m_repairTimer = new RegionTimer(CurrentRegion.TimeManager);
+			m_repairTimer.Callback = new RegionTimerCallback(RepairTimerCallback);
+			m_repairTimer.Interval = repairInterval;
+			m_repairTimer.Start(1);
 		}
 
 		/// <summary>
@@ -279,6 +283,7 @@ namespace DOL.GS.Keeps
 			this.AddToWorld();
 			FillPositions();
 			this.RepairedHealth = this.MaxHealth;
+			StartHealthRegeneration();
 		}
 
 		public void LoadPositions()
@@ -536,7 +541,6 @@ namespace DOL.GS.Keeps
 				m_isRaized = value;
 				if (value == true)
 				{
-					StartRebuildTimer();
 					if (this.Keep.Level > 1)
 						Keep.ChangeLevel(1);
 				}
@@ -549,25 +553,16 @@ namespace DOL.GS.Keeps
 
 		public int RepairedHealth = 0;
 
-		private RegionTimer m_rebuildTimer;
-		private static int rebuildInterval = 30 * 60 * 1000;
-		private void StartRebuildTimer()
-		{
-			m_rebuildTimer = new RegionTimer(CurrentRegion.TimeManager);
-			m_rebuildTimer.Callback = new RegionTimerCallback(RebuildTimerCallback);
-			m_rebuildTimer.Interval = rebuildInterval;
-			m_rebuildTimer.Start(1);
-		}
+		private RegionTimer m_repairTimer;
+		private static int repairInterval = 30 * 60 * 1000;
 
-		public int RebuildTimerCallback(RegionTimer timer)
+		public int RepairTimerCallback(RegionTimer timer)
 		{
+			if (HealthPercent == 100 || Keep.InCombat)
+				return repairInterval;
+
 			Repair((MaxHealth / 100) * 5);
-			if (HealthPercent >= 25)
-			{
-				FillPositions();
-				return 0;
-			}
-			return rebuildInterval;
+			return repairInterval;
 		}
 
 		public void Repair(int amount)

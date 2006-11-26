@@ -70,6 +70,9 @@ namespace DOL.GS.Spells
 		public override AttackData CalculateDamageToTarget(GameLiving target, double effectiveness)
 		{
 			AttackData ad = base.CalculateDamageToTarget(target, effectiveness);
+			RealmAbilities.L3RAPropertyEnhancer ra = Caster.GetAbility(typeof(RealmAbilities.ViperAbility)) as RealmAbilities.L3RAPropertyEnhancer;
+			if (ra != null)
+				ad.Damage *= 1 + (ra.Amount / 100);
 			ad.CriticalDamage = 0;
 			return ad;
 		}

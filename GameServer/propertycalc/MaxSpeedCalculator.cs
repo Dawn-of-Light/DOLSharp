@@ -47,20 +47,21 @@ namespace DOL.GS.PropertyCalc
 			if (living.IsMezzed || living.IsStunned) return 0;
 
 			double speed = living.BuffBonusMultCategory1.Get((int)property);
+			speed += living.AbilityBonus[(int)property];
 
 			if (living is GamePlayer)
 			{
 				GamePlayer player = (GamePlayer)living;
 
-//				Since Dark Age of Camelot's launch, we have heard continuous feedback from our community about the movement speed in our game. The concerns over how slow
-//				our movement is has continued to grow as we have added more and more areas in which to travel. Because we believe these concerns are valid, we have decided
-//				to make a long requested change to the game, enhancing the movement speed of all players who are out of combat. This new run state allows the player to move
-//				faster than normal run speed, provided that the player is not in any form of combat. Along with this change, we have slightly increased the speed of all
-//				secondary speed buffs (see below for details). Both of these changes are noticeable but will not impinge upon the supremacy of the primary speed buffs available
-//				to the Bard, Skald and Minstrel.
-//				- The new run speed does not work if the player is in any form of combat. All combat timers must also be expired.
-//				- The new run speed will not stack with any other run speed spell or ability, except for Sprint.
-//				- Pets that are not in combat have also received the new run speed, only when they are following, to allow them to keep up with their owners.
+				//				Since Dark Age of Camelot's launch, we have heard continuous feedback from our community about the movement speed in our game. The concerns over how slow
+				//				our movement is has continued to grow as we have added more and more areas in which to travel. Because we believe these concerns are valid, we have decided
+				//				to make a long requested change to the game, enhancing the movement speed of all players who are out of combat. This new run state allows the player to move
+				//				faster than normal run speed, provided that the player is not in any form of combat. Along with this change, we have slightly increased the speed of all
+				//				secondary speed buffs (see below for details). Both of these changes are noticeable but will not impinge upon the supremacy of the primary speed buffs available
+				//				to the Bard, Skald and Minstrel.
+				//				- The new run speed does not work if the player is in any form of combat. All combat timers must also be expired.
+				//				- The new run speed will not stack with any other run speed spell or ability, except for Sprint.
+				//				- Pets that are not in combat have also received the new run speed, only when they are following, to allow them to keep up with their owners.
 				double horseSpeed = (player.IsOnHorse ? player.ActiveHorse.Speed * 0.01 : 1.0);
 				if (speed > horseSpeed)
 					horseSpeed = 1.0;
@@ -70,18 +71,18 @@ namespace DOL.GS.PropertyCalc
 				if (player.IsOverencumbered && player.Client.Account.PrivLevel < 2)
 				{
 					double Enc = player.Encumberance; // calculating player.Encumberance is a bit slow with all those locks, don't call it much
-					if(Enc>player.MaxEncumberance)
+					if (Enc > player.MaxEncumberance)
 					{
-						speed *= (( ((player.MaxSpeedBase*1.0/GamePlayer.PLAYER_BASE_SPEED)*(-Enc)) / (player.MaxEncumberance * 0.35f) ) + (player.MaxSpeedBase/GamePlayer.PLAYER_BASE_SPEED) + ( (player.MaxSpeedBase/GamePlayer.PLAYER_BASE_SPEED)*player.MaxEncumberance / (player.MaxEncumberance * 0.35)));
-						if(speed<=0)
+						speed *= ((((player.MaxSpeedBase * 1.0 / GamePlayer.PLAYER_BASE_SPEED) * (-Enc)) / (player.MaxEncumberance * 0.35f)) + (player.MaxSpeedBase / GamePlayer.PLAYER_BASE_SPEED) + ((player.MaxSpeedBase / GamePlayer.PLAYER_BASE_SPEED) * player.MaxEncumberance / (player.MaxEncumberance * 0.35)));
+						if (speed <= 0)
 						{
-							speed=0;
+							speed = 0;
 							player.Out.SendMessage("You are encumbered and cannot move.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						}
 					}
 					else
 					{
-						player.IsOverencumbered=false;
+						player.IsOverencumbered = false;
 					}
 				}
 				if (player.IsStealthed)
@@ -91,7 +92,7 @@ namespace DOL.GS.PropertyCalc
 					VanishEffect vanish = player.EffectList.GetOfType(typeof(VanishEffect)) as VanishEffect;
 					if (vanish != null)
 						speed *= vanish.SpeedBonus;
-					MasteryOfStealthAbility mos = player.GetAbility(MasteryOfStealthAbility.KEY) as MasteryOfStealthAbility;
+					MasteryOfStealthAbility mos = player.GetAbility(typeof(MasteryOfStealthAbility)) as MasteryOfStealthAbility;
 					if (mos != null)
 						speed *= 1 + MasteryOfStealthAbility.GetSpeedBonusForLevel(mos.Level);
 				}
@@ -110,7 +111,7 @@ namespace DOL.GS.PropertyCalc
 				double healthPercent = living.Health / (double)living.MaxHealth;
 				if (healthPercent < 0.33)
 				{
-					speed *= 0.2 + healthPercent * (0.8/0.33); //33%hp=full speed 0%hp=20%speed
+					speed *= 0.2 + healthPercent * (0.8 / 0.33); //33%hp=full speed 0%hp=20%speed
 				}
 			}
 

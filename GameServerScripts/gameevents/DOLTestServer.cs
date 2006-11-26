@@ -47,6 +47,8 @@ namespace DOL.GS.GameEvents
 		[ScriptLoadedEvent]
 		public static void OnScriptCompiled(DOLEvent e, object sender, EventArgs args)
 		{
+			if (!ServerProperties.Properties.LOAD_EXAMPLES)
+				return;
 			//We want to be notified whenever a new character is created
 			GameEventMgr.AddHandler(DatabaseEvent.CharacterCreated, new DOLEventHandler(DOLTestCharacterCreation));
 			//We want to be notified whenever a player enters the world
@@ -72,6 +74,8 @@ namespace DOL.GS.GameEvents
 		[ScriptUnloadedEvent]
 		public static void OnScriptUnloaded(DOLEvent e, object sender, EventArgs args)
 		{
+			if (!ServerProperties.Properties.LOAD_EXAMPLES)
+				return;
 			GameEventMgr.RemoveHandler(DatabaseEvent.CharacterCreated, new DOLEventHandler(DOLTestCharacterCreation));
 			GameEventMgr.RemoveHandler(GamePlayerEvent.GameEntered, new DOLEventHandler(DOLTestPlayerEnterWorld));
 		}

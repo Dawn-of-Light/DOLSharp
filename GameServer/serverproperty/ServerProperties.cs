@@ -48,158 +48,194 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// The Experience Rate
 		/// </summary>
-		[ServerProperty(ServerPropertyConstants.XP_RATE, "The Experience Points Rate Modifier - Edit this to change the rate at which you gain experience points e.g 1.5 is 50% more 2.0 is twice the amount (100%) 0.5 is half the amount (50%)", 1.0)]
+		[ServerProperty("xp_rate", "The Experience Points Rate Modifier - Edit this to change the rate at which you gain experience points e.g 1.5 is 50% more 2.0 is twice the amount (100%) 0.5 is half the amount (50%)", 1.0)]
 		public static readonly double XP_RATE;
 
 		/// <summary>
 		/// The Realm Points Rate
 		/// </summary>
-		[ServerProperty(ServerPropertyConstants.RP_RATE, "The Realm Points Rate Modifier - Edit this to change the rate at which you gain realm points e.g 1.5 is 50% more 2.0 is twice the amount (100%) 0.5 is half the amount (50%)", 1.0)]
+		[ServerProperty("rp_rate", "The Realm Points Rate Modifier - Edit this to change the rate at which you gain realm points e.g 1.5 is 50% more 2.0 is twice the amount (100%) 0.5 is half the amount (50%)", 1.0)]
 		public static readonly double RP_RATE;
 
 		/// <summary>
 		/// The Server Message of the Day
 		/// </summary>
-		[ServerProperty(ServerPropertyConstants.MOTD, "The Server Message of the Day - Edit this to set what is displayed when a level 2+ character enters the game for the first time, set to \"\" for nothing", "Welcome to a Dawn of Light server, please edit this MOTD")]
+		[ServerProperty("motd", "The Server Message of the Day - Edit this to set what is displayed when a level 2+ character enters the game for the first time, set to \"\" for nothing", "Welcome to a Dawn of Light server, please edit this MOTD")]
 		public static readonly string MOTD;
 
 		/// <summary>
 		/// The damage players do against monsters
 		/// </summary>
-		[ServerProperty(ServerPropertyConstants.PVE_DAMAGE, "The PvE Damage Modifier - Edit this to change the amount of damage done when fighting mobs e.g 1.5 is 50% more damage 2.0 is twice the damage (100%) 0.5 is half the damage (50%)", 1.0)]
+		[ServerProperty("pve_damage", "The PvE Damage Modifier - Edit this to change the amount of damage done when fighting mobs e.g 1.5 is 50% more damage 2.0 is twice the damage (100%) 0.5 is half the damage (50%)", 1.0)]
 		public static readonly double PVE_DAMAGE;
 
 		/// <summary>
 		/// The damage players do against players
 		/// </summary>
-		[ServerProperty(ServerPropertyConstants.PVP_DAMAGE, "The PvP Damage Modifier - Edit this to change the amountof damage done when fighting players e.g 1.5 is 50% more damage 2.0 is twice the damage (100%) 0.5 is half the damage (50%)", 1.0)]
+		[ServerProperty("pvp_damage", "The PvP Damage Modifier - Edit this to change the amountof damage done when fighting players e.g 1.5 is 50% more damage 2.0 is twice the damage (100%) 0.5 is half the damage (50%)", 1.0)]
 		public static readonly double PVP_DAMAGE;
 
 		/// <summary>
 		/// The message players get when they enter the game past level 1
 		/// </summary>
-		[ServerProperty(ServerPropertyConstants.STARTING_MSG, "The Starting Mesage - Edit this to set what is displayed when a level 1 character enters the game for the first time, set to \"\" for nothing", "Welcome for your first time to a Dawn of Light server, please edit this Starter Message")]
+		[ServerProperty("starting_msg", "The Starting Mesage - Edit this to set what is displayed when a level 1 character enters the game for the first time, set to \"\" for nothing", "Welcome for your first time to a Dawn of Light server, please edit this Starter Message")]
 		public static readonly string STARTING_MSG;
 
 		/// <summary>
 		/// The amount of copper a player starts with
 		/// </summary>
-		[ServerProperty(ServerPropertyConstants.STARTING_MONEY, "Starting Money - Edit this to change the amount in copper of money new characters start the game with, max 214 plat", 0)]
+		[ServerProperty("starting_money", "Starting Money - Edit this to change the amount in copper of money new characters start the game with, max 214 plat", 0)]
 		public static readonly long STARTING_MONEY;
 
 		/// <summary>
 		/// The level of experience a player should start with
 		/// </summary>
-		[ServerProperty(ServerPropertyConstants.STARTING_LEVEL, "Starting Level - Edit this to set which levels experience a new player start the game with", 1)]
+		[ServerProperty("starting_level", "Starting Level - Edit this to set which levels experience a new player start the game with", 1)]
 		public static readonly int STARTING_LEVEL;
 
 		/// <summary>
 		/// The message players get when they enter the game at level 1
 		/// </summary>
-		[ServerProperty(ServerPropertyConstants.STARTING_REALM_LEVEL, "Starting Realm level - Edit this to set which realm level a new player starts the game with", 0)]
+		[ServerProperty("starting_realm_level", "Starting Realm level - Edit this to set which realm level a new player starts the game with", 0)]
 		public static readonly int STARTING_REALM_LEVEL;
 
 		/// <summary>
 		/// The a starting guild should be used
 		/// </summary>
-		[ServerProperty(ServerPropertyConstants.STARTING_GUILD, "Starter Guild - Edit this to change the starter guild options, values True,False", true)]
+		[ServerProperty("starting_guild", "Starter Guild - Edit this to change the starter guild options, values True,False", true)]
 		public static readonly bool STARTING_GUILD;
 
 		/// <summary>
 		/// The crafting speed modifier
 		/// </summary>
-		[ServerProperty(ServerPropertyConstants.CRAFTING_SPEED, "Crafting Speed Modifier - Edit this to change the speed at which you craft e.g 1.5 is 50% faster 2.0 is twice as fast (100%) 0.5 is half the speed (50%)", 1.0)]
+		[ServerProperty("crafting_speed", "Crafting Speed Modifier - Edit this to change the speed at which you craft e.g 1.5 is 50% faster 2.0 is twice as fast (100%) 0.5 is half the speed (50%)", 1.0)]
 		public static readonly double CRAFTING_SPEED;
 
 		/// <summary>
 		/// The money drop modifier
 		/// </summary>
-		[ServerProperty(ServerPropertyConstants.MONEY_DROP, "Money Drop Modifier - Edit this to change the amount of money which is dropped e.g 1.5 is 50% more 2.0 is twice the amount (100%) 0.5 is half the amount (50%)", 1.0)]
+		[ServerProperty("money_drop", "Money Drop Modifier - Edit this to change the amount of money which is dropped e.g 1.5 is 50% more 2.0 is twice the amount (100%) 0.5 is half the amount (50%)", 1.0)]
 		public static readonly double MONEY_DROP;
 
 		/// <summary>
 		/// The broadcast type
 		/// </summary>
-		[ServerProperty(ServerPropertyConstants.BROADCAST_TYPE, "Broadcast Type - Edit this to change what /b does, values 0 = disabled, 1 = area, 2 = visibility distance, 3 = zone, 4 = region, 5 = realm, 6 = server", 1)]
+		[ServerProperty("broadcast_type", "Broadcast Type - Edit this to change what /b does, values 0 = disabled, 1 = area, 2 = visibility distance, 3 = zone, 4 = region, 5 = realm, 6 = server", 1)]
 		public static readonly int BROADCAST_TYPE;
 
 		/// <summary>
 		/// The max number of guilds in an alliance
 		/// </summary>
-		[ServerProperty(ServerPropertyConstants.ALLIANCE_MAX, "Max Guilds In Alliance - Edit this to change the maximum number of guilds in an alliance -1 = unlimited, 0=disable alliances", -1)]
+		[ServerProperty("alliance_max", "Max Guilds In Alliance - Edit this to change the maximum number of guilds in an alliance -1 = unlimited, 0=disable alliances", -1)]
 		public static readonly int ALLIANCE_MAX;
 
 		/// <summary>
 		/// The number of players needed for claiming
 		/// </summary>
-		[ServerProperty(ServerPropertyConstants.CLAIM_NUM, "Players Needed For Claim - Edit this to change the amount of players required to claim a keep, towers are half this amount", 8)]
+		[ServerProperty("claim_num", "Players Needed For Claim - Edit this to change the amount of players required to claim a keep, towers are half this amount", 8)]
 		public static readonly int CLAIM_NUM;
 
 		/// <summary>
 		/// The number of players needed to form a guild
 		/// </summary>
-		[ServerProperty(ServerPropertyConstants.GUILD_NUM, "Players Needed For Guild Form - Edit this to change the amount of players required to form a guild", 8)]
+		[ServerProperty("guild_num", "Players Needed For Guild Form - Edit this to change the amount of players required to form a guild", 8)]
 		public static readonly int GUILD_NUM;
 
 		/// <summary>
 		/// If the server should only accept connections from staff
 		/// </summary>
-		[ServerProperty(ServerPropertyConstants.STAFF_LOGIN, "Staff Login Only - Edit this to set weather you wish staff to be the only ones allowed to log in values True,False", false)]
+		[ServerProperty("staff_login", "Staff Login Only - Edit this to set weather you wish staff to be the only ones allowed to log in values True,False", false)]
 		public static readonly bool STAFF_LOGIN;
 
 		/// <summary>
 		/// The max number of players on the server
 		/// </summary>
-		[ServerProperty(ServerPropertyConstants.MAX_PLAYERS, "Max Players - Edit this to set the maximum players allowed to connect at the same time set 0 for unlimited", 0)]
+		[ServerProperty("max_players", "Max Players - Edit this to set the maximum players allowed to connect at the same time set 0 for unlimited", 0)]
 		public static readonly int MAX_PLAYERS;
 
 		/// <summary>
 		/// The time until a player is worth rps again after death
 		/// </summary>
-		[ServerProperty(ServerPropertyConstants.RP_WORTH_SECONDS, "Realm Points Worth Seconds - Edit this to change how many seconds until a player is worth RPs again after being killed ", 300)]
+		[ServerProperty("rp_worth_seconds", "Realm Points Worth Seconds - Edit this to change how many seconds until a player is worth RPs again after being killed ", 300)]
 		public static readonly int RP_WORTH_SECONDS;
 
 		/// <summary>
 		/// The minimum client version required to connect
 		/// </summary>
-		[ServerProperty(ServerPropertyConstants.CLIENT_VERSION_MIN, "Minimum Client Version - Edit this to change which client version at the least have to be used: -1 = any, 1.80 = 180", -1)]
+		[ServerProperty("client_version_min", "Minimum Client Version - Edit this to change which client version at the least have to be used: -1 = any, 1.80 = 180", -1)]
 		public static readonly int CLIENT_VERSION_MIN;
 
 		/// <summary>
 		/// The maximum client version required to connect
 		/// </summary>
-		[ServerProperty(ServerPropertyConstants.CLIENT_VERSION_MAX, "Maximum Client Version - Edit this to change which client version at the most have to be used: -1 = any, 1.80 = 180", -1)]
+		[ServerProperty("client_version_max", "Maximum Client Version - Edit this to change which client version at the most have to be used: -1 = any, 1.80 = 180", -1)]
 		public static readonly int CLIENT_VERSION_MAX;
 
 		/// <summary>
 		/// Should the server load quests
 		/// </summary>
-		[ServerProperty(ServerPropertyConstants.LOAD_QUESTS, "Should the server load quests, values True,False", true)]
+		[ServerProperty("load_quests", "Should the server load quests, values True,False", true)]
 		public static readonly bool LOAD_QUESTS;
 
 		/// <summary>
 		/// Should the server log trades
 		/// </summary>
-		[ServerProperty(ServerPropertyConstants.LOG_TRADES, "Should the server log all trades a player makes, values True,False", false)]
+		[ServerProperty("log_trades", "Should the server log all trades a player makes, values True,False", false)]
 		public static readonly bool LOG_TRADES;
 
 		/// <summary>
 		/// What class should the server use for players
 		/// </summary>
-		[ServerProperty(ServerPropertyConstants.PLAYER_CLASS, "What class should the server use for players", "DOL.GS.GamePlayer")]
+		[ServerProperty("player_class", "What class should the server use for players", "DOL.GS.GamePlayer")]
 		public static readonly string PLAYER_CLASS;
 
 		/// <summary>
 		/// What is the maximum client type allowed to connect
 		/// </summary>
-		[ServerProperty(ServerPropertyConstants.CLIENT_TYPE_MAX, "What is the maximum client type allowed to connect", -1)]
+		[ServerProperty("client_type_max", "What is the maximum client type allowed to connect", -1)]
 		public static readonly int CLIENT_TYPE_MAX;
 
 		/// <summary>
 		/// Disable minotaurs from being created
 		/// </summary>
-		[ServerProperty(ServerPropertyConstants.DISABLE_MINOTAURS, "Disable minotaurs from being created", false)]
+		[ServerProperty("disable_minotaurs", "Disable minotaurs from being created", false)]
 		public static readonly bool DISABLE_MINOTAURS;
+
+		/// <summary>
+		/// Should the server load the example scripts
+		/// </summary>
+		[ServerProperty("load_examples", "should the server load the example scripts", true)]
+		public static readonly bool LOAD_EXAMPLES;
+		
+		/// <summary>
+		/// A serialised list of disabled RegionIDs
+		/// </summary>
+		[ServerProperty("disabled_regions", "a serialised list of disabled region IDs seperated by ;", "")]
+		public static readonly string DISABLED_REGIONS;
+
+		/// <summary>
+		/// A serialised list of disabled expansion IDs
+		/// </summary>
+		[ServerProperty("disabled_expansions", "a serialised list of disabled expansions IDs, expansion IDs are client type seperated by ;", "")]
+		public static readonly string DISABLED_EXPANSIONS;
+
+		/// <summary>
+		/// Should the server disable the tutorial zone
+		/// </summary>
+		[ServerProperty("disable_tutorial", "should the server disable the tutorial zone", false)]
+		public static readonly bool DISABLE_TUTORIAL;
+
+		/// <summary>
+		/// Should users be able to create characters in all realms using the same account
+		/// </summary>
+		[ServerProperty("allow_all_realms", "should we allow characters to be created on all realms using a single account", false)]
+		public static readonly bool ALLOW_ALL_REALMS;
+
+		/// <summary>
+		/// Should users be allowed to create catacombs classes
+		/// </summary>
+		[ServerProperty("disable_catacombs_classes", "should we disable catacombs classes", false)]
+		public static readonly bool DISABLE_CATACOMBS_CLASSES;
 
 		/// <summary>
 		/// This method loads the property from the database and returns

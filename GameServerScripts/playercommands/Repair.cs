@@ -82,6 +82,15 @@ namespace DOL.GS.Scripts
 				return false;
 			}
 
+			if (obj is IKeepItem)
+			{
+				if (obj.CurrentRegion.Time - obj.LastAttackedByEnemyTick <= 60 * 1000)
+				{
+					player.Out.SendMessage("The can't repair the keep component while it under attack!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					return false;
+				}
+			}
+
 			if ((obj as GameLiving).HealthPercent == 100)
 			{
 				player.Out.SendMessage("The component is already at full health!", eChatType.CT_System, eChatLoc.CL_SystemWindow);

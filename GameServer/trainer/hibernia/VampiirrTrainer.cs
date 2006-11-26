@@ -30,7 +30,8 @@ namespace DOL.GS.Trainer
 	{
 		public const string ARMOR_ID1 = "Vampiir_item";
 
-		public VampiirTrainer() : base()
+		public VampiirTrainer()
+			: base()
 		{
 		}
 
@@ -39,38 +40,44 @@ namespace DOL.GS.Trainer
 		/// </summary>
 		/// <param name="player"></param>
 		/// <returns></returns>
- 		public override bool Interact(GamePlayer player)
- 		{		
- 			if (!base.Interact(player)) return false;
-								
+		public override bool Interact(GamePlayer player)
+		{
+			if (!base.Interact(player)) return false;
+
 			// check if class matches.				
-			if (player.CharacterClass.ID == (int) eCharacterClass.Vampiir) {
+			if (player.CharacterClass.ID == (int)eCharacterClass.Vampiir)
+			{
 
 				// popup the training window
 				player.Out.SendTrainerWindow();
 				//player.Out.SendMessage(this.Name + " says, \"Select what you like to train.\"", eChatType.CT_System, eChatLoc.CL_PopupWindow;
 				player.Out.SendMessage(this.Name + " says, \"Do you wish to learn some more, " + player.Name + "? Step up and receive your training!\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
 
-			} else {
+			}
+			else
+			{
 				// perhaps player can be promoted
-				if (CanPromotePlayer(player)) {
+				if (CanPromotePlayer(player))
+				{
 					player.Out.SendMessage(this.Name + " says, \"" + player.Name + ", do you choose the Path of Affinity, and life as a [Vampiir]?\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
-				} else {
-					player.Out.SendMessage(this.Name + " says, \"You must seek elsewhere for your training.\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);							
+				}
+				else
+				{
+					player.Out.SendMessage(this.Name + " says, \"You must seek elsewhere for your training.\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
 				}
 			}
 			return true;
- 		}
+		}
 
 		/// <summary>
 		/// checks whether a player can be promoted or not
 		/// </summary>
 		/// <param name="player"></param>
 		/// <returns></returns>
-		public bool CanPromotePlayer(GamePlayer player) 
+		public bool CanPromotePlayer(GamePlayer player)
 		{
-			return (player.Level>=5 && (player.CharacterClass.ID == (int) eCharacterClass.Stalker || player.CharacterClass.ID == (int) eCharacterClass.Forester || player.CharacterClass.ID == (int) eCharacterClass.Guardian
-			|| player.CharacterClass.ID == (int) eCharacterClass.Magician || player.CharacterClass.ID == (int) eCharacterClass.Naturalist) && (player.Race == (int) eRace.Celt || player.Race == (int) eRace.Lurikeen || player.Race == (int) eRace.Shar));
+			return (player.Level >= 5 && (player.CharacterClass.ID == (int)eCharacterClass.Stalker || player.CharacterClass.ID == (int)eCharacterClass.Forester || player.CharacterClass.ID == (int)eCharacterClass.Guardian
+			|| player.CharacterClass.ID == (int)eCharacterClass.Magician || player.CharacterClass.ID == (int)eCharacterClass.Naturalist) && (player.Race == (int)eRace.Celt || player.Race == (int)eRace.Lurikeen || player.Race == (int)eRace.Shar));
 		}
 
 		/// <summary>
@@ -80,34 +87,42 @@ namespace DOL.GS.Trainer
 		/// <param name="text"></param>
 		/// <returns></returns>
 		public override bool WhisperReceive(GameLiving source, string text)
-		{				
-			if (!base.WhisperReceive(source, text)) return false;			
-			GamePlayer player = source as GamePlayer;			
-	
-			switch (text) {
-			case "Vampiir":
-				// promote player to other class
-				if (CanPromotePlayer(player))
-				{
-					player.RemoveAllSpellLines();	
-					player.RemoveAllSkills();
-					player.RemoveAllSpecs();			
-					player.RemoveAllStyles();
-					player.Out.SendUpdatePlayerSkills();
-					player.SkillSpecialtyPoints = 14;//lvl 5 skill points full
-					PromotePlayer(player, (int)eCharacterClass.Vampiir, "Very well, " + source.GetName(0, false) + ". I gladly take your training into my hands. Congratulations, from this day forth, you are a Vampiir. Here, take this gift to aid you.", null);
-					lock(player.Inventory)
+		{
+			if (!base.WhisperReceive(source, text)) return false;
+			GamePlayer player = source as GamePlayer;
+
+			switch (text)
+			{
+				case "Vampiir":
+					// promote player to other class
+					if (CanPromotePlayer(player))
 					{
-						foreach(InventoryItem item in player.Inventory.EquippedItems)
+						player.RemoveAllSpellLines();
+						player.RemoveAllSkills();
+						player.RemoveAllSpecs();
+						player.RemoveAllStyles();
+						player.Out.SendUpdatePlayerSkills();
+						player.SkillSpecialtyPoints = 14;//lvl 5 skill points full
+						PromotePlayer(player, (int)eCharacterClass.Vampiir, "Very well, " + source.GetName(0, false) + ". I gladly take your training into my hands. Congratulations, from this day forth, you are a Vampiir. Here, take this gift to aid you.", null);
+						lock (player.Inventory)
 						{
-							if(!player.HasAbilityToUseItem(item))
-								player.Inventory.MoveItem((eInventorySlot)item.SlotPosition,player.Inventory.FindFirstEmptySlot(eInventorySlot.FirstBackpack,eInventorySlot.LastBackpack),item.Count);
+							foreach (InventoryItem item in player.Inventory.EquippedItems)
+							{
+								if (!player.HasAbilityToUseItem(item))
+									player.Inventory.MoveItem((eInventorySlot)item.SlotPosition, player.Inventory.FindFirstEmptySlot(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack), item.Count);
+							}
 						}
 					}
-				}
-				break;
+					break;
 			}
-			return true;		
+			return true;
+		}
+
+		public override bool AddToWorld()
+		{
+			if (ServerProperties.Properties.DISABLE_CATACOMBS_CLASSES)
+				return false;
+			return base.AddToWorld();
 		}
 	}
 }

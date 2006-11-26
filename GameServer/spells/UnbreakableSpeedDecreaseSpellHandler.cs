@@ -30,6 +30,17 @@ namespace DOL.GS.Spells
 	[SpellHandler("UnbreakableSpeedDecrease")]
 	public class UnbreakableSpeedDecreaseSpellHandler : ImmunityEffectSpellHandler
 	{
+		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
+		{
+			if (target.EffectList.GetOfType(typeof(ChargeEffect)) != null)
+			{
+				MessageToCaster(target.Name + " is moving to fast for this spell to have any effect!", eChatType.CT_SpellResisted);
+				return;
+			}
+
+			base.ApplyEffectOnTarget(target, effectiveness);
+		}
+
 		/// <summary>
 		/// When an applied effect starts,
 		/// duration spells only

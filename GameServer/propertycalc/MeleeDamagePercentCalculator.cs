@@ -45,6 +45,8 @@ namespace DOL.GS.PropertyCalc
 				percent = (int)(percent * RelicMgr.GetRelicBonusModifier(living.Realm, eRelicType.Strength));
 			}
 
+			percent += living.AbilityBonus[(int)property];
+
 			return Math.Max(1, percent);
 		}
 	}

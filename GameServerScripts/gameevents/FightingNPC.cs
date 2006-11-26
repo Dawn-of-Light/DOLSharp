@@ -86,6 +86,8 @@ namespace DOL.GS.GameEvents
 		[ScriptLoadedEvent]
 		public static void OnScriptsCompiled(DOLEvent e, object sender, EventArgs args)
 		{
+			if (!ServerProperties.Properties.LOAD_EXAMPLES)
+				return;
 			//We set a new random class
 			m_rnd = new Random();
 
@@ -261,6 +263,8 @@ namespace DOL.GS.GameEvents
 		[ScriptLoadedEvent]
 		public static void OnScriptUnload(DOLEvent e, object sender, EventArgs args)
 		{
+			if (!ServerProperties.Properties.LOAD_EXAMPLES)
+				return;
 			//We stop our timer ... no more attacks
 			if (m_fightTimer != null) {
 				m_fightTimer.Stop();

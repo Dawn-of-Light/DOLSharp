@@ -89,11 +89,11 @@ namespace DOL.GS.Items
 				bard_item_template.MaxCondition = 50000;
 				bard_item_template.Quality = 90;
 				bard_item_template.MaxQuality = 90;
-				bard_item_template.DPS_AF = 0;
+				bard_item_template.DPS_AF = (int)eInstrumentType.Lute;
 				bard_item_template.SPD_ABS = 40;
 				bard_item_template.Hand = 1;
-				bard_item_template.Type_Damage = 1;
-				bard_item_template.Object_Type = 45;
+				bard_item_template.Type_Damage = 0;
+				bard_item_template.Object_Type = (int)eObjectType.Instrument;
 				bard_item_template.Item_Type = 12;
 				bard_item_template.Weight = 45;
 				bard_item_template.Model = 227;

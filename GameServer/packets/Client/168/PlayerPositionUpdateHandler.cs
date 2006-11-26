@@ -70,7 +70,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			if ((client.Player.ObjectState != GameObject.eObjectState.Active) ||
 				(client.ClientState != GameClient.eClientState.Playing))
 				return 1;
-				
+
 			int EnvironmentTick = Environment.TickCount;
 			int packetVersion;
 			if (client.Version > GameClient.eClientVersion.Version171)
@@ -394,7 +394,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					client.Disconnect();
 					return 1;
 				}
-			} 
+			}
 
 			SHlastFly = fly;
 			SHlastStatus = status;
@@ -508,10 +508,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 				client.Player.Heading = client.Player.Steed.Heading;
 
 				con168[2] |= 24; //Set ride flag 00011000
-				con168[12] = (byte) (client.Player.Steed.ObjectID >> 8); //heading = steed ID
-				con168[13] = (byte) (client.Player.Steed.ObjectID & 0xFF);
+				con168[12] = (byte)(client.Player.Steed.ObjectID >> 8); //heading = steed ID
+				con168[13] = (byte)(client.Player.Steed.ObjectID & 0xFF);
 				con168[14] = (byte)0;
-				con168[15] = (byte) (client.Player.Steed.RiderSlot(client.Player)); // there rider slot this player
+				con168[15] = (byte)(client.Player.Steed.RiderSlot(client.Player)); // there rider slot this player
 			}
 			else if (!client.Player.IsAlive)
 			{
@@ -585,6 +585,14 @@ namespace DOL.GS.PacketHandler.Client.v168
 				}
 				else
 					player.Out.SendObjectDelete(client.Player); //remove the stealthed player from view
+			}
+
+			//handle closing of windows
+			//trade window
+			if (client.Player.TradeWindow != null)
+			{
+				if (!WorldMgr.CheckDistance(client.Player, client.Player.TradeWindow.Partner, WorldMgr.GIVE_ITEM_DISTANCE))
+					client.Player.TradeWindow.CloseTrade();
 			}
 
 			return 1;
