@@ -10,7 +10,7 @@ namespace DOL.GS.RealmAbilities
         public DivineInterventionAbility(DBAbility dba, int level) : base(dba, level) { }
 		public const int poolDuration = 1200; // 20 minutes
 
-        public void Execute(GameLiving living)
+        public override void Execute(GameLiving living)
         {
             if (CheckPreconditions(living, DEAD | SITTING | MEZZED | STUNNED)) return;
             GamePlayer player = living as GamePlayer;

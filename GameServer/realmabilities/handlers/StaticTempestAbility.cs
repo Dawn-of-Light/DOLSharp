@@ -16,7 +16,7 @@ namespace DOL.GS.RealmAbilities
 		private int stunDuration;
 		private uint duration;
 		private GamePlayer player;
-        public void Execute(GameLiving living)
+        public override void Execute(GameLiving living)
 		{
 			if (CheckPreconditions(living, DEAD | SITTING | MEZZED | STUNNED)) return;
 			GamePlayer player = living as GamePlayer;

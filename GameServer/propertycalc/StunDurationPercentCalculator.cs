@@ -38,19 +38,11 @@ namespace DOL.GS.PropertyCalc
 			int percent = 100
 				- living.BuffBonusCategory1[(int)property] // buff reduce the duration
 				+ living.BuffBonusCategory3[(int)property]
-				- living.ItemBonus[(int)property];
+				- living.ItemBonus[(int)property]
+				- living.AbilityBonus[(int)property];
 
-			if (living is GamePlayer)
-			{
-				GamePlayer player = living as GamePlayer;
-
-				if (player.HasAbility(Abilities.Stoicism))
-					percent -= 25;
-
-				DeterminationAbility ra = player.GetAbility(typeof(DeterminationAbility)) as DeterminationAbility;
-				if (ra != null)
-					percent -= ra.GetAmountForLevel(ra.Level);
-			}
+			if (living.HasAbility(Abilities.Stoicism))
+				percent -= 25;
 
 			return Math.Max(1, percent);
 		}

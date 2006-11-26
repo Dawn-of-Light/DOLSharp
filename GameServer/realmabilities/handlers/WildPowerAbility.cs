@@ -37,8 +37,6 @@ namespace DOL.GS.RealmAbilities
 	/// </summary>
 	public class MasteryOfMageryAbility : RAPropertyEnhancer
 	{
-		public const string KEY = "Mastery of Magery";
-
 		public MasteryOfMageryAbility(DBAbility dba, int level)
 			: base(dba, level, eProperty.Undefined)
 		{

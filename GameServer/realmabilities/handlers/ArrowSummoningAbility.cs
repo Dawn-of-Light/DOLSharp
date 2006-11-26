@@ -29,7 +29,7 @@ namespace DOL.GS.RealmAbilities
     public class ArrowSummoningAbility : TimedRealmAbility
 	{
         public ArrowSummoningAbility(DBAbility dba, int level) : base(dba, level) { }
-        public void Execute(GameLiving living)
+        public override void Execute(GameLiving living)
 		{
             if (CheckPreconditions(living, DEAD | SITTING | MEZZED | STUNNED)) return;
             GamePlayer player = living as GamePlayer;
