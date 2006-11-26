@@ -38,7 +38,7 @@ namespace DOL.GS.RealmAbilities
             sl = new SpellLine("RAs", "RealmAbilitys", "RealmAbilitys", true);
         }	
 
-		public void Execute(GameLiving living)
+		public override void Execute(GameLiving living)
 		{
 			if (CheckPreconditions(living, DEAD | SITTING | MEZZED | STUNNED)) return;
 			player = living as GamePlayer;

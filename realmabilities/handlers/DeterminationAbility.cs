@@ -11,7 +11,13 @@ namespace DOL.GS.RealmAbilities
 	/// </summary>
 	public class DeterminationAbility : RAPropertyEnhancer
 	{
-		public DeterminationAbility(DBAbility dba, int level) : base(dba, level, eProperty.Undefined) { }
+		public static eProperty[] properties = new eProperty[] 
+{
+	eProperty.MesmerizeDuration,
+	eProperty.StunDuration,
+	eProperty.SpeedDecreaseDuration,
+};
+		public DeterminationAbility(DBAbility dba, int level) : base(dba, level, properties) { }
 
 		protected override string ValueUnit { get { return "%"; } }
 

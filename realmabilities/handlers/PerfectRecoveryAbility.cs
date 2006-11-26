@@ -18,7 +18,7 @@ namespace DOL.GS.RealmAbilities
 		private const String RESURRECT_CASTER_PROPERTY = "RESURRECT_CASTER";
 		private RegionTimer m_expireTimer;
 
-        public void Execute(GameLiving living)
+        public override void Execute(GameLiving living)
         {
             if (CheckPreconditions(living, DEAD | SITTING | MEZZED | STUNNED)) return;
             GamePlayer player = living as GamePlayer;

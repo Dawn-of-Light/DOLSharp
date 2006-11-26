@@ -18,7 +18,7 @@ namespace DOL.GS.RealmAbilities
         int m_reuseTimer = 600;
         int m_value = 0;
 
-        public void Execute(GameLiving living)
+        public override void Execute(GameLiving living)
         {
             GamePlayer player = living as GamePlayer;
             if (CheckPreconditions(living, DEAD | SITTING | MEZZED | STUNNED)) return;

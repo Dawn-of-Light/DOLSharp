@@ -19,7 +19,7 @@ namespace DOL.GS.RealmAbilities
         private const string IS_CASTING = "isCasting";
         private const string NM_CAST_SUCCESS = "NMCasting";
 
-        public void Execute(GameLiving living)
+        public override void Execute(GameLiving living)
         {
             if (CheckPreconditions(living, DEAD | SITTING | MEZZED | STUNNED)) return;
             GamePlayer player = living as GamePlayer;
