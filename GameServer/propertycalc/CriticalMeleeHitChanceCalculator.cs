@@ -29,25 +29,38 @@ namespace DOL.GS.PropertyCalc
 	/// BuffBonusCategory3 unused
 	/// BuffBonusCategory4 for uncapped realm ability bonus
 	/// BuffBonusMultCategory1 unused
-    /// 
-    /// Crit propability is capped to 50% except for berserk 
+	/// 
+	/// Crit propability is capped to 50% except for berserk 
 	/// </summary>
 	[PropertyCalculator(eProperty.CriticalMeleeHitChance)]
 	public class CriticalMeleeHitChanceCalculator : PropertyCalculator
 	{
-		public CriticalMeleeHitChanceCalculator() {}
+		public CriticalMeleeHitChanceCalculator() { }
 
-		public override int CalcValue(GameLiving living, eProperty property) 
+		public override int CalcValue(GameLiving living, eProperty property)
 		{
 			// no berserk for ranged weapons
-			BerserkEffect berserk = (BerserkEffect) living.EffectList.GetOfType(typeof(BerserkEffect));
-			if (berserk!=null) {
+			BerserkEffect berserk = (BerserkEffect)living.EffectList.GetOfType(typeof(BerserkEffect));
+			if (berserk != null)
+			{
 				return 100;
 			}
 
 			// base 10% chance of critical for all with melee weapons plus ra bonus
-			return 10 + living.BuffBonusCategory4[(int)property];
+			int chance = 10 + living.BuffBonusCategory4[(int)property] + living.AbilityBonus[(int)property];
 
+			if (living is GameNPC && (living as GameNPC).Brain is AI.Brain.IControlledBrain)
+			{
+				GamePlayer player = ((living as GameNPC).Brain as AI.Brain.IControlledBrain).Owner;
+				if (player != null)
+				{
+					RealmAbilities.WildMinionAbility ab = player.GetAbility(typeof(RealmAbilities.WildMinionAbility)) as RealmAbilities.WildMinionAbility;
+					chance += ab.Amount;
+				}
+			}
+
+			//50% hardcap
+			return Math.Min(chance, 50);
 		}
 	}
 }

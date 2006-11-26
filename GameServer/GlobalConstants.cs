@@ -23,6 +23,9 @@ using DOL.Database;
 
 namespace DOL.GS
 {
+	/// <summary>
+	/// Object type sets the type of object, for example sword or shield
+	/// </summary>
 	public enum eObjectType : byte
 	{
 		GenericItem = 0,
@@ -80,6 +83,8 @@ namespace DOL.GS
 		Poison = 46,
 		AlchemyTincture = 47,
 		SpellcraftGem = 48,
+
+		//housing
 		GardenObject = 49,
 		HouseWallObject = 50,
 		HouseFloorObject = 51,
@@ -102,6 +107,8 @@ namespace DOL.GS
 		HouseCarpetSecond = 69,
 		HouseCarpetThird = 70,
 		HouseCarpetFourth = 71,
+
+		//siege weapons
 		SiegeBalista = 80, // need log
 		SiegeCatapult = 81, // need log
 		SiegeCauldron = 82, // need log
@@ -222,6 +229,9 @@ namespace DOL.GS
 		Falling = 255,
 	}
 
+	/// <summary>
+	/// Holds the weapon damage type
+	/// </summary>
 	public enum eWeaponDamageType : byte
 	{
 		Elemental = 0,
@@ -237,6 +247,9 @@ namespace DOL.GS
 		Spirit = 15,
 	}
 
+	/// <summary>
+	/// The type of stat
+	/// </summary>
 	public enum eStat : byte
 	{
 		UNDEFINED = 0,
@@ -362,11 +375,25 @@ namespace DOL.GS
 		Blue_42 = 86
 	}
 
+	/// <summary>
+	/// Ressurection sickness types
+	/// </summary>
 	public enum eResurectionSicknessType : int
 	{
 		PvMSickness = 0,
 		RvRSickness = 1,
 		NoSickness = 2
+	}
+
+	/// <summary>
+	/// instrument types
+	/// </summary>
+	public enum eInstrumentType : int
+	{
+		Drum = 1,
+		Lute = 2,
+		Flute = 3,
+		Harp = 4,
 	}
 
 	/// <summary>
@@ -640,6 +667,7 @@ namespace DOL.GS
 		AllSkills = 213,
 		CriticalMeleeHitChance = 214,
 		CriticalArcheryHitChance = 215,
+		CriticalSpellHitChance = 216,
 
 		MaxProperty = 255,
 	}
@@ -765,6 +793,9 @@ namespace DOL.GS
 		_Last = 6,
 	}
 
+	/// <summary>
+	/// the size of a shield
+	/// </summary>
 	public abstract class ShieldLevel
 	{
 		public const int Small = 1;
@@ -772,6 +803,9 @@ namespace DOL.GS
 		public const int Large = 3;
 	}
 
+	/// <summary>
+	/// the material type
+	/// </summary>
 	public enum eMaterial : byte
 	{
 		Cloth = 0,

@@ -205,7 +205,7 @@ namespace DOL.GS.Effects
 		public virtual IGameEffect GetOfType(Type effectType)
 		{
 			if (m_effects == null) return null;
-			lock (m_effects)
+			lock (m_effects.SyncRoot)
 			{
 				foreach (IGameEffect effect in m_effects)
 					if (effect.GetType().Equals(effectType)) return effect;

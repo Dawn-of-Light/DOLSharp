@@ -120,6 +120,10 @@ namespace DOL.GS.Spells
 		/// <returns>The effect duration in milliseconds</returns>
 		protected override int CalculateEffectDuration(GameLiving target, double effectiveness)
 		{
+			double modifier = 1.0;
+			RealmAbilities.VeilRecoveryAbility ab = target.GetAbility(typeof(RealmAbilities.VeilRecoveryAbility)) as RealmAbilities.VeilRecoveryAbility;
+			if (ab != null)
+				modifier += ab.Amount;
 			return Spell.Duration;
 		}
 

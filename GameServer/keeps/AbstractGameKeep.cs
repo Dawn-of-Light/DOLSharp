@@ -237,12 +237,12 @@ namespace DOL.GS.Keeps
 				return m_difficultyLevel[Realm-1];
 			}
 		}
-		private int m_targetLevel;
+		private byte m_targetLevel;
 
 		/// <summary>
 		/// The target level for upgrading or downgrading
 		/// </summary>
-		public int TargetLevel
+		public byte TargetLevel
 		{
 			get
 			{
@@ -271,6 +271,14 @@ namespace DOL.GS.Keeps
 		{
 			get	{ return DBKeep.Level; }
 			set	{ DBKeep.Level = value; }
+		}
+
+		/// <summary>
+		/// calculate the effective level from a keep level
+		/// </summary>
+		public byte EffectiveLevel(byte level)
+		{
+			return (byte)Math.Max(0, level - 1);
 		}
 
 		/// <summary>
@@ -509,14 +517,20 @@ namespace DOL.GS.Keeps
 
 			if (player.PlayerGroup != null)
 			{
+				int count = 0;
 				foreach (GamePlayer p in player.PlayerGroup)
 				{
-					AbstractGameKeep keep = KeepMgr.getKeepCloseToSpot(player.CurrentRegionID, player, WorldMgr.VISIBILITY_DISTANCE);
-					if (keep == null || keep != this)
-					{
-						player.Out.SendMessage("Not all group members are near the keep.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						return false;
-					}
+					if (KeepMgr.getKeepCloseToSpot(p.CurrentRegionID, p, WorldMgr.VISIBILITY_DISTANCE) == this)
+						count++;
+				}
+
+				int needed = ServerProperties.Properties.CLAIM_NUM;
+				if (this is GameKeepTower)
+					needed = needed / 2;
+				if (count < needed)
+				{
+					player.Out.SendMessage("Not enough group members are near the keep. You have " + count + "/" + needed + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					return false;
 				}
 			}
 			return true;
@@ -669,7 +683,7 @@ namespace DOL.GS.Keeps
 		/// Start changing the keeps level to a target level
 		/// </summary>
 		/// <param name="targetLevel">The target level</param>
-		public void StartChangeLevel(int targetLevel)
+		public void StartChangeLevel(byte targetLevel)
 		{
 			if (this.Level == targetLevel)
 				return;
@@ -828,11 +842,11 @@ namespace DOL.GS.Keeps
 			{
 				if (!component.IsRaized)
 					component.Repair(component.MaxHealth - component.Health);
-				//change realm
-				foreach (GameClient client in WorldMgr.GetClientsOfRegion(component.CurrentRegionID))
-				{
-					client.Out.SendKeepComponentUpdate(this, false);
-				}
+			}
+			//change realm
+			foreach (GameClient client in WorldMgr.GetClientsOfRegion(this.CurrentRegion.ID))
+			{
+				client.Out.SendKeepComponentUpdate(this, false);
 			}
 			//we reset all doors
 			foreach(GameKeepDoor door in Doors.Values)

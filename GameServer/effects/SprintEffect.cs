@@ -110,7 +110,7 @@ namespace DOL.GS.Effects
 				{
 					int amount = 5;
 
-					LongWindAbility ra = m_player.GetAbility(LongWindAbility.KEY) as LongWindAbility;
+					LongWindAbility ra = m_player.GetAbility(typeof(LongWindAbility)) as LongWindAbility;
 					if (ra != null)
 						amount = 5 - ra.GetAmountForLevel(ra.Level);
 

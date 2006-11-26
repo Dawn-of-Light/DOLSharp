@@ -47,7 +47,7 @@ namespace DOL.GS.RealmAbilities
 	/// <summary>
 	/// Physical Defence RA, reduces melee damage
 	/// </summary>
-	public class PhysicalDefenseAbility : RAPropertyEnhancer
+	public class PhysicalDefenceAbility : RAPropertyEnhancer
 	{
 		/// <summary>
 		/// The list of properties this RA affects
@@ -59,7 +59,7 @@ namespace DOL.GS.RealmAbilities
 	eProperty.Resist_Thrust,
 };
 
-		public PhysicalDefenseAbility(DBAbility dba, int level)
+		public PhysicalDefenceAbility(DBAbility dba, int level)
 			: base(dba, level, properties)
 		{
 		}

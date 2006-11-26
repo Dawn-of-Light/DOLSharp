@@ -946,7 +946,7 @@ namespace DOL.GS
 		/// </summary>
 		public virtual int SpellCriticalChance
 		{
-			get { return 0; }
+			get { return GetModified(eProperty.CriticalSpellHitChance); }
 			set { }
 		}
 		/// <summary>
@@ -1394,9 +1394,9 @@ namespace DOL.GS
 				ad.UncappedDamage = ad.Damage;
 				ad.Damage = Math.Min(ad.Damage, (int)(UnstyledDamageCap(weapon) * effectiveness));
 
-				if (target is GamePlayer)
+				if ((this is GamePlayer || (this is GameNPC && this is GameNPC && (this as GameNPC).Brain is IControlledBrain && this.Realm != 0)) && target is GamePlayer)
 					ad.Damage = (int)((double)ad.Damage * ServerProperties.Properties.PVP_DAMAGE);
-				else if (target is GameNPC)
+				else if ((this is GamePlayer || (this is GameNPC && this is GameNPC && (this as GameNPC).Brain is IControlledBrain && this.Realm != 0)) && target is GameNPC)
 					ad.Damage = (int)((double)ad.Damage * ServerProperties.Properties.PVE_DAMAGE);
 
 				// patch to missed when 0 damage
@@ -2155,6 +2155,15 @@ namespace DOL.GS
 					if (mainHandAD.IsMeleeAttack)
 					{
 						owner.StartWeaponMagicalEffect(mainHandAD, mainWeapon); // proc, poison
+						if (mainHandAD.Target is GameLiving)
+						{
+							GameLiving living = mainHandAD.Target as GameLiving;
+							RealmAbilities.L3RAPropertyEnhancer ra = living.GetAbility(typeof(RealmAbilities.ReflexAttackAbility)) as RealmAbilities.L3RAPropertyEnhancer;
+							if (ra != null && Util.Chance(ra.Amount))
+							{
+								new WeaponOnTargetAction(living, owner, living.AttackWeapon, (living.Inventory == null) ? null : living.Inventory.GetItem(eInventorySlot.LeftHandWeapon), living.CalculateLeftHandSwingCount(), 1, living.AttackSpeed(living.AttackWeapon), null).Start(1);
+							}
+						}
 					}
 				}
 
@@ -4768,13 +4777,31 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		}
 
 		/// <summary>
-		/// returns ability of player or null if non existent
+		/// returns ability of living or null if non existent
 		/// </summary>
 		/// <param name="abilityKey"></param>
 		/// <returns></returns>
 		public Ability GetAbility(string abilityKey)
 		{
 			return m_abilities[abilityKey] as Ability;
+		}
+
+		/// <summary>
+		/// returns ability of living or null if no existant
+		/// </summary>
+		/// <param name="abilityType"></param>
+		/// <returns></returns>
+		public Ability GetAbility(Type abilityType)
+		{
+			lock (m_abilities.SyncRoot)
+			{
+				foreach (Ability ab in m_abilities.Values)
+				{
+					if (ab.GetType().Equals(abilityType))
+						return ab;
+				}
+			}
+			return null;
 		}
 
 		/// <summary>

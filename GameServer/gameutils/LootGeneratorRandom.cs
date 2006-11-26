@@ -17,6 +17,7 @@
  *
  */
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using DOL.Database;
 using log4net;
@@ -25,7 +26,7 @@ namespace DOL.GS
 {
 	/// <summary>
 	/// LootGeneratorRandom
-	/// This implementation uses ItemTemplates to fetch a random item in the range of LEVEL_RANGE to moblevel	
+	/// This implementation uses ItemTemplates to fetch a random item in the range of LEVEL_RANGE to moblevel   
 	/// </summary>
 	public class LootGeneratorRandom : LootGeneratorBase
 	{
@@ -39,7 +40,11 @@ namespace DOL.GS
 		/// groups are rounded down to 1-5, 5-10, 10-15, 15-20, 20-25, etc...
 		/// 1:n Mapping between Moblevel and LootTemplate
 		/// </summary>
-		protected static ItemTemplate[][] m_itemTemplates=null;
+		protected static ItemTemplate[][] m_itemTemplates = null;
+
+		protected static ItemTemplate[][] m_itemTemplatesAlb;
+		protected static ItemTemplate[][] m_itemTemplatesMid;
+		protected static ItemTemplate[][] m_itemTemplatesHib;
 
 		protected const int LEVEL_RANGE = 5; // 
 		protected const int LEVEL_SIZE = 10; // 10*LEVEL_RANGE = up to level 50
@@ -58,32 +63,68 @@ namespace DOL.GS
 		/// <returns></returns>
 		protected static bool PreloadItemTemplates()
 		{
-			if (m_itemTemplates==null)
+			if (m_itemTemplates == null)
 			{
-				m_itemTemplates = new ItemTemplate[LEVEL_SIZE+1][];
+				m_itemTemplates = new ItemTemplate[LEVEL_SIZE + 1][];
 
-				lock(m_itemTemplates.SyncRoot)
+				m_itemTemplatesAlb = new ItemTemplate[LEVEL_SIZE + 1][];
+				m_itemTemplatesHib = new ItemTemplate[LEVEL_SIZE + 1][];
+				m_itemTemplatesMid = new ItemTemplate[LEVEL_SIZE + 1][];
+
+				lock (m_itemTemplates.SyncRoot)
 				{
 					// ** find our loot template **
-					DataObject[] itemTemplates=null;
-					for (int i=0;i <= LEVEL_SIZE; i++) 
+					DataObject[] itemTemplates = null;
+					for (int i = 0; i <= LEVEL_SIZE; i++)
 					{
 						try
 						{
-							itemTemplates = GameServer.Database.SelectObjects(typeof(ItemTemplate),"Level>="+(i*LEVEL_RANGE)+" AND Level<="+((i+1)*LEVEL_RANGE));
+							itemTemplates = GameServer.Database.SelectObjects(typeof(ItemTemplate), "Level>=" + (i * LEVEL_RANGE) + " AND Level<=" + ((i + 1) * LEVEL_RANGE));
 						}
-						catch(Exception e)
+						catch (Exception e)
 						{
 							if (log.IsErrorEnabled)
 								log.Error("LootGeneratorRandom: ItemTemplates could not be loaded", e);
 							return false;
 						}
 
-						if(itemTemplates != null) // did we find a loot template
+						if (itemTemplates != null) // did we find a loot template
 						{
-							m_itemTemplates[i]= (ItemTemplate[]) itemTemplates;
+							m_itemTemplates[i] = (ItemTemplate[])itemTemplates;
+
+							List<ItemTemplate> templatesAlb = new List<ItemTemplate>();
+							List<ItemTemplate> templatesHib = new List<ItemTemplate>();
+							List<ItemTemplate> templatesMid = new List<ItemTemplate>();
+
+							foreach (ItemTemplate itemTemplate in itemTemplates)
+							{
+								switch (itemTemplate.Realm)
+								{
+									case (int)DOL.GS.PacketHandler.eRealm.Albion:
+										templatesAlb.Add(itemTemplate);
+										break;
+									case (int)DOL.GS.PacketHandler.eRealm.Hibernia:
+										templatesHib.Add(itemTemplate);
+										break;
+									case (int)DOL.GS.PacketHandler.eRealm.Midgard:
+										templatesMid.Add(itemTemplate);
+										break;
+									default:
+										{
+											templatesAlb.Add(itemTemplate);
+											templatesHib.Add(itemTemplate);
+											templatesMid.Add(itemTemplate);
+											break;
+										}
+								}
+							}
+
+							m_itemTemplatesAlb[i] = templatesAlb.ToArray();
+							m_itemTemplatesHib[i] = templatesHib.ToArray();
+							m_itemTemplatesMid[i] = templatesMid.ToArray();
 						}
 					}
+
 				}
 			}
 			return true;
@@ -93,12 +134,32 @@ namespace DOL.GS
 		{
 			LootList loot = base.GenerateLoot(mob, killer);
 
-			if (Util.Chance(25)) 
+			if (Util.Chance(10))
 			{
-				ItemTemplate[] itemTemplates = m_itemTemplates[Math.Min(m_itemTemplates.Length-1, mob.Level/LEVEL_RANGE)];
-				if (itemTemplates!=null && itemTemplates.Length>0)
+				int index = Math.Min(m_itemTemplates.Length - 1, mob.Level / LEVEL_RANGE);
+
+				ItemTemplate[] itemTemplates;
+
+				switch (mob.CurrentZone.GetRealm())
 				{
-					loot.AddRandom(100, itemTemplates[Util.Random(itemTemplates.Length-1)]);
+					case DOL.GS.PacketHandler.eRealm.Albion:
+						itemTemplates = m_itemTemplatesAlb[index];
+						break;
+					case DOL.GS.PacketHandler.eRealm.Hibernia:
+						itemTemplates = m_itemTemplatesHib[index];
+						break;
+					case DOL.GS.PacketHandler.eRealm.Midgard:
+						itemTemplates = m_itemTemplatesMid[index];
+						break;
+					default:
+						itemTemplates = m_itemTemplates[index];
+						break;
+				}
+
+				if (itemTemplates != null && itemTemplates.Length > 0)
+				{
+					ItemTemplate itemTemplate = itemTemplates[Util.Random(itemTemplates.Length - 1)];
+					loot.AddRandom(100, itemTemplate);
 				}
 			}
 

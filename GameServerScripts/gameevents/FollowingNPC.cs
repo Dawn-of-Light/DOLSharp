@@ -168,6 +168,8 @@ namespace DOL.GS.GameEvents
 		[ScriptLoadedEvent]
 		public static void OnScriptCompiled(DOLEvent e, object sender, EventArgs args)
 		{
+			if (!ServerProperties.Properties.LOAD_EXAMPLES)
+				return;
 			m_myFollowTimer = new Timer(1500);
 			m_myFollowTimer.AutoReset = true;
 			m_myFollowTimer.Start();
@@ -189,6 +191,8 @@ namespace DOL.GS.GameEvents
 		[ScriptUnloadedEvent]
 		public static void OnScriptUnload(DOLEvent e, object sender, EventArgs args)
 		{
+			if (!ServerProperties.Properties.LOAD_EXAMPLES)
+				return;
 			//To stop this event, we simply delete
 			//(remove from world completly) the npc
 			if (m_npc != null)
