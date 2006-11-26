@@ -1394,9 +1394,9 @@ namespace DOL.GS
 				ad.UncappedDamage = ad.Damage;
 				ad.Damage = Math.Min(ad.Damage, (int)(UnstyledDamageCap(weapon) * effectiveness));
 
-				if ((this is GamePlayer || (this is GameNPC && this is GameNPC && (this as GameNPC).Brain is IControlledBrain && this.Realm != 0)) && target is GamePlayer)
+				if ((this is GamePlayer || (this is GameNPC && (this as GameNPC).Brain is IControlledBrain && this.Realm != 0)) && target is GamePlayer)
 					ad.Damage = (int)((double)ad.Damage * ServerProperties.Properties.PVP_DAMAGE);
-				else if ((this is GamePlayer || (this is GameNPC && this is GameNPC && (this as GameNPC).Brain is IControlledBrain && this.Realm != 0)) && target is GameNPC)
+				else if ((this is GamePlayer || (this is GameNPC && (this as GameNPC).Brain is IControlledBrain && this.Realm != 0)) && target is GameNPC)
 					ad.Damage = (int)((double)ad.Damage * ServerProperties.Properties.PVE_DAMAGE);
 
 				// patch to missed when 0 damage

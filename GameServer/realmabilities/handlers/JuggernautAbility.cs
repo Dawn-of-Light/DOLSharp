@@ -15,8 +15,9 @@ namespace DOL.GS.RealmAbilities
 		int m_duration = 60;
 		byte m_value = 0;
 
-		public void Execute(Ability ab, GamePlayer player)
+		public override void Execute(GameLiving living)
 		{
+			GamePlayer player = living as GamePlayer;
 			#region preCheck
 			if (player == null)
 			{

@@ -32,42 +32,42 @@ namespace DOL.GS.RealmAbilities
         public MasteryofConcentrationAbility(DBAbility dba, int level) : base(dba, level) { }
 		public const Int32 Duration = 30;
 
-        public void Execute(GameLiving living)
-        {
-            if (CheckPreconditions(living, DEAD | SITTING | MEZZED | STUNNED)) return;
-            GamePlayer player = living as GamePlayer;
+		public override void Execute(GameLiving living)
+		{
+			if (CheckPreconditions(living, DEAD | SITTING | MEZZED | STUNNED)) return;
+			GamePlayer player = living as GamePlayer;
+
+			if (player == null)
+				return;
 
 			MasteryofConcentrationEffect MoCEffect = (MasteryofConcentrationEffect)player.EffectList.GetOfType(typeof(MasteryofConcentrationEffect));
-            if (player != null)
-            {
-                if (MoCEffect != null)
-                {
-                    MoCEffect.Cancel(false);
-                    return;
-                }
-                SendCasterSpellEffectAndCastMessage(living, 7007, true);
-                foreach (GamePlayer t_player in player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-                {
+			if (MoCEffect != null)
+			{
+				MoCEffect.Cancel(false);
+				return;
+			}
+			SendCasterSpellEffectAndCastMessage(living, 7007, true);
+			foreach (GamePlayer t_player in player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+			{
 
-                    if (WorldMgr.GetDistance(t_player, player) <= WorldMgr.INFO_DISTANCE)
-                    {
-                        if (t_player == player)
-                        {
-                            player.Out.SendMessage("You cast a Mastery of Concentration Spell!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
-                            player.Out.SendMessage("You become steadier in your casting abilities!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
-                        }
-                        else
-                        {
-                            t_player.Out.SendMessage(player.Name + " casts a spell!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
-                            t_player.Out.SendMessage(player.Name + "'s castings have perfect poise!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                        }
-                    }
-                }
+				if (WorldMgr.GetDistance(t_player, player) <= WorldMgr.INFO_DISTANCE)
+				{
+					if (t_player == player)
+					{
+						player.Out.SendMessage("You cast a Mastery of Concentration Spell!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+						player.Out.SendMessage("You become steadier in your casting abilities!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+					}
+					else
+					{
+						t_player.Out.SendMessage(player.Name + " casts a spell!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+						t_player.Out.SendMessage(player.Name + "'s castings have perfect poise!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					}
+				}
+			}
 
-                DisableSkill(living);
+			DisableSkill(living);
 
-                new MasteryofConcentrationEffect().Start(player);
-            }
+			new MasteryofConcentrationEffect().Start(player);
 		}
         public override int GetReUseDelay(int level)
         {

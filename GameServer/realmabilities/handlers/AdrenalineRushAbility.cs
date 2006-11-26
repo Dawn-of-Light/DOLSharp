@@ -14,7 +14,7 @@ namespace DOL.GS.RealmAbilities
 
         public AdrenalineRushAbility(DBAbility dba, int level) : base(dba, level) { }
 
-        public void Execute(GameLiving living)
+        public override void Execute(GameLiving living)
         {
             GamePlayer player = living as GamePlayer;
             if (CheckPreconditions(living, DEAD | SITTING | STEALTHED)) return;
