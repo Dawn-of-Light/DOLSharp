@@ -212,6 +212,17 @@ namespace DOL.GS.PacketHandler.Client.v168
 						ch.Concentration = 100;
 						ch.MaxSpeed = GamePlayer.PLAYER_BASE_SPEED;
 
+						//if the server property for disable tutorial is set, we load in the classic starting locations
+						if (ch.Region == 27 && ServerProperties.Properties.DISABLE_TUTORIAL)
+						{
+							switch (ch.Realm)
+							{
+								case 1: ch.Region = 1; break;
+								case 2: ch.Region = 100; break;
+								case 3: ch.Region = 200; break;
+							}
+						}
+
 
 
 						ch.Xpos = 505603;

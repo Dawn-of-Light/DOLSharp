@@ -8,10 +8,9 @@ namespace DOL.GS.RealmAbilities
 	/// </summary>
 	public class WildPowerAbility : RAPropertyEnhancer
 	{
-		public const string KEY = "Wild Power";
 
 		public WildPowerAbility(DBAbility dba, int level)
-			: base(dba, level, eProperty.Undefined)
+			: base(dba, level, eProperty.CriticalSpellHitChance)
 		{
 		}
 
@@ -68,8 +67,6 @@ namespace DOL.GS.RealmAbilities
 	/// </summary>
 	public class WildHealingAbility : RAPropertyEnhancer
 	{
-		public const string KEY = "Wild Healing";
-
 		public WildHealingAbility(DBAbility dba, int level)
 			: base(dba, level, eProperty.Undefined)
 		{
@@ -97,8 +94,6 @@ namespace DOL.GS.RealmAbilities
 	/// </summary>
 	public class MasteryOfHealingAbility : RAPropertyEnhancer
 	{
-		public const string KEY = "Mastery of Healing";
-
 		public MasteryOfHealingAbility(DBAbility dba, int level)
 			: base(dba, level, eProperty.Undefined)
 		{
@@ -126,8 +121,6 @@ namespace DOL.GS.RealmAbilities
 	/// </summary>
 	public class MasteryOfFocusAbility : RAPropertyEnhancer
 	{
-		public const string KEY = "Mastery of Focus";
-
 		public MasteryOfFocusAbility(DBAbility dba, int level) : base(dba, level, eProperty.Undefined) { }
 
 		public override int GetAmountForLevel(int level)

@@ -404,6 +404,14 @@ namespace DOL.GS.Keeps
 			//No regeneration for doors
 			return;
 		}
+
+		public override void StartHealthRegeneration()
+		{
+			m_repairTimer = new RegionTimer(CurrentRegion.TimeManager);
+			m_repairTimer.Callback = new RegionTimerCallback(RepairTimerCallback);
+			m_repairTimer.Interval = repairInterval;
+			m_repairTimer.Start(1);
+		}
 		#endregion
 
 		#region Save/load DB
@@ -437,13 +445,13 @@ namespace DOL.GS.Keeps
 			m_health = MaxHealth;
 			m_Name = "Keep Door";
 			m_oldHealthPercent = HealthPercent;
-			m_healthRegenerationPeriod = 3600000; //3600000 ms = 3600 seconds = 1 hour
 			m_doorID = GenerateDoorID();
 			this.m_Model = 0xFFFF;
 			m_state = eDoorState.Closed;
 
 			DoorMgr.Doors[m_doorID] = this;
 			this.AddToWorld();
+			StartHealthRegeneration();
 		}
 
 		public void MoveToPosition(DBKeepPosition position)
@@ -525,6 +533,18 @@ namespace DOL.GS.Keeps
 			{
 				client.Out.SendDoorState(this);
 			}
+		}
+
+		private RegionTimer m_repairTimer;
+		private static int repairInterval = 30 * 60 * 1000;
+
+		public int RepairTimerCallback(RegionTimer timer)
+		{
+			if (HealthPercent == 100 || Component.Keep.InCombat)
+				return repairInterval;
+
+			Repair((MaxHealth / 100) * 5);
+			return repairInterval;
 		}
 
 		/// <summary>

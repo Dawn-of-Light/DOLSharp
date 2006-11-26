@@ -19,6 +19,9 @@
 
 namespace DOL.GS.Scripts
 {
+	/// <summary>
+	/// Command handler for the /bind command
+	/// </summary>
 	[CmdAttribute(
 		"&bind",
 		(uint) ePrivLevel.Player,
@@ -26,6 +29,12 @@ namespace DOL.GS.Scripts
 		"/bind")]
 	public class BindCommandHandler : ICommandHandler
 	{
+		/// <summary>
+		/// Method to handle the command and any arguments
+		/// </summary>
+		/// <param name="client"></param>
+		/// <param name="args"></param>
+		/// <returns></returns>
 		public int OnCommand(GameClient client, string[] args)
 		{
 			client.Player.Bind(false);

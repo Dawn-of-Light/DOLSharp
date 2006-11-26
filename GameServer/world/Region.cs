@@ -226,7 +226,28 @@ namespace DOL.GS
 			m_waterLevel = data.WaterLevel;
 			m_divingEnabled = data.DivingEnabled;
 			m_housingEnabled = data.HousingEnabled;
-			m_expansion = data.Expansion;
+			//expansion type is client type + 1
+			m_expansion = data.Expansion + 1;
+
+			string[] list = ServerProperties.Properties.DISABLED_REGIONS.Split(';');
+			foreach (string region in list)
+			{
+				if (region.ToString() == ID.ToString())
+				{
+					m_isDisabled = true;
+					break;
+				}
+			}
+
+			list = ServerProperties.Properties.DISABLED_EXPANSIONS.Split(';');
+			foreach (string expansion in list)
+			{
+				if (expansion.ToString() == m_expansion.ToString())
+				{
+					m_isDisabled = true;
+					break;
+				}
+			}
 		}
 
 		#endregion
@@ -372,11 +393,29 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Gets the curret region time in milliseconds
+		/// Gets the current region time in milliseconds
 		/// </summary>
 		public long Time
 		{
 			get { return m_timeManager.CurrentTime; }
+		}
+
+		private BindPoint[] m_bindPoints;
+		/// <summary>
+		/// Gets the current regions bindpoints
+		/// </summary>
+		public BindPoint[] BindPoints
+		{
+			get { return m_bindPoints; }
+		}
+
+		private bool m_isDisabled = false;
+		/// <summary>
+		/// Is this region disabled
+		/// </summary>
+		public bool IsDisabled
+		{
+			get { return m_isDisabled; }
 		}
 
 		#endregion
@@ -430,15 +469,17 @@ namespace DOL.GS
 		/// <param name="mobCount">The count of loaded mobs</param>
 		/// <param name="merchantCount">The count of loaded merchants</param>
 		/// <param name="itemCount">The count of loaded items</param>
-		public void LoadFromDatabase(Mob[] mobObjs, ref long mobCount, ref long merchantCount, ref long itemCount)
+		public void LoadFromDatabase(Mob[] mobObjs, ref long mobCount, ref long merchantCount, ref long itemCount, ref long bindCount)
 		{
 			Assembly gasm = Assembly.GetAssembly(typeof(GameServer));
 			WorldObject[] staticObjs = (WorldObject[])GameServer.Database.SelectObjects(typeof(WorldObject), "Region = " + ID);
+			m_bindPoints = (BindPoint[])GameServer.Database.SelectObjects(typeof(BindPoint), "Region = "  + ID);
 			int count = mobObjs.Length + staticObjs.Length;
 			if (count > 0) PreAllocateRegionSpace(count + 100);
 			int myItemCount = staticObjs.Length;
 			int myMobCount = 0;
 			int myMerchantCount = 0;
+			int myBindCount = m_bindPoints.Length;
 			if (mobObjs.Length > 0)
 			{
 				foreach (Mob mob in mobObjs)
@@ -585,10 +626,10 @@ namespace DOL.GS
 				}
 			}
 
-			if (myMobCount + myItemCount + myMerchantCount > 0)
+			if (myMobCount + myItemCount + myMerchantCount + myBindCount > 0)
 			{
 				if (log.IsInfoEnabled)
-					log.Info(String.Format("Region: {0} loaded {1} mobs, {2} merchants, {3} items, from DB ({4})", Description, myMobCount, myMerchantCount, myItemCount, TimeManager.Name));
+					log.Info(String.Format("Region: {0} loaded {1} mobs, {2} merchants, {3} items {4} bindpoints, from DB ({5})", Description, myMobCount, myMerchantCount, myItemCount, myBindCount, TimeManager.Name));
 				//WorldMgr.GCAction();
 				log.Debug("Used Memory: " + GC.GetTotalMemory(false) / 1024 + "KB");
 				Thread.Sleep(0);
@@ -596,6 +637,7 @@ namespace DOL.GS
 			mobCount += myMobCount;
 			merchantCount += myMerchantCount;
 			itemCount += myItemCount;
+			bindCount += myBindCount;
 		}
 
 		/// <summary>

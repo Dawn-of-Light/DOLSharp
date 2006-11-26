@@ -126,6 +126,8 @@ namespace DOL.GS.Quests.Examples
 		[ScriptLoadedEvent]
 		public static void ScriptLoaded(DOLEvent e, object sender, EventArgs args)
 		{
+			if (!ServerProperties.Properties.LOAD_EXAMPLES)
+				return;
 			if (!ServerProperties.Properties.LOAD_QUESTS)
 				return;
 			/* First thing we do in here is to search for a Sir Quait NPC inside
@@ -247,6 +249,8 @@ namespace DOL.GS.Quests.Examples
 		[ScriptUnloadedEvent]
 		public static void ScriptUnloaded(DOLEvent e, object sender, EventArgs args)
 		{
+			if (!ServerProperties.Properties.LOAD_EXAMPLES)
+				return;
 			/* If sirQuait has not been initialized, then we don't have to remove any
 			 * hooks from him ;-)
 			 */

@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Reflection;
 using DOL.Database;
-using log4net;
 
 namespace DOL.GS.RealmAbilities
 {
@@ -11,12 +10,6 @@ namespace DOL.GS.RealmAbilities
 	/// </summary>
 	public class RAStatEnhancer : L5RealmAbility
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
-
 		eProperty m_property = eProperty.Undefined;
 
 		public eProperty Property

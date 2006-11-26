@@ -52,9 +52,8 @@ namespace DOL.GS.PropertyCalc
 
 				return af;
 			}
-			else if (living is GameKeepDoor)
+			else if (living is GameKeepDoor || living is GameKeepComponent)
 			{
-				GameKeepDoor keepdoor = living as GameKeepDoor;
 				return 2000;
 			}
 			else

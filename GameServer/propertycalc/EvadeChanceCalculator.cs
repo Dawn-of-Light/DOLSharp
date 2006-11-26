@@ -43,14 +43,15 @@ namespace DOL.GS.PropertyCalc
 				evadechance += player.BuffBonusCategory1[(int)property] * 10
 								+ player.BuffBonusCategory2[(int)property] * 10
 								- player.BuffBonusCategory3[(int)property] * 10
-								+ player.BuffBonusCategory4[(int)property] * 10;
+								+ player.BuffBonusCategory4[(int)property] * 10
+								+ player.AbilityBonus[(int)property] * 10;
 				return evadechance;
 			}
 
 			GameNPC npc = living as GameNPC;
 			if (npc != null)
 			{
-				return npc.EvadeChance * 10;
+				return living.AbilityBonus[(int)property] * 10 + npc.EvadeChance * 10;
 			}
 
 			return 0;

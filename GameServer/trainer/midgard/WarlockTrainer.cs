@@ -27,7 +27,8 @@ namespace DOL.GS.Trainer
 	[NPCGuildScript("Warlock Trainer", eRealm.Midgard)]		// this attribute instructs DOL to use this script for all "Warlock Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class WarlockTrainer : GameTrainer
 	{
-		public WarlockTrainer() : base()
+		public WarlockTrainer()
+			: base()
 		{
 		}
 
@@ -36,37 +37,43 @@ namespace DOL.GS.Trainer
 		/// </summary>
 		/// <param name="player"></param>
 		/// <returns></returns>
- 		public override bool Interact(GamePlayer player)
- 		{		
- 			if (!base.Interact(player)) return false;
-								
+		public override bool Interact(GamePlayer player)
+		{
+			if (!base.Interact(player)) return false;
+
 			// check if class matches.				
-			if (player.CharacterClass.ID == (int) eCharacterClass.Warlock) {
+			if (player.CharacterClass.ID == (int)eCharacterClass.Warlock)
+			{
 
 				// popup the training window
 				player.Out.SendTrainerWindow();
 				//player.Out.SendMessage(this.Name + " says, \"Select what you like to train.\"", eChatType.CT_Say, eChatLoc.CL_PopupWindow);												
 
-			} else {
+			}
+			else
+			{
 				// perhaps player can be promoted
-				if (CanPromotePlayer(player)) {
-					player.Out.SendMessage(this.Name + " says, \"Do you desire to [join the House of Hel] and defend our realm as a Warlock?\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
-				} else {
-					player.Out.SendMessage(this.Name + " says, \"You must seek elsewhere for your training.\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);							
+				if (CanPromotePlayer(player))
+				{
+					player.Out.SendMessage(this.Name + " says, \"Do you desire to [join the House of Hel] and defend our realm as a Warlock?\"", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+				}
+				else
+				{
+					player.Out.SendMessage(this.Name + " says, \"You must seek elsewhere for your training.\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
 				}
 			}
 			return true;
- 		}
+		}
 
 		/// <summary>
 		/// checks wether a player can be promoted or not
 		/// </summary>
 		/// <param name="player"></param>
 		/// <returns></returns>
-		public bool CanPromotePlayer(GamePlayer player) 
+		public bool CanPromotePlayer(GamePlayer player)
 		{
-			return (player.Level>=5 && player.CharacterClass.ID == (int) eCharacterClass.Mystic && (player.Race == (int) eRace.Frostalf || player.Race == (int) eRace.Norseman 
-				|| player.Race == (int) eRace.Kobold));
+			return (player.Level >= 5 && player.CharacterClass.ID == (int)eCharacterClass.Mystic && (player.Race == (int)eRace.Frostalf || player.Race == (int)eRace.Norseman
+				|| player.Race == (int)eRace.Kobold));
 		}
 
 		/// <summary>
@@ -76,19 +83,28 @@ namespace DOL.GS.Trainer
 		/// <param name="text"></param>
 		/// <returns></returns>
 		public override bool WhisperReceive(GameLiving source, string text)
-		{				
-			if (!base.WhisperReceive(source, text)) return false;			
-			GamePlayer player = source as GamePlayer;			
-	
-			switch (text) {
-			case "join the House of Hel":
-				// promote player to other class
-				if (CanPromotePlayer(player)) {
-					PromotePlayer(player, (int)eCharacterClass.Warlock, "Welcome young Warlock! May your time in Midgard army be rewarding!", null);	// TODO: gifts
-				}
-				break;
+		{
+			if (!base.WhisperReceive(source, text)) return false;
+			GamePlayer player = source as GamePlayer;
+
+			switch (text)
+			{
+				case "join the House of Hel":
+					// promote player to other class
+					if (CanPromotePlayer(player))
+					{
+						PromotePlayer(player, (int)eCharacterClass.Warlock, "Welcome young Warlock! May your time in Midgard army be rewarding!", null);	// TODO: gifts
+					}
+					break;
 			}
-			return true;		
+			return true;
+		}
+
+		public override bool AddToWorld()
+		{
+			if (ServerProperties.Properties.DISABLE_CATACOMBS_CLASSES)
+				return false;
+			return base.AddToWorld();
 		}
 	}
 }

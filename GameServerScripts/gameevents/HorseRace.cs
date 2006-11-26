@@ -421,6 +421,8 @@ namespace DOL.GS.GameEvents
 		[ScriptLoadedEvent]
 		public static void OnScriptCompiled(DOLEvent e, object sender, EventArgs args)
 		{
+			if (!ServerProperties.Properties.LOAD_EXAMPLES)
+				return;
 			//Declare our variables
 			m_horses = new RaceHorse[4];
 			m_racingHorses = new RaceHorse[4];
@@ -473,6 +475,8 @@ namespace DOL.GS.GameEvents
 		[ScriptUnloadedEvent]
 		public static void OnScriptUnloaded(DOLEvent e, object sender, EventArgs args)
 		{
+			if (!ServerProperties.Properties.LOAD_EXAMPLES)
+				return;
 			//Stop the timer
 			if (m_raceStartTimer != null)
 				m_raceStartTimer.Close();

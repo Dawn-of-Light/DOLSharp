@@ -27,7 +27,8 @@ namespace DOL.GS.Trainer
 	[NPCGuildScript("Valkyrie Trainer", eRealm.Midgard)]		// this attribute instructs DOL to use this script for all "Valkyrie Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class ValkyrieTrainer : GameTrainer
 	{
-		public ValkyrieTrainer() : base()
+		public ValkyrieTrainer()
+			: base()
 		{
 		}
 
@@ -36,37 +37,43 @@ namespace DOL.GS.Trainer
 		/// </summary>
 		/// <param name="player"></param>
 		/// <returns></returns>
- 		public override bool Interact(GamePlayer player)
- 		{		
- 			if (!base.Interact(player)) return false;
-								
+		public override bool Interact(GamePlayer player)
+		{
+			if (!base.Interact(player)) return false;
+
 			// check if class matches.				
-			if (player.CharacterClass.ID == (int) eCharacterClass.Valkyrie) {
+			if (player.CharacterClass.ID == (int)eCharacterClass.Valkyrie)
+			{
 
 				// popup the training window
 				player.Out.SendTrainerWindow();
 				//player.Out.SendMessage(this.Name + " says, \"Select what you like to train.\"", eChatType.CT_Say, eChatLoc.CL_PopupWindow);												
 
-			} else {
+			}
+			else
+			{
 				// perhaps player can be promoted
-				if (CanPromotePlayer(player)) {
-					player.Out.SendMessage(this.Name + " says, \"Do you desire to [join the House of Odin] and defend our realm as a Valkyrie?\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
-				} else {
-					player.Out.SendMessage(this.Name + " says, \"You must seek elsewhere for your training.\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);							
+				if (CanPromotePlayer(player))
+				{
+					player.Out.SendMessage(this.Name + " says, \"Do you desire to [join the House of Odin] and defend our realm as a Valkyrie?\"", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+				}
+				else
+				{
+					player.Out.SendMessage(this.Name + " says, \"You must seek elsewhere for your training.\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
 				}
 			}
 			return true;
- 		}
+		}
 
 		/// <summary>
 		/// checks wether a player can be promoted or not
 		/// </summary>
 		/// <param name="player"></param>
 		/// <returns></returns>
-		public bool CanPromotePlayer(GamePlayer player) 
+		public bool CanPromotePlayer(GamePlayer player)
 		{
-			return (player.Level>=5 && player.PlayerCharacter.Gender == 1 && player.CharacterClass.ID == (int) eCharacterClass.Viking && (player.Race == (int) eRace.Dwarf || player.Race == (int) eRace.Norseman
-				|| player.Race == (int) eRace.Frostalf));
+			return (player.Level >= 5 && player.PlayerCharacter.Gender == 1 && player.CharacterClass.ID == (int)eCharacterClass.Viking && (player.Race == (int)eRace.Dwarf || player.Race == (int)eRace.Norseman
+				|| player.Race == (int)eRace.Frostalf));
 		}
 
 		/// <summary>
@@ -76,19 +83,28 @@ namespace DOL.GS.Trainer
 		/// <param name="text"></param>
 		/// <returns></returns>
 		public override bool WhisperReceive(GameLiving source, string text)
-		{				
-			if (!base.WhisperReceive(source, text)) return false;			
-			GamePlayer player = source as GamePlayer;			
-	
-			switch (text) {
-			case "join the House of Odin":
-				// promote player to other class
-				if (CanPromotePlayer(player)) {
-					PromotePlayer(player, (int)eCharacterClass.Valkyrie, "Welcome young Valkyrie! May your time in Midgard army be rewarding!", null);	// TODO: gifts
-				}
-				break;
+		{
+			if (!base.WhisperReceive(source, text)) return false;
+			GamePlayer player = source as GamePlayer;
+
+			switch (text)
+			{
+				case "join the House of Odin":
+					// promote player to other class
+					if (CanPromotePlayer(player))
+					{
+						PromotePlayer(player, (int)eCharacterClass.Valkyrie, "Welcome young Valkyrie! May your time in Midgard army be rewarding!", null);	// TODO: gifts
+					}
+					break;
 			}
-			return true;		
+			return true;
+		}
+
+		public override bool AddToWorld()
+		{
+			if (ServerProperties.Properties.DISABLE_CATACOMBS_CLASSES)
+				return false;
+			return base.AddToWorld();
 		}
 	}
 }

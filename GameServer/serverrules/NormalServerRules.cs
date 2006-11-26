@@ -133,7 +133,10 @@ namespace DOL.GS.ServerRules
 
 		public override bool IsAllowedCharsInAllRealms(GameClient client)
 		{
-			if(client.Account.PrivLevel > 1) return true;
+			if (client.Account.PrivLevel > 1)
+				return true;
+			if (ServerProperties.Properties.ALLOW_ALL_REALMS)
+				return true;
 			return false;
 		}
 
@@ -154,7 +157,11 @@ namespace DOL.GS.ServerRules
 			if(source == null || target == null) return false;
 
 			// clients with priv level > 1 are allowed to trade with anyone
-			if(source is GamePlayer && ((GamePlayer)source).Client.Account.PrivLevel > 1) return true;
+			if(source is GamePlayer && target is GamePlayer)
+			{
+				if ((source as GamePlayer).Client.Account.PrivLevel > 1 ||(target as GamePlayer).Client.Account.PrivLevel > 1)
+					return true;
+			}
 
 			//Peace flag NPCs can trade with everyone
 			if (target is GameNPC)

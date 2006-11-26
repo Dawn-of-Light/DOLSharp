@@ -283,6 +283,8 @@ namespace DOL.GS.Spells
 		{
 			if (Caster.EffectList.GetOfType(typeof(QuickCastEffect)) != null)
 				return false;
+			if (Caster.EffectList.GetOfType(typeof(MasteryofConcentrationEffect)) != null)
+				return false;
 			if (IsCasting)
 			{
 				double mod = Caster.GetConLevel(attacker);
@@ -1025,6 +1027,8 @@ namespace DOL.GS.Spells
 					}
 				}
 			}
+
+			GameEventMgr.Notify(GameLivingEvent.CastFinished, new CastSpellEventArgs(this));
 		}
 
 		/// <summary>
@@ -1219,6 +1223,14 @@ namespace DOL.GS.Spells
 
 			foreach (GameLiving t in targets)
 			{
+				double effectiveness = 1.0;
+				if (Caster.EffectList.GetOfType(typeof(MasteryofConcentrationEffect)) != null)
+				{
+					GamePlayer playerCaster = Caster as GamePlayer;
+					RealmAbility ra = playerCaster.GetAbility(typeof(MasteryofConcentrationAbility)) as RealmAbility;
+					if (ra != null)
+						effectiveness = System.Math.Round((double)ra.Level * 25 / 100, 2);
+				}
 				if (Util.Chance(CalculateSpellResistChance(t)))
 				{
 					OnSpellResisted(t);
@@ -1227,7 +1239,7 @@ namespace DOL.GS.Spells
 
 				if (Spell.Radius == 0)
 				{
-					ApplyEffectOnTarget(t, 1.0);
+					ApplyEffectOnTarget(t, effectiveness);
 				}
 				else if (Spell.Target == "Area")
 				{
@@ -1878,14 +1890,29 @@ namespace DOL.GS.Spells
 
 			CalculateDamageVariance(target, out minVariance, out maxVariance);
 			double spellDamage = CalculateDamageBase();
-
 			GamePlayer player = null;
 			if (m_caster is GamePlayer)
 				player = m_caster as GamePlayer;
+			/* double TOADmg = 1 + m_caster.GetModified(eProperty.SpellDamage) * 0.01;
+			 double RelicDmg = 0;
+			 if (player != null)
+			 {
+				 //Relic bonus is calculated before ra bonus
+				 RelicDmg = RelicMgr.GetRelicBonusModifier(living.Realm, eRelicType.Magic);
+				 TOADmg += RelicDmg * 0.01;
+			 }
 
+			 if (m_caster.HasAbility(MasteryOfMageryAbility.KEY) && this is DoTSpellHandler == false)
+			 {
+				 RAPropertyEnhancer ra = (m_caster as GamePlayer).GetAbility(MasteryOfMageryAbility.KEY) as RAPropertyEnhancer;
+				 if (ra != null)
+				 {
+					 TOADmg += ra.Amount * 0.01;
+				 }
+			 }*/
+			//spellDamage *= TOADmg;
 			if (player != null)
 				spellDamage *= player.PlayerEffectiveness;
-
 			int finalDamage = Util.Random((int)(minVariance * spellDamage), (int)(maxVariance * spellDamage));
 
 			int hitChance = CalculateToHitChance(ad.Target);
@@ -1923,14 +1950,30 @@ namespace DOL.GS.Spells
 			*/
 			// apply effectiveness
 			finalDamage = (int)(finalDamage * effectiveness);
-
+			if (target is GamePlayer)
+			{
+				GamePlayer playerTarget = target as GamePlayer;
+				if (playerTarget.EffectList.GetOfType(typeof(TheEmptyMindEffect)) != null)
+				{
+					RealmAbility ra = player.GetAbility(TheEmptyMindAbility.KEY) as RealmAbility;
+					if (ra != null)
+					{
+						switch (ra.Level)
+						{
+							case 1: finalDamage = (int)(finalDamage * 0.9); break;
+							case 2: finalDamage = (int)(finalDamage * 0.8); break;
+							case 3: finalDamage = (int)(finalDamage * 0.7); break;
+						}
+					}
+				}
+			}
 			// Well the PenetrateResistBuff is NOT ResistPierce
 			GameSpellEffect penPierce = SpellHandler.FindEffectOnTarget(m_caster, "PenetrateResists");
 			if (penPierce != null)
 			{
 				finalDamage = (int)(finalDamage * (1.0 + penPierce.Spell.Value / 100.0));
 			}
-			
+
 			int cdamage = 0;
 			if (finalDamage < 0)
 				finalDamage = 0;
@@ -1975,7 +2018,7 @@ namespace DOL.GS.Spells
 			 * 
 			 * - assume that "spell damage reduction only" indicates resistcategory 2
 			 */
-			
+
 			if (ad.Target is GamePlayer && (ad.Target as GamePlayer).HasAbility(Abilities.MemoriesOfWar) && ad.Target.Level >= 40)
 			{
 				int levelbonus = Math.Min(target.Level - 40, 10);
@@ -1985,12 +2028,12 @@ namespace DOL.GS.Spells
 
 			int resistModifier = 0;
 			//primary resists
-			resistModifier += (int)(finalDamage * (double)primaryResistModifier * - 0.01);
+			resistModifier += (int)(finalDamage * (double)primaryResistModifier * -0.01);
 			//secondary resists
-			resistModifier += (int)((finalDamage + (double)resistModifier) * (double)secondaryResistModifier * - 0.01);
+			resistModifier += (int)((finalDamage + (double)resistModifier) * (double)secondaryResistModifier * -0.01);
 			//apply resists
 			finalDamage += resistModifier;
-			
+
 			#endregion
 
 
@@ -2008,7 +2051,6 @@ namespace DOL.GS.Spells
 				int critmax = (ad.Target is GamePlayer) ? finalDamage / 2 : finalDamage;
 				cdamage = Util.Random(finalDamage / 10, critmax); //think min crit is 10% of damage
 			}
-
 			ad.Damage = finalDamage;
 			ad.CriticalDamage = cdamage;
 			ad.DamageType = Spell.DamageType;

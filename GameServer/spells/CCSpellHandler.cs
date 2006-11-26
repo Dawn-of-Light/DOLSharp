@@ -30,6 +30,17 @@ namespace DOL.GS.Spells
 	/// </summary>
 	public abstract class AbstractCCSpellHandler : ImmunityEffectSpellHandler
 	{
+		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
+		{
+			if (target.EffectList.GetOfType(typeof(ChargeEffect)) != null)
+			{
+				MessageToCaster(target.Name + " is moving to fast for this spell to have any effect!", eChatType.CT_SpellResisted);
+				return;
+			}
+
+			base.ApplyEffectOnTarget(target, effectiveness);
+		}
+
 		public override void OnEffectStart(GameSpellEffect effect)
 		{
 			SendEffectAnimation(effect.Owner, 0, false, 1);

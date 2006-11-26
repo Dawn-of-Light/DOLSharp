@@ -614,11 +614,10 @@ namespace DOL.GS
 				Out.SendMessage("You must wait " + (1 + (60000 - changeTime) / 1000) + " seconds to bind again!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
-			BindPoint[] objs = (BindPoint[])GameServer.Database.SelectObjects(typeof(BindPoint), "Region = '" + CurrentRegionID + "'");
 			bool bound = false;
-			if (objs.Length > 0)
+			lock (CurrentRegion.BindPoints.SyncRoot)
 			{
-				foreach (BindPoint bp in objs)
+				foreach (BindPoint bp in CurrentRegion.BindPoints)
 				{
 					if (!GameServer.ServerRules.IsAllowedToBind(this, bp)) continue;
 					if (WorldMgr.CheckDistance(this, bp.X, bp.Y, bp.Z, bp.Radius))
@@ -1893,6 +1892,9 @@ namespace DOL.GS
 			}
 			m_class = cl;
 			m_character.Class = m_class.ID;
+
+			if (PlayerGroup != null)
+				PlayerGroup.UpdateMember(this, false, true);
 			return true;
 		}
 
@@ -3587,8 +3589,11 @@ namespace DOL.GS
 					}
 				case 50:
 					{
-						string message = string.Format("{0} reached level {1} in {2}!", Name, Level, LastPositionUpdateZone.Description);
-						NewsMgr.CreateNews(message, Realm, eNewsType.PvE, true);
+						if (Client.Account.PrivLevel == 1)
+						{
+							string message = string.Format("{0} reached level {1} in {2}!", Name, Level, LastPositionUpdateZone.Description);
+							NewsMgr.CreateNews(message, Realm, eNewsType.PvE, true);
+						}
 						break;
 					}
 			}
@@ -3627,11 +3632,10 @@ namespace DOL.GS
 
 			// Echostorm - Code for display of new title on level up
 			// Get old and current rank titles
-			string oldtitle = CharacterClass.GetTitle(previouslevel);
 			string currenttitle = CharacterClass.GetTitle(Level);
 
 			// check for difference
-			if (oldtitle != currenttitle)
+			if (CharacterClass.GetTitle(previouslevel) != currenttitle)
 			{
 				// Inform player of new title.
 				Out.SendMessage("You have attained the rank of " + currenttitle + "!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
@@ -5134,7 +5138,8 @@ namespace DOL.GS
 				(weapon.SlotPosition == (int)eInventorySlot.DistanceWeapon
 					? CharacterClass.WeaponSkillRangedBase
 					: CharacterClass.WeaponSkillBase);
-			return (Level * classbase * 0.02 * (1 + (GetWeaponStat(weapon) - 50) * 0.005) * PlayerEffectiveness);
+			return ((Level * classbase * 0.02 * (1 + (GetWeaponStat(weapon) - 50) * 0.005)) * PlayerEffectiveness);
+			//return Math.Max(0, unbuffed * GetModified(eProperty.WeaponSkill) * 0.01);
 		}
 
 		/// <summary>
@@ -5382,32 +5387,6 @@ namespace DOL.GS
 
 			// base 10% chance of critical for all with melee weapons
 			return 10;
-		}
-
-		/// <summary>
-		/// Returns the chance for a critical hit with a spell
-		/// </summary>
-		public override int SpellCriticalChance
-		{
-			get
-			{
-				int chance = 0;
-				if (CharacterClass.ClassType == eClassType.ListCaster)
-					chance += 10;
-				if (HasAbility(WildPowerAbility.KEY))
-				{
-					switch (GetAbilityLevel(WildPowerAbility.KEY))
-					{
-						case 1: chance += 3; break;
-						case 2: chance += 9; break;
-						case 3: chance += 17; break;
-						case 4: chance += 27; break;
-						case 5: chance += 39; break;
-						default: break;
-					}
-				}
-				return chance;
-			}
 		}
 
 		/// <summary>
@@ -8126,7 +8105,14 @@ namespace DOL.GS
 		/// </summary>
 		public virtual int MaxEncumberance
 		{
-			get { return Strength; }
+			get 
+			{
+				double enc = (double)Strength;
+				RAPropertyEnhancer ab = GetAbility(typeof(LifterAbility)) as RAPropertyEnhancer;
+				if (ab != null)
+					enc *= 1 + (ab.Amount / 100);
+				return (int)enc;
+			}
 		}
 
 		/// <summary>
@@ -8523,18 +8509,15 @@ namespace DOL.GS
 					if (group != null && group.AutosplitLoot)
 					{
 						ArrayList eligibleMembers = new ArrayList(8);
-						lock (group)
+						foreach (GamePlayer ply in group.GetPlayersInTheGroup())
 						{
-							foreach (GamePlayer ply in group)
+							if (ply.IsAlive
+							   && (ply.CurrentRegionID == CurrentRegionID)
+							   && (WorldMgr.GetDistance(this, ply) < WorldMgr.MAX_EXPFORKILL_DISTANCE)
+							   && (ply.ObjectState == eObjectState.Active)
+							   && (ply.AutoSplitLoot))
 							{
-								if (ply.IsAlive
-								   && (ply.CurrentRegionID == CurrentRegionID)
-								   && (WorldMgr.GetDistance(this, ply) < WorldMgr.MAX_EXPFORKILL_DISTANCE)
-								   && (ply.ObjectState == eObjectState.Active)
-								   && (ply.AutoSplitLoot))
-								{
-									eligibleMembers.Add(ply);
-								}
+								eligibleMembers.Add(ply);
 							}
 						}
 						if (eligibleMembers.Count <= 0)
@@ -9626,7 +9609,7 @@ namespace DOL.GS
 
 				if (!enemyHasCamouflage)
 				{
-					RAPropertyEnhancer mos = GetAbility(MasteryOfStealthAbility.KEY) as RAPropertyEnhancer;
+					RAPropertyEnhancer mos = GetAbility(typeof(MasteryOfStealthAbility)) as RAPropertyEnhancer;
 					if (mos != null)
 					{
 						range += mos.GetAmountForLevel(mos.Level);

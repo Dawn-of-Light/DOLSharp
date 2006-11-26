@@ -47,7 +47,7 @@ namespace DOL.GS.PropertyCalc
 				if (player.HasAbility(Abilities.Stoicism))
 					percent -= 25;
 
-				DeterminationAbility ra = player.GetAbility(DeterminationAbility.KEY) as DeterminationAbility;
+				DeterminationAbility ra = player.GetAbility(typeof(DeterminationAbility)) as DeterminationAbility;
 				if (ra != null)
 					percent -= ra.GetAmountForLevel(ra.Level);
 			}

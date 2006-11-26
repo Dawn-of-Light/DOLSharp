@@ -40,13 +40,13 @@ namespace DOL.GS.SkillHandler
 			#region Check
 			if (!player.IsStealthed)
 			{
-				if (player.Mez)
+				if (player.IsMezzed)
 				{
 					player.Out.SendMessage("You can't use camouflage while mesmerized!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return;
 				}
 
-				if (player.Stun)
+				if (player.IsStunned)
 				{
 					player.Out.SendMessage("You can't use camouflage while stunned!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return;
@@ -55,7 +55,7 @@ namespace DOL.GS.SkillHandler
 				player.Out.SendMessage("You can't use camouflage while not stealthed!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
-			if (!player.Alive)
+			if (!player.IsAlive)
 			{
 				player.Out.SendMessage("You can't use camouflage when dead!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;

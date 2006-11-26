@@ -1109,7 +1109,21 @@ namespace DOL.GS.Scripts
 					}
 				case "npctemplate":
 					{
-						int id = Convert.ToInt32(args[2]);
+						if (args.Length < 3)
+						{
+							DisplayError(client, "Usage: /mob npctemplate <id>", new object[] { });
+							break;
+						}
+						int id = 0;
+						try
+						{
+							id = Convert.ToInt32(args[2]);
+						}
+						catch
+						{
+							DisplayError(client, args[2] + " does not seem to be a number", new object[] { });
+							break;
+						}
 						INpcTemplate template = NpcTemplateMgr.GetTemplate(id);
 						if (template == null)
 						{
