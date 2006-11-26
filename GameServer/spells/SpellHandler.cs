@@ -1900,15 +1900,6 @@ namespace DOL.GS.Spells
 				 //Relic bonus is calculated before ra bonus
 				 RelicDmg = RelicMgr.GetRelicBonusModifier(living.Realm, eRelicType.Magic);
 				 TOADmg += RelicDmg * 0.01;
-			 }
-
-			 if (m_caster.HasAbility(MasteryOfMageryAbility.KEY) && this is DoTSpellHandler == false)
-			 {
-				 RAPropertyEnhancer ra = (m_caster as GamePlayer).GetAbility(MasteryOfMageryAbility.KEY) as RAPropertyEnhancer;
-				 if (ra != null)
-				 {
-					 TOADmg += ra.Amount * 0.01;
-				 }
 			 }*/
 			//spellDamage *= TOADmg;
 			if (player != null)
@@ -1950,12 +1941,16 @@ namespace DOL.GS.Spells
 			*/
 			// apply effectiveness
 			finalDamage = (int)(finalDamage * effectiveness);
+			if ((m_caster is GamePlayer || (m_caster is GameNPC && (m_caster as GameNPC).Brain is IControlledBrain && m_caster.Realm != 0)) && target is GamePlayer)
+				finalDamage = (int)((double)finalDamage * ServerProperties.Properties.PVP_DAMAGE);
+			else if ((m_caster is GamePlayer || (m_caster is GameNPC && (m_caster as GameNPC).Brain is IControlledBrain && m_caster.Realm != 0)) && target is GameNPC)
+				finalDamage = (int)((double)finalDamage * ServerProperties.Properties.PVE_DAMAGE);
 			if (target is GamePlayer)
 			{
 				GamePlayer playerTarget = target as GamePlayer;
 				if (playerTarget.EffectList.GetOfType(typeof(TheEmptyMindEffect)) != null)
 				{
-					RealmAbility ra = player.GetAbility(TheEmptyMindAbility.KEY) as RealmAbility;
+					RealmAbility ra = player.GetAbility(typeof(TheEmptyMindAbility)) as RealmAbility;
 					if (ra != null)
 					{
 						switch (ra.Level)

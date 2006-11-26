@@ -13,13 +13,13 @@ namespace DOL.GS.RealmAbilities
         int m_range = 2000;
         int m_duration = 30;
         int m_value = 0;
-        public void Execute(GameLiving living)
+        public override void Execute(GameLiving living)
         {
             if (CheckPreconditions(living, DEAD | SITTING | MEZZED | STUNNED)) return;
             GamePlayer player = living as GamePlayer;
             if (player.EffectList.CountOfType(typeof(StrikePredictionEffect)) > 0)
             {
-                player.Out.SendMessage("You already an effect of that type!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+                player.Out.SendMessage("You already have an effect of that type!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
             }
             switch (Level)
             {

@@ -220,7 +220,7 @@ namespace DOL.GS
 		public bool GainXP
 		{
 			get { return m_gainXP; }
-			set 
+			set
 			{
 				m_gainXP = value;
 				m_character.GainXP = value;
@@ -234,7 +234,7 @@ namespace DOL.GS
 		public bool GainRP
 		{
 			get { return m_gainRP; }
-			set 
+			set
 			{
 				m_gainRP = value;
 				m_character.GainXP = value;
@@ -2919,82 +2919,135 @@ namespace DOL.GS
 
 		/// <summary>
 		/// Holds all realm rank names
+		/// sirru mod 20.11.06
 		/// </summary>
-		public static readonly string[][] REALM_RANK_NAMES =
-			{
-				new string[]
-				{
-					"realm0"
-				},
-				// alb
-				new string[]
-				{
-					"Guardian",
-					"Warder",
-					"Myrmidon",
-					"Gryphon Knight",
-					"Eagle Knight",
-					"Phoenix Knight",
-					"Alerion Knight",
-					"Unicorn Knight",
-					"Lion Knight",
-					"Dragon Knight",
-					"Lord",
-					"Baronet",
-					"Baron",
-				},
-				// Mid
-				new string[]
-				{
-					"Skiltvakten",
-					"Isen Vakten",
-					"Flammen Vakten",
-					"Elding Vakten",
-					"Stormur Vakten",
-					"Isen Herra",
-					"Flammen Herra",
-					"Elding Herra",
-					"Stormur Herra",
-					"Einherjar",
-					"Herra",
-					"Hersir",
-					"Vicomte",
-				},
-				// Hib
-				new string[]
-				{
-					"Savant",
-					"Cosantoir",
-					"Brehon",
-					"Grove Protector",
-					"Raven Ardent",
-					"Silver Hand",
-					"Thunderer",
-					"Gilded Spear",
-					"Tiarna",
-					"Emerald Ridere",
-					"Barun",
-					"Ard Tiarna",
-					"Ciann Cath",
-				},
-			};
+		public static string[, ,] REALM_RANK_NAMES = new string[,,]
+        {
+            // Albion
+            {
+                // Male
+                {
+                    "Guardian",
+                    "Warder",
+                    "Myrmidon",
+                    "Gryphon Knight",
+                    "Eagle Knight",
+                    "Phoenix Knight",
+                    "Alerion Knight",
+                    "Unicorn Knight",
+                    "Lion Knight",
+                    "Dragon Knight",
+                    "Lord",
+                    "Baronet",
+                    "Baron"
+                }
+                ,
+                // Female
+                {
+                    "Guardian",
+                    "Warder",
+                    "Myrmidon",
+                    "Gryphon Knight",
+                    "Eagle Knight",
+                    "Phoenix Knight",
+                    "Alerion Knight",
+                    "Unicorn Knight",
+                    "Lion Knight",
+                    "Dragon Knight",
+                    "Lady",
+                    "Baronetess",
+                    "Baroness"
+                }
+            }
+            ,
+            // Midgard
+            {
+                // Male
+                {
+                    "Skiltvakten",
+                    "Isen Vakten",
+                    "Flammen Vakten",
+                    "Elding Vakten",
+                    "Stormur Vakten",
+                    "Isen Herra",
+                    "Flammen Herra",
+                    "Elding Herra",
+                    "Stormur Herra",
+                    "Einherjar",
+                    "Herra",
+                    "Hersir",
+                    "Cian"
+                }
+                ,
+                // Female
+                {
+                    "Skiltvakten",
+                    "Isen Vakten",
+                    "Flammen Vakten",
+                    "Elding Vakten",
+                    "Stormur Vakten",
+                    "Isen Herra",
+                    "Flammen Herra",
+                    "Elding Herra",
+                    "Stormur Herra",
+                    "Einherjar",
+                    "Fru",
+                    "Baronsfru",
+                    "Cath"
+                }
+            }
+            ,
+            // Hibernia
+            {
+                // Male
+                {
+                    "Savant",
+                    "Cosantoir",
+                    "Brehon",
+                    "Grove Protector",
+                    "Raven Ardent",
+                    "Silver Hand",
+                    "Thunderer",
+                    "Gilded Spear",
+                    "Tiarna",
+                    "Emerald Ridere",
+                    "Barun",
+                    "Ard Tiarna",
+                    "Vicomte"
+                }
+                ,
+                // Female
+                {
+                    "Savant",
+                    "Cosantoir",
+                    "Brehon",
+                    "Grove Protector",
+                    "Raven Ardent",
+                    "Silver Hand",
+                    "Thunderer",
+                    "Gilded Spear",
+                    "Tiarna",
+                    "Emerald Ridere",
+                    "Banbharun",
+                    "Ard Bantiarna",
+                    "Vicomtessa"
+                }
+            }
+        };
 
 		/// <summary>
 		/// Gets player realm rank name
+		/// sirru mod 20.11.06
 		/// </summary>
 		public string RealmTitle
 		{
 			get
 			{
-				if (Realm >= REALM_RANK_NAMES.Length)
+				if (Realm < 1 && Realm > 3)
 					return "unknown realm";
 
-				string[] rankNames = REALM_RANK_NAMES[Realm];
-				int rank = m_realmLevel / 10;
-				if (rank >= rankNames.Length)
-					rank = rankNames.Length - 1;
-
-				return rankNames[rank];
+				int m_RR = PlayerCharacter.RealmLevel / 10;
+				return REALM_RANK_NAMES[Realm - 1, PlayerCharacter.Gender, m_RR];
 			}
 		}
 
@@ -8105,7 +8158,7 @@ namespace DOL.GS
 		/// </summary>
 		public virtual int MaxEncumberance
 		{
-			get 
+			get
 			{
 				double enc = (double)Strength;
 				RAPropertyEnhancer ab = GetAbility(typeof(LifterAbility)) as RAPropertyEnhancer;

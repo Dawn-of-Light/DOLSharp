@@ -16,7 +16,7 @@ namespace DOL.GS.RealmAbilities
         RegionTimer m_expireTimerID;
         int dmgValue = 0;
         GamePlayer caster;
-        public void Execute(GameLiving living)
+        public override void Execute(GameLiving living)
         {
             if (CheckPreconditions(living, DEAD | SITTING | MEZZED | STUNNED)) return;
             GamePlayer player = living as GamePlayer;
