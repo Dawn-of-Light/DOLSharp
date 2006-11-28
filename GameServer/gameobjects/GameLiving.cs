@@ -3389,7 +3389,7 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 					break;
 
 				case eActiveWeaponSlot.TwoHanded:
-					if (twoHandSlot != null && twoHandSlot.Hand == 1) // 2h
+					if (twoHandSlot != null && (twoHandSlot.Hand == 1 || this is GameNPC)) // 2h
 					{
 						rightHand = leftHand = 0x02;
 						break;

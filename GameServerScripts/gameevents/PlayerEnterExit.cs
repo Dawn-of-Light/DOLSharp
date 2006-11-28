@@ -61,7 +61,23 @@ namespace DOL.GS.GameEvents
 
 			string message = player.Name + " just entered the game!";
 			if (player.Client.Account.PrivLevel > 1)
-				message = "Staff member " + message;
+				message = "[Staff Member] " + message;
+			else
+			{
+				string realm = "";
+				if (GameServer.Instance.Configuration.ServerType == eGameServerType.GST_Normal)
+				{
+					realm = "[";
+					switch (player.Realm)
+					{
+						case 1: realm = realm + "Albion"; break;
+						case 2: realm = realm + "Midgard"; break;
+						case 3: realm = realm + "Hibernia"; break;
+					}
+					realm = realm + "]";
+				}
+				message = realm + message;
+			}
 			foreach (GameClient pclient in WorldMgr.GetAllPlayingClients())
 			{
 				if (player.Client != pclient)

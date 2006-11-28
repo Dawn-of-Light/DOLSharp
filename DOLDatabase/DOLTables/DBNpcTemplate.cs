@@ -59,6 +59,8 @@ namespace DOL.Database
 		private int m_empathy = 0;
 		private int m_charisma = 0;
 		private string m_abilities = "";
+		private byte m_aggroLevel = 0;
+		private int m_aggroRange = 0;
 
 		private static bool m_autoSave;
 
@@ -385,6 +387,28 @@ namespace DOL.Database
 			{
 				Dirty = true;
 				m_abilities = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public byte AggroLevel
+		{
+			get { return m_aggroLevel; }
+			set
+			{
+				Dirty = true;
+				m_aggroLevel = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public int AggroRange
+		{
+			get { return m_aggroRange; }
+			set
+			{
+				Dirty = true;
+				m_aggroRange = value;
 			}
 		}
 	}

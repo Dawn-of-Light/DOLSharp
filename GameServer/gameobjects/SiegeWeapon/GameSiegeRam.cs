@@ -124,6 +124,13 @@ namespace DOL.GS
 			return true;
 		}
 
+		public override void ReleaseControl()
+		{
+			base.ReleaseControl();
+			foreach (GamePlayer player in CurrentRiders)
+				RiderDismount(true, player);
+		}
+
 		public void UpdateRamStatus()
 		{
 			//speed of reload changed by number

@@ -257,9 +257,6 @@
     <Compile Include="DOLTables\DBStyle.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DOLTables\DBStyleSubstitute.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="DOLTables\DBTask.cs">
       <SubType>Code</SubType>
     </Compile>

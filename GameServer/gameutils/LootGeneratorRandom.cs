@@ -79,7 +79,7 @@ namespace DOL.GS
 					{
 						try
 						{
-							itemTemplates = GameServer.Database.SelectObjects(typeof(ItemTemplate), "Level>=" + (i * LEVEL_RANGE) + " AND Level<=" + ((i + 1) * LEVEL_RANGE));
+							itemTemplates = GameServer.Database.SelectObjects(typeof(ItemTemplate), "Level>=" + (i * LEVEL_RANGE) + " AND Level<=" + ((i + 1) * LEVEL_RANGE) + " AND IsPickable = 1 AND IsDropable = 1 AND CanDropAsloot = 1");
 						}
 						catch (Exception e)
 						{
@@ -136,24 +136,28 @@ namespace DOL.GS
 
 			if (Util.Chance(10))
 			{
-				int index = Math.Min(m_itemTemplates.Length - 1, mob.Level / LEVEL_RANGE);
-
-				ItemTemplate[] itemTemplates;
+				ItemTemplate[] itemTemplates = null;
 
 				switch (mob.CurrentZone.GetRealm())
 				{
 					case DOL.GS.PacketHandler.eRealm.Albion:
-						itemTemplates = m_itemTemplatesAlb[index];
+						{
+							int index = Math.Min(m_itemTemplatesAlb.Length - 1, mob.Level / LEVEL_RANGE);
+							itemTemplates = m_itemTemplatesAlb[index];
+						}
 						break;
 					case DOL.GS.PacketHandler.eRealm.Hibernia:
-						itemTemplates = m_itemTemplatesHib[index];
-						break;
+						{
+							int index = Math.Min(m_itemTemplatesHib.Length - 1, mob.Level / LEVEL_RANGE);
+							itemTemplates = m_itemTemplatesHib[index];
+							break;
+						}
 					case DOL.GS.PacketHandler.eRealm.Midgard:
-						itemTemplates = m_itemTemplatesMid[index];
-						break;
-					default:
-						itemTemplates = m_itemTemplates[index];
-						break;
+						{
+							int index = Math.Min(m_itemTemplatesHib.Length - 1, mob.Level / LEVEL_RANGE);
+							itemTemplates = m_itemTemplatesMid[index];
+							break;
+						}
 				}
 
 				if (itemTemplates != null && itemTemplates.Length > 0)
