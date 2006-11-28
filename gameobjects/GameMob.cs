@@ -78,6 +78,8 @@ namespace DOL.GS
 			if (m_faction != null)
 				mob.FactionID = m_faction.ID;
 			mob.MeleeDamageType = (int)MeleeDamageType;
+			if (NPCTemplate != null)
+				mob.NPCTemplateID = NPCTemplate.TemplateId;
 
 			if (InternalID == null)
 			{

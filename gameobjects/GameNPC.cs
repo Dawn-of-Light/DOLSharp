@@ -1139,7 +1139,12 @@ namespace DOL.GS
 
 		#endregion
 		#region Inventory/LoadfromDB
-
+		protected NpcTemplate m_npcTemplate;
+		public NpcTemplate NPCTemplate
+		{
+			get { return m_npcTemplate; }
+			set { m_npcTemplate = value; }
+		}
 		/// <summary>
 		/// Loads the equipment template of this npc
 		/// </summary>
@@ -1296,7 +1301,8 @@ namespace DOL.GS
 			}
 			this.Spells = template.Spells;
 			this.Styles = template.Styles;
-			this.Abilities = template.Abilities;
+			//TODO load abilities
+			//this.Abilities = template.Abilities;
 			BuffBonusCategory4[(int)eStat.STR] += template.Strength;
 			BuffBonusCategory4[(int)eStat.DEX] += template.Dexterity;
 			BuffBonusCategory4[(int)eStat.CON] += template.Constitution;
@@ -1305,6 +1311,12 @@ namespace DOL.GS
 			BuffBonusCategory4[(int)eStat.PIE] += template.Piety;
 			BuffBonusCategory4[(int)eStat.EMP] += template.Empathy;
 			BuffBonusCategory4[(int)eStat.CHR] += template.Charisma;
+
+			m_ownBrain = new StandardMobBrain();
+			m_ownBrain.Body = this;
+			(m_ownBrain as StandardMobBrain).AggroLevel = template.AggroLevel;
+			(m_ownBrain as StandardMobBrain).AggroRange = template.AggroRange;
+			this.NPCTemplate = template as NpcTemplate;
 		}
 
 		/// <summary>
@@ -2351,16 +2363,6 @@ namespace DOL.GS
 			set { m_styles = value; }
 		}
 
-		private IList m_abilities = new ArrayList(1);
-		/// <summary>
-		/// The Abilities for this NPC
-		/// </summary>
-		public IList Abilities
-		{
-			get { return m_abilities; }
-			set { m_abilities = value; }
-		}
-
 		/// <summary>
 		/// start to cast spell attack in continue until takken melee damage
 		/// </summary>
@@ -2540,8 +2542,11 @@ namespace DOL.GS
 			m_flags = 0;
 			//m_factionName = "";
 			LinkedFactions = new ArrayList(1);
-			m_ownBrain = new StandardMobBrain();
-			m_ownBrain.Body = this;
+			if (m_ownBrain == null)
+			{
+				m_ownBrain = new StandardMobBrain();
+				m_ownBrain.Body = this;
+			}
 		}
 
 		/// <summary>

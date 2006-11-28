@@ -53,9 +53,14 @@ namespace DOL.GS
 		static readonly HybridDictionary m_mobNameGenerators = new HybridDictionary();
 
 		/// <summary>
-		/// List of Lootgenerators related by mobgiuld
+		/// List of Lootgenerators related by mobguild
 		/// </summary>
 		static readonly HybridDictionary m_mobGuildGenerators = new HybridDictionary();
+
+		/// <summary>
+		/// List of Lootgenerators related by region ID
+		/// </summary>
+		static readonly HybridDictionary m_mobRegionGenerators = new HybridDictionary();
 
 		/// <summary>
 		/// List of Lootgenerators related by mobfaction
@@ -70,25 +75,25 @@ namespace DOL.GS
 		{
 			if (log.IsInfoEnabled)
 				log.Info("Loading LootGenerators...");
-			
+
 			DataObject[] m_lootGenerators;
 			try
 			{
 				m_lootGenerators = GameServer.Database.SelectAllObjects(typeof(DBLootGenerator));
 			}
-			catch(Exception e)
+			catch (Exception e)
 			{
 				if (log.IsErrorEnabled)
 					log.Error("LootMgr: LootGenerators could not be loaded", e);
 				return false;
 			}
- 			
-			if(m_lootGenerators != null) // did we find any loot generators
+
+			if (m_lootGenerators != null) // did we find any loot generators
 			{
-				foreach( DBLootGenerator dbGenerator in m_lootGenerators) 
+				foreach (DBLootGenerator dbGenerator in m_lootGenerators)
 				{
-					ILootGenerator generator = GetGeneratorInCache(dbGenerator);														
-					if (generator==null)
+					ILootGenerator generator = GetGeneratorInCache(dbGenerator);
+					if (generator == null)
 					{
 						Type generatorType = null;
 						foreach (Assembly asm in ScriptMgr.Scripts)
@@ -97,36 +102,36 @@ namespace DOL.GS
 							if (generatorType != null)
 								break;
 						}
-						if(generatorType==null) 
+						if (generatorType == null)
 						{
 							generatorType = Assembly.GetAssembly(typeof(GameServer)).GetType(dbGenerator.LootGeneratorClass);
 						}
 
-						if(generatorType==null)
+						if (generatorType == null)
 						{
 							if (log.IsErrorEnabled)
-								log.Error("Could not find LootGenerator: "+dbGenerator.LootGeneratorClass+"!!!");						
+								log.Error("Could not find LootGenerator: " + dbGenerator.LootGeneratorClass + "!!!");
 							continue;
 						}
 						generator = (ILootGenerator)Activator.CreateInstance(generatorType);
 
-						PutGeneratorInCache(dbGenerator,generator);
+						PutGeneratorInCache(dbGenerator, generator);
 					}
-					RegisterLootGenerator(generator,dbGenerator.MobName,dbGenerator.MobGuild,dbGenerator.MobFaction);
+					RegisterLootGenerator(generator, dbGenerator.MobName, dbGenerator.MobGuild, dbGenerator.MobFaction, dbGenerator.RegionID);
 				}
 			}
 			if (log.IsDebugEnabled)
 			{
-				log.Debug("Found "+m_globalGenerators.Count+" Global LootGenerators");
-				log.Debug("Found "+m_mobNameGenerators.Count+" Mobnames registered by LootGenerators");
-				log.Debug("Found "+m_mobGuildGenerators.Count+" Guildnames registered by LootGenerators");
+				log.Debug("Found " + m_globalGenerators.Count + " Global LootGenerators");
+				log.Debug("Found " + m_mobNameGenerators.Count + " Mobnames registered by LootGenerators");
+				log.Debug("Found " + m_mobGuildGenerators.Count + " Guildnames registered by LootGenerators");
 			}
 
 			// no loot generators loaded...
-			if (m_globalGenerators.Count==0 && m_mobNameGenerators.Count==0 && m_globalGenerators.Count==0)
+			if (m_globalGenerators.Count == 0 && m_mobNameGenerators.Count == 0 && m_globalGenerators.Count == 0)
 			{
 				ILootGenerator baseGenerator = new LootGeneratorMoney();
-				RegisterLootGenerator(baseGenerator,null,null,null);
+				RegisterLootGenerator(baseGenerator, null, null, null, 0);
 				if (log.IsInfoEnabled)
 					log.Info("No LootGenerator found, adding LootGeneratorMoney for all mobs as default.");
 			}
@@ -143,7 +148,7 @@ namespace DOL.GS
 		/// <param name="generator"></param>
 		private static void PutGeneratorInCache(DBLootGenerator dbGenerator, ILootGenerator generator)
 		{
-			m_ClassGenerators[dbGenerator.LootGeneratorClass+dbGenerator.ExclusivePriority] = generator;
+			m_ClassGenerators[dbGenerator.LootGeneratorClass + dbGenerator.ExclusivePriority] = generator;
 		}
 
 		/// <summary>
@@ -152,10 +157,10 @@ namespace DOL.GS
 		/// <param name="dbGenerator"></param>
 		/// <returns></returns>
 		private static ILootGenerator GetGeneratorInCache(DBLootGenerator dbGenerator)
-		{			
-			if (m_ClassGenerators[dbGenerator.LootGeneratorClass+dbGenerator.ExclusivePriority]!=null) 
+		{
+			if (m_ClassGenerators[dbGenerator.LootGeneratorClass + dbGenerator.ExclusivePriority] != null)
 			{
-				return(ILootGenerator) m_ClassGenerators[dbGenerator.LootGeneratorClass+dbGenerator.ExclusivePriority];
+				return (ILootGenerator)m_ClassGenerators[dbGenerator.LootGeneratorClass + dbGenerator.ExclusivePriority];
 			}
 			return null;
 		}
@@ -167,15 +172,15 @@ namespace DOL.GS
 		/// <param name="mobname"></param>
 		/// <param name="mobguild"></param>
 		/// <param name="mobfaction"></param>
-		public static void UnRegisterLootGenerator(ILootGenerator generator,string mobname, string mobguild, string mobfaction)
+		public static void UnRegisterLootGenerator(ILootGenerator generator, string mobname, string mobguild, string mobfaction)
 		{
-			if (generator==null)
+			if (generator == null)
 				return;
 
-			if (!Util.IsEmpty(mobname)) 
+			if (!Util.IsEmpty(mobname))
 			{
-				IList nameList = (IList) m_mobNameGenerators[mobname];
-				if (nameList != null) 
+				IList nameList = (IList)m_mobNameGenerators[mobname];
+				if (nameList != null)
 				{
 					nameList.Remove(generator);
 				}
@@ -183,7 +188,7 @@ namespace DOL.GS
 
 			if (!Util.IsEmpty(mobguild))
 			{
-				IList guildList = (IList) m_mobGuildGenerators[mobguild];
+				IList guildList = (IList)m_mobGuildGenerators[mobguild];
 				if (guildList != null)
 				{
 					guildList.Remove(generator);
@@ -196,7 +201,7 @@ namespace DOL.GS
 			}
 		}
 
-		
+
 		/// <summary>
 		/// Register a generator for the given parameters,
 		/// If all parameters are null a global generaotr for all mobs will be registered
@@ -205,15 +210,15 @@ namespace DOL.GS
 		/// <param name="mobname"></param>
 		/// <param name="mobguild"></param>
 		/// <param name="mobfaction"></param>
-		public static void RegisterLootGenerator(ILootGenerator generator,string mobname, string mobguild, string mobfaction)
+		public static void RegisterLootGenerator(ILootGenerator generator, string mobname, string mobguild, string mobfaction, int mobregion)
 		{
-			if (generator ==null)
+			if (generator == null)
 				return;
 
-			if (!Util.IsEmpty(mobname)) 
+			if (!Util.IsEmpty(mobname))
 			{
-				IList nameList = (IList) m_mobNameGenerators[mobname];
-				if (nameList == null) 
+				IList nameList = (IList)m_mobNameGenerators[mobname];
+				if (nameList == null)
 				{
 					nameList = new ArrayList();
 					m_mobNameGenerators[mobname] = nameList;
@@ -223,7 +228,7 @@ namespace DOL.GS
 
 			if (!Util.IsEmpty(mobguild))
 			{
-				IList guildList = (IList) m_mobGuildGenerators[mobguild];
+				IList guildList = (IList)m_mobGuildGenerators[mobguild];
 				if (guildList == null)
 				{
 					guildList = new ArrayList();
@@ -232,13 +237,24 @@ namespace DOL.GS
 				guildList.Add(generator);
 			}
 
+			if (mobregion > 0)
+			{
+				IList regionList = (IList)m_mobRegionGenerators[mobregion];
+				if (regionList == null)
+				{
+					regionList = new ArrayList();
+					m_mobRegionGenerators[mobregion] = regionList;
+				}
+				regionList.Add(generator);
+			}
+
 			if (Util.IsEmpty(mobname) && Util.IsEmpty(mobguild) && Util.IsEmpty(mobfaction))
 			{
 				m_globalGenerators.Add(generator);
-			}			
+			}
 		}
 
-		
+
 		/// <summary>
 		/// Returns the lot for the given Mob
 		/// </summary>		
@@ -246,14 +262,14 @@ namespace DOL.GS
 		/// <param name="killer"></param>
 		/// <returns></returns>
 		public static ItemTemplate[] GetLoot(GameMob mob, GameObject killer)
-		{			
+		{
 			LootList lootList = null;
 			IList generators = GetLootGenerators(mob);
 			foreach (ILootGenerator generator in generators)
 			{
 				try
 				{
-					if (lootList==null)
+					if (lootList == null)
 						lootList = generator.GenerateLoot(mob, killer);
 					else
 						lootList.AddAll(generator.GenerateLoot(mob, killer));
@@ -264,7 +280,7 @@ namespace DOL.GS
 						log.Error("GetLoot", e);
 				}
 			}
-			if (lootList!=null)
+			if (lootList != null)
 				return lootList.GetLoot();
 			else
 				return new ItemTemplate[0];
@@ -277,39 +293,42 @@ namespace DOL.GS
 		/// <returns></returns>
 		private static IList GetLootGenerators(GameMob mob)
 		{
-			IList filteredGenerators = new ArrayList();			
+			IList filteredGenerators = new ArrayList();
 			ILootGenerator exclusiveGenerator = null;
 
-			IList nameGenerators = (IList) m_mobNameGenerators[mob.Name];
-			IList guildGenerators = (IList) m_mobNameGenerators[mob.GuildName];
+			IList nameGenerators = (IList)m_mobNameGenerators[mob.Name];
+			IList guildGenerators = (IList)m_mobGuildGenerators[mob.GuildName];
+			IList regionGenerators = (IList)m_mobRegionGenerators[mob.CurrentRegionID];
 			//IList factionGenerators = m_mobFactionGenerators[mob.Faction]; not implemented
 
 			ArrayList allGenerators = new ArrayList();
 
 			allGenerators.AddRange(m_globalGenerators);
-			if (nameGenerators!=null)
+			if (nameGenerators != null)
 				allGenerators.AddRange(nameGenerators);
-			if (guildGenerators!=null)
+			if (guildGenerators != null)
 				allGenerators.AddRange(guildGenerators);
+			if (regionGenerators != null)
+				allGenerators.AddRange(regionGenerators);
 
-			foreach(ILootGenerator generator in allGenerators)
-			{				
-				if (generator.ExclusivePriority>0)
+			foreach (ILootGenerator generator in allGenerators)
+			{
+				if (generator.ExclusivePriority > 0)
 				{
-					if (exclusiveGenerator==null || exclusiveGenerator.ExclusivePriority < generator.ExclusivePriority )					
+					if (exclusiveGenerator == null || exclusiveGenerator.ExclusivePriority < generator.ExclusivePriority)
 						exclusiveGenerator = generator;
 				}
 
 				// if we found a exclusive generator skip adding other generators, since list will only contain exclusive generator.
-				if (exclusiveGenerator!=null)
+				if (exclusiveGenerator != null)
 					continue;
-				
+
 				if (!filteredGenerators.Contains(generator))
 					filteredGenerators.Add(generator);
 			}
 
 			// if an exclusivegenerator is found only this one is used.
-			if (exclusiveGenerator!=null)
+			if (exclusiveGenerator != null)
 			{
 				filteredGenerators.Clear();
 				filteredGenerators.Add(exclusiveGenerator);

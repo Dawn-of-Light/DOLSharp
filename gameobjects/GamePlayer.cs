@@ -2673,7 +2673,7 @@ namespace DOL.GS
 		/// <summary>
 		/// updates the list of available styles
 		/// </summary>
-		/// <param="sendMessages">sends "you learn" messages if true</param="sendMessages">
+		/// <param name="sendMessages">sends "you learn" messages if true</param>
 		public void RefreshSpecDependantSkills(bool sendMessages)
 		{
 			IList newStyles = new ArrayList();
@@ -2685,14 +2685,19 @@ namespace DOL.GS
 					{
 						// check styles
 						IList styles = SkillBase.GetStyleList(spec.KeyName, CharacterClass.ID);
-						foreach (Style style in styles)
+						if (styles != null)
 						{
-							if (style.SpecLevelRequirement <= spec.Level)
+							foreach (Style style in styles)
 							{
-								if (!m_styles.Contains(style))
+								if (style == null)
+									continue;
+								if (style.SpecLevelRequirement <= spec.Level)
 								{
-									newStyles.Add(style);
-									m_styles.Add(style);
+									if (!m_styles.Contains(style))
+									{
+										newStyles.Add(style);
+										m_styles.Add(style);
+									}
 								}
 							}
 						}
@@ -8776,7 +8781,6 @@ namespace DOL.GS
 			}
 			m_character.SerializedAbilities = ab;
 			m_character.SerializedSpecs = sp;
-			m_character.Styles = styleList;
 			m_character.SerializedSpellLines = spellLines.ToString();
 			m_character.DisabledSpells = disabledSpells;
 			m_character.DisabledAbilities = disabledAbilities;
@@ -8910,57 +8914,6 @@ namespace DOL.GS
 					{
 						if (log.IsErrorEnabled)
 							log.Error(Name + ": error in loading specs => '" + m_character.SerializedSpecs + "'", e);
-					}
-				}
-			}
-			lock (m_styles.SyncRoot)
-			{
-				if (m_character.Styles != null && m_character.Styles.Length > 0)
-				{
-					m_styles.Clear();
-					string[] ids = m_character.Styles.Split(';');
-					SortedList sortedStyles = new SortedList();
-					for (int i = 0; i < ids.Length; i++)
-					{
-						try
-						{
-							if (ids[i].Trim().Length == 0) continue;
-							int id = int.Parse(ids[i]);
-							Style style = SkillBase.GetStyleByID(id, CharacterClass.ID);
-							if (style != null)
-							{
-								sortedStyles[string.Format("S:{0} L:{1,3} ID:{2,4}", style.Spec, style.SpecLevelRequirement, style.ID)] = style;
-							}
-							else
-							{
-								if (log.IsErrorEnabled)
-									log.Error("Cant find style " + id + " for character " + Name + "!");
-							}
-						}
-						catch (Exception e)
-						{
-							if (log.IsErrorEnabled)
-								log.Error("Error loading some style from character " + Name, e);
-						}
-					}
-					try
-					{
-						string styleList = "";
-						foreach (DictionaryEntry entry in sortedStyles)
-						{
-							Style style = (Style)entry.Value;
-							m_styles.Add(style);
-							if (styleList.Length > 0)
-							{
-								styleList += ";";
-							}
-							styleList += style.ID;
-						}
-					}
-					catch (Exception e)
-					{
-						if (log.IsErrorEnabled)
-							log.Error("Error sorting some style from character " + Name, e);
 					}
 				}
 			}

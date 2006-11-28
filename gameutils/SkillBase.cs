@@ -259,7 +259,6 @@ namespace DOL.GS
 		protected static readonly Dictionary<int, Dictionary<int, List<DBStyleXSpell>>> m_styleSpells = new Dictionary<int, Dictionary<int, List<DBStyleXSpell>>>();
 
 		// lookup table for styles
-		protected static readonly Hashtable m_stylesByID = new Hashtable();
 		protected static readonly Hashtable m_stylesByIDClass = new Hashtable();
 
 		// lookup table for property names
@@ -491,7 +490,9 @@ namespace DOL.GS
 							}
 
 							styleList.Insert(insertpos, st);
-							m_stylesByID[(int)st.ID] = st;
+
+
+							m_stylesByIDClass[((long)st.ID << 32) | (uint)style.ClassId] = st;
 						}
 					}
 					m_styleLists[spec.KeyName] = styleList; // also adds empty lists, so we dont have to generate empty lists later
@@ -507,24 +508,6 @@ namespace DOL.GS
 			}
 			if (log.IsInfoEnabled)
 				log.Info("Total specializations loaded: " + ((specs != null) ? specs.Length : 0));
-
-			DBStyleSubstitute[] stylesByClass = (DBStyleSubstitute[])GameServer.Database.SelectAllObjects(typeof(DBStyleSubstitute));
-			foreach (DBStyleSubstitute style in stylesByClass)
-			{
-				Style st = new Style((DBStyle)style);
-
-				//(procs) Add procs to the style
-				if (m_styleSpells.ContainsKey(st.ID) && m_styleSpells[st.ID].ContainsKey(style.ClassId))
-				{
-					foreach (DBStyleXSpell styleSpells in m_styleSpells[st.ID][style.ClassId])
-						st.Procs.Add(styleSpells);
-				}
-
-				m_stylesByIDClass[((long)st.ID << 32) | (uint)style.ClassId] = st;
-
-			}
-			if (log.IsInfoEnabled)
-				log.Info("Total style substitue loaded: " + ((stylesByClass != null) ? stylesByClass.Length : 0));
 
 			// load skill action handlers
 			//Search for ability handlers in the gameserver first
@@ -1313,7 +1296,7 @@ namespace DOL.GS
 				Style st = GetStyleByID(style.ID, classId);
 				newStyles.Add(st);
 			}
-
+			/*
 			foreach (Style style in m_stylesByIDClass.Values)
 			{
 				long key = ((long)style.ID << 32) | (uint)classId;
@@ -1321,7 +1304,7 @@ namespace DOL.GS
 
 				if (subStyle != null && !newStyles.Contains(subStyle))
 					newStyles.Add(subStyle);
-			}
+			}*/
 
 			return newStyles;
 		}
@@ -1357,23 +1340,16 @@ namespace DOL.GS
 			return list;
 		}
 
-		public static Style GetStyleByID(int styleID)
-		{
-			return m_stylesByID[styleID] as Style;
-		}
-
 		/// <summary>
 		/// find style with specific id
 		/// </summary>
 		/// <param name="styleID">id of style</param>
 		/// <param name="classId">ClassID for which style list is requested</param>
 		/// <returns>style or null if not found</returns>
-		public static Style GetStyleByID(int styleID, int ClassId)
+		public static Style GetStyleByID(int styleID, int classId)
 		{
-			long key = ((long)styleID << 32) | (uint)ClassId;
+			long key = ((long)styleID << 32) | (uint)classId;
 			Style style = (Style)m_stylesByIDClass[key];
-			if (style == null)
-				style = GetStyleByID(styleID);
 			return style;
 		}
 
