@@ -109,26 +109,6 @@ namespace DOL.GS.Styles
 		}
 
 		/// <summary>
-		/// The type of special effect applied on the target if
-		/// the style gets executed successfully
-		/// </summary>
-		public enum eSpecialType : int
-		{
-			/// <summary>
-			/// No special effect
-			/// </summary>
-			None = 0,
-			/// <summary>
-			/// An effect, like a spell (eg. Bleeding)
-			/// </summary>
-			Effect = 1,
-			/// <summary>
-			/// Taunt/Detaunt
-			/// </summary>
-			Taunt = 2
-		}
-
-		/// <summary>
 		/// Special weapon type requirements
 		/// </summary>
 		public abstract class SpecialWeaponType
@@ -264,15 +244,6 @@ namespace DOL.GS.Styles
 		public double GrowthRate
 		{
 			get { return baseStyle.GrowthRate; }
-		}
-
-		/// <summary>
-		/// (readonly) The type of special effect applied to the target
-		/// if this style is executed successfully.
-		/// </summary>
-		public eSpecialType SpecialType
-		{
-			get { return (eSpecialType)baseStyle.SpecialType; }
 		}
 
 		/// <summary>

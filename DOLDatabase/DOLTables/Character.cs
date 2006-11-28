@@ -28,7 +28,7 @@ namespace DOL
 		/// <summary>
 		/// The character the account own. it store GamePlayer in DB
 		/// </summary>
-		[DataTable(TableName="DOLCharacters")]
+		[DataTable(TableName = "DOLCharacters")]
 		public class Character : DataObject
 		{
 			private string m_accountName;
@@ -46,7 +46,7 @@ namespace DOL
 			//Locationstring		//24 bytes empty when sent
 			private string m_lastName;		//not sent in 0x55/0x57
 			private string m_guildName;		//not sent in 0x55/0x57
-			private int m_race;		
+			private int m_race;
 			private int m_gender;
 			private int m_level;				//01 byte
 			private int m_class;				//01 byte
@@ -96,21 +96,21 @@ namespace DOL
 			private int m_charisma = 0;
 
 			//This needs to be uint and ushort!
-			private int	m_xpos;
-			private int	m_ypos;
-			private int	m_zpos;
+			private int m_xpos;
+			private int m_ypos;
+			private int m_zpos;
 
 			//bind position
-			private int		m_bindxpos;
-			private int		m_bindypos;
-			private int		m_bindzpos;
-			private int		m_bindregion;
-			private int		m_bindheading;
-			private byte	m_deathCount;
-			private int		m_conLostAtDeath;
+			private int m_bindxpos;
+			private int m_bindypos;
+			private int m_bindzpos;
+			private int m_bindregion;
+			private int m_bindheading;
+			private byte m_deathCount;
+			private int m_conLostAtDeath;
 
-			private bool	m_hasGravestone;
-			private int		m_gravestoneRegion;
+			private bool m_hasGravestone;
+			private int m_gravestoneRegion;
 
 			private int m_direction;
 			private int m_maxSpeed;
@@ -121,18 +121,17 @@ namespace DOL
 			// here are skills stored. loading and saving skills of player is done automatically and 
 			// these fields should NOT manipulated or used otherwise
 			// instead use the skill access methods on GamePlayer
-			private string m_abilities="";	// comma separated string of ability keynames and levels eg "sprint,0,evade,1"
-			private string m_specs="";			// comma separated string of spec keynames and levels like "earth_magic,5,slash,10"
-			private string m_spellLines="";		// serialized string of spell lines and levels like "Spirit Animation|5;Vivification|7"
-			private string m_styles="";			// comma separated string of style id's
-			private string m_realmAbilities=""; // for later use
-			private string m_craftingSkills="";// crafting skills
-			private string m_disabledSpells="";
-			private string m_disabledAbilities="";
+			private string m_abilities = "";	// comma separated string of ability keynames and levels eg "sprint,0,evade,1"
+			private string m_specs = "";			// comma separated string of spec keynames and levels like "earth_magic,5,slash,10"
+			private string m_spellLines = "";		// serialized string of spell lines and levels like "Spirit Animation|5;Vivification|7"
+			private string m_realmAbilities = ""; // for later use
+			private string m_craftingSkills = "";// crafting skills
+			private string m_disabledSpells = "";
+			private string m_disabledAbilities = "";
 
-			private string m_friendList=""; //comma seperated string of friends
+			private string m_friendList = ""; //comma seperated string of friends
 			private string m_playerTitleType = "";
-			
+
 			private bool m_flagguildname = false;
 			private ushort m_guildRank;
 
@@ -142,9 +141,9 @@ namespace DOL
 			private int m_respecAmountAllSkill;  // full Respecs.
 			private int m_respecAmountSingleSkill; // Single-Line Respecs
 			private int m_respecAmountRealmSkill; //realm respecs
-			private bool	m_isLevelRespecUsed;
-			private bool	m_safetyFlag;
-			private int m_craftingPrimarySkill =0;
+			private bool m_isLevelRespecUsed;
+			private bool m_safetyFlag;
+			private int m_craftingPrimarySkill = 0;
 			private bool m_cancelStyle;
 			private bool m_isAnonymous;
 
@@ -169,7 +168,7 @@ namespace DOL
 			public Character()
 			{
 				m_creationDate = DateTime.Now;
-				m_autoSave=false;
+				m_autoSave = false;
 				m_type = "DOL.GS.Scripts.DOLPlayer";
 				m_concentration = 100;
 				m_exp = 0;
@@ -196,7 +195,7 @@ namespace DOL
 			/// <summary>
 			/// Gets/sets if this character has xp in a gravestone
 			/// </summary>
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull = true)]
 			public bool HasGravestone
 			{
 				get
@@ -213,7 +212,7 @@ namespace DOL
 			/// <summary>
 			/// Gets/sets the region id where the gravestone of the player is located
 			/// </summary>
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull = true)]
 			public int GravestoneRegion
 			{
 				get
@@ -230,7 +229,7 @@ namespace DOL
 			/// <summary>
 			/// Gets/sets character constitution
 			/// </summary>
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull = true)]
 			public int Constitution
 			{
 				get
@@ -247,7 +246,7 @@ namespace DOL
 			/// <summary>
 			/// Gets/sets character dexterity
 			/// </summary>
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull = true)]
 			public int Dexterity
 			{
 				get
@@ -264,7 +263,7 @@ namespace DOL
 			/// <summary>
 			/// Gets/sets character strength
 			/// </summary>
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull = true)]
 			public int Strength
 			{
 				get
@@ -281,7 +280,7 @@ namespace DOL
 			/// <summary>
 			/// Gets/sets character quickness
 			/// </summary>
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull = true)]
 			public int Quickness
 			{
 				get
@@ -298,7 +297,7 @@ namespace DOL
 			/// <summary>
 			/// Gets/sets character intelligence
 			/// </summary>
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull = true)]
 			public int Intelligence
 			{
 				get
@@ -315,7 +314,7 @@ namespace DOL
 			/// <summary>
 			/// Gets/sets character piety
 			/// </summary>
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull = true)]
 			public int Piety
 			{
 				get
@@ -332,7 +331,7 @@ namespace DOL
 			/// <summary>
 			/// Gets/sets character empathy
 			/// </summary>
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull = true)]
 			public int Empathy
 			{
 				get
@@ -349,7 +348,7 @@ namespace DOL
 			/// <summary>
 			/// Gets/sets character charisma
 			/// </summary>
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull = true)]
 			public int Charisma
 			{
 				get
@@ -366,7 +365,7 @@ namespace DOL
 			/// <summary>
 			/// Gets/sets chracter bounty points
 			/// </summary>
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull = true)]
 			public long BountyPoints
 			{
 				get
@@ -383,7 +382,7 @@ namespace DOL
 			/// <summary>
 			/// Gets/sets character realm points
 			/// </summary>
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull = true)]
 			public long RealmPoints
 			{
 				get
@@ -400,7 +399,7 @@ namespace DOL
 			/// <summary>
 			/// Gets/sets character skill specialty points
 			/// </summary>
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull = true)]
 			public int SkillSpecialtyPoints
 			{
 				get
@@ -417,7 +416,7 @@ namespace DOL
 			/// <summary>
 			/// Gets/sets realm specialty points
 			/// </summary>
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull = true)]
 			public int RealmSpecialtyPoints
 			{
 				get
@@ -434,7 +433,7 @@ namespace DOL
 			/// <summary>
 			/// Gets/sets realm rank
 			/// </summary>
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull = true)]
 			public int RealmLevel
 			{
 				get
@@ -451,7 +450,7 @@ namespace DOL
 			/// <summary>
 			/// Gets/sets experience
 			/// </summary>
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull = true)]
 			public long Experience
 			{
 				get
@@ -468,7 +467,7 @@ namespace DOL
 			/// <summary>
 			/// Gets/sets max endurance
 			/// </summary>
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull = true)]
 			public int MaxEndurance
 			{
 				get
@@ -485,7 +484,7 @@ namespace DOL
 			/// <summary>
 			/// Gets/sets maximum health
 			/// </summary>
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull = true)]
 			public int Health
 			{
 				get
@@ -502,7 +501,7 @@ namespace DOL
 			/// <summary>
 			/// Gets/sets max mana
 			/// </summary>
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull = true)]
 			public int Mana
 			{
 				get
@@ -519,7 +518,7 @@ namespace DOL
 			/// <summary>
 			/// Gets/sets max endurance
 			/// </summary>
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull = true)]
 			public int Endurance
 			{
 				get
@@ -536,7 +535,7 @@ namespace DOL
 			/// <summary>
 			/// Gets/sets the object concentration
 			/// </summary>
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull = true)]
 			public int Concentration
 			{
 				get
@@ -586,7 +585,7 @@ namespace DOL
 			/// <summary>
 			/// Account name of account which own this character
 			/// </summary>
-			[DataElement(AllowDbNull=false, Index=true)]
+			[DataElement(AllowDbNull = false, Index = true)]
 			public string AccountName
 			{
 				get
@@ -599,11 +598,11 @@ namespace DOL
 					m_accountName = value;
 				}
 			}
-			
+
 			/// <summary>
 			/// The slot of character in account
 			/// </summary>
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull = true)]
 			public int AccountSlot
 			{
 				get
@@ -620,7 +619,7 @@ namespace DOL
 			/// <summary>
 			/// The creation date of this character
 			/// </summary>
-			[DataElement(AllowDbNull=false)]
+			[DataElement(AllowDbNull = false)]
 			public DateTime CreationDate
 			{
 				get
@@ -628,7 +627,7 @@ namespace DOL
 					return m_creationDate;
 				}
 				set
-				{   
+				{
 					Dirty = true;
 					m_creationDate = value;
 				}
@@ -637,7 +636,7 @@ namespace DOL
 			/// <summary>
 			/// The last time this character have been played
 			/// </summary>
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull = true)]
 			public DateTime LastPlayed
 			{
 				get
@@ -645,16 +644,16 @@ namespace DOL
 					return m_lastPlayed;
 				}
 				set
-				{   
+				{
 					Dirty = true;
 					m_lastPlayed = value;
 				}
 			}
-			
+
 			/// <summary>
 			/// Name of this character. all name of character is unique
 			/// </summary>
-			[DataElement(AllowDbNull=false, Unique=true)]
+			[DataElement(AllowDbNull = false, Unique = true)]
 			public string Name
 			{
 				get
@@ -671,7 +670,7 @@ namespace DOL
 			/// <summary>
 			/// Lastname of this character. You can have familly ;)
 			/// </summary>
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull = true)]
 			public string LastName
 			{
 				get
@@ -684,11 +683,11 @@ namespace DOL
 					m_lastName = value;
 				}
 			}
-				
+
 			/// <summary>
 			/// The name of the guild you join
 			/// </summary>
-			[DataElement(AllowDbNull=true, Index=true)]
+			[DataElement(AllowDbNull = true, Index = true)]
 			public string GuildName
 			{
 				get
@@ -705,7 +704,7 @@ namespace DOL
 			/// <summary>
 			/// Male or female character
 			/// </summary>
-			[DataElement(AllowDbNull=false)]
+			[DataElement(AllowDbNull = false)]
 			public int Gender
 			{
 				get
@@ -722,7 +721,7 @@ namespace DOL
 			/// <summary>
 			/// Race of character (viking,troll,...)
 			/// </summary>
-			[DataElement(AllowDbNull=false)]
+			[DataElement(AllowDbNull = false)]
 			public int Race
 			{
 				get
@@ -739,7 +738,7 @@ namespace DOL
 			/// <summary>
 			/// Level of this character
 			/// </summary>
-			[DataElement(AllowDbNull=false)]
+			[DataElement(AllowDbNull = false)]
 			public int Level
 			{
 				get
@@ -756,7 +755,7 @@ namespace DOL
 			/// <summary>
 			/// class of this character
 			/// </summary>
-			[DataElement(AllowDbNull=false)]
+			[DataElement(AllowDbNull = false)]
 			public int Class
 			{
 				get
@@ -773,7 +772,7 @@ namespace DOL
 			/// <summary>
 			/// Realm of character
 			/// </summary>
-			[DataElement(AllowDbNull=false)]
+			[DataElement(AllowDbNull = false)]
 			public int Realm
 			{
 				get
@@ -790,12 +789,12 @@ namespace DOL
 			/// <summary>
 			/// The model of character when created
 			/// </summary>
-			[DataElement(AllowDbNull=false)]
+			[DataElement(AllowDbNull = false)]
 			public int CreationModel
 			{
 				get
 				{
-					return  m_creationModel;
+					return m_creationModel;
 				}
 				set
 				{
@@ -807,7 +806,7 @@ namespace DOL
 			/// <summary>
 			/// The region of character
 			/// </summary>
-			[DataElement(AllowDbNull=false)]
+			[DataElement(AllowDbNull = false)]
 			public int Region
 			{
 				get
@@ -824,7 +823,7 @@ namespace DOL
 			/// <summary>
 			/// the weapon active to show
 			/// </summary>
-			[DataElement(AllowDbNull=false)]
+			[DataElement(AllowDbNull = false)]
 			public byte ActiveWeaponSlot
 			{
 				get
@@ -841,7 +840,7 @@ namespace DOL
 			/// <summary>
 			/// The model used actually in character (main time same than CreationModel)
 			/// </summary>
-			[DataElement(AllowDbNull=false)]
+			[DataElement(AllowDbNull = false)]
 			public int CurrentModel
 			{
 				get
@@ -858,7 +857,7 @@ namespace DOL
 			/// <summary>
 			/// The X position of character
 			/// </summary>
-			[DataElement(AllowDbNull=false)]
+			[DataElement(AllowDbNull = false)]
 			public int Xpos
 			{
 				get
@@ -875,7 +874,7 @@ namespace DOL
 			/// <summary>
 			/// The Y position of character
 			/// </summary>
-			[DataElement(AllowDbNull=false)]
+			[DataElement(AllowDbNull = false)]
 			public int Ypos
 			{
 				get
@@ -892,7 +891,7 @@ namespace DOL
 			/// <summary>
 			/// The Z position of character
 			/// </summary>
-			[DataElement(AllowDbNull=false)]
+			[DataElement(AllowDbNull = false)]
 			public int Zpos
 			{
 				get
@@ -909,7 +908,7 @@ namespace DOL
 			/// <summary>
 			/// The bind X position of character
 			/// </summary>
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull = true)]
 			public int BindXpos
 			{
 				get
@@ -926,7 +925,7 @@ namespace DOL
 			/// <summary>
 			/// The bind Y position of character
 			/// </summary>
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull = true)]
 			public int BindYpos
 			{
 				get
@@ -943,7 +942,7 @@ namespace DOL
 			/// <summary>
 			/// The bind Z position of character
 			/// </summary>
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull = true)]
 			public int BindZpos
 			{
 				get
@@ -960,7 +959,7 @@ namespace DOL
 			/// <summary>
 			/// The bind region position of character
 			/// </summary>
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull = true)]
 			public int BindRegion
 			{
 				get
@@ -977,7 +976,7 @@ namespace DOL
 			/// <summary>
 			/// The bind heading position of character
 			/// </summary>
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull = true)]
 			public int BindHeading
 			{
 				get
@@ -994,7 +993,7 @@ namespace DOL
 			/// <summary>
 			/// The number of chacter is dead at this level
 			/// </summary>
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull = true)]
 			public byte DeathCount
 			{
 				get
@@ -1011,7 +1010,7 @@ namespace DOL
 			/// <summary>
 			/// Constitution lost at death
 			/// </summary>
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull = true)]
 			public int ConLostAtDeath
 			{
 				get
@@ -1028,7 +1027,7 @@ namespace DOL
 			/// <summary>
 			/// Heading of character
 			/// </summary>
-			[DataElement(AllowDbNull=false)]
+			[DataElement(AllowDbNull = false)]
 			public int Direction
 			{
 				get
@@ -1045,7 +1044,7 @@ namespace DOL
 			/// <summary>
 			/// The max speed of character
 			/// </summary>
-			[DataElement(AllowDbNull=false)]
+			[DataElement(AllowDbNull = false)]
 			public int MaxSpeed
 			{
 				get
@@ -1062,7 +1061,7 @@ namespace DOL
 			/// <summary>
 			/// Money copper part player own
 			/// </summary>
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull = true)]
 			public int Copper
 			{
 				get
@@ -1079,7 +1078,7 @@ namespace DOL
 			/// <summary>
 			/// Money silver part player own
 			/// </summary>
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull = true)]
 			public int Silver
 			{
 				get
@@ -1096,7 +1095,7 @@ namespace DOL
 			/// <summary>
 			/// Money gold part player own
 			/// </summary>
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull = true)]
 			public int Gold
 			{
 				get
@@ -1113,7 +1112,7 @@ namespace DOL
 			/// <summary>
 			/// Money platinum part player own
 			/// </summary>
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull = true)]
 			public int Platinum
 			{
 				get
@@ -1130,7 +1129,7 @@ namespace DOL
 			/// <summary>
 			/// Money mithril part player own
 			/// </summary>
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull = true)]
 			public int Mithril
 			{
 				get
@@ -1147,11 +1146,11 @@ namespace DOL
 			/// <summary>
 			/// The crafting skills of character
 			/// </summary>
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull = true)]
 			public string SerializedCraftingSkills
 			{
 				get { return m_craftingSkills; }
-				set 
+				set
 				{
 					Dirty = true;
 					m_craftingSkills = value;
@@ -1161,10 +1160,12 @@ namespace DOL
 			/// <summary>
 			/// The abilities of character
 			/// </summary>
-			[DataElement(AllowDbNull=true)]
-			public string SerializedAbilities {
+			[DataElement(AllowDbNull = true)]
+			public string SerializedAbilities
+			{
 				get { return m_abilities; }
-				set {
+				set
+				{
 					Dirty = true;
 					m_abilities = value;
 				}
@@ -1173,31 +1174,21 @@ namespace DOL
 			/// <summary>
 			/// The specs of character
 			/// </summary>
-			[DataElement(AllowDbNull=true)]
-			public string SerializedSpecs {
+			[DataElement(AllowDbNull = true)]
+			public string SerializedSpecs
+			{
 				get { return m_specs; }
-				set {
+				set
+				{
 					Dirty = true;
 					m_specs = value;
 				}
 			}
 
 			/// <summary>
-			/// The Styles of character
-			/// </summary>
-			[DataElement(AllowDbNull=true)]
-			public string Styles {
-				get { return m_styles; }
-				set {
-					m_styles = value;
-					Dirty = true;
-				}
-			}
-
-			/// <summary>
 			/// the spell lines of character
 			/// </summary>
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull = true)]
 			public string SerializedSpellLines
 			{
 				get { return m_spellLines; }
@@ -1211,10 +1202,12 @@ namespace DOL
 			/// <summary>
 			/// the realm abilities of character
 			/// </summary>
-			[DataElement(AllowDbNull=true)]
-			public string SerializedRealmAbilities {
+			[DataElement(AllowDbNull = true)]
+			public string SerializedRealmAbilities
+			{
 				get { return m_realmAbilities; }
-				set {
+				set
+				{
 					Dirty = true;
 					m_realmAbilities = value;
 				}
@@ -1223,7 +1216,7 @@ namespace DOL
 			/// <summary>
 			/// The spells unallowed to character
 			/// </summary>
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull = true)]
 			public string DisabledSpells
 			{
 				get { return m_disabledSpells; }
@@ -1233,7 +1226,7 @@ namespace DOL
 			/// <summary>
 			/// The abilities unallowed to character
 			/// </summary>
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull = true)]
 			public string DisabledAbilities
 			{
 				get { return m_disabledAbilities; }
@@ -1243,11 +1236,11 @@ namespace DOL
 			/// <summary>
 			/// The Friend list
 			/// </summary>
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull = true)]
 			public string SerializedFriendsList
 			{
 				get { return m_friendList; }
-				set 
+				set
 				{
 					Dirty = true;
 					m_friendList = value;
@@ -1257,7 +1250,7 @@ namespace DOL
 			/// <summary>
 			/// Is cloak hood up
 			/// </summary>
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull = true)]
 			public bool IsCloakHoodUp
 			{
 				get { return m_isCloakHoodUp; }
@@ -1271,7 +1264,7 @@ namespace DOL
 			/// <summary>
 			/// Spell queue flag
 			/// </summary>
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull = true)]
 			public bool SpellQueue
 			{
 				get { return m_spellQueue; }
@@ -1285,7 +1278,7 @@ namespace DOL
 			/// <summary>
 			/// Gets/sets half-level flag
 			/// </summary>
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull = true)]
 			public bool IsLevelSecondStage
 			{
 				get
@@ -1302,7 +1295,7 @@ namespace DOL
 			/// <summary>
 			/// Gets/sets guildname flag to print guildname or crafting title
 			/// </summary>
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull = true)]
 			public bool FlagGuildName
 			{
 				get
@@ -1319,7 +1312,7 @@ namespace DOL
 			/// <summary>
 			/// Gets/sets guild rank in the guild
 			/// </summary>
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull = true)]
 			public ushort GuildRank
 			{
 				get
@@ -1335,7 +1328,7 @@ namespace DOL
 			/// <summary>
 			/// Gets/sets the characters /played time
 			/// </summary>
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull = true)]
 			public long PlayedTime
 			{
 				get
@@ -1351,7 +1344,7 @@ namespace DOL
 			/// <summary>
 			/// Gets/sets the characters death /played time
 			/// </summary>
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull = true)]
 			public long DeathTime
 			{
 				get { return m_deathTime; }
@@ -1364,7 +1357,7 @@ namespace DOL
 			/// <summary>
 			/// Gets/sets the characters full skill respecs available
 			/// </summary>
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull = true)]
 			public int RespecAmountAllSkill
 			{
 				get
@@ -1380,7 +1373,7 @@ namespace DOL
 			/// <summary>
 			/// Gets/sets the characters single-line respecs available
 			/// </summary>
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull = true)]
 			public int RespecAmountSingleSkill
 			{
 				get
@@ -1427,7 +1420,7 @@ namespace DOL
 			/// <summary>
 			/// Gets/sets the characters safety flag
 			/// </summary>
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull = true)]
 			public bool SafetyFlag
 			{
 				get { return m_safetyFlag; }
@@ -1441,7 +1434,7 @@ namespace DOL
 			/// <summary>
 			/// Gets/sets the characters safety flag
 			/// </summary>
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull = true)]
 			public int CraftingPrimarySkill
 			{
 				get { return m_craftingPrimarySkill; }
@@ -1455,7 +1448,7 @@ namespace DOL
 			/// <summary>
 			/// the cancel style
 			/// </summary>
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull = true)]
 			public bool CancelStyle
 			{
 				get { return m_cancelStyle; }
@@ -1470,7 +1463,7 @@ namespace DOL
 			/// is anonymous( can not seen him in /who and some other things
 			/// /anon to toggle
 			/// </summary>
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull = true)]
 			public bool IsAnonymous
 			{
 				get { return m_isAnonymous; }
@@ -1484,7 +1477,7 @@ namespace DOL
 			/// <summary>
 			/// the face customisation step
 			/// </summary>
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull = true)]
 			public byte CustomisationStep
 			{
 				get { return m_customisationStep; }
@@ -1498,7 +1491,7 @@ namespace DOL
 			/// <summary>
 			/// Gets/sets character EyeSize
 			/// </summary>
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull = true)]
 			public byte EyeSize
 			{
 				get
@@ -1514,7 +1507,7 @@ namespace DOL
 			/// <summary>
 			/// Gets/sets character LipSize
 			/// </summary>
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull = true)]
 			public byte LipSize
 			{
 				get
@@ -1527,11 +1520,11 @@ namespace DOL
 					Dirty = true;
 				}
 			}
-			
+
 			/// <summary>
 			/// Gets/sets character EyeColor
 			/// </summary>
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull = true)]
 			public byte EyeColor
 			{
 				get
@@ -1544,11 +1537,11 @@ namespace DOL
 					Dirty = true;
 				}
 			}
-			
+
 			/// <summary>
 			/// Gets/sets character HairColor
 			/// </summary>
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull = true)]
 			public byte HairColor
 			{
 				get
@@ -1561,11 +1554,11 @@ namespace DOL
 					Dirty = true;
 				}
 			}
-			
+
 			/// <summary>
 			/// Gets/sets character FaceType
 			/// </summary>
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull = true)]
 			public byte FaceType
 			{
 				get
@@ -1578,11 +1571,11 @@ namespace DOL
 					Dirty = true;
 				}
 			}
-			
+
 			/// <summary>
 			/// Gets/sets character HairStyle
 			/// </summary>
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull = true)]
 			public byte HairStyle
 			{
 				get
@@ -1599,7 +1592,7 @@ namespace DOL
 			/// <summary>
 			/// Gets/sets character MoodType
 			/// </summary>
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull = true)]
 			public byte MoodType
 			{
 				get
@@ -1639,9 +1632,9 @@ namespace DOL
 				get { return m_playerTitleType; }
 				set { m_playerTitleType = value; Dirty = true; }
 			}
-			
+
 			#region Statistics
-			
+
 			private int m_killsAlbionPlayers;
 			private int m_killsMidgardPlayers;
 			private int m_killsHiberniaPlayers;

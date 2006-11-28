@@ -512,40 +512,34 @@ namespace DOL.GS.PacketHandler.Client.v168
 						else temp += "Very High Bonus";
 						objectInfo.Add(temp);
 
-                        if (style.SpecialType != Style.eSpecialType.None)
+						if (style.Procs.Count > 0)
 						{
-                            if (style.SpecialType == Style.eSpecialType.Effect)
-							{
-								if (style.Procs.Count > 0)
-                                {
-									temp = "Target Effect: ";
-									objectInfo.Add(temp);
+							temp = "Target Effect: ";
+							objectInfo.Add(temp);
 
-                                    SpellLine styleLine = SkillBase.GetSpellLine(GlobalSpellsLines.Combat_Styles_Effect);
-                                    if (styleLine != null)
-                                    {
-                                        foreach (DBStyleXSpell proc in style.Procs)
-                                        {
-                                            Spell spell = SkillBase.GetSpellByID(proc.SpellID);
-                                            if (spell != null)
-                                            {
-                                                ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, spell, styleLine);
-                                                if (spellHandler == null)
-                                                {
-                                                    temp = spell.Name + " (Not implemented yet)";
-                                                    objectInfo.Add(temp);
-                                                }
-                                                else
-                                                {
-                                                    temp = spell.Name;
-                                                    objectInfo.Add(temp);
-                                                    objectInfo.Add(" ");//empty line
-                                                    objectInfo.AddRange(spellHandler.DelveInfo);
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
+							SpellLine styleLine = SkillBase.GetSpellLine(GlobalSpellsLines.Combat_Styles_Effect);
+							if (styleLine != null)
+							{
+								foreach (DBStyleXSpell proc in style.Procs)
+								{
+									Spell spell = SkillBase.GetSpellByID(proc.SpellID);
+									if (spell != null)
+									{
+										ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, spell, styleLine);
+										if (spellHandler == null)
+										{
+											temp = spell.Name + " (Not implemented yet)";
+											objectInfo.Add(temp);
+										}
+										else
+										{
+											temp = spell.Name;
+											objectInfo.Add(temp);
+											objectInfo.Add(" ");//empty line
+											objectInfo.AddRange(spellHandler.DelveInfo);
+										}
+									}
+								}
 							}
 						}
 						break;

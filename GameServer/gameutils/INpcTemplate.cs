@@ -148,5 +148,15 @@ namespace DOL.GS
 		/// Gets the template npc Charisma 
 		///</summary>
 		int Charisma { get; }
+
+		/// <summary>
+		/// Gets the template npc aggro level
+		/// </summary>
+		byte AggroLevel { get;}
+
+		/// <summary>
+		/// Gets the template npc aggro range
+		/// </summary>
+		int AggroRange { get;}
 	}
 }

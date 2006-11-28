@@ -31,29 +31,9 @@ namespace DOL.GS.Effects
 		public void Start(GamePlayer player)
 		{
 			m_player = player;
-			
-
-			GameEventMgr.AddHandler(m_player, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
 			StartTimers();
 			m_player.EffectList.Add(this);
 			
-		}
-
-		/// <summary>
-		/// Called when a player leaves the game
-		/// </summary>
-		/// <param name="e">The event which was raised</param>
-		/// <param name="sender">Sender of the event</param>
-		/// <param name="args">EventArgs associated with the event</param>
-		private static void PlayerLeftWorld(DOLEvent e, object sender, EventArgs args)
-		{
-			GamePlayer player = (GamePlayer)sender;
-
-			MasteryofConcentrationEffect MasteryofConcentration = (MasteryofConcentrationEffect)player.EffectList.GetOfType(typeof(MasteryofConcentrationEffect));
-			if (MasteryofConcentration != null)
-			{
-				MasteryofConcentration.Cancel(false);
-			}
 		}
 
 		/// <summary>
@@ -69,7 +49,6 @@ namespace DOL.GS.Effects
             StopTimers();
 
 			m_player.EffectList.Remove(this);
-			GameEventMgr.RemoveHandler(m_player, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
 		}
 
 		/// <summary>

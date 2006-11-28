@@ -195,7 +195,7 @@ namespace DOL.GS
 				Arm();
 
 		}
-		public void ReleaseControl()
+		public virtual void ReleaseControl()
 		{
 			if (Owner == null) return;
 			Owner.Out.SendMessage("You are no longer controlling " + GetName(0, false) + ".", eChatType.CT_Say, eChatLoc.CL_SystemWindow);

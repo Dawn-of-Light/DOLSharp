@@ -629,7 +629,14 @@ namespace DOL.GS.Scripts
 						}
 						else
 						{
-							client.Out.SendMessage("Type /mob for command overview.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							if (targetMob.GuildName != "")
+							{
+								targetMob.GuildName = "";
+								targetMob.SaveIntoDatabase();
+								client.Out.SendMessage("Mob guild removed.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							}
+							else
+								client.Out.SendMessage("Type /mob for command overview.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						}
 					}
 					break;
@@ -1144,6 +1151,9 @@ namespace DOL.GS.Scripts
 						else
 						{
 							targetMob.LoadTemplate(template);
+							targetMob.UpdateNPCEquipmentAppearance();
+							targetMob.NPCTemplate = template as NpcTemplate;
+							targetMob.SaveIntoDatabase();
 							DisplayMessage(client, "updated npc based on template " + id, new object[] { });
 						}
 						break;

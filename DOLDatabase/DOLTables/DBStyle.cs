@@ -106,13 +106,6 @@ namespace DOL.Database
 		/// </summary>
 		protected double m_growthRate;
 		/// <summary>
-		/// The type of special style result beside damage
-		///		0 = no special
-		///		1 = effect
-		///		2 = taunt
-		/// </summary>
-		protected int m_SpecialType;
-		/// <summary>
 		/// The bonus to hit value for this style
 		/// below 0 = penalty
 		/// above 0 = bonus
@@ -133,6 +126,7 @@ namespace DOL.Database
 		/// Randomly cast a proc
 		/// </summary>
 		protected bool m_RandomProc;
+		private int m_classId;
 
 		static bool m_autoSave;
 
@@ -276,16 +270,6 @@ namespace DOL.Database
 		}
 
 		/// <summary>
-		/// The Style Special Type
-		/// </summary>
-		[DataElement(AllowDbNull = true)]
-		public int SpecialType
-		{
-			get { return m_SpecialType; }
-			set { m_SpecialType = value; Dirty = true; }
-		}
-
-		/// <summary>
 		/// The Style Bonus To Hit
 		/// </summary>
 		[DataElement(AllowDbNull = true)]
@@ -323,6 +307,13 @@ namespace DOL.Database
 		{
 			get { return m_RandomProc; }
 			set { m_RandomProc = value; Dirty = true; }
+		}
+
+		[DataElement(AllowDbNull = false)]
+		public int ClassId
+		{
+			get { return m_classId; }
+			set { m_classId = value; Dirty = true; }
 		}
 
 		/// <summary>
