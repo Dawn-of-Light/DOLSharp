@@ -26,31 +26,35 @@ namespace DOL.Database
 	/// <summary>
 	/// Database Storage of Tasks
 	/// </summary>
-	[DataTable(TableName="LootGenerator")]
+	[DataTable(TableName = "LootGenerator")]
 	public class DBLootGenerator : DataObject
-	{	
+	{
 		/// <summary>
 		/// Trigger Mob
 		/// </summary>
-		protected string	m_mobName = "";
+		protected string m_mobName = "";
 		/// <summary>
 		/// Trigger Guild
 		/// </summary>
-		protected string	m_mobGuild = "";
+		protected string m_mobGuild = "";
 		/// <summary>
 		/// Trigger Faction
 		/// </summary>
-		protected string	m_mobFaction = "";
+		protected string m_mobFaction = "";
+		/// <summary>
+		/// Trigger Region
+		/// </summary>
+		protected ushort m_regionID = 0;
 		/// <summary>
 		/// Class of the Loot Generator
 		/// </summary>
-		protected string	m_lootGeneratorClass = "";
+		protected string m_lootGeneratorClass = "";
 		/// <summary>
 		/// Exclusive Priority
 		/// </summary>
-		protected int		m_exclusivePriority = 0;
-				
-		static bool			m_autoSave;
+		protected int m_exclusivePriority = 0;
+
+		static bool m_autoSave;
 
 		/// <summary>
 		/// Constructor
@@ -65,18 +69,18 @@ namespace DOL.Database
 		/// </summary>
 		override public bool AutoSave
 		{
-			get	{return m_autoSave;}
-			set	{m_autoSave = value;}
+			get { return m_autoSave; }
+			set { m_autoSave = value; }
 		}
 
 		/// <summary>
 		/// MobName
 		/// </summary>
-		[DataElement(AllowDbNull=true,Unique=false)]
+		[DataElement(AllowDbNull = true, Unique = false)]
 		public String MobName
 		{
-			get {return m_mobName;}
-			set	
+			get { return m_mobName; }
+			set
 			{
 				Dirty = true;
 				m_mobName = value;
@@ -86,11 +90,11 @@ namespace DOL.Database
 		/// <summary>
 		/// MobGuild
 		/// </summary>
-		[DataElement(AllowDbNull=true,Unique=false)]
+		[DataElement(AllowDbNull = true, Unique = false)]
 		public String MobGuild
 		{
-			get {return m_mobGuild;}
-			set	
+			get { return m_mobGuild; }
+			set
 			{
 				Dirty = true;
 				m_mobGuild = value;
@@ -100,11 +104,11 @@ namespace DOL.Database
 		/// <summary>
 		/// MobFaction
 		/// </summary>
-		[DataElement(AllowDbNull=true,Unique=false)]
+		[DataElement(AllowDbNull = true, Unique = false)]
 		public String MobFaction
 		{
-			get {return m_mobFaction;}
-			set	
+			get { return m_mobFaction; }
+			set
 			{
 				Dirty = true;
 				m_mobFaction = value;
@@ -112,13 +116,27 @@ namespace DOL.Database
 		}
 
 		/// <summary>
+		/// Mobs Region ID
+		/// </summary>
+		[DataElement(AllowDbNull = false, Unique = false)]
+		public ushort RegionID
+		{
+			get { return m_regionID; }
+			set
+			{
+				Dirty = true;
+				m_regionID = value;
+			}
+		}
+
+		/// <summary>
 		/// LootGeneratorClass
 		/// </summary>
-		[DataElement(AllowDbNull=false,Unique=false)]
+		[DataElement(AllowDbNull = false, Unique = false)]
 		public String LootGeneratorClass
 		{
-			get {return m_lootGeneratorClass;}
-			set	
+			get { return m_lootGeneratorClass; }
+			set
 			{
 				Dirty = true;
 				m_lootGeneratorClass = value;
@@ -128,11 +146,11 @@ namespace DOL.Database
 		/// <summary>
 		/// ExclusivePriority
 		/// </summary>
-		[DataElement(AllowDbNull=false,Unique=false)]
+		[DataElement(AllowDbNull = false, Unique = false)]
 		public int ExclusivePriority
 		{
-			get {return m_exclusivePriority;}
-			set	
+			get { return m_exclusivePriority; }
+			set
 			{
 				Dirty = true;
 				m_exclusivePriority = value;

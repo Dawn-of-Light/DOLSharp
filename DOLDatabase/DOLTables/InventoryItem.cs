@@ -399,6 +399,7 @@ namespace DOL.Database
 			IsDropable = template.IsDropable;
 			IsPickable = template.IsPickable;
 			IsTradable = template.IsTradable;
+			CanDropAsLoot = template.CanDropAsLoot;
 			MaxCount = template.MaxCount;
 			PackSize = template.PackSize;
 			Item_Type = template.Item_Type;

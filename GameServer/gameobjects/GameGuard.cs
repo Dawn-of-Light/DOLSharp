@@ -16,12 +16,6 @@ namespace DOL.GS
 			//Guards dont drop loot when they die
 		}
 
-		public override void EnemyKilled(GameLiving enemy)
-		{
-			base.EnemyKilled(enemy);
-			WalkToSpawn();
-		}
-
 		public override IList GetExamineMessages(GamePlayer player)
 		{
 			//You examine the Guardian Sergeant.  He is neutral towards you and is a guard.

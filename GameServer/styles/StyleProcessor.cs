@@ -441,44 +441,34 @@ namespace DOL.GS.Styles
 						}
 					}
 
-					switch (attackData.Style.SpecialType)
+					if (attackData.Style.Procs.Count > 0)
 					{
-						case Style.eSpecialType.Effect:
-							if (attackData.Style.Procs.Count > 0)
+						ISpellHandler effect;
+						if (!attackData.Style.RandomProc)
+						{
+							foreach (DBStyleXSpell proc in attackData.Style.Procs)
 							{
-								ISpellHandler effect;
-								if (!attackData.Style.RandomProc)
+								//Add the procs to the styleEffects
+								if (Util.Chance(proc.Chance))
 								{
-									foreach (DBStyleXSpell proc in attackData.Style.Procs)
-									{
-										//Add the procs to the styleEffects
-										if (Util.Chance(proc.Chance))
-										{
-											effect = CreateMagicEffect(player, attackData.Target, proc.SpellID);
-											//effect could be null if the SpellID is bigger than ushort
-											if (effect != null)
-												attackData.StyleEffects.Add(effect);
-										}
-									}
-								}
-								else
-								{
-									//Add one proc randomly
-									int random = Util.Random(attackData.Style.Procs.Count - 1);
+									effect = CreateMagicEffect(player, attackData.Target, proc.SpellID);
 									//effect could be null if the SpellID is bigger than ushort
-									effect = CreateMagicEffect(player, attackData.Target, attackData.Style.Procs[random].SpellID);
 									if (effect != null)
 										attackData.StyleEffects.Add(effect);
 								}
 							}
-							break;
-
-						default:
-							if (log.IsWarnEnabled)
-								log.Warn(string.Format("Unknown style special type: style={0} (id={1}), special={2})", attackData.Style.Name, attackData.Style.ID, attackData.Style.SpecialType));
-							break;
+						}
+						else
+						{
+							//Add one proc randomly
+							int random = Util.Random(attackData.Style.Procs.Count - 1);
+							//effect could be null if the SpellID is bigger than ushort
+							effect = CreateMagicEffect(player, attackData.Target, attackData.Style.Procs[random].SpellID);
+							if (effect != null)
+								attackData.StyleEffects.Add(effect);
+						}
 					}
-					
+
 
 					if (weapon != null)
 						attackData.AnimationId = (weapon.Hand != 1) ? attackData.Style.Icon : attackData.Style.TwoHandAnimation; // special animation for two-hand

@@ -63,6 +63,8 @@ namespace DOL.GS
 		protected IList b_spells;
 		protected IList m_spelllines;
 		protected IList m_abilities;
+		protected byte m_aggroLevel;
+		protected int m_aggroRange;
 
 		/// <summary>
 		/// Constructs a new NpcTemplate
@@ -117,7 +119,7 @@ namespace DOL.GS
 				{
 					if (styles[i].Trim().Length == 0) continue;
 					int id = int.Parse(styles[i]);
-					Style style = SkillBase.GetStyleByID(id);
+					Style style = SkillBase.GetStyleByID(id, -1);
 					m_styles.Add(style);
 				}
 			}
@@ -147,6 +149,8 @@ namespace DOL.GS
 				m_meleeDamageType = eDamageType.Slash;
 
             m_inventory = data.EquipmentTemplateID;
+			m_aggroLevel = data.AggroLevel;
+			m_aggroRange = data.AggroRange;
 		}
 
 		public NpcTemplate(GameMob mob)
@@ -172,6 +176,12 @@ namespace DOL.GS
 			m_charisma = 30;
 			m_empathy = 30;
 			m_meleeDamageType = (eDamageType)mob.MeleeDamageType;
+			AI.Brain.StandardMobBrain brain = mob.Brain as AI.Brain.StandardMobBrain;
+			if (brain != null)
+			{
+				m_aggroLevel = (byte)brain.AggroLevel;
+				m_aggroRange = brain.AggroRange;
+			}
 		}
 
 
@@ -361,6 +371,18 @@ namespace DOL.GS
 			set { m_charisma = value; }
 		}
 
+		public byte AggroLevel
+		{
+			get { return m_aggroLevel; }
+			set { m_aggroLevel = value; }
+		}
+
+		public int AggroRange
+		{
+			get { return m_aggroRange; }
+			set { m_aggroRange = value; }
+		}
+
 		public virtual void SaveIntoDatabase()
 		{
 			DBNpcTemplate tmp = tmp = (DBNpcTemplate)GameServer.Database.FindObjectByKey(typeof(DBNpcTemplate), TemplateId);
@@ -388,6 +410,8 @@ namespace DOL.GS
 			tmp.Empathy = Empathy;
 			tmp.Intelligence = Intelligence;
 			tmp.Charisma = Charisma;
+			tmp.AggroRange = AggroRange;
+			tmp.AggroLevel = AggroLevel;
 			if (add)
 				GameServer.Database.AddNewObject(tmp);
 			else GameServer.Database.SaveObject(tmp);

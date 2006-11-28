@@ -79,6 +79,7 @@ namespace DOL.Database
 		protected bool m_isDropable;
 		protected bool m_isPickable;
 		protected bool m_isTradable;
+		protected bool m_canDropAsLoot;
 		protected int m_maxCount;
 		protected int m_packSize;
 		protected int m_spellID;
@@ -150,6 +151,7 @@ namespace DOL.Database
 			m_isDropable = true;
 			m_isPickable = true;
 			m_isTradable = true;
+			m_canDropAsLoot = true;
 			m_maxCount = 1;
 			m_packSize = 1;
 			m_charges = 0;
@@ -779,6 +781,7 @@ namespace DOL.Database
 				m_isPickable = value;
 			}
 		}
+		
 		[DataElement(AllowDbNull = true)]
 		public bool IsDropable
 		{
@@ -790,6 +793,20 @@ namespace DOL.Database
 			{
 				Dirty = true;
 				m_isDropable = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public bool CanDropAsLoot
+		{
+			get
+			{
+				return m_canDropAsLoot;
+			}
+			set
+			{
+				Dirty = true;
+				m_canDropAsLoot = value;
 			}
 		}
 
