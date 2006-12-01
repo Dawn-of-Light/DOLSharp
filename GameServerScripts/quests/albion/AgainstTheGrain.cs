@@ -137,7 +137,7 @@ namespace DOL.GS.Quests.Albion
 				*/
 			if (npcs.Length == 0)
 			{
-				laridiaTheMinstrel = new GameMob();
+				laridiaTheMinstrel = new GameNPC();
 				laridiaTheMinstrel.Model = 38;
 				laridiaTheMinstrel.Name = "Laridia the Minstrel";
 				if (log.IsWarnEnabled)
@@ -179,7 +179,7 @@ namespace DOL.GS.Quests.Albion
 			npcs = WorldMgr.GetNPCsByName("Farmer Asma", eRealm.Albion);
 			if (npcs.Length == 0)
 			{
-				farmerAsma = new GameMob();
+				farmerAsma = new GameNPC();
 				farmerAsma.Model = 82;
 				farmerAsma.Name = "Farmer Asma";
 				if (log.IsWarnEnabled)

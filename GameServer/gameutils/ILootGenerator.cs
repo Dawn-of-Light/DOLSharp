@@ -47,6 +47,6 @@ namespace DOL.GS
 		/// <param name="mob">Mob that drops loot</param>
 		/// <param name="killer"></param>
 		/// <returns>List of ItemTemplates</returns>
-		LootList GenerateLoot(GameMob mob, GameObject killer);
+		LootList GenerateLoot(GameNPC mob, GameObject killer);
 	}
 }

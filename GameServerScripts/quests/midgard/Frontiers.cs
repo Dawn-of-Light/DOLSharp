@@ -164,7 +164,7 @@ namespace DOL.GS.Quests.Midgard
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Stor Gothi Annark, creating ...");
-				annark = new GameMob();
+				annark = new GameNPC();
 				annark.Model = 215;
 				annark.Name = "Stor Gothi Annark";
 				annark.GuildName = "Part of " + questTitle + " Quest";
@@ -197,7 +197,7 @@ namespace DOL.GS.Quests.Midgard
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Scryer Idora, creating ...");
-				idora = new GameMob();
+				idora = new GameNPC();
 				idora.Model = 227;
 				idora.Name = "Scryer Idora";
 				idora.GuildName = "Part of " + questTitle + " Quest";
@@ -315,7 +315,7 @@ namespace DOL.GS.Quests.Midgard
 			}
 			if (griffin == null)
 			{
-				griffin = new GameMob();
+				griffin = new GameNPC();
 				griffin.Model = 1236; // //819;
 				griffin.Name = "Gryphon";
 				if (log.IsWarnEnabled)

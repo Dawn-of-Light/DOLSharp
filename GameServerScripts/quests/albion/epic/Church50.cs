@@ -100,7 +100,7 @@ namespace DOL.GS.Quests.Albion
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Roben , creating it ...");
-				Roben = new GameMob();
+				Roben = new GameNPC();
 				Roben.Model = 36;
 				Roben.Name = "Roben Fraomar";
 				Roben.GuildName = "";
@@ -126,7 +126,7 @@ namespace DOL.GS.Quests.Albion
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Blythe , creating it ...");
-				Blythe = new GameMob();
+				Blythe = new GameNPC();
 				Blythe.Model = 67;
 				Blythe.Name = "Sister Blythe";
 				Blythe.GuildName = "";

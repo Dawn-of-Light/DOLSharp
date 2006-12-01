@@ -117,7 +117,7 @@ namespace DOL.GS.Quests.Midgard
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Danica , creating it ...");
-				Danica = new GameMob();
+				Danica = new GameNPC();
 				Danica.Model = 227;
 				Danica.Name = "Danica";
 				Danica.GuildName = "";
@@ -144,7 +144,7 @@ namespace DOL.GS.Quests.Midgard
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Kelic , creating it ...");
-				Kelic = new GameMob();
+				Kelic = new GameNPC();
 				Kelic.Model = 26;
 				Kelic.Name = "Kelic";
 				Kelic.GuildName = "";

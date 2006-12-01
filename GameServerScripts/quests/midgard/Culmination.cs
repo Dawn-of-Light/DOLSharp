@@ -81,8 +81,8 @@ namespace DOL.GS.Quests.Midgard
 
 		private GameNPC[] recruits = new GameNPC[4];
 
-		private static GameMob queenVuuna = null;
-		private static GameMob[] askefruerSorceress = new GameMob[4];
+		private static GameNPC queenVuuna = null;
+		private static GameNPC[] askefruerSorceress = new GameNPC[4];
 
 		private static ItemTemplate queenVuunaHead = null;
 
@@ -158,7 +158,7 @@ namespace DOL.GS.Quests.Midgard
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Queen Vuuna, creating ...");
-				queenVuuna = new GameMob();
+				queenVuuna = new GameNPC();
 
 				queenVuuna.Name = "Queen Vuuna";
 				queenVuuna.X = GameLocation.ConvertLocalXToGlobalX(47071, 100);
@@ -184,7 +184,7 @@ namespace DOL.GS.Quests.Midgard
 			}
 			else
 			{
-				queenVuuna = (GameMob) npcs[0];
+				queenVuuna = (GameNPC) npcs[0];
 			}
 
 			int counter = 0;
@@ -192,7 +192,7 @@ namespace DOL.GS.Quests.Midgard
 			{
 				if (npc.Name == "askefruer sorceress")
 				{
-					askefruerSorceress[counter] = (GameMob) npc;
+					askefruerSorceress[counter] = (GameNPC) npc;
 					counter++;
 				}
 				if (counter == askefruerSorceress.Length)
@@ -205,7 +205,7 @@ namespace DOL.GS.Quests.Midgard
 				{
 					if (log.IsWarnEnabled)
 						log.Warn("Could not find askefruer sorceress, creating ...");
-					askefruerSorceress[i] = new GameMob();
+					askefruerSorceress[i] = new GameNPC();
 					askefruerSorceress[i].Model = 678; // //819;
 					askefruerSorceress[i].Name = "askefruer sorceress";
 					askefruerSorceress[i].GuildName = "Part of " + questTitle + " Quest";
@@ -549,7 +549,7 @@ namespace DOL.GS.Quests.Midgard
 
 		protected static void CheckNearQueenVuuna(DOLEvent e, object sender, EventArgs args)
 		{
-			GameMob queenTatiana = (GameMob) sender;
+			GameNPC queenTatiana = (GameNPC) sender;
 
 			// if princess is dead no ned to checks ...
 			if (!queenTatiana.IsAlive || queenTatiana.ObjectState != GameObject.eObjectState.Active)
@@ -711,7 +711,7 @@ namespace DOL.GS.Quests.Midgard
 					else if (quest.Step == 2)
 					{
 						quest.briediClone.SayTo(player, "Go now and kill their queen, so that Mularn is at ease.");
-						foreach (GameMob recruit in quest.recruits)
+						foreach (GameNPC recruit in quest.recruits)
 						{
 							recruit.Follow(player, 50 + Util.Random(100), 4000);
 						}
@@ -770,7 +770,7 @@ namespace DOL.GS.Quests.Midgard
 								}
 							}
 
-							foreach (GameMob recruit in quest.recruits)
+							foreach (GameNPC recruit in quest.recruits)
 							{
 								recruit.Follow(player, 50 + Util.Random(100), 4000);
 							}
@@ -829,7 +829,7 @@ namespace DOL.GS.Quests.Midgard
 			GameNpcInventoryTemplate template;
 			if (briediClone == null)
 			{
-				briediClone = new GameMob();
+				briediClone = new GameNPC();
 				briediClone.Model = 157;
 				briediClone.Name = "Master Briedi";
 				briediClone.GuildName = "Part of " + questTitle + " Quest";
@@ -884,7 +884,7 @@ namespace DOL.GS.Quests.Midgard
 
 			for (int i = 0; i < recruits.Length; i++)
 			{
-				recruits[i] = new GameMob();
+				recruits[i] = new GameNPC();
 
 				recruits[i].Name = "Recruit";
 

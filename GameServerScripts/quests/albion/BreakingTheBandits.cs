@@ -150,7 +150,7 @@ namespace DOL.GS.Quests.Albion
                 */
             if (npcs.Length == 0)
             {
-                atheleys = new GameMob();
+                atheleys = new GameNPC();
                 atheleys.Model = 87;
                 atheleys.Name = "Atheleys Sy'Lian";
                 if (log.IsWarnEnabled)
@@ -183,7 +183,7 @@ namespace DOL.GS.Quests.Albion
             if (npcs.Length == 0)
             {
                 //TODO insert proper attributes 
-                mostram = new GameMob();
+                mostram = new GameNPC();
                 mostram.Model = 18;
                 mostram.Name = "Mostram";
                 if (log.IsWarnEnabled)

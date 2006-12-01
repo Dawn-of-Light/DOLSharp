@@ -309,8 +309,11 @@ namespace DOL.GS.PacketHandler
 				int acuityItemBonus = 0;
 				if (m_gameClient.Player.CharacterClass.ClassType == eClassType.ListCaster && (int)updateStats[i] == (int)m_gameClient.Player.CharacterClass.ManaStat)
 					acuityItemBonus = m_gameClient.Player.AbilityBonus[(int)eProperty.Acuity];
-				pak.WriteShort((ushort)(m_gameClient.Player.AbilityBonus[(int)updateStats[i]] + acuityItemBonus));
+				pak.WriteByte((byte)(m_gameClient.Player.AbilityBonus[(int)updateStats[i]] + acuityItemBonus));
 			}
+
+			pak.WriteByte(0);
+
 			//pak.Fill(0, 9);
 			if (m_gameClient.Player.CharacterClass.ID == (int)eCharacterClass.Vampiir)
 				pak.WriteByte((byte)(m_gameClient.Player.Level - 5)); // Vampire bonuses

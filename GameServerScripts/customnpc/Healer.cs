@@ -34,7 +34,7 @@ namespace DOL.GS.Scripts
 	/// Represents an in-game GameHealer NPC
 	/// </summary>
 	[NPCGuildScript("Healer")]
-	public class GameHealer : GameMob
+	public class GameHealer : GameNPC
 	{
 		private const string CURRED_SPELL_TYPE = "PveResurrectionIllness";
 

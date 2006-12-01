@@ -277,7 +277,7 @@ namespace DOL.GS.Quests
 			if (source == null)
 				return false;
 
-			GameMob Mob = GetRandomMob(player);
+			GameNPC Mob = GetRandomMob(player);
 			if(Mob == null)
 			{
 				player.Out.SendMessage("I have no task for you, come back later",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
@@ -302,17 +302,13 @@ namespace DOL.GS.Quests
 		/// </summary>
 		/// <param name="Player">The GamePlayer Object</param>		
 		/// <returns>The GameMob Searched</returns>
-		public static GameMob GetRandomMob(GamePlayer Player)
+		public static GameNPC GetRandomMob(GamePlayer Player)
 		{					
 			int minLevel = GameLiving.NoXPForLevel[Player.Level]+1;			
 			int maxLevel = (int) (2 * ( (double)(Player.Level / 10 + 1) )) + Player.Level;
 
 			GameNPC npc = Player.CurrentZone.GetRandomNPC(eRealm.None, minLevel,maxLevel);
-
-			if (npc is GameMob)
-				return (GameMob)npc;
-			else
-				return null;
+			return npc;
 		}
 
 		/// <summary>

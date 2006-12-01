@@ -156,7 +156,7 @@ namespace DOL.GS.Quests.Albion
 
 			if (npcs.Length == 0)
 			{
-				masterFrederick = new GameMob();
+				masterFrederick = new GameNPC();
 				masterFrederick.Model = 32;
 				masterFrederick.Name = "Master Frederick";
 				if (log.IsWarnEnabled)

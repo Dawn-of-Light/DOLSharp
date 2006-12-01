@@ -24,7 +24,7 @@ namespace DOL.GS
 	/// <summary>
 	/// 
 	/// </summary>
-	public class GameHorse : GameMob
+	public class GameHorse : GameNPC
 	{
 		public GameHorse() : base()
 		{			

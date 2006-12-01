@@ -149,7 +149,7 @@ namespace DOL.GS.Quests.Midgard
 			GameNPC[] npcs = WorldMgr.GetNPCsByName("Abohas", eRealm.Midgard);
 			if (npcs.Length == 0)
 			{
-				abohas = new GameMob();
+				abohas = new GameNPC();
 				abohas.Model = 215;
 				abohas.Name = "Abohas";
 				if (log.IsWarnEnabled)

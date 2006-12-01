@@ -148,7 +148,7 @@ namespace DOL.GS.Quests.Hibernia
 			GameNPC[] npcs = WorldMgr.GetNPCsByName("Aethic", eRealm.Hibernia);
 			if (npcs.Length == 0)
 			{
-				aethic = new GameMob();
+				aethic = new GameNPC();
 				aethic.Model = 361;
 				aethic.Name = "Aethic";
 				if (log.IsWarnEnabled)

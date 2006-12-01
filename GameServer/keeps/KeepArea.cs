@@ -17,6 +17,7 @@ namespace DOL.GS.Keeps
 			m_Radius = radius;
 
 			m_RadiusRadius = radius * radius;
+			m_checkLOS = true;
 		}
 
 		public override void OnPlayerEnter(GamePlayer player)

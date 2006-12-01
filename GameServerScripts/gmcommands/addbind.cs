@@ -49,6 +49,7 @@ namespace DOL.GS.Scripts
 			bp.Region = client.Player.CurrentRegionID;
 			bp.Radius = bindRadius;
 			GameServer.Database.AddNewObject(bp);
+			client.Player.CurrentRegion.AddArea(new Area.BindArea("bind point", bp));
 			client.Out.SendMessage("Bindpoint added: X=" + bp.X + " Y=" + bp.Y + " Z=" + bp.Z + " Radius=" + bp.Radius + " Region=" + bp.Region, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			return 1;
 		}

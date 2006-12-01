@@ -142,7 +142,7 @@ namespace DOL.GS.Quests.Albion
 			GameNPC[] npcs = WorldMgr.GetNPCsByName("Farmer Asma", eRealm.Albion);
 			if (npcs.Length == 0)
 			{
-				farmerAsma = new GameMob();
+				farmerAsma = new GameNPC();
 				farmerAsma.Model = 82;
 				farmerAsma.Name = "Farmer Asma";
 				if (log.IsWarnEnabled)

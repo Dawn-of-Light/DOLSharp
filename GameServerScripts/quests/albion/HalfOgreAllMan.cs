@@ -156,7 +156,7 @@ namespace DOL.GS.Quests.Albion
 			GameNPC[] npcs = WorldMgr.GetNPCsByName("Madissair", eRealm.Albion);
 			if (npcs.Length == 0)
 			{
-				madissair = new GameMob();
+				madissair = new GameNPC();
 				madissair.Model = 1105;
 				madissair.Name = "Madissair";
 				if (log.IsWarnEnabled)
@@ -197,7 +197,7 @@ namespace DOL.GS.Quests.Albion
 			npcs = WorldMgr.GetNPCsByName("Eileen Morton", eRealm.Albion);
 			if (npcs.Length == 0)
 			{
-				eileenMorton = new GameMob();
+				eileenMorton = new GameNPC();
 				eileenMorton.Model = 5;
 				eileenMorton.Name = "Eileen Morton";
 				if (log.IsWarnEnabled)
@@ -237,7 +237,7 @@ namespace DOL.GS.Quests.Albion
 			npcs = WorldMgr.GetNPCsByName("Scribe Veral", eRealm.Albion);
 			if (npcs.Length == 0)
 			{
-				scribeVeral = new GameMob();
+				scribeVeral = new GameNPC();
 				scribeVeral.Model = 9;
 				scribeVeral.Name = "Scribe Veral";
 				if (log.IsWarnEnabled)
@@ -275,7 +275,7 @@ namespace DOL.GS.Quests.Albion
 			npcs = WorldMgr.GetNPCsByName("Serawen", eRealm.Albion);
 			if (npcs.Length == 0)
 			{
-				serawen = new GameMob();
+				serawen = new GameNPC();
 				serawen.Model = 45;
 				serawen.Name = "Serawen";
 				if (log.IsWarnEnabled)

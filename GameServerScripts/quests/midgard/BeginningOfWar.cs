@@ -93,8 +93,8 @@ namespace DOL.GS.Quests.Midgard
 		private static GameNPC briedi = null;
 		private GameNPC briediClone = null;
 
-		private static GameMob princessAiyr = null;
-		private static GameMob[] askefruerSorceress = new GameMob[4];
+		private static GameNPC princessAiyr = null;
+		private static GameNPC[] askefruerSorceress = new GameNPC[4];
 
 		private bool princessAiyrAttackStarted = false;
 
@@ -171,7 +171,7 @@ namespace DOL.GS.Quests.Midgard
             GameNPC[] npcs = WorldMgr.GetNPCsByName("Master Briedi", eRealm.Midgard);
 			if (npcs.Length == 0)
 			{
-				briedi = new GameMob();
+				briedi = new GameNPC();
 				briedi.Model = 157;
 				briedi.Name = "Master Briedi";
 				if (log.IsWarnEnabled)
@@ -222,7 +222,7 @@ namespace DOL.GS.Quests.Midgard
 			npcs = WorldMgr.GetNPCsByName("Princess Aiyr", eRealm.None);
 			if (npcs.Length == 0)
 			{
-				princessAiyr = new GameMob();
+				princessAiyr = new GameNPC();
 
 				princessAiyr.Name = "Princess Aiyr";
 				if (log.IsWarnEnabled)
@@ -249,7 +249,7 @@ namespace DOL.GS.Quests.Midgard
 			}
 			else
 			{
-				princessAiyr = (GameMob) npcs[0];
+				princessAiyr = npcs[0];
 			}
 
 			int counter = 0;
@@ -257,7 +257,7 @@ namespace DOL.GS.Quests.Midgard
 			{
 				if (npc.Name == "askefruer sorceress")
 				{
-					askefruerSorceress[counter] = (GameMob) npc;
+					askefruerSorceress[counter] = npc;
 					counter++;
 				}
 				if (counter == askefruerSorceress.Length)
@@ -268,7 +268,7 @@ namespace DOL.GS.Quests.Midgard
 			{
 				if (askefruerSorceress[i] == null)
 				{
-					askefruerSorceress[i] = new GameMob();
+					askefruerSorceress[i] = new GameNPC();
 					askefruerSorceress[i].Model = 678;
 					askefruerSorceress[i].Name = "askefruer sorceress";
 					if (log.IsWarnEnabled)
@@ -659,7 +659,7 @@ namespace DOL.GS.Quests.Midgard
 
 		protected static void CheckNearPrincessAyir(DOLEvent e, object sender, EventArgs args)
 		{
-			GameMob m_princessAyir = (GameMob) sender;
+			GameNPC m_princessAyir = (GameNPC) sender;
 
 			// if princess is dead no ned to checks ...
 			if (!m_princessAyir.IsAlive || m_princessAyir.ObjectState != GameObject.eObjectState.Active)
@@ -681,7 +681,7 @@ namespace DOL.GS.Quests.Midgard
 
 					if (quest.briediClone != null)
 					{
-						foreach (GameMob fairy in askefruerSorceress)
+						foreach (GameNPC fairy in askefruerSorceress)
 						{
 							aggroBrain = quest.briediClone.Brain as IAggressiveBrain;
 							if (aggroBrain != null)
@@ -1013,7 +1013,7 @@ namespace DOL.GS.Quests.Midgard
 		{
 			if (briediClone == null)
 			{
-				briediClone = new GameMob();
+				briediClone = new GameNPC();
 				briediClone.Name = briedi.Name;
 				briediClone.Model = briedi.Model;
 				briediClone.GuildName = briedi.GuildName;

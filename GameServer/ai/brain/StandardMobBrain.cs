@@ -663,7 +663,7 @@ namespace DOL.AI.Brain
 		{
 			foreach (GameNPC npc in Body.GetNPCsInRadius(600))
 			{
-				if (npc is GameMob && npc.Name == Body.Name && !npc.InCombat && npc.Brain is IControlledBrain == false)
+				if (npc.Name == Body.Name && !npc.InCombat && npc.Brain is IControlledBrain == false)
 				{
 					return npc;
 				}

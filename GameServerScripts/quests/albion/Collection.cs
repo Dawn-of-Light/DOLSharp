@@ -77,7 +77,7 @@ namespace DOL.GS.Quests.Albion
 
 		private static GameNPC masterFrederick = null;
 
-		private static GameMob[] general = new GameMob[3];
+		private static GameNPC[] general = new GameNPC[3];
 		private static String[] generalNames = {"Palearis", "Bohad", "Fluvale"};
 		private static GameLocation[] generalLocations = new GameLocation[3];
 
@@ -152,12 +152,12 @@ namespace DOL.GS.Quests.Albion
 			{
 				npcs = WorldMgr.GetNPCsByName(generalNames[i], eRealm.None);
 				if (npcs.Length > 0)
-					general[i] = npcs[0] as GameMob;
+					general[i] = npcs[0] as GameNPC;
 				else
 				{
 					if (log.IsWarnEnabled)
 						log.Warn("Could not find " + generalNames[i] + ", creating her ...");
-					general[i] = new GameMob();
+					general[i] = new GameNPC();
 
 					general[i].Model = 603;
 
@@ -166,12 +166,11 @@ namespace DOL.GS.Quests.Albion
 					general[i].Y = generalLocations[i].Y;
 					general[i].Z = generalLocations[i].Z;
 					general[i].Heading = generalLocations[i].Heading;
-					;
 
 					general[i].GuildName = "Part of " + questTitle + " Quest";
 					general[i].Realm = (byte) eRealm.None;
 					general[i].CurrentRegionID = generalLocations[i].RegionID;
-					;
+
 					general[i].Size = 49;
 					general[i].Level = 2;
 

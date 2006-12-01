@@ -29,7 +29,7 @@ using DOL.GS.PacketHandler;
 namespace DOL.GS.Scripts
 {
 	[NPCGuildScript("Enchanter")]
-	public class Enchanter : GameMob
+	public class Enchanter : GameNPC
 	{
 		private const string ENCHANT_ITEM_WEAK = "enchanting item";
 		private const string TOWARDSTR = " towards you.";

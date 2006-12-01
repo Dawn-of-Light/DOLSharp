@@ -107,7 +107,7 @@ namespace DOL.GS.Quests.Midgard
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Inaksha , creating it ...");
-				Inaksha = new GameMob();
+				Inaksha = new GameNPC();
 				Inaksha.Model = 193;
 				Inaksha.Name = "Inaksha";
 				Inaksha.GuildName = "";
@@ -136,7 +136,7 @@ namespace DOL.GS.Quests.Midgard
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Loken , creating it ...");
-				Loken = new GameMob();
+				Loken = new GameNPC();
 				Loken.Model = 212;
 				Loken.Name = "Loken";
 				Loken.GuildName = "";
@@ -165,7 +165,7 @@ namespace DOL.GS.Quests.Midgard
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Miri , creating it ...");
-				Miri = new GameMob();
+				Miri = new GameNPC();
 				Miri.Model = 220;
 				Miri.Name = "Miri";
 				Miri.GuildName = "";

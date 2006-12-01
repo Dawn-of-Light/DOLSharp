@@ -261,7 +261,7 @@ namespace DOL.GS
 		/// <param name="mob"></param>
 		/// <param name="killer"></param>
 		/// <returns></returns>
-		public static ItemTemplate[] GetLoot(GameMob mob, GameObject killer)
+		public static ItemTemplate[] GetLoot(GameNPC mob, GameObject killer)
 		{
 			LootList lootList = null;
 			IList generators = GetLootGenerators(mob);
@@ -291,7 +291,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="mob"></param>
 		/// <returns></returns>
-		private static IList GetLootGenerators(GameMob mob)
+		private static IList GetLootGenerators(GameNPC mob)
 		{
 			IList filteredGenerators = new ArrayList();
 			ILootGenerator exclusiveGenerator = null;

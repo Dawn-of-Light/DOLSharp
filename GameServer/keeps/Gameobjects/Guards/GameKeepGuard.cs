@@ -29,7 +29,7 @@ namespace DOL.GS.Keeps
 	/// <summary>
 	/// Keep guard is gamemob with just different brain and load from other DB table
 	/// </summary>
-	public class GameKeepGuard : GameMob, IKeepItem
+	public class GameKeepGuard : GameNPC, IKeepItem
 	{
 		private string m_templateID = "";
 		public string TemplateID

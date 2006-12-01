@@ -139,7 +139,7 @@ namespace DOL.GS.Quests.Albion
 				*/
 			if (npcs.Length == 0)
 			{
-				hughGallen = new GameMob();
+				hughGallen = new GameNPC();
 				hughGallen.Model = 40;
 				hughGallen.Name = "Hugh Gallen";
 				if (log.IsWarnEnabled)
@@ -454,7 +454,7 @@ namespace DOL.GS.Quests.Albion
 						{
 							if(mulgrutMaggot == null)
 							{
-								mulgrutMaggot = new GameMob();
+								mulgrutMaggot = new GameNPC();
 								mulgrutMaggot.Model = 467;
 								mulgrutMaggot.Name = "Mulgrut Maggot";
 								mulgrutMaggot.Realm = (byte) eRealm.None;
@@ -470,7 +470,7 @@ namespace DOL.GS.Quests.Albion
 								StandardMobBrain brain = new StandardMobBrain();  // set a brain witch find a lot mob friend to attack the player
 								mulgrutMaggot.SetOwnBrain(brain);
 
-								((GameMob)mulgrutMaggot).RespawnInterval = 0; // don't respawn when killed
+								mulgrutMaggot.RespawnInterval = 0; // don't respawn when killed
 
 								mulgrutMaggot.AddToWorld();
 							}

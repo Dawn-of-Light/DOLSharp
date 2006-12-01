@@ -39,6 +39,7 @@ namespace DOL.GS
 
 		protected int m_templateId;
 		protected string m_name;
+		protected string m_classType;
 		protected string m_guildName;
 		protected string m_model;
 		protected byte m_size;
@@ -77,6 +78,7 @@ namespace DOL.GS
 
 			m_templateId = data.TemplateId;
 			m_name = data.Name;
+			m_classType = data.ClassType;
 			m_guildName = data.GuildName;
 			m_model = data.Model;
 			m_size = data.Size;
@@ -153,12 +155,13 @@ namespace DOL.GS
 			m_aggroRange = data.AggroRange;
 		}
 
-		public NpcTemplate(GameMob mob)
+		public NpcTemplate(GameNPC mob)
 		{
 			if (mob == null)
 				throw new ArgumentNullException("data");
 			m_templateId = GameServer.Database.GetObjectCount(typeof(DBNpcTemplate));
 			m_name = mob.Name;
+			m_classType = mob.GetType().ToString();
 			m_guildName = mob.GuildName;
 			m_model = mob.Model.ToString();
 			m_size = mob.Size;
@@ -184,6 +187,9 @@ namespace DOL.GS
 			}
 		}
 
+		public NpcTemplate()
+			: base()
+		{ }
 
 		/// <summary>
 		/// Gets the npc template ID
@@ -193,6 +199,7 @@ namespace DOL.GS
 			get { return m_templateId; }
 			set { m_templateId = value; }
 		}
+
 		/// <summary>
 		/// Gets the template npc name
 		/// </summary>
@@ -200,6 +207,15 @@ namespace DOL.GS
 		{
 			get { return m_name; }
 			set { m_name = value; }
+		}
+
+		/// <summary>
+		/// Gets the template npc class type
+		/// </summary>
+		public string ClassType
+		{
+			get { return m_classType; }
+			set { m_classType = value; }
 		}
 
 		/// <summary>

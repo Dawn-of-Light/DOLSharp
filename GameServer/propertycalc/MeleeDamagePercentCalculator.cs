@@ -38,11 +38,12 @@ namespace DOL.GS.PropertyCalc
 				+ living.BuffBonusCategory1[(int)property]
 				- living.BuffBonusCategory3[(int)property]
 				//cap toaBoni & itemBoni at 10
-				+ Math.Min(living.ItemBonus[(int)property] + living.BuffBonusCategory2[(int)property], 10);
+				+ Math.Min(living.ItemBonus[(int)property] 
+				+ living.BuffBonusCategory2[(int)property], 10);
 
 			if (living is GamePlayer)
 			{
-				percent = (int)(percent * RelicMgr.GetRelicBonusModifier(living.Realm, eRelicType.Strength));
+				percent = (int)(percent * (1 + RelicMgr.GetRelicBonusModifier(living.Realm, eRelicType.Strength)));
 			}
 
 			percent += living.AbilityBonus[(int)property];

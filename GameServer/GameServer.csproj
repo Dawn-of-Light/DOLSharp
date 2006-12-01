@@ -187,6 +187,7 @@
     <Compile Include="Crafting\WoodWorking.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="dbconverters\Version004.cs" />
     <Compile Include="dbconverters\Version003.cs" />
     <Compile Include="dbconverters\DatabaseConverterAttribute.cs">
       <SubType>Code</SubType>
@@ -483,9 +484,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="gameobjects\GameMerchant.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameobjects\GameMob.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="gameobjects\GameMoney.cs">

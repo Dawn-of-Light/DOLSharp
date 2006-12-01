@@ -229,8 +229,8 @@ namespace DOL.GS.Keeps
 			hookPointObj.Z = hookpoint.Z;
 			if (hookPointObj is GameSiegeCauldron)
 				(hookPointObj as GameSiegeCauldron).Component = component;
-			if (hookPointObj is GameMob)
-				((GameMob)hookPointObj).RespawnInterval = 0;//do not respawn
+			if (hookPointObj is GameNPC)
+				((GameNPC)hookPointObj).RespawnInterval = 0;//do not respawn
 			hookPointObj.AddToWorld();
 			hookpoint.Object = hookPointObj;
 		}

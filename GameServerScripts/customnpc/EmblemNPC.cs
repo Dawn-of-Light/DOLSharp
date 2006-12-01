@@ -23,7 +23,7 @@ using DOL.GS.PacketHandler;
 namespace DOL.GS.Scripts
 {
 	[NPCGuildScript("Guild Emblemeer")]
-	public class EmblemNPC : GameMob
+	public class EmblemNPC : GameNPC
 	{
 		public const long EMBLEM_COST = 50000;
 		private const string EMBLEMIZE_ITEM_WEAK = "emblemise item";

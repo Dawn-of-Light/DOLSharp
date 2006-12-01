@@ -139,7 +139,7 @@ namespace DOL.GS.Quests.Albion
 				*/
 			if (npcs.Length == 0)
 			{
-				commanderBurcrif = new GameMob();
+				commanderBurcrif = new GameNPC();
 				commanderBurcrif.Model = 28;
 				commanderBurcrif.Name = "Commander Burcrif";
 				if (log.IsWarnEnabled)
@@ -454,7 +454,7 @@ namespace DOL.GS.Quests.Albion
 						{
 							if(slith == null)
 							{
-								slith = new GameMob();
+								slith = new GameNPC();
 								slith.Model = 31;
 								slith.Name = "Slith";
 								slith.Realm = (byte) eRealm.None;
@@ -470,7 +470,7 @@ namespace DOL.GS.Quests.Albion
 								StandardMobBrain brain = new StandardMobBrain();  // set a brain witch find a lot mob friend to attack the player
 								slith.SetOwnBrain(brain);
 
-								((GameMob)slith).RespawnInterval = 0; // don't respawn when killed
+								slith.RespawnInterval = 0; // don't respawn when killed
 
 								slith.AddToWorld();
 							}

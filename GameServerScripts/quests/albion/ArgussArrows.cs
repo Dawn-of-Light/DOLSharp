@@ -158,7 +158,7 @@ namespace DOL.GS.Quests.Albion
                 */
             if (npcs.Length == 0)
             {
-                argusBowman = new GameMob();
+                argusBowman = new GameNPC();
                 argusBowman.Model = 40;
                 argusBowman.Name = "Argus Bowman";
                 if (log.IsWarnEnabled)

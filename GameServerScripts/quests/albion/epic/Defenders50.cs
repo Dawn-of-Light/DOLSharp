@@ -94,7 +94,7 @@ namespace DOL.GS.Quests.Albion
 			if (npcs.Length == 0)
 			{
 				
-				Lidmann = new GameMob();
+				Lidmann = new GameNPC();
 				Lidmann.Model = 64;
 				Lidmann.Name = "Lidmann Halsey";
                 
@@ -127,7 +127,7 @@ namespace DOL.GS.Quests.Albion
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Uragaig , creating it ...");
-				Uragaig = new GameMob();
+				Uragaig = new GameNPC();
 				Uragaig.Model = 349;
 				Uragaig.Name = "Cailleach Uragaig";
 				Uragaig.GuildName = "";

@@ -118,7 +118,7 @@ namespace DOL.GS.Quests.Hibernia
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Brigit , creating it ...");
-				Brigit = new GameMob();
+				Brigit = new GameNPC();
 				Brigit.Model = 384;
 				Brigit.Name = "Brigit";
 				Brigit.GuildName = "";
@@ -147,7 +147,7 @@ namespace DOL.GS.Quests.Hibernia
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Caithor , creating it ...");
-				Caithor = new GameMob();
+				Caithor = new GameNPC();
 				Caithor.Model = 339;
 				Caithor.Name = "Caithor";
 				Caithor.GuildName = "";

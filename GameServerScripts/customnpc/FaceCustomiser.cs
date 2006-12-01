@@ -26,7 +26,7 @@ namespace DOL.GS.Scripts
 	/// <summary>
 	/// Represents an in-game FaceCustomiser NPC
 	/// </summary>
-	public class FaceCustomiser : GameMob
+	public class FaceCustomiser : GameNPC
 	{
 		/// <summary>
 		/// Spell id of the magical effect

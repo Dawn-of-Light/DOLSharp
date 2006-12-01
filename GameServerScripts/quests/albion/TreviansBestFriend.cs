@@ -75,14 +75,14 @@ namespace DOL.GS.Quests.Albion
 		private static GameNPC guardBrydus = null;
 
 		// lilybet is not static since it must be created and deleted for each quest to allow multi users to do quest at the same time...
-		private GameMob lilybet = null;
+		private GameNPC lilybet = null;
 
 		private const string banditAbductorLeaderName = "Bandit Abductor Leader";
-		private static GameMob banditAbductorLeader = null;
+		private static GameNPC banditAbductorLeader = null;
 
 		private const string banditAbductorName = "Bandit Abductor Henchman";
-		private static GameMob banditAbductor1 = null;
-		private static GameMob banditAbductor2 = null;
+		private static GameNPC banditAbductor1 = null;
+		private static GameNPC banditAbductor2 = null;
 
 
 		private static ItemTemplate treviansHoodedCloak = null;
@@ -163,7 +163,7 @@ namespace DOL.GS.Quests.Albion
 				*/
 			if (npcs.Length == 0)
 			{
-				trevian = new GameMob();
+				trevian = new GameNPC();
 				trevian.Model = 61;
 				trevian.Name = "Trevian";
 				if (log.IsWarnEnabled)
@@ -206,7 +206,7 @@ namespace DOL.GS.Quests.Albion
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Trevian's Puppy, creating him ...");
-				puppy = new GameMob();
+				puppy = new GameNPC();
 				puppy.Model = 459;
 				puppy.Name = "Trevian's Puppy";
 				puppy.GuildName = "Part of " + questTitle + " Quest";
@@ -235,7 +235,7 @@ namespace DOL.GS.Quests.Albion
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Guard Brydus, creating him ...");
-				guardBrydus = new GameMob();
+				guardBrydus = new GameNPC();
 				guardBrydus.Model = 27;
 				guardBrydus.Name = "Guard Brydus";
 				guardBrydus.GuildName = "Part of " + questTitle + " Quest";
@@ -270,12 +270,12 @@ namespace DOL.GS.Quests.Albion
 
 
 			// mob db check
-			GameObject[] mobs = WorldMgr.GetObjectsByNameFromRegion(banditAbductorLeaderName, 1, eRealm.None, typeof (GameMob));
+			GameObject[] mobs = WorldMgr.GetObjectsByNameFromRegion(banditAbductorLeaderName, 1, eRealm.None, typeof (GameNPC));
 			if (mobs.Length == 0)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Mob " + banditAbductorLeaderName + ", creating him ...");
-				banditAbductorLeader = new GameMob();
+				banditAbductorLeader = new GameNPC();
 				banditAbductorLeader.Model = 18;
 				banditAbductorLeader.Name = banditAbductorLeaderName;
 				banditAbductorLeader.GuildName = "Part of " + questTitle + " Quest";
@@ -309,14 +309,14 @@ namespace DOL.GS.Quests.Albion
 
 			}
 			else
-				banditAbductorLeader = mobs[0] as GameMob;
+				banditAbductorLeader = mobs[0] as GameNPC;
 
-			mobs = WorldMgr.GetObjectsByNameFromRegion(banditAbductorName, 1, eRealm.None, typeof (GameMob));
+			mobs = WorldMgr.GetObjectsByNameFromRegion(banditAbductorName, 1, eRealm.None, typeof (GameNPC));
 			if (mobs.Length == 0)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Mob " + banditAbductorName + ", creating him ...");
-				banditAbductor1 = new GameMob();
+				banditAbductor1 = new GameNPC();
 				banditAbductor1.Model = 16;
 				banditAbductor1.Name = banditAbductorName;
 				banditAbductor1.GuildName = "Part of " + questTitle + " Quest";
@@ -347,7 +347,7 @@ namespace DOL.GS.Quests.Albion
 				// We add two of them ...
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Mob " + banditAbductorName + ", creating him ...");
-				banditAbductor2 = new GameMob();
+				banditAbductor2 = new GameNPC();
 				banditAbductor2.Model = 16;
 				banditAbductor2.Name = banditAbductorName;
 				banditAbductor2.GuildName = "Part of " + questTitle + " Quest";
@@ -377,8 +377,8 @@ namespace DOL.GS.Quests.Albion
 			}
 			else
 			{
-				banditAbductor1 = mobs[0] as GameMob;
-				banditAbductor2 = mobs[1] as GameMob;
+				banditAbductor1 = mobs[0] as GameNPC;
+				banditAbductor2 = mobs[1] as GameNPC;
 			}
 
 			#endregion
@@ -1454,7 +1454,7 @@ namespace DOL.GS.Quests.Albion
 		{
 			if (lilybet == null)
 			{
-				lilybet = new GameMob();
+				lilybet = new GameNPC();
 				lilybet.Model = 459;
 				lilybet.Name = "Lilybet";
 				lilybet.GuildName = "Part of " + questTitle + " Quest";

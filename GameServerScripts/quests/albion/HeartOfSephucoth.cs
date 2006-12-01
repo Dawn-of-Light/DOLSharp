@@ -145,7 +145,7 @@ namespace DOL.GS.Quests.Albion
 				*/
 			if (npcs.Length == 0)
 			{
-				eowylnAstos = new GameMob();
+				eowylnAstos = new GameNPC();
 				eowylnAstos.Model = 35;
 				eowylnAstos.Name = "Eowyln Astos";
 				if (log.IsWarnEnabled)
@@ -547,7 +547,7 @@ namespace DOL.GS.Quests.Albion
 						{
 							if(sephucoth == null)
 							{
-								sephucoth = new GameMob();
+								sephucoth = new GameNPC();
 								sephucoth.Model = 136;
 								sephucoth.Name = "Sephucoth";
 								sephucoth.Realm = (byte) eRealm.None;
@@ -563,7 +563,7 @@ namespace DOL.GS.Quests.Albion
 								StandardMobBrain brain = new StandardMobBrain();  // set a brain witch find a lot mob friend to attack the player
 								sephucoth.SetOwnBrain(brain);					  // so this mob must be abble to cast 
 
-								((GameMob)sephucoth).RespawnInterval = 0; // don't respawn when killed
+								sephucoth.RespawnInterval = 0; // don't respawn when killed
 
 								sephucoth.AddToWorld();
 							}

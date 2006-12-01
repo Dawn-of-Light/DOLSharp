@@ -256,9 +256,9 @@ namespace DOL.GS.ServerProperties
 				property.DefaultValue = attrib.DefaultValue.ToString();
 				property.Value = attrib.DefaultValue.ToString();
 				GameServer.Database.AddNewObject(property);
-				log.Info("Cannot find server property " + key + " creating it");
+				log.Debug("Cannot find server property " + key + " creating it");
 			}
-			log.Info("Loading " + key + " Value is " + property.Value);
+			log.Debug("Loading " + key + " Value is " + property.Value);
 			try
 			{
 				//we do this because we need "1.0" to be considered double sometimes its "1,0" in other countries

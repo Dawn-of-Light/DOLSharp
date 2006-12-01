@@ -147,7 +147,7 @@ namespace DOL.GS.Quests.Hibernia
 
 			if (npcs.Length == 0)
 			{
-				addrir = new GameMob();
+				addrir = new GameNPC();
 				addrir.Model = 335;
 				addrir.Name = "Addrir";
 				if (log.IsWarnEnabled)
