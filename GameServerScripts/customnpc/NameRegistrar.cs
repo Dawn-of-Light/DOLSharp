@@ -11,7 +11,7 @@ using DOL.GS.PacketHandler;
 namespace DOL.GS.Scripts
 {
 	[NPCGuildScript("Name Registrar")]
-	public class NameRegistrar : GameMob
+	public class NameRegistrar : GameNPC
 	{
 		private const string TOWARDSTR = " towards you.";
 

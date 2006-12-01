@@ -81,7 +81,7 @@ namespace DOL.GS.Quests.Albion
 
 		private static GameNPC kealan = null;
 
-		private static GameMob arachneida = null;
+		private static GameNPC arachneida = null;
 
 		private static ItemTemplate spiderSilkenRobe = null;
 		private static ItemTemplate ringedSpiderChitinTunic = null;
@@ -156,7 +156,7 @@ namespace DOL.GS.Quests.Albion
 				*/
 			if (npcs.Length == 0)
 			{
-				kealan = new GameMob();
+				kealan = new GameNPC();
 				kealan.Model = 281;
 				kealan.Name = "Kealan";
 				if (log.IsWarnEnabled)
@@ -189,7 +189,7 @@ namespace DOL.GS.Quests.Albion
 			npcs = WorldMgr.GetNPCsByName("Arachneida", eRealm.None);
 			if (npcs.Length == 0)
 			{
-				arachneida = new GameMob();
+				arachneida = new GameNPC();
 				arachneida.Model = 72;
 				arachneida.Name = "Arachneida";
 				if (log.IsWarnEnabled)
@@ -216,7 +216,7 @@ namespace DOL.GS.Quests.Albion
 				arachneida.AddToWorld();
 			}
 			else
-				arachneida = (GameMob) npcs[0];
+				arachneida = npcs[0];
 
 			#endregion
 

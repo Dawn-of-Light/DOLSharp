@@ -156,7 +156,7 @@ namespace DOL.GS.Quests.Albion
                 */
             if (npcs.Length == 0)
             {
-                  arleighPenn = new GameMob();
+                  arleighPenn = new GameNPC();
                   arleighPenn.Model = 8;
                   arleighPenn.Name = "Arleigh Penn";
                   if (log.IsWarnEnabled)

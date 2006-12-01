@@ -140,7 +140,7 @@ namespace DOL.GS.Quests.Albion
 				*/
 			if (npcs.Length == 0)
 			{
-				elvarIronhand = new GameMob();
+				elvarIronhand = new GameNPC();
 				elvarIronhand.Model = 10;
 				elvarIronhand.Name = "Elvar Ironhand";
 				if (log.IsWarnEnabled)

@@ -164,7 +164,7 @@ namespace DOL.GS.Quests.Midgard
 			GameNPC[] npcs = WorldMgr.GetNPCsByName("Jarl Yuliwyf", eRealm.Midgard);
 			if (npcs.Length == 0)
 			{
-				yuliwyf = new GameMob();
+				yuliwyf = new GameNPC();
 				yuliwyf.Model = 159;
 				yuliwyf.Name = "Jarl Yuliwyf";
 				if (log.IsWarnEnabled)
@@ -863,7 +863,7 @@ namespace DOL.GS.Quests.Midgard
 			}
 			else
 			{
-				assistant = new GameMob();
+				assistant = new GameNPC();
 				assistant.Model = 951;
 				assistant.Name = m_questPlayer.Name + "'s Assistant";
 				assistant.GuildName = "Part of " + questTitle + " Quest";

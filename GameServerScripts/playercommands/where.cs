@@ -54,6 +54,9 @@ namespace DOL.GS.Scripts
 
 		public bool CheckTargetIsGuard(GameLiving target)
 		{
+			if (target is GameGuard)
+				return true;
+
 			if (target.Realm == 0)
 				return false;
 

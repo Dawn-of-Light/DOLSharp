@@ -372,7 +372,7 @@ namespace DOL.GS.Quests.Albion
 
 		protected virtual void CreateFairy()
 		{
-			ireFairy = new GameMob();
+			ireFairy = new GameNPC();
 			ireFairy.Model = 603;
 			ireFairy.Name = "Ire Fairy";
 			ireFairy.GuildName = "Part of " + questTitle + " Quest";

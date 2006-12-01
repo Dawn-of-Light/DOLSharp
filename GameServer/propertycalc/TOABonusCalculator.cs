@@ -104,7 +104,10 @@ namespace DOL.GS.PropertyCalc
 	{
 		public override int CalcValue(GameLiving living, eProperty property) 
 		{
-			return Math.Min(10, living.BuffBonusCategory1[(int)property] + living.ItemBonus[(int)property] - living.BuffBonusCategory3[(int)property]);
+			return Math.Min(10, living.BuffBonusCategory1[(int)property] 
+				+ living.ItemBonus[(int)property]
+				- living.BuffBonusCategory3[(int)property] 
+				+ living.AbilityBonus[(int)property]);
 		}
 	}
 }

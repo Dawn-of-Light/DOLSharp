@@ -96,8 +96,8 @@ namespace DOL.GS.Quests.Albion
 		private static GameNPC dunwyn = null;
 		private GameNPC dunwynClone = null;
 
-		private static GameMob princessObera = null;
-		private static GameMob[] fairySorceress = new GameMob[4];
+		private static GameNPC princessObera = null;
+		private static GameNPC[] fairySorceress = new GameNPC[4];
 
 		private bool princessOberaAttackStarted = false;
 
@@ -174,7 +174,7 @@ namespace DOL.GS.Quests.Albion
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Master Dunwyn, creating ...");
-				dunwyn = new GameMob();
+				dunwyn = new GameNPC();
 				dunwyn.Model = 9;
 				dunwyn.Name = "Master Dunwyn";
 				dunwyn.GuildName = "Part of " + questTitle + " Quest";
@@ -213,7 +213,7 @@ namespace DOL.GS.Quests.Albion
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Princess Obera, creating ...");
-				princessObera = new GameMob();
+				princessObera = new GameNPC();
 
 				princessObera.Name = "Princess Obera";
 				princessObera.X = 579289;
@@ -238,7 +238,7 @@ namespace DOL.GS.Quests.Albion
 			}
 			else
 			{
-				princessObera = (GameMob) npcs[0];
+				princessObera = (GameNPC) npcs[0];
 			}
 
 			int counter = 0;
@@ -246,7 +246,7 @@ namespace DOL.GS.Quests.Albion
 			{
 				if (npc.Name == "ire fairy sorceress")
 				{
-					fairySorceress[counter] = (GameMob) npc;
+					fairySorceress[counter] = (GameNPC) npc;
 					counter++;
 				}
 				if (counter == fairySorceress.Length)
@@ -259,7 +259,7 @@ namespace DOL.GS.Quests.Albion
 				{
 					if (log.IsWarnEnabled)
 						log.Warn("Could not find ire fairy sorceress, creating ...");
-					fairySorceress[i] = new GameMob();
+					fairySorceress[i] = new GameNPC();
 					fairySorceress[i].Model = 603; // //819;
 					fairySorceress[i].Name = "ire fairy sorceress";
 					fairySorceress[i].GuildName = "Part of " + questTitle + " Quest";
@@ -641,7 +641,7 @@ namespace DOL.GS.Quests.Albion
 
 		protected static void CheckNearPrincessObera(DOLEvent e, object sender, EventArgs args)
 		{
-			GameMob princessObera = (GameMob) sender;
+			GameNPC princessObera = (GameNPC) sender;
 
 			// if princess is dead no ned to checks ...
 			if (!princessObera.IsAlive || princessObera.ObjectState != GameObject.eObjectState.Active)
@@ -672,7 +672,7 @@ namespace DOL.GS.Quests.Albion
 
 					if (quest.dunwynClone != null)
 					{
-						foreach (GameMob fairy in fairySorceress)
+						foreach (GameNPC fairy in fairySorceress)
 						{
 							aggroBrain = quest.dunwynClone.Brain as IAggressiveBrain;
 							if (aggroBrain != null)
@@ -995,7 +995,7 @@ namespace DOL.GS.Quests.Albion
 		{
 			foreach (GamePlayer visPlayer in fairySorceress[0].GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
-				foreach (GameMob fairy in fairySorceress)
+				foreach (GameNPC fairy in fairySorceress)
 				{
 					visPlayer.Out.SendSpellEffectAnimation(dunwynClone, fairy, 61, 10, false, 0x01);
 				}
@@ -1032,7 +1032,7 @@ namespace DOL.GS.Quests.Albion
 		{
 			if (dunwynClone == null)
 			{
-				dunwynClone = new GameMob();
+				dunwynClone = new GameNPC();
 				dunwynClone.Name = dunwyn.Name;
 				dunwynClone.Model = dunwyn.Model;
 				dunwynClone.GuildName = dunwyn.GuildName;

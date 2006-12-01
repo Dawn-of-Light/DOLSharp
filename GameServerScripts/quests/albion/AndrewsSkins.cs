@@ -145,7 +145,7 @@ namespace DOL.GS.Quests.Albion
 				*/
 			if (npcs.Length == 0)
 			{
-				andrewWyatt = new GameMob();
+				andrewWyatt = new GameNPC();
 				andrewWyatt.Model = 80;
 				andrewWyatt.Name = "Andrew Wyatt";
 				if (log.IsWarnEnabled)
@@ -186,7 +186,7 @@ namespace DOL.GS.Quests.Albion
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Geor Nadren, creating him ...");
-				georNadren = new GameMob();
+				georNadren = new GameNPC();
 				georNadren.Model = 9;
 				georNadren.Name = "Geor Nadren";
 				georNadren.GuildName = "Part of " + questTitle + " Quest";
@@ -225,7 +225,7 @@ namespace DOL.GS.Quests.Albion
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Ver Nuren, creating him ...");
-				verNuren = new GameMob();
+				verNuren = new GameNPC();
 				verNuren.Model = 9;
 				verNuren.Name = "Ver Nuren";
 				verNuren.GuildName = "Part of " + questTitle + " Quest";

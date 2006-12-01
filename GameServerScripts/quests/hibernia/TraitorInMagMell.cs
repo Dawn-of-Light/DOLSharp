@@ -145,7 +145,7 @@ namespace DOL.GS.Quests.Hibernia
 			if (npcs.Length == 0)
 			{
 				//if (log.IsWarnEnabled) log.Warn("Could not find Lady Felin, creating her ...");
-				ladyLegada = new GameMob();
+				ladyLegada = new GameNPC();
 				ladyLegada.Model = 679;
 				ladyLegada.Name = "Lady Legada";
 				ladyLegada.GuildName = "Part of " + questTitle + " Quest";

@@ -123,7 +123,7 @@ namespace DOL.GS.Quests.Midgard
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Lynnleigh , creating it ...");
-				Lynnleigh = new GameMob();
+				Lynnleigh = new GameNPC();
 				Lynnleigh.Model = 217;
 				Lynnleigh.Name = "Lynnleigh";
 				Lynnleigh.GuildName = "";
@@ -150,7 +150,7 @@ namespace DOL.GS.Quests.Midgard
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Elizabeth , creating it ...");
-				Elizabeth = new GameMob();
+				Elizabeth = new GameNPC();
 				Elizabeth.Model = 217;
 				Elizabeth.Name = "Elizabeth";
 				Elizabeth.GuildName = "Enchanter";
@@ -179,7 +179,7 @@ namespace DOL.GS.Quests.Midgard
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Ydenia , creating it ...");
-				Ydenia = new GameMob();
+				Ydenia = new GameNPC();
 				Ydenia.Model = 217;
 				Ydenia.Name = "Ydenia of Seithkona";
 				Ydenia.GuildName = "";

@@ -33,10 +33,26 @@ namespace DOL.GS
 		/// Variable holding whether or not players can broadcast in this area
 		/// </summary>
 		public bool CanBroadcast = false;
+
+		protected bool m_checkLOS = false;
 		/// <summary>
 		/// Variable holding whether or not to check for LOS for spells in this area
 		/// </summary>
-		public bool CheckLOS = false;
+		public bool CheckLOS
+		{
+			get { return m_checkLOS; }
+			set { m_checkLOS = value; }
+		}
+
+		protected bool m_displayMessage = true;
+		/// <summary>
+		/// Display entered message
+		/// </summary>
+		public bool DisplayMessage
+		{
+			get { return m_displayMessage; }
+			set { m_displayMessage = value; }
+		}
 		/// <summary>
 		/// Constant holding max number of areas per zone, increase if more ares are needed,
 		/// this will slightly increase memory usage on server
@@ -142,7 +158,7 @@ namespace DOL.GS
 		/// <param name="player"></param>
 		public virtual void OnPlayerLeave(GamePlayer player)
 		{
-			if (Description != null && Description != "")
+			if (m_displayMessage && Description != null && Description != "")
 				player.Out.SendMessage("(Region) You have left " + Description + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 			player.Notify(AreaEvent.PlayerLeave, this, new AreaEventArgs(this, player));
@@ -154,7 +170,7 @@ namespace DOL.GS
 		/// <param name="player"></param>
 		public virtual void OnPlayerEnter(GamePlayer player)
 		{
-			if (Description != null && Description != "")
+			if (m_displayMessage && Description != null && Description != "")
 			{
 				player.Out.SendMessage("(Region) You have entered " + Description + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				player.Out.SendMessage(Description, eChatType.CT_ScreenCenterSmaller, eChatLoc.CL_SystemWindow);

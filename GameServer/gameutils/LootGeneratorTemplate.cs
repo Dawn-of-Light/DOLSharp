@@ -162,7 +162,7 @@ namespace DOL.GS
 			return true;
 		}
 
-		public override LootList GenerateLoot(GameMob mob, GameObject killer)
+		public override LootList GenerateLoot(GameNPC mob, GameObject killer)
 		{
 			LootList loot = base.GenerateLoot(mob, killer);
 

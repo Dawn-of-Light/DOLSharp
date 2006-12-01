@@ -153,7 +153,7 @@ namespace DOL.GS.Quests.Albion
             GameNPC[] npcs = WorldMgr.GetNPCsByName("Brice Yarley", eRealm.Albion);
             if (npcs.Length == 0)
             {
-                briceYarley = new GameMob();
+                briceYarley = new GameNPC();
                 briceYarley.Model = 10;
                 briceYarley.Name = "Brice Yarley";
                 if (log.IsWarnEnabled)
@@ -183,7 +183,7 @@ namespace DOL.GS.Quests.Albion
             npcs = WorldMgr.GetNPCsByName("Patrick Yarley", eRealm.Albion);
             if (npcs.Length == 0)
             {
-                patrickYarley = new GameMob();
+                patrickYarley = new GameNPC();
                 patrickYarley.Model = 9;
                 patrickYarley.Name = "Patrick Yarley";
                 if (log.IsWarnEnabled)

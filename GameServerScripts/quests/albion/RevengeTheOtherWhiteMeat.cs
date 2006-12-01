@@ -139,7 +139,7 @@ namespace DOL.GS.Quests.Albion
 		
 			if (npcs.Length == 0)
 			{
-				farmerAsma = new GameMob();
+				farmerAsma = new GameNPC();
 				farmerAsma.Model = 82;
 				farmerAsma.Name = "Farmer Asma";
 				if (log.IsWarnEnabled)
@@ -461,7 +461,7 @@ namespace DOL.GS.Quests.Albion
 
 						player.GainExperience(player.ExperienceForNextLevel / 25, 0, 0, true);
 						
-						GameNPC pigHerderWyatt = new GameMob();
+						GameNPC pigHerderWyatt = new GameNPC();
 						pigHerderWyatt.Model = 39;
 						pigHerderWyatt.Name = "Pig Herder Wyatt";
 						pigHerderWyatt.Realm = (byte) eRealm.Albion;

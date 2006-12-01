@@ -23,7 +23,7 @@ using log4net;
 
 namespace DOL.GS
 {
-	public abstract class CraftNPC : GameMob
+	public abstract class CraftNPC : GameNPC
 	{
 		/// <summary>
 		/// Defines a logger for this class.

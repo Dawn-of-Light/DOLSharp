@@ -129,7 +129,7 @@ namespace DOL.GS.Scripts
 						}
 						for (int i = 0; i < number; ++i)
 						{
-							GameMob mob = new GameMob();
+							GameNPC mob = new GameNPC();
 							//Fill the object variables
 							int x = client.Player.X + DOL.GS.Util.Random(-radius, radius);
 							int y = client.Player.Y + DOL.GS.Util.Random(-radius, radius);
@@ -187,7 +187,7 @@ namespace DOL.GS.Scripts
 						}
 						for (int i = 0; i < number; ++i)
 						{
-							GameMob mob = new GameMob();
+							GameNPC mob = new GameNPC();
 
 							//Fill the object variables
 							int x = client.Player.X + DOL.GS.Util.Random(-radius, radius);
@@ -240,7 +240,7 @@ namespace DOL.GS.Scripts
 							return 1;
 						}
 						name = CheckName(name, client);
-						GameMob mob = new GameMob();
+						GameNPC mob = new GameNPC();
 						//Fill the object variables
 						mob.X = client.Player.X;
 						mob.Y = client.Player.Y;
@@ -277,9 +277,7 @@ namespace DOL.GS.Scripts
 						{
 							info.Add(" + Not aggressive brain");
 						}
-						string respawn = "none";
-						if (targetMob is GameMob)
-							respawn = ((GameMob)targetMob).RespawnInterval.ToString();
+						string respawn = targetMob.RespawnInterval.ToString();
 
 						info.Add(" + Respawn: " + respawn + " (Position: X=" + targetMob.SpawnX + " Y=" + targetMob.SpawnY + " Z=" + targetMob.SpawnZ + ")");
 
@@ -384,16 +382,16 @@ namespace DOL.GS.Scripts
 					}
 				case "create":
 					{
-						string theType = "DOL.GS.GameMob";
+						string theType = "DOL.GS.GameNPC";
 						if (args.Length > 2)
 							theType = args[2];
 
 						//Create a new mob
-						GameMob mob = null;
+						GameNPC mob = null;
 						try
 						{
 							client.Out.SendDebugMessage(Assembly.GetAssembly(typeof(GameServer)).FullName);
-							mob = (GameMob)Assembly.GetAssembly(typeof(GameServer)).CreateInstance(theType, false);
+							mob = (GameNPC)Assembly.GetAssembly(typeof(GameServer)).CreateInstance(theType, false);
 						}
 						catch (Exception e)
 						{
@@ -404,7 +402,7 @@ namespace DOL.GS.Scripts
 							try
 							{
 								client.Out.SendDebugMessage(Assembly.GetExecutingAssembly().FullName);
-								mob = (GameMob)Assembly.GetExecutingAssembly().CreateInstance(theType, false);
+								mob = (GameNPC)Assembly.GetExecutingAssembly().CreateInstance(theType, false);
 							}
 							catch (Exception e)
 							{
@@ -460,7 +458,7 @@ namespace DOL.GS.Scripts
 						try
 						{
 							interval = Convert.ToInt32(args[2]);
-							((GameMob)targetMob).RespawnInterval = interval;
+							targetMob.RespawnInterval = interval;
 							targetMob.SaveIntoDatabase();
 							client.Out.SendMessage("Mob respawn interval changed to: " + interval, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						}
@@ -1061,11 +1059,11 @@ namespace DOL.GS.Scripts
 				case "copy":
 					{
 						//Create a new mob
-						GameMob mob = null;
+						GameNPC mob = null;
 
 						foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
 						{
-							mob = (GameMob)assembly.CreateInstance(targetMob.GetType().FullName, true);
+							mob = (GameNPC)assembly.CreateInstance(targetMob.GetType().FullName, true);
 							if (mob != null)
 								break;
 						}
@@ -1088,8 +1086,7 @@ namespace DOL.GS.Scripts
 						mob.Model = targetMob.Model;
 						mob.Flags = targetMob.Flags;
 						mob.MeleeDamageType = targetMob.MeleeDamageType;
-						if (targetMob is GameMob)
-							mob.RespawnInterval = ((GameMob)targetMob).RespawnInterval;
+						mob.RespawnInterval = targetMob.RespawnInterval;
 						//Fill the living variables
 						mob.CurrentSpeed = 0;
 						mob.MaxSpeedBase = targetMob.MaxSpeedBase;
@@ -1139,7 +1136,7 @@ namespace DOL.GS.Scripts
 						}
 						if (targetMob == null)
 						{
-							GameMob mob = new GameMob(template);
+							GameNPC mob = new GameNPC(template);
 							mob.X = client.Player.X;
 							mob.Y = client.Player.Y;
 							mob.Z = client.Player.Z;

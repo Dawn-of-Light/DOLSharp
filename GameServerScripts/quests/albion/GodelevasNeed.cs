@@ -143,7 +143,7 @@ namespace DOL.GS.Quests.Albion
 				*/
 			if (npcs.Length == 0)
 			{
-				godelevaDowden = new GameMob();
+				godelevaDowden = new GameNPC();
 				godelevaDowden.Model = 7;
 				godelevaDowden.Name = "Godeleva Dowden";
 				if (log.IsWarnEnabled)

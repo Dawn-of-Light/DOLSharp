@@ -292,5 +292,22 @@ namespace DOL.GS
 				return IsContaining(p.X, p.Y, p.Z, checkZ);
 			}
 		}
+
+		public class BindArea : Circle
+		{
+			protected Database.BindPoint m_dbBindPoint;
+
+			public BindArea(string desc, Database.BindPoint dbBindPoint)
+				: base(desc, dbBindPoint.X, dbBindPoint.Y, dbBindPoint.Z, dbBindPoint.Radius)
+			{
+				m_dbBindPoint = dbBindPoint;
+				m_displayMessage = false;
+			}
+
+			public Database.BindPoint BindPoint
+			{
+				get { return m_dbBindPoint; }
+			}
+		}
 	}
 }

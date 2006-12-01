@@ -370,7 +370,7 @@ namespace DOL.GS.Quests.Midgard
 
 		protected virtual void CreateAskefruer()
 		{
-			askefruer = new GameMob();
+			askefruer = new GameNPC();
 			askefruer.Model = 678;
 			askefruer.Name = "Fallen Askefruer";
 			askefruer.GuildName = "Part of " + questTitle + " Quest";

@@ -151,7 +151,7 @@ namespace DOL.GS.Quests.Albion
                 */
             if (npcs.Length == 0)
             {
-                marlinThuler = new GameMob();
+                marlinThuler = new GameNPC();
                 marlinThuler.Model = 960;
                 marlinThuler.Name = "Marlin Thuler";
                 if (log.IsWarnEnabled)

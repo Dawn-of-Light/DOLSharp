@@ -23,7 +23,7 @@ namespace DOL.GS.Scripts
 	/// Guild Registrar
 	/// </summary>	
 	[NPCGuildScript("Guild Registrar")]
-	public class GuildRegistrar : GameMob
+	public class GuildRegistrar : GameNPC
 	{
 		protected const string FORM_A_GUILD = "form a guild";
 

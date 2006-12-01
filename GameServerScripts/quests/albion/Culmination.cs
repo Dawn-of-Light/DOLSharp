@@ -81,8 +81,8 @@ namespace DOL.GS.Quests.Albion
 
 		private GameNPC[] recruits = new GameNPC[4];
 
-		private static GameMob queenTatiana = null;
-		private static GameMob[] fairySorceress = new GameMob[4];
+		private static GameNPC queenTatiana = null;
+		private static GameNPC[] fairySorceress = new GameNPC[4];
 
 		private static ItemTemplate queenTatianasHead = null;
 
@@ -157,7 +157,7 @@ namespace DOL.GS.Quests.Albion
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Queen Tatiana, creating ...");
-				queenTatiana = new GameMob();
+				queenTatiana = new GameNPC();
 
 				queenTatiana.Name = "Queen Tatiana";
 				queenTatiana.X = 558500;
@@ -183,7 +183,7 @@ namespace DOL.GS.Quests.Albion
 			}
 			else
 			{
-				queenTatiana = (GameMob) npcs[0];
+				queenTatiana = (GameNPC) npcs[0];
 			}
 
 			int counter = 0;
@@ -191,7 +191,7 @@ namespace DOL.GS.Quests.Albion
 			{
 				if (npc.Name == "ire fairy sorceress")
 				{
-					fairySorceress[counter] = (GameMob) npc;
+					fairySorceress[counter] = (GameNPC) npc;
 					counter++;
 				}
 				if (counter == fairySorceress.Length)
@@ -204,7 +204,7 @@ namespace DOL.GS.Quests.Albion
 				{
 					if (log.IsWarnEnabled)
 						log.Warn("Could not find ire fairy sorceress, creating ...");
-					fairySorceress[i] = new GameMob();
+					fairySorceress[i] = new GameNPC();
 					fairySorceress[i].Model = 603; // //819;
 					fairySorceress[i].Name = "ire fairy sorceress";
 					fairySorceress[i].GuildName = "Part of " + questTitle + " Quest";
@@ -546,7 +546,7 @@ namespace DOL.GS.Quests.Albion
 
 		protected static void CheckNearQueenTatiana(DOLEvent e, object sender, EventArgs args)
 		{
-			GameMob queenTatiana = (GameMob) sender;
+			GameNPC queenTatiana = (GameNPC) sender;
 
 			// if princess is dead no ned to checks ...
 			if (!queenTatiana.IsAlive || queenTatiana.ObjectState != GameObject.eObjectState.Active)
@@ -704,7 +704,7 @@ namespace DOL.GS.Quests.Albion
 					else if (quest.Step == 2)
 					{
 						quest.dunwynClone.SayTo(player, "Go now and kill their queen, so that Cotswold is at ease.");
-						foreach (GameMob recruit in quest.recruits)
+						foreach (GameNPC recruit in quest.recruits)
 						{
 							recruit.Follow(player, 50 + Util.Random(100), 4000);
 						}
@@ -765,7 +765,7 @@ namespace DOL.GS.Quests.Albion
 								}
 							}
 
-							foreach (GameMob recruit in quest.recruits)
+							foreach (GameNPC recruit in quest.recruits)
 							{
 								recruit.Follow(player, 50 + Util.Random(100), 4000);
 							}
@@ -824,7 +824,7 @@ namespace DOL.GS.Quests.Albion
 			GameNpcInventoryTemplate template;
 			if (dunwynClone == null)
 			{
-				dunwynClone = new GameMob();
+				dunwynClone = new GameNPC();
 				dunwynClone.Name = "Master Dunwyn";
 				dunwynClone.Model = 9;
 				dunwynClone.GuildName = "Part of " + questTitle + " Quest";
@@ -871,7 +871,7 @@ namespace DOL.GS.Quests.Albion
 
 			for (int i = 0; i < recruits.Length; i++)
 			{
-				recruits[i] = new GameMob();
+				recruits[i] = new GameNPC();
 
 				recruits[i].Name = "Recruit";
 

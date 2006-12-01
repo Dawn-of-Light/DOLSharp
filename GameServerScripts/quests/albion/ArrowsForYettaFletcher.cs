@@ -139,7 +139,7 @@ namespace DOL.GS.Quests.Albion
 				*/
 			if (npcs.Length == 0)
 			{
-				yettaFletcher = new GameMob();
+				yettaFletcher = new GameNPC();
 				yettaFletcher.Model = 82;
 				yettaFletcher.Name = "Yetta Fletcher";
 				if (log.IsWarnEnabled)

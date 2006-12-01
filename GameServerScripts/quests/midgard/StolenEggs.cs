@@ -80,8 +80,8 @@ namespace DOL.GS.Quests.Midgard
 		private static GameStableMaster njiedi = null;
 		private static GameNPC hyndla = null;
 
-		private static GameMob askefruerTrainer = null;
-		private GameMob grifflet = null;
+		private static GameNPC askefruerTrainer = null;
+		private GameNPC grifflet = null;
 
 		private bool askefruerGriffinHandlerAttackStarted = false;
 
@@ -151,7 +151,7 @@ namespace DOL.GS.Quests.Midgard
 			GameNPC[] npcs = WorldMgr.GetNPCsByName("Viking Hyndla", eRealm.Midgard);
 			if (npcs.Length == 0)
 			{
-				hyndla = new GameMob();
+				hyndla = new GameNPC();
 				hyndla.Model = 9;
 				hyndla.Name = "Viking Hyndla";
 				if (log.IsWarnEnabled)
@@ -229,7 +229,7 @@ namespace DOL.GS.Quests.Midgard
 			npcs = WorldMgr.GetNPCsByName("Askefruer Trainer", eRealm.None);
 			if (npcs.Length == 0)
 			{
-				askefruerTrainer = new GameMob();
+				askefruerTrainer = new GameNPC();
 
 				askefruerTrainer.Name = "Askefruer Trainer";
 				askefruerTrainer.X = GameLocation.ConvertLocalXToGlobalX(54739, 100);
@@ -256,7 +256,7 @@ namespace DOL.GS.Quests.Midgard
 				askefruerTrainer.AddToWorld();
 			}
 			else
-				askefruerTrainer = (GameMob) npcs[0];
+				askefruerTrainer = npcs[0];
 
 			#endregion
 
@@ -505,7 +505,7 @@ namespace DOL.GS.Quests.Midgard
 
 		protected static void CheckNearAskefruerTrainer(DOLEvent e, object sender, EventArgs args)
 		{
-			GameMob m_askefruerTrainer = (GameMob) sender;
+			GameNPC m_askefruerTrainer = (GameNPC) sender;
 
 			// if princess is dead no ned to checks ...
 			if (!m_askefruerTrainer.IsAlive || m_askefruerTrainer.ObjectState != GameObject.eObjectState.Active)
@@ -543,7 +543,7 @@ namespace DOL.GS.Quests.Midgard
 
 		protected void initGrifflet()
 		{
-			grifflet = new GameMob();
+			grifflet = new GameNPC();
 
 			grifflet.Model = 1236;
 			grifflet.Name = "Grifflet";

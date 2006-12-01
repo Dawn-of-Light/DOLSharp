@@ -37,6 +37,7 @@ namespace DOL.Database
 	{
 		private int m_templateId;
 		private string m_name = "";
+		private string m_classType = "";
 		private string m_guildName = "";
 		private string m_model;
 		private byte m_size = 50;
@@ -106,6 +107,20 @@ namespace DOL.Database
 			{
 				Dirty = true;
 				m_name = value;
+			}
+		}
+
+		/// <summary>
+		/// Class Type
+		/// </summary>
+		[DataElement(AllowDbNull = false)]
+		public string ClassType
+		{
+			get { return m_classType; }
+			set
+			{
+				Dirty = true;
+				m_classType = value;
 			}
 		}
 

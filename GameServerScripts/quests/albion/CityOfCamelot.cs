@@ -161,7 +161,7 @@ namespace DOL.GS.Quests.Albion
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Lord Urqhart, creating ...");
-				lordUrqhart = new GameMob();
+				lordUrqhart = new GameNPC();
 				lordUrqhart.Model = 79;
 				lordUrqhart.Name = "Lord Urqhart";
 				lordUrqhart.GuildName = "Vault Keeper";
@@ -845,7 +845,7 @@ namespace DOL.GS.Quests.Albion
 			}
 			else
 			{
-				assistant = new GameMob();
+				assistant = new GameNPC();
 				assistant.Model = 951;
 				assistant.Name = m_questPlayer.Name + "'s Assistant";
 				assistant.GuildName = "Part of " + questTitle + " Quest";

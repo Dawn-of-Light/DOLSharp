@@ -25,7 +25,7 @@ using DOL.GS.PacketHandler;
 namespace DOL.GS.Scripts
 {
 	[NPCGuildScript("Smith")]
-	public class Blacksmith : GameMob
+	public class Blacksmith : GameNPC
 	{
 		private const string REPAIR_ITEM_WEAK = "repair item";
 

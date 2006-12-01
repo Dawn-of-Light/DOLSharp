@@ -106,7 +106,7 @@ namespace DOL.GS.Quests.Hibernia
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Revelin , creating it ...");
-				Revelin = new GameMob();
+				Revelin = new GameNPC();
 				Revelin.Model = 361;
 				Revelin.Name = "Revelin";
 				Revelin.GuildName = "";
@@ -135,7 +135,7 @@ namespace DOL.GS.Quests.Hibernia
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Cailean , creating it ...");
-				Cailean = new GameMob();
+				Cailean = new GameNPC();
 				Cailean.Model = 98;
 				Cailean.Name = "Cailean";
 				Cailean.GuildName = "";

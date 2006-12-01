@@ -400,15 +400,6 @@ namespace DOL.GS
 			get { return m_timeManager.CurrentTime; }
 		}
 
-		private BindPoint[] m_bindPoints;
-		/// <summary>
-		/// Gets the current regions bindpoints
-		/// </summary>
-		public BindPoint[] BindPoints
-		{
-			get { return m_bindPoints; }
-		}
-
 		private bool m_isDisabled = false;
 		/// <summary>
 		/// Is this region disabled
@@ -473,13 +464,13 @@ namespace DOL.GS
 		{
 			Assembly gasm = Assembly.GetAssembly(typeof(GameServer));
 			WorldObject[] staticObjs = (WorldObject[])GameServer.Database.SelectObjects(typeof(WorldObject), "Region = " + ID);
-			m_bindPoints = (BindPoint[])GameServer.Database.SelectObjects(typeof(BindPoint), "Region = "  + ID);
+			BindPoint[] bindPoints = (BindPoint[])GameServer.Database.SelectObjects(typeof(BindPoint), "Region = "  + ID);
 			int count = mobObjs.Length + staticObjs.Length;
 			if (count > 0) PreAllocateRegionSpace(count + 100);
 			int myItemCount = staticObjs.Length;
 			int myMobCount = 0;
 			int myMerchantCount = 0;
-			int myBindCount = m_bindPoints.Length;
+			int myBindCount = bindPoints.Length;
 			if (mobObjs.Length > 0)
 			{
 				foreach (Mob mob in mobObjs)
@@ -541,12 +532,12 @@ namespace DOL.GS
 										break;
 								}
 								if (myMob == null)
-									myMob = new GameMob();
+									myMob = new GameNPC();
 							}
 						}
 						else
 						{
-							myMob = new GameMob();
+							myMob = new GameNPC();
 						}
 					}
 
@@ -624,6 +615,11 @@ namespace DOL.GS
 						//							log.ErrorFormat("Failed to add the item to the world: {0}", myItem.ToString());
 					}
 				}
+			}
+
+			foreach (BindPoint point in bindPoints)
+			{
+				AddArea(new Area.BindArea("bind point", point));
 			}
 
 			if (myMobCount + myItemCount + myMerchantCount + myBindCount > 0)

@@ -56,7 +56,7 @@ namespace DOL.GS.GameEvents
 		//For our horserace event we need some racehorses of course!
 		//Here we declare the racehorse class. Since race horses are
 		//mobs our base class is GameMob
-		protected class RaceHorse : GameMob
+		protected class RaceHorse : GameNPC
 		{
 			//Our horse will run along a certain path and this
 			//variable will hold the current position

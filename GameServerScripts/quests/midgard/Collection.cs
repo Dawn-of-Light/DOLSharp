@@ -77,7 +77,7 @@ namespace DOL.GS.Quests.Midgard
 
 		private static GameNPC dalikor = null;
 
-		private static GameMob[] general = new GameMob[3];
+		private static GameNPC[] general = new GameNPC[3];
 		private static String[] generalNames = {"Mitan", "Ostadi", "Seiki"};
 		private static GameLocation[] generalLocations = new GameLocation[3];
 
@@ -152,12 +152,12 @@ namespace DOL.GS.Quests.Midgard
 			{
 				npcs = WorldMgr.GetNPCsByName(generalNames[i], eRealm.None);
 				if (npcs.Length > 0)
-					general[i] = npcs[0] as GameMob;
+					general[i] = npcs[0] as GameNPC;
 				else
 				{
 					if (log.IsWarnEnabled)
 						log.Warn("Could not find " + generalNames[i] + ", creating ...");
-					general[i] = new GameMob();
+					general[i] = new GameNPC();
 
 					general[i].Model = 678;
 
