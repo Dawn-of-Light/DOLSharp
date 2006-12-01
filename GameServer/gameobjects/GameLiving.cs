@@ -832,7 +832,6 @@ namespace DOL.GS
 				//Ranged damage buff and debuff
 				damage *= GetModified(eProperty.RangedDamage) * 0.01;
 			}
-
 			return damage;
 		}
 
@@ -1332,7 +1331,7 @@ namespace DOL.GS
 			}
 
 			//Check if the target is in front of attacker
-			if (this is GamePlayer && !(ad.Target is GameKeepComponent) && !IsObjectInFront(ad.Target, 120))
+			if (this is GamePlayer && !IsObjectInFront(ad.Target, 120))
 			{
 				ad.AttackResult = eAttackResult.TargetNotVisible;
 				return ad;

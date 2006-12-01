@@ -158,7 +158,7 @@ namespace DOL.GS.Quests.Albion
 				*/
 			if (npcs.Length == 0)
 			{
-				stewardWillie = new GameMob();
+				stewardWillie = new GameNPC();
 				stewardWillie.Model = 27;
 				stewardWillie.Name = "Steward Willie";
 				if (log.IsWarnEnabled)
@@ -190,7 +190,7 @@ namespace DOL.GS.Quests.Albion
 			npcs = WorldMgr.GetNPCsByName("Seamstress Lynnet", eRealm.Albion);
 			if (npcs.Length == 0)
 			{
-				lynnet = new GameMob();
+				lynnet = new GameNPC();
 				lynnet.Model = 5;
 				lynnet.Name = "Seamstress Lynnet";
 				if (log.IsWarnEnabled)
@@ -225,7 +225,7 @@ namespace DOL.GS.Quests.Albion
 			npcs = WorldMgr.GetNPCsByName("Brother Don", eRealm.Albion);
 			if (npcs.Length == 0)
 			{
-				don = new GameMob();
+				don = new GameNPC();
 				don.Model = 34;
 				don.Name = "Brother Don";
 				if (log.IsWarnEnabled)

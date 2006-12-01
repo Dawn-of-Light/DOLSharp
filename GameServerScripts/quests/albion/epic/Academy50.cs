@@ -108,7 +108,7 @@ namespace DOL.GS.Quests.Albion
             GameNPC[] npcs = WorldMgr.GetNPCsByName("Master Ferowl", eRealm.Albion);
 			if (npcs.Length == 0)
 			{
-				Ferowl = new GameMob();
+				Ferowl = new GameNPC();
 				Ferowl.Model = 61;
 				Ferowl.Name = "Master Ferowl";
 				if (log.IsWarnEnabled)
@@ -134,7 +134,7 @@ namespace DOL.GS.Quests.Albion
 			npcs = WorldMgr.GetNPCsByName("Morgana", eRealm.None);
 			if (npcs.Length == 0)
 			{
-				Morgana = new GameMob();
+				Morgana = new GameNPC();
 				Morgana.Model = 283;
 				Morgana.Name = "Morgana";
 				if (log.IsWarnEnabled)
@@ -175,7 +175,7 @@ namespace DOL.GS.Quests.Albion
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Bechard , creating it ...");
-				Bechard = new GameMob();
+				Bechard = new GameNPC();
 				Bechard.Model = 606;
 				Bechard.Name = "Bechard";
 				Bechard.GuildName = "";
@@ -201,7 +201,7 @@ namespace DOL.GS.Quests.Albion
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Silcharde , creating it ...");
-				Silcharde = new GameMob();
+				Silcharde = new GameNPC();
 				Silcharde.Model = 606;
 				Silcharde.Name = "Silcharde";
 				Silcharde.GuildName = "";
@@ -1098,7 +1098,7 @@ namespace DOL.GS.Quests.Albion
 		{
 			if (Morgana == null)
 			{
-				Morgana = new GameMob();
+				Morgana = new GameNPC();
 				Morgana.Model = 283;
 				Morgana.Name = "Morgana";
 				if (log.IsWarnEnabled)

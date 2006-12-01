@@ -146,7 +146,7 @@ namespace DOL.GS.Quests.Albion
                 */
             if (npcs.Length == 0)
             {
-                sirJerem = new GameMob();
+                sirJerem = new GameNPC();
                 sirJerem.Model = 254;
                 sirJerem.Name = "Sir Jerem";
                 if (log.IsWarnEnabled)

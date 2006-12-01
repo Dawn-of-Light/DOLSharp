@@ -164,7 +164,7 @@ namespace DOL.GS.Quests.Hibernia
 			GameNPC[] npcs = WorldMgr.GetNPCsByName("Bhreagar Hylvian", eRealm.Hibernia);
 			if (npcs.Length == 0)
 			{
-				hylvian = new GameMob();
+				hylvian = new GameNPC();
 				hylvian.Model = 384;
 				hylvian.Name = "Bhreagar Hylvian";
 				if (log.IsWarnEnabled)
@@ -934,7 +934,7 @@ namespace DOL.GS.Quests.Hibernia
 			}
 			else
 			{
-				assistant = new GameMob();
+				assistant = new GameNPC();
 				assistant.Model = 951;
 				assistant.Name = m_questPlayer.Name + "'s Assistant";
 				assistant.GuildName = "Part of " + questTitle + " Quest";

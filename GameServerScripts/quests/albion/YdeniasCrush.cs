@@ -143,7 +143,7 @@ namespace DOL.GS.Quests.Albion
 				*/
 			if (npcs.Length == 0)
 			{
-				ydeniaPhilpott = new GameMob();
+				ydeniaPhilpott = new GameNPC();
 				ydeniaPhilpott.Model = 6;
 				ydeniaPhilpott.Name = "Ydenia Philpott";
 				if (log.IsWarnEnabled)
@@ -187,7 +187,7 @@ namespace DOL.GS.Quests.Albion
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Elvar Tambor, creating him ...");
-				elvarTambor = new GameMob();
+				elvarTambor = new GameNPC();
 				elvarTambor.Model = 9;
 				elvarTambor.Name = "Elvar Tambor";
 				elvarTambor.GuildName = "Part of " + questTitle + " Quest";

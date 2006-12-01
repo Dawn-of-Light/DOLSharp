@@ -135,7 +135,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					BugReport report = new BugReport();
 					report.DateSubmitted = DateTime.Now;
 					report.ID = GameServer.Database.GetObjectCount(typeof(BugReport)) + 1;
-					report.Message = "There is a missing door at location Region: " + player.CurrentRegionID + " X:" + player.X + " Y: " + player.Y;
+					report.Message = "There is a missing door at location Region: " + player.CurrentRegionID + " X:" + player.X + " Y: " + player.Y + " Z: " + player.Z;
 					report.Submitter = player.Name;
 					GameServer.Database.AddNewObject(report);
 

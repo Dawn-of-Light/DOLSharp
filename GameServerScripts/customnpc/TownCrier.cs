@@ -23,7 +23,7 @@ using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Scripts
 {
-	public class TownCrier : GameMob
+	public class TownCrier : GameNPC
 	{
 		/// <summary>
 		/// The data object that represents a town crier message

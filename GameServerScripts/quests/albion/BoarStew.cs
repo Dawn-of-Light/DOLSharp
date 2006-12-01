@@ -144,7 +144,7 @@ namespace DOL.GS.Quests.Albion
             GameNPC[] npcs = WorldMgr.GetNPCsByName("Master Gerol", eRealm.Albion);
             if (npcs.Length == 0)
             {
-                masterGerol = new GameMob();
+                masterGerol = new GameNPC();
                 masterGerol.Model = 10;
                 masterGerol.Name = "Master Gerol";
                 if (log.IsWarnEnabled)

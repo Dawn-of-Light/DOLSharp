@@ -152,7 +152,7 @@ namespace DOL.GS.Quests.Albion
                 */
             if (npcs.Length == 0)
             {
-                brotherMaynard = new GameMob();
+                brotherMaynard = new GameNPC();
                 brotherMaynard.Model = 34;
                 brotherMaynard.Name = "Brother Maynard";
                 if (log.IsWarnEnabled)

@@ -140,7 +140,7 @@ namespace DOL.GS.Quests.Albion
 				*/
 			if (npcs.Length == 0)
 			{
-				brotherLawrence = new GameMob();
+				brotherLawrence = new GameNPC();
 				brotherLawrence.Model = 32;
 				brotherLawrence.Name = "Brother Lawrence";
 				if (log.IsWarnEnabled)

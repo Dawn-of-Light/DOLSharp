@@ -25,7 +25,7 @@ namespace DOL.GS.Scripts
 	/// Represents an in-game VaultKeeper NPC
 	/// </summary>
 	[NPCGuildScript("Vault Keeper")]
-	public class GameVaultKeeper : GameMob
+	public class GameVaultKeeper : GameNPC
 	{
 		/// <summary>
 		/// Constructor

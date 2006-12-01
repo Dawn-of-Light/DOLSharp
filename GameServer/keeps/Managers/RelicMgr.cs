@@ -260,14 +260,14 @@ namespace DOL.GS
 		/// <returns></returns>
 		public static double GetRelicBonusModifier(byte realm, eRelicType type)
 		{
-			double value = 1.0;
+			double value = 0.0;
 			//only playerrealms can get bonus
 			foreach (GameRelic rel in getRelics(realm, type))
 			{
 				if (rel.Realm != rel.OriginalRealm)
 					value += 0.1;
 			}
-			return Math.Max(1.0, value);
+			return value;
 		}
 
 		/// <summary>

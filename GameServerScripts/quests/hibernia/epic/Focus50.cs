@@ -112,7 +112,7 @@ namespace DOL.GS.Quests.Hibernia
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Ainrebh , creating it ...");
-				Ainrebh = new GameMob();
+				Ainrebh = new GameNPC();
 				Ainrebh.Model = 384;
 				Ainrebh.Name = "Ainrebh";
 				Ainrebh.GuildName = "Enchanter";
@@ -141,7 +141,7 @@ namespace DOL.GS.Quests.Hibernia
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find GreenMaw , creating it ...");
-				GreenMaw = new GameMob();
+				GreenMaw = new GameNPC();
 				GreenMaw.Model = 146;
 				GreenMaw.Name = "Green Maw";
 				GreenMaw.GuildName = "";

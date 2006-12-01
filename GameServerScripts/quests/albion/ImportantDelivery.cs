@@ -146,7 +146,7 @@ namespace DOL.GS.Quests.Albion
 			GameNPC[] npcs = WorldMgr.GetNPCsByName("Apprentice Dunan", eRealm.Albion);
 			if (npcs.Length == 0)
 			{
-				dunan = new GameMob();
+				dunan = new GameNPC();
 				dunan.Model = 49;
 				dunan.Name = "Apprentice Dunan";
 				if (log.IsWarnEnabled)

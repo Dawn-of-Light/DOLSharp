@@ -163,7 +163,7 @@ namespace DOL.GS.Quests.Albion
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Master Visur, creating ...");
-				masterVisur = new GameMob();
+				masterVisur = new GameNPC();
 				masterVisur.Model = 61;
 				masterVisur.Name = "Master Visur";
 				masterVisur.GuildName = "Part of " + questTitle + " Quest";
@@ -203,7 +203,7 @@ namespace DOL.GS.Quests.Albion
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Alice, creating ...");
-				alice = new GameMob();
+				alice = new GameNPC();
 				alice.Model = 52;
 				alice.Name = "Scryer Alice";
 				alice.GuildName = "Part of " + questTitle + " Quest";
@@ -325,7 +325,7 @@ namespace DOL.GS.Quests.Albion
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Dragon Fly, creating ...");
-				dragonfly = new GameMob();
+				dragonfly = new GameNPC();
 				dragonfly.Model = 1207;
 				dragonfly.Name = "dragonfly hatchling";
 				dragonfly.GuildName = "Part of " + questTitle + " Quest";

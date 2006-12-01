@@ -159,7 +159,7 @@ namespace DOL.GS.Quests.Midgard
 
 			if (npcs.Length == 0)
 			{
-				dalikor = new GameMob();
+				dalikor = new GameNPC();
 				dalikor.Model = 159;
 				dalikor.Name = "Dalikor";
 				if (log.IsWarnEnabled)

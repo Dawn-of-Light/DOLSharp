@@ -106,7 +106,7 @@ namespace DOL.GS.Quests.Midgard
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Masrim , creating it ...");
-				Masrim = new GameMob();
+				Masrim = new GameNPC();
 				Masrim.Model = 177;
 				Masrim.Name = "Masrim";
 				Masrim.GuildName = "";
@@ -135,7 +135,7 @@ namespace DOL.GS.Quests.Midgard
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Oona , creating it ...");
-				Oona = new GameMob();
+				Oona = new GameNPC();
 				Oona.Model = 356;
 				Oona.Name = "Oona";
 				Oona.GuildName = "";
@@ -165,7 +165,7 @@ namespace DOL.GS.Quests.Midgard
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Morlin Caan , creating it ...");
-				MorlinCaan = new GameMob();
+				MorlinCaan = new GameNPC();
 				MorlinCaan.Model = 235;
 				MorlinCaan.Name = "Morlin Caan";
 				MorlinCaan.GuildName = "Smith";

@@ -153,7 +153,7 @@ namespace DOL.GS.Quests.Albion
             GameNPC[] npcs = WorldMgr.GetNPCsByName("Palune", eRealm.Albion);
             if (npcs.Length == 0)
             {
-                palune = new GameMob();
+                palune = new GameNPC();
                 palune.Model = 81;
                 palune.Name = "Palune";
                 if (log.IsWarnEnabled)
@@ -183,7 +183,7 @@ namespace DOL.GS.Quests.Albion
             npcs = WorldMgr.GetNPCsByName("Guard Cynon", eRealm.Albion);
             if (npcs.Length == 0)
             {
-                guardCynon = new GameMob();
+                guardCynon = new GameNPC();
                 guardCynon.Model = 28;
                 guardCynon.Name = "Guard Cynon";
                 if (log.IsWarnEnabled)

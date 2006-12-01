@@ -150,7 +150,7 @@ namespace DOL.GS.Quests.Examples
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("\"Help Sir Quait\" Quest could not find Sir Quait, creating him ...");
-				sirQuait = new GameMob();
+				sirQuait = new GameNPC();
 				sirQuait.Model = 40;
 				sirQuait.Name = "Sir Quait";
 				sirQuait.GuildName = "Part of DOL Quest Example";
@@ -181,7 +181,7 @@ namespace DOL.GS.Quests.Examples
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("\"Help Sir Quait\" Quest could not find Evil Thief of the Shadowclan, creating default");
-				evilThief = new GameMob();
+				evilThief = new GameNPC();
 				evilThief.Model = 55;
 				evilThief.Name = "Evil Thief of the Shadowclan";
 				evilThief.GuildName = "Part of DOL Quest Example";

@@ -66,7 +66,7 @@ namespace DOL.GS.Spells
 		{
 			foreach (AbstractArea area in living.CurrentAreas)
 			{
-				if (area is KeepArea || area.CheckLOS)
+				if (area.CheckLOS)
 					return true;
 			}
 			return false;

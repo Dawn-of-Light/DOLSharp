@@ -372,7 +372,7 @@ namespace DOL.GS.Quests.Hibernia
 
 		protected virtual void CreateSluagh()
 		{
-			sluagh = new GameMob();
+			sluagh = new GameNPC();
 			sluagh.Model = 603;
 			sluagh.Name = "Sluagh Footsoldier";
 			sluagh.GuildName = "Part of " + questTitle + " Quest";

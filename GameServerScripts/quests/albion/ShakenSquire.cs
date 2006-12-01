@@ -140,7 +140,7 @@ namespace DOL.GS.Quests.Albion
 				*/
 			if (npcs.Length == 0)
 			{
-				sirJerem = new GameMob();
+				sirJerem = new GameNPC();
 				sirJerem.Model = 254;
 				sirJerem.Name = "Sir Jerem";
 				if (log.IsWarnEnabled)
@@ -183,7 +183,7 @@ namespace DOL.GS.Quests.Albion
 			npcs = WorldMgr.GetNPCsByName("Squire Galune", eRealm.Albion);
 			if (npcs.Length == 0)
 			{
-				squireGalune = new GameMob();
+				squireGalune = new GameNPC();
 				squireGalune.Model = 254;
 				squireGalune.Name = "Squire Galune";
 				if (log.IsWarnEnabled)
@@ -231,7 +231,7 @@ namespace DOL.GS.Quests.Albion
 
 			if (smallSpider == null)
 			{
-				smallSpider = new GameMob();
+				smallSpider = new GameNPC();
 				smallSpider.Model = 72;
 				smallSpider.Name = "small spider";
 				if (log.IsWarnEnabled)

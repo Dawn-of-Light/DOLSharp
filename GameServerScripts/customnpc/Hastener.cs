@@ -29,7 +29,7 @@ namespace DOL.GS.Scripts
 	/// Represents an in-game Game Hastener NPC
 	/// </summary>
 	[NPCGuildScript("Hastener")]
-	public class GameHastener : GameMob
+	public class GameHastener : GameNPC
 	{
 		public override uint Flags
 		{

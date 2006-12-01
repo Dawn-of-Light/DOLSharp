@@ -141,7 +141,7 @@ namespace DOL.Database
 		/// <summary>
 		/// The Style ID
 		/// </summary>
-		[DataElement(AllowDbNull = false, Unique = true)]
+		[DataElement(AllowDbNull = false)]
 		public virtual int ID
 		{
 			get { return m_ID; }

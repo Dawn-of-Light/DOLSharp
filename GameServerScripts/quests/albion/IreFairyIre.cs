@@ -81,8 +81,8 @@ namespace DOL.GS.Quests.Albion
 		private static GameNPC nob = null;
 		private static GameNPC haruld = null;
 
-		private static GameMob fairyDragonflyHandler = null;
-		private GameMob dragonflyHatchling = null;
+		private static GameNPC fairyDragonflyHandler = null;
+		private GameNPC dragonflyHatchling = null;
 
 		private bool fairyDragonflyHandlerAttackStarted = false;
 
@@ -151,7 +151,7 @@ namespace DOL.GS.Quests.Albion
 			GameNPC[] npcs = WorldMgr.GetNPCsByName("Nob the Stableboy", eRealm.Albion);
 			if (npcs.Length == 0)
 			{
-				nob = new GameMob();
+				nob = new GameNPC();
 				nob.Model = 9;
 				nob.Name = "Nob the Stableboy";
 				if (log.IsWarnEnabled)
@@ -269,7 +269,7 @@ namespace DOL.GS.Quests.Albion
 			npcs = WorldMgr.GetNPCsByName("Fairy Dragonfly Handler", eRealm.None);
 			if (npcs.Length == 0)
 			{
-				fairyDragonflyHandler = new GameMob();
+				fairyDragonflyHandler = new GameNPC();
 				fairyDragonflyHandler.Name = "Fairy Dragonfly Handler";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + fairyDragonflyHandler.Name + ", creating ...");
@@ -297,7 +297,7 @@ namespace DOL.GS.Quests.Albion
 				fairyDragonflyHandler.AddToWorld();
 			}
 			else
-				fairyDragonflyHandler = (GameMob) npcs[0];
+				fairyDragonflyHandler = (GameNPC) npcs[0];
 
 			#endregion
 
@@ -537,7 +537,7 @@ namespace DOL.GS.Quests.Albion
 
 		protected static void CheckNearFairyDragonflyHandler(DOLEvent e, object sender, EventArgs args)
 		{
-			GameMob fairyDragonflyHandler = (GameMob) sender;
+			GameNPC fairyDragonflyHandler = (GameNPC) sender;
 
 			// if princess is dead no ned to checks ...
 			if (!fairyDragonflyHandler.IsAlive || fairyDragonflyHandler.ObjectState != GameObject.eObjectState.Active)
@@ -610,7 +610,7 @@ namespace DOL.GS.Quests.Albion
 
 		protected void initDragonflyHatchling()
 		{
-			dragonflyHatchling = new GameMob();
+			dragonflyHatchling = new GameNPC();
 
 			dragonflyHatchling.Model = 819;
 			dragonflyHatchling.Name = "Dragonfly Hatchling";

@@ -74,7 +74,7 @@ namespace DOL.GS.GameEvents
 						case 2: realm = realm + "Midgard"; break;
 						case 3: realm = realm + "Hibernia"; break;
 					}
-					realm = realm + "]";
+					realm = realm + "] ";
 				}
 				message = realm + message;
 			}
@@ -98,10 +98,28 @@ namespace DOL.GS.GameEvents
 			if (player.IsAnonymous) return;
 
 			string message = player.Name + " just left the game!";
-			foreach (GameClient pclient in WorldMgr.GetAllPlayingClients())
+			if (player.Client.Account.PrivLevel > 1)
+				message = "[Staff Member] " + message;
+			else
 			{
-				if (player.Client != pclient)
-					pclient.Out.SendMessage(message, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				string realm = "";
+				if (GameServer.Instance.Configuration.ServerType == eGameServerType.GST_Normal)
+				{
+					realm = "[";
+					switch (player.Realm)
+					{
+						case 1: realm = realm + "Albion"; break;
+						case 2: realm = realm + "Midgard"; break;
+						case 3: realm = realm + "Hibernia"; break;
+					}
+					realm = realm + "] ";
+				}
+				message = realm + message;
+				foreach (GameClient pclient in WorldMgr.GetAllPlayingClients())
+				{
+					if (player.Client != pclient)
+						pclient.Out.SendMessage(message, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				}
 			}
 		}
 	}

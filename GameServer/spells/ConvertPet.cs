@@ -48,9 +48,7 @@ namespace DOL.GS.Spells
 				mana += (int)(living.Health * Spell.Value / 100);
 			}
 
-			int absorb = m_caster.Mana;
-			m_caster.Mana += mana;
-			absorb = m_caster.Mana - absorb;
+			int absorb = m_caster.ChangeMana(m_caster, GameLiving.eManaChangeType.Spell, mana);
 
 			if (m_caster is GamePlayer)
 			{
