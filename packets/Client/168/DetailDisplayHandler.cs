@@ -157,7 +157,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 							WritePoisonInfo(objectInfo, item, client);
 						}
 
-						if (item.Object_Type == (int)eObjectType.Magical &&  item.Item_Type == (int)eInventorySlot.FirstBackpack) // potion
+						if (item.Object_Type == (int)eObjectType.Magical && item.Item_Type == (int)eInventorySlot.FirstBackpack) // potion
 							WritePotionInfo(objectInfo, item, client);
 
 						if (!item.IsDropable || !item.IsPickable)
@@ -667,63 +667,64 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 						break;
 					}
-				/*
-								case 8://abilities
+				case 8://abilities
+					{
+						objectInfo.Add("Delving on abilities is not yet supported!");
+						break;
+						/*
+						int index = objectID - 100;
+						IList skillList = client.Player.GetNonTrainableSkillList();
+						Ability ab = (Ability)skillList[index];
+
+						if (ab != null)
+						{
+							caption = ab.Name;
+
+							IAbilityActionHandler handler = SkillBase.GetAbilityActionHandler(ab.KeyName);
+							if (handler is BaseCastingAbilityHandler)
+							{
+								int spellID = ((BaseCastingAbilityHandler)handler).GetSpellID(client.Player.GetAbilityLevel(ab.KeyName));
+								SpellLine spline = SkillBase.GetSpellLine(((BaseCastingAbilityHandler)handler).GetAbilitiesSpellLine());
+								Spell abSpell = null;
+								if (spline != null)
 								{
-									int index = objectID - 100;
-									IList skillList = client.Player.GetNonTrainableSkillList();
-									Ability ab = (Ability)skillList[index];
-
-									if(ab != null)
+									IList spells = SkillBase.GetSpellList(spline.KeyName);
+									if (spells != null)
 									{
-										caption = ab.Name;
-
-										IAbilityActionHandler handler = SkillBase.GetAbilityActionHandler (ab.KeyName);
-										if(handler is BaseCastingAbilityHandler)
+										foreach (Spell spell in spells)
 										{
-											int spellID = ((BaseCastingAbilityHandler)handler).GetSpellID(client.Player.GetAbilityLevel(ab.KeyName));
-											SpellLine spline = SkillBase.GetSpellLine(((BaseCastingAbilityHandler)handler).GetAbilitiesSpellLine());
-											Spell abSpell = null;
-											if (spline != null)
+											if (spell.ID == spellID)
 											{
-												IList spells = SkillBase.GetSpellList(spline.KeyName);
-												if (spells != null)
-												{
-													foreach (Spell spell in spells)
-													{
-														if (spell.ID == spellID)
-														{
-															abSpell = spell;
-															break;
-														}
-													}
-												}
+												abSpell = spell;
+												break;
 											}
-
-											if(abSpell == null)
-												return 1;
-
-											ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, abSpell, spline);
-											if(spellHandler == null)
-											{
-												objectInfo.Add(" ");
-												objectInfo.Add("Spell type (" + abSpell.SpellType + ") is not implemented.");
-											}
-											else
-											{
-												objectInfo.AddRange(spellHandler.DelveInfo);
-											}
-											break;
-
-										}
-										else
-										{
-											objectInfo.Add(ab.Description);
 										}
 									}
-									break;
 								}
-				*/
+
+								if (abSpell == null)
+									return 1;
+
+								ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, abSpell, spline);
+								if (spellHandler == null)
+								{
+									objectInfo.Add(" ");
+									objectInfo.Add("Spell type (" + abSpell.SpellType + ") is not implemented.");
+								}
+								else
+								{
+									objectInfo.AddRange(spellHandler.DelveInfo);
+								}
+								break;
+
+							}
+							else
+							{
+								objectInfo.Add(ab.Description);
+							}
+						}
+						break;*/
+					}
 				case 9: //trainer window "info" button
 					{
 						IList specList = client.Player.GetSpecList();
@@ -772,14 +773,11 @@ namespace DOL.GS.PacketHandler.Client.v168
 						if (selectedSpellLine != null)
 							spells = SkillBase.GetSpellList(selectedSpellLine.KeyName);
 
-
-
-
 						caption = spec.Name;
 
 						if (styles.Count <= 0 && playerSpells.Count <= 0)
 						{
-							//objectInfo.Add("no info found for this spec");
+							objectInfo.Add("no info found for this spec");
 							break;
 						}
 

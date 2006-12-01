@@ -29,7 +29,7 @@ namespace DOL.GS
 	/// <summary>
 	/// The mother class for all class trainers
 	/// </summary>
-	public class GameTrainer : GameMob
+	public class GameTrainer : GameNPC
 	{
 		/// <summary>
 		/// Constructs a new GameTrainer
@@ -176,6 +176,8 @@ namespace DOL.GS
 			// Player was promoted
 			if (player.SetCharacterClass(classid))
 			{
+				player.RemoveAllStyles();
+
 				player.Out.SendMessage(this.Name + " says, \"" + messageToPlayer + "\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
 				player.Out.SendMessage("You have been upgraded to the " + player.CharacterClass.Name + " class!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 

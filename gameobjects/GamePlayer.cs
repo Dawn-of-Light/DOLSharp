@@ -615,13 +615,13 @@ namespace DOL.GS
 				return;
 			}
 			bool bound = false;
-			lock (CurrentRegion.BindPoints.SyncRoot)
+			lock (CurrentAreas.SyncRoot)
 			{
-				foreach (BindPoint bp in CurrentRegion.BindPoints)
+				foreach (AbstractArea area in CurrentAreas)
 				{
-					if (!GameServer.ServerRules.IsAllowedToBind(this, bp)) continue;
-					if (WorldMgr.CheckDistance(this, bp.X, bp.Y, bp.Z, bp.Radius))
+					if (area is Area.BindArea)
 					{
+						if (!GameServer.ServerRules.IsAllowedToBind(this, (area as Area.BindArea).BindPoint)) continue;
 						TempProperties.setProperty(LAST_BIND_TICK, CurrentRegion.Time);
 
 						bound = true;
@@ -2670,6 +2670,7 @@ namespace DOL.GS
 			}
 			return spells;
 		}
+
 		/// <summary>
 		/// updates the list of available styles
 		/// </summary>
@@ -3495,11 +3496,7 @@ namespace DOL.GS
 				return;
 
 			//xp rate modifier
-			if (expTotal > 0)
-			{
-				double modifier = ServerProperties.Properties.XP_RATE;
-				expTotal = (long)((double)expTotal * modifier);
-			}
+			expTotal = (long)((double)expTotal * ServerProperties.Properties.XP_RATE);
 
 			base.GainExperience(expTotal, expCampBonus, expGroupBonus, sendMessage);
 
@@ -5647,7 +5644,6 @@ namespace DOL.GS
 				//Melee damage buff and debuff
 				damage = damage * GetModified(eProperty.MeleeDamage) * 0.01;
 			}
-
 			return damage;
 		}
 
@@ -9477,7 +9473,7 @@ namespace DOL.GS
 				bool checklos = false;
 				foreach (AbstractArea area in player.CurrentAreas)
 				{
-					if (area is KeepArea || area.CheckLOS)
+					if (area.CheckLOS)
 					{
 						checklos = true;
 						break;

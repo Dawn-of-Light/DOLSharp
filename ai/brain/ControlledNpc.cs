@@ -358,6 +358,8 @@ namespace DOL.AI.Brain
 		{
 			AttackedByEnemyEventArgs args = arguments as AttackedByEnemyEventArgs;
 			if (args == null) return;
+			if (args.AttackData.Target is GamePlayer && (args.AttackData.Target as GamePlayer).ControlledNpc != this)
+				return;
 			// react only on these attack results
 			switch (args.AttackData.AttackResult)
 			{

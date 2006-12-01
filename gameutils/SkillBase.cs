@@ -276,10 +276,6 @@ namespace DOL.GS
 			InitPropertyTypes();
 		}
 
-		private SkillBase()
-		{
-		}
-
 		public static void LoadSkills()
 		{
 			RegisterPropertyNames();
@@ -468,11 +464,13 @@ namespace DOL.GS
 			{
 				foreach (DBSpecialization spec in specs)
 				{
-					ArrayList styleList = new ArrayList();
 					if (spec.Styles != null)
 					{
 						foreach (DBStyle style in spec.Styles)
 						{
+							ArrayList styleList = m_styleLists[style.SpecKeyName + "|" + style.ClassId] as ArrayList;
+							if (styleList == null)
+								styleList = new ArrayList();
 							// find right position for insert
 							int insertpos = 0;
 							for (insertpos = 0; insertpos < styleList.Count; insertpos++)
@@ -488,14 +486,15 @@ namespace DOL.GS
 								foreach (DBStyleXSpell styleSpells in m_styleSpells[st.ID][0])
 									st.Procs.Add(styleSpells);
 							}
-
 							styleList.Insert(insertpos, st);
 
+							//the following shows duplication errors.. interesting
+							//m_styleLists.Add(style.SpecKeyName + "|" + style.ClassId, styleList);
+							m_styleLists[style.SpecKeyName + "|" + style.ClassId] = styleList;
 
 							m_stylesByIDClass[((long)st.ID << 32) | (uint)style.ClassId] = st;
 						}
 					}
-					m_styleLists[spec.KeyName] = styleList; // also adds empty lists, so we dont have to generate empty lists later
 					RegisterSpec(new Specialization(spec.KeyName, spec.Name, spec.Icon));
 					int specAbCount = 0;
 					if (m_specAbilities[spec.KeyName] != null)
@@ -503,7 +502,12 @@ namespace DOL.GS
 						specAbCount = ((ArrayList)m_specAbilities[spec.KeyName]).Count;
 					}
 					if (log.IsDebugEnabled)
-						log.Debug("Specialization: " + spec.Name + ", " + styleList.Count + " styles, " + specAbCount + " abilities");
+					{
+						int styleCount = 0;
+						if (spec.Styles != null)
+							styleCount = spec.Styles.Length;
+						log.Debug("Specialization: " + spec.Name + ", " + styleCount + " styles, " + specAbCount + " abilities");
+					}
 				}
 			}
 			if (log.IsInfoEnabled)
@@ -1284,29 +1288,35 @@ namespace DOL.GS
 		/// <returns>list of styles, never null</returns>
 		public static IList GetStyleList(string specID, int classId)
 		{
+			IList list = m_styleLists[specID + "|" + classId] as IList;
+			if (list == null)
+				return new ArrayList(0);
+			return list;
+			/*
 			IList list = (IList)m_styleLists[specID];
 			if (list == null)
 			{
 				return new ArrayList(0);
 			}
 
-			IList newStyles = new ArrayList(m_styleLists.Count);
+			IList newStyles = new ArrayList();
 			foreach (Style style in list)
 			{
 				Style st = GetStyleByID(style.ID, classId);
 				newStyles.Add(st);
 			}
-			/*
-			foreach (Style style in m_stylesByIDClass.Values)
+			
+			foreach (Style style in list)
 			{
 				long key = ((long)style.ID << 32) | (uint)classId;
 				Style subStyle = (Style)m_stylesByIDClass[key];
 
-				if (subStyle != null && !newStyles.Contains(subStyle))
-					newStyles.Add(subStyle);
-			}*/
 
-			return newStyles;
+				if (style != null && !newStyles.Contains(style))
+					newStyles.Add(style);
+			}
+
+			return newStyles;				 */
 		}
 
 		/// <summary>

@@ -1893,15 +1893,14 @@ namespace DOL.GS.Spells
 			GamePlayer player = null;
 			if (m_caster is GamePlayer)
 				player = m_caster as GamePlayer;
-			/* double TOADmg = 1 + m_caster.GetModified(eProperty.SpellDamage) * 0.01;
-			 double RelicDmg = 0;
-			 if (player != null)
-			 {
-				 //Relic bonus is calculated before ra bonus
-				 RelicDmg = RelicMgr.GetRelicBonusModifier(living.Realm, eRelicType.Magic);
-				 TOADmg += RelicDmg * 0.01;
-			 }*/
-			//spellDamage *= TOADmg;
+			effectiveness += m_caster.GetModified(eProperty.SpellDamage) * 0.01;
+			double RelicDmg = 0;
+			if (player != null)
+			{
+				//Relic bonus is calculated before ra bonus
+				RelicDmg = RelicMgr.GetRelicBonusModifier(player.Realm, eRelicType.Magic) * 0.01;
+			}
+			effectiveness += RelicDmg;
 			if (player != null)
 				spellDamage *= player.PlayerEffectiveness;
 			int finalDamage = Util.Random((int)(minVariance * spellDamage), (int)(maxVariance * spellDamage));

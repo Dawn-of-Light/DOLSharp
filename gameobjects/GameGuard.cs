@@ -3,12 +3,13 @@ using System.Collections;
 
 namespace DOL.GS
 {
-	public class GameGuard : GameMob
+	public class GameGuard : GameNPC
 	{
 		public GameGuard()
 			: base()
 		{
-			SetOwnBrain(new GuardBrain());
+			m_ownBrain = new GuardBrain();
+			m_ownBrain.Body = this;
 		}
 
 		public override void DropLoot(GameObject killer)
