@@ -64,7 +64,7 @@ namespace DOL.GS.Quests.Tests
 					InventoryItem item = new InventoryItem();
 					item.Name = task.ItemName;
 
-					GameMob npc = new GameMob();
+					GameNPC npc = new GameNPC();
 					npc.Name = task.RecieverName;
 					task.Notify(GamePlayerEvent.GiveItem,player,new GiveItemEventArgs(player,npc,item));
 

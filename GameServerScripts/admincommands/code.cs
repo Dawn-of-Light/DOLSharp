@@ -70,7 +70,7 @@ namespace DOL.GS.Scripts
 			text.Append("	string str = (obj==null)?\"(null)\":obj.ToString();\n");
 			text.Append("	if (Client==null || Client.Player==null) log.Debug(str);\n	else Client.Out.SendMessage(str, eChatType.CT_System, eChatLoc.CL_SystemWindow);\n}\n");
 			text.Append("public static void DynMethod(GameObject target, GamePlayer player) {\nif (player!=null) Client = player.Client;\n");
-			text.Append("GameNPC targetNpc = target as GameNPC; GameMob targetMob = target as GameMob;");
+			text.Append("GameNPC targetNpc = target as GameNPC;");
 			text.Append(code);
 			text.Append("\n}\n}\n");
 

@@ -64,7 +64,7 @@ namespace DOL.Database
 		public Mob()
 		{
 			m_autoSave = false;
-			m_type = "DOL.GS.GameMob";
+			m_type = "DOL.GS.GameNPC";
 			m_equipmentTemplateID = "";
 			m_npcTemplateID = -1;
 			m_meleeDamageType = 2; // slash by default
