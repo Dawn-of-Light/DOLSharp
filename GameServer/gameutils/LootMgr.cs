@@ -248,7 +248,7 @@ namespace DOL.GS
 				regionList.Add(generator);
 			}
 
-			if (Util.IsEmpty(mobname) && Util.IsEmpty(mobguild) && Util.IsEmpty(mobfaction))
+			if (Util.IsEmpty(mobname) && Util.IsEmpty(mobguild) && Util.IsEmpty(mobfaction) && mobregion == 0)
 			{
 				m_globalGenerators.Add(generator);
 			}

@@ -44,7 +44,7 @@ namespace DOL.GS.Tests
 		[Test] public void AddObject()
 		{
 			Region region = WorldMgr.GetRegion(1);
-			GameObject obj = new GameMob();
+			GameObject obj = new GameNPC();
 			obj.Name="TestObject";
 			obj.X = 400000;
 			obj.Y = 200000;

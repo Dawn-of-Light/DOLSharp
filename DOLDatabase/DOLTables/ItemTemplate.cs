@@ -165,6 +165,7 @@ namespace DOL.Database
 			m_poisonCharges = 0;
 			m_poisonMaxCharges = 0;
 			m_poisonSpellID = 0;
+			m_realm = 0;
 			m_autoSave = false;
 		}
 

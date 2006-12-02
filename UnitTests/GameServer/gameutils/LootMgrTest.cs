@@ -38,7 +38,7 @@ namespace DOL.GS.Tests
 
 		[Test] public void TestLootGenerator()
 		{						
-			GameMob mob = new GameMob();
+			GameNPC mob = new GameNPC();
 			mob.Level = 6;
 			mob.Name="impling";
 
