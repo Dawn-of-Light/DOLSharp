@@ -66,7 +66,7 @@ namespace DOL.GS.Quests.Tests
 				InventoryItem item = new InventoryItem();
 				item.Name = task.ItemName;
 
-				GameMob mob = new GameMob();
+				GameNPC mob = new GameNPC();
 				mob.Name = task.MobName;
 				mob.X = player.X;
 				mob.Y = player.Y;

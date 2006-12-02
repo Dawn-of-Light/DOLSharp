@@ -17,15 +17,19 @@
  *
  */
 using System;
-using DOL.Database;
 using System.Collections;
 using System.Collections.Specialized;
+using System.Reflection;
+
+using DOL.Database;
 using DOL.GS.Effects;
 using DOL.GS.RealmAbilities;
 using DOL.GS.Scripts;
 using DOL.GS.Spells;
 using DOL.GS.Styles;
 using DOL.GS.SkillHandler;
+
+using log4net;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
@@ -35,6 +39,11 @@ namespace DOL.GS.PacketHandler.Client.v168
 	[PacketHandlerAttribute(PacketHandlerType.TCP, 0x70 ^ 168, "Handles detail display")]
 	public class DetailDisplayHandler : IPacketHandler
 	{
+		/// <summary>
+		/// Defines a logger for this class.
+		/// </summary>
+		protected static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			uint unk_186 = 0;
@@ -44,7 +53,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			ushort objectID = packet.ReadShort();
 			string caption = "";
 			ArrayList objectInfo = new ArrayList();
-			//			DOLConsole.WriteLine("type="+objectType+" id="+objectID);
+			//log.Debug("DetailDisplayHandler: type=" + objectType + " id=" + objectID);
 
 			switch (objectType)
 			{
