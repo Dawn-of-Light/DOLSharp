@@ -251,10 +251,18 @@ namespace DOL.GS.PacketHandler
 							if (zon != null)
 							{
 								IList areas = zon.GetAreasOfSpot(characters[j].Xpos, characters[j].Ypos, characters[j].Zpos);
-								if (areas.Count > 0)
-									pak.FillString((areas[0] as AbstractArea).Description, 24);
-								else
-									pak.FillString(zon.Description, 24);
+								string description = "";
+
+								foreach (AbstractArea area in areas)
+								{
+									if (!area.DisplayMessage) continue;
+									description = area.Description;
+									break;
+								}
+
+								if (description == "")
+									description = zon.Description;
+								pak.FillString(description, 24);
 							}
 							else
 								pak.Fill(0x0, 24); //No known location

@@ -197,6 +197,7 @@ namespace DOL.GS.Keeps
 		{
 			get
 			{
+				return 0;
 				if (IsRaized)
 					return 0;
 

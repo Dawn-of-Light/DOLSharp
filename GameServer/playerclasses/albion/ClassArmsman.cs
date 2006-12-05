@@ -24,7 +24,7 @@ namespace DOL.GS.Scripts
 	/// <summary>
 	/// 
 	/// </summary>
-	[PlayerClassAttribute((int)eCharacterClass.Armsman, "Armsman", "Fighter")]
+	[PlayerClassAttribute((int)eCharacterClass.Armsman, "Armsman", "Fighter", "Armswoman")]
 	public class ClassArmsman : ClassFighter
 	{
 		public ClassArmsman() : base() 

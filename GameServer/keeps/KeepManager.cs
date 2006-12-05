@@ -200,12 +200,18 @@ namespace DOL.GS.Keeps
 				myKeeps.Add(keep);
 			return myKeeps;
 		}
+
 		public static IList getNFKeeps()
+		{
+			return GetKeepsOfRegion(163);
+		}
+
+		public static IList GetKeepsOfRegion(ushort region)
 		{
 			ArrayList myKeeps = new ArrayList();
 			foreach (AbstractGameKeep keep in m_keeps.Values)
 			{
-				if (keep.CurrentRegion.ID != 163)
+				if (keep.CurrentRegion.ID != region)
 					continue;
 				myKeeps.Add(keep);
 			}

@@ -30,8 +30,17 @@ namespace DOL.GS
 	public class PlayerClassAttribute : Attribute 
 	{
 		protected string m_name;
+		protected string m_femaleName;
 		protected string m_basename;
 		protected int m_id;
+
+		public PlayerClassAttribute(int id, string name, string basename, string femalename)
+		{
+			m_basename = basename;
+			m_name = name;
+			m_id = id;
+			m_femaleName = femalename;
+		} 
 
 		public PlayerClassAttribute(int id, string name, string basename)
 		{
@@ -61,6 +70,14 @@ namespace DOL.GS
 			get 
 			{
 				return m_basename;
+			}
+		}
+
+		public string FemaleName
+		{
+			get
+			{
+				return m_femaleName;
 			}
 		}
 	}
@@ -136,6 +153,11 @@ namespace DOL.GS
 		void OnSkillTrained(GamePlayer player, Specialization skill);
 		bool CanUseLefthandedWeapon(GamePlayer player);
 		IList AutoTrainableSkills();
+		string FemaleName
+		{
+			get;
+		}
+		void SwitchToFemaleName(); 
 	}
 
 	/// <summary>
@@ -172,6 +194,11 @@ namespace DOL.GS
 		/// Name of class
 		/// </summary>
 		protected string m_name;
+
+		/// <summary>
+		/// Female name of class
+		/// </summary>
+		protected string m_femaleName; 
 
 		/// <summary>
 		/// Base of this class
@@ -242,11 +269,23 @@ namespace DOL.GS
 				{
 					m_id = ((PlayerClassAttribute)attr).ID;
 					m_name = ((PlayerClassAttribute)attr).Name;
-					m_basename = ((PlayerClassAttribute)attr).BaseName;
+					m_basename = ((PlayerClassAttribute)attr).BaseName; 
+					if (Util.IsEmpty(((PlayerClassAttribute)attr).FemaleName) == false)
+						m_femaleName = ((PlayerClassAttribute)attr).FemaleName; 
 					break;
 				}
 			}
 		}
+
+		public void SwitchToFemaleName()
+		{
+			m_name = m_femaleName;
+		}
+
+		public string FemaleName
+		{
+			get { return m_femaleName; }
+		} 
 
 		public int BaseHP
 		{

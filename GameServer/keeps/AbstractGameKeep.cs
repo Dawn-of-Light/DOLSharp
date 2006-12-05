@@ -274,6 +274,15 @@ namespace DOL.GS.Keeps
 		}
 
 		/// <summary>
+		/// The Base Keep Level
+		/// </summary>
+		public byte BaseLevel
+		{
+			get { return DBKeep.BaseLevel; }
+			set { DBKeep.BaseLevel = value; }
+		}
+
+		/// <summary>
 		/// calculate the effective level from a keep level
 		/// </summary>
 		public byte EffectiveLevel(byte level)
@@ -494,6 +503,13 @@ namespace DOL.GS.Keeps
 				player.Out.SendMessage("The keep is not owned by your realm.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 				return false;
 			}
+
+			if (this.BaseLevel != 50)
+			{
+				player.Out.SendMessage("This keep is not able to be claimed.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return false;
+			}
+
 			if (player.Guild == null)
 			{
 				player.Out.SendMessage("You must be in a guild to claim a keep.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
