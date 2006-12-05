@@ -29,10 +29,15 @@ namespace DOL.GS
 	/// </summary>
 	public abstract class AbstractArea : IArea
 	{
+		protected bool m_canBroadcast = false;
 		/// <summary>
 		/// Variable holding whether or not players can broadcast in this area
 		/// </summary>
-		public bool CanBroadcast = false;
+		public bool CanBroadcast
+		{
+			get { return m_canBroadcast; }
+			set { m_canBroadcast = value; }
+		}
 
 		protected bool m_checkLOS = false;
 		/// <summary>
@@ -48,11 +53,22 @@ namespace DOL.GS
 		/// <summary>
 		/// Display entered message
 		/// </summary>
-		public bool DisplayMessage
+		public virtual bool DisplayMessage
 		{
 			get { return m_displayMessage; }
 			set { m_displayMessage = value; }
 		}
+
+		protected bool m_safeArea = false;
+		/// <summary>
+		/// Can players be attacked by other players in this area
+		/// </summary>
+		public bool IsSafeArea
+		{
+			get { return m_safeArea; }
+			set { m_safeArea = value; }
+		}
+
 		/// <summary>
 		/// Constant holding max number of areas per zone, increase if more ares are needed,
 		/// this will slightly increase memory usage on server

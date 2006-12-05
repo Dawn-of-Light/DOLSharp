@@ -324,6 +324,7 @@
     <Compile Include="events\gameobjects\GiveMoneyEventArgs.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="events\gameobjects\HealthChangedEventArgs.cs" />
     <Compile Include="events\gameobjects\InteractEventArgs.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -549,6 +550,7 @@
     <Compile Include="gameutils\GameNPCInventory.cs" />
     <Compile Include="gameutils\MailMgr.cs" />
     <Compile Include="gameutils\NewsMgr.cs" />
+    <Compile Include="gameutils\PlayerStatistics.cs" />
     <Compile Include="keeps\Gameobjects\FrontiersPortalStone.cs" />
     <Compile Include="keeps\Gameobjects\Guards\Archer.cs" />
     <Compile Include="keeps\Gameobjects\Guards\Caster.cs" />
@@ -673,6 +675,7 @@
     <Compile Include="propertycalc\CriticalArcheryHitChanceCalculator.cs" />
     <Compile Include="propertycalc\CriticalMeleeHitChanceCalculator.cs" />
     <Compile Include="propertycalc\ResistPiercePropertyCalculator.cs" />
+    <Compile Include="propertycalc\WaterSpeedCalculator.cs" />
     <Compile Include="quests\Missions\AbstractMission.cs">
       <SubType>Code</SubType>
     </Compile>

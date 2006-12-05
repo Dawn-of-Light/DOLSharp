@@ -22,20 +22,31 @@ using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
 using DOL.Events;
 using log4net;
- 
- 
+
+
 namespace DOL.GS.Spells
 {
 	[SpellHandlerAttribute("WaterBreathing")]
 	public class WaterBreathingSpellHandler : SpellHandler
 	{
-		public WaterBreathingSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
+		/// <summary>
+		/// Defines a logger for this class.
+		/// </summary>
+		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
+		public WaterBreathingSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 
 		public override void OnEffectStart(GameSpellEffect effect)
 		{
+
 			GamePlayer player = effect.Owner as GamePlayer;
 			if (player != null)
+			{
 				player.CanBreathUnderWater = true;
+				player.BuffBonusCategory1[(int)eProperty.WaterSpeed] += (int)Spell.Value;
+				player.Out.SendUpdateMaxSpeed();
+			}
+
 			eChatType toLiving = (Spell.Pulse == 0) ? eChatType.CT_Spell : eChatType.CT_SpellPulse;
 			eChatType toOther = (Spell.Pulse == 0) ? eChatType.CT_System : eChatType.CT_SpellPulse;
 			if (Spell.Message2 != "")
@@ -50,6 +61,8 @@ namespace DOL.GS.Spells
 			if (player != null)
 			{
 				player.CanBreathUnderWater = false;
+				player.BuffBonusCategory1[(int)eProperty.WaterSpeed] -= (int)Spell.Value;
+				player.Out.SendUpdateMaxSpeed();
 				if (player.IsDiving)
 					MessageToLiving(effect.Owner, "With a gulp and a gasp you realize that you are unable to breathe underwater any longer!", eChatType.CT_SpellExpires);
 			}

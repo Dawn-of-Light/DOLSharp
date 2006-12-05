@@ -121,5 +121,9 @@ namespace DOL.Events
 		/// The CastFinished event is fired whenever the living finishes casting a spell
 		/// </summary>
 		public static readonly GameLivingEvent CastFinished = new GameLivingEvent("GameLiving.CastFinished");
+		/// <summary>
+		/// The HealthChanged event is fired whenever the GameLiving's health is changed
+		/// </summary>
+		public static readonly GameLivingEvent HealthChanged = new GameLivingEvent("GameLiving.HealthChanged");
 	}
 }

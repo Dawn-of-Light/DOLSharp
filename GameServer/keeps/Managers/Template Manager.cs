@@ -53,15 +53,13 @@ namespace DOL.GS.Keeps
 					return 75;
 				else return 65;
 			}
-			if (guard.IsPortalKeepGuard)
-				return 255;
 			if (guard is GuardLord)
 			{
 				if (guard.Component.Keep is GameKeep)
-					return 70;
-				else return 60;
+					return (byte)(guard.Component.Keep.BaseLevel + ((guard.Component.Keep.BaseLevel / 10) + 1) * 2);
+				else return (byte)(guard.Component.Keep.BaseLevel + ((guard.Component.Keep.BaseLevel / 10) + 1));
 			}
-			return 50;
+			return guard.Component.Keep.BaseLevel;
 		}
 
 		public static void SetGuardLevel(GameKeepGuard guard)

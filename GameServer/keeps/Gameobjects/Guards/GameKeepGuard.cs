@@ -66,9 +66,7 @@ namespace DOL.GS.Keeps
 		{
 			get
 			{
-				if (this.IsTowerGuard && this.Component.Keep.KeepComponents.Count > 1)
-					return true;
-				return false;
+				return this.Component.Keep.IsPortalKeep;
 			}
 		}
 
