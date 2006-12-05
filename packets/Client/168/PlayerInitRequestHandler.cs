@@ -17,12 +17,15 @@
  *
  */
 using System;
+using System.Collections;
 using System.Reflection;
+
 using DOL.Database;
 using DOL.Events;
 using DOL.GS;
 using DOL.GS.Keeps;
 using DOL.GS.ServerProperties;
+
 using log4net;
 
 namespace DOL.GS.PacketHandler.Client.v168
@@ -176,6 +179,24 @@ namespace DOL.GS.PacketHandler.Client.v168
 					{
 						player.Out.SendMessage("This area is unsafe, moving you to a safe location!", eChatType.CT_YouWereHit, eChatLoc.CL_SystemWindow);
 						player.MoveTo(163, x, y, z, heading);
+					}
+				}
+
+				IList list = KeepMgr.GetKeepsOfRegion(player.CurrentRegionID);
+				
+				if (player.Client.Account.PrivLevel == 1 && list.Count > 0)
+				{
+					foreach (AbstractGameKeep k in list)
+					{
+						if (k.CurrentRegion.ID == 263) continue;
+						if (k.BaseLevel == 255) continue;
+
+						if (player.Level > k.BaseLevel)
+						{
+							player.Out.SendMessage("You have exceeded the level cap of this battleground!", eChatType.CT_YouWereHit, eChatLoc.CL_SystemWindow);
+							player.MoveTo((ushort)player.PlayerCharacter.BindRegion, player.PlayerCharacter.BindXpos, player.PlayerCharacter.BindYpos, player.PlayerCharacter.BindZpos, (ushort)player.PlayerCharacter.BindHeading);
+							break;
+						}
 					}
 				}
 

@@ -199,10 +199,18 @@ namespace DOL.GS.PacketHandler
 							if (zon != null)
 							{
 								IList areas = zon.GetAreasOfSpot(characters[j].Xpos, characters[j].Ypos, characters[j].Zpos);
-								if (areas.Count > 0)
-									pak.FillString((areas[0] as AbstractArea).Description, 24);
-								else
-									pak.FillString(zon.Description, 24);
+								string description = "";
+
+								foreach (AbstractArea area in areas)
+								{
+									if (!area.DisplayMessage) continue;
+									description = area.Description;
+									break;
+								}
+
+								if (description == "")
+									description = zon.Description;
+								pak.FillString(description, 24);
 							}
 							else
 								pak.Fill(0x0, 24); //No known location
@@ -728,7 +736,7 @@ namespace DOL.GS.PacketHandler
 			if (obj is GameLiving)
 				pak.WriteByte((obj as GameLiving).HealthPercent);
 			else pak.WriteByte(0);
-			flags |= (byte)(((z.ID & 0x100) >> 6) | ((targetZone & 0x100) >> 5)); 
+			flags |= (byte)(((z.ID & 0x100) >> 6) | ((targetZone & 0x100) >> 5));
 			pak.WriteByte(flags);
 			pak.WriteByte((byte)z.ID);
 			pak.WriteByte((byte)targetZone);
@@ -982,7 +990,8 @@ namespace DOL.GS.PacketHandler
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.MaxSpeed));
 			pak.WriteShort((ushort)(m_gameClient.Player.MaxSpeed * 100 / GamePlayer.PLAYER_BASE_SPEED));
 			pak.WriteByte((byte)(m_gameClient.Player.IsTurningDisabled ? 0x01 : 0x00));
-			pak.WriteByte(0);
+			// water speed in % of land speed if its over 0 i think
+			pak.WriteByte((byte)((m_gameClient.Player.MaxSpeed * 100 / GamePlayer.PLAYER_BASE_SPEED) * (m_gameClient.Player.GetModified(eProperty.WaterSpeed) * .01)));
 			SendTCP(pak);
 		}
 
@@ -2794,7 +2803,7 @@ namespace DOL.GS.PacketHandler
 			pak.WriteByte(0x00);
 			SendTCP(pak);
 		}
-		
+
 		public virtual void SendGarden(House house)
 		{
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.HouseChangeGarden));
@@ -3086,9 +3095,9 @@ namespace DOL.GS.PacketHandler
 		/// <summary>
 		/// The bow prepare animation
 		/// </summary>
-		public virtual int BowPrepare 
+		public virtual int BowPrepare
 		{
-			get { return 0x01F4; } 
+			get { return 0x01F4; }
 		}
 
 		/// <summary>

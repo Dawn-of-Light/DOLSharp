@@ -211,6 +211,24 @@ namespace DOL.GS.ServerRules
 				if ((((GameNPC)defender).Flags & (uint)GameNPC.eFlags.PEACE) != 0)
 					return false;
 
+			foreach (AbstractArea area in defender.CurrentAreas)
+			{
+				if (area.IsSafeArea)
+				{
+					if (quiet == false) MessageToLiving(attacker, "You can't attack someone in a safe area!");
+					return false;
+				}
+			}
+
+			foreach (AbstractArea area in attacker.CurrentAreas)
+			{
+				if (area.IsSafeArea)
+				{
+					if (quiet == false) MessageToLiving(attacker, "You can't attack someone in a safe area!");
+					return false;
+				}
+			}
+
 			return true;
 		}
 
@@ -698,6 +716,8 @@ namespace DOL.GS.ServerRules
 					else if (campBonus > fullCampBonus)
 						campBonus = fullCampBonus;
 
+					campBonus = xpReward * campBonus;
+
 					if (!living.IsAlive)//Dead living gets 25% exp only
 					{
 						campBonus = (long)(campBonus * 0.25);
@@ -714,6 +734,8 @@ namespace DOL.GS.ServerRules
 							if (player != null && player.PlayerGroup != null && plrGrpExp.ContainsKey(player.PlayerGroup))
 								groupExp += (long)(0.125 * xpReward * (int)plrGrpExp[player.PlayerGroup]);
 						}
+
+						xpReward += (long)campBonus + groupExp;
 						living.GainExperience(xpReward, (long)campBonus, groupExp, true);
 					}
 				}
