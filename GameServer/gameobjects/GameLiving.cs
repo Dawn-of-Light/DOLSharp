@@ -2299,6 +2299,11 @@ namespace DOL.GS
 					}
 				}
 
+				//mobs dont update the heading after they start attacking
+				//so here they update it after they swing
+				if (owner is GameNPC)
+					(owner as GameNPC).TurnTo(mainHandAD.Target);
+
 				Stop();
 				return;
 			}
@@ -3127,6 +3132,8 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 			Health += changeAmount;
 			int healthChanged = Health - oldHealth;
 
+			Notify(GameLivingEvent.HealthChanged, this, new HealthChangedEventArgs(changeSource, healthChangeType, healthChanged));
+
 			//Nofiy our enemies that we were healed by other means than
 			//natural regeneration, this allows for aggro on healers!
 			if (healthChangeType != eHealthChangeType.Regenerate)
@@ -3266,13 +3273,13 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		/// <summary>
 		/// Called when the living is gaining experience
 		/// </summary>
-		/// <param name="expBase">base amount of xp to gain</param>
-		/// <param name="expCampBonus">camp bonus to base exp</param>
-		/// <param name="expGroupBonus">group bonus to base exp</param>
+		/// <param name="expTotal">total amount of xp to gain</param>
+		/// <param name="expCampBonus">camp bonus to display</param>
+		/// <param name="expGroupBonus">group bonus to display</param>
 		/// <param name="sendMessage">should exp gain message be sent</param>
-		public virtual void GainExperience(long expBase, long expCampBonus, long expGroupBonus, bool sendMessage)
+		public virtual void GainExperience(long expTotal, long expCampBonus, long expGroupBonus, bool sendMessage)
 		{
-			if (expBase > 0) Notify(GameLivingEvent.GainedExperience, this, new GainedExperienceEventArgs(expBase, expCampBonus, expGroupBonus, sendMessage));
+			if (expTotal > 0) Notify(GameLivingEvent.GainedExperience, this, new GainedExperienceEventArgs(expTotal, expCampBonus, expGroupBonus, sendMessage));
 		}
 		/// <summary>
 		/// Called when this living gains realm points

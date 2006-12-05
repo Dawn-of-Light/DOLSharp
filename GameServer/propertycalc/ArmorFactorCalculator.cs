@@ -54,7 +54,12 @@ namespace DOL.GS.PropertyCalc
 			}
 			else if (living is GameKeepDoor || living is GameKeepComponent)
 			{
-				return 2000;
+				GameKeepComponent component = null;
+				if (living is GameKeepDoor)
+					component = (living as GameKeepDoor).Component;
+				if (living is GameKeepComponent)
+					component = living as GameKeepComponent;
+				return component.Keep.BaseLevel * 40;
 			}
 			else
 			{

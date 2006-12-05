@@ -525,6 +525,11 @@ namespace DOL.GS
 					Out.SendMessage("You can't quit while you're crafting.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return false;
 				}
+
+				string stats = PlayerStatistic.GetStatsMessage(this);
+				if (stats != "")
+					Out.SendMessage(stats, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
 				if (!IsSitting)
 				{
 					Sit(true);
@@ -1891,6 +1896,8 @@ namespace DOL.GS
 				return false;
 			}
 			m_class = cl;
+			if (Util.IsEmpty(m_class.FemaleName) == false && PlayerCharacter.Gender == 1)
+				m_class.SwitchToFemaleName();
 			m_character.Class = m_class.ID;
 
 			if (PlayerGroup != null)
@@ -2136,15 +2143,6 @@ namespace DOL.GS
 					for (int i = 0; i < ab.Level; i++)
 					{
 						respecPoints += ((RealmAbility)ab).CostForUpgrade(i);
-					}
-					if (ab is RAStatEnhancer)
-					{
-						RAStatEnhancer ra = ab as RAStatEnhancer;
-						for (int i = ab.Level; i > 0; i--)
-						{
-							BuffBonusCategory4[(int)ra.Property] -= ra.GetAmountForLevel(i);
-						}
-						ra.SendUpdates(this);
 					}
 					RemoveAbility(ab.KeyName);
 				}

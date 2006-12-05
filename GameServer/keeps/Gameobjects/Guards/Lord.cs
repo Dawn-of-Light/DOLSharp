@@ -27,8 +27,8 @@ namespace DOL.GS.Keeps
 				if (this.Component == null || this.Component.Keep == null)
 					return 5000;
 				else
-				{ 
-					int value = 1000 * (this.Component.Keep.Level + 1);
+				{
+					int value = this.Component.Keep.BaseLevel * 4 * (this.Component.Keep.Level + 1);
 					if (this.Component.Keep is GameKeep)
 						value *= 4;
 					return value;

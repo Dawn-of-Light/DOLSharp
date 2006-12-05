@@ -32,6 +32,10 @@ namespace DOL.Database
 		/// </summary>
 		protected int m_ID;
 		/// <summary>
+		/// The class ID of the style
+		/// </summary>		
+		private int m_classId;
+		/// <summary>
 		/// The name of this style
 		/// </summary>
 		protected string m_Name;
@@ -126,8 +130,7 @@ namespace DOL.Database
 		/// Randomly cast a proc
 		/// </summary>
 		protected bool m_RandomProc;
-		private int m_classId;
-
+		
 		static bool m_autoSave;
 
 		/// <summary>
@@ -146,6 +149,16 @@ namespace DOL.Database
 		{
 			get { return m_ID; }
 			set { m_ID = value; }
+		}
+
+		/// <summary>
+		/// The ClassID
+		/// </summary>
+		[DataElement(AllowDbNull = false)]
+		public int ClassId
+		{
+			get { return m_classId; }
+			set { m_classId = value; Dirty = true; }
 		}
 
 		/// <summary>
@@ -307,13 +320,6 @@ namespace DOL.Database
 		{
 			get { return m_RandomProc; }
 			set { m_RandomProc = value; Dirty = true; }
-		}
-
-		[DataElement(AllowDbNull = false)]
-		public int ClassId
-		{
-			get { return m_classId; }
-			set { m_classId = value; Dirty = true; }
 		}
 
 		/// <summary>

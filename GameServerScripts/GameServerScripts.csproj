@@ -449,6 +449,7 @@
     <Compile Include="playercommands\stand.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="playercommands\stats.cs" />
     <Compile Include="playercommands\stuck.cs">
       <SubType>Code</SubType>
     </Compile>

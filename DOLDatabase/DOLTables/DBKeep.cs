@@ -24,10 +24,10 @@ namespace DOL.Database
 	/// <summary>
 	/// DB Keep is database of keep
 	/// </summary>
-	[DataTable(TableName="Keep",PreCache=true) ]
+	[DataTable(TableName = "Keep", PreCache = true)]
 	public class DBKeep : DataObject
 	{
-		static bool	m_autoSave;
+		static bool m_autoSave;
 		private string m_name;
 		private int m_region;
 		private int m_x;
@@ -43,13 +43,14 @@ namespace DOL.Database
 		private int m_hiberniaDifficultyLevel;
 		private int m_originalRealm;
 		private int m_type;
+		private byte m_baseLevel;
 
 		/// <summary>
 		/// Create a keep row
 		/// </summary>
 		public DBKeep()
 		{
-			m_autoSave=false;
+			m_autoSave = false;
 			m_name = "";
 			m_albionDifficultyLevel = 1;
 			m_midgardDifficultyLevel = 1;
@@ -71,7 +72,7 @@ namespace DOL.Database
 				m_autoSave = value;
 			}
 		}
-		
+
 		/// <summary>
 		/// Index of keep
 		/// </summary>
@@ -83,16 +84,16 @@ namespace DOL.Database
 				return m_keepID;
 			}
 			set
-			{   
+			{
 				Dirty = true;
 				m_keepID = value;
 			}
 		}
-		
+
 		/// <summary>
 		/// Name of keep
 		/// </summary>
-		[DataElement(AllowDbNull=false)]
+		[DataElement(AllowDbNull = false)]
 		public string Name
 		{
 			get
@@ -100,16 +101,16 @@ namespace DOL.Database
 				return m_name;
 			}
 			set
-			{   
+			{
 				Dirty = true;
 				m_name = value;
 			}
 		}
-		
+
 		/// <summary>
 		/// Region of keep
 		/// </summary>
-		[DataElement(AllowDbNull=false)]
+		[DataElement(AllowDbNull = false)]
 		public int Region
 		{
 			get
@@ -122,11 +123,11 @@ namespace DOL.Database
 				m_region = value;
 			}
 		}
-		
+
 		/// <summary>
 		/// X position of keep
 		/// </summary>
-		[DataElement(AllowDbNull=false)]
+		[DataElement(AllowDbNull = false)]
 		public int X
 		{
 			get
@@ -143,7 +144,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Y position of keep
 		/// </summary>
-		[DataElement(AllowDbNull=false)]
+		[DataElement(AllowDbNull = false)]
 		public int Y
 		{
 			get
@@ -160,7 +161,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Z position of keep
 		/// </summary>
-		[DataElement(AllowDbNull=false)]
+		[DataElement(AllowDbNull = false)]
 		public int Z
 		{
 			get
@@ -177,7 +178,7 @@ namespace DOL.Database
 		/// <summary>
 		/// heading of keep
 		/// </summary>
-		[DataElement(AllowDbNull=false)]
+		[DataElement(AllowDbNull = false)]
 		public int Heading
 		{
 			get
@@ -194,7 +195,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Realm of keep
 		/// </summary>
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public byte Realm
 		{
 			get
@@ -202,16 +203,16 @@ namespace DOL.Database
 				return m_realm;
 			}
 			set
-			{   
+			{
 				Dirty = true;
 				m_realm = value;
 			}
 		}
-		
+
 		/// <summary>
 		/// Level of keep
 		/// </summary>
-		[DataElement(AllowDbNull=false)]
+		[DataElement(AllowDbNull = false)]
 		public byte Level
 		{
 			get
@@ -219,7 +220,7 @@ namespace DOL.Database
 				return m_level;
 			}
 			set
-			{   
+			{
 				Dirty = true;
 				m_level = value;
 			}
@@ -228,7 +229,7 @@ namespace DOL.Database
 		/// <summary>
 		/// The guild chich claim this keep
 		/// </summary>
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public string ClaimedGuildName
 		{
 			get
@@ -236,7 +237,7 @@ namespace DOL.Database
 				return m_guildName;
 			}
 			set
-			{   
+			{
 				Dirty = true;
 				m_guildName = value;
 			}
@@ -245,7 +246,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Albion difficulty level
 		/// </summary>
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public int AlbionDifficultyLevel
 		{
 			get
@@ -253,7 +254,7 @@ namespace DOL.Database
 				return m_albionDifficultyLevel;
 			}
 			set
-			{   
+			{
 				Dirty = true;
 				m_albionDifficultyLevel = value;
 			}
@@ -262,7 +263,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Midgard difficulty level
 		/// </summary>
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public int MidgardDifficultyLevel
 		{
 			get
@@ -270,7 +271,7 @@ namespace DOL.Database
 				return m_midgardDifficultyLevel;
 			}
 			set
-			{   
+			{
 				Dirty = true;
 				m_midgardDifficultyLevel = value;
 			}
@@ -279,7 +280,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Hibernia difficulty level
 		/// </summary>
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public int HiberniaDifficultyLevel
 		{
 			get
@@ -287,7 +288,7 @@ namespace DOL.Database
 				return m_hiberniaDifficultyLevel;
 			}
 			set
-			{   
+			{
 				Dirty = true;
 				m_hiberniaDifficultyLevel = value;
 			}
@@ -296,7 +297,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Realm at start
 		/// </summary>
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public int OriginalRealm
 		{
 			get
@@ -304,7 +305,7 @@ namespace DOL.Database
 				return m_originalRealm;
 			}
 			set
-			{   
+			{
 				Dirty = true;
 				m_originalRealm = value;
 			}
@@ -313,7 +314,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Keep type
 		/// </summary>
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public int KeepType
 		{
 			get
@@ -321,11 +322,26 @@ namespace DOL.Database
 				return m_type;
 			}
 			set
-			{   
+			{
 				Dirty = true;
 				m_type = value;
 			}
 		}
-		
+
+		/// <summary>
+		/// The base keep level
+		/// </summary>
+		[DataElement(AllowDbNull = false)]
+		public byte BaseLevel
+		{
+			get
+			{
+				return m_baseLevel;
+			}
+			set
+			{
+				Dirty = true; m_baseLevel = value;
+			}
+		}
 	}
 }

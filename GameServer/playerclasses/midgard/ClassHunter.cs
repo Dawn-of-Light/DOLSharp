@@ -24,7 +24,7 @@ namespace DOL.GS.Scripts
 	/// <summary>
 	///
 	/// </summary>
-	[PlayerClassAttribute((int)eCharacterClass.Hunter, "Hunter", "MidgardRogue")]
+	[PlayerClassAttribute((int)eCharacterClass.Hunter, "Hunter", "MidgardRogue", "Huntress")]
 	public class ClassHunter : ClassMidgardRogue
 	{
 

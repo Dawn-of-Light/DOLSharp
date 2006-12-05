@@ -24,7 +24,7 @@ namespace DOL.GS.Scripts
 	/// <summary>
 	/// 
 	/// </summary>
-	[PlayerClassAttribute((int)eCharacterClass.Sorcerer, "Sorcerer", "Mage")]
+	[PlayerClassAttribute((int)eCharacterClass.Sorcerer, "Sorcerer", "Mage", "Sorceress")]
 	public class ClassSorcerer : ClassMage
 	{
 		public ClassSorcerer() : base()
