@@ -3047,7 +3047,7 @@ namespace DOL.GS
 		{
 			get
 			{
-				if (Realm < 1 && Realm > 3)
+				if (Realm < 1 || Realm > 3)
 					return "unknown realm";
 
 				int m_RR = PlayerCharacter.RealmLevel / 10;
