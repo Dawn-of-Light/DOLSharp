@@ -290,6 +290,7 @@
     <Compile Include="gmcommands\path.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="gmcommands\Player.cs" />
     <Compile Include="gmcommands\siegeweapon.cs" />
     <Compile Include="gmcommands\speed.cs">
       <SubType>Code</SubType>
