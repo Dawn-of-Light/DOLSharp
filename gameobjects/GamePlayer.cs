@@ -3576,6 +3576,11 @@ namespace DOL.GS
 						OnLevelUp(oldLevel);
 						Notify(GamePlayerEvent.LevelUp, this);
 					}
+					else
+					{
+						//update the mob colours
+						Out.SendLevelUpSound();
+					}
 				}
 			}
 		}
