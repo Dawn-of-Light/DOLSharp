@@ -28,7 +28,7 @@ namespace DOL.GS.Spells
 	/// Damages target and decreases speed after
 	/// </summary>
 	[SpellHandlerAttribute("DamageSpeedDecrease")]
-	public class DamageSpeedDecrease : SpeedDecreaseSpellHandler
+	public class DamageSpeedDecreaseSpellHandler : SpeedDecreaseSpellHandler
 	{
 		/// <summary>
 		/// Apply effect on target or do spell action if non duration spell
@@ -163,6 +163,6 @@ namespace DOL.GS.Spells
 		}
 
 		// counstructor
-		public DamageSpeedDecrease(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
+		public DamageSpeedDecreaseSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
 	}
 }
