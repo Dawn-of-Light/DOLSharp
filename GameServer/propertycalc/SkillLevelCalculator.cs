@@ -54,6 +54,8 @@ namespace DOL.GS.PropertyCalc
 				if (SkillBase.CheckPropertyType(property, ePropertyType.SkillArchery))
 					itemBonus += player.ItemBonus[(int)eProperty.AllArcherySkills];
 
+				itemBonus += player.ItemBonus[(int)eProperty.AllSkills];
+
 				if (itemBonus > itemCap)
 					itemBonus = itemCap;
 				int buffs = player.BuffBonusCategory1[(int)property]; // one buff category just in case..
