@@ -211,7 +211,7 @@ namespace DOL.GS.Quests.Hibernia
 				RangerEpicBoots.IsPickable = true;
 				RangerEpicBoots.DPS_AF = 100;
 				RangerEpicBoots.SPD_ABS = 19;
-				RangerEpicBoots.Object_Type = 34;
+				RangerEpicBoots.Object_Type = 37;
 				RangerEpicBoots.Quality = 100;
 				RangerEpicBoots.MaxQuality = 100;
 				RangerEpicBoots.Weight = 22;
@@ -256,7 +256,7 @@ namespace DOL.GS.Quests.Hibernia
 				RangerEpicHelm.IsPickable = true;
 				RangerEpicHelm.DPS_AF = 100;
 				RangerEpicHelm.SPD_ABS = 19;
-				RangerEpicHelm.Object_Type = 34;
+				RangerEpicHelm.Object_Type = 37;
 				RangerEpicHelm.Quality = 100;
 				RangerEpicHelm.MaxQuality = 100;
 				RangerEpicHelm.Weight = 22;
@@ -301,7 +301,7 @@ namespace DOL.GS.Quests.Hibernia
 				RangerEpicGloves.IsPickable = true;
 				RangerEpicGloves.DPS_AF = 100;
 				RangerEpicGloves.SPD_ABS = 19;
-				RangerEpicGloves.Object_Type = 34;
+				RangerEpicGloves.Object_Type = 37;
 				RangerEpicGloves.Quality = 100;
 				RangerEpicGloves.MaxQuality = 100;
 				RangerEpicGloves.Weight = 22;
@@ -345,7 +345,7 @@ namespace DOL.GS.Quests.Hibernia
 				RangerEpicVest.IsPickable = true;
 				RangerEpicVest.DPS_AF = 100;
 				RangerEpicVest.SPD_ABS = 19;
-				RangerEpicVest.Object_Type = 34;
+				RangerEpicVest.Object_Type = 37;
 				RangerEpicVest.Quality = 100;
 				RangerEpicVest.MaxQuality = 100;
 				RangerEpicVest.Weight = 22;
@@ -389,7 +389,7 @@ namespace DOL.GS.Quests.Hibernia
 				RangerEpicLegs.IsPickable = true;
 				RangerEpicLegs.DPS_AF = 100;
 				RangerEpicLegs.SPD_ABS = 19;
-				RangerEpicLegs.Object_Type = 34;
+				RangerEpicLegs.Object_Type = 37;
 				RangerEpicLegs.Quality = 100;
 				RangerEpicLegs.MaxQuality = 100;
 				RangerEpicLegs.Weight = 22;
@@ -434,7 +434,7 @@ namespace DOL.GS.Quests.Hibernia
 				RangerEpicArms.IsPickable = true;
 				RangerEpicArms.DPS_AF = 100;
 				RangerEpicArms.SPD_ABS = 19;
-				RangerEpicArms.Object_Type = 34;
+				RangerEpicArms.Object_Type = 37;
 				RangerEpicArms.Quality = 100;
 				RangerEpicArms.MaxQuality = 100;
 				RangerEpicArms.Weight = 22;
@@ -478,7 +478,7 @@ namespace DOL.GS.Quests.Hibernia
 				HeroEpicBoots.IsPickable = true;
 				HeroEpicBoots.DPS_AF = 100;
 				HeroEpicBoots.SPD_ABS = 27;
-				HeroEpicBoots.Object_Type = 34;
+				HeroEpicBoots.Object_Type = 38;
 				HeroEpicBoots.Quality = 100;
 				HeroEpicBoots.MaxQuality = 100;
 				HeroEpicBoots.Weight = 22;
@@ -523,7 +523,7 @@ namespace DOL.GS.Quests.Hibernia
 				HeroEpicHelm.IsPickable = true;
 				HeroEpicHelm.DPS_AF = 100;
 				HeroEpicHelm.SPD_ABS = 27;
-				HeroEpicHelm.Object_Type = 34;
+				HeroEpicHelm.Object_Type = 38;
 				HeroEpicHelm.Quality = 100;
 				HeroEpicHelm.MaxQuality = 100;
 				HeroEpicHelm.Weight = 22;
@@ -568,7 +568,7 @@ namespace DOL.GS.Quests.Hibernia
 				HeroEpicGloves.IsPickable = true;
 				HeroEpicGloves.DPS_AF = 100;
 				HeroEpicGloves.SPD_ABS = 27;
-				HeroEpicGloves.Object_Type = 34;
+				HeroEpicGloves.Object_Type = 38;
 				HeroEpicGloves.Quality = 100;
 				HeroEpicGloves.MaxQuality = 100;
 				HeroEpicGloves.Weight = 22;
@@ -612,7 +612,7 @@ namespace DOL.GS.Quests.Hibernia
 				HeroEpicVest.IsPickable = true;
 				HeroEpicVest.DPS_AF = 100;
 				HeroEpicVest.SPD_ABS = 27;
-				HeroEpicVest.Object_Type = 34;
+				HeroEpicVest.Object_Type = 38;
 				HeroEpicVest.Quality = 100;
 				HeroEpicVest.MaxQuality = 100;
 				HeroEpicVest.Weight = 22;
@@ -653,7 +653,7 @@ namespace DOL.GS.Quests.Hibernia
 				HeroEpicLegs.IsPickable = true;
 				HeroEpicLegs.DPS_AF = 100;
 				HeroEpicLegs.SPD_ABS = 27;
-				HeroEpicLegs.Object_Type = 34;
+				HeroEpicLegs.Object_Type = 38;
 				HeroEpicLegs.Quality = 100;
 				HeroEpicLegs.MaxQuality = 100;
 				HeroEpicLegs.Weight = 22;
@@ -697,7 +697,7 @@ namespace DOL.GS.Quests.Hibernia
 				HeroEpicArms.IsPickable = true;
 				HeroEpicArms.DPS_AF = 100;
 				HeroEpicArms.SPD_ABS = 27;
-				HeroEpicArms.Object_Type = 34;
+				HeroEpicArms.Object_Type = 38;
 				HeroEpicArms.Quality = 100;
 				HeroEpicArms.MaxQuality = 100;
 				HeroEpicArms.Weight = 22;
@@ -740,7 +740,7 @@ namespace DOL.GS.Quests.Hibernia
 				WardenEpicBoots.IsPickable = true;
 				WardenEpicBoots.DPS_AF = 100;
 				WardenEpicBoots.SPD_ABS = 27;
-				WardenEpicBoots.Object_Type = 34;
+				WardenEpicBoots.Object_Type = 38;
 				WardenEpicBoots.Quality = 100;
 				WardenEpicBoots.MaxQuality = 100;
 				WardenEpicBoots.Weight = 22;
@@ -785,7 +785,7 @@ namespace DOL.GS.Quests.Hibernia
 				WardenEpicHelm.IsPickable = true;
 				WardenEpicHelm.DPS_AF = 100;
 				WardenEpicHelm.SPD_ABS = 27;
-				WardenEpicHelm.Object_Type = 34;
+				WardenEpicHelm.Object_Type = 38;
 				WardenEpicHelm.Quality = 100;
 				WardenEpicHelm.MaxQuality = 100;
 				WardenEpicHelm.Weight = 22;
@@ -830,7 +830,7 @@ namespace DOL.GS.Quests.Hibernia
 				WardenEpicGloves.IsPickable = true;
 				WardenEpicGloves.DPS_AF = 100;
 				WardenEpicGloves.SPD_ABS = 27;
-				WardenEpicGloves.Object_Type = 34;
+				WardenEpicGloves.Object_Type = 38;
 				WardenEpicGloves.Quality = 100;
 				WardenEpicGloves.MaxQuality = 100;
 				WardenEpicGloves.Weight = 22;
@@ -875,7 +875,7 @@ namespace DOL.GS.Quests.Hibernia
 				WardenEpicVest.IsPickable = true;
 				WardenEpicVest.DPS_AF = 100;
 				WardenEpicVest.SPD_ABS = 27;
-				WardenEpicVest.Object_Type = 34;
+				WardenEpicVest.Object_Type = 38;
 				WardenEpicVest.Quality = 100;
 				WardenEpicVest.MaxQuality = 100;
 				WardenEpicVest.Weight = 22;
@@ -919,7 +919,7 @@ namespace DOL.GS.Quests.Hibernia
 				WardenEpicLegs.IsPickable = true;
 				WardenEpicLegs.DPS_AF = 100;
 				WardenEpicLegs.SPD_ABS = 27;
-				WardenEpicLegs.Object_Type = 34;
+				WardenEpicLegs.Object_Type = 38;
 				WardenEpicLegs.Quality = 100;
 				WardenEpicLegs.MaxQuality = 100;
 				WardenEpicLegs.Weight = 22;
@@ -963,7 +963,7 @@ namespace DOL.GS.Quests.Hibernia
 				WardenEpicArms.IsPickable = true;
 				WardenEpicArms.DPS_AF = 100;
 				WardenEpicArms.SPD_ABS = 27;
-				WardenEpicArms.Object_Type = 34;
+				WardenEpicArms.Object_Type = 38;
 				WardenEpicArms.Quality = 100;
 				WardenEpicArms.MaxQuality = 100;
 				WardenEpicArms.Weight = 22;
@@ -1006,7 +1006,7 @@ namespace DOL.GS.Quests.Hibernia
 				EldritchEpicBoots.IsPickable = true;
 				EldritchEpicBoots.DPS_AF = 50;
 				EldritchEpicBoots.SPD_ABS = 0;
-				EldritchEpicBoots.Object_Type = 34;
+				EldritchEpicBoots.Object_Type = 32;
 				EldritchEpicBoots.Quality = 100;
 				EldritchEpicBoots.MaxQuality = 100;
 				EldritchEpicBoots.Weight = 22;
@@ -1051,7 +1051,7 @@ namespace DOL.GS.Quests.Hibernia
 				EldritchEpicHelm.IsPickable = true;
 				EldritchEpicHelm.DPS_AF = 50;
 				EldritchEpicHelm.SPD_ABS = 0;
-				EldritchEpicHelm.Object_Type = 34;
+				EldritchEpicHelm.Object_Type = 32;
 				EldritchEpicHelm.Quality = 100;
 				EldritchEpicHelm.MaxQuality = 100;
 				EldritchEpicHelm.Weight = 22;
@@ -1096,7 +1096,7 @@ namespace DOL.GS.Quests.Hibernia
 				EldritchEpicGloves.IsPickable = true;
 				EldritchEpicGloves.DPS_AF = 50;
 				EldritchEpicGloves.SPD_ABS = 0;
-				EldritchEpicGloves.Object_Type = 34;
+				EldritchEpicGloves.Object_Type = 32;
 				EldritchEpicGloves.Quality = 100;
 				EldritchEpicGloves.MaxQuality = 100;
 				EldritchEpicGloves.Weight = 22;
@@ -1135,12 +1135,12 @@ namespace DOL.GS.Quests.Hibernia
 				EldritchEpicVest.Name = "Mistwoven Vest";
 				EldritchEpicVest.Level = 50;
 				EldritchEpicVest.Item_Type = 25;
-				EldritchEpicVest.Model = 378;
+				EldritchEpicVest.Model = 744;
 				EldritchEpicVest.IsDropable = true;
 				EldritchEpicVest.IsPickable = true;
 				EldritchEpicVest.DPS_AF = 50;
 				EldritchEpicVest.SPD_ABS = 0;
-				EldritchEpicVest.Object_Type = 34;
+				EldritchEpicVest.Object_Type = 32;
 				EldritchEpicVest.Quality = 100;
 				EldritchEpicVest.MaxQuality = 100;
 				EldritchEpicVest.Weight = 22;
@@ -1181,7 +1181,7 @@ namespace DOL.GS.Quests.Hibernia
 				EldritchEpicLegs.IsPickable = true;
 				EldritchEpicLegs.DPS_AF = 50;
 				EldritchEpicLegs.SPD_ABS = 0;
-				EldritchEpicLegs.Object_Type = 34;
+				EldritchEpicLegs.Object_Type = 32;
 				EldritchEpicLegs.Quality = 100;
 				EldritchEpicLegs.MaxQuality = 100;
 				EldritchEpicLegs.Weight = 22;
@@ -1225,7 +1225,7 @@ namespace DOL.GS.Quests.Hibernia
 				EldritchEpicArms.IsPickable = true;
 				EldritchEpicArms.DPS_AF = 50;
 				EldritchEpicArms.SPD_ABS = 0;
-				EldritchEpicArms.Object_Type = 34;
+				EldritchEpicArms.Object_Type = 32;
 				EldritchEpicArms.Quality = 100;
 				EldritchEpicArms.MaxQuality = 100;
 				EldritchEpicArms.Weight = 22;
@@ -1400,7 +1400,7 @@ namespace DOL.GS.Quests.Hibernia
 				//Check if we can add the quest!
 				if (!Ainrebh.GiveQuest(typeof (Focus_50), player, 1))
 					return;
-				player.Out.SendMessage("Kill Green Maw in Cursed Forest loc 42k, 35k!", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+				player.Out.SendMessage("Kill Green Maw in Cursed Forest loc 37k, 38k!", eChatType.CT_System, eChatLoc.CL_PopupWindow);
 			}
 		}
 
@@ -1418,9 +1418,9 @@ namespace DOL.GS.Quests.Hibernia
 				switch (Step)
 				{
 					case 1:
-						return "[Step #1] Seek out GreenMaw in Raumarik Loc 20k,51k kill it!";
+						return "[Step #1] Seek out GreenMaw in Cursed Forest Loc 37k,38k kill it!";
 					case 2:
-						return "[Step #2] Return to Ainrebh and give her Green Maw's Head!";
+						return "[Step #2] Return to Ainrebh and give her Green Maw's Key!";
 				}
 				return base.Description;
 			}
@@ -1439,7 +1439,7 @@ namespace DOL.GS.Quests.Hibernia
 
 				if (gArgs.Target.Name == GreenMaw.Name)
 				{
-					m_questPlayer.Out.SendMessage("You collect Green Maw's Head", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					m_questPlayer.Out.SendMessage("You collect Green Maw's Key", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					GiveItem(player, GreenMaw_key);
 					Step = 2;
 					return;
