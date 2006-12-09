@@ -1219,6 +1219,8 @@ namespace DOL.GS
 			m_faction = FactionMgr.GetFactionByID(npc.FactionID);
 			LoadEquipmentTemplateFromDatabase(npc.EquipmentTemplateID);
 
+			if (npc.RespawnInterval == -1)
+				npc.RespawnInterval = 0;
 			m_respawnInterval = npc.RespawnInterval * 1000;
 
 			IAggressiveBrain aggroBrain = Brain as IAggressiveBrain;
@@ -2507,7 +2509,7 @@ namespace DOL.GS
 		{
 			get
 			{
-				if (m_respawnInterval >= 0)
+				if (m_respawnInterval > 0)
 					return m_respawnInterval;
 
 				//Standard 5-8 mins
@@ -2885,17 +2887,21 @@ namespace DOL.GS
 									GameSpellEffect speffect = effect as GameSpellEffect;
 									if (speffect.Spell.SpellType == spell.SpellType)
 									{
-										already = true;
-										break;
+										if (speffect.Spell.EffectGroup == spell.EffectGroup)
+										{
+											already = true;
+											break;
+										}
 									}
 								}
 							}
 							if (already)
 								continue;
-
+							GameObject lastTarget = this.TargetObject;
 							this.TargetObject = this;
 							SpellLine spellline = SkillBase.GetSpellLine(GlobalSpellsLines.Mob_Spells);
 							this.CastSpell(spell, spellline);
+							this.TargetObject = lastTarget;
 							return;
 						}
 				}

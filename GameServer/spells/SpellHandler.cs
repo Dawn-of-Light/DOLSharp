@@ -384,7 +384,7 @@ namespace DOL.GS.Spells
 				//					return false;
 				//				}
 			}
-			else if (m_spell.Target != "Self" && m_spell.Target != "Group" && m_spell.Range > 0)
+			else if (m_spell.Target != "Self" && m_spell.Target != "Group" && m_spell.Target != "Pet" && m_spell.Range > 0)
 			{
 				//all spells that need a target
 
@@ -1554,13 +1554,6 @@ namespace DOL.GS.Spells
 			if (m_caster is GamePlayer)
 			{
 				((GamePlayer)m_caster).Out.SendMessage(message, type, eChatLoc.CL_SystemWindow);
-			}
-			if (m_caster is GameNPC)
-			{
-				if ((m_caster as GameNPC).Brain is IControlledBrain)
-				{
-					((m_caster as GameNPC).Brain as IControlledBrain).Owner.Out.SendMessage(message, type, eChatLoc.CL_SystemWindow);
-				}
 			}
 		}
 

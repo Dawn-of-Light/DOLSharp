@@ -81,9 +81,9 @@ namespace DOL.GS.Scripts
 								}
 							case "archer":
 								{
-									if (args.Length == 5)
+									if (args.Length > 3)
 										guard = new GuardStaticArcher();
-									guard = new GuardArcher();
+									else guard = new GuardArcher();
 									break;
 								}
 							case "healer":
@@ -98,7 +98,7 @@ namespace DOL.GS.Scripts
 								}
 							case "caster":
 								{
-									if (args.Length == 5)
+									if (args.Length > 3)
 										guard = new GuardStaticCaster();
 									else guard = new GuardCaster();
 									break;
@@ -130,9 +130,20 @@ namespace DOL.GS.Scripts
 							guard.Z = client.Player.Z;
 							guard.Heading = client.Player.Heading;
 							guard.Realm = (byte)guard.CurrentZone.GetRealm();
+							guard.SaveIntoDatabase();
+							foreach (AbstractArea area in guard.CurrentAreas)
+							{
+								if (area is KeepArea)
+								{
+									AbstractGameKeep keep = (area as KeepArea).Keep;
+									guard.Component = new GameKeepComponent();
+									guard.Component.Keep = keep;
+									guard.Component.Keep.Guards.Add(guard.InternalID, this);
+									break;
+								}
+							}
 							TemplateMgr.RefreshTemplate(guard);
 							guard.AddToWorld();
-							guard.SaveIntoDatabase();
 						}
 
 						DisplayMessage(client, "Guard added!", new object[] { });

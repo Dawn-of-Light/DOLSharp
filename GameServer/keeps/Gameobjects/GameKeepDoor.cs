@@ -220,6 +220,7 @@ namespace DOL.GS.Keeps
 		public GameKeepComponent Component
 		{
 			get { return m_component; }
+			set { m_component = value; }
 		}
 
 		private DBKeepPosition m_position;
@@ -431,7 +432,41 @@ namespace DOL.GS.Keeps
 		/// <param name="obj"></param>
 		public override void LoadFromDatabase(DataObject obj)
 		{
+			DBDoor door = obj as DBDoor;
+			if (door == null)
+				return;
+			base.LoadFromDatabase(obj);
 
+			Zone curZone = WorldMgr.GetZone((ushort)(door.InternalID / 1000000));
+			if (curZone == null) return;
+			this.CurrentRegion = curZone.ZoneRegion;
+			m_Name = door.Name;
+			m_Heading = (ushort)door.Heading;
+			m_X = door.X;
+			m_Y = door.Y;
+			m_Z = door.Z;
+			m_Level = 0;
+			m_Model = 0xFFFF;
+			m_doorID = door.InternalID;
+			m_state = eDoorState.Closed;
+
+			DoorMgr.Doors[m_doorID] = this;
+			this.AddToWorld();
+
+			foreach (AbstractArea area in this.CurrentAreas)
+			{
+				if (area is KeepArea)
+				{
+					AbstractGameKeep keep = (area as KeepArea).Keep;
+					Component = new GameKeepComponent();
+					Component.Keep = keep;
+					Component.Keep.Doors.Add(door.InternalID, this);
+					break;
+				}
+			}
+
+			m_health = MaxHealth;
+			StartHealthRegeneration();
 		}
 
 		public void LoadFromPosition(DBKeepPosition pos, GameKeepComponent component)

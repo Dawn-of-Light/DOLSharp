@@ -282,6 +282,19 @@ namespace DOL.GS
 			long val = item.Value * itemCount / packSize / 2;
 
 			if (!item.IsDropable) val = 0;
+			else if (val == 0)
+			{
+				int gold = 0, silver = 0, copper = 0;
+				gold = (short)(item.Level / 8);
+				if (gold == 0)
+					silver = (byte)(item.Level * 10 / 8);
+				if (silver == 0)
+					copper = (byte)(item.Level * 100 / 8);
+				if (copper < 1)
+					copper = 1;
+
+				val = Money.GetMoney(0, 0, gold, silver, copper);
+			}
 
 			if (!silent)
 			{

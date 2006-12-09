@@ -183,16 +183,10 @@ namespace DOL.GS.Scripts
 								return 0;
 							}
 
-							if (newRealm <= 0 || newRealm > 6)
+							if (newRealm < 0 || newRealm > 3)
 							{
-								client.Out.SendMessage(player.Name + "'s realm can only be set to numbers 1-6!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+								client.Out.SendMessage(player.Name + "'s realm can only be set to numbers 0-3!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 								return 0;
-							}
-
-							if (newRealm > 3 && newRealm < 7)
-							{
-								client.Out.SendMessage("You successfully changed " + player.Name + "'s realm to " + player.Realm + "!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-								player.Out.SendMessage(client.Player.Name + " has changed your realm to " + player.Realm + "!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 							}
 
 							player.Realm = newRealm;
