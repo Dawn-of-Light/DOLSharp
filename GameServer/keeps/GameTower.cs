@@ -27,6 +27,7 @@ namespace DOL.GS.Keeps
 	public class GameKeepTower : AbstractGameKeep
 	{
 		public GameKeepTower()
+			: base()
 		{
 		}
 

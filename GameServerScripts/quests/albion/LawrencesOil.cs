@@ -30,6 +30,7 @@
 
 using System;
 using System.Reflection;
+using DOL.GS.Scripts;
 using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
@@ -140,7 +141,7 @@ namespace DOL.GS.Quests.Albion
 				*/
 			if (npcs.Length == 0)
 			{
-				brotherLawrence = new GameNPC();
+				brotherLawrence = new GameHealer();
 				brotherLawrence.Model = 32;
 				brotherLawrence.Name = "Brother Lawrence";
 				if (log.IsWarnEnabled)
@@ -157,10 +158,10 @@ namespace DOL.GS.Quests.Albion
 
 				brotherLawrence.Size = 54;
 				brotherLawrence.Level = 29;
-				brotherLawrence.X = 559556;
-				brotherLawrence.Y = 513431;
-				brotherLawrence.Z = 2568;
-				brotherLawrence.Heading = 2082;
+				brotherLawrence.X = 560559;
+				brotherLawrence.Y = 511892;
+				brotherLawrence.Z = 2344;
+				brotherLawrence.Heading = 662;
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following

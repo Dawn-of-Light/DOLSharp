@@ -985,7 +985,6 @@ namespace DOL.GS
 				long lostExp = Experience;
 				long lastDeathExpLoss = TempProperties.getLongProperty(DEATH_EXP_LOSS_PROPERTY, 0);
 				TempProperties.removeProperty(DEATH_EXP_LOSS_PROPERTY);
-
 				GainExperience(-lastDeathExpLoss, 0, 0, false);
 				lostExp -= Experience;
 
@@ -1239,6 +1238,7 @@ namespace DOL.GS
 			{
 				GamePlayer player = (GamePlayer)m_actionSource;
 				long xp = m_gravestone.XPValue;
+				xp = (long)(xp / ServerProperties.Properties.XP_RATE);
 				m_gravestone.XPValue = 0;
 
 				if (xp > 0)
@@ -3095,12 +3095,12 @@ namespace DOL.GS
 				}
 				else
 					Notify(GamePlayerEvent.RLLevelUp, this);
-				if ((m_realmLevel >= 20 && m_realmLevel % 10 == 0) || m_realmLevel >= 60)
+				if (this.Client.Account.PrivLevel == 1 && (m_realmLevel >= 20 && m_realmLevel % 10 == 0) || m_realmLevel >= 60)
 				{
 					string message = string.Format("{0} reached realm rank {1:#L#} in {2}!", Name, m_realmLevel + 10, LastPositionUpdateZone.Description);
 					NewsMgr.CreateNews(message, this.Realm, eNewsType.RvRLocal, true);
 				}
-				if (m_realmPts >= 1000000 && m_realmPts - amount < 1000000)
+				if (this.Client.Account.PrivLevel == 1 && m_realmPts >= 1000000 && m_realmPts - amount < 1000000)
 				{
 					string message = string.Format("{0} has earned 1,000,000 realm points in {1}", Name, LastPositionUpdateZone.Description);
 					NewsMgr.CreateNews(message, this.Realm, eNewsType.RvRLocal, true);
@@ -7562,6 +7562,20 @@ namespace DOL.GS
 		#region X/Y/Z/Region/Realm/Position...
 
 		/// <summary>
+		/// Holds all areas this player is currently within
+		/// </summary>
+		private IList m_currentAreas;
+
+		/// <summary>
+		/// Holds all areas this player is currently within
+		/// </summary>
+		public override IList CurrentAreas
+		{
+			get { return m_currentAreas; }
+			set { m_currentAreas = value; }
+		}
+
+		/// <summary>
 		/// Property that saves last maximum Z value
 		/// </summary>
 		public const string MAX_LAST_Z = "max_last_z";
@@ -9874,7 +9888,7 @@ namespace DOL.GS
 					craftingSkills[(int)skill] = count + Convert.ToInt32(craftingSkills[(int)skill]);
 					Out.SendMessage("You gain skill in " + craftingSkill.Name + "! (" + craftingSkills[(int)skill] + ").", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 					int amount = GetCraftingSkillValue(skill);
-					if (amount >= 1000 && amount - count < 1000)
+					if (this.Client.Account.PrivLevel == 1 && amount >= 1000 && amount - count < 1000)
 					{
 						string message = string.Format("{0} reached 1000 skill in {1}", Name, craftingSkill.Name);
 						NewsMgr.CreateNews(message, Realm, eNewsType.PvE, true);
@@ -11210,6 +11224,7 @@ namespace DOL.GS
 			m_class = new DefaultCharacterClass();
 			m_playerGroupIndex = -1;
 			LoadFromDatabase(theChar);
+			m_currentAreas = new ArrayList(1);
 		}
 	}
 }
