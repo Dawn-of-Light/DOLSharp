@@ -1047,13 +1047,13 @@ namespace DOL.GS.Scripts
 				case "viewloot":
 					{
 						DataObject[] template = GameServer.Database.SelectObjects(typeof(DBLootTemplate), "TemplateName = '" + targetMob.Name + "'");
-						ArrayList info = new ArrayList();
+						string message = "[ " + targetMob.Name + "'s Loot Table ]/n";
 
 						foreach (DBLootTemplate loot in template)
 						{
-							info.Add(loot.ItemTemplate.Name + "(" + loot.ItemTemplate.Id_nb + ") Drop Chance: " + loot.Chance.ToString());
+							message += loot.ItemTemplate.Name + "(" + loot.ItemTemplate.Id_nb + ") Drop Chance: " + loot.Chance.ToString() + "\n";
 						}
-						client.Out.SendCustomTextWindow("[ " + targetMob.Name + "'s Loot Table ]", info);
+						client.Out.SendMessage(message, eChatType.CT_System, eChatLoc.CL_PopupWindow);
 					}
 					break;
 				case "copy":

@@ -41,7 +41,8 @@ namespace DOL.GS.Scripts
 		//"'/keep addcomponent <compx> <compy> <comphead> <skin> <height>' to add component to current keep",
 		"'/keep save' to save keep into DB",
 		"'/keep addteleporter' to create a teleporter stone",
-		"'/keep addbanner' to create a banner")]
+		"'/keep addbanner' to create a banner",
+		"'/keep realm <newrealm>'")]
 	public class KeepCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		protected string TEMP_KEEP_LAST = "TEMP_KEEP_LAST";
@@ -1941,6 +1942,32 @@ namespace DOL.GS.Scripts
 					{
 					
 					}break;*/
+				case "realm":
+					{
+						if (args.Length < 3)
+						{
+							DisplaySyntax(client);
+							return 1;
+						}
+						if (myKeep == null)
+						{
+							client.Out.SendMessage("You must create a keep first", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							return 1;
+						}
+						eRealm realm = eRealm.None;
+						try
+						{
+							realm = (eRealm)Convert.ToByte(args[2]);
+						}
+						catch
+						{
+							DisplaySyntax(client);
+							return 1;
+						}
+						myKeep.Reset(realm);
+						client.Out.SendMessage("You change the realm of current keep to " + GlobalConstants.RealmToName(realm), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						break;
+					}
 				case "save":
 					{
 						if (myKeep == null)

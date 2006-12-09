@@ -93,18 +93,18 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 			<End Info>
 			*/
-
+			//AbilityBonus[(int)((eProperty)updateResists[i])]
 			ArrayList info = new ArrayList();
 			info.Add("Resistances");
-			info.Add(string.Format(" Crush:   {0:+0;-0}%/\t{1:+0;-0}%", client.Player.GetModified(eProperty.Resist_Crush), client.Player.GetDamageResist(eProperty.Resist_Crush)));
-			info.Add(string.Format(" Slash:    {0:+0;-0}%/{1:+0;-0}%", client.Player.GetModified(eProperty.Resist_Slash), client.Player.GetDamageResist(eProperty.Resist_Slash)));
-			info.Add(string.Format(" Thrust:  {0:+0;-0}%/{1:+0;-0}%", client.Player.GetModified(eProperty.Resist_Thrust), client.Player.GetDamageResist(eProperty.Resist_Thrust)));
-			info.Add(string.Format(" Heat:      {0:+0;-0}%/{1:+0;-0}%", client.Player.GetModified(eProperty.Resist_Heat), client.Player.GetDamageResist(eProperty.Resist_Heat)));
-			info.Add(string.Format(" Cold:      {0:+0;-0}%/{1:+0;-0}%", client.Player.GetModified(eProperty.Resist_Cold), client.Player.GetDamageResist(eProperty.Resist_Cold)));
-			info.Add(string.Format(" Matter:  {0:+0;-0}%/{1:+0;-0}%", client.Player.GetModified(eProperty.Resist_Matter), client.Player.GetDamageResist(eProperty.Resist_Matter)));
-			info.Add(string.Format(" Body:     {0:+0;-0}%/{1:+0;-0}%", client.Player.GetModified(eProperty.Resist_Body), client.Player.GetDamageResist(eProperty.Resist_Body)));
-			info.Add(string.Format(" Spirit:    {0:+0;-0}%/{1:+0;-0}%", client.Player.GetModified(eProperty.Resist_Spirit), client.Player.GetDamageResist(eProperty.Resist_Spirit)));
-			info.Add(string.Format(" Energy: {0:+0;-0}%/{1:+0;-0}%", client.Player.GetModified(eProperty.Resist_Energy), client.Player.GetDamageResist(eProperty.Resist_Energy)));
+			info.Add(string.Format(" Crush:   {0:+0;-0}%/\t{1:+0;-0}%", client.Player.GetModified(eProperty.Resist_Crush) - client.Player.AbilityBonus[(int)eProperty.Resist_Crush], client.Player.AbilityBonus[(int)eProperty.Resist_Crush]));
+			info.Add(string.Format(" Slash:    {0:+0;-0}%/{1:+0;-0}%", client.Player.GetModified(eProperty.Resist_Slash) - client.Player.AbilityBonus[(int)eProperty.Resist_Slash], client.Player.AbilityBonus[(int)eProperty.Resist_Slash]));
+			info.Add(string.Format(" Thrust:  {0:+0;-0}%/{1:+0;-0}%", client.Player.GetModified(eProperty.Resist_Thrust) - client.Player.AbilityBonus[(int)eProperty.Resist_Thrust], client.Player.AbilityBonus[(int)eProperty.Resist_Thrust]));
+			info.Add(string.Format(" Heat:      {0:+0;-0}%/{1:+0;-0}%", client.Player.GetModified(eProperty.Resist_Heat) - client.Player.AbilityBonus[(int)eProperty.Resist_Heat], client.Player.AbilityBonus[(int)eProperty.Resist_Heat]));
+			info.Add(string.Format(" Cold:      {0:+0;-0}%/{1:+0;-0}%", client.Player.GetModified(eProperty.Resist_Cold) - client.Player.AbilityBonus[(int)eProperty.Resist_Cold], client.Player.AbilityBonus[(int)eProperty.Resist_Cold]));
+			info.Add(string.Format(" Matter:  {0:+0;-0}%/{1:+0;-0}%", client.Player.GetModified(eProperty.Resist_Matter) - client.Player.AbilityBonus[(int)eProperty.Resist_Matter], client.Player.AbilityBonus[(int)eProperty.Resist_Matter]));
+			info.Add(string.Format(" Body:     {0:+0;-0}%/{1:+0;-0}%", client.Player.GetModified(eProperty.Resist_Body) - client.Player.AbilityBonus[(int)eProperty.Resist_Body], client.Player.AbilityBonus[(int)eProperty.Resist_Body]));
+			info.Add(string.Format(" Spirit:    {0:+0;-0}%/{1:+0;-0}%", client.Player.GetModified(eProperty.Resist_Spirit) - client.Player.AbilityBonus[(int)eProperty.Resist_Spirit], client.Player.AbilityBonus[(int)eProperty.Resist_Spirit]));
+			info.Add(string.Format(" Energy: {0:+0;-0}%/{1:+0;-0}%", client.Player.GetModified(eProperty.Resist_Energy) - client.Player.AbilityBonus[(int)eProperty.Resist_Energy], client.Player.AbilityBonus[(int)eProperty.Resist_Energy]));
 			info.Add(" ");
 			info.Add("Special Item Bonuses");
 			GamePlayer player = client.Player;
