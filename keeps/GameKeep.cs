@@ -28,8 +28,10 @@ namespace DOL.GS.Keeps
 	public class GameKeep : AbstractGameKeep
 	{
 		public GameKeep()
+			: base()
 		{
 		}
+
 		/// <summary>
 		/// time to upgrade from one level to another
 		/// </summary>

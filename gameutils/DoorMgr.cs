@@ -49,8 +49,23 @@ namespace DOL.GS
 			{
 				if (m_doors[door.InternalID] == null)
 				{
-					GameDoor mydoor = new GameDoor();
-					mydoor.LoadFromDatabase(door);
+					bool loaded = false;
+					ushort zone = (ushort)(door.InternalID / 1000000);
+					foreach (AbstractArea area in WorldMgr.GetZone(zone).GetAreasOfSpot(door.X, door.Y, door.Z))
+					{
+						if (area is KeepArea)
+						{
+							GameKeepDoor mydoor = new GameKeepDoor();
+							mydoor.LoadFromDatabase(door);
+							loaded = true;
+							break;
+						}
+					}
+					if (!loaded)
+					{
+						GameDoor mydoor = new GameDoor();
+						mydoor.LoadFromDatabase(door);
+					}
 				}
 			}
 			return true;

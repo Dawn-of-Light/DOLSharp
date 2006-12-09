@@ -708,6 +708,24 @@ namespace DOL.AI.Brain
 				CheckSpellsByType("CureDisease");
 			//cure poison
 
+			//heal owner
+			if (this is IControlledBrain)
+			{
+				GamePlayer player = (this as IControlledBrain).Owner;
+				if (player.HealthPercent < 50)
+					CheckSpellsByType("Heal", player);
+
+				if (player.PlayerGroup != null)
+				{
+					foreach (GamePlayer gplayer in player.PlayerGroup.GetPlayersInTheGroup())
+					{
+						if (gplayer.HealthPercent < 50)
+							CheckSpellsByType("Heal", gplayer);
+
+					}
+				}
+			}
+
 			//heal group
 
 			//single bladeturn
@@ -769,6 +787,11 @@ namespace DOL.AI.Brain
 
 		private void CheckSpellsByType(string type)
 		{
+			CheckSpellsByType(type, Body);
+		}
+
+		private void CheckSpellsByType(string type, GameLiving target)
+		{
 			//if no spells exist, return
 			if (Body.Spells.Count == 0)
 				return;
@@ -804,30 +827,25 @@ namespace DOL.AI.Brain
 					continue;
 
 				//check if the effect is already active
-				if (LivingHasEffect(spell))
+				if (LivingHasEffect(target, spell))
 					continue;
 
 				//if the spell is friendly
 				if (spell.Target != "Enemy")
-					Body.TargetObject = Body;
+					Body.TargetObject = target;
 				if (spell.Target == "Enemy" && Body.TargetObject == Body)
 					Body.TargetObject = CalculateNextAttackTarget();
 
 				if (Body.IsMoving)
-					Body.StopMoving();
+					Body.StopFollow();
 
 				Body.CastSpell(spell, spellline);
 				break;
 			}
 		}
 
-		private bool LivingHasEffect(Spell spell)
+		private bool LivingHasEffect(GameLiving target, Spell spell)
 		{
-			GameLiving target = null;
-			if (spell.Target == "Enemy")
-				target = Body.TargetObject as GameLiving;
-			else target = Body;
-
 			if (target == null)
 				return true;
 
@@ -838,7 +856,10 @@ namespace DOL.AI.Brain
 					GameSpellEffect speffect = effect as GameSpellEffect;
 					if (speffect.Spell.SpellType == spell.SpellType)
 					{
-						return true;
+						if (speffect.Spell.EffectGroup == spell.EffectGroup)
+						{
+							return true;
+						}
 					}
 				}
 			}

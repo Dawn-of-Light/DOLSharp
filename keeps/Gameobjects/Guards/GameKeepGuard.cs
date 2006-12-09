@@ -41,6 +41,7 @@ namespace DOL.GS.Keeps
 		public GameKeepComponent Component
 		{
 			get { return m_component; }
+			set { m_component = value; }
 		}
 
 		private DBKeepPosition m_position;
@@ -212,17 +213,7 @@ namespace DOL.GS.Keeps
 				return;
 
 			GamePlayer player = guard.TargetObject as GamePlayer;
-			if (guard is GuardLord && guard.Component != null && guard.Component.Keep != null)
-			{
-				if (!guard.Component.IsAlive)
-					return;
-				foreach (GameKeepDoor door in guard.Component.Keep.Doors.Values)
-				{
-					if (!door.IsAttackableDoor) continue;
-					if (!door.IsAlive)
-						return;
-				}
-			}
+
 			player.Out.SendCheckLOS(guard, player, new CheckLOSResponse(guard.GuardStopAttackCheckLOS));
 		}
 
@@ -247,24 +238,6 @@ namespace DOL.GS.Keeps
 			//we dont send LOS checks for people we cant attack
 			if (!GameServer.ServerRules.IsAllowedToAttack(this, target, true))
 				return;
-
-			if (this is GuardLord && this.Component != null && this.Component.Keep != null)
-			{
-				if (!this.Component.IsAlive)
-				{
-					base.StartAttack(attackTarget);
-					return;
-				}
-				foreach (GameKeepDoor door in this.Component.Keep.Doors.Values)
-				{
-					if (!door.IsAttackableDoor) continue;
-					if (!door.IsAlive)
-					{
-						base.StartAttack(attackTarget);
-						return;
-					}
-				}
-			}
 
 			//Prevent spam for LOS checks multiple times..
 			GameObject lastTarget = (GameObject)this.TempProperties.getObjectProperty(Last_LOS_Target_Property, null);
@@ -594,7 +567,31 @@ namespace DOL.GS.Keeps
 		public override void LoadFromDatabase(DataObject mobobject)
 		{
 			base.LoadFromDatabase(mobobject);
+			foreach (AbstractArea area in this.CurrentAreas)
+			{
+				if (area is KeepArea)
+				{
+					AbstractGameKeep keep = (area as KeepArea).Keep;
+					Component = new GameKeepComponent();
+					Component.Keep = keep;
+					Component.Keep.Guards.Add(mobobject.ObjectId, this);
+					break;
+				}
+			}
 			TemplateMgr.RefreshTemplate(this);
+		}
+
+		public override void DeleteFromDatabase()
+		{
+			foreach (AbstractArea area in this.CurrentAreas)
+			{
+				if (area is KeepArea)
+				{
+					Component.Keep.Guards.Remove(this.InternalID);
+					break;
+				}
+			}
+			base.DeleteFromDatabase();
 		}
 
 		/// <summary>

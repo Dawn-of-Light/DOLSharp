@@ -619,13 +619,13 @@ namespace DOL
 					log.Info("GuildMgr initialized: true");
 
 				//---------------------------------------------------------------
-				//Load the door manager
-				if (!InitComponent(DoorMgr.Init(), "Door Manager"))
+				//Load the keep manager
+				if (!InitComponent(KeepMgr.Load(), "Keep Manager"))
 					return false;
 
 				//---------------------------------------------------------------
-				//Load the keep manager
-				if (!InitComponent(KeepMgr.Load(), "Keep Manager"))
+				//Load the door manager
+				if (!InitComponent(DoorMgr.Init(), "Door Manager"))
 					return false;
 
 				//---------------------------------------------------------------

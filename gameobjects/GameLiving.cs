@@ -2445,7 +2445,7 @@ namespace DOL.GS
 					int model = (weapon == null ? 0 : weapon.Model);
 					foreach (GamePlayer p in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 					{
-						p.Out.SendCombatAnimation(this, null, (ushort)model, 0x00, 0x01F4, attackSpeed, 0x80, 0x00);
+						p.Out.SendCombatAnimation(this, null, (ushort)model, 0x00, p.Out.BowPrepare, attackSpeed, 0x80, 0x00);
 					}
 
 					// From : http://www.camelotherald.com/more/888.shtml
@@ -4368,11 +4368,6 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		private int m_movementStartTick;
 
 		/// <summary>
-		/// Holds all areas this player is currently within
-		/// </summary>
-		private IList m_currentAreas;
-
-		/// <summary>
 		/// The X addition per coordinate of forward movement
 		/// </summary>
 		protected float m_xAddition;
@@ -4533,15 +4528,6 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 				CancelAllConcentrationEffects();
 			}
 			return base.MoveTo(regionID, x, y, z, heading);
-		}
-
-		/// <summary>
-		/// Holds all areas this player is currently within
-		/// </summary>
-		public IList CurrentAreas
-		{
-			get { return m_currentAreas; }
-			set { m_currentAreas = value; }
 		}
 
 		/// <summary>
@@ -5112,8 +5098,6 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 			m_mana = 1;
 			m_endurance = 1;
 			m_maxEndurance = 1;
-
-			m_currentAreas = new ArrayList(1);
 		}
 	}
 }

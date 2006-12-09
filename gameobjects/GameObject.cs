@@ -363,6 +363,15 @@ namespace DOL.GS
 			}
 		}
 
+		/// <summary>
+		/// Holds all areas this player is currently within
+		/// </summary>
+		public virtual IList CurrentAreas
+		{
+			get { return CurrentZone.GetAreasOfSpot(this); }
+			set { }
+		}
+
 		#endregion
 
 		#region Level/Name/Model/GetName/GetPronoun/GetExamineMessage

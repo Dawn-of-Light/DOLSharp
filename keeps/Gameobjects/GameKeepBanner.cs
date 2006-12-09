@@ -58,6 +58,7 @@ namespace DOL.GS.Keeps
 		public GameKeepComponent Component
 		{
 			get { return m_component; }
+			set { m_component = value; }
 		}
 
 		private DBKeepPosition m_position;
@@ -69,7 +70,17 @@ namespace DOL.GS.Keeps
 
 		public override void LoadFromDatabase(DataObject obj)
 		{
-			
+			base.LoadFromDatabase(obj);
+			foreach (AbstractArea area in this.CurrentAreas)
+			{
+				if (area is KeepArea)
+				{
+					AbstractGameKeep keep = (area as KeepArea).Keep;
+					Component = new GameKeepComponent();
+					Component.Keep = keep;
+					Component.Keep.Banners.Add(obj.ObjectId, this);
+				}
+			}
 		}
 
 		public void LoadFromPosition(DBKeepPosition pos, GameKeepComponent component)

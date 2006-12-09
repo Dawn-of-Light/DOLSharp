@@ -36,7 +36,7 @@ namespace DOL.GS.Keeps
 		{
 			string message = string.Format("The forces of {0} have captured {1}!", GlobalConstants.RealmToName((eRealm)keep.Realm), keep.Name);
 			BroadcastMessage(message, eRealm.None);
-			NewsMgr.CreateNews(message, 0, eNewsType.RvRGlobal, false);
+			NewsMgr.CreateNews(message, keep.Realm, eNewsType.RvRGlobal, false);
 		}
 
 		/// <summary>

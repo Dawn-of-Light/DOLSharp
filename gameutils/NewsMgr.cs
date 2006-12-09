@@ -43,7 +43,12 @@ namespace DOL.GS
 			for (int type = 0; type <= 2; type++)
 			{
 				int index = 0;
-				DBNews[] newsList = (DBNews[])GameServer.Database.SelectObjects(typeof(DBNews), "`Type` = '" + type + "' AND (`Realm` = '0' OR `Realm` = '" + client.Player.Realm + "') ORDER BY `CreationDate` DESC LIMIT 5");
+				string realm = "";
+				//we can see all captures
+				if (type > 0)
+					realm = " AND (`Realm` = '0' OR `Realm` = '" + client.Player.Realm + "')";
+
+				DBNews[] newsList = (DBNews[])GameServer.Database.SelectObjects(typeof(DBNews), "`Type` = '" + type + "'" + realm + " ORDER BY `CreationDate` DESC LIMIT 5");
 
 				foreach (DBNews news in newsList)
 				{
