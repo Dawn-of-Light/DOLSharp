@@ -138,7 +138,7 @@ namespace DOL.GS.Scripts
 									AbstractGameKeep keep = (area as KeepArea).Keep;
 									guard.Component = new GameKeepComponent();
 									guard.Component.Keep = keep;
-									guard.Component.Keep.Guards.Add(guard.InternalID, this);
+									guard.Component.Keep.Guards.Add(guard.InternalID, guard);
 									break;
 								}
 							}

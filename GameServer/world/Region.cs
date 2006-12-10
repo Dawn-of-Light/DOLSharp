@@ -599,17 +599,17 @@ namespace DOL.GS
 									break;
 							}
 							if (myItem == null)
-								myItem = new GameStaticItem(item);
+								myItem = new GameStaticItem();
 						}
 					}
 					else
 					{
-						myItem = new GameStaticItem(item);
+						myItem = new GameStaticItem();
 					}
 
 					if (myItem != null)
 					{
-						myItem.CopyFrom(item);
+						myItem.LoadFromDatabase(item);
 						myItem.AddToWorld();
 						//						if (!myItem.AddToWorld())
 						//							log.ErrorFormat("Failed to add the item to the world: {0}", myItem.ToString());

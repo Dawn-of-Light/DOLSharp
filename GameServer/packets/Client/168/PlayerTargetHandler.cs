@@ -117,8 +117,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 					}
 
 					player.Out.SendObjectUpdate(myTarget);
-					if (myTarget is GameKeepDoor)
-						player.Out.SendDoorState(myTarget as GameKeepDoor);
 				}
 
 				if (player.PrayState)
