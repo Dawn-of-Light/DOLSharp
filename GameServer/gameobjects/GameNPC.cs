@@ -2188,6 +2188,11 @@ namespace DOL.GS
 		/// <param name="attackTarget">The object to attack</param>
 		public override void StartAttack(GameObject attackTarget)
 		{
+			if (this.Brain is IControlledBrain)
+			{
+				if ((this.Brain as IControlledBrain).AggressionState == eAggressionState.Passive)
+					return;
+			}
 			TargetObject = attackTarget;
 			m_lastAttackTick = m_CurrentRegion.Time;
 			if (m_attackers.Count == 0 && this.Spells.Count > 0 && this.CurrentRegion.Time - LastAttackedByEnemyTick > 10 * 1000)

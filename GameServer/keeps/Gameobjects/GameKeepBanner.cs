@@ -23,6 +23,7 @@ namespace DOL.GS.Keeps
 {
 	public class GameKeepBanner : GameStaticItem , IKeepItem
 	{
+
 		/// <summary>
 		/// Albion unclaimed banner model
 		/// </summary>
@@ -79,6 +80,10 @@ namespace DOL.GS.Keeps
 					Component = new GameKeepComponent();
 					Component.Keep = keep;
 					Component.Keep.Banners.Add(obj.ObjectId, this);
+					if (Component.Keep.Guild != null)
+						ChangeGuild();
+					else ChangeRealm();
+					break;
 				}
 			}
 		}
@@ -90,9 +95,9 @@ namespace DOL.GS.Keeps
 
 			PositionMgr.LoadKeepItemPosition(pos, this);
 			component.Keep.Banners[m_templateID] = this;
-			ChangeRealm();
 			if (component.Keep.Guild != null)
 				ChangeGuild();
+			else ChangeRealm();
 			this.AddToWorld();
 		}
 
@@ -100,14 +105,6 @@ namespace DOL.GS.Keeps
 		{
 			PositionMgr.LoadKeepItemPosition(position, this);
 			this.MoveTo(this.CurrentRegionID, this.X, this.Y, this.Z, this.Heading);
-		}
-
-		/// <summary>
-		/// save the banner to DB
-		/// </summary>
-		public override void SaveIntoDatabase()
-		{
-
 		}
 
 		public void ChangeRealm()

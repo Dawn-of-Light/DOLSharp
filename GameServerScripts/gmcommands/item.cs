@@ -61,7 +61,8 @@ namespace DOL.GS.Scripts
 		"'/item spell <Charges> <MaxCharges> <SpellID> [slot #]' - change item spell charges",
 		"'/item proc <SpellID> [slot #]' - change item proc",
 		"'/item realm <num> [slot #]' - change items realm",
-		"'/item savetemplate <TemplateID> [slot #]' - create a new template")]
+		"'/item savetemplate <TemplateID> [slot #]' - create a new template",
+		"'/item templateid <TemplateID> [slot #] - change an items template ID'")]
 	public class ItemCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		public int OnCommand(GameClient client, string[] args)
@@ -1372,6 +1373,41 @@ namespace DOL.GS.Scripts
 							catch
 							{
 								client.Out.SendMessage("'/item realm <num> <slot #>' to change items realm", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							}
+
+							break;
+						}
+					case "templateid":
+						{
+							int slot = (int)eInventorySlot.LastBackpack;
+
+							if (args.Length >= 4)
+							{
+								try
+								{
+									slot = Convert.ToInt32(args[3]);
+								}
+								catch
+								{
+									slot = (int)eInventorySlot.LastBackpack;
+								}
+							}
+
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)slot);
+
+							if (item == null)
+							{
+								client.Out.SendMessage("No item in slot " + slot + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return 0;
+							}
+
+							try
+							{
+								item.Id_nb = args[2];
+							}
+							catch
+							{
+								client.Out.SendMessage("'/item templateid <TemplateID> <slot #>' to change items template ID", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							}
 
 							break;

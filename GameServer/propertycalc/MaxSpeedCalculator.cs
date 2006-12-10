@@ -47,7 +47,6 @@ namespace DOL.GS.PropertyCalc
 			if (living.IsMezzed || living.IsStunned) return 0;
 
 			double speed = living.BuffBonusMultCategory1.Get((int)property);
-			speed += living.AbilityBonus[(int)property];
 
 			if (living is GamePlayer)
 			{
@@ -119,6 +118,8 @@ namespace DOL.GS.PropertyCalc
 
 			if (speed < 0)
 				return 0;
+
+			speed += living.AbilityBonus[(int)property];
 			return (int)speed;
 		}
 	}
