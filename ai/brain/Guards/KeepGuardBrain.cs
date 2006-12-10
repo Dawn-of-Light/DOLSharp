@@ -17,7 +17,7 @@ namespace DOL.AI.Brain
 			: base()
 		{
 			AggroLevel = 60;
-			AggroRange = 2000;
+			AggroRange = 1500;
 		}
 
 		/// <summary>

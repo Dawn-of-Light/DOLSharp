@@ -342,8 +342,7 @@ namespace DOL.AI.Brain
 			{
 				if (!Body.AttackState || target != Body.TargetObject)
 				{
-					if (!Body.StartSpellAttack(target))
-						Body.StartAttack(target);
+					Body.StartAttack(target);
 				}
 			}
 			else

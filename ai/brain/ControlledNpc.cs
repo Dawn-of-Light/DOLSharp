@@ -331,9 +331,9 @@ namespace DOL.AI.Brain
 				return;
 			GameLiving target = CalculateNextAttackTarget();
 
-			if (target!=null) 
+			if (target != null)
 			{
-				if (!Body.AttackState || target!=Body.TargetObject) 
+				if (!Body.AttackState || target != Body.TargetObject)
 				{
 					if (!Body.StartSpellAttack(target))
 						Body.StartAttack(target);

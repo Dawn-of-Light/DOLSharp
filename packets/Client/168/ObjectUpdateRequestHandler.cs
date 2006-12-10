@@ -41,6 +41,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			foreach(IDoor door in DoorMgr.getDoorsCloseToSpot(client.Player.CurrentRegionID,client.Player,WorldMgr.OBJ_UPDATE_DISTANCE))
 			{
 				client.Out.SendObjectCreate(door as GameObject);
+				client.Out.SendDoorState(door);
 				client.Out.SendObjectUpdate(door as GameObject);
 			}
 			
