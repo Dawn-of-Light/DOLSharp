@@ -801,7 +801,6 @@ namespace DOL.GS
 			m_propertyTypes[(int)eProperty.Skill_DeathSight] = ePropertyType.Skill | ePropertyType.SkillMagical;
 			m_propertyTypes[(int)eProperty.Skill_Earth] = ePropertyType.Skill | ePropertyType.SkillMagical;
 			m_propertyTypes[(int)eProperty.Skill_Enhancement] = ePropertyType.Skill | ePropertyType.SkillMagical;
-			m_propertyTypes[(int)eProperty.Skill_Envenom] = ePropertyType.Skill | ePropertyType.SkillMagical;
 			m_propertyTypes[(int)eProperty.Skill_Fire] = ePropertyType.Skill | ePropertyType.SkillMagical;
 			m_propertyTypes[(int)eProperty.Skill_Cold] = ePropertyType.Skill | ePropertyType.SkillMagical;
 			m_propertyTypes[(int)eProperty.Skill_Instruments] = ePropertyType.Skill | ePropertyType.SkillMagical;
@@ -868,6 +867,7 @@ namespace DOL.GS
 			m_propertyTypes[(int)eProperty.Skill_Stealth] = ePropertyType.Skill;
 			m_propertyTypes[(int)eProperty.Skill_Cross_Bows] = ePropertyType.Skill;
 			m_propertyTypes[(int)eProperty.Skill_ShortBow] = ePropertyType.Skill;
+			m_propertyTypes[(int)eProperty.Skill_Envenom] = ePropertyType.Skill;
 		}
 
 		#endregion

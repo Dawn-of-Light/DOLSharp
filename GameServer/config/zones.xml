@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-	<Zone>
+	<Zone0>
 		<description>Camelot Hills</description>
 		<width>8</width>
 		<zoneID>0</zoneID>
@@ -8,8 +8,8 @@
 		<offsety>59</offsety>
 		<offsetx>67</offsetx>
 		<regionID>1</regionID>
-	</Zone>
-	<Zone>
+	</Zone0>
+	<Zone1>
 		<description>Salisbury Plains</description>
 		<width>8</width>
 		<zoneID>1</zoneID>
@@ -17,8 +17,8 @@
 		<offsety>67</offsety>
 		<offsetx>67</offsetx>
 		<regionID>1</regionID>
-	</Zone>
-	<Zone>
+	</Zone1>
+	<Zone2>
 		<description>Black Mtns. South</description>
 		<width>8</width>
 		<zoneID>2</zoneID>
@@ -26,8 +26,8 @@
 		<offsety>53</offsety>
 		<offsetx>59</offsetx>
 		<regionID>1</regionID>
-	</Zone>
-	<Zone>
+	</Zone2>
+	<Zone3>
 		<description>Black Mtns. North</description>
 		<width>8</width>
 		<zoneID>3</zoneID>
@@ -35,8 +35,8 @@
 		<offsety>45</offsety>
 		<offsetx>59</offsetx>
 		<regionID>1</regionID>
-	</Zone>
-	<Zone>
+	</Zone3>
+	<Zone4>
 		<description>Dartmoor</description>
 		<width>8</width>
 		<zoneID>4</zoneID>
@@ -44,8 +44,8 @@
 		<offsety>85</offsety>
 		<offsetx>43</offsetx>
 		<regionID>1</regionID>
-	</Zone>
-	<Zone>
+	</Zone4>
+	<Zone6>
 		<description>Cornwall</description>
 		<width>8</width>
 		<zoneID>6</zoneID>
@@ -53,8 +53,8 @@
 		<offsety>77</offsety>
 		<offsetx>43</offsetx>
 		<regionID>1</regionID>
-	</Zone>
-	<Zone>
+	</Zone6>
+	<Zone7>
 		<description>Llyn Barfog</description>
 		<width>8</width>
 		<zoneID>7</zoneID>
@@ -62,8 +62,8 @@
 		<offsety>45</offsety>
 		<offsetx>51</offsetx>
 		<regionID>1</regionID>
-	</Zone>
-	<Zone>
+	</Zone7>
+	<Zone8>
 		<description>Campacorentin Forest</description>
 		<width>8</width>
 		<zoneID>8</zoneID>
@@ -71,8 +71,8 @@
 		<offsety>71</offsety>
 		<offsetx>59</offsetx>
 		<regionID>1</regionID>
-	</Zone>
-	<Zone>
+	</Zone8>
+	<Zone9>
 		<description>Avalon Marsh</description>
 		<width>8</width>
 		<zoneID>9</zoneID>
@@ -80,8 +80,8 @@
 		<offsety>75</offsety>
 		<offsetx>51</offsetx>
 		<regionID>1</regionID>
-	</Zone>
-	<Zone>
+	</Zone9>
+	<Zone10>
 		<description>Lyonesse</description>
 		<width>8</width>
 		<zoneID>10</zoneID>
@@ -89,8 +89,8 @@
 		<offsety>77</offsety>
 		<offsetx>35</offsetx>
 		<regionID>1</regionID>
-	</Zone>
-	<Zone>
+	</Zone10>
+	<Zone11>
 		<description>Forest Sauvage</description>
 		<width>8</width>
 		<zoneID>11</zoneID>
@@ -98,8 +98,8 @@
 		<offsety>51</offsety>
 		<offsetx>69</offsetx>
 		<regionID>1</regionID>
-	</Zone>
-	<Zone>
+	</Zone11>
+	<Zone12>
 		<description>Snowdonia</description>
 		<width>8</width>
 		<zoneID>12</zoneID>
@@ -107,8 +107,8 @@
 		<offsety>37</offsety>
 		<offsetx>61</offsetx>
 		<regionID>1</regionID>
-	</Zone>
-	<Zone>
+	</Zone12>
+	<Zone13>
 		<description>Caerwent</description>
 		<width>8</width>
 		<zoneID>13</zoneID>
@@ -116,8 +116,8 @@
 		<offsety>64</offsety>
 		<offsetx>64</offsetx>
 		<regionID>2</regionID>
-	</Zone>
-	<Zone>
+	</Zone13>
+	<Zone14>
 		<description>Pennine Mountains</description>
 		<width>8</width>
 		<zoneID>14</zoneID>
@@ -125,8 +125,8 @@
 		<offsety>43</offsety>
 		<offsetx>69</offsetx>
 		<regionID>1</regionID>
-	</Zone>
-	<Zone>
+	</Zone14>
+	<Zone245>
 		<description>Labyrinth</description>
 		<width>8</width>
 		<zoneID>245</zoneID>
@@ -134,8 +134,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>245</regionID>
-	</Zone>
-	<Zone>
+	</Zone245>
+	<Zone15>
 		<description>Hadrian's Wall</description>
 		<width>8</width>
 		<zoneID>15</zoneID>
@@ -143,8 +143,8 @@
 		<offsety>35</offsety>
 		<offsetx>73</offsetx>
 		<regionID>1</regionID>
-	</Zone>
-	<Zone>
+	</Zone15>
+	<Zone16>
 		<description>Old Sarum</description>
 		<width>8</width>
 		<zoneID>16</zoneID>
@@ -152,8 +152,8 @@
 		<offsety>72</offsety>
 		<offsetx>64</offsetx>
 		<regionID>2</regionID>
-	</Zone>
-	<Zone>
+	</Zone16>
+	<Zone17>
 		<description>Rilan</description>
 		<width>8</width>
 		<zoneID>17</zoneID>
@@ -161,8 +161,8 @@
 		<offsety>56</offsety>
 		<offsetx>64</offsetx>
 		<regionID>2</regionID>
-	</Zone>
-	<Zone>
+	</Zone17>
+	<Zone18>
 		<description>Dalton</description>
 		<width>8</width>
 		<zoneID>18</zoneID>
@@ -170,8 +170,8 @@
 		<offsety>64</offsety>
 		<offsetx>56</offsetx>
 		<regionID>2</regionID>
-	</Zone>
-	<Zone>
+	</Zone18>
+	<Zone19>
 		<description>Stonehenge Barrows</description>
 		<width>8</width>
 		<zoneID>19</zoneID>
@@ -179,8 +179,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>20</regionID>
-	</Zone>
-	<Zone>
+	</Zone19>
+	<Zone20>
 		<description>Brisworthy</description>
 		<width>8</width>
 		<zoneID>20</zoneID>
@@ -188,8 +188,8 @@
 		<offsety>56</offsety>
 		<offsetx>56</offsetx>
 		<regionID>2</regionID>
-	</Zone>
-	<Zone>
+	</Zone20>
+	<Zone21>
 		<description>Tomb of Mithra</description>
 		<width>8</width>
 		<zoneID>21</zoneID>
@@ -197,8 +197,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>21</regionID>
-	</Zone>
-	<Zone>
+	</Zone21>
+	<Zone22>
 		<description>Keltoi Fogou</description>
 		<width>8</width>
 		<zoneID>22</zoneID>
@@ -206,8 +206,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>22</regionID>
-	</Zone>
-	<Zone>
+	</Zone22>
+	<Zone23>
 		<description>Catacombs of Cardova</description>
 		<width>8</width>
 		<zoneID>23</zoneID>
@@ -215,8 +215,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>23</regionID>
-	</Zone>
-	<Zone>
+	</Zone23>
+	<Zone24>
 		<description>Tepok's Mine</description>
 		<width>8</width>
 		<zoneID>24</zoneID>
@@ -224,8 +224,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>24</regionID>
-	</Zone>
-	<Zone>
+	</Zone24>
+	<Zone26>
 		<description>City of Camelot</description>
 		<width>8</width>
 		<zoneID>26</zoneID>
@@ -233,8 +233,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>10</regionID>
-	</Zone>
-	<Zone>
+	</Zone26>
+	<Zone27>
 		<description>Constantine's Sound</description>
 		<width>8</width>
 		<zoneID>27</zoneID>
@@ -242,8 +242,8 @@
 		<offsety>8</offsety>
 		<offsetx>8</offsetx>
 		<regionID>27</regionID>
-	</Zone>
-	<Zone>
+	</Zone27>
+	<Zone28>
 		<description>Grenlock's Sound</description>
 		<width>8</width>
 		<zoneID>28</zoneID>
@@ -251,8 +251,8 @@
 		<offsety>24</offsety>
 		<offsetx>24</offsetx>
 		<regionID>27</regionID>
-	</Zone>
-	<Zone>
+	</Zone28>
+	<Zone29>
 		<description>Lamfhota's Sound</description>
 		<width>8</width>
 		<zoneID>29</zoneID>
@@ -260,8 +260,8 @@
 		<offsety>40</offsety>
 		<offsetx>40</offsetx>
 		<regionID>27</regionID>
-	</Zone>
-	<Zone>
+	</Zone29>
+	<Zone30>
 		<description>Oceanus Hesperos</description>
 		<width>8</width>
 		<zoneID>30</zoneID>
@@ -269,8 +269,8 @@
 		<offsety>64</offsety>
 		<offsetx>32</offsetx>
 		<regionID>30</regionID>
-	</Zone>
-	<Zone>
+	</Zone30>
+	<Zone31>
 		<description>Mesothalassa</description>
 		<width>8</width>
 		<zoneID>31</zoneID>
@@ -278,8 +278,8 @@
 		<offsety>64</offsety>
 		<offsetx>40</offsetx>
 		<regionID>30</regionID>
-	</Zone>
-	<Zone>
+	</Zone31>
+	<Zone32>
 		<description>Oceanus Boreal</description>
 		<width>8</width>
 		<zoneID>32</zoneID>
@@ -287,8 +287,8 @@
 		<offsety>56</offsety>
 		<offsetx>40</offsetx>
 		<regionID>30</regionID>
-	</Zone>
-	<Zone>
+	</Zone32>
+	<Zone33>
 		<description>Oceanus Notos</description>
 		<width>8</width>
 		<zoneID>33</zoneID>
@@ -296,8 +296,8 @@
 		<offsety>72</offsety>
 		<offsetx>40</offsetx>
 		<regionID>30</regionID>
-	</Zone>
-	<Zone>
+	</Zone33>
+	<Zone34>
 		<description>Oceanus Anatole</description>
 		<width>8</width>
 		<zoneID>34</zoneID>
@@ -305,8 +305,8 @@
 		<offsety>64</offsety>
 		<offsetx>48</offsetx>
 		<regionID>30</regionID>
-	</Zone>
-	<Zone>
+	</Zone34>
+	<Zone35>
 		<description>Cetus' Pit</description>
 		<width>8</width>
 		<zoneID>35</zoneID>
@@ -314,8 +314,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>35</regionID>
-	</Zone>
-	<Zone>
+	</Zone35>
+	<Zone36>
 		<description>Sobekite Eternal</description>
 		<width>8</width>
 		<zoneID>36</zoneID>
@@ -323,8 +323,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>36</regionID>
-	</Zone>
-	<Zone>
+	</Zone36>
+	<Zone37>
 		<description>Temple of Twilight</description>
 		<width>8</width>
 		<zoneID>37</zoneID>
@@ -332,8 +332,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>37</regionID>
-	</Zone>
-	<Zone>
+	</Zone37>
+	<Zone38>
 		<description>Stygian Delta</description>
 		<width>8</width>
 		<zoneID>38</zoneID>
@@ -341,8 +341,8 @@
 		<offsety>48</offsety>
 		<offsetx>36</offsetx>
 		<regionID>30</regionID>
-	</Zone>
-	<Zone>
+	</Zone38>
+	<Zone39>
 		<description>Land of Atum</description>
 		<width>8</width>
 		<zoneID>39</zoneID>
@@ -350,8 +350,8 @@
 		<offsety>48</offsety>
 		<offsetx>28</offsetx>
 		<regionID>30</regionID>
-	</Zone>
-	<Zone>
+	</Zone39>
+	<Zone40>
 		<description>Halls of Ma'ati</description>
 		<width>8</width>
 		<zoneID>40</zoneID>
@@ -359,8 +359,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>40</regionID>
-	</Zone>
-	<Zone>
+	</Zone40>
+	<Zone41>
 		<description>Typhon's Reach</description>
 		<width>8</width>
 		<zoneID>41</zoneID>
@@ -368,8 +368,8 @@
 		<offsety>64</offsety>
 		<offsetx>56</offsetx>
 		<regionID>30</regionID>
-	</Zone>
-	<Zone>
+	</Zone41>
+	<Zone42>
 		<description>Ashen Isles</description>
 		<width>8</width>
 		<zoneID>42</zoneID>
@@ -377,8 +377,8 @@
 		<offsety>64</offsety>
 		<offsetx>64</offsetx>
 		<regionID>30</regionID>
-	</Zone>
-	<Zone>
+	</Zone42>
+	<Zone43>
 		<description>Green Glades</description>
 		<width>8</width>
 		<zoneID>43</zoneID>
@@ -386,8 +386,8 @@
 		<offsety>80</offsety>
 		<offsetx>44</offsetx>
 		<regionID>30</regionID>
-	</Zone>
-	<Zone>
+	</Zone43>
+	<Zone44>
 		<description>Arbor Glen</description>
 		<width>8</width>
 		<zoneID>44</zoneID>
@@ -395,8 +395,8 @@
 		<offsety>80</offsety>
 		<offsetx>52</offsetx>
 		<regionID>30</regionID>
-	</Zone>
-	<Zone>
+	</Zone44>
+	<Zone45>
 		<description>the Great Pyramid of Stygia</description>
 		<width>8</width>
 		<zoneID>45</zoneID>
@@ -404,8 +404,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>45</regionID>
-	</Zone>
-	<Zone>
+	</Zone45>
+	<Zone46>
 		<description>Deep Volcanus</description>
 		<width>8</width>
 		<zoneID>46</zoneID>
@@ -413,8 +413,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>46</regionID>
-	</Zone>
-	<Zone>
+	</Zone46>
+	<Zone47>
 		<description>City of Aerus</description>
 		<width>8</width>
 		<zoneID>47</zoneID>
@@ -422,8 +422,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>47</regionID>
-	</Zone>
-	<Zone>
+	</Zone47>
+	<Zone48>
 		<description>Unused Mine</description>
 		<width>8</width>
 		<zoneID>48</zoneID>
@@ -431,8 +431,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>48</regionID>
-	</Zone>
-	<Zone>
+	</Zone48>
+	<Zone49>
 		<description>Rugnog's Haven</description>
 		<width>8</width>
 		<zoneID>49</zoneID>
@@ -440,8 +440,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>49</regionID>
-	</Zone>
-	<Zone>
+	</Zone49>
+	<Zone50>
 		<description>Avalon City</description>
 		<width>8</width>
 		<zoneID>50</zoneID>
@@ -449,8 +449,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>50</regionID>
-	</Zone>
-	<Zone>
+	</Zone50>
+	<Zone51>
 		<description>Isle of Glass</description>
 		<width>8</width>
 		<zoneID>51</zoneID>
@@ -458,8 +458,8 @@
 		<offsety>60</offsety>
 		<offsetx>60</offsetx>
 		<regionID>51</regionID>
-	</Zone>
-	<Zone>
+	</Zone51>
+	<Zone52>
 		<description>Avalon Isle</description>
 		<width>8</width>
 		<zoneID>52</zoneID>
@@ -467,8 +467,8 @@
 		<offsety>54</offsety>
 		<offsetx>52</offsetx>
 		<regionID>51</regionID>
-	</Zone>
-	<Zone>
+	</Zone52>
+	<Zone53>
 		<description>Dales of Devwy</description>
 		<width>8</width>
 		<zoneID>53</zoneID>
@@ -476,8 +476,8 @@
 		<offsety>46</offsety>
 		<offsetx>46</offsetx>
 		<regionID>51</regionID>
-	</Zone>
-	<Zone>
+	</Zone53>
+	<Zone54>
 		<description>Caldey</description>
 		<width>8</width>
 		<zoneID>54</zoneID>
@@ -485,8 +485,8 @@
 		<offsety>44</offsety>
 		<offsetx>38</offsetx>
 		<regionID>51</regionID>
-	</Zone>
-	<Zone>
+	</Zone54>
+	<Zone55>
 		<description>Gwyddneau</description>
 		<width>8</width>
 		<zoneID>55</zoneID>
@@ -494,8 +494,8 @@
 		<offsety>52</offsety>
 		<offsetx>36</offsetx>
 		<regionID>51</regionID>
-	</Zone>
-	<Zone>
+	</Zone55>
+	<Zone56>
 		<description>Aldland</description>
 		<width>8</width>
 		<zoneID>56</zoneID>
@@ -503,8 +503,8 @@
 		<offsety>58</offsety>
 		<offsetx>44</offsetx>
 		<regionID>51</regionID>
-	</Zone>
-	<Zone>
+	</Zone56>
+	<Zone57>
 		<description>Inishail Island</description>
 		<width>8</width>
 		<zoneID>57</zoneID>
@@ -512,8 +512,8 @@
 		<offsety>52</offsety>
 		<offsetx>28</offsetx>
 		<regionID>51</regionID>
-	</Zone>
-	<Zone>
+	</Zone57>
+	<Zone58>
 		<description>Midgard's Underground Forest</description>
 		<width>8</width>
 		<zoneID>58</zoneID>
@@ -521,8 +521,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>58</regionID>
-	</Zone>
-	<Zone>
+	</Zone58>
+	<Zone59>
 		<description>Albion's Glashtin Forges</description>
 		<width>8</width>
 		<zoneID>59</zoneID>
@@ -530,8 +530,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>59</regionID>
-	</Zone>
-	<Zone>
+	</Zone59>
+	<Zone60>
 		<description>Caer Sidi</description>
 		<width>8</width>
 		<zoneID>60</zoneID>
@@ -539,8 +539,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>60</regionID>
-	</Zone>
-	<Zone>
+	</Zone60>
+	<Zone61>
 		<description>Krondon</description>
 		<width>8</width>
 		<zoneID>61</zoneID>
@@ -548,8 +548,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>61</regionID>
-	</Zone>
-	<Zone>
+	</Zone61>
+	<Zone62>
 		<description>Crystal Cave</description>
 		<width>8</width>
 		<zoneID>62</zoneID>
@@ -557,8 +557,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>62</regionID>
-	</Zone>
-	<Zone>
+	</Zone62>
+	<Zone63>
 		<description>Roman Aqueducts</description>
 		<width>8</width>
 		<zoneID>63</zoneID>
@@ -566,8 +566,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>63</regionID>
-	</Zone>
-	<Zone>
+	</Zone63>
+	<Zone64>
 		<description>Aylesbury</description>
 		<width>8</width>
 		<zoneID>64</zoneID>
@@ -575,8 +575,8 @@
 		<offsety>72</offsety>
 		<offsetx>56</offsetx>
 		<regionID>2</regionID>
-	</Zone>
-	<Zone>
+	</Zone64>
+	<Zone65>
 		<description>Inconnu Crypt</description>
 		<width>8</width>
 		<zoneID>65</zoneID>
@@ -584,8 +584,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>65</regionID>
-	</Zone>
-	<Zone>
+	</Zone65>
+	<Zone66>
 		<description>Albion's Underground Forest</description>
 		<width>8</width>
 		<zoneID>66</zoneID>
@@ -593,8 +593,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>66</regionID>
-	</Zone>
-	<Zone>
+	</Zone66>
+	<Zone67>
 		<description>The Deadlands of Annwn</description>
 		<width>8</width>
 		<zoneID>67</zoneID>
@@ -602,8 +602,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>67</regionID>
-	</Zone>
-	<Zone>
+	</Zone67>
+	<Zone68>
 		<description>Lower Crypt</description>
 		<width>8</width>
 		<zoneID>68</zoneID>
@@ -611,8 +611,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>68</regionID>
-	</Zone>
-	<Zone>
+	</Zone68>
+	<Zone69>
 		<description>Albion's Darkspire</description>
 		<width>8</width>
 		<zoneID>69</zoneID>
@@ -620,8 +620,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>69</regionID>
-	</Zone>
-	<Zone>
+	</Zone69>
+	<Zone70>
 		<description>Ruins of Atlantis</description>
 		<width>8</width>
 		<zoneID>70</zoneID>
@@ -629,8 +629,8 @@
 		<offsety>64</offsety>
 		<offsetx>64</offsetx>
 		<regionID>70</regionID>
-	</Zone>
-	<Zone>
+	</Zone70>
+	<Zone71>
 		<description>Ruinerar av Atlantis</description>
 		<width>8</width>
 		<zoneID>71</zoneID>
@@ -638,8 +638,8 @@
 		<offsety>64</offsety>
 		<offsetx>64</offsetx>
 		<regionID>71</regionID>
-	</Zone>
-	<Zone>
+	</Zone71>
+	<Zone72>
 		<description>Scrios de Atlantis</description>
 		<width>8</width>
 		<zoneID>72</zoneID>
@@ -647,8 +647,8 @@
 		<offsety>64</offsety>
 		<offsetx>64</offsetx>
 		<regionID>72</regionID>
-	</Zone>
-	<Zone>
+	</Zone72>
+	<Zone73>
 		<description>Oceanus Hesperos</description>
 		<width>8</width>
 		<zoneID>73</zoneID>
@@ -656,8 +656,8 @@
 		<offsety>64</offsety>
 		<offsetx>32</offsetx>
 		<regionID>73</regionID>
-	</Zone>
-	<Zone>
+	</Zone73>
+	<Zone74>
 		<description>Mesothalassa</description>
 		<width>8</width>
 		<zoneID>74</zoneID>
@@ -665,8 +665,8 @@
 		<offsety>64</offsety>
 		<offsetx>40</offsetx>
 		<regionID>73</regionID>
-	</Zone>
-	<Zone>
+	</Zone74>
+	<Zone75>
 		<description>Oceanus Boreal</description>
 		<width>8</width>
 		<zoneID>75</zoneID>
@@ -674,8 +674,8 @@
 		<offsety>56</offsety>
 		<offsetx>40</offsetx>
 		<regionID>73</regionID>
-	</Zone>
-	<Zone>
+	</Zone75>
+	<Zone76>
 		<description>Oceanus Notos</description>
 		<width>8</width>
 		<zoneID>76</zoneID>
@@ -683,8 +683,8 @@
 		<offsety>72</offsety>
 		<offsetx>40</offsetx>
 		<regionID>73</regionID>
-	</Zone>
-	<Zone>
+	</Zone76>
+	<Zone77>
 		<description>Oceanus Anatole</description>
 		<width>8</width>
 		<zoneID>77</zoneID>
@@ -692,8 +692,8 @@
 		<offsety>64</offsety>
 		<offsetx>48</offsetx>
 		<regionID>73</regionID>
-	</Zone>
-	<Zone>
+	</Zone77>
+	<Zone78>
 		<description>Cetus' Pit</description>
 		<width>8</width>
 		<zoneID>78</zoneID>
@@ -701,8 +701,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>78</regionID>
-	</Zone>
-	<Zone>
+	</Zone78>
+	<Zone79>
 		<description>Sobekite Eternal</description>
 		<width>8</width>
 		<zoneID>79</zoneID>
@@ -710,8 +710,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>79</regionID>
-	</Zone>
-	<Zone>
+	</Zone79>
+	<Zone80>
 		<description>Temple of Twilight</description>
 		<width>8</width>
 		<zoneID>80</zoneID>
@@ -719,8 +719,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>80</regionID>
-	</Zone>
-	<Zone>
+	</Zone80>
+	<Zone81>
 		<description>Stygian Delta</description>
 		<width>8</width>
 		<zoneID>81</zoneID>
@@ -728,8 +728,8 @@
 		<offsety>48</offsety>
 		<offsetx>36</offsetx>
 		<regionID>73</regionID>
-	</Zone>
-	<Zone>
+	</Zone81>
+	<Zone82>
 		<description>Land of Atum</description>
 		<width>8</width>
 		<zoneID>82</zoneID>
@@ -737,8 +737,8 @@
 		<offsety>48</offsety>
 		<offsetx>28</offsetx>
 		<regionID>73</regionID>
-	</Zone>
-	<Zone>
+	</Zone82>
+	<Zone83>
 		<description>Halls of Ma'ati</description>
 		<width>8</width>
 		<zoneID>83</zoneID>
@@ -746,8 +746,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>83</regionID>
-	</Zone>
-	<Zone>
+	</Zone83>
+	<Zone84>
 		<description>Typhon's Reach</description>
 		<width>8</width>
 		<zoneID>84</zoneID>
@@ -755,8 +755,8 @@
 		<offsety>64</offsety>
 		<offsetx>56</offsetx>
 		<regionID>73</regionID>
-	</Zone>
-	<Zone>
+	</Zone84>
+	<Zone85>
 		<description>Ashen Isles</description>
 		<width>8</width>
 		<zoneID>85</zoneID>
@@ -764,8 +764,8 @@
 		<offsety>64</offsety>
 		<offsetx>64</offsetx>
 		<regionID>73</regionID>
-	</Zone>
-	<Zone>
+	</Zone85>
+	<Zone86>
 		<description>Green Glades</description>
 		<width>8</width>
 		<zoneID>86</zoneID>
@@ -773,8 +773,8 @@
 		<offsety>80</offsety>
 		<offsetx>44</offsetx>
 		<regionID>73</regionID>
-	</Zone>
-	<Zone>
+	</Zone86>
+	<Zone87>
 		<description>Arbor Glen</description>
 		<width>8</width>
 		<zoneID>87</zoneID>
@@ -782,8 +782,8 @@
 		<offsety>80</offsety>
 		<offsetx>52</offsetx>
 		<regionID>73</regionID>
-	</Zone>
-	<Zone>
+	</Zone87>
+	<Zone88>
 		<description>the Great Pyramid of Stygia</description>
 		<width>8</width>
 		<zoneID>88</zoneID>
@@ -791,8 +791,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>88</regionID>
-	</Zone>
-	<Zone>
+	</Zone88>
+	<Zone89>
 		<description>Deep Volcanus</description>
 		<width>8</width>
 		<zoneID>89</zoneID>
@@ -800,8 +800,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>89</regionID>
-	</Zone>
-	<Zone>
+	</Zone89>
+	<Zone90>
 		<description>City of Aerus</description>
 		<width>8</width>
 		<zoneID>90</zoneID>
@@ -809,8 +809,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>90</regionID>
-	</Zone>
-	<Zone>
+	</Zone90>
+	<Zone91>
 		<description>Celestius</description>
 		<width>8</width>
 		<zoneID>91</zoneID>
@@ -818,8 +818,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>91</regionID>
-	</Zone>
-	<Zone>
+	</Zone91>
+	<Zone92>
 		<description>Veil Rift</description>
 		<width>8</width>
 		<zoneID>92</zoneID>
@@ -827,8 +827,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>92</regionID>
-	</Zone>
-	<Zone>
+	</Zone92>
+	<Zone93>
 		<description>Shar Labyrinth</description>
 		<width>8</width>
 		<zoneID>93</zoneID>
@@ -836,8 +836,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>93</regionID>
-	</Zone>
-	<Zone>
+	</Zone93>
+	<Zone94>
 		<description>The Queen's Labyrinth</description>
 		<width>8</width>
 		<zoneID>94</zoneID>
@@ -845,8 +845,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>94</regionID>
-	</Zone>
-	<Zone>
+	</Zone94>
+	<Zone95>
 		<description>Hibernia's Frontlines</description>
 		<width>8</width>
 		<zoneID>95</zoneID>
@@ -854,8 +854,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>95</regionID>
-	</Zone>
-	<Zone>
+	</Zone95>
+	<Zone96>
 		<description>Hibernia's Underground Forest</description>
 		<width>8</width>
 		<zoneID>96</zoneID>
@@ -863,8 +863,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>96</regionID>
-	</Zone>
-	<Zone>
+	</Zone96>
+	<Zone97>
 		<description>Hibernia's Deadlands</description>
 		<width>8</width>
 		<zoneID>97</zoneID>
@@ -872,8 +872,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>97</regionID>
-	</Zone>
-	<Zone>
+	</Zone97>
+	<Zone98>
 		<description>Hibernia's Darkspire</description>
 		<width>8</width>
 		<zoneID>98</zoneID>
@@ -881,8 +881,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>98</regionID>
-	</Zone>
-	<Zone>
+	</Zone98>
+	<Zone99>
 		<description>Hibernia's Glashtin Forge</description>
 		<width>8</width>
 		<zoneID>99</zoneID>
@@ -890,8 +890,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>99</regionID>
-	</Zone>
-	<Zone>
+	</Zone99>
+	<Zone100>
 		<description>Vale of Mularn</description>
 		<width>8</width>
 		<zoneID>100</zoneID>
@@ -899,8 +899,8 @@
 		<offsety>82</offsety>
 		<offsetx>92</offsetx>
 		<regionID>100</regionID>
-	</Zone>
-	<Zone>
+	</Zone100>
+	<Zone101>
 		<description>East Svealand</description>
 		<width>8</width>
 		<zoneID>101</zoneID>
@@ -908,8 +908,8 @@
 		<offsety>90</offsety>
 		<offsetx>88</offsetx>
 		<regionID>100</regionID>
-	</Zone>
-	<Zone>
+	</Zone101>
+	<Zone102>
 		<description>West Svealand</description>
 		<width>8</width>
 		<zoneID>102</zoneID>
@@ -917,8 +917,8 @@
 		<offsety>90</offsety>
 		<offsetx>80</offsetx>
 		<regionID>100</regionID>
-	</Zone>
-	<Zone>
+	</Zone102>
+	<Zone103>
 		<description>Gotar</description>
 		<width>8</width>
 		<zoneID>103</zoneID>
@@ -926,8 +926,8 @@
 		<offsety>98</offsety>
 		<offsetx>88</offsetx>
 		<regionID>100</regionID>
-	</Zone>
-	<Zone>
+	</Zone103>
+	<Zone104>
 		<description>Muspelheim</description>
 		<width>8</width>
 		<zoneID>104</zoneID>
@@ -935,8 +935,8 @@
 		<offsety>78</offsety>
 		<offsetx>100</offsetx>
 		<regionID>100</regionID>
-	</Zone>
-	<Zone>
+	</Zone104>
+	<Zone105>
 		<description>Myrkwood Forest</description>
 		<width>8</width>
 		<zoneID>105</zoneID>
@@ -944,8 +944,8 @@
 		<offsety>106</offsety>
 		<offsetx>92</offsetx>
 		<regionID>100</regionID>
-	</Zone>
-	<Zone>
+	</Zone105>
+	<Zone106>
 		<description>Skona Ravine</description>
 		<width>8</width>
 		<zoneID>106</zoneID>
@@ -953,8 +953,8 @@
 		<offsety>110</offsety>
 		<offsetx>84</offsetx>
 		<regionID>100</regionID>
-	</Zone>
-	<Zone>
+	</Zone106>
+	<Zone107>
 		<description>Vanern Swamp</description>
 		<width>8</width>
 		<zoneID>107</zoneID>
@@ -962,8 +962,8 @@
 		<offsety>106</offsety>
 		<offsetx>76</offsetx>
 		<regionID>100</regionID>
-	</Zone>
-	<Zone>
+	</Zone107>
+	<Zone108>
 		<description>Raumarik</description>
 		<width>8</width>
 		<zoneID>108</zoneID>
@@ -971,8 +971,8 @@
 		<offsety>90</offsety>
 		<offsetx>72</offsetx>
 		<regionID>100</regionID>
-	</Zone>
-	<Zone>
+	</Zone108>
+	<Zone109>
 		<description>Albion's Frontlines</description>
 		<width>8</width>
 		<zoneID>109</zoneID>
@@ -980,8 +980,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>109</regionID>
-	</Zone>
-	<Zone>
+	</Zone109>
+	<Zone111>
 		<description>Uppland</description>
 		<width>8</width>
 		<zoneID>111</zoneID>
@@ -989,8 +989,8 @@
 		<offsety>74</offsety>
 		<offsetx>88</offsetx>
 		<regionID>100</regionID>
-	</Zone>
-	<Zone>
+	</Zone111>
+	<Zone112>
 		<description>Yggdra Forest</description>
 		<width>8</width>
 		<zoneID>112</zoneID>
@@ -998,8 +998,8 @@
 		<offsety>82</offsety>
 		<offsetx>80</offsetx>
 		<regionID>100</regionID>
-	</Zone>
-	<Zone>
+	</Zone112>
+	<Zone113>
 		<description>Jamtland Mountains</description>
 		<width>8</width>
 		<zoneID>113</zoneID>
@@ -1007,8 +1007,8 @@
 		<offsety>74</offsety>
 		<offsetx>80</offsetx>
 		<regionID>100</regionID>
-	</Zone>
-	<Zone>
+	</Zone113>
+	<Zone114>
 		<description>Erikstaad</description>
 		<width>8</width>
 		<zoneID>114</zoneID>
@@ -1016,8 +1016,8 @@
 		<offsety>64</offsety>
 		<offsetx>64</offsetx>
 		<regionID>102</regionID>
-	</Zone>
-	<Zone>
+	</Zone114>
+	<Zone115>
 		<description>Odin's Gate</description>
 		<width>8</width>
 		<zoneID>115</zoneID>
@@ -1025,8 +1025,8 @@
 		<offsety>70</offsety>
 		<offsetx>72</offsetx>
 		<regionID>100</regionID>
-	</Zone>
-	<Zone>
+	</Zone115>
+	<Zone116>
 		<description>Malmohus</description>
 		<width>8</width>
 		<zoneID>116</zoneID>
@@ -1034,8 +1034,8 @@
 		<offsety>118</offsety>
 		<offsetx>84</offsetx>
 		<regionID>100</regionID>
-	</Zone>
-	<Zone>
+	</Zone116>
+	<Zone117>
 		<description>Arothi</description>
 		<width>8</width>
 		<zoneID>117</zoneID>
@@ -1043,8 +1043,8 @@
 		<offsety>56</offsety>
 		<offsetx>64</offsetx>
 		<regionID>102</regionID>
-	</Zone>
-	<Zone>
+	</Zone117>
+	<Zone118>
 		<description>Carlingford</description>
 		<width>8</width>
 		<zoneID>118</zoneID>
@@ -1052,8 +1052,8 @@
 		<offsety>64</offsety>
 		<offsetx>72</offsetx>
 		<regionID>102</regionID>
-	</Zone>
-	<Zone>
+	</Zone118>
+	<Zone119>
 		<description>Wyndham</description>
 		<width>8</width>
 		<zoneID>119</zoneID>
@@ -1061,8 +1061,8 @@
 		<offsety>72</offsety>
 		<offsetx>64</offsetx>
 		<regionID>102</regionID>
-	</Zone>
-	<Zone>
+	</Zone119>
+	<Zone120>
 		<description>Jordheim</description>
 		<width>8</width>
 		<zoneID>120</zoneID>
@@ -1070,8 +1070,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>101</regionID>
-	</Zone>
-	<Zone>
+	</Zone120>
+	<Zone121>
 		<description>Frisia</description>
 		<width>8</width>
 		<zoneID>121</zoneID>
@@ -1079,8 +1079,8 @@
 		<offsety>72</offsety>
 		<offsetx>72</offsetx>
 		<regionID>102</regionID>
-	</Zone>
-	<Zone>
+	</Zone121>
+	<Zone122>
 		<description>Kaupang</description>
 		<width>8</width>
 		<zoneID>122</zoneID>
@@ -1088,8 +1088,8 @@
 		<offsety>56</offsety>
 		<offsetx>72</offsetx>
 		<regionID>102</regionID>
-	</Zone>
-	<Zone>
+	</Zone122>
+	<Zone123>
 		<description>Aphophian</description>
 		<width>8</width>
 		<zoneID>123</zoneID>
@@ -1097,8 +1097,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>123</regionID>
-	</Zone>
-	<Zone>
+	</Zone123>
+	<Zone124>
 		<description>Hephaestian</description>
 		<width>8</width>
 		<zoneID>124</zoneID>
@@ -1106,8 +1106,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>124</regionID>
-	</Zone>
-	<Zone>
+	</Zone124>
+	<Zone125>
 		<description>Spindelhalla</description>
 		<width>8</width>
 		<zoneID>125</zoneID>
@@ -1115,8 +1115,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>125</regionID>
-	</Zone>
-	<Zone>
+	</Zone125>
+	<Zone126>
 		<description>Vendo Caverns</description>
 		<width>8</width>
 		<zoneID>126</zoneID>
@@ -1124,8 +1124,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>126</regionID>
-	</Zone>
-	<Zone>
+	</Zone126>
+	<Zone127>
 		<description>Varulvhamn</description>
 		<width>8</width>
 		<zoneID>127</zoneID>
@@ -1133,8 +1133,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>127</regionID>
-	</Zone>
-	<Zone>
+	</Zone127>
+	<Zone128>
 		<description>Cursed Tomb</description>
 		<width>8</width>
 		<zoneID>128</zoneID>
@@ -1142,8 +1142,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>128</regionID>
-	</Zone>
-	<Zone>
+	</Zone128>
+	<Zone129>
 		<description>Nisse's Lair</description>
 		<width>8</width>
 		<zoneID>129</zoneID>
@@ -1151,8 +1151,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>129</regionID>
-	</Zone>
-	<Zone>
+	</Zone129>
+	<Zone130>
 		<description>Oceanus Hesperos</description>
 		<width>8</width>
 		<zoneID>130</zoneID>
@@ -1160,8 +1160,8 @@
 		<offsety>64</offsety>
 		<offsetx>32</offsetx>
 		<regionID>130</regionID>
-	</Zone>
-	<Zone>
+	</Zone130>
+	<Zone131>
 		<description>Mesothalassa</description>
 		<width>8</width>
 		<zoneID>131</zoneID>
@@ -1169,8 +1169,8 @@
 		<offsety>64</offsety>
 		<offsetx>40</offsetx>
 		<regionID>130</regionID>
-	</Zone>
-	<Zone>
+	</Zone131>
+	<Zone132>
 		<description>Oceanus Boreal</description>
 		<width>8</width>
 		<zoneID>132</zoneID>
@@ -1178,8 +1178,8 @@
 		<offsety>56</offsety>
 		<offsetx>40</offsetx>
 		<regionID>130</regionID>
-	</Zone>
-	<Zone>
+	</Zone132>
+	<Zone133>
 		<description>Oceanus Notos</description>
 		<width>8</width>
 		<zoneID>133</zoneID>
@@ -1187,8 +1187,8 @@
 		<offsety>72</offsety>
 		<offsetx>40</offsetx>
 		<regionID>130</regionID>
-	</Zone>
-	<Zone>
+	</Zone133>
+	<Zone134>
 		<description>Oceanus Anatole</description>
 		<width>8</width>
 		<zoneID>134</zoneID>
@@ -1196,8 +1196,8 @@
 		<offsety>64</offsety>
 		<offsetx>48</offsetx>
 		<regionID>130</regionID>
-	</Zone>
-	<Zone>
+	</Zone134>
+	<Zone135>
 		<description>Cetus' Pit</description>
 		<width>8</width>
 		<zoneID>135</zoneID>
@@ -1205,8 +1205,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>135</regionID>
-	</Zone>
-	<Zone>
+	</Zone135>
+	<Zone136>
 		<description>Sobekite Eternal</description>
 		<width>8</width>
 		<zoneID>136</zoneID>
@@ -1214,8 +1214,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>136</regionID>
-	</Zone>
-	<Zone>
+	</Zone136>
+	<Zone137>
 		<description>Temple of Twilight</description>
 		<width>8</width>
 		<zoneID>137</zoneID>
@@ -1223,8 +1223,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>137</regionID>
-	</Zone>
-	<Zone>
+	</Zone137>
+	<Zone138>
 		<description>Stygian Delta</description>
 		<width>8</width>
 		<zoneID>138</zoneID>
@@ -1232,8 +1232,8 @@
 		<offsety>48</offsety>
 		<offsetx>36</offsetx>
 		<regionID>130</regionID>
-	</Zone>
-	<Zone>
+	</Zone138>
+	<Zone139>
 		<description>Land of Atum</description>
 		<width>8</width>
 		<zoneID>139</zoneID>
@@ -1241,8 +1241,8 @@
 		<offsety>48</offsety>
 		<offsetx>28</offsetx>
 		<regionID>130</regionID>
-	</Zone>
-	<Zone>
+	</Zone139>
+	<Zone140>
 		<description>Halls of Ma'ati</description>
 		<width>8</width>
 		<zoneID>140</zoneID>
@@ -1250,8 +1250,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>140</regionID>
-	</Zone>
-	<Zone>
+	</Zone140>
+	<Zone141>
 		<description>Typhon's Reach</description>
 		<width>8</width>
 		<zoneID>141</zoneID>
@@ -1259,8 +1259,8 @@
 		<offsety>64</offsety>
 		<offsetx>56</offsetx>
 		<regionID>130</regionID>
-	</Zone>
-	<Zone>
+	</Zone141>
+	<Zone142>
 		<description>Ashen Isles</description>
 		<width>8</width>
 		<zoneID>142</zoneID>
@@ -1268,8 +1268,8 @@
 		<offsety>64</offsety>
 		<offsetx>64</offsetx>
 		<regionID>130</regionID>
-	</Zone>
-	<Zone>
+	</Zone142>
+	<Zone143>
 		<description>Green Glades</description>
 		<width>8</width>
 		<zoneID>143</zoneID>
@@ -1277,8 +1277,8 @@
 		<offsety>80</offsety>
 		<offsetx>44</offsetx>
 		<regionID>130</regionID>
-	</Zone>
-	<Zone>
+	</Zone143>
+	<Zone144>
 		<description>Arbor Glen</description>
 		<width>8</width>
 		<zoneID>144</zoneID>
@@ -1286,8 +1286,8 @@
 		<offsety>80</offsety>
 		<offsetx>52</offsetx>
 		<regionID>130</regionID>
-	</Zone>
-	<Zone>
+	</Zone144>
+	<Zone145>
 		<description>the Great Pyramid of Stygia</description>
 		<width>8</width>
 		<zoneID>145</zoneID>
@@ -1295,8 +1295,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>145</regionID>
-	</Zone>
-	<Zone>
+	</Zone145>
+	<Zone146>
 		<description>Deep Volcanus</description>
 		<width>8</width>
 		<zoneID>146</zoneID>
@@ -1304,8 +1304,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>146</regionID>
-	</Zone>
-	<Zone>
+	</Zone146>
+	<Zone147>
 		<description>City of Aerus</description>
 		<width>8</width>
 		<zoneID>147</zoneID>
@@ -1313,8 +1313,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>147</regionID>
-	</Zone>
-	<Zone>
+	</Zone147>
+	<Zone148>
 		<description>The Frontlines</description>
 		<width>8</width>
 		<zoneID>148</zoneID>
@@ -1322,8 +1322,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>148</regionID>
-	</Zone>
-	<Zone>
+	</Zone148>
+	<Zone149>
 		<description>Nyttheim</description>
 		<width>8</width>
 		<zoneID>149</zoneID>
@@ -1331,8 +1331,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>149</regionID>
-	</Zone>
-	<Zone>
+	</Zone149>
+	<Zone150>
 		<description>Trollheim</description>
 		<width>8</width>
 		<zoneID>150</zoneID>
@@ -1340,8 +1340,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>150</regionID>
-	</Zone>
-	<Zone>
+	</Zone150>
+	<Zone151>
 		<description>Aegir's Landing</description>
 		<width>8</width>
 		<zoneID>151</zoneID>
@@ -1349,8 +1349,8 @@
 		<offsety>38</offsety>
 		<offsetx>30</offsetx>
 		<regionID>151</regionID>
-	</Zone>
-	<Zone>
+	</Zone151>
+	<Zone152>
 		<description>Gripklosa Mountains</description>
 		<width>8</width>
 		<zoneID>152</zoneID>
@@ -1358,8 +1358,8 @@
 		<offsety>30</offsety>
 		<offsetx>34</offsetx>
 		<regionID>151</regionID>
-	</Zone>
-	<Zone>
+	</Zone152>
+	<Zone153>
 		<description>Delling Crater</description>
 		<width>8</width>
 		<zoneID>153</zoneID>
@@ -1367,8 +1367,8 @@
 		<offsety>32</offsety>
 		<offsetx>42</offsetx>
 		<regionID>151</regionID>
-	</Zone>
-	<Zone>
+	</Zone153>
+	<Zone154>
 		<description>Faraheim</description>
 		<width>8</width>
 		<zoneID>154</zoneID>
@@ -1376,8 +1376,8 @@
 		<offsety>40</offsety>
 		<offsetx>44</offsetx>
 		<regionID>151</regionID>
-	</Zone>
-	<Zone>
+	</Zone154>
+	<Zone155>
 		<description>Munin Sound</description>
 		<width>8</width>
 		<zoneID>155</zoneID>
@@ -1385,8 +1385,8 @@
 		<offsety>46</offsety>
 		<offsetx>36</offsetx>
 		<regionID>151</regionID>
-	</Zone>
-	<Zone>
+	</Zone155>
+	<Zone156>
 		<description>Iarnwood</description>
 		<width>8</width>
 		<zoneID>156</zoneID>
@@ -1394,8 +1394,8 @@
 		<offsety>48</offsety>
 		<offsetx>48</offsetx>
 		<regionID>151</regionID>
-	</Zone>
-	<Zone>
+	</Zone156>
+	<Zone157>
 		<description>Dummy Zone</description>
 		<width>8</width>
 		<zoneID>157</zoneID>
@@ -1403,8 +1403,8 @@
 		<offsety>22</offsety>
 		<offsetx>34</offsetx>
 		<regionID>151</regionID>
-	</Zone>
-	<Zone>
+	</Zone157>
+	<Zone158>
 		<description>Modernagrav</description>
 		<width>8</width>
 		<zoneID>158</zoneID>
@@ -1412,8 +1412,8 @@
 		<offsety>40</offsety>
 		<offsetx>52</offsetx>
 		<regionID>151</regionID>
-	</Zone>
-	<Zone>
+	</Zone158>
+	<Zone160>
 		<description>Tuscaran Glacier</description>
 		<width>8</width>
 		<zoneID>160</zoneID>
@@ -1421,8 +1421,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>160</regionID>
-	</Zone>
-	<Zone>
+	</Zone160>
+	<Zone161>
 		<description>Iarnvidiur's Lair</description>
 		<width>8</width>
 		<zoneID>161</zoneID>
@@ -1430,8 +1430,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>161</regionID>
-	</Zone>
-	<Zone>
+	</Zone161>
+	<Zone162>
 		<description>Midgard's Deadlands</description>
 		<width>8</width>
 		<zoneID>162</zoneID>
@@ -1439,8 +1439,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>162</regionID>
-	</Zone>
-	<Zone>
+	</Zone162>
+	<Zone163>
 		<description>Agramon</description>
 		<width>8</width>
 		<zoneID>163</zoneID>
@@ -1448,8 +1448,8 @@
 		<offsety>52</offsety>
 		<offsetx>60</offsetx>
 		<regionID>163</regionID>
-	</Zone>
-	<Zone>
+	</Zone163>
+	<Zone164>
 		<description>Irish Sea</description>
 		<width>8</width>
 		<zoneID>164</zoneID>
@@ -1457,8 +1457,8 @@
 		<offsety>60</offsety>
 		<offsetx>60</offsetx>
 		<regionID>163</regionID>
-	</Zone>
-	<Zone>
+	</Zone164>
+	<Zone165>
 		<description>Cathal Valley</description>
 		<width>8</width>
 		<zoneID>165</zoneID>
@@ -1466,8 +1466,8 @@
 		<offsety>64</offsety>
 		<offsetx>64</offsetx>
 		<regionID>165</regionID>
-	</Zone>
-	<Zone>
+	</Zone165>
+	<Zone166>
 		<description>Unamed Sea 2</description>
 		<width>8</width>
 		<zoneID>166</zoneID>
@@ -1475,8 +1475,8 @@
 		<offsety>52</offsety>
 		<offsetx>68</offsetx>
 		<regionID>163</regionID>
-	</Zone>
-	<Zone>
+	</Zone166>
+	<Zone167>
 		<description>Odin's Gate</description>
 		<width>8</width>
 		<zoneID>167</zoneID>
@@ -1484,8 +1484,8 @@
 		<offsety>44</offsety>
 		<offsetx>64</offsetx>
 		<regionID>163</regionID>
-	</Zone>
-	<Zone>
+	</Zone167>
+	<Zone168>
 		<description>Jamtland Mountains</description>
 		<width>8</width>
 		<zoneID>168</zoneID>
@@ -1493,8 +1493,8 @@
 		<offsety>44</offsety>
 		<offsetx>72</offsetx>
 		<regionID>163</regionID>
-	</Zone>
-	<Zone>
+	</Zone168>
+	<Zone169>
 		<description>Yggdra Forest</description>
 		<width>8</width>
 		<zoneID>169</zoneID>
@@ -1502,8 +1502,8 @@
 		<offsety>44</offsety>
 		<offsetx>80</offsetx>
 		<regionID>163</regionID>
-	</Zone>
-	<Zone>
+	</Zone169>
+	<Zone170>
 		<description>Uppland</description>
 		<width>8</width>
 		<zoneID>170</zoneID>
@@ -1511,8 +1511,8 @@
 		<offsety>36</offsety>
 		<offsetx>72</offsetx>
 		<regionID>163</regionID>
-	</Zone>
-	<Zone>
+	</Zone170>
+	<Zone171>
 		<description>Emain Macha</description>
 		<width>8</width>
 		<zoneID>171</zoneID>
@@ -1520,8 +1520,8 @@
 		<offsety>60</offsety>
 		<offsetx>52</offsetx>
 		<regionID>163</regionID>
-	</Zone>
-	<Zone>
+	</Zone171>
+	<Zone172>
 		<description>Breifine</description>
 		<width>8</width>
 		<zoneID>172</zoneID>
@@ -1529,8 +1529,8 @@
 		<offsety>68</offsety>
 		<offsetx>52</offsetx>
 		<regionID>163</regionID>
-	</Zone>
-	<Zone>
+	</Zone172>
+	<Zone173>
 		<description>Cruachan Gorge</description>
 		<width>8</width>
 		<zoneID>173</zoneID>
@@ -1538,8 +1538,8 @@
 		<offsety>68</offsety>
 		<offsetx>44</offsetx>
 		<regionID>163</regionID>
-	</Zone>
-	<Zone>
+	</Zone173>
+	<Zone174>
 		<description>Mount Collory</description>
 		<width>8</width>
 		<zoneID>174</zoneID>
@@ -1547,8 +1547,8 @@
 		<offsety>76</offsety>
 		<offsetx>52</offsetx>
 		<regionID>163</regionID>
-	</Zone>
-	<Zone>
+	</Zone174>
+	<Zone175>
 		<description>Snowdonia</description>
 		<width>8</width>
 		<zoneID>175</zoneID>
@@ -1556,8 +1556,8 @@
 		<offsety>76</offsety>
 		<offsetx>68</offsetx>
 		<regionID>163</regionID>
-	</Zone>
-	<Zone>
+	</Zone175>
+	<Zone176>
 		<description>Forest Sauvage</description>
 		<width>8</width>
 		<zoneID>176</zoneID>
@@ -1565,8 +1565,8 @@
 		<offsety>68</offsety>
 		<offsetx>76</offsetx>
 		<regionID>163</regionID>
-	</Zone>
-	<Zone>
+	</Zone176>
+	<Zone177>
 		<description>Pennine Mountains</description>
 		<width>8</width>
 		<zoneID>177</zoneID>
@@ -1574,8 +1574,8 @@
 		<offsety>68</offsety>
 		<offsetx>68</offsetx>
 		<regionID>163</regionID>
-	</Zone>
-	<Zone>
+	</Zone177>
+	<Zone178>
 		<description>Hadrian's Wall</description>
 		<width>8</width>
 		<zoneID>178</zoneID>
@@ -1583,8 +1583,8 @@
 		<offsety>60</offsety>
 		<offsetx>68</offsetx>
 		<regionID>163</regionID>
-	</Zone>
-	<Zone>
+	</Zone178>
+	<Zone180>
 		<description>Fomor</description>
 		<width>8</width>
 		<zoneID>180</zoneID>
@@ -1592,8 +1592,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>180</regionID>
-	</Zone>
-	<Zone>
+	</Zone180>
+	<Zone181>
 		<description>Domnann</description>
 		<width>8</width>
 		<zoneID>181</zoneID>
@@ -1601,8 +1601,8 @@
 		<offsety>48</offsety>
 		<offsetx>48</offsetx>
 		<regionID>181</regionID>
-	</Zone>
-	<Zone>
+	</Zone181>
+	<Zone182>
 		<description>Caillte Garran</description>
 		<width>8</width>
 		<zoneID>182</zoneID>
@@ -1610,8 +1610,8 @@
 		<offsety>44</offsety>
 		<offsetx>40</offsetx>
 		<regionID>181</regionID>
-	</Zone>
-	<Zone>
+	</Zone182>
+	<Zone183>
 		<description>Vale of Balor</description>
 		<width>8</width>
 		<zoneID>183</zoneID>
@@ -1619,8 +1619,8 @@
 		<offsety>40</offsety>
 		<offsetx>32</offsetx>
 		<regionID>181</regionID>
-	</Zone>
-	<Zone>
+	</Zone183>
+	<Zone184>
 		<description>Cothrom Gorge</description>
 		<width>8</width>
 		<zoneID>184</zoneID>
@@ -1628,8 +1628,8 @@
 		<offsety>32</offsety>
 		<offsetx>34</offsetx>
 		<regionID>181</regionID>
-	</Zone>
-	<Zone>
+	</Zone184>
+	<Zone185>
 		<description>World's End</description>
 		<width>8</width>
 		<zoneID>185</zoneID>
@@ -1637,8 +1637,8 @@
 		<offsety>28</offsety>
 		<offsetx>42</offsetx>
 		<regionID>181</regionID>
-	</Zone>
-	<Zone>
+	</Zone185>
+	<Zone186>
 		<description>Vigilant Rock</description>
 		<width>8</width>
 		<zoneID>186</zoneID>
@@ -1646,8 +1646,8 @@
 		<offsety>36</offsety>
 		<offsetx>46</offsetx>
 		<regionID>181</regionID>
-	</Zone>
-	<Zone>
+	</Zone186>
+	<Zone187>
 		<description>Allta Fearann</description>
 		<width>8</width>
 		<zoneID>187</zoneID>
@@ -1655,8 +1655,8 @@
 		<offsety>20</offsety>
 		<offsetx>42</offsetx>
 		<regionID>181</regionID>
-	</Zone>
-	<Zone>
+	</Zone187>
+	<Zone188>
 		<description>Midgard's Darkspire</description>
 		<width>8</width>
 		<zoneID>188</zoneID>
@@ -1664,8 +1664,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>188</regionID>
-	</Zone>
-	<Zone>
+	</Zone188>
+	<Zone189>
 		<description>Midgard's Glashtin Forges</description>
 		<width>8</width>
 		<zoneID>189</zoneID>
@@ -1673,8 +1673,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>189</regionID>
-	</Zone>
-	<Zone>
+	</Zone189>
+	<Zone190>
 		<description>Tur Suil</description>
 		<width>8</width>
 		<zoneID>190</zoneID>
@@ -1682,8 +1682,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>190</regionID>
-	</Zone>
-	<Zone>
+	</Zone190>
+	<Zone191>
 		<description>Galladoria</description>
 		<width>8</width>
 		<zoneID>191</zoneID>
@@ -1691,8 +1691,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>191</regionID>
-	</Zone>
-	<Zone>
+	</Zone191>
+	<Zone195>
 		<description>Midgard's Otherworld</description>
 		<width>8</width>
 		<zoneID>195</zoneID>
@@ -1700,8 +1700,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>195</regionID>
-	</Zone>
-	<Zone>
+	</Zone195>
+	<Zone196>
 		<description>Albion's Otherworld</description>
 		<width>8</width>
 		<zoneID>196</zoneID>
@@ -1709,8 +1709,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>196</regionID>
-	</Zone>
-	<Zone>
+	</Zone196>
+	<Zone197>
 		<description>The Otherworld</description>
 		<width>8</width>
 		<zoneID>197</zoneID>
@@ -1718,8 +1718,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>197</regionID>
-	</Zone>
-	<Zone>
+	</Zone197>
+	<Zone198>
 		<description>Shaitan</description>
 		<width>8</width>
 		<zoneID>198</zoneID>
@@ -1727,8 +1727,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>198</regionID>
-	</Zone>
-	<Zone>
+	</Zone198>
+	<Zone199>
 		<description>Volurgon</description>
 		<width>8</width>
 		<zoneID>199</zoneID>
@@ -1736,8 +1736,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>199</regionID>
-	</Zone>
-	<Zone>
+	</Zone199>
+	<Zone200>
 		<description>Lough Derg</description>
 		<width>8</width>
 		<zoneID>200</zoneID>
@@ -1745,8 +1745,8 @@
 		<offsety>59</offsety>
 		<offsetx>39</offsetx>
 		<regionID>200</regionID>
-	</Zone>
-	<Zone>
+	</Zone200>
+	<Zone201>
 		<description>Silvermine Mts.</description>
 		<width>8</width>
 		<zoneID>201</zoneID>
@@ -1754,8 +1754,8 @@
 		<offsety>67</offsety>
 		<offsetx>39</offsetx>
 		<regionID>200</regionID>
-	</Zone>
-	<Zone>
+	</Zone201>
+	<Zone202>
 		<description>Shannon Estuary</description>
 		<width>8</width>
 		<zoneID>202</zoneID>
@@ -1763,8 +1763,8 @@
 		<offsety>75</offsety>
 		<offsetx>35</offsetx>
 		<regionID>200</regionID>
-	</Zone>
-	<Zone>
+	</Zone202>
+	<Zone203>
 		<description>Cliffs of Moher</description>
 		<width>8</width>
 		<zoneID>203</zoneID>
@@ -1772,8 +1772,8 @@
 		<offsety>51</offsety>
 		<offsetx>27</offsetx>
 		<regionID>200</regionID>
-	</Zone>
-	<Zone>
+	</Zone203>
+	<Zone204>
 		<description>Lough Gur</description>
 		<width>8</width>
 		<zoneID>204</zoneID>
@@ -1781,8 +1781,8 @@
 		<offsety>83</offsety>
 		<offsetx>35</offsetx>
 		<regionID>200</regionID>
-	</Zone>
-	<Zone>
+	</Zone204>
+	<Zone205>
 		<description>Bog of Cullen</description>
 		<width>8</width>
 		<zoneID>205</zoneID>
@@ -1790,8 +1790,8 @@
 		<offsety>87</offsety>
 		<offsetx>43</offsetx>
 		<regionID>200</regionID>
-	</Zone>
-	<Zone>
+	</Zone205>
+	<Zone206>
 		<description>Valley of Bri Leith</description>
 		<width>8</width>
 		<zoneID>206</zoneID>
@@ -1799,8 +1799,8 @@
 		<offsety>59</offsety>
 		<offsetx>47</offsetx>
 		<regionID>200</regionID>
-	</Zone>
-	<Zone>
+	</Zone206>
+	<Zone207>
 		<description>Connacht</description>
 		<width>8</width>
 		<zoneID>207</zoneID>
@@ -1808,8 +1808,8 @@
 		<offsety>51</offsety>
 		<offsetx>35</offsetx>
 		<regionID>200</regionID>
-	</Zone>
-	<Zone>
+	</Zone207>
+	<Zone208>
 		<description>Cursed Forest</description>
 		<width>8</width>
 		<zoneID>208</zoneID>
@@ -1817,8 +1817,8 @@
 		<offsety>59</offsety>
 		<offsetx>55</offsetx>
 		<regionID>200</regionID>
-	</Zone>
-	<Zone>
+	</Zone208>
+	<Zone209>
 		<description>Tir na Nog</description>
 		<width>8</width>
 		<zoneID>209</zoneID>
@@ -1826,8 +1826,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>201</regionID>
-	</Zone>
-	<Zone>
+	</Zone209>
+	<Zone210>
 		<description>Mount Collory</description>
 		<width>8</width>
 		<zoneID>210</zoneID>
@@ -1835,8 +1835,8 @@
 		<offsety>51</offsety>
 		<offsetx>47</offsetx>
 		<regionID>200</regionID>
-	</Zone>
-	<Zone>
+	</Zone210>
+	<Zone211>
 		<description>Cruachan Gorge</description>
 		<width>8</width>
 		<zoneID>211</zoneID>
@@ -1844,8 +1844,8 @@
 		<offsety>43</offsety>
 		<offsetx>39</offsetx>
 		<regionID>200</regionID>
-	</Zone>
-	<Zone>
+	</Zone211>
+	<Zone212>
 		<description>Breifine</description>
 		<width>8</width>
 		<zoneID>212</zoneID>
@@ -1853,8 +1853,8 @@
 		<offsety>43</offsety>
 		<offsetx>47</offsetx>
 		<regionID>200</regionID>
-	</Zone>
-	<Zone>
+	</Zone212>
+	<Zone213>
 		<description>Meath</description>
 		<width>8</width>
 		<zoneID>213</zoneID>
@@ -1862,8 +1862,8 @@
 		<offsety>64</offsety>
 		<offsetx>64</offsetx>
 		<regionID>202</regionID>
-	</Zone>
-	<Zone>
+	</Zone213>
+	<Zone214>
 		<description>Emain Macha</description>
 		<width>8</width>
 		<zoneID>214</zoneID>
@@ -1871,8 +1871,8 @@
 		<offsety>35</offsety>
 		<offsetx>51</offsetx>
 		<regionID>200</regionID>
-	</Zone>
-	<Zone>
+	</Zone214>
+	<Zone215>
 		<description>Dunshire</description>
 		<width>8</width>
 		<zoneID>215</zoneID>
@@ -1880,8 +1880,8 @@
 		<offsety>64</offsety>
 		<offsetx>56</offsetx>
 		<regionID>202</regionID>
-	</Zone>
-	<Zone>
+	</Zone215>
+	<Zone216>
 		<description>Sheeroe Hills</description>
 		<width>8</width>
 		<zoneID>216</zoneID>
@@ -1889,8 +1889,8 @@
 		<offsety>79</offsety>
 		<offsetx>43</offsetx>
 		<regionID>200</regionID>
-	</Zone>
-	<Zone>
+	</Zone216>
+	<Zone217>
 		<description>Torrylin</description>
 		<width>8</width>
 		<zoneID>217</zoneID>
@@ -1898,8 +1898,8 @@
 		<offsety>72</offsety>
 		<offsetx>64</offsetx>
 		<regionID>202</regionID>
-	</Zone>
-	<Zone>
+	</Zone217>
+	<Zone218>
 		<description>Kilcullen</description>
 		<width>8</width>
 		<zoneID>218</zoneID>
@@ -1907,8 +1907,8 @@
 		<offsety>64</offsety>
 		<offsetx>72</offsetx>
 		<regionID>202</regionID>
-	</Zone>
-	<Zone>
+	</Zone218>
+	<Zone219>
 		<description>Saeranthal</description>
 		<width>8</width>
 		<zoneID>219</zoneID>
@@ -1916,8 +1916,8 @@
 		<offsety>72</offsety>
 		<offsetx>56</offsetx>
 		<regionID>202</regionID>
-	</Zone>
-	<Zone>
+	</Zone219>
+	<Zone220>
 		<description>Coruscating Mine</description>
 		<width>8</width>
 		<zoneID>220</zoneID>
@@ -1925,8 +1925,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>220</regionID>
-	</Zone>
-	<Zone>
+	</Zone220>
+	<Zone221>
 		<description>Muire Tomb</description>
 		<width>8</width>
 		<zoneID>221</zoneID>
@@ -1934,8 +1934,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>221</regionID>
-	</Zone>
-	<Zone>
+	</Zone221>
+	<Zone222>
 		<description>Spraggon Den</description>
 		<width>8</width>
 		<zoneID>222</zoneID>
@@ -1943,8 +1943,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>222</regionID>
-	</Zone>
-	<Zone>
+	</Zone222>
+	<Zone223>
 		<description>Koalinth Caverns</description>
 		<width>8</width>
 		<zoneID>223</zoneID>
@@ -1952,8 +1952,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>223</regionID>
-	</Zone>
-	<Zone>
+	</Zone223>
+	<Zone224>
 		<description>Treibh Caillte</description>
 		<width>8</width>
 		<zoneID>224</zoneID>
@@ -1961,8 +1961,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>224</regionID>
-	</Zone>
-	<Zone>
+	</Zone224>
+	<Zone225>
 		<description>Aberillan</description>
 		<width>8</width>
 		<zoneID>225</zoneID>
@@ -1970,8 +1970,8 @@
 		<offsety>72</offsety>
 		<offsetx>72</offsetx>
 		<regionID>202</regionID>
-	</Zone>
-	<Zone>
+	</Zone225>
+	<Zone226>
 		<description>Midgard's Abandoned Mines</description>
 		<width>8</width>
 		<zoneID>226</zoneID>
@@ -1979,8 +1979,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>226</regionID>
-	</Zone>
-	<Zone>
+	</Zone226>
+	<Zone227>
 		<description>Albion's Abandoned Mines</description>
 		<width>8</width>
 		<zoneID>227</zoneID>
@@ -1988,8 +1988,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>227</regionID>
-	</Zone>
-	<Zone>
+	</Zone227>
+	<Zone228>
 		<description>Hibernia's Abandoned Mines</description>
 		<width>8</width>
 		<zoneID>228</zoneID>
@@ -1997,8 +1997,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>228</regionID>
-	</Zone>
-	<Zone>
+	</Zone228>
+	<Zone229>
 		<description>Burial Grounds</description>
 		<width>8</width>
 		<zoneID>229</zoneID>
@@ -2006,8 +2006,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>229</regionID>
-	</Zone>
-	<Zone>
+	</Zone229>
+	<Zone231>
 		<description>ArtOutside</description>
 		<width>8</width>
 		<zoneID>231</zoneID>
@@ -2015,8 +2015,8 @@
 		<offsety>80</offsety>
 		<offsetx>80</offsetx>
 		<regionID>231</regionID>
-	</Zone>
-	<Zone>
+	</Zone231>
+	<Zone232>
 		<description>ArtInside</description>
 		<width>8</width>
 		<zoneID>232</zoneID>
@@ -2024,8 +2024,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>232</regionID>
-	</Zone>
-	<Zone>
+	</Zone232>
+	<Zone233>
 		<description>Summoner's Hall</description>
 		<width>8</width>
 		<zoneID>233</zoneID>
@@ -2033,8 +2033,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>233</regionID>
-	</Zone>
-	<Zone>
+	</Zone233>
+	<Zone234>
 		<description>The Proving Grounds</description>
 		<width>8</width>
 		<zoneID>234</zoneID>
@@ -2042,8 +2042,8 @@
 		<offsety>64</offsety>
 		<offsetx>64</offsetx>
 		<regionID>234</regionID>
-	</Zone>
-	<Zone>
+	</Zone234>
+	<Zone235>
 		<description>The Lions Den</description>
 		<width>8</width>
 		<zoneID>235</zoneID>
@@ -2051,8 +2051,8 @@
 		<offsety>64</offsety>
 		<offsetx>64</offsetx>
 		<regionID>235</regionID>
-	</Zone>
-	<Zone>
+	</Zone235>
+	<Zone236>
 		<description>The Hills of Claret</description>
 		<width>8</width>
 		<zoneID>236</zoneID>
@@ -2060,8 +2060,8 @@
 		<offsety>64</offsety>
 		<offsetx>64</offsetx>
 		<regionID>236</regionID>
-	</Zone>
-	<Zone>
+	</Zone236>
+	<Zone237>
 		<description>Killaloe</description>
 		<width>8</width>
 		<zoneID>237</zoneID>
@@ -2069,8 +2069,8 @@
 		<offsety>64</offsety>
 		<offsetx>64</offsetx>
 		<regionID>237</regionID>
-	</Zone>
-	<Zone>
+	</Zone237>
+	<Zone238>
 		<description>Thidranki</description>
 		<width>8</width>
 		<zoneID>238</zoneID>
@@ -2078,8 +2078,8 @@
 		<offsety>64</offsety>
 		<offsetx>64</offsetx>
 		<regionID>238</regionID>
-	</Zone>
-	<Zone>
+	</Zone238>
+	<Zone239>
 		<description>Braemar</description>
 		<width>8</width>
 		<zoneID>239</zoneID>
@@ -2087,8 +2087,8 @@
 		<offsety>64</offsety>
 		<offsetx>64</offsetx>
 		<regionID>239</regionID>
-	</Zone>
-	<Zone>
+	</Zone239>
+	<Zone240>
 		<description>Wilton</description>
 		<width>8</width>
 		<zoneID>240</zoneID>
@@ -2096,8 +2096,8 @@
 		<offsety>64</offsety>
 		<offsetx>64</offsetx>
 		<regionID>240</regionID>
-	</Zone>
-	<Zone>
+	</Zone240>
+	<Zone241>
 		<description>Molvik</description>
 		<width>8</width>
 		<zoneID>241</zoneID>
@@ -2105,8 +2105,8 @@
 		<offsety>64</offsety>
 		<offsetx>64</offsetx>
 		<regionID>241</regionID>
-	</Zone>
-	<Zone>
+	</Zone241>
+	<Zone242>
 		<description>TestBG</description>
 		<width>8</width>
 		<zoneID>242</zoneID>
@@ -2114,8 +2114,8 @@
 		<offsety>64</offsety>
 		<offsetx>64</offsetx>
 		<regionID>242</regionID>
-	</Zone>
-	<Zone>
+	</Zone242>
+	<Zone243>
 		<description>Kobold Undercity</description>
 		<width>8</width>
 		<zoneID>243</zoneID>
@@ -2123,8 +2123,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>243</regionID>
-	</Zone>
-	<Zone>
+	</Zone243>
+	<Zone244>
 		<description>Passage of Conflict</description>
 		<width>8</width>
 		<zoneID>244</zoneID>
@@ -2132,8 +2132,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>244</regionID>
-	</Zone>
-	<Zone>
+	</Zone244>
+	<Zone249>
 		<description>Darkness Falls</description>
 		<width>8</width>
 		<zoneID>249</zoneID>
@@ -2141,8 +2141,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>249</regionID>
-	</Zone>
-	<Zone>
+	</Zone249>
+	<Zone254>
 		<description>Leirvik</description>
 		<width>8</width>
 		<zoneID>254</zoneID>
@@ -2150,8 +2150,8 @@
 		<offsety>32</offsety>
 		<offsetx>32</offsetx>
 		<regionID>242</regionID>
-	</Zone>
-	<Zone>
+	</Zone254>
+	<Zone256>
 		<description>Forgotten Mines</description>
 		<width>8</width>
 		<zoneID>256</zoneID>
@@ -2159,8 +2159,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>256</regionID>
-	</Zone>
-	<Zone>
+	</Zone256>
+	<Zone257>
 		<description>Forgotten Mines</description>
 		<width>8</width>
 		<zoneID>257</zoneID>
@@ -2168,8 +2168,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>257</regionID>
-	</Zone>
-	<Zone>
+	</Zone257>
+	<Zone258>
 		<description>Forgotten Mines</description>
 		<width>8</width>
 		<zoneID>258</zoneID>
@@ -2177,8 +2177,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>258</regionID>
-	</Zone>
-	<Zone>
+	</Zone258>
+	<Zone260>
 		<description>Chiltern</description>
 		<width>8</width>
 		<zoneID>260</zoneID>
@@ -2186,8 +2186,8 @@
 		<offsety>64</offsety>
 		<offsetx>48</offsetx>
 		<regionID>2</regionID>
-	</Zone>
-	<Zone>
+	</Zone260>
+	<Zone261>
 		<description>Sherborne</description>
 		<width>8</width>
 		<zoneID>261</zoneID>
@@ -2195,8 +2195,8 @@
 		<offsety>72</offsety>
 		<offsetx>48</offsetx>
 		<regionID>2</regionID>
-	</Zone>
-	<Zone>
+	</Zone261>
+	<Zone262>
 		<description>Stoneleigh</description>
 		<width>8</width>
 		<zoneID>262</zoneID>
@@ -2204,8 +2204,8 @@
 		<offsety>56</offsety>
 		<offsetx>48</offsetx>
 		<regionID>2</regionID>
-	</Zone>
-	<Zone>
+	</Zone262>
+	<Zone266>
 		<description>Holmestrand</description>
 		<width>8</width>
 		<zoneID>266</zoneID>
@@ -2213,8 +2213,8 @@
 		<offsety>64</offsety>
 		<offsetx>80</offsetx>
 		<regionID>102</regionID>
-	</Zone>
-	<Zone>
+	</Zone266>
+	<Zone267>
 		<description>Nittedal</description>
 		<width>8</width>
 		<zoneID>267</zoneID>
@@ -2222,8 +2222,8 @@
 		<offsety>72</offsety>
 		<offsetx>80</offsetx>
 		<regionID>102</regionID>
-	</Zone>
-	<Zone>
+	</Zone267>
+	<Zone268>
 		<description>Stavgaard</description>
 		<width>8</width>
 		<zoneID>268</zoneID>
@@ -2231,8 +2231,8 @@
 		<offsety>56</offsety>
 		<offsetx>80</offsetx>
 		<regionID>102</regionID>
-	</Zone>
-	<Zone>
+	</Zone268>
+	<Zone272>
 		<description>Tullamore</description>
 		<width>8</width>
 		<zoneID>272</zoneID>
@@ -2240,8 +2240,8 @@
 		<offsety>80</offsety>
 		<offsetx>64</offsetx>
 		<regionID>202</regionID>
-	</Zone>
-	<Zone>
+	</Zone272>
+	<Zone273>
 		<description>Moycullen</description>
 		<width>8</width>
 		<zoneID>273</zoneID>
@@ -2249,8 +2249,8 @@
 		<offsety>80</offsety>
 		<offsetx>56</offsetx>
 		<regionID>202</regionID>
-	</Zone>
-	<Zone>
+	</Zone273>
+	<Zone274>
 		<description>Broughshane</description>
 		<width>8</width>
 		<zoneID>274</zoneID>
@@ -2258,8 +2258,8 @@
 		<offsety>80</offsety>
 		<offsetx>72</offsetx>
 		<regionID>202</regionID>
-	</Zone>
-	<Zone>
+	</Zone274>
+	<Zone278>
 		<description>Damp Cavern</description>
 		<width>8</width>
 		<zoneID>278</zoneID>
@@ -2267,8 +2267,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>278</regionID>
-	</Zone>
-	<Zone>
+	</Zone278>
+	<Zone279>
 		<description>Damp Cavern</description>
 		<width>8</width>
 		<zoneID>279</zoneID>
@@ -2276,8 +2276,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>279</regionID>
-	</Zone>
-	<Zone>
+	</Zone279>
+	<Zone280>
 		<description>Damp Cavern</description>
 		<width>8</width>
 		<zoneID>280</zoneID>
@@ -2285,8 +2285,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>280</regionID>
-	</Zone>
-	<Zone>
+	</Zone280>
+	<Zone281>
 		<description>Forgotten Sepulchre</description>
 		<width>8</width>
 		<zoneID>281</zoneID>
@@ -2294,8 +2294,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>281</regionID>
-	</Zone>
-	<Zone>
+	</Zone281>
+	<Zone282>
 		<description>Forgotten Sepulchre</description>
 		<width>8</width>
 		<zoneID>282</zoneID>
@@ -2303,8 +2303,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>282</regionID>
-	</Zone>
-	<Zone>
+	</Zone282>
+	<Zone283>
 		<description>Forgotten Sepulchre</description>
 		<width>8</width>
 		<zoneID>283</zoneID>
@@ -2312,8 +2312,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>283</regionID>
-	</Zone>
-	<Zone>
+	</Zone283>
+	<Zone284>
 		<description>Concealed Guardhouse</description>
 		<width>8</width>
 		<zoneID>284</zoneID>
@@ -2321,8 +2321,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>284</regionID>
-	</Zone>
-	<Zone>
+	</Zone284>
+	<Zone285>
 		<description>Concealed Guardhouse</description>
 		<width>8</width>
 		<zoneID>285</zoneID>
@@ -2330,8 +2330,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>285</regionID>
-	</Zone>
-	<Zone>
+	</Zone285>
+	<Zone286>
 		<description>Concealed Guardhouse</description>
 		<width>8</width>
 		<zoneID>286</zoneID>
@@ -2339,8 +2339,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>286</regionID>
-	</Zone>
-	<Zone>
+	</Zone286>
+	<Zone287>
 		<description>The Gossamer Grotto</description>
 		<width>8</width>
 		<zoneID>287</zoneID>
@@ -2348,8 +2348,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>287</regionID>
-	</Zone>
-	<Zone>
+	</Zone287>
+	<Zone288>
 		<description>The Gossamer Grotto</description>
 		<width>8</width>
 		<zoneID>288</zoneID>
@@ -2357,8 +2357,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>288</regionID>
-	</Zone>
-	<Zone>
+	</Zone288>
+	<Zone289>
 		<description>The Gossamer Grotto</description>
 		<width>8</width>
 		<zoneID>289</zoneID>
@@ -2366,8 +2366,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>289</regionID>
-	</Zone>
-	<Zone>
+	</Zone289>
+	<Zone290>
 		<description>Underground Tunnel</description>
 		<width>8</width>
 		<zoneID>290</zoneID>
@@ -2375,8 +2375,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>290</regionID>
-	</Zone>
-	<Zone>
+	</Zone290>
+	<Zone291>
 		<description>Underground Tunnel</description>
 		<width>8</width>
 		<zoneID>291</zoneID>
@@ -2384,8 +2384,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>291</regionID>
-	</Zone>
-	<Zone>
+	</Zone291>
+	<Zone292>
 		<description>Underground Tunnel</description>
 		<width>8</width>
 		<zoneID>292</zoneID>
@@ -2393,8 +2393,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>292</regionID>
-	</Zone>
-	<Zone>
+	</Zone292>
+	<Zone293>
 		<description>Burial Tomb</description>
 		<width>8</width>
 		<zoneID>293</zoneID>
@@ -2402,8 +2402,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>293</regionID>
-	</Zone>
-	<Zone>
+	</Zone293>
+	<Zone294>
 		<description>Burial Tomb</description>
 		<width>8</width>
 		<zoneID>294</zoneID>
@@ -2411,8 +2411,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>294</regionID>
-	</Zone>
-	<Zone>
+	</Zone294>
+	<Zone295>
 		<description>Burial Tomb</description>
 		<width>8</width>
 		<zoneID>295</zoneID>
@@ -2420,8 +2420,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>295</regionID>
-	</Zone>
-	<Zone>
+	</Zone295>
+	<Zone296>
 		<description>Desecrated Grounds</description>
 		<width>8</width>
 		<zoneID>296</zoneID>
@@ -2429,8 +2429,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>296</regionID>
-	</Zone>
-	<Zone>
+	</Zone296>
+	<Zone297>
 		<description>Desecrated Grounds</description>
 		<width>8</width>
 		<zoneID>297</zoneID>
@@ -2438,8 +2438,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>297</regionID>
-	</Zone>
-	<Zone>
+	</Zone297>
+	<Zone298>
 		<description>Desecrated Grounds</description>
 		<width>8</width>
 		<zoneID>298</zoneID>
@@ -2447,8 +2447,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>298</regionID>
-	</Zone>
-	<Zone>
+	</Zone298>
+	<Zone300>
 		<description>Damp Cavern</description>
 		<width>8</width>
 		<zoneID>300</zoneID>
@@ -2456,8 +2456,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>300</regionID>
-	</Zone>
-	<Zone>
+	</Zone300>
+	<Zone301>
 		<description>Damp Cavern</description>
 		<width>8</width>
 		<zoneID>301</zoneID>
@@ -2465,8 +2465,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>301</regionID>
-	</Zone>
-	<Zone>
+	</Zone301>
+	<Zone302>
 		<description>Damp Cavern</description>
 		<width>8</width>
 		<zoneID>302</zoneID>
@@ -2474,8 +2474,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>302</regionID>
-	</Zone>
-	<Zone>
+	</Zone302>
+	<Zone303>
 		<description>Damp Cavern</description>
 		<width>8</width>
 		<zoneID>303</zoneID>
@@ -2483,8 +2483,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>303</regionID>
-	</Zone>
-	<Zone>
+	</Zone303>
+	<Zone304>
 		<description>Damp Cavern</description>
 		<width>8</width>
 		<zoneID>304</zoneID>
@@ -2492,8 +2492,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>304</regionID>
-	</Zone>
-	<Zone>
+	</Zone304>
+	<Zone305>
 		<description>Forgotten Sepulchre</description>
 		<width>8</width>
 		<zoneID>305</zoneID>
@@ -2501,8 +2501,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>305</regionID>
-	</Zone>
-	<Zone>
+	</Zone305>
+	<Zone306>
 		<description>Forgotten Sepulchre</description>
 		<width>8</width>
 		<zoneID>306</zoneID>
@@ -2510,8 +2510,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>306</regionID>
-	</Zone>
-	<Zone>
+	</Zone306>
+	<Zone307>
 		<description>Forgotten Sepulchre</description>
 		<width>8</width>
 		<zoneID>307</zoneID>
@@ -2519,8 +2519,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>307</regionID>
-	</Zone>
-	<Zone>
+	</Zone307>
+	<Zone308>
 		<description>Forgotten Sepulchre</description>
 		<width>8</width>
 		<zoneID>308</zoneID>
@@ -2528,8 +2528,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>308</regionID>
-	</Zone>
-	<Zone>
+	</Zone308>
+	<Zone309>
 		<description>Forgotten Sepulchre</description>
 		<width>8</width>
 		<zoneID>309</zoneID>
@@ -2537,8 +2537,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>309</regionID>
-	</Zone>
-	<Zone>
+	</Zone309>
+	<Zone310>
 		<description>Concealed Guardhouse</description>
 		<width>8</width>
 		<zoneID>310</zoneID>
@@ -2546,8 +2546,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>310</regionID>
-	</Zone>
-	<Zone>
+	</Zone310>
+	<Zone311>
 		<description>Concealed Guardhouse</description>
 		<width>8</width>
 		<zoneID>311</zoneID>
@@ -2555,8 +2555,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>311</regionID>
-	</Zone>
-	<Zone>
+	</Zone311>
+	<Zone312>
 		<description>Concealed Guardhouse</description>
 		<width>8</width>
 		<zoneID>312</zoneID>
@@ -2564,8 +2564,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>312</regionID>
-	</Zone>
-	<Zone>
+	</Zone312>
+	<Zone313>
 		<description>Concealed Guardhouse</description>
 		<width>8</width>
 		<zoneID>313</zoneID>
@@ -2573,8 +2573,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>313</regionID>
-	</Zone>
-	<Zone>
+	</Zone313>
+	<Zone314>
 		<description>Concealed Guardhouse</description>
 		<width>8</width>
 		<zoneID>314</zoneID>
@@ -2582,8 +2582,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>314</regionID>
-	</Zone>
-	<Zone>
+	</Zone314>
+	<Zone315>
 		<description>The Gossamer Grotto</description>
 		<width>8</width>
 		<zoneID>315</zoneID>
@@ -2591,8 +2591,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>315</regionID>
-	</Zone>
-	<Zone>
+	</Zone315>
+	<Zone316>
 		<description>The Gossamer Grotto</description>
 		<width>8</width>
 		<zoneID>316</zoneID>
@@ -2600,8 +2600,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>316</regionID>
-	</Zone>
-	<Zone>
+	</Zone316>
+	<Zone317>
 		<description>The Gossamer Grotto</description>
 		<width>8</width>
 		<zoneID>317</zoneID>
@@ -2609,8 +2609,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>317</regionID>
-	</Zone>
-	<Zone>
+	</Zone317>
+	<Zone318>
 		<description>The Gossamer Grotto</description>
 		<width>8</width>
 		<zoneID>318</zoneID>
@@ -2618,8 +2618,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>318</regionID>
-	</Zone>
-	<Zone>
+	</Zone318>
+	<Zone319>
 		<description>The Gossamer Grotto</description>
 		<width>8</width>
 		<zoneID>319</zoneID>
@@ -2627,8 +2627,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>319</regionID>
-	</Zone>
-	<Zone>
+	</Zone319>
+	<Zone320>
 		<description>Underground Tunnel</description>
 		<width>8</width>
 		<zoneID>320</zoneID>
@@ -2636,8 +2636,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>320</regionID>
-	</Zone>
-	<Zone>
+	</Zone320>
+	<Zone321>
 		<description>Underground Tunnel</description>
 		<width>8</width>
 		<zoneID>321</zoneID>
@@ -2645,8 +2645,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>321</regionID>
-	</Zone>
-	<Zone>
+	</Zone321>
+	<Zone322>
 		<description>Underground Tunnel</description>
 		<width>8</width>
 		<zoneID>322</zoneID>
@@ -2654,8 +2654,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>322</regionID>
-	</Zone>
-	<Zone>
+	</Zone322>
+	<Zone323>
 		<description>Underground Tunnel</description>
 		<width>8</width>
 		<zoneID>323</zoneID>
@@ -2663,8 +2663,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>323</regionID>
-	</Zone>
-	<Zone>
+	</Zone323>
+	<Zone324>
 		<description>Underground Tunnel</description>
 		<width>8</width>
 		<zoneID>324</zoneID>
@@ -2672,8 +2672,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>324</regionID>
-	</Zone>
-	<Zone>
+	</Zone324>
+	<Zone325>
 		<description>Hib 30 Dungeon</description>
 		<width>8</width>
 		<zoneID>325</zoneID>
@@ -2681,8 +2681,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>325</regionID>
-	</Zone>
-	<Zone>
+	</Zone325>
+	<Zone326>
 		<description>Alb 30 Dungeon</description>
 		<width>8</width>
 		<zoneID>326</zoneID>
@@ -2690,8 +2690,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>326</regionID>
-	</Zone>
-	<Zone>
+	</Zone326>
+	<Zone327>
 		<description>Caverns of Madness</description>
 		<width>8</width>
 		<zoneID>327</zoneID>
@@ -2699,8 +2699,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>327</regionID>
-	</Zone>
-	<Zone>
+	</Zone327>
+	<Zone328>
 		<description>Mid 30 Dungeon</description>
 		<width>8</width>
 		<zoneID>328</zoneID>
@@ -2708,8 +2708,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>328</regionID>
-	</Zone>
-	<Zone>
+	</Zone328>
+	<Zone329>
 		<description>Jarlsberg's Hideout</description>
 		<width>8</width>
 		<zoneID>329</zoneID>
@@ -2717,8 +2717,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>329</regionID>
-	</Zone>
-	<Zone>
+	</Zone329>
+	<Zone330>
 		<description>The Foothills of Albion</description>
 		<width>8</width>
 		<zoneID>330</zoneID>
@@ -2726,8 +2726,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>330</regionID>
-	</Zone>
-	<Zone>
+	</Zone330>
+	<Zone331>
 		<description>Thieves Den</description>
 		<width>8</width>
 		<zoneID>331</zoneID>
@@ -2735,8 +2735,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>331</regionID>
-	</Zone>
-	<Zone>
+	</Zone331>
+	<Zone332>
 		<description>Rebel Half Orc Lair</description>
 		<width>8</width>
 		<zoneID>332</zoneID>
@@ -2744,8 +2744,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>332</regionID>
-	</Zone>
-	<Zone>
+	</Zone332>
+	<Zone333>
 		<description>The Haunted Halls</description>
 		<width>8</width>
 		<zoneID>333</zoneID>
@@ -2753,8 +2753,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>333</regionID>
-	</Zone>
-	<Zone>
+	</Zone333>
+	<Zone334>
 		<description>The Foothills of Midgard</description>
 		<width>8</width>
 		<zoneID>334</zoneID>
@@ -2762,8 +2762,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>334</regionID>
-	</Zone>
-	<Zone>
+	</Zone334>
+	<Zone335>
 		<description>The Foothills of Hibernia</description>
 		<width>8</width>
 		<zoneID>335</zoneID>
@@ -2771,8 +2771,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>335</regionID>
-	</Zone>
-	<Zone>
+	</Zone335>
+	<Zone336>
 		<description>Demonic Prison</description>
 		<width>8</width>
 		<zoneID>336</zoneID>
@@ -2780,8 +2780,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>336</regionID>
-	</Zone>
-	<Zone>
+	</Zone336>
+	<Zone337>
 		<description>Demonic Prison</description>
 		<width>8</width>
 		<zoneID>337</zoneID>
@@ -2789,8 +2789,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>337</regionID>
-	</Zone>
-	<Zone>
+	</Zone337>
+	<Zone338>
 		<description>Demonic Prison</description>
 		<width>8</width>
 		<zoneID>338</zoneID>
@@ -2798,8 +2798,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>338</regionID>
-	</Zone>
-	<Zone>
+	</Zone338>
+	<Zone339>
 		<description>Brimstone Caverns</description>
 		<width>8</width>
 		<zoneID>339</zoneID>
@@ -2807,8 +2807,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>339</regionID>
-	</Zone>
-	<Zone>
+	</Zone339>
+	<Zone340>
 		<description>Halls of Helgardh</description>
 		<width>8</width>
 		<zoneID>340</zoneID>
@@ -2816,8 +2816,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>340</regionID>
-	</Zone>
-	<Zone>
+	</Zone340>
+	<Zone341>
 		<description>Cave of Cruachan</description>
 		<width>8</width>
 		<zoneID>341</zoneID>
@@ -2825,8 +2825,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>341</regionID>
-	</Zone>
-	<Zone>
+	</Zone341>
+	<Zone342>
 		<description>Mid Launch 2</description>
 		<width>8</width>
 		<zoneID>342</zoneID>
@@ -2834,8 +2834,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>342</regionID>
-	</Zone>
-	<Zone>
+	</Zone342>
+	<Zone343>
 		<description>Alb Launch 2</description>
 		<width>8</width>
 		<zoneID>343</zoneID>
@@ -2843,8 +2843,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>343</regionID>
-	</Zone>
-	<Zone>
+	</Zone343>
+	<Zone344>
 		<description>Hib Launch 2</description>
 		<width>8</width>
 		<zoneID>344</zoneID>
@@ -2852,8 +2852,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>344</regionID>
-	</Zone>
-	<Zone>
+	</Zone344>
+	<Zone345>
 		<description>Tomte Prison</description>
 		<width>8</width>
 		<zoneID>345</zoneID>
@@ -2861,8 +2861,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>345</regionID>
-	</Zone>
-	<Zone>
+	</Zone345>
+	<Zone346>
 		<description>Nisse's Retreat</description>
 		<width>8</width>
 		<zoneID>346</zoneID>
@@ -2870,8 +2870,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>346</regionID>
-	</Zone>
-	<Zone>
+	</Zone346>
+	<Zone347>
 		<description>Lair of the Demon Lord</description>
 		<width>8</width>
 		<zoneID>347</zoneID>
@@ -2879,8 +2879,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>347</regionID>
-	</Zone>
-	<Zone>
+	</Zone347>
+	<Zone348>
 		<description>The Baron's Gaol</description>
 		<width>8</width>
 		<zoneID>348</zoneID>
@@ -2888,8 +2888,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>348</regionID>
-	</Zone>
-	<Zone>
+	</Zone348>
+	<Zone349>
 		<description>Lios's Eternal Rest</description>
 		<width>8</width>
 		<zoneID>349</zoneID>
@@ -2897,8 +2897,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>349</regionID>
-	</Zone>
-	<Zone>
+	</Zone349>
+	<Zone350>
 		<description>Liche's Unrest</description>
 		<width>8</width>
 		<zoneID>350</zoneID>
@@ -2906,8 +2906,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>350</regionID>
-	</Zone>
-	<Zone>
+	</Zone350>
+	<Zone351>
 		<description>Nephraal's Gaol</description>
 		<width>8</width>
 		<zoneID>351</zoneID>
@@ -2915,8 +2915,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>351</regionID>
-	</Zone>
-	<Zone>
+	</Zone351>
+	<Zone352>
 		<description>Morfesa's Gaol</description>
 		<width>8</width>
 		<zoneID>352</zoneID>
@@ -2924,8 +2924,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>352</regionID>
-	</Zone>
-	<Zone>
+	</Zone352>
+	<Zone353>
 		<description>Den of Bones</description>
 		<width>8</width>
 		<zoneID>353</zoneID>
@@ -2933,8 +2933,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>353</regionID>
-	</Zone>
-	<Zone>
+	</Zone353>
+	<Zone354>
 		<description>The Lost Burrow</description>
 		<width>8</width>
 		<zoneID>354</zoneID>
@@ -2942,8 +2942,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>354</regionID>
-	</Zone>
-	<Zone>
+	</Zone354>
+	<Zone355>
 		<description>Hib 45 Dungeon</description>
 		<width>8</width>
 		<zoneID>355</zoneID>
@@ -2951,8 +2951,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>355</regionID>
-	</Zone>
-	<Zone>
+	</Zone355>
+	<Zone356>
 		<description>Alb 45 Dungeon</description>
 		<width>8</width>
 		<zoneID>356</zoneID>
@@ -2960,8 +2960,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>356</regionID>
-	</Zone>
-	<Zone>
+	</Zone356>
+	<Zone357>
 		<description>The Cursed Lair</description>
 		<width>8</width>
 		<zoneID>357</zoneID>
@@ -2969,8 +2969,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>357</regionID>
-	</Zone>
-	<Zone>
+	</Zone357>
+	<Zone358>
 		<description>The Burrow</description>
 		<width>8</width>
 		<zoneID>358</zoneID>
@@ -2978,8 +2978,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>358</regionID>
-	</Zone>
-	<Zone>
+	</Zone358>
+	<Zone359>
 		<description>Mid 45 Dungeon</description>
 		<width>8</width>
 		<zoneID>359</zoneID>
@@ -2987,8 +2987,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>359</regionID>
-	</Zone>
-	<Zone>
+	</Zone359>
+	<Zone360>
 		<description>King Eirik's Throne Room</description>
 		<width>8</width>
 		<zoneID>360</zoneID>
@@ -2996,8 +2996,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>360</regionID>
-	</Zone>
-	<Zone>
+	</Zone360>
+	<Zone361>
 		<description>Arachnid's Labyrinth</description>
 		<width>8</width>
 		<zoneID>361</zoneID>
@@ -3005,8 +3005,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>361</regionID>
-	</Zone>
-	<Zone>
+	</Zone361>
+	<Zone362>
 		<description>The Master's Lair</description>
 		<width>8</width>
 		<zoneID>362</zoneID>
@@ -3014,8 +3014,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>362</regionID>
-	</Zone>
-	<Zone>
+	</Zone362>
+	<Zone363>
 		<description>Anataeus' Sanctuary</description>
 		<width>8</width>
 		<zoneID>363</zoneID>
@@ -3023,8 +3023,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>363</regionID>
-	</Zone>
-	<Zone>
+	</Zone363>
+	<Zone364>
 		<description>Keeper Iraeda's Sanctuary</description>
 		<width>8</width>
 		<zoneID>364</zoneID>
@@ -3032,8 +3032,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>364</regionID>
-	</Zone>
-	<Zone>
+	</Zone364>
+	<Zone365>
 		<description>Bandit Lair</description>
 		<width>8</width>
 		<zoneID>365</zoneID>
@@ -3041,8 +3041,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>365</regionID>
-	</Zone>
-	<Zone>
+	</Zone365>
+	<Zone366>
 		<description>Gnoll Lair</description>
 		<width>8</width>
 		<zoneID>366</zoneID>
@@ -3050,8 +3050,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>366</regionID>
-	</Zone>
-	<Zone>
+	</Zone366>
+	<Zone367>
 		<description>Vandr's Bane</description>
 		<width>8</width>
 		<zoneID>367</zoneID>
@@ -3059,8 +3059,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>367</regionID>
-	</Zone>
-	<Zone>
+	</Zone367>
+	<Zone368>
 		<description>Past and Present</description>
 		<width>8</width>
 		<zoneID>368</zoneID>
@@ -3068,8 +3068,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>368</regionID>
-	</Zone>
-	<Zone>
+	</Zone368>
+	<Zone369>
 		<description>Half-Orc Camp</description>
 		<width>8</width>
 		<zoneID>369</zoneID>
@@ -3077,8 +3077,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>369</regionID>
-	</Zone>
-	<Zone>
+	</Zone369>
+	<Zone370>
 		<description>Brutal Realization</description>
 		<width>8</width>
 		<zoneID>370</zoneID>
@@ -3086,8 +3086,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>370</regionID>
-	</Zone>
-	<Zone>
+	</Zone370>
+	<Zone371>
 		<description>History Repeats Itself</description>
 		<width>8</width>
 		<zoneID>371</zoneID>
@@ -3095,8 +3095,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>371</regionID>
-	</Zone>
-	<Zone>
+	</Zone371>
+	<Zone372>
 		<description>Hounds of Arawn</description>
 		<width>8</width>
 		<zoneID>372</zoneID>
@@ -3104,8 +3104,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>372</regionID>
-	</Zone>
-	<Zone>
+	</Zone372>
+	<Zone373>
 		<description>Passage of Echoes</description>
 		<width>8</width>
 		<zoneID>373</zoneID>
@@ -3113,8 +3113,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>373</regionID>
-	</Zone>
-	<Zone>
+	</Zone373>
+	<Zone374>
 		<description>Unrestful Tomb</description>
 		<width>8</width>
 		<zoneID>374</zoneID>
@@ -3122,8 +3122,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>374</regionID>
-	</Zone>
-	<Zone>
+	</Zone374>
+	<Zone375>
 		<description>Lost Passages</description>
 		<width>8</width>
 		<zoneID>375</zoneID>
@@ -3131,8 +3131,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>375</regionID>
-	</Zone>
-	<Zone>
+	</Zone375>
+	<Zone376>
 		<description>Goblin's Cookery</description>
 		<width>8</width>
 		<zoneID>376</zoneID>
@@ -3140,8 +3140,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>376</regionID>
-	</Zone>
-	<Zone>
+	</Zone376>
+	<Zone377>
 		<description>The Beastmaster's Den</description>
 		<width>8</width>
 		<zoneID>377</zoneID>
@@ -3149,8 +3149,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>377</regionID>
-	</Zone>
-	<Zone>
+	</Zone377>
+	<Zone378>
 		<description>Keeper Garran's Sanctuary</description>
 		<width>8</width>
 		<zoneID>378</zoneID>
@@ -3158,8 +3158,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>378</regionID>
-	</Zone>
-	<Zone>
+	</Zone378>
+	<Zone379>
 		<description>The Funerary Hall</description>
 		<width>8</width>
 		<zoneID>379</zoneID>
@@ -3167,8 +3167,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>379</regionID>
-	</Zone>
-	<Zone>
+	</Zone379>
+	<Zone380>
 		<description>Lair of Doom</description>
 		<width>8</width>
 		<zoneID>380</zoneID>
@@ -3176,8 +3176,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>380</regionID>
-	</Zone>
-	<Zone>
+	</Zone380>
+	<Zone381>
 		<description>The Arena</description>
 		<width>8</width>
 		<zoneID>381</zoneID>
@@ -3185,8 +3185,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>381</regionID>
-	</Zone>
-	<Zone>
+	</Zone381>
+	<Zone382>
 		<description>The Funerary Hall</description>
 		<width>8</width>
 		<zoneID>382</zoneID>
@@ -3194,8 +3194,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>382</regionID>
-	</Zone>
-	<Zone>
+	</Zone382>
+	<Zone383>
 		<description>The Funerary Hall</description>
 		<width>8</width>
 		<zoneID>383</zoneID>
@@ -3203,8 +3203,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>383</regionID>
-	</Zone>
-	<Zone>
+	</Zone383>
+	<Zone384>
 		<description>The Ritual Hall</description>
 		<width>8</width>
 		<zoneID>384</zoneID>
@@ -3212,8 +3212,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>384</regionID>
-	</Zone>
-	<Zone>
+	</Zone384>
+	<Zone385>
 		<description>The Betrayer's Den</description>
 		<width>8</width>
 		<zoneID>385</zoneID>
@@ -3221,8 +3221,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>385</regionID>
-	</Zone>
-	<Zone>
+	</Zone385>
+	<Zone386>
 		<description>the Sundered Tombs</description>
 		<width>8</width>
 		<zoneID>386</zoneID>
@@ -3230,8 +3230,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>386</regionID>
-	</Zone>
-	<Zone>
+	</Zone386>
+	<Zone387>
 		<description>the Sundered Tombs</description>
 		<width>8</width>
 		<zoneID>387</zoneID>
@@ -3239,8 +3239,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>387</regionID>
-	</Zone>
-	<Zone>
+	</Zone387>
+	<Zone388>
 		<description>the Sundered Tombs</description>
 		<width>8</width>
 		<zoneID>388</zoneID>
@@ -3248,8 +3248,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>388</regionID>
-	</Zone>
-	<Zone>
+	</Zone388>
+	<Zone389>
 		<description>Shafts of the Tenebrae</description>
 		<width>8</width>
 		<zoneID>389</zoneID>
@@ -3257,8 +3257,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>389</regionID>
-	</Zone>
-	<Zone>
+	</Zone389>
+	<Zone390>
 		<description>Lair of the Exiled</description>
 		<width>8</width>
 		<zoneID>390</zoneID>
@@ -3266,8 +3266,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>390</regionID>
-	</Zone>
-	<Zone>
+	</Zone390>
+	<Zone392>
 		<description>The Hall of Reawakening</description>
 		<width>8</width>
 		<zoneID>392</zoneID>
@@ -3275,8 +3275,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>392</regionID>
-	</Zone>
-	<Zone>
+	</Zone392>
+	<Zone393>
 		<description>The Hidden Crypt</description>
 		<width>8</width>
 		<zoneID>393</zoneID>
@@ -3284,8 +3284,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>393</regionID>
-	</Zone>
-	<Zone>
+	</Zone393>
+	<Zone394>
 		<description>King Constantine's Throne Room</description>
 		<width>8</width>
 		<zoneID>394</zoneID>
@@ -3293,8 +3293,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>394</regionID>
-	</Zone>
-	<Zone>
+	</Zone394>
+	<Zone395>
 		<description>King Lamfhotas' Throne Room</description>
 		<width>8</width>
 		<zoneID>395</zoneID>
@@ -3302,8 +3302,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>395</regionID>
-	</Zone>
-	<Zone>
+	</Zone395>
+	<Zone396>
 		<description>Depths of Despair</description>
 		<width>8</width>
 		<zoneID>396</zoneID>
@@ -3311,8 +3311,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>396</regionID>
-	</Zone>
-	<Zone>
+	</Zone396>
+	<Zone397>
 		<description>the Realm of the Damned</description>
 		<width>8</width>
 		<zoneID>397</zoneID>
@@ -3320,8 +3320,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>397</regionID>
-	</Zone>
-	<Zone>
+	</Zone397>
+	<Zone400>
 		<description>Burial Tomb</description>
 		<width>8</width>
 		<zoneID>400</zoneID>
@@ -3329,8 +3329,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>400</regionID>
-	</Zone>
-	<Zone>
+	</Zone400>
+	<Zone401>
 		<description>Burial Tomb</description>
 		<width>8</width>
 		<zoneID>401</zoneID>
@@ -3338,8 +3338,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>401</regionID>
-	</Zone>
-	<Zone>
+	</Zone401>
+	<Zone402>
 		<description>Burial Tomb</description>
 		<width>8</width>
 		<zoneID>402</zoneID>
@@ -3347,8 +3347,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>402</regionID>
-	</Zone>
-	<Zone>
+	</Zone402>
+	<Zone403>
 		<description>Burial Tomb</description>
 		<width>8</width>
 		<zoneID>403</zoneID>
@@ -3356,8 +3356,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>403</regionID>
-	</Zone>
-	<Zone>
+	</Zone403>
+	<Zone404>
 		<description>Burial Tomb</description>
 		<width>8</width>
 		<zoneID>404</zoneID>
@@ -3365,8 +3365,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>404</regionID>
-	</Zone>
-	<Zone>
+	</Zone404>
+	<Zone405>
 		<description>Desecrated Grounds</description>
 		<width>8</width>
 		<zoneID>405</zoneID>
@@ -3374,8 +3374,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>405</regionID>
-	</Zone>
-	<Zone>
+	</Zone405>
+	<Zone406>
 		<description>Desecrated Grounds</description>
 		<width>8</width>
 		<zoneID>406</zoneID>
@@ -3383,8 +3383,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>406</regionID>
-	</Zone>
-	<Zone>
+	</Zone406>
+	<Zone407>
 		<description>Desecrated Grounds</description>
 		<width>8</width>
 		<zoneID>407</zoneID>
@@ -3392,8 +3392,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>407</regionID>
-	</Zone>
-	<Zone>
+	</Zone407>
+	<Zone408>
 		<description>Desecrated Grounds</description>
 		<width>8</width>
 		<zoneID>408</zoneID>
@@ -3401,8 +3401,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>408</regionID>
-	</Zone>
-	<Zone>
+	</Zone408>
+	<Zone409>
 		<description>Desecrated Grounds</description>
 		<width>8</width>
 		<zoneID>409</zoneID>
@@ -3410,8 +3410,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>409</regionID>
-	</Zone>
-	<Zone>
+	</Zone409>
+	<Zone410>
 		<description>Forgotten Mines</description>
 		<width>8</width>
 		<zoneID>410</zoneID>
@@ -3419,8 +3419,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>410</regionID>
-	</Zone>
-	<Zone>
+	</Zone410>
+	<Zone411>
 		<description>Forgotten Mines</description>
 		<width>8</width>
 		<zoneID>411</zoneID>
@@ -3428,8 +3428,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>411</regionID>
-	</Zone>
-	<Zone>
+	</Zone411>
+	<Zone412>
 		<description>Forgotten Mines</description>
 		<width>8</width>
 		<zoneID>412</zoneID>
@@ -3437,8 +3437,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>412</regionID>
-	</Zone>
-	<Zone>
+	</Zone412>
+	<Zone413>
 		<description>Forgotten Mines</description>
 		<width>8</width>
 		<zoneID>413</zoneID>
@@ -3446,8 +3446,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>413</regionID>
-	</Zone>
-	<Zone>
+	</Zone413>
+	<Zone414>
 		<description>Forgotten Mines</description>
 		<width>8</width>
 		<zoneID>414</zoneID>
@@ -3455,8 +3455,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>414</regionID>
-	</Zone>
-	<Zone>
+	</Zone414>
+	<Zone415>
 		<description>The Funerary Hall</description>
 		<width>8</width>
 		<zoneID>415</zoneID>
@@ -3464,8 +3464,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>415</regionID>
-	</Zone>
-	<Zone>
+	</Zone415>
+	<Zone416>
 		<description>The Funerary Hall</description>
 		<width>8</width>
 		<zoneID>416</zoneID>
@@ -3473,8 +3473,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>416</regionID>
-	</Zone>
-	<Zone>
+	</Zone416>
+	<Zone417>
 		<description>The Funerary Hall</description>
 		<width>8</width>
 		<zoneID>417</zoneID>
@@ -3482,8 +3482,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>417</regionID>
-	</Zone>
-	<Zone>
+	</Zone417>
+	<Zone418>
 		<description>The Funerary Hall</description>
 		<width>8</width>
 		<zoneID>418</zoneID>
@@ -3491,8 +3491,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>418</regionID>
-	</Zone>
-	<Zone>
+	</Zone418>
+	<Zone419>
 		<description>The Funerary Hall</description>
 		<width>8</width>
 		<zoneID>419</zoneID>
@@ -3500,8 +3500,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>419</regionID>
-	</Zone>
-	<Zone>
+	</Zone419>
+	<Zone420>
 		<description>the Sundered Tombs</description>
 		<width>8</width>
 		<zoneID>420</zoneID>
@@ -3509,8 +3509,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>420</regionID>
-	</Zone>
-	<Zone>
+	</Zone420>
+	<Zone421>
 		<description>the Sundered Tombs</description>
 		<width>8</width>
 		<zoneID>421</zoneID>
@@ -3518,8 +3518,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>421</regionID>
-	</Zone>
-	<Zone>
+	</Zone421>
+	<Zone422>
 		<description>the Sundered Tombs</description>
 		<width>8</width>
 		<zoneID>422</zoneID>
@@ -3527,8 +3527,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>422</regionID>
-	</Zone>
-	<Zone>
+	</Zone422>
+	<Zone423>
 		<description>the Sundered Tombs</description>
 		<width>8</width>
 		<zoneID>423</zoneID>
@@ -3536,8 +3536,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>423</regionID>
-	</Zone>
-	<Zone>
+	</Zone423>
+	<Zone424>
 		<description>the Sundered Tombs</description>
 		<width>8</width>
 		<zoneID>424</zoneID>
@@ -3545,8 +3545,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>424</regionID>
-	</Zone>
-	<Zone>
+	</Zone424>
+	<Zone425>
 		<description>The Lost Wing</description>
 		<width>8</width>
 		<zoneID>425</zoneID>
@@ -3554,8 +3554,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>425</regionID>
-	</Zone>
-	<Zone>
+	</Zone425>
+	<Zone426>
 		<description>Deliah's Sanctuary</description>
 		<width>8</width>
 		<zoneID>426</zoneID>
@@ -3563,8 +3563,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>426</regionID>
-	</Zone>
-	<Zone>
+	</Zone426>
+	<Zone427>
 		<description>The Cursed Barrow</description>
 		<width>8</width>
 		<zoneID>427</zoneID>
@@ -3572,8 +3572,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>427</regionID>
-	</Zone>
-	<Zone>
+	</Zone427>
+	<Zone428>
 		<description>The Cursed Barrow</description>
 		<width>8</width>
 		<zoneID>428</zoneID>
@@ -3581,8 +3581,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>428</regionID>
-	</Zone>
-	<Zone>
+	</Zone428>
+	<Zone429>
 		<description>Snyblem's Lair</description>
 		<width>8</width>
 		<zoneID>429</zoneID>
@@ -3590,8 +3590,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>429</regionID>
-	</Zone>
-	<Zone>
+	</Zone429>
+	<Zone430>
 		<description>the Plutonian Shore</description>
 		<width>8</width>
 		<zoneID>430</zoneID>
@@ -3599,8 +3599,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>430</regionID>
-	</Zone>
-	<Zone>
+	</Zone430>
+	<Zone431>
 		<description>The Cursed Barrow</description>
 		<width>8</width>
 		<zoneID>431</zoneID>
@@ -3608,8 +3608,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>431</regionID>
-	</Zone>
-	<Zone>
+	</Zone431>
+	<Zone432>
 		<description>Dismal Grotto</description>
 		<width>8</width>
 		<zoneID>432</zoneID>
@@ -3617,8 +3617,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>432</regionID>
-	</Zone>
-	<Zone>
+	</Zone432>
+	<Zone433>
 		<description>Snarg's Grotto</description>
 		<width>8</width>
 		<zoneID>433</zoneID>
@@ -3626,8 +3626,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>433</regionID>
-	</Zone>
-	<Zone>
+	</Zone433>
+	<Zone434>
 		<description>Maze of Tribulation</description>
 		<width>8</width>
 		<zoneID>434</zoneID>
@@ -3635,8 +3635,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>434</regionID>
-	</Zone>
-	<Zone>
+	</Zone434>
+	<Zone435>
 		<description>The Smelting Pot</description>
 		<width>8</width>
 		<zoneID>435</zoneID>
@@ -3644,8 +3644,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>435</regionID>
-	</Zone>
-	<Zone>
+	</Zone435>
+	<Zone436>
 		<description>Forges of Flame</description>
 		<width>8</width>
 		<zoneID>436</zoneID>
@@ -3653,8 +3653,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>436</regionID>
-	</Zone>
-	<Zone>
+	</Zone436>
+	<Zone437>
 		<description>Hammer Hugak's Smithy</description>
 		<width>8</width>
 		<zoneID>437</zoneID>
@@ -3662,8 +3662,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>437</regionID>
-	</Zone>
-	<Zone>
+	</Zone437>
+	<Zone438>
 		<description>the Goblin Workshop</description>
 		<width>8</width>
 		<zoneID>438</zoneID>
@@ -3671,8 +3671,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>438</regionID>
-	</Zone>
-	<Zone>
+	</Zone438>
+	<Zone439>
 		<description>Wolak's Crucible</description>
 		<width>8</width>
 		<zoneID>439</zoneID>
@@ -3680,8 +3680,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>439</regionID>
-	</Zone>
-	<Zone>
+	</Zone439>
+	<Zone440>
 		<description>Marik's Workroom</description>
 		<width>8</width>
 		<zoneID>440</zoneID>
@@ -3689,8 +3689,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>440</regionID>
-	</Zone>
-	<Zone>
+	</Zone440>
+	<Zone441>
 		<description>Dismal Grotto</description>
 		<width>8</width>
 		<zoneID>441</zoneID>
@@ -3698,8 +3698,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>441</regionID>
-	</Zone>
-	<Zone>
+	</Zone441>
+	<Zone442>
 		<description>The Steward's Crypt</description>
 		<width>8</width>
 		<zoneID>442</zoneID>
@@ -3707,8 +3707,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>442</regionID>
-	</Zone>
-	<Zone>
+	</Zone442>
+	<Zone443>
 		<description>Serf's Folly</description>
 		<width>8</width>
 		<zoneID>443</zoneID>
@@ -3716,8 +3716,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>443</regionID>
-	</Zone>
-	<Zone>
+	</Zone443>
+	<Zone444>
 		<description>Dismal Grotto</description>
 		<width>8</width>
 		<zoneID>444</zoneID>
@@ -3725,8 +3725,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>444</regionID>
-	</Zone>
-	<Zone>
+	</Zone444>
+	<Zone445>
 		<description>Dark Cavern</description>
 		<width>8</width>
 		<zoneID>445</zoneID>
@@ -3734,8 +3734,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>445</regionID>
-	</Zone>
-	<Zone>
+	</Zone445>
+	<Zone446>
 		<description>Blathnait's Refuge</description>
 		<width>8</width>
 		<zoneID>446</zoneID>
@@ -3743,8 +3743,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>446</regionID>
-	</Zone>
-	<Zone>
+	</Zone446>
+	<Zone447>
 		<description>Broken Mirrors</description>
 		<width>8</width>
 		<zoneID>447</zoneID>
@@ -3752,8 +3752,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>447</regionID>
-	</Zone>
-	<Zone>
+	</Zone447>
+	<Zone448>
 		<description>Dark Cavern</description>
 		<width>8</width>
 		<zoneID>448</zoneID>
@@ -3761,8 +3761,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>448</regionID>
-	</Zone>
-	<Zone>
+	</Zone448>
+	<Zone449>
 		<description>Dark Cavern</description>
 		<width>8</width>
 		<zoneID>449</zoneID>
@@ -3770,8 +3770,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>449</regionID>
-	</Zone>
-	<Zone>
+	</Zone449>
+	<Zone450>
 		<description>The Cursed Barrow</description>
 		<width>8</width>
 		<zoneID>450</zoneID>
@@ -3779,8 +3779,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>450</regionID>
-	</Zone>
-	<Zone>
+	</Zone450>
+	<Zone451>
 		<description>The Cursed Barrow</description>
 		<width>8</width>
 		<zoneID>451</zoneID>
@@ -3788,8 +3788,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>451</regionID>
-	</Zone>
-	<Zone>
+	</Zone451>
+	<Zone452>
 		<description>The Cursed Barrow</description>
 		<width>8</width>
 		<zoneID>452</zoneID>
@@ -3797,8 +3797,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>452</regionID>
-	</Zone>
-	<Zone>
+	</Zone452>
+	<Zone453>
 		<description>The Cursed Barrow</description>
 		<width>8</width>
 		<zoneID>453</zoneID>
@@ -3806,8 +3806,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>453</regionID>
-	</Zone>
-	<Zone>
+	</Zone453>
+	<Zone454>
 		<description>The Cursed Barrow</description>
 		<width>8</width>
 		<zoneID>454</zoneID>
@@ -3815,8 +3815,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>454</regionID>
-	</Zone>
-	<Zone>
+	</Zone454>
+	<Zone455>
 		<description>Dismal Grotto</description>
 		<width>8</width>
 		<zoneID>455</zoneID>
@@ -3824,8 +3824,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>455</regionID>
-	</Zone>
-	<Zone>
+	</Zone455>
+	<Zone456>
 		<description>Dismal Grotto</description>
 		<width>8</width>
 		<zoneID>456</zoneID>
@@ -3833,8 +3833,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>456</regionID>
-	</Zone>
-	<Zone>
+	</Zone456>
+	<Zone457>
 		<description>Dismal Grotto</description>
 		<width>8</width>
 		<zoneID>457</zoneID>
@@ -3842,8 +3842,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>457</regionID>
-	</Zone>
-	<Zone>
+	</Zone457>
+	<Zone458>
 		<description>Dismal Grotto</description>
 		<width>8</width>
 		<zoneID>458</zoneID>
@@ -3851,8 +3851,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>458</regionID>
-	</Zone>
-	<Zone>
+	</Zone458>
+	<Zone459>
 		<description>Dismal Grotto</description>
 		<width>8</width>
 		<zoneID>459</zoneID>
@@ -3860,8 +3860,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>459</regionID>
-	</Zone>
-	<Zone>
+	</Zone459>
+	<Zone460>
 		<description>The Accursed Caves</description>
 		<width>8</width>
 		<zoneID>460</zoneID>
@@ -3869,8 +3869,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>460</regionID>
-	</Zone>
-	<Zone>
+	</Zone460>
+	<Zone461>
 		<description>The Accursed Caves</description>
 		<width>8</width>
 		<zoneID>461</zoneID>
@@ -3878,8 +3878,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>461</regionID>
-	</Zone>
-	<Zone>
+	</Zone461>
+	<Zone462>
 		<description>The Accursed Caves</description>
 		<width>8</width>
 		<zoneID>462</zoneID>
@@ -3887,8 +3887,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>462</regionID>
-	</Zone>
-	<Zone>
+	</Zone462>
+	<Zone463>
 		<description>The Accursed Caves</description>
 		<width>8</width>
 		<zoneID>463</zoneID>
@@ -3896,8 +3896,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>463</regionID>
-	</Zone>
-	<Zone>
+	</Zone463>
+	<Zone464>
 		<description>The Accursed Caves</description>
 		<width>8</width>
 		<zoneID>464</zoneID>
@@ -3905,8 +3905,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>464</regionID>
-	</Zone>
-	<Zone>
+	</Zone464>
+	<Zone465>
 		<description>Dark Cavern</description>
 		<width>8</width>
 		<zoneID>465</zoneID>
@@ -3914,8 +3914,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>465</regionID>
-	</Zone>
-	<Zone>
+	</Zone465>
+	<Zone466>
 		<description>Dark Cavern</description>
 		<width>8</width>
 		<zoneID>466</zoneID>
@@ -3923,8 +3923,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>466</regionID>
-	</Zone>
-	<Zone>
+	</Zone466>
+	<Zone467>
 		<description>Dark Cavern</description>
 		<width>8</width>
 		<zoneID>467</zoneID>
@@ -3932,8 +3932,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>467</regionID>
-	</Zone>
-	<Zone>
+	</Zone467>
+	<Zone468>
 		<description>Dark Cavern</description>
 		<width>8</width>
 		<zoneID>468</zoneID>
@@ -3941,8 +3941,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>468</regionID>
-	</Zone>
-	<Zone>
+	</Zone468>
+	<Zone469>
 		<description>Dark Cavern</description>
 		<width>8</width>
 		<zoneID>469</zoneID>
@@ -3950,8 +3950,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>469</regionID>
-	</Zone>
-	<Zone>
+	</Zone469>
+	<Zone470>
 		<description>Half Orc Command Post</description>
 		<width>8</width>
 		<zoneID>470</zoneID>
@@ -3959,8 +3959,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>470</regionID>
-	</Zone>
-	<Zone>
+	</Zone470>
+	<Zone471>
 		<description>Unused Mine</description>
 		<width>8</width>
 		<zoneID>471</zoneID>
@@ -3968,8 +3968,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>471</regionID>
-	</Zone>
-	<Zone>
+	</Zone471>
+	<Zone472>
 		<description>Unused Mine</description>
 		<width>8</width>
 		<zoneID>472</zoneID>
@@ -3977,8 +3977,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>472</regionID>
-	</Zone>
-	<Zone>
+	</Zone472>
+	<Zone473>
 		<description>Unused Mine</description>
 		<width>8</width>
 		<zoneID>473</zoneID>
@@ -3986,8 +3986,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>473</regionID>
-	</Zone>
-	<Zone>
+	</Zone473>
+	<Zone474>
 		<description>Unused Mine</description>
 		<width>8</width>
 		<zoneID>474</zoneID>
@@ -3995,8 +3995,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>474</regionID>
-	</Zone>
-	<Zone>
+	</Zone474>
+	<Zone475>
 		<description>Rise of the Spraggons</description>
 		<width>8</width>
 		<zoneID>475</zoneID>
@@ -4004,8 +4004,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>475</regionID>
-	</Zone>
-	<Zone>
+	</Zone475>
+	<Zone476>
 		<description>The Warrens</description>
 		<width>8</width>
 		<zoneID>476</zoneID>
@@ -4013,8 +4013,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>476</regionID>
-	</Zone>
-	<Zone>
+	</Zone476>
+	<Zone477>
 		<description>The Accursed Caves</description>
 		<width>8</width>
 		<zoneID>477</zoneID>
@@ -4022,8 +4022,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>477</regionID>
-	</Zone>
-	<Zone>
+	</Zone477>
+	<Zone478>
 		<description>The Accursed Caves</description>
 		<width>8</width>
 		<zoneID>478</zoneID>
@@ -4031,8 +4031,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>478</regionID>
-	</Zone>
-	<Zone>
+	</Zone478>
+	<Zone479>
 		<description>The Ancient's Retreat</description>
 		<width>8</width>
 		<zoneID>479</zoneID>
@@ -4040,8 +4040,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>479</regionID>
-	</Zone>
-	<Zone>
+	</Zone479>
+	<Zone480>
 		<description>The Shaman's Inner Sanctum</description>
 		<width>8</width>
 		<zoneID>480</zoneID>
@@ -4049,8 +4049,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>480</regionID>
-	</Zone>
-	<Zone>
+	</Zone480>
+	<Zone481>
 		<description>The Accursed Caves</description>
 		<width>8</width>
 		<zoneID>481</zoneID>
@@ -4058,8 +4058,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>481</regionID>
-	</Zone>
-	<Zone>
+	</Zone481>
+	<Zone482>
 		<description>Unused Mine</description>
 		<width>8</width>
 		<zoneID>482</zoneID>
@@ -4067,8 +4067,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>482</regionID>
-	</Zone>
-	<Zone>
+	</Zone482>
+	<Zone483>
 		<description>The Brawler's Den</description>
 		<width>8</width>
 		<zoneID>483</zoneID>
@@ -4076,8 +4076,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>483</regionID>
-	</Zone>
-	<Zone>
+	</Zone483>
+	<Zone484>
 		<description>Felena's Sorrow</description>
 		<width>8</width>
 		<zoneID>484</zoneID>
@@ -4085,8 +4085,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>484</regionID>
-	</Zone>
-	<Zone>
+	</Zone484>
+	<Zone485>
 		<description>Unused Mine</description>
 		<width>8</width>
 		<zoneID>485</zoneID>
@@ -4094,8 +4094,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>485</regionID>
-	</Zone>
-	<Zone>
+	</Zone485>
+	<Zone486>
 		<description>Unused Mine</description>
 		<width>8</width>
 		<zoneID>486</zoneID>
@@ -4103,8 +4103,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>486</regionID>
-	</Zone>
-	<Zone>
+	</Zone486>
+	<Zone487>
 		<description>The Pit of Despair</description>
 		<width>8</width>
 		<zoneID>487</zoneID>
@@ -4112,8 +4112,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>487</regionID>
-	</Zone>
-	<Zone>
+	</Zone487>
+	<Zone488>
 		<description>The Forgotten Vein</description>
 		<width>8</width>
 		<zoneID>488</zoneID>
@@ -4121,8 +4121,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>488</regionID>
-	</Zone>
-	<Zone>
+	</Zone488>
+	<Zone491>
 		<description>Maze of Madness</description>
 		<width>8</width>
 		<zoneID>491</zoneID>
@@ -4130,8 +4130,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>491</regionID>
-	</Zone>
-	<Zone>
+	</Zone491>
+	<Zone492>
 		<description>the Shattered Lands</description>
 		<width>8</width>
 		<zoneID>492</zoneID>
@@ -4139,8 +4139,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>492</regionID>
-	</Zone>
-	<Zone>
+	</Zone492>
+	<Zone494>
 		<description>the Gnolls Den</description>
 		<width>8</width>
 		<zoneID>494</zoneID>
@@ -4148,8 +4148,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>494</regionID>
-	</Zone>
-	<Zone>
+	</Zone494>
+	<Zone495>
 		<description>Inner Sanctum</description>
 		<width>8</width>
 		<zoneID>495</zoneID>
@@ -4157,8 +4157,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>495</regionID>
-	</Zone>
-	<Zone>
+	</Zone495>
+	<Zone496>
 		<description>the Deep</description>
 		<width>8</width>
 		<zoneID>496</zoneID>
@@ -4166,8 +4166,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>496</regionID>
-	</Zone>
-	<Zone>
+	</Zone496>
+	<Zone497>
 		<description>Mid Launch</description>
 		<width>8</width>
 		<zoneID>497</zoneID>
@@ -4175,8 +4175,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>497</regionID>
-	</Zone>
-	<Zone>
+	</Zone497>
+	<Zone498>
 		<description>Alb Launch</description>
 		<width>8</width>
 		<zoneID>498</zoneID>
@@ -4184,8 +4184,8 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>498</regionID>
-	</Zone>
-	<Zone>
+	</Zone498>
+	<Zone499>
 		<description>Hib Launch</description>
 		<width>8</width>
 		<zoneID>499</zoneID>
@@ -4193,5 +4193,5 @@
 		<offsety>1</offsety>
 		<offsetx>1</offsetx>
 		<regionID>499</regionID>
-	</Zone>
+	</Zone499>
 </root>

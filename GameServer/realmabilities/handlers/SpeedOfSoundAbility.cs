@@ -29,6 +29,7 @@ namespace DOL.GS.RealmAbilities
                 player.Out.SendMessage("You already an effect of that type!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
                 return;
             }
+
             switch (Level)
             {
                 case 1: m_duration = 10; break;
@@ -36,14 +37,22 @@ namespace DOL.GS.RealmAbilities
                 case 3: m_duration = 60; break;
                 default: return;
             }
+
             DisableSkill(living);
+
             ArrayList targets = new ArrayList();
-            if (player.PlayerGroup == null)
-                targets.Add(player);
-            else
-                foreach (GamePlayer grpMate in player.PlayerGroup.GetPlayersInTheGroup())
-                    if (WorldMgr.CheckDistance(grpMate, player, m_range) && grpMate.IsAlive)
-                        targets.Add(grpMate);
+
+			if (player.PlayerGroup == null)
+				targets.Add(player);
+			else
+			{
+				foreach (GamePlayer grpMate in player.PlayerGroup.GetPlayersInTheGroup())
+				{
+					if (WorldMgr.CheckDistance(grpMate, player, m_range) && grpMate.IsAlive)
+						targets.Add(grpMate);
+				}
+			}
+
             bool success;
             foreach (GamePlayer target in targets)
             {
@@ -51,11 +60,10 @@ namespace DOL.GS.RealmAbilities
                 success = target.EffectList.CountOfType(typeof(SpeedOfSoundEffect)) == 0;
                 foreach (GamePlayer visPlayer in WorldMgr.GetPlayersCloseToObject(target, WorldMgr.VISIBILITY_DISTANCE))
                     visPlayer.Out.SendSpellEffectAnimation(player, target, 7021, 0, false, CastSuccess(success));
-                if (success)
-                    if (target != null)
-                    {
-                        new SpeedOfSoundEffect().Start(target, m_duration, m_value);
-                    }
+				if (success)
+				{
+					new SpeedOfSoundEffect().Start(target, m_duration, m_value);
+				}
             }
 
         }

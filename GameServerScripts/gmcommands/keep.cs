@@ -91,6 +91,7 @@ namespace DOL.GS.Scripts
 			if (myKeep == null) myKeep = KeepMgr.getKeepCloseToSpot(client.Player.CurrentRegionID, client.Player, 10000);
 			switch (args[1])
 			{
+				#region fastcreate
 				case "fastcreate":
 					{
 						if (args.Length < 5)
@@ -1837,6 +1838,7 @@ namespace DOL.GS.Scripts
 						}
 						client.Out.SendMessage("You have created a keep.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					} break;
+				#endregion
 				case "create":
 					{
 						if (args.Length < 4)
@@ -1854,8 +1856,7 @@ namespace DOL.GS.Scripts
 							DisplaySyntax(client);
 							return 1;
 						}
-						GameKeep keep = new GameKeep();
-						keep.DBKeep = new DBKeep();
+						DBKeep keep = new DBKeep();
 						keep.Name = String.Join(" ", args, 3, args.Length - 3);
 						keep.KeepID = keepid;
 						keep.Level = 0;
@@ -1864,6 +1865,7 @@ namespace DOL.GS.Scripts
 						keep.Y = client.Player.Y;
 						keep.Z = client.Player.Z;
 						keep.Heading = client.Player.Heading;
+						new GameKeep().LoadFromDatabase(keep);
 						client.Player.TempProperties.setProperty(TEMP_KEEP_LAST, keep);
 						client.Out.SendMessage("You have created a keep", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					} break;
@@ -2019,6 +2021,21 @@ namespace DOL.GS.Scripts
 							banner.Z = client.Player.Z;
 							banner.Heading = client.Player.Heading;
 							banner.SaveIntoDatabase();
+
+							foreach (AbstractArea area in banner.CurrentAreas)
+							{
+								if (area is KeepArea)
+								{
+									AbstractGameKeep keep = (area as KeepArea).Keep;
+									banner.Component = new GameKeepComponent();
+									banner.Component.Keep = keep;
+									banner.Component.Keep.Banners.Add(banner.InternalID, banner);
+									break;
+								}
+							}
+							if (banner.Component.Keep.Guild != null)
+								banner.ChangeGuild();
+							else banner.ChangeRealm();
 							banner.AddToWorld();
 						}
 						DisplayMessage(client, "Banner added!", new object[] { });

@@ -40,15 +40,6 @@ namespace DOL.GS
 			m_owners = new ArrayList(1);
 		}
 
-		/// <summary>
-		/// Constructs a new GameStaticItem from a WorldObject
-		/// </summary>
-		/// <param name="obj">WorldObject to take as template</param>
-		public GameStaticItem(WorldObject obj) : base()
-		{
-			CopyFrom(obj);
-		}
-
 		#region Name/Model/GetName/GetExamineMessages
 		/// <summary>
 		/// gets or sets the model of this Item
@@ -134,21 +125,18 @@ namespace DOL.GS
 		}
 		#endregion
 
-		/// <summary>
-		/// Copies a world object into this object
-		/// </summary>
-		/// <param name="obj">World object to be copied</param>
-		public void CopyFrom(WorldObject obj)
+		public override void LoadFromDatabase(DataObject obj)
 		{
-			CurrentRegionID = obj.Region;
-			Name = obj.Name;
-			Model = obj.Model;
-			Emblem = obj.Emblem;
-			Heading = obj.Heading;
-			X = obj.X;
-			Y = obj.Y;
-			Z = obj.Z;
-			InternalID = obj.ObjectId;
+			WorldObject item = obj as WorldObject;
+			base.LoadFromDatabase(obj);
+			CurrentRegionID = item.Region;
+			Name = item.Name;
+			Model = item.Model;
+			Emblem = item.Emblem;
+			Heading = item.Heading;
+			X = item.X;
+			Y = item.Y;
+			Z = item.Z;
 		}
 
 		/// <summary>

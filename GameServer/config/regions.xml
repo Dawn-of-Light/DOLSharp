@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-	<Region>
+	<Region001>
 		<description>Albion</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -8,8 +8,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>0</expansion>
-	</Region>
-	<Region>
+	</Region001>
+	<Region002>
 		<description>Albion Housing</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -18,8 +18,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>0</expansion>
 		<isHousingEnabled>True</isHousingEnabled>
-	</Region>
-	<Region>
+	</Region002>
+	<Region010>
 		<description>Camelot City</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -27,8 +27,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>0</expansion>
-	</Region>
-	<Region>
+	</Region010>
+	<Region245>
 		<description>Labyrinth</description>
 		<isDivingEnabled>True</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -36,8 +36,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>0</expansion>
-	</Region>
-	<Region>
+	</Region245>
+	<Region020>
 		<description>Stonehenge Barrows</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -45,8 +45,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>0</expansion>
-	</Region>
-	<Region>
+	</Region020>
+	<Region021>
 		<description>Tomb of Mithra</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -54,8 +54,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>0</expansion>
-	</Region>
-	<Region>
+	</Region021>
+	<Region022>
 		<description>Keltoi Fogou</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -63,8 +63,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>0</expansion>
-	</Region>
-	<Region>
+	</Region022>
+	<Region023>
 		<description>Catacombs of Cardova</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -72,8 +72,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>0</expansion>
-	</Region>
-	<Region>
+	</Region023>
+	<Region024>
 		<description>Tepok's Mine</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -81,8 +81,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>0</expansion>
-	</Region>
-	<Region>
+	</Region024>
+	<Region027>
 		<description>Tutorial</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -91,8 +91,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>0</expansion>
 		<tutorial>True</tutorial>
-	</Region>
-	<Region>
+	</Region027>
+	<Region030>
 		<description>Atlantis</description>
 		<isDivingEnabled>True</isDivingEnabled>
 		<waterLevel>7970</waterLevel>
@@ -100,8 +100,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>2</expansion>
-	</Region>
-	<Region>
+	</Region030>
+	<Region035>
 		<description>Cetus' Pit</description>
 		<isDivingEnabled>True</isDivingEnabled>
 		<waterLevel>18960</waterLevel>
@@ -109,8 +109,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>2</expansion>
-	</Region>
-	<Region>
+	</Region035>
+	<Region036>
 		<description>Sobekite Eternal</description>
 		<isDivingEnabled>True</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -118,8 +118,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>2</expansion>
-	</Region>
-	<Region>
+	</Region036>
+	<Region037>
 		<description>Temple of Twilight</description>
 		<isDivingEnabled>True</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -127,8 +127,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>2</expansion>
-	</Region>
-	<Region>
+	</Region037>
+	<Region040>
 		<description>Halls of Ma'ati</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -136,8 +136,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>2</expansion>
-	</Region>
-	<Region>
+	</Region040>
+	<Region045>
 		<description>The Great Pyramid</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -145,8 +145,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>2</expansion>
-	</Region>
-	<Region>
+	</Region045>
+	<Region046>
 		<description>Deep Volcanus</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -154,8 +154,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>2</expansion>
-	</Region>
-	<Region>
+	</Region046>
+	<Region047>
 		<description>Aerus City</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -163,8 +163,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>0</expansion>
-	</Region>
-	<Region>
+	</Region047>
+	<Region048>
 		<description>The Unused Mine</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -173,8 +173,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region048>
+	<Region049>
 		<description>Rugnog's Haven</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -183,8 +183,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region049>
+	<Region050>
 		<description>Avalon City</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -192,8 +192,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>1</expansion>
-	</Region>
-	<Region>
+	</Region050>
+	<Region051>
 		<description>Avalon</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -201,8 +201,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>1</expansion>
-	</Region>
-	<Region>
+	</Region051>
+	<Region058>
 		<description>Underground Forest</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -210,8 +210,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
-	</Region>
-	<Region>
+	</Region058>
+	<Region059>
 		<description>Glashtin Forge</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -219,8 +219,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
-	</Region>
-	<Region>
+	</Region059>
+	<Region060>
 		<description>Caer Sidi</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -228,8 +228,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>1</expansion>
-	</Region>
-	<Region>
+	</Region060>
+	<Region061>
 		<description>Krondon</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -237,8 +237,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>1</expansion>
-	</Region>
-	<Region>
+	</Region061>
+	<Region062>
 		<description>Crystal Cave</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -246,8 +246,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>1</expansion>
-	</Region>
-	<Region>
+	</Region062>
+	<Region063>
 		<description>Roman Aqueducts</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -255,8 +255,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
-	</Region>
-	<Region>
+	</Region063>
+	<Region065>
 		<description>Inconnu Crypt</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -264,8 +264,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
-	</Region>
-	<Region>
+	</Region065>
+	<Region066>
 		<description>Underground Forest</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -273,8 +273,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
-	</Region>
-	<Region>
+	</Region066>
+	<Region067>
 		<description>Deadlands of Annwn</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -282,8 +282,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
-	</Region>
-	<Region>
+	</Region067>
+	<Region068>
 		<description>Lower Crypt</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -291,8 +291,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
-	</Region>
-	<Region>
+	</Region068>
+	<Region069>
 		<description>Darkspire</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -300,8 +300,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
-	</Region>
-	<Region>
+	</Region069>
+	<Region070>
 		<description>Ruins of Atlantis</description>
 		<isDivingEnabled>True</isDivingEnabled>
 		<waterLevel>5804</waterLevel>
@@ -309,8 +309,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>2</expansion>
-	</Region>
-	<Region>
+	</Region070>
+	<Region071>
 		<description>Ruinrar Atlantis</description>
 		<isDivingEnabled>True</isDivingEnabled>
 		<waterLevel>5804</waterLevel>
@@ -318,8 +318,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>2</expansion>
-	</Region>
-	<Region>
+	</Region071>
+	<Region072>
 		<description>Scrios de Atlantis</description>
 		<isDivingEnabled>True</isDivingEnabled>
 		<waterLevel>5804</waterLevel>
@@ -327,8 +327,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>2</expansion>
-	</Region>
-	<Region>
+	</Region072>
+	<Region073>
 		<description>Atlantis</description>
 		<isDivingEnabled>True</isDivingEnabled>
 		<waterLevel>7970</waterLevel>
@@ -336,8 +336,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>2</expansion>
-	</Region>
-	<Region>
+	</Region073>
+	<Region078>
 		<description>Cetus' Pit</description>
 		<isDivingEnabled>True</isDivingEnabled>
 		<waterLevel>18960</waterLevel>
@@ -345,8 +345,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>2</expansion>
-	</Region>
-	<Region>
+	</Region078>
+	<Region079>
 		<description>Sobekite Eternal</description>
 		<isDivingEnabled>True</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -354,8 +354,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>2</expansion>
-	</Region>
-	<Region>
+	</Region079>
+	<Region080>
 		<description>Temple of Twilight</description>
 		<isDivingEnabled>True</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -363,8 +363,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>2</expansion>
-	</Region>
-	<Region>
+	</Region080>
+	<Region083>
 		<description>Halls of Ma'ati</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -372,8 +372,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>2</expansion>
-	</Region>
-	<Region>
+	</Region083>
+	<Region088>
 		<description>The Great Pyramid</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -381,8 +381,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>2</expansion>
-	</Region>
-	<Region>
+	</Region088>
+	<Region089>
 		<description>Deep Volcanus</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -390,8 +390,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>2</expansion>
-	</Region>
-	<Region>
+	</Region089>
+	<Region090>
 		<description>Aerus City</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -399,8 +399,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>2</expansion>
-	</Region>
-	<Region>
+	</Region090>
+	<Region091>
 		<description>Celestius</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -408,8 +408,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>2</expansion>
-	</Region>
-	<Region>
+	</Region091>
+	<Region092>
 		<description>Veil Rift</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -417,8 +417,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
-	</Region>
-	<Region>
+	</Region092>
+	<Region093>
 		<description>Shar Labyrinth</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -426,8 +426,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
-	</Region>
-	<Region>
+	</Region093>
+	<Region094>
 		<description>Queen's Labyrinth</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -435,8 +435,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
-	</Region>
-	<Region>
+	</Region094>
+	<Region095>
 		<description>The Frontlines</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -444,8 +444,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
-	</Region>
-	<Region>
+	</Region095>
+	<Region096>
 		<description>Underground Forest</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -453,8 +453,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
-	</Region>
-	<Region>
+	</Region096>
+	<Region097>
 		<description>Deadlands of Annwn</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -462,8 +462,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
-	</Region>
-	<Region>
+	</Region097>
+	<Region098>
 		<description>Darkspire</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -471,8 +471,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
-	</Region>
-	<Region>
+	</Region098>
+	<Region099>
 		<description>Glashtin Forge</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -480,8 +480,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
-	</Region>
-	<Region>
+	</Region099>
+	<Region100>
 		<description>Midgard</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -489,8 +489,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>0</expansion>
-	</Region>
-	<Region>
+	</Region100>
+	<Region101>
 		<description>Jordheim</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -498,8 +498,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>0</expansion>
-	</Region>
-	<Region>
+	</Region101>
+	<Region102>
 		<description>Midgard Housing</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -508,8 +508,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>0</expansion>
 		<isHousingEnabled>True</isHousingEnabled>
-	</Region>
-	<Region>
+	</Region102>
+	<Region109>
 		<description>The Frontlines</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -517,8 +517,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
-	</Region>
-	<Region>
+	</Region109>
+	<Region123>
 		<description>Volcanus Instance 1</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -526,8 +526,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>2</expansion>
-	</Region>
-	<Region>
+	</Region123>
+	<Region124>
 		<description>Volcanus Instance 2</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -535,8 +535,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>2</expansion>
-	</Region>
-	<Region>
+	</Region124>
+	<Region125>
 		<description>Spindelhalla</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -544,8 +544,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>0</expansion>
-	</Region>
-	<Region>
+	</Region125>
+	<Region126>
 		<description>Vendo Caverns</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -553,8 +553,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>0</expansion>
-	</Region>
-	<Region>
+	</Region126>
+	<Region127>
 		<description>Varulvhamn</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -562,8 +562,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>0</expansion>
-	</Region>
-	<Region>
+	</Region127>
+	<Region128>
 		<description>Cursed Tomb</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -571,8 +571,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>0</expansion>
-	</Region>
-	<Region>
+	</Region128>
+	<Region129>
 		<description>Nisse's Lair</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -580,8 +580,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>0</expansion>
-	</Region>
-	<Region>
+	</Region129>
+	<Region130>
 		<description>Atlantis</description>
 		<isDivingEnabled>True</isDivingEnabled>
 		<waterLevel>7970</waterLevel>
@@ -589,8 +589,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>2</expansion>
-	</Region>
-	<Region>
+	</Region130>
+	<Region135>
 		<description>Cetus' Pit</description>
 		<isDivingEnabled>True</isDivingEnabled>
 		<waterLevel>18960</waterLevel>
@@ -598,8 +598,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>2</expansion>
-	</Region>
-	<Region>
+	</Region135>
+	<Region136>
 		<description>Sobekite Eternal</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -607,8 +607,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>2</expansion>
-	</Region>
-	<Region>
+	</Region136>
+	<Region137>
 		<description>Temple of Twilight</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -616,8 +616,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>2</expansion>
-	</Region>
-	<Region>
+	</Region137>
+	<Region140>
 		<description>Halls of Ma'ati</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -625,8 +625,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>2</expansion>
-	</Region>
-	<Region>
+	</Region140>
+	<Region145>
 		<description>The Great Pyramid</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -634,8 +634,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>2</expansion>
-	</Region>
-	<Region>
+	</Region145>
+	<Region146>
 		<description>Deep Volcanus</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -643,8 +643,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>2</expansion>
-	</Region>
-	<Region>
+	</Region146>
+	<Region147>
 		<description>Aerus City</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -652,8 +652,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>0</expansion>
-	</Region>
-	<Region>
+	</Region147>
+	<Region148>
 		<description>The Frontlines</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -661,8 +661,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
-	</Region>
-	<Region>
+	</Region148>
+	<Region149>
 		<description>Nyttheim</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -670,8 +670,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
-	</Region>
-	<Region>
+	</Region149>
+	<Region150>
 		<description>Trollheim</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -679,8 +679,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>1</expansion>
-	</Region>
-	<Region>
+	</Region150>
+	<Region151>
 		<description>Aegir</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -688,8 +688,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>1</expansion>
-	</Region>
-	<Region>
+	</Region151>
+	<Region160>
 		<description>Tuscaran Glacier</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -697,8 +697,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>1</expansion>
-	</Region>
-	<Region>
+	</Region160>
+	<Region161>
 		<description>Iarnvidiur's Lair</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -706,8 +706,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>1</expansion>
-	</Region>
-	<Region>
+	</Region161>
+	<Region162>
 		<description>Deadlands of Annwn</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -715,8 +715,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
-	</Region>
-	<Region>
+	</Region162>
+	<Region163>
 		<description>New Frontiers</description>
 		<isDivingEnabled>True</isDivingEnabled>
 		<waterLevel>7879</waterLevel>
@@ -724,8 +724,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>0</expansion>
-	</Region>
-	<Region>
+	</Region163>
+	<Region165>
 		<description>Cathal Valley</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<!--<isDivingEnabled>True</isDivingEnabled>-->
@@ -735,8 +735,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>0</expansion>
-	</Region>
-	<Region>
+	</Region165>
+	<Region180>
 		<description>Fomor City</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -744,8 +744,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>1</expansion>
-	</Region>
-	<Region>
+	</Region180>
+	<Region181>
 		<description>HyBrasil</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -753,8 +753,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>1</expansion>
-	</Region>
-	<Region>
+	</Region181>
+	<Region188>
 		<description>Darkspire</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -762,8 +762,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
-	</Region>
-	<Region>
+	</Region188>
+	<Region189>
 		<description>Glashtin Forge</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -771,8 +771,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
-	</Region>
-	<Region>
+	</Region189>
+	<Region190>
 		<description>Tur Suil</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -780,8 +780,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>1</expansion>
-	</Region>
-	<Region>
+	</Region190>
+	<Region191>
 		<description>Galladoria</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -789,8 +789,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>1</expansion>
-	</Region>
-	<Region>
+	</Region191>
+	<Region195>
 		<description>The Otherworld</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -798,8 +798,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
-	</Region>
-	<Region>
+	</Region195>
+	<Region196>
 		<description>The Otherworld</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -807,8 +807,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
-	</Region>
-	<Region>
+	</Region196>
+	<Region197>
 		<description>The Otherworld</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -816,8 +816,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
-	</Region>
-	<Region>
+	</Region197>
+	<Region198>
 		<description>Volcanus Instance 3</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -825,8 +825,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>2</expansion>
-	</Region>
-	<Region>
+	</Region198>
+	<Region199>
 		<description>Volcanus Instance 4</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -834,8 +834,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>2</expansion>
-	</Region>
-	<Region>
+	</Region199>
+	<Region200>
 		<description>Hibernia</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -843,8 +843,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>0</expansion>
-	</Region>
-	<Region>
+	</Region200>
+	<Region201>
 		<description>Tir na Nog</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -852,8 +852,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>0</expansion>
-	</Region>
-	<Region>
+	</Region201>
+	<Region202>
 		<description>Hibernia Housing</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -862,8 +862,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>0</expansion>
 		<isHousingEnabled>True</isHousingEnabled>
-	</Region>
-	<Region>
+	</Region202>
+	<Region220>
 		<description>Coruscating Mine</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -871,8 +871,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>0</expansion>
-	</Region>
-	<Region>
+	</Region220>
+	<Region221>
 		<description>Muire Tomb</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -880,8 +880,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>0</expansion>
-	</Region>
-	<Region>
+	</Region221>
+	<Region222>
 		<description>Spraggon Den</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -889,8 +889,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>0</expansion>
-	</Region>
-	<Region>
+	</Region222>
+	<Region223>
 		<description>Koalinth Tribal Caverns</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -898,8 +898,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>0</expansion>
-	</Region>
-	<Region>
+	</Region223>
+	<Region224>
 		<description>Treibh Caillte</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -907,8 +907,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>0</expansion>
-	</Region>
-	<Region>
+	</Region224>
+	<Region226>
 		<description>Abandoned Mines</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -916,8 +916,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
-	</Region>
-	<Region>
+	</Region226>
+	<Region227>
 		<description>Abandoned Mines</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -925,8 +925,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
-	</Region>
-	<Region>
+	</Region227>
+	<Region228>
 		<description>Abandoned Mines</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -934,8 +934,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
-	</Region>
-	<Region>
+	</Region228>
+	<Region229>
 		<description>Burial Grounds</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -943,8 +943,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
-	</Region>
-	<Region>
+	</Region229>
+	<Region230>
 		<description></description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -952,8 +952,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
-	</Region>
-	<Region>
+	</Region230>
+	<Region231>
 		<description>Art Test Zone</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -961,8 +961,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>0</expansion>
-	</Region>
-	<Region>
+	</Region231>
+	<Region232>
 		<description>- Art Test Dungeon</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -970,8 +970,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>0</expansion>
-	</Region>
-	<Region>
+	</Region232>
+	<Region233>
 		<description>Summoner's Hall</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -979,8 +979,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>0</expansion>
-	</Region>
-	<Region>
+	</Region233>
+	<Region234>
 		<description>The Proving Grounds</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -988,8 +988,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>0</expansion>
-	</Region>
-	<Region>
+	</Region234>
+	<Region235>
 		<description>The Lion's Den</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -997,8 +997,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>0</expansion>
-	</Region>
-	<Region>
+	</Region235>
+	<Region236>
 		<description>The Hills of Claret</description>
 		<isDivingEnabled>True</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1006,8 +1006,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>0</expansion>
-	</Region>
-	<Region>
+	</Region236>
+	<Region237>
 		<description>Killaloe</description>
 		<isDivingEnabled>True</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1015,8 +1015,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>0</expansion>
-	</Region>
-	<Region>
+	</Region237>
+	<Region238>
 		<description>Thidranki</description>
 		<isDivingEnabled>True</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1024,8 +1024,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>0</expansion>
-	</Region>
-	<Region>
+	</Region238>
+	<Region239>
 		<description>Braemar</description>
 		<isDivingEnabled>True</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1033,8 +1033,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>0</expansion>
-	</Region>
-	<Region>
+	</Region239>
+	<Region240>
 		<description>Wilton</description>
 		<isDivingEnabled>True</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1042,8 +1042,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>0</expansion>
-	</Region>
-	<Region>
+	</Region240>
+	<Region241>
 		<description>Molvik</description>
 		<isDivingEnabled>True</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1051,8 +1051,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>0</expansion>
-	</Region>
-	<Region>
+	</Region241>
+	<Region242>
 		<description>Leirvik</description>
 		<isDivingEnabled>True</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1060,8 +1060,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>0</expansion>
-	</Region>
-	<Region>
+	</Region242>
+	<Region243>
 		<description>Kobold Undercity</description>
 		<isDivingEnabled>True</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1069,8 +1069,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
-	</Region>
-	<Region>
+	</Region243>
+	<Region244>
 		<description>Passage of Conflict</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1078,8 +1078,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>0</expansion>
-	</Region>
-	<Region>
+	</Region244>
+	<Region247>
 		<description></description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1087,8 +1087,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>0</expansion>
-	</Region>
-	<Region>
+	</Region247>
+	<Region249>
 		<description>Darkness Falls</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1096,8 +1096,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>0</expansion>
-	</Region>
-	<Region>
+	</Region249>
+	<Region256>
 		<description>Forgotten Mines</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1106,8 +1106,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region256>
+	<Region257>
 		<description>Forgotten Mines</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1116,8 +1116,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region257>
+	<Region258>
 		<description>Forgotten Mines</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1126,8 +1126,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region258>
+	<Region278>
 		<description>Damp Cavern</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1136,8 +1136,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region278>
+	<Region279>
 		<description>Damp Cavern</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1146,8 +1146,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region279>
+	<Region280>
 		<description>Damp Cavern</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1156,8 +1156,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region280>
+	<Region281>
 		<description>Forgotten Sepulchre</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1166,8 +1166,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region281>
+	<Region282>
 		<description>Forgotten Sepulchre</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1176,8 +1176,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region282>
+	<Region283>
 		<description>Forgotten Sepulchre</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1186,8 +1186,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region283>
+	<Region284>
 		<description>The Concealed Guardhouse</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1196,8 +1196,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region284>
+	<Region285>
 		<description>The Concealed Guardhouse</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1206,8 +1206,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region285>
+	<Region286>
 		<description>The Concealed Guardhouse</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1216,8 +1216,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region286>
+	<Region287>
 		<description>The Gossamer Grotto</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1226,8 +1226,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region287>
+	<Region288>
 		<description>The Gossamer Grotto</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1236,8 +1236,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region288>
+	<Region289>
 		<description>The Gossamer Grotto</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1246,8 +1246,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region289>
+	<Region290>
 		<description>Underground Tunnel</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1256,8 +1256,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region290>
+	<Region291>
 		<description>Underground Tunnel</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1266,8 +1266,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region291>
+	<Region292>
 		<description>Underground Tunnel</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1276,8 +1276,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region292>
+	<Region293>
 		<description>Burial Tomb</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1286,8 +1286,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region293>
+	<Region294>
 		<description>Burial Tomb</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1296,8 +1296,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region294>
+	<Region295>
 		<description>Burial Tomb</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1306,8 +1306,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region295>
+	<Region296>
 		<description>Desecrated Grounds</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1316,8 +1316,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region296>
+	<Region297>
 		<description>Desecrated Grounds</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1326,8 +1326,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region297>
+	<Region298>
 		<description>Desecrated Grounds</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1336,8 +1336,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region298>
+	<Region300>
 		<description>Damp Cavern</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1346,8 +1346,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region300>
+	<Region301>
 		<description>Damp Cavern</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1356,8 +1356,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region301>
+	<Region302>
 		<description>Damp Cavern</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1366,8 +1366,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region302>
+	<Region303>
 		<description>Damp Cavern</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1376,8 +1376,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region303>
+	<Region304>
 		<description>Damp Cavern</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1386,8 +1386,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region304>
+	<Region305>
 		<description>Forgotten Sepulchre</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1396,8 +1396,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region305>
+	<Region306>
 		<description>Forgotten Sepulchre</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1406,8 +1406,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region306>
+	<Region307>
 		<description>Forgotten Sepulchre</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1416,8 +1416,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region307>
+	<Region308>
 		<description>Forgotten Sepulchre</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1426,8 +1426,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region308>
+	<Region309>
 		<description>Forgotten Sepulchre</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1436,8 +1436,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region309>
+	<Region310>
 		<description>The Concealed Guardhouse</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1446,8 +1446,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region310>
+	<Region311>
 		<description>The Concealed Guardhouse</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1456,8 +1456,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region311>
+	<Region312>
 		<description>The Concealed Guardhouse</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1466,8 +1466,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region312>
+	<Region313>
 		<description>The Concealed Guardhouse</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1476,8 +1476,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region313>
+	<Region314>
 		<description>The Concealed Guardhouse</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1486,8 +1486,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region314>
+	<Region315>
 		<description>The Gossamer Grotto</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1496,8 +1496,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region315>
+	<Region316>
 		<description>The Gossamer Grotto</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1506,8 +1506,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region316>
+	<Region317>
 		<description>The Gossamer Grotto</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1516,8 +1516,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region317>
+	<Region318>
 		<description>The Gossamer Grotto</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1526,8 +1526,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region318>
+	<Region319>
 		<description>The Gossamer Grotto</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1536,8 +1536,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region319>
+	<Region320>
 		<description>Underground Tunnel</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1546,8 +1546,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region320>
+	<Region321>
 		<description>Underground Tunnel</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1556,8 +1556,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region321>
+	<Region322>
 		<description>Underground Tunnel</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1566,8 +1566,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region322>
+	<Region323>
 		<description>Underground Tunnel</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1576,8 +1576,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region323>
+	<Region324>
 		<description>Underground Tunnel</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1586,8 +1586,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region324>
+	<Region325>
 		<description>The Forgotten Tunnels</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1596,8 +1596,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>0</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region325>
+	<Region326>
 		<description>The Hidden Lair</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1606,8 +1606,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>0</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region326>
+	<Region327>
 		<description>Caverns of Madness</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1616,8 +1616,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region327>
+	<Region328>
 		<description>The Hidden Lair</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1626,8 +1626,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>0</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region328>
+	<Region329>
 		<description>Jarlsberg's Hideout</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1636,8 +1636,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region329>
+	<Region330>
 		<description>The Foothills of Albion</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1646,8 +1646,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>4</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region330>
+	<Region331>
 		<description>Burial AW4</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1655,8 +1655,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
-	</Region>
-	<Region>
+	</Region331>
+	<Region332>
 		<description>Rebel Half Orc Lair</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1665,8 +1665,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region332>
+	<Region333>
 		<description>The Haunted Halls</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1675,8 +1675,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region333>
+	<Region334>
 		<description>The Foothills of Midgard</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1685,8 +1685,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>4</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region334>
+	<Region335>
 		<description>Doiri Ban</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1695,8 +1695,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>4</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region335>
+	<Region336>
 		<description>Demonic Prison</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1705,8 +1705,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>4</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region336>
+	<Region337>
 		<description>Demonic Prison</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1715,8 +1715,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>4</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region337>
+	<Region338>
 		<description>Demonic Prison</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1725,8 +1725,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>4</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region338>
+	<Region339>
 		<description>Brimstone Caverns</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1734,8 +1734,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>4</expansion>
-	</Region>
-	<Region>
+	</Region339>
+	<Region340>
 		<description>Halls of Helgardh</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1743,8 +1743,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>4</expansion>
-	</Region>
-	<Region>
+	</Region340>
+	<Region341>
 		<description>Cave of Cruachan</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1752,8 +1752,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>4</expansion>
-	</Region>
-	<Region>
+	</Region341>
+	<Region342>
 		<description>Mid Launch 2</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1761,8 +1761,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
-	</Region>
-	<Region>
+	</Region342>
+	<Region343>
 		<description>Alb Launch 2</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1770,8 +1770,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
-	</Region>
-	<Region>
+	</Region343>
+	<Region344>
 		<description>Hib Launch 2</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1779,8 +1779,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
-	</Region>
-	<Region>
+	</Region344>
+	<Region345>
 		<description>Tomte Prison</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1789,8 +1789,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region345>
+	<Region346>
 		<description>Nisse's Retreat</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1799,8 +1799,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region346>
+	<Region347>
 		<description>Lair of the Demon Lord</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1809,8 +1809,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>4</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region347>
+	<Region348>
 		<description>The Baron's Gaol</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1818,8 +1818,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>4</expansion>
-	</Region>
-	<Region>
+	</Region348>
+	<Region349>
 		<description>Lios's Eternal Rest</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1828,8 +1828,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region349>
+	<Region350>
 		<description>Liche's Unrest</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1838,8 +1838,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region350>
+	<Region351>
 		<description>Nephraal's Gaol</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1847,8 +1847,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>4</expansion>
-	</Region>
-	<Region>
+	</Region351>
+	<Region352>
 		<description>Morfesa's Gaol</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1856,8 +1856,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>4</expansion>
-	</Region>
-	<Region>
+	</Region352>
+	<Region353>
 		<description>Den of Bones</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1866,8 +1866,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region353>
+	<Region354>
 		<description>The Lost Burrow</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1876,8 +1876,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region354>
+	<Region355>
 		<description>Tethra's Stronghold</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1886,8 +1886,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>0</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region355>
+	<Region356>
 		<description>Barrow of Restless Dead</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1896,8 +1896,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>0</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region356>
+	<Region357>
 		<description>The Cursed Lair</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1906,8 +1906,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region357>
+	<Region358>
 		<description>The Burrow</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1916,8 +1916,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region358>
+	<Region359>
 		<description>Red Dagger Hideout</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1926,8 +1926,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>0</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region359>
+	<Region360>
 		<description>King Eirik's Throne Room</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1936,8 +1936,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>4</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region360>
+	<Region361>
 		<description>Arachnid's Labyrinth</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1946,8 +1946,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region361>
+	<Region362>
 		<description>The Master's Lair</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1956,8 +1956,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region362>
+	<Region363>
 		<description>Anataeus' Sanctuary</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1966,8 +1966,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>4</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region363>
+	<Region364>
 		<description>Keeper Iraeda's Sanctuary</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1976,8 +1976,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>4</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region364>
+	<Region365>
 		<description>Bandit Lair</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1986,8 +1986,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region365>
+	<Region366>
 		<description>Gnoll Lair</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -1996,8 +1996,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region366>
+	<Region367>
 		<description>Vandr's Bane</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2006,8 +2006,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region367>
+	<Region368>
 		<description>Past and Present</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2016,8 +2016,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region368>
+	<Region369>
 		<description>Half-Orc Camp</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2026,8 +2026,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region369>
+	<Region370>
 		<description>Brutal Realization</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2036,8 +2036,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region370>
+	<Region371>
 		<description>History Repeats Itself</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2046,8 +2046,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region371>
+	<Region372>
 		<description>Hounds of Arawn</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2056,8 +2056,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region372>
+	<Region373>
 		<description>Passage of Echoes</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2066,8 +2066,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region373>
+	<Region374>
 		<description>The Unrestful Tomb</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2076,8 +2076,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region374>
+	<Region375>
 		<description>The Lost Passages</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2086,8 +2086,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region375>
+	<Region376>
 		<description>Goblin's Cookery</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2096,8 +2096,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region376>
+	<Region377>
 		<description>The Beastmaster's Den</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2106,8 +2106,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region377>
+	<Region378>
 		<description>Keeper Garran's Sanctuary</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2116,8 +2116,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>4</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region378>
+	<Region379>
 		<description>The Funerary Hall</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2126,8 +2126,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region379>
+	<Region380>
 		<description>Lair of Doom</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2136,8 +2136,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region380>
+	<Region381>
 		<description>The Arena</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2146,8 +2146,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region381>
+	<Region382>
 		<description>The Funerary Hall</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2156,8 +2156,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region382>
+	<Region383>
 		<description>The Funerary Hall</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2166,8 +2166,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region383>
+	<Region384>
 		<description>The Ritual Hall</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2176,8 +2176,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region384>
+	<Region385>
 		<description>The Betrayer's Den</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2186,8 +2186,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region385>
+	<Region386>
 		<description>The Sundered Tombs</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2196,8 +2196,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region386>
+	<Region387>
 		<description>The Sundered Tombs</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2206,8 +2206,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region387>
+	<Region388>
 		<description>The Sundered Tombs</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2216,8 +2216,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region388>
+	<Region389>
 		<description>Shafts of the Tenebrae</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2226,8 +2226,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region389>
+	<Region390>
 		<description>Lair of the Exiled</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2236,8 +2236,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region390>
+	<Region392>
 		<description>The Hall of Reawakening</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2246,8 +2246,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region392>
+	<Region393>
 		<description>The Hidden Crypt</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2256,8 +2256,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region393>
+	<Region394>
 		<description>King Constantine's Throne Room</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2266,8 +2266,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>4</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region394>
+	<Region395>
 		<description>King Lamfhotas' Throne Room</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2276,8 +2276,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>4</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region395>
+	<Region396>
 		<description>The Depths of Despair</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2286,8 +2286,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region396>
+	<Region397>
 		<description>Realm of the Damned</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2296,8 +2296,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region397>
+	<Region400>
 		<description>Burial Tomb</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2306,8 +2306,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region400>
+	<Region401>
 		<description>Burial Tomb</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2316,8 +2316,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region401>
+	<Region402>
 		<description>Burial Tomb</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2326,8 +2326,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region402>
+	<Region403>
 		<description>Burial Tomb</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2336,8 +2336,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region403>
+	<Region404>
 		<description>Burial Tomb</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2346,8 +2346,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region404>
+	<Region405>
 		<description>Desecrated Grounds</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2356,8 +2356,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region405>
+	<Region406>
 		<description>Desecrated Grounds</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2366,8 +2366,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region406>
+	<Region407>
 		<description>Desecrated Grounds</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2376,8 +2376,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region407>
+	<Region408>
 		<description>Desecrated Grounds</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2386,8 +2386,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region408>
+	<Region409>
 		<description>Desecrated Grounds</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2396,8 +2396,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region409>
+	<Region410>
 		<description>Forgotten Mines</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2406,8 +2406,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region410>
+	<Region411>
 		<description>Forgotten Mines</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2416,8 +2416,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region411>
+	<Region412>
 		<description>Forgotten Mines</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2426,8 +2426,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region412>
+	<Region413>
 		<description>Forgotten Mines</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2436,8 +2436,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region413>
+	<Region414>
 		<description>Forgotten Mines</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2446,8 +2446,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region414>
+	<Region415>
 		<description>The Funerary Hall</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2456,8 +2456,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region415>
+	<Region416>
 		<description>The Funerary Hall</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2466,8 +2466,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region416>
+	<Region417>
 		<description>The Funerary Hall</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2476,8 +2476,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region417>
+	<Region418>
 		<description>The Funerary Hall</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2486,8 +2486,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region418>
+	<Region419>
 		<description>The Funerary Hall</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2496,8 +2496,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region419>
+	<Region420>
 		<description>The Sundered Tombs</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2506,8 +2506,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region420>
+	<Region421>
 		<description>The Sundered Tombs</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2516,8 +2516,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region421>
+	<Region422>
 		<description>The Sundered Tombs</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2526,8 +2526,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region422>
+	<Region423>
 		<description>The Sundered Tombs</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2536,8 +2536,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region423>
+	<Region424>
 		<description>The Sundered Tombs</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2546,8 +2546,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region424>
+	<Region425>
 		<description>The Lost Wing</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2556,8 +2556,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region425>
+	<Region426>
 		<description>Deliah's Sanctuary</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2566,8 +2566,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region426>
+	<Region427>
 		<description>The Cursed Barrow</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2576,8 +2576,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region427>
+	<Region428>
 		<description>The Cursed Barrow</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2586,8 +2586,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region428>
+	<Region429>
 		<description>Snyblem's Lair</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2596,8 +2596,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region429>
+	<Region430>
 		<description>The Plutonian Shore</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2606,8 +2606,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region430>
+	<Region431>
 		<description>The Cursed Barrow</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2616,8 +2616,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region431>
+	<Region432>
 		<description>Dismal Grotto</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2626,8 +2626,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region432>
+	<Region433>
 		<description>Snarg's Grotto</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2636,8 +2636,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region433>
+	<Region434>
 		<description>The Maze of Tribulation</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2646,8 +2646,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region434>
+	<Region435>
 		<description>The Smelting Pot</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2656,8 +2656,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region435>
+	<Region436>
 		<description>Forges of Flame</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2666,8 +2666,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region436>
+	<Region437>
 		<description>Hugak's Smithy</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2676,8 +2676,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region437>
+	<Region438>
 		<description>The Goblin Workshop</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2686,8 +2686,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region438>
+	<Region439>
 		<description>Wolak's Crucible</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2696,8 +2696,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region439>
+	<Region440>
 		<description>Marik's Workroom</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2706,8 +2706,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region440>
+	<Region441>
 		<description>Dismal Grotto</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2716,8 +2716,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region441>
+	<Region442>
 		<description>The Steward's Crypt</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2726,8 +2726,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region442>
+	<Region443>
 		<description>Serf's Folly</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2736,8 +2736,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region443>
+	<Region444>
 		<description>Dismal Grotto</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2746,8 +2746,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region444>
+	<Region445>
 		<description>The Dark Caverns</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2756,8 +2756,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region445>
+	<Region446>
 		<description>Blathnait's Refuge</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2766,8 +2766,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region446>
+	<Region447>
 		<description>Broken Mirrors</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2776,8 +2776,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region447>
+	<Region448>
 		<description>The Dark Caverns</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2786,8 +2786,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region448>
+	<Region449>
 		<description>The Dark Caverns</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2796,8 +2796,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region449>
+	<Region450>
 		<description>The Cursed Barrow</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2806,8 +2806,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region450>
+	<Region451>
 		<description>The Cursed Barrow</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2816,8 +2816,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region451>
+	<Region452>
 		<description>The Cursed Barrow</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2826,8 +2826,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region452>
+	<Region453>
 		<description>The Cursed Barrow</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2836,8 +2836,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region453>
+	<Region454>
 		<description>The Cursed Barrow</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2846,8 +2846,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region454>
+	<Region455>
 		<description>Dismal Grotto</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2856,8 +2856,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region455>
+	<Region456>
 		<description>Dismal Grotto</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2866,8 +2866,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region456>
+	<Region457>
 		<description>Dismal Grotto</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2876,8 +2876,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region457>
+	<Region458>
 		<description>Dismal Grotto</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2886,8 +2886,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region458>
+	<Region459>
 		<description>Dismal Grotto</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2896,8 +2896,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region459>
+	<Region460>
 		<description>The Accursed Caves</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2906,8 +2906,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region460>
+	<Region461>
 		<description>The Accursed Caves</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2916,8 +2916,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region461>
+	<Region462>
 		<description>The Accursed Caves</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2926,8 +2926,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region462>
+	<Region463>
 		<description>The Accursed Caves</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2936,8 +2936,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region463>
+	<Region464>
 		<description>The Accursed Caves</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2946,8 +2946,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region464>
+	<Region465>
 		<description>The Dark Caverns</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2956,8 +2956,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region465>
+	<Region466>
 		<description>The Dark Caverns</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2966,8 +2966,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region466>
+	<Region467>
 		<description>The Dark Caverns</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2976,8 +2976,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region467>
+	<Region468>
 		<description>The Dark Caverns</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2986,8 +2986,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region468>
+	<Region469>
 		<description>The Dark Caverns</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -2996,8 +2996,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region469>
+	<Region470>
 		<description>Half Orc Command Post</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -3006,8 +3006,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region470>
+	<Region471>
 		<description>The Unused Mine</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -3016,8 +3016,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region471>
+	<Region472>
 		<description>The Unused Mine</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -3026,8 +3026,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region472>
+	<Region473>
 		<description>The Unused Mine</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -3036,8 +3036,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region473>
+	<Region474>
 		<description>The Unused Mine</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -3046,8 +3046,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region474>
+	<Region475>
 		<description>Rise of the Spraggons</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -3056,8 +3056,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region475>
+	<Region476>
 		<description>The Warrens</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -3066,8 +3066,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region476>
+	<Region477>
 		<description>The Accursed Caves</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -3076,8 +3076,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region477>
+	<Region478>
 		<description>The Accursed Caves</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -3086,8 +3086,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region478>
+	<Region479>
 		<description>The Ancient's Retreat</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -3096,8 +3096,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region479>
+	<Region480>
 		<description>The Shaman's Inner Sanctum</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -3106,8 +3106,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region480>
+	<Region481>
 		<description>The Accursed Caves</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -3116,8 +3116,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region481>
+	<Region482>
 		<description>The Unused Mine</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -3126,8 +3126,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region482>
+	<Region483>
 		<description>The Brawler's Den</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -3136,8 +3136,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region483>
+	<Region484>
 		<description>Felena's Sorrow</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -3146,8 +3146,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region484>
+	<Region485>
 		<description>The Unused Mine</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -3156,8 +3156,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region485>
+	<Region486>
 		<description>The Unused Mine</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -3166,8 +3166,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region486>
+	<Region487>
 		<description>The Pit of Despair</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -3176,8 +3176,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region487>
+	<Region488>
 		<description>The Forgotten Vein</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -3186,8 +3186,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region488>
+	<Region491>
 		<description>Maze of Madness</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -3196,8 +3196,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region491>
+	<Region492>
 		<description>Shattered Lands</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -3206,8 +3206,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region492>
+	<Region494>
 		<description>The Gnoll's Den</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -3216,8 +3216,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region494>
+	<Region495>
 		<description>The Inner Sanctum</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -3226,8 +3226,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region495>
+	<Region496>
 		<description>The Deep</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -3236,8 +3236,8 @@
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
 		<instance>True</instance>
-	</Region>
-	<Region>
+	</Region496>
+	<Region497>
 		<description>Mid Launch</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -3245,8 +3245,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
-	</Region>
-	<Region>
+	</Region497>
+	<Region498>
 		<description>Alb Launch</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -3254,8 +3254,8 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
-	</Region>
-	<Region>
+	</Region498>
+	<Region499>
 		<description>Hib Launch</description>
 		<isDivingEnabled>False</isDivingEnabled>
 		<waterLevel>0</waterLevel>
@@ -3263,5 +3263,5 @@
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
 		<expansion>3</expansion>
-	</Region>
+	</Region499>
 </root>
