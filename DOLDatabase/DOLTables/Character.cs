@@ -160,6 +160,9 @@ namespace DOL
 			private bool m_gainXP;
 			private bool m_gainRP;
 
+            private int m_lastfreeLevel;
+            private DateTime m_lastfreeleveled;
+		    
 			static bool m_autoSave;
 
 			/// <summary>
@@ -190,6 +193,8 @@ namespace DOL
 				m_spellQueue = true;
 				m_gainXP = true;
 				m_gainRP = true;
+                m_lastfreeLevel = 1;
+                m_lastfreeleveled = DateTime.Now;
 			}
 
 			/// <summary>
@@ -1778,7 +1783,7 @@ namespace DOL
 			/// can gain realm points
 			/// /rp to toggle
 			/// </summary>
-			[DataElement(AllowDbNull = true)]
+			[DataElement(AllowDbNull = false)]
 			public bool GainRP
 			{
 				get { return m_gainRP; }
@@ -1788,6 +1793,43 @@ namespace DOL
 					m_gainRP = value;
 				}
 			}
+
+            /// <summary>
+            /// Last Date for FreeLevel
+            /// </summary>
+            [DataElement(AllowDbNull = true)]
+		    public DateTime LastFreeLeveled
+		    {
+		        get {
+                    if (m_lastfreeleveled == DateTime.MinValue)
+                        m_lastfreeleveled = DateTime.Now;
+                    return m_lastfreeleveled;
+		        }
+                set
+                {
+                    Dirty = true;
+                    m_lastfreeleveled = value;
+                   
+                }
+		    }
+		    
+            /// <summary>
+            /// Last Level for FreeLevel
+            /// </summary>
+            [DataElement(AllowDbNull = true)]
+		    public int LastFreeLevel
+		    {
+		        get {
+                    return m_lastfreeLevel;
+		            
+		        }
+                set
+                {
+                    Dirty = true;
+                    m_lastfreeLevel = value;
+                   
+                }
+		    }
 		}
 	}
 }

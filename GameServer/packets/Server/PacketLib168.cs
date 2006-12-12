@@ -3092,6 +3092,10 @@ namespace DOL.GS.PacketHandler
 		{
 		}
 
+        public virtual void SendPlayerFreeLevelUpdate()
+        {
+        }
+
 		/// <summary>
 		/// The bow prepare animation
 		/// </summary>

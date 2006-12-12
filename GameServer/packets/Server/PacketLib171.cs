@@ -278,5 +278,28 @@ namespace DOL.GS.PacketHandler
 			}
 			SendTCP(pak);
 		}
+
+        public override void SendPlayerFreeLevelUpdate()
+        {
+            GamePlayer player = m_gameClient.Player;
+            GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.VisualEffect));
+
+            pak.WriteShort((ushort)player.ObjectID);
+            pak.WriteByte(0x09); // subcode
+
+            byte flag = player.FreeLevelState();
+
+            TimeSpan t = new TimeSpan((long)(DateTime.Now.Ticks - player.PlayerCharacter.LastFreeLeveled.Ticks));
+            
+            ushort time = 0;
+            //time is in minutes
+            time = (ushort)((7 * 24 * 60) - t.TotalMinutes);
+
+            //flag 1 = above level, 2 = elligable, 3= time until, 4 = level and time until, 5 = level until
+            pak.WriteByte(flag); //flag
+            pak.WriteShort(0); //unknown
+            pak.WriteShort(time); //time
+            SendTCP(pak);
+        }
 	}
 }

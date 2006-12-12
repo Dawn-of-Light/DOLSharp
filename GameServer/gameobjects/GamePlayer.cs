@@ -1388,6 +1388,29 @@ namespace DOL.GS
 
 		#region Stats
 
+        /// <summary>
+        /// Holds if the player can gain a FreeLevel
+        /// </summary>
+        public byte FreeLevelState()
+        {
+            //flag 1 = above level, 2 = elligable, 3= time until, 4 = level and time until, 5 = level until
+            if (Level >= 48)
+                return 1;
+            TimeSpan t = new TimeSpan((long)(DateTime.Now.Ticks - PlayerCharacter.LastFreeLeveled.Ticks));
+            if (t.Days >= 7)
+            {
+				if (Level >= PlayerCharacter.LastFreeLevel + 2)
+                    return 2;
+                else return 5;
+            }
+            else
+            {
+                if (Level >= PlayerCharacter.LastFreeLevel + 2)
+                    return 3;
+                else return 4;
+            }
+        }
+         
 		/// <summary>
 		/// Holds the total amount of constitution lost at deaths
 		/// </summary>
@@ -3617,7 +3640,9 @@ namespace DOL.GS
 			Out.SendMessage("You raise to level " + Level + "!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 			if (Experience < GameServer.ServerRules.GetExperienceForLevel(Level + 1))
 				Out.SendMessage("You have achieved level " + Level + "!", eChatType.CT_ScreenCenter, eChatLoc.CL_SystemWindow);
-
+			Out.SendPlayerFreeLevelUpdate();
+			if (FreeLevelState() == 2)
+				Out.SendMessage("You are eligible for a free level! Click on your trainer to receive it (or type /freelevel decline to discard your free level).", eChatType.CT_System, eChatLoc.CL_PopupWindow);
 			switch (Level)
 			{
 				// full respec on level 5 since 1.70

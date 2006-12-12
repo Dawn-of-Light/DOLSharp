@@ -331,6 +331,7 @@
     <Compile Include="playercommands\cmdhelp.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="playercommands\freelevel.cs" />
     <Compile Include="playercommands\quest.cs" />
     <Compile Include="playercommands\disband.cs">
       <SubType>Code</SubType>
