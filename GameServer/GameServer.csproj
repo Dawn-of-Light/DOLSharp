@@ -1395,6 +1395,7 @@
     <Compile Include="spells\ConcentrationList.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="spells\ConfusionSpellHandler.cs" />
     <Compile Include="spells\ConvertPet.cs" />
     <Compile Include="spells\EnduranceHealSpellHandler.cs" />
     <Compile Include="spells\NoVarianceSpells.cs" />
