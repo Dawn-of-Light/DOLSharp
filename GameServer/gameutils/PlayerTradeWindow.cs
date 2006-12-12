@@ -414,6 +414,8 @@ namespace DOL.GS
 				if (!m_partnerWindow.m_tradeAccept) return false;
 
 				bool logTrade = ServerProperties.Properties.LOG_TRADES;
+				if (m_owner.Client.Account.PrivLevel > 1 || partner.Client.Account.PrivLevel > 1)
+					logTrade = true;
 
 				//Test if we and our partner have enough money
 				bool enoughMoney        = m_owner.RemoveMoney(TradeMoney);

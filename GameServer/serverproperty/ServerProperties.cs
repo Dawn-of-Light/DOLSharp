@@ -58,6 +58,12 @@ namespace DOL.GS.ServerProperties
 		public static readonly double RP_RATE;
 
 		/// <summary>
+		/// The Bounty Points Rate
+		/// </summary>
+		[ServerProperty("bp_rate", "The Bounty Points Rate Modifier - Edit this to change the rate at which you gain bounty points e.g 1.5 is 50% more 2.0 is twice the amount (100%) 0.5 is half the amount (50%)", 1.0)]
+		public static readonly double BP_RATE;
+
+		/// <summary>
 		/// The Server Message of the Day
 		/// </summary>
 		[ServerProperty("motd", "The Server Message of the Day - Edit this to set what is displayed when a level 2+ character enters the game for the first time, set to \"\" for nothing", "Welcome to a Dawn of Light server, please edit this MOTD")]

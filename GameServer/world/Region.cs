@@ -1223,10 +1223,11 @@ namespace DOL.GS
 			}
 			else
 			{
-				if (log.IsErrorEnabled)
-					log.Error("GetInRadius starting zone is null for (" + type + ", " + x + ", " + y + ", " + z + ", " + radius + ") in Region ID=" + ID);
 				if (log.IsDebugEnabled)
+				{
+					log.Error("GetInRadius starting zone is null for (" + type + ", " + x + ", " + y + ", " + z + ", " + radius + ") in Region ID=" + ID);
 					log.Error(Environment.StackTrace);
+				}
 				return new EmptyEnumerator();
 			}
 		}

@@ -52,6 +52,7 @@ namespace DOL.GS.Keeps
 		public int DoorID
 		{
 			get { return m_doorID; }
+			set { m_doorID = value; }
 		}
 
 		public int OwnerKeepID

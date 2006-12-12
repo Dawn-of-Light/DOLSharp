@@ -3088,13 +3088,14 @@ namespace DOL.GS.PacketHandler
 			pak.WritePascalString(str);
 			SendTCP(pak);
 		}
+
 		public virtual void SendRvRGuildBanner(GamePlayer player, bool show)
 		{
 		}
 
-        public virtual void SendPlayerFreeLevelUpdate()
-        {
-        }
+		public virtual void SendPlayerFreeLevelUpdate()
+		{
+		}
 
 		/// <summary>
 		/// The bow prepare animation

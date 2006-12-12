@@ -24,6 +24,16 @@ namespace DOL.GS
 						area = new Area.Square(thisArea.Description, thisArea.X, thisArea.Y, thisArea.Radius, thisArea.Radius);
 					else if (thisArea.ClassType == "DOL.GS.Area.Circle")
 						area = new Area.Circle(thisArea.Description, thisArea.X, thisArea.Y, thisArea.Z, thisArea.Radius);
+					else if (thisArea.ClassType == "DOL.GS.Area.BindArea")
+					{
+						BindPoint bp = new BindPoint();
+						bp.Radius = (ushort)thisArea.Radius;
+						bp.X = thisArea.X;
+						bp.Y = thisArea.Y;
+						bp.Z = thisArea.Z;
+						bp.Region = thisArea.Region;
+						area = new Area.BindArea(thisArea.Description, bp);
+					}
 					if (area == null) throw new Exception("area is null");
 					area.Sound = thisArea.Sound;
 					area.CanBroadcast = thisArea.CanBroadcast;
