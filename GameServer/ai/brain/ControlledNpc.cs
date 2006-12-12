@@ -356,6 +356,10 @@ namespace DOL.AI.Brain
 		/// <param name="arguments"></param>
 		protected virtual void OnOwnerAttacked(DOLEvent e, object sender, EventArgs arguments)
 		{
+			// theurgist pets don't help their owner
+			if (Owner.CharacterClass.ID == (int)eCharacterClass.Theurgist)
+				return;
+
 			AttackedByEnemyEventArgs args = arguments as AttackedByEnemyEventArgs;
 			if (args == null) return;
 			if (args.AttackData.Target is GamePlayer && (args.AttackData.Target as GamePlayer).ControlledNpc != this)
