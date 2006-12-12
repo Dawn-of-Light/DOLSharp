@@ -64,7 +64,6 @@ namespace DOL.GS
 				{
 					rel.SaveIntoDatabase();
 					rel.RemoveFromWorld();
-
 				}
 
 				//then clear the hashtable

@@ -33,7 +33,8 @@ namespace DOL.GS.Scripts
 		"Various keep creation commands!", //command description
 		"'/keep fastcreate <type> <id> <name>' to create a keep with base template",
 		"'/keep fastcreate ' to show all template available in fast create",
-		"'/keep create <keepid> <name>' to create a keep ",
+		"'/keep create <keepid> <baselevel> <name>' to create a keep ",
+		"'/keep remove'",
 		"'/keep name <Name>' to change name",
 		"'/keep keepid <keepID>' to assign keepid to keep",
 		"'/keep level <level>' to change base level of keep",
@@ -1841,11 +1842,12 @@ namespace DOL.GS.Scripts
 				#endregion
 				case "create":
 					{
-						if (args.Length < 4)
+						if (args.Length < 5)
 						{
 							DisplaySyntax(client);
 							return 1;
 						}
+
 						int keepid = 0;
 						try
 						{
@@ -1856,8 +1858,20 @@ namespace DOL.GS.Scripts
 							DisplaySyntax(client);
 							return 1;
 						}
+
+						byte baselevel = 0;
+						try
+						{
+							baselevel = Convert.ToByte(args[3]);
+						}
+						catch
+						{
+							DisplaySyntax(client);
+							return 1;
+						}
+
 						DBKeep keep = new DBKeep();
-						keep.Name = String.Join(" ", args, 3, args.Length - 3);
+						keep.Name = String.Join(" ", args, 4, args.Length - 4);
 						keep.KeepID = keepid;
 						keep.Level = 0;
 						keep.Region = client.Player.CurrentRegionID;
@@ -1865,10 +1879,66 @@ namespace DOL.GS.Scripts
 						keep.Y = client.Player.Y;
 						keep.Z = client.Player.Z;
 						keep.Heading = client.Player.Heading;
-						new GameKeep().LoadFromDatabase(keep);
-						client.Player.TempProperties.setProperty(TEMP_KEEP_LAST, keep);
+						keep.BaseLevel = baselevel;
+						GameServer.Database.AddNewObject(keep);
+
+						GameKeep k = new GameKeep();
+						k.Load(keep);
+
+						foreach (IDoor door in DoorMgr.getDoorsCloseToSpot((ushort)keep.Region, keep.X, keep.Y, keep.Z, 3000))
+						{
+							(door as GameObject).RemoveFromWorld();
+							GameKeepDoor d = new GameKeepDoor();
+							d.CurrentRegionID = (ushort)keep.Region;
+							d.Name = door.Name;
+							d.Heading = (ushort)door.Heading;
+							d.X = door.X;
+							d.Y = door.Y;
+							d.Z = door.Z;
+							d.Level = 0;
+							d.Model = 0xFFFF;
+							d.DoorID = door.DoorID;
+							d.State = eDoorState.Closed;
+
+							DoorMgr.Doors[d.DoorID] = d;
+							d.AddToWorld();
+
+							d.Component = new GameKeepComponent();
+							d.Component.Keep = k;
+							d.Component.Keep.Doors[d.DoorID] = this;
+
+							d.Health = d.MaxHealth;
+							d.StartHealthRegeneration();
+
+							(door as GameObject).Delete();
+						}
+						client.Player.TempProperties.setProperty(TEMP_KEEP_LAST, k);
 						client.Out.SendMessage("You have created a keep", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					} break;
+						break;
+					} 
+				case "remove":
+					{
+						KeepArea karea = null;
+						foreach (AbstractArea area in client.Player.CurrentAreas)
+						{
+							if (area is KeepArea)
+							{
+								karea = area as KeepArea;
+								break;
+							}
+						}
+
+						if (karea == null)
+						{
+							DisplayError(client, "Your not in a keep area!", new object[] { });
+							return 1;
+						}
+
+						karea.Keep.Unload(karea);
+						DisplayMessage(client, "Keep Unloaded!", new object[] { });
+
+						break;
+					}
 				case "name":
 					{
 						if (args.Length < 3)
@@ -1936,6 +2006,10 @@ namespace DOL.GS.Scripts
 						client.Out.SendMessage("You change the level of current keep to " + keepLevel, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 					} break;
+				case "baselevel":
+					{
+						break;
+					}
 				/*	case "movehere":
 					{
 					

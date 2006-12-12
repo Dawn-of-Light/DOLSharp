@@ -427,6 +427,45 @@ namespace DOL.GS.Keeps
 			CurrentRegion.AddArea(area);
 		}
 
+		public void Unload(KeepArea area)
+		{
+			foreach (GameKeepGuard guard in (m_guards.Clone() as Hashtable).Values)
+			{
+				guard.Delete();
+				guard.DeleteFromDatabase();
+			}
+
+			foreach (GameKeepBanner banner in (m_banners.Clone() as Hashtable).Values)
+			{
+				banner.Delete();
+				banner.DeleteFromDatabase();
+			}
+
+			foreach (GameKeepDoor door in (m_doors.Clone() as Hashtable).Values)
+			{
+				door.Delete();
+				GameDoor d = new GameDoor();
+				d.CurrentRegionID = door.CurrentRegionID;
+				d.DoorID = door.DoorID;
+				d.Heading = door.Heading;
+				d.Level = door.Level;
+				d.Model = door.Model;
+				d.Name = "door";
+				d.Realm = door.Realm;
+				d.State = eDoorState.Closed;
+				d.X = door.X;
+				d.Y = door.Y;
+				d.Z = door.Z;
+				DoorMgr.Doors[d.DoorID] = d;
+				d.AddToWorld();
+			}
+
+			UnloadTimers();
+			GameEventMgr.RemoveHandler(CurrentRegion, RegionEvent.PlayerEnter, new DOLEventHandler(SendKeepInit));
+			CurrentRegion.RemoveArea(area);
+			RemoveFromDatabase();
+		}
+
 		/// <summary>
 		/// load keep from DB
 		/// </summary>
@@ -450,6 +489,14 @@ namespace DOL.GS.Keeps
 			}
 			if (m_targetLevel< Level)
 				m_targetLevel = Level;
+		}
+
+		/// <summary>
+		/// remove keep from DB
+		/// </summary>
+		public void RemoveFromDatabase()
+		{
+			GameServer.Database.DeleteObject(m_dbkeep);
 		}
 
 		/// <summary>
@@ -602,6 +649,12 @@ namespace DOL.GS.Keeps
 			m_claimTimer = new RegionTimer(CurrentRegion.TimeManager);
 			m_claimTimer.Callback = new RegionTimerCallback(ClaimCallBack);
 			m_claimTimer.Interval = 60 * 60 * 1000;
+		}
+
+		private void UnloadTimers()
+		{
+			m_changeLevelTimer.Stop();
+			m_claimTimer.Stop();
 		}
 
 		/// <summary>

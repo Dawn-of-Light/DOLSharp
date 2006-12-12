@@ -366,7 +366,7 @@ namespace DOL.GS
 		/// <param name="obj">The DBRelic-object for this relic</param>
 		public override void LoadFromDatabase(DataObject obj)
 		{
-			base.LoadFromDatabase(obj);
+			InternalID = obj.ObjectId;
 			m_dbRelic = obj as DBRelic;
 			CurrentRegionID = (ushort)m_dbRelic.Region;
 			X = m_dbRelic.X;

@@ -202,6 +202,11 @@ namespace DOL.GS.Keeps
 
 			if (guard.ActiveWeaponSlot == eActiveWeaponSlot.Distance)
 			{
+				if (GameServer.ServerRules.IsAllowedToAttack(guard, guard.TargetObject as GameLiving, true) == false)
+				{
+					guard.StopAttack();
+					return;
+				}
 				if (WorldMgr.GetDistance(guard, guard.TargetObject) > guard.AttackRange)
 				{
 					guard.StopAttack();

@@ -88,6 +88,19 @@ namespace DOL.GS.Keeps
 			}
 		}
 
+		public override void DeleteFromDatabase()
+		{
+			foreach (AbstractArea area in this.CurrentAreas)
+			{
+				if (area is KeepArea)
+				{
+					Component.Keep.Banners.Remove(this.InternalID);
+					break;
+				}
+			}
+			base.DeleteFromDatabase();
+		}
+
 		public void LoadFromPosition(DBKeepPosition pos, GameKeepComponent component)
 		{
 			m_templateID = pos.TemplateID;

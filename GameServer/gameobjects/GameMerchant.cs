@@ -494,7 +494,7 @@ namespace DOL.GS
 		{
 			IList list = base.GetExamineMessages(player);
 			list.Add("You examine " + GetName(0, false) + ".  " + GetPronoun(0, true) + " is " + GetAggroLevelString(player, false) + " and is a merchant.");
-			list.Add("You can buy items here for " + moneyItem.Item.Name + ".");
+			list.Add("You can buy items here for " + moneyItem == null ? "nothing" : moneyItem.Item.Name + ".");
 			list.Add("[Right click to display a shop window]");
 			return list;
 		}

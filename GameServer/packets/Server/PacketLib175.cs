@@ -277,7 +277,7 @@ namespace DOL.GS.PacketHandler
 				int acuityItemBonus = 0;
 				if (m_gameClient.Player.CharacterClass.ClassType == eClassType.ListCaster && (int)(eProperty)updateStats[i] == (int)m_gameClient.Player.CharacterClass.ManaStat)
 					acuityItemBonus = m_gameClient.Player.ItemBonus[(int)eProperty.Acuity];
-				int buff = modStats[i] - baseStats[i] - Math.Min(itemCaps[i], m_gameClient.Player.ItemBonus[(int)updateStats[i]]+acuityItemBonus);
+				int buff = modStats[i] - baseStats[i] - Math.Min(itemCaps[i], m_gameClient.Player.ItemBonus[(int)updateStats[i]] + acuityItemBonus) - m_gameClient.Player.AbilityBonus[(int)updateStats[i]];
 
 				pak.WriteShort((ushort)buff);
 			}

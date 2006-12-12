@@ -41,13 +41,14 @@ namespace DOL.GS.PacketHandler
 		/// Constructs a new PacketLib for Version 1.71 clients
 		/// </summary>
 		/// <param name="client">the gameclient this lib is associated with</param>
-		public PacketLib171(GameClient client):base(client)
+		public PacketLib171(GameClient client)
+			: base(client)
 		{
 		}
 
 		public override void SendPlayerPositionAndObjectID()
 		{
-			if (m_gameClient.Player==null) return;
+			if (m_gameClient.Player == null) return;
 
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.PositionAndObjectID));
 			pak.WriteShort((ushort)m_gameClient.Player.ObjectID); //This is the player's objectid not Sessionid!!!
@@ -58,14 +59,14 @@ namespace DOL.GS.PacketHandler
 
 			int flags = 0;
 			if (m_gameClient.Player.CurrentRegion.DivingEnabled)
-				flags = 0x80 | (m_gameClient.Player.IsUnderwater?0x01:0x00);
+				flags = 0x80 | (m_gameClient.Player.IsUnderwater ? 0x01 : 0x00);
 			pak.WriteByte((byte)(flags));
 
 			pak.WriteByte(0x00);	//TODO Unknown
 			Zone zone = m_gameClient.Player.CurrentZone;
 			if (zone == null) return;
-			pak.WriteShort((ushort)(zone.XOffset/0x2000));
-			pak.WriteShort((ushort)(zone.YOffset/0x2000));
+			pak.WriteShort((ushort)(zone.XOffset / 0x2000));
+			pak.WriteShort((ushort)(zone.YOffset / 0x2000));
 			pak.WriteShort(m_gameClient.Player.CurrentRegionID);
 			pak.WriteShort(0x00); //TODO: unknown, new in 1.71
 			SendTCP(pak);
@@ -88,7 +89,7 @@ namespace DOL.GS.PacketHandler
 			int flag = (obj.Realm & 3) << 4;
 			if (obj is GameKeepBanner)
 				flag |= 0x08;
-			if (obj is GameStaticItemTimed && m_gameClient.Player!=null && ((GameStaticItemTimed)obj).IsOwner(m_gameClient.Player))
+			if (obj is GameStaticItemTimed && m_gameClient.Player != null && ((GameStaticItemTimed)obj).IsOwner(m_gameClient.Player))
 				flag |= 0x04;
 			pak.WriteShort((ushort)flag);
 			pak.WriteInt(0x0); //TODO: unknown, new in 1.71
@@ -104,14 +105,14 @@ namespace DOL.GS.PacketHandler
 
 		public override void SendNPCCreate(GameNPC npc)
 		{
-			if(npc is GameMovingObject) { SendMovingObjectCreate(npc as GameMovingObject); return; }
+			if (npc is GameMovingObject) { SendMovingObjectCreate(npc as GameMovingObject); return; }
 
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.NPCCreate));
 			int speed = 0;
 			ushort speedZ = 0;
 			if (npc == null)
 				return;
-			if(!npc.IsOnTarget())
+			if (!npc.IsOnTarget())
 			{
 				speed = npc.CurrentSpeed;
 				speedZ = (ushort)npc.ZAddition;
@@ -128,10 +129,10 @@ namespace DOL.GS.PacketHandler
 			pak.WriteByte(npc.Level);
 
 			byte flags = (byte)(GameServer.ServerRules.GetLivingRealm(m_gameClient.Player, npc) << 6);
-			if((npc.Flags & (uint)GameNPC.eFlags.TRANSPARENT) != 0) flags |= 0x01;
-			if(npc.Inventory != null) flags |= 0x02; //If mob has equipment, then only show it after the client gets the 0xBD packet
-			if((npc.Flags & (uint)GameNPC.eFlags.PEACE) != 0) flags |= 0x10;
-			if((npc.Flags & (uint)GameNPC.eFlags.FLYING) != 0) flags |= 0x20;
+			if ((npc.Flags & (uint)GameNPC.eFlags.TRANSPARENT) != 0) flags |= 0x01;
+			if (npc.Inventory != null) flags |= 0x02; //If mob has equipment, then only show it after the client gets the 0xBD packet
+			if ((npc.Flags & (uint)GameNPC.eFlags.PEACE) != 0) flags |= 0x10;
+			if ((npc.Flags & (uint)GameNPC.eFlags.FLYING) != 0) flags |= 0x20;
 
 
 			pak.WriteByte(flags);
@@ -139,22 +140,22 @@ namespace DOL.GS.PacketHandler
 
 			string add = "";
 			byte flags2 = 0x00;
-			if((npc.Flags & (uint)GameNPC.eFlags.CANTTARGET) != 0)
+			if ((npc.Flags & (uint)GameNPC.eFlags.CANTTARGET) != 0)
 				if (m_gameClient.Account.PrivLevel > 1) add += "-DOR"; // indicates DOR flag for GMs
 				else flags2 |= 0x01;
-			if ((npc.Flags & (uint) GameNPC.eFlags.DONTSHOWNAME) != 0)
+			if ((npc.Flags & (uint)GameNPC.eFlags.DONTSHOWNAME) != 0)
 				if (m_gameClient.Account.PrivLevel > 1) add += "-NON"; // indicates NON flag for GMs
 				else flags2 |= 0x02;
-			if((npc.Flags & (uint)GameNPC.eFlags.TRANSPARENT) != 0) flags2 |= 0x04;
-			if(npc.CanGiveOneQuest(m_gameClient.Player)) flags2 |= 0x08;
+			if ((npc.Flags & (uint)GameNPC.eFlags.TRANSPARENT) != 0) flags2 |= 0x04;
+			if (npc.CanGiveOneQuest(m_gameClient.Player)) flags2 |= 0x08;
 
 			pak.WriteByte(flags2); // 4 high bits seems unused (new in 1.71)
 			pak.WriteShort(0x00); // new in 1.71
 			pak.WriteByte(0x00); // new in 1.71 (region instance ID from StoC_0x20)
 
 			string name = npc.Name;
-			if (name.Length+add.Length+2 > 47) // clients crash with too long names
-				name = name.Substring(0, 47-add.Length-2);
+			if (name.Length + add.Length + 2 > 47) // clients crash with too long names
+				name = name.Substring(0, 47 - add.Length - 2);
 			if (add.Length > 0)
 				name = string.Format("[{0}]{1}", name, add);
 
@@ -177,16 +178,16 @@ namespace DOL.GS.PacketHandler
 
 		public override void SendFindGroupWindowUpdate(GamePlayer[] list)
 		{
-			if (m_gameClient.Player==null) return;
+			if (m_gameClient.Player == null) return;
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.FindGroupUpdate));
-			if (list!=null)
+			if (list != null)
 			{
 				pak.WriteByte((byte)list.Length);
-				byte nbleader=0;
-				byte nbsolo=0x1E;
-				foreach(GamePlayer player in list)
+				byte nbleader = 0;
+				byte nbsolo = 0x1E;
+				foreach (GamePlayer player in list)
 				{
-					if (player.PlayerGroup!=null)
+					if (player.PlayerGroup != null)
 					{
 						pak.WriteByte(nbleader++);
 					}
@@ -197,7 +198,7 @@ namespace DOL.GS.PacketHandler
 					pak.WriteByte(player.Level);
 					pak.WritePascalString(player.Name);
 					pak.WriteString(player.CharacterClass.Name, 4);
-					if(player.CurrentZone != null)
+					if (player.CurrentZone != null)
 						pak.WriteByte((byte)player.CurrentZone.ID);
 					else
 						pak.WriteByte(255);
@@ -205,7 +206,7 @@ namespace DOL.GS.PacketHandler
 					pak.WriteByte(0); // objective
 					pak.WriteByte(0);
 					pak.WriteByte(0);
-					pak.WriteByte((byte) (player.PlayerGroup!=null ? 1 : 0));
+					pak.WriteByte((byte)(player.PlayerGroup != null ? 1 : 0));
 					pak.WriteByte(0);
 				}
 			}
@@ -220,7 +221,7 @@ namespace DOL.GS.PacketHandler
 		{
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.QuestEntry));
 
-			pak.WriteByte((byte) index);
+			pak.WriteByte((byte)index);
 			if (quest.Step <= 0)
 			{
 				pak.WriteByte(0);
@@ -233,19 +234,19 @@ namespace DOL.GS.PacketHandler
 				string desc = quest.Description;
 				if (name.Length > byte.MaxValue)
 				{
-					if (log.IsWarnEnabled) log.Warn(quest.GetType().ToString() + ": name is too long for 1.71 clients ("+name.Length+") '"+name+"'");
+					if (log.IsWarnEnabled) log.Warn(quest.GetType().ToString() + ": name is too long for 1.71 clients (" + name.Length + ") '" + name + "'");
 					name = name.Substring(0, byte.MaxValue);
 				}
 				if (desc.Length > ushort.MaxValue)
 				{
-					if (log.IsWarnEnabled) log.Warn(quest.GetType().ToString() + ": description is too long for 1.71 clients ("+desc.Length+") '"+desc+"'");
+					if (log.IsWarnEnabled) log.Warn(quest.GetType().ToString() + ": description is too long for 1.71 clients (" + desc.Length + ") '" + desc + "'");
 					desc = desc.Substring(0, ushort.MaxValue);
 				}
-				if (name.Length + desc.Length > 2048-10)
+				if (name.Length + desc.Length > 2048 - 10)
 				{
-					if (log.IsWarnEnabled) log.Warn(quest.GetType().ToString() + ": name + description length is too long and would have crashed the client.\nName ("+name.Length+"): '"+name+"'\nDesc ("+desc.Length+"): '"+desc+"'");
+					if (log.IsWarnEnabled) log.Warn(quest.GetType().ToString() + ": name + description length is too long and would have crashed the client.\nName (" + name.Length + "): '" + name + "'\nDesc (" + desc.Length + "): '" + desc + "'");
 					name = name.Substring(0, 32);
-					desc = desc.Substring(0, 2048-10 - name.Length); // all that's left
+					desc = desc.Substring(0, 2048 - 10 - name.Length); // all that's left
 				}
 				pak.WriteByte((byte)name.Length);
 				pak.WriteShort((ushort)desc.Length);
@@ -279,27 +280,27 @@ namespace DOL.GS.PacketHandler
 			SendTCP(pak);
 		}
 
-        public override void SendPlayerFreeLevelUpdate()
-        {
-            GamePlayer player = m_gameClient.Player;
-            GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.VisualEffect));
+		public override void SendPlayerFreeLevelUpdate()
+		{
+			GamePlayer player = m_gameClient.Player;
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.VisualEffect));
 
-            pak.WriteShort((ushort)player.ObjectID);
-            pak.WriteByte(0x09); // subcode
+			pak.WriteShort((ushort)player.ObjectID);
+			pak.WriteByte(0x09); // subcode
 
-            byte flag = player.FreeLevelState();
+			byte flag = player.FreeLevelState();
 
-            TimeSpan t = new TimeSpan((long)(DateTime.Now.Ticks - player.PlayerCharacter.LastFreeLeveled.Ticks));
-            
-            ushort time = 0;
-            //time is in minutes
-            time = (ushort)((7 * 24 * 60) - t.TotalMinutes);
+			TimeSpan t = new TimeSpan((long)(DateTime.Now.Ticks - player.PlayerCharacter.LastFreeLeveled.Ticks));
 
-            //flag 1 = above level, 2 = elligable, 3= time until, 4 = level and time until, 5 = level until
-            pak.WriteByte(flag); //flag
-            pak.WriteShort(0); //unknown
-            pak.WriteShort(time); //time
-            SendTCP(pak);
-        }
+			ushort time = 0;
+			//time is in minutes
+			time = (ushort)((7 * 24 * 60) - t.TotalMinutes);
+
+			//flag 1 = above level, 2 = elligable, 3= time until, 4 = level and time until, 5 = level until
+			pak.WriteByte(flag); //flag
+			pak.WriteShort(0); //unknown
+			pak.WriteShort(time); //time
+			SendTCP(pak);
+		}
 	}
 }
