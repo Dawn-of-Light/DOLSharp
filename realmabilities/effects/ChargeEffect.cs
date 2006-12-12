@@ -30,9 +30,10 @@ namespace DOL.GS.Effects
 			//sets player into combat mode
 			player.LastAttackTick = player.CurrentRegion.Time;
 			ArrayList speedSpells = new ArrayList();
-			foreach (GameSpellEffect effect in player.EffectList)
+			foreach (IGameEffect effect in player.EffectList)
 			{
-				if (effect.Spell.SpellType == "SpeedEnhancement")
+				if (effect is GameSpellEffect == false) continue;
+				if ((effect as GameSpellEffect).Spell.SpellType == "SpeedEnhancement")
 					speedSpells.Add(effect);
 			}
 			foreach (GameSpellEffect spell in speedSpells)

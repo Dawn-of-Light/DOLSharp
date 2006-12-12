@@ -641,6 +641,7 @@
     <Compile Include="packets\Client\168\warmapbonusesrequesthandler.cs" />
     <Compile Include="packets\Client\168\warmapshowrequesthandler.cs" />
     <Compile Include="packets\Client\168\WorldInitRequestHandler.cs" />
+    <Compile Include="packets\Client\168\QuestRemoveRequestHandler.cs" />
     <Compile Include="packets\Server\AbstractPacketLib.cs" />
     <Compile Include="packets\Server\CryptLib168.cs" />
     <Compile Include="packets\Server\GSTCPPacketOut.cs" />
@@ -1366,6 +1367,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="realmabilities\handlers\VanishAbility.cs" />
+    <Compile Include="skillhandler\TripleWieldAbilityHandler.cs" />
     <Compile Include="spells\AblativeArmorSpellHandler.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -1762,9 +1764,14 @@
     <Compile Include="world\Zone.cs">
       <SubType>Code</SubType>
     </Compile>
-    <EmbeddedResource Include="config\logconfig.xml" />
-    <EmbeddedResource Include="config\regions.xml" />
-    <EmbeddedResource Include="config\zones.xml" />
+    <EmbeddedResource Include="config\logconfig.xml">
+    </EmbeddedResource>
+    <EmbeddedResource Include="config\regions.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="config\zones.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
