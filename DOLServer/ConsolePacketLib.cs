@@ -202,6 +202,9 @@ namespace DOLGameServerConsole
 		public void SendListCastersSpell() { }
 		public void SendCrash(string str) { }
 		public void SendRvRGuildBanner(GamePlayer player, bool show) { }
+        public void SendPlayerFreeLevelUpdate()
+        {
+        }
 		/// <summary>
 		/// The bow prepare animation
 		/// </summary>

@@ -541,7 +541,8 @@ namespace DOL.GS.PacketHandler
 		void SendFurniture(House house, int i);
 		void SendHousePermissions(House house);
 		void SendHousePayRentDialog(string title);
-		
+
+        void SendPlayerFreeLevelUpdate();
 		
 		void SendMovingObjectCreate(GameMovingObject obj);
 		void SendSetControlledHorse(GamePlayer player);
