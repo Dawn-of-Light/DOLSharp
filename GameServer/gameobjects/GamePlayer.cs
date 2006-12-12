@@ -10305,6 +10305,8 @@ namespace DOL.GS
 			if (!CheckControlledNpc(npc))
 				return;
 
+			if (npc.Body.IsConfused) return;
+
 			GameLiving target = TargetObject as GameLiving;
 			if (!GameServer.ServerRules.IsAllowedToAttack(this, target, false))
 				return;
@@ -10339,6 +10341,8 @@ namespace DOL.GS
 			if (!CheckControlledNpc(npc))
 				return;
 
+			if (npc.Body.IsConfused) return;
+
 			Out.SendMessage("You command " + npc.Body.GetName(0, false) + " to follow you!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			npc.Follow(this);
 		}
@@ -10351,6 +10355,8 @@ namespace DOL.GS
 			IControlledBrain npc = ControlledNpc;
 			if (!CheckControlledNpc(npc))
 				return;
+
+			if (npc.Body.IsConfused) return;
 
 			Out.SendMessage("You command " + npc.Body.GetName(0, false) + " to stay in this position!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			npc.Stay();
@@ -10365,6 +10371,8 @@ namespace DOL.GS
 			if (!CheckControlledNpc(npc))
 				return;
 
+			if (npc.Body.IsConfused) return;
+
 			Out.SendMessage("You command " + npc.Body.GetName(0, false) + " to come to you.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			npc.ComeHere();
 		}
@@ -10377,6 +10385,8 @@ namespace DOL.GS
 			IControlledBrain npc = ControlledNpc;
 			if (!CheckControlledNpc(npc))
 				return;
+
+			if (npc.Body.IsConfused) return;
 
 			GameObject target = TargetObject;
 			if (target == null)
@@ -10397,6 +10407,8 @@ namespace DOL.GS
 			if (!CheckControlledNpc(npc))
 				return;
 
+			if (npc.Body.IsConfused) return;
+
 			Out.SendMessage("You command " + npc.Body.GetName(0, false) + " to disengage from combat!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			npc.AggressionState = eAggressionState.Passive;
 			npc.Body.StopAttack();
@@ -10412,6 +10424,8 @@ namespace DOL.GS
 			if (!CheckControlledNpc(npc))
 				return;
 
+			if (npc.Body.IsConfused) return;
+
 			Out.SendMessage("You command " + npc.Body.GetName(0, false) + " to attack all enemies!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			npc.AggressionState = eAggressionState.Aggressive;
 		}
@@ -10424,6 +10438,8 @@ namespace DOL.GS
 			IControlledBrain npc = ControlledNpc;
 			if (!CheckControlledNpc(npc))
 				return;
+
+			if (npc.Body.IsConfused) return;
 
 			Out.SendMessage("You command " + npc.Body.GetName(0, false) + " to defend you!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			npc.AggressionState = eAggressionState.Defensive;

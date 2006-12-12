@@ -181,6 +181,8 @@ namespace DOL.AI.Brain
 		/// <param name="aggroamount"></param>
 		public virtual void AddToAggroList(GameLiving living, int aggroamount)
 		{
+			if (m_body.IsConfused) return;
+
 			if (living == null) return;
 			//			log.Debug(Body.Name + ": AddToAggroList="+(living==null?"(null)":living.Name)+", "+aggroamount);
 
