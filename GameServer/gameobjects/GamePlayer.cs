@@ -3168,6 +3168,11 @@ namespace DOL.GS
 		/// <param name="amount">The amount of bounty points gained</param>
 		public override void GainBountyPoints(long amount)
 		{
+			//bp rate modifier
+			double modifier = ServerProperties.Properties.BP_RATE;
+			if (modifier != -1)
+				amount = (long)((double)amount * modifier);
+
 			base.GainBountyPoints(amount);
 			BountyPoints += amount;
 			if (m_guild != null)
@@ -3829,14 +3834,6 @@ namespace DOL.GS
 			Out.SendUpdatePlayerSkills();
 			Out.SendUpdatePoints();
 			UpdatePlayerStatus();
-
-			// not sure what package this is, but it triggers the mob color update
-			Out.SendLevelUpSound();
-
-			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-			{
-				player.Out.SendEmoteAnimation(this, eEmote.LvlUp);
-			}
 		}
 
 		#endregion

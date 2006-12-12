@@ -1092,6 +1092,7 @@ namespace DOL.GS
 					{
 						StopFollow();
 						Notify(GameNPCEvent.FollowLostTarget, this, new FollowLostTargetEventArgs(followTarget));
+						brain.ClearAggroList();
 						this.WalkToSpawn();
 						return 0;
 					}
@@ -2193,6 +2194,7 @@ namespace DOL.GS
 				if ((this.Brain as IControlledBrain).AggressionState == eAggressionState.Passive)
 					return;
 			}
+
 			TargetObject = attackTarget;
 			m_lastAttackTick = m_CurrentRegion.Time;
 			if (m_attackers.Count == 0 && this.Spells.Count > 0 && this.CurrentRegion.Time - LastAttackedByEnemyTick > 10 * 1000)

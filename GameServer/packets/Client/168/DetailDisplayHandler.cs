@@ -1019,7 +1019,8 @@ Type    Description           Id
 				WriteMagicalBonuses(objectInfo, item, client, true);
 				WriteClassicShieldInfos(objectInfo, item, client);
 			}
-			if (item.Object_Type == (int)eObjectType.Magical)
+			if (item.Object_Type == (int)eObjectType.Magical ||
+				item.Object_Type == (int)eObjectType.Instrument)
 			{
 				WriteMagicalBonuses(objectInfo, item, client, true);
 			}

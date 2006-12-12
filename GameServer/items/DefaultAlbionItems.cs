@@ -440,7 +440,7 @@ namespace DOL.GS.Items
 				friar_template.Object_Type = (int) eObjectType.Leather;
 				friar_template.Item_Type = (int) eEquipmentItems.TORSO;
 				friar_template.Weight = 15;
-				friar_template.Model = 58;
+				friar_template.Model = 441;
 				friar_template.Realm = (int)eRealm.Albion;
 				friar_template.IsPickable = true; 
 				friar_template.IsDropable = false; 
