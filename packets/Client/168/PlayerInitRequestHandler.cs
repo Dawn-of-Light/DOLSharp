@@ -158,7 +158,13 @@ namespace DOL.GS.PacketHandler.Client.v168
 				player.StartEnduranceRegeneration();
 
 				player.SetPvPInvulnerability(10*1000, null);
-
+                player.Out.SendPlayerFreeLevelUpdate();
+			    
+				if (player.FreeLevelState() == 2)
+				{
+					player.Out.SendMessage("You are eligible for a free level! Click on your trainer to receive it (or type /freelevel decline to discard your free level).", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+				}
+				
 				AssemblyName an = Assembly.GetExecutingAssembly().GetName();
 				player.Out.SendMessage("Dawn of Light " + an.Name + " Version: " + an.Version, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
