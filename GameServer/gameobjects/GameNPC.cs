@@ -243,6 +243,14 @@ namespace DOL.GS
 			set { m_linkedFactions = value; }
 		}
 
+		protected bool m_isConfused;
+
+		public bool IsConfused
+		{
+			get { return m_isConfused; }
+			set { m_isConfused = value; }
+		}
+
 		#endregion
 		#region Flags/Position/SpawnPosition/UpdateTick
 		/// <summary>
