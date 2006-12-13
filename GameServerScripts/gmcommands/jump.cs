@@ -87,6 +87,11 @@ namespace DOL.GS.Scripts
 				}
 				if (CheckExpansion(client, clientc, clientc.Player.CurrentRegionID))
 				{
+					if (clientc.Player.InHouse)
+					{
+						client.Out.SendMessage("Cannot jump to someone inside a house", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						return 1;
+					}
 					client.Out.SendMessage("/Jump to " + clientc.Player.CurrentRegion, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					client.Player.MoveTo(clientc.Player.CurrentRegionID, clientc.Player.X, clientc.Player.Y, clientc.Player.Z, client.Player.Heading);
 					return 1;

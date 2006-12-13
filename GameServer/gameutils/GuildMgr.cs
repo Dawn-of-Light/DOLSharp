@@ -172,7 +172,7 @@ namespace DOL.GS
 				rank.Claim = false;
 				rank.Emblem = false;
 				rank.GcHear = true;
-				rank.GcSpeak = false;
+				rank.GcSpeak = true;
 				rank.GuildID = newguild.GuildID;
 				rank.Invite = false;
 				rank.OcHear = false;

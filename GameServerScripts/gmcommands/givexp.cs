@@ -46,7 +46,7 @@ namespace DOL.GS.Scripts
 				GamePlayer obj = client.Player.TargetObject as GamePlayer;
 				if (obj != null)
 				{
-					obj.GainExperience(amount, 0, 0, true);
+					obj.GainExperience(amount);
 				}
 				else
 				{

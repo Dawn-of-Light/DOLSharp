@@ -290,7 +290,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						ch.BindYpos = ch.Ypos;
 						ch.BindZpos = ch.Zpos;
 
-						if (Properties.STARTING_GUILD)
+						if (client.Account.PrivLevel == 1 && Properties.STARTING_GUILD)
 						{
 							switch (ch.Realm)
 							{
