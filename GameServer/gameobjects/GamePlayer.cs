@@ -1,4 +1,5 @@
 /*
+/*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
  *
  * This program is free software; you can redistribute it and/or
@@ -65,6 +66,10 @@ namespace DOL.GS
 		/// based on!
 		/// </summary>
 		protected Character m_character;
+		/// <summary>
+		/// The database id this character belong to
+		/// </summary>
+		protected string m_guildid;
 		/// <summary>
 		/// Has this player entered the game, will be
 		/// true after the first time the char enters
@@ -985,6 +990,7 @@ namespace DOL.GS
 				long lostExp = Experience;
 				long lastDeathExpLoss = TempProperties.getLongProperty(DEATH_EXP_LOSS_PROPERTY, 0);
 				TempProperties.removeProperty(DEATH_EXP_LOSS_PROPERTY);
+
 				GainExperience(-lastDeathExpLoss, 0, 0, false);
 				lostExp -= Experience;
 
@@ -1316,7 +1322,6 @@ namespace DOL.GS
 			set
 			{
 				base.GuildName = value;
-				m_character.GuildName = value;
 				//update guild name for all players if client is playing
 				if (ObjectState == eObjectState.Active)
 				{
@@ -7469,6 +7474,16 @@ namespace DOL.GS
 			}
 		}
 
+
+		/// <summary>
+		/// Gets or sets the database guildid of this player
+		/// </summary>
+		public string GuildID
+		{
+			get { return m_guildid; }
+			set	{ m_guildid = (m_character.GuildID = value); }
+		}
+
 		/// <summary>
 		/// Gets or sets the player's guild flag
 		/// </summary>
@@ -9033,9 +9048,9 @@ namespace DOL.GS
 			m_customFaceAttributes[(int)eCharFacePart.MoodType] = m_character.MoodType;
 
 
-			m_guildName = m_character.GuildName;
-			if (m_guildName != "")
-				m_guild = GuildMgr.GetGuildByName(m_guildName);
+			m_guildid = m_character.GuildID;
+			if (m_guildid != null)
+				m_guild = GuildMgr.GetGuildByGuildID(m_guildid);
 			else
 				m_guild = null;
 
@@ -9050,7 +9065,8 @@ namespace DOL.GS
 						break;
 					}
 				}
-
+			
+				m_guildName = m_guild.Name;
 				m_guild.AddOnlineMember(this);
 			}
 			m_X = m_character.Xpos;

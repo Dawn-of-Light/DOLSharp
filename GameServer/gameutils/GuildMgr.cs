@@ -43,9 +43,14 @@ namespace DOL.GS
 		/// ArrayList of all guilds in the game
 		/// </summary>
 		static private readonly HybridDictionary m_guilds = new HybridDictionary();
-
+		
 		/// <summary>
-		/// Unique ID of last added guild
+		/// ArrayList of all GuildIDs to GuildNames
+		/// </summary>
+		static private readonly HybridDictionary m_guildids = new HybridDictionary();		
+		
+		/// <summary>
+		/// ArrayList of all guilds in the game
 		/// </summary>
 		static private ushort m_lastID = 0;
 
@@ -69,6 +74,7 @@ namespace DOL.GS
 				if (!m_guilds.Contains(guild.Name))
 				{
 					m_guilds.Add(guild.Name, guild);
+					m_guildids.Add(guild.GuildID, guild.Name);
 					guild.ID = ++m_lastID;
 					return true;
 				}
@@ -91,6 +97,7 @@ namespace DOL.GS
 			lock (m_guilds.SyncRoot)
 			{
 				m_guilds.Remove(guild.Name);
+				m_guildids.Remove(guild.GuildID);
 			}
 			return true;
 		}
@@ -138,9 +145,11 @@ namespace DOL.GS
 				newguild.theGuildDB = new DBGuild();
 				newguild.Name = guildName;
 				newguild.theGuildDB.GuildName = guildName;
+				newguild.GuildID = System.Guid.NewGuid().ToString(); //Assume this is unique, which I don't like, but it seems to be commonly used elsewhere in the code.
+				newguild.theGuildDB.GuildID = newguild.GuildID;
 				CreateRanks(newguild);
-
-				AddGuild(newguild);
+				
+				AddGuild(newguild);				
 				GameServer.Database.AddNewObject(newguild.theGuildDB);
 				return newguild;
 			}
@@ -164,7 +173,7 @@ namespace DOL.GS
 				rank.Emblem = false;
 				rank.GcHear = true;
 				rank.GcSpeak = false;
-				rank.GuildName = newguild.Name;
+				rank.GuildID = newguild.GuildID;
 				rank.Invite = false;
 				rank.OcHear = false;
 				rank.OcSpeak = false;
@@ -252,7 +261,7 @@ namespace DOL.GS
 				foreach (DBGuild guild in guilds)
 				{
 					foreach (Character cha in guild.Characters)
-						cha.GuildName = "";
+						cha.GuildID = "";
 					GameServer.Database.DeleteObject(guild);
 				}
 
@@ -261,6 +270,7 @@ namespace DOL.GS
 					foreach (GamePlayer ply in removeGuild.ListOnlineMembers())
 					{
 						ply.Guild = null;
+						ply.GuildID = "";
 						ply.GuildName = "";
 						ply.GuildRank = null;
 					}
@@ -290,6 +300,33 @@ namespace DOL.GS
 			}
 		}
 
+		/// <summary>
+		/// Returns a guild according to the matching database ID.
+		/// </summary>
+		/// <returns>Guild</returns>
+		public static Guild GetGuildByGuildID(string guildid)
+		{
+			if(guildid == null) return null;
+			
+			lock (m_guildids.SyncRoot)
+			{
+				if(m_guildids[guildid] == null) return null;
+				
+				lock(m_guilds.SyncRoot)
+				{
+					return (Guild)m_guilds[m_guildids[guildid]];
+				}
+			}
+		}
+
+		/// <summary>
+		/// Returns a database ID for a matching guild name.
+		/// </summary>
+		/// <returns>Guild</returns>
+		public static string GuildNameToGuildID(string guildName)
+		{
+			return (string)m_guildids[guildName];
+		}
 
 		/// <summary>
 		/// Returns a list of guilds by their status

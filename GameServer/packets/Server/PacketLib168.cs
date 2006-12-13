@@ -2690,13 +2690,20 @@ namespace DOL.GS.PacketHandler
 			{
 				lock (pet.EffectList)
 				{
-					int count = 0;
+					ArrayList icons = new ArrayList();
 					foreach (IGameEffect effect in pet.EffectList)
 					{
 						if (effect.Icon == 0)
 							continue;
-						pak.WriteShort(effect.Icon); // 0x08 - null terminated - (byte) list of shorts - spell icons on pet
-						if (++count > 8) break;
+						icons.Add(effect.Icon);
+					}
+					pak.WriteByte((byte)icons.Count); // effect count
+					// 0x08 - null terminated - (byte) list of shorts - spell icons on pet
+					foreach (ushort icon in icons)
+					{
+						if (icons.IndexOf(icon) >= 8)
+							break;
+						pak.WriteShort(icon);
 					}
 				}
 			}
