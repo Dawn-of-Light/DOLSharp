@@ -2573,7 +2573,7 @@ namespace DOL.GS
 					if (inter.InterceptSource.ObjectState != eObjectState.Active) continue;
 					if (inter.InterceptSource.IsAlive == false) continue;
 					if (!WorldMgr.CheckDistance(this, inter.InterceptSource, InterceptAbilityHandler.INTERCEPT_DISTANCE)) continue;
-					if (Util.Chance(50)) continue; // TODO: proper chance formula?
+					if (Util.Chance(inter.InterceptChance)) continue; // TODO: proper chance formula?
 					intercept = inter;
 				}
 			}
@@ -2589,7 +2589,8 @@ namespace DOL.GS
 			if (intercept != null && !stealthStyle)
 			{
 				ad.Target = intercept.InterceptSource;
-				intercept.Cancel(false); // can be canceled only outside of the loop
+				if (intercept.InterceptSource is GamePlayer)
+					intercept.Cancel(false); // can be canceled only outside of the loop
 				return eAttackResult.HitUnstyled;
 			}
 
@@ -3277,7 +3278,8 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		/// <param name="expCampBonus">camp bonus to display</param>
 		/// <param name="expGroupBonus">group bonus to display</param>
 		/// <param name="sendMessage">should exp gain message be sent</param>
-		public virtual void GainExperience(long expTotal, long expCampBonus, long expGroupBonus, bool sendMessage)
+		/// <param name="allowMultiply">should the xp amount be multiplied</param>
+		public virtual void GainExperience(long expTotal, long expCampBonus, long expGroupBonus, bool sendMessage, bool allowMultiply)
 		{
 			if (expTotal > 0) Notify(GameLivingEvent.GainedExperience, this, new GainedExperienceEventArgs(expTotal, expCampBonus, expGroupBonus, sendMessage));
 		}
@@ -3302,7 +3304,7 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		/// <param name="exp">base amount of xp to gain</param>
 		public void GainExperience(long exp)
 		{
-			GainExperience(exp, 0, 0, true);
+			GainExperience(exp, 0, 0, true, false);
 		}
 		/// <summary>
 		/// Called when an enemy of this living is killed

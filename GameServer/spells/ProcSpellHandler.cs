@@ -269,7 +269,13 @@ namespace DOL.GS.Spells
 			{
 				ISpellHandler handler = ScriptMgr.CreateSpellHandler((GameLiving)sender, m_procSpell, m_procSpellLine);
 				if (handler != null)
-					handler.StartSpell(ad.Target);
+				{
+					if (m_procSpell.Target == "Enemy")
+						handler.StartSpell(ad.Target);
+					else if (m_procSpell.Target == "Self")
+						handler.StartSpell(ad.Attacker);
+				}
+
 			}
 		}
 

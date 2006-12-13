@@ -87,17 +87,16 @@ namespace DOL.GS
 		/// <param name="player"></param>
 		/// <returns></returns>
 		public override bool Interact(GamePlayer player)
-		{
-			player.GainExperience(0, 0, 0, false); // leveup
-			
-
+		{			
 			if (!base.Interact(player)) return false;
 
-			if (player.FreeLevelState() == 2)
+			player.GainExperience(0);//levelup
+
+			if (player.FreeLevelState == 2)
 			{
 				long xp = GameServer.ServerRules.GetExperienceForLevel(player.PlayerCharacter.LastFreeLevel + 3) - GameServer.ServerRules.GetExperienceForLevel(player.PlayerCharacter.LastFreeLevel + 2);
 				player.PlayerCharacter.LastFreeLevel = player.Level;
-				player.GainExperience(xp, 0, 0, true);
+				player.GainExperience(xp);
 				player.PlayerCharacter.LastFreeLeveled = DateTime.Now;
 				player.Out.SendPlayerFreeLevelUpdate();
 			}

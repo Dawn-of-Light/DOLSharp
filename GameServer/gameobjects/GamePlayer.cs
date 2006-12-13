@@ -991,7 +991,7 @@ namespace DOL.GS
 				long lastDeathExpLoss = TempProperties.getLongProperty(DEATH_EXP_LOSS_PROPERTY, 0);
 				TempProperties.removeProperty(DEATH_EXP_LOSS_PROPERTY);
 
-				GainExperience(-lastDeathExpLoss, 0, 0, false);
+				GainExperience(-lastDeathExpLoss);
 				lostExp -= Experience;
 
 				// raise only the gravestone if xp has to be stored in it
@@ -1244,13 +1244,12 @@ namespace DOL.GS
 			{
 				GamePlayer player = (GamePlayer)m_actionSource;
 				long xp = m_gravestone.XPValue;
-				xp = (long)(xp / ServerProperties.Properties.XP_RATE);
 				m_gravestone.XPValue = 0;
 
 				if (xp > 0)
 				{
 					player.Out.SendMessage("You pray at your grave and gain back experience!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-					player.GainExperience(xp, 0, 0, false);
+					player.GainExperience(xp);
 				}
 				m_gravestone.Delete();
 			}
@@ -1396,24 +1395,29 @@ namespace DOL.GS
         /// <summary>
         /// Holds if the player can gain a FreeLevel
         /// </summary>
-        public byte FreeLevelState()
+        public byte FreeLevelState
         {
-            //flag 1 = above level, 2 = elligable, 3= time until, 4 = level and time until, 5 = level until
-            if (Level >= 48)
-                return 1;
-            TimeSpan t = new TimeSpan((long)(DateTime.Now.Ticks - PlayerCharacter.LastFreeLeveled.Ticks));
-            if (t.Days >= 7)
-            {
-				if (Level >= PlayerCharacter.LastFreeLevel + 2)
-                    return 2;
-                else return 5;
-            }
-            else
-            {
-                if (Level >= PlayerCharacter.LastFreeLevel + 2)
-                    return 3;
-                else return 4;
-            }
+			get
+			{
+				if (ServerProperties.Properties.FREELEVEL_DAYS == -1)
+					return 1;
+				//flag 1 = above level, 2 = elligable, 3= time until, 4 = level and time until, 5 = level until
+				if (Level >= 48)
+					return 1;
+				TimeSpan t = new TimeSpan((long)(DateTime.Now.Ticks - PlayerCharacter.LastFreeLeveled.Ticks));
+				if (t.Days >= ServerProperties.Properties.FREELEVEL_DAYS)
+				{
+					if (Level >= PlayerCharacter.LastFreeLevel + 2)
+						return 2;
+					else return 5;
+				}
+				else
+				{
+					if (Level >= PlayerCharacter.LastFreeLevel + 2)
+						return 3;
+					else return 4;
+				}
+			}
         }
          
 		/// <summary>
@@ -3521,15 +3525,29 @@ namespace DOL.GS
 		/// <param name="expCampBonus">camp bonus to included in total exp</param>
 		/// <param name="expGroupBonus">group bonus included in total exp</param>
 		/// <param name="sendMessage">should exp gain message be sent</param>
-		public override void GainExperience(long expTotal, long expCampBonus, long expGroupBonus, bool sendMessage)
+		public void GainExperience(long expTotal, long expCampBonus, long expGroupBonus, bool sendMessage)
+		{
+			GainExperience(expTotal, expCampBonus, expGroupBonus, sendMessage, true);
+		}
+
+		/// <summary>
+		/// Called whenever this player gains experience
+		/// </summary>
+		/// <param name="expTotal">amount of xp to gain</param>
+		/// <param name="expCampBonus">camp bonus to included in total exp</param>
+		/// <param name="expGroupBonus">group bonus included in total exp</param>
+		/// <param name="sendMessage">should exp gain message be sent</param>
+		/// <param name="allowMultiply">should the xp amount be multiplied</param>
+		public override void GainExperience(long expTotal, long expCampBonus, long expGroupBonus, bool sendMessage, bool allowMultiply)
 		{
 			if (!GainXP)
 				return;
 
 			//xp rate modifier
-			expTotal = (long)((double)expTotal * ServerProperties.Properties.XP_RATE);
+			if (allowMultiply)
+				expTotal = (long)(expTotal * ServerProperties.Properties.XP_RATE);
 
-			base.GainExperience(expTotal, expCampBonus, expGroupBonus, sendMessage);
+			base.GainExperience(expTotal, expCampBonus, expGroupBonus, sendMessage, allowMultiply);
 
 			if (IsLevelSecondStage)
 			{
@@ -3651,7 +3669,7 @@ namespace DOL.GS
 			if (Experience < GameServer.ServerRules.GetExperienceForLevel(Level + 1))
 				Out.SendMessage("You have achieved level " + Level + "!", eChatType.CT_ScreenCenter, eChatLoc.CL_SystemWindow);
 			Out.SendPlayerFreeLevelUpdate();
-			if (FreeLevelState() == 2)
+			if (FreeLevelState == 2)
 				Out.SendMessage("You are eligible for a free level! Click on your trainer to receive it (or type /freelevel decline to discard your free level).", eChatType.CT_System, eChatLoc.CL_PopupWindow);
 			switch (Level)
 			{
@@ -5885,7 +5903,7 @@ namespace DOL.GS
 					m_character.DeathCount++;
 
 					long xpLoss = (ExperienceForNextLevel - ExperienceForCurrentLevel) * xpLossPercent / 1000;
-					GainExperience(-xpLoss, 0, 0, false);
+					GainExperience(-xpLoss, 0, 0, false, true);
 					TempProperties.setProperty(DEATH_EXP_LOSS_PROPERTY, xpLoss);
 
 					int conLoss = m_character.DeathCount;

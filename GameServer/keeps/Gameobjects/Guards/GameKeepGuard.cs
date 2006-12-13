@@ -67,6 +67,8 @@ namespace DOL.GS.Keeps
 		{
 			get
 			{
+				if (this.Component == null || this.Component.Keep == null)
+					return false;
 				return this.Component.Keep.IsPortalKeep;
 			}
 		}

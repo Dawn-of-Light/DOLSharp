@@ -62,6 +62,16 @@ namespace DOL.GS.Effects
 			get { return m_interceptTarget; }
 		}
 
+		public int InterceptChance
+		{
+			get
+			{
+				if (InterceptSource is GamePlayer)
+					return 50;
+				return 10;
+			}
+		}
+
 		/// <summary>
 		/// Creates a new intercept effect
 		/// </summary>
@@ -90,14 +100,14 @@ namespace DOL.GS.Effects
 			{
 				if (interceptor is GamePlayer)
 					((GamePlayer)interceptor).Out.SendMessage(string.Format("You are now attempting to intercept an attack for {0}, but you must stand closer.", intercepted.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				if (intercepted is GamePlayer)
+				if (intercepted is GamePlayer && interceptor is GamePlayer)
 					((GamePlayer)intercepted).Out.SendMessage(string.Format("{0} is now attempting to intercept an attack for you, but you must stand closer.", interceptor.GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 			else
 			{
 				if (interceptor is GamePlayer)
 					((GamePlayer)interceptor).Out.SendMessage(string.Format("You are now attempting to intercept an attack for {0}.", intercepted.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				if (intercepted is GamePlayer)
+				if (intercepted is GamePlayer && interceptor is GamePlayer)
 					((GamePlayer)intercepted).Out.SendMessage(string.Format("{0} is now attempting to intercept an attack for you.", interceptor.GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 			interceptor.EffectList.Add(this);
@@ -120,7 +130,7 @@ namespace DOL.GS.Effects
 			{
 				if (InterceptSource is GamePlayer)
 					((GamePlayer)InterceptSource).Out.SendMessage("You are no longer attempting to intercept an attack for " + InterceptTarget.GetName(0, false) + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				if (InterceptTarget is GamePlayer)
+				if (InterceptTarget is GamePlayer && InterceptSource is GamePlayer)
 					((GamePlayer)InterceptTarget).Out.SendMessage(InterceptSource.GetName(0, true) + " is no longer attempting to intercept an attack for you.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 		}
@@ -162,12 +172,15 @@ namespace DOL.GS.Effects
 			get { return 0; }
 		}
 
+		private ushort m_icon = 410;
+
 		/// <summary>
 		/// Icon to show on players, can be id
 		/// </summary>
 		public ushort Icon
 		{
-			get { return 410; }
+			get { return m_icon; }
+			set { m_icon = value; }
 		}
 
 		/// <summary>

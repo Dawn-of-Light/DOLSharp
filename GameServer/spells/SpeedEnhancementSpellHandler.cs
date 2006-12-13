@@ -194,6 +194,7 @@ namespace DOL.GS.Spells
 
 				list.Add(" "); //empty line
 				list.Add("This spell's effect will not take hold while the target is in combat.");
+
 				return list;
 			}
 		}

@@ -244,6 +244,12 @@ namespace DOL.GS.ServerProperties
 		public static readonly bool DISABLE_CATACOMBS_CLASSES;
 
 		/// <summary>
+		/// Days before your elligable for a free level
+		/// </summary>
+		[ServerProperty("freelevel_days", "days before your elligable for a free level, use -1 to deactivate", 7)]
+		public static readonly int FREELEVEL_DAYS;
+
+		/// <summary>
 		/// This method loads the property from the database and returns
 		/// the value of the property as strongly typed object based on the
 		/// type of the default value
