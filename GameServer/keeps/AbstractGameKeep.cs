@@ -769,7 +769,10 @@ namespace DOL.GS.Keeps
 		{
 			get
 			{
-				return new TimeSpan(m_changeLevelTimer.TimeUntilElapsed);
+				int totalsec = m_changeLevelTimer.TimeUntilElapsed / 1000;
+				int min = (totalsec/60)%60;
+				int hours = (totalsec/3600)%24;
+				return new TimeSpan(0, hours, min + 1, totalsec%60);
 			}
 		}
 
@@ -802,6 +805,7 @@ namespace DOL.GS.Keeps
 				else if (timeelapsed < newinterval)
 					newinterval = m_changeLevelTimer.Interval - timeelapsed;
 				m_changeLevelTimer.Interval = newinterval;
+				
 			}
 			m_changeLevelTimer.Stop();
 			m_changeLevelTimer.Start(newinterval);
