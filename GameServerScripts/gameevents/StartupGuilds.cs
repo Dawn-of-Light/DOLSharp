@@ -57,11 +57,13 @@ namespace DOL.GS.GameEvents
 		private static void CheckGuild(string guildName)
 		{
 			if (GuildMgr.DoesGuildExist(guildName) == false)
-			{
+			{			
 				//create table of rank in guild
 				Guild newguild = new Guild();
 				newguild.theGuildDB = new DBGuild();
 				newguild.Name = guildName;
+				newguild.GuildID = System.Guid.NewGuid().ToString(); //Assume this is unique, which I don't like, but it seems to be commonly used elsewhere in the code.				
+				newguild.theGuildDB.GuildID = newguild.GuildID;
 				newguild.theGuildDB.GuildName = guildName;
 				newguild.theGuildDB.Motd = "Use /gu <text> to talk in this starter guild.";
 				newguild.theGuildDB.oMotd = "Type /gc quit to leave this starter guild.";

@@ -18,6 +18,7 @@
  */
 using System;
 using System.Reflection;
+using DOL.GS;
 using DOL.Events;
 using DOL.Database;
 using DOL.GS.ServerProperties;
@@ -141,7 +142,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 						packet.Skip(24); //Location String
 						ch.LastName = "";
-						ch.GuildName = "";
+						ch.GuildID = "";
 						packet.Skip(24); //Skip class name
 						packet.Skip(24); //Skip race name
 						ch.Level = packet.ReadByte(); //not safe!
@@ -295,22 +296,23 @@ namespace DOL.GS.PacketHandler.Client.v168
 							{
 								case 1:
 									{
-										ch.GuildName = "Clan Cotswold";
+										
+										ch.GuildID = GuildMgr.GuildNameToGuildID("Clan Cotswold");
 										break; 
 									}
 								case 2:
 									{
-										ch.GuildName = "Mularn Protectors";
+										ch.GuildID = GuildMgr.GuildNameToGuildID("Mularn Protectors");
 										break; 
 									}
 								case 3:
 									{
-										ch.GuildName = "Tir na Nog Adventurers";
+										ch.GuildID = GuildMgr.GuildNameToGuildID("Tir na Nog Adventurers");
 										break; 
 									}
 							}
 
-							if (ch.GuildName != "")
+							if (ch.GuildID != "")
 								ch.GuildRank = 8;
 						}
 
