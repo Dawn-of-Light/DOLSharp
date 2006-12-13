@@ -236,12 +236,6 @@ namespace DOL.GS.Scripts
 							{
 								ply.GuildName = newguildname;
 							}
-							Character[] objs = (Character[])GameServer.Database.SelectObjects(typeof(Character), "GuildName = '" + GameServer.Database.Escape(oldguildname) + "'");
-							foreach (Character chr in objs)
-							{
-								chr.GuildName = newguildname;
-								GameServer.Database.SaveObject(chr);
-							}
 						}
 						break;
 					// --------------------------------------------------------------------------------
@@ -966,7 +960,7 @@ namespace DOL.GS.Scripts
 								Character[] chars = (Character[])GameServer.Database.SelectObjects(typeof(Character), "AccountName = '" + accountname + "'");
 								foreach (Character c in chars)
 								{
-									c.GuildName = "";
+									c.GuildID = "";
 									c.GuildRank = 0;
 									GameServer.Database.SaveObject(c);
 								}
@@ -983,14 +977,14 @@ namespace DOL.GS.Scripts
 								else
 								{
 									Character c = (Character)GameServer.Database.SelectObject(typeof(Character), "Name = '" + args[2] + "'");
-									if (c.GuildName != client.Player.GuildName)
+									if (c.GuildID != client.Player.GuildID)
 									{
 										client.Out.SendMessage(c.Name + " is not a member of your guild.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 										return 1;
 									}
 									else
 									{
-										c.GuildName = "";
+										c.GuildID = "";
 										c.GuildRank = 0;
 										GameServer.Database.SaveObject(c);
 									}

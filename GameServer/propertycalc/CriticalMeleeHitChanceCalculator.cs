@@ -40,7 +40,7 @@ namespace DOL.GS.PropertyCalc
 		public override int CalcValue(GameLiving living, eProperty property)
 		{
 			// no berserk for ranged weapons
-			BerserkEffect berserk = (BerserkEffect)living.EffectList.GetOfType(typeof(BerserkEffect));
+			IGameEffect berserk = living.EffectList.GetOfType(typeof(BerserkEffect));
 			if (berserk != null)
 			{
 				return 100;

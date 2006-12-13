@@ -44,8 +44,8 @@ namespace DOL
 			private string m_name;			//24 Bytes
 			//0x00					//24 bytes empty 
 			//Locationstring		//24 bytes empty when sent
-			private string m_lastName;		//not sent in 0x55/0x57
-			private string m_guildName;		//not sent in 0x55/0x57
+			private string m_guildid;		//not sent in 0x55/0x57		
+			private string m_lastName;		//not sent in 0x55/0x57		
 			private int m_race;
 			private int m_gender;
 			private int m_level;				//01 byte
@@ -160,9 +160,9 @@ namespace DOL
 			private bool m_gainXP;
 			private bool m_gainRP;
 
-            private int m_lastfreeLevel;
-            private DateTime m_lastfreeleveled;
-		    
+			private int m_lastfreeLevel;
+			private DateTime m_lastfreeleveled;
+
 			static bool m_autoSave;
 
 			/// <summary>
@@ -193,8 +193,6 @@ namespace DOL
 				m_spellQueue = true;
 				m_gainXP = true;
 				m_gainRP = true;
-                m_lastfreeLevel = 1;
-                m_lastfreeleveled = DateTime.Now;
 			}
 
 			/// <summary>
@@ -673,7 +671,7 @@ namespace DOL
 			}
 
 			/// <summary>
-			/// Lastname of this character. You can have familly ;)
+			/// Lastname of this character. You can have family ;)
 			/// </summary>
 			[DataElement(AllowDbNull = true)]
 			public string LastName
@@ -690,19 +688,19 @@ namespace DOL
 			}
 
 			/// <summary>
-			/// The name of the guild you join
+			/// ID of the guild this character is in
 			/// </summary>
-			[DataElement(AllowDbNull = true, Index = true)]
-			public string GuildName
+			[DataElement(AllowDbNull = true)]
+			public string GuildID
 			{
 				get
 				{
-					return m_guildName;
+					return m_guildid;
 				}
 				set
 				{
 					Dirty = true;
-					m_guildName = value;
+					m_guildid = value;
 				}
 			}
 
@@ -1783,7 +1781,7 @@ namespace DOL
 			/// can gain realm points
 			/// /rp to toggle
 			/// </summary>
-			[DataElement(AllowDbNull = false)]
+			[DataElement(AllowDbNull = true)]
 			public bool GainRP
 			{
 				get { return m_gainRP; }
@@ -1794,42 +1792,44 @@ namespace DOL
 				}
 			}
 
-            /// <summary>
-            /// Last Date for FreeLevel
-            /// </summary>
-            [DataElement(AllowDbNull = true)]
-		    public DateTime LastFreeLeveled
-		    {
-		        get {
-                    if (m_lastfreeleveled == DateTime.MinValue)
-                        m_lastfreeleveled = DateTime.Now;
-                    return m_lastfreeleveled;
-		        }
-                set
-                {
-                    Dirty = true;
-                    m_lastfreeleveled = value;
-                   
-                }
-		    }
-		    
-            /// <summary>
-            /// Last Level for FreeLevel
-            /// </summary>
-            [DataElement(AllowDbNull = true)]
-		    public int LastFreeLevel
-		    {
-		        get {
-                    return m_lastfreeLevel;
-		            
-		        }
-                set
-                {
-                    Dirty = true;
-                    m_lastfreeLevel = value;
-                   
-                }
-		    }
+			/// <summary>
+			/// Last Date for FreeLevel
+			/// </summary>
+			[DataElement(AllowDbNull = true)]
+			public DateTime LastFreeLeveled
+			{
+				get
+				{
+					if (m_lastfreeleveled == DateTime.MinValue)
+						m_lastfreeleveled = DateTime.Now;
+					return m_lastfreeleveled;
+				}
+				set
+				{
+					Dirty = true;
+					m_lastfreeleveled = value;
+
+				}
+			}
+
+			/// <summary>
+			/// Last Level for FreeLevel
+			/// </summary>
+			[DataElement(AllowDbNull = true)]
+			public int LastFreeLevel
+			{
+				get
+				{
+					return m_lastfreeLevel;
+
+				}
+				set
+				{
+					Dirty = true;
+					m_lastfreeLevel = value;
+
+				}
+			}
 		}
 	}
 }

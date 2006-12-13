@@ -76,9 +76,19 @@ namespace DOL.GS
 		protected DBGuild m_DBguild;
 
 		/// <summary>
+		/// unique id of the guild
+		/// </summary>
+		protected string m_guildid;
+
+		/// <summary>
 		/// the name of the guild
 		/// </summary>
 		protected string m_name;
+		
+		/// <summary>
+		/// the runtime ID of the guild
+		/// </summary>
+		protected ushort m_id;		
 
 		/// <summary>
 		/// Holds the guild realm points
@@ -94,11 +104,6 @@ namespace DOL.GS
 		/// Stores claimed keep (unique)
 		/// </summary>
 		protected AbstractGameKeep m_claimedKeep;
-
-		/// <summary>
-		/// Stores guild unique run-time ID
-		/// </summary>
-		protected ushort m_id;
 
 		/// <summary>
 		/// Creates an empty Guild. Don't use this, use
@@ -118,7 +123,7 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Gets or sets the guild db
+		/// Gets or sets the guild alliance
 		/// </summary>
 		public Alliance  alliance
 		{
@@ -127,7 +132,25 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Gets or sets the guild db
+		/// Gets or sets the constant guild id
+		/// </summary>
+		public string GuildID
+		{
+			get	{	return m_guildid; }
+			set	{	m_guildid = value; }
+		}
+
+		/// <summary>
+		/// Gets or sets the runtime guild id
+		/// </summary>
+		public ushort ID
+		{
+			get	{	return m_id; }
+			set	{	m_id = value; }
+		}
+
+		/// <summary>
+		/// Gets or sets the guild name
 		/// </summary>
 		public string Name
 		{
@@ -169,15 +192,6 @@ namespace DOL.GS
 			{
 				return m_guildMembers.Count;
 			}
-		}
-
-		/// <summary>
-		/// Gets/Sets unique run-time guild ID
-		/// </summary>
-		public ushort ID
-		{
-			get { return m_id; }
-			set { m_id = value; }
 		}
 
 		public Quests.AbstractMission Mission = null;
@@ -270,6 +284,7 @@ namespace DOL.GS
 			{
 				AddOnlineMember(addeePlayer);
 				addeePlayer.GuildName = Name;
+				addeePlayer.GuildID = GuildID;
 				addeePlayer.GuildRank = GetRankByID(9);
 				addeePlayer.Guild = this;
 				addeePlayer.SaveIntoDatabase();
@@ -297,6 +312,7 @@ namespace DOL.GS
 			{
 				RemoveOnlineMember(member);
 				member.GuildName = "";
+				member.GuildID = "";
 				member.GuildRank = null;
 				member.Guild = null;
 				member.SaveIntoDatabase();
@@ -544,6 +560,7 @@ namespace DOL.GS
 				return;
 
 			m_DBguild = (DBGuild)obj;
+			m_guildid = m_DBguild.GuildID;			
 			m_name = m_DBguild.GuildName;
 			m_realmPoints = m_DBguild.RealmPoints;
 			m_bountyPoints = m_DBguild.BountyPoints;
