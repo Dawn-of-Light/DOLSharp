@@ -1088,7 +1088,7 @@ namespace DOL.GS
 			}
 
 			//if the npc hasn't hit or been hit in a while, stop following and return home
-			if (this.Brain is StandardMobBrain)
+			if (this.Brain is StandardMobBrain && this.Brain is IControlledBrain == false)
 			{
 				StandardMobBrain brain = this.Brain as StandardMobBrain;
 				if (AttackState && brain != null && followLiving != null)
