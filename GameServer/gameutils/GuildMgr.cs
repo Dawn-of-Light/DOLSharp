@@ -294,6 +294,7 @@ namespace DOL.GS
 		/// <returns>Guild</returns>
 		public static Guild GetGuildByName(string guildName)
 		{
+			if (guildName == null) return null;
 			lock (m_guilds.SyncRoot)
 			{
 				return (Guild)m_guilds[guildName];
