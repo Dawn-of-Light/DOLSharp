@@ -116,7 +116,7 @@ namespace DOL.GS
 			m_styles = new ArrayList();
 			if (data.Styles != null && data.Styles.Length > 0)
 			{
-				string[] styles = data.Styles.Split('|');
+				string[] styles = data.Styles.Split(';');
 				for (int i = 0; i < styles.Length; i++)
 				{
 					if (styles[i].Trim().Length == 0) continue;
@@ -130,11 +130,11 @@ namespace DOL.GS
 
 			if (data.Abilities != null && data.Abilities.Length > 0)
 			{
-				string[] serializedab = data.Abilities.Split('|');
-				for (int k = 0; k < serializedab.Length; k++)
+				string[] serializedab = data.Abilities.Split(';');
+				foreach (string splitab in serializedab)
 				{
-					string[] ab = serializedab[k].Split('|');
-					if (serializedab[k].Trim().Length == 0) continue;
+					string[] ab = splitab.Split('|');
+					if (splitab.Trim().Length == 0) continue;
 					int id = int.Parse(ab[1]);
 					Ability abil = SkillBase.GetAbility(ab[0], id);
 					m_abilities.Add(abil);

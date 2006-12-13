@@ -160,7 +160,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				player.SetPvPInvulnerability(10*1000, null);
                 player.Out.SendPlayerFreeLevelUpdate();
 			    
-				if (player.FreeLevelState() == 2)
+				if (player.FreeLevelState == 2)
 				{
 					player.Out.SendMessage("You are eligible for a free level! Click on your trainer to receive it (or type /freelevel decline to discard your free level).", eChatType.CT_System, eChatLoc.CL_PopupWindow);
 				}

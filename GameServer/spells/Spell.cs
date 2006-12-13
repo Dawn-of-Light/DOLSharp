@@ -27,26 +27,26 @@ namespace DOL.GS
 	/// </summary>
 	public class Spell : Skill
 	{
-		protected readonly string m_description;
-		protected readonly string m_target="";
-		protected readonly string m_spelltype="-";
-		protected readonly int m_range=0;
-		protected readonly int m_radius=0;
-		protected readonly double m_value=0;
-		protected readonly double m_damage=0;
+		protected readonly string m_description = "";
+		protected readonly string m_target = "";
+		protected readonly string m_spelltype = "-";
+		protected readonly int m_range = 0;
+		protected readonly int m_radius = 0;
+		protected readonly double m_value = 0;
+		protected readonly double m_damage = 0;
 		protected readonly eDamageType m_damageType = eDamageType.Natural;
-		protected readonly byte m_concentration=0;
-		protected readonly int m_duration=0;
-		protected readonly int m_frequency=0;
-		protected readonly int m_pulse=0;
-		protected readonly int m_pulse_power=0;
-		protected readonly int m_power=0;
-		protected readonly int m_casttime=0;
-		protected readonly int m_recastdelay=0;
-		protected readonly int m_reshealth=0;
-		protected readonly int m_resmana=0;
-		protected readonly int m_lifedrain_return=0;
-		protected readonly int m_amnesia_chance=0;
+		protected readonly byte m_concentration = 0;
+		protected readonly int m_duration = 0;
+		protected readonly int m_frequency = 0;
+		protected readonly int m_pulse = 0;
+		protected readonly int m_pulse_power = 0;
+		protected readonly int m_power = 0;
+		protected readonly int m_casttime = 0;
+		protected readonly int m_recastdelay = 0;
+		protected readonly int m_reshealth = 0;
+		protected readonly int m_resmana = 0;
+		protected readonly int m_lifedrain_return = 0;
+		protected readonly int m_amnesia_chance = 0;
 		protected readonly string m_message1 = "";
 		protected readonly string m_message2 = "";
 		protected readonly string m_message3 = "";
@@ -174,7 +174,7 @@ namespace DOL.GS
 
 		public string Message1 { get { return m_message1; } }
 		public string Message2 { get { return m_message2; } }
-		public string Message3 { get { return m_message3; } }		
+		public string Message3 { get { return m_message3; } }
 		public string Message4 { get { return m_message4; } }
 
 		public override eSkillPage SkillType
@@ -217,7 +217,9 @@ namespace DOL.GS
 				.ToString();
 		}
 
-		public Spell(DBSpell dbspell, int requiredLevel) : base(dbspell.Name, (ushort)dbspell.SpellID, requiredLevel) {
+		public Spell(DBSpell dbspell, int requiredLevel)
+			: base(dbspell.Name, (ushort)dbspell.SpellID, requiredLevel)
+		{
 
 			m_description = dbspell.Description;
 			m_target = dbspell.Target;
@@ -228,7 +230,7 @@ namespace DOL.GS
 			m_damage = dbspell.Damage;
 			m_damageType = (eDamageType)dbspell.DamageType;
 			m_concentration = (byte)dbspell.Concentration;
-			m_duration = dbspell.Duration*1000;
+			m_duration = dbspell.Duration * 1000;
 			m_frequency = dbspell.Frequency * 100;
 			m_pulse = dbspell.Pulse;
 			m_pulse_power = dbspell.PulsePower;

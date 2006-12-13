@@ -1398,8 +1398,7 @@ namespace DOL.GS
 			}
 			this.Spells = template.Spells;
 			this.Styles = template.Styles;
-			//TODO load abilities
-			//this.Abilities = template.Abilities;
+			this.Abilities = template.Abilities;
 			BuffBonusCategory4[(int)eStat.STR] += template.Strength;
 			BuffBonusCategory4[(int)eStat.DEX] += template.Dexterity;
 			BuffBonusCategory4[(int)eStat.CON] += template.Constitution;
@@ -2776,6 +2775,16 @@ namespace DOL.GS
 			set { m_styles = value; }
 		}
 
+		private IList m_abilities = new ArrayList(1);
+		/// <summary>
+		/// The Abilities for this NPC
+		/// </summary>
+		public IList Abilities
+		{
+			get { return m_abilities; }
+			set { m_abilities = value; }
+		}
+
 		/// <summary>
 		/// start to cast spell attack in continue until takken melee damage
 		/// </summary>
@@ -2858,67 +2867,93 @@ namespace DOL.GS
 		/// </summary>
 		public void Buff()
 		{
-			if (this.Spells == null || this.Spells.Count == 0)
-				return;
-
-			foreach (Spell spell in this.Spells)
+			//load up abilities
+			if (this.Abilities != null && this.Abilities.Count > 0)
 			{
-				//todo find a way to get it by inherit of PropertyChangingSpell or not
-				switch (spell.SpellType)
+				//trigger abilities on a certain target like intercept require being controlled
+				if (this.Brain is IControlledBrain)
 				{
-					case "StrengthConstitutionBuff":
-					case "DexterityQuicknessBuff":
-					case "StrengthBuff":
-					case "DexterityBuff":
-					case "ConstitutionBuff":
-					case "ArmorFactorBuff":
-					case "ArmorAbsorbtionBuff":
-					case "CombatSpeedBuff":
-					case "MeleeDamageBuff":
-					case "AcuityBuff":
-					case "HealthRegenBuff":
-					case "DamageAdd":
-					case "DamageShield":
-					case "BodyResistBuff":
-					case "ColdResistBuff":
-					case "EnergyResistBuff":
-					case "HeatResistBuff":
-					case "MatterResistBuff":
-					case "SpiritResistBuff":
-					case "BodySpiritEnergyBuff":
-					case "HeatColdMatterBuff":
-					case "CrushSlashThrustBuff":
-					case "OffensiveProc":
-					case "DefensiveProc":
+					foreach (Ability ab in this.Abilities)
+					{
+						switch (ab.KeyName)
 						{
-							if (this.AttackState && spell.CastTime > 0)
-								continue;
-
-							bool already = false;
-							foreach (IGameEffect effect in this.EffectList)
-							{
-								if (effect is GameSpellEffect)
+							case GS.Abilities.Intercept:
 								{
-									GameSpellEffect speffect = effect as GameSpellEffect;
-									if (speffect.Spell.SpellType == spell.SpellType)
+									if (EffectList.GetOfType(typeof(InterceptEffect)) == null)
 									{
-										if (speffect.Spell.EffectGroup == spell.EffectGroup)
+										InterceptEffect effect = new InterceptEffect();
+										effect.Icon = 0;
+										effect.Start(this, (this.Brain as IControlledBrain).Owner);
+									}
+									break;
+								}
+						}
+					}
+				}
+			}
+
+			if (this.Spells != null && this.Spells.Count > 0)
+			{
+
+				foreach (Spell spell in this.Spells)
+				{
+					//todo find a way to get it by inherit of PropertyChangingSpell or not
+					switch (spell.SpellType)
+					{
+						case "StrengthConstitutionBuff":
+						case "DexterityQuicknessBuff":
+						case "StrengthBuff":
+						case "DexterityBuff":
+						case "ConstitutionBuff":
+						case "ArmorFactorBuff":
+						case "ArmorAbsorbtionBuff":
+						case "CombatSpeedBuff":
+						case "MeleeDamageBuff":
+						case "AcuityBuff":
+						case "HealthRegenBuff":
+						case "DamageAdd":
+						case "DamageShield":
+						case "BodyResistBuff":
+						case "ColdResistBuff":
+						case "EnergyResistBuff":
+						case "HeatResistBuff":
+						case "MatterResistBuff":
+						case "SpiritResistBuff":
+						case "BodySpiritEnergyBuff":
+						case "HeatColdMatterBuff":
+						case "CrushSlashThrustBuff":
+						case "OffensiveProc":
+						case "DefensiveProc":
+							{
+								if (this.AttackState && spell.CastTime > 0)
+									continue;
+
+								bool already = false;
+								foreach (IGameEffect effect in this.EffectList)
+								{
+									if (effect is GameSpellEffect)
+									{
+										GameSpellEffect speffect = effect as GameSpellEffect;
+										if (speffect.Spell.SpellType == spell.SpellType)
 										{
-											already = true;
-											break;
+											if (speffect.Spell.EffectGroup == spell.EffectGroup)
+											{
+												already = true;
+												break;
+											}
 										}
 									}
 								}
+								if (already)
+									continue;
+								GameObject lastTarget = this.TargetObject;
+								this.TargetObject = this;
+								SpellLine spellline = SkillBase.GetSpellLine(GlobalSpellsLines.Mob_Spells);
+								this.CastSpell(spell, spellline);
+								this.TargetObject = lastTarget;
+								return;
 							}
-							if (already)
-								continue;
-							GameObject lastTarget = this.TargetObject;
-							this.TargetObject = this;
-							SpellLine spellline = SkillBase.GetSpellLine(GlobalSpellsLines.Mob_Spells);
-							this.CastSpell(spell, spellline);
-							this.TargetObject = lastTarget;
-							return;
-						}
+					}
 				}
 			}
 		}

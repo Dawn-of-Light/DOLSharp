@@ -57,6 +57,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 			switch (objectType)
 			{
+				#region Inventory Item
 				case 1: //Display Infos on inventory item
 					{
 						InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)objectID);
@@ -188,7 +189,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 						break;
 					}
-
+				#endregion
+				#region Spell
 				case 2: //spell
 					{
 						int lineID = objectID / 100;
@@ -200,11 +202,13 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 						Spell spell = null;
 						foreach (Spell spl in SkillBase.GetSpellList(spellLine.KeyName))
+						{
 							if (spl.Level == spellID)
 							{
 								spell = spl;
 								break;
 							}
+						}
 
 						if (spell == null)
 							return 1;
@@ -239,7 +243,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 						}
 						break;
 					}
-
+				#endregion
+				#region Spell
 				case 3: //spell
 					{
 						IList skillList = client.Player.GetNonTrainableSkillList();
@@ -279,8 +284,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 						}
 						break;
 					}
-
-
+				#endregion
+				#region Merchant
 				case 4: //Display Infos on Merchant objects
 					{
 						GameMerchant merchant = null;
@@ -384,18 +389,21 @@ namespace DOL.GS.PacketHandler.Client.v168
 						}
 						break;
 					}
-
+				#endregion
+				#region Effect
 				case 5: //icons on top (buffs/dots)
 					{
 						IGameEffect foundEffect = null;
 						lock (client.Player.EffectList)
 						{
 							foreach (IGameEffect effect in client.Player.EffectList)
+							{
 								if (effect.InternalID == objectID)
 								{
 									foundEffect = effect;
 									break;
 								}
+							}
 						}
 
 						if (foundEffect == null) break;
@@ -405,6 +413,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 						break;
 					}
+				#endregion
+				#region Style
 				case 6: //style
 					{
 						IList styleList = client.Player.GetStyleList();
@@ -553,7 +563,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 						}
 						break;
 					}
-
+				#endregion
+				#region Trade Window
 				case 7: //trade windows
 					{
 						ITradeWindow playerTradeWindow = client.Player.TradeWindow;
@@ -676,6 +687,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 						break;
 					}
+				#endregion
+				#region Ability
 				case 8://abilities
 					{
 						objectInfo.Add("Delving on abilities is not yet supported!");
@@ -734,6 +747,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 						}
 						break;*/
 					}
+				#endregion
+				#region Trainer
 				case 9: //trainer window "info" button
 					{
 						IList specList = client.Player.GetSpecList();
@@ -803,6 +818,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 						}
 						break;
 					}
+				#endregion
+				#region Group
 				case 12: // Item info to Group Chat
 					{
 						InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)objectID);
@@ -816,6 +833,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 						client.Player.PlayerGroup.SendMessageToGroupMembers(null, str);
 						return 1;
 					}
+				#endregion
+				#region Guild
 				case 13: // Item info to Guild Chat
 					{
 						InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)objectID);
@@ -838,6 +857,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 						}
 						return 1;
 					}
+				#endregion
+				#region ChatGroup
 				case 15: // Item info to Chat group
 					{
 						InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)objectID);
@@ -861,6 +882,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 						}
 						return 1;
 					}
+				#endregion
+				#region Repair
 				case 100://repair
 					{
 						InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)objectID);
@@ -874,6 +897,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 						}
 						return 1;
 					}
+				#endregion
+				#region Self Craft
 				case 101://selfcraft
 					{
 						InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)objectID);
@@ -887,6 +912,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 						}
 						return 1;
 					}
+				#endregion
+				#region Salvage
 				case 102://salvage
 					{
 						InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)objectID);
@@ -900,6 +927,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						}
 						return 1;
 					}
+				#endregion
 				default:
 					client.Out.SendMessage("No special information!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return 1;

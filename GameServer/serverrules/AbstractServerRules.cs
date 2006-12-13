@@ -736,7 +736,7 @@ namespace DOL.GS.ServerRules
 						}
 
 						xpReward += (long)campBonus + groupExp;
-						living.GainExperience(xpReward, (long)campBonus, groupExp, true);
+						living.GainExperience(xpReward, (long)campBonus, groupExp, true, true);
 					}
 				}
 			}

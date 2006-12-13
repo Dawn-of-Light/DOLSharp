@@ -40,7 +40,7 @@ namespace DOL.GS.Scripts
 							long newXP;
 							//calculate xp to level 20 from current level..
 							newXP = GamePlayer.XPLevel[20] - client.Player.Experience;
-							newXP = (long)((double)newXP / ServerProperties.Properties.XP_RATE);
+							newXP = (long)(newXP / ServerProperties.Properties.XP_RATE);
 							if (newXP < 0) newXP = 0;
 							client.Player.GainExperience(newXP);
 							client.Player.PlayerCharacter.UsedLevelCommand = true;

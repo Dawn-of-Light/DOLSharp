@@ -494,7 +494,11 @@ namespace DOL.GS
 		{
 			IList list = base.GetExamineMessages(player);
 			list.Add("You examine " + GetName(0, false) + ".  " + GetPronoun(0, true) + " is " + GetAggroLevelString(player, false) + " and is a merchant.");
-			list.Add("You can buy items here for " + moneyItem == null ? "nothing" : moneyItem.Item.Name + ".");
+			string text = "";
+			if (moneyItem == null || moneyItem.Item == null)
+				text = "nothing";
+			else text = moneyItem.Item.Name;
+			list.Add("You can buy items here for " + text + ".");
 			list.Add("[Right click to display a shop window]");
 			return list;
 		}
@@ -506,7 +510,8 @@ namespace DOL.GS
 
 		public override void OnPlayerBuy(GamePlayer player, int item_slot, int number)
 		{
-
+			if (m_moneyItem == null || m_moneyItem.Item == null)
+				return;
 			//Get the template
 			int pagenumber = item_slot / MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
 			int slotnumber = item_slot % MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;

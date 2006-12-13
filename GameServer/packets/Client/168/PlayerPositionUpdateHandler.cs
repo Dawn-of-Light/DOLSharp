@@ -591,8 +591,11 @@ namespace DOL.GS.PacketHandler.Client.v168
 			//trade window
 			if (client.Player.TradeWindow != null)
 			{
-				if (!WorldMgr.CheckDistance(client.Player, client.Player.TradeWindow.Partner, WorldMgr.GIVE_ITEM_DISTANCE))
-					client.Player.TradeWindow.CloseTrade();
+				if (client.Player.TradeWindow.Partner != null)
+				{
+					if (!WorldMgr.CheckDistance(client.Player, client.Player.TradeWindow.Partner, WorldMgr.GIVE_ITEM_DISTANCE))
+						client.Player.TradeWindow.CloseTrade();
+				}
 			}
 
 			return 1;
