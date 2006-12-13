@@ -1098,6 +1098,8 @@ namespace DOL.GS
 		}
 		public static bool CheckDistance(GameObject obj, GameObject obj2, int radius)
 		{
+			if (obj == null || obj2 == null)
+				return false;
 			if (obj.CurrentRegion != obj2.CurrentRegion)
 				return false;
 			return CheckDistance(obj.X, obj.Y, obj.Z, obj2.X, obj2.Y, obj2.Z, radius);

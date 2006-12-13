@@ -368,7 +368,12 @@ namespace DOL.GS
 		/// </summary>
 		public virtual IList CurrentAreas
 		{
-			get { return CurrentZone.GetAreasOfSpot(this); }
+			get
+			{
+				if (CurrentZone != null)
+					return CurrentZone.GetAreasOfSpot(this);
+				return new ArrayList();
+			}
 			set { }
 		}
 

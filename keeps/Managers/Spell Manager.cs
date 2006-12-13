@@ -389,9 +389,11 @@ namespace DOL.GS.Keeps
 				if (m_hastenerSpell == null)
 				{
 					DBSpell spell = new DBSpell();
+					spell.InstrumentRequirement = 0;
 					spell.AutoSave = false;
 					spell.CastTime = 1;
 					spell.ClientEffect = 2430;
+					spell.Icon = 2430;
 					spell.Value = 120;
 					spell.Name = "Speed of the Realm";
 					spell.Range = 0;
@@ -400,6 +402,7 @@ namespace DOL.GS.Keeps
 					spell.Type = "SpeedEnhancement";
 					spell.Duration = 600;
 					spell.Radius = 350;
+					spell.Description = "The movement speed of the target is increased.";
 					m_hastenerSpell = new Spell(spell, 50);
 				}
 				return m_hastenerSpell;
