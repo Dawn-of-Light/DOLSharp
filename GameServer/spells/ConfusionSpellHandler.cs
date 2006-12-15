@@ -170,8 +170,11 @@ namespace DOL.GS.Spells
 
 		public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
 		{
-			GameNPC npc = effect.Owner as GameNPC;
-			npc.IsConfused = false;
+			if(effect != null && effect.Owner != null && effect.Owner is GameNPC)
+			{
+				GameNPC npc = effect.Owner as GameNPC;
+				npc.IsConfused = false;
+			}
 			return base.OnEffectExpires(effect, noMessages);
 		}
 	}
