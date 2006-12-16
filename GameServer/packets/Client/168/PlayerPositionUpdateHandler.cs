@@ -573,6 +573,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 				//No position updates for ourselves
 				if (player == client.Player)
 					continue;
+				//no position updates in different houses
+				if (player.CurrentHouse != client.Player.CurrentHouse)
+					continue;
 
 				//Check stealth
 				if (!client.Player.IsStealthed || player.CanDetect(client.Player))

@@ -1734,14 +1734,6 @@ namespace DOL.GS
 				if (player == null) continue;
 				player.Out.SendObjectUpdate(this);
 				player.CurrentUpdateArray[ObjectID - 1] = true;
-
-				//if (MAX_PASSENGERS > 0)
-				//{
-				//    foreach (GamePlayer rider in CurrentRiders)
-				//    {
-				//        player.Out.SendRiding(rider, this, false);
-				//    }
-				//}
 			}
 			m_lastUpdateTickCount = (uint)Environment.TickCount;
 		}

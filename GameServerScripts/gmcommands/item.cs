@@ -1368,7 +1368,7 @@ namespace DOL.GS.Scripts
 
 							try
 							{
-								item.Realm = (int)Enum.Parse(typeof(eRealm), args[2], true);
+								item.Realm = int.Parse(args[2]);
 							}
 							catch
 							{

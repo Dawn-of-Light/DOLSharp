@@ -24,7 +24,7 @@ using log4net;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandler(PacketHandlerType.TCP,0x0D^168,"Update all GameObjects in Playerrange")]
+	[PacketHandler(PacketHandlerType.TCP, 0x0D ^ 168, "Update all GameObjects in Playerrange")]
 	public class ObjectUpdateRequestHandler : IPacketHandler
 	{
 		/// <summary>
@@ -34,45 +34,45 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
-			foreach(GameStaticItem item in client.Player.GetItemsInRadius(WorldMgr.OBJ_UPDATE_DISTANCE))
+			foreach (GameStaticItem item in client.Player.GetItemsInRadius(WorldMgr.OBJ_UPDATE_DISTANCE))
 			{
 				client.Out.SendObjectCreate(item);
 			}
-			foreach(IDoor door in DoorMgr.getDoorsCloseToSpot(client.Player.CurrentRegionID,client.Player,WorldMgr.OBJ_UPDATE_DISTANCE))
+			foreach (IDoor door in DoorMgr.getDoorsCloseToSpot(client.Player.CurrentRegionID, client.Player, WorldMgr.OBJ_UPDATE_DISTANCE))
 			{
 				client.Out.SendObjectCreate(door as GameObject);
 				client.Out.SendDoorState(door);
 				client.Out.SendObjectUpdate(door as GameObject);
 			}
-			
+
 			//housing
-			if(client.Player.CurrentRegion.HousingEnabled)
-			{ 
-				if(client.Player.HousingUpdateArray==null)
-					client.Player.HousingUpdateArray = new BitArray(HouseMgr.MAXHOUSES);
-				
+			if (client.Player.CurrentRegion.HousingEnabled)
+			{
+				if (client.Player.HousingUpdateArray == null)
+					client.Player.HousingUpdateArray = new BitArray(HouseMgr.MAXHOUSES, false);
+
 				Hashtable houses = (Hashtable)HouseMgr.GetHouses(client.Player.CurrentRegionID);
-				if(houses!=null)
+				if (houses != null)
 				{
-					foreach(House house in HouseMgr.GetHouses(client.Player.CurrentRegionID).Values)
+					foreach (House house in HouseMgr.GetHouses(client.Player.CurrentRegionID).Values)
 					{
-						if(WorldMgr.GetDistance(client.Player, house.X, house.Y, house.Z)<=HouseMgr.HOUSE_DISTANCE)
+						if (WorldMgr.GetDistance(client.Player, house.X, house.Y, house.Z) <= HouseMgr.HOUSE_DISTANCE)
 						{
-							if(!client.Player.HousingUpdateArray[house.UniqueID])
+							if (!client.Player.HousingUpdateArray[house.UniqueID])
 							{
 								client.Out.SendHouse(house);
 								client.Out.SendGarden(house);
 								client.Player.HousingUpdateArray[house.UniqueID] = true;
 							}
 						}
-							else
+						else
 						{
 							client.Player.HousingUpdateArray[house.UniqueID] = false;
 						}
 					}
 				}
 			}
-			else if(client.Player.HousingUpdateArray!=null)
+			else if (client.Player.HousingUpdateArray != null)
 				client.Player.HousingUpdateArray = null;
 
 			return 1;
