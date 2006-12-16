@@ -1208,6 +1208,33 @@ namespace DOL.GS
 		}
 
 		/// <summary>
+		/// Returns the number of playing Clients in a certain Region
+		/// </summary>
+		/// <param name="regionID">The ID of the Region</param>
+		/// <param name="realm">The realm of clients to check</param>
+		/// <returns>Number of playing Clients in that Region</returns>
+		public static int GetClientsOfRegionCount(ushort regionID, byte realm)
+		{
+			int count = 0;
+			lock (m_clients.SyncRoot)
+			{
+				foreach (GameClient client in m_clients)
+				{
+					if (client != null)
+					{
+						if (client.IsPlaying
+							&& client.Player != null
+							&& client.Player.ObjectState == GameObject.eObjectState.Active
+							&& client.Player.CurrentRegionID == regionID
+							&& client.Player.Realm == realm)
+							count++;
+					}
+				}
+			}
+			return count;
+		}
+
+		/// <summary>
 		/// Returns a list of playing clients inside a region
 		/// </summary>
 		/// <param name="regionID">The ID of the Region</param>

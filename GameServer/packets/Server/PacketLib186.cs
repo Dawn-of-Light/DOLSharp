@@ -46,7 +46,7 @@ namespace DOL.GS.PacketHandler
 		/// </summary>
 		public override int BowPrepare
 		{
-			get { return 16000; }
+			get { return 0x3E80; }
 		}
 
 		/// <summary>
@@ -54,7 +54,7 @@ namespace DOL.GS.PacketHandler
 		/// </summary>
 		public override int BowShoot
 		{
-			get { return 16003; }
+			get { return 0x3E83; }
 		}
 
 		public override void SendCombatAnimation(GameObject attacker, GameObject defender, ushort weaponID, ushort shieldID, int style, byte stance, byte result, byte targetHealthPercent)

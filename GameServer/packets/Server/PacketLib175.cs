@@ -399,7 +399,6 @@ namespace DOL.GS.PacketHandler
 
 		public override void SendPlayerCreate(GamePlayer playerToCreate)
 		{
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.PlayerCreate172));
 			Region playerRegion = playerToCreate.CurrentRegion;
 			if (playerRegion == null)
 			{
@@ -407,6 +406,7 @@ namespace DOL.GS.PacketHandler
 					log.Warn("SendPlayerCreate: playerRegion == null");
 				return;
 			}
+
 			Zone playerZone = playerToCreate.CurrentZone;
 			if (playerZone == null)
 			{
@@ -414,6 +414,11 @@ namespace DOL.GS.PacketHandler
 					log.Warn("SendPlayerCreate: playerZone == null");
 				return;
 			}
+
+			if (playerToCreate.CurrentHouse != m_gameClient.Player.CurrentHouse)
+				return;
+
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.PlayerCreate172));
 			pak.WriteShort((ushort)playerToCreate.Client.SessionID);
 			pak.WriteShort((ushort)playerToCreate.ObjectID);
 			pak.WriteShort(playerToCreate.Model);

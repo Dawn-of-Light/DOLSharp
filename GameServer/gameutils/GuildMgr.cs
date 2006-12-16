@@ -172,7 +172,7 @@ namespace DOL.GS
 				rank.Claim = false;
 				rank.Emblem = false;
 				rank.GcHear = true;
-				rank.GcSpeak = true;
+				rank.GcSpeak = false;
 				rank.GuildID = newguild.GuildID;
 				rank.Invite = false;
 				rank.OcHear = false;
@@ -326,7 +326,10 @@ namespace DOL.GS
 		/// <returns>Guild</returns>
 		public static string GuildNameToGuildID(string guildName)
 		{
-			return (string)m_guildids[guildName];
+			Guild g = GetGuildByName(guildName);
+			if (g == null)
+				return "";
+			return g.GuildID;
 		}
 
 		/// <summary>
