@@ -22,7 +22,7 @@ namespace DOL.GS.RealmAbilities
 		{
 			if (CheckPreconditions(living, DEAD | SITTING | MEZZED | STUNNED)) return;
 			GamePlayer player = living as GamePlayer;
-			if (player.TargetObject == null || !(player.TargetObject is GamePlayer) || player.TargetObject.Realm != player.Realm && (player.TargetObject as GameLiving).IsAlive)
+			if (player.TargetObject == null || !(player.TargetObject is GamePlayer) || player.TargetObject.Realm != player.Realm || (player.TargetObject.Realm == player.Realm && (player.TargetObject as GameLiving).IsAlive))
 			{
 				player.Out.SendMessage("You have to target a dead member of your realm!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
 				return;

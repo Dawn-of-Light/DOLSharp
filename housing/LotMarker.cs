@@ -174,7 +174,9 @@ namespace DOL.GS.Housing
 
 			House house = new House(DatabaseItem);
 			HouseMgr.AddHouse(house);
-			house.Exit(player, true); // move player outisde the mesh
+			// move all players outside the mesh
+			foreach (GamePlayer p in player.GetPlayersInRadius(500))
+				house.Exit(p, true);
 			this.RemoveFromWorld();
 			this.Delete();
 		}

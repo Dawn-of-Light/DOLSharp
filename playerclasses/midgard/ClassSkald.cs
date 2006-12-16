@@ -71,6 +71,7 @@ namespace DOL.GS.Scripts
 			{
 				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Battlesongs));
 				player.AddSpellLine(SkillBase.GetSpellLine("Battlesongs"));
+				player.AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Medium));
 			}
 			if (player.Level >= 12)
 			{

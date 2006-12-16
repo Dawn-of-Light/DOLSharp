@@ -3670,7 +3670,7 @@ namespace DOL.GS
 				Out.SendMessage("You have achieved level " + Level + "!", eChatType.CT_ScreenCenter, eChatLoc.CL_SystemWindow);
 			Out.SendPlayerFreeLevelUpdate();
 			if (FreeLevelState == 2)
-				Out.SendMessage("You are eligible for a free level! Click on your trainer to receive it (or type /freelevel decline to discard your free level).", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+				Out.SendDialogBox(eDialogCode.SimpleWarning, 0, 0, 0, 0, eDialogType.Ok, true, "You are eligible for a free level! Click on your trainer to receive it (or type /freelevel decline to discard your free level).");
 			switch (Level)
 			{
 				// full respec on level 5 since 1.70
@@ -3792,9 +3792,12 @@ namespace DOL.GS
 				}
 			}
 
-			// workaround for starting regeneration
-			StartHealthRegeneration();
-			StartPowerRegeneration();
+			if (IsAlive)
+			{
+				// workaround for starting regeneration
+				StartHealthRegeneration();
+				StartPowerRegeneration();
+			}
 
 			m_character.DeathCount = 0;
 
@@ -10151,18 +10154,6 @@ namespace DOL.GS
 		#endregion
 
 		#region Housing
-		private House m_currentHouse;
-		public House CurrentHouse
-		{
-			get { return m_currentHouse; }
-			set { m_currentHouse = value; }
-		}
-		private bool m_inHouse;
-		public bool InHouse
-		{
-			get { return m_inHouse; }
-			set { m_inHouse = value; }
-		}
 
 		/// <summary>
 		/// Holds the houses that need a update
