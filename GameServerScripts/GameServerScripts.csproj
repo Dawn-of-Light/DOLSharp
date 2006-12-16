@@ -120,6 +120,7 @@
     <Compile Include="customnpc\Blacksmith.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="customnpc\HousingHastener.cs" />
     <Compile Include="customnpc\craft master\AlchemyMaster.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -332,6 +333,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="playercommands\freelevel.cs" />
+    <Compile Include="playercommands\boot.cs" />
     <Compile Include="playercommands\quest.cs" />
     <Compile Include="playercommands\disband.cs">
       <SubType>Code</SubType>

@@ -21,10 +21,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Reflection;
+
 using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.Effects;
+using DOL.GS.Housing;
 using DOL.GS.Keeps;
 using DOL.GS.PacketHandler;
 using DOL.GS.PropertyCalc;
@@ -32,6 +34,7 @@ using DOL.GS.Scripts;
 using DOL.GS.SkillHandler;
 using DOL.GS.Spells;
 using DOL.GS.Styles;
+
 using log4net;
 
 namespace DOL.GS
@@ -1397,6 +1400,7 @@ namespace DOL.GS
 					ad.Damage = (int)((double)ad.Damage * ServerProperties.Properties.PVP_DAMAGE);
 				else if ((this is GamePlayer || (this is GameNPC && (this as GameNPC).Brain is IControlledBrain && this.Realm != 0)) && target is GameNPC)
 					ad.Damage = (int)((double)ad.Damage * ServerProperties.Properties.PVE_DAMAGE);
+				ad.UncappedDamage = ad.Damage;
 
 				// patch to missed when 0 damage
 				if (ad.Damage == 0)
@@ -1819,7 +1823,7 @@ namespace DOL.GS
 					foreach (GamePlayer player in owner.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 					{
 						if (player == null) continue;
-						player.Out.SendCombatAnimation(owner, attackTarget, (ushort)model, 0x00, player.Out.BowShoot, 0x01, 0x80, ((GameLiving)attackTarget).HealthPercent);
+						player.Out.SendCombatAnimation(owner, attackTarget, (ushort)model, 0x00, player.Out.BowShoot, 0x01, 0, ((GameLiving)attackTarget).HealthPercent);
 					}
 
 					interruptDuration = owner.AttackSpeed(attackWeapon);
@@ -2007,7 +2011,7 @@ namespace DOL.GS
 						int model = (attackWeapon == null ? 0 : attackWeapon.Model);
 						foreach (GamePlayer player in owner.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 						{
-							player.Out.SendCombatAnimation(owner, null, (ushort)model, 0x00, player.Out.BowPrepare, attackSpeed, 0x80, 0x00);
+							player.Out.SendCombatAnimation(owner, null, (ushort)model, 0x00, player.Out.BowPrepare, attackSpeed, 0x00, 0x00);
 						}
 
 						if (owner.RangeAttackType == eRangeAttackType.RapidFire)
@@ -2445,7 +2449,7 @@ namespace DOL.GS
 					int model = (weapon == null ? 0 : weapon.Model);
 					foreach (GamePlayer p in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 					{
-						p.Out.SendCombatAnimation(this, null, (ushort)model, 0x00, p.Out.BowPrepare, attackSpeed, 0x80, 0x00);
+						p.Out.SendCombatAnimation(this, null, (ushort)model, 0x00, p.Out.BowPrepare, attackSpeed, 0x00, 0x00);
 					}
 
 					// From : http://www.camelotherald.com/more/888.shtml
@@ -4363,6 +4367,18 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 
 		#endregion
 		#region Movement
+		private House m_currentHouse;
+		public House CurrentHouse
+		{
+			get { return m_currentHouse; }
+			set { m_currentHouse = value; }
+		}
+		private bool m_inHouse;
+		public bool InHouse
+		{
+			get { return m_inHouse; }
+			set { m_inHouse = value; }
+		}
 		//Movement relevant variables
 		/// <summary>
 		/// Holds when the movement started

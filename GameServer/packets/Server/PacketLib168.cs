@@ -586,6 +586,7 @@ namespace DOL.GS.PacketHandler
 					log.Warn("SendPlayerCreate: playerRegion == null");
 				return;
 			}
+
 			Zone playerZone = playerToCreate.CurrentZone;
 			if (playerZone == null)
 			{
@@ -593,6 +594,10 @@ namespace DOL.GS.PacketHandler
 					log.Warn("SendPlayerCreate: playerZone == null");
 				return;
 			}
+
+			if (playerToCreate.CurrentHouse != m_gameClient.Player.CurrentHouse)
+				return;
+
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.PlayerCreate));
 			pak.WriteShort((ushort)playerToCreate.Client.SessionID);
 			pak.WriteShort((ushort)playerToCreate.ObjectID);
@@ -842,7 +847,14 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendNPCCreate(GameNPC npc)
 		{
-			if (npc is GameMovingObject) { SendMovingObjectCreate(npc as GameMovingObject); return; }
+			if (npc.CurrentHouse != m_gameClient.Player.CurrentHouse)
+					return;
+
+			if (npc is GameMovingObject)
+			{
+				SendMovingObjectCreate(npc as GameMovingObject); 
+				return;
+			}
 
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.NPCCreate));
 			int speed = 0;

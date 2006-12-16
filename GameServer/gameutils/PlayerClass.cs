@@ -390,7 +390,7 @@ namespace DOL.GS
 							{
 								spec.Level = player.Level / 4;
 								player.CharacterClass.OnSkillTrained(player, spec);
-								player.Out.SendMessage("You autotrain " + spec.Name + " to level " + spec.Level, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								player.Out.SendDialogBox(eDialogCode.SimpleWarning, 0, 0, 0, 0, eDialogType.Ok, true, "You autotrain " + spec.Name + " to level " + spec.Level);
 								found = true;
 							}
 						}

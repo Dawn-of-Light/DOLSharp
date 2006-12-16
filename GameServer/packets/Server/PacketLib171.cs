@@ -105,7 +105,14 @@ namespace DOL.GS.PacketHandler
 
 		public override void SendNPCCreate(GameNPC npc)
 		{
-			if (npc is GameMovingObject) { SendMovingObjectCreate(npc as GameMovingObject); return; }
+			if (npc.CurrentHouse != m_gameClient.Player.CurrentHouse)
+				return;
+
+			if (npc is GameMovingObject)
+			{
+				SendMovingObjectCreate(npc as GameMovingObject);
+				return;
+			}
 
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.NPCCreate));
 			int speed = 0;
