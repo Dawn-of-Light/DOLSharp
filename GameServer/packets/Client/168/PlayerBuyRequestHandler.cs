@@ -40,32 +40,39 @@ namespace DOL.GS.PacketHandler.Client.v168
 			ushort item_slot = packet.ReadShort();
 			byte item_count = (byte)packet.ReadByte();
 			byte menu_id = (byte)packet.ReadByte();
-			
-			if (menu_id == (byte)eMerchantWindowType.HousingInsideShop || menu_id == (byte)eMerchantWindowType.HousingOutsideShop)
+
+			log.Debug("menu_id " + menu_id);
+
+			switch ((eMerchantWindowType)menu_id)
 			{
-				HouseMgr.SpecialBuy(client.Player, item_slot, item_count, menu_id);
+				case eMerchantWindowType.HousingInsideShop:
+				case eMerchantWindowType.HousingOutsideMenu:
+				case eMerchantWindowType.HousingBindstone:
+				case eMerchantWindowType.HousingCrafting:
+				case eMerchantWindowType.HousingNPC:
+				case eMerchantWindowType.HousingVault:
+					{
+						HouseMgr.SpecialBuy(client.Player, item_slot, item_count, menu_id);
+						break;
+					}
+				default:
+					{
+						if (client.Player.TargetObject == null)
+							return 0;
+
+						//Forward the buy process to the merchant
+						if (client.Player.TargetObject is GameMerchant)
+						{
+							//Let merchant choose what happens
+							((GameMerchant)client.Player.TargetObject).OnPlayerBuy(client.Player, item_slot, item_count);
+						}
+						else if (client.Player.TargetObject is GameLotMarker)
+						{
+							((GameLotMarker)client.Player.TargetObject).OnPlayerBuy(client.Player, item_slot, item_count);
+						}
+						break;
+					}
 			}
-			else 
-			{
-				if (client.Player.TargetObject == null)
-					return 0;
-				//--------------------------------------------------------------------------
-				//Forward the buy process to the merchant
-				if (client.Player.TargetObject is GameMerchant)
-				{
-					//Let merchant choose what happens
-					((GameMerchant)client.Player.TargetObject).OnPlayerBuy(client.Player, item_slot, item_count);
-
-				}
-				else if (client.Player.TargetObject is GameLotMarker)
-				{
-					((GameLotMarker)client.Player.TargetObject).OnPlayerBuy(client.Player, item_slot, item_count);
-
-				}
-			}
-			//--------------------------------------------------------------------------
-
-
 			return 1;
 		}
 	}

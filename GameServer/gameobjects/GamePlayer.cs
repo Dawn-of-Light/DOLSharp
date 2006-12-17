@@ -290,9 +290,9 @@ namespace DOL.GS
 				}
 			}
 
-			SaveIntoDatabase();
 			Out.SendPlayerQuit(false);
 			Quit(true);
+			SaveIntoDatabase();
 			m_quitTimer = null;
 			return 0;
 		}
@@ -485,6 +485,9 @@ namespace DOL.GS
 			if (SiegeWeapon != null)
 				SiegeWeapon.ReleaseControl();
 
+			if (InHouse)
+				CurrentHouse.Exit(this, true);
+
 			// cancel all effects until saving of running effects is done
 			try
 			{
@@ -518,11 +521,6 @@ namespace DOL.GS
 				if (IsMoving)
 				{
 					Out.SendMessage("You must be standing still to quit.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return false;
-				}
-				if (InHouse && CurrentHouse != null)
-				{
-					Out.SendMessage("You can't quit while being in a house.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return false;
 				}
 				if (CraftTimer != null && CraftTimer.IsAlive)
