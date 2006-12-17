@@ -26,7 +26,6 @@ using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.Effects;
-using DOL.GS.Housing;
 using DOL.GS.Keeps;
 using DOL.GS.PacketHandler;
 using DOL.GS.PropertyCalc;
@@ -4367,18 +4366,6 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 
 		#endregion
 		#region Movement
-		private House m_currentHouse;
-		public House CurrentHouse
-		{
-			get { return m_currentHouse; }
-			set { m_currentHouse = value; }
-		}
-		private bool m_inHouse;
-		public bool InHouse
-		{
-			get { return m_inHouse; }
-			set { m_inHouse = value; }
-		}
 		//Movement relevant variables
 		/// <summary>
 		/// Holds when the movement started

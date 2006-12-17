@@ -35,11 +35,11 @@ namespace DOL.GS.Scripts
 						//level 20 from the current level and give it to the player
 
 						// only do this if the players level is  < 20
-						if (client.Player.Experience < 24615952)
+						if (client.Player.Experience < GamePlayer.XPLevel[19])
 						{
 							long newXP;
 							//calculate xp to level 20 from current level..
-							newXP = GamePlayer.XPLevel[20] - client.Player.Experience;
+							newXP = GamePlayer.XPLevel[19] - client.Player.Experience;
 							if (newXP < 0) newXP = 0;
 							client.Player.GainExperience(newXP);
 							client.Player.PlayerCharacter.UsedLevelCommand = true;

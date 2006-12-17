@@ -332,6 +332,7 @@
     <Compile Include="playercommands\cmdhelp.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="playercommands\housepoints.cs" />
     <Compile Include="playercommands\freelevel.cs" />
     <Compile Include="playercommands\boot.cs" />
     <Compile Include="playercommands\quest.cs" />
