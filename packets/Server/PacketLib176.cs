@@ -85,6 +85,9 @@ namespace DOL.GS.PacketHandler
 
 		public override void SendObjectCreate(GameObject obj)
 		{
+			if (obj.CurrentHouse != m_gameClient.Player.CurrentHouse)
+				return;
+
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.ObjectCreate));
 			pak.WriteShort((ushort)obj.ObjectID);
 			if (obj is GameStaticItem)

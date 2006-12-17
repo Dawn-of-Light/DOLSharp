@@ -780,6 +780,9 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendObjectCreate(GameObject obj)
 		{
+			if (obj.CurrentHouse != m_gameClient.Player.CurrentHouse)
+				return;
+
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.ObjectCreate));
 			pak.WriteShort((ushort)obj.ObjectID);
 			if (obj is GameStaticItem)
@@ -2878,10 +2881,10 @@ namespace DOL.GS.PacketHandler
 			SendTCP(pak);
 		}
 
-		public void SendToggleHousePoints(House house)
+		public virtual void SendToggleHousePoints(House house)
 		{
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.HouseTogglePoints));
-
+			
 			pak.WriteShort((ushort)house.HouseNumber);
 			pak.WriteByte(0x04);
 			pak.WriteByte(0x00);

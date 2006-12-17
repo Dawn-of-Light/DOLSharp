@@ -61,7 +61,38 @@ namespace DOL.GS.PacketHandler.Client.v168
                         return 1;
 					client.Player.Out.SendMerchantWindow(HouseTemplateMgr.OutdoorMenuItems, eMerchantWindowType.HousingOutsideMenu);
 					break;
+				case 3: // interior npc
+					{
+						if (!house.IsOwner(client.Player) && !house.CanAddInterior(client.Player))
+							return 1;
 
+						client.Player.Out.SendMerchantWindow(HouseTemplateMgr.IndoorNPCMenuItems, eMerchantWindowType.HousingNPC);
+						break;
+					}
+				case 4: // vault menu
+					{
+						if (!house.IsOwner(client.Player) && !house.CanAddInterior(client.Player))
+							return 1;
+
+						client.Player.Out.SendMerchantWindow(HouseTemplateMgr.IndoorVaultMenuItems, eMerchantWindowType.HousingVault);
+						break;
+					}
+				case 5: // craft menu
+					{
+						if (!house.IsOwner(client.Player) && !house.CanAddInterior(client.Player))
+							return 1;
+
+						client.Player.Out.SendMerchantWindow(HouseTemplateMgr.IndoorCraftMenuItems, eMerchantWindowType.HousingCrafting);
+						break;
+					}
+				case 6: // bindstone menu
+					{
+						if (!house.IsOwner(client.Player) && !house.CanAddInterior(client.Player))
+							return 1;
+
+						client.Player.Out.SendMerchantWindow(HouseTemplateMgr.IndoorBindstoneMenuItems, eMerchantWindowType.HousingBindstone);
+						break;
+					}
 				case 7:
 					house.SendHouseInfo(client.Player);
 					break;

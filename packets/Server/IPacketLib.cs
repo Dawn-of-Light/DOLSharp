@@ -328,9 +328,11 @@ namespace DOL.GS.PacketHandler
 		Bp = 0x01,
 		Count = 0x02,
 		HousingOutsideMenu = 0x04,
+		HousingNPC = 0x05,
 		HousingInsideShop = 0x06,
 		HousingOutsideShop = 0x07,
 		HousingVault = 0x08,
+		HousingCrafting = 0x09,
 		HousingBindstone = 0x0A,
 		HousingInsideMenu = 0x0B,
 	}
@@ -541,6 +543,7 @@ namespace DOL.GS.PacketHandler
 		void SendFurniture(House house, int i);
 		void SendHousePermissions(House house);
 		void SendHousePayRentDialog(string title);
+		void SendToggleHousePoints(House house);
 
         void SendPlayerFreeLevelUpdate();
 		

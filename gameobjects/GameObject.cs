@@ -20,10 +20,13 @@ using System;
 using System.Collections;
 using System.Reflection;
 using System.Text;
+
 using DOL.Database;
 using DOL.Events;
+using DOL.GS.Housing;
 using DOL.GS.PacketHandler;
 using DOL.GS.Utils;
+
 using log4net;
 
 namespace DOL.GS
@@ -375,6 +378,19 @@ namespace DOL.GS
 				return new ArrayList();
 			}
 			set { }
+		}
+
+		private House m_currentHouse;
+		public House CurrentHouse
+		{
+			get { return m_currentHouse; }
+			set { m_currentHouse = value; }
+		}
+		private bool m_inHouse;
+		public bool InHouse
+		{
+			get { return m_inHouse; }
+			set { m_inHouse = value; }
 		}
 
 		#endregion
