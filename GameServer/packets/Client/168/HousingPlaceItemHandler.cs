@@ -35,7 +35,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			int unknow1	= packet.ReadByte();		// 1=Money 0=Item (?)
 			int slot		= packet.ReadByte();		// Item/money slot
 			ushort housenumber = packet.ReadShort();	// N° of house
-			int unknow2	= (byte)packet.ReadByte();
+			int unknow2	= (byte)packet.ReadByte();	
 			int position	= (byte)packet.ReadByte();
 			int method	= packet.ReadByte();		// 2=Wall 3=Floor
 			int rotation	= packet.ReadByte();		// garden items only
@@ -192,9 +192,24 @@ namespace DOL.GS.PacketHandler.Client.v168
 					}
 
 				case 5:
-					client.Player.Out.SendMessage("No hookpoints now !", eChatType.CT_Help, eChatLoc.CL_SystemWindow);
-					break;
+					{
+						if (!house.CanAddInterior(client.Player))
+							return 1;
 
+						if (orgitem.Object_Type != (int)eObjectType.HouseNPC
+							&& orgitem.Object_Type != (int)eObjectType.HouseBindstone
+							&& orgitem.Object_Type != (int)eObjectType.HouseVault
+							&& orgitem.Object_Type != (int)eObjectType.HouseInteriorObject)
+						{
+							client.Player.Out.SendMessage("This object can't be placed on a house hookpoint !", eChatType.CT_Help, eChatLoc.CL_SystemWindow);
+							return 1;
+						}
+
+						house.FillHookpoint(orgitem, (uint)position);
+
+						client.Player.Inventory.RemoveItem(orgitem);
+						break;
+					}
 				default:
 					break;
 			}

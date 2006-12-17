@@ -189,6 +189,7 @@ namespace DOLGameServerConsole
 		public void SendEnterHouse(House house) { }
 		public void SendFurniture(House house) { }
 		public void SendFurniture(House house, int i) { }
+		public void SendToggleHousePoints(House house) { }
 		public void SendMovingObjectCreate(GameMovingObject obj) { }
 		public void SendWarmapUpdate(IList list) { }
 		public void SendWarmapBonuses() { }
