@@ -41,7 +41,7 @@ namespace DOL.GS.Housing
 	}
 
 	public class House : IPoint3D
-	{
+	{	
 		#region Properties
 		public int HouseNumber
 		{
@@ -836,7 +836,16 @@ namespace DOL.GS.Housing
 			{
 				case eObjectType.HouseNPC:
 					{
-						//store npc template id somewhere on the db item?
+						DBNpcTemplate npt = (DBNpcTemplate)GameServer.Database.SelectObject(typeof(DBNpcTemplate), "TemplateId = '" + item.Bonus + "'");
+						GameNPC hNPC = new GameNPC(new NpcTemplate(npt));
+						hNPC.CurrentHouse = this;
+						hNPC.InHouse = true;
+						hNPC.X = x;
+						hNPC.Y = y;
+						hNPC.Z = z;
+						hNPC.Heading = heading;
+						hNPC.CurrentRegionID = RegionID;
+						hNPC.AddToWorld();
 						break;
 					}
 				case eObjectType.HouseBindstone:
