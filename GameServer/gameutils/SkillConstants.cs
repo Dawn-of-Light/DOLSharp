@@ -82,8 +82,8 @@ namespace DOL.GS
 		public const string Berserk = "Berserk";
 		public const string Enhanced_Evade = "Enhanced Evade";
 		public const string Intercept = "Intercept";
-		public const string Charge = "Charge Ability";
-		public const string Flurry = "Flurry Ability";
+		public const string Charge = "Charge";
+		public const string Flurry = "Flurry";
 		public const string Protect = "Protect";
 		public const string Critical_Shot = "Critical Shot";
 		public const string Camouflage = "Camouflage";

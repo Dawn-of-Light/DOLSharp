@@ -37,15 +37,6 @@ namespace DOL.GS.Spells
 		public ResurrectSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
 
 		/// <summary>
-		/// Execute resurrect spell
-		/// </summary>
-		public override void FinishSpellCast(GameLiving target)
-		{
-			m_caster.Mana -= CalculateNeededPower(target);
-			base.FinishSpellCast(target);
-		}
-
-		/// <summary>
 		/// execute non duration spell effect on target
 		/// </summary>
 		/// <param name="target"></param>
@@ -135,6 +126,8 @@ namespace DOL.GS.Spells
 		{
 			if (m_caster.ObjectState != GameObject.eObjectState.Active) return;
 			if (m_caster.CurrentRegionID != living.CurrentRegionID) return;
+
+			m_caster.Mana -= CalculateNeededPower(living);
 
 			living.Health = living.MaxHealth * m_spell.ResurrectHealth / 100;
 			living.Mana = living.MaxMana * m_spell.ResurrectMana / 100;

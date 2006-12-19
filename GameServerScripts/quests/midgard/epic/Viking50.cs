@@ -1804,7 +1804,7 @@ namespace DOL.GS.Quests.Midgard
 				if (gArgs.Target.Name == Ydenia.Name)
 				{
 					Step = 2;
-					GiveItem(player, tome_enchantments);
+					GiveItem(m_questPlayer, tome_enchantments);
 					m_questPlayer.Out.SendMessage("Ydenia drops the Tome of Enchantments and you pick it up!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return;
 				}

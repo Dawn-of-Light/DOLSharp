@@ -261,6 +261,7 @@ namespace DOL.GS
 				switch (m_ID)
 				{
 					case 163://new frontiers
+					case 165://cathal valley
 					case 233://Sumoner hall
 					case 234://1to4BG
 					case 235://5to9BG

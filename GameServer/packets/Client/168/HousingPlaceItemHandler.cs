@@ -205,7 +205,15 @@ namespace DOL.GS.PacketHandler.Client.v168
 							return 1;
 						}
 
-						house.FillHookpoint(orgitem, (uint)position);
+						DBHousepointItem point = new DBHousepointItem();
+						point.HouseID = house.HouseNumber;
+						point.ItemTemplateID = orgitem.Id_nb;
+						point.Position = (uint)position;
+
+						GameServer.Database.AddNewObject(point);
+
+						house.FillHookpoint(orgitem, (uint)position, orgitem.Id_nb);
+						house.HousepointItems[point.Position] = point;
 
 						client.Player.Inventory.RemoveItem(orgitem);
 						break;

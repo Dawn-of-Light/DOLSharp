@@ -1624,7 +1624,7 @@ namespace DOL.GS.Quests.Hibernia
 				if (gArgs.Target.Name == Cailean.Name)
 				{
 					m_questPlayer.Out.SendMessage("You collect the Horn from Cailean", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					GiveItem(player, Horn);
+					GiveItem(m_questPlayer, Horn);
 					Step = 2;
 					return;
 				}

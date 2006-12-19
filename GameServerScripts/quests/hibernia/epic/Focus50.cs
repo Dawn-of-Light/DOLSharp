@@ -1440,7 +1440,7 @@ namespace DOL.GS.Quests.Hibernia
 				if (gArgs.Target.Name == GreenMaw.Name)
 				{
 					m_questPlayer.Out.SendMessage("You collect Green Maw's Key", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					GiveItem(player, GreenMaw_key);
+					GiveItem(m_questPlayer, GreenMaw_key);
 					Step = 2;
 					return;
 				}

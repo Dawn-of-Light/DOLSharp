@@ -1445,7 +1445,7 @@ namespace DOL.GS.Quests.Hibernia
 				if (gArgs.Target.Name == Caithor.Name)
 				{
 					m_questPlayer.Out.SendMessage("You collect the Moonstone from Caithor", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					GiveItem(player, Moonstone);
+					GiveItem(m_questPlayer, Moonstone);
 					Step = 2;
 					return;
 				}

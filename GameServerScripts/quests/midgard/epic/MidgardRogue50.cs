@@ -987,7 +987,7 @@ namespace DOL.GS.Quests.Midgard
 				if (gArgs.Target.Name == Oona.Name)
 				{
 					m_questPlayer.Out.SendMessage("You collect Oona's Head", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					GiveItem(player, oona_head);
+					GiveItem(m_questPlayer, oona_head);
 					Step = 2;
 					return;
 				}
