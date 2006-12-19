@@ -1409,7 +1409,7 @@ namespace DOL.GS.Quests.Albion
 					if (gArgs.Target.Name == Uragaig.Name)
 					{
 						m_questPlayer.Out.SendMessage("Take the pouch to Lidmann Halsey", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						GiveItem(player, sealed_pouch);
+						GiveItem(m_questPlayer, sealed_pouch);
 						Step = 2;
 						return;
 					}

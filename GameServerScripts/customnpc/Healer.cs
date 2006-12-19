@@ -40,66 +40,11 @@ namespace DOL.GS.Scripts
 
 		private const string COST_BY_PTS = "cost";
 
-		private static readonly int[] prcRestore =
-		{
-			// http://www.silicondragon.com/Gaming/DAoC/Misc/XPs.htm
-			0,//0
-			0,//1
-			0,//2
-			0,//3
-			0,//4
-			0,//5
-			33,//6
-			53,//7
-			82,//8
-			125,//9
-			188,//10
-			278,//11
-			352,//12
-			443,//13
-			553,//14
-			688,//15
-			851,//16
-			1048,//17
-			1288,//18
-			1578,//19
-			1926,//20
-			2347,//21
-			2721,//22
-			3146,//23
-			3633,//24
-			4187,//25
-			4820,//26
-			5537,//27
-			6356,//28
-			7281,//29
-			8337,//30
-			9532,//31 - from logs
-			10886,//32 - from logs
-			12421,//33 - from logs
-			14161,//34
-			16131,//35
-			18360,//36 - recheck
-			19965,//37 - guessed
-			21857,//38
-			23821,//39
-			25928,//40 - guessed
-			28244,//41
-			30731,//42
-			33411,//43
-			36308,//44
-			39438,//45
-			42812,//46
-			46454,//47
-			50385,//48
-			54625,//49
-			59195,//50
-		};
-
 		/// <summary>
 		/// Constructor
 		/// </summary>
-		public GameHealer() : base()
+		public GameHealer()
+			: base()
 		{
 		}
 
@@ -131,11 +76,11 @@ namespace DOL.GS.Scripts
 				player.Out.SendMessage(GetName(0, false) + " cure your resurrection sickness.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 
-			if(player.TotalConstitutionLostAtDeath > 0)
+			if (player.TotalConstitutionLostAtDeath > 0)
 			{
-				int oneConCost = prcRestore[player.Level<prcRestore.Length?player.Level:prcRestore.Length-1];
+				int oneConCost = GamePlayer.prcRestore[player.Level < GamePlayer.prcRestore.Length ? player.Level : GamePlayer.prcRestore.Length - 1];
 				player.TempProperties.setProperty(COST_BY_PTS, (long)oneConCost);
-				player.Out.SendCustomDialog("Recover your constitution will cost to you \n"+Money.GetString(player.TotalConstitutionLostAtDeath * (long)oneConCost)+".\nDo you accept?", new CustomDialogResponse(HealerDialogResponse));	
+				player.Out.SendCustomDialog("Recover your constitution will cost to you \n" + Money.GetString(player.TotalConstitutionLostAtDeath * (long)oneConCost) + ".\nDo you accept?", new CustomDialogResponse(HealerDialogResponse));
 			}
 			else
 			{
@@ -146,13 +91,13 @@ namespace DOL.GS.Scripts
 
 		protected void HealerDialogResponse(GamePlayer player, byte response)
 		{
-			if (!WorldMgr.CheckDistance(this, player,WorldMgr.INTERACT_DISTANCE))
+			if (!WorldMgr.CheckDistance(this, player, WorldMgr.INTERACT_DISTANCE))
 			{
 				player.Out.SendMessage("You are too far away to speak with " + GetName(0, false) + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
-			if (response!=0x01) return; //declined
+			if (response != 0x01) return; //declined
 
 			long cost = player.TempProperties.getLongProperty(COST_BY_PTS, 0);
 			player.TempProperties.removeProperty(COST_BY_PTS);
@@ -167,10 +112,10 @@ namespace DOL.GS.Scripts
 			}
 			else
 			{
-				player.Out.SendMessage("Need "+Money.GetString(totalCost)+" to restore "+restorePoints+" constitution points.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage("Need " + Money.GetString(totalCost) + " to restore " + restorePoints + " constitution points.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 			return;
-		}	
+		}
 		#endregion Examine/Interact Message
 	}
 }

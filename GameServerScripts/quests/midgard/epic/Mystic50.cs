@@ -1196,7 +1196,7 @@ namespace DOL.GS.Quests.Midgard
 				if (gArgs.Target.Name == Kelic.Name)
 				{
 					Step = 2;
-					GiveItem(player, kelics_totem);
+					GiveItem(m_questPlayer, kelics_totem);
 					m_questPlayer.Out.SendMessage("Kelic drops his Totem and you pick it up!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return;
 				}

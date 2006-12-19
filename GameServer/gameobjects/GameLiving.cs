@@ -1043,6 +1043,14 @@ namespace DOL.GS
 		}
 
 		/// <summary>
+		/// Money value of this living
+		/// </summary>
+		public virtual long MoneyValue
+		{
+			get { return 0; }
+		}
+
+		/// <summary>
 		/// Holds pre calculated experience values of the living for special levels
 		/// </summary>
 		public static readonly long[] XPForLiving =

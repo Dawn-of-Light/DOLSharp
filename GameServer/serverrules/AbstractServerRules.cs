@@ -211,6 +211,10 @@ namespace DOL.GS.ServerRules
 				if ((((GameNPC)defender).Flags & (uint)GameNPC.eFlags.PEACE) != 0)
 					return false;
 
+			//GMs can't be attacked
+			if (playerDefender != null && playerDefender.Client.Account.PrivLevel > 1)
+				return false;
+
 			foreach (AbstractArea area in defender.CurrentAreas)
 			{
 				if (area.IsSafeArea)
@@ -929,6 +933,7 @@ namespace DOL.GS.ServerRules
 				long playerExpValue = killedPlayer.ExperienceValue;
 				int playerRPValue = killedPlayer.RealmPointsValue;
 				int playerBPValue = killedPlayer.BountyPointsValue;
+				long playerMoneyValue = killedPlayer.MoneyValue;
 
 				//Now deal the XP and RPs to all livings
 				foreach (DictionaryEntry de in killedPlayer.XPGainers)
@@ -1008,12 +1013,11 @@ namespace DOL.GS.ServerRules
 					//gold
 					if (living is GamePlayer)
 					{
-						long money = (long)(Money.GetMoney(0, 0, 17, 85, 0) * damagePercent * killedPlayer.Level / 50);
+						long money = (long)(playerMoneyValue * damagePercent);
+						//long money = (long)(Money.GetMoney(0, 0, 17, 85, 0) * damagePercent * killedPlayer.Level / 50);
 						((GamePlayer)living).AddMoney(money, "You recieve {0}");
 					}
-
-
-
+					
 					if (killedPlayer.ReleaseType != GamePlayer.eReleaseType.Duel && expGainPlayer != null)
 					{
 						switch ((eRealm)killedPlayer.Realm)

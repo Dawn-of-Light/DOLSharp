@@ -994,7 +994,7 @@ namespace DOL.GS.Quests.Midgard
 		{
 			GamePlayer player = sender as GamePlayer;
 
-			if (player==null || player.IsDoingQuest(typeof (Seer_50)) == null)
+			if (player == null || player.IsDoingQuest(typeof(Seer_50)) == null)
 				return;
 
 			if (Step == 1 && e == GameLivingEvent.EnemyKilled)
@@ -1003,7 +1003,7 @@ namespace DOL.GS.Quests.Midgard
 				if (gArgs.Target.Name == Loken.Name)
 				{
 					m_questPlayer.Out.SendMessage("You get a ball of flame", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					GiveItem(player, ball_of_flame);
+					GiveItem(m_questPlayer, ball_of_flame);
 					Step = 2;
 					return;
 				}

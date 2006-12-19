@@ -52,7 +52,7 @@ namespace DOL.GS.RealmAbilities
 		}
         public override int GetReUseDelay(int level)
         {
-            return 1200;
+            return 600;
         }
 	}
 }

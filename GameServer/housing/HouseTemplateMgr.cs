@@ -130,15 +130,17 @@ namespace DOL.GS.Housing
 			CheckItemTemplate("Dye Supply Master", "dye_supply_master", 593, (int)eObjectType.HouseNPC, 1000000, 0, 0, 0, 0);
 
 			//indoor craft
-			CheckItemTemplate("alchemy table", "alchemy_table", 1444, (int)eObjectType.HouseInteriorObject, 10000000, 0, 0, 0, 0);
-			CheckItemTemplate("forge", "forge", 1445, (int)eObjectType.HouseInteriorObject, 10000000, 0, 0, 0, 0);
-			CheckItemTemplate("lathe", "lathe", 1446, (int)eObjectType.HouseInteriorObject, 10000000, 0, 0, 0, 0);
+			CheckItemTemplate("alchemy table", "alchemy_table", 1494, (int)eObjectType.HouseInteriorObject, 10000000, 0, 0, 0, 0);
+			CheckItemTemplate("forge", "forge", 1495, (int)eObjectType.HouseInteriorObject, 10000000, 0, 0, 0, 0);
+			CheckItemTemplate("lathe", "lathe", 1496, (int)eObjectType.HouseInteriorObject, 10000000, 0, 0, 0, 0);
 
 			//indoor bindstone
-			CheckItemTemplate("Hibernia bindstone", "hib_bindstone", 1440, (int)eObjectType.HouseBindstone, 10000000, 0, 0, 0, 0);
+			//alb 1488 mid 1492
+			CheckItemTemplate("Hibernia bindstone", "hib_bindstone", 1490, (int)eObjectType.HouseBindstone, 10000000, 0, 0, 0, 0);
 
 			//indoor vault
-			CheckItemTemplate("Hibernia vault", "hib_vault", 1441, (int)eObjectType.HouseVault, 10000000, 0, 0, 0, 0);
+			//alb 1489 mid 1493
+			CheckItemTemplate("Hibernia vault", "hib_vault", 1491, (int)eObjectType.HouseVault, 10000000, 0, 0, 0, 0);
 		}
 
 		static void CheckMerchantItemTemplates()
