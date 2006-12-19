@@ -143,6 +143,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DOLTables\ClassXRealmAbility.cs" />
+    <Compile Include="DOLTables\DBHousepointItem.cs" />
     <Compile Include="DOLTables\DBHouseCharsXPerms.cs" />
     <Compile Include="DOLTables\DBHousePermissions.cs" />
     <Compile Include="DOLTables\DBKeepPosition.cs" />

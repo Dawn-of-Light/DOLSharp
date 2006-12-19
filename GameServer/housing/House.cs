@@ -42,6 +42,7 @@ namespace DOL.GS.Housing
 
 	public class House : IPoint3D
 	{
+		#region Properties
 		public int HouseNumber
 		{
 			get { return m_databaseItem.HouseNumber; }
@@ -83,7 +84,6 @@ namespace DOL.GS.Housing
 			get { return m_databaseItem.Name; }
 			set { m_databaseItem.Name = value; }
 		}
-
 
 		public string OwnerIDs
 		{
@@ -235,6 +235,14 @@ namespace DOL.GS.Housing
 			set { m_outdooritems = value; }
 		}
 
+		Hashtable m_housepointitems;
+
+		public Hashtable HousepointItems
+		{
+			get { return m_housepointitems; }
+			set { m_housepointitems = value; }
+		}
+
 		public DBHouse DatabaseItem
 		{
 			get { return m_databaseItem; }
@@ -255,6 +263,8 @@ namespace DOL.GS.Housing
 		{
 			get { return m_houseAccess; }
 		}
+		#endregion
+
 		/// <summary>
 		/// Sends a update of the house and the garden to all players in range
 		/// </summary>
@@ -801,26 +811,26 @@ namespace DOL.GS.Housing
 			}
 		}
 
-		public void FillHookpoint(InventoryItem item, uint slot)
+		/// <summary>
+		/// 
+		/// </summary>
+		public void FillHookpoint(ItemTemplate item, uint position, string templateID)
 		{
-			IPoint3D location = GetHookpointLocation(slot);
+			if (item == null)
+			{
+				item = (ItemTemplate)GameServer.Database.SelectObject(typeof(ItemTemplate), "Id_nb = '" + templateID + "'");
+				if (item == null)
+					return;
+			}
+
+			HouseMgr.Logger.Debug("item is not null");
+
+			//get location from slot
+			IPoint3D location = GetHookpointLocation(position);
 			int x = location.X;
 			int y = location.Y;
 			int z = location.Z;
-			ushort heading = GetHookpointHeading(slot);
-
-			GameStaticItem sItem = new GameStaticItem();
-			sItem.CurrentHouse = this;
-			sItem.InHouse = true;
-			sItem.X = x;
-			sItem.Y = y;
-			sItem.Z = z;
-			sItem.Heading = heading;
-			sItem.CurrentRegionID = RegionID;
-			sItem.Name = item.Name;
-			sItem.Model = (ushort)item.Model;
-			sItem.AddToWorld();
-			/*
+			ushort heading = GetHookpointHeading(position);
 
 			switch ((eObjectType)item.Object_Type)
 			{
@@ -842,11 +852,23 @@ namespace DOL.GS.Housing
 						sItem.Name = item.Name;
 						sItem.Model = (ushort)item.Model;
 						sItem.AddToWorld();
+						//0:07:45.984 S=>C 0xD9 item/door create v171 (oid:0x0DDB emblem:0x0000 heading:0x0DE5 x:596203 y:530174 z:24723 model:0x05D2 health:  0% flags:0x04(realm:0) extraBytes:0 unk1_171:0x0096220C name:"Hibernia bindstone")
 						//add bind point
 						break;
 					}
 				case eObjectType.HouseInteriorObject:
 					{
+						GameStaticItem sItem = new GameStaticItem();
+						sItem.CurrentHouse = this;
+						sItem.InHouse = true;
+						sItem.X = x;
+						sItem.Y = y;
+						sItem.Z = z;
+						sItem.Heading = heading;
+						sItem.CurrentRegionID = RegionID;
+						sItem.Name = item.Name;
+						sItem.Model = (ushort)item.Model;
+						sItem.AddToWorld();
 						break;
 					}
 				case eObjectType.HouseVault:
@@ -865,7 +887,7 @@ namespace DOL.GS.Housing
 						sItem.AddToWorld();
 						break;
 					}
-			}*/
+			}
 		}
 
 		public void EmptyHookpoint(int slot)
@@ -877,9 +899,11 @@ namespace DOL.GS.Housing
 			m_houseAccess = new DBHousePermissions[10];
 			m_indooritems = new Hashtable();
 			m_outdooritems = new Hashtable();
+			m_housepointitems = new Hashtable();
 			m_charspermissions = new ArrayList();
 		}
 
+		#region Housepoint location
 		protected static readonly int[][][] RELATIVE_HOOKPOINTS_COORDS = new int[][][]
 			{
 				// NOTHING : Lot
@@ -988,6 +1012,41 @@ namespace DOL.GS.Housing
 		ushort GetHookpointHeading(uint n)
 		{
 			return (ushort)(Heading + RELATIVE_HOOKPOINTS_COORDS[Model][n][3]);
+		}
+		#endregion
+
+		public void LoadFromDatabase()
+		{
+			int i = 0;
+			foreach (DBHouseIndoorItem dbiitem in GameServer.Database.SelectObjects(typeof(DBHouseIndoorItem), "HouseNumber = '" + this.HouseNumber + "'"))
+			{
+				IndoorItem iitem = new IndoorItem();
+				iitem.CopyFrom(dbiitem);
+				this.IndoorItems.Add(i++, iitem);
+			}
+			i = 0;
+			foreach (DBHouseOutdoorItem dboitem in GameServer.Database.SelectObjects(typeof(DBHouseOutdoorItem), "HouseNumber = '" + this.HouseNumber + "'"))
+			{
+				OutdoorItem oitem = new OutdoorItem();
+				oitem.CopyFrom(dboitem);
+				this.OutdoorItems.Add(i++, oitem);
+			}
+
+			foreach (DBHouseCharsXPerms d in GameServer.Database.SelectObjects(typeof(DBHouseCharsXPerms), "HouseNumber = '" + this.HouseNumber + "'"))
+			{
+				this.CharsPermissions.Add(d);
+			}
+
+			foreach (DBHousePermissions dbperm in GameServer.Database.SelectObjects(typeof(DBHousePermissions), "HouseNumber = '" + this.HouseNumber + "'"))
+			{
+				this.HouseAccess[dbperm.PermLevel] = dbperm;
+			}
+
+			foreach (DBHousepointItem item in GameServer.Database.SelectObjects(typeof(DBHousepointItem), "HouseID = '" + this.HouseNumber + "'"))
+			{
+				FillHookpoint(null, item.Position, item.ItemTemplateID);
+				this.HousepointItems[item.Position] = item;
+			}
 		}
 	}
 }

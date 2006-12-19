@@ -934,7 +934,7 @@ namespace DOL.GS.Quests.Albion
 				if (gArgs.Target.Name == Blythe.Name)
 				{
 					m_questPlayer.Out.SendMessage("As you search the dead body of sister Blythe, you find a sacred " + statue_of_arawn.Name + ", bring it to " + Roben.Name + " has proof of your success.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					GiveItem(player, statue_of_arawn);
+					GiveItem(m_questPlayer, statue_of_arawn);
 					Step = 2;
 					return;
 				}

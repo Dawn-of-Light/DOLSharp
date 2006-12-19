@@ -1314,7 +1314,7 @@ namespace DOL.GS.Quests.Albion
 						DeleteMorgana();
 
 						m_questPlayer.Out.SendMessage("Take the pouch to " + Ferowl.GetName(0, true), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						GiveItem(player, sealed_pouch);
+						GiveItem(m_questPlayer, sealed_pouch);
 						Step = 2;
 						return;
 					}

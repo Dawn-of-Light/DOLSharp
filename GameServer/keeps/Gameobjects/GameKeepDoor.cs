@@ -41,7 +41,7 @@ namespace DOL.GS.Keeps
 
 		#region properties
 
-		private byte m_oldLevel;
+		private int m_oldMaxHealth;
 
 		private byte m_oldHealthPercent;
 
@@ -134,10 +134,18 @@ namespace DOL.GS.Keeps
 
 		public void UpdateLevel()
 		{
-			if (Level != m_oldLevel)
+			if (MaxHealth != m_oldMaxHealth)
 			{
-				Health = Health * (Level + 1) / (m_oldLevel + 1);
-				m_oldLevel = Level;
+				if (m_oldMaxHealth > 0)
+				{
+					Health = (int)Math.Ceiling(((double)Health) * ((double)MaxHealth) / ((double)m_oldMaxHealth));
+				}
+				else
+				{
+					Health = MaxHealth;
+				}
+				m_oldMaxHealth = MaxHealth;
+
 			}
 		}
 
@@ -478,7 +486,7 @@ namespace DOL.GS.Keeps
 			PositionMgr.LoadKeepItemPosition(pos, this);
 			component.Keep.Doors[m_templateID] = this;
 
-			m_oldLevel = Level;
+			m_oldMaxHealth = MaxHealth;
 			m_health = MaxHealth;
 			m_Name = "Keep Door";
 			m_oldHealthPercent = HealthPercent;
