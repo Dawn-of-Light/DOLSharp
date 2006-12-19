@@ -3385,6 +3385,73 @@ namespace DOL.GS
 			get { return (int)(1 + Level * 0.6); }
 		}
 
+		public static readonly int[] prcRestore =
+		{
+			// http://www.silicondragon.com/Gaming/DAoC/Misc/XPs.htm
+			0,//0
+			0,//1
+			0,//2
+			0,//3
+			0,//4
+			0,//5
+			33,//6
+			53,//7
+			82,//8
+			125,//9
+			188,//10
+			278,//11
+			352,//12
+			443,//13
+			553,//14
+			688,//15
+			851,//16
+			1048,//17
+			1288,//18
+			1578,//19
+			1926,//20
+			2347,//21
+			2721,//22
+			3146,//23
+			3633,//24
+			4187,//25
+			4820,//26
+			5537,//27
+			6356,//28
+			7281,//29
+			8337,//30
+			9532,//31 - from logs
+			10886,//32 - from logs
+			12421,//33 - from logs
+			14161,//34
+			16131,//35
+			18360,//36 - recheck
+			19965,//37 - guessed
+			21857,//38
+			23821,//39
+			25928,//40 - guessed
+			28244,//41
+			30731,//42
+			33411,//43
+			36308,//44
+			39438,//45
+			42812,//46
+			46454,//47
+			50385,//48
+			54625,//49
+			59195,//50
+		};
+
+		/// <summary>
+		/// Money value of this player
+		/// </summary>
+		public override long MoneyValue
+		{
+			get
+			{
+				return 3 * prcRestore[Level < GamePlayer.prcRestore.Length ? Level : GamePlayer.prcRestore.Length - 1];
+			}
+		}
+
 		#endregion
 
 		#region Level/Experience
@@ -6671,9 +6738,9 @@ namespace DOL.GS
 				}
 
 
-				if (useItem.SpellID != 0 || useItem.SpellID1 != 0) // don't return without firing events
+				if (useItem.SpellID != 0 || useItem.SpellID1 != 0 || useItem.PoisonSpellID != 0) // don't return without firing events
 				{
-					if ((type < 2 && useItem.SpellID > 0 && useItem.Charges < 1) || (type == 2 && useItem.SpellID1 > 0 && useItem.Charges1 < 1))
+					if ((type < 2 && useItem.SpellID > 0 && useItem.Charges < 1) || (type == 2 && useItem.SpellID1 > 0 && useItem.Charges1 < 1) || (useItem.PoisonSpellID > 0 && useItem.PoisonCharges < 1))
 					{
 						Out.SendMessage("The " + useItem.Name + " is out of charges.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}
@@ -6683,11 +6750,11 @@ namespace DOL.GS
 						{
 							InventoryItem mainHand = AttackWeapon;
 							InventoryItem leftHand = Inventory.GetItem(eInventorySlot.LeftHandWeapon);
-							if (mainHand != null && mainHand.SpellID == 0)
+							if (mainHand != null && mainHand.PoisonSpellID == 0)
 							{
 								ApplyPoison(useItem, mainHand);
 							}
-							else if (leftHand != null && leftHand.SpellID == 0)
+							else if (leftHand != null && leftHand.PoisonSpellID == 0)
 							{
 								ApplyPoison(useItem, leftHand);
 							}

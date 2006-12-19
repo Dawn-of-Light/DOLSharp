@@ -348,7 +348,7 @@ namespace DOL.GS.Spells
 				}
 			}
 
-			if (m_spell.CastTime > 0 && m_caster is GamePlayer)
+			if (m_spell.CastTime > 0 && m_caster is GamePlayer && m_caster.EffectList.GetOfType(typeof(QuickCastEffect)) == null)
 			{
 				long leftseconds = Math.Max(
 					Caster.TempProperties.getLongProperty(INTERRUPT_TIMEOUT_PROPERTY, 0) - Caster.CurrentRegion.Time,

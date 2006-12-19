@@ -30,7 +30,7 @@ namespace DOL.GS.Housing
 {
 	public class HouseMgr
 	{
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		public static readonly ILog Logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		public const int MAXHOUSES = 2000;
 		public const int HOUSE_DISTANCE = 5120; //guessed, but i'm sure its > vis dist.
@@ -74,39 +74,16 @@ namespace DOL.GS.Housing
 						Hashtable hash = (Hashtable)m_houselists[house.RegionID];
 						if (hash == null) continue;
 						if (hash.ContainsKey(newHouse.HouseNumber)) continue;
-						int i = 0;
-						foreach (DBHouseIndoorItem dbiitem in GameServer.Database.SelectObjects(typeof(DBHouseIndoorItem), "HouseNumber = '" + newHouse.HouseNumber + "'"))
-						{
-							IndoorItem iitem = new IndoorItem();
-							iitem.CopyFrom(dbiitem);
-							newHouse.IndoorItems.Add(i++, iitem);
-						}
-						i = 0;
-						foreach (DBHouseOutdoorItem dboitem in GameServer.Database.SelectObjects(typeof(DBHouseOutdoorItem), "HouseNumber = '" + newHouse.HouseNumber + "'"))
-						{
-							OutdoorItem oitem = new OutdoorItem();
-							oitem.CopyFrom(dboitem);
-							newHouse.OutdoorItems.Add(i++, oitem);
-						}
 
-						foreach (DBHouseCharsXPerms d in GameServer.Database.SelectObjects(typeof(DBHouseCharsXPerms), "HouseNumber = '" + newHouse.HouseNumber + "'"))
-						{
-							newHouse.CharsPermissions.Add(d);
-						}
-
-						foreach (DBHousePermissions dbperm in GameServer.Database.SelectObjects(typeof(DBHousePermissions), "HouseNumber = '" + newHouse.HouseNumber + "'"))
-						{
-							newHouse.HouseAccess[dbperm.PermLevel] = dbperm;
-						}
-
+						newHouse.LoadFromDatabase();
 
 						hash.Add(newHouse.HouseNumber, newHouse);
 						houses++;
 					}
 					else
 					{
-						if (log.IsWarnEnabled)
-							log.Warn("Failed to get a unique id, cant load house! More than " + MAXHOUSES + " houses in region " + house.RegionID + " or region not loaded // housing not enabled?");
+						if (Logger.IsWarnEnabled)
+							Logger.Warn("Failed to get a unique id, cant load house! More than " + MAXHOUSES + " houses in region " + house.RegionID + " or region not loaded // housing not enabled?");
 					}
 				}
 				else
@@ -117,8 +94,8 @@ namespace DOL.GS.Housing
 				}
 			}
 
-			if (log.IsInfoEnabled)
-				log.Info("loaded " + houses + " houses and " + lotmarkers + " lotmarkers in " + regions + " regions!");
+			if (Logger.IsInfoEnabled)
+				Logger.Info("loaded " + houses + " houses and " + lotmarkers + " lotmarkers in " + regions + " regions!");
 
 			CheckRentTimer = new Timer(new TimerCallback(CheckRents), null, 10000, 1000 * 3600);
 			return true;
@@ -164,7 +141,7 @@ namespace DOL.GS.Housing
 			if (hash == null) return;
 			if (hash.ContainsKey(house.HouseNumber))
 			{
-				log.Warn("House ID exists !");
+				Logger.Warn("House ID exists !");
 				return;
 			}
 			hash.Add(house.HouseNumber, house);
@@ -185,7 +162,7 @@ namespace DOL.GS.Housing
 
 		public static void RemoveHouse(House house)
 		{
-			log.Debug("House " + house.UniqueID + " removed");
+			Logger.Debug("House " + house.UniqueID + " removed");
 			Hashtable hash = (Hashtable)m_houselists[house.RegionID];
 			if (hash == null) return;
 			foreach (GamePlayer player in WorldMgr.GetPlayersCloseToSpot((ushort)house.RegionID, house.X, house.Y, house.Z, WorldMgr.OBJ_UPDATE_DISTANCE))
@@ -290,7 +267,7 @@ namespace DOL.GS.Housing
 
 		public static void CheckRents(object state)
 		{
-			log.Debug("Time to check Rents !");
+			Logger.Debug("Time to check Rents !");
 			TimeSpan Diff;
 			ArrayList todel = new ArrayList();
 
@@ -304,7 +281,7 @@ namespace DOL.GS.Housing
 					Diff = DateTime.Now - house.LastPaid;
 					if (Diff.Days >= 7)
 					{
-						log.Debug("House " + house.UniqueID + " must pay !");
+						Logger.Debug("House " + house.UniqueID + " must pay !");
 						long Rent = GetRentByModel(house.Model);
 						if (house.KeptMoney >= Rent)
 						{
