@@ -160,7 +160,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 						byte startRaceGender = (byte)packet.ReadByte();
 
 						ch.Race = (startRaceGender & 0x0F) + ((startRaceGender & 0x40) >> 2);
-						if (Properties.DISABLE_MINOTAURS)
+						//only players(plvl 1) are disabled. GMs and Admins can still be Minotaurs.
+						if (Properties.DISABLE_MINOTAURS && client.Account.PrivLevel == 1)
 						{
 							switch ((eRace)ch.Race)
 							{
