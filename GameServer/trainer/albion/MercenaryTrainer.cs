@@ -71,7 +71,7 @@ namespace DOL.GS.Trainer
 		{
 			return (player.Level>=5 && player.CharacterClass.ID == (int) eCharacterClass.Fighter && (player.Race == (int) eRace.Briton || player.Race == (int) eRace.Avalonian
 				|| player.Race == (int) eRace.Highlander || player.Race == (int) eRace.Saracen || player.Race == (int) eRace.HalfOgre || player.Race == (int) eRace.Inconnu
-				|| player.Race == (int) eRace.HiberniaMinotaur));
+				|| player.Race == (int) eRace.AlbionMinotaur));
 		}
 
 		/// <summary>
