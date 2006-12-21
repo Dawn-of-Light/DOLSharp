@@ -98,7 +98,7 @@ namespace DOL.GS.Trainer
 					this.SayTo(player,"The path of a Friar is not available to your race. Please choose another.");
 				}
 				return true;
-			case "Heretec":
+			case "Heretic":
 			if(player.Race == (int)eRace.Briton || player.Race == (int)eRace.Avalonian || player.Race == (int)eRace.Inconnu || player.Race == (int)eRace.AlbionMinotaur)
 				{
 					this.SayTo(player, "Members of a brotherhood, you will find more than a community should you join ranks with the Defenders of Albion. Deadly with a Quarterstaff, and proficient with the healing of wounds, the army is in constant need of new recruits such as you.");
