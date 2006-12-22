@@ -25,17 +25,20 @@ using DOL.GS.PacketHandler;
 namespace DOL.GS.Scripts
 {
 	[CmdAttribute(
-		"&path",
-		(uint)ePrivLevel.GM,
+	   "&path",
+	   (uint)ePrivLevel.GM,
 		"There are several path functions",
-		"/path create - creates a temp path in ram",
+		"/path create - creates a new temporary path, deleting any existing temporary path",
 		"/path load <pathname> - loads a path from db",
 		"/path add [speedlimit] [wait time in second] - adds a point at the end of the current path",
 		"/path save <pathname> - saves a path to db",
-		"/path travel - makes a target mob travel the current path",
+		"/path travel - makes a target npc travel the current path",
+		"/path stop - clears the path for a targeted npc and tells npc to walk to spawn",
+		"/path speed [speedlimit] - sets the speed of all path nodes",
 		"/path assignhorseroute <Destination> - sets the current path as horseroute on stablemaster",
-		"/path hide - removes the temporary objects shown when a path is loaded or created",
-		"/path type - changes the path's type")]
+		"/path hide - hides all path markers but does not delete the path",
+		"/path delete - deletes the temporary path",
+		"/path type - changes the paths type")]
 	public class PathCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		protected string TEMP_PATH_FIRST = "TEMP_PATH_FIRST";
@@ -49,7 +52,7 @@ namespace DOL.GS.Scripts
 			//Fill the object variables
 			obj.X = pp.X;
 			obj.Y = pp.Y;
-			obj.Z = pp.Z;
+			obj.Z = pp.Z + 2; // raise a bit off of ground level
 			obj.CurrentRegion = client.Player.CurrentRegion;
 			obj.Heading = client.Player.Heading;
 			obj.Name = name;
@@ -70,9 +73,30 @@ namespace DOL.GS.Scripts
 			if (objs == null)
 				return;
 
+			// remove the markers
 			foreach (GameStaticItem obj in objs)
 				obj.Delete();
+
+			// clear the path point array
+			objs.Clear();
+
+			// remove all path properties
 			client.Player.TempProperties.setProperty(TEMP_PATH_OBJS, null);
+			client.Player.TempProperties.setProperty(TEMP_PATH_FIRST, null);
+			client.Player.TempProperties.setProperty(TEMP_PATH_LAST, null);
+		}
+
+		private int PathHide(GameClient client)
+		{
+			ArrayList objs = (ArrayList)client.Player.TempProperties.getObjectProperty(TEMP_PATH_OBJS, null);
+			if (objs == null)
+				return 0;
+
+			// remove the markers
+			foreach (GameStaticItem obj in objs)
+				obj.Delete();
+
+			return 1;
 		}
 
 		private int PathCreate(GameClient client)
@@ -99,7 +123,7 @@ namespace DOL.GS.Scripts
 			}
 
 			int speedlimit = 1000;
-            int waittime = 0;
+			int waittime = 0;
 			if (args.Length > 2)
 			{
 				try
@@ -112,21 +136,21 @@ namespace DOL.GS.Scripts
 					return 0;
 				}
 
-                if (args.Length > 3)
-                {
-                    try
-                    {
-                        waittime = int.Parse(args[3]);
-                    }
-                    catch
-                    {
-                        DisplayError(client, "No valid wait time '{0}'!", args[3]);
-                    }
-                }
+				if (args.Length > 3)
+				{
+					try
+					{
+						waittime = int.Parse(args[3]);
+					}
+					catch
+					{
+						DisplayError(client, "No valid wait time '{0}'!", args[3]);
+					}
+				}
 			}
 
 			PathPoint newpp = new PathPoint(client.Player.X, client.Player.Y, client.Player.Z, speedlimit, path.Type);
-            newpp.WaitTime = waittime*10;
+			newpp.WaitTime = waittime * 10;
 			path.Next = newpp;
 			newpp.Prev = path;
 			client.Player.TempProperties.setProperty(TEMP_PATH_LAST, newpp);
@@ -140,6 +164,45 @@ namespace DOL.GS.Scripts
 			len += 2;
 			CreateTempPathObject(client, newpp, "TMP PP " + len);
 			DisplayMessage(client, "Pathpoint added. Current pathlength = {0}", len);
+			return 1;
+		}
+
+		private int PathSpeed(GameClient client, string[] args)
+		{
+			int speedlimit = 80;
+
+			if (args.Length < 3)
+			{
+				DisplayError(client, "No valid speedlimit '{0}'!", args[2]);
+				return 0;
+			}
+
+			try
+			{
+				speedlimit = int.Parse(args[2]);
+			}
+			catch
+			{
+				DisplayError(client, "No valid speedlimit '{0}'!", args[2]);
+				return 0;
+			}
+
+			PathPoint pathpoint = (PathPoint)client.Player.TempProperties.getObjectProperty(TEMP_PATH_FIRST, null);
+
+			if (pathpoint == null)
+			{
+				DisplayError(client, "No path created yet! Use /path create first!");
+				return 0;
+			}
+
+			pathpoint.MaxSpeed = speedlimit;
+
+			while (pathpoint.Next != null)
+			{
+				pathpoint = pathpoint.Next;
+				pathpoint.MaxSpeed = speedlimit;
+			}
+
 			return 1;
 		}
 
@@ -157,8 +220,28 @@ namespace DOL.GS.Scripts
 				return 0;
 			}
 			int speed = Math.Min(((GameNPC)client.Player.TargetObject).MaxSpeedBase, path.MaxSpeed);
+
+			// clear any current path
+			((GameNPC)client.Player.TargetObject).CurrentWayPoint = null;
+
+			// set the new path
 			((GameNPC)client.Player.TargetObject).CurrentWayPoint = (PathPoint)client.Player.TempProperties.getObjectProperty(TEMP_PATH_FIRST, null);
+
 			MovementMgr.Instance.MoveOnPath(((GameNPC)client.Player.TargetObject), speed);
+			return 1;
+		}
+
+		private int PathStop(GameClient client)
+		{
+			if (client.Player.TargetObject == null || !(client.Player.TargetObject is GameNPC))
+			{
+				DisplayError(client, "You need to select a mob first!");
+				return 0;
+			}
+
+			// clear any current path
+			((GameNPC)client.Player.TargetObject).CurrentWayPoint = null;
+			((GameNPC)client.Player.TargetObject).WalkToSpawn();
 			return 1;
 		}
 
@@ -276,7 +359,7 @@ namespace DOL.GS.Scripts
 				DisplayError(client, "You must select a stable master to assign a horseroute!");
 				return 0;
 			}
-			string target = String.Join(" ", args, 2, args.Length - 2);;
+			string target = String.Join(" ", args, 2, args.Length - 2); ;
 			bool ticketFound = false;
 			string ticket = "Ticket to " + target;
 			if (merchant.TradeItems != null)
@@ -307,16 +390,19 @@ namespace DOL.GS.Scripts
 				DisplaySyntax(client);
 				return 0;
 			}
-			switch (args[1])
+			switch (args[1].ToLower())
 			{
 				case "create": return PathCreate(client);
 				case "add": return PathAdd(client, args);
 				case "travel": return PathTravel(client);
+				case "stop": return PathStop(client);
+				case "speed": return PathSpeed(client, args);
 				case "type": return PathType(client, args);
 				case "save": return PathSave(client, args);
 				case "load": return PathLoad(client, args);
 				case "assignhorseroute": return PathAssignHorseroute(client, args);
-				case "hide": RemoveAllTempPathObjects(client); return 1;
+				case "hide": return PathHide(client);
+				case "delete": RemoveAllTempPathObjects(client); return 1;
 			}
 			DisplaySyntax(client);
 			return 0;

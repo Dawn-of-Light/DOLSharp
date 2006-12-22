@@ -33,12 +33,12 @@ namespace DOL.GS.RealmAbilities
 
 
 	/// <summary>
-	/// Mastery of Magery ability, adds to effectivenes of damage spells (SpellHandler checks for it)
+	/// Mastery of Magery ability, adds to effectivenes of damage spells
 	/// </summary>
 	public class MasteryOfMageryAbility : RAPropertyEnhancer
 	{
 		public MasteryOfMageryAbility(DBAbility dba, int level)
-			: base(dba, level, eProperty.Undefined)
+			: base(dba, level, eProperty.SpellDamage)
 		{
 		}
 

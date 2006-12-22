@@ -1921,15 +1921,6 @@ namespace DOL.GS.Spells
 				RelicDmg = RelicMgr.GetRelicBonusModifier(living.Realm, eRelicType.Magic);
 			}
 
-			if (m_caster.HasAbility(MasteryOfMageryAbility.KEY) && this is DoTSpellHandler == false)
-			{
-				RAPropertyEnhancer ra = (m_caster as GamePlayer).GetAbility(MasteryOfMageryAbility.KEY) as RAPropertyEnhancer;
-				if (ra != null)
-				{
-					TOADmg += ra.Amount * 0.01;
-				}
-			}
-
 			*/
 			// apply effectiveness
 			finalDamage = (int)(finalDamage * effectiveness);

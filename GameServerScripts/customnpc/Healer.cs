@@ -80,7 +80,7 @@ namespace DOL.GS.Scripts
 			{
 				int oneConCost = GamePlayer.prcRestore[player.Level < GamePlayer.prcRestore.Length ? player.Level : GamePlayer.prcRestore.Length - 1];
 				player.TempProperties.setProperty(COST_BY_PTS, (long)oneConCost);
-				player.Out.SendCustomDialog("Recover your constitution will cost to you \n" + Money.GetString(player.TotalConstitutionLostAtDeath * (long)oneConCost) + ".\nDo you accept?", new CustomDialogResponse(HealerDialogResponse));
+				player.Out.SendCustomDialog("It will cost " + Money.GetString(player.TotalConstitutionLostAtDeath * (long)oneConCost) + " to have your constitution restored. Do you accept?", new CustomDialogResponse(HealerDialogResponse));
 			}
 			else
 			{
@@ -107,6 +107,7 @@ namespace DOL.GS.Scripts
 			long totalCost = restorePoints * cost;
 			if (player.RemoveMoney(totalCost))
 			{
+				player.Out.SendMessage("You give " + player.TargetObject.Name + " a donation of " + Money.GetString(totalCost), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				player.TotalConstitutionLostAtDeath -= restorePoints;
 				player.Out.SendCharStatsUpdate();
 			}
