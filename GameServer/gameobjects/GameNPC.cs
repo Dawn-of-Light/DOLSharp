@@ -1295,6 +1295,7 @@ namespace DOL.GS
 			mob.Level = Level;
 			mob.ClassType = this.GetType().ToString();
 			mob.Flags = Flags;
+			mob.RespawnInterval = m_respawnInterval / 1000;
 			IAggressiveBrain aggroBrain = Brain as IAggressiveBrain;
 			if (aggroBrain != null)
 			{
