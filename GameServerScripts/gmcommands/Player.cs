@@ -352,7 +352,7 @@ namespace DOL.GS.Scripts
 								return 0;
 							}
 
-							player.GainRealmPoints(amount);
+							player.GainRealmPoints(amount, false);
 							client.Out.SendMessage("You gave " + player.Name + " " + amount + " realmpoints succesfully!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 							player.Out.SendMessage(client.Player.Name + "(PrivLevel: " + client.Account.PrivLevel + ") has given you " + amount + " realmpoints!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 							player.SaveIntoDatabase();

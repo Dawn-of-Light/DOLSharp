@@ -35,7 +35,7 @@ namespace DOL.GS.Scripts
 		"'/mob nfastcreate <Model> <Realm> <Level> <Number> <Radius> <Name>' to create n mob with fixed level,model and name placed around creator within the provided radius",
 		"'/mob nrandcreate <Number> <Radius>' to create <Number> mob in <Radius> around player",
 		"'/mob fastcreate <Model> <Level> <Name>' to create mob with fixed level,model",
-		"'/mob create' to create an empty mob",
+		"'/mob create <type> <realm>' to create an empty mob",
 		"'/mob model <newMobModel>' to set the mob model to newMobModel",
 		"'/mob size <newMobSize>' to set the mob size to newMobSize",
 		"'/mob name <newMobName>' to set the mob name to newMobName",
@@ -383,8 +383,11 @@ namespace DOL.GS.Scripts
 				case "create":
 					{
 						string theType = "DOL.GS.GameNPC";
+						byte realm = 0;
 						if (args.Length > 2)
 							theType = args[2];
+						if (args.Length > 3)
+							realm = Convert.ToByte(args[3]); 
 
 						//Create a new mob
 						GameNPC mob = null;
@@ -421,7 +424,7 @@ namespace DOL.GS.Scripts
 						mob.CurrentRegion = client.Player.CurrentRegion;
 						mob.Heading = client.Player.Heading;
 						mob.Level = 1;
-						mob.Realm = 0;
+						mob.Realm = realm;
 						mob.Name = "New Mob";
 						mob.Model = 408;
 						//Fill the living variables

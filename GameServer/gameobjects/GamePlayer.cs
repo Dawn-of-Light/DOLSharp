@@ -3089,22 +3089,27 @@ namespace DOL.GS
 		/// Called when this living gains realm points
 		/// </summary>
 		/// <param name="amount">The amount of realm points gained</param>
-		public override void GainRealmPoints(long amount)
+		/// <param name="modify">Should we apply the rp modifer</param>
+		public void GainRealmPoints(long amount, bool modify)
 		{
 			if (!GainRP)
 				return;
 
-			//rp rate modifier
-			double modifier = ServerProperties.Properties.RP_RATE;
-			if (modifier != -1)
-				amount = (long)((double)amount * modifier);
+			if (modify)
+			{
+				//rp rate modifier
+				double modifier = ServerProperties.Properties.RP_RATE;
+				if (modifier != -1)
+					amount = (long)((double)amount * modifier);
+			}
 
 			base.GainRealmPoints(amount);
 			RealmPoints += amount;
 			if (m_guild != null)
 				m_guild.GainRealmPoints(amount);
 
-			Out.SendMessage("You get " + amount.ToString() + " realm points!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+			if (amount > 0)
+				Out.SendMessage("You get " + amount.ToString() + " realm points!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 			//"You earn 4 extra realm points!"
 
 			while (RealmPoints >= CalculateRPsFromRealmLevel(m_realmLevel + 1) && m_realmLevel < 120)
@@ -3137,6 +3142,15 @@ namespace DOL.GS
 				}
 			}
 			Out.SendUpdatePoints();
+		}
+
+		/// <summary>
+		/// Called when this living gains realm points
+		/// </summary>
+		/// <param name="amount">The amount of realm points gained</param>
+		public override void GainRealmPoints(long amount)
+		{
+			GainRealmPoints(amount, true);
 		}
 
 		/// <summary>
@@ -3773,6 +3787,10 @@ namespace DOL.GS
 						break;
 					}
 			}
+
+			//level 20 changes realm title and gives 1 realm skill point
+			if (Level == 20)
+				GainRealmPoints(0);
 
 			// Adjust stats
 			bool statsChanged = false;
