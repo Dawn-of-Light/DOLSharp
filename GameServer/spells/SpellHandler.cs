@@ -745,7 +745,9 @@ namespace DOL.GS.Spells
 			}
 			else if (Caster is GamePlayer && ((GamePlayer)Caster).CharacterClass.ClassType == eClassType.Hybrid)
 			{
-				double specBonus = ((GamePlayer)Caster).GetBaseSpecLevel(SpellLine.Spec) * 0.4 / Spell.Level;
+				double specBonus = 0;
+				if(Spell.Level != 0) specBonus = ((GamePlayer)Caster).GetBaseSpecLevel(SpellLine.Spec) * 0.4 / Spell.Level);
+				
 				if (specBonus > 0.4)
 					specBonus = 0.4;
 				else if (specBonus < 0)
