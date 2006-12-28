@@ -2335,6 +2335,12 @@ namespace DOL.GS
 				return;
 			}
 
+			if ((eCharacterClass)CharacterClass.ID == eCharacterClass.Infiltrator &&
+				ability.KeyName == Abilities.Snapshot)
+			{
+				return;
+			}
+
 			bool newAbility = false;
 			lock (m_abilities.SyncRoot)
 			{

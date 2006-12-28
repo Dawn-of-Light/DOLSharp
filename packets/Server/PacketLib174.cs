@@ -322,7 +322,7 @@ namespace DOL.GS.PacketHandler
 			pak.WritePascalString(playerToCreate.CurrentTitle.GetValue(playerToCreate)); // new in 1.74, NewTitle
 			SendTCP(pak);
 
-			if (GameServer.ServerRules.GetColorHandling(m_gameClient) == 1) // PvP
+			//if (GameServer.ServerRules.GetColorHandling(m_gameClient) == 1) // PvP
 				SendObjectGuildID(playerToCreate, playerToCreate.Guild); //used for nearest friendly/enemy object buttons and name colors on PvP server
 
 			if (m_gameClient.Player != null && playerToCreate.CharacterClass.ID == (int)eCharacterClass.Warlock)

@@ -317,8 +317,12 @@ namespace DOL.GS
 				member.Guild = null;
 				member.SaveIntoDatabase();
 
+				member.Out.SendObjectGuildID(member, member.Guild);
 				// Send message to removerClient about successful removal
-				member.Out.SendMessage(removername + " remove you from " + theGuildDB.GuildName, PacketHandler.eChatType.CT_System, PacketHandler.eChatLoc.CL_SystemWindow);
+				if (removername == member.Name)
+					member.Out.SendMessage("You leave the guild.", DOL.GS.PacketHandler.eChatType.CT_System, DOL.GS.PacketHandler.eChatLoc.CL_SystemWindow);
+				else
+					member.Out.SendMessage(removername + " remove you from " + theGuildDB.GuildName, PacketHandler.eChatType.CT_System, PacketHandler.eChatLoc.CL_SystemWindow);
 			}
 			catch(Exception e)
 			{

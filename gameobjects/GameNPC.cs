@@ -1207,9 +1207,7 @@ namespace DOL.GS
 			m_Y = npc.Y;
 			m_Z = npc.Z;
 			m_Heading = (ushort)(npc.Heading & 0xFFF);
-			m_maxSpeedBase = npc.Speed;	// TODO db has currntly senseless information here, mob type db required
-			if (m_maxSpeedBase == 0)
-				m_maxSpeedBase = 191;
+			m_maxSpeedBase = npc.Speed;
 			m_currentSpeed = 0;
 			CurrentRegionID = npc.Region;
 			Realm = npc.Realm;
@@ -1295,6 +1293,7 @@ namespace DOL.GS
 			mob.Level = Level;
 			mob.ClassType = this.GetType().ToString();
 			mob.Flags = Flags;
+			mob.Speed = MaxSpeedBase;
 			mob.RespawnInterval = m_respawnInterval / 1000;
 			IAggressiveBrain aggroBrain = Brain as IAggressiveBrain;
 			if (aggroBrain != null)
@@ -2207,7 +2206,11 @@ namespace DOL.GS
 			if (AttackState)
 			{
 				if (ActiveWeaponSlot == eActiveWeaponSlot.Distance)
-					Follow(attackTarget, 1000, 5000);	// follow at archery range
+				{
+					if (IsMoving)
+						StopFollow();
+					//Follow(attackTarget, 1000, 5000);	// follow at archery range
+				}
 				else
 					Follow(attackTarget, 90, 5000);	// follow at stickrange
 			}
@@ -2984,7 +2987,7 @@ namespace DOL.GS
 			//			CurrentSpeed = 0; // cause position addition recalculation
 			MaxSpeedBase = 100;
 			GuildName = "";
-			m_healthRegenerationPeriod = 20000;
+			m_healthRegenerationPeriod = 3000;
 
 			m_brainSync = m_brains.SyncRoot;
 			m_followTarget = new WeakRef(null);

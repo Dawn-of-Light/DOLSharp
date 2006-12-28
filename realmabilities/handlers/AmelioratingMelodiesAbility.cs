@@ -50,8 +50,7 @@ namespace DOL.GS.RealmAbilities
 					break;
 			}
 
-			AmelioratingMelodiesEffect am = new AmelioratingMelodiesEffect(heal);
-			am.Start(player);
+			new AmelioratingMelodiesEffect(heal).Start(player);
 
 			DisableSkill(living);
 		}
