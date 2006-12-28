@@ -453,14 +453,14 @@ namespace DOL.GS.PacketHandler
 			pak.WriteByte(0x00); // new in 1.75
 			SendTCP(pak);
 
-			if(GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvP)
+			//if(GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvP)
 				SendObjectGuildID(playerToCreate, playerToCreate.Guild); //used for nearest friendly/enemy object buttons and name colors on PvP server
 		}
 
 		public override void SendLoginGranted()
 		{
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.LoginGranted));
-			pak.WriteByte(0x01);
+			pak.WriteByte(0x01); //isSI
 			int version = (int) m_gameClient.Version;
 			pak.WriteByte((byte) (version/100));
 			pak.WriteByte((byte) ((version%100)/10));

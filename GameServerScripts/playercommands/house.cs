@@ -25,15 +25,22 @@ namespace DOL.GS.Scripts
 {
 	[CmdAttribute(
 		"&house",
-		(uint) ePrivLevel.GM,
-		"Various housing commands",
-		"(taken out)"
+		(uint) ePrivLevel.Player,
+		"Show various housing information"
 		)]
-	public class HouseCommanHandler : ICommandHandler
+	public class HouseCommanHandler : AbstractCommandHandler, ICommandHandler
 	{
 		public int OnCommand(GameClient client, string[] args)
 		{
-			return 0;	
+			House house = HouseMgr.GetHouseByPlayer(client.Player);
+			if (house == null)
+			{
+				DisplayError(client, "You do not own a house.");
+				return 0;
+			}
+
+			house.SendHouseInfo(client.Player);
+			return 1;
 		}
 	}
 }

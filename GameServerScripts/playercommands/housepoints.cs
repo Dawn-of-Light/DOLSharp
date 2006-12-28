@@ -13,20 +13,18 @@ namespace DOL.GS.Scripts
 	{
 		public int OnCommand(GameClient client, string[] args)
 		{
-			int num = HouseMgr.GetHouseNumberByPlayer(client.Player);
-			if (num == 0)
+			House house = HouseMgr.GetHouseByPlayer(client.Player);
+			if (house == null)
 			{
 				DisplayError(client, "You don't own a house!", new object[] { });
 				return 0;
 			}
 
-			if (!client.Player.InHouse || client.Player.CurrentHouse.HouseNumber != num)
+			if (!client.Player.InHouse || client.Player.CurrentHouse != house)
 			{
 				DisplayError(client, "You have to be in your house to use this command!", new object[] { });
 				return 0;
 			}
-
-			House house = HouseMgr.GetHouse(num);
 
 			client.Player.Out.SendToggleHousePoints(house);
 			return 0;

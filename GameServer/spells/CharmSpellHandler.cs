@@ -201,7 +201,7 @@ namespace DOL.GS.Spells
 				}
 
 				npc.BroadcastUpdate();
-				if (GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvP)
+				//if (GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvP)
 				{
 					foreach(GamePlayer ply in npc.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 						ply.Out.SendObjectGuildID(npc, player.Guild);
@@ -272,7 +272,7 @@ namespace DOL.GS.Spells
 
 					npc.BroadcastUpdate();
 
-					if (GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvP)
+					//if (GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvP)
 					{
 						foreach(GamePlayer ply in npc.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 							ply.Out.SendObjectGuildID(npc, null);
@@ -288,7 +288,8 @@ namespace DOL.GS.Spells
 						if (aggroBrain != null)
 						{
 							aggroBrain.ClearAggroList();
-							aggroBrain.AddToAggroList(Caster, Caster.Level*10);
+							if (Spell.Pulse != 0)
+								aggroBrain.AddToAggroList(Caster, Caster.Level * 10);
 						}
 					}
 

@@ -121,6 +121,7 @@ namespace DOL.GS.PacketHandler
 		TimerWindow = 0xF3,
 		SiegeWeaponInterface = 0xF5,
 		ChangeTarget = 0xF6,
+		HelpWindow = 0xF7,
 		EmoteAnimation = 0xF9,
 		MoneyUpdate = 0xFA,
 		StatsUpdate = 0xFB,
@@ -318,8 +319,10 @@ namespace DOL.GS.PacketHandler
 		Rofl = 0x41,
 		Mememe = 0x42,
 		Horse_whistle = 0x43,
-		Kowtow = 0x44
-
+		Kowtow = 0x44,
+		PlayerPrepare = 0x45,
+		PlayerPickup = 0x46,
+		PlayerListen = 0x47,
 	};
 
 	public enum eMerchantWindowType : byte
@@ -544,7 +547,9 @@ namespace DOL.GS.PacketHandler
 		void SendHousePermissions(House house);
 		void SendHousePayRentDialog(string title);
 		void SendToggleHousePoints(House house);
+		void SendRentReminder(House house);
 
+		void SendStarterHelp();
         void SendPlayerFreeLevelUpdate();
 		
 		void SendMovingObjectCreate(GameMovingObject obj);

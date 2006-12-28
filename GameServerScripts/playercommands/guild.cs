@@ -447,9 +447,9 @@ namespace DOL.GS.Scripts
 								client.Out.SendMessage(mesg, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 								if (client.Player.Guild.theGuildDB.Motd != null && client.Player.Guild.theGuildDB.Motd != "")
-									client.Player.Out.SendMessage("Guild Message: " + client.Player.Guild.theGuildDB.Motd, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									client.Player.Out.SendMessage(client.Player.Guild.theGuildDB.Motd, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								if (client.Player.Guild.theGuildDB.oMotd != null && client.Player.Guild.theGuildDB.oMotd != "" && client.Player.GuildRank.OcHear)
-									client.Player.Out.SendMessage("Officer Message: " + client.Player.Guild.theGuildDB.oMotd, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									client.Player.Out.SendMessage(client.Player.Guild.theGuildDB.oMotd, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 								foreach (DBRank rank in client.Player.Guild.theGuildDB.Ranks)
 								{
@@ -664,9 +664,9 @@ namespace DOL.GS.Scripts
 							{
 								client.Out.SendMessage("You must promote to a number : /gc promote <ranklevel>", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							}
-							if ((newrank > obj.GuildRank.RankLevel) || (newrank < 1))
+							if ((newrank >= obj.GuildRank.RankLevel) || (newrank < 1))
 							{
-								client.Out.SendMessage("You can promote to a inferior rank", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								client.Out.SendMessage("You can only promote to an inferior rank.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return 1;
 							}
 							obj.GuildRank = obj.Guild.GetRankByID(newrank);
@@ -799,8 +799,11 @@ namespace DOL.GS.Scripts
 								for (i = 0; i < maxShowed; i++)
 								{
 									GamePlayer ply = (GamePlayer)onlineMembers.GetByIndex((page - 1) * MaxOnPage + i);
-									client.Out.SendMessage(string.Format("E,{0},{1},{2},{3},{4},{5},{6},\"{7}\",\"{8}\"",
-										(i + 1), 0, ply.Name, ply.Level, ply.CharacterClass.ID, ply.GuildRank.RankLevel, (ply.PlayerGroup == null ? 1 : 2), (ply.CurrentZone == null ? "" : ply.CurrentZone.Description), ""/*Note*/), eChatType.CT_SocialInterface, eChatLoc.CL_SystemWindow);
+									if (ply != null)
+									{
+										client.Out.SendMessage(string.Format("E,{0},{1},{2},{3},{4},{5},{6},\"{7}\",\"{8}\"",
+											(i + 1), 0, ply.Name, ply.Level, ply.CharacterClass.ID, ply.GuildRank.RankLevel, (ply.PlayerGroup == null ? 1 : 2), (ply.CurrentZone == null ? "" : ply.CurrentZone.Description), ""/*Note*/), eChatType.CT_SocialInterface, eChatLoc.CL_SystemWindow);
+									}
 								}
 								return 1;
 							}
@@ -976,7 +979,7 @@ namespace DOL.GS.Scripts
 								}
 								else
 								{
-									Character c = (Character)GameServer.Database.SelectObject(typeof(Character), "Name = '" + args[2] + "'");
+									Character c = (Character)GameServer.Database.SelectObject(typeof(Character), "Name = '" + GameServer.Database.Escape(args[2]) + "'");
 									if (c.GuildID != client.Player.GuildID)
 									{
 										client.Out.SendMessage(c.Name + " is not a member of your guild.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
