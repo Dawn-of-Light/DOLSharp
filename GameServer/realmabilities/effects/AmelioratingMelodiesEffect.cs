@@ -51,8 +51,7 @@ namespace DOL.GS.RealmAbilities
 			base.Start(target);
 			GamePlayer player = target as GamePlayer;
 			if (player == null) return;
-			m_range = (int)(2000 * player.GetModified(eProperty.SpellRange) * 0.01);
-			m_heal = (int)(m_heal * player.GetModified(eProperty.HealingEffectiveness) * 0.01);
+			m_range = (int)(2000 * (player.GetModified(eProperty.SpellRange) * 0.01));
 			m_countDownTimer = new RegionTimer(player, new RegionTimerCallback(CountDown));
 			m_countDownTimer.Start(1);
 		}

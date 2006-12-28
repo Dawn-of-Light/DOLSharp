@@ -23,6 +23,7 @@ using System.Reflection;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS;
+using DOL.GS.Housing;
 using DOL.GS.Keeps;
 using DOL.GS.ServerProperties;
 
@@ -117,15 +118,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 								pclient.Out.SendAddFriends(friendList);
 						}
 					}
-
-					if (player.Level > 1 && Properties.MOTD != "")
-					{
-						player.Out.SendMessage(Properties.MOTD, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					}
-					else if (player.Level == 1 && Properties.STARTING_MSG != "")
-					{
-						player.Out.SendMessage(Properties.STARTING_MSG, eChatType.CT_System, eChatLoc.CL_PopupWindow);
-					}
 				}
 				else
 				{
@@ -158,11 +150,59 @@ namespace DOL.GS.PacketHandler.Client.v168
 				player.StartEnduranceRegeneration();
 
 				player.SetPvPInvulnerability(10*1000, null);
+
+				/*
+				 * update points
+				 * guild message
+				 * officer message
+				 * alliance message
+				 * housing rent help
+				 * server message
+				 * you have entered message
+				 * freelevel update
+				 */
+
+				if (player.Guild != null)
+				{
+					if (player.GuildRank.GcHear && player.Guild.theGuildDB.Motd != "")
+					{
+						player.Out.SendMessage("Guild Message:", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						player.Out.SendMessage(player.Guild.theGuildDB.Motd, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					}
+					if (player.GuildRank.OcHear && player.Guild.theGuildDB.oMotd != "")
+					{
+						player.Out.SendMessage("Officer Message: " + player.Guild.theGuildDB.oMotd, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					}
+					if (player.Guild.alliance != null && player.GuildRank.AcHear && player.Guild.alliance.Dballiance.Motd != "")
+					{
+						player.Out.SendMessage("Alliance Message: " + player.Guild.theGuildDB.oMotd, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					}
+				}
+
+				House house = HouseMgr.GetHouseByPlayer(player);
+				if (house != null)
+				{
+					TimeSpan due = (house.LastPaid.AddDays(7).AddHours(1) - DateTime.Now);
+					if (due.Days < 7)
+						player.Out.SendRentReminder(house);
+				}
+
+				if (player.Level > 1 && Properties.MOTD != "")
+				{
+					player.Out.SendMessage(Properties.MOTD, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				}
+				else if (player.Level == 1)
+				{
+					player.Out.SendStarterHelp();
+					if (Properties.STARTING_MSG != "")
+						player.Out.SendMessage(Properties.STARTING_MSG, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+				}
+
                 player.Out.SendPlayerFreeLevelUpdate();
 			    
 				if (player.FreeLevelState == 2)
 				{
-					player.Out.SendMessage("You are eligible for a free level! Click on your trainer to receive it (or type /freelevel decline to discard your free level).", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+					player.Out.SendDialogBox(eDialogCode.SimpleWarning, 0, 0, 0, 0, eDialogType.Ok, true, "You are eligible for a free level! Click on your trainer to receive it (or type /freelevel decline to discard your free level).");
 				}
 				
 				AssemblyName an = Assembly.GetExecutingAssembly().GetName();

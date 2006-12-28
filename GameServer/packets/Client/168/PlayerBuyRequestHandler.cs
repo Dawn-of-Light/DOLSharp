@@ -41,12 +41,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 			byte item_count = (byte)packet.ReadByte();
 			byte menu_id = (byte)packet.ReadByte();
 
-			log.Debug("menu_id " + menu_id);
-
 			switch ((eMerchantWindowType)menu_id)
 			{
 				case eMerchantWindowType.HousingInsideShop:
-				case eMerchantWindowType.HousingOutsideMenu:
+				case eMerchantWindowType.HousingOutsideShop:
 				case eMerchantWindowType.HousingBindstone:
 				case eMerchantWindowType.HousingCrafting:
 				case eMerchantWindowType.HousingNPC:

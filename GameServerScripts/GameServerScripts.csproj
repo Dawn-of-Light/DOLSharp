@@ -246,9 +246,6 @@
     <Compile Include="gmcommands\heal.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="gmcommands\house.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="gmcommands\item.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -332,6 +329,8 @@
     <Compile Include="playercommands\cmdhelp.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="playercommands\houseface.cs" />
+    <Compile Include="playercommands\house.cs" />
     <Compile Include="playercommands\housepoints.cs" />
     <Compile Include="playercommands\freelevel.cs" />
     <Compile Include="playercommands\boot.cs" />

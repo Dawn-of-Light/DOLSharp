@@ -52,17 +52,15 @@ namespace DOL.GS.PropertyCalc
 		}
 	}
 
-	// Health Effectivness
+	// Healing Effectivness
 	[PropertyCalculator(eProperty.HealingEffectiveness)]
 	public class HealingEffectivenessPercentCalculator : PropertyCalculator
 	{
 		public override int CalcValue(GameLiving living, eProperty property) 
 		{
-			int percent = 100
-				+ living.BuffBonusCategory1[(int)property]
+			int percent = living.BuffBonusCategory1[(int)property]
 				- living.BuffBonusCategory3[(int)property]
-				//hardcap at 25%
-				+ Math.Min(living.ItemBonus[(int)property], 25);
+				+ living.ItemBonus[(int)property];
 
 			if (living is GamePlayer)
 			{
@@ -70,8 +68,8 @@ namespace DOL.GS.PropertyCalc
 				percent = (int)(percent * RelicMgr.GetRelicBonusModifier(living.Realm, eRelicType.Magic));
 			}
 
-
-			return Math.Max(1, percent);
+			//hardcap at 25%
+			return Math.Min(25, percent);
 		}
 	}
 

@@ -32,7 +32,7 @@ namespace DOL.GS.Spells
 	{
 		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
 		{
-			if (target.EffectList.GetOfType(typeof(ChargeEffect)) != null)
+			if (target.EffectList.GetOfType(typeof(ChargeEffect)) != null || target.TempProperties.getProperty("Charging", false))
 			{
 				MessageToCaster(target.Name + " is moving to fast for this spell to have any effect!", eChatType.CT_SpellResisted);
 				return;

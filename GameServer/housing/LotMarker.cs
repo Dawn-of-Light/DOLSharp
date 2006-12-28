@@ -81,7 +81,7 @@ namespace DOL.GS.Housing
 				if (DatabaseItem.OwnerIDs != null && DatabaseItem.OwnerIDs != "") return;
 				if (HouseMgr.GetHouseNumberByPlayer(player) != 0 && player.Client.Account.PrivLevel <= 1)
 				{
-					player.Out.SendMessage("You do already own another lot or house (Number " + HouseMgr.GetHouseNumberByPlayer(player) + ").", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage("You already own another lot or house (Number " + HouseMgr.GetHouseNumberByPlayer(player) + ").", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
 					return;
 				}
 				if (player.RemoveMoney(HouseTemplateMgr.GetLotPrice(DatabaseItem), "You just bought this lot for {0}.", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow))

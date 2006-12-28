@@ -632,7 +632,7 @@ namespace DOL.GS.PacketHandler
 				}
 				 */
 			}
-			if (GameServer.ServerRules.GetColorHandling(m_gameClient) == 1) // PvP
+			//if (GameServer.ServerRules.GetColorHandling(m_gameClient) == 1) // PvP
 				SendObjectGuildID(playerToCreate, playerToCreate.Guild); //used for nearest friendly/enemy object buttons and name colors on PvP server
 		}
 
@@ -809,10 +809,6 @@ namespace DOL.GS.PacketHandler
 			}
 			else pak.WriteByte(0x00);
 			SendTCP(pak);
-			/*
-			if (obj is GameKeepDoor)
-				SendDoorState(obj as GameKeepDoor);
-			 */
 		}
 
 		public virtual void SendDebugMode(bool on)
@@ -910,7 +906,7 @@ namespace DOL.GS.PacketHandler
 			pak.WriteByte(0x00);
 			SendTCP(pak);
 
-			if (GameServer.ServerRules.GetColorHandling(m_gameClient) == 1) // PvP
+			//if (GameServer.ServerRules.GetColorHandling(m_gameClient) == 1) // PvP
 			{
 				IControlledBrain brain = npc.Brain as IControlledBrain;
 				if (brain != null)
@@ -1558,74 +1554,77 @@ namespace DOL.GS.PacketHandler
 			pak.WriteByte(preAction); //preAction (0x00 - Do nothing)
 			if (slots != null)
 			{
-				foreach (int updatedSlot in slots)
+				lock (slots)
 				{
-					pak.WriteByte((byte)updatedSlot);
-					InventoryItem item = m_gameClient.Player.Inventory.GetItem((eInventorySlot)updatedSlot);
-
-					if (item == null)
+					foreach (int updatedSlot in slots)
 					{
-						pak.Fill(0x00, 18);
-						continue;
+						pak.WriteByte((byte)updatedSlot);
+						InventoryItem item = m_gameClient.Player.Inventory.GetItem((eInventorySlot)updatedSlot);
+
+						if (item == null)
+						{
+							pak.Fill(0x00, 18);
+							continue;
+						}
+
+						pak.WriteByte((byte)item.Level);
+
+						int value1; // some object types use this field to display count
+						int value2; // some object types use this field to display count
+						switch (item.Object_Type)
+						{
+							case (int)eObjectType.Arrow:
+							case (int)eObjectType.Bolt:
+							case (int)eObjectType.Poison:
+							case (int)eObjectType.GenericItem:
+								value1 = item.Count;
+								value2 = item.SPD_ABS;
+								break;
+							case (int)eObjectType.Thrown:
+								value1 = item.DPS_AF;
+								value2 = item.Count;
+								break;
+							case (int)eObjectType.Instrument:
+								value1 = (item.DPS_AF == 2 ? 0 : item.DPS_AF); // 0x00 = Lute ; 0x01 = Drum ; 0x03 = Flute
+								value2 = 0;
+								break; // unused
+							case (int)eObjectType.Shield:
+								value1 = item.Type_Damage;
+								value2 = item.DPS_AF;
+								break;
+							case (int)eObjectType.GardenObject:
+								value1 = 0;
+								value2 = item.SPD_ABS;
+								break;
+							default:
+								value1 = item.DPS_AF;
+								value2 = item.SPD_ABS;
+								break;
+						}
+						pak.WriteByte((byte)value1);
+						pak.WriteByte((byte)value2);
+
+						if (item.Object_Type == (int)eObjectType.GardenObject)
+							pak.WriteByte((byte)(item.DPS_AF));
+						else
+							pak.WriteByte((byte)(item.Hand << 6));
+						pak.WriteByte((byte)((item.Type_Damage > 3 ? 0 : item.Type_Damage << 6) | item.Object_Type));
+						pak.WriteShort((ushort)item.Weight);
+						pak.WriteByte(item.ConditionPercent); // % of con
+						pak.WriteByte(item.DurabilityPercent); // % of dur
+						pak.WriteByte((byte)item.Quality); // % of qua
+						pak.WriteByte((byte)item.Bonus); // % bonus
+						pak.WriteShort((ushort)item.Model);
+						if (item.Emblem != 0)
+							pak.WriteShort((ushort)item.Emblem);
+						else
+							pak.WriteShort((ushort)item.Color);
+						pak.WriteShort((ushort)item.Effect);
+						if (item.Count > 1)
+							pak.WritePascalString(item.Count + " " + item.Name);
+						else
+							pak.WritePascalString(item.Name);
 					}
-
-					pak.WriteByte((byte)item.Level);
-
-					int value1; // some object types use this field to display count
-					int value2; // some object types use this field to display count
-					switch (item.Object_Type)
-					{
-						case (int)eObjectType.Arrow:
-						case (int)eObjectType.Bolt:
-						case (int)eObjectType.Poison:
-						case (int)eObjectType.GenericItem:
-							value1 = item.Count;
-							value2 = item.SPD_ABS;
-							break;
-						case (int)eObjectType.Thrown:
-							value1 = item.DPS_AF;
-							value2 = item.Count;
-							break;
-						case (int)eObjectType.Instrument:
-							value1 = (item.DPS_AF == 2 ? 0 : item.DPS_AF); // 0x00 = Lute ; 0x01 = Drum ; 0x03 = Flute
-							value2 = 0;
-							break; // unused
-						case (int)eObjectType.Shield:
-							value1 = item.Type_Damage;
-							value2 = item.DPS_AF;
-							break;
-						case (int)eObjectType.GardenObject:
-							value1 = 0;
-							value2 = item.SPD_ABS;
-							break;
-						default:
-							value1 = item.DPS_AF;
-							value2 = item.SPD_ABS;
-							break;
-					}
-					pak.WriteByte((byte)value1);
-					pak.WriteByte((byte)value2);
-
-					if (item.Object_Type == (int)eObjectType.GardenObject)
-						pak.WriteByte((byte)(item.DPS_AF));
-					else
-						pak.WriteByte((byte)(item.Hand << 6));
-					pak.WriteByte((byte)((item.Type_Damage > 3 ? 0 : item.Type_Damage << 6) | item.Object_Type));
-					pak.WriteShort((ushort)item.Weight);
-					pak.WriteByte(item.ConditionPercent); // % of con
-					pak.WriteByte(item.DurabilityPercent); // % of dur
-					pak.WriteByte((byte)item.Quality); // % of qua
-					pak.WriteByte((byte)item.Bonus); // % bonus
-					pak.WriteShort((ushort)item.Model);
-					if (item.Emblem != 0)
-						pak.WriteShort((ushort)item.Emblem);
-					else
-						pak.WriteShort((ushort)item.Color);
-					pak.WriteShort((ushort)item.Effect);
-					if (item.Count > 1)
-						pak.WritePascalString(item.Count + " " + item.Name);
-					else
-						pak.WritePascalString(item.Name);
 				}
 			}
 			SendTCP(pak);
@@ -2935,6 +2934,24 @@ namespace DOL.GS.PacketHandler
 			pak.WriteByte((byte)item.Size);
 			pak.WriteByte((byte)item.Position);
 			pak.WriteByte((byte)(item.Placemode - 2));
+			SendTCP(pak);
+		}
+
+		public virtual void SendRentReminder(House house)
+		{
+			//0:00:58.047 S=>C 0xF7 show help window (topicIndex:106 houseLot?:4281)
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.HelpWindow));
+			pak.WriteShort(106);//short index
+			pak.WriteShort((ushort)house.HouseNumber); //short lot
+			SendTCP(pak);
+		}
+
+		public virtual void SendStarterHelp()
+		{
+			//* 0:00:57.984 S=>C 0xF7 show help window (topicIndex:1 houseLot?:0)
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.HelpWindow));
+			pak.WriteShort(1);//short index
+			pak.WriteShort(0); //short lot
 			SendTCP(pak);
 		}
 

@@ -236,6 +236,27 @@ namespace DOL.GS.Housing
 			return 0; // no house
 		}
 
+		/// <summary>
+		/// Get the house object from the owner player
+		/// </summary>
+		/// <param name="p">The player owner</param>
+		/// <returns>The house object</returns>
+		public static House GetHouseByPlayer(GamePlayer p)
+		{
+			foreach (DictionaryEntry regs in m_houselists)
+			{
+				foreach (DictionaryEntry Entry in (Hashtable)(regs.Value))
+				{
+					House house = (House)Entry.Value;
+					if (house.OwnerIDs == null)
+						continue;
+					if (house.IsOwner(p))
+						return house;
+				}
+			}
+			return null; // no house
+		}
+
 		public static ArrayList GetOwners(DBHouse house)
 		{
 			if (house == null) return null;

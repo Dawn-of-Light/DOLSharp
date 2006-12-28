@@ -118,6 +118,8 @@ namespace DOL.GS
 		//new maintank skills with 1.81
 		public const string ScarsOfBattle = "Scars of Battle";
 		public const string MemoriesOfWar = "Memories of War";
+		//moved from Armsman RR5 RA to Armsman 25 spec crossbow.
+		public const string Snapshot = "Snapshot";
 
 	}
 

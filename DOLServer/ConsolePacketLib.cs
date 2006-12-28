@@ -190,6 +190,7 @@ namespace DOLGameServerConsole
 		public void SendFurniture(House house) { }
 		public void SendFurniture(House house, int i) { }
 		public void SendToggleHousePoints(House house) { }
+		public void SendRentReminder(House house) { }
 		public void SendMovingObjectCreate(GameMovingObject obj) { }
 		public void SendWarmapUpdate(IList list) { }
 		public void SendWarmapBonuses() { }
@@ -204,6 +205,7 @@ namespace DOLGameServerConsole
 		public void SendCrash(string str) { }
 		public void SendRvRGuildBanner(GamePlayer player, bool show) { }
 		public void SendPlayerFreeLevelUpdate() { }
+		public void SendStarterHelp() { }
 		/// <summary>
 		/// The bow prepare animation
 		/// </summary>

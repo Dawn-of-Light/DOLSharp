@@ -1557,6 +1557,10 @@ namespace DOL.GS.Spells
 			{
 				((GamePlayer)m_caster).Out.SendMessage(message, type, eChatLoc.CL_SystemWindow);
 			}
+			else if (m_caster is GameNPC && (m_caster as GameNPC).Brain is IControlledBrain && type == eChatType.CT_YouHit)
+			{
+				((m_caster as GameNPC).Brain as IControlledBrain).Owner.Out.SendMessage(message, type, eChatLoc.CL_SystemWindow);
+			}
 		}
 
 		/// <summary>
