@@ -4971,7 +4971,7 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 
 		public virtual bool IsCasting
 		{
-			get { return m_runningSpellHandler != null && m_runningSpellHandler.IsCasting; }
+			get { return m_runningSpellHandler != null;/*&& m_runningSpellHandler.IsCasting;*/ }
 		}
 
 		/// <summary>

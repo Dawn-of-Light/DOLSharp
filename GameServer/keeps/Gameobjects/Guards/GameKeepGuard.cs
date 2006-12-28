@@ -300,13 +300,6 @@ namespace DOL.GS.Keeps
 				}
 
 				base.StartAttack(TargetObject);
-
-
-				if (ActiveWeaponSlot == eActiveWeaponSlot.Distance)
-				{
-					if (IsMoving)
-						StopFollow();
-				}
 			}
 		}
 

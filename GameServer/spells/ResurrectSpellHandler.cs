@@ -36,6 +36,12 @@ namespace DOL.GS.Spells
 		// constructor
 		public ResurrectSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
 
+		public override void FinishSpellCast(GameLiving target)
+		{
+			m_caster.Mana -= CalculateNeededPower(target);
+			base.FinishSpellCast(target);
+		}
+
 		/// <summary>
 		/// execute non duration spell effect on target
 		/// </summary>
@@ -112,7 +118,12 @@ namespace DOL.GS.Spells
 				else
 				{
 					if (response == 1) ResurrectLiving(player); //accepted
-					else player.Out.SendMessage("You decline to be resurrected.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					else
+					{
+						player.Out.SendMessage("You decline to be resurrected.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						//refund mana
+						m_caster.Mana += CalculateNeededPower(player);
+					}
 				}
 			}
 			player.TempProperties.removeProperty(RESURRECT_CASTER_PROPERTY);
@@ -126,8 +137,6 @@ namespace DOL.GS.Spells
 		{
 			if (m_caster.ObjectState != GameObject.eObjectState.Active) return;
 			if (m_caster.CurrentRegionID != living.CurrentRegionID) return;
-
-			m_caster.Mana -= CalculateNeededPower(living);
 
 			living.Health = living.MaxHealth * m_spell.ResurrectHealth / 100;
 			living.Mana = living.MaxMana * m_spell.ResurrectMana / 100;

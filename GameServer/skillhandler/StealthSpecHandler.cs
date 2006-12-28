@@ -92,8 +92,7 @@ namespace DOL.GS.SkillHandler
 				}
 
 				// Check if enemy player is close
-				foreach (GamePlayer ply in 
-					player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+				foreach (GamePlayer ply in player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 				{
 					if (ply.ObjectState != GameObject.eObjectState.Active) continue;
 

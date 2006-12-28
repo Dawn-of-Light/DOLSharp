@@ -107,7 +107,7 @@ namespace DOL.GS.Scripts
 			long totalCost = restorePoints * cost;
 			if (player.RemoveMoney(totalCost))
 			{
-				player.Out.SendMessage("You give " + player.TargetObject.Name + " a donation of " + Money.GetString(totalCost), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage("You give " + this.Name + " a donation of " + Money.GetString(totalCost), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				player.TotalConstitutionLostAtDeath -= restorePoints;
 				player.Out.SendCharStatsUpdate();
 			}

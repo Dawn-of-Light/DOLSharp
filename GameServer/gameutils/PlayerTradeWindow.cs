@@ -518,6 +518,8 @@ namespace DOL.GS
 
 					foreach(InventoryItem item in ownerTradeItems)
 					{
+						if (m_owner.Guild != partner.Guild)
+							item.Emblem = 0;
 						if (!partner.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, item))
 							if (log.IsWarnEnabled)
 								log.Warn("Item was not added to first free slot. Player="+partner.Name+"; Item="+item.Id_nb);
@@ -526,6 +528,8 @@ namespace DOL.GS
 					}
 					foreach(InventoryItem item in partnerTradeItems)
 					{
+						if (m_owner.Guild != partner.Guild)
+							item.Emblem = 0;
 						if (!m_owner.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, item))
 							if (log.IsWarnEnabled)
 								log.Warn("Item was not added to first free slot. Player="+m_owner.Name+"; Item="+item.Id_nb);

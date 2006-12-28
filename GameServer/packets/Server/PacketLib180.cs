@@ -189,7 +189,7 @@ namespace DOL.GS.PacketHandler
 
 			SendTCP(pak);
 
-			if (GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvP)
+			//if (GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvP)
 				SendObjectGuildID(playerToCreate, playerToCreate.Guild); //used for nearest friendly/enemy object buttons and name colors on PvP server
 
 			/*

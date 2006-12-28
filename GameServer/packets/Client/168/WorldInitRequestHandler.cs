@@ -164,7 +164,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				// Visual 0x4C - Color Name style (0 0 5 0 0 0 0 0) for RvR or (0 0 5 1 0 0 0 0) for PvP
 				// 0xBE - 0 1 0 0
 				//used only on PvP, sets THIS players ID for nearest friend/enemy buttons and "friendly" name colors
-				if (GameServer.ServerRules.GetColorHandling(player.Client) == 1) // PvP
+				//if (GameServer.ServerRules.GetColorHandling(player.Client) == 1) // PvP
 					player.Out.SendObjectGuildID(player, player.Guild);
 				player.Out.SendDebugMode(player.TempProperties.getObjectProperty(GamePlayer.DEBUG_MODE_PROPERTY, null) != null);
 				player.Out.SendUpdateMaxSpeed(); // Speed in debug mode ?

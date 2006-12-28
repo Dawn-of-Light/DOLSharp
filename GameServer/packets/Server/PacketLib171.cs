@@ -178,7 +178,7 @@ namespace DOL.GS.PacketHandler
 			pak.WriteByte(0x00);
 			SendTCP(pak);
 
-			if (GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvP)
+			//if (GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvP)
 			{
 				IControlledBrain brain = npc.Brain as IControlledBrain;
 				if (brain != null)
