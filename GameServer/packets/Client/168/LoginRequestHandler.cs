@@ -238,7 +238,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 							// save player infos
 							playerAccount.LastLogin = DateTime.Now;
 							playerAccount.LastLoginIP = ipAddress;
-
+							if (playerAccount.Language == null || playerAccount.Language == "")
+								playerAccount.Language = ServerProperties.Properties.SERV_LANGUAGE;
+							
 							GameServer.Database.SaveObject(playerAccount);
 						}
 
