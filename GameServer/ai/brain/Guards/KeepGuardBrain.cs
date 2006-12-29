@@ -25,6 +25,10 @@ namespace DOL.AI.Brain
 		/// </summary>
 		public override void Think()
 		{
+			if (guard == null)
+				guard = Body as GameKeepGuard;
+			if (guard == null)
+				Stop();
 			CheckPlayerAggro();
 			CheckNPCAggro();
 
