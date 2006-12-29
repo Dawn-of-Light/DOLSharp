@@ -250,6 +250,18 @@ namespace DOL.GS.ServerProperties
 		public static readonly int FREELEVEL_DAYS;
 
 		/// <summary>
+		/// Server Language
+		/// </summary>
+		[ServerProperty("server_language", "Language of your server. It can be EN, FR or DE.", "EN")]
+		public static readonly string SERV_LANGUAGE;
+
+		/// <summary>
+		/// allow_change_language
+		/// </summary>
+		[ServerProperty("allow_change_language", "Should we allow clients to change their language ?", true)]
+		public static readonly bool ALLOW_CHANGE_LANGUAGE;
+		
+		/// <summary>
 		/// This method loads the property from the database and returns
 		/// the value of the property as strongly typed object based on the
 		/// type of the default value

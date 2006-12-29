@@ -37,7 +37,7 @@ using DOL.GS.Scripts;
 using DOL.GS.ServerRules;
 using DOL.GS.ServerProperties;
 using DOL.Config;
-
+using DOL.Language;
 using log4net;
 using log4net.Config;
 using log4net.Core;
@@ -553,7 +553,7 @@ namespace DOL
 
 				//---------------------------------------------------------------
 				//Try to start the Language Manager
-				if (!InitComponent(LanguageMgr.Initialize(), "Multi Language Initialization"))
+				if (!InitComponent(DOL.Language.LanguageMgr.Init(), "Multi Language Initialization"))
 					return false;
 
 				//Init the mail manager
