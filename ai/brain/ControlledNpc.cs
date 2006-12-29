@@ -40,6 +40,10 @@ namespace DOL.AI.Brain
 		public static readonly short MIN_ENEMY_FOLLOW_DIST = 90;
 		public static readonly short MAX_ENEMY_FOLLOW_DIST = 512;
 
+		private int m_tempX = 0;
+		private int m_tempY = 0;
+		private int m_tempZ = 0;
+
 		/// <summary>
 		/// Holds the controlling player of this brain
 		/// </summary>
@@ -48,18 +52,19 @@ namespace DOL.AI.Brain
 		/// <summary>
 		/// Holds the walk state of the brain
 		/// </summary>
-		private eWalkState          m_walkState;
+		private eWalkState m_walkState;
 
 		/// <summary>
 		/// Holds the aggression level of the brain
 		/// </summary>
-		private eAggressionState    m_aggressionState;
+		private eAggressionState m_aggressionState;
 
 		/// <summary>
 		/// Constructs new controlled npc brain
 		/// </summary>
 		/// <param name="owner"></param>
-		public ControlledNpc(GamePlayer owner) : base()
+		public ControlledNpc(GamePlayer owner)
+			: base()
 		{
 			if (owner == null)
 				throw new ArgumentNullException("owner");
@@ -122,7 +127,13 @@ namespace DOL.AI.Brain
 				m_aggressionState = value;
 				m_orderAttackTarget = null;
 				if (m_aggressionState == eAggressionState.Passive)
+				{
 					ClearAggroList();
+					if (WalkState == eWalkState.Follow)
+						Body.Follow(Body, MIN_OWNER_FOLLOW_DIST, MAX_OWNER_FOLLOW_DIST);
+					else if (m_tempX > 0 && m_tempY > 0 && m_tempZ > 0)
+						Body.WalkTo(m_tempX, m_tempY, m_tempZ, Body.MaxSpeed);
+				}
 				AttackMostWanted();
 				UpdatePetWindow();
 			}
@@ -155,6 +166,9 @@ namespace DOL.AI.Brain
 		/// </summary>
 		public void Stay()
 		{
+			m_tempX = Body.X;
+			m_tempY = Body.Y;
+			m_tempZ = Body.Z;
 			WalkState = eWalkState.Stay;
 			Body.StopFollow();
 		}
@@ -164,6 +178,9 @@ namespace DOL.AI.Brain
 		/// </summary>
 		public void ComeHere()
 		{
+			m_tempX = Body.X;
+			m_tempY = Body.Y;
+			m_tempZ = Body.Z;
 			WalkState = eWalkState.ComeHere;
 			Body.StopFollow();
 			Body.WalkTo(Owner, Body.MaxSpeed);
@@ -175,6 +192,9 @@ namespace DOL.AI.Brain
 		/// <param name="target"></param>
 		public void Goto(GameObject target)
 		{
+			m_tempX = Body.X;
+			m_tempY = Body.Y;
+			m_tempZ = Body.Z;
 			WalkState = eWalkState.GoTarget;
 			Body.StopFollow();
 			Body.WalkTo(target, Body.MaxSpeed);
@@ -236,10 +256,10 @@ namespace DOL.AI.Brain
 		/// </summary>
 		public override void Think()
 		{
-			if (!Owner.CurrentUpdateArray[Body.ObjectID-1])
+			if (!Owner.CurrentUpdateArray[Body.ObjectID - 1])
 			{
 				Owner.Out.SendObjectUpdate(Body);
-				Owner.CurrentUpdateArray[Body.ObjectID-1] = true;
+				Owner.CurrentUpdateArray[Body.ObjectID - 1] = true;
 			}
 
 			if (!WorldMgr.CheckDistance(Body, Owner, MAX_OWNER_FOLLOW_DIST))
@@ -343,8 +363,11 @@ namespace DOL.AI.Brain
 			{
 				if (Body.AttackState)
 					Body.StopAttack();
+
 				if (WalkState == eWalkState.Follow)
 					FollowOwner();
+				else if (m_tempX > 0 && m_tempY > 0 && m_tempZ > 0)
+					Body.WalkTo(m_tempX, m_tempY, m_tempZ, Body.MaxSpeed);
 			}
 		}
 

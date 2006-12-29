@@ -1037,6 +1037,17 @@ namespace DOL.GS
 					m_attackAction.Start(1);// schedule for next tick
 				}
 			}
+			//sirru
+			else if (m_attackers.Count == 0 && this.Spells.Count > 0 && this.TargetObject != null && GameServer.ServerRules.IsAllowedToAttack(this, (this.TargetObject as GameLiving), true))
+			{
+				m_lastAttackTick = m_CurrentRegion.Time;
+				if (this.CurrentRegion.Time - LastAttackedByEnemyTick > 10 * 1000)
+				{
+					if (StartSpellAttack(this.TargetObject))
+						return;
+				}
+			}
+
 		}
 
 		/// <summary>
@@ -2781,6 +2792,8 @@ namespace DOL.GS
 			set { m_abilities = value; }
 		}
 
+		private RegionTimer m_retrySpellAttackTimer = null;
+
 		/// <summary>
 		/// start to cast spell attack in continue until takken melee damage
 		/// </summary>
@@ -2798,14 +2811,51 @@ namespace DOL.GS
 					if (spell.SpellType == "DirectDamage" || spell.SpellType == "Lifedrain")
 					{
 						this.TargetObject = attackTarget;
-						TurnTo(this.TargetObject);
-						SpellLine spellline = SkillBase.GetSpellLine(GlobalSpellsLines.Mob_Spells);
-						this.CastSpell(spell, spellline);
+
+						if (WorldMgr.GetDistance(this, attackTarget) > spell.Range)
+						{
+							Follow(attackTarget, 1000, 5000);
+							StartRetrySpellAttackTimer();
+						}
+						else
+						{
+							StopRetrySpellAttackTimer();
+							StopMoving();
+							TurnTo(this.TargetObject);
+							SpellLine spellline = SkillBase.GetSpellLine(GlobalSpellsLines.Mob_Spells);
+							this.CastSpell(spell, spellline);
+						}
 						return true;
 					}
 				}
 			}
 			return false;
+		}
+
+		private void StartRetrySpellAttackTimer()
+		{
+			if (m_retrySpellAttackTimer == null)
+			{
+				m_retrySpellAttackTimer = new RegionTimer(this);
+				m_retrySpellAttackTimer.Interval = 500;
+				m_retrySpellAttackTimer.Callback = new RegionTimerCallback(RetrySpellAttackCallback);
+				m_retrySpellAttackTimer.Start(500);
+			}
+		}
+
+		private void StopRetrySpellAttackTimer()
+		{
+			if (m_retrySpellAttackTimer != null && m_retrySpellAttackTimer.IsAlive)
+			{
+				m_retrySpellAttackTimer.Stop();
+				m_retrySpellAttackTimer = null;
+			}
+		}
+
+		protected virtual int RetrySpellAttackCallback(RegionTimer callingTimer)
+		{
+			StartAttack(this.TargetObject);
+			return callingTimer.Interval;
 		}
 
 		/// <summary>
