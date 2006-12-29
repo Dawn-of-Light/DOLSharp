@@ -1,0 +1,42 @@
+# Language file for DOL
+# Language used : ENGLISH
+#
+# #-Beginning and Empty lines are ignored
+# TABS are ignored at the left of ':' too.
+# {0} etc. are for args, don't remove them !
+
+# LANGUAGEMGR
+System.LanguagesName.English:				English
+System.LanguagesName.French:				French
+System.LanguagesName.German:				German
+
+# SYSTEM
+System.NoSense:								That would make no sense!
+
+# GAMEPLAYER
+GamePlayer.SendReceive.sends:				 sends, 
+
+# HOUSING
+HouseEnterLeave.TooFarAway:					You are too far away to enter house {0}.
+HouseEnterLeave.CantEnter:					You can't enter house {0}.
+HousingDecorationRotate.Rotated:			Interior decoration rotated from {0} degrees to {1} degrees.
+HousingPickupItemHandler.GardenRemoved:		Garden object removed.
+HousingPickupItemHandler.PickUp:			You get {0} and put it in your backpack.
+HousingPlaceItemHandler.30objects:			You have already placed 30 objects. You can't place more.
+HousingPlaceItemHandler.40objects:			You have already placed 40 objects. You can't place more.
+HousingPlaceItemHandler.CantFloor:			This object can't be placed on the floor !
+HousingPlaceItemHandler.CantWall:			This object can't be placed on a wall !
+HousingPlaceItemHandler.DropOnFloor:		You drop the {0} onto the floor of your house !
+HousingPlaceItemHandler.DropOnGarden:		You drop the {0} onto your garden !
+HousingPlaceItemHandler.DropOnWall:			You drop the {0} onto the wall of your house !
+HousingPlaceItemHandler.GardenObjectPlaced:	Garden Object placed. {0} slots remaining.
+HousingPlaceItemHandler.HasPorch:			This house already has a porch !
+HousingPlaceItemHandler.HasNoPorch:			This house has no porch !
+HousingPlaceItemHandler.IndoorObjectPlaced:	Indoor Object placed. {0} slots remaining.
+HousingPlaceItemHandler.NoHookpoint:		No hookpoints now !
+HousingPlaceItemHandler.PutMoney:			You put money in your house.
+
+# SCRIPTS
+# /Language
+Scripts.Players.Language.Set:				You changes server display language to {0}.
+Scripts.Players.Language.Current:			Your language is actually set to: {0}.

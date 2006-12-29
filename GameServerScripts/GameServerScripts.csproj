@@ -334,6 +334,7 @@
     <Compile Include="playercommands\housepoints.cs" />
     <Compile Include="playercommands\freelevel.cs" />
     <Compile Include="playercommands\boot.cs" />
+    <Compile Include="playercommands\language.cs" />
     <Compile Include="playercommands\quest.cs" />
     <Compile Include="playercommands\disband.cs">
       <SubType>Code</SubType>

@@ -40,7 +40,8 @@ namespace DOL
 			private int m_state;
 			private String m_mail;
 			private string m_lastLoginIP;
-
+			private string m_language;
+			
 			private static bool m_autoSave;
 
 			/// <summary>
@@ -53,7 +54,6 @@ namespace DOL
 				m_creationDate = DateTime.Now;
 				m_plvl = 1;
 				m_realm = 0;
-
 				//m_autoSave = true;
 				m_autoSave = false;
 			}
@@ -203,6 +203,16 @@ namespace DOL
 				set { m_lastLoginIP = value; }
 			}
 
+			/// <summary>
+			/// The player language
+			/// </summary>
+			[DataElement(AllowDbNull = true)]
+			public string Language
+			{
+				get { return m_language; }
+				set { m_language = value; }
+			}
+			
 			/// <summary>
 			/// List of charcter the account own
 			/// </summary>

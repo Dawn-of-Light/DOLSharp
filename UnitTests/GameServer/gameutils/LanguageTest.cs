@@ -19,6 +19,7 @@
 using System;
 using DOL;
 using DOL.GS;
+using DOL.Language;
 using NUnit.Framework;
 
 namespace DOL.Tests
@@ -31,7 +32,7 @@ namespace DOL.Tests
 		}
 		[Test]
 		public void TestGetString()
-		{
+		{/*
 			Console.WriteLine("TestGetString();");
 			Console.WriteLine(LanguageMgr.GetString("test","fail default string"));
 			Console.WriteLine(LanguageMgr.GetString("test2","fail default string2"));
@@ -39,7 +40,7 @@ namespace DOL.Tests
 			Console.WriteLine(LanguageMgr.GetString("test3","defaultstring test3 succeed"));
 			
 			Console.WriteLine(LanguageMgr.GetString("testscript","fail default string"));
-			Console.WriteLine(LanguageMgr.GetString("test.script2","fail default string"));
+			Console.WriteLine(LanguageMgr.GetString("test.script2","fail default string"));*/
 		}
 	}
 }
