@@ -39,7 +39,7 @@ using DOL.GS.SkillHandler;
 using DOL.GS.PacketHandler;
 using DOL.GS.Spells;
 using DOL.GS.Styles;
-
+using DOL.Language;
 using log4net;
 
 namespace DOL.GS
@@ -7057,7 +7057,7 @@ namespace DOL.GS
 				type = eChatType.CT_Staff;
 
 			if (GameServer.ServerRules.IsAllowedToUnderstand(source, this))
-				Out.SendMessage(source.Name + LanguageMgr.GetString("GamePlayer.SendReceive.sends", " sends, ") + "\"" + str + "\"", type, eChatLoc.CL_ChatWindow);
+				Out.SendMessage(source.Name + LanguageMgr.GetTranslation(Client, "GamePlayer.SendReceive.sends") + "\"" + str + "\"", type, eChatLoc.CL_ChatWindow);
 			else
 			{
 				Out.SendMessage(source.Name + " sends something in a language you don't understand.", eChatType.CT_Send, eChatLoc.CL_ChatWindow);
@@ -7073,7 +7073,7 @@ namespace DOL.GS
 				}
 				else
 				{
-					source.Out.SendMessage("<AFK> " + Name + " sends, " + "\"" + afkmessage + "\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
+					source.Out.SendMessage("<AFK> " + Name + LanguageMgr.GetTranslation(Client, "GamePlayer.SendReceive.sends") + "\"" + afkmessage + "\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
 				}
 			}
 

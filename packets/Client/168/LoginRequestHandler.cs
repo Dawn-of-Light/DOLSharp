@@ -185,7 +185,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 								playerAccount.CreationDate = DateTime.Now;
 								playerAccount.LastLogin = DateTime.Now;
 								playerAccount.LastLoginIP = ipAddress;
-
+								playerAccount.Language = ServerProperties.Properties.SERV_LANGUAGE;
+								
 								if(GameServer.Database.GetObjectCount(typeof (Account)) == 0)
 								{
 									playerAccount.PrivLevel = 3;
