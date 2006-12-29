@@ -258,7 +258,7 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// allow_change_language
 		/// </summary>
-		[ServerProperty("allow_change_language", "Should we allow clients to change their language ?", true)]
+		[ServerProperty("allow_change_language", "Should we allow clients to change their language ?", false)]
 		public static readonly bool ALLOW_CHANGE_LANGUAGE;
 		
 		/// <summary>
