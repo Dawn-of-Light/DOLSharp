@@ -730,6 +730,7 @@ namespace DOL.GS
 			{
 				Hashtable changedSlots = new Hashtable(); // value: <0 = new item count; >0 = add to old
 				bool fits = false;
+				int itemcount = count;
 				eInventorySlot i = minSlot;
 
 				// fill the gaps in existing stacks
@@ -807,7 +808,7 @@ namespace DOL.GS
 					{
 						InventoryItem item = new InventoryItem(template);
 						item.Count = -value;
-						item.Weight *= -value;
+						item.Weight = (template.Weight / itemcount) * -value;
 						AddItem((eInventorySlot)slot, item);
 					}
 				}

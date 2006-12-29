@@ -4938,7 +4938,7 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 					((GameLiving)obj).EnemyKilled(this);
 
 			CancelAllConcentrationEffects();
-			EffectList.CancelAll();
+			//EffectList.CancelAll();
 			StopHealthRegeneration();
 			StopPowerRegeneration();
 			StopEnduranceRegeneration();
