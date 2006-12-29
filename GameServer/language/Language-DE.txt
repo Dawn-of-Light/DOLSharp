@@ -1,0 +1,37 @@
+# Language file for DOL
+# Language used : GERMAN / DEUTSCH
+#
+# #-Beginning and Empty lines are ignored
+# TABS are ignored at the left of ':' too.
+# {0} etc. are for args, don't remove them !
+
+# LANGUAGEMGR
+System.LanguagesName.English:				Englisch
+System.LanguagesName.French:				Französisch
+System.LanguagesName.German:				Deutsch
+
+# SYSTEM
+System.NoSense:								Das würde keinen Sinn machen!
+
+# GAMEPLAYER
+GamePlayer.SendReceive.sends:				 sendet, 
+
+# HOUSING
+HousingPlaceItemHandler.30objects:			Du kannst hier nicht mehr als 30 Objekte aufstellen!
+HousingPlaceItemHandler.40objects:			Du kannst hier nicht mehr als 40 Objekte aufstellen!
+HousingPlaceItemHandler.CantFloor:			Du kannst das nicht auf den Boden stellen!
+HousingPlaceItemHandler.CantWall:			Du kannst das nicht an die Wand hängen!
+HousingPlaceItemHandler.DropOnFloor:		Du stellst {0} auf den Boden deines Hauses.
+HousingPlaceItemHandler.DropOnGarden:		Du stellst {0} in deinen Garten.
+HousingPlaceItemHandler.DropOnWall:			Du hängst {0} an die Wand.
+HousingPlaceItemHandler.GardenObjectPlaced:	Gartenobjekt aufgestellt. {0} freie Plätze verbleibend.
+HousingPlaceItemHandler.HasPorch:			Dieses Haus hat eine Veranda.
+HousingPlaceItemHandler.HasNoPorch:			Dieses Haus hat keine Veranda.
+HousingPlaceItemHandler.IndoorObjectPlaced:	Inneneinrichtung aufgestellt. {0} freie Plätze verbleidend.
+HousingPlaceItemHandler.NoHookpoint:		Kein Hookpoint vorhanden.
+HousingPlaceItemHandler.PutMoney:			Du leistest eine Anzahlung auf dein Haus.
+
+
+# SCRIPTS
+# /Language
+Scripts.Players.Language.Set:				Du änderst die vom Server angezeigte Sprache zu {0}.

@@ -1,0 +1,42 @@
+# Language file for DOL
+# Language used : FRENCH / FRANCAIS
+#
+# #-Beginning and Empty lines are ignored
+# TABS are ignored at the left of ':' too.
+# {0} etc. are for args, don't remove them !
+
+# LANGUAGEMGR
+System.LanguagesName.English:				Anglais
+System.LanguagesName.French:				Français
+System.LanguagesName.German:				Allemand
+
+# SYSTEM
+System.NoSense:								Cela n'a aucun sens !
+
+# GAMEPLAYER
+GamePlayer.SendReceive.sends:				 envoie, 
+
+# HOUSING
+HouseEnterLeave.TooFarAway:					Vous êtes trop loin pour entrer dans la maison {0}.
+HouseEnterLeave.CantEnter:					Vous ne pouvez pas entrer dans la maison {0}.
+HousingDecorationRotate.Rotated:			Objet d'interieur pivoté de {0} degrés à {1} degrés.
+HousingPickupItemHandler.GardenRemoved:		Objet de jardin retiré.
+HousingPickupItemHandler.PickUp:			Vous mettez {0} dans votre inventaire.
+HousingPlaceItemHandler.30objects:			Vous avez déjà placé 30 objets. Vous ne pouvez pas en placer plus.
+HousingPlaceItemHandler.40objects:			Vous avez déjà placé 40 objets. Vous ne pouvez pas en placer plus.
+HousingPlaceItemHandler.CantFloor:			Cet objet ne peut pas être placé sur le sol !
+HousingPlaceItemHandler.CantWall:			Cet objet ne peut pas être placé sur un mur !
+HousingPlaceItemHandler.DropOnFloor:		Vous déposez l'objet {0} sur le sol de votre maison.
+HousingPlaceItemHandler.DropOnGarden:		Vous déposez l'objet {0} dans votre jardin.
+HousingPlaceItemHandler.DropOnWall:			Vous déposez l'objet {0} sur le mur de votre maison.
+HousingPlaceItemHandler.GardenObjectPlaced:	Objet de jardin placé. {0} places restantes.
+HousingPlaceItemHandler.HasPorch:			Cette maison a déjà un porche !
+HousingPlaceItemHandler.HasNoPorch:			Cette maison n'a pas de porche !
+HousingPlaceItemHandler.IndoorObjectPlaced:	Objet interieur placé. {0} places restantes.
+HousingPlaceItemHandler.NoHookpoint:		Plus de point d'ancrage maintenant !
+HousingPlaceItemHandler.PutMoney:			Vous déposez de l'argent sur le compte de votre maison.
+
+# SCRIPTS
+# /Language
+Scripts.Players.Language.Set:				Vous changez la langue d'affichage du serveur en {0}.
+Scripts.Players.Language.Current:			La langue d'affichage est actuellement: {0}.

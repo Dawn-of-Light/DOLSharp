@@ -572,6 +572,7 @@
     <Compile Include="keeps\Managers\Spell Manager.cs" />
     <Compile Include="keeps\Relics\GameRelic.cs" />
     <Compile Include="keeps\Relics\GameRelicPad.cs" />
+    <Compile Include="language\LanguageMgr.cs" />
     <Compile Include="packets\Client\168\BadNameCheckRequestHandler.cs" />
     <Compile Include="packets\Client\168\BuyHookPointHandler.cs" />
     <Compile Include="packets\Client\168\CharacterDeleteRequestHandler.cs" />
@@ -798,9 +799,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="gameutils\ITradeWindow.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameutils\LanguageMgr.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="gameutils\LootGeneratorBase.cs">
@@ -1775,11 +1773,15 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="language\Language-DE.txt" />
+    <Content Include="language\Language-EN.txt" />
+    <Content Include="language\Language-FR.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PostBuildEvent>xcopy "$(ProjectDir)\language\*.txt" "$(SolutionDir)\$(ConfigurationName)\languages" /y /s /q /i</PostBuildEvent>
   </PropertyGroup>
 </Project>
