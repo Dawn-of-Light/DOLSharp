@@ -495,9 +495,12 @@ namespace DOL.GS
 			IList list = base.GetExamineMessages(player);
 			list.Add("You examine " + GetName(0, false) + ".  " + GetPronoun(0, true) + " is " + GetAggroLevelString(player, false) + " and is a merchant.");
 			string text = "";
-			if (moneyItem == null || moneyItem.Item == null)
+			if (moneyItem == null || moneyItem.Item == null || m_countText == null || m_countText == "")
 				text = "nothing";
-			else text = moneyItem.Item.Name;
+			else
+			{
+				text = m_countText;
+			}
 			list.Add("You can buy items here for " + text + ".");
 			list.Add("[Right click to display a shop window]");
 			return list;
@@ -572,8 +575,8 @@ namespace DOL.GS
 		public GameDiamondSealsMerchant()
 			: base()
 		{
-			m_moneyItem = GameInventoryItem.CreateFromTemplate("dias");
-			m_countText = "units of diamond";
+			m_moneyItem = GameInventoryItem.CreateFromTemplate("DiamondSeal");
+			m_countText = "diamond seals";
 		}
 	}
 
@@ -582,8 +585,8 @@ namespace DOL.GS
 		public GameSapphireSealsMerchant()
 			: base()
 		{
-			m_moneyItem = GameInventoryItem.CreateFromTemplate("saphir");
-			m_countText = "units of sapphire";
+			m_moneyItem = GameInventoryItem.CreateFromTemplate("SapphireSeal");
+			m_countText = "sapphire seals";
 		}
 
 	}
@@ -593,8 +596,8 @@ namespace DOL.GS
 		public GameEmeraldSealsMerchant()
 			: base()
 		{
-			m_moneyItem = GameInventoryItem.CreateFromTemplate("smaras");
-			m_countText = "units of emerald";
+			m_moneyItem = GameInventoryItem.CreateFromTemplate("EmeraldSeal");
+			m_countText = "emerald seals";
 		}
 	}
 
