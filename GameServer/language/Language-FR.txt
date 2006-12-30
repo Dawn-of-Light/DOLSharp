@@ -15,6 +15,23 @@ System.NoSense:								Cela n'a aucun sens !
 
 # GAMEPLAYER
 GamePlayer.SendReceive.sends:				 envoie, 
+GamePlayer.Quit.CantQuitDead:				Vous ne pouvez pas quitter maintenant, vous êtes mort !  Tapez '/release' pour réssusciter.
+GamePlayer.Quit.CantQuitMount:				Vous devez descendre de votre monture avant de quitter.
+GamePlayer.Quit.CantQuitStanding:			Vous devez êtes immobile pour quitter.
+GamePlayer.Quit.CantQuitCrafting:			Vous ne pouvez pas quitter pendant une fabrication.
+GamePlayer.Quit.RecentlyInCombat:			Vous étiez récemment en combat, vous devez attendre plus longtemps pour quitter.
+GamePlayer.Quit.YouWillQuit:				Vous quitterez en restant assis après {0} secondes.  Tapez '/stand' ou bougez pour ne pas quitter.
+GamePlayer.Release.NotDead:					Vous n'êtes pas mort !
+GamePlayer.Release.CantReleaseDuel:			You can't alter your release on a duel death!
+GamePlayer.Release.NoLongerReleaseAuto:		Vous ne réssusciterez plus automatiquement ({0} secondes restantes)
+GamePlayer.Release.WillReleaseAuto:			Vous réssusciterez automatiquement dans {0} secondes!
+GamePlayer.Release.WillReleaseAutoCity:		Vous réssusciterez automatiquement a la ville dans {0} secondes!
+GamePlayer.Release.YouRelease:				Vous ramenez votre corps à la vie !
+GamePlayer.Release.GraveErected:			Une pierre tombale a été érigée a l'endroit de votre mort.
+GamePlayer.Release.ReturnToPray:			Retournez prier sur votre tombe (/pray) pour regagner de l'explérience.
+GamePlayer.Release.LostConstitution:		Vous avez perdu un peu de constitution, allez voir un guérisseur pour la restaurer.
+GamePlayer.Release.SurroundingChange:		Votre environnement change subitement.
+GamePlayer.Release.NoValidBindpoint:		You have no valid bindpoint! Releasing here instead!
 
 # HOUSING
 HouseEnterLeave.TooFarAway:					Vous êtes trop loin pour entrer dans la maison {0}.
