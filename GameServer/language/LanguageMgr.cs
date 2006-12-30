@@ -10,10 +10,14 @@ namespace DOL.Language
 {
 	public class LanguageMgr
 	{
-		public static string[] Langs_str;
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		// All the sentences, by language
 		private static Hashtable[] LangsSentences;
-		public enum Langs : byte
+		
+		// Optimisation, instead of read all the hastable to find the language, we have a table with ShortName->Langs
+		private static Hashtable m_NameToLangs;
+		
+		public enum Langs : byte 
 		{
 			EN = 0,
 			FR = 1,
@@ -21,94 +25,110 @@ namespace DOL.Language
 			Langs_size
 		};
 
-		public static string LangsToCompleteName(GameClient client, Langs LangToConvert)
-		{
-			switch (LangToConvert)
-			{
-				case Langs.EN: return GetTranslation(client, "System.LanguagesName.English");
-				case Langs.FR: return GetTranslation(client, "System.LanguagesName.French");
-				case Langs.DE: return GetTranslation(client, "System.LanguagesName.German");
-				default: return GetTranslation(client, "System.LanguagesName.English");
-			}
-		}
-		public static string LangsToName(Langs l)
-		{
-			switch (l)
-			{
-				case Langs.EN: return "EN";
-				case Langs.FR: return "FR";
-				case Langs.DE: return "DE";
-				default: return "EN";
-			}
-		}
-		public static Langs NameToLangs(string l)
-		{
-			switch (l)
-			{
-				case "EN": return Langs.EN;
-				case "FR": return Langs.FR;
-				case "DE": return Langs.DE;
-				default: return Langs.EN;
-			}
-		}
-		public static bool Init()
+		private static bool LoadLanguage(Langs l, string abrev, string longname)
 		{
 			string[] lines;
-			LangsSentences = new Hashtable[(int)Langs.Langs_size];
-			for (int i = 0; i < (int)Langs.Langs_size; i++)
+			string FilePath = ".\\Languages\\Language-";
+			FilePath += abrev;
+			FilePath += ".txt";
+			LangsSentences[(int)l] = new Hashtable();
+			if (!File.Exists(FilePath))
 			{
-				string FilePath = ".\\Languages\\Language-";
-				FilePath += LangsToName((Langs)i);
-				FilePath += ".txt";
-				LangsSentences[i] = new Hashtable();
-				if (!File.Exists(FilePath))
+				log.Error("Language file : " + FilePath + " not found !");
+				if (DOL.GS.ServerProperties.Properties.SERV_LANGUAGE == abrev)
 				{
-					log.Warn("Language file : " + FilePath + " not found !");
-					if (DOL.GS.ServerProperties.Properties.SERV_LANGUAGE == LangsToName((Langs)i))
-					{
-						log.Error("Default Language file : " + FilePath + " missing !! Server can't start without !");
-						return false;
-					}
-					continue;
+					log.Error("Default Language file : " + FilePath + " missing !! Server can't start without !");
+					return false;
 				}
-				lines = File.ReadAllLines(FilePath, Encoding.GetEncoding(1252));
-
-				IList textList = new ArrayList(lines);
-				foreach (string line in textList)
-				{
-					if (line.StartsWith("#"))
-						continue;
-					if (line.IndexOf(':') == -1)
-						continue;
-					string[] splitted = new string[2];
-					splitted[0] = line.Substring(0, line.IndexOf(':'));
-					splitted[1] = line.Substring(line.IndexOf(':') + 1);
-
-					splitted[1] = splitted[1].Replace("\t", "");
-					log.Debug("Index : " + splitted[0] + " sentence : '" + splitted[1] + "'");
-					LangsSentences[i][splitted[0]] = splitted[1];
-				}
+				return false;
 			}
+			lines = File.ReadAllLines(FilePath, Encoding.GetEncoding(1252));
+
+			IList textList = new ArrayList(lines);
+			foreach (string line in textList)
+			{
+				if (line.StartsWith("#"))
+					continue;
+				if (line.IndexOf(':') == -1)
+					continue;
+				string[] splitted = new string[2];
+				splitted[0] = line.Substring(0, line.IndexOf(':'));
+				splitted[1] = line.Substring(line.IndexOf(':') + 1);
+
+				splitted[1] = splitted[1].Replace("\t", "");
+				log.Debug("Index : " + splitted[0] + " sentence : '" + splitted[1] + "'");
+				LangsSentences[(int)l][splitted[0]] = splitted[1];
+			}
+			// Now we can set the short/long name
+			LangsSentences[(int) l]["SHORT_NAME"] = abrev;
+			// long name must be in english !
+			LangsSentences[(int)l]["LONG_NAME"] = longname;
+			m_NameToLangs[abrev] = l;
+			return true;
+		}
+		
+		public static bool Init()
+		{
+			LangsSentences = new Hashtable[(int)Langs.Langs_size];
+			m_NameToLangs = new Hashtable();
+			
+			// Here you can add new languages, just add the Langs too.
+			// Full name must be in english !
+			LoadLanguage(Langs.EN, "EN", "English");
+			LoadLanguage(Langs.FR, "FR", "French");
+			LoadLanguage(Langs.DE, "DE", "German");
+			
 			return true;
 		}
 
-		public static string GetTranslation(GameClient client, string TranslationID)
+		public static Langs NameToLangs(string abrev)
 		{
-			Langs ServerLanguage = NameToLangs(client.Account.Language);
+			if (m_NameToLangs[abrev] == null)
+				return (Langs) m_NameToLangs["EN"]; // English default
+			return (Langs)m_NameToLangs[abrev];
+		}
 
+		public static string LangsToName(Langs l)
+		{
+			return (string)LangsSentences[(int)l]["SHORT_NAME"];
+		}
+
+		public static string LangsToCompleteName(GameClient c, Langs l)
+		{
+			string ID = (string)LangsSentences[(int) l]["LONG_NAME"];
+			return GetTranslation(c, "System.LanguagesName." + ID);
+		}
+		
+		public static string GetTranslation(string lang, string TranslationID, params object [] args)
+		{
+			Langs Language = NameToLangs(lang);
 			//log.Debug("Translation requested: " + TranslationID);
-			string translated = (string)LangsSentences[(int)ServerLanguage][TranslationID];
-			if (translated == null)
+			string translated = (string)LangsSentences[(int)Language][TranslationID];
+			if (translated == null && lang != DOL.GS.ServerProperties.Properties.SERV_LANGUAGE)
 			{
 				translated = (string)LangsSentences[(int)NameToLangs(DOL.GS.ServerProperties.Properties.SERV_LANGUAGE)][TranslationID];
-				log.Warn("Warning Tanslation ID : " + TranslationID + " doesn't exists in language " + client.Account.Language);
-			} 
+				log.Warn("Warning Tanslation ID : " + TranslationID + " doesn't exists in language : " + lang);
+			}
+			if (translated == null && lang != "EN")
+			{
+				translated = (string)LangsSentences[(int)NameToLangs("EN")][TranslationID];
+				log.Warn("Warning Tanslation ID : " + TranslationID + " doesn't exists in language : English");
+			}
 			if (translated == null)
 			{
 				translated = "Error during translation, contact your shard admin with error name : '" + TranslationID + "'";
 				log.Error("Error during translation with  ID : " + TranslationID);
 			}
+			else
+			{
+				translated = string.Format(translated, args);
+			}
 			return translated;
+		}
+
+		public static string GetTranslation(GameClient client, string TranslationID, params object[] args)
+		{
+			return GetTranslation(client.Account.Language, TranslationID, args);
 		}
 	}
 }

@@ -18,6 +18,7 @@
  */
 using DOL.GS.PacketHandler;
 using DOL.Language;
+using log4net;
 
 namespace DOL.GS.Scripts
 {
@@ -28,20 +29,28 @@ namespace DOL.GS.Scripts
 		"/language <EN|FR|DE>")]
 	public class LanguageCommandHandler : ICommandHandler
 	{
+		/// <summary>
+		/// Defines a logger for this class.
+		/// </summary>
+		private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 		public int OnCommand(GameClient client, string[] args)
 		{
 			if (DOL.GS.ServerProperties.Properties.ALLOW_CHANGE_LANGUAGE == false)
 				return 0;
 			if (args.Length == 1)
 			{
-				client.Out.SendMessage(string.Format(LanguageMgr.GetTranslation(client, "Scripts.Players.Language.Current"), LanguageMgr.LangsToCompleteName(client, LanguageMgr.NameToLangs(client.Account.Language))), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Language.Current", LanguageMgr.LangsToCompleteName(client, LanguageMgr.NameToLangs(client.Account.Language))), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return 0;
 			}
 			else	if (args.Length == 2)
 			{
 				// Valid language -> English default
-				client.Account.Language = LanguageMgr.LangsToName(LanguageMgr.NameToLangs(args[1]));
-				client.Out.SendMessage(string.Format(LanguageMgr.GetTranslation(client, "Scripts.Players.Language.Set"), LanguageMgr.LangsToCompleteName(client, LanguageMgr.NameToLangs(client.Account.Language))), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				client.Account.Language = LanguageMgr.LangsToName(LanguageMgr.NameToLangs(args[1].ToUpper()));
+				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Language.Set", LanguageMgr.LangsToCompleteName(client, LanguageMgr.NameToLangs(client.Account.Language))), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				GameServer.Database.SaveObject(client.Account);
+				if (log.IsInfoEnabled)
+					log.Info(client.Player.Name + " (" + client.Account.Name + ") changed language.");
 				return 0;
 			}
 			else	client.Out.SendMessage("Command help: /language <EN|FR|DE>", eChatType.CT_System, eChatLoc.CL_SystemWindow);

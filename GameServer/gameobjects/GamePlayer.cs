@@ -510,22 +510,22 @@ namespace DOL.GS
 			{
 				if (!IsAlive)
 				{
-					Out.SendMessage("You can't quit now, you're dead.  Type '/release' to release your corpse.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Quit.CantQuitDead"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return false;
 				}
 				if (Steed != null || IsOnHorse)
 				{
-					Out.SendMessage("You have to dismount before you can quit.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Quit.CantQuitMount"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return false;
 				}
 				if (IsMoving)
 				{
-					Out.SendMessage("You must be standing still to quit.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Quit.CantQuitStanding"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return false;
 				}
 				if (CraftTimer != null && CraftTimer.IsAlive)
 				{
-					Out.SendMessage("You can't quit while you're crafting.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Quit.CantQuitCrafting"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return false;
 				}
 
@@ -547,8 +547,8 @@ namespace DOL.GS
 				}
 
 				if (secondsleft > 20)
-					Out.SendMessage("You were recently in combat and must wait longer to quit.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				Out.SendMessage("You will quit after sitting for " + secondsleft + " seconds.  Type '/stand' or move if you don't want to quit.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Quit.RecentlyInCombat"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Quit.RecentlyInCombat", secondsleft), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 			else
 			{
@@ -769,7 +769,7 @@ namespace DOL.GS
 
 			if (IsAlive)
 			{
-				Out.SendMessage("You are not dead!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Release.NotDead"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
@@ -777,7 +777,7 @@ namespace DOL.GS
 			{
 				if (m_releaseType == eReleaseType.Duel)
 				{
-					Out.SendMessage("You can't alter your release on a duel death!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Release.CantReleaseDuel"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return;
 				}
 				m_releaseType = releaseCommand;
@@ -789,7 +789,7 @@ namespace DOL.GS
 					{
 						m_automaticRelease = false;
 						m_releaseType = eReleaseType.Normal;
-						Out.SendMessage("You will no longer release automatically. (" + diff / 1000 + " more seconds)", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Release.NoLongerReleaseAuto", diff / 1000), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						return;
 					}
 
@@ -798,12 +798,12 @@ namespace DOL.GS
 					{
 						default:
 							{
-								Out.SendMessage("You will now release automatically in " + diff / 1000 + " more seconds!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Release.WillReleaseAuto", diff / 1000), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return;
 							}
 						case eReleaseType.City:
 							{
-								Out.SendMessage("You will now release automatically to your home city in " + diff / 1000 + " more seconds!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Release.WillReleaseAutoCity", diff / 1000), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return;
 							}
 					}
@@ -974,7 +974,7 @@ namespace DOL.GS
 					}
 			}
 
-			Out.SendMessage("You release your corpse unto death.", eChatType.CT_YouDied, eChatLoc.CL_SystemWindow);
+			Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Release.YouRelease"), eChatType.CT_YouDied, eChatLoc.CL_SystemWindow);
 			Out.SendCloseTimerWindow();
 			if (m_releaseTimer != null)
 			{
@@ -1014,8 +1014,8 @@ namespace DOL.GS
 					gravestone.AddToWorld();
 					m_character.GravestoneRegion = gravestone.CurrentRegionID;
 					m_character.HasGravestone = true;
-					Out.SendMessage("A grave was erected where you were slain.", eChatType.CT_YouDied, eChatLoc.CL_SystemWindow);
-					Out.SendMessage("Return to /pray at your grave to regain experience.", eChatType.CT_YouDied, eChatLoc.CL_SystemWindow);
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Release.GraveErected"), eChatType.CT_YouDied, eChatLoc.CL_SystemWindow);
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Release.ReturnToPray"), eChatType.CT_YouDied, eChatLoc.CL_SystemWindow);
 				}
 			}
 
@@ -1024,7 +1024,7 @@ namespace DOL.GS
 			{
 				TotalConstitutionLostAtDeath += deathConLoss;
 				Out.SendCharStatsUpdate();
-				Out.SendMessage("You've lost some constitution, go to a healer to have it restored!", eChatType.CT_YouDied, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Release.LostConstitution"), eChatType.CT_YouDied, eChatLoc.CL_SystemWindow);
 			}
 
 			//Update health&sit state first!
@@ -1035,11 +1035,11 @@ namespace DOL.GS
 			Region region = null;
 			if ((region = WorldMgr.GetRegion((ushort)PlayerCharacter.BindRegion)) != null && region.GetZone(PlayerCharacter.BindXpos, PlayerCharacter.BindYpos) != null)
 			{
-				Out.SendMessage("Your surroundings suddenly change!", eChatType.CT_YouDied, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Release.SurroundingChange"), eChatType.CT_YouDied, eChatLoc.CL_SystemWindow);
 			}
 			else
 			{
-				Out.SendMessage("You have no valid bindpoint! Releasing here instead!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Release.NoValidBindpoint"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 				Bind(true);
 			}
 
