@@ -812,8 +812,11 @@ namespace DOL.GS.Housing
 		}
 
 		/// <summary>
-		/// 
+		/// Fill a hookpoint with an object, create it in the database.
 		/// </summary>
+		/// <param name="item">The itemtemplate of the item used to fill the hookpoint (can be null if templateid is filled)</param>
+		/// <param name="position">The position of the hookpoint</param>
+		/// <param name="templateID">The template id of the item (can be blank if item is filled)</param>
 		public void FillHookpoint(ItemTemplate item, uint position, string templateID)
 		{
 			if (item == null)
@@ -823,10 +826,10 @@ namespace DOL.GS.Housing
 					return;
 			}
 
-			HouseMgr.Logger.Debug("item is not null");
-
 			//get location from slot
 			IPoint3D location = GetHookpointLocation(position);
+			if (location == null)
+				return;
 			int x = location.X;
 			int y = location.Y;
 			int z = location.Z;
@@ -836,8 +839,30 @@ namespace DOL.GS.Housing
 			{
 				case eObjectType.HouseNPC:
 					{
-						DBNpcTemplate npt = (DBNpcTemplate)GameServer.Database.SelectObject(typeof(DBNpcTemplate), "TemplateId = '" + item.Bonus + "'");
-						GameNPC hNPC = new GameNPC(new NpcTemplate(npt));
+						NpcTemplate npt = NpcTemplateMgr.GetTemplate(item.Bonus);
+						if (npt == null)
+							return;
+
+						GameNPC hNPC = (GameNPC)Assembly.GetAssembly(typeof(GameServer)).CreateInstance(npt.ClassType, false);
+
+						if (hNPC == null)
+						{
+							foreach (Assembly asm in Scripts.ScriptMgr.Scripts)
+							{
+								hNPC = (GameNPC)asm.CreateInstance(npt.ClassType, false);
+								if (hNPC != null) break;
+							}
+						}
+
+						if (hNPC == null)
+						{
+							HouseMgr.Logger.Error("Can't create instance of type: " + npt.ClassType);
+							return;
+						}
+
+						hNPC.LoadTemplate(npt);
+
+						hNPC.Name = item.Name;
 						hNPC.CurrentHouse = this;
 						hNPC.InHouse = true;
 						hNPC.X = x;
@@ -913,6 +938,9 @@ namespace DOL.GS.Housing
 		}
 
 		#region Housepoint location
+		/// <summary>
+		/// Housing hookpoint coordinates offset relative to a house
+		/// </summary>
 		protected static readonly int[][][] RELATIVE_HOOKPOINTS_COORDS = new int[][][]
 			{
 				// NOTHING : Lot
@@ -1195,10 +1223,17 @@ namespace DOL.GS.Housing
 					},
 			};
 
-		Point3D GetHookpointLocation(uint n)
+		public Point3D GetHookpointLocation(uint n)
 		{
-			Point3D p = new Point3D(X + RELATIVE_HOOKPOINTS_COORDS[Model][n][0], Y + RELATIVE_HOOKPOINTS_COORDS[Model][n][1], 25000 + RELATIVE_HOOKPOINTS_COORDS[Model][n][2]);
-			return p;
+			try
+			{
+				Point3D p = new Point3D(X + RELATIVE_HOOKPOINTS_COORDS[Model][n][0], Y + RELATIVE_HOOKPOINTS_COORDS[Model][n][1], 25000 + RELATIVE_HOOKPOINTS_COORDS[Model][n][2]);
+				return p;
+			}
+			catch
+			{
+				return null;
+			}
 		}
 
 		ushort GetHookpointHeading(uint n)
@@ -1207,6 +1242,9 @@ namespace DOL.GS.Housing
 		}
 		#endregion
 
+		/// <summary>
+		/// Load a house from the database
+		/// </summary>
 		public void LoadFromDatabase()
 		{
 			int i = 0;

@@ -20,6 +20,7 @@ using System;
 using System.Collections;
 using DOL.Database;
 using DOL.GS.Styles;
+using DOL.GS.Keeps;
 
 namespace DOL.GS.ServerRules
 {
@@ -263,5 +264,12 @@ namespace DOL.GS.ServerRules
 		/// <param name="player">The player to read statistics from.</param>
 		/// <returns>List of strings.</returns>
 		IList FormatPlayerStatistics(GamePlayer player);
+
+		/// <summary>
+		/// Reset the keep with special server rules handling
+		/// </summary>
+		/// <param name="lord">The lord that was killed</param>
+		/// <param name="killer">The lord's killer</param>
+		void ResetKeep(GuardLord lord, GameObject killer);
 	}
 }

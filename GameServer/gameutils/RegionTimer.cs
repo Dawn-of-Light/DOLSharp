@@ -42,6 +42,16 @@ namespace DOL.GS
 		/// </summary>
 		private PropertyCollection m_properties;
 
+		private GameObject m_owner;
+
+		/// <summary>
+		/// The timer owner
+		/// </summary>
+		public GameObject Owner
+		{
+			get { return m_owner; }
+		}
+
 		/// <summary>
 		/// Gets or sets the timer callback
 		/// </summary>
@@ -56,7 +66,7 @@ namespace DOL.GS
 		/// </summary>
 		public PropertyCollection Properties
 		{
-			get 
+			get
 			{
 				if (m_properties == null)
 				{
@@ -70,7 +80,7 @@ namespace DOL.GS
 						}
 					}
 				}
-				return m_properties; 
+				return m_properties;
 			}
 		}
 
@@ -78,8 +88,10 @@ namespace DOL.GS
 		/// Constructs a new region timer
 		/// </summary>
 		/// <param name="timerOwner">The game object that is starting the timer</param>
-		public RegionTimer(GameObject timerOwner) : base(timerOwner.CurrentRegion.TimeManager)
+		public RegionTimer(GameObject timerOwner)
+			: base(timerOwner.CurrentRegion.TimeManager)
 		{
+			m_owner = timerOwner;
 		}
 
 		/// <summary>
@@ -87,8 +99,10 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="timerOwner">The game object that is starting the timer</param>
 		/// <param name="callback">The callback function to call</param>
-		public RegionTimer(GameObject timerOwner, RegionTimerCallback callback) : this(timerOwner)
+		public RegionTimer(GameObject timerOwner, RegionTimerCallback callback)
+			: this(timerOwner)
 		{
+			m_owner = timerOwner;
 			m_callback = callback;
 		}
 
@@ -98,8 +112,10 @@ namespace DOL.GS
 		/// <param name="timerOwner">The game object that is starting the timer</param>
 		/// <param name="callback">The callback function to call</param>
 		/// <param name="delay">The interval in milliseconds when to call the callback</param>
-		public RegionTimer(GameObject timerOwner, RegionTimerCallback callback, int delay) : this(timerOwner, callback)
+		public RegionTimer(GameObject timerOwner, RegionTimerCallback callback, int delay)
+			: this(timerOwner, callback)
 		{
+			m_owner = timerOwner;
 			Start(delay);
 		}
 
@@ -107,7 +123,8 @@ namespace DOL.GS
 		/// Constructs a new region timer
 		/// </summary>
 		/// <param name="time"></param>
-		public RegionTimer(TimeManager time) : base(time)
+		public RegionTimer(TimeManager time)
+			: base(time)
 		{
 		}
 
@@ -131,10 +148,10 @@ namespace DOL.GS
 			if (callback != null)
 				target = callback.Target;
 			return new StringBuilder(128)
-				.Append("callback: ").Append(callback==null ? "(null)" : callback.Method.Name)
+				.Append("callback: ").Append(callback == null ? "(null)" : callback.Method.Name)
 				.Append(' ').Append(base.ToString())
-				.Append(" target: ").Append(target==null ? "" : (target.GetType().FullName+" "))
-				.Append('(').Append(target==null ? "null" : target.ToString())
+				.Append(" target: ").Append(target == null ? "" : (target.GetType().FullName + " "))
+				.Append('(').Append(target == null ? "null" : target.ToString())
 				.Append(')')
 				.ToString();
 		}

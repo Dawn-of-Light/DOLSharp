@@ -2814,7 +2814,7 @@ namespace DOL.GS
 
 						if (WorldMgr.GetDistance(this, attackTarget) > spell.Range)
 						{
-							Follow(attackTarget, 1000, 5000);
+							Follow(attackTarget, spell.Range, 5000);
 							StartRetrySpellAttackTimer();
 						}
 						else

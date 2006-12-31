@@ -104,8 +104,8 @@ namespace DOL.GS.PropertyCalc
 		{
 			return Math.Min(10, living.BuffBonusCategory1[(int)property] 
 				+ living.ItemBonus[(int)property]
-				- living.BuffBonusCategory3[(int)property] 
-				+ living.AbilityBonus[(int)property]);
+				- living.BuffBonusCategory3[(int)property]) 
+				+ living.AbilityBonus[(int)property];
 		}
 	}
 }

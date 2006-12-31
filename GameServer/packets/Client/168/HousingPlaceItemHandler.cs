@@ -30,13 +30,15 @@ namespace DOL.GS.PacketHandler.Client.v168
 	{
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
+		private int position;
+
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			int unknow1	= packet.ReadByte();		// 1=Money 0=Item (?)
 			int slot		= packet.ReadByte();		// Item/money slot
 			ushort housenumber = packet.ReadShort();	// N° of house
 			int unknow2	= (byte)packet.ReadByte();	
-			int position	= (byte)packet.ReadByte();
+			position	= (byte)packet.ReadByte();
 			int method	= packet.ReadByte();		// 2=Wall 3=Floor
 			int rotation	= packet.ReadByte();		// garden items only
 			short xpos	= (short)packet.ReadShort();	// x for inside objs
@@ -216,6 +218,13 @@ namespace DOL.GS.PacketHandler.Client.v168
 						house.HousepointItems[point.Position] = point;
 
 						client.Player.Inventory.RemoveItem(orgitem);
+
+						if (house.GetHookpointLocation((uint)position) == null)
+						{
+							client.Player.Out.SendMessage("The housepoint ID is: " + position, eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+							client.Player.Out.SendMessage("Stand as close to the housepoint as possible and face the proper direction and press accept", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+							client.Player.Out.SendCustomDialog("Log this housepoint location?", new CustomDialogResponse(LogLocation));
+						}
 						break;
 					}
 				default:
@@ -230,6 +239,24 @@ namespace DOL.GS.PacketHandler.Client.v168
 			while(tbl.Contains(i))
 				i++;
 			return i;
+		}
+
+		/// <summary>
+		/// Does the player want to log the offset location of the missing housepoint
+		/// </summary>
+		/// <param name="player">The player</param>
+		/// <param name="response">1 = yes 0 = no</param>
+		protected void LogLocation(GamePlayer player, byte response)
+		{
+			if (response != 0x01)
+				return;
+
+			if (player.CurrentHouse == null)
+				return;
+
+			log.Error("Position: " + position + " Offset: " + (player.X - player.CurrentHouse.X) + ", " + (player.Y - player.CurrentHouse.Y) + ", " + (player.Z - 25000) + ", " + (player.Heading - player.CurrentHouse.Heading));
+
+			player.Out.SendMessage("Logged housepoint position " + position + " in error.log!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 		}
 	}
 }
