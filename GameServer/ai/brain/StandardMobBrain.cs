@@ -68,7 +68,7 @@ namespace DOL.AI.Brain
 		/// </summary>
 		public override void Think()
 		{
-			if (!Body.IsCasting && Body.Spells.Count > 0)
+			if (!Body.IsCasting && Body.Spells != null && Body.Spells.Count > 0)
 				CheckSpells();
 
 			if (AggroLevel > 0)

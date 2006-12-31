@@ -160,6 +160,7 @@
     <Compile Include="customnpc\NameRegistrar.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="customnpc\Recharger.cs" />
     <Compile Include="customnpc\TownCrier.cs">
       <SubType>Code</SubType>
     </Compile>

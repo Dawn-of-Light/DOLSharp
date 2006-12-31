@@ -30,6 +30,7 @@ namespace DOL.GS.Housing
 			CheckItemTemplates();
 			CheckMerchantItemTemplates();
 			LoadItemLists();
+			CheckNPCTemplates();
 		}
 
 		public static int LOT_PRICE_PER_HOUR = (int) (1.2*1000*100*100); //1.2p
@@ -216,6 +217,77 @@ namespace DOL.GS.Housing
                 templateitem.Platinum = (short)Money.GetPlatinum(copper);
 				templateitem.Bonus = bonus;
 				GameServer.Database.AddNewObject(templateitem);
+			}
+		}
+
+		static void CheckNPCTemplates()
+		{
+			#region Hibernia
+			//Hastener
+			CheckNPCTemplate(500, "DOL.GS.Scripts.GameHastener", "Hastener", "50", "");
+			//Smith
+			CheckNPCTemplate(501, "DOL.GS.Scripts.Blacksmith", "Smith", "50", "");
+			//Enchanter
+			CheckNPCTemplate(502, "DOL.GS.Scripts.Enchanter", "Enchanter", "50", "");
+			//Emblemeer
+			CheckNPCTemplate(503, "DOL.GS.Scripts.Emblemeer", "Emblemeer", "50", "");
+			//Healer
+			CheckNPCTemplate(504, "DOL.GS.Scripts.GameHealer", "Healer", "50", "");
+			//Recharger
+			CheckNPCTemplate(505, "DOL.GS.Scripts.Recharger", "Recharger", "50", "");
+			//Hibernia Teleporter
+#warning TODO
+			CheckNPCTemplate(506, "DOL.GS.GameNPC", "Teleporter", "50", "");
+			//Apprentice Merchant
+#warning TODO merchant list
+			CheckNPCTemplate(507, "DOL.GS.GameMerchant", "Merchant", "50", "");
+			//Grandmaster Merchant
+#warning TODO merchant list
+			CheckNPCTemplate(508, "DOL.GS.GameMerchant", "Merchant", "50", "");
+			//Incantation Merchant
+#warning TODO merchant list
+			CheckNPCTemplate(509, "DOL.GS.GameMerchant", "Merchant", "50", "");
+			//Poison and Dye Supplies
+#warning TODO merchant list
+			CheckNPCTemplate(510, "DOL.GS.GameMerchant", "Merchant", "50", "");
+			//Potion, Tincture, and Enchantment Supplies
+#warning TODO merchant list
+			CheckNPCTemplate(511, "DOL.GS.GameMerchant", "Merchant", "50", "");
+			//Poison and Potion Supplies
+#warning TODO merchant list
+			CheckNPCTemplate(512, "DOL.GS.GameMerchant", "Merchant", "50", "");
+			//Dye, Tincture, and Enchantment Supplies
+#warning TODO merchant list
+			CheckNPCTemplate(513, "DOL.GS.GameMerchant", "Merchant", "50", "");
+			//Taxidermy Supplies
+#warning TODO merchant list
+			CheckNPCTemplate(514, "DOL.GS.GameMerchant", "Merchant", "50", "");
+			//Siegecraft Supplies
+#warning TODO merchant list
+			CheckNPCTemplate(515, "DOL.GS.GameMerchant", "Merchant", "50", "");
+			//Hibernia Vault Keeper
+			CheckNPCTemplate(516, "DOL.GS.Scripts.GameVaultKeeper", "Vault Keeper", "50", "");
+			//Dye Supply Master
+#warning TODO merchant list
+			CheckNPCTemplate(517, "DOL.GS.GameMerchant", "Merchant", "50", "");
+			#endregion
+		}
+
+		static void CheckNPCTemplate(int templateID, string classType, string guild, string model, string inventory)
+		{
+			NpcTemplate template = NpcTemplateMgr.GetTemplate(templateID);
+			if (template == null)
+			{
+				template = new NpcTemplate();
+				template.Name = "";
+				template.TemplateId = templateID;
+				template.ClassType = classType;
+				template.GuildName = guild;
+				template.Model = model;
+				template.Inventory = inventory;
+
+				NpcTemplateMgr.AddTemplate(template);
+				//template.SaveIntoDatabase(); lets not save yet
 			}
 		}
 	}

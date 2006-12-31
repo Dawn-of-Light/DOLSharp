@@ -55,5 +55,5 @@ HousingPlaceItemHandler.PutMoney:			You put money in your house.
 
 # SCRIPTS
 # /Language
-Scripts.Players.Language.Set:				You changes server display language to {0}.
-Scripts.Players.Language.Current:			Your language is actually set to: {0}.
+Scripts.Players.Language.Set:				You change your server display language to {0}.
+Scripts.Players.Language.Current:			Your language is currently set to: {0}.

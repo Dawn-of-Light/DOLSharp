@@ -21,6 +21,7 @@ using DOL;
 using DOL.AI.Brain;
 using DOL.Events;
 using DOL.GS;
+using DOL.GS.Keeps;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.ServerRules
@@ -75,7 +76,7 @@ namespace DOL.GS.ServerRules
 		/// <param name="args"></param>
 		public virtual void OnGameEntered(DOLEvent e, object sender, EventArgs args)
 		{
-			SetImmunity((GamePlayer)sender, 10*1000); //10sec immunity
+			SetImmunity((GamePlayer)sender, 10 * 1000); //10sec immunity
 		}
 
 		/// <summary>
@@ -86,7 +87,7 @@ namespace DOL.GS.ServerRules
 		/// <param name="args"></param>
 		public virtual void OnRegionChanged(DOLEvent e, object sender, EventArgs args)
 		{
-			SetImmunity((GamePlayer)sender, 30*1000); //30sec immunity
+			SetImmunity((GamePlayer)sender, 30 * 1000); //30sec immunity
 		}
 
 		/// <summary>
@@ -98,14 +99,14 @@ namespace DOL.GS.ServerRules
 		public virtual void OnReleased(DOLEvent e, object sender, EventArgs args)
 		{
 			GamePlayer player = (GamePlayer)sender;
-			if(player.TempProperties.getObjectProperty(KILLED_BY_PLAYER_PROP, null) != null)
+			if (player.TempProperties.getObjectProperty(KILLED_BY_PLAYER_PROP, null) != null)
 			{
 				player.TempProperties.removeProperty(KILLED_BY_PLAYER_PROP);
-				SetImmunity(player, 2*60*1000); //2min immunity if killed by a player
+				SetImmunity(player, 2 * 60 * 1000); //2min immunity if killed by a player
 			}
 			else
 			{
-				SetImmunity(player, 30*1000); //30sec immunity if killed by a mob
+				SetImmunity(player, 30 * 1000); //30sec immunity if killed by a mob
 			}
 		}
 
@@ -124,7 +125,7 @@ namespace DOL.GS.ServerRules
 		/// Holds the delegate called when PvP invulnerability is expired
 		/// </summary>
 		protected GamePlayer.InvulnerabilityExpiredCallback m_invExpiredCallback;
-		
+
 		/// <summary>
 		/// Removes PvP immunity from the players
 		/// </summary>
@@ -134,7 +135,7 @@ namespace DOL.GS.ServerRules
 			if (player.ObjectState != GameObject.eObjectState.Active) return;
 			if (player.Client.IsPlaying == false) return;
 
-			if(player.Level < m_safetyLevel && player.SafetyFlag)
+			if (player.Level < m_safetyLevel && player.SafetyFlag)
 				player.Out.SendMessage("Your temporary pvp invulnerability timer has expired, but your safety flag is still on.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			else
 				player.Out.SendMessage("Your temporary pvp invulnerability timer has expired.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -151,7 +152,7 @@ namespace DOL.GS.ServerRules
 		public override void OnPlayerKilled(GamePlayer killedPlayer, GameObject killer)
 		{
 			base.OnPlayerKilled(killedPlayer, killer);
-			if(killer == null || killer is GamePlayer)
+			if (killer == null || killer is GamePlayer)
 				killedPlayer.TempProperties.setProperty(KILLED_BY_PLAYER_PROP, KILLED_BY_PLAYER_PROP);
 			else
 				killedPlayer.TempProperties.removeProperty(KILLED_BY_PLAYER_PROP);
@@ -210,7 +211,7 @@ namespace DOL.GS.ServerRules
 			}
 
 			// can't attack self
-			if(attacker == defender)
+			if (attacker == defender)
 			{
 				if (quiet == false) MessageToLiving(attacker, "You can't attack yourself!");
 				return false;
@@ -219,10 +220,10 @@ namespace DOL.GS.ServerRules
 			//ogre: sometimes other players shouldn't be attackable
 			GamePlayer playerAttacker = attacker as GamePlayer;
 			GamePlayer playerDefender = defender as GamePlayer;
-			if(playerAttacker != null && playerDefender != null)
+			if (playerAttacker != null && playerDefender != null)
 			{
 				//check group
-				if(playerAttacker.PlayerGroup != null && playerAttacker.PlayerGroup.IsInTheGroup(playerDefender))
+				if (playerAttacker.PlayerGroup != null && playerAttacker.PlayerGroup.IsInTheGroup(playerDefender))
 				{
 					if (!quiet) MessageToLiving(playerAttacker, "You can't attack your group members.");
 					return false;
@@ -231,7 +232,7 @@ namespace DOL.GS.ServerRules
 				if (playerAttacker.DuelTarget != defender)
 				{
 					//check guild
-					if(playerAttacker.Guild != null && playerAttacker.Guild == playerDefender.Guild)
+					if (playerAttacker.Guild != null && playerAttacker.Guild == playerDefender.Guild)
 					{
 						if (!quiet) MessageToLiving(playerAttacker, "You can't attack your guild members.");
 						return false;
@@ -240,40 +241,40 @@ namespace DOL.GS.ServerRules
 					//todo: battlegroups
 
 					// Safe regions
-					if(m_safeRegions != null)
+					if (m_safeRegions != null)
 					{
-						foreach(int reg in m_safeRegions)
+						foreach (int reg in m_safeRegions)
 							if (playerAttacker.CurrentRegionID == reg)
 							{
-								if(quiet == false) MessageToLiving(playerAttacker, "You're currently in a safe zone, you can't attack other players here.");
+								if (quiet == false) MessageToLiving(playerAttacker, "You're currently in a safe zone, you can't attack other players here.");
 								return false;
 							}
 					}
 
 
 					// Players with safety flag can not attack other players
-					if(playerAttacker.Level < m_safetyLevel && playerAttacker.SafetyFlag)
+					if (playerAttacker.Level < m_safetyLevel && playerAttacker.SafetyFlag)
 					{
-						if(quiet == false) MessageToLiving(attacker, "Your PvP safety flag is ON.");
+						if (quiet == false) MessageToLiving(attacker, "Your PvP safety flag is ON.");
 						return false;
 					}
 
 					// Players with safety flag can not be attacked in safe regions
-					if(playerDefender.Level < m_safetyLevel && playerDefender.SafetyFlag)
+					if (playerDefender.Level < m_safetyLevel && playerDefender.SafetyFlag)
 					{
 						bool unsafeRegion = false;
-						foreach(int regionID in m_unsafeRegions)
+						foreach (int regionID in m_unsafeRegions)
 						{
-							if(regionID == playerDefender.CurrentRegionID)
+							if (regionID == playerDefender.CurrentRegionID)
 							{
 								unsafeRegion = true;
 								break;
 							}
 						}
-						if(unsafeRegion == false)
+						if (unsafeRegion == false)
 						{
 							//"PLAYER has his safety flag on and is in a safe area, you can't attack him here."
-							if(quiet == false) MessageToLiving(attacker, playerDefender.Name + " has " + playerDefender.GetPronoun(1, false) + " safety flag on and is in a safe area, you can't attack " + playerDefender.GetPronoun(2, false) + " here.");
+							if (quiet == false) MessageToLiving(attacker, playerDefender.Name + " has " + playerDefender.GetPronoun(1, false) + " safety flag on and is in a safe area, you can't attack " + playerDefender.GetPronoun(2, false) + " here.");
 							return false;
 						}
 					}
@@ -285,13 +286,13 @@ namespace DOL.GS.ServerRules
 				return true;
 
 			// "friendly" NPCs can't attack "friendly" players
-			if(defender is GameNPC && defender.Realm != 0 && attacker.Realm != 0)
+			if (defender is GameNPC && defender.Realm != 0 && attacker.Realm != 0)
 			{
-				if(quiet == false) MessageToLiving(attacker, "You can't attack a friendly NPC!");
+				if (quiet == false) MessageToLiving(attacker, "You can't attack a friendly NPC!");
 				return false;
 			}
 			// "friendly" NPCs can't be attacked by "friendly" players
-			if(attacker is GameNPC && attacker.Realm != 0 && defender.Realm != 0)
+			if (attacker is GameNPC && attacker.Realm != 0 && defender.Realm != 0)
 			{
 				return false;
 			}
@@ -309,19 +310,19 @@ namespace DOL.GS.ServerRules
 		/// <returns>true if allowed</returns>
 		public override bool IsAllowedToCastSpell(GameLiving caster, GameLiving target, Spell spell, SpellLine spellLine)
 		{
-			if(!base.IsAllowedToCastSpell(caster, target, spell, spellLine)) return false;
+			if (!base.IsAllowedToCastSpell(caster, target, spell, spellLine)) return false;
 
 			GamePlayer casterPlayer = caster as GamePlayer;
-			if(casterPlayer != null)
+			if (casterPlayer != null)
 			{
-				if(casterPlayer.IsPvPInvulnerability)
+				if (casterPlayer.IsPvPInvulnerability)
 				{
 					// always allow selftargeted spells
-					if(spell.Target == "Self") return true;
+					if (spell.Target == "Self") return true;
 
 					// only caster can be the target, can't buff/heal other players
 					// PBAE/GTAE doesn't need a target so we check spell type as well
-					if(caster != target || spell.Target == "Area" || spell.Target == "Enemy" || (spell.Target == "Group" && spell.SpellType != "SpeedEnhancement"))
+					if (caster != target || spell.Target == "Area" || spell.Target == "Enemy" || (spell.Target == "Group" && spell.SpellType != "SpeedEnhancement"))
 					{
 						MessageToLiving(caster, "You can only cast spells on yourself until your PvP invulnerability timer wears off!", eChatType.CT_Important);
 						return false;
@@ -334,7 +335,7 @@ namespace DOL.GS.ServerRules
 
 		public override bool IsSameRealm(GameLiving source, GameLiving target, bool quiet)
 		{
-			if(source == null || target == null) return false;
+			if (source == null || target == null) return false;
 
 			// if controlled NPC - do checks for owner instead
 			if (source is GameNPC)
@@ -354,11 +355,11 @@ namespace DOL.GS.ServerRules
 			}
 
 			// clients with priv level > 1 are considered friendly by anyone
-			if(target is GamePlayer && ((GamePlayer)target).Client.Account.PrivLevel > 1) return true;
+			if (target is GamePlayer && ((GamePlayer)target).Client.Account.PrivLevel > 1) return true;
 
 			// mobs can heal mobs, players heal players/NPC
-			if(source.Realm == 0 && target.Realm == 0) return true;
-			if(source.Realm != 0 && target.Realm != 0) return true;
+			if (source.Realm == 0 && target.Realm == 0) return true;
+			if (source.Realm != 0 && target.Realm != 0) return true;
 
 			//Peace flag NPCs are same realm
 			if (target is GameNPC)
@@ -369,7 +370,7 @@ namespace DOL.GS.ServerRules
 				if ((((GameNPC)source).Flags & (uint)GameNPC.eFlags.PEACE) != 0)
 					return true;
 
-			if(quiet == false) MessageToLiving(source, target.GetName(0, true) + " is not a member of your realm!");
+			if (quiet == false) MessageToLiving(source, target.GetName(0, true) + " is not a member of your realm!");
 			return false;
 		}
 
@@ -379,7 +380,7 @@ namespace DOL.GS.ServerRules
 		}
 
 		public override bool IsAllowedToGroup(GamePlayer source, GamePlayer target, bool quiet)
-		{            
+		{
 			return true;
 		}
 
@@ -408,6 +409,35 @@ namespace DOL.GS.ServerRules
 		public override byte GetColorHandling(GameClient client)
 		{
 			return 1;
+		}
+
+		/// <summary>
+		/// Reset the keep with special server rules handling
+		/// </summary>
+		/// <param name="lord">The lord that was killed</param>
+		/// <param name="killer">The lord's killer</param>
+		public override void ResetKeep(GuardLord lord, GameObject killer)
+		{
+			base.ResetKeep(lord, killer);
+			eRealm realm = eRealm.None;
+
+			//pvp servers, the realm changes to the group leaders realm
+			if (killer is GamePlayer)
+			{
+				PlayerGroup group = ((killer as GamePlayer).PlayerGroup);
+				if (group != null)
+					realm = (eRealm)group.Leader.Realm;
+				else realm = (eRealm)killer.Realm;
+			}
+			else if (killer is GameNPC && (killer as GameNPC).Brain is IControlledBrain)
+			{
+				GamePlayer player = ((killer as GameNPC).Brain as IControlledBrain).Owner;
+				PlayerGroup group = player.PlayerGroup;
+				if (group != null)
+					realm = (eRealm)group.Leader.Realm;
+				else realm = (eRealm)killer.Realm;
+			}
+			lord.Component.Keep.Reset(realm);
 		}
 	}
 }

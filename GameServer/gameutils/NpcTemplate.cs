@@ -261,10 +261,10 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets the template npc inventory
 		/// </summary>
-        // We want Inventory to be readonly so that it cannot be messed up. 
 		public string Inventory
 		{
 			get { return m_inventory; }
+			set { m_inventory = value; }
 		}
 		/// <summary>
 		/// Gets the template npc melee damage type
@@ -408,7 +408,9 @@ namespace DOL.GS
 				tmp = new DBNpcTemplate();
 				add = true;
 			}
-			tmp.TemplateId = GameServer.Database.GetObjectCount(typeof(DBNpcTemplate));
+			if (TemplateId == 0)
+				tmp.TemplateId = GameServer.Database.GetObjectCount(typeof(DBNpcTemplate));
+			else tmp.TemplateId = TemplateId;
 			tmp.Model = Model;
 			tmp.Size = Size;
 			tmp.Name = Name;
