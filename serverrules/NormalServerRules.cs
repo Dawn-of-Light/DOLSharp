@@ -20,6 +20,7 @@ using System;
 using System.Collections;
 using DOL.AI.Brain;
 using DOL.Database;
+using DOL.GS.Keeps;
 using DOL.GS.PacketHandler;
 using DOL.GS.Styles;
 
@@ -420,6 +421,17 @@ namespace DOL.GS.ServerRules
 			if (IsSameRealm(source, target, true))
 				return target.GuildName;
 			return string.Empty;
+		}
+
+		/// <summary>
+		/// Reset the keep with special server rules handling
+		/// </summary>
+		/// <param name="lord">The lord that was killed</param>
+		/// <param name="killer">The lord's killer</param>
+		public override void ResetKeep(GuardLord lord, GameObject killer)
+		{
+			base.ResetKeep(lord, killer);
+			lord.Component.Keep.Reset((eRealm)killer.Realm);
 		}
 	}
 }

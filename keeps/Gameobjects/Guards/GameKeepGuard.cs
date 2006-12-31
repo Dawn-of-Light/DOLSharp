@@ -412,7 +412,7 @@ namespace DOL.GS.Keeps
 			if (guard.Component.Keep == null) return;
 			if (guard.Component.Keep.Guild == null) return;
 
-			int inArea = GetEnemyCountInArea(guard);
+			int inArea = guard.GetEnemyCountInArea();
 
 			string message = guard.Name + " has been killed in " + guard.Component.Keep.Name + " with " + inArea + " enemy player(s) in the area!";
 			KeepGuildMgr.SendMessageToGuild(message, guard.Component.Keep.Guild);
@@ -423,12 +423,12 @@ namespace DOL.GS.Keeps
 		/// </summary>
 		/// <param name="guard">The guard object</param>
 		/// <returns></returns>
-		public static int GetEnemyCountInArea(GameKeepGuard guard)
+		public int GetEnemyCountInArea()
 		{
 			int inArea = 0;
-			foreach (GamePlayer NearbyPlayers in guard.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+			foreach (GamePlayer NearbyPlayers in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
-				if (GameServer.ServerRules.IsAllowedToAttack(guard, NearbyPlayers, true))
+				if (GameServer.ServerRules.IsAllowedToAttack(this, NearbyPlayers, true))
 					inArea++;
 			}
 			return inArea;

@@ -1225,6 +1225,16 @@ namespace DOL.GS.ServerRules
 			return stat;
 		}
 
+		/// <summary>
+		/// Reset the keep with special server rules handling
+		/// </summary>
+		/// <param name="lord">The lord that was killed</param>
+		/// <param name="killer">The lord's killer</param>
+		public virtual void ResetKeep(GuardLord lord, GameObject killer)
+		{
+			PlayerMgr.UpdateStats(lord);
+		}
+
 		#region MessageToLiving
 		/// <summary>
 		/// Send system text message to system window

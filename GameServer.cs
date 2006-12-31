@@ -587,6 +587,11 @@ namespace DOL
 					return false;
 
 				//---------------------------------------------------------------
+				//Try to start the Npc Templates Manager
+				if (!InitComponent(NpcTemplateMgr.Init(), "Npc Templates Manager"))
+					return false;
+
+				//---------------------------------------------------------------
 				//Load the house manager
 				if (!InitComponent(HouseMgr.Start(), "House Manager"))
 					return false;
@@ -631,11 +636,6 @@ namespace DOL
 				//---------------------------------------------------------------
 				//Load the relic manager
 				if (!InitComponent(RelicMgr.Init(), "Relic Manager"))
-					return false;
-
-				//---------------------------------------------------------------
-				//Try to start the Npc Templates Manager
-				if (!InitComponent(NpcTemplateMgr.Init(), "Npc Templates Manager"))
 					return false;
 
 				//---------------------------------------------------------------

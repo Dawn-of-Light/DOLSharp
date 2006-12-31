@@ -35,6 +35,21 @@ namespace DOL.GS.Keeps
 		public static void BroadcastCapture(AbstractGameKeep keep)
 		{
 			string message = string.Format("The forces of {0} have captured {1}!", GlobalConstants.RealmToName((eRealm)keep.Realm), keep.Name);
+			/*
+			switch (GameServer.Instance.Configuration.ServerType)
+			{
+				case eGameServerType.GST_Normal:
+					{
+						message = string.Format("The forces of {0} have captured {1}!", GlobalConstants.RealmToName((eRealm)keep.Realm), keep.Name);
+						break;
+					}
+				case eGameServerType.GST_PvP:
+					{
+						string defeatersStr = "";
+						message = string.Format("The forces of {0} have defeated the defenders of {1}!", defeatersStr, keep.Name);
+						break;
+					}
+			}*/
 			BroadcastMessage(message, eRealm.None);
 			NewsMgr.CreateNews(message, keep.Realm, eNewsType.RvRGlobal, false);
 		}

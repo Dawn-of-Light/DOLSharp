@@ -1,4 +1,5 @@
 using DOL.Events;
+using DOL.AI.Brain;
 using DOL.GS;
 using DOL.GS.PacketHandler;
 
@@ -52,10 +53,8 @@ namespace DOL.GS.Keeps
 		public override void Die(GameObject killer)
 		{
 			if (this.Component != null)
-			{
-				PlayerMgr.UpdateStats(this);
-				this.Component.Keep.Reset((eRealm)killer.Realm);
-			}
+				GameServer.ServerRules.ResetKeep(this, killer);
+
 			base.Die(killer);
 		}
 
