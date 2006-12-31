@@ -21,10 +21,14 @@ namespace DOL.GS.RealmAbilities
 		public override void Execute(GameLiving living)
 		{
 			if (CheckPreconditions(living, DEAD | SITTING | MEZZED | STUNNED)) return;
-			GamePlayer player = living as GamePlayer;
-			if (player.TargetObject == null)
+
+			caster = living as GamePlayer;
+			if (caster == null)
+				return;
+
+			if (caster.TargetObject == null)
 			{
-				player.Out.SendMessage("You need a target for this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				caster.Out.SendMessage("You need a target for this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 			//150 dam/10 sec || 400/20  || 600/30 
@@ -35,28 +39,26 @@ namespace DOL.GS.RealmAbilities
 				case 3: dmgValue = 600; duration = 30000; break;
 				default: return;
 			}
-			caster = player;
-			if (caster != null)
-			{
-				if (caster.TargetObject != null)
-				{
-					foreach (GamePlayer i_player in player.GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
-					{
-						if (i_player == player) i_player.Out.SendMessage("You cast " + this.Name + "!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
-						else i_player.Out.SendMessage(player.Name + " casts a spell!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
 
-						i_player.Out.SendSpellCastAnimation(player, 7029, 20);
-					}
-					DisableSkill(living);
-					m_expireTimerID = new RegionTimer(player, new RegionTimerCallback(EndCast), 2000);
-				}
-				else
+			if (caster.TargetObject != null)
+			{
+				foreach (GamePlayer i_player in caster.GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
 				{
-					caster.DisableSkill(this, 3 * 1000);
-					caster.Out.SendMessage("You don't have a target.", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+					if (i_player == caster) i_player.Out.SendMessage("You cast " + this.Name + "!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+					else i_player.Out.SendMessage(caster.Name + " casts a spell!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+
+					i_player.Out.SendSpellCastAnimation(caster, 7029, 20);
 				}
+				DisableSkill(living);
+				m_expireTimerID = new RegionTimer(caster, new RegionTimerCallback(EndCast), 2000);
+			}
+			else
+			{
+				caster.DisableSkill(this, 3 * 1000);
+				caster.Out.SendMessage("You don't have a target.", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
 			}
 		}
+
 		protected virtual int EndCast(RegionTimer timer)
 		{
 			if (GameServer.ServerRules.IsAllowedToAttack(caster, (GameLiving)caster.TargetObject, true))
@@ -137,7 +139,7 @@ namespace DOL.GS.RealmAbilities
 		}
 		protected virtual int RootExpires(RegionTimer timer)
 		{
-			GameLiving living = caster.TargetObject as GameLiving;
+			GameLiving living = timer.Owner as GameLiving;
 			if (living != null)
 			{
 				living.BuffBonusMultCategory1.Remove((int)eProperty.MaxSpeed, this);
