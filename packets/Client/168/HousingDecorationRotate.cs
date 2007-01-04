@@ -37,7 +37,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 			ushort housenumber = packet.ReadShort();
 			ushort angle = packet.ReadShort();
 			ushort unk2 = packet.ReadShort();
-
+			// Working only for inside items.
+			if (!client.Player.InHouse) return 1;
 			House house = HouseMgr.GetHouse(housenumber);
 			if (house == null)
 				return 1;
@@ -55,7 +56,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 			iitem.Rotation = (iitem.Rotation + angle) % 360;
 			if (iitem.Rotation < 0)
 				iitem.Rotation = 360 + iitem.Rotation;
-
+			iitem.DatabaseItem.Rotation = iitem.Rotation;
+			GameServer.Database.SaveObject(iitem.DatabaseItem);
 			client.Player.Out.SendMessage(string.Format("Interior decoration rotated from {0} degrees to {1}", old, iitem.Rotation), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			foreach (GamePlayer plr in house.GetAllPlayersInHouse())
 				plr.Client.Out.SendFurniture(house, position);
