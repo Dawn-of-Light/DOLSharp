@@ -40,7 +40,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 			if (house == null)
 				return 1;
 			if (client.Player == null) return 1;
-
+			// Working only for inside items.
+			if (!client.Player.InHouse) return 1;
+			
 			if (!house.IsOwner(client.Player) && !house.CanAddInterior(client.Player))
 				return 1;
 

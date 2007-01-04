@@ -32,6 +32,60 @@ GamePlayer.Release.ReturnToPray:			Return to /pray at your grave to regain exper
 GamePlayer.Release.LostConstitution:		You've lost some constitution, go to a healer to have it restored!
 GamePlayer.Release.SurroundingChange:		Your surroundings suddenly change!
 GamePlayer.Release.NoValidBindpoint:		You have no valid bindpoint! Releasing here instead!
+GamePlayer.Release.WillReleaseIn:			You will autorelease in {0} seconds.
+GamePlayer.Pray.CantPrayNow:				You can't pray now!
+GamePlayer.Pray.NeedTarget:					You need to target a grave at which to pray!
+GamePlayer.Pray.SelectGrave:				Select your gravestone to pray!
+GamePlayer.Pray.MustGetCloser:				You must get closer to your grave and sit to pray!
+GamePlayer.Pray.MustStandingStill:			You must be standing still to pray.
+GamePlayer.Pray.AlreadyPraying:				You are already praying!
+GamePlayer.Pray.Begin:						You begin your prayers!
+GamePlayer.Pray.GainBack:					You pray at your grave and gain back experience!
+GamePlayer.AddSpecialisation.YouLearn:		You learn the {0} skill!
+GamePlayer.RemoveSpecialization.YouLose:	You lose the {0} skill!
+GamePlayer.AddSpellLine.YouLearn:			You learn the {0} spell list!
+GamePlayer.RemoveSpellLine.YouLose:			You lose the {0} spell line!
+GamePlayer.AddAbility.YouLearn:				You learn the {0} ability!
+GamePlayer.RemoveAbility.YouLose:			You lose the {0} ability!
+GamePlayer.RefreshSpec.YouLearn:			You learn the {0} combat style!
+GamePlayer.RefreshSpec.AfterStyle:			This style can only be used after you execute the {0} style.
+GamePlayer.RefreshSpec.AfterMissed:			This style is best used after your last attack is missed.
+GamePlayer.RefreshSpec.AfterParried:		This style is best used after your last attack is parried.
+GamePlayer.RefreshSpec.AfterBlocked:		This style is best used after your last attack is blocked.
+GamePlayer.RefreshSpec.AfterEvaded:			This style is best used after your last attack is evaded.
+GamePlayer.RefreshSpec.AfterFumbles:		This style is best used after your last attack fumbles.
+GamePlayer.RefreshSpec.TargetMisses:		This style is best used after your target's last attack misses.
+GamePlayer.RefreshSpec.TargetHits:			This style is best used after your target's last attack hits.
+GamePlayer.RefreshSpec.TargetParried:		This style is best used after your target's last attack is parried.
+GamePlayer.RefreshSpec.TargetBlocked:		This style is best used after your target's last attack is blocked.
+GamePlayer.RefreshSpec.TargetEvaded:		This style is best used after your target's last attack is evaded.
+GamePlayer.RefreshSpec.TargetFumbles:		This style is best used after your target's last attack fumbles.
+GamePlayer.RefreshSpec.TargetStyle:			This style is best used after your target's last attack is style.
+GamePlayer.UpdateSpellLine.GainPower:		You gain power in the {0} spell list!
+GamePlayer.OnSkillTrained.YouSpend:			You spend {0} points and specialize further in {1}
+GamePlayer.OnSkillTrained.YouHave:			You have {0} specialization points left this level.
+GamePlayer.OnSkillTrained.TrainsInVarious:	{0} trains in various specializations.
+GamePlayer.GainRealmPoints.YouGet:			You get {0} realm points!
+GamePlayer.GainRealmPoints.GainedLevel:		You have gained a realm level!
+GamePlayer.GainRealmPoints.GainedRank:		You have gained a new rank and a new realm title!
+GamePlayer.GainRealmPoints.NewRealmTitle:	Your new realm title is {0}!
+GamePlayer.GainRealmPoints.GainBonus:		You gain a +{0} bonus to all specializations!
+GamePlayer.GainRealmPoints.ReachedRank:		{0} reached realm rank {1:#L#} in {2}!
+GamePlayer.GainRealmPoints.Earned:			{0} has earned 1,000,000 realm points in {1}
+GamePlayer.GainBountyPoints.YouGet:			You get {0} bounty points!
+GamePlayer.GainExperience.YouGet:			You get {0} experience points.
+GamePlayer.GainExperience.CannotRaise:		You cannot raise to the 6th level until you join an advanced guild!
+GamePlayer.GainExperience.TalkToTrainer:	Talk to your trainer for more information.
+GamePlayer.OnLevelUp.YouRaise:				You raise to level {0}!
+GamePlayer.OnLevelUp.YouAchived:			You have achieved level {0}!
+GamePlayer.OnLevelUp.FreeLevelEligible:		You are eligible for a free level! Click on your trainer to receive it (or type /freelevel decline to discard your free level).
+GamePlayer.OnLevelUp.Reached:				{0} reached level {1} in {2}!
+GamePlayer.OnLevelUp.StatRaise:				Your stats raise!
+GamePlayer.OnLevelUp.AttainedRank:			You have attained the rank of {0}!
+GamePlayer.OnLevelUp.YouGetSpec:			You get {0} more Specialization Points to spend at this level!
+GamePlayer.OnLevelUp.HitsRaise:				Your hits raise by {0} points.
+GamePlayer.OnLevelUp.PowerRaise:			Your power raises by {0} points.
+GamePlayer.OnLevelUp.SecondStage:			You raise to level {0} Stage 2!
 
 # HOUSING
 HouseEnterLeave.TooFarAway:					You are too far away to enter house {0}.
