@@ -1111,12 +1111,12 @@ namespace DOL.GS
 			}
 			if (m_releasePhase <= 1 && diffToRelease <= 10 && diffToRelease >= 8)
 			{
-				Out.SendMessage("You will autorelease in 10 seconds.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Release.WillReleaseIn", 10), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				m_releasePhase = 2;
 			}
 			if (m_releasePhase == 0 && diffToRelease <= 30 && diffToRelease >= 28)
 			{
-				Out.SendMessage("You will autorelease in 30 seconds.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Release.WillReleaseIn", 30), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				m_releasePhase = 1;
 			}
 			return 1000;
@@ -1158,34 +1158,34 @@ namespace DOL.GS
 		{
 			if (!IsAlive)
 			{
-				Out.SendMessage("You can't pray now!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Pray.CantPrayNow"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 			GameGravestone gravestone = TargetObject as GameGravestone;
 			if (gravestone == null)
 			{
-				Out.SendMessage("You need to target a grave at which to pray!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Pray.NeedTarget"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 			if (!gravestone.InternalID.Equals(InternalID))
 			{
-				Out.SendMessage("Select your gravestone to pray!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Pray.SelectGrave"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 			if (!WorldMgr.CheckDistance(this, gravestone, 2000))
 			{
-				Out.SendMessage("You must get closer to your grave and sit to pray!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Pray.MustGetCloser"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 			if (IsMoving)
 			{
-				Out.SendMessage("You must be standing still to pray.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Pray.MustStandingStill"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
 			if (PrayState)
 			{
-				Out.SendMessage("You are already praying!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Pray.AlreadyPraying"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
@@ -1195,7 +1195,7 @@ namespace DOL.GS
 			m_prayAction.Start(PRAY_DELAY);
 
 			Sit(true);
-			Out.SendMessage("You begin your prayers!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Pray.Begin"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 				player.Out.SendEmoteAnimation(this, eEmote.Pray);
@@ -1246,7 +1246,7 @@ namespace DOL.GS
 
 				if (xp > 0)
 				{
-					player.Out.SendMessage("You pray at your grave and gain back experience!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GamePlayer.Pray.GainBack"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 					player.GainExperience(xp);
 				}
 				m_gravestone.Delete();
@@ -2079,7 +2079,7 @@ namespace DOL.GS
 						m_specList.Add(skill);
 					}
 				}
-				Out.SendMessage("You learn the " + skill.Name + " skill!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.AddSpecialisation.YouLearn", skill.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 			else
 			{
@@ -2109,7 +2109,7 @@ namespace DOL.GS
 					m_specialization.Remove(specKeyName);
 				}
 			}
-			Out.SendMessage("You lose the " + playerSpec + " skill!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.RemoveSpecialization.YouLose", playerSpec), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			return true;
 		}
 
@@ -2124,7 +2124,7 @@ namespace DOL.GS
 			{
 				m_spelllines.Remove(line);
 			}
-			Out.SendMessage("You lose the " + line.Name + " spell line!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.RemoveSpellLine.YouLose", line.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			return true;
 		}
 
@@ -2362,7 +2362,7 @@ namespace DOL.GS
 					}
 					if (newAbility)
 					{
-						Out.SendMessage("You learn the " + ability.Name + " ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.AddAbility.YouLearn", ability.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}
 				}
 			}
@@ -2388,7 +2388,7 @@ namespace DOL.GS
 					m_skillList.Remove(ability);
 				}
 			}
-			Out.SendMessage("You lose the " + ability.Name + " ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.RemoveAbility.YouLose", ability.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			return true;
 		}
 
@@ -2581,7 +2581,7 @@ namespace DOL.GS
 				{
 					m_spelllines.Add(line);
 				}
-				Out.SendMessage("You learn the " + line.Name + " spell list!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.AddSpellLine.YouLearn", line.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 			else
 			{
@@ -2754,7 +2754,7 @@ namespace DOL.GS
 			{
 				foreach (Style style in newStyles)
 				{
-					Out.SendMessage("You learn the " + style.Name + " combat style!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.RefreshSpec.YouLearn", style.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 					string message = null;
 					if (Style.eOpening.Offensive == style.OpeningRequirementType)
@@ -2763,30 +2763,31 @@ namespace DOL.GS
 						{
 							case Style.eAttackResult.Style:
 							case Style.eAttackResult.Hit: // TODO: make own message for hit after styles DB is updated
-								message = "This style can only be used after you execute the ";
+
 								Style reqStyle = SkillBase.GetStyleByID(style.OpeningRequirementValue, CharacterClass.ID);
 								if (reqStyle == null)
-									message += "(style " + style.OpeningRequirementValue + " not found) style.";
-								else message += reqStyle.Name + " style.";
+									message = LanguageMgr.GetTranslation(Client, "GamePlayer.RefreshSpec.AfterStyle", "(style " + style.OpeningRequirementValue + " not found)");
+								else message = LanguageMgr.GetTranslation(Client, "GamePlayer.RefreshSpec.AfterStyle", reqStyle.Name);
+
 								break;
-							case Style.eAttackResult.Miss: message = "This style is best used after your last attack is missed."; break;
-							case Style.eAttackResult.Parry: message = "This style is best used after your last attack is parried."; break;
-							case Style.eAttackResult.Block: message = "This style is best used after your last attack is blocked."; break;
-							case Style.eAttackResult.Evade: message = "This style is best used after your last attack is evaded."; break;
-							case Style.eAttackResult.Fumble: message = "This style is best used after your last attack fumbles."; break;
+							case Style.eAttackResult.Miss: message = LanguageMgr.GetTranslation(Client, "GamePlayer.RefreshSpec.AfterMissed"); break;
+							case Style.eAttackResult.Parry: message = LanguageMgr.GetTranslation(Client, "GamePlayer.RefreshSpec.AfterParried"); break;
+							case Style.eAttackResult.Block: message = LanguageMgr.GetTranslation(Client, "GamePlayer.RefreshSpec.AfterBlocked"); break;
+							case Style.eAttackResult.Evade: message = LanguageMgr.GetTranslation(Client, "GamePlayer.RefreshSpec.AfterEvaded"); break;
+							case Style.eAttackResult.Fumble: message = LanguageMgr.GetTranslation(Client, "GamePlayer.RefreshSpec.AfterFumbles"); break;
 						}
 					}
 					else if (Style.eOpening.Defensive == style.OpeningRequirementType)
 					{
 						switch (style.AttackResultRequirement)
 						{
-							case Style.eAttackResult.Miss: message = "This style is best used after your target's last attack misses."; break;
-							case Style.eAttackResult.Hit: message = "This style is best used after your target's last attack hits."; break;
-							case Style.eAttackResult.Parry: message = "This style is best used after your target's last attack is parried."; break;
-							case Style.eAttackResult.Block: message = "This style is best used after your target's last attack is blocked."; break;
-							case Style.eAttackResult.Evade: message = "This style is best used after your target's last attack is evaded."; break;
-							case Style.eAttackResult.Fumble: message = "This style is best used after your target's last attack fumbles."; break;
-							case Style.eAttackResult.Style: message = "This style is best used after your target's last attack is style."; break;
+							case Style.eAttackResult.Miss: message = LanguageMgr.GetTranslation(Client, "GamePlayer.RefreshSpec.TargetMisses"); break;
+							case Style.eAttackResult.Hit: message = LanguageMgr.GetTranslation(Client, "GamePlayer.RefreshSpec.TargetHits"); break;
+							case Style.eAttackResult.Parry: message = LanguageMgr.GetTranslation(Client, "GamePlayer.RefreshSpec.TargetParried"); break;
+							case Style.eAttackResult.Block: message = LanguageMgr.GetTranslation(Client, "GamePlayer.RefreshSpec.TargetBlocked"); break;
+							case Style.eAttackResult.Evade: message = LanguageMgr.GetTranslation(Client, "GamePlayer.RefreshSpec.TargetEvaded"); break;
+							case Style.eAttackResult.Fumble: message = LanguageMgr.GetTranslation(Client, "GamePlayer.RefreshSpec.TargetFumbles"); break;
+							case Style.eAttackResult.Style: message = LanguageMgr.GetTranslation(Client, "GamePlayer.RefreshSpec.TargetStyle"); break;
 						}
 					}
 
@@ -2818,7 +2819,7 @@ namespace DOL.GS
 						if (newSpec > 0)
 						{
 							if (sendMessages && line.Level < newSpec)
-								Out.SendMessage("You gain power in the " + line.Name + " spell list!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UpdateSpellLine.GainPower", line.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							line.Level = newSpec;
 						}
 					}
@@ -2832,9 +2833,9 @@ namespace DOL.GS
 		/// <param name="skill"></param>
 		public void OnSkillTrained(Specialization skill)
 		{
-			Out.SendMessage("You spend " + skill.Level + " points and specialize further in " + skill.Name, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			Out.SendMessage("You have " + SkillSpecialtyPoints + " specialization points left this level.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			Message.SystemToOthers(this, GetName(0, true) + " trains in various specializations.", eChatType.CT_System);
+			Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.OnSkillTrained.YouSpend", skill.Level, skill.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.OnSkillTrained.YouHave", SkillSpecialtyPoints), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			Message.SystemToOthers(this, LanguageMgr.GetTranslation(Client, "GamePlayer.OnSkillTrained.TrainsInVarious", GetName(0, true)), eChatType.CT_System);
 			CharacterClass.OnSkillTrained(this, skill);
 			RefreshSpecDependantSkills(true);
 			UpdateSpellLineLevels(true);
@@ -3115,7 +3116,7 @@ namespace DOL.GS
 				m_guild.GainRealmPoints(amount);
 
 			if (amount > 0)
-				Out.SendMessage("You get " + amount.ToString() + " realm points!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.GainRealmPoints.YouGet", amount.ToString()), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 			//"You earn 4 extra realm points!"
 
 			while (RealmPoints >= CalculateRPsFromRealmLevel(m_realmLevel + 1) && m_realmLevel < 120)
@@ -3123,13 +3124,13 @@ namespace DOL.GS
 				RealmLevel++;
 				RealmSpecialtyPoints++;
 				Out.SendUpdatePlayer();
-				Out.SendMessage("You have gained a realm level!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.GainRealmPoints.GainedLevel"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				if (m_realmLevel % 10 == 0)
 				{
 					Out.SendUpdatePlayerSkills();
-					Out.SendMessage("You have gained a new rank and a new realm title!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					Out.SendMessage("Your new realm title is " + RealmTitle + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					Out.SendMessage("You gain a +" + m_realmLevel / 10 + " bonus to all specializations!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.GainRealmPoints.GainedRank"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.GainRealmPoints.NewRealmTitle", RealmTitle), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.GainRealmPoints.GainBonus", m_realmLevel / 10), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					foreach (GamePlayer plr in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 						plr.Out.SendLivingDataUpdate(this, true);
 					Notify(GamePlayerEvent.RRLevelUp, this);
@@ -3138,12 +3139,12 @@ namespace DOL.GS
 					Notify(GamePlayerEvent.RLLevelUp, this);
 				if (this.Client.Account.PrivLevel == 1 && (m_realmLevel >= 20 && m_realmLevel % 10 == 0) || m_realmLevel >= 60)
 				{
-					string message = string.Format("{0} reached realm rank {1:#L#} in {2}!", Name, m_realmLevel + 10, LastPositionUpdateZone.Description);
+					string message = LanguageMgr.GetTranslation(Client, "GamePlayer.GainRealmPoints.ReachedRank", Name, m_realmLevel + 10, LastPositionUpdateZone.Description);
 					NewsMgr.CreateNews(message, this.Realm, eNewsType.RvRLocal, true);
 				}
 				if (this.Client.Account.PrivLevel == 1 && m_realmPts >= 1000000 && m_realmPts - amount < 1000000)
 				{
-					string message = string.Format("{0} has earned 1,000,000 realm points in {1}", Name, LastPositionUpdateZone.Description);
+					string message = LanguageMgr.GetTranslation(Client, "GamePlayer.GainRealmPoints.Earned", Name, LastPositionUpdateZone.Description);
 					NewsMgr.CreateNews(message, this.Realm, eNewsType.RvRLocal, true);
 				}
 			}
@@ -3204,7 +3205,7 @@ namespace DOL.GS
 			BountyPoints += amount;
 			if (m_guild != null)
 				m_guild.GainBountyPoints(amount);
-			Out.SendMessage("You get " + amount.ToString() + " bounty points!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+			Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.GainRealmPoints.YouGet", amount.ToString()), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 			Out.SendUpdatePoints();
 		}
 
@@ -3662,7 +3663,7 @@ namespace DOL.GS
 					expGroupBonusStr = " (" + expGroupBonus.ToString("N0", format) + " group bonus)";
 				}
 
-				Out.SendMessage("You get " + totalExpStr + " experience points." + expCampBonusStr + expGroupBonusStr, eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.GainExperience.YouGet", totalExpStr) + expCampBonusStr + expGroupBonusStr, eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 			}
 
 			m_currentXP += expTotal; // force usage of this method, Experience property cannot be set
@@ -3675,8 +3676,8 @@ namespace DOL.GS
 				{
 					if (expTotal > 0)
 					{
-						Out.SendMessage("You cannot raise to the 6th level until you join an advanced guild!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-						Out.SendMessage("Talk to your trainer for more information.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+						Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.GainExperience.CannotRaise"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+						Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.GainExperience.TalkToTrainer"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 					}
 				}
 				else if (Level >= 40 && Level < MAX_LEVEL && !IsLevelSecondStage && Experience >= ExperienceForCurrentLevelSecondStage)
@@ -3750,12 +3751,12 @@ namespace DOL.GS
 		{
 			IsLevelSecondStage = false;
 
-			Out.SendMessage("You raise to level " + Level + "!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+			Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.OnLevelUp.YouRaise", Level), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 			if (Experience < GameServer.ServerRules.GetExperienceForLevel(Level + 1))
-				Out.SendMessage("You have achieved level " + Level + "!", eChatType.CT_ScreenCenter, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.OnLevelUp.YouAchived", Level), eChatType.CT_ScreenCenter, eChatLoc.CL_SystemWindow);
 			Out.SendPlayerFreeLevelUpdate();
 			if (FreeLevelState == 2)
-				Out.SendDialogBox(eDialogCode.SimpleWarning, 0, 0, 0, 0, eDialogType.Ok, true, "You are eligible for a free level! Click on your trainer to receive it (or type /freelevel decline to discard your free level).");
+				Out.SendDialogBox(eDialogCode.SimpleWarning, 0, 0, 0, 0, eDialogType.Ok, true, LanguageMgr.GetTranslation(Client, "GamePlayer.OnLevelUp.FreeLevelEligible"));
 			switch (Level)
 			{
 				// full respec on level 5 since 1.70
@@ -3787,7 +3788,7 @@ namespace DOL.GS
 					{
 						if (Client.Account.PrivLevel == 1)
 						{
-							string message = string.Format("{0} reached level {1} in {2}!", Name, Level, LastPositionUpdateZone.Description);
+							string message = LanguageMgr.GetTranslation(Client, "GamePlayer.OnLevelUp.Reached", Name, Level, LastPositionUpdateZone.Description);
 							NewsMgr.CreateNews(message, Realm, eNewsType.PvE, true);
 						}
 						break;
@@ -3822,7 +3823,7 @@ namespace DOL.GS
 
 			if (statsChanged)
 			{
-				Out.SendMessage("Your stats raise!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.OnLevelUp.StatRaise"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 			}
 
 			CharacterClass.OnLevelUp(this);
@@ -3838,7 +3839,7 @@ namespace DOL.GS
 			if (CharacterClass.GetTitle(previouslevel) != currenttitle)
 			{
 				// Inform player of new title.
-				Out.SendMessage("You have attained the rank of " + currenttitle + "!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.OnLevelUp.AttainedRank", currenttitle), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 			}
 
 			// spec points
@@ -3849,7 +3850,7 @@ namespace DOL.GS
 			}
 			if (specpoints > 0)
 			{
-				Out.SendMessage("You get " + specpoints + " more Specialization Points to spend at this level!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.OnLevelUp.YouGetSpec", specpoints), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 			}
 
 			SkillSpecialtyPoints += specpoints;
@@ -3868,7 +3869,7 @@ namespace DOL.GS
 			int newhp = CalculateMaxHealth(Level, GetBaseStat(eStat.CON));
 			if (oldhp > 0 && oldhp < newhp)
 			{
-				Out.SendMessage("Your hits raise by " + (newhp - oldhp) + " points.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.OnLevelUp.HitsRaise", (newhp - oldhp)), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 			}
 
 			// power upgrade
@@ -3877,7 +3878,7 @@ namespace DOL.GS
 				int newpow = CalculateMaxMana(Level, GetBaseStat(CharacterClass.ManaStat));
 				if (newpow > 0 && oldpow < newpow)
 				{
-					Out.SendMessage("Your power raises by " + (newpow - oldpow) + " points.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.OnLevelUp.PowerRaise", (newpow - oldpow)), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 				}
 			}
 
@@ -3928,13 +3929,13 @@ namespace DOL.GS
 		{
 			IsLevelSecondStage = true;
 
-			Out.SendMessage("You raise to level " + Level + " Stage 2!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+			Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.OnLevelUp.SecondStage", Level), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 
 			// spec points
 			int specpoints = CharacterClass.SpecPointsMultiplier * Level / 20;
 			if (specpoints > 0)
 			{
-				Out.SendMessage("You get " + specpoints + " more Specialization Points to spend at this level!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.OnLevelUp.YouGetSpec", specpoints), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 			}
 
 			SkillSpecialtyPoints += specpoints;
