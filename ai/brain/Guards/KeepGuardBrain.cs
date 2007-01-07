@@ -56,8 +56,6 @@ namespace DOL.AI.Brain
 					guard.Y != guard.SpawnY ||
 					guard.Z != guard.SpawnZ)
 					guard.WalkToSpawn();
-				if (!guard.IsMoving && guard.Heading != guard.SpawnHeading)
-					guard.Heading = guard.SpawnHeading;
 			}
 		}
 

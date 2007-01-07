@@ -1040,6 +1040,7 @@ namespace DOL.GS
 			m_propertyNames[eProperty.SpellRange] = "Spell Range";
 			m_propertyNames[eProperty.ArcheryRange] = "Archery Range";
 			m_propertyNames[eProperty.Acuity] = "Acuity";
+			m_propertyNames[eProperty.MeleeSpeed] = "Melee Speed";
 
 			m_propertyNames[eProperty.AllMagicSkills] = "ALL magic skills";
 			m_propertyNames[eProperty.AllMeleeWeaponSkills] = "ALL melee weapon skills";

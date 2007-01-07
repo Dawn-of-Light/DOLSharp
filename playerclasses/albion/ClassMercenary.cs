@@ -121,7 +121,7 @@ namespace DOL.GS.Scripts
 			}
 			if (player.Level >= 40)
 			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Charge));
+				//player.AddAbility(SkillBase.GetAbility(Abilities.Charge));
 			}
 		}
 	}
