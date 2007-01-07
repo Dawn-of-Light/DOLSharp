@@ -9,12 +9,49 @@
 System.LanguagesName.English:				Englisch
 System.LanguagesName.French:				Französisch
 System.LanguagesName.German:				Deutsch
+System.LanguagesName.Spanish:				Spanish
+System.LanguagesName.Czech:					Czech
 
 # SYSTEM
 System.NoSense:								Das würde keinen Sinn machen!
 
 # GAMEPLAYER
-GamePlayer.SendReceive.sends:				 sendet, 
+GamePlayer.SendReceive.sends:				 sendet,
+GamePlayer.Quit.CantQuitDead:            Sie können DAoC nicht beenden. Sie sind tot. Geben Sie '/release' ein, um ihre Leiche freizugeben
+GamePlayer.Quit.CantQuitMount:        Sie müssen absteigen, bevor sie DAoC beenden können.
+GamePlayer.Quit.CantQuitStanding:                     Sie müssen stillstehen, um DAoC beenden zu können.
+GamePlayer.Quit.CantQuitCrafting:                     Sie können DAoC nicht beenden, solange sie Gegenstände herstellen.
+GamePlayer.Quit.RecentlyInCombat:                     Sie haben vor kurzem gekämpft und müssen noch warten, um DAoC beenden zu können
+GamePlayer.Quit.YouWillQuit:                You will quit after sitting for {0} seconds.  Type '/stand' or move if you don't want to quit. 
+GamePlayer.Release.NotDead:                         Sie sind nicht tot!
+GamePlayer.Release.CantReleaseDuel:               You can't alter your release on a duel death!
+GamePlayer.Release.NoLongerReleaseAuto:  You will no longer release automatically. ({0} more seconds) Sie werden ihre Leiche jetzt nicht länger automatisch freigeben. (noch {0} Sekunden)
+GamePlayer.Release.WillReleaseAuto:               Sie werden ihre Leiche in {0} Sekunden automatisch freigeben.
+GamePlayer.Release.WillReleaseAutoCity:  You will now release automatically to your home city in {0} more seconds!
+GamePlayer.Release.YouRelease:        You release your corpse unto death. 
+GamePlayer.Release.GraveErected:                        Ein Grab wurde an ihrem Sterbeort errichtet.
+GamePlayer.Release.ReturnToPray:                        Kehren sie zu ihrem Grab zurück, und /pray en sie um Erfahrung zurückzuerhalten.
+GamePlayer.Release.LostConstitution:        ihre Konstitution wurde geschwächt, besuchen sie einen Heiler um sie zurückzuerhalten.
+GamePlayer.Release.SurroundingChange:      Ihre Umgebung verändert sich plötzlich.
+GamePlayer.Release.NoValidBindpoint:        Sie haben keinen gültigen Bindepunkt. Gebe stattdessen hier frei.
+GamePlayer.Release.WillReleaseIn:                     Sie werden ihre Leiche in {0} Sekunden automatisch freigeben.
+GamePlayer.Pray.CantPrayNow:                Sie können jetzt nicht beten.
+GamePlayer.Pray.NeedTarget:                         Sie müssen das Grab anvisieren, an dem sie beten wollen.
+GamePlayer.Pray.SelectGrave:                Beten sie an ihrem Grabstein.
+GamePlayer.Pray.MustGetCloser:        Sie müssen näher an ihrem Grab sitzen, um beten zu können.
+GamePlayer.Pray.MustStandingStill:                  Sie müssen stillstehen, um beten zu können.
+GamePlayer.Pray.AlreadyPraying:    Sie beten bereits.
+GamePlayer.Pray.Begin:            Sie fangen an, zu beten.
+GamePlayer.Pray.GainBack:                                   Sie beten an ihrem Grab und erhalten Erfahrung zurück.
+GamePlayer.AddSpecialisation.YouLearn:    Sie erlernen die Fertigkeit {0}.
+GamePlayer.RemoveSpecialization.YouLose:        Sie verlieren die Fertigkeit {0}.
+GamePlayer.AddSpellLine.YouLearn:                     Sie erlernen die Spruchliste {0}
+GamePlayer.RemoveSpellLine.YouLose:               You lose the {0} spell line! Sie verlernen die Spruchliste {0}
+GamePlayer.AddAbility.YouLearn:    You learn the {0} ability! Sie erhalten die Fähigkeit {0}
+GamePlayer.RemoveAbility.YouLose:                     Sie verlieren die Fähigkeit {0} .
+GamePlayer.RefreshSpec.YouLearn:                        You learn the {0} combat style! Sie erlernen den {0} Kampfstil.
+GamePlayer.RefreshSpec.AfterStyle:                  Dieser Stil kann nur nach der Ausführung des {0} Stils benutzt werden.
+GamePlayer.RefreshSpec.AfterMissed:               Benutzen sie diesen Stil am besten, nachdem ihr letzter Angriff verfehlt hat.
 
 # HOUSING
 HousingPlaceItemHandler.30objects:			Du kannst hier nicht mehr als 30 Objekte aufstellen!

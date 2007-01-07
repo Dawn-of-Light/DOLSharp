@@ -309,6 +309,7 @@ namespace DOL.GS.Spells
 					}
 
 					m_controlledBrain.ClearAggroList();
+					npc.StopFollow();
 
 					npc.TempProperties.setProperty(GameNPC.CHARMED_TICK_PROP, npc.CurrentRegion.Time);
 				}

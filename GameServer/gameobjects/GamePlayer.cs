@@ -8329,7 +8329,7 @@ namespace DOL.GS
 				double enc = (double)Strength;
 				RAPropertyEnhancer ab = GetAbility(typeof(LifterAbility)) as RAPropertyEnhancer;
 				if (ab != null)
-					enc *= 1 + (ab.Amount / 100);
+					enc *= 1 + ((double)ab.Amount / 100);
 				return (int)enc;
 			}
 		}

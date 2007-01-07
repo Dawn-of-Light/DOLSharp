@@ -196,12 +196,6 @@ namespace DOL.GS.Scripts
 							DisplaySyntax(client);
 							return 1;
 						}
-						byte height = byte.Parse(args[2]);
-						if (height > 3)
-						{
-							DisplayError(client, "Choose a height between 0 and 3", new object[] { });
-							return 1;
-						}
 
 						GameKeepGuard guard = client.Player.TargetObject as GameKeepGuard;
 
