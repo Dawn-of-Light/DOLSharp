@@ -40,6 +40,8 @@ namespace DOL.Language
 			EN = 0,
 			FR = 1,
 			DE = 2,
+			ES = 3,
+			CZ = 4,
 			Langs_size
 		};
 
@@ -95,6 +97,8 @@ namespace DOL.Language
 			LoadLanguage(Langs.EN, "EN", "English");
 			LoadLanguage(Langs.FR, "FR", "French");
 			LoadLanguage(Langs.DE, "DE", "German");
+			LoadLanguage(Langs.ES, "ES", "Spanish");
+			LoadLanguage(Langs.CZ, "CZ", "Czech");
 			
 			return true;
 		}

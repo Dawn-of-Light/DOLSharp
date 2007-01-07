@@ -40,7 +40,7 @@ namespace DOL.GS.RealmAbilities
 				default: return;
 			}
 
-			if (caster.TargetObject != null)
+			if (caster.TargetObject != null && caster.TargetInView && WorldMgr.GetDistance(caster, caster.TargetObject) <= 1875)
 			{
 				foreach (GamePlayer i_player in caster.GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
 				{
