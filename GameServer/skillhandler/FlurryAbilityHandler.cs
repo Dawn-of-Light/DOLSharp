@@ -115,7 +115,7 @@ namespace DOL.GS.SkillHandler
 			//damage = base HP / 100 * DWspec / 2.7 that would be the original calculation
 			if (target is GamePlayer)
 			{
-				damage = (int)((target as GamePlayer).PlayerCharacter.Health / 100 * specc / 3.5);   //works fine      
+				damage = (int)(target.MaxHealth / 100 * specc / 3.5);   //works fine      
 			}
 			else
 			{ damage = (int)(target.MaxHealth / 100 * specc / 3.6); } //works fine

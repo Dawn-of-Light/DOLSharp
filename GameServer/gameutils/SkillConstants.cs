@@ -33,19 +33,9 @@ namespace DOL.GS
 		public const string AlbArmor = "AlbArmor";
 		public const string HibArmor = "HibArmor";
 		public const string MidArmor = "MidArmor";
-//		public const string Armor_Cloth = "Cloth";
-//		public const string Armor_Leather = "Leather";
-//		public const string Armor_Studded = "Studded";
-//		public const string Armor_Chain = "Chain";
-//		public const string Armor_Plate = "Plate";
-//		public const string Armor_Reinforced = "Reinforced";
-//		public const string Armor_Scale = "Scale";
 
 		// shields
 		public const string Shield = "Shield";
-//		public const string Shield_SmallShields = "Shield Ability: Small Shields";
-//		public const string Shield_MediumShields = "Shield Ability: Medium Shields";
-//		public const string Shield_LargeShields = "Shield Ability: Large Shields";
 
 		// Weaponry
 		public const string Weapon_Staves = "Weaponry: Staves";
@@ -82,7 +72,7 @@ namespace DOL.GS
 		public const string Berserk = "Berserk";
 		public const string Enhanced_Evade = "Enhanced Evade";
 		public const string Intercept = "Intercept";
-		public const string Charge = "Charge";
+		//public const string Charge = "Charge";
 		public const string Flurry = "Flurry";
 		public const string Protect = "Protect";
 		public const string Critical_Shot = "Critical Shot";
@@ -102,10 +92,6 @@ namespace DOL.GS
 		public const string PreventFlight = "Prevent Flight";
 		public const string RapidFire = "Rapid Fire";
 		public const string Stag = "Stag";
-//		public const string Initiate_OfTheHunt = "Initiate of the Hunt";
-//		public const string Member_OfTheHunt = "Member of the Hunt";
-//		public const string Leader_OfTheHunt = "Leader of the Hunt";
-//		public const string Master_OfTheHunt = "Master of the Hunt";
 		public const string Stoicism = "Stoicism";
 		public const string SureShot = "Sure Shot";
 		public const string Tireless = "Tireless";
@@ -120,6 +106,8 @@ namespace DOL.GS
 		public const string MemoriesOfWar = "Memories of War";
 		//moved from Armsman RR5 RA to Armsman 25 spec crossbow.
 		public const string Snapshot = "Snapshot";
+		//NPC only abilities
+		public const string CCImmunity = "CCImmunity"; 
 
 	}
 

@@ -1364,7 +1364,7 @@ namespace DOL.GS.Scripts
 							text.Add(p.Name + " " + p.Level + " " + p.CharacterClass.Name);
 						}
 
-						player.Out.SendCustomTextWindow("Group Members", text);
+						client.Out.SendCustomTextWindow("Group Members", text);
 						break;
 					}
 				case "showeffects":
@@ -1387,7 +1387,7 @@ namespace DOL.GS.Scripts
 						{
 							text.Add(effect.Name + " remaining " + effect.RemainingTime);
 						}
-						player.Out.SendCustomTextWindow("Player Effects ", text);
+						client.Out.SendCustomTextWindow("Player Effects ", text);
 						break;
 					}
 			}

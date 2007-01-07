@@ -9,6 +9,8 @@
 System.LanguagesName.English:				Anglais
 System.LanguagesName.French:				Français
 System.LanguagesName.German:				Allemand
+System.LanguagesName.Spanish:				Spanish
+System.LanguagesName.Czech:					Czech
 
 # SYSTEM
 System.NoSense:								Cela n'a aucun sens !

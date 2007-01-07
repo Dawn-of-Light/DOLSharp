@@ -178,7 +178,7 @@ namespace DOL.GS.ServerRules
 			GamePlayer playerAttacker = attacker as GamePlayer;
 			GamePlayer playerDefender = defender as GamePlayer;
 
-			if (playerDefender != null && playerDefender.Client.ClientState != GameClient.eClientState.Playing)
+			if (playerDefender != null && playerDefender.Client.ClientState == GameClient.eClientState.WorldEnter)
 			{
 				if (!quiet)
 					MessageToLiving(attacker, defender.Name + " is entering the game and is temporarily immune to PvP attacks!");

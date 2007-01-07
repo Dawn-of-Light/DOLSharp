@@ -1,0 +1,115 @@
+# Language file for DOL
+# Language used : ENGLISH
+#
+# #-Beginning and Empty lines are ignored
+# TABS are ignored at the left of ':' too.
+# {0} etc. are for args, don't remove them !
+
+# LANGUAGEMGR
+System.LanguagesName.English:				Anglictina
+System.LanguagesName.French:				Francouzstina
+System.LanguagesName.German:				Nemcina
+System.LanguagesName.Czech:				Cestina
+System.LanguagesName.Spanish:				Spanish
+
+# SYSTEM
+System.NoSense:								To nedava smysl!
+
+# GAMEPLAYER
+GamePlayer.SendReceive.sends:				 sends, 
+GamePlayer.Quit.CantQuitDead:				Ted nemuzes ukoncit hru, jsi mrtvy. Napis '/release' pro oziveni tveho tela.
+GamePlayer.Quit.CantQuitMount:				Musis slezt z kone, nez ukoncis hru.
+GamePlayer.Quit.CantQuitStanding:			Musis stat na miste, pokud chces ukoncit hru.
+GamePlayer.Quit.CantQuitCrafting:			Nemuzes ukoncit hru behem vyrabeni.
+GamePlayer.Quit.RecentlyInCombat:			Nedavno jsi byl v boji a musis jeste chvilku pockat, nez budes smet opustit hru.
+GamePlayer.Quit.YouWillQuit:				Opustis hru za {0} sekund sezeni. Napis '/stand' nebo se pohni, pokud hru nechces opustit.
+GamePlayer.Release.NotDead:					Nejsi mrtvy!
+GamePlayer.Release.CantReleaseDuel:			Nemuzes menit zpusob tveho oziveni po smrti v duelu!
+GamePlayer.Release.NoLongerReleaseAuto:		Od ted nebudes oziven automaticky. ({0} sekund zbyva)
+GamePlayer.Release.WillReleaseAuto:			Budes oziven automaticky za {0} sekund!
+GamePlayer.Release.WillReleaseAutoCity:		Budes oziven automaticky do rodneho mesta za {0} sekund!
+GamePlayer.Release.YouRelease:				Propustil jsi svoji mrtvolu smrti.
+GamePlayer.Release.GraveErected:			Hrob vyrostl na miste kde jsi byl zabit.
+GamePlayer.Release.ReturnToPray:			Vrat se a pouzij prikaz '/pray' na tvem hrobe abys dostal zpet zkusenosti.
+GamePlayer.Release.LostConstitution:		Prisel jsi o konstituci, promluv si s healerem aby ti ji navratil!
+GamePlayer.Release.SurroundingChange:		Tvoje okoli se nahle zmenilo!
+GamePlayer.Release.NoValidBindpoint:		Nemas nastaveny bind point! Budes oziven na miste!
+GamePlayer.Release.WillReleaseIn:			Budes automaticky oziven za {0} sekund.
+GamePlayer.Pray.CantPrayNow:				Ted se nemuzes modlit!
+GamePlayer.Pray.NeedTarget:					Musis oznacit hrob u ktereho se chces modlit!
+GamePlayer.Pray.SelectGrave:				Pro modleni oznac svuj hrob!
+GamePlayer.Pray.MustGetCloser:				Musis prijit blize k tvemu hrobu aby ses mohl pomodlit!
+GamePlayer.Pray.MustStandingStill:			Musis stat na miste, pokud se chces modlit.
+GamePlayer.Pray.AlreadyPraying:				Uz se modlis!
+GamePlayer.Pray.Begin:						Zacal jsi svou modlitbu!
+GamePlayer.Pray.GainBack:					Modlis se u sveho hrobu a dostal jsi zpet zkusenosti!
+GamePlayer.AddSpecialisation.YouLearn:		Naucil jsi se dovednost {0}!
+GamePlayer.RemoveSpecialization.YouLose:	Prisel jsi o dovednost {0}!
+GamePlayer.AddSpellLine.YouLearn:			Naucil jsi se {0} magii!
+GamePlayer.RemoveSpellLine.YouLose:			Prisel jsi o {0} magii!
+GamePlayer.AddAbility.YouLearn:				Naucil jsi se dovednost {0}!
+GamePlayer.RemoveAbility.YouLose:			Prisel jsi o dovednost {0}!
+GamePlayer.RefreshSpec.YouLearn:			Naucil jsi se bojovy styl {0}!
+GamePlayer.RefreshSpec.AfterStyle:			Tento bojovy styl muze byt pouzit po bojovem stylu {0}.
+GamePlayer.RefreshSpec.AfterMissed:			Tento bojovy styl muze byt pouzit pokud jsi tvym poslednim utokem netrefil.
+GamePlayer.RefreshSpec.AfterParried:		Tento bojovy styl muze byt pouzit pokud tvuj posledni utok byl odrazen.
+GamePlayer.RefreshSpec.AfterBlocked:		Tento bojovy styl muze byt pouzit pokud tvuj posledni utok byl zablokovan.
+GamePlayer.RefreshSpec.AfterEvaded:			Tento bojovy styl muze byt pouzit pokud protivnik tvemu poslednimu utoku uhnul.
+GamePlayer.RefreshSpec.AfterFumbles:		Tento bojovy styl muze byt pouzit pokud jsi pri poslednim utoku udelal chybu.
+GamePlayer.RefreshSpec.TargetMisses:		Tento bojovy styl muze byt pouzit pokud se tvuj protivnik poslednim utokem netrefil.
+GamePlayer.RefreshSpec.TargetHits:			Tento bojovy styl muze byt pouzit pokud se tvuj protivnik poslednim utokem trefil.
+GamePlayer.RefreshSpec.TargetParried:		Tento bojovy styl muze byt pouzit pokud jsi posledni protivnikuv utok odrazil.
+GamePlayer.RefreshSpec.TargetBlocked:		Tento bojovy styl muze byt pouzit pokud jsi posledni protivnikuv utok zblkoval.
+GamePlayer.RefreshSpec.TargetEvaded:		Tento bojovy styl muze byt pouzit pokud jsi poslednimu protivnikovu utoku uhnul.
+GamePlayer.RefreshSpec.TargetFumbles:		Tento bojovy styl muze byt pouzit pokud tvuj protivnik pri poslednim utoku udelal chybu.
+GamePlayer.RefreshSpec.TargetStyle:			Tento bojovy styl muze byt pouzit pokud posledni protivnikuv utok byl bojovy styl.
+GamePlayer.UpdateSpellLine.GainPower:		Ziskal jsi nove kouzlo v {0} magii!
+GamePlayer.OnSkillTrained.YouSpend:			Vlozil jsi {0} bodu a pokrocil jsi v {1}
+GamePlayer.OnSkillTrained.YouHave:			Na teto urovni ti zbylo {0} dovednostnich bodu.
+GamePlayer.OnSkillTrained.TrainsInVarious:	{0} se uci novym dovednostem.
+GamePlayer.GainRealmPoints.YouGet:			Dostal jsi {0} realm bodu!
+GamePlayer.GainRealmPoints.GainedLevel:		Ziskal jsi realm uroven!
+GamePlayer.GainRealmPoints.GainedRank:		Ziskal jsi novou hodnost a novy titul!
+GamePlayer.GainRealmPoints.NewRealmTitle:	Tvuj novy titul je {0}!
+GamePlayer.GainRealmPoints.GainBonus:		Ziskal jsi +{0} bonus ke vsem dovednostem!
+GamePlayer.GainRealmPoints.ReachedRank:		{0} dosahl hodnosti {1:#L#} v {2}!
+GamePlayer.GainRealmPoints.Earned:			{0} dosahl 1,000,000 realm bodu v {1}
+GamePlayer.GainBountyPoints.YouGet:			Dostal jsi {0} premiovych bodu!
+GamePlayer.GainExperience.YouGet:			Dostal jsi {0} zkusenosti.
+GamePlayer.GainExperience.CannotRaise:		Nemuzes postoupit na sestou uroven dokud nevstoupis do cechu sveho budouciho povolani!
+GamePlayer.GainExperience.TalkToTrainer:	Promluv si s trenerem pro vice informaci.
+GamePlayer.OnLevelUp.YouRaise:				Postoupil jsi na {0} uroven!
+GamePlayer.OnLevelUp.YouAchived:			Dosahl jsi {0} urovne!
+GamePlayer.OnLevelUp.FreeLevelEligible:		Mas moznost ziskat uroven zdarma! Klikni na trenera abys ho ziskal (nebo napis /freelevel decline pro odlozeni na pozdeji)
+GamePlayer.OnLevelUp.Reached:				{0} dosahl urovne {1} v {2}!
+GamePlayer.OnLevelUp.StatRaise:				Tvoje vlastnosti se zvysily!
+GamePlayer.OnLevelUp.AttainedRank:			Dosahl jsi hodnosti {0}!
+GamePlayer.OnLevelUp.YouGetSpec:			Na teto urovni jsi ziskal {0} dovednostnich bodu k rozdeleni!
+GamePlayer.OnLevelUp.HitsRaise:				Tvoje zivoty vzrostly o {0} bodu.
+GamePlayer.OnLevelUp.PowerRaise:			Tvoje mana vzrostla o {0} bodu.
+GamePlayer.OnLevelUp.SecondStage:			Postoupil jsi do druhe etapy {0} urovne!
+
+# HOUSING
+HouseEnterLeave.TooFarAway:					Jsi prilis daleko aby jsi mohl vstoupit do domu {0}.
+HouseEnterLeave.CantEnter:					Nemuzes vstoupit do domu {0}.
+HousingDecorationRotate.Rotated:			Vnitrni dekorace otocena z {0} stupnu na {1} stupnu.
+HousingPickupItemHandler.GardenRemoved:		Zahradni objekt je odstranen.
+HousingPickupItemHandler.PickUp:			Dostal jsi {0} a dal do batohu.
+HousingPlaceItemHandler.30objects:			Uz jsi umistil 30 objektu. Nemuzes vic.
+HousingPlaceItemHandler.40objects:			Uz jsi umistil 40 objektu. Nemuzes vic.
+HousingPlaceItemHandler.CantFloor:			Tento objekt nemuze byt umisten na podlaze !
+HousingPlaceItemHandler.CantWall:			Tento objekt nemuze byt umisten na zdi !
+HousingPlaceItemHandler.DropOnFloor:		Umistil jsi {0} na podlahu !
+HousingPlaceItemHandler.DropOnGarden:		Umistil jsi {0} na zahradu !
+HousingPlaceItemHandler.DropOnWall:			Umistil jsi {0} na zed !
+HousingPlaceItemHandler.GardenObjectPlaced:	Zahradni objekt umisten. {0} pozic zbiva.
+HousingPlaceItemHandler.HasPorch:			Tento dum jiz ma verandu !
+HousingPlaceItemHandler.HasNoPorch:			Tento dum nema verandu !
+HousingPlaceItemHandler.IndoorObjectPlaced:	Vnitrní objekt umisten. {0} pozic zbiva.
+HousingPlaceItemHandler.NoHookpoint:		Zadne uchycovaci body nejsou momentalne k dispozici !
+HousingPlaceItemHandler.PutMoney:			Dal jsi penize na tvuj dum.
+
+# SCRIPTS
+# /Language
+Scripts.Players.Language.Set:				Zmenil jsi jazyk na: {0}.
+Scripts.Players.Language.Current:			Jazyk je prave nastaven na: {0}.

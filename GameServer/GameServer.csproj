@@ -1774,8 +1774,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="language\Language-CZ.txt" />
     <Content Include="language\Language-DE.txt" />
     <Content Include="language\Language-EN.txt" />
+    <Content Include="language\Language-ES.txt" />
     <Content Include="language\Language-FR.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

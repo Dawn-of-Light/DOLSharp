@@ -1409,7 +1409,8 @@ namespace DOL.GS
 			}
 			this.Spells = template.Spells;
 			this.Styles = template.Styles;
-			this.Abilities = template.Abilities;
+			foreach (Ability ab in template.Abilities)
+				m_abilities[ab.KeyName] = ab;
 			BuffBonusCategory4[(int)eStat.STR] += template.Strength;
 			BuffBonusCategory4[(int)eStat.DEX] += template.Dexterity;
 			BuffBonusCategory4[(int)eStat.CON] += template.Constitution;
@@ -2782,14 +2783,12 @@ namespace DOL.GS
 			set { m_styles = value; }
 		}
 
-		private IList m_abilities = new ArrayList(1);
 		/// <summary>
 		/// The Abilities for this NPC
 		/// </summary>
-		public IList Abilities
+		public Hashtable Abilities
 		{
 			get { return m_abilities; }
-			set { m_abilities = value; }
 		}
 
 		private RegionTimer m_retrySpellAttackTimer = null;

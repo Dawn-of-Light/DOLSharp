@@ -870,6 +870,7 @@ namespace DOL.GS.Housing
 						hNPC.Z = z;
 						hNPC.Heading = heading;
 						hNPC.CurrentRegionID = RegionID;
+						hNPC.Realm = (byte)item.Realm;
 						hNPC.AddToWorld();
 						break;
 					}

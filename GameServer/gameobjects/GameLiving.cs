@@ -2003,6 +2003,11 @@ namespace DOL.GS
 										owner.RangeAttackType = eRangeAttackType.RapidFire;
 										break;
 									}
+									else if (effect is TrueshotEffect)
+									{
+										owner.RangeAttackType = eRangeAttackType.Long;
+										break;
+									}
 								}
 							}
 						}

@@ -1,16 +1,16 @@
 /*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -44,7 +44,7 @@ namespace DOL.GS.Scripts
 			 */
 			IList list = new ArrayList();
 			list.Add("You target [" + GetName(0, false) + "]");
-			list.Add("You examine " + GetName(0, false) + ".  " + GetPronoun(0, true) + " is " + GetAggroLevelString(player, false) + " and is a smith.");
+			list.Add("You examine " + GetName(0, false) + "  " + GetPronoun(0, true) + " is " + GetAggroLevelString(player, false) + " and is a smith.");
 			list.Add("[Give him an object to be repaired]");
 			return list;
 		}
@@ -60,7 +60,7 @@ namespace DOL.GS.Scripts
 				return false;
 
 			TurnTo(player, 1000);
-			SayTo(player, eChatLoc.CL_ChatWindow, "I can repair weapons or armor for you, Just hand me the item you want repaired and I'll see what I can do, for a small fee.");
+			SayTo(player, eChatLoc.CL_ChatWindow, "I can repair weapons or armor for you, Just hand me the item you want repaired and I'll see what I can do, for a small fee of course.");
 			return true;
 		}
 
@@ -73,19 +73,19 @@ namespace DOL.GS.Scripts
 			GamePlayer player = source as GamePlayer;
 			if (player == null || item == null)
 				return false;
-			
+
 			if (item.Count != 1)
 			{
-				player.Out.SendMessage(GetName(0, false) + " can't repear stacked objets.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(GetName(0, false) + " can't repair stacked objets.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
 			switch (item.Object_Type)
 			{
-				case (int) eObjectType.GenericItem:
-				case (int) eObjectType.Magical:
-				case (int) eObjectType.Instrument:
-				case (int) eObjectType.Poison:
-					SayTo(player, "I can't repear that.");
+				case (int)eObjectType.GenericItem:
+				case (int)eObjectType.Magical:
+				case (int)eObjectType.Instrument:
+				case (int)eObjectType.Poison:
+					SayTo(player, "I can't repair that.");
 					return false;
 			}
 			if (item.Condition < item.MaxCondition)
@@ -98,8 +98,9 @@ namespace DOL.GS.Scripts
 				else
 				{
 					player.TempProperties.setProperty(REPAIR_ITEM_WEAK, new WeakRef(item));
-					long NeededMoney = ((item.MaxCondition - item.Condition)*item.Value)/item.MaxCondition;
-					player.Client.Out.SendCustomDialog(GetName(0, true) + " asks " + Money.GetString(NeededMoney) + "\n to repair " + item.Name, new CustomDialogResponse(BlacksmithDialogResponse));
+					long NeededMoney = ((item.MaxCondition - item.Condition) * item.Value) / item.MaxCondition;
+					player.Out.SendMessage("It will cost " + Money.GetString(NeededMoney) + " to repair the " + item.Name, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					player.Client.Out.SendCustomDialog("Do you accept too repair the " + item.Name, new CustomDialogResponse(BlacksmithDialogResponse));
 				}
 			}
 			else
@@ -121,9 +122,9 @@ namespace DOL.GS.Scripts
 			if (response != 0x01)
 				return;
 
-			InventoryItem item = (InventoryItem) itemWeak.Target;
+			InventoryItem item = (InventoryItem)itemWeak.Target;
 
-			if (item == null || item.SlotPosition == (int) eInventorySlot.Ground
+			if (item == null || item.SlotPosition == (int)eInventorySlot.Ground
 				|| item.OwnerID == null || item.OwnerID != player.InternalID)
 			{
 				player.Out.SendMessage("Invalid item.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -131,7 +132,7 @@ namespace DOL.GS.Scripts
 			}
 
 			int ToRecoverCond = item.MaxCondition - item.Condition;
-			long cost = ToRecoverCond*item.Value/item.MaxCondition;
+			long cost = ToRecoverCond * item.Value / item.MaxCondition;
 
 			if (!player.RemoveMoney(cost))
 			{
@@ -139,7 +140,7 @@ namespace DOL.GS.Scripts
 				return;
 			}
 
-			player.Out.SendMessage("You give to " + GetName(0, false) + " " + Money.GetString((long) cost) + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			player.Out.SendMessage("You pay " + GetName(0, false) + " " + Money.GetString((long)cost) + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 			if (ToRecoverCond + 1 >= item.Durability)
 			{
@@ -153,7 +154,7 @@ namespace DOL.GS.Scripts
 				item.Durability -= (ToRecoverCond + 1);
 				SayTo(player, "Well, it's finished. Your " + item.Name + " is practically new. Come back if you need my service once again!");
 			}
-
+			/*
 			// Add some random Quality +1/-1 stuff to make smithing more interesting
 			// Chance of quality -1 must be higher than +1 to reduce chance ob smithing abuse.
 			if (item.Quality > 0 && Util.Chance(10)) // 10% chance to reduce item quality by one
@@ -162,14 +163,14 @@ namespace DOL.GS.Scripts
 			}
 			else
 			{
-				int proChance = (item.MaxQuality - item.Quality)/2;
+				int proChance = (item.MaxQuality - item.Quality) / 2;
 				if (Util.Chance(proChance))
 				{
 					item.Quality++;
 				}
-			}
+			}*/
 
-			player.Out.SendInventoryItemsUpdate(new InventoryItem[] {item});
+			player.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
 			SayTo(player, "It's done. Your " + item.Name + " is ready for combat!");
 			return;
 		}
