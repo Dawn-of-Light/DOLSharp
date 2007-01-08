@@ -260,6 +260,12 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("allow_change_language", "Should we allow clients to change their language ?", false)]
 		public static readonly bool ALLOW_CHANGE_LANGUAGE;
+
+		/// <summary>
+		/// StatSave Interval
+		/// </summary>
+		[ServerProperty("statsave_interval", "Interval between each DB Stats store in minutes. -1 for desactivated.", -1)]
+		public static readonly int STATSAVE_INTERVAL;
 		
 		/// <summary>
 		/// This method loads the property from the database and returns
