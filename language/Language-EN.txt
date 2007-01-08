@@ -88,6 +88,26 @@ GamePlayer.OnLevelUp.YouGetSpec:			You get {0} more Specialization Points to spe
 GamePlayer.OnLevelUp.HitsRaise:				Your hits raise by {0} points.
 GamePlayer.OnLevelUp.PowerRaise:			Your power raises by {0} points.
 GamePlayer.OnLevelUp.SecondStage:			You raise to level {0} Stage 2!
+GamePlayer.IsCloakHoodUp.NowWear:			You will now wear your hood up.
+GamePlayer.IsCloakHoodUp.NoLongerWear:		You will no longer wear your hood up.
+GamePlayer.SwitchWeapon.SpellCancelled:		Your spell is cancelled!
+GamePlayer.StartAttack.YouMustWait:			You must wait {0} more second to attempt to attack!
+GamePlayer.StartAttack.YouCantCombat:		You can't enter combat mode while lying down!
+GamePlayer.StartAttack.CantAttackStunned:	You can't attack when you are stunned!
+GamePlayer.StartAttack.CantAttackmesmerized:You can't attack when you are mesmerized!
+GamePlayer.StartAttack.YouMustWaitAgain:	You must wait {0} more seconds before attacking again.
+GamePlayer.StartAttack.CannotWithoutWeapon:	You cannot enter combat mode without a weapon!
+GamePlayer.StartAttack.CannotMelee:			You cannot enter melee combat mode with an instrument!
+GamePlayer.StartAttack.SelectQuiver:		You must select a quiver slot to draw from!
+GamePlayer.StartAttack.CantUseQuiver:		You can't use the selected quiver ammo with your weapon!
+GamePlayer.StartAttack.TiredShot:			You're too tired to perform a critical shot!
+GamePlayer.StartAttack.TiredUse:			You're too tired to use your {0}!
+GamePlayer.StartAttack.CombatNoTarget:		You enter combat mode but have no target!
+GamePlayer.StartAttack.CombatTarget:		You enter combat mode and target [{0}]
+GamePlayer.StartAttack.SpellCancelled:		Your spell is cancelled!
+GamePlayer.StartAttack.TargetInRange:		, target is in range
+GamePlayer.StartAttack.TargetOutOfRange:	, target is out of range
+GamePlayer.StartAttack.YouPrepare:			You prepare your {0} ({1}.{2}s to fire{3})
 
 # HOUSING
 HouseEnterLeave.TooFarAway:					You are too far away to enter house {0}.

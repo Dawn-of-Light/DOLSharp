@@ -4062,11 +4062,11 @@ namespace DOL.GS
 
 				if (value)
 				{
-					Out.SendMessage("You will now wear your hood up.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.IsCloakHoodUp.NowWear"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 				else
 				{
-					Out.SendMessage("You will no longer wear your hood up.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.IsCloakHoodUp.NoLongerWear"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 			}
 		}
@@ -4101,7 +4101,7 @@ namespace DOL.GS
 
 			if (CurrentSpellHandler != null)
 			{
-				Out.SendMessage("Your spell is cancelled!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.SwitchWeapon.SpellCancelled"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
 				StopCurrentSpellcast();
 			}
 
@@ -4233,13 +4233,13 @@ namespace DOL.GS
 			long changeTime = this.CurrentRegion.Time - VanishTick;
 			if (changeTime < 30000 && VanishTick > 0)
 			{
-				this.Out.SendMessage("You must wait " + ((30000 - changeTime) / 1000).ToString() + " more second to attempt to attack!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+				this.Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.StartAttack.YouMustWait", ((30000 - changeTime) / 1000).ToString()), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
 			if (!IsAlive)
 			{
-				Out.SendMessage("You can't enter combat mode while lying down!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.StartAttack.YouCantCombat"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
@@ -4250,12 +4250,12 @@ namespace DOL.GS
 			//			}
 			if (IsStunned)
 			{
-				Out.SendMessage("You can't attack when you are stunned!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.StartAttack.CantAttackStunned"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 				return;
 			}
 			if (IsMezzed)
 			{
-				Out.SendMessage("You can't attack when you are mesmerized!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.StartAttack.CantAttackmesmerized"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
@@ -4264,7 +4264,7 @@ namespace DOL.GS
 			{
 				if (vanishTimeout > CurrentRegion.Time)
 				{
-					Out.SendMessage("You must wait " + (vanishTimeout - CurrentRegion.Time + 1000) / 1000 + " more seconds before attacking again.", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.StartAttack.YouMustWaitAgain", (vanishTimeout - CurrentRegion.Time + 1000) / 1000), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 					return;
 				}
 				else
@@ -4279,12 +4279,12 @@ namespace DOL.GS
 			}
 			if (AttackWeapon == null)
 			{
-				Out.SendMessage("You cannot enter combat mode without a weapon!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.StartAttack.CannotWithoutWeapon"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 				return;
 			}
 			if (AttackWeapon.Object_Type == (int)eObjectType.Instrument)
 			{
-				Out.SendMessage("You cannot enter melee combat mode with an instrument!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.StartAttack.CannotMelee"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 				return;
 			}
 			//			if(attackTarget!=null && attackTarget is GamePlayer && ((GamePlayer)attackTarget).IsShade)
@@ -4297,13 +4297,13 @@ namespace DOL.GS
 				// Check arrows for ranged attack
 				if (RangeAttackAmmo == null)
 				{
-					Out.SendMessage("You must select a quiver slot to draw from!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.StartAttack.SelectQuiver"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 					return;
 				}
 				// Check if selected ammo is compatible for ranged attack
 				if (!CheckRangedAmmoCompatibilityWithActiveWeapon())
 				{
-					Out.SendMessage("You can't use the selected quiver ammo with your weapon!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.StartAttack.CantUseQuiver"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 					return;
 				}
 
@@ -4333,13 +4333,13 @@ namespace DOL.GS
 
 				if (RangeAttackType == eRangeAttackType.Critical && Endurance < CRITICAL_SHOT_ENDURANCE)
 				{
-					Out.SendMessage("You're too tired to perform a critical shot!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.StartAttack.TiredShot"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 					return;
 				}
 
 				if (Endurance < RANGE_ATTACK_ENDURANCE)
 				{
-					Out.SendMessage("You're too tired to use your " + AttackWeapon.Name + "!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.StartAttack.TiredUse", AttackWeapon.Name), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 					return;
 				}
 
@@ -4361,9 +4361,9 @@ namespace DOL.GS
 			else
 			{
 				if (attackTarget == null)
-					Out.SendMessage("You enter combat mode but have no target!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.StartAttack.CombatNoTarget"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 				else
-					Out.SendMessage("You enter combat mode and target [" + attackTarget.GetName(0, false) + "]", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.StartAttack.CombatTarget", attackTarget.GetName(0, false)), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 			}
 
 			base.StartAttack(attackTarget);
@@ -4371,7 +4371,7 @@ namespace DOL.GS
 			if (IsCasting)
 			{
 				StopCurrentSpellcast();
-				Out.SendMessage("Your spell is cancelled!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.StartAttack.SpellCancelled"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
 			}
 
 			//Clear styles
@@ -4394,13 +4394,13 @@ namespace DOL.GS
 				if (attackTarget != null)
 				{
 					if (WorldMgr.CheckDistance(this, attackTarget, AttackRange))
-						targetMsg = ", target is in range";
+						targetMsg = LanguageMgr.GetTranslation(Client, "GamePlayer.StartAttack.TargetInRange");
 					else
-						targetMsg = ", target is out of range";
+						targetMsg = LanguageMgr.GetTranslation(Client, "GamePlayer.StartAttack.TargetOutOfRange");
 				}
 
 				int speed = AttackSpeed(AttackWeapon) / 100;
-				Out.SendMessage(string.Format("You prepare your {0} ({1}.{2}s to fire{3})", typeMsg, speed / 10, speed % 10, targetMsg), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.StartAttack.YouPrepare", typeMsg, speed / 10, speed % 10, targetMsg), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 			}
 		}
 
