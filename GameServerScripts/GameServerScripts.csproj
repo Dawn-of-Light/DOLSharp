@@ -193,6 +193,7 @@
     <Compile Include="gameevents\StatPrint.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="gameevents\StatSave.cs" />
     <Compile Include="gameevents\TalkingNPC.cs">
       <SubType>Code</SubType>
     </Compile>

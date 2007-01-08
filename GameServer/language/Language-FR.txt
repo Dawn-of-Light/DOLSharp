@@ -88,6 +88,26 @@ GamePlayer.OnLevelUp.YouGetSpec:			Vous obtenez {0} points de spécialisation à d
 GamePlayer.OnLevelUp.HitsRaise:				Votre vie à augmentée de {0} points.
 GamePlayer.OnLevelUp.PowerRaise:			Votre pouvoir à augmenté de {0} points.
 GamePlayer.OnLevelUp.SecondStage:			Vous avez atteint la 2eme étape de votre niveau {0} !
+GamePlayer.IsCloakHoodUp.NowWear:			Vous mettez votre capuche.
+GamePlayer.IsCloakHoodUp.NoLongerWear:		Vous retirez votre capuche.
+GamePlayer.SwitchWeapon.SpellCancelled:		Votre sort est annulé!
+GamePlayer.StartAttack.YouMustWait:			Vous devez attendre {0} secondes pour tenter une attaque !
+GamePlayer.StartAttack.YouCantCombat:		Vous ne pouvez pas attaquer en étant mort !
+GamePlayer.StartAttack.CantAttackStunned:	You can't attack when you are stunned!
+GamePlayer.StartAttack.CantAttackmesmerized:You can't attack when you are mesmerized!
+GamePlayer.StartAttack.YouMustWaitAgain:	Vous devez attendre {0} secondes pour tenter une nouvelle attaque.
+GamePlayer.StartAttack.CannotWithoutWeapon:	Vous ne pouvez pas attaquer sans arme !
+GamePlayer.StartAttack.CannotMelee:			Vous ne pouvez pas frapper avec un instrument !
+GamePlayer.StartAttack.SelectQuiver:		Vous devez sélectionner un carquois à utiliser.
+GamePlayer.StartAttack.CantUseQuiver:		Vous ne pouvez pas sélectionner ce carquois avec votre arme courante !
+GamePlayer.StartAttack.TiredShot:			Vous êtes trop fatigué pour tenter un coup critique !
+GamePlayer.StartAttack.TiredUse:			Vous êtes trop fatigué pour utiliser votre {0} !
+GamePlayer.StartAttack.CombatNoTarget:		Vous entrez en combat, mais sans cible.
+GamePlayer.StartAttack.CombatTarget:		Vous entrez en combat, et ciblez [{0}]
+GamePlayer.StartAttack.SpellCancelled:		Votre sort est annulé !
+GamePlayer.StartAttack.TargetInRange:		, la cible est a proximité
+GamePlayer.StartAttack.TargetOutOfRange:	, la cible est hors de portée
+GamePlayer.StartAttack.YouPrepare:			You prepare your {0} ({1}.{2}s to fire{3})
 
 # HOUSING
 HouseEnterLeave.TooFarAway:					Vous êtes trop loin pour entrer dans la maison {0}.
