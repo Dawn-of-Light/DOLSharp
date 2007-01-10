@@ -541,6 +541,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 							{
 								foreach (DBStyleXSpell proc in style.Procs)
 								{
+									// RR4: we added all the procs to the style, now it's time to check for class ID
+									if (proc.ClassID != 0 && proc.ClassID != client.Player.CharacterClass.ID) continue;
+
 									Spell spell = SkillBase.GetSpellByID(proc.SpellID);
 									if (spell != null)
 									{

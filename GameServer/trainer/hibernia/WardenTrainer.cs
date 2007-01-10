@@ -27,11 +27,11 @@ namespace DOL.GS.Trainer
 	[NPCGuildScript("Warden Trainer", eRealm.Hibernia)]		// this attribute instructs DOL to use this script for all "Warden Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class WardenTrainer : GameTrainer
 	{
+		/// <summary>
+		/// The free starter armor from trainer
+		/// </summary>
 		public const string ARMOR_ID1 = "warden_item";
 
-		public WardenTrainer() : base()
-		{
-		}
 
 		/// <summary>
 		/// Interact with trainer

@@ -65,13 +65,14 @@ namespace DOL.GS.Scripts
 				return false;
 			TurnTo(player, 10000);
 			// Affiche tous les objets dans le coffre
-			if (player.Inventory.GetItemRange(eInventorySlot.FirstVault, eInventorySlot.LastVault).Count == 0)
+			ICollection items = player.Inventory.GetItemRange(eInventorySlot.FirstVault, eInventorySlot.LastVault);
+			if (items.Count == 0)
 			{
 				player.Out.SendInventoryItemsUpdate(0x03, null);
 			}
 			else
 			{
-				player.Out.SendInventoryItemsUpdate(0x03, player.Inventory.GetItemRange(eInventorySlot.FirstVault, eInventorySlot.LastVault));
+				player.Out.SendInventoryItemsUpdate(0x03, items);
 			}
 			return true;
 		}

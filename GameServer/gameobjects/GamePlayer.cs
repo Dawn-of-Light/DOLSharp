@@ -1460,29 +1460,7 @@ namespace DOL.GS
 					case eStat.EMP: m_character.Empathy = newstat; break;
 					case eStat.CHR: m_character.Charisma = newstat; break;
 				}
-
-				OnStatChanged(stat, newstat - oldstat);
 			}
-		}
-
-		/// <summary>
-		/// Is called whenever a stat changed in value
-		/// </summary>
-		/// <param name="stat">The stat that changed</param>
-		/// <param name="change">The change value</param>
-		public virtual void OnStatChanged(eStat stat, int change)
-		{
-			if (change == 0)
-				return;
-			//should be done for buffs not base stats
-			/*			if (change > 0)
-						{
-							Out.SendMessage("Your " + STAT_NAMES[(int)stat] + " has increased.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						}
-						else
-						{
-							Out.SendMessage("Your " + STAT_NAMES[(int)stat] + " has decreased.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						}*/
 		}
 
 		/// <summary>
@@ -1931,7 +1909,10 @@ namespace DOL.GS
 			m_character.Class = m_class.ID;
 
 			if (PlayerGroup != null)
-				PlayerGroup.UpdateMember(this, false, true);
+			{
+				foreach (GamePlayer player in PlayerGroup.GetPlayersInTheGroup())
+					player.Out.SendGroupWindowUpdate();
+			}
 			return true;
 		}
 
@@ -10675,7 +10656,7 @@ namespace DOL.GS
 		}
 		public void SalvageSiegeWeapon(GameSiegeWeapon siegeWeapon)
 		{
-			Out.SendMessage("Repairing Siege Weapons is not yet implemented", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			Salvage.BeginWork(this, siegeWeapon);
 		}
 		#endregion
 

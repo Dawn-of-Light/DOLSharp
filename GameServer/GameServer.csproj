@@ -478,6 +478,7 @@
     <Compile Include="gameobjects\GameHorse.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="gameobjects\GameHouseVault.cs" />
     <Compile Include="gameobjects\GameInventoryItem.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -1396,6 +1397,7 @@
     </Compile>
     <Compile Include="spells\ConfusionSpellHandler.cs" />
     <Compile Include="spells\ConvertPet.cs" />
+    <Compile Include="spells\CureAllSpellHandler.cs" />
     <Compile Include="spells\EnduranceHealSpellHandler.cs" />
     <Compile Include="spells\NoVarianceSpells.cs" />
     <Compile Include="spells\PowerHealSpellHandler.cs" />

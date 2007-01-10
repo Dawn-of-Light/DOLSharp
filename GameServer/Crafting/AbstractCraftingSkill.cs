@@ -734,7 +734,8 @@ namespace DOL.GS
 
 			//at least 1s
 			int craftingTime = (int)(baseMultiplier * materialsCount / 4);
-			craftingTime = (int)(craftingTime * Properties.CRAFTING_SPEED);
+			if (Properties.CRAFTING_SPEED != 0)
+				craftingTime = (int)(craftingTime / Properties.CRAFTING_SPEED);
 			if (craftingTime < 1) craftingTime = 1;
 
 			return craftingTime;

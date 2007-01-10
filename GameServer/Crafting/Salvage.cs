@@ -107,6 +107,37 @@ namespace DOL.GS
 		}
 
 		/// <summary>
+		/// Called when player try to use a secondary crafting skill
+		/// </summary>
+		/// <param name="item"></param>
+		/// <param name="player"></param>
+		/// <returns></returns>
+		public static int BeginWork(GamePlayer player, GameSiegeWeapon siegeWeapon)
+		{
+			// Galenas
+			siegeWeapon.ReleaseControl();
+			siegeWeapon.RemoveFromWorld();
+			bool error = false;
+			DBCraftedItem craftItemData = (DBCraftedItem)GameServer.Database.SelectObject(typeof(DBCraftedItem), "Id_nb ='" + siegeWeapon.ItemId + "'");
+			InventoryItem item;
+			ItemTemplate template;
+			foreach (DBCraftedXItem rawmaterial in craftItemData.RawMaterials)
+			{
+				template = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), rawmaterial.IngredientId_nb);
+				item = new InventoryItem(template);
+				item.Count = rawmaterial.Count;
+				if (!player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, item))
+				{
+					error = true;
+					break;
+				}
+			}
+			if (error)
+				player.Out.SendMessage("You don't have enough room in your inventory...", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			return 1;
+		}
+
+		/// <summary>
 		/// Called when craft time is finished 
 		/// </summary>
 		/// <param name="timer"></param>

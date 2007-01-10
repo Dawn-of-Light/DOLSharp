@@ -27,10 +27,10 @@ namespace DOL.GS.Trainer
 	[NPCGuildScript("Friar Trainer", eRealm.Albion)]		// this attribute instructs DOL to use this script for all "Friar Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class FriarTrainer : GameTrainer
 	{
+		/// <summary>
+		/// The free starter armor from trainer
+		/// </summary>
 		public const string ARMOR_ID1 = "friar_item";
-		public FriarTrainer() : base()
-		{
-		}
 
 		/// <summary>
 		/// Interact with trainer

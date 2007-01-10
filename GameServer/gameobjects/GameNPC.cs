@@ -215,11 +215,8 @@ namespace DOL.GS
 				}
 			}
 		}
-		/// <summary>
-		/// Holds the Faction of the NPC
-		/// </summary>
-		protected Faction m_faction;
 
+		private Faction m_faction;
 		/// <summary>
 		/// Gets the Faction of the NPC
 		/// </summary>
@@ -232,8 +229,7 @@ namespace DOL.GS
 			}
 		}
 
-		protected ArrayList m_linkedFactions;
-
+		private ArrayList m_linkedFactions;
 		/// <summary>
 		/// The linked factions for this NPC
 		/// </summary>
@@ -243,8 +239,10 @@ namespace DOL.GS
 			set { m_linkedFactions = value; }
 		}
 
-		protected bool m_isConfused;
-
+		private bool m_isConfused;
+		/// <summary>
+		/// Is this NPC currently confused
+		/// </summary>
 		public bool IsConfused
 		{
 			get { return m_isConfused; }
@@ -1159,7 +1157,10 @@ namespace DOL.GS
 
 		#endregion
 		#region Inventory/LoadfromDB
-		protected NpcTemplate m_npcTemplate;
+		private NpcTemplate m_npcTemplate;
+		/// <summary>
+		/// The NPC's template
+		/// </summary>
 		public NpcTemplate NPCTemplate
 		{
 			get { return m_npcTemplate; }
@@ -1409,8 +1410,11 @@ namespace DOL.GS
 			}
 			this.Spells = template.Spells;
 			this.Styles = template.Styles;
-			foreach (Ability ab in template.Abilities)
-				m_abilities[ab.KeyName] = ab;
+			if (template.Abilities != null)
+			{
+				foreach (Ability ab in template.Abilities)
+					m_abilities[ab.KeyName] = ab;
+			}
 			BuffBonusCategory4[(int)eStat.STR] += template.Strength;
 			BuffBonusCategory4[(int)eStat.DEX] += template.Dexterity;
 			BuffBonusCategory4[(int)eStat.CON] += template.Constitution;
@@ -2851,7 +2855,7 @@ namespace DOL.GS
 			}
 		}
 
-		protected virtual int RetrySpellAttackCallback(RegionTimer callingTimer)
+		private int RetrySpellAttackCallback(RegionTimer callingTimer)
 		{
 			StartAttack(this.TargetObject);
 			return callingTimer.Interval;
@@ -2918,7 +2922,7 @@ namespace DOL.GS
 				//trigger abilities on a certain target like intercept require being controlled
 				if (this.Brain is IControlledBrain)
 				{
-					foreach (Ability ab in this.Abilities)
+					foreach (Ability ab in this.Abilities.Values)
 					{
 						switch (ab.KeyName)
 						{
