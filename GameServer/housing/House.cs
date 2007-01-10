@@ -408,6 +408,38 @@ namespace DOL.GS.Housing
 			return false;
 		}
 
+		public bool CanViewHouseVault(GamePlayer p)
+		{
+			if (IsOwner(p) || p.Client.Account.PrivLevel > 1)
+				return true;
+			foreach (DBHousePermissions perm in HouseAccess)
+			{
+				if (perm.Vault1 == 0)// optim
+					continue;
+				if (IsInPerm(p.Name, ePermsTypes.Player, perm.PermLevel))
+					return true;
+				if (IsInPerm(p.Name, ePermsTypes.Account, perm.PermLevel))
+					return true;
+			}
+			return false;
+		}
+
+		public bool CanUseHouseVault(GamePlayer p)
+		{
+			if (IsOwner(p) || p.Client.Account.PrivLevel > 1)
+				return true;
+			foreach (DBHousePermissions perm in HouseAccess)
+			{
+				if (perm.Vault1 == 0)// optim
+					continue;
+				if (IsInPerm(p.Name, ePermsTypes.Player, perm.PermLevel))
+					return true;
+				if (IsInPerm(p.Name, ePermsTypes.Account, perm.PermLevel))
+					return true;
+			}
+			return false;
+		}
+
 
 
 		public void RemoveFromPerm(int slot)
@@ -826,10 +858,12 @@ namespace DOL.GS.Housing
 					return;
 			}
 
+
 			//get location from slot
 			IPoint3D location = GetHookpointLocation(position);
 			if (location == null)
 				return;
+
 			int x = location.X;
 			int y = location.Y;
 			int z = location.Z;
@@ -908,8 +942,8 @@ namespace DOL.GS.Housing
 					}
 				case eObjectType.HouseVault:
 					{
-						//todo vault class of item
-						GameStaticItem sItem = new GameStaticItem();
+						//0:08:07.734 S=>C 0xD9 item/door create v171 (oid:0x0DDC emblem:0x0000 heading:0x0145 x:596823 y:530336 z:24718 model:0x05D3 health:  0% flags:0x04(realm:0) extraBytes:0 unk1_171:0x0096220C name:"Hibernia vault")
+						GameHouseVault sItem = new GameHouseVault();
 						sItem.CurrentHouse = this;
 						sItem.InHouse = true;
 						sItem.X = x;
@@ -964,7 +998,7 @@ namespace DOL.GS.Housing
 						null,
 						null,
 						null,
-	/* Position 15 */	new int[4] {369, -9040, -306, 910},
+	/* Position 15 */	new int[4] {370, -39, -306, 725},
 						null,
 						null,
 	                	null

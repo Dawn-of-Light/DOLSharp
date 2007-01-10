@@ -95,10 +95,6 @@ namespace DOL.GS.Scripts
 				player.AddAbility(SkillBase.GetAbility(Abilities.Advanced_Evade));
 				player.AddAbility(SkillBase.GetAbility(Abilities.Stoicism));
 			}
-			if (player.Level >= 40)
-			{
-				//player.AddAbility(SkillBase.GetAbility(Abilities.Charge));
-			}
 		}
 	}
 }

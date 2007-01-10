@@ -88,6 +88,26 @@ GamePlayer.OnLevelUp.YouGetSpec:			Consigues {0} puntos mas para gastar en este 
 GamePlayer.OnLevelUp.HitsRaise:				Tus puntos de vida aumentan en {0} puntos.
 GamePlayer.OnLevelUp.PowerRaise:			Tu poder aumenta en {0} puntos.
 GamePlayer.OnLevelUp.SecondStage:			Alcanzas la segunda parte del nivel {0}!
+GamePlayer.IsCloakHoodUp.NowWear:                     Te enfundas en tu capa.
+GamePlayer.IsCloakHoodUp.NoLongerWear:    Te levantas la capucha.
+GamePlayer.SwitchWeapon.SpellCancelled:  Tu hechizo es cancelado!
+GamePlayer.StartAttack.YouMustWait:               Has de esperar {0} segundos mas para intentar atacar!
+GamePlayer.StartAttack.YouCantCombat:      No puedes entrar en combate mientras estás muerto!
+GamePlayer.StartAttack.CantAttackStunned:       No puedes entrar en combate mientras estás atontado.  
+GamePlayer.StartAttack.CantAttackmesmerized: No puedes atacar mientras estás dormido!
+GamePlayer.StartAttack.YouMustWaitAgain:        Has de esperar {0} segundos más para atacar de nuevo.
+GamePlayer.StartAttack.CannotWithoutWeapon:     No puedes entrar en combate sin arma!
+GamePlayer.StartAttack.CannotMelee:               No puedes entrar en combate con un instrumento!
+GamePlayer.StartAttack.SelectQuiver:        Has de seleccionar un carcaj!
+GamePlayer.StartAttack.CantUseQuiver:      No puedes usar ese carcaj con el arma que tienes equipada!
+GamePlayer.StartAttack.TiredShot:                     Estás demasiado cansado para hacer un disparo crítico!
+GamePlayer.StartAttack.TiredUse:                        Estás demasiado cansado para usar tu {0}!
+GamePlayer.StartAttack.CombatNoTarget:    Entras en combate, pero no tienes objetivo!
+GamePlayer.StartAttack.CombatTarget:         Entras en combate y seleccionas [{0}]
+GamePlayer.StartAttack.SpellCancelled:    Tu hechizo es cancelado! 
+GamePlayer.StartAttack.TargetInRange:      ,  El objetivo esta en tu rango de ataque 
+GamePlayer.StartAttack.TargetOutOfRange:        ,  Objetivo fuera de rango de ataque
+GamePlayer.StartAttack.YouPrepare:                  Preparas tu {0} ({1}.{2}s para disparar {3}) 
 
 # HOUSING
 HouseEnterLeave.TooFarAway:					Estás demasiado lejos para entrar a esa casa {0}

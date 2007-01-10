@@ -144,11 +144,11 @@ namespace DOL.GS.RealmAbilities
 		/// <param name="caster"></param>
 		/// <param name="spellEffect"></param>
 		/// <param name="success"></param>
-		public virtual void SendCasterSpellEffectAndCastMessage(GameLiving caster, int spellEffect, bool success)
+		public virtual void SendCasterSpellEffectAndCastMessage(GameLiving caster, ushort spellEffect, bool success)
 		{
 			foreach (GamePlayer player in caster.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
-				player.Out.SendSpellEffectAnimation(caster, caster, 7004, 0, false, success ? (byte)1 : (byte)0);
+				player.Out.SendSpellEffectAnimation(caster, caster, spellEffect, 0, false, success ? (byte)1 : (byte)0);
 
 				if (Point3D.GetDistance(caster, player) <= WorldMgr.INFO_DISTANCE)
 				{

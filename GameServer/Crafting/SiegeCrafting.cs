@@ -195,6 +195,10 @@ namespace DOL.GS
 						return;
 					}
 			}
+
+			//actually stores the Id_nb of the siegeweapon
+			siegeweapon.ItemId = craftItemData.ItemTemplate.Id_nb;
+
 			siegeweapon.LoadFromDatabase(craftItemData.ItemTemplate);
 			siegeweapon.CurrentRegion = player.CurrentRegion;
 			siegeweapon.Heading = player.Heading;

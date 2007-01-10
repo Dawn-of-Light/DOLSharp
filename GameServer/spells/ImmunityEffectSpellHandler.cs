@@ -109,7 +109,12 @@ namespace DOL.GS.Spells
 			return new GameSpellAndImmunityEffect(this, CalculateEffectDuration(target, effectiveness), 0, effectiveness);
 		}
 
-		// constructor
+		/// <summary>
+		/// constructor
+		/// </summary>
+		/// <param name="caster">The spell caster</param>
+		/// <param name="spell">The spell being cast</param>
+		/// <param name="spellLine">The spell's spellline</param>
 		public ImmunityEffectSpellHandler(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) {}
 	}
 }

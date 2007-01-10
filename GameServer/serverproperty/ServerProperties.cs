@@ -264,7 +264,7 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// StatSave Interval
 		/// </summary>
-		[ServerProperty("statsave_interval", "Interval between each DB Stats store in minutes. -1 for desactivated.", -1)]
+		[ServerProperty("statsave_interval", "Interval between each DB Stats store in minutes. -1 for deactivated.", -1)]
 		public static readonly int STATSAVE_INTERVAL;
 		
 		/// <summary>

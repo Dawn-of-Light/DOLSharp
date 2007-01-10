@@ -168,6 +168,13 @@ namespace DOL.GS
 		{
 			get { return -this.MaxHealth / 10; }
 		}
+
+		private string m_itemId;
+		public string ItemId
+		{
+			get { return m_itemId; }
+			set { m_itemId = value; }
+		} 
 		#endregion
 		#region public methode
 		public void TakeControl(GamePlayer player)
