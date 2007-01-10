@@ -123,8 +123,9 @@ namespace DOL.GS.Spells
 			double modifier = 1.0;
 			RealmAbilities.VeilRecoveryAbility ab = target.GetAbility(typeof(RealmAbilities.VeilRecoveryAbility)) as RealmAbilities.VeilRecoveryAbility;
 			if (ab != null)
-				modifier += ab.Amount;
-			return Spell.Duration;
+				modifier -= ((double)ab.Amount / 100);
+
+			return (int)((double)Spell.Duration * modifier); 
 		}
 
 		public AbstractIllnessSpellHandler(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) {}

@@ -45,10 +45,25 @@ namespace DOL.GS.Spells
 		protected static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		private DelayedCastTimer m_castTimer;
+		/// <summary>
+		/// The spell that we want to handle
+		/// </summary>
 		protected Spell m_spell;
+		/// <summary>
+		/// The spell line the spell belongs to
+		/// </summary>
 		protected SpellLine m_spellLine;
+		/// <summary>
+		/// The caster of the spell
+		/// </summary>
 		protected GameLiving m_caster;
+		/// <summary>
+		/// Has the spell been interrupted
+		/// </summary>
 		protected bool m_interrupted = false;
+		/// <summary>
+		/// Shall we start the reuse timer
+		/// </summary>
 		protected bool m_startReuseTimer = true;
 		/// <summary>
 		/// The property key for the interrupt timeout

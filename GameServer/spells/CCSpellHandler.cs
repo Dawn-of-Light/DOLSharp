@@ -30,6 +30,11 @@ namespace DOL.GS.Spells
 	/// </summary>
 	public abstract class AbstractCCSpellHandler : ImmunityEffectSpellHandler
 	{
+		/// <summary>
+		/// Apply effect on target or do spell action if non duration spell
+		/// </summary>
+		/// <param name="target">target that gets the effect</param>
+		/// <param name="effectiveness">factor from 0..1 (0%-100%)</param>
 		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
 		{
 			if (target.HasAbility(Abilities.CCImmunity))
@@ -46,6 +51,11 @@ namespace DOL.GS.Spells
 			base.ApplyEffectOnTarget(target, effectiveness);
 		}
 
+		/// <summary>
+		/// When an applied effect starts
+		/// duration spells only
+		/// </summary>
+		/// <param name="effect"></param>
 		public override void OnEffectStart(GameSpellEffect effect)
 		{
 			SendEffectAnimation(effect.Owner, 0, false, 1);
@@ -101,7 +111,12 @@ namespace DOL.GS.Spells
 			return 60000;
 		}
 
-		// constructor
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		/// <param name="caster"></param>
+		/// <param name="spell"></param>
+		/// <param name="line"></param>
 		public AbstractCCSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
 	}
 

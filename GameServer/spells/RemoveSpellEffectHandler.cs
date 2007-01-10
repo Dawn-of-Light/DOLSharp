@@ -1,23 +1,5 @@
-/*
- * DAWN OF LIGHT - The first free open source DAoC server emulator
- * 
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- *
- */
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 
@@ -30,15 +12,17 @@ namespace DOL.GS.Spells
 	{
 		/// <summary>
 		/// Stores spell effect type that will be removed
+		/// RR4: now its a list of effects to remove
 		/// </summary>
-		protected string m_spellTypeToRemove = null;
+		protected List<string> m_spellTypesToRemove = null;
 
 		/// <summary>
 		/// Spell effect type that will be removed
+		/// RR4: now its a list of effects to remove
 		/// </summary>
-		public virtual string SpellTypeToRemove
+		public virtual List<string> SpellTypesToRemove
 		{
-			get { return m_spellTypeToRemove; }
+			get { return m_spellTypesToRemove; }
 		}
 
 		/// <summary>
@@ -62,13 +46,17 @@ namespace DOL.GS.Spells
 			if (target == null || !target.IsAlive)
 				return;
 
-			GameSpellEffect effect = SpellHandler.FindEffectOnTarget(target, SpellTypeToRemove);
-			if(effect != null)
-				effect.Cancel(false);
+			// RR4: we remove all the effects
+			foreach (string toRemove in SpellTypesToRemove)
+			{
+				GameSpellEffect effect = SpellHandler.FindEffectOnTarget(target, toRemove);
+				if (effect != null)
+					effect.Cancel(false);
+			}
 			SendEffectAnimation(target, 0, false, 1);
 		}
 
 		// constructor
-		public RemoveSpellEffectHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
+		public RemoveSpellEffectHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 	}
 }

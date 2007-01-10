@@ -18,6 +18,7 @@
  */
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 
@@ -30,9 +31,12 @@ namespace DOL.GS.Spells
 	public class CurePoisonSpellHandler : RemoveSpellEffectHandler
 	{
 		// constructor
-		public CurePoisonSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line)
+		public CurePoisonSpellHandler(GameLiving caster, Spell spell, SpellLine line)
+			: base(caster, spell, line)
 		{
-			m_spellTypeToRemove = "DamageOverTime";
-		}
+			// RR4: now it's a list
+			m_spellTypesToRemove = new List<string>();
+			m_spellTypesToRemove.Add("DamageOverTime");
+		} 
 	}
 }

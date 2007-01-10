@@ -48,22 +48,7 @@ namespace DOL.GS.RealmAbilities
 			}
 			if (targetPlayer != null)
 			{
-				foreach (GamePlayer t_player in targetPlayer.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-				{
-					t_player.Out.SendSpellEffectAnimation(targetPlayer, targetPlayer, 7019, 0, false, 1);
-
-					if (WorldMgr.GetDistance(player, t_player) <= WorldMgr.INFO_DISTANCE)
-					{
-						if (t_player == player)
-						{
-							t_player.Out.SendMessage("You cast a Perfect Recovery Spell!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
-						}
-						else
-						{
-							t_player.Out.SendMessage(player.Name + " casts a spell!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
-						}
-					}
-				}
+				SendCasterSpellEffectAndCastMessage(living, 7019, true);
 				DisableSkill(living);
 				ResurrectLiving(targetPlayer, player);
 			}

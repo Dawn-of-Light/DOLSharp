@@ -1096,6 +1096,7 @@ namespace DOL.GS.Scripts
 						mob.GuildName = targetMob.GuildName;
 						mob.Size = targetMob.Size;
 						mob.Inventory = targetMob.Inventory;
+						mob.NPCTemplate = targetMob.NPCTemplate;
 						ABrain brain = null;
 						foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
 						{

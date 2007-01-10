@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 
@@ -31,9 +32,12 @@ namespace DOL.GS.Spells
 	public class CureNearsightSpellHandler : RemoveSpellEffectHandler
 	{
 		// constructor
-		public CureNearsightSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line)
+		public CureNearsightSpellHandler(GameLiving caster, Spell spell, SpellLine line)
+			: base(caster, spell, line)
 		{
-			m_spellTypeToRemove = "Nearsight";
-		}
+			// RR4: now it's a list
+			m_spellTypesToRemove = new List<string>();
+			m_spellTypesToRemove.Add("Nearsight");
+		} 
 	}
 }

@@ -137,7 +137,8 @@ namespace DOL.GS
 					if (splitab.Trim().Length == 0) continue;
 					int id = int.Parse(ab[1]);
 					Ability abil = SkillBase.GetAbility(ab[0], id);
-					m_abilities.Add(abil);
+					if (abil != null)
+						m_abilities.Add(abil);
 				}
 			}
 

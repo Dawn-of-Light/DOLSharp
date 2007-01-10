@@ -38,7 +38,7 @@ namespace DOL.GS.RealmAbilities
 					return;
 				}
 
-				SendCasterSpellEffectAndCastMessage(living, 70017, true);
+				SendCasterSpellEffectAndCastMessage(living, 7017, true);
 
 				foreach (GamePlayer p in player.PlayerGroup)
 				{
