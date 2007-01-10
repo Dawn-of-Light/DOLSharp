@@ -62,6 +62,9 @@ namespace DOL.GS
 
 		Max_Inv			  = 149,
 
+		FirstHousingVault_First = 150,
+		FirstHousingVault_Last = 249,
+
 		//Consignment_First = 150,
 		//Consignment_last = 249,
 

@@ -33,6 +33,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 		private static string ItemBonusDescription(int iBonus, int iBonusType)
 		{
+			/*Not needed.
 			string BonusName;
 			if (iBonusType == (int)eProperty.Stat_First)
 				BonusName = "Strength";
@@ -47,9 +48,14 @@ namespace DOL.GS.PacketHandler.Client.v168
 			else if (iBonusType == (int)eProperty.Skill_Last)
 				BonusName = "Scythe";
 			else if (!Enum.IsDefined(typeof(eProperty), (eProperty)iBonusType)) BonusName = iBonusType.ToString();
-			else BonusName = ((eProperty)iBonusType).ToString();
+            
+			string BonusName = ((eProperty)iBonusType).ToString();
 			string str = BonusName.ToString().Replace("_", " ") + ": ";
 			return str + iBonus + (((iBonusType < 20) && (iBonusType > 10)) ? "%" : "");
+			*/
+			//This displays the bonuses just like the Live servers. there is a check against the pts/% differences
+			string str = ((iBonusType == 150) | (iBonusType == 151) | (iBonusType == 186)) ? "pts of " : "% to ";  //150(Health Regen) 151(PowerRegen) and 186(Style reductions) need the prefix of "pts of " to be correct
+			return "+" + iBonus + str + SkillBase.GetPropertyName(((eProperty)iBonusType));
 		}
 
 		public int HandlePacket(GameClient client, GSPacketIn packet)
@@ -108,9 +114,11 @@ namespace DOL.GS.PacketHandler.Client.v168
 			info.Add(" ");
 			info.Add("Special Item Bonuses");
 			GamePlayer player = client.Player;
+			int[] bonusToBeDisplayed;//This is an Array of the bonuses that show up in the Bonuns Snapshot on Live, the only ones that really need to be there.
+			bonusToBeDisplayed = new int[28] { 150, 151, 153, 154, 155, 173, 174, 179, 180, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200 };
 			for (int i = 0; i < (int)eProperty.MaxProperty; i++)
 			{
-				if (client.Player.ItemBonus[i] > 0)
+				if ((client.Player.ItemBonus[i] > 0) && ((Array.BinarySearch(bonusToBeDisplayed, i)) >= 0)) //Tiny edit here to add the binary serach to weed out the non essential bonuses
 				{
 					if (client.Player.ItemBonus[i] != 0) info.Add(ItemBonusDescription(client.Player.ItemBonus[i], i));
 				}

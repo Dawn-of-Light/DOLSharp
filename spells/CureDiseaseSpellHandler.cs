@@ -20,6 +20,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 
@@ -34,7 +35,9 @@ namespace DOL.GS.Spells
 		// constructor
 		public CureDiseaseSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line)
 		{
-			m_spellTypeToRemove = "Disease";
+			// RR4: now it's a list
+			m_spellTypesToRemove = new List<string>();
+			m_spellTypesToRemove.Add("Disease");
 		}
 	}
 }

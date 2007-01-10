@@ -27,10 +27,6 @@ namespace DOL.GS.Trainer
 	[NPCGuildScript("Thane Trainer", eRealm.Midgard)]		// this attribute instructs DOL to use this script for all "Thane Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class ThaneTrainer : GameTrainer
 	{
-		public ThaneTrainer() : base()
-		{
-		}
-
 		/// <summary>
 		/// Interact with trainer
 		/// </summary>

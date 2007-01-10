@@ -481,10 +481,18 @@ namespace DOL.GS
 							Style st = new Style(style);
 
 							//(procs) Add procs to the style, 0 is used for normal style
-							if (m_styleSpells.ContainsKey(st.ID) && m_styleSpells[st.ID].ContainsKey(0))
+							if (m_styleSpells.ContainsKey(st.ID))// && m_styleSpells[st.ID].ContainsKey(0))
 							{
-								foreach (DBStyleXSpell styleSpells in m_styleSpells[st.ID][0])
-									st.Procs.Add(styleSpells);
+								// now we add every proc to the style (even if ClassID != 0)
+								foreach (byte classID in Enum.GetValues(typeof(eCharacterClass)))
+								{
+									try
+									{ // In case m_styleSpells doesn't contains any proc for this ClassID, I guess it can be improved
+										foreach (DBStyleXSpell styleSpells in m_styleSpells[st.ID][classID])
+											st.Procs.Add(styleSpells);
+									}
+									catch { }
+								} 
 							}
 							styleList.Insert(insertpos, st);
 
@@ -1040,7 +1048,6 @@ namespace DOL.GS
 			m_propertyNames[eProperty.SpellRange] = "Spell Range";
 			m_propertyNames[eProperty.ArcheryRange] = "Archery Range";
 			m_propertyNames[eProperty.Acuity] = "Acuity";
-			m_propertyNames[eProperty.MeleeSpeed] = "Melee Speed";
 
 			m_propertyNames[eProperty.AllMagicSkills] = "ALL magic skills";
 			m_propertyNames[eProperty.AllMeleeWeaponSkills] = "ALL melee weapon skills";
@@ -1050,7 +1057,6 @@ namespace DOL.GS
 
 			m_propertyNames[eProperty.LivingEffectiveLevel] = "Effective level";
 
-			m_propertyNames[eProperty.PowerPool] = "Power";
 
 			//Added by Fooljam : Missing TOA/Catacomb bonusses names in item properties.
 			//Date : 20-Jan-2005
@@ -1059,8 +1065,8 @@ namespace DOL.GS
 			m_propertyNames[eProperty.BlockChance] = "Block Chance";
 			m_propertyNames[eProperty.ParryChance] = "Parry Chance";
 			m_propertyNames[eProperty.FumbleChance] = "Fumble Chance";
-			m_propertyNames[eProperty.MeleeDamage] = "Melee Damage";
-			m_propertyNames[eProperty.RangedDamage] = "Ranged Damage";
+			m_propertyNames[eProperty.MeleeDamage] = "all Melee Damage";
+			m_propertyNames[eProperty.RangedDamage] = "all Ranged Damage";
 			m_propertyNames[eProperty.MesmerizeDuration] = "Mesmerize Duration";
 			m_propertyNames[eProperty.StunDuration] = "Stun Duration";
 			m_propertyNames[eProperty.SpeedDecreaseDuration] = "Speed Decrease Duration";
@@ -1069,22 +1075,23 @@ namespace DOL.GS
 			m_propertyNames[eProperty.PieceAblative] = "Piece Ablative";
 			m_propertyNames[eProperty.NegativeReduction] = "Negative Reduction";
 			m_propertyNames[eProperty.ReactionaryStyleDamage] = "Reactionary Style Damage";
-			m_propertyNames[eProperty.SpellPowerCost] = "Spell Power Cost";
+			m_propertyNames[eProperty.SpellPowerCost] = "Spell Power Cost Reduction";
 			m_propertyNames[eProperty.StyleCostReduction] = "Style Cost Reduction";
 			m_propertyNames[eProperty.ToHitBonus] = "To Hit Bonus";
 			m_propertyNames[eProperty.ArcherySpeed] = "Archery Speed";
 			m_propertyNames[eProperty.ArrowRecovery] = "Arrow Recovery";
-			m_propertyNames[eProperty.BuffEffectiveness] = "Buff Effectiveness";
+			m_propertyNames[eProperty.BuffEffectiveness] = "all Stat Buff Spells";
 			m_propertyNames[eProperty.CastingSpeed] = "Casting Speed";
-			m_propertyNames[eProperty.DeathExpLoss] = "Death Exp Loss";
+			m_propertyNames[eProperty.DeathExpLoss] = "Death Experience Loss Reduction";
 			m_propertyNames[eProperty.DebuffEffectivness] = "Debuff Effectivness";
 			m_propertyNames[eProperty.Fatigue] = "Fatigue";
-			m_propertyNames[eProperty.HealingEffectiveness] = "Healing Effectiveness";
+			m_propertyNames[eProperty.HealingEffectiveness] = "all Heal Spells";
 			m_propertyNames[eProperty.PowerPool] = "Power Pool";
 			m_propertyNames[eProperty.ResistPierce] = "Resist Pierce";
-			m_propertyNames[eProperty.SpellDamage] = "Magic Damage";//fooljam fix : Was the wrong name (Spell Damage)
+			m_propertyNames[eProperty.SpellDamage] = "all Magic Damage";//fooljam fix : Was the wrong name (Spell Damage)
 			m_propertyNames[eProperty.SpellDuration] = "Spell Duration";
 			m_propertyNames[eProperty.StyleDamage] = "Style Damage";
+			m_propertyNames[eProperty.MeleeSpeed] = "Melee Combat Speed";//Lifeflight fix : Was missing
 			//Missing bonusses end
 
 			m_propertyNames[eProperty.StrCapBonus] = "Bonus to Strength attribute bonus cap";

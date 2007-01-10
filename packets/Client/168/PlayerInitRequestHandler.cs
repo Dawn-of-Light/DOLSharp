@@ -224,7 +224,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					KeepMgr.GetBorderKeepLocation(keepid, out x, out y, out z, out heading);
 					 */
 
-					player.Out.SendMessage("This area is unsafe, moving you to a safe location!", eChatType.CT_YouWereHit, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage("This area isn't currently secure and you are being transported to a safer location.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					player.MoveTo((ushort)player.PlayerCharacter.BindRegion, player.PlayerCharacter.BindXpos, player.PlayerCharacter.BindYpos, player.PlayerCharacter.BindZpos, (ushort)player.PlayerCharacter.BindHeading);
 				}
 
