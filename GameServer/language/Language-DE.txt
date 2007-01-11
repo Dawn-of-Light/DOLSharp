@@ -9,66 +9,107 @@
 System.LanguagesName.English:				Englisch
 System.LanguagesName.French:				Französisch
 System.LanguagesName.German:				Deutsch
-System.LanguagesName.Spanish:				Spanish
-System.LanguagesName.Czech:					Czech
+System.LanguagesName.Spanish:				Spanisch
+System.LanguagesName.Czech:					Tschechisch
 
 # SYSTEM
 System.NoSense:								Das würde keinen Sinn machen!
 
 # GAMEPLAYER
 GamePlayer.SendReceive.sends:				 sendet,
-GamePlayer.Quit.CantQuitDead:            Sie können DAoC nicht beenden. Sie sind tot. Geben Sie '/release' ein, um ihre Leiche freizugeben
-GamePlayer.Quit.CantQuitMount:        Sie müssen absteigen, bevor sie DAoC beenden können.
-GamePlayer.Quit.CantQuitStanding:                     Sie müssen stillstehen, um DAoC beenden zu können.
-GamePlayer.Quit.CantQuitCrafting:                     Sie können DAoC nicht beenden, solange sie Gegenstände herstellen.
-GamePlayer.Quit.RecentlyInCombat:                     Sie haben vor kurzem gekämpft und müssen noch warten, um DAoC beenden zu können
-GamePlayer.Quit.YouWillQuit:                You will quit after sitting for {0} seconds.  Type '/stand' or move if you don't want to quit. 
-GamePlayer.Release.NotDead:                         Sie sind nicht tot!
-GamePlayer.Release.CantReleaseDuel:               You can't alter your release on a duel death!
-GamePlayer.Release.NoLongerReleaseAuto:  You will no longer release automatically. ({0} more seconds) Sie werden ihre Leiche jetzt nicht länger automatisch freigeben. (noch {0} Sekunden)
-GamePlayer.Release.WillReleaseAuto:               Sie werden ihre Leiche in {0} Sekunden automatisch freigeben.
-GamePlayer.Release.WillReleaseAutoCity:  You will now release automatically to your home city in {0} more seconds!
-GamePlayer.Release.YouRelease:        You release your corpse unto death. 
-GamePlayer.Release.GraveErected:                        Ein Grab wurde an ihrem Sterbeort errichtet.
-GamePlayer.Release.ReturnToPray:                        Kehren sie zu ihrem Grab zurück, und /pray en sie um Erfahrung zurückzuerhalten.
-GamePlayer.Release.LostConstitution:        ihre Konstitution wurde geschwächt, besuchen sie einen Heiler um sie zurückzuerhalten.
-GamePlayer.Release.SurroundingChange:      Ihre Umgebung verändert sich plötzlich.
-GamePlayer.Release.NoValidBindpoint:        Sie haben keinen gültigen Bindepunkt. Gebe stattdessen hier frei.
-GamePlayer.Release.WillReleaseIn:                     Sie werden ihre Leiche in {0} Sekunden automatisch freigeben.
-GamePlayer.Pray.CantPrayNow:                Sie können jetzt nicht beten.
-GamePlayer.Pray.NeedTarget:                         Sie müssen das Grab anvisieren, an dem sie beten wollen.
-GamePlayer.Pray.SelectGrave:                Beten sie an ihrem Grabstein.
-GamePlayer.Pray.MustGetCloser:        Sie müssen näher an ihrem Grab sitzen, um beten zu können.
-GamePlayer.Pray.MustStandingStill:                  Sie müssen stillstehen, um beten zu können.
-GamePlayer.Pray.AlreadyPraying:    Sie beten bereits.
-GamePlayer.Pray.Begin:            Sie fangen an, zu beten.
-GamePlayer.Pray.GainBack:                                   Sie beten an ihrem Grab und erhalten Erfahrung zurück.
-GamePlayer.AddSpecialisation.YouLearn:    Sie erlernen die Fertigkeit {0}.
-GamePlayer.RemoveSpecialization.YouLose:        Sie verlieren die Fertigkeit {0}.
-GamePlayer.AddSpellLine.YouLearn:                     Sie erlernen die Spruchliste {0}
-GamePlayer.RemoveSpellLine.YouLose:               You lose the {0} spell line! Sie verlernen die Spruchliste {0}
-GamePlayer.AddAbility.YouLearn:    You learn the {0} ability! Sie erhalten die Fähigkeit {0}
-GamePlayer.RemoveAbility.YouLose:                     Sie verlieren die Fähigkeit {0} .
-GamePlayer.RefreshSpec.YouLearn:                        You learn the {0} combat style! Sie erlernen den {0} Kampfstil.
-GamePlayer.RefreshSpec.AfterStyle:                  Dieser Stil kann nur nach der Ausführung des {0} Stils benutzt werden.
-GamePlayer.RefreshSpec.AfterMissed:               Benutzen sie diesen Stil am besten, nachdem ihr letzter Angriff verfehlt hat.
+GamePlayer.Quit.CantQuitDead:				Ihr könnt diese Welt nicht verlassen, Ihr seid tot. Gebt /release ein, um wieder auf zuerstehen.
+GamePlayer.Quit.CantQuitMount:				Ihr müsst erst absteigen, bevor Ihr diese Welt verlassen könnt.
+GamePlayer.Quit.CantQuitStanding:			Ihr müsst erst einmal stehen bleiben, bevor Ihr diese Welt verlassen könnt.
+GamePlayer.Quit.CantQuitCrafting:			Ihr könnt diese Welt nicht verlassen, während Ihr arbeitet.
+GamePlayer.Quit.RecentlyInCombat:			Ihr habt gerade noch gekämpft und müsst etwas länger warten, bevor Ihr diese Welt verlassen könnt.
+GamePlayer.Quit.YouWillQuit:				You will quit after sitting for {0} seconds.  Type '/stand' or move if you don't want to quit.
+GamePlayer.Release.NotDead:					Ihr seid nicht tot!
+GamePlayer.Release.CantReleaseDuel:			You can't alter your release on a duel death!
+GamePlayer.Release.NoLongerReleaseAuto:		Ihr werdet nicht länger automatisch auferstehen. ({0} Sekunden)
+GamePlayer.Release.WillReleaseAuto:			Ihr werdet automatisch in {0} Sekunden wieder auferstehen!
+GamePlayer.Release.WillReleaseAutoCity:		Ihr werdet automatisch in Eurer Heimatstadt wieder auferstehen in {0} Sekunden!
+GamePlayer.Release.YouRelease:				Ihr verlasst Euren Leichnam und kehrt ins Leben zurück.
+GamePlayer.Release.GraveErected:			Es wurde ein Grabstein an der Stelle Eures Todes errichtet.
+GamePlayer.Release.ReturnToPray:			Betet an diesem Grabstein, um einen Teil Eurer verlorenen Erfahrungspunkte zurück zu erhalten.
+GamePlayer.Release.LostConstitution:		Ihr habt einen Teil Eurer Konstitution verloren. Geht zu einen Heiler, um diese wieder herzustellen!
+GamePlayer.Release.SurroundingChange:		Auf einen Schlag verändert sich Eure Umgebung!
+GamePlayer.Release.NoValidBindpoint:		Ihr habt keinen Bindeort und werdet stattdessen hier wiederauferstehen!
+GamePlayer.Release.WillReleaseIn:			Ihr werdet automatisch in {0} Sekunden wiederauferstehen.
+GamePlayer.Pray.CantPrayNow:				Ihr könnt jetzt nicht beten!
+GamePlayer.Pray.NeedTarget:					Ihr müsst einen Grabstein auswählen, an welchen ihr beten wollt!
+GamePlayer.Pray.SelectGrave:				Ihr müsst Euren Grabstein auswählen, um daran zu beten!"
+GamePlayer.Pray.MustGetCloser:				Ihr müsst Euch näher an Euer Grab setzen um zu beten!
+GamePlayer.Pray.MustStandingStill:			Ihr müsst still stehen um zu beten.
+GamePlayer.Pray.AlreadyPraying:				Ihr betet bereits!
+GamePlayer.Pray.Begin:						Ihr beginnt zu beten!
+GamePlayer.Pray.GainBack:					Durch Euer Gebet habt Ihr einen Teil Eurer Erfahrungspunkte zurück bekommen!
+GamePlayer.AddSpecialisation.YouLearn:		Ihr erlernt die {0}-Fähigkeit!
+GamePlayer.RemoveSpecialization.YouLose:	Ihr verliert die {0}-Fähigkeit!
+GamePlayer.AddSpellLine.YouLearn:			Ihr erlernt die {0}-Zauberlinie!
+GamePlayer.RemoveSpellLine.YouLose:			Ihr verliert die {0}-Zauberlinie!
+GamePlayer.AddAbility.YouLearn:				Ihr erlernt die {0}-Fähigkeit!
+GamePlayer.RemoveAbility.YouLose:			Ihr verliert die {0}-Fähigkeit!
+GamePlayer.RefreshSpec.YouLearn:			Ihr erlernt den {0}-Kampfstil!
+GamePlayer.RefreshSpec.AfterStyle:			Dieser Stil kann nur verwendet werden, nach der Ausführung des {0}-Stils.
+GamePlayer.RefreshSpec.AfterMissed:			Dieser Stil ist am Besten, wenn Euer letzter Angriff fehl geschlagen ist.
+GamePlayer.RefreshSpec.AfterParried:		Dieser Stil ist am Besten, wenn Euer letzter Angriff parriert wurde.
+GamePlayer.RefreshSpec.AfterBlocked:		Dieser Stil ist am Besten, wenn Euer letzter Angriff abgeblockt wurde.
+GamePlayer.RefreshSpec.AfterEvaded:			Dieser Stil ist am Besten, wenn Eurem letzten Angriff ausgewichen wurde.
+GamePlayer.RefreshSpec.AfterFumbles:		Dieser Stil ist am Besten, wenn Euer letzter Angriff verstolpert wurde.
+GamePlayer.RefreshSpec.TargetMisses:		Dieser Stil ist am Besten, wenn der letzte Angriff Eures Gegners fehl geschlagen ist.
+GamePlayer.RefreshSpec.TargetHits:			Dieser Stil ist am Besten, wenn der letzte Angriff Eures Gegners getroffen hat.
+GamePlayer.RefreshSpec.TargetParried:		Dieser Stil ist am Besten, wenn Ihr den letzten Angriff Eures Gegners parriert habt.
+GamePlayer.RefreshSpec.TargetBlocked:		Dieser Stil ist am Besten, wenn Ihr den letzten Angriff Eures Gegners abgeblockt habt.
+GamePlayer.RefreshSpec.TargetEvaded:		Dieser Stil ist am Besten, wenn Ihr dem letzten Angriff Eures Gegners ausgewichen seid.
+GamePlayer.RefreshSpec.TargetFumbles:		Dieser Stil ist am Besten, wenn Euer Gegner seinen letzten Angriff verstolpert hat.
+GamePlayer.RefreshSpec.TargetStyle:			Dieser Stil ist am Besten, wenn der letzte Angriff Eures Gegners ein Kampstil war.
+GamePlayer.UpdateSpellLine.GainPower:		Ihr erhaltet einen Eintrag in Eure {0}-Zauberlinie!
+GamePlayer.OnSkillTrained.YouSpend:			Ihr verteilt {0} Punkte und spezialisiert Euch weiter im Bereich {1}.
+GamePlayer.OnSkillTrained.YouHave:			Ihr habt {0} Punkte übrig.
+GamePlayer.OnSkillTrained.TrainsInVarious:	{0} trainiert verschiedene Spezialisierungen.
+GamePlayer.GainRealmPoints.YouGet:			Ihr erhaltet {0} Reichspunkte!
+GamePlayer.GainRealmPoints.GainedLevel:		Ihr habt eine Reichsstufe erreicht!
+GamePlayer.GainRealmPoints.GainedRank:		Ihr habt einen neuen Rang und einen neuen Reichstitel erhalten!
+GamePlayer.GainRealmPoints.NewRealmTitle:	Euer neuer Reichstitel lautet {0}!
+GamePlayer.GainRealmPoints.GainBonus:		Ihr erhaltet einen +{0} Bonus auf alle Spezialisierungen!
+GamePlayer.GainRealmPoints.ReachedRank:		{0} erreicht Reichsrang {1:#L#} in {2}!
+GamePlayer.GainRealmPoints.Earned:			{0} hat 1,000,000 Reichspunkte verdient in {1}!
+GamePlayer.GainBountyPoints.YouGet:			Ihr bekommt {0} Kopfgeldpunkte!
+GamePlayer.GainExperience.YouGet:			Ihr erhaltet " {0} Erfahrungspunkte.
+GamePlayer.GainExperience.CannotRaise:		Ihr könnt nicht zur Stufe 6 aufsteigen, bevor Ihr nicht einen Beruf gewählt habt!
+GamePlayer.GainExperience.TalkToTrainer:	Sprecht mit Eurem Ausbilder für mehr Informationen.
+GamePlayer.OnLevelUp.YouRaise:				Ihr steigt zur {0} Erfahrungsstufe auf!
+GamePlayer.OnLevelUp.YouAchived:			Ihr erreicht die Erfahrungsstufe {0}!
+GamePlayer.OnLevelUp.FreeLevelEligible:		Ihr seid nun würdig, eine freie Stufe zu erhalten. Klickt auf Euren Ausbilder, um sie zu bekommen!
+GamePlayer.OnLevelUp.Reached:				{0} erreicht Erfahrungsstufe {1} in {2}!
+GamePlayer.OnLevelUp.StatRaise:				Eure Attribute sind gestiegen!
+GamePlayer.OnLevelUp.AttainedRank:			Ihr habt den Rang eines {0} erreicht!
+GamePlayer.OnLevelUp.YouGetSpec:			Ihr erhaltet {0} Spezialisierungspunkte, die Ihr nach Belieben verteilen könnt!
+GamePlayer.OnLevelUp.HitsRaise:				Ihr erhaltet {0} zusätzliche Trefferpunkte..
+GamePlayer.OnLevelUp.PowerRaise:			Your power raises by {0} points.
+GamePlayer.OnLevelUp.SecondStage:			Ihr erreicht Teil 2 der {0}. Erfahrungsstufe!
 
 # HOUSING
-HousingPlaceItemHandler.30objects:			Du kannst hier nicht mehr als 30 Objekte aufstellen!
-HousingPlaceItemHandler.40objects:			Du kannst hier nicht mehr als 40 Objekte aufstellen!
-HousingPlaceItemHandler.CantFloor:			Du kannst das nicht auf den Boden stellen!
-HousingPlaceItemHandler.CantWall:			Du kannst das nicht an die Wand hängen!
-HousingPlaceItemHandler.DropOnFloor:		Du stellst {0} auf den Boden deines Hauses.
-HousingPlaceItemHandler.DropOnGarden:		Du stellst {0} in deinen Garten.
-HousingPlaceItemHandler.DropOnWall:			Du hängst {0} an die Wand.
-HousingPlaceItemHandler.GardenObjectPlaced:	Gartenobjekt aufgestellt. {0} freie Plätze verbleibend.
+HouseEnterLeave.TooFarAway:					Ihr seid zu weit von diesem Haus entfernt, um es zu betreten!
+HouseEnterLeave.CantEnter:					Ihr könnt dieses Haus nicht betreten!
+HousingDecorationRotate.Rotated:			Innendekoration wurde von {0} Grad auf {1} Grad gedreht.   
+HousingPickupItemHandler.GardenRemoved:		Gartenobjekt entfernt.
+HousingPickupItemHandler.PickUp:			Es wird {0} in Euren Rucksack gesteckt.
+HousingPlaceItemHandler.30objects:			Ihr könnt keine weiteren Dekorationen platzieren, entfernt zunächst eine!
+HousingPlaceItemHandler.40objects:			Ihr könnt keine weiteren Dekorationen platzieren, entfernt zunächst eine!
+HousingPlaceItemHandler.CantFloor:			Dieses Objekt kann nicht auf dem Boden platziert werden!
+HousingPlaceItemHandler.CantWall:			Dieses Objekt kann nicht an einer Wand platziert werden!
+HousingPlaceItemHandler.DropOnFloor:		Ihr stellt {0} auf den Boden Eures Hauses.
+HousingPlaceItemHandler.DropOnGarden:		Ihr platziert {0} im Garten!
+HousingPlaceItemHandler.DropOnWall:			Ihr hängt {0} an die Wand.
+HousingPlaceItemHandler.GardenObjectPlaced:	Gartenobjekt wurde platziert. Es können noch {0} Objekte platziert werden.
 HousingPlaceItemHandler.HasPorch:			Dieses Haus hat eine Veranda.
 HousingPlaceItemHandler.HasNoPorch:			Dieses Haus hat keine Veranda.
 HousingPlaceItemHandler.IndoorObjectPlaced:	Inneneinrichtung aufgestellt. {0} freie Plätze verbleidend.
 HousingPlaceItemHandler.NoHookpoint:		Kein Hookpoint vorhanden.
-HousingPlaceItemHandler.PutMoney:			Du leistest eine Anzahlung auf dein Haus.
-
+HousingPlaceItemHandler.PutMoney:			Ihr leistet eine Anzahlung auf Euer Haus.
 
 # SCRIPTS
 # /Language
-Scripts.Players.Language.Set:				Du änderst die vom Server angezeigte Sprache zu {0}.
+Scripts.Players.Language.Set:				Ihr ändert die vom Server angezeigte Sprache auf {0}.
+Scripts.Players.Language.Current:			Die aktuell auf dem Server angezeigte Sprache ist: {0}.
