@@ -452,25 +452,26 @@ namespace DOL.GS
 						return false;
 					}
 				}
+			}
 
-				player.Inventory.BeginChanges();
-				foreach (DictionaryEntry de in dataSlots)
+			player.Inventory.BeginChanges();
+			foreach (DictionaryEntry de in dataSlots)
+			{
+				InventoryItem item = player.Inventory.GetItem((eInventorySlot)de.Key);
+				if (item != null)
 				{
-					InventoryItem item = player.Inventory.GetItem((eInventorySlot)de.Key);
-					if (item != null)
+					if (de.Value == null)
 					{
-						if (de.Value == null)
-						{
-							player.Inventory.RemoveItem(item);
-						}
-						else
-						{
-							player.Inventory.RemoveCountFromStack(item, (int)de.Value);
-						}
+						player.Inventory.RemoveItem(item);
+					}
+					else
+					{
+						player.Inventory.RemoveCountFromStack(item, (int)de.Value);
 					}
 				}
-				player.Inventory.CommitChanges();
 			}
+			player.Inventory.CommitChanges();
+
 			return true;//all raw material removed and item created
 		}
 
