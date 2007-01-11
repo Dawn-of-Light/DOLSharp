@@ -49,7 +49,12 @@ namespace DOL.GS.PacketHandler.Client.v168
 			InventoryItem orgitem = client.Player.Inventory.GetItem((eInventorySlot) slot);
 			House house = (House) HouseMgr.GetHouse(client.Player.CurrentRegionID,housenumber);
 
-			if ((slot >= 244) && (slot <= 248)) 
+			//log.Info("position: " + position + " - rotation: " + rotation);
+			if (orgitem == null) return 1;
+			if (house == null) return 1;
+			if (client.Player == null) return 1;
+			
+			if ((slot >= 244) && (slot <= 248)) // money
 			{
                 if (!house.CanPayRent(client.Player))
                     return 1;
@@ -69,11 +74,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 				
 				return 1;
 			}
-
-			//log.Info("position: " + position + " - rotation: " + rotation);
-			if (orgitem == null)	return 1;
-			if (house == null)		return 1;
-			if (client.Player == null)          return 1;
 
 			int pos;
 			switch (method)
@@ -178,13 +178,21 @@ namespace DOL.GS.PacketHandler.Client.v168
 						case "porch_deed":
 							if (house.EditPorch(true))
 								client.Player.Inventory.RemoveItem(orgitem);
-							else	client.Player.Out.SendMessage("This house already has a porch !", eChatType.CT_Help, eChatLoc.CL_SystemWindow);
+							else
+							{
+								client.Player.Out.SendMessage("This house already has a porch !", eChatType.CT_Help, eChatLoc.CL_SystemWindow);
+								client.Out.SendInventorySlotsUpdate(new int[] { slot });
+							}
 							return 1;
 
 						case "porch_remove_deed":
 							if (house.EditPorch(false))
 								client.Player.Inventory.RemoveItem(orgitem);
-							else client.Player.Out.SendMessage("This house has no porch !", eChatType.CT_Help, eChatLoc.CL_SystemWindow);
+							else
+							{
+								client.Player.Out.SendMessage("This house has no porch !", eChatType.CT_Help, eChatLoc.CL_SystemWindow);
+								client.Out.SendInventorySlotsUpdate(new int[] { slot });
+							}
 							return 1;
 
 						default:
