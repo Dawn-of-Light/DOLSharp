@@ -1859,6 +1859,12 @@ namespace DOL.GS.Scripts
 							return 1;
 						}
 
+						if (KeepMgr.getKeepByID(keepid) != null)
+						{
+							DisplayError(client, "KeepID {0} already exists!", keepid);
+							return 0;
+						}
+
 						byte baselevel = 0;
 						try
 						{

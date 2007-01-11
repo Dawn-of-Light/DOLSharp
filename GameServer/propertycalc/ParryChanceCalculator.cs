@@ -38,7 +38,8 @@ namespace DOL.GS.PropertyCalc
 			if (player != null)
 			{
 				int parrySpec = player.GetModifiedSpecLevel(Specs.Parry) - 1;
-				return (player.Dexterity*2-100)/4 + parrySpec*(10/2) + 50;
+				int ability = player.AbilityBonus[(int)property] * 10;
+				return (player.Dexterity * 2 - 100) / 4 + parrySpec * (10 / 2) + 50 + ability;
 			}
 
 			GameNPC npc = living as GameNPC;

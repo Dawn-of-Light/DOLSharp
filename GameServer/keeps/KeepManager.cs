@@ -337,15 +337,23 @@ namespace DOL.GS.Keeps
 			}
 		}
 
-		public static bool IsEnemy(GameKeepGuard checker, GameLiving target)
+		public static bool IsEnemy(GameNPC checker, GameLiving target)
 		{
+			if (checker is GameKeepGuard == false)
+				return false;
+
+			if (checker.GuildName == "")
+				return false;
+
 			if (target is GamePlayer)
 			{
 				if ((target as GamePlayer).Client.Account.PrivLevel != 1)
 					return false;
 			}
+
 			if (target.Realm == 0)
 				return false;
+
 			switch (GameServer.Instance.Configuration.ServerType)
 			{
 				case eGameServerType.GST_Normal:

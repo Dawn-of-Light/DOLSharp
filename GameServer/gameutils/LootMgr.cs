@@ -298,12 +298,14 @@ namespace DOL.GS
 
 			IList nameGenerators = (IList)m_mobNameGenerators[mob.Name];
 			IList guildGenerators = (IList)m_mobGuildGenerators[mob.GuildName];
-			IList regionGenerators = (IList)m_mobRegionGenerators[mob.CurrentRegionID];
+			IList regionGenerators = (IList)m_mobRegionGenerators[(int)mob.CurrentRegionID];
+
 			//IList factionGenerators = m_mobFactionGenerators[mob.Faction]; not implemented
 
 			ArrayList allGenerators = new ArrayList();
 
 			allGenerators.AddRange(m_globalGenerators);
+
 			if (nameGenerators != null)
 				allGenerators.AddRange(nameGenerators);
 			if (guildGenerators != null)
