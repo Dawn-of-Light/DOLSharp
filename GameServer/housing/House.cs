@@ -905,6 +905,7 @@ namespace DOL.GS.Housing
 						hNPC.Heading = heading;
 						hNPC.CurrentRegionID = RegionID;
 						hNPC.Realm = (byte)item.Realm;
+						hNPC.Flags ^= (uint)GameNPC.eFlags.PEACE;
 						hNPC.AddToWorld();
 						break;
 					}
