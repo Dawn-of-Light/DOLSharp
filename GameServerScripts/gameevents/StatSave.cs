@@ -42,7 +42,9 @@ namespace DOL.GS.GameEvents
 		private static long m_lastBytesOut = 0;
 		private static long m_lastMeasureTick = DateTime.Now.Ticks;
 		private static int m_statFrequency = 60 * 1000; // 1 minute
-		private static PerformanceCounter m_systemCpuUsedCounter;
+		private static PerformanceCounter m_systemCpuUsedCounter = null;
+		private static PerformanceCounter m_processCpuUsedCounter = null;
+		
 		private static volatile Timer m_timer = null;
 		
 		[GameServerStartedEvent]
@@ -52,16 +54,51 @@ namespace DOL.GS.GameEvents
 			if (ServerProperties.Properties.STATSAVE_INTERVAL == -1)
 				return;
 			
-			m_systemCpuUsedCounter = new PerformanceCounter();
-
-			m_systemCpuUsedCounter.CategoryName = "Processor";
-			m_systemCpuUsedCounter.CounterName = "% Processor Time";
-			m_systemCpuUsedCounter.InstanceName = "_Total";
+			try
+			{
+				m_systemCpuUsedCounter = new PerformanceCounter("Processor", "% processor time", "_total");
+				m_systemCpuUsedCounter.NextValue();
+			}
+			catch (Exception ex)
+			{
+				m_systemCpuUsedCounter = null;
+				if (log.IsWarnEnabled)
+					log.Warn(ex.GetType().Name + " SystemCpuUsedCounter won't be available: " + ex.Message);
+			}
+			try
+			{
+				m_processCpuUsedCounter = new PerformanceCounter("Process", "% processor time", GetProcessCounterName());
+				m_processCpuUsedCounter.NextValue();
+			}
+			catch (Exception ex)
+			{
+				m_processCpuUsedCounter = null;
+				if (log.IsWarnEnabled)
+					log.Warn(ex.GetType().Name + " ProcessCpuUsedCounter won't be available: " + ex.Message);
+			}
 			// 1 min * INTERVAL
 			m_statFrequency *= ServerProperties.Properties.STATSAVE_INTERVAL;
 			m_timer = new Timer(new TimerCallback(SaveStats), null, m_statFrequency, m_statFrequency);
 		}
 
+		/// <summary>
+		/// Find the process counter name
+		/// </summary>
+		/// <returns></returns>
+		public static string GetProcessCounterName()
+		{
+			Process process = Process.GetCurrentProcess();
+			int id = process.Id;
+			PerformanceCounterCategory perfCounterCat = new PerformanceCounterCategory("Process");
+			foreach (DictionaryEntry entry in perfCounterCat.ReadCategory()["id process"])
+			{
+				string processCounterName = (string)entry.Key;
+				if (((InstanceData)entry.Value).RawValue == id)
+					return processCounterName;
+			}
+			return "";
+		}
+		
 		public static void SaveStats(object state)
 		{
 			long time = System.DateTime.Now.Ticks - m_lastMeasureTick;
@@ -74,7 +111,11 @@ namespace DOL.GS.GameEvents
 
 			int clients = WorldMgr.GetAllPlayingClientsCount();
 
-			float cpu = m_systemCpuUsedCounter.NextValue();
+			float cpu = 0;
+			if (m_systemCpuUsedCounter != null)
+				cpu = m_systemCpuUsedCounter.NextValue(); 
+			if (m_processCpuUsedCounter != null)
+				cpu = m_processCpuUsedCounter.NextValue();
 
 			DBServerStats newstat = new DBServerStats();
 			newstat.CPU = cpu;
