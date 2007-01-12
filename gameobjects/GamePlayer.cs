@@ -269,7 +269,7 @@ namespace DOL.GS
 			{
 				if (CraftTimer != null && CraftTimer.IsAlive)
 				{
-					Out.SendMessage("You must finish your crafting work before you quit!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Quit.CantQuitCrafting"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 					m_quitTimer = null;
 					return 0;
 				}
@@ -284,7 +284,7 @@ namespace DOL.GS
 				{
 					if (secondsleft == 15 || secondsleft == 10 || secondsleft == 5)
 					{
-						Out.SendMessage("You will quit in " + secondsleft + " seconds.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+						Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Quit.YouWillQuit", secondsleft), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 					}
 					return 1000;
 				}
@@ -440,7 +440,7 @@ namespace DOL.GS
 			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
 			{
 				if (GameServer.ServerRules.IsAllowedToUnderstand(this, player))
-					player.Out.SendMessage(Name + " went linkdead!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GamePlayer.OnLinkdeath.Linkdead", Name), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 			}
 
 			//Notify other group members of this linkdead
@@ -606,20 +606,18 @@ namespace DOL.GS
 
 			Region reg = WorldMgr.GetRegion((ushort)m_character.BindRegion); // TODO : Display Area or zone name so ex: Prydwen Keep in Camelot Hills.
 			if (reg != null)
-			{
-				Out.SendMessage("Last Bind Point : " + reg.Description + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			}
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Bind.LastBindPoint", reg.Description), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 			if (!IsAlive)
 			{
-				Out.SendMessage("You can not bind while dead!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Bind.CantBindDead"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 			long lastBindTick = TempProperties.getLongProperty(LAST_BIND_TICK, 0L);
 			long changeTime = CurrentRegion.Time - lastBindTick;
 			if (Client.Account.PrivLevel == 1 && changeTime < 60000) //60 second rebind timer
 			{
-				Out.SendMessage("You must wait " + (1 + (60000 - changeTime) / 1000) + " seconds to bind again!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Bind.MustWait", (1 + (60000 - changeTime) / 1000)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 			bool bound = false;
@@ -650,12 +648,10 @@ namespace DOL.GS
 					foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 						player.Out.SendEmoteAnimation(this, eEmote.Bind);
 				}
-				Out.SendMessage("You are now bound to this location.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Bind.Bound"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 			else
-			{
-				Out.SendMessage("You cannot bind here!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			}
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Bind.CantHere"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}
 
 		/// <summary>
@@ -1271,7 +1267,7 @@ namespace DOL.GS
 					{
 						ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(player, spell, Line);
 						if (spellHandler == null)
-							player.Out.SendMessage(spell.Name + " not implemented yet (" + spell.SpellType + ")", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GamePlayer.OnRevive.NotImplemented", spell.Name, spell.SpellType), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						else
 							spellHandler.StartSpell(player);
 						break;
