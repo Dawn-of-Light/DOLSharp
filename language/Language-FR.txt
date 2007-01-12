@@ -14,6 +14,7 @@ System.LanguagesName.Czech:					Czech
 
 # SYSTEM
 System.NoSense:								Cela n'a aucun sens !
+System.MustSelectTarget:					Vous devez selectionner une cible !
 
 # GAMEPLAYER
 GamePlayer.SendReceive.sends:				 envoie, 
@@ -115,6 +116,28 @@ GamePlayer.Bind.MustWait:					Vous devez attendre {0} secondes avant de vous lie
 GamePlayer.Bind.Bound:						Vous êtes maintenant lié à cet endroit.
 GamePlayer.Bind.CantHere:					Vous ne pouvez pas vous lier ici !
 GamePlayer.Spell.NotImplemented:			{0} n'est pas encore implementé sur ce serveur ({1})
+GamePlayer.RealmTitle.UnknownRealm:			Royaume inconnu
+GamePlayer.SwitchQuiver.ShootWith:			You will shoot with: {0}.
+GamePlayer.SwitchQuiver.NoMoreAmmo:			Vous n'avez plus de munitions dans votre carquois !
+GamePlayer.SwitchQuiver.NotUseQuiver:		Vous n'utiliserez pas votre carquois.
+
+GamePlayer.Attack.AlreadyDead:				{0} est déjà mort !
+GamePlayer.Attack.Blocked:					{0} blocks your attack!
+GamePlayer.Attack.CantBeAttacked:			Ceci ne peut pas être attaqué !
+GamePlayer.Attack.CantCritical:				Vous ne pouvez pas faire de coup critique sur votre cible, vous optez pour un coup standard.
+GamePlayer.Attack.CantSeeTarget:			Vous ne voyez pas votre cible !
+GamePlayer.Attack.CantUseQuiver:			Vous ne pouvez pas utiliser les munitions selectionnées avec cette arme !
+GamePlayer.Attack.Evaded:					{0} evades your attack!
+GamePlayer.Attack.Fumble:					Vous manquez lamentablement votre attaque et prenez le temps de recuperer !
+GamePlayer.Attack.Miss:						Vous manquez !
+GamePlayer.Attack.MustSelectQuiver:			Vous devez selectionner un emplacement de votre carquois !
+GamePlayer.Attack.NeedTarget:				Vous devez selectionner une cible pour attaquer !
+GamePlayer.Attack.NotInView:				{0} n'est pas en vue !
+GamePlayer.Attack.Parried:					{0} parries your attack!
+GamePlayer.Attack.ReadyToFire:				Vous êtes prêt à tirer !
+GamePlayer.Attack.StrafMiss:				Vous strafiez en combat et manquez votre coup !
+GamePlayer.Attack.TooFarAway:				{0} est trop loin pour être attaqué !
+GamePlayer.Attack.TooTired:					Vous êtes trop fatigué pour maintenir votre tir plus longtemps !
 
 # HOUSING
 HouseEnterLeave.TooFarAway:					Vous êtes trop loin pour entrer dans la maison {0}.
