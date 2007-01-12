@@ -1,15 +1,17 @@
 # Language file for DOL
-# Language used : ENGLISH
+# Language used : CZECH / CESTINA
 #
 # #-Beginning and Empty lines are ignored
 # TABS are ignored at the left of ':' too.
 # {0} etc. are for args, don't remove them !
+#
+# Please try to keep ID's alphabetical order
 
 # LANGUAGEMGR
 System.LanguagesName.English:				Anglictina
 System.LanguagesName.French:				Francouzstina
 System.LanguagesName.German:				Nemcina
-System.LanguagesName.Czech:				Cestina
+System.LanguagesName.Czech:					Cestina
 System.LanguagesName.Spanish:				Spanish
 
 # SYSTEM
