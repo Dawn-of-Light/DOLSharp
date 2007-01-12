@@ -4,6 +4,8 @@
 # #-Beginning and Empty lines are ignored
 # TABS are ignored at the left of ':' too.
 # {0} etc. are for args, don't remove them !
+#
+# Please try to keep ID's alphabetical order
 
 # LANGUAGEMGR
 System.LanguagesName.English:				Anglais
@@ -15,8 +17,63 @@ System.LanguagesName.Czech:					Tchèque
 # SYSTEM
 System.NoSense:								Cela n'a aucun sens !
 System.MustSelectTarget:					Vous devez selectionner une cible !
+System.ReleaseTimer:						Timer de résurrection
 
 # GAMEPLAYER
+GamePlayer.Attack.AlreadyDead:				{0} est déjà mort !
+GamePlayer.Attack.Blocked:					{0} bloque votre attaque !
+GamePlayer.Attack.CantBeAttacked:			Ceci ne peut pas être attaqué !
+GamePlayer.Attack.CantCritical:				Vous ne pouvez pas faire de coup critique sur votre cible, vous optez pour un coup standard.
+GamePlayer.Attack.CantSeeTarget:			Vous ne voyez pas votre cible !
+GamePlayer.Attack.CantUseQuiver:			Vous ne pouvez pas utiliser les munitions selectionnées avec cette arme !
+GamePlayer.Attack.CouldRepair:				Votre {0} peut être réparé.
+GamePlayer.Attack.Critical:					Vous donnez un coup critique à {0} pour {1} dommages additionels !
+GamePlayer.Attack.Evade:					{0} vous attaque, mais vous evitez le coup !
+GamePlayer.Attack.Evaded:					{0} évite votre attaque !
+GamePlayer.Attack.Fumble:					Vous manquez lamentablement votre attaque et prenez le temps de recuperer !
+GamePlayer.Attack.Fumbled:					{0} manque lamentablement !
+GamePlayer.Attack.HitsYour:					{0} frappe votre {1} pour {2}{3} dommages !
+GamePlayer.Attack.HitsYou:					{0} vous frappe pour {1}{2} dommages !
+GamePlayer.Attack.HitsYouCritical:			{0} vous frappe de manière critique pour {1} dommages additionels !
+GamePlayer.Attack.InterceptHit:				{0} {1}{2} et touchez pour {3}{4} dommages !
+GamePlayer.Attack.Intercepted:				{0} se place devant {1} et prend le coup !
+GamePlayer.Attack.InterceptedHit:			{0} {1}{2} mais touchez {3} pour {4}{5} dommages !
+GamePlayer.Attack.Interrupted:				{0} vous attaque et votre {1} est interrompu !
+GamePlayer.Attack.Location.Torso:			torse
+GamePlayer.Attack.Location.Arm:				bras
+GamePlayer.Attack.Location.Head:			tête
+GamePlayer.Attack.Location.Leg:				jambe
+GamePlayer.Attack.Location.Hand:			main
+GamePlayer.Attack.Location.Foot:			pied
+GamePlayer.Attack.Miss:						Vous manquez !
+GamePlayer.Attack.Missed:					{0} vous attaque mais manque son coup !
+GamePlayer.Attack.MustSelectQuiver:			Vous devez selectionner un emplacement de votre carquois !
+GamePlayer.Attack.NeedRepair:				Votre {0} a besoin d'être réparé.
+GamePlayer.Attack.NeedRepairDire:			Votre {0} a grand besoin d'être réparé.
+GamePlayer.Attack.NeedTarget:				Vous devez selectionner une cible pour attaquer !
+GamePlayer.Attack.NotInView:				{0} n'est pas en vue !
+GamePlayer.Attack.Parried:					{0} parre votre attaque !
+GamePlayer.Attack.Parry:					{0} vous attaque, mais vous parrez le coup !
+GamePlayer.Attack.ReadyToFire:				Vous êtes prêt à tirer !
+GamePlayer.Attack.StrafMiss:				Vous strafiez en combat et manquez votre coup !
+GamePlayer.Attack.TooFarAway:				{0} est trop loin pour être attaqué !
+GamePlayer.Attack.TooTired:					Vous êtes trop fatigué pour maintenir votre tir plus longtemps !
+GamePlayer.Attack.Type.Shot:				tir
+GamePlayer.Attack.Type.Throw:				jet
+GamePlayer.Attack.WithYour:					avec votre
+GamePlayer.Attack.YouAttack:				Vous attaquez
+GamePlayer.Attack.YouShot:					Vous tirez
+GamePlayer.Die.CorpseLies:					{0} est mort. {1} corps gît sur le sol.
+GamePlayer.Die.DeadRVR:						Vous êtes mort au combat pour votre royaume et ne perdez aucune experience !
+GamePlayer.Die.DeathN1:						Ceci est votre première mort pour ce level. Vos pertes d'experience et de constitutions sont grandement réduites.
+GamePlayer.Die.DeathN2:						Ceci est votre seconde mort pour ce level.  Vos pertes d'experience et de constitutions sont réduites.
+GamePlayer.Die.DuelDefeated:				{0} a été vaincu en duel par {1} !
+GamePlayer.Die.Killed:						{0} vient de se faire tuer !
+GamePlayer.Die.KilledBy:					{0} vient de se faire tuer par {1} !
+GamePlayer.Die.KilledByLocation:			{0} vient de se faire tuer par {1} à {2} !
+GamePlayer.Die.KilledLocation:				{0} vient de se faire tuer à {1} !
+GamePlayer.Die.ReleaseToReturn:				Vous êtes mort.  Tapez /release pour retourner à votre bind.
+GamePlayer.Die.YouKilled:					Vous venez de tuer {0} !
 GamePlayer.SendReceive.sends:				 envoie, 
 GamePlayer.Quit.CantQuitDead:				Vous ne pouvez pas quitter maintenant, vous êtes mort !  Tapez '/release' pour ressusciter.
 GamePlayer.Quit.CantQuitMount:				Vous devez descendre de votre monture avant de quitter.
@@ -115,36 +172,20 @@ GamePlayer.Bind.CantBindDead:				Vous ne pouvez pas vous lier tant que vous êtes
 GamePlayer.Bind.MustWait:					Vous devez attendre {0} secondes avant de vous lier de nouveau !
 GamePlayer.Bind.Bound:						Vous êtes maintenant lié à cet endroit.
 GamePlayer.Bind.CantHere:					Vous ne pouvez pas vous lier ici !
-GamePlayer.Spell.NotImplemented:			{0} n'est pas encore implementé sur ce serveur ({1})
+GamePlayer.Spell.NotEnoughPowerful:			Vous n'êtes pas assez puissant pour utiliser le sort de cet item.
+GamePlayer.Spell.NotImplemented:			{0} ({1}) n'est pas encore implementé sur ce serveur.
+GamePlayer.Spell.Proc.NotImplemented:		L'effet réactif d'ID {0} n'est pas encore implementé sur ce serveur.
 GamePlayer.RealmTitle.UnknownRealm:			Royaume inconnu
 GamePlayer.SwitchQuiver.ShootWith:			Vous attaquerez avec: {0}.
 GamePlayer.SwitchQuiver.NoMoreAmmo:			Vous n'avez plus de munitions dans votre carquois !
 GamePlayer.SwitchQuiver.NotUseQuiver:		Vous n'utiliserez pas votre carquois.
-GamePlayer.Attack.AlreadyDead:				{0} est déjà mort !
-GamePlayer.Attack.Blocked:					{0} bloque votre attaque !
-GamePlayer.Attack.CantBeAttacked:			Ceci ne peut pas être attaqué !
-GamePlayer.Attack.CantCritical:				Vous ne pouvez pas faire de coup critique sur votre cible, vous optez pour un coup standard.
-GamePlayer.Attack.CantSeeTarget:			Vous ne voyez pas votre cible !
-GamePlayer.Attack.CantUseQuiver:			Vous ne pouvez pas utiliser les munitions selectionnées avec cette arme !
-GamePlayer.Attack.Critical:					Vous donnez un coup critique à {0} pour {1} dommages additionels !
-GamePlayer.Attack.Evaded:					{0} évite votre attaque !
-GamePlayer.Attack.Fumble:					Vous manquez lamentablement votre attaque et prenez le temps de recuperer !
-GamePlayer.Attack.InterceptHit:				{0} {1}{2} et touchez pour {3}{4} dommages !
-GamePlayer.Attack.Intercepted:				{0} se place devant {1} et prend le coup !
-GamePlayer.Attack.InterceptedHit:			{0} {1}{2} mais touchez {3} pour {4}{5} dommages !
-GamePlayer.Attack.Miss:						Vous manquez !
-GamePlayer.Attack.MustSelectQuiver:			Vous devez selectionner un emplacement de votre carquois !
-GamePlayer.Attack.NeedTarget:				Vous devez selectionner une cible pour attaquer !
-GamePlayer.Attack.NotInView:				{0} n'est pas en vue !
-GamePlayer.Attack.Parried:					{0} parre votre attaque !
-GamePlayer.Attack.ReadyToFire:				Vous êtes prêt à tirer !
-GamePlayer.Attack.StrafMiss:				Vous strafiez en combat et manquez votre coup !
-GamePlayer.Attack.TooFarAway:				{0} est trop loin pour être attaqué !
-GamePlayer.Attack.TooTired:					Vous êtes trop fatigué pour maintenir votre tir plus longtemps !
-GamePlayer.Attack.WithYour:					avec votre
-GamePlayer.Attack.YouAttack:				Vous attaquez
-GamePlayer.Attack.YouShot:					Vous tirez
-						
+GamePlayer.Pronoun.Male.Subjective:			il
+GamePlayer.Pronoun.Male.Possessive:			son
+GamePlayer.Pronoun.Male.Objective:			lui
+GamePlayer.Pronoun.Female.Subjective:		elle
+GamePlayer.Pronoun.Female.Possessive:		sa
+GamePlayer.Pronoun.Female.Objective:		elle
+
 # HOUSING
 HouseEnterLeave.TooFarAway:					Vous êtes trop loin pour entrer dans la maison {0}.
 HouseEnterLeave.CantEnter:					Vous ne pouvez pas entrer dans la maison {0}.

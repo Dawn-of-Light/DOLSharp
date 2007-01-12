@@ -18,6 +18,7 @@
  */
 using System;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS
 {
@@ -91,6 +92,39 @@ namespace DOL.GS
 		public static void SystemToOthers(GameObject centerObject, string message, eChatType chatType)
 		{
 			SystemToArea(centerObject, message, chatType, WorldMgr.INFO_DISTANCE, centerObject);
+		}
+
+		/// <summary>
+		/// Sends a message to the system window of players inside
+		/// INFO_DISTANCE radius of the center object
+		/// </summary>
+		/// <param name="centerObject">The center object of the message</param>
+		/// <param name="chatType">The type of message to send</param>
+		/// <param name="message">The Translation-Message-ID to send</param>
+		/// <param name="args">The Translation args</param>
+		/// <remarks>If the centerObject is a player, he won't receive the message</remarks>
+		public static void SystemToOthers2(GameObject centerObject, eChatType chatType, string LanguageMessageID, params object[] args)
+		{
+			if (LanguageMessageID == null || LanguageMessageID.Length <= 0) return;
+			//bool excluded;
+			foreach (GamePlayer player in centerObject.GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
+			{
+				/*
+				excluded = false;
+				if (excludes != null)
+				{
+					foreach (GameObject obj in excludes)
+						if (obj == player)
+						{
+							excluded = true;
+							break;
+						}
+				}
+				if (!excluded)
+				*/
+				if (!(centerObject is GamePlayer && centerObject == player))
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, LanguageMessageID, args), chatType, eChatLoc.CL_SystemWindow);
+			}
 		}
 
 		/// <summary>

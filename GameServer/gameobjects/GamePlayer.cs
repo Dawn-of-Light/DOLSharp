@@ -4713,26 +4713,24 @@ namespace DOL.GS
 							hitWeapon = GlobalConstants.NameToShortName(weapon.Name);
 
 						if (hitWeapon.Length > 0)
-						{
-							hitWeapon = " with your " + hitWeapon;
-						}
+							hitWeapon = " " + LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.WithYour") + " " + hitWeapon;
 
-						string attackTypeMsg = "attack";
+						string attackTypeMsg = LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.YouAttack");
 						if (ActiveWeaponSlot == eActiveWeaponSlot.Distance)
-							attackTypeMsg = "shot";
+							attackTypeMsg = LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.YouShot");
 
 						// intercept messages
 						if (target != null && target != ad.Target)
 						{
-							Out.SendMessage(string.Format("{0} steps in front of {1} and takes the blow!", ad.Target.GetName(0, true), target.GetName(0, false)), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
-							Out.SendMessage(string.Format("You {0} {1}{2} but hit {3} for {4}{5} damage!", attackTypeMsg, target.GetName(0, false), hitWeapon, ad.Target.GetName(0, false), ad.Damage, modmessage), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+							Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.Intercepted", ad.Target.GetName(0, true), target.GetName(0, false)), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+							Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.InterceptedHit", attackTypeMsg, target.GetName(0, false), hitWeapon, ad.Target.GetName(0, false), ad.Damage, modmessage), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 						}
 						else
-						{
-							Out.SendMessage(string.Format("You {0} {1}{2} and hit for {3}{4} damage!", attackTypeMsg, ad.Target.GetName(0, false), hitWeapon, ad.Damage, modmessage), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
-						}
+							Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.InterceptHit", attackTypeMsg, ad.Target.GetName(0, false), hitWeapon, ad.Damage, modmessage), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+						 
+						// critical hit
 						if (ad.CriticalDamage > 0)
-							Out.SendMessage("You critical hit " + ad.Target.GetName(0, false) + " for an additional " + ad.CriticalDamage + " damage!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+							Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.Critical", ad.Target.GetName(0, false), ad.CriticalDamage), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 						break;
 					}
 			}
@@ -4773,11 +4771,11 @@ namespace DOL.GS
 							// item 's buff do not depend of condition
 							// Out.SendCharStatsUpdate();
 							if (weapon.ConditionPercent == 90)
-								Out.SendMessage("Your " + weapon.Name + " could use repairs.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.CouldRepair", weapon.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							else if (weapon.ConditionPercent == 80)
-								Out.SendMessage("Your " + weapon.Name + " is in need of repairs.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.NeedRepair", weapon.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							else if (weapon.ConditionPercent == 70)
-								Out.SendMessage("Your " + weapon.Name + " is in dire need of repairs.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.NeedRepairDire", weapon.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							Out.SendUpdateWeaponAndArmorStats();
 							Out.SendInventorySlotsUpdate(new int[] { weapon.SlotPosition });
 						}
@@ -4909,13 +4907,13 @@ namespace DOL.GS
 			{
 				// is done in game living because of guard
 				//			case eAttackResult.Blocked : Out.SendMessage(ad.Attacker.GetName(0, true) + " attacks you and you block the blow!", eChatType.CT_Missed, eChatLoc.CL_SystemWindow); break;
-				case eAttackResult.Parried: Out.SendMessage(ad.Attacker.GetName(0, true) + " attacks you and you parry the blow!", eChatType.CT_Missed, eChatLoc.CL_SystemWindow); break;
-				case eAttackResult.Evaded: Out.SendMessage(ad.Attacker.GetName(0, true) + " attacks you and you evade the blow!", eChatType.CT_Missed, eChatLoc.CL_SystemWindow); break;
-				case eAttackResult.Fumbled: Out.SendMessage(ad.Attacker.GetName(0, true) + " fumbled!", eChatType.CT_Missed, eChatLoc.CL_SystemWindow); break;
+				case eAttackResult.Parried: Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.Parry", ad.Attacker.GetName(0, true)), eChatType.CT_Missed, eChatLoc.CL_SystemWindow); break;
+				case eAttackResult.Evaded: Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.Evade", ad.Attacker.GetName(0, true)), eChatType.CT_Missed, eChatLoc.CL_SystemWindow); break;
+				case eAttackResult.Fumbled: Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.Fumbled", ad.Attacker.GetName(0, true)), eChatType.CT_Missed, eChatLoc.CL_SystemWindow); break;
 				case eAttackResult.Missed:
 					if (ad.AttackType == AttackData.eAttackType.Spell)
 						break;
-					Out.SendMessage(ad.Attacker.GetName(0, true) + " attacks you and misses!", eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.Missed", ad.Attacker.GetName(0, true)), eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
 					break;
 				case eAttackResult.HitStyle:
 				case eAttackResult.HitUnstyled:
@@ -4925,12 +4923,14 @@ namespace DOL.GS
 						string hitLocName = null;
 						switch (ad.ArmorHitLocation)
 						{
-							case eArmorSlot.TORSO: hitLocName = "torso"; break;
-							case eArmorSlot.ARMS: hitLocName = "arm"; break;
-							case eArmorSlot.HEAD: hitLocName = "head"; break;
-							case eArmorSlot.LEGS: hitLocName = "leg"; break;
-							case eArmorSlot.HAND: hitLocName = "hand"; break;
-							case eArmorSlot.FEET: hitLocName = "feet"; break;
+							//GamePlayer.Attack.Location.Feet:	feet
+							// LanguageMgr.GetTranslation(Client, "", ad.Attacker.GetName(0, true))
+							case eArmorSlot.TORSO: hitLocName = LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.Location.Torso"); break;
+							case eArmorSlot.ARMS: hitLocName = LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.Location.Arm"); break;
+							case eArmorSlot.HEAD: hitLocName = LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.Location.Head"); break;
+							case eArmorSlot.LEGS: hitLocName = LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.Location.Leg"); break;
+							case eArmorSlot.HAND: hitLocName = LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.Location.Hand"); break;
+							case eArmorSlot.FEET: hitLocName = LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.Location.Foot"); break;
 						}
 						string modmessage = "";
 						if (ad.Attacker is GamePlayer == false) // if attacked by player, don't show resists (?)
@@ -4940,17 +4940,12 @@ namespace DOL.GS
 						}
 
 						if (hitLocName != null)
-						{
-							Out.SendMessage(ad.Attacker.GetName(0, true) + " hits your " + hitLocName + " for " + ad.Damage + modmessage + " damage!", eChatType.CT_YouWereHit, eChatLoc.CL_SystemWindow);
-						}
+							Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.HitsYour", ad.Attacker.GetName(0, true), hitLocName, ad.Damage, modmessage), eChatType.CT_YouWereHit, eChatLoc.CL_SystemWindow);
 						else
-						{
-							Out.SendMessage(ad.Attacker.GetName(0, true) + " hits you for " + ad.Damage + modmessage + " damage!", eChatType.CT_YouWereHit, eChatLoc.CL_SystemWindow);
-						}
+							Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.HitsYou", ad.Attacker.GetName(0, true), ad.Damage, modmessage), eChatType.CT_YouWereHit, eChatLoc.CL_SystemWindow);
+
 						if (ad.CriticalDamage > 0)
-						{
-							Out.SendMessage(ad.Attacker.GetName(0, true) + " critical hits you for an additional " + ad.CriticalDamage + " damage!", eChatType.CT_YouWereHit, eChatLoc.CL_SystemWindow);
-						}
+							Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.HitsYouCritical", ad.Attacker.GetName(0, true), ad.CriticalDamage), eChatType.CT_YouWereHit, eChatLoc.CL_SystemWindow);
 
 						// decrease condition of hitted armor piece
 						if (ad.ArmorHitLocation != eArmorSlot.UNKNOWN)
@@ -4988,11 +4983,11 @@ namespace DOL.GS
 									// item 's buff do not depend of condition
 									// Out.SendCharStatsUpdate();
 									if (item.ConditionPercent == 90)
-										Out.SendMessage("Your " + item.Name + " could use repairs.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+										Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.CouldRepair", item.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 									else if (item.ConditionPercent == 80)
-										Out.SendMessage("Your " + item.Name + " is in need of repairs.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+										Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.NeedRepair", item.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 									else if (item.ConditionPercent == 70)
-										Out.SendMessage("Your " + item.Name + " is in dire need of repairs.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+										Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.NeedRepairDire", item.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 									Out.SendUpdateWeaponAndArmorStats();
 									Out.SendInventorySlotsUpdate(new int[] { item.SlotPosition });
 								}
@@ -5024,18 +5019,12 @@ namespace DOL.GS
 													{
 														ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, reactiveEffectLine);
 														if (spellHandler != null)
-														{
 															spellHandler.StartSpell(ad.Attacker);
-														}
 														else
-														{
-															Out.SendMessage("Reactive effect ID " + reactiveitem.ProcSpellID + " is not implemented yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-														}
+															Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Spell.Proc.NotImplemented", reactiveitem.ProcSpellID), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 													}
 													else
-													{
-														Out.SendMessage("You are not powerful enough to use this item's spell.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-													}
+														Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Spell.NotEnoughPowerful"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 													break;
 												}
 											}
@@ -5068,11 +5057,11 @@ namespace DOL.GS
 														}
 														else
 														{
-															Out.SendMessage("Reactive effect ID " + reactiveitem.ProcSpellID1 + " is not implemented yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+															Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Spell.Proc.NotImplemented", reactiveitem.ProcSpellID), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 														}
 													}
 													else
-														Out.SendMessage("You are not powerful enough to use this item's spell.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+														Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Spell.NotEnoughPowerful"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 													break;
 												}
 											}
@@ -5099,10 +5088,10 @@ namespace DOL.GS
 			{
 				if (ActiveWeaponSlot == eActiveWeaponSlot.Distance)
 				{
-					string attackTypeMsg = "shot";
+					string attackTypeMsg = LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.Type.Shot");
 					if (AttackWeapon != null && AttackWeapon.Object_Type == (int)eObjectType.Thrown)
-						attackTypeMsg = "throw";
-					Out.SendMessage(attacker.GetName(0, true) + " is attacking you and your " + attackTypeMsg + " is interrupted!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+						attackTypeMsg = LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.Type.Throw");
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.Interrupted", attacker.GetName(0, true), attackTypeMsg), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 				}
 				return true;
 			}
@@ -5811,8 +5800,8 @@ namespace DOL.GS
 			if (killer == null)
 			{
 				if (realmDeath)
-					message = GetName(0, true) + " was just killed in " + location + "!";
-				else message = GetName(0, true) + " was just killed!";
+					message = LanguageMgr.GetTranslation(Client, "GamePlayer.Die.KilledLocation", GetName(0, true), location);
+				else message = LanguageMgr.GetTranslation(Client, "GamePlayer.Die.Killed", GetName(0, true));
 			}
 			else
 			{
@@ -5820,14 +5809,14 @@ namespace DOL.GS
 				{
 					m_releaseType = eReleaseType.Duel;
 					messageDistance = WorldMgr.YELL_DISTANCE;
-					message = GetName(0, true) + " was just defeated in a duel by " + killer.GetName(1, false) + "!";
+					message = LanguageMgr.GetTranslation(Client, "GamePlayer.Die.DuelDefeated", GetName(0, true), killer.GetName(1, false));
 				}
 				else
 				{
 					messageDistance = 0;
 					if (realmDeath)
-						message = GetName(0, true) + " was just killed by " + killer.GetName(1, false) + " in " + location + ".";
-					else message = GetName(0, true) + " was just killed by " + killer.GetName(1, false) + ".";
+						message = LanguageMgr.GetTranslation(Client, "GamePlayer.Die.KilledByLocation", GetName(0, true), killer.GetName(1, false), location);
+					else message = LanguageMgr.GetTranslation(Client, "GamePlayer.Die.KilledBy", GetName(0, true), killer.GetName(1, false));
 				}
 			}
 
@@ -5864,7 +5853,7 @@ namespace DOL.GS
 
 			if (killer is GamePlayer && killer != this)
 			{
-				((GamePlayer)killer).Out.SendMessage("You just killed " + GetName(0, false) + "!", eChatType.CT_PlayerDied, eChatLoc.CL_SystemWindow);
+				((GamePlayer)killer).Out.SendMessage(LanguageMgr.GetTranslation(((GamePlayer)killer).Client, "GamePlayer.Die.YouKilled", GetName(0, false)), eChatType.CT_PlayerDied, eChatLoc.CL_SystemWindow);
 			}
 
 			ArrayList players = new ArrayList();
@@ -5926,12 +5915,12 @@ namespace DOL.GS
 				m_deathTick = Environment.TickCount; // we use realtime, because timer window is realtime
 				//UpdatePlayerStatus();
 
-				Out.SendTimerWindow("Release Timer", (m_automaticRelease ? RELEASE_MINIMUM_WAIT : RELEASE_TIME));
+				Out.SendTimerWindow(LanguageMgr.GetTranslation(Client, "System.ReleaseTimer"), (m_automaticRelease ? RELEASE_MINIMUM_WAIT : RELEASE_TIME));
 				m_releaseTimer = new RegionTimer(this);
 				m_releaseTimer.Callback = new RegionTimerCallback(ReleaseTimerCallback);
 				m_releaseTimer.Start(1000);
 
-				Out.SendMessage("You have died.  Type /release to return to your last bindpoint.", eChatType.CT_YouDied, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Die.ReleaseToReturn"), eChatType.CT_YouDied, eChatLoc.CL_SystemWindow);
 
 				// clear target object so no more actions can used on this target, spells, styles, attacks...
 				TargetObject = null;
@@ -5952,7 +5941,8 @@ namespace DOL.GS
 
 				if (realmDeath)
 				{
-					Out.SendMessage("You died fighting for your realm and lose no experience!", eChatType.CT_YouDied, eChatLoc.CL_SystemWindow);
+					// 
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Die.DeadRVR"), eChatType.CT_YouDied, eChatLoc.CL_SystemWindow);
 					xpLossPercent = 0;
 				}
 				else if (Level > 5) // under level 5 there is no penalty
@@ -5960,14 +5950,14 @@ namespace DOL.GS
 					Out.SendMessage("You lose some experience!", eChatType.CT_YouDied, eChatLoc.CL_SystemWindow);
 					// if this is the first death in level, you lose only half the penalty
 					switch (m_character.DeathCount)
-					{
+						{
 						case 0:
-							Out.SendMessage("This is your first death for this level.  Your experience and constitution losses are greatly reduced.", eChatType.CT_YouDied, eChatLoc.CL_SystemWindow);
+							Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Die.DeathN1"), eChatType.CT_YouDied, eChatLoc.CL_SystemWindow);
 							xpLossPercent /= 3;
 							break;
 
 						case 1:
-							Out.SendMessage("This is your second death for this level.  Your experience and constitution losses are reduced.", eChatType.CT_YouDied, eChatLoc.CL_SystemWindow);
+							Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Die.DeathN2"), eChatType.CT_YouDied, eChatLoc.CL_SystemWindow);
 							xpLossPercent = xpLossPercent * 2 / 3;
 							break;
 					}
@@ -5993,7 +5983,9 @@ namespace DOL.GS
 				SiegeWeapon.ReleaseControl();
 
 			// sent after buffs drop
-			Message.SystemToOthers(this, GetName(0, true) + " just died.  " + GetPronoun(1, true) + " corpse lies on the ground.", eChatType.CT_PlayerDied);
+			// GamePlayer.Die.CorpseLies:		{0} just died. {1} corpse lies on the ground.
+			//Message.SystemToOthers(this, GetName(0, true) + " just died.  " + GetPronoun(1, true) + " corpse lies on the ground.", eChatType.CT_PlayerDied);
+			Message.SystemToOthers2(this, eChatType.CT_PlayerDied, "GamePlayer.Die.CorpseLies", GetName(0, true), GetPronoun(this.Client, 1, true));
 			if (m_releaseType == eReleaseType.Duel)
 			{
 				Message.SystemToOthers(this, killer.Name + " wins the duel!", eChatType.CT_Emote);
@@ -9438,6 +9430,41 @@ namespace DOL.GS
 							return "Her";
 						else
 							return "her";
+				}
+		}
+
+		public string SetFirstUppercase(bool firstLetterUppercase, string text)
+		{
+			if (!firstLetterUppercase) return text;
+
+			string result = "";
+			if (text == null || text.Length <= 0) return result;
+			result = text[0].ToString().ToUpper();
+			if (text.Length > 1) result += text.Substring(1, text.Length - 1);
+			return result;
+		}
+
+		public string GetPronoun(GameClient Client, int form, bool firstLetterUppercase)
+		{
+			if (PlayerCharacter.Gender == 0)
+				switch (form)
+				{
+					default:
+						return SetFirstUppercase(firstLetterUppercase, LanguageMgr.GetTranslation(Client, "GamePlayer.Pronoun.Male.Subjective"));
+					case 1:
+						return SetFirstUppercase(firstLetterUppercase, LanguageMgr.GetTranslation(Client, "GamePlayer.Pronoun.Male.Possessive"));
+					case 2:
+						return SetFirstUppercase(firstLetterUppercase, LanguageMgr.GetTranslation(Client, "GamePlayer.Pronoun.Male.Objective"));
+				}
+			else
+				switch (form)
+				{
+					default:
+						return SetFirstUppercase(firstLetterUppercase, LanguageMgr.GetTranslation(Client, "GamePlayer.Pronoun.Female.Subjective"));
+					case 1:
+						return SetFirstUppercase(firstLetterUppercase, LanguageMgr.GetTranslation(Client, "GamePlayer.Pronoun.Female.Possessive"));
+					case 2:
+						return SetFirstUppercase(firstLetterUppercase, LanguageMgr.GetTranslation(Client, "GamePlayer.Pronoun.Female.Objective"));
 				}
 		}
 
