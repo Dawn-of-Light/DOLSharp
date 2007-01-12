@@ -108,6 +108,13 @@ GamePlayer.StartAttack.SpellCancelled:		Your spell is cancelled!
 GamePlayer.StartAttack.TargetInRange:		, target is in range
 GamePlayer.StartAttack.TargetOutOfRange:	, target is out of range
 GamePlayer.StartAttack.YouPrepare:			You prepare your {0} ({1}.{2}s to fire{3})
+GamePlayer.OnLinkdeath.Linkdead:			{0} went linkdead!
+GamePlayer.Bind.LastBindPoint:				Last Bind Point : {0}.
+GamePlayer.Bind.CantBindDead:				You can not bind while dead!
+GamePlayer.Bind.MustWait:					You must wait {0} seconds to bind again!
+GamePlayer.Bind.Bound:						You are now bound to this location.
+GamePlayer.Bind.CantHere:					You cannot bind here!
+GamePlayer.Spell.NotImplemented:			{0} not implemented yet on this server ({1})
 
 # HOUSING
 HouseEnterLeave.TooFarAway:					You are too far away to enter house {0}.

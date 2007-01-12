@@ -108,6 +108,13 @@ GamePlayer.StartAttack.SpellCancelled:		Votre sort est annulé !
 GamePlayer.StartAttack.TargetInRange:		, la cible est a proximité
 GamePlayer.StartAttack.TargetOutOfRange:	, la cible est hors de portée
 GamePlayer.StartAttack.YouPrepare:			You prepare your {0} ({1}.{2}s to fire{3})
+GamePlayer.OnLinkdeath.Linkdead:			{0} a été deconnecté par le serveur !
+GamePlayer.Bind.LastBindPoint:				Dernier Bind : {0}.
+GamePlayer.Bind.CantBindDead:				Vous ne pouvez pas vous lier tant que vous êtes mort !
+GamePlayer.Bind.MustWait:					Vous devez attendre {0} secondes avant de vous lier de nouveau !
+GamePlayer.Bind.Bound:						Vous êtes maintenant lié à cet endroit.
+GamePlayer.Bind.CantHere:					Vous ne pouvez pas vous lier ici !
+GamePlayer.Spell.NotImplemented:			{0} n'est pas encore implementé sur ce serveur ({1})
 
 # HOUSING
 HouseEnterLeave.TooFarAway:					Vous êtes trop loin pour entrer dans la maison {0}.
