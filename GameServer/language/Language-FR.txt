@@ -83,7 +83,7 @@ GamePlayer.OnLevelUp.YouAchived:			Vous avez achevé le niveau {0}!
 GamePlayer.OnLevelUp.FreeLevelEligible:		Vous êtes eligible pour un Niveau gratuit! Cliquez sur votre entraineur pour le recevoir (ou tapez /freelevel decline pour refuser votre niveau gratuit.)
 GamePlayer.OnLevelUp.Reached:				{0} a atteint le niveau {1} dans {2}!
 GamePlayer.OnLevelUp.StatRaise:				Vos stats augmentent !
-GamePlayer.OnLevelUp.AttainedRank:			Vous avez atteint le rang de !
+GamePlayer.OnLevelUp.AttainedRank:			Vous avez atteint le rang de {0} !
 GamePlayer.OnLevelUp.YouGetSpec:			Vous obtenez {0} points de spécialisation à dépenser pour ce niveau!
 GamePlayer.OnLevelUp.HitsRaise:				Votre vie à augmentée de {0} points.
 GamePlayer.OnLevelUp.PowerRaise:			Votre pouvoir à augmenté de {0} points.
@@ -102,7 +102,7 @@ GamePlayer.StartAttack.SelectQuiver:		Vous devez sélectionner un carquois à util
 GamePlayer.StartAttack.CantUseQuiver:		Vous ne pouvez pas sélectionner ce carquois avec votre arme courante !
 GamePlayer.StartAttack.TiredShot:			Vous êtes trop fatigué pour tenter un coup critique !
 GamePlayer.StartAttack.TiredUse:			Vous êtes trop fatigué pour utiliser votre {0} !
-GamePlayer.StartAttack.CombatNoTarget:		Vous entrez en combat, mais sans cible.
+GamePlayer.StartAttack.CombatNoTarget:		Vous entrez en combat, mais n'avez aucune cible.
 GamePlayer.StartAttack.CombatTarget:		Vous entrez en combat, et ciblez [{0}]
 GamePlayer.StartAttack.SpellCancelled:		Votre sort est annulé !
 GamePlayer.StartAttack.TargetInRange:		, la cible est a proximité
