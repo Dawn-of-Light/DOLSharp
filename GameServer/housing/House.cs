@@ -283,7 +283,8 @@ namespace DOL.GS.Housing
 				return false;
 			Porch = add_porch;
 			this.SendUpdate();
-
+			this.SaveIntoDatabase();
+			
 			return true;
 		}
 

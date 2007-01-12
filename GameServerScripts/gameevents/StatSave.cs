@@ -117,11 +117,14 @@ namespace DOL.GS.GameEvents
 			if (m_processCpuUsedCounter != null)
 				cpu = m_processCpuUsedCounter.NextValue();
 
+			long totalmem = GC.GetTotalMemory(false);
+			
 			DBServerStats newstat = new DBServerStats();
 			newstat.CPU = cpu;
 			newstat.Clients = clients;
 			newstat.Upload = (int)outRate/1024;
 			newstat.Download = (int)inRate / 1024;
+			newstat.Memory = totalmem / 1024;
 			GameServer.Database.AddNewObject(newstat);
 			GameServer.Database.SaveObject(newstat);
 			
@@ -146,7 +149,7 @@ namespace DOL.Database
 		protected float m_cpu;
 		protected int m_upload;
 		protected int m_download;
-
+		protected long m_memory;
 
 		static bool m_autoSave;
 		static bool m_init;
@@ -158,6 +161,7 @@ namespace DOL.Database
 			m_cpu = 0;
 			m_upload = 0;
 			m_download = 0;
+			m_memory = 0;
 			m_autoSave = false;
 		}
 
@@ -216,6 +220,17 @@ namespace DOL.Database
 			{
 				Dirty = true;
 				m_download = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = false)]
+		public long Memory
+		{
+			get { return m_memory; }
+			set
+			{
+				Dirty = true;
+				m_memory = value;
 			}
 		}
 
