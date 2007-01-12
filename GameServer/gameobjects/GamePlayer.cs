@@ -548,7 +548,7 @@ namespace DOL.GS
 
 				if (secondsleft > 20)
 					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Quit.RecentlyInCombat"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Quit.RecentlyInCombat", secondsleft), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Quit.YouWillQuit", secondsleft), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 			else
 			{
