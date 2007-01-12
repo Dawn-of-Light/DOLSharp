@@ -4,6 +4,8 @@
 # #-Beginning and Empty lines are ignored
 # TABS are ignored at the left of ':' too.
 # {0} etc. are for args, don't remove them !
+#
+# Please try to keep ID's alphabetical order
 
 # LANGUAGEMGR
 System.LanguagesName.English:				English
@@ -15,8 +17,63 @@ System.LanguagesName.Czech:					Czech
 # SYSTEM
 System.NoSense:								That would make no sense!
 System.MustSelectTarget:					You must select a target!
+System.ReleaseTimer:						Release Timer
 
 # GAMEPLAYER
+GamePlayer.Attack.AlreadyDead:				{0} is already dead!
+GamePlayer.Attack.Blocked:					{0} blocks your attack!
+GamePlayer.Attack.CantBeAttacked:			This can't be attacked!
+GamePlayer.Attack.CantCritical:				You can't get a critical shot on your target, you switch to a standard shot.
+GamePlayer.Attack.CantSeeTarget:			You can't see your target!
+GamePlayer.Attack.CantUseQuiver:			You can't use the selected quiver ammo with your weapon!
+GamePlayer.Attack.CouldRepair:				Your {0} could use repairs.
+GamePlayer.Attack.Critical:					You critical hit {0} for an additional {1} damage!
+GamePlayer.Attack.Evade:					{0} attacks you and you evade the blow!
+GamePlayer.Attack.Evaded:					{0} evades your attack!
+GamePlayer.Attack.Fumble:					You fumble the attack and take time to recover!
+GamePlayer.Attack.Fumbled:					{0} fumbled!
+GamePlayer.Attack.HitsYour:					{0} hits your {1} for {2}{3} damage!
+GamePlayer.Attack.HitsYou:					{0} hits you for {1}{2} damage!
+GamePlayer.Attack.HitsYouCritical:			{0} critical hits you for an additionnal {1} damage!
+GamePlayer.Attack.InterceptHit:				{0} {1}{2} and hit for {3}{4} damage!
+GamePlayer.Attack.Intercepted:				{0} steps in front of {1} and takes the blow!
+GamePlayer.Attack.InterceptedHit:			{0} {1}{2} but hit {3} for {4}{5} damage!
+GamePlayer.Attack.Interrupted:				{0} is attacking you and your {1} is interrupted!
+GamePlayer.Attack.Location.Torso:			torso
+GamePlayer.Attack.Location.Arm:				arm
+GamePlayer.Attack.Location.Head:			head
+GamePlayer.Attack.Location.Leg:				leg
+GamePlayer.Attack.Location.Hand:			hand
+GamePlayer.Attack.Location.Foot:			foot
+GamePlayer.Attack.Miss:						You miss!
+GamePlayer.Attack.Missed:					{0} attacks you and misses!
+GamePlayer.Attack.MustSelectQuiver:			You must select a quiver slot to draw from!
+GamePlayer.Attack.NeedRepair:				Your {0} is in need of repairs.
+GamePlayer.Attack.NeedRepairDire:			Your {0} is in dire need of repairs.
+GamePlayer.Attack.NeedTarget:				You need to select a target to attack!
+GamePlayer.Attack.NotInView:				{0} is not in view!
+GamePlayer.Attack.Parried:					{0} parries your attack!
+GamePlayer.Attack.Parry:					{0} attacks you and you parry the blow!
+GamePlayer.Attack.ReadyToFire:				You are ready to fire!
+GamePlayer.Attack.StrafMiss:				You were strafing in combat and miss!
+GamePlayer.Attack.TooFarAway:				{0} is too far away to attack!
+GamePlayer.Attack.TooTired:					You are too tired to hold your shot any longer!
+GamePlayer.Attack.Type.Shot:				shot
+GamePlayer.Attack.Type.Throw:				throw
+GamePlayer.Attack.WithYour:					with your
+GamePlayer.Attack.YouAttack:				You attack
+GamePlayer.Attack.YouShot:					You shot		
+GamePlayer.Die.CorpseLies:					{0} just died. {1} corpse lies on the ground.
+GamePlayer.Die.DeadRVR:						You died fighting for your realm and lose no experience!
+GamePlayer.Die.DeathN1:						This is your first death for this level.  Your experience and constitution losses are greatly reduced.
+GamePlayer.Die.DeathN2:						This is your second death for this level.  Your experience and constitution losses are reduced.
+GamePlayer.Die.DuelDefeated:				{0} was just defeated in a duel by {1} !
+GamePlayer.Die.Killed:						{0} was just killed !
+GamePlayer.Die.KilledBy:					{0} was just killed by {1}.
+GamePlayer.Die.KilledByLocation:			{0} was just killed by {1} in {2}.
+GamePlayer.Die.KilledLocation:				{0} was just killed in {1} !
+GamePlayer.Die.ReleaseToReturn:				You have died.  Type /release to return to your last bindpoint.
+GamePlayer.Die.YouKilled:					You just killed {0}!
 GamePlayer.SendReceive.sends:				 sends, 
 GamePlayer.Quit.CantQuitDead:				You can't quit now, you're dead.  Type '/release' to release your corpse.
 GamePlayer.Quit.CantQuitMount:				You have to dismount before you can quit.
@@ -115,36 +172,20 @@ GamePlayer.Bind.CantBindDead:				You can not bind while dead!
 GamePlayer.Bind.MustWait:					You must wait {0} seconds to bind again!
 GamePlayer.Bind.Bound:						You are now bound to this location.
 GamePlayer.Bind.CantHere:					You cannot bind here!
-GamePlayer.Spell.NotImplemented:			{0} not implemented yet on this server ({1})
+GamePlayer.Spell.NotEnoughPowerful:			You are not powerful enough to use this item's spell.
+GamePlayer.Spell.NotImplemented:			{0} ({1}) not implemented yet on this server.
+GamePlayer.Spell.Proc.NotImplemented:		Reactive effect ID {0} is not implemented yet on this server.
 GamePlayer.RealmTitle.UnknownRealm:			Unknown realm
 GamePlayer.SwitchQuiver.ShootWith:			You will shoot with: {0}.
 GamePlayer.SwitchQuiver.NoMoreAmmo:			You have no more ammo in your quiver!
 GamePlayer.SwitchQuiver.NotUseQuiver:		You will not use your quiver.
-GamePlayer.Attack.AlreadyDead:				{0} is already dead!
-GamePlayer.Attack.Blocked:					{0} blocks your attack!
-GamePlayer.Attack.CantBeAttacked:			This can't be attacked!
-GamePlayer.Attack.CantCritical:				You can't get a critical shot on your target, you switch to a standard shot.
-GamePlayer.Attack.CantSeeTarget:			You can't see your target!
-GamePlayer.Attack.CantUseQuiver:			You can't use the selected quiver ammo with your weapon!
-GamePlayer.Attack.Critical:					You critical hit {0} for an additional {1} damage!
-GamePlayer.Attack.Evaded:					{0} evades your attack!
-GamePlayer.Attack.Fumble:					You fumble the attack and take time to recover!
-GamePlayer.Attack.InterceptHit:				{0} {1}{2} and hit for {3}{4} damage!
-GamePlayer.Attack.Intercepted:				{0} steps in front of {1} and takes the blow!
-GamePlayer.Attack.InterceptedHit:			{0} {1}{2} but hit {3} for {4}{5} damage!
-GamePlayer.Attack.Miss:						You miss!
-GamePlayer.Attack.MustSelectQuiver:			You must select a quiver slot to draw from!
-GamePlayer.Attack.NeedTarget:				You need to select a target to attack!
-GamePlayer.Attack.NotInView:				{0} is not in view!
-GamePlayer.Attack.Parried:					{0} parries your attack!
-GamePlayer.Attack.ReadyToFire:				You are ready to fire!
-GamePlayer.Attack.StrafMiss:				You were strafing in combat and miss!
-GamePlayer.Attack.TooFarAway:				{0} is too far away to attack!
-GamePlayer.Attack.TooTired:					You are too tired to hold your shot any longer!
-GamePlayer.Attack.WithYour:					with your
-GamePlayer.Attack.YouAttack:				You attack
-GamePlayer.Attack.YouShot:					You shot
-						
+GamePlayer.Pronoun.Male.Subjective:			he
+GamePlayer.Pronoun.Male.Possessive:			his
+GamePlayer.Pronoun.Male.Objective:			him
+GamePlayer.Pronoun.Female.Subjective:		she
+GamePlayer.Pronoun.Female.Possessive:		her
+GamePlayer.Pronoun.Female.Objective:		her
+					
 # HOUSING
 HouseEnterLeave.TooFarAway:					You are too far away to enter house {0}.
 HouseEnterLeave.CantEnter:					You can't enter house {0}.
