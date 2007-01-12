@@ -120,15 +120,18 @@ GamePlayer.RealmTitle.UnknownRealm:			Unknown realm
 GamePlayer.SwitchQuiver.ShootWith:			You will shoot with: {0}.
 GamePlayer.SwitchQuiver.NoMoreAmmo:			You have no more ammo in your quiver!
 GamePlayer.SwitchQuiver.NotUseQuiver:		You will not use your quiver.
-
 GamePlayer.Attack.AlreadyDead:				{0} is already dead!
 GamePlayer.Attack.Blocked:					{0} blocks your attack!
 GamePlayer.Attack.CantBeAttacked:			This can't be attacked!
 GamePlayer.Attack.CantCritical:				You can't get a critical shot on your target, you switch to a standard shot.
 GamePlayer.Attack.CantSeeTarget:			You can't see your target!
 GamePlayer.Attack.CantUseQuiver:			You can't use the selected quiver ammo with your weapon!
+GamePlayer.Attack.Critical:					You critical hit {0} for an additional {1} damage!
 GamePlayer.Attack.Evaded:					{0} evades your attack!
 GamePlayer.Attack.Fumble:					You fumble the attack and take time to recover!
+GamePlayer.Attack.InterceptHit:				{0} {1}{2} and hit for {3}{4} damage!
+GamePlayer.Attack.Intercepted:				{0} steps in front of {1} and takes the blow!
+GamePlayer.Attack.InterceptedHit:			{0} {1}{2} but hit {3} for {4}{5} damage!
 GamePlayer.Attack.Miss:						You miss!
 GamePlayer.Attack.MustSelectQuiver:			You must select a quiver slot to draw from!
 GamePlayer.Attack.NeedTarget:				You need to select a target to attack!
@@ -138,7 +141,10 @@ GamePlayer.Attack.ReadyToFire:				You are ready to fire!
 GamePlayer.Attack.StrafMiss:				You were strafing in combat and miss!
 GamePlayer.Attack.TooFarAway:				{0} is too far away to attack!
 GamePlayer.Attack.TooTired:					You are too tired to hold your shot any longer!
-				
+GamePlayer.Attack.WithYour:					with your
+GamePlayer.Attack.YouAttack:				You attack
+GamePlayer.Attack.YouShot:					You shot
+						
 # HOUSING
 HouseEnterLeave.TooFarAway:					You are too far away to enter house {0}.
 HouseEnterLeave.CantEnter:					You can't enter house {0}.
