@@ -1267,7 +1267,7 @@ namespace DOL.GS
 					{
 						ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(player, spell, Line);
 						if (spellHandler == null)
-							player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GamePlayer.OnRevive.NotImplemented", spell.Name, spell.SpellType), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GamePlayer.Spell.NotImplemented", spell.Name, spell.SpellType), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						else
 							spellHandler.StartSpell(player);
 						break;
@@ -3062,7 +3062,8 @@ namespace DOL.GS
 			get
 			{
 				if (Realm < 1 || Realm > 3)
-					return "unknown realm";
+
+					return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.UnknownRealm");
 
 				int m_RR = PlayerCharacter.RealmLevel / 10;
 				return REALM_RANK_NAMES[Realm - 1, PlayerCharacter.Gender, m_RR];
@@ -4415,12 +4416,13 @@ namespace DOL.GS
 				if (Inventory.GetItem(updatedSlot) != null && (ActiveQuiverSlot != slot || forced))
 				{
 					ActiveQuiverSlot = slot;
-					Out.SendMessage("You will shoot with: " + Inventory.GetItem(updatedSlot).GetName(0, false) + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					//GamePlayer.SwitchQuiver.ShootWith:		You will shoot with: {0}.
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.SwitchQuiver.ShootWith", Inventory.GetItem(updatedSlot).GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 				else
 				{
 					ActiveQuiverSlot = eActiveQuiverSlot.None;
-					Out.SendMessage("You have no more ammo in your quiver!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.SwitchQuiver.NoMoreAmmo"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 
 				Out.SendInventorySlotsUpdate(new int[] { (int)updatedSlot });
@@ -4438,7 +4440,7 @@ namespace DOL.GS
 				else
 				{
 					ActiveQuiverSlot = eActiveQuiverSlot.None;
-					Out.SendMessage("You will not use your quiver.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.SwitchQuiver.NotUseQuiver"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 				Out.SendInventorySlotsUpdate(null);
 			}
@@ -4572,7 +4574,7 @@ namespace DOL.GS
 			//DOLConsole.WriteLine("Holding.... ("+holdStart+") "+(Environment.TickCount - holdStart));
 			if ((CurrentRegion.Time - holdStart) > 15000 && AttackWeapon.Object_Type != (int)eObjectType.Crossbow)
 			{
-				Out.SendMessage("You are too tired to hold your shot any longer!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.TooTired"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return eCheckRangeAttackStateResult.Stop; //Stop the attack
 			}
 
@@ -4585,28 +4587,28 @@ namespace DOL.GS
 
 				if (target == null || !(target is GameLiving))
 				{
-					Out.SendMessage("You must select a target!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "System.MustSelectTarget"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 				else if (!WorldMgr.CheckDistance(this, target, AttackRange))
 				{
-					Out.SendMessage(target.GetName(0, true) + " is too far away to attack!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.TooFarAway", target.GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 				else if (!TargetInView)  // TODO : wrong, must be checked with the target parameter and not with the targetObject
 				{
-					Out.SendMessage("You can't see your target!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.CantSeeTarget"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 				else if (!IsObjectInFront(target, 90))
 				{
-					Out.SendMessage(target.GetName(0, true) + " is not in view!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.NotInView", target.GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 				else if (RangeAttackAmmo == null)
 				{
 					//another check for ammo just before firing
-					Out.SendMessage("You must select a quiver slot to draw from!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.MustSelectQuiver"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 				}
 				else if (!CheckRangedAmmoCompatibilityWithActiveWeapon())
 				{
-					Out.SendMessage("You can't use the selected quiver ammo with your weapon!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.CantUseQuiver"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 				}
 				else if (GameServer.ServerRules.IsAllowedToAttack(this, (GameLiving)target, false))
 				{
@@ -4638,7 +4640,7 @@ namespace DOL.GS
 						 */
 
 						// TODO: more checks?
-						Out.SendMessage("You can't get a critical shot on your target, you switch to a standard shot.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.CantCritical"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						RangeAttackType = eRangeAttackType.Normal;
 					}
 					return eCheckRangeAttackStateResult.Fire;
@@ -4651,7 +4653,7 @@ namespace DOL.GS
 			//Player is aiming
 			if (RangeAttackState == eRangeAttackState.Aim)
 			{
-				Out.SendMessage("You are ready to fire!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.ReadyToFire"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				RangeAttackState = eRangeAttackState.ReadyToFire;
 				return eCheckRangeAttackStateResult.Hold;
 			}
@@ -4680,16 +4682,16 @@ namespace DOL.GS
 
 			switch (ad.AttackResult)
 			{
-				case eAttackResult.TargetNotVisible: Out.SendMessage(ad.Target.GetName(0, true) + " is not in view!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow); break;
-				case eAttackResult.OutOfRange: Out.SendMessage(ad.Target.GetName(0, true) + " is too far away to attack!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow); break;
-				case eAttackResult.TargetDead: Out.SendMessage(ad.Target.GetName(0, true) + " is already dead!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow); break;
-				case eAttackResult.Blocked: Out.SendMessage(ad.Target.GetName(0, true) + " blocks your attack!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow); break;
-				case eAttackResult.Parried: Out.SendMessage(ad.Target.GetName(0, true) + " parries your attack!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow); break;
-				case eAttackResult.Evaded: Out.SendMessage(ad.Target.GetName(0, true) + " evades your attack!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow); break;
-				case eAttackResult.NoTarget: Out.SendMessage("You need to select a target to attack!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow); break;
-				case eAttackResult.NoValidTarget: Out.SendMessage("This can't be attacked!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow); break;
-				case eAttackResult.Missed: Out.SendMessage("You miss!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow); break;
-				case eAttackResult.Fumbled: Out.SendMessage("You fumble the attack and take time to recover!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow); break;
+				case eAttackResult.TargetNotVisible: Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.NotInView", ad.Target.GetName(0, true)), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow); break;
+				case eAttackResult.OutOfRange: Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.TooFarAway", ad.Target.GetName(0, true)), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow); break;
+				case eAttackResult.TargetDead: Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.AlreadyDead", ad.Target.GetName(0, true)), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow); break;
+				case eAttackResult.Blocked: Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.Blocked", ad.Target.GetName(0, true)), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow); break;
+				case eAttackResult.Parried: Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.Parried", ad.Target.GetName(0, true)), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow); break;
+				case eAttackResult.Evaded: Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.Evaded", ad.Target.GetName(0, true)), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow); break;
+				case eAttackResult.NoTarget: Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.NeedTarget"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow); break;
+				case eAttackResult.NoValidTarget: Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.CantBeAttacked"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow); break;
+				case eAttackResult.Missed: Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.Miss"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow); break;
+				case eAttackResult.Fumbled: Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.Fumble"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow); break;
 				case eAttackResult.HitStyle:
 				case eAttackResult.HitUnstyled:
 					{
@@ -4698,7 +4700,7 @@ namespace DOL.GS
 						if (IsStrafing && ad.Target is GamePlayer && Util.Chance(30))
 						{
 							ad.AttackResult = eAttackResult.Missed;
-							Out.SendMessage("You were strafing in combat and miss!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+							Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.StrafMiss"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 							break;
 						}
 
