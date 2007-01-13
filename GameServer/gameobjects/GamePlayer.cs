@@ -4325,7 +4325,7 @@ namespace DOL.GS
 				{
 					/*
 					 * -Chance to unstealth while nocking an arrow = stealth spec / level
-					 * -Chance to unstealth nocking a crit = stealth / level – 0.20
+					 * -Chance to unstealth nocking a crit = stealth / level  0.20
 					 */
 					int stealthSpec = GetModifiedSpecLevel(Specs.Stealth);
 					int stayStealthed = stealthSpec * 100 / Level;
@@ -5947,7 +5947,7 @@ namespace DOL.GS
 				}
 				else if (Level > 5) // under level 5 there is no penalty
 				{
-					Out.SendMessage("You lose some experience!", eChatType.CT_YouDied, eChatLoc.CL_SystemWindow);
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Die.LoseExperience"), eChatType.CT_YouDied, eChatLoc.CL_SystemWindow);
 					// if this is the first death in level, you lose only half the penalty
 					switch (m_character.DeathCount)
 						{
@@ -6114,7 +6114,7 @@ namespace DOL.GS
 			{
 				m_xpGainers.Clear();
 			}
-			Out.SendMessage("Your duel ends!", eChatType.CT_Emote, eChatLoc.CL_SystemWindow);
+			Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.DuelStop.DuelEnds"), eChatType.CT_Emote, eChatLoc.CL_SystemWindow);
 			target.DuelStop();
 		}
 
@@ -6279,12 +6279,12 @@ namespace DOL.GS
 		{
 			if (IsStunned)
 			{
-				Out.SendMessage("You can't cast while stunned!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CastSpell.CantCastStunned"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
 				return;
 			}
 			if (IsMezzed)
 			{
-				Out.SendMessage("You can't cast while mesmerized!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CastSpell.CantCastMezzed"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
@@ -6294,16 +6294,16 @@ namespace DOL.GS
 				{
 					if (m_runningSpellHandler.Spell.InstrumentRequirement != 0)
 					{
-						Out.SendMessage("You are already playing a song!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+						Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CastSpell.AlreadyPlaySong"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
 						return;
 					}
 					if (SpellQueue)
 					{
-						Out.SendMessage("You are already casting a spell!  You prepare this spell as a follow up!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+						Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CastSpell.AlreadyCastFollow"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
 						m_nextSpell = spell;
 						m_nextSpellLine = line;
 					}
-					else Out.SendMessage("You are already casting a spell, to enable spell queueing use '/noqueue'!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+					else Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CastSpell.AlreadyCastNoQueue"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
 					return;
 				}
 			}
@@ -6374,7 +6374,7 @@ namespace DOL.GS
 							GamePlayer sourceTradePartner = source.TradeWindow.Partner;
 							if (sourceTradePartner == null)
 							{
-								source.Out.SendMessage("You are still selfcrafting.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								source.Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.ReceiveTradeItem.StillSelfcrafting"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							}
 							else
 							{
@@ -6385,13 +6385,13 @@ namespace DOL.GS
 					}
 					if (item.IsTradable == false && source.Client.Account.PrivLevel < 2 && TradeWindow.Partner.Client.Account.PrivLevel < 2)
 					{
-						source.Out.SendMessage("You can't trade this item!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						source.Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.ReceiveTradeItem.CantTrade"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						return false;
 					}
 
 					if (!source.TradeWindow.AddItemToTrade(item))
 					{
-						source.Out.SendMessage("You can't trade this item!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						source.Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.ReceiveTradeItem.CantTrade"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}
 					return true;
 				}
@@ -6432,7 +6432,7 @@ namespace DOL.GS
 							GamePlayer sourceTradePartner = source.TradeWindow.Partner;
 							if (sourceTradePartner == null)
 							{
-								source.Out.SendMessage("You are still selfcrafting.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								source.Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.ReceiveTradeMoney.StillSelfcrafting"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							}
 							else
 							{
@@ -6562,7 +6562,7 @@ namespace DOL.GS
 		{
 			if (!IsAlive)
 			{
-				Out.SendMessage("You can't fire or use this item!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantFire"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
@@ -6606,49 +6606,49 @@ namespace DOL.GS
 								}
 								if (!IsAlive)
 								{
-									Out.SendMessage("You can't mount while you're dead.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantMountWhileDead"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 									return;
 								}
 								if (Steed != null)
 								{
-									Out.SendMessage("You must to dismount before.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.MustDismountBefore"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 									return;
 								}
 								if (CurrentRegion.IsRvR && !ActiveHorse.IsSummonRvR)
 								{
-									Out.SendMessage("You cannot summon that mount in RvR zones.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantSummonRvR"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 									return;
 								}
 								if (IsMoving)
 								{
-									Out.SendMessage("You can't mount while you're moving.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantMountMoving"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 									return;
 								}
 								if (IsSitting)
 								{
-									Out.SendMessage("You cannot call your mount while seated.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantCallMountSeated"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 									return;
 								}
 								if (IsStealthed)
 								{
-									Out.SendMessage("You can't mount while you're in stealth.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantMountSteath"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 									return;
 								}
 								if (InCombat)
 								{
-									Out.SendMessage("You are in combat and cannot call your mount.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantMountCombat"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 									return;
 								}
 								if (IsSummoningMount)
 								{
-									Out.SendMessage("You stop calling your mount.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.StopCallingMount"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 									StopWhistleTimers();
 									return;
 								}
 								Out.SendTimerWindow("Summoning Mount", 5);
 								foreach (GamePlayer plr in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 									plr.Out.SendEmoteAnimation(this, eEmote.Horse_whistle);
-								Out.SendMessage("You whistle for your mount.", eChatType.CT_Emote, eChatLoc.CL_SystemWindow);
+								Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.WhistleMount"), eChatType.CT_Emote, eChatLoc.CL_SystemWindow);
 								m_whistleMountTimer = new RegionTimer(this);
 								m_whistleMountTimer.Callback = new RegionTimerCallback(WhistleMountTimerCallback);
 								m_whistleMountTimer.Start(5000);
@@ -6701,7 +6701,7 @@ namespace DOL.GS
 								if (!TargetInView)
 								{
 									// Don't store last target if it's not visible
-									Out.SendMessage("You can't see your target!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantSeeTarget"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								}
 								else
 								{
@@ -6712,18 +6712,18 @@ namespace DOL.GS
 									}
 
 									RangeAttackState = eRangeAttackState.AimFire;
-									Out.SendMessage("You will now automatically release your shot.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.AutoReleaseShot"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								}
 							}
 							else if (RangeAttackState == eRangeAttackState.AimFire)
 							{
 								RangeAttackState = eRangeAttackState.AimFireReload;
-								Out.SendMessage("You will now automatically release your shot and reload.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.AutoReleaseShotReload"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							}
 							else if (RangeAttackState == eRangeAttackState.AimFireReload)
 							{
 								RangeAttackState = eRangeAttackState.Aim;
-								Out.SendMessage("You will no longer automatically release your shot or reload.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.NoAutoReleaseShotReload"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							}
 						}
 						break;
@@ -6784,7 +6784,7 @@ namespace DOL.GS
 												{
 													if (spell.CastTime > 0 && AttackState)
 													{
-														Out.SendMessage("You can't use this item in combat!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+														Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantUseInCombat"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 													}
 													else
 													{
@@ -6807,7 +6807,7 @@ namespace DOL.GS
 													}
 												}
 												else
-													Out.SendMessage("You are not powerful enough to use this item's spell.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+													Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.NotEnouthPower"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 												break;
 											}
 										}
@@ -6819,7 +6819,7 @@ namespace DOL.GS
 						{
 							if (!(new ArrayList(Inventory.EquippedItems).Contains(useItem)))
 							{
-								Out.SendMessage("You can't use this item from your backpack. Equip it before!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.Can'tUseFromBackpack"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							}
 							else
 							{
@@ -6931,27 +6931,27 @@ namespace DOL.GS
 			int envenomSpec = GetModifiedSpecLevel(Specs.Envenom);
 			if (envenomSpec < 1)
 			{
-				Out.SendMessage("You can't use poisons.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.ApplyPoison.CantUsePoisons"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
 			if (!GlobalConstants.IsWeapon(toItem.Object_Type))
 			{
-				Out.SendMessage("Poisons can be applied only to weapons.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.ApplyPoison.PoisonsAppliedWeapons"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
 			if (!HasAbilityToUseItem(toItem))
 			{
-				Out.SendMessage("You can't poison this weapon!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.ApplyPoison.CantPoisonWeapon"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
 			if (envenomSpec < poisonPotion.Level)
 			{
-				Out.SendMessage("You can't use this poison.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.ApplyPoison.CantUsePoison"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
 			if (InCombat)
 			{
-				Out.SendMessage("You have been in combat recently and can't apply a poison yet!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.ApplyPoison.CantApplyRecentCombat"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
 
@@ -7188,7 +7188,7 @@ namespace DOL.GS
 		{
 			if (target == null)
 			{
-				Out.SendMessage("Select a target to whisper to!", eChatType.CT_System, eChatLoc.CL_ChatWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Whisper.SelectTarget"), eChatType.CT_System, eChatLoc.CL_ChatWindow);
 				return false;
 			}
 			if (!GameServer.ServerRules.IsAllowedToSpeak(this, "whisper"))
@@ -7898,8 +7898,8 @@ namespace DOL.GS
 				return 0;
 			if (this.Client.Account.PrivLevel == 1)
 			{
-				Out.SendMessage("You cannot breathe underwater and take damage!", eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
-				Out.SendMessage("You take 5% of your max hits in damage.", eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.byte.CannotBreath"), eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.byte.Take5%Damage"), eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
 				if (CurrentRegion.Time - m_beginDrowningTick > 15000) // 15 sec
 				{
 					TakeDamage(null, eDamageType.Natural, MaxHealth, 0);
@@ -8079,24 +8079,24 @@ namespace DOL.GS
 				// can't start sprinting with 10 endurance on 1.68 server
 				if (Endurance <= 10)
 				{
-					Out.SendMessage("You are too fatigued to sprint!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Sprint.TooFatigued"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return false;
 				}
 				if (IsStealthed)
 				{
-					Out.SendMessage("You can't sprint while you are hidden!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Sprint.CantSprintHidden"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return false;
 				}
 				if (!IsAlive)
 				{
-					Out.SendMessage("You can't sprint when dead!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Sprint.CantSprintDead"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return false;
 				}
 
 				m_sprintEffect = new SprintEffect();
 				m_sprintEffect.Start(this);
 				Out.SendUpdateMaxSpeed();
-				Out.SendMessage("You prepare to sprint!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Sprint.PrepareSprint"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return true;
 			}
 			else
@@ -8104,7 +8104,7 @@ namespace DOL.GS
 				m_sprintEffect.Stop();
 				m_sprintEffect = null;
 				Out.SendUpdateMaxSpeed();
-				Out.SendMessage("You are no longer ready to sprint.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Sprint.NoLongerReady"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
 		}
@@ -8141,14 +8141,14 @@ namespace DOL.GS
 			}
 			if (IsCrafting)
 			{
-				Out.SendMessage("You move and interrupt your crafting.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.OnPlayerMove.InterruptCrafting"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				CraftTimer.Stop();
 				CraftTimer = null;
 				Out.SendCloseTimerWindow();
 			}
 			if (IsSummoningMount)
 			{
-				Out.SendMessage("You are moving and cannot call your mount.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.OnPlayerMove.CannotCallMount"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				StopWhistleTimers();
 			}
 			if (AttackState)
@@ -8184,55 +8184,55 @@ namespace DOL.GS
 		{
 			if (IsSummoningMount)
 			{
-				Out.SendMessage("You attempt to sit down and interrupt your call for your mount!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Sit.InterruptCallMount"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				StopWhistleTimers();
 			}
 			if (IsSitting == sit)
 			{
 				if (sit)
-					Out.SendMessage("You are already sitting!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Sit.AlreadySitting"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				if (!sit)
-					Out.SendMessage("You are not sitting!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Sit.NotSitting"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return; // already done
 			}
 
 			if (!IsAlive)
 			{
-				Out.SendMessage("You can't sit down now, you're dead!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Sit.CantSitDead"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
 			if (IsStunned)
 			{
-				Out.SendMessage("You can't rest when you are stunned!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Sit.CantSitStunned"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
 			if (IsMezzed)
 			{
-				Out.SendMessage("You can't rest when you are mesmerized!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Sit.CantSitMezzed"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
 			if (sit && CurrentSpeed > 0)
 			{
-				Out.SendMessage("You must be standing still to sit down.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Sit.MustStandingStill"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
 			if (Steed != null || IsOnHorse)
 			{
-				Out.SendMessage("You must dismount first.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Sit.MustDismount"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
 			if (sit)
 			{
-				Out.SendMessage("You sit down.  Type '/stand' or move to stand up.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Sit.YouSitDown"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 			else
 			{
-				Out.SendMessage("You stand up.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Sit.YouStandUp"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 
 			//Stop attack if you sit down while attacking
@@ -8249,7 +8249,7 @@ namespace DOL.GS
 					m_quitTimer.Stop();
 					m_quitTimer = null;
 					Stuck = false;
-					Out.SendMessage("You are no longer waiting to quit.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Sit.NoLongerWaitingQuit"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 				//Stop praying if the player stands up...
 				if (PrayState)
@@ -8349,11 +8349,11 @@ namespace DOL.GS
 				if (IsOverencumbered == false)
 				{
 					IsOverencumbered = true;
-					Out.SendMessage("You are encumbered and move more slowly.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UpdateEncumberance.EncumberedMoveSlowly"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 				else
 				{
-					Out.SendMessage("You are encumbered!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UpdateEncumberance.Encumbered"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 				Out.SendUpdateMaxSpeed();
 			}
@@ -8663,7 +8663,7 @@ namespace DOL.GS
 		{
 			if (floorObject == null)
 			{
-				Out.SendMessage("You must have a target to get something!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.MustHaveTarget"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
 			if (floorObject.ObjectState != eObjectState.Active)
@@ -8671,7 +8671,7 @@ namespace DOL.GS
 
 			if (floorObject is GameStaticItemTimed && !((GameStaticItemTimed)floorObject).IsOwner(this))
 			{
-				Out.SendMessage("That loot doesn't belong to you - you can't pick it up.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.LootDoesntBelongYou"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
 
@@ -8692,7 +8692,7 @@ namespace DOL.GS
 
 					if (floorItem.Item == null || floorItem.Item.IsPickable == false)
 					{
-						Out.SendMessage("You can't get that!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.CantGetThat"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						return false;
 					}
 					PlayerGroup group = PlayerGroup;
@@ -8726,7 +8726,7 @@ namespace DOL.GS
 							else good = eligibleMember.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, floorItem.Item);
 							if (!good)
 							{
-								eligibleMember.Out.SendMessage("Your backpack is full. You must drop something first.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								eligibleMember.Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.BackpackFull"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return false;
 							}
 							Message.SystemToOthers(this, Name + " picks up " + floorItem.Item.GetName(1, false), eChatType.CT_System);
@@ -8744,7 +8744,7 @@ namespace DOL.GS
 
 						if (!good)
 						{
-							Out.SendMessage("Your backpack is full. You must drop something first.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.BackpackFull"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return false;
 						}
 
@@ -8782,7 +8782,7 @@ namespace DOL.GS
 						}
 						if (eligibleMembers.Count <= 0)
 						{
-							Out.SendMessage("No one in group wants the money.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.NoOneGroupWantsMoney"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return false;
 						}
 
@@ -8802,7 +8802,7 @@ namespace DOL.GS
 			}
 			else
 			{
-				Out.SendMessage("You can't get that!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.CantGetThat"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
 		}
@@ -9346,7 +9346,7 @@ namespace DOL.GS
 				Inventory.SaveIntoDatabase(InternalID);
 				if (log.IsInfoEnabled)
 					log.Info(m_character.Name + " saved!");
-				Out.SendMessage("Your character has been saved.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.SaveIntoDatabase.CharacterSaved"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 			catch (Exception e)
 			{
@@ -9564,7 +9564,7 @@ namespace DOL.GS
 				TempProperties.setProperty(UNCOVER_STEALTH_ACTION_PROP, action);
 
 				if (ObjectState == eObjectState.Active)
-					Out.SendMessage("You are now hidden!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Stealth.NowHidden"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				Out.SendPlayerModelTypeChange(this, 3);
 				m_stealthEffect = new StealthEffect();
 				m_stealthEffect.Start(this);
@@ -9587,7 +9587,7 @@ namespace DOL.GS
 				}
 
 				if (ObjectState == eObjectState.Active)
-					Out.SendMessage("You are no longer hidden!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Stealth.NoLongerHidden"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 				CamouflageEffect cam = (CamouflageEffect)EffectList.GetOfType(typeof(CamouflageEffect));
 				if (cam != null)
@@ -9755,8 +9755,8 @@ namespace DOL.GS
 			 * http://www.critshot.com/forums/showthread.php?threadid=3142
 			 * The person doing the looking has a chance to find them based on their level, minus the stealthed person's stealth spec.
 			 *
-			 * -Normal detection range = (enemy lvl – your stealth spec) * 20 + 125
-			 * -Detect Hidden Range = (enemy lvl – your stealth spec) * 50 + 250
+			 * -Normal detection range = (enemy lvl  your stealth spec) * 20 + 125
+			 * -Detect Hidden Range = (enemy lvl  your stealth spec) * 50 + 250
 			 * -See Hidden range = 2700 - (38 * your stealth spec)
 			 */
 
@@ -10222,7 +10222,7 @@ namespace DOL.GS
 				}
 				else
 				{
-					Out.SendMessage("You do not have the ability to make this item.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CraftItem.DontHaveAbilityMake"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 			}
 			else
@@ -10347,7 +10347,7 @@ namespace DOL.GS
 					GamePlayer sourceTradePartner = TradeWindow.Partner;
 					if (sourceTradePartner == null)
 					{
-						Out.SendMessage("You are already selfcrafting.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.OpenSelfCraft.AlreadySelfCrafting"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}
 					else
 					{
@@ -10358,7 +10358,7 @@ namespace DOL.GS
 
 				if (item.SlotPosition < (int)eInventorySlot.FirstBackpack || item.SlotPosition > (int)eInventorySlot.LastBackpack)
 				{
-					Out.SendMessage("You can only self-craft items in your backpack!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.OpenSelfCraft.CanOnlyCraftBackpack"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return false;
 				}
 
@@ -10396,7 +10396,7 @@ namespace DOL.GS
 			if (controlledNpc == null)
 			{
 				Out.SendPetWindow(null, ePetWindowAction.Close, 0, 0);
-				Out.SendMessage("You release control of your controlled target.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.SetControlledNpc.ReleaseTarget"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 			else
 			{
@@ -10433,7 +10433,7 @@ namespace DOL.GS
 				return;
 			if (WorldMgr.GetDistance(target, this) > 1500)
 			{
-				Out.SendMessage("Your target is too far away to attack by your pet!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CommandNpcAttack.TooFarAwayForPet"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
@@ -10512,7 +10512,7 @@ namespace DOL.GS
 			GameObject target = TargetObject;
 			if (target == null)
 			{
-				Out.SendMessage("You must select a destination for your controlled creature.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CommandNpcGoTarget.MustSelectDestination"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 			Out.SendMessage("You command " + npc.Body.GetName(0, false) + " to go to your target.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -10588,7 +10588,7 @@ namespace DOL.GS
 			if (IsShade == state)
 			{
 				if (state && (ObjectState == eObjectState.Active))
-					Out.SendMessage("You are already a shade!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Shade.AlreadyShade"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 				return;
 			}
 			if (state)
@@ -10632,7 +10632,7 @@ namespace DOL.GS
 				m_ShadeEffect = null;
 				Model = (ushort)m_client.Account.Characters[m_client.ActiveCharIndex].CreationModel;
 				if (ObjectState == eObjectState.Active)
-					Out.SendMessage("You are no longer a shade!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Shade.NoLongerShade"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 
 				if (ControlledNpc != null)
 					CommandNpcRelease();
@@ -10855,7 +10855,7 @@ namespace DOL.GS
 				if (ObjectState == eObjectState.Active)
 				{
 					if (value == PlayerTitleMgr.ClearTitle)
-						Out.SendMessage("Your title has been cleared.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CurrentTitle.TitleCleared"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					else
 						Out.SendMessage("Your title has been set to " + value.GetDescription(this) + '.', eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
@@ -11125,9 +11125,9 @@ namespace DOL.GS
 					plr.Out.SendControlledHorse(this, value);
 				}
 				if (m_isOnHorse)
-					Out.SendMessage("You mount your steed.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.IsOnHorse.MountSteed"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				else
-					Out.SendMessage("You dismount your steed.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.IsOnHorse.DismountSteed"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				Out.SendUpdateMaxSpeed();
 			}
 		}
