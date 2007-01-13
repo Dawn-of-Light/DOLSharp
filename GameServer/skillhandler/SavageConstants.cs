@@ -30,7 +30,7 @@ namespace DOL.GS.SkillHandler
             int take = (int)(max * penalty);
             if (player.Health - take < 1)
                 return;
-            player.TakeDamage(player, eDamageType.Natural, take, 0);
+            player.TakeDamage(null, eDamageType.Natural, take, 0);
 		}
 
 		public static bool CanUseSavageAbility(GamePlayer player, int level)
