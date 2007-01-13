@@ -180,10 +180,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 								playerAccount = new Account();
 								playerAccount.Name = username;
-								if (password.StartsWith("##") && password.Length == 32)
-									playerAccount.Password = password;
-								else
-									playerAccount.Password = CryptPassword(password);
+								playerAccount.Password = CryptPassword(password);
 								playerAccount.Realm = 0;
 								playerAccount.CreationDate = DateTime.Now;
 								playerAccount.LastLogin = DateTime.Now;
@@ -229,18 +226,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 							//{
 							//	playerAccount.Password = CryptPassword(playerAccount.Password);
 							//}
-							if (password.StartsWith("##") && password.Length == 32)
-							{
-								if(!password.Equals(playerAccount.Password))
-								{
-									if (log.IsInfoEnabled)
-									log.Info("(" + client.TcpEndpoint + ") Wrong password!");
-									client.Out.SendLoginDenied(eLoginError.WrongPassword);
-									GameServer.Instance.Disconnect(client);
-									return 1;
-								}
-							}
-							else if (!CryptPassword(password).Equals(playerAccount.Password))
+							if (!CryptPassword(password).Equals(playerAccount.Password))
 							{
 								if (log.IsInfoEnabled)
 									log.Info("(" + client.TcpEndpoint + ") Wrong password!");
@@ -311,27 +297,32 @@ namespace DOL.GS.PacketHandler.Client.v168
 		}
 
 /*
+php version of CryptPass(string password)
 
 $pass = "abc";
-$len = strlen($pass);
-$res = "";
-for ($i = 0; $i < $len; $i++)
+cryptPassword($pass);
+
+function cryptPassword($pass)
 {
-	$res = $res . chr(ord(substr($pass, $i, 1)) >> 8);
-	$res = $res . chr(ord(substr($pass, $i, 1)));
+	$len = strlen($pass);
+	$res = "";
+	for ($i = 0; $i < $len; $i++)
+	{
+		$res = $res . chr(ord(substr($pass, $i, 1)) >> 8);
+		$res = $res . chr(ord(substr($pass, $i, 1)));
+	}
+
+	$hash = strtoupper(md5($res));
+	$len = strlen($hash);
+	for ($i = ($len-1)&~1; $i >= 0; $i-=2)
+	{
+		if (substr($hash, $i, 1) == "0")
+			$hash = substr($hash, 0, $i) . substr($hash, $i+1, $len);
+	}
+
+	$crypted = "##" . $hash;
+	return $crypted;
 }
-
-$hash = strtoupper(md5($res));
-$len = strlen($hash);
-for ($i = ($len-1)&~1; $i >= 0; $i-=2)
-{
-	if (substr($hash, $i, 1) == "0")
-		$hash = substr($hash, 0, $i) . substr($hash, $i+1, $len);
-}
-
-$crypted = "##" . $hash;
-print "hash: " . $crypted . "\n";
-
 */
 	}
 }
