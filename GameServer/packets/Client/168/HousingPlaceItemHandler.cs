@@ -171,7 +171,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					break;
 
 				case 4:
-                    if (!house.IsOwner(client.Player))
+                    if (!house.IsOwner(client.Player) && !house.CanAddGarden(client.Player))
                         return 1;
 					switch (orgitem.Id_nb)
 					{
@@ -197,6 +197,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 						default:
 							client.Player.Out.SendMessage("That would make no sense!", eChatType.CT_Help, eChatLoc.CL_SystemWindow);
+							client.Out.SendInventorySlotsUpdate(new int[] { slot });
 							return 1;
 
 					}
