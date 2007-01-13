@@ -180,7 +180,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 								playerAccount = new Account();
 								playerAccount.Name = username;
-								playerAccount.Password = CryptPassword(password);
+								if (password.StartsWith("##") && password.Length == 32)
+									playerAccount.Password = password;
+								else
+									playerAccount.Password = CryptPassword(password);
 								playerAccount.Realm = 0;
 								playerAccount.CreationDate = DateTime.Now;
 								playerAccount.LastLogin = DateTime.Now;
@@ -222,11 +225,22 @@ namespace DOL.GS.PacketHandler.Client.v168
 //							}
 
 							// check password
-							if (!playerAccount.Password.StartsWith("##"))
+							//if (!playerAccount.Password.StartsWith("##"))
+							//{
+							//	playerAccount.Password = CryptPassword(playerAccount.Password);
+							//}
+							if (password.StartsWith("##") && password.Length == 32)
 							{
-								playerAccount.Password = CryptPassword(playerAccount.Password);
+								if(!password.Equals(playerAccount.Password))
+								{
+									if (log.IsInfoEnabled)
+									log.Info("(" + client.TcpEndpoint + ") Wrong password!");
+									client.Out.SendLoginDenied(eLoginError.WrongPassword);
+									GameServer.Instance.Disconnect(client);
+									return 1;
+								}
 							}
-							if(!CryptPassword(password).Equals(playerAccount.Password))
+							else if (!CryptPassword(password).Equals(playerAccount.Password))
 							{
 								if (log.IsInfoEnabled)
 									log.Info("(" + client.TcpEndpoint + ") Wrong password!");
@@ -234,7 +248,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 								GameServer.Instance.Disconnect(client);
 								return 1;
 							}
-
 							// save player infos
 							playerAccount.LastLogin = DateTime.Now;
 							playerAccount.LastLoginIP = ipAddress;
