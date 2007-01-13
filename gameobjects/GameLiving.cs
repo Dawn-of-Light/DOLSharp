@@ -3001,7 +3001,7 @@ namespace DOL.GS
 				}
 				//DealDamage needs to be called after addxpgainer!
 			}
-			else if (source != null)
+			else if (source != null && source != this)
 			{
 				AddXPGainer(source, (float)damageAmount + criticalAmount);
 			}
