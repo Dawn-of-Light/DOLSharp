@@ -57,6 +57,8 @@ namespace DOL
 			/// </summary>
 			private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
+			bool debugMemory = true;
+
 			#region Variables
 
 			/// <summary>
@@ -517,6 +519,8 @@ namespace DOL
 			/// <returns>True if the server was successfully started</returns>
 			public override bool Start()
 			{
+				if (debugMemory)
+					log.Debug("Starting Server, Memory is " + GC.GetTotalMemory(false) / 1024 / 1024);
 				m_status = eGameServerStatus.GSS_Closed;
 				Thread.CurrentThread.Priority = ThreadPriority.Normal;
 
@@ -603,7 +607,7 @@ namespace DOL
 
 				//---------------------------------------------------------------
 				//Load the area manager
-				if (!AreaMgr.LoadAllAreas())
+				if (!InitComponent(AreaMgr.LoadAllAreas(), "Areas"))
 					return false;
 
 				//---------------------------------------------------------------
@@ -619,9 +623,8 @@ namespace DOL
 
 				//---------------------------------------------------------------
 				//Load all guilds
-				GuildMgr.LoadAllGuilds();
-				if (log.IsInfoEnabled)
-					log.Info("GuildMgr initialized: true");
+				if (!InitComponent(GuildMgr.LoadAllGuilds(), "Guild Manager"))
+					return false;
 
 				//---------------------------------------------------------------
 				//Load the keep manager
@@ -863,10 +866,14 @@ namespace DOL
 			/// <returns>false if startup should be interrupted</returns>
 			protected bool InitComponent(bool componentInitState, string text)
 			{
+				if (debugMemory)
+					log.Debug("Start Memory " + text + ": " + GC.GetTotalMemory(false) / 1024 / 1024);
 				if (log.IsInfoEnabled)
 					log.Info(text + ": " + componentInitState);
 				if (!componentInitState)
 					Stop();
+				if (debugMemory)
+					log.Debug("Finish Memory " + text + ": " + GC.GetTotalMemory(false) / 1024 / 1024);
 				return componentInitState;
 			}
 

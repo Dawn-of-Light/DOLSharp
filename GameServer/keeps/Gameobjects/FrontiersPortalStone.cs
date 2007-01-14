@@ -46,6 +46,8 @@ namespace DOL.GS.Keeps
 
 		public void LoadFromPosition(DBKeepPosition pos, GameKeepComponent component)
 		{
+			if (component.Keep.BaseLevel < 50)
+				return;
 			m_component = component;
 			PositionMgr.LoadKeepItemPosition(pos, this);
 			this.m_component.Keep.TeleportStone = this;

@@ -63,7 +63,7 @@ namespace DOL.GS
 						}
 					}
 
-					String destination = item.Name.Substring(10);
+					String destination = item.Name.Substring(item.Name.IndexOf(" to ") + 4);
 					PathPoint path = MovementMgr.Instance.LoadPath(this.Name + "=>" + destination);
 					if (path != null)
 					{

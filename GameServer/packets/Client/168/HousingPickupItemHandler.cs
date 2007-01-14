@@ -23,15 +23,26 @@ using DOL.GS.Housing;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
+	/// <summary>
+	/// Handle housing pickup item requests from the client.
+	/// </summary>
 	[PacketHandler(PacketHandlerType.TCP, 0x0D, "Handles things like pickup indoor/outdoor items")]
 	public class HousingPickupItemHandler : IPacketHandler
 	{
+		/// <summary>
+		/// Handle the packet
+		/// </summary>
+		/// <param name="client"></param>
+		/// <param name="packet"></param>
+		/// <returns></returns>
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
-			int unkown = packet.ReadByte();
+			int unknown = packet.ReadByte();
 			int position = packet.ReadByte();
 			int housenumber = packet.ReadShort();
 			int method = packet.ReadByte();
+
+			//HouseMgr.Logger.Debug("HousingPickupItemHandler unknown" + unknown + " position " + position + " method " + method);
 
 			House house = (House) HouseMgr.GetHouse(client.Player.CurrentRegionID, housenumber);
 

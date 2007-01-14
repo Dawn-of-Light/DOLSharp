@@ -283,6 +283,8 @@ namespace DOL.GS.Spells
 		{
 			if (Spell.InstrumentRequirement != 0)
 				return; // song can be played while moving
+			if (Spell.MoveCast)
+				return;
 			MessageToCaster("You move and interrupt your spellcast!", eChatType.CT_System);
 			InterruptCasting();
 		}
@@ -761,8 +763,8 @@ namespace DOL.GS.Spells
 			else if (Caster is GamePlayer && ((GamePlayer)Caster).CharacterClass.ClassType == eClassType.Hybrid)
 			{
 				double specBonus = 0;
-				if(Spell.Level != 0) specBonus = (((GamePlayer)Caster).GetBaseSpecLevel(SpellLine.Spec) * 0.4 / Spell.Level);
-				
+				if (Spell.Level != 0) specBonus = (((GamePlayer)Caster).GetBaseSpecLevel(SpellLine.Spec) * 0.4 / Spell.Level);
+
 				if (specBonus > 0.4)
 					specBonus = 0.4;
 				else if (specBonus < 0)
@@ -1327,6 +1329,17 @@ namespace DOL.GS.Spells
 			if (effectiveness <= 0)
 				return; // no effect
 
+			if (!HasPositiveEffect)
+			{
+				AttackData ad = new AttackData();
+				ad.Attacker = Caster;
+				ad.Target = target;
+				ad.AttackType = AttackData.eAttackType.Spell;
+				ad.AttackResult = GameLiving.eAttackResult.HitUnstyled;
+				ad.SpellHandler = this;
+				target.OnAttackedByEnemy(ad);
+			}
+
 			if ((Spell.Duration > 0 && Spell.Target != "Area") || Spell.Concentration > 0)
 			{
 				if (!target.IsAlive)
@@ -1842,16 +1855,17 @@ namespace DOL.GS.Spells
 		/// <returns>chance that the spell lands on target</returns>
 		public virtual int CalculateToHitChance(GameLiving target)
 		{
-			int SpellLevel = Spell.Level;
+			int spellLevel = Spell.Level;
 			GamePlayer player = null;
 			if (m_caster is GamePlayer)
 				player = m_caster as GamePlayer;
 			else if (m_caster is GameNPC && (m_caster as GameNPC).Brain is ControlledNpc)
 				player = ((ControlledNpc)((GameNPC)m_caster).Brain).Owner;
-
+			int spellbonus = player.GetModified(eProperty.SpellLevel);
+			spellLevel += spellbonus;
 			//Cap on lvl 50 for spell level
-			if (SpellLevel > 50)
-				SpellLevel = 50;
+			if (spellLevel > 50)
+				spellLevel = 50;
 
 			int speclevel = 1;
 			int manastat = 0;
@@ -1867,7 +1881,7 @@ namespace DOL.GS.Spells
 			GameSpellEffect resPierce = SpellHandler.FindEffectOnTarget(m_caster, "PenetrateResists");
 			if (resPierce != null)
 				bonustohit += (int)resPierce.Spell.Value;
-			int hitchance = 85 + ((SpellLevel - target.Level) >> 1) + bonustohit;
+			int hitchance = 85 + ((spellLevel - target.Level) >> 1) + bonustohit;
 			if (!(player != null && target is GamePlayer))
 			{
 				// level mod
