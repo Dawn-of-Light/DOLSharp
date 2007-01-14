@@ -6434,7 +6434,7 @@ namespace DOL.GS
 							GamePlayer sourceTradePartner = source.TradeWindow.Partner;
 							if (sourceTradePartner == null)
 							{
-								source.Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.ReceiveTradeMoney.StillSelfcrafting"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								source.Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.ReceiveTradeItem.StillSelfcrafting"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							}
 							else
 							{
@@ -7900,8 +7900,8 @@ namespace DOL.GS
 				return 0;
 			if (this.Client.Account.PrivLevel == 1)
 			{
-				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.byte.CannotBreath"), eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
-				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.byte.Take5%Damage"), eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.DrowningTimerCallback.CannotBreath"), eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.DrowningTimerCallback.Take5%Damage"), eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
 				if (CurrentRegion.Time - m_beginDrowningTick > 15000) // 15 sec
 				{
 					TakeDamage(null, eDamageType.Natural, MaxHealth, 0);

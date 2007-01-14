@@ -56,8 +56,11 @@ namespace DOL.GS.PacketHandler.Client.v168
 			
 			if ((slot >= 244) && (slot <= 248)) // money
 			{
-                if (!house.CanPayRent(client.Player))
-                    return 1;
+				if (!house.CanPayRent(client.Player))
+				{
+					client.Out.SendInventorySlotsUpdate(new int[] { slot });
+					return 1;
+				}
 				long MoneyToAdd = position;
 				switch (slot)
 				{
@@ -80,10 +83,14 @@ namespace DOL.GS.PacketHandler.Client.v168
 			{
 				case 1:
                     if (!house.CanAddGarden(client.Player))
-                        return 1;
+					{
+						client.Out.SendInventorySlotsUpdate(new int[] { slot });
+						return 1;
+					}
 					if (house.OutdoorItems.Count >= 30)
 					{
 						client.Player.Out.SendMessage("You have already placed 30 objects. You can't place more.", eChatType.CT_Help, eChatLoc.CL_SystemWindow);
+						client.Out.SendInventorySlotsUpdate(new int[] { slot });
 						return 1;
 					}
 					pos = GetFirstFreeSlot(house.OutdoorItems);
@@ -113,21 +120,27 @@ namespace DOL.GS.PacketHandler.Client.v168
 				case 2:
 				case 3:
                     if (!house.CanAddInterior(client.Player))
-                        return 1;
+					{
+						client.Out.SendInventorySlotsUpdate(new int[] { slot });
+						return 1;
+					}
 					if (orgitem.Object_Type != 50 && method == 2)
 					{
 						client.Player.Out.SendMessage("This object can't be placed on a wall !", eChatType.CT_Help, eChatLoc.CL_SystemWindow);
+						client.Out.SendInventorySlotsUpdate(new int[] { slot });
 						return 1;
 					}
 					if (orgitem.Object_Type != 51 && method == 3)
 					{
 						client.Player.Out.SendMessage("This object can't be placed on the floor !", eChatType.CT_Help, eChatLoc.CL_SystemWindow);
+						client.Out.SendInventorySlotsUpdate(new int[] { slot });
 						return 1;
 					}
 
 					if (house.IndoorItems.Count >= 40)
 					{
 						client.Player.Out.SendMessage("You have already placed 40 objects. You can't place more.", eChatType.CT_Help, eChatLoc.CL_SystemWindow);
+						client.Out.SendInventorySlotsUpdate(new int[] { slot });
 						return 1;
 					}
 					IndoorItem iitem = new IndoorItem();
@@ -172,7 +185,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 				case 4:
                     if (!house.IsOwner(client.Player) && !house.CanAddGarden(client.Player))
-                        return 1;
+					{
+						client.Out.SendInventorySlotsUpdate(new int[] { slot });
+						return 1;
+					}
 					switch (orgitem.Id_nb)
 					{
 						case "porch_deed":
@@ -205,7 +221,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 				case 5:
 					{
 						if (!house.CanAddInterior(client.Player))
+						{
+							client.Out.SendInventorySlotsUpdate(new int[] { slot });
 							return 1;
+						}
 
 						if (orgitem.Object_Type != (int)eObjectType.HouseNPC
 							&& orgitem.Object_Type != (int)eObjectType.HouseBindstone
@@ -213,6 +232,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 							&& orgitem.Object_Type != (int)eObjectType.HouseInteriorObject)
 						{
 							client.Player.Out.SendMessage("This object can't be placed on a house hookpoint !", eChatType.CT_Help, eChatLoc.CL_SystemWindow);
+							client.Out.SendInventorySlotsUpdate(new int[] { slot });
 							return 1;
 						}
 
