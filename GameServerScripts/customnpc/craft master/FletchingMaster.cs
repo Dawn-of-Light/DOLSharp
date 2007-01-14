@@ -37,29 +37,6 @@ namespace DOL.GS.Scripts
 			get { return "Fletchers"; }
 		}
 
-		public override eCharacterClass[] AllowedClass
-		{
-			get 
-			{
-				return new eCharacterClass[]
-					{
-						eCharacterClass.Friar,
-						eCharacterClass.Infiltrator,
-						eCharacterClass.Minstrel,
-						eCharacterClass.Scout,
-						eCharacterClass.Nightshade,
-						eCharacterClass.Ranger,
-						eCharacterClass.Vampiir,
-						eCharacterClass.Mercenary,
-						eCharacterClass.AlbionRogue,
-						eCharacterClass.Stalker,
-						eCharacterClass.MidgardRogue,
-						eCharacterClass.Shadowblade,
-						eCharacterClass.Hunter,
-					};
-			}
-		}
-
 		public override eCraftingSkill TheCraftingSkill
 		{
 			get { return eCraftingSkill.Fletching; }

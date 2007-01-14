@@ -33,11 +33,11 @@ namespace DOL.GS.PropertyCalc
 	[PropertyCalculator(eProperty.Stat_First, eProperty.Stat_Last)]
 	public class StatCalculator : PropertyCalculator
 	{
-		public StatCalculator() {}
+		public StatCalculator() { }
 
-		public override int CalcValue(GameLiving living, eProperty property) 
+		public override int CalcValue(GameLiving living, eProperty property)
 		{
-			if (living is GamePlayer) 
+			if (living is GamePlayer)
 			{
 				GamePlayer player = living as GamePlayer;
 				int baseStat = player.GetBaseStat((eStat)property);
@@ -52,26 +52,32 @@ namespace DOL.GS.PropertyCalc
 				int singlecap = (int)(living.Level * 1.25);
 				int dualcap = (int)(living.Level * 1.25 * 1.5);
 				int overcapMax = living.Level / 2 + 1;
-				int overcapbonus = living.ItemBonus[(int) (eProperty.StatCapBonus_First - eProperty.Stat_First + property)];
+				int overcapbonus = living.ItemBonus[(int)(eProperty.StatCapBonus_First - eProperty.Stat_First + property)];
 
-				if (property == (eProperty)player.CharacterClass.ManaStat) {
+				if (property == (eProperty)player.CharacterClass.ManaStat)
+				{
 					overcapbonus += living.ItemBonus[(int)eProperty.AcuCapBonus];
 					itemBonus += living.ItemBonus[(int)eProperty.Acuity];
+					abilityBonus += living.AbilityBonus[(int)eProperty.Acuity];
 					if (player.CharacterClass.ClassType == eClassType.ListCaster)
 						acuityBonus = living.BuffBonusCategory1[(int)eProperty.Acuity];
 				}
 
 				overcapbonus = Math.Min(overcapbonus, overcapMax);
-				if (itemBonus > itemcap + overcapbonus) {
+				if (itemBonus > itemcap + overcapbonus)
+				{
 					itemBonus = itemcap + overcapbonus;
 				}
-				if (singleStatBonus > singlecap) {
+				if (singleStatBonus > singlecap)
+				{
 					singleStatBonus = singlecap;
 				}
-				if (dualStatBonus > dualcap) {
+				if (dualStatBonus > dualcap)
+				{
 					dualStatBonus = dualcap;
 				}
-				if (debuff < 0) {
+				if (debuff < 0)
+				{
 					debuff = -debuff;
 				}
 				int stat = singleStatBonus + dualStatBonus - debuff + acuityBonus + living.BuffBonusCategory4[(int)property];
@@ -89,24 +95,24 @@ namespace DOL.GS.PropertyCalc
 				if (stat < 1) stat = 1;	// at least 1
 
 				return stat;
-			} 
-			else 
+			}
+			else
 			{
 				//str for mobs
 				int statBase = 50;
 				if (property == eProperty.Strength)
 				{
-					statBase += living.Level*3 + (living.Level*3*living.Level/50);
+					statBase += living.Level * 3 + (living.Level * 3 * living.Level / 50);
 				}
 				else //TODO: other stats
 				{
 				}
 				return (int)((statBase +
 					+living.BuffBonusCategory1[(int)property]
-					+living.BuffBonusCategory2[(int)property]
-					-living.BuffBonusCategory3[(int)property]
-					+living.BuffBonusCategory4[(int)property])
-					*living.BuffBonusMultCategory1.Get((int)property));
+					+ living.BuffBonusCategory2[(int)property]
+					- living.BuffBonusCategory3[(int)property]
+					+ living.BuffBonusCategory4[(int)property])
+					* living.BuffBonusMultCategory1.Get((int)property));
 			}
 		}
 	}

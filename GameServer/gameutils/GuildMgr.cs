@@ -344,7 +344,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Load all guilds and alliances from the database
 		/// </summary>
-		public static void LoadAllGuilds()
+		public static bool LoadAllGuilds()
 		{
 			lock (m_guilds.SyncRoot)
 			{
@@ -379,6 +379,8 @@ namespace DOL.GS
 					}
 				}
 			}
+
+			return true;
 		}
 
 		/// <summary>

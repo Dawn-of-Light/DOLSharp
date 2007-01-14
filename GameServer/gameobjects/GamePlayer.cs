@@ -476,6 +476,10 @@ namespace DOL.GS
 			if (m_guild != null)
 				m_guild.RemoveOnlineMember(this);
 
+			// RR4: expire personal mission, if any
+			if (Mission != null)
+				Mission.ExpireMission();
+
 			ChatGroup mychatgroup = (ChatGroup)TempProperties.getObjectProperty(ChatGroup.CHATGROUP_PROPERTY, null);
 			if (mychatgroup != null)
 				mychatgroup.RemovePlayer(this);
@@ -491,6 +495,7 @@ namespace DOL.GS
 			// cancel all effects until saving of running effects is done
 			try
 			{
+				CancelAllConcentrationEffects();
 				EffectList.CancelAll();
 			}
 			catch (Exception e)
@@ -1945,9 +1950,6 @@ namespace DOL.GS
 		/// </summary>
 		protected readonly ArrayList m_spelllines = new ArrayList();
 		/// <summary>
-		/// Holds the Spells without spell lines behind aka Songs
-		/// </summary>
-		//protected ArrayList m_spells = new ArrayList();
 		/// <summary>
 		/// Holds all styles of the player
 		/// </summary>
@@ -3183,7 +3185,7 @@ namespace DOL.GS
 			BountyPoints += amount;
 			if (m_guild != null)
 				m_guild.GainBountyPoints(amount);
-			Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.GainRealmPoints.YouGet", amount.ToString()), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+			Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.GainBountyPoints.YouGet", amount.ToString()), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 			Out.SendUpdatePoints();
 		}
 
@@ -7443,7 +7445,7 @@ namespace DOL.GS
 				//notify event
 				CurrentRegion.Notify(RegionEvent.PlayerLeave, CurrentRegion, new RegionPlayerEventArgs(this));
 
-				CancelAllConcentrationEffects();
+				CancelAllConcentrationEffects(true);
 				CommandNpcRelease();
 			}
 			else
@@ -8799,6 +8801,11 @@ namespace DOL.GS
 					moneyObject.Delete();
 					return true;
 				}
+			}
+			else if ((floorObject is GameNPC || floorObject is GameStaticItem) && floorObject.CurrentHouse != null)
+			{
+				floorObject.CurrentHouse.EmptyHookpoint(this, floorObject);
+				return true;
 			}
 			else
 			{

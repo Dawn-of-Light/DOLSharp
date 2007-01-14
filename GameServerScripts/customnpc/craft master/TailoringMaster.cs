@@ -36,46 +36,6 @@ namespace DOL.GS.Scripts
 			get { return "Tailors"; }
 		}
 
-		public override eCharacterClass[] AllowedClass
-		{
-			get
-			{
-				return new eCharacterClass[]
-					{
-						eCharacterClass.Friar,
-						eCharacterClass.Scout,
-						eCharacterClass.Infiltrator,
-						eCharacterClass.Minstrel,
-						eCharacterClass.Elementalist,
-						eCharacterClass.Wizard,
-						eCharacterClass.Theurgist,
-						eCharacterClass.Mage,
-						eCharacterClass.Cabalist,
-						eCharacterClass.Sorcerer,
-						eCharacterClass.Stalker,
-						eCharacterClass.Nightshade,
-						eCharacterClass.Ranger,
-						eCharacterClass.Magician,
-						eCharacterClass.Enchanter,
-						eCharacterClass.Mentalist,
-						eCharacterClass.Eldritch,
-						eCharacterClass.MidgardRogue,
-						eCharacterClass.Shadowblade,
-						eCharacterClass.Hunter,
-						eCharacterClass.Mystic,
-						eCharacterClass.Runemaster,
-						eCharacterClass.Spiritmaster,
-						eCharacterClass.Bonedancer,
-						eCharacterClass.Heretic,
-						eCharacterClass.Necromancer,
-						eCharacterClass.Bainshee,
-						eCharacterClass.Valewalker,
-						eCharacterClass.Vampiir,
-						eCharacterClass.Warlock,
-				  };
-			}
-		}
-
 		public override eCraftingSkill TheCraftingSkill
 		{
 			get { return eCraftingSkill.Tailoring; }

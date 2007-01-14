@@ -1738,7 +1738,9 @@ namespace DOL.GS.Scripts
 						return 0;
 					}
 			} //switch
-			GameServer.Database.SaveObject(client.Player.Guild.GetRankByID(number));
+			DBRank rank = client.Player.Guild.GetRankByID(number);
+			if (rank != null)
+				GameServer.Database.SaveObject(rank);
 			return 1;
 		}
 	}

@@ -669,6 +669,7 @@ namespace DOL.GS
 		CriticalArcheryHitChance = 215,
 		CriticalSpellHitChance = 216,
 		WaterSpeed = 217,
+		SpellLevel = 218,
 		MaxProperty = 255,
 	}
 

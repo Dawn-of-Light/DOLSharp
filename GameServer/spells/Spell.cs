@@ -57,6 +57,7 @@ namespace DOL.GS
 		protected readonly int m_spellGroup = 0;
 		protected readonly int m_effectGroup = 0;
 		protected readonly int m_subSpellID = 0;
+		protected readonly bool m_moveCast = false;
 
 
 		#region member access properties
@@ -202,6 +203,11 @@ namespace DOL.GS
 			get { return m_subSpellID; }
 		}
 
+		public bool MoveCast
+		{
+			get { return m_moveCast; }
+		}
+
 		#endregion
 
 		/// <summary>
@@ -251,6 +257,7 @@ namespace DOL.GS
 			m_spellGroup = dbspell.SpellGroup;
 			m_effectGroup = dbspell.EffectGroup;
 			m_subSpellID = dbspell.SubSpellID;
+			m_moveCast = dbspell.MoveCast;
 		}
 	}
 }

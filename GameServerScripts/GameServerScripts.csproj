@@ -319,6 +319,7 @@
     <Compile Include="playercommands\bind.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="playercommands\bountyrent.cs" />
     <Compile Include="playercommands\broadcast.cs">
       <SubType>Code</SubType>
     </Compile>

@@ -175,19 +175,41 @@ namespace DOL.GS.Spells
 			if (attackArgs == null) return;
 			if (living == null) return;
 
-			switch (attackArgs.AttackData.AttackResult)
+			bool remove = false;
+
+			if (attackArgs.AttackData.IsMeleeAttack)
 			{
-				case GameLiving.eAttackResult.HitStyle:
-				case GameLiving.eAttackResult.HitUnstyled:
-				case GameLiving.eAttackResult.Blocked:
-				case GameLiving.eAttackResult.Evaded:
-				case GameLiving.eAttackResult.Fumbled:
-				case GameLiving.eAttackResult.Missed:
-				case GameLiving.eAttackResult.Parried:
-					GameSpellEffect effect = SpellHandler.FindEffectOnTarget(living, this);
-					if (effect != null)
-						effect.Cancel(false);//call OnEffectExpires
-					break;
+				switch (attackArgs.AttackData.AttackResult)
+				{
+					case GameLiving.eAttackResult.HitStyle:
+					case GameLiving.eAttackResult.HitUnstyled:
+					case GameLiving.eAttackResult.Blocked:
+					case GameLiving.eAttackResult.Evaded:
+					case GameLiving.eAttackResult.Fumbled:
+					case GameLiving.eAttackResult.Missed:
+					case GameLiving.eAttackResult.Parried:
+						remove = true;
+						break;
+				}
+			}
+			else
+			{
+
+				if (!remove && attackArgs.AttackData.SpellHandler != null)
+				{
+					//debuffs/shears dont interrupt mez, neither does recasting mez
+					if (attackArgs.AttackData.SpellHandler is PropertyChangingSpell || attackArgs.AttackData.SpellHandler is MesmerizeSpellHandler
+						|| attackArgs.AttackData.SpellHandler is NearsightSpellHandler || attackArgs.AttackData.SpellHandler.HasPositiveEffect) return;
+					if (attackArgs.AttackData.AttackResult == GameLiving.eAttackResult.HitUnstyled)
+						remove = true;
+				}
+			}
+
+			if (remove)
+			{
+				GameSpellEffect effect = SpellHandler.FindEffectOnTarget(living, this);
+				if (effect != null)
+					effect.Cancel(false);//call OnEffectExpires
 			}
 		}
 

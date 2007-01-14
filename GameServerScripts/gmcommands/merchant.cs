@@ -47,6 +47,7 @@ namespace DOL.GS.Scripts
 			if (args.Length == 1)
 			{
 				DisplaySyntax(client);
+				return 0;
 			}
 
 			string param = "";
