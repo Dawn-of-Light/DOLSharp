@@ -185,6 +185,80 @@ GamePlayer.Pronoun.Male.Objective:			lui
 GamePlayer.Pronoun.Female.Subjective:		elle
 GamePlayer.Pronoun.Female.Possessive:		sa
 GamePlayer.Pronoun.Female.Objective:		elle
+GamePlayer.IsOnHorse.DismountSteed:			Vous descendez de votre cheval.
+GamePlayer.IsOnHorse.MountSteed:			You montez sur votre cheval.
+GamePlayer.Die.LoseExperience:				Vous perdez de l'expérience !
+GamePlayer.DuelStop.DuelEnds:				Your duel ends!
+GamePlayer.CastSpell.CantCastStunned:		You can't cast while stunned!
+GamePlayer.CastSpell.CantCastMezzed:		You can't cast while mesmerized!
+GamePlayer.CastSpell.AlreadyPlaySong:		You are already playing a song!
+GamePlayer.CastSpell.AlreadyCastFollow:		Vous incantez déjà un sort. Vous preparez celui-ci à la suite.
+GamePlayer.CastSpell.AlreadyCastNoQueue:	Vous incantez déjà un sort, pour activer la suite de sorts, tapez '/noqueue'!
+GamePlayer.ReceiveTradeItem.StillSelfcrafting:	You are still selfcrafting.
+GamePlayer.ReceiveTradeItem.CantTrade:		Vous ne pouvez pas échanger cet objet !
+GamePlayer.UseSlot.CantFire:				Vous ne pouvez pas lancer ou utiliser cet objet.
+GamePlayer.UseSlot.CantMountWhileDead:		Vous ne pouvez pas monter sur votre cheval, vous êtes mort !
+GamePlayer.UseSlot.MustDismountBefore:		Vous devez d'abord descendre de votre cheval.
+GamePlayer.UseSlot.CantSummonRvR:			Vous ne pouvez pas utiliser cette monture dans une zone RvR.
+GamePlayer.UseSlot.CantMountMoving:			Vous ne pouvez pas monter sur un cheval lorsque vous bougez.
+GamePlayer.UseSlot.CantCallMountSeated:		Vous ne pouvez pas appeler votre monture si vous êtes assis.
+GamePlayer.UseSlot.CantMountSteath:			Vous ne pouvez pas monter sur un cheval si vous êtes en furtivité.
+GamePlayer.UseSlot.CantMountCombat:			Vous êtes en combat, et ne pouvez pas appeler votre monture.
+GamePlayer.UseSlot.StopCallingMount:		Vous arrêtez d'appeler votre monture.
+GamePlayer.UseSlot.WhistleMount:			Vous sifflez votre monture.
+GamePlayer.UseSlot.CantSeeTarget:			Vous ne voyez pas votre cible !
+GamePlayer.UseSlot.AutoReleaseShot:			You will now automatically release your shot.
+GamePlayer.UseSlot.AutoReleaseShotReload:	You will now automatically release your shot and reload.
+GamePlayer.UseSlot.NoAutoReleaseShotReload:	You will no longer automatically release your shot or reload.
+GamePlayer.UseSlot.CantUseInCombat:			Vous ne pouvez pas utiliser cet objet en combat !
+GamePlayer.UseSlot.NotEnouthPower:			You are not powerful enough to use this item's spell.
+GamePlayer.UseSlot.Can'tUseFromBackpack:	Vous ne pouvez pas utiliser cet objet directement dans votre sac à dos. Equippez le avant !
+GamePlayer.ApplyPoison.CantUsePoisons:		Vous ne pouvez pas utiliser de poison.
+GamePlayer.ApplyPoison.PoisonsAppliedWeapons:	Les poisons ne sont utilisables que sur une arme !
+GamePlayer.ApplyPoison.CantPoisonWeapon:	Vous ne pouvez pas empoisonner cet arme !
+GamePlayer.ApplyPoison.CantUsePoison:		Vous ne pouvez pas utiliser ce poison !
+GamePlayer.ApplyPoison.CantApplyRecentCombat:	Vous avez été en combat récemment, vous ne pouvez pas appliquer ce poison pour le moment !
+GamePlayer.Whisper.SelectTarget:			Sélectionner une clible pour lui chuchoter.
+GamePlayer.DrowningTimerCallback.CannotBreath:	Vous ne pouvez pas respirer sous l'eau, vous perdez de la vie !
+GamePlayer.DrowningTimerCallback.Take5%Damage:	Vous perdez 5% de votre vie maximum !
+GamePlayer.Sprint.TooFatigued:				Vous êtes trop fatigué pour sprinter !
+GamePlayer.Sprint.CantSprintHidden:			Vous ne pouvez pas sprinter quand vous êtes caché !
+GamePlayer.Sprint.CantSprintDead:			Vous ne pouvez pas sprinter, vous êtes mort !
+GamePlayer.Sprint.PrepareSprint:			Vous vous préparez à sprinter.
+GamePlayer.Sprint.NoLongerReady:			Vous n'êtes plus prêt à sprinter.
+GamePlayer.OnPlayerMove.InterruptCrafting:	Vous bougez, et interrompez votre fabrication.
+GamePlayer.OnPlayerMove.CannotCallMount:	Vous bougez, vous ne pouvez pas appeler votre monture !
+GamePlayer.Sit.InterruptCallMount:			Vous vous asseyez et arrêtez d'appeler votre monture !
+GamePlayer.Sit.AlreadySitting:				Vous êtes déjà assis !
+GamePlayer.Sit.NotSitting:					Vous n'êtes pas assis !
+GamePlayer.Sit.CantSitDead:					Vous ne pouvez pas vous assoir, vous êtes mort !
+GamePlayer.Sit.CantSitStunned:				You can't rest when you are stunned!
+GamePlayer.Sit.CantSitMezzed:				You can't rest when you are mesmerized!
+GamePlayer.Sit.MustStandingStill:			Vous devez être immobile pour vous assoir !
+GamePlayer.Sit.MustDismount:				Vous devez descendre de votre monture avant !
+GamePlayer.Sit.YouSitDown:					Vous vous asseyez. Tapez '/stand' ou bougez pour vous lever.
+GamePlayer.Sit.YouStandUp:					vous vous levez.
+GamePlayer.Sit.NoLongerWaitingQuit:			Vous n'attendez plus de quitter.
+GamePlayer.UpdateEncumberance.EncumberedMoveSlowly:		Vous êtes encombré, et bougez lentement.
+GamePlayer.UpdateEncumberance.Encumbered:	Vous êtes encombré.
+GamePlayer.PickupObject.MustHaveTarget:		Vous devez avoir une cible pour ramasser quelquechose !
+GamePlayer.PickupObject.LootDoesntBelongYou:			That loot doesn't belong to you - you can't pick it up.
+GamePlayer.PickupObject.CantGetThat:		Vous ne pouvez pas ramasser ça !
+GamePlayer.PickupObject.BackpackFull:		Votre sac à dos est plein, vous devez faire de la place.
+GamePlayer.PickupObject.NoOneGroupWantsMoney:			Personne dans le groupe ne veut de l'argent.
+GamePlayer.SaveIntoDatabase.CharacterSaved:	Votre personnage a été sauvegardé.
+GamePlayer.Stealth.NowHidden:				Vous êtes caché.
+GamePlayer.Stealth.NoLongerHidden:			Vous n'êtes plus caché.
+GamePlayer.CraftItem.DontHaveAbilityMake:	You do not have the ability to make this item.
+GamePlayer.OpenSelfCraft.AlreadySelfCrafting:			You are already selfcrafting.
+GamePlayer.OpenSelfCraft.CanOnlyCraftBackpack:			You can only self-craft items in your backpack!
+GamePlayer.SetControlledNpc.ReleaseTarget:				Vous relachez le controle de votre cible.
+GamePlayer.CommandNpcAttack.TooFarAwayForPet:			Your target is too far away to attack by your pet!
+GamePlayer.CommandNpcGoTarget.MustSelectDestination:	You must select a destination for your controlled creature.
+GamePlayer.Shade.AlreadyShade:				You are already a shade!
+GamePlayer.Shade.NoLongerShade:				You are no longer a shade!
+GamePlayer.CurrentTitle.TitleCleared:		Your title has been cleared.
+
 
 # HOUSING
 HouseEnterLeave.TooFarAway:					Vous êtes trop loin pour entrer dans la maison {0}.
