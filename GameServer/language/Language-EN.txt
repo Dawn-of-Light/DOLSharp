@@ -196,7 +196,6 @@ GamePlayer.CastSpell.AlreadyCastFollow:		You are already casting a spell!  You p
 GamePlayer.CastSpell.AlreadyCastNoQueue:	You are already casting a spell, to enable spell queueing use '/noqueue'!
 GamePlayer.ReceiveTradeItem.StillSelfcrafting:	You are still selfcrafting.
 GamePlayer.ReceiveTradeItem.CantTrade:		You can't trade this item!
-GamePlayer.ReceiveTradeMoney.StillSelfcrafting:	You are still selfcrafting.
 GamePlayer.UseSlot.CantFire:				You can't fire or use this item!
 GamePlayer.UseSlot.CantMountWhileDead:		You can't mount while you're dead.
 GamePlayer.UseSlot.MustDismountBefore:		You must to dismount before.
@@ -220,8 +219,8 @@ GamePlayer.ApplyPoison.CantPoisonWeapon:	You can't poison this weapon!
 GamePlayer.ApplyPoison.CantUsePoison:		You can't use this poison.
 GamePlayer.ApplyPoison.CantApplyRecentCombat:	You have been in combat recently and can't apply a poison yet!
 GamePlayer.Whisper.SelectTarget:			Select a target to whisper to!
-GamePlayer.byte.CannotBreath:				You cannot breathe underwater and take damage!
-GamePlayer.byte.Take5%Damage:				You take 5% of your max hits in damage.
+GamePlayer.DrowningTimerCallback.CannotBreath:				You cannot breathe underwater and take damage!
+GamePlayer.DrowningTimerCallback.Take5%Damage:				You take 5% of your max hits in damage.
 GamePlayer.Sprint.TooFatigued:				You are too fatigued to sprint!
 GamePlayer.Sprint.CantSprintHidden:			You can't sprint while you are hidden!
 GamePlayer.Sprint.CantSprintDead:			You can't sprint when dead!
@@ -259,8 +258,6 @@ GamePlayer.CommandNpcGoTarget.MustSelectDestination:	You must select a destinati
 GamePlayer.Shade.AlreadyShade:				You are already a shade!
 GamePlayer.Shade.NoLongerShade:				You are no longer a shade!
 GamePlayer.CurrentTitle.TitleCleared:		Your title has been cleared.
-GamePlayer.IsOnHorse.MountSteed:			You mount your steed.
-GamePlayer.IsOnHorse.DismountSteed:			You dismount your steed.
 					
 # HOUSING
 HouseEnterLeave.TooFarAway:					You are too far away to enter house {0}.
