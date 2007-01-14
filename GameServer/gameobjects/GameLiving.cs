@@ -58,7 +58,7 @@ namespace DOL.GS
 		private Style m_style = null;
 		private eAttackType m_attackType = eAttackType.Unknown;
 		private GameLiving.eAttackResult m_attackResult = GameLiving.eAttackResult.Any;
-		//private ISpellHandler m_styleEffect;
+		private ISpellHandler m_spellHandler;
 		private List<ISpellHandler> m_styleEffects;
 		private int m_animationId;
 		private int m_weaponSpeed;
@@ -173,13 +173,13 @@ namespace DOL.GS
 		}
 
 		///// <summary>
-		///// Sets or gets the style effect
+		///// Sets or gets the attack spellhandler
 		///// </summary>
-		//public ISpellHandler StyleEffect
-		//{
-		//    get { return m_styleEffect; }
-		//    set { m_styleEffect = value; }
-		//}
+		public ISpellHandler SpellHandler
+		{
+		    get { return m_spellHandler; }
+			set { m_spellHandler = value; }
+		}
 
 		/// <summary>
 		/// (procs) Gets the style effects
@@ -2647,7 +2647,6 @@ namespace DOL.GS
 						evadeChance = 0.5; //50% evade cap RvR only; http://www.camelotherald.com/more/664.shtml
 					else if (evadeChance > 1.0) evadeChance = 1.0;
 
-					if (ad.AttackType == AttackData.eAttackType.MeleeDualWield) evadeChance /= 2.0;
 					if (ad.AttackType == AttackData.eAttackType.Ranged) evadeChance /= 5.0;
 
 					if (Util.ChanceDouble(evadeChance))
@@ -2693,9 +2692,7 @@ namespace DOL.GS
 						if (parryChance < 0.01) parryChance = 0.01;
 						if (parryChance > 0.99) parryChance = 0.99;
 
-						if (m_attackers.Count > 1) parryChance /= m_attackers.Count;
-						if (weapon != null && weapon.Hand == 1) parryChance /= 2;
-
+						if (m_attackers.Count > 1) parryChance /= m_attackers.Count / 2;
 						if (Util.ChanceDouble(parryChance))
 						{
 							return eAttackResult.Parried;
@@ -2758,7 +2755,6 @@ namespace DOL.GS
 						shieldSize = lefthand.Type_Damage;
 					if (player != null && m_attackers.Count > shieldSize)
 						blockChance /= (m_attackers.Count - shieldSize + 1);
-					if (ad.AttackType == AttackData.eAttackType.MeleeDualWield) blockChance /= 2;
 
 					// Engage raised block change to 85% if attacker is engageTarget and player is in attackstate
 					if (engage != null && AttackState && engage.EngageTarget == ad.Attacker)
@@ -4200,8 +4196,16 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		/// </summary>
 		public void CancelAllConcentrationEffects()
 		{
+			CancelAllConcentrationEffects(false);
+		}
+
+		/// <summary>
+		/// Cancels all concentration effects by this living and on this living
+		/// </summary>
+		public void CancelAllConcentrationEffects(bool leaveSelf)
+		{
 			// cancel conc spells
-			ConcentrationEffects.CancelAll();
+			ConcentrationEffects.CancelAll(leaveSelf);
 
 			// cancel all active conc spell effects from other casters
 			ArrayList concEffects = new ArrayList();
@@ -4211,6 +4215,7 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 				{
 					if (effect is GameSpellEffect && ((GameSpellEffect)effect).Spell.Concentration > 0)
 					{
+						if (!leaveSelf || leaveSelf && ((GameSpellEffect)effect).SpellHandler.Caster != this)
 						concEffects.Add(effect);
 					}
 				}
@@ -4941,9 +4946,6 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 			foreach (GameObject obj in temp)
 				if (obj is GameLiving)
 					((GameLiving)obj).EnemyKilled(this);
-
-			CancelAllConcentrationEffects();
-			//EffectList.CancelAll();
 			StopHealthRegeneration();
 			StopPowerRegeneration();
 			StopEnduranceRegeneration();

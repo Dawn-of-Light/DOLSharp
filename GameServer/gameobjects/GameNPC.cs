@@ -19,6 +19,7 @@
 using System;
 using System.Reflection;
 using System.Collections;
+using System.Collections.Generic;
 using System.Threading;
 using DOL.AI;
 using DOL.AI.Brain;
@@ -1723,18 +1724,18 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets a list of the current riders
 		/// </summary>
-		public ArrayList CurrentRiders
+		public GamePlayer[] CurrentRiders
 		{
 			get
 			{
-				ArrayList list = new ArrayList();
+				List<GamePlayer> list = new List<GamePlayer>(MAX_PASSENGERS);
 				for (int i = 0; i < MAX_PASSENGERS; i++)
 				{
 					GamePlayer player = Riders[i];
 					if (player != null)
 						list.Add(player);
 				}
-				return list;
+				return list.ToArray();
 			}
 		}
 		#endregion
@@ -1829,6 +1830,7 @@ namespace DOL.GS
 				ABrain brain = Brain;
 				brain.Stop();
 			}
+			EffectList.CancelAll();
 			return true;
 		}
 

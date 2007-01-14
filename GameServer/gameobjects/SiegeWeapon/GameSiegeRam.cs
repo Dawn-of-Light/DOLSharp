@@ -142,7 +142,7 @@ namespace DOL.GS
 			get
 			{
 				//custom formula
-				return 10000 + ((Level + 1) * 2000) - 10000 * (int)((double)CurrentRiders.Count / (double)MAX_PASSENGERS);
+				return 10000 + ((Level + 1) * 2000) - 10000 * (int)((double)CurrentRiders.Length / (double)MAX_PASSENGERS);
 			}
 		}
 
@@ -150,7 +150,7 @@ namespace DOL.GS
 		{
 			get
 			{
-				return BaseRamDamage + (int)(((double)BaseRamDamage / 2.0) * (double)((double)CurrentRiders.Count / (double)MAX_PASSENGERS));
+				return BaseRamDamage + (int)(((double)BaseRamDamage / 2.0) * (double)((double)CurrentRiders.Length / (double)MAX_PASSENGERS));
 			}
 		}
 
@@ -198,7 +198,7 @@ namespace DOL.GS
 			get
 			{
 				//custom formula
-				double speed = (10.0 + (5.0 * (double)Level) + 100.0 * ((double)CurrentRiders.Count / (double)MAX_PASSENGERS));
+				double speed = (10.0 + (5.0 * (double)Level) + 100.0 * ((double)CurrentRiders.Length / (double)MAX_PASSENGERS));
 				foreach (GamePlayer player in CurrentRiders)
 				{
 					RealmAbilities.RAPropertyEnhancer ab = player.GetAbility(typeof(RealmAbilities.LifterAbility)) as RealmAbilities.RAPropertyEnhancer;

@@ -679,6 +679,7 @@
     <Compile Include="propertycalc\CriticalArcheryHitChanceCalculator.cs" />
     <Compile Include="propertycalc\CriticalMeleeHitChanceCalculator.cs" />
     <Compile Include="propertycalc\ResistPiercePropertyCalculator.cs" />
+    <Compile Include="propertycalc\SpellLevelCalculator.cs" />
     <Compile Include="propertycalc\WaterSpeedCalculator.cs" />
     <Compile Include="quests\Missions\AbstractMission.cs">
       <SubType>Code</SubType>

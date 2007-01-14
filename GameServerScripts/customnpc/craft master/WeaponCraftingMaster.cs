@@ -37,42 +37,6 @@ namespace DOL.GS.Scripts
 			get { return "Weaponsmiths"; }
 		}
 
-		public override eCharacterClass[] AllowedClass
-		{
-			get
-			{
-				return new eCharacterClass[]
-					{
-						eCharacterClass.Reaver,
-						eCharacterClass.Fighter,
-						eCharacterClass.Mercenary,
-						eCharacterClass.Paladin,
-						eCharacterClass.Armsman,
-						eCharacterClass.Infiltrator,
-						eCharacterClass.Guardian,
-						eCharacterClass.Hero,
-						eCharacterClass.Blademaster,
-						eCharacterClass.Champion,
-						eCharacterClass.Nightshade,
-						eCharacterClass.Ranger,
-						eCharacterClass.Bard,
-						eCharacterClass.Viking,
-						eCharacterClass.Warrior,
-						eCharacterClass.Berserker,
-						eCharacterClass.Thane,
-						eCharacterClass.Skald,
-						eCharacterClass.MidgardRogue,
-						eCharacterClass.Shadowblade,
-						eCharacterClass.Hunter,
-						eCharacterClass.Heretic,
-						eCharacterClass.Vampiir,
-						eCharacterClass.Savage,
-						eCharacterClass.Valkyrie,
-
-					};
-			}
-		}
-
 		public override eCraftingSkill TheCraftingSkill
 		{
 			get { return eCraftingSkill.WeaponCrafting; }

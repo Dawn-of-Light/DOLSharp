@@ -52,34 +52,6 @@ namespace DOL.GS.Scripts
 			get { return "Spell Crafter"; }
 		}
 
-		public override eCharacterClass[] AllowedClass
-		{
-			get
-			{
-				return new eCharacterClass[]
-					{
-						eCharacterClass.Cabalist,
-						eCharacterClass.Cleric,
-						eCharacterClass.Necromancer,
-						eCharacterClass.Sorcerer,
-						eCharacterClass.Theurgist,
-						eCharacterClass.Wizard,
-						eCharacterClass.Animist,
-						eCharacterClass.Bainshee,
-						eCharacterClass.Druid,
-						eCharacterClass.Eldritch,
-						eCharacterClass.Enchanter,
-						eCharacterClass.Mentalist,
-						eCharacterClass.Bonedancer,
-						eCharacterClass.Healer,
-						eCharacterClass.Runemaster,
-						eCharacterClass.Shaman,
-						eCharacterClass.Spiritmaster,
-						eCharacterClass.Warlock,
-					};
-			}
-		}
-
 		public override eCraftingSkill TheCraftingSkill
 		{
 			get { return eCraftingSkill.SpellCrafting; }

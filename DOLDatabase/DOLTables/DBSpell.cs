@@ -61,6 +61,7 @@ namespace DOL.Database
 		protected int m_spellGroup;
 		protected int m_effectGroup;
 		protected int m_subSpellID = 0;
+		protected bool m_moveCast = false;
 
 		static bool m_autoSave;
 
@@ -513,6 +514,17 @@ namespace DOL.Database
 			{
 				Dirty = true;
 				m_subSpellID = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public bool MoveCast
+		{
+			get { return m_moveCast; }
+			set
+			{
+				Dirty = true;
+				m_moveCast = value;
 			}
 		}
 	}

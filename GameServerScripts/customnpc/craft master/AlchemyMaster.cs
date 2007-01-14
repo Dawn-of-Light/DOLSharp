@@ -53,39 +53,6 @@ namespace DOL.GS.Scripts
 		}
 
 		/// <summary>
-		/// The classes allowed to be this crafter
-		/// </summary>
-		public override eCharacterClass[] AllowedClass
-		{
-			get
-			{
-				return new eCharacterClass[]
-					{
-						eCharacterClass.Friar,
-						eCharacterClass.Infiltrator,
-						eCharacterClass.Heretic,
-						eCharacterClass.Minstrel,
-						eCharacterClass.Paladin,
-						eCharacterClass.Scout,
-						eCharacterClass.Reaver,
-						eCharacterClass.Bard,
-						eCharacterClass.Champion,
-						eCharacterClass.Nightshade,
-						eCharacterClass.Ranger,
-						eCharacterClass.Valewalker,
-						eCharacterClass.Vampiir,
-						eCharacterClass.Warden,
-						eCharacterClass.Hunter,
-						eCharacterClass.Shadowblade,
-						eCharacterClass.Skald,
-						eCharacterClass.Thane,
-						eCharacterClass.Valkyrie,
-						eCharacterClass.Warlock,
-					};
-			}
-		}
-
-		/// <summary>
 		/// The eCraftingSkill
 		/// </summary>
 		public override eCraftingSkill TheCraftingSkill
