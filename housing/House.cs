@@ -961,8 +961,23 @@ namespace DOL.GS.Housing
 			}
 		}
 
-		public void EmptyHookpoint(int slot)
-		{ }
+		public void EmptyHookpoint(GamePlayer player, GameObject obj)
+		{
+
+			//get the item template
+			ItemTemplate template = (ItemTemplate)GameServer.Database.SelectObject(typeof(ItemTemplate), "Name = '" + obj.Name + "'");
+			if (template == null)
+				return;
+
+			//get the housepoint item
+			DBHousepointItem item = (DBHousepointItem)GameServer.Database.SelectObject(typeof(DBHousepointItem), "ItemTemplateID = '" + template.Id_nb + "'");
+			if (item == null)
+				return;
+
+			obj.Delete();
+			GameServer.Database.DeleteObject(item);
+			player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, new InventoryItem(template));
+		}
 
 		public House(DBHouse house)
 		{

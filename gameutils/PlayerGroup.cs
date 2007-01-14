@@ -111,13 +111,17 @@ namespace DOL.GS
 				player.PlayerGroup = null;
 				player.PlayerGroupIndex = -1;
 				player.Out.SendGroupWindowUpdate();
+				player.Out.SendQuestListUpdate();
 				UpdateGroupWindow();
 				player.Out.SendMessage("You leave your group.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				SendMessageToGroupMembers(player.Name + " has left the group.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 				// only one player left?
 				if (PlayerCount == 1)
-				{
+				{ 
+					// RR4: Group is disbanded, ending mission group if any
+					if (Mission != null)
+						Mission.ExpireMission(); 
 					RemovePlayer((GamePlayer)m_groupMembers[0]);
 				}
 				else if (Leader == player && PlayerCount > 0)

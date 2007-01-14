@@ -45,7 +45,8 @@ namespace DOL.GS
 		RightBracer       = 34,//Equipment
 		LeftRing          = 35,//Equipment
 		RightRing         = 36,//Equipment
-		MaxEquipable	  = 36,
+		Mythical		  = 37,
+		MaxEquipable	  = 37,
 
 		FirstBackpack     = 40,
 		LastBackpack      = 79,

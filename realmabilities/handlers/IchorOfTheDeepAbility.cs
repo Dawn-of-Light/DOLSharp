@@ -29,8 +29,24 @@ namespace DOL.GS.RealmAbilities
 			if (caster.TargetObject == null)
 			{
 				caster.Out.SendMessage("You need a target for this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				caster.DisableSkill(this, 3 * 1000);
 				return;
 			}
+
+			if (!caster.TargetInView)
+			{
+				caster.Out.SendMessage(caster.TargetObject.Name + " is not in view.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				caster.DisableSkill(this, 3 * 1000);
+				return;
+			}
+
+			if (WorldMgr.GetDistance(caster, caster.TargetObject) > 1875)
+			{
+				caster.Out.SendMessage(caster.TargetObject.Name + " is too far away.", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+				caster.DisableSkill(this, 3 * 1000);
+				return;
+			}
+
 			//150 dam/10 sec || 400/20  || 600/30 
 			switch (Level)
 			{
@@ -40,23 +56,16 @@ namespace DOL.GS.RealmAbilities
 				default: return;
 			}
 
-			if (caster.TargetObject != null && caster.TargetInView && WorldMgr.GetDistance(caster, caster.TargetObject) <= 1875)
+			foreach (GamePlayer i_player in caster.GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
 			{
-				foreach (GamePlayer i_player in caster.GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
-				{
-					if (i_player == caster) i_player.Out.SendMessage("You cast " + this.Name + "!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
-					else i_player.Out.SendMessage(caster.Name + " casts a spell!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+				if (i_player == caster) i_player.Out.SendMessage("You cast " + this.Name + "!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+				else i_player.Out.SendMessage(caster.Name + " casts a spell!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
 
-					i_player.Out.SendSpellCastAnimation(caster, 7029, 20);
-				}
-				DisableSkill(living);
-				m_expireTimerID = new RegionTimer(caster, new RegionTimerCallback(EndCast), 2000);
+				i_player.Out.SendSpellCastAnimation(caster, 7029, 20);
 			}
-			else
-			{
-				caster.DisableSkill(this, 3 * 1000);
-				caster.Out.SendMessage("You don't have a target.", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
-			}
+
+			DisableSkill(living);
+			m_expireTimerID = new RegionTimer(caster, new RegionTimerCallback(EndCast), 2000);
 		}
 
 		protected virtual int EndCast(RegionTimer timer)

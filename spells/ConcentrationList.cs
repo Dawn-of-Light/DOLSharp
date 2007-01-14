@@ -144,8 +144,16 @@ namespace DOL.GS.Spells
 		/// </summary>
 		public void CancelAll()
 		{
+			CancelAll(false);
+		}
+
+		/// <summary>
+		/// Cancels all list effects
+		/// </summary>
+		public void CancelAll(bool leaveself)
+		{
 			if (log.IsDebugEnabled)
-				log.Debug("(" + m_owner.Name + ") cancels all conc spells");
+				log.Debug("(" + m_owner.Name + ") cancels all conc spells leaveself: " + leaveself);
 			ArrayList spells = null;
 			if (m_concSpells == null) return;
 			spells = (ArrayList)m_concSpells.Clone();
@@ -153,7 +161,10 @@ namespace DOL.GS.Spells
 			if (spells != null)
 			{
 				foreach (IConcentrationEffect fx in spells)
-					fx.Cancel(false);
+				{
+					if (!leaveself || leaveself && fx.OwnerName != m_owner.Name)
+						fx.Cancel(false);
+				}
 			}
 			CommitChanges();
 		}

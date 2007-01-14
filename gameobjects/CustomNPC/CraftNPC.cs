@@ -34,8 +34,6 @@ namespace DOL.GS
 
 		public abstract string GUILD_CRAFTERS { get; }
 
-		public abstract eCharacterClass[] AllowedClass { get; }
-
 		public abstract eCraftingSkill[] TrainedSkills { get; }
 
 		public abstract eCraftingSkill TheCraftingSkill { get; }
@@ -50,22 +48,6 @@ namespace DOL.GS
 				return false;
 
 			TurnTo(player, 5000);
-
-			bool eligible = false;
-			foreach(eCharacterClass currentClass in AllowedClass)
-			{
-				if(currentClass == (eCharacterClass) player.CharacterClass.ID)
-				{
-					eligible = true;
-					break;
-				}
-			}
-
-			if (!eligible)
-			{
-				SayTo(player, eChatLoc.CL_ChatWindow, "I'm sorry, those in your profession are not eligible for the Order of " + GUILD_ORDER + ". Perhaps the other trade orders would be interested in your services.");
-				return true;
-			}
 			
 			if(player.CraftingPrimarySkill == eCraftingSkill.NoCrafting)
 			{

@@ -119,7 +119,7 @@ namespace DOL.GS.RealmAbilities
 	/// </summary>
 	public class MasteryOfFocusAbility : RAPropertyEnhancer
 	{
-		public MasteryOfFocusAbility(DBAbility dba, int level) : base(dba, level, eProperty.Undefined) { }
+		public MasteryOfFocusAbility(DBAbility dba, int level) : base(dba, level, eProperty.SpellLevel) { }
 
 		public override int GetAmountForLevel(int level)
 		{

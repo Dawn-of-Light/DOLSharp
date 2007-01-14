@@ -37,9 +37,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			ushort fromSlot = (ushort) packet.ReadShort();
 			ushort itemCount= (ushort) packet.ReadShort();
 
-//			log.Warn("MoveItem, id="+id.ToString()+" toSlot="+toSlot.ToString()+" fromSlot="+fromSlot.ToString()+" itemCount="+itemCount.ToString());
-
-			//GSMessages.SendMessage(client,id.ToString()+"("+Number.ToString()+"): ["+From.ToString()+"] -> ["+To.ToString()+"]",GSMessages.eChatType.CT_Say,GSMessages.eChatLoc.CL_SystemWindow);
+			//log.Debug("MoveItem, id=" + id.ToString() + " toSlot=" + toSlot.ToString() + " fromSlot=" + fromSlot.ToString() + " itemCount=" + itemCount.ToString());
 
 			//If our slot is > 1000 it is (objectID+1000) of target
 			if(toSlot>1000)
