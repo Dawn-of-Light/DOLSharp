@@ -170,9 +170,8 @@ namespace DOL.GS.Quests
 					FinishTask();
 				}
 			}
-			/// 
-			/// Check if Mob is the Target of a KillTask for each of XPGainers in the Killer Group and if true Drop the TaskItem
-			/// 
+			
+			// Check if Mob is the Target of a KillTask for each of XPGainers in the Killer Group and if true Drop the TaskItem
 			else if (e == GameLivingEvent.EnemyKilled) 
 			{
 				EnemyKilledEventArgs gArgs = (EnemyKilledEventArgs)args;

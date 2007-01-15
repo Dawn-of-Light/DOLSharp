@@ -78,9 +78,9 @@ namespace DOL.GS.Quests
 		public Queue m_portObjectQueue = new Queue();
 		public Queue m_portDestinationQueue = new Queue();
 
-		/// <summary>
-		/// List of all QuestParts that can be fired on interact Events.
-		/// </summary>
+		// /// <summary>
+		// /// List of all QuestParts that can be fired on interact Events.
+		// /// </summary>
 		//private static IDictionary interactQuestParts = new HybridDictionary();
 
 		/// <summary>

@@ -308,7 +308,6 @@ namespace DOL.GS.Quests
 		/// </summary>
 		/// <param name="questType">The type of the quest</param>
 		/// <param name="source">The npc source</param>
-		/// <param name="target">The player to ask</param>
 		/// <param name="sentence">The sentence to show</param>
 		public static bool ProposeQuestToPlayer(Type questType, string sentence, GamePlayer player, GameNPC source)
 		{
@@ -330,7 +329,6 @@ namespace DOL.GS.Quests
         /// <param name="questType">The type of the quest</param>
         /// <param name="source">The npc source</param>
         /// <param name="target">The player to ask</param>
-        /// <param name="sentence">The sentence to show</param>
         public static bool AbortQuestToPlayer(Type questType, string sentence, GamePlayer player,GameNPC source )
         {
             if (player.IsDoingQuest(questType) != null)

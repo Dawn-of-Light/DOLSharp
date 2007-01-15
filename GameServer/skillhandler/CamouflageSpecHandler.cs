@@ -33,7 +33,7 @@ namespace DOL.GS.SkillHandler
 		/// <summary>
 		/// Executes the stealth ability
 		/// </summary>
-		/// <param name="spec"></param>
+		/// <param name="ab"></param>
 		/// <param name="player"></param>
 		public void Execute(Ability ab, GamePlayer player)
 		{

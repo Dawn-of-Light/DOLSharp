@@ -117,7 +117,6 @@ namespace DOL.GS
 		/// <summary>
 		/// send message to all member of alliance
 		/// </summary>
-		/// <param name="obj"></param>
 		public void SendMessageToAllianceMembers(string msg, PacketHandler.eChatType type, PacketHandler.eChatLoc loc)
 		{
 			lock (Guilds.SyncRoot)

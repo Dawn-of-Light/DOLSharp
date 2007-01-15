@@ -369,7 +369,7 @@ namespace DOL.GS
 
 
 		/// <summary>
-		/// Add all skills & other things that are required for current level
+		/// Add all skills and other things that are required for current level
 		/// </summary>
 		/// <param name="player">player to modify</param>
 		public virtual void OnLevelUp(GamePlayer player)
@@ -410,7 +410,7 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Add all spell-lines & other things that are new when this skill is trained
+		/// Add all spell-lines and other things that are new when this skill is trained
 		/// </summary>
 		/// <param name="player">player to modify</param>
 		public virtual void OnSkillTrained(GamePlayer player, Specialization skill)

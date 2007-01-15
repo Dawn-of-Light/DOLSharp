@@ -421,7 +421,6 @@ namespace DOL.GS.Keeps
 		/// <summary>
 		/// Gets the count of enemies in the Area
 		/// </summary>
-		/// <param name="guard">The guard object</param>
 		/// <returns></returns>
 		public int GetEnemyCountInArea()
 		{

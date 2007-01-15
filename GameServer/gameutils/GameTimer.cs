@@ -205,7 +205,7 @@ namespace DOL.GS
 			public static readonly int BUCKET_BITS = 4;
 			/// <summary>
 			/// The table arrays size in bits.
-			/// Table size in milliseconds is (1 << BUCKET_BITS + TABLE_BITS).
+			/// Table size in milliseconds is (1<<BUCKET_BITS + TABLE_BITS).
 			/// </summary>
 			public static readonly int TABLE_BITS = 17;
 			/// <summary>
@@ -264,7 +264,7 @@ namespace DOL.GS
 			/// </summary>
 			private readonly CacheBucket[] m_cachedBucket = new CacheBucket[1 << CACHE_BITS];
 			/// <summary>
-			/// Stores all timers. Array index = (TimerTick >> BUCKET_BITS) & TABLE_MASK
+			/// Stores all timers. Array index = (TimerTick>>BUCKET_BITS)&TABLE_MASK
 			/// </summary>
 			private readonly GameTimer[] m_buckets = new GameTimer[1 << TABLE_BITS];
 			/// <summary>

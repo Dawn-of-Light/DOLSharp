@@ -105,7 +105,7 @@ namespace DOL.GS.Scripts
 		}
 
 		/// <summary>
-		/// Add all spell-lines & other things that are new when this skill is trained
+		/// Add all spell-lines and other things that are new when this skill is trained
 		/// </summary>
 		/// <param name="player">player to modify</param>
 		public override void OnSkillTrained(GamePlayer player, Specialization skill)
