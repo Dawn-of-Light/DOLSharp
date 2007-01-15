@@ -100,10 +100,10 @@ namespace DOL.GS.Quests
 		/// </summary>
 		/// <remarks>Tested</remarks>
 		FinishQuest,
-		/// <summary>
-		/// GCAP : gives cap experience p## times (q## should be set to 1 to avoid bugs)                         
-		/// </summary>
-		//GiveXPCap,
+		// // <summary>
+		// /// GCAP : gives cap experience p## times (q## should be set to 1 to avoid bugs)                         
+		// /// </summary>
+		// GiveXPCap,
 		/// <summary>
 		/// GCPR : gives P:long[string] coppers
 		/// </summary>

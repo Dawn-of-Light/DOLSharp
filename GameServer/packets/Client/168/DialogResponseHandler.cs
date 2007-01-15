@@ -144,7 +144,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 									guildLeader.Out.SendMessage(player.Name + " declined your invite.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return;
 							}
-							break;
 						}
 					case eDialogCode.GuildLeave:
 						{

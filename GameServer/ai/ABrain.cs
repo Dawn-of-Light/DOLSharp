@@ -38,10 +38,10 @@ namespace DOL.AI
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		/// <summary>
-		/// Action queue
-		/// </summary>
-//		protected Stack m_actions = new Stack();
+		// /// <summary>
+		// /// Action queue
+		// /// </summary>
+		// protected Stack m_actions = new Stack();
 
 		/// <summary>
 		/// The body of this brain

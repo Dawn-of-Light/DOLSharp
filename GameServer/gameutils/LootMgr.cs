@@ -62,9 +62,9 @@ namespace DOL.GS
 		/// </summary>
 		static readonly HybridDictionary m_mobRegionGenerators = new HybridDictionary();
 
-		/// <summary>
-		/// List of Lootgenerators related by mobfaction
-		/// </summary>
+		// /// <summary>
+		// /// List of Lootgenerators related by mobfaction
+		// /// </summary>
 		//static readonly HybridDictionary m_mobFactionGenerators = new HybridDictionary();		
 
 		/// <summary>

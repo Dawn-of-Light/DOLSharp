@@ -46,8 +46,7 @@ namespace DOL.GS.Quests
         /// <summary>
         /// Adds an interact QuestPart that will display some sort of text, depending on texttype.
         /// </summary>
-        /// <param name="questType">type of quest this interact Questpart should be added to.</param>
-        /// <param name="npc">NPC player must interact with</param>
+       /// <param name="npc">NPC player must interact with</param>
         /// <param name="step">QuestStep Player must have to fire interaction. 
         /// -1 means Player does not have quest defined by questType
         /// 0 means Player has quest defined by questType
@@ -64,8 +63,6 @@ namespace DOL.GS.Quests
         /// <summary>
         /// Adds an interact QuestPart that will display some sort of text, depending on texttype.
         /// </summary>
-        /// <param name="questType">type of quest this interact Questpart should be added to.</param>
-        /// <param name="npc">NPC player must interact with</param>
         /// <param name="step">QuestStep Player must have to fire interaction. 
         /// -1 means Player does not have quest defined by questType
         /// 0 means Player has quest defined by questType

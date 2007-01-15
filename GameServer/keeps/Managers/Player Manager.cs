@@ -121,7 +121,7 @@ namespace DOL.GS.Keeps
 		/// Method to tell us if a player can interact with the lord to do certain tasks
 		/// </summary>
 		/// <param name="player">The player object</param>
-		/// <param name="area">The area object</param>
+		/// <param name="keep">The area object</param>
 		/// <param name="type">The type of interaction</param>
 		/// <returns></returns>
 		public static bool IsAllowedToInteract(GamePlayer player, AbstractGameKeep keep, eInteractType type)
