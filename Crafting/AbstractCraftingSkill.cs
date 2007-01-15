@@ -65,7 +65,7 @@ namespace DOL.GS
 
 		/// <summary>
 		/// The item in construction
-		/// </summary
+		/// </summary>
 		protected const string ITEM_CRAFTER = "ITEM_CRAFTER";
 
 		/// <summary>

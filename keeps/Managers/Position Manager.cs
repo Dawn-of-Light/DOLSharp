@@ -202,7 +202,7 @@ namespace DOL.GS.Keeps
 		/// <summary>
 		/// Creates a position
 		/// </summary>
-		/// <param name="objectID">The object ID</param>
+		/// <param name="templateID">The template ID</param>
 		/// <param name="component">The component object</param>
 		/// <param name="player">The creating player object</param>
 		/// <returns>The position object</returns>

@@ -48,12 +48,12 @@ namespace DOL.GS.Spells
 
 			transferHeal = (int)(spellValue * 1.25);
 
-			///Needed to prevent divide by zero error
+			//Needed to prevent divide by zero error
 			if (transferHeal <= 0)
 				transferHeal = 0; 
 			else
 			{
-				///Remaining health is used if caster does not have enough health, leaving caster at 1 hitpoint
+				//Remaining health is used if caster does not have enough health, leaving caster at 1 hitpoint
 				if ( (transferHeal >> 1) >= casterPlayer.Health )
 					transferHeal = ( (casterPlayer.Health - 1) << 1);
 			}
@@ -120,7 +120,7 @@ namespace DOL.GS.Spells
 				return false;
 			}
 			
-			if (amount <= 0) ///Player does not have enough health to transfer
+			if (amount <= 0) //Player does not have enough health to transfer
 			{
 				MessageToCaster("You do not have enough health to transfer.", eChatType.CT_SpellResisted);
 				return false;  

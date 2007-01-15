@@ -124,7 +124,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Checks if a GameRelic is mounted at this GameRelicPad
 		/// </summary>
-		/// <param name="Relic"></param>
+		/// <param name="relic"></param>
 		/// <returns></returns>
 		public bool IsMountedHere(GameRelic relic)
 		{
