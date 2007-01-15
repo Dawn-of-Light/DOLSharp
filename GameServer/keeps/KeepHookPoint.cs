@@ -71,7 +71,7 @@ namespace DOL.GS.Keeps
 		#region properties
 
 		/// <summary>
-		/// id < 0x20 = red , > 0x20 - blue, >0x40 - green and yellow: 0x41(ballista),0x61(trebuchet),0x81(cauldron)
+		/// id <0x20=red,>0x20 - blue,>0x40 - green and yellow: 0x41(ballista),0x61(trebuchet),0x81(cauldron)
 		/// </summary>
 		private int m_index;
 		public int ID

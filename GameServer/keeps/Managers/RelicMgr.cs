@@ -196,7 +196,7 @@ namespace DOL.GS
 		/// Returns an enumeration with all mounted Relics of an realm by a specified RelicType
 		/// </summary>
 		/// <param name="Realm"></param>
-		/// <param name="Type"></param>
+		/// <param name="RelicType"></param>
 		/// <returns></returns>
 		public static IEnumerable getRelics(byte Realm, eRelicType RelicType)
 		{

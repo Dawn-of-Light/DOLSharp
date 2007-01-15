@@ -30,7 +30,6 @@ using log4net;
 using MySql.Data.Types;
 using DataTable = System.Data.DataTable;
 using MySql.Data.MySqlClient;
-using DOL.Database.Connection;
 
 namespace DOL.Database
 {

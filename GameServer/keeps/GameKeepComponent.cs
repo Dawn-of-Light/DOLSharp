@@ -198,22 +198,22 @@ namespace DOL.GS.Keeps
 			get
 			{
 				return 0;
-				if (IsRaized)
-					return 0;
+				//if (IsRaized)
+				//	return 0;
 
-				if (Skin == (int)eComponentSkin.Tower)
-				{
-					return RepairedHealth / 100;
-				}
+				//if (Skin == (int)eComponentSkin.Tower)
+				//{
+				//	return RepairedHealth / 100;
+				//}
 
-				foreach (GameKeepComponent component in this.Keep.KeepComponents)
-				{
-					if (component.IsAlive == false && component != this)
-					{
-						return MaxHealth / 100;
-					}
-				}
-				return MaxHealth / 10;
+				//foreach (GameKeepComponent component in this.Keep.KeepComponents)
+				//{
+				//	if (component.IsAlive == false && component != this)
+				//	{
+				//		return MaxHealth / 100;
+				//	}
+				//}
+				//return MaxHealth / 10;
 			}
 		}
 

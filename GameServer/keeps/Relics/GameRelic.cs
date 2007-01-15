@@ -437,8 +437,6 @@ namespace DOL.GS
 		/// <summary>
 		/// Returns a Template for Name and Model for the relic
 		/// </summary>
-		/// <param name="Realm"></param>
-		/// <param name="RelicType"></param>
 		/// <returns>this object has only set Realm and Name</returns>
 		public class MiniTemp
 		{

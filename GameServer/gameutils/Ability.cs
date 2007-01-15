@@ -140,10 +140,10 @@ namespace DOL.GS
 		{
 		}
 
-		/// <summary>
-		/// called when all modifications should be taken back
-		/// </summary>
-		/// <param name="living"></param>
+		// /// <summary>
+		// /// called when all modifications should be taken back
+		// /// </summary>
+		// /// <param name="living"></param>
 		//public virtual void Deactivate(GameLiving living) {			
 		//}
 

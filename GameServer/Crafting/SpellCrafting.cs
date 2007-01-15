@@ -653,7 +653,8 @@ namespace DOL.GS
 		/// <summary>
 		/// Get how much the gem use like bonus point
 		/// </summary>
-		/// <param name="gem"></param>
+		/// <param name="bonusType"></param>
+		/// <param name="bonusValue"></param>
 		/// <returns></returns>
 		protected int GetGemImbuePoints(int bonusType, int bonusValue)
 		{

@@ -27,7 +27,7 @@ using System.Collections;
 
 namespace DOL.GS
 {
-
+	/// <summary>
 	/// A npc template
 	/// </summary>
 	public class NpcTemplate : INpcTemplate

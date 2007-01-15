@@ -139,9 +139,9 @@ namespace DOL.GS.Spells
 		/// </summary>
 		event CastingCompleteCallback CastingCompleteEvent;
 
-		/// <summary>
-		/// Event raised when spell is done or canceled
-		/// </summary>
+		// /// <summary>
+		// /// Event raised when spell is done or canceled
+		// /// </summary>
 		//event SpellEndsCallback SpellEndsEvent;
 	}
 

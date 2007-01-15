@@ -195,9 +195,9 @@ namespace DOL.GS.Keeps
 			get
 			{
 				return 0;
-				if (IsAttackableDoor)
-					return MaxHealth / 10;
-				else return MaxHealth / 100;
+				//if (IsAttackableDoor)
+				//	return MaxHealth / 10;
+				//else return MaxHealth / 100;
 			}
 		}
 

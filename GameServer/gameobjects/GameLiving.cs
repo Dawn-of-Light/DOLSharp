@@ -275,7 +275,6 @@ namespace DOL.GS
 		/// <summary>
 		/// Method to determine if an attack result, resulted in a hit
 		/// </summary>
-		/// <param name="result">eAttackResult</param>
 		/// <returns>true if it was a hit</returns>
 		public bool IsHit
 		{
@@ -3562,15 +3561,15 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 			return 0;
 		}
 
-		/// <summary>
-		/// Old temp properties
-		/// </summary>
-		//protected int[] m_oldTempProps = new int[(int)eProperty.MaxProperty];
+		// /// <summary>
+		// /// Old temp properties
+		// /// </summary>
+		// protected int[] m_oldTempProps = new int[(int)eProperty.MaxProperty];
 
-		/// <summary>
-		/// New temp properties
-		/// </summary>
-		//protected int[] m_newTempProps = new int[(int)eProperty.MaxProperty];
+		// /// <summary>
+		// /// New temp properties
+		// /// </summary>
+		// protected int[] m_newTempProps = new int[(int)eProperty.MaxProperty];
 
 		/// <summary>
 		/// has to be called after properties were changed and updates are needed
@@ -3982,18 +3981,18 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		/// Health of the object
 		/// </summary>
 		protected int m_health;
-		/// <summary>
-		/// Maxiumum value that can be in m_health
-		/// </summary>
-		//protected int m_maxHealth;
+		// /// <summary>
+		// /// Maxiumum value that can be in m_health
+		// /// </summary>
+		// protected int m_maxHealth;
 		/// <summary>
 		/// Amount of mana
 		/// </summary>
 		protected int m_mana;
-		/// <summary>
-		/// Maximum value that can be in m_mana
-		/// </summary>
-		//protected int m_maxMana;
+		// /// <summary>
+		// /// Maximum value that can be in m_mana
+		// /// </summary>
+		// protected int m_maxMana;
 		/// <summary>
 		/// Amount of endurance
 		/// </summary>
@@ -4964,13 +4963,13 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		#endregion
 		#region Spell Cast
 
-		/// <summary>
-		/// Holds the active spell handlers for this living
-		/// </summary>
+		// /// <summary>
+		// /// Holds the active spell handlers for this living
+		// /// </summary>
 		//		protected readonly ArrayList m_activeSpellHandlers = new ArrayList(1);
-		/// <summary>
-		/// spell handlers that are currently running duration spells
-		/// </summary>
+		// /// <summary>
+		// /// spell handlers that are currently running duration spells
+		// /// </summary>
 		//		public IList ActiveSpellHandlers
 		//		{
 		//			get { return m_activeSpellHandlers; }

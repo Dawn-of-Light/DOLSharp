@@ -1941,19 +1941,22 @@ namespace DOL.GS
 		/// (KeyName -> Specialization)
 		/// </summary>
 		protected readonly Hashtable m_specialization = new Hashtable();
+		
 		/// <summary>
 		/// Holds the players specs again but ordered
 		/// </summary>
 		protected readonly ArrayList m_specList = new ArrayList();
+		
 		/// <summary>
 		/// Holds the Spell lines the player can use
 		/// </summary>
 		protected readonly ArrayList m_spelllines = new ArrayList();
-		/// <summary>
+
 		/// <summary>
 		/// Holds all styles of the player
 		/// </summary>
 		protected readonly ArrayList m_styles = new ArrayList();
+		
 		/// <summary>
 		/// Holds all non trainable skills in determined order without styles
 		/// </summary>
@@ -1963,6 +1966,7 @@ namespace DOL.GS
 		/// Temporary Stats Boni
 		/// </summary>
 		protected readonly int[] m_statBonus = new int[8];
+		
 		/// <summary>
 		/// Temporary Stats Boni in percent
 		/// </summary>
@@ -1972,14 +1976,17 @@ namespace DOL.GS
 		/// Holds amount of full skill respecs
 		/// </summary>
 		protected int m_respecAmountAllSkill;
+		
 		/// <summary>
 		/// Holds amount of single-line skill respecs
 		/// </summary>
 		protected int m_respecAmountSingleSkill;
+		
 		/// <summary>
 		/// Holds amount of realm skill respecs
 		/// </summary>
 		protected int m_respecAmountRealmSkill;
+		
 		/// <summary>
 		/// Holds level respec usage flag
 		/// </summary>
@@ -2179,7 +2186,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Respec single line
 		/// </summary>
-		/// <param name="player">Player that is doing respec</param>
+		/// <param name="specLine">spec line being respec'd</param>
 		/// <returns>Amount of points spent in that line</returns>
 		private int RespecSingleLine(Specialization specLine)
 		{
@@ -2781,7 +2788,7 @@ namespace DOL.GS
 		/// specialized spell lines depend from spec levels
 		/// base lines depend from player level
 		/// </summary>
-		/// <param="sendMessages">sends "You gain power" messages if true</param="sendMessages">
+		/// <param name="sendMessages">sends "You gain power" messages if true</param>
 		public virtual void UpdateSpellLineLevels(bool sendMessages)
 		{
 			lock (GetSpellLines().SyncRoot)
@@ -5082,7 +5089,7 @@ namespace DOL.GS
 		/// Does needed interrupt checks and interrupts if needed
 		/// </summary>
 		/// <param name="attacker">the attacker that is interrupting</param>
-		/// <param name="attacktype">The attack type</param>
+		/// <param name="attackType">The attack type</param>
 		/// <returns>true if interrupted successfully</returns>
 		protected override bool OnInterruptTick(GameLiving attacker, AttackData.eAttackType attackType)
 		{

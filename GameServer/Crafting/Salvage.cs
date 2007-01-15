@@ -45,17 +45,17 @@ namespace DOL.GS
 
 		/// <summary>
 		/// The item to salvage
-		/// </summary
+		/// </summary>
 		protected const string ITEM_CRAFTER = "ITEM_CRAFTER";
 
 		/// <summary>
 		/// The material to give
-		/// </summary
+		/// </summary>
 		protected const string MATERIAL_CRAFTER = "MATERIAL_CRAFTER";
 
 		/// <summary>
 		/// The material to give
-		/// </summary
+		/// </summary>
 		protected const string MATERIAL_COUNT_CRAFTER = "MATERIAL_COUNT_CRAFTER";
 
 		#endregion
@@ -230,7 +230,6 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="player"></param>
 		/// <param name="item"></param>
-		/// <param name="percentNeeded">min 50 max 100</param>
 		/// <returns></returns>
 		public static bool IsAllowedToBeginWork(GamePlayer player, InventoryItem item)
 		{

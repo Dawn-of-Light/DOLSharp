@@ -771,7 +771,6 @@ namespace DOL.GS.Scripts
 									{
 										return DisplaySyntax(client);
 									}
-									break;
 							}
 
 						}
@@ -833,7 +832,6 @@ namespace DOL.GS.Scripts
 									{
 										return DisplaySyntax(client);
 									}
-									break;
 							}
 						}
 					}

@@ -36,9 +36,9 @@ namespace DOL.GS.Quests
 		/// CLAS : checks for player class N:int[string]
 		/// </summary>
 		Class,
-		/// <summary>
-		/// COMB : checks for player combat skill N at level V:int[string]
-		/// </summary>
+		// /// <summary>
+		// /// COMB : checks for player combat skill N at level V:int[string]
+		// /// </summary>
 		//CombatSkill = 0x04,
 		/// <summary>
 		/// CQST : checks for quest N:Type[Typename:string](Current Quest) completed V:int[string] times
@@ -52,9 +52,9 @@ namespace DOL.GS.Quests
 		/// MENC : compares player's maximum encumbrance value with N:int[string]
 		/// </summary>
 		EncumbranceMax,
-		/// <summary>
-		/// FACT : checks for faction N at level N
-		/// </summary>
+		// // <summary>
+		// /// FACT : checks for faction N at level N
+		// /// </summary>
 		//Faction=0x07,	
 		/// <summary>
 		/// FATG : compares player's fatigue value with N:int[string] using eComparator
@@ -64,9 +64,9 @@ namespace DOL.GS.Quests
 		/// MFAT : compares player's maximum fatigue value with N:int[string] using eComparator
 		/// </summary>
 		EnduranceMax,
-		/// <summary>
-		/// GLEV : compares guild level with N:int[string] (not player's guilds) using eComparator
-		/// </summary>
+		// // <summary>
+		// /// GLEV : compares guild level with N:int[string] (not player's guilds) using eComparator
+		// /// </summary>
 		//GuildLevel=0x09,
 		/// <summary>
 		/// GNDR : compares player's gender with N:int[string] {0=male,1=female}
