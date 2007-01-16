@@ -246,6 +246,17 @@ namespace DOL.GS
 			}
 		}
 
+		private string m_guildNote = "";
+		public string GuildNote
+		{
+			get { return m_guildNote; }
+			set
+			{
+				m_guildNote = value;
+				m_character.GuildNote = value;
+			}
+		}
+
 		/// <summary>
 		/// quit timer
 		/// </summary>

@@ -627,6 +627,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="fromSlot">Source slot</param>
 		/// <param name="toSlot">Destination slot</param>
+		/// <param name="itemCount"></param>
 		/// <returns>true if successfull false if not</returns>
 		public virtual bool MoveItem(eInventorySlot fromSlot,eInventorySlot toSlot, int itemCount)
 		{

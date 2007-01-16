@@ -623,7 +623,6 @@ namespace DOL.GS.Scripts
 				case "respec":
 					{
 						GamePlayer player = client.Player.TargetObject as GamePlayer;
-						int specPoints = 0;
 
 						if (args.Length > 4)
 						{

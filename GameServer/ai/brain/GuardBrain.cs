@@ -65,5 +65,11 @@ namespace DOL.AI.Brain
 				}
 			}
 		}
+
+		public override int CalculateAggroLevelToTarget(GameLiving target)
+		{
+			if (GameServer.ServerRules.IsSameRealm(Body, target, true)) return 0;
+			return AggroLevel;
+		}
 	}
 }

@@ -41,7 +41,10 @@ namespace DOL.GS.Housing
 	}
 
 	public class House : IPoint3D
-	{	
+	{
+		public const string HOUSEFORHOUSERENT = "HouseForHouseRent";
+		public const string MONEYFORHOUSERENT = "MoneyForHouseRent";
+		public const string BPSFORHOUSERENT = "BPsForHouseRent";
 		#region Properties
 		public int HouseNumber
 		{

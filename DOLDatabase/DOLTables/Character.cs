@@ -163,6 +163,8 @@ namespace DOL
 			private int m_lastfreeLevel;
 			private DateTime m_lastfreeleveled;
 
+			private string m_guildNote = "";
+
 			static bool m_autoSave;
 
 			/// <summary>
@@ -1828,6 +1830,20 @@ namespace DOL
 					Dirty = true;
 					m_lastfreeLevel = value;
 
+				}
+			}
+
+			[DataElement(AllowDbNull = true)]
+			public string GuildNote
+			{
+				get
+				{
+					return m_guildNote;
+				}
+				set
+				{
+					Dirty = true;
+					m_guildNote = value;
 				}
 			}
 		}

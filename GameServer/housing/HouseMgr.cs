@@ -118,7 +118,10 @@ namespace DOL.GS.Housing
 		}
 		public static Hashtable GetHouses(ushort regionid)
 		{
-			return (Hashtable)m_houselists[regionid];
+			Hashtable table = m_houselists[regionid] as Hashtable;
+			if (table == null)
+				table = new Hashtable();
+			return table;
 		}
 		public static House GetHouse(ushort regionid, int housenumber)
 		{
@@ -339,5 +342,28 @@ namespace DOL.GS.Housing
 
 			GameMerchant.OnPlayerBuy(gamePlayer, item_slot, item_count, items);
 		}
+
+		/// <summary>
+		/// This function gets the house close to spot
+		/// </summary>
+		/// <returns>array of house</returns>
+		public static IEnumerable getHousesCloseToSpot(ushort regionid, int x, int y, int radius)
+		{
+			ArrayList myhouses = new ArrayList();
+			int radiussqrt = radius * radius;
+			foreach (House house in GetHouses(regionid).Values)
+			{
+				int xdiff = house.X - x;
+				int ydiff = house.Y - y;
+				int range = xdiff * xdiff + ydiff * ydiff;
+				if (range < 0)
+					range *= -1;
+				if (range > radiussqrt)
+					continue;
+				myhouses.Add(house);
+			}
+			return myhouses;
+		}
+
 	}
 }

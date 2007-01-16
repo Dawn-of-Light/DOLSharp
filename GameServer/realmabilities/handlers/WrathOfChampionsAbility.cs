@@ -36,6 +36,7 @@ namespace DOL.GS.RealmAbilities
 				player.Out.SendMessage("You target is too far away to use this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
+
 			Int32 dmgValue = 0;
 			switch (Level)
 			{
