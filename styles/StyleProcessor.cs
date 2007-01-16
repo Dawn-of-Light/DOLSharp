@@ -488,6 +488,7 @@ namespace DOL.GS.Styles
 		/// <summary>
 		/// Calculates endurance needed to use style
 		/// </summary>
+		/// <param name="living">The living doing the style</param>
 		/// <param name="style">The style to be used</param>
 		/// <param name="weaponSpd">The weapon speed</param>
 		/// <returns>Endurance needed to use style</returns>

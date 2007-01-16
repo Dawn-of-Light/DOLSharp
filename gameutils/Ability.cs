@@ -241,11 +241,6 @@ namespace DOL.GS
 
 	public class PropertyChangingAbility : Ability 
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
 		// properties to modify
 		eProperty[] m_properties;
 

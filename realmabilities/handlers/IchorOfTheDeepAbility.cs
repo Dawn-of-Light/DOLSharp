@@ -13,11 +13,13 @@ namespace DOL.GS.RealmAbilities
 	public class IchorOfTheDeepAbility : TimedRealmAbility
 	{
 		public IchorOfTheDeepAbility(DBAbility dba, int level) : base(dba, level) { }
-		RegionTimer m_expireTimerID;
-		RegionTimer m_rootExpire;
-		int dmgValue = 0;
-		int duration = 0;
-		GamePlayer caster;
+
+		private RegionTimer m_expireTimerID;
+		private RegionTimer m_rootExpire;
+		private int dmgValue = 0;
+		private int duration = 0;
+		private GamePlayer caster;
+
 		public override void Execute(GameLiving living)
 		{
 			if (CheckPreconditions(living, DEAD | SITTING | MEZZED | STUNNED)) return;
@@ -64,88 +66,99 @@ namespace DOL.GS.RealmAbilities
 				i_player.Out.SendSpellCastAnimation(caster, 7029, 20);
 			}
 
-			DisableSkill(living);
 			m_expireTimerID = new RegionTimer(caster, new RegionTimerCallback(EndCast), 2000);
 		}
 
 		protected virtual int EndCast(RegionTimer timer)
 		{
-			if (GameServer.ServerRules.IsAllowedToAttack(caster, (GameLiving)caster.TargetObject, true))
+			if (caster.TargetObject == null)
 			{
-				if (caster.TargetInView)
+				caster.Out.SendMessage("You need a target for this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				caster.DisableSkill(this, 3 * 1000);
+				return 0;
+			}
+
+			if (!caster.TargetInView)
+			{
+				caster.Out.SendMessage(caster.TargetObject.Name + " is not in view.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				caster.DisableSkill(this, 3 * 1000);
+				return 0;
+			}
+
+			if (WorldMgr.GetDistance(caster, caster.TargetObject) > 1875)
+			{
+				caster.Out.SendMessage(caster.TargetObject.Name + " is too far away.", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+				caster.DisableSkill(this, 3 * 1000);
+				return 0;
+			}
+
+			GameLiving living = caster.TargetObject as GameLiving;
+
+			if (living.EffectList.GetOfType(typeof(ChargeEffect)) == null && living.EffectList.GetOfType(typeof(SpeedOfSoundEffect)) != null)
+			{
+				living.BuffBonusMultCategory1.Set((int)eProperty.MaxSpeed, this, 1.0 - 99 * 0.01);
+				m_rootExpire = new RegionTimer(living, new RegionTimerCallback(RootExpires), duration);
+				GameEventMgr.AddHandler(living, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnAttacked));
+				SendUpdates(living);
+			}
+
+			foreach (GamePlayer player in caster.TargetObject.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+			{
+				player.Out.SendSpellEffectAnimation(caster, (caster.TargetObject as GameLiving), 7029, 0, false, 1);
+			}
+
+			foreach (GameNPC mob in caster.TargetObject.GetNPCsInRadius(500))
+			{
+				if (!GameServer.ServerRules.IsAllowedToAttack(caster, mob, true))
+					continue;
+
+				mob.TakeDamage(caster, eDamageType.Spirit, dmgValue, 0);
+
+				if (mob.EffectList.GetOfType(typeof(ChargeEffect)) == null && mob.EffectList.GetOfType(typeof(SpeedOfSoundEffect)) == null)
 				{
-					if (WorldMgr.GetDistance(caster, caster.TargetObject) <= 1875)
-					{
-						GameLiving living = caster.TargetObject as GameLiving;
-						living.TakeDamage(caster, eDamageType.Spirit, dmgValue, 0);
-						if (living.EffectList.GetOfType(typeof(ChargeEffect)) == null && living.EffectList.GetOfType(typeof(SpeedOfSoundEffect)) != null)
-						{
-							living.BuffBonusMultCategory1.Set((int)eProperty.MaxSpeed, this, 1.0 - 99 * 0.01);
-							m_rootExpire = new RegionTimer(living, new RegionTimerCallback(RootExpires), duration);
-							GameEventMgr.AddHandler(living, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnAttacked));
-							SendUpdates(living);
-						}
-						foreach (GamePlayer player in caster.TargetObject.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-						{
-							player.Out.SendSpellEffectAnimation(caster, (caster.TargetObject as GameLiving), 7029, 0, false, 1);
-						}
-						foreach (GameNPC mob in caster.TargetObject.GetNPCsInRadius(500))
-						{
-							if (GameServer.ServerRules.IsAllowedToAttack(caster, mob, true))
-							{
-								(mob as GameLiving).TakeDamage(caster, eDamageType.Spirit, dmgValue, 0);
-								if (mob.EffectList.GetOfType(typeof(ChargeEffect)) == null && mob.EffectList.GetOfType(typeof(SpeedOfSoundEffect)) == null)
-								{
-									(mob as GameLiving).BuffBonusMultCategory1.Set((int)eProperty.MaxSpeed, this, 1.0 - 99 * 0.01);
-									m_rootExpire = new RegionTimer(mob, new RegionTimerCallback(RootExpires), duration);
-									GameEventMgr.AddHandler(mob, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnAttacked));
-									SendUpdates(mob);
-								}
-								caster.Out.SendMessage("You hit the " + mob.Name + " for " + dmgValue + " damage.", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
-								foreach (GamePlayer player2 in caster.TargetObject.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-								{
-									player2.Out.SendSpellEffectAnimation(caster, mob, 7029, 0, false, 1);
-								}
-							}
-						}
-						foreach (GamePlayer aeplayer in caster.TargetObject.GetPlayersInRadius(500))
-						{
-							if (GameServer.ServerRules.IsAllowedToAttack(caster, aeplayer, true))
-							{
-								(aeplayer as GameLiving).TakeDamage(caster, eDamageType.Spirit, dmgValue, 0);
-								if (aeplayer.EffectList.GetOfType(typeof(ChargeEffect)) == null && aeplayer.EffectList.GetOfType(typeof(SpeedOfSoundEffect)) == null)
-								{
-									(aeplayer as GameLiving).BuffBonusMultCategory1.Set((int)eProperty.MaxSpeed, this, 1.0 - 99 * 0.01);
-									m_rootExpire = new RegionTimer(aeplayer, new RegionTimerCallback(RootExpires), duration);
-									GameEventMgr.AddHandler(aeplayer, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnAttacked));
-									SendUpdates(aeplayer);
-								}
-								caster.Out.SendMessage("You hit " + aeplayer.Name + " for " + dmgValue + " damage.", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
-								foreach (GamePlayer player3 in caster.TargetObject.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-								{
-									player3.Out.SendSpellEffectAnimation(caster, aeplayer, 7029, 0, false, 1);
-								}
-							}
-						}
-					}
-					else
-					{
-						caster.Out.SendMessage(caster.TargetObject + " is too far away.", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
-					}
+					mob.BuffBonusMultCategory1.Set((int)eProperty.MaxSpeed, this, 1.0 - 99 * 0.01);
+					m_rootExpire = new RegionTimer(mob, new RegionTimerCallback(RootExpires), duration);
+					GameEventMgr.AddHandler(mob, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnAttacked));
+					SendUpdates(mob);
 				}
-				else
+
+				caster.Out.SendMessage("You hit the " + mob.Name + " for " + dmgValue + " damage.", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+
+				foreach (GamePlayer player2 in caster.TargetObject.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 				{
-					caster.Out.SendMessage(caster.TargetObject + " is not in view.", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+					player2.Out.SendSpellEffectAnimation(caster, mob, 7029, 0, false, 1);
 				}
 			}
-			else
+
+			foreach (GamePlayer aeplayer in caster.TargetObject.GetPlayersInRadius(500))
 			{
-				caster.Out.SendMessage("You cant attack a friendly NPC.", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+				if (!GameServer.ServerRules.IsAllowedToAttack(caster, aeplayer, true))
+					continue;
+
+				aeplayer.TakeDamage(caster, eDamageType.Spirit, dmgValue, 0);
+
+				if (aeplayer.EffectList.GetOfType(typeof(ChargeEffect)) == null && aeplayer.EffectList.GetOfType(typeof(SpeedOfSoundEffect)) == null)
+				{
+					(aeplayer as GameLiving).BuffBonusMultCategory1.Set((int)eProperty.MaxSpeed, this, 1.0 - 99 * 0.01);
+					m_rootExpire = new RegionTimer(aeplayer, new RegionTimerCallback(RootExpires), duration);
+					GameEventMgr.AddHandler(aeplayer, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnAttacked));
+					SendUpdates(aeplayer);
+				}
+
+				caster.Out.SendMessage("You hit " + aeplayer.Name + " for " + dmgValue + " damage.", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+
+				foreach (GamePlayer player3 in caster.TargetObject.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+				{
+					player3.Out.SendSpellEffectAnimation(caster, aeplayer, 7029, 0, false, 1);
+				}
 			}
+
+			DisableSkill(living);
 			timer.Stop();
 			timer = null;
 			return 0;
 		}
+
 		protected virtual int RootExpires(RegionTimer timer)
 		{
 			GameLiving living = timer.Owner as GameLiving;

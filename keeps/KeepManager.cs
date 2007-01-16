@@ -342,9 +342,6 @@ namespace DOL.GS.Keeps
 			if (checker is GameKeepGuard == false)
 				return false;
 
-			if (checker.GuildName == "")
-				return false;
-
 			if (target is GamePlayer)
 			{
 				if ((target as GamePlayer).Client.Account.PrivLevel != 1)
@@ -359,7 +356,9 @@ namespace DOL.GS.Keeps
 				case eGameServerType.GST_Normal:
 					return checker.Realm != target.Realm;
 				case eGameServerType.GST_PvP:
-					return checker.GuildName != target.GuildName;
+					{
+						return checker.GuildName != "" &&checker.GuildName != target.GuildName;
+					}
 				case eGameServerType.GST_PvE:
 					return !(target is GamePlayer);
 			}

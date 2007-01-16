@@ -271,46 +271,55 @@ namespace DOL.GS.PacketHandler.Client.v168
 						{
 							if (m_response == 0x00)
 							{
-								if (player.TempProperties.getProperty("MoneyForHouseRent", null) != null)
+								if (player.TempProperties.getLongProperty(House.MONEYFORHOUSERENT, -1) != -1)
 								{
-									player.TempProperties.removeProperty("MoneyForHouseRent");
+									player.TempProperties.removeProperty(House.MONEYFORHOUSERENT);
 								}
-								if (player.TempProperties.getProperty("BPsForHouseRent", null) != null)
+								if (player.TempProperties.getLongProperty(House.BPSFORHOUSERENT, -1) != -1)
 								{
-									player.TempProperties.removeProperty("BPsForHouseRent");
+									player.TempProperties.removeProperty(House.BPSFORHOUSERENT);
 								}
-								player.TempProperties.removeProperty("HouseForHouseRent");
+								player.TempProperties.removeProperty(House.HOUSEFORHOUSERENT);
 								return;
 							}
-							House house = player.TempProperties.getObjectProperty("HouseForHouseRent", null) as House;
-							if (player.TempProperties.getProperty("MoneyForHouseRent", null) != null)
+							House house = player.TempProperties.getObjectProperty(House.HOUSEFORHOUSERENT, null) as House;
+
+							long MoneyToAdd = player.TempProperties.getLongProperty(House.MONEYFORHOUSERENT, -1);
+							if (MoneyToAdd != -1)
 							{
-								long MoneyToAdd = (long)player.TempProperties.getObjectProperty("MoneyForHouseRent", null);
 								if (MoneyToAdd + house.KeptMoney > HouseMgr.GetRentByModel(house.Model) * 4)
 									MoneyToAdd = (HouseMgr.GetRentByModel(house.Model) * 4) - house.KeptMoney;
+
 								if (!player.RemoveMoney(MoneyToAdd))
 									return;
+
 								house.KeptMoney += MoneyToAdd;
 								house.SaveIntoDatabase();
 								player.SaveIntoDatabase();
 								player.Out.SendMessage("You deposit " + Money.GetString(MoneyToAdd) + " in the lockbox.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								player.Out.SendMessage("The lockbox now has " + Money.GetString(house.KeptMoney) + " in it.  The weekly payment is " + Money.GetString(HouseMgr.GetRentByModel(house.Model)) + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								player.Out.SendMessage("The house is now prepaid for the next " + (house.KeptMoney / HouseMgr.GetRentByModel(house.Model)) + " payments.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								player.TempProperties.removeProperty(House.MONEYFORHOUSERENT);
 							}
 							else
 							{
-								long BPsToMoney = (long)player.TempProperties.getObjectProperty("BPsForHouseRent", null);
+								long BPsToMoney = player.TempProperties.getLongProperty(House.BPSFORHOUSERENT, 0);
 								if (BPsToMoney + house.KeptMoney > HouseMgr.GetRentByModel(house.Model) * 4)
 									BPsToMoney = (HouseMgr.GetRentByModel(house.Model) * 4) - house.KeptMoney;
-								if (!player.RemoveBountyPoints(BPsToMoney / 10000000))
+
+								if (!player.RemoveBountyPoints(Money.GetGold(BPsToMoney)))
 									return;
+
 								house.KeptMoney += BPsToMoney;
 								house.SaveIntoDatabase();
 								player.SaveIntoDatabase();
 								player.Out.SendMessage("You deposit " + Money.GetString(BPsToMoney) + " in the lockbox.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								player.Out.SendMessage("The lockbox now has " + Money.GetString(house.KeptMoney) + " in it.  The weekly payment is " + Money.GetString(HouseMgr.GetRentByModel(house.Model)) + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								player.Out.SendMessage("The house is now prepaid for the next " + (house.KeptMoney / HouseMgr.GetRentByModel(house.Model)) + " payments.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								player.TempProperties.removeProperty(House.BPSFORHOUSERENT);
 							}
+
+							player.TempProperties.removeProperty(House.MONEYFORHOUSERENT);
 							break;
 						}
 				}

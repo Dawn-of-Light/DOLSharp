@@ -2766,6 +2766,52 @@ namespace DOL.GS
 			}
 		}
 
+		/// <summary>
+		/// The enemy is healed, so we add to the xp gainers list
+		/// </summary>
+		/// <param name="enemy"></param>
+		/// <param name="healSource"></param>
+		/// <param name="changeType"></param>
+		/// <param name="healAmount"></param>
+		public override void EnemyHealed(GameLiving enemy, GameObject healSource, GameLiving.eHealthChangeType changeType, int healAmount)
+		{
+			base.EnemyHealed(enemy, healSource, changeType, healAmount);
+			if (changeType != eHealthChangeType.Spell)
+				return;
+			if (enemy == healSource)
+				return;
+
+			GamePlayer attackerPlayer = healSource as GamePlayer;
+			if (attackerPlayer == null)
+				return;
+
+			PlayerGroup attackerGroup = attackerPlayer.PlayerGroup;
+			if (attackerGroup != null)
+			{
+				ArrayList xpGainers = new ArrayList(8);
+				lock (attackerGroup)
+				{
+					// collect "helping" group players in range
+					for (int i = 0; i < attackerGroup.PlayerCount; i++)
+					{
+						GamePlayer player = attackerGroup[i];
+						if (WorldMgr.CheckDistance(player, this, WorldMgr.MAX_EXPFORKILL_DISTANCE) && player.IsAlive && player.ObjectState == eObjectState.Active)
+							xpGainers.Add(player);
+					}
+				}
+				// add players in range for exp to exp gainers
+				for (int i = 0; i < xpGainers.Count; i++)
+				{
+					this.AddXPGainer((GamePlayer)xpGainers[i], (float)(healAmount / xpGainers.Count));
+				}
+			}
+			else
+			{
+				this.AddXPGainer(healSource, (float)healAmount);
+			}
+			//DealDamage needs to be called after addxpgainer!
+		}
+
 
 		#endregion
 		#region Spell

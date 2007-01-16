@@ -201,15 +201,6 @@ namespace DOL.GS
 
 				GainCraftingSkillPoints(player, item);
 			}
-			else if (Util.Chance(CalculateChanceToLooseMaterial(player, item)))
-			{
-				if (!LooseRawMaterial(player, item))
-				{
-					player.Out.SendMessage("You have not all needed raw materials to create this item.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				}
-
-				player.Out.SendPlaySound(eSoundType.Craft, 0x01);
-			}
 			else
 			{
 				player.Out.SendMessage("You fail to make the " + item.ItemTemplate.Name + " but lose no materials!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -655,26 +646,21 @@ namespace DOL.GS
 		/// </summary>
 		public virtual int CalculateChanceToMakeItem(GamePlayer player, DBCraftedItem item)
 		{
-			//int[] basesTable = new int[12] { 90, 84, 78, 72, 68, 66, 57, 54, 52, 51, 50, 50 }; Where do you find that ? (seems very more big than on official server)
+			int con = GetItemCon(player.GetCraftingSkillValue(m_eskill), item.CraftingLevel);
+			if (con < -3) con = -3;
+			if (con > 3) con = 3;
 
-			int[] basesTable = new int[12] { 70, 68, 66, 64, 62, 60, 58, 56, 54, 52, 50, 50 };
-
-			int playerCraftLevel = player.GetCraftingSkillValue(m_eskill) / 100;
-			if (playerCraftLevel > 11) playerCraftLevel = 11;
-
-			int baseChance = basesTable[playerCraftLevel];
-
-			//modificator based on difficulty of item and current player's level
-			int chanceModifier = player.GetCraftingSkillValue(m_eskill) - item.CraftingLevel;
-			if (chanceModifier > 0) chanceModifier /= 2;
-			else chanceModifier *= 2;
-
-			int finalChances = baseChance + chanceModifier;
-
-			if (finalChances < 2) finalChances = 2;
-			else if (finalChances > 100) finalChances = 100;
-
-			return finalChances;  // red 20, orange 45 ,yellow 70 ,bleu 80, green 90 
+			switch (con)
+			{
+				case -3: return 0;
+				case -2: return 0;
+				case -1: return 0;
+				case 0: return 8;
+				case 1: return 16;
+				case 2: return 32;
+				case 3: return 0;
+				default: return 0;
+			}
 		}
 
 		/// <summary>
@@ -682,39 +668,21 @@ namespace DOL.GS
 		/// </summary>
 		public virtual int CalculateChanceToGainPoint(GamePlayer player, DBCraftedItem item)
 		{
-			/*int delta = item.CraftingLevel - (ushort)player.GetCraftingSkillValue(m_eskill);
-			// take care about extremes
-			if (delta < -45) return -100;
-			else if (delta > 45) return 100;
+			int con = GetItemCon(player.GetCraftingSkillValue(m_eskill), item.CraftingLevel);
+			if (con < -3) con = -3;
+			if (con > 3) con = 3;
 
-			// levelModifier = (((skill/100)-6)^2) * 3/4 
-			int levelModifier = (player.GetCraftingSkillValue(m_eskill) / 100) - 6;
-			levelModifier *= levelModifier;
-			
-			int finalChances = delta + 60 + levelModifier;
-			
-			if(finalChances < 0) finalChances = 0;
-			else if(finalChances > 100) finalChances = 100;
-			
-			return finalChances;*/
-
-			int[] basesTable = new int[12] { 80, 80, 75, 70, 65, 60, 55, 50, 45, 45, 45, 45 };
-
-			int playerCraftLevel = player.GetCraftingSkillValue(m_eskill) / 100;
-			if (playerCraftLevel > 11) playerCraftLevel = 11;
-
-			int baseChance = basesTable[playerCraftLevel];
-
-			int chanceModifier = item.CraftingLevel - player.GetCraftingSkillValue(m_eskill);
-
-			int finalChances = baseChance + chanceModifier;
-			if (finalChances < 0) finalChances = 0;
-			else if (finalChances > 98) finalChances = 98;
-
-			return finalChances;
-
-			//skill 0-100 : red 98, orange 92 ,yellow 85 ,bleu 60, green 30
-			//skill 900-1000 : red 55, orange 47 ,yellow 40 ,bleu 15, green 0
+			switch (con)
+			{
+				case -3: return 0;
+				case -2: return 15;
+				case -1: return 30;
+				case 0: return 45;
+				case 1: return 55;
+				case 2: return 45;
+				case 3: return 0;
+				default: return 0;
+			}
 		}
 
 		/// <summary>
@@ -730,26 +698,29 @@ namespace DOL.GS
 				materialsCount += (ushort)rawmaterial.Count;
 			}
 
-			//if the item is gray con, crafting process will be almost two times faster
-			if (((ushort)player.GetCraftingSkillValue(m_eskill) - ItemCraft.CraftingLevel) > 45) baseMultiplier *= 0.55;
-
 			//at least 1s
 			int craftingTime = (int)(baseMultiplier * materialsCount / 4);
+
 			if (Properties.CRAFTING_SPEED != 0)
 				craftingTime = (int)(craftingTime / Properties.CRAFTING_SPEED);
+
+			int con = GetItemCon(player.GetCraftingSkillValue(m_eskill), ItemCraft.CraftingLevel);
+			double mod = 1.0;
+			switch (con)
+			{
+				case -3: mod = 0.4; break;
+				case -2: mod = 0.6; break;
+				case -1: mod = 0.8; break;
+				case 0: mod = 1.0; break;
+				case 1: mod = 1.0; break;
+				case 2: mod = 1.0; break;
+				case 3: mod = 1.0; break;
+			}
+			craftingTime = (int)(craftingTime / mod);
+
 			if (craftingTime < 1) craftingTime = 1;
 
 			return craftingTime;
-		}
-
-		/// <summary>
-		/// Calculate chance to lose material
-		/// </summary>
-		public virtual int CalculateChanceToLooseMaterial(GamePlayer player, DBCraftedItem item)
-		{
-			if (player.GetCraftingSkillValue(m_eskill) >= item.CraftingLevel) return 0;
-
-			return item.CraftingLevel - player.GetCraftingSkillValue(m_eskill);
 		}
 
 		/// <summary>
@@ -767,6 +738,7 @@ namespace DOL.GS
 		{
 			// 2% chance to get masterpiece, 1:6 chance to get 94-99%, if legendary or if grey con
 			// otherwise moving the most load towards 94%, the higher the item con to the crafter skill
+			//1.87 patch raises min quality to 96%
 
 			// legendary
 			if (player.GetCraftingSkillValue(m_eskill) >= 1000)
@@ -775,14 +747,14 @@ namespace DOL.GS
 				{
 					return 100;	// 2% chance for master piece
 				}
-				return 94 + Util.Random(5);
+				return 96 + Util.Random(5);
 			}
 
 			int delta = GetItemCon(player.GetCraftingSkillValue(m_eskill), item.CraftingLevel);
 			if (delta < -2)
 			{
 				if (Util.Chance(2)) return 100; // grey items get 2% chance to be master piece
-				return 94 + Util.Random(5); // handle grey items like legendary
+				return 96 + Util.Random(5); // handle grey items like legendary
 			}
 
 			// this is a type of roulette selection, imagine a roulette wheel where all chances get different sized
@@ -794,15 +766,13 @@ namespace DOL.GS
 			// 98:
 			// 97: o
 			// 96: oo
-			// 95: ooo
-			// 94: oooo
 			// where one 'o' marks 100 size, this example results in 10% chance for yellow items to be 97% quality
 
 			delta = delta * 100;
 
-			int[] chancePart = new int[6]; // index ranges from 94%(0) to 99%(5)
+			int[] chancePart = new int[4]; // index ranges from 96%(0) to 99%(5)
 			int sum = 0;
-			for (int i = 0; i < 6; i++)
+			for (int i = 0; i < 4; i++)
 			{
 				chancePart[i] = Math.Max((4 - i) * 100 - delta, 0);	// 0 minimum
 				sum += chancePart[i];
@@ -810,24 +780,24 @@ namespace DOL.GS
 
 			// selection
 			int rand = Util.Random(sum);
-			for (int i = 5; i >= 0; i--)
+			for (int i = 3; i >= 0; i--)
 			{
-				if (rand < chancePart[i]) return 94 + i;
+				if (rand < chancePart[i]) return 96 + i;
 				rand -= chancePart[i];
 			}
 
 			// if something still not clear contact Thrydon/Blue
 
-			return 94;
+			return 96;
 		}
 
 
 		/// <summary>
-		/// get item con color compared to crafters skill, TODO no floating point calculation yet
+		/// get item con color compared to crafters skill
 		/// </summary>
 		/// <param name="crafterSkill"></param>
 		/// <param name="itemCraftingLevel"></param>
-		/// <returns></returns>
+		/// <returns>-3 grey, -2 green, -1 blue, 0 yellow, 1 orange, 2 red, 3 purple</returns>
 		public int GetItemCon(int crafterSkill, int itemCraftingLevel)
 		{
 			int diff = itemCraftingLevel - crafterSkill;
