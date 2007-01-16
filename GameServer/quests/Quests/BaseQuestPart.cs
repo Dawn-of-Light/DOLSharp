@@ -346,7 +346,7 @@ namespace DOL.GS.Quests
                 //all players in visible distance will get notify.
                 GameLiving living = sender as GameLiving;
                 if (sender!=null){
-                    foreach (GamePlayer vizPlayer in WorldMgr.GetPlayersCloseToObject(living, WorldMgr.VISIBILITY_DISTANCE, false))
+                    foreach (GamePlayer vizPlayer in living.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
                     {
                         Notify(e, sender, args, vizPlayer);
                     }

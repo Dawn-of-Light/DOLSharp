@@ -104,9 +104,11 @@ namespace DOL.GS
 		/// <summary>
 		/// calculates distance between 2 locations
 		/// </summary>
+		/// <param name="r1"></param>
 		/// <param name="x1"></param>
 		/// <param name="y1"></param>
 		/// <param name="z1"></param>
+		/// <param name="r2"></param>
 		/// <param name="x2"></param>
 		/// <param name="y2"></param>
 		/// <param name="z2"></param>

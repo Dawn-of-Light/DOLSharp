@@ -60,7 +60,7 @@
     <DebugSymbols>false</DebugSymbols>
     <FileAlignment>4096</FileAlignment>
     <NoStdLib>false</NoStdLib>
-    <NoWarn>CS1591</NoWarn>
+    <NoWarn>1591</NoWarn>
     <Optimize>true</Optimize>
     <RegisterForComInterop>false</RegisterForComInterop>
     <RemoveIntegerChecks>false</RemoveIntegerChecks>
@@ -337,6 +337,7 @@
     <Compile Include="playercommands\housepoints.cs" />
     <Compile Include="playercommands\freelevel.cs" />
     <Compile Include="playercommands\boot.cs" />
+    <Compile Include="playercommands\knock.cs" />
     <Compile Include="playercommands\language.cs" />
     <Compile Include="playercommands\quest.cs" />
     <Compile Include="playercommands\disband.cs">

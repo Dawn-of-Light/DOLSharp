@@ -1856,12 +1856,11 @@ namespace DOL.GS.Spells
 		public virtual int CalculateToHitChance(GameLiving target)
 		{
 			int spellLevel = Spell.Level;
-			GamePlayer player = null;
-			if (m_caster is GamePlayer)
-				player = m_caster as GamePlayer;
-			else if (m_caster is GameNPC && (m_caster as GameNPC).Brain is ControlledNpc)
-				player = ((ControlledNpc)((GameNPC)m_caster).Brain).Owner;
-			int spellbonus = player.GetModified(eProperty.SpellLevel);
+			GameLiving caster = null;
+			if (m_caster is GameNPC && (m_caster as GameNPC).Brain is ControlledNpc)
+				caster = ((ControlledNpc)((GameNPC)m_caster).Brain).Owner;
+			else caster = m_caster;
+			int spellbonus = caster.GetModified(eProperty.SpellLevel);
 			spellLevel += spellbonus;
 			//Cap on lvl 50 for spell level
 			if (spellLevel > 50)
@@ -1870,8 +1869,9 @@ namespace DOL.GS.Spells
 			int speclevel = 1;
 			int manastat = 0;
 			int bonustohit = m_caster.GetModified(eProperty.ToHitBonus);
-			if (player != null)
+			if (caster is GamePlayer)
 			{
+				GamePlayer player = caster as GamePlayer;
 				speclevel = player.GetBaseSpecLevel(m_spellLine.Spec);
 				if (player.CharacterClass.ManaStat != eStat.UNDEFINED)
 					manastat = player.GetModified((eProperty)player.CharacterClass.ManaStat);
@@ -1882,7 +1882,7 @@ namespace DOL.GS.Spells
 			if (resPierce != null)
 				bonustohit += (int)resPierce.Spell.Value;
 			int hitchance = 85 + ((spellLevel - target.Level) >> 1) + bonustohit;
-			if (!(player != null && target is GamePlayer))
+			if (!(caster is GamePlayer && target is GamePlayer))
 			{
 				// level mod
 				hitchance -= (int)(m_caster.GetConLevel(target) * 10);

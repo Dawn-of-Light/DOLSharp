@@ -25,31 +25,35 @@ namespace DOL.GS.Scripts
 	[CmdAttribute("&bountyrent", //command to handle
 		(uint)ePrivLevel.Player, //minimum privelege level
 		"Pay house rent with bountypoints", //command description
-		"/bountyrent")] //command usage
-	public class BountyRentCommandHandler : ICommandHandler
+		"/bountyrent <personal/guild> <amount>")] //command usage
+	public class BountyRentCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		public int OnCommand(GameClient client, string[] args)
 		{
-			if (args.Length < 2) return 0;
+			if (args.Length < 2)
+			{
+				DisplaySyntax(client);
+				return 0;
+			}
 			House house = HouseMgr.GetHouseByPlayer(client.Player);
 			if (house == null)
 			{
-				//DisplayError(client, "You don't own a house!", new object[] { });
+				DisplayError(client, "You don't own a house!", new object[] { });
 				return 0;
 			}
 			if (!client.Player.InHouse || client.Player.CurrentHouse != house)
 			{
-				//DisplayError(client, "You have to be in your house to use this command!", new object[] { });
+				DisplayError(client, "You have to be in your house to use this command!", new object[] { });
 				return 0;
 			}
 			switch (args[1].ToLower())
 			{
 				case "personal":
 					{
-						int BPsToAdd = 0;
+						long BPsToAdd = 0;
 						try
 						{
-							BPsToAdd = (int)UInt32.Parse(args[2]);
+							BPsToAdd = Int64.Parse(args[2]);
 						}
 						catch
 						{
@@ -60,16 +64,21 @@ namespace DOL.GS.Scripts
 							//  DisplayError(client, "You do not have enough bps!", new object[] { });
 							return 0;
 						}
-						BPsToAdd *= 10000000;
-						client.Player.TempProperties.setProperty("BPsForHouseRent", BPsToAdd);
-						client.Player.TempProperties.setProperty("HouseForHouseRent", house);
+						BPsToAdd *= 10000;
+						client.Player.TempProperties.setProperty(House.BPSFORHOUSERENT, BPsToAdd);
+						client.Player.TempProperties.setProperty(House.HOUSEFORHOUSERENT, house);
 						client.Player.Out.SendHousePayRentDialog("Housing07");
 						return 1;
 						break;
 					}
 				case "guild":
 					{
-						return 0;
+						DisplayMessage(client, "This feature is not yet implemented!", new object[] { });
+						break;
+					}
+				default:
+					{
+						DisplaySyntax(client);
 						break;
 					}
 			}

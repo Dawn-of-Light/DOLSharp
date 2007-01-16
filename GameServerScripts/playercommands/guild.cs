@@ -116,6 +116,7 @@ namespace DOL.GS.Scripts
 					client.Out.SendMessage("'/gc ainvite' to invite another guild to join your alliance", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					client.Out.SendMessage("'/gc aremove' to removes your entire guild from an alliance", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					client.Out.SendMessage("'/gc aremove alliance [#]' to Remove the specified guild (listed by number) from the alliance", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					client.Out.SendMessage("'/gc noteself <note>", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 
 					return 1;
@@ -802,7 +803,7 @@ namespace DOL.GS.Scripts
 									if (ply != null)
 									{
 										client.Out.SendMessage(string.Format("E,{0},{1},{2},{3},{4},{5},{6},\"{7}\",\"{8}\"",
-											(i + 1), 0, ply.Name, ply.Level, ply.CharacterClass.ID, ply.GuildRank.RankLevel, (ply.PlayerGroup == null ? 1 : 2), (ply.CurrentZone == null ? "" : ply.CurrentZone.Description), ""/*Note*/), eChatType.CT_SocialInterface, eChatLoc.CL_SystemWindow);
+											(i + 1), 0, ply.Name, ply.Level, ply.CharacterClass.ID, ply.GuildRank.RankLevel, (ply.PlayerGroup == null ? 1 : 2), (ply.CurrentZone == null ? "" : ply.CurrentZone.Description), ply.GuildNote), eChatType.CT_SocialInterface, eChatLoc.CL_SystemWindow);
 									}
 								}
 								return 1;
@@ -1359,6 +1360,21 @@ namespace DOL.GS.Scripts
 							}
 							//client.Player.Guild.ClaimedKeep.Release();
 							return 1;
+						}
+
+					case "noteself":
+						{
+							if (client.Player.Guild == null)
+							{
+								client.Out.SendMessage("You must have a guild to set a note.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return 1;
+							}
+
+							string note = String.Join(" ", args, 2, args.Length - 2);
+							client.Player.GuildNote = note;
+							client.Player.SaveIntoDatabase();
+							client.Out.SendMessage("You set your guild note to:" + note, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							break;
 						}
 					default:
 						{

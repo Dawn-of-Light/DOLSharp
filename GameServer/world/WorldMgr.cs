@@ -529,6 +529,7 @@ namespace DOL.GS
 		/// Starts a new day with a certain increment
 		/// </summary>
 		/// <param name="dayInc"></param>
+		/// <param name="dayStart"></param>
 		public static void StartDay(uint dayInc, uint dayStart)
 		{
 			m_dayIncrement = dayInc;
@@ -1291,6 +1292,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="playerName">Name to search</param>
 		/// <param name="exactMatch">true if AccountName match exactly</param>
+		/// <param name="activeRequired"></param>
 		/// <returns>The found GameClient or null</returns>
 		public static GameClient GetClientByPlayerName(string playerName, bool exactMatch, bool activeRequired)
 		{
@@ -1311,6 +1313,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="playerName">Name to search</param>
 		/// <param name="realmID">search in: 0=all realms or player.Realm</param>
+		/// <param name="activeRequired"></param>
 		/// <returns>The found GameClient or null</returns>
 		public static GameClient GetClientByPlayerNameAndRealm(string playerName, int realmID, bool activeRequired)
 		{
@@ -1339,6 +1342,7 @@ namespace DOL.GS
 		/// <param name="playerName">Name to search</param>
 		/// <param name="realmID">search in: 0=all realms or player.Realm</param>
 		/// <param name="result">returns: 1=no name found, 2=name is not unique, 3=exact match, 4=guessed name</param>
+		/// <param name="activeRequired"></param>
 		/// <returns>The found GameClient or null</returns>
 		public static GameClient GuessClientByPlayerNameAndRealm(string playerName, int realmID, bool activeRequired, out int result)
 		{
@@ -1390,6 +1394,7 @@ namespace DOL.GS
 		/// <param name="playerName">Name to search</param>
 		/// <param name="regionID">Region ID of region to search through</param>
 		/// <param name="exactMatch">true if the Name must match exactly</param>
+		/// <param name="activeRequired"></param>
 		/// <returns>The first found GameClient or null</returns>
 		public static GameClient GetClientByPlayerNameFromRegion(string playerName, ushort regionID, bool exactMatch, bool activeRequired)
 		{

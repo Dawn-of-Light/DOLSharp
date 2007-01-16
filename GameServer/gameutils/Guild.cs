@@ -312,6 +312,7 @@ namespace DOL.GS
 			{
 				RemoveOnlineMember(member);
 				member.GuildName = "";
+				member.GuildNote = "";
 				member.GuildID = "";
 				member.GuildRank = null;
 				member.Guild = null;

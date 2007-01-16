@@ -58,7 +58,7 @@ namespace DOL.GS.RealmAbilities
             {
                 //send spelleffect
                 success = target.EffectList.CountOfType(typeof(SpeedOfSoundEffect)) == 0;
-                foreach (GamePlayer visPlayer in WorldMgr.GetPlayersCloseToObject(target, WorldMgr.VISIBILITY_DISTANCE))
+                foreach (GamePlayer visPlayer in target.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
                     visPlayer.Out.SendSpellEffectAnimation(player, target, 7021, 0, false, CastSuccess(success));
 				if (success)
 				{

@@ -466,6 +466,7 @@ namespace DOL.GS.Quests
 		/// </summary>
 		/// <param name="ItemName">Name for the object</param>
 		/// <param name="ItemLevel">Level to give to the object</param>
+		/// <param name="Model">Model for the object</param>
 		/// <returns>InventoryItem of given Name and Level</returns>
 		public static InventoryItem GenerateItem(string ItemName, int ItemLevel, int Model)
 		{
@@ -506,6 +507,8 @@ namespace DOL.GS.Quests
 		/// Check if Player can accept a new Task
 		/// </summary>
 		/// <param name="player">The GamePlayer Object</param>
+		/// <param name="target">The target</param>
+		/// <param name="chanceOfSuccess">The chance of success</param>
 		/// <returns>True Player have no other Chart</returns>
 		protected static bool CheckAvailability(GamePlayer player, GameLiving target, int chanceOfSuccess)
 		{

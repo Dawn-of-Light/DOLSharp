@@ -286,6 +286,7 @@ namespace DOL.GS
 			/// Checks wether given point is within area boundaries
 			/// </summary>
 			/// <param name="p"></param>
+			/// <param name="checkZ"></param>
 			/// <returns></returns>
 			public override bool IsContaining(IPoint3D p, bool checkZ)
 			{
