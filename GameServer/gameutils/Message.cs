@@ -100,7 +100,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="centerObject">The center object of the message</param>
 		/// <param name="chatType">The type of message to send</param>
-		/// <param name="message">The Translation-Message-ID to send</param>
+		/// <param name="LanguageMessageID">The language message ID</param>
 		/// <param name="args">The Translation args</param>
 		/// <remarks>If the centerObject is a player, he won't receive the message</remarks>
 		public static void SystemToOthers2(GameObject centerObject, eChatType chatType, string LanguageMessageID, params object[] args)

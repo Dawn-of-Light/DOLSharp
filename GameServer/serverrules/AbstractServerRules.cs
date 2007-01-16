@@ -175,6 +175,10 @@ namespace DOL.GS.ServerRules
 		{
 			if (attacker == null || defender == null) return false;
 
+			//dead things can't attack
+			if (!defender.IsAlive || !attacker.IsAlive )
+				return false;
+
 			GamePlayer playerAttacker = attacker as GamePlayer;
 			GamePlayer playerDefender = defender as GamePlayer;
 

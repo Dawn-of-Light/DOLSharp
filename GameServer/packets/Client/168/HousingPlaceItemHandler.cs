@@ -46,11 +46,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 			//log.Info("U1: " + unknow1 + " - U2: " + unknow2);
 
-			InventoryItem orgitem = client.Player.Inventory.GetItem((eInventorySlot) slot);
 			House house = (House) HouseMgr.GetHouse(client.Player.CurrentRegionID,housenumber);
 
 			//log.Info("position: " + position + " - rotation: " + rotation);
-			if (orgitem == null) return 1;
 			if (house == null) return 1;
 			if (client.Player == null) return 1;
 			
@@ -70,13 +68,16 @@ namespace DOL.GS.PacketHandler.Client.v168
 					case 245: MoneyToAdd *= 10000000; break;
 					case 244: MoneyToAdd *= 10000000000; break;
 				}
-				client.Player.TempProperties.setProperty("MoneyForHouseRent", MoneyToAdd);
-				client.Player.TempProperties.setProperty("HouseForHouseRent", house);
+				client.Player.TempProperties.setProperty(House.MONEYFORHOUSERENT, MoneyToAdd);
+				client.Player.TempProperties.setProperty(House.HOUSEFORHOUSERENT, house);
 				client.Player.Out.SendInventorySlotsUpdate(null);
 				client.Player.Out.SendHousePayRentDialog("Housing07");
 				
 				return 1;
 			}
+
+			InventoryItem orgitem = client.Player.Inventory.GetItem((eInventorySlot)slot);
+			if (orgitem == null) return 1;
 
 			int pos;
 			switch (method)

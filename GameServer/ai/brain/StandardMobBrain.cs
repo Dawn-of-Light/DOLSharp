@@ -71,11 +71,15 @@ namespace DOL.AI.Brain
 			if (!Body.IsCasting && Body.Spells != null && Body.Spells.Count > 0)
 				CheckSpells();
 
+			if (Body.IsMoving && !Body.InCombat)
+				return;
+
 			if (AggroLevel > 0)
 			{
 				CheckPlayerAggro();
 				CheckNPCAggro();
 			}
+
 
 			if (!Body.AttackState && !Body.IsCasting && !Body.IsMoving
 				&& Body.Heading != Body.SpawnHeading)

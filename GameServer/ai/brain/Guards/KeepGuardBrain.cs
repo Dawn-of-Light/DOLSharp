@@ -124,5 +124,12 @@ namespace DOL.AI.Brain
 					Body.WalkToSpawn();
 			}
 		}
+
+		public override int CalculateAggroLevelToTarget(GameLiving target)
+		{
+			if (KeepMgr.IsEnemy(Body, target))
+				return AggroLevel;
+			return 0;
+		}
 	}
 }
