@@ -652,12 +652,13 @@ namespace DOL.GS
 
 			switch (con)
 			{
-				case -3: return 0;
-				case -2: return 0;
-				case -1: return 0;
-				case 0: return 8;
-				case 1: return 16;
-				case 2: return 32;
+				// Chance to MAKE ! (100 - chance to fail)
+				case -3: return 100;
+				case -2: return 100;
+				case -1: return 100;
+				case 0: return 100 - 8;
+				case 1: return 100 - 16;
+				case 2: return 100 - 32;
 				case 3: return 0;
 				default: return 0;
 			}
@@ -747,14 +748,14 @@ namespace DOL.GS
 				{
 					return 100;	// 2% chance for master piece
 				}
-				return 96 + Util.Random(5);
+				return 96 + Util.Random(3);
 			}
 
 			int delta = GetItemCon(player.GetCraftingSkillValue(m_eskill), item.CraftingLevel);
 			if (delta < -2)
 			{
 				if (Util.Chance(2)) return 100; // grey items get 2% chance to be master piece
-				return 96 + Util.Random(5); // handle grey items like legendary
+				return 96 + Util.Random(3); // handle grey items like legendary
 			}
 
 			// this is a type of roulette selection, imagine a roulette wheel where all chances get different sized
