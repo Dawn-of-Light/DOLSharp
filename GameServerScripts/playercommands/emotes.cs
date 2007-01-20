@@ -64,6 +64,10 @@ namespace DOL.GS.Scripts
 	[CmdAttribute("&mememe", (uint) ePrivLevel.Player, "mememe", "/mememe")]
 	[CmdAttribute("&worship", (uint) ePrivLevel.Player, "worship", "/worship")]
 	[CmdAttribute("&drink", (uint) ePrivLevel.Player, "drink", "/drink")]
+	[CmdAttribute("&angry", (uint)ePrivLevel.Player, "Look angrily around", "/angry")]
+	[CmdAttribute("&lookfar", (uint)ePrivLevel.Player, "Lets you look into the distance", "/lookfar")]
+	[CmdAttribute("&smile", (uint)ePrivLevel.Player, "Make a big smile", "/smile")]
+	[CmdAttribute("&stench", (uint)ePrivLevel.Player, "Wave away the local stench", "/stench")] 
 	public class EmoteCommandHandler : ICommandHandler
 	{
 		private const ushort EMOTE_RANGE_TO_TARGET = 2048; // 2064 was out of range and 2020 in range;
@@ -104,6 +108,10 @@ namespace DOL.GS.Scripts
 
 			switch (args[0])
 			{
+				case "&angry":
+					emoteID = eEmote.Angry;
+					emoteMessages = EMOTE_MESSAGES_ANGRY;
+					break; 
 				case "&bang":
 					emoteID = eEmote.BangOnShield;
 					emoteMessages = EMOTE_MESSAGES_BANG;
@@ -164,6 +172,10 @@ namespace DOL.GS.Scripts
 					emoteID = eEmote.Induct;
 					emoteMessages = EMOTE_MESSAGES_INDUCT;
 					break;
+				case "&lookfar":
+					emoteID = eEmote.Rider_LookFar;
+					emoteMessages = EMOTE_MESSAGES_RIDER_LOOKFAR;
+					break; 
 				case "&kiss":
 					emoteID = eEmote.BlowKiss;
 					emoteMessages = EMOTE_MESSAGES_KISS;
@@ -216,6 +228,14 @@ namespace DOL.GS.Scripts
 					emoteID = eEmote.Slit;
 					emoteMessages = EMOTE_MESSAGES_SLIT;
 					break;
+				case "&smile":
+					emoteID = eEmote.Smile;
+					emoteMessages = EMOTE_MESSAGES_SMILE;
+					break; 
+				case "&stench":
+					emoteID = eEmote.Rider_Stench;
+					emoteMessages = EMOTE_MESSAGES_RIDER_STENCH;
+					break; 
 				case "&surrender":
 					emoteID = eEmote.Surrender;
 					emoteMessages = EMOTE_MESSAGES_SURRENDER;
@@ -269,7 +289,7 @@ namespace DOL.GS.Scripts
 					emoteMessages = EMOTE_MESSAGES_MEMEME;
 					break;
 				case "&worship":
-					emoteID = eEmote.Kowtow;
+					emoteID = eEmote.Worship;
 					emoteMessages = EMOTE_MESSAGES_WORSHIP;
 					break;
 				case "&drink":
@@ -641,5 +661,32 @@ namespace DOL.GS.Scripts
 			"You toast {0} and take a drink.",
 			"{0} toasts {1}!",
 		};
+
+		private readonly string[] EMOTE_MESSAGES_ANGRY = {
+                                              "You look angrily around.",
+                                              "{0} looks angrily.",
+                                              "You look angrily at {0}.",
+                                              "{0} looks angrily at {1}.",
+      };
+
+		private readonly string[] EMOTE_MESSAGES_RIDER_LOOKFAR = {
+                                                    "You look into the distance.",
+                                                    "{0} looks into the distance.",
+                                                    "You look into the distance.",
+                                                    "{0} looks into the distance.",
+      };
+
+		private readonly string[] EMOTE_MESSAGES_RIDER_STENCH = {
+                                                   "You wave away the local stench.",
+                                                   "{0} waves away the local stench.",
+                                                   "You wave away the stench of {0}.",
+                                                   "{0} waves away the stench of {1}.",
+      };
+		private readonly string[] EMOTE_MESSAGES_SMILE = {
+                                               "You smile happily.",
+                                               "{0} smiles happily.",
+                                               "You smile at {0}.",
+                                               "{0} smiles at {1}.",
+      }; 
 	}
 }

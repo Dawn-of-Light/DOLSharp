@@ -337,6 +337,32 @@ namespace DOL.GS.Keeps
 			}
 		}
 
+		public static bool IsEnemy(AbstractGameKeep keep, GameLiving target)
+		{
+			if (target is GamePlayer)
+			{
+				if ((target as GamePlayer).Client.Account.PrivLevel != 1)
+					return false;
+			}
+			else return false;
+
+			if (target.Realm == 0)
+				return false;
+
+			switch (GameServer.Instance.Configuration.ServerType)
+			{
+				case eGameServerType.GST_Normal:
+					return keep.Realm != target.Realm;
+				case eGameServerType.GST_PvP:
+					{
+						return keep.Guild != null && keep.Guild != (target as GamePlayer).Guild;
+					}
+				case eGameServerType.GST_PvE:
+					return !(target is GamePlayer);
+			}
+			return true;
+		}
+
 		public static bool IsEnemy(GameNPC checker, GameLiving target)
 		{
 			if (checker is GameKeepGuard == false)

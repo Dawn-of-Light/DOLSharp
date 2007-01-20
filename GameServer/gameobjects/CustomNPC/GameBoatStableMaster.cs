@@ -64,7 +64,7 @@ namespace DOL.GS
 					}
 
 					String destination = item.Name.Substring(item.Name.IndexOf(" to ") + 4);
-					PathPoint path = MovementMgr.Instance.LoadPath(this.Name + "=>" + destination);
+					PathPoint path = MovementMgr.Instance.LoadPath(item.Id_nb);
 					if (path != null)
 					{
 						player.Inventory.RemoveCountFromStack(item, 1);
