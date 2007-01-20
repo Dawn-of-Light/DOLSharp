@@ -243,22 +243,23 @@ namespace DOL.Database
 	/// ItemTemplate table and also some more values that
 	/// are neccessary to store the inventory position
 	/// </summary>
-	[DataTable(TableName="InventoryItem")]
+	[DataTable(TableName = "InventoryItem")]
 	public class InventoryItem : ItemTemplate
 	{
-		protected string	m_ownerID;
-		protected int		m_slot_pos;
-		protected string	craftername;
+		protected string m_ownerID;
+		protected int m_slot_pos;
+		protected string craftername;
 
 		/// <summary>
 		/// The count of items (for stack!)
 		/// </summary>
-		protected int		m_count;
-		static bool			m_autoSave;
+		protected int m_count;
+		static bool m_autoSave;
 
-		public InventoryItem() : base()
+		public InventoryItem()
+			: base()
 		{
-			m_autoSave=false;
+			m_autoSave = false;
 			m_id_nb = "default";
 			m_count = 1;
 		}
@@ -267,7 +268,8 @@ namespace DOL.Database
 		/// Creates a new Inventoryitem based on the given ItemTemplate
 		/// </summary>
 		/// <param name="itemTemplate"></param>
-		public InventoryItem(ItemTemplate itemTemplate) : this()
+		public InventoryItem(ItemTemplate itemTemplate)
+			: this()
 		{
 			CopyFrom(itemTemplate);
 		}
@@ -276,7 +278,8 @@ namespace DOL.Database
 		/// Creates a new Inventoryitem based on the given ItemTemplate
 		/// </summary>
 		/// <param name="inventoryItem"></param>
-		public InventoryItem(InventoryItem inventoryItem) : this()
+		public InventoryItem(InventoryItem inventoryItem)
+			: this()
 		{
 			CopyFrom(inventoryItem);
 		}
@@ -292,8 +295,8 @@ namespace DOL.Database
 				m_autoSave = value;
 			}
 		}
-		
-		[DataElement(AllowDbNull=false)]
+
+		[DataElement(AllowDbNull = false)]
 		public override string Id_nb
 		{
 			get
@@ -307,7 +310,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull=false, Index=true)]
+		[DataElement(AllowDbNull = false, Index = true)]
 		public string OwnerID
 		{
 			get
@@ -321,7 +324,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public int Count
 		{
 			get
@@ -335,7 +338,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull = true)]
 		public int SlotPosition
 		{
 			get
@@ -348,8 +351,8 @@ namespace DOL.Database
 				m_slot_pos = value;
 			}
 		}
-		
-		[DataElement(AllowDbNull=true)]
+
+		[DataElement(AllowDbNull = true)]
 		public string CrafterName
 		{
 			get
@@ -442,6 +445,7 @@ namespace DOL.Database
 			PoisonCharges = template.PoisonCharges;
 			PoisonMaxCharges = template.PoisonMaxCharges;
 			Realm = template.Realm;
+			AllowedClasses = template.AllowedClasses;
 		}
 	}
 }

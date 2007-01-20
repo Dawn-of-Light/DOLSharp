@@ -491,9 +491,14 @@
     <Compile Include="playertitles\BaneOfAlbionTitle.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="playertitles\BaneOfHiberniaTitle.cs" />
+    <Compile Include="playertitles\BaneOfMidgardTitle.cs" />
+    <Compile Include="playertitles\BattleEnforcerTitle.cs" />
+    <Compile Include="playertitles\ElderTitle.cs" />
     <Compile Include="playertitles\Level20Title.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="playertitles\LoneEnforcerTitle.cs" />
     <Compile Include="playertitles\VeteranTitle.cs">
       <SubType>Code</SubType>
     </Compile>

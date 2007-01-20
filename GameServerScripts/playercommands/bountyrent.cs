@@ -68,7 +68,6 @@ namespace DOL.GS.Scripts
 						client.Player.TempProperties.setProperty(House.BPSFORHOUSERENT, BPsToAdd);
 						client.Player.TempProperties.setProperty(House.HOUSEFORHOUSERENT, house);
 						client.Player.Out.SendHousePayRentDialog("Housing07");
-						return 1;
 						break;
 					}
 				case "guild":

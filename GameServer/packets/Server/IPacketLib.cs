@@ -300,6 +300,8 @@ namespace DOL.GS.PacketHandler
 		Bind = 0x2c,
 		SpellGoBoom = 0x2d,
 		Knock = 0x2e,
+		Smile = 0x2f,
+		Angry = 0x30, 
 		Rider_LookFar = 0x31,
 		Rider_Stench = 0x32,
 		Rider_Halt = 0x33,
@@ -323,6 +325,7 @@ namespace DOL.GS.PacketHandler
 		PlayerPrepare = 0x45,
 		PlayerPickup = 0x46,
 		PlayerListen = 0x47,
+		Worship = 68,
 	};
 
 	public enum eMerchantWindowType : byte

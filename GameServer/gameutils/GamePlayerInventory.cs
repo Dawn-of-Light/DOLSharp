@@ -363,6 +363,24 @@ namespace DOL.GS
 					goto apply_poison;
 				}
 
+				if (fromItem.AllowedClasses != "" || fromItem.AllowedClasses != null)
+				{
+					valid = false;
+					string[] allowedclasses = fromItem.AllowedClasses.Split(';');
+					foreach (string allowed in allowedclasses)
+					{
+						if (m_player.CharacterClass.ID.ToString() == allowed)
+						{
+							valid = true;
+							break;
+						}
+					}
+					if (!valid)
+					{
+						m_player.Out.SendMessage("Your class cannot use this item!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					}
+				}
+
 				if (valid && (fromItem.Realm > 0 && m_player.Realm != fromItem.Realm) && ((int)toSlot >= (int)eInventorySlot.HorseArmor && (int)toSlot <= (int)eInventorySlot.HorseBarding))
 				{
 					if (m_player.Client.Account.PrivLevel == 1)

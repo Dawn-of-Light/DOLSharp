@@ -298,6 +298,8 @@ namespace DOL.GS.Spells
 		/// <returns>true if casting was interrupted</returns>
 		public virtual bool CasterIsAttacked(GameLiving attacker)
 		{
+			if (Spell.Uninterruptible)
+				return false;
 			if (Caster.EffectList.GetOfType(typeof(QuickCastEffect)) != null)
 				return false;
 			if (Caster.EffectList.GetOfType(typeof(MasteryofConcentrationEffect)) != null)
@@ -1335,7 +1337,7 @@ namespace DOL.GS.Spells
 				ad.Attacker = Caster;
 				ad.Target = target;
 				ad.AttackType = AttackData.eAttackType.Spell;
-				ad.AttackResult = GameLiving.eAttackResult.HitUnstyled;
+				ad.AttackResult = GameLiving.eAttackResult.Missed;
 				ad.SpellHandler = this;
 				target.OnAttackedByEnemy(ad);
 			}
@@ -1912,6 +1914,8 @@ namespace DOL.GS.Spells
 			ad.Attacker = m_caster;
 			ad.Target = target;
 			ad.AttackType = AttackData.eAttackType.Spell;
+			ad.SpellHandler = this;
+			ad.AttackResult = GameLiving.eAttackResult.Missed;
 
 			double minVariance;
 			double maxVariance;

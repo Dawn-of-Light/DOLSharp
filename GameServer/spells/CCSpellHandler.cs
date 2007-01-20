@@ -177,7 +177,7 @@ namespace DOL.GS.Spells
 
 			bool remove = false;
 
-			if (attackArgs.AttackData.IsMeleeAttack)
+			if (attackArgs.AttackData.SpellHandler == null)
 			{
 				switch (attackArgs.AttackData.AttackResult)
 				{
@@ -192,17 +192,13 @@ namespace DOL.GS.Spells
 						break;
 				}
 			}
-			else
+			else if (attackArgs.AttackData.SpellHandler != null)
 			{
-
-				if (!remove && attackArgs.AttackData.SpellHandler != null)
-				{
-					//debuffs/shears dont interrupt mez, neither does recasting mez
-					if (attackArgs.AttackData.SpellHandler is PropertyChangingSpell || attackArgs.AttackData.SpellHandler is MesmerizeSpellHandler
-						|| attackArgs.AttackData.SpellHandler is NearsightSpellHandler || attackArgs.AttackData.SpellHandler.HasPositiveEffect) return;
-					if (attackArgs.AttackData.AttackResult == GameLiving.eAttackResult.HitUnstyled)
-						remove = true;
-				}
+				//debuffs/shears dont interrupt mez, neither does recasting mez
+				if (attackArgs.AttackData.SpellHandler is PropertyChangingSpell || attackArgs.AttackData.SpellHandler is MesmerizeSpellHandler
+					|| attackArgs.AttackData.SpellHandler is NearsightSpellHandler || attackArgs.AttackData.SpellHandler.HasPositiveEffect) return;
+				if (attackArgs.AttackData.AttackResult == GameLiving.eAttackResult.Missed || attackArgs.AttackData.AttackResult == GameLiving.eAttackResult.HitUnstyled)
+					remove = true;
 			}
 
 			if (remove)

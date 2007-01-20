@@ -109,7 +109,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 			client.Player.IsStrafing = ((data & 0xe000) != 0);
 
-
 			int realZ = packet.ReadShort();
 			ushort xOffsetInZone = packet.ReadShort();
 			ushort yOffsetInZone = packet.ReadShort();
@@ -361,6 +360,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 			int state = ((data >> 10) & 7);
 			client.Player.IsClimbing = (state == 7);
+			client.Player.IsSwimming = (state == 1);
 			if (state == 3 && client.Player.TempProperties.getObjectProperty(GamePlayer.DEBUG_MODE_PROPERTY, null) == null) //debugFly on, but player not do /debug on (hack)
 			{
 				StringBuilder builder = new StringBuilder();

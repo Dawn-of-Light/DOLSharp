@@ -62,7 +62,8 @@ namespace DOL.GS.Scripts
 		"'/item proc <SpellID> [slot #]' - change item proc",
 		"'/item realm <num> [slot #]' - change items realm",
 		"'/item savetemplate <TemplateID> [slot #]' - create a new template",
-		"'/item templateid <TemplateID> [slot #] - change an items template ID'")]
+		"'/item templateid <TemplateID> [slot #] - change an items template ID'",
+		"'/item findid <name>'")]
 	public class ItemCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		public int OnCommand(GameClient client, string[] args)
@@ -1542,6 +1543,17 @@ namespace DOL.GS.Scripts
 							client.Out.SendMessage("The ItemTemplate " + name + " was successfully saved", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						}
 						break;
+					case "findid":
+						{
+							string name = string.Join(" ", args, 2, args.Length - 2);
+							ItemTemplate[] items = (ItemTemplate[])GameServer.Database.SelectObjects(typeof(ItemTemplate), "Name like '%" + name + "%'");
+							DisplayMessage(client, "Matching ID's for " + name + " count " + items.Length, new object[] { });
+							foreach (ItemTemplate item in items)
+							{
+								DisplayMessage(client, item.Id_nb, new object[] { });
+							}
+							break;
+						}
 				}
 			}
 			catch (Exception e)

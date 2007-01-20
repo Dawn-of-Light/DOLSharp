@@ -94,7 +94,7 @@ namespace DOL.Database
 		protected int m_poisonMaxCharges;
 		protected int m_poisonCharges;
 		protected int m_realm;
-
+		private string m_allowedClasses = "";
 		static bool m_autoSave;
 
 		public ItemTemplate()
@@ -782,7 +782,7 @@ namespace DOL.Database
 				m_isPickable = value;
 			}
 		}
-		
+
 		[DataElement(AllowDbNull = true)]
 		public bool IsDropable
 		{
@@ -846,7 +846,7 @@ namespace DOL.Database
 				m_platinum = value;
 			}
 		}
-		
+
 		[DataElement(AllowDbNull = true)]
 		public short Gold
 		{
@@ -1074,6 +1074,20 @@ namespace DOL.Database
 			set
 			{
 				m_realm = value;
+				Dirty = true;
+			}
+		}
+
+		/// <summary>
+		/// the serialized allowed classes of item
+		/// </summary>
+		[DataElement(AllowDbNull = true)]
+		public string AllowedClasses
+		{
+			get { return m_allowedClasses; }
+			set
+			{
+				m_allowedClasses = value;
 				Dirty = true;
 			}
 		}
