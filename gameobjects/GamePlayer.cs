@@ -473,6 +473,8 @@ namespace DOL.GS
 			if (IsOnHorse)
 				IsOnHorse = false;
 			GameEventMgr.RemoveHandler(this, GameLivingEvent.AttackFinished, new DOLEventHandler(RangeAttackHandler));
+			GameEventMgr.RemoveHandler(m_inventory, PlayerInventoryEvent.ItemEquipped, new DOLEventHandler(OnItemEquipped));
+			GameEventMgr.RemoveHandler(m_inventory, PlayerInventoryEvent.ItemUnequipped, new DOLEventHandler(OnItemUnequipped));
 
 			//TODO perhaps pull out the whole group-handing from
 			//the packet handler and from the Player into a own class
@@ -3402,6 +3404,17 @@ namespace DOL.GS
 		{
 			// TODO: correct formula!
 			get { return (int)(1 + Level * 0.6); }
+		}
+
+		/// <summary>
+		/// Returns the amount of experience this player is worth
+		/// </summary>
+		public override long ExperienceValue
+		{
+			get
+			{
+				return base.ExperienceValue * 4;
+			}
 		}
 
 		public static readonly int[] prcRestore =
@@ -7883,6 +7896,21 @@ namespace DOL.GS
 			}
 		}
 
+		protected bool m_swimming;
+		/// <summary>
+		/// Gets/sets the current swimming state
+		/// </summary>
+		public bool IsSwimming
+		{
+			get { return m_swimming; }
+			set
+			{
+				if (value == m_swimming) return;
+				m_swimming = value;
+				//TODO notify some event of this
+			}
+		}
+
 		/// <summary>
 		/// The suck state of this player
 		/// </summary>
@@ -8725,7 +8753,8 @@ namespace DOL.GS
 							   && (ply.CurrentRegionID == CurrentRegionID)
 							   && (WorldMgr.GetDistance(this, ply) < WorldMgr.MAX_EXPFORKILL_DISTANCE)
 							   && (ply.ObjectState == eObjectState.Active)
-							   && (ply.AutoSplitLoot))
+							   && (ply.AutoSplitLoot)
+							   && (ply.Inventory.FindFirstEmptySlot(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) != eInventorySlot.Invalid))
 							{
 								eligibleMembers.Add(ply);
 							}
@@ -8757,7 +8786,7 @@ namespace DOL.GS
 					else
 					{
 						bool good = false;
-						if (floorItem.Item.IsStackable) // poison ID is lost here
+						if (floorItem.Item.IsStackable)
 							good = Inventory.AddTemplate(floorItem.Item, floorItem.Item.Count, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
 						else
 							good = Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, floorItem.Item);
@@ -9175,6 +9204,7 @@ namespace DOL.GS
 			
 				m_guildName = m_guild.Name;
 				m_guild.AddOnlineMember(this);
+				m_guildNote = m_character.GuildNote;
 			}
 			m_X = m_character.Xpos;
 			m_Y = m_character.Ypos;
@@ -9323,6 +9353,9 @@ namespace DOL.GS
 			m_killsHiberniaSolo = m_character.KillsHiberniaSolo;
 			m_capturedKeeps = m_character.CapturedKeeps;
 			m_capturedTowers = m_character.CapturedTowers;
+
+			m_gainXP = m_character.GainXP;
+			m_gainRP = m_character.GainRP;
 
 
 			// Has to be updated on load to ensure time offline isn't

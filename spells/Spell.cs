@@ -58,6 +58,7 @@ namespace DOL.GS
 		protected readonly int m_effectGroup = 0;
 		protected readonly int m_subSpellID = 0;
 		protected readonly bool m_moveCast = false;
+		protected readonly bool m_uninterruptible = false;
 
 
 		#region member access properties
@@ -208,6 +209,11 @@ namespace DOL.GS
 			get { return m_moveCast; }
 		}
 
+		public bool Uninterruptible
+		{
+			get { return m_uninterruptible; }
+		}
+
 		#endregion
 
 		/// <summary>
@@ -258,6 +264,7 @@ namespace DOL.GS
 			m_effectGroup = dbspell.EffectGroup;
 			m_subSpellID = dbspell.SubSpellID;
 			m_moveCast = dbspell.MoveCast;
+			m_uninterruptible = dbspell.Uninterruptible;
 		}
 	}
 }

@@ -418,10 +418,11 @@ namespace DOL.GS.Keeps
 
 		public override void StartHealthRegeneration()
 		{
+			if (m_repairTimer != null && m_repairTimer.IsAlive) return; 
 			m_repairTimer = new RegionTimer(CurrentRegion.TimeManager);
 			m_repairTimer.Callback = new RegionTimerCallback(RepairTimerCallback);
 			m_repairTimer.Interval = repairInterval;
-			m_repairTimer.Start(1);
+			m_repairTimer.Start(repairInterval);
 		}
 		#endregion
 

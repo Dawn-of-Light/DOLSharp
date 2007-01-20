@@ -49,6 +49,13 @@ namespace DOL.GS.RealmAbilities
 				return;
 			}
 
+			if (m_expireTimerID.IsAlive)
+			{
+				caster.Out.SendMessage("You are already casting this ability.", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+				caster.DisableSkill(this, 3 * 1000);
+				return;
+			}
+
 			//150 dam/10 sec || 400/20  || 600/30 
 			switch (Level)
 			{
@@ -153,7 +160,7 @@ namespace DOL.GS.RealmAbilities
 				}
 			}
 
-			DisableSkill(living);
+			DisableSkill(caster);
 			timer.Stop();
 			timer = null;
 			return 0;

@@ -285,6 +285,10 @@ namespace DOL.GS.ServerRules
 			if (attacker.Realm == 0 && defender.Realm == 0)
 				return true;
 
+			//allow confused mobs to attack same realm
+			if (attacker is GameNPC && (attacker as GameNPC).IsConfused && attacker.Realm == defender.Realm)
+				return true;
+
 			// "friendly" NPCs can't attack "friendly" players
 			if (defender is GameNPC && defender.Realm != 0 && attacker.Realm != 0 && KeepMgr.IsEnemy(defender as GameNPC, attacker) == false)
 			{

@@ -62,7 +62,7 @@ namespace DOL.GS
 				if (item.Name.StartsWith("ticket to ") && item.Item_Type==40)
 				{
 					String destination = item.Name.Substring(10);
-					PathPoint path = MovementMgr.Instance.LoadPath(this.Name+"=>"+destination);
+					PathPoint path = MovementMgr.Instance.LoadPath(item.Id_nb);
 					if (path != null)
 					{	
 						player.Inventory.RemoveCountFromStack(item, 1);
@@ -95,7 +95,7 @@ namespace DOL.GS
 					}
 					else
 					{
-						player.Out.SendMessage("My horse doesn't know the way to "+destination+" yet.", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+						player.Out.SendMessage("My horse doesn't know the way to " + destination + " yet.", eChatType.CT_System, eChatLoc.CL_PopupWindow);
 					}
 				}
 			}
@@ -113,6 +113,8 @@ namespace DOL.GS
 		{
 			if (!(o is GameNPC)) return;
 			GameNPC npc = (GameNPC)o;
+
+			GameEventMgr.RemoveHandler(npc, GameNPCEvent.PathMoveEnds, new DOLEventHandler(OnHorseAtPathEnd));
 			npc.StopMoving();
 			npc.RemoveFromWorld();
 		}
