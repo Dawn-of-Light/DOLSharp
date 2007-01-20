@@ -153,6 +153,15 @@ namespace DOL.GS.Spells
 				
 			if(Caster is GamePlayer)
 			{
+				/*
+				 * The Minstrel/Mentalist has an almost certain chance to charm/retain control of 
+				 * a creature his level or lower, although there is a small random chance that it
+				 * could fail. The higher the level of the charmed creature compared to the 
+				 * Minstrel/Mentalist, the greater the chance the monster has of breaking the charm.
+				 * Please note that your specialization level in the magic skill that contains the
+				 * charm spell will modify your base chance of charming and retaining control.
+				 * The higher your spec level, the greater your chance of controlling.
+				 */
 				int diffLevel = ((GamePlayer) Caster).GetModifiedSpecLevel(m_spellLine.Spec) - target.Level;
 				int resistChance = 30 - diffLevel * 5; // completly guessed ...
 				if(resistChance < 5) resistChance = 5;

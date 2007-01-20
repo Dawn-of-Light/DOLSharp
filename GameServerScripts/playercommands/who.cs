@@ -122,6 +122,7 @@ namespace DOL.GS.Scripts
 					filters = null;
 					break;
 
+				case "staff":
 				case "gm":
 				case "admin":
 					filters = new ArrayList(1);
@@ -240,6 +241,10 @@ namespace DOL.GS.Scripts
 			if(player.Client.Account.PrivLevel == (int)ePrivLevel.Admin)
 			{
 				result.Append(" <Admin>");
+			}
+			if (ServerProperties.Properties.ALLOW_CHANGE_LANGUAGE)
+			{
+				result.Append(" <" + player.Client.Account.Language + ">");
 			}
 
 			return result.ToString();

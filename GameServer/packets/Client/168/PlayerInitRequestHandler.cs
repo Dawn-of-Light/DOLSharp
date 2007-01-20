@@ -210,7 +210,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 				//we check here if we are near any enemy keeps
 				AbstractGameKeep keep = KeepMgr.getKeepCloseToSpot(player.CurrentRegionID, player, WorldMgr.VISIBILITY_DISTANCE);
-				if (keep != null && player.Client.Account.PrivLevel == 1 && keep.Realm != player.Realm)
+				if (keep != null && player.Client.Account.PrivLevel == 1 && KeepMgr.IsEnemy(keep, player))
 				{
 					/*
 					int keepid = 1, x = 0, y = 0, z = 0;

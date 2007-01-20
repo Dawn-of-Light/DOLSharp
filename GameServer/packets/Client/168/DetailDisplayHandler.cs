@@ -82,7 +82,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						if ((item.Object_Type >= (int)eObjectType.GenericWeapon) && (item.Object_Type <= (int)eObjectType.Scythe) ||
 							item.Object_Type == (int)eObjectType.Instrument)
 						{
-
+							WriteUsableClasses(objectInfo, item, client);
 							//						objectInfo.Add("Usable by:");
 							//						objectInfo.Add("- ");
 							//						objectInfo.Add(" ");
@@ -110,7 +110,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 							//						objectInfo.Add("Usable by:");
 							//						objectInfo.Add("- ");
 							//						objectInfo.Add(" ");
-
+							WriteUsableClasses(objectInfo, item, client);
 							WriteMagicalBonuses(objectInfo, item, client, false);
 
 							WriteClassicArmorInfos(objectInfo, item, client);
@@ -135,7 +135,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 							//						objectInfo.Add("Usable by:");
 							//						objectInfo.Add("- ");
 							//						objectInfo.Add(" ");
-
+							WriteUsableClasses(objectInfo, item, client);
 							WriteMagicalBonuses(objectInfo, item, client, false);
 
 							WriteClassicShieldInfos(objectInfo, item, client);
@@ -324,7 +324,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						if ((item.Object_Type >= (int)eObjectType.GenericWeapon) && (item.Object_Type <= (int)eObjectType.Scythe) ||
 							item.Object_Type == (int)eObjectType.Instrument)
 						{
-
+							WriteUsableClasses(objectInfo, item, client);
 							//						objectInfo.Add("Usable by:");
 							//						objectInfo.Add("- ");
 
@@ -341,7 +341,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 							//						objectInfo.Add("Usable by:");
 							//						objectInfo.Add("- ");
 							//						objectInfo.Add(" ");
-
+							WriteUsableClasses(objectInfo, item, client);
 							WriteMagicalBonuses(objectInfo, item, client, false);
 
 							WriteClassicArmorInfos(objectInfo, item, client);
@@ -356,7 +356,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 							//						objectInfo.Add("Usable by:");
 							//						objectInfo.Add("- ");
 							//						objectInfo.Add(" ");
-
+							WriteUsableClasses(objectInfo, item, client);
 							WriteMagicalBonuses(objectInfo, item, client, false);
 
 							WriteClassicShieldInfos(objectInfo, item, client);
@@ -608,7 +608,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 							//						objectInfo.Add("Usable by:");
 							//						objectInfo.Add("- ");
 							//						objectInfo.Add(" ");
-
+							WriteUsableClasses(objectInfo, item, client);
 							WriteMagicalBonuses(objectInfo, item, client, false);
 
 							WriteClassicWeaponInfos(objectInfo, item, client);
@@ -629,7 +629,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 							//						objectInfo.Add("Usable by:");
 							//						objectInfo.Add("- ");
 							//						objectInfo.Add(" ");
-
+							WriteUsableClasses(objectInfo, item, client);
 							WriteMagicalBonuses(objectInfo, item, client, false);
 
 							WriteClassicArmorInfos(objectInfo, item, client);
@@ -651,7 +651,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 							//						objectInfo.Add("Usable by:");
 							//						objectInfo.Add("- ");
 							//						objectInfo.Add(" ");
-
+							WriteUsableClasses(objectInfo, item, client);
 							WriteMagicalBonuses(objectInfo, item, client, false);
 
 							WriteClassicShieldInfos(objectInfo, item, client);
@@ -981,6 +981,7 @@ Type    Description           Id
 			output.Add("      SpellID: " + item.SpellID + " (" + item.Charges + "/" + item.MaxCharges + ")");
 			output.Add("     SpellID1: " + item.SpellID1 + " (" + item.Charges1 + "/" + item.MaxCharges1 + ")");
 			output.Add("PoisonSpellID: " + item.PoisonSpellID + " (" + item.PoisonCharges + "/" + item.PoisonMaxCharges + ") ");
+
 			if (GlobalConstants.IsWeapon(item.Object_Type))
 			{
 				output.Add("         Hand: " + GlobalConstants.ItemHandToName(item.Hand));
@@ -1135,7 +1136,17 @@ Type    Description           Id
 				output.Add("- " + effectiveDPS.ToString("0.0") + " DPS");
 			}
 		}
-
+		public void WriteUsableClasses(ArrayList output, ItemTemplate item, GameClient client)
+		{
+			if (item.AllowedClasses == "" || item.AllowedClasses == null)
+				return;
+			output.Add("Usable by: ");
+			string[] allowedclasses = item.AllowedClasses.Split(';');
+			foreach (string allowed in allowedclasses)
+			{
+				output.Add("- " + ((eCharacterClass)int.Parse(allowed))).ToString();
+			}
+		}
 		/// <summary>
 		///
 		///

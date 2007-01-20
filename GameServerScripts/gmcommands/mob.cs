@@ -986,6 +986,13 @@ namespace DOL.GS.Scripts
 							}
 							else
 							{
+								ItemTemplate itemtemplate = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), lootTemplateID);
+								if (itemtemplate == null)
+								{
+									DisplayError(client, "ItemTemplate " + lootTemplateID + " not found!");
+									return 0;
+								}
+
 								DBLootTemplate lt = new DBLootTemplate();
 								lt.Chance = chance;
 								lt.TemplateName = name;
@@ -1050,11 +1057,14 @@ namespace DOL.GS.Scripts
 				case "viewloot":
 					{
 						DataObject[] template = GameServer.Database.SelectObjects(typeof(DBLootTemplate), "TemplateName = '" + targetMob.Name + "'");
-						string message = "[ " + targetMob.Name + "'s Loot Table ]/n";
+						string message = "[ " + targetMob.Name + "'s Loot Table ]\n\n";
 
 						foreach (DBLootTemplate loot in template)
 						{
-							message += loot.ItemTemplate.Name + "(" + loot.ItemTemplate.Id_nb + ") Drop Chance: " + loot.Chance.ToString() + "\n";
+							if (loot.ItemTemplate == null)
+								message += loot.ItemTemplateID + " (Template Not Found)";
+							else message += loot.ItemTemplate.Name + " (" + loot.ItemTemplate.Id_nb + ")";
+							message += " Chance: " + loot.Chance.ToString() + "\n\n";
 						}
 						client.Out.SendMessage(message, eChatType.CT_System, eChatLoc.CL_PopupWindow);
 					}

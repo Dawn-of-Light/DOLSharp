@@ -842,7 +842,7 @@ namespace DOL.GS.Scripts
 								{
 									ind++;
 									string zoneName = (ply.CurrentZone == null ? "(null)" : ply.CurrentZone.Description);
-									string mesg = ind + ") " + ply.Name + " <rank=" + ply.GuildRank.RankLevel.ToString() + "> the Level " + ply.Level + " " + ply.CharacterClass.Name + " in " + zoneName;
+									string mesg = ind + ") " + ply.Name + " <" + ply.GuildRank.Title + "> the Level " + ply.Level + " " + ply.CharacterClass.Name + " in " + zoneName;
 									client.Out.SendMessage(mesg, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								}
 							}

@@ -72,9 +72,7 @@ namespace DOL.GS.PropertyCalc
 			if (regen < 1)
 				regen = 1;
 
-			//1.87 - Each tick of health and power is now twice as effective.
-			// - All health and power regeneration aids are now twice as effective.
-			return (int)regen * 2;
+			return (int)regen;
 		}
 	}
 }

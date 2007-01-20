@@ -62,6 +62,7 @@ namespace DOL.Database
 		protected int m_effectGroup;
 		protected int m_subSpellID = 0;
 		protected bool m_moveCast = false;
+		protected bool m_uninterruptible = true;
 
 		static bool m_autoSave;
 
@@ -525,6 +526,17 @@ namespace DOL.Database
 			{
 				Dirty = true;
 				m_moveCast = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public bool Uninterruptible
+		{
+			get { return m_uninterruptible; }
+			set
+			{
+				Dirty = true;
+				m_uninterruptible = value;
 			}
 		}
 	}

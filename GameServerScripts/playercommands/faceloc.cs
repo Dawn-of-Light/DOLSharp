@@ -32,10 +32,15 @@ namespace DOL.GS.Scripts
 		(uint) ePrivLevel.Player,
 		"Turns and faces your character into the direction of the x, y coordinates provided (using Mythic zone coordinates).",
 		"/faceloc [x] [y]")]
-	public class LocFaceCommandHandler : ICommandHandler
+	public class LocFaceCommandHandler : AbstractCommandHandler,ICommandHandler
 	{
 		public int OnCommand(GameClient client, string[] args)
 		{
+			if (client.Player.IsTurningDisabled)
+			{
+				DisplayError(client, "You can't use this command now!", new object[] { });
+				return 0;
+			}
 			if (args.Length < 3)
 			{
 				client.Out.SendMessage

@@ -1014,6 +1014,7 @@ namespace DOL.GS
 				return LastCombatTick + 10000 >= region.Time;
 			}
 		}
+
 		/// <summary>
 		/// Returns the amount of experience this living is worth
 		/// </summary>
@@ -3890,32 +3891,19 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 			int variance = m_healthRegenerationPeriod / 1000;
 			int periodVariance = Util.Random(-variance, variance);
 
-			//If we were hit before we regenerated, we regenerate slower the next time
-			/*
-			 * 1.87
-			 * - While in combat, health and power regeneration ticks will happen twice as often. 
-			 */
 			if (InCombat)
 			{
-				return m_healthRegenerationPeriod + periodVariance;
+				return m_healthRegenerationPeriod * 2 + periodVariance;
 			}
 
 			//Sitting livings heal faster
-			/*
-			 * 1.87
-			 * - The bonus to regeneration while standing out of combat has been 
-			 * greatly increased. The amount of ticks a player receives while 
-			 * standing has been doubled and it will now match the bonus to 
-			 * regeneration while sitting. Players will no longer need to sit 
-			 * to regenerate faster. 
-			 */
-			//if (IsSitting)
-			//{
-			//    return m_healthRegenerationPeriod / 2 + periodVariance;
-			//}
+			if (IsSitting)
+			{
+				return m_healthRegenerationPeriod / 2 + periodVariance;
+			}
 
 			//Heal at standard rate
-			return m_healthRegenerationPeriod / 2 + periodVariance;
+			return m_healthRegenerationPeriod + periodVariance;
 		}
 		/// <summary>
 		/// Callback for the power regenerationTimer
@@ -3957,17 +3945,17 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 			//If we were hit before we regenerated, we regenerate slower the next time
 			if (InCombat)
 			{
-				return m_powerRegenerationPeriod + periodVariance;
+				return m_powerRegenerationPeriod * 2 + periodVariance;
 			}
 
 			//Sitting livings regen faster
-			//if (IsSitting)
-			//{
-			//    return m_powerRegenerationPeriod / 2 + periodVariance;
-			//}
+			if (IsSitting)
+			{
+				return m_powerRegenerationPeriod / 2 + periodVariance;
+			}
 
 			//regen at standard rate
-			return m_powerRegenerationPeriod / 2 + periodVariance;
+			return m_powerRegenerationPeriod + periodVariance;
 		}
 		/// <summary>
 		/// Callback for the endurance regenerationTimer
