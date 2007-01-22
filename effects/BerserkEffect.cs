@@ -27,7 +27,7 @@ namespace DOL.GS.Effects
 	/// <summary>
 	/// The helper class for the berserk ability
 	/// </summary>
-	public class BerserkEffect : IGameEffect
+	public class BerserkEffect : StaticEffect, IGameEffect
 	{
 		/// <summary>
 		/// The ability description

@@ -18,6 +18,8 @@
  */
 using System;
 using System.Collections;
+
+using DOL.Database;
 using DOL.GS.Effects;
 
 namespace DOL.GS.Spells
@@ -139,10 +141,9 @@ namespace DOL.GS.Spells
 		/// </summary>
 		event CastingCompleteCallback CastingCompleteEvent;
 
-		// /// <summary>
-		// /// Event raised when spell is done or canceled
-		// /// </summary>
-		//event SpellEndsCallback SpellEndsEvent;
+		PlayerXEffect getSavedEffect(GameSpellEffect e);
+		void OnEffectRestored(GameSpellEffect effect, int[] RestoreVars);
+		int OnRestoredEffectExpires(GameSpellEffect effect, int[] RestoreVars, bool noMessages);
 	}
 
 	/// <summary>

@@ -363,7 +363,7 @@ namespace DOL.GS
 					goto apply_poison;
 				}
 
-				if (fromItem.AllowedClasses != "" || fromItem.AllowedClasses != null)
+				if (!Util.IsEmpty(fromItem.AllowedClasses))
 				{
 					valid = false;
 					string[] allowedclasses = fromItem.AllowedClasses.Split(';');

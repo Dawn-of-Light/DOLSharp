@@ -88,6 +88,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 					}
 				}
 
+				player.EffectList.RestoreAllEffects();
+
 				player.Client.ClientState=GameClient.eClientState.WorldEnter;
 				// 0x88 - Position
 				// 0x6D - FriendList

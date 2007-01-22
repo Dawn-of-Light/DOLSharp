@@ -10,7 +10,7 @@ namespace DOL.GS.Effects
 	/// <summary>
 	/// Effect handler for Barrier Of Fortitude
 	/// </summary>
-	public class BedazzlingAuraEffect : IGameEffect
+	public class BedazzlingAuraEffect : StaticEffect, IGameEffect
 	{
 		private const String m_delveString = "Grants the group increased resistance to magical damage (Does not stack with Soldier's Barricade or Barrier of Fortitude).";
 		private GamePlayer m_player;

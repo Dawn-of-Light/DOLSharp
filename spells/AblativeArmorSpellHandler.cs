@@ -18,9 +18,12 @@
  *///made by DeMAN
 using System;
 using System.Reflection;
+
+using DOL.Database;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
 using DOL.Events;
+
 using log4net;
  
  
@@ -110,6 +113,36 @@ namespace DOL.GS.Spells
 			{
 				living.TempProperties.setProperty(ABLATIVE_HP,ablativehp);
 			}
+		}
+
+		public override PlayerXEffect getSavedEffect(GameSpellEffect e)
+		{
+			if (e is PulsingSpellEffect || Spell.Pulse != 0 || Spell.Concentration != 0 || e.RemainingTime < 1)
+				return null;
+			PlayerXEffect eff = new PlayerXEffect();
+			eff.Var1 = Spell.ID;
+			eff.Duration = e.RemainingTime;
+			eff.IsHandler = true;
+			eff.Var2 = (int)Spell.Value;
+			return eff;
+		}
+
+		public override void OnEffectRestored(GameSpellEffect effect, int[] vars)
+		{
+			effect.Owner.TempProperties.setProperty(ABLATIVE_HP, (int)vars[1]);
+			GameEventMgr.AddHandler(effect.Owner, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnAttack));
+		}
+
+		public override int OnRestoredEffectExpires(GameSpellEffect effect, int[] vars, bool noMessages)
+		{
+			GameEventMgr.RemoveHandler(effect.Owner, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnAttack));
+			effect.Owner.TempProperties.removeProperty(ABLATIVE_HP);
+			if (!noMessages && Spell.Pulse == 0)
+			{
+				MessageToLiving(effect.Owner, Spell.Message3, eChatType.CT_SpellExpires);
+				Message.SystemToArea(effect.Owner, Util.MakeSentence(Spell.Message4, effect.Owner.GetName(0, false)), eChatType.CT_SpellExpires, effect.Owner);
+			}
+			return 0;
 		}
 
 		public AblativeArmorSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}

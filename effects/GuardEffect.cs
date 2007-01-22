@@ -27,7 +27,7 @@ namespace DOL.GS.Effects
 	/// <summary>
 	/// The helper class for the guard ability
 	/// </summary>
-	public class GuardEffect : IGameEffect
+	public class GuardEffect : StaticEffect, IGameEffect
 	{
 		/// <summary>
 		/// The ability description

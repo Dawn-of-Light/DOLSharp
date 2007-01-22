@@ -7,7 +7,7 @@ using DOL.Events;
 namespace DOL.GS.Effects
 {
 
-	public class ChargeEffect : IGameEffect
+	public class ChargeEffect : StaticEffect, IGameEffect
 	{
 		protected const String delveString = "Grants unbreakable speed 3 for 15 second duration. Grants immunity to roots, stun, snare and mesmerize spells. Target will still take damage from snare/root spells that do damage.";
 		GamePlayer m_player;

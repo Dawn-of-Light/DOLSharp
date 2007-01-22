@@ -46,7 +46,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				return 1;
 			}
 			
-			client.Player.PickupObject(target);
+			client.Player.PickupObject(target, false);
 			return 1;
 		}
 	}

@@ -25,7 +25,7 @@ namespace DOL.GS.Effects
 	/// <summary>
 	/// The helper class for quckcast ability
 	/// </summary>
-	public class QuickCastEffect : IGameEffect
+	public class QuickCastEffect : StaticEffect, IGameEffect
 	{
 		/// <summary>
 		/// The ability description
@@ -91,7 +91,7 @@ namespace DOL.GS.Effects
 		/// <summary>
 		/// Delve Info
 		/// </summary>
-		public IList DelveInfo 
+		public IList DelveInfo
 		{
 			get
 			{

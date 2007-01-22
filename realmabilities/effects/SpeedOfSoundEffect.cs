@@ -10,7 +10,7 @@ namespace DOL.GS.Effects
 	/// <summary>
 	/// Effect handler for Barrier Of Fortitude
 	/// </summary> 
-	public class SpeedOfSoundEffect : IGameEffect
+	public class SpeedOfSoundEffect : StaticEffect, IGameEffect
 	{
 		private const String m_delveString = "Gives immunity to stun/snare/root and mesmerize spells and provides unbreakeable speed.";
 		private GamePlayer m_player;

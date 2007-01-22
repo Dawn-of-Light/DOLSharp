@@ -25,7 +25,7 @@ namespace DOL.GS.Effects
 	/// <summary>
 	/// The helper effect for sure shot
 	/// </summary>
-	public class SureShotEffect : IGameEffect
+	public class SureShotEffect : StaticEffect, IGameEffect
 	{
 		/// <summary>
 		/// The effect owner
