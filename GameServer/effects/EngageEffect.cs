@@ -25,7 +25,7 @@ namespace DOL.GS.Effects
 	/// <summary>
 	/// The helper class for the engage ability
 	/// </summary>
-	public class EngageEffect : IGameEffect
+	public class EngageEffect : StaticEffect, IGameEffect
 	{
 		/// <summary>
 		/// The ability description

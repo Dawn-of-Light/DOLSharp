@@ -26,7 +26,7 @@ namespace DOL.GS.Effects
 	/// <summary>
 	/// The helper class for sprint ability
 	/// </summary>
-	public sealed class SprintEffect : IGameEffect
+	public sealed class SprintEffect : StaticEffect, IGameEffect
 	{
 		/// <summary>
 		/// The timer that reduce the endurance every interval

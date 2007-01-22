@@ -172,7 +172,7 @@ namespace DOL.GS.Effects
 	/// <summary>
 	/// The helper class for the berserk ability
 	/// </summary>
-	public class DTdetrimentalEffect : IGameEffect
+	public class DTdetrimentalEffect : StaticEffect, IGameEffect
 	{
 		/// <summary>
 		/// Defines a logger for this class.

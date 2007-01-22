@@ -17,9 +17,12 @@
  *
  */
 using System.Reflection;
+
+using DOL.Database;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 using DOL.GS.PropertyCalc;
+
 using log4net;
 
 namespace DOL.GS.Spells
@@ -185,6 +188,62 @@ namespace DOL.GS.Spells
 		public virtual int BonusCategory3
 		{
 			get { return 1; }
+		}
+
+		public override void OnEffectRestored(GameSpellEffect effect, int[] vars)
+		{
+			IPropertyIndexer bonuscat = GetBonusCategory(effect.Owner, BonusCategory1);
+			bonuscat[(int)Property1] += vars[1];
+
+			if (Property2 != eProperty.Undefined)
+			{
+				bonuscat = GetBonusCategory(effect.Owner, BonusCategory2);
+				bonuscat[(int)Property2] += vars[1];
+			}
+			if (Property3 != eProperty.Undefined)
+			{
+				bonuscat = GetBonusCategory(effect.Owner, BonusCategory3);
+				bonuscat[(int)Property3] += vars[1];
+			}
+			SendUpdates(effect.Owner);
+		}
+
+		public override int OnRestoredEffectExpires(GameSpellEffect effect, int[] vars, bool noMessages)
+		{
+			if (!noMessages && Spell.Pulse == 0)
+			{
+				MessageToLiving(effect.Owner, Spell.Message3, eChatType.CT_SpellExpires);
+				Message.SystemToArea(effect.Owner, Util.MakeSentence(Spell.Message4, effect.Owner.GetName(0, false)), eChatType.CT_SpellExpires, effect.Owner);
+			}
+
+			IPropertyIndexer bonuscat = GetBonusCategory(effect.Owner, BonusCategory1);
+			bonuscat[(int)Property1] -= vars[1];
+
+			if (Property2 != eProperty.Undefined)
+			{
+				bonuscat = GetBonusCategory(effect.Owner, BonusCategory2);
+				bonuscat[(int)Property2] -= vars[1];
+			}
+			if (Property3 != eProperty.Undefined)
+			{
+				bonuscat = GetBonusCategory(effect.Owner, BonusCategory3);
+				bonuscat[(int)Property3] -= vars[1];
+			}
+			SendUpdates(effect.Owner);
+
+			return 0;
+
+		}
+
+		public override PlayerXEffect getSavedEffect(GameSpellEffect e)
+		{
+			PlayerXEffect eff = new PlayerXEffect();
+			eff.Var1 = Spell.ID;
+			eff.Duration = e.RemainingTime;
+			eff.IsHandler = true;
+			eff.Var2 = (int)(Spell.Value * e.Effectiveness);
+			return eff;
+
 		}
 
 		// constructor

@@ -52,7 +52,7 @@ namespace DOL.GS
 			{
 				GamePlayer player = (GamePlayer)source;
 
-				if (item.Name.StartsWith("Ticket: ") && item.Item_Type == 40)
+				if (item.Name.ToLower().StartsWith("ticket: ") && item.Item_Type == 40)
 				{
 					foreach (GameNPC npc in GetNPCsInRadius(1500))
 					{
@@ -65,6 +65,7 @@ namespace DOL.GS
 
 					String destination = item.Name.Substring(item.Name.IndexOf(" to ") + 4);
 					PathPoint path = MovementMgr.Instance.LoadPath(item.Id_nb);
+					//PathPoint path = MovementMgr.Instance.LoadPath(this.Name + "=>" + destination);
 					if (path != null)
 					{
 						player.Inventory.RemoveCountFromStack(item, 1);

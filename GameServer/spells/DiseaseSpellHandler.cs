@@ -17,6 +17,8 @@
  *
  */
 using System;
+
+using DOL.Database;
 using DOL.AI.Brain;
 using DOL.GS;
 using DOL.GS.Effects;
@@ -138,6 +140,30 @@ namespace DOL.GS.Spells
 				if (npc.CurrentSpeed > maxSpeed)
 					npc.CurrentSpeed = maxSpeed;
 			}
+		}
+
+		public override PlayerXEffect getSavedEffect(GameSpellEffect e)
+		{
+			if (e is PulsingSpellEffect || Spell.Pulse != 0 || Spell.Concentration != 0 || e.RemainingTime < 1)
+				return null;
+			PlayerXEffect eff = new PlayerXEffect();
+			eff.Var1 = Spell.ID;
+			eff.Duration = e.RemainingTime;
+			eff.IsHandler = true;
+
+			return eff;
+		}
+
+		public override void OnEffectRestored(GameSpellEffect effect, int[] vars)
+		{
+			effect.Owner.Disease(true);
+			effect.Owner.BuffBonusMultCategory1.Set((int)eProperty.MaxSpeed, this, 1.0 - 0.15);
+			effect.Owner.BuffBonusMultCategory1.Set((int)eProperty.Strength, this, 1.0 - 0.075);
+		}
+
+		public override int OnRestoredEffectExpires(GameSpellEffect effect, int[] vars, bool noMessages)
+		{
+			return this.OnEffectExpires(effect, noMessages);
 		}
 
 		// constructor

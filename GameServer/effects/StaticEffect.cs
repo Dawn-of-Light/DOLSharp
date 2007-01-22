@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using DOL.Database;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Effects
@@ -101,6 +102,15 @@ namespace DOL.GS.Effects
 			{
 				return new ArrayList(0);
 			}
+		}
+
+		/// <summary>
+		/// Get the save effect
+		/// </summary>
+		/// <returns></returns>
+		public PlayerXEffect getSavedEffect()
+		{
+			return null;
 		}
 	}
 }

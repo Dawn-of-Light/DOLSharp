@@ -30,6 +30,20 @@ namespace DOL.GS.Scripts
 	{
 		public int OnCommand(GameClient client, string[] args)
 		{
+			const string YELL_TICK = "YELL_Tick";
+			long YELLTick = client.Player.TempProperties.getLongProperty(YELL_TICK, 0);
+			if (YELLTick > 0 && YELLTick - client.Player.CurrentRegion.Time <= 0)
+			{
+				client.Player.TempProperties.removeProperty(YELL_TICK);
+			}
+
+			long changeTime = client.Player.CurrentRegion.Time - YELLTick;
+			if (changeTime < 500 && YELLTick > 0)
+			{
+				client.Player.Out.SendMessage("Slow down! Think before you say each word!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return 0;
+			}
+
 			if (args.Length < 2)
 			{
 				foreach (GamePlayer player in client.Player.GetPlayersInRadius(WorldMgr.YELL_DISTANCE))
@@ -62,10 +76,13 @@ namespace DOL.GS.Scripts
 					else
 						client.Out.SendMessage("You yell for help!", eChatType.CT_Help, eChatLoc.CL_SystemWindow);
 				}
+				client.Player.TempProperties.setProperty(YELL_TICK, client.Player.CurrentRegion.Time);
 				return 1;
 			}
+
 			string message = string.Join(" ", args, 1, args.Length - 1);
 			client.Player.Yell(message);
+			client.Player.TempProperties.setProperty(YELL_TICK, client.Player.CurrentRegion.Time);
 			return 1;
 		}
 	}

@@ -109,8 +109,8 @@ namespace DOL.GS
 		/// <summary>
 		/// Called when player try to use a secondary crafting skill
 		/// </summary>
-		/// <param name="item"></param>
 		/// <param name="player"></param>
+		/// <param name="siegeWeapon"></param>
 		/// <returns></returns>
 		public static int BeginWork(GamePlayer player, GameSiegeWeapon siegeWeapon)
 		{

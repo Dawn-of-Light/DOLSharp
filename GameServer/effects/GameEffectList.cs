@@ -19,7 +19,12 @@
 using System;
 using System.Collections;
 using System.Reflection;
+
+using DOL.Database;
 using DOL.AI.Brain;
+using DOL.GS.Scripts;
+using DOL.GS.Spells;
+
 using log4net;
 
 namespace DOL.GS.Effects
@@ -144,6 +149,58 @@ namespace DOL.GS.Effects
 			foreach (IGameEffect effect in fx)
 				effect.Cancel(false);
 			CommitChanges();
+		}
+
+		public virtual void RestoreAllEffects()
+		{
+			GamePlayer player = m_owner as GamePlayer;
+			if (player == null || player.PlayerCharacter == null || GameServer.Database == null)
+				return;
+			PlayerXEffect[] effs = (PlayerXEffect[])GameServer.Database.SelectObjects(typeof(PlayerXEffect), "ChardID = '" + player.PlayerCharacter.ObjectId + "'");
+			if (effs == null)
+				return;
+			ArrayList targets = new ArrayList();
+			targets.Add(player);
+			SpellLine line = new SpellLine("restoredEffects", "RestoredEffects", "NONE", false);
+			foreach (PlayerXEffect eff in effs)
+			{
+				DBSpell dbspell = (DBSpell)GameServer.Database.SelectObject(typeof(DBSpell), " spellid = '" + eff.Var1 + "'");
+				if (dbspell == null)
+					continue;
+				Spell spell = new Spell(dbspell, 0);
+				ISpellHandler handler = ScriptMgr.CreateSpellHandler(player, spell, line);
+				GameSpellEffect e;
+				e = new GameSpellEffect(handler, eff.Duration, spell.Frequency);
+				e.RestoredEffect = true;
+				int[] vars = { eff.Var1, eff.Var2, eff.Var3, eff.Var4, eff.Var5, eff.Var6 };
+				e.RestoreVars = vars;
+				GameServer.Database.DeleteObject(eff);
+				e.Start(player);
+			}
+
+		}
+
+		public virtual void SaveAllEffects()
+		{
+			GamePlayer player = m_owner as GamePlayer;
+			if (player == null)
+				return;
+			if (m_effects == null || m_effects.Count < 1)
+				return;
+			foreach (IGameEffect eff in m_effects)
+			{
+				if (eff is GameSpellEffect)
+				{ 
+					GameSpellEffect gse = eff as GameSpellEffect;
+					if (gse.Concentration > 0 && gse.SpellHandler.Caster != player)
+						continue;
+				}
+				PlayerXEffect effx = eff.getSavedEffect();
+				if (effx == null)
+					continue;
+				effx.ChardID = player.PlayerCharacter.ObjectId;
+				GameServer.Database.AddNewObject(effx);
+			}
 		}
 
 		/// <summary>
