@@ -163,6 +163,18 @@ namespace DOL.GS.Spells
 				player.Out.SendMessage("You have been resurrected by " + m_caster.GetName(0, false) + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				player.Notify(GamePlayerEvent.Revive, player);
 
+				IList attackers;
+				lock (player.Attackers.SyncRoot) { attackers = (IList)(player.Attackers as ArrayList).Clone(); }
+
+				foreach (GameObject attacker in attackers)
+				{
+					if (attacker is GameLiving && attacker != living.TargetObject)
+						((GameLiving)attacker).Notify(
+							GameLivingEvent.EnemyHealed,
+							(GameLiving)attacker,
+							new EnemyHealedEventArgs(living, m_caster, GameLiving.eHealthChangeType.Spell, living.Health));
+				}
+
 				GamePlayer casterPlayer = Caster as GamePlayer;
 				if (casterPlayer != null)
 				{

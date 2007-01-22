@@ -282,7 +282,7 @@ namespace DOL.GS.Quests.Albion
 				item.Durability = 50000;
 
 				item.Bonus1 = 4;
-				item.Bonus1Type = (int) eProperty.Focus_Cold;
+				item.Bonus1Type = (int) eProperty.Skill_Cold;
 
 				item.Bonus2 = 22;
 				item.Bonus2Type = (int) eStat.DEX;
@@ -455,7 +455,7 @@ namespace DOL.GS.Quests.Albion
 				item.Durability = 50000;
 
 				item.Bonus1 = 4;
-				item.Bonus1Type = (int) eProperty.Focus_Fire;
+				item.Bonus1Type = (int) eProperty.Skill_Fire;
 
 				item.Bonus2 = 8;
 				item.Bonus2Type = (int) eResist.Cold;
@@ -496,7 +496,7 @@ namespace DOL.GS.Quests.Albion
 				item.Durability = 50000;
 
 				item.Bonus1 = 4;
-				item.Bonus1Type = (int) eProperty.Focus_Earth;
+				item.Bonus1Type = (int) eProperty.Skill_Earth;
 
 				item.Bonus2 = 18;
 				item.Bonus2Type = (int) eStat.DEX;

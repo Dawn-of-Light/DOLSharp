@@ -7,7 +7,7 @@ namespace DOL.GS.Effects
 	/// <summary>
 	/// Camouflage
 	/// </summary>
-	public class CamouflageEffect : StaticEffect
+	public class CamouflageEffect : StaticEffect, IGameEffect
 	{
 		GamePlayer player;
 		

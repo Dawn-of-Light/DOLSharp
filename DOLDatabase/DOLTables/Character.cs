@@ -159,7 +159,7 @@ namespace DOL
 
 			private bool m_gainXP;
 			private bool m_gainRP;
-
+			private bool m_autoloot;
 			private int m_lastfreeLevel;
 			private DateTime m_lastfreeleveled;
 
@@ -195,6 +195,7 @@ namespace DOL
 				m_spellQueue = true;
 				m_gainXP = true;
 				m_gainRP = true;
+				m_autoloot = false;
 			}
 
 			/// <summary>
@@ -1793,7 +1794,19 @@ namespace DOL
 					m_gainRP = value;
 				}
 			}
-
+			/// <summary>
+			/// autoloot
+			/// </summary>
+			[DataElement(AllowDbNull = true)]
+			public bool Autoloot
+			{
+				get { return m_autoloot; }
+				set
+				{
+					Dirty = true;
+					m_autoloot = value;
+				}
+			}
 			/// <summary>
 			/// Last Date for FreeLevel
 			/// </summary>

@@ -151,6 +151,7 @@
     <Compile Include="DOLTables\DBStyleXSpell.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DOLTables\DBPlayerXEffect.cs" />
     <Compile Include="DOLTables\ServerProperty.cs" />
     <Compile Include="DOLTables\DBAbility.cs">
       <SubType>Code</SubType>

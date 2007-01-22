@@ -257,6 +257,20 @@ namespace DOL.GS
 			}
 		}
 
+		private bool m_autoloot = false;
+		/// <summary>
+		/// Gets or sets the gain XP flag for this player
+		/// </summary>
+		public bool Autoloot
+		{
+			get { return m_autoloot; }
+			set
+			{
+				m_autoloot = value;
+				m_character.Autoloot = value;
+			}
+		}
+
 		/// <summary>
 		/// quit timer
 		/// </summary>
@@ -508,6 +522,7 @@ namespace DOL.GS
 			// cancel all effects until saving of running effects is done
 			try
 			{
+				EffectList.SaveAllEffects();
 				CancelAllConcentrationEffects();
 				EffectList.CancelAll();
 			}
@@ -996,49 +1011,55 @@ namespace DOL.GS
 				m_releaseTimer = null;
 			}
 
-			if (Realm != (byte)eRealm.None && Level > 5)
+			if (Realm != (byte)eRealm.None)
 			{
-				// actual lost exp, needed for 2nd stage deaths
-				long lostExp = Experience;
-				long lastDeathExpLoss = TempProperties.getLongProperty(DEATH_EXP_LOSS_PROPERTY, 0);
-				TempProperties.removeProperty(DEATH_EXP_LOSS_PROPERTY);
-
-				GainExperience(-lastDeathExpLoss);
-				lostExp -= Experience;
-
-				// raise only the gravestone if xp has to be stored in it
-				if (lostExp > 0)
+				if (Level > 5)
 				{
-					// find old gravestone of player and remove it
-					if (m_character.HasGravestone)
-					{
-						Region reg = WorldMgr.GetRegion((ushort)m_character.GravestoneRegion);
-						if (reg != null)
-						{
-							GameGravestone oldgrave = reg.FindGraveStone(this);
-							if (oldgrave != null)
-							{
-								oldgrave.Delete();
-							}
-						}
-						m_character.HasGravestone = false;
-					}
+					// actual lost exp, needed for 2nd stage deaths
+					long lostExp = Experience;
+					long lastDeathExpLoss = TempProperties.getLongProperty(DEATH_EXP_LOSS_PROPERTY, 0);
+					TempProperties.removeProperty(DEATH_EXP_LOSS_PROPERTY);
 
-					GameGravestone gravestone = new GameGravestone(this, lostExp);
-					gravestone.AddToWorld();
-					m_character.GravestoneRegion = gravestone.CurrentRegionID;
-					m_character.HasGravestone = true;
-					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Release.GraveErected"), eChatType.CT_YouDied, eChatLoc.CL_SystemWindow);
-					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Release.ReturnToPray"), eChatType.CT_YouDied, eChatLoc.CL_SystemWindow);
+					GainExperience(-lastDeathExpLoss);
+					lostExp -= Experience;
+
+					// raise only the gravestone if xp has to be stored in it
+					if (lostExp > 0)
+					{
+						// find old gravestone of player and remove it
+						if (m_character.HasGravestone)
+						{
+							Region reg = WorldMgr.GetRegion((ushort)m_character.GravestoneRegion);
+							if (reg != null)
+							{
+								GameGravestone oldgrave = reg.FindGraveStone(this);
+								if (oldgrave != null)
+								{
+									oldgrave.Delete();
+								}
+							}
+							m_character.HasGravestone = false;
+						}
+
+						GameGravestone gravestone = new GameGravestone(this, lostExp);
+						gravestone.AddToWorld();
+						m_character.GravestoneRegion = gravestone.CurrentRegionID;
+						m_character.HasGravestone = true;
+						Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Release.GraveErected"), eChatType.CT_YouDied, eChatLoc.CL_SystemWindow);
+						Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Release.ReturnToPray"), eChatType.CT_YouDied, eChatLoc.CL_SystemWindow);
+					}
 				}
 			}
 
-			int deathConLoss = TempProperties.getIntProperty(DEATH_CONSTITUTION_LOSS_PROPERTY, 0); // get back constitution lost at death
-			if (deathConLoss > 0)
+			if (Level > 10)
 			{
-				TotalConstitutionLostAtDeath += deathConLoss;
-				Out.SendCharStatsUpdate();
-				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Release.LostConstitution"), eChatType.CT_YouDied, eChatLoc.CL_SystemWindow);
+				int deathConLoss = TempProperties.getIntProperty(DEATH_CONSTITUTION_LOSS_PROPERTY, 0); // get back constitution lost at death
+				if (deathConLoss > 0)
+				{
+					TotalConstitutionLostAtDeath += deathConLoss;
+					Out.SendCharStatsUpdate();
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Release.LostConstitution"), eChatType.CT_YouDied, eChatLoc.CL_SystemWindow);
+				}
 			}
 
 			//Update health&sit state first!
@@ -1175,6 +1196,13 @@ namespace DOL.GS
 				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Pray.CantPrayNow"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
+
+			if (IsRiding)
+			{
+				Out.SendMessage("You can't pray while riding a horse!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return;
+			}
+
 			GameGravestone gravestone = TargetObject as GameGravestone;
 			if (gravestone == null)
 			{
@@ -2650,7 +2678,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="line">the line of spell</param>
 		/// <returns>list of Spells</returns>
-		public IList GetUsableSpellsOfLine(SpellLine line)
+		public virtual IList GetUsableSpellsOfLine(SpellLine line)
 		{
 			IList spells = new ArrayList();
 			Hashtable table_spells = new Hashtable();
@@ -2708,7 +2736,7 @@ namespace DOL.GS
 		/// updates the list of available styles
 		/// </summary>
 		/// <param name="sendMessages">sends "you learn" messages if true</param>
-		public void RefreshSpecDependantSkills(bool sendMessages)
+		public virtual void RefreshSpecDependantSkills(bool sendMessages)
 		{
 			IList newStyles = new ArrayList();
 			lock (m_styles.SyncRoot)
@@ -8707,7 +8735,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="floorObject">GameItem on the floor</param>
 		/// <returns>true if picked up</returns>
-		public bool PickupObject(GameObject floorObject)
+		public bool PickupObject(GameObject floorObject, bool checkRange)
 		{
 			if (floorObject == null)
 			{
@@ -8723,7 +8751,7 @@ namespace DOL.GS
 				return false;
 			}
 
-			if (!WorldMgr.CheckDistance(floorObject, this, WorldMgr.PICKUP_DISTANCE))
+			if (!checkRange && !WorldMgr.CheckDistance(floorObject, this, WorldMgr.PICKUP_DISTANCE))
 			{
 				Out.SendMessage("The " + floorObject.Name + " is too far away to pick up!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
@@ -9356,6 +9384,7 @@ namespace DOL.GS
 
 			m_gainXP = m_character.GainXP;
 			m_gainRP = m_character.GainRP;
+			m_autoloot = m_character.Autoloot;
 
 
 			// Has to be updated on load to ensure time offline isn't

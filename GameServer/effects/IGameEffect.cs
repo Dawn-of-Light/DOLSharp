@@ -18,6 +18,7 @@
  */
 using System;
 using System.Collections;
+using DOL.Database;
 
 namespace DOL.GS.Effects
 {
@@ -56,5 +57,11 @@ namespace DOL.GS.Effects
 		/// Delve Info
 		/// </summary>
 		IList DelveInfo { get; }
+
+		/// <summary>
+		/// Get the save effect
+		/// </summary>
+		/// <returns></returns>
+		PlayerXEffect getSavedEffect();
 	}
 }

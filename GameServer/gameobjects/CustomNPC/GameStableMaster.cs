@@ -59,9 +59,11 @@ namespace DOL.GS
 			{
 				GamePlayer player = (GamePlayer)source;
 
-				if (item.Name.StartsWith("ticket to ") && item.Item_Type==40)
+				if (item.Name.ToLower().StartsWith("ticket to ") && item.Item_Type==40)
 				{
-					String destination = item.Name.Substring(10);
+					//String destination = item.Name.Substring(10);
+					String destination = item.Name.Substring(item.Name.IndexOf(" to "));
+					//PathPoint path = MovementMgr.Instance.LoadPath(this.Name+"=>"+destination);
 					PathPoint path = MovementMgr.Instance.LoadPath(item.Id_nb);
 					if (path != null)
 					{	

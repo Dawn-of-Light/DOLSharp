@@ -192,7 +192,7 @@ namespace DOL.GS.Spells
 						break;
 				}
 			}
-			else if (attackArgs.AttackData.SpellHandler != null)
+			else
 			{
 				//debuffs/shears dont interrupt mez, neither does recasting mez
 				if (attackArgs.AttackData.SpellHandler is PropertyChangingSpell || attackArgs.AttackData.SpellHandler is MesmerizeSpellHandler

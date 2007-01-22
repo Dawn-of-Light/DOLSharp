@@ -10,7 +10,7 @@ namespace DOL.GS.Effects
 	/// <summary>
 	/// Effect handler for Barrier Of Fortitude
 	/// </summary>
-	public class BarrierOfFortitudeEffect : IGameEffect
+	public class BarrierOfFortitudeEffect : StaticEffect, IGameEffect
 	{
 		private const String m_delveString = "Grants the group a melee absorption bonus (Does not stack with Soldier's Barricade or Bedazzling Aura).";
 		private GamePlayer m_player;

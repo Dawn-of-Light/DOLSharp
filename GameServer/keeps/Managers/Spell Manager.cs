@@ -224,7 +224,7 @@ namespace DOL.GS.Keeps
 					spell.SpellID = 90001;
 					spell.Target = "Realm";
 					spell.Type = "Heal";
-					//spell.Interruptable = 0;
+					spell.Uninterruptible = true;
 					m_albLordHealSpell = new Spell(spell, 50);
 				}
 				return m_albLordHealSpell;
@@ -250,7 +250,7 @@ namespace DOL.GS.Keeps
 					spell.SpellID = 90002;
 					spell.Target = "Realm";
 					spell.Type = "Heal";
-					//spell.Interruptable = 0;
+					spell.Uninterruptible = true;
 					m_midLordHealSpell = new Spell(spell, 50);
 				}
 				return m_midLordHealSpell;
@@ -276,7 +276,7 @@ namespace DOL.GS.Keeps
 					spell.SpellID = 90003;
 					spell.Target = "Realm";
 					spell.Type = "Heal";
-					//spell.Interruptable = 0;
+					spell.Uninterruptible = true;
 					m_hibLordHealSpell = new Spell(spell, 50);
 				}
 				return m_hibLordHealSpell;

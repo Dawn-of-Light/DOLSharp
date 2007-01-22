@@ -725,8 +725,8 @@ namespace DOL.GS.Quests.Hibernia
 				}
 
 			}
-			HeroEpicBoots = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "WardenEpicBoots");
-			if (HeroEpicBoots == null)
+			WardenEpicBoots = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "WardenEpicBoots");
+			if (WardenEpicBoots == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Warden Epic Boots , creating it ...");

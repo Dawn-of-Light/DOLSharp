@@ -10,7 +10,7 @@ namespace DOL.GS.Effects
     /// <summary>
     /// Effect handler for Barrier Of Fortitude
     /// </summary>
-    public class AdrenalineRushEffect : IGameEffect
+	public class AdrenalineRushEffect : StaticEffect, IGameEffect
     {
         private const String m_delveString = "Doubles the base melee damage for 20 seconds.";
         private GamePlayer m_player;

@@ -27,7 +27,7 @@ namespace DOL.GS.Effects
 	/// <summary>
 	/// The helper class for the intercept ability
 	/// </summary>
-	public class InterceptEffect : IGameEffect
+	public class InterceptEffect : StaticEffect, IGameEffect
 	{
 		protected const String delveString = "Ability that if successful will intercept an attack meant for the ability's target. You will take damage in the target's place.";
 

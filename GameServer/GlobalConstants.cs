@@ -805,6 +805,17 @@ namespace DOL.GS
 	}
 
 	/// <summary>
+	/// The type of instrument
+	/// </summary>
+	public abstract class InstrumentType
+	{
+		public const int Drum = 1;
+		public const int Lute = 2;
+		public const int Flute = 3;
+		public const int Harp = 4;
+	}
+
+	/// <summary>
 	/// the material type
 	/// </summary>
 	public enum eMaterial : byte

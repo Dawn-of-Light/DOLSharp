@@ -49,7 +49,7 @@ namespace DOL.GS.RealmAbilities
 				return;
 			}
 
-			if (m_expireTimerID.IsAlive)
+			if (m_expireTimerID != null && m_expireTimerID.IsAlive)
 			{
 				caster.Out.SendMessage("You are already casting this ability.", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
 				caster.DisableSkill(this, 3 * 1000);

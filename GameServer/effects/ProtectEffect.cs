@@ -28,7 +28,7 @@ namespace DOL.GS.Effects
 	/// <summary>
 	/// The helper class for the protect ability
 	/// </summary>
-	public class ProtectEffect : IGameEffect
+	public class ProtectEffect : StaticEffect, IGameEffect
 	{
 		/// <summary>
 		/// The ability description

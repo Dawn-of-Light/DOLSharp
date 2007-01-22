@@ -62,7 +62,7 @@ namespace DOL.Database
 		protected int m_effectGroup;
 		protected int m_subSpellID = 0;
 		protected bool m_moveCast = false;
-		protected bool m_uninterruptible = true;
+		protected bool m_uninterruptible = false;
 
 		static bool m_autoSave;
 

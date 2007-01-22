@@ -27,7 +27,7 @@ namespace DOL.GS.Effects
 	/// <summary>
 	/// The helper class for the stag ability
 	/// </summary>
-	public class StagEffect : IGameEffect
+	public class StagEffect : StaticEffect, IGameEffect
 	{
 		/*
         1.42
