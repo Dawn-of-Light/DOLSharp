@@ -19,6 +19,7 @@
 using System;
 using System.Reflection;
 
+using DOL.Database;
 using DOL.AI.Brain;
 using DOL.Events;
 using DOL.GS.Effects;
@@ -313,6 +314,25 @@ namespace DOL.GS.Spells
 			}
 			GameEventMgr.RemoveHandler(effect.Owner, EventType, new DOLEventHandler(EventHandler));
 			return 0;
+		}
+
+		public override void OnEffectRestored(GameSpellEffect effect, int[] vars)
+		{
+			GameEventMgr.AddHandler(effect.Owner, EventType, new DOLEventHandler(EventHandler));
+		}
+
+		public override int OnRestoredEffectExpires(GameSpellEffect effect, int[] vars, bool noMessages)
+		{
+			return OnEffectExpires(effect, noMessages);
+		}
+
+		public override PlayerXEffect getSavedEffect(GameSpellEffect e)
+		{
+			PlayerXEffect eff = new PlayerXEffect();
+			eff.Var1 = Spell.ID;
+			eff.Duration = e.RemainingTime;
+			eff.IsHandler = true;
+			return eff;
 		}
 
 		// constructor

@@ -25,7 +25,7 @@ namespace DOL.GS.Effects
 	/// <summary>
 	/// The helper class for the stealth ability
 	/// </summary>
-	public class StealthEffect : IGameEffect
+	public class StealthEffect : StaticEffect, IGameEffect
 	{
 		/// <summary>
 		/// The owner of the effect

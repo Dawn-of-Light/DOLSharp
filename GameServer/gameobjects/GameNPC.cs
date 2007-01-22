@@ -834,6 +834,7 @@ namespace DOL.GS
 		{
 			if (IsTurningDisabled)
 				return; // can't walk when turning is disabled
+
 			//Slow mobs down when they are hurt!
 			int maxSpeed = MaxSpeed;
 			if (speed > maxSpeed)
@@ -2692,6 +2693,8 @@ namespace DOL.GS
 		{
 			// TODO: mobs drop "a small chest" sometimes
 			ArrayList dropMessages = new ArrayList();
+			ArrayList autolootlist = new ArrayList();
+			ArrayList aplayer = new ArrayList();
 			lock (m_xpGainers.SyncRoot)
 			{
 				if (m_xpGainers.Keys.Count == 0) return;
@@ -2746,6 +2749,20 @@ namespace DOL.GS
 					//Only add money loot if not killing grays
 					dropMessages.Add(GetName(0, true) + " drops " + loot.GetName(1, false) + ".");
 					loot.AddToWorld();
+
+					foreach (GameObject gainer in m_xpGainers.Keys)
+					{
+						if (gainer is GamePlayer)
+						{
+							GamePlayer player = gainer as GamePlayer;
+							if (player.Autoloot && WorldMgr.CheckDistance(loot, player, 700))
+							{
+								if (player.PlayerGroup == null || (player.PlayerGroup != null && player == player.PlayerGroup.Leader))
+									aplayer.Add(player);
+								autolootlist.Add(loot);
+							}
+						}
+					}
 				}
 			}
 
@@ -2762,6 +2779,18 @@ namespace DOL.GS
 					if (player == killer) continue;
 					foreach (string str in dropMessages)
 						player.Out.SendMessage(str, eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
+				}
+			}
+
+			if (autolootlist.Count > 0)
+			{
+				foreach (GameObject obj in autolootlist)
+				{
+					foreach (GamePlayer player in aplayer)
+					{
+						player.PickupObject(obj, true);
+						break;
+					}
 				}
 			}
 		}

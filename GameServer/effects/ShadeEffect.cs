@@ -24,7 +24,7 @@ namespace DOL.GS.Effects
 	/// <summary>
 	/// The helper effect for player shade mode
 	/// </summary>
-	public class ShadeEffect : IGameEffect
+	public class ShadeEffect : StaticEffect, IGameEffect
 	{
 		/// <summary>
 		/// The effect owner

@@ -28,7 +28,7 @@ namespace DOL.GS.Effects
 	/// <summary>
 	/// The helper class for the SavageCrush ability
 	/// </summary>
-	public class TheEmptyMindEffect : IGameEffect
+	public class TheEmptyMindEffect : StaticEffect, IGameEffect
 	{
 		/// <summary>
 		/// The ability description

@@ -10,7 +10,7 @@ namespace DOL.GS.Effects
     /// <summary>
     /// Effect handler for Barrier Of Fortitude
     /// </summary>
-    public class StrikePredictionEffect : IGameEffect
+	public class StrikePredictionEffect : StaticEffect, IGameEffect
     {
         private const String m_delveString = "Grants all group members a chance to evade all melee and arrow attacks for 30 seconds.";
         private GamePlayer m_player;

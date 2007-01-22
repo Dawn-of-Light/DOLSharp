@@ -9,7 +9,7 @@ namespace DOL.GS.Effects
 	/// <summary>
 	/// 
 	/// </summary>
-	public class MasteryofConcentrationEffect : IGameEffect
+	public class MasteryofConcentrationEffect : StaticEffect, IGameEffect
 	{
 		private const string m_delveString = "This ability allows a player to cast uninterrupted, even while sustaining attacks, through melee or spell for 30 seconds.";
 		private GamePlayer m_player;

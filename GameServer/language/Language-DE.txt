@@ -12,103 +12,271 @@ System.LanguagesName.English:				Englisch
 System.LanguagesName.French:				Französisch
 System.LanguagesName.German:				Deutsch
 System.LanguagesName.Spanish:				Spanisch
-System.LanguagesName.Czech:					Tschechisch
+System.LanguagesName.Czech:				Tschechisch
 
 # SYSTEM
-System.NoSense:								Das würde keinen Sinn machen!
+System.NoSense:						Das würde keinen Sinn machen!
+System.MustSelectTarget:				Ihr müsst ein Ziel auswählen!
+System.ReleaseTimer:					Automatischer Release
 
 # GAMEPLAYER
-GamePlayer.SendReceive.sends:				 sendet,
+GamePlayer.Attack.AlreadyDead:				{0} ist bereits tot!
+GamePlayer.Attack.Blocked:				{0} blockiert Euren Angriff!
+GamePlayer.Attack.CantBeAttacked:			Das kann nicht angegriffen werden!
+GamePlayer.Attack.CantCritical:				Ihr könnt keinen kritischen Schuss auf Euer Ziel ausführen, deshalb wechselt Ihr in die normale Schussart.
+GamePlayer.Attack.CantSeeTarget:			Ihr könnt Euer Ziel nicht sehen!
+GamePlayer.Attack.CantUseQuiver:			Ihr könnt den ausgewählten Köcher nicht mit Eurer Waffe benutzen!
+GamePlayer.Attack.CouldRepair:				Euer {0} sollte repariert werden.
+GamePlayer.Attack.Critical:				Ihr trefft {0} kritisch mit zusätzlich {1} Schaden!
+GamePlayer.Attack.Evade:				{0} greift Euch an, doch Ihr könnt ausweichen!
+GamePlayer.Attack.Evaded:				{0} weicht Eurem Angriff aus!
+GamePlayer.Attack.Fumble:				Ihr stolpert, verhaspelt Euch beim Angriff und braucht ein paar Augenblicke, um wieder in Kampfposition zu kommen!
+GamePlayer.Attack.Fumbled:				{0} verhaspelt sich!
+GamePlayer.Attack.HitsYour:				{0} trifft {1} mit {2}{3} Schaden!
+GamePlayer.Attack.HitsYou:				{0} trifft Euch mit {1}{2} Schaden!
+GamePlayer.Attack.HitsYouCritical:			{0} trifft Euch kritisch mit {1} zusätzlichen Schaden!
+GamePlayer.Attack.InterceptHit:				Ihr {0} {1}{2} an und trefft für {3}{4} Schaden!
+GamePlayer.Attack.Intercepted:				{0} stellt sich vor {1} und fängt den Schlag ab!
+GamePlayer.Attack.InterceptedHit:			Ihr {0} {1}{2} an aber trefft {3} für {4}{5} Schaden!
+GamePlayer.Attack.Interrupted:				{0} greift Euch an und Euer {1} wurde unterbrochen!
+GamePlayer.Attack.Location.Torso:			torso
+GamePlayer.Attack.Location.Arm:				Euren Arm
+GamePlayer.Attack.Location.Head:			Euren Kopf
+GamePlayer.Attack.Location.Leg:				Euer Bein
+GamePlayer.Attack.Location.Hand:			Eure Hand
+GamePlayer.Attack.Location.Foot:			Euren Fuß
+GamePlayer.Attack.Miss:					Ihr habt nicht getroffen!
+GamePlayer.Attack.Missed:				{0} greift Euch an, trifft aber nicht!
+GamePlayer.Attack.MustSelectQuiver:			Ihr müsst einen Köcherslot auswählen, aus dem Ihr ziehen wollt!
+GamePlayer.Attack.NeedRepair:				Euer {0} benödigt eine Reparatur.
+GamePlayer.Attack.NeedRepairDire:			Euer {0} benödigt dringend eine Reparatur.
+GamePlayer.Attack.NeedTarget:				Ihr braucht ein Ziel um anzugreifen!
+GamePlayer.Attack.NotInView:				{0} ist nicht in Sichtweite!
+GamePlayer.Attack.Parried:				{0} parriert Euren Angriff!
+GamePlayer.Attack.Parry:				{0} greift Euch an, doch Ihr könnt parieren!
+GamePlayer.Attack.ReadyToFire:				Ihr seid bereit zum Schießen!
+GamePlayer.Attack.StrafMiss:				Ihr wurdet im Kampf schwer angegriffen und trefft deshalb nicht.
+GamePlayer.Attack.TooFarAway:				{0} ist zu weit weg für einen Angriff!
+GamePlayer.Attack.TooTired:				Es ist Euch zu anstrengend, das Ziel noch länger anzuvisieren!
+GamePlayer.Attack.Type.Shot:				Schuss
+GamePlayer.Attack.Type.Throw:				Wurf
+GamePlayer.Attack.WithYour:				mit Eure(r/m)
+GamePlayer.Attack.YouAttack:				Ihr attackiert
+GamePlayer.Attack.YouShot:				Ihr schießt		
+GamePlayer.Die.CorpseLies:				{0} ist gerade gestorben. {1} Leichnam liegt auf der Erde.
+GamePlayer.Die.DeadRVR:					Ihr starbt im Kampf für Euer Reich und verliert deshalb keine Erfahrung!
+GamePlayer.Die.DeathN1:					Das ist Euer erster Tod auf dieser Stufe. Der Verlusst Eurer Erfahrung und Konstitution ist deshalb gering.
+GamePlayer.Die.DeathN2:					Das ist Euer zweiter Tod auf dieser Stufe. Der Verlusst Eurer Erfahrung und Konstitution ist deshalb etwas geringer.
+GamePlayer.Die.DuelDefeated:				{0} wurde gerade von {1} in einem Duell besiegt !
+GamePlayer.Die.Killed:					{0} wurde gerade getötet !
+GamePlayer.Die.KilledBy:				{0} wurde gerade von {1} getötet.
+GamePlayer.Die.KilledByLocation:			{0} wurde gerade von {1} in {2} getötet.
+GamePlayer.Die.KilledLocation:				{0} wurde gerade in {1} getötet !
+GamePlayer.Die.ReleaseToReturn:				Ihr seid tot. Gebt /release ein, um an der Stelle ins Leben zurückzukehren, wo Ihr Eure Seele zuletzt gebunden habt.
+GamePlayer.Die.YouKilled:				Ihr habt gerade {0} getötet !
+GamePlayer.SendReceive.sends:				sendet: 
 GamePlayer.Quit.CantQuitDead:				Ihr könnt diese Welt nicht verlassen, Ihr seid tot. Gebt /release ein, um wieder auf zuerstehen.
 GamePlayer.Quit.CantQuitMount:				Ihr müsst erst absteigen, bevor Ihr diese Welt verlassen könnt.
 GamePlayer.Quit.CantQuitStanding:			Ihr müsst erst einmal stehen bleiben, bevor Ihr diese Welt verlassen könnt.
 GamePlayer.Quit.CantQuitCrafting:			Ihr könnt diese Welt nicht verlassen, während Ihr arbeitet.
 GamePlayer.Quit.RecentlyInCombat:			Ihr habt gerade noch gekämpft und müsst etwas länger warten, bevor Ihr diese Welt verlassen könnt.
-GamePlayer.Quit.YouWillQuit:				You will quit after sitting for {0} seconds.  Type '/stand' or move if you don't want to quit.
-GamePlayer.Release.NotDead:					Ihr seid nicht tot!
+GamePlayer.Quit.YouWillQuit:				Ihr werdet diese Welt in {0} Sekunden verlassen. Bewegt Euch einfach, falls Ihr noch hier bleiben wollt.
+GamePlayer.Release.NotDead:				Ihr seid nicht tot!
 GamePlayer.Release.CantReleaseDuel:			You can't alter your release on a duel death!
-GamePlayer.Release.NoLongerReleaseAuto:		Ihr werdet nicht länger automatisch auferstehen. ({0} Sekunden)
-GamePlayer.Release.WillReleaseAuto:			Ihr werdet automatisch in {0} Sekunden wieder auferstehen!
-GamePlayer.Release.WillReleaseAutoCity:		Ihr werdet automatisch in Eurer Heimatstadt wieder auferstehen in {0} Sekunden!
+GamePlayer.Release.NoLongerReleaseAuto:			Ihr werdet nicht länger automatisch wieder auferstehen. ({0} Sekunden)
+GamePlayer.Release.WillReleaseAuto:			Ihr werdet automatisch in {0} Sekunden wiederauferstehen!
+GamePlayer.Release.WillReleaseAutoCity:			In {0} Sekunden werdet Ihr automatisch in Eurer Heimatstadt wiederauferstehen !
 GamePlayer.Release.YouRelease:				Ihr verlasst Euren Leichnam und kehrt ins Leben zurück.
 GamePlayer.Release.GraveErected:			Es wurde ein Grabstein an der Stelle Eures Todes errichtet.
-GamePlayer.Release.ReturnToPray:			Betet an diesem Grabstein, um einen Teil Eurer verlorenen Erfahrungspunkte zurück zu erhalten.
-GamePlayer.Release.LostConstitution:		Ihr habt einen Teil Eurer Konstitution verloren. Geht zu einen Heiler, um diese wieder herzustellen!
-GamePlayer.Release.SurroundingChange:		Auf einen Schlag verändert sich Eure Umgebung!
-GamePlayer.Release.NoValidBindpoint:		Ihr habt keinen Bindeort und werdet stattdessen hier wiederauferstehen!
+GamePlayer.Release.ReturnToPray:			Betet an Eurem Grabstein, um einen Teil Eurer verlorenen Erfahrungspunkte zurück zu erhalten.
+GamePlayer.Release.LostConstitution:			Ihr habt einen Teil Eurer Konstitution verloren. Geht zu einen Heiler, um diese wieder herzustellen!
+GamePlayer.Release.SurroundingChange:			Auf einen Schlag verändert sich Eure Umgebung!
+GamePlayer.Release.NoValidBindpoint:			Es gibt keinen Ort, an dem Ihr Euch gebunden habt und seit stattdessen hier wiederauferstanden!
 GamePlayer.Release.WillReleaseIn:			Ihr werdet automatisch in {0} Sekunden wiederauferstehen.
 GamePlayer.Pray.CantPrayNow:				Ihr könnt jetzt nicht beten!
-GamePlayer.Pray.NeedTarget:					Ihr müsst einen Grabstein auswählen, an welchen ihr beten wollt!
-GamePlayer.Pray.SelectGrave:				Ihr müsst Euren Grabstein auswählen, um daran zu beten!"
+GamePlayer.Pray.NeedTarget:				Ihr müsst einen Grabstein auswählen, an welchen ihr beten wollt!
+GamePlayer.Pray.SelectGrave:				Ihr müsst Euren Grabstein auswählen, um daran zu beten!
 GamePlayer.Pray.MustGetCloser:				Ihr müsst Euch näher an Euer Grab setzen um zu beten!
 GamePlayer.Pray.MustStandingStill:			Ihr müsst still stehen um zu beten.
 GamePlayer.Pray.AlreadyPraying:				Ihr betet bereits!
-GamePlayer.Pray.Begin:						Ihr beginnt zu beten!
-GamePlayer.Pray.GainBack:					Durch Euer Gebet habt Ihr einen Teil Eurer Erfahrungspunkte zurück bekommen!
-GamePlayer.AddSpecialisation.YouLearn:		Ihr erlernt die {0}-Fähigkeit!
-GamePlayer.RemoveSpecialization.YouLose:	Ihr verliert die {0}-Fähigkeit!
-GamePlayer.AddSpellLine.YouLearn:			Ihr erlernt die {0}-Zauberlinie!
-GamePlayer.RemoveSpellLine.YouLose:			Ihr verliert die {0}-Zauberlinie!
-GamePlayer.AddAbility.YouLearn:				Ihr erlernt die {0}-Fähigkeit!
-GamePlayer.RemoveAbility.YouLose:			Ihr verliert die {0}-Fähigkeit!
-GamePlayer.RefreshSpec.YouLearn:			Ihr erlernt den {0}-Kampfstil!
-GamePlayer.RefreshSpec.AfterStyle:			Dieser Stil kann nur verwendet werden, nach der Ausführung des {0}-Stils.
+GamePlayer.Pray.Begin:					Ihr beginnt zu beten!
+GamePlayer.Pray.GainBack:				Durch Euer Gebet habt Ihr einen Teil Eurer Erfahrungspunkte zurück bekommen!
+GamePlayer.AddSpecialisation.YouLearn:			Ihr erlernt die "{0}"-Fähigkeit!
+GamePlayer.RemoveSpecialization.YouLose:		Ihr verliert die "{0}"-Fähigkeit!
+GamePlayer.AddSpellLine.YouLearn:			Ihr erlernt die Zauber der "{0}"-Liste!
+GamePlayer.RemoveSpellLine.YouLose:			Ihr verliert die Zauber der "{0}"-Liste!
+GamePlayer.AddAbility.YouLearn:				Ihr erlernt die "{0}"-Fähigkeit!
+GamePlayer.RemoveAbility.YouLose:			Ihr verliert die "{0}"-Fähigkeit!
+GamePlayer.RefreshSpec.YouLearn:			Ihr erlernt den "{0}"-Kampfstil!
+GamePlayer.RefreshSpec.AfterStyle:			Dieser Stil kann nur verwendet werden, nach der Ausführung des "{0}"-Stils.
 GamePlayer.RefreshSpec.AfterMissed:			Dieser Stil ist am Besten, wenn Euer letzter Angriff fehl geschlagen ist.
-GamePlayer.RefreshSpec.AfterParried:		Dieser Stil ist am Besten, wenn Euer letzter Angriff parriert wurde.
-GamePlayer.RefreshSpec.AfterBlocked:		Dieser Stil ist am Besten, wenn Euer letzter Angriff abgeblockt wurde.
+GamePlayer.RefreshSpec.AfterParried:			Dieser Stil ist am Besten, wenn Euer letzter Angriff parriert wurde.
+GamePlayer.RefreshSpec.AfterBlocked:			Dieser Stil ist am Besten, wenn Euer letzter Angriff abgeblockt wurde.
 GamePlayer.RefreshSpec.AfterEvaded:			Dieser Stil ist am Besten, wenn Eurem letzten Angriff ausgewichen wurde.
-GamePlayer.RefreshSpec.AfterFumbles:		Dieser Stil ist am Besten, wenn Euer letzter Angriff verstolpert wurde.
-GamePlayer.RefreshSpec.TargetMisses:		Dieser Stil ist am Besten, wenn der letzte Angriff Eures Gegners fehl geschlagen ist.
-GamePlayer.RefreshSpec.TargetHits:			Dieser Stil ist am Besten, wenn der letzte Angriff Eures Gegners getroffen hat.
-GamePlayer.RefreshSpec.TargetParried:		Dieser Stil ist am Besten, wenn Ihr den letzten Angriff Eures Gegners parriert habt.
-GamePlayer.RefreshSpec.TargetBlocked:		Dieser Stil ist am Besten, wenn Ihr den letzten Angriff Eures Gegners abgeblockt habt.
-GamePlayer.RefreshSpec.TargetEvaded:		Dieser Stil ist am Besten, wenn Ihr dem letzten Angriff Eures Gegners ausgewichen seid.
-GamePlayer.RefreshSpec.TargetFumbles:		Dieser Stil ist am Besten, wenn Euer Gegner seinen letzten Angriff verstolpert hat.
+GamePlayer.RefreshSpec.AfterFumbles:			Dieser Stil ist am Besten, wenn Euer letzter Angriff verstolpert wurde.
+GamePlayer.RefreshSpec.TargetMisses:			Dieser Stil ist am Besten, wenn der letzte Angriff Eures Gegners fehl geschlagen ist.
+GamePlayer.RefreshSpec.TargetHits:			Dieser Stil ist am Besten, wenn der letzte Angriff Eures Gegners erfolgreich war.
+GamePlayer.RefreshSpec.TargetParried:			Dieser Stil ist am Besten, wenn Ihr den letzten Angriff Eures Gegners parriert habt.
+GamePlayer.RefreshSpec.TargetBlocked:			Dieser Stil ist am Besten, wenn Ihr den letzten Angriff Eures Gegners abgeblockt habt.
+GamePlayer.RefreshSpec.TargetEvaded:			Dieser Stil ist am Besten, wenn Ihr dem letzten Angriff Eures Gegners ausgewichen seid.
+GamePlayer.RefreshSpec.TargetFumbles:			Dieser Stil ist am Besten, wenn Euer Gegner seinen letzten Angriff verstolpert hat.
 GamePlayer.RefreshSpec.TargetStyle:			Dieser Stil ist am Besten, wenn der letzte Angriff Eures Gegners ein Kampstil war.
-GamePlayer.UpdateSpellLine.GainPower:		Ihr erhaltet einen Eintrag in Eure {0}-Zauberlinie!
-GamePlayer.OnSkillTrained.YouSpend:			Ihr verteilt {0} Punkte und spezialisiert Euch weiter im Bereich {1}.
+GamePlayer.UpdateSpellLine.GainPower:			Ihr erhaltet einen Eintrag in Eure "{0}"-Zauberliste!
+GamePlayer.OnSkillTrained.YouSpend:			Ihr verteilt {0} Punkte und spezialisiert Euch weiter im Bereich "{1}".
 GamePlayer.OnSkillTrained.YouHave:			Ihr habt {0} Punkte übrig.
-GamePlayer.OnSkillTrained.TrainsInVarious:	{0} trainiert verschiedene Spezialisierungen.
+GamePlayer.OnSkillTrained.TrainsInVarious:		{0} trainiert verschiedene Spezialisierungen.
 GamePlayer.GainRealmPoints.YouGet:			Ihr erhaltet {0} Reichspunkte!
-GamePlayer.GainRealmPoints.GainedLevel:		Ihr habt eine Reichsstufe erreicht!
-GamePlayer.GainRealmPoints.GainedRank:		Ihr habt einen neuen Rang und einen neuen Reichstitel erhalten!
-GamePlayer.GainRealmPoints.NewRealmTitle:	Euer neuer Reichstitel lautet {0}!
-GamePlayer.GainRealmPoints.GainBonus:		Ihr erhaltet einen +{0} Bonus auf alle Spezialisierungen!
-GamePlayer.GainRealmPoints.ReachedRank:		{0} erreicht Reichsrang {1:#L#} in {2}!
-GamePlayer.GainRealmPoints.Earned:			{0} hat 1,000,000 Reichspunkte verdient in {1}!
+GamePlayer.GainRealmPoints.GainedLevel:			Ihr habt eine Reichsstufe erreicht!
+GamePlayer.GainRealmPoints.GainedRank:			Ihr habt einen neuen Rang und einen neuen Reichstitel erhalten!
+GamePlayer.GainRealmPoints.NewRealmTitle:		Euer neuer Reichstitel lautet "{0}" !
+GamePlayer.GainRealmPoints.GainBonus:			Ihr erhaltet einen +{0}-Bonus auf alle Spezialisierungen!
+GamePlayer.GainRealmPoints.ReachedRank:			{0} erreicht Reichsrang {1:#L#} in {2} !
+GamePlayer.GainRealmPoints.Earned:			{0} hat 1.000.000 Reichspunkte in {1} verdient!
 GamePlayer.GainBountyPoints.YouGet:			Ihr bekommt {0} Kopfgeldpunkte!
-GamePlayer.GainExperience.YouGet:			Ihr erhaltet " {0} Erfahrungspunkte.
-GamePlayer.GainExperience.CannotRaise:		Ihr könnt nicht zur Stufe 6 aufsteigen, bevor Ihr nicht einen Beruf gewählt habt!
-GamePlayer.GainExperience.TalkToTrainer:	Sprecht mit Eurem Ausbilder für mehr Informationen.
-GamePlayer.OnLevelUp.YouRaise:				Ihr steigt zur {0} Erfahrungsstufe auf!
-GamePlayer.OnLevelUp.YouAchived:			Ihr erreicht die Erfahrungsstufe {0}!
-GamePlayer.OnLevelUp.FreeLevelEligible:		Ihr seid nun würdig, eine freie Stufe zu erhalten. Klickt auf Euren Ausbilder, um sie zu bekommen!
+GamePlayer.GainExperience.YouGet:			Ihr erhaltet {0} Erfahrungspunkte.
+GamePlayer.GainExperience.CannotRaise:			Ihr könnt nicht zur Stufe 6 aufsteigen, bevor Ihr nicht einen Beruf gewählt habt!
+GamePlayer.GainExperience.TalkToTrainer:		Sprecht mit Eurem Ausbilder für mehr Informationen.
+GamePlayer.OnLevelUp.YouRaise:				Ihr steigt zur {0}. Erfahrungsstufe auf!
+GamePlayer.OnLevelUp.YouAchived:			Ihr erreicht die Erfahrungsstufe {0} !
+GamePlayer.OnLevelUp.FreeLevelEligible:			Ihr seid nun würdig, eine freie Stufe zu erhalten. Klickt auf Euren Ausbilder, um sie zu bekommen!
 GamePlayer.OnLevelUp.Reached:				{0} erreicht Erfahrungsstufe {1} in {2}!
 GamePlayer.OnLevelUp.StatRaise:				Eure Attribute sind gestiegen!
 GamePlayer.OnLevelUp.AttainedRank:			Ihr habt den Rang eines {0} erreicht!
 GamePlayer.OnLevelUp.YouGetSpec:			Ihr erhaltet {0} Spezialisierungspunkte, die Ihr nach Belieben verteilen könnt!
-GamePlayer.OnLevelUp.HitsRaise:				Ihr erhaltet {0} zusätzliche Trefferpunkte..
-GamePlayer.OnLevelUp.PowerRaise:			Your power raises by {0} points.
+GamePlayer.OnLevelUp.HitsRaise:				Ihr erhaltet {0} zusätzliche Trefferpunkte.
+GamePlayer.OnLevelUp.PowerRaise:			Eure Power erhöht sich um {0} Punkte.
 GamePlayer.OnLevelUp.SecondStage:			Ihr erreicht Teil 2 der {0}. Erfahrungsstufe!
-
+GamePlayer.IsCloakHoodUp.NowWear:			Ihr tragt Eure Kapuze nun auf dem Kopf.
+GamePlayer.IsCloakHoodUp.NoLongerWear:			Ihr tragt Eure Kapuze nun nicht mehr auf dem Kopf.
+GamePlayer.SwitchWeapon.SpellCancelled:			Euer Zauberspruch wurde abgebrochen!
+GamePlayer.StartAttack.YouMustWait:			Ihr müsst noch {0} Sekunden warten für einen neuen Angriffsversuch!
+GamePlayer.StartAttack.YouCantCombat:			Ihr könnt Euch nicht zum Kampf bereit machen, während Ihr da liegt!
+GamePlayer.StartAttack.CantAttackStunned:		Ihr könnt nicht angreifen, wenn Ihr betäubt seid!
+GamePlayer.StartAttack.CantAttackmesmerized:		Ihr könnt nicht angreifen, wenn Ihr hypnotisiert seid!
+GamePlayer.StartAttack.YouMustWaitAgain:		Ihr müsst noch {0} Sekunden warten, bevor Ihr wieder angreifen könnt.
+GamePlayer.StartAttack.CannotWithoutWeapon:		Ihr könnt Euch nicht kampfbereit machen ohne eine Waffe!
+GamePlayer.StartAttack.CannotMelee:			Ihr könnt nicht mit einem Musikinstrument in den Nahkampf ziehen!
+GamePlayer.StartAttack.SelectQuiver:			Ihr müsst einen Köcherslot auswählen, aus dem Ihr ziehen wollt!
+GamePlayer.StartAttack.CantUseQuiver:			Ihr könnt den ausgewählten Köcher nicht mit Eurer Waffe benutzen!
+GamePlayer.StartAttack.TiredShot:			Ihr seid zu erschöpft für einen kritischen Schuss!
+GamePlayer.StartAttack.TiredUse:			Ihr seid zu erschöpft um {0} zu benutzen!
+GamePlayer.StartAttack.CombatNoTarget:			Ihr macht Euch kampfbereit, aber Ihr habt kein Ziel ausgewählt!
+GamePlayer.StartAttack.CombatTarget:			Ihr macht Euch kampfbereit. Euer Ziel ist [{0}].
+GamePlayer.StartAttack.SpellCancelled:			Euer Zauberspruch wurde abgebrochen!
+GamePlayer.StartAttack.TargetInRange:			, Ziel ist in Reichweite.
+GamePlayer.StartAttack.TargetOutOfRange:		, Ziel ist nicht in Reichweite.
+GamePlayer.StartAttack.YouPrepare:			Ihr bereitet Euren {0} vor und könnt in ({1}.{2} Sekunden feuern{3}).
+GamePlayer.OnLinkdeath.Linkdead:			Die Verbindung zu {0} wurde unterbrochen!
+GamePlayer.Bind.LastBindPoint:				Letzter Bindepunkt: {0}.
+GamePlayer.Bind.CantBindDead:				Ihr könnt Euch nicht binden, wenn Ihr tot seid!
+GamePlayer.Bind.MustWait:				Ihr müsst {0} Sekunden warten um Euch wieder zu binden!
+GamePlayer.Bind.Bound:					Eure Seele ist nun an diesen Ort gebunden.
+GamePlayer.Bind.CantHere:				Ihr könnt Euch hier nicht binden!
+GamePlayer.Spell.NotEnoughPowerful:			Ihr seit nicht mächtig genug, um den Zauber dieses Gegenstandes anwenden zu können.
+GamePlayer.Spell.NotImplemented:			{0} ({1}) ist noch nicht implementiert auf diesem Server.
+GamePlayer.Spell.Proc.NotImplemented:			Der Reaktionseffekt (ID {0}) ist noch nicht implementiert auf diesem Server.
+GamePlayer.RealmTitle.UnknownRealm:			Unbekanntes Reich
+GamePlayer.SwitchQuiver.ShootWith:			Ihr wollt schießen mit: {0}.
+GamePlayer.SwitchQuiver.NoMoreAmmo:			Ihr habt keine Pfeile mehr in Eurem Köcher!
+GamePlayer.SwitchQuiver.NotUseQuiver:			Ihr werdet Euren Köcher nicht benutzen können.
+GamePlayer.Pronoun.Male.Subjective:			er
+GamePlayer.Pronoun.Male.Possessive:			sein
+GamePlayer.Pronoun.Male.Objective:			ihm
+GamePlayer.Pronoun.Female.Subjective:			sie
+GamePlayer.Pronoun.Female.Possessive:			ihr
+GamePlayer.Pronoun.Female.Objective:			ihr
+GamePlayer.IsOnHorse.DismountSteed:			Ihr steigt von Eurem Pferd ab.
+GamePlayer.IsOnHorse.MountSteed:			Ihr besteigt Euer Pferd.
+GamePlayer.Die.LoseExperience:				Ihr verliert einige Erfahrung!
+GamePlayer.DuelStop.DuelEnds:				Euer Duell ist beendet!
+GamePlayer.CastSpell.CantCastStunned:			Ihr könnt nichts machen, wenn Ihr betäubt seid!
+GamePlayer.CastSpell.CantCastMezzed:			Ihr könnt nichts machen, wenn Ihr hypnotisiert seid!
+GamePlayer.CastSpell.AlreadyPlaySong:			Ihr spielt bereits ein Lied!
+GamePlayer.CastSpell.AlreadyCastFollow:			Ihr zaubert bereits, dieser Spruch wird jetzt als Folgezauber vorbereitet!
+GamePlayer.CastSpell.AlreadyCastNoQueue:		Ihr zaubert bereits, um Folgezauber zu ermöglichen gebt '/noqueue' ein!
+GamePlayer.ReceiveTradeItem.StillSelfcrafting:		Ihr seid gerade beim Arbeiten.
+GamePlayer.ReceiveTradeItem.CantTrade:			Ihr könnt mit diesem Gegenstand nicht handeln!
+GamePlayer.UseSlot.CantFire:				Ihr könnt diesen Gegenstand weder abschießen noch benutzen!
+GamePlayer.UseSlot.CantMountWhileDead:			Ihr könnt nicht aufsteigen, weil Ihr tot seid.
+GamePlayer.UseSlot.MustDismountBefore:			Ihr müsst vorher absteigen.
+GamePlayer.UseSlot.CantSummonRvR:			Ihr könnt das Pferd nicht in RvR-Zonen rufen.
+GamePlayer.UseSlot.CantMountMoving:			Ihr könnt nicht aufsteigen, während Ihr Euch bewegt.
+GamePlayer.UseSlot.CantCallMountSeated:			Ihr könnt Euer Pferd nicht rufen, während Ihr dasitzt.
+GamePlayer.UseSlot.CantMountSteath:			Ihr könnt nicht aufsitzen, während Ihr getarnt seid.
+GamePlayer.UseSlot.CantMountCombat:			Ihr könnt Euer Pferd nicht während eines Kampfes rufen.
+GamePlayer.UseSlot.StopCallingMount:			Ihr ruft nicht mehr nach Eurem Pferd.
+GamePlayer.UseSlot.WhistleMount:			Ihr pfeift nach Eurem Pferd.
+GamePlayer.UseSlot.CantSeeTarget:			Ihr könnt Euer Ziel nicht sehen!
+GamePlayer.UseSlot.AutoReleaseShot:			Eurer Schuss wird nun automatisch freigegeben.
+GamePlayer.UseSlot.AutoReleaseShotReload:		Eurer Schuss wird nun automatisch nachgeladen und freigegeben.
+GamePlayer.UseSlot.NoAutoReleaseShotReload:		Eurer Schuss wird nun nicht länger automatisch nachgeladen und freigegeben.
+GamePlayer.UseSlot.CantUseInCombat:			Ihr könnt diesen Gegenstand nicht im Kampf benutzen!
+GamePlayer.UseSlot.NotEnouthPower:			Ihr seit nicht mächtig genug, um den Zauber dieses Gegenstandes anwenden zu können.
+GamePlayer.UseSlot.Can'tUseFromBackpack:		Ihr müsst diesen Gegenstand erst anlegen, bevor Ihr ihn verwenden könnt!
+GamePlayer.ApplyPoison.CantUsePoisons:			Ihr könnt kein Gifte anwenden.
+GamePlayer.ApplyPoison.PoisonsAppliedWeapons:		Gifte können nur auf Waffen aufgetragen werden.
+GamePlayer.ApplyPoison.CantPoisonWeapon:		Diese Waffe könnt Ihr nicht vergiften!
+GamePlayer.ApplyPoison.CantUsePoison:			Ihr könnt dieses Gift nicht verwenden.
+GamePlayer.ApplyPoison.CantApplyRecentCombat:		Ihr habt gerade gekämpft und könnt deshalb im Moment kein Gift auftragen!
+GamePlayer.Whisper.SelectTarget:			Wählt jemanden aus, dem Ihr etwas zuflüstern wollt!
+GamePlayer.DrowningTimerCallback.CannotBreath:		Ihr könnt unter Wasser nicht atmen und nehmt deshalb Schaden!
+GamePlayer.DrowningTimerCallback.Take5%Damage:		Ihr verliert 5% Eurer Trefferpunkte durch Schaden.
+GamePlayer.Sprint.TooFatigued:				Ihr seid zu erschöpft zum Rennen!
+GamePlayer.Sprint.CantSprintHidden:			Ihr könnt nicht rennen, solange Ihr getarnt seid!
+GamePlayer.Sprint.CantSprintDead:			Ihr könnt nicht rennen, da Ihr tot seid!
+GamePlayer.Sprint.PrepareSprint:			Ihr beginnt zu rennen!
+GamePlayer.Sprint.NoLongerReady:			Ihr wollt nun doch nicht mehr rennen.
+GamePlayer.OnPlayerMove.InterruptCrafting:		Ihr bewegt Euch und unterbrecht damit Eure Arbeit.
+GamePlayer.OnPlayerMove.CannotCallMount:		Ihr bewegt Euch und könnt deshalb Euer Pferd nicht rufen.
+GamePlayer.Sit.InterruptCallMount:			Ihr setzt Euch hin und unterbrecht damit den Ruf nach Eurem Pferd!
+GamePlayer.Sit.AlreadySitting:				Ihr sitzt bereits!
+GamePlayer.Sit.NotSitting:				Ihr sitzt nicht mehr!
+GamePlayer.Sit.CantSitDead:				Ihr könnt Euch nicht setzen...Ihr seid...Naja, ziemlich tot!
+GamePlayer.Sit.CantSitStunned:				Ihr könnt Euch nicht ausruhen, wenn Ihr betäubt seid!
+GamePlayer.Sit.CantSitMezzed:				Ihr könnt Euch nicht ausruhen, wenn Ihr hypnotisiert seid!
+GamePlayer.Sit.MustStandingStill:			Ihr müsst erst einmal still stehen bleiben, bevor Ihr Euch hinsetzen könnt.
+GamePlayer.Sit.MustDismount:				Ihr müsst erst einmal absteigen.
+GamePlayer.Sit.YouSitDown:				Ihr setzt Euch. Bewegt Euch einfach, wenn Ihr wieder aufstehen wollt.
+GamePlayer.Sit.YouStandUp:				Ihr erhebt Euch.
+GamePlayer.Sit.NoLongerWaitingQuit:			Ihr verlasst diese Welt nun doch nicht.
+GamePlayer.UpdateEncumberance.EncumberedMoveSlowly:	Ihr seid überlastet und bewegt Euch deshalb langsamer.
+GamePlayer.UpdateEncumberance.Encumbered:		Ihr seid überlastet!
+GamePlayer.PickupObject.MustHaveTarget:			Ihr müsst erst etwas auswählen, um es nehmen zu können!
+GamePlayer.PickupObject.LootDoesntBelongYou:		Die Beute gehört Euch nicht - Also Finger weg!
+GamePlayer.PickupObject.CantGetThat:			Ihr könnt das nicht bekommen!
+GamePlayer.PickupObject.BackpackFull:			Euer Rucksack ist voll. Ihr solltet erst etwas weglegen.
+GamePlayer.PickupObject.NoOneGroupWantsMoney:		Niemand in der Gruppe will das Geld haben.
+GamePlayer.SaveIntoDatabase.CharacterSaved:		Euer Charakter wurde gespeichert.
+GamePlayer.Stealth.NowHidden:				Ihr seid nun getarnt!
+GamePlayer.Stealth.NoLongerHidden:			Ihr seid nicht mehr länger getarnt!
+GamePlayer.CraftItem.DontHaveAbilityMake:		Ihr habt nicht die Fähigkeit, diesen Gegenstand herzustellen.
+GamePlayer.OpenSelfCraft.AlreadySelfCrafting:		Ihr seid gerade beim Arbeiten.
+GamePlayer.OpenSelfCraft.CanOnlyCraftBackpack:		Ihr könnt nur Gegenstände in Eurem Inventar bearbeiten!
+GamePlayer.SetControlledNpc.ReleaseTarget:		Ihr verliert die Kontrolle über Euer Wesen.
+GamePlayer.CommandNpcAttack.TooFarAwayForPet:		Das Ziel ist zu weit entfernt für einen Angriff durch Euer Wesen!
+GamePlayer.CommandNpcGoTarget.MustSelectDestination:	Ihr müsst erst ein Ziel auswählen für Euer Wesen.
+GamePlayer.Shade.AlreadyShade:				Ihr seid bereits ein Schatten!
+GamePlayer.Shade.NoLongerShade:				Ihr seid nicht länger ein Schatten!
+GamePlayer.CurrentTitle.TitleCleared:			Euer Titel wurde Euch aberkannt.
+					
 # HOUSING
-HouseEnterLeave.TooFarAway:					Ihr seid zu weit von diesem Haus entfernt, um es zu betreten!
-HouseEnterLeave.CantEnter:					Ihr könnt dieses Haus nicht betreten!
-HousingDecorationRotate.Rotated:			Innendekoration wurde von {0} Grad auf {1} Grad gedreht.   
-HousingPickupItemHandler.GardenRemoved:		Gartenobjekt entfernt.
-HousingPickupItemHandler.PickUp:			Es wird {0} in Euren Rucksack gesteckt.
+HouseEnterLeave.TooFarAway:				Ihr seid zu weit von diesem Haus entfernt, um es zu betreten!
+HouseEnterLeave.CantEnter:				Ihr könnt dieses Haus nicht betreten!
+HousingDecorationRotate.Rotated:			Die Innendekoration wurde von {0} Grad auf {1} Grad gedreht.
+HousingPickupItemHandler.GardenRemoved:			Das Gartenobjekt entfernt.
+HousingPickupItemHandler.PickUp:			Es wird {0} in Euren Rucksack gesteckt
 HousingPlaceItemHandler.30objects:			Ihr könnt keine weiteren Dekorationen platzieren, entfernt zunächst eine!
-HousingPlaceItemHandler.40objects:			Ihr könnt keine weiteren Dekorationen platzieren, entfernt zunächst eine!
+HousingPlaceItemHandler.40objects:			Ihr könnt keine weiteren Dekorationen platzieren, entfernt zunächst eine!.
 HousingPlaceItemHandler.CantFloor:			Dieses Objekt kann nicht auf dem Boden platziert werden!
 HousingPlaceItemHandler.CantWall:			Dieses Objekt kann nicht an einer Wand platziert werden!
-HousingPlaceItemHandler.DropOnFloor:		Ihr stellt {0} auf den Boden Eures Hauses.
-HousingPlaceItemHandler.DropOnGarden:		Ihr platziert {0} im Garten!
-HousingPlaceItemHandler.DropOnWall:			Ihr hängt {0} an die Wand.
-HousingPlaceItemHandler.GardenObjectPlaced:	Gartenobjekt wurde platziert. Es können noch {0} Objekte platziert werden.
-HousingPlaceItemHandler.HasPorch:			Dieses Haus hat eine Veranda.
-HousingPlaceItemHandler.HasNoPorch:			Dieses Haus hat keine Veranda.
-HousingPlaceItemHandler.IndoorObjectPlaced:	Inneneinrichtung aufgestellt. {0} freie Plätze verbleidend.
-HousingPlaceItemHandler.NoHookpoint:		Kein Hookpoint vorhanden.
+HousingPlaceItemHandler.DropOnFloor:			Ihr stellt {0} auf den Boden Eures Hauses.
+HousingPlaceItemHandler.DropOnGarden:			Ihr platziert {0} im Garten!
+HousingPlaceItemHandler.DropOnWall:			Ihr hängt {0} an die Wand!
+HousingPlaceItemHandler.GardenObjectPlaced:		Gartenobjekt wurde platziert. Es können noch {0} Objekte platziert werden.
+HousingPlaceItemHandler.HasPorch:			Dieses Haus hat bereits eine Veranda!
+HousingPlaceItemHandler.HasNoPorch:			Dieses Haus hat garkeine Veranda.
+HousingPlaceItemHandler.IndoorObjectPlaced:		Inneneinrichtung aufgestellt. {0} freie Plätze verbleidend.
+HousingPlaceItemHandler.NoHookpoint:			Ihr kann nichts platziert werden!
 HousingPlaceItemHandler.PutMoney:			Ihr leistet eine Anzahlung auf Euer Haus.
 
 # SCRIPTS

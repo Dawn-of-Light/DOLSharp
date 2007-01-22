@@ -128,7 +128,26 @@ namespace DOL.GS.Scripts
 					filters = new ArrayList(1);
 					filters.Add(new GMFilter());
 					break;
-
+				case "EN":
+					filters = new ArrayList(1);
+					filters.Add(new LanguageFilter("EN"));
+					break;
+				case "CZ":
+					filters = new ArrayList(1);
+					filters.Add(new LanguageFilter("CZ"));
+					break;
+				case "DE":
+					filters = new ArrayList(1);
+					filters.Add(new LanguageFilter("DE"));
+					break;
+				case "ES":
+					filters = new ArrayList(1);
+					filters.Add(new LanguageFilter("ES"));
+					break;
+				case "FR":
+					filters = new ArrayList(1);
+					filters.Add(new LanguageFilter("FR"));
+					break;
 				default:
 					filters = new ArrayList();
 					AddFilters(filters, args, 1);
@@ -249,7 +268,6 @@ namespace DOL.GS.Scripts
 
 			return result.ToString();
 		}
-
 
 		private void AddFilters(ArrayList filters, string[] args, int skip)
 		{
@@ -374,7 +392,23 @@ namespace DOL.GS.Scripts
 					return true;
 				return false;
 			}
-			public GMFilter() {}
+		}
+
+		private class LanguageFilter : IWhoFilter
+		{
+			private string m_str;
+			public bool ApplyFilter(GamePlayer player)
+			{
+				if (!player.IsAnonymous && player.Client.Account.Language.ToLower() == m_str)
+					return true;
+				return false;
+			}
+			
+			public LanguageFilter(string language) 
+			{
+				m_str = language;
+			}
+
 		}
 
 		private interface IWhoFilter

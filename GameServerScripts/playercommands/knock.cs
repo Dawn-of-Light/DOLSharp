@@ -39,19 +39,18 @@ namespace DOL.GS.Scripts
             }
 
             long KnockTick = client.Player.TempProperties.getLongProperty(PLAYER_KNOCKED, 0);
-            if (KnockTick > 0)
+            if (KnockTick > 0 && KnockTick - client.Player.CurrentRegion.Time <= 0)
             {
-                if (KnockTick - client.Player.CurrentRegion.Time <= 0)
-                {
-                    client.Player.TempProperties.removeProperty(PLAYER_KNOCKED);
-                }
+				client.Player.TempProperties.removeProperty(PLAYER_KNOCKED);
             }
+
             long changeTime = client.Player.CurrentRegion.Time - KnockTick;
             if (changeTime < 30000 && KnockTick > 0)
             {
                 client.Player.Out.SendMessage("You must wait " + ((30000 - changeTime) / 1000).ToString() + " more seconds before knocking again!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 return 0;
             }
+
             bool done = false;
             foreach (House house in HouseMgr.getHousesCloseToSpot(client.Player.CurrentRegionID, client.Player.X, client.Player.Y, 650))
             {
@@ -63,6 +62,7 @@ namespace DOL.GS.Scripts
                 }
                 done = true;
             }
+
             if (done)
             {
                 client.Out.SendMessage("You knock on the door.", eChatType.CT_System, eChatLoc.CL_SystemWindow);

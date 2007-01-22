@@ -10,7 +10,7 @@ namespace DOL.GS.Effects
 	/// <summary>
 	/// 
 	/// </summary>
-	public class DivineInterventionEffect : IGameEffect
+	public class DivineInterventionEffect : StaticEffect, IGameEffect
 	{
 		public DivineInterventionEffect(int value)
 			: base()

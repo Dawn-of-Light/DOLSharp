@@ -1337,8 +1337,9 @@ namespace DOL.GS.Spells
 				ad.Attacker = Caster;
 				ad.Target = target;
 				ad.AttackType = AttackData.eAttackType.Spell;
-				ad.AttackResult = GameLiving.eAttackResult.Missed;
+				ad.AttackResult = GameLiving.eAttackResult.HitUnstyled;
 				ad.SpellHandler = this;
+				ad.Damage = -1;
 				target.OnAttackedByEnemy(ad);
 			}
 
@@ -1915,7 +1916,7 @@ namespace DOL.GS.Spells
 			ad.Target = target;
 			ad.AttackType = AttackData.eAttackType.Spell;
 			ad.SpellHandler = this;
-			ad.AttackResult = GameLiving.eAttackResult.Missed;
+			ad.AttackResult = GameLiving.eAttackResult.HitUnstyled;
 
 			double minVariance;
 			double maxVariance;
@@ -2131,6 +2132,21 @@ namespace DOL.GS.Spells
 			}
 		}
 
+		#endregion
+
+		#region saved effects
+		public virtual PlayerXEffect getSavedEffect(GameSpellEffect effect)
+		{
+			return null;
+		}
+
+		public virtual void OnEffectRestored(GameSpellEffect effect, int[] vars)
+		{ }
+
+		public virtual int OnRestoredEffectExpires(GameSpellEffect effect, int[] vars, bool noMessages)
+		{
+			return 0;
+		}
 		#endregion
 	}
 }

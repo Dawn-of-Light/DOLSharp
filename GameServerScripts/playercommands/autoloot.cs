@@ -21,39 +21,30 @@ using DOL.GS.PacketHandler;
 namespace DOL.GS.Scripts
 {
 	[CmdAttribute(
-		"&say",
-		new string[] {"&s"},
-		(uint) ePrivLevel.Player,
-		"Say something to other players around you",
-		"/say <message>")]
-	public class SayCommandHandler : ICommandHandler
+		"&autoloot",
+		(uint)ePrivLevel.Player,
+		"automaticly pick up any loot that drops in your area",
+		"/autoloot <on/off>")]
+	public class AutolootCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		public int OnCommand(GameClient client, string[] args)
 		{
-			const string SAY_TICK = "Say_Tick";
-
 			if (args.Length < 2)
 			{
-				client.Out.SendMessage("You must say something...", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 1;
-			}
-			string message = string.Join(" ", args, 1, args.Length - 1);
-
-			long SayTick = client.Player.TempProperties.getLongProperty(SAY_TICK, 0);
-			if (SayTick > 0 && SayTick - client.Player.CurrentRegion.Time <= 0)
-			{
-				client.Player.TempProperties.removeProperty(SAY_TICK);
-			}
-
-			long changeTime = client.Player.CurrentRegion.Time - SayTick;
-			if (changeTime < 500 && SayTick > 0)
-			{
-				client.Player.Out.SendMessage("Slow down! Think before you say each word!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				DisplaySyntax(client);
 				return 0;
 			}
 
-			client.Player.Say(message);
-			client.Player.TempProperties.setProperty(SAY_TICK, client.Player.CurrentRegion.Time);
+			if (args[1].ToLower().Equals("on"))
+			{
+				client.Player.Autoloot = true;
+				client.Out.SendMessage("Your autoloot is on. You will now attempt to automaticly loot anything that drops in your area.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+			}
+			else if (args[1].ToLower().Equals("off"))
+			{
+				client.Player.Autoloot = false;
+				client.Out.SendMessage("Your autoloot is off. You will no longer attempt to automaticly loot anything that drops in your area.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+			}
 			return 1;
 		}
 	}

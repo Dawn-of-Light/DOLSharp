@@ -20,8 +20,11 @@ using System;
 using System.Collections;
 using System.Reflection;
 using System.Text;
+
+using DOL.Database;
 using DOL.GS.Spells;
 using DOL.GS.PacketHandler;
+
 using log4net;
 
 namespace DOL.GS.Effects
@@ -148,7 +151,10 @@ namespace DOL.GS.Effects
 					{
 						SpellHandler.Caster.ConcentrationEffects.Add(this);
 					}
-					m_handler.OnEffectStart(this);
+					if (RestoredEffect)
+						m_handler.OnEffectRestored(this, RestoreVars);
+					else
+						m_handler.OnEffectStart(this);
 					m_handler.OnEffectPulse(this);
 				}
 				finally
@@ -189,7 +195,10 @@ namespace DOL.GS.Effects
 					{
 						SpellHandler.Caster.ConcentrationEffects.Remove(this);
 					}
-					m_handler.OnEffectExpires(this, false);
+					if (RestoredEffect)
+						m_handler.OnRestoredEffectExpires(this, RestoreVars, false);
+					else
+						m_handler.OnEffectExpires(this, false);
 				}
 			}
 			//DOLConsole.WriteLine("done cancel effect on "+Owner.Name);
@@ -487,6 +496,32 @@ namespace DOL.GS.Effects
 
 				return list;
 			}
+		}
+
+		public int[] RestoreVars = new int[] { };
+		public bool RestoredEffect = false;
+
+		public PlayerXEffect getSavedEffect()
+		{
+			if (this.RestoredEffect)
+			{
+				PlayerXEffect eff = new PlayerXEffect();
+				eff.Duration = this.RemainingTime;
+				eff.IsHandler = true;
+				eff.Var1 = this.RestoreVars[0];
+				eff.Var2 = this.RestoreVars[1];
+				eff.Var3 = this.RestoreVars[2];
+				eff.Var4 = this.RestoreVars[3];
+				eff.Var5 = this.RestoreVars[4];
+				eff.Var6 = this.RestoreVars[5];
+				return eff;
+			}
+			if (m_handler != null)
+			{
+				PlayerXEffect eff = m_handler.getSavedEffect(this);
+				return eff;
+			}
+			return null;
 		}
 	}
 }

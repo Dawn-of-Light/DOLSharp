@@ -7,7 +7,7 @@ namespace DOL.GS.Effects
 	/// <summary>
 	/// Trueshot grants 50% more range for next archery attack
 	/// </summary>
-	public class TrueshotEffect : StaticEffect
+	public class TrueshotEffect : StaticEffect, IGameEffect
 	{
 		public TrueshotEffect()
 			: base()

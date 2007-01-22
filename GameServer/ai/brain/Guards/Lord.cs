@@ -29,7 +29,7 @@ namespace DOL.AI.Brain
 			//if the lord is in combat, there is only a chance to heal
 			if (Body.InCombat)
 			{
-				if (Body.HealthPercent < 25 && Util.Chance(25))
+				if (Body.HealthPercent < 25 && Util.Chance(10))
 					SpellMgr.LordCastHealSpell(guard);
 			}
 			//if the lord is not in combat, the lord can heal himself fully
