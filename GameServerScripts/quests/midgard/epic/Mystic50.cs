@@ -987,6 +987,9 @@ namespace DOL.GS.Quests.Midgard
 
 			#endregion
 
+			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
 			GameEventMgr.AddHandler(Danica, GameObjectEvent.Interact, new DOLEventHandler(TalkToDanica));
 			GameEventMgr.AddHandler(Danica, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToDanica));
 
@@ -1004,6 +1007,9 @@ namespace DOL.GS.Quests.Midgard
 			if (Danica == null)
 				return;
 			// remove handlers
+			GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
 			GameEventMgr.RemoveHandler(Danica, GameObjectEvent.Interact, new DOLEventHandler(TalkToDanica));
 			GameEventMgr.RemoveHandler(Danica, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToDanica));
 
@@ -1064,7 +1070,7 @@ namespace DOL.GS.Quests.Midgard
 							Danica.SayTo(player, "Yes, it worries me, but I think that you are ready to [face Kelic] and his minions.");
 							break;
 						case "face Kelic":
-							player.Out.SendCustomDialog("Will you face Kelic [Mystic Level 50 Epic]?", new CustomDialogResponse(CheckPlayerAcceptQuest));
+							player.Out.SendQuestSubscribeCommand(Danica, QuestMgr.GetIDForQuestType(typeof(Mystic_50)), "Will you face Kelic [Mystic Level 50 Epic]?");
 							break;
 					}
 				}
@@ -1130,6 +1136,21 @@ namespace DOL.GS.Quests.Midgard
 				SendSystemMessage(player, "Aborting Quest " + questTitle + ". You can start over again if you want.");
 				quest.AbortQuest();
 			}
+		}
+
+		protected static void SubscribeQuest(DOLEvent e, object sender, EventArgs args)
+		{
+			QuestEventArgs qargs = args as QuestEventArgs;
+			if (qargs == null)
+				return;
+
+			if (qargs.QuestID != QuestMgr.GetIDForQuestType(typeof(Mystic_50)))
+				return;
+
+			if (e == GamePlayerEvent.AcceptQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x01);
+			else if (e == GamePlayerEvent.DeclineQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x00);
 		}
 
 		private static void CheckPlayerAcceptQuest(GamePlayer player, byte response)

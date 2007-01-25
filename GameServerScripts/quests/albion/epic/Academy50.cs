@@ -1041,6 +1041,9 @@ namespace DOL.GS.Quests.Albion
 			morganaArea = WorldMgr.GetRegion(Morgana.CurrentRegionID).AddArea(new Area.Circle(null, Morgana.X, Morgana.Y, 0, 1000));
 			morganaArea.RegisterPlayerEnter(new DOLEventHandler(PlayerEnterMorganaArea));
 
+			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
 			GameEventMgr.AddHandler(Ferowl, GameObjectEvent.Interact, new DOLEventHandler(TalkToFerowl));
 			GameEventMgr.AddHandler(Ferowl, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToFerowl));
 
@@ -1063,6 +1066,9 @@ namespace DOL.GS.Quests.Albion
 			morganaArea.UnRegisterPlayerEnter(new DOLEventHandler(PlayerEnterMorganaArea));
 			WorldMgr.GetRegion(Morgana.CurrentRegionID).RemoveArea(morganaArea);
 			// remove handlers
+			GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
 			GameEventMgr.RemoveHandler(Ferowl, GameObjectEvent.Interact, new DOLEventHandler(TalkToFerowl));
 			GameEventMgr.RemoveHandler(Ferowl, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToFerowl));
 
@@ -1172,7 +1178,7 @@ namespace DOL.GS.Quests.Albion
 					switch (wArgs.Text)
 					{
 						case "services":
-							player.Out.SendCustomDialog("Will you help Ferowl [Academy Level 50 Epic]?", new CustomDialogResponse(CheckPlayerAcceptQuest));
+							player.Out.SendQuestSubscribeCommand(Ferowl, QuestMgr.GetIDForQuestType(typeof(Academy_50)), "Will you help Ferowl [Academy Level 50 Epic]");
 							break;
 					}
 				}
@@ -1234,6 +1240,21 @@ namespace DOL.GS.Quests.Albion
 		 * on any button in the quest offer dialog. We check if he accepts or
 		 * declines here...
 		 */
+
+		protected static void SubscribeQuest(DOLEvent e, object sender, EventArgs args)
+		{
+			QuestEventArgs qargs = args as QuestEventArgs;
+			if (qargs == null)
+				return;
+
+			if (qargs.QuestID != QuestMgr.GetIDForQuestType(typeof(Academy_50)))
+				return;
+
+			if (e == GamePlayerEvent.AcceptQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x01);
+			else if (e == GamePlayerEvent.DeclineQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x00);
+		}
 
 		private static void CheckPlayerAbortQuest(GamePlayer player, byte response)
 		{

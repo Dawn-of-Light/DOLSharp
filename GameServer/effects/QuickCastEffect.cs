@@ -33,65 +33,44 @@ namespace DOL.GS.Effects
 		protected const String delveString = "This allows them to cast a single spell with a quickened casting time, but costs twice the power. It cannot be interrupted by melee or spells. The only exception to this is the Necromancer form of Quickcast (Facilitate Painworking). It allows the Necromancer's summoned undead pet to have six seconds of uninterrupted casting time.";
 
 		/// <summary>
-		/// The owner of the effect
-		/// </summary>
-		GamePlayer m_player;
-
-		/// <summary>
-		/// The internal unique effect ID
-		/// </summary>
-		ushort m_id;
-
-		/// <summary>
-		/// Creates a new quickcast effect
-		/// </summary>
-		public QuickCastEffect()
-		{
-		}
-
-		/// <summary>
 		/// Start the quickcast on player
 		/// </summary>
-		public void Start(GamePlayer player)
+		public override void Start(GameLiving living)
 		{
-			m_player = player;
-			m_player.EffectList.Add(this);
-			m_player.Out.SendMessage("You have activated quickcast.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			base.Start(living);
+			if (m_owner is GamePlayer)
+				(m_owner as GamePlayer).Out.SendMessage("You have activated quickcast.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}
 
 		/// <summary>
 		/// Called when effect must be canceled
 		/// </summary>
-		public void Cancel(bool playerCancel)
+		public override void Cancel(bool playerCancel)
 		{
-			m_player.EffectList.Remove(this);
-			m_player.Out.SendMessage("Your next spell will not be quickcasted.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			base.Cancel(playerCancel);
+			if (m_owner is GamePlayer)
+				(m_owner as GamePlayer).Out.SendMessage("Your next spell will not be quickcasted.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}
 
 		/// <summary>
 		/// Name of the effect
 		/// </summary>
-		public string Name { get { return "QuickCast"; } }
+		public override string Name { get { return "QuickCast"; } }
 
 		/// <summary>
 		/// Remaining Time of the effect in milliseconds
 		/// </summary>
-		public int RemainingTime { get { return 0; } }
+		public override int RemainingTime { get { return 0; } }
 
 		/// <summary>
 		/// Icon to show on players, can be id
 		/// </summary>
-		public ushort Icon { get { return 0x0190; } }
-
-		/// <summary>
-		/// unique id for identification in effect list
-		/// </summary>
-		public ushort InternalID { get { return m_id; } set { m_id = value; } }
+		public override ushort Icon { get { return 0x0190; } }
 
 		/// <summary>
 		/// Delve Info
 		/// </summary>
-		public IList DelveInfo
+		public override IList DelveInfo
 		{
 			get
 			{

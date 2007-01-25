@@ -648,5 +648,8 @@ namespace DOL.GS.Keeps
 				Interact(source as GamePlayer);
 			return true;
 		}
+
+		public void NPCManipulateDoorRequest(GameNPC npc, bool open)
+		{ }
 	}
 }

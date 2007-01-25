@@ -71,6 +71,13 @@ namespace DOL.GS.SkillHandler
 				player.Out.SendMessage("You can't enter combat mode while lying down!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 				return;
 			}
+
+			if (!player.IsSitting)
+			{
+				player.Out.SendMessage("You can't enter combat mode while sitting down!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+				return;
+			}
+
 			if (player.ActiveWeaponSlot == GameLiving.eActiveWeaponSlot.Distance)
 			{
 				player.Out.SendMessage("You can't enter melee combat mode with a fired weapon!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);

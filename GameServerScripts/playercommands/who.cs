@@ -128,25 +128,13 @@ namespace DOL.GS.Scripts
 					filters = new ArrayList(1);
 					filters.Add(new GMFilter());
 					break;
-				case "EN":
+				case "en":
+				case "cz":
+				case "de":
+				case "es":
+				case "fr":
 					filters = new ArrayList(1);
-					filters.Add(new LanguageFilter("EN"));
-					break;
-				case "CZ":
-					filters = new ArrayList(1);
-					filters.Add(new LanguageFilter("CZ"));
-					break;
-				case "DE":
-					filters = new ArrayList(1);
-					filters.Add(new LanguageFilter("DE"));
-					break;
-				case "ES":
-					filters = new ArrayList(1);
-					filters.Add(new LanguageFilter("ES"));
-					break;
-				case "FR":
-					filters = new ArrayList(1);
-					filters.Add(new LanguageFilter("FR"));
+					filters.Add(new LanguageFilter(args[1].ToLower()));
 					break;
 				default:
 					filters = new ArrayList();

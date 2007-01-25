@@ -487,7 +487,10 @@ namespace DOL.GS.Quests.Hibernia
 			* method. This means, the "TalkToXXX" method is called whenever
 			* a player right clicks on him or when he whispers to him.
 			*/
-			//We want to be notified whenever a player enters the world            
+			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
+			//We want to be notified whenever a player enters the world   
 			GameEventMgr.AddHandler(GamePlayerEvent.GameEntered, new DOLEventHandler(PlayerEnterWorld));
 
 			GameEventMgr.AddHandler(addrir, GameLivingEvent.Interact, new DOLEventHandler(TalkToAddrir));
@@ -528,6 +531,9 @@ namespace DOL.GS.Quests.Hibernia
 			/* Removing hooks works just as adding them but instead of 
 			 * AddHandler, we call RemoveHandler, the parameters stay the same
 			 */
+			GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
 			GameEventMgr.RemoveHandler(GamePlayerEvent.GameEntered, new DOLEventHandler(PlayerEnterWorld));
 
 			GameEventMgr.RemoveHandler(addrir, GameLivingEvent.Interact, new DOLEventHandler(TalkToAddrir));
@@ -731,7 +737,7 @@ namespace DOL.GS.Quests.Hibernia
 							freagus.SayTo(player, "By the time I close my stable down for the evening, the vault keeper has already gone home. You have already helped me once Lirone, will you help me [again]?");
 							break;
 						case "again":
-							player.Out.SendCustomDialog("Will you travel to Tir na Nog for Freagus?", new CustomDialogResponse(CheckPlayerAcceptQuest));
+							player.Out.SendQuestSubscribeCommand(freagus, QuestMgr.GetIDForQuestType(typeof(CityOfTirnaNog)), "Will you travel to Tir na Nog for Freagus?");
 							break;
 					}
 				}
@@ -1013,6 +1019,21 @@ namespace DOL.GS.Quests.Hibernia
 				SendSystemMessage(player, "Aborting Quest " + questTitle + ". You can start over again if you want.");
 				quest.AbortQuest();
 			}
+		}
+
+		protected static void SubscribeQuest(DOLEvent e, object sender, EventArgs args)
+		{
+			QuestEventArgs qargs = args as QuestEventArgs;
+			if (qargs == null)
+				return;
+
+			if (qargs.QuestID != QuestMgr.GetIDForQuestType(typeof(CityOfTirnaNog)))
+				return;
+
+			if (e == GamePlayerEvent.AcceptQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x01);
+			else if (e == GamePlayerEvent.DeclineQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x00);
 		}
 
 		/* This is our callback hook that will be called when the player clicks

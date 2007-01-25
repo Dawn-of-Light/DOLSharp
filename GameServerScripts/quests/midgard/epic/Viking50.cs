@@ -1569,6 +1569,9 @@ namespace DOL.GS.Quests.Midgard
 
 			#endregion
 
+			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
 			GameEventMgr.AddHandler(Lynnleigh, GameObjectEvent.Interact, new DOLEventHandler(TalkToLynnleigh));
 			GameEventMgr.AddHandler(Lynnleigh, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToLynnleigh));
 
@@ -1589,6 +1592,9 @@ namespace DOL.GS.Quests.Midgard
 			if (Lynnleigh == null)
 				return;
 			// remove handlers
+			GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
 			GameEventMgr.RemoveHandler(Lynnleigh, GameObjectEvent.Interact, new DOLEventHandler(TalkToLynnleigh));
 			GameEventMgr.RemoveHandler(Lynnleigh, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToLynnleigh));
 
@@ -1636,7 +1642,7 @@ namespace DOL.GS.Quests.Midgard
 							Lynnleigh.SayTo(player, "Yes, it worries me, but I think that you are ready to [face Ydenia] and his minions.");
 							break;
 						case "face Ydenia":
-							player.Out.SendCustomDialog("Will you face Ydenia [Viking Level 50 Epic]?", new CustomDialogResponse(CheckPlayerAcceptQuest));
+							player.Out.SendQuestSubscribeCommand(Lynnleigh, QuestMgr.GetIDForQuestType(typeof(Viking_50)), "Will you face Ydenia [Viking Level 50 Epic]?");
 							break;
 					}
 				}
@@ -1742,6 +1748,21 @@ namespace DOL.GS.Quests.Midgard
 				SendSystemMessage(player, "Aborting Quest " + questTitle + ". You can start over again if you want.");
 				quest.AbortQuest();
 			}
+		}
+
+		protected static void SubscribeQuest(DOLEvent e, object sender, EventArgs args)
+		{
+			QuestEventArgs qargs = args as QuestEventArgs;
+			if (qargs == null)
+				return;
+
+			if (qargs.QuestID != QuestMgr.GetIDForQuestType(typeof(Viking_50)))
+				return;
+
+			if (e == GamePlayerEvent.AcceptQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x01);
+			else if (e == GamePlayerEvent.DeclineQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x00);
 		}
 
 		private static void CheckPlayerAcceptQuest(GamePlayer player, byte response)

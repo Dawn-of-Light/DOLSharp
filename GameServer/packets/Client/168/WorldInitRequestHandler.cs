@@ -88,8 +88,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 					}
 				}
 
-				player.EffectList.RestoreAllEffects();
-
 				player.Client.ClientState=GameClient.eClientState.WorldEnter;
 				// 0x88 - Position
 				// 0x6D - FriendList
@@ -145,6 +143,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				player.Out.SendUpdatePlayer();
 				player.Out.SendUpdateMoney();
 				player.Out.SendCharStatsUpdate();
+				player.EffectList.RestoreAllEffects();
 				ArrayList friends = player.Friends;
 				ArrayList onlineFriends = new ArrayList();
 				foreach(string friendName in friends)
