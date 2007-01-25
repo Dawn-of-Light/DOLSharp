@@ -34,6 +34,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
+			if (client.Player == null)
+				return 0;
+
 			uint X = packet.ReadInt();
 			uint Y = packet.ReadInt();
 			ushort id = packet.ReadShort();

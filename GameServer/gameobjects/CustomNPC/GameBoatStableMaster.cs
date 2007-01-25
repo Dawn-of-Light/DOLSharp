@@ -107,6 +107,7 @@ namespace DOL.GS
 		{
 			if (!(o is GameNPC)) return;
 			GameNPC npc = (GameNPC)o;
+			GameEventMgr.RemoveHandler(npc, GameNPCEvent.PathMoveEnds, new DOLEventHandler(OnHorseAtPathEnd));
 			npc.StopMoving();
 			npc.RemoveFromWorld();
 		}

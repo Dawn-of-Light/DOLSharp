@@ -173,6 +173,21 @@ namespace DOL.GS
 		}
 
 		/// <summary>
+		/// Allow a NPC to manipulate the door
+		/// </summary>
+		/// <param name="npc"></param>
+		/// <param name="open"></param>
+		public void NPCManipulateDoorRequest(GameNPC npc, bool open)
+		{
+			npc.TurnTo(this.X, this.Y);
+			if (open && m_state != eDoorState.Open)
+				this.Open();
+			else if (!open && m_state != eDoorState.Closed)
+				this.Close();
+
+		} 
+
+		/// <summary>
 		/// The action that closes the door after specified duration
 		/// </summary>
 		protected class CloseDoorAction : RegionAction

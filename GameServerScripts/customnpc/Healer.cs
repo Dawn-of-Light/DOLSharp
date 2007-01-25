@@ -36,7 +36,7 @@ namespace DOL.GS.Scripts
 	[NPCGuildScript("Healer")]
 	public class GameHealer : GameNPC
 	{
-		private const string CURRED_SPELL_TYPE = "PveResurrectionIllness";
+		private const string CURED_SPELL_TYPE = "PveResurrectionIllness";
 
 		private const string COST_BY_PTS = "cost";
 
@@ -69,11 +69,11 @@ namespace DOL.GS.Scripts
 
 			TurnTo(player, 5000);
 
-			GameSpellEffect effect = SpellHandler.FindEffectOnTarget(player, CURRED_SPELL_TYPE);
+			GameSpellEffect effect = SpellHandler.FindEffectOnTarget(player, CURED_SPELL_TYPE);
 			if (effect != null)
 			{
 				effect.Cancel(false);
-				player.Out.SendMessage(GetName(0, false) + " cure your resurrection sickness.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(GetName(0, false) + " cures your resurrection sickness.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 
 			if (player.TotalConstitutionLostAtDeath > 0)

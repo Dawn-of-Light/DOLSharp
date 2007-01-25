@@ -843,6 +843,8 @@ namespace DOL.GS.Scripts
 									ind++;
 									string zoneName = (ply.CurrentZone == null ? "(null)" : ply.CurrentZone.Description);
 									string mesg = ind + ") " + ply.Name + " <" + ply.GuildRank.Title + "> the Level " + ply.Level + " " + ply.CharacterClass.Name + " in " + zoneName;
+									if (ServerProperties.Properties.ALLOW_CHANGE_LANGUAGE)
+										mesg += " <" + ply.Client.Account.Language + ">";
 									client.Out.SendMessage(mesg, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								}
 							}

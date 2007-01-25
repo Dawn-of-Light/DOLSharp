@@ -843,7 +843,7 @@ namespace DOL.GS
 
 		#region ObjectsInRadius
 		/********************ADDED BY KONIK & WITCHKING FOR NEW GETINRADIUS SYSTEM********************/
-		#region OIRData
+		/*#region OIRData
 		public class OIRData
 		{
 			private class OIRElement
@@ -1019,7 +1019,7 @@ namespace DOL.GS
 		}
 
 		protected readonly OIRData m_oirData = new OIRData();
-		#endregion
+		#endregion*/
 
 
 		/// <summary>
@@ -1073,7 +1073,10 @@ namespace DOL.GS
 		{
 			/******* MODIFIED BY KONIK & WITCHKING FOR NEW ZONE SYSTEM *********/
 			if (CurrentRegion != null)
-				return m_oirData.GetInRadius(this, CurrentRegion, Zone.eGameObjectType.PLAYER, X, Y, Z, radiusToCheck, withDistance, useCache);
+			{
+				//return m_oirData.GetInRadius(this, CurrentRegion, Zone.eGameObjectType.PLAYER, X, Y, Z, radiusToCheck, withDistance, useCache);
+				return CurrentRegion.GetPlayerInRadius(X, Y, Z, radiusToCheck, withDistance);
+			}
 			return new Region.EmptyEnumerator();
 			/***************************************************************/
 		}
@@ -1125,8 +1128,8 @@ namespace DOL.GS
 			/******* MODIFIED BY KONIK & WITCHKING FOR NEW ZONE SYSTEM *********/
 			if (CurrentRegion != null)
 			{
-				IEnumerable result = m_oirData.GetInRadius(this, CurrentRegion, Zone.eGameObjectType.NPC, X, Y, Z, radiusToCheck, withDistance, useCache);
-				//IEnumerable result = CurrentRegion.GetNPCsInRadius(X, Y, Z, radiusToCheck, withDistance);
+				//IEnumerable result = m_oirData.GetInRadius(this, CurrentRegion, Zone.eGameObjectType.NPC, X, Y, Z, radiusToCheck, withDistance, useCache);
+				IEnumerable result = CurrentRegion.GetNPCsInRadius(X, Y, Z, radiusToCheck, withDistance);
 
 				return result;
 			}
@@ -1157,7 +1160,10 @@ namespace DOL.GS
 		{
 			/******* MODIFIED BY KONIK & WITCHKING FOR NEW ZONE SYSTEM *********/
 			if (CurrentRegion != null)
-				return m_oirData.GetInRadius(this, CurrentRegion, Zone.eGameObjectType.ITEM, X, Y, Z, radiusToCheck, withDistance, true);
+			{
+				//return m_oirData.GetInRadius(this, CurrentRegion, Zone.eGameObjectType.ITEM, X, Y, Z, radiusToCheck, withDistance, true);
+				return CurrentRegion.GetItemsInRadius(X, Y, Z, radiusToCheck, withDistance);
+			}
 			return new Region.EmptyEnumerator();
 			/***************************************************************/
 		}

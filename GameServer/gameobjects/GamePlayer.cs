@@ -3168,12 +3168,14 @@ namespace DOL.GS
 				if (this.Client.Account.PrivLevel == 1 && (m_realmLevel >= 20 && m_realmLevel % 10 == 0) || m_realmLevel >= 60)
 				{
 					string message = LanguageMgr.GetTranslation(Client, "GamePlayer.GainRealmPoints.ReachedRank", Name, m_realmLevel + 10, LastPositionUpdateZone.Description);
-					NewsMgr.CreateNews(message, this.Realm, eNewsType.RvRLocal, true);
+					string newsmessage = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GamePlayer.GainRealmPoints.ReachedRank", Name, m_realmLevel + 10, LastPositionUpdateZone.Description);
+					NewsMgr.CreateNews(newsmessage, this.Realm, eNewsType.RvRLocal, true);
 				}
 				if (this.Client.Account.PrivLevel == 1 && m_realmPts >= 1000000 && m_realmPts - amount < 1000000)
 				{
 					string message = LanguageMgr.GetTranslation(Client, "GamePlayer.GainRealmPoints.Earned", Name, LastPositionUpdateZone.Description);
-					NewsMgr.CreateNews(message, this.Realm, eNewsType.RvRLocal, true);
+					string newsmessage = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GamePlayer.GainRealmPoints.Earned", Name, LastPositionUpdateZone.Description);
+					NewsMgr.CreateNews(newsmessage, this.Realm, eNewsType.RvRLocal, true);
 				}
 			}
 			Out.SendUpdatePoints();
@@ -3828,7 +3830,8 @@ namespace DOL.GS
 						if (Client.Account.PrivLevel == 1)
 						{
 							string message = LanguageMgr.GetTranslation(Client, "GamePlayer.OnLevelUp.Reached", Name, Level, LastPositionUpdateZone.Description);
-							NewsMgr.CreateNews(message, Realm, eNewsType.PvE, true);
+							string newsmessage = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GamePlayer.OnLevelUp.Reached", Name, Level, LastPositionUpdateZone.Description);
+							NewsMgr.CreateNews(newsmessage, Realm, eNewsType.PvE, true);
 						}
 						break;
 					}

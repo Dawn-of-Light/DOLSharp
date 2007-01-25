@@ -78,7 +78,7 @@ namespace DOL.GS.GameEvents
 			}
 			// 1 min * INTERVAL
 			m_statFrequency *= ServerProperties.Properties.STATSAVE_INTERVAL;
-			m_timer = new Timer(new TimerCallback(SaveStats), null, m_statFrequency, m_statFrequency);
+			m_timer = new Timer(new TimerCallback(SaveStats), null, 60000, m_statFrequency);
 		}
 
 		/// <summary>
