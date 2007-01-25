@@ -41,5 +41,6 @@ namespace DOL.GS
 		eDoorState State {get; set;}
 		void Open();
 		void Close();
+		void NPCManipulateDoorRequest(GameNPC npc, bool open);
 	}
 }

@@ -72,7 +72,10 @@ namespace DOL.AI.Brain
 				CheckSpells();
 
 			if (Body.IsMoving && !Body.InCombat)
+			{
+				Body.TempProperties.removeProperty(GameLiving.LAST_ATTACK_DATA);
 				return;
+			}
 
 			if (AggroLevel > 0)
 			{
@@ -84,6 +87,9 @@ namespace DOL.AI.Brain
 			if (!Body.AttackState && !Body.IsCasting && !Body.IsMoving
 				&& Body.Heading != Body.SpawnHeading)
 				Body.TurnTo(Body.SpawnHeading);
+
+			if (!Body.InCombat)
+				Body.TempProperties.removeProperty(GameLiving.LAST_ATTACK_DATA);
 		}
 
 		/// <summary>

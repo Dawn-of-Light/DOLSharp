@@ -69,6 +69,7 @@ namespace DOL.GS.GameEvents
 				newguild.theGuildDB.oMotd = "Type /gc quit to leave this starter guild.";
 				GuildMgr.CreateRanks(newguild);
 				newguild.theGuildDB.Ranks[8].OcHear = true;
+				newguild.theGuildDB.Ranks[8].Title = "Initiate";
 
 				GuildMgr.AddGuild(newguild);
 				GameServer.Database.AddNewObject(newguild.theGuildDB);

@@ -74,7 +74,7 @@ GamePlayer.Die.KilledByLocation:			{0} byl prave zabit od {1} v {2}.
 GamePlayer.Die.KilledLocation:				{0} byl prave zabit v {1} !
 GamePlayer.Die.ReleaseToReturn:				Zemrel jsi. Napis /release pro navrat na tvuj posledni bindpoint.
 GamePlayer.Die.YouKilled:					Prave jsi zabil {0}!
-GamePlayer.SendReceive.sends:				 posila, 
+GamePlayer.SendReceive.sends:				 sends, 
 GamePlayer.Quit.CantQuitDead:				Ted nemuzes ukoncit hru, jsi mrtvy. Napis '/release' pro oziveni tveho tela.
 GamePlayer.Quit.CantQuitMount:				Musis slezt z kone, nez ukoncis hru.
 GamePlayer.Quit.CantQuitStanding:			Musis stat na miste, pokud chces ukoncit hru.
