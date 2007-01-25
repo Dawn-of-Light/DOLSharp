@@ -468,6 +468,5 @@ namespace DOL.GS.Quests
 			}
 			return 0;
 		}
-
 	}
 }

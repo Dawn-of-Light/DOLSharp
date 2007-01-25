@@ -104,9 +104,6 @@ namespace DOL.GS.SkillHandler
 			}
 			#endregion
 
-
-
-
 			GameLiving target = (GameLiving)player.TargetObject;
 			int damage = 0;
 			int specc = (player.CharacterClass is ClassBlademaster) ?
@@ -122,10 +119,8 @@ namespace DOL.GS.SkillHandler
 
 			//final variance...damage += Util.Random(100) - 50; to much variation
 
-
 			//flurry is slash damage
 			target.TakeDamage(player, eDamageType.Slash, damage, 0);
-
 
 			//sending spell effect
 			//      spellhitID 5988

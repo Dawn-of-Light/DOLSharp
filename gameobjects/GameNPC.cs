@@ -2353,6 +2353,10 @@ namespace DOL.GS
 				GamePlayer player = killer as GamePlayer;
 				Faction.KillMember(player);
 			}
+
+			// remove temp properties
+			TempProperties.RemoveAll();
+
 			StartRespawn();
 		}
 
@@ -3060,13 +3064,11 @@ namespace DOL.GS
 									if (effect is GameSpellEffect)
 									{
 										GameSpellEffect speffect = effect as GameSpellEffect;
-										if (speffect.Spell.SpellType == spell.SpellType)
+										if (speffect.Spell.SpellType == spell.SpellType
+											&& speffect.Spell.EffectGroup == spell.EffectGroup)
 										{
-											if (speffect.Spell.EffectGroup == spell.EffectGroup)
-											{
-												already = true;
-												break;
-											}
+											already = true;
+											break;
 										}
 									}
 								}
