@@ -250,6 +250,12 @@ namespace DOL.GS.ServerRules
 		/// <returns>true if allowed</returns>
 		public virtual bool IsAllowedToCastSpell(GameLiving caster, GameLiving target, Spell spell, SpellLine spellLine)
 		{
+			if (target is GamePlayer && (target as GamePlayer).Client.ClientState == GameClient.eClientState.WorldEnter)
+			{
+				MessageToLiving(caster, target.Name + " is entering the game and you are unable to cast a spell!");
+				return false;
+			}
+
 			if (target is GameKeepDoor || target is GameKeepComponent)
 			{
 				switch (spell.Target.ToLower())

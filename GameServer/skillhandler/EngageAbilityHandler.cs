@@ -72,7 +72,7 @@ namespace DOL.GS.SkillHandler
 				return;
 			}
 
-			if (!player.IsSitting)
+			if (player.IsSitting)
 			{
 				player.Out.SendMessage("You can't enter combat mode while sitting down!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 				return;
