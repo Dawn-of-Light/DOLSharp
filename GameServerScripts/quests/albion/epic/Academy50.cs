@@ -1265,7 +1265,7 @@ namespace DOL.GS.Quests.Albion
 
 			if (response == 0x00)
 			{
-				SendSystemMessage(player, "Good, no go out there and finish your work!");
+				SendSystemMessage(player, "Good, now go out there and finish your work!");
 			}
 			else
 			{

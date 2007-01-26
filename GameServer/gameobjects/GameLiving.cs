@@ -2923,6 +2923,16 @@ namespace DOL.GS
 
 			// Bladeturn
 			// TODO: high level mob attackers penetrate bt, players are tested and do not penetrate (lv30 vs lv20)
+			/*
+			 * http://www.camelotherald.com/more/31.shtml
+			 * - Bladeturns can now be penetrated by attacks from higher level monsters and
+			 * players. The chance of the bladeturn deflecting a higher level attack is 
+			 * approximately the caster's level / the attacker's level.
+			 * Please be aware that everything in the game is 
+			 * level/chance based - nothing works 100% of the time in all cases. 
+			 * It was a bug that caused it to work 100% of the time - now it takes the 
+			 * levels of the players involved into account.
+			 */
 			// "The blow penetrated the magical barrier!"
 			if (bladeturn != null)
 			{
