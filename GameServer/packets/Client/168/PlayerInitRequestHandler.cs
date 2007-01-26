@@ -118,6 +118,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 								pclient.Out.SendAddFriends(friendList);
 						}
 					}
+					player.EffectList.RestoreAllEffects();
 				}
 				else
 				{
