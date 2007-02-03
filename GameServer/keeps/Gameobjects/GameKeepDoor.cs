@@ -253,12 +253,6 @@ namespace DOL.GS.Keeps
 		public override void TakeDamage(GameObject source, eDamageType damageType, int damageAmount, int criticalAmount)
 		{
 			this.Component.Keep.LastAttackedByEnemyTick = this.CurrentRegion.Time;
-			if (damageType != eDamageType.Slash && damageType != eDamageType.Thrust && damageType != eDamageType.Crush && damageType != eDamageType.Natural)
-			{
-				if (source is GamePlayer)
-					(source as GamePlayer).Out.SendMessage("Your attack has no effect on the door!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-				return;
-			}
 			//only on hp change
 			if (m_oldHealthPercent != HealthPercent)
 			{

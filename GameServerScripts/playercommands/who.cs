@@ -229,7 +229,7 @@ namespace DOL.GS.Scripts
 					log.Error("no currentzone in who commandhandler for player " + player.Name);
 			}
 			ChatGroup mychatgroup = (ChatGroup) player.TempProperties.getObjectProperty(ChatGroup.CHATGROUP_PROPERTY, null);
-			if (mychatgroup != null && ((bool) mychatgroup.Members[player]) == true)
+			if (mychatgroup != null && ((bool) mychatgroup.Members[player]) == true && (mychatgroup.IsPublic || mychatgroup.Members[player] != null))
 			{
 				result.Append(" [CG]");
 			}

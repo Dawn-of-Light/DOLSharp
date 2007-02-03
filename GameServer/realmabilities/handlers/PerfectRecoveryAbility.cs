@@ -76,7 +76,6 @@ namespace DOL.GS.RealmAbilities
 			if (effect != null)
 				effect.Cancel(false);
 			resurrectedPlayer.Out.SendMessage("You have been resurrected by " + rezzer.GetName(0, false) + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			GameEventMgr.Notify(GamePlayerEvent.Revive, resurrectedPlayer);
 		}
 		public override int GetReUseDelay(int level)
 		{

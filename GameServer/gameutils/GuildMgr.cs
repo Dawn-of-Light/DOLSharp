@@ -260,7 +260,7 @@ namespace DOL.GS
 				DBGuild[] guilds = (DBGuild[])GameServer.Database.SelectObjects(typeof(DBGuild), "GuildName='" + GameServer.Database.Escape(guildName) + "'");
 				foreach (DBGuild guild in guilds)
 				{
-					foreach (Character cha in guild.Characters)
+					foreach (Character cha in GameServer.Database.SelectObjects(typeof(Character), "GuildID = '" + guild.GuildID + "'"))
 						cha.GuildID = "";
 					GameServer.Database.DeleteObject(guild);
 				}

@@ -51,7 +51,6 @@ namespace DOL.GS.PropertyCalc
 			if (living is GamePlayer)
 			{
 				GamePlayer player = (GamePlayer)living;
-
 				//				Since Dark Age of Camelot's launch, we have heard continuous feedback from our community about the movement speed in our game. The concerns over how slow
 				//				our movement is has continued to grow as we have added more and more areas in which to travel. Because we believe these concerns are valid, we have decided
 				//				to make a long requested change to the game, enhancing the movement speed of all players who are out of combat. This new run state allows the player to move

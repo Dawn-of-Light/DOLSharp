@@ -184,7 +184,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				if (house != null)
 				{
 					TimeSpan due = (house.LastPaid.AddDays(7).AddHours(1) - DateTime.Now);
-					if (due.Days < 7)
+					if (due.Days < 7 && house.KeptMoney < HouseMgr.GetRentByModel(house.Model))
 						player.Out.SendRentReminder(house);
 				}
 
@@ -235,8 +235,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				{
 					foreach (AbstractGameKeep k in list)
 					{
-						if (k.CurrentRegion.ID == 263) continue;
-						if (k.BaseLevel == 255) continue;
+						if (k.BaseLevel >= 50) continue;
 
 						if (player.Level > k.BaseLevel)
 						{

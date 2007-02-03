@@ -42,7 +42,8 @@ namespace DOL.GS
 		protected string m_classType;
 		protected string m_guildName;
 		protected string m_model;
-		protected byte m_size;
+		protected string m_size;
+		protected string m_level;
 		protected short m_maxSpeed;
 		protected byte m_parryChance;
 		protected byte m_evadeChance;
@@ -66,6 +67,7 @@ namespace DOL.GS
 		protected IList m_abilities;
 		protected byte m_aggroLevel;
 		protected int m_aggroRange;
+		protected int m_bodyType;
 
 		/// <summary>
 		/// Constructs a new NpcTemplate
@@ -82,6 +84,11 @@ namespace DOL.GS
 			m_guildName = data.GuildName;
 			m_model = data.Model;
 			m_size = data.Size;
+			if (m_size == null)
+				m_size = "50";
+			m_level = data.Level;
+			if (m_level == null)
+				m_level = "0";
 			m_maxSpeed = data.MaxSpeed;
 			m_parryChance = data.ParryChance;
 			m_evadeChance = data.EvadeChance;
@@ -154,6 +161,7 @@ namespace DOL.GS
             m_inventory = data.EquipmentTemplateID;
 			m_aggroLevel = data.AggroLevel;
 			m_aggroRange = data.AggroRange;
+			m_bodyType = data.BodyType;
 		}
 
 		public NpcTemplate(GameNPC mob)
@@ -165,7 +173,8 @@ namespace DOL.GS
 			m_classType = mob.GetType().ToString();
 			m_guildName = mob.GuildName;
 			m_model = mob.Model.ToString();
-			m_size = mob.Size;
+			m_size = mob.Size.ToString();
+			m_level = mob.Level.ToString();
 			m_maxSpeed = (short)mob.MaxSpeed;
 			m_parryChance = mob.ParryChance;
 			m_evadeChance = mob.EvadeChance;
@@ -186,6 +195,7 @@ namespace DOL.GS
 				m_aggroLevel = (byte)brain.AggroLevel;
 				m_aggroRange = brain.AggroRange;
 			}
+			m_bodyType = mob.BodyType;
 		}
 
 		public NpcTemplate()
@@ -238,10 +248,16 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets the template npc size
 		/// </summary>
-		public byte Size
+		public string Size
 		{
 			get { return m_size; }
 			set { m_size = value; }
+		}
+
+		public string Level
+		{
+			get { return m_level; }
+			set { m_level = value; }
 		}
 		/// <summary>
 		/// Gets the template npc max speed
@@ -398,6 +414,12 @@ namespace DOL.GS
 		{
 			get { return m_aggroRange; }
 			set { m_aggroRange = value; }
+		}
+
+		public int BodyType
+		{
+			get { return m_bodyType; }
+			set { m_bodyType = value; }
 		}
 
 		public virtual void SaveIntoDatabase()

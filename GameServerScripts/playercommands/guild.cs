@@ -93,6 +93,7 @@ namespace DOL.GS.Scripts
 					client.Out.SendMessage("Member commands:", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					client.Out.SendMessage("'/gc form <Name>' to create a new guilde with all player of group", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					client.Out.SendMessage("'/gc info' to show information on the guild", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					DisplayMessage(client, "'/gc ranks' to show rank information for the guild", new object[] { });
 					client.Out.SendMessage("'/gc cancel <option> [value]' to cancel all command done before", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					client.Out.SendMessage("'/gc decline' to decline the enter in guild ", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					client.Out.SendMessage("'/gc claim' to claim a keep", eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -116,8 +117,9 @@ namespace DOL.GS.Scripts
 					client.Out.SendMessage("'/gc ainvite' to invite another guild to join your alliance", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					client.Out.SendMessage("'/gc aremove' to removes your entire guild from an alliance", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					client.Out.SendMessage("'/gc aremove alliance [#]' to Remove the specified guild (listed by number) from the alliance", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					client.Out.SendMessage("'/gc noteself <note>", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-
+					client.Out.SendMessage("'/gc noteself <note>' to set a note about your character for the guild", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					DisplayMessage(client, "'/gc webpage <the.guildpage.com>' is an additional line set by the leader that can be display in a /gc info command, as well as on the Herald. ", new object[] { });
+					DisplayMessage(client, "'/gc email <contact@guildpage.com>' is an additional line set by the leader that can be displayed in a /gc info command, as well as on the Herald. ", new object[] { });
 
 					return 1;
 				}
@@ -443,23 +445,35 @@ namespace DOL.GS.Scripts
 
 							if (typed)
 							{
-								client.Out.SendMessage("info of guild :", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								string mesg = client.Player.Guild.Name + "  " + client.Player.Guild.MemberOnlineCount + " members ";
-								client.Out.SendMessage(mesg, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								/*
+								 * Guild Info for Clan Cotswold:
+								 * Realm Points: xxx Bouty Points: xxx Merit Points: xxx
+								 * Guild Level: xx
+								 * Dues: 0% Bank: 0 copper pieces
+								 * Current Merit Bonus: None
+								 * Banner available for purchase
+								 * Webpage: xxx
+								 * Contact Email:
+								 * Message: motd
+								 * Officer Message: xxx
+								 * Alliance Message: xxx
+								 */
+								client.Out.SendMessage("Guild Info for " + client.Player.Guild.Name + ":", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								client.Out.SendMessage(string.Format("Realm Points: {0} Bounty Points: {1} Merit Points: {2}", client.Player.Guild.RealmPoints, client.Player.Guild.BountyPoints, 0), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								client.Out.SendMessage("Webpage: " + client.Player.Guild.theGuildDB.Webpage, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								client.Out.SendMessage("Contact Email: " + client.Player.Guild.theGuildDB.Email, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
-								if (client.Player.Guild.theGuildDB.Motd != null && client.Player.Guild.theGuildDB.Motd != "")
-									client.Player.Out.SendMessage(client.Player.Guild.theGuildDB.Motd, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								if (client.Player.Guild.theGuildDB.oMotd != null && client.Player.Guild.theGuildDB.oMotd != "" && client.Player.GuildRank.OcHear)
-									client.Player.Out.SendMessage(client.Player.Guild.theGuildDB.oMotd, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-
-								foreach (DBRank rank in client.Player.Guild.theGuildDB.Ranks)
+								string motd = client.Player.Guild.theGuildDB.Motd;
+								if (!Util.IsEmpty(motd) && client.Player.GuildRank.GcHear)
+									client.Player.Out.SendMessage("Message: " + motd, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								string omotd = client.Player.Guild.theGuildDB.oMotd;
+								if (!Util.IsEmpty(omotd) && client.Player.GuildRank.OcHear)
+									client.Player.Out.SendMessage("Officer Message: " + omotd, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								if (client.Player.Guild.alliance != null)
 								{
-									client.Out.SendMessage("RANK :" + rank.RankLevel.ToString() + "Name :" + rank.Title, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-									client.Out.SendMessage("AcHear :" + (rank.AcHear ? "y" : "n") + " AcSpeak :" + (rank.AcSpeak ? "y" : "n"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-									client.Out.SendMessage("OcHear :" + (rank.OcHear ? "y" : "n") + " OcSpeak :" + (rank.OcSpeak ? "y" : "n"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-									client.Out.SendMessage("GcHear :" + (rank.GcHear ? "y" : "n") + " GcSpeak :" + (rank.GcSpeak ? "y" : "n"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-									client.Out.SendMessage("Emblem :" + (rank.Emblem ? "y" : "n") + " Promote :" + (rank.Promote ? "y" : "n"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-									client.Out.SendMessage("Remove :" + (rank.Remove ? "y" : "n") + " View :" + (rank.View ? "y" : "n"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									string amotd = client.Player.Guild.alliance.Dballiance.Motd;
+									if (!Util.IsEmpty(amotd) && client.Player.GuildRank.AcHear)
+										client.Out.SendMessage("Alliance Message: " + amotd, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								}
 							}
 							else
@@ -497,8 +511,67 @@ namespace DOL.GS.Scripts
 								return 1;
 
 							}
+							break;
 						}
-						break;
+					case "ranks":
+						{
+							if (client.Player.Guild == null)
+							{
+								client.Out.SendMessage("You have to be a member of a guild, before you can use any of the commands!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return 1;
+							}
+							if (!client.Player.GuildRank.GcHear)
+							{
+								client.Out.SendMessage("You do not have the necessary permissions to perform this task!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return 1;
+							}
+							foreach (DBRank rank in client.Player.Guild.theGuildDB.Ranks)
+							{
+								client.Out.SendMessage("RANK :" + rank.RankLevel.ToString() + "Name :" + rank.Title, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								client.Out.SendMessage("AcHear :" + (rank.AcHear ? "y" : "n") + " AcSpeak :" + (rank.AcSpeak ? "y" : "n"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								client.Out.SendMessage("OcHear :" + (rank.OcHear ? "y" : "n") + " OcSpeak :" + (rank.OcSpeak ? "y" : "n"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								client.Out.SendMessage("GcHear :" + (rank.GcHear ? "y" : "n") + " GcSpeak :" + (rank.GcSpeak ? "y" : "n"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								client.Out.SendMessage("Emblem :" + (rank.Emblem ? "y" : "n") + " Promote :" + (rank.Promote ? "y" : "n"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								client.Out.SendMessage("Remove :" + (rank.Remove ? "y" : "n") + " View :" + (rank.View ? "y" : "n"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							}
+							break;
+						}
+					case "webpage":
+						{
+							if (client.Player.Guild == null)
+							{
+								client.Out.SendMessage("You have to be a member of a guild, before you can use any of the commands!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return 1;
+							}
+							if (!client.Player.Guild.GotAccess(client.Player, eGuildRank.Leader))
+							{
+								client.Out.SendMessage("You do not have the necessary permissions to perform this task!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return 1;
+							}
+							message = String.Join(" ", args, 2, args.Length - 2);
+							client.Player.Guild.theGuildDB.Webpage = message;
+							GameServer.Database.SaveObject(client.Player.Guild.theGuildDB);
+							client.Out.SendMessage("You have set the guild webpage", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							break;
+						}
+					case "email":
+						{
+							if (client.Player.Guild == null)
+							{
+								client.Out.SendMessage("You have to be a member of a guild, before you can use any of the commands!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return 1;
+							}
+							if (!client.Player.Guild.GotAccess(client.Player, eGuildRank.Leader))
+							{
+								client.Out.SendMessage("You do not have the necessary permissions to perform this task!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return 1;
+							}
+							message = String.Join(" ", args, 2, args.Length - 2);
+							client.Player.Guild.theGuildDB.Email = message;
+							GameServer.Database.SaveObject(client.Player.Guild.theGuildDB);
+							client.Out.SendMessage("You have set the guild email", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							break;
+						}
 					// --------------------------------------------------------------------------------
 					// LIST
 					// --------------------------------------------------------------------------------

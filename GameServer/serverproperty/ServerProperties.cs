@@ -266,6 +266,12 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("statsave_interval", "Interval between each DB Stats store in minutes. -1 for deactivated.", -1)]
 		public static readonly int STATSAVE_INTERVAL;
+
+		/// <summary>
+		/// Anon Modifier
+		/// </summary>
+		[ServerProperty("anon_modifier", "Various modifying options for anon, 0 = default, 1 = /who shows player but as ANON, -1 = disabled", 0)]
+		public static readonly int ANON_MODIFIER;
 		
 		/// <summary>
 		/// This method loads the property from the database and returns
