@@ -747,6 +747,10 @@ namespace DOL.GS
 			/// Release to the current location
 			/// </summary>
 			Duel,
+			/// <summary>
+			/// Release to your bind point
+			/// </summary>
+			Bind,
 		}
 
 		/// <summary>
@@ -886,6 +890,33 @@ namespace DOL.GS
 					{
 						switch (CurrentRegionID)
 						{
+								/*
+								//bg1-4
+							case 234:
+								{
+									break;
+								}
+								//bg5-9
+							case 235:
+								{
+									break;
+								}
+								//bg10-14
+							case 236:
+								{
+									break;
+								}
+								//bg15-19
+							case 237:
+								{
+									break;
+								}
+								//bg20-24
+							case 238:
+								{
+									break;
+								}
+								//bg25-29*/
 							case 239:
 								{
 									if (Realm == 1 && Level < 31)
@@ -922,6 +953,7 @@ namespace DOL.GS
 									relHeading = (ushort)m_character.BindHeading;
 									break;
 								}
+								//bg30-34
 							case 240:
 								{
 									if (Realm == 1 && Level < 41)
@@ -957,7 +989,18 @@ namespace DOL.GS
 									relZ = m_character.BindZpos;
 									relHeading = (ushort)m_character.BindHeading;
 									break;
+								}/*
+								//bg 35-39
+							case 241:
+								{
+									break;
 								}
+								//bg 40-45
+							case 242:
+								{
+									break;
+								}*/
+								//nf
 							case 163:
 								{
 									if (m_character.BindRegion != 163)
@@ -988,7 +1031,12 @@ namespace DOL.GS
 										relHeading = (ushort)m_character.BindHeading;
 									}
 									break;
-								}
+								}/*
+								//bg45-49
+							case 165:
+								{
+									break;
+								}*/
 							default:
 								{
 									relRegion = (ushort)m_character.BindRegion;
@@ -3419,11 +3467,12 @@ namespace DOL.GS
 				// http://www.camelotherald.com/more/2275.shtml
 				// new 1.81D formula
 				// Realm point value = (level - 20)squared + (realm rank level x 5) + (champion level x 10) + (master level (squared)x 5)
+				//we use realm level 1L0 = 0, mythic uses 1L0 = 10, so we + 10 the realm level
 				int level = Math.Max(0, Level - 20);
 				if (level == 0)
-					return Math.Max(1, RealmLevel * 5);
+					return Math.Max(1, (RealmLevel + 10) * 5);
 
-				return Math.Max(1, level * level + RealmLevel * 5);
+				return Math.Max(1, level * level + (RealmLevel + 10) * 5);
 			}
 		}
 
@@ -6058,7 +6107,8 @@ namespace DOL.GS
 			// deal out exp and realm points based on server rules
 			// no other way to keep correct message order...
 			GameServer.ServerRules.OnPlayerKilled(this, killer);
-			m_character.DeathTime = PlayedTime;
+			if (m_releaseType != eReleaseType.Duel)
+				m_character.DeathTime = PlayedTime;
 		}
 
 		public override void EnemyKilled(GameLiving enemy)
@@ -9337,7 +9387,8 @@ namespace DOL.GS
 			}
 
 			m_cancelStyle = m_character.CancelStyle;
-			m_isAnonymous = m_character.IsAnonymous;
+			if (ServerProperties.Properties.ANON_MODIFIER != -1)
+				m_isAnonymous = m_character.IsAnonymous;
 
 			//Need to load the skills at the end, so the stored values modify the
 			//existing skill levels for this player
@@ -9631,6 +9682,7 @@ namespace DOL.GS
 			GamePlayer player = sender as GamePlayer;
 			if (player == null || atkArgs == null) return;
 			if (atkArgs.AttackData.AttackResult != eAttackResult.HitUnstyled && atkArgs.AttackData.AttackResult != eAttackResult.HitStyle) return;
+			if (atkArgs.AttackData.Damage == -1) return;
 
 			player.Stealth(false);
 		}
@@ -9750,6 +9802,12 @@ namespace DOL.GS
 					double npcLevel = Math.Max(npc.Level, 1.0);
 					double stealthLevel = player.GetModifiedSpecLevel(Specs.Stealth);
 					double detectRadius = 125.0 + ((npcLevel - stealthLevel) * 20.0);
+
+					// we have detect hidden and enemy don't = higher range
+					if (npc.HasAbility(Abilities.DetectHidden) && player.EffectList.GetOfType(typeof(CamouflageEffect)) == null)
+					{
+						detectRadius += 125;
+					}
 
 					if (detectRadius < 126) detectRadius = 126;
 
@@ -11472,6 +11530,7 @@ namespace DOL.GS
 			m_saveInDB = true; // always save char data in db
 			m_class = new DefaultCharacterClass();
 			m_playerGroupIndex = -1;
+			m_isAnonymous = false;
 			LoadFromDatabase(theChar);
 			m_currentAreas = new ArrayList(1);
 		}

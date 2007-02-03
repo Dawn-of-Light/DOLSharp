@@ -14,6 +14,7 @@ namespace DOL.GS.Effects
 		protected long m_startTick;
 		protected RegionTimer m_expireTimer;
 		private UInt16 m_id;
+		private int m_value = 75;
 
 		public void Start(GamePlayer player)
 		{
@@ -38,9 +39,9 @@ namespace DOL.GS.Effects
 			}
 			foreach (GameSpellEffect spell in speedSpells)
 				spell.Cancel(false);
-			m_player.MaxSpeedBase = 174 + 191;
-			m_player.Out.SendUpdateMaxSpeed();
+			m_player.AbilityBonus[(int)eProperty.MaxSpeed] += m_value;
 			m_player.TempProperties.setProperty("Charging", true);
+			m_player.Out.SendUpdateMaxSpeed();
 			StartTimers();
 			m_player.EffectList.Add(this);
 		}
@@ -49,7 +50,7 @@ namespace DOL.GS.Effects
 		{
 			m_player.TempProperties.removeProperty("Charging");
 			m_player.EffectList.Remove(this);
-			m_player.MaxSpeedBase = 191;
+			m_player.AbilityBonus[(int)eProperty.MaxSpeed] -= m_value;
 			m_player.Out.SendUpdateMaxSpeed();
 			m_player.Out.SendMessage("You no longer seem so crazy!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			StopTimers();

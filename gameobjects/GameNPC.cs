@@ -250,6 +250,16 @@ namespace DOL.GS
 			set { m_isConfused = value; }
 		}
 
+		private int m_bodyType;
+		/// <summary>
+		/// The NPC's body type
+		/// </summary>
+		public int BodyType
+		{
+			get { return m_bodyType; }
+			set { m_bodyType = value; }
+		}
+
 		#endregion
 		#region Flags/Position/SpawnPosition/UpdateTick
 		/// <summary>
@@ -1266,6 +1276,7 @@ namespace DOL.GS
 					aggroBrain.AggroRange = npc.AggroRange;
 				}
 			}
+			m_bodyType = npc.BodyType;
 		}
 
 		/// <summary>
@@ -1338,6 +1349,8 @@ namespace DOL.GS
 		public void LoadTemplate(INpcTemplate template)
 		{
 			IList m_models = new ArrayList();
+			IList m_sizes = new ArrayList();
+			IList m_levels = new ArrayList();
 			IList m_equipLoc = new ArrayList();
 			Hashtable m_equipModel = new Hashtable();
 			GameNpcInventoryTemplate equip = new GameNpcInventoryTemplate();
@@ -1346,12 +1359,31 @@ namespace DOL.GS
 			foreach (string str in template.Model.Split(';'))
 			{
 				if (str.Length == 0) continue;
-				int i = int.Parse(str);
+				ushort i = ushort.Parse(str);
 				m_models.Add(i);
 			}
-			int k = Util.Random(m_models.Count - 1);
-			this.Model = Convert.ToUInt16(m_models[k]);
-			this.Size = template.Size;
+			this.Model = (ushort)m_models[Util.Random(m_models.Count - 1)];
+
+			string[] splitSize = template.Size.Split(';');
+			byte size = 50;
+			if (splitSize.Length > 0)
+			{
+				if (splitSize.Length == 1)
+					size = byte.Parse(splitSize[0]);
+				else size = (byte)Util.Random(int.Parse(splitSize[0]), int.Parse(splitSize[1]));
+			}
+			this.Size = size;
+
+			string[] splitLevel = template.Level.Split(';');
+			byte level = 0;
+			if (splitLevel.Length > 0)
+			{
+				if (splitLevel.Length == 1)
+					level = byte.Parse(splitLevel[0]);
+				else level = (byte)Util.Random(int.Parse(splitLevel[0]), int.Parse(splitLevel[1]));
+			}
+			this.Level = level;
+			this.BodyType = template.BodyType;
 			this.MaxSpeedBase = template.MaxSpeed;
 			this.Flags = template.Flags;
 			this.MeleeDamageType = template.MeleeDamageType;

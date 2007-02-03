@@ -125,12 +125,19 @@ namespace DOL.GS.Spells
 					MessageToCaster("You can't charm a creature in combat!", eChatType.CT_SpellResisted);
 					return;
 				}
+
 				if (target.Realm != 0 || target is GameNPC == false)
 				{
-					//TODO: Change this to check for right mobtype
 					MessageToCaster("This spell does not charm this type of monster!", eChatType.CT_SpellResisted);
 					return;
 				}
+
+				if ((target as GameNPC).BodyType != m_spell.AmnesiaChance)
+				{
+					MessageToCaster("This spell does not charm this type of monster!", eChatType.CT_SpellResisted);
+					return;
+				}
+
 				if (Caster is GamePlayer && ((GamePlayer)Caster).ControlledNpc != null)
 				{
 					MessageToCaster("You already have a charmed creature, release it first!", eChatType.CT_SpellResisted);

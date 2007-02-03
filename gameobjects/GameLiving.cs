@@ -2936,8 +2936,19 @@ namespace DOL.GS
 			// "The blow penetrated the magical barrier!"
 			if (bladeturn != null)
 			{
-				if (stealthStyle || ad.Attacker.RangeAttackType == eRangeAttackType.Long // stealth styles pierce bladeturn
+				bool penetrate = false;
+
+				if (stealthStyle)
+					penetrate = true;
+
+				if (ad.Attacker.RangeAttackType == eRangeAttackType.Long // stealth styles pierce bladeturn
 				|| (ad.AttackType == AttackData.eAttackType.Ranged && ad.Target != bladeturn.SpellHandler.Caster && ad.Attacker is GamePlayer && ((GamePlayer)ad.Attacker).HasAbility(Abilities.PenetratingArrow)))  // penetrating arrow attack pierce bladeturn
+					penetrate = true;
+
+				if (ad.IsMeleeAttack && !Util.ChanceDouble(bladeturn.SpellHandler.Caster.Level / ad.Attacker.Level))
+					penetrate = true;
+
+				if (penetrate)
 				{
 					if (ad.Target is GamePlayer) ((GamePlayer)ad.Target).Out.SendMessage("The blow penetrated the magical barrier!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
 					bladeturn.Cancel(false);

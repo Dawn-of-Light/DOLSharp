@@ -97,17 +97,17 @@ namespace DOL.GS
 
 						foreach (DBLootTemplate dbTemplate in m_lootTemplates)
 						{
-							IList loot = (IList)m_templateNameXLootTemplate[dbTemplate.TemplateName];
+							IList loot = (IList)m_templateNameXLootTemplate[dbTemplate.TemplateName.ToLower()];
 							if (loot == null)
 							{
 								loot = new ArrayList();
-								m_templateNameXLootTemplate[dbTemplate.TemplateName] = loot;
+								m_templateNameXLootTemplate[dbTemplate.TemplateName.ToLower()] = loot;
 							}
 
 							if (dbTemplate.ItemTemplate == null)
 							{
-								if (log.IsWarnEnabled)
-									log.Warn("No ItemTemplate found for id=" + dbTemplate.ItemTemplateID + ". Check loottemplat entry with id=" + dbTemplate.ObjectId);
+								if (log.IsErrorEnabled)
+									log.Warn("ItemTemplate: " + dbTemplate.ItemTemplateID + " is not found, it is referenced from loottemplate_id: " + dbTemplate.ObjectId);
 								continue;
 							}
 
@@ -138,15 +138,15 @@ namespace DOL.GS
 					{
 						foreach (DBMobXLootTemplate dbMobXTemplate in m_mobLootTemplates)
 						{
-							if (m_mobXLootTemplates[dbMobXTemplate.MobName] == null)
+							if (m_mobXLootTemplates[dbMobXTemplate.MobName.ToLower()] == null)
 							{
 								ArrayList newMobXLootTemplates = new ArrayList();
 								newMobXLootTemplates.Add(dbMobXTemplate);
-								m_mobXLootTemplates[dbMobXTemplate.MobName] = newMobXLootTemplates;
+								m_mobXLootTemplates[dbMobXTemplate.MobName.ToLower()] = newMobXLootTemplates;
 							}
 							else
 							{
-								ArrayList mobxLootTemplates = (ArrayList)m_mobXLootTemplates[dbMobXTemplate.MobName];
+								ArrayList mobxLootTemplates = (ArrayList)m_mobXLootTemplates[dbMobXTemplate.MobName.ToLower()];
 								mobxLootTemplates.Add(dbMobXTemplate);
 
 								//Array.Resize IS ONLY AVAILABLE IN .NET 2.0 ... which we don't use currently because
@@ -166,7 +166,7 @@ namespace DOL.GS
 		{
 			LootList loot = base.GenerateLoot(mob, killer);
 
-			ArrayList mobXLootTemplates = (ArrayList)m_mobXLootTemplates[mob.Name];
+			ArrayList mobXLootTemplates = (ArrayList)m_mobXLootTemplates[mob.Name.ToLower()];
 			//DBMobXLootTemplate[] mobXLootTemplates = ((DBMobXLootTemplate[]) m_mobXLootTemplates[mob.Name]);
 			//string lootTemplateName = null;
 			IList lootTemplates = null;
@@ -175,7 +175,7 @@ namespace DOL.GS
 			if (mobXLootTemplates == null)
 			{
 				// allow lazy relation between lootTemplate and mob if templateName == mob name.                
-				lootTemplates = (IList)m_templateNameXLootTemplate[mob.Name];
+				lootTemplates = (IList)m_templateNameXLootTemplate[mob.Name.ToLower()];
 			}
 			else
 			{
@@ -184,7 +184,7 @@ namespace DOL.GS
 				{
 					loot.DropCount = Math.Max(loot.DropCount, mobXLootTemplate.DropCount);
 
-					IList templateList = (IList)m_templateNameXLootTemplate[mobXLootTemplate.LootTemplateName];
+					IList templateList = (IList)m_templateNameXLootTemplate[mobXLootTemplate.LootTemplateName.ToLower()];
 					if (templateList != null)
 					{
 						((ArrayList)lootTemplates).AddRange(templateList);
