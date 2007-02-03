@@ -40,7 +40,8 @@ namespace DOL.Database
 		private string m_classType = "";
 		private string m_guildName = "";
 		private string m_model;
-		private byte m_size = 50;
+		private string m_size = "50";
+		private string m_level = "0";
 		private short m_maxSpeed = 50;
 		private string m_equipmentTemplateID = "";
 		private bool m_ghost;
@@ -62,6 +63,7 @@ namespace DOL.Database
 		private string m_abilities = "";
 		private byte m_aggroLevel = 0;
 		private int m_aggroRange = 0;
+		private int m_bodyType = 0;
 
 		private static bool m_autoSave;
 
@@ -156,13 +158,27 @@ namespace DOL.Database
 		/// Size
 		/// </summary>
 		[DataElement(AllowDbNull = false)]
-		public byte Size
+		public string Size
 		{
 			get { return m_size; }
 			set
 			{
 				Dirty = true;
 				m_size = value;
+			}
+		}
+
+		/// <summary>
+		/// Level Range
+		/// </summary>
+		[DataElement(AllowDbNull = false)]
+		public string Level
+		{
+			get { return m_level; }
+			set
+			{
+				Dirty = true;
+				m_level = value;
 			}
 		}
 
@@ -424,6 +440,17 @@ namespace DOL.Database
 			{
 				Dirty = true;
 				m_aggroRange = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public int BodyType
+		{
+			get { return m_bodyType; }
+			set
+			{
+				Dirty = true;
+				m_bodyType = value;
 			}
 		}
 	}

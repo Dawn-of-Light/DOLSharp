@@ -44,6 +44,10 @@ namespace DOL.GS.Scripts
 		"/respec")]
 	public class RespecCommandHandler : ICommandHandler
 	{
+		const string RA_RESPEC = "realm_respec";
+		const string ALL_RESPEC = "all_respec";
+		const string LINE_RESPEC = "line_respec";
+
 		public int OnCommand(GameClient client, string[] args)
 		{
 			if (args.Length < 2)
@@ -82,10 +86,6 @@ namespace DOL.GS.Scripts
 				return 1;
 			}
 
-			//total specpoints returned
-			int specPoints = 0;
-			int realmSpecPoints = 0;
-
 			switch (args[1].ToLower())
 			{
 				case "all":
@@ -97,7 +97,8 @@ namespace DOL.GS.Scripts
 							return 1;
 						}
 
-						specPoints = client.Player.RespecAll();
+						client.Out.SendCustomDialog("CAUTION: All Respec changes are final with no 2nd chance. Proceed Carefully!", new CustomDialogResponse(RespecDialogResponse));
+						client.Player.TempProperties.setProperty(ALL_RESPEC, true);
 						break;
 					}
 				case "realm":
@@ -108,7 +109,8 @@ namespace DOL.GS.Scripts
 							return 1;
 						}
 
-						realmSpecPoints = client.Player.RespecRealm();
+						client.Out.SendCustomDialog("CAUTION: All Respec changes are final with no 2nd chance. Proceed Carefully!", new CustomDialogResponse(RespecDialogResponse));
+						client.Player.TempProperties.setProperty(RA_RESPEC, true);
 						break;
 					}
 				default:
@@ -133,36 +135,62 @@ namespace DOL.GS.Scripts
 							return 1;
 						}
 
-						specPoints = client.Player.RespecSingle(specLine);
+						client.Out.SendCustomDialog("CAUTION: All Respec changs are final with no 2nd chance. Proceed Carefully!", new CustomDialogResponse(RespecDialogResponse));
+						client.Player.TempProperties.setProperty(LINE_RESPEC, specLine);
 						break;
 					}
 			}
 
+			return 1;
+		}
+		protected void RespecDialogResponse(GamePlayer player, byte response)
+		{
+
+			if (response != 0x01) return; //declined
+
+			int specPoints = 0;
+			int realmSpecPoints = 0;
+
+			if (player.TempProperties.getProperty(ALL_RESPEC, false))
+			{
+				specPoints = player.RespecAll();
+				player.TempProperties.removeProperty(ALL_RESPEC);
+			}
+			if (player.TempProperties.getProperty(RA_RESPEC, false))
+			{
+				realmSpecPoints = player.RespecRealm();
+				player.TempProperties.removeProperty(RA_RESPEC);
+			}
+			if (player.TempProperties.getObjectProperty(LINE_RESPEC, null) != null)
+			{
+				Specialization specLine = (Specialization)player.TempProperties.getObjectProperty(LINE_RESPEC, null);
+				specPoints = player.RespecSingle(specLine);
+				player.TempProperties.removeProperty(LINE_RESPEC);
+			}
 			// Assign full points returned
 			if (specPoints > 0)
 			{
-				client.Player.SkillSpecialtyPoints += specPoints;
-				lock (client.Player.GetStyleList().SyncRoot)
+				player.SkillSpecialtyPoints += specPoints;
+				lock (player.GetStyleList().SyncRoot)
 				{
-					client.Player.GetStyleList().Clear(); // Kill styles
+					player.GetStyleList().Clear(); // Kill styles
 				}
-				client.Player.UpdateSpellLineLevels(false);
-				client.Out.SendMessage("You regain " + specPoints + " specialization points!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.UpdateSpellLineLevels(false);
+				player.Out.SendMessage("You regain " + specPoints + " specialization points!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 			if (realmSpecPoints > 0)
 			{
-				client.Player.RealmSpecialtyPoints += realmSpecPoints;
-				client.Out.SendMessage("You regain " + realmSpecPoints + " realm specialization points!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.RealmSpecialtyPoints += realmSpecPoints;
+				player.Out.SendMessage("You regain " + realmSpecPoints + " realm specialization points!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
-			client.Player.RefreshSpecDependantSkills(false);
+			player.RefreshSpecDependantSkills(false);
 			// Notify Player of points
-			client.Out.SendUpdatePlayerSkills();
-			client.Out.SendUpdatePoints();
-			client.Out.SendUpdatePlayer();
-			client.Out.SendTrainerWindow();
-			client.Player.SaveIntoDatabase();
-
-			return 1;
+			player.Out.SendUpdatePlayerSkills();
+			player.Out.SendUpdatePoints();
+			player.Out.SendUpdatePlayer();
+			player.Out.SendTrainerWindow();
+			player.SaveIntoDatabase();
+			return;
 		}
 	}
 }

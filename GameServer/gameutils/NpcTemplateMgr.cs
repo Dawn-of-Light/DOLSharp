@@ -29,6 +29,23 @@ namespace DOL.GS
 	/// </summary>
 	public sealed class NpcTemplateMgr
 	{
+		public enum eBodyType : int
+		{
+			None = 0,
+			Animal = 1,
+			Demon = 2,
+			Dragon = 3,
+			Elemental = 4,
+			Giant = 5,
+			Humanoid = 6,
+			Insect = 7,
+			Magical = 8,
+			Reptile = 9,
+			Plant = 10,
+			Undead = 11,
+			_Last = 11,
+		}
+
 		/// <summary>
 		/// Defines a logger for this class.
 		/// </summary>
@@ -119,8 +136,8 @@ namespace DOL.GS
 				}
 				else if (entry == null)
 				{
-					if (log.IsErrorEnabled)
-						log.Error("No npctemplate with ID " + templateId + " found.");
+					if (log.IsWarnEnabled)
+						log.Warn("No npctemplate with ID " + templateId + " found.");
 						/*log.Warn("no mob template with ID " + templateId + " found.\n" + Environment.StackTrace);*/
 					return null;
 				}

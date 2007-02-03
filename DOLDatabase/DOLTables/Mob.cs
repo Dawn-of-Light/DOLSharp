@@ -55,6 +55,7 @@ namespace DOL.Database
 		private string m_itemsListTemplateID;
 
 		private int m_npcTemplateID;
+		private int m_bodyType;
 
 		static bool m_autoSave;
 
@@ -70,6 +71,7 @@ namespace DOL.Database
 			m_meleeDamageType = 2; // slash by default
 			m_respawnInterval = -1; // randow respawn by default
 			m_guild = "";
+			m_bodyType = 0;
 		}
 
 		/// <summary>
@@ -421,6 +423,16 @@ namespace DOL.Database
 		{
 			get { return m_faction; }
 			set { Dirty = true; m_faction = value; }
+		}
+
+		/// <summary>
+		/// The mob's body type
+		/// </summary>
+		[DataElement(AllowDbNull = true)]
+		public int BodyType
+		{
+			get { return m_bodyType; }
+			set { Dirty = true; m_bodyType = value; }
 		}
 	}
 }

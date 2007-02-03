@@ -738,17 +738,19 @@ namespace DOL.GS.Spells
 		/// <returns></returns>
 		public virtual int CalculateNeededPower(GameLiving target)
 		{
-			double power = m_spell.Power * 1.2;
+			double basepower = m_spell.Power; //<== defined a basevar first then modified this base-var to tell %-costs from absolut-costs
 
 			// percent of maxPower if less than zero
-			if (power < 0)
+			if (basepower < 0)
 				if (Caster is GamePlayer && ((GamePlayer)Caster).CharacterClass.ManaStat != eStat.UNDEFINED)
 				{
 					GamePlayer player = Caster as GamePlayer;
-					power = player.CalculateMaxMana(player.Level, player.GetBaseStat(player.CharacterClass.ManaStat)) * power * -0.01;
+					basepower = player.CalculateMaxMana(player.Level, player.GetBaseStat(player.CharacterClass.ManaStat)) * basepower * -0.01;
 				}
 				else
-					power = Caster.MaxMana * power * -0.01;
+					basepower = Caster.MaxMana * basepower * -0.01;
+
+			double power = basepower * 1.2; //<==NOW holding basepower*1.2 within 'power'
 
 			eProperty focusProp = SkillBase.SpecToFocus(SpellLine.Spec);
 			if (focusProp != eProperty.Undefined)
@@ -760,7 +762,7 @@ namespace DOL.GS.Spells
 					focusBonus = 0.4;
 				else if (focusBonus < 0)
 					focusBonus = 0;
-				power -= m_spell.Power * focusBonus;
+				power -= basepower * focusBonus; //<== So i can finally use 'basepower' for both calculations: % and absolut
 			}
 			else if (Caster is GamePlayer && ((GamePlayer)Caster).CharacterClass.ClassType == eClassType.Hybrid)
 			{
@@ -771,12 +773,12 @@ namespace DOL.GS.Spells
 					specBonus = 0.4;
 				else if (specBonus < 0)
 					specBonus = 0;
-				power -= Spell.Power * specBonus;
+				power -= basepower * specBonus;
 			}
 			// doubled power usage if quickcasting
 			if (Caster.EffectList.GetOfType(typeof(QuickCastEffect)) != null && Spell.CastTime > 0)
 				power *= 2;
-			return (int)power;
+			return (int)power; 
 		}
 
 		/// <summary>
@@ -1326,6 +1328,12 @@ namespace DOL.GS.Spells
 		/// <param name="effectiveness">factor from 0..1 (0%-100%)</param>
 		public virtual void ApplyEffectOnTarget(GameLiving target, double effectiveness)
 		{
+			//todo allow bolts and direct damages
+			if (target is Keeps.GameKeepDoor)
+			{
+				MessageToCaster("Your spell has no effect on the door!", eChatType.CT_SpellResisted);
+				return;
+			}
 			if (m_spellLine.KeyName == GlobalSpellsLines.Item_Effects || m_spellLine.KeyName == GlobalSpellsLines.Combat_Styles_Effect || m_spellLine.KeyName == GlobalSpellsLines.Potions_Effects || m_spellLine.KeyName == Specs.Savagery || m_spellLine.KeyName == GlobalSpellsLines.Character_Abilities || m_spellLine.KeyName == "OffensiveProc")
 				effectiveness = 1.0; // TODO player.PlayerEffectiveness
 			if (effectiveness <= 0)

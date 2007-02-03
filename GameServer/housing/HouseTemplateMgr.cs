@@ -291,6 +291,8 @@ namespace DOL.GS.Housing
 				template.ClassType = classType;
 				template.GuildName = guild;
 				template.Model = model;
+				template.Size = "50";
+				template.Level = "50";
 				template.Inventory = inventory;
 
 				NpcTemplateMgr.AddTemplate(template);

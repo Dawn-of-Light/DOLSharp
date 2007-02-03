@@ -109,13 +109,24 @@ namespace DOL.GS.Scripts
 [04:20:12] You are already in a duel.  /duel surrender to end it
 
  */
-	public class DuelCommandHandler : ICommandHandler
+	public class DuelCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		private const string DUEL_STARTER_WEAK = "DuelStarter";
 		private const string CHALLENGE_TARGET_WEAK = "DuelTarget";
 
 		public int OnCommand(GameClient client, string[] args)
 		{
+			switch (client.Player.CurrentRegionID)
+			{
+				case 10:
+				case 101:
+				case 201:
+					{
+						DisplayError(client, "This is a safe zone and you cannot duel here!", new object[] { });
+						return 1;
+					}
+			}
+
 			WeakRef weak = null;
 			GamePlayer duelStarter = null;
 			GamePlayer duelTarget = null;

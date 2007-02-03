@@ -427,8 +427,16 @@ namespace DOL.GS.Keeps
 			int inArea = 0;
 			foreach (GamePlayer NearbyPlayers in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
-				if (GameServer.ServerRules.IsAllowedToAttack(this, NearbyPlayers, true))
-					inArea++;
+				if (this.Component != null)
+				{
+					if (KeepMgr.IsEnemy(this.Component.Keep, NearbyPlayers))
+						inArea++;
+				}
+				else
+				{
+					if (GameServer.ServerRules.IsAllowedToAttack(this, NearbyPlayers, true))
+						inArea++;
+				}
 			}
 			return inArea;
 		}

@@ -35,6 +35,20 @@ namespace DOL.GS.Scripts
 				client.Out.SendCustomTextWindow("Friends (snapshot)", friends);
 				return 1;
 			}
+			else if (args.Length == 2 && args[1] == "window")
+			{
+				// "TF" - clear friend list in social
+				client.Out.SendMessage("TF", eChatType.CT_SocialInterface, eChatLoc.CL_SystemWindow);
+				byte ind = 0;
+				foreach (string friendName in client.Player.Friends)
+				{
+					GameClient friendClient = WorldMgr.GetClientByPlayerName(friendName, true, true);
+					if (friendClient.Player != null && friendClient.Player.IsAnonymous) continue;
+					client.Out.SendMessage(string.Format("F,{0},{1},{2},{3},\"{4}\"",
+						ind++, friendClient.Player.Name, friendClient.Player.Level, friendClient.Player.CharacterClass.ID, (friendClient.Player.CurrentZone == null ? "" : friendClient.Player.CurrentZone.Description)), eChatType.CT_SocialInterface, eChatLoc.CL_SystemWindow);
+				}
+				return 0;
+			}
 			string name = string.Join(" ", args, 1, args.Length - 1);
 
 			int result = 0;

@@ -41,6 +41,9 @@ namespace DOL.Database
 		private long m_realmPoints;
 		private long m_bountyPoints;
 
+		private string m_webpage;
+		private string m_email;
+
 		/// <summary>
 		/// Create a guild
 		/// </summary>
@@ -50,6 +53,8 @@ namespace DOL.Database
 			m_autoSave=false;
 			m_emblem = 0;
 			Ranks = new DBRank[10];
+			m_webpage = "";
+			m_email = "";
 		}
 
 		/// <summary>
@@ -204,10 +209,40 @@ namespace DOL.Database
 		}
 
 		/// <summary>
+		/// Webpage for the guild
+		/// </summary>
+		[DataElement(AllowDbNull = true)]
+		public string Webpage
+		{
+			get { return m_webpage; }
+			set
+			{
+				Dirty = true;
+				m_webpage = value;
+			}
+		}
+
+		/// <summary>
+		/// Email for the guild
+		/// </summary>
+		[DataElement(AllowDbNull = true)]
+		public string Email
+		{
+			get { return m_email; }
+			set
+			{
+				Dirty = true;
+				m_email = value;
+			}
+		}
+
+		/*
+		/// <summary>
 		/// characters in guild
 		/// </summary>
 		[Relation(LocalField = "GuildID", RemoteField = "GuildID", AutoLoad = true, AutoDelete=false)]
 		public Character[] Characters;
+		 */
 
 		/// <summary>
 		/// rank rules
