@@ -48,7 +48,12 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets the template npc size
 		/// </summary>
-		byte Size { get; }
+		string Size { get; }
+
+		/// <summary>
+		/// Gets the template npc level
+		/// </summary>
+		string Level { get;}
 
 		/// <summary>
 		/// Gets the template npc max speed
@@ -158,5 +163,10 @@ namespace DOL.GS
 		/// Gets the template npc aggro range
 		/// </summary>
 		int AggroRange { get;}
+
+		/// <summary>
+		/// Gets the body type of the npc
+		/// </summary>
+		int BodyType { get;}
 	}
 }

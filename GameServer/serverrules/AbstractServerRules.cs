@@ -250,30 +250,6 @@ namespace DOL.GS.ServerRules
 		/// <returns>true if allowed</returns>
 		public virtual bool IsAllowedToCastSpell(GameLiving caster, GameLiving target, Spell spell, SpellLine spellLine)
 		{
-			if (target is GamePlayer && (target as GamePlayer).Client.ClientState == GameClient.eClientState.WorldEnter)
-			{
-				MessageToLiving(caster, target.Name + " is entering the game and you are unable to cast a spell!");
-				return false;
-			}
-
-			if (target is GameKeepDoor || target is GameKeepComponent)
-			{
-				switch (spell.Target.ToLower())
-				{
-					case "self":
-					case "group":
-					case "area": break;
-					default:
-						{
-							if (spell.SpellType.ToLower() != "summon")
-							{
-								MessageToLiving(caster, "You can't cast on a keep component!");
-								return false;
-							}
-							break;
-						}
-				}
-			}
 			return true;
 		}
 
@@ -724,6 +700,10 @@ namespace DOL.GS.ServerRules
 						xpReward = expCap;
 
 					double campBonus = fullCampBonus * (livingLifeSpan / fullCampBonusTicks);
+					//1.49 http://news-daoc.goa.com/view_patchnote_archive.php?id_article=2478
+					//"Camp bonuses" have been substantially upped in dungeons. Now camp bonuses in dungeons are, on average, 20% higher than outside camp bonuses.
+					if (killer.CurrentZone.IsDungeon)
+						campBonus += 0.20;
 
 					if (campBonus < 0.01)
 						campBonus = 0;
@@ -942,7 +922,18 @@ namespace DOL.GS.ServerRules
 
 				long playerExpValue = killedPlayer.ExperienceValue;
 				int playerRPValue = killedPlayer.RealmPointsValue;
-				int playerBPValue = killedPlayer.BountyPointsValue;
+				int playerBPValue = 0;
+				bool BG = false;
+				foreach (AbstractGameKeep keep in KeepMgr.GetKeepsOfRegion(killedPlayer.CurrentRegionID))
+				{
+					if (keep.BaseLevel < 50)
+					{
+						BG = true;
+						break;
+					}
+				}
+				if (!BG)
+					playerBPValue = killedPlayer.BountyPointsValue;
 				long playerMoneyValue = killedPlayer.MoneyValue;
 
 				//Now deal the XP and RPs to all livings

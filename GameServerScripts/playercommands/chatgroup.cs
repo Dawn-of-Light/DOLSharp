@@ -290,6 +290,7 @@ namespace DOL.GS.Scripts
 						if (args.Length < 3)
 						{
 							PrintHelp(client);
+							return 0;
 						}
 						GameClient inviteeclient = WorldMgr.GetClientByPlayerName(args[2], false, false);
 						if (inviteeclient == null || !GameServer.ServerRules.IsSameRealm(client.Player, inviteeclient.Player, true)) // allow priv level>1 to join anywhere

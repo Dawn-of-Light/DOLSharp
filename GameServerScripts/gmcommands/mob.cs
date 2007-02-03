@@ -351,8 +351,7 @@ namespace DOL.GS.Scripts
 					{
 						try
 						{
-							targetMob.Health = targetMob.
-								MaxHealth;
+							targetMob.Health = targetMob.MaxHealth;
 							targetMob.SaveIntoDatabase();
 							client.Out.SendObjectUpdate(targetMob);
 							client.Out.SendMessage("Mob health regenerated (" + targetMob.Health + "/" + targetMob.MaxHealth + ")", eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -369,6 +368,7 @@ namespace DOL.GS.Scripts
 						try
 						{
 							targetMob.AddAttacker(client.Player);
+							targetMob.AddXPGainer(client.Player, targetMob.Health);
 							targetMob.Die(client.Player);
 							targetMob.XPGainers.Clear();
 							client.Out.SendMessage("Mob '" + targetMob.Name + "' killed", eChatType.CT_System, eChatLoc.CL_SystemWindow);
