@@ -839,7 +839,7 @@ namespace DOL.GS.Quests.Midgard
 				ThaneEpicHelm.Name = "Storm Touched Coif";
 				ThaneEpicHelm.Level = 50;
 				ThaneEpicHelm.Item_Type = 21;
-				ThaneEpicHelm.Model = 832; //NEED TO WORK ON..
+				ThaneEpicHelm.Model = 834;
 				ThaneEpicHelm.IsDropable = true;
 				ThaneEpicHelm.IsPickable = true;
 				ThaneEpicHelm.DPS_AF = 100;

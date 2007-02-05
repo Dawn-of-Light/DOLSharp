@@ -88,7 +88,7 @@ namespace DOL.GS.Scripts
 					return false;
 				}
 				t.TempProperties.setProperty(EMBLEMIZE_ITEM_WEAK, new WeakRef(item));
-				t.Out.SendCustomDialog("Do you agree to put an emblem\x000Aon this object?", new CustomDialogResponse(EmblemerDialogResponse));
+				t.Out.SendCustomDialog("Do you agree to put an emblem on this object?", new CustomDialogResponse(EmblemerDialogResponse));
 			}
 			else
 				t.Out.SendMessage("I can not put an emblem on this item.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
