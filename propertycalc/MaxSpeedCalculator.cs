@@ -117,8 +117,6 @@ namespace DOL.GS.PropertyCalc
 
 			if (speed < 0)
 				return 0;
-
-			speed += living.AbilityBonus[(int)property];
 			return (int)speed;
 		}
 	}

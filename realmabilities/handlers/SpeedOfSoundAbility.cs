@@ -13,7 +13,6 @@ namespace DOL.GS.RealmAbilities
 
         int m_range = 2000;
         int m_duration = 1;
-        int m_value = 85;
 
         public override void Execute(GameLiving living)
 		{
@@ -62,7 +61,7 @@ namespace DOL.GS.RealmAbilities
                     visPlayer.Out.SendSpellEffectAnimation(player, target, 7021, 0, false, CastSuccess(success));
 				if (success)
 				{
-					new SpeedOfSoundEffect().Start(target, m_duration, m_value);
+					new SpeedOfSoundEffect().Start(target, m_duration);
 				}
             }
 

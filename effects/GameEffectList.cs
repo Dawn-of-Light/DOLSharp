@@ -161,21 +161,34 @@ namespace DOL.GS.Effects
 				return;
 			ArrayList targets = new ArrayList();
 			targets.Add(player);
-			SpellLine line = new SpellLine("restoredEffects", "RestoredEffects", "NONE", false);
 			foreach (PlayerXEffect eff in effs)
 			{
-				DBSpell dbspell = (DBSpell)GameServer.Database.SelectObject(typeof(DBSpell), " spellid = '" + eff.Var1 + "'");
-				if (dbspell == null)
-					continue;
-				Spell spell = new Spell(dbspell, 0);
-				ISpellHandler handler = ScriptMgr.CreateSpellHandler(player, spell, line);
-				GameSpellEffect e;
-				e = new GameSpellEffect(handler, eff.Duration, spell.Frequency);
-				e.RestoredEffect = true;
-				int[] vars = { eff.Var1, eff.Var2, eff.Var3, eff.Var4, eff.Var5, eff.Var6 };
-				e.RestoreVars = vars;
+				bool good = true;
+				Spell spell = SkillBase.GetSpellByID(eff.Var1);
+				if (spell == null)
+					good = false;
+
+				SpellLine line = null;
+
+				if (!Util.IsEmpty(eff.SpellLine))
+				{
+					line = SkillBase.GetSpellLine(eff.SpellLine);
+					if (line == null)
+						good = false;
+				}
+				else good = false;
+
+				if (good)
+				{
+					ISpellHandler handler = ScriptMgr.CreateSpellHandler(player, spell, line);
+					GameSpellEffect e;
+					e = new GameSpellEffect(handler, eff.Duration, spell.Frequency);
+					e.RestoredEffect = true;
+					int[] vars = { eff.Var1, eff.Var2, eff.Var3, eff.Var4, eff.Var5, eff.Var6 };
+					e.RestoreVars = vars;
+					e.Start(player);
+				}
 				GameServer.Database.DeleteObject(eff);
-				e.Start(player);
 			}
 
 		}

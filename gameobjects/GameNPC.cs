@@ -1364,25 +1364,26 @@ namespace DOL.GS
 			}
 			this.Model = (ushort)m_models[Util.Random(m_models.Count - 1)];
 
-			string[] splitSize = template.Size.Split(';');
 			byte size = 50;
-			if (splitSize.Length > 0)
+			if (!Util.IsEmpty(template.Size))
 			{
+				string[] splitSize = template.Size.Split(';');
 				if (splitSize.Length == 1)
 					size = byte.Parse(splitSize[0]);
 				else size = (byte)Util.Random(int.Parse(splitSize[0]), int.Parse(splitSize[1]));
 			}
 			this.Size = size;
 
-			string[] splitLevel = template.Level.Split(';');
 			byte level = 0;
-			if (splitLevel.Length > 0)
+			if (!Util.IsEmpty(template.Level))
 			{
+				string[] splitLevel = template.Level.Split(';');
 				if (splitLevel.Length == 1)
 					level = byte.Parse(splitLevel[0]);
 				else level = (byte)Util.Random(int.Parse(splitLevel[0]), int.Parse(splitLevel[1]));
 			}
 			this.Level = level;
+
 			this.BodyType = template.BodyType;
 			this.MaxSpeedBase = template.MaxSpeed;
 			this.Flags = template.Flags;

@@ -3030,6 +3030,7 @@ namespace DOL.GS
 			{
 				m_realmLevel = value;
 				m_character.RealmLevel = value;
+				CharacterClass.OnRealmLevelUp(this);
 			}
 		}
 
@@ -6445,6 +6446,30 @@ namespace DOL.GS
 
 		#endregion
 
+		#region Realm Abilities
+		/// <summary>
+		/// This is the timer used to count time when a player casts a RA
+		/// </summary>
+		private RegionTimer m_realmAbilityCastTimer;
+
+		/// <summary>
+		/// Get and set the RA cast timer
+		/// </summary>
+		public RegionTimer RealmAbilityCastTimer
+		{
+			get { return m_realmAbilityCastTimer; }
+			set { m_realmAbilityCastTimer = value; }
+		}
+
+		/// <summary>
+		/// Does the player is casting a realm ability
+		/// </summary>
+		public bool IsCastingRealmAbility
+		{
+			get { return (m_realmAbilityCastTimer != null && m_realmAbilityCastTimer.IsAlive); }
+		}
+		#endregion
+
 		#region Money/Items/Trading/UseSlot/ApplyPoison
 
 		/// <summary>
@@ -8268,6 +8293,13 @@ namespace DOL.GS
 			{
 				m_runningSpellHandler.CasterMoves();
 			}
+			if (IsCastingRealmAbility)
+			{
+				Out.SendInterruptAnimation(this);
+				Out.SendMessage("You move and interrupt your spellcast!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				RealmAbilityCastTimer.Stop();
+				RealmAbilityCastTimer = null;
+			}
 			if (IsCrafting)
 			{
 				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.OnPlayerMove.InterruptCrafting"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -9205,6 +9237,7 @@ namespace DOL.GS
 				}
 			}
 			CharacterClass.OnLevelUp(this); // load all skills from DB first to keep the order
+			CharacterClass.OnRealmLevelUp(this);
 			RefreshSpecDependantSkills(false);
 			UpdateSpellLineLevels(false);
 			try

@@ -316,6 +316,7 @@ namespace DOL.GS.Spells
 			AttackedByEnemyEventArgs args = arguments as AttackedByEnemyEventArgs;
 			if (args == null) return;
 			if (args.AttackData == null) return;
+			if (args.AttackData.SpellHandler != null) return;
 			if (args.AttackData.AttackResult != GameLiving.eAttackResult.HitUnstyled
 				&& args.AttackData.AttackResult != GameLiving.eAttackResult.HitStyle)
 				return;

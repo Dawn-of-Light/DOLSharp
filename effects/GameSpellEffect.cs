@@ -514,6 +514,7 @@ namespace DOL.GS.Effects
 				eff.Var4 = this.RestoreVars[3];
 				eff.Var5 = this.RestoreVars[4];
 				eff.Var6 = this.RestoreVars[5];
+				eff.SpellLine = this.SpellHandler.SpellLine.KeyName;
 				return eff;
 			}
 			if (m_handler != null)
