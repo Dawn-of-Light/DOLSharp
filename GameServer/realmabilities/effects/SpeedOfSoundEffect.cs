@@ -18,7 +18,6 @@ namespace DOL.GS.Effects
 		private Int32 m_effectDuration;
 		private RegionTimer m_expireTimer;
 		private UInt16 m_id;
-		private int m_value;
 
 
 
@@ -36,17 +35,16 @@ namespace DOL.GS.Effects
 		/// <param name="player">The player to start the effect for</param>
 		/// <param name="duration">The effectduration in secounds</param>
 		/// <param name="value">The percentage additional value for melee absorb</param>
-		public void Start(GamePlayer player, int duration, int value)
+		public void Start(GamePlayer player, int duration)
 		{
 			m_player = player;
 			m_effectDuration = duration;
-			m_value = value;
 
 			StartTimers();
 			m_player.TempProperties.setProperty("Charging", true);
 			GameEventMgr.AddHandler(m_player, GamePlayerEvent.AttackFinished, new DOLEventHandler(AttackFinished));
 			GameEventMgr.AddHandler(m_player, GamePlayerEvent.CastFinished, new DOLEventHandler(AttackFinished));
-			m_player.AbilityBonus[(int)eProperty.MaxSpeed] += m_value;
+			m_player.BuffBonusMultCategory1.Set((int)ePackets.MaxSpeed, this, PropertyCalc.MaxSpeedCalculator.SPEED4);		
 			m_player.Out.SendUpdateMaxSpeed();
 
 			m_player.EffectList.Add(this);
@@ -108,7 +106,7 @@ namespace DOL.GS.Effects
 		{
 			StopTimers();
 			m_player.TempProperties.removeProperty("Charging");
-			m_player.AbilityBonus[(int)eProperty.MaxSpeed] -= m_value;
+			m_player.BuffBonusMultCategory1.Remove((int)ePackets.MaxSpeed, this);
 			m_player.Out.SendUpdateMaxSpeed();
 			m_player.EffectList.Remove(this);
 			GameEventMgr.RemoveHandler(m_player, GamePlayerEvent.AttackFinished, new DOLEventHandler(AttackFinished));

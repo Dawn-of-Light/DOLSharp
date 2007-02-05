@@ -150,7 +150,7 @@ namespace DOL.GS.Spells
 			eff.Var1 = Spell.ID;
 			eff.Duration = e.RemainingTime;
 			eff.IsHandler = true;
-
+			eff.SpellLine = SpellLine.KeyName;
 			return eff;
 		}
 

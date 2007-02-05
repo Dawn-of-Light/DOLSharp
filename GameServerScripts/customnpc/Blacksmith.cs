@@ -100,7 +100,7 @@ namespace DOL.GS.Scripts
 					player.TempProperties.setProperty(REPAIR_ITEM_WEAK, new WeakRef(item));
 					long NeededMoney = ((item.MaxCondition - item.Condition) * item.Value) / item.MaxCondition;
 					player.Out.SendMessage("It will cost " + Money.GetString(NeededMoney) + " to repair the " + item.Name, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					player.Client.Out.SendCustomDialog("Do you accept too repair the " + item.Name, new CustomDialogResponse(BlacksmithDialogResponse));
+					player.Client.Out.SendCustomDialog("Do you accept to repair the " + item.Name, new CustomDialogResponse(BlacksmithDialogResponse));
 				}
 			}
 			else

@@ -43,7 +43,7 @@ namespace DOL.GS.Scripts
 				foreach (string friendName in client.Player.Friends)
 				{
 					GameClient friendClient = WorldMgr.GetClientByPlayerName(friendName, true, true);
-					if (friendClient.Player != null && friendClient.Player.IsAnonymous) continue;
+					if (friendClient != null || friendClient.Player == null || friendClient.Player.IsAnonymous) continue;
 					client.Out.SendMessage(string.Format("F,{0},{1},{2},{3},\"{4}\"",
 						ind++, friendClient.Player.Name, friendClient.Player.Level, friendClient.Player.CharacterClass.ID, (friendClient.Player.CurrentZone == null ? "" : friendClient.Player.CurrentZone.Description)), eChatType.CT_SocialInterface, eChatLoc.CL_SystemWindow);
 				}
