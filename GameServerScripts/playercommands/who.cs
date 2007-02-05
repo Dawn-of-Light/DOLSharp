@@ -119,27 +119,40 @@ namespace DOL.GS.Scripts
 			switch (args[1].ToLower())
 			{
 				case "all": // display all players, no filter
-					filters = null;
-					break;
-
+					{
+						filters = null;
+						break;
+					}
 				case "staff":
 				case "gm":
 				case "admin":
-					filters = new ArrayList(1);
-					filters.Add(new GMFilter());
-					break;
+					{
+						filters = new ArrayList(1);
+						filters.Add(new GMFilter());
+						break;
+					}
 				case "en":
 				case "cz":
 				case "de":
 				case "es":
 				case "fr":
-					filters = new ArrayList(1);
-					filters.Add(new LanguageFilter(args[1].ToLower()));
-					break;
+					{
+						filters = new ArrayList(1);
+						filters.Add(new LanguageFilter(args[1].ToLower()));
+						break;
+					}
+				case "cg":
+					{
+						filters = new ArrayList(1);
+						filters.Add(new ChatGroupFilter());
+						break;
+					}
 				default:
-					filters = new ArrayList();
-					AddFilters(filters, args, 1);
-					break;
+					{
+						filters = new ArrayList();
+						AddFilters(filters, args, 1);
+						break;
+					}
 			}
 
 
@@ -229,7 +242,7 @@ namespace DOL.GS.Scripts
 					log.Error("no currentzone in who commandhandler for player " + player.Name);
 			}
 			ChatGroup mychatgroup = (ChatGroup) player.TempProperties.getObjectProperty(ChatGroup.CHATGROUP_PROPERTY, null);
-			if (mychatgroup != null && ((bool) mychatgroup.Members[player]) == true && (mychatgroup.IsPublic || mychatgroup.Members[player] != null))
+			if (mychatgroup != null && (mychatgroup.Members.Contains(player) || mychatgroup.IsPublic))
 			{
 				result.Append(" [CG]");
 			}
@@ -396,7 +409,26 @@ namespace DOL.GS.Scripts
 			{
 				m_str = language;
 			}
+		}
 
+		private class ChatGroupFilter : IWhoFilter 
+		{
+			public bool ApplyFilter(GamePlayer player)
+			{
+				ChatGroup cg = (ChatGroup)player.TempProperties.getObjectProperty(ChatGroup.CHATGROUP_PROPERTY, null);
+				//no chatgroup found
+				if (cg == null)
+					return false;
+
+				//always show your own cg
+				//TODO
+
+				//player is a cg leader, and the cg is public
+				if ((bool)cg.Members[player] == true && cg.IsPublic)
+					return true;
+
+				return true;
+			}
 		}
 
 		private interface IWhoFilter

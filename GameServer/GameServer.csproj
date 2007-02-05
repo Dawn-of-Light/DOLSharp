@@ -696,6 +696,8 @@
     <Compile Include="realmabilities\effects\DivineInterventionEffect.cs" />
     <Compile Include="realmabilities\effects\JuggernautEffect.cs" />
     <Compile Include="realmabilities\effects\MasteryOfConcentrationEffect.cs" />
+    <Compile Include="realmabilities\effects\rr5\ArmsLengthEffect.cs" />
+    <Compile Include="realmabilities\effects\rr5\TestudoEffect.cs" />
     <Compile Include="realmabilities\effects\SoldiersBarricadeEffect.cs" />
     <Compile Include="realmabilities\effects\SpeedOfSoundEffect.cs" />
     <Compile Include="realmabilities\effects\StrikePredictionEffect.cs" />
@@ -706,8 +708,13 @@
     <Compile Include="realmabilities\handlers\ArrowSummoningAbility.cs" />
     <Compile Include="realmabilities\handlers\BarrierOfFortitudeAbility.cs" />
     <Compile Include="realmabilities\handlers\BedazzlingAuraAbility.cs" />
+    <Compile Include="realmabilities\handlers\DecimationTrap.cs" />
     <Compile Include="realmabilities\handlers\IchorOfTheDeepAbility.cs" />
     <Compile Include="realmabilities\handlers\L3RAPropertyEnhancerAbilities.cs" />
+    <Compile Include="realmabilities\handlers\rr5\ArmsLengthAbility.cs" />
+    <Compile Include="realmabilities\handlers\rr5\RemedyAbility.cs" />
+    <Compile Include="realmabilities\handlers\rr5\TestudoAbilty.cs" />
+    <Compile Include="realmabilities\handlers\rr5\WhirlingStaffAbility.cs" />
     <Compile Include="realmabilities\handlers\WildMinionAbility.cs" />
     <Compile Include="realmabilities\handlers\LifterAbility.cs" />
     <Compile Include="realmabilities\handlers\VeilRecoveryAbility.cs" />

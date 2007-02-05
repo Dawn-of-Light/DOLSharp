@@ -1207,6 +1207,17 @@ namespace DOL.GS
 			return (IList)m_classRealmAbilities[classID];
 		}
 
+		public static Ability getClassRealmAbility(int charclass)
+		{
+			IList abis = GetClassRealmAbilities(charclass);
+			foreach (Ability ab in abis)
+			{
+				if (ab is RR5RealmAbility)
+					return ab;
+			}
+			return null;
+		}
+
 		/// <summary>
 		/// 
 		/// </summary>

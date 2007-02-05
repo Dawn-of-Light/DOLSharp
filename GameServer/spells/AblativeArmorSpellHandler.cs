@@ -124,6 +124,7 @@ namespace DOL.GS.Spells
 			eff.Duration = e.RemainingTime;
 			eff.IsHandler = true;
 			eff.Var2 = (int)Spell.Value;
+			eff.SpellLine = SpellLine.KeyName;
 			return eff;
 		}
 

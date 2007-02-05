@@ -150,6 +150,7 @@ namespace DOL.GS
 		}
 		string GetTitle(int level);
 		void OnLevelUp(GamePlayer player);
+		void OnRealmLevelUp(GamePlayer player);
 		void OnSkillTrained(GamePlayer player, Specialization skill);
 		bool CanUseLefthandedWeapon(GamePlayer player);
 		IList AutoTrainableSkills();
@@ -407,6 +408,16 @@ namespace DOL.GS
 //					player.SaveIntoDatabase(); // saved in game player
 				}
 			}
+		}
+
+		/// <summary>
+		/// Add various skills as the player levels his realm rank up
+		/// </summary>
+		/// <param name="player">player to modify</param>
+		public virtual void OnRealmLevelUp(GamePlayer player)
+		{
+			if (player.RealmLevel >= 40)
+				player.AddAbility(SkillBase.getClassRealmAbility(player.CharacterClass.ID), true);
 		}
 
 		/// <summary>

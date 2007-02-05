@@ -23,6 +23,7 @@ namespace DOL
 			private int m_var4;
 			private int m_var5;
 			private int m_var6;
+			private string m_spellLine;
 			private static bool m_autoSave;
 
 			public PlayerXEffect()
@@ -139,14 +140,22 @@ namespace DOL
 			[DataElement(AllowDbNull = true)]
 			public string EffectType
 			{
-				get
-				{
-					return m_effecttype;
-				}
+				get { return m_effecttype; }
 				set
 				{
 					Dirty = true;
 					m_effecttype = value;
+				}
+			}
+
+			[DataElement(AllowDbNull = true)]
+			public string SpellLine
+			{
+				get { return m_spellLine; }
+				set
+				{
+					Dirty = true;
+					m_spellLine = value;
 				}
 			}
 
