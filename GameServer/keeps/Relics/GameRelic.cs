@@ -400,7 +400,6 @@ namespace DOL.GS
 			m_itemTemp.IsPickable = false;
 			m_itemTemp.Level = 99;
 			m_itemTemp.Quality = 100;
-			m_itemTemp.MaxQuality = 100;
 			m_itemTemp.PackSize = 1;
 			m_itemTemp.AutoSave = false;
 			m_itemTemp.Weight = 1000;

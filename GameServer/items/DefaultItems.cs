@@ -50,7 +50,6 @@ namespace DOL.GS.Items
 				practice_sword_template.Condition = 50000;
 				practice_sword_template.MaxCondition = 50000;
 				practice_sword_template.Quality = 90;
-				practice_sword_template.MaxQuality = 90;
 				practice_sword_template.DPS_AF = 12;
 				practice_sword_template.SPD_ABS = 25;
 				practice_sword_template.Hand = 0;
@@ -77,7 +76,6 @@ namespace DOL.GS.Items
 				practice_dirk_template.Condition = 50000;
 				practice_dirk_template.MaxCondition = 50000;
 				practice_dirk_template.Quality = 90;
-				practice_dirk_template.MaxQuality = 90;
 				practice_dirk_template.DPS_AF = 12;
 				practice_dirk_template.SPD_ABS = 22;
 				practice_dirk_template.Hand = 2;
@@ -104,7 +102,6 @@ namespace DOL.GS.Items
 				trimmed_branch_template.Condition = 50000;
 				trimmed_branch_template.MaxCondition = 50000;
 				trimmed_branch_template.Quality = 90;
-				trimmed_branch_template.MaxQuality = 90;
 				trimmed_branch_template.DPS_AF = 12;
 				trimmed_branch_template.SPD_ABS = 27;
 				trimmed_branch_template.Hand = 1;
@@ -131,7 +128,6 @@ namespace DOL.GS.Items
 				training_mace_template.Condition = 50000;
 				training_mace_template.MaxCondition = 50000;
 				training_mace_template.Quality = 90;
-				training_mace_template.MaxQuality = 90;
 				training_mace_template.DPS_AF = 12;
 				training_mace_template.SPD_ABS = 27;
 				training_mace_template.Hand = 2;
@@ -158,7 +154,6 @@ namespace DOL.GS.Items
 				training_sword_hib_template.Condition = 50000;
 				training_sword_hib_template.MaxCondition = 50000;
 				training_sword_hib_template.Quality = 90;
-				training_sword_hib_template.MaxQuality = 90;
 				training_sword_hib_template.DPS_AF = 12;
 				training_sword_hib_template.SPD_ABS = 25;
 				training_sword_hib_template.Hand = 2;
@@ -185,7 +180,6 @@ namespace DOL.GS.Items
 				training_dirk_template.Condition = 50000;
 				training_dirk_template.MaxCondition = 50000;
 				training_dirk_template.Quality = 90;
-				training_dirk_template.MaxQuality = 90;
 				training_dirk_template.DPS_AF = 12;
 				training_dirk_template.SPD_ABS = 22;
 				training_dirk_template.Hand = 2;
@@ -212,7 +206,6 @@ namespace DOL.GS.Items
 				training_club_template.Condition = 50000;
 				training_club_template.MaxCondition = 50000;
 				training_club_template.Quality = 90;
-				training_club_template.MaxQuality = 90;
 				training_club_template.DPS_AF = 12;
 				training_club_template.SPD_ABS = 40;
 				training_club_template.Hand = 0;
@@ -239,7 +232,6 @@ namespace DOL.GS.Items
 				training_staff_template.Condition = 50000;
 				training_staff_template.MaxCondition = 50000;
 				training_staff_template.Quality = 90;
-				training_staff_template.MaxQuality = 90;
 				training_staff_template.DPS_AF = 12;
 				training_staff_template.SPD_ABS = 45;
 				training_staff_template.Hand = 1;
@@ -266,7 +258,6 @@ namespace DOL.GS.Items
 				training_axe_template.Condition = 50000;
 				training_axe_template.MaxCondition = 50000;
 				training_axe_template.Quality = 90;
-				training_axe_template.MaxQuality = 90;
 				training_axe_template.DPS_AF = 13;
 				training_axe_template.SPD_ABS = 25;
 				training_axe_template.Hand = 2;
@@ -293,7 +284,6 @@ namespace DOL.GS.Items
 				training_sword_mid_template.Condition = 50000;
 				training_sword_mid_template.MaxCondition = 50000;
 				training_sword_mid_template.Quality = 90;
-				training_sword_mid_template.MaxQuality = 90;
 				training_sword_mid_template.DPS_AF = 13;
 				training_sword_mid_template.SPD_ABS = 25;
 				training_sword_mid_template.Hand = 0;
@@ -320,7 +310,6 @@ namespace DOL.GS.Items
 				training_hammer_template.Condition = 50000;
 				training_hammer_template.MaxCondition = 50000;
 				training_hammer_template.Quality = 90;
-				training_hammer_template.MaxQuality = 90;
 				training_hammer_template.DPS_AF = 13;
 				training_hammer_template.SPD_ABS = 30;
 				training_hammer_template.Hand = 0;
@@ -347,9 +336,8 @@ namespace DOL.GS.Items
 				small_training_shield_template.Condition = 50000;
 				small_training_shield_template.MaxCondition = 50000;
 				small_training_shield_template.Quality = 100;
-				small_training_shield_template.MaxQuality = 100;
-				small_training_shield_template.DPS_AF = 1;
-				small_training_shield_template.SPD_ABS = 1;
+				small_training_shield_template.DPS_AF = 10;
+				small_training_shield_template.SPD_ABS = 10;
 				small_training_shield_template.Hand = 2;
 				small_training_shield_template.Type_Damage = 1;
 				small_training_shield_template.Object_Type = 0x2A;
@@ -374,7 +362,6 @@ namespace DOL.GS.Items
 				training_shield_template.Condition = 50000;
 				training_shield_template.MaxCondition = 50000;
 				training_shield_template.Quality = 90;
-				training_shield_template.MaxQuality = 90;
 				training_shield_template.DPS_AF = 1;
 				training_shield_template.SPD_ABS = 1;
 				training_shield_template.Hand = 2;
@@ -403,7 +390,6 @@ namespace DOL.GS.Items
 				respec_realm.Condition = 50000;
 				respec_realm.MaxCondition = 50000;
 				respec_realm.Quality = 70;
-				respec_realm.MaxQuality = 100;
 				respec_realm.DPS_AF = 0;
 				respec_realm.SPD_ABS = 0;
 				respec_realm.Hand = 0;
@@ -432,7 +418,6 @@ namespace DOL.GS.Items
 				respec_single.Condition = 50000;
 				respec_single.MaxCondition = 50000;
 				respec_single.Quality = 70;
-				respec_single.MaxQuality = 100;
 				respec_single.DPS_AF = 0;
 				respec_single.SPD_ABS = 0;
 				respec_single.Hand = 0;
@@ -461,7 +446,6 @@ namespace DOL.GS.Items
 				respec_full.Condition = 50000;
 				respec_full.MaxCondition = 50000;
 				respec_full.Quality = 70;
-				respec_full.MaxQuality = 100;
 				respec_full.DPS_AF = 0;
 				respec_full.SPD_ABS = 0;
 				respec_full.Hand = 0;

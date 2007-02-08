@@ -35,7 +35,6 @@ namespace DOL.Database
 		protected int m_condition;
 		protected int m_maxcondition;
 		protected int m_quality;
-		protected int m_maxquality;
 		protected int m_dps_af;
 		protected int m_spd_abs;
 		protected int m_hand;
@@ -107,7 +106,6 @@ namespace DOL.Database
 			m_condition = 1;
 			m_maxcondition = 1;
 			m_quality = 1;
-			m_maxquality = 1;
 			m_dps_af = 0;
 			m_spd_abs = 0;
 			m_hand = 0;
@@ -299,19 +297,6 @@ namespace DOL.Database
 			{
 				Dirty = true;
 				m_quality = value;
-			}
-		}
-		[DataElement(AllowDbNull = true)]
-		public int MaxQuality
-		{
-			get
-			{
-				return m_maxquality;
-			}
-			set
-			{
-				Dirty = true;
-				m_maxquality = value;
 			}
 		}
 		[DataElement(AllowDbNull = true)]

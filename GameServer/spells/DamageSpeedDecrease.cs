@@ -49,6 +49,11 @@ namespace DOL.GS.Spells
 		/// <param name="effectiveness"></param>
 		public override void OnDirectEffect(GameLiving target, double effectiveness)
 		{
+			if (target is Keeps.GameKeepDoor || target is Keeps.GameKeepComponent)
+			{
+				MessageToCaster("Your spell has no effect on the keep component!", eChatType.CT_SpellResisted);
+				return;
+			}
 			base.OnDirectEffect(target, effectiveness);
 			// calc damage
 			AttackData ad = CalculateDamageToTarget(target, effectiveness);

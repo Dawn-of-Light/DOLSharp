@@ -136,23 +136,6 @@ namespace DOL.Database
 		}
 
 		/// <summary>
-		/// Height of component
-		/// </summary>
-		[DataElement(AllowDbNull=true)]
-		public int Height
-		{
-			get
-			{
-				return m_height;
-			}
-			set
-			{   
-				Dirty = true;
-				m_height = value;
-			}
-		}
-
-		/// <summary>
 		/// Health of component
 		/// </summary>
 		[DataElement(AllowDbNull=false)]

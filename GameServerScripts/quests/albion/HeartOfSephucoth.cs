@@ -203,7 +203,6 @@ namespace DOL.GS.Quests.Albion
 				sephucothsHeart.IsDropable = false;
 				
 				sephucothsHeart.Quality = 100;
-				sephucothsHeart.MaxQuality = 100;
 				sephucothsHeart.Condition = 1000;
 				sephucothsHeart.MaxCondition = 1000;
 				sephucothsHeart.Durability = 1000;
@@ -238,7 +237,6 @@ namespace DOL.GS.Quests.Albion
 				polishedBone.IsDropable = false;
 				
 				polishedBone.Quality = 100;
-				polishedBone.MaxQuality = 100;
 				polishedBone.Condition = 1000;
 				polishedBone.MaxCondition = 1000;
 				polishedBone.Durability = 1000;
@@ -280,7 +278,6 @@ namespace DOL.GS.Quests.Albion
 				fieryCrystalPendant.Bonus2Type = (int)eProperty.Intelligence;
 			
 				fieryCrystalPendant.Quality = 100;
-				fieryCrystalPendant.MaxQuality = 100;
 				fieryCrystalPendant.Condition = 1000;
 				fieryCrystalPendant.MaxCondition = 1000;
 				fieryCrystalPendant.Durability = 1000;

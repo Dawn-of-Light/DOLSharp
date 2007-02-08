@@ -245,7 +245,7 @@ namespace DOL.GS.Spells
 			if (ad.AttackResult != GameLiving.eAttackResult.HitUnstyled && ad.AttackResult != GameLiving.eAttackResult.HitStyle)
 				return;
 
-			int baseChance = (int)(Spell.Frequency * 0.01);
+			int baseChance = Spell.Frequency;
 			
 			if (ad.IsMeleeAttack)
 			{
@@ -321,7 +321,7 @@ namespace DOL.GS.Spells
 				&& args.AttackData.AttackResult != GameLiving.eAttackResult.HitStyle)
 				return;
 
-			if (Util.Chance((int)(Spell.Frequency * 0.01)))
+			if (Util.Chance(Spell.Frequency))
 			{
 				ISpellHandler handler = ScriptMgr.CreateSpellHandler((GameLiving)sender, m_procSpell, m_procSpellLine);
 				if (handler != null)

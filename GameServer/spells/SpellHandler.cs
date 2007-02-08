@@ -1299,7 +1299,7 @@ namespace DOL.GS.Spells
 				if (instrument != null)
 				{
 					duration *= 1.0 + Math.Min(1.0, instrument.Level / (double)Caster.Level); // up to 200% duration for songs
-					duration *= instrument.Condition / (double)instrument.MaxCondition * instrument.Quality / (double)instrument.MaxQuality;
+					duration *= instrument.Condition / (double)instrument.MaxCondition * instrument.Quality / 100;
 				}
 			}
 
@@ -1329,9 +1329,9 @@ namespace DOL.GS.Spells
 		public virtual void ApplyEffectOnTarget(GameLiving target, double effectiveness)
 		{
 			//todo allow bolts and direct damages
-			if (target is Keeps.GameKeepDoor)
+			if (target is Keeps.GameKeepDoor || target is Keeps.GameKeepComponent)
 			{
-				MessageToCaster("Your spell has no effect on the door!", eChatType.CT_SpellResisted);
+				MessageToCaster("Your spell has no effect on the keep component!", eChatType.CT_SpellResisted);
 				return;
 			}
 			if (m_spellLine.KeyName == GlobalSpellsLines.Item_Effects || m_spellLine.KeyName == GlobalSpellsLines.Combat_Styles_Effect || m_spellLine.KeyName == GlobalSpellsLines.Potions_Effects || m_spellLine.KeyName == Specs.Savagery || m_spellLine.KeyName == GlobalSpellsLines.Character_Abilities || m_spellLine.KeyName == "OffensiveProc")

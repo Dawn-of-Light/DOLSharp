@@ -296,7 +296,6 @@ namespace DOL.GS.Quests.Midgard
 				recruitsGauntlets.Bonus2Type = (int) eStat.DEX;
 
 				recruitsGauntlets.Quality = 100;
-				recruitsGauntlets.MaxQuality = 100;
 				recruitsGauntlets.Condition = 1000;
 				recruitsGauntlets.MaxCondition = 1000;
 				recruitsGauntlets.Durability = 1000;
@@ -344,7 +343,6 @@ namespace DOL.GS.Quests.Midgard
 				recruitsGloves.Bonus2Type = (int) eStat.DEX;
 
 				recruitsGloves.Quality = 100;
-				recruitsGloves.MaxQuality = 100;
 				recruitsGloves.Condition = 1000;
 				recruitsGloves.MaxCondition = 1000;
 				recruitsGloves.Durability = 1000;
@@ -387,7 +385,6 @@ namespace DOL.GS.Quests.Midgard
 				recruitsJewel.Bonus2Type = (int) eProperty.MaxHealth;
 
 				recruitsJewel.Quality = 100;
-				recruitsJewel.MaxQuality = 100;
 				recruitsJewel.Condition = 1000;
 				recruitsJewel.MaxCondition = 1000;
 				recruitsJewel.Durability = 1000;
@@ -433,7 +430,6 @@ namespace DOL.GS.Quests.Midgard
 				recruitsJewelCloth.Bonus3Type = (int) eResist.Body;
 
 				recruitsJewelCloth.Quality = 100;
-				recruitsJewelCloth.MaxQuality = 100;
 				recruitsJewelCloth.Condition = 1000;
 				recruitsJewelCloth.MaxCondition = 1000;
 				recruitsJewelCloth.Durability = 1000;
@@ -479,7 +475,6 @@ namespace DOL.GS.Quests.Midgard
 				recruitsBracer.Bonus3Type = (int) eResist.Body;
 
 				recruitsBracer.Quality = 100;
-				recruitsBracer.MaxQuality = 100;
 				recruitsBracer.Condition = 1000;
 				recruitsBracer.MaxCondition = 1000;
 				recruitsBracer.Durability = 1000;

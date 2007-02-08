@@ -245,7 +245,6 @@ namespace DOL.GS.Quests.Albion
                 dullBlackGem.Bonus2Type = (int)eResist.Spirit;
 
                 dullBlackGem.Quality = 100;
-                dullBlackGem.MaxQuality = 100;
                 dullBlackGem.Condition = 1000;
                 dullBlackGem.MaxCondition = 1000;
                 dullBlackGem.Durability = 1000;

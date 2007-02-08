@@ -273,7 +273,6 @@ namespace DOL.GS.Quests.Albion
 				recruitsArms.Bonus2Type = (int) eResist.Body;
 
 				recruitsArms.Quality = 100;
-				recruitsArms.MaxQuality = 100;
 				recruitsArms.Condition = 1000;
 				recruitsArms.MaxCondition = 1000;
 				recruitsArms.Durability = 1000;
@@ -320,7 +319,6 @@ namespace DOL.GS.Quests.Albion
 				recruitsSleeves.Bonus2Type = (int) eResist.Body;
 
 				recruitsSleeves.Quality = 100;
-				recruitsSleeves.MaxQuality = 100;
 				recruitsSleeves.Condition = 1000;
 				recruitsSleeves.MaxCondition = 1000;
 				recruitsSleeves.Durability = 1000;

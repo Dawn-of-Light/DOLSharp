@@ -49,7 +49,6 @@ namespace DOL.GS.Items
 				animist_item_template.Condition = 50000;
 				animist_item_template.MaxCondition = 50000;
 				animist_item_template.Quality = 90;
-				animist_item_template.MaxQuality = 90;
 				animist_item_template.DPS_AF = 30;
 				animist_item_template.SPD_ABS = 44;
 				animist_item_template.Hand = 0;
@@ -88,7 +87,6 @@ namespace DOL.GS.Items
 				bard_item_template.Condition = 50000;
 				bard_item_template.MaxCondition = 50000;
 				bard_item_template.Quality = 90;
-				bard_item_template.MaxQuality = 90;
 				bard_item_template.DPS_AF = (int)eInstrumentType.Lute;
 				bard_item_template.SPD_ABS = 40;
 				bard_item_template.Hand = 1;
@@ -120,7 +118,6 @@ namespace DOL.GS.Items
 				blademaster_item_template.Condition = 50000;
 				blademaster_item_template.MaxCondition = 50000;
 				blademaster_item_template.Quality = 90;
-				blademaster_item_template.MaxQuality = 90;
 				blademaster_item_template.DPS_AF = 14;
 				blademaster_item_template.SPD_ABS = 19;
 				blademaster_item_template.Object_Type = (int) eObjectType.Reinforced;
@@ -150,7 +147,6 @@ namespace DOL.GS.Items
 				champion_item_template.Condition = 50000;
 				champion_item_template.MaxCondition = 50000;
 				champion_item_template.Quality = 90;
-				champion_item_template.MaxQuality = 90;
 				champion_item_template.DPS_AF = 14;
 				champion_item_template.SPD_ABS = 19;
 				champion_item_template.Object_Type = (int) eObjectType.Reinforced;
@@ -180,7 +176,6 @@ namespace DOL.GS.Items
 				hero_item_template.Condition = 50000;
 				hero_item_template.MaxCondition = 50000;
 				hero_item_template.Quality = 90;
-				hero_item_template.MaxQuality = 90;
 				hero_item_template.DPS_AF = 14;
 				hero_item_template.SPD_ABS = 19;
 				hero_item_template.Object_Type = (int) eObjectType.Reinforced;
@@ -210,7 +205,6 @@ namespace DOL.GS.Items
 				druid_item_template.Condition = 50000;
 				druid_item_template.MaxCondition = 50000;
 				druid_item_template.Quality = 90;
-				druid_item_template.MaxQuality = 90;
 				druid_item_template.DPS_AF = 14;
 				druid_item_template.SPD_ABS = 10;
 				druid_item_template.Object_Type = (int) eObjectType.Leather;
@@ -240,7 +234,6 @@ namespace DOL.GS.Items
 				warden_item_template.Condition = 50000;
 				warden_item_template.MaxCondition = 50000;
 				warden_item_template.Quality = 90;
-				warden_item_template.MaxQuality = 90;
 				warden_item_template.DPS_AF = 14;
 				warden_item_template.SPD_ABS = 10;
 				warden_item_template.Object_Type = (int) eObjectType.Leather;
@@ -270,7 +263,6 @@ namespace DOL.GS.Items
 				nightshade_item_template.Condition = 50000;
 				nightshade_item_template.MaxCondition = 50000;
 				nightshade_item_template.Quality = 90;
-				nightshade_item_template.MaxQuality = 90;
 				nightshade_item_template.DPS_AF = 14;
 				nightshade_item_template.SPD_ABS = 10;
 				nightshade_item_template.Hand = 0;
@@ -298,7 +290,6 @@ namespace DOL.GS.Items
 				ranger_item_template.Condition = 50000;
 				ranger_item_template.MaxCondition = 50000;
 				ranger_item_template.Quality = 90;
-				ranger_item_template.MaxQuality = 90;
 				ranger_item_template.DPS_AF = 30;
 				ranger_item_template.SPD_ABS = 47;
 				ranger_item_template.Hand = 0;
@@ -330,7 +321,6 @@ namespace DOL.GS.Items
 				valewalker_item_template.Condition = 50000;
 				valewalker_item_template.MaxCondition = 50000;
 				valewalker_item_template.Quality = 90;
-				valewalker_item_template.MaxQuality = 90;
 				valewalker_item_template.DPS_AF = 26;
 				valewalker_item_template.SPD_ABS = 42;
 				valewalker_item_template.Hand = 0;
@@ -362,7 +352,6 @@ namespace DOL.GS.Items
 				eldritch_item_template.Condition = 50000;
 				eldritch_item_template.MaxCondition = 50000;
 				eldritch_item_template.Quality = 90;
-				eldritch_item_template.MaxQuality = 90;
 				eldritch_item_template.DPS_AF = 30;
 				eldritch_item_template.SPD_ABS = 44;
 				eldritch_item_template.Hand = 0;
@@ -399,7 +388,6 @@ namespace DOL.GS.Items
 				enchanter_item_template.Condition = 50000;
 				enchanter_item_template.MaxCondition = 50000;
 				enchanter_item_template.Quality = 90;
-				enchanter_item_template.MaxQuality = 90;
 				enchanter_item_template.DPS_AF = 30;
 				enchanter_item_template.SPD_ABS = 44;
 				enchanter_item_template.Hand = 0;
@@ -437,7 +425,6 @@ namespace DOL.GS.Items
 				mentalist_item_template.Condition = 50000;
 				mentalist_item_template.MaxCondition = 50000;
 				mentalist_item_template.Quality = 90;
-				mentalist_item_template.MaxQuality = 90;
 				mentalist_item_template.DPS_AF = 30;
 				mentalist_item_template.SPD_ABS = 44;
 				mentalist_item_template.Hand = 0;

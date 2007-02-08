@@ -231,7 +231,6 @@ namespace DOL.GS.Quests.Midgard
 				recruitsShortSword.Bonus2Type = (int) eResist.Body;
 
 				recruitsShortSword.Quality = 100;
-				recruitsShortSword.MaxQuality = 100;
 				recruitsShortSword.Condition = 1000;
 				recruitsShortSword.MaxCondition = 1000;
 				recruitsShortSword.Durability = 1000;
@@ -280,7 +279,6 @@ namespace DOL.GS.Quests.Midgard
 				recruitsStaff.Bonus2Type = (int) eResist.Crush;
 
 				recruitsStaff.Quality = 100;
-				recruitsStaff.MaxQuality = 100;
 				recruitsStaff.Condition = 1000;
 				recruitsStaff.MaxCondition = 1000;
 				recruitsStaff.Durability = 1000;

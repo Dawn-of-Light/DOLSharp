@@ -17,6 +17,7 @@
  *
  */
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Scripts
 {
@@ -36,15 +37,15 @@ namespace DOL.GS.Scripts
 						return 0;
 					if (!WorldMgr.CheckDistance(client.Player, assistClient.Player, 2048))
 					{
-						client.Out.SendMessage("You don't see " + args[1] + " around here!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						return 0;
+                        client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Assist.DontSee", args[1]), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                        return 0;
 					}
 				}
 			}
 			else if (client.Player.TargetObject == null)
 			{
-				client.Out.SendMessage("You have no target.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 0;
+                client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Assist.NoTarget"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return 0;
 			}
 			else
 			{
@@ -53,24 +54,24 @@ namespace DOL.GS.Scripts
 
 			if (assistPlayer == null)
 			{
-				client.Out.SendMessage("Target is not valid.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 0;
+                client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Assist.NotValid"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return 0;
 			}
 			if (assistPlayer == client.Player)
 			{
-				client.Out.SendMessage("You can't assist yourself.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 0;
+                client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Assist.CantAssistYourself"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return 0;
 			}
 
 			if (assistPlayer.TargetObject == null)
 			{
-				client.Out.SendMessage(assistPlayer.GetName(0, true) + " doesn't currently have a target", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 0;
+                client.Out.SendMessage(assistPlayer.GetName(0, true) + LanguageMgr.GetTranslation(client, "Scripts.Players.Assist.DoesntHaveTarget"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return 0;
 			}
 
 			client.Out.SendChangeTarget(assistPlayer.TargetObject);
-			client.Out.SendMessage("You assist " + assistPlayer.GetName(0, true) + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			return 1;
+            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Assist.YouAssist", assistPlayer.GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+            return 1;
 		}
 	}
 }

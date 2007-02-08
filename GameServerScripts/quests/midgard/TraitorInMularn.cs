@@ -199,7 +199,6 @@ namespace DOL.GS.Quests.Midgard
 				necklaceOfDoppelganger.IsDropable = false;
 
 				necklaceOfDoppelganger.Quality = 100;
-				necklaceOfDoppelganger.MaxQuality = 100;
 				necklaceOfDoppelganger.Condition = 1000;
 				necklaceOfDoppelganger.MaxCondition = 1000;
 				necklaceOfDoppelganger.Durability = 1000;
@@ -277,7 +276,6 @@ namespace DOL.GS.Quests.Midgard
 				recruitsBoots.Bonus3Type = (int) eResist.Spirit;
 
 				recruitsBoots.Quality = 100;
-				recruitsBoots.MaxQuality = 100;
 				recruitsBoots.Condition = 1000;
 				recruitsBoots.MaxCondition = 1000;
 				recruitsBoots.Durability = 1000;
@@ -329,7 +327,6 @@ namespace DOL.GS.Quests.Midgard
 				recruitsQuiltedBoots.Bonus3Type = (int) eResist.Spirit;
 
 				recruitsQuiltedBoots.Quality = 100;
-				recruitsQuiltedBoots.MaxQuality = 100;
 				recruitsQuiltedBoots.Condition = 1000;
 				recruitsQuiltedBoots.MaxCondition = 1000;
 				recruitsQuiltedBoots.Durability = 1000;

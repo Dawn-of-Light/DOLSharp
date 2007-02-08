@@ -408,7 +408,6 @@ namespace DOL.GS.Quests.Albion
 				treviansHoodedCloak.Color = 44;
 
 				treviansHoodedCloak.Quality = 100;
-				treviansHoodedCloak.MaxQuality = 100;
 				treviansHoodedCloak.Condition = 1000;
 				treviansHoodedCloak.MaxCondition = 1000;
 				treviansHoodedCloak.Durability = 1000;
@@ -464,7 +463,6 @@ namespace DOL.GS.Quests.Albion
 				bootsOfRescuer.Bonus4Type = (int) eResist.Energy;
 
 				bootsOfRescuer.Quality = 100;
-				bootsOfRescuer.MaxQuality = 100;
 				bootsOfRescuer.Condition = 1000;
 				bootsOfRescuer.MaxCondition = 1000;
 				bootsOfRescuer.Durability = 1000;
@@ -520,7 +518,6 @@ namespace DOL.GS.Quests.Albion
 				bootsOfBaneful.Bonus4Type = 10; // Hit
 
 				bootsOfBaneful.Quality = 100;
-				bootsOfBaneful.MaxQuality = 100;
 				bootsOfBaneful.Condition = 1000;
 				bootsOfBaneful.MaxCondition = 1000;
 				bootsOfBaneful.Durability = 1000;
@@ -575,7 +572,6 @@ namespace DOL.GS.Quests.Albion
 				bootsOfProtector.Bonus4Type = 10; // hit
 
 				bootsOfProtector.Quality = 100;
-				bootsOfProtector.MaxQuality = 100;
 				bootsOfProtector.Condition = 1000;
 				bootsOfProtector.MaxCondition = 1000;
 				bootsOfProtector.Durability = 1000;
@@ -627,7 +623,6 @@ namespace DOL.GS.Quests.Albion
 				bootsOfErudition.Bonus3Type = (int) eResist.Energy;
 
 				bootsOfErudition.Quality = 100;
-				bootsOfErudition.MaxQuality = 100;
 				bootsOfErudition.Condition = 1000;
 				bootsOfErudition.MaxCondition = 1000;
 				bootsOfErudition.Durability = 1000;
@@ -681,7 +676,6 @@ namespace DOL.GS.Quests.Albion
 				bootsOfReverence.Bonus4Type = (int) eResist.Heat; // hp
 
 				bootsOfReverence.Quality = 100;
-				bootsOfReverence.MaxQuality = 100;
 				bootsOfReverence.Condition = 1000;
 				bootsOfReverence.MaxCondition = 1000;
 				bootsOfReverence.Durability = 1000;
@@ -735,7 +729,6 @@ namespace DOL.GS.Quests.Albion
 				bootsOfShadow.Bonus4Type = (int) eResist.Energy;
 
 				bootsOfShadow.Quality = 100;
-				bootsOfShadow.MaxQuality = 100;
 				bootsOfShadow.Condition = 1000;
 				bootsOfShadow.MaxCondition = 1000;
 				bootsOfShadow.Durability = 1000;
@@ -789,7 +782,6 @@ namespace DOL.GS.Quests.Albion
 				bootsOfEvanescent.Bonus4Type = (int) eResist.Energy; // hp
 
 				bootsOfEvanescent.Quality = 100;
-				bootsOfEvanescent.MaxQuality = 100;
 				bootsOfEvanescent.Condition = 1000;
 				bootsOfEvanescent.MaxCondition = 1000;
 				bootsOfEvanescent.Durability = 1000;
@@ -840,7 +832,6 @@ namespace DOL.GS.Quests.Albion
 				bootsOfInfluence.Bonus3Type = (int) eResist.Spirit; // resist body                
 
 				bootsOfInfluence.Quality = 100;
-				bootsOfInfluence.MaxQuality = 100;
 				bootsOfInfluence.Condition = 1000;
 				bootsOfInfluence.MaxCondition = 1000;
 				bootsOfInfluence.Durability = 1000;
@@ -894,7 +885,6 @@ namespace DOL.GS.Quests.Albion
 				bootsOfTheDevoted.Bonus4Type = (int) eResist.Body;
 
 				bootsOfTheDevoted.Quality = 100;
-				bootsOfTheDevoted.MaxQuality = 100;
 				bootsOfTheDevoted.Condition = 1000;
 				bootsOfTheDevoted.MaxCondition = 1000;
 				bootsOfTheDevoted.Durability = 1000;
@@ -930,7 +920,6 @@ namespace DOL.GS.Quests.Albion
 
 
 				whistleReward.Quality = 100;
-				whistleReward.MaxQuality = 100;
 				whistleReward.Condition = 1000;
 				whistleReward.MaxCondition = 1000;
 				whistleReward.Durability = 1000;

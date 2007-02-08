@@ -39,6 +39,11 @@ namespace DOL.GS.Spells
 		public override void FinishSpellCast(GameLiving target)
 		{
 			m_caster.Mana -= CalculateNeededPower(target);
+			if (target is Keeps.GameKeepDoor || target is Keeps.GameKeepComponent)
+			{
+				MessageToCaster("Your spell has no effect on the keep component!", eChatType.CT_SpellResisted);
+				return;
+			}
 			base.FinishSpellCast(target);
 		}
 

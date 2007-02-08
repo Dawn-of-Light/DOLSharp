@@ -49,7 +49,6 @@ namespace DOL.GS.Items
 				cabalist_item_template.Condition = 50000;
 				cabalist_item_template.MaxCondition = 50000;
 				cabalist_item_template.Quality = 90;
-				cabalist_item_template.MaxQuality = 90;
 				cabalist_item_template.DPS_AF = 30;
 				cabalist_item_template.SPD_ABS = 44;
 				cabalist_item_template.Hand = 0;
@@ -87,7 +86,6 @@ namespace DOL.GS.Items
 				wizard_item_template.Condition = 50000;
 				wizard_item_template.MaxCondition = 50000;
 				wizard_item_template.Quality = 90;
-				wizard_item_template.MaxQuality = 90;
 				wizard_item_template.DPS_AF = 30;
 				wizard_item_template.SPD_ABS = 44;
 				wizard_item_template.Hand = 0;
@@ -125,7 +123,6 @@ namespace DOL.GS.Items
 				theurgist_item_template.Condition = 50000;
 				theurgist_item_template.MaxCondition = 50000;
 				theurgist_item_template.Quality = 90;
-				theurgist_item_template.MaxQuality = 90;
 				theurgist_item_template.DPS_AF = 30;
 				theurgist_item_template.SPD_ABS = 44;
 				theurgist_item_template.Hand = 0;
@@ -163,7 +160,6 @@ namespace DOL.GS.Items
 				sorcerer_item_template.Condition = 50000;
 				sorcerer_item_template.MaxCondition = 50000;
 				sorcerer_item_template.Quality = 90;
-				sorcerer_item_template.MaxQuality = 90;
 				sorcerer_item_template.DPS_AF = 30;
 				sorcerer_item_template.SPD_ABS = 44;
 				sorcerer_item_template.Hand = 0;
@@ -201,11 +197,9 @@ namespace DOL.GS.Items
 				necromancer_item_template.Condition = 50000;
 				necromancer_item_template.MaxCondition = 50000;
 				necromancer_item_template.Quality = 90;
-				necromancer_item_template.MaxQuality = 90;
 				necromancer_item_template.DPS_AF = 30;
 				necromancer_item_template.SPD_ABS = 44;
 				necromancer_item_template.Hand = 0;
-				necromancer_item_template.Type_Damage = 1;
 				necromancer_item_template.Object_Type = 8;
 				necromancer_item_template.Item_Type = 12;
 				necromancer_item_template.Weight = 45;
@@ -239,7 +233,6 @@ namespace DOL.GS.Items
 				slash_sword_item_template.Condition = 50000;
 				slash_sword_item_template.MaxCondition = 50000;
 				slash_sword_item_template.Quality = 90;
-				slash_sword_item_template.MaxQuality = 90;
 				slash_sword_item_template.DPS_AF = 30;
 				slash_sword_item_template.SPD_ABS = 25;
 				slash_sword_item_template.Hand = 2;
@@ -271,7 +264,6 @@ namespace DOL.GS.Items
 				crush_sword_item_template.Condition = 50000;
 				crush_sword_item_template.MaxCondition = 50000;
 				crush_sword_item_template.Quality = 90;
-				crush_sword_item_template.MaxQuality = 90;
 				crush_sword_item_template.DPS_AF = 30;
 				crush_sword_item_template.SPD_ABS = 30;
 				crush_sword_item_template.Hand = 2;
@@ -303,7 +295,6 @@ namespace DOL.GS.Items
 				thrust_sword_item_template.Condition = 50000;
 				thrust_sword_item_template.MaxCondition = 50000;
 				thrust_sword_item_template.Quality = 90;
-				thrust_sword_item_template.MaxQuality = 90;
 				thrust_sword_item_template.DPS_AF = 30;
 				thrust_sword_item_template.SPD_ABS = 25;
 				thrust_sword_item_template.Hand = 2;
@@ -335,7 +326,6 @@ namespace DOL.GS.Items
 				twohand_sword_item_template.Condition = 50000;
 				twohand_sword_item_template.MaxCondition = 50000;
 				twohand_sword_item_template.Quality = 90;
-				twohand_sword_item_template.MaxQuality = 90;
 				twohand_sword_item_template.DPS_AF = 30;
 				twohand_sword_item_template.SPD_ABS = 47;
 				twohand_sword_item_template.Hand = 0;
@@ -367,7 +357,6 @@ namespace DOL.GS.Items
 				pike_polearm_item_template.Condition = 50000;
 				pike_polearm_item_template.MaxCondition = 50000;
 				pike_polearm_item_template.Quality = 90;
-				pike_polearm_item_template.MaxQuality = 90;
 				pike_polearm_item_template.DPS_AF = 32;
 				pike_polearm_item_template.SPD_ABS = 30;
 				pike_polearm_item_template.Hand = 0;
@@ -400,7 +389,6 @@ namespace DOL.GS.Items
 				scout_item_template.Condition = 50000;
 				scout_item_template.MaxCondition = 50000;
 				scout_item_template.Quality = 90;
-				scout_item_template.MaxQuality = 90;
 				scout_item_template.DPS_AF = 30;
 				scout_item_template.SPD_ABS = 54;
 				scout_item_template.Hand = 0;
@@ -434,7 +422,6 @@ namespace DOL.GS.Items
 				friar_template.Condition = 50000;
 				friar_template.MaxCondition = 50000;
 				friar_template.Quality = 100;
-				friar_template.MaxQuality = 100;
 				friar_template.DPS_AF = 14;
 				friar_template.SPD_ABS = 10;								
 				friar_template.Object_Type = (int) eObjectType.Leather;

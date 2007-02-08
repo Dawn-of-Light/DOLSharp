@@ -201,7 +201,6 @@ namespace DOL.GS.Quests.Albion
 				lawrencesEmptyFlask.IsDropable = false;
 				
 				lawrencesEmptyFlask.Quality = 100;
-				lawrencesEmptyFlask.MaxQuality = 100;
 				lawrencesEmptyFlask.Condition = 1000;
 				lawrencesEmptyFlask.MaxCondition = 1000;
 				lawrencesEmptyFlask.Durability = 1000;
@@ -237,7 +236,6 @@ namespace DOL.GS.Quests.Albion
 				lawrencesFilledFlask.IsDropable = false;
 				
 				lawrencesFilledFlask.Quality = 100;
-				lawrencesFilledFlask.MaxQuality = 100;
 				lawrencesFilledFlask.Condition = 1000;
 				lawrencesFilledFlask.MaxCondition = 1000;
 				lawrencesFilledFlask.Durability = 1000;

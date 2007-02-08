@@ -209,7 +209,6 @@ namespace DOL.GS.Quests.Albion
 				slithsTail.Bonus1Type = (int)eProperty.Dexterity;
 				
 				slithsTail.Quality = 100;
-				slithsTail.MaxQuality = 100;
 				slithsTail.Condition = 1000;
 				slithsTail.MaxCondition = 1000;
 				slithsTail.Durability = 1000;

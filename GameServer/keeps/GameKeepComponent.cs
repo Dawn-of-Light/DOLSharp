@@ -89,10 +89,6 @@ namespace DOL.GS.Keeps
 		/// <summary>
 		/// height of keep grow with level
 		/// </summary>
-		private int m_height;
-		/// <summary>
-		/// height of keep grow with level
-		/// </summary>
 		public int Height
 		{
 			get { return KeepMgr.GetHeightFromLevel(this.Keep.Level); }
@@ -424,7 +420,6 @@ namespace DOL.GS.Keeps
 			obj.X = this.ComponentX;
 			obj.Y = this.ComponentY;
 			obj.ID = this.ID;
-			obj.Height = this.Height;
 			obj.Skin = this.Skin;
 
 			if (New)

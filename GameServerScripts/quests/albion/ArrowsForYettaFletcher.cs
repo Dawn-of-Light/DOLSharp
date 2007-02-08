@@ -193,7 +193,6 @@ namespace DOL.GS.Quests.Albion
 				bundleOfDecayedZombieLegs.IsDropable = false;
 				
 				bundleOfDecayedZombieLegs.Quality = 100;
-				bundleOfDecayedZombieLegs.MaxQuality = 100;
 				bundleOfDecayedZombieLegs.Condition = 1000;
 				bundleOfDecayedZombieLegs.MaxCondition = 1000;
 				bundleOfDecayedZombieLegs.Durability = 1000;

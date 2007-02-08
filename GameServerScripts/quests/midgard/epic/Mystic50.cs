@@ -191,7 +191,6 @@ namespace DOL.GS.Quests.Midgard
 				kelics_totem.Hand = 0;
 				kelics_totem.Type_Damage = 0;
 				kelics_totem.Quality = 100;
-				kelics_totem.MaxQuality = 100;
 				kelics_totem.Weight = 12;
 				if (SAVE_INTO_DATABASE)
 				{
@@ -217,7 +216,6 @@ namespace DOL.GS.Quests.Midgard
 				SpiritmasterEpicBoots.SPD_ABS = 0;
 				SpiritmasterEpicBoots.Object_Type = 32;
 				SpiritmasterEpicBoots.Quality = 100;
-				SpiritmasterEpicBoots.MaxQuality = 100;
 				SpiritmasterEpicBoots.Weight = 22;
 				SpiritmasterEpicBoots.Bonus = 35;
 				SpiritmasterEpicBoots.MaxCondition = 50000;
@@ -261,7 +259,6 @@ namespace DOL.GS.Quests.Midgard
 				SpiritmasterEpicHelm.SPD_ABS = 0;
 				SpiritmasterEpicHelm.Object_Type = 32;
 				SpiritmasterEpicHelm.Quality = 100;
-				SpiritmasterEpicHelm.MaxQuality = 100;
 				SpiritmasterEpicHelm.Weight = 22;
 				SpiritmasterEpicHelm.Bonus = 35;
 				SpiritmasterEpicHelm.MaxCondition = 50000;
@@ -305,7 +302,6 @@ namespace DOL.GS.Quests.Midgard
 				SpiritmasterEpicGloves.SPD_ABS = 0;
 				SpiritmasterEpicGloves.Object_Type = 32;
 				SpiritmasterEpicGloves.Quality = 100;
-				SpiritmasterEpicGloves.MaxQuality = 100;
 				SpiritmasterEpicGloves.Weight = 22;
 				SpiritmasterEpicGloves.Bonus = 35;
 				SpiritmasterEpicGloves.MaxCondition = 50000;
@@ -349,7 +345,6 @@ namespace DOL.GS.Quests.Midgard
 				SpiritmasterEpicVest.SPD_ABS = 0;
 				SpiritmasterEpicVest.Object_Type = 32;
 				SpiritmasterEpicVest.Quality = 100;
-				SpiritmasterEpicVest.MaxQuality = 100;
 				SpiritmasterEpicVest.Weight = 22;
 				SpiritmasterEpicVest.Bonus = 35;
 				SpiritmasterEpicVest.MaxCondition = 50000;
@@ -393,7 +388,6 @@ namespace DOL.GS.Quests.Midgard
 				SpiritmasterEpicLegs.SPD_ABS = 0;
 				SpiritmasterEpicLegs.Object_Type = 32;
 				SpiritmasterEpicLegs.Quality = 100;
-				SpiritmasterEpicLegs.MaxQuality = 100;
 				SpiritmasterEpicLegs.Weight = 22;
 				SpiritmasterEpicLegs.Bonus = 35;
 				SpiritmasterEpicLegs.MaxCondition = 50000;
@@ -437,7 +431,6 @@ namespace DOL.GS.Quests.Midgard
 				SpiritmasterEpicArms.SPD_ABS = 0;
 				SpiritmasterEpicArms.Object_Type = 32;
 				SpiritmasterEpicArms.Quality = 100;
-				SpiritmasterEpicArms.MaxQuality = 100;
 				SpiritmasterEpicArms.Weight = 22;
 				SpiritmasterEpicArms.Bonus = 35;
 				SpiritmasterEpicArms.MaxCondition = 50000;
@@ -480,7 +473,6 @@ namespace DOL.GS.Quests.Midgard
 				RunemasterEpicBoots.SPD_ABS = 0;
 				RunemasterEpicBoots.Object_Type = 32;
 				RunemasterEpicBoots.Quality = 100;
-				RunemasterEpicBoots.MaxQuality = 100;
 				RunemasterEpicBoots.Weight = 22;
 				RunemasterEpicBoots.Bonus = 35;
 				RunemasterEpicBoots.MaxCondition = 50000;
@@ -523,7 +515,6 @@ namespace DOL.GS.Quests.Midgard
 				RunemasterEpicHelm.SPD_ABS = 0;
 				RunemasterEpicHelm.Object_Type = 32;
 				RunemasterEpicHelm.Quality = 100;
-				RunemasterEpicHelm.MaxQuality = 100;
 				RunemasterEpicHelm.Weight = 22;
 				RunemasterEpicHelm.Bonus = 35;
 				RunemasterEpicHelm.MaxCondition = 50000;
@@ -566,7 +557,6 @@ namespace DOL.GS.Quests.Midgard
 				RunemasterEpicGloves.SPD_ABS = 0;
 				RunemasterEpicGloves.Object_Type = 32;
 				RunemasterEpicGloves.Quality = 100;
-				RunemasterEpicGloves.MaxQuality = 100;
 				RunemasterEpicGloves.Weight = 22;
 				RunemasterEpicGloves.Bonus = 35;
 				RunemasterEpicGloves.MaxCondition = 50000;
@@ -609,7 +599,6 @@ namespace DOL.GS.Quests.Midgard
 				RunemasterEpicVest.SPD_ABS = 0;
 				RunemasterEpicVest.Object_Type = 32;
 				RunemasterEpicVest.Quality = 100;
-				RunemasterEpicVest.MaxQuality = 100;
 				RunemasterEpicVest.Weight = 22;
 				RunemasterEpicVest.Bonus = 35;
 				RunemasterEpicVest.MaxCondition = 50000;
@@ -652,7 +641,6 @@ namespace DOL.GS.Quests.Midgard
 				RunemasterEpicLegs.SPD_ABS = 0;
 				RunemasterEpicLegs.Object_Type = 32;
 				RunemasterEpicLegs.Quality = 100;
-				RunemasterEpicLegs.MaxQuality = 100;
 				RunemasterEpicLegs.Weight = 22;
 				RunemasterEpicLegs.Bonus = 35;
 				RunemasterEpicLegs.MaxCondition = 50000;
@@ -695,7 +683,6 @@ namespace DOL.GS.Quests.Midgard
 				RunemasterEpicArms.SPD_ABS = 0;
 				RunemasterEpicArms.Object_Type = 32;
 				RunemasterEpicArms.Quality = 100;
-				RunemasterEpicArms.MaxQuality = 100;
 				RunemasterEpicArms.Weight = 22;
 				RunemasterEpicArms.Bonus = 35;
 				RunemasterEpicArms.MaxCondition = 50000;
@@ -738,7 +725,6 @@ namespace DOL.GS.Quests.Midgard
 				BonedancerEpicBoots.SPD_ABS = 0;
 				BonedancerEpicBoots.Object_Type = 32;
 				BonedancerEpicBoots.Quality = 100;
-				BonedancerEpicBoots.MaxQuality = 100;
 				BonedancerEpicBoots.Weight = 22;
 				BonedancerEpicBoots.Bonus = 35;
 				BonedancerEpicBoots.MaxCondition = 50000;
@@ -782,7 +768,6 @@ namespace DOL.GS.Quests.Midgard
 				BonedancerEpicHelm.SPD_ABS = 0;
 				BonedancerEpicHelm.Object_Type = 32;
 				BonedancerEpicHelm.Quality = 100;
-				BonedancerEpicHelm.MaxQuality = 100;
 				BonedancerEpicHelm.Weight = 22;
 				BonedancerEpicHelm.Bonus = 35;
 				BonedancerEpicHelm.MaxCondition = 50000;
@@ -827,7 +812,6 @@ namespace DOL.GS.Quests.Midgard
 				BonedancerEpicGloves.SPD_ABS = 0;
 				BonedancerEpicGloves.Object_Type = 32;
 				BonedancerEpicGloves.Quality = 100;
-				BonedancerEpicGloves.MaxQuality = 100;
 				BonedancerEpicGloves.Weight = 22;
 				BonedancerEpicGloves.Bonus = 35;
 				BonedancerEpicGloves.MaxCondition = 50000;
@@ -870,7 +854,6 @@ namespace DOL.GS.Quests.Midgard
 				BonedancerEpicVest.SPD_ABS = 0;
 				BonedancerEpicVest.Object_Type = 32;
 				BonedancerEpicVest.Quality = 100;
-				BonedancerEpicVest.MaxQuality = 100;
 				BonedancerEpicVest.Weight = 22;
 				BonedancerEpicVest.Bonus = 35;
 				BonedancerEpicVest.MaxCondition = 50000;
@@ -913,7 +896,6 @@ namespace DOL.GS.Quests.Midgard
 				BonedancerEpicLegs.SPD_ABS = 0;
 				BonedancerEpicLegs.Object_Type = 32;
 				BonedancerEpicLegs.Quality = 100;
-				BonedancerEpicLegs.MaxQuality = 100;
 				BonedancerEpicLegs.Weight = 22;
 				BonedancerEpicLegs.Bonus = 35;
 				BonedancerEpicLegs.MaxCondition = 50000;
@@ -957,7 +939,6 @@ namespace DOL.GS.Quests.Midgard
 				BonedancerEpicArms.SPD_ABS = 0;
 				BonedancerEpicArms.Object_Type = 32;
 				BonedancerEpicArms.Quality = 100;
-				BonedancerEpicArms.MaxQuality = 100;
 				BonedancerEpicArms.Weight = 22;
 				BonedancerEpicArms.Bonus = 35;
 				BonedancerEpicArms.MaxCondition = 50000;
