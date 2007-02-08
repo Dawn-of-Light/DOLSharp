@@ -199,7 +199,6 @@ namespace DOL.GS.Quests.Albion
 				wellPreservedBones.IsDropable = false;
 				
 				wellPreservedBones.Quality = 100;
-				wellPreservedBones.MaxQuality = 100;
 				wellPreservedBones.Condition = 1000;
 				wellPreservedBones.MaxCondition = 1000;
 				wellPreservedBones.Durability = 1000;
@@ -235,7 +234,6 @@ namespace DOL.GS.Quests.Albion
 				twoWellPreservedBones.IsDropable = false;
 				
 				twoWellPreservedBones.Quality = 100;
-				twoWellPreservedBones.MaxQuality = 100;
 				twoWellPreservedBones.Condition = 1000;
 				twoWellPreservedBones.MaxCondition = 1000;
 				twoWellPreservedBones.Durability = 1000;

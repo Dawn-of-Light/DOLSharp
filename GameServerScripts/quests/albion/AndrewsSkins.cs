@@ -285,7 +285,6 @@ namespace DOL.GS.Quests.Albion
 				bundleOfBearSkins.IsDropable = false;
 				
 				bundleOfBearSkins.Quality = 100;
-				bundleOfBearSkins.MaxQuality = 100;
 				bundleOfBearSkins.Condition = 1000;
 				bundleOfBearSkins.MaxCondition = 1000;
 				bundleOfBearSkins.Durability = 1000;
@@ -320,7 +319,6 @@ namespace DOL.GS.Quests.Albion
 				spoolOfLeatherworkingThread.IsDropable = false;
 
 				spoolOfLeatherworkingThread.Quality = 100;
-				spoolOfLeatherworkingThread.MaxQuality = 100;
 				spoolOfLeatherworkingThread.Condition = 1000;
 				spoolOfLeatherworkingThread.MaxCondition = 1000;
 				spoolOfLeatherworkingThread.Durability = 1000;
@@ -364,7 +362,6 @@ namespace DOL.GS.Quests.Albion
 				chokerOfTheBear.Bonus2 = 1;
 
 				chokerOfTheBear.Quality = 100;
-				chokerOfTheBear.MaxQuality = 100;
 				chokerOfTheBear.Condition = 1000;
 				chokerOfTheBear.MaxCondition = 1000;
 				chokerOfTheBear.Durability = 1000;

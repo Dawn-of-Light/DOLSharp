@@ -227,7 +227,6 @@ namespace DOL.GS.Quests.Midgard
 				tome_enchantments.Hand = 0;
 				tome_enchantments.Type_Damage = 0;
 				tome_enchantments.Quality = 100;
-				tome_enchantments.MaxQuality = 100;
 				tome_enchantments.Weight = 12;
 				if (SAVE_INTO_DATABASE)
 				{
@@ -255,7 +254,6 @@ namespace DOL.GS.Quests.Midgard
 				sealed_pouch.Hand = 0;
 				sealed_pouch.Type_Damage = 0;
 				sealed_pouch.Quality = 100;
-				sealed_pouch.MaxQuality = 100;
 				sealed_pouch.Weight = 12;
 				if (SAVE_INTO_DATABASE)
 				{
@@ -280,7 +278,6 @@ namespace DOL.GS.Quests.Midgard
 				WarriorEpicBoots.SPD_ABS = 27;
 				WarriorEpicBoots.Object_Type = 35;
 				WarriorEpicBoots.Quality = 100;
-				WarriorEpicBoots.MaxQuality = 100;
 				WarriorEpicBoots.Weight = 22;
 				WarriorEpicBoots.Bonus = 35;
 				WarriorEpicBoots.MaxCondition = 50000;
@@ -324,7 +321,6 @@ namespace DOL.GS.Quests.Midgard
 				WarriorEpicHelm.SPD_ABS = 27;
 				WarriorEpicHelm.Object_Type = 35;
 				WarriorEpicHelm.Quality = 100;
-				WarriorEpicHelm.MaxQuality = 100;
 				WarriorEpicHelm.Weight = 22;
 				WarriorEpicHelm.Bonus = 35;
 				WarriorEpicHelm.MaxCondition = 50000;
@@ -368,7 +364,6 @@ namespace DOL.GS.Quests.Midgard
 				WarriorEpicGloves.SPD_ABS = 27;
 				WarriorEpicGloves.Object_Type = 35;
 				WarriorEpicGloves.Quality = 100;
-				WarriorEpicGloves.MaxQuality = 100;
 				WarriorEpicGloves.Weight = 22;
 				WarriorEpicGloves.Bonus = 35;
 				WarriorEpicGloves.MaxCondition = 50000;
@@ -412,7 +407,6 @@ namespace DOL.GS.Quests.Midgard
 				WarriorEpicVest.SPD_ABS = 27;
 				WarriorEpicVest.Object_Type = 35;
 				WarriorEpicVest.Quality = 100;
-				WarriorEpicVest.MaxQuality = 100;
 				WarriorEpicVest.Weight = 22;
 				WarriorEpicVest.Bonus = 35;
 				WarriorEpicVest.MaxCondition = 50000;
@@ -456,7 +450,6 @@ namespace DOL.GS.Quests.Midgard
 				WarriorEpicLegs.SPD_ABS = 27;
 				WarriorEpicLegs.Object_Type = 35;
 				WarriorEpicLegs.Quality = 100;
-				WarriorEpicLegs.MaxQuality = 100;
 				WarriorEpicLegs.Weight = 22;
 				WarriorEpicLegs.Bonus = 35;
 				WarriorEpicLegs.MaxCondition = 50000;
@@ -500,7 +493,6 @@ namespace DOL.GS.Quests.Midgard
 				WarriorEpicArms.SPD_ABS = 27;
 				WarriorEpicArms.Object_Type = 35;
 				WarriorEpicArms.Quality = 100;
-				WarriorEpicArms.MaxQuality = 100;
 				WarriorEpicArms.Weight = 22;
 				WarriorEpicArms.Bonus = 35;
 				WarriorEpicArms.MaxCondition = 50000;
@@ -543,7 +535,6 @@ namespace DOL.GS.Quests.Midgard
 				BerserkerEpicBoots.SPD_ABS = 19;
 				BerserkerEpicBoots.Object_Type = 34;
 				BerserkerEpicBoots.Quality = 100;
-				BerserkerEpicBoots.MaxQuality = 100;
 				BerserkerEpicBoots.Weight = 22;
 				BerserkerEpicBoots.Bonus = 35;
 				BerserkerEpicBoots.MaxCondition = 50000;
@@ -587,7 +578,6 @@ namespace DOL.GS.Quests.Midgard
 				BerserkerEpicHelm.SPD_ABS = 19;
 				BerserkerEpicHelm.Object_Type = 34;
 				BerserkerEpicHelm.Quality = 100;
-				BerserkerEpicHelm.MaxQuality = 100;
 				BerserkerEpicHelm.Weight = 22;
 				BerserkerEpicHelm.Bonus = 35;
 				BerserkerEpicHelm.MaxCondition = 50000;
@@ -630,7 +620,6 @@ namespace DOL.GS.Quests.Midgard
 				BerserkerEpicGloves.SPD_ABS = 19;
 				BerserkerEpicGloves.Object_Type = 34;
 				BerserkerEpicGloves.Quality = 100;
-				BerserkerEpicGloves.MaxQuality = 100;
 				BerserkerEpicGloves.Weight = 22;
 				BerserkerEpicGloves.Bonus = 35;
 				BerserkerEpicGloves.MaxCondition = 50000;
@@ -673,7 +662,6 @@ namespace DOL.GS.Quests.Midgard
 				BerserkerEpicVest.SPD_ABS = 19;
 				BerserkerEpicVest.Object_Type = 34;
 				BerserkerEpicVest.Quality = 100;
-				BerserkerEpicVest.MaxQuality = 100;
 				BerserkerEpicVest.Weight = 22;
 				BerserkerEpicVest.Bonus = 35;
 				BerserkerEpicVest.MaxCondition = 50000;
@@ -716,7 +704,6 @@ namespace DOL.GS.Quests.Midgard
 				BerserkerEpicLegs.SPD_ABS = 19;
 				BerserkerEpicLegs.Object_Type = 34;
 				BerserkerEpicLegs.Quality = 100;
-				BerserkerEpicLegs.MaxQuality = 100;
 				BerserkerEpicLegs.Weight = 22;
 				BerserkerEpicLegs.Bonus = 35;
 				BerserkerEpicLegs.MaxCondition = 50000;
@@ -759,7 +746,6 @@ namespace DOL.GS.Quests.Midgard
 				BerserkerEpicArms.SPD_ABS = 19;
 				BerserkerEpicArms.Object_Type = 34;
 				BerserkerEpicArms.Quality = 100;
-				BerserkerEpicArms.MaxQuality = 100;
 				BerserkerEpicArms.Weight = 22;
 				BerserkerEpicArms.Bonus = 35;
 				BerserkerEpicArms.MaxCondition = 50000;
@@ -802,7 +788,6 @@ namespace DOL.GS.Quests.Midgard
 				ThaneEpicBoots.SPD_ABS = 27;
 				ThaneEpicBoots.Object_Type = 35;
 				ThaneEpicBoots.Quality = 100;
-				ThaneEpicBoots.MaxQuality = 100;
 				ThaneEpicBoots.Weight = 22;
 				ThaneEpicBoots.Bonus = 35;
 				ThaneEpicBoots.MaxCondition = 50000;
@@ -846,7 +831,6 @@ namespace DOL.GS.Quests.Midgard
 				ThaneEpicHelm.SPD_ABS = 27;
 				ThaneEpicHelm.Object_Type = 35;
 				ThaneEpicHelm.Quality = 100;
-				ThaneEpicHelm.MaxQuality = 100;
 				ThaneEpicHelm.Weight = 22;
 				ThaneEpicHelm.Bonus = 35;
 				ThaneEpicHelm.MaxCondition = 50000;
@@ -891,7 +875,6 @@ namespace DOL.GS.Quests.Midgard
 				ThaneEpicGloves.SPD_ABS = 27;
 				ThaneEpicGloves.Object_Type = 35;
 				ThaneEpicGloves.Quality = 100;
-				ThaneEpicGloves.MaxQuality = 100;
 				ThaneEpicGloves.Weight = 22;
 				ThaneEpicGloves.Bonus = 35;
 				ThaneEpicGloves.MaxCondition = 50000;
@@ -935,7 +918,6 @@ namespace DOL.GS.Quests.Midgard
 				ThaneEpicVest.SPD_ABS = 27;
 				ThaneEpicVest.Object_Type = 35;
 				ThaneEpicVest.Quality = 100;
-				ThaneEpicVest.MaxQuality = 100;
 				ThaneEpicVest.Weight = 22;
 				ThaneEpicVest.Bonus = 35;
 				ThaneEpicVest.MaxCondition = 50000;
@@ -979,7 +961,6 @@ namespace DOL.GS.Quests.Midgard
 				ThaneEpicLegs.SPD_ABS = 27;
 				ThaneEpicLegs.Object_Type = 35;
 				ThaneEpicLegs.Quality = 100;
-				ThaneEpicLegs.MaxQuality = 100;
 				ThaneEpicLegs.Weight = 22;
 				ThaneEpicLegs.Bonus = 35;
 				ThaneEpicLegs.MaxCondition = 50000;
@@ -1022,7 +1003,6 @@ namespace DOL.GS.Quests.Midgard
 				ThaneEpicArms.SPD_ABS = 27;
 				ThaneEpicArms.Object_Type = 35;
 				ThaneEpicArms.Quality = 100;
-				ThaneEpicArms.MaxQuality = 100;
 				ThaneEpicArms.Weight = 22;
 				ThaneEpicArms.Bonus = 35;
 				ThaneEpicArms.MaxCondition = 50000;
@@ -1065,7 +1045,6 @@ namespace DOL.GS.Quests.Midgard
 				SkaldEpicBoots.SPD_ABS = 27;
 				SkaldEpicBoots.Object_Type = 35;
 				SkaldEpicBoots.Quality = 100;
-				SkaldEpicBoots.MaxQuality = 100;
 				SkaldEpicBoots.Weight = 22;
 				SkaldEpicBoots.Bonus = 35;
 				SkaldEpicBoots.MaxCondition = 50000;
@@ -1109,7 +1088,6 @@ namespace DOL.GS.Quests.Midgard
 				SkaldEpicHelm.SPD_ABS = 27;
 				SkaldEpicHelm.Object_Type = 35;
 				SkaldEpicHelm.Quality = 100;
-				SkaldEpicHelm.MaxQuality = 100;
 				SkaldEpicHelm.Weight = 22;
 				SkaldEpicHelm.Bonus = 35;
 				SkaldEpicHelm.MaxCondition = 50000;
@@ -1150,7 +1128,6 @@ namespace DOL.GS.Quests.Midgard
 				SkaldEpicGloves.SPD_ABS = 27;
 				SkaldEpicGloves.Object_Type = 35;
 				SkaldEpicGloves.Quality = 100;
-				SkaldEpicGloves.MaxQuality = 100;
 				SkaldEpicGloves.Weight = 22;
 				SkaldEpicGloves.Bonus = 35;
 				SkaldEpicGloves.MaxCondition = 50000;
@@ -1194,7 +1171,6 @@ namespace DOL.GS.Quests.Midgard
 				SkaldEpicVest.SPD_ABS = 27;
 				SkaldEpicVest.Object_Type = 35;
 				SkaldEpicVest.Quality = 100;
-				SkaldEpicVest.MaxQuality = 100;
 				SkaldEpicVest.Weight = 22;
 				SkaldEpicVest.Bonus = 35;
 				SkaldEpicVest.MaxCondition = 50000;
@@ -1237,7 +1213,6 @@ namespace DOL.GS.Quests.Midgard
 				SkaldEpicLegs.SPD_ABS = 27;
 				SkaldEpicLegs.Object_Type = 35;
 				SkaldEpicLegs.Quality = 100;
-				SkaldEpicLegs.MaxQuality = 100;
 				SkaldEpicLegs.Weight = 22;
 				SkaldEpicLegs.Bonus = 35;
 				SkaldEpicLegs.MaxCondition = 50000;
@@ -1280,7 +1255,6 @@ namespace DOL.GS.Quests.Midgard
 				SkaldEpicArms.SPD_ABS = 27;
 				SkaldEpicArms.Object_Type = 35;
 				SkaldEpicArms.Quality = 100;
-				SkaldEpicArms.MaxQuality = 100;
 				SkaldEpicArms.Weight = 22;
 				SkaldEpicArms.Bonus = 35;
 				SkaldEpicArms.MaxCondition = 50000;
@@ -1323,7 +1297,6 @@ namespace DOL.GS.Quests.Midgard
 				SavageEpicBoots.SPD_ABS = 27;
 				SavageEpicBoots.Object_Type = 34;
 				SavageEpicBoots.Quality = 100;
-				SavageEpicBoots.MaxQuality = 100;
 				SavageEpicBoots.Weight = 22;
 				SavageEpicBoots.Bonus = 35;
 				SavageEpicBoots.MaxCondition = 50000;
@@ -1366,7 +1339,6 @@ namespace DOL.GS.Quests.Midgard
 				SavageEpicHelm.SPD_ABS = 19;
 				SavageEpicHelm.Object_Type = 34;
 				SavageEpicHelm.Quality = 100;
-				SavageEpicHelm.MaxQuality = 100;
 				SavageEpicHelm.Weight = 22;
 				SavageEpicHelm.Bonus = 35;
 				SavageEpicHelm.MaxCondition = 50000;
@@ -1409,7 +1381,6 @@ namespace DOL.GS.Quests.Midgard
 				SavageEpicGloves.SPD_ABS = 19;
 				SavageEpicGloves.Object_Type = 34;
 				SavageEpicGloves.Quality = 100;
-				SavageEpicGloves.MaxQuality = 100;
 				SavageEpicGloves.Weight = 22;
 				SavageEpicGloves.Bonus = 35;
 				SavageEpicGloves.MaxCondition = 50000;
@@ -1452,7 +1423,6 @@ namespace DOL.GS.Quests.Midgard
 				SavageEpicVest.SPD_ABS = 19;
 				SavageEpicVest.Object_Type = 34;
 				SavageEpicVest.Quality = 100;
-				SavageEpicVest.MaxQuality = 100;
 				SavageEpicVest.Weight = 22;
 				SavageEpicVest.Bonus = 35;
 				SavageEpicVest.MaxCondition = 50000;
@@ -1495,7 +1465,6 @@ namespace DOL.GS.Quests.Midgard
 				SavageEpicLegs.SPD_ABS = 19;
 				SavageEpicLegs.Object_Type = 34;
 				SavageEpicLegs.Quality = 100;
-				SavageEpicLegs.MaxQuality = 100;
 				SavageEpicLegs.Weight = 22;
 				SavageEpicLegs.Bonus = 35;
 				SavageEpicLegs.MaxCondition = 50000;
@@ -1538,7 +1507,6 @@ namespace DOL.GS.Quests.Midgard
 				SavageEpicArms.SPD_ABS = 19;
 				SavageEpicArms.Object_Type = 34;
 				SavageEpicArms.Quality = 100;
-				SavageEpicArms.MaxQuality = 100;
 				SavageEpicArms.Weight = 22;
 				SavageEpicArms.Bonus = 35;
 				SavageEpicArms.MaxCondition = 50000;
@@ -1805,7 +1773,9 @@ namespace DOL.GS.Quests.Midgard
 					case 2:
 						return "[Step #2] Return to Lynnleigh and give her tome of Enchantments!";
 					case 3:
-						return "[Step #3] Tell Lynnleigh you can 'take them' for your rewards!";
+						return "[Step #3] Take the Sealed Pouch to Elizabeth in Mularn";
+					case 4:
+						return "[Step #4] Tell Elizabeth you can 'take them' for your rewards!";
 				}
 				return base.Description;
 			}

@@ -969,7 +969,7 @@ Type    Description           Id
 			output.Add("       Effect: " + item.Effect);
 			output.Add("  Value/Price: " + item.Gold + "g " + item.Silver + "s " + item.Copper + "c");
 			output.Add("       Weight: " + (item.Weight / 10.0f) + "lbs");
-			output.Add("      Quality: " + item.Quality + "/" + item.MaxQuality + "(max)");
+			output.Add("      Quality: " + item.Quality + "%");
 			output.Add("   Durability: " + item.Durability + "/" + item.MaxDurability + "(max)");
 			output.Add("    Condition: " + item.Condition + "/" + item.MaxCondition + "(max)");
 			output.Add("        Realm: " + item.Realm);

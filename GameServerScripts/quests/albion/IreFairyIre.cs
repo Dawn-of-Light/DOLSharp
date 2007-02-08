@@ -362,7 +362,6 @@ namespace DOL.GS.Quests.Albion
 				recruitsVest.Bonus2Type = (int) eStat.CON;
 
 				recruitsVest.Quality = 100;
-				recruitsVest.MaxQuality = 100;
 				recruitsVest.Condition = 1000;
 				recruitsVest.MaxCondition = 1000;
 				recruitsVest.Durability = 1000;
@@ -410,7 +409,6 @@ namespace DOL.GS.Quests.Albion
 				recruitsQuiltedVest.Bonus2Type = (int) eStat.DEX;
 
 				recruitsQuiltedVest.Quality = 100;
-				recruitsQuiltedVest.MaxQuality = 100;
 				recruitsQuiltedVest.Condition = 1000;
 				recruitsQuiltedVest.MaxCondition = 1000;
 				recruitsQuiltedVest.Durability = 1000;

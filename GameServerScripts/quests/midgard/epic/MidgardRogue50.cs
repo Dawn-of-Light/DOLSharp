@@ -211,7 +211,6 @@ namespace DOL.GS.Quests.Midgard
 				oona_head.Hand = 0;
 				oona_head.Type_Damage = 0;
 				oona_head.Quality = 100;
-				oona_head.MaxQuality = 100;
 				oona_head.Weight = 12;
 				if (SAVE_INTO_DATABASE)
 				{
@@ -239,7 +238,6 @@ namespace DOL.GS.Quests.Midgard
 				sealed_pouch.Hand = 0;
 				sealed_pouch.Type_Damage = 0;
 				sealed_pouch.Quality = 100;
-				sealed_pouch.MaxQuality = 100;
 				sealed_pouch.Weight = 12;
 				if (SAVE_INTO_DATABASE)
 				{
@@ -266,7 +264,6 @@ namespace DOL.GS.Quests.Midgard
 				HunterEpicBoots.SPD_ABS = 19;
 				HunterEpicBoots.Object_Type = 34;
 				HunterEpicBoots.Quality = 100;
-				HunterEpicBoots.MaxQuality = 100;
 				HunterEpicBoots.Weight = 22;
 				HunterEpicBoots.Bonus = 35;
 				HunterEpicBoots.MaxCondition = 50000;
@@ -308,7 +305,6 @@ namespace DOL.GS.Quests.Midgard
 				HunterEpicHelm.SPD_ABS = 19;
 				HunterEpicHelm.Object_Type = 34;
 				HunterEpicHelm.Quality = 100;
-				HunterEpicHelm.MaxQuality = 100;
 				HunterEpicHelm.Weight = 22;
 				HunterEpicHelm.Bonus = 35;
 				HunterEpicHelm.MaxCondition = 50000;
@@ -353,7 +349,6 @@ namespace DOL.GS.Quests.Midgard
 				HunterEpicGloves.SPD_ABS = 19;
 				HunterEpicGloves.Object_Type = 34;
 				HunterEpicGloves.Quality = 100;
-				HunterEpicGloves.MaxQuality = 100;
 				HunterEpicGloves.Weight = 22;
 				HunterEpicGloves.Bonus = 35;
 				HunterEpicGloves.MaxCondition = 50000;
@@ -394,7 +389,6 @@ namespace DOL.GS.Quests.Midgard
 				HunterEpicVest.SPD_ABS = 19;
 				HunterEpicVest.Object_Type = 34;
 				HunterEpicVest.Quality = 100;
-				HunterEpicVest.MaxQuality = 100;
 				HunterEpicVest.Weight = 22;
 				HunterEpicVest.Bonus = 35;
 				HunterEpicVest.MaxCondition = 50000;
@@ -438,7 +432,6 @@ namespace DOL.GS.Quests.Midgard
 				HunterEpicLegs.SPD_ABS = 19;
 				HunterEpicLegs.Object_Type = 34;
 				HunterEpicLegs.Quality = 100;
-				HunterEpicLegs.MaxQuality = 100;
 				HunterEpicLegs.Weight = 22;
 				HunterEpicLegs.Bonus = 35;
 				HunterEpicLegs.MaxCondition = 50000;
@@ -482,7 +475,6 @@ namespace DOL.GS.Quests.Midgard
 				HunterEpicArms.SPD_ABS = 19;
 				HunterEpicArms.Object_Type = 34;
 				HunterEpicArms.Quality = 100;
-				HunterEpicArms.MaxQuality = 100;
 				HunterEpicArms.Weight = 22;
 				HunterEpicArms.Bonus = 35;
 				HunterEpicArms.MaxCondition = 50000;
@@ -526,7 +518,6 @@ namespace DOL.GS.Quests.Midgard
 				ShadowbladeEpicBoots.SPD_ABS = 10;
 				ShadowbladeEpicBoots.Object_Type = 33;
 				ShadowbladeEpicBoots.Quality = 100;
-				ShadowbladeEpicBoots.MaxQuality = 100;
 				ShadowbladeEpicBoots.Weight = 22;
 				ShadowbladeEpicBoots.Bonus = 35;
 				ShadowbladeEpicBoots.MaxCondition = 50000;
@@ -570,7 +561,6 @@ namespace DOL.GS.Quests.Midgard
 				ShadowbladeEpicHelm.SPD_ABS = 10;
 				ShadowbladeEpicHelm.Object_Type = 33;
 				ShadowbladeEpicHelm.Quality = 100;
-				ShadowbladeEpicHelm.MaxQuality = 100;
 				ShadowbladeEpicHelm.Weight = 22;
 				ShadowbladeEpicHelm.Bonus = 35;
 				ShadowbladeEpicHelm.MaxCondition = 50000;
@@ -614,7 +604,6 @@ namespace DOL.GS.Quests.Midgard
 				ShadowbladeEpicGloves.SPD_ABS = 10;
 				ShadowbladeEpicGloves.Object_Type = 33;
 				ShadowbladeEpicGloves.Quality = 100;
-				ShadowbladeEpicGloves.MaxQuality = 100;
 				ShadowbladeEpicGloves.Weight = 22;
 				ShadowbladeEpicGloves.Bonus = 35;
 				ShadowbladeEpicGloves.MaxCondition = 50000;
@@ -659,7 +648,6 @@ namespace DOL.GS.Quests.Midgard
 				ShadowbladeEpicVest.SPD_ABS = 10;
 				ShadowbladeEpicVest.Object_Type = 33;
 				ShadowbladeEpicVest.Quality = 100;
-				ShadowbladeEpicVest.MaxQuality = 100;
 				ShadowbladeEpicVest.Weight = 22;
 				ShadowbladeEpicVest.Bonus = 35;
 				ShadowbladeEpicVest.MaxCondition = 50000;
@@ -703,7 +691,6 @@ namespace DOL.GS.Quests.Midgard
 				ShadowbladeEpicLegs.SPD_ABS = 10;
 				ShadowbladeEpicLegs.Object_Type = 33;
 				ShadowbladeEpicLegs.Quality = 100;
-				ShadowbladeEpicLegs.MaxQuality = 100;
 				ShadowbladeEpicLegs.Weight = 22;
 				ShadowbladeEpicLegs.Bonus = 35;
 				ShadowbladeEpicLegs.MaxCondition = 50000;
@@ -747,7 +734,6 @@ namespace DOL.GS.Quests.Midgard
 				ShadowbladeEpicArms.SPD_ABS = 10;
 				ShadowbladeEpicArms.Object_Type = 33;
 				ShadowbladeEpicArms.Quality = 100;
-				ShadowbladeEpicArms.MaxQuality = 100;
 				ShadowbladeEpicArms.Weight = 22;
 				ShadowbladeEpicArms.Bonus = 35;
 				ShadowbladeEpicArms.MaxCondition = 50000;

@@ -80,7 +80,15 @@ namespace DOL.GS.Spells
 			//messages are after buff and after "Your xxx has increased." messages
 			MessageToLiving(effect.Owner, Spell.Message1, toLiving);
 			Message.SystemToArea(effect.Owner, Util.MakeSentence(Spell.Message2, effect.Owner.GetName(0, false)), toOther, effect.Owner);
+
+			if (ServerProperties.Properties.BUFF_RANGE > 0 && effect.Spell.Concentration > 0 && effect.SpellHandler.HasPositiveEffect && effect.Owner != effect.SpellHandler.Caster)
+			{
+				m_buffCheckAction = new BuffCheckAction(effect.SpellHandler.Caster, effect.Owner, effect);
+				m_buffCheckAction.Start(BuffCheckAction.BUFFCHECKINTERVAL);
+			}
 		}
+
+		BuffCheckAction m_buffCheckAction = null;
 
 		/// <summary>
 		/// When an applied effect expires.
@@ -113,6 +121,11 @@ namespace DOL.GS.Spells
 
 			SendUpdates(effect.Owner);
 
+			if (m_buffCheckAction != null)
+			{
+				m_buffCheckAction.Stop();
+				m_buffCheckAction = null;
+			}
 			return 0;
 		}
 
@@ -250,6 +263,39 @@ namespace DOL.GS.Spells
 		// constructor
 		public PropertyChangingSpell(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line)
 		{
+		}
+	}
+
+	public class BuffCheckAction : RegionAction 
+	{
+		public const int BUFFCHECKINTERVAL = 60000;//60 seconds
+
+		private GameLiving m_caster = null;
+		private GameLiving m_owner = null;
+		private GameSpellEffect m_effect = null;
+
+		public BuffCheckAction(GameLiving caster, GameLiving owner, GameSpellEffect effect)
+			: base(caster)
+		{
+			m_caster = caster;
+			m_owner = owner;
+			m_effect = effect;
+		}
+
+		/// <summary>
+		/// Called on every timer tick
+		/// </summary>
+		protected override void OnTick()
+		{
+			if (m_caster == null ||
+				m_owner == null ||
+				m_effect == null)
+				return;
+
+			if (WorldMgr.GetDistance(m_caster, m_owner) > ServerProperties.Properties.BUFF_RANGE)
+				m_effect.Cancel(false);
+			else
+				Start(BUFFCHECKINTERVAL);
 		}
 	}
 }

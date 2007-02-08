@@ -13,10 +13,7 @@ namespace DOL.GS.RealmAbilities
 	/// Vanish realm ability
 	/// </summary>
 	public class VanishAbility : TimedRealmAbility
-	{
-		public const string VANISH_BLOCK_ATTACK_TIME_KEY = "vanish_no_attack";
-
-		public VanishAbility(DBAbility dba, int level) : base(dba, level) { }
+	{		public VanishAbility(DBAbility dba, int level) : base(dba, level) { }
 
 		/// <summary>
 		/// Action
@@ -54,8 +51,6 @@ namespace DOL.GS.RealmAbilities
 					}
 				}
 			}
-			living.TempProperties.setProperty(VANISH_BLOCK_ATTACK_TIME_KEY, living.CurrentRegion.Time + 30000);
-			living.StopAttack();
 
 			ArrayList attackers = new ArrayList();
 			attackers.AddRange(living.Attackers);

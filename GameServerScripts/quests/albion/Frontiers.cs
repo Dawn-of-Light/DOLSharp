@@ -553,7 +553,6 @@ namespace DOL.GS.Quests.Albion
 				recruitsLegs.Bonus3Type = (int) eResist.Cold;
 
 				recruitsLegs.Quality = 100;
-				recruitsLegs.MaxQuality = 100;
 				recruitsLegs.Condition = 1000;
 				recruitsLegs.MaxCondition = 1000;
 				recruitsLegs.Durability = 1000;
@@ -605,7 +604,6 @@ namespace DOL.GS.Quests.Albion
 				recruitsPants.Bonus3Type = (int) eResist.Cold;
 
 				recruitsPants.Quality = 100;
-				recruitsPants.MaxQuality = 100;
 				recruitsPants.Condition = 1000;
 				recruitsPants.MaxCondition = 1000;
 				recruitsPants.Durability = 1000;

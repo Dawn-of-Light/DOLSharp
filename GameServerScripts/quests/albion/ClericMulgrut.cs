@@ -206,7 +206,6 @@ namespace DOL.GS.Quests.Albion
 				beltOfAnimation.Bonus1Type = (int)eProperty.MaxHealth;
 				
 				beltOfAnimation.Quality = 100;
-				beltOfAnimation.MaxQuality = 100;
 				beltOfAnimation.Condition = 1000;
 				beltOfAnimation.MaxCondition = 1000;
 				beltOfAnimation.Durability = 1000;

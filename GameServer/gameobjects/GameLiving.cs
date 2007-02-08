@@ -627,6 +627,19 @@ namespace DOL.GS
 			set { m_mezzed = value; }
 		}
 
+		protected bool m_disarmed = false;
+		/// <summary>
+		/// Is the living disarmed
+		/// </summary>
+		public bool IsDisarmed
+		{
+			get { return m_disarmed; }
+			set
+			{
+				m_disarmed = value;
+			}
+		}
+
 		/// <summary>
 		/// Holds disease counter
 		/// </summary>
@@ -1660,17 +1673,6 @@ namespace DOL.GS
 
 				if (target.CurrentSpellHandler != null)
 					target.CurrentSpellHandler.CasterIsAttacked(m_attacker);
-				if (target is GamePlayer)
-				{
-					GamePlayer player = target as GamePlayer;
-					if (player.RealmAbilityCastTimer != null && player.RealmAbilityCastTimer.IsAlive)
-					{
-						player.RealmAbilityCastTimer.Stop();
-						player.RealmAbilityCastTimer = null;
-						player.Out.SendInterruptAnimation(player);
-						player.Out.SendMessage(m_attacker.GetName(0, true) + " is attacking you and your spell is interrupted!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-					}
-				}
 				if (target.AttackState && target.ActiveWeaponSlot == eActiveWeaponSlot.Distance)
 					target.OnInterruptTick(m_attacker, m_attackType);
 			}

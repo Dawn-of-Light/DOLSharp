@@ -416,8 +416,17 @@ namespace DOL.GS
 		/// <param name="player">player to modify</param>
 		public virtual void OnRealmLevelUp(GamePlayer player)
 		{
+			//we dont want to add things when players arent using their advanced class
+			if (player.CharacterClass.BaseName == player.CharacterClass.Name)
+				return;
+
+			//add rr5 realm abilities
 			if (player.RealmLevel >= 40)
-				player.AddAbility(SkillBase.getClassRealmAbility(player.CharacterClass.ID), true);
+			{
+				Ability ab = SkillBase.getClassRealmAbility(player.CharacterClass.ID);
+				if (ab != null)
+					player.AddAbility(ab, true);
+			}
 		}
 
 		/// <summary>
