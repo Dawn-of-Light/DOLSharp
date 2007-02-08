@@ -289,7 +289,6 @@ namespace DOL.GS.Quests.Albion
 				wolfPeltCloak.IsDropable = true;
 				wolfPeltCloak.Color = 44;
 				wolfPeltCloak.Quality = 100;
-				wolfPeltCloak.MaxQuality = 100;
 				wolfPeltCloak.Condition = 1000;
 				wolfPeltCloak.MaxCondition = 1000;
 				wolfPeltCloak.Durability = 1000;

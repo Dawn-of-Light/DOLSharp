@@ -193,7 +193,6 @@ namespace DOL.GS.Quests.Hibernia
 				Moonstone.Hand = 0;
 				Moonstone.Type_Damage = 0;
 				Moonstone.Quality = 100;
-				Moonstone.MaxQuality = 100;
 				Moonstone.Weight = 12;
 				if (SAVE_INTO_DATABASE)
 				{
@@ -219,7 +218,6 @@ namespace DOL.GS.Quests.Hibernia
 				BardEpicBoots.SPD_ABS = 19;
 				BardEpicBoots.Object_Type = 37;
 				BardEpicBoots.Quality = 100;
-				BardEpicBoots.MaxQuality = 100;
 				BardEpicBoots.Weight = 22;
 				BardEpicBoots.Bonus = 35;
 				BardEpicBoots.MaxCondition = 50000;
@@ -264,7 +262,6 @@ namespace DOL.GS.Quests.Hibernia
 				BardEpicHelm.SPD_ABS = 19;
 				BardEpicHelm.Object_Type = 37;
 				BardEpicHelm.Quality = 100;
-				BardEpicHelm.MaxQuality = 100;
 				BardEpicHelm.Weight = 22;
 				BardEpicHelm.Bonus = 35;
 				BardEpicHelm.MaxCondition = 50000;
@@ -310,7 +307,6 @@ namespace DOL.GS.Quests.Hibernia
 				BardEpicGloves.SPD_ABS = 19;
 				BardEpicGloves.Object_Type = 37;
 				BardEpicGloves.Quality = 100;
-				BardEpicGloves.MaxQuality = 100;
 				BardEpicGloves.Weight = 22;
 				BardEpicGloves.Bonus = 35;
 				BardEpicGloves.MaxCondition = 50000;
@@ -354,7 +350,6 @@ namespace DOL.GS.Quests.Hibernia
 				BardEpicVest.SPD_ABS = 19;
 				BardEpicVest.Object_Type = 37;
 				BardEpicVest.Quality = 100;
-				BardEpicVest.MaxQuality = 100;
 				BardEpicVest.Weight = 22;
 				BardEpicVest.Bonus = 35;
 				BardEpicVest.MaxCondition = 50000;
@@ -398,7 +393,6 @@ namespace DOL.GS.Quests.Hibernia
 				BardEpicLegs.SPD_ABS = 19;
 				BardEpicLegs.Object_Type = 37;
 				BardEpicLegs.Quality = 100;
-				BardEpicLegs.MaxQuality = 100;
 				BardEpicLegs.Weight = 22;
 				BardEpicLegs.Bonus = 35;
 				BardEpicLegs.MaxCondition = 50000;
@@ -442,7 +436,6 @@ namespace DOL.GS.Quests.Hibernia
 				BardEpicArms.SPD_ABS = 19;
 				BardEpicArms.Object_Type = 37;
 				BardEpicArms.Quality = 100;
-				BardEpicArms.MaxQuality = 100;
 				BardEpicArms.Weight = 22;
 				BardEpicArms.Bonus = 35;
 				BardEpicArms.MaxCondition = 50000;
@@ -486,7 +479,6 @@ namespace DOL.GS.Quests.Hibernia
 				ChampionEpicBoots.SPD_ABS = 27;
 				ChampionEpicBoots.Object_Type = 38;
 				ChampionEpicBoots.Quality = 100;
-				ChampionEpicBoots.MaxQuality = 100;
 				ChampionEpicBoots.Weight = 22;
 				ChampionEpicBoots.Bonus = 35;
 				ChampionEpicBoots.MaxCondition = 50000;
@@ -531,7 +523,6 @@ namespace DOL.GS.Quests.Hibernia
 				ChampionEpicHelm.SPD_ABS = 27;
 				ChampionEpicHelm.Object_Type = 38;
 				ChampionEpicHelm.Quality = 100;
-				ChampionEpicHelm.MaxQuality = 100;
 				ChampionEpicHelm.Weight = 22;
 				ChampionEpicHelm.Bonus = 35;
 				ChampionEpicHelm.MaxCondition = 50000;
@@ -576,7 +567,6 @@ namespace DOL.GS.Quests.Hibernia
 				ChampionEpicGloves.SPD_ABS = 27;
 				ChampionEpicGloves.Object_Type = 38;
 				ChampionEpicGloves.Quality = 100;
-				ChampionEpicGloves.MaxQuality = 100;
 				ChampionEpicGloves.Weight = 22;
 				ChampionEpicGloves.Bonus = 35;
 				ChampionEpicGloves.MaxCondition = 50000;
@@ -620,7 +610,6 @@ namespace DOL.GS.Quests.Hibernia
 				ChampionEpicVest.SPD_ABS = 27;
 				ChampionEpicVest.Object_Type = 38;
 				ChampionEpicVest.Quality = 100;
-				ChampionEpicVest.MaxQuality = 100;
 				ChampionEpicVest.Weight = 22;
 				ChampionEpicVest.Bonus = 35;
 				ChampionEpicVest.MaxCondition = 50000;
@@ -664,7 +653,6 @@ namespace DOL.GS.Quests.Hibernia
 				ChampionEpicLegs.SPD_ABS = 27;
 				ChampionEpicLegs.Object_Type = 38;
 				ChampionEpicLegs.Quality = 100;
-				ChampionEpicLegs.MaxQuality = 100;
 				ChampionEpicLegs.Weight = 22;
 				ChampionEpicLegs.Bonus = 35;
 				ChampionEpicLegs.MaxCondition = 50000;
@@ -708,7 +696,6 @@ namespace DOL.GS.Quests.Hibernia
 				ChampionEpicArms.SPD_ABS = 27;
 				ChampionEpicArms.Object_Type = 38;
 				ChampionEpicArms.Quality = 100;
-				ChampionEpicArms.MaxQuality = 100;
 				ChampionEpicArms.Weight = 22;
 				ChampionEpicArms.Bonus = 35;
 				ChampionEpicArms.MaxCondition = 50000;
@@ -751,7 +738,6 @@ namespace DOL.GS.Quests.Hibernia
 				NightshadeEpicBoots.SPD_ABS = 10;
 				NightshadeEpicBoots.Object_Type = 33;
 				NightshadeEpicBoots.Quality = 100;
-				NightshadeEpicBoots.MaxQuality = 100;
 				NightshadeEpicBoots.Weight = 22;
 				NightshadeEpicBoots.Bonus = 35;
 				NightshadeEpicBoots.MaxCondition = 50000;
@@ -796,7 +782,6 @@ namespace DOL.GS.Quests.Hibernia
 				NightshadeEpicHelm.SPD_ABS = 10;
 				NightshadeEpicHelm.Object_Type = 33;
 				NightshadeEpicHelm.Quality = 100;
-				NightshadeEpicHelm.MaxQuality = 100;
 				NightshadeEpicHelm.Weight = 22;
 				NightshadeEpicHelm.Bonus = 35;
 				NightshadeEpicHelm.MaxCondition = 50000;
@@ -841,7 +826,6 @@ namespace DOL.GS.Quests.Hibernia
 				NightshadeEpicGloves.SPD_ABS = 10;
 				NightshadeEpicGloves.Object_Type = 33;
 				NightshadeEpicGloves.Quality = 100;
-				NightshadeEpicGloves.MaxQuality = 100;
 				NightshadeEpicGloves.Weight = 22;
 				NightshadeEpicGloves.Bonus = 35;
 				NightshadeEpicGloves.MaxCondition = 50000;
@@ -885,7 +869,6 @@ namespace DOL.GS.Quests.Hibernia
 				NightshadeEpicVest.SPD_ABS = 10;
 				NightshadeEpicVest.Object_Type = 33;
 				NightshadeEpicVest.Quality = 100;
-				NightshadeEpicVest.MaxQuality = 100;
 				NightshadeEpicVest.Weight = 22;
 				NightshadeEpicVest.Bonus = 35;
 				NightshadeEpicVest.MaxCondition = 50000;
@@ -926,7 +909,6 @@ namespace DOL.GS.Quests.Hibernia
 				NightshadeEpicLegs.SPD_ABS = 10;
 				NightshadeEpicLegs.Object_Type = 33;
 				NightshadeEpicLegs.Quality = 100;
-				NightshadeEpicLegs.MaxQuality = 100;
 				NightshadeEpicLegs.Weight = 22;
 				NightshadeEpicLegs.Bonus = 35;
 				NightshadeEpicLegs.MaxCondition = 50000;
@@ -970,7 +952,6 @@ namespace DOL.GS.Quests.Hibernia
 				NightshadeEpicArms.SPD_ABS = 10;
 				NightshadeEpicArms.Object_Type = 33;
 				NightshadeEpicArms.Quality = 100;
-				NightshadeEpicArms.MaxQuality = 100;
 				NightshadeEpicArms.Weight = 22;
 				NightshadeEpicArms.Bonus = 35;
 				NightshadeEpicArms.MaxCondition = 50000;
@@ -1013,7 +994,6 @@ namespace DOL.GS.Quests.Hibernia
 				EnchanterEpicBoots.SPD_ABS = 0;
 				EnchanterEpicBoots.Object_Type = 32;
 				EnchanterEpicBoots.Quality = 100;
-				EnchanterEpicBoots.MaxQuality = 100;
 				EnchanterEpicBoots.Weight = 22;
 				EnchanterEpicBoots.Bonus = 35;
 				EnchanterEpicBoots.MaxCondition = 50000;
@@ -1058,7 +1038,6 @@ namespace DOL.GS.Quests.Hibernia
 				EnchanterEpicHelm.SPD_ABS = 0;
 				EnchanterEpicHelm.Object_Type = 32;
 				EnchanterEpicHelm.Quality = 100;
-				EnchanterEpicHelm.MaxQuality = 100;
 				EnchanterEpicHelm.Weight = 22;
 				EnchanterEpicHelm.Bonus = 35;
 				EnchanterEpicHelm.MaxCondition = 50000;
@@ -1103,7 +1082,6 @@ namespace DOL.GS.Quests.Hibernia
 				EnchanterEpicGloves.SPD_ABS = 0;
 				EnchanterEpicGloves.Object_Type = 32;
 				EnchanterEpicGloves.Quality = 100;
-				EnchanterEpicGloves.MaxQuality = 100;
 				EnchanterEpicGloves.Weight = 22;
 				EnchanterEpicGloves.Bonus = 35;
 				EnchanterEpicGloves.MaxCondition = 50000;
@@ -1147,7 +1125,6 @@ namespace DOL.GS.Quests.Hibernia
 				EnchanterEpicVest.SPD_ABS = 0;
 				EnchanterEpicVest.Object_Type = 32;
 				EnchanterEpicVest.Quality = 100;
-				EnchanterEpicVest.MaxQuality = 100;
 				EnchanterEpicVest.Weight = 22;
 				EnchanterEpicVest.Bonus = 35;
 				EnchanterEpicVest.MaxCondition = 50000;
@@ -1188,7 +1165,6 @@ namespace DOL.GS.Quests.Hibernia
 				EnchanterEpicLegs.SPD_ABS = 0;
 				EnchanterEpicLegs.Object_Type = 32;
 				EnchanterEpicLegs.Quality = 100;
-				EnchanterEpicLegs.MaxQuality = 100;
 				EnchanterEpicLegs.Weight = 22;
 				EnchanterEpicLegs.Bonus = 35;
 				EnchanterEpicLegs.MaxCondition = 50000;
@@ -1232,7 +1208,6 @@ namespace DOL.GS.Quests.Hibernia
 				EnchanterEpicArms.SPD_ABS = 0;
 				EnchanterEpicArms.Object_Type = 32;
 				EnchanterEpicArms.Quality = 100;
-				EnchanterEpicArms.MaxQuality = 100;
 				EnchanterEpicArms.Weight = 22;
 				EnchanterEpicArms.Bonus = 35;
 				EnchanterEpicArms.MaxCondition = 50000;

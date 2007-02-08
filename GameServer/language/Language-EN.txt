@@ -280,6 +280,27 @@ HousingPlaceItemHandler.NoHookpoint:		No hookpoints now !
 HousingPlaceItemHandler.PutMoney:			You put money in your house.
 
 # SCRIPTS
+# /Afk
+Scripts.Players.Afk.Off:				Your AFK flag is now off.
+Scripts.Players.Afk.On:					Your AFK flag is now on.
+
+# /Anonymous
+Scripts.Players.Anonymous.Error:			Anonymous mode is disabled.
+Scripts.Players.Anonymous.Off:				You are no longer anonymous.
+Scripts.Players.Anonymous.On:				You are now anonymous.
+
+# /Assist
+Scripts.Players.Assist.DontSee:				You don't see {0} around here!
+Scripts.Players.Assist.NoTarget:			You have no target.
+Scripts.Players.Assist.NotValid:			Target is not valid.
+Scripts.Players.Assist.CantAssistYourself:		You can't assist yourself.
+Scripts.Players.Assist.DoesntHaveTarget:		 doesn't currently have a target.
+Scripts.Players.Assist.YouAssist:			You assist {0}.
+
+# /Autoloot
+Scripts.Players.Autoloot.Off:				Your autoloot is off. You will no longer attempt to automaticly loot anything that drops in your area.
+Scripts.Players.Autoloot.On:				Your autoloot is on. You will now attempt to automaticly loot anything that drops in your area.
+
 # /Language
 Scripts.Players.Language.Set:				You change your server display language to {0}.
 Scripts.Players.Language.Current:			Your language is currently set to: {0}.

@@ -110,10 +110,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					}
 					else
 					{
-						if (!WorldMgr.CheckDistance(player, mydoor, WorldMgr.PICKUP_DISTANCE))
-						{
-							player.Out.SendObjectCreate(mydoor as GameDoor);
-						}
+						player.Out.SendObjectCreate(mydoor as GameDoor);
 
 						if (!WorldMgr.CheckDistance(player, mydoor, WorldMgr.PICKUP_DISTANCE))
 						{

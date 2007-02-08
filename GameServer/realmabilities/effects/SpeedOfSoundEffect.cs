@@ -59,19 +59,21 @@ namespace DOL.GS.Effects
 		private static void AttackFinished(DOLEvent e, object sender, EventArgs args)
 		{
 			GamePlayer player = (GamePlayer)sender;
-			if (args is CastSpellEventArgs)
+			if (e == GamePlayerEvent.CastFinished)
 			{
 				CastSpellEventArgs cfea = args as CastSpellEventArgs;
+
+				if (cfea.SpellHandler.Caster != player)
+					return;
 				//cancel if the effectowner casts a non-positive spell
-				if (!cfea.SpellHandler.HasPositiveEffect &&
-					cfea.SpellHandler.Caster == player)
+				if (!cfea.SpellHandler.HasPositiveEffect)
 				{
 					SpeedOfSoundEffect effect = (SpeedOfSoundEffect)player.EffectList.GetOfType(typeof(SpeedOfSoundEffect));
 					if (effect != null)
 						effect.Cancel(false);
 				}
 			}
-			else if (args is AttackFinishedEventArgs)
+			else if (e == GamePlayerEvent.AttackFinished)
 			{
 				AttackFinishedEventArgs afargs = args as AttackFinishedEventArgs;
 				if (afargs == null)
@@ -95,7 +97,6 @@ namespace DOL.GS.Effects
 						break;
 				}
 			}
-
 		}
 
 		/// <summary>

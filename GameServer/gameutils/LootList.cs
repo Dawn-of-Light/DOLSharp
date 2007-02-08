@@ -105,13 +105,13 @@ namespace DOL.GS
 			// then a random number withing this range is picked, and then chances of each itemtemplate are summed up until we  reach the random number.
 			
 			// determine which is smaller dropCount or number of items to drop and use smaller one.
-			/*
+
 			foreach (LootEntry e in m_randomItemDrops)
 			{
 				if (Util.Chance(e.Chance))
 					loot.Add(e.ItemTemplate);
-			}*/
-
+			}
+			/*
 			int maxTries = Math.Min(m_dropCount,m_randomItemDrops.Count);
 			int randomRange = m_randomItemDrops.Count*100;
 			for (int i=0;i< maxTries;i++)
@@ -130,7 +130,7 @@ namespace DOL.GS
 						break;
 					}
 				}
-			}
+			}*/
 			return (ItemTemplate[])loot.ToArray(typeof(ItemTemplate));
 		}
 	}

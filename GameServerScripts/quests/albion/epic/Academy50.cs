@@ -246,7 +246,6 @@ namespace DOL.GS.Quests.Albion
 				sealed_pouch.Hand = 0;
 				sealed_pouch.Type_Damage = 0;
 				sealed_pouch.Quality = 100;
-				sealed_pouch.MaxQuality = 100;
 				sealed_pouch.Weight = 12;
 
 				if (SAVE_INTO_DATABASE)
@@ -273,7 +272,6 @@ namespace DOL.GS.Quests.Albion
 				item.SPD_ABS = 0;
 				item.Object_Type = 32;
 				item.Quality = 100;
-				item.MaxQuality = 100;
 				item.Weight = 22;
 				item.Bonus = 35;
 				item.MaxCondition = 50000;
@@ -317,7 +315,6 @@ namespace DOL.GS.Quests.Albion
 				item.SPD_ABS = 0;
 				item.Object_Type = 32;
 				item.Quality = 100;
-				item.MaxQuality = 100;
 				item.Weight = 22;
 				item.Bonus = 35;
 				item.MaxCondition = 50000;
@@ -361,7 +358,6 @@ namespace DOL.GS.Quests.Albion
 				item.SPD_ABS = 0;
 				item.Object_Type = 32;
 				item.Quality = 100;
-				item.MaxQuality = 100;
 				item.Weight = 22;
 				item.Bonus = 35;
 				item.MaxCondition = 50000;
@@ -405,7 +401,6 @@ namespace DOL.GS.Quests.Albion
 				item.SPD_ABS = 0;
 				item.Object_Type = 32;
 				item.Quality = 100;
-				item.MaxQuality = 100;
 				item.Weight = 22;
 				item.Bonus = 35;
 				item.MaxCondition = 50000;
@@ -446,7 +441,6 @@ namespace DOL.GS.Quests.Albion
 				item.SPD_ABS = 0;
 				item.Object_Type = 32;
 				item.Quality = 100;
-				item.MaxQuality = 100;
 				item.Weight = 22;
 				item.Bonus = 35;
 				item.MaxCondition = 50000;
@@ -487,7 +481,6 @@ namespace DOL.GS.Quests.Albion
 				item.SPD_ABS = 0;
 				item.Object_Type = 32;
 				item.Quality = 100;
-				item.MaxQuality = 100;
 				item.Weight = 22;
 				item.Bonus = 35;
 				item.MaxCondition = 50000;
@@ -528,7 +521,6 @@ namespace DOL.GS.Quests.Albion
 				item.SPD_ABS = 27;
 				item.Object_Type = 35;
 				item.Quality = 100;
-				item.MaxQuality = 100;
 				item.Weight = 22;
 				item.Bonus = 35;
 				item.MaxCondition = 50000;
@@ -573,7 +565,6 @@ namespace DOL.GS.Quests.Albion
 				item.SPD_ABS = 27;
 				item.Object_Type = 35;
 				item.Quality = 100;
-				item.MaxQuality = 100;
 				item.Weight = 22;
 				item.Bonus = 35;
 				item.MaxCondition = 50000;
@@ -618,7 +609,6 @@ namespace DOL.GS.Quests.Albion
 				item.SPD_ABS = 27;
 				item.Object_Type = 35;
 				item.Quality = 100;
-				item.MaxQuality = 100;
 				item.Weight = 22;
 				item.Bonus = 35;
 				item.MaxCondition = 50000;
@@ -662,7 +652,6 @@ namespace DOL.GS.Quests.Albion
 				item.SPD_ABS = 27;
 				item.Object_Type = 35;
 				item.Quality = 100;
-				item.MaxQuality = 100;
 				item.Weight = 22;
 				item.Bonus = 35;
 				item.MaxCondition = 50000;
@@ -706,7 +695,6 @@ namespace DOL.GS.Quests.Albion
 				item.SPD_ABS = 27;
 				item.Object_Type = 35;
 				item.Quality = 100;
-				item.MaxQuality = 100;
 				item.Weight = 22;
 				item.Bonus = 35;
 				item.MaxCondition = 50000;
@@ -750,7 +738,6 @@ namespace DOL.GS.Quests.Albion
 				item.SPD_ABS = 27;
 				item.Object_Type = 35;
 				item.Quality = 100;
-				item.MaxQuality = 100;
 				item.Weight = 22;
 				item.Bonus = 35;
 				item.MaxCondition = 50000;
@@ -793,7 +780,6 @@ namespace DOL.GS.Quests.Albion
 				item.SPD_ABS = 0;
 				item.Object_Type = 32;
 				item.Quality = 100;
-				item.MaxQuality = 100;
 				item.Weight = 22;
 				item.Bonus = 35;
 				item.MaxCondition = 50000;
@@ -838,7 +824,6 @@ namespace DOL.GS.Quests.Albion
 				item.SPD_ABS = 0;
 				item.Object_Type = 32;
 				item.Quality = 100;
-				item.MaxQuality = 100;
 				item.Weight = 22;
 				item.Bonus = 35;
 				item.MaxCondition = 50000;
@@ -883,7 +868,6 @@ namespace DOL.GS.Quests.Albion
 				item.SPD_ABS = 0;
 				item.Object_Type = 32;
 				item.Quality = 100;
-				item.MaxQuality = 100;
 				item.Weight = 22;
 				item.Bonus = 35;
 				item.MaxCondition = 50000;
@@ -927,7 +911,6 @@ namespace DOL.GS.Quests.Albion
 				item.SPD_ABS = 0;
 				item.Object_Type = 32;
 				item.Quality = 100;
-				item.MaxQuality = 100;
 				item.Weight = 22;
 				item.Bonus = 35;
 				item.MaxCondition = 50000;
@@ -968,7 +951,6 @@ namespace DOL.GS.Quests.Albion
 				item.SPD_ABS = 0;
 				item.Object_Type = 32;
 				item.Quality = 100;
-				item.MaxQuality = 100;
 				item.Weight = 22;
 				item.Bonus = 35;
 				item.MaxCondition = 50000;
@@ -1012,7 +994,6 @@ namespace DOL.GS.Quests.Albion
 				item.SPD_ABS = 0;
 				item.Object_Type = 32;
 				item.Quality = 100;
-				item.MaxQuality = 100;
 				item.Weight = 22;
 				item.Bonus = 35;
 				item.MaxCondition = 50000;

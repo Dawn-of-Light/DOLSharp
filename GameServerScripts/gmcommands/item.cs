@@ -47,7 +47,7 @@ namespace DOL.GS.Scripts
 		"'/item emblem <EmblemID> [slot #]' - change item emblem",
 		"'/item price <gold> <silver> <copper> [slot #]' - change the price of an item",
 		"'/item condition <con> <maxCon> [slot #]' - change the condition of an item",
-		"'/item quality <qua> <maxQua> [slot #]' - change the quality of an item",
+		"'/item quality <qua> [slot #]' - change the quality of an item",
 		"'/item durability <dur> <maxDur> [slot #]' - change the durability of an item",
 		"'/item ispickable <true or false> [slot #]' - sets whether or not an item can be picked up",
 		"'/item isdropable <true or false> [slot #]' - sets whether or not an item can be dropped",
@@ -279,7 +279,7 @@ namespace DOL.GS.Scripts
 							client.Out.SendMessage("        Realm: " + obj.Realm, eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							client.Out.SendMessage("  Value/Price: " + obj.Gold + "g " + obj.Silver + "s " + obj.Copper + "c", eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							client.Out.SendMessage("       Weight: " + (obj.Weight/10.0f) + "lbs", eChatType.CT_System, eChatLoc.CL_PopupWindow);
-							client.Out.SendMessage("      Quality: " + obj.Quality + "/" + obj.MaxQuality + "(max)", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+							client.Out.SendMessage("      Quality: " + obj.Quality + "%", eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							client.Out.SendMessage("   Durability: " + obj.Durability + "/" + obj.MaxDurability + "(max)", eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							client.Out.SendMessage("    Condition: " + obj.Condition + "/" + obj.MaxCondition + "(max)", eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							client.Out.SendMessage("  Is dropable: " + (obj.IsDropable ? "yes" : "no"), eChatType.CT_System, eChatLoc.CL_PopupWindow);
@@ -853,11 +853,11 @@ namespace DOL.GS.Scripts
 						{
 							int slot = (int) eInventorySlot.LastBackpack;
 
-							if (args.Length >= 5)
+							if (args.Length >= 4)
 							{
 								try
 								{
-									slot = Convert.ToInt32(args[4]);
+									slot = Convert.ToInt32(args[3]);
 								}
 								catch
 								{
@@ -876,9 +876,7 @@ namespace DOL.GS.Scripts
 							try
 							{
 								int Qua = Convert.ToInt32(args[2]);
-								int MaxQua = Convert.ToInt32(args[3]);
 								item.Quality = Qua;
-								item.MaxQuality = MaxQua;
 
 								client.Out.SendInventoryItemsUpdate(new InventoryItem[] {item});
 							}
@@ -1514,7 +1512,6 @@ namespace DOL.GS.Scripts
 							temp.Level = item.Level;
 							temp.MaxCondition = item.MaxCondition;
 							temp.MaxDurability = item.MaxDurability;
-							temp.MaxQuality = item.MaxQuality;
 							temp.Model = item.Model;
 							temp.Extension = item.Extension;
 							temp.Name = item.Name;

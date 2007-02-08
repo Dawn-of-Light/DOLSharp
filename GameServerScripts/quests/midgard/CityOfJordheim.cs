@@ -384,7 +384,6 @@ namespace DOL.GS.Quests.Midgard
 				recruitsRoundShield.Bonus2Type = (int) eResist.Body;
 
 				recruitsRoundShield.Quality = 100;
-				recruitsRoundShield.MaxQuality = 100;
 				recruitsRoundShield.Condition = 1000;
 				recruitsRoundShield.MaxCondition = 1000;
 				recruitsRoundShield.Durability = 1000;
@@ -434,7 +433,6 @@ namespace DOL.GS.Quests.Midgard
 				recruitsBracer.Bonus2Type = (int) eResist.Crush;
 
 				recruitsBracer.Quality = 100;
-				recruitsBracer.MaxQuality = 100;
 				recruitsBracer.Condition = 1000;
 				recruitsBracer.MaxCondition = 1000;
 				recruitsBracer.Durability = 1000;

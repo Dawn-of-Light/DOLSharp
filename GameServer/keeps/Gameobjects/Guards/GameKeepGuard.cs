@@ -233,6 +233,12 @@ namespace DOL.GS.Keeps
 		/// <param name="attackTarget"></param>
 		public override void StartAttack(GameObject attackTarget)
 		{
+			if (IsPortalKeepGuard)
+			{
+				base.StartAttack(attackTarget);
+				return;
+			}
+
 			if (AttackState || CurrentSpellHandler != null)
 				return;
 

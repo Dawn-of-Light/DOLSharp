@@ -17,6 +17,7 @@
  *
  */
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Scripts
 {
@@ -38,13 +39,13 @@ namespace DOL.GS.Scripts
 			if (args[1].ToLower().Equals("on"))
 			{
 				client.Player.Autoloot = true;
-				client.Out.SendMessage("Your autoloot is on. You will now attempt to automaticly loot anything that drops in your area.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-			}
+                client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Autoloot.On"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+            }
 			else if (args[1].ToLower().Equals("off"))
 			{
 				client.Player.Autoloot = false;
-				client.Out.SendMessage("Your autoloot is off. You will no longer attempt to automaticly loot anything that drops in your area.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-			}
+                client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Autoloot.Off"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+            }
 			return 1;
 		}
 	}

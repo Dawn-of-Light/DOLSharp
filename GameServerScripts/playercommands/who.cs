@@ -427,7 +427,7 @@ namespace DOL.GS.Scripts
 				if ((bool)cg.Members[player] == true && cg.IsPublic)
 					return true;
 
-				return true;
+				return false;
 			}
 		}
 

@@ -211,7 +211,6 @@ namespace DOL.GS.Quests.Midgard
 				ball_of_flame.Hand = 0;
 				ball_of_flame.Type_Damage = 0;
 				ball_of_flame.Quality = 100;
-				ball_of_flame.MaxQuality = 100;
 				ball_of_flame.Weight = 12;
 				if (SAVE_INTO_DATABASE)
 				{
@@ -239,7 +238,6 @@ namespace DOL.GS.Quests.Midgard
 				sealed_pouch.Hand = 0;
 				sealed_pouch.Type_Damage = 0;
 				sealed_pouch.Quality = 100;
-				sealed_pouch.MaxQuality = 100;
 				sealed_pouch.Weight = 12;
 				if (SAVE_INTO_DATABASE)
 				{
@@ -266,7 +264,6 @@ namespace DOL.GS.Quests.Midgard
 				HealerEpicBoots.SPD_ABS = 27;
 				HealerEpicBoots.Object_Type = 35;
 				HealerEpicBoots.Quality = 100;
-				HealerEpicBoots.MaxQuality = 100;
 				HealerEpicBoots.Weight = 22;
 				HealerEpicBoots.Bonus = 35;
 				HealerEpicBoots.MaxCondition = 50000;
@@ -310,7 +307,6 @@ namespace DOL.GS.Quests.Midgard
 				HealerEpicHelm.SPD_ABS = 27;
 				HealerEpicHelm.Object_Type = 35;
 				HealerEpicHelm.Quality = 100;
-				HealerEpicHelm.MaxQuality = 100;
 				HealerEpicHelm.Weight = 22;
 				HealerEpicHelm.Bonus = 35;
 				HealerEpicHelm.MaxCondition = 50000;
@@ -355,7 +351,6 @@ namespace DOL.GS.Quests.Midgard
 				HealerEpicGloves.SPD_ABS = 27;
 				HealerEpicGloves.Object_Type = 35;
 				HealerEpicGloves.Quality = 100;
-				HealerEpicGloves.MaxQuality = 100;
 				HealerEpicGloves.Weight = 22;
 				HealerEpicGloves.Bonus = 35;
 				HealerEpicGloves.MaxCondition = 50000;
@@ -399,7 +394,6 @@ namespace DOL.GS.Quests.Midgard
 				HealerEpicVest.SPD_ABS = 27;
 				HealerEpicVest.Object_Type = 35;
 				HealerEpicVest.Quality = 100;
-				HealerEpicVest.MaxQuality = 100;
 				HealerEpicVest.Weight = 22;
 				HealerEpicVest.Bonus = 35;
 				HealerEpicVest.MaxCondition = 50000;
@@ -443,7 +437,6 @@ namespace DOL.GS.Quests.Midgard
 				HealerEpicLegs.SPD_ABS = 27;
 				HealerEpicLegs.Object_Type = 35;
 				HealerEpicLegs.Quality = 100;
-				HealerEpicLegs.MaxQuality = 100;
 				HealerEpicLegs.Weight = 22;
 				HealerEpicLegs.Bonus = 35;
 				HealerEpicLegs.MaxCondition = 50000;
@@ -487,7 +480,6 @@ namespace DOL.GS.Quests.Midgard
 				HealerEpicArms.SPD_ABS = 27;
 				HealerEpicArms.Object_Type = 35;
 				HealerEpicArms.Quality = 100;
-				HealerEpicArms.MaxQuality = 100;
 				HealerEpicArms.Weight = 22;
 				HealerEpicArms.Bonus = 35;
 				HealerEpicArms.MaxCondition = 50000;
@@ -531,7 +523,6 @@ namespace DOL.GS.Quests.Midgard
 				ShamanEpicBoots.SPD_ABS = 27;
 				ShamanEpicBoots.Object_Type = 35;
 				ShamanEpicBoots.Quality = 100;
-				ShamanEpicBoots.MaxQuality = 100;
 				ShamanEpicBoots.Weight = 22;
 				ShamanEpicBoots.Bonus = 35;
 				ShamanEpicBoots.MaxCondition = 50000;
@@ -572,7 +563,6 @@ namespace DOL.GS.Quests.Midgard
 				ShamanEpicHelm.SPD_ABS = 27;
 				ShamanEpicHelm.Object_Type = 35;
 				ShamanEpicHelm.Quality = 100;
-				ShamanEpicHelm.MaxQuality = 100;
 				ShamanEpicHelm.Weight = 22;
 				ShamanEpicHelm.Bonus = 35;
 				ShamanEpicHelm.MaxCondition = 50000;
@@ -616,7 +606,6 @@ namespace DOL.GS.Quests.Midgard
 				ShamanEpicGloves.SPD_ABS = 27;
 				ShamanEpicGloves.Object_Type = 35;
 				ShamanEpicGloves.Quality = 100;
-				ShamanEpicGloves.MaxQuality = 100;
 				ShamanEpicGloves.Weight = 22;
 				ShamanEpicGloves.Bonus = 35;
 				ShamanEpicGloves.MaxCondition = 50000;
@@ -660,7 +649,6 @@ namespace DOL.GS.Quests.Midgard
 				ShamanEpicVest.SPD_ABS = 27;
 				ShamanEpicVest.Object_Type = 35;
 				ShamanEpicVest.Quality = 100;
-				ShamanEpicVest.MaxQuality = 100;
 				ShamanEpicVest.Weight = 22;
 				ShamanEpicVest.Bonus = 35;
 				ShamanEpicVest.MaxCondition = 50000;
@@ -704,7 +692,6 @@ namespace DOL.GS.Quests.Midgard
 				ShamanEpicLegs.SPD_ABS = 27;
 				ShamanEpicLegs.Object_Type = 35;
 				ShamanEpicLegs.Quality = 100;
-				ShamanEpicLegs.MaxQuality = 100;
 				ShamanEpicLegs.Weight = 22;
 				ShamanEpicLegs.Bonus = 35;
 				ShamanEpicLegs.MaxCondition = 50000;
@@ -748,7 +735,6 @@ namespace DOL.GS.Quests.Midgard
 				ShamanEpicArms.SPD_ABS = 27;
 				ShamanEpicArms.Object_Type = 35;
 				ShamanEpicArms.Quality = 100;
-				ShamanEpicArms.MaxQuality = 100;
 				ShamanEpicArms.Weight = 22;
 				ShamanEpicArms.Bonus = 35;
 				ShamanEpicArms.MaxCondition = 50000;

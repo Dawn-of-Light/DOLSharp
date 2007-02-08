@@ -717,7 +717,7 @@ namespace DOL.GS
 				case 2: mod = 1.0; break;
 				case 3: mod = 1.0; break;
 			}
-			craftingTime = (int)(craftingTime / mod);
+			craftingTime = (int)(craftingTime * mod);
 
 			if (craftingTime < 1) craftingTime = 1;
 

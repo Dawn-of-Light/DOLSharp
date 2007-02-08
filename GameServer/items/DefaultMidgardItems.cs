@@ -48,7 +48,6 @@ namespace DOL.GS.Items
 				practice_sword_template.Condition = 50000;
 				practice_sword_template.MaxCondition = 50000;
 				practice_sword_template.Quality = 90;
-				practice_sword_template.MaxQuality = 90;
 				practice_sword_template.DPS_AF = 12;
 				practice_sword_template.SPD_ABS = 25;
 				practice_sword_template.Hand = 0;

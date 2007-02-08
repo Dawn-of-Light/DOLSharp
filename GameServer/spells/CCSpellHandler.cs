@@ -129,6 +129,7 @@ namespace DOL.GS.Spells
 		public override void OnEffectStart(GameSpellEffect effect)
 		{			
 			effect.Owner.IsMezzed = true;
+			effect.Owner.StopAttack();
 			effect.Owner.StopCurrentSpellcast();
 			effect.Owner.DisableTurning(true);
 			GameEventMgr.AddHandler(effect.Owner, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnAttacked));

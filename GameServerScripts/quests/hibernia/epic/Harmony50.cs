@@ -182,7 +182,6 @@ namespace DOL.GS.Quests.Hibernia
 				Horn.Hand = 0;
 				Horn.Type_Damage = 0;
 				Horn.Quality = 100;
-				Horn.MaxQuality = 100;
 				Horn.Weight = 12;
 				if (SAVE_INTO_DATABASE)
 				{
@@ -208,7 +207,6 @@ namespace DOL.GS.Quests.Hibernia
 				i.SPD_ABS = 27;
 				i.Object_Type = 38;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -251,7 +249,6 @@ namespace DOL.GS.Quests.Hibernia
 				i.SPD_ABS = 27;
 				i.Object_Type = 38;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -293,7 +290,6 @@ namespace DOL.GS.Quests.Hibernia
 				i.SPD_ABS = 27;
 				i.Object_Type = 38;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -334,7 +330,6 @@ namespace DOL.GS.Quests.Hibernia
 				i.SPD_ABS = 27;
 				i.Object_Type = 38;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -375,7 +370,6 @@ namespace DOL.GS.Quests.Hibernia
 				i.SPD_ABS = 27;
 				i.Object_Type = 38;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -417,7 +411,6 @@ namespace DOL.GS.Quests.Hibernia
 				i.SPD_ABS = 27;
 				i.Object_Type = 38;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -459,7 +452,6 @@ namespace DOL.GS.Quests.Hibernia
 				i.SPD_ABS = 19;
 				i.Object_Type = 37;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -501,7 +493,6 @@ namespace DOL.GS.Quests.Hibernia
 				i.SPD_ABS = 19;
 				i.Object_Type = 37;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -544,7 +535,6 @@ namespace DOL.GS.Quests.Hibernia
 				i.SPD_ABS = 19;
 				i.Object_Type = 37;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -586,7 +576,6 @@ namespace DOL.GS.Quests.Hibernia
 				i.SPD_ABS = 19;
 				i.Object_Type = 37;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -628,7 +617,6 @@ namespace DOL.GS.Quests.Hibernia
 				i.SPD_ABS = 19;
 				i.Object_Type = 37;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -670,7 +658,6 @@ namespace DOL.GS.Quests.Hibernia
 				i.SPD_ABS = 19;
 				i.Object_Type = 37;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -711,7 +698,6 @@ namespace DOL.GS.Quests.Hibernia
 				i.SPD_ABS = 0;
 				i.Object_Type = 32;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -753,7 +739,6 @@ namespace DOL.GS.Quests.Hibernia
 				i.SPD_ABS = 0;
 				i.Object_Type = 32;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -796,7 +781,6 @@ namespace DOL.GS.Quests.Hibernia
 				i.SPD_ABS = 0;
 				i.Object_Type = 32;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -837,7 +821,6 @@ namespace DOL.GS.Quests.Hibernia
 				i.SPD_ABS = 0;
 				i.Object_Type = 32;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -878,7 +861,6 @@ namespace DOL.GS.Quests.Hibernia
 				i.SPD_ABS = 0;
 				i.Object_Type = 32;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -919,7 +901,6 @@ namespace DOL.GS.Quests.Hibernia
 				i.SPD_ABS = 0;
 				i.Object_Type = 32;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -959,7 +940,6 @@ namespace DOL.GS.Quests.Hibernia
 				i.SPD_ABS = 0;
 				i.Object_Type = 32;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -1001,7 +981,6 @@ namespace DOL.GS.Quests.Hibernia
 				i.SPD_ABS = 0;
 				i.Object_Type = 32;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -1043,7 +1022,6 @@ namespace DOL.GS.Quests.Hibernia
 				i.SPD_ABS = 0;
 				i.Object_Type = 32;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -1084,7 +1062,6 @@ namespace DOL.GS.Quests.Hibernia
 				i.SPD_ABS = 0;
 				i.Object_Type = 32;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -1125,7 +1102,6 @@ namespace DOL.GS.Quests.Hibernia
 				i.SPD_ABS = 0;
 				i.Object_Type = 32;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -1166,7 +1142,6 @@ namespace DOL.GS.Quests.Hibernia
 				i.SPD_ABS = 0;
 				i.Object_Type = 32;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -1206,7 +1181,6 @@ namespace DOL.GS.Quests.Hibernia
 				i.SPD_ABS = 0;
 				i.Object_Type = 32;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -1248,7 +1222,6 @@ namespace DOL.GS.Quests.Hibernia
 				i.SPD_ABS = 0;
 				i.Object_Type = 32;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -1290,7 +1263,6 @@ namespace DOL.GS.Quests.Hibernia
 				i.SPD_ABS = 0;
 				i.Object_Type = 32;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -1331,7 +1303,6 @@ namespace DOL.GS.Quests.Hibernia
 				i.SPD_ABS = 0;
 				i.Object_Type = 32;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -1372,7 +1343,6 @@ namespace DOL.GS.Quests.Hibernia
 				i.SPD_ABS = 0;
 				i.Object_Type = 32;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -1413,7 +1383,6 @@ namespace DOL.GS.Quests.Hibernia
 				i.SPD_ABS = 0;
 				i.Object_Type = 32;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;

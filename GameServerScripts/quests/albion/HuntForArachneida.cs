@@ -258,7 +258,6 @@ namespace DOL.GS.Quests.Albion
 				spiderSilkenRobe.IsDropable = true;
 				//spiderSilkenRobe.Color = 44;
 				spiderSilkenRobe.Quality = 100;
-				spiderSilkenRobe.MaxQuality = 100;
 				spiderSilkenRobe.Condition = 1000;
 				spiderSilkenRobe.MaxCondition = 1000;
 				spiderSilkenRobe.Durability = 1000;
@@ -308,7 +307,6 @@ namespace DOL.GS.Quests.Albion
 
 				ringedSpiderChitinTunic.Color = 45;
 				ringedSpiderChitinTunic.Quality = 100;
-				ringedSpiderChitinTunic.MaxQuality = 100;
 				ringedSpiderChitinTunic.Condition = 1000;
 				ringedSpiderChitinTunic.MaxCondition = 1000;
 				ringedSpiderChitinTunic.Durability = 1000;
@@ -357,7 +355,6 @@ namespace DOL.GS.Quests.Albion
 
 				studdedSpiderEyeVest.Color = 45;
 				studdedSpiderEyeVest.Quality = 100;
-				studdedSpiderEyeVest.MaxQuality = 100;
 				studdedSpiderEyeVest.Condition = 1000;
 				studdedSpiderEyeVest.MaxCondition = 1000;
 				studdedSpiderEyeVest.Durability = 1000;
@@ -405,7 +402,6 @@ namespace DOL.GS.Quests.Albion
 
 				spiderEmblazonedTunic.Color = 45;
 				spiderEmblazonedTunic.Quality = 100;
-				spiderEmblazonedTunic.MaxQuality = 100;
 				spiderEmblazonedTunic.Condition = 1000;
 				spiderEmblazonedTunic.MaxCondition = 1000;
 				spiderEmblazonedTunic.Durability = 1000;
@@ -454,7 +450,6 @@ namespace DOL.GS.Quests.Albion
 
 				embossedSpiderTunic.Color = 45;
 				embossedSpiderTunic.Quality = 100;
-				embossedSpiderTunic.MaxQuality = 100;
 				embossedSpiderTunic.Condition = 1000;
 				embossedSpiderTunic.MaxCondition = 1000;
 				embossedSpiderTunic.Durability = 1000;

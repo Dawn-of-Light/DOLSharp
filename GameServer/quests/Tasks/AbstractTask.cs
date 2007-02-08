@@ -494,7 +494,6 @@ namespace DOL.GS.Quests
 			TaskItems.Quality = 80+ItemLevel;
 			TaskItems.MaxCondition = TaskItems.Condition;
 			TaskItems.MaxDurability = TaskItems.Durability;
-			TaskItems.MaxQuality = TaskItems.Quality;
 			return TaskItems;
 		}
 

@@ -575,14 +575,10 @@ namespace DOL.AI.Brain
 		/// <param name="ad"></param>
 		protected virtual void OnAttackedByEnemy(AttackData ad)
 		{
-			if (!Body.AttackState && Body.IsAlive && Body.ObjectState == GameObject.eObjectState.Active &&
-				(ad.AttackResult == GameLiving.eAttackResult.HitUnstyled ||
-				ad.AttackResult == GameLiving.eAttackResult.HitStyle ||
-				ad.AttackResult == GameLiving.eAttackResult.Missed ||
-				ad.AttackResult == GameLiving.eAttackResult.Blocked ||
-				ad.AttackResult == GameLiving.eAttackResult.Evaded ||
-				ad.AttackResult == GameLiving.eAttackResult.Fumbled ||
-				ad.AttackResult == GameLiving.eAttackResult.Parried))
+			if (!Body.AttackState 
+				&& Body.IsAlive 
+				&& Body.ObjectState == GameObject.eObjectState.Active 
+				&& ad.IsHit)
 			{
 				Body.StartAttack(ad.Attacker);
 				BringFriends(ad);

@@ -202,7 +202,6 @@ namespace DOL.GS.Quests.Albion
 				farmerAsmasMap.IsDropable = false;
 				
 				farmerAsmasMap.Quality = 100;
-				farmerAsmasMap.MaxQuality = 100;
 				farmerAsmasMap.Condition = 1000;
 				farmerAsmasMap.MaxCondition = 1000;
 				farmerAsmasMap.Durability = 1000;

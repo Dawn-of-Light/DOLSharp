@@ -247,7 +247,6 @@ namespace DOL.GS.Quests.Albion
 				letterToElvar.IsDropable = false;
 				
 				letterToElvar.Quality = 100;
-				letterToElvar.MaxQuality = 100;
 				letterToElvar.Condition = 1000;
 				letterToElvar.MaxCondition = 1000;
 				letterToElvar.Durability = 1000;
@@ -282,7 +281,6 @@ namespace DOL.GS.Quests.Albion
 				letterToYdenia.IsDropable = false;
 
 				letterToYdenia.Quality = 100;
-				letterToYdenia.MaxQuality = 100;
 				letterToYdenia.Condition = 1000;
 				letterToYdenia.MaxCondition = 1000;
 				letterToYdenia.Durability = 1000;
@@ -325,7 +323,6 @@ namespace DOL.GS.Quests.Albion
 				silverRingOfHealth.Bonus2 = 1;
 
 				silverRingOfHealth.Quality = 100;
-				silverRingOfHealth.MaxQuality = 100;
 				silverRingOfHealth.Condition = 1000;
 				silverRingOfHealth.MaxCondition = 1000;
 				silverRingOfHealth.Durability = 1000;

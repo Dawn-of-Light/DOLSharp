@@ -509,7 +509,6 @@ namespace DOL.GS.Quests.Midgard
 				recruitsLegs.Bonus3Type = (int) eResist.Cold;
 
 				recruitsLegs.Quality = 100;
-				recruitsLegs.MaxQuality = 100;
 				recruitsLegs.Condition = 1000;
 				recruitsLegs.MaxCondition = 1000;
 				recruitsLegs.Durability = 1000;
@@ -561,7 +560,6 @@ namespace DOL.GS.Quests.Midgard
 				recruitsPants.Bonus3Type = (int) eResist.Cold;
 
 				recruitsPants.Quality = 100;
-				recruitsPants.MaxQuality = 100;
 				recruitsPants.Condition = 1000;
 				recruitsPants.MaxCondition = 1000;
 				recruitsPants.Durability = 1000;

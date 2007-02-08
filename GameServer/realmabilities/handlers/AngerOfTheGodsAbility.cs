@@ -33,6 +33,8 @@ namespace DOL.GS.RealmAbilities
             dbs.PulsePower = 0;
             dbs.Power = 0;
             dbs.CastTime = 0;
+			dbs.EffectGroup = 10;
+			dbs.SpellGroup = 10;
             dbs.Range = 1000;
             s = new Spell(dbs, 1);
             sl = new SpellLine("RAs", "RealmAbilitys", "RealmAbilitys", true);

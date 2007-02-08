@@ -409,7 +409,6 @@ namespace DOL.Database
 			Level = template.Level;
 			MaxCondition = template.MaxCondition;
 			MaxDurability = template.MaxDurability;
-			MaxQuality = template.MaxQuality;
 			Model = template.Model;
 			Extension = template.Extension;
 			Name = template.Name;

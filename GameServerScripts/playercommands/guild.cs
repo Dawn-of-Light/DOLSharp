@@ -814,13 +814,15 @@ namespace DOL.GS.Scripts
 								{
 									sort = Convert.ToInt32(args[3]); // Sort(0:unsorted, -1:names, 2:level, -3:class, 4:rank, -5:grp/solo, 6:zone,-7:note)
 									page = Convert.ToInt32(args[4]);
-									showOffline = (Convert.ToInt32(args[4]) == 0 ? false : true); // 0 - online, 1 - offline
+									showOffline = (Convert.ToInt32(args[5]) == 0 ? false : true); // 0 - online, 1 - offline
 								}
 								catch { }
+
 								int i = 0;
-								foreach (GamePlayer ply in client.Player.Guild.ListOnlineMembers())
+
+								if (showOffline)
 								{
-									if (ply.Client.IsPlaying && (!ply.IsAnonymous || ply == client.Player))
+									foreach (Character ply in (Character[])GameServer.Database.SelectObjects(typeof(Character), "GuildID = '" + client.Player.GuildID + "'"))
 									{
 										string keyStr = "";
 										switch (sort)
@@ -835,23 +837,20 @@ namespace DOL.GS.Scripts
 												break;
 											case -3:
 											case 3:
-												keyStr = "C:" + ply.CharacterClass.ID.ToString() + "_N:" + ply.Name;
+												keyStr = "C:" + ((eCharacterClass)ply.Class).ToString() + "_N:" + ply.Name;
 												break;
 											case -4:
 											case 4:
-												keyStr = "R:" + ply.GuildRank.RankLevel.ToString() + "_N:" + ply.Name;
-												break;
-											case -5:
-											case 5:
-												keyStr = "G:" + (ply.PlayerGroup == null ? "s" : "g") + "_N:" + ply.Name;
+												keyStr = "R:" + ply.GuildRank.ToString() + "_N:" + ply.Name;
 												break;
 											case -6:
 											case 6:
-												keyStr = "Z:" + (ply.CurrentZone == null ? "null" : ply.CurrentZone.Description) + "_N:" + ply.Name;
+												keyStr = "Z:" + ply.LastPlayed.ToShortDateString() + "_N:" + ply.Name;
 												break;
-											//											case -7:
-											//												keyStr = ply.GuildNote;
-											//												break;
+											case -7:
+											case 7:
+												keyStr = ply.GuildNote;
+												break;
 											default:
 												keyStr = (i++).ToString();
 												break;
@@ -859,27 +858,94 @@ namespace DOL.GS.Scripts
 										if (!onlineMembers.ContainsKey(keyStr))
 											onlineMembers.Add(keyStr, ply);
 									}
-								}
-								const int MaxOnPage = 10;
-								//OnlyForCheck					for (i = 1 ; i < 19 ; i++)
-								//OnlyForCheck						onlineMembers.Add(i.ToString(), client.Player);
-								int maxShowed = onlineMembers.Count % MaxOnPage;
-								if (onlineMembers.Count > 1 && maxShowed == 0)
-									maxShowed = MaxOnPage;
-								page = Math.Max(1, Math.Min((onlineMembers.Count - 1) / MaxOnPage + 1, page));
-								if (onlineMembers.Count > page * MaxOnPage)
-									maxShowed = MaxOnPage;
-								client.Out.SendMessage(string.Format("TE,{0},{1},{2}", page, onlineMembers.Count, maxShowed), eChatType.CT_SocialInterface, eChatLoc.CL_SystemWindow);
-								for (i = 0; i < maxShowed; i++)
-								{
-									GamePlayer ply = (GamePlayer)onlineMembers.GetByIndex((page - 1) * MaxOnPage + i);
-									if (ply != null)
+
+									const int MaxOnPage = 10;
+									//OnlyForCheck					for (i = 1 ; i < 19 ; i++)
+									//OnlyForCheck						onlineMembers.Add(i.ToString(), client.Player);
+									int maxShowed = onlineMembers.Count % MaxOnPage;
+									if (onlineMembers.Count > 1 && maxShowed == 0)
+										maxShowed = MaxOnPage;
+									page = Math.Max(1, Math.Min((onlineMembers.Count - 1) / MaxOnPage + 1, page));
+									if (onlineMembers.Count > page * MaxOnPage)
+										maxShowed = MaxOnPage;
+									client.Out.SendMessage(string.Format("TE,{0},{1},{2}", page, onlineMembers.Count, maxShowed), eChatType.CT_SocialInterface, eChatLoc.CL_SystemWindow);
+									for (i = 0; i < maxShowed; i++)
 									{
-										client.Out.SendMessage(string.Format("E,{0},{1},{2},{3},{4},{5},{6},\"{7}\",\"{8}\"",
-											(i + 1), 0, ply.Name, ply.Level, ply.CharacterClass.ID, ply.GuildRank.RankLevel, (ply.PlayerGroup == null ? 1 : 2), (ply.CurrentZone == null ? "" : ply.CurrentZone.Description), ply.GuildNote), eChatType.CT_SocialInterface, eChatLoc.CL_SystemWindow);
+										Character ply = (Character)onlineMembers.GetByIndex((page - 1) * MaxOnPage + i);
+										if (ply != null)
+										{
+											client.Out.SendMessage(string.Format("E,{0},{1},{2},{3},{4},{5},{6},\"{7}\",\"{8}\"",
+												(i + 1), 0, ply.Name, ply.Level, ply.Class, ply.GuildRank, 1, ply.LastPlayed.ToShortDateString(), ply.GuildNote), eChatType.CT_SocialInterface, eChatLoc.CL_SystemWindow);
+										}
 									}
+									return 1;
 								}
-								return 1;
+								else
+								{
+									foreach (GamePlayer ply in client.Player.Guild.ListOnlineMembers())
+									{
+										if (ply.Client.IsPlaying && (!ply.IsAnonymous || ply == client.Player))
+										{
+											string keyStr = "";
+											switch (sort)
+											{
+												case -1:
+												case 1:
+													keyStr = "N:" + ply.Name;
+													break;
+												case -2:
+												case 2:
+													keyStr = "L:" + ply.Level.ToString() + "_N:" + ply.Name;
+													break;
+												case -3:
+												case 3:
+													keyStr = "C:" + ply.CharacterClass.ID.ToString() + "_N:" + ply.Name;
+													break;
+												case -4:
+												case 4:
+													keyStr = "R:" + ply.GuildRank.RankLevel.ToString() + "_N:" + ply.Name;
+													break;
+												case -5:
+												case 5:
+													keyStr = "G:" + (ply.PlayerGroup == null ? "s" : "g") + "_N:" + ply.Name;
+													break;
+												case -6:
+												case 6:
+													keyStr = "Z:" + (ply.CurrentZone == null ? "null" : ply.CurrentZone.Description) + "_N:" + ply.Name;
+													break;
+												case -7:
+												case 7:
+													keyStr = ply.GuildNote;
+													break;
+												default:
+													keyStr = (i++).ToString();
+													break;
+											}
+											if (!onlineMembers.ContainsKey(keyStr))
+												onlineMembers.Add(keyStr, ply);
+										}
+									}
+									const int MaxOnPage = 10;
+									//OnlyForCheck					for (i = 1 ; i < 19 ; i++)
+									//OnlyForCheck						onlineMembers.Add(i.ToString(), client.Player);
+									int maxShowed = onlineMembers.Count % MaxOnPage;
+									if (onlineMembers.Count > 1 && maxShowed == 0)
+										maxShowed = MaxOnPage;
+									page = Math.Max(1, Math.Min((onlineMembers.Count - 1) / MaxOnPage + 1, page));
+									if (onlineMembers.Count > page * MaxOnPage)
+										maxShowed = MaxOnPage;
+									client.Out.SendMessage(string.Format("TE,{0},{1},{2}", page, onlineMembers.Count, maxShowed), eChatType.CT_SocialInterface, eChatLoc.CL_SystemWindow);
+									for (i = 0; i < maxShowed; i++)
+									{
+										GamePlayer ply = (GamePlayer)onlineMembers.GetByIndex((page - 1) * MaxOnPage + i);
+										if (ply != null)
+										{
+											client.Out.SendMessage(string.Format("E,{0},{1},{2},{3},{4},{5},{6},\"{7}\",\"{8}\"",
+												(i + 1), 0, ply.Name, ply.Level, ply.CharacterClass.ID, ply.GuildRank.RankLevel, (ply.PlayerGroup == null ? 1 : 2), (ply.CurrentZone == null ? "" : ply.CurrentZone.Description), ply.GuildNote), eChatType.CT_SocialInterface, eChatLoc.CL_SystemWindow);
+										}
+									}
+									return 1;
+								}
 							}
 							if (client.Player.Guild == null)
 							{

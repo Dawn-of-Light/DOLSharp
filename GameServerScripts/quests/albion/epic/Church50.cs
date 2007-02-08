@@ -170,7 +170,6 @@ namespace DOL.GS.Quests.Albion
 				statue_of_arawn.Hand = 0;
 				statue_of_arawn.Type_Damage = 0;
 				statue_of_arawn.Quality = 100;
-				statue_of_arawn.MaxQuality = 100;
 				statue_of_arawn.Weight = 12;
 				if (SAVE_INTO_DATABASE)
 				{
@@ -197,7 +196,6 @@ namespace DOL.GS.Quests.Albion
 				i.SPD_ABS = 27;
 				i.Object_Type = 35;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -243,7 +241,6 @@ namespace DOL.GS.Quests.Albion
 				i.SPD_ABS = 27;
 				i.Object_Type = 35;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -290,7 +287,6 @@ namespace DOL.GS.Quests.Albion
 				i.SPD_ABS = 27;
 				i.Object_Type = 35;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -336,7 +332,6 @@ namespace DOL.GS.Quests.Albion
 				i.SPD_ABS = 27;
 				i.Object_Type = 35;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -381,7 +376,6 @@ namespace DOL.GS.Quests.Albion
 				i.SPD_ABS = 27;
 				i.Object_Type = 35;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -427,7 +421,6 @@ namespace DOL.GS.Quests.Albion
 				i.SPD_ABS = 27;
 				i.Object_Type = 35;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -472,7 +465,6 @@ namespace DOL.GS.Quests.Albion
 				i.SPD_ABS = 34;
 				i.Object_Type = 36;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -519,7 +511,6 @@ namespace DOL.GS.Quests.Albion
 				i.SPD_ABS = 34;
 				i.Object_Type = 36;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -566,7 +557,6 @@ namespace DOL.GS.Quests.Albion
 				i.SPD_ABS = 34;
 				i.Object_Type = 36;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -612,7 +602,6 @@ namespace DOL.GS.Quests.Albion
 				i.SPD_ABS = 34;
 				i.Object_Type = 36;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -658,7 +647,6 @@ namespace DOL.GS.Quests.Albion
 				i.SPD_ABS = 34;
 				i.Object_Type = 36;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -704,7 +692,6 @@ namespace DOL.GS.Quests.Albion
 				i.SPD_ABS = 34;
 				i.Object_Type = 36;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;

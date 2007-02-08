@@ -333,7 +333,6 @@ namespace DOL.GS.Quests.Albion
 				sealedLovePoem.IsDropable = false;
 				
 				sealedLovePoem.Quality = 100;
-				sealedLovePoem.MaxQuality = 100;
 				sealedLovePoem.Condition = 1000;
 				sealedLovePoem.MaxCondition = 1000;
 				sealedLovePoem.Durability = 1000;
@@ -368,7 +367,6 @@ namespace DOL.GS.Quests.Albion
 				beautifulRedRose.IsDropable = false;
 				
 				beautifulRedRose.Quality = 100;
-				beautifulRedRose.MaxQuality = 100;
 				beautifulRedRose.Condition = 1000;
 				beautifulRedRose.MaxCondition = 1000;
 				beautifulRedRose.Durability = 1000;
@@ -403,7 +401,6 @@ namespace DOL.GS.Quests.Albion
 					adnilsMagicalOrb.IsDropable = false;
 				
 					adnilsMagicalOrb.Quality = 100;
-					adnilsMagicalOrb.MaxQuality = 100;
 					adnilsMagicalOrb.Condition = 1000;
 					adnilsMagicalOrb.MaxCondition = 1000;
 					adnilsMagicalOrb.Durability = 1000;

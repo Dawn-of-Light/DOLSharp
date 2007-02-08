@@ -485,7 +485,6 @@ namespace DOL.GS.Quests.Midgard
 				recruitsHelm.Bonus3Type = (int) eProperty.MaxHealth;
 
 				recruitsHelm.Quality = 100;
-				recruitsHelm.MaxQuality = 100;
 				recruitsHelm.Condition = 1000;
 				recruitsHelm.MaxCondition = 1000;
 				recruitsHelm.Durability = 1000;
@@ -536,7 +535,6 @@ namespace DOL.GS.Quests.Midgard
 				recruitsCap.Bonus3Type = (int) eResist.Spirit;
 
 				recruitsCap.Quality = 100;
-				recruitsCap.MaxQuality = 100;
 				recruitsCap.Condition = 1000;
 				recruitsCap.MaxCondition = 1000;
 				recruitsCap.Durability = 1000;
@@ -582,7 +580,6 @@ namespace DOL.GS.Quests.Midgard
 				recruitsRing.Bonus3Type = (int) eProperty.MaxHealth;
 
 				recruitsRing.Quality = 100;
-				recruitsRing.MaxQuality = 100;
 				recruitsRing.Condition = 1000;
 				recruitsRing.MaxCondition = 1000;
 				recruitsRing.Durability = 1000;

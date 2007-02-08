@@ -345,7 +345,6 @@ namespace DOL.GS.Quests.Albion
 				recruitsCloak.Bonus2Type = (int) eResist.Slash;
 
 				recruitsCloak.Quality = 100;
-				recruitsCloak.MaxQuality = 100;
 				recruitsCloak.Condition = 1000;
 				recruitsCloak.MaxCondition = 1000;
 				recruitsCloak.Durability = 1000;

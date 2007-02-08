@@ -203,7 +203,6 @@ namespace DOL.GS.Quests.Albion
 				woodenBucket.IsDropable = false;
 				
 				woodenBucket.Quality = 100;
-				woodenBucket.MaxQuality = 100;
 				woodenBucket.Condition = 1000;
 				woodenBucket.MaxCondition = 1000;
 				woodenBucket.Durability = 1000;
@@ -238,7 +237,6 @@ namespace DOL.GS.Quests.Albion
 				fullWoodenBucket.IsDropable = false;
 				
 				fullWoodenBucket.Quality = 100;
-				fullWoodenBucket.MaxQuality = 100;
 				fullWoodenBucket.Condition = 1000;
 				fullWoodenBucket.MaxCondition = 1000;
 				fullWoodenBucket.Durability = 1000;
@@ -281,7 +279,6 @@ namespace DOL.GS.Quests.Albion
 				reedBracer.Bonus2 = 1;
 
 				reedBracer.Quality = 100;
-				reedBracer.MaxQuality = 100;
 				reedBracer.Condition = 1000;
 				reedBracer.MaxCondition = 1000;
 				reedBracer.Durability = 1000;
