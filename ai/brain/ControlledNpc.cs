@@ -129,8 +129,10 @@ namespace DOL.AI.Brain
 				if (m_aggressionState == eAggressionState.Passive)
 				{
 					ClearAggroList();
+					Body.StopAttack();
+					Body.TargetObject = null;
 					if (WalkState == eWalkState.Follow)
-						Body.Follow(Owner, MIN_OWNER_FOLLOW_DIST, MAX_OWNER_FOLLOW_DIST);
+						FollowOwner();
 					else if (m_tempX > 0 && m_tempY > 0 && m_tempZ > 0)
 						Body.WalkTo(m_tempX, m_tempY, m_tempZ, Body.MaxSpeed);
 				}

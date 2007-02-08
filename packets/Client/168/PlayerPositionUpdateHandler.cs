@@ -333,7 +333,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 								GameServer.Database.SaveObject(accountToBan);
 								return 1;
 							}
-							*/
+							*//*
 							string message = "Speed Hack Detected!!!";
 							for (int i = 0; i < 6; i++)
 							{
@@ -341,7 +341,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 								client.Out.SendMessage(message, eChatType.CT_System, eChatLoc.CL_ChatWindow);
 							}
 							client.Out.SendPlayerQuit(true);
-							client.Disconnect();
+							client.Disconnect();*/
 						}
 					}
 					else

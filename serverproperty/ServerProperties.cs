@@ -272,6 +272,12 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("anon_modifier", "Various modifying options for anon, 0 = default, 1 = /who shows player but as ANON, -1 = disabled", 0)]
 		public static readonly int ANON_MODIFIER;
+
+		/// <summary>
+		/// Buff Range
+		/// </summary>
+		[ServerProperty("buff_range", "The range that concentration buffs can last from the owner before it expires", 0)]
+		public static readonly int BUFF_RANGE;
 		
 		/// <summary>
 		/// This method loads the property from the database and returns

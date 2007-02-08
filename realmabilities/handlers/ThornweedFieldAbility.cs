@@ -13,8 +13,6 @@ namespace DOL.GS.RealmAbilities
 	public class ThornweedFieldAbility : TimedRealmAbility
 	{
 		public ThornweedFieldAbility(DBAbility dba, int level) : base(dba, level) { }
-		private const string IS_CASTING = "isCasting";
-		private const string TWF_CAST_SUCCESS = "TWFCasting";
 		private int dmgValue;
 		private uint duration;
 		private GamePlayer player;
@@ -37,11 +35,6 @@ namespace DOL.GS.RealmAbilities
 				player.Out.SendMessage("You groundtarget is too far away to use this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
-			if (player.TempProperties.getProperty(IS_CASTING, false))
-			{
-				player.Out.SendMessage("You are already casting an ability.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return;
-			}
 			this.player = player;
 			if (player.AttackState)
 			{
@@ -62,24 +55,22 @@ namespace DOL.GS.RealmAbilities
 
 				i_player.Out.SendSpellCastAnimation(player, 7028, 20);
 			}
-			player.TempProperties.setProperty(IS_CASTING, true);
-			player.TempProperties.setProperty(TWF_CAST_SUCCESS, true);
-			GameEventMgr.AddHandler(player, GamePlayerEvent.Moving, new DOLEventHandler(CastInterrupted));
-			GameEventMgr.AddHandler(player, GamePlayerEvent.AttackFinished, new DOLEventHandler(CastInterrupted));
-			GameEventMgr.AddHandler(player, GamePlayerEvent.Dying, new DOLEventHandler(CastInterrupted));
-			new RegionTimer(player, new RegionTimerCallback(EndCast), 2000);
+
+			if (player.RealmAbilityCastTimer != null)
+			{
+				player.RealmAbilityCastTimer.Stop();
+				player.RealmAbilityCastTimer = null;
+				player.Out.SendMessage("You cancel your Spell!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+			}
+
+			player.RealmAbilityCastTimer = new RegionTimer(player);
+			player.RealmAbilityCastTimer.Callback = new RegionTimerCallback(EndCast);
+			player.RealmAbilityCastTimer.Start(2000);
 		}
 
 		protected virtual int EndCast(RegionTimer timer)
 		{
-			bool castWasSuccess = player.TempProperties.getProperty(TWF_CAST_SUCCESS, false);
-			player.TempProperties.removeProperty(IS_CASTING);
-			GameEventMgr.RemoveHandler(player, GamePlayerEvent.Moving, new DOLEventHandler(CastInterrupted));
-			GameEventMgr.RemoveHandler(player, GamePlayerEvent.AttackFinished, new DOLEventHandler(CastInterrupted));
-			GameEventMgr.RemoveHandler(player, GamePlayerEvent.Dying, new DOLEventHandler(CastInterrupted));
 			if (player.IsMezzed || player.IsStunned || player.IsSitting)
-				return 0;
-			if (!castWasSuccess)
 				return 0;
 			Statics.ThornweedFieldBase twf = new Statics.ThornweedFieldBase(dmgValue);
 			twf.CreateStatic(player, player.GroundTarget, duration, 3, 500);
@@ -87,18 +78,6 @@ namespace DOL.GS.RealmAbilities
 			timer.Stop();
 			timer = null;
 			return 0;
-		}
-
-		private void CastInterrupted(DOLEvent e, object sender, EventArgs arguments)
-		{
-			AttackFinishedEventArgs attackFinished = arguments as AttackFinishedEventArgs;
-			if (attackFinished != null && attackFinished.AttackData.Attacker != sender)
-				return;
-			player.TempProperties.setProperty(TWF_CAST_SUCCESS, false);
-			foreach (GamePlayer i_player in player.GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
-			{
-				i_player.Out.SendInterruptAnimation(player);
-			}
 		}
 
 		public override int GetReUseDelay(int level)

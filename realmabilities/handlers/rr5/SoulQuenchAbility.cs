@@ -6,11 +6,11 @@ using DOL.GS.PacketHandler;
 namespace DOL.GS.RealmAbilities
 {
 	/// <summary>
-	/// Whirling Staff Ability
+	/// Soul Quench RA
 	/// </summary>
-	public class WhirlingStaffAbility : RR5RealmAbility
+	public class SoulQuenchAbility : RR5RealmAbility
 	{
-		public WhirlingStaffAbility(DBAbility dba, int level) : base(dba, level) { }
+		public SoulQuenchAbility(DBAbility dba, int level) : base(dba, level) { }
 
 		/// <summary>
 		/// Action
@@ -20,7 +20,7 @@ namespace DOL.GS.RealmAbilities
 		{
 			if (CheckPreconditions(living, DEAD | SITTING | MEZZED | STUNNED)) return;
 
-			SendCasterSpellEffectAndCastMessage(living, 7043, true);
+			SendCasterSpellEffectAndCastMessage(living, 7041, true);
 
 			bool deactivate = false;
 			foreach (GamePlayer player in living.GetPlayersInRadius(false, 350))
@@ -46,12 +46,21 @@ namespace DOL.GS.RealmAbilities
 
 		private void DamageTarget(GameLiving target, GameLiving caster)
 		{
-			int resist = 251 * target.GetResist(eDamageType.Crush) / -100;
-			int damage = 251 + resist;
+			double modifier = 0.5 + (caster.GetModifiedSpecLevel("Soulrending") * 0.01);
+			int basedamage = (int)(250 * modifier);
+			int resist = basedamage * target.GetResist(eDamageType.Spirit) / -100;
+			int damage = basedamage + resist;
+			int heal = (int)(damage * 0.75);
+			int modheal = caster.MaxHealth - caster.Health;
+			if (modheal > heal)
+				modheal = heal;
+			caster.Health += modheal;
 
 			GamePlayer player = caster as GamePlayer;
 			if (player != null)
 				player.Out.SendMessage("You hit " + target.Name + " for " + damage + "(" + resist + ") points of damage!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+			if (caster is GamePlayer && modheal > 0)
+				((GamePlayer)caster).Out.SendMessage("Your Soul Quench returns " + modheal + " lifepoints to you", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
 
 			GamePlayer targetPlayer = target as GamePlayer;
 			if (targetPlayer != null)
@@ -62,7 +71,7 @@ namespace DOL.GS.RealmAbilities
 
 			foreach (GamePlayer p in target.GetPlayersInRadius(false, WorldMgr.VISIBILITY_DISTANCE))
 			{
-				p.Out.SendSpellEffectAnimation(caster, target, 7043, 0, false, 1);
+				p.Out.SendSpellEffectAnimation(caster, target, 7041, 0, false, 1);
 				p.Out.SendCombatAnimation(caster, target, 0, 0, 0, 0, 0x14, target.HealthPercent);
 			}
 
@@ -71,16 +80,11 @@ namespace DOL.GS.RealmAbilities
 			ad.AttackResult = GameLiving.eAttackResult.HitUnstyled;
 			ad.Attacker = caster;
 			ad.Target = target;
-			ad.DamageType = eDamageType.Crush;
+			ad.DamageType = eDamageType.Spirit;
 			ad.Damage = damage;
 			target.OnAttackedByEnemy(ad);
 			caster.DealDamage(ad);
 
-			if ((WhirlingStaffEffect)target.EffectList.GetOfType(typeof(WhirlingStaffEffect)) == null)
-			{
-				WhirlingStaffEffect effect = new WhirlingStaffEffect();
-				effect.Start(target);
-			}
 
 		}
 
@@ -91,11 +95,10 @@ namespace DOL.GS.RealmAbilities
 
 		public override void AddEffectsInfo(System.Collections.IList list)
 		{
-			list.Add("A 350 radius PBAE attack that deals medium crushing damage and disarms your opponents for 6 seconds");
+			list.Add("Insta-PBAE attack that drains 250 points (modified up or down by the Reavers SR level) from all nearby enemies and returns 75% to the Reaver.");
 			list.Add("");
 			list.Add("Radius: 350");
 			list.Add("Target: Enemy");
-			list.Add("Duration: 6 sec");
 			list.Add("Casting time: instant");
 		}
 

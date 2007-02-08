@@ -103,7 +103,6 @@ namespace DOL.GS.RealmAbilities
 				arrow_summoning1.Condition = 50000;
 				arrow_summoning1.MaxCondition = 50000;
 				arrow_summoning1.Quality = 100;
-				arrow_summoning1.MaxQuality = 100;
 				arrow_summoning1.DPS_AF = 0;
 				arrow_summoning1.SPD_ABS = 47;
 				arrow_summoning1.Hand = 0;
@@ -132,7 +131,6 @@ namespace DOL.GS.RealmAbilities
 				arrow_summoning2.Condition = 50000;
 				arrow_summoning2.MaxCondition = 50000;
 				arrow_summoning2.Quality = 100;
-				arrow_summoning2.MaxQuality = 100;
 				arrow_summoning2.DPS_AF = 0;
 				arrow_summoning2.SPD_ABS = 47;
 				arrow_summoning2.Hand = 0;
@@ -161,7 +159,6 @@ namespace DOL.GS.RealmAbilities
 				arrow_summoning3.Condition = 50000;
 				arrow_summoning3.MaxCondition = 50000;
 				arrow_summoning3.Quality = 100;
-				arrow_summoning3.MaxQuality = 100;
 				arrow_summoning3.DPS_AF = 0;
 				arrow_summoning3.SPD_ABS = 47;
 				arrow_summoning3.Hand = 0;

@@ -5,11 +5,11 @@ using DOL.GS.Effects;
 namespace DOL.GS.RealmAbilities
 {
 	/// <summary>
-	/// Remedy Realm Ability
+	/// Mastery of Concentration RA
 	/// </summary>
-	public class RemedyAbility : RR5RealmAbility
+	public class FuryOfNatureAbility : RR5RealmAbility
 	{
-		public RemedyAbility(DBAbility dba, int level) : base(dba, level) { }
+		public FuryOfNatureAbility(DBAbility dba, int level) : base(dba, level) { }
 
 		/// <summary>
 		/// Action
@@ -24,8 +24,8 @@ namespace DOL.GS.RealmAbilities
 			GamePlayer player = living as GamePlayer;
 			if (player != null)
 			{
-				SendCasterSpellEffectAndCastMessage(player, 7060, true);
-				RemedyEffect effect = new RemedyEffect();
+				SendCasterSpellEffectAndCastMessage(player, 5103, true);
+				FuryOfNatureEffect effect = new FuryOfNatureEffect();
 				effect.Start(player);
 			}
 			DisableSkill(living);
@@ -33,16 +33,15 @@ namespace DOL.GS.RealmAbilities
 
 		public override int GetReUseDelay(int level)
 		{
-			return 300;
+			return 600;
 		}
 
 		public override void AddEffectsInfo(System.Collections.IList list)
 		{
-			list.Add("Gives you immunity to weapon poisons for 1 minute. This spell wont purge already received poisons!");
-			list.Add("This spell costs 10% of your HP. These will be regained by the end of the effect.");
+			list.Add("Doubles Style Damage for 30 seconds and heals the group, excluding the caster, like spreadheal with all the damage dealt");
 			list.Add("");
 			list.Add("Target: Self");
-			list.Add("Duration: 60 sec");
+			list.Add("Duration: 30 sec");
 			list.Add("Casting time: instant");
 		}
 

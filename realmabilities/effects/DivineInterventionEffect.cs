@@ -32,7 +32,6 @@ namespace DOL.GS.Effects
 				return;
 			m_player.Out.SendMessage("Your group is protected by a pool of healing!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
 			m_startTick = player.CurrentRegion.Time;
-			GameEventMgr.AddHandler(m_player, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
 			GameEventMgr.AddHandler(m_player.PlayerGroup, PlayerGroupEvent.PlayerJoined, new DOLEventHandler(PlayerJoinedGroup));
 			GameEventMgr.AddHandler(m_player.PlayerGroup, PlayerGroupEvent.PlayerDisbanded, new DOLEventHandler(PlayerDisbandedGroup));
 
@@ -74,8 +73,9 @@ namespace DOL.GS.Effects
 				return;
 			if (targs.DamageType == eDamageType.Falling) return;
 			if (!player.IsAlive) return;
+			if (player.HealthPercent >= 75) return;
 			int dmgamount = player.MaxHealth - player.Health;
-			if (dmgamount <= 0 || player.HealthPercent >= 75) return;
+			if (dmgamount <= 0) return;
 			int healamount = 0;
 			if (poolValue <= 0)
 				Cancel(false);
@@ -99,15 +99,6 @@ namespace DOL.GS.Effects
 			if (poolValue <= 0)
 				Cancel(false);
 		}
-		protected static void PlayerLeftWorld(DOLEvent e, object sender, EventArgs args)
-		{
-			GamePlayer player = (GamePlayer)sender;
-			DivineInterventionEffect DIEffect = (DivineInterventionEffect)player.EffectList.GetOfType(typeof(DivineInterventionEffect));
-			if (DIEffect != null)
-			{
-				DIEffect.Cancel(false);
-			}
-		}
 		/// <summary>
 		/// Called when effect must be canceled
 		/// </summary>
@@ -116,7 +107,6 @@ namespace DOL.GS.Effects
 			StopTimers();
 			m_player.EffectList.Remove(this);
 			GameEventMgr.RemoveHandler(m_player.PlayerGroup, PlayerGroupEvent.PlayerDisbanded, new DOLEventHandler(PlayerDisbandedGroup));
-			GameEventMgr.RemoveHandler(m_player, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
 			GameEventMgr.RemoveHandler(m_player.PlayerGroup, PlayerGroupEvent.PlayerJoined, new DOLEventHandler(PlayerJoinedGroup));
 			foreach (GamePlayer pl in affected)
 			{

@@ -4321,7 +4321,7 @@ namespace DOL.GS
 			if (IsOnHorse)
 				IsOnHorse = false;
 
-			long VanishTick = this.TempProperties.getLongProperty(VanishAbility.VANISH_BLOCK_ATTACK_TIME_KEY, 0);
+			long VanishTick = this.TempProperties.getLongProperty(VanishEffect.VANISH_BLOCK_ATTACK_TIME_KEY, 0);
 			long changeTime = this.CurrentRegion.Time - VanishTick;
 			if (changeTime < 30000 && VanishTick > 0)
 			{
@@ -4351,18 +4351,17 @@ namespace DOL.GS
 				return;
 			}
 
-			long vanishTimeout = TempProperties.getLongProperty(VanishAbility.VANISH_BLOCK_ATTACK_TIME_KEY, 0);
-			if (vanishTimeout > 0)
+			long vanishTimeout = TempProperties.getLongProperty(VanishEffect.VANISH_BLOCK_ATTACK_TIME_KEY, 0);
+			if (vanishTimeout > 0 && vanishTimeout > CurrentRegion.Time)
 			{
-				if (vanishTimeout > CurrentRegion.Time)
-				{
-					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.StartAttack.YouMustWaitAgain", (vanishTimeout - CurrentRegion.Time + 1000) / 1000), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
-					return;
-				}
-				else
-				{
-					TempProperties.removeProperty(VanishAbility.VANISH_BLOCK_ATTACK_TIME_KEY);
-				}
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.StartAttack.YouMustWaitAgain", (vanishTimeout - CurrentRegion.Time + 1000) / 1000), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+				return;
+			}
+
+			if (IsDisarmed)
+			{
+				Out.SendMessage("You are disarmed and cannot attack!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+				return;
 			}
 
 			if (IsSitting)
@@ -5901,7 +5900,8 @@ namespace DOL.GS
 			if (Task != null && Task.TaskActive)
 				Task.ExpireTask();
 
-			string message;
+			string playerMessage;
+			string publicMessage;
 			ushort messageDistance = WorldMgr.DEATH_MESSAGE_DISTANCE;
 			m_releaseType = eReleaseType.Normal;
 
@@ -5914,8 +5914,15 @@ namespace DOL.GS
 			if (killer == null)
 			{
 				if (realmDeath)
-					message = LanguageMgr.GetTranslation(Client, "GamePlayer.Die.KilledLocation", GetName(0, true), location);
-				else message = LanguageMgr.GetTranslation(Client, "GamePlayer.Die.Killed", GetName(0, true));
+				{
+					playerMessage = LanguageMgr.GetTranslation(Client, "GamePlayer.Die.KilledLocation", GetName(0, true), location);
+					publicMessage = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GamePlayer.Die.KilledLocation", GetName(0, true), location);
+				}
+				else
+				{
+					playerMessage = LanguageMgr.GetTranslation(Client, "GamePlayer.Die.Killed", GetName(0, true));
+					publicMessage = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GamePlayer.Die.Killed", GetName(0, true));
+				}
 			}
 			else
 			{
@@ -5923,14 +5930,22 @@ namespace DOL.GS
 				{
 					m_releaseType = eReleaseType.Duel;
 					messageDistance = WorldMgr.YELL_DISTANCE;
-					message = LanguageMgr.GetTranslation(Client, "GamePlayer.Die.DuelDefeated", GetName(0, true), killer.GetName(1, false));
+					playerMessage = LanguageMgr.GetTranslation(Client, "GamePlayer.Die.DuelDefeated", GetName(0, true), killer.GetName(1, false));
+					publicMessage = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GamePlayer.Die.DuelDefeated", GetName(0, true), killer.GetName(1, false));
 				}
 				else
 				{
 					messageDistance = 0;
 					if (realmDeath)
-						message = LanguageMgr.GetTranslation(Client, "GamePlayer.Die.KilledByLocation", GetName(0, true), killer.GetName(1, false), location);
-					else message = LanguageMgr.GetTranslation(Client, "GamePlayer.Die.KilledBy", GetName(0, true), killer.GetName(1, false));
+					{
+						playerMessage = LanguageMgr.GetTranslation(Client, "GamePlayer.Die.KilledByLocation", GetName(0, true), killer.GetName(1, false), location);
+						publicMessage = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GamePlayer.Die.KilledByLocation", GetName(0, true), killer.GetName(1, false), location);
+					}
+					else
+					{
+						playerMessage = LanguageMgr.GetTranslation(Client, "GamePlayer.Die.KilledBy", GetName(0, true), killer.GetName(1, false));
+						publicMessage = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GamePlayer.Die.KilledBy", GetName(0, true), killer.GetName(1, false));
+					}
 				}
 			}
 
@@ -5995,7 +6010,9 @@ namespace DOL.GS
 											(killer != null && killer is GamePlayer && GameServer.ServerRules.IsSameRealm((GamePlayer)killer, player, true))
 											|| (GameServer.ServerRules.IsSameRealm(this, player, true)))
 					)
-					player.Out.SendMessage(message, messageType, eChatLoc.CL_SystemWindow);
+					if (player == this)
+						player.Out.SendMessage(playerMessage, messageType, eChatLoc.CL_SystemWindow);
+					else player.Out.SendMessage(publicMessage, messageType, eChatLoc.CL_SystemWindow);
 			}
 
 			//Dead ppl. dismount ...
@@ -6934,8 +6951,13 @@ namespace DOL.GS
 															if (useItem.Item_Type == 40)
 																Emote(eEmote.Drink);
 															spellHandler.StartSpell(TargetObject as GameLiving);
-															useItem.Charges--;
-															if (useItem.Charges < 1) Inventory.RemoveCountFromStack(useItem, 1);
+															if (useItem.Count > 1)
+																Inventory.RemoveCountFromStack(useItem, 1);
+															else
+															{
+																useItem.Charges--;
+																if (useItem.Charges < 1) Inventory.RemoveCountFromStack(useItem, 1);
+															}
 															Out.SendMessage(useItem.GetName(0, false) + " has been used.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 															TempProperties.setProperty(LAST_POTION_ITEM_USE_TICK, CurrentRegion.Time);
 														}
@@ -10615,6 +10637,12 @@ namespace DOL.GS
 			if (WorldMgr.GetDistance(target, this) > 1500)
 			{
 				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CommandNpcAttack.TooFarAwayForPet"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return;
+			}
+
+			if (!TargetInView)
+			{
+				Out.SendMessage("You can't see your target!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
 				return;
 			}
 

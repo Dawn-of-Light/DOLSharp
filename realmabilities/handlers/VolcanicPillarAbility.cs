@@ -13,7 +13,6 @@ namespace DOL.GS.RealmAbilities
 	public class VolcanicPillarAbility : TimedRealmAbility
 	{
 		public VolcanicPillarAbility(DBAbility dba, int level) : base(dba, level) { }
-		private RegionTimer m_expireTimerID;
 		private int dmgValue = 0;
 		private GamePlayer caster = null;
 
@@ -52,7 +51,17 @@ namespace DOL.GS.RealmAbilities
 
 				i_player.Out.SendSpellCastAnimation(caster, 7025, 20);
 			}
-			m_expireTimerID = new RegionTimer(caster, new RegionTimerCallback(EndCast), 2000);
+
+			if (caster.RealmAbilityCastTimer != null)
+			{
+				caster.RealmAbilityCastTimer.Stop();
+				caster.RealmAbilityCastTimer = null;
+				caster.Out.SendMessage("You cancel your Spell!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+			}
+
+			caster.RealmAbilityCastTimer = new RegionTimer(caster);
+			caster.RealmAbilityCastTimer.Callback = new RegionTimerCallback(EndCast);
+			caster.RealmAbilityCastTimer.Start(2000);
 		}
 
 		protected virtual int EndCast(RegionTimer timer)

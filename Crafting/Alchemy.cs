@@ -210,13 +210,13 @@ namespace DOL.GS
 		/// <returns></returns>
 		public int GetItemMaxCharges(InventoryItem item)
 		{
-			if ((item.Quality*100/item.MaxQuality) <= 94)		return 2;
-			else if ((item.Quality*100/item.MaxQuality) <= 95)	return 3;
-			else if ((item.Quality*100/item.MaxQuality) <= 96)	return 4;
-			else if ((item.Quality*100/item.MaxQuality) <= 97)	return 5;
-			else if ((item.Quality*100/item.MaxQuality) <= 98)	return 6;
-			else if ((item.Quality*100/item.MaxQuality) <= 99)	return 7;
-			else	return 10;
+			if (item.Quality <= 94) return 2;
+			else if (item.Quality <= 95) return 3;
+			else if (item.Quality <= 96) return 4;
+			else if (item.Quality <= 97) return 5;
+			else if (item.Quality <= 98) return 6;
+			else if (item.Quality <= 99) return 7;
+			else return 10;
 		}
 
 		#endregion

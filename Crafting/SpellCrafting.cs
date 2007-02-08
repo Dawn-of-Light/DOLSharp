@@ -542,20 +542,20 @@ namespace DOL.GS
 			{
 				foreach (InventoryItem gemme in player.TradeWindow.TradeItems)
 				{
-					if ((gemme.Quality * 100 / gemme.MaxQuality) == 96) gemmeModifier += 1;
-					else if ((gemme.Quality * 100 / gemme.MaxQuality) == 97) gemmeModifier += 3;
-					else if ((gemme.Quality * 100 / gemme.MaxQuality) == 98) gemmeModifier += 5;
-					else if ((gemme.Quality * 100 / gemme.MaxQuality) == 99) gemmeModifier += 8;
-					else if ((gemme.Quality * 100 / gemme.MaxQuality) == 100) gemmeModifier += 11;
+					if (gemme.Quality == 96) gemmeModifier += 1;
+					else if (gemme.Quality == 97) gemmeModifier += 3;
+					else if (gemme.Quality == 98) gemmeModifier += 5;
+					else if (gemme.Quality == 99) gemmeModifier += 8;
+					else if (gemme.Quality == 100) gemmeModifier += 11;
 				}
 			}
 
 			int itemQualityModifier = 0;
-			if ((item.Quality * 100 / item.MaxQuality) == 96) itemQualityModifier += 6;
-			else if ((item.Quality * 100 / item.MaxQuality) == 97) itemQualityModifier += 8;
-			else if ((item.Quality * 100 / item.MaxQuality) == 98) itemQualityModifier += 10;
-			else if ((item.Quality * 100 / item.MaxQuality) == 99) itemQualityModifier += 18;
-			else if ((item.Quality * 100 / item.MaxQuality) == 100) itemQualityModifier += 26;
+			if (item.Quality == 96) itemQualityModifier += 6;
+			else if (item.Quality == 97) itemQualityModifier += 8;
+			else if (item.Quality == 98) itemQualityModifier += 10;
+			else if (item.Quality == 99) itemQualityModifier += 18;
+			else if (item.Quality == 100) itemQualityModifier += 26;
 
 			int intSkill = player.GetCraftingSkillValue(eCraftingSkill.SpellCrafting);
 			int intSkillMod;
@@ -595,10 +595,10 @@ namespace DOL.GS
 		/// <returns></returns>
 		protected int GetItemMaxImbuePoints(InventoryItem item)
 		{
-			if ((item.Quality * 100 / item.MaxQuality) < 94) return 0;
+			if (item.Quality < 94) return 0;
 			if (item.Level > 51) return 32;
 			if (item.Level < 1) return 0;
-			return itemMaxBonusLevel[item.Level - 1, (item.Quality * 100 / item.MaxQuality) - 94];
+			return itemMaxBonusLevel[item.Level - 1, item.Quality - 94];
 		}
 
 		/// <summary>
@@ -701,10 +701,10 @@ namespace DOL.GS
 			lock (player.TradeWindow.Sync)
 			{
 				foreach (InventoryItem gem in player.TradeWindow.TradeItems)
-					gemModifier += (gem.Quality * 100 / gem.MaxQuality - 92) * 1.8;
+					gemModifier += (gem.Quality - 92) * 1.8;
 			}
 
-			gemModifier = gemModifier * item.Quality / item.MaxQuality;
+			gemModifier = gemModifier * item.Quality / 100;
 
 			int intSkill = player.GetCraftingSkillValue(eCraftingSkill.SpellCrafting);
 			int intSkillMod;

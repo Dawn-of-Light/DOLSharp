@@ -2920,6 +2920,7 @@ namespace DOL.GS
 		{
 			if (Spells == null || Spells.Count < 1)
 				return false;
+
 			if (!WorldMgr.CheckDistance(attackTarget, this, AttackRange))
 			{
 				foreach (Spell spell in this.Spells)

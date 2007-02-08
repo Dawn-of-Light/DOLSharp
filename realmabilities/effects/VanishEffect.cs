@@ -10,6 +10,8 @@ namespace DOL.GS.RealmAbilities
 	/// </summary>
 	public class VanishEffect : TimedEffect
 	{
+		public const string VANISH_BLOCK_ATTACK_TIME_KEY = "vanish_no_attack";
+
 		double m_speedBonus;
 		int m_countdown;
 		RegionTimer m_countDownTimer = null;
@@ -24,18 +26,22 @@ namespace DOL.GS.RealmAbilities
 		{
 			base.Start(target);
 			GamePlayer player = target as GamePlayer;
+			player.TempProperties.setProperty(VANISH_BLOCK_ATTACK_TIME_KEY, player.CurrentRegion.Time + 30000);
+			player.StopAttack();
 			player.Stealth(true);
 			player.Out.SendUpdateMaxSpeed();
 			m_countDownTimer = new RegionTimer(player, new RegionTimerCallback(CountDown));
 			m_countDownTimer.Start(1);
 		}
-		
+
 		public override void Stop()
 		{
 			base.Stop();
 			GamePlayer player = Owner as GamePlayer;
+			player.TempProperties.removeProperty(VANISH_BLOCK_ATTACK_TIME_KEY);
 			player.Out.SendUpdateMaxSpeed();
-			if (m_countDownTimer != null) {
+			if (m_countDownTimer != null)
+			{
 				m_countDownTimer.Stop();
 				m_countDownTimer = null;
 			}
