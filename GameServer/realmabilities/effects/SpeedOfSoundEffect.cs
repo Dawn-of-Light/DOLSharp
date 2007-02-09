@@ -44,7 +44,7 @@ namespace DOL.GS.Effects
 			m_player.TempProperties.setProperty("Charging", true);
 			GameEventMgr.AddHandler(m_player, GamePlayerEvent.AttackFinished, new DOLEventHandler(AttackFinished));
 			GameEventMgr.AddHandler(m_player, GamePlayerEvent.CastFinished, new DOLEventHandler(AttackFinished));
-			m_player.BuffBonusMultCategory1.Set((int)ePackets.MaxSpeed, this, PropertyCalc.MaxSpeedCalculator.SPEED4);		
+			m_player.BuffBonusMultCategory1.Set((int)eProperty.MaxSpeed, this, PropertyCalc.MaxSpeedCalculator.SPEED4);		
 			m_player.Out.SendUpdateMaxSpeed();
 
 			m_player.EffectList.Add(this);
@@ -107,7 +107,7 @@ namespace DOL.GS.Effects
 		{
 			StopTimers();
 			m_player.TempProperties.removeProperty("Charging");
-			m_player.BuffBonusMultCategory1.Remove((int)ePackets.MaxSpeed, this);
+			m_player.BuffBonusMultCategory1.Remove((int)eProperty.MaxSpeed, this);
 			m_player.Out.SendUpdateMaxSpeed();
 			m_player.EffectList.Remove(this);
 			GameEventMgr.RemoveHandler(m_player, GamePlayerEvent.AttackFinished, new DOLEventHandler(AttackFinished));

@@ -20,6 +20,7 @@ namespace DOL.GS.Effects
 
 		protected const String delveString = "This ability creates a pool of healing on the user, instantly healing any member of the caster's group when they go below 75% hp, until it is used up.";
 		GamePlayer m_player;
+		PlayerGroup m_group;
 		public int poolValue = 0;
 		protected long m_startTick;
 		protected RegionTimer m_expireTimer;
@@ -27,15 +28,16 @@ namespace DOL.GS.Effects
 		public void Start(GamePlayer player)
 		{
 			m_player = player;
+			m_group = player.PlayerGroup;
 
-			if (player.PlayerGroup == null)
+			if (m_group == null)
 				return;
 			m_player.Out.SendMessage("Your group is protected by a pool of healing!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
 			m_startTick = player.CurrentRegion.Time;
-			GameEventMgr.AddHandler(m_player.PlayerGroup, PlayerGroupEvent.PlayerJoined, new DOLEventHandler(PlayerJoinedGroup));
-			GameEventMgr.AddHandler(m_player.PlayerGroup, PlayerGroupEvent.PlayerDisbanded, new DOLEventHandler(PlayerDisbandedGroup));
+			GameEventMgr.AddHandler(m_group, PlayerGroupEvent.PlayerJoined, new DOLEventHandler(PlayerJoinedGroup));
+			GameEventMgr.AddHandler(m_group, PlayerGroupEvent.PlayerDisbanded, new DOLEventHandler(PlayerDisbandedGroup));
 
-			foreach (GamePlayer g_player in player.PlayerGroup.GetPlayersInTheGroup())
+			foreach (GamePlayer g_player in m_group.GetPlayersInTheGroup())
 			{
 				foreach (GamePlayer t_player in player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 				{
@@ -64,6 +66,8 @@ namespace DOL.GS.Effects
 			affected.Remove(pdargs.Player);
 			GameEventMgr.RemoveHandler(pdargs.Player, GamePlayerEvent.TakeDamage, new DOLEventHandler(TakeDamage));
 			pdargs.Player.Out.SendMessage("Your are not longer protected by a pool of healing!", eChatType.CT_SpellExpires, eChatLoc.CL_SystemWindow);
+			if (m_group == null)
+				Cancel(false);
 		}
 		protected void TakeDamage(DOLEvent e, object sender, EventArgs args)
 		{
@@ -106,8 +110,11 @@ namespace DOL.GS.Effects
 		{
 			StopTimers();
 			m_player.EffectList.Remove(this);
-			GameEventMgr.RemoveHandler(m_player.PlayerGroup, PlayerGroupEvent.PlayerDisbanded, new DOLEventHandler(PlayerDisbandedGroup));
-			GameEventMgr.RemoveHandler(m_player.PlayerGroup, PlayerGroupEvent.PlayerJoined, new DOLEventHandler(PlayerJoinedGroup));
+			if (m_group != null)
+			{
+				GameEventMgr.RemoveHandler(m_group, PlayerGroupEvent.PlayerDisbanded, new DOLEventHandler(PlayerDisbandedGroup));
+				GameEventMgr.RemoveHandler(m_group, PlayerGroupEvent.PlayerJoined, new DOLEventHandler(PlayerJoinedGroup));
+			}
 			foreach (GamePlayer pl in affected)
 			{
 				pl.Out.SendMessage("Your are no longer protected by a pool of healing!", eChatType.CT_SpellExpires, eChatLoc.CL_SystemWindow);
@@ -115,6 +122,8 @@ namespace DOL.GS.Effects
 			}
 			affected.Clear();
 			m_player.EffectList.Remove(this);
+			m_player = null;
+			m_group = null;
 		}
 		/// <summary>
 		/// Starts the timers for this effect

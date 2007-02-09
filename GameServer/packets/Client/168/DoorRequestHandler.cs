@@ -110,8 +110,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 					}
 					else
 					{
-						player.Out.SendObjectCreate(mydoor as GameDoor);
-
 						if (!WorldMgr.CheckDistance(player, mydoor, WorldMgr.PICKUP_DISTANCE))
 						{
 							player.Out.SendMessage("The " + mydoor.Name + " is too far away!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
