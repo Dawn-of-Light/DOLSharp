@@ -507,6 +507,11 @@ namespace DOL.GS
 
 		#endregion
 		#region decay
+		public override void StartHealthRegeneration()
+		{
+			//don't regenerate health
+		}
+
 		private void StartDecay()
 		{
 			if (ObjectState != eObjectState.Active)
