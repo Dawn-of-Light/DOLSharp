@@ -697,6 +697,7 @@
     <Compile Include="realmabilities\effects\JuggernautEffect.cs" />
     <Compile Include="realmabilities\effects\MasteryOfConcentrationEffect.cs" />
     <Compile Include="realmabilities\effects\rr5\ArmsLengthEffect.cs" />
+    <Compile Include="realmabilities\effects\rr5\BlindingDustEffect.cs" />
     <Compile Include="realmabilities\effects\rr5\FuryOfNatureEffect.cs" />
     <Compile Include="realmabilities\effects\rr5\NaturesWombEffect.cs" />
     <Compile Include="realmabilities\effects\rr5\RemedyEffect.cs" />
@@ -718,6 +719,7 @@
     <Compile Include="realmabilities\handlers\IchorOfTheDeepAbility.cs" />
     <Compile Include="realmabilities\handlers\L3RAPropertyEnhancerAbilities.cs" />
     <Compile Include="realmabilities\handlers\rr5\ArmsLengthAbility.cs" />
+    <Compile Include="realmabilities\handlers\rr5\BlindingDustAbility.cs" />
     <Compile Include="realmabilities\handlers\rr5\FuryOfNatureAbility.cs" />
     <Compile Include="realmabilities\handlers\rr5\NaturesWombAbility.cs" />
     <Compile Include="realmabilities\handlers\rr5\RemedyAbility.cs" />
