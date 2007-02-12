@@ -114,11 +114,17 @@ namespace DOL.GS
 		/// <returns></returns>
 		public static int BeginWork(GamePlayer player, GameSiegeWeapon siegeWeapon)
 		{
+			if (siegeWeapon == null)
+				return 0;
 			// Galenas
 			siegeWeapon.ReleaseControl();
 			siegeWeapon.RemoveFromWorld();
 			bool error = false;
 			DBCraftedItem craftItemData = (DBCraftedItem)GameServer.Database.SelectObject(typeof(DBCraftedItem), "Id_nb ='" + siegeWeapon.ItemId + "'");
+			if (craftItemData == null)
+				return 0;
+			if (craftItemData.RawMaterials == null)
+				return 0;
 			InventoryItem item;
 			ItemTemplate template;
 			foreach (DBCraftedXItem rawmaterial in craftItemData.RawMaterials)

@@ -42,6 +42,7 @@ namespace DOL.Language
 			DE = 2,
 			ES = 3,
 			CZ = 4,
+			IT = 5,
 			Langs_size
 		};
 
@@ -99,6 +100,7 @@ namespace DOL.Language
 			LoadLanguage(Langs.DE, "DE", "German");
 			LoadLanguage(Langs.ES, "ES", "Spanish");
 			LoadLanguage(Langs.CZ, "CZ", "Czech");
+			LoadLanguage(Langs.IT, "IT", "Italian");
 			
 			return true;
 		}

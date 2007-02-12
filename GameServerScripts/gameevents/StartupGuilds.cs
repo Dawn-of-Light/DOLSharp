@@ -44,9 +44,24 @@ namespace DOL.GS.GameEvents
 		[ScriptLoadedEvent]
 		public static void OnScriptCompiled(DOLEvent e, object sender, EventArgs args)
 		{
-			CheckGuild("Clan Cotswold");
-			CheckGuild("Mularn Protectors");
-			CheckGuild("Tir na Nog Adventurers");
+			switch (ServerProperties.Properties.SERV_LANGUAGE)
+			{
+				case "EN":
+					CheckGuild("Clan Cotswold");
+					CheckGuild("Mularn Protectors");
+					CheckGuild("Tir na Nog Adventurers");
+					break;
+				case "DE":
+					CheckGuild("Klan Cotswold");
+					CheckGuild("Beschützer von Mularn");
+					CheckGuild("Tir na Nog-Abenteurer");
+					break;
+				default:
+					CheckGuild("Clan Cotswold");
+					CheckGuild("Mularn Protectors");
+					CheckGuild("Tir na Nog Adventurers");
+					break;
+			}
 		}
 
 		/// <summary>
@@ -57,7 +72,7 @@ namespace DOL.GS.GameEvents
 		private static void CheckGuild(string guildName)
 		{
 			if (GuildMgr.DoesGuildExist(guildName) == false)
-			{			
+			{
 				//create table of rank in guild
 				Guild newguild = new Guild();
 				newguild.theGuildDB = new DBGuild();
@@ -65,11 +80,27 @@ namespace DOL.GS.GameEvents
 				newguild.GuildID = System.Guid.NewGuid().ToString(); //Assume this is unique, which I don't like, but it seems to be commonly used elsewhere in the code.				
 				newguild.theGuildDB.GuildID = newguild.GuildID;
 				newguild.theGuildDB.GuildName = guildName;
-				newguild.theGuildDB.Motd = "Use /gu <text> to talk in this starter guild.";
-				newguild.theGuildDB.oMotd = "Type /gc quit to leave this starter guild.";
 				GuildMgr.CreateRanks(newguild);
 				newguild.theGuildDB.Ranks[8].OcHear = true;
-				newguild.theGuildDB.Ranks[8].Title = "Initiate";
+
+				switch (ServerProperties.Properties.SERV_LANGUAGE)
+				{
+					case "EN":
+						newguild.theGuildDB.Motd = "Use /gu <text> to talk in this starter guild.";
+						newguild.theGuildDB.oMotd = "Type /gc quit to leave this starter guild.";
+						newguild.theGuildDB.Ranks[8].Title = "Initiate";
+						break;
+					case "DE":
+						newguild.theGuildDB.Motd = "Gebt '/gu <text>' ein, um mit den Mitgliedern dieser Startgilde zu sprechen.";
+						newguild.theGuildDB.oMotd = "Gebt '/gc quit' ein, um die Startgilde zu verlassen.";
+						newguild.theGuildDB.Ranks[8].Title = "Abenteurer";
+						break;
+					default:
+						newguild.theGuildDB.Motd = "Use /gu <text> to talk in this starter guild.";
+						newguild.theGuildDB.oMotd = "Type /gc quit to leave this starter guild.";
+						newguild.theGuildDB.Ranks[8].Title = "Initiate";
+						break;
+				}
 
 				GuildMgr.AddGuild(newguild);
 				GameServer.Database.AddNewObject(newguild.theGuildDB);

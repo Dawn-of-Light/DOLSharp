@@ -132,7 +132,7 @@ namespace DOL
 			private string m_friendList = ""; //comma seperated string of friends
 			private string m_playerTitleType = "";
 
-			private bool m_flagguildname = false;
+			private bool m_flagClassName = true;
 			private ushort m_guildRank;
 
 			private long m_playedTime;  // character /played in seconds.
@@ -1302,17 +1302,28 @@ namespace DOL
 			/// Gets/sets guildname flag to print guildname or crafting title
 			/// </summary>
 			[DataElement(AllowDbNull = true)]
-			public bool FlagGuildName
+			public bool FlagClassName
 			{
 				get
 				{
-					return m_flagguildname;
+					return m_flagClassName;
 				}
 				set
 				{
-					m_flagguildname = value;
+					m_flagClassName = value;
 					Dirty = true;
 				}
+			}
+
+			private bool m_advisor = false;
+			/// <summary>
+			/// Is the character an advisor
+			/// </summary>
+			[DataElement(AllowDbNull=true)]
+			public bool Advisor
+			{
+				get { return m_advisor; }
+				set { Dirty = true; m_advisor = value; }
 			}
 
 			/// <summary>
@@ -1652,6 +1663,7 @@ namespace DOL
 			private int m_killsHiberniaSolo;
 			private int m_capturedKeeps;
 			private int m_capturedTowers;
+			private int m_killsDragon;
 
 			/// <summary>
 			/// Amount of Albion Players Killed
@@ -1761,6 +1773,16 @@ namespace DOL
 			{
 				get { return m_capturedTowers; }
 				set { m_capturedTowers = value; Dirty = true; }
+			}
+
+			/// <summary>
+			/// Amount of Dragons Killed
+			/// </summary>
+			[DataElement(AllowDbNull = true)]
+			public int KillsDragon
+			{
+				get { return m_killsDragon; }
+				set { m_killsDragon = value; Dirty = true; }
 			}
 
 			#endregion

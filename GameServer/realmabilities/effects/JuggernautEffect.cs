@@ -17,7 +17,6 @@ namespace DOL.GS.Effects
 		private Int64 m_startTick;
 		private Int32 m_effectDuration;
 		private RegionTimer m_expireTimer;
-		private UInt16 m_id;
 		private byte m_value;
 		private int m_growSize = 15;
 
@@ -58,9 +57,8 @@ namespace DOL.GS.Effects
 		/// Called when effect is to be cancelled
 		/// </summary>
 		/// <param name="playerCancel">Whether or not effect is player cancelled</param>
-		public void Cancel(bool playerCancel)
+		public override void Cancel(bool playerCancel)
 		{
-
 			StopTimers();
 			m_living.Size -= (byte)m_growSize;
 			m_living.Level -= m_value;
@@ -104,7 +102,7 @@ namespace DOL.GS.Effects
 		/// <summary>
 		/// Name of the effect
 		/// </summary>
-		public string Name
+		public override string Name
 		{
 			get
 			{
@@ -115,7 +113,7 @@ namespace DOL.GS.Effects
 		/// <summary>
 		/// Remaining time of the effect in milliseconds
 		/// </summary>
-		public Int32 RemainingTime
+		public override Int32 RemainingTime
 		{
 			get
 			{
@@ -129,7 +127,7 @@ namespace DOL.GS.Effects
 		/// <summary>
 		/// Icon ID
 		/// </summary>
-		public UInt16 Icon
+		public override UInt16 Icon
 		{
 			get
 			{
@@ -138,24 +136,9 @@ namespace DOL.GS.Effects
 		}
 
 		/// <summary>
-		/// Unique ID for identification in the effect list
-		/// </summary>
-		public UInt16 InternalID
-		{
-			get
-			{
-				return m_id;
-			}
-			set
-			{
-				m_id = value;
-			}
-		}
-
-		/// <summary>
 		/// Delve information
 		/// </summary>
-		public IList DelveInfo
+		public override IList DelveInfo
 		{
 			get
 			{

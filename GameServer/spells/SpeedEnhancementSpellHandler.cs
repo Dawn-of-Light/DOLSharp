@@ -47,9 +47,14 @@ namespace DOL.GS.Spells
 		/// <param name="effectiveness">factor from 0..1 (0%-100%)</param>
 		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
 		{
+			if (target.EffectList.GetOfType(typeof(ChargeEffect)) != null || target.TempProperties.getProperty("Charging", false))
+				return;
+
+			if (target is GamePlayer && (target as GamePlayer).IsRiding)
+				return;
+
 			if ((Spell.Pulse != 0 || Spell.CastTime != 0) && target.InCombat)
 			{
-				// how does ranger's instant speed works here?
 				MessageToLiving(target, "You've been in combat recently, the spell has no effect on you!", eChatType.CT_SpellResisted);
 				return;
 			}
