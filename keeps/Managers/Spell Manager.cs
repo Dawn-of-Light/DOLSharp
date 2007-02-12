@@ -365,21 +365,21 @@ namespace DOL.GS.Keeps
 			}
 		}
 
-		private static Spell m_albLargeGuardHealSpell;
-		private static Spell m_midLargeGuardHealSpell;
-		private static Spell m_hibLargeGuardHealSpell;
+		//private static Spell m_albLargeGuardHealSpell;
+		//private static Spell m_midLargeGuardHealSpell;
+		//private static Spell m_hibLargeGuardHealSpell;
 
-		private static Spell m_albGuardNukeSpell;
-		private static Spell m_midGuardNukeSpell;
-		private static Spell m_hibGuardNukeSpell;
+		//private static Spell m_albGuardNukeSpell;
+		//private static Spell m_midGuardNukeSpell;
+		//private static Spell m_hibGuardNukeSpell;
 
-		private static Spell m_albGuardDOTSpell;
-		private static Spell m_midGuardDOTSpell;
-		private static Spell m_hibGuardDOTSpell;
+		//private static Spell m_albGuardDOTSpell;
+		//private static Spell m_midGuardDOTSpell;
+		//private static Spell m_hibGuardDOTSpell;
 
-		private static Spell m_albGuardMezSpell;
-		private static Spell m_midGuardMezSpell;
-		private static Spell m_hibGuardMezSpell;
+		//private static Spell m_albGuardMezSpell;
+		//private static Spell m_midGuardMezSpell;
+		//private static Spell m_hibGuardMezSpell;
 
 		private static Spell m_hastenerSpell;
 		public static Spell HastenerSpell

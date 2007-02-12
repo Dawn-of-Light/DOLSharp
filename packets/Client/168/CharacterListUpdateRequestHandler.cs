@@ -296,21 +296,48 @@ namespace DOL.GS.PacketHandler.Client.v168
 							switch (ch.Realm)
 							{
 								case 1:
-									{
-										
-										ch.GuildID = GuildMgr.GuildNameToGuildID("Clan Cotswold");
-										break; 
-									}
+									switch (ServerProperties.Properties.SERV_LANGUAGE)
+										{
+											case "EN":
+												ch.GuildID = GuildMgr.GuildNameToGuildID("Clan Cotswold");
+												break; 
+											case "DE":
+												ch.GuildID = GuildMgr.GuildNameToGuildID("Klan Cotswold");
+												break; 
+											default:
+												ch.GuildID = GuildMgr.GuildNameToGuildID("Clan Cotswold");
+												break; 
+										}													
+									break;
 								case 2:
-									{
-										ch.GuildID = GuildMgr.GuildNameToGuildID("Mularn Protectors");
-										break; 
-									}
+									switch (ServerProperties.Properties.SERV_LANGUAGE)
+										{
+											case "EN":
+												ch.GuildID = GuildMgr.GuildNameToGuildID("Mularn Protectors");
+												break; 
+											case "DE":
+												ch.GuildID = GuildMgr.GuildNameToGuildID("Beschützer von Mularn");
+												break; 
+											default:
+												ch.GuildID = GuildMgr.GuildNameToGuildID("Mularn Protectors");
+												break; 
+										}													
+									break;
 								case 3:
-									{
-										ch.GuildID = GuildMgr.GuildNameToGuildID("Tir na Nog Adventurers");
-										break; 
-									}
+									switch (ServerProperties.Properties.SERV_LANGUAGE)
+										{
+											case "EN":
+												ch.GuildID = GuildMgr.GuildNameToGuildID("Tir na Nog Adventurers");
+												break; 
+											case "DE":
+												ch.GuildID = GuildMgr.GuildNameToGuildID("Tir na Nog-Abenteurer");
+												break; 
+											default:
+												ch.GuildID = GuildMgr.GuildNameToGuildID("Tir na Nog Adventurers");
+												break; 
+										}
+									break;
+								default: break;
 							}
 
 							if (ch.GuildID != "")

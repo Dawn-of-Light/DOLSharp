@@ -301,6 +301,56 @@ Scripts.Players.Assist.YouAssist:			You assist {0}.
 Scripts.Players.Autoloot.Off:				Your autoloot is off. You will no longer attempt to automaticly loot anything that drops in your area.
 Scripts.Players.Autoloot.On:				Your autoloot is on. You will now attempt to automaticly loot anything that drops in your area.
 
+# /Boot
+Scripts.Players.Boot.InHouseError:			You have to be in your house to use this command!
+Scripts.Players.Boot.NoHouseError:			You don't own a house!
+Scripts.Players.Boot.NoOneOnline:			No one with that name is online to Kick!
+Scripts.Players.Boot.YouRemoved:			You have been removed from the house by {0}!
+
+# /Bountyrent
+Scripts.Players.Bountyrent.InHouseError:		You have to be in your house to use this command!
+Scripts.Players.Bountyrent.NoHouseError:		You don't own a house!
+
+# /Cancelstyle
+Scripts.Players.Cancelstyle.Set:			Cancel Style now set to {0}.
+
+# /Chatgroup
+Scripts.Players.Chatgroup.Help.Help:			/cg help - Displays all chat group commands
+Scripts.Players.Chatgroup.Help.Invite:			/cg invite [playername] - Invites the specified player to the chat group
+Scripts.Players.Chatgroup.Help.JoinPrivate:		/cg join [moderator name] [password] - Join a private chat group which has a password set	
+Scripts.Players.Chatgroup.Help.JoinPublic:		/cg join [moderator name] - Join a public chat group by name of the moderator	
+Scripts.Players.Chatgroup.Help.Leader:			/cg leader <name> - Declare another member of the chat group as leader; This player can invite other players into the chat group and speak when the chat group is on listen mode.
+Scripts.Players.Chatgroup.Help.Leave:			/cg leave - Remove oneself from the chat group
+Scripts.Players.Chatgroup.Help.Listen:			/cg listen - Puts the chat group on listen mode; only the moderator and leaders can speak
+Scripts.Players.Chatgroup.Help.PasswordClear:		/cg password clear - Clears the current password (moderator only)	
+Scripts.Players.Chatgroup.Help.PasswordDisplay:		/cg password - Display the current password for the chat group (moderator only)	
+Scripts.Players.Chatgroup.Help.PasswordNew:		/cg password [new password]	
+Scripts.Players.Chatgroup.Help.Private:			/cg private - The chat group is invite or password-only
+Scripts.Players.Chatgroup.Help.Public:			/cg public - The chat group is public and anyone can join by typing /cg join
+Scripts.Players.Chatgroup.Help.Remove:			/cg remove [playername] - Removes the specified player from the chat group
+Scripts.Players.Chatgroup.Help.Usage:			/cg usage:
+Scripts.Players.Chatgroup.Help.Who:			/cg who - Lists all members of the chat group
+Scripts.Players.Chatgroup.InChatGroup:			You must be in a chat group to use this command.
+Scripts.Players.Chatgroup.InviteYourself:		You cannot invite yourself to a chatgroup.	
+Scripts.Players.Chatgroup.JoinChatGroup:		Do you want to join {0}'s chatgroup?	
+Scripts.Players.Chatgroup.LeaderCommand:		You must be a leader of the chat group to use this command.	
+Scripts.Players.Chatgroup.LeaderInvite:			You must be the leader to invite a player to join the chat group.
+Scripts.Players.Chatgroup.ListenMode:			The listen mode of chatgroup is switch 
+Scripts.Players.Chatgroup.Moderator:			{0} becomes a moderator.
+Scripts.Players.Chatgroup.NoPlayer:			There is no player with this name.
+Scripts.Players.Chatgroup.NotChatGroupLeader:		This player is not a leader of a chatgroup.	
+Scripts.Players.Chatgroup.NotChatGroupMember:		This player is not a member of a chatgroup.	
+Scripts.Players.Chatgroup.NotPublic:			This chatgroup is not public.
+Scripts.Players.Chatgroup.OnlyModerator:		Only moderator can talk on this chat group.	
+Scripts.Players.Chatgroup.OwnChatGroup:			You cannot join your own chatgroup.
+Scripts.Players.Chatgroup.Password:			Password of Chatgroup: {0}.
+Scripts.Players.Chatgroup.PasswordChanged:		You have change the password of Chatgroup to: {0}.	
+Scripts.Players.Chatgroup.PlayerInChatgroup:		{0} is already in a chatgroup.	
+Scripts.Players.Chatgroup.Private:			The chatgroup is now private.
+Scripts.Players.Chatgroup.Public:			The chatgroup is now public.
+Scripts.Players.Chatgroup.Usage:			Usage: /c <text>
+Scripts.Players.Chatgroup.UsageInvite:			Usage: /cg invite <playername>"
+
 # /Language
 Scripts.Players.Language.Set:				You change your server display language to {0}.
 Scripts.Players.Language.Current:			Your language is currently set to: {0}.
