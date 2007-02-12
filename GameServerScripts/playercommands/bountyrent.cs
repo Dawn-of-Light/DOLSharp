@@ -19,6 +19,7 @@
 using System;
 using DOL.GS.PacketHandler;
 using DOL.GS.Housing;
+using DOL.Language;
 
 namespace DOL.GS.Scripts
 {
@@ -38,12 +39,12 @@ namespace DOL.GS.Scripts
 			House house = HouseMgr.GetHouseByPlayer(client.Player);
 			if (house == null)
 			{
-				DisplayError(client, "You don't own a house!", new object[] { });
+				DisplayError(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Bountyrent.NoHouseError"), new object[] { });
 				return 0;
 			}
 			if (!client.Player.InHouse || client.Player.CurrentHouse != house)
 			{
-				DisplayError(client, "You have to be in your house to use this command!", new object[] { });
+				DisplayError(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Bountyrent.InHouseError"), new object[] { });
 				return 0;
 			}
 			switch (args[1].ToLower())

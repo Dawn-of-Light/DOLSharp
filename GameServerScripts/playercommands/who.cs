@@ -221,10 +221,16 @@ namespace DOL.GS.Scripts
 
 			result.Append(" the Level ");
 			result.Append(player.Level);
-			if (player.CharacterClass != null)
+			if (player.ClassNameFlag)
 			{
 				result.Append(" ");
 				result.Append(player.CharacterClass.Name);
+			}
+			else if (player.CharacterClass != null)
+			{
+				result.Append(" ");
+				AbstractCraftingSkill skill = CraftingMgr.getSkillbyEnum(player.CraftingPrimarySkill);
+				result.Append(player.CraftTitle + " " + skill.Name);
 			}
 			else
 			{
@@ -253,6 +259,10 @@ namespace DOL.GS.Scripts
 			if (player.TempProperties.getProperty(GamePlayer.AFK_MESSAGE, null) != null)
 			{
 				result.Append(" <AFK>");
+			}
+			if (player.Advisor)
+			{
+				result.Append(" <ADV>");
 			}
 			if(player.Client.Account.PrivLevel == (int)ePrivLevel.GM)
 			{

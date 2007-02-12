@@ -29,14 +29,20 @@ namespace DOL.GS.Scripts
 		"&report",
 		(uint)ePrivLevel.Player,
 		"Reports a bug",
-		"Use: /report <message>")]
-	public class ReportCommandHandler : ICommandHandler
+		"Usage: /report <message>")]
+	public class ReportCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		public int OnCommand(GameClient client, string[] args)
 		{
+			if (ServerProperties.Properties.DISABLE_BUG_REPORTS)
+			{
+				DisplayError(client, "Bug reporting has been disabled for this server!", new object[] { });
+				return 1;
+			}
+
 			if (args.Length < 2)
 			{
-				DisplaySyntax(client.Player);
+				DisplaySyntax(client);
 				return 1;
 			}
 
@@ -49,11 +55,6 @@ namespace DOL.GS.Scripts
 			client.Player.Out.SendMessage("Report submitted, if this is not a bug report it will be ignored!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 			return 1;
-		}
-
-		public static void DisplaySyntax(GamePlayer player)
-		{
-			player.Out.SendMessage("Invalid use: Usage /report <message>", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}
 	}
 }

@@ -299,6 +299,7 @@ namespace DOL.GS
 		/// <returns>true if successfull</returns>
 		public static bool Load()
 		{
+#warning ideally we'd want this read from the region table instead of hardcoding which regions should produce storms
 			lock (m_weathers)
 			{
 				foreach (RegionEntry region in DOL.GS.WorldMgr.GetRegionList())
@@ -321,7 +322,16 @@ namespace DOL.GS
 						case 72://Hibernia TOA
 						case 130://Hibernia TOA
 						case 163:// New Frontiers
-						case 252://Thidranki
+						case 234://bg1-4
+						case 235://bg5-9
+						case 236://bg10-14
+						case 237://bg15-19
+						case 238://bg20-24
+						case 239://bg25-29
+						case 240://bg30-34
+						case 241://bg35-39
+						case 242://bg40-44
+						case 165://bg45-49
 							m_weathers.Add(region.id, new WeatherMgr(region.id));
 							break;
 					}

@@ -271,6 +271,20 @@ namespace DOL.GS
 			}
 		}
 
+		private bool m_advisor = false;
+		/// <summary>
+		/// Gets or sets the advisor flag for this player
+		/// </summary>
+		public bool Advisor
+		{
+			get { return m_advisor; }
+			set
+			{
+				m_advisor = value;
+				m_character.Advisor = value;
+			}
+		}
+
 		/// <summary>
 		/// quit timer
 		/// </summary>
@@ -3259,6 +3273,9 @@ namespace DOL.GS
 		/// Called when this living buy something with realm points
 		/// </summary>
 		/// <param name="amount">The amount of realm points loosed</param>
+		/// <param name="loc">The chat location</param>
+		/// <param name="str">The message</param>
+		/// <param name="type">The chat type</param>
 		public bool RemoveBountyPoints(long amount, string str, eChatType type, eChatLoc loc)
 		{
 			if (BountyPoints < amount)
@@ -6892,9 +6909,15 @@ namespace DOL.GS
 
 				if (useItem.SpellID != 0 || useItem.SpellID1 != 0 || useItem.PoisonSpellID != 0) // don't return without firing events
 				{
+					if (IsSitting)
+					{
+						Out.SendMessage("You can't use an item while sitting!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						return;
+					}
 					if ((type < 2 && useItem.SpellID > 0 && useItem.Charges < 1) || (type == 2 && useItem.SpellID1 > 0 && useItem.Charges1 < 1) || (useItem.PoisonSpellID > 0 && useItem.PoisonCharges < 1))
 					{
 						Out.SendMessage("The " + useItem.Name + " is out of charges.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						return;
 					}
 					else
 					{
@@ -7730,12 +7753,12 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets or sets the player's guild flag
 		/// </summary>
-		public bool GuildNameFlag
+		public bool ClassNameFlag
 		{
-			get { return m_character.FlagGuildName; }
+			get { return m_character.FlagClassName; }
 			set
 			{
-				m_character.FlagGuildName = value;
+				m_character.FlagClassName = value;
 			}
 		}
 
@@ -9490,11 +9513,12 @@ namespace DOL.GS
 			m_killsHiberniaSolo = m_character.KillsHiberniaSolo;
 			m_capturedKeeps = m_character.CapturedKeeps;
 			m_capturedTowers = m_character.CapturedTowers;
+			m_killsDragon = m_character.KillsDragon;
 
 			m_gainXP = m_character.GainXP;
 			m_gainRP = m_character.GainRP;
 			m_autoloot = m_character.Autoloot;
-
+			m_advisor = m_character.Advisor;
 
 			// Has to be updated on load to ensure time offline isn't
 			// added to character /played.
@@ -11139,6 +11163,10 @@ namespace DOL.GS
 		/// Stores the count of captured towers.
 		/// </summary>
 		private int m_capturedTowers;
+		/// <summary>
+		/// Stores the count of killed dragons
+		/// </summary>
+		private int m_killsDragon;
 
 		/// <summary>
 		/// Gets or sets the count of albion players killed.
@@ -11292,6 +11320,19 @@ namespace DOL.GS
 			{
 				m_capturedTowers = value;
 				m_character.CapturedTowers = value;
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets the count of dragons killed.
+		/// </summary>
+		public int KillsDragon
+		{
+			get { return m_killsDragon; }
+			set
+			{
+				m_killsDragon = value;
+				m_character.KillsDragon = value;
 			}
 		}
 

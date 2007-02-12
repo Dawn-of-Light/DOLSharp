@@ -14,27 +14,18 @@ namespace DOL.GS.Effects
 	{
 		private const String m_delveString = "Gives immunity to stun/snare/root and mesmerize spells and provides unbreakeable speed.";
 		private GamePlayer m_player;
-		private Int64 m_startTick;
 		private Int32 m_effectDuration;
 		private RegionTimer m_expireTimer;
 		private UInt16 m_id;
 
+		DOLEventHandler m_attackFinished = new DOLEventHandler(AttackFinished);
 
-
-		/// <summary>
-		/// Default constructor for AmelioratingMelodiesEffect
-		/// </summary>
-		public SpeedOfSoundEffect()
-		{
-
-		}
 
 		/// <summary>
 		/// Called when effect is to be started
 		/// </summary>
 		/// <param name="player">The player to start the effect for</param>
 		/// <param name="duration">The effectduration in secounds</param>
-		/// <param name="value">The percentage additional value for melee absorb</param>
 		public void Start(GamePlayer player, int duration)
 		{
 			m_player = player;
@@ -42,8 +33,8 @@ namespace DOL.GS.Effects
 
 			StartTimers();
 			m_player.TempProperties.setProperty("Charging", true);
-			GameEventMgr.AddHandler(m_player, GamePlayerEvent.AttackFinished, new DOLEventHandler(AttackFinished));
-			GameEventMgr.AddHandler(m_player, GamePlayerEvent.CastFinished, new DOLEventHandler(AttackFinished));
+			GameEventMgr.AddHandler(m_player, GameLivingEvent.AttackFinished, m_attackFinished);
+			GameEventMgr.AddHandler(m_player, GameLivingEvent.CastFinished, m_attackFinished);
 			m_player.BuffBonusMultCategory1.Set((int)eProperty.MaxSpeed, this, PropertyCalc.MaxSpeedCalculator.SPEED4);		
 			m_player.Out.SendUpdateMaxSpeed();
 
@@ -56,15 +47,16 @@ namespace DOL.GS.Effects
 		/// <param name="e">The event which was raised</param>
 		/// <param name="sender">Sender of the event</param>
 		/// <param name="args">EventArgs associated with the event</param>
-		private static void AttackFinished(DOLEvent e, object sender, EventArgs args)
+		private  static void AttackFinished(DOLEvent e, object sender, EventArgs args)
 		{
 			GamePlayer player = (GamePlayer)sender;
-			if (e == GamePlayerEvent.CastFinished)
+			if (e == GameLivingEvent.CastFinished)
 			{
 				CastSpellEventArgs cfea = args as CastSpellEventArgs;
 
 				if (cfea.SpellHandler.Caster != player)
 					return;
+
 				//cancel if the effectowner casts a non-positive spell
 				if (!cfea.SpellHandler.HasPositiveEffect)
 				{
@@ -73,7 +65,7 @@ namespace DOL.GS.Effects
 						effect.Cancel(false);
 				}
 			}
-			else if (e == GamePlayerEvent.AttackFinished)
+			else if (e == GameLivingEvent.AttackFinished)
 			{
 				AttackFinishedEventArgs afargs = args as AttackFinishedEventArgs;
 				if (afargs == null)
@@ -110,8 +102,8 @@ namespace DOL.GS.Effects
 			m_player.BuffBonusMultCategory1.Remove((int)eProperty.MaxSpeed, this);
 			m_player.Out.SendUpdateMaxSpeed();
 			m_player.EffectList.Remove(this);
-			GameEventMgr.RemoveHandler(m_player, GamePlayerEvent.AttackFinished, new DOLEventHandler(AttackFinished));
-			GameEventMgr.RemoveHandler(m_player, GamePlayerEvent.CastFinished, new DOLEventHandler(AttackFinished));
+			GameEventMgr.RemoveHandler(m_player, GameLivingEvent.AttackFinished, m_attackFinished);
+			GameEventMgr.RemoveHandler(m_player, GameLivingEvent.CastFinished, m_attackFinished);
 		}
 
 		/// <summary>
