@@ -132,7 +132,7 @@ namespace DOL.Events
 		/// <param name="del">The event handler to register for this event type</param>
 		/// <param name="unique">Flag wether event shall be added unique or not</param>
 		/// <exception cref="ArgumentNullException">If one of the parameters is null</exception>
-		protected static void AddHandler(DOLEvent e, DOLEventHandler del, bool unique)
+		private static void AddHandler(DOLEvent e, DOLEventHandler del, bool unique)
 		{
 			if (e == null)
 				throw new ArgumentNullException("e", "No event type given!");
@@ -205,7 +205,7 @@ namespace DOL.Events
 		/// <param name="del">The event handler to register for this event type</param>
 		/// <param name="unique">Flag wether event shall be added unique or not</param>
 		/// <exception cref="ArgumentNullException">If one of the parameters is null</exception>
-		protected static void AddHandler(object obj, DOLEvent e, DOLEventHandler del, bool unique)
+		private static void AddHandler(object obj, DOLEvent e, DOLEventHandler del, bool unique)
 		{
 			//Test the parameters
 			if (obj == null)

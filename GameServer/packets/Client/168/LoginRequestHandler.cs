@@ -45,7 +45,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 			byte build = (byte)packet.ReadByte();
 			string password = packet.ReadString(20);
 			bool v174;
-			bool loggerUsing = false;
+			//the logger detection we had is no longer working
+			//bool loggerUsing = false;
 			switch(client.Version)
 			{
 				case GameClient.eClientVersion.Version168:
@@ -70,11 +71,12 @@ namespace DOL.GS.PacketHandler.Client.v168
 			else
 				packet.Skip(31);
 			string username = packet.ReadString(20);
+			/*
 			if (c2 == 0 && c3 == 0x05000000 && c4 == 0xF4000000)
 			{
 				loggerUsing = true;
 				log.Warn("logger detected (" + username + ")");
-			}
+			}*/
 
 			// check server status
 			if (GameServer.Instance.ServerStatus == eGameServerStatus.GSS_Closed)

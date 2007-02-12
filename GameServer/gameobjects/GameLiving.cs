@@ -2637,7 +2637,7 @@ namespace DOL.GS
 				GamePlayer player = this as GamePlayer;
 				if (player != null)
 				{
-					if ((player.HasAbility(Abilities.Evade) && IsObjectInFront(ad.Attacker, 180)) || player.HasAbility(Abilities.Advanced_Evade))
+					if ((player.HasAbility(Abilities.Evade) && IsObjectInFront(ad.Attacker, 180)) || player.HasAbility(Abilities.Advanced_Evade) || player.EffectList.GetOfType(typeof(CombatAwarenessEffect)) != null)
 						evadeChance = GetModified(eProperty.EvadeChance);
 				}
 				else if (IsObjectInFront(ad.Attacker, 180))

@@ -304,6 +304,8 @@
     <Compile Include="gmcommands\weather.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="playercommands\advice.cs" />
+    <Compile Include="playercommands\advisor.cs" />
     <Compile Include="playercommands\afk.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -431,6 +433,7 @@
     <Compile Include="playercommands\respec.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="playercommands\resurrect.cs" />
     <Compile Include="playercommands\roll.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -453,6 +456,7 @@
     <Compile Include="playercommands\settitle.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="playercommands\setwho.cs" />
     <Compile Include="playercommands\sprint.cs">
       <SubType>Code</SubType>
     </Compile>

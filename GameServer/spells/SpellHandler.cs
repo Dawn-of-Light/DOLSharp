@@ -1050,8 +1050,7 @@ namespace DOL.GS.Spells
 					}
 				}
 			}
-
-			GameEventMgr.Notify(GameLivingEvent.CastFinished, new CastSpellEventArgs(this));
+			GameEventMgr.Notify(GameLivingEvent.CastFinished, m_caster, new CastSpellEventArgs(this));
 		}
 
 		/// <summary>
@@ -1328,7 +1327,6 @@ namespace DOL.GS.Spells
 		/// <param name="effectiveness">factor from 0..1 (0%-100%)</param>
 		public virtual void ApplyEffectOnTarget(GameLiving target, double effectiveness)
 		{
-			//todo allow bolts and direct damages
 			if (target is Keeps.GameKeepDoor || target is Keeps.GameKeepComponent)
 			{
 				MessageToCaster("Your spell has no effect on the keep component!", eChatType.CT_SpellResisted);
@@ -1338,18 +1336,6 @@ namespace DOL.GS.Spells
 				effectiveness = 1.0; // TODO player.PlayerEffectiveness
 			if (effectiveness <= 0)
 				return; // no effect
-
-			if (!HasPositiveEffect)
-			{
-				AttackData ad = new AttackData();
-				ad.Attacker = Caster;
-				ad.Target = target;
-				ad.AttackType = AttackData.eAttackType.Spell;
-				ad.AttackResult = GameLiving.eAttackResult.HitUnstyled;
-				ad.SpellHandler = this;
-				ad.Damage = -1;
-				target.OnAttackedByEnemy(ad);
-			}
 
 			if ((Spell.Duration > 0 && Spell.Target != "Area") || Spell.Concentration > 0)
 			{
