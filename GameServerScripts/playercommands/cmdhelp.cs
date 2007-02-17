@@ -18,11 +18,12 @@
  */
 using System;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Scripts
 {
 	[CmdAttribute("&cmdhelp", //command to handle
-		(uint) ePrivLevel.Player, //minimum privelege level
+		(uint)ePrivLevel.Player, //minimum privelege level
 		"Displays available commands", //command description
 		//usage
 		"'/cmdhelp' displays a list of all the commands and their descriptions",
@@ -50,8 +51,7 @@ namespace DOL.GS.Scripts
 			if (iscmd)
 			{
 				string[] cmds = ScriptMgr.GetCommandList(plvl, true);
-
-				client.Out.SendMessage("<----------Commands available for plvl " + plvl.ToString() + "---------->", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Cmdhelp.PlvlCommands", plvl.ToString()), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 				foreach (string s in cmds)
 				{
@@ -71,7 +71,7 @@ namespace DOL.GS.Scripts
 
 				if (cmd != null)
 				{
-					client.Out.SendMessage(">----------Usage for " + arg + "----------<", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Cmdhelp.Usage", arg), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 					foreach (string s in cmd.m_usage)
 					{
@@ -80,7 +80,7 @@ namespace DOL.GS.Scripts
 				}
 				else
 				{
-					client.Out.SendMessage("Command " + arg + " does not exist", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Cmdhelp.NoCommand", arg), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 			}
 			return 1;

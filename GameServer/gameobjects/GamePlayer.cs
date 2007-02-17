@@ -1943,9 +1943,9 @@ namespace DOL.GS
 				"Half Ogre",
 				"Frostalf",
 				"Shar",
-				"AlbionMenotaur",
-				"MidgardMenotaur",
-				"HiberniaMenotaur"
+				"Minotaur",//albion
+				"Minotaur",//midgard
+				"Minotaur"//hibernia
 			};
 
 		/// <summary>
@@ -4048,7 +4048,8 @@ namespace DOL.GS
 			}
 
 			SkillSpecialtyPoints += specpoints;
-			m_character.DeathCount = 0; // ?
+#warning here we reset the death count because the character has mini dinged he will restart his con loss and xp penalties, is this correct?
+			m_character.DeathCount = 0;
 
 			if (PlayerGroup != null)
 			{
@@ -9514,6 +9515,7 @@ namespace DOL.GS
 			m_capturedKeeps = m_character.CapturedKeeps;
 			m_capturedTowers = m_character.CapturedTowers;
 			m_killsDragon = m_character.KillsDragon;
+			m_deathsPvP = m_character.DeathsPvP;
 
 			m_gainXP = m_character.GainXP;
 			m_gainRP = m_character.GainRP;
@@ -11167,6 +11169,10 @@ namespace DOL.GS
 		/// Stores the count of killed dragons
 		/// </summary>
 		private int m_killsDragon;
+		/// <summary>
+		/// Stores the count of PvP deaths
+		/// </summary>
+		private int m_deathsPvP;
 
 		/// <summary>
 		/// Gets or sets the count of albion players killed.
@@ -11333,6 +11339,19 @@ namespace DOL.GS
 			{
 				m_killsDragon = value;
 				m_character.KillsDragon = value;
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets the pvp deaths
+		/// </summary>
+		public int DeathsPvP
+		{
+			get { return m_deathsPvP; }
+			set
+			{
+				m_deathsPvP = value;
+				m_character.DeathsPvP = value;
 			}
 		}
 

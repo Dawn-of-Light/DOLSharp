@@ -362,6 +362,11 @@ namespace DOL.GS.Scripts
 			string target = String.Join(" ", args, 2, args.Length - 2); ;
 			bool ticketFound = false;
 			string ticket = "Ticket to " + target;
+			// Most //
+			// With the new horse system, the stablemasters are using the item.Id_nb to find the horse route in the database
+			// So we have to save a path in the database with the Id_nb as a PathID
+			// The following string will contain the item Id_nb if it is found in the merchant list
+			string pathname = ""; 
 			if (merchant.TradeItems != null)
 			{
 				foreach (ItemTemplate template in merchant.TradeItems.GetAllItems().Values)
@@ -369,6 +374,7 @@ namespace DOL.GS.Scripts
 					if (template != null && template.Name.ToLower() == ticket.ToLower())
 					{
 						ticketFound = true;
+						pathname = template.Id_nb;
 						break;
 					}
 
@@ -379,7 +385,8 @@ namespace DOL.GS.Scripts
 				DisplayError(client, "Stablemaster has no {0}!", ticket);
 				return 0;
 			}
-			MovementMgr.Instance.SavePath(merchant.Name + "=>" + target, path);
+			//MovementMgr.Instance.SavePath(merchant.Name + "=>" + target, path);
+			MovementMgr.Instance.SavePath(pathname, path); 
 			return 1;
 		}
 

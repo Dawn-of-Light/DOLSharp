@@ -47,7 +47,7 @@ namespace DOL.GS.Scripts
 	 "/player bps <amount>",
 	 "/player stat <typeofStat> <value>",
 	 "/player friend <list|playerName>",
-	 "/player respec <all|line> <lineName>",
+	 "/player respec <all|line|realm> <lineName>",
 	 "/player kill <albs|mids|hibs|self|all>", // if realm not specified, it will kill target.
 	 "/player rez <albs|mids|hibs|self|all>", // if realm not specified, it will rez target.
 	 "/player jump <group|guild|cg> <name>", // to jump a group to you, just type in a player's name and his or her entire group will come with.
@@ -151,7 +151,12 @@ namespace DOL.GS.Scripts
 								client.Out.SendMessage(player.Name + "'s level can only be set to a number 1 to 255!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 								return 0;
 							}
+							int curLevel = player.Level;
 							player.Level = newLevel;
+							if (curLevel < 40)
+								curLevel = 40;
+							for (int i = curLevel; i < 50; i++)
+								player.SkillSpecialtyPoints += player.CharacterClass.SpecPointsMultiplier * i / 20; 
 							client.Out.SendMessage("You changed " + player.Name + "'s level successfully to " + newLevel.ToString() + "!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 							player.Out.SendMessage(client.Player.Name + "(PrivLevel: " + client.Account.PrivLevel + ") has changed your level to " + newLevel.ToString() + "!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 							player.Out.SendUpdatePlayer();

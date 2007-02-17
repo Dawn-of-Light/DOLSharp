@@ -590,6 +590,8 @@ namespace DOL.GS.Keeps
 				int needed = ServerProperties.Properties.CLAIM_NUM;
 				if (this is GameKeepTower)
 					needed = needed / 2;
+				if (player.Client.Account.PrivLevel > 1)
+					needed = 0;
 				if (count < needed)
 				{
 					player.Out.SendMessage("Not enough group members are near the keep. You have " + count + "/" + needed + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);

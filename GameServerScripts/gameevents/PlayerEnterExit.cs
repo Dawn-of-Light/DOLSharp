@@ -19,6 +19,7 @@
 using System;
 using DOL.Events;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.GameEvents
 {
@@ -59,9 +60,9 @@ namespace DOL.GS.GameEvents
 			if (player == null) return;
 			if (player.IsAnonymous) return;
 
-			string message = player.Name + " just entered the game!";
+			string message = LanguageMgr.GetTranslation(player.Client, "Scripts.Events.PlayerEnterExit.Entered", player.Name);
 			if (player.Client.Account.PrivLevel > 1)
-				message = "[Staff Member] " + message;
+				message = LanguageMgr.GetTranslation(player.Client, "Scripts.Events.PlayerEnterExit.Staff", message);
 			else
 			{
 				string realm = "";
@@ -97,9 +98,9 @@ namespace DOL.GS.GameEvents
 			if (player == null) return;
 			if (player.IsAnonymous) return;
 
-			string message = player.Name + " just left the game!";
+			string message = LanguageMgr.GetTranslation(player.Client, "Scripts.Events.PlayerEnterExit.Left", player.Name);
 			if (player.Client.Account.PrivLevel > 1)
-				message = "[Staff Member] " + message;
+				message = LanguageMgr.GetTranslation(player.Client, "Scripts.Events.PlayerEnterExit.Staff", message);
 			else
 			{
 				string realm = "";

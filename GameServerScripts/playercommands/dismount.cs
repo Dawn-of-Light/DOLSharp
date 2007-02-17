@@ -17,12 +17,13 @@
  *
  */
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Scripts
 {
 	[CmdAttribute(
 		"&dismount",
-		(uint) ePrivLevel.Player,
+		(uint)ePrivLevel.Player,
 		"Dismount your steed",
 		"/dismount")]
 	public class RideDismountCommandHandler : ICommandHandler
@@ -34,7 +35,7 @@ namespace DOL.GS.Scripts
 				if (client.Player.IsOnHorse)
 					client.Player.IsOnHorse = false;
 				else
-					client.Out.SendMessage("You are not riding any steed!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Dismount"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return 1;
 			}
 			client.Player.DismountSteed(false);

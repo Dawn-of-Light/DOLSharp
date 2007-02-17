@@ -191,19 +191,7 @@ namespace DOL.GS.Spells
 			// calc damage
 			AttackData ad = CalculateDamageToTarget(target, effectiveness);
 			SendDamageMessages(ad);
-			DamageTarget(ad);
-		}
-
-		// damage target
-		public virtual void DamageTarget(AttackData ad)
-		{
-			ad.AttackResult = GameLiving.eAttackResult.HitUnstyled;
-			ad.Attacker.DealDamage(ad);
-			foreach (GamePlayer player in ad.Attacker.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-			{
-				if (player != null)
-					player.Out.SendCombatAnimation(null, ad.Target, 0, 0, 0, 0, 0x0A, ad.Target.HealthPercent);
-			}
+			DamageTarget(ad, true);
 		}
 
 		public override double CalculateDamageBase()

@@ -48,6 +48,11 @@ namespace DOL.GS.Spells
 			SavageAbilities.ApplyHPPenalty((GamePlayer)m_caster, m_spell.Power);
 			return base.OnEffectExpires (effect, noMessages);
 		}
+
+		public override int CalculateEnduranceCost()
+		{
+			return 0;
+		}
 		
 		// constructor
 		public SavageDamageHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
