@@ -19,6 +19,7 @@
 
 using System.Collections;
 using System.Reflection;
+using DOL.Language;
 using DOL.GS;
 using DOL.GS.ServerProperties;
 using DOL.GS.PacketHandler;
@@ -47,7 +48,7 @@ namespace DOL.GS.Scripts
 		{
 			if(args.Length<2)
 			{
-				client.Out.SendMessage("You must broadcast something...",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Broadcast.NoText"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return 1;
 			}
 
@@ -64,9 +65,7 @@ namespace DOL.GS.Scripts
 			{
 				if (GameServer.ServerRules.IsAllowedToUnderstand(p, player))
 				{
-					p.Out.SendMessage("[Broadcast] "
-						+ player.Name + ": " + message, eChatType.CT_Broadcast,
-						eChatLoc.CL_ChatWindow);
+					p.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Scripts.Players.Broadcast.Message", player.Name, message), eChatType.CT_Broadcast, eChatLoc.CL_ChatWindow);
 				}
 			}
 				
@@ -97,7 +96,7 @@ namespace DOL.GS.Scripts
 						}
 						if (!found)
 						{
-							player.Out.SendMessage("You cannot broadcast here.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Scripts.Players.Broadcast.NoHere"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						}
 						break;
 					}

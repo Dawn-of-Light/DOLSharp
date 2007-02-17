@@ -387,6 +387,9 @@ namespace DOL.GS.Quests.Midgard
 			GameEventMgr.AddHandler(dalikor, GameLivingEvent.Interact, new DOLEventHandler(TalkToDalikor));
 			GameEventMgr.AddHandler(dalikor, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToDalikor));
 
+			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
 			/* Now we bring to dalikor the possibility to give this quest to players */
 			dalikor.AddQuestToGive(typeof (Collection));
 
@@ -418,6 +421,9 @@ namespace DOL.GS.Quests.Midgard
 
 			GameEventMgr.RemoveHandler(dalikor, GameLivingEvent.Interact, new DOLEventHandler(TalkToDalikor));
 			GameEventMgr.RemoveHandler(dalikor, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToDalikor));
+
+			GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
 
 			/* Now we remove to dalikor the possibility to give this quest to players */
 			dalikor.RemoveQuestToGive(typeof (Collection));
@@ -495,7 +501,7 @@ namespace DOL.GS.Quests.Midgard
 
 							//If the player offered his "help", we send the quest dialog now!
 						case "do it":
-							player.Out.SendCustomDialog("Will you find and slay these three Fallen Askefruer and return their wings to Dalikor?", new CustomDialogResponse(CheckPlayerAcceptQuest));
+							player.Out.SendQuestSubscribeCommand(dalikor, QuestMgr.GetIDForQuestType(typeof(Collection)), "Will you find and slay these three Fallen Askefruer and return their wings to Dalikor?");
 							break;
 					}
 				}
@@ -525,6 +531,21 @@ namespace DOL.GS.Quests.Midgard
 					}
 				}
 			}
+		}
+
+		protected static void SubscribeQuest(DOLEvent e, object sender, EventArgs args)
+		{
+			QuestEventArgs qargs = args as QuestEventArgs;
+			if (qargs == null)
+				return;
+
+			if (qargs.QuestID != QuestMgr.GetIDForQuestType(typeof(Collection)))
+				return;
+
+			if (e == GamePlayerEvent.AcceptQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x01);
+			else if (e == GamePlayerEvent.DeclineQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x00);
 		}
 
 		protected static void PlayerLeftWorld(DOLEvent e, object sender, EventArgs args)

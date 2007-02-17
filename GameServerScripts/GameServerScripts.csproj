@@ -503,6 +503,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="playertitles\LoneEnforcerTitle.cs" />
+    <Compile Include="playertitles\MasterEnforcerTitle.cs" />
+    <Compile Include="playertitles\MasterSoldierTitle.cs" />
     <Compile Include="playertitles\VeteranTitle.cs">
       <SubType>Code</SubType>
     </Compile>

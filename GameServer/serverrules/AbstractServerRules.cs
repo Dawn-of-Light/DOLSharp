@@ -1053,9 +1053,8 @@ namespace DOL.GS.ServerRules
 								}
 								break;
 						}
+						killedPlayer.DeathsPvP++;
 					}
-
-
 				}
 			}
 		}

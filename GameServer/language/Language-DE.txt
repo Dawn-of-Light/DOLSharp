@@ -8,11 +8,11 @@
 # Please try to keep ID's alphabetical order
 
 # LANGUAGEMGR
+System.LanguagesName.Czech:				Tschechisch
 System.LanguagesName.English:				Englisch
 System.LanguagesName.French:				Französisch
 System.LanguagesName.German:				Deutsch
 System.LanguagesName.Spanish:				Spanisch
-System.LanguagesName.Czech:				Tschechisch
 
 # SYSTEM
 System.NoSense:						Das würde keinen Sinn machen!
@@ -39,7 +39,7 @@ GamePlayer.Attack.InterceptHit:				Ihr {0} {1}{2} an und trefft für {3}{4} Schad
 GamePlayer.Attack.Intercepted:				{0} stellt sich vor {1} und fängt den Schlag ab!
 GamePlayer.Attack.InterceptedHit:			Ihr {0} {1}{2} an aber trefft {3} für {4}{5} Schaden!
 GamePlayer.Attack.Interrupted:				{0} greift Euch an und Euer {1} wurde unterbrochen!
-GamePlayer.Attack.Location.Torso:			torso
+GamePlayer.Attack.Location.Torso:			Eure Brust
 GamePlayer.Attack.Location.Arm:				Euren Arm
 GamePlayer.Attack.Location.Head:			Euren Kopf
 GamePlayer.Attack.Location.Leg:				Euer Bein
@@ -144,7 +144,7 @@ GamePlayer.OnLevelUp.StatRaise:				Eure Attribute sind gestiegen!
 GamePlayer.OnLevelUp.AttainedRank:			Ihr habt den Rang eines {0} erreicht!
 GamePlayer.OnLevelUp.YouGetSpec:			Ihr erhaltet {0} Spezialisierungspunkte, die Ihr nach Belieben verteilen könnt!
 GamePlayer.OnLevelUp.HitsRaise:				Ihr erhaltet {0} zusätzliche Trefferpunkte.
-GamePlayer.OnLevelUp.PowerRaise:			Eure Power erhöht sich um {0} Punkte.
+GamePlayer.OnLevelUp.PowerRaise:			Eure Magiekraft erhöht sich um {0} Punkte.
 GamePlayer.OnLevelUp.SecondStage:			Ihr erreicht Teil 2 der {0}. Erfahrungsstufe!
 GamePlayer.IsCloakHoodUp.NowWear:			Ihr tragt Eure Kapuze nun auf dem Kopf.
 GamePlayer.IsCloakHoodUp.NoLongerWear:			Ihr tragt Eure Kapuze nun nicht mehr auf dem Kopf.
@@ -279,7 +279,114 @@ HousingPlaceItemHandler.IndoorObjectPlaced:		Inneneinrichtung aufgestellt. {0} f
 HousingPlaceItemHandler.NoHookpoint:			Ihr kann nichts platziert werden!
 HousingPlaceItemHandler.PutMoney:			Ihr leistet eine Anzahlung auf Euer Haus.
 
+# GameServer\world
+# AbstractArea
+AbstractArea.Entered:					(Region) Ihr seid nun {0}!
+AbstractArea.Left:					(Region) Ihr seid nun nicht mehr {0}!
+
 # SCRIPTS
+# GameEvents
+# /Playerenterexit
+Scripts.Events.PlayerEnterExit.Entered:			{0} betritt gerade das Spiel!
+Scripts.Events.PlayerEnterExit.Left:			{0} verlässt gerade das Spiel!
+Scripts.Events.PlayerEnterExit.Staff:			[Spielleitung] {0}
+
+# PlayerCommands
+# /Afk
+Scripts.Players.Afk.Off:				AFK ausgeschaltet.
+Scripts.Players.Afk.On:					AFK eingeschaltet.
+
+# /Anonymous
+Scripts.Players.Anonymous.Error:			Anonymer Modus ist deaktiviert.
+Scripts.Players.Anonymous.Off:				Anonymer Modus AUS.
+Scripts.Players.Anonymous.On:				Anonymer Modus AN.
+
+# /Assist
+Scripts.Players.Assist.CantAssistYourself:		Ihr könnt Euch nicht selbst helfen.
+Scripts.Players.Assist.DoesntHaveTarget:		 hat zur Zeit kein Ziel.
+Scripts.Players.Assist.DontSee:				Ihr seht hier weit und breit niemanden mit dem Namen {0}!
+Scripts.Players.Assist.NoTarget:			Ihr müsst einen Mitbürger Eures Heimatreiches aussuchen, dem Ihr helfen wollt.
+Scripts.Players.Assist.NotValid:			Hier gibt es niemanden, der so heißt.
+Scripts.Players.Assist.YouAssist:			Ihr helft {0}.
+
+# /Autoloot
+Scripts.Players.Autoloot.Off:				Euer Autoloot-Status ist AUS. Ihr werdet nicht versuchen, alle erbeuteten Gegenstände und Münzen automatisch aufzuheben. Benutzt '/autoloot on', um diese Option anzuschalten.
+Scripts.Players.Autoloot.On:				Euer Autoloot-Status ist AN. Wenn Ihr alleine seid oder der Gruppenführer, werdet Ihr versuchen, alle erbeuteten Gegenstände und Münzen automatisch aufzuheben. Benutzt '/autoloot off', um diese Option abzuschalten.
+
+# /Autosplit
+Scripts.Players.Autosplit.Coins:			Der Leiter ändert 
+Scripts.Players.Autosplit.InGroup:			Ihr müsst für diesen Befehl Mitglied einer Gruppe sein.
+Scripts.Players.Autosplit.Leader:			Ihr müsst für diesen Befehl Leiter der Gruppe sein.
+Scripts.Players.Autosplit.Loot:				Der Leiter ändert 
+Scripts.Players.Autosplit.Off:				Der Leiter hat den Autosplit-Status auf AUS gesetzt.
+Scripts.Players.Autosplit.On:				Der Leiter hat den Autosplit-Status auf EIN gesetzt.
+Scripts.Players.Autosplit.Self:				{0} ändert 
+
+# /Boot
+Scripts.Players.Boot.InHouseError:			Ihr müsst Euch in Eurem Haus befinden, um diesen Befehl verwenden zu können!
+Scripts.Players.Boot.NoHouseError:			Ihr besitzt kein Haus!
+Scripts.Players.Boot.NoOneOnline:			Niemand ist mit diesem Namen online den Ihr kicken könnt!
+Scripts.Players.Boot.YouRemoved:			Ihr wurdet von {0} aus dem Haus geworfen!
+
+# /Bountyrent
+Scripts.Players.Bountyrent.InHouseError:		Ihr müsst Euch in Eurem Haus befinden, um diesen Befehl verwenden zu können!
+Scripts.Players.Bountyrent.NoHouseError:		Ihr besitzt kein Haus!
+
+# /Cancelstyle
+Scripts.Players.Cancelstyle.Set:			Kampfstil-Abbruch {0}geschaltet.
+
+# /Chatgroup
+Scripts.Players.Chatgroup.Help.Help:			/cg help - Zeigt die Hilfe zur Befehlsformulierung an
+Scripts.Players.Chatgroup.Help.Invite:			/cg invite <Name> - Lädt einen Spieler in die Chatgruppe ein. Ist dies eine öffentliche Chatgruppe, kann der Befehl von jedem Chatgruppenmitglied benutzt werden, ansonsten nur vom Chatgruppenleiter.
+Scripts.Players.Chatgroup.Help.JoinPrivate:		/cg join <Leitername> <Passwort> - Ihr tretet einer öffentlichen, passwortgeschützten Chatgruppe bei.
+Scripts.Players.Chatgroup.Help.JoinPublic:		/cg join <Leitername> - Ihr tretet einer öffentlichen Chatgruppe bei.
+Scripts.Players.Chatgroup.Help.Leader:			/cg leader <name> - Schaltet einen Spieler als Leiter der Chatgruppe. (Nur Leiter)
+Scripts.Players.Chatgroup.Help.Leave:			/cg leave - Ihr verlasst die Chatgruppe.
+Scripts.Players.Chatgroup.Help.Listen:			/cg listen - Schaltet die Chatgruppe auf "Nur lesen". Nur noch der Chatgruppenleiter und die Moderatoren können etwas schreiben. (Nur Leiter)
+Scripts.Players.Chatgroup.Help.PasswordClear:		/cg password clear - Löscht das aktuelle Passwort (Nur Leiter)
+Scripts.Players.Chatgroup.Help.PasswordDisplay:		/cg password - Zeigt das aktuelle Passwort (Nur dem Leiter)
+Scripts.Players.Chatgroup.Help.PasswordNew:		/cg password <Neues Passwort> - Setz ein (neues) Passwort für die Chatgruppe. (Nur Leiter)
+Scripts.Players.Chatgroup.Help.Private:			/cg private - Schaltet die Chatgruppe auf Nicht-Öffentlich. Man muss das Passwort oder von einem Leiter eingeladen werden um beizutreten. (Nur Leiter)
+Scripts.Players.Chatgroup.Help.Public:			/cg public - Schaltet die Chatgruppe "Öffentlich". Dann kann jeder mit "/cg join <Leitername>" der Chatgruppe beitreten. Ausserdem ist sie dann unter "/who CG" finden. (Nur Leiter)
+Scripts.Players.Chatgroup.Help.Remove:			/cg remove <Name> - Wirft einen Spieler aus der Chatgruppe. (Nur Leiter)
+Scripts.Players.Chatgroup.Help.Usage:			Befehle für "/cg" sind:
+Scripts.Players.Chatgroup.Help.Who:			/cg who - Zeigt alle Mitglieder der Chatgruppe.
+Scripts.Players.Chatgroup.InChatGroup:			Ihr seid zur Zeit in keiner Chat-Gruppe!
+Scripts.Players.Chatgroup.InviteYourself:		Ihr könnt Euch nicht selber einladen.	
+Scripts.Players.Chatgroup.JoinChatGroup:		Wollt Ihr der Chat-Gruppe von {0} beitreten?	
+Scripts.Players.Chatgroup.LeaderCommand:		Diesen Befehl kann nur der Leiter der Chat-Gruppe geben.	
+Scripts.Players.Chatgroup.LeaderInvite:			Ihr müsst der Leiter der Chat-Gruppe sein, um einen Spieler einladen zukönnen.
+Scripts.Players.Chatgroup.ListenMode:			Der "Nur Lesen"-Status der Chat-Gruppe wurde geändert auf 
+Scripts.Players.Chatgroup.Moderator:			{0} ist Moderator geworden.
+Scripts.Players.Chatgroup.NoPlayer:			Ein Spieler mit diesem Namen ist zur Zeit nicht im Spiel oder gehört einem anderen Reich an.
+Scripts.Players.Chatgroup.NotChatGroupLeader:		Dieser Spieler ist kein Leiter einer Chat-Gruppe.	
+Scripts.Players.Chatgroup.NotChatGroupMember:		Dieser Spieler gehört keiner Chat-Gruppe an.	
+Scripts.Players.Chatgroup.NotPublic:			Das ist keine öffentliche Chat-Gruppe.
+Scripts.Players.Chatgroup.OnlyModerator:		Nur der Leiter oder ein Moderator kann in dieser Chat-Gruppe sprechen.	
+Scripts.Players.Chatgroup.OwnChatGroup:			Eurer eigenen Chat-Gruppe könnt Ihr nicht beitreten.
+Scripts.Players.Chatgroup.Password:			Das Passwort der Chat-Gruppe lautet: {0}.
+Scripts.Players.Chatgroup.PasswordChanged:		Ihr habt das Passwort der Chat-Gruppe geändert in: {0}.	
+Scripts.Players.Chatgroup.PlayerInChatgroup:		{0} ist bereits Mitglied einer Chat-Gruppe.	
+Scripts.Players.Chatgroup.Private:			Das ist nun eine private Chat-Gruppe.
+Scripts.Players.Chatgroup.Public:			Das ist nun eine öffentliche Chat-Gruppe.
+Scripts.Players.Chatgroup.Usage:			Verwendet: /c <text>
+Scripts.Players.Chatgroup.UsageInvite:			Verwendet: /cg invite <playername>"
+
+# /Cmdhelp
+Scripts.Players.Cmdhelp.NoCommand:			Den Befehl {0} gibt es nicht.
+Scripts.Players.Cmdhelp.PlvlCommands:			<---------Befehle für Berechtigungsstufe {0}--------->
+Scripts.Players.Cmdhelp.Usage:				>-------Befehlsform für {0}-------<
+
+# /Disband
+Scripts.Players.Disband.Disbanded:			{o} wurde aus der Gruppe entlassen.
+Scripts.Players.Disband.NoPlayer:			In der Gruppe gibt es keinen Spieler mit diesem Namen.
+Scripts.Players.Disband.NotInGroup:			Ihr seid zur Zeit in keiner Gruppe.
+Scripts.Players.Disband.NotLeader:			Ihr seit nicht der Leiter Eurer Gruppe.
+Scripts.Players.Disband.NoYourself:			Auf diesem Wege könnt Ihr die Gruppe nicht verlassen.
+
+# /Dismount
+Scripts.Players.Dismount:				Ihr reitet doch garnicht!
+
 # /Language
-Scripts.Players.Language.Set:				Ihr ändert die vom Server angezeigte Sprache auf {0}.
 Scripts.Players.Language.Current:			Die aktuell auf dem Server angezeigte Sprache ist: {0}.
+Scripts.Players.Language.Set:				Ihr ändert die vom Server angezeigte Sprache auf {0}.

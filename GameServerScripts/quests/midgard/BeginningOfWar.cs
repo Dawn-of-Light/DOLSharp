@@ -612,6 +612,9 @@ namespace DOL.GS.Quests.Midgard
 
 			GameEventMgr.AddHandler(princessAiyr, GameNPCEvent.OnAICallback, new DOLEventHandler(CheckNearPrincessAyir));
 
+			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
 			/* Now we bring to dalikor the possibility to give this quest to players */
 			dalikor.AddQuestToGive(typeof (BeginningOfWar));
 
@@ -648,6 +651,9 @@ namespace DOL.GS.Quests.Midgard
 			GameEventMgr.RemoveHandler(briedi, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToMasterBriedi));
 
 			GameEventMgr.RemoveHandler(princessAiyr, GameNPCEvent.OnAICallback, new DOLEventHandler(CheckNearPrincessAyir));
+
+			GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
 
 			/* Now we remove to dalikor the possibility to give this quest to players */
 			dalikor.RemoveQuestToGive(typeof (BeginningOfWar));
@@ -763,7 +769,7 @@ namespace DOL.GS.Quests.Midgard
 							break;
 							//If the player offered his "help", we send the quest dialog now!
 						case "do that":
-							player.Out.SendCustomDialog("Will you take the letter to Master Briedi in Gotar for help with the Askefruer problem?", new CustomDialogResponse(CheckPlayerAcceptQuest));
+							player.Out.SendQuestSubscribeCommand(dalikor, QuestMgr.GetIDForQuestType(typeof(BeginningOfWar)), "Will you take the letter to Master Briedi in Gotar for help with the Askefruer problem?");
 							break;
 					}
 				}
@@ -831,6 +837,21 @@ namespace DOL.GS.Quests.Midgard
 					}
 				}
 			}
+		}
+
+		protected static void SubscribeQuest(DOLEvent e, object sender, EventArgs args)
+		{
+			QuestEventArgs qargs = args as QuestEventArgs;
+			if (qargs == null)
+				return;
+
+			if (qargs.QuestID != QuestMgr.GetIDForQuestType(typeof(BeginningOfWar)))
+				return;
+
+			if (e == GamePlayerEvent.AcceptQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x01);
+			else if (e == GamePlayerEvent.DeclineQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x00);
 		}
 
 		/* This is the method we declared as callback for the hooks we set to

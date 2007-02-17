@@ -466,6 +466,9 @@ namespace DOL.GS.Quests.Midgard
 			GameEventMgr.AddHandler(yuliwyf, GameLivingEvent.Interact, new DOLEventHandler(TalkToYuliwyf));
 			GameEventMgr.AddHandler(yuliwyf, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToYuliwyf));
 
+			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
 			/* Now we bring to harlfug the possibility to give this quest to players */
 			harlfug.AddQuestToGive(typeof (CityOfJordheim));
 
@@ -503,6 +506,9 @@ namespace DOL.GS.Quests.Midgard
 
 			GameEventMgr.RemoveHandler(yuliwyf, GameLivingEvent.Interact, new DOLEventHandler(TalkToYuliwyf));
 			GameEventMgr.RemoveHandler(yuliwyf, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToYuliwyf));
+
+			GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
 
 			/* Now we remove to harlfug the possibility to give this quest to players */
 			harlfug.RemoveQuestToGive(typeof (CityOfJordheim));
@@ -663,7 +669,7 @@ namespace DOL.GS.Quests.Midgard
 							harlfug.SayTo(player, "I trust that you won't steal from me, so what do you say? Will you [do this] for me or not?");
 							break;
 						case "do this":
-							player.Out.SendCustomDialog("Will you take these coins to the Vault Keeper Yuliwyf in Jordheim?", new CustomDialogResponse(CheckPlayerAcceptQuest));
+							player.Out.SendQuestSubscribeCommand(harlfug, QuestMgr.GetIDForQuestType(typeof(CityOfJordheim)), "Will you take these coins to the Vault Keeper Yuliwyf in Jordheim?");
 							break;
 					}
 				}
@@ -681,6 +687,21 @@ namespace DOL.GS.Quests.Midgard
 					}
 				}
 			}
+		}
+
+		protected static void SubscribeQuest(DOLEvent e, object sender, EventArgs args)
+		{
+			QuestEventArgs qargs = args as QuestEventArgs;
+			if (qargs == null)
+				return;
+
+			if (qargs.QuestID != QuestMgr.GetIDForQuestType(typeof(CityOfJordheim)))
+				return;
+
+			if (e == GamePlayerEvent.AcceptQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x01);
+			else if (e == GamePlayerEvent.DeclineQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x00);
 		}
 
 		protected static void TalkToAssistant(DOLEvent e, object sender, EventArgs args)

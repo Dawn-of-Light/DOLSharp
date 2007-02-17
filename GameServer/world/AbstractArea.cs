@@ -18,6 +18,7 @@
  */
 using System;
 using DOL.Events;
+using DOL.Language;
 using DOL.GS;
 using DOL.GS.PacketHandler;
 
@@ -175,7 +176,7 @@ namespace DOL.GS
 		public virtual void OnPlayerLeave(GamePlayer player)
 		{
 			if (m_displayMessage && Description != null && Description != "")
-				player.Out.SendMessage("(Region) You have left " + Description + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractArea.Left", Description), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 			player.Notify(AreaEvent.PlayerLeave, this, new AreaEventArgs(this, player));
 		}
@@ -188,7 +189,7 @@ namespace DOL.GS
 		{
 			if (m_displayMessage && Description != null && Description != "")
 			{
-				player.Out.SendMessage("(Region) You have entered " + Description + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractArea.Entered", Description), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				player.Out.SendMessage(Description, eChatType.CT_ScreenCenterSmaller, eChatLoc.CL_SystemWindow);
 			}
 			if (Sound != 0)
