@@ -782,6 +782,15 @@ namespace DOL.GS.Spells
 		}
 
 		/// <summary>
+		/// Calculates the enduance cost of the spell
+		/// </summary>
+		/// <returns></returns>
+		public virtual int CalculateEnduranceCost()
+		{
+			return 5;
+		}
+
+		/// <summary>
 		/// Calculates the range to target needed to cast the spell
 		/// </summary>
 		/// <returns></returns>
@@ -989,7 +998,7 @@ namespace DOL.GS.Spells
 		public virtual void FinishSpellCast(GameLiving target)
 		{
 			// endurance
-			m_caster.Endurance -= 5;
+			m_caster.Endurance -= CalculateEnduranceCost();
 
 			// messages
 			if (Spell.InstrumentRequirement == 0 && Spell.ClientEffect != 0)

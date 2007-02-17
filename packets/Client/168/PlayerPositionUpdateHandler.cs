@@ -24,6 +24,7 @@ using System.Reflection;
 using System.Text;
 using DOL.GS;
 using DOL.Database;
+using DOL.Language;
 using System.Net;
 using DOL.GS.PacketHandler;
 using DOL.Events;
@@ -134,7 +135,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					|| client.Player.X != client.Player.PlayerCharacter.BindXpos
 					|| client.Player.Y != client.Player.PlayerCharacter.BindYpos)
 				{
-					client.Out.SendMessage("Unknown zone, moving to bind point.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+					client.Out.SendMessage(LanguageMgr.GetTranslation(client, "PlayerPositionUpdateHandler.UnknownZone"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 					client.Player.MoveTo(
 						(ushort)client.Player.PlayerCharacter.BindRegion,
 						client.Player.PlayerCharacter.BindXpos,
@@ -174,7 +175,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				{
 					client.Player.MaxLastZ = int.MinValue;
 				}
-				client.Out.SendMessage("You have entered " + newZone.Description + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "PlayerPositionUpdateHandler.Entered", newZone.Description), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				client.Out.SendMessage(newZone.Description, eChatType.CT_ScreenCenterSmaller, eChatLoc.CL_SystemWindow);
 				client.Player.LastPositionUpdateZone = newZone;
 			}
@@ -452,13 +453,13 @@ namespace DOL.GS.PacketHandler.Client.v168
 					int fallSpeed = (flyingflag & 0xFFF) - 100 * safeFallLevel; // 0x7FF fall speed and 0x800 bit = fall speed overcaped
 					if (fallSpeed > 400)
 					{
-						client.Out.SendMessage("You take falling damage!", eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
+						client.Out.SendMessage(LanguageMgr.GetTranslation(client, "PlayerPositionUpdateHandler.FallingDamage"), eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
 						int fallPercent = Math.Min(99, (fallSpeed - 401) / 6);
 						if (fallPercent > 0)
 						{
 							if (safeFallLevel > 0)
-								client.Out.SendMessage("The damage was lessened by your Safe Fall ability!", eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
-							client.Out.SendMessage("You take " + fallPercent + "% of your max hits in damage.", eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
+								client.Out.SendMessage(LanguageMgr.GetTranslation(client, "PlayerPositionUpdateHandler.SafeFall"), eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
+							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "PlayerPositionUpdateHandler.FallPercent", fallPercent), eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
 
 							client.Player.Endurance -= client.Player.MaxEndurance * fallPercent / 100;
 							client.Player.TakeDamage(null, eDamageType.Falling, (int)(0.01 * fallPercent * (client.Player.MaxHealth - 1)), 0);
@@ -467,9 +468,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 							foreach (GamePlayer player in client.Player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 								player.Out.SendCombatAnimation(null, client.Player, 0, 0, 0, 0, 0, client.Player.HealthPercent);
 
-							//							client.Player.ChangeHealth(client.Player, GameLiving.eHealthChangeType.Unknown, -0.01*fallPercent*(client.Player.MaxHealth - 1));
+//							client.Player.ChangeHealth(client.Player, GameLiving.eHealthChangeType.Unknown, -0.01*fallPercent*(client.Player.MaxHealth - 1));
 						}
-						client.Out.SendMessage("You lose endurance!", eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
+						client.Out.SendMessage(LanguageMgr.GetTranslation(client, "PlayerPositionUpdateHandler.Endurance"), eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
 					}
 					client.Player.MaxLastZ = client.Player.Z;
 				}

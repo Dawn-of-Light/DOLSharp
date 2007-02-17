@@ -22,6 +22,7 @@ using System.Reflection;
 
 using DOL.Database;
 using DOL.Events;
+using DOL.Language;
 using DOL.GS;
 using DOL.GS.Housing;
 using DOL.GS.Keeps;
@@ -167,16 +168,16 @@ namespace DOL.GS.PacketHandler.Client.v168
 				{
 					if (player.GuildRank.GcHear && player.Guild.theGuildDB.Motd != "")
 					{
-						player.Out.SendMessage("Guild Message:", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "PlayerInitRequestHandler.GuildMessage"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						player.Out.SendMessage(player.Guild.theGuildDB.Motd, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}
 					if (player.GuildRank.OcHear && player.Guild.theGuildDB.oMotd != "")
 					{
-						player.Out.SendMessage("Officer Message: " + player.Guild.theGuildDB.oMotd, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "PlayerInitRequestHandler.OfficerMessage", player.Guild.theGuildDB.oMotd), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}
 					if (player.Guild.alliance != null && player.GuildRank.AcHear && player.Guild.alliance.Dballiance.Motd != "")
 					{
-						player.Out.SendMessage("Alliance Message: " + player.Guild.theGuildDB.oMotd, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "PlayerInitRequestHandler.AllianceMessage", player.Guild.theGuildDB.oMotd), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}
 				}
 
@@ -203,7 +204,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			    
 				if (player.FreeLevelState == 2)
 				{
-					player.Out.SendDialogBox(eDialogCode.SimpleWarning, 0, 0, 0, 0, eDialogType.Ok, true, "You are eligible for a free level! Click on your trainer to receive it (or type /freelevel decline to discard your free level).");
+					player.Out.SendDialogBox(eDialogCode.SimpleWarning, 0, 0, 0, 0, eDialogType.Ok, true, LanguageMgr.GetTranslation(player.Client, "PlayerInitRequestHandler.FreeLevel"));
 				}
 				
 				AssemblyName an = Assembly.GetExecutingAssembly().GetName();
@@ -225,7 +226,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					KeepMgr.GetBorderKeepLocation(keepid, out x, out y, out z, out heading);
 					 */
 
-					player.Out.SendMessage("This area isn't currently secure and you are being transported to a safer location.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "PlayerInitRequestHandler.SaferLocation"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					player.MoveTo((ushort)player.PlayerCharacter.BindRegion, player.PlayerCharacter.BindXpos, player.PlayerCharacter.BindYpos, player.PlayerCharacter.BindZpos, (ushort)player.PlayerCharacter.BindHeading);
 				}
 
@@ -239,7 +240,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 						if (player.Level > k.BaseLevel)
 						{
-							player.Out.SendMessage("You have exceeded the level cap of this battleground!", eChatType.CT_YouWereHit, eChatLoc.CL_SystemWindow);
+							player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "PlayerInitRequestHandler.LevelCap"), eChatType.CT_YouWereHit, eChatLoc.CL_SystemWindow);
 							player.MoveTo((ushort)player.PlayerCharacter.BindRegion, player.PlayerCharacter.BindXpos, player.PlayerCharacter.BindYpos, player.PlayerCharacter.BindZpos, (ushort)player.PlayerCharacter.BindHeading);
 							break;
 						}

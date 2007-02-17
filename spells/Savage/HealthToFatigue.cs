@@ -75,6 +75,11 @@ namespace DOL.GS.Spells
 			GiveEndurance(m_caster, (int)m_spell.Value);
 		}
 
+		public override int CalculateEnduranceCost()
+		{
+			return 0;
+		}
+
 		protected virtual void GiveEndurance(GameLiving target, int amount)
 		{
 			if (target.Endurance >= amount)
