@@ -519,9 +519,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 				new int[8] { 90, 70, 40, 40, 60, 60, 60, 60 }, // Half Ogre
 				new int[8] { 55, 55, 55, 60, 60, 75, 60, 60 }, // Frostalf
 				new int[8] { 60, 80, 50, 50, 60, 60, 60, 60 }, // Shar
-				new int[8] { 80, 80, 50, 60, 50, 50, 50, 60 }, // AlbionMenotaur
-				new int[8] { 80, 80, 50, 60, 50, 50, 50, 60 }, // MidgardMenotaur
-				new int[8] { 80, 80, 50, 60, 50, 50, 50, 60 }, // HiberniaMenotaur
+				new int[8] { 80, 70, 50, 40, 60, 60, 60, 60 }, // AlbionMenotaur
+				new int[8] { 80, 70, 50, 40, 60, 60, 60, 60 }, // MidgardMenotaur
+				new int[8] { 80, 70, 50, 40, 60, 60, 60, 60 }, // HiberniaMenotaur
 			};
 
 			/// <summary>

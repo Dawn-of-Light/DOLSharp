@@ -17,12 +17,13 @@
  *
  */
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Scripts
 {
 	[CmdAttribute(
 		"&disband",
-		(uint) ePrivLevel.Player,
+		(uint)ePrivLevel.Player,
 		"Disband from a group", "/disband")]
 	public class DisbandCommandHandler : ICommandHandler
 	{
@@ -30,20 +31,20 @@ namespace DOL.GS.Scripts
 		{
 			if (client.Player.PlayerGroup == null)
 			{
-				client.Out.SendMessage("You are not in a group", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Disband.NotInGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return 1;
 			}
 
-			if(args.Length < 2)//disband myslef
+			if (args.Length < 2)//disband myslef
 			{
-			client.Player.PlayerGroup.RemovePlayer(client.Player);
+				client.Player.PlayerGroup.RemovePlayer(client.Player);
 				return 1;
 			}
 			else//disband by name
 			{
-				if(client.Player.PlayerGroup.Leader != client.Player)
+				if (client.Player.PlayerGroup.Leader != client.Player)
 				{
-					client.Out.SendMessage("You are not the leader of your group.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+					client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Disband.NotLeader"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return 1;
 				}
 
@@ -52,23 +53,23 @@ namespace DOL.GS.Scripts
 
 				GameClient targetClient = WorldMgr.GetClientByPlayerNameAndRealm(name, client.Player.Realm, false);
 				if (targetClient == null)
-					target = null;				
+					target = null;
 				else
 					target = targetClient.Player;
 
-				if(target == null || client.Player.PlayerGroup != target.PlayerGroup)
+				if (target == null || client.Player.PlayerGroup != target.PlayerGroup)
 				{ // Invalid target 
-					client.Out.SendMessage("No players in group with that name.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+					client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Disband.NoPlayer"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return 1;
 				}
 
-				if(target == client.Player)
+				if (target == client.Player)
 				{
-					client.Out.SendMessage("Can't disband yourself in such way.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+					client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Disband.NoYourself"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return 1;
 				}
 
-				client.Player.PlayerGroup.SendMessageToGroupMembers(target.Name+" was disbanded from group",eChatType.CT_Say,eChatLoc.CL_SystemWindow);
+				client.Player.PlayerGroup.SendMessageToGroupMembers(LanguageMgr.GetTranslation(client, "Scripts.Players.Disband.Disbanded", target.Name), eChatType.CT_Say, eChatLoc.CL_SystemWindow);
 				target.PlayerGroup.RemovePlayer(target);
 			}
 

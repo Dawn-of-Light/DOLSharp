@@ -2602,7 +2602,7 @@ namespace DOL.GS
 					if (inter.InterceptSource.ObjectState != eObjectState.Active) continue;
 					if (inter.InterceptSource.IsAlive == false) continue;
 					if (!WorldMgr.CheckDistance(this, inter.InterceptSource, InterceptAbilityHandler.INTERCEPT_DISTANCE)) continue;
-					if (Util.Chance(inter.InterceptChance)) continue; // TODO: proper chance formula?
+					if (!Util.Chance(inter.InterceptChance)) continue; // TODO: proper chance formula?
 					intercept = inter;
 				}
 			}

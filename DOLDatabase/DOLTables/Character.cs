@@ -1664,6 +1664,7 @@ namespace DOL
 			private int m_capturedKeeps;
 			private int m_capturedTowers;
 			private int m_killsDragon;
+			private int m_deathsPvP;
 
 			/// <summary>
 			/// Amount of Albion Players Killed
@@ -1783,6 +1784,16 @@ namespace DOL
 			{
 				get { return m_killsDragon; }
 				set { m_killsDragon = value; Dirty = true; }
+			}
+
+			/// <summary>
+			/// Amount of PvP deaths
+			/// </summary>
+			[DataElement(AllowDbNull = true)]
+			public int DeathsPvP
+			{
+				get { return m_deathsPvP; }
+				set { m_deathsPvP = value; Dirty = true; }
 			}
 
 			#endregion

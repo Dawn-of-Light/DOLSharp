@@ -504,6 +504,9 @@ namespace DOL.GS.Quests.Midgard
 
 			GameEventMgr.AddHandler(queenVuuna, GameNPCEvent.OnAICallback, new DOLEventHandler(CheckNearQueenVuuna));
 
+			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
 			/* Now we bring to Dalikor the possibility to give this quest to players */
 			dalikor.AddQuestToGive(typeof (Culmination));
 
@@ -537,6 +540,9 @@ namespace DOL.GS.Quests.Midgard
 			GameEventMgr.RemoveHandler(dalikor, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToDalikor));
 
 			GameEventMgr.RemoveHandler(queenVuuna, GameNPCEvent.OnAICallback, new DOLEventHandler(CheckNearQueenVuuna));
+
+			GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
 
 			/* Now we remove to dalikor the possibility to give this quest to players */
 			dalikor.RemoveQuestToGive(typeof (Culmination));
@@ -647,7 +653,7 @@ namespace DOL.GS.Quests.Midgard
 							break;
 							//If the player offered his "help", we send the quest dialog now!
 						case "take on":
-							player.Out.SendCustomDialog("Are you ready to take part in this monumental battle for the good of Mularn?", new CustomDialogResponse(CheckPlayerAcceptQuest));
+							player.Out.SendQuestSubscribeCommand(dalikor, QuestMgr.GetIDForQuestType(typeof(Culmination)), "Are you ready to take part in this monumental battle for the good of Mularn?");
 							break;
 					}
 				}
@@ -673,6 +679,21 @@ namespace DOL.GS.Quests.Midgard
 					}
 				}
 			}
+		}
+
+		protected static void SubscribeQuest(DOLEvent e, object sender, EventArgs args)
+		{
+			QuestEventArgs qargs = args as QuestEventArgs;
+			if (qargs == null)
+				return;
+
+			if (qargs.QuestID != QuestMgr.GetIDForQuestType(typeof(Culmination)))
+				return;
+
+			if (e == GamePlayerEvent.AcceptQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x01);
+			else if (e == GamePlayerEvent.DeclineQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x00);
 		}
 
 		/* This is the method we declared as callback for the hooks we set to

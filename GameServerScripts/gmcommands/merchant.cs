@@ -37,7 +37,7 @@ namespace DOL.GS.Scripts
 		 "'/merchant sell <itemsListID>' to assign this merchant with an articles list template",
 		 "'/merchant sellremove' to remove the articles list template from merchant",
 		 "'/merchant articles add <itemTemplateID> <pageNumber> [slot]' to add an item to the merchant articles list template",
-		 "'/merchant articles remove <slot>' to remove item from the specified slot in this merchant inventory articles list template",
+		 "'/merchant articles remove <pageNumber> <slot>' to remove item from the specified slot in this merchant inventory articles list template",
 		 "'/merchant articles delete' to delete the inventory articles list template of the merchant",
 		 "'/merchant type <classtype>")]
 	public class MerchantCommandHandler : AbstractCommandHandler, ICommandHandler

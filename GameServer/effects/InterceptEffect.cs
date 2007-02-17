@@ -62,13 +62,14 @@ namespace DOL.GS.Effects
 			get { return m_interceptTarget; }
 		}
 
+		/// <summary>
+		/// chance to intercept
+		/// </summary>
 		public int InterceptChance
 		{
 			get
 			{
-				if (InterceptSource is GamePlayer)
-					return 50;
-				return 10;
+				return 50;
 			}
 		}
 
