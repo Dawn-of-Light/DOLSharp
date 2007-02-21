@@ -151,100 +151,103 @@ namespace DOL.GS.PacketHandler.Client.v168
 						else
 							client.LoggerUsing = false;
 						 */
-						playerAccount = (Account) GameServer.Database.FindObjectByKey(typeof(Account), username);
-						client.PingTime = DateTime.Now.Ticks;
+                        foreach (char c in username.ToLower().ToCharArray())
+                        {
+                            if ((c < '0' || c > '9') && (c < 'a' || c > 'z'))
+                            {
+                                goodname = false;
+                                break;
+                            }
+                        }
 
-						if(playerAccount == null)
-						{
-							//check autocreate ...
-							bool goodname = true;
-							if(GameServer.Instance.Configuration.AutoAccountCreation)
-							{
-								// autocreate account
-								foreach(char c in username.ToLower().ToCharArray())
-								{
-									if((c < '0' || c > '9') && (c < 'a' || c > 'z'))
-									{
-										goodname = false;
-										break;
-									}
-								}
+                        // Yes! Stoping!
+                        if (!goodname)
+                        {
+                            if (log.IsInfoEnabled)
+                                log.Info("Invalid symbols in account name \"" + username + "\" found!");
+                            client.Out.SendLoginDenied(eLoginError.AccountInvalid);
+                            GameServer.Instance.Disconnect(client);
+                            return 1;
+                        }
+                        else
+                        {
+                            playerAccount = (Account)GameServer.Database.FindObjectByKey(typeof(Account), username);
+                            client.PingTime = DateTime.Now.Ticks;
 
-								// Yes! Stoping!
-								if (!goodname)
-								{
-									if (log.IsInfoEnabled)
-										log.Info("Invalid symbols in account name \""+username+"\" found!");
-									client.Out.SendLoginDenied(eLoginError.AccountInvalid);
-									GameServer.Instance.Disconnect(client);
-									return 1;
-								}
+                            if (playerAccount == null)
+                            {
+                                //check autocreate ...
+                                bool goodname = true;
+                                if (GameServer.Instance.Configuration.AutoAccountCreation)
+                                {
+                                    // autocreate account
 
-								playerAccount = new Account();
-								playerAccount.Name = username;
-								playerAccount.Password = CryptPassword(password);
-								playerAccount.Realm = 0;
-								playerAccount.CreationDate = DateTime.Now;
-								playerAccount.LastLogin = DateTime.Now;
-								playerAccount.LastLoginIP = ipAddress;
-								playerAccount.Language = ServerProperties.Properties.SERV_LANGUAGE;
-								
-								if(GameServer.Database.GetObjectCount(typeof (Account)) == 0)
-								{
-									playerAccount.PrivLevel = 3;
-									if (log.IsInfoEnabled)
-										log.Info("New admin account created: " + username);
-								}
-								else
-								{
-									playerAccount.PrivLevel = 1;
-									if (log.IsInfoEnabled)
-										log.Info("New account created: " + username);
-								}
 
-								GameServer.Database.AddNewObject(playerAccount);
-							}
-							else
-							{
-								if (log.IsInfoEnabled)
-									log.Info("No such account found and autocreation deactivated!");
-								client.Out.SendLoginDenied(eLoginError.AccountNotFound);
-								GameServer.Instance.Disconnect(client);
-								return 1;
-							}
-						}
-						else
-						{
-//							// autoconvert all
-//							foreach (Account acc in GameServer.Database.SelectAllObjects(typeof(Account))) {
-//								if (acc.Password != null && !acc.Password.StartsWith("##")) {
-//									acc.Password = CryptPassword(acc.Password);
-//									GameServer.Database.SaveObject(acc);
-//								}
-//							}
+                                    playerAccount = new Account();
+                                    playerAccount.Name = username;
+                                    playerAccount.Password = CryptPassword(password);
+                                    playerAccount.Realm = 0;
+                                    playerAccount.CreationDate = DateTime.Now;
+                                    playerAccount.LastLogin = DateTime.Now;
+                                    playerAccount.LastLoginIP = ipAddress;
+                                    playerAccount.Language = ServerProperties.Properties.SERV_LANGUAGE;
 
-							// check password
-							//if (!playerAccount.Password.StartsWith("##"))
-							//{
-							//	playerAccount.Password = CryptPassword(playerAccount.Password);
-							//}
-							if (!CryptPassword(password).Equals(playerAccount.Password))
-							{
-								if (log.IsInfoEnabled)
-									log.Info("(" + client.TcpEndpoint + ") Wrong password!");
-								client.Out.SendLoginDenied(eLoginError.WrongPassword);
-								GameServer.Instance.Disconnect(client);
-								return 1;
-							}
-							// save player infos
-							playerAccount.LastLogin = DateTime.Now;
-							playerAccount.LastLoginIP = ipAddress;
-							if (playerAccount.Language == null || playerAccount.Language == "")
-								playerAccount.Language = ServerProperties.Properties.SERV_LANGUAGE;
-							
-							GameServer.Database.SaveObject(playerAccount);
-						}
+                                    if (GameServer.Database.GetObjectCount(typeof(Account)) == 0)
+                                    {
+                                        playerAccount.PrivLevel = 3;
+                                        if (log.IsInfoEnabled)
+                                            log.Info("New admin account created: " + username);
+                                    }
+                                    else
+                                    {
+                                        playerAccount.PrivLevel = 1;
+                                        if (log.IsInfoEnabled)
+                                            log.Info("New account created: " + username);
+                                    }
 
+                                    GameServer.Database.AddNewObject(playerAccount);
+                                }
+                                else
+                                {
+                                    if (log.IsInfoEnabled)
+                                        log.Info("No such account found and autocreation deactivated!");
+                                    client.Out.SendLoginDenied(eLoginError.AccountNotFound);
+                                    GameServer.Instance.Disconnect(client);
+                                    return 1;
+                                }
+                            }
+                            else
+                            {
+                                //							// autoconvert all
+                                //							foreach (Account acc in GameServer.Database.SelectAllObjects(typeof(Account))) {
+                                //								if (acc.Password != null && !acc.Password.StartsWith("##")) {
+                                //									acc.Password = CryptPassword(acc.Password);
+                                //									GameServer.Database.SaveObject(acc);
+                                //								}
+                                //							}
+
+                                // check password
+                                //if (!playerAccount.Password.StartsWith("##"))
+                                //{
+                                //	playerAccount.Password = CryptPassword(playerAccount.Password);
+                                //}
+                                if (!CryptPassword(password).Equals(playerAccount.Password))
+                                {
+                                    if (log.IsInfoEnabled)
+                                        log.Info("(" + client.TcpEndpoint + ") Wrong password!");
+                                    client.Out.SendLoginDenied(eLoginError.WrongPassword);
+                                    GameServer.Instance.Disconnect(client);
+                                    return 1;
+                                }
+                                // save player infos
+                                playerAccount.LastLogin = DateTime.Now;
+                                playerAccount.LastLoginIP = ipAddress;
+                                if (playerAccount.Language == null || playerAccount.Language == "")
+                                    playerAccount.Language = ServerProperties.Properties.SERV_LANGUAGE;
+
+                                GameServer.Database.SaveObject(playerAccount);
+                            }
+                        }
 						//Save the account table
 						client.Account = playerAccount;
 
