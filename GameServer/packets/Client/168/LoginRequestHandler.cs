@@ -151,6 +151,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 						else
 							client.LoggerUsing = false;
 						 */
+
+                        bool goodname = true;
                         foreach (char c in username.ToLower().ToCharArray())
                         {
                             if ((c < '0' || c > '9') && (c < 'a' || c > 'z'))
@@ -177,7 +179,7 @@ namespace DOL.GS.PacketHandler.Client.v168
                             if (playerAccount == null)
                             {
                                 //check autocreate ...
-                                bool goodname = true;
+                                
                                 if (GameServer.Instance.Configuration.AutoAccountCreation)
                                 {
                                     // autocreate account
