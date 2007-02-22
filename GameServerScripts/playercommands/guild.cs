@@ -787,15 +787,22 @@ namespace DOL.GS.Scripts
 								return 1;
 							}
 
-							ushort newrank = Convert.ToUInt16(args[2]);
-							if (newrank < obj.GuildRank.RankLevel || newrank > 10)
+							try
 							{
-								client.Out.SendMessage("You can demote to a superior rank", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return 1;
+								ushort newrank = Convert.ToUInt16(args[2]);
+								if (newrank < obj.GuildRank.RankLevel || newrank > 10)
+								{
+									client.Out.SendMessage("You can demote to a superior rank", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									return 1;
+								}
+								obj.GuildRank = obj.Guild.GetRankByID(newrank);
+								obj.SaveIntoDatabase();
+								obj.Out.SendMessage("You are demoted to " + newrank.ToString(), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							}
-							obj.GuildRank = obj.Guild.GetRankByID(newrank);
-							obj.SaveIntoDatabase();
-							obj.Out.SendMessage("You are demoted to " + newrank.ToString(), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							catch 
+							{
+								DisplayError(client, "Incorrect rank number given!", new object[] { });
+							}
 						}
 						break;
 					// --------------------------------------------------------------------------------

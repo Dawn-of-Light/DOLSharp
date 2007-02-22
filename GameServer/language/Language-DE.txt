@@ -35,7 +35,7 @@ GamePlayer.Attack.Fumbled:				{0} verhaspelt sich!
 GamePlayer.Attack.HitsYour:				{0} trifft {1} mit {2}{3} Schaden!
 GamePlayer.Attack.HitsYou:				{0} trifft Euch mit {1}{2} Schaden!
 GamePlayer.Attack.HitsYouCritical:			{0} trifft Euch kritisch mit {1} zusätzlichen Schaden!
-GamePlayer.Attack.InterceptHit:				Ihr {0} {1}{2} an und trefft für {3}{4} Schaden!
+GamePlayer.Attack.InterceptHit:				Ihr {0} {1}{2} und trefft für {3}{4} Schaden!
 GamePlayer.Attack.Intercepted:				{0} stellt sich vor {1} und fängt den Schlag ab!
 GamePlayer.Attack.InterceptedHit:			Ihr {0} {1}{2} an aber trefft {3} für {4}{5} Schaden!
 GamePlayer.Attack.Interrupted:				{0} greift Euch an und Euer {1} wurde unterbrochen!
@@ -279,6 +279,23 @@ HousingPlaceItemHandler.IndoorObjectPlaced:		Inneneinrichtung aufgestellt. {0} f
 HousingPlaceItemHandler.NoHookpoint:			Ihr kann nichts platziert werden!
 HousingPlaceItemHandler.PutMoney:			Ihr leistet eine Anzahlung auf Euer Haus.
 
+# GameServer\packets\Client\168
+# /PlayerInitRequestHandler
+PlayerInitRequestHandler.AllianceMessage:		Allianznachricht: {0}
+PlayerInitRequestHandler.FreeLevel:			Ihr seid nun würdig, eine freie Stufe zu erhalten. Klickt auf Euren Ausbilder, um sie zu bekommen!
+PlayerInitRequestHandler.GuildMessage:			Gildennachricht: 
+PlayerInitRequestHandler.LevelCap:			Ihr habt für dieses Schlachtfeld die Stufenobergrenze erreicht!
+PlayerInitRequestHandler.OfficerMessage:		Offiziersnachricht: {0}
+PlayerInitRequestHandler.SaferLocation:			Diese Gegend ist im Moment nicht sicher. Ihr werdet an einen sicheren Ort versetzt.
+
+# /PlayerPositionUpdateHandler
+PlayerPositionUpdateHandler.Endurance:			Ihr verliert Ausdauer!
+PlayerPositionUpdateHandler.Entered:			Ihr befindet Euch nun {0}.
+PlayerPositionUpdateHandler.FallingDamage:		Ihr erleidet Sturzschaden!
+PlayerPositionUpdateHandler.FallPercent:		Ihr erleidet Schaden und verliert {0}% Eurer Trefferpunkte.
+PlayerPositionUpdateHandler.SafeFall:			Der Schaden wurde durch Eure Fallschutz-Fähigkeit vermindert!
+PlayerPositionUpdateHandler.UnknownZone:		Unbekannte Zone! Ihr werdet zu Eurem letzten Bindepunkt gebracht.
+
 # GameServer\world
 # AbstractArea
 AbstractArea.Entered:					(Region) Ihr seid nun {0}!
@@ -331,6 +348,11 @@ Scripts.Players.Boot.YouRemoved:			Ihr wurdet von {0} aus dem Haus geworfen!
 # /Bountyrent
 Scripts.Players.Bountyrent.InHouseError:		Ihr müsst Euch in Eurem Haus befinden, um diesen Befehl verwenden zu können!
 Scripts.Players.Bountyrent.NoHouseError:		Ihr besitzt kein Haus!
+
+# /Broadcast
+Scripts.Players.Broadcast.Message:			{0}: **{1}**
+Scripts.Players.Broadcast.NoHere:			Ihr könnt hier keinen Rundspruch machen.
+Scripts.Players.Broadcast.NoText:			Hmmm...Ihr solltet aufhören, dauernd mit Euch selbst zu reden.
 
 # /Cancelstyle
 Scripts.Players.Cancelstyle.Set:			Kampfstil-Abbruch {0}geschaltet.
@@ -386,6 +408,38 @@ Scripts.Players.Disband.NoYourself:			Auf diesem Wege könnt Ihr die Gruppe nicht
 
 # /Dismount
 Scripts.Players.Dismount:				Ihr reitet doch garnicht!
+
+# /Duel
+Scripts.Players.Duel.ChallengesYou:			{0} fordert Euch zu einem Duell heraus! '/duel accept' lässt den Kampf beginnen, '/duel decline' lehnt die Herausforderung ab.
+Scripts.Players.Duel.DuelOptions:			Es gibt folgende '/duel'-Optionen: 'challenge/decline/cancel/surrender/accept'
+Scripts.Players.Duel.EnemyRealm:			Ihr könnt Euch nicht mit Spielern aus verfeindeten Reichen duellieren.
+Scripts.Players.Duel.NeedTarget:			Ihr braucht schon einen Gegenspieler, den Ihr zum Duell fordern könnt!
+Scripts.Players.Duel.ConsideringDuel:			Zur Zeit seid Ihr nicht zu einem Duell aufgefordert worden oder habt selbst jemanden aufgefordert.
+Scripts.Players.Duel.NotInDuel:				Ihr befindet Euch zur Zeit in keinem Duell!
+Scripts.Players.Duel.PlayerVsPlayer:			{0} ergibt sich {1}!
+Scripts.Players.Duel.SafeZone:				Dies ist eine geschützte Zone in der Ihr Euch nicht duellieren könnt!
+Scripts.Players.Duel.TargetAccept:			{0} hat die Duellforderung angenommen. Auf zum Kampf!
+Scripts.Players.Duel.TargetAlreadyChallenging:		{0} hat bereits jemand anderes zum Duell gefordert.
+Scripts.Players.Duel.TargetAlreadyConsidering:		{0} hat bereits eine andere Duellforderung zugesagt.
+Scripts.Players.Duel.TargetCancel:			{0} hat seine Aufforderung zum Duell zurückgezogen.	
+Scripts.Players.Duel.TargetDeclines:			{0} hat Euere Duellforderung abgelehnt.
+Scripts.Players.Duel.TargetHealth:			Euer Duellgegner muss völlig gesund sein.
+Scripts.Players.Duel.TargetInCombat:			{0} kämpft zur Zeit.
+Scripts.Players.Duel.TargetInDuel:			{0} befindet sich bereits in einem Duell.
+Scripts.Players.Duel.TargetInGroup:			{0} ist Mitglied einer Gruppe.
+Scripts.Players.Duel.TargetSurrender:			{0} ergibt sich Euch!
+Scripts.Players.Duel.YouAccept:				Ihr habt die Duellforderung angenommen. Auf zum Kampf!
+Scripts.Players.Duel.YouAlreadyChallenging:		Ihr habt bereits {0} zu einem Duell herausgefordert. Zieht diese Forderung zuerst zurück, damit Ihr jemand anderes zum Duell auffordern könnt.
+Scripts.Players.Duel.YouAlreadyConsidering:		Ihr habt bereits einem Duell mit {0} zugesagt. Zieht diese Zusage erst zurück, bevor Ihr jemand anderes herausfordert.
+Scripts.Players.Duel.YouCancel:				Ihr habt Eure Duellforderung zurückgezogen.
+Scripts.Players.Duel.YouChallenge:			Ihr fordert {0} zum Duell heraus!
+Scripts.Players.Duel.YouDecline:			Ihr habt die Duellforderung von {0} abgelehnt.
+Scripts.Players.Duel.YouHaventChallenged:		Ihr habt niemanden zu einem Duell herausgefordert.
+Scripts.Players.Duel.YouHealth:				Ihr müsst erst völlig gesund sein.
+Scripts.Players.Duel.YouInCombat:			Ihr befindet Euch in einem Kampf.
+Scripts.Players.Duel.YouInDuel:				Ihr befindet Euch schon in einem Duell.
+Scripts.Players.Duel.YouInGroup:			Ihr seit Mitglied einer Gruppe.
+Scripts.Players.Duel.YouSurrender:			Ihr ergebt Euch {0}!
 
 # /Language
 Scripts.Players.Language.Current:			Die aktuell auf dem Server angezeigte Sprache ist: {0}.
