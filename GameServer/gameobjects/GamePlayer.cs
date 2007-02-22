@@ -1943,9 +1943,9 @@ namespace DOL.GS
 				"Half Ogre",
 				"Frostalf",
 				"Shar",
-				"Minotaur",//albion
-				"Minotaur",//midgard
-				"Minotaur"//hibernia
+				"Korazh",//albion minotaur
+				"Deifang",//midgard minotaur
+				"Graoch"//hibernia minotaur
 			};
 
 		/// <summary>
@@ -2257,7 +2257,7 @@ namespace DOL.GS
 			int respecPoints = 0;
 			foreach (Ability ab in GetAllAbilities())
 			{
-				if (ab is RealmAbility)
+				if (ab is RealmAbility && ab is RR5RealmAbility == false)
 				{
 					for (int i = 0; i < ab.Level; i++)
 					{

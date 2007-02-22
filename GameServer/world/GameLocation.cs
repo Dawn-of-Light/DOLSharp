@@ -101,6 +101,18 @@ namespace DOL.GS
 			return z.YOffset + localY;
 		}
 
+		public static int ConvertGlobalXToLocalX(int globalX, ushort zoneId)
+		{
+			Zone z = WorldMgr.GetZone(zoneId);
+			return globalX - z.XOffset;
+		}
+
+		public static int ConvertGlobalYToLocalY(int globalY, ushort zoneId)
+		{
+			Zone z = WorldMgr.GetZone(zoneId);
+			return globalY - z.YOffset;
+		}		
+
 		/// <summary>
 		/// calculates distance between 2 locations
 		/// </summary>

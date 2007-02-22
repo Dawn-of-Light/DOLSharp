@@ -142,6 +142,8 @@ namespace DOL.GS.Effects
 			while (iter.MoveNext())
 			{
 				GameLiving healTarget = iter.Key as GameLiving;
+				if (!healTarget.IsAlive)
+					continue;
 				double uncappedHeal = (int)iter.Value;
 				int reducedHeal = (int)Math.Min(targetHealCap, uncappedHeal * (groupHealCap / totalHealed));
 
@@ -149,7 +151,7 @@ namespace DOL.GS.Effects
 				int baseheal = healTarget.MaxHealth - healTarget.Health;
 				if (reducedHeal < baseheal)
 					baseheal = reducedHeal;
-				healTarget.Health += baseheal;
+				healTarget.ChangeHealth(player, GameLiving.eHealthChangeType.Spell, baseheal);
 				player.Out.SendMessage("You heal " + healTarget.Name + " for " + baseheal + "!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
 				if (healTarget is GamePlayer)
 					((GamePlayer)healTarget).Out.SendMessage(player.Name + " heals you for " + baseheal + "!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);

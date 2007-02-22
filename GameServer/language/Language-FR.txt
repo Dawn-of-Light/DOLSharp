@@ -15,9 +15,9 @@ System.LanguagesName.Spanish:				Espagnol
 System.LanguagesName.Czech:					Tchèque
 
 # SYSTEM
-System.NoSense:								Cela n'a aucun sens !
+System.NoSense:								Cela n'aurait aucun sens !
 System.MustSelectTarget:					Vous devez selectionner une cible !
-System.ReleaseTimer:						Timer de résurrection
+System.ReleaseTimer:						Délais de résurrection
 
 # GAMEPLAYER
 GamePlayer.Attack.AlreadyDead:				{0} est déjà mort !
@@ -65,14 +65,14 @@ GamePlayer.Attack.YouAttack:				Vous attaquez
 GamePlayer.Attack.YouShot:					Vous tirez
 GamePlayer.Die.CorpseLies:					{0} est mort. {1} corps gît sur le sol.
 GamePlayer.Die.DeadRVR:						Vous êtes mort au combat pour votre royaume et ne perdez aucune experience !
-GamePlayer.Die.DeathN1:						Ceci est votre première mort pour ce level. Vos pertes d'experience et de constitutions sont grandement réduites.
-GamePlayer.Die.DeathN2:						Ceci est votre seconde mort pour ce level.  Vos pertes d'experience et de constitutions sont réduites.
+GamePlayer.Die.DeathN1:						Ceci est votre première mort pour ce niveau. Vos pertes d'experience et de constitutions sont grandement réduites.
+GamePlayer.Die.DeathN2:						Ceci est votre seconde mort pour ce niveau.  Vos pertes d'experience et de constitutions sont réduites.
 GamePlayer.Die.DuelDefeated:				{0} a été vaincu en duel par {1} !
 GamePlayer.Die.Killed:						{0} vient de se faire tuer !
 GamePlayer.Die.KilledBy:					{0} vient de se faire tuer par {1} !
 GamePlayer.Die.KilledByLocation:			{0} vient de se faire tuer par {1} à {2} !
 GamePlayer.Die.KilledLocation:				{0} vient de se faire tuer à {1} !
-GamePlayer.Die.ReleaseToReturn:				Vous êtes mort.  Tapez /release pour retourner à votre bind.
+GamePlayer.Die.ReleaseToReturn:				Vous êtes mort.  Tapez /release pour retourner à votre pierre des âmes.
 GamePlayer.Die.YouKilled:					Vous venez de tuer {0} !
 GamePlayer.SendReceive.sends:				 envoie, 
 GamePlayer.Quit.CantQuitDead:				Vous ne pouvez pas quitter maintenant, vous êtes mort !  Tapez '/release' pour ressusciter.
@@ -82,7 +82,7 @@ GamePlayer.Quit.CantQuitCrafting:			Vous ne pouvez pas quitter pendant une fabri
 GamePlayer.Quit.RecentlyInCombat:			Vous étiez récemment en combat, vous devez attendre plus longtemps pour quitter.
 GamePlayer.Quit.YouWillQuit:				Vous quitterez en restant assis après {0} secondes.  Tapez '/stand' ou bougez pour ne pas quitter.
 GamePlayer.Release.NotDead:					Vous n'êtes pas mort !
-GamePlayer.Release.CantReleaseDuel:			You can't alter your release on a duel death!
+GamePlayer.Release.CantReleaseDuel:			Vous ne pouvez altérer votre résurrection pour une mort en duel!
 GamePlayer.Release.NoLongerReleaseAuto:		Vous ne ressusciterez plus automatiquement ({0} secondes restantes)
 GamePlayer.Release.WillReleaseAuto:			Vous ressusciterez automatiquement dans {0} secondes!
 GamePlayer.Release.WillReleaseAutoCity:		Vous ressusciterez automatiquement à la ville dans {0} secondes!
@@ -91,11 +91,11 @@ GamePlayer.Release.GraveErected:			Une pierre tombale a été érigée à l'endroit d
 GamePlayer.Release.ReturnToPray:			Retournez prier sur votre tombe (/pray) pour regagner de l'expérience.
 GamePlayer.Release.LostConstitution:		Vous avez perdu un peu de constitution, allez voir un guérisseur pour la restaurer.
 GamePlayer.Release.SurroundingChange:		Votre environnement change subitement.
-GamePlayer.Release.NoValidBindpoint:		Vous n'avez pas de bind valide, vous ressucitez donc ici !
+GamePlayer.Release.NoValidBindpoint:		Vous n'êtes lié à aucune pierre des âmes valide, vous ressucitez donc ici !
 GamePlayer.Release.WillReleaseIn:			Vous ressusciterez dans {0} secondes.
 GamePlayer.Pray.CantPrayNow:				Vous ne pouvez pas prier maintenant !
 GamePlayer.Pray.NeedTarget:					Vous devez sélectionner une tombe pour prier !
-GamePlayer.Pray.SelectGrave:				Sélectionnez VOTRE tombe !
+GamePlayer.Pray.SelectGrave:				Sélectionnez votre tombe pour prier !
 GamePlayer.Pray.MustGetCloser:				Vous devez vous approcher de votre tombe pour prier !
 GamePlayer.Pray.MustStandingStill:			Vous devez être immobile pour prier.
 GamePlayer.Pray.AlreadyPraying:				Vous priez déjà !
@@ -132,7 +132,7 @@ GamePlayer.GainRealmPoints.NewRealmTitle:	Votre nouveau titre de royaume est {0}
 GamePlayer.GainRealmPoints.GainBonus:		Vous gagnez un bonus de +{0} dans toutes vos spécialisations!
 GamePlayer.GainRealmPoints.ReachedRank:		{0} a atteint le rang de royaume {1:#L#} dans {2}!
 GamePlayer.GainRealmPoints.Earned:			{0} a gagné 1,000,000 de points de royaume dans {1}
-GamePlayer.GainBountyPoints.YouGet:			Vous obtenez {0} bounty points !
+GamePlayer.GainBountyPoints.YouGet:			Vous obtenez {0} primes de royaume !
 GamePlayer.GainExperience.YouGet:			Vous obtenez {0} points d'expérience.
 GamePlayer.GainExperience.CannotRaise:		Vous ne pouvez pas atteindre le niveau 6 tant que vous n'avez pas choisi une spécialisation.
 GamePlayer.GainExperience.TalkToTrainer:	Parlez à votre entraineur pour plus d'informations.
@@ -140,11 +140,11 @@ GamePlayer.OnLevelUp.YouRaise:				Vous avez atteint le niveau {0}!
 GamePlayer.OnLevelUp.YouAchived:			Vous avez achevé le niveau {0}!
 GamePlayer.OnLevelUp.FreeLevelEligible:		Vous êtes eligible pour un niveau gratuit! Cliquez sur votre entraineur pour le recevoir (ou tapez '/freelevel decline' pour refuser votre niveau gratuit.)
 GamePlayer.OnLevelUp.Reached:				{0} a atteint le niveau {1} dans {2}!
-GamePlayer.OnLevelUp.StatRaise:				Vos stats augmentent !
+GamePlayer.OnLevelUp.StatRaise:				Vos statistiques augmentent !
 GamePlayer.OnLevelUp.AttainedRank:			Vous avez atteint le rang de {0} !
 GamePlayer.OnLevelUp.YouGetSpec:			Vous obtenez {0} points de spécialisation à dépenser pour ce niveau!
-GamePlayer.OnLevelUp.HitsRaise:				Votre vie a augmentée de {0} points.
-GamePlayer.OnLevelUp.PowerRaise:			Votre pouvoir a augmenté de {0} points.
+GamePlayer.OnLevelUp.HitsRaise:				Vos points de vie ont augmentés de {0}.
+GamePlayer.OnLevelUp.PowerRaise:			Vos points de mana ont augmentés de {0}.
 GamePlayer.OnLevelUp.SecondStage:			Vous avez atteint la deuxième étape de votre niveau {0} !
 GamePlayer.IsCloakHoodUp.NowWear:			Vous mettez votre capuche.
 GamePlayer.IsCloakHoodUp.NoLongerWear:		Vous retirez votre capuche.
@@ -165,14 +165,14 @@ GamePlayer.StartAttack.CombatTarget:		Vous entrez en combat, et ciblez [{0}]
 GamePlayer.StartAttack.SpellCancelled:		Votre sort est annulé !
 GamePlayer.StartAttack.TargetInRange:		, la cible est à proximité
 GamePlayer.StartAttack.TargetOutOfRange:	, la cible est hors de portée
-GamePlayer.StartAttack.YouPrepare:			You prepare your {0} ({1}.{2}s to fire{3})
+GamePlayer.StartAttack.YouPrepare:			Vous préparez votre {0} ({1}.{2}s pour tirer{3})
 GamePlayer.OnLinkdeath.Linkdead:			{0} a été deconnecté par le serveur !
 GamePlayer.Bind.LastBindPoint:				Dernier Bind : {0}.
-GamePlayer.Bind.CantBindDead:				Vous ne pouvez pas vous lier tant que vous êtes mort !
-GamePlayer.Bind.MustWait:					Vous devez attendre {0} secondes avant de vous lier de nouveau !
+GamePlayer.Bind.CantBindDead:				Vous ne pouvez pas vous lier à une pierre des âmes alors que vous êtes mort !
+GamePlayer.Bind.MustWait:					Vous devez attendre {0} secondes avant de vous lier à nouveau !
 GamePlayer.Bind.Bound:						Vous êtes maintenant lié à cet endroit.
 GamePlayer.Bind.CantHere:					Vous ne pouvez pas vous lier ici !
-GamePlayer.Spell.NotEnoughPowerful:			Vous n'êtes pas assez puissant pour utiliser le sort de cet item.
+GamePlayer.Spell.NotEnoughPowerful:			Vous n'êtes pas assez puissant pour utiliser le sortilège de cet objet.
 GamePlayer.Spell.NotImplemented:			{0} ({1}) n'est pas encore implementé sur ce serveur.
 GamePlayer.Spell.Proc.NotImplemented:		L'effet réactif d'ID {0} n'est pas encore implementé sur ce serveur.
 GamePlayer.RealmTitle.UnknownRealm:			Royaume inconnu
@@ -186,15 +186,15 @@ GamePlayer.Pronoun.Female.Subjective:		elle
 GamePlayer.Pronoun.Female.Possessive:		sa
 GamePlayer.Pronoun.Female.Objective:		elle
 GamePlayer.IsOnHorse.DismountSteed:			Vous descendez de votre cheval.
-GamePlayer.IsOnHorse.MountSteed:			You montez sur votre cheval.
+GamePlayer.IsOnHorse.MountSteed:			Vous montez sur votre cheval.
 GamePlayer.Die.LoseExperience:				Vous perdez de l'expérience !
-GamePlayer.DuelStop.DuelEnds:				Your duel ends!
-GamePlayer.CastSpell.CantCastStunned:		You can't cast while stunned!
-GamePlayer.CastSpell.CantCastMezzed:		You can't cast while mesmerized!
-GamePlayer.CastSpell.AlreadyPlaySong:		You are already playing a song!
+GamePlayer.DuelStop.DuelEnds:				Votre duel prend fin!
+GamePlayer.CastSpell.CantCastStunned:		Vous ne pouvez pas incanter lorsque vous êtes assomé !
+GamePlayer.CastSpell.CantCastMezzed:		Vous ne pouvez pas incanter lorsque vous êtes endormi !
+GamePlayer.CastSpell.AlreadyPlaySong:		Vous êtes déjà en train de jouer un morceau!
 GamePlayer.CastSpell.AlreadyCastFollow:		Vous incantez déjà un sort. Vous preparez celui-ci à la suite.
 GamePlayer.CastSpell.AlreadyCastNoQueue:	Vous incantez déjà un sort, pour activer la suite de sorts, tapez '/noqueue'!
-GamePlayer.ReceiveTradeItem.StillSelfcrafting:	You are still selfcrafting.
+GamePlayer.ReceiveTradeItem.StillSelfcrafting:	Vous êtes encore en train d'enchanter.
 GamePlayer.ReceiveTradeItem.CantTrade:		Vous ne pouvez pas échanger cet objet !
 GamePlayer.UseSlot.CantFire:				Vous ne pouvez pas lancer ou utiliser cet objet.
 GamePlayer.UseSlot.CantMountWhileDead:		Vous ne pouvez pas monter sur votre cheval, vous êtes mort !
@@ -207,58 +207,57 @@ GamePlayer.UseSlot.CantMountCombat:			Vous êtes en combat, et ne pouvez pas appe
 GamePlayer.UseSlot.StopCallingMount:		Vous arrêtez d'appeler votre monture.
 GamePlayer.UseSlot.WhistleMount:			Vous sifflez votre monture.
 GamePlayer.UseSlot.CantSeeTarget:			Vous ne voyez pas votre cible !
-GamePlayer.UseSlot.AutoReleaseShot:			You will now automatically release your shot.
-GamePlayer.UseSlot.AutoReleaseShotReload:	You will now automatically release your shot and reload.
-GamePlayer.UseSlot.NoAutoReleaseShotReload:	You will no longer automatically release your shot or reload.
+GamePlayer.UseSlot.AutoReleaseShot:			Vous allez maintenant tirer automatiquement.
+GamePlayer.UseSlot.AutoReleaseShotReload:	Vous allez maintenant tirer et recharger automatiquement.
+GamePlayer.UseSlot.NoAutoReleaseShotReload:	Vous ne tirerez ou ne rechargerez plus automatiquement.
 GamePlayer.UseSlot.CantUseInCombat:			Vous ne pouvez pas utiliser cet objet en combat !
-GamePlayer.UseSlot.NotEnouthPower:			You are not powerful enough to use this item's spell.
-GamePlayer.UseSlot.Can'tUseFromBackpack:	Vous ne pouvez pas utiliser cet objet directement dans votre sac à dos. Equippez le avant !
+GamePlayer.UseSlot.NotEnouthPower:			Vous n'êtes pas assez puissant pour utiliser le sortilège de cet objet.
+GamePlayer.UseSlot.Can'tUseFromBackpack:	Vous ne pouvez pas utiliser cet objet directement dans votre sac à dos. Equipez le avant !
 GamePlayer.ApplyPoison.CantUsePoisons:		Vous ne pouvez pas utiliser de poison.
 GamePlayer.ApplyPoison.PoisonsAppliedWeapons:	Les poisons ne sont utilisables que sur une arme !
-GamePlayer.ApplyPoison.CantPoisonWeapon:	Vous ne pouvez pas empoisonner cet arme !
+GamePlayer.ApplyPoison.CantPoisonWeapon:	Vous ne pouvez pas empoisonner cette arme !
 GamePlayer.ApplyPoison.CantUsePoison:		Vous ne pouvez pas utiliser ce poison !
-GamePlayer.ApplyPoison.CantApplyRecentCombat:	Vous avez été en combat récemment, vous ne pouvez pas appliquer ce poison pour le moment !
-GamePlayer.Whisper.SelectTarget:			Sélectionner une clible pour lui chuchoter.
+GamePlayer.ApplyPoison.CantApplyRecentCombat:	Vous étiez en combat récemment, vous ne pouvez pas appliquer ce poison pour le moment !
+GamePlayer.Whisper.SelectTarget:			Sélectionnez une cible à qui chuchoter.
 GamePlayer.DrowningTimerCallback.CannotBreath:	Vous ne pouvez pas respirer sous l'eau, vous perdez de la vie !
-GamePlayer.DrowningTimerCallback.Take5%Damage:	Vous perdez 5% de votre vie maximum !
+GamePlayer.DrowningTimerCallback.Take5%Damage:	Vous perdez 5% de votre maximum de points de vie!
 GamePlayer.Sprint.TooFatigued:				Vous êtes trop fatigué pour sprinter !
-GamePlayer.Sprint.CantSprintHidden:			Vous ne pouvez pas sprinter quand vous êtes caché !
+GamePlayer.Sprint.CantSprintHidden:			Vous ne pouvez pas sprinter tout en étant dissimulé !
 GamePlayer.Sprint.CantSprintDead:			Vous ne pouvez pas sprinter, vous êtes mort !
 GamePlayer.Sprint.PrepareSprint:			Vous vous préparez à sprinter.
 GamePlayer.Sprint.NoLongerReady:			Vous n'êtes plus prêt à sprinter.
 GamePlayer.OnPlayerMove.InterruptCrafting:	Vous bougez, et interrompez votre fabrication.
-GamePlayer.OnPlayerMove.CannotCallMount:	Vous bougez, vous ne pouvez pas appeler votre monture !
+GamePlayer.OnPlayerMove.CannotCallMount:	Vous bougez et ne pouvez pas appeler votre monture !
 GamePlayer.Sit.InterruptCallMount:			Vous vous asseyez et arrêtez d'appeler votre monture !
 GamePlayer.Sit.AlreadySitting:				Vous êtes déjà assis !
 GamePlayer.Sit.NotSitting:					Vous n'êtes pas assis !
-GamePlayer.Sit.CantSitDead:					Vous ne pouvez pas vous assoir, vous êtes mort !
-GamePlayer.Sit.CantSitStunned:				You can't rest when you are stunned!
-GamePlayer.Sit.CantSitMezzed:				You can't rest when you are mesmerized!
+GamePlayer.Sit.CantSitDead:					Vous ne pouvez pas vous assoir alors que vous êtes mort !
+GamePlayer.Sit.CantSitStunned:				Vous ne pouvez pas vous assoir alors que vous êtes assomé!
+GamePlayer.Sit.CantSitMezzed:				Vous ne pouvez pas vous assoir alors que vous êtes endormi!
 GamePlayer.Sit.MustStandingStill:			Vous devez être immobile pour vous assoir !
-GamePlayer.Sit.MustDismount:				Vous devez descendre de votre monture avant !
+GamePlayer.Sit.MustDismount:				Vous devez d'abord descendre de votre monture !
 GamePlayer.Sit.YouSitDown:					Vous vous asseyez. Tapez '/stand' ou bougez pour vous lever.
 GamePlayer.Sit.YouStandUp:					vous vous levez.
 GamePlayer.Sit.NoLongerWaitingQuit:			Vous n'attendez plus de quitter.
 GamePlayer.UpdateEncumberance.EncumberedMoveSlowly:		Vous êtes encombré, et bougez lentement.
 GamePlayer.UpdateEncumberance.Encumbered:	Vous êtes encombré.
 GamePlayer.PickupObject.MustHaveTarget:		Vous devez avoir une cible pour ramasser quelquechose !
-GamePlayer.PickupObject.LootDoesntBelongYou:			That loot doesn't belong to you - you can't pick it up.
+GamePlayer.PickupObject.LootDoesntBelongYou:			Ce butin ne vous appartient pas - vous ne pouvez pas le prendre.
 GamePlayer.PickupObject.CantGetThat:		Vous ne pouvez pas ramasser ça !
 GamePlayer.PickupObject.BackpackFull:		Votre sac à dos est plein, vous devez faire de la place.
 GamePlayer.PickupObject.NoOneGroupWantsMoney:			Personne dans le groupe ne veut de l'argent.
 GamePlayer.SaveIntoDatabase.CharacterSaved:	Votre personnage a été sauvegardé.
 GamePlayer.Stealth.NowHidden:				Vous êtes caché.
 GamePlayer.Stealth.NoLongerHidden:			Vous n'êtes plus caché.
-GamePlayer.CraftItem.DontHaveAbilityMake:	You do not have the ability to make this item.
-GamePlayer.OpenSelfCraft.AlreadySelfCrafting:			You are already selfcrafting.
-GamePlayer.OpenSelfCraft.CanOnlyCraftBackpack:			You can only self-craft items in your backpack!
+GamePlayer.CraftItem.DontHaveAbilityMake:	Vous avez pas les capacités pour faire cet objet.
+GamePlayer.OpenSelfCraft.AlreadySelfCrafting:			Vous êtes déjà en train d'enchanter.
+GamePlayer.OpenSelfCraft.CanOnlyCraftBackpack:			Vous ne pouvez combiner que des objets dans votre sac!
 GamePlayer.SetControlledNpc.ReleaseTarget:				Vous relachez le controle de votre cible.
-GamePlayer.CommandNpcAttack.TooFarAwayForPet:			Your target is too far away to attack by your pet!
-GamePlayer.CommandNpcGoTarget.MustSelectDestination:	You must select a destination for your controlled creature.
-GamePlayer.Shade.AlreadyShade:				You are already a shade!
-GamePlayer.Shade.NoLongerShade:				You are no longer a shade!
-GamePlayer.CurrentTitle.TitleCleared:		Your title has been cleared.
-
+GamePlayer.CommandNpcAttack.TooFarAwayForPet:			Votre cible est trop loin pour l'attaquer avec votre pet!
+GamePlayer.CommandNpcGoTarget.MustSelectDestination:	Vous devez sélectionner une destination pour votre créature contrôlée.
+GamePlayer.Shade.AlreadyShade:				Vous êtes déjà dissimulé!
+GamePlayer.Shade.NoLongerShade:				Vous ne vous dissimulez plus d'avantage!
+GamePlayer.CurrentTitle.TitleCleared:		Votre titre a été effacé.
 
 # HOUSING
 HouseEnterLeave.TooFarAway:					Vous êtes trop loin pour entrer dans la maison {0}.
@@ -277,10 +276,172 @@ HousingPlaceItemHandler.GardenObjectPlaced:	Objet de jardin placé. {0} places re
 HousingPlaceItemHandler.HasPorch:			Cette maison a déjà un porche !
 HousingPlaceItemHandler.HasNoPorch:			Cette maison n'a pas de porche !
 HousingPlaceItemHandler.IndoorObjectPlaced:	Objet interieur placé. {0} places restantes.
-HousingPlaceItemHandler.NoHookpoint:		Plus de point d'ancrage maintenant !
+HousingPlaceItemHandler.NoHookpoint:		Il n'y a plus de point d'ancrage !
 HousingPlaceItemHandler.PutMoney:			Vous déposez de l'argent sur le compte de votre maison.
 
+# GameServer\world
+# AbstractArea
+AbstractArea.Entered:					(Region) Vous êtes entrés dans {0}!
+AbstractArea.Left:					(Region) Vous avez quitté {0}!
+
+# GameServer\packets\Client\168
+# /PlayerInitRequestHandler
+PlayerInitRequestHandler.AllianceMessage:		Message d'Alliance: {0}
+PlayerInitRequestHandler.FreeLevel:			Vous êtes éligible pour un niveau gratuit! Cliquez sur votre entraineur pour le recevoir (ou tapez /freelevel decline pour refuser votre niveau gratuit).
+PlayerInitRequestHandler.GuildMessage:			Message de Guilde: 
+PlayerInitRequestHandler.LevelCap:			Vous avez excédé la limite de niveau pour ce champs de bataille!
+PlayerInitRequestHandler.OfficerMessage:		Message Officiers: {0}
+PlayerInitRequestHandler.SaferLocation:			Cette zone n'est actuellement pas sécurisée et vous êtes transporté vers un endroit plus sûr.
+
+# /PlayerPositionUpdateHandler
+PlayerPositionUpdateHandler.Endurance:			Vous avez perdu de l'endurance!
+PlayerPositionUpdateHandler.Entered:			Vous êtes entrés dans {0}.
+PlayerPositionUpdateHandler.FallingDamage:		Vous encaissez des dommages de chute!
+PlayerPositionUpdateHandler.FallPercent:		Vous perdez {0}% de votre maximum de points de vie.
+PlayerPositionUpdateHandler.SafeFall:			Les dommages ont été réduits grâce à votre abilité de chute contrôlée!
+PlayerPositionUpdateHandler.UnknownZone:		Zone inconnue, déplacement vers votre pierre des âmes.
+
+
 # SCRIPTS
+# GameEvents
+# /Playerenterexit
+Scripts.Events.PlayerEnterExit.Entered:			{0} vient d'entrer en jeu!
+Scripts.Events.PlayerEnterExit.Left:			{0} vient de quitter le jeu!
+Scripts.Events.PlayerEnterExit.Staff:			[Staff Member] {0}
+
+# PlayerCommands
+# /Afk
+Scripts.Players.Afk.Off:				Vous n'êtes plus considéré comme étant AFK.
+Scripts.Players.Afk.On:					Vous êtes maintenant considéré comme étant AFK.
+
+# /Anonymous
+Scripts.Players.Anonymous.Error:			Le mode anonyme est désactivé.
+Scripts.Players.Anonymous.Off:				Vous n'êtes plus anonyme.
+Scripts.Players.Anonymous.On:				Vous êtes maintenant anonyme.
+
+# /Assist
+Scripts.Players.Assist.CantAssistYourself:		Vous ne pouvez pas vous assister vous-même.
+Scripts.Players.Assist.DoesntHaveTarget:		 n'a pas de cible actuellement.
+Scripts.Players.Assist.DontSee:				Vous ne voyez pas {0} aux alentours!
+Scripts.Players.Assist.NoTarget:			Vous n'avez pas de cible.
+Scripts.Players.Assist.NotValid:			La cible n'est pas valide.
+Scripts.Players.Assist.YouAssist:			Vous assistez {0}.
+
+# /Autoloot
+Scripts.Players.Autoloot.Off:				Your autoloot is off. You will no longer attempt to automaticly loot anything that drops in your area.
+Scripts.Players.Autoloot.On:				Your autoloot is on. You will now attempt to automaticly loot anything that drops in your area.
+
+# /Autosplit
+Scripts.Players.Autosplit.Coins:			The leader switched 
+Scripts.Players.Autosplit.InGroup:			Vous devez être dans un groupe pour utiliser cette commande.
+Scripts.Players.Autosplit.Leader:			Vous devez être le chef de groupe pour utiliser cette commande.
+Scripts.Players.Autosplit.Loot:				The leader switched 
+Scripts.Players.Autosplit.Off:				Le chef de groupe a désactivé l'autosplit.
+Scripts.Players.Autosplit.On:				Le chef de groupe a activé l'autosplit.
+Scripts.Players.Autosplit.Self:				{0} switched
+
+# /Boot
+Scripts.Players.Boot.InHouseError:			Vous devez être dans votre maison pour utiliser cette commande!
+Scripts.Players.Boot.NoHouseError:			Vous ne possédez pas de maison!
+Scripts.Players.Boot.NoOneOnline:			Aucun joueur de ce nom n'est en ligne!
+Scripts.Players.Boot.YouRemoved:			Vous avez été éjecté de la maison par {0}!
+
+# /Bountyrent
+Scripts.Players.Bountyrent.InHouseError:		Vous devez être dans votre maison pour utiliser cette commande!
+Scripts.Players.Bountyrent.NoHouseError:		Vous ne possédez pas de maison!
+
+# /Broadcast
+Scripts.Players.Broadcast.Message:			[Broadcast] {0} : {1}
+Scripts.Players.Broadcast.NoHere:			You cannot broadcast here.
+Scripts.Players.Broadcast.NoText:			You must broadcast something...
+
+# /Cancelstyle
+Scripts.Players.Cancelstyle.Set:			Cancel Style now set to {0}.
+
+# /Chatgroup
+Scripts.Players.Chatgroup.Help.Help:			/cg help - Affiche toutes les commandes du groupe de discussion
+Scripts.Players.Chatgroup.Help.Invite:			/cg invite [nom du joueur] - Invite le joueur spécifié à rejoindre le groupe de discussion
+Scripts.Players.Chatgroup.Help.JoinPrivate:		/cg join [moderateur] [mot de passe] - Rejoindre un groupe de discussion protégé par un mot de passe	
+Scripts.Players.Chatgroup.Help.JoinPublic:		/cg join [moderateur] - Rejoindre un groupe de discussion
+Scripts.Players.Chatgroup.Help.Leader:			/cg leader <nom> - Promouvoir un autre joueur comme chef du groupe de discussion; Ce joueur peut inviter d'autre joueurs à rejoindre le canal et peut parler quand le canal est en mode écoute.
+Scripts.Players.Chatgroup.Help.Leave:			/cg leave - Quitter le groupe de discussion
+Scripts.Players.Chatgroup.Help.Listen:			/cg listen - Mettre le groupe de discussion en mode écoute; seul le modérateur et les leads peuvent parler
+Scripts.Players.Chatgroup.Help.PasswordClear:		/cg password clear - Efface le mot de passe actuel (moderateur uniquement)	
+Scripts.Players.Chatgroup.Help.PasswordDisplay:		/cg password - Affiche le mot de passe actuel (moderateur uniquement)	
+Scripts.Players.Chatgroup.Help.PasswordNew:		/cg password [nouveau mot de passe]	- Change le mot de passe actuel
+Scripts.Players.Chatgroup.Help.Private:			/cg private - Définir le groupe de discussion comme étant privé
+Scripts.Players.Chatgroup.Help.Public:			/cg public - Définir le groupe de discussion comme étant publique, tout le monde peut rejoindre
+Scripts.Players.Chatgroup.Help.Remove:			/cg remove [nom du joueur] - Ejecte le joueur spécifié du groupe de discussion
+Scripts.Players.Chatgroup.Help.Usage:			/cg usage:
+Scripts.Players.Chatgroup.Help.Who:			/cg who - Liste tous les membres du groupe de discussion
+Scripts.Players.Chatgroup.InChatGroup:			Vous devez être dans un groupe de discussion pour utiliser cette commande.
+Scripts.Players.Chatgroup.InviteYourself:		Vous ne pouvez pas vous inviter vous même dans un groupe de discussion.	
+Scripts.Players.Chatgroup.JoinChatGroup:		Voulez vous rejoindre le groupe de discussion de {0} ?	
+Scripts.Players.Chatgroup.LeaderCommand:		Vous devez être le modérateur du groupe de discussion pour utiliser cette commande.	
+Scripts.Players.Chatgroup.LeaderInvite:			Vous devez être le modérateur du groupe de discussion pour inviter un joueur à le rejoindre.
+Scripts.Players.Chatgroup.ListenMode:			The listen mode of chatgroup is switch 
+Scripts.Players.Chatgroup.Moderator:			{0} est maintenant moderateur du groupe de discussion.
+Scripts.Players.Chatgroup.NoPlayer:			Il n'y a pas de joueur de ce nom.
+Scripts.Players.Chatgroup.NotChatGroupLeader:		Ce joueur n'est pas modérateur d'un groupe de discussion.	
+Scripts.Players.Chatgroup.NotChatGroupMember:		Ce joueur n'est pas membre d'un groupe de discussion.	
+Scripts.Players.Chatgroup.NotPublic:			Ce groupe de discussion n'est pas publique.
+Scripts.Players.Chatgroup.OnlyModerator:		Seul le modérateur peut parler dans ce groupe de discussion.	
+Scripts.Players.Chatgroup.OwnChatGroup:			Vous ne pouvez pas rejoindre votre propre groupe de discussion.
+Scripts.Players.Chatgroup.Password:			Mot de passe de ce groupe de discussion: {0}.
+Scripts.Players.Chatgroup.PasswordChanged:		Nouveau mot de passe du groupe de discussion: {0}.	
+Scripts.Players.Chatgroup.PlayerInChatgroup:		{0} est déjà membre d'un groupe de discussion.	
+Scripts.Players.Chatgroup.Private:			Le groupe de discussion est maintenant privé.
+Scripts.Players.Chatgroup.Public:			Le groupe de discussion est maintenant publique.
+Scripts.Players.Chatgroup.Usage:			Usage: /c <text>e
+Scripts.Players.Chatgroup.UsageInvite:			Usage: /cg invite <nom du joueur>"
+
+# /Cmdhelp
+Scripts.Players.Cmdhelp.NoCommand:			La commande {0} n'existe pas.
+Scripts.Players.Cmdhelp.PlvlCommands:			<----------Commandes disponibles pour le niveau de privilège {0}---------->
+Scripts.Players.Cmdhelp.Usage:				>----------Usage pour {0}----------<
+
+# /Disband
+Scripts.Players.Disband.Disbanded:			{o} a quitté le groupe.
+Scripts.Players.Disband.NoPlayer:			Pas de joueur de ce nom dans le groupe.
+Scripts.Players.Disband.NotInGroup:			Vous n'êtes pas dans un groupe.
+Scripts.Players.Disband.NotLeader:			Vous n'êtes pas le chef du groupe.
+Scripts.Players.Disband.NoYourself:			Vous ne pouvez pas vous dégrouper de cette manière.
+
+# /Dismount
+Scripts.Players.Dismount:				Vous n'êtes pas à cheval.
+
+# /Duel
+Scripts.Players.Duel.ChallengesYou:			{0} vous défie en duel! /duel accept pour accepter, /duel decline pour refuser.
+Scripts.Players.Duel.DuelOptions:			/duel options : challenge/decline/cancel/surrender/accept
+Scripts.Players.Duel.EnemyRealm:			Vous ne pouvez pas défier un membre d'un royaume ennemi.
+Scripts.Players.Duel.NeedTarget:			Vous devez cibler quelqu'un pour le défier!
+Scripts.Players.Duel.ConsideringDuel:			Vous n'êtes pas défié en duel.
+Scripts.Players.Duel.NotInDuel:				Vous n'êtes pas en duel!
+Scripts.Players.Duel.PlayerVsPlayer:			{0} se rend à {1}!
+Scripts.Players.Duel.SafeZone:				Vous êtes dans une zone sécurisée et ne pouvez vous battre en duel ici!
+Scripts.Players.Duel.TargetAccept:			{0} accepte le duel.  Le combat peut commencer!
+Scripts.Players.Duel.TargetAlreadyChallenging:		{0} a déjà défié quelqu'un en duel.
+Scripts.Players.Duel.TargetAlreadyConsidering:		{0} est déjà défié par quelqu'un d'autre.
+Scripts.Players.Duel.TargetCancel:			{0} son invitation au duel.	
+Scripts.Players.Duel.TargetDeclines:			{0} décline votre invitation.
+Scripts.Players.Duel.TargetHealth:			Votre cible doit avoir sa vie au maximum.
+Scripts.Players.Duel.TargetInCombat:			{0} est en combat.
+Scripts.Players.Duel.TargetInDuel:			{0} est déjà en duel.
+Scripts.Players.Duel.TargetInGroup:			{0} est dans un groupe.
+Scripts.Players.Duel.TargetSurrender:			{0} se rend à vous!
+Scripts.Players.Duel.YouAccept:				Vous acceptez le duel!  Le combat peut commencer!
+Scripts.Players.Duel.YouAlreadyChallenging:		Vous avez déjà défié {0} en duel. Annulez cette invitation pour défier quelqu'un d'autre.
+Scripts.Players.Duel.YouAlreadyConsidering:		Vous êtes déjà défié en duel par {0}. Refusez son invitation avant de défier quelqu'un d'autre.
+Scripts.Players.Duel.YouCancel:				Vous annulez votre invitation au duel.
+Scripts.Players.Duel.YouChallenge:			Vous défiez {0} en duel!
+Scripts.Players.Duel.YouDecline:			Vous refuser l'invitation au duel de {0}.
+Scripts.Players.Duel.YouHaventChallenged:		Vous n'avez défié personne à un duel.
+Scripts.Players.Duel.YouHealth:				Vous devez avoir votre maximum de points de vie.
+Scripts.Players.Duel.YouInCombat:			Vous êtes en combat.
+Scripts.Players.Duel.YouInDuel:				Vous êtes déjà en duel.
+Scripts.Players.Duel.YouInGroup:			Vous êtes dans un groupe.
+Scripts.Players.Duel.YouSurrender:			Vous vous rendez à {0}!
+
 # /Language
 Scripts.Players.Language.Set:				Vous changez la langue d'affichage du serveur en {0}.
 Scripts.Players.Language.Current:			La langue d'affichage est actuellement: {0}.
