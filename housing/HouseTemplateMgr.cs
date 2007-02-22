@@ -237,7 +237,7 @@ namespace DOL.GS.Housing
 			//Enchanter
 			CheckNPCTemplate(502, "DOL.GS.Scripts.Enchanter", "Enchanter", "50", "");
 			//Emblemeer
-			CheckNPCTemplate(503, "DOL.GS.Scripts.Emblemeer", "Emblemeer", "50", "");
+			CheckNPCTemplate(503, "DOL.GS.Scripts.EmblemNPC", "Emblemeer", "50", "");
 			//Healer
 			CheckNPCTemplate(504, "DOL.GS.Scripts.GameHealer", "Healer", "50", "");
 			//Recharger
