@@ -38,8 +38,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 				packet.Position = 0x50;
 				uint upTime = packet.ReadInt();
 				string text = string.Format("Client crash ({0}) dll:{1} clientUptime:{2}sec", client.ToString(), dllName, upTime);
-				if (log.IsErrorEnabled)
-					log.Error(text);
+				if (log.IsInfoEnabled)
+					log.Info(text);
 
 				if (log.IsDebugEnabled)
 				{

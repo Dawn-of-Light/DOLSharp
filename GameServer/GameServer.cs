@@ -882,6 +882,16 @@ namespace DOL
 
 			#region Stop
 
+			public void Close()
+			{
+				m_status = eGameServerStatus.GSS_Closed;
+			}
+
+			public void Open()
+			{
+				m_status = eGameServerStatus.GSS_Open;
+			}
+
 			/// <summary>
 			/// Stops the server, disconnects all clients, and writes the database to disk
 			/// </summary>
@@ -1178,6 +1188,7 @@ namespace DOL
 				{
 					if (m_timer != null)
 						m_timer.Change(SaveInterval * MINUTE_CONV, Timeout.Infinite);
+					DOL.Events.GameEventMgr.Notify(GameServerEvent.WorldSave);
 				}
 			}
 

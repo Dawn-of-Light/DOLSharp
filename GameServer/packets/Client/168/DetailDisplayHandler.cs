@@ -1144,7 +1144,10 @@ Type    Description           Id
 			string[] allowedclasses = item.AllowedClasses.Split(';');
 			foreach (string allowed in allowedclasses)
 			{
-				output.Add("- " + ((eCharacterClass)int.Parse(allowed))).ToString();
+				int classID = -1;
+				if (int.TryParse(allowed, out classID))
+					output.Add("- " + ((eCharacterClass)classID)).ToString();
+				else log.Error(item.Id_nb + " has an invalid entry for allowed classes '" + allowed + "'");
 			}
 		}
 		/// <summary>
