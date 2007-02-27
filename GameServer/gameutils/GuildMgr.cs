@@ -260,7 +260,7 @@ namespace DOL.GS
 				DBGuild[] guilds = (DBGuild[])GameServer.Database.SelectObjects(typeof(DBGuild), "GuildName='" + GameServer.Database.Escape(guildName) + "'");
 				foreach (DBGuild guild in guilds)
 				{
-					foreach (Character cha in GameServer.Database.SelectObjects(typeof(Character), "GuildID = '" + guild.GuildID + "'"))
+					foreach (Character cha in GameServer.Database.SelectObjects(typeof(Character), "GuildID = '" + GameServer.Database.Escape(guild.GuildID) + "'"))
 						cha.GuildID = "";
 					GameServer.Database.DeleteObject(guild);
 				}
@@ -437,7 +437,7 @@ namespace DOL.GS
 			if (oldemblem != 0)
 			{
 				player.RemoveMoney(COST_RE_EMBLEM, null);
-				DataObject[] objs = GameServer.Database.SelectObjects(typeof(InventoryItem), "Emblem = " + oldemblem.ToString());
+				DataObject[] objs = GameServer.Database.SelectObjects(typeof(InventoryItem), "Emblem = " + GameServer.Database.Escape(oldemblem.ToString()));
 				foreach (InventoryItem item in objs)
 				{
 					item.Emblem = newemblem;

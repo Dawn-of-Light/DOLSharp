@@ -218,6 +218,10 @@ namespace DOL.GS.Quests.Albion
 				* method. This means, the "TalkToXXX" method is called whenever
 				* a player right clicks on him or when he whispers to him.
 				*/
+
+			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
             GameEventMgr.AddHandler(marlinThuler, GameLivingEvent.Interact, new DOLEventHandler(TalkToMarlinThuler));
             GameEventMgr.AddHandler(marlinThuler, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToMarlinThuler));
 
@@ -247,6 +251,10 @@ namespace DOL.GS.Quests.Albion
             /* Removing hooks works just as adding them but instead of 
              * AddHandler, we call RemoveHandler, the parameters stay the same
              */
+
+			GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
             GameEventMgr.RemoveHandler(marlinThuler, GameObjectEvent.Interact, new DOLEventHandler(TalkToMarlinThuler));
             GameEventMgr.RemoveHandler(marlinThuler, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToMarlinThuler));
 
@@ -305,7 +313,7 @@ namespace DOL.GS.Quests.Albion
                             marlinThuler.SayTo(player, "Those tomb raider scoundrels have stolen my favorite drum again. I use it to demonstrate the wondrous sound my instruments can produce! Never has a customer heard that beautiful sound and failed to buy something from me. Without that drum, I'm ruined! Will you get my [drum] back for me? I will reward you handsomely, I swear it.");
                             break;
                         case "drum":
-                            player.Out.SendCustomDialog(" Will you help Marlin retrieve his lost drum? [Levels 17-20] ", new CustomDialogResponse(CheckPlayerAcceptQuest));
+							player.Out.SendQuestSubscribeCommand(marlinThuler, QuestMgr.GetIDForQuestType(typeof(MarlinsSalesPitch)), "Will you help Marlin retrieve his lost drum? [Levels 17-20]");
                             break;
                     }
                 }
@@ -340,6 +348,21 @@ namespace DOL.GS.Quests.Albion
 
             }
         }
+
+		protected static void SubscribeQuest(DOLEvent e, object sender, EventArgs args)
+		{
+			QuestEventArgs qargs = args as QuestEventArgs;
+			if (qargs == null)
+				return;
+
+			if (qargs.QuestID != QuestMgr.GetIDForQuestType(typeof(MarlinsSalesPitch)))
+				return;
+
+			if (e == GamePlayerEvent.AcceptQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x01);
+			else if (e == GamePlayerEvent.DeclineQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x00);
+		}
 
         /// <summary>
         /// This method checks if a player qualifies for this quest

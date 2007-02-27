@@ -216,6 +216,9 @@ namespace DOL.GS.Quests.Albion
 			* method. This means, the "TalkToXXX" method is called whenever
 			* a player right clicks on him or when he whispers to him.
 			*/
+
+			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
 			
 			GameEventMgr.AddHandler(yettaFletcher, GameLivingEvent.Interact, new DOLEventHandler(TalkToYettaFletcher));
 			GameEventMgr.AddHandler(yettaFletcher, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToYettaFletcher));
@@ -246,6 +249,10 @@ namespace DOL.GS.Quests.Albion
 			/* Removing hooks works just as adding them but instead of 
 			 * AddHandler, we call RemoveHandler, the parameters stay the same
 			 */
+
+			GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
 			GameEventMgr.RemoveHandler(yettaFletcher, GameLivingEvent.Interact, new DOLEventHandler(TalkToYettaFletcher));
 			GameEventMgr.RemoveHandler(yettaFletcher, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToYettaFletcher));
 
@@ -318,7 +325,7 @@ namespace DOL.GS.Quests.Albion
 						
 							//If the player offered his help, we send the quest dialog now!
 						case "to pay you":
-							player.Out.SendCustomDialog("Will you help Yetta Fletcher \nobtain the supplies she needs? \n[Levels 4-7]", new CustomDialogResponse(CheckPlayerAcceptQuest));
+							player.Out.SendQuestSubscribeCommand(yettaFletcher, QuestMgr.GetIDForQuestType(typeof(ArrowsForYettaFletcher)), "Will you help Yetta Fletcher \nobtain the supplies she needs? \n[Levels 4-7]");
 							break;
 					}
 				}
@@ -347,6 +354,21 @@ namespace DOL.GS.Quests.Albion
 					}
 				}
 			}
+		}
+
+		protected static void SubscribeQuest(DOLEvent e, object sender, EventArgs args)
+		{
+			QuestEventArgs qargs = args as QuestEventArgs;
+			if (qargs == null)
+				return;
+
+			if (qargs.QuestID != QuestMgr.GetIDForQuestType(typeof(ArrowsForYettaFletcher)))
+				return;
+
+			if (e == GamePlayerEvent.AcceptQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x01);
+			else if (e == GamePlayerEvent.DeclineQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x00);
 		}
 
 		/// <summary>

@@ -218,10 +218,7 @@ namespace DOL.Database
 						}
 						if (val is string)
 						{
-							val = ((String) val).Replace("\\", "\\\\");
-							val = ((String) val).Replace("\"", "\\\"");
-							val = ((String) val).Replace("'", "\\'");
-							val = ((String) val).Replace("’", "\\’");
+							Escape((string)val);
 						}
 						values.Append('\'');
 						values.Append(val);

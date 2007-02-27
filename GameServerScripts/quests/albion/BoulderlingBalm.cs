@@ -222,6 +222,10 @@ namespace DOL.GS.Quests.Albion
 				* method. This means, the "TalkToXXX" method is called whenever
 				* a player right clicks on him or when he whispers to him.
 				*/
+
+			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
             GameEventMgr.AddHandler(brotherMaynard, GameLivingEvent.Interact, new DOLEventHandler(TalkToBrotherMaynard));
             GameEventMgr.AddHandler(brotherMaynard, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToBrotherMaynard));
 
@@ -251,6 +255,10 @@ namespace DOL.GS.Quests.Albion
             /* Removing hooks works just as adding them but instead of 
              * AddHandler, we call RemoveHandler, the parameters stay the same
              */
+
+			GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
             GameEventMgr.RemoveHandler(brotherMaynard, GameObjectEvent.Interact, new DOLEventHandler(TalkToBrotherMaynard));
             GameEventMgr.RemoveHandler(brotherMaynard, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToBrotherMaynard));
 
@@ -320,7 +328,7 @@ namespace DOL.GS.Quests.Albion
                             break;
                         case "battle":
                             brotherMaynard.SayTo(player, "A dedicated craftsman's hands taked a beating, and over the years, I've learned to make a balm that soothes them. I go hrough it rather quickly and I'm almost out of ingredients. Perhaps you would help me restock?");
-                            player.Out.SendCustomDialog("Will you gather the ingredients for Brother Maynard's special balm? [Levels 10-13]", new CustomDialogResponse(CheckPlayerAcceptQuest));
+							player.Out.SendQuestSubscribeCommand(brotherMaynard, QuestMgr.GetIDForQuestType(typeof(BoulderlingBalm)), "Will you gather the ingredients for Brother Maynard's special balm? [Levels 10-13]");
                             break;                        
                     }
                 }
@@ -344,6 +352,21 @@ namespace DOL.GS.Quests.Albion
 
             }
         }
+
+		protected static void SubscribeQuest(DOLEvent e, object sender, EventArgs args)
+		{
+			QuestEventArgs qargs = args as QuestEventArgs;
+			if (qargs == null)
+				return;
+
+			if (qargs.QuestID != QuestMgr.GetIDForQuestType(typeof(BoulderlingBalm)))
+				return;
+
+			if (e == GamePlayerEvent.AcceptQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x01);
+			else if (e == GamePlayerEvent.DeclineQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x00);
+		}
 
         /// <summary>
         /// This method checks if a player qualifies for this quest

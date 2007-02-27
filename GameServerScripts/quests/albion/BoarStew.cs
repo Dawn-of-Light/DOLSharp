@@ -211,6 +211,10 @@ namespace DOL.GS.Quests.Albion
 				* method. This means, the "TalkToXXX" method is called whenever
 				* a player right clicks on him or when he whispers to him.
 				*/
+
+			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
             GameEventMgr.AddHandler(masterGerol, GameLivingEvent.Interact, new DOLEventHandler(TalkToMasterGerol));
             GameEventMgr.AddHandler(masterGerol, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToMasterGerol));
 
@@ -241,6 +245,10 @@ namespace DOL.GS.Quests.Albion
                 /* Removing hooks works just as adding them but instead of 
                  * AddHandler, we call RemoveHandler, the parameters stay the same
                  */
+
+				GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+				GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
                 GameEventMgr.RemoveHandler(masterGerol, GameObjectEvent.Interact, new DOLEventHandler(TalkToMasterGerol));
                 GameEventMgr.RemoveHandler(masterGerol, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToMasterGerol));
 
@@ -293,7 +301,7 @@ namespace DOL.GS.Quests.Albion
                             masterGerol.SayTo(player, "Oh yes! It is my speciality and one of the key components to helping people out when they are sick. Everyone knows that my wonderful stew brings along a speedy recovery. I am running low on the main [ingredient], do you think you could help me out?");
                             break;
                         case "ingredient":
-                            player.Out.SendCustomDialog("Will you help Master Gerol? [Levels 19-22]", new CustomDialogResponse(CheckPlayerAcceptQuest));
+							player.Out.SendQuestSubscribeCommand(masterGerol, QuestMgr.GetIDForQuestType(typeof(BoarStew)), "Will you help Master Gerol? [Levels 19-22]");
                             break;
                         
                     }
@@ -311,7 +319,20 @@ namespace DOL.GS.Quests.Albion
             }
         }
 
-        
+		protected static void SubscribeQuest(DOLEvent e, object sender, EventArgs args)
+		{
+			QuestEventArgs qargs = args as QuestEventArgs;
+			if (qargs == null)
+				return;
+
+			if (qargs.QuestID != QuestMgr.GetIDForQuestType(typeof(BoarStew)))
+				return;
+
+			if (e == GamePlayerEvent.AcceptQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x01);
+			else if (e == GamePlayerEvent.DeclineQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x00);
+		}
 
         /// <summary>
         /// This method checks if a player qualifies for this quest

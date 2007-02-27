@@ -898,7 +898,7 @@ namespace DOL.GS.Scripts
 									if (args.Length > 3)
 									{
 										bool replace = (args.Length > 4 && args[4].ToLower() == "replace") ? true : false;
-										if (!replace && null != GameServer.Database.SelectObject(typeof(NPCEquipment), "TemplateID = '" + args[3] + "'"))
+										if (!replace && null != GameServer.Database.SelectObject(typeof(NPCEquipment), "TemplateID = '" + GameServer.Database.Escape(args[3]) + "'"))
 										{
 											client.Out.SendMessage("Template with name '" + args[3] + "' already exists. Use 'replace' flag if you want to overwrite it.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 											return 1;
@@ -971,7 +971,7 @@ namespace DOL.GS.Scripts
 							int chance = Convert.ToInt16(args[3]);
 							string name = targetMob.Name;
 
-							DataObject[] template = GameServer.Database.SelectObjects(typeof(DBLootTemplate), "TemplateName = '" + name + "' AND ItemTemplateID = '" + lootTemplateID + "'");
+							DataObject[] template = GameServer.Database.SelectObjects(typeof(DBLootTemplate), "TemplateName = '" + GameServer.Database.Escape(name) + "' AND ItemTemplateID = '" + GameServer.Database.Escape(lootTemplateID) + "'");
 							if (template != null)
 							{
 								foreach (DataObject loot in template)
@@ -1019,7 +1019,7 @@ namespace DOL.GS.Scripts
 						string name = targetMob.Name;
 						if (lootTemplateID.ToLower().ToString() == "all")
 						{
-							DataObject[] template = GameServer.Database.SelectObjects(typeof(DBLootTemplate), "TemplateName = '" + name + "'");
+							DataObject[] template = GameServer.Database.SelectObjects(typeof(DBLootTemplate), "TemplateName = '" + GameServer.Database.Escape(name) + "'");
 							if (template != null)
 							{
 								foreach (DataObject loot in template)
@@ -1037,7 +1037,7 @@ namespace DOL.GS.Scripts
 						}
 						else
 						{
-							DataObject[] template = GameServer.Database.SelectObjects(typeof(DBLootTemplate), "TemplateName = '" + name + "' AND ItemTemplateID = '" + lootTemplateID + "'");
+							DataObject[] template = GameServer.Database.SelectObjects(typeof(DBLootTemplate), "TemplateName = '" + GameServer.Database.Escape(name) + "' AND ItemTemplateID = '" + GameServer.Database.Escape(lootTemplateID) + "'");
 							if (template != null)
 							{
 								foreach (DataObject loot in template)
@@ -1057,7 +1057,7 @@ namespace DOL.GS.Scripts
 					break;
 				case "viewloot":
 					{
-						DataObject[] template = GameServer.Database.SelectObjects(typeof(DBLootTemplate), "TemplateName = '" + targetMob.Name + "'");
+						DataObject[] template = GameServer.Database.SelectObjects(typeof(DBLootTemplate), "TemplateName = '" + GameServer.Database.Escape(targetMob.Name) + "'");
 						string message = "[ " + targetMob.Name + "'s Loot Table ]\n\n";
 
 						foreach (DBLootTemplate loot in template)

@@ -377,6 +377,7 @@ namespace DOL.GS.Keeps
 
 			foreach (GameKeepGuard guard in this.Keep.Guards.Values)
 			{
+				if (guard.HookPoint != null) continue;
 				if (guard.Position.Height > guard.Component.Height)
 					guard.RemoveFromWorld();
 				else

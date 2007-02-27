@@ -302,6 +302,10 @@ namespace DOL.GS.Quests.Albion
 			* method. This means, the "TalkToXXX" method is called whenever
 			* a player right clicks on him or when he whispers to him.
 			*/
+
+			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
 			GameEventMgr.AddHandler(GamePlayerEvent.GameEntered, new DOLEventHandler(PlayerEnterWorld));
 			
 			GameEventMgr.AddHandler(godelevaDowden, GameLivingEvent.Interact, new DOLEventHandler(TalkToGodelevaDowden));
@@ -333,6 +337,10 @@ namespace DOL.GS.Quests.Albion
 			/* Removing hooks works just as adding them but instead of 
 			 * AddHandler, we call RemoveHandler, the parameters stay the same
 			 */
+
+			GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
 			GameEventMgr.RemoveHandler(GamePlayerEvent.GameEntered, new DOLEventHandler(PlayerEnterWorld));
 
 			GameEventMgr.RemoveHandler(godelevaDowden, GameLivingEvent.Interact, new DOLEventHandler(TalkToGodelevaDowden));
@@ -426,7 +434,7 @@ namespace DOL.GS.Quests.Albion
 						
 							//If the player offered his help, we send the quest dialog now!
 						case "fetch":
-							player.Out.SendCustomDialog("Will you take the bucket\ndown to the river and\nretrieve some water for\nGodeleva?\n[Level "+player.Level+"]", new CustomDialogResponse(CheckPlayerAcceptQuest));
+							player.Out.SendQuestSubscribeCommand(godelevaDowden, QuestMgr.GetIDForQuestType(typeof(GodelevasNeed)), "Will you take the bucket\ndown to the river and\nretrieve some water for\nGodeleva?\n[Level " + player.Level + "]");
 							break;
 					}
 				}
@@ -440,6 +448,21 @@ namespace DOL.GS.Quests.Albion
 					}
 				}
 			}
+		}
+
+		protected static void SubscribeQuest(DOLEvent e, object sender, EventArgs args)
+		{
+			QuestEventArgs qargs = args as QuestEventArgs;
+			if (qargs == null)
+				return;
+
+			if (qargs.QuestID != QuestMgr.GetIDForQuestType(typeof(GodelevasNeed)))
+				return;
+
+			if (e == GamePlayerEvent.AcceptQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x01);
+			else if (e == GamePlayerEvent.DeclineQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x00);
 		}
 
 		protected static void PlayerUseSlot(DOLEvent e, object sender, EventArgs args)

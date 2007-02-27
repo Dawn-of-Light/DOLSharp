@@ -72,8 +72,8 @@ namespace DOL.GS.Scripts
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		private const int MAX_LIST_SIZE = 26;
-		private const string MESSAGE_LIST_TRUNCATED = "(Too many matches ({0}).  List truncated.)";
+		public const int MAX_LIST_SIZE = 26;
+		public const string MESSAGE_LIST_TRUNCATED = "(Too many matches ({0}).  List truncated.)";
 		private const string MESSAGE_NO_MATCHES = "No Matches.";
 		private const string MESSAGE_NO_ARGS = "Type /WHO HELP for variations on the WHO command.";
 		private const string MESSAGE_PLAYERS_ONLINE = "{0} player{1} currently online.";

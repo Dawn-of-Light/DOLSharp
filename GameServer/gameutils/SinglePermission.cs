@@ -34,7 +34,7 @@ namespace DOL.GS
 
 		public static bool HasPermission(GamePlayer player,string command)
 		{
-			DataObject obj = GameServer.Database.SelectObject(typeof(DBSinglePermission),"Command = '" + GameServer.Database.Escape( command ) + "' and PlayerID = '" + GameServer.Database.Escape( player.PlayerCharacter.ObjectId ) + "'");
+			DataObject obj = GameServer.Database.SelectObject(typeof(DBSinglePermission), "Command = '" + GameServer.Database.Escape(command) + "' and PlayerID = '" + GameServer.Database.Escape(player.PlayerCharacter.ObjectId) + "'");
 			if (obj == null)
 				return false;
 			return true;
@@ -50,7 +50,7 @@ namespace DOL.GS
 
 		public static bool removePermission(GamePlayer player,string command)
 		{
-			DataObject obj = GameServer.Database.SelectObject(typeof(DBSinglePermission),"Command = '" + GameServer.Database.Escape( command ) + "' and PlayerID = '" + GameServer.Database.Escape( player.PlayerCharacter.ObjectId ) + "'");
+			DataObject obj = GameServer.Database.SelectObject(typeof(DBSinglePermission), "Command = '" + GameServer.Database.Escape(command) + "' and PlayerID = '" + GameServer.Database.Escape(player.PlayerCharacter.ObjectId) + "'");
 			if (obj == null)
 			{
 				return false;

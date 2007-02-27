@@ -42,7 +42,7 @@ namespace DOL.GS
 			if (CurrentHouse != null && CurrentHouse.CanViewHouseVault(player))
 			{
 				ArrayList vaultItems = null;
-				DataObject[] items = GameServer.Database.SelectObjects(typeof(InventoryItem), "OwnerID = '" + (HouseMgr.GetOwners(CurrentHouse.DatabaseItem)[0] as Character).ObjectId + "'");
+				DataObject[] items = GameServer.Database.SelectObjects(typeof(InventoryItem), "OwnerID = '" + GameServer.Database.Escape((HouseMgr.GetOwners(CurrentHouse.DatabaseItem)[0] as Character).ObjectId) + "'");
 				foreach (InventoryItem item in items)
 				{
 					if (vaultItems == null)

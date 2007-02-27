@@ -259,6 +259,9 @@ namespace DOL.GS.Quests.Albion
 			* method. This means, the "TalkToXXX" method is called whenever
 			* a player right clicks on him or when he whispers to him.
 			*/
+
+			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
 			
 			GameEventMgr.AddHandler(brotherLawrence, GameLivingEvent.Interact, new DOLEventHandler(TalkToBrotherLawrence));
 			GameEventMgr.AddHandler(brotherLawrence, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToBrotherLawrence));
@@ -289,6 +292,9 @@ namespace DOL.GS.Quests.Albion
 			/* Removing hooks works just as adding them but instead of 
 			 * AddHandler, we call RemoveHandler, the parameters stay the same
 			 */
+
+			GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
 			
 			GameEventMgr.RemoveHandler(brotherLawrence, GameLivingEvent.Interact, new DOLEventHandler(TalkToBrotherLawrence));
 			GameEventMgr.RemoveHandler(brotherLawrence, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToBrotherLawrence));
@@ -350,7 +356,7 @@ namespace DOL.GS.Quests.Albion
 							//If the player offered his help, we send the quest dialog now!
 						case "day":
 							brotherLawrence.SayTo(player, "It's exhausting work, but I believe I've found my calling.  I think I may have discovered a way to help deal with minor injuries and preserve the use of magic for more serious cases. Are you willing to help me prepare for a demonstration of my methods?");
-							player.Out.SendCustomDialog("Will you help Brother Lawrence gather \nthe oil he needs for his demonstration? \n[Levels 4-7]", new CustomDialogResponse(CheckPlayerAcceptQuest));
+							player.Out.SendQuestSubscribeCommand(brotherLawrence, QuestMgr.GetIDForQuestType(typeof(LawrencesOil)), "Will you help Brother Lawrence gather \nthe oil he needs for his demonstration? \n[Levels 4-7]");
 							break;
 					}
 				}
@@ -390,6 +396,21 @@ namespace DOL.GS.Quests.Albion
 					}
 				}
 			}
+		}
+
+		protected static void SubscribeQuest(DOLEvent e, object sender, EventArgs args)
+		{
+			QuestEventArgs qargs = args as QuestEventArgs;
+			if (qargs == null)
+				return;
+
+			if (qargs.QuestID != QuestMgr.GetIDForQuestType(typeof(LawrencesOil)))
+				return;
+
+			if (e == GamePlayerEvent.AcceptQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x01);
+			else if (e == GamePlayerEvent.DeclineQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x00);
 		}
 
 		/// <summary>

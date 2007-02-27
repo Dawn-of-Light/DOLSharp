@@ -227,8 +227,16 @@ namespace DOL.GS.Keeps
 			hookPointObj.X = hookpoint.X;
 			hookPointObj.Y = hookpoint.Y;
 			hookPointObj.Z = hookpoint.Z;
-			if (hookPointObj is GameSiegeCauldron)
-				(hookPointObj as GameSiegeCauldron).Component = component;
+			if (hookPointObj is GameSiegeWeapon)
+				(hookPointObj as GameSiegeWeapon).HookPoint = hookpoint;
+			if (hookPointObj is IKeepItem)
+				(hookPointObj as IKeepItem).Component = component;
+			if (hookPointObj is GameKeepGuard)
+			{
+				(hookPointObj as GameKeepGuard).HookPoint = hookpoint;
+				Keeps.TemplateMgr.RefreshTemplate(hookPointObj as GameKeepGuard);
+				(hookPointObj as GameKeepGuard).Component.Keep.Guards.Add(hookPointObj.ObjectID, hookPointObj);
+			}
 			if (hookPointObj is GameNPC)
 				((GameNPC)hookPointObj).RespawnInterval = 0;//do not respawn
 			hookPointObj.AddToWorld();
