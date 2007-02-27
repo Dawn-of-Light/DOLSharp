@@ -118,11 +118,18 @@ namespace DOL.GS.Spells
 		/// <param name="effectiveness">factor from 0..1 (0%-100%)</param>
 		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
 		{
-			if (m_controlledBrain == null) // check only if brain wasn't changed at least once
+			// check only if brain wasn't changed at least once
+			if (m_controlledBrain == null)
 			{
 				if (target.InCombat)
 				{
 					MessageToCaster("You can't charm a creature in combat!", eChatType.CT_SpellResisted);
+					return;
+				}
+
+				if (target.Name.ToLower() != target.Name)
+				{
+					MessageToCaster("You can't charm this creature!", eChatType.CT_SpellResisted);
 					return;
 				}
 
@@ -151,14 +158,14 @@ namespace DOL.GS.Spells
 					return;
 				}
 			}
-			
-			if (target.Level > Spell.Value || target.Level > Caster.Level*Spell.Damage/100)
+
+			if (target.Level > Spell.Value || target.Level > Caster.Level * Spell.Damage / 100)
 			{
 				MessageToCaster(target.GetName(0, true) + " is too strong for you to charm!", eChatType.CT_SpellResisted);
 				return;
 			}
-				
-			if(Caster is GamePlayer)
+
+			if (Caster is GamePlayer)
 			{
 				/*
 				 * The Minstrel/Mentalist has an almost certain chance to charm/retain control of 
@@ -169,9 +176,9 @@ namespace DOL.GS.Spells
 				 * charm spell will modify your base chance of charming and retaining control.
 				 * The higher your spec level, the greater your chance of controlling.
 				 */
-				int diffLevel = ((GamePlayer) Caster).GetModifiedSpecLevel(m_spellLine.Spec) - target.Level;
+				int diffLevel = ((GamePlayer)Caster).GetModifiedSpecLevel(m_spellLine.Spec) - target.Level;
 				int resistChance = 30 - diffLevel * 5; // completly guessed ...
-				if(resistChance < 5) resistChance = 5;
+				if (resistChance < 5) resistChance = 5;
 				if (Util.Chance(resistChance))
 				{
 					MessageToCaster(target.GetName(0, true) + " resists the charm!", eChatType.CT_SpellResisted);
@@ -204,7 +211,7 @@ namespace DOL.GS.Spells
 					m_isBrainSet = true;
 
 					GameEventMgr.AddHandler(player, GamePlayerEvent.CommandNpcRelease, new DOLEventHandler(ReleaseEventHandler));
-//					GameEventMgr.AddHandler(npc, GameLivingEvent.Dying, new DOLEventHandler(ReleaseEventHandler)); // must be canceled by Die() method anyway, makes some problems with attackers list this way
+					//					GameEventMgr.AddHandler(npc, GameLivingEvent.Dying, new DOLEventHandler(ReleaseEventHandler)); // must be canceled by Die() method anyway, makes some problems with attackers list this way
 				}
 
 				if (player.ControlledNpc != m_controlledBrain)
@@ -219,7 +226,7 @@ namespace DOL.GS.Spells
 				npc.BroadcastUpdate();
 				//if (GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvP)
 				{
-					foreach(GamePlayer ply in npc.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+					foreach (GamePlayer ply in npc.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 						ply.Out.SendObjectGuildID(npc, player.Guild);
 				}
 			}
@@ -228,8 +235,8 @@ namespace DOL.GS.Spells
 				// hmm
 				if (log.IsWarnEnabled)
 					log.Warn(string.Format("charm effect start: Caster={0} effect.Owner={1}",
-						(Caster==null ? "(null)" : Caster.GetType().ToString()),
-						(effect.Owner==null ? "(null)" : effect.Owner.GetType().ToString())));
+						(Caster == null ? "(null)" : Caster.GetType().ToString()),
+						(effect.Owner == null ? "(null)" : effect.Owner.GetType().ToString())));
 			}
 		}
 
@@ -281,7 +288,7 @@ namespace DOL.GS.Spells
 				if (!noMessages) // no overwrite
 				{
 					GameEventMgr.RemoveHandler(player, GamePlayerEvent.CommandNpcRelease, new DOLEventHandler(ReleaseEventHandler));
-//					GameEventMgr.RemoveHandler(npc, GameLivingEvent.Dying, new DOLEventHandler(ReleaseEventHandler));
+					//					GameEventMgr.RemoveHandler(npc, GameLivingEvent.Dying, new DOLEventHandler(ReleaseEventHandler));
 
 					player.SetControlledNpc(null);
 					MessageToCaster("You lose control of " + npc.GetName(0, false) + "!", eChatType.CT_SpellExpires);
@@ -290,7 +297,7 @@ namespace DOL.GS.Spells
 
 					//if (GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvP)
 					{
-						foreach(GamePlayer ply in npc.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+						foreach (GamePlayer ply in npc.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 							ply.Out.SendObjectGuildID(npc, null);
 					}
 
@@ -335,8 +342,8 @@ namespace DOL.GS.Spells
 				// hmmmmmm
 				if (log.IsWarnEnabled)
 					log.Warn(string.Format("charm effect expired: Caster={0} effect.Owner={1}",
-						(Caster==null ? "(null)" : Caster.GetType().ToString()),
-						(effect.Owner==null ? "(null)" : effect.Owner.GetType().ToString())));
+						(Caster == null ? "(null)" : Caster.GetType().ToString()),
+						(effect.Owner == null ? "(null)" : effect.Owner.GetType().ToString())));
 			}
 
 			return 0;
@@ -378,167 +385,168 @@ namespace DOL.GS.Spells
 				list.Add("Target: " + Spell.Target);
 				if (Spell.Range != 0)
 					list.Add("Range: " + Spell.Range);
-				if (Spell.Duration >= ushort.MaxValue*1000)
+				if (Spell.Duration >= ushort.MaxValue * 1000)
 					list.Add("Duration: Permanent.");
 				else if (Spell.Duration > 60000)
-					list.Add(string.Format("Duration: {0}:{1} min", Spell.Duration/60000, (Spell.Duration%60000/1000).ToString("00")));
+					list.Add(string.Format("Duration: {0}:{1} min", Spell.Duration / 60000, (Spell.Duration % 60000 / 1000).ToString("00")));
 				else if (Spell.Duration != 0)
-					list.Add("Duration: " + (Spell.Duration/1000).ToString("0' sec';'Permanent.';'Permanent.'"));
+					list.Add("Duration: " + (Spell.Duration / 1000).ToString("0' sec';'Permanent.';'Permanent.'"));
 				if (Spell.Frequency != 0)
-					list.Add("Frequency: " + (Spell.Frequency*0.001).ToString("0.0"));
+					list.Add("Frequency: " + (Spell.Frequency * 0.001).ToString("0.0"));
 				if (Spell.Power != 0)
 					list.Add("Power cost: " + Spell.Power.ToString("0;0'%'"));
-				list.Add("Casting time: " + (Spell.CastTime*0.001).ToString("0.0## sec;-0.0## sec;'instant'"));
+				list.Add("Casting time: " + (Spell.CastTime * 0.001).ToString("0.0## sec;-0.0## sec;'instant'"));
 				if (Spell.RecastDelay > 60000)
-					list.Add("Recast time: " + Spell.RecastDelay/60000 + ":" + (Spell.RecastDelay%60000/1000).ToString("00") + " min");
+					list.Add("Recast time: " + Spell.RecastDelay / 60000 + ":" + (Spell.RecastDelay % 60000 / 1000).ToString("00") + " min");
 				else if (Spell.RecastDelay > 0)
-					list.Add("Recast time: " + (Spell.RecastDelay/1000).ToString() + " sec");
+					list.Add("Recast time: " + (Spell.RecastDelay / 1000).ToString() + " sec");
 				if (Spell.Concentration != 0)
 					list.Add("Concentration cost: " + Spell.Concentration);
 				if (Spell.Radius != 0)
 					list.Add("Radius: " + Spell.Radius);
 				if (Spell.DamageType != eDamageType.Natural)
 					list.Add("Damage: " + GlobalConstants.DamageTypeToName(Spell.DamageType));
-				
+
 				return list;
 			}
 		}
 
 		// Constructs new Charm spell handler
-		public CharmSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line)
+		public CharmSpellHandler(GameLiving caster, Spell spell, SpellLine line)
+			: base(caster, spell, line)
 		{
 		}
 
-/*
+		/*
 
-http://www.camelotherald.com/more/1775.shtml
+		http://www.camelotherald.com/more/1775.shtml
 
-... Can you please explain what the max level pet a hunter can charm if they are fully Beastcraft specd? The community feels its no higher then 41, but the builder says max level 50.
+		... Can you please explain what the max level pet a hunter can charm if they are fully Beastcraft specd? The community feels its no higher then 41, but the builder says max level 50.
 
-A: Sayeth the Oracle: ”It's 82% of the caster's level for the highest charm in beastcraft; or level 41 if the caster is 50. Spec doesn't determine the level of the pet - it's purely based on the spell.”
-
-
-
-http://vnboards.ign.com/message.asp?topic=87170081&start=87173224&search=charm
-
-More info in the sticky thread, but... 
-
-
-<copies and pastes her charm spell info> 
-
-What you can charm: 
-4 - humanoids 
-10 - humanoids, animals 
-17 - humanoids, animals, insects 
-25 - humanoids, animals, insects, magical 
-33 - humanoids, animals, insects, magical, undead 
-42 - anything charmable 
-
-Always use lowest charm to save power. 
-
-Safety level formula: 
-(level * .66) + (spec level * .33) 
-spec level includes: trainings, items, and realm rank 
-
-Mastery of Focus: 
-Mastery of Focus affects SPELL level. Notice that SPELL level is not included in the above formula. SPEC level is important. If you raise the lvl 4 charm up to lvl 20 it makes NO difference to what you can charm. 
-
-Current charm bugs: 
-- Porting has the chance to completely break your charm if there is a delay in porting. Pet will show up at portal location very very mad. 
-- Porting also causes your pet to completely disappear. Walk away and it should reappear. Maybe 
-
-NOT A BUG, working as intended 
-- Artifact chants (Cloudsong, Crown, etc.) will interfere and overwrite your charm.
+		A: Sayeth the Oracle: ”It's 82% of the caster's level for the highest charm in beastcraft; or level 41 if the caster is 50. Spec doesn't determine the level of the pet - it's purely based on the spell.”
 
 
 
+		http://vnboards.ign.com/message.asp?topic=87170081&start=87173224&search=charm
+
+		More info in the sticky thread, but... 
 
 
-sorc
+		<copies and pastes her charm spell info> 
 
-<Begin Info: Coerce Will>
-Function: charm
+		What you can charm: 
+		4 - humanoids 
+		10 - humanoids, animals 
+		17 - humanoids, animals, insects 
+		25 - humanoids, animals, insects, magical 
+		33 - humanoids, animals, insects, magical, undead 
+		42 - anything charmable 
+
+		Always use lowest charm to save power. 
+
+		Safety level formula: 
+		(level * .66) + (spec level * .33) 
+		spec level includes: trainings, items, and realm rank 
+
+		Mastery of Focus: 
+		Mastery of Focus affects SPELL level. Notice that SPELL level is not included in the above formula. SPEC level is important. If you raise the lvl 4 charm up to lvl 20 it makes NO difference to what you can charm. 
+
+		Current charm bugs: 
+		- Porting has the chance to completely break your charm if there is a delay in porting. Pet will show up at portal location very very mad. 
+		- Porting also causes your pet to completely disappear. Walk away and it should reappear. Maybe 
+
+		NOT A BUG, working as intended 
+		- Artifact chants (Cloudsong, Crown, etc.) will interfere and overwrite your charm.
+
+
+
+
+
+		sorc
+
+		<Begin Info: Coerce Will>
+		Function: charm
  
-Attempts to bring the target under the caster's control.
+		Attempts to bring the target under the caster's control.
  
-Target: Targetted
-Range: 1000
-Duration: Permanent.
-Power cost: 25%
-Casting time:      4.0 sec
-Damage: Energy
+		Target: Targetted
+		Range: 1000
+		Duration: Permanent.
+		Power cost: 25%
+		Casting time:      4.0 sec
+		Damage: Energy
  
-<End Info>
+		<End Info>
 
-[06:23:57] You begin casting a Coerce Will spell!
-[06:24:01] The slough serpent attacks you and misses!
-[06:24:01] You cast a Coerce Will Spell!
-[06:24:01] The slough serpent is enthralled!
-[06:24:01] The slough serpent is now under your control.
+		[06:23:57] You begin casting a Coerce Will spell!
+		[06:24:01] The slough serpent attacks you and misses!
+		[06:24:01] You cast a Coerce Will Spell!
+		[06:24:01] The slough serpent is enthralled!
+		[06:24:01] The slough serpent is now under your control.
 
-[14:30:55] The frost stallion dies!
-[14:30:55] This monster has been charmed recently and is worth no experience.
-
-
+		[14:30:55] The frost stallion dies!
+		[14:30:55] This monster has been charmed recently and is worth no experience.
 
 
-pulsing, mentalist
 
-<Begin Info: Imaginary Enemy>
-Function: charm
+
+		pulsing, mentalist
+
+		<Begin Info: Imaginary Enemy>
+		Function: charm
  
-Attempts to bring the target under the caster's control.
+		Attempts to bring the target under the caster's control.
  
-Target: Targetted
-Range: 2000
-Duration: 10 sec
-Frequency:      4.8 sec
-Casting time:      3.0 sec
-Damage: Heat
+		Target: Targetted
+		Range: 2000
+		Duration: 10 sec
+		Frequency:      4.8 sec
+		Casting time:      3.0 sec
+		Damage: Heat
  
-<End Info>
+		<End Info>
 
-[16:11:59] You begin casting a Imaginary Enemy spell!
-[16:11:59] You are already casting a spell!  You prepare this spell as a follow up!
-[16:12:01] You are already casting a spell!  You prepare this spell as a follow up!
-[16:12:02] You cast a Imaginary Enemy Spell!
-[16:12:02] The villainous youth is now under your control.
-[16:12:02] You cancel your effect.
+		[16:11:59] You begin casting a Imaginary Enemy spell!
+		[16:11:59] You are already casting a spell!  You prepare this spell as a follow up!
+		[16:12:01] You are already casting a spell!  You prepare this spell as a follow up!
+		[16:12:02] You cast a Imaginary Enemy Spell!
+		[16:12:02] The villainous youth is now under your control.
+		[16:12:02] You cancel your effect.
 
-[16:11:42] You can't attack yourself!
-[16:11:42] You lose control of the villainous youth!
-[16:11:42] You lose control of the villainous youth.
-
-
+		[16:11:42] You can't attack yourself!
+		[16:11:42] You lose control of the villainous youth!
+		[16:11:42] You lose control of the villainous youth.
 
 
-minstrel
 
-[09:00:12] <Begin Info: Attracting Melodies>
-[09:00:12] Function: charm
-[09:00:12]  
-[09:00:12] Attempts to bring the target under the caster's control.
-[09:00:12]  
-[09:00:12] Target: Targetted
-[09:00:12] Range: 2000
-[09:00:12] Duration: 10 sec
-[09:00:12] Frequency:      5.0 sec
-[09:00:12] Casting time: instant
-[09:00:12] Recast time: 5 sec
-[09:00:12]  
-[09:00:12] <End Info>
 
-[09:05:56] You command the the worker ant to kill your target!
-[09:05:59] The worker ant attacks the worker ant and hits!
-[09:06:00] The worker ant attacks the worker ant and hits!
-[09:06:01] You lose control of the worker ant!
-[09:06:01] You release control of your controlled target.
+		minstrel
 
-[09:06:50] The worker ant is now under your control.
-[09:06:51] The worker ant attacks you and misses!
-[09:06:55] The worker ant attacks the worker ant and hits!
-[09:06:55] The worker ant resists the charm!
+		[09:00:12] <Begin Info: Attracting Melodies>
+		[09:00:12] Function: charm
+		[09:00:12]  
+		[09:00:12] Attempts to bring the target under the caster's control.
+		[09:00:12]  
+		[09:00:12] Target: Targetted
+		[09:00:12] Range: 2000
+		[09:00:12] Duration: 10 sec
+		[09:00:12] Frequency:      5.0 sec
+		[09:00:12] Casting time: instant
+		[09:00:12] Recast time: 5 sec
+		[09:00:12]  
+		[09:00:12] <End Info>
 
-*/
+		[09:05:56] You command the the worker ant to kill your target!
+		[09:05:59] The worker ant attacks the worker ant and hits!
+		[09:06:00] The worker ant attacks the worker ant and hits!
+		[09:06:01] You lose control of the worker ant!
+		[09:06:01] You release control of your controlled target.
+
+		[09:06:50] The worker ant is now under your control.
+		[09:06:51] The worker ant attacks you and misses!
+		[09:06:55] The worker ant attacks the worker ant and hits!
+		[09:06:55] The worker ant resists the charm!
+
+		*/
 	}
 }

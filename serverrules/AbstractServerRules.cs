@@ -65,7 +65,7 @@ namespace DOL.GS.ServerRules
 			}
 
 			// Ban IP Adress
-			objs = GameServer.Database.SelectObjects(typeof(DBBannedAccount), "(Type = 'Ip' AND Ip ='" + accip + "') OR (Type ='Account+Ip' AND Ip ='" + accip + "')");
+			objs = GameServer.Database.SelectObjects(typeof(DBBannedAccount), "(Type = 'Ip' AND Ip ='" + GameServer.Database.Escape(accip) + "') OR (Type ='Account+Ip' AND Ip ='" + GameServer.Database.Escape(accip) + "')");
 			if (objs.Length > 0)
 			{
 				client.Out.SendLoginDenied(eLoginError.AccountIsBannedFromThisServerType);
@@ -635,6 +635,8 @@ namespace DOL.GS.ServerRules
 				int npcRPValue = killedNPC.RealmPointsValue;
 				int npcBPValue = killedNPC.BountyPointsValue;
 
+				npcExpValue = (long)(npcExpValue * ServerProperties.Properties.XP_RATE);
+
 				//Now deal the XP to all livings
 				foreach (DictionaryEntry de in killedNPC.XPGainers)
 				{
@@ -730,7 +732,7 @@ namespace DOL.GS.ServerRules
 						}
 
 						xpReward += (long)campBonus + groupExp;
-						living.GainExperience(xpReward, (long)campBonus, groupExp, true, true);
+						living.GainExperience(xpReward, (long)campBonus, groupExp, true, false);
 					}
 				}
 			}
@@ -921,6 +923,7 @@ namespace DOL.GS.ServerRules
 
 
 				long playerExpValue = killedPlayer.ExperienceValue;
+				playerExpValue = (long)(playerExpValue * ServerProperties.Properties.XP_RATE);
 				int playerRPValue = killedPlayer.RealmPointsValue;
 				int playerBPValue = 0;
 				bool BG = false;
@@ -1009,7 +1012,7 @@ namespace DOL.GS.ServerRules
 					if (xpReward > expCap)
 						xpReward = expCap;
 
-					living.GainExperience(xpReward);
+					living.GainExperience(xpReward, 0, 0, true, false);
 
 					//gold
 					if (living is GamePlayer)

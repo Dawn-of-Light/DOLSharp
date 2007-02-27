@@ -310,6 +310,14 @@ Scripts.Events.PlayerEnterExit.Left:			{0} just left the game!
 Scripts.Events.PlayerEnterExit.Staff:			[Staff Member] {0}
 
 # PlayerCommands
+# /Advice
+Scripts.Players.Advice.Advice:				[ADVICE{0}] {1}: "{2}"
+Scripts.Players.Advice.AdvicersOn:			There are {0} advisors online!
+
+# /Advisor
+Scripts.Players.Advisor.Off:				You will no longer receive messages from the advice channel.
+Scripts.Players.Advisor.On:				You will now receive messages from the advice channel.
+
 # /Afk
 Scripts.Players.Afk.Off:				Your AFK flag is now off.
 Scripts.Players.Afk.On:					Your AFK flag is now on.

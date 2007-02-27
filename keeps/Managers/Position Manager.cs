@@ -20,7 +20,7 @@ namespace DOL.GS.Keeps
 		/// <returns>The position object</returns>
 		public static DBKeepPosition GetUsablePosition(GameKeepGuard guard)
 		{
-			return GameServer.Database.SelectObject(typeof(DBKeepPosition), "ClassType != 'DOL.GS.Keeps.Banner' and TemplateID = '" + guard.TemplateID + "' and ComponentSkin = '" + guard.Component.Skin + "' and Height <= " + guard.Component.Height + " order by Height desc limit 0,1") as DBKeepPosition;
+			return GameServer.Database.SelectObject(typeof(DBKeepPosition), "ClassType != 'DOL.GS.Keeps.Banner' and TemplateID = '" + GameServer.Database.Escape(guard.TemplateID) + "' and ComponentSkin = '" + guard.Component.Skin + "' and Height <= " + guard.Component.Height + " order by Height desc limit 0,1") as DBKeepPosition;
 		}
 
 		/// <summary>
@@ -30,7 +30,7 @@ namespace DOL.GS.Keeps
 		/// <returns>The position object</returns>
 		public static DBKeepPosition GetUsablePosition(GameKeepBanner b)
 		{
-			return GameServer.Database.SelectObject(typeof(DBKeepPosition), "ClassType = 'DOL.GS.Keeps.Banner' and TemplateID = '" + b.TemplateID + "' and ComponentSkin = '" + b.Component.Skin + "' and Height <= " + b.Component.Height + " order by Height desc limit 0,1") as DBKeepPosition;
+			return GameServer.Database.SelectObject(typeof(DBKeepPosition), "ClassType = 'DOL.GS.Keeps.Banner' and TemplateID = '" + GameServer.Database.Escape(b.TemplateID) + "' and ComponentSkin = '" + b.Component.Skin + "' and Height <= " + b.Component.Height + " order by Height desc limit 0,1") as DBKeepPosition;
 		}
 
 		/// <summary>
@@ -40,7 +40,7 @@ namespace DOL.GS.Keeps
 		/// <returns>The position object</returns>
 		public static DBKeepPosition GetPosition(GameKeepGuard guard)
 		{
-			return GameServer.Database.SelectObject(typeof(DBKeepPosition), "TemplateID = '" + guard.TemplateID + "' and ComponentSkin = '" + guard.Component.Skin + "' and Height = " + guard.Component.Height) as DBKeepPosition;
+			return GameServer.Database.SelectObject(typeof(DBKeepPosition), "TemplateID = '" + GameServer.Database.Escape(guard.TemplateID) + "' and ComponentSkin = '" + guard.Component.Skin + "' and Height = " + guard.Component.Height) as DBKeepPosition;
 		}
 
 

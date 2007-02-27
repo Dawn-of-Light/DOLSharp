@@ -60,7 +60,8 @@ namespace DOL.GS.PropertyCalc
 		{
 			int percent = living.BuffBonusCategory1[(int)property]
 				- living.BuffBonusCategory3[(int)property]
-				+ living.ItemBonus[(int)property];
+				+ living.ItemBonus[(int)property]
+				+ living.AbilityBonus[(int)property];
 
 			if (living is GamePlayer)
 			{

@@ -142,7 +142,7 @@ namespace DOL.GS
 				HybridDictionary itemsInPage = new HybridDictionary(MAX_ITEM_IN_TRADEWINDOWS);
 				if (m_itemsListID != null && m_itemsListID.Length > 0)
 				{
-					DataObject[] itemList = GameServer.Database.SelectObjects(typeof(MerchantItem), "ItemListID = '" + m_itemsListID + "' AND PageNumber = '" + page + "'");
+					DataObject[] itemList = GameServer.Database.SelectObjects(typeof(MerchantItem), "ItemListID = '" + GameServer.Database.Escape(m_itemsListID) + "' AND PageNumber = '" + page + "'");
 					foreach (MerchantItem merchantitem in itemList)
 					{
 						ItemTemplate item = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), merchantitem.ItemTemplateID);
@@ -200,7 +200,7 @@ namespace DOL.GS
 
 				if (m_itemsListID != null && m_itemsListID.Length > 0)
 				{
-					MerchantItem itemToFind = (MerchantItem)GameServer.Database.SelectObject(typeof (MerchantItem), "ItemListID = '" + m_itemsListID + "' AND PageNumber = '" + page + "' AND SlotPosition = '" + (int)slot + "'");
+					MerchantItem itemToFind = (MerchantItem)GameServer.Database.SelectObject(typeof (MerchantItem), "ItemListID = '" + GameServer.Database.Escape(m_itemsListID) + "' AND PageNumber = '" + page + "' AND SlotPosition = '" + (int)slot + "'");
 					if (itemToFind != null)
 					{
 						item = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof (ItemTemplate), itemToFind.ItemTemplateID);
@@ -227,7 +227,7 @@ namespace DOL.GS
 				Hashtable allItems = new Hashtable();
 				if (m_itemsListID != null)
 				{
-					DataObject[] itemList = GameServer.Database.SelectObjects(typeof(MerchantItem), "ItemListID = '" + m_itemsListID + "'");
+					DataObject[] itemList = GameServer.Database.SelectObjects(typeof(MerchantItem), "ItemListID = '" + GameServer.Database.Escape(m_itemsListID) + "'");
 					foreach (MerchantItem merchantitem in itemList)
 					{
 						ItemTemplate item = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), merchantitem.ItemTemplateID);

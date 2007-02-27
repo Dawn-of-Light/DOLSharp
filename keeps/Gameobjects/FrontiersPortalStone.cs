@@ -35,6 +35,7 @@ namespace DOL.GS.Keeps
 		public GameKeepComponent Component
 		{
 			get { return m_component; }
+			set { m_component = value; }
 		}
 
 		private DBKeepPosition m_position;

@@ -175,6 +175,7 @@ namespace DOL.GS
 		public const int RIGHTWRIST = 34;
 		public const int LEFTRING = 35;
 		public const int RIGHTRING = 36;
+		public const int MYTHICAL = 37;
 	};
 
 	/// <summary>

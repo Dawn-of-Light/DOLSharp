@@ -109,6 +109,25 @@ namespace DOL.GS.Spells
 					mocFactor = System.Math.Round((double)ra.Level * 25 / 100, 2);
 				amount = (int)Math.Round(amount * mocFactor);
 			}
+
+			int criticalvalue = 0;
+
+			RAPropertyEnhancer critRA = Caster.GetAbility(typeof(WildHealingAbility)) as RAPropertyEnhancer;
+			int criticalchance = 0;
+			if (critRA != null)
+				criticalchance += critRA.Amount;
+
+			critRA = Caster.GetAbility(typeof(DualThreatAbility)) as RAPropertyEnhancer;
+			if (critRA != null)
+				criticalchance += critRA.Amount;
+
+			if (Util.Chance(criticalchance))
+				criticalvalue = Util.Random(amount / 10, amount / 2 + 1);
+
+			amount += criticalvalue;
+			int mod = amount * Caster.GetModified(eProperty.HealingEffectiveness) / 100;
+			amount += mod;
+
 			int heal = target.ChangeHealth(Caster, GameLiving.eHealthChangeType.Spell, amount);
 
 			if (heal == 0)
@@ -133,6 +152,8 @@ namespace DOL.GS.Spells
 				MessageToLiving(target, "You are healed by " + m_caster.GetName(0, false) + " for " + heal + " hit points.", eChatType.CT_Spell);
 				if (heal < amount)
 					MessageToCaster(target.GetName(0, true) + " is fully healed.", eChatType.CT_Spell);
+				if (heal > 0 && criticalvalue > 0)
+					MessageToCaster("Your heal criticals for an extra " + criticalvalue + " amount of hit points!", eChatType.CT_Spell);
 			}
 
 			return true;
