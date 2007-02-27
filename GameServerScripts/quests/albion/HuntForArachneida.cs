@@ -514,6 +514,9 @@ namespace DOL.GS.Quests.Albion
 				* a player right clicks on him or when he whispers to him.
 				*/
 
+			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
 			GameEventMgr.AddHandler(GamePlayerEvent.GameEntered, new DOLEventHandler(PlayerEnterWorld));
 
 			GameEventMgr.AddHandler(kealan, GameLivingEvent.Interact, new DOLEventHandler(TalkToKealan));
@@ -545,6 +548,9 @@ namespace DOL.GS.Quests.Albion
 			/* Removing hooks works just as adding them but instead of 
 			 * AddHandler, we call RemoveHandler, the parameters stay the same
 			 */
+			GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
 			GameEventMgr.RemoveHandler(GamePlayerEvent.GameEntered, new DOLEventHandler(PlayerEnterWorld));
 
 			GameEventMgr.RemoveHandler(kealan, GameLivingEvent.Interact, new DOLEventHandler(TalkToKealan));
@@ -612,7 +618,7 @@ namespace DOL.GS.Quests.Albion
 							break;
 							//If the player offered his "help", we send the quest dialog now!
 						case "hunt":
-							player.Out.SendCustomDialog("Do you want to hunt Arachneida?", new CustomDialogResponse(CheckPlayerAcceptQuest));
+							player.Out.SendQuestSubscribeCommand(kealan, QuestMgr.GetIDForQuestType(typeof(HuntForArachneida)), "Do you want to hunt Arachneida?");
 							break;
 					}
 				}
@@ -630,6 +636,21 @@ namespace DOL.GS.Quests.Albion
 				}
 
 			}
+		}
+
+		protected static void SubscribeQuest(DOLEvent e, object sender, EventArgs args)
+		{
+			QuestEventArgs qargs = args as QuestEventArgs;
+			if (qargs == null)
+				return;
+
+			if (qargs.QuestID != QuestMgr.GetIDForQuestType(typeof(HuntForArachneida)))
+				return;
+
+			if (e == GamePlayerEvent.AcceptQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x01);
+			else if (e == GamePlayerEvent.DeclineQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x00);
 		}
 
 		protected static void PlayerLeftWorld(DOLEvent e, object sender, EventArgs args)

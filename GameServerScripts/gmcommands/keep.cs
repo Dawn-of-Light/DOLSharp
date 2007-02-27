@@ -33,7 +33,8 @@ namespace DOL.GS.Scripts
 		"Various keep creation commands!", //command description
 		"'/keep fastcreate <type> <id> <name>' to create a keep with base template",
 		"'/keep fastcreate ' to show all template available in fast create",
-		"'/keep create <keepid> <baselevel> <name>' to create a keep ",
+		"'/keep create <keepid> <baselevel> <name>' to create a keep",
+	   "'/keep towercreate <keepid> <baselevel> <name>' to create a tower",
 		"'/keep remove'",
 		"'/keep name <Name>' to change name",
 		"'/keep keepid <keepID>' to assign keepid to keep",
@@ -1840,6 +1841,55 @@ namespace DOL.GS.Scripts
 						client.Out.SendMessage("You have created a keep.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					} break;
 				#endregion
+				case "towercreate":
+					{
+						if (args.Length < 5)
+						{
+							DisplaySyntax(client);
+							return 0;
+						}
+
+						int keepid = -1;
+						if (!int.TryParse(args[2], out keepid))
+						{
+							DisplayError(client, "Invalid entry for KeepID!", new object[] { });
+							return 0;
+						}
+
+						if (KeepMgr.getKeepByID(keepid) != null)
+						{
+							DisplayError(client, "KeepID {0} already exists!", keepid);
+							return 0;
+						}
+
+						byte baseLevel = 50;
+						if (!byte.TryParse(args[3], out baseLevel))
+						{
+							DisplayError(client, "Invalid entry for BaseLevel!", new object[] { });
+							return 0;
+						}
+
+						DBKeep keep = new DBKeep();
+						keep.Name = String.Join(" ", args, 4, args.Length - 4);
+						keep.KeepID = keepid;
+						keep.Level = 0;
+						keep.Region = client.Player.CurrentRegionID;
+						keep.X = client.Player.X;
+						keep.Y = client.Player.Y;
+						keep.Z = client.Player.Z;
+						keep.Heading = client.Player.Heading;
+						keep.BaseLevel = baseLevel;
+						GameServer.Database.AddNewObject(keep);
+
+						DBKeepComponent towerComponent = new DBKeepComponent(1, (int)GameKeepComponent.eComponentSkin.Tower, 0, 0, 0, 0, 100, keep.KeepID);
+						GameServer.Database.AddNewObject(towerComponent);
+
+						GameKeepTower k = new GameKeepTower();
+						k.Load(keep);
+						new GameKeepComponent().LoadFromDatabase(towerComponent);
+						DisplayMessage(client, "Tower created and saved at your location!", new object[] { });
+						break;
+					}
 				case "create":
 					{
 						if (args.Length < 5)

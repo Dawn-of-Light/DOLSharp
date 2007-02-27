@@ -113,7 +113,10 @@ namespace DOL.Database.Connection
 			}
 			else
 			{
+				s = s.Replace("\\", "\\\\");
+				s = s.Replace("\"", "\\\"");
 				s = s.Replace("'", "\\'");
+				s = s.Replace("’", "\\’");
 				//s = s.Replace("’", "\\’");//have it now in the mysqlstring object
 			}
 			return s;

@@ -242,7 +242,7 @@ namespace DOL.GS.Housing
 			CheckNPCTemplate(504, "DOL.GS.Scripts.GameHealer", "Healer", "50", "");
 			//Recharger
 			CheckNPCTemplate(505, "DOL.GS.Scripts.Recharger", "Recharger", "50", "");
-			//Hibernia Teleporter
+			//Teleporter
 #warning TODO
 			CheckNPCTemplate(506, "DOL.GS.GameNPC", "Teleporter", "50", "");
 			//Apprentice Merchant

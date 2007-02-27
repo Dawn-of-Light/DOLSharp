@@ -65,7 +65,7 @@ namespace DOL.Database
 			m_heading = componentHead;
 			m_height = componentHeight;
 			m_health = componentHealth;
-			m_keepID = 0;
+			m_keepID = keepid;
 			m_keepComponentID = componentID;
 		}
 

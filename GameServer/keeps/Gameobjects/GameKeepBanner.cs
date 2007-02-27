@@ -24,6 +24,14 @@ namespace DOL.GS.Keeps
 	public class GameKeepBanner : GameStaticItem , IKeepItem
 	{
 
+		public enum eBannerType : int 
+		{
+			Realm = 0,
+			Guild = 1,
+		}
+
+		public eBannerType BannerType;
+
 		/// <summary>
 		/// Albion unclaimed banner model
 		/// </summary>
@@ -80,7 +88,7 @@ namespace DOL.GS.Keeps
 					Component = new GameKeepComponent();
 					Component.Keep = keep;
 					Component.Keep.Banners.Add(obj.ObjectId, this);
-					if (Component.Keep.Guild != null)
+					if (BannerType == eBannerType.Guild && Component.Keep.Guild != null)
 						ChangeGuild();
 					else ChangeRealm();
 					break;
@@ -105,13 +113,23 @@ namespace DOL.GS.Keeps
 		{
 			m_templateID = pos.TemplateID;
 			m_component = component;
+			BannerType = (eBannerType)pos.TemplateType;
 
 			PositionMgr.LoadKeepItemPosition(pos, this);
 			component.Keep.Banners[m_templateID] = this;
-			if (component.Keep.Guild != null)
-				ChangeGuild();
-			else ChangeRealm();
-			this.AddToWorld();
+			if (BannerType == eBannerType.Guild)
+			{
+				if (component.Keep.Guild != null)
+				{
+					ChangeGuild();
+					this.AddToWorld();
+				}
+			}
+			else
+			{
+				ChangeRealm();
+				this.AddToWorld();
+			}
 		}
 
 		public void MoveToPosition(DBKeepPosition position)
@@ -151,11 +169,17 @@ namespace DOL.GS.Keeps
 		/// </summary>
 		public void ChangeGuild()
 		{
+			if (BannerType != eBannerType.Guild)
+				return;
 			Guild guild = this.Component.Keep.Guild;
 
 			int emblem = 0;
 			if (guild != null)
+			{
 				emblem = guild.theGuildDB.Emblem;
+				this.AddToWorld();
+			}
+			else this.RemoveFromWorld();
 
 			ushort model = AlbionGuildModel;
 			switch (this.Component.Keep.Realm)
@@ -168,26 +192,6 @@ namespace DOL.GS.Keeps
 			this.Model = model;
 			this.Emblem = emblem;
 			this.Name = GlobalConstants.RealmToName((eRealm)this.Component.Keep.Realm) + " Guild Banner";
-		}
-
-		/// <summary>
-		/// get the emblem of of realm or of guild when keep is claimed
-		/// </summary>
-		/// <returns></returns>
-		public int GetEmblem()
-		{
-			if (this.Component.Keep.Guild != null)
-			{
-				return this.Component.Keep.Guild.theGuildDB.Emblem;
-			}
-			switch (this.Realm)
-			{
-				case 0: return 0;
-				case 1: return 464;
-				case 2: return 465;
-				case 3: return 466;
-				default: return 0;
-			}
 		}
 	}
 }

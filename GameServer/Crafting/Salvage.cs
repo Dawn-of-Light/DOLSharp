@@ -120,7 +120,7 @@ namespace DOL.GS
 			siegeWeapon.ReleaseControl();
 			siegeWeapon.RemoveFromWorld();
 			bool error = false;
-			DBCraftedItem craftItemData = (DBCraftedItem)GameServer.Database.SelectObject(typeof(DBCraftedItem), "Id_nb ='" + siegeWeapon.ItemId + "'");
+			DBCraftedItem craftItemData = (DBCraftedItem)GameServer.Database.SelectObject(typeof(DBCraftedItem), "Id_nb ='" + GameServer.Database.Escape(siegeWeapon.ItemId) + "'");
 			if (craftItemData == null)
 				return 0;
 			if (craftItemData.RawMaterials == null)

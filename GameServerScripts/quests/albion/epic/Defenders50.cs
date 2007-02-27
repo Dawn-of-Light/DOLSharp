@@ -956,7 +956,7 @@ namespace DOL.GS.Quests.Albion
                     i.Model = 143;
                     i.IsDropable = true;
                     i.IsPickable = true;
-                    i.DPS_AF = 48;
+                    i.DPS_AF = 50;
                     i.SPD_ABS = 0;
                     i.Object_Type = 32;
                     i.Quality = 100;
@@ -999,7 +999,7 @@ namespace DOL.GS.Quests.Albion
                     i.Model = 1290; //NEED TO WORK ON..
                     i.IsDropable = true;
                     i.IsPickable = true;
-                    i.DPS_AF = 48;
+                    i.DPS_AF = 50;
                     i.SPD_ABS = 0;
                     i.Object_Type = 32;
                     i.Quality = 100;
@@ -1042,7 +1042,7 @@ namespace DOL.GS.Quests.Albion
                     i.Model = 142;
                     i.IsDropable = true;
                     i.IsPickable = true;
-                    i.DPS_AF = 48;
+                    i.DPS_AF = 50;
                     i.SPD_ABS = 0;
                     i.Object_Type = 32;
                     i.Quality = 100;
@@ -1084,7 +1084,7 @@ namespace DOL.GS.Quests.Albion
                     i.Model = 733;
                     i.IsDropable = true;
                     i.IsPickable = true;
-                    i.DPS_AF = 48;
+                    i.DPS_AF = 50;
                     i.SPD_ABS = 0;
                     i.Object_Type = 32;
                     i.Quality = 100;
@@ -1124,7 +1124,7 @@ namespace DOL.GS.Quests.Albion
                     i.Model = 140;
                     i.IsDropable = true;
                     i.IsPickable = true;
-                    i.DPS_AF = 48;
+                    i.DPS_AF = 50;
                     i.SPD_ABS = 0;
                     i.Object_Type = 32;
                     i.Quality = 100;
@@ -1166,7 +1166,7 @@ namespace DOL.GS.Quests.Albion
 					i.Model = 141;
 					i.IsDropable = true;
 					i.IsPickable = true;
-					i.DPS_AF = 48;
+					i.DPS_AF = 50;
 					i.SPD_ABS = 0;
 					i.Object_Type = 32;
 					i.Quality = 100;

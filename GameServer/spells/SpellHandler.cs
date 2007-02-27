@@ -2067,7 +2067,7 @@ namespace DOL.GS.Spells
 			if (finalDamage < 0)
 				finalDamage = 0;
 
-			if (Util.Chance(m_caster.SpellCriticalChance) && (finalDamage >= 1))
+			if (Util.Chance(Math.Min(50, m_caster.SpellCriticalChance)) && (finalDamage >= 1))
 			{
 				int critmax = (ad.Target is GamePlayer) ? finalDamage / 2 : finalDamage;
 				cdamage = Util.Random(finalDamage / 10, critmax); //think min crit is 10% of damage

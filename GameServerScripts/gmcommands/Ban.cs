@@ -74,7 +74,7 @@ namespace DOL.GS.Scripts
 				switch (TypeOfBan)
 				{
 					case "account+ip":
-						objs = GameServer.Database.SelectObjects(typeof (DBBannedAccount), "Type ='" + TypeOfBan + "' AND Account ='" + accname + "' AND Ip ='" + accip + "'");
+						objs = GameServer.Database.SelectObjects(typeof (DBBannedAccount), "Type ='" + GameServer.Database.Escape(TypeOfBan) + "' AND Account ='" + GameServer.Database.Escape(accname) + "' AND Ip ='" + GameServer.Database.Escape(accip) + "'");
 						if (objs.Length > 0)
 						{
 							client.Out.SendMessage("this Account+Ip has already been banned.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
@@ -86,7 +86,7 @@ namespace DOL.GS.Scripts
 						break;
 
 					case "account":
-						objs = GameServer.Database.SelectObjects(typeof (DBBannedAccount), "(Type ='Account' AND Account ='" + accname + "') OR (Type ='Account+Ip' AND Account ='" + accname + "')");
+						objs = GameServer.Database.SelectObjects(typeof(DBBannedAccount), "(Type ='Account' AND Account ='" + GameServer.Database.Escape(accname) + "') OR (Type ='Account+Ip' AND Account ='" + GameServer.Database.Escape(accname) + "')");
 						if (objs.Length > 0)
 						{
 							client.Out.SendMessage("this account has already been banned.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
@@ -98,7 +98,7 @@ namespace DOL.GS.Scripts
 						break;
 
 					case "ip":
-						objs = GameServer.Database.SelectObjects(typeof (DBBannedAccount), "(Type ='Ip' AND Ip ='" + accip + "') OR (Type ='Account+Ip' AND Ip ='" + accip + "')");
+						objs = GameServer.Database.SelectObjects(typeof (DBBannedAccount), "(Type ='Ip' AND Ip ='" + GameServer.Database.Escape(accip) + "') OR (Type ='Account+Ip' AND Ip ='" + GameServer.Database.Escape(accip) + "')");
 						if (objs.Length > 0)
 						{
 							client.Out.SendMessage("this IP adress has already been banned.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);

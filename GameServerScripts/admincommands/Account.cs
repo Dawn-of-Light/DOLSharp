@@ -203,7 +203,7 @@ namespace DOL.GS.Scripts
 				return client.Account;
 
 			//Return database object
-			return (Account) GameServer.Database.SelectObject(typeof (Account), "Name ='" + GameServer.Database.Escape(name) + "'");
+			return (Account)GameServer.Database.SelectObject(typeof(Account), "Name ='" + GameServer.Database.Escape(name) + "'");
 		}
 
 		/// <summary>
