@@ -300,7 +300,7 @@ namespace DOL.GS.Quests.Midgard
 				HealerEpicHelm.Name = "Valhalla Touched Coif";
 				HealerEpicHelm.Level = 50;
 				HealerEpicHelm.Item_Type = 21;
-				HealerEpicHelm.Model = 63; //NEED TO WORK ON..
+				HealerEpicHelm.Model = 1291; //NEED TO WORK ON..
 				HealerEpicHelm.IsDropable = true;
 				HealerEpicHelm.IsPickable = true;
 				HealerEpicHelm.DPS_AF = 100;

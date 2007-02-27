@@ -184,6 +184,9 @@ namespace DOL.GS.Quests.Albion
 				* method. This means, the "TalkToXXX" method is called whenever
 				* a player right clicks on him or when he whispers to him.
 				*/
+			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
             GameEventMgr.AddHandler(sirJerem, GameLivingEvent.Interact, new DOLEventHandler(TalkToSirJerem));
             GameEventMgr.AddHandler(sirJerem, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToSirJerem));
 
@@ -213,6 +216,9 @@ namespace DOL.GS.Quests.Albion
             /* Removing hooks works just as adding them but instead of 
              * AddHandler, we call RemoveHandler, the parameters stay the same
              */
+			GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
             GameEventMgr.RemoveHandler(sirJerem, GameObjectEvent.Interact, new DOLEventHandler(TalkToSirJerem));
             GameEventMgr.RemoveHandler(sirJerem, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToSirJerem));
 
@@ -275,7 +281,7 @@ namespace DOL.GS.Quests.Albion
                             sirJerem.SayTo(player, "We have skilled soldirs and commanders, but if our enemies should decide to unite, I fear they would overrun us. The denizens of Darkness Falls have begun to venture beyond the confines of their dungeon. We must act to [contain] them.");
                             break;
                         case "contain":
-                            player.Out.SendCustomDialog("Will you help Sir Jerem dissuade the Manes demons from leaving Darkness Falls? [Levels 9-12] ", new CustomDialogResponse(CheckPlayerAcceptQuest));
+							player.Out.SendQuestSubscribeCommand(sirJerem, QuestMgr.GetIDForQuestType(typeof(AMessageToTheManes)), "Will you help Sir Jerem dissuade the Manes demons from leaving Darkness Falls? [Levels 9-12]");
                             break;
                     }
                 }
@@ -314,6 +320,21 @@ namespace DOL.GS.Quests.Albion
 
             }
         }
+
+		protected static void SubscribeQuest(DOLEvent e, object sender, EventArgs args)
+		{
+			QuestEventArgs qargs = args as QuestEventArgs;
+			if (qargs == null)
+				return;
+
+			if (qargs.QuestID != QuestMgr.GetIDForQuestType(typeof(AMessageToTheManes)))
+				return;
+
+			if (e == GamePlayerEvent.AcceptQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x01);
+			else if (e == GamePlayerEvent.DeclineQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x00);
+		}
 
         /// <summary>
         /// This method checks if a player qualifies for this quest

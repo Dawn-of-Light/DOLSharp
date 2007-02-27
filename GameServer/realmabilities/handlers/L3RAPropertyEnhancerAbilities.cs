@@ -5,7 +5,7 @@ namespace DOL.GS.RealmAbilities
 	public class DualThreatAbility : L3RAPropertyEnhancer
 	{
 		public DualThreatAbility(DBAbility dba, int level)
-			: base(dba, level, new eProperty[] { eProperty.CriticalMeleeHitChance, eProperty.CriticalSpellHitChance })
+			: base(dba, level, new eProperty[] { eProperty.CriticalMeleeHitChance, eProperty.CriticalSpellHitChance})
 		{
 		}
 

@@ -136,9 +136,8 @@ namespace DOL.GS
 				}
 				else if (entry == null)
 				{
-					if (log.IsWarnEnabled)
-						log.Warn("No npctemplate with ID " + templateId + " found.");
-						/*log.Warn("no mob template with ID " + templateId + " found.\n" + Environment.StackTrace);*/
+					//if (log.IsWarnEnabled)
+						//log.Warn("No npctemplate with ID " + templateId + " found.");
 					return null;
 				}
 				return (NpcTemplate)entry;

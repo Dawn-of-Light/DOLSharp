@@ -214,8 +214,9 @@ namespace DOL.GS.Effects
 			//DOLConsole.WriteLine("overwrite effect on "+Owner.Name+" effect "+effect.Spell.Name);
 			if (Spell.Concentration > 0) 
 			{
+
 				if (log.IsWarnEnabled)
-					log.Warn("Tried to Overwrite conc based effect! effectowner:"+effect.Owner+" effect:"+effect.Spell.Name+" caster:"+SpellHandler.Caster);
+					log.Warn(effect.Name + " (" + effect.Spell.Name + ") is trying to overwrite " + Spell.Name + " which has concentration " + Spell.Concentration);
 				return;
 			}
 

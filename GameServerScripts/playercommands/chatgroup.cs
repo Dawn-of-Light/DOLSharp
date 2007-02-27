@@ -397,7 +397,7 @@ namespace DOL.GS.Scripts
 			{
 				if (mychatgroup.Members.Count < 1)
 				{
-					player.Out.SendMessage("Chat group doesn't exist anymore.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Scripts.Players.Chatgroup.NoChatGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return;
 				}
 				if (response == 0x01)

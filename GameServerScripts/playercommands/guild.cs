@@ -811,6 +811,8 @@ namespace DOL.GS.Scripts
 					case "who":
 						{
 							int ind = 0;
+							int startInd = 0;
+
 							if (args.Length == 6 && args[2] == "window" && (client.Player.Guild != null))
 							{
 								int page = 1;
@@ -829,7 +831,7 @@ namespace DOL.GS.Scripts
 
 								if (showOffline)
 								{
-									foreach (Character ply in (Character[])GameServer.Database.SelectObjects(typeof(Character), "GuildID = '" + client.Player.GuildID + "'"))
+									foreach (Character ply in (Character[])GameServer.Database.SelectObjects(typeof(Character), "GuildID = '" + GameServer.Database.Escape(client.Player.GuildID) + "'"))
 									{
 										string keyStr = "";
 										switch (sort)
@@ -976,25 +978,34 @@ namespace DOL.GS.Scripts
 											}
 										}
 									}
+									return 1;
 								}
 								else
-									client.Out.SendMessage("alliance list usage: /gc who alliance or /gc who a ", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return 1;
+								{
+									int.TryParse(args[2], out startInd);
+								}
 							}
 
-							foreach (GamePlayer ply in client.Player.Guild.ListOnlineMembers())
+							ArrayList onlineGuildMembers = client.Player.Guild.ListOnlineMembers();
+														
+							foreach (GamePlayer ply in onlineGuildMembers)
 							{
 								if (ply.Client.IsPlaying && !ply.IsAnonymous)
 								{
+									if (startInd + ind > startInd + WhoCommandHandler.MAX_LIST_SIZE)
+										break;
 									ind++;
 									string zoneName = (ply.CurrentZone == null ? "(null)" : ply.CurrentZone.Description);
 									string mesg = ind + ") " + ply.Name + " <" + ply.GuildRank.Title + "> the Level " + ply.Level + " " + ply.CharacterClass.Name + " in " + zoneName;
 									if (ServerProperties.Properties.ALLOW_CHANGE_LANGUAGE)
 										mesg += " <" + ply.Client.Account.Language + ">";
-									client.Out.SendMessage(mesg, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									if (ind >= startInd)
+										client.Out.SendMessage(mesg, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								}
 							}
-							client.Out.SendMessage("total member online:        " + ind.ToString(), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							if (ind != onlineGuildMembers.Count)
+								client.Out.SendMessage(string.Format(WhoCommandHandler.MESSAGE_LIST_TRUNCATED, onlineGuildMembers.Count), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							else  client.Out.SendMessage("total member online:        " + ind.ToString(), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 							break;
 						}
@@ -1101,7 +1112,7 @@ namespace DOL.GS.Scripts
 								}
 								else
 								{
-									Character c = (Character)GameServer.Database.SelectObject(typeof(Character), "Name = '" + playername + "'");
+									Character c = (Character)GameServer.Database.SelectObject(typeof(Character), "Name = '" + GameServer.Database.Escape(playername) + "'");
 									if (c == null)
 									{
 										client.Out.SendMessage("No player by the name " + playername + " found.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -1109,7 +1120,7 @@ namespace DOL.GS.Scripts
 									}
 									accountname = c.AccountName;
 								}
-								Character[] chars = (Character[])GameServer.Database.SelectObjects(typeof(Character), "AccountName = '" + accountname + "'");
+								Character[] chars = (Character[])GameServer.Database.SelectObjects(typeof(Character), "AccountName = '" + GameServer.Database.Escape(accountname) + "'");
 								foreach (Character c in chars)
 								{
 									c.GuildID = "";

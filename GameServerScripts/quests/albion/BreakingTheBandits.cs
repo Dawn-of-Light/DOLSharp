@@ -219,8 +219,6 @@ namespace DOL.GS.Quests.Albion
 
             #endregion
 
-            
-
             /* Now we add some hooks to the Sir Quait we found.
 				* Actually, we want to know when a player interacts with him.
 				* So, we hook the right-click (interact) and the whisper method
@@ -228,6 +226,10 @@ namespace DOL.GS.Quests.Albion
 				* method. This means, the "TalkToXXX" method is called whenever
 				* a player right clicks on him or when he whispers to him.
 				*/
+
+			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
             GameEventMgr.AddHandler(atheleys, GameLivingEvent.Interact, new DOLEventHandler(TalkToAtheleys));
             GameEventMgr.AddHandler(atheleys, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToAtheleys));
 
@@ -257,6 +259,10 @@ namespace DOL.GS.Quests.Albion
             /* Removing hooks works just as adding them but instead of 
              * AddHandler, we call RemoveHandler, the parameters stay the same
              */
+
+			GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
             GameEventMgr.RemoveHandler(atheleys, GameObjectEvent.Interact, new DOLEventHandler(TalkToAtheleys));
             GameEventMgr.RemoveHandler(atheleys, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToAtheleys));
 
@@ -319,7 +325,7 @@ namespace DOL.GS.Quests.Albion
                             break;
                         case "problem":
                             atheleys.SayTo(player, "The first step in my plan is to eliminate the leader of a group of bandits operating just outside of Prydwen Keep. Will you assist me in this task?.");
-                            player.Out.SendCustomDialog("Will you help Atheleys Sy'Lian in her campaign against the bandits? [Levels 8-11]", new CustomDialogResponse(CheckPlayerAcceptQuest));
+							player.Out.SendQuestSubscribeCommand(atheleys, QuestMgr.GetIDForQuestType(typeof(BreakingTheBandits)), "Will you help Atheleys Sy'Lian in her campaign against the bandits? [Levels 8-11]");
                             break;
                     }
                 }
@@ -354,6 +360,21 @@ namespace DOL.GS.Quests.Albion
 
             }
         }
+
+		protected static void SubscribeQuest(DOLEvent e, object sender, EventArgs args)
+		{
+			QuestEventArgs qargs = args as QuestEventArgs;
+			if (qargs == null)
+				return;
+
+			if (qargs.QuestID != QuestMgr.GetIDForQuestType(typeof(BreakingTheBandits)))
+				return;
+
+			if (e == GamePlayerEvent.AcceptQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x01);
+			else if (e == GamePlayerEvent.DeclineQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x00);
+		}
 
         /// <summary>
         /// This method checks if a player qualifies for this quest

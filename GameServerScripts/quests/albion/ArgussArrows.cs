@@ -266,6 +266,9 @@ namespace DOL.GS.Quests.Albion
 				* method. This means, the "TalkToXXX" method is called whenever
 				* a player right clicks on him or when he whispers to him.
 				*/
+			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
             GameEventMgr.AddHandler(argusBowman, GameLivingEvent.Interact, new DOLEventHandler(TalkToArgusBowman));
             GameEventMgr.AddHandler(argusBowman, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToArgusBowman));
 
@@ -295,6 +298,10 @@ namespace DOL.GS.Quests.Albion
             /* Removing hooks works just as adding them but instead of 
              * AddHandler, we call RemoveHandler, the parameters stay the same
              */
+
+			GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
             GameEventMgr.RemoveHandler(argusBowman, GameObjectEvent.Interact, new DOLEventHandler(TalkToArgusBowman));
             GameEventMgr.RemoveHandler(argusBowman, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToArgusBowman));
 
@@ -369,7 +376,7 @@ namespace DOL.GS.Quests.Albion
                             argusBowman.SayTo(player, "It wasn't bent or cracked or anything! I guess now you know why I want more of that wood! So, if you go and kill a few of those cutpurses and get me a good solid stack of the wood, I'll reward you. You [up] for it?");
                             break;
                         case "up":
-                            player.Out.SendCustomDialog("Will you help Argus in his quest to make a new type of arrow? [Level 4] ", new CustomDialogResponse(CheckPlayerAcceptQuest));
+							player.Out.SendQuestSubscribeCommand(argusBowman, QuestMgr.GetIDForQuestType(typeof(ArgussArrows)), "Will you help Argus in his quest to make a new type of arrow? [Level 4]");
                             break;
                     }
                 }
@@ -393,6 +400,21 @@ namespace DOL.GS.Quests.Albion
 
             }
         }
+
+		protected static void SubscribeQuest(DOLEvent e, object sender, EventArgs args)
+		{
+			QuestEventArgs qargs = args as QuestEventArgs;
+			if (qargs == null)
+				return;
+
+			if (qargs.QuestID != QuestMgr.GetIDForQuestType(typeof(ArgussArrows)))
+				return;
+
+			if (e == GamePlayerEvent.AcceptQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x01);
+			else if (e == GamePlayerEvent.DeclineQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x00);
+		}
 
         /// <summary>
         /// This method checks if a player qualifies for this quest

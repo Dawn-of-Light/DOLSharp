@@ -217,13 +217,6 @@ namespace DOL.GS.Quests.Albion
 
 			#endregion
 
-			/* Now we add some hooks to the npc we found.
-			* Actually, we want to know when a player interacts with him.
-			* So, we hook the right-click (interact) and the whisper method
-			* of npc and set the callback method to the "TalkToXXX"
-			* method. This means, the "TalkToXXX" method is called whenever
-			* a player right clicks on him or when he whispers to him.
-			*/
 
 			firstFieldArea = WorldMgr.GetRegion(firstField.RegionID).AddArea(new Area.Circle("First Vacant Field", firstField.X, firstField.Y, 0, 1450));
 			firstFieldArea.RegisterPlayerEnter(new DOLEventHandler(PlayerEnterFirstFieldArea));
@@ -233,6 +226,17 @@ namespace DOL.GS.Quests.Albion
 
 			thirdFieldArea = WorldMgr.GetRegion(thirdField.RegionID).AddArea(new Area.Circle("Third Vacant Field", thirdField.X, thirdField.Y, 0, 1100));
 			thirdFieldArea.RegisterPlayerEnter(new DOLEventHandler(PlayerEnterThirdFieldArea));
+			
+			/* Now we add some hooks to the npc we found.
+			* Actually, we want to know when a player interacts with him.
+			* So, we hook the right-click (interact) and the whisper method
+			* of npc and set the callback method to the "TalkToXXX"
+			* method. This means, the "TalkToXXX" method is called whenever
+			* a player right clicks on him or when he whispers to him.
+			*/
+
+			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
 
 			GameEventMgr.AddHandler(GamePlayerEvent.GameEntered, new DOLEventHandler(PlayerEnterWorld));
 			
@@ -262,10 +266,6 @@ namespace DOL.GS.Quests.Albion
 			if (farmerAsma == null)
 				return;
 
-			/* Removing hooks works just as adding them but instead of 
-			 * AddHandler, we call RemoveHandler, the parameters stay the same
-			 */
-			
 			firstFieldArea.UnRegisterPlayerEnter(new DOLEventHandler(PlayerEnterFirstFieldArea));
 			WorldMgr.GetRegion(firstField.RegionID).RemoveArea(firstFieldArea);
 
@@ -274,6 +274,13 @@ namespace DOL.GS.Quests.Albion
 
 			thirdFieldArea.UnRegisterPlayerEnter(new DOLEventHandler(PlayerEnterThirdFieldArea));
 			WorldMgr.GetRegion(thirdField.RegionID).RemoveArea(thirdFieldArea);
+
+			/* Removing hooks works just as adding them but instead of 
+			 * AddHandler, we call RemoveHandler, the parameters stay the same
+			 */
+
+			GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
 
 			GameEventMgr.RemoveHandler(GamePlayerEvent.GameEntered, new DOLEventHandler(PlayerEnterWorld));
 
@@ -367,7 +374,7 @@ namespace DOL.GS.Quests.Albion
 						case "check them out":
 							farmerAsma.SayTo(player, "Would you be willing to take a look at these fields for me and let me know if you think they are worth leasing?");
 							//If the player offered his help, we send the quest dialog now!
-							player.Out.SendCustomDialog("Will you help Farmer Asma \nsearch for new farmland?\n[Level 2-5]", new CustomDialogResponse(CheckPlayerAcceptQuest));
+							player.Out.SendQuestSubscribeCommand(farmerAsma, QuestMgr.GetIDForQuestType(typeof(GreenerPastures)), "Will you help Farmer Asma \nsearch for new farmland?\n[Level 2-5]");
 							break;
 					}
 				}
@@ -397,6 +404,21 @@ namespace DOL.GS.Quests.Albion
 					}
 				}
 			}
+		}
+
+		protected static void SubscribeQuest(DOLEvent e, object sender, EventArgs args)
+		{
+			QuestEventArgs qargs = args as QuestEventArgs;
+			if (qargs == null)
+				return;
+
+			if (qargs.QuestID != QuestMgr.GetIDForQuestType(typeof(GreenerPastures)))
+				return;
+
+			if (e == GamePlayerEvent.AcceptQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x01);
+			else if (e == GamePlayerEvent.DeclineQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x00);
 		}
 
 		protected static void PlayerUseSlot(DOLEvent e, object sender, EventArgs args)

@@ -82,6 +82,13 @@ namespace DOL.GS.Scripts
 				return 1;
 			}
 
+			if (GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvP &&
+				target.IsStealthed)
+			{
+				client.Out.SendMessage("You can't find the player around here.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return 1;
+			}
+
 			client.Out.SendMessage("You have invited " + target.Name + " to join your group.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			target.Out.SendGroupInviteCommand(client.Player, client.Player.Name + " has invited you to join\n" + client.Player.GetPronoun(1, false) + " group. Do you wish to join?");
 			target.Out.SendMessage(client.Player.Name + " has invited you to join " + client.Player.GetPronoun(1, false) + " group.", eChatType.CT_System, eChatLoc.CL_SystemWindow);

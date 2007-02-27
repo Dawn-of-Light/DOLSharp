@@ -53,7 +53,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					// delete items
 					try
 					{
-						DataObject[] objs = GameServer.Database.SelectObjects(typeof(InventoryItem), "OwnerID = '" + chars[i].ObjectId + "'");
+						DataObject[] objs = GameServer.Database.SelectObjects(typeof(InventoryItem), "OwnerID = '" + GameServer.Database.Escape(chars[i].ObjectId) + "'");
 						foreach (InventoryItem item in objs)
 						{
 							GameServer.Database.DeleteObject(item);
@@ -69,7 +69,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					// delete quests
 					try
 					{
-						DataObject[] objs = GameServer.Database.SelectObjects(typeof(DBQuest), "CharName = '"+GameServer.Database.Escape(chars[i].Name) + "'");
+						DataObject[] objs = GameServer.Database.SelectObjects(typeof(DBQuest), "CharName = '" + GameServer.Database.Escape(chars[i].Name) + "'");
 						foreach (DBQuest quest in objs)
 						{
 							GameServer.Database.DeleteObject(quest);

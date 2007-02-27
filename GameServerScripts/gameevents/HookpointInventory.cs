@@ -42,7 +42,8 @@ namespace DOL.GS.GameEvents
 			//todo make new class like guard with special brain for each class
 
 			/*string name,byte gold,byte silver,byte copper,ushort icon,string objectType,ushort flag*/
-			HookPointInventory.RedHPInventory.AddFirstFreeSlot(new HookPointItem("Melee Guard",67,0x0A40,"DOL.GS.GameKeepGuard",0));
+			/*
+			HookPointInventory.RedHPInventory.AddFirstFreeSlot(new HookPointItem("Melee Guard",67,0x0A40,"DOL.GS.Keeps.GuardFighter",0));
 
 			HookPointInventory.GreenHPInventory.AddFirstFreeSlot(new HookPointItem("Palintone",50,0x0A2C,"DOL.GS.GameSiegeCatapult",0x4100));
 			HookPointInventory.GreenHPInventory.AddFirstFreeSlot(new HookPointItem("Trebuchet",20,0x0A22,"DOL.GS.GameSiegeTrebuchet",0x4B00));
@@ -51,14 +52,14 @@ namespace DOL.GS.GameEvents
 
 			HookPointInventory.YellowHPInventory.AddFirstFreeSlot(new HookPointItem("Boiling Oil",70,0x0A40,"DOL.GS.GameSiegeCauldron",0x2800));
 
-//			HookPointInventory.BlueHPInventory.AddFirstFreeSlot(new HookPointItem("Healer",10,0x0A40,"DOL.GS.Scripts.GameHealer",0));
-//			HookPointInventory.BlueHPInventory.AddFirstFreeSlot(new HookPointItem("Hastener",10,0x0A40,"DOL.GS.Scripts.GameHastener",0));
-//			HookPointInventory.BlueHPInventory.AddFirstFreeSlot(new HookPointItem("BlackSmith",1,0x0A40,"DOL.GS.Scripts.Blacksmith",0));
-			/*
-			HookPointInventory.RedHPInventory.AddFirstFreeSlot(new HookPointItem("Caster Guard",67,0x0A40,"DOL.GS.GameKeepGuard",0));
-			HookPointInventory.RedHPInventory.AddFirstFreeSlot(new HookPointItem("Tanged Guard",67,0x0A40,"DOL.GS.GameKeepGuard",0));
-			HookPointInventory.RedHPInventory.AddFirstFreeSlot(new HookPointItem("Healer Guard",67,0x0A40,"DOL.GS.GameKeepGuard",0));
-			HookPointInventory.RedHPInventory.AddFirstFreeSlot(new HookPointItem("Stealther Guard",67,0x0A40,"DOL.GS.GameKeepGuard",0));
+			HookPointInventory.BlueHPInventory.AddFirstFreeSlot(new HookPointItem("Healer",10,0x0A40,"DOL.GS.Scripts.GameHealer",0));
+			HookPointInventory.BlueHPInventory.AddFirstFreeSlot(new HookPointItem("Hastener",10,0x0A40,"DOL.GS.Scripts.GameHastener",0));
+			HookPointInventory.BlueHPInventory.AddFirstFreeSlot(new HookPointItem("BlackSmith",1,0x0A40,"DOL.GS.Scripts.Blacksmith",0));
+
+			HookPointInventory.RedHPInventory.AddFirstFreeSlot(new HookPointItem("Caster Guard",67,0x0A40,"DOL.GS.Keeps.GuardCaster",0));
+			HookPointInventory.RedHPInventory.AddFirstFreeSlot(new HookPointItem("Ranged Guard",67,0x0A40,"DOL.GS.Keeps.GuardArcher",0));
+			HookPointInventory.RedHPInventory.AddFirstFreeSlot(new HookPointItem("Healer Guard",67,0x0A40,"DOL.GS.Keeps.GuardHealer",0));
+			HookPointInventory.RedHPInventory.AddFirstFreeSlot(new HookPointItem("Stealther Guard",67,0x0A40,"DOL.GS.Keeps.GuardStealther",0));
 
 
 			HookPointInventory.BlueHPInventory.AddFirstFreeSlot(new HookPointItem("Healer",10,0x0A40,"DOL.GS.GameHealer",0));
@@ -70,9 +71,9 @@ namespace DOL.GS.GameEvents
 
 			HookPointInventory.BlueHPInventory.AddFirstFreeSlot(new HookPointItem("BlackSmith",1,0x0A40,"DOL.GS.Blacksmith",0));
 
-			HookPointInventory.BlueHPInventory.AddFirstFreeSlot(new HookPointItem("Marchand de Gemmes",1,0x0A40,"DOL.GS.GameKeepGuard",0));
-			HookPointInventory.BlueHPInventory.AddFirstFreeSlot(new HookPointItem("Preserveur d'Ether",1,0x0A40,"DOL.GS.GameKeepGuard",0));
-			*/
+			//HookPointInventory.BlueHPInventory.AddFirstFreeSlot(new HookPointItem("Marchand de Gemmes",1,0x0A40,"DOL.GS.GameKeepGuard",0));
+			//HookPointInventory.BlueHPInventory.AddFirstFreeSlot(new HookPointItem("Preserveur d'Ether",1,0x0A40,"DOL.GS.GameKeepGuard",0));
+			 */
 		}
 	}
 }

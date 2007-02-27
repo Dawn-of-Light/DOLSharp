@@ -232,6 +232,9 @@ namespace DOL.GS.Quests.Albion
 			* method. This means, the "TalkToXXX" method is called whenever
 			* a player right clicks on him or when he whispers to him.
 			*/
+
+			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
 			
 			GameEventMgr.AddHandler(commanderBurcrif, GameLivingEvent.Interact, new DOLEventHandler(TalkToCommanderBurcrif));
 			GameEventMgr.AddHandler(commanderBurcrif, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToCommanderBurcrif));
@@ -262,6 +265,9 @@ namespace DOL.GS.Quests.Albion
 			/* Removing hooks works just as adding them but instead of 
 			 * AddHandler, we call RemoveHandler, the parameters stay the same
 			 */
+			GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
 			GameEventMgr.RemoveHandler(commanderBurcrif, GameLivingEvent.Interact, new DOLEventHandler(TalkToCommanderBurcrif));
 			GameEventMgr.RemoveHandler(commanderBurcrif, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToCommanderBurcrif));
 
@@ -317,7 +323,7 @@ namespace DOL.GS.Quests.Albion
 						
 							//If the player offered his help, we send the quest dialog now!
 						case "interested":
-							player.Out.SendCustomDialog("Do you accept the Hunt for Slith quest? \n[Levels 4-8]", new CustomDialogResponse(CheckPlayerAcceptQuest));
+							player.Out.SendQuestSubscribeCommand(commanderBurcrif, QuestMgr.GetIDForQuestType(typeof(HuntForSlith)), "Do you accept the Hunt for Slith quest? \n[Levels 4-8]");
 							break;
 					}
 				}
@@ -331,6 +337,21 @@ namespace DOL.GS.Quests.Albion
 					}
 				}
 			}
+		}
+
+		protected static void SubscribeQuest(DOLEvent e, object sender, EventArgs args)
+		{
+			QuestEventArgs qargs = args as QuestEventArgs;
+			if (qargs == null)
+				return;
+
+			if (qargs.QuestID != QuestMgr.GetIDForQuestType(typeof(HuntForSlith)))
+				return;
+
+			if (e == GamePlayerEvent.AcceptQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x01);
+			else if (e == GamePlayerEvent.DeclineQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x00);
 		}
 
 		/// <summary>

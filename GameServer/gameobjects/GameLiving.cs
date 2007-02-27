@@ -3181,7 +3181,7 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 
 			Notify(GameLivingEvent.HealthChanged, this, new HealthChangedEventArgs(changeSource, healthChangeType, healthChanged));
 
-			//Nofiy our enemies that we were healed by other means than
+			//Notify our enemies that we were healed by other means than
 			//natural regeneration, this allows for aggro on healers!
 			if (healthChangeType != eHealthChangeType.Regenerate)
 			{
@@ -3191,10 +3191,10 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 				foreach (GameObject attacker in attackers)
 				{
 					if (attacker is GameLiving && attacker != TargetObject)
-						((GameLiving)attacker).Notify(
-							GameLivingEvent.EnemyHealed,
-							(GameLiving)attacker,
-							new EnemyHealedEventArgs(this, changeSource, healthChangeType, changeAmount));
+					{
+						(attacker as GameLiving) .Notify(GameLivingEvent.EnemyHealed, (GameLiving)attacker, new EnemyHealedEventArgs(this, changeSource, healthChangeType, changeAmount));
+						(attacker as GameLiving).AddXPGainer(changeSource, healthChanged);
+					}
 				}
 			}
 			return healthChanged;

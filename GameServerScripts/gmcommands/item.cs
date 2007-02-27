@@ -1543,7 +1543,7 @@ namespace DOL.GS.Scripts
 					case "findid":
 						{
 							string name = string.Join(" ", args, 2, args.Length - 2);
-							ItemTemplate[] items = (ItemTemplate[])GameServer.Database.SelectObjects(typeof(ItemTemplate), "Name like '%" + name + "%'");
+							ItemTemplate[] items = (ItemTemplate[])GameServer.Database.SelectObjects(typeof(ItemTemplate), "Name like '%" + GameServer.Database.Escape(name) + "%'");
 							DisplayMessage(client, "Matching ID's for " + name + " count " + items.Length, new object[] { });
 							foreach (ItemTemplate item in items)
 							{

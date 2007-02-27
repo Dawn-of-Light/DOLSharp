@@ -51,6 +51,13 @@ namespace DOL.GS.Keeps
 			set { m_position = value; }
 		}
 
+		private GameKeepHookPoint m_hookPoint;
+		public GameKeepHookPoint HookPoint
+		{
+			get { return m_hookPoint; }
+			set { m_hookPoint = value; }
+		}
+
 		public bool IsTowerGuard
 		{
 			get
@@ -592,6 +599,13 @@ namespace DOL.GS.Keeps
 				}
 			}
 			TemplateMgr.RefreshTemplate(this);
+		}
+
+		public override void Delete()
+		{
+			if (HookPoint != null && Component != null)
+				Component.Keep.Guards.Remove(this.ObjectID);
+			base.Delete();
 		}
 
 		public override void DeleteFromDatabase()

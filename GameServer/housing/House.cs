@@ -857,7 +857,7 @@ namespace DOL.GS.Housing
 		{
 			if (item == null)
 			{
-				item = (ItemTemplate)GameServer.Database.SelectObject(typeof(ItemTemplate), "Id_nb = '" + templateID + "'");
+				item = (ItemTemplate)GameServer.Database.SelectObject(typeof(ItemTemplate), "Id_nb = '" + GameServer.Database.Escape(templateID) + "'");
 				if (item == null)
 					return;
 			}
@@ -968,12 +968,12 @@ namespace DOL.GS.Housing
 		{
 
 			//get the item template
-			ItemTemplate template = (ItemTemplate)GameServer.Database.SelectObject(typeof(ItemTemplate), "Name = '" + obj.Name + "'");
+			ItemTemplate template = (ItemTemplate)GameServer.Database.SelectObject(typeof(ItemTemplate), "Name = '" + GameServer.Database.Escape(obj.Name) + "'");
 			if (template == null)
 				return;
 
 			//get the housepoint item
-			DBHousepointItem item = (DBHousepointItem)GameServer.Database.SelectObject(typeof(DBHousepointItem), "ItemTemplateID = '" + template.Id_nb + "'");
+			DBHousepointItem item = (DBHousepointItem)GameServer.Database.SelectObject(typeof(DBHousepointItem), "ItemTemplateID = '" + GameServer.Database.Escape(template.Id_nb) + "'");
 			if (item == null)
 				return;
 

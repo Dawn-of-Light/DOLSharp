@@ -107,7 +107,7 @@ namespace DOL.GS
 							if (dbTemplate.ItemTemplate == null)
 							{
 								if (log.IsErrorEnabled)
-									log.Warn("ItemTemplate: " + dbTemplate.ItemTemplateID + " is not found, it is referenced from loottemplate_id: " + dbTemplate.ObjectId);
+									log.Error("ItemTemplate: " + dbTemplate.ItemTemplateID + " is not found, it is referenced from loottemplate_id: " + dbTemplate.ObjectId);
 								continue;
 							}
 

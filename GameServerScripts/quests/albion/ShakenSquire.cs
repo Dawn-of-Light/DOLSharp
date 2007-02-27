@@ -273,6 +273,9 @@ namespace DOL.GS.Quests.Albion
 			* method. This means, the "TalkToXXX" method is called whenever
 			* a player right clicks on him or when he whispers to him.
 			*/
+
+			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
 			
 			GameEventMgr.AddHandler(sirJerem, GameLivingEvent.Interact, new DOLEventHandler(TalkToSirJerem));
 			GameEventMgr.AddHandler(sirJerem, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToSirJerem));
@@ -306,6 +309,9 @@ namespace DOL.GS.Quests.Albion
 			/* Removing hooks works just as adding them but instead of 
 			 * AddHandler, we call RemoveHandler, the parameters stay the same
 			 */
+
+			GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
 			
 			GameEventMgr.RemoveHandler(sirJerem, GameLivingEvent.Interact, new DOLEventHandler(TalkToSirJerem));
 			GameEventMgr.RemoveHandler(sirJerem, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToSirJerem));
@@ -371,7 +377,7 @@ namespace DOL.GS.Quests.Albion
 							//If the player offered his help, we send the quest dialog now!
 						case "investigate":
 							sirJerem.SayTo(player, "This happens every time we get a new squire. The merchants fill his head with nonsense about becoming a hero and then the boy goes off exploring and gets himself into trouble.  Will you help me locate my missing squire?");
-							player.Out.SendCustomDialog("Will you help Sir Jerem find \nthe missing squire? \n[Levels 6-9]", new CustomDialogResponse(CheckPlayerAcceptQuest));
+							player.Out.SendQuestSubscribeCommand(sirJerem, QuestMgr.GetIDForQuestType(typeof(ShakenSquire)), "Will you help Sir Jerem find \nthe missing squire? \n[Levels 6-9]");
 							break;
 					}
 				}
@@ -416,6 +422,21 @@ namespace DOL.GS.Quests.Albion
 					}
 				}
 			}
+		}
+
+		protected static void SubscribeQuest(DOLEvent e, object sender, EventArgs args)
+		{
+			QuestEventArgs qargs = args as QuestEventArgs;
+			if (qargs == null)
+				return;
+
+			if (qargs.QuestID != QuestMgr.GetIDForQuestType(typeof(ShakenSquire)))
+				return;
+
+			if (e == GamePlayerEvent.AcceptQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x01);
+			else if (e == GamePlayerEvent.DeclineQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x00);
 		}
 
 		/* This is the method we declared as callback for the hooks we set to

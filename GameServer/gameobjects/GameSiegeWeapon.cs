@@ -22,6 +22,7 @@ using DOL.GS.PacketHandler;
 using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
+using DOL.GS.Keeps;
 
 namespace DOL.GS
 {
@@ -76,6 +77,13 @@ namespace DOL.GS
 		}
 		#endregion
 		#region properties
+		private GameKeepHookPoint m_hookPoint;
+		public GameKeepHookPoint HookPoint
+		{
+			get { return m_hookPoint; }
+			set { m_hookPoint = value; }
+		}
+
 		public override Region CurrentRegion
 		{
 			get

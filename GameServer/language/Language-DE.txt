@@ -35,7 +35,7 @@ GamePlayer.Attack.Fumbled:				{0} verhaspelt sich!
 GamePlayer.Attack.HitsYour:				{0} trifft {1} mit {2}{3} Schaden!
 GamePlayer.Attack.HitsYou:				{0} trifft Euch mit {1}{2} Schaden!
 GamePlayer.Attack.HitsYouCritical:			{0} trifft Euch kritisch mit {1} zusätzlichen Schaden!
-GamePlayer.Attack.InterceptHit:				Ihr {0} {1}{2} und trefft für {3}{4} Schaden!
+GamePlayer.Attack.InterceptHit:				Ihr {0} {1}{2} an und trefft für {3}{4} Schaden!
 GamePlayer.Attack.Intercepted:				{0} stellt sich vor {1} und fängt den Schlag ab!
 GamePlayer.Attack.InterceptedHit:			Ihr {0} {1}{2} an aber trefft {3} für {4}{5} Schaden!
 GamePlayer.Attack.Interrupted:				{0} greift Euch an und Euer {1} wurde unterbrochen!
@@ -309,6 +309,14 @@ Scripts.Events.PlayerEnterExit.Left:			{0} verlässt gerade das Spiel!
 Scripts.Events.PlayerEnterExit.Staff:			[Spielleitung] {0}
 
 # PlayerCommands
+# /Advice
+Scripts.Players.Advice.Advice:				[Anfrage{0}] {1}: "{2}"
+Scripts.Players.Advice.AdvicersOn:			Es sind {0} Ratgeber online!
+
+# /Advisor
+Scripts.Players.Advisor.Off:				Eure Ratgeberkennung wurde ausgeschaltet.
+Scripts.Players.Advisor.On:				Ihr seid nun als Ratgeber in Eurem Reich aktiv. Das Ratgeber-System wird von Spielern betrieben und benutzt, die anderen Leuten bei Problemen mit dem Spiel helfen wollen. Bitte aktiviert diese Funktion nur dann, wenn Ihr anderen Spielern helfen wollt. Wenn Ihr wieder Eure Ruhe haben und nicht mehr als Ratgeber tätig sein wollt, gebt einfach erneut '/advisor' ein.
+
 # /Afk
 Scripts.Players.Afk.Off:				AFK ausgeschaltet.
 Scripts.Players.Afk.On:					AFK eingeschaltet.
