@@ -17,88 +17,21 @@
  *
  */
 using System;
-using System.Collections;
-using System.Reflection;
-using DOL.Database;
-using DOL.Events;
 using DOL.GS.PacketHandler;
-using DOL.GS.Database;
-using log4net;
+using DOL.Database;
 
 namespace DOL.GS.Trainer
 {
 	/// <summary>
 	/// Albion Rogue Trainer
 	/// </summary>	
-	public class AlbionRogueTrainer : GameStandardTrainer
+	[NPCGuildScript("Rogue Trainer", eRealm.Albion)]		// this attribute instructs DOL to use this script for all "Rogue Trainer" NPC's in Albion (multiple guilds are possible for one script)
+	public class AlbionRogueTrainer : GameTrainer
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
-		/// <summary>
-		/// This function is called at the server startup
-		/// </summary>	
-		[GameServerStartedEvent]
-		public static void OnServerStartup(DOLEvent e, object sender, EventArgs args)
-		{
-			#region Practice dirk
-
-			ThrustWeaponTemplate practice_dirk_template = new ThrustWeaponTemplate();
-			practice_dirk_template.Name = "practice dirk";
-			practice_dirk_template.Level = 0;
-			practice_dirk_template.Durability = 100;
-			practice_dirk_template.Condition = 100;
-			practice_dirk_template.Quality = 90;
-			practice_dirk_template.Bonus = 0;
-			practice_dirk_template.DamagePerSecond = 12;
-			practice_dirk_template.Speed = 2200;
-			practice_dirk_template.Weight = 8;
-			practice_dirk_template.Model = 21;
-			practice_dirk_template.Realm = eRealm.Albion;
-			practice_dirk_template.IsDropable = true; 
-			practice_dirk_template.IsTradable = false; 
-			practice_dirk_template.IsSaleable = false;
-			practice_dirk_template.MaterialLevel = eMaterialLevel.Bronze;
+		public const string PRACTICE_WEAPON_ID = "practice_dirk";
 	
-			if(!allStartupItems.Contains(practice_dirk_template))
-			{
-				allStartupItems.Add(practice_dirk_template);
-			
-				if (log.IsDebugEnabled)
-					log.Debug("Adding " + practice_dirk_template.Name + " to AlbionRogueTrainer gifts.");
-			}
-			#endregion
-		}
-
-		/// <summary>
-		/// This hash constrain all item template the trainer can give
-		/// </summary>	
-		protected static IList allStartupItems = new ArrayList();
-
-		/// <summary>
-		/// Gets all trainer gifts
-		/// </summary>
-		public override IList TrainerGifts
+		public AlbionRogueTrainer() : base()
 		{
-			get { return allStartupItems; }
-		}
-	
-		/// <summary>
-		/// Gets trainer classname
-		/// </summary>
-		public override string TrainerClassName
-		{
-			get { return "Rogue"; }
-		}
-
-		/// <summary>
-		/// Gets trained class
-		/// </summary>
-		public override eCharacterClass TrainedClass
-		{
-			get { return eCharacterClass.AlbionRogue; }
 		}
 
 		/// <summary>
@@ -110,8 +43,26 @@ namespace DOL.GS.Trainer
  		{		
  			if (!base.Interact(player)) return false;
 								
-			player.Out.SendMessage(this.Name + " says, \"[Infiltrator], [Minstrel], or [Scout]?\"", eChatType.CT_Say, eChatLoc.CL_PopupWindow);												
-					
+			// check if class matches				
+			if (player.CharacterClass.ID == (int) eCharacterClass.AlbionRogue) {
+
+				// popup the training window
+				player.Out.SendTrainerWindow();
+							
+				// player can be promoted
+				if (player.Level>=5) {
+					player.Out.SendMessage(this.Name + " says, \"You must now seek your training elsewhere. Which path would you like to follow? [Infiltrator], [Minstrel], or [Scout]?\"", eChatType.CT_Say, eChatLoc.CL_PopupWindow);												
+				} else {
+					//player.Out.SendMessage(this.Name + " says, \"Select what you like to train.\"", eChatType.CT_Say, eChatLoc.CL_PopupWindow);												
+				}
+
+				// ask for basic equipment if player doesnt own it
+				if (player.Inventory.GetFirstItemByID(PRACTICE_WEAPON_ID, eInventorySlot.Min_Inv, eInventorySlot.Max_Inv) == null) {
+					player.Out.SendMessage(this.Name + " says, \"Do you require a [practice weapon]?\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
+				}
+			} else {
+				player.Out.SendMessage(this.Name + " says, \"You must seek elsewhere for your training.\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);							
+			}
 			return true;
 		}
 
@@ -149,6 +100,12 @@ namespace DOL.GS.Trainer
 				}
 				else{
 					player.Out.SendMessage(this.Name + " says, \"The path of a Scout is not available to your race. Please choose another.\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
+				}
+				return true;
+			case "practice weapon":
+				if (player.Inventory.GetFirstItemByID(PRACTICE_WEAPON_ID, eInventorySlot.Min_Inv, eInventorySlot.Max_Inv) == null) 
+				{
+					player.ReceiveItem(this,PRACTICE_WEAPON_ID);
 				}
 				return true;
 			}

@@ -17,13 +17,7 @@
  *
  */
 using System;
-using System.Collections;
-using System.Reflection;
-using DOL.Database;
-using DOL.Events;
-using DOL.GS.Database;
 using DOL.GS.PacketHandler;
-using log4net;
 
 namespace DOL.GS.Trainer
 {
@@ -34,150 +28,21 @@ namespace DOL.GS.Trainer
 	public class ArmsmanTrainer : GameTrainer
 	{
 		/// <summary>
-		/// Defines a logger for this class.
+		/// The slash sword item template ID
 		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
+		public const string WEAPON_ID1 = "slash_sword_item";
 		/// <summary>
-		/// This hash constrain all item template the trainer can give
-		/// </summary>	
-		private static IDictionary allStartupItems = new Hashtable();
-
-		/// <summary>
-		/// This function is called at the server startup
-		/// </summary>	
-		[GameServerStartedEvent]
-		public static void OnServerStartup(DOLEvent e, object sender, EventArgs args)
-		{
-			#region Slash weapon
-
-			SlashingWeaponTemplate slash_sword_item_template = new SlashingWeaponTemplate();
-			slash_sword_item_template.Name = "Sword of the Initiate";
-			slash_sword_item_template.Level = 5;
-			slash_sword_item_template.Durability = 100;
-			slash_sword_item_template.Condition = 100;
-			slash_sword_item_template.Quality = 90;
-			slash_sword_item_template.Bonus = 10;
-			slash_sword_item_template.DamagePerSecond = 30;
-			slash_sword_item_template.Speed = 2500;
-			slash_sword_item_template.Weight = 20;
-			slash_sword_item_template.Model = 3;
-			slash_sword_item_template.Realm = eRealm.Albion;
-			slash_sword_item_template.IsDropable = true; 
-			slash_sword_item_template.IsTradable = false; 
-			slash_sword_item_template.IsSaleable = false;
-			slash_sword_item_template.MaterialLevel = eMaterialLevel.Bronze;
-			
-			slash_sword_item_template.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Slashing, 1));
-			
-			if(!allStartupItems.Contains("Sword_of_the_Initiate"))
-			{
-				allStartupItems.Add("Sword_of_the_Initiate", slash_sword_item_template);
-			
-				if (log.IsDebugEnabled)
-					log.Debug("Adding " + slash_sword_item_template.Name + " to ArmsmanTrainer gifts.");
-			}
-			#endregion
-
-			#region Thrust weapon
-
-			ThrustWeaponTemplate thrust_sword_item_template = new ThrustWeaponTemplate();
-			thrust_sword_item_template.Name = "Rapier of the Initiate";
-			thrust_sword_item_template.Level = 5;
-			thrust_sword_item_template.Durability = 100;
-			thrust_sword_item_template.Condition = 100;
-			thrust_sword_item_template.Quality = 90;
-			thrust_sword_item_template.Bonus = 10;	
-			thrust_sword_item_template.DamagePerSecond = 30;
-			thrust_sword_item_template.Speed = 2500;
-			thrust_sword_item_template.Weight = 10;
-			thrust_sword_item_template.Model = 21;
-			thrust_sword_item_template.Realm = eRealm.Albion;
-			thrust_sword_item_template.IsDropable = true; 
-			thrust_sword_item_template.IsTradable = false; 
-			thrust_sword_item_template.IsSaleable = false;
-			thrust_sword_item_template.MaterialLevel = eMaterialLevel.Bronze;
-			
-			thrust_sword_item_template.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Thrusting, 1));
-			
-			if(!allStartupItems.Contains("Rapier_of_the_Initiate"))
-			{
-				allStartupItems.Add("Rapier_of_the_Initiate", thrust_sword_item_template);
-		
-				if (log.IsDebugEnabled)
-					log.Debug("Adding " + thrust_sword_item_template.Name + " to ArmsmanTrainer gifts.");
-			}
-			#endregion
-
-			#region Crush weapon
-
-			CrushingWeaponTemplate chrush_sword_item_template = new CrushingWeaponTemplate();
-			chrush_sword_item_template.Name = "Mace of the Initiate";
-			chrush_sword_item_template.Level = 5;
-			chrush_sword_item_template.Durability = 100;
-			chrush_sword_item_template.Condition = 100;
-			chrush_sword_item_template.Quality = 90;
-			chrush_sword_item_template.Bonus = 10;	
-			chrush_sword_item_template.DamagePerSecond = 30;
-			chrush_sword_item_template.Speed = 3000;
-			chrush_sword_item_template.Weight = 32;
-			chrush_sword_item_template.Model = 13;
-			chrush_sword_item_template.Realm = eRealm.Albion;
-			chrush_sword_item_template.IsDropable = true; 
-			chrush_sword_item_template.IsTradable = false; 
-			chrush_sword_item_template.IsSaleable = false;
-			chrush_sword_item_template.MaterialLevel = eMaterialLevel.Bronze;
-			
-			chrush_sword_item_template.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Crushing, 1));
-			
-			if(!allStartupItems.Contains("Mace_of_the_Initiate"))
-			{
-				allStartupItems.Add("Mace_of_the_Initiate", chrush_sword_item_template);
-	
-				if (log.IsDebugEnabled)
-					log.Debug("Adding " + chrush_sword_item_template.Name + " to ArmsmanTrainer gifts.");
-			}
-			#endregion
-
-			#region Polearm weapon
-
-			PolearmWeaponTemplate pike_polearm_item_template = new PolearmWeaponTemplate();
-			pike_polearm_item_template.Name = "Pike of the Initiate";
-			pike_polearm_item_template.Level = 5;
-			pike_polearm_item_template.Durability = 100;
-			pike_polearm_item_template.Condition = 100;
-			pike_polearm_item_template.Quality = 90;
-			pike_polearm_item_template.Bonus = 10;	
-			pike_polearm_item_template.DamagePerSecond = 32;
-			pike_polearm_item_template.Speed = 3000;
-			pike_polearm_item_template.DamageType = eDamageType.Thrust;
-			pike_polearm_item_template.Weight = 44;
-			pike_polearm_item_template.Model = 69;
-			pike_polearm_item_template.Realm = eRealm.Albion;
-			pike_polearm_item_template.IsDropable = true; 
-			pike_polearm_item_template.IsTradable = false; 
-			pike_polearm_item_template.IsSaleable = false;
-			pike_polearm_item_template.MaterialLevel = eMaterialLevel.Bronze;
-			
-			pike_polearm_item_template.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Polearms, 1));
-			
-			if(!allStartupItems.Contains("Pike_of_the_Initiate"))
-			{
-				allStartupItems.Add("Pike_of_the_Initiate", pike_polearm_item_template);
-
-				if (log.IsDebugEnabled)
-					log.Debug("Adding " + pike_polearm_item_template.Name + " to ArmsmanTrainer gifts.");
-			}
-			#endregion
-		}
-
-		/// <summary>
-		/// Gets trainer classname
+		/// The crush sword item template ID
 		/// </summary>
-		public override string TrainerClassName
-		{
-			get { return "Armsman"; }
-		}
+		public const string WEAPON_ID2 = "crush_sword_item";
+		/// <summary>
+		/// The thrust sword item template ID
+		/// </summary>
+		public const string WEAPON_ID3 = "thrust_sword_item";
+		/// <summary>
+		/// The pike polearm item template ID
+		/// </summary>
+		public const string WEAPON_ID4 = "pike_polearm_item";
 
 		/// <summary>
 		/// Interact with trainer
@@ -189,17 +54,19 @@ namespace DOL.GS.Trainer
  			if (!base.Interact(player)) return false;
 								
 			// check if class matches.				
-			if (player.CharacterClass.ID == (int) eCharacterClass.Armsman)
-			{
+			if (player.CharacterClass.ID == (int) eCharacterClass.Armsman) {
+
+				// popup the training window
 				player.Out.SendTrainerWindow();
-			} 
-			else if (CanPromotePlayer(player)) 
-			{
-				player.Out.SendMessage(this.Name + " says, \"Do you desire to [join the Defenders of Albion] and defend our realm as an Armsman?\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
-			} 
-			else 
-			{
-				player.Out.SendMessage(this.Name + " says, \"You must seek elsewhere for your training.\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);	
+				//player.Out.SendMessage(this.Name + " says, \"Select what you like to train.\"", eChatType.CT_Say, eChatLoc.CL_PopupWindow);												
+
+			} else {
+				// perhaps player can be promoted
+				if (CanPromotePlayer(player)) {
+					player.Out.SendMessage(this.Name + " says, \"Do you desire to [join the Defenders of Albion] and defend our realm as an Armsman?\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
+				} else {
+					player.Out.SendMessage(this.Name + " says, \"You must seek elsewhere for your training.\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);							
+				}
 			}
 			return true;
  		}
@@ -212,7 +79,8 @@ namespace DOL.GS.Trainer
 		public bool CanPromotePlayer(GamePlayer player) 
 		{
 			return (player.Level>=5 && player.CharacterClass.ID == (int) eCharacterClass.Fighter && (player.Race == (int) eRace.Briton || player.Race == (int) eRace.Avalonian
-				|| player.Race == (int) eRace.Highlander || player.Race == (int) eRace.Saracen || player.Race == (int) eRace.Inconnu || player.Race == (int) eRace.HalfOgre));
+				|| player.Race == (int) eRace.Highlander || player.Race == (int) eRace.Saracen || player.Race == (int) eRace.Inconnu || player.Race == (int) eRace.HalfOgre
+				|| player.Race == (int) eRace.AlbionMinotaur));
 		}
 
 		/// <summary>
@@ -233,22 +101,31 @@ namespace DOL.GS.Trainer
 					case "join the Defenders of Albion":
 				
 						player.Out.SendMessage(this.Name + " says, \"Very well. Choose a weapon, and you shall become one of us. Which would you have, [slashing], [crushing], [thrusting] or [polearms]?\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
+				
 						break;
 					case "slashing":
-						
-						PromotePlayer(player, (int)eCharacterClass.Armsman, "Here is your Sword of the Initiate. Welcome to the Defenders of Albion.", new GenericItemTemplate[] {allStartupItems["Sword_of_the_Initiate"] as GenericItemTemplate} );
+					
+						PromotePlayer(player, (int)eCharacterClass.Armsman, "Here is your Sword of the Initiate. Welcome to the Defenders of Albion.", null);
+						player.ReceiveItem(this,WEAPON_ID1);
+					
 						break;
 					case "crushing":
 					
-						PromotePlayer(player, (int)eCharacterClass.Armsman, "Here is your Mace of the Initiate. Welcome to the Defenders of Albion.", new GenericItemTemplate[] {allStartupItems["Mace_of_the_Initiate"] as GenericItemTemplate});
+						PromotePlayer(player, (int)eCharacterClass.Armsman, "Here is your Mace of the Initiate. Welcome to the Defenders of Albion.", null);
+						player.ReceiveItem(this,WEAPON_ID2);
+					
 						break;
 					case "thrusting":
 					
-						PromotePlayer(player, (int)eCharacterClass.Armsman, "Here is your Rapier of the Initiate. Welcome to the Defenders of Albion.", new GenericItemTemplate[] {allStartupItems["Rapier_of_the_Initiate"] as GenericItemTemplate});
+						PromotePlayer(player, (int)eCharacterClass.Armsman, "Here is your Rapier of the Initiate. Welcome to the Defenders of Albion.", null);
+						player.ReceiveItem(this,WEAPON_ID3);
+					
 						break;
 					case "polearms":
 					
-						PromotePlayer(player, (int)eCharacterClass.Armsman, "Here is your Pike of the Initiate. Welcome to the Defenders of Albion.", new GenericItemTemplate[] {allStartupItems["Pike_of_the_Initiate"] as GenericItemTemplate});
+						PromotePlayer(player, (int)eCharacterClass.Armsman, "Here is your Pike of the Initiate. Welcome to the Defenders of Albion.", null);
+						player.ReceiveItem(this,WEAPON_ID4);
+					
 						break;
 				}
 			}

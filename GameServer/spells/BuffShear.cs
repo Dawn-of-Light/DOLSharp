@@ -23,7 +23,6 @@
 using System;
 using System.Collections;
 using DOL.AI.Brain;
-using DOL.GS.Database;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 
@@ -125,9 +124,9 @@ namespace DOL.GS.Spells
 		/// <summary>
 		/// called after normal spell cast is completed and effect has to be started
 		/// </summary>
-		public override void FinishSpellCast(GameLivingBase target)
+		public override void FinishSpellCast(GameLiving target)
 		{
-			m_caster.ChangeMana(null, -CalculateNeededPower(target));
+			m_caster.Mana -= CalculateNeededPower(target);
 			base.FinishSpellCast(target);
 		}
 
@@ -140,7 +139,7 @@ namespace DOL.GS.Spells
 		{
 			base.OnDirectEffect(target, effectiveness);
 			if (target == null) return;
-			if (!target.Alive || target.ObjectState!=eObjectState.Active) return;
+			if (!target.IsAlive || target.ObjectState!=GameLiving.eObjectState.Active) return;
 
 			target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, AttackData.eAttackType.Spell, Caster);
 			if (target is GameNPC)

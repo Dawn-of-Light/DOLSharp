@@ -85,7 +85,7 @@ namespace DOL.GS.Scripts
 		
 			if (player.Level >= 5) 
 			{			
-				player.AddAbility(SkillBase.GetAbility(Abilities.Shield, (int)eShieldSize.Small));	
+				player.AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Small));	
 				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 2));
 			}
 			if (player.Level >= 10) 
@@ -115,7 +115,7 @@ namespace DOL.GS.Scripts
 		}
 
 		/// <summary>
-		/// Add all spell-lines & other things that are new when this skill is trained
+		/// Add all spell-lines and other things that are new when this skill is trained
 		/// </summary>
 		/// <param name="player">player to modify</param>
 		public override void OnSkillTrained(GamePlayer player, Specialization skill)

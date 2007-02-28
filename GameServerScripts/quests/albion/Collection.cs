@@ -37,8 +37,6 @@ using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
-using NHibernate.Expression;
-using NHibernate.Mapping.Attributes;
 /* I suggest you declare yourself some namespaces for your quests
  * Like: DOL.GS.Quests.Albion
  *       DOL.GS.Quests.Midgard
@@ -50,61 +48,12 @@ using NHibernate.Mapping.Attributes;
 
 namespace DOL.GS.Quests.Albion
 {
-    /* The first thing we do, is to declare the quest requirement
-    * class linked with the new Quest. To do this, we derive 
-    * from the abstract class AbstractQuestDescriptor
-    */
-    public class CollectionDescriptor : AbstractQuestDescriptor
-    {
-        /* This is the type of the quest class linked with 
-         * this requirement class, you must override the 
-         * base methid like that
-         */
-        public override Type LinkedQuestType
-        {
-            get { return typeof(Collection); }
-        }
+	/* The first thing we do, is to declare the class we create
+	 * as Quest. To do this, we derive from the abstract class
+	 * AbstractQuest
+	 * 	 
+	 */
 
-        /* This value is used to retrieves the minimum level needed
-         *  to be able to make this quest. Override it only if you need, 
-         * the default value is 1
-         */
-        public override int MinLevel
-        {
-            get { return 3; }
-        }
-
-        /* This value is used to retrieves how maximum level needed
-         * to be able to make this quest. Override it only if you need, 
-         * the default value is 50
-         */
-        public override int MaxLevel
-        {
-            get { return 3; }
-        }
-
-        public override bool CheckQuestQualification(GamePlayer player)
-        {
-			// if the player is already doing the quest always return true !!!
-			if (player.IsDoingQuest(LinkedQuestType) != null)
-				return true;
-
-            // This checks below are only performed is player isn't doing quest already
-            if (player.HasFinishedQuest(typeof(Frontiers)) == 0)
-                return false;
-
-            if (!BaseFrederickQuest.CheckPartAccessible(player, typeof(Collection)))
-                return false;
-
-            return base.CheckQuestQualification(player);
-        }
-    }
-
-    /* The second thing we do, is to declare the class we create
-     * as Quest. We must make it persistant using attributes, to
-     * do this, we derive from the abstract class AbstractQuest
-     */
-    [Subclass(NameType = typeof(Collection), ExtendsType = typeof(AbstractQuest))]
 	public class Collection : BaseFrederickQuest
 	{
 		/// <summary>
@@ -123,17 +72,40 @@ namespace DOL.GS.Quests.Albion
 		 */
 
 		protected const string questTitle = "Collection";
+		protected const int minimumLevel = 3;
+		protected const int maximumLevel = 3;
 
-		private static GameMob masterFrederick = null;
+		private static GameNPC masterFrederick = null;
 
-		private static GameMob[] general = new GameMob[3];
+		private static GameNPC[] general = new GameNPC[3];
 		private static String[] generalNames = {"Palearis", "Bohad", "Fluvale"};
 		private static GameLocation[] generalLocations = new GameLocation[3];
 
-		private static GenericItemTemplate fairyGeneralWings = null;
-		private static GenericItemTemplate dustyOldMap = null;
-		private static ArmsArmorTemplate recruitsArms = null;
-		private static ArmsArmorTemplate recruitsSleeves = null;
+
+		private static ItemTemplate fairyGeneralWings = null;
+		private static ItemTemplate dustyOldMap = null;
+		private static ItemTemplate recruitsArms = null;
+		private static ItemTemplate recruitsSleeves = null;
+
+
+		/* We need to define the constructors from the base class here, else there might be problems
+		 * when loading this quest...
+		 */
+		public Collection() : base()
+		{
+		}
+
+		public Collection(GamePlayer questingPlayer) : this(questingPlayer, 1)
+		{
+		}
+
+		public Collection(GamePlayer questingPlayer, int step) : base(questingPlayer, step)
+		{
+		}
+
+		public Collection(GamePlayer questingPlayer, DBQuest dbQuest) : base(questingPlayer, dbQuest)
+		{
+		}
 
 		/* The following method is called automatically when this quest class
 		 * is loaded. You might notice that this method is the same as in standard
@@ -153,8 +125,10 @@ namespace DOL.GS.Quests.Albion
 		[ScriptLoadedEvent]
 		public static void ScriptLoaded(DOLEvent e, object sender, EventArgs args)
 		{
-            if (log.IsInfoEnabled)
-                log.Info("Quest \"" + questTitle + "\" initializing ...");
+			if (!ServerProperties.Properties.LOAD_QUESTS)
+				return;
+			if (log.IsInfoEnabled)
+				log.Info("Quest \"" + questTitle + "\" initializing ...");
 			/* First thing we do in here is to search for the NPCs inside
 			* the world who comes from the certain Realm. If we find a the players,
 			* this means we don't have to create a new one.
@@ -168,59 +142,46 @@ namespace DOL.GS.Quests.Albion
 			#region defineNPCS
 
 			masterFrederick = GetMasterFrederick();
-			if(masterFrederick == null)
-			{
-				if (log.IsWarnEnabled)
-					log.Warn("Quest "+questTitle+" abort because a needed region is not in use in this server!");
-				return;
-			}
 
 			generalLocations[0] = new GameLocation(generalNames[0], 1, 568589, 501801, 2134, 23);
 			generalLocations[1] = new GameLocation(generalNames[1], 1, 572320, 499246, 2472, 14);
 			generalLocations[2] = new GameLocation(generalNames[2], 1, 571900, 510559, 2210, 170);
 
+			GameNPC[] npcs = null;
 			for (int i = 0; i < general.Length; i++)
 			{
-				general[i] = ResearchQuestObject(typeof(GameMob), WorldMgr.GetRegion(1), eRealm.None, generalNames[i]) as GameMob;
-					
-				if (general[i] == null)
+				npcs = WorldMgr.GetNPCsByName(generalNames[i], eRealm.None);
+				if (npcs.Length > 0)
+					general[i] = npcs[0] as GameNPC;
+				else
 				{
 					if (log.IsWarnEnabled)
 						log.Warn("Could not find " + generalNames[i] + ", creating her ...");
-					general[i] = new GameMob();
+					general[i] = new GameNPC();
 
 					general[i].Model = 603;
 
 					general[i].Name = generalNames[i];
-					general[i].Position = generalLocations[i].Position;
+					general[i].X = generalLocations[i].X;
+					general[i].Y = generalLocations[i].Y;
+					general[i].Z = generalLocations[i].Z;
 					general[i].Heading = generalLocations[i].Heading;
 
 					general[i].GuildName = "Part of " + questTitle + " Quest";
 					general[i].Realm = (byte) eRealm.None;
-					general[i].Region = generalLocations[i].Region;
+					general[i].CurrentRegionID = generalLocations[i].RegionID;
+
 					general[i].Size = 49;
 					general[i].Level = 2;
 
-					general[i].RespawnInterval = -1; // autorespawn
-
 					StandardMobBrain brain = new StandardMobBrain();
-					brain.Body = general[i];
 					brain.AggroLevel = 80;
 					brain.AggroRange = 1000;
-					general[i].OwnBrain = brain;
+					general[i].SetOwnBrain(brain);
 
-					if(!general[i].AddToWorld())
-					{
-						if (log.IsWarnEnabled)
-							log.Warn("Quest "+questTitle+" abort because a needed region is not in use in this server!");
-						return;
-					}
-
-					//You don't have to store the created mob in the db if you don't want,
-					//it will be recreated each time it is not found, just comment the following
-					//line if you rather not modify your database
 					if (SAVE_INTO_DATABASE)
-						GameServer.Database.AddNewObject(general[i]);
+						general[i].SaveIntoDatabase();
+					general[i].AddToWorld();
 				}
 			}
 
@@ -228,10 +189,10 @@ namespace DOL.GS.Quests.Albion
 
 			#region defineItems
 
-			fairyGeneralWings = GameServer.Database.SelectObject(typeof(GenericItemTemplate), Expression.Eq("Name", "Wings of Fairy General")) as GenericItemTemplate;
+			fairyGeneralWings = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "fairy_general_wings");
 			if (fairyGeneralWings == null)
 			{
-				fairyGeneralWings = new GenericItemTemplate();
+				fairyGeneralWings = new ItemTemplate();
 				fairyGeneralWings.Name = "Wings of Fairy General";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + fairyGeneralWings.Name + " , creating it ...");
@@ -239,9 +200,11 @@ namespace DOL.GS.Quests.Albion
 				fairyGeneralWings.Weight = 2;
 				fairyGeneralWings.Model = 551;
 
+				fairyGeneralWings.Object_Type = (int) eObjectType.GenericItem;
+
+				fairyGeneralWings.Id_nb = "fairy_general_wings";
+				fairyGeneralWings.IsPickable = true;
 				fairyGeneralWings.IsDropable = false;
-                fairyGeneralWings.IsSaleable = false;
-                fairyGeneralWings.IsTradable = false;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -250,10 +213,10 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(fairyGeneralWings);
 			}
 
-			dustyOldMap = GameServer.Database.SelectObject(typeof (GenericItemTemplate), Expression.Eq("Name", "Dusty Old Map")) as GenericItemTemplate;
+			dustyOldMap = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "dusty_old_map");
 			if (dustyOldMap == null)
 			{
-				dustyOldMap = new GenericItemTemplate();
+				dustyOldMap = new ItemTemplate();
 				dustyOldMap.Name = "Dusty Old Map";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + dustyOldMap.Name + " , creating it ...");
@@ -261,9 +224,11 @@ namespace DOL.GS.Quests.Albion
 				dustyOldMap.Weight = 10;
 				dustyOldMap.Model = 498;
 
+				dustyOldMap.Object_Type = (int) eObjectType.GenericItem;
+
+				dustyOldMap.Id_nb = "dusty_old_map";
+				dustyOldMap.IsPickable = true;
 				dustyOldMap.IsDropable = false;
-                dustyOldMap.IsSaleable = false;
-                dustyOldMap.IsTradable = false;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -274,10 +239,10 @@ namespace DOL.GS.Quests.Albion
 
 
 			// item db check
-			recruitsArms = GameServer.Database.SelectObject(typeof (ArmsArmorTemplate), Expression.Eq("Name", "Recruit's Studded Arms")) as ArmsArmorTemplate;
+			recruitsArms = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_studded_arms");
 			if (recruitsArms == null)
 			{
-				recruitsArms = new ArmsArmorTemplate();
+				recruitsArms = new ItemTemplate();
 				recruitsArms.Name = "Recruit's Studded Arms";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + recruitsArms.Name + ", creating it ...");
@@ -286,23 +251,32 @@ namespace DOL.GS.Quests.Albion
 				recruitsArms.Weight = 36;
 				recruitsArms.Model = 83; // studded Boots
 
-                recruitsArms.ArmorFactor = 10;
-                recruitsArms.ArmorLevel = eArmorLevel.Medium;
+				recruitsArms.DPS_AF = 10; // Armour
+				recruitsArms.SPD_ABS = 19; // Absorption
 
-				recruitsArms.Value = 400;
-
+				recruitsArms.Object_Type = (int) eObjectType.Studded;
+				recruitsArms.Item_Type = (int) eEquipmentItems.ARMS;
+				recruitsArms.Id_nb = "recruits_studded_arms";
+				recruitsArms.Gold = 0;
+				recruitsArms.Silver = 4;
+				recruitsArms.Copper = 0;
+				recruitsArms.IsPickable = true;
 				recruitsArms.IsDropable = true;
-                recruitsArms.IsSaleable = true;
-                recruitsArms.IsTradable = true;
-
 				recruitsArms.Color = 9; // red leather
 
 				recruitsArms.Bonus = 5; // default bonus
 
-                recruitsArms.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Quickness, 4));
-                recruitsArms.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Body, 1));
+				recruitsArms.Bonus1 = 4;
+				recruitsArms.Bonus1Type = (int) eStat.QUI;
+
+				recruitsArms.Bonus2 = 1;
+				recruitsArms.Bonus2Type = (int) eResist.Body;
 
 				recruitsArms.Quality = 100;
+				recruitsArms.Condition = 1000;
+				recruitsArms.MaxCondition = 1000;
+				recruitsArms.Durability = 1000;
+				recruitsArms.MaxDurability = 1000;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -311,10 +285,10 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(recruitsArms);
 			}
 
-			recruitsSleeves = GameServer.Database.SelectObject(typeof (ArmsArmorTemplate), Expression.Eq("Name", "Recruit's Quilted Sleeves")) as ArmsArmorTemplate;
+			recruitsSleeves = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_quilted_sleeves");
 			if (recruitsSleeves == null)
 			{
-				recruitsSleeves = new ArmsArmorTemplate();
+				recruitsSleeves = new ItemTemplate();
 				recruitsSleeves.Name = "Recruit's Quilted Sleeves";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + recruitsSleeves.Name + ", creating it ...");
@@ -323,23 +297,32 @@ namespace DOL.GS.Quests.Albion
 				recruitsSleeves.Weight = 12;
 				recruitsSleeves.Model = 153;
 
-                recruitsSleeves.ArmorLevel = eArmorLevel.VeryLow;
-                recruitsSleeves.ArmorFactor = 6;
+				recruitsSleeves.DPS_AF = 6; // Armour
+				recruitsSleeves.SPD_ABS = 0; // Absorption
 
-				recruitsSleeves.Value = 400;
-
+				recruitsSleeves.Object_Type = (int) eObjectType.Cloth;
+				recruitsSleeves.Item_Type = (int) eEquipmentItems.ARMS;
+				recruitsSleeves.Id_nb = "recruits_quilted_sleeves";
+				recruitsSleeves.Gold = 0;
+				recruitsSleeves.Silver = 4;
+				recruitsSleeves.Copper = 0;
+				recruitsSleeves.IsPickable = true;
 				recruitsSleeves.IsDropable = true;
-                recruitsSleeves.IsSaleable = true;
-                recruitsSleeves.IsTradable = true;
-
 				recruitsSleeves.Color = 27; // red cloth
 
 				recruitsSleeves.Bonus = 5; // default bonus
 
-                recruitsSleeves.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 4));
-                recruitsSleeves.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Body, 1));
+				recruitsSleeves.Bonus1 = 4;
+				recruitsSleeves.Bonus1Type = (int) eStat.DEX;
+
+				recruitsSleeves.Bonus2 = 1;
+				recruitsSleeves.Bonus2Type = (int) eResist.Body;
 
 				recruitsSleeves.Quality = 100;
+				recruitsSleeves.Condition = 1000;
+				recruitsSleeves.MaxCondition = 1000;
+				recruitsSleeves.Durability = 1000;
+				recruitsSleeves.MaxDurability = 1000;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -357,21 +340,21 @@ namespace DOL.GS.Quests.Albion
 			* method. This means, the "TalkToXXX" method is called whenever
 			* a player right clicks on him or when he whispers to him.
 			*/
+
+			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
 			//We want to be notified whenever a player enters the world            
 			GameEventMgr.AddHandler(GamePlayerEvent.GameEntered, new DOLEventHandler(PlayerEnterWorld));
 
-			GameEventMgr.AddHandler(masterFrederick, GameObjectEvent.Interact, new DOLEventHandler(TalkToMasterFrederick));
+			GameEventMgr.AddHandler(masterFrederick, GameLivingEvent.Interact, new DOLEventHandler(TalkToMasterFrederick));
 			GameEventMgr.AddHandler(masterFrederick, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToMasterFrederick));
 
-			/* Now we add some hooks to trigger the quest dialog reponse. */
-			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(QuestDialogResponse));
-			GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(QuestDialogResponse));
-
 			/* Now we bring to masterFrederick the possibility to give this quest to players */
-            QuestMgr.AddQuestDescriptor(masterFrederick, typeof(CollectionDescriptor));
+			masterFrederick.AddQuestToGive(typeof (Collection));
 
-            if (log.IsInfoEnabled)
-                log.Info("Quest \"" + questTitle + "\" initialized");
+			if (log.IsInfoEnabled)
+				log.Info("Quest \"" + questTitle + "\" initialized");
 
 		}
 
@@ -394,16 +377,17 @@ namespace DOL.GS.Quests.Albion
 			/* Removing hooks works just as adding them but instead of 
 			 * AddHandler, we call RemoveHandler, the parameters stay the same
 			 */
+
+			GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
 			GameEventMgr.RemoveHandler(GamePlayerEvent.GameEntered, new DOLEventHandler(PlayerEnterWorld));
 
-			GameEventMgr.RemoveHandler(masterFrederick, GameObjectEvent.Interact, new DOLEventHandler(TalkToMasterFrederick));
+			GameEventMgr.RemoveHandler(masterFrederick, GameLivingEvent.Interact, new DOLEventHandler(TalkToMasterFrederick));
 			GameEventMgr.RemoveHandler(masterFrederick, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToMasterFrederick));
 		
-			GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(QuestDialogResponse));
-			GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(QuestDialogResponse));
-
 			/* Now we remove to masterFrederick the possibility to give this quest to players */
-            QuestMgr.RemoveQuestDescriptor(masterFrederick, typeof(Collection));
+			masterFrederick.RemoveQuestToGive(typeof (Collection));
 		}
 
 		/* This is the method we declared as callback for the hooks we set to
@@ -418,8 +402,9 @@ namespace DOL.GS.Quests.Albion
 			if (player == null)
 				return;
 
-            if (QuestMgr.CanGiveQuest(typeof(Collection), player, masterFrederick) <= 0)
+			if(masterFrederick.CanGiveQuest(typeof (Collection), player)  <= 0)
 				return;
+
 
 			//We also check if the player is already doing the quest
 			Collection quest = player.IsDoingQuest(typeof (Collection)) as Collection;
@@ -444,12 +429,12 @@ namespace DOL.GS.Quests.Albion
 					}
 					else if (quest.Step == 5)
 					{
-						masterFrederick.SayTo(player, "Welcome back "+player.Name+". I take it you were successful in your mission. If so, hand me the first fairie wing.");
-						quest.ChangeQuestStep(6);
+						masterFrederick.SayTo(player, "Welcome back Vinde. I take it you were successful in your mission. If so, hand me the first fairie wing.");
+						quest.Step = 6;
 					}
 					else if (quest.Step == 9)
 					{
-						masterFrederick.SayTo(player, "For you, a pair of rugged sleeves, great for protecting your arms from the wildlife around here. Thank you again "+player.Name+". I promise my next task will be a little easier on the fighting. *hehe*");
+						masterFrederick.SayTo(player, "For you, a pair of rugged sleeves, great for protecting your arms from the wildlife around here. Thank you again Vinde. I promise my next task will be a little easier on the fighting. *hehe*");
 						quest.FinishQuest();
 					}
 					return;
@@ -473,7 +458,7 @@ namespace DOL.GS.Quests.Albion
 
 							//If the player offered his "help", we send the quest dialog now!
 						case "situation":
-							QuestMgr.ProposeQuestToPlayer(typeof(Collection), "Will you find and slay these three ire fairies?", player, masterFrederick);
+							player.Out.SendQuestSubscribeCommand(masterFrederick, QuestMgr.GetIDForQuestType(typeof(Collection)), "Will you find and slay these three ire fairies?");
 							break;
 					}
 				}
@@ -485,21 +470,39 @@ namespace DOL.GS.Quests.Albion
 							masterFrederick.SayTo(player, "You will need to use your compass in order to find your way to these locations. If your compass is not yet visible on your screen, use your shift + C keys to display it. Good luck.recruit. We're counting on you.");
 							if (quest.Step == 1)
 							{
-                                GiveItemToPlayer(masterFrederick, CreateQuestItem(dustyOldMap, quest), player);
-								quest.ChangeQuestStep(2);
+								GiveItem(masterFrederick, player, dustyOldMap);
+								quest.Step = 2;
 							}
 							break;
 
 						case "reward":
-							masterFrederick.SayTo(player, "For you, a pair of rugged sleeves, great for protecting your arms from the wildlife around here. Thank you again "+player.Name+". I promise my next task will be a little easier on the fighting. *hehe*");
+							masterFrederick.SayTo(player, "For you, a pair of rugged sleeves, great for protecting your arms from the wildlife around here. Thank you again Vinde. I promise my next task will be a little easier on the fighting. *hehe*");
 							if (quest.Step == 9)
 							{
 								quest.FinishQuest();
 							}
 							break;
+						case "abort":
+							player.Out.SendCustomDialog("Do you really want to abort this quest, \nall items gained during quest will be lost?", new CustomDialogResponse(CheckPlayerAbortQuest));
+							break;
 					}
 				}
 			}
+		}
+
+		protected static void SubscribeQuest(DOLEvent e, object sender, EventArgs args)
+		{
+			QuestEventArgs qargs = args as QuestEventArgs;
+			if (qargs == null)
+				return;
+
+			if (qargs.QuestID != QuestMgr.GetIDForQuestType(typeof(Collection)))
+				return;
+
+			if (e == GamePlayerEvent.AcceptQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x01);
+			else if (e == GamePlayerEvent.DeclineQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x00);
 		}
 
 		protected static void PlayerLeftWorld(DOLEvent e, object sender, EventArgs args)
@@ -541,8 +544,8 @@ namespace DOL.GS.Quests.Albion
 
 			UseSlotEventArgs uArgs = (UseSlotEventArgs) args;
 
-			GenericItem item = player.Inventory.GetItem((eInventorySlot)uArgs.Slot) as GenericItem;
-			if (item != null && item.Name == dustyOldMap.Name)
+			InventoryItem item = player.Inventory.GetItem((eInventorySlot)uArgs.Slot);
+			if (item != null && item.Id_nb == dustyOldMap.Id_nb)
 			{
 				if (quest.Step == 2)
 				{
@@ -563,34 +566,84 @@ namespace DOL.GS.Quests.Albion
 			}
 		}
 
+		/// <summary>
+		/// This method checks if a player qualifies for this quest
+		/// </summary>
+		/// <returns>true if qualified, false if not</returns>
+		public override bool CheckQuestQualification(GamePlayer player)
+		{
+			// if the player is already doing the quest his level is no longer of relevance
+			if (player.IsDoingQuest(typeof (Collection)) != null)
+				return true;
+
+			// This checks below are only performed is player isn't doing quest already
+			if (player.HasFinishedQuest(typeof (Frontiers)) == 0)
+				return false;
+
+			if (!CheckPartAccessible(player, typeof (Collection)))
+				return false;
+
+			if (player.Level < minimumLevel || player.Level > maximumLevel)
+				return false;
+
+			return true;
+		}
+
+
 		/* This is our callback hook that will be called when the player clicks
 		 * on any button in the quest offer dialog. We check if he accepts or
 		 * declines here...
 		 */
-		protected static void QuestDialogResponse(DOLEvent e, object sender, EventArgs args)
+
+		private static void CheckPlayerAbortQuest(GamePlayer player, byte response)
 		{
-			QuestEventArgs gArgs = args as QuestEventArgs;
+			Collection quest = player.IsDoingQuest(typeof (Collection)) as Collection;
 
-			if (gArgs != null && gArgs.QuestType.Equals(typeof(Collection)))
+			if (quest == null)
+				return;
+
+			if (response == 0x00)
 			{
-				GamePlayer player = gArgs.Player;
-				if (player == null) return;
+				SendSystemMessage(player, "Good, no go out there and finish your work!");
+			}
+			else
+			{
+				SendSystemMessage(player, "Aborting Quest " + questTitle + ". You can start over again if you want.");
+				quest.AbortQuest();
+			}
+		}
 
-				if (e == GamePlayerEvent.AcceptQuest)
-				{
-					if (QuestMgr.GiveQuestToPlayer(typeof(Collection), player, gArgs.Source as GameNPC))
-					{
-						GameEventMgr.AddHandler(player, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
-						GameEventMgr.AddHandler(player, GamePlayerEvent.UseSlot, new DOLEventHandler(PlayerUseSlot));
+		/* This is our callback hook that will be called when the player clicks
+		 * on any button in the quest offer dialog. We check if he accepts or
+		 * declines here...
+		 */
 
-						masterFrederick.SayTo(player, "Alright recruit, let's get started. You will need to find and defeat three key ire fairy generals, so to speak. According to my map, there is a [camp] to the north of this tower, to the northeast and to the south, near the stable across the road.");
-					}
-				}
-				else if (e == GamePlayerEvent.DeclineQuest)
-				{
+		private static void CheckPlayerAcceptQuest(GamePlayer player, byte response)
+		{
+			//We recheck the qualification, because we don't talk to players
+			//who are not doing the quest
+			if(masterFrederick.CanGiveQuest(typeof (Collection), player)  <= 0)
+				return;
 
-					player.Out.SendMessage("Oh well, if you change your mind, please come back!", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
-				}
+			Collection quest = player.IsDoingQuest(typeof (Collection)) as Collection;
+
+			if (quest != null)
+				return;
+
+			if (response == 0x00)
+			{
+				SendReply(player, "Oh well, if you change your mind, please come back!");
+			}
+			else
+			{
+				//Check if we can add the quest!
+				if (!masterFrederick.GiveQuest(typeof (Collection), player, 1))
+					return;
+
+				GameEventMgr.AddHandler(player, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
+				GameEventMgr.AddHandler(player, GamePlayerEvent.UseSlot, new DOLEventHandler(PlayerUseSlot));
+
+				masterFrederick.SayTo(player, "Alright recruit, let's get started. You will need to find and defeat three key ire fairy generals, so to speak. According to my map, there is a [camp] to the north of this tower, to the northeast and to the south, near the stable across the road.");
 			}
 		}
 
@@ -635,9 +688,8 @@ namespace DOL.GS.Quests.Albion
 						return "[Step #6] Hand Master Frederick the fairy wings.";
 					case 9:
 						return "[Step #7] Wait for Master Frederick to reward you. If he stops speaking with you, ask if you might have a [reward] for your troubles.";
-                    default:
-                        return "[Step #" + Step + "] No Description entered for this step!";
 				}
+				return base.Description;
 			}
 		}
 
@@ -652,12 +704,12 @@ namespace DOL.GS.Quests.Albion
 			{
 				EnemyKilledEventArgs gArgs = (EnemyKilledEventArgs) args;
 
-				if (gArgs.Target == general[Step - 2])
+				if (gArgs.Target.Name == generalNames[Step - 2])
 				{
 					SendSystemMessage("You slay the creature and take it's wing.");
-					GiveItemToPlayer(CreateQuestItem(fairyGeneralWings));
+					GiveItem(gArgs.Target, player, fairyGeneralWings);
 					SendSystemMessage(player, generalNames[Step - 2] + " yells at you, \"A curse on you land-bound monster! I curse you for killing me!\"");
-					ChangeQuestStep((byte)(Step + 1));
+					Step++;
 					return;
 				}
 			}
@@ -665,10 +717,8 @@ namespace DOL.GS.Quests.Albion
 			if (Step >= 6 && Step <= 8 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target == masterFrederick && gArgs.Item.Name == fairyGeneralWings.Name)
+				if (gArgs.Target.Name == masterFrederick.Name && gArgs.Item.Id_nb == fairyGeneralWings.Id_nb)
 				{
-					RemoveItemFromPlayer(masterFrederick, gArgs.Item);
-					
 					if (Step == 6)
 					{
 						masterFrederick.SayTo(player, "Excellent. Please, hand me the second one now.");
@@ -679,25 +729,40 @@ namespace DOL.GS.Quests.Albion
 					}
 					else if (Step == 8)
 					{
-						masterFrederick.SayTo(player, "Ah, the third wing. Yes, excellent job "+player.Name+". Now, for your [reward]");
+						masterFrederick.SayTo(player, "Ah, the third wing. Yes, excellent job Vinde. Now, for your [reward]");
 					}
-
-					ChangeQuestStep((byte)(Step + 1));
+					RemoveItem(masterFrederick, player, fairyGeneralWings);
+					Step++;
 					return;
 				}
 			}
 
 		}
 
+		public override void AbortQuest()
+		{
+			base.AbortQuest(); //Defined in Quest, changes the state, stores in DB etc ...
+
+			RemoveItem(m_questPlayer, dustyOldMap, false);
+			RemoveItem(m_questPlayer, fairyGeneralWings, false);
+			RemoveItem(m_questPlayer, fairyGeneralWings, false);
+			RemoveItem(m_questPlayer, fairyGeneralWings, false);
+
+			GameEventMgr.RemoveHandler(m_questPlayer, GamePlayerEvent.UseSlot, new DOLEventHandler(PlayerUseSlot));
+			GameEventMgr.RemoveHandler(m_questPlayer, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
+		}
+
 		public override void FinishQuest()
 		{
-			//Give reward to player here ...  
-			RemoveItemFromPlayer(m_questPlayer.Inventory.GetFirstItemByName(dustyOldMap.Name, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack));
+			base.FinishQuest(); //Defined in Quest, changes the state, stores in DB etc ...
 
-			if (m_questPlayer.HasAbilityToUseItem(recruitsArms.CreateInstance() as ArmsArmor))
-				GiveItemToPlayer(masterFrederick, recruitsArms.CreateInstance());
+			//Give reward to player here ...  
+			RemoveItem(masterFrederick, m_questPlayer, dustyOldMap);
+
+			if (m_questPlayer.HasAbilityToUseItem(recruitsArms))
+				GiveItem(masterFrederick, m_questPlayer, recruitsArms);
 			else
-				GiveItemToPlayer(masterFrederick, recruitsSleeves.CreateInstance());
+				GiveItem(masterFrederick, m_questPlayer, recruitsSleeves);
 
 			m_questPlayer.GainExperience(240, 0, 0, true);
 			m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 6, Util.Random(50)), "You recieve {0} as a reward.");
@@ -705,7 +770,7 @@ namespace DOL.GS.Quests.Albion
 			GameEventMgr.RemoveHandler(m_questPlayer, GamePlayerEvent.UseSlot, new DOLEventHandler(PlayerUseSlot));
 			GameEventMgr.RemoveHandler(m_questPlayer, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
 
-			base.FinishQuest(); //Defined in Quest, changes the state, stores in DB etc ...
 		}
+
 	}
 }

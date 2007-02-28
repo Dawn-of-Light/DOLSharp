@@ -16,7 +16,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using DOL.Database;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Scripts
@@ -39,30 +38,37 @@ namespace DOL.GS.Scripts
 			string targetName = args[1];
 			string message = string.Join(" ", args, 2, args.Length - 2);
 
-			GameClient targetClient = WorldMgr.GetClientByPlayerName(targetName, false);
+			int result = 0;
+			GameClient targetClient = WorldMgr.GuessClientByPlayerNameAndRealm(targetName, 0, false, out result);
 			if (targetClient != null && !GameServer.ServerRules.IsAllowedToUnderstand(client.Player, targetClient.Player))
 			{
 				targetClient = null;
 			}
-		    
-		    if(targetClient != null)
-		    {
-		        if (targetClient == client)
-			    {
-			    	client.Out.SendMessage("You can't /send to yourself!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			    }
-			    else
-			    {
-			    	client.Player.Send(targetClient.Player, message);
-			    }
-		        return 1;
-		    }
-			else
+
+			if (targetClient == null)
 			{
 				// nothing found
 				client.Out.SendMessage(targetName + " is not in the game, or in another realm.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return 1;
 			}
-		
+
+			switch (result)
+			{
+				case 2: // name not unique
+					client.Out.SendMessage("Character name is not unique.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					return 1;
+				case 3: // exact match
+				case 4: // guessed name
+					if (targetClient == client)
+					{
+						client.Out.SendMessage("You can't /send to yourself!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					}
+					else
+					{
+						client.Player.Send(targetClient.Player, message);
+					}
+					return 1;
+			}
 			return 0;
 		}
 	}

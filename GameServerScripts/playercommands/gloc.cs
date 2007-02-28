@@ -16,7 +16,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using DOL.Database;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Scripts
@@ -30,9 +29,11 @@ namespace DOL.GS.Scripts
 		public int OnCommand(GameClient client, string[] args)
 		{
 			client.Out.SendMessage(
-				"You are at Pos:" + client.Player.Position.ToString()
+				"You are at X:" + client.Player.X
+					+ " Y:" + client.Player.Y
+					+ " Z:" + client.Player.Z
 					+ " Heading:" + client.Player.Heading
-					+ " Region:" + client.Player.Region.RegionID,
+					+ " Region:" + client.Player.CurrentRegionID,
 				eChatType.CT_System,
 				eChatLoc.CL_SystemWindow);
 			//Command handled fine

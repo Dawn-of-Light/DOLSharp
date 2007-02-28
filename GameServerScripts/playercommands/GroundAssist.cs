@@ -16,35 +16,56 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using DOL.Database;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Scripts
 {
 	[CmdAttribute("&groundassist", //command to handle
-		 (uint) ePrivLevel.Player, //minimum privelege level
+		 (uint)ePrivLevel.Player, //minimum privelege level
 		 "Show the current coordinates", //command description
 		 "/groundassist")] //command usage
 	public class GroundAssistCommandHandler : ICommandHandler
 	{
 		public int OnCommand(GameClient client, string[] args)
 		{
-			GamePlayer obj = client.Player.TargetObject as GamePlayer;
-			if (args.Length >1)
+			GameLiving target = client.Player.TargetObject as GameLiving;
+			if (args.Length > 1)
 			{
 				GameClient myclient;
-				myclient = WorldMgr.GetClientByPlayerName(args[1], true);
+				myclient = WorldMgr.GetClientByPlayerName(args[1], true, true);
 				if (myclient == null)
 				{
 					client.Player.Out.SendMessage("No player with this name in game.", eChatType.CT_Say, eChatLoc.CL_SystemWindow);
 					return 1;
 				}
-				obj = myclient.Player;
+				target = myclient.Player;
 			}
-			if (obj != null)
-				client.Player.GroundTarget = obj.GroundTarget;
-			else
-				client.Player.Out.SendMessage("You must select a target before use this command.",eChatType.CT_Say,eChatLoc.CL_SystemWindow);
+
+			if (target == client.Player)
+			{
+				client.Out.SendMessage("You can't groundassist yourself.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return 0;
+			}
+
+			if (target == null)
+				return 0;
+
+			if (!GameServer.ServerRules.IsSameRealm(client.Player, target as GameLiving, false))
+				return 0;
+
+			if (!WorldMgr.CheckDistance(client.Player, target, 2048))
+			{
+				client.Out.SendMessage("You don't see " + args[1] + " around here!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return 0;
+			}
+
+			if (target.GroundTarget == null || (target.GroundTarget.X == 0 && target.GroundTarget.Y == 0 && target.GroundTarget.Z == 0))
+			{
+				client.Out.SendMessage(target.Name + " doesn't currently have a ground target.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return 0;
+			}
+			client.Player.Out.SendChangeGroundTarget(target.GroundTarget);
+			client.Player.SetGroundTarget(target.GroundTarget.X, target.GroundTarget.Y, target.GroundTarget.Z);
 			return 1;
 		}
 	}

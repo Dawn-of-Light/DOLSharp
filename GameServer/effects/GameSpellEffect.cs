@@ -20,9 +20,11 @@ using System;
 using System.Collections;
 using System.Reflection;
 using System.Text;
-using DOL.GS.Database;
+
+using DOL.Database;
 using DOL.GS.Spells;
 using DOL.GS.PacketHandler;
+
 using log4net;
 
 namespace DOL.GS.Effects
@@ -32,6 +34,8 @@ namespace DOL.GS.Effects
 	/// </summary>
 	public class GameSpellEffect : IGameEffect, IConcentrationEffect
 	{
+		private readonly object m_LockObject = new object(); // dummy object for thread sync - Mannen
+
 		/// <summary>
 		/// Defines a logger for this class.
 		/// </summary>
@@ -119,7 +123,7 @@ namespace DOL.GS.Effects
 		/// <param name="target">the target</param>
 		public void Start(GameLiving target)
 		{
-			lock (this)
+			lock (m_LockObject)
 			{
 				if (!m_expired)
 				{
@@ -147,7 +151,10 @@ namespace DOL.GS.Effects
 					{
 						SpellHandler.Caster.ConcentrationEffects.Add(this);
 					}
-					m_handler.OnEffectStart(this);
+					if (RestoredEffect)
+						m_handler.OnEffectRestored(this, RestoreVars);
+					else
+						m_handler.OnEffectStart(this);
 					m_handler.OnEffectPulse(this);
 				}
 				finally
@@ -171,7 +178,7 @@ namespace DOL.GS.Effects
 				return;
 			}
 
-			lock(this)
+			lock (m_LockObject)
 			{				
 				if (m_expired)
 					return;
@@ -188,7 +195,10 @@ namespace DOL.GS.Effects
 					{
 						SpellHandler.Caster.ConcentrationEffects.Remove(this);
 					}
-					m_handler.OnEffectExpires(this, false);
+					if (RestoredEffect)
+						m_handler.OnRestoredEffectExpires(this, RestoreVars, false);
+					else
+						m_handler.OnEffectExpires(this, false);
 				}
 			}
 			//DOLConsole.WriteLine("done cancel effect on "+Owner.Name);
@@ -204,12 +214,13 @@ namespace DOL.GS.Effects
 			//DOLConsole.WriteLine("overwrite effect on "+Owner.Name+" effect "+effect.Spell.Name);
 			if (Spell.Concentration > 0) 
 			{
+
 				if (log.IsWarnEnabled)
-					log.Warn("Tried to Overwrite conc based effect! effectowner:"+effect.Owner+" effect:"+effect.Spell.Name+" caster:"+SpellHandler.Caster);
+					log.Warn(effect.Name + " (" + effect.Spell.Name + ") is trying to overwrite " + Spell.Name + " which has concentration " + Spell.Concentration);
 				return;
 			}
 
-			lock (this)
+			lock (m_LockObject)
 			{
 				// immunity effects in immunity state are already expired
 				if (!m_expired)
@@ -266,7 +277,7 @@ namespace DOL.GS.Effects
 		/// </summary>
 		protected virtual void ExpiredCallback()
 		{
-			lock (this)
+			lock (m_LockObject)
 			{
 				if (m_expired)
 					return;
@@ -312,7 +323,7 @@ namespace DOL.GS.Effects
 			/// Constructs a new pulsing timer
 			/// </summary>
 			/// <param name="effect">The pulsing effect</param>
-			public PulsingEffectTimer(GameSpellEffect effect) : base(effect.m_owner.Region.TimeManager)
+			public PulsingEffectTimer(GameSpellEffect effect) : base(effect.m_owner.CurrentRegion.TimeManager)
 			{
 				if (effect == null)
 					throw new ArgumentNullException("effect");
@@ -486,6 +497,33 @@ namespace DOL.GS.Effects
 
 				return list;
 			}
+		}
+
+		public int[] RestoreVars = new int[] { };
+		public bool RestoredEffect = false;
+
+		public PlayerXEffect getSavedEffect()
+		{
+			if (this.RestoredEffect)
+			{
+				PlayerXEffect eff = new PlayerXEffect();
+				eff.Duration = this.RemainingTime;
+				eff.IsHandler = true;
+				eff.Var1 = this.RestoreVars[0];
+				eff.Var2 = this.RestoreVars[1];
+				eff.Var3 = this.RestoreVars[2];
+				eff.Var4 = this.RestoreVars[3];
+				eff.Var5 = this.RestoreVars[4];
+				eff.Var6 = this.RestoreVars[5];
+				eff.SpellLine = this.SpellHandler.SpellLine.KeyName;
+				return eff;
+			}
+			if (m_handler != null)
+			{
+				PlayerXEffect eff = m_handler.getSavedEffect(this);
+				return eff;
+			}
+			return null;
 		}
 	}
 }

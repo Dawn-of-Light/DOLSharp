@@ -234,5 +234,21 @@ namespace DOL
 				m_srvr.ReleasePacketBuffer(buff);
 			}
 		}
+
+		/// <summary>
+		/// Closes the client connection
+		/// </summary>
+		public void Disconnect()
+		{
+			try
+			{
+				m_srvr.Disconnect(this);
+			}
+			catch(Exception e)
+			{
+				if(log.IsErrorEnabled)
+					log.Error("Exception",e);
+			}
+		}
 	}
 }

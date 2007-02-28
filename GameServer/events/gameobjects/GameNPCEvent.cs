@@ -24,7 +24,7 @@ namespace DOL.Events
 	/// This class holds all possible GameNPC events.
 	/// Only constants defined here!
 	/// </summary>
-	public class GameNPCEvent : DOLEvent
+	public class GameNPCEvent : GameLivingEvent
 	{
 		/// <summary>
 		/// Constructs a new GameNPCEvent
@@ -45,15 +45,53 @@ namespace DOL.Events
 		}
 
 		/// <summary>
+		/// The TurnTo event is fired whenever the npc turns towards some coordinates
+		/// <seealso cref="TurnToEventArgs"/>
+		/// </summary>
+		public static readonly GameNPCEvent TurnTo = new GameNPCEvent("GameNPC.TurnTo");
+		/// <summary>
 		/// The TurnToHeading event is fired whenever the npc turns towards a specific heading
 		/// <seealso cref="TurnToHeadingEventArgs"/>
 		/// </summary>
 		public static readonly GameNPCEvent TurnToHeading = new GameNPCEvent("GameNPC.TurnToHeading");
 		/// <summary>
 		/// The ArriveAtTarget event is fired whenever the npc arrives at it's WalkTo target
-		/// <see cref="DOL.GS.GameNPC.WalkTo"/>
+		/// <see cref="DOL.GS.GameNPC.WalkTo(int, int, int, int)"/>
 		/// </summary>
 		public static readonly GameNPCEvent ArriveAtTarget = new GameNPCEvent("GameNPC.ArriveAtTarget");
+		/// <summary>
+		/// The CloseToTarget event is fired whenever the npc is close to it's WalkTo target
+		/// <see cref="DOL.GS.GameNPC.WalkTo(int, int, int, int)"/>
+		/// </summary>
+		public static readonly GameNPCEvent CloseToTarget = new GameNPCEvent("GameNPC.CloseToTarget");
+		/// <summary>
+		/// The WalkTo event is fired whenever the npc is commanded to walk to a specific target
+		/// <seealso cref="WalkToEventArgs"/>
+		/// </summary>
+		public static readonly GameNPCEvent WalkTo = new GameNPCEvent("GameNPC.WalkTo");
+		/// <summary>
+		/// The Walk event is fired whenever the npc is commanded to walk
+		/// <seealso cref="WalkEventArgs"/>
+		/// </summary>
+		public static readonly GameNPCEvent Walk = new GameNPCEvent("GameNPC.Walk");
+		/// <summary>
+		/// The RiderMount event is fired whenever the npc is mounted by a ride
+		/// <seealso cref="RiderMountEventArgs"/>
+		/// </summary>
+		public static readonly GameNPCEvent RiderMount = new GameNPCEvent("GameNPC.RiderMount");
+		/// <summary>
+		/// The RiderDismount event is fired whenever the rider dismounts from the npc
+		/// <seealso cref="RiderDismountEventArgs"/>
+		/// </summary>
+		public static readonly GameNPCEvent RiderDismount = new GameNPCEvent("GameNPC.RiderDismount");
+		/// <summary>
+		/// Fired when pathing starts
+		/// </summary>
+		public static readonly GameNPCEvent PathMoveStarts = new GameNPCEvent("GameNPC.PathMoveStarts");
+		/// <summary>
+		/// Fired when npc is on end of path
+		/// </summary>
+		public static readonly GameNPCEvent PathMoveEnds = new GameNPCEvent("GameNPC.PathMoveEnds");
 		/// <summary>
 		/// Fired on every AI callback
 		/// </summary>

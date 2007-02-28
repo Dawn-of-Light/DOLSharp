@@ -18,16 +18,15 @@
  */
 
 
+using System;
 using DOL.GS.PacketHandler;
-using NHibernate.Mapping.Attributes;
 
 namespace DOL.GS.Scripts
 {
 	/// <summary>
 	/// Represents an in-game FaceCustomiser NPC
 	/// </summary>
-	[Subclass(NameType=typeof(FaceCustomiser), ExtendsType=typeof(GameMob))] 
-	public class FaceCustomiser : GameMob
+	public class FaceCustomiser : GameNPC
 	{
 		/// <summary>
 		/// Spell id of the magical effect
@@ -40,21 +39,29 @@ namespace DOL.GS.Scripts
 		public const int CAST_TIME = 2000;
 
 		/// <summary>
+		/// Constructor
+		/// </summary>
+		public FaceCustomiser () : base()
+		{
+		}
+
+		/// <summary>
 		/// Called when a player right clicks on the npc
 		/// </summary>
 		/// <param name="player">Player that interacting</param>
 		/// <returns>True if succeeded</returns>
 		public override bool Interact(GamePlayer player)
 		{
-			if (!base.Interact(player)) return false;
+			if (!base.Interact(player))
+				return false;
 
-			TurnTo(player, 10000);
+			TurnTo(player, 5000);
 
-			if(player.CustomisationStep == 2)
+			if(player.PlayerCharacter.CustomisationStep == 2)
 			{
 				SayTo(player, eChatLoc.CL_PopupWindow, player.CharacterClass.Name +", I have discovered a secret spell that will allow you to change your appearance. I can cast this spell upon you if you wish. All you must do is say the word and I will [change your appearance].");
 			}
-			else if(player.CustomisationStep == 3)
+			else if(player.PlayerCharacter.CustomisationStep == 3)
 			{
 				SayTo(player, eChatLoc.CL_PopupWindow, "You have already been granted the ability to change your appearance. You must leave this world to make the changes. (Log out to change your appearance.)");
 			}
@@ -77,16 +84,16 @@ namespace DOL.GS.Scripts
 			if (player == null)
 				return false;
 
-			if (player.CustomisationStep == 2 && text == "change your appearance")
+			if (player.PlayerCharacter.CustomisationStep == 2 && text == "change your appearance")
 			{
-				foreach(GamePlayer players in GetInRadius(typeof(GamePlayer), WorldMgr.VISIBILITY_DISTANCE)) 
+				foreach(GamePlayer players in this.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE)) 
 				{
 					players.Out.SendSpellCastAnimation(this,EFFECT_ID,CAST_TIME);
 				}
 				new RegionTimer(player, new RegionTimerCallback(EndCastCallback), CAST_TIME);
 			
 				SayTo(player, eChatLoc.CL_PopupWindow, "There it is done! Now, you must leave this world for a short time for the magic to work. (You must log out to change your appearance.)");
-				player.CustomisationStep = 3;
+				player.PlayerCharacter.CustomisationStep = 3;
 			}
 			return true;
 		}
@@ -98,7 +105,7 @@ namespace DOL.GS.Scripts
 		/// <returns>new delay in milliseconds</returns>
 		protected virtual int EndCastCallback(RegionTimer callingTimer)
 		{
-			foreach(GamePlayer players in GetInRadius(typeof(GamePlayer), WorldMgr.VISIBILITY_DISTANCE)) 
+			foreach(GamePlayer players in this.GetPlayersInRadius( WorldMgr.VISIBILITY_DISTANCE)) 
 			{
 				players.Out.SendSpellEffectAnimation(this,this,EFFECT_ID,0,false,0x01);
 			}

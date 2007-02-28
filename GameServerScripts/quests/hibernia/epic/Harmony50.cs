@@ -93,6 +93,8 @@ namespace DOL.GS.Quests.Hibernia
 		[ScriptLoadedEvent]
 		public static void ScriptLoaded(DOLEvent e, object sender, EventArgs args)
 		{
+			if (!ServerProperties.Properties.LOAD_QUESTS)
+				return;
 			if (log.IsInfoEnabled)
 				log.Info("Quest \"" + questTitle + "\" initializing ...");
 
@@ -104,16 +106,19 @@ namespace DOL.GS.Quests.Hibernia
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Revelin , creating it ...");
-				Revelin = new GameMob();
+				Revelin = new GameNPC();
 				Revelin.Model = 361;
 				Revelin.Name = "Revelin";
 				Revelin.GuildName = "";
 				Revelin.Realm = (byte)eRealm.Hibernia;
-				Revelin.RegionId = 200;
+				Revelin.CurrentRegionID = 200;
 				Revelin.Size = 42;
 				Revelin.Level = 20;
-				Revelin.Position = new Point(344387, 706197, 6351);
+				Revelin.X = 344387;
+				Revelin.Y = 706197;
+				Revelin.Z = 6351;
 				Revelin.Heading = 2127;
+				Revelin.Flags ^= (uint)GameNPC.eFlags.PEACE;
 				Revelin.AddToWorld();
 				if (SAVE_INTO_DATABASE)
 				{
@@ -131,15 +136,17 @@ namespace DOL.GS.Quests.Hibernia
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Cailean , creating it ...");
-				Cailean = new GameMob();
+				Cailean = new GameNPC();
 				Cailean.Model = 98;
 				Cailean.Name = "Cailean";
 				Cailean.GuildName = "";
 				Cailean.Realm = (byte)eRealm.None;
-				Cailean.RegionId = 200;
+				Cailean.CurrentRegionID = 200;
 				Cailean.Size = 60;
 				Cailean.Level = 65;
-				Cailean.Position = new Point(479042, 508134, 4569);
+				Cailean.X = 479042;
+				Cailean.Y = 508134;
+				Cailean.Z = 4569;
 				Cailean.Heading = 3319;
 				Cailean.AddToWorld();
 				if (SAVE_INTO_DATABASE)
@@ -162,7 +169,7 @@ namespace DOL.GS.Quests.Hibernia
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Horn , creating it ...");
 				Horn = new ItemTemplate();
-				Horn.ItemTemplateID = "Horn";
+				Horn.Id_nb = "Horn";
 				Horn.Name = "Horn";
 				Horn.Level = 8;
 				Horn.Item_Type = 29;
@@ -175,7 +182,6 @@ namespace DOL.GS.Quests.Hibernia
 				Horn.Hand = 0;
 				Horn.Type_Damage = 0;
 				Horn.Quality = 100;
-				Horn.MaxQuality = 100;
 				Horn.Weight = 12;
 				if (SAVE_INTO_DATABASE)
 				{
@@ -190,7 +196,7 @@ namespace DOL.GS.Quests.Hibernia
 			if (DruidEpicBoots == null)
 			{
 				i = new ItemTemplate();
-				i.ItemTemplateID = "DruidEpicBoots";
+				i.Id_nb = "DruidEpicBoots";
 				i.Name = "Sidhe Scale Boots";
 				i.Level = 50;
 				i.Item_Type = 23;
@@ -201,7 +207,6 @@ namespace DOL.GS.Quests.Hibernia
 				i.SPD_ABS = 27;
 				i.Object_Type = 38;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -233,7 +238,7 @@ namespace DOL.GS.Quests.Hibernia
 			if (DruidEpicHelm == null)
 			{
 				i = new ItemTemplate();
-				i.ItemTemplateID = "DruidEpicHelm";
+				i.Id_nb = "DruidEpicHelm";
 				i.Name = "Sidhe Scale Coif";
 				i.Level = 50;
 				i.Item_Type = 21;
@@ -244,7 +249,6 @@ namespace DOL.GS.Quests.Hibernia
 				i.SPD_ABS = 27;
 				i.Object_Type = 38;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -275,7 +279,7 @@ namespace DOL.GS.Quests.Hibernia
 			if (DruidEpicGloves == null)
 			{
 				i = new ItemTemplate();
-				i.ItemTemplateID = "DruidEpicGloves";
+				i.Id_nb = "DruidEpicGloves";
 				i.Name = "Sidhe Scale Gloves ";
 				i.Level = 50;
 				i.Item_Type = 22;
@@ -286,7 +290,6 @@ namespace DOL.GS.Quests.Hibernia
 				i.SPD_ABS = 27;
 				i.Object_Type = 38;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -316,7 +319,7 @@ namespace DOL.GS.Quests.Hibernia
 			if (DruidEpicVest == null)
 			{
 				i = new ItemTemplate();
-				i.ItemTemplateID = "DruidEpicVest";
+				i.Id_nb = "DruidEpicVest";
 				i.Name = "Sidhe Scale Breastplate";
 				i.Level = 50;
 				i.Item_Type = 25;
@@ -327,7 +330,6 @@ namespace DOL.GS.Quests.Hibernia
 				i.SPD_ABS = 27;
 				i.Object_Type = 38;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -357,7 +359,7 @@ namespace DOL.GS.Quests.Hibernia
 			if (DruidEpicLegs == null)
 			{
 				i = new ItemTemplate();
-				i.ItemTemplateID = "DruidEpicLegs";
+				i.Id_nb = "DruidEpicLegs";
 				i.Name = "Sidhe Scale Leggings";
 				i.Level = 50;
 				i.Item_Type = 27;
@@ -368,7 +370,6 @@ namespace DOL.GS.Quests.Hibernia
 				i.SPD_ABS = 27;
 				i.Object_Type = 38;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -399,7 +400,7 @@ namespace DOL.GS.Quests.Hibernia
 			if (DruidEpicArms == null)
 			{
 				i = new ItemTemplate();
-				i.ItemTemplateID = "DruidEpicArms";
+				i.Id_nb = "DruidEpicArms";
 				i.Name = "Sidhe Scale Sleeves";
 				i.Level = 50;
 				i.Item_Type = 28;
@@ -410,7 +411,6 @@ namespace DOL.GS.Quests.Hibernia
 				i.SPD_ABS = 27;
 				i.Object_Type = 38;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -441,7 +441,7 @@ namespace DOL.GS.Quests.Hibernia
 			if (BlademasterEpicBoots == null)
 			{
 				i = new ItemTemplate();
-				i.ItemTemplateID = "BlademasterEpicBoots";
+				i.Id_nb = "BlademasterEpicBoots";
 				i.Name = "Sidhe Studded Boots";
 				i.Level = 50;
 				i.Item_Type = 23;
@@ -452,7 +452,6 @@ namespace DOL.GS.Quests.Hibernia
 				i.SPD_ABS = 19;
 				i.Object_Type = 37;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -483,7 +482,7 @@ namespace DOL.GS.Quests.Hibernia
 			if (BlademasterEpicHelm == null)
 			{
 				i = new ItemTemplate();
-				i.ItemTemplateID = "BlademasterEpicHelm";
+				i.Id_nb = "BlademasterEpicHelm";
 				i.Name = "Sidhe Studded Helm";
 				i.Level = 50;
 				i.Item_Type = 21;
@@ -494,7 +493,6 @@ namespace DOL.GS.Quests.Hibernia
 				i.SPD_ABS = 19;
 				i.Object_Type = 37;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -526,7 +524,7 @@ namespace DOL.GS.Quests.Hibernia
 			if (BlademasterEpicGloves == null)
 			{
 				i = new ItemTemplate();
-				i.ItemTemplateID = "BlademasterEpicGloves";
+				i.Id_nb = "BlademasterEpicGloves";
 				i.Name = "Sidhe Studded Gloves ";
 				i.Level = 50;
 				i.Item_Type = 22;
@@ -537,7 +535,6 @@ namespace DOL.GS.Quests.Hibernia
 				i.SPD_ABS = 19;
 				i.Object_Type = 37;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -568,7 +565,7 @@ namespace DOL.GS.Quests.Hibernia
 			if (BlademasterEpicVest == null)
 			{
 				i = new ItemTemplate();
-				i.ItemTemplateID = "BlademasterEpicVest";
+				i.Id_nb = "BlademasterEpicVest";
 				i.Name = "Sidhe Studded Hauberk";
 				i.Level = 50;
 				i.Item_Type = 25;
@@ -579,7 +576,6 @@ namespace DOL.GS.Quests.Hibernia
 				i.SPD_ABS = 19;
 				i.Object_Type = 37;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -610,7 +606,7 @@ namespace DOL.GS.Quests.Hibernia
 			if (BlademasterEpicLegs == null)
 			{
 				i = new ItemTemplate();
-				i.ItemTemplateID = "BlademasterEpicLegs";
+				i.Id_nb = "BlademasterEpicLegs";
 				i.Name = "Sidhe Studded Leggings";
 				i.Level = 50;
 				i.Item_Type = 27;
@@ -621,7 +617,6 @@ namespace DOL.GS.Quests.Hibernia
 				i.SPD_ABS = 19;
 				i.Object_Type = 37;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -652,7 +647,7 @@ namespace DOL.GS.Quests.Hibernia
 			if (BlademasterEpicArms == null)
 			{
 				i = new ItemTemplate();
-				i.ItemTemplateID = "BlademasterEpicArms";
+				i.Id_nb = "BlademasterEpicArms";
 				i.Name = "Sidhe Studded Sleeves";
 				i.Level = 50;
 				i.Item_Type = 28;
@@ -663,7 +658,6 @@ namespace DOL.GS.Quests.Hibernia
 				i.SPD_ABS = 19;
 				i.Object_Type = 37;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -693,7 +687,7 @@ namespace DOL.GS.Quests.Hibernia
 			if (AnimistEpicBoots == null)
 			{
 				i = new ItemTemplate();
-				i.ItemTemplateID = "AnimistEpicBoots";
+				i.Id_nb = "AnimistEpicBoots";
 				i.Name = "Brightly Woven Boots";
 				i.Level = 50;
 				i.Item_Type = 23;
@@ -704,7 +698,6 @@ namespace DOL.GS.Quests.Hibernia
 				i.SPD_ABS = 0;
 				i.Object_Type = 32;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -735,7 +728,7 @@ namespace DOL.GS.Quests.Hibernia
 			if (AnimistEpicHelm == null)
 			{
 				i = new ItemTemplate();
-				i.ItemTemplateID = "AnimistEpicHelm";
+				i.Id_nb = "AnimistEpicHelm";
 				i.Name = "Brightly Woven Cap";
 				i.Level = 50;
 				i.Item_Type = 21;
@@ -746,7 +739,6 @@ namespace DOL.GS.Quests.Hibernia
 				i.SPD_ABS = 0;
 				i.Object_Type = 32;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -778,7 +770,7 @@ namespace DOL.GS.Quests.Hibernia
 			if (AnimistEpicGloves == null)
 			{
 				i = new ItemTemplate();
-				i.ItemTemplateID = "AnimistEpicGloves";
+				i.Id_nb = "AnimistEpicGloves";
 				i.Name = "Brightly Woven Gloves ";
 				i.Level = 50;
 				i.Item_Type = 22;
@@ -789,7 +781,6 @@ namespace DOL.GS.Quests.Hibernia
 				i.SPD_ABS = 0;
 				i.Object_Type = 32;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -819,7 +810,7 @@ namespace DOL.GS.Quests.Hibernia
 			if (AnimistEpicVest == null)
 			{
 				i = new ItemTemplate();
-				i.ItemTemplateID = "AnimistEpicVest";
+				i.Id_nb = "AnimistEpicVest";
 				i.Name = "Brightly Woven Robe";
 				i.Level = 50;
 				i.Item_Type = 25;
@@ -830,7 +821,6 @@ namespace DOL.GS.Quests.Hibernia
 				i.SPD_ABS = 0;
 				i.Object_Type = 32;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -860,7 +850,7 @@ namespace DOL.GS.Quests.Hibernia
 			if (AnimistEpicLegs == null)
 			{
 				i = new ItemTemplate();
-				i.ItemTemplateID = "AnimistEpicLegs";
+				i.Id_nb = "AnimistEpicLegs";
 				i.Name = "Brightly Woven Pants";
 				i.Level = 50;
 				i.Item_Type = 27;
@@ -871,7 +861,6 @@ namespace DOL.GS.Quests.Hibernia
 				i.SPD_ABS = 0;
 				i.Object_Type = 32;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -901,7 +890,7 @@ namespace DOL.GS.Quests.Hibernia
 			if (AnimistEpicArms == null)
 			{
 				i = new ItemTemplate();
-				i.ItemTemplateID = "AnimistEpicArms";
+				i.Id_nb = "AnimistEpicArms";
 				i.Name = "Brightly Woven Sleeves";
 				i.Level = 50;
 				i.Item_Type = 28;
@@ -912,7 +901,6 @@ namespace DOL.GS.Quests.Hibernia
 				i.SPD_ABS = 0;
 				i.Object_Type = 32;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -941,7 +929,7 @@ namespace DOL.GS.Quests.Hibernia
 			if (MentalistEpicBoots == null)
 			{
 				i = new ItemTemplate();
-				i.ItemTemplateID = "MentalistEpicBoots";
+				i.Id_nb = "MentalistEpicBoots";
 				i.Name = "Sidhe Woven Boots";
 				i.Level = 50;
 				i.Item_Type = 23;
@@ -952,7 +940,6 @@ namespace DOL.GS.Quests.Hibernia
 				i.SPD_ABS = 0;
 				i.Object_Type = 32;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -983,7 +970,7 @@ namespace DOL.GS.Quests.Hibernia
 			if (MentalistEpicHelm == null)
 			{
 				i = new ItemTemplate();
-				i.ItemTemplateID = "MentalistEpicHelm";
+				i.Id_nb = "MentalistEpicHelm";
 				i.Name = "Sidhe Woven Cap";
 				i.Level = 50;
 				i.Item_Type = 21;
@@ -994,7 +981,6 @@ namespace DOL.GS.Quests.Hibernia
 				i.SPD_ABS = 0;
 				i.Object_Type = 32;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -1025,7 +1011,7 @@ namespace DOL.GS.Quests.Hibernia
 			if (MentalistEpicGloves == null)
 			{
 				i = new ItemTemplate();
-				i.ItemTemplateID = "MentalistEpicGloves";
+				i.Id_nb = "MentalistEpicGloves";
 				i.Name = "Sidhe Woven Gloves ";
 				i.Level = 50;
 				i.Item_Type = 22;
@@ -1036,7 +1022,6 @@ namespace DOL.GS.Quests.Hibernia
 				i.SPD_ABS = 0;
 				i.Object_Type = 32;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -1066,7 +1051,7 @@ namespace DOL.GS.Quests.Hibernia
 			if (MentalistEpicVest == null)
 			{
 				i = new ItemTemplate();
-				i.ItemTemplateID = "MentalistEpicVest";
+				i.Id_nb = "MentalistEpicVest";
 				i.Name = "Sidhe Woven Vest";
 				i.Level = 50;
 				i.Item_Type = 25;
@@ -1077,7 +1062,6 @@ namespace DOL.GS.Quests.Hibernia
 				i.SPD_ABS = 0;
 				i.Object_Type = 32;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -1107,7 +1091,7 @@ namespace DOL.GS.Quests.Hibernia
 			if (MentalistEpicLegs == null)
 			{
 				i = new ItemTemplate();
-				i.ItemTemplateID = "MentalistEpicLegs";
+				i.Id_nb = "MentalistEpicLegs";
 				i.Name = "Sidhe Woven Pants";
 				i.Level = 50;
 				i.Item_Type = 27;
@@ -1118,7 +1102,6 @@ namespace DOL.GS.Quests.Hibernia
 				i.SPD_ABS = 0;
 				i.Object_Type = 32;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -1148,7 +1131,7 @@ namespace DOL.GS.Quests.Hibernia
 			if (MentalistEpicArms == null)
 			{
 				i = new ItemTemplate();
-				i.ItemTemplateID = "MentalistEpicArms";
+				i.Id_nb = "MentalistEpicArms";
 				i.Name = "Sidhe Woven Sleeves";
 				i.Level = 50;
 				i.Item_Type = 28;
@@ -1159,7 +1142,6 @@ namespace DOL.GS.Quests.Hibernia
 				i.SPD_ABS = 0;
 				i.Object_Type = 32;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -1188,7 +1170,7 @@ namespace DOL.GS.Quests.Hibernia
 			if (ValewalkerEpicBoots == null)
 			{
 				i = new ItemTemplate();
-				i.ItemTemplateID = "ValewalkerEpicBoots";
+				i.Id_nb = "ValewalkerEpicBoots";
 				i.Name = "Boots of the Misty Glade";
 				i.Level = 50;
 				i.Item_Type = 23;
@@ -1199,7 +1181,6 @@ namespace DOL.GS.Quests.Hibernia
 				i.SPD_ABS = 0;
 				i.Object_Type = 32;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -1230,7 +1211,7 @@ namespace DOL.GS.Quests.Hibernia
 			if (ValewalkerEpicHelm == null)
 			{
 				i = new ItemTemplate();
-				i.ItemTemplateID = "ValewalkerEpicHelm";
+				i.Id_nb = "ValewalkerEpicHelm";
 				i.Name = "Cap of the Misty Glade";
 				i.Level = 50;
 				i.Item_Type = 21;
@@ -1241,7 +1222,6 @@ namespace DOL.GS.Quests.Hibernia
 				i.SPD_ABS = 0;
 				i.Object_Type = 32;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -1272,7 +1252,7 @@ namespace DOL.GS.Quests.Hibernia
 			if (ValewalkerEpicGloves == null)
 			{
 				i = new ItemTemplate();
-				i.ItemTemplateID = "ValewalkerEpicGloves";
+				i.Id_nb = "ValewalkerEpicGloves";
 				i.Name = "Gloves of the Misty Glades";
 				i.Level = 50;
 				i.Item_Type = 22;
@@ -1283,7 +1263,6 @@ namespace DOL.GS.Quests.Hibernia
 				i.SPD_ABS = 0;
 				i.Object_Type = 32;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -1313,7 +1292,7 @@ namespace DOL.GS.Quests.Hibernia
 			if (ValewalkerEpicVest == null)
 			{
 				i = new ItemTemplate();
-				i.ItemTemplateID = "ValewalkerEpicVest";
+				i.Id_nb = "ValewalkerEpicVest";
 				i.Name = "Robe of the Misty Glade";
 				i.Level = 50;
 				i.Item_Type = 25;
@@ -1324,7 +1303,6 @@ namespace DOL.GS.Quests.Hibernia
 				i.SPD_ABS = 0;
 				i.Object_Type = 32;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -1354,7 +1332,7 @@ namespace DOL.GS.Quests.Hibernia
 			if (ValewalkerEpicLegs == null)
 			{
 				i = new ItemTemplate();
-				i.ItemTemplateID = "ValewalkerEpicLegs";
+				i.Id_nb = "ValewalkerEpicLegs";
 				i.Name = "Pants of the Misty Glade";
 				i.Level = 50;
 				i.Item_Type = 27;
@@ -1365,7 +1343,6 @@ namespace DOL.GS.Quests.Hibernia
 				i.SPD_ABS = 0;
 				i.Object_Type = 32;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -1395,7 +1372,7 @@ namespace DOL.GS.Quests.Hibernia
 			if (ValewalkerEpicArms == null)
 			{
 				i = new ItemTemplate();
-				i.ItemTemplateID = "ValewalkerEpicArms";
+				i.Id_nb = "ValewalkerEpicArms";
 				i.Name = "Sleeves of the Misty Glade";
 				i.Level = 50;
 				i.Item_Type = 28;
@@ -1406,7 +1383,6 @@ namespace DOL.GS.Quests.Hibernia
 				i.SPD_ABS = 0;
 				i.Object_Type = 32;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -1437,6 +1413,9 @@ namespace DOL.GS.Quests.Hibernia
 
 			#endregion
 
+			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
 			GameEventMgr.AddHandler(Revelin, GameObjectEvent.Interact, new DOLEventHandler(TalkToRevelin));
 			GameEventMgr.AddHandler(Revelin, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToRevelin));
 
@@ -1454,6 +1433,9 @@ namespace DOL.GS.Quests.Hibernia
 			if (Revelin == null)
 				return;
 			// remove handlers
+			GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
 			GameEventMgr.RemoveHandler(Revelin, GameObjectEvent.Interact, new DOLEventHandler(TalkToRevelin));
 			GameEventMgr.RemoveHandler(Revelin, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToRevelin));
 
@@ -1495,7 +1477,7 @@ namespace DOL.GS.Quests.Hibernia
 					switch (wArgs.Text)
 					{
 						case "services":
-							player.Out.SendCustomDialog("Will you help Revelin [Path of Harmony Level 50 Epic]?", new CustomDialogResponse(CheckPlayerAcceptQuest));
+							player.Out.SendQuestSubscribeCommand(Revelin, QuestMgr.GetIDForQuestType(typeof(Harmony_50)), "Will you help Revelin [Path of Harmony Level 50 Epic]?");
 							break;
 					}
 				}
@@ -1560,6 +1542,21 @@ namespace DOL.GS.Quests.Hibernia
 			}
 		}
 
+		protected static void SubscribeQuest(DOLEvent e, object sender, EventArgs args)
+		{
+			QuestEventArgs qargs = args as QuestEventArgs;
+			if (qargs == null)
+				return;
+
+			if (qargs.QuestID != QuestMgr.GetIDForQuestType(typeof(Harmony_50)))
+				return;
+
+			if (e == GamePlayerEvent.AcceptQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x01);
+			else if (e == GamePlayerEvent.DeclineQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x00);
+		}
+
 		private static void CheckPlayerAcceptQuest(GamePlayer player, byte response)
 		{
 			if (Revelin.CanGiveQuest(typeof(Harmony_50), player) <= 0)
@@ -1617,7 +1614,7 @@ namespace DOL.GS.Quests.Hibernia
 				if (gArgs.Target.Name == Cailean.Name)
 				{
 					m_questPlayer.Out.SendMessage("You collect the Horn from Cailean", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					GiveItem(player, Horn);
+					GiveItem(m_questPlayer, Horn);
 					Step = 2;
 					return;
 				}
@@ -1627,7 +1624,7 @@ namespace DOL.GS.Quests.Hibernia
 			if (Step == 2 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs)args;
-				if (gArgs.Target.Name == Revelin.Name && gArgs.Item.ItemTemplateID == Horn.ItemTemplateID)
+				if (gArgs.Target.Name == Revelin.Name && gArgs.Item.Id_nb == Horn.Id_nb)
 				{
 					RemoveItem(Revelin, player, Horn);
 					Revelin.SayTo(player, "You have earned this Epic Armour!");

@@ -29,7 +29,7 @@ namespace DOL.GS.Scripts
 		public ClassFriar() : base()
 		{
 			m_profession = "Defenders of Albion";
-			m_specializationMultiplier = 15;
+			m_specializationMultiplier = 18;
 			m_primaryStat = eStat.PIE;
 			m_secondaryStat = eStat.CON;
 			m_tertiaryStat = eStat.STR;

@@ -16,10 +16,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using System.Collections;
+using System;
 using System.Reflection;
-using DOL.GS.Database;
+
+using DOL.Database;
+using DOL.GS.Keeps;
+
 using log4net;
 
 namespace DOL.GS
@@ -29,41 +32,85 @@ namespace DOL.GS
 	/// </summary>		
 	public sealed class DoorMgr
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
-		/// <summary>
-		/// this hash store all IDoors of the game by door unique id
-		/// </summary>
 		private static Hashtable m_doors = new Hashtable();
 
-		/// <summary>
-		/// This method add a new door to the door manadger
-		/// </summary>	
-		public static bool AddDoor(IDoor newDoor)
+		public static Hashtable Doors
 		{
-			if(!m_doors.Contains(newDoor.DoorID))
-			{
-				m_doors.Add(newDoor.DoorID, newDoor);
-				return true;
-			}
-			else
-			{
-				if (log.IsWarnEnabled)
-					log.Warn("Door with DoorID: " + newDoor.DoorID + " defined twice in the db !!!");
-				return false;
-			}	
+			get { return m_doors; }
 		}
 
 		/// <summary>
-		/// This method return the door with the given DoorID
-		/// </summary>
-		/// <returns>return the door</returns>
-		public static IDoor GetDoor(int doorID)
+		/// this function load all door from DB
+		/// </summary>	
+		public static bool Init()
 		{
-			return m_doors[doorID] as IDoor;
+			DataObject[] dbdoors = GameServer.Database.SelectAllObjects(typeof(DBDoor));
+			foreach (DBDoor door in dbdoors)
+			{
+				if (m_doors[door.InternalID] == null)
+				{
+					bool loaded = false;
+					ushort zone = (ushort)(door.InternalID / 1000000);
+					foreach (AbstractArea area in WorldMgr.GetZone(zone).GetAreasOfSpot(door.X, door.Y, door.Z))
+					{
+						if (area is KeepArea)
+						{
+							GameKeepDoor mydoor = new GameKeepDoor();
+							mydoor.LoadFromDatabase(door);
+							loaded = true;
+							break;
+						}
+					}
+					if (!loaded)
+					{
+						GameDoor mydoor = new GameDoor();
+						mydoor.LoadFromDatabase(door);
+					}
+				}
+			}
+			return true;
+		}
+
+		/// <summary>
+		/// This function get the door object by door index
+		/// </summary>
+		/// <returns>return the door with the index</returns>
+		public static IDoor getDoorByID(int id)
+		{
+			return m_doors[id] as IDoor;
+		}
+
+		/// <summary>
+		/// This function get the door close to spot
+		/// </summary>
+		/// <returns>array of door</returns>
+		public static IEnumerable getDoorsCloseToSpot(ushort regionid, IPoint3D point3d, int radius)
+		{
+			return getDoorsCloseToSpot(regionid, point3d.X, point3d.Y, point3d.Z, radius); 
+		}
+
+		/// <summary>
+		/// This function get the door close to spot
+		/// </summary>
+		/// <returns>array of door</returns>
+		public static IEnumerable getDoorsCloseToSpot(ushort regionid, int x, int y, int z, int radius)
+		{
+			ArrayList mydoors = new ArrayList();
+			int radiussqrt = radius * radius;
+			lock (m_doors.SyncRoot)
+			{
+				foreach(GameObject door in m_doors.Values)//door inerite from GameObject and IDoor
+				{
+					if (door.CurrentRegionID != regionid)
+						continue;
+					int xdiff = door.X - x;
+					int ydiff = door.Y - y;
+					int range = xdiff * xdiff + ydiff * ydiff ;
+					if (range < radiussqrt)
+						mydoors.Add(door);
+				}
+			}
+			return mydoors;
 		}
 	}
 }

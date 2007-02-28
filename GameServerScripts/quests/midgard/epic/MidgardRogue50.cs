@@ -93,6 +93,8 @@ namespace DOL.GS.Quests.Midgard
 		[ScriptLoadedEvent]
 		public static void ScriptLoaded(DOLEvent e, object sender, EventArgs args)
 		{
+			if (!ServerProperties.Properties.LOAD_QUESTS)
+				return;
 			if (log.IsInfoEnabled)
 				log.Info("Quest \"" + questTitle + "\" initializing ...");
 
@@ -104,15 +106,17 @@ namespace DOL.GS.Quests.Midgard
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Masrim , creating it ...");
-				Masrim = new GameMob();
+				Masrim = new GameNPC();
 				Masrim.Model = 177;
 				Masrim.Name = "Masrim";
 				Masrim.GuildName = "";
 				Masrim.Realm = (byte) eRealm.Midgard;
-				Masrim.RegionId = 100;
+				Masrim.CurrentRegionID = 100;
 				Masrim.Size = 52;
 				Masrim.Level = 40;
-				Masrim.Position = new Point(749099, 813104, 4437);
+				Masrim.X = 749099;
+				Masrim.Y = 813104;
+				Masrim.Z = 4437;
 				Masrim.Heading = 2605;
 				Masrim.AddToWorld();
 				if (SAVE_INTO_DATABASE)
@@ -131,17 +135,19 @@ namespace DOL.GS.Quests.Midgard
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Oona , creating it ...");
-				Oona = new GameMob();
+				Oona = new GameNPC();
 				Oona.Model = 356;
 				Oona.Name = "Oona";
 				Oona.GuildName = "";
 				Oona.Realm = (byte) eRealm.None;
-				Oona.RegionId = 100;
+				Oona.CurrentRegionID = 100;
 				Oona.Size = 50;
 				Oona.Level = 65;
-				Oona.Position = new Point(607233, 786850, 4384);
+				Oona.X = 607233;
+				Oona.Y = 786850;
+				Oona.Z = 4384;
 				Oona.Heading = 3891;
-				Oona.Flags = 1;
+				Oona.Flags ^= (uint) GameNPC.eFlags.TRANSPARENT;
 				Oona.AddToWorld();
 				if (SAVE_INTO_DATABASE)
 				{
@@ -159,15 +165,17 @@ namespace DOL.GS.Quests.Midgard
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Morlin Caan , creating it ...");
-				MorlinCaan = new GameMob();
+				MorlinCaan = new GameNPC();
 				MorlinCaan.Model = 235;
 				MorlinCaan.Name = "Morlin Caan";
 				MorlinCaan.GuildName = "Smith";
 				MorlinCaan.Realm = (byte) eRealm.Midgard;
-				MorlinCaan.RegionId = 101;
+				MorlinCaan.CurrentRegionID = 101;
 				MorlinCaan.Size = 50;
 				MorlinCaan.Level = 54;
-				MorlinCaan.Position = new Point(33400, 33620, 8023);
+				MorlinCaan.X = 33400;
+				MorlinCaan.Y = 33620;
+				MorlinCaan.Z = 8023;
 				MorlinCaan.Heading = 523;
 				MorlinCaan.AddToWorld();
 				if (SAVE_INTO_DATABASE)
@@ -190,7 +198,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Oona's Head , creating it ...");
 				oona_head = new ItemTemplate();
-				oona_head.ItemTemplateID = "oona_head";
+				oona_head.Id_nb = "oona_head";
 				oona_head.Name = "Oona's Head";
 				oona_head.Level = 8;
 				oona_head.Item_Type = 29;
@@ -203,7 +211,6 @@ namespace DOL.GS.Quests.Midgard
 				oona_head.Hand = 0;
 				oona_head.Type_Damage = 0;
 				oona_head.Quality = 100;
-				oona_head.MaxQuality = 100;
 				oona_head.Weight = 12;
 				if (SAVE_INTO_DATABASE)
 				{
@@ -218,7 +225,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Sealed Pouch , creating it ...");
 				sealed_pouch = new ItemTemplate();
-				sealed_pouch.ItemTemplateID = "sealed_pouch";
+				sealed_pouch.Id_nb = "sealed_pouch";
 				sealed_pouch.Name = "Sealed Pouch";
 				sealed_pouch.Level = 8;
 				sealed_pouch.Item_Type = 29;
@@ -231,7 +238,6 @@ namespace DOL.GS.Quests.Midgard
 				sealed_pouch.Hand = 0;
 				sealed_pouch.Type_Damage = 0;
 				sealed_pouch.Quality = 100;
-				sealed_pouch.MaxQuality = 100;
 				sealed_pouch.Weight = 12;
 				if (SAVE_INTO_DATABASE)
 				{
@@ -247,7 +253,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Hunters Epic Boots , creating it ...");
 				HunterEpicBoots = new ItemTemplate();
-				HunterEpicBoots.ItemTemplateID = "HunterEpicBoots";
+				HunterEpicBoots.Id_nb = "HunterEpicBoots";
 				HunterEpicBoots.Name = "Call of the Hunt Boots";
 				HunterEpicBoots.Level = 50;
 				HunterEpicBoots.Item_Type = 23;
@@ -258,7 +264,6 @@ namespace DOL.GS.Quests.Midgard
 				HunterEpicBoots.SPD_ABS = 19;
 				HunterEpicBoots.Object_Type = 34;
 				HunterEpicBoots.Quality = 100;
-				HunterEpicBoots.MaxQuality = 100;
 				HunterEpicBoots.Weight = 22;
 				HunterEpicBoots.Bonus = 35;
 				HunterEpicBoots.MaxCondition = 50000;
@@ -289,7 +294,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Hunters Epic Helm , creating it ...");
 				HunterEpicHelm = new ItemTemplate();
-				HunterEpicHelm.ItemTemplateID = "HunterEpicHelm";
+				HunterEpicHelm.Id_nb = "HunterEpicHelm";
 				HunterEpicHelm.Name = "Call of the Hunt Coif";
 				HunterEpicHelm.Level = 50;
 				HunterEpicHelm.Item_Type = 21;
@@ -300,7 +305,6 @@ namespace DOL.GS.Quests.Midgard
 				HunterEpicHelm.SPD_ABS = 19;
 				HunterEpicHelm.Object_Type = 34;
 				HunterEpicHelm.Quality = 100;
-				HunterEpicHelm.MaxQuality = 100;
 				HunterEpicHelm.Weight = 22;
 				HunterEpicHelm.Bonus = 35;
 				HunterEpicHelm.MaxCondition = 50000;
@@ -334,7 +338,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Hunters Epic Gloves , creating it ...");
 				HunterEpicGloves = new ItemTemplate();
-				HunterEpicGloves.ItemTemplateID = "HunterEpicGloves";
+				HunterEpicGloves.Id_nb = "HunterEpicGloves";
 				HunterEpicGloves.Name = "Call of the Hunt Gloves ";
 				HunterEpicGloves.Level = 50;
 				HunterEpicGloves.Item_Type = 22;
@@ -345,7 +349,6 @@ namespace DOL.GS.Quests.Midgard
 				HunterEpicGloves.SPD_ABS = 19;
 				HunterEpicGloves.Object_Type = 34;
 				HunterEpicGloves.Quality = 100;
-				HunterEpicGloves.MaxQuality = 100;
 				HunterEpicGloves.Weight = 22;
 				HunterEpicGloves.Bonus = 35;
 				HunterEpicGloves.MaxCondition = 50000;
@@ -375,7 +378,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Hunters Epic Vest , creating it ...");
 				HunterEpicVest = new ItemTemplate();
-				HunterEpicVest.ItemTemplateID = "HunterEpicVest";
+				HunterEpicVest.Id_nb = "HunterEpicVest";
 				HunterEpicVest.Name = "Call of the Hunt Jerkin";
 				HunterEpicVest.Level = 50;
 				HunterEpicVest.Item_Type = 25;
@@ -386,7 +389,6 @@ namespace DOL.GS.Quests.Midgard
 				HunterEpicVest.SPD_ABS = 19;
 				HunterEpicVest.Object_Type = 34;
 				HunterEpicVest.Quality = 100;
-				HunterEpicVest.MaxQuality = 100;
 				HunterEpicVest.Weight = 22;
 				HunterEpicVest.Bonus = 35;
 				HunterEpicVest.MaxCondition = 50000;
@@ -419,7 +421,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Hunters Epic Legs , creating it ...");
 				HunterEpicLegs = new ItemTemplate();
-				HunterEpicLegs.ItemTemplateID = "HunterEpicLegs";
+				HunterEpicLegs.Id_nb = "HunterEpicLegs";
 				HunterEpicLegs.Name = "Call of the Hunt Legs";
 				HunterEpicLegs.Level = 50;
 				HunterEpicLegs.Item_Type = 27;
@@ -430,7 +432,6 @@ namespace DOL.GS.Quests.Midgard
 				HunterEpicLegs.SPD_ABS = 19;
 				HunterEpicLegs.Object_Type = 34;
 				HunterEpicLegs.Quality = 100;
-				HunterEpicLegs.MaxQuality = 100;
 				HunterEpicLegs.Weight = 22;
 				HunterEpicLegs.Bonus = 35;
 				HunterEpicLegs.MaxCondition = 50000;
@@ -463,7 +464,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Hunter Epic Arms , creating it ...");
 				HunterEpicArms = new ItemTemplate();
-				HunterEpicArms.ItemTemplateID = "HunterEpicArms";
+				HunterEpicArms.Id_nb = "HunterEpicArms";
 				HunterEpicArms.Name = "Call of the Hunt Sleeves";
 				HunterEpicArms.Level = 50;
 				HunterEpicArms.Item_Type = 28;
@@ -474,7 +475,6 @@ namespace DOL.GS.Quests.Midgard
 				HunterEpicArms.SPD_ABS = 19;
 				HunterEpicArms.Object_Type = 34;
 				HunterEpicArms.Quality = 100;
-				HunterEpicArms.MaxQuality = 100;
 				HunterEpicArms.Weight = 22;
 				HunterEpicArms.Bonus = 35;
 				HunterEpicArms.MaxCondition = 50000;
@@ -507,7 +507,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Shadowblade Epic Boots , creating it ...");
 				ShadowbladeEpicBoots = new ItemTemplate();
-				ShadowbladeEpicBoots.ItemTemplateID = "ShadowbladeEpicBoots";
+				ShadowbladeEpicBoots.Id_nb = "ShadowbladeEpicBoots";
 				ShadowbladeEpicBoots.Name = "Shadow Shrouded Boots";
 				ShadowbladeEpicBoots.Level = 50;
 				ShadowbladeEpicBoots.Item_Type = 23;
@@ -518,7 +518,6 @@ namespace DOL.GS.Quests.Midgard
 				ShadowbladeEpicBoots.SPD_ABS = 10;
 				ShadowbladeEpicBoots.Object_Type = 33;
 				ShadowbladeEpicBoots.Quality = 100;
-				ShadowbladeEpicBoots.MaxQuality = 100;
 				ShadowbladeEpicBoots.Weight = 22;
 				ShadowbladeEpicBoots.Bonus = 35;
 				ShadowbladeEpicBoots.MaxCondition = 50000;
@@ -551,7 +550,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Shadowblade Epic Helm , creating it ...");
 				ShadowbladeEpicHelm = new ItemTemplate();
-				ShadowbladeEpicHelm.ItemTemplateID = "ShadowbladeEpicHelm";
+				ShadowbladeEpicHelm.Id_nb = "ShadowbladeEpicHelm";
 				ShadowbladeEpicHelm.Name = "Shadow Shrouded Coif";
 				ShadowbladeEpicHelm.Level = 50;
 				ShadowbladeEpicHelm.Item_Type = 21;
@@ -562,7 +561,6 @@ namespace DOL.GS.Quests.Midgard
 				ShadowbladeEpicHelm.SPD_ABS = 10;
 				ShadowbladeEpicHelm.Object_Type = 33;
 				ShadowbladeEpicHelm.Quality = 100;
-				ShadowbladeEpicHelm.MaxQuality = 100;
 				ShadowbladeEpicHelm.Weight = 22;
 				ShadowbladeEpicHelm.Bonus = 35;
 				ShadowbladeEpicHelm.MaxCondition = 50000;
@@ -595,7 +593,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Shadowblade Epic Gloves , creating it ...");
 				ShadowbladeEpicGloves = new ItemTemplate();
-				ShadowbladeEpicGloves.ItemTemplateID = "ShadowbladeEpicGloves";
+				ShadowbladeEpicGloves.Id_nb = "ShadowbladeEpicGloves";
 				ShadowbladeEpicGloves.Name = "Shadow Shrouded Gloves";
 				ShadowbladeEpicGloves.Level = 50;
 				ShadowbladeEpicGloves.Item_Type = 22;
@@ -606,7 +604,6 @@ namespace DOL.GS.Quests.Midgard
 				ShadowbladeEpicGloves.SPD_ABS = 10;
 				ShadowbladeEpicGloves.Object_Type = 33;
 				ShadowbladeEpicGloves.Quality = 100;
-				ShadowbladeEpicGloves.MaxQuality = 100;
 				ShadowbladeEpicGloves.Weight = 22;
 				ShadowbladeEpicGloves.Bonus = 35;
 				ShadowbladeEpicGloves.MaxCondition = 50000;
@@ -640,7 +637,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Shadowblade Epic Vest , creating it ...");
 				ShadowbladeEpicVest = new ItemTemplate();
-				ShadowbladeEpicVest.ItemTemplateID = "ShadowbladeEpicVest";
+				ShadowbladeEpicVest.Id_nb = "ShadowbladeEpicVest";
 				ShadowbladeEpicVest.Name = "Shadow Shrouded Jerkin";
 				ShadowbladeEpicVest.Level = 50;
 				ShadowbladeEpicVest.Item_Type = 25;
@@ -651,7 +648,6 @@ namespace DOL.GS.Quests.Midgard
 				ShadowbladeEpicVest.SPD_ABS = 10;
 				ShadowbladeEpicVest.Object_Type = 33;
 				ShadowbladeEpicVest.Quality = 100;
-				ShadowbladeEpicVest.MaxQuality = 100;
 				ShadowbladeEpicVest.Weight = 22;
 				ShadowbladeEpicVest.Bonus = 35;
 				ShadowbladeEpicVest.MaxCondition = 50000;
@@ -684,7 +680,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Shadowblade Epic Legs , creating it ...");
 				ShadowbladeEpicLegs = new ItemTemplate();
-				ShadowbladeEpicLegs.ItemTemplateID = "ShadowbladeEpicLegs";
+				ShadowbladeEpicLegs.Id_nb = "ShadowbladeEpicLegs";
 				ShadowbladeEpicLegs.Name = "Shadow Shrouded Legs";
 				ShadowbladeEpicLegs.Level = 50;
 				ShadowbladeEpicLegs.Item_Type = 27;
@@ -695,7 +691,6 @@ namespace DOL.GS.Quests.Midgard
 				ShadowbladeEpicLegs.SPD_ABS = 10;
 				ShadowbladeEpicLegs.Object_Type = 33;
 				ShadowbladeEpicLegs.Quality = 100;
-				ShadowbladeEpicLegs.MaxQuality = 100;
 				ShadowbladeEpicLegs.Weight = 22;
 				ShadowbladeEpicLegs.Bonus = 35;
 				ShadowbladeEpicLegs.MaxCondition = 50000;
@@ -728,7 +723,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Shadowblade Epic Arms , creating it ...");
 				ShadowbladeEpicArms = new ItemTemplate();
-				ShadowbladeEpicArms.ItemTemplateID = "ShadowbladeEpicArms";
+				ShadowbladeEpicArms.Id_nb = "ShadowbladeEpicArms";
 				ShadowbladeEpicArms.Name = "Shadow Shrouded Sleeves";
 				ShadowbladeEpicArms.Level = 50;
 				ShadowbladeEpicArms.Item_Type = 28;
@@ -739,7 +734,6 @@ namespace DOL.GS.Quests.Midgard
 				ShadowbladeEpicArms.SPD_ABS = 10;
 				ShadowbladeEpicArms.Object_Type = 33;
 				ShadowbladeEpicArms.Quality = 100;
-				ShadowbladeEpicArms.MaxQuality = 100;
 				ShadowbladeEpicArms.Weight = 22;
 				ShadowbladeEpicArms.Bonus = 35;
 				ShadowbladeEpicArms.MaxCondition = 50000;
@@ -770,6 +764,9 @@ namespace DOL.GS.Quests.Midgard
 
 			#endregion
 
+			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
 			GameEventMgr.AddHandler(Masrim, GameObjectEvent.Interact, new DOLEventHandler(TalkToMasrim));
 			GameEventMgr.AddHandler(Masrim, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToMasrim));
 
@@ -790,6 +787,9 @@ namespace DOL.GS.Quests.Midgard
 			if (Masrim == null || MorlinCaan == null)
 				return;
 			// remove handlers
+			GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
 			GameEventMgr.RemoveHandler(Masrim, GameObjectEvent.Interact, new DOLEventHandler(TalkToMasrim));
 			GameEventMgr.RemoveHandler(Masrim, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToMasrim));
 
@@ -835,7 +835,7 @@ namespace DOL.GS.Quests.Midgard
 					switch (wArgs.Text)
 					{
 						case "services":
-							player.Out.SendCustomDialog("Will you help Masrim [Rogue Level 50 Epic]?", new CustomDialogResponse(CheckPlayerAcceptQuest));
+							player.Out.SendQuestSubscribeCommand(Masrim, QuestMgr.GetIDForQuestType(typeof(Rogue_50)), "Will you help Masrim [Rogue Level 50 Epic]?");
 							break;
 					}
 				}
@@ -920,6 +920,21 @@ namespace DOL.GS.Quests.Midgard
 			}
 		}
 
+		protected static void SubscribeQuest(DOLEvent e, object sender, EventArgs args)
+		{
+			QuestEventArgs qargs = args as QuestEventArgs;
+			if (qargs == null)
+				return;
+
+			if (qargs.QuestID != QuestMgr.GetIDForQuestType(typeof(Rogue_50)))
+				return;
+
+			if (e == GamePlayerEvent.AcceptQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x01);
+			else if (e == GamePlayerEvent.DeclineQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x00);
+		}
+
 		private static void CheckPlayerAcceptQuest(GamePlayer player, byte response)
 		{
 			if(Masrim.CanGiveQuest(typeof (Rogue_50), player)  <= 0)
@@ -979,7 +994,7 @@ namespace DOL.GS.Quests.Midgard
 				if (gArgs.Target.Name == Oona.Name)
 				{
 					m_questPlayer.Out.SendMessage("You collect Oona's Head", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					GiveItem(player, oona_head);
+					GiveItem(m_questPlayer, oona_head);
 					Step = 2;
 					return;
 				}
@@ -988,7 +1003,7 @@ namespace DOL.GS.Quests.Midgard
 			if (Step == 2 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == Masrim.Name && gArgs.Item.ItemTemplateID == oona_head.ItemTemplateID)
+				if (gArgs.Target.Name == Masrim.Name && gArgs.Item.Id_nb == oona_head.Id_nb)
 				{
 					RemoveItem(Masrim, player, oona_head);
 					Masrim.SayTo(player, "Take this sealed pouch to Morlin Caan in Jordheim for your reward!");
@@ -1001,7 +1016,7 @@ namespace DOL.GS.Quests.Midgard
 			if (Step == 3 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == MorlinCaan.Name && gArgs.Item.ItemTemplateID == sealed_pouch.ItemTemplateID)
+				if (gArgs.Target.Name == MorlinCaan.Name && gArgs.Item.Id_nb == sealed_pouch.Id_nb)
 				{
 					RemoveItem(MorlinCaan, player, sealed_pouch);
 					MorlinCaan.SayTo(player, "You have earned this Epic Armour!");

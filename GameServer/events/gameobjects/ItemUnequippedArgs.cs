@@ -17,8 +17,7 @@
  *
  */
 using System;
-using DOL.GS;
-using DOL.GS.Database;
+using DOL.Database;
 
 namespace DOL.Events
 {
@@ -27,7 +26,7 @@ namespace DOL.Events
 	/// </summary>
 	public class ItemUnequippedArgs : EventArgs
 	{
-		private EquipableItem m_item;
+		private InventoryItem m_item;
 		private int m_previousSlotPos;
 
 		/// <summary>
@@ -35,7 +34,7 @@ namespace DOL.Events
 		/// </summary>
 		/// <param name="item">The unequipped item</param>
 		/// <param name="previousSlotPos">The slot position item had before it was equipped</param>
-		public ItemUnequippedArgs(EquipableItem item, int previousSlotPos)
+		public ItemUnequippedArgs(InventoryItem item, int previousSlotPos)
 		{
 			m_item = item;
 			m_previousSlotPos = previousSlotPos;
@@ -44,7 +43,7 @@ namespace DOL.Events
 		/// <summary>
 		/// Gets the unequipped item
 		/// </summary>
-		public EquipableItem Item
+		public InventoryItem Item
 		{
 			get { return m_item; }
 		}

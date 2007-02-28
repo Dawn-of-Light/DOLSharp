@@ -17,7 +17,7 @@
  *
  */
 using System;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.GS;
 
 namespace DOL.Events
@@ -30,7 +30,7 @@ namespace DOL.Events
 
 		private GamePlayer source;
 		private GameObject target;
-		private GenericItem item;
+		private InventoryItem item;
 
 		/// <summary>
 		/// Constructs a new SayReceiveEventArgs
@@ -38,7 +38,7 @@ namespace DOL.Events
 		/// <param name="source">the source that is saying something</param>
 		/// <param name="target">the target that listened to the say</param>
 		/// <param name="item">the item being given</param>
-		public GiveItemEventArgs(GamePlayer source, GameObject target, GenericItem item)
+		public GiveItemEventArgs(GamePlayer source, GameObject target, InventoryItem item)
 		{
 			this.source = source;
 			this.target = target;
@@ -64,7 +64,7 @@ namespace DOL.Events
 		/// <summary>
 		/// Gets the item being moved
 		/// </summary>
-		public GenericItem Item
+		public InventoryItem Item
 		{
 			get { return item; }
 		}

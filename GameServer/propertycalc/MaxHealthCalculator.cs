@@ -18,6 +18,8 @@
  */
 using System;
 
+using DOL.GS.Keeps;
+
 namespace DOL.GS.PropertyCalc
 {
 	/// <summary>
@@ -43,19 +45,21 @@ namespace DOL.GS.PropertyCalc
 				int cap = Math.Max(player.Level * 4, 20) + // at least 20
 						  Math.Min(living.ItemBonus[(int)eProperty.MaxHealthCapBonus], player.Level * 4);	
 				itemBonus = Math.Min(itemBonus, cap);
+				int abilityBonus = living.AbilityBonus[(int)property];
 
-				return Math.Max(hpBase + itemBonus + buffBonus, 1); // at least 1
+				return Math.Max(hpBase + itemBonus + buffBonus + abilityBonus, 1); // at least 1
 			}
-			/*else if ( living is GameKeepComponent )
+			else if ( living is GameKeepComponent )
 			{
 				GameKeepComponent keepcomp = living as GameKeepComponent;
-				return (keepcomp.Keep.Level+1)*30000;
+				return (keepcomp.Keep.EffectiveLevel(keepcomp.Keep.Level) + 1) * keepcomp.Keep.BaseLevel * 200;
 			}
 			else if ( living is GameKeepDoor )
 			{
 				GameKeepDoor keepdoor = living as GameKeepDoor;
-				return (keepdoor.Keep.Level+1)*10000;//todo : use material too to calculate maxhealth
-			}*/
+				return (keepdoor.Component.Keep.EffectiveLevel(keepdoor.Component.Keep.Level) + 1) * keepdoor.Component.Keep.BaseLevel * 200;
+				//todo : use material too to calculate maxhealth
+			}
 			else
 			{
 				if (living.Level<10)

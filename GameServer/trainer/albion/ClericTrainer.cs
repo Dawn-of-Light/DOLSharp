@@ -17,13 +17,7 @@
  *
  */
 using System;
-using System.Collections;
-using System.Reflection;
-using DOL.Database;
-using DOL.Events;
-using DOL.GS.Database;
 using DOL.GS.PacketHandler;
-using log4net;
 
 namespace DOL.GS.Trainer
 {
@@ -34,59 +28,10 @@ namespace DOL.GS.Trainer
 	public class ClericTrainer : GameTrainer
 	{
 		/// <summary>
-		/// Defines a logger for this class.
+		/// The crush sword template ID
 		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		public const string WEAPON_ID1 = "crush_sword_item";
 
-		/// <summary>
-		/// This hash constrain all item template the trainer can give
-		/// </summary>	
-		private static IDictionary allStartupItems = new Hashtable();
-
-		/// <summary>
-		/// This function is called at the server startup
-		/// </summary>	
-		[GameServerStartedEvent]
-		public static void OnServerStartup(DOLEvent e, object sender, EventArgs args)
-		{
-			#region Crush weapon
-
-			CrushingWeaponTemplate chrush_sword_item_template = new CrushingWeaponTemplate();
-			chrush_sword_item_template.Name = "Mace of the Initiate";
-			chrush_sword_item_template.Level = 5;
-			chrush_sword_item_template.Durability = 100;
-			chrush_sword_item_template.Condition = 100;
-			chrush_sword_item_template.Quality = 90;
-			chrush_sword_item_template.Bonus = 10;	
-			chrush_sword_item_template.DamagePerSecond = 30;
-			chrush_sword_item_template.Speed = 3000;
-			chrush_sword_item_template.Weight = 32;
-			chrush_sword_item_template.Model = 13;
-			chrush_sword_item_template.Realm = eRealm.Albion;
-			chrush_sword_item_template.IsDropable = true; 
-			chrush_sword_item_template.IsTradable = false; 
-			chrush_sword_item_template.IsSaleable = false;
-			chrush_sword_item_template.MaterialLevel = eMaterialLevel.Bronze;
-			
-			chrush_sword_item_template.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Rejuvenation, 1));
-			
-			if(!allStartupItems.Contains("Mace_of_the_Initiate"))
-			{
-				allStartupItems.Add("Mace_of_the_Initiate", chrush_sword_item_template);
-	
-				if (log.IsDebugEnabled)
-					log.Debug("Adding " + chrush_sword_item_template.Name + " to ClericTrainer gifts.");
-			}
-			#endregion
-		}
-
-		/// <summary>
-		/// Gets trainer classname
-		/// </summary>
-		public override string TrainerClassName
-		{
-			get { return "Cleric"; }
-		}
 
 		/// <summary>
 		/// Interact with trainer
@@ -140,9 +85,10 @@ namespace DOL.GS.Trainer
 			switch (text) {
 			case "join the Church of Albion":
 				// promote player to other class
-				if (CanPromotePlayer(player)) 
-					PromotePlayer(player, (int)eCharacterClass.Cleric, "Welcome my child! Walk the path of light, shout to all the words of our beloved church and rid the land of the faithless! Here is your Mace of the Initiate. It is our standard gift to all new members.", new GenericItemTemplate[] {allStartupItems["Mace_of_the_Initiate"] as GenericItemTemplate});
-				
+				if (CanPromotePlayer(player)) {
+					PromotePlayer(player, (int)eCharacterClass.Cleric, "Welcome my child! Walk the path of light, shout to all the words of our beloved church and rid the land of the faithless! Here is your Mace of the Initiate. It is our standard gift to all new members.", null);
+					player.ReceiveItem(this,WEAPON_ID1);
+				}
 				break;
 			}
 			return true;		

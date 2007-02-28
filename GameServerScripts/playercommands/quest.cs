@@ -1,4 +1,4 @@
- /*
+/*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
  * 
  * This program is free software; you can redistribute it and/or
@@ -16,46 +16,28 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using DOL.Database;
 using DOL.GS.PacketHandler;
 using DOL.GS.Quests;
-using Iesi.Collections;
 
 namespace DOL.GS.Scripts
 {
-	[CmdAttribute("&quest", //command to handle
-		 (uint) ePrivLevel.Player, //minimum privelege level
-		 "Send the player's quest list", //command description
-		 "/quest")] //usage
-	public class QuestCommandHandler : ICommandHandler
+	[CmdAttribute(
+		"&quest",
+		(uint) ePrivLevel.Player,
+		"Display the players completed quests", "/quest")]
+	public class QuestCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		public int OnCommand(GameClient client, string[] args)
 		{
-			GamePlayer player = client.Player;
-			ISet activeQuests = player.ActiveQuests;
-			lock (activeQuests)
-			{
-				client.Out.SendMessage(" ", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				client.Out.SendMessage("You are currently doing the following quests :", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				foreach (AbstractQuest q in activeQuests)
-				{
-					string desc = q.Description;
-					client.Out.SendMessage("Step " + q.Step + " of the quest '" + q.Name + ".'", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					client.Out.SendMessage("What you have to do : '" + desc.Substring(desc.IndexOf("]") + 1) + ".'" , eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				}
-			}
-
-			ISet finishedQuests = player.FinishedQuests;
-			lock (finishedQuests)
-			{
-				client.Out.SendMessage(" ", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				client.Out.SendMessage("You have finished the following quests :", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				foreach (AbstractQuest q in finishedQuests)
-				{
-					client.Out.SendMessage(q.Name + ", finished.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				}
-			}
-			return 0;
+			string message = "";
+			message += "Current Quests:\n";
+			foreach (AbstractQuest quest in client.Player.QuestList)
+				message += quest.Name + "\n";
+			message += "Completed Quests:\n";
+			foreach (AbstractQuest quest in client.Player.QuestListFinished)
+				message += quest.Name + "\n";
+			client.Out.SendMessage(message, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			return 1;
 		}
 	}
 }

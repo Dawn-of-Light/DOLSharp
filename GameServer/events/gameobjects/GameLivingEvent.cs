@@ -24,13 +24,14 @@ namespace DOL.Events
 	/// This class holds all possible GameLiving events.
 	/// Only constants defined here!
 	/// </summary>
-	public class GameLivingEvent : DOLEvent
+	public class GameLivingEvent : GameObjectEvent
 	{
 		/// <summary>
 		/// Constructs a new GameLivingEvent
 		/// </summary>
 		/// <param name="name">the event name</param>
-		protected GameLivingEvent(string name) : base(name)
+		protected GameLivingEvent(string name)
+			: base(name)
 		{
 		}
 
@@ -75,22 +76,54 @@ namespace DOL.Events
 		/// </summary>
 		public static readonly GameLivingEvent Whisper = new GameLivingEvent("GameLiving.Whisper");
 		/// <summary>
-		/// The AttackFinished event is fired whenever the living makes attack
+		/// The Hit event is fired whenever the living is hit by gameliving
 		/// </summary>
-		public static readonly GameLivingEvent AttackFinished = new GameLivingEvent("GameLiving.AttackFinished");
+		public static readonly GameLivingEvent AttackedByEnemy = new GameLivingEvent("GameLiving.AttackedByEnemy");
+		/// <summary>
+		/// The AttackedEnemy event is fired whenever the living makes attack
+		/// </summary>
+		public static readonly GameLivingEvent AttackFinished = new GameLivingEvent("GameLiving.AttackedEnemy");
 		/// <summary>
 		/// The EnemyKilled event is fired whenever the living kill something
 		/// </summary>
 		public static readonly GameLivingEvent EnemyKilled = new GameLivingEvent("GameLiving.EnemyKilled");
 		/// <summary>
+		/// The GainedExperience event is fired whenever the living gains experience
+		/// </summary>
+		public static readonly GameLivingEvent GainedExperience = new GameLivingEvent("GameLiving.GainedExperience");
+		/// <summary>
+		/// The GainRealmPoints event is fired whenever the living gains realm points
+		/// </summary>
+		public static readonly GameLivingEvent GainedRealmPoints = new GameLivingEvent("GameLiving.GainedRealmPoints");
+		/// <summary>
+		/// The Dying event is fired just before the living died
+		/// </summary>
+		public static readonly GameLivingEvent Dying = new GameLivingEvent("GameLiving.Dying");
+		/// <summary>
+		/// The Moving event is fired whenever the living moves
+		/// </summary>
+		public static readonly GameLivingEvent Moving = new GameLivingEvent("GameLiving.Moving");
+		/// <summary>
 		/// The EnemyHealed event is fired whenever the living's enemy is healed
 		/// <seealso cref="EnemyHealedEventArgs"/>
 		/// </summary>
 		public static readonly GameLivingEvent EnemyHealed = new GameLivingEvent("GameLiving.EnemyHealed");
-        /// <summary>
-        /// The Timer event is fired whenever an previously added timer has finished
-        /// Used within questsystem
-        /// </summary>
-        public static readonly GameLivingEvent Timer = new GameLivingEvent("GameLiving.Timer");
+		/// <summary>
+		/// The Timer event is fired whenever an previously added timer has finished
+		/// Used within questsystem
+		/// </summary>
+		public static readonly GameLivingEvent Timer = new GameLivingEvent("GameLiving.Timer");
+		/// <summary>
+		/// The CastSpell event is fired whenever the living casts a spell
+		/// </summary>
+		public static readonly GameLivingEvent CastSpell = new GameLivingEvent("GameLiving.CastSpell");
+		/// <summary>
+		/// The CastFinished event is fired whenever the living finishes casting a spell
+		/// </summary>
+		public static readonly GameLivingEvent CastFinished = new GameLivingEvent("GameLiving.CastFinished");
+		/// <summary>
+		/// The HealthChanged event is fired whenever the GameLiving's health is changed
+		/// </summary>
+		public static readonly GameLivingEvent HealthChanged = new GameLivingEvent("GameLiving.HealthChanged");
 	}
 }

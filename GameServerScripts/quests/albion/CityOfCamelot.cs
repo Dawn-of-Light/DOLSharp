@@ -33,14 +33,10 @@
 
 using System;
 using System.Reflection;
-using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
-using DOL.GS.Movement;
 using DOL.GS.PacketHandler;
 using log4net;
-using NHibernate.Expression;
-using NHibernate.Mapping.Attributes;
 /* I suggest you declare yourself some namespaces for your quests
  * Like: DOL.GS.Quests.Albion
  *       DOL.GS.Quests.Midgard
@@ -52,52 +48,12 @@ using NHibernate.Mapping.Attributes;
 
 namespace DOL.GS.Quests.Albion
 {
-    /* The first thing we do, is to declare the quest requirement
-    * class linked with the new Quest. To do this, we derive 
-    * from the abstract class AbstractQuestDescriptor
-    */
-    public class CityOfCamelotDescriptor : AbstractQuestDescriptor
-    {
-        /* This is the type of the quest class linked with 
-         * this requirement class, you must override the 
-         * base methid like that
-         */
-        public override Type LinkedQuestType
-        {
-            get { return typeof(CityOfCamelot); }
-        }
+	/* The first thing we do, is to declare the class we create
+	 * as Quest. To do this, we derive from the abstract class
+	 * AbstractQuest
+	 * 	 
+	 */
 
-		/* This value is used to retrieves how maximum level needed
-		 * to be able to make this quest. Override it only if you need, 
-		 * the default value is 50
-		 */
-		public override int MaxLevel
-		{
-			get { return 1; }
-		}
-
-        public override bool CheckQuestQualification(GamePlayer player)
-        {
-			// if the player is already doing the quest always return true !!!
-			if (player.IsDoingQuest(LinkedQuestType) != null)
-				return true;
-
-            // This checks below are only performed is player isn't doing quest already
-            if (player.HasFinishedQuest(typeof(ImportantDelivery)) == 0)
-                return false;
-
-            if (!BaseFrederickQuest.CheckPartAccessible(player, LinkedQuestType))
-                return false;
-
-            return base.CheckQuestQualification(player);
-        }
-    }
-
-    /* The second thing we do, is to declare the class we create
-     * as Quest. We must make it persistant using attributes, to
-     * do this, we derive from the abstract class AbstractQuest
-     */
-	[Subclass(NameType = typeof(CityOfCamelot), ExtendsType = typeof(AbstractQuest))]
 	public class CityOfCamelot : BaseFrederickQuest
 	{
 		/// <summary>
@@ -116,6 +72,8 @@ namespace DOL.GS.Quests.Albion
 		 */
 
 		protected const string questTitle = "City of Camelot";
+		protected const int minimumLevel = 1;
+		protected const int maximumLevel = 1;
 
 		protected static GameLocation armsManTrainer = new GameLocation("Armsman Trainer", 10, 30985, 31520, 8216, 0);
 		protected static GameLocation reaverTrainer = new GameLocation("Reaver Trainer", 10, 32545, 26900, 7830, 0);
@@ -125,21 +83,42 @@ namespace DOL.GS.Quests.Albion
 		protected static GameLocation vaultKeeper = new GameLocation("Vault Keeper", 10, 35408, 23830, 8751, 0);
 		protected static GameLocation mainGates = new GameLocation("Main Gates", 10, 40069, 26463, 8255, 0);
 
-		private static GameMob masterFrederick = null;
-		private static GameMob lordUrqhart = null;
-		private static GameMob bombard = null;
+		private static GameNPC masterFrederick = null;
+		private static GameNPC lordUrqhart = null;
+		private static GameNPC bombard = null;
 
 		private GameNPC assistant = null;
 		private RegionTimer assistantTimer = null;
 
-		private static TravelTicketTemplate ticketToCotswold = null;
-		private static GenericItemTemplate scrollUrqhart = null;
-		private static GenericItemTemplate receiptBombard = null;
-		private static GenericItemTemplate letterFrederick = null;
-		private static NecklaceTemplate assistantNecklace = null;
-		private static GenericItemTemplate chestOfCoins = null;
-		private static ShieldTemplate recruitsRoundShield = null;
-		private static BracerTemplate recruitsBracer = null;
+		private static ItemTemplate ticketToCotswold = null;
+		private static ItemTemplate scrollUrqhart = null;
+		private static ItemTemplate receiptBombard = null;
+		private static ItemTemplate letterFrederick = null;
+		private static ItemTemplate assistantNecklace = null;
+		private static ItemTemplate chestOfCoins = null;
+		private static ItemTemplate recruitsRoundShield = null;
+		private static ItemTemplate recruitsBracer = null;
+
+
+		/* We need to define the constructors from the base class here, else there might be problems
+		 * when loading this quest...
+		 */
+		public CityOfCamelot() : base()
+		{
+		}
+
+		public CityOfCamelot(GamePlayer questingPlayer) : this(questingPlayer, 1)
+		{
+		}
+
+		public CityOfCamelot(GamePlayer questingPlayer, int step) : base(questingPlayer, step)
+		{
+		}
+
+		public CityOfCamelot(GamePlayer questingPlayer, DBQuest dbQuest) : base(questingPlayer, dbQuest)
+		{
+		}
+
 
 		/* The following method is called automatically when this quest class
 		 * is loaded. You might notice that this method is the same as in standard
@@ -159,6 +138,8 @@ namespace DOL.GS.Quests.Albion
 		[ScriptLoadedEvent]
 		public static void ScriptLoaded(DOLEvent e, object sender, EventArgs args)
 		{
+			if (!ServerProperties.Properties.LOAD_QUESTS)
+				return;
 			if (log.IsInfoEnabled)
 				log.Info("Quest \"" + questTitle + "\" initializing ...");
 			/* First thing we do in here is to search for the NPCs inside
@@ -174,52 +155,38 @@ namespace DOL.GS.Quests.Albion
 			#region defineNPCs
 
 			masterFrederick = GetMasterFrederick();
-			if(masterFrederick == null)
-			{
-				if (log.IsWarnEnabled)
-					log.Warn("Quest "+questTitle+" abort because a needed region is not in use in this server!");
-				return;
-			}
 
-			lordUrqhart = ResearchQuestObject(typeof(GameMob), WorldMgr.GetRegion(10), eRealm.Albion, "Lord Urqhart") as GameMob;
-			if (lordUrqhart == null)
+			GameNPC[] npcs = WorldMgr.GetNPCsByName("Lord Urqhart", eRealm.Albion);
+			if (npcs.Length == 0)
 			{
 				if (log.IsWarnEnabled)
-					log.Warn("Could not find Lord Urqhart, creating him ...");
-				lordUrqhart = new GameMob();
+					log.Warn("Could not find Lord Urqhart, creating ...");
+				lordUrqhart = new GameNPC();
 				lordUrqhart.Model = 79;
 				lordUrqhart.Name = "Lord Urqhart";
 				lordUrqhart.GuildName = "Vault Keeper";
 				lordUrqhart.Realm = (byte) eRealm.Albion;
-				lordUrqhart.Region = WorldMgr.GetRegion(10);
+				lordUrqhart.CurrentRegionID = 10;
 				lordUrqhart.Size = 49;
 				lordUrqhart.Level = 50;
-				lordUrqhart.Position = new Point(35500, 23857, 8751);
+				lordUrqhart.X = 35500;
+				lordUrqhart.Y = 23857;
+				lordUrqhart.Z = 8751;
 				lordUrqhart.Heading = 603;
-				
-				StandardMobBrain newBrain = new StandardMobBrain();
-				newBrain.Body = lordUrqhart;
-				newBrain.AggroLevel = 100;
-				newBrain.AggroRange = 0;
-				lordUrqhart.OwnBrain = newBrain;
-
-				if(!lordUrqhart.AddToWorld())
-				{
-					if (log.IsWarnEnabled)
-						log.Warn("Quest "+questTitle+" abort because a needed region is not in use in this server!");
-					return;
-				}
-
+				lordUrqhart.EquipmentTemplateID = "1707104";
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(lordUrqhart);
+					lordUrqhart.SaveIntoDatabase();
+
+				lordUrqhart.AddToWorld();
 			}
+			else
+				lordUrqhart = npcs[0];
 
-
-			bombard = ResearchQuestObject(typeof(GameMob), WorldMgr.GetRegion(1), eRealm.Albion, "Bombard") as GameMob;
-			if (bombard == null)
+			npcs = WorldMgr.GetNPCsByName("Bombard", eRealm.Albion);
+			if (npcs.Length == 0)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Bombard, creating her ...");
@@ -228,457 +195,34 @@ namespace DOL.GS.Quests.Albion
 				bombard.Name = "Bombard";
 				bombard.GuildName = "Stable Master";
 				bombard.Realm = (byte) eRealm.Albion;
-				bombard.Region = WorldMgr.GetRegion(1);
+				bombard.CurrentRegionID = 1;
 				bombard.Size = 49;
 				bombard.Level = 4;
-				bombard.Position = new Point(515718, 496739, 3352);
+				bombard.X = 515718;
+				bombard.Y = 496739;
+				bombard.Z = 3352;
 				bombard.Heading = 2500;
-
-				StandardMobBrain newBrain = new StandardMobBrain();
-				newBrain.Body = bombard;
-				newBrain.AggroLevel = 100;
-				newBrain.AggroRange = 0;
-				bombard.OwnBrain = newBrain;
-
-				if(!bombard.AddToWorld())
-				{
-					if (log.IsWarnEnabled)
-						log.Warn("Quest "+questTitle+" abort because a needed region is not in use in this server!");
-					return;
-				}
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(bombard);
+					bombard.SaveIntoDatabase();
+				bombard.AddToWorld();
 			}
-
-			#endregion
-
-			#region define horse Paths
-
-			PathPoint newPoint = null;
-			PathPoint lastPoint = null;
-
-			TripPath pathToCotswold = new TripPath();
-			pathToCotswold.PathID = -20;
-			pathToCotswold.Region = WorldMgr.GetRegion(1);
-			pathToCotswold.SteedModel = 413;
-			pathToCotswold.SteedName = "horse";
-
-			if(!PathMgr.AddPath(pathToCotswold))
-			{
-				if (log.IsWarnEnabled)
-					log.Warn("Quest "+questTitle+" abort because a needed region is not in use in this server!");
-				return;
-			}
-			
-			#region all pathToCamelotHills points
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(515765, 496737, 3352);
-			newPoint.Speed = 0;
-
-			pathToCotswold.StartingPoint = newPoint;
-
-			lastPoint = newPoint;
-		
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(515809,496751,3352);
-			newPoint.Speed = 14;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(516181,496820,3352);
-			newPoint.Speed = 600;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(516639,496814,3352);
-			newPoint.Speed = 70;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(516748,496701,3352);
-			newPoint.Speed = 128;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(516832,496649,3352);
-			newPoint.Speed = 128;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(517002,496529,3352);
-			newPoint.Speed = 67;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(517006,496423,3373);
-			newPoint.Speed = 600;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(516987,495759,3352);
-			newPoint.Speed = 600;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(516957,492076,3349);
-			newPoint.Speed = 600;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(516915,487275,3188);
-			newPoint.Speed = 600;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(516894,486775,3184);
-			newPoint.Speed = 600;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(516772,483642,3182);
-			newPoint.Speed = 600;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(516820,481497,2459);
-			newPoint.Speed = 600;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(516802,480791,2407);
-			newPoint.Speed = 194;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(516609,480776,2406);
-			newPoint.Speed = 135;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(516537,480597,2408);
-			newPoint.Speed = 600;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(515098,477707,2332);
-			newPoint.Speed = 600;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(514965,477192,2363);
-			newPoint.Speed = 600;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(515265,474872,2823);
-			newPoint.Speed = 600;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(516038,472574,2925);
-			newPoint.Speed = 600;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(518045,471473,2381);
-			newPoint.Speed = 600;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(519125,471862,2378);
-			newPoint.Speed = 600;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(520702,472715,2438);
-			newPoint.Speed = 600;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(525002,475074,2234);
-			newPoint.Speed = 600;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(525423,475435,2288);
-			newPoint.Speed = 600;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(527691,477396,2382);
-			newPoint.Speed = 600;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(529057,479349,2243);
-			newPoint.Speed = 600;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(532185,483818,2315);
-			newPoint.Speed = 600;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(532922,484886,2236);
-			newPoint.Speed = 600;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(534495,487604,2220);
-			newPoint.Speed = 600;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(535038,488202,2220);
-			newPoint.Speed = 600;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(535725,488871,2232);
-			newPoint.Speed = 600;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(539423,491056,1957);
-			newPoint.Speed = 600;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(539875,491262,1924);
-			newPoint.Speed = 600;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(543418,491164,1968);
-			newPoint.Speed = 600;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(544549,491001,1910);
-			newPoint.Speed = 600;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(548126,490498,2167);
-			newPoint.Speed = 600;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(549887,490673,2152);
-			newPoint.Speed = 600;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(551798,490853,2210);
-			newPoint.Speed = 600;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(553123,490859,2213);
-			newPoint.Speed = 600;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(555350,490681,2189);
-			newPoint.Speed = 600;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(557276,490532,2145);
-			newPoint.Speed = 600;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(560519,490761,2172);
-			newPoint.Speed = 600;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(562735,490944,2214);
-			newPoint.Speed = 600;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(565041,491555,2256);
-			newPoint.Speed = 191;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(565391,491685,2274);
-			newPoint.Speed = 600;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(565551,491996,2264);
-			newPoint.Speed = 600;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(566813,494410,2302);
-			newPoint.Speed = 600;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(568438,496197,2308);
-			newPoint.Speed = 600;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(569185,497057,2304);
-			newPoint.Speed = 600;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(570289,501228,2143);
-			newPoint.Speed = 600;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(567906,505921,2207);
-			newPoint.Speed = 600;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(567376,507118,2248);
-			newPoint.Speed = 600;
-
-			#endregion
+			else
+				bombard = npcs[0];
 
 			#endregion
 
 			#region defineItems
 
-			// ------------- First traver ticket -----------------
-			ticketToCotswold = new TravelTicketTemplate();
-			ticketToCotswold.Name = "Ticket to Cotswold";
-			if (log.IsWarnEnabled)
-				log.Warn("Creating ticket " + ticketToCotswold.Name + " ...");
+			ticketToCotswold = CreateTicketTo("Camelot Hills");
 
-			ticketToCotswold.Weight = 0;
-			ticketToCotswold.Model = 499;
-			ticketToCotswold.Realm = eRealm.Albion;
-			ticketToCotswold.Value = Money.GetMoney(0, 0, 0, 5, 0);
-
-			ticketToCotswold.IsDropable = true;
-			ticketToCotswold.IsSaleable = true;
-			ticketToCotswold.IsTradable = true;
-
-			ticketToCotswold.TripPathID = pathToCotswold.PathID;
-
-			scrollUrqhart = GameServer.Database.SelectObject(typeof(GenericItemTemplate), Expression.Eq("Name", "Scroll for Vault Keeper Urqhart")) as GenericItemTemplate;
+			scrollUrqhart = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "scroll_for_urqhart");
 			if (scrollUrqhart == null)
 			{
-				scrollUrqhart = new GenericItemTemplate();
+				scrollUrqhart = new ItemTemplate();
 				scrollUrqhart.Name = "Scroll for Vault Keeper Urqhart";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + scrollUrqhart.Name + " , creating it ...");
@@ -686,9 +230,11 @@ namespace DOL.GS.Quests.Albion
 				scrollUrqhart.Weight = 3;
 				scrollUrqhart.Model = 498;
 
+				scrollUrqhart.Object_Type = (int) eObjectType.GenericItem;
+
+				scrollUrqhart.Id_nb = "scroll_for_urqhart";
+				scrollUrqhart.IsPickable = true;
 				scrollUrqhart.IsDropable = false;
-				scrollUrqhart.IsSaleable = false;
-				scrollUrqhart.IsTradable = false;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -698,10 +244,10 @@ namespace DOL.GS.Quests.Albion
 			}
 
 
-			receiptBombard = GameServer.Database.SelectObject(typeof (GenericItemTemplate), Expression.Eq("Name", "Receipt for Bombard")) as GenericItemTemplate;
+			receiptBombard = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "receipt_for_bombard");
 			if (receiptBombard == null)
 			{
-				receiptBombard = new GenericItemTemplate();
+				receiptBombard = new ItemTemplate();
 				receiptBombard.Name = "Receipt for Bombard";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + receiptBombard.Name + " , creating it ...");
@@ -709,9 +255,11 @@ namespace DOL.GS.Quests.Albion
 				receiptBombard.Weight = 3;
 				receiptBombard.Model = 498;
 
+				receiptBombard.Object_Type = (int) eObjectType.GenericItem;
+
+				receiptBombard.Id_nb = "receipt_for_bombard";
+				receiptBombard.IsPickable = true;
 				receiptBombard.IsDropable = false;
-				receiptBombard.IsSaleable = false;
-				receiptBombard.IsTradable = false;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -720,10 +268,10 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(receiptBombard);
 			}
 
-			chestOfCoins = GameServer.Database.SelectObject(typeof (GenericItemTemplate), Expression.Eq("Name", "Small Chest of Coins")) as GenericItemTemplate;
+			chestOfCoins = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "small_chest_of_coins");
 			if (chestOfCoins == null)
 			{
-				chestOfCoins = new GenericItemTemplate();
+				chestOfCoins = new ItemTemplate();
 				chestOfCoins.Name = "Small Chest of Coins";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + chestOfCoins.Name + " , creating it ...");
@@ -731,9 +279,11 @@ namespace DOL.GS.Quests.Albion
 				chestOfCoins.Weight = 15;
 				chestOfCoins.Model = 602;
 
+				chestOfCoins.Object_Type = (int) eObjectType.GenericItem;
+
+				chestOfCoins.Id_nb = "small_chest_of_coins";
+				chestOfCoins.IsPickable = true;
 				chestOfCoins.IsDropable = false;
-				chestOfCoins.IsSaleable = false;
-				chestOfCoins.IsTradable = false;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -742,10 +292,10 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(chestOfCoins);
 			}
 
-			letterFrederick = GameServer.Database.SelectObject(typeof (GenericItemTemplate), Expression.Eq("Name", "Letter for Frederick")) as GenericItemTemplate;
+			letterFrederick = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "letter_for_frederick");
 			if (letterFrederick == null)
 			{
-				letterFrederick = new GenericItemTemplate();
+				letterFrederick = new ItemTemplate();
 				letterFrederick.Name = "Letter for Frederick";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + letterFrederick.Name + " , creating it ...");
@@ -753,9 +303,11 @@ namespace DOL.GS.Quests.Albion
 				letterFrederick.Weight = 3;
 				letterFrederick.Model = 498;
 
+				letterFrederick.Object_Type = (int) eObjectType.GenericItem;
+
+				letterFrederick.Id_nb = "letter_for_frederick";
+				letterFrederick.IsPickable = true;
 				letterFrederick.IsDropable = false;
-				letterFrederick.IsSaleable = false;
-				letterFrederick.IsTradable = false;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -764,10 +316,10 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(letterFrederick);
 			}
 
-			assistantNecklace = GameServer.Database.SelectObject(typeof (NecklaceTemplate), Expression.Eq("Name", "Assistant's Necklace")) as NecklaceTemplate;
+			assistantNecklace = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "assistant_necklace");
 			if (assistantNecklace == null)
 			{
-				assistantNecklace = new NecklaceTemplate();
+				assistantNecklace = new ItemTemplate();
 				assistantNecklace.Name = "Assistant's Necklace";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + assistantNecklace.Name + " , creating it ...");
@@ -775,9 +327,12 @@ namespace DOL.GS.Quests.Albion
 				assistantNecklace.Weight = 3;
 				assistantNecklace.Model = 101;
 
+				assistantNecklace.Object_Type = (int) eObjectType.Magical;
+				assistantNecklace.Item_Type = (int) eEquipmentItems.NECK;
+
+				assistantNecklace.Id_nb = "assistant_necklace";
+				assistantNecklace.IsPickable = true;
 				assistantNecklace.IsDropable = false;
-				assistantNecklace.IsSaleable = false;
-				assistantNecklace.IsTradable = false;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -787,38 +342,46 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			recruitsRoundShield = GameServer.Database.SelectObject(typeof (ShieldTemplate), Expression.Eq("Name", "Recruit's Round Shield")) as ShieldTemplate;
+			recruitsRoundShield = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_round_shield");
 			if (recruitsRoundShield == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Recruit's Round Shield, creating it ...");
-				recruitsRoundShield = new ShieldTemplate();
+				recruitsRoundShield = new ItemTemplate();
 				recruitsRoundShield.Name = "Recruit's Round Shield";
 				recruitsRoundShield.Level = 4;
 
 				recruitsRoundShield.Weight = 31;
 				recruitsRoundShield.Model = 59; // studded Boots                
 
-				recruitsRoundShield.Value = 400;
-
+				recruitsRoundShield.Object_Type = 0x2A; // (int)eObjectType.Shield;
+				recruitsRoundShield.Item_Type = (int) eEquipmentItems.LEFT_HAND;
+				recruitsRoundShield.Id_nb = "recruits_round_shield";
+				recruitsRoundShield.Gold = 0;
+				recruitsRoundShield.Silver = 4;
+				recruitsRoundShield.Copper = 0;
+				recruitsRoundShield.IsPickable = true;
 				recruitsRoundShield.IsDropable = true;
-				recruitsRoundShield.IsSaleable = true;
-				recruitsRoundShield.IsTradable = true;
-
 				recruitsRoundShield.Color = 36;
+				recruitsRoundShield.Hand = 2;
+				recruitsRoundShield.DPS_AF = 1;
+				recruitsRoundShield.SPD_ABS = 1;
 
-				recruitsRoundShield.Size = eShieldSize.Small;
-				recruitsRoundShield.HandNeeded = eHandNeeded.LeftHand;
-
-				recruitsRoundShield.Speed = 1000;
-				recruitsRoundShield.DamagePerSecond = 1;
+				recruitsRoundShield.Type_Damage = 1;
 
 				recruitsRoundShield.Bonus = 1; // default bonus
 
-				recruitsRoundShield.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 1));
-				recruitsRoundShield.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Body, 1));
+				recruitsRoundShield.Bonus1 = 1;
+				recruitsRoundShield.Bonus1Type = (int) eStat.STR;
+
+				recruitsRoundShield.Bonus2 = 1;
+				recruitsRoundShield.Bonus2Type = (int) eResist.Body;
 
 				recruitsRoundShield.Quality = 100;
+				recruitsRoundShield.Condition = 1000;
+				recruitsRoundShield.MaxCondition = 1000;
+				recruitsRoundShield.Durability = 1000;
+				recruitsRoundShield.MaxDurability = 1000;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -828,10 +391,10 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			recruitsBracer = GameServer.Database.SelectObject(typeof (BracerTemplate), Expression.Eq("Name", "Recruit's Silver Bracer")) as BracerTemplate;
+			recruitsBracer = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_silver_bracer");
 			if (recruitsBracer == null)
 			{
-				recruitsBracer = new BracerTemplate();
+				recruitsBracer = new ItemTemplate();
 				recruitsBracer.Name = "Recruit's Silver Bracer";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + recruitsBracer.Name + ", creating it ...");
@@ -840,18 +403,34 @@ namespace DOL.GS.Quests.Albion
 				recruitsBracer.Weight = 10;
 				recruitsBracer.Model = 130;
 
-				recruitsBracer.Value = 400;
-
+				recruitsBracer.Object_Type = (int) eObjectType.Magical;
+				recruitsBracer.Item_Type = (int) eEquipmentItems.L_BRACER;
+				recruitsBracer.Id_nb = "recruits_silver_bracer";
+				recruitsBracer.Gold = 0;
+				recruitsBracer.Silver = 4;
+				recruitsBracer.Copper = 0;
+				recruitsBracer.IsPickable = true;
 				recruitsBracer.IsDropable = true;
-				recruitsBracer.IsSaleable = true;
-				recruitsBracer.IsTradable = true;
+				//recruitsBracer.Color = 36;
+				//recruitsBracer.Hand = 2;
+				//recruitsBracer.DPS_AF = 1;
+				//recruitsBracer.SPD_ABS = 1;
+
+				//recruitsBracer.Type_Damage = 1;
 
 				recruitsBracer.Bonus = 1; // default bonus
 
-				recruitsBracer.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 8));
-				recruitsBracer.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Crush, 1));
+				recruitsBracer.Bonus1 = 8;
+				recruitsBracer.Bonus1Type = (int) eProperty.MaxHealth;
+
+				recruitsBracer.Bonus2 = 1;
+				recruitsBracer.Bonus2Type = (int) eResist.Crush;
 
 				recruitsBracer.Quality = 100;
+				recruitsBracer.Condition = 1000;
+				recruitsBracer.MaxCondition = 1000;
+				recruitsBracer.Durability = 1000;
+				recruitsBracer.MaxDurability = 1000;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -869,24 +448,24 @@ namespace DOL.GS.Quests.Albion
 			* method. This means, the "TalkToXXX" method is called whenever
 			* a player right clicks on him or when he whispers to him.
 			*/
+
+			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
 			//We want to be notified whenever a player enters the world            
 			GameEventMgr.AddHandler(GamePlayerEvent.GameEntered, new DOLEventHandler(PlayerEnterWorld));
 
-			GameEventMgr.AddHandler(masterFrederick, GameObjectEvent.Interact, new DOLEventHandler(TalkToMasterFrederick));
+			GameEventMgr.AddHandler(masterFrederick, GameLivingEvent.Interact, new DOLEventHandler(TalkToMasterFrederick));
 			GameEventMgr.AddHandler(masterFrederick, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToMasterFrederick));
 
-			GameEventMgr.AddHandler(bombard, GameObjectEvent.Interact, new DOLEventHandler(TalkToBombard));
+			GameEventMgr.AddHandler(bombard, GameLivingEvent.Interact, new DOLEventHandler(TalkToBombard));
 			GameEventMgr.AddHandler(bombard, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToBombard));
 
-			GameEventMgr.AddHandler(lordUrqhart, GameObjectEvent.Interact, new DOLEventHandler(TalkToUrqhart));
+			GameEventMgr.AddHandler(lordUrqhart, GameLivingEvent.Interact, new DOLEventHandler(TalkToUrqhart));
 			GameEventMgr.AddHandler(lordUrqhart, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToUrqhart));
 
-			/* Now we add some hooks to trigger the quest dialog reponse. */
-			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(QuestDialogResponse));
-			GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(QuestDialogResponse));
-
-			/* Now we bring to Ydenia the possibility to give this quest to players */
-			QuestMgr.AddQuestDescriptor(bombard, typeof(CityOfCamelotDescriptor));
+			/* Now we bring to bombard the possibility to give this quest to players */
+			bombard.AddQuestToGive(typeof (CityOfCamelot));
 
 			if (log.IsInfoEnabled)
 				log.Info("Quest \"" + questTitle + "\" initialized");
@@ -912,22 +491,23 @@ namespace DOL.GS.Quests.Albion
 			/* Removing hooks works just as adding them but instead of 
 			 * AddHandler, we call RemoveHandler, the parameters stay the same
 			 */
+
+			GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
 			GameEventMgr.RemoveHandler(GamePlayerEvent.GameEntered, new DOLEventHandler(PlayerEnterWorld));
 
-			GameEventMgr.RemoveHandler(masterFrederick, GameObjectEvent.Interact, new DOLEventHandler(TalkToMasterFrederick));
+			GameEventMgr.RemoveHandler(masterFrederick, GameLivingEvent.Interact, new DOLEventHandler(TalkToMasterFrederick));
 			GameEventMgr.RemoveHandler(masterFrederick, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToMasterFrederick));
 
-			GameEventMgr.RemoveHandler(bombard, GameObjectEvent.Interact, new DOLEventHandler(TalkToBombard));
+			GameEventMgr.RemoveHandler(bombard, GameLivingEvent.Interact, new DOLEventHandler(TalkToBombard));
 			GameEventMgr.RemoveHandler(bombard, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToBombard));
 
-			GameEventMgr.RemoveHandler(lordUrqhart, GameObjectEvent.Interact, new DOLEventHandler(TalkToUrqhart));
+			GameEventMgr.RemoveHandler(lordUrqhart, GameLivingEvent.Interact, new DOLEventHandler(TalkToUrqhart));
 			GameEventMgr.RemoveHandler(lordUrqhart, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToUrqhart));
 
-			GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(QuestDialogResponse));
-			GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(QuestDialogResponse));
-
 			/* Now we remove to bombard the possibility to give this quest to players */
-			QuestMgr.RemoveQuestDescriptor(bombard, typeof(CityOfCamelotDescriptor));
+			bombard.RemoveQuestToGive(typeof (CityOfCamelot));
 		}
 
 		/* This is the method we declared as callback for the hooks we set to
@@ -942,7 +522,7 @@ namespace DOL.GS.Quests.Albion
 			if (player == null)
 				return;
 
-			if (QuestMgr.CanGiveQuest(typeof(CityOfCamelot), player, bombard) <= 0)
+			if(bombard.CanGiveQuest(typeof (CityOfCamelot), player)  <= 0)
 				return;
 
 			//We also check if the player is already doing the quest
@@ -957,8 +537,8 @@ namespace DOL.GS.Quests.Albion
 					//Player is not doing the quest...
 					if (quest.Step == 9)
 					{
-						masterFrederick.SayTo(player, "This note puts you in high regard "+player.Name+". I'm glad to see that you are so willing to serve Albion and so ready to help her citizens. For your selfless acts of servitude, I have this [reward] for you.");
-						quest.ChangeQuestStep(10);
+						masterFrederick.SayTo(player, "This note puts you in high regard Vinde. I'm glad to see that you are so willing to serve Albion and so ready to help her citizens. For your selfless acts of servitude, I have this [reward] for you.");
+						quest.Step = 10;
 					}
 					return;
 				}
@@ -993,7 +573,7 @@ namespace DOL.GS.Quests.Albion
 			if (player == null)
 				return;
 
-			if (QuestMgr.CanGiveQuest(typeof(CityOfCamelot), player, bombard) <= 0)
+			if(bombard.CanGiveQuest(typeof (CityOfCamelot), player)  <= 0)
 				return;
 
 			//We also check if the player is already doing the quest
@@ -1029,8 +609,8 @@ namespace DOL.GS.Quests.Albion
 							lordUrqhart.SayTo(player, "Alright, here you are my friend, as promised. Please be sure to return it to Bombard. Have a nice day!");
 							if (quest.Step == 6)
 							{
-								player.ReceiveItem(lordUrqhart, receiptBombard.CreateInstance());
-								quest.ChangeQuestStep(7);
+								GiveItem(lordUrqhart, player, receiptBombard);
+								quest.Step = 7;
 							}
 							break;
 					}
@@ -1045,7 +625,7 @@ namespace DOL.GS.Quests.Albion
 			if (player == null)
 				return;
 
-			if (QuestMgr.CanGiveQuest(typeof(CityOfCamelot), player, bombard) <= 0)
+			if(bombard.CanGiveQuest(typeof (CityOfCamelot), player)  <= 0)
 				return;
 
 			//We also check if the player is already doing the quest
@@ -1076,7 +656,7 @@ namespace DOL.GS.Quests.Albion
 							bombard.SayTo(player, "I trust that you won't steal from me, so what do you say? Will you [do this] for me or not?");
 							break;
 						case "do this":
-							QuestMgr.ProposeQuestToPlayer(typeof(CityOfCamelot), "Will you take these coins to Vault Keeper Urqhart in Camelot?", player, bombard);
+							player.Out.SendQuestSubscribeCommand(bombard, QuestMgr.GetIDForQuestType(typeof(CityOfCamelot)), "Will you take these coins to Vault Keeper Urqhart in Camelot?");
 							break;
 					}
 				}
@@ -1088,9 +668,27 @@ namespace DOL.GS.Quests.Albion
 						case "necklace":
 							bombard.SayTo(player, "The necklace was made by my wife, a Cabalist with the Academy. She is currently helping out with a few things in Avalon Marsh, or else she could take the money to the vault keeper, hehe. Anyhow, you'll need to USE the necklace once you're inside Camelot City. I'm sure your journal there will be able to help you out. Don't worry, you'll get the hang of it. Be sure to give the Vault Keeper the scroll. Good luck, and thank you again.");
 							break;
+						case "abort":
+							player.Out.SendCustomDialog("Do you really want to abort this quest, \nall items gained during quest will be lost?", new CustomDialogResponse(CheckPlayerAbortQuest));
+							break;
 					}
 				}
 			}
+		}
+
+		protected static void SubscribeQuest(DOLEvent e, object sender, EventArgs args)
+		{
+			QuestEventArgs qargs = args as QuestEventArgs;
+			if (qargs == null)
+				return;
+
+			if (qargs.QuestID != QuestMgr.GetIDForQuestType(typeof(CityOfCamelot)))
+				return;
+
+			if (e == GamePlayerEvent.AcceptQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x01);
+			else if (e == GamePlayerEvent.DeclineQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x00);
 		}
 
 		protected static void TalkToAssistant(DOLEvent e, object sender, EventArgs args)
@@ -1100,7 +698,7 @@ namespace DOL.GS.Quests.Albion
 			if (player == null)
 				return;
 
-			if (QuestMgr.CanGiveQuest(typeof(CityOfCamelot), player, bombard) <= 0)
+			if(bombard.CanGiveQuest(typeof (CityOfCamelot), player)  <= 0)
 				return;
 
 			//We also check if the player is already doing the quest
@@ -1115,7 +713,7 @@ namespace DOL.GS.Quests.Albion
 					quest.assistant.SayTo(player, "Greetings to you. I am here to assist you on your journey through Camelot. Please listen [carefully] to my instructions.");
 					if (quest.Step == 2)
 					{
-						quest.ChangeQuestStep(3);
+						quest.Step = 3;
 					}
 				}
 				return;
@@ -1157,7 +755,7 @@ namespace DOL.GS.Quests.Albion
 						case "vault keeper":
 							if (quest.Step == 3)
 							{
-								quest.ChangeQuestStep(4);
+								quest.Step = 4;
 							}
 							quest.TeleportTo(vaultKeeper);
 							break;
@@ -1172,8 +770,8 @@ namespace DOL.GS.Quests.Albion
 		}
 
 		/**
-		 * Convinient Method for teleporintg with assistant 
-		 */
+         * Convinient Method for teleporintg with assistant 
+         */
 
 		protected void TeleportTo(GameLocation target)
 		{
@@ -1221,7 +819,7 @@ namespace DOL.GS.Quests.Albion
 				return;
 
 			// assistant works only in camelot...
-			if (player.Region.RegionID != 10)
+			if (player.CurrentRegionID != 10)
 				return;
 
 			CityOfCamelot quest = (CityOfCamelot) player.IsDoingQuest(typeof (CityOfCamelot));
@@ -1230,30 +828,31 @@ namespace DOL.GS.Quests.Albion
 
 			UseSlotEventArgs uArgs = (UseSlotEventArgs) args;
 
-			GenericItem item = player.Inventory.GetItem((eInventorySlot)uArgs.Slot) as GenericItem;
-			if (item != null && item.Name == assistantNecklace.Name)
+			InventoryItem item = player.Inventory.GetItem((eInventorySlot)uArgs.Slot);
+			if (item != null && item.Id_nb == assistantNecklace.Id_nb)
 			{
-				foreach (GamePlayer visPlayer in player.GetInRadius(typeof(GamePlayer), WorldMgr.VISIBILITY_DISTANCE))
+				foreach (GamePlayer visPlayer in player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 				{
 					visPlayer.Out.SendSpellCastAnimation(player, 1, 20);
 				}
 
-				new RegionTimer(player, new RegionTimerCallback(quest.CreateAssistant), 2000);
+				RegionTimer createTimer = new RegionTimer(player, new RegionTimerCallback(quest.CreateAssistant), 2000);
 
 				if (quest.Step == 1)
 				{
-					quest.ChangeQuestStep(2);
+					quest.Step = 2;
 				}
 			}
+
 		}
 
 		protected virtual int DeleteAssistant(RegionTimer callingTimer)
 		{
 			if (assistant != null)
 			{
-				assistant.RemoveFromWorld();
+				assistant.Delete();
 
-				GameEventMgr.RemoveHandler(assistant, GameObjectEvent.Interact, new DOLEventHandler(TalkToAssistant));
+				GameEventMgr.RemoveHandler(assistant, GameLivingEvent.Interact, new DOLEventHandler(TalkToAssistant));
 				GameEventMgr.RemoveHandler(assistant, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToAssistant));
 			}
 			return 0;
@@ -1261,36 +860,32 @@ namespace DOL.GS.Quests.Albion
 
 		protected virtual int CreateAssistant(RegionTimer timer)
 		{
-			if (assistant != null && assistant.ObjectState == eObjectState.Active)
+			if (assistant != null && assistant.ObjectState == GameObject.eObjectState.Active)
 			{
-				Point pos = m_questPlayer.Position;
-				pos.X += 50;
-				pos.Y += 30;
-				assistant.MoveTo(m_questPlayer.Region, pos, (ushort)m_questPlayer.Heading);
+				assistant.MoveTo(m_questPlayer.CurrentRegionID, m_questPlayer.X + 50, m_questPlayer.Y + 30, m_questPlayer.Z, m_questPlayer.Heading);
 			}
 			else
 			{
-				assistant = new GameMob();
+				assistant = new GameNPC();
 				assistant.Model = 951;
 				assistant.Name = m_questPlayer.Name + "'s Assistant";
 				assistant.GuildName = "Part of " + questTitle + " Quest";
 				assistant.Realm = m_questPlayer.Realm;
-				assistant.Region = m_questPlayer.Region;
+				assistant.CurrentRegionID = m_questPlayer.CurrentRegionID;
 				assistant.Size = 25;
 				assistant.Level = 5;
-				Point pos = m_questPlayer.Position;
-				pos.X += 50;
-				pos.Y += 50;
-				assistant.Position = pos;
+				assistant.X = m_questPlayer.X + 50;
+				assistant.Y = m_questPlayer.Y + 50;
+				assistant.Z = m_questPlayer.Z;
 				assistant.Heading = m_questPlayer.Heading;
 
 				assistant.AddToWorld();
 
-				GameEventMgr.AddHandler(assistant, GameObjectEvent.Interact, new DOLEventHandler(TalkToAssistant));
+				GameEventMgr.AddHandler(assistant, GameLivingEvent.Interact, new DOLEventHandler(TalkToAssistant));
 				GameEventMgr.AddHandler(assistant, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToAssistant));
 			}
 
-			foreach (GamePlayer visPlayer in assistant.GetInRadius(typeof(GamePlayer), WorldMgr.VISIBILITY_DISTANCE))
+			foreach (GamePlayer visPlayer in assistant.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
 				visPlayer.Out.SendEmoteAnimation(assistant, eEmote.Bind);
 			}
@@ -1304,40 +899,90 @@ namespace DOL.GS.Quests.Albion
 			return 0;
 		}
 
+		/// <summary>
+		/// This method checks if a player qualifies for this quest
+		/// </summary>
+		/// <returns>true if qualified, false if not</returns>
+		public override bool CheckQuestQualification(GamePlayer player)
+		{
+			// if the player is already doing the quest his level is no longer of relevance
+			if (player.IsDoingQuest(typeof (CityOfCamelot)) != null)
+				return true;
+
+			// This checks below are only performed is player isn't doing quest already
+
+			if (player.HasFinishedQuest(typeof (ImportantDelivery)) == 0)
+				return false;
+
+			if (!CheckPartAccessible(player, typeof (CityOfCamelot)))
+				return false;
+
+			if (player.Level < minimumLevel || player.Level > maximumLevel)
+				return false;
+
+			return true;
+		}
+
+
 		/* This is our callback hook that will be called when the player clicks
 		 * on any button in the quest offer dialog. We check if he accepts or
 		 * declines here...
 		 */
-		protected static void QuestDialogResponse(DOLEvent e, object sender, EventArgs args)
+
+		private static void CheckPlayerAbortQuest(GamePlayer player, byte response)
 		{
-			QuestEventArgs gArgs = args as QuestEventArgs;
+			CityOfCamelot quest = player.IsDoingQuest(typeof (CityOfCamelot)) as CityOfCamelot;
 
-			if (gArgs != null && gArgs.QuestType.Equals(typeof(CityOfCamelot)))
+			if (quest == null)
+				return;
+
+			if (response == 0x00)
 			{
-				GamePlayer player = gArgs.Player;
-				if (player == null) return;
+				SendSystemMessage(player, "Good, no go out there and finish your work!");
+			}
+			else
+			{
+				SendSystemMessage(player, "Aborting Quest " + questTitle + ". You can start over again if you want.");
+				quest.AbortQuest();
+			}
+		}
 
-				if (e == GamePlayerEvent.AcceptQuest)
-				{
-					if (QuestMgr.GiveQuestToPlayer(typeof(CityOfCamelot), player, gArgs.Source as GameNPC))
-					{
-						bombard.SayTo(player, "Oh thank you "+player.Name+". This means a lot to me. Here, take this chest of coins, this scroll and this [necklace].");
+		/* This is our callback hook that will be called when the player clicks
+		 * on any button in the quest offer dialog. We check if he accepts or
+		 * declines here...
+		 */
 
-						AbstractQuest quest = player.IsDoingQuest(typeof (CityOfCamelot));
-						GiveItemToPlayer(bombard, CreateQuestItem(assistantNecklace, quest), player);
-						GiveItemToPlayer(bombard, CreateQuestItem(chestOfCoins, quest), player);
-						GiveItemToPlayer(bombard, CreateQuestItem(scrollUrqhart, quest), player);
-						player.GainExperience(7, 0, 0, true);
+		private static void CheckPlayerAcceptQuest(GamePlayer player, byte response)
+		{
+			//We recheck the qualification, because we don't talk to players
+			//who are not doing the quest
+			if(bombard.CanGiveQuest(typeof (CityOfCamelot), player)  <= 0)
+				return;
 
-						GameEventMgr.AddHandler(player, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
-						GameEventMgr.AddHandler(player, GamePlayerEvent.UseSlot, new DOLEventHandler(PlayerUseSlot));
-					}
-				}
-				else if (e == GamePlayerEvent.DeclineQuest)
-				{
+			CityOfCamelot quest = player.IsDoingQuest(typeof (CityOfCamelot)) as CityOfCamelot;
 
-					player.Out.SendMessage("Oh well, if you change your mind, please come back!", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
-				}
+			if (quest != null)
+				return;
+
+			if (response == 0x00)
+			{
+				SendReply(player, "Oh well, if you change your mind, please come back!");
+			}
+			else
+			{
+				//Check if we can add the quest!
+				if (!bombard.GiveQuest(typeof (CityOfCamelot), player, 1))
+					return;
+
+				bombard.SayTo(player, "Oh thank you Vinde. This means a lot to me. Here, take this chest of coins, this scroll and this [necklace].");
+
+				GiveItem(bombard, player, assistantNecklace);
+				GiveItem(bombard, player, chestOfCoins);
+				GiveItem(bombard, player, scrollUrqhart);
+				player.GainExperience(7, 0, 0, true);
+
+				GameEventMgr.AddHandler(player, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
+				GameEventMgr.AddHandler(player, GamePlayerEvent.UseSlot, new DOLEventHandler(PlayerUseSlot));
 			}
 		}
 
@@ -1384,9 +1029,9 @@ namespace DOL.GS.Quests.Albion
 						return "[Step #9] Wait for Master Frederick to finish reading the note from Bombard. If he stops speaking with you, ask him if he is [done] with the letter.";
 					case 10:
 						return "[Step #10] Wait for Master Frederick to reward you. If your trainer stops speaking with you at any time, ask him if there is a [reward] for your efforts.";
-					default:
-						return "[Step #" + Step + "] No Description entered for this step!";
+
 				}
+				return base.Description;
 			}
 		}
 
@@ -1397,77 +1042,95 @@ namespace DOL.GS.Quests.Albion
 			if (player==null || player.IsDoingQuest(typeof (CityOfCamelot)) == null)
 				return;
 
-			if(e == GamePlayerEvent.GiveItem)
+			if (Step <= 4 && e == GamePlayerEvent.GiveItem)
 			{
-				if (Step <= 4)
+				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
+				if (gArgs.Target.Name == lordUrqhart.Name && gArgs.Item.Id_nb == scrollUrqhart.Id_nb)
 				{
-					GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-					if (gArgs.Target == lordUrqhart && gArgs.Item.QuestName == Name && gArgs.Item.Name == scrollUrqhart.Name)
-					{
-						lordUrqhart.SayTo(player, "Ah, a note from Bombard. Excellent. I see he wishes to make a deposit. Alright then, just hand me the chest please.");
-						RemoveItemFromPlayer(lordUrqhart, gArgs.Item);
-						ChangeQuestStep(5);
-						return;
-					}
-				}
-
-				if (Step == 5)
-				{
-					GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-					if (gArgs.Target == lordUrqhart && gArgs.Item.QuestName == Name && gArgs.Item.Name == chestOfCoins.Name)
-					{
-						lordUrqhart.SayTo(player, "My this is heavy. Business must be booming for him! Well, one moment and I will write you a receipt to take back to him.");
-						RemoveItemFromPlayer(lordUrqhart, gArgs.Item);
-						ChangeQuestStep(6);
-						return;
-					}
-				}
-
-				if (Step == 7)
-				{
-					GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-					if (gArgs.Target == bombard && gArgs.Item.QuestName == Name && gArgs.Item.Name == receiptBombard.Name)
-					{
-						bombard.SayTo(player, "Ah, fantastic. I'm glad to know my money is now in a safe place. Thank you so much for doing that for me, and I hope the trip into Camelot was informative for you. Here, take this letter back to Master Frederick in Cotswold. I want for him to know what a fantastic job you did for me by delivering these vegetables from Ludlow, and for taking care of some business in Camelot for me. Thank you again "+player.Name+". I hope we speak again soon.");
-
-						RemoveItemFromPlayer(bombard, gArgs.Item);
-						RemoveItemFromPlayer(bombard, player.Inventory.GetFirstItemByName(assistantNecklace.Name, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack));
-
-						GiveItemToPlayer(bombard, CreateQuestItem(ticketToCotswold));
-						GiveItemToPlayer(bombard, CreateQuestItem(letterFrederick));
-
-						player.Out.SendDialogBox(eDialogCode.SimpleWarning, 0x00, 0x00, 0x00, 0x00, eDialogType.Ok, true, "You receive a horse ticket. \nGive it to Bombard to go to Cotswold.");
-                            
-						ChangeQuestStep(8);
-						return;
-					}
-				}
-
-				if (Step == 8)
-				{
-					GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-					if (gArgs.Target == masterFrederick && gArgs.Item.Name == letterFrederick.Name)
-					{
-						RemoveItemFromPlayer(masterFrederick, gArgs.Item);
-						
-						masterFrederick.SayTo(player, "Ah, from Bombard. Let me see what is says. One moment please.");
-						SendSystemMessage(player, "Master Frederick reads the note from Bombard carefully.");
-						player.Out.SendEmoteAnimation(masterFrederick, eEmote.Ponder);
-
-						ChangeQuestStep(9);
-						return;
-					}
+					lordUrqhart.SayTo(player, "Ah, a note from Bombard. Excellent. I see he wishes to make a deposit. Alright then, just hand me the chest please.");
+					RemoveItem(lordUrqhart, player, scrollUrqhart);
+					Step = 5;
+					return;
 				}
 			}
+
+			if (Step == 5 && e == GamePlayerEvent.GiveItem)
+			{
+				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
+				if (gArgs.Target.Name == lordUrqhart.Name && gArgs.Item.Id_nb == chestOfCoins.Id_nb)
+				{
+					lordUrqhart.SayTo(player, "My this is heavy. Business must be booming for him! Well, one moment and I will write you a receipt to take back to him.");
+					RemoveItem(lordUrqhart, player, chestOfCoins);
+					Step = 6;
+					return;
+				}
+			}
+
+			if (Step == 7 && e == GamePlayerEvent.GiveItem)
+			{
+				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
+				if (gArgs.Target.Name == bombard.Name && gArgs.Item.Id_nb == receiptBombard.Id_nb)
+				{
+					bombard.SayTo(player, "Ah, fantastic. I'm glad to know my money is now in a safe place. Thank you so much for doing that for me, and I hope the trip into Camelot was informative for you. Here, take this letter back to Master Frederick in Cotswold. I want for him to know what a fantastic job you did for me by delivering these vegetables from Ludlow, and for taking care of some business in Camelot for me. Thank you again Vinde. I hope we speak again soon.");
+
+					RemoveItem(bombard, player, receiptBombard);
+					RemoveItem(bombard, player, assistantNecklace);
+
+					GiveItem(bombard, player, ticketToCotswold);
+					GiveItem(bombard, player, letterFrederick);
+					Step = 8;
+					return;
+				}
+			}
+
+			if (Step == 8 && e == GamePlayerEvent.GiveItem)
+			{
+				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
+				if (gArgs.Target.Name == masterFrederick.Name && gArgs.Item.Id_nb == letterFrederick.Id_nb)
+				{
+					masterFrederick.SayTo(player, "Ah, from Bombard. Let me see what is says. One moment please.");
+					SendSystemMessage(player, "Master Frederick reads the note from Bombard carefully.");
+					player.Out.SendEmoteAnimation(masterFrederick, eEmote.Ponder);
+
+					RemoveItem(masterFrederick, player, letterFrederick);
+					Step = 9;
+					return;
+				}
+			}
+
+		}
+
+		public override void AbortQuest()
+		{
+			base.AbortQuest(); //Defined in Quest, changes the state, stores in DB etc ...
+
+			RemoveItem(m_questPlayer, assistantNecklace, false);
+			RemoveItem(m_questPlayer, chestOfCoins, false);
+			RemoveItem(m_questPlayer, letterFrederick, false);
+			RemoveItem(m_questPlayer, scrollUrqhart, false);
+			RemoveItem(m_questPlayer, ticketToCotswold, false);
+
+			// remove the 7 xp you get on quest start for beeing so nice to bombard again.
+			m_questPlayer.GainExperience(-7, 0, 0, true);
+
+			if (assistantTimer != null)
+			{
+				assistantTimer.Start(1);
+			}
+
+			GameEventMgr.RemoveHandler(m_questPlayer, GamePlayerEvent.UseSlot, new DOLEventHandler(PlayerUseSlot));
+			GameEventMgr.RemoveHandler(m_questPlayer, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
 		}
 
 		public override void FinishQuest()
 		{
+			base.FinishQuest(); //Defined in Quest, changes the state, stores in DB etc ...
+
 			//Give reward to player here ...            
-			if (m_questPlayer.HasAbilityToUseItem(recruitsRoundShield.CreateInstance() as Shield))
-				GiveItemToPlayer(masterFrederick, recruitsRoundShield.CreateInstance());
+			if (m_questPlayer.HasAbilityToUseItem(recruitsRoundShield))
+				GiveItem(masterFrederick, m_questPlayer, recruitsRoundShield);
 			else
-				GiveItemToPlayer(masterFrederick, recruitsBracer.CreateInstance());
+				GiveItem(masterFrederick, m_questPlayer, recruitsBracer);
 
 			m_questPlayer.GainExperience(26, 0, 0, true);
 			m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 2, Util.Random(50)), "You recieve {0} as a reward.");
@@ -1475,7 +1138,7 @@ namespace DOL.GS.Quests.Albion
 			GameEventMgr.RemoveHandler(m_questPlayer, GamePlayerEvent.UseSlot, new DOLEventHandler(PlayerUseSlot));
 			GameEventMgr.RemoveHandler(m_questPlayer, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
 
-			base.FinishQuest(); //Defined in Quest, changes the state, stores in DB etc ...
 		}
+
 	}
 }

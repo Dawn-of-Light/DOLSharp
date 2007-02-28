@@ -1,16 +1,16 @@
 /*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -22,33 +22,31 @@ using System.Reflection;
 using DOL.AI;
 using DOL.AI.Brain;
 using DOL.Database;
-using DOL.GS.Loot;
 using DOL.GS.PacketHandler;
 using DOL.GS.Utils;
-using NHibernate.Expression;
+using DOL.GS.Quests;
 
 namespace DOL.GS.Scripts
 {
 	[Cmd("&mob", //command to handle
-		(uint) ePrivLevel.GM, //minimum privelege level
+		(uint)ePrivLevel.GM, //minimum privelege level
 		"Various mob creation commands!", //command description
 		//Usage
 		"'/mob nfastcreate <Model> <Realm> <Level> <Number> <Radius> <Name>' to create n mob with fixed level,model and name placed around creator within the provided radius",
 		"'/mob nrandcreate <Number> <Radius>' to create <Number> mob in <Radius> around player",
 		"'/mob fastcreate <Model> <Level> <Name>' to create mob with fixed level,model",
-		"'/mob create' to create an empty mob",
+		"'/mob create <type> <realm>' to create an empty mob",
 		"'/mob model <newMobModel>' to set the mob model to newMobModel",
 		"'/mob size <newMobSize>' to set the mob size to newMobSize",
 		"'/mob name <newMobName>' to set the mob name to newMobName",
 		"'/mob guild <newMobGuild>' to set the mob guildname to newMobGuild",
-		"'/mob aggroLevel <level>' set mob aggro level 0..100%",
-		"'/mob aggroRange <distance>' set mob aggro range",
+		"'/mob aggro <level>' set mob aggro level 0..100%",
+		"'/mob range <distance>' set mob aggro range",
 		"'/mob damagetype <eDamageType>' set mob damage type",
 		"'/mob movehere'",
 		"'/mob remove' to remove this mob from the DB",
-		"'/mob save' to save this mob in the DB",
 		"'/mob ghost' makes this mob ghostlike",
-		"'/mob stealth' makes this mob stealth",
+		"'/mob transparent' makes this mob transparent",
 		"'/mob fly' makes this mob able to fly by changing the Z coordinate",
 		"'/mob noname' still possible to target this mob but removes the name from above mob",
 		"'/mob notarget' makes it impossible to target this mob and removes the name from above it",
@@ -60,18 +58,20 @@ namespace DOL.GS.Scripts
 		"'/mob level' changing the mob's level",
 		"'/mob brain' changing the mob's brain",
 		"'/mob respawn <newDuration>' changing the time between each mob respawn",
+		"'/mob questinfo' to show mob quests infos",
 		"'/mob equipinfo' to show mob inventory infos",
-		//"'/mob equiptemplate create' to create an empty inventory template",
-		//"'/mob equiptemplate add <slot> <model> [color] [effect]' to add an item to this mob inventory template",
-		//"'/mob equiptemplate remove <slot>' to remove item from the specified slot in this mob inventory template",
-		//"'/mob equiptemplate clear' to remove the inventory template from mob",
-		//"'/mob equiptemplate close' to finish the inventory template you are creating",
-		//"'/mob equiptemplate save <templateID> [replace]' to save the inventory template with a new name",
-		"'/mob equiptemplate load <templateID>' to assign a inventory template to this mob",
-		"'/mob lootlist <lootListID>' to assign a loot list to the mob",
+		"'/mob equiptemplate create' to create an empty inventory template",
+		"'/mob equiptemplate add <slot> <model> [color] [effect]' to add an item to this mob inventory template",
+		"'/mob equiptemplate remove <slot>' to remove item from the specified slot in this mob inventory template",
+		"'/mob equiptemplate clear' to remove the inventory template from mob",
+		"'/mob equiptemplate close' to finish the inventory template you are creating",
+		"'/mob equiptemplate save <templateID> [replace]' to save the inventory template with a new name",
+		"'/mob equiptemplate load <templateID>' to load the inventory template from the database, it is open for modifications after",
+		"'/mob addloot <ItemTemplateID> [chance]' to add loot to the mob's unique drop table",
 		"'/mob viewloot' to view the selected mob's loot table",
 		"'/mob removeloot <ItemTemplateID>' to remove loot from the mob's unique drop table",
-		"'/mob copy' copies a mob exactly and places it at your location"
+		"'/mob copy' copies a mob exactly and places it at your location",
+	    "'/mob npctemplate <NPCTemplateID>' creates a mob with npc template, or modifies target"
 		)]
 	public class MobCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
@@ -86,18 +86,20 @@ namespace DOL.GS.Scripts
 			if (args.Length > 2)
 				param = String.Join(" ", args, 2, args.Length - 2);
 
-			GameMob targetMob = null;
-			if (client.Player.TargetObject != null && client.Player.TargetObject is GameMob)
-				targetMob = (GameMob) client.Player.TargetObject;
+			GameNPC targetMob = null;
+			if (client.Player.TargetObject != null && client.Player.TargetObject is GameNPC)
+				targetMob = (GameNPC)client.Player.TargetObject;
 
-			if (args[1] != "create" 
-				&& args[1] != "fastcreate" 
-				&& args[1] != "nrandcreate" 
-				&& args[1] != "nfastcreate" 
+			if (args[1] != "create"
+				&& args[1] != "fastcreate"
+				&& args[1] != "nrandcreate"
+				&& args[1] != "nfastcreate"
+				&& args[1] != "npctemplate"
 				&& targetMob == null)
 			{
-				if (client.Player.TargetObject != null) {
-					client.Out.SendMessage("Cannot use "+client.Player.TargetObject+" for /mob command.", eChatType.CT_System, eChatLoc.CL_SystemWindow);				
+				if (client.Player.TargetObject != null)
+				{
+					client.Out.SendMessage("Cannot use " + client.Player.TargetObject + " for /mob command.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return 1;
 				}
 				client.Out.SendMessage("Type /mob for command overview.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -127,31 +129,33 @@ namespace DOL.GS.Scripts
 						}
 						for (int i = 0; i < number; ++i)
 						{
-							GameMob mob = new GameMob();
+							GameNPC mob = new GameNPC();
 							//Fill the object variables
-							Point pos = client.Player.Position;
-							pos.X = FastMath.Abs(pos.X + Util.Random(-radius, radius));
-							pos.Y = FastMath.Abs(pos.Y + Util.Random(-radius, radius));
-							mob.Position = pos;
-							mob.Region = client.Player.Region;
+							int x = client.Player.X + DOL.GS.Util.Random(-radius, radius);
+							int y = client.Player.Y + DOL.GS.Util.Random(-radius, radius);
+							mob.X = FastMath.Abs(x);
+							mob.Y = FastMath.Abs(y);
+							mob.Z = client.Player.Z;
+							mob.CurrentRegion = client.Player.CurrentRegion;
 							mob.Heading = client.Player.Heading;
-							mob.Level = (byte) Util.Random(10, 50);
-							mob.Realm = (byte) Util.Random(1, 3);
+							mob.Level = (byte)DOL.GS.Util.Random(10, 50);
+							mob.Realm = (byte)DOL.GS.Util.Random(1, 3);
 							mob.Name = "rand_" + i;
-							mob.Model = (byte) Util.Random(100, 200);
+							mob.Model = (byte)DOL.GS.Util.Random(100, 200);
+
+							//Fill the living variables
+							if (mob.Brain is IAggressiveBrain)
+							{
+								((IAggressiveBrain)mob.Brain).AggroLevel = 100;
+								((IAggressiveBrain)mob.Brain).AggroRange = 1500;
+							}
 							mob.CurrentSpeed = 0;
 							mob.MaxSpeedBase = 200;
 							mob.GuildName = "";
 							mob.Size = 50;
-
-							mob.OwnBrain = new StandardMobBrain();
-							mob.OwnBrain.Body = mob;
-							((IAggressiveBrain)mob.Brain).AggroLevel = 100;
-							((IAggressiveBrain)mob.Brain).AggroRange = 1500;
-							
 							mob.AddToWorld();
 						}
-						client.Out.SendMessage("Created " + number + " mobs !", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						client.Out.SendMessage("created " + number + " mobs", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						break;
 					}
 				case "nfastcreate":
@@ -183,32 +187,33 @@ namespace DOL.GS.Scripts
 						}
 						for (int i = 0; i < number; ++i)
 						{
-							GameMob mob = new GameMob();
+							GameNPC mob = new GameNPC();
 
 							//Fill the object variables
-							Point pos = client.Player.Position;
-							pos.X = FastMath.Abs(pos.X + Util.Random(-radius, radius));
-							pos.Y = FastMath.Abs(pos.Y + Util.Random(-radius, radius));
-							mob.Position = pos;
-							mob.Region = client.Player.Region;
+							int x = client.Player.X + DOL.GS.Util.Random(-radius, radius);
+							int y = client.Player.Y + DOL.GS.Util.Random(-radius, radius);
+							mob.X = FastMath.Abs(x);
+							mob.Y = FastMath.Abs(y);
+							mob.Z = client.Player.Z;
+							mob.CurrentRegion = client.Player.CurrentRegion;
 							mob.Heading = client.Player.Heading;
 							mob.Level = level;
 							mob.Realm = realm;
 							mob.Name = name;
 							mob.Model = model;
+
+							//Fill the living variables
+							if (mob.Brain is IAggressiveBrain)
+							{
+								((IAggressiveBrain)mob.Brain).AggroLevel = 100;
+								((IAggressiveBrain)mob.Brain).AggroRange = 1500;
+							}
 							mob.CurrentSpeed = 0;
 							mob.MaxSpeedBase = 200;
 							mob.GuildName = "";
 							mob.Size = 50;
-
-							mob.OwnBrain = new StandardMobBrain();
-							mob.OwnBrain.Body = mob;
-							((IAggressiveBrain)mob.Brain).AggroLevel = 100;
-							((IAggressiveBrain)mob.Brain).AggroRange = 1500;
-							
-							
 							mob.AddToWorld();
-							client.Out.SendMessage("Mob created: OID =" + mob.ObjectID, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							client.Out.SendMessage("Mob created: OID=" + mob.ObjectID, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						}
 						break;
 					}
@@ -235,25 +240,22 @@ namespace DOL.GS.Scripts
 							return 1;
 						}
 						name = CheckName(name, client);
-						GameMob mob = new GameMob();
+						GameNPC mob = new GameNPC();
 						//Fill the object variables
-						mob.Position = client.Player.Position;
-						mob.Region = client.Player.Region;
+						mob.X = client.Player.X;
+						mob.Y = client.Player.Y;
+						mob.Z = client.Player.Z;
+						mob.CurrentRegion = client.Player.CurrentRegion;
 						mob.Heading = client.Player.Heading;
 						mob.Level = level;
 						mob.Realm = 0;
 						mob.Name = name;
 						mob.Model = model;
+						//Fill the living variables
 						mob.CurrentSpeed = 0;
 						mob.MaxSpeedBase = 200;
 						mob.GuildName = "";
 						mob.Size = 50;
-
-						mob.OwnBrain = new StandardMobBrain();
-						mob.OwnBrain.Body = mob;
-						((IAggressiveBrain)mob.Brain).AggroLevel = 100;
-						((IAggressiveBrain)mob.Brain).AggroRange = 1500;
-							
 						mob.AddToWorld();
 						client.Out.SendMessage("Mob created: OID=" + mob.ObjectID, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}
@@ -275,23 +277,22 @@ namespace DOL.GS.Scripts
 						{
 							info.Add(" + Not aggressive brain");
 						}
+						string respawn = targetMob.RespawnInterval.ToString();
+
+						info.Add(" + Respawn: " + respawn + " (Position: X=" + targetMob.SpawnX + " Y=" + targetMob.SpawnY + " Z=" + targetMob.SpawnZ + ")");
+
 						info.Add(" + Damage type: " + targetMob.MeleeDamageType);
-						info.Add(" + Position: " + targetMob.Position);
+						info.Add(" + Position: X=" + targetMob.X + " Y=" + targetMob.Y + " Z=" + targetMob.Z);
 						info.Add(" + Guild: " + targetMob.GuildName);
 						info.Add(" + Model: " + targetMob.Model + " sized to " + targetMob.Size);
-						info.Add(string.Format(" + Flags: {0} (0x{1})", ((GameNPC.eFlags) targetMob.Flags).ToString("G"), targetMob.Flags.ToString("X")));
+						info.Add(string.Format(" + Flags: {0} (0x{1})", ((GameNPC.eFlags)targetMob.Flags).ToString("G"), targetMob.Flags.ToString("X")));
 						info.Add(" + Active weapon slot: " + targetMob.ActiveWeaponSlot);
 						info.Add(" + Visible weapon slot: " + targetMob.VisibleActiveWeaponSlots);
-						info.Add(" + MaxSpeed : " + targetMob.MaxSpeedBase);
-						if(targetMob.Inventory != null)
-						{
-							info.Add(" + Inventory Template ID: " + targetMob.Inventory.InventoryID);
-						}
-						else
-						{
-							info.Add(" + Inventory Template ID: null");
-						}
+						info.Add(" + MaxSpeed: " + targetMob.MaxSpeedBase);
+						info.Add(" + Health: " + targetMob.Health + "/" + targetMob.MaxHealth);
+						info.Add(" + Equipment Template ID: " + targetMob.EquipmentTemplateID);
 						info.Add(" + Inventory: " + targetMob.Inventory);
+						info.Add(" + CanGiveQuest: " + targetMob.QuestListToGive.Count);
 
 						client.Out.SendCustomTextWindow("[ " + targetMob.Name + " ]", info);
 					}
@@ -303,6 +304,7 @@ namespace DOL.GS.Scripts
 						{
 							level = Convert.ToByte(args[2]);
 							targetMob.Level = level;
+							targetMob.SaveIntoDatabase();
 							client.Out.SendMessage("Mob level changed to: " + targetMob.Level, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						}
 						catch (Exception)
@@ -319,6 +321,7 @@ namespace DOL.GS.Scripts
 						{
 							realm = Convert.ToByte(args[2]);
 							targetMob.Realm = realm;
+							targetMob.SaveIntoDatabase();
 							client.Out.SendMessage("Mob realm changed to: " + targetMob.Realm, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						}
 						catch (Exception)
@@ -335,6 +338,7 @@ namespace DOL.GS.Scripts
 						{
 							maxSpeed = Convert.ToUInt16(args[2]);
 							targetMob.MaxSpeedBase = maxSpeed;
+							targetMob.SaveIntoDatabase();
 							client.Out.SendMessage("Mob MaxSpeed changed to: " + targetMob.MaxSpeedBase, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						}
 						catch (Exception)
@@ -348,7 +352,9 @@ namespace DOL.GS.Scripts
 					{
 						try
 						{
-							targetMob.ChangeHealth(null, targetMob.MaxHealth, false);
+							targetMob.Health = targetMob.MaxHealth;
+							targetMob.SaveIntoDatabase();
+							client.Out.SendObjectUpdate(targetMob);
 							client.Out.SendMessage("Mob health regenerated (" + targetMob.Health + "/" + targetMob.MaxHealth + ")", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						}
 						catch (Exception)
@@ -362,7 +368,10 @@ namespace DOL.GS.Scripts
 					{
 						try
 						{
+							targetMob.AddAttacker(client.Player);
+							targetMob.AddXPGainer(client.Player, targetMob.Health);
 							targetMob.Die(client.Player);
+							targetMob.XPGainers.Clear();
 							client.Out.SendMessage("Mob '" + targetMob.Name + "' killed", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return 1;
 						}
@@ -374,16 +383,19 @@ namespace DOL.GS.Scripts
 					}
 				case "create":
 					{
-						string theType = "DOL.GS.GameMob";
+						string theType = "DOL.GS.GameNPC";
+						byte realm = 0;
 						if (args.Length > 2)
 							theType = args[2];
+						if (args.Length > 3)
+							realm = Convert.ToByte(args[3]); 
 
 						//Create a new mob
-						GameMob mob = null;
+						GameNPC mob = null;
 						try
 						{
-							client.Out.SendDebugMessage(Assembly.GetAssembly(typeof (GameServer)).FullName);
-							mob = (GameMob) Assembly.GetAssembly(typeof (GameServer)).CreateInstance(theType, false);
+							client.Out.SendDebugMessage(Assembly.GetAssembly(typeof(GameServer)).FullName);
+							mob = (GameNPC)Assembly.GetAssembly(typeof(GameServer)).CreateInstance(theType, false);
 						}
 						catch (Exception e)
 						{
@@ -394,7 +406,7 @@ namespace DOL.GS.Scripts
 							try
 							{
 								client.Out.SendDebugMessage(Assembly.GetExecutingAssembly().FullName);
-								mob = (GameMob) Assembly.GetExecutingAssembly().CreateInstance(theType, false);
+								mob = (GameNPC)Assembly.GetExecutingAssembly().CreateInstance(theType, false);
 							}
 							catch (Exception e)
 							{
@@ -407,11 +419,13 @@ namespace DOL.GS.Scripts
 							return 0;
 						}
 						//Fill the object variables
-						mob.Position = client.Player.Position;
-						mob.Region = client.Player.Region;
+						mob.X = client.Player.X;
+						mob.Y = client.Player.Y;
+						mob.Z = client.Player.Z;
+						mob.CurrentRegion = client.Player.CurrentRegion;
 						mob.Heading = client.Player.Heading;
 						mob.Level = 1;
-						mob.Realm = 0;
+						mob.Realm = realm;
 						mob.Name = "New Mob";
 						mob.Model = 408;
 						//Fill the living variables
@@ -419,12 +433,8 @@ namespace DOL.GS.Scripts
 						mob.MaxSpeedBase = 200;
 						mob.GuildName = "";
 						mob.Size = 50;
-
-						PeaceBrain brain = new PeaceBrain();
-						brain.Body = mob;
-						mob.OwnBrain = brain;
-
 						mob.AddToWorld();
+						mob.SaveIntoDatabase();
 						client.Out.SendMessage("Mob created: OID=" + mob.ObjectID, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}
 					break;
@@ -435,6 +445,7 @@ namespace DOL.GS.Scripts
 						{
 							model = Convert.ToUInt16(args[2]);
 							targetMob.Model = model;
+							targetMob.SaveIntoDatabase();
 							client.Out.SendMessage("Mob model changed to: " + targetMob.Model, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						}
 						catch (Exception)
@@ -446,20 +457,21 @@ namespace DOL.GS.Scripts
 					break;
 
 				case "respawn":
-				{
-					int interval;
-					try
 					{
-						interval = Convert.ToInt16(args[2]);
-						targetMob.RespawnInterval = interval;
-						client.Out.SendMessage("Mob respawn interval changed to: " + interval, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						int interval;
+						try
+						{
+							interval = Convert.ToInt32(args[2]);
+							targetMob.RespawnInterval = interval;
+							targetMob.SaveIntoDatabase();
+							client.Out.SendMessage("Mob respawn interval changed to: " + interval, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						}
+						catch (Exception)
+						{
+							client.Out.SendMessage("Type /mob for command overview.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							return 1;
+						}
 					}
-					catch (Exception)
-					{
-						client.Out.SendMessage("Type /mob for command overview.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						return 1;
-					}
-				}
 					break;
 
 				case "size":
@@ -474,7 +486,8 @@ namespace DOL.GS.Scripts
 								return 1;
 							}
 
-							targetMob.Size = (byte) size;
+							targetMob.Size = (byte)size;
+							targetMob.SaveIntoDatabase();
 							client.Out.SendMessage("Mob size changed to: " + targetMob.Size, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						}
 						catch (Exception)
@@ -485,7 +498,7 @@ namespace DOL.GS.Scripts
 					}
 					break;
 
-				case "aggroLevel":
+				case "aggro":
 					{
 						try
 						{
@@ -495,6 +508,7 @@ namespace DOL.GS.Scripts
 								int aggro = int.Parse(args[2]);
 								client.Out.SendMessage("Mob aggro changed to: " + aggro + " (was " + aggroBrain.AggroLevel + ")", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								aggroBrain.AggroLevel = aggro;
+								targetMob.SaveIntoDatabase();
 							}
 							else
 							{
@@ -509,7 +523,7 @@ namespace DOL.GS.Scripts
 					}
 					break;
 
-				case "aggroRange":
+				case "range":
 					{
 						try
 						{
@@ -519,6 +533,7 @@ namespace DOL.GS.Scripts
 								int range = int.Parse(args[2]);
 								DisplayMessage(client, "Mob aggro range changed to: {0} (was {1})", range, aggroBrain.AggroRange);
 								aggroBrain.AggroRange = range;
+								targetMob.SaveIntoDatabase();
 							}
 							else
 							{
@@ -537,9 +552,10 @@ namespace DOL.GS.Scripts
 					{
 						try
 						{
-							eDamageType damage = (eDamageType) Enum.Parse(typeof (eDamageType), args[2], true);
+							eDamageType damage = (eDamageType)Enum.Parse(typeof(eDamageType), args[2], true);
 							DisplayMessage(client, "Mob damage type changed to: {0} (was {1})", damage, targetMob.MeleeDamageType);
 							targetMob.MeleeDamageType = damage;
+							targetMob.SaveIntoDatabase();
 						}
 						catch
 						{
@@ -553,6 +569,7 @@ namespace DOL.GS.Scripts
 						if (param != "" && targetMob != null)
 						{
 							targetMob.Name = CheckName(param, client);
+							targetMob.SaveIntoDatabase();
 							client.Out.SendMessage("Mob name changed to: " + targetMob.Name, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						}
 						else
@@ -570,8 +587,8 @@ namespace DOL.GS.Scripts
 							string brainType = args[2];
 							try
 							{
-								client.Out.SendDebugMessage(Assembly.GetAssembly(typeof (GameServer)).FullName);
-								brain = (ABrain) Assembly.GetAssembly(typeof (GameServer)).CreateInstance(brainType, false);
+								client.Out.SendDebugMessage(Assembly.GetAssembly(typeof(GameServer)).FullName);
+								brain = (ABrain)Assembly.GetAssembly(typeof(GameServer)).CreateInstance(brainType, false);
 							}
 							catch (Exception e)
 							{
@@ -582,7 +599,7 @@ namespace DOL.GS.Scripts
 								try
 								{
 									client.Out.SendDebugMessage(Assembly.GetExecutingAssembly().FullName);
-									brain = (ABrain) Assembly.GetExecutingAssembly().CreateInstance(brainType, false);
+									brain = (ABrain)Assembly.GetExecutingAssembly().CreateInstance(brainType, false);
 								}
 								catch (Exception e)
 								{
@@ -609,24 +626,33 @@ namespace DOL.GS.Scripts
 						if (param != "")
 						{
 							targetMob.GuildName = CheckGuildName(param, client);
+							targetMob.SaveIntoDatabase();
 							client.Out.SendMessage("Mob guild changed to: " + targetMob.GuildName, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						}
 						else
 						{
-							client.Out.SendMessage("Type /mob for command overview.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							if (targetMob.GuildName != "")
+							{
+								targetMob.GuildName = "";
+								targetMob.SaveIntoDatabase();
+								client.Out.SendMessage("Mob guild removed.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							}
+							else
+								client.Out.SendMessage("Type /mob for command overview.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						}
 					}
 					break;
 
 				case "movehere":
 					{
-						targetMob.MoveTo(client.Player.Region, client.Player.Position, (ushort)client.Player.Heading);
+						targetMob.MoveTo(client.Player.CurrentRegionID, client.Player.X, client.Player.Y, client.Player.Z, client.Player.Heading);
+						targetMob.SaveIntoDatabase();
 						client.Out.SendMessage("Target Mob '" + targetMob.Name + "' moved to your location!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}
 					break;
 
 				case "attack":
-					foreach (GamePlayer player in targetMob.GetInRadius(typeof(GamePlayer), 3000))
+					foreach (GamePlayer player in targetMob.GetPlayersInRadius(3000))
 					{
 						if (player.Name == args[2])
 						{
@@ -638,18 +664,26 @@ namespace DOL.GS.Scripts
 
 				case "remove":
 					{
-						targetMob.RemoveFromWorld();
-						if(targetMob.PersistantGameObjectID != 0) GameServer.Database.DeleteObject(targetMob);
+						targetMob.StopAttack();
+						targetMob.StopCurrentSpellcast();
+						targetMob.DeleteFromDatabase();
+						targetMob.Delete();
 						client.Out.SendMessage("Target Mob removed from DB!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}
 					break;
 
-				case "save":
-				{
-					if(targetMob.PersistantGameObjectID != 0) GameServer.Database.SaveObject(targetMob);
-					else GameServer.Database.AddNewObject(targetMob);
-					client.Out.SendMessage("Target Mob saved in DB!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				}
+				case "questinfo":
+					{
+						if (targetMob.QuestListToGive.Count == 0)
+						{
+							client.Out.SendMessage("Mob not have any quests!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							return 1;
+						}
+
+						client.Out.SendMessage("--------------------------------------------------------------", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+						foreach (AbstractQuest quest in targetMob.QuestListToGive)
+							client.Out.SendMessage("Quest Name: [" + quest.Name + "]", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+					}
 					break;
 
 				case "equipinfo":
@@ -661,21 +695,24 @@ namespace DOL.GS.Scripts
 						}
 
 						client.Out.SendMessage("--------------------------------------------------------------", eChatType.CT_System, eChatLoc.CL_PopupWindow);
-						string message = string.Format("			         Inventory: {0}, equip template ID: {1}", targetMob.Inventory.GetType().ToString(), targetMob.Inventory.InventoryID);
+						string closed = "";
+						if (targetMob.Inventory is GameNpcInventoryTemplate)
+						{
+							GameNpcInventoryTemplate t = (GameNpcInventoryTemplate)targetMob.Inventory;
+							closed = t.IsClosed ? " (closed)" : " (open)";
+						}
+						string message = string.Format("			         Inventory: {0}{1}, equip template ID: {2}", targetMob.Inventory.GetType().ToString(), closed, targetMob.EquipmentTemplateID);
 						client.Out.SendMessage(message, eChatType.CT_System, eChatLoc.CL_PopupWindow);
 						client.Out.SendMessage("--------------------------------------------------------------", eChatType.CT_System, eChatLoc.CL_PopupWindow);
 						client.Out.SendMessage("", eChatType.CT_System, eChatLoc.CL_PopupWindow);
-						foreach (NPCEquipment item in targetMob.Inventory.AllItems)
+						foreach (InventoryItem item in targetMob.Inventory.AllItems)
 						{
 							client.Out.SendMessage("Slot Description : [" + GlobalConstants.SlotToName(item.SlotPosition) + "]", eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							client.Out.SendMessage("------------", eChatType.CT_System, eChatLoc.CL_PopupWindow);
-							client.Out.SendMessage("         Slot: " + item.SlotPosition, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+							client.Out.SendMessage("         Slot: " + GlobalConstants.SlotToName(item.Item_Type), eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							client.Out.SendMessage("        Model: " + item.Model, eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							client.Out.SendMessage("        Color: " + item.Color, eChatType.CT_System, eChatLoc.CL_PopupWindow);
-							if(item is NPCArmor)
-								client.Out.SendMessage("ModelExtension: " + ((NPCArmor)item).ModelExtension, eChatType.CT_System, eChatLoc.CL_PopupWindow);
-							else if(item is NPCWeapon)
-								client.Out.SendMessage("    GlowEffect: " + ((NPCWeapon)item).GlowEffect, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+							client.Out.SendMessage("       Effect: " + item.Effect, eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							client.Out.SendMessage("------------", eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							client.Out.SendMessage("", eChatType.CT_System, eChatLoc.CL_PopupWindow);
 						}
@@ -690,7 +727,7 @@ namespace DOL.GS.Scripts
 							return 1;
 						}
 
-					/*	if (args[2].ToLower() == "create")
+						if (args[2].ToLower() == "create")
 						{
 							try
 							{
@@ -711,21 +748,27 @@ namespace DOL.GS.Scripts
 							}
 							break;
 						}
-						else */if (args[2].ToLower() == "load")
+						else if (args[2].ToLower() == "load")
 						{
 							if (args.Length > 3)
 							{
+								if (targetMob.Inventory != null && !(targetMob.Inventory is GameNpcInventoryTemplate))
+								{
+									client.Out.SendMessage("Target mob is not using GameNpcInventoryTemplate.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									return 1;
+								}
 								try
 								{
-									GameNpcInventory inv = NPCInventoryMgr.GetNPCInventory(int.Parse(args[3]));
-									if(inv == null)
+									GameNpcInventoryTemplate load = new GameNpcInventoryTemplate();
+									if (!load.LoadFromDatabase(args[3]))
 									{
-										client.Out.SendMessage("Mob inventory template with id '"+int.Parse(args[3])+"' not found!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+										client.Out.SendMessage("Error loading equipment template \"" + args[2] + "\"", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 										return 1;
 									}
-									targetMob.Inventory = inv;
+									targetMob.EquipmentTemplateID = args[3];
+									targetMob.Inventory = load;
+									targetMob.SaveIntoDatabase();
 									targetMob.UpdateNPCEquipmentAppearance();
-									GameServer.Database.SaveObject(targetMob);
 									client.Out.SendMessage("Mob equipment loaded!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								}
 								catch
@@ -741,7 +784,7 @@ namespace DOL.GS.Scripts
 							break;
 						}
 
-						/*GameNpcInventoryTemplate template = targetMob.Inventory as GameNpcInventoryTemplate;
+						GameNpcInventoryTemplate template = targetMob.Inventory as GameNpcInventoryTemplate;
 						if (template == null)
 						{
 							client.Out.SendMessage("Target mob is not using GameNpcInventoryTemplate.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -773,7 +816,7 @@ namespace DOL.GS.Scripts
 												effect = Convert.ToInt32(args[6]);
 
 
-											if (! template.AddNPCEquipment((eInventorySlot) slot, model, color, effect))
+											if (!template.AddNPCEquipment((eInventorySlot)slot, model, color, effect))
 											{
 												client.Out.SendMessage("Couldn't add new item to slot " + slot + ". Template could be closed.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 												return 1;
@@ -808,7 +851,7 @@ namespace DOL.GS.Scripts
 												return 1;
 											}
 
-											if (!template.RemoveNPCEquipment((eInventorySlot) slot))
+											if (!template.RemoveNPCEquipment((eInventorySlot)slot))
 											{
 												client.Out.SendMessage("Couldn't remove item from slot " + slot + ". Template could be closed.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 												return 1;
@@ -855,7 +898,7 @@ namespace DOL.GS.Scripts
 									if (args.Length > 3)
 									{
 										bool replace = (args.Length > 4 && args[4].ToLower() == "replace") ? true : false;
-										if (!replace && null != GameServer.Database.SelectObject(typeof(NPCEquipment), Expression.Eq("TemplateID",args[3])))
+										if (!replace && null != GameServer.Database.SelectObject(typeof(NPCEquipment), "TemplateID = '" + GameServer.Database.Escape(args[3]) + "'"))
 										{
 											client.Out.SendMessage("Template with name '" + args[3] + "' already exists. Use 'replace' flag if you want to overwrite it.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 											return 1;
@@ -882,64 +925,104 @@ namespace DOL.GS.Scripts
 								break;
 						}
 
-						targetMob.UpdateNPCEquipmentAppearance();*/
+						targetMob.UpdateNPCEquipmentAppearance();
 					}
 					break;
-
-				case "ghost":
+				case "transparent":
 					{
-						targetMob.Flags ^= (byte) GameNPC.eFlags.GHOST;
-						client.Out.SendMessage("Mob GHOST flag is set to " + ((targetMob.Flags & (uint) GameNPC.eFlags.GHOST) != 0), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						targetMob.Flags ^= (uint)GameNPC.eFlags.TRANSPARENT;
+						targetMob.SaveIntoDatabase();
+						client.Out.SendMessage("Mob TRANSPARENT flag is set to " + ((targetMob.Flags & (uint)GameNPC.eFlags.TRANSPARENT) != 0), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}
 					break;
-				case "stealth":
-				{
-					targetMob.Flags ^= (byte) GameNPC.eFlags.STEALTH;
-					client.Out.SendMessage("Mob TRANSPARENT flag is set to " + ((targetMob.Flags & (uint) GameNPC.eFlags.STEALTH) != 0), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				}
+				case "peace":
+					{
+						targetMob.Flags ^= (uint)GameNPC.eFlags.PEACE;
+						targetMob.SaveIntoDatabase();
+						client.Out.SendMessage("Mob PEACE flag is set to " + ((targetMob.Flags & (uint)GameNPC.eFlags.PEACE) != 0), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					}
 					break;
 				case "fly":
 					{
-						targetMob.Flags ^= (byte) GameNPC.eFlags.FLYING;
-						client.Out.SendMessage("Mob FLYING flag is set to " + ((targetMob.Flags & (uint) GameNPC.eFlags.FLYING) != 0), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						targetMob.Flags ^= (uint)GameNPC.eFlags.FLYING;
+						targetMob.SaveIntoDatabase();
+						client.Out.SendMessage("Mob FLYING flag is set to " + ((targetMob.Flags & (uint)GameNPC.eFlags.FLYING) != 0), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}
 					break;
 				case "noname":
 					{
-						targetMob.Flags ^= (byte) GameNPC.eFlags.DONTSHOWNAME;
-						client.Out.SendMessage("Mob DONTSHOWNAME flag is set to " + ((targetMob.Flags & (uint) GameNPC.eFlags.DONTSHOWNAME) != 0), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						targetMob.Flags ^= (uint)GameNPC.eFlags.DONTSHOWNAME;
+						targetMob.SaveIntoDatabase();
+						client.Out.SendMessage("Mob DONTSHOWNAME flag is set to " + ((targetMob.Flags & (uint)GameNPC.eFlags.DONTSHOWNAME) != 0), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}
 					break;
 				case "notarget":
 					{
-						targetMob.Flags ^= (byte) GameNPC.eFlags.CANTTARGET;
-						client.Out.SendMessage("Mob CANTTARGET flag is set to " + ((targetMob.Flags & (uint) GameNPC.eFlags.CANTTARGET) != 0), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						targetMob.Flags ^= (uint)GameNPC.eFlags.CANTTARGET;
+						targetMob.SaveIntoDatabase();
+						client.Out.SendMessage("Mob CANTTARGET flag is set to " + ((targetMob.Flags & (uint)GameNPC.eFlags.CANTTARGET) != 0), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}
 					break;
-				case "lootList":
+				case "addloot":
 					{
 						try
 						{
-							targetMob.LootListID = int.Parse(args[2]);
-							DisplayMessage(client, "Mob loot list id changed to: {0})", targetMob.LootListID);
+							string lootTemplateID = args[2];
+							int chance = Convert.ToInt16(args[3]);
+							string name = targetMob.Name;
+
+							DataObject[] template = GameServer.Database.SelectObjects(typeof(DBLootTemplate), "TemplateName = '" + GameServer.Database.Escape(name) + "' AND ItemTemplateID = '" + GameServer.Database.Escape(lootTemplateID) + "'");
+							if (template != null)
+							{
+								foreach (DataObject loot in template)
+								{
+									GameServer.Database.DeleteObject(loot);
+								}
+								DBLootTemplate lt = new DBLootTemplate();
+								lt.Chance = chance;
+								lt.TemplateName = name;
+								lt.ItemTemplateID = lootTemplateID;
+
+								GameServer.Database.AddNewObject(lt);
+							}
+							else
+							{
+								ItemTemplate itemtemplate = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), lootTemplateID);
+								if (itemtemplate == null)
+								{
+									DisplayError(client, "ItemTemplate " + lootTemplateID + " not found!");
+									return 0;
+								}
+
+								DBLootTemplate lt = new DBLootTemplate();
+								lt.Chance = chance;
+								lt.TemplateName = name;
+								lt.ItemTemplateID = lootTemplateID;
+
+								GameServer.Database.AddNewObject(lt);
+							}
+
+
+							client.Out.SendMessage("LootTemplate " + lootTemplateID + " Successfully Added to " + name + " with a " + chance + "% chance to drop",
+								eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						}
 						catch
 						{
-							DisplayError(client, "Type /mob for command overview.");
-							return 1;
+							client.Out.SendMessage("An Error occured, Please make sure you have a mob targeted.",
+								eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						}
 					}
 					break;
 				case "removeloot":
 					{
-					/*	string lootTemplateID = args[2];
+						string lootTemplateID = args[2];
 						string name = targetMob.Name;
 						if (lootTemplateID.ToLower().ToString() == "all")
 						{
-							IList template = GameServer.Database.SelectObjects(typeof(DBLootTemplate), Expression.Eq("TemplateName",name));
+							DataObject[] template = GameServer.Database.SelectObjects(typeof(DBLootTemplate), "TemplateName = '" + GameServer.Database.Escape(name) + "'");
 							if (template != null)
 							{
-								foreach (DBLootTemplate loot in template)
+								foreach (DataObject loot in template)
 								{
 									GameServer.Database.DeleteObject(loot);
 								}
@@ -954,10 +1037,10 @@ namespace DOL.GS.Scripts
 						}
 						else
 						{
-							IList template = GameServer.Database.SelectObjects(typeof(DBLootTemplate), Expression.And(Expression.Eq("TemplateName",name), Expression.Eq("ItemTemplateID",lootTemplateID)));
+							DataObject[] template = GameServer.Database.SelectObjects(typeof(DBLootTemplate), "TemplateName = '" + GameServer.Database.Escape(name) + "' AND ItemTemplateID = '" + GameServer.Database.Escape(lootTemplateID) + "'");
 							if (template != null)
 							{
-								foreach (DBLootTemplate loot in template)
+								foreach (DataObject loot in template)
 								{
 									GameServer.Database.DeleteObject(loot);
 								}
@@ -969,38 +1052,32 @@ namespace DOL.GS.Scripts
 								client.Out.SendMessage(lootTemplateID + " does not exist on " + name,
 									eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							}
-						}*/
+						}
 					}
 					break;
 				case "viewloot":
 					{
-						LootList mobLootList = GameServer.Database.SelectObject(typeof(LootList), Expression.Eq("LootListID", targetMob.LootListID)) as LootList;
-						ArrayList info = new ArrayList();
+						DataObject[] template = GameServer.Database.SelectObjects(typeof(DBLootTemplate), "TemplateName = '" + GameServer.Database.Escape(targetMob.Name) + "'");
+						string message = "[ " + targetMob.Name + "'s Loot Table ]\n\n";
 
-						if(mobLootList != null)
+						foreach (DBLootTemplate loot in template)
 						{
-							foreach(ILoot loot in mobLootList.AllLoots)
-							{
-								info.Add("- LootID = "+loot.LootID + "(Drop chances: " + loot.Chance +")");
-								info.Add("		LootType = "+loot.GetType());
-								if(loot is ItemLoot && ((ItemLoot)loot).ItemTemplate != null)
-								{
-									info.Add("			ItemTemplateID = "+((ItemLoot)loot).ItemTemplate.ItemTemplateID+" (Name: "+((ItemLoot)loot).ItemTemplate.Name +")");
-								}
-							}
+							if (loot.ItemTemplate == null)
+								message += loot.ItemTemplateID + " (Template Not Found)";
+							else message += loot.ItemTemplate.Name + " (" + loot.ItemTemplate.Id_nb + ")";
+							message += " Chance: " + loot.Chance.ToString() + "\n\n";
 						}
-
-						client.Out.SendCustomTextWindow("[ Loot list "+ targetMob.LootListID +" ]", info);
+						client.Out.SendMessage(message, eChatType.CT_System, eChatLoc.CL_PopupWindow);
 					}
 					break;
 				case "copy":
 					{
 						//Create a new mob
-						GameMob mob = null;
+						GameNPC mob = null;
 
 						foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
 						{
-							mob = (GameMob)assembly.CreateInstance(targetMob.GetType().FullName, true);
+							mob = (GameNPC)assembly.CreateInstance(targetMob.GetType().FullName, true);
 							if (mob != null)
 								break;
 						}
@@ -1012,8 +1089,10 @@ namespace DOL.GS.Scripts
 						}
 
 						//Fill the object variables
-						mob.Position = client.Player.Position;
-						mob.Region = client.Player.Region;
+						mob.X = client.Player.X;
+						mob.Y = client.Player.Y;
+						mob.Z = client.Player.Z;
+						mob.CurrentRegion = client.Player.CurrentRegion;
 						mob.Heading = client.Player.Heading;
 						mob.Level = targetMob.Level;
 						mob.Realm = targetMob.Realm;
@@ -1023,11 +1102,12 @@ namespace DOL.GS.Scripts
 						mob.MeleeDamageType = targetMob.MeleeDamageType;
 						mob.RespawnInterval = targetMob.RespawnInterval;
 						//Fill the living variables
+						mob.CurrentSpeed = 0;
 						mob.MaxSpeedBase = targetMob.MaxSpeedBase;
 						mob.GuildName = targetMob.GuildName;
 						mob.Size = targetMob.Size;
 						mob.Inventory = targetMob.Inventory;
-						mob.LootListID = targetMob.LootListID;
+						mob.NPCTemplate = targetMob.NPCTemplate;
 						ABrain brain = null;
 						foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
 						{
@@ -1038,20 +1118,58 @@ namespace DOL.GS.Scripts
 						if (brain == null)
 						{
 							client.Out.SendMessage("Cannot create brain, standard brain being applied", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							brain = new StandardMobBrain();
+							mob.SetOwnBrain(new StandardMobBrain());
 						}
-						if(brain is StandardMobBrain && targetMob.Brain is StandardMobBrain)
-						{
-							((StandardMobBrain)brain).AggroLevel = ((StandardMobBrain)targetMob.Brain).AggroLevel;
-							((StandardMobBrain)brain).AggroRange = ((StandardMobBrain)targetMob.Brain).AggroRange;
-						}
-						mob.OwnBrain = brain;
-						brain.Body = mob;
-
+						else mob.SetOwnBrain(brain);
 						mob.AddToWorld();
+						mob.SaveIntoDatabase();
 						client.Out.SendMessage("Mob created: OID=" + mob.ObjectID, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						break;
 					}
-					break;
+				case "npctemplate":
+					{
+						if (args.Length < 3)
+						{
+							DisplayError(client, "Usage: /mob npctemplate <id>", new object[] { });
+							break;
+						}
+						int id = 0;
+						try
+						{
+							id = Convert.ToInt32(args[2]);
+						}
+						catch
+						{
+							DisplayError(client, args[2] + " does not seem to be a number", new object[] { });
+							break;
+						}
+						INpcTemplate template = NpcTemplateMgr.GetTemplate(id);
+						if (template == null)
+						{
+							DisplayError(client, "no template found for " + id, new object[] { });
+							break;
+						}
+						if (targetMob == null)
+						{
+							GameNPC mob = new GameNPC(template);
+							mob.X = client.Player.X;
+							mob.Y = client.Player.Y;
+							mob.Z = client.Player.Z;
+							mob.Heading = client.Player.Heading;
+							mob.CurrentRegion = client.Player.CurrentRegion;
+							mob.AddToWorld();
+							DisplayMessage(client, "created npc based on template " + id, new object[] { });
+						}
+						else
+						{
+							targetMob.LoadTemplate(template);
+							targetMob.UpdateNPCEquipmentAppearance();
+							targetMob.NPCTemplate = template as NpcTemplate;
+							targetMob.SaveIntoDatabase();
+							DisplayMessage(client, "updated npc based on template " + id, new object[] { });
+						}
+						break;
+					}
 			}
 			return 1;
 		}

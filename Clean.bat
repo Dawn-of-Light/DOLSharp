@@ -1,1 +1,1 @@
-Prebuild /clean /removedir obj /file prebuild.xml /pause
+dnpb /clean /removedir obj /pause

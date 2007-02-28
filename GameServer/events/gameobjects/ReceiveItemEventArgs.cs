@@ -17,7 +17,7 @@
  *
  */
 using System;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.GS;
 
 namespace DOL.Events
@@ -28,7 +28,7 @@ namespace DOL.Events
 	public class ReceiveMoneyEventArgs : EventArgs
 	{
 		private GameLiving source;
-		private GameObject target;
+		private GameLiving target;
 		private long copperValue;
 
 		/// <summary>
@@ -37,7 +37,7 @@ namespace DOL.Events
 		/// <param name="source">the source of the money</param>
 		/// <param name="target">the target of the money</param>
 		/// <param name="copperValue">the money value</param>
-		public ReceiveMoneyEventArgs(GameLiving source, GameObject target, long copperValue)
+		public ReceiveMoneyEventArgs(GameLiving source, GameLiving target, long copperValue)
 		{
 			this.source = source;
 			this.target = target;
@@ -55,7 +55,7 @@ namespace DOL.Events
 		/// <summary>
 		/// Gets the GameLivng who receives the money
 		/// </summary>
-		public GameObject Target
+		public GameLiving Target
 		{
 			get { return target; }
 		}

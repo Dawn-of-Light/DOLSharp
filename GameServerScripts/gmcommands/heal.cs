@@ -17,7 +17,6 @@
  *
  */
 using System;
-using DOL.Database;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Scripts
@@ -31,27 +30,19 @@ namespace DOL.GS.Scripts
 	{
 		public int OnCommand(GameClient client, string[] args)
 		{
-			if (args.Length == 1)
-			{
-				client.Out.SendMessage("Usage: /heal",
-				                       eChatType.CT_System,
-				                       eChatLoc.CL_SystemWindow);
-				return 1;
-			}
-
 			try
 			{
 				GameLiving living = client.Player.TargetObject as GameLiving;
 				if (living != null)
 				{
 					living.Health = living.MaxHealth;
-					living.EndurancePercent = 100;
+					living.Endurance = living.MaxEndurance;
 					living.Mana = living.MaxMana;
 				}
 				else
 				{
 					client.Player.Health = client.Player.MaxHealth;
-                    client.Player.EndurancePercent = 100;
+					client.Player.Endurance = client.Player.MaxEndurance;
 					client.Player.Mana = client.Player.MaxMana;
 				}
 			}

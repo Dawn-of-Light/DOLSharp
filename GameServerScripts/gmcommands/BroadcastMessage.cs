@@ -17,14 +17,13 @@
  *
  */
 using System.Collections;
-using DOL.Database;
 
 namespace DOL.GS.Scripts
 {
 	[CmdAttribute(
 		"&announce2",
 		(uint) ePrivLevel.GM,
-		"Broadcast something to all players in the game",
+		"Broadcast something to all players in the DAOC",
 		"/broadcast <message>")]
 	public class AnnounceCommandHandler : ICommandHandler
 	{

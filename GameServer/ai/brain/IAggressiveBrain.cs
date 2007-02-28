@@ -52,6 +52,6 @@ namespace DOL.AI.Brain
 		/// </summary>
 		/// <param name="target"></param>
 		/// <returns></returns>
-		int CalculateAggroChance(GameLiving target);
+		int CalculateAggroLevelToTarget(GameLiving target);
 	}
 }

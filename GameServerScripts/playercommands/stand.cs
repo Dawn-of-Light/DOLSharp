@@ -17,8 +17,6 @@
  *
  */
 
-using DOL.Database;
-
 namespace DOL.GS.Scripts
 {
 	[CmdAttribute("&stand", (uint) ePrivLevel.Player, "Stands up when sitting", "/stand")]

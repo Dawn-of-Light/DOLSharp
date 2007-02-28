@@ -43,7 +43,6 @@ namespace DOL.GS.GameEvents
 		private static long m_lastBytesOut = 0;
 		private static long m_lastPacketsIn = 0;
 		private static long m_lastPacketsOut = 0;
-		private static long m_lastGetInRadius = 0;
 		private static long m_lastMeasureTick = DateTime.Now.Ticks;
 		private static int m_statFrequency = 30000; // 30s
 		private static PerformanceCounter m_systemCpuUsedCounter;
@@ -146,12 +145,10 @@ namespace DOL.GS.GameEvents
 				long outRate = (Statistics.BytesOut - m_lastBytesOut)/time;
 				long inPckRate = (Statistics.PacketsIn - m_lastPacketsIn)/time;
 				long outPckRate = (Statistics.PacketsOut - m_lastPacketsOut)/time;
-				long inRadiusRate = (Zone.InRadiusCalls - m_lastGetInRadius)/time;
 				m_lastBytesIn = Statistics.BytesIn;
 				m_lastBytesOut = Statistics.BytesOut;
 				m_lastPacketsIn = Statistics.PacketsIn;
 				m_lastPacketsOut = Statistics.PacketsOut;
-				m_lastGetInRadius = Zone.InRadiusCalls;
 
 				if (log.IsInfoEnabled)
 				{
@@ -161,8 +158,7 @@ namespace DOL.GS.GameEvents
 						.Append("  Down=").Append(inRate/1024).Append( "kb/s (" ).Append(Statistics.BytesIn/1024/1024).Append( "MB)" )
 						.Append("  Up=").Append(outRate/1024).Append( "kb/s (" ).Append(Statistics.BytesOut/1024/1024).Append( "MB)" )
 						.Append("  In=").Append(inPckRate).Append( "pck/s (" ).Append(Statistics.PacketsIn/1000).Append( "K)" )
-						.Append("  Out=").Append(outPckRate).Append( "pck/s (" ).Append(Statistics.PacketsOut/1000).Append( "K)" )
-						.Append("  InRadius=").Append(inRadiusRate).Append( "call/s (" ).Append(Zone.InRadiusCalls/1000).Append( "K)" );
+						.Append("  Out=").Append(outPckRate).Append( "pck/s (" ).Append(Statistics.PacketsOut/1000).Append( "K)" );
 
 					lock (m_timerStatsByMgr.SyncRoot)
 					{
@@ -204,6 +200,7 @@ namespace DOL.GS.GameEvents
 							{
 								log.FatalFormat("{0} stopped ticking; timer stacktrace:\n{1}\n", mgr.Name, Util.FormatStackTrace(mgr.GetStacktrace()));
 								log.FatalFormat("NPC update stacktrace:\n{0}\n", Util.FormatStackTrace(WorldMgr.GetNpcUpdateStacktrace()));
+								log.FatalFormat("Relocate() stacktrace:\n{0}\n", Util.FormatStackTrace(WorldMgr.GetRelocateRegionsStacktrace()));
 								log.FatalFormat("Packethandlers stacktraces:\n{0}\n", PacketProcessor.GetConnectionThreadpoolStacks());
 							}
 

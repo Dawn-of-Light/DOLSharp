@@ -20,7 +20,6 @@ using System;
 using System.Reflection;
 using DOL.Events;
 using DOL.GS;
-using DOL.GS.Database;
 using DOL.GS.PacketHandler;
 using log4net;
 
@@ -37,9 +36,13 @@ namespace DOL.AI.Brain
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		public static readonly short MIN_OWNER_FOLLOW_DIST = 128;
-		public static readonly short MAX_OWNER_FOLLOW_DIST = 1500;
+		public static readonly short MAX_OWNER_FOLLOW_DIST = short.MaxValue;
 		public static readonly short MIN_ENEMY_FOLLOW_DIST = 90;
 		public static readonly short MAX_ENEMY_FOLLOW_DIST = 512;
+
+		private int m_tempX = 0;
+		private int m_tempY = 0;
+		private int m_tempZ = 0;
 
 		/// <summary>
 		/// Holds the controlling player of this brain
@@ -49,18 +52,19 @@ namespace DOL.AI.Brain
 		/// <summary>
 		/// Holds the walk state of the brain
 		/// </summary>
-		private eWalkState          m_walkState;
+		private eWalkState m_walkState;
 
 		/// <summary>
 		/// Holds the aggression level of the brain
 		/// </summary>
-		private eAggressionState    m_aggressionState;
+		private eAggressionState m_aggressionState;
 
 		/// <summary>
 		/// Constructs new controlled npc brain
 		/// </summary>
 		/// <param name="owner"></param>
-		public ControlledNpc(GamePlayer owner) : base()
+		public ControlledNpc(GamePlayer owner)
+			: base()
 		{
 			if (owner == null)
 				throw new ArgumentNullException("owner");
@@ -69,7 +73,7 @@ namespace DOL.AI.Brain
 			m_aggressionState = eAggressionState.Defensive;
 			m_walkState = eWalkState.Follow;
 			m_aggroLevel = 99;
-			m_aggroRange = 1500;
+			m_aggroMaxRange = 1500;
 		}
 
 		/// <summary>
@@ -122,6 +126,16 @@ namespace DOL.AI.Brain
 			{
 				m_aggressionState = value;
 				m_orderAttackTarget = null;
+				if (m_aggressionState == eAggressionState.Passive)
+				{
+					ClearAggroList();
+					Body.StopAttack();
+					Body.TargetObject = null;
+					if (WalkState == eWalkState.Follow)
+						FollowOwner();
+					else if (m_tempX > 0 && m_tempY > 0 && m_tempZ > 0)
+						Body.WalkTo(m_tempX, m_tempY, m_tempZ, Body.MaxSpeed);
+				}
 				AttackMostWanted();
 				UpdatePetWindow();
 			}
@@ -143,7 +157,7 @@ namespace DOL.AI.Brain
 		/// Follow the target on command
 		/// </summary>
 		/// <param name="target"></param>
-		public void Follow(GamePlayer target)
+		public void Follow(GameObject target)
 		{
 			WalkState = eWalkState.Follow;
 			Body.Follow(target, MIN_OWNER_FOLLOW_DIST, MAX_OWNER_FOLLOW_DIST);
@@ -154,6 +168,9 @@ namespace DOL.AI.Brain
 		/// </summary>
 		public void Stay()
 		{
+			m_tempX = Body.X;
+			m_tempY = Body.Y;
+			m_tempZ = Body.Z;
 			WalkState = eWalkState.Stay;
 			Body.StopFollow();
 		}
@@ -163,9 +180,12 @@ namespace DOL.AI.Brain
 		/// </summary>
 		public void ComeHere()
 		{
+			m_tempX = Body.X;
+			m_tempY = Body.Y;
+			m_tempZ = Body.Z;
 			WalkState = eWalkState.ComeHere;
 			Body.StopFollow();
-			Body.WalkTo(Owner.Position, Body.MaxSpeed);
+			Body.WalkTo(Owner, Body.MaxSpeed);
 		}
 
 		/// <summary>
@@ -174,9 +194,12 @@ namespace DOL.AI.Brain
 		/// <param name="target"></param>
 		public void Goto(GameObject target)
 		{
+			m_tempX = Body.X;
+			m_tempY = Body.Y;
+			m_tempZ = Body.Z;
 			WalkState = eWalkState.GoTarget;
 			Body.StopFollow();
-			Body.WalkTo(target.Position, Body.MaxSpeed);
+			Body.WalkTo(target, Body.MaxSpeed);
 		}
 
 		/// <summary>
@@ -214,7 +237,7 @@ namespace DOL.AI.Brain
 			if (!base.Start()) return false;
 			if (WalkState == eWalkState.Follow)
 				FollowOwner();
-			GameEventMgr.AddHandler(Owner, GameLivingBaseEvent.AttackedByEnemy, new DOLEventHandler(OnOwnerAttacked));
+			GameEventMgr.AddHandler(Owner, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnOwnerAttacked));
 			return true;
 		}
 
@@ -225,7 +248,7 @@ namespace DOL.AI.Brain
 		public override bool Stop()
 		{
 			if (!base.Stop()) return false;
-			GameEventMgr.RemoveHandler(Owner, GameLivingBaseEvent.AttackedByEnemy, new DOLEventHandler(OnOwnerAttacked));
+			GameEventMgr.RemoveHandler(Owner, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnOwnerAttacked));
 			Owner.CommandNpcRelease();
 			return true;
 		}
@@ -235,18 +258,22 @@ namespace DOL.AI.Brain
 		/// </summary>
 		public override void Think()
 		{
-			if (!Owner.CurrentUpdateArray[Body.ObjectID-1])
+			if (!Owner.CurrentUpdateArray[Body.ObjectID - 1])
 			{
-				Owner.Out.SendNPCUpdate(Body);
-				Owner.CurrentUpdateArray[Body.ObjectID-1] = true;
+				Owner.Out.SendObjectUpdate(Body);
+				Owner.CurrentUpdateArray[Body.ObjectID - 1] = true;
 			}
 
-			if (!Body.Position.CheckSquareDistance(Owner.Position, (uint)(MAX_OWNER_FOLLOW_DIST*MAX_OWNER_FOLLOW_DIST)))
+			if (!WorldMgr.CheckDistance(Body, Owner, MAX_OWNER_FOLLOW_DIST))
 				Owner.CommandNpcRelease();
+
+			if (!Body.IsCasting && Body.Spells.Count > 0)
+				CheckSpells();
 
 			if (AggressionState == eAggressionState.Aggressive)
 			{
-				CheckAggro();
+				CheckPlayerAggro();
+				CheckNPCAggro();
 			}
 		}
 
@@ -258,23 +285,32 @@ namespace DOL.AI.Brain
 		/// <param name="args">The event arguments</param>
 		public override void Notify(DOLEvent e, object sender, EventArgs args)
 		{
+			base.Notify(e, sender, args);
+
 			if (!IsActive) return;
 
 			if (sender == Body)
 			{
 				if (e == GameNPCEvent.FollowLostTarget)
 				{
-					FollowLostTargetEventArgs eArgs = args as FollowLostTargetEventArgs;
-					if (eArgs == null) return;
-					if (eArgs.LostTarget == Owner)
-					{
-						Owner.CommandNpcRelease();
-						return;
-					}
+					return;
 				}
 			}
+		}
 
-			base.Notify(e, sender, args);
+		/// <summary>
+		/// Lost follow target event
+		/// </summary>
+		/// <param name="target"></param>
+		protected override void OnFollowLostTarget(GameObject target)
+		{
+			if (target == Owner)
+			{
+				Owner.CommandNpcRelease();
+				return;
+			}
+
+			FollowOwner();
 		}
 
 		/// <summary>
@@ -300,7 +336,7 @@ namespace DOL.AI.Brain
 				return null;
 			if (m_orderAttackTarget != null)
 			{
-				if (m_orderAttackTarget.Alive && m_orderAttackTarget.ObjectState == eObjectState.Active)
+				if (m_orderAttackTarget.IsAlive && m_orderAttackTarget.ObjectState == GameObject.eObjectState.Active)
 					return m_orderAttackTarget;
 				m_orderAttackTarget = null;
 			}
@@ -315,11 +351,11 @@ namespace DOL.AI.Brain
 		{
 			if (!IsActive)
 				return;
-
 			GameLiving target = CalculateNextAttackTarget();
-			if (target!=null) 
+
+			if (target != null)
 			{
-				if (!Body.AttackState || target!=Body.TargetObject) 
+				if (!Body.AttackState || target != Body.TargetObject)
 				{
 					if (!Body.StartSpellAttack(target))
 						Body.StartAttack(target);
@@ -329,8 +365,11 @@ namespace DOL.AI.Brain
 			{
 				if (Body.AttackState)
 					Body.StopAttack();
+
 				if (WalkState == eWalkState.Follow)
 					FollowOwner();
+				else if (m_tempX > 0 && m_tempY > 0 && m_tempZ > 0)
+					Body.WalkTo(m_tempX, m_tempY, m_tempZ, Body.MaxSpeed);
 			}
 		}
 
@@ -342,8 +381,14 @@ namespace DOL.AI.Brain
 		/// <param name="arguments"></param>
 		protected virtual void OnOwnerAttacked(DOLEvent e, object sender, EventArgs arguments)
 		{
+			// theurgist pets don't help their owner
+			if (Owner.CharacterClass.ID == (int)eCharacterClass.Theurgist)
+				return;
+
 			AttackedByEnemyEventArgs args = arguments as AttackedByEnemyEventArgs;
 			if (args == null) return;
+			if (args.AttackData.Target is GamePlayer && (args.AttackData.Target as GamePlayer).ControlledNpc != this)
+				return;
 			// react only on these attack results
 			switch (args.AttackData.AttackResult)
 			{
@@ -359,7 +404,7 @@ namespace DOL.AI.Brain
 			}
 		}
 
-		protected override void BringFriends(GameLiving living)
+		protected override void BringFriends(AttackData ad)
 		{
 			// don't
 		}

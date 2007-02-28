@@ -75,12 +75,12 @@ namespace DOL.GS.Scripts
 			{
 				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Instruments));
 				player.AddSpellLine(SkillBase.GetSpellLine("Instruments"));
-				player.AddAbility(SkillBase.GetAbility(Abilities.Shield, (int)eShieldSize.Small));
+				player.AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Small));
 				player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Instruments));
 			}
 			if (player.Level >= 10)
 			{				
-				player.AddAbility(SkillBase.GetAbility(Abilities.AlbArmor, (int)eArmorLevel.Medium));
+				player.AddAbility(SkillBase.GetAbility(Abilities.AlbArmor, ArmorLevel.Studded));
 			}
 			if (player.Level >= 15)
 			{
@@ -89,14 +89,15 @@ namespace DOL.GS.Scripts
 			}
 			if (player.Level >= 20)
 			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.AlbArmor, (int)eArmorLevel.High));
+				player.AddAbility(SkillBase.GetAbility(Abilities.AlbArmor, ArmorLevel.Chain));
 			}
 		}
 
 		/// <summary>
-		/// Add all spell-lines & other things that are new when this skill is trained
+		/// Add all spell-lines and other things that are new when this skill is trained
 		/// </summary>
 		/// <param name="player">player to modify</param>
+		/// <param name="skill">The skill to train</param>
 		public override void OnSkillTrained(GamePlayer player, Specialization skill)
 		{
 			base.OnSkillTrained(player, skill);

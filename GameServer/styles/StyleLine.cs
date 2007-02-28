@@ -38,7 +38,8 @@ namespace DOL.GS.Styles
 		/// <param name="keyName">The key name of this styleLine</param>
 		/// <param name="name">The name of this styleLine, eg. "Blades"</param>
 		/// <param name="styles">The styles for this StyleLine</param>
-		public StyleLine (string keyName, string name, Style[] styles) : base(keyName, name, 0)
+		public StyleLine(string keyName, string name, Style[] styles)
+			: base(keyName, name, 0)
 		{
 			m_styles = styles;
 		}
@@ -48,14 +49,14 @@ namespace DOL.GS.Styles
 		/// this StyleLine
 		/// </summary>
 		/// <returns>List of styles available at the current level of this styleline</returns>
-		public IList GetStylesForLevel ()
+		public IList GetStylesForLevel()
 		{
-			ArrayList list = new ArrayList ();
+			ArrayList list = new ArrayList();
 			for (int i = 0; i < m_styles.Length; i++)
 			{
 				if (m_styles[i].Level <= Level)
 				{
-					list.Add (m_styles[i]);
+					list.Add(m_styles[i]);
 				}
 			}
 			return list;

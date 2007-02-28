@@ -75,7 +75,7 @@ namespace DOL.GS.Scripts
 				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Dual_Wield));
 				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Envenom));
 				player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Crossbow));
-				player.AddAbility(SkillBase.GetAbility(Abilities.Shield, (int)eShieldSize.Small));
+				player.AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Small));
 				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 2));
 			}
 			if (player.Level >= 10)
@@ -105,9 +105,10 @@ namespace DOL.GS.Scripts
 		}
 
 		/// <summary>
-		/// Add all spell-lines & other things that are new when this skill is trained
+		/// Add all spell-lines and other things that are new when this skill is trained
 		/// </summary>
 		/// <param name="player">player to modify</param>
+		/// <param name="skill">The skill to train</param>
 		public override void OnSkillTrained(GamePlayer player, Specialization skill)
 		{
 			base.OnSkillTrained(player, skill);

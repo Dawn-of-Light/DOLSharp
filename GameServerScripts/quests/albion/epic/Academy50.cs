@@ -98,26 +98,29 @@ namespace DOL.GS.Quests.Albion
 		[ScriptLoadedEvent]
 		public static void ScriptLoaded(DOLEvent e, object sender, EventArgs args)
 		{
+			if (!ServerProperties.Properties.LOAD_QUESTS)
+				return;
 			if (log.IsInfoEnabled)
-				if (log.IsInfoEnabled)
-					log.Info("Quest \"" + questTitle + "\" initializing ...");
+				log.Info("Quest \"" + questTitle + "\" initializing ...");
 
 			#region defineNPCs
 
             GameNPC[] npcs = WorldMgr.GetNPCsByName("Master Ferowl", eRealm.Albion);
 			if (npcs.Length == 0)
 			{
-				Ferowl = new GameMob();
+				Ferowl = new GameNPC();
 				Ferowl.Model = 61;
 				Ferowl.Name = "Master Ferowl";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + Ferowl.Name + " , creating it ...");
 				Ferowl.GuildName = "";
 				Ferowl.Realm = (byte) eRealm.Albion;
-				Ferowl.RegionId = 1;
+				Ferowl.CurrentRegionID = 1;
 				Ferowl.Size = 51;
 				Ferowl.Level = 40;
-				Ferowl.Position = new Point(559716, 510733, 2720);
+				Ferowl.X = 559716;
+				Ferowl.Y = 510733;
+				Ferowl.Z = 2720;
 				Ferowl.Heading = 703;
 				Ferowl.AddToWorld();
 
@@ -131,17 +134,19 @@ namespace DOL.GS.Quests.Albion
 			npcs = WorldMgr.GetNPCsByName("Morgana", eRealm.None);
 			if (npcs.Length == 0)
 			{
-				Morgana = new GameMob();
+				Morgana = new GameNPC();
 				Morgana.Model = 283;
 				Morgana.Name = "Morgana";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + Morgana.Name + " , creating it ...");
 				Morgana.GuildName = "";
 				Morgana.Realm = (byte) eRealm.None;
-				Morgana.RegionId = 1;
+				Morgana.CurrentRegionID = 1;
 				Morgana.Size = 51;
 				Morgana.Level = 90;
-				Morgana.Position = new Point(306056, 670106, 3095);
+				Morgana.X = 306056;
+				Morgana.Y = 670106;
+				Morgana.Z = 3095;
 				Morgana.Heading = 3261;
 
 				StandardMobBrain brain = new StandardMobBrain();
@@ -150,8 +155,8 @@ namespace DOL.GS.Quests.Albion
 				Morgana.SetOwnBrain(brain);
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
-				template.AddNPCEquipment(eInventorySlot.TorsoArmor, 98, 43, 0);
-				template.AddNPCEquipment(eInventorySlot.FeetArmor, 133, 61, 0);
+				template.AddNPCEquipment(eInventorySlot.TorsoArmor, 98, 43);
+				template.AddNPCEquipment(eInventorySlot.FeetArmor, 133, 61);
 				Morgana.Inventory = template.CloseTemplate();
 
 //				Morgana.AddNPCEquipment((byte) eVisibleItems.TORSO, 98, 43, 0, 0);
@@ -170,15 +175,17 @@ namespace DOL.GS.Quests.Albion
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Bechard , creating it ...");
-				Bechard = new GameMob();
+				Bechard = new GameNPC();
 				Bechard.Model = 606;
 				Bechard.Name = "Bechard";
 				Bechard.GuildName = "";
 				Bechard.Realm = (byte) eRealm.None;
-				Bechard.RegionId = 1;
+				Bechard.CurrentRegionID = 1;
 				Bechard.Size = 50;
 				Bechard.Level = 63;
-				Bechard.Position = new Point(306025, 670473, 2863);
+				Bechard.X = 306025;
+				Bechard.Y = 670473;
+				Bechard.Z = 2863;
 				Bechard.Heading = 3754;
 				Bechard.AddToWorld();
 
@@ -194,15 +201,17 @@ namespace DOL.GS.Quests.Albion
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Silcharde , creating it ...");
-				Silcharde = new GameMob();
+				Silcharde = new GameNPC();
 				Silcharde.Model = 606;
 				Silcharde.Name = "Silcharde";
 				Silcharde.GuildName = "";
 				Silcharde.Realm = (byte) eRealm.None;
-				Silcharde.RegionId = 1;
+				Silcharde.CurrentRegionID = 1;
 				Silcharde.Size = 50;
 				Silcharde.Level = 63;
-				Silcharde.Position = new Point(306252, 670274, 2857);
+				Silcharde.X = 306252;
+				Silcharde.Y = 670274;
+				Silcharde.Z = 2857;
 				Silcharde.Heading = 3299;
 				Silcharde.AddToWorld();
 
@@ -224,7 +233,7 @@ namespace DOL.GS.Quests.Albion
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Sealed Pouch , creating it ...");
 				sealed_pouch = new ItemTemplate();
-				sealed_pouch.ItemTemplateID = "sealed_pouch";
+				sealed_pouch.Id_nb = "sealed_pouch";
 				sealed_pouch.Name = "Sealed Pouch";
 				sealed_pouch.Level = 8;
 				sealed_pouch.Item_Type = 29;
@@ -237,7 +246,6 @@ namespace DOL.GS.Quests.Albion
 				sealed_pouch.Hand = 0;
 				sealed_pouch.Type_Damage = 0;
 				sealed_pouch.Quality = 100;
-				sealed_pouch.MaxQuality = 100;
 				sealed_pouch.Weight = 12;
 
 				if (SAVE_INTO_DATABASE)
@@ -253,7 +261,7 @@ namespace DOL.GS.Quests.Albion
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Wizards Epic Boots , creating it ...");
 				item = new ItemTemplate();
-				item.ItemTemplateID = "WizardEpicBoots";
+				item.Id_nb = "WizardEpicBoots";
 				item.Name = "Bernor's Numinous Boots";
 				item.Level = 50;
 				item.Item_Type = 23;
@@ -264,7 +272,6 @@ namespace DOL.GS.Quests.Albion
 				item.SPD_ABS = 0;
 				item.Object_Type = 32;
 				item.Quality = 100;
-				item.MaxQuality = 100;
 				item.Weight = 22;
 				item.Bonus = 35;
 				item.MaxCondition = 50000;
@@ -273,7 +280,7 @@ namespace DOL.GS.Quests.Albion
 				item.Durability = 50000;
 
 				item.Bonus1 = 4;
-				item.Bonus1Type = (int) eProperty.Focus_Cold;
+				item.Bonus1Type = (int) eProperty.Skill_Cold;
 
 				item.Bonus2 = 22;
 				item.Bonus2Type = (int) eStat.DEX;
@@ -297,7 +304,7 @@ namespace DOL.GS.Quests.Albion
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Wizards Epic Helm , creating it ...");
 				item = new ItemTemplate();
-				item.ItemTemplateID = "WizardEpicHelm";
+				item.Id_nb = "WizardEpicHelm";
 				item.Name = "Bernor's Numinous Cap";
 				item.Level = 50;
 				item.Item_Type = 21;
@@ -308,7 +315,6 @@ namespace DOL.GS.Quests.Albion
 				item.SPD_ABS = 0;
 				item.Object_Type = 32;
 				item.Quality = 100;
-				item.MaxQuality = 100;
 				item.Weight = 22;
 				item.Bonus = 35;
 				item.MaxCondition = 50000;
@@ -341,7 +347,7 @@ namespace DOL.GS.Quests.Albion
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Wizards Epic Gloves , creating it ...");
 				item = new ItemTemplate();
-				item.ItemTemplateID = "WizardEpicGloves";
+				item.Id_nb = "WizardEpicGloves";
 				item.Name = "Bernor's Numinous Gloves ";
 				item.Level = 50;
 				item.Item_Type = 22;
@@ -352,7 +358,6 @@ namespace DOL.GS.Quests.Albion
 				item.SPD_ABS = 0;
 				item.Object_Type = 32;
 				item.Quality = 100;
-				item.MaxQuality = 100;
 				item.Weight = 22;
 				item.Bonus = 35;
 				item.MaxCondition = 50000;
@@ -385,7 +390,7 @@ namespace DOL.GS.Quests.Albion
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Wizards Epic Vest , creating it ...");
 				item = new ItemTemplate();
-				item.ItemTemplateID = "WizardEpicVest";
+				item.Id_nb = "WizardEpicVest";
 				item.Name = "Bernor's Numinous Robes";
 				item.Level = 50;
 				item.Item_Type = 25;
@@ -396,7 +401,6 @@ namespace DOL.GS.Quests.Albion
 				item.SPD_ABS = 0;
 				item.Object_Type = 32;
 				item.Quality = 100;
-				item.MaxQuality = 100;
 				item.Weight = 22;
 				item.Bonus = 35;
 				item.MaxCondition = 50000;
@@ -426,7 +430,7 @@ namespace DOL.GS.Quests.Albion
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Wizards Epic Legs , creating it ...");
 				item = new ItemTemplate();
-				item.ItemTemplateID = "WizardEpicLegs";
+				item.Id_nb = "WizardEpicLegs";
 				item.Name = "Bernor's Numinous Pants";
 				item.Level = 50;
 				item.Item_Type = 27;
@@ -437,7 +441,6 @@ namespace DOL.GS.Quests.Albion
 				item.SPD_ABS = 0;
 				item.Object_Type = 32;
 				item.Quality = 100;
-				item.MaxQuality = 100;
 				item.Weight = 22;
 				item.Bonus = 35;
 				item.MaxCondition = 50000;
@@ -446,7 +449,7 @@ namespace DOL.GS.Quests.Albion
 				item.Durability = 50000;
 
 				item.Bonus1 = 4;
-				item.Bonus1Type = (int) eProperty.Focus_Fire;
+				item.Bonus1Type = (int) eProperty.Skill_Fire;
 
 				item.Bonus2 = 8;
 				item.Bonus2Type = (int) eResist.Cold;
@@ -467,7 +470,7 @@ namespace DOL.GS.Quests.Albion
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Wizard Epic Arms , creating it ...");
 				item = new ItemTemplate();
-				item.ItemTemplateID = "WizardEpicArms";
+				item.Id_nb = "WizardEpicArms";
 				item.Name = "Bernor's Numinous Sleeves";
 				item.Level = 50;
 				item.Item_Type = 28;
@@ -478,7 +481,6 @@ namespace DOL.GS.Quests.Albion
 				item.SPD_ABS = 0;
 				item.Object_Type = 32;
 				item.Quality = 100;
-				item.MaxQuality = 100;
 				item.Weight = 22;
 				item.Bonus = 35;
 				item.MaxCondition = 50000;
@@ -487,7 +489,7 @@ namespace DOL.GS.Quests.Albion
 				item.Durability = 50000;
 
 				item.Bonus1 = 4;
-				item.Bonus1Type = (int) eProperty.Focus_Earth;
+				item.Bonus1Type = (int) eProperty.Skill_Earth;
 
 				item.Bonus2 = 18;
 				item.Bonus2Type = (int) eStat.DEX;
@@ -508,7 +510,7 @@ namespace DOL.GS.Quests.Albion
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Minstrels Epic Boots , creating it ...");
 				item = new ItemTemplate();
-				item.ItemTemplateID = "MinstrelEpicBoots";
+				item.Id_nb = "MinstrelEpicBoots";
 				item.Name = "Boots of Coruscating Harmony";
 				item.Level = 50;
 				item.Item_Type = 23;
@@ -519,7 +521,6 @@ namespace DOL.GS.Quests.Albion
 				item.SPD_ABS = 27;
 				item.Object_Type = 35;
 				item.Quality = 100;
-				item.MaxQuality = 100;
 				item.Weight = 22;
 				item.Bonus = 35;
 				item.MaxCondition = 50000;
@@ -553,7 +554,7 @@ namespace DOL.GS.Quests.Albion
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Minstrels Epic Helm , creating it ...");
 				item = new ItemTemplate();
-				item.ItemTemplateID = "MinstrelEpicHelm";
+				item.Id_nb = "MinstrelEpicHelm";
 				item.Name = "Coif of Coruscating Harmony";
 				item.Level = 50;
 				item.Item_Type = 21;
@@ -564,7 +565,6 @@ namespace DOL.GS.Quests.Albion
 				item.SPD_ABS = 27;
 				item.Object_Type = 35;
 				item.Quality = 100;
-				item.MaxQuality = 100;
 				item.Weight = 22;
 				item.Bonus = 35;
 				item.MaxCondition = 50000;
@@ -598,7 +598,7 @@ namespace DOL.GS.Quests.Albion
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Minstrels Epic Gloves , creating it ...");
 				item = new ItemTemplate();
-				item.ItemTemplateID = "MinstrelEpicGloves";
+				item.Id_nb = "MinstrelEpicGloves";
 				item.Name = "Gauntlets of Coruscating Harmony";
 				item.Level = 50;
 				item.Item_Type = 22;
@@ -609,7 +609,6 @@ namespace DOL.GS.Quests.Albion
 				item.SPD_ABS = 27;
 				item.Object_Type = 35;
 				item.Quality = 100;
-				item.MaxQuality = 100;
 				item.Weight = 22;
 				item.Bonus = 35;
 				item.MaxCondition = 50000;
@@ -642,7 +641,7 @@ namespace DOL.GS.Quests.Albion
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Minstrels Epic Vest , creating it ...");
 				item = new ItemTemplate();
-				item.ItemTemplateID = "MinstrelEpicVest";
+				item.Id_nb = "MinstrelEpicVest";
 				item.Name = "Habergeon of Coruscating Harmony";
 				item.Level = 50;
 				item.Item_Type = 25;
@@ -653,7 +652,6 @@ namespace DOL.GS.Quests.Albion
 				item.SPD_ABS = 27;
 				item.Object_Type = 35;
 				item.Quality = 100;
-				item.MaxQuality = 100;
 				item.Weight = 22;
 				item.Bonus = 35;
 				item.MaxCondition = 50000;
@@ -686,7 +684,7 @@ namespace DOL.GS.Quests.Albion
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Minstrels Epic Legs , creating it ...");
 				item = new ItemTemplate();
-				item.ItemTemplateID = "MinstrelEpicLegs";
+				item.Id_nb = "MinstrelEpicLegs";
 				item.Name = "Chaussess of Coruscating Harmony";
 				item.Level = 50;
 				item.Item_Type = 27;
@@ -697,7 +695,6 @@ namespace DOL.GS.Quests.Albion
 				item.SPD_ABS = 27;
 				item.Object_Type = 35;
 				item.Quality = 100;
-				item.MaxQuality = 100;
 				item.Weight = 22;
 				item.Bonus = 35;
 				item.MaxCondition = 50000;
@@ -730,7 +727,7 @@ namespace DOL.GS.Quests.Albion
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Minstrel Epic Arms , creating it ...");
 				item = new ItemTemplate();
-				item.ItemTemplateID = "MinstrelEpicArms";
+				item.Id_nb = "MinstrelEpicArms";
 				item.Name = "Sleeves of Coruscating Harmony";
 				item.Level = 50;
 				item.Item_Type = 28;
@@ -741,7 +738,6 @@ namespace DOL.GS.Quests.Albion
 				item.SPD_ABS = 27;
 				item.Object_Type = 35;
 				item.Quality = 100;
-				item.MaxQuality = 100;
 				item.Weight = 22;
 				item.Bonus = 35;
 				item.MaxCondition = 50000;
@@ -773,7 +769,7 @@ namespace DOL.GS.Quests.Albion
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Sorceror Epic Boots , creating it ...");
 				item = new ItemTemplate();
-				item.ItemTemplateID = "SorcerorEpicBoots";
+				item.Id_nb = "SorcerorEpicBoots";
 				item.Name = "Boots of Mental Acuity";
 				item.Level = 50;
 				item.Item_Type = 23;
@@ -784,7 +780,6 @@ namespace DOL.GS.Quests.Albion
 				item.SPD_ABS = 0;
 				item.Object_Type = 32;
 				item.Quality = 100;
-				item.MaxQuality = 100;
 				item.Weight = 22;
 				item.Bonus = 35;
 				item.MaxCondition = 50000;
@@ -818,7 +813,7 @@ namespace DOL.GS.Quests.Albion
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Sorceror Epic Helm , creating it ...");
 				item = new ItemTemplate();
-				item.ItemTemplateID = "SorcerorEpicHelm";
+				item.Id_nb = "SorcerorEpicHelm";
 				item.Name = "Cap of Mental Acuity";
 				item.Level = 50;
 				item.Item_Type = 21;
@@ -829,7 +824,6 @@ namespace DOL.GS.Quests.Albion
 				item.SPD_ABS = 0;
 				item.Object_Type = 32;
 				item.Quality = 100;
-				item.MaxQuality = 100;
 				item.Weight = 22;
 				item.Bonus = 35;
 				item.MaxCondition = 50000;
@@ -863,7 +857,7 @@ namespace DOL.GS.Quests.Albion
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Sorceror Epic Gloves , creating it ...");
 				item = new ItemTemplate();
-				item.ItemTemplateID = "SorcerorEpicGloves";
+				item.Id_nb = "SorcerorEpicGloves";
 				item.Name = "Gloves of Mental Acuity";
 				item.Level = 50;
 				item.Item_Type = 22;
@@ -874,7 +868,6 @@ namespace DOL.GS.Quests.Albion
 				item.SPD_ABS = 0;
 				item.Object_Type = 32;
 				item.Quality = 100;
-				item.MaxQuality = 100;
 				item.Weight = 22;
 				item.Bonus = 35;
 				item.MaxCondition = 50000;
@@ -907,7 +900,7 @@ namespace DOL.GS.Quests.Albion
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Sorceror Epic Vest , creating it ...");
 				item = new ItemTemplate();
-				item.ItemTemplateID = "SorcerorEpicVest";
+				item.Id_nb = "SorcerorEpicVest";
 				item.Name = "Vest of Mental Acuity";
 				item.Level = 50;
 				item.Item_Type = 25;
@@ -918,7 +911,6 @@ namespace DOL.GS.Quests.Albion
 				item.SPD_ABS = 0;
 				item.Object_Type = 32;
 				item.Quality = 100;
-				item.MaxQuality = 100;
 				item.Weight = 22;
 				item.Bonus = 35;
 				item.MaxCondition = 50000;
@@ -948,7 +940,7 @@ namespace DOL.GS.Quests.Albion
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Sorceror Epic Legs , creating it ...");
 				item = new ItemTemplate();
-				item.ItemTemplateID = "SorcerorEpicLegs";
+				item.Id_nb = "SorcerorEpicLegs";
 				item.Name = "Pants of Mental Acuity";
 				item.Level = 50;
 				item.Item_Type = 27;
@@ -959,7 +951,6 @@ namespace DOL.GS.Quests.Albion
 				item.SPD_ABS = 0;
 				item.Object_Type = 32;
 				item.Quality = 100;
-				item.MaxQuality = 100;
 				item.Weight = 22;
 				item.Bonus = 35;
 				item.MaxCondition = 50000;
@@ -992,7 +983,7 @@ namespace DOL.GS.Quests.Albion
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Sorceror Epic Arms , creating it ...");
 				item = new ItemTemplate();
-				item.ItemTemplateID = "SorcerorEpicArms";
+				item.Id_nb = "SorcerorEpicArms";
 				item.Name = "Sleeves of Mental Acuity";
 				item.Level = 50;
 				item.Item_Type = 28;
@@ -1003,7 +994,6 @@ namespace DOL.GS.Quests.Albion
 				item.SPD_ABS = 0;
 				item.Object_Type = 32;
 				item.Quality = 100;
-				item.MaxQuality = 100;
 				item.Weight = 22;
 				item.Bonus = 35;
 				item.MaxCondition = 50000;
@@ -1029,8 +1019,11 @@ namespace DOL.GS.Quests.Albion
 
 			#endregion
 
-			morganaArea = Morgana.Region.AddArea(new Area.Circle(null, Morgana.Position, 1000));
+			morganaArea = WorldMgr.GetRegion(Morgana.CurrentRegionID).AddArea(new Area.Circle(null, Morgana.X, Morgana.Y, 0, 1000));
 			morganaArea.RegisterPlayerEnter(new DOLEventHandler(PlayerEnterMorganaArea));
+
+			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
 
 			GameEventMgr.AddHandler(Ferowl, GameObjectEvent.Interact, new DOLEventHandler(TalkToFerowl));
 			GameEventMgr.AddHandler(Ferowl, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToFerowl));
@@ -1045,13 +1038,18 @@ namespace DOL.GS.Quests.Albion
 		[ScriptUnloadedEvent]
 		public static void ScriptUnloaded(DOLEvent e, object sender, EventArgs args)
 		{
+			if (!ServerProperties.Properties.LOAD_QUESTS)
+				return;
 			//if not loaded, don't worry
 			if (Ferowl == null)
 				return;
 
 			morganaArea.UnRegisterPlayerEnter(new DOLEventHandler(PlayerEnterMorganaArea));
-			WorldMgr.GetRegion(Morgana.RegionId).RemoveArea(morganaArea);
+			WorldMgr.GetRegion(Morgana.CurrentRegionID).RemoveArea(morganaArea);
 			// remove handlers
+			GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
 			GameEventMgr.RemoveHandler(Ferowl, GameObjectEvent.Interact, new DOLEventHandler(TalkToFerowl));
 			GameEventMgr.RemoveHandler(Ferowl, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToFerowl));
 
@@ -1087,17 +1085,19 @@ namespace DOL.GS.Quests.Albion
 		{
 			if (Morgana == null)
 			{
-				Morgana = new GameMob();
+				Morgana = new GameNPC();
 				Morgana.Model = 283;
 				Morgana.Name = "Morgana";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + Morgana.Name + " , creating it ...");
 				Morgana.GuildName = "";
 				Morgana.Realm = (byte) eRealm.None;
-				Morgana.RegionId = 1;
+				Morgana.CurrentRegionID = 1;
 				Morgana.Size = 51;
 				Morgana.Level = 90;
-				Morgana.Position = new Point(306056, 670106, 3095);
+				Morgana.X = 306056;
+				Morgana.Y = 670106;
+				Morgana.Z = 3095;
 				Morgana.Heading = 3261;
 
 				
@@ -1159,7 +1159,7 @@ namespace DOL.GS.Quests.Albion
 					switch (wArgs.Text)
 					{
 						case "services":
-							player.Out.SendCustomDialog("Will you help Ferowl [Academy Level 50 Epic]?", new CustomDialogResponse(CheckPlayerAcceptQuest));
+							player.Out.SendQuestSubscribeCommand(Ferowl, QuestMgr.GetIDForQuestType(typeof(Academy_50)), "Will you help Ferowl [Academy Level 50 Epic]");
 							break;
 					}
 				}
@@ -1222,6 +1222,21 @@ namespace DOL.GS.Quests.Albion
 		 * declines here...
 		 */
 
+		protected static void SubscribeQuest(DOLEvent e, object sender, EventArgs args)
+		{
+			QuestEventArgs qargs = args as QuestEventArgs;
+			if (qargs == null)
+				return;
+
+			if (qargs.QuestID != QuestMgr.GetIDForQuestType(typeof(Academy_50)))
+				return;
+
+			if (e == GamePlayerEvent.AcceptQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x01);
+			else if (e == GamePlayerEvent.DeclineQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x00);
+		}
+
 		private static void CheckPlayerAbortQuest(GamePlayer player, byte response)
 		{
 			Academy_50 quest = player.IsDoingQuest(typeof (Academy_50)) as Academy_50;
@@ -1231,7 +1246,7 @@ namespace DOL.GS.Quests.Albion
 
 			if (response == 0x00)
 			{
-				SendSystemMessage(player, "Good, no go out there and finish your work!");
+				SendSystemMessage(player, "Good, now go out there and finish your work!");
 			}
 			else
 			{
@@ -1301,7 +1316,7 @@ namespace DOL.GS.Quests.Albion
 						DeleteMorgana();
 
 						m_questPlayer.Out.SendMessage("Take the pouch to " + Ferowl.GetName(0, true), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						GiveItem(player, sealed_pouch);
+						GiveItem(m_questPlayer, sealed_pouch);
 						Step = 2;
 						return;
 					}
@@ -1311,7 +1326,7 @@ namespace DOL.GS.Quests.Albion
 			if (Step == 2 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == Ferowl.Name && gArgs.Item.ItemTemplateID == sealed_pouch.ItemTemplateID)
+				if (gArgs.Target.Name == Ferowl.Name && gArgs.Item.Id_nb == sealed_pouch.Id_nb)
 				{
 					RemoveItem(Ferowl, player, sealed_pouch);
 					Ferowl.SayTo(player, "You have earned this Epic Armour, wear it with honor!");

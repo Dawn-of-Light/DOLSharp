@@ -17,88 +17,21 @@
  *
  */
 using System;
-using System.Collections;
-using System.Reflection;
-using DOL.Database;
-using DOL.Events;
 using DOL.GS.PacketHandler;
-using DOL.GS.Database;
-using log4net;
+using DOL.Database;
 
 namespace DOL.GS.Trainer
 {
 	/// <summary>
 	/// Midgard Rogue Trainer
 	/// </summary>	
-	public class MidgardRogueTrainer : GameStandardTrainer
+	[NPCGuildScript("Rogue Trainer", eRealm.Midgard)]		// this attribute instructs DOL to use this script for all "Rogue Trainer" NPC's in Midgard (multiple guilds are possible for one script)
+	public class MidgardRogueTrainer : GameTrainer
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
-		/// <summary>
-		/// This function is called at the server startup
-		/// </summary>	
-		[GameServerStartedEvent]
-		public static void OnServerStartup(DOLEvent e, object sender, EventArgs args)
+		public const string PRACTICE_WEAPON_ID = "training_sword_mid";
+		
+		public MidgardRogueTrainer() : base()
 		{
-			#region Practice sword
-
-			SlashingWeaponTemplate practice_sword_template = new SlashingWeaponTemplate();
-			practice_sword_template.Name = "practice sword";
-			practice_sword_template.Level = 0;
-			practice_sword_template.Durability = 100;
-			practice_sword_template.Condition = 100;
-			practice_sword_template.Quality = 90;
-			practice_sword_template.Bonus = 0;
-			practice_sword_template.DamagePerSecond = 12;
-			practice_sword_template.Speed = 2500;
-			practice_sword_template.Weight = 10;
-			practice_sword_template.Model = 3;
-			practice_sword_template.Realm = eRealm.Midgard;
-			practice_sword_template.IsDropable = true; 
-			practice_sword_template.IsTradable = false; 
-			practice_sword_template.IsSaleable = false;
-			practice_sword_template.MaterialLevel = eMaterialLevel.Bronze;
-	
-			if(!allStartupItems.Contains(practice_sword_template))
-			{
-				allStartupItems.Add(practice_sword_template);
-			
-				if (log.IsDebugEnabled)
-					log.Debug("Adding " + practice_sword_template.Name + " to MidgardRogueTrainer gifts.");
-			}
-			#endregion
-		}
-
-		/// <summary>
-		/// This hash constrain all item template the trainer can give
-		/// </summary>	
-		protected static IList allStartupItems = new ArrayList();
-
-		/// <summary>
-		/// Gets all trainer gifts
-		/// </summary>
-		public override IList TrainerGifts
-		{
-			get { return allStartupItems; }
-		}
-
-		/// <summary>
-		/// Gets trainer classname
-		/// </summary>
-		public override string TrainerClassName
-		{
-			get { return "Rogue"; }
-		}
-
-		/// <summary>
-		/// Gets trained class
-		/// </summary>
-		public override eCharacterClass TrainedClass
-		{
-			get { return eCharacterClass.MidgardRogue; }
 		}
 
 		/// <summary>
@@ -109,9 +42,28 @@ namespace DOL.GS.Trainer
  		public override bool Interact(GamePlayer player)
  		{		
  			if (!base.Interact(player)) return false;
+								
+			// check if class matches				
+			if (player.CharacterClass.ID == (int) eCharacterClass.MidgardRogue) {
 
-			player.Out.SendMessage(this.Name + " says, \"[Hunter] or [Shadowblade]?\"", eChatType.CT_Say, eChatLoc.CL_PopupWindow);												
+				// popup the training window
+				player.Out.SendTrainerWindow();
+							
+				// player can be promoted
+				if (player.Level>=5) {
+					player.Out.SendMessage(this.Name + " says, \"You must now seek your training elsewhere. Which path would you like to follow? [Hunter] or [Shadowblade]?\"", eChatType.CT_Say, eChatLoc.CL_PopupWindow);												
+				} else {
+					//player.Out.SendMessage(this.Name + " says, \"Select what you like to train.\"", eChatType.CT_Say, eChatLoc.CL_PopupWindow);												
+				}
 
+				// ask for basic equipment if player doesnt own it
+				if (player.Inventory.GetFirstItemByID(PRACTICE_WEAPON_ID, eInventorySlot.Min_Inv, eInventorySlot.Max_Inv) == null) {
+					player.Out.SendMessage(this.Name + " says, \"Do you require a [practice weapon]?\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);																																			
+				}
+				
+			} else {
+				player.Out.SendMessage(this.Name + " says, \"You must seek elsewhere for your training.\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);							
+			}
 			return true;
 		}
 
@@ -143,6 +95,13 @@ namespace DOL.GS.Trainer
 					player.Out.SendMessage(this.Name + " says, \"The path of a Shadowblade is not available to your race. Please choose another.\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
 				}
 				return true;
+			case "practice weapon":
+				if (player.Inventory.GetFirstItemByID(PRACTICE_WEAPON_ID, eInventorySlot.Min_Inv, eInventorySlot.Max_Inv) == null)
+				{
+					player.ReceiveItem(this,PRACTICE_WEAPON_ID);
+				}
+				return true;
+		
 			}
 			return true;			
 		}

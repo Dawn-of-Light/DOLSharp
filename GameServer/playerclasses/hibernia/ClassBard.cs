@@ -82,7 +82,7 @@ namespace DOL.GS.Scripts
 			}
 			if (player.Level >= 15) 
 			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.HibArmor, (int)eArmorLevel.Medium));
+				player.AddAbility(SkillBase.GetAbility(Abilities.HibArmor, ArmorLevel.Reinforced));
 				player.AddAbility(SkillBase.GetAbility(Abilities.Tireless));
 			}
 			if (player.Level >= 25) 

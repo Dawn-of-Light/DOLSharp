@@ -110,6 +110,8 @@ namespace DOL.GS.Quests.Midgard
 		[ScriptLoadedEvent]
 		public static void ScriptLoaded(DOLEvent e, object sender, EventArgs args)
 		{
+			if (!ServerProperties.Properties.LOAD_QUESTS)
+				return;
 			if (log.IsInfoEnabled)
 				log.Info("Quest \"" + questTitle + "\" initializing ...");
 
@@ -121,15 +123,17 @@ namespace DOL.GS.Quests.Midgard
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Lynnleigh , creating it ...");
-				Lynnleigh = new GameMob();
+				Lynnleigh = new GameNPC();
 				Lynnleigh.Model = 217;
 				Lynnleigh.Name = "Lynnleigh";
 				Lynnleigh.GuildName = "";
 				Lynnleigh.Realm = (byte) eRealm.Midgard;
-				Lynnleigh.RegionId = 100;
+				Lynnleigh.CurrentRegionID = 100;
 				Lynnleigh.Size = 51;
 				Lynnleigh.Level = 50;
-				Lynnleigh.Position = new Point(760085, 758453, 4736);
+				Lynnleigh.X = 760085;
+				Lynnleigh.Y = 758453;
+				Lynnleigh.Z = 4736;
 				Lynnleigh.Heading = 2197;
 				Lynnleigh.AddToWorld();
 				if (SAVE_INTO_DATABASE)
@@ -146,15 +150,17 @@ namespace DOL.GS.Quests.Midgard
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Elizabeth , creating it ...");
-				Elizabeth = new GameMob();
+				Elizabeth = new GameNPC();
 				Elizabeth.Model = 217;
 				Elizabeth.Name = "Elizabeth";
 				Elizabeth.GuildName = "Enchanter";
 				Elizabeth.Realm = (byte) eRealm.Midgard;
-				Elizabeth.RegionId = 100;
+				Elizabeth.CurrentRegionID = 100;
 				Elizabeth.Size = 51;
 				Elizabeth.Level = 41;
-				Elizabeth.Position = new Point(802849, 727081, 4681);
+				Elizabeth.X = 802849;
+				Elizabeth.Y = 727081;
+				Elizabeth.Z = 4681;
 				Elizabeth.Heading = 2480;
 				Elizabeth.AddToWorld();
 				if (SAVE_INTO_DATABASE)
@@ -173,17 +179,19 @@ namespace DOL.GS.Quests.Midgard
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Ydenia , creating it ...");
-				Ydenia = new GameMob();
+				Ydenia = new GameNPC();
 				Ydenia.Model = 217;
 				Ydenia.Name = "Ydenia of Seithkona";
 				Ydenia.GuildName = "";
 				Ydenia.Realm = (byte) eRealm.None;
-				Ydenia.RegionId = 100;
+				Ydenia.CurrentRegionID = 100;
 				Ydenia.Size = 100;
 				Ydenia.Level = 65;
-				Ydenia.Position = new Point(637680, 767189, 4480);
+				Ydenia.X = 637680;
+				Ydenia.Y = 767189;
+				Ydenia.Z = 4480;
 				Ydenia.Heading = 2156;
-				Ydenia.Flags = 1;
+				Ydenia.Flags ^= (uint)GameNPC.eFlags.TRANSPARENT;
 				Ydenia.MaxSpeedBase = 200;
 				Ydenia.AddToWorld();
 				if (SAVE_INTO_DATABASE)
@@ -206,7 +214,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Tome of Enchantments , creating it ...");
 				tome_enchantments = new ItemTemplate();
-				tome_enchantments.ItemTemplateID = "tome_enchantments";
+				tome_enchantments.Id_nb = "tome_enchantments";
 				tome_enchantments.Name = "Tome of Enchantments";
 				tome_enchantments.Level = 8;
 				tome_enchantments.Item_Type = 0;
@@ -219,7 +227,6 @@ namespace DOL.GS.Quests.Midgard
 				tome_enchantments.Hand = 0;
 				tome_enchantments.Type_Damage = 0;
 				tome_enchantments.Quality = 100;
-				tome_enchantments.MaxQuality = 100;
 				tome_enchantments.Weight = 12;
 				if (SAVE_INTO_DATABASE)
 				{
@@ -234,7 +241,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Sealed Pouch , creating it ...");
 				sealed_pouch = new ItemTemplate();
-				sealed_pouch.ItemTemplateID = "sealed_pouch";
+				sealed_pouch.Id_nb = "sealed_pouch";
 				sealed_pouch.Name = "Sealed Pouch";
 				sealed_pouch.Level = 8;
 				sealed_pouch.Item_Type = 29;
@@ -247,7 +254,6 @@ namespace DOL.GS.Quests.Midgard
 				sealed_pouch.Hand = 0;
 				sealed_pouch.Type_Damage = 0;
 				sealed_pouch.Quality = 100;
-				sealed_pouch.MaxQuality = 100;
 				sealed_pouch.Weight = 12;
 				if (SAVE_INTO_DATABASE)
 				{
@@ -261,7 +267,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Warrior Epic Boots , creating it ...");
 				WarriorEpicBoots = new ItemTemplate();
-				WarriorEpicBoots.ItemTemplateID = "WarriorEpicBoots";
+				WarriorEpicBoots.Id_nb = "WarriorEpicBoots";
 				WarriorEpicBoots.Name = "Tyr's Might Boots";
 				WarriorEpicBoots.Level = 50;
 				WarriorEpicBoots.Item_Type = 23;
@@ -272,7 +278,6 @@ namespace DOL.GS.Quests.Midgard
 				WarriorEpicBoots.SPD_ABS = 27;
 				WarriorEpicBoots.Object_Type = 35;
 				WarriorEpicBoots.Quality = 100;
-				WarriorEpicBoots.MaxQuality = 100;
 				WarriorEpicBoots.Weight = 22;
 				WarriorEpicBoots.Bonus = 35;
 				WarriorEpicBoots.MaxCondition = 50000;
@@ -305,7 +310,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Warrior Epic Helm , creating it ...");
 				WarriorEpicHelm = new ItemTemplate();
-				WarriorEpicHelm.ItemTemplateID = "WarriorEpicHelm";
+				WarriorEpicHelm.Id_nb = "WarriorEpicHelm";
 				WarriorEpicHelm.Name = "Tyr's Might Coif";
 				WarriorEpicHelm.Level = 50;
 				WarriorEpicHelm.Item_Type = 21;
@@ -316,7 +321,6 @@ namespace DOL.GS.Quests.Midgard
 				WarriorEpicHelm.SPD_ABS = 27;
 				WarriorEpicHelm.Object_Type = 35;
 				WarriorEpicHelm.Quality = 100;
-				WarriorEpicHelm.MaxQuality = 100;
 				WarriorEpicHelm.Weight = 22;
 				WarriorEpicHelm.Bonus = 35;
 				WarriorEpicHelm.MaxCondition = 50000;
@@ -349,7 +353,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Warrior Epic Gloves , creating it ...");
 				WarriorEpicGloves = new ItemTemplate();
-				WarriorEpicGloves.ItemTemplateID = "WarriorEpicGloves";
+				WarriorEpicGloves.Id_nb = "WarriorEpicGloves";
 				WarriorEpicGloves.Name = "Tyr's Might Gloves";
 				WarriorEpicGloves.Level = 50;
 				WarriorEpicGloves.Item_Type = 22;
@@ -360,7 +364,6 @@ namespace DOL.GS.Quests.Midgard
 				WarriorEpicGloves.SPD_ABS = 27;
 				WarriorEpicGloves.Object_Type = 35;
 				WarriorEpicGloves.Quality = 100;
-				WarriorEpicGloves.MaxQuality = 100;
 				WarriorEpicGloves.Weight = 22;
 				WarriorEpicGloves.Bonus = 35;
 				WarriorEpicGloves.MaxCondition = 50000;
@@ -393,7 +396,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Warrior Epic Vest , creating it ...");
 				WarriorEpicVest = new ItemTemplate();
-				WarriorEpicVest.ItemTemplateID = "WarriorEpicVest";
+				WarriorEpicVest.Id_nb = "WarriorEpicVest";
 				WarriorEpicVest.Name = "Tyr's Might Hauberk";
 				WarriorEpicVest.Level = 50;
 				WarriorEpicVest.Item_Type = 25;
@@ -404,7 +407,6 @@ namespace DOL.GS.Quests.Midgard
 				WarriorEpicVest.SPD_ABS = 27;
 				WarriorEpicVest.Object_Type = 35;
 				WarriorEpicVest.Quality = 100;
-				WarriorEpicVest.MaxQuality = 100;
 				WarriorEpicVest.Weight = 22;
 				WarriorEpicVest.Bonus = 35;
 				WarriorEpicVest.MaxCondition = 50000;
@@ -437,7 +439,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Warrior Epic Legs , creating it ...");
 				WarriorEpicLegs = new ItemTemplate();
-				WarriorEpicLegs.ItemTemplateID = "WarriorEpicLegs";
+				WarriorEpicLegs.Id_nb = "WarriorEpicLegs";
 				WarriorEpicLegs.Name = "Tyr's Might Legs";
 				WarriorEpicLegs.Level = 50;
 				WarriorEpicLegs.Item_Type = 27;
@@ -448,7 +450,6 @@ namespace DOL.GS.Quests.Midgard
 				WarriorEpicLegs.SPD_ABS = 27;
 				WarriorEpicLegs.Object_Type = 35;
 				WarriorEpicLegs.Quality = 100;
-				WarriorEpicLegs.MaxQuality = 100;
 				WarriorEpicLegs.Weight = 22;
 				WarriorEpicLegs.Bonus = 35;
 				WarriorEpicLegs.MaxCondition = 50000;
@@ -481,7 +482,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Warrior Epic Arms , creating it ...");
 				WarriorEpicArms = new ItemTemplate();
-				WarriorEpicArms.ItemTemplateID = "WarriorEpicArms";
+				WarriorEpicArms.Id_nb = "WarriorEpicArms";
 				WarriorEpicArms.Name = "Tyr's Might Sleeves";
 				WarriorEpicArms.Level = 50;
 				WarriorEpicArms.Item_Type = 28;
@@ -492,7 +493,6 @@ namespace DOL.GS.Quests.Midgard
 				WarriorEpicArms.SPD_ABS = 27;
 				WarriorEpicArms.Object_Type = 35;
 				WarriorEpicArms.Quality = 100;
-				WarriorEpicArms.MaxQuality = 100;
 				WarriorEpicArms.Weight = 22;
 				WarriorEpicArms.Bonus = 35;
 				WarriorEpicArms.MaxCondition = 50000;
@@ -524,7 +524,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Berserker Epic Boots , creating it ...");
 				BerserkerEpicBoots = new ItemTemplate();
-				BerserkerEpicBoots.ItemTemplateID = "BerserkerEpicBoots";
+				BerserkerEpicBoots.Id_nb = "BerserkerEpicBoots";
 				BerserkerEpicBoots.Name = "Courage Bound Boots";
 				BerserkerEpicBoots.Level = 50;
 				BerserkerEpicBoots.Item_Type = 23;
@@ -535,7 +535,6 @@ namespace DOL.GS.Quests.Midgard
 				BerserkerEpicBoots.SPD_ABS = 19;
 				BerserkerEpicBoots.Object_Type = 34;
 				BerserkerEpicBoots.Quality = 100;
-				BerserkerEpicBoots.MaxQuality = 100;
 				BerserkerEpicBoots.Weight = 22;
 				BerserkerEpicBoots.Bonus = 35;
 				BerserkerEpicBoots.MaxCondition = 50000;
@@ -568,7 +567,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Berserker Epic Helm , creating it ...");
 				BerserkerEpicHelm = new ItemTemplate();
-				BerserkerEpicHelm.ItemTemplateID = "BerserkerEpicHelm";
+				BerserkerEpicHelm.Id_nb = "BerserkerEpicHelm";
 				BerserkerEpicHelm.Name = "Courage Bound Helm";
 				BerserkerEpicHelm.Level = 50;
 				BerserkerEpicHelm.Item_Type = 21;
@@ -579,7 +578,6 @@ namespace DOL.GS.Quests.Midgard
 				BerserkerEpicHelm.SPD_ABS = 19;
 				BerserkerEpicHelm.Object_Type = 34;
 				BerserkerEpicHelm.Quality = 100;
-				BerserkerEpicHelm.MaxQuality = 100;
 				BerserkerEpicHelm.Weight = 22;
 				BerserkerEpicHelm.Bonus = 35;
 				BerserkerEpicHelm.MaxCondition = 50000;
@@ -611,7 +609,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Berserker Epic Gloves , creating it ...");
 				BerserkerEpicGloves = new ItemTemplate();
-				BerserkerEpicGloves.ItemTemplateID = "BerserkerEpicGloves";
+				BerserkerEpicGloves.Id_nb = "BerserkerEpicGloves";
 				BerserkerEpicGloves.Name = "Courage Bound Gloves";
 				BerserkerEpicGloves.Level = 50;
 				BerserkerEpicGloves.Item_Type = 22;
@@ -622,7 +620,6 @@ namespace DOL.GS.Quests.Midgard
 				BerserkerEpicGloves.SPD_ABS = 19;
 				BerserkerEpicGloves.Object_Type = 34;
 				BerserkerEpicGloves.Quality = 100;
-				BerserkerEpicGloves.MaxQuality = 100;
 				BerserkerEpicGloves.Weight = 22;
 				BerserkerEpicGloves.Bonus = 35;
 				BerserkerEpicGloves.MaxCondition = 50000;
@@ -654,7 +651,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Berserker Epic Vest , creating it ...");
 				BerserkerEpicVest = new ItemTemplate();
-				BerserkerEpicVest.ItemTemplateID = "BerserkerEpicVest";
+				BerserkerEpicVest.Id_nb = "BerserkerEpicVest";
 				BerserkerEpicVest.Name = "Courage Bound Jerkin";
 				BerserkerEpicVest.Level = 50;
 				BerserkerEpicVest.Item_Type = 25;
@@ -665,7 +662,6 @@ namespace DOL.GS.Quests.Midgard
 				BerserkerEpicVest.SPD_ABS = 19;
 				BerserkerEpicVest.Object_Type = 34;
 				BerserkerEpicVest.Quality = 100;
-				BerserkerEpicVest.MaxQuality = 100;
 				BerserkerEpicVest.Weight = 22;
 				BerserkerEpicVest.Bonus = 35;
 				BerserkerEpicVest.MaxCondition = 50000;
@@ -697,7 +693,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Berserker Epic Legs , creating it ...");
 				BerserkerEpicLegs = new ItemTemplate();
-				BerserkerEpicLegs.ItemTemplateID = "BerserkerEpicLegs";
+				BerserkerEpicLegs.Id_nb = "BerserkerEpicLegs";
 				BerserkerEpicLegs.Name = "Courage Bound Leggings";
 				BerserkerEpicLegs.Level = 50;
 				BerserkerEpicLegs.Item_Type = 27;
@@ -708,7 +704,6 @@ namespace DOL.GS.Quests.Midgard
 				BerserkerEpicLegs.SPD_ABS = 19;
 				BerserkerEpicLegs.Object_Type = 34;
 				BerserkerEpicLegs.Quality = 100;
-				BerserkerEpicLegs.MaxQuality = 100;
 				BerserkerEpicLegs.Weight = 22;
 				BerserkerEpicLegs.Bonus = 35;
 				BerserkerEpicLegs.MaxCondition = 50000;
@@ -740,7 +735,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Berserker Epic Arms , creating it ...");
 				BerserkerEpicArms = new ItemTemplate();
-				BerserkerEpicArms.ItemTemplateID = "BerserkerEpicArms";
+				BerserkerEpicArms.Id_nb = "BerserkerEpicArms";
 				BerserkerEpicArms.Name = "Courage Bound Sleeves";
 				BerserkerEpicArms.Level = 50;
 				BerserkerEpicArms.Item_Type = 28;
@@ -751,7 +746,6 @@ namespace DOL.GS.Quests.Midgard
 				BerserkerEpicArms.SPD_ABS = 19;
 				BerserkerEpicArms.Object_Type = 34;
 				BerserkerEpicArms.Quality = 100;
-				BerserkerEpicArms.MaxQuality = 100;
 				BerserkerEpicArms.Weight = 22;
 				BerserkerEpicArms.Bonus = 35;
 				BerserkerEpicArms.MaxCondition = 50000;
@@ -783,7 +777,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Thane Epic Boots , creating it ...");
 				ThaneEpicBoots = new ItemTemplate();
-				ThaneEpicBoots.ItemTemplateID = "ThaneEpicBoots";
+				ThaneEpicBoots.Id_nb = "ThaneEpicBoots";
 				ThaneEpicBoots.Name = "Storm Touched Boots";
 				ThaneEpicBoots.Level = 50;
 				ThaneEpicBoots.Item_Type = 23;
@@ -794,7 +788,6 @@ namespace DOL.GS.Quests.Midgard
 				ThaneEpicBoots.SPD_ABS = 27;
 				ThaneEpicBoots.Object_Type = 35;
 				ThaneEpicBoots.Quality = 100;
-				ThaneEpicBoots.MaxQuality = 100;
 				ThaneEpicBoots.Weight = 22;
 				ThaneEpicBoots.Bonus = 35;
 				ThaneEpicBoots.MaxCondition = 50000;
@@ -827,18 +820,17 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Thane Epic Helm , creating it ...");
 				ThaneEpicHelm = new ItemTemplate();
-				ThaneEpicHelm.ItemTemplateID = "ThaneEpicHelm";
+				ThaneEpicHelm.Id_nb = "ThaneEpicHelm";
 				ThaneEpicHelm.Name = "Storm Touched Coif";
 				ThaneEpicHelm.Level = 50;
 				ThaneEpicHelm.Item_Type = 21;
-				ThaneEpicHelm.Model = 832; //NEED TO WORK ON..
+				ThaneEpicHelm.Model = 834;
 				ThaneEpicHelm.IsDropable = true;
 				ThaneEpicHelm.IsPickable = true;
 				ThaneEpicHelm.DPS_AF = 100;
 				ThaneEpicHelm.SPD_ABS = 27;
 				ThaneEpicHelm.Object_Type = 35;
 				ThaneEpicHelm.Quality = 100;
-				ThaneEpicHelm.MaxQuality = 100;
 				ThaneEpicHelm.Weight = 22;
 				ThaneEpicHelm.Bonus = 35;
 				ThaneEpicHelm.MaxCondition = 50000;
@@ -872,7 +864,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Thane Epic Gloves , creating it ...");
 				ThaneEpicGloves = new ItemTemplate();
-				ThaneEpicGloves.ItemTemplateID = "ThaneEpicGloves";
+				ThaneEpicGloves.Id_nb = "ThaneEpicGloves";
 				ThaneEpicGloves.Name = "Storm Touched Gloves";
 				ThaneEpicGloves.Level = 50;
 				ThaneEpicGloves.Item_Type = 22;
@@ -883,7 +875,6 @@ namespace DOL.GS.Quests.Midgard
 				ThaneEpicGloves.SPD_ABS = 27;
 				ThaneEpicGloves.Object_Type = 35;
 				ThaneEpicGloves.Quality = 100;
-				ThaneEpicGloves.MaxQuality = 100;
 				ThaneEpicGloves.Weight = 22;
 				ThaneEpicGloves.Bonus = 35;
 				ThaneEpicGloves.MaxCondition = 50000;
@@ -916,7 +907,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Thane Epic Vest , creating it ...");
 				ThaneEpicVest = new ItemTemplate();
-				ThaneEpicVest.ItemTemplateID = "ThaneEpicVest";
+				ThaneEpicVest.Id_nb = "ThaneEpicVest";
 				ThaneEpicVest.Name = "Storm Touched Hauberk";
 				ThaneEpicVest.Level = 50;
 				ThaneEpicVest.Item_Type = 25;
@@ -927,7 +918,6 @@ namespace DOL.GS.Quests.Midgard
 				ThaneEpicVest.SPD_ABS = 27;
 				ThaneEpicVest.Object_Type = 35;
 				ThaneEpicVest.Quality = 100;
-				ThaneEpicVest.MaxQuality = 100;
 				ThaneEpicVest.Weight = 22;
 				ThaneEpicVest.Bonus = 35;
 				ThaneEpicVest.MaxCondition = 50000;
@@ -960,7 +950,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Thane Epic Legs , creating it ...");
 				ThaneEpicLegs = new ItemTemplate();
-				ThaneEpicLegs.ItemTemplateID = "ThaneEpicLegs";
+				ThaneEpicLegs.Id_nb = "ThaneEpicLegs";
 				ThaneEpicLegs.Name = "Storm Touched Legs";
 				ThaneEpicLegs.Level = 50;
 				ThaneEpicLegs.Item_Type = 27;
@@ -971,7 +961,6 @@ namespace DOL.GS.Quests.Midgard
 				ThaneEpicLegs.SPD_ABS = 27;
 				ThaneEpicLegs.Object_Type = 35;
 				ThaneEpicLegs.Quality = 100;
-				ThaneEpicLegs.MaxQuality = 100;
 				ThaneEpicLegs.Weight = 22;
 				ThaneEpicLegs.Bonus = 35;
 				ThaneEpicLegs.MaxCondition = 50000;
@@ -1003,7 +992,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Thane Epic Arms , creating it ...");
 				ThaneEpicArms = new ItemTemplate();
-				ThaneEpicArms.ItemTemplateID = "ThaneEpicArms";
+				ThaneEpicArms.Id_nb = "ThaneEpicArms";
 				ThaneEpicArms.Name = "Storm Touched Sleeves";
 				ThaneEpicArms.Level = 50;
 				ThaneEpicArms.Item_Type = 28;
@@ -1014,7 +1003,6 @@ namespace DOL.GS.Quests.Midgard
 				ThaneEpicArms.SPD_ABS = 27;
 				ThaneEpicArms.Object_Type = 35;
 				ThaneEpicArms.Quality = 100;
-				ThaneEpicArms.MaxQuality = 100;
 				ThaneEpicArms.Weight = 22;
 				ThaneEpicArms.Bonus = 35;
 				ThaneEpicArms.MaxCondition = 50000;
@@ -1046,7 +1034,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Skalds Epic Boots , creating it ...");
 				SkaldEpicBoots = new ItemTemplate();
-				SkaldEpicBoots.ItemTemplateID = "SkaldEpicBoots";
+				SkaldEpicBoots.Id_nb = "SkaldEpicBoots";
 				SkaldEpicBoots.Name = "Battlesung Boots";
 				SkaldEpicBoots.Level = 50;
 				SkaldEpicBoots.Item_Type = 23;
@@ -1057,7 +1045,6 @@ namespace DOL.GS.Quests.Midgard
 				SkaldEpicBoots.SPD_ABS = 27;
 				SkaldEpicBoots.Object_Type = 35;
 				SkaldEpicBoots.Quality = 100;
-				SkaldEpicBoots.MaxQuality = 100;
 				SkaldEpicBoots.Weight = 22;
 				SkaldEpicBoots.Bonus = 35;
 				SkaldEpicBoots.MaxCondition = 50000;
@@ -1090,7 +1077,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Skalds Epic Helm , creating it ...");
 				SkaldEpicHelm = new ItemTemplate();
-				SkaldEpicHelm.ItemTemplateID = "SkaldEpicHelm";
+				SkaldEpicHelm.Id_nb = "SkaldEpicHelm";
 				SkaldEpicHelm.Name = "Battlesung Coif";
 				SkaldEpicHelm.Level = 50;
 				SkaldEpicHelm.Item_Type = 21;
@@ -1101,7 +1088,6 @@ namespace DOL.GS.Quests.Midgard
 				SkaldEpicHelm.SPD_ABS = 27;
 				SkaldEpicHelm.Object_Type = 35;
 				SkaldEpicHelm.Quality = 100;
-				SkaldEpicHelm.MaxQuality = 100;
 				SkaldEpicHelm.Weight = 22;
 				SkaldEpicHelm.Bonus = 35;
 				SkaldEpicHelm.MaxCondition = 50000;
@@ -1131,7 +1117,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Skalds Epic Gloves , creating it ...");
 				SkaldEpicGloves = new ItemTemplate();
-				SkaldEpicGloves.ItemTemplateID = "SkaldEpicGloves";
+				SkaldEpicGloves.Id_nb = "SkaldEpicGloves";
 				SkaldEpicGloves.Name = "Battlesung Gloves";
 				SkaldEpicGloves.Level = 50;
 				SkaldEpicGloves.Item_Type = 22;
@@ -1142,7 +1128,6 @@ namespace DOL.GS.Quests.Midgard
 				SkaldEpicGloves.SPD_ABS = 27;
 				SkaldEpicGloves.Object_Type = 35;
 				SkaldEpicGloves.Quality = 100;
-				SkaldEpicGloves.MaxQuality = 100;
 				SkaldEpicGloves.Weight = 22;
 				SkaldEpicGloves.Bonus = 35;
 				SkaldEpicGloves.MaxCondition = 50000;
@@ -1175,7 +1160,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Skalds Epic Vest , creating it ...");
 				SkaldEpicVest = new ItemTemplate();
-				SkaldEpicVest.ItemTemplateID = "SkaldEpicVest";
+				SkaldEpicVest.Id_nb = "SkaldEpicVest";
 				SkaldEpicVest.Name = "Battlesung Hauberk";
 				SkaldEpicVest.Level = 50;
 				SkaldEpicVest.Item_Type = 25;
@@ -1186,7 +1171,6 @@ namespace DOL.GS.Quests.Midgard
 				SkaldEpicVest.SPD_ABS = 27;
 				SkaldEpicVest.Object_Type = 35;
 				SkaldEpicVest.Quality = 100;
-				SkaldEpicVest.MaxQuality = 100;
 				SkaldEpicVest.Weight = 22;
 				SkaldEpicVest.Bonus = 35;
 				SkaldEpicVest.MaxCondition = 50000;
@@ -1218,7 +1202,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Skalds Epic Legs , creating it ...");
 				SkaldEpicLegs = new ItemTemplate();
-				SkaldEpicLegs.ItemTemplateID = "SkaldEpicLegs";
+				SkaldEpicLegs.Id_nb = "SkaldEpicLegs";
 				SkaldEpicLegs.Name = "Battlesung Legs";
 				SkaldEpicLegs.Level = 50;
 				SkaldEpicLegs.Item_Type = 27;
@@ -1229,7 +1213,6 @@ namespace DOL.GS.Quests.Midgard
 				SkaldEpicLegs.SPD_ABS = 27;
 				SkaldEpicLegs.Object_Type = 35;
 				SkaldEpicLegs.Quality = 100;
-				SkaldEpicLegs.MaxQuality = 100;
 				SkaldEpicLegs.Weight = 22;
 				SkaldEpicLegs.Bonus = 35;
 				SkaldEpicLegs.MaxCondition = 50000;
@@ -1261,7 +1244,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Skald Epic Arms , creating it ...");
 				SkaldEpicArms = new ItemTemplate();
-				SkaldEpicArms.ItemTemplateID = "SkaldEpicArms";
+				SkaldEpicArms.Id_nb = "SkaldEpicArms";
 				SkaldEpicArms.Name = "Battlesung Sleeves";
 				SkaldEpicArms.Level = 50;
 				SkaldEpicArms.Item_Type = 28;
@@ -1272,7 +1255,6 @@ namespace DOL.GS.Quests.Midgard
 				SkaldEpicArms.SPD_ABS = 27;
 				SkaldEpicArms.Object_Type = 35;
 				SkaldEpicArms.Quality = 100;
-				SkaldEpicArms.MaxQuality = 100;
 				SkaldEpicArms.Weight = 22;
 				SkaldEpicArms.Bonus = 35;
 				SkaldEpicArms.MaxCondition = 50000;
@@ -1304,7 +1286,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Savage Epic Boots , creating it ...");
 				SavageEpicBoots = new ItemTemplate();
-				SavageEpicBoots.ItemTemplateID = "SavageEpicBoots";
+				SavageEpicBoots.Id_nb = "SavageEpicBoots";
 				SavageEpicBoots.Name = "Kelgor's Battle Boots";
 				SavageEpicBoots.Level = 50;
 				SavageEpicBoots.Item_Type = 23;
@@ -1315,7 +1297,6 @@ namespace DOL.GS.Quests.Midgard
 				SavageEpicBoots.SPD_ABS = 27;
 				SavageEpicBoots.Object_Type = 34;
 				SavageEpicBoots.Quality = 100;
-				SavageEpicBoots.MaxQuality = 100;
 				SavageEpicBoots.Weight = 22;
 				SavageEpicBoots.Bonus = 35;
 				SavageEpicBoots.MaxCondition = 50000;
@@ -1347,7 +1328,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Savage Epic Helm , creating it ...");
 				SavageEpicHelm = new ItemTemplate();
-				SavageEpicHelm.ItemTemplateID = "SavageEpicHelm";
+				SavageEpicHelm.Id_nb = "SavageEpicHelm";
 				SavageEpicHelm.Name = "Kelgor's Battle Helm";
 				SavageEpicHelm.Level = 50;
 				SavageEpicHelm.Item_Type = 21;
@@ -1358,7 +1339,6 @@ namespace DOL.GS.Quests.Midgard
 				SavageEpicHelm.SPD_ABS = 19;
 				SavageEpicHelm.Object_Type = 34;
 				SavageEpicHelm.Quality = 100;
-				SavageEpicHelm.MaxQuality = 100;
 				SavageEpicHelm.Weight = 22;
 				SavageEpicHelm.Bonus = 35;
 				SavageEpicHelm.MaxCondition = 50000;
@@ -1390,7 +1370,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Savage Epic Gloves , creating it ...");
 				SavageEpicGloves = new ItemTemplate();
-				SavageEpicGloves.ItemTemplateID = "SavageEpicGloves";
+				SavageEpicGloves.Id_nb = "SavageEpicGloves";
 				SavageEpicGloves.Name = "Kelgor's Battle Gauntlets";
 				SavageEpicGloves.Level = 50;
 				SavageEpicGloves.Item_Type = 22;
@@ -1401,7 +1381,6 @@ namespace DOL.GS.Quests.Midgard
 				SavageEpicGloves.SPD_ABS = 19;
 				SavageEpicGloves.Object_Type = 34;
 				SavageEpicGloves.Quality = 100;
-				SavageEpicGloves.MaxQuality = 100;
 				SavageEpicGloves.Weight = 22;
 				SavageEpicGloves.Bonus = 35;
 				SavageEpicGloves.MaxCondition = 50000;
@@ -1433,7 +1412,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Savage Epic Vest , creating it ...");
 				SavageEpicVest = new ItemTemplate();
-				SavageEpicVest.ItemTemplateID = "SavageEpicVest";
+				SavageEpicVest.Id_nb = "SavageEpicVest";
 				SavageEpicVest.Name = "Kelgor's Battle Vest";
 				SavageEpicVest.Level = 50;
 				SavageEpicVest.Item_Type = 25;
@@ -1444,7 +1423,6 @@ namespace DOL.GS.Quests.Midgard
 				SavageEpicVest.SPD_ABS = 19;
 				SavageEpicVest.Object_Type = 34;
 				SavageEpicVest.Quality = 100;
-				SavageEpicVest.MaxQuality = 100;
 				SavageEpicVest.Weight = 22;
 				SavageEpicVest.Bonus = 35;
 				SavageEpicVest.MaxCondition = 50000;
@@ -1476,7 +1454,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Savage Epic Legs , creating it ...");
 				SavageEpicLegs = new ItemTemplate();
-				SavageEpicLegs.ItemTemplateID = "SavageEpicLegs";
+				SavageEpicLegs.Id_nb = "SavageEpicLegs";
 				SavageEpicLegs.Name = "Kelgor's Battle Leggings";
 				SavageEpicLegs.Level = 50;
 				SavageEpicLegs.Item_Type = 27;
@@ -1487,7 +1465,6 @@ namespace DOL.GS.Quests.Midgard
 				SavageEpicLegs.SPD_ABS = 19;
 				SavageEpicLegs.Object_Type = 34;
 				SavageEpicLegs.Quality = 100;
-				SavageEpicLegs.MaxQuality = 100;
 				SavageEpicLegs.Weight = 22;
 				SavageEpicLegs.Bonus = 35;
 				SavageEpicLegs.MaxCondition = 50000;
@@ -1519,7 +1496,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Savage Epic Arms , creating it ...");
 				SavageEpicArms = new ItemTemplate();
-				SavageEpicArms.ItemTemplateID = "SavageEpicArms";
+				SavageEpicArms.Id_nb = "SavageEpicArms";
 				SavageEpicArms.Name = "Kelgor's Battle Sleeves";
 				SavageEpicArms.Level = 50;
 				SavageEpicArms.Item_Type = 28;
@@ -1530,7 +1507,6 @@ namespace DOL.GS.Quests.Midgard
 				SavageEpicArms.SPD_ABS = 19;
 				SavageEpicArms.Object_Type = 34;
 				SavageEpicArms.Quality = 100;
-				SavageEpicArms.MaxQuality = 100;
 				SavageEpicArms.Weight = 22;
 				SavageEpicArms.Bonus = 35;
 				SavageEpicArms.MaxCondition = 50000;
@@ -1561,6 +1537,9 @@ namespace DOL.GS.Quests.Midgard
 
 			#endregion
 
+			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
 			GameEventMgr.AddHandler(Lynnleigh, GameObjectEvent.Interact, new DOLEventHandler(TalkToLynnleigh));
 			GameEventMgr.AddHandler(Lynnleigh, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToLynnleigh));
 
@@ -1581,6 +1560,9 @@ namespace DOL.GS.Quests.Midgard
 			if (Lynnleigh == null)
 				return;
 			// remove handlers
+			GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
 			GameEventMgr.RemoveHandler(Lynnleigh, GameObjectEvent.Interact, new DOLEventHandler(TalkToLynnleigh));
 			GameEventMgr.RemoveHandler(Lynnleigh, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToLynnleigh));
 
@@ -1628,7 +1610,7 @@ namespace DOL.GS.Quests.Midgard
 							Lynnleigh.SayTo(player, "Yes, it worries me, but I think that you are ready to [face Ydenia] and his minions.");
 							break;
 						case "face Ydenia":
-							player.Out.SendCustomDialog("Will you face Ydenia [Viking Level 50 Epic]?", new CustomDialogResponse(CheckPlayerAcceptQuest));
+							player.Out.SendQuestSubscribeCommand(Lynnleigh, QuestMgr.GetIDForQuestType(typeof(Viking_50)), "Will you face Ydenia [Viking Level 50 Epic]?");
 							break;
 					}
 				}
@@ -1736,6 +1718,21 @@ namespace DOL.GS.Quests.Midgard
 			}
 		}
 
+		protected static void SubscribeQuest(DOLEvent e, object sender, EventArgs args)
+		{
+			QuestEventArgs qargs = args as QuestEventArgs;
+			if (qargs == null)
+				return;
+
+			if (qargs.QuestID != QuestMgr.GetIDForQuestType(typeof(Viking_50)))
+				return;
+
+			if (e == GamePlayerEvent.AcceptQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x01);
+			else if (e == GamePlayerEvent.DeclineQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x00);
+		}
+
 		private static void CheckPlayerAcceptQuest(GamePlayer player, byte response)
 		{
 			if(Lynnleigh.CanGiveQuest(typeof (Viking_50), player)  <= 0)
@@ -1776,7 +1773,9 @@ namespace DOL.GS.Quests.Midgard
 					case 2:
 						return "[Step #2] Return to Lynnleigh and give her tome of Enchantments!";
 					case 3:
-						return "[Step #3] Tell Lynnleigh you can 'take them' for your rewards!";
+						return "[Step #3] Take the Sealed Pouch to Elizabeth in Mularn";
+					case 4:
+						return "[Step #4] Tell Elizabeth you can 'take them' for your rewards!";
 				}
 				return base.Description;
 			}
@@ -1796,7 +1795,7 @@ namespace DOL.GS.Quests.Midgard
 				if (gArgs.Target.Name == Ydenia.Name)
 				{
 					Step = 2;
-					GiveItem(player, tome_enchantments);
+					GiveItem(m_questPlayer, tome_enchantments);
 					m_questPlayer.Out.SendMessage("Ydenia drops the Tome of Enchantments and you pick it up!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return;
 				}
@@ -1805,7 +1804,7 @@ namespace DOL.GS.Quests.Midgard
 			if (Step == 2 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == Lynnleigh.Name && gArgs.Item.ItemTemplateID == tome_enchantments.ItemTemplateID)
+				if (gArgs.Target.Name == Lynnleigh.Name && gArgs.Item.Id_nb == tome_enchantments.Id_nb)
 				{
 					RemoveItem(Lynnleigh, player, tome_enchantments);
 					Lynnleigh.SayTo(player, "Take this sealed pouch to Elizabeth in Mularn for your reward!");
@@ -1817,7 +1816,7 @@ namespace DOL.GS.Quests.Midgard
 			if (Step == 3 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == Elizabeth.Name && gArgs.Item.ItemTemplateID == sealed_pouch.ItemTemplateID)
+				if (gArgs.Target.Name == Elizabeth.Name && gArgs.Item.Id_nb == sealed_pouch.Id_nb)
 				{
 					RemoveItem(Elizabeth, player, sealed_pouch);
 					Elizabeth.SayTo(player, "There are six parts to your reward, so make sure you have room for them. Just let me know when you are ready, and then you can [take them] with our thanks!");

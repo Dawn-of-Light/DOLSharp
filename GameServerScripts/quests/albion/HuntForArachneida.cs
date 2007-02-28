@@ -34,13 +34,10 @@
 
 using System;
 using System.Reflection;
-using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
-using NHibernate.Expression;
-using NHibernate.Mapping.Attributes;
 /* I suggest you declare yourself some namespaces for your quests
  * Like: DOL.GS.Quests.Albion
  *       DOL.GS.Quests.Midgard
@@ -52,36 +49,14 @@ using NHibernate.Mapping.Attributes;
 
 namespace DOL.GS.Quests.Albion
 {
-	/* The first thing we do, is to declare the quest requirement
-	* class linked with the new Quest. To do this, we derive 
-	* from the abstract class AbstractQuestDescriptor
-	*/
-	public class HuntForArachneidaDescriptor : AbstractQuestDescriptor
-	{
-		/* This is the type of the quest class linked with 
-		 * this requirement class, you must override the 
-		 * base methid like that
-		 */
-		public override Type LinkedQuestType
-		{
-			get { return typeof(HuntForArachneida); }
-		}
-
-		/* This value is used to retrieves the minimum level needed
-		 *  to be able to make this quest. Override it only if you need, 
-		 * the default value is 1
-		 */
-		public override int MinLevel
-		{
-			get { return 14; }
-		}
-	}
-
-	/* The second thing we do, is to declare the class we create
-	 * as Quest. We must make it persistant using attributes, to
-	 * do this, we derive from the abstract class AbstractQuest
+	/* The first thing we do, is to declare the class we create
+	 * as Quest. To do this, we derive from the abstract class
+	 * AbstractQuest
+	 * 
+	 * This quest for example will be stored in the database with
+	 * the name: DOL.GS.Quests.Albion.HuntForArachneida
 	 */
-	[Subclass(NameType = typeof(HuntForArachneida), ExtendsType = typeof(AbstractQuest))]
+
 	public class HuntForArachneida : BaseQuest
 	{
 		/// <summary>
@@ -101,19 +76,41 @@ namespace DOL.GS.Quests.Albion
 		 */
 
 		protected const string questTitle = "The Hunt for Arachneida";
+		protected const int minimumLevel = 14;
+		protected const int maximumLevel = 50;
 
-		private static GameMob kealan = null;
+		private static GameNPC kealan = null;
 
-		private static GameMob arachneida = null;
+		private static GameNPC arachneida = null;
 
-		private static TorsoArmorTemplate spiderSilkenRobe = null;
-		private static TorsoArmorTemplate ringedSpiderChitinTunic = null;
-		private static TorsoArmorTemplate studdedSpiderEyeVest = null;
-		private static TorsoArmorTemplate spiderEmblazonedTunic = null;
-		private static TorsoArmorTemplate embossedSpiderTunic = null;
+		private static ItemTemplate spiderSilkenRobe = null;
+		private static ItemTemplate ringedSpiderChitinTunic = null;
+		private static ItemTemplate studdedSpiderEyeVest = null;
+		private static ItemTemplate spiderEmblazonedTunic = null;
+		private static ItemTemplate embossedSpiderTunic = null;
 
-		private static GenericItemTemplate bloatedFang = null;
-		private static GenericItemTemplate spiderChitin = null;
+		private static ItemTemplate bloatedFang = null;
+		private static ItemTemplate spiderChitin = null;
+
+		/* We need to define the constructors from the base class here, else there might be problems
+		 * when loading this quest...
+		 */
+		public HuntForArachneida() : base()
+		{
+		}
+
+		public HuntForArachneida(GamePlayer questingPlayer) : this(questingPlayer, 1)
+		{
+		}
+
+		public HuntForArachneida(GamePlayer questingPlayer, int step) : base(questingPlayer, step)
+		{
+		}
+
+		public HuntForArachneida(GamePlayer questingPlayer, DBQuest dbQuest) : base(questingPlayer, dbQuest)
+		{
+		}
+
 
 		/* The following method is called automatically when this quest class
 		 * is loaded. You might notice that this method is the same as in standard
@@ -134,6 +131,8 @@ namespace DOL.GS.Quests.Albion
 		[ScriptLoadedEvent]
 		public static void ScriptLoaded(DOLEvent e, object sender, EventArgs args)
 		{
+			if (!ServerProperties.Properties.LOAD_QUESTS)
+				return;
 			if (log.IsInfoEnabled)
 				log.Info("Quest \"" + questTitle + "\" initializing ...");
 			/* First thing we do in here is to search for the NPCs inside
@@ -148,95 +147,85 @@ namespace DOL.GS.Quests.Albion
 
 			#region defineNPCS
 
-			kealan = ResearchQuestObject(typeof(GameMob), WorldMgr.GetRegion(1), eRealm.Albion, "Kealan") as GameMob;
-			if (kealan == null)
+			GameNPC[] npcs = WorldMgr.GetNPCsByName("Kealan", eRealm.Albion);
+
+			/* Whops, if the npcs array length is 0 then no Sir Quait exists in
+				* this users Mob Database, so we simply create one ;-)
+				* else we take the existing one. And if more than one exist, we take
+				* the first ...
+				*/
+			if (npcs.Length == 0)
 			{
-				kealan = new GameMob();
+				kealan = new GameNPC();
 				kealan.Model = 281;
 				kealan.Name = "Kealan";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + kealan.Name + ", creating him ...");
+
 				kealan.GuildName = "Part of " + questTitle + " Quest";
 				kealan.Realm = (byte) eRealm.Albion;
-				kealan.Region = WorldMgr.GetRegion(1);
-
-				GameNpcInventory template = new GameNpcInventory();
-				template.AddItem(eInventorySlot.TorsoArmor, new NPCArmor(58, 40, 0));
-				kealan.Inventory = template;
-				kealan.SwitchWeapon(GameLiving.eActiveWeaponSlot.Standard);
-
+				kealan.CurrentRegionID = 1;
 				kealan.Size = 48;
 				kealan.Level = 32;
-				kealan.Position = new Point(493414, 593089, 1797);
+				kealan.X = 493414;
+				kealan.Y = 593089;
+				kealan.Z = 1797;
 				kealan.Heading = 830;
 
-				StandardMobBrain newBrain = new StandardMobBrain();
-				newBrain.Body = kealan;
-				newBrain.AggroLevel = 100;
-				newBrain.AggroRange = 0;
-				kealan.OwnBrain = newBrain;
-
-				if(!kealan.AddToWorld())
-				{
-					if (log.IsWarnEnabled)
-						log.Warn("Quest "+questTitle+" abort because a needed region is not in use in this server!");
-					return;
-				}
+				kealan.EquipmentTemplateID = "11704675";
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(kealan);
-			}
+					kealan.SaveIntoDatabase();
 
-			arachneida = ResearchQuestObject(typeof(GameMob), WorldMgr.GetRegion(1), eRealm.None, "Arachneida") as GameMob;
-			if (arachneida == null)
+
+				kealan.AddToWorld();
+			}
+			else
+				kealan = npcs[0];
+
+			npcs = WorldMgr.GetNPCsByName("Arachneida", eRealm.None);
+			if (npcs.Length == 0)
 			{
-				arachneida = new GameMob();
+				arachneida = new GameNPC();
 				arachneida.Model = 72;
 				arachneida.Name = "Arachneida";
 				if (log.IsWarnEnabled)
-					log.Warn("Could not find " + arachneida.Name + ", creating him ...");
+					log.Warn("Could not find " + arachneida.Name + ", creating her ...");
+
 				arachneida.GuildName = "Part of " + questTitle + " Quest";
 				arachneida.Realm = (byte) eRealm.None;
-				arachneida.Region = WorldMgr.GetRegion(1);
-
+				arachneida.CurrentRegionID = 1;
 				arachneida.Size = 90;
 				arachneida.Level = 12;
-				arachneida.Position = new Point(534851, 609656, 2456);
+				arachneida.X = 534851;
+				arachneida.Y = 609656;
+				arachneida.Z = 2456;
 				arachneida.Heading = 2080;
 
-				arachneida.RespawnInterval = -1; // auto respawn
-
-				StandardMobBrain newBrain = new StandardMobBrain();
-				newBrain.Body = arachneida;
-				newBrain.AggroLevel = 100;
-				newBrain.AggroRange = 1000;
-				arachneida.OwnBrain = newBrain;
-
-				if(!arachneida.AddToWorld())
-				{
-					if (log.IsWarnEnabled)
-						log.Warn("Quest "+questTitle+" abort because a needed region is not in use in this server!");
-					return;
-				}
+				arachneida.EquipmentTemplateID = "2";
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(arachneida);
+					arachneida.SaveIntoDatabase();
+
+				arachneida.AddToWorld();
 			}
+			else
+				arachneida = npcs[0];
 
 			#endregion
 
 			#region defineItems
 
-			spiderSilkenRobe = GameServer.Database.SelectObject(typeof (TorsoArmorTemplate), Expression.Eq("Name", "Spider Silken Robe")) as TorsoArmorTemplate;
+			spiderSilkenRobe = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "spider_silken_robe");
 			if (spiderSilkenRobe == null)
 			{
-				spiderSilkenRobe = new TorsoArmorTemplate();
+				spiderSilkenRobe = new ItemTemplate();
 				spiderSilkenRobe.Name = "Spider Silken Robe";
 
 				if (log.IsWarnEnabled)
@@ -246,19 +235,34 @@ namespace DOL.GS.Quests.Albion
 				spiderSilkenRobe.Model = 58;
 
 				spiderSilkenRobe.Bonus = 5;
+				spiderSilkenRobe.Bonus1 = 3;
+				spiderSilkenRobe.Bonus1Type = (int) eStat.DEX;
+				;
 
-				spiderSilkenRobe.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 3));
-				spiderSilkenRobe.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Intelligence, 3));
-				spiderSilkenRobe.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 6));
+				spiderSilkenRobe.Bonus2 = 3;
+				spiderSilkenRobe.Bonus2Type = (int) eStat.INT;
 
-				spiderSilkenRobe.ArmorFactor = 18;
-				spiderSilkenRobe.ArmorLevel = eArmorLevel.VeryLow;
+				spiderSilkenRobe.Bonus3 = 6;
+				spiderSilkenRobe.Bonus3Type = (int) eProperty.MaxHealth;
 
-				spiderSilkenRobe.Value = Money.GetMoney(0, 0, 0, 8, 3);
+				spiderSilkenRobe.DPS_AF = 18;
+				spiderSilkenRobe.SPD_ABS = 0;
 
+				spiderSilkenRobe.Object_Type = (int) eObjectType.Cloth;
+				spiderSilkenRobe.Item_Type = (int) eEquipmentItems.TORSO;
+				spiderSilkenRobe.Id_nb = "spider_silken_robe";
+				spiderSilkenRobe.Gold = 0;
+				spiderSilkenRobe.Silver = 8;
+				spiderSilkenRobe.Copper = 3;
+				spiderSilkenRobe.IsPickable = true;
 				spiderSilkenRobe.IsDropable = true;
-				spiderSilkenRobe.IsSaleable = true;
-				spiderSilkenRobe.IsTradable = true;
+				//spiderSilkenRobe.Color = 44;
+				spiderSilkenRobe.Quality = 100;
+				spiderSilkenRobe.Condition = 1000;
+				spiderSilkenRobe.MaxCondition = 1000;
+				spiderSilkenRobe.Durability = 1000;
+				spiderSilkenRobe.MaxDurability = 1000;
+
 
 				//You don't have to store the created wolfPeltCloak in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -267,10 +271,10 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(spiderSilkenRobe);
 			}
 
-			ringedSpiderChitinTunic = GameServer.Database.SelectObject(typeof (TorsoArmorTemplate), Expression.Eq("Name", "Ringed Spider Chitin Tunic")) as TorsoArmorTemplate;
+			ringedSpiderChitinTunic = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ringed_spider_chitin_tunic");
 			if (ringedSpiderChitinTunic == null)
 			{
-				ringedSpiderChitinTunic = new TorsoArmorTemplate();
+				ringedSpiderChitinTunic = new ItemTemplate();
 				ringedSpiderChitinTunic.Name = "Ringed Spider Chitin Tunic";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + ringedSpiderChitinTunic.Name + ", creating it ...");
@@ -280,21 +284,33 @@ namespace DOL.GS.Quests.Albion
 				ringedSpiderChitinTunic.Model = 41;
 
 				ringedSpiderChitinTunic.Bonus = 5;
+				ringedSpiderChitinTunic.Bonus1 = 4;
+				ringedSpiderChitinTunic.Bonus1Type = (int) eStat.STR;
 
-				ringedSpiderChitinTunic.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 4));
-				ringedSpiderChitinTunic.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Quickness, 3));
-				ringedSpiderChitinTunic.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 9));
+				ringedSpiderChitinTunic.Bonus2 = 3;
+				ringedSpiderChitinTunic.Bonus2Type = (int) eStat.QUI;
 
-				ringedSpiderChitinTunic.ArmorFactor = 28;
-				ringedSpiderChitinTunic.ArmorLevel = eArmorLevel.High;
+				ringedSpiderChitinTunic.Bonus3 = 9;
+				ringedSpiderChitinTunic.Bonus3Type = (int) eProperty.MaxHealth;
 
-				ringedSpiderChitinTunic.Value = Money.GetMoney(0, 0, 0, 9, 3);
+				ringedSpiderChitinTunic.DPS_AF = 28;
+				ringedSpiderChitinTunic.SPD_ABS = 27;
 
+				ringedSpiderChitinTunic.Object_Type = (int) eObjectType.Chain;
+				ringedSpiderChitinTunic.Item_Type = (int) eEquipmentItems.TORSO;
+				ringedSpiderChitinTunic.Id_nb = "ringed_spider_chitin_tunic";
+				ringedSpiderChitinTunic.Gold = 0;
+				ringedSpiderChitinTunic.Silver = 9;
+				ringedSpiderChitinTunic.Copper = 3;
+				ringedSpiderChitinTunic.IsPickable = true;
 				ringedSpiderChitinTunic.IsDropable = true;
-				ringedSpiderChitinTunic.IsSaleable = true;
-				ringedSpiderChitinTunic.IsTradable = true;
 
 				ringedSpiderChitinTunic.Color = 45;
+				ringedSpiderChitinTunic.Quality = 100;
+				ringedSpiderChitinTunic.Condition = 1000;
+				ringedSpiderChitinTunic.MaxCondition = 1000;
+				ringedSpiderChitinTunic.Durability = 1000;
+				ringedSpiderChitinTunic.MaxDurability = 1000;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -303,10 +319,10 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(ringedSpiderChitinTunic);
 			}
 
-			studdedSpiderEyeVest = GameServer.Database.SelectObject(typeof (TorsoArmorTemplate), Expression.Eq("Name", "Studded Spider Eye Vest")) as TorsoArmorTemplate;
+			studdedSpiderEyeVest = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "studded_spider_eye_vest");
 			if (studdedSpiderEyeVest == null)
 			{
-				studdedSpiderEyeVest = new TorsoArmorTemplate();
+				studdedSpiderEyeVest = new ItemTemplate();
 				studdedSpiderEyeVest.Name = "Studded Spider Eye Vest";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + studdedSpiderEyeVest.Name + ", creating it ...");
@@ -316,21 +332,33 @@ namespace DOL.GS.Quests.Albion
 				studdedSpiderEyeVest.Model = 51;
 
 				studdedSpiderEyeVest.Bonus = 5;
+				studdedSpiderEyeVest.Bonus1 = 3;
+				studdedSpiderEyeVest.Bonus1Type = (int) eStat.QUI;
 
-				studdedSpiderEyeVest.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Quickness, 3));
-				studdedSpiderEyeVest.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Piety, 2));
-				studdedSpiderEyeVest.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 9));
+				studdedSpiderEyeVest.Bonus2 = 2;
+				studdedSpiderEyeVest.Bonus2Type = (int) eStat.PIE;
 
-				studdedSpiderEyeVest.ArmorFactor = 28;
-				studdedSpiderEyeVest.ArmorLevel = eArmorLevel.Medium;
+				studdedSpiderEyeVest.Bonus3 = 9;
+				studdedSpiderEyeVest.Bonus3Type = (int) eProperty.MaxHealth;
 
-				studdedSpiderEyeVest.Value = Money.GetMoney(0, 0, 0, 9, 3);
+				studdedSpiderEyeVest.DPS_AF = 28;
+				studdedSpiderEyeVest.SPD_ABS = 19;
 
+				studdedSpiderEyeVest.Object_Type = (int) eObjectType.Studded;
+				studdedSpiderEyeVest.Item_Type = (int) eEquipmentItems.TORSO;
+				studdedSpiderEyeVest.Id_nb = "studded_spider_eye_vest";
+				studdedSpiderEyeVest.Gold = 0;
+				studdedSpiderEyeVest.Silver = 9;
+				studdedSpiderEyeVest.Copper = 3;
+				studdedSpiderEyeVest.IsPickable = true;
 				studdedSpiderEyeVest.IsDropable = true;
-				studdedSpiderEyeVest.IsSaleable = true;
-				studdedSpiderEyeVest.IsTradable = true;
 
 				studdedSpiderEyeVest.Color = 45;
+				studdedSpiderEyeVest.Quality = 100;
+				studdedSpiderEyeVest.Condition = 1000;
+				studdedSpiderEyeVest.MaxCondition = 1000;
+				studdedSpiderEyeVest.Durability = 1000;
+				studdedSpiderEyeVest.MaxDurability = 1000;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -339,10 +367,10 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(studdedSpiderEyeVest);
 			}
 
-			spiderEmblazonedTunic = GameServer.Database.SelectObject(typeof (TorsoArmorTemplate), Expression.Eq("Name", "Spider Emblazoned Tunic")) as TorsoArmorTemplate;
+			spiderEmblazonedTunic = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "spider_emblazoned_tunic");
 			if (spiderEmblazonedTunic == null)
 			{
-				spiderEmblazonedTunic = new TorsoArmorTemplate();
+				spiderEmblazonedTunic = new ItemTemplate();
 				spiderEmblazonedTunic.Name = "Spider Emblazoned Tunic";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + spiderEmblazonedTunic.Name + ", creating it ...");
@@ -351,21 +379,33 @@ namespace DOL.GS.Quests.Albion
 				spiderEmblazonedTunic.Model = 31;
 
 				spiderEmblazonedTunic.Bonus = 5;
+				spiderEmblazonedTunic.Bonus1 = 2;
+				spiderEmblazonedTunic.Bonus1Type = (int) eStat.STR;
 
-				spiderEmblazonedTunic.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 2));
-				spiderEmblazonedTunic.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Piety, 3));
-				spiderEmblazonedTunic.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 9));
+				spiderEmblazonedTunic.Bonus2 = 3;
+				spiderEmblazonedTunic.Bonus2Type = (int) eStat.PIE;
 
-				spiderEmblazonedTunic.ArmorFactor = 28;
-				spiderEmblazonedTunic.ArmorLevel = eArmorLevel.Low;
+				spiderEmblazonedTunic.Bonus3 = 9;
+				spiderEmblazonedTunic.Bonus3Type = (int) eProperty.MaxHealth;
 
-				spiderEmblazonedTunic.Value = Money.GetMoney(0, 0, 0, 9, 3);
+				spiderEmblazonedTunic.DPS_AF = 28;
+				spiderEmblazonedTunic.SPD_ABS = 10;
 
+				spiderEmblazonedTunic.Object_Type = (int) eObjectType.Leather;
+				spiderEmblazonedTunic.Item_Type = (int) eEquipmentItems.TORSO;
+				spiderEmblazonedTunic.Id_nb = "spider_emblazoned_tunic";
+				spiderEmblazonedTunic.Gold = 0;
+				spiderEmblazonedTunic.Silver = 9;
+				spiderEmblazonedTunic.Copper = 3;
+				spiderEmblazonedTunic.IsPickable = true;
 				spiderEmblazonedTunic.IsDropable = true;
-				spiderEmblazonedTunic.IsSaleable = true;
-				spiderEmblazonedTunic.IsTradable = true;
 
 				spiderEmblazonedTunic.Color = 45;
+				spiderEmblazonedTunic.Quality = 100;
+				spiderEmblazonedTunic.Condition = 1000;
+				spiderEmblazonedTunic.MaxCondition = 1000;
+				spiderEmblazonedTunic.Durability = 1000;
+				spiderEmblazonedTunic.MaxDurability = 1000;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -374,10 +414,10 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(spiderEmblazonedTunic);
 			}
 
-			embossedSpiderTunic = GameServer.Database.SelectObject(typeof (TorsoArmorTemplate), Expression.Eq("Name", "Embossed Spider Tunic")) as TorsoArmorTemplate;
+			embossedSpiderTunic = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "embossed_spider_tunic");
 			if (embossedSpiderTunic == null)
 			{
-				embossedSpiderTunic = new TorsoArmorTemplate();
+				embossedSpiderTunic = new ItemTemplate();
 				embossedSpiderTunic.Name = "Embossed Spider Tunic";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + embossedSpiderTunic.Name + ", creating it ...");
@@ -387,21 +427,33 @@ namespace DOL.GS.Quests.Albion
 				embossedSpiderTunic.Model = 31;
 
 				embossedSpiderTunic.Bonus = 5;
+				embossedSpiderTunic.Bonus1 = 2;
+				embossedSpiderTunic.Bonus1Type = (int) eStat.STR;
 
-				embossedSpiderTunic.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 2));
-				embossedSpiderTunic.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 2));
-				embossedSpiderTunic.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 12));
+				embossedSpiderTunic.Bonus2 = 2;
+				embossedSpiderTunic.Bonus2Type = (int) eStat.DEX;
 
-				embossedSpiderTunic.ArmorFactor = 28;
-				embossedSpiderTunic.ArmorLevel = eArmorLevel.Low;
+				embossedSpiderTunic.Bonus3 = 12;
+				embossedSpiderTunic.Bonus3Type = (int) eProperty.MaxHealth;
 
-				embossedSpiderTunic.Value = Money.GetMoney(0, 0, 0, 9, 3);
+				embossedSpiderTunic.DPS_AF = 28;
+				embossedSpiderTunic.SPD_ABS = 10;
 
+				embossedSpiderTunic.Object_Type = (int) eObjectType.Leather;
+				embossedSpiderTunic.Item_Type = (int) eEquipmentItems.TORSO;
+				embossedSpiderTunic.Id_nb = "embossed_spider_tunic";
+				embossedSpiderTunic.Gold = 0;
+				embossedSpiderTunic.Silver = 9;
+				embossedSpiderTunic.Copper = 3;
+				embossedSpiderTunic.IsPickable = true;
 				embossedSpiderTunic.IsDropable = true;
-				embossedSpiderTunic.IsSaleable = true;
-				embossedSpiderTunic.IsTradable = true;
 
 				embossedSpiderTunic.Color = 45;
+				embossedSpiderTunic.Quality = 100;
+				embossedSpiderTunic.Condition = 1000;
+				embossedSpiderTunic.MaxCondition = 1000;
+				embossedSpiderTunic.Durability = 1000;
+				embossedSpiderTunic.MaxDurability = 1000;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -410,18 +462,19 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(embossedSpiderTunic);
 			}
 
-			bloatedFang = GameServer.Database.SelectObject(typeof (GenericItemTemplate), Expression.Eq("Name", "Bloated spider fang")) as GenericItemTemplate;
+			bloatedFang = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "bloated_spider_fang");
 			if (bloatedFang == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find  Bloated spider fang, creating it ...");
-				bloatedFang = new GenericItemTemplate();
+				bloatedFang = new ItemTemplate();
+				bloatedFang.Object_Type = (int) eObjectType.GenericItem;
 				bloatedFang.Weight = 10;
+				bloatedFang.Id_nb = "bloated_spider_fang";
 				bloatedFang.Name = "Bloated spider fang";
 				bloatedFang.Model = 106;
 				bloatedFang.IsDropable = false;
-				bloatedFang.IsSaleable = false;
-				bloatedFang.IsTradable = false;
+				bloatedFang.IsPickable = false;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -430,18 +483,19 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(bloatedFang);
 			}
 
-			spiderChitin = GameServer.Database.SelectObject(typeof (GenericItemTemplate), Expression.Eq("Name", "Arachneida's Chitin")) as GenericItemTemplate;
+			spiderChitin = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "arachneida_spider_chitin");
 			if (spiderChitin == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Arachneida's Chitin, creating it ...");
-				spiderChitin = new GenericItemTemplate();
+				spiderChitin = new ItemTemplate();
+				spiderChitin.Object_Type = (int) eObjectType.GenericItem;
 				spiderChitin.Weight = 25;
+				spiderChitin.Id_nb = "arachneida_spider_chitin";
 				spiderChitin.Name = "Arachneida's Chitin";
 				spiderChitin.Model = 108;
 				spiderChitin.IsDropable = false;
-				spiderChitin.IsSaleable = false;
-				spiderChitin.IsTradable = false;
+				spiderChitin.IsPickable = false;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -460,17 +514,16 @@ namespace DOL.GS.Quests.Albion
 				* a player right clicks on him or when he whispers to him.
 				*/
 
+			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
 			GameEventMgr.AddHandler(GamePlayerEvent.GameEntered, new DOLEventHandler(PlayerEnterWorld));
 
-			GameEventMgr.AddHandler(kealan, GameObjectEvent.Interact, new DOLEventHandler(TalkToKealan));
+			GameEventMgr.AddHandler(kealan, GameLivingEvent.Interact, new DOLEventHandler(TalkToKealan));
 			GameEventMgr.AddHandler(kealan, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToKealan));
 
-			/* Now we add some hooks to trigger the quest dialog reponse. */
-			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(QuestDialogResponse));
-			GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(QuestDialogResponse));
-
-			/* Now we bring to Ydenia the possibility to give this quest to players */
-			QuestMgr.AddQuestDescriptor(kealan, typeof(HuntForArachneidaDescriptor));
+			/* Now we bring to kealan the possibility to give this quest to players */
+			kealan.AddQuestToGive(typeof (HuntForArachneida));	
 
 			if (log.IsInfoEnabled)
 				log.Info("Quest \"" + questTitle + "\" initialized");
@@ -495,16 +548,16 @@ namespace DOL.GS.Quests.Albion
 			/* Removing hooks works just as adding them but instead of 
 			 * AddHandler, we call RemoveHandler, the parameters stay the same
 			 */
+			GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
 			GameEventMgr.RemoveHandler(GamePlayerEvent.GameEntered, new DOLEventHandler(PlayerEnterWorld));
 
-			GameEventMgr.RemoveHandler(kealan, GameObjectEvent.Interact, new DOLEventHandler(TalkToKealan));
+			GameEventMgr.RemoveHandler(kealan, GameLivingEvent.Interact, new DOLEventHandler(TalkToKealan));
 			GameEventMgr.RemoveHandler(kealan, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToKealan));
 
-			GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(QuestDialogResponse));
-			GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(QuestDialogResponse));
-
 			/* Now we remove to kealan the possibility to give this quest to players */
-			QuestMgr.RemoveQuestDescriptor(kealan, typeof(HuntForArachneidaDescriptor));
+			kealan.RemoveQuestToGive(typeof (HuntForArachneida));
 		}
 
 		/* This is the method we declared as callback for the hooks we set to
@@ -519,7 +572,7 @@ namespace DOL.GS.Quests.Albion
 			if (player == null)
 				return;
 
-			if (QuestMgr.CanGiveQuest(typeof(HuntForArachneida), player, kealan) <= 0)
+			if(kealan.CanGiveQuest(typeof (HuntForArachneida), player)  <= 0)
 				return;
 
 			//We also check if the player is already doing the quest
@@ -539,9 +592,9 @@ namespace DOL.GS.Quests.Albion
 				else
 				{
 					//If the player is already doing the quest, we ask if he found the fur!
-					if (player.Inventory.GetFirstItemByName(bloatedFang.Name, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) != null)
+					if (player.Inventory.GetFirstItemByID(bloatedFang.Id_nb, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) != null)
 						kealan.SayTo(player, "Good, you managed to retrieve a bloated spider fang, but did you also slay Arachneida?");
-					else if (player.Inventory.GetFirstItemByName(spiderChitin.Name, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) != null)
+					else if (player.Inventory.GetFirstItemByID(spiderChitin.Id_nb, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) != null)
 						kealan.SayTo(player, "Ah, I see you killed her, I knew you were other than the rest. Now hand me over the chitin and fang so that I can give you your reward.");
 					else
 						kealan.SayTo(player, "Go now, and bring back her chitin as prof of your success.");
@@ -565,7 +618,7 @@ namespace DOL.GS.Quests.Albion
 							break;
 							//If the player offered his "help", we send the quest dialog now!
 						case "hunt":
-							QuestMgr.ProposeQuestToPlayer(typeof(HuntForArachneida), "Do you want to hunt Arachneida?", player, kealan);
+							player.Out.SendQuestSubscribeCommand(kealan, QuestMgr.GetIDForQuestType(typeof(HuntForArachneida)), "Do you want to hunt Arachneida?");
 							break;
 					}
 				}
@@ -576,10 +629,28 @@ namespace DOL.GS.Quests.Albion
 						case "bloated spider fang":
 							kealan.SayTo(player, "There should be lots of them out there near Arachneida's lair.");
 							break;
+						case "abort":
+							player.Out.SendCustomDialog("Do you really want to abort this quest, \nall items gained during quest will be lost?", new CustomDialogResponse(CheckPlayerAbortQuest));
+							break;
 					}
 				}
 
 			}
+		}
+
+		protected static void SubscribeQuest(DOLEvent e, object sender, EventArgs args)
+		{
+			QuestEventArgs qargs = args as QuestEventArgs;
+			if (qargs == null)
+				return;
+
+			if (qargs.QuestID != QuestMgr.GetIDForQuestType(typeof(HuntForArachneida)))
+				return;
+
+			if (e == GamePlayerEvent.AcceptQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x01);
+			else if (e == GamePlayerEvent.DeclineQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x00);
 		}
 
 		protected static void PlayerLeftWorld(DOLEvent e, object sender, EventArgs args)
@@ -622,16 +693,59 @@ namespace DOL.GS.Quests.Albion
 			{
 				UseSlotEventArgs uArgs = (UseSlotEventArgs) args;
 
-				GenericItem item = player.Inventory.GetItem((eInventorySlot)uArgs.Slot) as GenericItem;
-				if (item != null && item.QuestName == quest.Name && item.Name == bloatedFang.Name)
+				InventoryItem item = player.Inventory.GetItem((eInventorySlot)uArgs.Slot);
+				if (item != null && item.Id_nb == bloatedFang.Id_nb)
 				{
-					if (player.Position.CheckSquareDistance(arachneida.Position, 500*500) && !arachneida.Alive)
+					if (WorldMgr.GetDistance(player, arachneida) < 500 && !arachneida.IsAlive)
 					{
 						SendSystemMessage(player, "You use the bloated spider fang to retrieve arachneida's chitin!");
-						GiveItemToPlayer(CreateQuestItem(spiderChitin, quest), player);
-						quest.ChangeQuestStep(4);
+						GiveItem(player, spiderChitin);
+
+						quest.Step = 4;
 					}
 				}
+			}
+		}
+
+		/// <summary>
+		/// This method checks if a player qualifies for this quest
+		/// </summary>
+		/// <returns>true if qualified, false if not</returns>
+		public override bool CheckQuestQualification(GamePlayer player)
+		{
+			// if the player is already doing the quest his level is no longer of relevance
+			if (player.IsDoingQuest(typeof (HuntForArachneida)) != null)
+				return true;
+
+			// This checks below are only performed is player isn't doing quest already
+
+			if (player.Level < minimumLevel || player.Level > maximumLevel)
+				return false;
+
+			return true;
+		}
+
+
+		/* This is our callback hook that will be called when the player clicks
+		 * on any button in the quest offer dialog. We check if he accepts or
+		 * declines here...
+		 */
+
+		private static void CheckPlayerAbortQuest(GamePlayer player, byte response)
+		{
+			HuntForArachneida quest = player.IsDoingQuest(typeof (HuntForArachneida)) as HuntForArachneida;
+
+			if (quest == null)
+				return;
+
+			if (response == 0x00)
+			{
+				SendSystemMessage(player, "Good, no go out there and finish your work!");
+			}
+			else
+			{
+				SendSystemMessage(player, "Aborting Quest " + questTitle + ". You can start over again if you want.");
+				quest.AbortQuest();
 			}
 		}
 
@@ -639,30 +753,31 @@ namespace DOL.GS.Quests.Albion
 		 * on any button in the quest offer dialog. We check if he accepts or
 		 * declines here...
 		 */
-		protected static void QuestDialogResponse(DOLEvent e, object sender, EventArgs args)
+
+		private static void CheckPlayerAcceptQuest(GamePlayer player, byte response)
 		{
-			QuestEventArgs gArgs = args as QuestEventArgs;
+			//We recheck the qualification, because we don't talk to players
+			//who are not doing the quest
+			if(kealan.CanGiveQuest(typeof (HuntForArachneida), player)  <= 0)
+				return;
 
-			if (gArgs != null && gArgs.QuestType.Equals(typeof(HuntForArachneida)))
+			if (player.IsDoingQuest(typeof (HuntForArachneida)) != null)
+				return;
+
+			if (response == 0x00)
 			{
-				GamePlayer player = gArgs.Player;
-				if (player == null) return;
+				SendReply(player, "Oh well, if you change your mind, please come back!");
+			}
+			else
+			{
+				//Check if we can add the quest!
+				if (!kealan.GiveQuest(typeof (HuntForArachneida), player, 1))
+					return;
 
-				if (e == GamePlayerEvent.AcceptQuest)
-				{
-					if (QuestMgr.GiveQuestToPlayer(typeof(HuntForArachneida), player, gArgs.Source as GameNPC))
-					{
-						kealan.SayTo(player, "Good! I know we ca'count on ye. As a proof bring me Arachneida's chitin. But make sure to fetch a [bloated spider fang] first, or you won't be able to retrieve the chitin, it's rather hard to break.!");
+				kealan.SayTo(player, "Good! I know we ca'count on ye. As a proof bring me Arachneida's chitin. But make sure to fetch a [bloated spider fang] first, or you won't be able to retrieve the chitin, it's rather hard to break.!");
 
-						GameEventMgr.AddHandler(player, GamePlayerEvent.UseSlot, new DOLEventHandler(PlayerUseSlot));
-						GameEventMgr.AddHandler(player, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
-					}
-				}
-				else if (e == GamePlayerEvent.DeclineQuest)
-				{
-
-					player.Out.SendMessage("Oh well, if you change your mind, please come back!", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
-				}
+				GameEventMgr.AddHandler(player, GamePlayerEvent.UseSlot, new DOLEventHandler(PlayerUseSlot));
+				GameEventMgr.AddHandler(player, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
 			}
 		}
 
@@ -699,9 +814,8 @@ namespace DOL.GS.Quests.Albion
 						return "[Step #4] Bring both, bloated spider fang and Arachneida's chitin to Kealan.";
 					case 5:
 						return "[Step #4] Bring both, bloated spider fang and Arachneida's chitin to Kealan.";
-					default:
-						return "[Step #" + Step + "] No Description entered for this step!";
 				}
+				return base.Description;
 			}
 		}
 
@@ -724,8 +838,8 @@ namespace DOL.GS.Quests.Albion
 					else
 					{
 						SendSystemMessage("You were able to slay a bloated spider, and take her fang!");
-						GiveItemToPlayer(CreateQuestItem(bloatedFang));
-						ChangeQuestStep(2);
+						GiveItem(gArgs.Target, player, bloatedFang);
+						Step = 2;
 					}
 					return;
 				}
@@ -733,29 +847,28 @@ namespace DOL.GS.Quests.Albion
 			if (Step == 2 && e == GameLivingEvent.EnemyKilled)
 			{
 				EnemyKilledEventArgs gArgs = (EnemyKilledEventArgs) args;
-				if (gArgs.Target == arachneida)
+				if (gArgs.Target.Name == arachneida.Name)
 				{
 					SendSystemMessage("You strike down Arachneida, now use the fang to retrieve her chitin!");
-					ChangeQuestStep(3);
+					Step = 3;
 					return;
 				}
 			}
 			else if (Step >= 4 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target == kealan && gArgs.Item.QuestName == Name && (gArgs.Item.Name == bloatedFang.Name || gArgs.Item.Name == spiderChitin.Name))
+				if (gArgs.Target.Name == kealan.Name && (gArgs.Item.Id_nb == bloatedFang.Id_nb || gArgs.Item.Id_nb == spiderChitin.Id_nb))
 				{
 					kealan.TurnTo(m_questPlayer);
 					if (Step == 4)
 					{
-						RemoveItemFromPlayer(kealan, gArgs.Item);
 						kealan.SayTo(player, "Very well now hand me over the rest and you will revieve your reward...");
-						ChangeQuestStep(5);
+						RemoveItem(kealan, player, gArgs.Item);
+						Step = 5;
 					}
 					else if (Step == 5)
 					{
-						RemoveItemFromPlayer(kealan, gArgs.Item);
-						kealan.SayTo(m_questPlayer, "Great, the bloated spider fang and Arachneida's chitin. You did your job well! Now here, take this as a token of my gratitude.");
+						RemoveItem(kealan, player, gArgs.Item);
 						FinishQuest();
 					}
 					return;
@@ -763,8 +876,23 @@ namespace DOL.GS.Quests.Albion
 			}
 		}
 
+		public override void AbortQuest()
+		{
+			base.AbortQuest(); //Defined in Quest, changes the state, stores in DB etc ...
+
+			RemoveItem(m_questPlayer, spiderChitin, false);
+			RemoveItem(m_questPlayer, bloatedFang, false);
+
+			GameEventMgr.RemoveHandler(m_questPlayer, GamePlayerEvent.UseSlot, new DOLEventHandler(PlayerUseSlot));
+			GameEventMgr.RemoveHandler(m_questPlayer, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
+
+		}
+
 		public override void FinishQuest()
 		{
+			kealan.SayTo(m_questPlayer, "Great, the bloated spider fang and Arachneida's chitin. You did your job well! Now here, take this as a token of my gratitude.");
+			base.FinishQuest(); //Defined in Quest, changes the state, stores in DB etc ...
+
 			//Give reward to player here ...
 			m_questPlayer.GainExperience(40050, 0, 0, true);
 			m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 22, Util.Random(50)), "You recieve {0} for your service.");
@@ -774,34 +902,33 @@ namespace DOL.GS.Quests.Albion
 				m_questPlayer.CharacterClass.ID == (byte) eCharacterClass.Cabalist ||
 				m_questPlayer.CharacterClass.ID == (byte) eCharacterClass.Theurgist)
 			{
-				GiveItemToPlayer(kealan, spiderSilkenRobe.CreateInstance());
+				GiveItem(kealan, m_questPlayer, spiderSilkenRobe);
 			}
 			else if (m_questPlayer.CharacterClass.ID == (byte) eCharacterClass.Paladin ||
 				m_questPlayer.CharacterClass.ID == (byte) eCharacterClass.Armsman ||
 				m_questPlayer.CharacterClass.ID == (byte) eCharacterClass.Reaver ||
 				m_questPlayer.CharacterClass.ID == (byte) eCharacterClass.Mercenary)
 			{
-				GiveItemToPlayer(kealan, ringedSpiderChitinTunic.CreateInstance());
+				GiveItem(kealan, m_questPlayer, ringedSpiderChitinTunic);
 			}
 			else if (m_questPlayer.CharacterClass.ID == (byte) eCharacterClass.Cleric ||
 				m_questPlayer.CharacterClass.ID == (byte) eCharacterClass.Scout ||
 				m_questPlayer.CharacterClass.ID == (byte) eCharacterClass.Minstrel)
 			{
-				GiveItemToPlayer(kealan, studdedSpiderEyeVest.CreateInstance());
+				GiveItem(kealan, m_questPlayer, studdedSpiderEyeVest);
 			}
 			else if (m_questPlayer.CharacterClass.ID == (byte) eCharacterClass.Friar)
 			{
-				GiveItemToPlayer(kealan, spiderEmblazonedTunic.CreateInstance());
+				GiveItem(kealan, m_questPlayer, spiderEmblazonedTunic);
 			}
 			else if (m_questPlayer.CharacterClass.ID == (byte) eCharacterClass.Infiltrator)
 			{
-				GiveItemToPlayer(kealan, embossedSpiderTunic.CreateInstance());
+				GiveItem(kealan, m_questPlayer, embossedSpiderTunic);
 			}
 
 			GameEventMgr.RemoveHandler(m_questPlayer, GamePlayerEvent.UseSlot, new DOLEventHandler(PlayerUseSlot));
 			GameEventMgr.RemoveHandler(m_questPlayer, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
-		
-			base.FinishQuest(); //Defined in Quest, changes the state, stores in DB etc ...
 		}
+
 	}
 }

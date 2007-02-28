@@ -80,7 +80,7 @@ namespace DOL.GS.Scripts
 			}
 			if (player.Level >= 10)
 			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.AlbArmor, (int)eArmorLevel.High));
+				player.AddAbility(SkillBase.GetAbility(Abilities.AlbArmor, ArmorLevel.Chain));
 				player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Shortbows));
 				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 1));
 
@@ -118,10 +118,6 @@ namespace DOL.GS.Scripts
 			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.Advanced_Evade));
 				player.AddAbility(SkillBase.GetAbility(Abilities.Stoicism));
-			}
-			if (player.Level >= 40)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Charge));
 			}
 		}
 	}

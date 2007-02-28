@@ -47,6 +47,8 @@ namespace DOL.GS.GameEvents
 		[ScriptLoadedEvent]
 		public static void OnScriptCompiled(DOLEvent e, object sender, EventArgs args)
 		{
+			if (!ServerProperties.Properties.LOAD_EXAMPLES)
+				return;
 			//We want to be notified whenever a new character is created
 			GameEventMgr.AddHandler(DatabaseEvent.CharacterCreated, new DOLEventHandler(DOLTestCharacterCreation));
 			//We want to be notified whenever a player enters the world
@@ -66,13 +68,14 @@ namespace DOL.GS.GameEvents
 			*/
 			//Output success message
 			if (log.IsInfoEnabled)
-				if (log.IsInfoEnabled)
-					log.Info("DOLTestServer initialized");
+				log.Info("DOLTestServer initialized");
 		}
 
 		[ScriptUnloadedEvent]
 		public static void OnScriptUnloaded(DOLEvent e, object sender, EventArgs args)
 		{
+			if (!ServerProperties.Properties.LOAD_EXAMPLES)
+				return;
 			GameEventMgr.RemoveHandler(DatabaseEvent.CharacterCreated, new DOLEventHandler(DOLTestCharacterCreation));
 			GameEventMgr.RemoveHandler(GamePlayerEvent.GameEntered, new DOLEventHandler(DOLTestPlayerEnterWorld));
 		}
@@ -92,7 +95,7 @@ namespace DOL.GS.GameEvents
 			//DOLTopia (our selfproclaimed town to show off)
 			//If the player is > 10.000 coordinates away or in another region
 			//we send a dialog to the player and register a dialog-callback
-			if (player.Region.RegionID != 1 || !player.Position.CheckDistance(new Point(531405, 479515, 0), 10000))
+			if (player.CurrentRegionID != 1 || !WorldMgr.CheckDistance(player, 531405, 479515, 0,10000))
 				player.Out.SendCustomDialog("Do you want to be teleported to DOLTopia?", new CustomDialogResponse(TeleportToDOLTopia));
 		}
 
@@ -105,7 +108,8 @@ namespace DOL.GS.GameEvents
 				return;
 
 			//We want our new characters to start with some money
-			//chArgs.Character.Money = 10;
+			//chArgs.Character.Gold = 10;
+			//chArgs.Character.Silver = 50;
 			// since at least money loot is available we dont need start money
 		}
 
@@ -117,7 +121,7 @@ namespace DOL.GS.GameEvents
 			if (response != 0x01)
 				return;
 			//The player clicked on "OK" so we teleport him!
-			player.MoveTo(WorldMgr.GetRegion(1), new Point(531405, 479515, 0), 2790);
+			player.MoveTo(1, 531405, 479515, 0, 2790);
 		}
 	}
 }

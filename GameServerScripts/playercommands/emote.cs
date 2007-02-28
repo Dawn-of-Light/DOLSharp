@@ -16,21 +16,29 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using DOL.Database;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Scripts
 {
+	/// <summary>
+	/// Command handler to handle emotes
+	/// </summary>
 	[CmdAttribute(
 		"&emote", new string[] {"&em", "&e"},
 		(uint) ePrivLevel.Player,
 		"Roleplay an action or emotion", "/emote <text>")]
 	public class CustomEmoteCommandHandler : ICommandHandler
 	{
+		/// <summary>
+		/// Method to handle the command from the client
+		/// </summary>
+		/// <param name="client"></param>
+		/// <param name="args"></param>
+		/// <returns></returns>
 		public int OnCommand(GameClient client, string[] args)
 		{
 			// no emotes if dead
-			if (!client.Player.Alive)
+			if (!client.Player.IsAlive)
 			{
 				client.Out.SendMessage("You can't emote while dead!", eChatType.CT_Emote, eChatLoc.CL_SystemWindow);
 				return 1;
@@ -47,7 +55,7 @@ namespace DOL.GS.Scripts
 
 			string diffRealm = "<" + client.Player.Name + " makes strange motions.>";
 
-			foreach (GamePlayer player in client.Player.GetInRadius(typeof(GamePlayer), WorldMgr.SAY_DISTANCE))
+			foreach (GamePlayer player in client.Player.GetPlayersInRadius(WorldMgr.SAY_DISTANCE))
 				if (GameServer.ServerRules.IsAllowedToUnderstand(client.Player, player))
 				{
 					player.Out.SendMessage(ownRealm, eChatType.CT_Emote, eChatLoc.CL_ChatWindow);

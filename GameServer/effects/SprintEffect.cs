@@ -19,12 +19,14 @@
 using System;
 using System.Collections;
 
+using DOL.GS.RealmAbilities;
+
 namespace DOL.GS.Effects
 {
 	/// <summary>
 	/// The helper class for sprint ability
 	/// </summary>
-	public sealed class SprintEffect : IGameEffect
+	public sealed class SprintEffect : StaticEffect, IGameEffect
 	{
 		/// <summary>
 		/// The timer that reduce the endurance every interval
@@ -59,7 +61,8 @@ namespace DOL.GS.Effects
 		public void Start(GamePlayer player)
 		{
 			m_player = player;
-			if (m_tickTimer != null) {
+			if (m_tickTimer != null)
+			{
 				m_tickTimer.Stop();
 				m_tickTimer = null;
 			}
@@ -74,10 +77,11 @@ namespace DOL.GS.Effects
 		/// </summary>
 		public void Stop()
 		{
-			if (m_tickTimer != null) {
+			if (m_tickTimer != null)
+			{
 				m_tickTimer.Stop();
 				m_tickTimer = null;
-			}				
+			}
 			m_player.EffectList.Remove(this);
 		}
 
@@ -86,7 +90,7 @@ namespace DOL.GS.Effects
 		/// </summary>
 		/// <param name="callingTimer"></param>
 		/// <returns></returns>
-		public int PulseCallback(RegionTimer callingTimer) 
+		public int PulseCallback(RegionTimer callingTimer)
 		{
 			int nextInterval;
 
@@ -94,14 +98,25 @@ namespace DOL.GS.Effects
 				m_idleTicks = 0;
 			else m_idleTicks++;
 
-			if (m_player.EndurancePercent - 5 <= 0 || m_idleTicks >= 6) {
+			if (m_player.Endurance - 5 <= 0 || m_idleTicks >= 6)
+			{
 				Cancel(false);
 				nextInterval = 0;
-			} else {
-				nextInterval = Util.Random(600, 1400);
-				if (m_player.IsMoving) m_player.EndurancePercent -= 5; //remove endurance only if effect is not stopped
 			}
-			//m_player.Out.SendUpdatePlayer();
+			else
+			{
+				nextInterval = Util.Random(600, 1400);
+				if (m_player.IsMoving)
+				{
+					int amount = 5;
+
+					LongWindAbility ra = m_player.GetAbility(typeof(LongWindAbility)) as LongWindAbility;
+					if (ra != null)
+						amount = 5 - ra.GetAmountForLevel(ra.Level);
+
+					m_player.Endurance -= amount;
+				}
+			}
 			return nextInterval;
 		}
 

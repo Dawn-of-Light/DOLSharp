@@ -17,28 +17,21 @@
  *
  */
 
-using NHibernate.Mapping.Attributes;
-
 namespace DOL.GS.Scripts
 {
 	/// <summary>
 	/// Guild Registrar
 	/// </summary>	
-	[Subclass(NameType=typeof(GuildRegistrar), ExtendsType=typeof(GameMob))] 
-	public class GuildRegistrar : GameMob
+	[NPCGuildScript("Guild Registrar")]
+	public class GuildRegistrar : GameNPC
 	{
 		protected const string FORM_A_GUILD = "form a guild";
 
-		/// <summary>
-		/// This function is called from the ObjectInteractRequestHandler
-		/// </summary>
-		/// <param name="player">GamePlayer that interacts with this object</param>
-		/// <returns>false if interaction is prevented</returns>
 		public override bool Interact(GamePlayer player)
 		{
-			if (!base.Interact(player)) return false;
+			if (!base.Interact(player))
+				return false;
 
-			TurnTo(player, 10000);
 			SayTo(player, "Hail, " + player.CharacterClass.Name + ". Have you come to [" + FORM_A_GUILD + "]?");
 
 			return true;
@@ -48,9 +41,9 @@ namespace DOL.GS.Scripts
 		{
 			if (!base.WhisperReceive(source, text))
 				return false;
-
-			GamePlayer player = source as GamePlayer;
-			if(player == null) return false;
+			if (source is GamePlayer == false)
+				return true;
+			GamePlayer player = (GamePlayer) source;
 
 			switch (text)
 			{

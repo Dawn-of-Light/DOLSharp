@@ -20,7 +20,6 @@ using System;
 using System.Collections.Specialized;
 using System.Reflection;
 using System.Threading;
-using DOL.GS.Database;
 using DOL.GS.PacketHandler;
 using log4net;
 
@@ -41,7 +40,7 @@ namespace DOL.GS
 		/// <summary>
 		/// The interval in which the weather chance will be tested, in milliseconds
 		/// </summary>
-		private const int CHECK_INTERVAL = 5*60*1000;
+		private const int CHECK_INTERVAL = 5 * 60 * 1000;
 		/// <summary>
 		/// The chance to start the weather.
 		/// Will be tested every CHECK_INTERVAL milliseconds
@@ -50,7 +49,7 @@ namespace DOL.GS
 		/// <summary>
 		/// The width of zone
 		/// </summary>
-		private const int ZONE_WIDTH=1048575;//0xFFFFF
+		private const int ZONE_WIDTH = 1048575;//0xFFFFF
 		/// <summary>
 		/// The starting line of the weather
 		/// </summary>
@@ -68,7 +67,7 @@ namespace DOL.GS
 		/// <summary>
 		/// The speed of this weather in coordinates/second
 		/// </summary>
-		private ushort m_speed; 
+		private ushort m_speed;
 		/// <summary>
 		/// The intensity of this weather
 		/// </summary>
@@ -123,7 +122,7 @@ namespace DOL.GS
 		{
 			get
 			{
-				if(m_weatherStartTick==0) 
+				if (m_weatherStartTick == 0)
 					return 0;
 				return (uint)(m_startX + (Environment.TickCount - m_weatherStartTick) * m_speed / 1000);
 			}
@@ -132,9 +131,9 @@ namespace DOL.GS
 		public uint StartX
 		{
 			get { return m_startX; }
-			set 
-			{ 
-				m_startX = value; 
+			set
+			{
+				m_startX = value;
 				RestartStorm();
 			}
 		}
@@ -186,7 +185,7 @@ namespace DOL.GS
 		/// <returns>The retrieved weather manager or null if none for this region</returns>
 		public static WeatherMgr GetWeatherForRegion(ushort regionID)
 		{
-			return (WeatherMgr) m_weathers[regionID];
+			return (WeatherMgr)m_weathers[regionID];
 		}
 
 		/// <summary>
@@ -196,20 +195,20 @@ namespace DOL.GS
 		/// <param name="state"></param>
 		private void CheckWeatherTimerCallback(object state)
 		{
-			if(IsActive)
+			if (IsActive)
 				return;
 
 			//Reset the weather start tick so it can not overflow
 			m_weatherStartTick = 0;
 
 			//Test our chance to start the weather
-			if(!Util.Chance(CHANCE))
+			if (!Util.Chance(CHANCE))
 				return;
 
 			//Start the weather
 			StartStorm();
 
-			m_weatherTimer.Change(CHECK_INTERVAL + ZONE_WIDTH*1000/m_speed, CHECK_INTERVAL);
+			m_weatherTimer.Change(CHECK_INTERVAL + ZONE_WIDTH * 1000 / m_speed, CHECK_INTERVAL);
 			return; //0xFFFFF/speed*10 to wait time of storm  before check
 		}
 
@@ -221,8 +220,8 @@ namespace DOL.GS
 		{
 			StartStorm(1,
 					   (uint)Util.Random(25000, 90000),
-					   (ushort)Util.Random(100,700),
-				       16000,
+					   (ushort)Util.Random(100, 700),
+					   16000,
 					   (ushort)Util.Random(30, 120));
 		}
 
@@ -232,7 +231,7 @@ namespace DOL.GS
 		public void RestartStorm()
 		{
 			StartStorm(m_startX, m_width, m_speed, m_fogDiffusion, m_intensity);
-			m_weatherTimer.Change(ZONE_WIDTH*1000/m_speed, CHECK_INTERVAL);
+			m_weatherTimer.Change(ZONE_WIDTH * 1000 / m_speed, CHECK_INTERVAL);
 		}
 
 		/// <summary>
@@ -246,15 +245,15 @@ namespace DOL.GS
 		{
 			m_startX = x;
 			m_width = duration;
-			m_speed = speed; 
+			m_speed = speed;
 			m_fogDiffusion = fog;
 			m_intensity = intensity;
 			m_weatherStartTick = Environment.TickCount;
 
 			foreach (GameClient cl in WorldMgr.GetClientsOfRegion(m_regionID))
-				cl.Out.SendWeather(m_startX,m_width,m_speed,m_fogDiffusion,m_intensity);
+				cl.Out.SendWeather(m_startX, m_width, m_speed, m_fogDiffusion, m_intensity);
 			if (log.IsInfoEnabled)
-				log.Info("It starts to rain in "+WorldMgr.GetRegion(m_regionID).Description);
+				log.Info("It starts to rain in " + WorldMgr.GetRegion(m_regionID).Description);
 		}
 
 
@@ -263,7 +262,7 @@ namespace DOL.GS
 		/// </summary>
 		public void StopStorm()
 		{
-			if(!IsActive) return;
+			if (!IsActive) return;
 
 			uint currentLine = CurrentWeatherLine;
 
@@ -272,14 +271,13 @@ namespace DOL.GS
 
 			foreach (GameClient cl in WorldMgr.GetClientsOfRegion(m_regionID))
 			{
-				cl.Out.SendWeather(0,0,0,0,0);
-				Point pos = cl.Player.Position;
-				if (pos.X > (currentLine-m_width) && pos.X < (currentLine+m_width))
-					cl.Out.SendMessage("The sky clears up again as the storm clouds disperse!",eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+				cl.Out.SendWeather(0, 0, 0, 0, 0);
+				if (cl.Player.X > (currentLine - m_width) && cl.Player.X < (currentLine + m_width))
+					cl.Out.SendMessage("The sky clears up again as the storm clouds disperse!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 			}
 			m_weatherTimer.Change(CHECK_INTERVAL, CHECK_INTERVAL);
 			if (log.IsInfoEnabled)
-				log.Info("Rain was stopped in "+WorldMgr.GetRegion(m_regionID).Description);
+				log.Info("Rain was stopped in " + WorldMgr.GetRegion(m_regionID).Description);
 		}
 
 		/// <summary>
@@ -288,9 +286,9 @@ namespace DOL.GS
 		/// <param name="player">The player entering the region</param>
 		public static void UpdatePlayerWeather(GamePlayer player)
 		{
-			WeatherMgr mgr = GetWeatherForRegion((ushort)player.Region.RegionID);
-			if(mgr!=null && mgr.IsActive)
-				player.Out.SendWeather(mgr.CurrentWeatherLine,mgr.m_width, mgr.m_speed, mgr.m_fogDiffusion, mgr.m_intensity);
+			WeatherMgr mgr = GetWeatherForRegion(player.CurrentRegionID);
+			if (mgr != null && mgr.IsActive)
+				player.Out.SendWeather(mgr.CurrentWeatherLine, mgr.m_width, mgr.m_speed, mgr.m_fogDiffusion, mgr.m_intensity);
 		}
 		#endregion
 
@@ -301,35 +299,46 @@ namespace DOL.GS
 		/// <returns>true if successfull</returns>
 		public static bool Load()
 		{
-			lock(m_weathers)
+#warning ideally we'd want this read from the region table instead of hardcoding which regions should produce storms
+			lock (m_weathers)
 			{
 				foreach (RegionEntry region in DOL.GS.WorldMgr.GetRegionList())
- 				{
- 					switch(region.id)
- 					{
- 						case 1://Albion main
- 						case 2://Albion housing
- 						case 51://Albion SI
- 						case 70://Albion TOA
- 						case 71://Albion TOA
- 						case 73://Albion TOA
- 						case 100://Midgard main
- 						case 102://Midgard housing
- 						case 151://Midgard SI
- 						case 30://Midgard TOA
- 						case 200://Hibernia main
- 						case 202://Hibernia housing
- 						case 181://Hibernia SI
- 						case 72://Hibernia TOA
- 						case 130://Hibernia TOA
- 						case 252://Thidranki
- 							m_weathers.Add(region.id, new WeatherMgr(region.id));
- 							break;
- 					}
- 				}
-				foreach(WeatherMgr weather in m_weathers.Values)
+				{
+					switch (region.id)
+					{
+						case 1://Albion main
+						case 2://Albion housing
+						case 51://Albion SI
+						case 70://Albion TOA
+						case 71://Albion TOA
+						case 73://Albion TOA
+						case 100://Midgard main
+						case 102://Midgard housing
+						case 151://Midgard SI
+						case 30://Midgard TOA
+						case 200://Hibernia main
+						case 202://Hibernia housing
+						case 181://Hibernia SI
+						case 72://Hibernia TOA
+						case 130://Hibernia TOA
+						case 163:// New Frontiers
+						case 234://bg1-4
+						case 235://bg5-9
+						case 236://bg10-14
+						case 237://bg15-19
+						case 238://bg20-24
+						case 239://bg25-29
+						case 240://bg30-34
+						case 241://bg35-39
+						case 242://bg40-44
+						case 165://bg45-49
+							m_weathers.Add(region.id, new WeatherMgr(region.id));
+							break;
+					}
+				}
+				foreach (WeatherMgr weather in m_weathers.Values)
 					weather.m_weatherTimer.Change(CHECK_INTERVAL, CHECK_INTERVAL);
-			}				
+			}
 			return true;
 		}
 
@@ -338,9 +347,9 @@ namespace DOL.GS
 		/// </summary>
 		public static void Unload()
 		{
-			lock(m_weathers)
+			lock (m_weathers)
 			{
-				foreach(WeatherMgr weather in m_weathers.Values)
+				foreach (WeatherMgr weather in m_weathers.Values)
 					weather.m_weatherTimer.Change(Timeout.Infinite, Timeout.Infinite);
 				m_weathers.Clear();
 			}

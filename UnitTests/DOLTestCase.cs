@@ -19,9 +19,7 @@
 using System;
 using System.IO;
 using System.Net.Sockets;
-using DOL.GS.Database;
-using DOL.GS.PacketHandler;
-using NHibernate.Expression;
+using DOL.Database;
 using DOL.GS;
 using NUnit.Framework;
 
@@ -35,25 +33,26 @@ namespace DOL.Tests
 
 		protected GamePlayer CreateMockGamePlayer()
 		{
-			Account account = (Account) GameServer.Database.FindObjectByKey(typeof(Account),"d");
+			Character character= null;
+			Account account = (Account) GameServer.Database.SelectObject(typeof(Account),"");
 			
 			Assert.IsNotNull(account);
 
-			Character character = (Character) GameServer.Database.SelectObject(typeof(Character),Expression.Eq("AccountName",account.AccountName));
-			
+			foreach (Character charact in account.Characters)
+			{
+				if (charact!=null)
+					character = charact;
+			}			
+
 			Assert.IsNotNull(character);
 			
 
 			GameClient client = new GameClient(GameServer.Instance);
 			client.Version = GameClient.eClientVersion.Version168;
-			client.Out = new PacketLib168(client);
-			client.Socket = new Socket(AddressFamily.InterNetwork,SocketType.Stream,ProtocolType.Tcp);
+			client.Socket = new Socket(AddressFamily.InterNetwork,SocketType.Stream,ProtocolType.Tcp);			
 			client.Account = account;
 
-			WorldMgr.CreateSessionID(client);
-			GamePlayer player = new GamePlayer(client, character);
-			client.Player = player;
-			client.ClientState = GameClient.eClientState.CharScreen;
+			GamePlayer player = new GamePlayer(client,character);
 			return player;
 		}
 
@@ -85,7 +84,7 @@ namespace DOL.Tests
 			}
 		}
 
-		[TestFixtureTearDown] public virtual void Dispose()
+		[TestFixtureTearDown] public void Dispose()
 		{
 			// At the moment we do not stop GameServer after each test to let it be reused by all tests.
 			// TODO Find a way to Startup/Stop GameServer once for all TestCases...

@@ -3,9 +3,12 @@
 // email to their entry in the Account DB.
 
 using System;
-using System.Text.RegularExpressions;
+using DOL.GS;
 using DOL.Database;
 using DOL.GS.PacketHandler;
+using System.Text.RegularExpressions;
+
+using log4net;
 
 namespace DOL.GS.Scripts
 {

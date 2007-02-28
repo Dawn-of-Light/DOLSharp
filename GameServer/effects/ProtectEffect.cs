@@ -1,16 +1,16 @@
 /*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -18,7 +18,6 @@
  */
 using System;
 using System.Collections;
-using DOL.GS.Database;
 using DOL.GS.PacketHandler;
 using DOL.Events;
 using DOL.GS.SkillHandler;
@@ -29,7 +28,7 @@ namespace DOL.GS.Effects
 	/// <summary>
 	/// The helper class for the protect ability
 	/// </summary>
-	public class ProtectEffect : IGameEffect
+	public class ProtectEffect : StaticEffect, IGameEffect
 	{
 		/// <summary>
 		/// The ability description
@@ -52,7 +51,7 @@ namespace DOL.GS.Effects
 
 		/// <summary>
 		/// Reference to gameplayer that is protecting this player
-		/// </summary>  
+		/// </summary>
 		GamePlayer m_protectTarget = null;
 
 		/// <summary>
@@ -94,7 +93,7 @@ namespace DOL.GS.Effects
 			m_protectSource.EffectList.Add(this);
 			m_protectTarget.EffectList.Add(this);
 
-			if (!protectSource.Position.CheckSquareDistance(protectTarget.Position, (uint)(ProtectAbilityHandler.PROTECT_DISTANCE * ProtectAbilityHandler.PROTECT_DISTANCE)))
+			if (!WorldMgr.CheckDistance(protectSource, protectTarget, ProtectAbilityHandler.PROTECT_DISTANCE))
 			{
 				protectSource.Out.SendMessage(string.Format("You are now protecting {0}, but you must stand closer.", protectTarget.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				protectTarget.Out.SendMessage(string.Format("{0} is now protecting you, but you must stand closer.", protectSource.GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -128,6 +127,7 @@ namespace DOL.GS.Effects
 		public void Cancel(bool playerCancel)
 		{
 			GameEventMgr.RemoveHandler(m_playerGroup, PlayerGroupEvent.PlayerDisbanded, new DOLEventHandler(GroupDisbandCallback));
+			// intercept handling is done by the active part             
 			m_protectSource.EffectList.Remove(this);
 			m_protectTarget.EffectList.Remove(this);
 
@@ -146,7 +146,7 @@ namespace DOL.GS.Effects
 			get
 			{
 				if (m_protectSource != null && m_protectTarget != null)
-					return m_protectSource.GetName(0, false) + " is Protecting " + m_protectTarget.GetName(0, false);
+					return m_protectTarget.GetName(0, false) + " protected by " + m_protectSource.GetName(0, false);
 				return "Protect";
 			}
 		}

@@ -18,7 +18,6 @@
  */
 using System;
 using DOL.Database;
-using DOL.GS.Database;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Scripts
@@ -44,13 +43,13 @@ namespace DOL.GS.Scripts
 				}
 			}
 			BindPoint bp = new BindPoint();
-			Point pos = client.Player.Position;
-			bp.X = pos.X;
-			bp.Y = pos.Y;
-			bp.Z = pos.Z;
-			bp.Region = client.Player.Region.RegionID;
+			bp.X = client.Player.X;
+			bp.Y = client.Player.Y;
+			bp.Z = client.Player.Z;
+			bp.Region = client.Player.CurrentRegionID;
 			bp.Radius = bindRadius;
 			GameServer.Database.AddNewObject(bp);
+			client.Player.CurrentRegion.AddArea(new Area.BindArea("bind point", bp));
 			client.Out.SendMessage("Bindpoint added: X=" + bp.X + " Y=" + bp.Y + " Z=" + bp.Z + " Radius=" + bp.Radius + " Region=" + bp.Region, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			return 1;
 		}

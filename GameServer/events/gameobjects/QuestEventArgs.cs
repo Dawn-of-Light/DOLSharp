@@ -18,7 +18,6 @@
  */
 using System;
 using DOL.GS;
-using DOL.GS.Quests;
 
 namespace DOL.Events
 {
@@ -27,7 +26,7 @@ namespace DOL.Events
 	/// </summary>
 	public class QuestEventArgs : SourceEventArgs
 	{
-		private Type questType;
+		private ushort questid;
         private GamePlayer player;
 
 		/// <summary>
@@ -35,19 +34,19 @@ namespace DOL.Events
 		/// </summary>
 		/// <param name="source">Inviting NPC</param>
 		/// <param name="player">Player associated with quest</param>
-		/// <param name="questType">the type of the quest</param>
-		public QuestEventArgs(GameLiving source,GamePlayer player, Type questType) : base (source)
+		/// <param name="questid">id of quest</param>
+		public QuestEventArgs(GameLiving source,GamePlayer player,ushort questid) : base (source)
 		{
-			this.questType = questType;
+			this.questid = questid;
             this.player = player;
 		}
 
 		/// <summary>
 		/// Gets the Id of quest
 		/// </summary>
-		public Type QuestType
+		public ushort QuestID
 		{
-			get { return questType; }
+			get { return questid; }
 		}
 
         public GamePlayer Player

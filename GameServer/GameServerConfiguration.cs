@@ -21,7 +21,7 @@ using System.IO;
 using System.Net;
 using System.Reflection;
 using DOL.Config;
-using DOL.Database;
+using DOL.Database.Connection;
 
 namespace DOL.GS
 {
@@ -33,19 +33,24 @@ namespace DOL.GS
 		#region Server
 
 		/// <summary>
+		/// holds the server root directory
+		/// </summary>
+		protected string m_rootDirectory;
+
+		/// <summary>
 		/// Holds the log configuration file path
 		/// </summary>
 		protected string m_logConfigFile;
-		
-		/// <summary>
-		/// Holds the database configuration file path
-		/// </summary>
-		protected string m_databaseConfigFile;
 
 		/// <summary>
-		/// The <see cref="IDatabaseMgr"/>'s config file.
+		/// Holds the log configuration file path
 		/// </summary>
-		protected string m_databaseMgrConfig;
+		protected string m_regionConfigFile;
+		
+		/// <summary>
+		/// Holds the log configuration file path
+		/// </summary>
+		protected string m_zoneConfigFile;
 
 		/// <summary>
 		/// Name of the scripts compilation target
@@ -92,10 +97,22 @@ namespace DOL.GS
 		/// </summary>
 		protected int m_maxClientCount;
 
+		#endregion
+		#region Logging
 		/// <summary>
-		/// Use the reflexion optimiser ?
+		/// The logger name where to log the gm+ commandos
 		/// </summary>
-		protected bool m_useReflectionOptimizer;
+		protected string m_gmActionsLoggerName;
+
+		/// <summary>
+		/// The logger name where to log cheat attempts
+		/// </summary>
+		protected string m_cheatLoggerName;
+
+		/// <summary>
+		/// The file name of the invalid names file
+		/// </summary>
+		protected string m_invalidNamesFile = "";
 
 		#endregion
 		#region Database
@@ -103,12 +120,22 @@ namespace DOL.GS
 		/// <summary>
 		/// The path to the XML database folder
 		/// </summary>
-		protected bool m_dbAutoCreate;
+		protected string m_dbConnectionString;
+
+		/// <summary>
+		/// Type database type
+		/// </summary>
+		protected ConnectionType m_dbType;
+
+		/// <summary>
+		/// True if the server shall autosave the db
+		/// </summary>
+		protected bool m_autoSave;
 
 		/// <summary>
 		/// The auto save interval in minutes
 		/// </summary>
-		protected int m_dbSaveInterval;
+		protected int m_saveInterval;
 
 		#endregion
 		#region Load/Save
@@ -121,10 +148,12 @@ namespace DOL.GS
 		{
 			base.LoadFromConfig(root);
 
-			m_logConfigFile      = root["Server"]["LogConfigFile"].GetString(m_logConfigFile);
-			m_databaseMgrConfig  = root["Server"]["DatabaseMgrConfig"].GetString(m_databaseMgrConfig);
-			m_databaseConfigFile = root["Server"]["DatabaseConfigFile"].GetString(m_databaseConfigFile);
-			m_languageFile       = root["Server"]["LanguageFile"].GetString(m_languageFile);
+			m_rootDirectory = root["Server"]["RootDirectory"].GetString(m_rootDirectory);
+
+			m_logConfigFile = root["Server"]["LogConfigFile"].GetString(m_logConfigFile);
+			m_regionConfigFile = root["Server"]["RegionConfigFile"].GetString(m_regionConfigFile);
+			m_zoneConfigFile = root["Server"]["ZoneConfigFile"].GetString(m_zoneConfigFile);
+			m_languageFile = root["Server"]["LanguageFile"].GetString(m_languageFile);
 
 			m_scriptCompilationTarget = root["Server"]["ScriptCompilationTarget"].GetString(m_scriptCompilationTarget);
 			m_scriptAssemblies = root["Server"]["ScriptAssemblies"].GetString(m_scriptAssemblies);
@@ -159,10 +188,38 @@ namespace DOL.GS
 			m_ServerName = root["Server"]["ServerName"].GetString(m_ServerName);
 			m_ServerNameShort = root["Server"]["ServerNameShort"].GetString(m_ServerNameShort);
 
-			m_dbAutoCreate = root["Server"]["DBAutoCreate"].GetBoolean(m_dbAutoCreate);
-			m_dbSaveInterval = root["Server"]["DBAutosaveInterval"].GetInt(m_dbSaveInterval);
+			m_cheatLoggerName = root["Server"]["CheatLoggerName"].GetString(m_cheatLoggerName);
+			m_gmActionsLoggerName = root["Server"]["GMActionLoggerName"].GetString(m_gmActionsLoggerName);
+			m_invalidNamesFile = root["Server"]["InvalidNamesFile"].GetString(m_invalidNamesFile);
+
+
+
+			string db = root["Server"]["DBType"].GetString("XML");
+			switch (db.ToLower())
+			{
+				case "xml":
+					m_dbType = ConnectionType.DATABASE_XML;
+					break;
+				case "mysql":
+					m_dbType = ConnectionType.DATABASE_MYSQL;
+					break;
+				case "mssql":
+					m_dbType = ConnectionType.DATABASE_MSSQL;
+					break;
+				case "odbc":
+					m_dbType = ConnectionType.DATABASE_ODBC;
+					break;
+				case "oledb":
+					m_dbType = ConnectionType.DATABASE_OLEDB;
+					break;
+				default:
+					m_dbType = ConnectionType.DATABASE_XML;
+					break;
+			}
+			m_dbConnectionString = root["Server"]["DBConnectionString"].GetString(m_dbConnectionString);
+			m_autoSave = root["Server"]["DBAutosave"].GetBoolean(m_autoSave);
+			m_saveInterval = root["Server"]["DBAutosaveInterval"].GetInt(m_saveInterval);
 			m_maxClientCount = root["Server"]["MaxClientCount"].GetInt(m_maxClientCount);
-			m_useReflectionOptimizer = root["Server"]["UseReflectionOptimizer"].GetBoolean(m_useReflectionOptimizer);
 			m_cpuCount = root["Server"]["CpuCount"].GetInt(m_cpuCount);
 			if (m_cpuCount < 1)
 				m_cpuCount = 1;
@@ -175,10 +232,12 @@ namespace DOL.GS
 		protected override void SaveToConfig(ConfigElement root)
 		{
 			base.SaveToConfig(root);
-
+			root["Server"]["ServerName"].Set(m_ServerName);
+			root["Server"]["ServerNameShort"].Set(m_ServerNameShort);
+			root["Server"]["RootDirectory"].Set(m_rootDirectory);
 			root["Server"]["LogConfigFile"].Set(m_logConfigFile);
-			root["Server"]["DatabaseMgrConfig"].Set(m_databaseMgrConfig);
-			root["Server"]["DatabaseConfigFile"].Set(m_databaseConfigFile);
+			root["Server"]["RegionConfigFile"].Set(m_regionConfigFile);
+			root["Server"]["ZoneConfigFile"].Set(m_zoneConfigFile);
 			root["Server"]["LanguageFile"].Set(m_languageFile);
 
 			root["Server"]["ScriptCompilationTarget"].Set(m_scriptCompilationTarget);
@@ -213,11 +272,37 @@ namespace DOL.GS
 			}
 			root["Server"]["GameType"].Set(serverType);
 
-			root["Server"]["DBAutoCreate"].Set(m_dbAutoCreate);
-			root["Server"]["DBAutosaveInterval"].Set(m_dbSaveInterval);
-			root["Server"]["MaxClientCount"].Set(m_maxClientCount);
-			root["Server"]["UseReflectionOptimizer"].Set(m_useReflectionOptimizer);
-			root["Server"]["CpuCount"].Set(m_cpuCount);
+			root["Server"]["CheatLoggerName"].Set(m_cheatLoggerName);
+			root["Server"]["GMActionLoggerName"].Set(m_gmActionsLoggerName);
+			root["Server"]["InvalidNamesFile"].Set(m_invalidNamesFile);
+
+			string db = "XML";
+			
+			switch (m_dbType)
+			{
+			case ConnectionType.DATABASE_XML:
+				db = "XML";
+					break;
+			case ConnectionType.DATABASE_MYSQL:
+				db = "MYSQL";
+					break;
+			case ConnectionType.DATABASE_MSSQL:
+				db = "MSSQL";
+					break;
+			case ConnectionType.DATABASE_ODBC:
+				db = "ODBC";
+					break;
+			case ConnectionType.DATABASE_OLEDB:
+				db = "OLEDB";
+					break;
+				default:
+					m_dbType = ConnectionType.DATABASE_XML;
+					break;
+			}
+			root["Server"]["DBType"].Set(db);
+			root["Server"]["DBConnectionString"].Set(m_dbConnectionString);
+			root["Server"]["DBAutosave"].Set(m_autoSave);
+			root["Server"]["DBAutosaveInterval"].Set(m_saveInterval);
 		}
 		#endregion
 		#region Constructors
@@ -228,39 +313,50 @@ namespace DOL.GS
 		{
 			m_ServerName = "Dawn Of Light";
 			m_ServerNameShort = "DOLSERVER";
-			
+			if(Assembly.GetEntryAssembly()!=null)
+				m_rootDirectory = new FileInfo(Assembly.GetEntryAssembly().Location).DirectoryName;
+			else
+				m_rootDirectory = new FileInfo(Assembly.GetAssembly(typeof(GameServer)).Location).DirectoryName;
+
 			m_logConfigFile = "." + Path.DirectorySeparatorChar + "config" + Path.DirectorySeparatorChar + "logconfig.xml";
-			m_databaseConfigFile = "." + Path.DirectorySeparatorChar + "config" + Path.DirectorySeparatorChar + "databaseconfig.xml";
-			m_databaseMgrConfig = "." + Path.DirectorySeparatorChar + "config" + Path.DirectorySeparatorChar + "DatabaseMgrConfig.xml";
+			m_regionConfigFile = "." + Path.DirectorySeparatorChar + "config" + Path.DirectorySeparatorChar + "regions.xml";
+			m_zoneConfigFile = "." + Path.DirectorySeparatorChar + "config" + Path.DirectorySeparatorChar + "zones.xml";
 			m_languageFile = "." + Path.DirectorySeparatorChar + "config" + Path.DirectorySeparatorChar + "GameServer.lng";
 
 			m_scriptCompilationTarget = "."+Path.DirectorySeparatorChar+"lib"+Path.DirectorySeparatorChar+"GameServerScripts.dll";
-#warning TODO: remove NHibernate .dlls
-			m_scriptAssemblies = "DOLBase.dll,GameServer.dll,DOLDatabase.dll,System.dll,log4net.dll,System.Xml.dll,NHibernate.dll,Iesi.Collections.dll,NHibernate.Mapping.Attributes.dll";
+			m_scriptAssemblies = "DOLBase.dll,GameServer.dll,DOLDatabase.dll,System.dll,log4net.dll,System.Xml.dll";
 			m_autoAccountCreation = true;
 			m_serverType = eGameServerType.GST_Normal;
 
-			m_dbAutoCreate = false;
-			m_dbSaveInterval = 10;
+			m_cheatLoggerName = "cheats";
+			m_gmActionsLoggerName = "gmactions";
+			m_invalidNamesFile = "." + Path.DirectorySeparatorChar + "config" + Path.DirectorySeparatorChar + "invalidnames.txt";
+
+			m_dbType = ConnectionType.DATABASE_XML;
+			m_dbConnectionString = m_rootDirectory+Path.DirectorySeparatorChar+"xml_db";
+			m_autoSave = true;
+			m_saveInterval = 10;
 			m_maxClientCount = 500;
-
-			m_useReflectionOptimizer = true;
-
+			
 			try
 			{
-				m_cpuCount = Environment.ProcessorCount;
+				m_cpuCount = int.Parse(Environment.GetEnvironmentVariable("NUMBER_OF_PROCESSORS"));
 			}
-			catch (NotImplementedException e)
-			{
-				m_cpuCount = 1;
-			}
-
-
+			catch { m_cpuCount = -1; }
 			if (m_cpuCount < 1)
 				m_cpuCount = 1;
 		}
 
 		#endregion
+
+		/// <summary>
+		/// Gets or sets the root directory of the server
+		/// </summary>
+		public string RootDirectory
+		{
+			get { return m_rootDirectory; }
+			set { m_rootDirectory = value; }
+		}
 
 		/// <summary>
 		/// Gets or sets the log configuration file of this server
@@ -272,41 +368,39 @@ namespace DOL.GS
 				if(Path.IsPathRooted(m_logConfigFile))
 					return m_logConfigFile;
 				else
-					return Path.Combine(Directory.GetCurrentDirectory(), m_logConfigFile);
+					return Path.Combine(m_rootDirectory, m_logConfigFile);
 			}
 			set { m_logConfigFile = value; }
 		}
 
 		/// <summary>
-		/// Gets or sets the database configuration file of this server
+		/// Gets or sets the region configuration file of this server
 		/// </summary>
-		public string DatabaseConfigFile
+		public string RegionConfigFile
 		{
-			get
-			{
-				if(Path.IsPathRooted(m_databaseConfigFile))
-					return m_databaseConfigFile;
+			get 
+			{ 
+				if(Path.IsPathRooted(m_regionConfigFile))
+					return m_regionConfigFile;
 				else
-					return Path.Combine(Directory.GetCurrentDirectory(), m_databaseConfigFile);
+					return Path.Combine(m_rootDirectory, m_regionConfigFile);
 			}
-			set { m_databaseConfigFile = value; }
+			set { m_regionConfigFile = value; }
 		}
 
 		/// <summary>
-		/// Gets or sets the database manager's config file name.
+		/// Gets or sets the zone configuration file of this server
 		/// </summary>
-		/// <value>The database manager's config file name.</value>
-		/// <seealso cref="IDatabaseMgr"/>
-		public string DatabaseMgrConfig
+		public string ZoneConfigFile
 		{
 			get
 			{
-				if (Path.IsPathRooted(m_databaseMgrConfig))
-					return m_databaseMgrConfig;
+				if(Path.IsPathRooted(m_zoneConfigFile))
+					return m_zoneConfigFile;
 				else
-					return Path.Combine(Directory.GetCurrentDirectory(), m_databaseMgrConfig);
+					return Path.Combine(m_rootDirectory, m_zoneConfigFile);
 			}
-			set { m_databaseMgrConfig = value; }
+			set { m_zoneConfigFile = value; }
 		}
 
 		/// <summary>
@@ -319,7 +413,7 @@ namespace DOL.GS
 				if(Path.IsPathRooted(m_languageFile))
 					return m_languageFile;
 				else
-					return Path.Combine(Directory.GetCurrentDirectory(), m_languageFile);
+					return Path.Combine(m_rootDirectory, m_languageFile);
 			}
 			set { m_languageFile = value; }
 		}
@@ -379,21 +473,72 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Gets or sets the autocreate flag
+		/// Gets or sets the GM action logger name
 		/// </summary>
-		public bool DBAutoCreate
+		public string GMActionsLoggerName
 		{
-			get { return m_dbAutoCreate; }
-			set { m_dbAutoCreate = value; }
+			get { return m_gmActionsLoggerName; }
+			set { m_gmActionsLoggerName = value; }
+		}
+
+		/// <summary>
+		/// Gets or sets the cheat logger name
+		/// </summary>
+		public string CheatLoggerName
+		{
+			get { return m_cheatLoggerName; }
+			set { m_cheatLoggerName = value; }
+		}
+
+		/// <summary>
+		/// Gets or sets the invalid name filename
+		/// </summary>
+		public string InvalidNamesFile
+		{
+			get
+			{
+				if(Path.IsPathRooted(m_invalidNamesFile))
+					return m_invalidNamesFile;
+				else
+					return Path.Combine(m_rootDirectory, m_invalidNamesFile);
+			}
+			set { m_invalidNamesFile = value; }
+		}
+
+		/// <summary>
+		/// Gets or sets the xml database path
+		/// </summary>
+		public string DBConnectionString
+		{
+			get { return m_dbConnectionString; }
+			set { m_dbConnectionString = value; }
+		}
+
+		/// <summary>
+		/// Gets or sets the DB type
+		/// </summary>
+		public ConnectionType DBType
+		{
+			get { return m_dbType; }
+			set { m_dbType = value; }
+		}
+
+		/// <summary>
+		/// Gets or sets the autosave flag
+		/// </summary>
+		public bool AutoSave
+		{
+			get { return m_autoSave; }
+			set { m_autoSave = value; }
 		}
 
 		/// <summary>
 		/// Gets or sets the autosave interval
 		/// </summary>
-		public int DBSaveInterval
+		public int SaveInterval
 		{
-			get { return m_dbSaveInterval; }
-			set { m_dbSaveInterval = value; }
+			get { return m_saveInterval; }
+			set { m_saveInterval = value; }
 		}
 
 		/// <summary>
@@ -412,15 +557,6 @@ namespace DOL.GS
 		{
 			get { return m_maxClientCount; }
 			set { m_maxClientCount = value; }
-		}
-
-		/// <summary>
-		/// Gets or sets if we use the reflection optimiser
-		/// </summary>
-		public bool UseReflectionOptimizer
-		{
-			get { return m_useReflectionOptimizer; }
-			set { m_useReflectionOptimizer = value; }
 		}
 	}
 }

@@ -39,6 +39,7 @@ using System;
 using System.Reflection;
 using DOL.AI.Brain;
 using DOL.Database;
+using DOL.GS.PacketHandler;
 using log4net;
 /* I suggest you declare yourself some namespaces for your quests
  * Like: DOL.GS.Quests.Albion
@@ -158,14 +159,14 @@ namespace DOL.GS.Quests.Midgard
 
 			if (npcs.Length == 0)
 			{
-				dalikor = new GameMob();
+				dalikor = new GameNPC();
 				dalikor.Model = 159;
 				dalikor.Name = "Dalikor";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + dalikor.Name + ", creating him ...");
 				dalikor.GuildName = "Part of Dalikor Quests";
 				dalikor.Realm = (byte) eRealm.Midgard;
-				dalikor.Region = locationDalikor.Region;
+				dalikor.CurrentRegionID = locationDalikor.RegionID;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
 				template.AddNPCEquipment(eInventorySlot.TorsoArmor, 348);
@@ -186,7 +187,9 @@ namespace DOL.GS.Quests.Midgard
 
 				dalikor.Size = 50;
 				dalikor.Level = 50;
-				dalikor.Position = locationDalikor.Position;
+				dalikor.X = locationDalikor.X;
+				dalikor.Y = locationDalikor.Y;
+				dalikor.Z = locationDalikor.Z;
 				dalikor.Heading = locationDalikor.Heading;
 
 				StandardMobBrain brain = new StandardMobBrain();

@@ -17,7 +17,6 @@
  *
  */
 using System;
-using DOL.Database;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Scripts
@@ -41,7 +40,7 @@ namespace DOL.GS.Scripts
 			}
 			if (args[1] == "reset")
 			{
-				client.Player.Model = (ushort)client.Player.CreationModel;
+				client.Player.Model = (ushort) client.Account.Characters[client.ActiveCharIndex].CreationModel;
 				client.Out.SendMessage("You change back to your normal form!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return 1;
 			}

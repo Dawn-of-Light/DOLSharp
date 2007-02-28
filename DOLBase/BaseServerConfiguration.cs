@@ -38,16 +38,6 @@ namespace DOL
 		protected IPAddress m_ip;
 
 		/// <summary>
-		/// The UDP IP
-		/// </summary>
-		protected IPAddress m_udpIP;
-
-		/// <summary>
-		/// The UDP port
-		/// </summary>
-		protected ushort m_udpPort;
-		
-		/// <summary>
 		/// The region IP
 		/// </summary>
 		protected IPAddress m_regionIP;
@@ -56,6 +46,16 @@ namespace DOL
 		/// The region port
 		/// </summary>
 		protected ushort m_regionPort;
+
+		/// <summary>
+		/// The UDP IP
+		/// </summary>
+		protected IPAddress m_udpIP;
+
+		/// <summary>
+		/// The UDP port
+		/// </summary>
+		protected ushort m_udpPort;
 
 		/// <summary>
 		/// Enable uPnP features
@@ -80,19 +80,19 @@ namespace DOL
 				m_ip = IPAddress.Parse(ip);
 			m_port = (ushort)root["Server"]["Port"].GetInt(m_port);
 			
-			string udpip = root["Server"]["UdpIP"].GetString("any");
-			if(udpip == "any")
-				m_udpIP = IPAddress.Any;
-			else
-				m_udpIP = IPAddress.Parse(udpip);
-			m_udpPort = (ushort)root["Server"]["UdpPort"].GetInt(m_udpPort);
-			
-			string regionip = root["Server"]["RegionIP"].GetString("any");
-			if(regionip == "any")
+			ip = root["Server"]["RegionIP"].GetString("any");
+			if(ip == "any")
 				m_regionIP = IPAddress.Any;
 			else
-				m_regionIP = IPAddress.Parse(regionip);
+				m_regionIP = IPAddress.Parse(ip);
 			m_regionPort = (ushort)root["Server"]["RegionPort"].GetInt(m_regionPort);
+
+			ip = root["Server"]["UdpIP"].GetString("any");
+			if(ip == "any")
+				m_udpIP = IPAddress.Any;
+			else
+				m_udpIP = IPAddress.Parse(ip);
+			m_udpPort = (ushort)root["Server"]["UdpPort"].GetInt(m_udpPort);
 
 			m_enableUPnP = (bool)root["Server"]["EnableUPnP"].GetBoolean(m_enableUPnP);
 			m_detectRegionIP = (bool)root["Server"]["DetectRegionIP"].GetBoolean(m_detectRegionIP);
@@ -116,10 +116,10 @@ namespace DOL
 		{
 			root["Server"]["Port"].Set(m_port);
 			root["Server"]["IP"].Set(m_ip);
-			root["Server"]["UdpIP"].Set(m_udpIP);
-			root["Server"]["UdpPort"].Set(m_udpPort);
 			root["Server"]["RegionIP"].Set(m_regionIP);
 			root["Server"]["RegionPort"].Set(m_regionPort);
+			root["Server"]["UdpIP"].Set(m_udpIP);
+			root["Server"]["UdpPort"].Set(m_udpPort);
 			root["Server"]["EnableUPnP"].Set(m_enableUPnP);
 			root["Server"]["DetectRegionIP"].Set(m_detectRegionIP);
 		}
@@ -145,10 +145,10 @@ namespace DOL
 		{
 			m_port = 10300;
 			m_ip = IPAddress.Any;
-			m_udpIP = IPAddress.Any;
-			m_udpPort = 10400;
 			m_regionIP = IPAddress.Any;
 			m_regionPort = 10400;
+			m_udpIP = IPAddress.Any;
+			m_udpPort = 10400;
 			m_detectRegionIP = true;
 			m_enableUPnP = true;
 		}
@@ -172,23 +172,6 @@ namespace DOL
 		}
 
 		/// <summary>
-		/// Gets or sets the UDP ip
-		/// </summary>
-		public IPAddress UDPIp
-		{
-			get	{ return m_udpIP; }
-			set	{ m_udpIP = value; }
-		}
-
-		/// <summary>
-		/// Gets or sets the UDP port
-		/// </summary>
-		public ushort UDPPort
-		{
-			get	{ return m_udpPort; }
-			set	{ m_udpPort = value; }
-		}
-		/// <summary>
 		/// Gets or sets the region ip
 		/// </summary>
 		public IPAddress RegionIp
@@ -207,8 +190,22 @@ namespace DOL
 		}
 
 		/// <summary>
-		/// Enables UPnPSupport for servers that are behind a supported IGD
+		/// Gets or sets the UDP ip
 		/// </summary>
+		public IPAddress UDPIp
+		{
+			get { return m_udpIP; }
+			set { m_udpIP = value; }
+		}
+
+		/// <summary>
+		/// Gets or sets the UDP port
+		/// </summary>
+		public ushort UDPPort
+		{
+			get { return m_udpPort; }
+			set { m_udpPort = value; }
+		}
 		public bool EnableUPnP
 		{
 			get { return m_enableUPnP; }

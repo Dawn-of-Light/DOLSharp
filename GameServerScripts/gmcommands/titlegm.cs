@@ -16,10 +16,12 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
+using System;
 using System.Collections;
-using DOL.Database;
+using DOL.GS;
 using DOL.GS.PacketHandler;
 using DOL.GS.PlayerTitles;
+using DOL.GS.Scripts;
 
 namespace DOL.GS.Scripts
 {
@@ -27,10 +29,10 @@ namespace DOL.GS.Scripts
 		 "&titlegm",
 		 (uint) ePrivLevel.GM,
 		 "Changes target player's titles",
-		 "/titlegm add <class type> - add a title to the target player",
-		 "/titlegm remove <class type> - remove a title from the target player",
-		 "/titlegm set <class type> - sets current title of the target player",
-		 "/titlegm list - lists all target player's titles")]
+		 "/titlegm <add> <class type> - add a title to the target player",
+		 "/titlegm <remove> <class type> - remove a title from the target player",
+		 "/titlegm <set> <class type> - sets current title of the target player",
+		 "/titlegm <list> - lists all target player's titles")]
 	public class TitleGmCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		public int OnCommand(GameClient client, string[] args)

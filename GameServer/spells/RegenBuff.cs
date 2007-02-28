@@ -76,7 +76,7 @@ namespace DOL.GS.Spells
 		/// Execute property changing spell
 		/// </summary>
 		/// <param name="target"></param>
-		public override void FinishSpellCast(GameLivingBase target)
+		public override void FinishSpellCast(GameLiving target)
 		{
 			if (Spell.Concentration > 0)
 			{
@@ -92,7 +92,7 @@ namespace DOL.GS.Spells
 		/// called when spell effect has to be started and applied to targets
 		/// </summary>
 		/// <param name="target">The current target object</param>
-		public override void StartSpell(GameLivingBase target)
+		public override void StartSpell(GameLiving target)
 		{
 			// paladin chants seem special
 			if (SpellLine.Spec == Specs.Chants)
@@ -200,7 +200,7 @@ namespace DOL.GS.Spells
 						if (caster == effectOwner) continue;
 //						DOLConsole.WriteLine(Caster.Name+" to "+effectOwner.Name+" range="+range);
 
-						if (!caster.Position.CheckSquareDistance(effectOwner.Position, CONC_MAX_RANGE*CONC_MAX_RANGE))
+						if (!WorldMgr.CheckDistance(caster, effectOwner,CONC_MAX_RANGE))
 						{
 							if (de.Value != null)
 							{

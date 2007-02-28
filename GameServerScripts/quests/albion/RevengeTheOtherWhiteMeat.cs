@@ -35,7 +35,6 @@ using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
-using NHibernate.Mapping.Attributes;
 /* I suggest you declare yourself some namespaces for your quests
  * Like: DOL.GS.Quests.Albion
  *       DOL.GS.Quests.Midgard
@@ -47,45 +46,12 @@ using NHibernate.Mapping.Attributes;
 
 namespace DOL.GS.Quests.Albion
 {
-	/* The first thing we do, is to declare the quest requirement
-	* class linked with the new Quest. To do this, we derive 
-	* from the abstract class AbstractQuestDescriptor
-	*/
-	public class RevengeTheOtherWhiteMeatDescriptor : AbstractQuestDescriptor
-	{
-		/* This is the type of the quest class linked with 
-		 * this requirement class, you must override the 
-		 * base methid like that
-		 */
-		public override Type LinkedQuestType
-		{
-			get { return typeof(RevengeTheOtherWhiteMeat); }
-		}
-
-		/* This value is used to retrieves the minimum level needed
-		 *  to be able to make this quest. Override it only if you need, 
-		 * the default value is 1
-		 */
-		public override int MinLevel
-		{
-			get { return 5; }
-		}
-
-		/* This value is used to retrieves how maximum level needed
-		 * to be able to make this quest. Override it only if you need, 
-		 * the default value is 50
-		 */
-		public override int MaxLevel
-		{
-			get { return 8; }
-		}
-	}
-
-	/* The second thing we do, is to declare the class we create
-	 * as Quest. We must make it persistant using attributes, to
-	 * do this, we derive from the abstract class AbstractQuest
+	/* The first thing we do, is to declare the class we create
+	 * as Quest. To do this, we derive from the abstract class
+	 * AbstractQuest
+	 * 	 
 	 */
-	[Subclass(NameType = typeof(RevengeTheOtherWhiteMeat), ExtendsType = typeof(AbstractQuest))]
+
 	public class RevengeTheOtherWhiteMeat : BaseQuest
 	{
 		/// <summary>
@@ -103,11 +69,32 @@ namespace DOL.GS.Quests.Albion
 		 * 
 		 */
 		protected const string questTitle = "Revenge, the Other White Meat";
+		protected const int minimumLevel = 5;
+		protected const int maximumLevel = 8;
 
-		private static GameMob farmerAsma = null;
+		private static GameNPC farmerAsma = null;
 		
 		private static GameLocation wilburSpawnLocation = new GameLocation("Wilbur Location", 1, 500646, 491255, 2298);
 		
+		/* We need to define the constructors from the base class here, else there might be problems
+		 * when loading this quest...
+		 */
+		public RevengeTheOtherWhiteMeat() : base()
+		{
+		}
+
+		public RevengeTheOtherWhiteMeat(GamePlayer questingPlayer) : this(questingPlayer, 1)
+		{
+		}
+
+		public RevengeTheOtherWhiteMeat(GamePlayer questingPlayer, int step) : base(questingPlayer, step)
+		{
+		}
+
+		public RevengeTheOtherWhiteMeat(GamePlayer questingPlayer, DBQuest dbQuest) : base(questingPlayer, dbQuest)
+		{
+		}
+
 		/* The following method is called automatically when this quest class
 		 * is loaded. You might notice that this method is the same as in standard
 		 * game events. And yes, quests basically are game events for single players
@@ -126,6 +113,8 @@ namespace DOL.GS.Quests.Albion
 		[ScriptLoadedEvent]
 		public static void ScriptLoaded(DOLEvent e, object sender, EventArgs args)
 		{
+			if (!ServerProperties.Properties.LOAD_QUESTS)
+				return;
 			if (log.IsInfoEnabled)
 				log.Info("Quest \"" + questTitle + "\" initializing ...");
 			/* First thing we do in here is to search for the NPCs inside
@@ -140,50 +129,50 @@ namespace DOL.GS.Quests.Albion
 			
 			#region defineNPCS
 
-			farmerAsma = ResearchQuestObject(typeof(GameMob), WorldMgr.GetRegion(1), eRealm.Albion, "Farmer Asma") as GameMob;
-			if (farmerAsma == null)
+			GameNPC[] npcs = WorldMgr.GetNPCsByName("Farmer Asma", eRealm.Albion);
+			
+			/* Whops, if the npcs array length is 0 then no npc exists in
+				* this users Mob Database, so we simply create one ;-)
+				* else we take the existing one. And if more than one exist, we take
+				* the first ...
+				*/
+		
+			if (npcs.Length == 0)
 			{
-				farmerAsma = new GameMob();
+				farmerAsma = new GameNPC();
 				farmerAsma.Model = 82;
 				farmerAsma.Name = "Farmer Asma";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + farmerAsma.Name + ", creating him ...");
 				farmerAsma.GuildName = "Part of " + questTitle + " Quest";
 				farmerAsma.Realm = (byte) eRealm.Albion;
-				farmerAsma.Region = WorldMgr.GetRegion(1);
+				farmerAsma.CurrentRegionID = 1;
 
-				GameNpcInventory template = new GameNpcInventory();
-				template.AddItem(eInventorySlot.TorsoArmor, new NPCArmor(31));
-				template.AddItem(eInventorySlot.Cloak, new NPCEquipment(57));
-				template.AddItem(eInventorySlot.LegsArmor, new NPCArmor(32));
-				template.AddItem(eInventorySlot.ArmsArmor, new NPCArmor(33));
-				farmerAsma.Inventory = template;
+				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
+				template.AddNPCEquipment(eInventorySlot.TorsoArmor, 31);
+				template.AddNPCEquipment(eInventorySlot.Cloak, 57);
+				template.AddNPCEquipment(eInventorySlot.LegsArmor, 32);
+				template.AddNPCEquipment(eInventorySlot.ArmsArmor, 33);
+				farmerAsma.Inventory = template.CloseTemplate();
 				farmerAsma.SwitchWeapon(GameLiving.eActiveWeaponSlot.Standard);
 
 				farmerAsma.Size = 50;
 				farmerAsma.Level = 35;
-				farmerAsma.Position = new Point(563939, 509234, 2744);
+				farmerAsma.X = 563939;
+				farmerAsma.Y = 509234;
+				farmerAsma.Z = 2744 ;
 				farmerAsma.Heading = 21;
-
-				StandardMobBrain newBrain = new StandardMobBrain();
-				newBrain.Body = farmerAsma;
-				newBrain.AggroLevel = 100;
-				newBrain.AggroRange = 0;
-				farmerAsma.OwnBrain = newBrain;
-
-				if(!farmerAsma.AddToWorld())
-				{
-					if (log.IsWarnEnabled)
-						log.Warn("Quest "+questTitle+" abort because a needed region is not in use in this server!");
-					return;
-				}
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(farmerAsma);
+					farmerAsma.SaveIntoDatabase();
+
+				farmerAsma.AddToWorld();
 			}
+			else
+				farmerAsma = npcs[0];
 
 			#endregion
 
@@ -194,16 +183,15 @@ namespace DOL.GS.Quests.Albion
 			* method. This means, the "TalkToXXX" method is called whenever
 			* a player right clicks on him or when he whispers to him.
 			*/
+
+			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
 			
 			GameEventMgr.AddHandler(farmerAsma, GameObjectEvent.Interact, new DOLEventHandler(TalkToFarmerAsma));
 			GameEventMgr.AddHandler(farmerAsma, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToFarmerAsma));
 
-			/* Now we add some hooks to trigger the quest dialog reponse. */
-			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(QuestDialogResponse));
-			GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(QuestDialogResponse));
-
 			/* Now we bring to Ydenia the possibility to give this quest to players */
-			QuestMgr.AddQuestDescriptor(farmerAsma, typeof(RevengeTheOtherWhiteMeatDescriptor));
+			farmerAsma.AddQuestToGive(typeof (RevengeTheOtherWhiteMeat));
 
 			if (log.IsInfoEnabled)
 				log.Info("Quest \"" + questTitle + "\" initialized");
@@ -228,15 +216,15 @@ namespace DOL.GS.Quests.Albion
 			/* Removing hooks works just as adding them but instead of 
 			 * AddHandler, we call RemoveHandler, the parameters stay the same
 			 */
+
+			GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
 			
 			GameEventMgr.RemoveHandler(farmerAsma, GameObjectEvent.Interact, new DOLEventHandler(TalkToFarmerAsma));
 			GameEventMgr.RemoveHandler(farmerAsma, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToFarmerAsma));
 			
-			GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(QuestDialogResponse));
-			GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(QuestDialogResponse));
-
 			/* Now we remove to Ydenia the possibility to give this quest to players */
-			QuestMgr.RemoveQuestDescriptor(farmerAsma, typeof(RevengeTheOtherWhiteMeatDescriptor));
+			farmerAsma.RemoveQuestToGive(typeof (RevengeTheOtherWhiteMeat));
 		}
 
 		/* This is the method we declared as callback for the hooks we set to
@@ -251,7 +239,7 @@ namespace DOL.GS.Quests.Albion
 			if (player == null)
 				return;
 
-			if (QuestMgr.CanGiveQuest(typeof(RevengeTheOtherWhiteMeat), player, farmerAsma) <= 0)
+			if(farmerAsma.CanGiveQuest(typeof (RevengeTheOtherWhiteMeat), player)  <= 0)
 				return;
 
 			//We also check if the player is already doing the quest
@@ -290,7 +278,8 @@ namespace DOL.GS.Quests.Albion
 							break;
 						case "like that":
 							farmerAsma.SayTo(player, "I wish I could give them a taste of their own medicine. If someone took something important away from them... Hey, that gives me an idea! Are you willing to help me get a little revenge on those pig herders?");
-							QuestMgr.ProposeQuestToPlayer(typeof(RevengeTheOtherWhiteMeat), "Will you help Farmer Asma get \nrevenge on the pig herders?\n[Level 5-8]", player, farmerAsma);
+							//If the player offered his help, we send the quest dialog now!
+							player.Out.SendQuestSubscribeCommand(farmerAsma, QuestMgr.GetIDForQuestType(typeof(RevengeTheOtherWhiteMeat)), "Will you help Farmer Asma get \nrevenge on the pig herders?\n[Level 5-8]");
 							break;
 					}
 				}
@@ -316,7 +305,7 @@ namespace DOL.GS.Quests.Albion
 							if(quest.Step == 1)
 							{
 								farmerAsma.SayTo(player, "You'll see Vetusta Abbey in the distance. Keep running toward it, and you'll see a field and some stables. The pigs should be in that area. The pig you're looking for is one they've nicknamed Wilbur.");
-								quest.ChangeQuestStep(2);
+								quest.Step = 2;
 							}
 							break;
 
@@ -343,8 +332,69 @@ namespace DOL.GS.Quests.Albion
 								quest.FinishQuest();
 							}
 							break;
+
+						case "abort":
+							player.Out.SendCustomDialog("Do you really want to abort this quest, \nall items gained during quest will be lost?", new CustomDialogResponse(CheckPlayerAbortQuest));
+							break;
 					}
 				}
+			}
+		}
+
+		protected static void SubscribeQuest(DOLEvent e, object sender, EventArgs args)
+		{
+			QuestEventArgs qargs = args as QuestEventArgs;
+			if (qargs == null)
+				return;
+
+			if (qargs.QuestID != QuestMgr.GetIDForQuestType(typeof(RevengeTheOtherWhiteMeat)))
+				return;
+
+			if (e == GamePlayerEvent.AcceptQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x01);
+			else if (e == GamePlayerEvent.DeclineQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x00);
+		}
+
+		/// <summary>
+		/// This method checks if a player qualifies for this quest
+		/// </summary>
+		/// <returns>true if qualified, false if not</returns>
+		public override bool CheckQuestQualification(GamePlayer player)
+		{
+			// if the player is already doing the quest his level is no longer of relevance
+			if (player.IsDoingQuest(typeof (RevengeTheOtherWhiteMeat)) != null)
+				return true;
+
+			// This checks below are only performed is player isn't doing quest already
+
+			if (player.Level < minimumLevel || player.Level > maximumLevel)
+				return false;
+
+			return true;
+		}
+
+		
+		/* This is our callback hook that will be called when the player clicks
+		 * on any button in the quest offer dialog. We check if he accepts or
+		 * declines here...
+		 */
+
+		private static void CheckPlayerAbortQuest(GamePlayer player, byte response)
+		{
+			RevengeTheOtherWhiteMeat quest = player.IsDoingQuest(typeof (RevengeTheOtherWhiteMeat)) as RevengeTheOtherWhiteMeat;
+
+			if (quest == null)
+				return;
+
+			if (response == 0x00)
+			{
+				SendSystemMessage(player, "Good, no go out there and finish your work!");
+			}
+			else
+			{
+				SendSystemMessage(player, "Aborting Quest " + questTitle + ". You can start over again if you want.");
+				quest.AbortQuest();
 			}
 		}
 
@@ -352,31 +402,31 @@ namespace DOL.GS.Quests.Albion
 		 * on any button in the quest offer dialog. We check if he accepts or
 		 * declines here...
 		 */
-		protected static void QuestDialogResponse(DOLEvent e, object sender, EventArgs args)
+
+		private static void CheckPlayerAcceptQuest(GamePlayer player, byte response)
 		{
-			QuestEventArgs gArgs = args as QuestEventArgs;
+			//We recheck the qualification, because we don't talk to players
+			//who are not doing the quest
+			if(farmerAsma.CanGiveQuest(typeof (RevengeTheOtherWhiteMeat), player)  <= 0)
+				return;
 
-			if (gArgs != null && gArgs.QuestType.Equals(typeof(RevengeTheOtherWhiteMeat)))
+			if (player.IsDoingQuest(typeof (RevengeTheOtherWhiteMeat)) != null)
+				return;
+
+			if (response == 0x00)
 			{
-				GamePlayer player = gArgs.Player;
-				if (player == null) return;
+				SendReply(player, "Hmm...Perhaps you're right. Revenge may not be the best thing, after all. I should focus on moving ahead with my life. Thank you, "+player.Name+".");
+			}
+			else
+			{
+				//Check if we can add the quest!
+				if (!farmerAsma.GiveQuest(typeof (RevengeTheOtherWhiteMeat), player, 1))
+					return;
 
-				if (e == GamePlayerEvent.AcceptQuest)
-				{
-					if (QuestMgr.GiveQuestToPlayer(typeof(RevengeTheOtherWhiteMeat), player, gArgs.Source as GameNPC))
-					{
-						player.Out.SendMessage("Farmer Asma rubs her hands together in anticipation.", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
-						SendReply(player, "Excellent. Thank you for agreeing to help. Here's what I have in [mind].");
-					}
-				}
-				else if (e == GamePlayerEvent.DeclineQuest)
-				{
-
-					player.Out.SendMessage("Oh well, if you change your mind, please come back!", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
-				}
+				SendMessage(player, "Farmer Asma rubs her hands together in anticipation.", 0, eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+				SendReply(player, "Excellent. Thank you for agreeing to help. Here's what I have in [mind].");
 			}
 		}
-
 
 		/* Now we set the quest name.
 		 * If we don't override the base method, then the quest
@@ -407,9 +457,8 @@ namespace DOL.GS.Quests.Albion
 						return "[Step #2] Farmer Asma wants you to kill the pig herders' favorite puck, 'Wilbur.' To find Wilbur, enter Camelot city and exit through the North Gate. Travel west until you see Vetusta Abbey. Wilbur will be in the fields in that area.";
 					case 3:
 						return "[Step #3] Now that you've killed Wilbur and made your escape, return to Farmer Asma in the camp near the Shrouded Isles portal in Cotswold, and give her the news.";
-					default:
-						return "[Step #" + Step + "] No Description entered for this step!";
 				}
+				return base.Description;
 			}
 		}
 
@@ -429,37 +478,32 @@ namespace DOL.GS.Quests.Albion
 					if (gArgs.Target.Name == "Wilbur")
 					{
 						player.Out.SendDialogBox(eDialogCode.SimpleWarning, 0x00, 0x00, 0x00, 0x00, eDialogType.Ok, true, "You've succeeded in killing Wilbur. In the \ndistance you hear the angry voice of \na pig herder. Make your escape!");
-						ChangeQuestStep(3);
+						Step = 3;
 
 						player.GainExperience(player.ExperienceForNextLevel / 25, 0, 0, true);
 						
-						GameNPC pigHerderWyatt = new GameMob();
+						GameNPC pigHerderWyatt = new GameNPC();
 						pigHerderWyatt.Model = 39;
 						pigHerderWyatt.Name = "Pig Herder Wyatt";
 						pigHerderWyatt.Realm = (byte) eRealm.Albion;
-						pigHerderWyatt.Region = WorldMgr.GetRegion(1);
+						pigHerderWyatt.CurrentRegionID = 1;
 
-						GameNpcInventory template = new GameNpcInventory();
-						template.AddItem(eInventorySlot.FeetArmor, new NPCArmor(143));
-						template.AddItem(eInventorySlot.TorsoArmor, new NPCArmor(1005));
-						pigHerderWyatt.Inventory = template;
+						GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
+						template.AddNPCEquipment(eInventorySlot.FeetArmor, 143);
+						template.AddNPCEquipment(eInventorySlot.TorsoArmor, 1005);
+						pigHerderWyatt.Inventory = template.CloseTemplate();
 						pigHerderWyatt.SwitchWeapon(GameLiving.eActiveWeaponSlot.Standard);
 
 						pigHerderWyatt.Size = 54;
 						pigHerderWyatt.Level = 33;
-						Point pos = wilburSpawnLocation.Position;
-						pos.X -= 1000;
-						pos.Y += 1500;
-						pigHerderWyatt.Position = pos;
+						pigHerderWyatt.X = wilburSpawnLocation.X - 1000;
+						pigHerderWyatt.Y = wilburSpawnLocation.Y + 1500;
+						pigHerderWyatt.Z = wilburSpawnLocation.Z;
 						pigHerderWyatt.Heading = 2548;
 						pigHerderWyatt.AddToWorld();
 
 						GameEventMgr.AddHandler(pigHerderWyatt, GameNPCEvent.ArriveAtTarget, new DOLEventHandler(OnCloseToDeadWilbur));
-						
-						pos = gArgs.Target.Position;
-						pos.X -= 90;
-						pos.Y += 90;
-						pigHerderWyatt.WalkTo(pos, 200);
+						pigHerderWyatt.WalkTo(gArgs.Target.X - 90, gArgs.Target.Y + 90, gArgs.Target.Z, 200);
 						
 						return;
 					}
@@ -490,11 +534,8 @@ namespace DOL.GS.Quests.Albion
 			{
 				pigHerderWyatt.Yell("The King's men will hear about this!!! Oh, Wilbur...");
 				pigHerderWyatt.Emote(eEmote.Cry);
-				GameEventMgr.AddHandler(pigHerderWyatt, GameNPCEvent.ArriveAtTarget, new DOLEventHandler(OnRemovePigHerder));
-				Point pos = wilburSpawnLocation.Position;
-				pos.X -= 1000;
-				pos.Y += 1500;
-				pigHerderWyatt.WalkTo(pos, 200);
+				GameEventMgr.AddHandler(pigHerderWyatt, GameNPCEvent.CloseToTarget, new DOLEventHandler(OnRemovePigHerder));
+				pigHerderWyatt.WalkTo(wilburSpawnLocation.X - 1000, wilburSpawnLocation.Y + 1500, wilburSpawnLocation.Z, 200);
 			}
 			return 0;
 		}
@@ -504,19 +545,21 @@ namespace DOL.GS.Quests.Albion
 			GameNPC pigHerderWyatt = n as GameNPC;
 			if(pigHerderWyatt != null)
 			{
-				GameEventMgr.RemoveHandler(pigHerderWyatt, GameNPCEvent.ArriveAtTarget, new DOLEventHandler(OnRemovePigHerder));
-				pigHerderWyatt.RemoveFromWorld();
+				GameEventMgr.RemoveHandler(pigHerderWyatt, GameNPCEvent.CloseToTarget, new DOLEventHandler(OnRemovePigHerder));
+//				pigHerderWyatt.RemoveFromWorld();
+				pigHerderWyatt.Delete();
 			}
 		}
 
 
 		public override void FinishQuest()
 		{
+			base.FinishQuest(); //Defined in Quest, changes the state, stores in DB etc ...
+
 			//Give reward to player here ...
 			m_questPlayer.GainExperience(m_questPlayer.ExperienceForNextLevel / 25, 0, 0, true);
-			m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 0, m_questPlayer.Level * 10 + 30), "You are awarded "+m_questPlayer.Level * 10 + 30+" copper!");
-		
-			base.FinishQuest(); //Defined in Quest, changes the state, stores in DB etc ...
+			long money = Money.GetMoney(0, 0, 0, 0, m_questPlayer.Level * 10 + 30);
+			m_questPlayer.AddMoney(money, "You are awarded " + Money.GetString(money) + "!");
 		}
 	}
 }

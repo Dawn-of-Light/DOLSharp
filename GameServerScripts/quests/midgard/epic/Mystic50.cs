@@ -104,6 +104,8 @@ namespace DOL.GS.Quests.Midgard
 		[ScriptLoadedEvent]
 		public static void ScriptLoaded(DOLEvent e, object sender, EventArgs args)
 		{
+			if (!ServerProperties.Properties.LOAD_QUESTS)
+				return;
 			if (log.IsInfoEnabled)
 				log.Info("Quest \"" + questTitle + "\" initializing ...");
 
@@ -115,15 +117,17 @@ namespace DOL.GS.Quests.Midgard
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Danica , creating it ...");
-				Danica = new GameMob();
+				Danica = new GameNPC();
 				Danica.Model = 227;
 				Danica.Name = "Danica";
 				Danica.GuildName = "";
 				Danica.Realm = (byte) eRealm.Midgard;
-				Danica.RegionId = 100;
+				Danica.CurrentRegionID = 100;
 				Danica.Size = 51;
 				Danica.Level = 50;
-				Danica.Position = new Point(804440, 722267, 4719);
+				Danica.X = 804440;
+				Danica.Y = 722267;
+				Danica.Z = 4719;
 				Danica.Heading = 2116;
 				Danica.AddToWorld();
 				if (SAVE_INTO_DATABASE)
@@ -140,17 +144,19 @@ namespace DOL.GS.Quests.Midgard
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Kelic , creating it ...");
-				Kelic = new GameMob();
+				Kelic = new GameNPC();
 				Kelic.Model = 26;
 				Kelic.Name = "Kelic";
 				Kelic.GuildName = "";
 				Kelic.Realm = (byte) eRealm.None;
-				Kelic.RegionId = 100;
+				Kelic.CurrentRegionID = 100;
 				Kelic.Size = 100;
 				Kelic.Level = 65;
-				Kelic.Position = new Point(621577, 745848, 4593);
+				Kelic.X = 621577;
+				Kelic.Y = 745848;
+				Kelic.Z = 4593;
 				Kelic.Heading = 3538;
-				Kelic.Flags = 1;
+				Kelic.Flags ^= (uint)GameNPC.eFlags.TRANSPARENT;
 				Kelic.MaxSpeedBase = 200;
 				Kelic.AddToWorld();
 				if (SAVE_INTO_DATABASE)
@@ -172,7 +178,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Kelic's Totem , creating it ...");
 				kelics_totem = new ItemTemplate();
-				kelics_totem.ItemTemplateID = "kelics_totem";
+				kelics_totem.Id_nb = "kelics_totem";
 				kelics_totem.Name = "Kelic's Totem";
 				kelics_totem.Level = 8;
 				kelics_totem.Item_Type = 0;
@@ -185,7 +191,6 @@ namespace DOL.GS.Quests.Midgard
 				kelics_totem.Hand = 0;
 				kelics_totem.Type_Damage = 0;
 				kelics_totem.Quality = 100;
-				kelics_totem.MaxQuality = 100;
 				kelics_totem.Weight = 12;
 				if (SAVE_INTO_DATABASE)
 				{
@@ -200,7 +205,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Spiritmaster Epic Boots , creating it ...");
 				SpiritmasterEpicBoots = new ItemTemplate();
-				SpiritmasterEpicBoots.ItemTemplateID = "SpiritmasterEpicBoots";
+				SpiritmasterEpicBoots.Id_nb = "SpiritmasterEpicBoots";
 				SpiritmasterEpicBoots.Name = "Spirit Touched Boots";
 				SpiritmasterEpicBoots.Level = 50;
 				SpiritmasterEpicBoots.Item_Type = 23;
@@ -211,7 +216,6 @@ namespace DOL.GS.Quests.Midgard
 				SpiritmasterEpicBoots.SPD_ABS = 0;
 				SpiritmasterEpicBoots.Object_Type = 32;
 				SpiritmasterEpicBoots.Quality = 100;
-				SpiritmasterEpicBoots.MaxQuality = 100;
 				SpiritmasterEpicBoots.Weight = 22;
 				SpiritmasterEpicBoots.Bonus = 35;
 				SpiritmasterEpicBoots.MaxCondition = 50000;
@@ -244,7 +248,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Spiritmaster Epic Helm , creating it ...");
 				SpiritmasterEpicHelm = new ItemTemplate();
-				SpiritmasterEpicHelm.ItemTemplateID = "SpiritmasterEpicHelm";
+				SpiritmasterEpicHelm.Id_nb = "SpiritmasterEpicHelm";
 				SpiritmasterEpicHelm.Name = "Spirit Touched Cap";
 				SpiritmasterEpicHelm.Level = 50;
 				SpiritmasterEpicHelm.Item_Type = 21;
@@ -255,7 +259,6 @@ namespace DOL.GS.Quests.Midgard
 				SpiritmasterEpicHelm.SPD_ABS = 0;
 				SpiritmasterEpicHelm.Object_Type = 32;
 				SpiritmasterEpicHelm.Quality = 100;
-				SpiritmasterEpicHelm.MaxQuality = 100;
 				SpiritmasterEpicHelm.Weight = 22;
 				SpiritmasterEpicHelm.Bonus = 35;
 				SpiritmasterEpicHelm.MaxCondition = 50000;
@@ -288,7 +291,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Spiritmaster Epic Gloves , creating it ...");
 				SpiritmasterEpicGloves = new ItemTemplate();
-				SpiritmasterEpicGloves.ItemTemplateID = "SpiritmasterEpicGloves";
+				SpiritmasterEpicGloves.Id_nb = "SpiritmasterEpicGloves";
 				SpiritmasterEpicGloves.Name = "Spirit Touched Gloves ";
 				SpiritmasterEpicGloves.Level = 50;
 				SpiritmasterEpicGloves.Item_Type = 22;
@@ -299,7 +302,6 @@ namespace DOL.GS.Quests.Midgard
 				SpiritmasterEpicGloves.SPD_ABS = 0;
 				SpiritmasterEpicGloves.Object_Type = 32;
 				SpiritmasterEpicGloves.Quality = 100;
-				SpiritmasterEpicGloves.MaxQuality = 100;
 				SpiritmasterEpicGloves.Weight = 22;
 				SpiritmasterEpicGloves.Bonus = 35;
 				SpiritmasterEpicGloves.MaxCondition = 50000;
@@ -332,7 +334,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Spiritmaster Epic Vest , creating it ...");
 				SpiritmasterEpicVest = new ItemTemplate();
-				SpiritmasterEpicVest.ItemTemplateID = "SpiritmasterEpicVest";
+				SpiritmasterEpicVest.Id_nb = "SpiritmasterEpicVest";
 				SpiritmasterEpicVest.Name = "Spirit Touched Vest";
 				SpiritmasterEpicVest.Level = 50;
 				SpiritmasterEpicVest.Item_Type = 25;
@@ -343,7 +345,6 @@ namespace DOL.GS.Quests.Midgard
 				SpiritmasterEpicVest.SPD_ABS = 0;
 				SpiritmasterEpicVest.Object_Type = 32;
 				SpiritmasterEpicVest.Quality = 100;
-				SpiritmasterEpicVest.MaxQuality = 100;
 				SpiritmasterEpicVest.Weight = 22;
 				SpiritmasterEpicVest.Bonus = 35;
 				SpiritmasterEpicVest.MaxCondition = 50000;
@@ -376,7 +377,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Spiritmaster Epic Legs , creating it ...");
 				SpiritmasterEpicLegs = new ItemTemplate();
-				SpiritmasterEpicLegs.ItemTemplateID = "SpiritmasterEpicLegs";
+				SpiritmasterEpicLegs.Id_nb = "SpiritmasterEpicLegs";
 				SpiritmasterEpicLegs.Name = "Spirit Touched Pants";
 				SpiritmasterEpicLegs.Level = 50;
 				SpiritmasterEpicLegs.Item_Type = 27;
@@ -387,7 +388,6 @@ namespace DOL.GS.Quests.Midgard
 				SpiritmasterEpicLegs.SPD_ABS = 0;
 				SpiritmasterEpicLegs.Object_Type = 32;
 				SpiritmasterEpicLegs.Quality = 100;
-				SpiritmasterEpicLegs.MaxQuality = 100;
 				SpiritmasterEpicLegs.Weight = 22;
 				SpiritmasterEpicLegs.Bonus = 35;
 				SpiritmasterEpicLegs.MaxCondition = 50000;
@@ -420,7 +420,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Spiritmaster Epic Arms , creating it ...");
 				SpiritmasterEpicArms = new ItemTemplate();
-				SpiritmasterEpicArms.ItemTemplateID = "SpiritmasterEpicArms";
+				SpiritmasterEpicArms.Id_nb = "SpiritmasterEpicArms";
 				SpiritmasterEpicArms.Name = "Spirit Touched Sleeves";
 				SpiritmasterEpicArms.Level = 50;
 				SpiritmasterEpicArms.Item_Type = 28;
@@ -431,7 +431,6 @@ namespace DOL.GS.Quests.Midgard
 				SpiritmasterEpicArms.SPD_ABS = 0;
 				SpiritmasterEpicArms.Object_Type = 32;
 				SpiritmasterEpicArms.Quality = 100;
-				SpiritmasterEpicArms.MaxQuality = 100;
 				SpiritmasterEpicArms.Weight = 22;
 				SpiritmasterEpicArms.Bonus = 35;
 				SpiritmasterEpicArms.MaxCondition = 50000;
@@ -463,7 +462,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Runemaster Epic Boots , creating it ...");
 				RunemasterEpicBoots = new ItemTemplate();
-				RunemasterEpicBoots.ItemTemplateID = "RunemasterEpicBoots";
+				RunemasterEpicBoots.Id_nb = "RunemasterEpicBoots";
 				RunemasterEpicBoots.Name = "Raven-Rune Boots";
 				RunemasterEpicBoots.Level = 50;
 				RunemasterEpicBoots.Item_Type = 23;
@@ -474,7 +473,6 @@ namespace DOL.GS.Quests.Midgard
 				RunemasterEpicBoots.SPD_ABS = 0;
 				RunemasterEpicBoots.Object_Type = 32;
 				RunemasterEpicBoots.Quality = 100;
-				RunemasterEpicBoots.MaxQuality = 100;
 				RunemasterEpicBoots.Weight = 22;
 				RunemasterEpicBoots.Bonus = 35;
 				RunemasterEpicBoots.MaxCondition = 50000;
@@ -506,7 +504,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Runemaster Epic Helm , creating it ...");
 				RunemasterEpicHelm = new ItemTemplate();
-				RunemasterEpicHelm.ItemTemplateID = "RunemasterEpicHelm";
+				RunemasterEpicHelm.Id_nb = "RunemasterEpicHelm";
 				RunemasterEpicHelm.Name = "Raven-Rune Cap";
 				RunemasterEpicHelm.Level = 50;
 				RunemasterEpicHelm.Item_Type = 21;
@@ -517,7 +515,6 @@ namespace DOL.GS.Quests.Midgard
 				RunemasterEpicHelm.SPD_ABS = 0;
 				RunemasterEpicHelm.Object_Type = 32;
 				RunemasterEpicHelm.Quality = 100;
-				RunemasterEpicHelm.MaxQuality = 100;
 				RunemasterEpicHelm.Weight = 22;
 				RunemasterEpicHelm.Bonus = 35;
 				RunemasterEpicHelm.MaxCondition = 50000;
@@ -549,7 +546,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Runemaster Epic Gloves , creating it ...");
 				RunemasterEpicGloves = new ItemTemplate();
-				RunemasterEpicGloves.ItemTemplateID = "RunemasterEpicGloves";
+				RunemasterEpicGloves.Id_nb = "RunemasterEpicGloves";
 				RunemasterEpicGloves.Name = "Raven-Rune Gloves ";
 				RunemasterEpicGloves.Level = 50;
 				RunemasterEpicGloves.Item_Type = 22;
@@ -560,7 +557,6 @@ namespace DOL.GS.Quests.Midgard
 				RunemasterEpicGloves.SPD_ABS = 0;
 				RunemasterEpicGloves.Object_Type = 32;
 				RunemasterEpicGloves.Quality = 100;
-				RunemasterEpicGloves.MaxQuality = 100;
 				RunemasterEpicGloves.Weight = 22;
 				RunemasterEpicGloves.Bonus = 35;
 				RunemasterEpicGloves.MaxCondition = 50000;
@@ -592,7 +588,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Runemaster Epic Vest , creating it ...");
 				RunemasterEpicVest = new ItemTemplate();
-				RunemasterEpicVest.ItemTemplateID = "RunemasterEpicVest";
+				RunemasterEpicVest.Id_nb = "RunemasterEpicVest";
 				RunemasterEpicVest.Name = "Raven-Rune Vest";
 				RunemasterEpicVest.Level = 50;
 				RunemasterEpicVest.Item_Type = 25;
@@ -603,7 +599,6 @@ namespace DOL.GS.Quests.Midgard
 				RunemasterEpicVest.SPD_ABS = 0;
 				RunemasterEpicVest.Object_Type = 32;
 				RunemasterEpicVest.Quality = 100;
-				RunemasterEpicVest.MaxQuality = 100;
 				RunemasterEpicVest.Weight = 22;
 				RunemasterEpicVest.Bonus = 35;
 				RunemasterEpicVest.MaxCondition = 50000;
@@ -635,7 +630,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Runemaster Epic Legs , creating it ...");
 				RunemasterEpicLegs = new ItemTemplate();
-				RunemasterEpicLegs.ItemTemplateID = "RunemasterEpicLegs";
+				RunemasterEpicLegs.Id_nb = "RunemasterEpicLegs";
 				RunemasterEpicLegs.Name = "Raven-Rune Pants";
 				RunemasterEpicLegs.Level = 50;
 				RunemasterEpicLegs.Item_Type = 27;
@@ -646,7 +641,6 @@ namespace DOL.GS.Quests.Midgard
 				RunemasterEpicLegs.SPD_ABS = 0;
 				RunemasterEpicLegs.Object_Type = 32;
 				RunemasterEpicLegs.Quality = 100;
-				RunemasterEpicLegs.MaxQuality = 100;
 				RunemasterEpicLegs.Weight = 22;
 				RunemasterEpicLegs.Bonus = 35;
 				RunemasterEpicLegs.MaxCondition = 50000;
@@ -678,7 +672,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Runemaster Epic Arms , creating it ...");
 				RunemasterEpicArms = new ItemTemplate();
-				RunemasterEpicArms.ItemTemplateID = "RunemasterEpicArms";
+				RunemasterEpicArms.Id_nb = "RunemasterEpicArms";
 				RunemasterEpicArms.Name = "Raven-Rune Sleeves";
 				RunemasterEpicArms.Level = 50;
 				RunemasterEpicArms.Item_Type = 28;
@@ -689,7 +683,6 @@ namespace DOL.GS.Quests.Midgard
 				RunemasterEpicArms.SPD_ABS = 0;
 				RunemasterEpicArms.Object_Type = 32;
 				RunemasterEpicArms.Quality = 100;
-				RunemasterEpicArms.MaxQuality = 100;
 				RunemasterEpicArms.Weight = 22;
 				RunemasterEpicArms.Bonus = 35;
 				RunemasterEpicArms.MaxCondition = 50000;
@@ -721,7 +714,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Bonedancer Epic Boots , creating it ...");
 				BonedancerEpicBoots = new ItemTemplate();
-				BonedancerEpicBoots.ItemTemplateID = "BonedancerEpicBoots";
+				BonedancerEpicBoots.Id_nb = "BonedancerEpicBoots";
 				BonedancerEpicBoots.Name = "Raven-Boned Boots";
 				BonedancerEpicBoots.Level = 50;
 				BonedancerEpicBoots.Item_Type = 23;
@@ -732,7 +725,6 @@ namespace DOL.GS.Quests.Midgard
 				BonedancerEpicBoots.SPD_ABS = 0;
 				BonedancerEpicBoots.Object_Type = 32;
 				BonedancerEpicBoots.Quality = 100;
-				BonedancerEpicBoots.MaxQuality = 100;
 				BonedancerEpicBoots.Weight = 22;
 				BonedancerEpicBoots.Bonus = 35;
 				BonedancerEpicBoots.MaxCondition = 50000;
@@ -765,7 +757,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Bonedancer Epic Helm , creating it ...");
 				BonedancerEpicHelm = new ItemTemplate();
-				BonedancerEpicHelm.ItemTemplateID = "BonedancerEpicHelm";
+				BonedancerEpicHelm.Id_nb = "BonedancerEpicHelm";
 				BonedancerEpicHelm.Name = "Raven-Boned Cap";
 				BonedancerEpicHelm.Level = 50;
 				BonedancerEpicHelm.Item_Type = 21;
@@ -776,7 +768,6 @@ namespace DOL.GS.Quests.Midgard
 				BonedancerEpicHelm.SPD_ABS = 0;
 				BonedancerEpicHelm.Object_Type = 32;
 				BonedancerEpicHelm.Quality = 100;
-				BonedancerEpicHelm.MaxQuality = 100;
 				BonedancerEpicHelm.Weight = 22;
 				BonedancerEpicHelm.Bonus = 35;
 				BonedancerEpicHelm.MaxCondition = 50000;
@@ -810,7 +801,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Bonedancer Epic Gloves , creating it ...");
 				BonedancerEpicGloves = new ItemTemplate();
-				BonedancerEpicGloves.ItemTemplateID = "BonedancerEpicGloves";
+				BonedancerEpicGloves.Id_nb = "BonedancerEpicGloves";
 				BonedancerEpicGloves.Name = "Raven-Boned Gloves ";
 				BonedancerEpicGloves.Level = 50;
 				BonedancerEpicGloves.Item_Type = 22;
@@ -821,7 +812,6 @@ namespace DOL.GS.Quests.Midgard
 				BonedancerEpicGloves.SPD_ABS = 0;
 				BonedancerEpicGloves.Object_Type = 32;
 				BonedancerEpicGloves.Quality = 100;
-				BonedancerEpicGloves.MaxQuality = 100;
 				BonedancerEpicGloves.Weight = 22;
 				BonedancerEpicGloves.Bonus = 35;
 				BonedancerEpicGloves.MaxCondition = 50000;
@@ -853,7 +843,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Bonedancer Epic Vest , creating it ...");
 				BonedancerEpicVest = new ItemTemplate();
-				BonedancerEpicVest.ItemTemplateID = "BonedancerEpicVest";
+				BonedancerEpicVest.Id_nb = "BonedancerEpicVest";
 				BonedancerEpicVest.Name = "Raven-Boned Vest";
 				BonedancerEpicVest.Level = 50;
 				BonedancerEpicVest.Item_Type = 25;
@@ -864,7 +854,6 @@ namespace DOL.GS.Quests.Midgard
 				BonedancerEpicVest.SPD_ABS = 0;
 				BonedancerEpicVest.Object_Type = 32;
 				BonedancerEpicVest.Quality = 100;
-				BonedancerEpicVest.MaxQuality = 100;
 				BonedancerEpicVest.Weight = 22;
 				BonedancerEpicVest.Bonus = 35;
 				BonedancerEpicVest.MaxCondition = 50000;
@@ -896,7 +885,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Bonedancer Epic Legs , creating it ...");
 				BonedancerEpicLegs = new ItemTemplate();
-				BonedancerEpicLegs.ItemTemplateID = "BonedancerEpicLegs";
+				BonedancerEpicLegs.Id_nb = "BonedancerEpicLegs";
 				BonedancerEpicLegs.Name = "Raven-Boned Pants";
 				BonedancerEpicLegs.Level = 50;
 				BonedancerEpicLegs.Item_Type = 27;
@@ -907,7 +896,6 @@ namespace DOL.GS.Quests.Midgard
 				BonedancerEpicLegs.SPD_ABS = 0;
 				BonedancerEpicLegs.Object_Type = 32;
 				BonedancerEpicLegs.Quality = 100;
-				BonedancerEpicLegs.MaxQuality = 100;
 				BonedancerEpicLegs.Weight = 22;
 				BonedancerEpicLegs.Bonus = 35;
 				BonedancerEpicLegs.MaxCondition = 50000;
@@ -940,7 +928,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Bonedancer Epic Arms , creating it ...");
 				BonedancerEpicArms = new ItemTemplate();
-				BonedancerEpicArms.ItemTemplateID = "BonedancerEpicArms";
+				BonedancerEpicArms.Id_nb = "BonedancerEpicArms";
 				BonedancerEpicArms.Name = "Raven-Boned Sleeves";
 				BonedancerEpicArms.Level = 50;
 				BonedancerEpicArms.Item_Type = 28;
@@ -951,7 +939,6 @@ namespace DOL.GS.Quests.Midgard
 				BonedancerEpicArms.SPD_ABS = 0;
 				BonedancerEpicArms.Object_Type = 32;
 				BonedancerEpicArms.Quality = 100;
-				BonedancerEpicArms.MaxQuality = 100;
 				BonedancerEpicArms.Weight = 22;
 				BonedancerEpicArms.Bonus = 35;
 				BonedancerEpicArms.MaxCondition = 50000;
@@ -981,6 +968,9 @@ namespace DOL.GS.Quests.Midgard
 
 			#endregion
 
+			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
 			GameEventMgr.AddHandler(Danica, GameObjectEvent.Interact, new DOLEventHandler(TalkToDanica));
 			GameEventMgr.AddHandler(Danica, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToDanica));
 
@@ -998,6 +988,9 @@ namespace DOL.GS.Quests.Midgard
 			if (Danica == null)
 				return;
 			// remove handlers
+			GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
 			GameEventMgr.RemoveHandler(Danica, GameObjectEvent.Interact, new DOLEventHandler(TalkToDanica));
 			GameEventMgr.RemoveHandler(Danica, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToDanica));
 
@@ -1058,7 +1051,7 @@ namespace DOL.GS.Quests.Midgard
 							Danica.SayTo(player, "Yes, it worries me, but I think that you are ready to [face Kelic] and his minions.");
 							break;
 						case "face Kelic":
-							player.Out.SendCustomDialog("Will you face Kelic [Mystic Level 50 Epic]?", new CustomDialogResponse(CheckPlayerAcceptQuest));
+							player.Out.SendQuestSubscribeCommand(Danica, QuestMgr.GetIDForQuestType(typeof(Mystic_50)), "Will you face Kelic [Mystic Level 50 Epic]?");
 							break;
 					}
 				}
@@ -1126,6 +1119,21 @@ namespace DOL.GS.Quests.Midgard
 			}
 		}
 
+		protected static void SubscribeQuest(DOLEvent e, object sender, EventArgs args)
+		{
+			QuestEventArgs qargs = args as QuestEventArgs;
+			if (qargs == null)
+				return;
+
+			if (qargs.QuestID != QuestMgr.GetIDForQuestType(typeof(Mystic_50)))
+				return;
+
+			if (e == GamePlayerEvent.AcceptQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x01);
+			else if (e == GamePlayerEvent.DeclineQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x00);
+		}
+
 		private static void CheckPlayerAcceptQuest(GamePlayer player, byte response)
 		{
 			if(Danica.CanGiveQuest(typeof (Mystic_50), player)  <= 0)
@@ -1190,7 +1198,7 @@ namespace DOL.GS.Quests.Midgard
 				if (gArgs.Target.Name == Kelic.Name)
 				{
 					Step = 2;
-					GiveItem(player, kelics_totem);
+					GiveItem(m_questPlayer, kelics_totem);
 					m_questPlayer.Out.SendMessage("Kelic drops his Totem and you pick it up!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return;
 				}
@@ -1199,7 +1207,7 @@ namespace DOL.GS.Quests.Midgard
 			if (Step == 2 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == Danica.Name && gArgs.Item.ItemTemplateID == kelics_totem.ItemTemplateID)
+				if (gArgs.Target.Name == Danica.Name && gArgs.Item.Id_nb == kelics_totem.Id_nb)
 				{
 					RemoveItem(Danica, player, kelics_totem);
 					Danica.SayTo(player, "Ah, I can see how he wore the curse around the totem. I can now break the curse that is destroying the clan!");

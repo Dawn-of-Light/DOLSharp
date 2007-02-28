@@ -16,19 +16,16 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-//using DOL.GS.Database;
+//using DOL.Database;
 //using DOL.GS.PacketHandler;
-
-using NHibernate.Mapping.Attributes;
 
 namespace DOL.GS.Scripts
 {
 	/// <summary>
-	/// This class holds all information that
-	/// EVERY alchemits master npc in the game world needs!
+	/// the master for alchemy
 	/// </summary>
-	[Subclass(NameType=typeof(AlchemistsMaster), ExtendsType=typeof(GameCraftMaster))] 
-	public class AlchemistsMaster : GameCraftMaster
+	[NPCGuildScript("Alchemists Master")]
+	public class AlchemistsMaster : CraftNPC
 	{
 		private static readonly eCraftingSkill[] m_trainedSkills = 
 		{
@@ -55,41 +52,17 @@ namespace DOL.GS.Scripts
 			get { return "Alchemists"; }
 		}
 
-		public override eCharacterClass[] AllowedClass
-		{
-			get
-			{
-				return new eCharacterClass[]
-					{
-						eCharacterClass.Friar,
-						eCharacterClass.Infiltrator,
-						eCharacterClass.Heretic,
-						eCharacterClass.Minstrel,
-						eCharacterClass.Paladin,
-						eCharacterClass.Scout,
-						eCharacterClass.Reaver,
-						eCharacterClass.Bard,
-						eCharacterClass.Champion,
-						eCharacterClass.Nightshade,
-						eCharacterClass.Ranger,
-						eCharacterClass.Valewalker,
-						eCharacterClass.Vampiir,
-						eCharacterClass.Warden,
-						eCharacterClass.Hunter,
-						eCharacterClass.Shadowblade,
-						eCharacterClass.Skald,
-						eCharacterClass.Thane,
-						eCharacterClass.Valkyrie,
-						eCharacterClass.Warlock,
-					};
-			}
-		}
-
+		/// <summary>
+		/// The eCraftingSkill
+		/// </summary>
 		public override eCraftingSkill TheCraftingSkill
 		{
 			get { return eCraftingSkill.Alchemy; }
 		}
 
+		/// <summary>
+		/// The text for join order
+		/// </summary>
 		public override string InitialEntersentence
 		{
 			get { return "Would you like to join the Order of [" + GUILD_ORDER + "]? As a Alchemist, you have the ability to make dyes, poisons, and various magical potions. You also have the ability to make magical tinctures that can add both offensive and defensive magical effects to crafted items. You have some skill in Spellcraft, as well as being able to Jewelcraft with great skill"; }

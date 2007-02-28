@@ -19,6 +19,7 @@
 using System;
 using DOL.Events;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.GameEvents
 {
@@ -59,7 +60,25 @@ namespace DOL.GS.GameEvents
 			if (player == null) return;
 			if (player.IsAnonymous) return;
 
-			string message = player.Name + " just entered the game!";
+			string message = LanguageMgr.GetTranslation(player.Client, "Scripts.Events.PlayerEnterExit.Entered", player.Name);
+			if (player.Client.Account.PrivLevel > 1)
+				message = LanguageMgr.GetTranslation(player.Client, "Scripts.Events.PlayerEnterExit.Staff", message);
+			else
+			{
+				string realm = "";
+				if (GameServer.Instance.Configuration.ServerType == eGameServerType.GST_Normal)
+				{
+					realm = "[";
+					switch (player.Realm)
+					{
+						case 1: realm = realm + "Albion"; break;
+						case 2: realm = realm + "Midgard"; break;
+						case 3: realm = realm + "Hibernia"; break;
+					}
+					realm = realm + "] ";
+				}
+				message = realm + message;
+			}
 			foreach (GameClient pclient in WorldMgr.GetAllPlayingClients())
 			{
 				if (player.Client != pclient)
@@ -79,11 +98,29 @@ namespace DOL.GS.GameEvents
 			if (player == null) return;
 			if (player.IsAnonymous) return;
 
-			string message = player.Name + " just left the game!";
-			foreach (GameClient pclient in WorldMgr.GetAllPlayingClients())
+			string message = LanguageMgr.GetTranslation(player.Client, "Scripts.Events.PlayerEnterExit.Left", player.Name);
+			if (player.Client.Account.PrivLevel > 1)
+				message = LanguageMgr.GetTranslation(player.Client, "Scripts.Events.PlayerEnterExit.Staff", message);
+			else
 			{
-				if (player.Client != pclient)
-					pclient.Out.SendMessage(message, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				string realm = "";
+				if (GameServer.Instance.Configuration.ServerType == eGameServerType.GST_Normal)
+				{
+					realm = "[";
+					switch (player.Realm)
+					{
+						case 1: realm = realm + "Albion"; break;
+						case 2: realm = realm + "Midgard"; break;
+						case 3: realm = realm + "Hibernia"; break;
+					}
+					realm = realm + "] ";
+				}
+				message = realm + message;
+				foreach (GameClient pclient in WorldMgr.GetAllPlayingClients())
+				{
+					if (player.Client != pclient)
+						pclient.Out.SendMessage(message, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				}
 			}
 		}
 	}

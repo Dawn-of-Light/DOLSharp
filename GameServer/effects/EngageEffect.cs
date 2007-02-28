@@ -18,7 +18,6 @@
  */
 using System;
 using System.Collections;
-using DOL.GS.Database;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Effects
@@ -26,7 +25,7 @@ namespace DOL.GS.Effects
 	/// <summary>
 	/// The helper class for the engage ability
 	/// </summary>
-	public class EngageEffect : IGameEffect
+	public class EngageEffect : StaticEffect, IGameEffect
 	{
 		/// <summary>
 		/// The ability description

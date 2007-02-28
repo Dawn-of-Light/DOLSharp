@@ -1,22 +1,21 @@
 /*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using DOL.Database;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Scripts
@@ -54,6 +53,21 @@ namespace DOL.GS.Scripts
 	[CmdAttribute("&victory", (uint) ePrivLevel.Player, "Make a victory cheer", "/victory")]
 	[CmdAttribute("&wave", (uint) ePrivLevel.Player, "Makes a waving gesture", "/wave")]
 	[CmdAttribute("&yes", (uint) ePrivLevel.Player, "Nod your head", "/yes")]
+	//New
+	[CmdAttribute("&sweat", (uint) ePrivLevel.Player, "sweat", "/sweat")]
+	[CmdAttribute("&stagger", (uint) ePrivLevel.Player, "stagger", "/stagger")]
+	[CmdAttribute("&yawn", (uint) ePrivLevel.Player, "yawn", "/yawn")]
+	[CmdAttribute("&doh", (uint) ePrivLevel.Player, "doh", "/doh")]
+	[CmdAttribute("&confuse", (uint) ePrivLevel.Player, "Confused", "/confuse")]
+	[CmdAttribute("&shiver", (uint) ePrivLevel.Player, "shiver", "/shiver")]
+	[CmdAttribute("&rofl", (uint) ePrivLevel.Player, "rofl", "/rofl")]
+	[CmdAttribute("&mememe", (uint) ePrivLevel.Player, "mememe", "/mememe")]
+	[CmdAttribute("&worship", (uint) ePrivLevel.Player, "worship", "/worship")]
+	[CmdAttribute("&drink", (uint) ePrivLevel.Player, "drink", "/drink")]
+	[CmdAttribute("&angry", (uint)ePrivLevel.Player, "Look angrily around", "/angry")]
+	[CmdAttribute("&lookfar", (uint)ePrivLevel.Player, "Lets you look into the distance", "/lookfar")]
+	[CmdAttribute("&smile", (uint)ePrivLevel.Player, "Make a big smile", "/smile")]
+	[CmdAttribute("&stench", (uint)ePrivLevel.Player, "Wave away the local stench", "/stench")] 
 	public class EmoteCommandHandler : ICommandHandler
 	{
 		private const ushort EMOTE_RANGE_TO_TARGET = 2048; // 2064 was out of range and 2020 in range;
@@ -63,14 +77,14 @@ namespace DOL.GS.Scripts
 		public int OnCommand(GameClient client, string[] args)
 		{
 			// no emotes if dead
-			if (!client.Player.Alive)
+			if (!client.Player.IsAlive)
 			{
 				client.Out.SendMessage("You can't do that, you're dead!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return 1;
 			}
 
 			// no emotes in combat / mez / stun
-			if (client.Player.AttackState || client.Player.Mez || client.Player.Stun)
+			if (client.Player.AttackState || client.Player.IsMezzed || client.Player.IsStunned)
 			{
 				client.Out.SendMessage("You can't do that, you're busy!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return 1;
@@ -78,14 +92,10 @@ namespace DOL.GS.Scripts
 
 			if (client.Player.TargetObject != null)
 			{
-				if (client.Player.TargetObject.Region != client.Player.Region)
-				{
-					client.Out.SendMessage("Target is in another region.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return 1;
-				}
-				
+				int distanceToTarget = WorldMgr.GetDistance((GameObject) client.Player, (GameObject) client.Player.TargetObject);
+
 				// target not in range
-				if (!client.Player.Position.CheckSquareDistance(client.Player.TargetObject.Position, EMOTE_RANGE_TO_TARGET*EMOTE_RANGE_TO_TARGET))
+				if (distanceToTarget > EMOTE_RANGE_TO_TARGET || distanceToTarget < 0)
 				{
 					client.Out.SendMessage("You don't see your target around here.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return 1;
@@ -98,6 +108,10 @@ namespace DOL.GS.Scripts
 
 			switch (args[0])
 			{
+				case "&angry":
+					emoteID = eEmote.Angry;
+					emoteMessages = EMOTE_MESSAGES_ANGRY;
+					break; 
 				case "&bang":
 					emoteID = eEmote.BangOnShield;
 					emoteMessages = EMOTE_MESSAGES_BANG;
@@ -158,6 +172,10 @@ namespace DOL.GS.Scripts
 					emoteID = eEmote.Induct;
 					emoteMessages = EMOTE_MESSAGES_INDUCT;
 					break;
+				case "&lookfar":
+					emoteID = eEmote.Rider_LookFar;
+					emoteMessages = EMOTE_MESSAGES_RIDER_LOOKFAR;
+					break; 
 				case "&kiss":
 					emoteID = eEmote.BlowKiss;
 					emoteMessages = EMOTE_MESSAGES_KISS;
@@ -210,6 +228,14 @@ namespace DOL.GS.Scripts
 					emoteID = eEmote.Slit;
 					emoteMessages = EMOTE_MESSAGES_SLIT;
 					break;
+				case "&smile":
+					emoteID = eEmote.Smile;
+					emoteMessages = EMOTE_MESSAGES_SMILE;
+					break; 
+				case "&stench":
+					emoteID = eEmote.Rider_Stench;
+					emoteMessages = EMOTE_MESSAGES_RIDER_STENCH;
+					break; 
 				case "&surrender":
 					emoteID = eEmote.Surrender;
 					emoteMessages = EMOTE_MESSAGES_SURRENDER;
@@ -230,7 +256,46 @@ namespace DOL.GS.Scripts
 					emoteID = eEmote.Yes;
 					emoteMessages = EMOTE_MESSAGES_YES;
 					break;
-
+				case "&sweat":
+					emoteID = eEmote.Sweat;
+					emoteMessages = EMOTE_MESSAGES_SWEAT;
+					break;
+				case "&stagger":
+					emoteID = eEmote.Stagger;
+					emoteMessages = EMOTE_MESSAGES_STAGGER;
+					break;
+				case "&yawn":
+					emoteID = eEmote.Yawn;
+					emoteMessages = EMOTE_MESSAGES_YAWN;
+					break;
+				case "&doh":
+					emoteID = eEmote.Doh;
+					emoteMessages = EMOTE_MESSAGES_DOH;
+					break;
+				case "&confuse":
+					emoteID = eEmote.Confused;
+					emoteMessages = EMOTE_MESSAGES_CONFUSE;
+					break;
+				case "&shiver":
+					emoteID = eEmote.Shiver;
+					emoteMessages = EMOTE_MESSAGES_SHIVER;
+					break;
+				case "&rofl":
+					emoteID = eEmote.Rofl;
+					emoteMessages = EMOTE_MESSAGES_ROFL;
+					break;
+				case "&mememe":
+					emoteID = eEmote.Mememe;
+					emoteMessages = EMOTE_MESSAGES_MEMEME;
+					break;
+				case "&worship":
+					emoteID = eEmote.Worship;
+					emoteMessages = EMOTE_MESSAGES_WORSHIP;
+					break;
+				case "&drink":
+					emoteID = eEmote.Drink;
+					emoteMessages = EMOTE_MESSAGES_DRINK;
+					break;
 				default:
 					return 0;
 			}
@@ -262,7 +327,7 @@ namespace DOL.GS.Scripts
 					messageToTarget = string.Format(emoteMessages[EMOTE_TO_OTHERS], sourcePlayer.Name, YOU);
 			}
 
-			foreach (GamePlayer player in sourcePlayer.GetInRadius(typeof(GamePlayer), WorldMgr.VISIBILITY_DISTANCE))
+			foreach (GamePlayer player in sourcePlayer.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 				player.Out.SendEmoteAnimation(sourcePlayer, emoteID);
 
 			SendEmoteMessages(sourcePlayer, targetObject as GamePlayer, messageToSource, messageToTarget, messageToOthers);
@@ -274,16 +339,16 @@ namespace DOL.GS.Scripts
 		// send emote messages to all players in range
 		private void SendEmoteMessages(GamePlayer sourcePlayer, GamePlayer targetPlayer, string messageToSource, string messageToTarget, string messageToOthers)
 		{
-//			sourcePlayer.Client.Out.SendMessage("sending messages", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-//			SendEmoteMessage(sourcePlayer, "to target: \""+messageToTarget+"\"");
-//			SendEmoteMessage(sourcePlayer, "to others: \""+messageToOthers+"\"");
+			//			sourcePlayer.Client.Out.SendMessage("sending messages", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			//			SendEmoteMessage(sourcePlayer, "to target: \""+messageToTarget+"\"");
+			//			SendEmoteMessage(sourcePlayer, "to others: \""+messageToOthers+"\"");
 
 			SendEmoteMessage(sourcePlayer, messageToSource);
 
 			if (targetPlayer != null)
 				SendEmoteMessage(targetPlayer, messageToTarget);
 
-			foreach (GamePlayer player in sourcePlayer.GetInRadius(typeof(GamePlayer), EMOTE_RANGE_TO_OTHERS))
+			foreach (GamePlayer player in sourcePlayer.GetPlayersInRadius(EMOTE_RANGE_TO_OTHERS))
 				if (player != sourcePlayer && player != targetPlayer) // client and target gets unique messages
 					SendEmoteMessage(player, messageToOthers);
 
@@ -536,5 +601,92 @@ namespace DOL.GS.Scripts
 			"You nod your head yes at {0}.",
 			"{0} nods his head yes at {1}.",
 		};
+		private readonly string[] EMOTE_MESSAGES_SWEAT = {
+			"You break into a sweat.",
+			"{0} breaks into a sweat.",
+			"You break into a sweat at the sight of {0}.",
+			"{0} breaks into a sweat at the sight of {1}.",
+		};
+		private readonly string[] EMOTE_MESSAGES_STAGGER = {
+			"You stagger.",
+			"{0} staggers.",
+			"You stagger towards {0}.",
+			"{0} staggers towards {1}.",
+		};
+		private readonly string[] EMOTE_MESSAGES_YAWN = {
+			"You yawn.",
+			"{0} yanws.",
+			"You yawn at {0}.",
+			"{0} yawns at {1}.",
+		};
+		private readonly string[] EMOTE_MESSAGES_DOH = {
+			"You slap your head in confusion.",
+			"{0} slaps your head in confusion.",
+			"You slap your head in confusion at {0}.",
+			"{0} slaps his head in confusion at {1}.",
+		};
+		private readonly string[] EMOTE_MESSAGES_CONFUSE = {
+			"You look at yourself, clearly confused.",
+			"{0} looks at you, clearly confused.",
+			"You look at {0}, clearly confused.",
+			"{0} looks at {1}, clearly confused.",
+		};
+		private readonly string[] EMOTE_MESSAGES_SHIVER = {
+			"You shiver.",
+			"{0} shivers.",
+			"You shiver at the sight of {0}.",
+			"{0} shivers at the sight of {1}.",
+		};
+		private readonly string[] EMOTE_MESSAGES_ROFL = {
+			"You roll on the floor laughing.",
+			"{0} rolls on the floor laughing at.",
+			"You roll on the floor laughing at {0}.",
+			"{0} rolls on the floor laughing at {1}.",
+		};
+		private readonly string[] EMOTE_MESSAGES_MEMEME = {
+			"You beg to pick you.",
+			"{0} begs to pick him.",
+			"You beg {0} to pick you.",
+			"{0} begs {1} to pick them.",
+		};
+		private readonly string[] EMOTE_MESSAGES_WORSHIP = {
+			"You worship everything, and yet nothing.",
+			"{0} worships nothing in particular.",
+			"You worship {0}!",
+			"{0} worships {1}!",
+		};
+		private readonly string[] EMOTE_MESSAGES_DRINK = {
+			"You take a drink.",
+			"{0} takes a drink.",
+			"You toast {0} and take a drink.",
+			"{0} toasts {1}!",
+		};
+
+		private readonly string[] EMOTE_MESSAGES_ANGRY = {
+                                              "You look angrily around.",
+                                              "{0} looks angrily.",
+                                              "You look angrily at {0}.",
+                                              "{0} looks angrily at {1}.",
+      };
+
+		private readonly string[] EMOTE_MESSAGES_RIDER_LOOKFAR = {
+                                                    "You look into the distance.",
+                                                    "{0} looks into the distance.",
+                                                    "You look into the distance.",
+                                                    "{0} looks into the distance.",
+      };
+
+		private readonly string[] EMOTE_MESSAGES_RIDER_STENCH = {
+                                                   "You wave away the local stench.",
+                                                   "{0} waves away the local stench.",
+                                                   "You wave away the stench of {0}.",
+                                                   "{0} waves away the stench of {1}.",
+      };
+		private readonly string[] EMOTE_MESSAGES_SMILE = {
+                                               "You smile happily.",
+                                               "{0} smiles happily.",
+                                               "You smile at {0}.",
+                                               "{0} smiles at {1}.",
+      }; 
 	}
 }

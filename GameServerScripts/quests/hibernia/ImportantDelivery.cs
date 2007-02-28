@@ -37,7 +37,6 @@ using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
-using NHibernate.Mapping.Attributes;
 /* I suggest you declare yourself some namespaces for your quests
  * Like: DOL.GS.Quests.Albion
  *       DOL.GS.Quests.Midgard
@@ -49,51 +48,13 @@ using NHibernate.Mapping.Attributes;
 
 namespace DOL.GS.Quests.Hibernia
 {
-	/* The first thing we do, is to declare the quest requirement
-	 * class linked with the new Quest. To do this, we derive 
-	 * from the abstract class AbstractQuestDescriptor
+	/* The first thing we do, is to declare the class we create
+	 * as Quest. To do this, we derive from the abstract class
+	 * AbstractQuest
+	 * 	 
 	 */
-	public class ImportantDeliveryHibDescriptor : AbstractQuestDescriptor
-	{
-		/* This is the type of the quest class linked with 
-		 * this requirement class, you must override the 
-		 * base method like that
-		 */
-		public override Type LinkedQuestType
-		{
-			get { return typeof(ImportantDeliveryHib); }
-		}
 
-		/* This value is used to retrieves how maximum level needed
-		 * to be able to make this quest. Override it only if you need, 
-		 * the default value is 50
-		 */
-		public override int MaxLevel
-		{
-			get { return 1; }
-		}
-
-		/* This method is used to know if the player is qualified to 
-		 * do the quest. The base method always test his level and
-		 * how many time the quest has been done. Override it only if 
-		 * you want to add a custom test (here we test also the class name)
-		 */
-		public override bool CheckQuestQualification(GamePlayer player)
-		{
-			if (!BaseAddirQuest.CheckPartAccessible(player, typeof(ImportantDeliveryHib)))
-				return false;
-
-			return base.CheckQuestQualification(player);
-		}
-	}
-
-
-	/* The second thing we do, is to declare the class we create
-	 * as Quest. We must make it persistant using attributes, to
-	 * do this, we derive from the abstract class AbstractQuest
-	 */
-	[Subclass(NameType = typeof(ImportantDeliveryHib), ExtendsType = typeof(AbstractQuest))] 
-	public class ImportantDeliveryHib : BaseAddirQuest
+	public class ImportantDelivery : BaseAddirQuest
 	{
 		/// <summary>
 		/// Defines a logger for this class.
@@ -111,6 +72,8 @@ namespace DOL.GS.Quests.Hibernia
 		 */
 
 		protected const string questTitle = "Important Delivery (Hib)";
+		protected const int minimumLevel = 1;
+		protected const int maximumLevel = 1;
 
 		private static GameNPC addrir = null;
 
@@ -119,11 +82,32 @@ namespace DOL.GS.Quests.Hibernia
 		private static GameNPC truichon = null;
 		private static GameNPC freagus = null;
 
-		private static GenericItemTemplate ticketToTirnamBeo = null;
-		private static GenericItemTemplate ticketToArdee = null;
-		private static GenericItemTemplate sackOfSupplies = null;
-		private static GenericItemTemplate crateOfVegetables = null;
-		private static CloakTemplate recruitsCloak = null;
+		private static ItemTemplate ticketToTirnamBeo = null;
+		private static ItemTemplate ticketToArdee = null;
+		private static ItemTemplate sackOfSupplies = null;
+		private static ItemTemplate crateOfVegetables = null;
+		private static ItemTemplate recruitsCloak = null;
+
+
+		/* We need to define the constructors from the base class here, else there might be problems
+		 * when loading this quest...
+		 */
+		public ImportantDelivery() : base()
+		{
+		}
+
+		public ImportantDelivery(GamePlayer questingPlayer) : this(questingPlayer, 1)
+		{
+		}
+
+		public ImportantDelivery(GamePlayer questingPlayer, int step) : base(questingPlayer, step)
+		{
+		}
+
+		public ImportantDelivery(GamePlayer questingPlayer, DBQuest dbQuest) : base(questingPlayer, dbQuest)
+		{
+		}
+
 
 		/* The following method is called automatically when this quest class
 		 * is loaded. You might notice that this method is the same as in standard
@@ -143,6 +127,8 @@ namespace DOL.GS.Quests.Hibernia
 		[ScriptLoadedEvent]
 		public static void ScriptLoaded(DOLEvent e, object sender, EventArgs args)
 		{
+			if (!ServerProperties.Properties.LOAD_QUESTS)
+				return;
 			if (log.IsInfoEnabled)
 				log.Info("Quest \"" + questTitle + "\" initializing ...");
 			/* First thing we do in here is to search for the NPCs inside
@@ -154,8 +140,6 @@ namespace DOL.GS.Quests.Hibernia
 				* on the ground and if a player picks it up, he will get the quest!
 				* Just examples, do anything you like and feel comfortable with :)
 				*/
-			
-			Zone zone = WorldMgr.GetRegion(200).GetZone(200);
 
 			#region defineNPCs
 
@@ -164,17 +148,19 @@ namespace DOL.GS.Quests.Hibernia
 			GameNPC[] npcs = WorldMgr.GetNPCsByName("Aethic", eRealm.Hibernia);
 			if (npcs.Length == 0)
 			{
-				aethic = new GameMob();
+				aethic = new GameNPC();
 				aethic.Model = 361;
 				aethic.Name = "Aethic";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find" + aethic.Name + " , creating ...");
 				aethic.GuildName = "Part of " + questTitle + " Quest";
 				aethic.Realm = (byte) eRealm.Hibernia;
-				aethic.RegionId = 200;
+				aethic.CurrentRegionID = 200;
 				aethic.Size = 49;
 				aethic.Level = 21;
-				aethic.Position = zone.ToRegionPosition(new Point(23761, 45658, 5448));
+				aethic.X = GameLocation.ConvertLocalXToGlobalX(23761, 200);
+				aethic.Y = GameLocation.ConvertLocalYToGlobalY(45658, 200);
+				aethic.Z = 5448;
 				aethic.Heading = 320;
 				//aethic.EquipmentTemplateID = "1707754";
 				//You don't have to store the created mob in the db if you don't want,
@@ -197,10 +183,12 @@ namespace DOL.GS.Quests.Hibernia
 					log.Warn("Could not find " + freagus.Name + ", creating ...");
 				freagus.GuildName = "Stable Master";
 				freagus.Realm = (byte) eRealm.Hibernia;
-				freagus.RegionId = 200;
+				freagus.CurrentRegionID = 200;
 				freagus.Size = 48;
 				freagus.Level = 30;
-				freagus.Position = new Point(341008, 469180, 5200);
+				freagus.X = 341008;
+				freagus.Y = 469180;
+				freagus.Z = 5200;
 				freagus.Heading = 1934;
 				freagus.EquipmentTemplateID = "3800664";
 
@@ -224,10 +212,12 @@ namespace DOL.GS.Quests.Hibernia
 				rumdor.Name = "Rumdor";
 				rumdor.GuildName = "Stable Master";
 				rumdor.Realm = (byte) eRealm.Hibernia;
-				rumdor.RegionId = 200;
+				rumdor.CurrentRegionID = 200;
 				rumdor.Size = 53;
 				rumdor.Level = 33;
-				rumdor.Position = new Point(347175, 491836, 5226);
+				rumdor.X = 347175;
+				rumdor.Y = 491836;
+				rumdor.Z = 5226;
 				rumdor.Heading = 1262;
 				rumdor.EquipmentTemplateID = "3800664";
 
@@ -252,10 +242,12 @@ namespace DOL.GS.Quests.Hibernia
 					log.Warn("Could not find " + truichon.Name + ", creating ...");
 				truichon.GuildName = "Stable Master";
 				truichon.Realm = (byte) eRealm.Hibernia;
-				truichon.RegionId = 1;
+				truichon.CurrentRegionID = 1;
 				truichon.Size = 50;
 				truichon.Level = 33;
-				truichon.Position = new Point(343464, 526708, 5448);
+				truichon.X = 343464;
+				truichon.Y = 526708;
+				truichon.Z = 5448;
 				truichon.Heading = 68;
 				//truichon.EquipmentTemplateID = "5448";
 
@@ -277,10 +269,10 @@ namespace DOL.GS.Quests.Hibernia
 			ticketToArdee = CreateTicketTo("Ardee");
 
 
-			sackOfSupplies = (GenericItemTemplate) GameServer.Database.FindObjectByKey(typeof (GenericItemTemplate), "sack_of_supplies");
+			sackOfSupplies = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "sack_of_supplies");
 			if (sackOfSupplies == null)
 			{
-				sackOfSupplies = new GenericItemTemplate();
+				sackOfSupplies = new ItemTemplate();
 				sackOfSupplies.Name = "Sack of Supplies";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + sackOfSupplies.Name + " , creating it ...");
@@ -288,11 +280,11 @@ namespace DOL.GS.Quests.Hibernia
 				sackOfSupplies.Weight = 10;
 				sackOfSupplies.Model = 488;
 
-				sackOfSupplies.ItemTemplateID = "sack_of_supplies";
+				sackOfSupplies.Object_Type = (int) eObjectType.GenericItem;
 
+				sackOfSupplies.Id_nb = "sack_of_supplies";
+				sackOfSupplies.IsPickable = true;
 				sackOfSupplies.IsDropable = false;
-				sackOfSupplies.IsSaleable = false;
-				sackOfSupplies.IsTradable = false;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -301,10 +293,10 @@ namespace DOL.GS.Quests.Hibernia
 					GameServer.Database.AddNewObject(sackOfSupplies);
 			}
 
-			crateOfVegetables = (GenericItemTemplate) GameServer.Database.FindObjectByKey(typeof (GenericItemTemplate), "crate_of_vegetables");
+			crateOfVegetables = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "crate_of_vegetables");
 			if (crateOfVegetables == null)
 			{
-				crateOfVegetables = new GenericItemTemplate();
+				crateOfVegetables = new ItemTemplate();
 				crateOfVegetables.Name = "Crate of Vegetables";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + crateOfVegetables.Name + " , creating it ...");
@@ -312,11 +304,11 @@ namespace DOL.GS.Quests.Hibernia
 				crateOfVegetables.Weight = 15;
 				crateOfVegetables.Model = 602;
 
-				crateOfVegetables.ItemTemplateID = "crate_of_vegetables";
+				crateOfVegetables.Object_Type = (int) eObjectType.GenericItem;
 
+				crateOfVegetables.Id_nb = "crate_of_vegetables";
+				crateOfVegetables.IsPickable = true;
 				crateOfVegetables.IsDropable = false;
-				crateOfVegetables.IsSaleable = false;
-				crateOfVegetables.IsTradable = false;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -326,31 +318,41 @@ namespace DOL.GS.Quests.Hibernia
 			}
 
 			// item db check
-			recruitsCloak = (CloakTemplate) GameServer.Database.FindObjectByKey(typeof (CloakTemplate), "recruits_cloak_hib");
+			recruitsCloak = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_cloak_hib");
 			if (recruitsCloak == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Recruit's Cloak, creating it ...");
-				recruitsCloak = new CloakTemplate();
+				recruitsCloak = new ItemTemplate();
 				recruitsCloak.Name = "Recruit's Cloak (Hib)";
 				recruitsCloak.Level = 3;
 
 				recruitsCloak.Weight = 3;
 				recruitsCloak.Model = 57;
 
-				recruitsCloak.ItemTemplateID = "recruits_cloak_hib";
-				recruitsCloak.Value = 100;
-
+				recruitsCloak.Object_Type = (int) eObjectType.Cloth;
+				recruitsCloak.Item_Type = (int) eEquipmentItems.CLOAK;
+				recruitsCloak.Id_nb = "recruits_cloak_hib";
+				recruitsCloak.Gold = 0;
+				recruitsCloak.Silver = 1;
+				recruitsCloak.Copper = 0;
+				recruitsCloak.IsPickable = true;
 				recruitsCloak.IsDropable = true;
-				recruitsCloak.IsSaleable = true;
-				recruitsCloak.IsTradable = true;
-
 				recruitsCloak.Color = 69;
 
 				recruitsCloak.Bonus = 1; // default bonus
 
-				recruitsCloak.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 1));
-				recruitsCloak.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Slash, 1));
+				recruitsCloak.Bonus1 = 1;
+				recruitsCloak.Bonus1Type = (int) eStat.CON;
+
+				recruitsCloak.Bonus2 = 1;
+				recruitsCloak.Bonus2Type = (int) eResist.Slash;
+
+				recruitsCloak.Quality = 100;
+				recruitsCloak.Condition = 1000;
+				recruitsCloak.MaxCondition = 1000;
+				recruitsCloak.Durability = 1000;
+				recruitsCloak.MaxDurability = 1000;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -368,6 +370,9 @@ namespace DOL.GS.Quests.Hibernia
 			* method. This means, the "TalkToXXX" method is called whenever
 			* a player right clicks on him or when he whispers to him.
 			*/
+			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
 			//We want to be notified whenever a player enters the world            
 			GameEventMgr.AddHandler(addrir, GameLivingEvent.Interact, new DOLEventHandler(TalkToAddrir));
 			GameEventMgr.AddHandler(addrir, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToAddrir));
@@ -379,7 +384,7 @@ namespace DOL.GS.Quests.Hibernia
 			GameEventMgr.AddHandler(aethic, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToAethic));
 
 			/* Now we bring to addrir the possibility to give this quest to players */
-			QuestMgr.AddQuestDescriptor(addrir, typeof(ImportantDeliveryHibDescriptor));
+			addrir.AddQuestToGive(typeof (ImportantDelivery));
 
 			if (log.IsInfoEnabled)
 				log.Info("Quest \"" + questTitle + "\" initialized");
@@ -406,6 +411,9 @@ namespace DOL.GS.Quests.Hibernia
 			 * AddHandler, we call RemoveHandler, the parameters stay the same
 			 */
 
+			GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
 			GameEventMgr.RemoveHandler(addrir, GameLivingEvent.Interact, new DOLEventHandler(TalkToAddrir));
 			GameEventMgr.RemoveHandler(addrir, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToAddrir));
 
@@ -416,7 +424,7 @@ namespace DOL.GS.Quests.Hibernia
 			GameEventMgr.RemoveHandler(aethic, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToAethic));
 
 			/* Now we remove to addrir the possibility to give this quest to players */
-			QuestMgr.RemoveQuestDescriptor(addrir, typeof(ImportantDeliveryHibDescriptor));
+			addrir.RemoveQuestToGive(typeof (ImportantDelivery));
 		}
 
 		/* This is the method we declared as callback for the hooks we set to
@@ -432,11 +440,11 @@ namespace DOL.GS.Quests.Hibernia
 			if (player == null)
 				return;
 
-			if (QuestMgr.CanGiveQuest(typeof(ImportantDeliveryHib), player, addrir) <= 0)
+			if(addrir.CanGiveQuest(typeof (ImportantDelivery), player)  <= 0)
 				return;
 
 			//We also check if the player is already doing the quest
-			ImportantDeliveryHib quest = player.IsDoingQuest(typeof (ImportantDeliveryHib)) as ImportantDeliveryHib;
+			ImportantDelivery quest = player.IsDoingQuest(typeof (ImportantDelivery)) as ImportantDelivery;
 
 			addrir.TurnTo(player);
 			//Did the player rightclick on NPC?
@@ -480,7 +488,7 @@ namespace DOL.GS.Quests.Hibernia
 							break;
 							//If the player offered his "help", we send the quest dialog now!
 						case "continue your training":
-							player.Out.SendCustomDialog("Are you ready to begin your training?", new CustomDialogResponse(CheckPlayerAcceptQuest));
+							player.Out.SendQuestSubscribeCommand(addrir, QuestMgr.GetIDForQuestType(typeof(ImportantDelivery)), "Are you ready to begin your training?");
 							break;
 					}
 				}
@@ -506,10 +514,13 @@ namespace DOL.GS.Quests.Hibernia
 							addrir.SayTo(player, "All you need to do is take this horse ticket to Rumdor here in Mag Mell, by the horse cart. Hand him the ticket and you'll be on your way to Tir na mBeo. Be swift my young recruit. Time is of the essence.");
 							if (quest.Step == 2)
 							{
-								player.ReceiveItem(addrir, ticketToTirnamBeo.CreateInstance());
-								player.ReceiveItem(addrir, sackOfSupplies.CreateInstance());
+								GiveItem(addrir, player, ticketToTirnamBeo);
+								GiveItem(addrir, player, sackOfSupplies);
 								quest.Step = 3;
 							}
+							break;
+						case "abort":
+							player.Out.SendCustomDialog("Do you really want to abort this quest, \nall items gained during quest will be lost?", new CustomDialogResponse(CheckPlayerAbortQuest));
 							break;
 					}
 				}
@@ -524,11 +535,11 @@ namespace DOL.GS.Quests.Hibernia
 			if (player == null)
 				return;
 
-			if (QuestMgr.CanGiveQuest(typeof(ImportantDeliveryHib), player, addrir) <= 0)
+			if(addrir.CanGiveQuest(typeof (ImportantDelivery), player)  <= 0)
 				return;
 
 			//We also check if the player is already doing the quest
-			ImportantDeliveryHib quest = player.IsDoingQuest(typeof (ImportantDeliveryHib)) as ImportantDeliveryHib;
+			ImportantDelivery quest = player.IsDoingQuest(typeof (ImportantDelivery)) as ImportantDelivery;
 
 			aethic.TurnTo(player);
 			//Did the player rightclick on NPC?
@@ -566,8 +577,8 @@ namespace DOL.GS.Quests.Hibernia
 							aethic.SayTo(player, "I need for you to deliver this crate of vegetables to Freagus in Ardee. I'm sure you can do the job. Take this horse ticket and give it to Stable Master Truichon. Hurry now, before the vegetables rot.");
 							if (quest.Step == 5)
 							{
-								player.ReceiveItem(aethic, ticketToArdee.CreateInstance());
-								player.ReceiveItem(aethic, crateOfVegetables.CreateInstance());
+								GiveItem(aethic, player, ticketToArdee);
+								GiveItem(aethic, player, crateOfVegetables);
 
 								quest.Step = 6;
 							}
@@ -585,11 +596,11 @@ namespace DOL.GS.Quests.Hibernia
 			if (player == null)
 				return;
 
-			if (QuestMgr.CanGiveQuest(typeof(ImportantDeliveryHib), player, addrir) <= 0)
+			if(addrir.CanGiveQuest(typeof (ImportantDelivery), player)  <= 0)
 				return;
 
 			//We also check if the player is already doing the quest
-			ImportantDeliveryHib quest = player.IsDoingQuest(typeof (ImportantDeliveryHib)) as ImportantDeliveryHib;
+			ImportantDelivery quest = player.IsDoingQuest(typeof (ImportantDelivery)) as ImportantDelivery;
 
 			freagus.TurnTo(player);
 			//Did the player rightclick on NPC?
@@ -633,6 +644,66 @@ namespace DOL.GS.Quests.Hibernia
 			}
 		}
 
+		/// <summary>
+		/// This method checks if a player qualifies for this quest
+		/// </summary>
+		/// <returns>true if qualified, false if not</returns>
+		public override bool CheckQuestQualification(GamePlayer player)
+		{
+			// if the player is already doing the quest his level is no longer of relevance
+			if (player.IsDoingQuest(typeof (ImportantDelivery)) != null)
+				return true;
+
+			// This checks below are only performed is player isn't doing quest already
+
+			if (!CheckPartAccessible(player, typeof (ImportantDelivery)))
+				return false;
+
+			if (player.Level < minimumLevel || player.Level > maximumLevel)
+				return false;
+
+			return true;
+		}
+
+
+		/* This is our callback hook that will be called when the player clicks
+		 * on any button in the quest offer dialog. We check if he accepts or
+		 * declines here...
+		 */
+
+		private static void CheckPlayerAbortQuest(GamePlayer player, byte response)
+		{
+			ImportantDelivery quest = player.IsDoingQuest(typeof (ImportantDelivery)) as ImportantDelivery;
+
+			if (quest == null)
+				return;
+
+			if (response == 0x00)
+			{
+				SendSystemMessage(player, "Good, no go out there and finish your work!");
+			}
+			else
+			{
+				SendSystemMessage(player, "Aborting Quest " + questTitle + ". You can start over again if you want.");
+				quest.AbortQuest();
+			}
+		}
+
+		protected static void SubscribeQuest(DOLEvent e, object sender, EventArgs args)
+		{
+			QuestEventArgs qargs = args as QuestEventArgs;
+			if (qargs == null)
+				return;
+
+			if (qargs.QuestID != QuestMgr.GetIDForQuestType(typeof(ImportantDelivery)))
+				return;
+
+			if (e == GamePlayerEvent.AcceptQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x01);
+			else if (e == GamePlayerEvent.DeclineQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x00);
+		}
+
 		/* This is our callback hook that will be called when the player clicks
 		 * on any button in the quest offer dialog. We check if he accepts or
 		 * declines here...
@@ -642,10 +713,10 @@ namespace DOL.GS.Quests.Hibernia
 		{
 			//We recheck the qualification, because we don't talk to players
 			//who are not doing the quest
-			if (QuestMgr.CanGiveQuest(typeof(ImportantDeliveryHib), player, addrir) <= 0)
+			if(addrir.CanGiveQuest(typeof (ImportantDelivery), player)  <= 0)
 				return;
 
-			ImportantDeliveryHib quest = player.IsDoingQuest(typeof (ImportantDeliveryHib)) as ImportantDeliveryHib;
+			ImportantDelivery quest = player.IsDoingQuest(typeof (ImportantDelivery)) as ImportantDelivery;
 
 			if (quest != null)
 				return;
@@ -657,7 +728,7 @@ namespace DOL.GS.Quests.Hibernia
 			else
 			{
 				//Check if we can add the quest!
-				if (!QuestMgr.GiveQuestToPlayer(typeof(ImportantDeliveryHib), player, addrir))
+				if (!addrir.GiveQuest(typeof (ImportantDelivery), player, 1))
 					return;
 
 				addrir.SayTo(player, "Congratulations! You are now one step closer to understanding the world of Camelot! During this phase of your training, I will be sending you to different parts of the realm to deliver much needed supplies to various citizens. You will need to check your QUEST JOURNAL from time to time to see what you need to accomplish next on your quest. You can access the quest journal from the COMMAND button on your [character sheet].");
@@ -703,9 +774,9 @@ namespace DOL.GS.Quests.Hibernia
 						return "[Step #7] Hand Stable Master Freagus the Crate of Vegetables.";
 					case 8:
 						return "[Step #8] Listen to Stable Master Freagus some more. If he stops speaking with you, ask him if he has a [reward] for your hard work and service to Hibernia.";
-					default:
-						return "[Step #" + Step + "] No Description entered for this step!";
+
 				}
+				return base.Description;
 			}
 		}
 
@@ -713,13 +784,13 @@ namespace DOL.GS.Quests.Hibernia
 		{
 			GamePlayer player = sender as GamePlayer;
 
-			if (player==null || player.IsDoingQuest(typeof (ImportantDeliveryHib)) == null)
+			if (player==null || player.IsDoingQuest(typeof (ImportantDelivery)) == null)
 				return;
 
 			if (Step == 3 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == rumdor.Name && gArgs.Item.Name == ticketToTirnamBeo.Name)
+				if (gArgs.Target.Name == rumdor.Name && gArgs.Item.Id_nb == ticketToTirnamBeo.Id_nb)
 				{
 					rumdor.SayTo(player, "Good day, Lirone. If you are interested in renting a horse, purchase a ticket, then hand it to me. Have a safe trip!");
 					Step = 4;
@@ -730,10 +801,10 @@ namespace DOL.GS.Quests.Hibernia
 			if (Step >= 3 && Step <= 4 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == aethic.Name && gArgs.Item.Name == sackOfSupplies.Name)
+				if (gArgs.Target.Name == aethic.Name && gArgs.Item.Id_nb == sackOfSupplies.Id_nb)
 				{
 					aethic.SayTo(player, "Ah! The supplies I have been waiting for. Thank you Lirone. These will help us tremendously in the coming weeks. I have another [errand] if you are up for it.");
-					RemoveItemFromPlayer(aethic, sackOfSupplies.CreateInstance());
+					RemoveItem(aethic, player, sackOfSupplies);
 					Step = 5;
 					return;
 				}
@@ -742,7 +813,7 @@ namespace DOL.GS.Quests.Hibernia
 			if (Step == 6 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == truichon.Name && gArgs.Item.Name == ticketToArdee.Name)
+				if (gArgs.Target.Name == truichon.Name && gArgs.Item.Id_nb == ticketToArdee.Id_nb)
 				{
 					Step = 7;
 					return;
@@ -752,14 +823,25 @@ namespace DOL.GS.Quests.Hibernia
 			if (Step >= 6 && Step <= 7 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == freagus.Name && gArgs.Item.Name == crateOfVegetables.Name)
+				if (gArgs.Target.Name == freagus.Name && gArgs.Item.Id_nb == crateOfVegetables.Id_nb)
 				{
 					freagus.SayTo(player, "Ah, the vegetables I've been waiting for from Aethic. Thank you for delivering them to me. I couldn't find anyone to look after my stable so I could go and get them. Let me see, I think a [reward] is in order for your hard work.");
-					RemoveItemFromPlayer(freagus, crateOfVegetables.CreateInstance());
+					RemoveItem(freagus, player, crateOfVegetables);
 					Step = 8;
 					return;
 				}
 			}
+
+		}
+
+		public override void AbortQuest()
+		{
+			base.AbortQuest(); //Defined in Quest, changes the state, stores in DB etc ...
+
+			RemoveItem(m_questPlayer, ticketToArdee, false);
+			RemoveItem(m_questPlayer, ticketToTirnamBeo, false);
+			RemoveItem(m_questPlayer, sackOfSupplies, false);
+			RemoveItem(m_questPlayer, crateOfVegetables, false);
 
 		}
 
@@ -768,7 +850,7 @@ namespace DOL.GS.Quests.Hibernia
 			base.FinishQuest(); //Defined in Quest, changes the state, stores in DB etc ...
 
 			//Give reward to player here ...            
-			GiveItemToPlayer(freagus, recruitsCloak.CreateInstance());
+			GiveItem(freagus, m_questPlayer, recruitsCloak);
 
 			m_questPlayer.GainExperience(12, 0, 0, true);
 			m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 1, Util.Random(50)), "You recieve {0} as a reward.");

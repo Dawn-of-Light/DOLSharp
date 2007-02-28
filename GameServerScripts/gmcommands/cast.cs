@@ -17,7 +17,6 @@
  *
  */
 using System;
-using DOL.Database;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Scripts
@@ -46,7 +45,7 @@ namespace DOL.GS.Scripts
 					target = client.Player;
 				else if (obj is GameLiving)
 					target = (GameLiving) obj;
-				foreach(GamePlayer plr in client.Player.GetInRadius(typeof(GamePlayer), WorldMgr.VISIBILITY_DISTANCE))
+				foreach(GamePlayer plr in client.Player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 					plr.Out.SendSpellEffectAnimation(client.Player, target, spellID, 0, false, 1);
 			}
 			catch

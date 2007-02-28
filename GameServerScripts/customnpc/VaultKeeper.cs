@@ -18,16 +18,22 @@
  */
 //							Written by Doulbousiouf (01/11/2004)					//
 using System.Collections;
-using NHibernate.Mapping.Attributes;
 
 namespace DOL.GS.Scripts
 {
 	/// <summary>
 	/// Represents an in-game VaultKeeper NPC
 	/// </summary>
-	[Subclass(NameType=typeof(GameVaultKeeper), ExtendsType=typeof(GameMob))] 
-	public class GameVaultKeeper : GameMob
+	[NPCGuildScript("Vault Keeper")]
+	public class GameVaultKeeper : GameNPC
 	{
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		public GameVaultKeeper() : base()
+		{
+		}
+
 		#region Examine Message
 
 		/// <summary>
@@ -38,6 +44,7 @@ namespace DOL.GS.Scripts
 		public override IList GetExamineMessages(GamePlayer player)
 		{
 			IList list = new ArrayList();
+			//IList list = base.GetExamineMessages(player);
 			list.Add("You examine " + GetName(0, false) + ".  " + GetPronoun(0, true) + " is " + GetAggroLevelString(player, false) + " and vaultkeeper.");
 			list.Add("[Right click to display a vault window]");
 			return list;
@@ -54,17 +61,19 @@ namespace DOL.GS.Scripts
 		/// <returns>True if succeeded</returns>
 		public override bool Interact(GamePlayer player)
 		{
-			if (!base.Interact(player)) return false;
-
+			if (!base.Interact(player))
+				return false;
 			TurnTo(player, 10000);
-			
-			ArrayList slotToUpdate = new ArrayList();
-			for(int i = (int)eInventorySlot.FirstVault ; i <= (int)eInventorySlot.LastVault ; i++)
+			// Affiche tous les objets dans le coffre
+			ICollection items = player.Inventory.GetItemRange(eInventorySlot.FirstVault, eInventorySlot.LastVault);
+			if (items.Count == 0)
 			{
-				if(player.Inventory.GetItem((eInventorySlot)i) != null) slotToUpdate.Add(i);
+				player.Out.SendInventoryItemsUpdate(0x03, null);
 			}
-			player.Out.SendInventorySlotsUpdate(0x03, slotToUpdate);
-			
+			else
+			{
+				player.Out.SendInventoryItemsUpdate(0x03, items);
+			}
 			return true;
 		}
 

@@ -18,7 +18,6 @@
  */
 using System;
 using System.Collections;
-using DOL.GS.Database;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Spells
@@ -37,7 +36,7 @@ namespace DOL.GS.Spells
 		/// <summary>
 		/// Execute lifetransfer spell
 		/// </summary>
-		public override void StartSpell(GameLivingBase target)
+		public override void StartSpell(GameLiving target)
 		{
 			IList targets = SelectTargets(target);
 			if (targets.Count <= 0) return;
@@ -47,44 +46,41 @@ namespace DOL.GS.Spells
 			double spellValue = m_spell.Value;
 			GamePlayer casterPlayer = m_caster as GamePlayer;
 
-			transferHeal = (int)(casterPlayer.MaxHealth * spellValue * 0.0125);
+			//transferHeal = (int)(spellValue * 1.25);
+			transferHeal = (int)(casterPlayer.MaxHealth / 100 * spellValue); 
 
-			///Needed to prevent divide by zero error
+			//Needed to prevent divide by zero error
 			if (transferHeal <= 0)
-			{
 				transferHeal = 0; 
-			}
 			else
 			{
-				///Remaining health is used if caster does not have enough health, leaving caster at 1 hitpoint
+				//Remaining health is used if caster does not have enough health, leaving caster at 1 hitpoint
 				if ( (transferHeal >> 1) >= casterPlayer.Health )
 					transferHeal = ( (casterPlayer.Health - 1) << 1);
 			}
 
-			foreach(GameLiving spellTarget in targets)
-			{
-				GameLiving healTarget = spellTarget as GameLiving;
-				if(healTarget == null)
-				{
-					MessageToCaster("The spell fails to affect "+ spellTarget.GetName(0, false) +"!", eChatType.CT_SpellResisted);
-					continue;
-				}
 
-				if (healTarget.IsDiseased)
+
+			foreach(GameLiving healTarget in targets)
+			{
+				if (target.IsDiseased)
 				{
 					MessageToCaster("Your target is diseased!", eChatType.CT_SpellResisted);
 					healed |= HealTarget(healTarget, ( transferHeal >>= 1 ));	
 				}
-				else
-				{
-					healed |= HealTarget(healTarget, transferHeal);
-				}
+
+				else healed |= HealTarget(healTarget, transferHeal);
 			}
 
 			if (!healed && Spell.Target == "Realm")
-				m_caster.ChangeMana(null, -CalculateNeededPower(target) >> 1);// only 1/2 power if no heal
+			{
+				m_caster.Mana -= CalculateNeededPower(target) >> 1;	// only 1/2 power if no heal
+			}
 			else
-				m_caster.ChangeMana(null, -CalculateNeededPower(target));
+			{
+				m_caster.Mana -= CalculateNeededPower(target);
+				m_caster.Health -= transferHeal >> 1;
+			}
 
 			// send animation for non pulsing spells only
 			if (Spell.Pulse == 0)
@@ -92,10 +88,8 @@ namespace DOL.GS.Spells
 				if (healed)
 				{
 					// send animation on all targets if healed
-					foreach(GameLivingBase healTarget in targets)
-					{
-						if(healTarget is GameLiving) SendEffectAnimation((GameLiving)healTarget, 0, false, 1);
-					}
+					foreach(GameLiving healTarget in targets)
+						SendEffectAnimation(healTarget, 0, false, 1);
 				}
 				else
 				{
@@ -113,9 +107,9 @@ namespace DOL.GS.Spells
 		/// <returns>true if heal was done</returns>
 		public virtual bool HealTarget(GameLiving target, int amount)
 		{
-			if (target==null || target.ObjectState!=eObjectState.Active) return false;
+			if (target==null || target.ObjectState!=GameLiving.eObjectState.Active) return false;
 
-			if (!target.Alive) 
+			if (!target.IsAlive) 
 			{
 				MessageToCaster(target.GetName(0, true) + " is dead!", eChatType.CT_SpellResisted);
 				return false;
@@ -127,14 +121,14 @@ namespace DOL.GS.Spells
 				return false;
 			}
 			
-			if (amount <= 0) ///Player does not have enough health to transfer
+			if (amount <= 0) //Player does not have enough health to transfer
 			{
 				MessageToCaster("You do not have enough health to transfer.", eChatType.CT_SpellResisted);
 				return false;  
 			}
 
 
-			int heal = target.ChangeHealth(Caster, amount, true);			
+			int heal = target.ChangeHealth(Caster, GameLiving.eHealthChangeType.Spell, amount);			
 
 			if (heal == 0) 
 			{

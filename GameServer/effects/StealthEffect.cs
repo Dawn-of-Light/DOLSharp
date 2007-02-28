@@ -25,7 +25,7 @@ namespace DOL.GS.Effects
 	/// <summary>
 	/// The helper class for the stealth ability
 	/// </summary>
-	public class StealthEffect : IGameEffect
+	public class StealthEffect : StaticEffect, IGameEffect
 	{
 		/// <summary>
 		/// The owner of the effect
@@ -58,6 +58,12 @@ namespace DOL.GS.Effects
 		/// </summary>
 		public void Stop()
 		{
+			if (m_player.HasAbility(Abilities.Camouflage))
+			{
+				IGameEffect camouflage = m_player.EffectList.GetOfType(typeof(CamouflageEffect));
+				if (camouflage!=null)
+					camouflage.Cancel(false);
+			}
 			m_player.EffectList.Remove(this);
 		}
 
