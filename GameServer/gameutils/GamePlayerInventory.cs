@@ -990,6 +990,10 @@ namespace DOL.GS
 					{
 						canApply = true;
 					}
+					if (objectToDye.Object_Type == 41 && objectToDye.Item_Type == 8) // horse barding
+					{
+						canApply = true;
+					} 
 
 					break;
 				case 494: //Dye pack
@@ -1002,7 +1006,8 @@ namespace DOL.GS
 						|| (objectToDye.Object_Type == 35) // Chain
 						|| (objectToDye.Object_Type == 36) // Plate
 						|| (objectToDye.Object_Type == 37) // Reinforced
-						|| (objectToDye.Object_Type == 38)) // Scale
+						|| (objectToDye.Object_Type == 38) // Scale
+						|| ((objectToDye.Object_Type == 41) && (objectToDye.Item_Type == 7))) // horse saddle 
 						canApply = true;
 					break;
 				case 538: //Dye pot

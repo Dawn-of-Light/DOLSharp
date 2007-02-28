@@ -31,8 +31,17 @@ namespace DOL.GS.Quests
 			{
 				case eCaptureType.Tower:
 					{
-						foreach (AbstractGameKeep keep in KeepMgr.getNFKeeps())
+						IList keeps;
+						if (owner is PlayerGroup)
+							keeps = KeepMgr.GetKeepsOfRegion((owner as PlayerGroup).Leader.CurrentRegionID);
+						else if (owner is GamePlayer)
+							keeps = KeepMgr.GetKeepsOfRegion((owner as GamePlayer).CurrentRegionID);
+						else keeps = new ArrayList();
+
+						foreach (AbstractGameKeep keep in keeps)
 						{
+							if (keep.IsPortalKeep)
+								continue;
 							if (keep is GameKeepTower && keep.Realm != realm)
 								list.Add(keep);
 						}
@@ -40,8 +49,17 @@ namespace DOL.GS.Quests
 					}
 				case eCaptureType.Keep:
 					{
-						foreach (AbstractGameKeep keep in KeepMgr.getNFKeeps())
+						IList keeps;
+						if (owner is PlayerGroup)
+							keeps = KeepMgr.GetKeepsOfRegion((owner as PlayerGroup).Leader.CurrentRegionID);
+						else if (owner is GamePlayer)
+							keeps = KeepMgr.GetKeepsOfRegion((owner as GamePlayer).CurrentRegionID);
+						else keeps = new ArrayList();
+
+						foreach (AbstractGameKeep keep in keeps)
 						{
+							if (keep.IsPortalKeep)
+								continue;
 							if (keep is GameKeep && keep.Realm != realm && keep.Level < 5)
 								list.Add(keep);
 						}
