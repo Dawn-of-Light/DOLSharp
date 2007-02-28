@@ -27,7 +27,6 @@
 ******************/
 
 using System;
-using DOL.Database;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Scripts
@@ -61,7 +60,7 @@ namespace DOL.GS.Scripts
 			// trying to convert number
 			try
 			{
-				thrownMax = Convert.ToInt32(args[1]);
+				thrownMax = System.Convert.ToInt32(args[1]);
 			}
 			catch (OverflowException)
 			{
@@ -90,7 +89,7 @@ namespace DOL.GS.Scripts
 			EmoteMessage(client, selfMessage);
 
 			// sending result & playername to all players in range
-			foreach (GamePlayer player in client.Player.GetInRadius(typeof(GamePlayer), RESULT_RANGE))
+			foreach (GamePlayer player in client.Player.GetPlayersInRadius(RESULT_RANGE))
 				if (client.Player != player) // client gets unique message
 					EmoteMessage(player, otherMessage); // sending msg to other players
 

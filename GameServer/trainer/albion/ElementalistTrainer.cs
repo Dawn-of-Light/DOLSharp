@@ -17,88 +17,22 @@
  *
  */
 using System;
-using System.Collections;
-using System.Reflection;
-using DOL.Database;
-using DOL.Events;
 using DOL.GS.PacketHandler;
-using DOL.GS.Database;
-using log4net;
+using DOL.Database;
 
 namespace DOL.GS.Trainer
 {
 	/// <summary>
 	/// Elementalist Trainer
 	/// </summary>	
-	public class ElementalistTrainer : GameStandardTrainer
+	[NPCGuildScript("Elementalist Trainer", eRealm.Albion)]		// this attribute instructs DOL to use this script for all "Elementalist Trainer" NPC's in Albion (multiple guilds are possible for one script)
+	public class ElementalistTrainer : GameTrainer
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		public const string PRACTICE_WEAPON_ID = "trimmed_branch";
+		
 
-		/// <summary>
-		/// This function is called at the server startup
-		/// </summary>	
-		[GameServerStartedEvent]
-		public static void OnServerStartup(DOLEvent e, object sender, EventArgs args)
+		public ElementalistTrainer() : base()
 		{
-			#region Trimmed branch
-
-			StaffTemplate trimmed_branch_template = new StaffTemplate();
-			trimmed_branch_template.Name = "trimmed branch";
-			trimmed_branch_template.Level = 0;
-			trimmed_branch_template.Durability = 100;
-			trimmed_branch_template.Condition = 100;
-			trimmed_branch_template.Quality = 90;
-			trimmed_branch_template.Bonus = 0;
-			trimmed_branch_template.DamagePerSecond = 12;
-			trimmed_branch_template.Speed = 2700;
-			trimmed_branch_template.Weight = 12;
-			trimmed_branch_template.Model = 19;
-			trimmed_branch_template.Realm = eRealm.Albion;
-			trimmed_branch_template.IsDropable = true; 
-			trimmed_branch_template.IsTradable = false; 
-			trimmed_branch_template.IsSaleable = false;
-			trimmed_branch_template.MaterialLevel = eMaterialLevel.Bronze;
-			
-			if(!allStartupItems.Contains(trimmed_branch_template))
-			{
-				allStartupItems.Add(trimmed_branch_template);
-			
-				if (log.IsDebugEnabled)
-					log.Debug("Adding " + trimmed_branch_template.Name + " to ElementalistTrainer gifts.");
-			}
-			#endregion
-		}
-
-		/// <summary>
-		/// This hash constrain all item template the trainer can give
-		/// </summary>	
-		protected static IList allStartupItems = new ArrayList();
-
-		/// <summary>
-		/// Gets all trainer gifts
-		/// </summary>
-		public override IList TrainerGifts
-		{
-			get { return allStartupItems; }
-		}
-
-		/// <summary>
-		/// Gets trainer classname
-		/// </summary>
-		public override string TrainerClassName
-		{
-			get { return "Elementalist"; }
-		}
-
-		/// <summary>
-		/// Gets trained class
-		/// </summary>
-		public override eCharacterClass TrainedClass
-		{
-			get { return eCharacterClass.Elementalist; }
 		}
 
 		/// <summary>
@@ -109,9 +43,27 @@ namespace DOL.GS.Trainer
  		public override bool Interact(GamePlayer player)
  		{		
  			if (!base.Interact(player)) return false;
+								
+			// check if class matches				
+			if (player.CharacterClass.ID == (int) eCharacterClass.Elementalist) {
 
-			player.Out.SendMessage(this.Name + " says, \"[Theurgist] or [Wizard]?\"", eChatType.CT_Say, eChatLoc.CL_PopupWindow);												
+				// popup the training window
+				player.Out.SendTrainerWindow();
+							
+				// player can be promoted
+				if (player.Level>=5) {
+					player.Out.SendMessage(this.Name + " says, \"You must now seek your training elsewhere. Which path would you like to follow? [Theurgist] or [Wizard]?\"", eChatType.CT_Say, eChatLoc.CL_PopupWindow);												
+				} else {
+					//player.Out.SendMessage(this.Name + " says, \"Select what you like to train.\"", eChatType.CT_Say, eChatLoc.CL_PopupWindow);												
+				}
 
+				// ask for basic equipment if player doesnt own it
+				if (player.Inventory.GetFirstItemByID(PRACTICE_WEAPON_ID, eInventorySlot.Min_Inv, eInventorySlot.Max_Inv) == null) {
+					player.Out.SendMessage(this.Name + " says, \"Do you require a [practice weapon]?\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);																																			
+				}
+			} else {
+				player.Out.SendMessage(this.Name + " says, \"You must seek elsewhere for your training.\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);							
+			}
 			return true;
 		}
 
@@ -141,6 +93,12 @@ namespace DOL.GS.Trainer
 				}
 				else{
 					player.Out.SendMessage(this.Name + " says, \"The path of a Wizard is not available to your race. Please choose another.\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
+				}
+				return true;
+			case "practice weapon":
+				if (player.Inventory.GetFirstItemByID(PRACTICE_WEAPON_ID, eInventorySlot.Min_Inv, eInventorySlot.Max_Inv) == null)
+				{
+					player.ReceiveItem(this,PRACTICE_WEAPON_ID);
 				}
 				return true;
 			}

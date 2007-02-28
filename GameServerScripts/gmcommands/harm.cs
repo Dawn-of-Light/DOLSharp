@@ -17,7 +17,6 @@
  *
  */
 using System;
-using DOL.Database;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Scripts
@@ -33,7 +32,7 @@ namespace DOL.GS.Scripts
 		{
 			if (args.Length == 1)
 			{
-				client.Out.SendMessage("Usage: /harm <ammount>",
+				client.Out.SendMessage("Usage: /harm <amount>",
 				                       eChatType.CT_System,
 				                       eChatLoc.CL_SystemWindow);
 				return 1;
@@ -56,7 +55,7 @@ namespace DOL.GS.Scripts
 			}
 			catch (Exception)
 			{
-				client.Out.SendMessage("Usage: /harm <ammount>",
+				client.Out.SendMessage("Usage: /harm <amount>",
 				                       eChatType.CT_System,
 				                       eChatLoc.CL_SystemWindow);
 			}

@@ -17,9 +17,10 @@
  *
  */
 using System;
+
+using DOL.Database;
 using DOL.AI.Brain;
 using DOL.GS;
-using DOL.GS.Database;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 
@@ -38,9 +39,9 @@ namespace DOL.GS.Spells
 		/// <summary>
 		/// called after normal spell cast is completed and effect has to be started
 		/// </summary>
-		public override void FinishSpellCast(GameLivingBase target)
+		public override void FinishSpellCast(GameLiving target)
 		{
-			m_caster.ChangeMana(null, -CalculateNeededPower(target));
+			m_caster.Mana -= CalculateNeededPower(target);
 			base.FinishSpellCast(target);
 		}
 
@@ -53,8 +54,8 @@ namespace DOL.GS.Spells
 		{
 			base.OnEffectStart(effect);
 
-			Caster.LastAttackTick = Caster.Region.Time;
-			effect.Owner.LastAttackedByEnemyTick = effect.Owner.Region.Time;
+			Caster.LastAttackTick = Caster.CurrentRegion.Time;
+			effect.Owner.LastAttackedByEnemyTick = effect.Owner.CurrentRegion.Time;
 
 			effect.Owner.Disease(true);
 			effect.Owner.BuffBonusMultCategory1.Set((int)eProperty.MaxSpeed, this, 1.0 - 0.15);
@@ -126,7 +127,7 @@ namespace DOL.GS.Spells
 			GamePlayer player = effect.Owner as GamePlayer;
 			if (player != null)
 			{
-				if (!player.Mez && !player.Stun)
+				if (!player.IsMezzed && !player.IsStunned)
 					player.Out.SendUpdateMaxSpeed();
 				player.Out.SendCharStatsUpdate();
 				player.Out.SendUpdateWeaponAndArmorStats();
@@ -139,6 +140,30 @@ namespace DOL.GS.Spells
 				if (npc.CurrentSpeed > maxSpeed)
 					npc.CurrentSpeed = maxSpeed;
 			}
+		}
+
+		public override PlayerXEffect getSavedEffect(GameSpellEffect e)
+		{
+			if (e is PulsingSpellEffect || Spell.Pulse != 0 || Spell.Concentration != 0 || e.RemainingTime < 1)
+				return null;
+			PlayerXEffect eff = new PlayerXEffect();
+			eff.Var1 = Spell.ID;
+			eff.Duration = e.RemainingTime;
+			eff.IsHandler = true;
+			eff.SpellLine = SpellLine.KeyName;
+			return eff;
+		}
+
+		public override void OnEffectRestored(GameSpellEffect effect, int[] vars)
+		{
+			effect.Owner.Disease(true);
+			effect.Owner.BuffBonusMultCategory1.Set((int)eProperty.MaxSpeed, this, 1.0 - 0.15);
+			effect.Owner.BuffBonusMultCategory1.Set((int)eProperty.Strength, this, 1.0 - 0.075);
+		}
+
+		public override int OnRestoredEffectExpires(GameSpellEffect effect, int[] vars, bool noMessages)
+		{
+			return this.OnEffectExpires(effect, noMessages);
 		}
 
 		// constructor

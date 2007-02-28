@@ -18,7 +18,7 @@
  */
 using System;
 
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS
@@ -27,75 +27,54 @@ namespace DOL.GS
 	/// This class holds all information that
 	/// EVERY object in the game world needs!
 	/// </summary>
-	public class GameGravestone : GameObject
+	public class GameGravestone : GameStaticItem
 	{
 		/// <summary>
 		/// how much xp are stored in this gravestone
 		/// </summary>
 		private long m_xpValue;
-
 		/// <summary>
-		/// get / set the xpvalue of this gravestone
+		/// Constructs a new empty Gravestone
+		/// </summary>
+		public GameGravestone(GamePlayer player, long xpValue):base()
+		{
+			//Objects should NOT be saved back to the DB
+			//as standard! We want our mobs/items etc. at
+			//the same startingspots when we restart!
+			m_saveInDB = false;
+			m_Name = player.Name+"'s Grave";
+			m_Heading = player.Heading;
+			m_X=player.X;
+			m_Y=player.Y;
+			m_Z=player.Z;
+			CurrentRegionID = player.CurrentRegionID;
+			m_Level = 0;
+
+			if(player.Realm==(byte)eRealm.Albion)
+				m_Model=145; //Albion Gravestone
+			else if(player.Realm==(byte)eRealm.Midgard)
+				m_Model=636; //Midgard Gravestone
+			else if(player.Realm==(byte)eRealm.Hibernia)
+				m_Model=637; //Hibernia Gravestone
+
+			m_xpValue = xpValue;
+
+			m_InternalID = player.InternalID;	// gravestones use the player unique id for themself
+			ObjectState=eObjectState.Inactive;
+		}
+		/// <summary>
+		/// returns the xpvalue of this gravestone
 		/// </summary>
 		public long XPValue
 		{
-			get { return m_xpValue; }
-			set { m_xpValue = value; }
-		}
-
-		/// <summary>
-		/// store the db id of the linked player
-		/// </summary>
-		private int m_playerPersistantID;
-
-		/// <summary>
-		/// rget / set the db id of the linked player
-		/// </summary>
-		public int PlayerPersistantID
-		{
-			get { return m_playerPersistantID; }
-			set { m_playerPersistantID = value; }
-		}
-
-		/// <summary>
-		/// Broadcasts the object to all players around
-		/// </summary>
-		public override void BroadcastCreate()
-		{
-			if(ObjectState!=eObjectState.Active) return;
-			foreach(GamePlayer player in GetInRadius(typeof(GamePlayer), WorldMgr.VISIBILITY_DISTANCE))
-				player.Out.SendItemCreate(this);
-		}
-
-		/// <summary>
-		/// Remove the object to all players around
-		/// </summary>
-		public override void BroadcastRemove()
-		{
-			foreach(GamePlayer player in GetInRadius(typeof(GamePlayer), WorldMgr.VISIBILITY_DISTANCE))
-				player.Out.SendRemoveObject(this, eRemoveType.Disappear);
-		}
-
-		/// <summary>
-		/// override the AddToWorld funtion to store the grave stone to the gravestone manadger manadger
-		/// </summary>
-		public override bool AddToWorld()
-		{
-			if(!base.AddToWorld()) return false;
-			
-			GravestoneMgr.AddGravestone(this);
-			return true;
-		}
-
-		/// <summary>
-		/// override the RemoveFromWorld funtion to remove the grave stone from the manadger
-		/// </summary>
-		public override bool RemoveFromWorld()
-		{
-			if(!base.RemoveFromWorld()) return false;
-			
-			GravestoneMgr.RemoveGravestone(this);
-			return true;
+			get
+			{
+				return m_xpValue;
+			}
+			set
+			{
+				m_xpValue = value;
+			}
 		}
 	}
 }

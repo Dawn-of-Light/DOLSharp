@@ -1,16 +1,13 @@
- //using DOL.GS.Database;
+ //using DOL.Database;
 //using DOL.GS.PacketHandler;
-
-using NHibernate.Mapping.Attributes;
 
 namespace DOL.GS.Scripts
 {
 	/// <summary>
-	/// This class holds all information that
-	/// EVERY Weapon Crafting master npc in the game world needs!
+	/// the master for armorcrafting
 	/// </summary>
-	[Subclass(NameType=typeof(WeaponCraftingMaster), ExtendsType=typeof(GameCraftMaster))] 
-	public class WeaponCraftingMaster : GameCraftMaster
+	[NPCGuildScript("Weaponsmiths Master")]
+	public class WeaponCraftingMaster : CraftNPC
 	{
 		private static readonly eCraftingSkill[] m_trainedSkills = 
 		{
@@ -38,42 +35,6 @@ namespace DOL.GS.Scripts
 		public override string GUILD_CRAFTERS
 		{
 			get { return "Weaponsmiths"; }
-		}
-
-		public override eCharacterClass[] AllowedClass
-		{
-			get
-			{
-				return new eCharacterClass[]
-					{
-						eCharacterClass.Reaver,
-						eCharacterClass.Fighter,
-						eCharacterClass.Mercenary,
-						eCharacterClass.Paladin,
-						eCharacterClass.Armsman,
-						eCharacterClass.Infiltrator,
-						eCharacterClass.Guardian,
-						eCharacterClass.Hero,
-						eCharacterClass.Blademaster,
-						eCharacterClass.Champion,
-						eCharacterClass.Nightshade,
-						eCharacterClass.Ranger,
-						eCharacterClass.Bard,
-						eCharacterClass.Viking,
-						eCharacterClass.Warrior,
-						eCharacterClass.Berserker,
-						eCharacterClass.Thane,
-						eCharacterClass.Skald,
-						eCharacterClass.MidgardRogue,
-						eCharacterClass.Shadowblade,
-						eCharacterClass.Hunter,
-						eCharacterClass.Heretic,
-						eCharacterClass.Vampiir,
-						eCharacterClass.Savage,
-						eCharacterClass.Valkyrie,
-
-					};
-			}
 		}
 
 		public override eCraftingSkill TheCraftingSkill

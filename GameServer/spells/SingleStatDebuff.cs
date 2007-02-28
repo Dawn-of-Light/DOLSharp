@@ -18,7 +18,7 @@
  */
 using System;
 using DOL.AI.Brain;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 
@@ -40,8 +40,8 @@ namespace DOL.GS.Spells
 		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
 		{
 			base.ApplyEffectOnTarget(target, effectiveness);
-			target.LastAttackedByEnemyTick = target.Region.Time;
-			Caster.LastAttackTick = Caster.Region.Time;
+			target.LastAttackedByEnemyTick = target.CurrentRegion.Time;
+			Caster.LastAttackTick = Caster.CurrentRegion.Time;
 			if(target is GameNPC) 
 			{
 				IAggressiveBrain aggroBrain = ((GameNPC)target).Brain as IAggressiveBrain;
@@ -218,5 +218,28 @@ namespace DOL.GS.Spells
 
 		// constructor
 		public FumbleChanceDebuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
+	}
+	
+	/// <summary>
+	/// DPS debuff
+	/// </summary>
+	[SpellHandlerAttribute("DPSDebuff")]
+	public class DPSDebuff : SingleStatDebuff
+	{
+		public override eProperty Property1 { get { return eProperty.DPS; } }	
+
+		// constructor
+		public DPSDebuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
+	}
+	/// <summary>
+	/// Skills Debuff
+	/// </summary>
+	[SpellHandlerAttribute("SkillsDebuff")]
+	public class SkillsDebuff : SingleStatDebuff
+	{
+		public override eProperty Property1 { get { return eProperty.AllSkills; } }	
+
+		// constructor
+		public SkillsDebuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
 	}
  }

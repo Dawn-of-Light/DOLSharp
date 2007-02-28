@@ -22,10 +22,9 @@
  * Date:	20040817
 */
 
-using DOL.Database;
+using System.Collections;
 using DOL.GS.PacketHandler;
 using DOL.GS.Quests;
-using DOL.GS.Tasks;
 
 namespace DOL.GS.Scripts
 {
@@ -34,26 +33,89 @@ namespace DOL.GS.Scripts
 	{
 		public int OnCommand(GameClient client, string[] args)
 		{
-            if (client.Player.TargetObject == null || client.Player.TargetObject == client.Player)
+			if (args.Length > 1)
 			{
-                AbstractTask task = client.Player.Task;
-
-				if (task != null)
+				if (args[1] == "abort")
 				{
-                    client.Player.Out.SendMessage(task.Description, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                    long minutesLeft = ((task.StartingPlayedTime + 2 * 3600) - client.Player.PlayedTime) / 60;
-                    client.Player.Out.SendMessage("You have " + (minutesLeft > 0 ? minutesLeft + " minutes" : "less than a minute") + " left to complete this task.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				}
-				else
-				{
-                    client.Player.Out.SendMessage("You have no current personal task.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					if (client.Player.Task != null && client.Player.Task.TaskActive)
+						client.Player.Task.ExpireTask();
 				}
 			}
 			else
 			{
-               TaskMgr.CanGiveTask(client.Player, client.Player.TargetObject as GameMob);
+				TaskCommand(client.Player);
 			}
-            return 0;
+			return 1;
+		}
+
+		/// <summary>
+		/// Execute /Task Command
+		/// Same if Player write /Task or press TaskButtom
+		/// </summary>
+		/// <param name="player">The GamePlayer Object</param>
+		/// <returns>True if Command Execute Succesfully</returns>
+		public static bool TaskCommand(GamePlayer player)
+		{
+			if (player.Task != null)
+				player.Task.CheckTaskExpired();
+
+			if (player.TargetObject == null || player.TargetObject == player)
+			{
+				//TaskMgr.UpdateDiaryWindow(Player);
+				AbstractTask task = player.Task;
+
+				if (task != null && task.TaskActive)
+				{
+					IList messages = new ArrayList(4);
+					messages.Add("You are on " + task.Name);
+					messages.Add("What to do: " + task.Description);
+					messages.Add(" ");
+					messages.Add("Task will expire at " + task.TimeOut.ToShortTimeString());
+					messages.Add("You have done " + task.TasksDone + " tasks out of " + AbstractTask.MaxTasksDone(player.Level) + " until now.");
+					player.Out.SendCustomTextWindow("Tasks (Snapshot)", messages);
+				}
+				else if (task != null && task.TasksDone >= AbstractTask.MaxTasksDone(player.Level))
+				{
+					player.Out.SendMessage("You can do no more tasks at your current level", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				}
+				else
+				{
+					player.Out.SendMessage("You have currently no pending task", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				}
+				return true;
+			}
+			else
+			{
+				if (WorldMgr.GetDistance(player.X, player.Y, 0, player.TargetObject.X, player.TargetObject.Y, 0) <= WorldMgr.WHISPER_DISTANCE)
+					//ToDo: Use follow Line instead of Above when Dol will support Mob with a Z coordinate.
+					//foreach(GameNPC mob in WorldMgr.GetNPCsCloseToObject(Player, WorldMgr.WHISPER_DISTANCE))
+				{
+					if (player.TargetObject is GameLiving)
+					{
+						if (KillTask.CheckAvailability(player, (GameLiving) player.TargetObject))
+						{
+							KillTask.BuildTask(player, (GameLiving) player.TargetObject);
+							return true;
+						}
+						else if (MoneyTask.CheckAvailability(player, (GameLiving) player.TargetObject))
+						{
+							MoneyTask.BuildTask(player, (GameLiving) player.TargetObject);
+							return true;
+						}
+						else if (CraftTask.CheckAvailability(player, (GameLiving) player.TargetObject))
+						{
+							CraftTask.BuildTask(player, (GameLiving) player.TargetObject);
+							return true;
+						}
+					}
+					return false;
+				}
+				else
+				{
+					player.Out.SendMessage(player.TargetObject.GetName(0, true) + " is too far away to interact", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					return false;
+				}
+			}
 		}
 	}
 

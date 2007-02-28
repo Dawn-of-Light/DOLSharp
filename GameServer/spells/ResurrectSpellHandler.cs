@@ -18,7 +18,6 @@
  */
 using System;
 using System.Collections.Specialized;
-using DOL.GS.Database;
 using DOL.GS.PacketHandler;
 using DOL.Events;
 using System.Collections;
@@ -37,12 +36,9 @@ namespace DOL.GS.Spells
 		// constructor
 		public ResurrectSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
 
-		/// <summary>
-		/// Execute resurrect spell
-		/// </summary>
-		public override void FinishSpellCast(GameLivingBase target)
+		public override void FinishSpellCast(GameLiving target)
 		{
-			m_caster.ChangeMana(null, -CalculateNeededPower(target));
+			m_caster.Mana -= CalculateNeededPower(target);
 			base.FinishSpellCast(target);
 		}
 
@@ -54,7 +50,7 @@ namespace DOL.GS.Spells
 		public override void OnDirectEffect(GameLiving target, double effectiveness)
 		{
 			base.OnDirectEffect(target, effectiveness);
-			if(target == null || target.Alive) return;
+			if(target == null || target.IsAlive) return;
 
 			SendEffectAnimation(target, 0, false, 1);
 			GamePlayer targetPlayer = target as GamePlayer;
@@ -85,7 +81,7 @@ namespace DOL.GS.Spells
 		/// </summary>
 		/// <param name="target"></param>
 		/// <returns></returns>
-		public override int CalculateNeededPower(GameLivingBase target)
+		public override int CalculateNeededPower(GameLiving target)
 		{
 			float factor = Math.Max (0.1f, 0.5f + (target.Level - m_caster.Level) / (float)m_caster.Level);
 
@@ -113,7 +109,7 @@ namespace DOL.GS.Spells
 			}
 
 			GameLiving rezzer = (GameLiving)player.TempProperties.getObjectProperty(RESURRECT_CASTER_PROPERTY, null);
-			if (!player.Alive)
+			if (!player.IsAlive)
 			{
 				if (rezzer == null)
 				{
@@ -122,7 +118,12 @@ namespace DOL.GS.Spells
 				else
 				{
 					if (response == 1) ResurrectLiving(player); //accepted
-					else player.Out.SendMessage("You decline to be resurrected.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					else
+					{
+						player.Out.SendMessage("You decline to be resurrected.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						//refund mana
+						m_caster.Mana += CalculateNeededPower(player);
+					}
 				}
 			}
 			player.TempProperties.removeProperty(RESURRECT_CASTER_PROPERTY);
@@ -134,13 +135,13 @@ namespace DOL.GS.Spells
 		/// <param name="living"></param>
 		protected virtual void ResurrectLiving(GameLiving living)
 		{
-			if (m_caster.ObjectState != eObjectState.Active) return;
-			if (m_caster.Region != living.Region) return;
+			if (m_caster.ObjectState != GameObject.eObjectState.Active) return;
+			if (m_caster.CurrentRegionID != living.CurrentRegionID) return;
 
-			living.ChangeHealth(m_caster, living.MaxHealth * m_spell.ResurrectHealth / 100, true);
-			living.ChangeMana(m_caster, living.MaxMana * m_spell.ResurrectMana / 100);
-			living.EndurancePercent = 0; //no endurance after any rez
-			living.MoveTo(m_caster.Region, m_caster.Position, (ushort)m_caster.Heading);
+			living.Health = living.MaxHealth * m_spell.ResurrectHealth / 100;
+			living.Mana = living.MaxMana * m_spell.ResurrectMana / 100;
+			living.Endurance = 0; //no endurance after any rez
+			living.MoveTo(m_caster.CurrentRegionID, m_caster.X, m_caster.Y, m_caster.Z, m_caster.Heading);
 
 			GameTimer resurrectExpiredTimer = null;
 			lock (m_resTimersByLiving.SyncRoot)
@@ -161,6 +162,18 @@ namespace DOL.GS.Spells
 				player.UpdatePlayerStatus();
 				player.Out.SendMessage("You have been resurrected by " + m_caster.GetName(0, false) + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				player.Notify(GamePlayerEvent.Revive, player);
+
+				IList attackers;
+				lock (player.Attackers.SyncRoot) { attackers = (IList)(player.Attackers as ArrayList).Clone(); }
+
+				foreach (GameObject attacker in attackers)
+				{
+					if (attacker is GameLiving && attacker != living.TargetObject)
+						((GameLiving)attacker).Notify(
+							GameLivingEvent.EnemyHealed,
+							(GameLiving)attacker,
+							new EnemyHealedEventArgs(living, m_caster, GameLiving.eHealthChangeType.Spell, living.Health));
+				}
 
 				GamePlayer casterPlayer = Caster as GamePlayer;
 				if (casterPlayer != null)
@@ -198,21 +211,17 @@ namespace DOL.GS.Spells
 		/// </summary>
 		/// <param name="target"></param>
 		/// <returns></returns>
-		public override bool CheckBeginCast(GameLivingBase target)
+		public override bool CheckBeginCast(GameLiving target)
 		{
 			if (!base.CheckBeginCast(target))
 				return false;
 
-			GameLiving livingTarget = target as GameLiving;
-			if(livingTarget != null)
+			GameLiving resurrectionCaster = target.TempProperties.getObjectProperty(RESURRECT_CASTER_PROPERTY, null) as GameLiving;
+			if (resurrectionCaster != null)
 			{
-				GameLiving resurrectionCaster = livingTarget.TempProperties.getObjectProperty(RESURRECT_CASTER_PROPERTY, null) as GameLiving;
-				if (resurrectionCaster != null)
-				{
-					//already considering resurrection - do nothing
-					MessageToCaster("Your target is already considering a resurrection!", eChatType.CT_SpellResisted);
-					return false;
-				}
+				//already considering resurrection - do nothing
+				MessageToCaster("Your target is already considering a resurrection!", eChatType.CT_SpellResisted);
+				return false;
 			}
 
 			return true;
@@ -223,18 +232,14 @@ namespace DOL.GS.Spells
 		/// </summary>
 		/// <param name="target"></param>
 		/// <returns></returns>
-		public override bool CheckEndCast(GameLivingBase target)
+		public override bool CheckEndCast(GameLiving target)
 		{
-			GameLiving livingTarget = target as GameLiving;
-			if(livingTarget != null)
+			GameLiving resurrectionCaster = target.TempProperties.getObjectProperty(RESURRECT_CASTER_PROPERTY, null) as GameLiving;
+			if (resurrectionCaster != null)
 			{
-				GameLiving resurrectionCaster = livingTarget.TempProperties.getObjectProperty(RESURRECT_CASTER_PROPERTY, null) as GameLiving;
-				if (resurrectionCaster != null)
-				{
-					//already considering resurrection - do nothing
-					MessageToCaster("Your target is already considering a resurrection!", eChatType.CT_SpellResisted);
-					return false;
-				}
+				//already considering resurrection - do nothing
+				MessageToCaster("Your target is already considering a resurrection!", eChatType.CT_SpellResisted);
+				return false;
 			}
 			return base.CheckEndCast(target);
 		}

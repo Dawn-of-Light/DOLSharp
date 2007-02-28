@@ -26,7 +26,7 @@ namespace DOL.Events
 	/// </summary>
 	public class TakeDamageEventArgs : EventArgs
 	{
-		private GameLiving m_damageSource;
+		private GameObject m_damageSource;
 		private eDamageType m_damageType;
 		private int m_damageAmount;
 		private int m_criticalAmount;
@@ -38,7 +38,7 @@ namespace DOL.Events
 		/// <param name="damageType">The damage type</param>
 		/// <param name="damageAmount">The damage amount</param>
 		/// <param name="criticalAmount">The critical damage amount</param>
-		public TakeDamageEventArgs(GameLiving damageSource, eDamageType damageType, int damageAmount, int criticalAmount)
+		public TakeDamageEventArgs(GameObject damageSource, eDamageType damageType, int damageAmount, int criticalAmount)
 		{
 			m_damageSource = damageSource;
 			m_damageType = damageType;
@@ -49,7 +49,7 @@ namespace DOL.Events
 		/// <summary>
 		/// Gets the damage source
 		/// </summary>
-		public GameLiving DamageSource
+		public GameObject DamageSource
 		{
 			get { return m_damageSource; }
 		}

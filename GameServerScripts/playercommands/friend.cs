@@ -16,7 +16,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using DOL.Database;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Scripts
@@ -32,14 +31,28 @@ namespace DOL.GS.Scripts
 		{
 			if (args.Length < 2)
 			{
-				string[] friends = client.Player.SerializedFriendsList.Split(',');
+				string[] friends = client.Player.PlayerCharacter.SerializedFriendsList.Split(',');
 				client.Out.SendCustomTextWindow("Friends (snapshot)", friends);
 				return 1;
+			}
+			else if (args.Length == 2 && args[1] == "window")
+			{
+				// "TF" - clear friend list in social
+				client.Out.SendMessage("TF", eChatType.CT_SocialInterface, eChatLoc.CL_SystemWindow);
+				byte ind = 0;
+				foreach (string friendName in client.Player.Friends)
+				{
+					GameClient friendClient = WorldMgr.GetClientByPlayerName(friendName, true, true);
+					if (friendClient == null || friendClient.Player == null || friendClient.Player.IsAnonymous) continue;
+					client.Out.SendMessage(string.Format("F,{0},{1},{2},{3},\"{4}\"",
+						ind++, friendClient.Player.Name, friendClient.Player.Level, friendClient.Player.CharacterClass.ID, (friendClient.Player.CurrentZone == null ? "" : friendClient.Player.CurrentZone.Description)), eChatType.CT_SocialInterface, eChatLoc.CL_SystemWindow);
+				}
+				return 0;
 			}
 			string name = string.Join(" ", args, 1, args.Length - 1);
 
 			int result = 0;
-			GameClient fclient = WorldMgr.GetClientByPlayerName(name, false);
+			GameClient fclient = WorldMgr.GuessClientByPlayerNameAndRealm(name, 0, false, out result);
 			if (fclient != null && !GameServer.ServerRules.IsSameRealm(fclient.Player, client.Player, true))
 			{
 				fclient = null;
@@ -62,8 +75,14 @@ namespace DOL.GS.Scripts
 					return 1;
 				}
 			}
-			else
+
+			switch (result)
 			{
+				case 2: // name not unique
+					client.Out.SendMessage("Character name is not unique.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					return 1;
+				case 3: // exact match
+				case 4: // guessed name
 					if (fclient == client)
 					{
 						client.Out.SendMessage("You can't add yourself!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -85,6 +104,7 @@ namespace DOL.GS.Scripts
 					}
 					return 1;
 			}
+			return 0;
 		}
 	}
 }

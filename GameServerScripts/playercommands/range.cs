@@ -16,7 +16,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using DOL.Database;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Scripts
@@ -32,12 +31,7 @@ namespace DOL.GS.Scripts
 		{
 			if (client.Player.TargetObject != null)
 			{
-//				if (client.Player.TargetObject is GameLiving)
-//				{
-//					client.Out.SendMessage("This command only works on objects.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-//					return 1;
-//				}
-				int range = client.Player.Position.GetDistance(client.Player.TargetObject.Position);
+				int range = WorldMgr.GetDistance(client.Player, client.Player.TargetObject);
 				client.Out.SendMessage("Range to target: " + range + " units." + (client.Player.TargetInView ? "" : " (Target not visible)"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 			else

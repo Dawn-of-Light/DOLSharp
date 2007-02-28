@@ -18,7 +18,6 @@
  */
 using System.Collections;
 using System.Collections.Specialized;
-using DOL.GS.Database;
 using DOL.GS.PacketHandler;
 namespace DOL.GS
 {
@@ -27,7 +26,7 @@ namespace DOL.GS
 	/// </summary>
 	public class ChatGroup
 	{
-		public const string CHATGROUP_PROPERTY = "chatgroup";
+		public const string CHATGROUP_PROPERTY="chatgroup";
 		/// <summary>
 		/// This holds all players inside the chatgroup
 		/// </summary>
@@ -41,26 +40,26 @@ namespace DOL.GS
 		}
 		public HybridDictionary Members
 		{
-			get { return m_chatgroupMembers; }
-			set { m_chatgroupMembers = value; }
+			get{return m_chatgroupMembers;}
+			set{m_chatgroupMembers=value;}
 		}
-		private bool listen = false;
+		private bool listen=false;
 		public bool Listen
 		{
-			get { return listen; }
-			set { listen = value; }
+			get{return listen;}
+			set{listen = value;}
 		}
-		private bool ispublic = true;
+		private bool ispublic=true;
 		public bool IsPublic
 		{
-			get { return ispublic; }
-			set { ispublic = value; }
+			get{return ispublic;}
+			set{ispublic = value;}
 		}
-		private string password = "";
+		private string password="";
 		public string Password
 		{
-			get { return password; }
-			set { password = value; }
+			get{return password;}
+			set{password = value;}
 		}
 
 		/// <summary>
@@ -68,18 +67,20 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="player">GamePlayer to be added to the group</param>
 		/// <returns>true if added successfully</returns>
-		public virtual bool AddPlayer(GamePlayer player, bool leader)
+		public virtual bool AddPlayer(GamePlayer player,bool leader) 
 		{
 			if (player == null) return false;
-			lock (this)
+			lock (m_chatgroupMembers)
 			{
 				if (m_chatgroupMembers.Contains(player))
 					return false;
 				player.TempProperties.setProperty(CHATGROUP_PROPERTY, this);
 				player.Out.SendMessage("You join the chat group.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				string message = player.Name + " has joined the chat group.";
-				SendMessageToMembers(message);
-				m_chatgroupMembers.Add(player, leader);
+				foreach(GamePlayer member in Members.Keys)
+				{
+					member.Out.SendMessage(player.Name+" has joined the chat group.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				}
+				m_chatgroupMembers.Add(player,leader);
 			}
 			return true;
 		}
@@ -92,17 +93,17 @@ namespace DOL.GS
 		public virtual bool RemovePlayer(GamePlayer player)
 		{
 			if (player == null) return false;
-			lock (this)
+			lock (m_chatgroupMembers)
 			{
 				if (!m_chatgroupMembers.Contains(player))
 					return false;
-
 				m_chatgroupMembers.Remove(player);
-				if (NeedsLeader())
-					NewDefaultLeader();
 				player.TempProperties.removeProperty(CHATGROUP_PROPERTY);
 				player.Out.SendMessage("You leave the chat group.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				SendMessageToMembers(player.Name + " has left the chat group.");
+				foreach(GamePlayer member in Members.Keys)
+				{
+					member.Out.SendMessage(player.Name+" has left the chat group.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				}
 				if (m_chatgroupMembers.Count == 1)
 				{
 					ArrayList lastPlayers = new ArrayList(m_chatgroupMembers.Count);
@@ -114,58 +115,6 @@ namespace DOL.GS
 				}
 			}
 			return true;
-		}
-
-		/// <summary>
-		/// Returns True if the Chatgroup hasn't got a leader and false if it has
-		/// </summary>
-		/// <returns></returns>
-		public virtual bool NeedsLeader()
-		{
-			bool found = false;
-			foreach (GamePlayer member in m_chatgroupMembers.Keys)
-			{
-				if ((bool)m_chatgroupMembers[member] == true)
-				{
-					found = true;
-					break;
-				}
-			}
-			return !found;
-		}
-
-		/// <summary>
-		/// Sets a Default chatgroup leader
-		/// </summary>
-		public virtual void NewDefaultLeader()
-		{
-			foreach (GamePlayer player in m_chatgroupMembers.Keys)
-			{
-				SetLeader(player);
-				return;
-			}
-		}
-
-		/// <summary>
-		/// Sets a player as a chatgroup leader and sends message
-		/// </summary>
-		/// <param name="player"></param>
-		public virtual void SetLeader(GamePlayer player)
-		{
-			m_chatgroupMembers[player] = true;
-			SendMessageToMembers(player.Name + " is now a leader.");
-		}
-
-		/// <summary>
-		/// Sends message to chatgroup members
-		/// </summary>
-		/// <param name="message"></param>
-		public virtual void SendMessageToMembers(string message)
-		{
-			foreach (GamePlayer member in Members.Keys)
-			{
-				member.Out.SendMessage(message, eChatType.CT_Friend, eChatLoc.CL_ChatWindow);
-			}
 		}
 	}
 }

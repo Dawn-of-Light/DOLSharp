@@ -58,11 +58,6 @@ namespace DOL.DOLServer
 				if (action.Syntax != null && action.Description != null)
 					Console.WriteLine(String.Format("{0,-20}\t{1}", action.Syntax, action.Description));
 			}
-			/*
-			Console.WriteLine("");
-			Console.WriteLine("Possible parameters:");
-			Console.WriteLine(String.Format("{0,-20}\t{1}", "-logconfig","Path to log configuration file"));
-			*/
 		}
 
 		/// <summary>
@@ -163,8 +158,7 @@ namespace DOL.DOLServer
 
 			if (args.Length == 0)
 			{
-				ShowSyntax();
-				return;
+				args = new string[] { "--start", };
 			}
 
 			string actionName;

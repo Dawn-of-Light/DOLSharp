@@ -16,12 +16,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-
+using DOL.Database;
+using DOL.Database.Attributes;
+using DOL.GS.PacketHandler;
 //This script demonstrates how to create a data aware custom NPC
 
 namespace DOL.GS.Scripts
 {
-/*	public class TownCrier : GameMob
+	public class TownCrier : GameNPC
 	{
 		/// <summary>
 		/// The data object that represents a town crier message
@@ -111,7 +113,7 @@ namespace DOL.GS.Scripts
 
 			if (res = base.Interact(player))
 			{
-				TurnTo(player.Position);
+				TurnTo(player, 5000);
 
 				player.Out.SendMessage(this.Name + " says, \"" + m_msg + "\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
 			}
@@ -174,5 +176,5 @@ namespace DOL.GS.Scripts
 
 			base.DeleteFromDatabase();
 		}
-	}*/
+	}
 }

@@ -18,16 +18,15 @@
  */
 using System;
 using System.Collections;
-using System.Reflection;
-using DOL.AI;
-using DOL.AI.Brain;
-using DOL.Database;
-using DOL.GS.Database;
-using DOL.GS;
-using DOL.GS.Loot;
-using DOL.GS.PacketHandler;
 using System.Net;
-using NHibernate.Expression;
+using System.Reflection;
+
+using DOL.Database;
+using DOL.GS;
+using DOL.GS.Keeps;
+using DOL.GS.PacketHandler;
+using DOL.GS.ServerProperties;
+
 using log4net;
 
 namespace DOL.GS.ServerRules
@@ -54,14 +53,48 @@ namespace DOL.GS.ServerRules
 		{
 			if (!client.Socket.Connected)
 				return false;
+			string accip = ((IPEndPoint)client.Socket.RemoteEndPoint).Address.ToString();
 
-			/* Example to limit the connections to a certain client version!
-			if(client.Version != GameClient.eClientVersion.Version169)
+			// Ban account
+			DataObject[] objs;
+			objs = GameServer.Database.SelectObjects(typeof(DBBannedAccount), "(Type ='Account' AND Account ='" + GameServer.Database.Escape(username) + "') OR (Type ='Account+Ip' AND Account ='" + GameServer.Database.Escape(username) + "')");
+			if (objs.Length > 0)
+			{
+				client.Out.SendLoginDenied(eLoginError.AccountIsBannedFromThisServerType);
+				return false;
+			}
+
+			// Ban IP Adress
+			objs = GameServer.Database.SelectObjects(typeof(DBBannedAccount), "(Type = 'Ip' AND Ip ='" + GameServer.Database.Escape(accip) + "') OR (Type ='Account+Ip' AND Ip ='" + GameServer.Database.Escape(accip) + "')");
+			if (objs.Length > 0)
+			{
+				client.Out.SendLoginDenied(eLoginError.AccountIsBannedFromThisServerType);
+				return false;
+			}
+
+			GameClient.eClientVersion min = (GameClient.eClientVersion)Properties.CLIENT_VERSION_MIN;
+			if (min != GameClient.eClientVersion.VersionNotChecked && client.Version < min)
 			{
 				client.Out.SendLoginDenied(eLoginError.ClientVersionTooLow);
 				return false;
 			}
-			*/
+
+			GameClient.eClientVersion max = (GameClient.eClientVersion)Properties.CLIENT_VERSION_MAX;
+			if (max != GameClient.eClientVersion.VersionNotChecked && client.Version > max)
+			{
+				client.Out.SendLoginDenied(eLoginError.ClientVersionTooLow);
+				return false;
+			}
+
+			if (Properties.CLIENT_TYPE_MAX > -1)
+			{
+				GameClient.eClientType type = (GameClient.eClientType)Properties.CLIENT_TYPE_MAX;
+				if ((int)client.ClientType > (int)type )
+				{
+					client.Out.SendLoginDenied(eLoginError.ExpansionPacketNotAllowed);
+					return false;
+				}
+			}
 
 			/* Example to limit the connections from a certain IP range!
 			if(client.Socket.RemoteEndPoint.ToString().StartsWith("192.168.0."))
@@ -88,52 +121,49 @@ namespace DOL.GS.ServerRules
 			}
 			*/
 
+			if (Properties.MAX_PLAYERS > 0)
+			{
+				if (WorldMgr.GetAllClients().Count > Properties.MAX_PLAYERS)
+				{
+					// GMs are still allowed to enter server
+					objs = GameServer.Database.SelectObjects(typeof(Account), string.Format("Name = '{0}'", GameServer.Database.Escape(username)));
+					if (objs.Length > 0)
+					{
+						Account account = objs[0] as Account;
+						if (account.PrivLevel > 1) return true;
+					}
+
+					// Normal Players will not be allowed over the max
+					client.Out.SendLoginDenied(eLoginError.TooManyPlayersLoggedIn);
+					return false;
+				}
+			}
+
+			if (Properties.STAFF_LOGIN)
+			{
+				// GMs are still allowed to enter server
+				objs = GameServer.Database.SelectObjects(typeof(Account), string.Format("Name = '{0}'", GameServer.Database.Escape(username)));
+				if (objs.Length > 0)
+				{
+					Account account = objs[0] as Account;
+					if (account.PrivLevel > 1) return true;
+				}
+
+				// Normal Players will not be allowed to log in
+				client.Out.SendLoginDenied(eLoginError.GameCurrentlyClosed);
+				return false;
+			}
+
 			return true;
 		}
 
+		public abstract bool IsSameRealm(GameLiving source, GameLiving target, bool quiet);
+		public abstract bool IsAllowedCharsInAllRealms(GameClient client);
+		public abstract bool IsAllowedToGroup(GamePlayer source, GamePlayer target, bool quiet);
+		public abstract bool IsAllowedToTrade(GameLiving source, GameLiving target, bool quiet);
+		public abstract bool IsAllowedToUnderstand(GameLiving source, GamePlayer target);
 		public abstract string RulesDescription();
 
-		public virtual bool IsAllowedCharsInAllRealms(GameClient client)
-		{
-			return true;
-		}
-		
-		public virtual bool IsAllowedToGroup(GamePlayer source, GamePlayer target, bool quiet)
-		{
-			if(source == null || target == null) return false;
-			
-			return true;
-		}
-		
-		public virtual bool IsAllowedToTrade(GamePlayer source, GamePlayer target, bool quiet)
-		{
-			if(source == null || target == null) return false;
-			
-			return true;
-		}
-
-		public virtual bool IsAllowedToUnderstand(GameLiving source, GamePlayer target)
-		{
-			if(source == null || target == null) return false;
-			
-			return true;
-		}
-		
-		public virtual bool IsSameRealm(GameLiving source, GameLivingBase target, bool quiet)
-		{
-			if(source == null || target == null) return false;
-			
-			// clients with priv level > 1 are considered friendly by anyone
-			if(target is GamePlayer && ((GamePlayer)target).Client.Account.PrivLevel > ePrivLevel.Player) return true;
-
-			// npc with peace brain are always of the same realm
-			if (source is GameNPC && ((GameNPC)source).OwnBrain is PeaceBrain
-			 || target is GameNPC && ((GameNPC)target).OwnBrain is PeaceBrain)
-				return true;
-			
-			return false;
-		}
-		
 		/// <summary>
 		/// Is attacker allowed to attack defender.
 		/// </summary>
@@ -141,26 +171,18 @@ namespace DOL.GS.ServerRules
 		/// <param name="defender">attacker's target</param>
 		/// <param name="quiet">should messages be sent</param>
 		/// <returns>true if attack is allowed</returns>
-		public virtual bool IsAllowedToAttack(GameLiving attacker, GameLivingBase defender, bool quiet)
+		public virtual bool IsAllowedToAttack(GameLiving attacker, GameLiving defender, bool quiet)
 		{
-			if(attacker == null || defender == null) return false;
+			if (attacker == null || defender == null) return false;
 
-			// can't attack self
-			if(attacker == defender)
-			{
-				if (quiet == false) MessageToLiving(attacker, "You can't attack yourself!");
-				return false;
-			}
-
-			// npc with peace brain can't attack and can't be attacked
-			if (attacker is GameNPC && ((GameNPC)attacker).OwnBrain is PeaceBrain
-			 || defender is GameNPC && ((GameNPC)defender).OwnBrain is PeaceBrain)
+			//dead things can't attack
+			if (!defender.IsAlive || !attacker.IsAlive )
 				return false;
 
 			GamePlayer playerAttacker = attacker as GamePlayer;
 			GamePlayer playerDefender = defender as GamePlayer;
 
-			if (playerDefender != null && playerDefender.Client.ClientState != GameClient.eClientState.Playing)
+			if (playerDefender != null && playerDefender.Client.ClientState == GameClient.eClientState.WorldEnter)
 			{
 				if (!quiet)
 					MessageToLiving(attacker, defender.Name + " is entering the game and is temporarily immune to PvP attacks!");
@@ -170,16 +192,47 @@ namespace DOL.GS.ServerRules
 			if (playerAttacker != null && playerDefender != null)
 			{
 				// Attacker immunity
-				if(playerAttacker.IsPvPInvulnerability)
+				if (playerAttacker.IsPvPInvulnerability)
 				{
-					if(quiet == false) MessageToLiving(attacker, "You can't attack players until your PvP invulnerability timer wears off!");
+					if (quiet == false) MessageToLiving(attacker, "You can't attack players until your PvP invulnerability timer wears off!");
 					return false;
 				}
 
 				// Defender immunity
-				if(playerDefender.IsPvPInvulnerability)
+				if (playerDefender.IsPvPInvulnerability)
 				{
-					if(quiet == false) MessageToLiving(attacker, defender.Name + " is temporarily immune to PvP attacks!");
+					if (quiet == false) MessageToLiving(attacker, defender.Name + " is temporarily immune to PvP attacks!");
+					return false;
+				}
+			}
+
+			// PEACE NPCs can't be attacked/attack
+			if (attacker is GameNPC)
+				if ((((GameNPC)attacker).Flags & (uint)GameNPC.eFlags.PEACE) != 0)
+					return false;
+
+			if (defender is GameNPC)
+				if ((((GameNPC)defender).Flags & (uint)GameNPC.eFlags.PEACE) != 0)
+					return false;
+
+			//GMs can't be attacked
+			if (playerDefender != null && playerDefender.Client.Account.PrivLevel > 1)
+				return false;
+
+			foreach (AbstractArea area in defender.CurrentAreas)
+			{
+				if (area.IsSafeArea)
+				{
+					if (quiet == false) MessageToLiving(attacker, "You can't attack someone in a safe area!");
+					return false;
+				}
+			}
+
+			foreach (AbstractArea area in attacker.CurrentAreas)
+			{
+				if (area.IsSafeArea)
+				{
+					if (quiet == false) MessageToLiving(attacker, "You can't attack someone in a safe area!");
 					return false;
 				}
 			}
@@ -195,14 +248,16 @@ namespace DOL.GS.ServerRules
 		/// <param name="spell"></param>
 		/// <param name="spellLine"></param>
 		/// <returns>true if allowed</returns>
-		public virtual bool IsAllowedToCastSpell(GameLiving caster, GameLivingBase target, Spell spell, SpellLine spellLine)
+		public virtual bool IsAllowedToCastSpell(GameLiving caster, GameLiving target, Spell spell, SpellLine spellLine)
 		{
 			return true;
 		}
 
+
+
 		public virtual bool IsAllowedToSpeak(GamePlayer source, string communicationType)
 		{
-			if(source.Alive == false)
+			if (source.IsAlive == false)
 			{
 				MessageToLiving(source, "Hmmmm...you can't " + communicationType + " while dead!");
 				return false;
@@ -225,16 +280,16 @@ namespace DOL.GS.ServerRules
 		/// Is player allowed to make the item
 		/// </summary>
 		/// <param name="player"></param>
-		/// <param name="point"></param>
+		/// <param name="item"></param>
 		/// <returns></returns>
-		public virtual bool IsAllowedToCraft(GamePlayer player, GenericItemTemplate item)
+		public virtual bool IsAllowedToCraft(GamePlayer player, ItemTemplate item)
 		{
 			return true;
 		}
 
 		public virtual bool CanTakeFallDamage(GamePlayer player)
 		{
-			if(player.Client.Account.PrivLevel > ePrivLevel.Player)
+			if (player.Client.Account.PrivLevel > 1)
 				return false;
 			return true;
 		}
@@ -253,44 +308,44 @@ namespace DOL.GS.ServerRules
 			level = (level < 0) ? 0 : level;
 
 			// use exp table
-			if(level < GameLiving.XPForLiving.Length)
+			if (level < GameLiving.XPForLiving.Length)
 				return GameLiving.XPForLiving[level];
 
 			// use formula if level is not in exp table
 			// long can hold values up to level 238
-			if(level > 238)
+			if (level > 238)
 				level = 238;
 
 			double k1, k1_inc, k1_lvl;
 
 			// noret: using these rules i was able to reproduce table from
 			// http://www.daocweave.com/daoc/general/experience_table.htm
-			if(level>=35)
+			if (level >= 35)
 			{
-				k1_lvl=35;
-				k1_inc=0.2;
-				k1=20;
+				k1_lvl = 35;
+				k1_inc = 0.2;
+				k1 = 20;
 			}
-			else if(level>=20)
+			else if (level >= 20)
 			{
-				k1_lvl=20;
-				k1_inc=0.3334;
-				k1=15;
+				k1_lvl = 20;
+				k1_inc = 0.3334;
+				k1 = 15;
 			}
-			else if(level>=10)
+			else if (level >= 10)
 			{
-				k1_lvl=10;
-				k1_inc=0.5;
-				k1=10;
+				k1_lvl = 10;
+				k1_inc = 0.5;
+				k1 = 10;
 			}
 			else
 			{
-				k1_lvl=0;
-				k1_inc=1;
-				k1=0;
+				k1_lvl = 0;
+				k1_inc = 1;
+				k1 = 0;
 			}
 
-			long exp = (long)(Math.Pow(2, k1+(level-k1_lvl)*k1_inc) * 5);
+			long exp = (long)(Math.Pow(2, k1 + (level - k1_lvl) * k1_inc) * 5);
 			if (exp < 0)
 			{
 				exp = 0;
@@ -299,90 +354,112 @@ namespace DOL.GS.ServerRules
 			return exp;
 		}
 
-		public virtual bool CheckAbilityToUseItem(GamePlayer player, EquipableItem item)
+		public virtual bool CheckAbilityToUseItem(GameLiving living, ItemTemplate item)
 		{
-			if(player == null)
+			if (living == null || item == null)
 				return false;
-
-			if(item.AllowedClass.Count > 0 && !item.AllowedClass.Contains((eCharacterClass)player.CharacterClassID))
-			{
-				return false;
-			}
 
 			//armor
-			if (item.ObjectType >= eObjectType._FirstArmor && item.ObjectType <= eObjectType._LastArmor)
+			if (item.Object_Type >= (int)eObjectType._FirstArmor && item.Object_Type <= (int)eObjectType._LastArmor)
 			{
 				int bestLevel = -1;
-				bestLevel = Math.Max(bestLevel, player.GetAbilityLevel(Abilities.AlbArmor));
-				bestLevel = Math.Max(bestLevel, player.GetAbilityLevel(Abilities.HibArmor));
-				bestLevel = Math.Max(bestLevel, player.GetAbilityLevel(Abilities.MidArmor));
+				bestLevel = Math.Max(bestLevel, living.GetAbilityLevel(Abilities.AlbArmor));
+				bestLevel = Math.Max(bestLevel, living.GetAbilityLevel(Abilities.HibArmor));
+				bestLevel = Math.Max(bestLevel, living.GetAbilityLevel(Abilities.MidArmor));
 
-				switch (item.ObjectType)
+				switch ((eObjectType)item.Object_Type)
 				{
-					case eObjectType.Cloth      : return bestLevel >= 1;
-					case eObjectType.Leather    : return bestLevel >= 2;
-					case eObjectType.Reinforced :
-					case eObjectType.Studded    : return bestLevel >= 3;
-					case eObjectType.Scale      :
-					case eObjectType.Chain      : return bestLevel >= 4;
-					case eObjectType.Plate      : return bestLevel >= 5;
+					case eObjectType.Cloth: return bestLevel >= 1;
+					case eObjectType.Leather: return bestLevel >= 2;
+					case eObjectType.Reinforced:
+					case eObjectType.Studded: return bestLevel >= 3;
+					case eObjectType.Scale:
+					case eObjectType.Chain: return bestLevel >= 4;
+					case eObjectType.Plate: return bestLevel >= 5;
 					default: return false;
 				}
 			}
 
-			string[] check = new string[0];
-			
+			string[] oneHandCheck = new string[0];
+			string[] twoHandCheck = new string[0];
+			string[] otherCheck = new string[0];
+
 			//http://dol.kitchenhost.de/files/dol/Info/itemtable.txt
 			//http://support.darkageofcamelot.com/cgi-bin/support.cfg/php/enduser/std_adp.php?p_sid=frxnPUjg&p_lva=&p_refno=020709-000000&p_created=1026248996&p_sp=cF9ncmlkc29ydD0mcF9yb3dfY250PTE0JnBfc2VhcmNoX3RleHQ9JnBfc2VhcmNoX3R5cGU9MyZwX2NhdF9sdmwxPTI2JnBfY2F0X2x2bDI9fmFueX4mcF9zb3J0X2J5PWRmbHQmcF9wYWdlPTE*&p_li
-			switch(item.ObjectType)
+			switch ((eObjectType)item.Object_Type)
 			{
-				case eObjectType.GenericItem     : return true;
-				case eObjectType.GenericArmor    : return true;
-				case eObjectType.GenericWeapon   : return true;
-				case eObjectType.Staff           : check = new string[] { Abilities.Weapon_Staves }; break;
-				case eObjectType.ShortBow        : check = new string[] { Abilities.Weapon_Shortbows }; break;
+				case eObjectType.GenericItem: return true;
+				case eObjectType.GenericArmor: return true;
+				case eObjectType.GenericWeapon: return true;
+				case eObjectType.Staff: twoHandCheck = new string[] { Abilities.Weapon_Staves }; break;
+				case eObjectType.Fired: otherCheck = new string[] { Abilities.Weapon_Shortbows }; break;
 
-					//alb
-				case eObjectType.CrushingWeapon  : check = new string[] { Abilities.Weapon_Crushing, Abilities.Weapon_Blunt, Abilities.Weapon_Hammers }; break;
-				case eObjectType.SlashingWeapon  : check = new string[] { Abilities.Weapon_Slashing, Abilities.Weapon_Blades, Abilities.Weapon_Swords, Abilities.Weapon_Axes }; break;
-				case eObjectType.ThrustWeapon    : check = new string[] { Abilities.Weapon_Thrusting, Abilities.Weapon_Piercing }; break;
-				case eObjectType.FlexibleWeapon  : check = new string[] { Abilities.Weapon_Flexible }; break;
-				case eObjectType.TwoHandedWeapon : check = new string[] { Abilities.Weapon_TwoHanded, Abilities.Weapon_LargeWeapons }; break;
-				case eObjectType.PolearmWeapon   : check = new string[] { Abilities.Weapon_Polearms, Abilities.Weapon_CelticSpear, Abilities.Weapon_Spears }; break;
-				case eObjectType.Longbow         : check = new string[] { Abilities.Weapon_Longbows }; break;
-				case eObjectType.Crossbow        : check = new string[] { Abilities.Weapon_Crossbow }; break;
+				//alb
+				case eObjectType.CrushingWeapon: oneHandCheck = new string[] { Abilities.Weapon_Crushing, Abilities.Weapon_Blunt, Abilities.Weapon_Hammers }; break;
+				case eObjectType.SlashingWeapon: oneHandCheck = new string[] { Abilities.Weapon_Slashing, Abilities.Weapon_Blades, Abilities.Weapon_Swords, Abilities.Weapon_Axes }; break;
+				case eObjectType.ThrustWeapon: oneHandCheck = new string[] { Abilities.Weapon_Thrusting, Abilities.Weapon_Piercing }; break;
+				case eObjectType.Flexible: oneHandCheck = new string[] { Abilities.Weapon_Flexible }; break;
+				case eObjectType.TwoHandedWeapon: twoHandCheck = new string[] { Abilities.Weapon_TwoHanded, Abilities.Weapon_LargeWeapons }; break;
+				case eObjectType.PolearmWeapon: twoHandCheck = new string[] { Abilities.Weapon_Polearms, Abilities.Weapon_CelticSpear, Abilities.Weapon_Spears }; break;
+				case eObjectType.Longbow: otherCheck = new string[] { Abilities.Weapon_Longbows }; break;
+				case eObjectType.Crossbow: otherCheck = new string[] { Abilities.Weapon_Crossbow }; break;
 
-					//mid
-				case eObjectType.Sword           : check = new string[] { Abilities.Weapon_Swords, Abilities.Weapon_Slashing, Abilities.Weapon_Blades }; check = new string[] { Abilities.Weapon_Swords }; break;
-				case eObjectType.Hammer          : check = new string[] { Abilities.Weapon_Hammers, Abilities.Weapon_Crushing, Abilities.Weapon_Blunt }; check = new string[] { Abilities.Weapon_Hammers }; break;
+				//mid
+				case eObjectType.Sword: oneHandCheck = new string[] { Abilities.Weapon_Swords, Abilities.Weapon_Slashing, Abilities.Weapon_Blades }; twoHandCheck = new string[] { Abilities.Weapon_Swords }; break;
+				case eObjectType.Hammer: oneHandCheck = new string[] { Abilities.Weapon_Hammers, Abilities.Weapon_Crushing, Abilities.Weapon_Blunt }; twoHandCheck = new string[] { Abilities.Weapon_Hammers }; break;
 				case eObjectType.LeftAxe:
-				case eObjectType.Axe             : check = new string[] { Abilities.Weapon_Axes, Abilities.Weapon_Slashing, Abilities.Weapon_Blades }; check = new string[] { Abilities.Weapon_Axes }; break;
-				case eObjectType.HandToHand      : check = new string[] { Abilities.Weapon_HandToHand }; break;
-				case eObjectType.Spear           : check = new string[] { Abilities.Weapon_Spears, Abilities.Weapon_CelticSpear, Abilities.Weapon_Polearms }; break;
-				case eObjectType.CompositeBow    : check = new string[] { Abilities.Weapon_CompositeBows }; break;
-				case eObjectType.ThrownWeapon    : check = new string[] { Abilities.Weapon_Thrown }; break;
+				case eObjectType.Axe: oneHandCheck = new string[] { Abilities.Weapon_Axes, Abilities.Weapon_Slashing, Abilities.Weapon_Blades }; twoHandCheck = new string[] { Abilities.Weapon_Axes }; break;
+				case eObjectType.HandToHand: oneHandCheck = new string[] { Abilities.Weapon_HandToHand }; break;
+				case eObjectType.Spear: twoHandCheck = new string[] { Abilities.Weapon_Spears, Abilities.Weapon_CelticSpear, Abilities.Weapon_Polearms }; break;
+				case eObjectType.CompositeBow: otherCheck = new string[] { Abilities.Weapon_CompositeBows }; break;
+				case eObjectType.Thrown: otherCheck = new string[] { Abilities.Weapon_Thrown }; break;
 
-					//hib
-				case eObjectType.Blades          : check = new string[] { Abilities.Weapon_Blades, Abilities.Weapon_Slashing, Abilities.Weapon_Swords, Abilities.Weapon_Axes }; break;
-				case eObjectType.Blunt           : check = new string[] { Abilities.Weapon_Blunt, Abilities.Weapon_Crushing, Abilities.Weapon_Hammers }; break;
-				case eObjectType.Piercing        : check = new string[] { Abilities.Weapon_Piercing, Abilities.Weapon_Thrusting }; break;
-				case eObjectType.LargeWeapon     : check = new string[] { Abilities.Weapon_LargeWeapons, Abilities.Weapon_TwoHanded }; break;
-				case eObjectType.CelticSpear     : check = new string[] { Abilities.Weapon_CelticSpear, Abilities.Weapon_Spears, Abilities.Weapon_Polearms }; break;
-				case eObjectType.Scythe          : check = new string[] { Abilities.Weapon_Scythe }; break;
-				case eObjectType.RecurvedBow     : check = new string[] { Abilities.Weapon_RecurvedBows }; break;
+				//hib
+				case eObjectType.Blades: oneHandCheck = new string[] { Abilities.Weapon_Blades, Abilities.Weapon_Slashing, Abilities.Weapon_Swords, Abilities.Weapon_Axes }; break;
+				case eObjectType.Blunt: oneHandCheck = new string[] { Abilities.Weapon_Blunt, Abilities.Weapon_Crushing, Abilities.Weapon_Hammers }; break;
+				case eObjectType.Piercing: oneHandCheck = new string[] { Abilities.Weapon_Piercing, Abilities.Weapon_Thrusting }; break;
+				case eObjectType.LargeWeapons: twoHandCheck = new string[] { Abilities.Weapon_LargeWeapons, Abilities.Weapon_TwoHanded }; break;
+				case eObjectType.CelticSpear: twoHandCheck = new string[] { Abilities.Weapon_CelticSpear, Abilities.Weapon_Spears, Abilities.Weapon_Polearms }; break;
+				case eObjectType.Scythe: twoHandCheck = new string[] { Abilities.Weapon_Scythe }; break;
+				case eObjectType.RecurvedBow: otherCheck = new string[] { Abilities.Weapon_RecurvedBows }; break;
 
-					//misc
-				//case eObjectType.Magical         : return true;
-				case eObjectType.Shield          : return player.GetAbilityLevel(Abilities.Shield) >= (byte)(((Shield)item).Size);
-				//case eObjectType.Arrow           : check = new string[] { Abilities.Weapon_CompositeBows, Abilities.Weapon_Longbows, Abilities.Weapon_RecurvedBows, Abilities.Weapon_Shortbows }; break;
-				//case eObjectType.Bolt            : check = new string[] { Abilities.Weapon_Crossbow }; break;
-				//case eObjectType.Poison          : return player.GetModifiedSpecLevel(Specs.Envenom) > 0;
-				case eObjectType.Instrument      : return player.HasAbility(Abilities.Weapon_Instruments);
+				//misc
+				case eObjectType.Magical: return true;
+				case eObjectType.Shield: return living.GetAbilityLevel(Abilities.Shield) >= item.Type_Damage;
+				case eObjectType.Arrow: otherCheck = new string[] { Abilities.Weapon_CompositeBows, Abilities.Weapon_Longbows, Abilities.Weapon_RecurvedBows, Abilities.Weapon_Shortbows }; break;
+				case eObjectType.Bolt: otherCheck = new string[] { Abilities.Weapon_Crossbow }; break;
+				case eObjectType.Poison: return living.GetModifiedSpecLevel(Specs.Envenom) > 0;
+				case eObjectType.Instrument: return living.HasAbility(Abilities.Weapon_Instruments);
+
+				//housing
+				case eObjectType.GardenObject: return true;
+				case eObjectType.HouseWallObject: return true;
+				case eObjectType.HouseFloorObject: return true;
+				//TODO: different shield sizes
 			}
 
-			foreach(string ch in check)
-				if(player.HasAbility(ch))
+			if (item.Item_Type == Slot.RIGHTHAND || item.Item_Type == Slot.LEFTHAND)
+			{
+				foreach (string check in oneHandCheck)
+				{
+					if (living.HasAbility(check))
+						return true;
+				}
+			}
+			else if (item.Item_Type == Slot.TWOHAND)
+			{
+				foreach (string check in twoHandCheck)
+				{
+					if (living.HasAbility(check))
+						return true;
+				}
+			}
+
+			foreach (string check in otherCheck)
+			{
+				if (living.HasAbility(check))
 					return true;
+			}
 
 			return false;
 		}
@@ -397,10 +474,29 @@ namespace DOL.GS.ServerRules
 		{
 			int res = 0;
 
-			foreach(eObjectType obj in GetCompatibleObjectTypes(objectType))
+			foreach (eObjectType obj in GetCompatibleObjectTypes(objectType))
 			{
 				int spec = player.GetModifiedSpecLevel(SkillBase.ObjectTypeToSpec(obj));
-				if(res < spec)
+				if (res < spec)
+					res = spec;
+			}
+			return res;
+		}
+
+		/// <summary>
+		/// Get object specialization level based on server type
+		/// </summary>
+		/// <param name="player">player whom specializations are checked</param>
+		/// <param name="objectType">object type</param>
+		/// <returns>specialization in object or 0</returns>
+		public virtual int GetBaseObjectSpecLevel(GamePlayer player, eObjectType objectType)
+		{
+			int res = 0;
+
+			foreach (eObjectType obj in GetCompatibleObjectTypes(objectType))
+			{
+				int spec = player.GetBaseSpecLevel(SkillBase.ObjectTypeToSpec(obj));
+				if (res < spec)
 					res = spec;
 			}
 			return res;
@@ -415,9 +511,9 @@ namespace DOL.GS.ServerRules
 		/// <returns>true if equals</returns>
 		public virtual bool IsObjectTypesEqual(eObjectType type1, eObjectType type2)
 		{
-			foreach(eObjectType obj in GetCompatibleObjectTypes(type1))
+			foreach (eObjectType obj in GetCompatibleObjectTypes(type1))
 			{
-				if(obj == type2)
+				if (obj == type2)
 					return true;
 			}
 			return false;
@@ -437,49 +533,49 @@ namespace DOL.GS.ServerRules
 		/// <returns>An array of compatible object types</returns>
 		protected virtual eObjectType[] GetCompatibleObjectTypes(eObjectType objectType)
 		{
-			if(m_compatibleObjectTypes == null)
+			if (m_compatibleObjectTypes == null)
 			{
 				m_compatibleObjectTypes = new Hashtable();
 				m_compatibleObjectTypes[(int)eObjectType.Staff] = new eObjectType[] { eObjectType.Staff };
-				m_compatibleObjectTypes[(int)eObjectType.ShortBow] = new eObjectType[] { eObjectType.ShortBow };
+				m_compatibleObjectTypes[(int)eObjectType.Fired] = new eObjectType[] { eObjectType.Fired };
 
 				//alb
-				m_compatibleObjectTypes[(int)eObjectType.CrushingWeapon]  = new eObjectType[] { eObjectType.CrushingWeapon, eObjectType.Blunt, eObjectType.Hammer };
-				m_compatibleObjectTypes[(int)eObjectType.SlashingWeapon]  = new eObjectType[] { eObjectType.SlashingWeapon, eObjectType.Blades, eObjectType.Sword, eObjectType.Axe };
-				m_compatibleObjectTypes[(int)eObjectType.ThrustWeapon]    = new eObjectType[] { eObjectType.ThrustWeapon, eObjectType.Piercing };
-				m_compatibleObjectTypes[(int)eObjectType.TwoHandedWeapon] = new eObjectType[] { eObjectType.TwoHandedWeapon, eObjectType.LargeWeapon };
-				m_compatibleObjectTypes[(int)eObjectType.PolearmWeapon]   = new eObjectType[] { eObjectType.PolearmWeapon, eObjectType.CelticSpear, eObjectType.Spear };
-				m_compatibleObjectTypes[(int)eObjectType.FlexibleWeapon]  = new eObjectType[] { eObjectType.FlexibleWeapon };
-				m_compatibleObjectTypes[(int)eObjectType.Longbow]         = new eObjectType[] { eObjectType.Longbow };
-				m_compatibleObjectTypes[(int)eObjectType.Crossbow]        = new eObjectType[] { eObjectType.Crossbow };
+				m_compatibleObjectTypes[(int)eObjectType.CrushingWeapon] = new eObjectType[] { eObjectType.CrushingWeapon, eObjectType.Blunt, eObjectType.Hammer };
+				m_compatibleObjectTypes[(int)eObjectType.SlashingWeapon] = new eObjectType[] { eObjectType.SlashingWeapon, eObjectType.Blades, eObjectType.Sword, eObjectType.Axe };
+				m_compatibleObjectTypes[(int)eObjectType.ThrustWeapon] = new eObjectType[] { eObjectType.ThrustWeapon, eObjectType.Piercing };
+				m_compatibleObjectTypes[(int)eObjectType.TwoHandedWeapon] = new eObjectType[] { eObjectType.TwoHandedWeapon, eObjectType.LargeWeapons };
+				m_compatibleObjectTypes[(int)eObjectType.PolearmWeapon] = new eObjectType[] { eObjectType.PolearmWeapon, eObjectType.CelticSpear, eObjectType.Spear };
+				m_compatibleObjectTypes[(int)eObjectType.Flexible] = new eObjectType[] { eObjectType.Flexible };
+				m_compatibleObjectTypes[(int)eObjectType.Longbow] = new eObjectType[] { eObjectType.Longbow };
+				m_compatibleObjectTypes[(int)eObjectType.Crossbow] = new eObjectType[] { eObjectType.Crossbow };
 				//TODO: case 5: abilityCheck = Abilities.Weapon_Thrown; break;
 
 				//mid
-				m_compatibleObjectTypes[(int)eObjectType.Hammer]       = new eObjectType[] { eObjectType.Hammer, eObjectType.CrushingWeapon, eObjectType.Blunt };
-				m_compatibleObjectTypes[(int)eObjectType.Sword]        = new eObjectType[] { eObjectType.Sword, eObjectType.SlashingWeapon, eObjectType.Blades };
-				m_compatibleObjectTypes[(int)eObjectType.LeftAxe]      = new eObjectType[] { eObjectType.LeftAxe };
-				m_compatibleObjectTypes[(int)eObjectType.Axe]          = new eObjectType[] { eObjectType.Axe, eObjectType.SlashingWeapon, eObjectType.Blades };
-				m_compatibleObjectTypes[(int)eObjectType.HandToHand]   = new eObjectType[] { eObjectType.HandToHand };
-				m_compatibleObjectTypes[(int)eObjectType.Spear]        = new eObjectType[] { eObjectType.Spear, eObjectType.CelticSpear, eObjectType.PolearmWeapon };
+				m_compatibleObjectTypes[(int)eObjectType.Hammer] = new eObjectType[] { eObjectType.Hammer, eObjectType.CrushingWeapon, eObjectType.Blunt };
+				m_compatibleObjectTypes[(int)eObjectType.Sword] = new eObjectType[] { eObjectType.Sword, eObjectType.SlashingWeapon, eObjectType.Blades };
+				m_compatibleObjectTypes[(int)eObjectType.LeftAxe] = new eObjectType[] { eObjectType.LeftAxe };
+				m_compatibleObjectTypes[(int)eObjectType.Axe] = new eObjectType[] { eObjectType.Axe, eObjectType.SlashingWeapon, eObjectType.Blades, eObjectType.LeftAxe };
+				m_compatibleObjectTypes[(int)eObjectType.HandToHand] = new eObjectType[] { eObjectType.HandToHand };
+				m_compatibleObjectTypes[(int)eObjectType.Spear] = new eObjectType[] { eObjectType.Spear, eObjectType.CelticSpear, eObjectType.PolearmWeapon };
 				m_compatibleObjectTypes[(int)eObjectType.CompositeBow] = new eObjectType[] { eObjectType.CompositeBow };
-				m_compatibleObjectTypes[(int)eObjectType.ThrownWeapon] = new eObjectType[] { eObjectType.ThrownWeapon };
+				m_compatibleObjectTypes[(int)eObjectType.Thrown] = new eObjectType[] { eObjectType.Thrown };
 
 				//hib
-				m_compatibleObjectTypes[(int)eObjectType.Blunt]        = new eObjectType[] { eObjectType.Blunt, eObjectType.CrushingWeapon, eObjectType.Hammer };
-				m_compatibleObjectTypes[(int)eObjectType.Blades]       = new eObjectType[] { eObjectType.Blades, eObjectType.SlashingWeapon, eObjectType.Sword, eObjectType.Axe };
-				m_compatibleObjectTypes[(int)eObjectType.Piercing]     = new eObjectType[] { eObjectType.Piercing, eObjectType.ThrustWeapon };
-				m_compatibleObjectTypes[(int)eObjectType.LargeWeapon]  = new eObjectType[] { eObjectType.LargeWeapon, eObjectType.TwoHandedWeapon };
-				m_compatibleObjectTypes[(int)eObjectType.CelticSpear]  = new eObjectType[] { eObjectType.CelticSpear, eObjectType.Spear, eObjectType.PolearmWeapon };
-				m_compatibleObjectTypes[(int)eObjectType.Scythe]       = new eObjectType[] { eObjectType.Scythe };
-				m_compatibleObjectTypes[(int)eObjectType.RecurvedBow]  = new eObjectType[] { eObjectType.RecurvedBow };
+				m_compatibleObjectTypes[(int)eObjectType.Blunt] = new eObjectType[] { eObjectType.Blunt, eObjectType.CrushingWeapon, eObjectType.Hammer };
+				m_compatibleObjectTypes[(int)eObjectType.Blades] = new eObjectType[] { eObjectType.Blades, eObjectType.SlashingWeapon, eObjectType.Sword, eObjectType.Axe };
+				m_compatibleObjectTypes[(int)eObjectType.Piercing] = new eObjectType[] { eObjectType.Piercing, eObjectType.ThrustWeapon };
+				m_compatibleObjectTypes[(int)eObjectType.LargeWeapons] = new eObjectType[] { eObjectType.LargeWeapons, eObjectType.TwoHandedWeapon };
+				m_compatibleObjectTypes[(int)eObjectType.CelticSpear] = new eObjectType[] { eObjectType.CelticSpear, eObjectType.Spear, eObjectType.PolearmWeapon };
+				m_compatibleObjectTypes[(int)eObjectType.Scythe] = new eObjectType[] { eObjectType.Scythe };
+				m_compatibleObjectTypes[(int)eObjectType.RecurvedBow] = new eObjectType[] { eObjectType.RecurvedBow };
 
-				m_compatibleObjectTypes[(int)eObjectType.Shield]       = new eObjectType[] { eObjectType.Shield };
-				m_compatibleObjectTypes[(int)eObjectType.Poison]       = new eObjectType[] { eObjectType.Poison };
+				m_compatibleObjectTypes[(int)eObjectType.Shield] = new eObjectType[] { eObjectType.Shield };
+				m_compatibleObjectTypes[(int)eObjectType.Poison] = new eObjectType[] { eObjectType.Poison };
 				//TODO: case 45: abilityCheck = Abilities.instruments; break;
 			}
 
 			eObjectType[] res = (eObjectType[])m_compatibleObjectTypes[(int)objectType];
-			if(res == null)
+			if (res == null)
 				return new eObjectType[0];
 			return res;
 		}
@@ -490,200 +586,279 @@ namespace DOL.GS.ServerRules
 		/// Invoked on NPC death and deals out
 		/// experience/realm points if needed
 		/// </summary>
-		/// <param name="killedNpc">npc that died</param>
+		/// <param name="killedNPC">npc that died</param>
 		/// <param name="killer">killer</param>
-		public virtual void OnNPCKilled(GameNPC killedNpc, GameLiving killer)
+		public virtual void OnNPCKilled(GameNPC killedNPC, GameObject killer)
 		{
-			bool isWorthReward = true;
+			//"This monster has been charmed recently and is worth no experience."
 
 			string message = "You gain no experience from this kill!";
-			if (killedNpc is GameSummonedPet || killedNpc.Region.Time - GameMob.CHARMED_NOEXP_TIMEOUT < killedNpc.TempProperties.getLongProperty(GameMob.CHARMED_TICK_PROP, long.MinValue))
+			if (killedNPC.CurrentRegion.Time - GameNPC.CHARMED_NOEXP_TIMEOUT < killedNPC.TempProperties.getLongProperty(GameNPC.CHARMED_TICK_PROP, 0L))
 			{
 				message = "This monster has been charmed recently and is worth no experience.";
-				isWorthReward = false;
 			}
-			else		
+
+			lock (killedNPC.XPGainers.SyncRoot)
 			{
-				lock(killedNpc.XPGainers.SyncRoot)
+				if (!killedNPC.IsWorthReward)
 				{
-					if(killedNpc.XPGainers.Count == 0)
+					foreach (DictionaryEntry de in killedNPC.XPGainers)
 					{
-						isWorthReward = false;
+						GamePlayer player = de.Key as GamePlayer;
+						if (player != null)
+							player.Out.SendMessage(message, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}
-					else
-					{
-						// we need at least 1 player attacker to deal xp and loot
-						bool playerAttacker = false;
-						foreach(GameLiving gainer in killedNpc.XPGainers.Keys)
-						{
-							GamePlayer gainerPlayer = gainer as GamePlayer;
-							if(gainerPlayer != null)
-							{
-								playerAttacker = true;
-
-								//If a gameplayer with privlevel > 1 attacked the
-								//mob, then the players won't gain xp nor loot...
-								if(gainerPlayer.Client.Account.PrivLevel > ePrivLevel.Player)
-								{
-									isWorthReward = false;
-									break;
-								}
-							}
-							else
-							{
-								GameNPC gainerNPC = gainer as GameNPC;
-								if(gainerNPC != null)
-								{
-									IControlledBrain brain = gainerNPC.Brain as IControlledBrain;
-									if (brain != null && brain.Owner != null)
-									{
-										playerAttacker = true;
-									}
-								}
-							}
-
-							//If the killed npc is gray for one of the xpGainer (no matter if player or another npc)
-							//it is't worth anything either
-							if(gainer.IsObjectGreyCon(killedNpc)) 
-							{
-								isWorthReward = false;
-								break;
-							}
-						}
-
-						if(!playerAttacker) isWorthReward = false;
-					}
+					return;
 				}
-			}
-
-			if(!isWorthReward)
-			{
-				foreach(DictionaryEntry de in killedNpc.XPGainers)
-				{
-					GamePlayer player = de.Key as GamePlayer;
-					if(player!=null)
-						player.Out.SendMessage(message, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				}
-				return;
-			}
-
-			lock(killedNpc.XPGainers.SyncRoot)
-			{
-				ArrayList playerGainers = new ArrayList();
-				foreach(DictionaryEntry de in killedNpc.XPGainers)
-				{
-					GamePlayer player = de.Key as GamePlayer;
-					if (player == null) continue;
-					if (player.ObjectState != eObjectState.Active) continue;
-					if (!player.Alive) continue;
-					if (!player.Position.CheckSquareDistance(killedNpc.Position, (uint) (WorldMgr.MAX_EXPFORKILL_DISTANCE*WorldMgr.MAX_EXPFORKILL_DISTANCE))) continue;
-					
-					playerGainers.Add(player);
-				}
-
-				#region XP
 
 				float totalDamage = 0;
-				foreach(GamePlayer player in playerGainers)
-					totalDamage += (float)killedNpc.XPGainers[player];
+				Hashtable plrGrpExp = new Hashtable();
+				//Collect the total damage
+				foreach (DictionaryEntry de in killedNPC.XPGainers)
+				{
+					totalDamage += (float)de.Value;
+					GamePlayer player = de.Key as GamePlayer;
+					if (player == null) continue;
+					if (player.ObjectState != GameObject.eObjectState.Active) continue;
+					//					if (!player.Alive) continue;
+					if (!WorldMgr.CheckDistance(player, killedNPC, WorldMgr.MAX_EXPFORKILL_DISTANCE)) continue;
+					if (player.PlayerGroup != null)
+					{
+						if (plrGrpExp.ContainsKey(player.PlayerGroup))
+							plrGrpExp[player.PlayerGroup] = (int)plrGrpExp[player.PlayerGroup] + 1;
+						else
+							plrGrpExp[player.PlayerGroup] = 1;
+					}
+				}
 
-				long npcExpValue = killedNpc.ExperienceValue;
+				long npcExpValue = killedNPC.ExperienceValue;
+				int npcRPValue = killedNPC.RealmPointsValue;
+				int npcBPValue = killedNPC.BountyPointsValue;
+
+				npcExpValue = (long)(npcExpValue * ServerProperties.Properties.XP_RATE);
 
 				//Now deal the XP to all livings
-				foreach(GamePlayer player in playerGainers)
+				foreach (DictionaryEntry de in killedNPC.XPGainers)
 				{
-					double damagePercent = (float)killedNpc.XPGainers[player] / totalDamage;
-					long xpReward = (long)(npcExpValue * damagePercent); // exp for damage percent
+					GameLiving living = de.Key as GameLiving;
+					if (living == null) continue;
+					if (living.ObjectState != GameObject.eObjectState.Active) continue;
+					//if (!living.Alive) continue;
+					if (!WorldMgr.CheckDistance(living, killedNPC, WorldMgr.MAX_EXPFORKILL_DISTANCE)) continue;
+					// TODO: pets take 25% and owner gets 75%
+					double damagePercent = (float)de.Value / totalDamage;
 
-					// exp cap
-					long expCap = (long)(player.ExperienceValue * 1.25);
-					if(xpReward > expCap) xpReward = expCap;
-
-					// camp bonus
-					const double fullCampBonus = 0.3;
-					const double fullCampBonusTicks = (1000 * 60 * 60); //1 hour (in ms) = full 30%
-					long livingLifeSpan = killedNpc.Region.Time - killedNpc.SpawnTick;
-
-					double campBonus = fullCampBonus * (livingLifeSpan / fullCampBonusTicks);
-
-					if(campBonus < 0.01)
-						campBonus = 0;
-					else if(campBonus > fullCampBonus)
-						campBonus = fullCampBonus;
-
-                    //group bonus
-                    //TODO
-
-                    player.GainExperience(xpReward, (long)(xpReward * campBonus), 0, true);
-				}
-				#endregion
-
-				#region Loot
-
-				// now generate loot
-				GameMob killedMob = killedNpc as GameMob;
-				if(killedMob != null) // only GameMob can loot
-				{
-					ArrayList allLoots = new ArrayList();
-
-					LootList mobLootList = GameServer.Database.SelectObject(typeof(LootList), Expression.Eq("LootListID", killedMob.LootListID)) as LootList;
-					if(mobLootList != null)
+					// realm points
+					int rpCap = living.RealmPointsValue * 2;
+					int realmPoints = (int)(npcRPValue * damagePercent);
+					//rp bonuses from RR and Group
+					//20% if R1L0 char kills RR10,if RR10 char kills R1L0 he will get -20% bonus
+					//100% if full group,scales down according to player count in group and their range to target
+					if (living is GamePlayer)
 					{
-						foreach(ILoot loot in mobLootList.AllLoots)
+						GamePlayer killerPlayer = living as GamePlayer;
+						if (killerPlayer.PlayerGroup != null && killerPlayer.PlayerGroup.PlayerCount > 1)
 						{
-							if(Util.Chance(loot.Chance))
+							lock (killerPlayer.PlayerGroup)
 							{
-								GameObjectTimed obj = loot.GetLoot(killedMob, killer);
-								if(obj != null) allLoots.Add(obj);
+								int count = 0;
+								foreach (GamePlayer player in killerPlayer.PlayerGroup.GetPlayersInTheGroup())
+								{
+									if (!WorldMgr.CheckDistance(player, killedNPC, WorldMgr.MAX_EXPFORKILL_DISTANCE)) continue;
+									count++;
+								}
+								realmPoints = (int)(realmPoints * (1.0 + count * 0.125));
 							}
 						}
 					}
-
-					// when no item loot always drop a bag of coin else 20% chance
-					if(allLoots.Count <= 0 || Util.Chance(20)) 
+					if (realmPoints > rpCap)
+						realmPoints = rpCap;
+					if (realmPoints != 0)
 					{
-						GameMoney money = new GameMoney();
-						money.Name = "bag of coin";
-						money.Model = 82;
-						money.Realm = 0;
-						
-						int lvl = killedMob.Level+1;
-						if (lvl < 1) lvl = 1;
-						int minLoot = 2+((lvl*lvl*lvl)>>3);
-						money.TotalCopper = minLoot+Util.Random(minLoot>>1);
-
-						allLoots.Add(money);
+						living.GainRealmPoints(realmPoints);
 					}
-							
-					//Now add all owner to all loots
-					foreach(GamePlayer player in playerGainers)
+
+					// bounty points
+					int bpCap = living.BountyPointsValue * 2;
+					int bountyPoints = (int)(npcBPValue * damagePercent);
+					if (bountyPoints > bpCap)
+						bountyPoints = bpCap;
+					if (bountyPoints != 0)
 					{
-						foreach(GameObjectTimed loot in allLoots)
+						living.GainBountyPoints(bountyPoints);
+					}
+
+					// experience points
+					long xpReward = (long)(npcExpValue * damagePercent); // exp for damage percent
+
+					// camp bonus
+					const double fullCampBonus = 2.0;
+					const double fullCampBonusTicks = (1000 * 60 * 60); //1 hour (in ms) = full 100%
+					long livingLifeSpan = killedNPC.CurrentRegion.Time - killedNPC.SpawnTick;
+
+					// exp cap
+					long expCap = (long)(living.ExperienceValue * 1.25);
+					if (xpReward > expCap)
+						xpReward = expCap;
+
+					double campBonus = fullCampBonus * (livingLifeSpan / fullCampBonusTicks);
+					//1.49 http://news-daoc.goa.com/view_patchnote_archive.php?id_article=2478
+					//"Camp bonuses" have been substantially upped in dungeons. Now camp bonuses in dungeons are, on average, 20% higher than outside camp bonuses.
+					if (killer.CurrentZone.IsDungeon)
+						campBonus += 0.20;
+
+					if (campBonus < 0.01)
+						campBonus = 0;
+					else if (campBonus > fullCampBonus)
+						campBonus = fullCampBonus;
+
+					campBonus = xpReward * campBonus;
+
+					if (!living.IsAlive)//Dead living gets 25% exp only
+					{
+						campBonus = (long)(campBonus * 0.25);
+						xpReward = (long)(xpReward * 0.25);
+					}
+
+					long groupExp = 0;
+
+					if (xpReward > 0)
+					{
+						if (living is GamePlayer)
 						{
-							loot.AddOwner(player);
+							GamePlayer player = living as GamePlayer;
+							if (player != null && player.PlayerGroup != null && plrGrpExp.ContainsKey(player.PlayerGroup))
+								groupExp += (long)(0.125 * xpReward * (int)plrGrpExp[player.PlayerGroup]);
 						}
-					}
 
-					// add all loots to the world
-					foreach(GameObjectTimed loot in allLoots)
-					{
-						loot.Position = killedMob.Position;
-						loot.Heading = killedMob.Heading;
-						loot.Region = killedMob.Region;
-
-						loot.AddToWorld();
-					}
-
-					// send all loot message
-					foreach(GamePlayer player in killedMob.GetInRadius(typeof(GamePlayer), WorldMgr.INFO_DISTANCE))
-					{
-						foreach(GameObjectTimed loot in allLoots)
-						{
-							player.Out.SendMessage(killedMob.GetName(0, true) +" drops "+ loot.GetName(1, false) +".", eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
-						}
+						xpReward += (long)campBonus + groupExp;
+						living.GainExperience(xpReward, (long)campBonus, groupExp, true, false);
 					}
 				}
-				#endregion
+			}
+		}
+
+		/// <summary>
+		/// Called on living death that is not gameplayer or gamenpc
+		/// </summary>
+		/// <param name="killedLiving">The living object</param>
+		/// <param name="killer">The killer object</param>
+		public virtual void OnLivingKilled(GameLiving killedLiving, GameObject killer)
+		{
+			lock (killedLiving.XPGainers.SyncRoot)
+			{
+				bool dealNoXP = false;
+				float totalDamage = 0;
+				//Collect the total damage
+				foreach (DictionaryEntry de in killedLiving.XPGainers)
+				{
+					GameObject obj = (GameObject)de.Key;
+					if (obj is GamePlayer)
+					{
+						//If a gameplayer with privlevel > 1 attacked the
+						//mob, then the players won't gain xp ...
+						if (((GamePlayer)obj).Client.Account.PrivLevel > 1)
+						{
+							dealNoXP = true;
+							break;
+						}
+					}
+					totalDamage += (float)de.Value;
+				}
+
+				if (dealNoXP || (killedLiving.ExperienceValue == 0 && killedLiving.RealmPointsValue == 0 && killedLiving.BountyPointsValue == 0))
+				{
+					return;
+				}
+
+
+				long ExpValue = killedLiving.ExperienceValue;
+				int RPValue = killedLiving.RealmPointsValue;
+				int BPValue = killedLiving.BountyPointsValue;
+
+				//Now deal the XP and RPs to all livings
+				foreach (DictionaryEntry de in killedLiving.XPGainers)
+				{
+					GameLiving living = de.Key as GameLiving;
+					GamePlayer expGainPlayer = living as GamePlayer;
+					if (living == null)
+					{
+						continue;
+					}
+					if (living.ObjectState != GameObject.eObjectState.Active)
+					{
+						continue;
+					}
+					/*
+					 * http://www.camelotherald.com/more/2289.shtml
+					 * Dead players will now continue to retain and receive their realm point credit
+					 * on targets until they release. This will work for solo players as well as 
+					 * grouped players in terms of continuing to contribute their share to the kill
+					 * if a target is being attacked by another non grouped player as well.
+					 */
+					//if (!living.Alive) continue;
+					if (!WorldMgr.CheckDistance(living, killedLiving, WorldMgr.MAX_EXPFORKILL_DISTANCE))
+					{
+						continue;
+					}
+
+
+					double damagePercent = (float)de.Value / totalDamage;
+					if (!living.IsAlive)//Dead living gets 25% exp only
+						damagePercent *= 0.25;
+
+					// realm points
+					int rpCap = living.RealmPointsValue * 2;
+					int realmPoints = (int)(RPValue * damagePercent);
+					//rp bonuses from RR and Group
+					//20% if R1L0 char kills RR10,if RR10 char kills R1L0 he will get -20% bonus
+					//100% if full group,scales down according to player count in group and their range to target
+					if (living is GamePlayer)
+					{
+						GamePlayer killerPlayer = living as GamePlayer;
+						if (killerPlayer.PlayerGroup != null && killerPlayer.PlayerGroup.PlayerCount > 1)
+						{
+							lock (killerPlayer.PlayerGroup)
+							{
+								int count = 0;
+								foreach (GamePlayer player in killerPlayer.PlayerGroup.GetPlayersInTheGroup())
+								{
+									if (!WorldMgr.CheckDistance(player, killedLiving, WorldMgr.MAX_EXPFORKILL_DISTANCE)) continue;
+									count++;
+								}
+								realmPoints = (int)(realmPoints * (1.0 + count * 0.125));
+							}
+						}
+					}
+					if (realmPoints > rpCap)
+						realmPoints = rpCap;
+					if (realmPoints != 0)
+					{
+						living.GainRealmPoints(realmPoints);
+					}
+
+					// bounty points
+					int bpCap = living.BountyPointsValue * 2;
+					int bountyPoints = (int)(BPValue * damagePercent);
+					if (bountyPoints > bpCap)
+						bountyPoints = bpCap;
+					if (bountyPoints != 0)
+					{
+						living.GainBountyPoints(bountyPoints);
+					}
+
+					// experience
+					// TODO: pets take 25% and owner gets 75%
+					long xpReward = (long)(ExpValue * damagePercent); // exp for damage percent
+
+					long expCap = (long)(living.ExperienceValue * 1.25);
+					if (xpReward > expCap)
+						xpReward = expCap;
+
+					if (xpReward > 0)
+						living.GainExperience(xpReward);
+
+				}
 			}
 		}
 
@@ -697,45 +872,36 @@ namespace DOL.GS.ServerRules
 		{
 			killedPlayer.LastDeathRealmPoints = 0;
 			// "player has been killed recently"
-			const long noExpSeconds = 5 * 60;
-			if(killedPlayer.DeathTime + noExpSeconds > killedPlayer.PlayedTime)
+			long noExpSeconds = ServerProperties.Properties.RP_WORTH_SECONDS;
+			if (killedPlayer.PlayerCharacter.DeathTime + noExpSeconds > killedPlayer.PlayedTime)
 			{
-				lock(killedPlayer.XPGainers.SyncRoot)
+				lock (killedPlayer.XPGainers.SyncRoot)
 				{
-					foreach(DictionaryEntry de in killedPlayer.XPGainers)
-						if(de.Key is GamePlayer)
+					foreach (DictionaryEntry de in killedPlayer.XPGainers)
+					{
+						if (de.Key is GamePlayer)
 						{
 							((GamePlayer)de.Key).Out.SendMessage(killedPlayer.Name + " has been killed recently and is worth no realm points!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 							((GamePlayer)de.Key).Out.SendMessage(killedPlayer.Name + " has been killed recently and is worth no experience!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 						}
+					}
 				}
 				return;
 			}
 
-			lock(killedPlayer.XPGainers.SyncRoot)
+			lock (killedPlayer.XPGainers.SyncRoot)
 			{
 				bool dealNoXP = false;
 				float totalDamage = 0;
 				//Collect the total damage
-				foreach(DictionaryEntry de in killedPlayer.XPGainers)
+				foreach (DictionaryEntry de in killedPlayer.XPGainers)
 				{
 					GameObject obj = (GameObject)de.Key;
-					if(obj is GamePlayer)
+					if (obj is GamePlayer)
 					{
 						//If a gameplayer with privlevel > 1 attacked the
 						//mob, then the players won't gain xp ...
-						if(((GamePlayer)obj).Client.Account.PrivLevel > ePrivLevel.Player)
-						{
-							dealNoXP = true;
-							break;
-						}
-					}
-					else
-					{
-						//If object is no gameplayer and realm is != none
-						//then it means that a npc has hit this living and
-						//it is not worth any xp ...
-						if(obj.Realm != (byte)eRealm.None)
+						if (((GamePlayer)obj).Client.Account.PrivLevel > 1)
 						{
 							dealNoXP = true;
 							break;
@@ -744,12 +910,12 @@ namespace DOL.GS.ServerRules
 					totalDamage += (float)de.Value;
 				}
 
-				if(dealNoXP)
+				if (dealNoXP)
 				{
-					foreach(DictionaryEntry de in killedPlayer.XPGainers)
+					foreach (DictionaryEntry de in killedPlayer.XPGainers)
 					{
 						GamePlayer player = de.Key as GamePlayer;
-						if(player!=null)
+						if (player != null)
 							player.Out.SendMessage("You gain no experience from this kill!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}
 					return;
@@ -757,85 +923,140 @@ namespace DOL.GS.ServerRules
 
 
 				long playerExpValue = killedPlayer.ExperienceValue;
+				playerExpValue = (long)(playerExpValue * ServerProperties.Properties.XP_RATE);
 				int playerRPValue = killedPlayer.RealmPointsValue;
-				int playerBPValue = killedPlayer.BountyPointsValue;
+				int playerBPValue = 0;
+				bool BG = false;
+				foreach (AbstractGameKeep keep in KeepMgr.GetKeepsOfRegion(killedPlayer.CurrentRegionID))
+				{
+					if (keep.BaseLevel < 50)
+					{
+						BG = true;
+						break;
+					}
+				}
+				if (!BG)
+					playerBPValue = killedPlayer.BountyPointsValue;
+				long playerMoneyValue = killedPlayer.MoneyValue;
 
 				//Now deal the XP and RPs to all livings
-				foreach(DictionaryEntry de in killedPlayer.XPGainers)
+				foreach (DictionaryEntry de in killedPlayer.XPGainers)
 				{
-					GamePlayer expGainer = de.Key as GamePlayer;
-					if (expGainer == null) continue;
-					if (expGainer.ObjectState != eObjectState.Active) continue;
-					if (!expGainer.Alive) continue;
-					if (!expGainer.Position.CheckSquareDistance(killedPlayer.Position, (uint) (WorldMgr.MAX_EXPFORKILL_DISTANCE*WorldMgr.MAX_EXPFORKILL_DISTANCE))) continue;
+					GameLiving living = de.Key as GameLiving;
+					GamePlayer expGainPlayer = living as GamePlayer;
+					if (living == null) continue;
+					if (living.ObjectState != GameObject.eObjectState.Active) continue;
+					/*
+					 * http://www.camelotherald.com/more/2289.shtml
+					 * Dead players will now continue to retain and receive their realm point credit
+					 * on targets until they release. This will work for solo players as well as 
+					 * grouped players in terms of continuing to contribute their share to the kill
+					 * if a target is being attacked by another non grouped player as well.
+					 */
+					//if (!living.Alive) continue;
+					if (!WorldMgr.CheckDistance(living, killedPlayer, WorldMgr.MAX_EXPFORKILL_DISTANCE)) continue;
 
 
 					double damagePercent = (float)de.Value / totalDamage;
+					if (!living.IsAlive)//Dead living gets 25% exp only
+						damagePercent *= 0.25;
 
 					// realm points
-					int rpCap = expGainer.RealmPointsValue * 2;
+					int rpCap = living.RealmPointsValue * 2;
 					int realmPoints = (int)(playerRPValue * damagePercent);
-					if(realmPoints > rpCap)
-						realmPoints = rpCap;
-					if(realmPoints != 0)
+					//rp bonuses from RR and Group
+					//20% if R1L0 char kills RR10,if RR10 char kills R1L0 he will get -20% bonus
+					//100% if full group,scales down according to player count in group and their range to target
+					if (living is GamePlayer)
 					{
-						killedPlayer.LastDeathRealmPoints += realmPoints;
-						expGainer.GainRealmPoints(realmPoints);
+						GamePlayer killerPlayer = living as GamePlayer;
+						realmPoints = (int)(realmPoints * (1.0 + 2.0 * (killedPlayer.RealmLevel - killerPlayer.RealmLevel) / 900.0));
+						if (killerPlayer.PlayerGroup != null && killerPlayer.PlayerGroup.PlayerCount > 1)
+						{
+							lock (killerPlayer.PlayerGroup)
+							{
+								int count = 0;
+								foreach (GamePlayer player in killerPlayer.PlayerGroup.GetPlayersInTheGroup())
+								{
+									if (!WorldMgr.CheckDistance(player, killedPlayer, WorldMgr.MAX_EXPFORKILL_DISTANCE)) continue;
+									count++;
+								}
+								realmPoints = (int)(realmPoints * (1.0 + count * 0.125));
+							}
+						}
+					}
+					if (realmPoints > rpCap)
+						realmPoints = rpCap;
+					if (realmPoints != 0)
+					{
+						if (living is GamePlayer)
+							killedPlayer.LastDeathRealmPoints += realmPoints;
+						living.GainRealmPoints(realmPoints);
 					}
 
 					// bounty points
-					int bpCap = expGainer.BountyPointsValue * 2;
+					int bpCap = living.BountyPointsValue * 2;
 					int bountyPoints = (int)(playerBPValue * damagePercent);
-					if(bountyPoints > bpCap)
+					if (bountyPoints > bpCap)
 						bountyPoints = bpCap;
-					if(bountyPoints != 0)
+					if (bountyPoints != 0)
 					{
-						expGainer.GainBountyPoints(bountyPoints);
+						living.GainBountyPoints(bountyPoints);
 					}
 
 					// experience
+					// TODO: pets take 25% and owner gets 75%
 					long xpReward = (long)(playerExpValue * damagePercent); // exp for damage percent
 
-					long expCap = (long)(expGainer.ExperienceValue * 1.25);
-					if(xpReward > expCap)
+					long expCap = (long)(living.ExperienceValue * 1.25);
+					if (xpReward > expCap)
 						xpReward = expCap;
 
-					expGainer.GainExperience(xpReward);
+					living.GainExperience(xpReward, 0, 0, true, false);
+
+					//gold
+					if (living is GamePlayer)
+					{
+						long money = (long)(playerMoneyValue * damagePercent);
+						//long money = (long)(Money.GetMoney(0, 0, 17, 85, 0) * damagePercent * killedPlayer.Level / 50);
+						((GamePlayer)living).AddMoney(money, "You recieve {0}");
+					}
 					
-					if (killedPlayer.ReleaseType != GamePlayer.eReleaseType.Duel)
+					if (killedPlayer.ReleaseType != GamePlayer.eReleaseType.Duel && expGainPlayer != null)
 					{
 						switch ((eRealm)killedPlayer.Realm)
 						{
 							case eRealm.Albion:
-								expGainer.KillsAlbionPlayers++;
-								if (expGainer == killer)
+								expGainPlayer.KillsAlbionPlayers++;
+								if (expGainPlayer == killer)
 								{
-									expGainer.KillsAlbionDeathBlows++;
+									expGainPlayer.KillsAlbionDeathBlows++;
 									if ((float)de.Value == totalDamage)
-										expGainer.KillsAlbionSolo++;
+										expGainPlayer.KillsAlbionSolo++;
 								}
 								break;
-								
+
 							case eRealm.Hibernia:
-								expGainer.KillsHiberniaPlayers++;
-								if (expGainer == killer)
+								expGainPlayer.KillsHiberniaPlayers++;
+								if (expGainPlayer == killer)
 								{
-									expGainer.KillsHiberniaDeathBlows++;
+									expGainPlayer.KillsHiberniaDeathBlows++;
 									if ((float)de.Value == totalDamage)
-										expGainer.KillsHiberniaSolo++;
+										expGainPlayer.KillsHiberniaSolo++;
 								}
 								break;
-								
+
 							case eRealm.Midgard:
-								expGainer.KillsMidgardPlayers++;
-								if (expGainer == killer)
+								expGainPlayer.KillsMidgardPlayers++;
+								if (expGainPlayer == killer)
 								{
-									expGainer.KillsMidgardDeathBlows++;
+									expGainPlayer.KillsMidgardDeathBlows++;
 									if ((float)de.Value == totalDamage)
-										expGainer.KillsMidgardSolo++;
+										expGainPlayer.KillsMidgardSolo++;
 								}
 								break;
 						}
+						killedPlayer.DeathsPvP++;
 					}
 				}
 			}
@@ -853,7 +1074,7 @@ namespace DOL.GS.ServerRules
 
 			// clients with priv level > 1 are considered friendly by anyone
 			GamePlayer playerTarget = target as GamePlayer;
-			if(playerTarget != null && playerTarget.Client.Account.PrivLevel > ePrivLevel.Player) return player.Realm;
+			if (playerTarget != null && playerTarget.Client.Account.PrivLevel > 1) return player.Realm;
 
 			return target.Realm;
 		}
@@ -888,7 +1109,7 @@ namespace DOL.GS.ServerRules
 		/// <returns>The guild name of the target</returns>
 		public virtual string GetPlayerGuildName(GamePlayer source, GamePlayer target)
 		{
-			return target.Guild != null ? target.Guild.GuildName : String.Empty;
+			return target.GuildName;
 		}
 
 		/// <summary>
@@ -917,8 +1138,9 @@ namespace DOL.GS.ServerRules
 		{
 			ArrayList stat = new ArrayList();
 			int total = 0;
+			#region Players Killed
 			stat.Add("Kill report");
-			switch((eRealm)player.Realm)
+			switch ((eRealm)player.Realm)
 			{
 				case eRealm.Albion:
 					stat.Add("Midgard Players Killed: " + player.KillsMidgardPlayers.ToString("N0"));
@@ -937,12 +1159,83 @@ namespace DOL.GS.ServerRules
 					break;
 			}
 			stat.Add("Total Players Killed: " + total.ToString("N0"));
+			#endregion
 			stat.Add(" ");
+			#region Players Deathblows
+			total = 0;
+			switch ((eRealm)player.Realm)
+			{
+				case eRealm.Albion:
+					stat.Add("Midgard Deathblows: " + player.KillsMidgardDeathBlows.ToString("N0"));
+					stat.Add("Hibernia Deathblows: " + player.KillsHiberniaDeathBlows.ToString("N0"));
+					total = player.KillsMidgardDeathBlows + player.KillsHiberniaDeathBlows;
+					break;
+				case eRealm.Midgard:
+					stat.Add("Albion Deathblows: " + player.KillsAlbionDeathBlows.ToString("N0"));
+					stat.Add("Hibernia Deathblows: " + player.KillsHiberniaDeathBlows.ToString("N0"));
+					total = player.KillsAlbionDeathBlows + player.KillsHiberniaDeathBlows;
+					break;
+				case eRealm.Hibernia:
+					stat.Add("Albion Deathblows: " + player.KillsAlbionDeathBlows.ToString("N0"));
+					stat.Add("Midgard Deathblows: " + player.KillsMidgardDeathBlows.ToString("N0"));
+					total = player.KillsMidgardDeathBlows + player.KillsAlbionDeathBlows;
+					break;
+			}
+			stat.Add("Total Deathblows: " + total.ToString("N0"));
+			#endregion
+			stat.Add(" ");
+			#region Players Solo Kills
+			total = 0;
+			switch ((eRealm)player.Realm)
+			{
+				case eRealm.Albion:
+					stat.Add("Midgard Solo Kills: " + player.KillsMidgardSolo.ToString("N0"));
+					stat.Add("Hibernia Solo Kills: " + player.KillsHiberniaSolo.ToString("N0"));
+					total = player.KillsMidgardSolo + player.KillsHiberniaSolo;
+					break;
+				case eRealm.Midgard:
+					stat.Add("Albion Solo Kills: " + player.KillsAlbionSolo.ToString("N0"));
+					stat.Add("Hibernia Solo Kills: " + player.KillsHiberniaSolo.ToString("N0"));
+					total = player.KillsAlbionSolo + player.KillsHiberniaSolo;
+					break;
+				case eRealm.Hibernia:
+					stat.Add("Albion Solo Kills: " + player.KillsAlbionSolo.ToString("N0"));
+					stat.Add("Midgard Solo Kills: " + player.KillsMidgardSolo.ToString("N0"));
+					total = player.KillsMidgardSolo + player.KillsAlbionSolo;
+					break;
+			}
+			stat.Add("Total Solo Kills: " + total.ToString("N0"));
+			#endregion
+			stat.Add(" ");
+			#region Keeps
 			stat.Add("Capture Report");
-			stat.Add("Keeps Captured: " + player.CapturedKeeps.ToString("N0"));
-			stat.Add("Towers Captured: " + player.CapturedTowers.ToString("N0"));
-			
+			//stat.Add("Relics Taken: " + player.RelicsTaken.ToString("N0"));
+			//stat.Add("Albion Keeps Captured: " + player.CapturedAlbionKeeps.ToString("N0"));
+			//stat.Add("Midgard Keeps Captured: " + player.CapturedMidgardKeeps.ToString("N0"));
+			//stat.Add("Hibernia Keeps Captured: " + player.CapturedHiberniaKeeps.ToString("N0"));
+			stat.Add("Total Keeps Captured: " + player.CapturedKeeps.ToString("N0"));
+			//stat.Add("Keep Lords Slain: " + player.KeepLordsSlain.ToString("N0"));
+			//stat.Add("Albion Towers Captured: " + player.CapturedAlbionTowers.ToString("N0"));
+			//stat.Add("Midgard Towers Captured: " + player.CapturedMidgardTowers.ToString("N0"));
+			//stat.Add("Hibernia Towers Captured: " + player.CapturedHiberniaTowers.ToString("N0"));
+			stat.Add("Total Towers Captured: " + player.CapturedTowers.ToString("N0"));
+			//stat.Add("Tower Captains Slain: " + player.TowerCaptainsSlain.ToString("N0"));
+			//stat.Add("Realm Guard Kills Albion: " + player.RealmGuardTotalKills.ToString("N0"));
+			//stat.Add("Realm Guard Kills Midgard: " + player.RealmGuardTotalKills.ToString("N0"));
+			//stat.Add("Realm Guard Kills Hibernia: " + player.RealmGuardTotalKills.ToString("N0"));
+			//stat.Add("Total Realm Guard Kills: " + player.RealmGuardTotalKills.ToString("N0"));
+			#endregion
 			return stat;
+		}
+
+		/// <summary>
+		/// Reset the keep with special server rules handling
+		/// </summary>
+		/// <param name="lord">The lord that was killed</param>
+		/// <param name="killer">The lord's killer</param>
+		public virtual void ResetKeep(GuardLord lord, GameObject killer)
+		{
+			PlayerMgr.UpdateStats(lord);
 		}
 
 		#region MessageToLiving
@@ -974,7 +1267,7 @@ namespace DOL.GS.ServerRules
 		/// <param name="loc"></param>
 		public virtual void MessageToLiving(GameLiving living, string message, eChatType type, eChatLoc loc)
 		{
-			if(living is GamePlayer)
+			if (living is GamePlayer)
 				((GamePlayer)living).Out.SendMessage(message, type, loc);
 		}
 		#endregion

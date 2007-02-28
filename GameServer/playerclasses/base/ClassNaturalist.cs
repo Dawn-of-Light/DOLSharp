@@ -57,8 +57,8 @@ namespace DOL.GS.Scripts
 
 			// Abilities
 			player.AddAbility(SkillBase.GetAbility(Abilities.Sprint));
-			player.AddAbility(SkillBase.GetAbility(Abilities.HibArmor, (int)eArmorLevel.Low));
-			player.AddAbility(SkillBase.GetAbility(Abilities.Shield, (int)eShieldSize.Small));
+			player.AddAbility(SkillBase.GetAbility(Abilities.HibArmor, ArmorLevel.Leather));
+			player.AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Small));
 			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Blades));
 			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Blunt));
 			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Staves));

@@ -17,7 +17,6 @@
  *
  */
 using System.Reflection;
-using DOL.GS.Database;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 using log4net;
@@ -38,7 +37,7 @@ namespace DOL.GS.SkillHandler
 		/// <summary>
 		/// The Protect Distance
 		/// </summary>
-		public static readonly ushort PROTECT_DISTANCE = 1000;
+		public const int PROTECT_DISTANCE = 1000;
 
 		public void Execute(Ability ab, GamePlayer player)
 		{

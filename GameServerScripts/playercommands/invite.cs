@@ -16,7 +16,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using DOL.Database;
 using DOL.GS.PacketHandler;
 // TODO: Restrict inviting to own realm.
 
@@ -60,7 +59,7 @@ namespace DOL.GS.Scripts
 			}
 			else
 			{ // Inviting by name
-				GameClient targetClient = WorldMgr.GetClientByPlayerName(targetName, false);
+				GameClient targetClient = WorldMgr.GetClientByPlayerNameAndRealm(targetName, 0, true);
 				if (targetClient == null)
 					target = null;
 				else
@@ -79,12 +78,19 @@ namespace DOL.GS.Scripts
 
 			if (target.PlayerGroup != null)
 			{
-				client.Out.SendMessage(target.Name + " is already in a group.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				client.Out.SendMessage("The player is still in a group.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return 1;
+			}
+
+			if (GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvP &&
+				target.IsStealthed)
+			{
+				client.Out.SendMessage("You can't find the player around here.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return 1;
 			}
 
 			client.Out.SendMessage("You have invited " + target.Name + " to join your group.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			target.Out.SendDialogBox(eDialogCode.GroupInvite, (ushort)client.SessionID, 0x00, 0x00, 0x00, eDialogType.YesNo, false, client.Player.Name + " has invited you to join\n" + client.Player.GetPronoun(1, false) + " group. Do you wish to join?");
+			target.Out.SendGroupInviteCommand(client.Player, client.Player.Name + " has invited you to join\n" + client.Player.GetPronoun(1, false) + " group. Do you wish to join?");
 			target.Out.SendMessage(client.Player.Name + " has invited you to join " + client.Player.GetPronoun(1, false) + " group.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 			return 1;

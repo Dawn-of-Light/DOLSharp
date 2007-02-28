@@ -23,7 +23,6 @@ using System.Reflection;
 using DOL.AI.Brain;
 using DOL.Events;
 using DOL.GS;
-using DOL.GS.Database;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 using DOL.GS.SkillHandler;
@@ -45,21 +44,18 @@ namespace DOL.GS.Spells
 	[SpellHandler("Summon")]
 	public class SummonSpellHandler : SpellHandler
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
-		public SummonSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line)
+		public SummonSpellHandler(GameLiving caster, Spell spell, SpellLine line)
+			: base(caster, spell, line)
 		{
+
 		}
 
 		/// <summary>
 		/// called after normal spell cast is completed and effect has to be started
 		/// </summary>
-		public override void FinishSpellCast(GameLivingBase target)
+		public override void FinishSpellCast(GameLiving target)
 		{
-			m_caster.ChangeMana(null, -CalculateNeededPower(target));
+			m_caster.Mana -= CalculateNeededPower(target);
 			base.FinishSpellCast(target);
 		}
 
@@ -68,7 +64,7 @@ namespace DOL.GS.Spells
 		/// </summary>
 		/// <param name="selectedTarget"></param>
 		/// <returns></returns>
-		public override bool CheckBeginCast(GameLivingBase selectedTarget)
+		public override bool CheckBeginCast(GameLiving selectedTarget)
 		{
 			if (Caster is GamePlayer && ((GamePlayer)Caster).ControlledNpc != null)
 			{
@@ -91,40 +87,64 @@ namespace DOL.GS.Spells
 				return;
 			}
 
-			if(player.Region.Type == eRegionType.Safe)
-			{
-				MessageToCaster("You can't summon here!", eChatType.CT_System);
-				return;
-			}
-
-			// Spell.LifeDrainReturn store the unique template id of the pet
-			GameSummonedPetTemplate template = GameServer.Database.FindObjectByKey(typeof(GameSummonedPetTemplate), Spell.LifeDrainReturn) as GameSummonedPetTemplate;
+			INpcTemplate template = NpcTemplateMgr.GetTemplate(Spell.LifeDrainReturn);
 			if (template == null)
 			{
 				if (log.IsWarnEnabled)
-					log.WarnFormat("GameSummonedPet template {0} not found! Spell: {1}", Spell.LifeDrainReturn, Spell.ToString());
-				MessageToCaster("GameSummonedPet template "+Spell.LifeDrainReturn+" not found!", eChatType.CT_System);
+					log.WarnFormat("NPC template {0} not found! Spell: {1}", Spell.LifeDrainReturn, Spell.ToString());
+				MessageToCaster("NPC template " + Spell.LifeDrainReturn + " not found!", eChatType.CT_System);
 				return;
 			}
 
-			Point spawnSpot = target.GetSpotFromHeading(64);
-			spawnSpot.Z = target.Position.Z;
+			int x, y;
 			GameSpellEffect effect = CreateSpellEffect(target, effectiveness);
-			ControlledNpc controlledBrain = new ControlledNpc(player);
+			if (Spell.Duration < 65535)
+			{
+				Caster.GetSpotFromHeading(64, out x, out y);
 
-			GameSummonedPet summoned = (GameSummonedPet)template.CreateInstance();
-			summoned.SetOwnBrain(controlledBrain);
-			summoned.Position = spawnSpot;
-			summoned.Region = target.Region;
-			summoned.Heading = (ushort)((target.Heading + 2048)%4096);
-			summoned.Realm = target.Realm;
-			if (Spell.Damage < 0) summoned.Level = (byte)(target.Level * Spell.Damage * -0.01); //Spell.Damage store the pet level in owner level %
-			if (Spell.Value > 0 && summoned.Level > Spell.Value) summoned.Level = (byte)Spell.Value; // Spell.Value store the level cap of the pet
-			summoned.AddToWorld();
+				ControlledNpc controlledBrain = new ControlledNpc(player);
 
-			GameEventMgr.AddHandler(player, GamePlayerEvent.CommandNpcRelease, new DOLEventHandler(OnNpcReleaseCommand));
-			player.SetControlledNpc(controlledBrain);
-			effect.Start(summoned);
+				GameNPC summoned = new GameNPC(template);
+				controlledBrain.WalkState = eWalkState.Stay;
+				summoned.SetOwnBrain(controlledBrain);
+				summoned.X = x;
+				summoned.Y = y;
+				summoned.Z = Caster.Z;
+				summoned.CurrentRegion = Caster.CurrentRegion;
+				summoned.Heading = (ushort)((Caster.Heading + 2048) % 4096);
+				summoned.Realm = Caster.Realm;
+				summoned.CurrentSpeed = 0;
+				if (Spell.Damage < 0) summoned.Level = (byte)(Caster.Level * Spell.Damage * -0.01);
+				else summoned.Level = (byte)Spell.Damage;
+				if (summoned.Level > Spell.Value) summoned.Level = (byte)Spell.Value;
+				summoned.AddToWorld();
+				effect.Start(summoned);
+				controlledBrain.Attack(target);
+			}
+			else
+			{
+				target.GetSpotFromHeading(64, out x, out y);
+
+				ControlledNpc controlledBrain = new ControlledNpc(player);
+
+				GameNPC summoned = new GameNPC(template);
+				summoned.SetOwnBrain(controlledBrain);
+				summoned.X = x;
+				summoned.Y = y;
+				summoned.Z = target.Z;
+				summoned.CurrentRegion = target.CurrentRegion;
+				summoned.Heading = (ushort)((target.Heading + 2048) % 4096);
+				summoned.Realm = target.Realm;
+				summoned.CurrentSpeed = 0;
+				if (Spell.Damage < 0) summoned.Level = (byte)(target.Level * Spell.Damage * -0.01);
+				else summoned.Level = (byte)Spell.Damage;
+				if (summoned.Level > Spell.Value) summoned.Level = (byte)Spell.Value;
+				summoned.AddToWorld();
+
+				GameEventMgr.AddHandler(player, GamePlayerEvent.CommandNpcRelease, new DOLEventHandler(OnNpcReleaseCommand));
+				player.SetControlledNpc(controlledBrain);
+				effect.Start(summoned);
+			}
 		}
 
 		/// <summary>
@@ -137,7 +157,12 @@ namespace DOL.GS.Spells
 		public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
 		{
 			effect.Owner.Health = 0; // to send proper remove packet
-			effect.Owner.RemoveFromWorld();
+			effect.Owner.Delete();
+			return 0;
+		}
+
+		public override int CalculateSpellResistChance(GameLiving target)
+		{
 			return 0;
 		}
 
@@ -181,21 +206,21 @@ namespace DOL.GS.Spells
 				list.Add("Target: " + Spell.Target);
 				if (Spell.Range != 0)
 					list.Add("Range: " + Spell.Range);
-				if (Spell.Duration >= ushort.MaxValue*1000)
+				if (Spell.Duration >= ushort.MaxValue * 1000)
 					list.Add("Duration: Permanent.");
 				else if (Spell.Duration > 60000)
-					list.Add(string.Format("Duration: {0}:{1} min", Spell.Duration/60000, (Spell.Duration%60000/1000).ToString("00")));
+					list.Add(string.Format("Duration: {0}:{1} min", Spell.Duration / 60000, (Spell.Duration % 60000 / 1000).ToString("00")));
 				else if (Spell.Duration != 0)
-					list.Add("Duration: " + (Spell.Duration/1000).ToString("0' sec';'Permanent.';'Permanent.'"));
+					list.Add("Duration: " + (Spell.Duration / 1000).ToString("0' sec';'Permanent.';'Permanent.'"));
 				if (Spell.Frequency != 0)
-					list.Add("Frequency: " + (Spell.Frequency*0.001).ToString("0.0"));
+					list.Add("Frequency: " + (Spell.Frequency * 0.001).ToString("0.0"));
 				if (Spell.Power != 0)
 					list.Add("Power cost: " + Spell.Power.ToString("0;0'%'"));
-				list.Add("Casting time: " + (Spell.CastTime*0.001).ToString("0.0## sec;-0.0## sec;'instant'"));
+				list.Add("Casting time: " + (Spell.CastTime * 0.001).ToString("0.0## sec;-0.0## sec;'instant'"));
 				if (Spell.RecastDelay > 60000)
-					list.Add("Recast time: " + (Spell.RecastDelay/60000).ToString() + ":" + (Spell.RecastDelay%60000/1000).ToString("00") + " min");
+					list.Add("Recast time: " + (Spell.RecastDelay / 60000).ToString() + ":" + (Spell.RecastDelay % 60000 / 1000).ToString("00") + " min");
 				else if (Spell.RecastDelay > 0)
-					list.Add("Recast time: " + (Spell.RecastDelay/1000).ToString() + " sec");
+					list.Add("Recast time: " + (Spell.RecastDelay / 1000).ToString() + " sec");
 				if (Spell.Concentration != 0)
 					list.Add("Concentration cost: " + Spell.Concentration);
 				if (Spell.Radius != 0)
@@ -207,24 +232,24 @@ namespace DOL.GS.Spells
 			}
 		}
 
-//		public override void StartSpell(GameLiving target)
-//		{
-//			#region Add the Mob to World and set Pet Property for Caster
-//
-//			petMob.AddToWorld();
-//			petMob.NewOwner(m_PetOwner);
-//			foreach (GamePlayer player in target.GetPlayersInRadius((ushort)WorldMgr.VISIBILITY_DISTANCE))
-//			{
-//				player.Out.SendSpellEffectAnimation(m_caster, target, m_spell.ID, 0, false, 1);
-//			}
-//			if (m_PetOwner == m_caster)
-//			{
-//				if (pet.MaxOwnedPets == 0) ((GameLiving)m_caster).TempProperties.setProperty("Pet", petMob);
-//				GameSummoned mobpet = (GameSummoned)m_caster.TempProperties.getObjectProperty("Pet", null);
-//				if (mobpet == null) return;
-//			}
-//
-//			#endregion
-//		}
+		//		public override void StartSpell(GameLiving target)
+		//		{
+		//			#region Add the Mob to World and set Pet Property for Caster
+		//
+		//			petMob.AddToWorld();
+		//			petMob.NewOwner(m_PetOwner);
+		//			foreach (GamePlayer player in target.GetPlayersInRadius((ushort)WorldMgr.VISIBILITY_DISTANCE))
+		//			{
+		//				player.Out.SendSpellEffectAnimation(m_caster, target, m_spell.ID, 0, false, 1);
+		//			}
+		//			if (m_PetOwner == m_caster)
+		//			{
+		//				if (pet.MaxOwnedPets == 0) ((GameLiving)m_caster).TempProperties.setProperty("Pet", petMob);
+		//				GameSummoned mobpet = (GameSummoned)m_caster.TempProperties.getObjectProperty("Pet", null);
+		//				if (mobpet == null) return;
+		//			}
+		//
+		//			#endregion
+		//		}
 	}
 }

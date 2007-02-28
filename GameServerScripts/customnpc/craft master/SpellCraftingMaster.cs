@@ -16,19 +16,16 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-//using DOL.GS.Database;
+//using DOL.Database;
 //using DOL.GS.PacketHandler;
-
-using NHibernate.Mapping.Attributes;
 
 namespace DOL.GS.Scripts
 {
 	/// <summary>
-	/// This class holds all information that
-	/// EVERY spellcrafting master npc in the game world needs!
+	/// the master for spell crafting
 	/// </summary>
-	[Subclass(NameType=typeof(SpellCraftingMaster), ExtendsType=typeof(GameCraftMaster))] 
-	public class SpellCraftingMaster : GameCraftMaster
+	[NPCGuildScript("Spellcrafters Master")]
+	public class SpellCraftingMaster : CraftNPC
 	{
 		private static readonly eCraftingSkill[] m_trainedSkills = 
 		{
@@ -53,34 +50,6 @@ namespace DOL.GS.Scripts
 		public override string GUILD_CRAFTERS
 		{
 			get { return "Spell Crafter"; }
-		}
-
-		public override eCharacterClass[] AllowedClass
-		{
-			get
-			{
-				return new eCharacterClass[]
-					{
-						eCharacterClass.Cabalist,
-						eCharacterClass.Cleric,
-						eCharacterClass.Necromancer,
-						eCharacterClass.Sorcerer,
-						eCharacterClass.Theurgist,
-						eCharacterClass.Wizard,
-						eCharacterClass.Animist,
-						eCharacterClass.Bainshee,
-						eCharacterClass.Druid,
-						eCharacterClass.Eldritch,
-						eCharacterClass.Enchanter,
-						eCharacterClass.Mentalist,
-						eCharacterClass.Bonedancer,
-						eCharacterClass.Healer,
-						eCharacterClass.Runemaster,
-						eCharacterClass.Shaman,
-						eCharacterClass.Spiritmaster,
-						eCharacterClass.Warlock,
-					};
-			}
 		}
 
 		public override eCraftingSkill TheCraftingSkill

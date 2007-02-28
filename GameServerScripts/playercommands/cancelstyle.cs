@@ -16,18 +16,20 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using DOL.Database;
+using System;
+using DOL.GS;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Scripts
 {
-	[CmdAttribute("&cancelstyle",(uint)ePrivLevel.Player,"Toggle cancelstyle flag.","/cancelstyle")]
+	[CmdAttribute("&cancelstyle", (uint)ePrivLevel.Player, "Toggle cancelstyle flag.", "/cancelstyle")]
 	public class CancelStyleCommandHandler : ICommandHandler
 	{
 		public int OnCommand(GameClient client, string[] args)
 		{
 			client.Player.CancelStyle = !client.Player.CancelStyle;
-			client.Out.SendMessage(string.Format("Cancel Style now set to {0}.", (client.Player.CancelStyle?"ON":"OFF")), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			client.Out.SendMessage(string.Format(LanguageMgr.GetTranslation(client, "Scripts.Players.Cancelstyle.Set"), (client.Player.CancelStyle ? "ON" : "OFF")), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			return 1;
 		}
 	}

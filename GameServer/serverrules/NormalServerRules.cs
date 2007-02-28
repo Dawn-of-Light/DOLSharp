@@ -18,10 +18,9 @@
  */
 using System;
 using System.Collections;
-using DOL.AI;
 using DOL.AI.Brain;
 using DOL.Database;
-using DOL.GS.Database;
+using DOL.GS.Keeps;
 using DOL.GS.PacketHandler;
 using DOL.GS.Styles;
 
@@ -38,12 +37,21 @@ namespace DOL.GS.ServerRules
 			return "standard Normal server rules";
 		}
 
-		public override bool IsAllowedToAttack(GameLiving attacker, GameLivingBase defender, bool quiet)
+		/// <summary>
+		/// Invoked on NPC death and deals out
+		/// experience/realm points if needed
+		/// </summary>
+		/// <param name="killedNPC">npc that died</param>
+		/// <param name="killer">killer</param>
+		public override void OnNPCKilled(GameNPC killedNPC, GameObject killer)
 		{
-			if(attacker is GamePlayer && ((GamePlayer)attacker).Client.Account.PrivLevel > ePrivLevel.Player)
-			{
-				return true;
-			}
+			base.OnNPCKilled(killedNPC, killer); 	
+		}
+
+		public override bool IsAllowedToAttack(GameLiving attacker, GameLiving defender, bool quiet)
+		{
+			if (!base.IsAllowedToAttack(attacker, defender, quiet))
+				return false;
 
 			// if controlled NPC - do checks for owner instead
 			if (attacker is GameNPC)
@@ -62,14 +70,22 @@ namespace DOL.GS.ServerRules
 					defender = controlled.Owner;
 			}
 
-			if (!base.IsAllowedToAttack(attacker, defender, quiet))
+			//"You can't attack yourself!"
+			if(attacker == defender)
+			{
+				if (quiet == false) MessageToLiving(attacker, "You can't attack yourself!");
 				return false;
+			}
 
 			//Don't allow attacks on same realm members on Normal Servers
 			if (attacker.Realm == defender.Realm && !(attacker is GamePlayer && ((GamePlayer)attacker).DuelTarget == defender))
 			{
 				// allow mobs to attack mobs
 				if (attacker.Realm == 0)
+					return true;
+
+				//allow confused mobs to attack same realm
+				if (attacker is GameNPC && (attacker as GameNPC).IsConfused && attacker.Realm == defender.Realm)
 					return true;
 
 				if(quiet == false) MessageToLiving(attacker, "You can't attack a member of your realm!");
@@ -79,7 +95,7 @@ namespace DOL.GS.ServerRules
 			return true;
 		}
 
-		public override bool IsSameRealm(GameLiving source, GameLivingBase target, bool quiet)
+		public override bool IsSameRealm(GameLiving source, GameLiving target, bool quiet)
 		{
 			if(source == null || target == null) return false;
 
@@ -100,7 +116,17 @@ namespace DOL.GS.ServerRules
 					target = controlled.Owner;
 			}
 
-			if(base.IsSameRealm(source, target, quiet)) return true;
+			// clients with priv level > 1 are considered friendly by anyone
+			if(target is GamePlayer && ((GamePlayer)target).Client.Account.PrivLevel > 1) return true;
+
+			//Peace flag NPCs are same realm
+			if (target is GameNPC)
+				if ((((GameNPC)target).Flags & (uint)GameNPC.eFlags.PEACE) != 0)
+					return true;
+
+			if (source is GameNPC)
+				if ((((GameNPC)source).Flags & (uint)GameNPC.eFlags.PEACE) != 0)
+					return true;
 
 			if(source.Realm != target.Realm)
 			{
@@ -112,14 +138,17 @@ namespace DOL.GS.ServerRules
 
 		public override bool IsAllowedCharsInAllRealms(GameClient client)
 		{
-			if(client.Account.PrivLevel == ePrivLevel.Player) return false;
-			return base.IsAllowedCharsInAllRealms(client);
+			if (client.Account.PrivLevel > 1)
+				return true;
+			if (ServerProperties.Properties.ALLOW_ALL_REALMS)
+				return true;
+			return false;
 		}
 
 		public override bool IsAllowedToGroup(GamePlayer source, GamePlayer target, bool quiet)
 		{
-			if(!base.IsAllowedToGroup(source, target, quiet)) return false;
-			
+			if(source == null || target == null) return false;
+
 			if(source.Realm != target.Realm)
 			{
 				if(quiet == false) MessageToLiving(source, "You can't invite a player of another realm.");
@@ -128,39 +157,49 @@ namespace DOL.GS.ServerRules
 			return true;
 		}
 
-		public override bool IsAllowedToTrade(GamePlayer source, GamePlayer target, bool quiet)
+		public override bool IsAllowedToTrade(GameLiving source, GameLiving target, bool quiet)
 		{
-			if(!base.IsAllowedToTrade(source, target, quiet)) return false;
-			
-			// clients with priv level > 1 can trade with anyone
-			if(target.Client.Account.PrivLevel > ePrivLevel.Player
-			|| source.Client.Account.PrivLevel > ePrivLevel.Player)
-				return true;
+			if(source == null || target == null) return false;
+
+			// clients with priv level > 1 are allowed to trade with anyone
+			if(source is GamePlayer && target is GamePlayer)
+			{
+				if ((source as GamePlayer).Client.Account.PrivLevel > 1 ||(target as GamePlayer).Client.Account.PrivLevel > 1)
+					return true;
+			}
+
+			//Peace flag NPCs can trade with everyone
+			if (target is GameNPC)
+				if ((((GameNPC)target).Flags & (uint)GameNPC.eFlags.PEACE) != 0)
+					return true;
+
+			if (source is GameNPC)
+				if ((((GameNPC)source).Flags & (uint)GameNPC.eFlags.PEACE) != 0)
+					return true;
 
 			if(source.Realm != target.Realm)
 			{
 				if(quiet == false) MessageToLiving(source, "You can't trade with enemy realm!");
 				return false;
 			}
-
 			return true;
 		}
 
 		public override bool IsAllowedToUnderstand(GameLiving source, GamePlayer target)
 		{
-			if(!base.IsAllowedToUnderstand(source, target)) return false;
+			if(source == null || target == null) return false;
 
-			// clients with priv level > 1 can understand everything
-			if(target.Client.Account.PrivLevel > ePrivLevel.Player
-			|| source is GamePlayer && ((GamePlayer)source).Client.Account.PrivLevel > ePrivLevel.Player)
-				return true;
+			// clients with priv level > 1 are allowed to talk and hear anyone
+			if(source is GamePlayer && ((GamePlayer)source).Client.Account.PrivLevel > 1) return true;
+			if(target.Client.Account.PrivLevel > 1) return true;
 
-			// npc with peace brain can understand everything
-			if (source is GameNPC && ((GameNPC)source).OwnBrain is PeaceBrain)
-				return true;
+			//Peace flag NPCs can be understood by everyone
+
+			if (source is GameNPC)
+				if ((((GameNPC)source).Flags & (uint)GameNPC.eFlags.PEACE) != 0)
+					return true;
 
 			if(source.Realm != target.Realm) return false;
-
 			return true;
 		}
 
@@ -180,57 +219,52 @@ namespace DOL.GS.ServerRules
 		/// Is player allowed to make the item
 		/// </summary>
 		/// <param name="player"></param>
-		/// <param name="point"></param>
+		/// <param name="item"></param>
 		/// <returns></returns>
-		public override bool IsAllowedToCraft(GamePlayer player, GenericItemTemplate item)
+		public override bool IsAllowedToCraft(GamePlayer player, ItemTemplate item)
 		{
-			return player.Realm == (byte)item.Realm;
+			return player.Realm == item.Realm;
 		}
 
-		public override bool CheckAbilityToUseItem(GamePlayer player, EquipableItem item)
+		/// <summary>
+		/// Check a living has the ability to use an item
+		/// </summary>
+		/// <param name="living"></param>
+		/// <param name="item"></param>
+		/// <returns></returns>
+		public override bool CheckAbilityToUseItem(GameLiving living, ItemTemplate item)
 		{
-			if(player == null)
+			if(living == null || item == null)
 				return false;
 
-			if(player.Client.Account.PrivLevel > ePrivLevel.Player)
-			{
-				return true;
-			}
-
-			if(item.Realm != eRealm.None && item.Realm != (eRealm)player.Realm)
-			{
+			if(item.Realm != 0 && item.Realm != living.Realm)
 				return false;
-			}
-
-			if(item.AllowedClass.Count > 0 && !item.AllowedClass.Contains((eCharacterClass)player.CharacterClassID))
-			{
-				return false;
-			}
 
 			//armor
-			if (item.ObjectType >= eObjectType._FirstArmor && item.ObjectType <= eObjectType._LastArmor)
+			if (item.Object_Type >= (int)eObjectType._FirstArmor && item.Object_Type <= (int)eObjectType._LastArmor)
 			{
 				int armorAbility = -1;
-				switch (item.Realm)
+				switch ((eRealm)item.Realm)
 				{
-					case eRealm.Albion   : armorAbility = player.GetAbilityLevel(Abilities.AlbArmor); break;
-					case eRealm.Hibernia : armorAbility = player.GetAbilityLevel(Abilities.HibArmor); break;
-					case eRealm.Midgard  : armorAbility = player.GetAbilityLevel(Abilities.MidArmor); break;
+					case eRealm.Albion   : armorAbility = living.GetAbilityLevel(Abilities.AlbArmor); break;
+					case eRealm.Hibernia : armorAbility = living.GetAbilityLevel(Abilities.HibArmor); break;
+					case eRealm.Midgard  : armorAbility = living.GetAbilityLevel(Abilities.MidArmor); break;
 					default: // use old system
-						armorAbility = Math.Max(armorAbility, player.GetAbilityLevel(Abilities.AlbArmor));
-						armorAbility = Math.Max(armorAbility, player.GetAbilityLevel(Abilities.HibArmor));
-						armorAbility = Math.Max(armorAbility, player.GetAbilityLevel(Abilities.MidArmor));
+						armorAbility = Math.Max(armorAbility, living.GetAbilityLevel(Abilities.AlbArmor));
+						armorAbility = Math.Max(armorAbility, living.GetAbilityLevel(Abilities.HibArmor));
+						armorAbility = Math.Max(armorAbility, living.GetAbilityLevel(Abilities.MidArmor));
 						break;
 				}
-				switch (item.ObjectType)
+				switch ((eObjectType)item.Object_Type)
 				{
-					case eObjectType.Cloth       : return armorAbility >= (int)eArmorLevel.VeryLow;
-					case eObjectType.Leather     : return armorAbility >= (int)eArmorLevel.Low;
+					case eObjectType.GenericArmor: return armorAbility >= ArmorLevel.GenericArmor;
+					case eObjectType.Cloth       : return armorAbility >= ArmorLevel.Cloth;
+					case eObjectType.Leather     : return armorAbility >= ArmorLevel.Leather;
 					case eObjectType.Reinforced  :
-					case eObjectType.Studded     : return armorAbility >= (int)eArmorLevel.Medium;
+					case eObjectType.Studded     : return armorAbility >= ArmorLevel.Studded;
 					case eObjectType.Scale       :
-					case eObjectType.Chain       : return armorAbility >= (int)eArmorLevel.High;
-					case eObjectType.Plate       : return armorAbility >= (int)eArmorLevel.VeryHigh;
+					case eObjectType.Chain       : return armorAbility >= ArmorLevel.Chain;
+					case eObjectType.Plate       : return armorAbility >= ArmorLevel.Plate;
 					default: return false;
 				}
 			}
@@ -239,13 +273,13 @@ namespace DOL.GS.ServerRules
 			string[] otherCheck = new string[0];
 
 			//http://dol.kitchenhost.de/files/dol/Info/itemtable.txt
-			switch(item.ObjectType)
+			switch((eObjectType)item.Object_Type)
 			{
 				case eObjectType.GenericItem     : return true;
 				case eObjectType.GenericArmor    : return true;
 				case eObjectType.GenericWeapon   : return true;
 				case eObjectType.Staff           : abilityCheck = Abilities.Weapon_Staves; break;
-				case eObjectType.ShortBow        : abilityCheck = Abilities.Weapon_Shortbows; break;
+				case eObjectType.Fired           : abilityCheck = Abilities.Weapon_Shortbows; break;
 
 					//alb
 				case eObjectType.CrushingWeapon  : abilityCheck = Abilities.Weapon_Crushing; break;
@@ -255,7 +289,7 @@ namespace DOL.GS.ServerRules
 				case eObjectType.PolearmWeapon   : abilityCheck = Abilities.Weapon_Polearms; break;
 				case eObjectType.Longbow         : abilityCheck = Abilities.Weapon_Longbows; break;
 				case eObjectType.Crossbow        : abilityCheck = Abilities.Weapon_Crossbow; break;
-				case eObjectType.FlexibleWeapon        : abilityCheck = Abilities.Weapon_Flexible; break;
+				case eObjectType.Flexible        : abilityCheck = Abilities.Weapon_Flexible; break;
 				//TODO: case 5: abilityCheck = Abilities.Weapon_Thrown; break;
 
 					//mid
@@ -265,7 +299,7 @@ namespace DOL.GS.ServerRules
 				case eObjectType.Axe             : abilityCheck = Abilities.Weapon_Axes; break;
 				case eObjectType.Spear           : abilityCheck = Abilities.Weapon_Spears; break;
 				case eObjectType.CompositeBow    : abilityCheck = Abilities.Weapon_CompositeBows; break;
-				case eObjectType.ThrownWeapon    : abilityCheck = Abilities.Weapon_Thrown; break;
+				case eObjectType.Thrown          : abilityCheck = Abilities.Weapon_Thrown; break;
 				case eObjectType.HandToHand      : abilityCheck = Abilities.Weapon_HandToHand; break;
 
 					//hib
@@ -273,26 +307,29 @@ namespace DOL.GS.ServerRules
 				case eObjectType.Blades          : abilityCheck = Abilities.Weapon_Blades; break;
 				case eObjectType.Blunt           : abilityCheck = Abilities.Weapon_Blunt; break;
 				case eObjectType.Piercing        : abilityCheck = Abilities.Weapon_Piercing; break;
-				case eObjectType.LargeWeapon     : abilityCheck = Abilities.Weapon_LargeWeapons; break;
+				case eObjectType.LargeWeapons    : abilityCheck = Abilities.Weapon_LargeWeapons; break;
 				case eObjectType.CelticSpear     : abilityCheck = Abilities.Weapon_CelticSpear; break;
 				case eObjectType.Scythe          : abilityCheck = Abilities.Weapon_Scythe; break;
 
 					//misc
-				//case eObjectType.Magical         : return true;
-				case eObjectType.Shield          : return player.GetAbilityLevel(Abilities.Shield) >= (byte)(((Shield)item).Size);
-				//case eObjectType.Bolt            : abilityCheck = Abilities.Weapon_Crossbow; break;
-				//case eObjectType.Arrow           : otherCheck = new string[] { Abilities.Weapon_CompositeBows, Abilities.Weapon_Longbows, Abilities.Weapon_RecurvedBows, Abilities.Weapon_Shortbows }; break;
-				//case eObjectType.Poison          : return player.GetModifiedSpecLevel(Specs.Envenom) > 0;
-				case eObjectType.Instrument      : return player.HasAbility(Abilities.Weapon_Instruments);
+				case eObjectType.Magical         : return true;
+				case eObjectType.Shield          : return living.GetAbilityLevel(Abilities.Shield) >= item.Type_Damage;
+				case eObjectType.Bolt            : abilityCheck = Abilities.Weapon_Crossbow; break;
+				case eObjectType.Arrow           : otherCheck = new string[] { Abilities.Weapon_CompositeBows, Abilities.Weapon_Longbows, Abilities.Weapon_RecurvedBows, Abilities.Weapon_Shortbows }; break;
+				case eObjectType.Poison          : return living.GetModifiedSpecLevel(Specs.Envenom) > 0;
+				case eObjectType.Instrument      : return living.HasAbility(Abilities.Weapon_Instruments);
+				//TODO: different shield sizes
 			}
 
 			//player.Out.SendMessage("ability: \""+abilityCheck+"\"; type: "+item.Object_Type, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			if(abilityCheck != null && player.HasAbility(abilityCheck))
+			if(abilityCheck != null && living.HasAbility(abilityCheck))
 				return true;
 
-			foreach(string str in otherCheck)
-				if(player.HasAbility(str))
+			foreach (string str in otherCheck)
+			{
+				if (living.HasAbility(str))
 					return true;
+			}
 
 			return false;
 		}
@@ -308,7 +345,7 @@ namespace DOL.GS.ServerRules
 			{
 				m_compatibleObjectTypes = new Hashtable();
 				m_compatibleObjectTypes[(int)eObjectType.Staff] = new eObjectType[] { eObjectType.Staff };
-				m_compatibleObjectTypes[(int)eObjectType.ShortBow] = new eObjectType[] { eObjectType.ShortBow };
+				m_compatibleObjectTypes[(int)eObjectType.Fired] = new eObjectType[] { eObjectType.Fired };
 
 				//alb
 				m_compatibleObjectTypes[(int)eObjectType.CrushingWeapon]  = new eObjectType[] { eObjectType.CrushingWeapon };
@@ -316,7 +353,7 @@ namespace DOL.GS.ServerRules
 				m_compatibleObjectTypes[(int)eObjectType.ThrustWeapon]    = new eObjectType[] { eObjectType.ThrustWeapon };
 				m_compatibleObjectTypes[(int)eObjectType.TwoHandedWeapon] = new eObjectType[] { eObjectType.TwoHandedWeapon };
 				m_compatibleObjectTypes[(int)eObjectType.PolearmWeapon]   = new eObjectType[] { eObjectType.PolearmWeapon };
-				m_compatibleObjectTypes[(int)eObjectType.FlexibleWeapon]  = new eObjectType[] { eObjectType.FlexibleWeapon };
+				m_compatibleObjectTypes[(int)eObjectType.Flexible]        = new eObjectType[] { eObjectType.Flexible };
 				m_compatibleObjectTypes[(int)eObjectType.Longbow]         = new eObjectType[] { eObjectType.Longbow };
 				m_compatibleObjectTypes[(int)eObjectType.Crossbow]        = new eObjectType[] { eObjectType.Crossbow };
 				//TODO: case 5: abilityCheck = Abilities.Weapon_Thrown; break;                                         
@@ -329,13 +366,13 @@ namespace DOL.GS.ServerRules
 				m_compatibleObjectTypes[(int)eObjectType.HandToHand]   = new eObjectType[] { eObjectType.HandToHand };
 				m_compatibleObjectTypes[(int)eObjectType.Spear]        = new eObjectType[] { eObjectType.Spear };
 				m_compatibleObjectTypes[(int)eObjectType.CompositeBow] = new eObjectType[] { eObjectType.CompositeBow };
-				m_compatibleObjectTypes[(int)eObjectType.ThrownWeapon] = new eObjectType[] { eObjectType.ThrownWeapon };
+				m_compatibleObjectTypes[(int)eObjectType.Thrown]       = new eObjectType[] { eObjectType.Thrown };
 
 				//hib
 				m_compatibleObjectTypes[(int)eObjectType.Blunt]        = new eObjectType[] { eObjectType.Blunt };
 				m_compatibleObjectTypes[(int)eObjectType.Blades]       = new eObjectType[] { eObjectType.Blades };
 				m_compatibleObjectTypes[(int)eObjectType.Piercing]     = new eObjectType[] { eObjectType.Piercing };
-				m_compatibleObjectTypes[(int)eObjectType.LargeWeapon]  = new eObjectType[] { eObjectType.LargeWeapon };
+				m_compatibleObjectTypes[(int)eObjectType.LargeWeapons] = new eObjectType[] { eObjectType.LargeWeapons };
 				m_compatibleObjectTypes[(int)eObjectType.CelticSpear]  = new eObjectType[] { eObjectType.CelticSpear };
 				m_compatibleObjectTypes[(int)eObjectType.Scythe]       = new eObjectType[] { eObjectType.Scythe };
 				m_compatibleObjectTypes[(int)eObjectType.RecurvedBow]  = new eObjectType[] { eObjectType.RecurvedBow };
@@ -361,7 +398,7 @@ namespace DOL.GS.ServerRules
 		{
 			if (IsSameRealm(source, target, true))
 				return target.Name;
-			return GlobalConstants.RaceToName((eRace)target.Race);
+			return target.RaceName;
 		}
 
 		/// <summary>
@@ -386,8 +423,19 @@ namespace DOL.GS.ServerRules
 		public override string GetPlayerGuildName(GamePlayer source, GamePlayer target)
 		{
 			if (IsSameRealm(source, target, true))
-				return base.GetPlayerGuildName(source, target);
+				return target.GuildName;
 			return string.Empty;
+		}
+
+		/// <summary>
+		/// Reset the keep with special server rules handling
+		/// </summary>
+		/// <param name="lord">The lord that was killed</param>
+		/// <param name="killer">The lord's killer</param>
+		public override void ResetKeep(GuardLord lord, GameObject killer)
+		{
+			base.ResetKeep(lord, killer);
+			lord.Component.Keep.Reset((eRealm)killer.Realm);
 		}
 	}
 }

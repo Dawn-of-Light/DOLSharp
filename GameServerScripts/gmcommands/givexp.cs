@@ -17,7 +17,6 @@
  *
  */
 using System;
-using DOL.Database;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Scripts
@@ -47,7 +46,7 @@ namespace DOL.GS.Scripts
 				GamePlayer obj = client.Player.TargetObject as GamePlayer;
 				if (obj != null)
 				{
-					obj.GainExperience(amount, 0, 0, true);
+					obj.GainExperience(amount);
 				}
 				else
 				{

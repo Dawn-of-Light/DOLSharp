@@ -17,21 +17,19 @@
  *
  */
 using System;
+using System.Net;
 using System.Reflection;
 using DOL.Database;
 using DOL.GS.PacketHandler;
 using log4net;
-using NHibernate.Expression;
 
 namespace DOL.GS.Scripts
 {
 	[CmdAttribute(
 		"&ban",
 		(uint) ePrivLevel.GM,
-		"Ban an account",
-		"/ban <day> <hour> <minute> [reason]",
-		"/ban <accountName> <day> <hour> <minute> [reason]",
-		"/ban status <accountName>")]
+		"Ban an account, user name, IP",
+		"/ban <type> <ip/pseudo/compte>")]
 	public class BanCommandHandler : ICommandHandler
 	{
 		/// <summary>
@@ -41,117 +39,98 @@ namespace DOL.GS.Scripts
 
 		public int OnCommand(GameClient client, string[] args)
 		{
+			//GamePlayer player = client.Player;
+			GamePlayer player = client.Player.TargetObject as GamePlayer;
+			if (player == null)
+			{
+				client.Out.SendMessage("You must select a target!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return 0;
+			}
+
 			try
 			{
-				if (args.Length < 3)
+				if (args.Length < 2)
 				{
-					showCommandInformations(client);
+					client.Out.SendMessage("Usage of /ban :", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					client.Out.SendMessage("/ban ip <reason> : ban an IP.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					client.Out.SendMessage("/ban account <reason> : ban an account.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					client.Out.SendMessage("/ban account+ip <reason> : ban an account and this IP.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return 0;
 				}
-				if(args[1] == "status")
-				{
-					Account account = (Account) GameServer.Database.SelectObject(typeof (Account), Expression.Eq("AccountName", args[2]));
-					if(account != null)
-					{	
-						TimeSpan durationLeft = (account.LastLogin.Add(account.BanDuration)).Subtract(DateTime.Now);
-						if(durationLeft.CompareTo(TimeSpan.Zero) > 0)
-						{
-							client.Out.SendMessage("This account has been banned by "+account.BanAuthor+" for the reason "+account.BanReason+".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							client.Out.SendMessage("The ban will expire in "+durationLeft.Days+" days "+durationLeft.Hours+" hours "+durationLeft.Minutes+" minutes.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						}
-						else
-						{
-							client.Out.SendMessage("This account is not banned.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						}	
-					}
-					else
-					{
-						client.Out.SendMessage("The account "+account.AccountName+" does not exist.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					}
-					return 1;
-				}
 
-				string reason= "No special reason";
-				Account accountToBan;
-				TimeSpan banDuration;
+				string TypeOfBan = args[1];
+				DataObject[] objs;
+				DBBannedAccount b = new DBBannedAccount();
+				string idban = System.Guid.NewGuid().ToString();
+				string accip = ((IPEndPoint) player.Client.Socket.RemoteEndPoint).Address.ToString();
+				string accname = GameServer.Database.Escape(player.Client.Account.Name);
+				string reason;
 
-				GamePlayer player = client.Player.TargetObject as GamePlayer;
-				if(player != null) // target selected
-				{
-					if(args.Length < 4)
-					{
-						showCommandInformations(client);
-						return 0;
-					}
-
-					if (args.Length >= 5) reason = args[4];
-					
-					accountToBan = player.Client.Account;
-
-					// Kick player
-					player.Client.Out.SendPlayerQuit(true);
-					GameServer.Instance.Disconnect(player.Client);
-
-					banDuration =  new TimeSpan(Convert.ToInt32(args[1]), Convert.ToInt32(args[2]), Convert.ToInt32(args[3]), 0 , 0);
-				}
+				if (args.Length >= 3)
+					reason = String.Join(" ", args, 2, args.Length - 2);
 				else
+					reason = "No Reason.";
+
+				switch (TypeOfBan)
 				{
-					if(args.Length < 5)
-					{
-						showCommandInformations(client);
-						return 0;
-					}
+					case "account+ip":
+						objs = GameServer.Database.SelectObjects(typeof (DBBannedAccount), "Type ='" + GameServer.Database.Escape(TypeOfBan) + "' AND Account ='" + GameServer.Database.Escape(accname) + "' AND Ip ='" + GameServer.Database.Escape(accip) + "'");
+						if (objs.Length > 0)
+						{
+							client.Out.SendMessage("this Account+Ip has already been banned.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+							return 0;
+						}
 
-					if (args.Length >= 6) reason = args[5];
+						b.Type = "Account+Ip";
+						client.Out.SendMessage("Account " + accname + " and IP +" + accip + " banned.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+						break;
 
-					//Seek players ingame first
-					GameClient clientToBan = WorldMgr.GetClientByAccountName(args[1]);
-					if (clientToBan != null)
-					{
-						accountToBan = clientToBan.Account;
-						
-						// Kick player
-						clientToBan.Out.SendPlayerQuit(true);
-						GameServer.Instance.Disconnect(clientToBan);
-					}
-					else
-					{
-						//Get database object
-						accountToBan = (Account) GameServer.Database.SelectObject(typeof (Account), Expression.Eq("AccountName", args[1]));
-					}
-					
-					banDuration =  new TimeSpan(Convert.ToInt32(args[2]), Convert.ToInt32(args[3]), Convert.ToInt32(args[4]), 0 , 0);
+					case "account":
+						objs = GameServer.Database.SelectObjects(typeof(DBBannedAccount), "(Type ='Account' AND Account ='" + GameServer.Database.Escape(accname) + "') OR (Type ='Account+Ip' AND Account ='" + GameServer.Database.Escape(accname) + "')");
+						if (objs.Length > 0)
+						{
+							client.Out.SendMessage("this account has already been banned.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+							return 0;
+						}
+
+						b.Type = "Account";
+						client.Out.SendMessage("Account " + accname + " banned.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+						break;
+
+					case "ip":
+						objs = GameServer.Database.SelectObjects(typeof (DBBannedAccount), "(Type ='Ip' AND Ip ='" + GameServer.Database.Escape(accip) + "') OR (Type ='Account+Ip' AND Ip ='" + GameServer.Database.Escape(accip) + "')");
+						if (objs.Length > 0)
+						{
+							client.Out.SendMessage("this IP adress has already been banned.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+							return 0;
+						}
+
+						b.Type = "Ip";
+						client.Out.SendMessage("IP address " + accip + " banned.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+						break;
 				}
 
-				if(accountToBan == null)
-				{
-					client.Out.SendMessage("The account to ban has not been found.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-					return 0;
-				}
-
-				accountToBan.BanDuration = banDuration;
-				accountToBan.BanAuthor = client.Player.Name;
-				accountToBan.BanReason = reason;
-		
-				GameServer.Database.SaveObject(accountToBan);
-
-				client.Out.SendMessage("Account " + accountToBan.AccountName + " banned.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+				b.IDBan = idban;
+				b.Author = client.Player.PlayerCharacter.Name;
+				b.Ip = accip;
+				b.Account = accname;
+				b.DateTime = DateTime.Now.ToString();
+				b.Reason = reason;
+				GameServer.Database.AddNewObject(b);
+				GameServer.Database.SaveObject(b);
+				if (log.IsInfoEnabled)
+					log.Info("Ban added [" + TypeOfBan + "]: " + accname + "(" + accip + ")");
 			}
 			catch (Exception e)
 			{
 				if (log.IsErrorEnabled)
 					log.Error("/ban Exception", e);
-				showCommandInformations(client);
+				client.Out.SendMessage("Exception! Usage:", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				client.Out.SendMessage("/ban ip <reason> : ban an IP.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				client.Out.SendMessage("/ban account <reason> : ban an account.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				client.Out.SendMessage("/ban account+ip <reason> : ban an account and this IP.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 			return 1;
 		}
-
-		private void showCommandInformations(GameClient client)
-		{
-			client.Out.SendMessage("Usage of /ban :", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage("/ban <day> <hour> <minute> [reason] : ban the account of the selected player.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage("/ban <accountName> <day> <hour> <minute> [reason] : ban the account with the given name.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage("/ban status <accountName> : view the ban status of account with the given name.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-		}			
 	}
 }

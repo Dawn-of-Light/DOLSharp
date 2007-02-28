@@ -31,7 +31,7 @@ namespace DOL.GS.Spells
 		/// Execute heal spell
 		/// </summary>
 		/// <param name="target"></param>
-		public override void StartSpell(GameLivingBase target)
+		public override void StartSpell(GameLiving target)
 		{
 			m_startReuseTimer = true;
 			// do not start spell if not in combat
@@ -39,13 +39,6 @@ namespace DOL.GS.Spells
 			if (!Caster.InCombat && (player==null || player.PlayerGroup==null || !player.PlayerGroup.IsGroupInCombat()))
 				return;
 			base.StartSpell(target);
-		}
-
-		public override bool HealTarget(GameLiving target, int amount)
-		{
-			//if a target is dead we dont display cant heal dead member message
-			if (!target.Alive) return false;
-			return base.HealTarget(target, amount);
 		}
 
 		// constructor

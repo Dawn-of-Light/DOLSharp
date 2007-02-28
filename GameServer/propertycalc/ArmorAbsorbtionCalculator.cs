@@ -32,30 +32,25 @@ namespace DOL.GS.PropertyCalc
 	[PropertyCalculator(eProperty.ArmorAbsorbtion)]
 	public class ArmorAbsorbtionCalculator : PropertyCalculator
 	{
-		public override int CalcValue(GameLiving living, eProperty property) 
+		public override int CalcValue(GameLiving living, eProperty property)
 		{
-			if (living is GamePlayer)
-			{
-				return
-					 living.BuffBonusCategory1[(int)property]
-					-living.BuffBonusCategory3[(int)property]
-					+living.ItemBonus[(int)property];
-			}
-			else
-			{
-				int abs =
-					 living.BuffBonusCategory1[(int)property]
-					-living.BuffBonusCategory3[(int)property];
+			int abs = living.BuffBonusCategory1[(int)property]
+				- living.BuffBonusCategory3[(int)property]
+				+ living.ItemBonus[(int)property]
+				+ living.AbilityBonus[(int)property];
 
+			if (living is GameNPC)
+			{
 				if (living.Level >= 30) abs += 27;
 				else if (living.Level >= 20) abs += 19;
 				else if (living.Level >= 10) abs += 10;
 
-				abs += (living.GetModified(eProperty.Constitution) + living.GetModified(eProperty.Dexterity) - 100)  / 400;
-
-				return abs;
+				abs += (living.GetModified(eProperty.Constitution) + living.GetModified(eProperty.Dexterity) - 100) / 400;
 			}
 
+			abs += living.AbilityBonus[(int)property];
+
+			return abs;
 		}
 	}
 }

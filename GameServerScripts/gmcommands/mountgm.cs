@@ -16,7 +16,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using DOL.Database;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Scripts
@@ -30,21 +29,21 @@ namespace DOL.GS.Scripts
 	{
 		public int OnCommand(GameClient client, string[] args)
 		{
-			if (client.Player.Steed != null)
+			if (client.Player.IsRiding)
 			{
 				client.Out.SendMessage("You are already riding a steed!",
 				                       eChatType.CT_System,
 				                       eChatLoc.CL_SystemWindow);
 				return 1;
 			}
-			if (client.Player.TargetObject == null || !(client.Player.TargetObject is GameSteed))
+			if (client.Player.TargetObject == null || !(client.Player.TargetObject is GameNPC))
 			{
 				client.Out.SendMessage("You can't ride THIS!",
 				                       eChatType.CT_System,
 				                       eChatLoc.CL_SystemWindow);
 				return 1;
 			}
-			client.Player.MountSteed((GameSteed) client.Player.TargetObject);
+			client.Player.MountSteed((GameNPC) client.Player.TargetObject, false);
 			return 1;
 		}
 	}

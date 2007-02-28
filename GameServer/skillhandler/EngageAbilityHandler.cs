@@ -17,7 +17,6 @@
  *
  */
 using System.Reflection;
-using DOL.GS.Database;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
 using log4net;
@@ -67,11 +66,18 @@ namespace DOL.GS.SkillHandler
 				return;
 			}
 
-			if (!player.Alive)
+			if (!player.IsAlive)
 			{
 				player.Out.SendMessage("You can't enter combat mode while lying down!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 				return;
 			}
+
+			if (player.IsSitting)
+			{
+				player.Out.SendMessage("You can't enter combat mode while sitting down!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+				return;
+			}
+
 			if (player.ActiveWeaponSlot == GameLiving.eActiveWeaponSlot.Distance)
 			{
 				player.Out.SendMessage("You can't enter melee combat mode with a fired weapon!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
@@ -86,7 +92,7 @@ namespace DOL.GS.SkillHandler
 			}
 
 			// You cannot engage a mob that was attacked within the last 5 seconds...
-			if (target.LastAttackedByEnemyTick > target.Region.Time - EngageAbilityHandler.ENGAGE_ATTACK_DELAY_TICK) 
+			if (target.LastAttackedByEnemyTick > target.CurrentRegion.Time - EngageAbilityHandler.ENGAGE_ATTACK_DELAY_TICK) 
 			{
 				player.Out.SendMessage(target.GetName(0,true)+" has been attacked recently and you are unable to engage.", eChatType.CT_System, eChatLoc.CL_SystemWindow);	
 				return;

@@ -87,9 +87,10 @@ namespace DOL.GS.Quests.Albion
 		[ScriptLoadedEvent]
 		public static void ScriptLoaded(DOLEvent e, object sender, EventArgs args)
 		{
+			if (!ServerProperties.Properties.LOAD_QUESTS)
+				return;
 			if (log.IsInfoEnabled)
-				if (log.IsInfoEnabled)
-					log.Info("Quest \"" + questTitle + "\" initializing ...");
+				log.Info("Quest \"" + questTitle + "\" initializing ...");
 
 			#region defineNPCs
 
@@ -99,15 +100,17 @@ namespace DOL.GS.Quests.Albion
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Roben , creating it ...");
-				Roben = new GameMob();
+				Roben = new GameNPC();
 				Roben.Model = 36;
 				Roben.Name = "Roben Fraomar";
 				Roben.GuildName = "";
 				Roben.Realm = (byte) eRealm.Albion;
-				Roben.RegionId = 1;
+				Roben.CurrentRegionID = 1;
 				Roben.Size = 52;
 				Roben.Level = 50;
-				Roben.Position = new Point(408557, 651675, 5200);
+				Roben.X = 408557;
+				Roben.Y = 651675;
+				Roben.Z = 5200;
 				Roben.Heading = 3049;
 				Roben.AddToWorld();
 
@@ -123,15 +126,17 @@ namespace DOL.GS.Quests.Albion
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Blythe , creating it ...");
-				Blythe = new GameMob();
+				Blythe = new GameNPC();
 				Blythe.Model = 67;
 				Blythe.Name = "Sister Blythe";
 				Blythe.GuildName = "";
 				Blythe.Realm = (byte) eRealm.None;
-				Blythe.RegionId = 1;
+				Blythe.CurrentRegionID = 1;
 				Blythe.Size = 50;
 				Blythe.Level = 69;
-				Blythe.Position = new Point(322231, 671546, 2762);
+				Blythe.X = 322231;
+				Blythe.Y = 671546;
+				Blythe.Z = 2762;
 				Blythe.Heading = 1683;
 				Blythe.AddToWorld();
 
@@ -152,7 +157,7 @@ namespace DOL.GS.Quests.Albion
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Statue of Arawn, creating it ...");
 				statue_of_arawn = new ItemTemplate();
-				statue_of_arawn.ItemTemplateID = "statue_of_arawn";
+				statue_of_arawn.Id_nb = "statue_of_arawn";
 				statue_of_arawn.Name = "Statue of Arawn";
 				statue_of_arawn.Level = 8;
 				statue_of_arawn.Item_Type = 29;
@@ -165,7 +170,6 @@ namespace DOL.GS.Quests.Albion
 				statue_of_arawn.Hand = 0;
 				statue_of_arawn.Type_Damage = 0;
 				statue_of_arawn.Quality = 100;
-				statue_of_arawn.MaxQuality = 100;
 				statue_of_arawn.Weight = 12;
 				if (SAVE_INTO_DATABASE)
 				{
@@ -181,7 +185,7 @@ namespace DOL.GS.Quests.Albion
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Clerics Epic Boots , creating it ...");
 				i = new ItemTemplate();
-				i.ItemTemplateID = "ClericEpicBoots";
+				i.Id_nb = "ClericEpicBoots";
 				i.Name = "Boots of Defiant Soul";
 				i.Level = 50;
 				i.Item_Type = 23;
@@ -192,7 +196,6 @@ namespace DOL.GS.Quests.Albion
 				i.SPD_ABS = 27;
 				i.Object_Type = 35;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -227,7 +230,7 @@ namespace DOL.GS.Quests.Albion
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Clerics Epic Helm , creating it ...");
 				i = new ItemTemplate();
-				i.ItemTemplateID = "ClericEpicHelm";
+				i.Id_nb = "ClericEpicHelm";
 				i.Name = "Coif of Defiant Soul";
 				i.Level = 50;
 				i.Item_Type = 21;
@@ -238,7 +241,6 @@ namespace DOL.GS.Quests.Albion
 				i.SPD_ABS = 27;
 				i.Object_Type = 35;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -274,7 +276,7 @@ namespace DOL.GS.Quests.Albion
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Clerics Epic Gloves , creating it ...");
 				i = new ItemTemplate();
-				i.ItemTemplateID = "ClericEpicGloves";
+				i.Id_nb = "ClericEpicGloves";
 				i.Name = "Gauntlets of Defiant Soul";
 				i.Level = 50;
 				i.Item_Type = 22;
@@ -285,7 +287,6 @@ namespace DOL.GS.Quests.Albion
 				i.SPD_ABS = 27;
 				i.Object_Type = 35;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -320,7 +321,7 @@ namespace DOL.GS.Quests.Albion
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Clerics Epic Vest , creating it ...");
 				i = new ItemTemplate();
-				i.ItemTemplateID = "ClericEpicVest";
+				i.Id_nb = "ClericEpicVest";
 				i.Name = "Habergeon of Defiant Soul";
 				i.Level = 50;
 				i.Item_Type = 25;
@@ -331,7 +332,6 @@ namespace DOL.GS.Quests.Albion
 				i.SPD_ABS = 27;
 				i.Object_Type = 35;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -365,7 +365,7 @@ namespace DOL.GS.Quests.Albion
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Clerics Epic Legs , creating it ...");
 				i = new ItemTemplate();
-				i.ItemTemplateID = "ClericEpicLegs";
+				i.Id_nb = "ClericEpicLegs";
 				i.Name = "Chaussess of Defiant Soul";
 				i.Level = 50;
 				i.Item_Type = 27;
@@ -376,7 +376,6 @@ namespace DOL.GS.Quests.Albion
 				i.SPD_ABS = 27;
 				i.Object_Type = 35;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -411,7 +410,7 @@ namespace DOL.GS.Quests.Albion
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Cleric Epic Arms , creating it ...");
 				i = new ItemTemplate();
-				i.ItemTemplateID = "ClericEpicArms";
+				i.Id_nb = "ClericEpicArms";
 				i.Name = "Sleeves of Defiant Soul";
 				i.Level = 50;
 				i.Item_Type = 28;
@@ -422,7 +421,6 @@ namespace DOL.GS.Quests.Albion
 				i.SPD_ABS = 27;
 				i.Object_Type = 35;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -456,7 +454,7 @@ namespace DOL.GS.Quests.Albion
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Paladin Epic Boots , creating it ...");
 				i = new ItemTemplate();
-				i.ItemTemplateID = "PaladinEpicBoots";
+				i.Id_nb = "PaladinEpicBoots";
 				i.Name = "Sabaton of the Iron Will";
 				i.Level = 50;
 				i.Item_Type = 23;
@@ -467,7 +465,6 @@ namespace DOL.GS.Quests.Albion
 				i.SPD_ABS = 34;
 				i.Object_Type = 36;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -503,7 +500,7 @@ namespace DOL.GS.Quests.Albion
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Paladin Epic Helm , creating it ...");
 				i = new ItemTemplate();
-				i.ItemTemplateID = "PaladinEpicHelm";
+				i.Id_nb = "PaladinEpicHelm";
 				i.Name = "Hounskull of the Iron Will";
 				i.Level = 50;
 				i.Item_Type = 21;
@@ -514,7 +511,6 @@ namespace DOL.GS.Quests.Albion
 				i.SPD_ABS = 34;
 				i.Object_Type = 36;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -550,7 +546,7 @@ namespace DOL.GS.Quests.Albion
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Paladin Epic Gloves , creating it ...");
 				i = new ItemTemplate();
-				i.ItemTemplateID = "PaladinEpicGloves";
+				i.Id_nb = "PaladinEpicGloves";
 				i.Name = "Gauntlets of the Iron Will";
 				i.Level = 50;
 				i.Item_Type = 22;
@@ -561,7 +557,6 @@ namespace DOL.GS.Quests.Albion
 				i.SPD_ABS = 34;
 				i.Object_Type = 36;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -596,7 +591,7 @@ namespace DOL.GS.Quests.Albion
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Paladin Epic Vest , creating it ...");
 				i = new ItemTemplate();
-				i.ItemTemplateID = "PaladinEpicVest";
+				i.Id_nb = "PaladinEpicVest";
 				i.Name = "Curiass of the Iron Will";
 				i.Level = 50;
 				i.Item_Type = 25;
@@ -607,7 +602,6 @@ namespace DOL.GS.Quests.Albion
 				i.SPD_ABS = 34;
 				i.Object_Type = 36;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -642,7 +636,7 @@ namespace DOL.GS.Quests.Albion
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Paladin Epic Legs , creating it ...");
 				i = new ItemTemplate();
-				i.ItemTemplateID = "PaladinEpicLegs";
+				i.Id_nb = "PaladinEpicLegs";
 				i.Name = "Greaves of the Iron Will";
 				i.Level = 50;
 				i.Item_Type = 27;
@@ -653,7 +647,6 @@ namespace DOL.GS.Quests.Albion
 				i.SPD_ABS = 34;
 				i.Object_Type = 36;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -688,7 +681,7 @@ namespace DOL.GS.Quests.Albion
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Paladin Epic Arms , creating it ...");
 				i = new ItemTemplate();
-				i.ItemTemplateID = "PaladinEpicArms";
+				i.Id_nb = "PaladinEpicArms";
 				i.Name = "Spaulders of the Iron Will";
 				i.Level = 50;
 				i.Item_Type = 28;
@@ -699,7 +692,6 @@ namespace DOL.GS.Quests.Albion
 				i.SPD_ABS = 34;
 				i.Object_Type = 36;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -729,6 +721,9 @@ namespace DOL.GS.Quests.Albion
 
 			#endregion
 
+			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
 			GameEventMgr.AddHandler(Roben, GameObjectEvent.Interact, new DOLEventHandler(TalkToRoben));
 			GameEventMgr.AddHandler(Roben, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToRoben));
 
@@ -743,10 +738,15 @@ namespace DOL.GS.Quests.Albion
 		[ScriptUnloadedEvent]
 		public static void ScriptUnloaded(DOLEvent e, object sender, EventArgs args)
 		{
+			if (!ServerProperties.Properties.LOAD_QUESTS)
+				return;
 			//if not loaded, don't worry
 			if (Roben == null)
 				return;
 			// remove handlers
+			GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
 			GameEventMgr.RemoveHandler(Roben, GameObjectEvent.Interact, new DOLEventHandler(TalkToRoben));
 			GameEventMgr.RemoveHandler(Roben, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToRoben));
 
@@ -804,7 +804,7 @@ namespace DOL.GS.Quests.Albion
 							Roben.SayTo(player, "Occupants that worship not the church of Albion, but the dark lord Arawn! Magess Axton requests that you gather a group and destroy the leader of these dark disciples. She believes these worshippers of Arawan strive to [break the light of camelot] and establish their own religion within our realm.");
 							break;
 						case "break the light of camelot":
-							player.Out.SendCustomDialog("Will you help Roben [Church Level 50 Epic]?", new CustomDialogResponse(CheckPlayerAcceptQuest));
+							player.Out.SendQuestSubscribeCommand(Roben, QuestMgr.GetIDForQuestType(typeof(Church_50)), "Will you help Roben [Church Level 50 Epic]?");
 							break;
 					}
 				}
@@ -870,6 +870,22 @@ namespace DOL.GS.Quests.Albion
 			}
 		}
 
+
+		protected static void SubscribeQuest(DOLEvent e, object sender, EventArgs args)
+		{
+			QuestEventArgs qargs = args as QuestEventArgs;
+			if (qargs == null)
+				return;
+
+			if (qargs.QuestID != QuestMgr.GetIDForQuestType(typeof(Church_50)))
+				return;
+
+			if (e == GamePlayerEvent.AcceptQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x01);
+			else if (e == GamePlayerEvent.DeclineQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x00);
+		}
+
 		private static void CheckPlayerAcceptQuest(GamePlayer player, byte response)
 		{
 			if(Roben.CanGiveQuest(typeof (Church_50), player)  <= 0)
@@ -927,7 +943,7 @@ namespace DOL.GS.Quests.Albion
 				if (gArgs.Target.Name == Blythe.Name)
 				{
 					m_questPlayer.Out.SendMessage("As you search the dead body of sister Blythe, you find a sacred " + statue_of_arawn.Name + ", bring it to " + Roben.Name + " has proof of your success.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					GiveItem(player, statue_of_arawn);
+					GiveItem(m_questPlayer, statue_of_arawn);
 					Step = 2;
 					return;
 				}
@@ -936,7 +952,7 @@ namespace DOL.GS.Quests.Albion
 			if (Step == 2 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == Roben.Name && gArgs.Item.ItemTemplateID == statue_of_arawn.ItemTemplateID)
+				if (gArgs.Target.Name == Roben.Name && gArgs.Item.Id_nb == statue_of_arawn.Id_nb)
 				{
 					RemoveItem(player, statue_of_arawn, true);
 					Roben.SayTo(player, "You have earned this Epic Armour, wear it with honour!");

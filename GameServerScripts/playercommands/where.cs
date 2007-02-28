@@ -17,8 +17,6 @@
  *
  */
 using System;
-using DOL.Database;
-using DOL.GS.Collections;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Scripts
@@ -37,27 +35,14 @@ namespace DOL.GS.Scripts
 			if (targetnpc != null && CheckTargetIsGuard(targetnpc))
 			{
 				string name = String.Join(" ", args, 1, args.Length - 1);
-				DynamicList npcs = client.Player.Region.GetAllObjects(typeof(GameNPC));
-				if (npcs == null || npcs.Count <= 0)
+				GameNPC[] npcs = WorldMgr.GetNPCsByNameFromRegion(name, client.Player.CurrentRegionID, (eRealm) client.Player.Realm);
+				if (npcs == null || npcs.Length <= 0)
 				{
 					targetnpc.SayTo(client.Player, "Sorry, i do not know this person.");
 					return 0;
 				}
-				GameNPC npc = null;
-				foreach(GameNPC currentNpc in npcs)
-				{
-					if(GameServer.ServerRules.IsSameRealm(currentNpc, client.Player, true))
-					{
-						npc = currentNpc;
-						break;
-					}
-				}
-				if (npc == null)
-				{
-					targetnpc.SayTo(client.Player, "Sorry, i do not know this person.");
-					return 0;
-				}
-				ushort heading = targetnpc.Position.GetHeadingTo(npc.Position);
+				GameNPC npc = npcs[0];
+				ushort heading = targetnpc.GetHeadingToTarget(npc);
 				string directionstring = GetDirectionFromHeading(heading);
 				targetnpc.SayTo(client.Player, eChatLoc.CL_SystemWindow, npc.Name + " is in the " + directionstring);
 				targetnpc.TurnTo(npc, 10000);
@@ -69,6 +54,9 @@ namespace DOL.GS.Scripts
 
 		public bool CheckTargetIsGuard(GameLiving target)
 		{
+			if (target is GameGuard)
+				return true;
+
 			if (target.Realm == 0)
 				return false;
 

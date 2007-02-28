@@ -94,6 +94,8 @@ namespace DOL.GS.Quests.Midgard
 		[ScriptLoadedEvent]
 		public static void ScriptLoaded(DOLEvent e, object sender, EventArgs args)
 		{
+			if (!ServerProperties.Properties.LOAD_QUESTS)
+				return;
 			if (log.IsInfoEnabled)
 				log.Info("Quest \"" + questTitle + "\" initializing ...");
 
@@ -105,15 +107,17 @@ namespace DOL.GS.Quests.Midgard
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Inaksha , creating it ...");
-				Inaksha = new GameMob();
+				Inaksha = new GameNPC();
 				Inaksha.Model = 193;
 				Inaksha.Name = "Inaksha";
 				Inaksha.GuildName = "";
 				Inaksha.Realm = (byte) eRealm.Midgard;
-				Inaksha.RegionId = 100;
+				Inaksha.CurrentRegionID = 100;
 				Inaksha.Size = 50;
 				Inaksha.Level = 41;
-				Inaksha.Position = new Point(805929, 702449, 4960);
+				Inaksha.X = 805929;
+				Inaksha.Y = 702449;
+				Inaksha.Z = 4960;
 				Inaksha.Heading = 2116;
 				Inaksha.AddToWorld();
 				if (SAVE_INTO_DATABASE)
@@ -132,15 +136,17 @@ namespace DOL.GS.Quests.Midgard
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Loken , creating it ...");
-				Loken = new GameMob();
+				Loken = new GameNPC();
 				Loken.Model = 212;
 				Loken.Name = "Loken";
 				Loken.GuildName = "";
 				Loken.Realm = (byte) eRealm.None;
-				Loken.RegionId = 100;
+				Loken.CurrentRegionID = 100;
 				Loken.Size = 50;
 				Loken.Level = 65;
-				Loken.Position = new Point(636784, 762433, 4596);
+				Loken.X = 636784;
+				Loken.Y = 762433;
+				Loken.Z = 4596;
 				Loken.Heading = 3777;
 				Loken.AddToWorld();
 				if (SAVE_INTO_DATABASE)
@@ -159,15 +165,17 @@ namespace DOL.GS.Quests.Midgard
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Miri , creating it ...");
-				Miri = new GameMob();
+				Miri = new GameNPC();
 				Miri.Model = 220;
 				Miri.Name = "Miri";
 				Miri.GuildName = "";
 				Miri.Realm = (byte) eRealm.Midgard;
-				Miri.RegionId = 101;
+				Miri.CurrentRegionID = 101;
 				Miri.Size = 50;
 				Miri.Level = 43;
-				Miri.Position = new Point(30641, 32093, 8305);
+				Miri.X = 30641;
+				Miri.Y = 32093;
+				Miri.Z = 8305;
 				Miri.Heading = 3037;
 				Miri.AddToWorld();
 				if (SAVE_INTO_DATABASE)
@@ -190,7 +198,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find ball_of_flame , creating it ...");
 				ball_of_flame = new ItemTemplate();
-				ball_of_flame.ItemTemplateID = "ball_of_flame";
+				ball_of_flame.Id_nb = "ball_of_flame";
 				ball_of_flame.Name = "Ball of Flame";
 				ball_of_flame.Level = 8;
 				ball_of_flame.Item_Type = 29;
@@ -203,7 +211,6 @@ namespace DOL.GS.Quests.Midgard
 				ball_of_flame.Hand = 0;
 				ball_of_flame.Type_Damage = 0;
 				ball_of_flame.Quality = 100;
-				ball_of_flame.MaxQuality = 100;
 				ball_of_flame.Weight = 12;
 				if (SAVE_INTO_DATABASE)
 				{
@@ -218,7 +225,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Sealed Pouch , creating it ...");
 				sealed_pouch = new ItemTemplate();
-				sealed_pouch.ItemTemplateID = "sealed_pouch";
+				sealed_pouch.Id_nb = "sealed_pouch";
 				sealed_pouch.Name = "Sealed Pouch";
 				sealed_pouch.Level = 8;
 				sealed_pouch.Item_Type = 29;
@@ -231,7 +238,6 @@ namespace DOL.GS.Quests.Midgard
 				sealed_pouch.Hand = 0;
 				sealed_pouch.Type_Damage = 0;
 				sealed_pouch.Quality = 100;
-				sealed_pouch.MaxQuality = 100;
 				sealed_pouch.Weight = 12;
 				if (SAVE_INTO_DATABASE)
 				{
@@ -247,7 +253,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Healers Epic Boots , creating it ...");
 				HealerEpicBoots = new ItemTemplate();
-				HealerEpicBoots.ItemTemplateID = "HealerEpicBoots";
+				HealerEpicBoots.Id_nb = "HealerEpicBoots";
 				HealerEpicBoots.Name = "Valhalla Touched Boots";
 				HealerEpicBoots.Level = 50;
 				HealerEpicBoots.Item_Type = 23;
@@ -258,7 +264,6 @@ namespace DOL.GS.Quests.Midgard
 				HealerEpicBoots.SPD_ABS = 27;
 				HealerEpicBoots.Object_Type = 35;
 				HealerEpicBoots.Quality = 100;
-				HealerEpicBoots.MaxQuality = 100;
 				HealerEpicBoots.Weight = 22;
 				HealerEpicBoots.Bonus = 35;
 				HealerEpicBoots.MaxCondition = 50000;
@@ -291,18 +296,17 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Healers Epic Helm , creating it ...");
 				HealerEpicHelm = new ItemTemplate();
-				HealerEpicHelm.ItemTemplateID = "HealerEpicHelm";
+				HealerEpicHelm.Id_nb = "HealerEpicHelm";
 				HealerEpicHelm.Name = "Valhalla Touched Coif";
 				HealerEpicHelm.Level = 50;
 				HealerEpicHelm.Item_Type = 21;
-				HealerEpicHelm.Model = 63; //NEED TO WORK ON..
+				HealerEpicHelm.Model = 1291; //NEED TO WORK ON..
 				HealerEpicHelm.IsDropable = true;
 				HealerEpicHelm.IsPickable = true;
 				HealerEpicHelm.DPS_AF = 100;
 				HealerEpicHelm.SPD_ABS = 27;
 				HealerEpicHelm.Object_Type = 35;
 				HealerEpicHelm.Quality = 100;
-				HealerEpicHelm.MaxQuality = 100;
 				HealerEpicHelm.Weight = 22;
 				HealerEpicHelm.Bonus = 35;
 				HealerEpicHelm.MaxCondition = 50000;
@@ -336,7 +340,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Healers Epic Gloves , creating it ...");
 				HealerEpicGloves = new ItemTemplate();
-				HealerEpicGloves.ItemTemplateID = "HealerEpicGloves";
+				HealerEpicGloves.Id_nb = "HealerEpicGloves";
 				HealerEpicGloves.Name = "Valhalla Touched Gloves ";
 				HealerEpicGloves.Level = 50;
 				HealerEpicGloves.Item_Type = 22;
@@ -347,7 +351,6 @@ namespace DOL.GS.Quests.Midgard
 				HealerEpicGloves.SPD_ABS = 27;
 				HealerEpicGloves.Object_Type = 35;
 				HealerEpicGloves.Quality = 100;
-				HealerEpicGloves.MaxQuality = 100;
 				HealerEpicGloves.Weight = 22;
 				HealerEpicGloves.Bonus = 35;
 				HealerEpicGloves.MaxCondition = 50000;
@@ -380,7 +383,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Healers Epic Vest , creating it ...");
 				HealerEpicVest = new ItemTemplate();
-				HealerEpicVest.ItemTemplateID = "HealerEpicVest";
+				HealerEpicVest.Id_nb = "HealerEpicVest";
 				HealerEpicVest.Name = "Valhalla Touched Haukberk";
 				HealerEpicVest.Level = 50;
 				HealerEpicVest.Item_Type = 25;
@@ -391,7 +394,6 @@ namespace DOL.GS.Quests.Midgard
 				HealerEpicVest.SPD_ABS = 27;
 				HealerEpicVest.Object_Type = 35;
 				HealerEpicVest.Quality = 100;
-				HealerEpicVest.MaxQuality = 100;
 				HealerEpicVest.Weight = 22;
 				HealerEpicVest.Bonus = 35;
 				HealerEpicVest.MaxCondition = 50000;
@@ -424,7 +426,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Healers Epic Legs , creating it ...");
 				HealerEpicLegs = new ItemTemplate();
-				HealerEpicLegs.ItemTemplateID = "HealerEpicLegs";
+				HealerEpicLegs.Id_nb = "HealerEpicLegs";
 				HealerEpicLegs.Name = "Valhalla Touched Legs";
 				HealerEpicLegs.Level = 50;
 				HealerEpicLegs.Item_Type = 27;
@@ -435,7 +437,6 @@ namespace DOL.GS.Quests.Midgard
 				HealerEpicLegs.SPD_ABS = 27;
 				HealerEpicLegs.Object_Type = 35;
 				HealerEpicLegs.Quality = 100;
-				HealerEpicLegs.MaxQuality = 100;
 				HealerEpicLegs.Weight = 22;
 				HealerEpicLegs.Bonus = 35;
 				HealerEpicLegs.MaxCondition = 50000;
@@ -468,7 +469,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Healer Epic Arms , creating it ...");
 				HealerEpicArms = new ItemTemplate();
-				HealerEpicArms.ItemTemplateID = "HealerEpicArms";
+				HealerEpicArms.Id_nb = "HealerEpicArms";
 				HealerEpicArms.Name = "Valhalla Touched Sleeves";
 				HealerEpicArms.Level = 50;
 				HealerEpicArms.Item_Type = 28;
@@ -479,7 +480,6 @@ namespace DOL.GS.Quests.Midgard
 				HealerEpicArms.SPD_ABS = 27;
 				HealerEpicArms.Object_Type = 35;
 				HealerEpicArms.Quality = 100;
-				HealerEpicArms.MaxQuality = 100;
 				HealerEpicArms.Weight = 22;
 				HealerEpicArms.Bonus = 35;
 				HealerEpicArms.MaxCondition = 50000;
@@ -512,7 +512,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Shaman Epic Boots , creating it ...");
 				ShamanEpicBoots = new ItemTemplate();
-				ShamanEpicBoots.ItemTemplateID = "ShamanEpicBoots";
+				ShamanEpicBoots.Id_nb = "ShamanEpicBoots";
 				ShamanEpicBoots.Name = "Subterranean Boots";
 				ShamanEpicBoots.Level = 50;
 				ShamanEpicBoots.Item_Type = 23;
@@ -523,7 +523,6 @@ namespace DOL.GS.Quests.Midgard
 				ShamanEpicBoots.SPD_ABS = 27;
 				ShamanEpicBoots.Object_Type = 35;
 				ShamanEpicBoots.Quality = 100;
-				ShamanEpicBoots.MaxQuality = 100;
 				ShamanEpicBoots.Weight = 22;
 				ShamanEpicBoots.Bonus = 35;
 				ShamanEpicBoots.MaxCondition = 50000;
@@ -553,7 +552,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Shaman Epic Helm , creating it ...");
 				ShamanEpicHelm = new ItemTemplate();
-				ShamanEpicHelm.ItemTemplateID = "ShamanEpicHelm";
+				ShamanEpicHelm.Id_nb = "ShamanEpicHelm";
 				ShamanEpicHelm.Name = "Subterranean Coif";
 				ShamanEpicHelm.Level = 50;
 				ShamanEpicHelm.Item_Type = 21;
@@ -564,7 +563,6 @@ namespace DOL.GS.Quests.Midgard
 				ShamanEpicHelm.SPD_ABS = 27;
 				ShamanEpicHelm.Object_Type = 35;
 				ShamanEpicHelm.Quality = 100;
-				ShamanEpicHelm.MaxQuality = 100;
 				ShamanEpicHelm.Weight = 22;
 				ShamanEpicHelm.Bonus = 35;
 				ShamanEpicHelm.MaxCondition = 50000;
@@ -597,7 +595,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Shaman Epic Gloves , creating it ...");
 				ShamanEpicGloves = new ItemTemplate();
-				ShamanEpicGloves.ItemTemplateID = "ShamanEpicGloves";
+				ShamanEpicGloves.Id_nb = "ShamanEpicGloves";
 				ShamanEpicGloves.Name = "Subterranean Gloves";
 				ShamanEpicGloves.Level = 50;
 				ShamanEpicGloves.Item_Type = 22;
@@ -608,7 +606,6 @@ namespace DOL.GS.Quests.Midgard
 				ShamanEpicGloves.SPD_ABS = 27;
 				ShamanEpicGloves.Object_Type = 35;
 				ShamanEpicGloves.Quality = 100;
-				ShamanEpicGloves.MaxQuality = 100;
 				ShamanEpicGloves.Weight = 22;
 				ShamanEpicGloves.Bonus = 35;
 				ShamanEpicGloves.MaxCondition = 50000;
@@ -641,7 +638,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Shaman Epic Vest , creating it ...");
 				ShamanEpicVest = new ItemTemplate();
-				ShamanEpicVest.ItemTemplateID = "ShamanEpicVest";
+				ShamanEpicVest.Id_nb = "ShamanEpicVest";
 				ShamanEpicVest.Name = "Subterranean Hauberk";
 				ShamanEpicVest.Level = 50;
 				ShamanEpicVest.Item_Type = 25;
@@ -652,7 +649,6 @@ namespace DOL.GS.Quests.Midgard
 				ShamanEpicVest.SPD_ABS = 27;
 				ShamanEpicVest.Object_Type = 35;
 				ShamanEpicVest.Quality = 100;
-				ShamanEpicVest.MaxQuality = 100;
 				ShamanEpicVest.Weight = 22;
 				ShamanEpicVest.Bonus = 35;
 				ShamanEpicVest.MaxCondition = 50000;
@@ -685,7 +681,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Shaman Epic Legs , creating it ...");
 				ShamanEpicLegs = new ItemTemplate();
-				ShamanEpicLegs.ItemTemplateID = "ShamanEpicLegs";
+				ShamanEpicLegs.Id_nb = "ShamanEpicLegs";
 				ShamanEpicLegs.Name = "Subterranean Legs";
 				ShamanEpicLegs.Level = 50;
 				ShamanEpicLegs.Item_Type = 27;
@@ -696,7 +692,6 @@ namespace DOL.GS.Quests.Midgard
 				ShamanEpicLegs.SPD_ABS = 27;
 				ShamanEpicLegs.Object_Type = 35;
 				ShamanEpicLegs.Quality = 100;
-				ShamanEpicLegs.MaxQuality = 100;
 				ShamanEpicLegs.Weight = 22;
 				ShamanEpicLegs.Bonus = 35;
 				ShamanEpicLegs.MaxCondition = 50000;
@@ -729,7 +724,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Shaman Epic Arms , creating it ...");
 				ShamanEpicArms = new ItemTemplate();
-				ShamanEpicArms.ItemTemplateID = "ShamanEpicArms";
+				ShamanEpicArms.Id_nb = "ShamanEpicArms";
 				ShamanEpicArms.Name = "Subterranean Sleeves";
 				ShamanEpicArms.Level = 50;
 				ShamanEpicArms.Item_Type = 28;
@@ -740,7 +735,6 @@ namespace DOL.GS.Quests.Midgard
 				ShamanEpicArms.SPD_ABS = 27;
 				ShamanEpicArms.Object_Type = 35;
 				ShamanEpicArms.Quality = 100;
-				ShamanEpicArms.MaxQuality = 100;
 				ShamanEpicArms.Weight = 22;
 				ShamanEpicArms.Bonus = 35;
 				ShamanEpicArms.MaxCondition = 50000;
@@ -772,6 +766,9 @@ namespace DOL.GS.Quests.Midgard
 
 			#endregion
 
+			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
 			GameEventMgr.AddHandler(Inaksha, GameObjectEvent.Interact, new DOLEventHandler(TalkToInaksha));
 			GameEventMgr.AddHandler(Inaksha, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToInaksha));
 			GameEventMgr.AddHandler(Miri, GameObjectEvent.Interact, new DOLEventHandler(TalkToMiri));
@@ -791,6 +788,9 @@ namespace DOL.GS.Quests.Midgard
 			if (Inaksha == null || Miri == null)
 				return;
 			// remove handlers
+			GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
 			GameEventMgr.RemoveHandler(Inaksha, GameObjectEvent.Interact, new DOLEventHandler(TalkToInaksha));
 			GameEventMgr.RemoveHandler(Inaksha, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToInaksha));
 			GameEventMgr.RemoveHandler(Miri, GameObjectEvent.Interact, new DOLEventHandler(TalkToMiri));
@@ -835,7 +835,7 @@ namespace DOL.GS.Quests.Midgard
 					switch (wArgs.Text)
 					{
 						case "services":
-							player.Out.SendCustomDialog("Will you help Inaksha [Seer Level 50 Epic]?", new CustomDialogResponse(CheckPlayerAcceptQuest));
+							player.Out.SendQuestSubscribeCommand(Inaksha, QuestMgr.GetIDForQuestType(typeof(Seer_50)), "Will you help Inaksha [Seer Level 50 Epic]?");
 							break;
 					}
 				}
@@ -934,6 +934,21 @@ namespace DOL.GS.Quests.Midgard
 			}
 		}
 
+		protected static void SubscribeQuest(DOLEvent e, object sender, EventArgs args)
+		{
+			QuestEventArgs qargs = args as QuestEventArgs;
+			if (qargs == null)
+				return;
+
+			if (qargs.QuestID != QuestMgr.GetIDForQuestType(typeof(Seer_50)))
+				return;
+
+			if (e == GamePlayerEvent.AcceptQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x01);
+			else if (e == GamePlayerEvent.DeclineQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x00);
+		}
+
 		private static void CheckPlayerAcceptQuest(GamePlayer player, byte response)
 		{
 			if(Inaksha.CanGiveQuest(typeof (Seer_50), player)  <= 0)
@@ -986,7 +1001,7 @@ namespace DOL.GS.Quests.Midgard
 		{
 			GamePlayer player = sender as GamePlayer;
 
-			if (player==null || player.IsDoingQuest(typeof (Seer_50)) == null)
+			if (player == null || player.IsDoingQuest(typeof(Seer_50)) == null)
 				return;
 
 			if (Step == 1 && e == GameLivingEvent.EnemyKilled)
@@ -995,7 +1010,7 @@ namespace DOL.GS.Quests.Midgard
 				if (gArgs.Target.Name == Loken.Name)
 				{
 					m_questPlayer.Out.SendMessage("You get a ball of flame", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					GiveItem(player, ball_of_flame);
+					GiveItem(m_questPlayer, ball_of_flame);
 					Step = 2;
 					return;
 				}
@@ -1004,7 +1019,7 @@ namespace DOL.GS.Quests.Midgard
 			if (Step == 2 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == Inaksha.Name && gArgs.Item.ItemTemplateID == ball_of_flame.ItemTemplateID)
+				if (gArgs.Target.Name == Inaksha.Name && gArgs.Item.Id_nb == ball_of_flame.Id_nb)
 				{
 					RemoveItem(Inaksha, player, ball_of_flame);
 					Inaksha.SayTo(player, "So it seems Logan's [dead]");
@@ -1016,7 +1031,7 @@ namespace DOL.GS.Quests.Midgard
 			if (Step == 4 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == Miri.Name && gArgs.Item.ItemTemplateID == sealed_pouch.ItemTemplateID)
+				if (gArgs.Target.Name == Miri.Name && gArgs.Item.Id_nb == sealed_pouch.Id_nb)
 				{
 					RemoveItem(Miri, player, sealed_pouch);
 					Miri.SayTo(player, "You have earned this Epic Armour!");

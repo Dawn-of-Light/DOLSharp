@@ -17,7 +17,6 @@
  *
  */
 using System.Reflection;
-using DOL.GS.Database;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 using log4net;
@@ -38,12 +37,12 @@ namespace DOL.GS.SkillHandler
 		/// <summary>
 		/// The intercept distance
 		/// </summary>
-		public static readonly ushort INTERCEPT_DISTANCE = 128;
+		public const int INTERCEPT_DISTANCE = 128;
 
 		/// <summary>
 		/// Intercept reuse timer in milliseconds
 		/// </summary>
-		public static readonly int REUSE_TIMER = 60 * 1000;
+		public const int REUSE_TIMER = 60 * 1000;
 
 		/// <summary>
 		/// Executes the ability

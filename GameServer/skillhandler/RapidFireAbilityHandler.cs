@@ -17,7 +17,6 @@
  *
  */
 using System;
-using DOL.GS.Database;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
  
@@ -39,17 +38,19 @@ namespace DOL.GS.SkillHandler
 				return;
 			}
 
-			if(!player.Alive)
+			if(!player.IsAlive)
 			{
 				player.Out.SendMessage("You can't switch to rapid fire when dead!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
 			SureShotEffect sureShot = (SureShotEffect)player.EffectList.GetOfType(typeof(SureShotEffect));
-			if (sureShot!=null)
-			{
+			if (sureShot != null)
 				sureShot.Cancel(false);
-			}
+
+			TrueshotEffect trueshot = (TrueshotEffect)player.EffectList.GetOfType(typeof(TrueshotEffect));
+			if (trueshot != null)
+				trueshot.Cancel(false);
 
 			new RapidFireEffect().Start(player);
 		}

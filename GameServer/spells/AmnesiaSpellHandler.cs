@@ -19,7 +19,6 @@
 using System;
 using System.Collections;
 using DOL.AI.Brain;
-using DOL.GS.Database;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 
@@ -35,9 +34,9 @@ namespace DOL.GS.Spells
 		/// Execute direct damage spell
 		/// </summary>
 		/// <param name="target"></param>
-		public override void FinishSpellCast(GameLivingBase target)
+		public override void FinishSpellCast(GameLiving target)
 		{
-			m_caster.ChangeMana(null, -CalculateNeededPower(target));
+			m_caster.Mana -= CalculateNeededPower(target);
 			base.FinishSpellCast(target);
 		}
 
@@ -49,10 +48,10 @@ namespace DOL.GS.Spells
 		public override void OnDirectEffect(GameLiving target, double effectiveness)
 		{
 			base.OnDirectEffect(target, effectiveness);
-			if (target == null || !target.Alive)
+			if (target == null || !target.IsAlive)
 				return;
 
-			target.LastAttackedByEnemyTick = target.Region.Time; //have to do it here because OnAttackedByEnemy is not called to not get aggro
+			target.LastAttackedByEnemyTick = target.CurrentRegion.Time; //have to do it here because OnAttackedByEnemy is not called to not get aggro
 			SendEffectAnimation(target, 0, false, 1);
 
 			if (target is GamePlayer)

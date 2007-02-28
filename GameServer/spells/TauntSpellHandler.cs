@@ -32,9 +32,9 @@ namespace DOL.GS.Spells
 		/// <summary>
 		/// called after normal spell cast is completed and effect has to be started
 		/// </summary>
-		public override void FinishSpellCast(GameLivingBase target)
+		public override void FinishSpellCast(GameLiving target)
 		{
-			m_caster.ChangeMana(null, -CalculateNeededPower(target));
+			Caster.Mana -= CalculateNeededPower(target);
 			base.FinishSpellCast(target);
 		}
 
@@ -46,7 +46,7 @@ namespace DOL.GS.Spells
 		public override void OnDirectEffect(GameLiving target, double effectiveness)
 		{
 			if (target == null) return;
-			if (!target.Alive || target.ObjectState!=eObjectState.Active) return;
+			if (!target.IsAlive || target.ObjectState!=GameLiving.eObjectState.Active) return;
 
 			SendEffectAnimation(target, 0, false, 1);
 
@@ -56,7 +56,7 @@ namespace DOL.GS.Spells
 			ad.Target = target;
 			ad.AttackType = AttackData.eAttackType.Spell;
 			ad.AttackResult = GameLiving.eAttackResult.HitUnstyled;
-			target.OnAttackedByEnemy(ad, ad.Target);
+			target.OnAttackedByEnemy(ad);
 
 			target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, ad.AttackType, Caster);
 			if (target is GameNPC)

@@ -81,8 +81,8 @@ namespace DOL.GS.Quests.Midgard
 
 		private GameNPC[] recruits = new GameNPC[4];
 
-		private static GameMob queenVuuna = null;
-		private static GameMob[] askefruerSorceress = new GameMob[4];
+		private static GameNPC queenVuuna = null;
+		private static GameNPC[] askefruerSorceress = new GameNPC[4];
 
 		private static ItemTemplate queenVuunaHead = null;
 
@@ -135,6 +135,8 @@ namespace DOL.GS.Quests.Midgard
 		[ScriptLoadedEvent]
 		public static void ScriptLoaded(DOLEvent e, object sender, EventArgs args)
 		{
+			if (!ServerProperties.Properties.LOAD_QUESTS)
+				return;
 			if (log.IsInfoEnabled)
 				log.Info("Quest \"" + questTitle + "\" initializing ...");
 			/* First thing we do in here is to search for the NPCs inside
@@ -156,16 +158,17 @@ namespace DOL.GS.Quests.Midgard
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Queen Vuuna, creating ...");
-				queenVuuna = new GameMob();
+				queenVuuna = new GameNPC();
 
-				Zone z = WorldMgr.GetZone(100);
 				queenVuuna.Name = "Queen Vuuna";
-				queenVuuna.Position = z.ToRegionPosition(new Point(47071, 38934, 4747));
+				queenVuuna.X = GameLocation.ConvertLocalXToGlobalX(47071, 100);
+				queenVuuna.Y = GameLocation.ConvertLocalYToGlobalY(38934, 100);
+				queenVuuna.Z = 4747;
 				queenVuuna.Heading = 50;
 				queenVuuna.Model = 678;
 				queenVuuna.GuildName = "Part of " + questTitle + " Quest";
 				queenVuuna.Realm = (byte) eRealm.None;
-				queenVuuna.RegionId = 100;
+				queenVuuna.CurrentRegionID = 100;
 				queenVuuna.Size = 49;
 				queenVuuna.Level = 5;
 
@@ -181,7 +184,7 @@ namespace DOL.GS.Quests.Midgard
 			}
 			else
 			{
-				queenVuuna = (GameMob) npcs[0];
+				queenVuuna = (GameNPC) npcs[0];
 			}
 
 			int counter = 0;
@@ -189,7 +192,7 @@ namespace DOL.GS.Quests.Midgard
 			{
 				if (npc.Name == "askefruer sorceress")
 				{
-					askefruerSorceress[counter] = (GameMob) npc;
+					askefruerSorceress[counter] = (GameNPC) npc;
 					counter++;
 				}
 				if (counter == askefruerSorceress.Length)
@@ -202,18 +205,17 @@ namespace DOL.GS.Quests.Midgard
 				{
 					if (log.IsWarnEnabled)
 						log.Warn("Could not find askefruer sorceress, creating ...");
-					askefruerSorceress[i] = new GameMob();
+					askefruerSorceress[i] = new GameNPC();
 					askefruerSorceress[i].Model = 678; // //819;
 					askefruerSorceress[i].Name = "askefruer sorceress";
 					askefruerSorceress[i].GuildName = "Part of " + questTitle + " Quest";
 					askefruerSorceress[i].Realm = (byte) eRealm.None;
-					askefruerSorceress[i].RegionId = 100;
+					askefruerSorceress[i].CurrentRegionID = 100;
 					askefruerSorceress[i].Size = 35;
 					askefruerSorceress[i].Level = 5;
-					Point pos = queenVuuna.Position;
-					pos.X += Util.Random(30, 150);
-					pos.Y += Util.Random(30, 150);
-					askefruerSorceress[i].Position = pos;
+					askefruerSorceress[i].X = queenVuuna.X + Util.Random(30, 150);
+					askefruerSorceress[i].Y = queenVuuna.Y + Util.Random(30, 150);
+					askefruerSorceress[i].Z = queenVuuna.Z;
 
 					StandardMobBrain brain = new StandardMobBrain();
 					brain.AggroLevel = 30;
@@ -248,7 +250,7 @@ namespace DOL.GS.Quests.Midgard
 
 				queenVuunaHead.Object_Type = (int) eObjectType.GenericItem;
 
-				queenVuunaHead.ItemTemplateID = "queen_vuuna_head";
+				queenVuunaHead.Id_nb = "queen_vuuna_head";
 				queenVuunaHead.IsPickable = true;
 				queenVuunaHead.IsDropable = false;
 
@@ -276,8 +278,8 @@ namespace DOL.GS.Quests.Midgard
 				recruitsGauntlets.SPD_ABS = 19; // Absorption
 
 				recruitsGauntlets.Object_Type = (int) eObjectType.Studded;
-				recruitsGauntlets.Item_Type = (int) eInventorySlot.HandsArmor;
-				recruitsGauntlets.ItemTemplateID = "recruits_studded_gauntlets_mid";
+				recruitsGauntlets.Item_Type = (int) eEquipmentItems.HAND;
+				recruitsGauntlets.Id_nb = "recruits_studded_gauntlets_mid";
 				recruitsGauntlets.Gold = 0;
 				recruitsGauntlets.Silver = 9;
 				recruitsGauntlets.Copper = 0;
@@ -294,7 +296,6 @@ namespace DOL.GS.Quests.Midgard
 				recruitsGauntlets.Bonus2Type = (int) eStat.DEX;
 
 				recruitsGauntlets.Quality = 100;
-				recruitsGauntlets.MaxQuality = 100;
 				recruitsGauntlets.Condition = 1000;
 				recruitsGauntlets.MaxCondition = 1000;
 				recruitsGauntlets.Durability = 1000;
@@ -324,8 +325,8 @@ namespace DOL.GS.Quests.Midgard
 				recruitsGloves.SPD_ABS = 0; // Absorption
 
 				recruitsGloves.Object_Type = (int) eObjectType.Cloth;
-				recruitsGloves.Item_Type = (int) eInventorySlot.HandsArmor;
-				recruitsGloves.ItemTemplateID = "recruits_quilted_gloves";
+				recruitsGloves.Item_Type = (int) eEquipmentItems.HAND;
+				recruitsGloves.Id_nb = "recruits_quilted_gloves";
 				recruitsGloves.Gold = 0;
 				recruitsGloves.Silver = 9;
 				recruitsGloves.Copper = 0;
@@ -342,7 +343,6 @@ namespace DOL.GS.Quests.Midgard
 				recruitsGloves.Bonus2Type = (int) eStat.DEX;
 
 				recruitsGloves.Quality = 100;
-				recruitsGloves.MaxQuality = 100;
 				recruitsGloves.Condition = 1000;
 				recruitsGloves.MaxCondition = 1000;
 				recruitsGloves.Durability = 1000;
@@ -368,8 +368,8 @@ namespace DOL.GS.Quests.Midgard
 				recruitsJewel.Model = 110;
 
 				recruitsJewel.Object_Type = (int) eObjectType.Magical;
-				recruitsJewel.Item_Type = (int) eInventorySlot.Jewellery;
-				recruitsJewel.ItemTemplateID = "recruits_tarnished_bauble";
+				recruitsJewel.Item_Type = (int) eEquipmentItems.JEWEL;
+				recruitsJewel.Id_nb = "recruits_tarnished_bauble";
 				recruitsJewel.Gold = 0;
 				recruitsJewel.Silver = 9;
 				recruitsJewel.Copper = 0;
@@ -385,7 +385,6 @@ namespace DOL.GS.Quests.Midgard
 				recruitsJewel.Bonus2Type = (int) eProperty.MaxHealth;
 
 				recruitsJewel.Quality = 100;
-				recruitsJewel.MaxQuality = 100;
 				recruitsJewel.Condition = 1000;
 				recruitsJewel.MaxCondition = 1000;
 				recruitsJewel.Durability = 1000;
@@ -411,8 +410,8 @@ namespace DOL.GS.Quests.Midgard
 				recruitsJewelCloth.Model = 110;
 
 				recruitsJewelCloth.Object_Type = (int) eObjectType.Magical;
-				recruitsJewelCloth.Item_Type = (int) eInventorySlot.Jewellery;
-				recruitsJewelCloth.ItemTemplateID = "recruits_cloudy_jewel_cloth";
+				recruitsJewelCloth.Item_Type = (int) eEquipmentItems.JEWEL;
+				recruitsJewelCloth.Id_nb = "recruits_cloudy_jewel_cloth";
 				recruitsJewelCloth.Gold = 0;
 				recruitsJewelCloth.Silver = 9;
 				recruitsJewelCloth.Copper = 0;
@@ -431,7 +430,6 @@ namespace DOL.GS.Quests.Midgard
 				recruitsJewelCloth.Bonus3Type = (int) eResist.Body;
 
 				recruitsJewelCloth.Quality = 100;
-				recruitsJewelCloth.MaxQuality = 100;
 				recruitsJewelCloth.Condition = 1000;
 				recruitsJewelCloth.MaxCondition = 1000;
 				recruitsJewelCloth.Durability = 1000;
@@ -457,8 +455,8 @@ namespace DOL.GS.Quests.Midgard
 				recruitsBracer.Model = 121;
 
 				recruitsBracer.Object_Type = (int) eObjectType.Magical;
-				recruitsBracer.Item_Type = (int) eInventorySlot.RightBracer;
-				recruitsBracer.ItemTemplateID = "recruits_golden_bracer";
+				recruitsBracer.Item_Type = (int) eEquipmentItems.R_BRACER;
+				recruitsBracer.Id_nb = "recruits_golden_bracer";
 				recruitsBracer.Gold = 0;
 				recruitsBracer.Silver = 9;
 				recruitsBracer.Copper = 0;
@@ -477,7 +475,6 @@ namespace DOL.GS.Quests.Midgard
 				recruitsBracer.Bonus3Type = (int) eResist.Body;
 
 				recruitsBracer.Quality = 100;
-				recruitsBracer.MaxQuality = 100;
 				recruitsBracer.Condition = 1000;
 				recruitsBracer.MaxCondition = 1000;
 				recruitsBracer.Durability = 1000;
@@ -506,6 +503,9 @@ namespace DOL.GS.Quests.Midgard
 			GameEventMgr.AddHandler(dalikor, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToDalikor));
 
 			GameEventMgr.AddHandler(queenVuuna, GameNPCEvent.OnAICallback, new DOLEventHandler(CheckNearQueenVuuna));
+
+			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
 
 			/* Now we bring to Dalikor the possibility to give this quest to players */
 			dalikor.AddQuestToGive(typeof (Culmination));
@@ -541,16 +541,19 @@ namespace DOL.GS.Quests.Midgard
 
 			GameEventMgr.RemoveHandler(queenVuuna, GameNPCEvent.OnAICallback, new DOLEventHandler(CheckNearQueenVuuna));
 
+			GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
 			/* Now we remove to dalikor the possibility to give this quest to players */
 			dalikor.RemoveQuestToGive(typeof (Culmination));
 		}
 
 		protected static void CheckNearQueenVuuna(DOLEvent e, object sender, EventArgs args)
 		{
-			GameMob queenTatiana = (GameMob) sender;
+			GameNPC queenTatiana = (GameNPC) sender;
 
 			// if princess is dead no ned to checks ...
-			if (!queenTatiana.Alive || queenTatiana.ObjectState != GameObject.eObjectState.Active)
+			if (!queenTatiana.IsAlive || queenTatiana.ObjectState != GameObject.eObjectState.Active)
 				return;
 
 			foreach (GamePlayer player in queenTatiana.GetPlayersInRadius(1000))
@@ -650,7 +653,7 @@ namespace DOL.GS.Quests.Midgard
 							break;
 							//If the player offered his "help", we send the quest dialog now!
 						case "take on":
-							player.Out.SendCustomDialog("Are you ready to take part in this monumental battle for the good of Mularn?", new CustomDialogResponse(CheckPlayerAcceptQuest));
+							player.Out.SendQuestSubscribeCommand(dalikor, QuestMgr.GetIDForQuestType(typeof(Culmination)), "Are you ready to take part in this monumental battle for the good of Mularn?");
 							break;
 					}
 				}
@@ -676,6 +679,21 @@ namespace DOL.GS.Quests.Midgard
 					}
 				}
 			}
+		}
+
+		protected static void SubscribeQuest(DOLEvent e, object sender, EventArgs args)
+		{
+			QuestEventArgs qargs = args as QuestEventArgs;
+			if (qargs == null)
+				return;
+
+			if (qargs.QuestID != QuestMgr.GetIDForQuestType(typeof(Culmination)))
+				return;
+
+			if (e == GamePlayerEvent.AcceptQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x01);
+			else if (e == GamePlayerEvent.DeclineQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x00);
 		}
 
 		/* This is the method we declared as callback for the hooks we set to
@@ -709,7 +727,7 @@ namespace DOL.GS.Quests.Midgard
 					else if (quest.Step == 2)
 					{
 						quest.briediClone.SayTo(player, "Go now and kill their queen, so that Mularn is at ease.");
-						foreach (GameMob recruit in quest.recruits)
+						foreach (GameNPC recruit in quest.recruits)
 						{
 							recruit.Follow(player, 50 + Util.Random(100), 4000);
 						}
@@ -768,7 +786,7 @@ namespace DOL.GS.Quests.Midgard
 								}
 							}
 
-							foreach (GameMob recruit in quest.recruits)
+							foreach (GameNPC recruit in quest.recruits)
 							{
 								recruit.Follow(player, 50 + Util.Random(100), 4000);
 							}
@@ -780,7 +798,7 @@ namespace DOL.GS.Quests.Midgard
 
 		protected virtual void ResetMasterBriedi()
 		{
-			if (briediClone != null && (briediClone.Alive || briediClone.ObjectState == GameObject.eObjectState.Active))
+			if (briediClone != null && (briediClone.IsAlive || briediClone.ObjectState == GameObject.eObjectState.Active))
 			{
 				m_animSpellObjectQueue.Enqueue(briediClone);
 				m_animSpellTeleportTimerQueue.Enqueue(new RegionTimer(briediClone, new RegionTimerCallback(MakeAnimSpellSequence), 4000));
@@ -827,17 +845,18 @@ namespace DOL.GS.Quests.Midgard
 			GameNpcInventoryTemplate template;
 			if (briediClone == null)
 			{
-				briediClone = new GameMob();
+				briediClone = new GameNPC();
 				briediClone.Model = 157;
 				briediClone.Name = "Master Briedi";
 				briediClone.GuildName = "Part of " + questTitle + " Quest";
 				briediClone.Realm = (byte) eRealm.Midgard;
-				briediClone.RegionId = 100;
+				briediClone.CurrentRegionID = 100;
 
 				briediClone.Size = 50;
 				briediClone.Level = 45;
-				Zone z = WorldMgr.GetZone(100);
-				briediClone.Position = z.ToRegionPosition(new Point(45394, 39768, 4709));
+				briediClone.X = GameLocation.ConvertLocalXToGlobalX(45394, 100);
+				briediClone.Y = GameLocation.ConvertLocalYToGlobalY(39768, 100);
+				briediClone.Z = 4709;
 				briediClone.Heading = 107;
 
 				template = new GameNpcInventoryTemplate();
@@ -869,8 +888,7 @@ namespace DOL.GS.Quests.Midgard
 			}
 			else
 			{
-				Zone z = WorldMgr.GetZone(100);
-				briediClone.MoveTo(100, z.ToRegionPosition(new Point(45394, 39768, 4709)), 107);
+				briediClone.MoveTo(100, GameLocation.ConvertLocalXToGlobalX(45394, 100), GameLocation.ConvertLocalYToGlobalY(39768, 100), 4709, 107);
 			}
 
 
@@ -882,20 +900,20 @@ namespace DOL.GS.Quests.Midgard
 
 			for (int i = 0; i < recruits.Length; i++)
 			{
-				recruits[i] = new GameMob();
+				recruits[i] = new GameNPC();
 
 				recruits[i].Name = "Recruit";
 
 				recruits[i].GuildName = "Part of " + questTitle + " Quest";
 				recruits[i].Realm = (byte) eRealm.Midgard;
-				recruits[i].RegionId = briediClone.RegionId;
+				recruits[i].CurrentRegionID = briediClone.CurrentRegionID;
 
 				recruits[i].Size = 50;
 				recruits[i].Level = 6;
-				Point pos = briediClone.Position;
-				pos.X += Util.Random(-150, 150);
-				pos.Y += Util.Random(-150, 150);
-				recruits[i].Position = pos;
+				recruits[i].X = briediClone.X + Util.Random(-150, 150);
+				recruits[i].Y = briediClone.Y + Util.Random(-150, 150);
+
+				recruits[i].Z = briediClone.Z;
 				recruits[i].Heading = 187;
 
 				StandardMobBrain brain = new StandardMobBrain();
@@ -1169,7 +1187,7 @@ namespace DOL.GS.Quests.Midgard
 			if (Step == 4 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == dalikor.Name && gArgs.Item.ItemTemplateID == queenVuunaHead.ItemTemplateID)
+				if (gArgs.Target.Name == dalikor.Name && gArgs.Item.Id_nb == queenVuunaHead.Id_nb)
 				{
 					dalikor.SayTo(player, "I see. Excellent work recruit. Now, I have a [reward] for you.");
 					RemoveItem(dalikor, player, queenVuunaHead);

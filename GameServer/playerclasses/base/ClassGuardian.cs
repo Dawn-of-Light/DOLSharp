@@ -47,8 +47,8 @@ namespace DOL.GS.Scripts
 			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Piercing));
 
 			player.AddAbility(SkillBase.GetAbility(Abilities.Sprint));
-			player.AddAbility(SkillBase.GetAbility(Abilities.HibArmor, (int)eArmorLevel.Medium));
-			player.AddAbility(SkillBase.GetAbility(Abilities.Shield, (int)eShieldSize.Small));
+			player.AddAbility(SkillBase.GetAbility(Abilities.HibArmor, ArmorLevel.Reinforced));
+			player.AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Small));
 			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Blades));
 			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Blunt));
 			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Piercing));

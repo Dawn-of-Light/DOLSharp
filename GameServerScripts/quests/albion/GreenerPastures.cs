@@ -37,8 +37,6 @@ using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
-using NHibernate.Expression;
-using NHibernate.Mapping.Attributes;
 /* I suggest you declare yourself some namespaces for your quests
  * Like: DOL.GS.Quests.Albion
  *       DOL.GS.Quests.Midgard
@@ -50,45 +48,12 @@ using NHibernate.Mapping.Attributes;
 
 namespace DOL.GS.Quests.Albion
 {
-	/* The first thing we do, is to declare the quest requirement
-	* class linked with the new Quest. To do this, we derive 
-	* from the abstract class AbstractQuestDescriptor
-	*/
-	public class GreenerPasturesDescriptor : AbstractQuestDescriptor
-	{
-		/* This is the type of the quest class linked with 
-		 * this requirement class, you must override the 
-		 * base methid like that
-		 */
-		public override Type LinkedQuestType
-		{
-			get { return typeof(GreenerPastures); }
-		}
-
-		/* This value is used to retrieves the minimum level needed
-		 *  to be able to make this quest. Override it only if you need, 
-		 * the default value is 1
-		 */
-		public override int MinLevel
-		{
-			get { return 2; }
-		}
-
-		/* This value is used to retrieves how maximum level needed
-		 * to be able to make this quest. Override it only if you need, 
-		 * the default value is 50
-		 */
-		public override int MaxLevel
-		{
-			get { return 5; }
-		}
-	}
-
-	/* The second thing we do, is to declare the class we create
-	 * as Quest. We must make it persistant using attributes, to
-	 * do this, we derive from the abstract class AbstractQuest
+	/* The first thing we do, is to declare the class we create
+	 * as Quest. To do this, we derive from the abstract class
+	 * AbstractQuest
+	 * 	 
 	 */
-	[Subclass(NameType = typeof(GreenerPastures), ExtendsType = typeof(AbstractQuest))]
+
 	public class GreenerPastures : BaseQuest
 	{
 		/// <summary>
@@ -106,18 +71,39 @@ namespace DOL.GS.Quests.Albion
 		 * 
 		 */
 		protected const string questTitle = "Greener Pastures";
+		protected const int minimumLevel = 2;
+		protected const int maximumLevel = 5;
 
-		private static GameMob farmerAsma = null;
+		private static GameNPC farmerAsma = null;
 
-		private static GenericItemTemplate farmerAsmasMap = null;
+		private static ItemTemplate farmerAsmasMap = null;
 
 		private static GameLocation firstField = new GameLocation("First Field", 1, 568278, 504052, 2168);
 		private static GameLocation secondField = new GameLocation("Second Field", 1, 573718, 509044, 2192);
 		private static GameLocation thirdField = new GameLocation("Third Field", 1, 577336, 513324, 2169);
 
-		private static Circle firstFieldArea = null;
-		private static Circle secondFieldArea = null;
-		private static Circle thirdFieldArea = null;
+		private static IArea firstFieldArea = null;
+		private static IArea secondFieldArea = null;
+		private static IArea thirdFieldArea = null;
+		
+		/* We need to define the constructors from the base class here, else there might be problems
+		 * when loading this quest...
+		 */
+		public GreenerPastures() : base()
+		{
+		}
+
+		public GreenerPastures(GamePlayer questingPlayer) : this(questingPlayer, 1)
+		{
+		}
+
+		public GreenerPastures(GamePlayer questingPlayer, int step) : base(questingPlayer, step)
+		{
+		}
+
+		public GreenerPastures(GamePlayer questingPlayer, DBQuest dbQuest) : base(questingPlayer, dbQuest)
+		{
+		}
 
 		/* The following method is called automatically when this quest class
 		 * is loaded. You might notice that this method is the same as in standard
@@ -137,6 +123,8 @@ namespace DOL.GS.Quests.Albion
 		[ScriptLoadedEvent]
 		public static void ScriptLoaded(DOLEvent e, object sender, EventArgs args)
 		{
+			if (!ServerProperties.Properties.LOAD_QUESTS)
+				return;
 			if (log.IsInfoEnabled)
 				log.Info("Quest \"" + questTitle + "\" initializing ...");
 			/* First thing we do in here is to search for the NPCs inside
@@ -148,72 +136,77 @@ namespace DOL.GS.Quests.Albion
 			* on the ground and if a player picks it up, he will get the quest!
 			* Just examples, do anything you like and feel comfortable with :)
 			*/
-
+			
 			#region defineNPCS
 
-			farmerAsma = ResearchQuestObject(typeof(GameMob), WorldMgr.GetRegion(1), eRealm.Albion, "Farmer Asma") as GameMob;
-			if (farmerAsma == null)
+			GameNPC[] npcs = WorldMgr.GetNPCsByName("Farmer Asma", eRealm.Albion);
+			if (npcs.Length == 0)
 			{
-				farmerAsma = new GameMob();
+				farmerAsma = new GameNPC();
 				farmerAsma.Model = 82;
 				farmerAsma.Name = "Farmer Asma";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + farmerAsma.Name + ", creating him ...");
 				farmerAsma.GuildName = "Part of " + questTitle + " Quest";
-				farmerAsma.Realm = (byte)eRealm.Albion;
-				farmerAsma.Region = WorldMgr.GetRegion(1);
+				farmerAsma.Realm = (byte) eRealm.Albion;
+				farmerAsma.CurrentRegionID = 1;
 
-				GameNpcInventory template = new GameNpcInventory();
-				template.AddItem(eInventorySlot.TorsoArmor, new NPCArmor(31));
-				template.AddItem(eInventorySlot.Cloak, new NPCEquipment(57));
-				template.AddItem(eInventorySlot.LegsArmor, new NPCArmor(32));
-				template.AddItem(eInventorySlot.ArmsArmor, new NPCArmor(33));
-				farmerAsma.Inventory = template;
-				
+				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
+				template.AddNPCEquipment(eInventorySlot.TorsoArmor, 31);
+				template.AddNPCEquipment(eInventorySlot.Cloak, 57);
+				template.AddNPCEquipment(eInventorySlot.LegsArmor, 32);
+				template.AddNPCEquipment(eInventorySlot.ArmsArmor, 33);
+				farmerAsma.Inventory = template.CloseTemplate();
+				farmerAsma.SwitchWeapon(GameLiving.eActiveWeaponSlot.Standard);
+
 				farmerAsma.Size = 50;
 				farmerAsma.Level = 35;
-				farmerAsma.Position = new Point(563939, 509234, 2744);
+				farmerAsma.X = 563939;
+				farmerAsma.Y = 509234;
+				farmerAsma.Z = 2744 ;
 				farmerAsma.Heading = 21;
-
-				StandardMobBrain newBrain = new StandardMobBrain();
-				newBrain.Body = farmerAsma;
-				newBrain.AggroLevel = 100;
-				newBrain.AggroRange = 0;
-				farmerAsma.OwnBrain = newBrain;
-
-				if(!farmerAsma.AddToWorld())
-				{
-					if (log.IsWarnEnabled)
-						log.Warn("Quest "+questTitle+" abort because a needed region is not in use in this server!");
-					return;
-				}
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(farmerAsma);
+					farmerAsma.SaveIntoDatabase();
+
+				farmerAsma.AddToWorld();
 			}
+			else
+				farmerAsma = npcs[0];
 
 			#endregion
-
+			
 			#region defineItems
 
 			// item db check
-			farmerAsmasMap = GameServer.Database.SelectObject(typeof(GenericItemTemplate), Expression.Eq("Name", "Farmer Asma's Map")) as GenericItemTemplate;
+			farmerAsmasMap = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "farmer_asma_map");
 			if (farmerAsmasMap == null)
 			{
-				farmerAsmasMap = new GenericItemTemplate();
+				farmerAsmasMap = new ItemTemplate();
 				farmerAsmasMap.Name = "Farmer Asma's Map";
 				if (log.IsWarnEnabled)
-					log.Warn("Could not find " + farmerAsmasMap.Name + ", creating it ...");
+					log.Warn("Could not find "+farmerAsmasMap.Name+", creating it ...");
 				farmerAsmasMap.Level = 0;
 				farmerAsmasMap.Weight = 1;
 				farmerAsmasMap.Model = 499;
 
+				farmerAsmasMap.Object_Type = (int) eObjectType.GenericItem;
+				farmerAsmasMap.Id_nb = "farmer_asma_map";
+				farmerAsmasMap.Gold = 0;
+				farmerAsmasMap.Silver = 0;
+				farmerAsmasMap.Copper = 0;
+				farmerAsmasMap.IsPickable = false;
 				farmerAsmasMap.IsDropable = false;
-				farmerAsmasMap.IsSaleable = false;
-				farmerAsmasMap.IsTradable = false;
+				
+				farmerAsmasMap.Quality = 100;
+				farmerAsmasMap.Condition = 1000;
+				farmerAsmasMap.MaxCondition = 1000;
+				farmerAsmasMap.Durability = 1000;
+				farmerAsmasMap.MaxDurability = 1000;
+
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -224,6 +217,16 @@ namespace DOL.GS.Quests.Albion
 
 			#endregion
 
+
+			firstFieldArea = WorldMgr.GetRegion(firstField.RegionID).AddArea(new Area.Circle("First Vacant Field", firstField.X, firstField.Y, 0, 1450));
+			firstFieldArea.RegisterPlayerEnter(new DOLEventHandler(PlayerEnterFirstFieldArea));
+
+			secondFieldArea = WorldMgr.GetRegion(secondField.RegionID).AddArea(new Area.Circle("Second Vacant Field", secondField.X, secondField.Y, 0, 1100));
+			secondFieldArea.RegisterPlayerEnter(new DOLEventHandler(PlayerEnterSecondFieldArea));
+
+			thirdFieldArea = WorldMgr.GetRegion(thirdField.RegionID).AddArea(new Area.Circle("Third Vacant Field", thirdField.X, thirdField.Y, 0, 1100));
+			thirdFieldArea.RegisterPlayerEnter(new DOLEventHandler(PlayerEnterThirdFieldArea));
+			
 			/* Now we add some hooks to the npc we found.
 			* Actually, we want to know when a player interacts with him.
 			* So, we hook the right-click (interact) and the whisper method
@@ -231,53 +234,22 @@ namespace DOL.GS.Quests.Albion
 			* method. This means, the "TalkToXXX" method is called whenever
 			* a player right clicks on him or when he whispers to him.
 			*/
-			firstFieldArea = new Circle();
-			firstFieldArea.Description = "First Vacant Field";
-			firstFieldArea.IsBroadcastEnabled = false;
-			firstFieldArea.Radius = 1450;
-			firstFieldArea.RegionID = firstField.Region.RegionID;
-			firstFieldArea.X = firstField.Position.X;
-			firstFieldArea.Y = firstField.Position.Y;
 
-			secondFieldArea = new Circle();
-			secondFieldArea.Description = "Second Vacant Field";
-			secondFieldArea.IsBroadcastEnabled = false;
-			secondFieldArea.Radius = 1450;
-			secondFieldArea.RegionID = secondField.Region.RegionID;
-			secondFieldArea.X = secondField.Position.X;
-			secondFieldArea.Y = secondField.Position.Y;
-
-			thirdFieldArea = new Circle();
-			thirdFieldArea.Description = "Third Vacant Field";
-			thirdFieldArea.IsBroadcastEnabled = false;
-			thirdFieldArea.Radius = 1450;
-			thirdFieldArea.RegionID = thirdField.Region.RegionID;
-			thirdFieldArea.X = thirdField.Position.X;
-			thirdFieldArea.Y = thirdField.Position.Y;
-
-			AreaMgr.RegisterArea(firstFieldArea);
-			AreaMgr.RegisterArea(secondFieldArea);
-			AreaMgr.RegisterArea(thirdFieldArea);
-
-			GameEventMgr.AddHandler(AreaEvent.PlayerEnter, new DOLEventHandler(PlayerEnterFieldArea));
+			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
 
 			GameEventMgr.AddHandler(GamePlayerEvent.GameEntered, new DOLEventHandler(PlayerEnterWorld));
-
+			
 			GameEventMgr.AddHandler(farmerAsma, GameObjectEvent.Interact, new DOLEventHandler(TalkToFarmerAsma));
 			GameEventMgr.AddHandler(farmerAsma, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToFarmerAsma));
 
-			/* Now we add some hooks to trigger the quest dialog reponse. */
-			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(QuestDialogResponse));
-			GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(QuestDialogResponse));
-			GameEventMgr.AddHandler(GamePlayerEvent.AbortQuest, new DOLEventHandler(QuestCancelDialogResponse));
-			
 			/* Now we bring to Ydenia the possibility to give this quest to players */
-			QuestMgr.AddQuestDescriptor(farmerAsma, typeof(GreenerPasturesDescriptor));
+			farmerAsma.AddQuestToGive(typeof (GreenerPastures));
 
 			if (log.IsInfoEnabled)
 				log.Info("Quest \"" + questTitle + "\" initialized");
 		}
-
+		
 		/* The following method is called automatically when this quest class
 		 * is unloaded. 
 		 * 
@@ -294,26 +266,29 @@ namespace DOL.GS.Quests.Albion
 			if (farmerAsma == null)
 				return;
 
+			firstFieldArea.UnRegisterPlayerEnter(new DOLEventHandler(PlayerEnterFirstFieldArea));
+			WorldMgr.GetRegion(firstField.RegionID).RemoveArea(firstFieldArea);
+
+			secondFieldArea.UnRegisterPlayerEnter(new DOLEventHandler(PlayerEnterSecondFieldArea));
+			WorldMgr.GetRegion(secondField.RegionID).RemoveArea(secondFieldArea);
+
+			thirdFieldArea.UnRegisterPlayerEnter(new DOLEventHandler(PlayerEnterThirdFieldArea));
+			WorldMgr.GetRegion(thirdField.RegionID).RemoveArea(thirdFieldArea);
+
 			/* Removing hooks works just as adding them but instead of 
 			 * AddHandler, we call RemoveHandler, the parameters stay the same
 			 */
-			AreaMgr.UnregisterArea(firstFieldArea);
-			AreaMgr.UnregisterArea(secondFieldArea);
-			AreaMgr.UnregisterArea(thirdFieldArea);
 
-			GameEventMgr.RemoveHandler(AreaEvent.PlayerEnter, new DOLEventHandler(PlayerEnterFieldArea));
+			GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
 
 			GameEventMgr.RemoveHandler(GamePlayerEvent.GameEntered, new DOLEventHandler(PlayerEnterWorld));
 
 			GameEventMgr.RemoveHandler(farmerAsma, GameObjectEvent.Interact, new DOLEventHandler(TalkToFarmerAsma));
 			GameEventMgr.RemoveHandler(farmerAsma, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToFarmerAsma));
-
-			GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(QuestDialogResponse));
-			GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(QuestDialogResponse));
-			GameEventMgr.RemoveHandler(GamePlayerEvent.AbortQuest, new DOLEventHandler(QuestCancelDialogResponse));
 			
 			/* Now we remove to Ydenia the possibility to give this quest to players */
-			QuestMgr.RemoveQuestDescriptor(farmerAsma, typeof(GreenerPasturesDescriptor));
+			farmerAsma.RemoveQuestToGive(typeof (GreenerPastures));
 		}
 
 		protected static void PlayerEnterWorld(DOLEvent e, object sender, EventArgs args)
@@ -322,7 +297,7 @@ namespace DOL.GS.Quests.Albion
 			if (player == null)
 				return;
 
-			GreenerPastures quest = player.IsDoingQuest(typeof(GreenerPastures)) as GreenerPastures;
+			GreenerPastures quest = player.IsDoingQuest(typeof (GreenerPastures)) as GreenerPastures;
 			if (quest != null)
 			{
 				GameEventMgr.AddHandler(player, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
@@ -336,7 +311,7 @@ namespace DOL.GS.Quests.Albion
 			if (player == null)
 				return;
 
-			GreenerPastures quest = player.IsDoingQuest(typeof(GreenerPastures)) as GreenerPastures;
+			GreenerPastures quest = player.IsDoingQuest(typeof (GreenerPastures)) as GreenerPastures;
 			if (quest != null)
 			{
 				GameEventMgr.RemoveHandler(player, GamePlayerEvent.UseSlot, new DOLEventHandler(PlayerUseSlot));
@@ -352,15 +327,15 @@ namespace DOL.GS.Quests.Albion
 		protected static void TalkToFarmerAsma(DOLEvent e, object sender, EventArgs args)
 		{
 			//We get the player from the event arguments and check if he qualifies		
-			GamePlayer player = ((SourceEventArgs)args).Source as GamePlayer;
+			GamePlayer player = ((SourceEventArgs) args).Source as GamePlayer;
 			if (player == null)
 				return;
 
-			if (QuestMgr.CanGiveQuest(typeof(GreenerPastures), player, farmerAsma) <= 0)
+			if(farmerAsma.CanGiveQuest(typeof (GreenerPastures), player)  <= 0)
 				return;
 
 			//We also check if the player is already doing the quest
-			GreenerPastures quest = player.IsDoingQuest(typeof(GreenerPastures)) as GreenerPastures;
+			GreenerPastures quest = player.IsDoingQuest(typeof (GreenerPastures)) as GreenerPastures;
 
 			farmerAsma.TurnTo(player);
 			//Did the player rightclick on NPC?
@@ -369,7 +344,7 @@ namespace DOL.GS.Quests.Albion
 				if (quest == null)
 				{
 					//Player is not doing the quest...
-					farmerAsma.SayTo(player, "Good night. I wish I had time to talk, " + player.CharacterClass.Name + ", but I'm in the process of trying to find a new field to lease. I'd like to return to my life as a farmer. It's not that Cotswold isn't a nice village, but I feel more at home in the [field].");
+					farmerAsma.SayTo(player, "Good night. I wish I had time to talk, "+player.CharacterClass.Name+", but I'm in the process of trying to find a new field to lease. I'd like to return to my life as a farmer. It's not that Cotswold isn't a nice village, but I feel more at home in the [field].");
 					return;
 				}
 				else
@@ -384,10 +359,10 @@ namespace DOL.GS.Quests.Albion
 					return;
 				}
 			}
-			// The player whispered to NPC (clicked on the text inside the [])
+				// The player whispered to NPC (clicked on the text inside the [])
 			else if (e == GameLivingEvent.WhisperReceive)
 			{
-				WhisperReceiveEventArgs wArgs = (WhisperReceiveEventArgs)args;
+				WhisperReceiveEventArgs wArgs = (WhisperReceiveEventArgs) args;
 				if (quest == null)
 				{
 					//Do some small talk :)
@@ -398,16 +373,17 @@ namespace DOL.GS.Quests.Albion
 							break;
 						case "check them out":
 							farmerAsma.SayTo(player, "Would you be willing to take a look at these fields for me and let me know if you think they are worth leasing?");
-							QuestMgr.ProposeQuestToPlayer(typeof(GreenerPastures), "Will you help Farmer Asma \nsearch for new farmland?\n[Level 2-5]", player, farmerAsma);
+							//If the player offered his help, we send the quest dialog now!
+							player.Out.SendQuestSubscribeCommand(farmerAsma, QuestMgr.GetIDForQuestType(typeof(GreenerPastures)), "Will you help Farmer Asma \nsearch for new farmland?\n[Level 2-5]");
 							break;
 					}
 				}
 				else
-				{
+				{	
 					switch (wArgs.Text)
 					{
 						case "them":
-							if (quest.Step < 4)
+							if(quest.Step < 4)
 							{
 								farmerAsma.SayTo(player, "When you're done taking a look at the fields, please return to me and let me know what you saw.");
 							}
@@ -416,28 +392,47 @@ namespace DOL.GS.Quests.Albion
 						case "I'd recommend the first field.":
 						case "The second field is best.":
 						case "You should rent the third one.":
-							if (quest.Step == 4)
+							if(quest.Step == 4)
 							{
 								farmerAsma.SayTo(player, "Excellent. I'll speak to the owner tomorrow. May I have the map back?");
 							}
+							break;
+
+						case "abort":
+							player.Out.SendCustomDialog("Do you really want to abort this quest, \nall items gained during quest will be lost?", new CustomDialogResponse(CheckPlayerAbortQuest));
 							break;
 					}
 				}
 			}
 		}
 
-		protected static void PlayerUseSlot(DOLEvent e, object sender, EventArgs args)
+		protected static void SubscribeQuest(DOLEvent e, object sender, EventArgs args)
 		{
-			GamePlayer player = (GamePlayer)sender;
-
-			GreenerPastures quest = (GreenerPastures)player.IsDoingQuest(typeof(GreenerPastures));
-			if (quest == null)
+			QuestEventArgs qargs = args as QuestEventArgs;
+			if (qargs == null)
 				return;
 
-			UseSlotEventArgs uArgs = (UseSlotEventArgs)args;
+			if (qargs.QuestID != QuestMgr.GetIDForQuestType(typeof(GreenerPastures)))
+				return;
 
-			GenericItem item = player.Inventory.GetItem((eInventorySlot)uArgs.Slot) as GenericItem;
-			if (item != null && item.QuestName == quest.Name && item.Name == farmerAsmasMap.Name)
+			if (e == GamePlayerEvent.AcceptQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x01);
+			else if (e == GamePlayerEvent.DeclineQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x00);
+		}
+
+		protected static void PlayerUseSlot(DOLEvent e, object sender, EventArgs args)
+		{
+			GamePlayer player = (GamePlayer) sender;
+
+			GreenerPastures quest = (GreenerPastures) player.IsDoingQuest(typeof (GreenerPastures));
+			if (quest == null)
+				return;
+		
+			UseSlotEventArgs uArgs = (UseSlotEventArgs) args;
+
+			InventoryItem item = player.Inventory.GetItem((eInventorySlot)uArgs.Slot);
+			if (item != null && item.Id_nb == farmerAsmasMap.Id_nb)
 			{
 				switch (quest.Step)
 				{
@@ -456,40 +451,84 @@ namespace DOL.GS.Quests.Albion
 			}
 		}
 
-		protected static void PlayerEnterFieldArea(DOLEvent e, object sender, EventArgs args)
+		protected static void PlayerEnterFirstFieldArea(DOLEvent e, object sender, EventArgs args)
 		{
 			AreaEventArgs aargs = args as AreaEventArgs;
 			GamePlayer player = aargs.GameObject as GamePlayer;
+			GreenerPastures quest = player.IsDoingQuest(typeof (GreenerPastures)) as GreenerPastures;
 
-			GreenerPastures quest = player.IsDoingQuest(typeof(GreenerPastures)) as GreenerPastures;
-
-			if (quest == null) return;
-			
-			switch(quest.Step)
+			if (quest != null && quest.Step == 1)
 			{
-				case 1 :
-					if(aargs.Area == firstFieldArea) // first area
-					{
-						player.Out.SendDialogBox(eDialogCode.SimpleWarning, 0x00, 0x00, 0x00, 0x00, eDialogType.Ok, true, "You've located the first field on Asma's \nMap. Turning over the map, you jot down \na few notes about your impressions. \nYour quest journal has been updated.");
-						quest.ChangeQuestStep(2);
-					}
-					break;
+				player.Out.SendDialogBox(eDialogCode.SimpleWarning, 0x00, 0x00, 0x00, 0x00, eDialogType.Ok, true, "You've located the first field on Asma's \nMap. Turning over the map, you jot down \na few notes about your impressions. \nYour quest journal has been updated.");
+				quest.Step = 2;
+			}
+		}
 
-				case 2 :
-					if(aargs.Area == secondFieldArea) // secnd area
-					{
-						player.Out.SendDialogBox(eDialogCode.SimpleWarning, 0x00, 0x00, 0x00, 0x00, eDialogType.Ok, true, "You've located the next field on Asma's \nMap. Turning over the map, you jot down \na few notes about your impressions. \nYour quest journal has been updated.");
-						quest.ChangeQuestStep(3);
-					}
-					break;
+		protected static void PlayerEnterSecondFieldArea(DOLEvent e, object sender, EventArgs args)
+		{
+			AreaEventArgs aargs = args as AreaEventArgs;
+			GamePlayer player = aargs.GameObject as GamePlayer;
+			GreenerPastures quest = player.IsDoingQuest(typeof (GreenerPastures)) as GreenerPastures;
 
-				case 3 :
-					if(aargs.Area == thirdFieldArea) // third area
-					{
-						player.Out.SendDialogBox(eDialogCode.SimpleWarning, 0x00, 0x00, 0x00, 0x00, eDialogType.Ok, true, "You've located the last field on Asma's \nMap. Turning over the map, you jot down \na few notes about your impressions. \nYour quest journal has been updated.");
-						quest.ChangeQuestStep(4);
-					}
-					break;
+			if (quest != null && quest.Step == 2)
+			{
+				player.Out.SendDialogBox(eDialogCode.SimpleWarning, 0x00, 0x00, 0x00, 0x00, eDialogType.Ok, true, "You've located the next field on Asma's \nMap. Turning over the map, you jot down \na few notes about your impressions. \nYour quest journal has been updated.");
+				quest.Step = 3;
+			}
+		}
+
+		protected static void PlayerEnterThirdFieldArea(DOLEvent e, object sender, EventArgs args)
+		{
+			AreaEventArgs aargs = args as AreaEventArgs;
+			GamePlayer player = aargs.GameObject as GamePlayer;
+			GreenerPastures quest = player.IsDoingQuest(typeof (GreenerPastures)) as GreenerPastures;
+
+			if (quest != null && quest.Step == 3)
+			{
+				player.Out.SendDialogBox(eDialogCode.SimpleWarning, 0x00, 0x00, 0x00, 0x00, eDialogType.Ok, true, "You've located the last field on Asma's \nMap. Turning over the map, you jot down \na few notes about your impressions. \nYour quest journal has been updated.");
+				quest.Step = 4;
+			}
+		}
+
+		/// <summary>
+		/// This method checks if a player qualifies for this quest
+		/// </summary>
+		/// <returns>true if qualified, false if not</returns>
+		public override bool CheckQuestQualification(GamePlayer player)
+		{
+			// if the player is already doing the quest his level is no longer of relevance
+			if (player.IsDoingQuest(typeof (GreenerPastures)) != null)
+				return true;
+
+			// This checks below are only performed is player isn't doing quest already
+
+			if (player.Level < minimumLevel || player.Level > maximumLevel)
+				return false;
+
+			return true;
+		}
+
+		
+		/* This is our callback hook that will be called when the player clicks
+		 * on any button in the quest offer dialog. We check if he accepts or
+		 * declines here...
+		 */
+
+		private static void CheckPlayerAbortQuest(GamePlayer player, byte response)
+		{
+			GreenerPastures quest = player.IsDoingQuest(typeof (GreenerPastures)) as GreenerPastures;
+
+			if (quest == null)
+				return;
+
+			if (response == 0x00)
+			{
+				SendSystemMessage(player, "Good, no go out there and finish your work!");
+			}
+			else
+			{
+				SendSystemMessage(player, "Aborting Quest " + questTitle + ". You can start over again if you want.");
+				quest.AbortQuest();
 			}
 		}
 
@@ -497,57 +536,34 @@ namespace DOL.GS.Quests.Albion
 		 * on any button in the quest offer dialog. We check if he accepts or
 		 * declines here...
 		 */
-		protected static void QuestDialogResponse(DOLEvent e, object sender, EventArgs args)
+
+		private static void CheckPlayerAcceptQuest(GamePlayer player, byte response)
 		{
-			QuestEventArgs gArgs = args as QuestEventArgs;
+			//We recheck the qualification, because we don't talk to players
+			//who are not doing the quest
+			if(farmerAsma.CanGiveQuest(typeof (GreenerPastures), player)  <= 0)
+				return;
 
-			if (gArgs != null && gArgs.QuestType.Equals(typeof(GreenerPastures)))
+			if (player.IsDoingQuest(typeof (GreenerPastures)) != null)
+				return;
+
+			if (response == 0x00)
 			{
-				GamePlayer player = gArgs.Player;
-				if (player == null) return;
-
-				if (e == GamePlayerEvent.AcceptQuest)
-				{
-					if (QuestMgr.GiveQuestToPlayer(typeof(GreenerPastures), player, gArgs.Source as GameNPC))
-					{
-						// give map
-						GiveItemToPlayer(CreateQuestItem(farmerAsmasMap, player.IsDoingQuest(typeof(GreenerPastures))), player);
-				
-						SendReply(player, "Thank you for agreeing to help.  A man in Cotswold was kind enough to draw a map of some vacant fields in the area. I'll give you the map so that you can travel to the fields and take a look at [them].");
-
-						GameEventMgr.AddHandler(player, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
-						GameEventMgr.AddHandler(player, GamePlayerEvent.UseSlot, new DOLEventHandler(PlayerUseSlot));
-					}
-				}
-				else if (e == GamePlayerEvent.DeclineQuest)
-				{
-					player.Out.SendMessage("Oh well, if you change your mind, please come back!", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
-				}
+				SendReply(player, "Oh well, if you change your mind, please come back!");
 			}
-		}
-
-		/* This is our callback hook that will be called when the player clicks
-		 * on any button in the quest cancel dialog. We check if he accepts or
-		 * declines here...
-		 */
-		protected static void QuestCancelDialogResponse(DOLEvent e, object sender, EventArgs args)
-		{
-			QuestCancelEventArgs gArgs = args as QuestCancelEventArgs;
-
-			if (gArgs != null && gArgs.Quest.GetType().Equals(typeof(GreenerPastures)))
+			else
 			{
-				GamePlayer player = gArgs.Player;
-				if (player == null) return;
+				//Check if we can add the quest!
+				if (!farmerAsma.GiveQuest(typeof (GreenerPastures), player, 1))
+					return;
 
-				if (e == GamePlayerEvent.AbortQuest)
-				{
-					GameEventMgr.RemoveHandler(player, GamePlayerEvent.UseSlot, new DOLEventHandler(PlayerUseSlot));
-					GameEventMgr.RemoveHandler(player, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
-		
-					RemoveItemFromPlayer(player.Inventory.GetFirstItemByName(farmerAsmasMap.Name, eInventorySlot.Min_Inv, eInventorySlot.Max_Inv), player);
+				// give map                
+				GiveItem(farmerAsma, player, farmerAsmasMap);
 
-					gArgs.Quest.AbortQuest();
-				}		
+				SendReply(player, "Thank you for agreeing to help.  A man in Cotswold was kind enough to draw a map of some vacant fields in the area. I'll give you the map so that you can travel to the fields and take a look at [them].");
+
+				GameEventMgr.AddHandler(player, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
+				GameEventMgr.AddHandler(player, GamePlayerEvent.UseSlot, new DOLEventHandler(PlayerUseSlot));
 			}
 		}
 
@@ -582,9 +598,8 @@ namespace DOL.GS.Quests.Albion
 						return "[Step #3] You've completed your inspections of the first two fields. Now, find the third field listed on Asma's Map. To read the map, right click on it in your inventory and /use it.";
 					case 4:
 						return "[Step #4] You've taken a look at the three fields Farmer Asma asked you to inspect. Return to her in the camp near the Shrouded Isles portal, and tell her your findings.";
-					default:
-						return "[Step #" + Step + "] No Description entered for this step!";
 				}
+				return base.Description;
 			}
 		}
 
@@ -592,22 +607,22 @@ namespace DOL.GS.Quests.Albion
 		{
 			GamePlayer player = sender as GamePlayer;
 
-			if (player == null || player.IsDoingQuest(typeof(GreenerPastures)) == null)
+			if (player == null || player.IsDoingQuest(typeof (GreenerPastures)) == null)
 				return;
 
 
 			if (e == GamePlayerEvent.GiveItem)
 			{
-				if (Step == 4)
+				if(Step == 4)
 				{
-					GiveItemEventArgs gArgs = (GiveItemEventArgs)args;
-					if (gArgs.Target == farmerAsma && gArgs.Item.QuestName == Name && gArgs.Item.Name == farmerAsmasMap.Name)
+					GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
+					if (gArgs.Target.Name == farmerAsma.Name && gArgs.Item.Id_nb == farmerAsmasMap.Id_nb)
 					{
-						RemoveItemFromPlayer(farmerAsma, gArgs.Item);
+						RemoveItem(farmerAsma, m_questPlayer, farmerAsmasMap);
 
 						farmerAsma.TurnTo(m_questPlayer);
 						farmerAsma.SayTo(m_questPlayer, "Thank you for you help. I can only offer you a small bit of coin as a reward for your assistance, but I am grateful for your advice.");
-
+						
 						FinishQuest();
 						return;
 					}
@@ -615,16 +630,28 @@ namespace DOL.GS.Quests.Albion
 			}
 		}
 
-		public override void FinishQuest()
+
+		public override void AbortQuest()
 		{
-			//Give reward to player here ...
-			m_questPlayer.GainExperience(m_questPlayer.Level * 10, 0, 0, true);
-			m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 0, 35 + m_questPlayer.Level), "You are awarded " + (35 + m_questPlayer.Level) + " copper!");
+			base.AbortQuest(); //Defined in Quest, changes the state, stores in DB etc ...
+
+			RemoveItem(m_questPlayer, farmerAsmasMap, false);
 
 			GameEventMgr.RemoveHandler(m_questPlayer, GamePlayerEvent.UseSlot, new DOLEventHandler(PlayerUseSlot));
 			GameEventMgr.RemoveHandler(m_questPlayer, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
-		
+		}
+
+		public override void FinishQuest()
+		{
 			base.FinishQuest(); //Defined in Quest, changes the state, stores in DB etc ...
+
+			//Give reward to player here ...
+
+			m_questPlayer.GainExperience(m_questPlayer.Level * 10, 0, 0, true);
+			m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 0, 35 + m_questPlayer.Level), "You are awarded "+(35+m_questPlayer.Level)+" copper!");
+		
+			GameEventMgr.RemoveHandler(m_questPlayer, GamePlayerEvent.UseSlot, new DOLEventHandler(PlayerUseSlot));
+			GameEventMgr.RemoveHandler(m_questPlayer, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
 		}
 	}
 }

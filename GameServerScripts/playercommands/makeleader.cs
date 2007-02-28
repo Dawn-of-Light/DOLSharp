@@ -16,8 +16,11 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
+using System;
+using DOL.GS;
 using DOL.Database;
 using DOL.GS.PacketHandler;
+using System.Collections;
 
 namespace DOL.GS.Scripts
 {
@@ -66,7 +69,7 @@ namespace DOL.GS.Scripts
 			else //Setting by name
 			{
 				string targetName = args[1];
-				GameClient targetClient = WorldMgr.GetClientByPlayerName(targetName, false);
+				GameClient targetClient = WorldMgr.GetClientByPlayerNameAndRealm(targetName, 0, false);
 				if (targetClient == null)
 					target = null;
 				else target = targetClient.Player;

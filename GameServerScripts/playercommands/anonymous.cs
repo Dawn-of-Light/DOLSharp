@@ -27,8 +27,11 @@
  * 
  */
 
-using DOL.Database;
+using System;
+using DOL.GS;
 using DOL.GS.PacketHandler;
+using DOL.Language;
+using log4net;
 
 namespace DOL.GS.Scripts
 {
@@ -37,34 +40,40 @@ namespace DOL.GS.Scripts
 	  (uint)ePrivLevel.Player,
 	  "Toggle anonymous mode (name doesn't show up in /who)",
 	  "/anonymous")]
-	public class AnonymousCommandHandler : ICommandHandler
+	public class AnonymousCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		public int OnCommand(GameClient client, string[] args)
 		{
-			client.Player.IsAnonymous = !client.Player.IsAnonymous ;
-            string[] friendList = new string[]
+			if (client.Account.PrivLevel == 1 && ServerProperties.Properties.ANON_MODIFIER == -1)
+			{
+                DisplayError(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Anonymous.Error"), new object[] { });
+                return 0;
+			}
+
+			client.Player.IsAnonymous = !client.Player.IsAnonymous;
+			string[] friendList = new string[]
 				{
 					client.Player.Name
 				};
-            if (client.Player.IsAnonymous)
-            {
-                client.Out.SendMessage("You are now anonymous.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			if (client.Player.IsAnonymous)
+			{
+                client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Anonymous.On"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 foreach (GameClient pclient in WorldMgr.GetAllPlayingClients())
-                {
-                    if (pclient.Player.Friends.Contains(client.Player.Name))
-                        pclient.Out.SendRemoveFriends(friendList);
-                }
-            }
-            else
-            {
-                client.Out.SendMessage("You are no longer anonymous.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				{
+					if (pclient.Player.Friends.Contains(client.Player.Name))
+						pclient.Out.SendRemoveFriends(friendList);
+				}
+			}
+			else
+			{
+                client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Anonymous.Off"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 foreach (GameClient pclient in WorldMgr.GetAllPlayingClients())
-                {
-                    if (pclient.Player.Friends.Contains(client.Player.Name))
-                        pclient.Out.SendAddFriends(friendList);
-                }
-            }
-            return 1;
+				{
+					if (pclient.Player.Friends.Contains(client.Player.Name))
+						pclient.Out.SendAddFriends(friendList);
+				}
+			}
+			return 1;
 		}
 	}
 }

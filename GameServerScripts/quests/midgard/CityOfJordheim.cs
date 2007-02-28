@@ -94,14 +94,14 @@ namespace DOL.GS.Quests.Midgard
 		private GameNPC assistant = null;
 		private GameTimer assistantTimer = null;
 
-		private static GenericItemTemplate ticketToMularn = null;
-        private static GenericItemTemplate scrollYuliwyf = null;
-        private static GenericItemTemplate receiptHarlfug = null;
-        private static GenericItemTemplate letterDalikor = null;
-        private static GenericItemTemplate assistantNecklace = null;
-        private static GenericItemTemplate chestOfCoins = null;
-        private static GenericItemTemplate recruitsRoundShield = null;
-        private static GenericItemTemplate recruitsBracer = null;
+		private static ItemTemplate ticketToMularn = null;
+		private static ItemTemplate scrollYuliwyf = null;
+		private static ItemTemplate receiptHarlfug = null;
+		private static ItemTemplate letterDalikor = null;
+		private static ItemTemplate assistantNecklace = null;
+		private static ItemTemplate chestOfCoins = null;
+		private static ItemTemplate recruitsRoundShield = null;
+		private static ItemTemplate recruitsBracer = null;
 
 
 		/* We need to define the constructors from the base class here, else there might be problems
@@ -143,6 +143,8 @@ namespace DOL.GS.Quests.Midgard
 		[ScriptLoadedEvent]
 		public static void ScriptLoaded(DOLEvent e, object sender, EventArgs args)
 		{
+			if (!ServerProperties.Properties.LOAD_QUESTS)
+				return;
 			if (log.IsInfoEnabled)
 				log.Info("Quest \"" + questTitle + "\" initializing ...");
 			/* First thing we do in here is to search for the NPCs inside
@@ -162,17 +164,19 @@ namespace DOL.GS.Quests.Midgard
 			GameNPC[] npcs = WorldMgr.GetNPCsByName("Jarl Yuliwyf", eRealm.Midgard);
 			if (npcs.Length == 0)
 			{
-				yuliwyf = new GameMob();
+				yuliwyf = new GameNPC();
 				yuliwyf.Model = 159;
 				yuliwyf.Name = "Jarl Yuliwyf";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + yuliwyf.Name + ", creating ...");
 				yuliwyf.GuildName = "Part of " + questTitle + " Quest";
 				yuliwyf.Realm = (byte) eRealm.Midgard;
-				yuliwyf.RegionId = 101;
+				yuliwyf.CurrentRegionID = 101;
 				yuliwyf.Size = 51;
 				yuliwyf.Level = 50;
-				yuliwyf.Position = new Point(31929, 28279, 8819);
+				yuliwyf.X = 31929;
+				yuliwyf.Y = 28279;
+				yuliwyf.Z = 8819;
 				yuliwyf.Heading = 2013;
 				yuliwyf.EquipmentTemplateID = "5101262";
 				//You don't have to store the created mob in the db if you don't want,
@@ -196,10 +200,12 @@ namespace DOL.GS.Quests.Midgard
 					log.Warn("Could not find " + harlfug.Name + ", creating her ...");
 				harlfug.GuildName = "Stable Master";
 				harlfug.Realm = (byte) eRealm.Midgard;
-				harlfug.RegionId = 100;
+				harlfug.CurrentRegionID = 100;
 				harlfug.Size = 52;
 				harlfug.Level = 41;
-				harlfug.Position = new Point(773458, 754240, 4600);
+				harlfug.X = 773458;
+				harlfug.Y = 754240;
+				harlfug.Z = 4600;
 				harlfug.Heading = 2707;
 				harlfug.EquipmentTemplateID = "5100798";
 
@@ -232,7 +238,7 @@ namespace DOL.GS.Quests.Midgard
 
 				scrollYuliwyf.Object_Type = (int) eObjectType.GenericItem;
 
-				scrollYuliwyf.ItemTemplateID = "scroll_for_yuliwyf";
+				scrollYuliwyf.Id_nb = "scroll_for_yuliwyf";
 				scrollYuliwyf.IsPickable = true;
 				scrollYuliwyf.IsDropable = false;
 
@@ -257,7 +263,7 @@ namespace DOL.GS.Quests.Midgard
 
 				receiptHarlfug.Object_Type = (int) eObjectType.GenericItem;
 
-				receiptHarlfug.ItemTemplateID = "receipt_for_harlfug";
+				receiptHarlfug.Id_nb = "receipt_for_harlfug";
 				receiptHarlfug.IsPickable = true;
 				receiptHarlfug.IsDropable = false;
 
@@ -281,7 +287,7 @@ namespace DOL.GS.Quests.Midgard
 
 				chestOfCoins.Object_Type = (int) eObjectType.GenericItem;
 
-				chestOfCoins.ItemTemplateID = "small_chest_of_coins";
+				chestOfCoins.Id_nb = "small_chest_of_coins";
 				chestOfCoins.IsPickable = true;
 				chestOfCoins.IsDropable = false;
 
@@ -305,7 +311,7 @@ namespace DOL.GS.Quests.Midgard
 
 				letterDalikor.Object_Type = (int) eObjectType.GenericItem;
 
-				letterDalikor.ItemTemplateID = "letter_for_dalikor";
+				letterDalikor.Id_nb = "letter_for_dalikor";
 				letterDalikor.IsPickable = true;
 				letterDalikor.IsDropable = false;
 
@@ -328,9 +334,9 @@ namespace DOL.GS.Quests.Midgard
 				assistantNecklace.Model = 101;
 
 				assistantNecklace.Object_Type = (int) eObjectType.Magical;
-				assistantNecklace.Item_Type = (int) eInventorySlot.Neck;
+				assistantNecklace.Item_Type = (int) eEquipmentItems.NECK;
 
-				assistantNecklace.ItemTemplateID = "assistant_necklace";
+				assistantNecklace.Id_nb = "assistant_necklace";
 				assistantNecklace.IsPickable = true;
 				assistantNecklace.IsDropable = false;
 
@@ -355,8 +361,8 @@ namespace DOL.GS.Quests.Midgard
 				recruitsRoundShield.Model = 59; // studded Boots                
 
 				recruitsRoundShield.Object_Type = 0x2A; // (int)eObjectType.Shield;
-				recruitsRoundShield.Item_Type = (int) eInventorySlot.LeftHandWeapon;
-				recruitsRoundShield.ItemTemplateID = "recruits_round_shield_mid";
+				recruitsRoundShield.Item_Type = (int) eEquipmentItems.LEFT_HAND;
+				recruitsRoundShield.Id_nb = "recruits_round_shield_mid";
 				recruitsRoundShield.Gold = 0;
 				recruitsRoundShield.Silver = 4;
 				recruitsRoundShield.Copper = 0;
@@ -378,7 +384,6 @@ namespace DOL.GS.Quests.Midgard
 				recruitsRoundShield.Bonus2Type = (int) eResist.Body;
 
 				recruitsRoundShield.Quality = 100;
-				recruitsRoundShield.MaxQuality = 100;
 				recruitsRoundShield.Condition = 1000;
 				recruitsRoundShield.MaxCondition = 1000;
 				recruitsRoundShield.Durability = 1000;
@@ -405,8 +410,8 @@ namespace DOL.GS.Quests.Midgard
 				recruitsBracer.Model = 130;
 
 				recruitsBracer.Object_Type = (int) eObjectType.Magical;
-				recruitsBracer.Item_Type = (int) eInventorySlot.LeftBracer;
-				recruitsBracer.ItemTemplateID = "recruits_silver_bracer";
+				recruitsBracer.Item_Type = (int) eEquipmentItems.L_BRACER;
+				recruitsBracer.Id_nb = "recruits_silver_bracer";
 				recruitsBracer.Gold = 0;
 				recruitsBracer.Silver = 4;
 				recruitsBracer.Copper = 0;
@@ -428,7 +433,6 @@ namespace DOL.GS.Quests.Midgard
 				recruitsBracer.Bonus2Type = (int) eResist.Crush;
 
 				recruitsBracer.Quality = 100;
-				recruitsBracer.MaxQuality = 100;
 				recruitsBracer.Condition = 1000;
 				recruitsBracer.MaxCondition = 1000;
 				recruitsBracer.Durability = 1000;
@@ -461,6 +465,9 @@ namespace DOL.GS.Quests.Midgard
 
 			GameEventMgr.AddHandler(yuliwyf, GameLivingEvent.Interact, new DOLEventHandler(TalkToYuliwyf));
 			GameEventMgr.AddHandler(yuliwyf, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToYuliwyf));
+
+			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
 
 			/* Now we bring to harlfug the possibility to give this quest to players */
 			harlfug.AddQuestToGive(typeof (CityOfJordheim));
@@ -499,6 +506,9 @@ namespace DOL.GS.Quests.Midgard
 
 			GameEventMgr.RemoveHandler(yuliwyf, GameLivingEvent.Interact, new DOLEventHandler(TalkToYuliwyf));
 			GameEventMgr.RemoveHandler(yuliwyf, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToYuliwyf));
+
+			GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
 
 			/* Now we remove to harlfug the possibility to give this quest to players */
 			harlfug.RemoveQuestToGive(typeof (CityOfJordheim));
@@ -659,7 +669,7 @@ namespace DOL.GS.Quests.Midgard
 							harlfug.SayTo(player, "I trust that you won't steal from me, so what do you say? Will you [do this] for me or not?");
 							break;
 						case "do this":
-							player.Out.SendCustomDialog("Will you take these coins to the Vault Keeper Yuliwyf in Jordheim?", new CustomDialogResponse(CheckPlayerAcceptQuest));
+							player.Out.SendQuestSubscribeCommand(harlfug, QuestMgr.GetIDForQuestType(typeof(CityOfJordheim)), "Will you take these coins to the Vault Keeper Yuliwyf in Jordheim?");
 							break;
 					}
 				}
@@ -677,6 +687,21 @@ namespace DOL.GS.Quests.Midgard
 					}
 				}
 			}
+		}
+
+		protected static void SubscribeQuest(DOLEvent e, object sender, EventArgs args)
+		{
+			QuestEventArgs qargs = args as QuestEventArgs;
+			if (qargs == null)
+				return;
+
+			if (qargs.QuestID != QuestMgr.GetIDForQuestType(typeof(CityOfJordheim)))
+				return;
+
+			if (e == GamePlayerEvent.AcceptQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x01);
+			else if (e == GamePlayerEvent.DeclineQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x00);
 		}
 
 		protected static void TalkToAssistant(DOLEvent e, object sender, EventArgs args)
@@ -810,7 +835,7 @@ namespace DOL.GS.Quests.Midgard
 				return;
 
 			// assistant works only in camelot...
-			if (player.RegionId != 101)
+			if (player.CurrentRegionID != 101)
 				return;
 
 			CityOfJordheim quest = (CityOfJordheim) player.IsDoingQuest(typeof (CityOfJordheim));
@@ -820,7 +845,7 @@ namespace DOL.GS.Quests.Midgard
 			UseSlotEventArgs uArgs = (UseSlotEventArgs) args;
 
 			InventoryItem item = player.Inventory.GetItem((eInventorySlot)uArgs.Slot);
-			if (item != null && item.ItemTemplateID == assistantNecklace.ItemTemplateID)
+			if (item != null && item.Id_nb == assistantNecklace.Id_nb)
 			{
 				foreach (GamePlayer visPlayer in player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 				{
@@ -853,25 +878,21 @@ namespace DOL.GS.Quests.Midgard
 		{
 			if (assistant != null && assistant.ObjectState == GameObject.eObjectState.Active)
 			{
-				Point pos = m_questPlayer.Position;
-				pos.X += 50;
-				pos.Y += 30;
-				assistant.MoveTo(m_questPlayer.RegionId, pos, m_questPlayer.Heading);
+				assistant.MoveTo(m_questPlayer.CurrentRegionID, m_questPlayer.X + 50, m_questPlayer.Y + 30, m_questPlayer.Z, m_questPlayer.Heading);
 			}
 			else
 			{
-				assistant = new GameMob();
+				assistant = new GameNPC();
 				assistant.Model = 951;
 				assistant.Name = m_questPlayer.Name + "'s Assistant";
 				assistant.GuildName = "Part of " + questTitle + " Quest";
 				assistant.Realm = m_questPlayer.Realm;
-				assistant.RegionId = m_questPlayer.RegionId;
+				assistant.CurrentRegionID = m_questPlayer.CurrentRegionID;
 				assistant.Size = 25;
 				assistant.Level = 5;
-				Point pos = m_questPlayer.Position;
-				pos.X += 50;
-				pos.Y += 50;
-				assistant.Position = pos;
+				assistant.X = m_questPlayer.X + 50;
+				assistant.Y = m_questPlayer.Y + 50;
+				assistant.Z = m_questPlayer.Z;
 				assistant.Heading = m_questPlayer.Heading;
 
 				assistant.AddToWorld();
@@ -1038,7 +1059,7 @@ namespace DOL.GS.Quests.Midgard
 			if (Step <= 4 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == yuliwyf.Name && gArgs.Item.ItemTemplateID == scrollYuliwyf.ItemTemplateID)
+				if (gArgs.Target.Name == yuliwyf.Name && gArgs.Item.Id_nb == scrollYuliwyf.Id_nb)
 				{
 					yuliwyf.SayTo(player, "What's this? Ah! From Stable Master Harlfug. Excellent. It looks like he wishes to make a deposit. If that is indeed the case, please hand me the Small Chest of Coins.");
 					RemoveItem(yuliwyf, player, scrollYuliwyf);
@@ -1050,7 +1071,7 @@ namespace DOL.GS.Quests.Midgard
 			if (Step == 5 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == yuliwyf.Name && gArgs.Item.ItemTemplateID == chestOfCoins.ItemTemplateID)
+				if (gArgs.Target.Name == yuliwyf.Name && gArgs.Item.Id_nb == chestOfCoins.Id_nb)
 				{
 					yuliwyf.SayTo(player, "My my, this is quite heavy. Business must be very good for Harlfug. If you don't mind waiting for just a few moments, I will count these coins and give you a receipt.");
 					RemoveItem(yuliwyf, player, chestOfCoins);
@@ -1062,7 +1083,7 @@ namespace DOL.GS.Quests.Midgard
 			if (Step == 7 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == harlfug.Name && gArgs.Item.ItemTemplateID == receiptHarlfug.ItemTemplateID)
+				if (gArgs.Target.Name == harlfug.Name && gArgs.Item.Id_nb == receiptHarlfug.Id_nb)
 				{
 					harlfug.SayTo(player, "Ah, fantastic. I'm glad to know my money is now in a safe place. Thank you so much for doing that for me, and I hope the trip into Jordhiem was informative for you. Here, take this letter back to Dalikor in Mularn. I want for him to know what a fantastic job you did for me by delivering these vegetables from Haggerfel, and for taking care of some business in Jordheim for me. Thank you again Eeinken. I hope we speak again soon.");
 
@@ -1079,7 +1100,7 @@ namespace DOL.GS.Quests.Midgard
 			if (Step == 8 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == dalikor.Name && gArgs.Item.ItemTemplateID == letterDalikor.ItemTemplateID)
+				if (gArgs.Target.Name == dalikor.Name && gArgs.Item.Id_nb == letterDalikor.Id_nb)
 				{
 					dalikor.SayTo(player, "Ah, from Harlfug. Let me see what is says. One moment please.");
 					SendSystemMessage(player, "Dalikor reads the note from Harlfug carefully.");

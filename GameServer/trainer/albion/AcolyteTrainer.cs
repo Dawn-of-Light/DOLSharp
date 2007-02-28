@@ -17,117 +17,22 @@
  *
  */
 using System;
-using System.Collections;
-using System.Reflection;
-using DOL.Database;
-using DOL.Events;
 using DOL.GS.PacketHandler;
-using DOL.GS.Database;
-using log4net;
+using DOL.Database;
 
 namespace DOL.GS.Trainer
 {
 	/// <summary>
 	/// Acolyte Trainer
 	/// </summary>	
-	public class AcolyteTrainer : GameStandardTrainer
+	[NPCGuildScript("Acolyte Trainer", eRealm.Albion)]		// this attribute instructs DOL to use this script for all "Acolyte Trainer" NPC's in Albion (multiple guilds are possible for one script)
+	public class AcolyteTrainer : GameTrainer
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		public const string PRACTICE_WEAPON_ID = "training_mace";
+		public const string PRACTICE_SHIELD_ID = "small_training_shield";
 
-		/// <summary>
-		/// This function is called at the server startup
-		/// </summary>	
-		[GameServerStartedEvent]
-		public static void OnServerStartup(DOLEvent e, object sender, EventArgs args)
+		public AcolyteTrainer() : base()
 		{
-			#region Practice mace
-
-			CrushingWeaponTemplate training_mace_template = new CrushingWeaponTemplate();
-			training_mace_template.Name = "practice mace";
-			training_mace_template.Level = 0;
-			training_mace_template.Durability = 100;
-			training_mace_template.Condition = 100;
-			training_mace_template.Quality = 90;
-			training_mace_template.Bonus = 0;
-			training_mace_template.DamagePerSecond = 12;
-			training_mace_template.Speed = 2700;
-			training_mace_template.Weight = 30;
-			training_mace_template.Model = 13;
-			training_mace_template.Realm = eRealm.Albion;
-			training_mace_template.IsDropable = true; 
-			training_mace_template.IsTradable = false; 
-			training_mace_template.IsSaleable = false;
-			training_mace_template.MaterialLevel = eMaterialLevel.Bronze;
-				
-			if(!allStartupItems.Contains(training_mace_template))
-			{
-				allStartupItems.Add(training_mace_template);
-			
-				if (log.IsDebugEnabled)
-					log.Debug("Adding " + training_mace_template.Name + " to AcolyteTrainer gifts.");
-			}
-			#endregion
-
-			#region Training shield
-
-			ShieldTemplate small_training_shield_template = new ShieldTemplate();
-			small_training_shield_template.Name = "small training shield";
-			small_training_shield_template.Level = 2;
-			small_training_shield_template.Durability = 100;
-			small_training_shield_template.Condition = 100;
-			small_training_shield_template.Quality = 100;
-			small_training_shield_template.Bonus = 0;
-			small_training_shield_template.DamagePerSecond = 10;
-			small_training_shield_template.Speed = 2000;
-			small_training_shield_template.Size = eShieldSize.Small;
-			small_training_shield_template.Weight = 32;
-			small_training_shield_template.Model = 59;
-			small_training_shield_template.Realm = eRealm.Albion;
-			small_training_shield_template.IsDropable = true; 
-			small_training_shield_template.IsTradable = false; 
-			small_training_shield_template.IsSaleable = false;
-			small_training_shield_template.MaterialLevel = eMaterialLevel.Bronze;
-		
-			if(!allStartupItems.Contains(small_training_shield_template))
-			{
-				allStartupItems.Add(small_training_shield_template);
-			
-				if (log.IsDebugEnabled)
-					log.Debug("Adding " + small_training_shield_template.Name + " to AcolyteTrainer gifts.");
-			}
-			#endregion
-		}
-
-		/// <summary>
-		/// This hash constrain all item template the trainer can give
-		/// </summary>	
-		protected static IList allStartupItems = new ArrayList();
-
-		/// <summary>
-		/// Gets all trainer gifts
-		/// </summary>
-		public override IList TrainerGifts
-		{
-			get { return allStartupItems; }
-		}
-
-		/// <summary>
-		/// Gets trainer classname
-		/// </summary>
-		public override string TrainerClassName
-		{
-			get { return "Acolyte"; }
-		}
-
-		/// <summary>
-		/// Gets trained class
-		/// </summary>
-		public override eCharacterClass TrainedClass
-		{
-			get { return eCharacterClass.Acolyte; }
 		}
 
 		/// <summary>
@@ -138,9 +43,30 @@ namespace DOL.GS.Trainer
  		public override bool Interact(GamePlayer player)
  		{		
  			if (!base.Interact(player)) return false;
+								
+			// check if class matches				
+			if (player.CharacterClass.ID == (int) eCharacterClass.Acolyte) {
 
-			player.Out.SendMessage(Name + " says, \"[Cleric] or [Friar]?\"", eChatType.CT_Say, eChatLoc.CL_PopupWindow);												
-			
+				// popup the training window
+				player.Out.SendTrainerWindow();
+							
+				// player can be promoted
+				if (player.Level>=5) {
+					player.Out.SendMessage(this.Name + " says, \"You must now seek your training elsewhere. Which path would you like to follow? [Cleric], [Heretic], or [Friar]?\"", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+				} else {
+					//player.Out.SendMessage(this.Name + " says, \"Select what you like to train.\"", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+				}
+
+				// ask for basic equipment if player doesnt own it
+				if (player.Inventory.GetFirstItemByID(PRACTICE_WEAPON_ID, eInventorySlot.Min_Inv, eInventorySlot.Max_Inv) == null) {
+					player.Out.SendMessage(this.Name + " says, \"Do you require a [practice weapon]?\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
+				}
+				if (player.Inventory.GetFirstItemByID(PRACTICE_SHIELD_ID, eInventorySlot.Min_Inv, eInventorySlot.Max_Inv) == null) {
+					player.Out.SendMessage(this.Name + " says, \"Do you require a [training shield]?\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
+				}
+			} else {
+				player.Out.SendMessage(this.Name + " says, \"You must seek elsewhere for your training.\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
+			}
 			return true;
 		}
 
@@ -155,28 +81,45 @@ namespace DOL.GS.Trainer
 			if (!base.WhisperReceive(source, text)) return false;	
 			GamePlayer player = source as GamePlayer;
 
-			switch (text)
-			{
-				case "Cleric":
-					if(player.Race == (int) eRace.Avalonian || player.Race == (int) eRace.Briton || player.Race == (int) eRace.Highlander)
-					{
-						SayTo(player,"So, you wish to serve the Church as healer, defender and leader of our faith. The Church of Albion will welcome one of your skill. Perhaps in time, your commitment will lead others to join our order.");
-					}
-					else
-					{
-						SayTo(player,"The path of a Cleric is not available to your race. Please choose another.");
-					}
-					break;
-				case "Friar":
-					if(player.Race == (int) eRace.Briton)
-					{
-						SayTo(player,"Members of a brotherhood, you will find more than a community should you join ranks with the Defenders of Albion. Deadly with a Quarterstaff, and proficient with the healing of wounds, the army is in constant need of new recruits such as you.");
-					}
-					else
-					{
-						SayTo(player,"The path of a Friar is not available to your race. Please choose another.");
-					}
-					break;
+			switch (text) {
+			case "Cleric":
+				if(player.Race == (int) eRace.Avalonian || player.Race == (int) eRace.Briton || player.Race == (int) eRace.Highlander){
+					this.SayTo(player,"So, you wish to serve the Church as healer, defender and leader of our faith. The Church of Albion will welcome one of your skill. Perhaps in time, your commitment will lead others to join our order.");
+				}
+				else{
+					this.SayTo(player,"The path of a Cleric is not available to your race. Please choose another.");
+				}
+				return true;
+			case "Friar":
+				if(player.Race == (int) eRace.Briton){
+					this.SayTo(player,"Members of a brotherhood, you will find more than a community should you join ranks with the Defenders of Albion. Deadly with a Quarterstaff, and proficient with the healing of wounds, the army is in constant need of new recruits such as you.");
+				}
+				else{
+					this.SayTo(player,"The path of a Friar is not available to your race. Please choose another.");
+				}
+				return true;
+			case "Heretic":
+			if(player.Race == (int)eRace.Briton || player.Race == (int)eRace.Avalonian || player.Race == (int)eRace.Inconnu || player.Race == (int)eRace.AlbionMinotaur)
+				{
+					this.SayTo(player, "Members of a brotherhood, you will find more than a community should you join ranks with the Defenders of Albion. Deadly with a Quarterstaff, and proficient with the healing of wounds, the army is in constant need of new recruits such as you.");
+				}
+				else
+				{
+					this.SayTo(player, "The path of a Friar is not available to your race. Please choose another.");
+				}
+				return true;
+			case "practice weapon":
+				if (player.Inventory.GetFirstItemByID(PRACTICE_WEAPON_ID, eInventorySlot.Min_Inv, eInventorySlot.Max_Inv) == null) 
+				{
+					player.ReceiveItem(this,PRACTICE_WEAPON_ID);
+				}
+				return true;
+			case "training shield":
+				if (player.Inventory.GetFirstItemByID(PRACTICE_SHIELD_ID, eInventorySlot.Min_Inv, eInventorySlot.Max_Inv) == null) 
+				{
+					player.ReceiveItem(this,PRACTICE_SHIELD_ID); 
+				}
+				return true;
 			}
 			return true;			
 		}

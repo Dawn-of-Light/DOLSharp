@@ -216,5 +216,13 @@ namespace DOL.GS
 		{
 			m_props.Remove(key);
 		}
+
+		/// <summary>
+		/// remove all properties
+		/// </summary>
+		public void RemoveAll()
+		{
+			m_props.Clear();
+		}
 	}
 }

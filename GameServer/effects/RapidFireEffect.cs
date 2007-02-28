@@ -18,7 +18,6 @@
  */
 using System;
 using System.Collections;
-using DOL.GS.Database;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Effects
@@ -26,7 +25,7 @@ namespace DOL.GS.Effects
 	/// <summary>
 	/// The helper effect for sure shot
 	/// </summary>
-	public class RapidFireEffect : IGameEffect
+	public class RapidFireEffect : StaticEffect, IGameEffect
 	{
 		/// <summary>
 		/// The effect owner

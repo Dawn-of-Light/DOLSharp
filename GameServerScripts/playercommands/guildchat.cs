@@ -16,7 +16,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using DOL.Database;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Scripts
@@ -36,7 +35,7 @@ namespace DOL.GS.Scripts
 				client.Out.SendMessage("You don't belong to a player guild.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return 1;
 			}
-			if (!client.Player.Guild.CheckGuildPermission(client.Player, eGuildPerm.GcSpeak))
+			if (!client.Player.Guild.GotAccess(client.Player, eGuildRank.GcSpeak))
 			{
 				client.Out.SendMessage("You don't have permission to speak on the on guild line.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return 1;
@@ -62,18 +61,19 @@ namespace DOL.GS.Scripts
 				client.Out.SendMessage("You don't belong to a player guild.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return 1;
 			}
-			if (!client.Player.Guild.CheckGuildPermission(client.Player, eGuildPerm.OcSpeak))
+			if (!client.Player.Guild.GotAccess(client.Player, eGuildRank.OcSpeak))
 			{
 				client.Out.SendMessage("You don't have permission to speak on the officer line.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return 1;
 			}
 			string message = "[Officers] " + client.Player.Name + ": \"" + string.Join(" ", args, 1, args.Length - 1) + "\"";
-			foreach (GamePlayer ply in client.Player.Guild.ListOnlineMembers)
+			foreach (GamePlayer ply in client.Player.Guild.ListOnlineMembers())
 			{
-				if (client.Player.Guild.CheckGuildPermission(ply, eGuildPerm.OcHear))
+				if (!client.Player.Guild.GotAccess(ply, eGuildRank.OcHear))
 				{
-					ply.Out.SendMessage(message, eChatType.CT_Officer, eChatLoc.CL_ChatWindow);
+					continue;
 				}
+				ply.Out.SendMessage(message, eChatType.CT_Officer, eChatLoc.CL_ChatWindow);
 			}
 			return 1;
 		}
@@ -94,25 +94,26 @@ namespace DOL.GS.Scripts
 				client.Out.SendMessage("You don't belong to a player guild.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return 1;
 			}
-			if (client.Player.Guild.Alliance == null)
+			if (client.Player.Guild.alliance == null)
 			{
 				client.Out.SendMessage("Your guild doesn't belong to any alliance.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return 1;
 			}
-			if (!client.Player.Guild.CheckGuildPermission(client.Player, eGuildPerm.AcSpeak))
+			if (!client.Player.Guild.GotAccess(client.Player, eGuildRank.AcSpeak))
 			{
 				client.Out.SendMessage("You can not speak on alliance chan.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return 1;
 			}
 			string message = "[Alliance] " + client.Player.Name + ": \"" + string.Join(" ", args, 1, args.Length - 1) + "\"";
-			foreach (Guild gui in client.Player.Guild.Alliance.AllianceGuilds)
+			foreach (Guild gui in client.Player.Guild.alliance.Guilds)
 			{
-				foreach (GamePlayer ply in gui.ListOnlineMembers)
+				foreach (GamePlayer ply in gui.ListOnlineMembers())
 				{
-					if (gui.CheckGuildPermission(ply, eGuildPerm.AcHear))
+					if (!gui.GotAccess(ply, eGuildRank.AcHear))
 					{
-						ply.Out.SendMessage(message, eChatType.CT_Alliance, eChatLoc.CL_ChatWindow);
+						continue;
 					}
+					ply.Out.SendMessage(message, eChatType.CT_Alliance, eChatLoc.CL_ChatWindow);
 				}
 			}
 			return 1;

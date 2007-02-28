@@ -20,11 +20,8 @@ using System;
 using System.Collections;
 using System.IO;
 using System.Reflection;
-using System.Text;
-using System.Timers;
-using DOL.Database;
-using DOL.Database.DataAccessInterfaces;
 using DOL.Events;
+using DOL.GS.PacketHandler;
 using log4net;
 
 namespace DOL.GS.Scripts
@@ -63,8 +60,8 @@ namespace DOL.GS.Scripts
 			public ArrayList m_dirs = new ArrayList();
 		}
 
-		private static StringBuilder m_js = null;
-		private static Timer m_timer = null;
+		private static System.Text.StringBuilder m_js = null;
+		private static System.Timers.Timer m_timer = null;
 
 		/// <summary>
 		/// Parses a directory for all source files
@@ -161,7 +158,7 @@ namespace DOL.GS.Scripts
 		/// </summary>
 		private static void InitJS()
 		{
-			m_js = new StringBuilder();
+			m_js = new System.Text.StringBuilder();
 			StreamWriter nl = new StreamWriter(new MemoryStream());
 
 			m_js.Append(nl.NewLine);
@@ -177,9 +174,9 @@ namespace DOL.GS.Scripts
 
 			int gm = 0;
 			int admin = 0;
-			foreach (GameClient client in WorldMgr.GetAllPlayingClients()) {
-				if (client.Account.PrivLevel == ePrivLevel.GM) gm++;
-				if (client.Account.PrivLevel == ePrivLevel.Admin) admin++;
+			foreach (GameClient client in WorldMgr.GetAllClients()) {
+				if (client.Account.PrivLevel == (int)ePrivLevel.GM) gm++;
+				if (client.Account.PrivLevel == (int)ePrivLevel.Admin) admin++;
 			}
 
 			m_js.AppendFormat("var numClientsConnected = {0}", GameServer.Instance.ClientCount);
@@ -191,22 +188,25 @@ namespace DOL.GS.Scripts
 			m_js.AppendFormat("var numAdminsConnected = {0}", admin);
 			m_js.Append(nl.NewLine);
 
-			m_js.AppendFormat("var numAccts = {0}", GameServer.DatabaseNew.Using<IAccountDao>().CountAll());
+			m_js.AppendFormat("var numAccts = {0}", GameServer.Database.GetObjectCount(typeof (DOL.Database.Account)));
 			m_js.Append(nl.NewLine);
 
-			m_js.AppendFormat("var numMobs = {0}", GameServer.Database.GetObjectCount(typeof (GameNPC)));
+			m_js.AppendFormat("var numMobs = {0}", GameServer.Database.GetObjectCount(typeof (DOL.Database.Mob)));
 			m_js.Append(nl.NewLine);
 
-			m_js.AppendFormat("var numInvItems = {0}", GameServer.Database.GetObjectCount(typeof (GenericItem)));
+			m_js.AppendFormat("var numInvItems = {0}", GameServer.Database.GetObjectCount(typeof (DOL.Database.InventoryItem)));
 			m_js.Append(nl.NewLine);
 
-			m_js.AppendFormat("var numPlrChars = {0}", GameServer.Database.GetObjectCount(typeof (GamePlayer)));
+			m_js.AppendFormat("var numPlrChars = {0}", GameServer.Database.GetObjectCount(typeof (DOL.Database.Character)));
 			m_js.Append(nl.NewLine);
 
-			m_js.AppendFormat("var numItemTemplates = {0}", GameServer.Database.GetObjectCount(typeof (GenericItemTemplate)));
+			m_js.AppendFormat("var numMerchantItems = {0}", GameServer.Database.GetObjectCount(typeof (DOL.Database.MerchantItem)));
 			m_js.Append(nl.NewLine);
 
-			m_js.AppendFormat("var numWorldObjects = {0}", GameServer.Database.GetObjectCount(typeof (GameStaticItem)));
+			m_js.AppendFormat("var numItemTemplates = {0}", GameServer.Database.GetObjectCount(typeof (DOL.Database.ItemTemplate)));
+			m_js.Append(nl.NewLine);
+
+			m_js.AppendFormat("var numWorldObjects = {0}", GameServer.Database.GetObjectCount(typeof (DOL.Database.WorldObject)));
 			m_js.Append(nl.NewLine);
 
 			m_js.AppendFormat("var srvrType = \"{0}\"", GameServer.Instance.Configuration.ServerType.ToString());
@@ -374,7 +374,7 @@ namespace DOL.GS.Scripts
 				//Race
 				m_js.Append("document.write(\"<td bgcolor=\\\"#333333\\\">\")");
 				m_js.Append(nl.NewLine);
-				m_js.AppendFormat("document.write(\"{0}\")", GlobalConstants.RaceToName((eRace)plr.Race));
+				m_js.AppendFormat("document.write(\"{0}\")", plr.RaceName);
 				m_js.Append(nl.NewLine);
 				m_js.Append("document.write(\"</td>\")");
 				m_js.Append(nl.NewLine);
@@ -383,7 +383,7 @@ namespace DOL.GS.Scripts
 				//Guild
 				m_js.Append("document.write(\"<td bgcolor=\\\"#333333\\\">\")");
 				m_js.Append(nl.NewLine);
-				m_js.AppendFormat("document.write(\"{0}\")", plr.Guild != null ? plr.Guild.GuildName : String.Empty);
+				m_js.AppendFormat("document.write(\"{0}\")", plr.GuildName);
 				m_js.Append(nl.NewLine);
 				m_js.Append("document.write(\"</td>\")");
 				m_js.Append(nl.NewLine);
@@ -401,7 +401,7 @@ namespace DOL.GS.Scripts
 				//Alive
 				m_js.Append("document.write(\"<td bgcolor=\\\"#333333\\\">\")");
 				m_js.Append(nl.NewLine);
-				m_js.AppendFormat("document.write(\"{0}\")", plr.Alive ? "yes" : "no");
+				m_js.AppendFormat("document.write(\"{0}\")", plr.IsAlive ? "yes" : "no");
 				m_js.Append(nl.NewLine);
 				m_js.Append("document.write(\"</td>\")");
 				m_js.Append(nl.NewLine);
@@ -419,17 +419,16 @@ namespace DOL.GS.Scripts
 				//Current Region
 				m_js.Append("document.write(\"<td bgcolor=\\\"#333333\\\">\")");
 				m_js.Append(nl.NewLine);
-				m_js.AppendFormat("document.write(\"{0}\")", plr.Region.Description);
+				m_js.AppendFormat("document.write(\"{0}\")", plr.CurrentRegion.Description);
 				m_js.Append(nl.NewLine);
 				m_js.Append("document.write(\"</td>\")");
 				m_js.Append(nl.NewLine);
 				m_js.Append(nl.NewLine);
 
-				Point pos = plr.Position;
 				//X
 				m_js.Append("document.write(\"<td align=\\\"center\\\" bgcolor=\\\"#333333\\\">\")");
 				m_js.Append(nl.NewLine);
-				m_js.AppendFormat("document.write(\"{0}\")", pos.X);
+				m_js.AppendFormat("document.write(\"{0}\")", plr.X);
 				m_js.Append(nl.NewLine);
 				m_js.Append("document.write(\"</td>\")");
 				m_js.Append(nl.NewLine);
@@ -438,7 +437,7 @@ namespace DOL.GS.Scripts
 				//Y
 				m_js.Append("document.write(\"<td align=\\\"center\\\" bgcolor=\\\"#333333\\\">\")");
 				m_js.Append(nl.NewLine);
-				m_js.AppendFormat("document.write(\"{0}\")", pos.Y);
+				m_js.AppendFormat("document.write(\"{0}\")", plr.Y);
 				m_js.Append(nl.NewLine);
 				m_js.Append("document.write(\"</td>\")");
 				m_js.Append(nl.NewLine);
@@ -501,8 +500,8 @@ namespace DOL.GS.Scripts
 				Stop();
 			}
 
-			m_timer = new Timer(60000.0); //1 minute
-			m_timer.Elapsed += new ElapsedEventHandler(m_timer_Elapsed);
+			m_timer = new System.Timers.Timer(60000.0); //1 minute
+			m_timer.Elapsed += new System.Timers.ElapsedEventHandler(m_timer_Elapsed);
 			m_timer.AutoReset = true;
 			m_timer.Start();
 
@@ -520,7 +519,7 @@ namespace DOL.GS.Scripts
 			{
 				m_timer.Stop();
 				m_timer.Close();
-				m_timer.Elapsed -= new ElapsedEventHandler(m_timer_Elapsed);
+				m_timer.Elapsed -= new System.Timers.ElapsedEventHandler(m_timer_Elapsed);
 				m_timer = null;
 			}
 
@@ -536,7 +535,7 @@ namespace DOL.GS.Scripts
 		/// </summary>
 		/// <param name="sender">Caller of this function</param>
 		/// <param name="e">Info about the timer</param>
-		private static void m_timer_Elapsed(object sender, ElapsedEventArgs e)
+		private static void m_timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
 		{
 			Generate();
 		}

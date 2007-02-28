@@ -16,236 +16,299 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using DOL.GS.Utils;
+using DOL.Events;
+using DOL.GS.PacketHandler;
 
 namespace DOL.GS
 {		
 	/// <summary>
-	/// The square area.
+	/// Collection of basic area shapes
+	/// Circle
+	/// Square
 	/// </summary>
-	public class Square : AbstractArea
+	public class Area 
 	{
-		#region Declaration
-
-		/// <summary>
-		/// The X coordinate of this Area
-		/// </summary>
-		protected int m_X;
-
-		/// <summary>
-		/// The Y coordinate of this Area 
-		/// </summary>
-		protected int m_Y;
-
-		/// <summary>
-		/// The width of this Area 
-		/// </summary>
-		protected int m_Width;
-
-		/// <summary>
-		/// The height of this Area 
-		/// </summary>
-		protected int m_Height;
-
-		/// <summary>
-		/// Returns the X Coordinate of this Area
-		/// </summary>
-		public int X
+		public class Square : AbstractArea
 		{
-			get { return m_X; }
-			set { m_X = value; }
+			/// <summary>
+			/// The X coordinate of this Area
+			/// </summary>
+			protected int m_X;
+
+			/// <summary>
+			/// The Y coordinate of this Area 
+			/// </summary>
+			protected int m_Y;
+
+			/// <summary>
+			/// The width of this Area 
+			/// </summary>
+			protected int m_Width;
+
+			/// <summary>
+			/// The height of this Area 
+			/// </summary>
+			protected int m_Height;
+
+			public Square(string desc, int x, int y, int width, int height): base(desc)
+			{
+				m_X = x;
+				m_Y = y;
+				m_Height = height;
+				m_Width = width;
+			}
+
+			/// <summary>
+			/// Returns the X Coordinate of this Area
+			/// </summary>
+			public int X
+			{
+				get { return m_X; }
+			}
+
+			/// <summary>
+			/// Returns the Y Coordinate of this Area
+			/// </summary>
+			public int Y
+			{
+				get { return m_Y; }
+			}
+
+			/// <summary>
+			/// Returns the Width of this Area
+			/// </summary>
+			public int Width
+			{
+				get { return m_Width; }
+			}
+
+			/// <summary>
+			/// Returns the Height of this Area
+			/// </summary>
+			public int Height
+			{
+				get { return m_Height; }
+			}
+
+			/// <summary>
+			/// Checks wether area intersects with given zone
+			/// </summary>
+			/// <param name="zone"></param>
+			/// <returns></returns>
+			public override bool IsIntersectingZone(Zone zone)
+			{
+				if (X+Width < zone.XOffset)
+					return false;
+				if (X-Width >= zone.XOffset + 65536)
+					return false;
+				if (Y+Height < zone.YOffset)
+					return false;
+				if (Y-Height >= zone.YOffset + 65536)
+					return false;
+
+				return true;
+			}	
+
+			/// <summary>
+			/// Checks wether given point is within area boundaries
+			/// </summary>
+			/// <param name="p"></param>
+			/// <returns></returns>
+			public override bool IsContaining(IPoint3D p)
+			{
+				return IsContaining(p, true);
+			}
+
+			public override bool IsContaining(int x, int y, int z)
+			{
+				return IsContaining(x, y, z, true);
+			}
+
+			public override bool IsContaining(IPoint3D p, bool checkZ)
+			{
+				return IsContaining(p.X, p.Y, p.Z, checkZ);
+			}
+
+			public override bool IsContaining(int x, int y, int z, bool checkZ)
+			{
+				long m_xdiff = (long)x - X;
+				if (m_xdiff < 0 || m_xdiff > Width)
+					return false;
+
+				long m_ydiff = (long)y - Y;
+				if (m_ydiff < 0 || m_ydiff > Height)
+					return false;
+
+				/*
+				//SH: Removed Z checks when one of the two Z values is zero(on ground)
+				if (Z != 0 && spotZ != 0)
+				{
+					long m_zdiff = (long) spotZ - Z;
+					if (m_zdiff> Radius)
+						return false;
+				}
+				*/
+
+				return true;
+			}
 		}
 
-		/// <summary>
-		/// Returns the Y Coordinate of this Area
-		/// </summary>
-		public int Y
+		public class Circle : AbstractArea
 		{
-			get { return m_Y; }
-			set { m_Y = value; }
+			
+			/// <summary>
+			/// The X coordinate of this Area
+			/// </summary>
+			protected int m_X;
+
+			/// <summary>
+			/// The Y coordinate of this Area
+			/// </summary>
+			protected int m_Y;
+
+			/// <summary>
+			/// The Z coordinate of this Area
+			/// </summary>
+			protected int m_Z;
+
+			/// <summary>
+			/// The radius of the area in Coordinates
+			/// </summary>
+			protected int m_Radius;
+
+			protected long m_distSq;
+
+			public Circle( string desc, int x, int y, int z, int radius) : base(desc)
+			{															
+				m_Description = desc;
+				m_X = x;
+				m_Y = y;
+				m_Z= z;
+				m_Radius= radius;
+					
+				m_RadiusRadius = radius*radius;
+			}
+
+			/// <summary>
+			/// Returns the X Coordinate of this Area
+			/// </summary>
+			public int X
+			{
+				get { return m_X; }
+			}
+
+			/// <summary>
+			/// Returns the Y Coordinate of this Area
+			/// </summary>
+			public int Y
+			{
+				get { return m_Y; }
+			}
+
+			/// <summary>
+			/// Returns the Width of this Area
+			/// </summary>
+			public int Z
+			{
+				get { return m_Z; }
+			}
+
+			/// <summary>
+			/// Returns the Height of this Area
+			/// </summary>
+			public int Radius
+			{
+				get { return m_Radius; }
+			}
+
+			/// <summary>
+			/// Cache for radius*radius to increase performance of circle check,
+			/// radius is still needed for square check
+			/// </summary>
+			protected int m_RadiusRadius;
+			
+
+			/// <summary>
+			/// Checks wether area intersects with given zone
+			/// </summary>
+			/// <param name="zone"></param>
+			/// <returns></returns>
+			public override bool IsIntersectingZone(Zone zone)
+			{
+				if (X+Radius < zone.XOffset)
+					return false;
+				if (X-Radius >= zone.XOffset + 65536)
+					return false;
+				if (Y+Radius < zone.YOffset)
+					return false;
+				if (Y-Radius >= zone.YOffset + 65536)
+					return false;
+
+				return true;
+			}
+
+			public override bool IsContaining(IPoint3D spot)
+			{
+				return IsContaining(spot, true);
+			}
+
+			public override bool IsContaining(int x, int y, int z, bool checkZ)
+			{
+				// spot is not in square around circle no need to check for circle...
+				long m_xdiff = (long)x - X;
+				if (m_xdiff > Radius)
+					return false;
+
+				long m_ydiff = (long)y - Y;
+				if (m_ydiff > Radius)
+					return false;
+
+
+				// check if spot is in circle
+				m_distSq = m_xdiff * m_xdiff + m_ydiff * m_ydiff;
+
+				//SH: Removed Z checks when one of the two Z values is zero(on ground)
+				if (Z != 0 && z != 0 && checkZ)
+				{
+					long m_zdiff = (long)z - Z;
+					m_distSq += m_zdiff * m_zdiff;
+				}
+
+				return (m_distSq <= m_RadiusRadius);
+			}
+
+			public override bool IsContaining(int x, int y, int z)
+			{
+				return IsContaining(x, y, z, true);
+			}
+
+			/// <summary>
+			/// Checks wether given point is within area boundaries
+			/// </summary>
+			/// <param name="p"></param>
+			/// <param name="checkZ"></param>
+			/// <returns></returns>
+			public override bool IsContaining(IPoint3D p, bool checkZ)
+			{
+				return IsContaining(p.X, p.Y, p.Z, checkZ);
+			}
 		}
 
-		/// <summary>
-		/// Returns the Width of this Area
-		/// </summary>
-		public int Width
+		public class BindArea : Circle
 		{
-			get { return m_Width; }
-			set { m_Width = value; }
-		}
+			protected Database.BindPoint m_dbBindPoint;
 
-		/// <summary>
-		/// Returns the Height of this Area
-		/// </summary>
-		public int Height
-		{
-			get { return m_Height; }
-			set { m_Height = value; }
-		}
+			public BindArea(string desc, Database.BindPoint dbBindPoint)
+				: base(desc, dbBindPoint.X, dbBindPoint.Y, dbBindPoint.Z, dbBindPoint.Radius)
+			{
+				m_dbBindPoint = dbBindPoint;
+				m_displayMessage = false;
+			}
 
-		#endregion
-
-		/// <summary>
-		/// Checks wether area intersects with given zone
-		/// </summary>
-		/// <param name="zone"></param>
-		/// <returns></returns>
-		public override bool IsIntersectingZone(Zone zone)
-		{
-			if (m_X+m_Width < zone.XOffset)
-				return false;
-			if (m_X-m_Width >= zone.XOffset + 65536)
-				return false;
-			if (m_Y+m_Height < zone.YOffset)
-				return false;
-			if (m_Y-m_Height >= zone.YOffset + 65536)
-				return false;
-
-			return true;
-		}	
-
-		/// <summary>
-		/// Checks wether given point is within area boundaries
-		/// </summary>
-		/// <param name="p"></param>
-		/// <returns></returns>
-		public override bool IsContaining(Point p)
-		{							
-			long m_xdiff = (long) p.X - m_X;
-			if (m_xdiff < 0 || m_xdiff > m_Width)
-				return false;
-
-			long m_ydiff = (long) p.Y - m_Y;
-			if (m_ydiff < 0 || m_ydiff > m_Height)
-				return false;
-
-			return true;
-		}
-
-		/// <summary>
-		/// Check if two areas are equals
-		/// </summary>
-		/// <param name="area">the area to compare with</param>
-		/// <returns>true if equals</returns>
-		public override bool IsEqual(AbstractArea area)
-		{
-			Square sq = area as Square;
-			if(sq == null)
-				return false;
-
-			if(sq.X != m_X || sq.Y != m_Y || sq.Height != m_Height || sq.Width != m_Width)
-				return false;
-
-			return base.Equals(area);
-		}
-	}
-
-	/// <summary>
-	/// The sphere area.
-	/// </summary>
-	public class Circle : AbstractArea
-	{
-		#region Declaration
-
-		/// <summary>
-		/// The X coordinate of this Area
-		/// </summary>
-		protected int m_X;
-
-		/// <summary>
-		/// The Y coordinate of this Area 
-		/// </summary>
-		protected int m_Y;
-
-		/// <summary>
-		/// The radius of the area in Coordinates
-		/// </summary>
-		protected int m_Radius;
-
-		/// <summary>
-		/// Returns the X Coordinate of this Area
-		/// </summary>
-		public int X
-		{
-			get { return m_X; }
-			set { m_X = value; }
-		}
-
-		/// <summary>
-		/// Returns the Y Coordinate of this Area
-		/// </summary>
-		public int Y
-		{
-			get { return m_Y; }
-			set { m_Y = value; }
-		}
-
-		/// <summary>
-		/// Gets that circle's radius.
-		/// </summary>
-		public int Radius
-		{
-			get { return m_Radius; }
-			set { m_Radius = value; }
-		}
-
-		#endregion
-
-		/// <summary>
-		/// Checks wether area intersects with given zone.
-		/// </summary>
-		/// <param name="zone"></param>
-		/// <returns></returns>
-		public override bool IsIntersectingZone(Zone zone)
-		{
-			if (m_X+m_Radius < zone.XOffset)
-				return false;
-			if (m_X-m_Radius >= zone.XOffset + 65536)
-				return false;
-			if (m_Y+m_Radius < zone.YOffset)
-				return false;
-			if (m_Y-m_Radius >= zone.YOffset + 65536)
-				return false;
-
-			return true;
-		}	
-
-		/// <summary>
-		/// Checks wether given point is within area boundaries.
-		/// </summary>
-		/// <param name="p"></param>
-		/// <returns></returns>
-		public override bool IsContaining(Point p)
-		{						
-			// spot is not in square around circle no need to check for circle...
-			int xdiff = p.X - m_X;
-			if (FastMath.Abs(xdiff) > m_Radius)
-				return false;
-
-			int ydiff = p.Y - m_Y;
-			if (FastMath.Abs(ydiff) > m_Radius)
-				return false;
-
-			// check if spot is in circle
-			return (xdiff*xdiff + ydiff*ydiff) <= (m_Radius * m_Radius);
-		}
-
-		/// <summary>
-		/// Check if two areas are equals
-		/// </summary>
-		/// <param name="area">the area to compare with</param>
-		/// <returns>true if equals</returns>
-		public override bool IsEqual(AbstractArea area)
-		{
-			Circle sq = area as Circle;
-			if(sq == null)
-				return false;
-
-			if(sq.X != m_X || sq.Y != m_Y || sq.Radius != m_Radius)
-				return false;
-
-			return base.Equals(area);
+			public Database.BindPoint BindPoint
+			{
+				get { return m_dbBindPoint; }
+			}
 		}
 	}
 }

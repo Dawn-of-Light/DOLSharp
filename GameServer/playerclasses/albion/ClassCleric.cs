@@ -72,12 +72,12 @@ namespace DOL.GS.Scripts
 			}
 			if (player.Level >= 10) 
 			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.AlbArmor, (int)eArmorLevel.Low));
-				player.AddAbility(SkillBase.GetAbility(Abilities.Shield, (int)eShieldSize.Medium));
+				player.AddAbility(SkillBase.GetAbility(Abilities.AlbArmor, ArmorLevel.Studded));
+				player.AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Medium));
 			}
 			if (player.Level >= 20) 
 			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.AlbArmor, (int)eArmorLevel.High));
+				player.AddAbility(SkillBase.GetAbility(Abilities.AlbArmor, ArmorLevel.Chain));
 			}		
 		}
 	}

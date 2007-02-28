@@ -36,8 +36,6 @@ using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
-using NHibernate.Expression;
-using NHibernate.Mapping.Attributes;
 /* I suggest you declare yourself some namespaces for your quests
  * Like: DOL.GS.Quests.Albion
  *       DOL.GS.Quests.Midgard
@@ -49,61 +47,12 @@ using NHibernate.Mapping.Attributes;
 
 namespace DOL.GS.Quests.Albion
 {
-	/* The first thing we do, is to declare the quest requirement
-	* class linked with the new Quest. To do this, we derive 
-	* from the abstract class AbstractQuestDescriptor
-	*/
-	public class TraitorInCotswoldDescriptor : AbstractQuestDescriptor
-	{
-		/* This is the type of the quest class linked with 
-		 * this requirement class, you must override the 
-		 * base methid like that
-		 */
-		public override Type LinkedQuestType
-		{
-			get { return typeof(TraitorInCotswold); }
-		}
-
-		/* This value is used to retrieves the minimum level needed
-		 *  to be able to make this quest. Override it only if you need, 
-		 * the default value is 1
-		 */
-		public override int MinLevel
-		{
-			get { return 2; }
-		}
-
-		/* This value is used to retrieves how maximum level needed
-		 * to be able to make this quest. Override it only if you need, 
-		 * the default value is 50
-		 */
-		public override int MaxLevel
-		{
-			get { return 2; }
-		}
-
-		public override bool CheckQuestQualification(GamePlayer player)
-		{
-			// if the player is already doing the quest always return true !!!
-			if (player.IsDoingQuest(LinkedQuestType) != null)
-				return true;
-
-			// This checks below are only performed is player isn't doing quest already
-			if (player.HasFinishedQuest(typeof(Nuisances)) == 0)
-				return false;
-
-			if (!BaseFrederickQuest.CheckPartAccessible(player, typeof(TraitorInCotswold)))
-				return false;
-
-			return base.CheckQuestQualification(player);
-		}
-	}
-
-	/* The second thing we do, is to declare the class we create
-	 * as Quest. We must make it persistant using attributes, to
-	 * do this, we derive from the abstract class AbstractQuest
+	/* The first thing we do, is to declare the class we create
+	 * as Quest. To do this, we derive from the abstract class
+	 * AbstractQuest
+	 * 	 
 	 */
-	[Subclass(NameType = typeof(TraitorInCotswold), ExtendsType = typeof(AbstractQuest))]
+
 	public class TraitorInCotswold : BaseFrederickQuest
 	{
 		/// <summary>
@@ -121,17 +70,40 @@ namespace DOL.GS.Quests.Albion
 		 * 
 		 */
 		protected const string questTitle = "Traitor in Cotswold";
+		protected const int minimumLevel = 2;
+		protected const int maximumLevel = 2;
 
-		private static GameMob masterFrederick = null;
-		private static GameMob ladyFelin = null;
+		private static GameNPC masterFrederick = null;
+		private static GameNPC ladyFelin = null;
 
-		private static NecklaceTemplate necklaceOfDoppelganger = null;
-		private static GenericItemTemplate fairyPlans = null;
-		private static FeetArmorTemplate recruitsBoots = null;
-		private static FeetArmorTemplate recruitsQuiltedBoots = null;
+		private static ItemTemplate necklaceOfDoppelganger = null;
+		private static ItemTemplate fairyPlans = null;
+		private static ItemTemplate recruitsBoots = null;
+		private static ItemTemplate recruitsQuiltedBoots = null;
 
 		private static GameLocation felinEnd = new GameLocation("Lady Felin", 1, 558999, 514944, 2628, 2332);
 		private static GameLocation felinStart = new GameLocation("Lady Felin", 1, 558846, 516434, 2519, 2332);
+
+
+		/* We need to define the constructors from the base class here, else there might be problems
+		 * when loading this quest...
+		 */
+		public TraitorInCotswold() : base()
+		{
+		}
+
+		public TraitorInCotswold(GamePlayer questingPlayer) : this(questingPlayer, 1)
+		{
+		}
+
+		public TraitorInCotswold(GamePlayer questingPlayer, int step) : base(questingPlayer, step)
+		{
+		}
+
+		public TraitorInCotswold(GamePlayer questingPlayer, DBQuest dbQuest) : base(questingPlayer, dbQuest)
+		{
+		}
+
 
 		/* The following method is called automatically when this quest class
 		 * is loaded. You might notice that this method is the same as in standard
@@ -151,6 +123,8 @@ namespace DOL.GS.Quests.Albion
 		[ScriptLoadedEvent]
 		public static void ScriptLoaded(DOLEvent e, object sender, EventArgs args)
 		{
+			if (!ServerProperties.Properties.LOAD_QUESTS)
+				return;
 			if (log.IsInfoEnabled)
 				log.Info("Quest \"" + questTitle + "\" initializing ...");
 			/* First thing we do in here is to search for the NPCs inside
@@ -166,69 +140,68 @@ namespace DOL.GS.Quests.Albion
 			#region defineNPCs
 
 			masterFrederick = GetMasterFrederick();
-			if(masterFrederick == null)
-			{
-				if (log.IsWarnEnabled)
-					log.Warn("Quest "+questTitle+" abort because a needed region is not in use in this server!");
-				return;
-			}
 
-			ladyFelin = ResearchQuestObject(typeof(GameMob), WorldMgr.GetRegion(1), eRealm.None, "Lady Felin") as GameMob;
-			if (ladyFelin == null)
+			GameNPC[] npcs = WorldMgr.GetNPCsByName("Lady Felin", eRealm.None);
+			if (npcs.Length == 0)
 			{
 				//if (log.IsWarnEnabled) log.Warn("Could not find Lady Felin, creating her ...");
-				ladyFelin = new GameMob();
+				ladyFelin = new GameNPC();
 				ladyFelin.Model = 603;
 				ladyFelin.Name = "Lady Felin";
 				ladyFelin.GuildName = "Part of " + questTitle + " Quest";
 				ladyFelin.Realm = (byte) eRealm.None;
-				ladyFelin.Region = WorldMgr.GetRegion(1);
-
+				ladyFelin.CurrentRegionID = 1;
 				ladyFelin.Size = 50;
 				ladyFelin.Level = 30;
-				ladyFelin.Position = new Point(558846, 516434, 2519);
+				ladyFelin.X = 558846;
+				ladyFelin.Y = 516434;
+				ladyFelin.Z = 2519;
 				ladyFelin.Heading = 2332;
 
 				StandardMobBrain brain = new StandardMobBrain();
-				brain.Body = ladyFelin;
 				brain.AggroLevel = 0;
 				brain.AggroRange = 0;
-				ladyFelin.OwnBrain = brain;
-
-				if(!ladyFelin.AddToWorld())
-				{
-					if (log.IsWarnEnabled)
-						log.Warn("Quest "+questTitle+" abort because a needed region is not in use in this server!");
-					return;
-				}
+				ladyFelin.SetOwnBrain(brain);
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(ladyFelin);
+				//ladyFelin.SaveIntoDatabase();                
+				//ladyFelin.AddToWorld();
 			}
+			else
+				ladyFelin = npcs[0];
 
 			#endregion
 
 			#region defineItems
 
 			// item db check
-			necklaceOfDoppelganger = GameServer.Database.SelectObject(typeof (NecklaceTemplate), Expression.Eq("Name", "Necklace of the Doppelganger")) as NecklaceTemplate;
+			necklaceOfDoppelganger = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "necklace_of_the_doppelganger");
 			if (necklaceOfDoppelganger == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Necklace of the Doppelganger, creating it ...");
-				necklaceOfDoppelganger = new NecklaceTemplate();
+				necklaceOfDoppelganger = new ItemTemplate();
 				necklaceOfDoppelganger.Name = "Necklace of the Doppelganger";
 				necklaceOfDoppelganger.Level = 2;
 				necklaceOfDoppelganger.Weight = 2;
 				necklaceOfDoppelganger.Model = 101;
 
+				necklaceOfDoppelganger.Object_Type = (int) eObjectType.Magical;
+				necklaceOfDoppelganger.Item_Type = (int) eEquipmentItems.NECK;
+				necklaceOfDoppelganger.Id_nb = "necklace_of_the_doppelganger";
+				necklaceOfDoppelganger.Gold = 0;
+				necklaceOfDoppelganger.Silver = 0;
+				necklaceOfDoppelganger.Copper = 0;
+				necklaceOfDoppelganger.IsPickable = true;
 				necklaceOfDoppelganger.IsDropable = false;
-				necklaceOfDoppelganger.IsSaleable = false;
-				necklaceOfDoppelganger.IsTradable = false;
+
+				necklaceOfDoppelganger.Quality = 100;
+				necklaceOfDoppelganger.Condition = 1000;
+				necklaceOfDoppelganger.MaxCondition = 1000;
+				necklaceOfDoppelganger.Durability = 1000;
+				necklaceOfDoppelganger.MaxDurability = 1000;
 
 
 				//You don't have to store the created item in the db if you don't want,
@@ -239,19 +212,22 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			fairyPlans = GameServer.Database.SelectObject(typeof (GenericItemTemplate), Expression.Eq("Name", "Ire Fairy Plans")) as GenericItemTemplate;
+			fairyPlans = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ire_fairy_plans");
 			if (fairyPlans == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Ire Fairy Plans, creating it ...");
-				fairyPlans = new GenericItemTemplate();
+				fairyPlans = new ItemTemplate();
 				fairyPlans.Name = "Ire Fairy Plans";
+
 				fairyPlans.Weight = 3;
 				fairyPlans.Model = 498;
 
+				fairyPlans.Object_Type = (int) eObjectType.GenericItem;
+
+				fairyPlans.Id_nb = "ire_fairy_plans";
+				fairyPlans.IsPickable = true;
 				fairyPlans.IsDropable = false;
-				fairyPlans.IsSaleable = false;
-				fairyPlans.IsTradable = false;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -261,34 +237,47 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			recruitsBoots = GameServer.Database.SelectObject(typeof (FeetArmorTemplate), Expression.Eq("Name", "Recruit's Studded Boots")) as FeetArmorTemplate;
+			recruitsBoots = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_studded_boots");
 			if (recruitsBoots == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Recruit's Studded Boots, creating it ...");
-				recruitsBoots = new FeetArmorTemplate();
+				recruitsBoots = new ItemTemplate();
 				recruitsBoots.Name = "Recruit's Studded Boots";
 				recruitsBoots.Level = 7;
 
 				recruitsBoots.Weight = 24;
 				recruitsBoots.Model = 84; // studded Boots
 
-				recruitsBoots.ArmorFactor = 12;
-				recruitsBoots.ArmorLevel = eArmorLevel.Medium;
+				recruitsBoots.DPS_AF = 12; // Armour
+				recruitsBoots.SPD_ABS = 19; // Absorption
 
-				recruitsBoots.Value = 1000;
-
+				recruitsBoots.Object_Type = (int) eObjectType.Studded;
+				recruitsBoots.Item_Type = (int) eEquipmentItems.FEET;
+				recruitsBoots.Id_nb = "recruits_studded_boots";
+				recruitsBoots.Gold = 0;
+				recruitsBoots.Silver = 10;
+				recruitsBoots.Copper = 0;
+				recruitsBoots.IsPickable = true;
 				recruitsBoots.IsDropable = true;
-				recruitsBoots.IsSaleable = true;
-				recruitsBoots.IsTradable = true;
-
 				recruitsBoots.Color = 9; // red leather
 
 				recruitsBoots.Bonus = 5; // default bonus
 
-				recruitsBoots.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 1));
-				recruitsBoots.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 3));
-				recruitsBoots.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Spirit, 1));
+				recruitsBoots.Bonus1 = 1;
+				recruitsBoots.Bonus1Type = (int) eStat.STR;
+
+				recruitsBoots.Bonus2 = 3;
+				recruitsBoots.Bonus2Type = (int) eStat.CON;
+
+				recruitsBoots.Bonus3 = 1;
+				recruitsBoots.Bonus3Type = (int) eResist.Spirit;
+
+				recruitsBoots.Quality = 100;
+				recruitsBoots.Condition = 1000;
+				recruitsBoots.MaxCondition = 1000;
+				recruitsBoots.Durability = 1000;
+				recruitsBoots.MaxDurability = 1000;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -298,10 +287,10 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			recruitsQuiltedBoots = GameServer.Database.SelectObject(typeof (FeetArmorTemplate), Expression.Eq("Name", "Recruit's Quilted Boots")) as FeetArmorTemplate;
+			recruitsQuiltedBoots = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_quilted_boots");
 			if (recruitsQuiltedBoots == null)
 			{
-				recruitsQuiltedBoots = new FeetArmorTemplate();
+				recruitsQuiltedBoots = new ItemTemplate();
 				recruitsQuiltedBoots.Name = "Recruit's Quilted Boots";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + recruitsQuiltedBoots.Name + ", creating it ...");
@@ -310,21 +299,36 @@ namespace DOL.GS.Quests.Albion
 				recruitsQuiltedBoots.Weight = 8;
 				recruitsQuiltedBoots.Model = 155; // studded Boots
 
-				recruitsQuiltedBoots.ArmorFactor = 6;
-				recruitsQuiltedBoots.ArmorLevel = eArmorLevel.VeryLow;
+				recruitsQuiltedBoots.DPS_AF = 6; // Armour
+				recruitsQuiltedBoots.SPD_ABS = 0; // Absorption
 
-				recruitsQuiltedBoots.Value = 1000;
-
+				recruitsQuiltedBoots.Object_Type = (int) eObjectType.Cloth;
+				recruitsQuiltedBoots.Item_Type = (int) eEquipmentItems.FEET;
+				recruitsQuiltedBoots.Id_nb = "recruits_quilted_boots";
+				recruitsQuiltedBoots.Gold = 0;
+				recruitsQuiltedBoots.Silver = 10;
+				recruitsQuiltedBoots.Copper = 0;
+				recruitsQuiltedBoots.IsPickable = true;
 				recruitsQuiltedBoots.IsDropable = true;
-				recruitsQuiltedBoots.IsSaleable = true;
-				recruitsQuiltedBoots.IsTradable = true;
 				recruitsQuiltedBoots.Color = 27; // red leather
 
 				recruitsQuiltedBoots.Bonus = 5; // default bonus
 
-				recruitsQuiltedBoots.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 3));
-				recruitsQuiltedBoots.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 1));
-				recruitsQuiltedBoots.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Spirit, 1));
+				recruitsQuiltedBoots.Bonus1 = 3;
+				recruitsQuiltedBoots.Bonus1Type = (int) eStat.CON;
+
+
+				recruitsQuiltedBoots.Bonus2 = 1;
+				recruitsQuiltedBoots.Bonus2Type = (int) eStat.STR;
+
+				recruitsQuiltedBoots.Bonus3 = 1;
+				recruitsQuiltedBoots.Bonus3Type = (int) eResist.Spirit;
+
+				recruitsQuiltedBoots.Quality = 100;
+				recruitsQuiltedBoots.Condition = 1000;
+				recruitsQuiltedBoots.MaxCondition = 1000;
+				recruitsQuiltedBoots.Durability = 1000;
+				recruitsQuiltedBoots.MaxDurability = 1000;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -342,21 +346,21 @@ namespace DOL.GS.Quests.Albion
 			* method. This means, the "TalkToXXX" method is called whenever
 			* a player right clicks on him or when he whispers to him.
 			*/
+
+			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
 			//We want to be notified whenever a player enters the world
 			GameEventMgr.AddHandler(GamePlayerEvent.GameEntered, new DOLEventHandler(PlayerEnterWorld));
 
-			GameEventMgr.AddHandler(masterFrederick, GameObjectEvent.Interact, new DOLEventHandler(TalkToMasterFrederick));
+			GameEventMgr.AddHandler(masterFrederick, GameLivingEvent.Interact, new DOLEventHandler(TalkToMasterFrederick));
 			GameEventMgr.AddHandler(masterFrederick, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToMasterFrederick));
 
-			GameEventMgr.AddHandler(ladyFelin, GameObjectEvent.Interact, new DOLEventHandler(TalkToLadyFelin));
+			GameEventMgr.AddHandler(ladyFelin, GameLivingEvent.Interact, new DOLEventHandler(TalkToLadyFelin));
 			GameEventMgr.AddHandler(ladyFelin, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToLadyFelin));
 
-			/* Now we add some hooks to trigger the quest dialog reponse. */
-			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(QuestDialogResponse));
-			GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(QuestDialogResponse));
-
-			/* Now we bring to Ydenia the possibility to give this quest to players */
-			QuestMgr.AddQuestDescriptor(masterFrederick, typeof(TraitorInCotswoldDescriptor));
+			/* Now we bring to masterFrederick the possibility to give this quest to players */
+			masterFrederick.AddQuestToGive(typeof (TraitorInCotswold));
 
 			if (log.IsInfoEnabled)
 				log.Info("Quest \"" + questTitle + "\" initialized");
@@ -382,19 +386,20 @@ namespace DOL.GS.Quests.Albion
 			/* Removing hooks works just as adding them but instead of 
 			 * AddHandler, we call RemoveHandler, the parameters stay the same
 			 */
+
+			GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
 			GameEventMgr.RemoveHandler(GamePlayerEvent.GameEntered, new DOLEventHandler(PlayerEnterWorld));
 
-			GameEventMgr.RemoveHandler(masterFrederick, GameObjectEvent.Interact, new DOLEventHandler(TalkToMasterFrederick));
+			GameEventMgr.RemoveHandler(masterFrederick, GameLivingEvent.Interact, new DOLEventHandler(TalkToMasterFrederick));
 			GameEventMgr.RemoveHandler(masterFrederick, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToMasterFrederick));
 
-			GameEventMgr.RemoveHandler(ladyFelin, GameObjectEvent.Interact, new DOLEventHandler(TalkToLadyFelin));
+			GameEventMgr.RemoveHandler(ladyFelin, GameLivingEvent.Interact, new DOLEventHandler(TalkToLadyFelin));
 			GameEventMgr.RemoveHandler(ladyFelin, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToLadyFelin));
 		
-			GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(QuestDialogResponse));
-			GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(QuestDialogResponse));
-
 			/* Now we remove to masterFrederick the possibility to give this quest to players */
-			QuestMgr.RemoveQuestDescriptor(masterFrederick, typeof(TraitorInCotswoldDescriptor));
+			masterFrederick.RemoveQuestToGive(typeof (TraitorInCotswold));
 		}
 
 		protected static void PlayerLeftWorld(DOLEvent e, object sender, EventArgs args)
@@ -411,14 +416,15 @@ namespace DOL.GS.Quests.Albion
 				// remorph player back...
 				if (player.Model == ladyFelin.Model)
 				{
-					player.Model = player.CreationModel;
+					GameClient client = player.Client;
+					player.Model = (ushort) client.Account.Characters[client.ActiveCharIndex].CreationModel;
 					SendSystemMessage(player, "You change back to your normal form!");
 				}
 
 				if (quest.Step == 3)
 				{
 					if (ladyFelin != null)
-						ladyFelin.RemoveFromWorld();
+						ladyFelin.Delete();
 				}
 			}
 		}
@@ -438,12 +444,12 @@ namespace DOL.GS.Quests.Albion
 			{
 				UseSlotEventArgs uArgs = (UseSlotEventArgs) args;
 
-				GenericItem item = player.Inventory.GetItem((eInventorySlot)uArgs.Slot) as GenericItem;
-				if (item != null && item.Name == necklaceOfDoppelganger.Name)
+				InventoryItem item = player.Inventory.GetItem((eInventorySlot)uArgs.Slot);
+				if (item != null && item.Id_nb == necklaceOfDoppelganger.Id_nb)
 				{
-					if (player.Position.CheckSquareDistance(felinEnd.Position, 2500*2500))
+					if (WorldMgr.GetDistance(player, felinEnd.X, felinEnd.Y, felinEnd.Z) < 2500)
 					{
-						foreach (GamePlayer visPlayer in player.GetInRadius(typeof(GamePlayer), WorldMgr.VISIBILITY_DISTANCE))
+						foreach (GamePlayer visPlayer in player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 						{
 							visPlayer.Out.SendSpellCastAnimation(player, 1, 20);
 						}
@@ -452,14 +458,16 @@ namespace DOL.GS.Quests.Albion
 						SendSystemMessage(player, "You change into a new form!");
 						new RegionTimer(player, new RegionTimerCallback(quest.ResetPlayerModel), 60000); // call after 10 minutes                    
 
-						if (!ladyFelin.Alive || ladyFelin.ObjectState != eObjectState.Active)
+						if (!ladyFelin.IsAlive || ladyFelin.ObjectState != GameObject.eObjectState.Active)
 						{
-							ladyFelin.Position = felinStart.Position;
+							ladyFelin.X = felinStart.X;
+							ladyFelin.Y = felinStart.Y;
+							ladyFelin.Z = felinStart.Z;
 							ladyFelin.Heading = felinStart.Heading;
 							ladyFelin.AddToWorld();
-							ladyFelin.WalkTo(felinEnd.Position, ladyFelin.MaxSpeed);
+							ladyFelin.WalkTo(felinEnd.X, felinEnd.Y, felinEnd.Z, ladyFelin.MaxSpeed);
 						}
-						quest.ChangeQuestStep(3);
+						quest.Step = 3;
 					}
 				}
 			}
@@ -477,9 +485,11 @@ namespace DOL.GS.Quests.Albion
 				GameEventMgr.AddHandler(player, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
 				GameEventMgr.AddHandler(player, GamePlayerEvent.UseSlot, new DOLEventHandler(PlayerUseSlot));
 
-				if (quest.Step == 3 && (!ladyFelin.Alive || ladyFelin.ObjectState != eObjectState.Active))
+				if (quest.Step == 3 && (!ladyFelin.IsAlive || ladyFelin.ObjectState != GameObject.eObjectState.Active))
 				{
-					ladyFelin.Position = felinEnd.Position;
+					ladyFelin.X = felinEnd.X;
+					ladyFelin.Y = felinEnd.Y;
+					ladyFelin.Z = felinEnd.Z;
 					ladyFelin.Heading = felinEnd.Heading;
 					ladyFelin.AddToWorld();
 				}
@@ -498,7 +508,7 @@ namespace DOL.GS.Quests.Albion
 			if (player == null)
 				return;
 
-			if (QuestMgr.CanGiveQuest(typeof(TraitorInCotswold), player, masterFrederick) <= 0)
+			if(masterFrederick.CanGiveQuest(typeof (TraitorInCotswold), player)  <= 0)
 				return;
 
 			//We also check if the player is already doing the quest
@@ -511,18 +521,20 @@ namespace DOL.GS.Quests.Albion
 				if (quest == null)
 				{
 					//Player is not doing the quest...
-					masterFrederick.SayTo(player, ""+player.Name+"! I have some important news regarding the recent capture of the [ire fairies].");
+					masterFrederick.SayTo(player, "Vinde! I have some important news regarding the recent capture of the [ire fairies].");
 					return;
 				}
 				else
 				{
 					if (quest.Step == 4)
 					{
-						masterFrederick.SayTo(player, ""+player.Name+", you've returned. I'm sure you were successful with your mission. Come come my friend. Hand over the information.");
+						masterFrederick.SayTo(player, "Vinde, you've returned. I'm sure you were successful with your mission. Come come my friend. Hand over the information.");
+
 					}
 					else if (quest.Step == 5)
 					{
-						masterFrederick.SayTo(player, "Hrm...These plans are sketchy, at best. I wonder if Shaemus was supposed to add in his two coppers. Interesting nonetheless. Thank you for helping us out "+player.Name+". I have [something] here for you.");
+						masterFrederick.SayTo(player, "Hrm...These plans are sketchy, at best. I wonder if Shaemus was supposed to add in his two coppers. Interesting nonetheless. Thank you for helping us out Vinde. I have [something] here for you.");
+
 					}
 					else
 					{
@@ -550,12 +562,12 @@ namespace DOL.GS.Quests.Albion
 							masterFrederick.SayTo(player, "His deal with them was to share in the profits of their stealing. I can't believe someone's greed would allow them to make deals with ire fairies! Well, anyhow, he gave us some further information on his [dealings] with them.");
 							break;
 						case "dealings":
-							masterFrederick.SayTo(player, "Shaemus uses a necklace that changes his appearance so he looks like one of the ire fairies. He said it's easier to deal with them that way. The guards confiscated it and it's currently in my possession. I was wondering if you would help us with this severe [problem]. What do you say "+player.Name+", will you help us?");
+							masterFrederick.SayTo(player, "Shaemus uses a necklace that changes his appearance so he looks like one of the ire fairies. He said it's easier to deal with them that way. The guards confiscated it and it's currently in my possession. I was wondering if you would help us with this severe [problem]. What do you say Vinde, will you help us?");
 							break;
 
 							//If the player offered his "help", we send the quest dialog now!
 						case "problem":
-							QuestMgr.ProposeQuestToPlayer(typeof(TraitorInCotswold), "Will you help Cotswold by taking on this vital mission?", player, masterFrederick);
+							player.Out.SendQuestSubscribeCommand(masterFrederick, QuestMgr.GetIDForQuestType(typeof(TraitorInCotswold)), "Will you help Cotswold by taking on this vital mission?");
 							break;
 					}
 				}
@@ -570,7 +582,7 @@ namespace DOL.GS.Quests.Albion
 							masterFrederick.SayTo(player, "He was supposed to be getting more information on their plans, so you shouldn't need to say much. Make your way to the grove and wait for the ire fairies. Return to me when you've gotten the information we're looking for.");
 							if (quest.Step == 1)
 							{
-								quest.ChangeQuestStep(2);
+								quest.Step = 2;
 							}
 							break;
 							// step 5
@@ -578,13 +590,30 @@ namespace DOL.GS.Quests.Albion
 							masterFrederick.SayTo(player, "Here you are my friend. These boots will help keep your feet dry and warm on those days when you think the weather in Albion is against you. Be well my friend. We will talk again soon.");
 							if (quest.Step == 5)
 							{
-								RemoveItemFromPlayer(player.Inventory.GetFirstItemByName(necklaceOfDoppelganger.Name, eInventorySlot.Min_Inv, eInventorySlot.Max_Inv), player);
 								quest.FinishQuest();
 							}
+							break;
+						case "abort":
+							player.Out.SendCustomDialog("Do you really want to abort this quest, \nall items gained during quest will be lost?", new CustomDialogResponse(CheckPlayerAbortQuest));
 							break;
 					}
 				}
 			}
+		}
+
+		protected static void SubscribeQuest(DOLEvent e, object sender, EventArgs args)
+		{
+			QuestEventArgs qargs = args as QuestEventArgs;
+			if (qargs == null)
+				return;
+
+			if (qargs.QuestID != QuestMgr.GetIDForQuestType(typeof(TraitorInCotswold)))
+				return;
+
+			if (e == GamePlayerEvent.AcceptQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x01);
+			else if (e == GamePlayerEvent.DeclineQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x00);
 		}
 
 		protected static void TalkToLadyFelin(DOLEvent e, object sender, EventArgs args)
@@ -594,7 +623,7 @@ namespace DOL.GS.Quests.Albion
 			if (player == null)
 				return;
 
-			if (QuestMgr.CanGiveQuest(typeof(TraitorInCotswold), player, masterFrederick) <= 0)
+			if(masterFrederick.CanGiveQuest(typeof (TraitorInCotswold), player)  <= 0)
 				return;
 
 			//We also check if the player is already doing the quest
@@ -624,16 +653,63 @@ namespace DOL.GS.Quests.Albion
 							ladyFelin.SayTo(player, "I have with me the plans for tomorrow night. We will need your help in being prepared. Your instructions are written on the parchment. Take it and memorize your duties, lest our Queen be angered. I bid you farewell for now.");
 							if (quest.Step == 3)
 							{
-								GiveItemToPlayer(ladyFelin, CreateQuestItem(fairyPlans, quest), player);
-								
+								GiveItem(ladyFelin, player, fairyPlans);
+
 								new RegionTimer(ladyFelin, new RegionTimerCallback(quest.CastLadyFelin), 10000);
 								new RegionTimer(ladyFelin, new RegionTimerCallback(quest.RemoveLadyFelin), 12000);
 
-								quest.ChangeQuestStep(4);
+								quest.Step = 4;
 							}
 							break;
 					}
 				}
+			}
+		}
+
+		/// <summary>
+		/// This method checks if a player qualifies for this quest
+		/// </summary>
+		/// <returns>true if qualified, false if not</returns>
+		public override bool CheckQuestQualification(GamePlayer player)
+		{
+			// if the player is already doing the quest his level is no longer of relevance
+			if (player.IsDoingQuest(typeof (TraitorInCotswold)) != null)
+				return true;
+
+			// This checks below are only performed is player isn't doing quest already
+			if (player.HasFinishedQuest(typeof (Nuisances)) == 0)
+				return false;
+
+			if (!CheckPartAccessible(player, typeof (TraitorInCotswold)))
+				return false;
+
+			if (player.Level < minimumLevel || player.Level > maximumLevel)
+				return false;
+
+			return true;
+		}
+
+
+		/* This is our callback hook that will be called when the player clicks
+		 * on any button in the quest offer dialog. We check if he accepts or
+		 * declines here...
+		 */
+
+		private static void CheckPlayerAbortQuest(GamePlayer player, byte response)
+		{
+			TraitorInCotswold quest = player.IsDoingQuest(typeof (TraitorInCotswold)) as TraitorInCotswold;
+
+			if (quest == null)
+				return;
+
+			if (response == 0x00)
+			{
+				SendSystemMessage(player, "Good, no go out there and finish your work!");
+			}
+			else
+			{
+				SendSystemMessage(player, "Aborting Quest " + questTitle + ". You can start over again if you want.");
+				quest.AbortQuest();
 			}
 		}
 
@@ -642,38 +718,40 @@ namespace DOL.GS.Quests.Albion
 		 * declines here...
 		 */
 
-		protected static void QuestDialogResponse(DOLEvent e, object sender, EventArgs args)
+		private static void CheckPlayerAcceptQuest(GamePlayer player, byte response)
 		{
-			QuestEventArgs gArgs = args as QuestEventArgs;
+			//We recheck the qualification, because we don't talk to players
+			//who are not doing the quest
+			if(masterFrederick.CanGiveQuest(typeof (TraitorInCotswold), player)  <= 0)
+				return;
 
-			if (gArgs != null && gArgs.QuestType.Equals(typeof(TraitorInCotswold)))
+			TraitorInCotswold quest = player.IsDoingQuest(typeof (TraitorInCotswold)) as TraitorInCotswold;
+
+			if (quest != null)
+				return;
+
+			if (response == 0x00)
 			{
-				GamePlayer player = gArgs.Player;
-				if (player == null) return;
+				SendReply(player, "Oh well, if you change your mind, please come back!");
+			}
+			else
+			{
+				//Check if we can add the quest!
+				if (!masterFrederick.GiveQuest(typeof (TraitorInCotswold), player, 1))
+					return;
 
-				if (e == GamePlayerEvent.AcceptQuest)
-				{
-					if (QuestMgr.GiveQuestToPlayer(typeof(TraitorInCotswold), player, gArgs.Source as GameNPC))
-					{
-						masterFrederick.SayTo(player, "Excellent job recruit. He said his contact's name was Lady Felin. I wasn't aware fairies had any sort of royalty, but that's not important. Here, take this. You'll need to use it in order to [infiltrate] the meeting tonight.");
-						// give necklace  
-						GiveItemToPlayer(masterFrederick, CreateQuestItem(necklaceOfDoppelganger, player.IsDoingQuest(typeof(TraitorInCotswold))), player);
-				
-						GameEventMgr.AddHandler(player, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
-						GameEventMgr.AddHandler(player, GamePlayerEvent.UseSlot, new DOLEventHandler(PlayerUseSlot));
-					}
-				}
-				else if (e == GamePlayerEvent.DeclineQuest)
-				{
+				masterFrederick.SayTo(player, "Excellent job recruit. He said his contact's name was Lady Felin. I wasn't aware fairies had any sort of royalty, but that's not important. Here, take this. You'll need to use it in order to [infiltrate] the meeting tonight.");
+				// give necklace                
+				GiveItem(masterFrederick, player, necklaceOfDoppelganger);
 
-					player.Out.SendMessage("Oh well, if you change your mind, please come back!", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
-				}
+				GameEventMgr.AddHandler(player, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
+				GameEventMgr.AddHandler(player, GamePlayerEvent.UseSlot, new DOLEventHandler(PlayerUseSlot));
 			}
 		}
 
 		protected virtual int CastLadyFelin(RegionTimer callingTimer)
 		{
-			foreach (GamePlayer visPlayer in ladyFelin.GetInRadius(typeof(GamePlayer), WorldMgr.VISIBILITY_DISTANCE))
+			foreach (GamePlayer visPlayer in ladyFelin.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
 				visPlayer.Out.SendSpellCastAnimation(ladyFelin, 1, 20);
 			}
@@ -685,14 +763,15 @@ namespace DOL.GS.Quests.Albion
 		protected virtual int RemoveLadyFelin(RegionTimer callingTimer)
 		{
 			if (ladyFelin != null)
-				ladyFelin.RemoveFromWorld();
+				ladyFelin.Delete();
 			return 0;
 		}
 
 
 		protected virtual int ResetPlayerModel(RegionTimer callingTimer)
 		{
-			m_questPlayer.Model = m_questPlayer.CreationModel;
+			GameClient client = m_questPlayer.Client;
+			m_questPlayer.Model = (ushort) client.Account.Characters[client.ActiveCharIndex].CreationModel;
 			SendSystemMessage("You change back to your normal form!");
 			return 0;
 		}
@@ -730,9 +809,9 @@ namespace DOL.GS.Quests.Albion
 						return "[Step #4] Take the plans you received from Lady Felin back to Master Frederick for further analysis.";
 					case 5:
 						return "[Step #5] Wait for Master Frederick to reward you. If he stops speaking with you, ask if there is [something] you might be given for your efforts.";
-					default:
-						return "[Step #" + Step + "] No Description entered for this step!";
+
 				}
+				return base.Description;
 			}
 		}
 
@@ -746,36 +825,49 @@ namespace DOL.GS.Quests.Albion
 			if (Step == 4 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target == masterFrederick && gArgs.Item.QuestName == Name && gArgs.Item.Name == fairyPlans.Name)
+				if (gArgs.Target.Name == masterFrederick.Name && gArgs.Item.Id_nb == fairyPlans.Id_nb)
 				{
-					RemoveItemFromPlayer(masterFrederick, gArgs.Item);
+					RemoveItem(masterFrederick, m_questPlayer, fairyPlans);
 
 					masterFrederick.TurnTo(m_questPlayer);
 					masterFrederick.SayTo(m_questPlayer, "This is a very small parchment. Hrm...Let me see if I can make out the words.");
-					masterFrederick.Emote(eEmote.Ponder);
-					ChangeQuestStep(5);
+					m_questPlayer.Out.SendEmoteAnimation(masterFrederick, eEmote.Ponder);
+					Step = 5;
 					return;
 				}
 			}
 
 		}
 
+		public override void AbortQuest()
+		{
+			base.AbortQuest(); //Defined in Quest, changes the state, stores in DB etc ...
+
+			RemoveItem(m_questPlayer, necklaceOfDoppelganger, false);
+			RemoveItem(m_questPlayer, fairyPlans, false);
+
+			GameEventMgr.RemoveHandler(m_questPlayer, GamePlayerEvent.UseSlot, new DOLEventHandler(PlayerUseSlot));
+			GameEventMgr.RemoveHandler(m_questPlayer, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
+		}
+
 
 		public override void FinishQuest()
 		{
+			base.FinishQuest(); //Defined in Quest, changes the state, stores in DB etc ...
+
+			RemoveItem(masterFrederick, m_questPlayer, necklaceOfDoppelganger);
 			//Give reward to player here ...            
-			if (m_questPlayer.HasAbilityToUseItem(recruitsBoots.CreateInstance() as EquipableItem))
-				GiveItemToPlayer(masterFrederick, recruitsBoots.CreateInstance());
+			if (m_questPlayer.HasAbilityToUseItem(recruitsBoots))
+				GiveItem(masterFrederick, m_questPlayer, recruitsBoots);
 			else
-				GiveItemToPlayer(masterFrederick, recruitsQuiltedBoots.CreateInstance());
+				GiveItem(masterFrederick, m_questPlayer, recruitsQuiltedBoots);
 
 			m_questPlayer.GainExperience(40, 0, 0, true);
 			m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 4, Util.Random(50)), "You recieve {0} as a reward.");
 
 			GameEventMgr.RemoveHandler(m_questPlayer, GamePlayerEvent.UseSlot, new DOLEventHandler(PlayerUseSlot));
 			GameEventMgr.RemoveHandler(m_questPlayer, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
-		
-			base.FinishQuest(); //Defined in Quest, changes the state, stores in DB etc ...
 		}
+
 	}
 }

@@ -17,7 +17,7 @@
  *
  */
 using System;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.GS;
 
 namespace DOL.Events
@@ -28,8 +28,8 @@ namespace DOL.Events
 	public class ReceiveItemEventArgs : EventArgs
 	{
 		private GameLiving source;
-		private GameObject target;
-		private GenericItem item;
+		private GameLiving target;
+		private InventoryItem item;
 
 		/// <summary>
 		/// Constructs new ReceiveItemEventArgs
@@ -37,7 +37,7 @@ namespace DOL.Events
 		/// <param name="source">the source of the item</param>
 		/// <param name="target">the target of the item</param>
 		/// <param name="item">the item to transfer</param>
-		public ReceiveItemEventArgs(GameLiving source, GameObject target, GenericItem item)
+		public ReceiveItemEventArgs(GameLiving source, GameLiving target, InventoryItem item)
 		{
 			this.source = source;
 			this.target = target;
@@ -55,7 +55,7 @@ namespace DOL.Events
 		/// <summary>
 		/// Gets the GameLiving who receives the item
 		/// </summary>
-		public GameObject Target
+		public GameLiving Target
 		{
 			get { return target; }
 		}
@@ -63,7 +63,7 @@ namespace DOL.Events
 		/// <summary>
 		/// Gets the item to transfer
 		/// </summary>
-		public GenericItem Item
+		public InventoryItem Item
 		{
 			get { return item; }
 		}

@@ -35,8 +35,6 @@ using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
-using NHibernate.Expression;
-using NHibernate.Mapping.Attributes;
 /* I suggest you declare yourself some namespaces for your quests
  * Like: DOL.GS.Quests.Albion
  *       DOL.GS.Quests.Midgard
@@ -48,45 +46,12 @@ using NHibernate.Mapping.Attributes;
 
 namespace DOL.GS.Quests.Albion
 {
-    /* The first thing we do, is to declare the quest requirement
-    * class linked with the new Quest. To do this, we derive 
-    * from the abstract class AbstractQuestDescriptor
-    */
-    public class ClericMulgrutDescriptor : AbstractQuestDescriptor
-    {
-        /* This is the type of the quest class linked with 
-         * this requirement class, you must override the 
-         * base methid like that
-         */
-        public override Type LinkedQuestType
-        {
-            get { return typeof(ClericMulgrut); }
-        }
+	/* The first thing we do, is to declare the class we create
+	 * as Quest. To do this, we derive from the abstract class
+	 * AbstractQuest
+	 * 	 
+	 */
 
-        /* This value is used to retrieves the minimum level needed
-         *  to be able to make this quest. Override it only if you need, 
-         * the default value is 1
-         */
-        public override int MinLevel
-        {
-            get { return 5; }
-        }
-
-        /* This value is used to retrieves how maximum level needed
-         * to be able to make this quest. Override it only if you need, 
-         * the default value is 50
-         */
-        public override int MaxLevel
-        {
-            get { return 10; }
-        }
-    }
-
-    /* The second thing we do, is to declare the class we create
-     * as Quest. We must make it persistant using attributes, to
-     * do this, we derive from the abstract class AbstractQuest
-     */
-    [Subclass(NameType = typeof(ClericMulgrut), ExtendsType = typeof(AbstractQuest))]
 	public class ClericMulgrut : BaseQuest
 	{
 		/// <summary>
@@ -104,12 +69,33 @@ namespace DOL.GS.Quests.Albion
 		 * 
 		 */
 		protected const string questTitle = "Cleric Mulgrut";
+		protected const int minimumLevel = 5;
+		protected const int maximumLevel = 10;
 
 		private static GameNPC hughGallen = null;
 		private static GameNPC mulgrutMaggot = null;
 		
-		private static WaistTemplate beltOfAnimation = null;
+		private static ItemTemplate beltOfAnimation = null;
 		
+		/* We need to define the constructors from the base class here, else there might be problems
+		 * when loading this quest...
+		 */
+		public ClericMulgrut() : base()
+		{
+		}
+
+		public ClericMulgrut(GamePlayer questingPlayer) : this(questingPlayer, 1)
+		{
+		}
+
+		public ClericMulgrut(GamePlayer questingPlayer, int step) : base(questingPlayer, step)
+		{
+		}
+
+		public ClericMulgrut(GamePlayer questingPlayer, DBQuest dbQuest) : base(questingPlayer, dbQuest)
+		{
+		}
+
 		/* The following method is called automatically when this quest class
 		 * is loaded. You might notice that this method is the same as in standard
 		 * game events. And yes, quests basically are game events for single players
@@ -128,6 +114,8 @@ namespace DOL.GS.Quests.Albion
 		[ScriptLoadedEvent]
 		public static void ScriptLoaded(DOLEvent e, object sender, EventArgs args)
 		{
+			if (!ServerProperties.Properties.LOAD_QUESTS)
+				return;
 			if (log.IsInfoEnabled)
 				log.Info("Quest \"" + questTitle + "\" initializing ...");
 			/* First thing we do in here is to search for the NPCs inside
@@ -142,60 +130,61 @@ namespace DOL.GS.Quests.Albion
 
 			#region defineNPCS
 
-			hughGallen = ResearchQuestObject(typeof(GameMob), WorldMgr.GetRegion(1), eRealm.Albion, "Hugh Gallen") as GameMob;
-			if (hughGallen == null)
+			GameNPC[] npcs = WorldMgr.GetNPCsByName("Hugh Gallen", eRealm.Albion);
+
+			/* Whops, if the npcs array length is 0 then no npc exists in
+				* this users Mob Database, so we simply create one ;-)
+				* else we take the existing one. And if more than one exist, we take
+				* the first ...
+				*/
+			if (npcs.Length == 0)
 			{
-				hughGallen = new GameMob();
+				hughGallen = new GameNPC();
 				hughGallen.Model = 40;
 				hughGallen.Name = "Hugh Gallen";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + hughGallen.Name + ", creating him ...");
 				hughGallen.GuildName = "Part of " + questTitle + " Quest";
 				hughGallen.Realm = (byte) eRealm.Albion;
-				hughGallen.Region = WorldMgr.GetRegion(1);
+				hughGallen.CurrentRegionID = 1;
 
-				GameNpcInventory template = new GameNpcInventory();
-				template.AddItem(eInventorySlot.HandsArmor, new NPCArmor(39));
-				template.AddItem(eInventorySlot.FeetArmor, new NPCArmor(40));
-				template.AddItem(eInventorySlot.TorsoArmor, new NPCArmor(36));
-				template.AddItem(eInventorySlot.LegsArmor, new NPCArmor(37));
-				template.AddItem(eInventorySlot.ArmsArmor, new NPCArmor(38));
-				hughGallen.Inventory = template;
+				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
+				template.AddNPCEquipment(eInventorySlot.HandsArmor, 39);
+				template.AddNPCEquipment(eInventorySlot.FeetArmor, 40);
+				template.AddNPCEquipment(eInventorySlot.TorsoArmor, 36);
+				template.AddNPCEquipment(eInventorySlot.LegsArmor, 37);
+				template.AddNPCEquipment(eInventorySlot.ArmsArmor, 38);
+				hughGallen.Inventory = template.CloseTemplate();
+				hughGallen.SwitchWeapon(GameLiving.eActiveWeaponSlot.Standard);
 
 				hughGallen.Size = 49;
 				hughGallen.Level = 38;
-				hughGallen.Position = new Point(574640, 531109, 2896);
+				hughGallen.X = 574640;
+				hughGallen.Y = 531109;
+				hughGallen.Z = 2896;
 				hughGallen.Heading = 2275;
-
-				StandardMobBrain newBrain = new StandardMobBrain();
-				newBrain.Body = hughGallen;
-				newBrain.AggroLevel = 100;
-				newBrain.AggroRange = 0;
-				hughGallen.OwnBrain = newBrain;
-
-				if(!hughGallen.AddToWorld())
-				{
-					if (log.IsWarnEnabled)
-						log.Warn("Quest "+questTitle+" abort because a needed region is not in use in this server!");
-					return;
-				}
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
+
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(hughGallen);
+					hughGallen.SaveIntoDatabase();
+
+				hughGallen.AddToWorld();
 			}
+			else
+				hughGallen = npcs[0];
 
 			#endregion
 
 			#region defineItems
 
 			// item db check
-			beltOfAnimation = GameServer.Database.SelectObject(typeof (WaistTemplate), Expression.Eq("Name", "Belt of Animation")) as WaistTemplate;
+			beltOfAnimation = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "belt_of_animation");
 			if (beltOfAnimation == null)
 			{
-				beltOfAnimation = new WaistTemplate();
+				beltOfAnimation = new ItemTemplate();
 				beltOfAnimation.Name = "Belt of Animation";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find "+beltOfAnimation.Name+", creating it ...");
@@ -204,13 +193,24 @@ namespace DOL.GS.Quests.Albion
 				beltOfAnimation.Weight = 3;
 				beltOfAnimation.Model = 597;
 				
-                beltOfAnimation.IsDropable = false;
-                beltOfAnimation.IsSaleable = false;
-                beltOfAnimation.IsTradable = false;
+				beltOfAnimation.Object_Type = (int) eObjectType.Magical;
+				beltOfAnimation.Item_Type = (int) eEquipmentItems.WAIST;
+				beltOfAnimation.Id_nb = "belt_of_animation";
+				beltOfAnimation.Gold = 0;
+				beltOfAnimation.Silver = 0;
+				beltOfAnimation.Copper = 0;
+				beltOfAnimation.IsPickable = true;
+				beltOfAnimation.IsDropable = false; // can't be sold to merchand
 
-                beltOfAnimation.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 6));
+				beltOfAnimation.Bonus1 = 6;
+				beltOfAnimation.Bonus1Type = (int)eProperty.MaxHealth;
 				
 				beltOfAnimation.Quality = 100;
+				beltOfAnimation.Condition = 1000;
+				beltOfAnimation.MaxCondition = 1000;
+				beltOfAnimation.Durability = 1000;
+				beltOfAnimation.MaxDurability = 1000;
+
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -229,16 +229,15 @@ namespace DOL.GS.Quests.Albion
 			* method. This means, the "TalkToXXX" method is called whenever
 			* a player right clicks on him or when he whispers to him.
 			*/
+
+			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
 			
-			GameEventMgr.AddHandler(hughGallen, GameObjectEvent.Interact, new DOLEventHandler(TalkToHughGallen));
+			GameEventMgr.AddHandler(hughGallen, GameLivingEvent.Interact, new DOLEventHandler(TalkToHughGallen));
 			GameEventMgr.AddHandler(hughGallen, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToHughGallen));
 
-			/* Now we add some hooks to trigger the quest dialog reponse. */
-			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(QuestDialogResponse));
-			GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(QuestDialogResponse));
-
 			/* Now we bring to Yetta Fletcher the possibility to give this quest to players */
-            QuestMgr.AddQuestDescriptor(hughGallen, typeof(ClericMulgrutDescriptor));
+			hughGallen.AddQuestToGive(typeof (ClericMulgrut));
 
 			if (log.IsInfoEnabled)
 				log.Info("Quest \"" + questTitle + "\" initialized");
@@ -263,14 +262,15 @@ namespace DOL.GS.Quests.Albion
 			/* Removing hooks works just as adding them but instead of 
 			 * AddHandler, we call RemoveHandler, the parameters stay the same
 			 */
-			GameEventMgr.RemoveHandler(hughGallen, GameObjectEvent.Interact, new DOLEventHandler(TalkToHughGallen));
+
+			GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
+			GameEventMgr.RemoveHandler(hughGallen, GameLivingEvent.Interact, new DOLEventHandler(TalkToHughGallen));
 			GameEventMgr.RemoveHandler(hughGallen, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToHughGallen));
 
-			GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(QuestDialogResponse));
-			GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(QuestDialogResponse));
-
 			/* Now we remove to Yetta Fletcher the possibility to give this quest to players */
-            QuestMgr.RemoveQuestDescriptor(hughGallen, typeof(ClericMulgrutDescriptor));
+			hughGallen.RemoveQuestToGive(typeof (ClericMulgrut));
 		}
 
 		/* This is the method we declared as callback for the hooks we set to
@@ -285,7 +285,7 @@ namespace DOL.GS.Quests.Albion
 			if (player == null)
 				return;
 
-            if (QuestMgr.CanGiveQuest(typeof(ClericMulgrut), player, hughGallen) <= 0)
+			if(hughGallen.CanGiveQuest(typeof (ClericMulgrut), player)  <= 0)
 				return;
 
 			//We also check if the player is already doing the quest
@@ -325,38 +325,105 @@ namespace DOL.GS.Quests.Albion
 						
 							//If the player offered his help, we send the quest dialog now!
 						case "make a profit":
-							QuestMgr.ProposeQuestToPlayer(typeof(ClericMulgrut), "Do you accept the Cleric Mulgrut quest? \n[Levels 5-10]", player, hughGallen);
+							player.Out.SendQuestSubscribeCommand(hughGallen, QuestMgr.GetIDForQuestType(typeof(ClericMulgrut)), "Do you accept the Cleric Mulgrut quest? \n[Levels 5-10]");
+							break;
+					}
+				}
+				else
+				{
+					switch (wArgs.Text)
+					{
+						case "abort":
+							player.Out.SendCustomDialog("Do you really want to abort this quest, \nall items gained during quest will be lost?", new CustomDialogResponse(CheckPlayerAbortQuest));
 							break;
 					}
 				}
 			}
 		}
 
+		/// <summary>
+		/// This method checks if a player qualifies for this quest
+		/// </summary>
+		/// <returns>true if qualified, false if not</returns>
+		public override bool CheckQuestQualification(GamePlayer player)
+		{
+			// if the player is already doing the quest his level is no longer of relevance
+			if (player.IsDoingQuest(typeof (ClericMulgrut)) != null)
+				return true;
+
+			// This checks below are only performed is player isn't doing quest already
+
+			if (player.Level < minimumLevel || player.Level > maximumLevel)
+				return false;
+
+			return true;
+		}
+
+		
 		/* This is our callback hook that will be called when the player clicks
 		 * on any button in the quest offer dialog. We check if he accepts or
 		 * declines here...
 		 */
-		protected static void QuestDialogResponse(DOLEvent e, object sender, EventArgs args)
+
+		private static void CheckPlayerAbortQuest(GamePlayer player, byte response)
 		{
-			QuestEventArgs gArgs = args as QuestEventArgs;
+			ClericMulgrut quest = player.IsDoingQuest(typeof (ClericMulgrut)) as ClericMulgrut;
 
-			if (gArgs != null && gArgs.QuestType.Equals(typeof(ClericMulgrut)))
+			if (quest == null)
+				return;
+
+			if (response == 0x00)
 			{
-				GamePlayer player = gArgs.Player;
-				if (player == null) return;
+				SendSystemMessage(player, "Good, no go out there and finish your work!");
+			}
+			else
+			{
+				SendSystemMessage(player, "Aborting Quest " + questTitle + ". You can start over again if you want.");
+				quest.AbortQuest();
+			}
+		}
 
-				if (e == GamePlayerEvent.AcceptQuest)
-				{
-					if (QuestMgr.GiveQuestToPlayer(typeof(ClericMulgrut), player, gArgs.Source as GameNPC))
-					{
-						player.Out.SendMessage("It is said that upon his death, he carried into the after life an item of great worth. Some say he still walks the cemetery not far from here!", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
-					}
-				}
-				else if (e == GamePlayerEvent.DeclineQuest)
-				{
+		protected static void SubscribeQuest(DOLEvent e, object sender, EventArgs args)
+		{
+			QuestEventArgs qargs = args as QuestEventArgs;
+			if (qargs == null)
+				return;
 
-					player.Out.SendMessage("Oh well, if you change your mind, please come back!", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
-				}
+			if (qargs.QuestID != QuestMgr.GetIDForQuestType(typeof(ClericMulgrut)))
+				return;
+
+			if (e == GamePlayerEvent.AcceptQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x01);
+			else if (e == GamePlayerEvent.DeclineQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x00);
+		}
+
+		/* This is our callback hook that will be called when the player clicks
+		 * on any button in the quest offer dialog. We check if he accepts or
+		 * declines here...
+		 */
+
+		private static void CheckPlayerAcceptQuest(GamePlayer player, byte response)
+		{
+			//We recheck the qualification, because we don't talk to players
+			//who are not doing the quest
+			if(hughGallen.CanGiveQuest(typeof (ClericMulgrut), player)  <= 0)
+				return;
+
+			if (player.IsDoingQuest(typeof (ClericMulgrut)) != null)
+				return;
+
+			if (response == 0x00)
+			{
+				SendReply(player, "Oh well, if you change your mind, please come back!");
+			}
+			else
+			{
+				//Check if we can add the quest!
+				if (!hughGallen.GiveQuest(typeof (ClericMulgrut), player, 1))
+					return;
+
+				SendReply(player, "It is said that upon his death, he carried into the after life an item of great worth. Some say he still walks the cemetery not far from here!");
 			}
 		}
 
@@ -385,9 +452,8 @@ namespace DOL.GS.Quests.Albion
 				{
 					case 1:
 						return "[Step #1] Locate and slay Mulgrut for his magical item.  He can usually be found either at the graveyard near Prydwen Keep or wandering about Camelot Hills.";
-                    default:
-                        return "[Step #" + Step + "] No Description entered for this step!";
 				}
+				return base.Description;
 			}
 		}
 
@@ -409,41 +475,36 @@ namespace DOL.GS.Quests.Albion
 						{
 							if(mulgrutMaggot == null)
 							{
-								mulgrutMaggot = new GameMob();
+								mulgrutMaggot = new GameNPC();
 								mulgrutMaggot.Model = 467;
 								mulgrutMaggot.Name = "Mulgrut Maggot";
 								mulgrutMaggot.Realm = (byte) eRealm.None;
-								mulgrutMaggot.Region = WorldMgr.GetRegion(1);
+								mulgrutMaggot.CurrentRegionID = 1;
 
 								mulgrutMaggot.Size = 60;
 								mulgrutMaggot.Level = 5;
-								mulgrutMaggot.Position = new Point(565941, 528121, 2152);
+								mulgrutMaggot.X = 565941;
+								mulgrutMaggot.Y = 528121;
+								mulgrutMaggot.Z = 2152;
 								mulgrutMaggot.Heading = 2278;
 
 								StandardMobBrain brain = new StandardMobBrain();  // set a brain witch find a lot mob friend to attack the player
-								brain.Body = mulgrutMaggot;
-								brain.AggroLevel = 100;
-								brain.AggroRange = 2000;
-								mulgrutMaggot.OwnBrain = brain;
+								mulgrutMaggot.SetOwnBrain(brain);
+
+								mulgrutMaggot.RespawnInterval = 0; // don't respawn when killed
 
 								mulgrutMaggot.AddToWorld();
 							}
 						}
 					}
-					else if (gArgs.Target.Name == mulgrutMaggot.Name)
+					else if (gArgs.Target.Name == "Mulgrut Maggot")
 					{
+						GiveItem(gArgs.Target, player, beltOfAnimation);
 						if(mulgrutMaggot != null) { mulgrutMaggot = null; }
 						FinishQuest();
 					}
 				}
 			}
-		}
-
-		public override void FinishQuest()
-		{
-			GiveItemToPlayer(beltOfAnimation.CreateInstance());
-
-			base.FinishQuest(); //Defined in Quest, changes the state, stores in DB etc ...
 		}
 	}
 }

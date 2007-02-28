@@ -19,7 +19,6 @@
 using System;
 using System.Collections;
 using DOL.GS;
-using DOL.GS.Database;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
 
@@ -35,9 +34,9 @@ namespace DOL.GS.Spells
 		/// Execute heal over time spell
 		/// </summary>
 		/// <param name="target"></param>
-		public override void FinishSpellCast(GameLivingBase target)
+		public override void FinishSpellCast(GameLiving target)
 		{
-			m_caster.ChangeMana(null, -CalculateNeededPower(target));
+			m_caster.Mana -= CalculateNeededPower(target);
 			base.FinishSpellCast(target);
 		}
 
@@ -81,14 +80,14 @@ namespace DOL.GS.Spells
 
 		public override void OnDirectEffect(GameLiving target, double effectiveness)
 		{
-			if (target.ObjectState != eObjectState.Active) return;
-			if (target.Alive == false) return;
+			if (target.ObjectState != GameObject.eObjectState.Active) return;
+			if (target.IsAlive == false) return;
 
 			base.OnDirectEffect(target, effectiveness);
 			double heal = Spell.Value * effectiveness;
 			if (target.IsDiseased)
 				heal /= 2;
-			target.ChangeHealth(target, (int)heal, false); // Regenerate don't generate aggro
+			target.Health += (int)heal;
 			//"You feel calm and healthy."
 			MessageToLiving(target, Spell.Message1, eChatType.CT_Spell);
 		}

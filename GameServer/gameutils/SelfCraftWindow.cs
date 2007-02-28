@@ -20,7 +20,7 @@ using System;
 using System.Collections;
 using System.Reflection;
 using DOL.GS;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.GS.PacketHandler;
 using log4net;
 
@@ -36,7 +36,7 @@ namespace DOL.GS
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		public SelfCraftWindow(GamePlayer owner, GenericItem item)
+		public SelfCraftWindow(GamePlayer owner, InventoryItem item)
 		{
 			if (owner == null)
 				throw new ArgumentNullException("owner");
@@ -187,10 +187,12 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="itemForTrade">InventoryItem to add</param>
 		/// <returns>true if added</returns>
-		public bool AddItemToTrade(GenericItem itemForTrade)
+		public bool AddItemToTrade(InventoryItem itemForTrade)
 		{
 			lock(Sync)
 			{
+				if(!itemForTrade.IsDropable || !itemForTrade.IsPickable)
+					return false;
 				if (TradeItems.Contains(itemForTrade))
 					return false;
 				if (TradeItems.Count >= MAX_ITEMS)
@@ -218,7 +220,7 @@ namespace DOL.GS
 		/// Removes an item from the tradewindow
 		/// </summary>
 		/// <param name="itemToRemove"></param>
-		public void RemoveItemToTrade(GenericItem itemToRemove)
+		public void RemoveItemToTrade(InventoryItem itemToRemove)
 		{
 			if (itemToRemove == null)
 				return;
@@ -245,14 +247,14 @@ namespace DOL.GS
 						log.Error("Changes count is less than 0, forgot to add m_changesCount++?\n\n" + Environment.StackTrace);
 				}
 
-				GenericItem itemToCombine = (GenericItem)PartnerTradeItems[0];
+				InventoryItem itemToCombine = (InventoryItem)PartnerTradeItems[0];
 				AbstractCraftingSkill skill = CraftingMgr.getSkillbyEnum(m_owner.CraftingPrimarySkill);
 				if(skill != null && skill is AdvancedCraftingSkill && itemToCombine != null)
 				{
 					if(((AdvancedCraftingSkill)skill).IsAllowedToCombine(m_owner, itemToCombine))
 					{
 						if(skill is SpellCrafting)
-							((SpellCrafting)skill).ShowSpellCraftingInfos(m_owner, (EquipableItem)itemToCombine);
+							((SpellCrafting)skill).ShowSpellCraftingInfos(m_owner, itemToCombine);
 					}
 				}
 				else

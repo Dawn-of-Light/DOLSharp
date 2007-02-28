@@ -1,16 +1,16 @@
 /*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -18,109 +18,112 @@
  */
 using System;
 using System.Collections;
-using System.Reflection;
 using DOL.Database;
-using DOL.Events;
 using DOL.GS.Movement;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Scripts
 {
 	[CmdAttribute(
-		"&path",
-		(uint) ePrivLevel.GM,
+	   "&path",
+	   (uint)ePrivLevel.GM,
 		"There are several path functions",
-		"/path create <path type> - creates a temp path in ram",
-		"/path load <pathID> - loads a path from db",
-		"/path add [speedlimit] - adds a point at the end of the current path",
-		"/path close - the next point will be the first (not avalable with TripPath)",
-		"/path travel - makes a target mob travel the current path",
-		"/path save - saves a path to db",
-		"/path steed <model> <name> - set a model and name to the steed (only avalable with TripPath)",
-		"/path hide - removes the temporary objects shown when a path is loaded or created")]
+		"/path create - creates a new temporary path, deleting any existing temporary path",
+		"/path load <pathname> - loads a path from db",
+		"/path add [speedlimit] [wait time in second] - adds a point at the end of the current path",
+		"/path save <pathname> - saves a path to db",
+		"/path travel - makes a target npc travel the current path",
+		"/path stop - clears the path for a targeted npc and tells npc to walk to spawn",
+		"/path speed [speedlimit] - sets the speed of all path nodes",
+		"/path assignhorseroute <Destination> - sets the current path as horseroute on stablemaster",
+		"/path hide - hides all path markers but does not delete the path",
+		"/path delete - deletes the temporary path",
+		"/path type - changes the paths type")]
 	public class PathCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		protected string TEMP_PATH = "TEMP_PATH";
+		protected string TEMP_PATH_FIRST = "TEMP_PATH_FIRST";
 		protected string TEMP_PATH_LAST = "TEMP_PATH_LAST";
 		protected string TEMP_PATH_OBJS = "TEMP_PATH_OBJS";
 
 		private void CreateTempPathObject(GameClient client, PathPoint pp, String name)
 		{
 			//Create a new object
-			GameStaticItem pathObj = new GameStaticItem();
-			pathObj.Position = pp.Position;
-			pathObj.Region = client.Player.Region;
-			pathObj.Heading = client.Player.Heading;
-			pathObj.Name = name;
-			pathObj.Model = 488;
-			pathObj.AddToWorld();
+			GameStaticItem obj = new GameStaticItem();
+			//Fill the object variables
+			obj.X = pp.X;
+			obj.Y = pp.Y;
+			obj.Z = pp.Z + 2; // raise a bit off of ground level
+			obj.CurrentRegion = client.Player.CurrentRegion;
+			obj.Heading = client.Player.Heading;
+			obj.Name = name;
+			obj.Model = 1293;
+			obj.Emblem = 0;
+			obj.AddToWorld();
 
-			ArrayList objs = (ArrayList) client.Player.TempProperties.getObjectProperty(TEMP_PATH_OBJS, null);
-			
-			if (objs == null) objs = new ArrayList();
-			objs.Add(pathObj);
-
+			ArrayList objs = (ArrayList)client.Player.TempProperties.getObjectProperty(TEMP_PATH_OBJS, null);
+			if (objs == null)
+				objs = new ArrayList();
+			objs.Add(obj);
 			client.Player.TempProperties.setProperty(TEMP_PATH_OBJS, objs);
 		}
 
 		private void RemoveAllTempPathObjects(GameClient client)
 		{
-			ArrayList objs = (ArrayList) client.Player.TempProperties.getObjectProperty(TEMP_PATH_OBJS, null);
+			ArrayList objs = (ArrayList)client.Player.TempProperties.getObjectProperty(TEMP_PATH_OBJS, null);
 			if (objs == null)
 				return;
 
-			foreach (GameStaticItem obj in objs) obj.RemoveFromWorld();
+			// remove the markers
+			foreach (GameStaticItem obj in objs)
+				obj.Delete();
+
+			// clear the path point array
+			objs.Clear();
+
+			// remove all path properties
 			client.Player.TempProperties.setProperty(TEMP_PATH_OBJS, null);
+			client.Player.TempProperties.setProperty(TEMP_PATH_FIRST, null);
+			client.Player.TempProperties.setProperty(TEMP_PATH_LAST, null);
 		}
 
-		private int PathCreate(GameClient client, string[] args)
+		private int PathHide(GameClient client)
+		{
+			ArrayList objs = (ArrayList)client.Player.TempProperties.getObjectProperty(TEMP_PATH_OBJS, null);
+			if (objs == null)
+				return 0;
+
+			// remove the markers
+			foreach (GameStaticItem obj in objs)
+				obj.Delete();
+
+			return 1;
+		}
+
+		private int PathCreate(GameClient client)
 		{
 			//Remove old temp objects
 			RemoveAllTempPathObjects(client);
 
-			if (args.Length < 3)
-			{
-				DisplayError(client, "Usage: /path create <path type>");
-				return 0;
-			}
-
-			Path newPath = Assembly.GetAssembly(typeof (GameServer)).CreateInstance(args[2], false) as Path;
-			if(newPath == null)
-			{
-				DisplayError(client, "Type '{0}' is not a valid path type!", args[2]);
-				return 0;
-			}
-
-			newPath.Region = client.Player.Region;
-			newPath.StartingPoint = new PathPoint();
-			newPath.StartingPoint.Position = client.Player.Position;
-			newPath.StartingPoint.Speed = 0;
-
-			client.Player.TempProperties.setProperty(TEMP_PATH, newPath);
-			client.Player.TempProperties.setProperty(TEMP_PATH_LAST, newPath.StartingPoint);
-			
+			PathPoint startpoint = new PathPoint(client.Player.X, client.Player.Y, client.Player.Z, 100000, ePathType.Once);
+			client.Player.TempProperties.setProperty(TEMP_PATH_FIRST, startpoint);
+			client.Player.TempProperties.setProperty(TEMP_PATH_LAST, startpoint);
 			client.Player.Out.SendMessage("Path creation started! You can add new pathpoints via /path add now!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			CreateTempPathObject(client, newPath.StartingPoint, "TMP PP START");
+			CreateTempPathObject(client, startpoint, "TMP PP 1");
 
 			return 1;
 		}
 
 		private int PathAdd(GameClient client, string[] args)
 		{
-			PathPoint oldPathPoint = (PathPoint) client.Player.TempProperties.getObjectProperty(TEMP_PATH_LAST, null);
-			if (oldPathPoint == null)
+			PathPoint path = (PathPoint)client.Player.TempProperties.getObjectProperty(TEMP_PATH_LAST, null);
+			if (path == null)
 			{
 				DisplayError(client, "No path created yet! Use /path create first!");
 				return 0;
 			}
 
-			if(oldPathPoint.NextPoint != null)
-			{
-				DisplayError(client, "This path is already closed!");
-				return 0;
-			}
-
 			int speedlimit = 1000;
+			int waittime = 0;
 			if (args.Length > 2)
 			{
 				try
@@ -132,189 +135,281 @@ namespace DOL.GS.Scripts
 					DisplayError(client, "No valid speedlimit '{0}'!", args[2]);
 					return 0;
 				}
+
+				if (args.Length > 3)
+				{
+					try
+					{
+						waittime = int.Parse(args[3]);
+					}
+					catch
+					{
+						DisplayError(client, "No valid wait time '{0}'!", args[3]);
+					}
+				}
 			}
 
-			PathPoint newPathPoint = new PathPoint();
-			newPathPoint.Position = client.Player.Position;
-			newPathPoint.Speed = speedlimit;
-			
-			oldPathPoint.NextPoint = newPathPoint;
-			
+			PathPoint newpp = new PathPoint(client.Player.X, client.Player.Y, client.Player.Z, speedlimit, path.Type);
+			newpp.WaitTime = waittime * 10;
+			path.Next = newpp;
+			newpp.Prev = path;
+			client.Player.TempProperties.setProperty(TEMP_PATH_LAST, newpp);
 
-			client.Player.TempProperties.setProperty(TEMP_PATH_LAST, newPathPoint);
+			int len = 0;
+			while (path.Prev != null)
+			{
+				len++;
+				path = path.Prev;
+			}
+			len += 2;
+			CreateTempPathObject(client, newpp, "TMP PP " + len);
+			DisplayMessage(client, "Pathpoint added. Current pathlength = {0}", len);
+			return 1;
+		}
 
-			CreateTempPathObject(client, newPathPoint, "TMP PP");
-			DisplayMessage(client, "Pathpoint added.");
+		private int PathSpeed(GameClient client, string[] args)
+		{
+			int speedlimit = 80;
+
+			if (args.Length < 3)
+			{
+				DisplayError(client, "No valid speedlimit '{0}'!", args[2]);
+				return 0;
+			}
+
+			try
+			{
+				speedlimit = int.Parse(args[2]);
+			}
+			catch
+			{
+				DisplayError(client, "No valid speedlimit '{0}'!", args[2]);
+				return 0;
+			}
+
+			PathPoint pathpoint = (PathPoint)client.Player.TempProperties.getObjectProperty(TEMP_PATH_FIRST, null);
+
+			if (pathpoint == null)
+			{
+				DisplayError(client, "No path created yet! Use /path create first!");
+				return 0;
+			}
+
+			pathpoint.MaxSpeed = speedlimit;
+
+			while (pathpoint.Next != null)
+			{
+				pathpoint = pathpoint.Next;
+				pathpoint.MaxSpeed = speedlimit;
+			}
+
 			return 1;
 		}
 
 		private int PathTravel(GameClient client)
 		{
-			Path path = (Path) client.Player.TempProperties.getObjectProperty(TEMP_PATH, null);
+			PathPoint path = (PathPoint)client.Player.TempProperties.getObjectProperty(TEMP_PATH_LAST, null);
+			if (client.Player.TargetObject == null || !(client.Player.TargetObject is GameNPC))
+			{
+				DisplayError(client, "You need to select a mob first!");
+				return 0;
+			}
 			if (path == null)
 			{
 				DisplayError(client, "No path created yet! Use /path create first!");
 				return 0;
 			}
+			int speed = Math.Min(((GameNPC)client.Player.TargetObject).MaxSpeedBase, path.MaxSpeed);
 
-			GameSteed steed = new GameSteed();
-			steed.Region = path.Region;
-			steed.Position = path.StartingPoint.Position;
-			steed.Heading = steed.Position.GetHeadingTo(path.StartingPoint.NextPoint.Position);
-			steed.Name = "Path Tester Mob";
-			if(path is TripPath) steed.Model = ((TripPath)path).SteedModel;
-			else steed.Model = 450;
-			steed.Realm = client.Player.Realm;
-			steed.Level = 1;
-			steed.Size = 50;
-			steed.AddToWorld();
+			// clear any current path
+			((GameNPC)client.Player.TargetObject).CurrentWayPoint = null;
 
-			client.Player.MountSteed(steed);
-						
-			GameEventMgr.AddHandler(steed, GameSteedEvent.PathMoveEnds, new DOLEventHandler(OnSteedAtRouteEnd));					
-						
-			steed.MoveOnPath(path.StartingPoint.NextPoint);
+			// set the new path
+			((GameNPC)client.Player.TargetObject).CurrentWayPoint = (PathPoint)client.Player.TempProperties.getObjectProperty(TEMP_PATH_FIRST, null);
 
-			return 1;			
+			MovementMgr.Instance.MoveOnPath(((GameNPC)client.Player.TargetObject), speed);
+			return 1;
 		}
 
-		public void OnSteedAtRouteEnd(DOLEvent e, object o, EventArgs args)
+		private int PathStop(GameClient client)
 		{
-			GameSteed steed = o as GameSteed;
-			if (steed == null) return;
-
-			GameEventMgr.RemoveHandler(steed, GameSteedEvent.PathMoveEnds, new DOLEventHandler(OnSteedAtRouteEnd));
-		
-			if(steed.Rider != null)
+			if (client.Player.TargetObject == null || !(client.Player.TargetObject is GameNPC))
 			{
-				steed.Rider.DismountSteed();
+				DisplayError(client, "You need to select a mob first!");
+				return 0;
 			}
-			steed.RemoveFromWorld();
+
+			// clear any current path
+			((GameNPC)client.Player.TargetObject).CurrentWayPoint = null;
+			((GameNPC)client.Player.TargetObject).WalkToSpawn();
+			return 1;
+		}
+
+		private int PathType(GameClient client, string[] args)
+		{
+			PathPoint path = (PathPoint)client.Player.TempProperties.getObjectProperty(TEMP_PATH_LAST, null);
+			if (args.Length < 2)
+			{
+				DisplayError(client, "Usage: /path type <pathtype>");
+				DisplayError(client, "Current path type is '{0}'", path.Type.ToString());
+				DisplayError(client, "Possible pathtype values are:");
+				DisplayError(client, String.Join(", ", Enum.GetNames(typeof(ePathType))));
+				return 0;
+			}
+			if (path == null)
+			{
+				DisplayError(client, "No path created yet! Use /path create or /path load first!");
+				return 0;
+			}
+
+			ePathType pathType = ePathType.Once;
+			try
+			{
+				pathType = (ePathType)Enum.Parse(typeof(ePathType), args[2], true);
+			}
+			catch
+			{
+				DisplayError(client, "Usage: /path type <pathtype>");
+				DisplayError(client, "Current path type is '{0}'", path.Type.ToString());
+				DisplayError(client, "PathType must be one of the following:");
+				DisplayError(client, String.Join(", ", Enum.GetNames(typeof(ePathType))));
+				return 0;
+			}
+
+			path.Type = pathType;
+			PathPoint temp = path.Prev;
+			while ((temp != null) && (temp != path))
+			{
+				temp.Type = pathType;
+				temp = temp.Prev;
+			}
+			DisplayError(client, "Current path type set to '{0}'", path.Type.ToString());
+			return 1;
 		}
 
 		private int PathLoad(GameClient client, string[] args)
 		{
-			if (args.Length < 3)
+			if (args.Length < 2)
 			{
-				DisplayError(client, "Usage: /path load <pathID>");
+				DisplayError(client, "Usage: /path load <pathname>");
 				return 0;
 			}
-
-			Path newPath = GameServer.Database.FindObjectByKey(typeof(Path), args[2]) as Path;
-			if(newPath == null)
+			string pathname = String.Join(" ", args, 2, args.Length - 2);
+			PathPoint path = MovementMgr.Instance.LoadPath(pathname);
+			if (path != null)
 			{
-				DisplayError(client, "Path with id '{0}' not found!", args[2]);
-				return 0;
-			}
-
-			DisplayMessage(client, "Path '{0}' loaded. Type : '{1}'", args[2], newPath.GetType().FullName);
-			
-			RemoveAllTempPathObjects(client);
-			
-			client.Player.TempProperties.setProperty(TEMP_PATH, newPath);
-			PathPoint startingPoint = newPath.StartingPoint;
-			CreateTempPathObject(client, startingPoint, "TMP PP START");
-			
-			while (startingPoint.NextPoint != null)
-			{
-				CreateTempPathObject(client, startingPoint.NextPoint, "TMP PP");
-				startingPoint = startingPoint.NextPoint;
-			}
-
-			client.Player.TempProperties.setProperty(TEMP_PATH_LAST, startingPoint);
-			return 1;
-		}
-		
-		private int PathSave(GameClient client)
-		{
-			Path path = (Path) client.Player.TempProperties.getObjectProperty(TEMP_PATH, null);
-			if (path == null)
-			{
-				DisplayError(client, "No path created yet! Use /path create first!");
-				return 0;
-			}
-
-			TripPath trip = path as TripPath;
-			if(trip != null && (trip.SteedModel == 0 || trip.SteedName == ""))
-			{
-				DisplayMessage(client, "You must define a steed model and a steed name before save this TripPath!", path.PathID);
+				RemoveAllTempPathObjects(client);
+				DisplayMessage(client, "Path '{0}' loaded.", pathname);
+				client.Player.TempProperties.setProperty(TEMP_PATH_FIRST, path);
+				int len = 1;
+				while (path.Next != null)
+				{
+					CreateTempPathObject(client, path, "TMP PP " + len);
+					path = path.Next;
+					len++;
+				}
+				client.Player.TempProperties.setProperty(TEMP_PATH_LAST, path);
 				return 1;
 			}
-
-			GameServer.Database.AddNewObject(path);
-			DisplayMessage(client, "Path saved as '{0}'", path.PathID);
-			return 1;
+			DisplayError(client, "Path '{0}' not found!", pathname);
+			return 0;
 		}
 
-		private int PathClose(GameClient client)
+		private int PathSave(GameClient client, string[] args)
 		{
-			Path path = (Path) client.Player.TempProperties.getObjectProperty(TEMP_PATH, null);
-			PathPoint oldPathPoint = (PathPoint) client.Player.TempProperties.getObjectProperty(TEMP_PATH_LAST, null);
-			
-			if (path == null || oldPathPoint == null)
+			PathPoint path = (PathPoint)client.Player.TempProperties.getObjectProperty(TEMP_PATH_LAST, null);
+			if (args.Length < 2)
+			{
+				DisplayError(client, "Usage: /path save <pathname>");
+				return 0;
+			}
+			if (path == null)
 			{
 				DisplayError(client, "No path created yet! Use /path create first!");
 				return 0;
 			}
-
-			if(path is TripPath)
-			{
-				DisplayError(client, "You can't close a TripPath !");
-				return 0;
-			}
-
-			if(oldPathPoint.NextPoint != null)
-			{
-				DisplayError(client, "This path is already closed!");
-				return 0;
-			}
-
-			oldPathPoint.NextPoint = path.StartingPoint;
-			
-			DisplayMessage(client, "Pathpoint closed.");
+			string pathname = String.Join(" ", args, 2, args.Length - 2);
+			MovementMgr.Instance.SavePath(pathname, path);
+			DisplayMessage(client, "Path saved as '{0}'", pathname);
 			return 1;
 		}
 
-		private int PathSetSteed(GameClient client, string[] args)
+		private int PathAssignHorseroute(GameClient client, string[] args)
 		{
-			TripPath path = client.Player.TempProperties.getObjectProperty(TEMP_PATH, null) as TripPath;
+			PathPoint path = (PathPoint)client.Player.TempProperties.getObjectProperty(TEMP_PATH_LAST, null);
+			if (args.Length < 2)
+			{
+				DisplayError(client, "Usage: /path assignhorseroute <destination>");
+				return 0;
+			}
+
 			if (path == null)
 			{
 				DisplayError(client, "No path created yet! Use /path create first!");
 				return 0;
 			}
 
-			if (args.Length < 4)
+			GameMerchant merchant = null;
+			if (client.Player.TargetObject is GameStableMaster)
+				merchant = client.Player.TargetObject as GameStableMaster;
+			if (client.Player.TargetObject is GameBoatStableMaster)
+				merchant = client.Player.TargetObject as GameBoatStableMaster;
+			if (merchant == null)
 			{
-				DisplayError(client, "Usage: /path steed <model> <name>");
+				DisplayError(client, "You must select a stable master to assign a horseroute!");
 				return 0;
 			}
+			string target = String.Join(" ", args, 2, args.Length - 2); ;
+			bool ticketFound = false;
+			string ticket = "Ticket to " + target;
+			// Most //
+			// With the new horse system, the stablemasters are using the item.Id_nb to find the horse route in the database
+			// So we have to save a path in the database with the Id_nb as a PathID
+			// The following string will contain the item Id_nb if it is found in the merchant list
+			string pathname = ""; 
+			if (merchant.TradeItems != null)
+			{
+				foreach (ItemTemplate template in merchant.TradeItems.GetAllItems().Values)
+				{
+					if (template != null && template.Name.ToLower() == ticket.ToLower())
+					{
+						ticketFound = true;
+						pathname = template.Id_nb;
+						break;
+					}
 
-			path.SteedModel = int.Parse(args[2]);
-			path.SteedName = args[3];
-
-			DisplayMessage(client, "Steed model set '{0}' and name set '{1}'", path.SteedModel, path.SteedName);
+				}
+			}
+			if (!ticketFound)
+			{
+				DisplayError(client, "Stablemaster has no {0}!", ticket);
+				return 0;
+			}
+			//MovementMgr.Instance.SavePath(merchant.Name + "=>" + target, path);
+			MovementMgr.Instance.SavePath(pathname, path); 
 			return 1;
 		}
-
 
 		public int OnCommand(GameClient client, string[] args)
 		{
-			if(args.Length < 2)
+			if (args.Length < 2)
 			{
 				DisplaySyntax(client);
 				return 0;
 			}
-			switch (args[1])
+			switch (args[1].ToLower())
 			{
-				case "create": return PathCreate(client, args);
+				case "create": return PathCreate(client);
 				case "add": return PathAdd(client, args);
-				case "close": return PathClose(client);
 				case "travel": return PathTravel(client);
-				case "save": return PathSave(client);
+				case "stop": return PathStop(client);
+				case "speed": return PathSpeed(client, args);
+				case "type": return PathType(client, args);
+				case "save": return PathSave(client, args);
 				case "load": return PathLoad(client, args);
-				case "steed": return PathSetSteed(client, args);
-				case "hide": RemoveAllTempPathObjects(client); return 1;
+				case "assignhorseroute": return PathAssignHorseroute(client, args);
+				case "hide": return PathHide(client);
+				case "delete": RemoveAllTempPathObjects(client); return 1;
 			}
 			DisplaySyntax(client);
 			return 0;

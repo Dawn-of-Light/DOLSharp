@@ -18,9 +18,9 @@
  */
 using System;
 using System.Collections;
-using DOL.GS.Database;
-using DOL.GS.PacketHandler;
+using DOL.Database;
 using DOL.GS.Styles;
+using DOL.GS.Keeps;
 
 namespace DOL.GS.ServerRules
 {
@@ -49,7 +49,7 @@ namespace DOL.GS.ServerRules
 		/// <param name="defender">attacker's target</param>
 		/// <param name="quiet">should messages be sent</param>
 		/// <returns>true if attack is allowed</returns>
-		bool IsAllowedToAttack(GameLiving attacker, GameLivingBase defender, bool quiet);
+		bool IsAllowedToAttack(GameLiving attacker, GameLiving defender, bool quiet);
 
 		/// <summary>
 		/// Is caster allowed to cast a spell
@@ -59,7 +59,7 @@ namespace DOL.GS.ServerRules
 		/// <param name="spell"></param>
 		/// <param name="spellLine"></param>
 		/// <returns>true if allowed</returns>
-		bool IsAllowedToCastSpell(GameLiving caster, GameLivingBase target, Spell spell, SpellLine spellLine);
+		bool IsAllowedToCastSpell(GameLiving caster, GameLiving target, Spell spell, SpellLine spellLine);
 
 		/// <summary>
 		/// Does source considers target "friendly".
@@ -69,7 +69,7 @@ namespace DOL.GS.ServerRules
 		/// <param name="target">spell target, considered object</param>
 		/// <param name="quiet"></param>
 		/// <returns></returns>
-		bool IsSameRealm(GameLiving source, GameLivingBase target, bool quiet);
+		bool IsSameRealm(GameLiving source, GameLiving target, bool quiet);
 
 		/// <summary>
 		/// Does the server type allows to play/create characters in all realms on one account
@@ -94,7 +94,7 @@ namespace DOL.GS.ServerRules
 		/// <param name="target"></param>
 		/// <param name="quiet"></param>
 		/// <returns></returns>
-		bool IsAllowedToTrade(GamePlayer source, GamePlayer target, bool quiet);
+		bool IsAllowedToTrade(GameLiving source, GameLiving target, bool quiet);
 
 		/// <summary>
 		/// Is target allowed to understand source.
@@ -126,7 +126,7 @@ namespace DOL.GS.ServerRules
 		/// <param name="player"></param>
 		/// <param name="item"></param>
 		/// <returns></returns>
-		bool IsAllowedToCraft(GamePlayer player, GenericItemTemplate item);
+		bool IsAllowedToCraft(GamePlayer player, ItemTemplate item);
 
 		/// <summary>
 		/// Short description of server rules
@@ -156,12 +156,12 @@ namespace DOL.GS.ServerRules
 		long GetExperienceForLiving(int level);
 
 		/// <summary>
-		/// Checks if player has ability to use items of this type
+		/// Checks if living has ability to use items of this type
 		/// </summary>
-		/// <param name="player"></param>
+		/// <param name="living"></param>
 		/// <param name="item"></param>
 		/// <returns>true if player has ability to use item</returns>
-		bool CheckAbilityToUseItem(GamePlayer player, EquipableItem item);
+		bool CheckAbilityToUseItem(GameLiving living, ItemTemplate item);
 
 		/// <summary>
 		/// Checks whether one object type is equal to another
@@ -181,12 +181,20 @@ namespace DOL.GS.ServerRules
 		int GetObjectSpecLevel(GamePlayer player, eObjectType objectType);
 
 		/// <summary>
+		/// Get object specialization level based on server type
+		/// </summary>
+		/// <param name="player">player whom specializations are checked</param>
+		/// <param name="objectType">object type</param>
+		/// <returns>specialization in object or 0</returns>
+		int GetBaseObjectSpecLevel(GamePlayer player, eObjectType objectType);
+
+		/// <summary>
 		/// Invoked on NPC death and deals out
 		/// experience/realm points if needed
 		/// </summary>
 		/// <param name="killedNPC">npc that died</param>
 		/// <param name="killer">killer</param>
-		void OnNPCKilled(GameNPC killedNPC, GameLiving killer);
+		void OnNPCKilled(GameNPC killedNPC, GameObject killer);
 
 		/// <summary>
 		/// Invoked on Player death and deals out
@@ -195,6 +203,14 @@ namespace DOL.GS.ServerRules
 		/// <param name="killedPlayer">player that died</param>
 		/// <param name="killer">killer</param>
 		void OnPlayerKilled(GamePlayer killedPlayer, GameObject killer);
+
+		/// <summary>
+		/// Invoked on a livings death and deals out
+		/// experience / rps if needed
+		/// </summary>
+		/// <param name="living">the living that died</param>
+		/// <param name="killer"></param>
+		void OnLivingKilled(GameLiving living, GameObject killer);
 
 		/// <summary>
 		/// Gets the Realm of an living for name text coloring
@@ -248,5 +264,12 @@ namespace DOL.GS.ServerRules
 		/// <param name="player">The player to read statistics from.</param>
 		/// <returns>List of strings.</returns>
 		IList FormatPlayerStatistics(GamePlayer player);
+
+		/// <summary>
+		/// Reset the keep with special server rules handling
+		/// </summary>
+		/// <param name="lord">The lord that was killed</param>
+		/// <param name="killer">The lord's killer</param>
+		void ResetKeep(GuardLord lord, GameObject killer);
 	}
 }

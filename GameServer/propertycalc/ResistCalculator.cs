@@ -24,7 +24,7 @@ namespace DOL.GS.PropertyCalc
 	/// The Resistance Property calculator
 	/// 
 	/// BuffBonusCategory1 is used for all capped buffs
-	/// BuffBonusCategory2 unused
+	/// BuffBonusCategory2 external used for only damagemodifiing resists (1.65 Category2 Resists)
 	/// BuffBonusCategory3 is used for all debuffs (positive values expected here)
 	/// BuffBonusCategory4 is used for all uncapped modifications
 	///                    category 4 kicks in at last
@@ -33,46 +33,45 @@ namespace DOL.GS.PropertyCalc
 	[PropertyCalculator(eProperty.Resist_First, eProperty.Resist_Last)]
 	public class ResistCalculator : PropertyCalculator
 	{
-		public ResistCalculator() {}
+		public ResistCalculator() { }
 
-		public override int CalcValue(GameLiving living, eProperty property) 
+		public override int CalcValue(GameLiving living, eProperty property)
 		{
-			int itemBonus = living.ItemBonus[(int)property];
-			int buffBonus = living.BuffBonusCategory1[(int)property];
-			int debuff = living.BuffBonusCategory3[(int)property];
-			if (debuff < 0) {
+			int intProperty = (int)property;
+			int itemBonus = living.ItemBonus[intProperty];
+			int abilityBonus = living.AbilityBonus[intProperty];
+			int buffBonus = living.BuffBonusCategory1[intProperty];
+			int debuff = living.BuffBonusCategory3[intProperty];
+			if (debuff < 0)
+			{
 				debuff = -debuff;
 			}
 			int res = 0;
 
-			if (living is GamePlayer) 
+			if (living is GamePlayer)
 			{
 				GamePlayer player = (GamePlayer)living;
 				res += SkillBase.GetRaceResist((eRace)player.Race, (eResist)property);
 				int cap = living.Level / 2 + 1;
 
-				if (itemBonus > cap) {
+				if (itemBonus > cap)
+				{
 					itemBonus = cap;
 				}
 
-				if (buffBonus > cap) {
+				if (buffBonus > cap)
+				{
 					buffBonus = cap;
 				}
 			}
 
 			//100% debuff effectiveness for resists buffs
-			buffBonus = buffBonus + living.BuffBonusCategory4[(int)property] - debuff;
+			buffBonus = buffBonus + living.BuffBonusCategory4[intProperty] - debuff;
 			//50% debuff effectiveness for item and racial bonuses
 			if (buffBonus < 0)
 				buffBonus /= 2;
 
-			res += itemBonus + buffBonus;
-
-			// final cap 55% resist max
-			if(res > 55)
-				res = 55;
-
-			return res;
+			return res + itemBonus + buffBonus + abilityBonus;
 		}
 	}
 }

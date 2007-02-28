@@ -27,7 +27,6 @@
  */
 using System;
 using System.Reflection;
-using DOL.AI.Brain;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
@@ -53,21 +52,17 @@ namespace DOL.GS.GameEvents
 				//npc in the constructor. You can set
 				//the npc position, model etc. in the
 				//StartEvent() method too if you want.
+				X = 505499;
+				Y = 437679;
+				Z = 0;
+				Heading = 0x0;
 				Name = "The talking NPC";
-				Realm = 1;
-				Model = 5;
-				Region = WorldMgr.GetRegion(1);
-				Heading = 0;
-				Position = new Point(505499, 437679, 0);
-				Level = 10;
 				GuildName = "Rightclick me";
-				MaxSpeedBase = 150;
+				Model = 5;
 				Size = 50;
-
-				OwnBrain = new StandardMobBrain();
-				OwnBrain.Body = this;
-				((StandardMobBrain)OwnBrain).AggroLevel = 100;
-				((StandardMobBrain)OwnBrain).AggroRange = 1500;
+				Level = 10;
+				Realm = 1;
+				CurrentRegionID = 1;
 			}
 
 			//This function is the callback function that is called when
@@ -79,7 +74,7 @@ namespace DOL.GS.GameEvents
 
 				//Now we turn the npc into the direction of the person it is
 				//speaking to.
-				TurnTo(player, 10000);
+				TurnTo(player.X, player.Y);
 
 				//We send a message to player and make it appear in a popup
 				//window. Text inside the [brackets] is clickable in popup
@@ -106,7 +101,7 @@ namespace DOL.GS.GameEvents
 
 				//Now we turn the npc into the direction of the person it is
 				//speaking to.
-				TurnTo(t.Position);
+				TurnTo(t.X, t.Y);
 
 				//We test what the player whispered to the npc and
 				//send a reply. The Method SendReply used here is
@@ -167,12 +162,14 @@ namespace DOL.GS.GameEvents
 		[ScriptLoadedEvent]
 		public static void OnScriptCompiled(DOLEvent e, object sender, EventArgs args)
 		{
+			if (!ServerProperties.Properties.LOAD_EXAMPLES)
+				return;
 			//Here we create an instance of our talking NPC
 			m_npc = new TalkingNPC();
 			//And add it to the world (the position and all
 			//other relevant data is defined in the constructor
 			//of the NPC
-			m_npc.AddToWorld();
+			bool good = m_npc.AddToWorld();
 			if (log.IsInfoEnabled)
 				log.Info("TalkingNPCEvent initialized");
 		}
@@ -183,10 +180,12 @@ namespace DOL.GS.GameEvents
 		[ScriptUnloadedEvent]
 		public static void OnScriptUnloaded(DOLEvent e, object sender, EventArgs args)
 		{
+			if (!ServerProperties.Properties.LOAD_EXAMPLES)
+				return;
 			//To stop this event, we simply delete
 			//(remove from world completly) the npc
 			if (m_npc != null)
-				m_npc.RemoveFromWorld();
+				m_npc.Delete();
 		}
 	}
 }

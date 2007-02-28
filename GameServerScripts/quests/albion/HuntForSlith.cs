@@ -35,8 +35,6 @@ using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
-using NHibernate.Expression;
-using NHibernate.Mapping.Attributes;
 /* I suggest you declare yourself some namespaces for your quests
  * Like: DOL.GS.Quests.Albion
  *       DOL.GS.Quests.Midgard
@@ -48,45 +46,12 @@ using NHibernate.Mapping.Attributes;
 
 namespace DOL.GS.Quests.Albion
 {
-	/* The first thing we do, is to declare the quest requirement
-	* class linked with the new Quest. To do this, we derive 
-	* from the abstract class AbstractQuestDescriptor
-	*/
-	public class HuntForSlithDescriptor : AbstractQuestDescriptor
-	{
-		/* This is the type of the quest class linked with 
-		 * this requirement class, you must override the 
-		 * base methid like that
-		 */
-		public override Type LinkedQuestType
-		{
-			get { return typeof(HuntForSlith); }
-		}
-
-		/* This value is used to retrieves the minimum level needed
-		 *  to be able to make this quest. Override it only if you need, 
-		 * the default value is 1
-		 */
-		public override int MinLevel
-		{
-			get { return 4; }
-		}
-
-		/* This value is used to retrieves how maximum level needed
-		 * to be able to make this quest. Override it only if you need, 
-		 * the default value is 50
-		 */
-		public override int MaxLevel
-		{
-			get { return 8; }
-		}
-	}
-
-	/* The second thing we do, is to declare the class we create
-	 * as Quest. We must make it persistant using attributes, to
-	 * do this, we derive from the abstract class AbstractQuest
+	/* The first thing we do, is to declare the class we create
+	 * as Quest. To do this, we derive from the abstract class
+	 * AbstractQuest
+	 * 	 
 	 */
-	[Subclass(NameType = typeof(HuntForSlith), ExtendsType = typeof(AbstractQuest))]
+
 	public class HuntForSlith : BaseQuest
 	{
 		/// <summary>
@@ -110,7 +75,26 @@ namespace DOL.GS.Quests.Albion
 		private static GameNPC commanderBurcrif = null;
 		private static GameNPC slith = null;
 		
-		private static RingTemplate slithsTail = null;
+		private static ItemTemplate slithsTail = null;
+		
+		/* We need to define the constructors from the base class here, else there might be problems
+		 * when loading this quest...
+		 */
+		public HuntForSlith() : base()
+		{
+		}
+
+		public HuntForSlith(GamePlayer questingPlayer) : this(questingPlayer, 1)
+		{
+		}
+
+		public HuntForSlith(GamePlayer questingPlayer, int step) : base(questingPlayer, step)
+		{
+		}
+
+		public HuntForSlith(GamePlayer questingPlayer, DBQuest dbQuest) : base(questingPlayer, dbQuest)
+		{
+		}
 
 		/* The following method is called automatically when this quest class
 		 * is loaded. You might notice that this method is the same as in standard
@@ -130,6 +114,8 @@ namespace DOL.GS.Quests.Albion
 		[ScriptLoadedEvent]
 		public static void ScriptLoaded(DOLEvent e, object sender, EventArgs args)
 		{
+			if (!ServerProperties.Properties.LOAD_QUESTS)
+				return;
 			if (log.IsInfoEnabled)
 				log.Info("Quest \"" + questTitle + "\" initializing ...");
 			/* First thing we do in here is to search for the NPCs inside
@@ -144,65 +130,64 @@ namespace DOL.GS.Quests.Albion
 
 			#region defineNPCS
 
-			commanderBurcrif = ResearchQuestObject(typeof(GameMob), WorldMgr.GetRegion(1), eRealm.Albion, "Commander Burcrif") as GameMob;
-			if (commanderBurcrif == null)
+			GameNPC[] npcs = WorldMgr.GetNPCsByName("Commander Burcrif", eRealm.Albion);
+
+			/* Whops, if the npcs array length is 0 then no npc exists in
+				* this users Mob Database, so we simply create one ;-)
+				* else we take the existing one. And if more than one exist, we take
+				* the first ...
+				*/
+			if (npcs.Length == 0)
 			{
-				commanderBurcrif = new GameMob();
+				commanderBurcrif = new GameNPC();
 				commanderBurcrif.Model = 28;
 				commanderBurcrif.Name = "Commander Burcrif";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + commanderBurcrif.Name + ", creating him ...");
 				commanderBurcrif.GuildName = "Part of " + questTitle + " Quest";
 				commanderBurcrif.Realm = (byte) eRealm.Albion;
-				commanderBurcrif.Region = WorldMgr.GetRegion(1);
+				commanderBurcrif.CurrentRegionID = 1;
 
-				GameNpcInventory template = new GameNpcInventory();
-				template.AddItem(eInventorySlot.TwoHandWeapon, new NPCWeapon(26));
-				template.AddItem(eInventorySlot.HeadArmor, new NPCArmor(93));
-				template.AddItem(eInventorySlot.HandsArmor, new NPCArmor(49));
-				template.AddItem(eInventorySlot.FeetArmor, new NPCArmor(50));
-				template.AddItem(eInventorySlot.TorsoArmor, new NPCArmor(662));
-				template.AddItem(eInventorySlot.Cloak, new NPCEquipment(91));
-				template.AddItem(eInventorySlot.LegsArmor, new NPCArmor(47));
-				template.AddItem(eInventorySlot.ArmsArmor, new NPCArmor(48));
-				commanderBurcrif.Inventory = template;
+				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
+				template.AddNPCEquipment(eInventorySlot.TwoHandWeapon, 26);
+				template.AddNPCEquipment(eInventorySlot.HeadArmor, 93);
+				template.AddNPCEquipment(eInventorySlot.HandsArmor, 49);
+				template.AddNPCEquipment(eInventorySlot.FeetArmor, 50);
+				template.AddNPCEquipment(eInventorySlot.TorsoArmor, 662);
+				template.AddNPCEquipment(eInventorySlot.Cloak, 91);
+				template.AddNPCEquipment(eInventorySlot.LegsArmor, 47);
+				template.AddNPCEquipment(eInventorySlot.ArmsArmor, 48);
+				commanderBurcrif.Inventory = template.CloseTemplate();
 				commanderBurcrif.SwitchWeapon(GameLiving.eActiveWeaponSlot.TwoHanded);
 
 				commanderBurcrif.Size = 53;
 				commanderBurcrif.Level = 45;
-				commanderBurcrif.Position = new Point(517270, 495711, 3352);
+				commanderBurcrif.X = 517270;
+				commanderBurcrif.Y = 495711;
+				commanderBurcrif.Z = 3352;
 				commanderBurcrif.Heading = 2093;
-
-				StandardMobBrain newBrain = new StandardMobBrain();
-				newBrain.Body = commanderBurcrif;
-				newBrain.AggroLevel = 100;
-				newBrain.AggroRange = 0;
-				commanderBurcrif.OwnBrain = newBrain;
-
-				if(!commanderBurcrif.AddToWorld())
-				{
-					if (log.IsWarnEnabled)
-						log.Warn("Quest "+questTitle+" abort because a needed region is not in use in this server!");
-					return;
-				}
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(commanderBurcrif);
-			}
 
+				if (SAVE_INTO_DATABASE)
+					commanderBurcrif.SaveIntoDatabase();
+
+				commanderBurcrif.AddToWorld();
+			}
+			else
+				commanderBurcrif = npcs[0];
 
 			#endregion
 
 			#region defineItems
 
 			// item db check
-			slithsTail = GameServer.Database.SelectObject(typeof (RingTemplate), Expression.Eq("Name", "Slith's Tail")) as RingTemplate;
+			slithsTail = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "sliths_tail");
 			if (slithsTail == null)
 			{
-				slithsTail = new RingTemplate();
+				slithsTail = new ItemTemplate();
 				slithsTail.Name = "Slith's Tail";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find "+slithsTail.Name+", creating it ...");
@@ -211,13 +196,24 @@ namespace DOL.GS.Quests.Albion
 				slithsTail.Weight = 10;
 				slithsTail.Model = 515;
 				
-				slithsTail.Value = 30;
-
+				slithsTail.Object_Type = (int) eObjectType.Magical;
+				slithsTail.Item_Type = (int) eEquipmentItems.L_RING;
+				slithsTail.Id_nb = "sliths_tail";
+				slithsTail.Gold = 0;
+				slithsTail.Silver = 0;
+				slithsTail.Copper = 30;
+				slithsTail.IsPickable = true;
 				slithsTail.IsDropable = true;
-				slithsTail.IsSaleable = true;
-				slithsTail.IsTradable = true;
 
-				slithsTail.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 3));
+				slithsTail.Bonus1 = 3;
+				slithsTail.Bonus1Type = (int)eProperty.Dexterity;
+				
+				slithsTail.Quality = 100;
+				slithsTail.Condition = 1000;
+				slithsTail.MaxCondition = 1000;
+				slithsTail.Durability = 1000;
+				slithsTail.MaxDurability = 1000;
+
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -236,16 +232,15 @@ namespace DOL.GS.Quests.Albion
 			* method. This means, the "TalkToXXX" method is called whenever
 			* a player right clicks on him or when he whispers to him.
 			*/
+
+			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
 			
-			GameEventMgr.AddHandler(commanderBurcrif, GameObjectEvent.Interact, new DOLEventHandler(TalkToCommanderBurcrif));
+			GameEventMgr.AddHandler(commanderBurcrif, GameLivingEvent.Interact, new DOLEventHandler(TalkToCommanderBurcrif));
 			GameEventMgr.AddHandler(commanderBurcrif, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToCommanderBurcrif));
 
-			/* Now we add some hooks to trigger the quest dialog reponse. */
-			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(QuestDialogResponse));
-			GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(QuestDialogResponse));
-
-			/* Now we bring to Ydenia the possibility to give this quest to players */
-			QuestMgr.AddQuestDescriptor(commanderBurcrif, typeof(HuntForSlithDescriptor));
+			/* Now we bring to Yetta Fletcher the possibility to give this quest to players */
+			commanderBurcrif.AddQuestToGive(typeof (HuntForSlith));
 
 			if (log.IsInfoEnabled)
 				log.Info("Quest \"" + questTitle + "\" initialized");
@@ -270,14 +265,14 @@ namespace DOL.GS.Quests.Albion
 			/* Removing hooks works just as adding them but instead of 
 			 * AddHandler, we call RemoveHandler, the parameters stay the same
 			 */
-			GameEventMgr.RemoveHandler(commanderBurcrif, GameObjectEvent.Interact, new DOLEventHandler(TalkToCommanderBurcrif));
+			GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
+			GameEventMgr.RemoveHandler(commanderBurcrif, GameLivingEvent.Interact, new DOLEventHandler(TalkToCommanderBurcrif));
 			GameEventMgr.RemoveHandler(commanderBurcrif, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToCommanderBurcrif));
 
-			GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(QuestDialogResponse));
-			GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(QuestDialogResponse));
-
 			/* Now we remove to Yetta Fletcher the possibility to give this quest to players */
-			QuestMgr.RemoveQuestDescriptor(commanderBurcrif, typeof(HuntForSlithDescriptor));
+			commanderBurcrif.RemoveQuestToGive(typeof (HuntForSlith));
 		}
 
 		/* This is the method we declared as callback for the hooks we set to
@@ -292,7 +287,7 @@ namespace DOL.GS.Quests.Albion
 			if (player == null)
 				return;
 
-			if (QuestMgr.CanGiveQuest(typeof(HuntForSlith), player, commanderBurcrif) <= 0)
+			if(commanderBurcrif.CanGiveQuest(typeof (HuntForSlith), player)  <= 0)
 				return;
 
 			//We also check if the player is already doing the quest
@@ -328,10 +323,76 @@ namespace DOL.GS.Quests.Albion
 						
 							//If the player offered his help, we send the quest dialog now!
 						case "interested":
-							QuestMgr.ProposeQuestToPlayer(typeof(HuntForSlith), "Do you accept the Hunt for Slith quest? \n[Levels 4-8]", player, commanderBurcrif);
+							player.Out.SendQuestSubscribeCommand(commanderBurcrif, QuestMgr.GetIDForQuestType(typeof(HuntForSlith)), "Do you accept the Hunt for Slith quest? \n[Levels 4-8]");
 							break;
 					}
 				}
+				else
+				{
+					switch (wArgs.Text)
+					{
+						case "abort":
+							player.Out.SendCustomDialog("Do you really want to abort this quest, \nall items gained during quest will be lost?", new CustomDialogResponse(CheckPlayerAbortQuest));
+							break;
+					}
+				}
+			}
+		}
+
+		protected static void SubscribeQuest(DOLEvent e, object sender, EventArgs args)
+		{
+			QuestEventArgs qargs = args as QuestEventArgs;
+			if (qargs == null)
+				return;
+
+			if (qargs.QuestID != QuestMgr.GetIDForQuestType(typeof(HuntForSlith)))
+				return;
+
+			if (e == GamePlayerEvent.AcceptQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x01);
+			else if (e == GamePlayerEvent.DeclineQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x00);
+		}
+
+		/// <summary>
+		/// This method checks if a player qualifies for this quest
+		/// </summary>
+		/// <returns>true if qualified, false if not</returns>
+		public override bool CheckQuestQualification(GamePlayer player)
+		{
+			// if the player is already doing the quest his level is no longer of relevance
+			if (player.IsDoingQuest(typeof (HuntForSlith)) != null)
+				return true;
+
+			// This checks below are only performed is player isn't doing quest already
+
+			if (player.Level < minimumLevel || player.Level > maximumLevel)
+				return false;
+
+			return true;
+		}
+
+		
+		/* This is our callback hook that will be called when the player clicks
+		 * on any button in the quest offer dialog. We check if he accepts or
+		 * declines here...
+		 */
+
+		private static void CheckPlayerAbortQuest(GamePlayer player, byte response)
+		{
+			HuntForSlith quest = player.IsDoingQuest(typeof (HuntForSlith)) as HuntForSlith;
+
+			if (quest == null)
+				return;
+
+			if (response == 0x00)
+			{
+				SendSystemMessage(player, "Good, no go out there and finish your work!");
+			}
+			else
+			{
+				SendSystemMessage(player, "Aborting Quest " + questTitle + ". You can start over again if you want.");
+				quest.AbortQuest();
 			}
 		}
 
@@ -339,27 +400,28 @@ namespace DOL.GS.Quests.Albion
 		 * on any button in the quest offer dialog. We check if he accepts or
 		 * declines here...
 		 */
-		protected static void QuestDialogResponse(DOLEvent e, object sender, EventArgs args)
+
+		private static void CheckPlayerAcceptQuest(GamePlayer player, byte response)
 		{
-			QuestEventArgs gArgs = args as QuestEventArgs;
+			//We recheck the qualification, because we don't talk to players
+			//who are not doing the quest
+			if(commanderBurcrif.CanGiveQuest(typeof (HuntForSlith), player)  <= 0)
+				return;
 
-			if (gArgs != null && gArgs.QuestType.Equals(typeof(HuntForSlith)))
+			if (player.IsDoingQuest(typeof (HuntForSlith)) != null)
+				return;
+
+			if (response == 0x00)
 			{
-				GamePlayer player = gArgs.Player;
-				if (player == null) return;
+				SendReply(player, "Oh well, if you change your mind, please come back!");
+			}
+			else
+			{
+				//Check if we can add the quest!
+				if (!commanderBurcrif.GiveQuest(typeof (HuntForSlith), player, 1))
+					return;
 
-				if (e == GamePlayerEvent.AcceptQuest)
-				{
-					if (QuestMgr.GiveQuestToPlayer(typeof(HuntForSlith), player, gArgs.Source as GameNPC))
-					{
-						player.Out.SendMessage("Good! This rare snake was last seen to the east. Not far from the walls of Camelot. Best of luck in your endeavor!", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
-					}
-				}
-				else if (e == GamePlayerEvent.DeclineQuest)
-				{
-
-					player.Out.SendMessage("Oh well, if you change your mind, please come back!", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
-				}
+				SendReply(player, "Good! This rare snake was last seen to the east. Not far from the walls of Camelot. Best of luck in your endeavor!");
 			}
 		}
 
@@ -388,9 +450,8 @@ namespace DOL.GS.Quests.Albion
 				{
 					case 1:
 						return "[Step #1] Locate Slith by angering him. Then slay the beast!";
-					default:
-						return "[Step #" + Step + "] No Description entered for this step!";
 				}
+				return base.Description;
 			}
 		}
 
@@ -413,22 +474,23 @@ namespace DOL.GS.Quests.Albion
 						{
 							if(slith == null)
 							{
-								slith = new GameMob();
+								slith = new GameNPC();
 								slith.Model = 31;
 								slith.Name = "Slith";
 								slith.Realm = (byte) eRealm.None;
-								slith.Region = WorldMgr.GetRegion(1);
+								slith.CurrentRegionID = 1;
 
 								slith.Size = 50;
 								slith.Level = 7;
-								slith.Position = new Point(524840, 490529, 2545);
+								slith.X = 524840;
+								slith.Y = 490529;
+								slith.Z = 2545;
 								slith.Heading = 2082;
 
 								StandardMobBrain brain = new StandardMobBrain();  // set a brain witch find a lot mob friend to attack the player
-								brain.Body = slith;
-								brain.AggroLevel = 100;
-								brain.AggroRange = 1000;
 								slith.SetOwnBrain(brain);
+
+								slith.RespawnInterval = 0; // don't respawn when killed
 
 								slith.AddToWorld();
 							}
@@ -436,18 +498,12 @@ namespace DOL.GS.Quests.Albion
 					}
 					else if (gArgs.Target.Name == "Slith")
 					{
+						GiveItem(gArgs.Target, player, slithsTail);
 						if(slith != null) { slith = null; }
 						FinishQuest();
 					}
 				}
 			}
-		}
-
-		public override void FinishQuest()
-		{
-			GiveItemToPlayer(CreateQuestItem(slithsTail));		
-		
-			base.FinishQuest(); //Defined in Quest, changes the state, stores in DB etc ...
 		}
 	}
 }

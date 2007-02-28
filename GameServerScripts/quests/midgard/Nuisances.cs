@@ -123,6 +123,8 @@ namespace DOL.GS.Quests.Midgard
 		[ScriptLoadedEvent]
 		public static void ScriptLoaded(DOLEvent e, object sender, EventArgs args)
 		{
+			if (!ServerProperties.Properties.LOAD_QUESTS)
+				return;
 			if (log.IsInfoEnabled)
 				log.Info("Quest \"" + questTitle + "\" initializing ...");
 			/* First thing we do in here is to search for the NPCs inside
@@ -156,7 +158,7 @@ namespace DOL.GS.Quests.Midgard
 				emptyMagicBox.Model = 602;
 
 				emptyMagicBox.Object_Type = (int) eObjectType.GenericItem;
-				emptyMagicBox.ItemTemplateID = "empty_wodden_magic_box";
+				emptyMagicBox.Id_nb = "empty_wodden_magic_box";
 
 				emptyMagicBox.IsPickable = true;
 				emptyMagicBox.IsDropable = false;
@@ -182,7 +184,7 @@ namespace DOL.GS.Quests.Midgard
 
 				fullMagicBox.Object_Type = (int) eObjectType.GenericItem;
 
-				fullMagicBox.ItemTemplateID = "full_wodden_magic_box";
+				fullMagicBox.Id_nb = "full_wodden_magic_box";
 				fullMagicBox.IsPickable = true;
 				fullMagicBox.IsDropable = false;
 
@@ -211,8 +213,8 @@ namespace DOL.GS.Quests.Midgard
 
 				recruitsShortSword.Type_Damage = (int) eDamageType.Slash;
 				recruitsShortSword.Object_Type = (int) eObjectType.Sword;
-				recruitsShortSword.Item_Type = (int) eInventorySlot.LeftHandWeapon;
-				recruitsShortSword.ItemTemplateID = "recruits_short_sword_mid";
+				recruitsShortSword.Item_Type = (int) eEquipmentItems.LEFT_HAND;
+				recruitsShortSword.Id_nb = "recruits_short_sword_mid";
 				recruitsShortSword.Gold = 0;
 				recruitsShortSword.Silver = 2;
 				recruitsShortSword.Copper = 0;
@@ -229,7 +231,6 @@ namespace DOL.GS.Quests.Midgard
 				recruitsShortSword.Bonus2Type = (int) eResist.Body;
 
 				recruitsShortSword.Quality = 100;
-				recruitsShortSword.MaxQuality = 100;
 				recruitsShortSword.Condition = 1000;
 				recruitsShortSword.MaxCondition = 1000;
 				recruitsShortSword.Durability = 1000;
@@ -260,8 +261,8 @@ namespace DOL.GS.Quests.Midgard
 
 				recruitsStaff.Type_Damage = (int) eDamageType.Slash;
 				recruitsStaff.Object_Type = (int) eObjectType.Staff;
-				recruitsStaff.Item_Type = (int) eInventorySlot.LeftHandWeapon;
-				recruitsStaff.ItemTemplateID = "recruits_staff";
+				recruitsStaff.Item_Type = (int) eEquipmentItems.LEFT_HAND;
+				recruitsStaff.Id_nb = "recruits_staff";
 				recruitsStaff.Gold = 0;
 				recruitsStaff.Silver = 2;
 				recruitsStaff.Copper = 0;
@@ -278,7 +279,6 @@ namespace DOL.GS.Quests.Midgard
 				recruitsStaff.Bonus2Type = (int) eResist.Crush;
 
 				recruitsStaff.Quality = 100;
-				recruitsStaff.MaxQuality = 100;
 				recruitsStaff.Condition = 1000;
 				recruitsStaff.MaxCondition = 1000;
 				recruitsStaff.Durability = 1000;
@@ -293,7 +293,7 @@ namespace DOL.GS.Quests.Midgard
 
 			#endregion
 
-			askefruerArea = askefruerLocation.Region.AddArea(new Area.Circle("Askefruer contamined Area", askefruerLocation.Position, 1500));
+			askefruerArea = WorldMgr.GetRegion(askefruerLocation.RegionID).AddArea(new Area.Circle("Askefruer contamined Area", askefruerLocation.X, askefruerLocation.Y, 0, 1500));
 			askefruerArea.RegisterPlayerEnter(new DOLEventHandler(PlayerEnterAskefruerArea));
 
 			/* Now we add some hooks to the npc we found.
@@ -304,6 +304,9 @@ namespace DOL.GS.Quests.Midgard
 			* a player right clicks on him or when he whispers to him.
 			*/
 			//We want to be notified whenever a player enters the world
+			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
 			GameEventMgr.AddHandler(GamePlayerEvent.GameEntered, new DOLEventHandler(PlayerEnterWorld));
 
 			GameEventMgr.AddHandler(dalikor, GameLivingEvent.Interact, new DOLEventHandler(TalkToDalikor));
@@ -333,11 +336,14 @@ namespace DOL.GS.Quests.Midgard
 				return;
 
 			askefruerArea.UnRegisterPlayerEnter(new DOLEventHandler(PlayerEnterAskefruerArea));
-			askefruerLocation.Region.RemoveArea(askefruerArea);
+			WorldMgr.GetRegion(askefruerLocation.RegionID).RemoveArea(askefruerArea);
 
 			/* Removing hooks works just as adding them but instead of 
 			 * AddHandler, we call RemoveHandler, the parameters stay the same
 			 */
+			GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
 			GameEventMgr.RemoveHandler(GamePlayerEvent.GameEntered, new DOLEventHandler(PlayerEnterWorld));
 
 			GameEventMgr.RemoveHandler(dalikor, GameLivingEvent.Interact, new DOLEventHandler(TalkToDalikor));
@@ -368,18 +374,17 @@ namespace DOL.GS.Quests.Midgard
 
 		protected virtual void CreateAskefruer()
 		{
-			askefruer = new GameMob();
+			askefruer = new GameNPC();
 			askefruer.Model = 678;
 			askefruer.Name = "Fallen Askefruer";
 			askefruer.GuildName = "Part of " + questTitle + " Quest";
 			askefruer.Realm = (byte) eRealm.None;
-			askefruer.Region = askefruerLocation.Region;
+			askefruer.CurrentRegionID = askefruerLocation.RegionID;
 			askefruer.Size = 50;
 			askefruer.Level = 4;
-			Point pos = askefruerLocation.Position;
-			pos.X += Util.Random(-150, 150);
-			pos.Y += Util.Random(-150, 150);
-			askefruer.Position = pos;
+			askefruer.X = askefruerLocation.X + Util.Random(-150, 150);
+			askefruer.Y = askefruerLocation.Y + Util.Random(-150, 150);
+			askefruer.Z = askefruerLocation.Z;
 			askefruer.Heading = askefruerLocation.Heading;
 
 			StandardMobBrain brain = new StandardMobBrain();
@@ -411,9 +416,9 @@ namespace DOL.GS.Quests.Midgard
 				UseSlotEventArgs uArgs = (UseSlotEventArgs) args;
 
 				InventoryItem item = player.Inventory.GetItem((eInventorySlot)uArgs.Slot);
-				if (item != null && item.ItemTemplateID == emptyMagicBox.ItemTemplateID)
+				if (item != null && item.Id_nb == emptyMagicBox.Id_nb)
 				{
-					if (player.Position.CheckSquareDistance(quest.askefruer.Position, 500*500))
+					if (WorldMgr.GetDistance(player, quest.askefruer) < 500)
 					{
 						foreach (GamePlayer visPlayer in quest.askefruer.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 						{
@@ -505,7 +510,6 @@ namespace DOL.GS.Quests.Midgard
 					else if (quest.Step == 3)
 					{
 						dalikor.SayTo(player, "Hrm...Fallen Askefruer. This is what has been causing us our problems? Interesting. I want to thank you recruit for your hard work in helping us solve this problem. A [reward] is in store for you I think.");
-
 					}
 					return;
 				}
@@ -524,7 +528,7 @@ namespace DOL.GS.Quests.Midgard
 							break;
 							//If the player offered his "help", we send the quest dialog now!
 						case "find":
-							player.Out.SendCustomDialog("Will you help out Mularn and discover who or what is making this noise?", new CustomDialogResponse(CheckPlayerAcceptQuest));
+							player.Out.SendQuestSubscribeCommand(dalikor, QuestMgr.GetIDForQuestType(typeof(Nuisances)), "Will you help out Mularn and discover who or what is making this noise?");
 							break;
 					}
 				}
@@ -546,6 +550,21 @@ namespace DOL.GS.Quests.Midgard
 					}
 				}
 			}
+		}
+
+		protected static void SubscribeQuest(DOLEvent e, object sender, EventArgs args)
+		{
+			QuestEventArgs qargs = args as QuestEventArgs;
+			if (qargs == null)
+				return;
+
+			if (qargs.QuestID != QuestMgr.GetIDForQuestType(typeof(Nuisances)))
+				return;
+
+			if (e == GamePlayerEvent.AcceptQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x01);
+			else if (e == GamePlayerEvent.DeclineQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x00);
 		}
 
 		/// <summary>
@@ -672,7 +691,7 @@ namespace DOL.GS.Quests.Midgard
 			if (Step == 2 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == dalikor.Name && gArgs.Item.ItemTemplateID == fullMagicBox.ItemTemplateID)
+				if (gArgs.Target.Name == dalikor.Name && gArgs.Item.Id_nb == fullMagicBox.Id_nb)
 				{
 					RemoveItem(dalikor, m_questPlayer, fullMagicBox);
 

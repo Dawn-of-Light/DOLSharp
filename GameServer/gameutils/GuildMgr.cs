@@ -18,15 +18,12 @@
  */
 
 using System;
-using System.Collections.Generic;
+using System.Collections;
 using System.Collections.Specialized;
 using System.Reflection;
 using DOL.Database;
-using DOL.Database.DataAccessInterfaces;
-using DOL.Database.DataTransferObjects;
 using DOL.Events;
 using DOL.GS.PacketHandler;
-using NHibernate.Expression;
 using log4net;
 
 namespace DOL.GS
@@ -42,72 +39,306 @@ namespace DOL.GS
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		#region Declarations
 		/// <summary>
 		/// ArrayList of all guilds in the game
 		/// </summary>
-		static private readonly IList<Guild> m_allGuilds = new List<Guild>();
+		static private readonly HybridDictionary m_guilds = new HybridDictionary();
+		
+		/// <summary>
+		/// ArrayList of all GuildIDs to GuildNames
+		/// </summary>
+		static private readonly HybridDictionary m_guildids = new HybridDictionary();		
+		
+		/// <summary>
+		/// ArrayList of all guilds in the game
+		/// </summary>
+		static private ushort m_lastID = 0;
 
 		/// <summary>
 		/// The cost in copper to reemblem the guild
 		/// </summary>
-		public const long COST_RE_EMBLEM = 2000000; //200 gold
+		public const long COST_RE_EMBLEM = 1000000; //200 gold
 
 		/// <summary>
-		/// Returns a list of all guilds
+		/// Adds a guild to the list of guilds
 		/// </summary>
-		/// <returns>ArrayList of guilds</returns>
-		public static IList<Guild> AllGuilds
+		/// <param name="guild">The guild to add</param>
+		/// <returns>True if the function succeeded, otherwise false</returns>
+		public static bool AddGuild(Guild guild)
 		{
-			get { return m_allGuilds; }
-		}
-		#endregion
+			if (guild == null)
+				return false;
 
-		#region CreateGuild / LoadAllGuilds
+			lock (m_guilds.SyncRoot)
+			{
+				if (!m_guilds.Contains(guild.Name))
+				{
+					m_guilds.Add(guild.Name, guild);
+					m_guildids.Add(guild.GuildID, guild.Name);
+					guild.ID = ++m_lastID;
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		/// <summary>
+		/// Removes a guild from the manager
+		/// </summary>
+		/// <param name="guild">the guild</param>
+		/// <returns></returns>
+		public static bool RemoveGuild(Guild guild)
+		{
+			if (guild == null)
+				return false;
+
+			guild.RemoveAllMembers();
+			lock (m_guilds.SyncRoot)
+			{
+				m_guilds.Remove(guild.Name);
+				m_guildids.Remove(guild.GuildID);
+			}
+			return true;
+		}
+
+		/// <summary>
+		/// Checks if a guild with guildName exists
+		/// </summary>
+		/// <param name="guildName">The guild to check</param>
+		/// <returns>true or false</returns>
+		public static bool DoesGuildExist(string guildName)
+		{
+			lock (m_guilds.SyncRoot)
+			{
+				if (m_guilds.Contains(guildName))
+					return true;
+				return false;
+			}
+		}
 
 		/// <summary>
 		/// Creates a new guild
 		/// </summary>
 		/// <returns>GuildEntry</returns>
-		public static Guild CreateGuild(string guildName)
+		public static Guild CreateGuild(GamePlayer creator, string guildName)
 		{
+			if (log.IsDebugEnabled)
+				log.Debug("Create guild; guild name=\"" + guildName + "\"");
 			try
-			{	
-				if(GetGuildByName(guildName) != null) return null; // Another guild with that name
-			
-				if (log.IsDebugEnabled)
-					log.Debug("Creating new guild ("+guildName+")");
+			{
+				// Does guild exist, if so return null
+				if (DoesGuildExist(guildName) == true)
+				{
+					if (creator != null)
+						creator.Out.SendMessage(guildName + " already exists!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					return null;
+				}
 
+				// Check if client exists
+				if (creator == null)
+					return null;
+
+
+				//create table of rank in guild
 				Guild newguild = new Guild();
-				newguild.GuildName = guildName;
-				newguild.BountyPoints = 0;
-				newguild.RealmPoints = 0;
-				newguild.MeritPoints = 0;
-				newguild.Due = false;
-				newguild.TotalMoney = 0;
-				newguild.Level = 0;
-				newguild.Emblem = 0;
-				newguild.Motd = "Welcome to the new guild "+newguild.GuildName+".";
-				newguild.OMotd = "";
-				newguild.Webpage = "";
-				newguild.Email = "";
-				newguild.Alliance = new Alliance();			// create a new empty alliance
-				newguild.Alliance.AMotd = "Your guild have no alliances.";
-				newguild.Alliance.AllianceLeader = newguild;
-				newguild.Alliance.AllianceGuilds.Add(newguild);
-
-				GameServer.Database.AddNewObject(newguild);	// save the new guild and its empty alliance
+				newguild.theGuildDB = new DBGuild();
+				newguild.Name = guildName;
+				newguild.theGuildDB.GuildName = guildName;
+				newguild.GuildID = System.Guid.NewGuid().ToString(); //Assume this is unique, which I don't like, but it seems to be commonly used elsewhere in the code.
+				newguild.theGuildDB.GuildID = newguild.GuildID;
+				CreateRanks(newguild);
 				
-				m_allGuilds.Add(newguild);
-
+				AddGuild(newguild);				
+				GameServer.Database.AddNewObject(newguild.theGuildDB);
 				return newguild;
 			}
-			catch(Exception e)
+			catch (Exception e)
 			{
 				if (log.IsErrorEnabled)
 					log.Error("CreateGuild", e);
 				return null;
 			}
+		}
+		public static void CreateRanks(Guild newguild)
+		{
+			DBRank rank;
+			for (int i = 0; i < 10; i++)
+			{
+				rank = new DBRank();
+				rank.AcHear = false;
+				rank.AcSpeak = false;
+				rank.Alli = false;
+				rank.Claim = false;
+				rank.Emblem = false;
+				rank.GcHear = true;
+				rank.GcSpeak = false;
+				rank.GuildID = newguild.GuildID;
+				rank.Invite = false;
+				rank.OcHear = false;
+				rank.OcSpeak = false;
+				rank.Promote = false;
+				rank.RankLevel = (byte)i;
+				rank.Release = false;
+				rank.Remove = false;
+				rank.Title = "";
+				rank.Upgrade = false;
+				rank.View = false;
+
+				if (i < 9)
+				{
+					rank.GcSpeak = true;
+					rank.View = true;
+					if (i < 8)
+					{
+						rank.Emblem = true;
+						if (i < 7)
+						{
+							rank.AcHear = true;
+							if (i < 6)
+							{
+								rank.AcSpeak = true;
+								if (i < 5)
+								{
+									rank.OcHear = true;
+									if (i < 4)
+									{
+										rank.OcSpeak = true;
+										if (i < 3)
+										{
+											rank.Invite = true;
+											rank.Promote = true;
+
+											if (i < 2)
+											{
+												rank.Release = true;
+												rank.Upgrade = true;
+												rank.Claim = true;
+												if (i < 1)
+												{
+													rank.Remove = true;
+													rank.Alli = true;
+
+												}
+
+											}
+
+										}
+
+									}
+
+								}
+
+							}
+
+						}
+
+					}
+
+				}
+				GameServer.Database.AddNewObject(rank);
+				GameServer.Database.SaveObject(rank);
+				newguild.theGuildDB.Ranks[i] = rank;
+			}
+		}
+
+		/// <summary>
+		/// Delete's a guild
+		/// </summary>
+		/// <returns>true or false</returns>
+		public static bool DeleteGuild(string guildName)
+		{
+			try
+			{
+				Guild removeGuild = GetGuildByName(guildName);
+				// Does guild exist, if not return null
+				if (removeGuild == null)
+				{
+					return false;
+				}
+
+				DBGuild[] guilds = (DBGuild[])GameServer.Database.SelectObjects(typeof(DBGuild), "GuildName='" + GameServer.Database.Escape(guildName) + "'");
+				foreach (DBGuild guild in guilds)
+				{
+					foreach (Character cha in GameServer.Database.SelectObjects(typeof(Character), "GuildID = '" + GameServer.Database.Escape(guild.GuildID) + "'"))
+						cha.GuildID = "";
+					GameServer.Database.DeleteObject(guild);
+				}
+
+				lock (removeGuild.ListOnlineMembers())
+				{
+					foreach (GamePlayer ply in removeGuild.ListOnlineMembers())
+					{
+						ply.Guild = null;
+						ply.GuildID = "";
+						ply.GuildName = "";
+						ply.GuildRank = null;
+					}
+				}
+
+				RemoveGuild(removeGuild);
+
+				return true;
+			}
+			catch (Exception e)
+			{
+				if (log.IsErrorEnabled)
+					log.Error("DeleteGuild", e);
+				return false;
+			}
+		}
+
+		/// <summary>
+		/// Returns a guild according to the matching name
+		/// </summary>
+		/// <returns>Guild</returns>
+		public static Guild GetGuildByName(string guildName)
+		{
+			if (guildName == null) return null;
+			lock (m_guilds.SyncRoot)
+			{
+				return (Guild)m_guilds[guildName];
+			}
+		}
+
+		/// <summary>
+		/// Returns a guild according to the matching database ID.
+		/// </summary>
+		/// <returns>Guild</returns>
+		public static Guild GetGuildByGuildID(string guildid)
+		{
+			if(guildid == null) return null;
+			
+			lock (m_guildids.SyncRoot)
+			{
+				if(m_guildids[guildid] == null) return null;
+				
+				lock(m_guilds.SyncRoot)
+				{
+					return (Guild)m_guilds[m_guildids[guildid]];
+				}
+			}
+		}
+
+		/// <summary>
+		/// Returns a database ID for a matching guild name.
+		/// </summary>
+		/// <returns>Guild</returns>
+		public static string GuildNameToGuildID(string guildName)
+		{
+			Guild g = GetGuildByName(guildName);
+			if (g == null)
+				return "";
+			return g.GuildID;
+		}
+
+		/// <summary>
+		/// Returns a list of guilds by their status
+		/// </summary>
+		/// <returns>ArrayList of guilds</returns>
+		public static ICollection ListGuild()
+		{
+			return m_guilds.Values;
 		}
 
 		/// <summary>
@@ -115,64 +346,80 @@ namespace DOL.GS
 		/// </summary>
 		public static bool LoadAllGuilds()
 		{
-			IList<GuildEntity> guilds = GameServer.DatabaseNew.Using<IGuildDao>().SelectAll();
-
-			foreach (GuildEntity dbGuild in guilds)
+			lock (m_guilds.SyncRoot)
 			{
-				Guild myguild = new Guild(dbGuild);// not ok because missing alliance to load 
-				if (!m_allGuilds.Contains(myguild))
+				m_guilds.Clear(); //clear guild list before loading!
+			}
+			m_lastID = 0;
+
+			//load guilds
+			DataObject[] objs = GameServer.Database.SelectAllObjects(typeof(DBGuild));
+			foreach (DataObject obj in objs)
+			{
+				Guild myguild = new Guild();
+				myguild.LoadFromDatabase(obj);
+				AddGuild(myguild);
+				if (((DBGuild)obj).Ranks.Length == 0)
+					CreateRanks(myguild);
+			}
+
+			//load alliances
+			objs = GameServer.Database.SelectAllObjects(typeof(DBAlliance));
+			foreach (DBAlliance dball in objs)
+			{
+				Alliance myalliance = new Alliance();
+				myalliance.LoadFromDatabase(dball);
+				if (dball != null && dball.DBguilds != null)
 				{
-					m_allGuilds.Add(myguild);
+					foreach (DBGuild mydbgui in dball.DBguilds)
+					{
+						Guild gui = GetGuildByName(mydbgui.GuildName);
+						myalliance.Guilds.Add(gui);
+						gui.alliance = myalliance;
+					}
 				}
-			}
-
-			IList<AllianceEntity> alliances = GameServer.DatabaseNew.Using<IAllianceDao>().SelectAll();
-			IDictionary<int, Alliance> allianceList = new Dictionary<int, Alliance>();
-			foreach (AllianceEntity dballi in alliances)
-			{
-				Alliance myalli = new Alliance(dballi); // ok here guild ever loaded
-				allianceList.Add(dballi.Id, myalli);
-			}
-
-			//second pass to put alliance
-			foreach (GuildEntity dbGuild in guilds)
-			{
-				Guild myguilde = GetGuildById(dbGuild.Id);
-				myguilde.Alliance = allianceList[dbGuild.Alliance];
 			}
 
 			return true;
 		}
-		#endregion
 
-		#region GetGuildByName
 		/// <summary>
-		/// Returns a guild according to the matching name
+		/// Save all guild into database
 		/// </summary>
-		/// <returns>Guild</returns>
-		public static Guild GetGuildByName(string guildName)
+		public static void SaveAllGuilds()
 		{
-			foreach (Guild guild in m_allGuilds)
+			if (log.IsDebugEnabled)
+				log.Debug("Saving all guilds...");
+			try
 			{
-				if (guild.GuildName == guildName)
-					return guild;
+				lock (m_guilds.SyncRoot)
+				{
+					foreach (Guild g in m_guilds.Values)
+					{
+						g.SaveIntoDatabase();
+					}
+				}
 			}
-			return null;
+			catch (Exception e)
+			{
+				if (log.IsErrorEnabled)
+					log.Error("Error saving guilds.", e);
+			}
 		}
-		#endregion
-
-		#region Guild emblem functions
 		/// <summary>
 		/// Returns true if a guild is using the emblem
 		/// </summary>
 		/// <param name="emblem"></param>
 		/// <returns></returns>
-		public static bool IsEmblemUsed(ushort emblem)
+		public static bool IsEmblemUsed(int emblem)
 		{
-			foreach (Guild guild in m_allGuilds)
+			lock (m_guilds.SyncRoot)
 			{
-				if (guild.Emblem == emblem)
-					return true;
+				foreach (Guild guild in m_guilds.Values)
+				{
+					if (guild.theGuildDB.Emblem == emblem)
+						return true;
+				}
 			}
 			return false;
 		}
@@ -183,25 +430,33 @@ namespace DOL.GS
 		/// <param name="player"></param>
 		/// <param name="oldemblem"></param>
 		/// <param name="newemblem"></param>
-		public static void ChangeEmblem(GamePlayer player, ushort oldemblem, ushort newemblem)
+		public static void ChangeEmblem(GamePlayer player, int oldemblem, int newemblem)
 		{
-			player.Guild.Emblem = newemblem;
-			GameServer.Database.SaveObject(player.Guild);
+			player.Guild.theGuildDB.Emblem = newemblem;
+			GameServer.Database.SaveObject(player.Guild.theGuildDB);
 			if (oldemblem != 0)
 			{
-				player.RemoveMoney(COST_RE_EMBLEM);
+				player.RemoveMoney(COST_RE_EMBLEM, null);
+				DataObject[] objs = GameServer.Database.SelectObjects(typeof(InventoryItem), "Emblem = " + GameServer.Database.Escape(oldemblem.ToString()));
+				foreach (InventoryItem item in objs)
+				{
+					item.Emblem = newemblem;
+					GameServer.Database.SaveObject(item);
+				}
 			}
 		}
-		#endregion
 
-		public static Guild GetGuildById(int index)
+		public static ArrayList GetAllGuilds()
 		{
-			foreach (Guild guild in m_allGuilds)
+			ArrayList guilds = new ArrayList();
+			lock (m_guilds.SyncRoot)
 			{
-				if (guild.GuildID == index)
-					return guild;
+				foreach (Guild guild in m_guilds.Values)
+				{
+					guilds.Add(guild);
+				}
 			}
-			return null;
+			return guilds;
 		}
 	}
 }

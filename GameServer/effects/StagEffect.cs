@@ -27,7 +27,7 @@ namespace DOL.GS.Effects
 	/// <summary>
 	/// The helper class for the stag ability
 	/// </summary>
-	public class StagEffect : IGameEffect
+	public class StagEffect : StaticEffect, IGameEffect
 	{
 		/*
         1.42
@@ -90,22 +90,22 @@ namespace DOL.GS.Effects
 			m_ability = ab;
 			m_player = player;
 
-			if (!(player.Alive))
+			if (!(player.IsAlive))
 			{
 				player.Out.SendMessage("You cannot use this ability while Dead!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
-			if (player.Mez)
+			if (player.IsMezzed)
 			{
 				player.Out.SendMessage("You cannot use this ability while Mezzed!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
-			if (player.Stun)
+			if (player.IsStunned)
 			{
 				player.Out.SendMessage("You cannot use this ability while Stunned!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
-			if (player.Sitting)
+			if (player.IsSitting)
 			{
 				player.Out.SendMessage("You cannot use this ability while Sitting!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
@@ -122,7 +122,7 @@ namespace DOL.GS.Effects
 			if (m_player.Health > m_player.MaxHealth) m_player.Health = m_player.MaxHealth;
 			m_player.Out.SendUpdatePlayer();
 
-			foreach (GamePlayer visiblePlayer in m_player.GetInRadius(typeof(GamePlayer), WorldMgr.VISIBILITY_DISTANCE))
+			foreach (GamePlayer visiblePlayer in m_player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
 				visiblePlayer.Out.SendEmoteAnimation(m_player, eEmote.StagFrenzy);
 			}
@@ -140,12 +140,12 @@ namespace DOL.GS.Effects
 		{
 			StopTimers();
 
-			m_player.Model = (ushort)m_player.CreationModel;
+			m_player.Model = (ushort)m_player.PlayerCharacter.CreationModel;
 
 			double m_amountPercent = m_amount / m_player.GetModified(eProperty.MaxHealth);
 			int playerHealthPercent = m_player.HealthPercent;
 			m_player.BuffBonusCategory1[(int)eProperty.MaxHealth] -= m_amount;
-			if (m_player.Alive)
+			if (m_player.IsAlive)
 				m_player.Health = (int)Math.Max(1, 0.01 * m_player.MaxHealth * playerHealthPercent);
 			m_player.Out.SendUpdatePlayer();
 

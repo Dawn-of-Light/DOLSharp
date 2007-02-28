@@ -17,10 +17,12 @@
  *
  */
 using System.Reflection;
-using DOL.GS.Database;
+
+using DOL.Database;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 using DOL.GS.PropertyCalc;
+
 using log4net;
 
 namespace DOL.GS.Spells
@@ -32,17 +34,12 @@ namespace DOL.GS.Spells
 	public abstract class PropertyChangingSpell : SpellHandler
 	{
 		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
-		/// <summary>
 		/// Execute property changing spell
 		/// </summary>
 		/// <param name="target"></param>
-		public override void FinishSpellCast(GameLivingBase target)
+		public override void FinishSpellCast(GameLiving target)
 		{
-			m_caster.ChangeMana(null, -CalculateNeededPower(target));
+			m_caster.Mana -= CalculateNeededPower(target);
 			base.FinishSpellCast(target);
 		}
 
@@ -53,17 +50,20 @@ namespace DOL.GS.Spells
 		public override void OnEffectStart(GameSpellEffect effect)
 		{
 			IPropertyIndexer bonuscat = GetBonusCategory(effect.Owner, BonusCategory1);
-			bonuscat[(int) Property1] += (int) (Spell.Value*effect.Effectiveness);
+
+			int amount = (int)(Spell.Value * effect.Effectiveness);
+
+			bonuscat[(int)Property1] += amount;
 
 			if (Property2 != eProperty.Undefined)
 			{
 				bonuscat = GetBonusCategory(effect.Owner, BonusCategory2);
-				bonuscat[(int) Property2] += (int) (Spell.Value*effect.Effectiveness);
+				bonuscat[(int)Property2] += amount;
 			}
 			if (Property3 != eProperty.Undefined)
 			{
 				bonuscat = GetBonusCategory(effect.Owner, BonusCategory3);
-				bonuscat[(int) Property3] += (int) (Spell.Value*effect.Effectiveness);
+				bonuscat[(int)Property3] += amount;
 			}
 
 			SendUpdates(effect.Owner);
@@ -80,7 +80,15 @@ namespace DOL.GS.Spells
 			//messages are after buff and after "Your xxx has increased." messages
 			MessageToLiving(effect.Owner, Spell.Message1, toLiving);
 			Message.SystemToArea(effect.Owner, Util.MakeSentence(Spell.Message2, effect.Owner.GetName(0, false)), toOther, effect.Owner);
+
+			if (ServerProperties.Properties.BUFF_RANGE > 0 && effect.Spell.Concentration > 0 && effect.SpellHandler.HasPositiveEffect && effect.Owner != effect.SpellHandler.Caster)
+			{
+				m_buffCheckAction = new BuffCheckAction(effect.SpellHandler.Caster, effect.Owner, effect);
+				m_buffCheckAction.Start(BuffCheckAction.BUFFCHECKINTERVAL);
+			}
 		}
+
+		BuffCheckAction m_buffCheckAction = null;
 
 		/// <summary>
 		/// When an applied effect expires.
@@ -113,6 +121,11 @@ namespace DOL.GS.Spells
 
 			SendUpdates(effect.Owner);
 
+			if (m_buffCheckAction != null)
+			{
+				m_buffCheckAction.Stop();
+				m_buffCheckAction = null;
+			}
 			return 0;
 		}
 
@@ -190,9 +203,99 @@ namespace DOL.GS.Spells
 			get { return 1; }
 		}
 
+		public override void OnEffectRestored(GameSpellEffect effect, int[] vars)
+		{
+			IPropertyIndexer bonuscat = GetBonusCategory(effect.Owner, BonusCategory1);
+			bonuscat[(int)Property1] += vars[1];
+
+			if (Property2 != eProperty.Undefined)
+			{
+				bonuscat = GetBonusCategory(effect.Owner, BonusCategory2);
+				bonuscat[(int)Property2] += vars[1];
+			}
+			if (Property3 != eProperty.Undefined)
+			{
+				bonuscat = GetBonusCategory(effect.Owner, BonusCategory3);
+				bonuscat[(int)Property3] += vars[1];
+			}
+			SendUpdates(effect.Owner);
+		}
+
+		public override int OnRestoredEffectExpires(GameSpellEffect effect, int[] vars, bool noMessages)
+		{
+			if (!noMessages && Spell.Pulse == 0)
+			{
+				MessageToLiving(effect.Owner, Spell.Message3, eChatType.CT_SpellExpires);
+				Message.SystemToArea(effect.Owner, Util.MakeSentence(Spell.Message4, effect.Owner.GetName(0, false)), eChatType.CT_SpellExpires, effect.Owner);
+			}
+
+			IPropertyIndexer bonuscat = GetBonusCategory(effect.Owner, BonusCategory1);
+			bonuscat[(int)Property1] -= vars[1];
+
+			if (Property2 != eProperty.Undefined)
+			{
+				bonuscat = GetBonusCategory(effect.Owner, BonusCategory2);
+				bonuscat[(int)Property2] -= vars[1];
+			}
+			if (Property3 != eProperty.Undefined)
+			{
+				bonuscat = GetBonusCategory(effect.Owner, BonusCategory3);
+				bonuscat[(int)Property3] -= vars[1];
+			}
+			SendUpdates(effect.Owner);
+
+			return 0;
+
+		}
+
+		public override PlayerXEffect getSavedEffect(GameSpellEffect e)
+		{
+			PlayerXEffect eff = new PlayerXEffect();
+			eff.Var1 = Spell.ID;
+			eff.Duration = e.RemainingTime;
+			eff.IsHandler = true;
+			eff.Var2 = (int)(Spell.Value * e.Effectiveness);
+			eff.SpellLine = SpellLine.KeyName;
+			return eff;
+
+		}
+
 		// constructor
 		public PropertyChangingSpell(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line)
 		{
+		}
+	}
+
+	public class BuffCheckAction : RegionAction 
+	{
+		public const int BUFFCHECKINTERVAL = 60000;//60 seconds
+
+		private GameLiving m_caster = null;
+		private GameLiving m_owner = null;
+		private GameSpellEffect m_effect = null;
+
+		public BuffCheckAction(GameLiving caster, GameLiving owner, GameSpellEffect effect)
+			: base(caster)
+		{
+			m_caster = caster;
+			m_owner = owner;
+			m_effect = effect;
+		}
+
+		/// <summary>
+		/// Called on every timer tick
+		/// </summary>
+		protected override void OnTick()
+		{
+			if (m_caster == null ||
+				m_owner == null ||
+				m_effect == null)
+				return;
+
+			if (WorldMgr.GetDistance(m_caster, m_owner) > ServerProperties.Properties.BUFF_RANGE)
+				m_effect.Cancel(false);
+			else
+				Start(BUFFCHECKINTERVAL);
 		}
 	}
 }

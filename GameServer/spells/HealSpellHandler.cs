@@ -18,8 +18,8 @@
  */
 using System;
 using System.Collections;
-using DOL.GS.Database;
 using DOL.GS.PacketHandler;
+using DOL.GS.RealmAbilities;
 
 namespace DOL.GS.Spells
 {
@@ -30,12 +30,12 @@ namespace DOL.GS.Spells
 	public class HealSpellHandler : SpellHandler
 	{
 		// constructor
-		public HealSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
+		public HealSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 		/// <summary>
 		/// Execute heal spell
 		/// </summary>
 		/// <param name="target"></param>
-		public override void StartSpell(GameLivingBase target)
+		public override void StartSpell(GameLiving target)
 		{
 			IList targets = SelectTargets(target);
 			if (targets.Count <= 0) return;
@@ -45,15 +45,8 @@ namespace DOL.GS.Spells
 			int maxHeal;
 			CalculateHealVariance(out minHeal, out maxHeal);
 
-			foreach(GameLivingBase spellTarget in targets)
+			foreach (GameLiving healTarget in targets)
 			{
-				GameLiving healTarget = spellTarget as GameLiving;
-				if(healTarget == null)
-				{
-					MessageToCaster("The spell fails to affect "+ spellTarget.GetName(0, false) +"!", eChatType.CT_SpellResisted);
-					continue;
-				}
-
 				int heal = Util.Random(minHeal, maxHeal);
 				if (healTarget.IsDiseased)
 				{
@@ -65,9 +58,9 @@ namespace DOL.GS.Spells
 
 			// group heals seem to use full power even if no heals
 			if (!healed && Spell.Target == "Realm")
-				m_caster.ChangeMana(null, -CalculateNeededPower(target) >> 1); // only 1/2 power if no heal
+				m_caster.Mana -= CalculateNeededPower(target) >> 1; // only 1/2 power if no heal
 			else
-				m_caster.ChangeMana(null, -CalculateNeededPower(target));
+				m_caster.Mana -= CalculateNeededPower(target);
 
 			// send animation for non pulsing spells only
 			if (Spell.Pulse == 0)
@@ -75,10 +68,8 @@ namespace DOL.GS.Spells
 				if (healed)
 				{
 					// send animation on all targets if healed
-					foreach(GameLivingBase healTarget in targets)
-					{
-						if(healTarget is GameLiving) SendEffectAnimation((GameLiving)healTarget, 0, false, 1);
-					}
+					foreach (GameLiving healTarget in targets)
+						SendEffectAnimation(healTarget, 0, false, 1);
 				}
 				else
 				{
@@ -98,39 +89,71 @@ namespace DOL.GS.Spells
 		/// <returns>true if heal was done</returns>
 		public virtual bool HealTarget(GameLiving target, int amount)
 		{
-			if (target==null || target.ObjectState!=eObjectState.Active) return false;
+			if (target == null || target.ObjectState != GameLiving.eObjectState.Active) return false;
 
-			if (!target.Alive) 
+			if (!target.IsAlive)
 			{
 				//"You cannot heal the dead!" sshot550.tga
 				MessageToCaster(target.GetName(0, true) + " is dead!", eChatType.CT_SpellResisted);
 				return false;
 			}
+			amount = (int)(amount * 1.00);
+			//moc heal decrease
+			double mocFactor = 1.0;
+			Effects.MasteryofConcentrationEffect moc = (Effects.MasteryofConcentrationEffect)Caster.EffectList.GetOfType(typeof(Effects.MasteryofConcentrationEffect));
+			if (moc != null)
+			{
+				GamePlayer playerCaster = Caster as GamePlayer;
+				RealmAbility ra = playerCaster.GetAbility(typeof(MasteryofConcentrationAbility)) as RealmAbility;
+				if (ra != null)
+					mocFactor = System.Math.Round((double)ra.Level * 25 / 100, 2);
+				amount = (int)Math.Round(amount * mocFactor);
+			}
 
-			int heal = target.ChangeHealth(Caster, amount, true);
+			int criticalvalue = 0;
 
-			if(heal == 0) 
+			RAPropertyEnhancer critRA = Caster.GetAbility(typeof(WildHealingAbility)) as RAPropertyEnhancer;
+			int criticalchance = 0;
+			if (critRA != null)
+				criticalchance += critRA.Amount;
+
+			critRA = Caster.GetAbility(typeof(DualThreatAbility)) as RAPropertyEnhancer;
+			if (critRA != null)
+				criticalchance += critRA.Amount;
+
+			if (Util.Chance(criticalchance))
+				criticalvalue = Util.Random(amount / 10, amount / 2 + 1);
+
+			amount += criticalvalue;
+			int mod = amount * Caster.GetModified(eProperty.HealingEffectiveness) / 100;
+			amount += mod;
+
+			int heal = target.ChangeHealth(Caster, GameLiving.eHealthChangeType.Spell, amount);
+
+			if (heal == 0)
 			{
 				if (Spell.Pulse == 0)
 				{
 					if (target == m_caster) MessageToCaster("You are fully healed.", eChatType.CT_SpellResisted);
-					else MessageToCaster(target.GetName(0, true)+" is fully healed.", eChatType.CT_SpellResisted);
+					else MessageToCaster(target.GetName(0, true) + " is fully healed.", eChatType.CT_SpellResisted);
 				}
 				return false;
 			}
 
-			if(m_caster == target)
+			if (m_caster == target)
 			{
-				MessageToCaster("You heal yourself for "+heal+" hit points.", eChatType.CT_Spell);
-				if(heal < amount)
+				MessageToCaster("You heal yourself for " + heal + " hit points.", eChatType.CT_Spell);
+				if (heal < amount)
 					MessageToCaster("You are fully healed.", eChatType.CT_Spell);
 			}
 			else
 			{
 				MessageToCaster("You heal " + target.GetName(0, false) + " for " + heal + " hit points!", eChatType.CT_Spell);
 				MessageToLiving(target, "You are healed by " + m_caster.GetName(0, false) + " for " + heal + " hit points.", eChatType.CT_Spell);
-				if(heal < amount)
-					MessageToCaster(target.GetName(0, true)+" is fully healed.", eChatType.CT_Spell);
+				if (heal < amount)
+					MessageToCaster(target.GetName(0, true) + " is fully healed.", eChatType.CT_Spell);
+				if (heal > 0 && criticalvalue > 0)
+					MessageToCaster("Your heal criticals for an extra " + criticalvalue + " amount of hit points!", eChatType.CT_Spell);
 			}
 
 			return true;
@@ -150,28 +173,28 @@ namespace DOL.GS.Spells
 			if (spellValue < 0)
 			{
 				if (casterPlayer != null)
-					spellValue = (spellValue / -100.0) * casterPlayer.CalculateMaxHealth(casterPlayer.Level, casterPlayer.BaseConstitution);
+					spellValue = (spellValue / -100.0) * casterPlayer.CalculateMaxHealth(casterPlayer.Level, casterPlayer.GetBaseStat(eStat.CON));
 				else
 					spellValue = (spellValue / -100.0) * m_caster.MaxHealth;
 
-				min = max = (int) spellValue;
+				min = max = (int)spellValue;
 				return;
 			}
 
-			int upperLimit = (int) (spellValue * 1.25);
+			int upperLimit = (int)(spellValue * 1.25);
 			if (upperLimit < 1)
 			{
 				upperLimit = 1;
 			}
 
-//			if (!m_spellLine.IsBaseLine)
-//			{
-//				min = max = upperLimit;
-//				return;
-//			}
+			//			if (!m_spellLine.IsBaseLine)
+			//			{
+			//				min = max = upperLimit;
+			//				return;
+			//			}
 
 			double eff = 1.25;
-			if(Caster is GamePlayer)
+			if (Caster is GamePlayer)
 			{
 				double lineSpec = Caster.GetModifiedSpecLevel(m_spellLine.Spec);
 				if (lineSpec < 1)
@@ -179,18 +202,18 @@ namespace DOL.GS.Spells
 				eff = 0.25;
 				if (Spell.Level > 0)
 				{
-					eff += (lineSpec-1.0)/Spell.Level;
+					eff += (lineSpec - 1.0) / Spell.Level;
 					if (eff > 1.25)
 						eff = 1.25;
 				}
 			}
 
 			int lowerLimit = (int)(spellValue * eff);
-			if (lowerLimit < 1) 
+			if (lowerLimit < 1)
 			{
 				lowerLimit = 1;
 			}
-			if (lowerLimit > upperLimit) 
+			if (lowerLimit > upperLimit)
 			{
 				lowerLimit = upperLimit;
 			}
