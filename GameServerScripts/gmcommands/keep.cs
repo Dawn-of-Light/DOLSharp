@@ -1862,6 +1862,15 @@ namespace DOL.GS.Scripts
 							return 0;
 						}
 
+						// Most //
+						// Since the KeepManager consider a KeepID higher than 255 as a Tower KeepID
+						// We must check that the client is not trying to create a tower with a lower KeepID
+						if ((keepid >> 8) == 0)
+						{
+							DisplayError(client, "Wrong KeepID ({0}) : a tower KeepID must be higher than 255 !", keepid);
+							return 0;
+						}
+
 						byte baseLevel = 50;
 						if (!byte.TryParse(args[3], out baseLevel))
 						{
@@ -1912,6 +1921,15 @@ namespace DOL.GS.Scripts
 						if (KeepMgr.getKeepByID(keepid) != null)
 						{
 							DisplayError(client, "KeepID {0} already exists!", keepid);
+							return 0;
+						}
+
+						// Most //
+						// Since the KeepManager consider a KeepID lower than 256 as a keep KeepID
+						// We must check that the client is not trying to create a keep with a higher KeepID
+						if ((keepid >> 8) != 0)
+						{
+							DisplayError(client, "Wrong KeepID ({0}) : a keep KeepID must be lower than 256 !", keepid);
 							return 0;
 						}
 
