@@ -21,8 +21,17 @@ namespace DOL.GS.Quests
 
 			ArrayList list = new ArrayList();
 
-			foreach (AbstractGameKeep keep in KeepMgr.getNFKeeps())
+			IList keeps;
+			if (owner is PlayerGroup)
+				keeps = KeepMgr.GetKeepsOfRegion((owner as PlayerGroup).Leader.CurrentRegionID);
+			else if (owner is GamePlayer)
+				keeps = KeepMgr.GetKeepsOfRegion((owner as GamePlayer).CurrentRegionID);
+			else keeps = new ArrayList();
+
+			foreach (AbstractGameKeep keep in keeps)
 			{
+				if (keep.IsPortalKeep)
+					continue;
 				if (keep is GameKeepTower && keep.Realm != realm)
 					list.Add(keep);
 			}
