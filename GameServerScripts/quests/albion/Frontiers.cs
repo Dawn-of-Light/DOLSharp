@@ -37,10 +37,8 @@ using System.Reflection;
 using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
-using DOL.GS.Movement;
 using DOL.GS.PacketHandler;
 using log4net;
-using NHibernate.Mapping.Attributes;
 /* I suggest you declare yourself some namespaces for your quests
  * Like: DOL.GS.Quests.Albion
  *       DOL.GS.Quests.Midgard
@@ -52,58 +50,12 @@ using NHibernate.Mapping.Attributes;
 
 namespace DOL.GS.Quests.Albion
 {
-    /* The first thing we do, is to declare the quest requirement
-    * class linked with the new Quest. To do this, we derive 
-    * from the abstract class AbstractQuestDescriptor
-    */
-    public class FrontiersDescriptor : AbstractQuestDescriptor
-    {
-        /* This is the type of the quest class linked with 
-         * this requirement class, you must override the 
-         * base methid like that
-         */
-        public override Type LinkedQuestType
-        {
-            get { return typeof(Frontiers); }
-        }
+	/* The first thing we do, is to declare the class we create
+	 * as Quest. To do this, we derive from the abstract class
+	 * AbstractQuest
+	 * 	 
+	 */
 
-        /* This value is used to retrieves the minimum level needed
-         *  to be able to make this quest. Override it only if you need, 
-         * the default value is 1
-         */
-        public override int MinLevel
-        {
-            get { return 3; }
-        }
-
-        /* This value is used to retrieves how maximum level needed
-         * to be able to make this quest. Override it only if you need, 
-         * the default value is 50
-         */
-        public override int MaxLevel
-        {
-            get { return 3; }
-        }
-
-        public override bool CheckQuestQualification(GamePlayer player)
-        {
-			// if the player is already doing the quest always return true !!!
-			if (player.IsDoingQuest(LinkedQuestType) != null)
-				return true;
-
-            // This checks below are only performed is player isn't doing quest already
-            if (!BaseFrederickQuest.CheckPartAccessible(player, typeof(Frontiers)))
-                return false;
-
-            return base.CheckQuestQualification(player);
-        }
-    }
-
-    /* The second thing we do, is to declare the class we create
-     * as Quest. We must make it persistant using attributes, to
-     * do this, we derive from the abstract class AbstractQuest
-     */
-    [Subclass(NameType = typeof(Frontiers), ExtendsType = typeof(AbstractQuest))]
 	public class Frontiers : BaseFrederickQuest
 	{
 		/// <summary>
@@ -122,25 +74,52 @@ namespace DOL.GS.Quests.Albion
 		 */
 
 		protected const string questTitle = "Frontiers";
+		protected const int minimumLevel = 3;
+		protected const int maximumLevel = 3;
 
-		private static GameMob masterFrederick = null;
-		private static GameMob masterVisur = null;
-		private static GameMob alice = null;
+		private static GameNPC masterFrederick = null;
+		private static GameNPC masterVisur = null;
+		private static GameNPC alice = null;
 		private static GameStableMaster uliam = null;
-		private static GameStableMaster colm = null;
 
 		private static GameLocation locationAlice = null;
 		private static GameLocation locationUliam = null;
 
-		private static GenericItemTemplate translatedPlans = null;
-		private static GenericItemTemplate fairyPlans = null;
-		private static GenericItemTemplate noteFormColm = null;
-		private static TravelTicketTemplate dragonflyTicket = null;
-		private static TravelTicketTemplate horseTicket = null;
+		private static GameStableMaster colm = null;
+		private static GameNPC dragonfly = null;
 
+		private static ItemTemplate translatedPlans = null;
+		private static ItemTemplate fairyPlans = null;
+		private static ItemTemplate noteFormColm = null;
+		private static ItemTemplate dragonflyTicket = null;
+		private static ItemTemplate horseTicket = null;
+//		private static MerchantItem dragonflyTicketM;
 
-		private static LegsArmorTemplate recruitsLegs = null;
-		private static LegsArmorTemplate recruitsPants = null;
+		private static ItemTemplate recruitsLegs = null;
+		private static ItemTemplate recruitsPants = null;
+
+		// marker wether alice has finised translation the fairy plans
+		private bool aliceDone = false;
+
+		/* We need to define the constructors from the base class here, else there might be problems
+		 * when loading this quest...
+		 */
+		public Frontiers() : base()
+		{
+		}
+
+		public Frontiers(GamePlayer questingPlayer) : this(questingPlayer, 1)
+		{
+		}
+
+		public Frontiers(GamePlayer questingPlayer, int step) : base(questingPlayer, step)
+		{
+		}
+
+		public Frontiers(GamePlayer questingPlayer, DBQuest dbQuest) : base(questingPlayer, dbQuest)
+		{
+		}
+
 
 		/* The following method is called automatically when this quest class
 		 * is loaded. You might notice that this method is the same as in standard
@@ -160,8 +139,10 @@ namespace DOL.GS.Quests.Albion
 		[ScriptLoadedEvent]
 		public static void ScriptLoaded(DOLEvent e, object sender, EventArgs args)
 		{
-            if (log.IsInfoEnabled)
-                log.Info("Quest \"" + questTitle + "\" initializing ...");
+			if (!ServerProperties.Properties.LOAD_QUESTS)
+				return;
+			if (log.IsInfoEnabled)
+				log.Info("Quest \"" + questTitle + "\" initializing ...");
 			/* First thing we do in here is to search for the NPCs inside
 			* the world who comes from the certain Realm. If we find a the players,
 			* this means we don't have to create a new one.
@@ -175,114 +156,109 @@ namespace DOL.GS.Quests.Albion
 			#region DefineNPCs
 
 			masterFrederick = GetMasterFrederick();
-			if(masterFrederick == null)
-			{
-				if (log.IsWarnEnabled)
-					log.Warn("Quest "+questTitle+" abort because a needed region is not in use in this server!");
-				return;
-			}
 
-			masterVisur = ResearchQuestObject(typeof(GameMob), WorldMgr.GetRegion(1), eRealm.Albion, "Master Visur") as GameMob;
-			if (masterVisur == null)
+
+			GameNPC[] npcs = WorldMgr.GetNPCsByName("Master Visur", eRealm.Albion);
+			if (npcs.Length == 0)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Master Visur, creating ...");
-				masterVisur = new GameMob();
+				masterVisur = new GameNPC();
 				masterVisur.Model = 61;
 				masterVisur.Name = "Master Visur";
 				masterVisur.GuildName = "Part of " + questTitle + " Quest";
 				masterVisur.Realm = (byte) eRealm.Albion;
-				masterVisur.Region = WorldMgr.GetRegion(1);
-
-				GameNpcInventory template = new GameNpcInventory();
-				template.AddItem(eInventorySlot.TorsoArmor, new NPCArmor(798));
-				template.AddItem(eInventorySlot.RightHandWeapon, new NPCWeapon(19));
-				masterVisur.Inventory = template;
-				masterVisur.SwitchWeapon(GameLiving.eActiveWeaponSlot.Standard);
-
+				masterVisur.CurrentRegionID = 1;
 				masterVisur.Size = 49;
 				masterVisur.Level = 55;
-				masterVisur.Position = new Point(585589, 478396, 3368);
+				masterVisur.X = 585589;
+				masterVisur.Y = 478396;
+				masterVisur.Z = 3368;
 				masterVisur.Heading = 56;
 				masterVisur.MaxSpeedBase = 200;
 
-				StandardMobBrain newBrain = new StandardMobBrain();
-				newBrain.Body = masterVisur;
-				newBrain.AggroLevel = 0;
-				newBrain.AggroRange = 0;
-				masterVisur.OwnBrain = newBrain;
+				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
+				template.AddNPCEquipment(eInventorySlot.TorsoArmor, 798);
+				template.AddNPCEquipment(eInventorySlot.RightHandWeapon, 19);
+				masterVisur.Inventory = template.CloseTemplate();
+				masterVisur.SwitchWeapon(GameLiving.eActiveWeaponSlot.Standard);
 
-				if(!masterVisur.AddToWorld())
-				{
-					if (log.IsWarnEnabled)
-						log.Warn("Quest "+questTitle+" abort because a needed region is not in use in this server!");
-					return;
-				}
+//				masterVisur.AddNPCEquipment((byte) eEquipmentItems.TORSO, 798, 0, 0, 0);
+//				masterVisur.AddNPCEquipment((byte) eEquipmentItems.RIGHT_HAND, 19, 0, 0, 0);
+
+				masterVisur.EquipmentTemplateID = "3400843";
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(masterVisur);
+					masterVisur.SaveIntoDatabase();
+				masterVisur.AddToWorld();
 			}
+			else
+				masterVisur = npcs[0];
 
-
-			alice = ResearchQuestObject(typeof(GameMob), WorldMgr.GetRegion(1), eRealm.Albion, "Scryer Alice") as GameMob; 
-			if (alice == null)
+			npcs = WorldMgr.GetNPCsByName("Scryer Alice", eRealm.Albion);
+			if (npcs.Length == 0)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Alice, creating ...");
-				alice = new GameMob();
+				alice = new GameNPC();
 				alice.Model = 52;
 				alice.Name = "Scryer Alice";
 				alice.GuildName = "Part of " + questTitle + " Quest";
 				alice.Realm = (byte) eRealm.Albion;
-				alice.Region = WorldMgr.GetRegion(1);
-
-				GameNpcInventory template = new GameNpcInventory();
-				template.AddItem(eInventorySlot.TorsoArmor, new NPCArmor(81));
-				template.AddItem(eInventorySlot.LegsArmor, new NPCArmor(82));
-				template.AddItem(eInventorySlot.FeetArmor, new NPCArmor(84));
-				template.AddItem(eInventorySlot.Cloak, new NPCEquipment(91));
-				template.AddItem(eInventorySlot.RightHandWeapon, new NPCWeapon(3));
-				alice.Inventory = template;
-				alice.SwitchWeapon(GameLiving.eActiveWeaponSlot.Standard);
-
+				alice.CurrentRegionID = 1;
 				alice.Size = 51;
 				alice.Level = 50;
-				alice.Position = new Point(436598, 650425, 2448);
+				alice.X = 436598;
+				alice.Y = 650425;
+				alice.Z = 2448;
+
+				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
+				template.AddNPCEquipment(eInventorySlot.TorsoArmor, 81);
+				template.AddNPCEquipment(eInventorySlot.LegsArmor, 82);
+				template.AddNPCEquipment(eInventorySlot.FeetArmor, 84);
+				template.AddNPCEquipment(eInventorySlot.Cloak, 91);
+				template.AddNPCEquipment(eInventorySlot.RightHandWeapon, 3);
+				alice.Inventory = template.CloseTemplate();
+				alice.SwitchWeapon(GameLiving.eActiveWeaponSlot.Standard);
+
+//				alice.AddNPCEquipment(Slot.TORSO, 81, 0, 0, 0);
+//				alice.AddNPCEquipment(Slot.LEGS, 82, 0, 0, 0);
+//				alice.AddNPCEquipment(Slot.FEET, 84, 0, 0, 0);
+//				alice.AddNPCEquipment(Slot.CLOAK, 91, 0, 0, 0);
+//				alice.AddNPCEquipment(Slot.RIGHTHAND, 3, 0, 0, 0);
+
 				alice.Heading = 3766;
 				alice.MaxSpeedBase = 200;
+				alice.EquipmentTemplateID = "200276";
 				alice.Flags = 18;
 
 				StandardMobBrain brain = new StandardMobBrain();
-				brain.Body = alice;
 				brain.AggroLevel = 0;
 				brain.AggroRange = 0;
-				alice.OwnBrain = brain;
-
-				if(!alice.AddToWorld())
-				{
-					if (log.IsWarnEnabled)
-						log.Warn("Quest "+questTitle+" abort because a needed region is not in use in this server!");
-					return;
-				}
+				alice.SetOwnBrain(brain);
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(alice);
+					alice.SaveIntoDatabase();
+				alice.AddToWorld();
 			}
+			else
+				alice = npcs[0];
 
-			Point tmp = alice.GetSpotFromHeading(30);
-			tmp.Z = alice.Position.Z;
-			locationAlice = new GameLocation(alice.Region.GetZone(alice.Position).Description, alice.Region, tmp, 0);
+			int tmpX, tmpY;
+			alice.GetSpotFromHeading(30, out tmpX, out tmpY);
+			locationAlice = new GameLocation(alice.CurrentZone.Description, alice.CurrentRegionID, (int) tmpX, (int) tmpY, alice.Z);
 
-			colm = ResearchQuestObject(typeof(GameStableMaster), WorldMgr.GetRegion(1), eRealm.Albion, "Dragonfly Handler Colm") as GameStableMaster;
-			if (colm == null)
+			dragonflyTicket = CreateTicketTo("Castle Sauvage");
+			horseTicket = CreateTicketTo("Camelot Hills");
+
+			npcs = (GameNPC[]) WorldMgr.GetObjectsByName("Dragonfly Handler Colm", eRealm.Albion, typeof (GameStableMaster));
+			if (npcs.Length == 0)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Dragonfly Handler Colm, creating ...");
@@ -291,44 +267,96 @@ namespace DOL.GS.Quests.Albion
 				colm.Name = "Dragonfly Handler Colm";
 				colm.GuildName = "Stable Master";
 				colm.Realm = (byte) eRealm.Albion;
-				colm.Region = WorldMgr.GetRegion(1);
-
-				GameNpcInventory template = new GameNpcInventory();
-				template.AddItem(eInventorySlot.TorsoArmor, new NPCArmor(81, 10, 0));
-				template.AddItem(eInventorySlot.LegsArmor, new NPCArmor(82, 10, 0));
-				template.AddItem(eInventorySlot.FeetArmor, new NPCArmor(84, 10, 0));
-				template.AddItem(eInventorySlot.Cloak, new NPCEquipment(57, 32));
-				colm.Inventory = template;
-
+				colm.CurrentRegionID = 1;
 				colm.Size = 51;
 				colm.Level = 50;
-				colm.Position = new Point(562775, 512453, 2438);
+
+				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
+				template.AddNPCEquipment(eInventorySlot.TorsoArmor, 81, 10);
+				template.AddNPCEquipment(eInventorySlot.LegsArmor, 82, 10);
+				template.AddNPCEquipment(eInventorySlot.FeetArmor, 84, 10);
+				template.AddNPCEquipment(eInventorySlot.Cloak, 57, 32);
+				colm.Inventory = template.CloseTemplate();
+
+//				colm.AddNPCEquipment(Slot.TORSO, 81, 10, 0, 0);
+//				colm.AddNPCEquipment(Slot.LEGS, 82, 10, 0, 0);
+//				colm.AddNPCEquipment(Slot.FEET, 84, 10, 0, 0);
+//				colm.AddNPCEquipment(Slot.CLOAK, 57, 32, 0, 0);
+
+				colm.X = 562775;
+				colm.Y = 512453;
+				colm.Z = 2438;
 				colm.Heading = 158;
 				colm.MaxSpeedBase = 200;
 
 				StandardMobBrain brain = new StandardMobBrain();
-				brain.Body = colm;
 				brain.AggroLevel = 0;
 				brain.AggroRange = 0;
-				colm.OwnBrain = brain;
+				colm.SetOwnBrain(brain);
 
-				if(!colm.AddToWorld())
+				//You don't have to store the created mob in the db if you don't want,
+				//it will be recreated each time it is not found, just comment the following
+				//line if you rather not modify your database
+				if (SAVE_INTO_DATABASE)
+					colm.SaveIntoDatabase();
+				colm.AddToWorld();
+			}
+			else
+			{
+				colm = npcs[0] as GameStableMaster;
+			}
+
+
+			colm.TradeItems = new MerchantTradeItems(null);
+			if (!colm.TradeItems.AddTradeItem(0, eMerchantWindowSlot.FirstEmptyInPage, dragonflyTicket))
+				if (log.IsWarnEnabled)
+					log.Warn("dragonflyTicket not added");
+
+
+			foreach (GameNPC npc in colm.GetNPCsInRadius(400))
+			{
+				if (npc.Name == "dragonfly hatchling")
 				{
-					if (log.IsWarnEnabled)
-						log.Warn("Quest "+questTitle+" abort because a needed region is not in use in this server!");
-					return;
+					dragonfly = npc;
+					break;
 				}
+			}
+			if (dragonfly == null)
+			{
+				if (log.IsWarnEnabled)
+					log.Warn("Could not find Dragon Fly, creating ...");
+				dragonfly = new GameNPC();
+				dragonfly.Model = 1207;
+				dragonfly.Name = "dragonfly hatchling";
+				dragonfly.GuildName = "Part of " + questTitle + " Quest";
+				dragonfly.Realm = (byte) eRealm.None;
+				dragonfly.CurrentRegionID = 1;
+				dragonfly.Size = 25;
+				dragonfly.Level = 31;
+				dragonfly.X = colm.X + 80;
+				dragonfly.Y = colm.Y + 100;
+				dragonfly.Z = colm.Z;
+
+				StandardMobBrain brain = new StandardMobBrain();
+				brain.AggroLevel = 0;
+				brain.AggroRange = 0;
+				dragonfly.SetOwnBrain(brain);
+
+				dragonfly.Heading = 2434;
+				dragonfly.MaxSpeedBase = 400;
+				//dragonfly.EquipmentTemplateID = 200276;                
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(colm);
+					dragonfly.SaveIntoDatabase();
+				dragonfly.AddToWorld();
 			}
 
-			uliam = ResearchQuestObject(typeof(GameStableMaster), WorldMgr.GetRegion(1), eRealm.Albion, "Uliam") as GameStableMaster;
-			if (uliam == null)
+			npcs = (GameNPC[]) WorldMgr.GetObjectsByName("Uliam", eRealm.Albion, typeof (GameStableMaster));
+			if (npcs.Length == 0)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Uliam, creating ...");
@@ -337,338 +365,98 @@ namespace DOL.GS.Quests.Albion
 				uliam.Name = "Uliam";
 				uliam.GuildName = "Stable Master";
 				uliam.Realm = (byte) eRealm.Albion;
-				uliam.Region = WorldMgr.GetRegion(1);
-
+				uliam.CurrentRegionID = 1;
 				uliam.Size = 51;
 				uliam.Level = 50;
-				uliam.Position = new Point(585609, 478980, 2183);
+				uliam.X = 585609;
+				uliam.Y = 478980;
+				uliam.Z = 2183;
 				uliam.Heading = 93;
-				
+				uliam.MaxSpeedBase = 200;
+
 				StandardMobBrain brain = new StandardMobBrain();
-				brain.Body = uliam;
 				brain.AggroLevel = 0;
 				brain.AggroRange = 0;
-				uliam.OwnBrain = brain;
+				uliam.SetOwnBrain(brain);
 
-				if(!uliam.AddToWorld())
-				{
-					if (log.IsWarnEnabled)
-						log.Warn("Quest "+questTitle+" abort because a needed region is not in use in this server!");
-					return;
-				}
+				//ulliam.EquipmentTemplateID = 200276;                
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(uliam);
+					uliam.SaveIntoDatabase();
+
+				uliam.AddToWorld();
 			}
-
-			tmp = uliam.GetSpotFromHeading(30);
-			tmp.Z = uliam.Position.Z;
-			locationUliam = new GameLocation(uliam.Region.GetZone(uliam.Position).Description, uliam.Region, tmp, 0);
-
-			#endregion
-
-			#region define horse Paths
-
-			PathPoint newPoint = null;
-			PathPoint lastPoint = null;
-
-			TripPath pathToCastleSauvage = new TripPath();
-			pathToCastleSauvage.PathID = -27;
-			pathToCastleSauvage.Region = WorldMgr.GetRegion(1);
-			pathToCastleSauvage.SteedModel = 1207;
-			pathToCastleSauvage.SteedName = "dragonfly hatchling";
-
-			if(!PathMgr.AddPath(pathToCastleSauvage))
-			{
-				if (log.IsWarnEnabled)
-					log.Warn("Quest "+questTitle+" abort because a needed region is not in use in this server!");
-				return;
-			}
-
-			#region all pathToCastleSauvage points
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(562905, 512603, 2438);
-			newPoint.Speed = 0;
-
-			pathToCastleSauvage.StartingPoint = newPoint;
-
-			lastPoint = newPoint;
-		
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(585709, 479030, 2600);
-			newPoint.Speed = 600;
-
-			#endregion
-
-			TripPath pathToCamelotHills = new TripPath();
-			pathToCamelotHills.PathID = -28;
-			pathToCamelotHills.Region = WorldMgr.GetRegion(1);
-			pathToCamelotHills.SteedModel = 413;
-			pathToCamelotHills.SteedName = "horse";
-
-			if(!PathMgr.AddPath(pathToCamelotHills))
-			{
-				if (log.IsWarnEnabled)
-					log.Warn("Quest "+questTitle+" abort because a needed region is not in use in this server!");
-				return;
-			}
-
-			#region all pathToCamelotHills points
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(585594, 479122, 2609);
-			newPoint.Speed = 0;
-
-			pathToCamelotHills.StartingPoint = newPoint;
-
-			lastPoint = newPoint;
-		
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(585594, 479122, 2609);
-			newPoint.Speed = 600;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(585248, 481710, 2238);
-			newPoint.Speed = 600;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(585524, 483696, 2241);
-			newPoint.Speed = 600;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(584258, 487442, 2292);
-			newPoint.Speed = 600;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(583711, 492791, 2192);
-			newPoint.Speed = 600;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(583111, 493911, 2192);
-			newPoint.Speed = 600;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(582859, 495248, 2192);
-			newPoint.Speed = 600;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(583511, 497842, 2192);
-			newPoint.Speed = 600;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(584182, 498450, 2192);
-			newPoint.Speed = 600;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(585226, 498677, 2192);
-			newPoint.Speed = 600;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(585989, 502453, 2112);
-			newPoint.Speed = 600;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(586885, 503822, 2112);
-			newPoint.Speed = 600;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(587106, 506934, 2112);
-			newPoint.Speed = 600;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(586022, 510058, 2204);
-			newPoint.Speed = 600;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(586296, 512660, 2192);
-			newPoint.Speed = 600;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(582753, 512761, 2072);
-			newPoint.Speed = 600;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(582062, 513533, 2072);
-			newPoint.Speed = 600;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(581443, 516055, 2072);
-			newPoint.Speed = 600;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(580760, 516904, 2072);
-			newPoint.Speed = 600;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(577513, 517128, 2075);
-			newPoint.Speed = 600;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(572200, 516277, 2096);
-			newPoint.Speed = 600;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(571728, 515762, 2072);
-			newPoint.Speed = 600;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(571616, 512988, 2072);
-			newPoint.Speed = 600;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(570821, 512530, 2072);
-			newPoint.Speed = 600;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(571473, 509825, 2118);
-			newPoint.Speed = 600;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(571271, 507051, 2151);
-			newPoint.Speed = 600;
-
-			lastPoint.NextPoint = newPoint;
-			lastPoint = newPoint;
-
-			newPoint = new PathPoint();
-			newPoint.Position = new Point(572460, 504634, 2184);
-			newPoint.Speed = 600;
-			#endregion
+			else
+				uliam = npcs[0] as GameStableMaster;
+
+			uliam.GetSpotFromHeading(30, out tmpX, out tmpY);
+			locationUliam = new GameLocation(uliam.CurrentZone.Description, uliam.CurrentRegionID, (int) tmpX, (int) tmpY, uliam.Z);
+
+			/*
+            foreach (GameNPC npc in WorldMgr.GetNPCsCloseToObject(uliam, 400))                
+            {
+                if (npc.Name == "horse")
+                {
+                    horse = npc;
+                    break;
+                }
+            }
+            
+            if (horse == null)
+            {
+                if(log.IsWarnEnabled)
+									log.Warn("Could not find Horse near Uliam, creating ...");
+                horse = new GameNPC();
+                horse.Model = 450; // //819;
+                horse.Name = "horse";
+                horse.GuildName = "Part of " + questTitle + " Quest";
+                horse.Realm = (byte)eRealm.None;
+                horse.CurrentRegionID = 1;
+                horse.Size = 63;
+                horse.Level = 55;
+                horse.X = uliam.X + 80;
+                horse.Y = uliam.Y + 130;
+                horse.Z = uliam.Z;
+                horse.Heading = 93;
+                                
+                horse.AggroLevel = 0;
+                horse.AggroRange = 0;
+                //horse.EquipmentTemplateID = 200276;                
+
+                //You don't have to store the created mob in the db if you don't want,
+                //it will be recreated each time it is not found, just comment the following
+                //line if you rather not modify your database
+                if (SAVE_INTO_DATABASE) 
+                    horse.SaveIntoDatabase();
+                horse.AddToWorld();
+            }
+			*/
 
 			#endregion
 
 			#region DefineItems
 
-			// ------------- First traver ticket -----------------
-			dragonflyTicket = new TravelTicketTemplate();
-			dragonflyTicket.Name = "Ticket to Camelot Hills";
-			if (log.IsWarnEnabled)
-				log.Warn("Creating ticket " + dragonflyTicket.Name + " ...");
-
-			dragonflyTicket.Weight = 0;
-			dragonflyTicket.Model = 499;
-			dragonflyTicket.Realm = eRealm.Albion;
-			dragonflyTicket.Value = Money.GetMoney(0, 0, 0, 5, 0);
-
-			dragonflyTicket.IsDropable = true;
-			dragonflyTicket.IsSaleable = true;
-			dragonflyTicket.IsTradable = true;
-
-			dragonflyTicket.TripPathID = pathToCastleSauvage.PathID;
-
-			// -------------- Second travel ticket ----------------
-			horseTicket = new TravelTicketTemplate();
-			horseTicket.Name = "Ticket to North Camelot Gates";
-			if (log.IsWarnEnabled)
-				log.Warn("Creating ticket " + horseTicket.Name + " ...");
-
-			horseTicket.Weight = 0;
-			horseTicket.Model = 499;
-			horseTicket.Realm = eRealm.Albion;
-			horseTicket.Value = Money.GetMoney(0, 0, 0, 5, 0);
-
-			horseTicket.IsDropable = true;
-			horseTicket.IsSaleable = true;
-			horseTicket.IsTradable = true;
-
-			horseTicket.TripPathID = pathToCamelotHills.PathID;
-
 			// item db check
-			noteFormColm = (GenericItemTemplate) GameServer.Database.FindObjectByKey(typeof (GenericItemTemplate), "colms_note");
+			noteFormColm = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "colms_note");
 			if (noteFormColm == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Colm's Note, creating it ...");
-				noteFormColm = new GenericItemTemplate();
+				noteFormColm = new ItemTemplate();
 				noteFormColm.Name = "Colm's Note";
 
 				noteFormColm.Weight = 3;
 				noteFormColm.Model = 498;
 
-				noteFormColm.ItemTemplateID = "colms_note";
+				noteFormColm.Object_Type = (int) eObjectType.GenericItem;
 
+				noteFormColm.Id_nb = "colms_note";
+				noteFormColm.IsPickable = true;
 				noteFormColm.IsDropable = false;
-                noteFormColm.IsSaleable = false;
-                noteFormColm.IsTradable = false;
+
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -678,21 +466,22 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			fairyPlans = (GenericItemTemplate) GameServer.Database.FindObjectByKey(typeof (GenericItemTemplate), "ire_fairy_plans");
+			fairyPlans = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ire_fairy_plans");
 			if (fairyPlans == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Ire Fairy Plans, creating it ...");
-				fairyPlans = new GenericItemTemplate();
+				fairyPlans = new ItemTemplate();
 				fairyPlans.Name = "Ire Fairy Plans";
 
 				fairyPlans.Weight = 3;
 				fairyPlans.Model = 498;
 
-				fairyPlans.ItemTemplateID = "ire_fairy_plans";
+				fairyPlans.Object_Type = (int) eObjectType.GenericItem;
+
+				fairyPlans.Id_nb = "ire_fairy_plans";
+				fairyPlans.IsPickable = true;
 				fairyPlans.IsDropable = false;
-                fairyPlans.IsSaleable = false;
-                fairyPlans.IsTradable = false;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -701,21 +490,22 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(fairyPlans);
 			}
 
-			translatedPlans = (GenericItemTemplate) GameServer.Database.FindObjectByKey(typeof (GenericItemTemplate), "translated_ire_fairy_plans");
+			translatedPlans = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "translated_ire_fairy_plans");
 			if (translatedPlans == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Translated Ire Fairy Plans, creating it ...");
-				translatedPlans = new GenericItemTemplate();
+				translatedPlans = new ItemTemplate();
 				translatedPlans.Name = "Translated Ire Fairy Plans";
 
 				translatedPlans.Weight = 3;
 				translatedPlans.Model = 498;
 
-				translatedPlans.ItemTemplateID = "translated_ire_fairy_plans";
+				translatedPlans.Object_Type = (int) eObjectType.GenericItem;
+
+				translatedPlans.Id_nb = "translated_ire_fairy_plans";
+				translatedPlans.IsPickable = true;
 				translatedPlans.IsDropable = false;
-                translatedPlans.IsSaleable = false;
-                translatedPlans.IsTradable = false;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -725,36 +515,48 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			recruitsLegs = (LegsArmorTemplate) GameServer.Database.FindObjectByKey(typeof (LegsArmorTemplate), "recruits_studded_legs");
+			recruitsLegs = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_studded_legs");
 			if (recruitsLegs == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Recruit's Studded Legs, creating it ...");
-				recruitsLegs = new LegsArmorTemplate();
+				recruitsLegs = new ItemTemplate();
 				recruitsLegs.Name = "Recruit's Studded Legs";
 				recruitsLegs.Level = 7;
 
 				recruitsLegs.Weight = 42;
 				recruitsLegs.Model = 82; // Studded Legs
 
-                recruitsLegs.ArmorFactor = 10;
-                recruitsLegs.ArmorLevel = eArmorLevel.Medium;
+				recruitsLegs.DPS_AF = 10; // Armour
+				recruitsLegs.SPD_ABS = 19; // Absorption
 
-				recruitsLegs.ItemTemplateID = "recruits_studded_legs";
-                recruitsLegs.Value = 1000;
-
+				recruitsLegs.Object_Type = (int) eObjectType.Studded;
+				recruitsLegs.Item_Type = (int) eEquipmentItems.LEGS;
+				recruitsLegs.Id_nb = "recruits_studded_legs";
+				recruitsLegs.Gold = 0;
+				recruitsLegs.Silver = 10;
+				recruitsLegs.Copper = 0;
+				recruitsLegs.IsPickable = true;
 				recruitsLegs.IsDropable = true;
-                recruitsLegs.IsSaleable = true;
-                recruitsLegs.IsTradable = true;
 				recruitsLegs.Color = 9; // red leather
 
 				recruitsLegs.Bonus = 5; // default bonus
 
-                recruitsLegs.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 10));
-                recruitsLegs.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Slash, 2));
-                recruitsLegs.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Cold, 1));
+				recruitsLegs.Bonus1 = 10;
+				recruitsLegs.Bonus1Type = (int) eProperty.MaxHealth; // hit
+
+
+				recruitsLegs.Bonus2 = 2;
+				recruitsLegs.Bonus2Type = (int) eResist.Slash;
+
+				recruitsLegs.Bonus3 = 1;
+				recruitsLegs.Bonus3Type = (int) eResist.Cold;
 
 				recruitsLegs.Quality = 100;
+				recruitsLegs.Condition = 1000;
+				recruitsLegs.MaxCondition = 1000;
+				recruitsLegs.Durability = 1000;
+				recruitsLegs.MaxDurability = 1000;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -764,10 +566,10 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			recruitsPants = (LegsArmorTemplate) GameServer.Database.FindObjectByKey(typeof (GenericItemTemplate), "recruits_quilted_pants");
+			recruitsPants = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_quilted_pants");
 			if (recruitsPants == null)
 			{
-				recruitsPants = new LegsArmorTemplate();
+				recruitsPants = new ItemTemplate();
 				recruitsPants.Name = "Recruit's Quilted Pants";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + recruitsPants.Name + ", creating it ...");
@@ -776,22 +578,36 @@ namespace DOL.GS.Quests.Albion
 				recruitsPants.Weight = 14;
 				recruitsPants.Model = 152; // cloth Legs
 
-                recruitsPants.ArmorFactor = 5;
-                recruitsPants.ArmorLevel = eArmorLevel.VeryLow;
+				recruitsPants.DPS_AF = 5; // Armour
+				recruitsPants.SPD_ABS = 0; // Absorption
 
-				recruitsPants.ItemTemplateID = "recruits_quilted_pants";
-                recruitsPants.Value = 1000;
-
+				recruitsPants.Object_Type = (int) eObjectType.Cloth;
+				recruitsPants.Item_Type = (int) eEquipmentItems.LEGS;
+				recruitsPants.Id_nb = "recruits_quilted_pants";
+				recruitsPants.Gold = 0;
+				recruitsPants.Silver = 10;
+				recruitsPants.Copper = 0;
+				recruitsPants.IsPickable = true;
 				recruitsPants.IsDropable = true;
 				recruitsPants.Color = 17; // red leather
 
 				recruitsPants.Bonus = 5; // default bonus
 
-                recruitsPants.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 12));
-                recruitsPants.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Slash, 2));
-                recruitsPants.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Cold, 1));
+				recruitsPants.Bonus1 = 12;
+				recruitsPants.Bonus1Type = (int) eProperty.MaxHealth; // hit
+
+
+				recruitsPants.Bonus2 = 2;
+				recruitsPants.Bonus2Type = (int) eResist.Slash;
+
+				recruitsPants.Bonus3 = 1;
+				recruitsPants.Bonus3Type = (int) eResist.Cold;
 
 				recruitsPants.Quality = 100;
+				recruitsPants.Condition = 1000;
+				recruitsPants.MaxCondition = 1000;
+				recruitsPants.Durability = 1000;
+				recruitsPants.MaxDurability = 1000;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -809,7 +625,14 @@ namespace DOL.GS.Quests.Albion
 			* method. This means, the "TalkToXXX" method is called whenever
 			* a player right clicks on him or when he whispers to him.
 			*/
-			GameEventMgr.AddHandler(masterFrederick, GameObjectEvent.Interact, new DOLEventHandler(TalkToMasterFrederick));
+
+			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
+			//We want to be notified whenever a player enters the world
+			GameEventMgr.AddHandler(GamePlayerEvent.GameEntered, new DOLEventHandler(PlayerEnterWorld));
+
+			GameEventMgr.AddHandler(masterFrederick, GameLivingEvent.Interact, new DOLEventHandler(TalkToMasterFrederick));
 			GameEventMgr.AddHandler(masterFrederick, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToMasterFrederick));
 
 			GameEventMgr.AddHandler(masterVisur, GameObjectEvent.Interact, new DOLEventHandler(TalkToMasterVisur));
@@ -819,12 +642,8 @@ namespace DOL.GS.Quests.Albion
 			GameEventMgr.AddHandler(alice, GameObjectEvent.Interact, new DOLEventHandler(TalkToAlice));
 			GameEventMgr.AddHandler(alice, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToAlice));
 
-			/* Now we add some hooks to trigger the quest dialog reponse. */
-			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(QuestDialogResponse));
-			GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(QuestDialogResponse));
-
 			/* Now we bring to masterFrederick the possibility to give this quest to players */
-            QuestMgr.AddQuestDescriptor(masterFrederick, typeof(FrontiersDescriptor));
+			masterFrederick.AddQuestToGive(typeof (Frontiers));	
 
 			if (log.IsInfoEnabled)
 				log.Info("Quest \"" + questTitle + "\" initialized");
@@ -850,6 +669,12 @@ namespace DOL.GS.Quests.Albion
 			/* Removing hooks works just as adding them but instead of 
 			 * AddHandler, we call RemoveHandler, the parameters stay the same
 			 */
+
+			GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
+			GameEventMgr.RemoveHandler(GamePlayerEvent.GameEntered, new DOLEventHandler(PlayerEnterWorld));
+
 			GameEventMgr.RemoveHandler(masterFrederick, GameObjectEvent.Interact, new DOLEventHandler(TalkToMasterFrederick));
 			GameEventMgr.RemoveHandler(masterFrederick, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToMasterFrederick));
 
@@ -860,11 +685,25 @@ namespace DOL.GS.Quests.Albion
 			GameEventMgr.RemoveHandler(alice, GameObjectEvent.Interact, new DOLEventHandler(TalkToAlice));
 			GameEventMgr.RemoveHandler(alice, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToAlice));
 
-			GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(QuestDialogResponse));
-			GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(QuestDialogResponse));
-
 			/* Now we remove to masterFrederick the possibility to give this quest to players */
-            QuestMgr.RemoveQuestDescriptor(masterFrederick, typeof(FrontiersDescriptor));
+			masterFrederick.RemoveQuestToGive(typeof (Frontiers));
+		}
+
+		protected static void PlayerEnterWorld(DOLEvent e, object sender, EventArgs args)
+		{
+			GamePlayer player = sender as GamePlayer;
+			if (player == null)
+				return;
+
+			Frontiers quest = player.IsDoingQuest(typeof (Frontiers)) as Frontiers;
+			if (quest != null)
+			{
+				// if player reenters during step 4 alice will have finished translation anyway...
+				if (quest.Step == 4)
+				{
+					quest.aliceDone = true;
+				}
+			}
 		}
 
 		/* This is the method we declared as callback for the hooks we set to
@@ -879,7 +718,7 @@ namespace DOL.GS.Quests.Albion
 			if (player == null)
 				return;
 
-            if (QuestMgr.CanGiveQuest(typeof(Frontiers), player, masterFrederick) <= 0)
+			if(masterFrederick.CanGiveQuest(typeof (Frontiers), player)  <= 0)
 				return;
 
 			//We also check if the player is already doing the quest
@@ -892,7 +731,7 @@ namespace DOL.GS.Quests.Albion
 				if (quest == null)
 				{
 					//Player is not doing the quest...
-					masterFrederick.SayTo(player, "Ah, "+player.Name+". Yes, I've been waiting for you. I have here a parchment that I need taken to the Caer Witrin. I know it sounds a little overwhelming, but I'm sure you can handle it. Will you take this to the [Caer Witrin] for me?");
+					masterFrederick.SayTo(player, "Ah, Vinde. Yes, I've been waiting for you. I have here a parchment that I need taken to the Caer Witrin. I know it sounds a little overwhelming, but I'm sure you can handle it. Will you take this to the [Caer Witrin] for me?");
 					return;
 				}
 				else
@@ -903,7 +742,7 @@ namespace DOL.GS.Quests.Albion
 					}
 					else if (quest.Step == 5)
 					{
-						masterFrederick.SayTo(player, "Welcome back "+player.Name+". I take it you went to the Caer Witrin? Tell me, did Scryer Alice translate the parchment for me?");
+						masterFrederick.SayTo(player, "Welcome back Vinde. I take it you went to the Caer Witrin? Tell me, did Scryer Alice translate the parchment for me?");
 					}
 					else if (quest.Step == 6)
 					{
@@ -923,7 +762,7 @@ namespace DOL.GS.Quests.Albion
 					{
 							//If the player offered his "help", we send the quest dialog now!
 						case "Caer Witrin":
-							QuestMgr.ProposeQuestToPlayer(typeof(Frontiers), "Will you take this package to Scryer Alice for Master Frederick?", player, masterFrederick);
+							player.Out.SendQuestSubscribeCommand(masterFrederick, QuestMgr.GetIDForQuestType(typeof(Frontiers)), "Will you take this package to Scryer Alice for Master Frederick?");
 							break;
 					}
 				}
@@ -938,9 +777,28 @@ namespace DOL.GS.Quests.Albion
 								quest.FinishQuest();
 							}
 							break;
+						case "abort":
+							player.Out.SendCustomDialog("Do you really want to abort this quest, \nall items gained during quest will be lost?", new CustomDialogResponse(CheckPlayerAbortQuest));
+							break;
+
 					}
 				}
 			}
+		}
+
+		protected static void SubscribeQuest(DOLEvent e, object sender, EventArgs args)
+		{
+			QuestEventArgs qargs = args as QuestEventArgs;
+			if (qargs == null)
+				return;
+
+			if (qargs.QuestID != QuestMgr.GetIDForQuestType(typeof(Frontiers)))
+				return;
+
+			if (e == GamePlayerEvent.AcceptQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x01);
+			else if (e == GamePlayerEvent.DeclineQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x00);
 		}
 
 		protected static void TalkToColm(DOLEvent e, object sender, EventArgs args)
@@ -950,7 +808,7 @@ namespace DOL.GS.Quests.Albion
 			if (player == null)
 				return;
 
-            if (QuestMgr.CanGiveQuest(typeof(Frontiers), player, masterFrederick) <= 0)
+			if(masterFrederick.CanGiveQuest(typeof (Frontiers), player)  <= 0)
 				return;
 
 			//We also check if the player is already doing the quest
@@ -975,7 +833,7 @@ namespace DOL.GS.Quests.Albion
 			if (player == null)
 				return;
 
-            if (QuestMgr.CanGiveQuest(typeof(Frontiers), player, masterFrederick) <= 0)
+			if(masterFrederick.CanGiveQuest(typeof (Frontiers), player)  <= 0)
 				return;
 
 			//We also check if the player is already doing the quest
@@ -994,7 +852,7 @@ namespace DOL.GS.Quests.Albion
 					}
 					else if (quest.Step == 4)
 					{
-						if (alice.TempProperties.getProperty("TranslationEnded", true))
+						if (quest.aliceDone)
 						{
 							alice.SayTo(player, "Ah, yes, I am now [done] with the translation.");
 						}
@@ -1017,15 +875,13 @@ namespace DOL.GS.Quests.Albion
 					switch (wArgs.Text)
 					{
 						case "done":
-							if (quest.Step == 4 && alice.TempProperties.getProperty("TranslationEnded", true))
+							alice.SayTo(player, "Here you are my intreprid young traveler. It has all been translated now. Take it back to Master Frederick. I hope I was able to help today. Come back and visit me soon!");
+							alice.SayTo(player, "Oh and take this horse ticket and give it to Uliam at Castle Sauvage he will bring you back home safely.");
+							if (quest.Step == 4)
 							{
-								alice.SayTo(player, "Here you are my intreprid young traveler. It has all been translated now. Take it back to Master Frederick. I hope I was able to help today. Come back and visit me soon!");
-								alice.SayTo(player, "Oh and take this horse ticket and give it to Uliam at Castle Sauvage he will bring you back home safely.");
-							
-								GiveItemToPlayer(alice, CreateQuestItem(translatedPlans, quest), player);
-								GiveItemToPlayer(alice, CreateQuestItem(horseTicket, quest), player);
-                                
-                                quest.ChangeQuestStep(5);
+								GiveItem(alice, player, translatedPlans);
+								GiveItem(alice, player, horseTicket);
+								quest.Step = 5;
 
 								quest.TeleportTo(player, alice, locationUliam, 50);
 							}
@@ -1042,7 +898,7 @@ namespace DOL.GS.Quests.Albion
 			if (player == null)
 				return;
 
-            if (QuestMgr.CanGiveQuest(typeof(Frontiers), player, masterFrederick) <= 0)
+			if(masterFrederick.CanGiveQuest(typeof (Frontiers), player)  <= 0)
 				return;
 
 			//We also check if the player is already doing the quest
@@ -1055,7 +911,7 @@ namespace DOL.GS.Quests.Albion
 				if (quest != null && quest.Step == 2)
 				{
 					masterVisur.SayTo(player, "From sodden ground to the glow of the moon, let each vessel in this circle depart to lands now lost from the light of our fair Camelot!");
-					quest.ChangeQuestStep(3);
+					quest.Step = 3;
 
 					quest.TeleportTo(player, masterVisur, locationAlice, 30);
 					return;
@@ -1066,44 +922,89 @@ namespace DOL.GS.Quests.Albion
 
 		}
 
+		/// <summary>
+		/// This method checks if a player qualifies for this quest
+		/// </summary>
+		/// <returns>true if qualified, false if not</returns>
+		public override bool CheckQuestQualification(GamePlayer player)
+		{
+			// if the player is already doing the quest his level is no longer of relevance
+			if (player.IsDoingQuest(typeof (Frontiers)) != null)
+				return true;
+
+			// This checks below are only performed is player isn't doing quest already
+			if (!CheckPartAccessible(player, typeof (Frontiers)))
+				return false;
+
+			if (player.Level < minimumLevel || player.Level > maximumLevel)
+				return false;
+
+			return true;
+		}
+
+
 		/* This is our callback hook that will be called when the player clicks
 		 * on any button in the quest offer dialog. We check if he accepts or
 		 * declines here...
 		 */
-		protected static void QuestDialogResponse(DOLEvent e, object sender, EventArgs args)
+
+		private static void CheckPlayerAbortQuest(GamePlayer player, byte response)
 		{
-			QuestEventArgs gArgs = args as QuestEventArgs;
+			Frontiers quest = player.IsDoingQuest(typeof (Frontiers)) as Frontiers;
 
-			if (gArgs != null && gArgs.QuestType.Equals(typeof(BuildingABetterBow)))
+			if (quest == null)
+				return;
+
+			if (response == 0x00)
 			{
-				GamePlayer player = gArgs.Player;
-				if (player == null) return;
-
-				if (e == GamePlayerEvent.AcceptQuest)
-				{
-					if (QuestMgr.GiveQuestToPlayer(typeof(BuildingABetterBow), player, gArgs.Source as GameNPC))
-					{
-						masterFrederick.SayTo(player, "Alright, there is no time to lose. Take this parchment to my good friend Colm. He is a dragonfly handler here in Cotswold. He will get you set up on a dragonfly to make the trip to Castle Sauvage. Hurry now, do not tarry. And don't forget to give the parchment to Colm!");
-                
-						AbstractQuest quest = player.IsDoingQuest(typeof(BuildingABetterBow));
-						GiveItemToPlayer(masterFrederick, CreateQuestItem(noteFormColm, quest), player);
-						GiveItemToPlayer(masterFrederick, CreateQuestItem(fairyPlans, quest), player);
-				
-						player.AddMoney(Money.GetMoney(0, 0, 0, 6, 0), "You recieve {0} for the ride to Castle Sauvage");
-					}
-				}
-				else if (e == GamePlayerEvent.DeclineQuest)
-				{
-
-					player.Out.SendMessage("Oh well, if you change your mind, please come back!", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
-				}
+				SendSystemMessage(player, "Good, no go out there and finish your work!");
+			}
+			else
+			{
+				SendSystemMessage(player, "Aborting Quest " + questTitle + ". You can start over again if you want.");
+				quest.AbortQuest();
 			}
 		}
 
-		protected virtual int AliceTranslationFinished(RegionTimer callingTimer)
+		/* This is our callback hook that will be called when the player clicks
+		 * on any button in the quest offer dialog. We check if he accepts or
+		 * declines here...
+		 */
+
+		private static void CheckPlayerAcceptQuest(GamePlayer player, byte response)
+		{
+			//We recheck the qualification, because we don't talk to players
+			//who are not doing the quest
+			if(masterFrederick.CanGiveQuest(typeof (Frontiers), player)  <= 0)
+				return;
+
+			Frontiers quest = player.IsDoingQuest(typeof (Frontiers)) as Frontiers;
+
+			if (quest != null)
+				return;
+
+			if (response == 0x00)
+			{
+				SendReply(player, "Oh well, if you change your mind, please come back!");
+			}
+			else
+			{
+				//Check if we can add the quest!
+				if (!masterFrederick.GiveQuest(typeof (Frontiers), player, 1))
+					return;
+
+				masterFrederick.SayTo(player, "Alright, there is no time to lose. Take this parchment to my good friend Colm. He is a dragonfly handler here in Cotswold. He will get you set up on a dragonfly to make the trip to Castle Sauvage. Hurry now, do not tarry. And don't forget to give the parchment to Colm!");
+
+				GiveItem(masterFrederick, player, noteFormColm);
+				GiveItem(masterFrederick, player, fairyPlans);
+				player.AddMoney(Money.GetMoney(0, 0, 0, 6, 0), "You recieve {0} for the ride to Castle Sauvage");
+			}
+		}
+
+		protected virtual int AliceTranslation(RegionTimer callingTimer)
 		{
 			m_questPlayer.Out.SendEmoteAnimation(alice, eEmote.Yes);
-			alice.TempProperties.removeProperty("TranslationEnded");
+			aliceDone = true;
 			return 0;
 		}
 
@@ -1142,9 +1043,8 @@ namespace DOL.GS.Quests.Albion
 						return "[Step #5] Take the translated plans back to Master Frederick. Alice has give you a horse ticket so you can get home faster. Give it to Uliam.";
 					case 6:
 						return "[Step #6] Wait for Master Frederick to finish reading the translated plans.";
-                    default:
-                        return "[Step #" + Step + "] No Description entered for this step!";
 				}
+				return base.Description;
 			}
 		}
 
@@ -1155,73 +1055,87 @@ namespace DOL.GS.Quests.Albion
 			if (player==null || player.IsDoingQuest(typeof (Frontiers)) == null)
 				return;
 
-			if(e == GamePlayerEvent.GiveItem)
+			if (Step == 1 && e == GamePlayerEvent.GiveItem)
 			{
-				if (Step == 1)
+				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
+				if (gArgs.Target.Name == colm.Name && gArgs.Item.Id_nb == noteFormColm.Id_nb)
 				{
-					GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-					if (gArgs.Target == colm && gArgs.Item.QuestName == Name && gArgs.Item.Name == noteFormColm.Name)
-					{
-						RemoveItemFromPlayer(colm, gArgs.Item);
+					RemoveItem(colm, player, noteFormColm);
 
-						colm.TurnTo(m_questPlayer);
-						colm.Emote(eEmote.Ponder);
-						colm.SayTo(m_questPlayer, "Ah, from Master Frederick. Let's see what he says. Ah, I am to give you transportation to Castle Sauvage. No problem. All you need to do is to give me this ticket.");
+					colm.TurnTo(m_questPlayer);
+					colm.SayTo(m_questPlayer, "Ah, from Master Frederick. Let's see what he says. Ah, I am to give you transportation to Castle Sauvage. No problem. All you need to do is purchase a ticket from my store.");
+					m_questPlayer.Out.SendEmoteAnimation(masterFrederick, eEmote.Ponder);
 
-						GiveItemToPlayer(colm, CreateQuestItem(dragonflyTicket));
-						ChangeQuestStep(2);
-						return;
-					}
-				}
-				else if (Step == 3 || Step == 2)
-				{
-					GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-					if (gArgs.Target == alice && gArgs.Item.QuestName == Name && gArgs.Item.Name == fairyPlans.Name)
-					{
-						RemoveItemFromPlayer(alice, gArgs.Item);
-
-						alice.TurnTo(m_questPlayer);
-						alice.Emote(eEmote.Ponder);
-						alice.SayTo(m_questPlayer, "Hmm...What's this now? A letter? For me? Interesting. Ah, I see it is from Master Frederick, something about plans written in fairy. I can translate this if you can wait just a few moments.");
-
-						new RegionTimer(alice, new RegionTimerCallback(AliceTranslationFinished), 30000);
-						alice.TempProperties.setProperty("TranslationEnded", false);
-			
-						ChangeQuestStep(4);
-
-						return;
-					}
-				}
-				else if (Step == 5)
-				{
-					GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-					if (gArgs.Target == masterFrederick && gArgs.Item.QuestName == Name && gArgs.Item.Name == translatedPlans.Name)
-					{
-						RemoveItemFromPlayer(masterFrederick, gArgs.Item);
-
-						masterFrederick.TurnTo(m_questPlayer);
-						masterFrederick.SayTo(m_questPlayer, "Excellent! Let me just read this over for a moment.");
-						masterFrederick.Emote(eEmote.Ponder);
-
-						ChangeQuestStep(6);
-						return;
-					}
+					Step = 2;
+					return;
 				}
 			}
+			else if ((Step == 3 || Step == 2) && e == GamePlayerEvent.GiveItem)
+			{
+				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
+				if (gArgs.Target.Name == alice.Name && gArgs.Item.Id_nb == fairyPlans.Id_nb)
+				{
+					RemoveItem(alice, player, fairyPlans);
+
+					alice.TurnTo(m_questPlayer);
+					alice.SayTo(m_questPlayer, "Hmm...What's this now? A letter? For me? Interesting. Ah, I see it is from Master Frederick, something about plans written in fairy. I can translate this if you can wait just a few moments.");
+					m_questPlayer.Out.SendEmoteAnimation(alice, eEmote.Ponder);
+
+					new RegionTimer(alice, new RegionTimerCallback(AliceTranslation), 30000);
+
+					Step = 4;
+					return;
+				}
+			}
+			else if (Step == 5 && e == GamePlayerEvent.GiveItem)
+			{
+				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
+				if (gArgs.Target.Name == masterFrederick.Name && gArgs.Item.Id_nb == translatedPlans.Id_nb)
+				{
+					RemoveItem(masterFrederick, player, translatedPlans);
+
+					masterFrederick.TurnTo(m_questPlayer);
+					masterFrederick.SayTo(m_questPlayer, "Excellent! Let me just read this over for a moment.");
+					m_questPlayer.Out.SendEmoteAnimation(masterFrederick, eEmote.Ponder);
+
+					Step = 6;
+					return;
+				}
+			}
+
+		}
+
+		public override void AbortQuest()
+		{
+			base.AbortQuest(); //Defined in Quest, changes the state, stores in DB etc ...
+
+			if (Step < 3 && m_questPlayer.Inventory.GetFirstItemByID(dragonflyTicket.Id_nb, eInventorySlot.Min_Inv, eInventorySlot.Max_Inv) == null)
+			{
+				m_questPlayer.RemoveMoney(Money.GetMoney(0, 0, 0, 6, 0), null);
+			}
+
+			RemoveItem(m_questPlayer, dragonflyTicket, false);
+			RemoveItem(m_questPlayer, fairyPlans, false);
+			RemoveItem(m_questPlayer, horseTicket, false);
+			RemoveItem(m_questPlayer, noteFormColm, false);
+			RemoveItem(m_questPlayer, translatedPlans, false);
+
 		}
 
 		public override void FinishQuest()
 		{
+			base.FinishQuest(); //Defined in Quest, changes the state, stores in DB etc ...
+
 			//Give reward to player here ...            
-			if (m_questPlayer.HasAbilityToUseItem(recruitsLegs.CreateInstance() as EquipableItem))
-				GiveItemToPlayer(masterFrederick, recruitsLegs.CreateInstance());
+			if (m_questPlayer.HasAbilityToUseItem(recruitsLegs))
+				GiveItem(masterFrederick, m_questPlayer, recruitsLegs);
 			else
-				GiveItemToPlayer(masterFrederick, recruitsPants.CreateInstance());
+				GiveItem(masterFrederick, m_questPlayer, recruitsPants);
 
 			m_questPlayer.GainExperience(240, 0, 0, true);
 			m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 5, Util.Random(50)), "You recieve {0} as a reward.");
 
-			base.FinishQuest(); //Defined in Quest, changes the state, stores in DB etc ...
 		}
+
 	}
 }

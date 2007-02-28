@@ -140,6 +140,8 @@ namespace DOL.GS.Quests.Midgard
 		[ScriptLoadedEvent]
 		public static void ScriptLoaded(DOLEvent e, object sender, EventArgs args)
 		{
+			if (!ServerProperties.Properties.LOAD_QUESTS)
+				return;
 			if (log.IsInfoEnabled)
 				log.Info("Quest \"" + questTitle + "\" initializing ...");
 			/* First thing we do in here is to search for the NPCs inside
@@ -155,7 +157,6 @@ namespace DOL.GS.Quests.Midgard
 			#region DefineNPCs
 
 			dalikor = GetDalikor();
-			Point pos;
 
 
 			GameNPC[] npcs = WorldMgr.GetNPCsByName("Stor Gothi Annark", eRealm.Midgard);
@@ -163,15 +164,17 @@ namespace DOL.GS.Quests.Midgard
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Stor Gothi Annark, creating ...");
-				annark = new GameMob();
+				annark = new GameNPC();
 				annark.Model = 215;
 				annark.Name = "Stor Gothi Annark";
 				annark.GuildName = "Part of " + questTitle + " Quest";
 				annark.Realm = (byte) eRealm.Midgard;
-				annark.RegionId = 100;
+				annark.CurrentRegionID = 100;
 				annark.Size = 51;
 				annark.Level = 66;
-				annark.Position = new Point(765357, 668790, 5759);
+				annark.X = 765357;
+				annark.Y = 668790;
+				annark.Z = 5759;
 				annark.Heading = 7711;
 
 				//annark.AddNPCEquipment((byte)eEquipmentItems.TORSO, 798, 0, 0, 0);
@@ -194,15 +197,17 @@ namespace DOL.GS.Quests.Midgard
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Scryer Idora, creating ...");
-				idora = new GameMob();
+				idora = new GameNPC();
 				idora.Model = 227;
 				idora.Name = "Scryer Idora";
 				idora.GuildName = "Part of " + questTitle + " Quest";
 				idora.Realm = (byte) eRealm.Midgard;
-				idora.RegionId = 234;
+				idora.CurrentRegionID = 234;
 				idora.Size = 52;
 				idora.Level = 50;
-				idora.Position = new Point(558081, 573988, 8640);
+				idora.X = 558081;
+				idora.Y = 573988;
+				idora.Z = 8640;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
 				template.AddNPCEquipment(eInventorySlot.TorsoArmor, 81);
@@ -238,8 +243,9 @@ namespace DOL.GS.Quests.Midgard
 			else
 				idora = npcs[0];
 
-			Point tmp = idora.GetSpotFromHeading(30);
-			locationIdora = new GameLocation(idora.CurrentZone.Description, idora.Region, tmp, 0);
+			int tmpX, tmpY;
+			idora.GetSpotFromHeading(30, out tmpX, out tmpY);
+			locationIdora = new GameLocation(idora.CurrentZone.Description, idora.CurrentRegionID, (int) tmpX, (int) tmpY, idora.Z);
 
 			ticketToSvasudFaste = CreateTicketTo("Svasud Faste");
 			ticketToMularn = CreateTicketTo("Mularn");
@@ -254,7 +260,7 @@ namespace DOL.GS.Quests.Midgard
 					log.Warn("Could not find " + njiedi.Name + ", creating ...");
 				njiedi.GuildName = "Stable Master";
 				njiedi.Realm = (byte) eRealm.Midgard;
-				njiedi.RegionId = 100;
+				njiedi.CurrentRegionID = 100;
 				njiedi.Size = 51;
 				njiedi.Level = 50;
 
@@ -270,8 +276,9 @@ namespace DOL.GS.Quests.Midgard
 //				njiedi.AddNPCEquipment(Slot.FEET, 84, 10, 0, 0);
 //				njiedi.AddNPCEquipment(Slot.CLOAK, 57, 32, 0, 0);
 
-				Zone z = WorldMgr.GetZone(100);
-				pos = z.ToRegionPosition(new Point(55561, 58225, 5005));
+				njiedi.X = GameLocation.ConvertLocalXToGlobalX(55561, 100);
+				njiedi.Y = GameLocation.ConvertLocalYToGlobalY(58225, 100);
+				njiedi.Z = 5005;
 				njiedi.Heading = 126;
 
 				StandardMobBrain brain = new StandardMobBrain();
@@ -308,20 +315,19 @@ namespace DOL.GS.Quests.Midgard
 			}
 			if (griffin == null)
 			{
-				griffin = new GameMob();
+				griffin = new GameNPC();
 				griffin.Model = 1236; // //819;
 				griffin.Name = "Gryphon";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + griffin.Name + ", creating ...");
 				griffin.GuildName = "Part of " + questTitle + " Quest";
 				griffin.Realm = (byte) eRealm.Midgard;
-				griffin.RegionId = njiedi.RegionId;
+				griffin.CurrentRegionID = njiedi.CurrentRegionID;
 				griffin.Size = 50;
 				griffin.Level = 50;
-				pos = njiedi.Position;
-				pos.X += 80;
-				pos.Y += 100;
-				griffin.Position = pos;
+				griffin.X = njiedi.X + 80;
+				griffin.Y = njiedi.Y + 100;
+				griffin.Z = njiedi.Z;
 
 				StandardMobBrain brain = new StandardMobBrain();
 				brain.AggroLevel = 0;
@@ -353,11 +359,12 @@ namespace DOL.GS.Quests.Midgard
 					log.Warn("Could not find " + vorgar.Name + ", creating ...");
 				vorgar.GuildName = "Stable Master";
 				vorgar.Realm = (byte) eRealm.Midgard;
-				vorgar.RegionId = 100;
+				vorgar.CurrentRegionID = 100;
 				vorgar.Size = 51;
 				vorgar.Level = 50;
-				Zone z = WorldMgr.GetZone(100);
-				vorgar.Position = z.ToRegionPosition(new Point(10660, 3437, 5717));
+				vorgar.X = GameLocation.ConvertLocalXToGlobalX(10660, 100);
+				vorgar.Y = GameLocation.ConvertLocalYToGlobalY(3437, 100);
+				vorgar.Z = 5717;
 				vorgar.Heading = 327;
 				vorgar.MaxSpeedBase = 200;
 
@@ -381,8 +388,8 @@ namespace DOL.GS.Quests.Midgard
 			else
 				vorgar = npcs[0] as GameStableMaster;
 
-			pos = vorgar.GetSpotFromHeading(30);
-			locationVorgar = new GameLocation(vorgar.CurrentZone.Description, vorgar.Region, tmp, 0);
+			vorgar.GetSpotFromHeading(30, out tmpX, out tmpY);
+			locationVorgar = new GameLocation(vorgar.CurrentZone.Description, vorgar.CurrentRegionID, (int) tmpX, (int) tmpY, vorgar.Z);
 
 			#endregion
 
@@ -402,7 +409,7 @@ namespace DOL.GS.Quests.Midgard
 
 				noteForNjiedi.Object_Type = (int) eObjectType.GenericItem;
 
-				noteForNjiedi.ItemTemplateID = "njiedi_note";
+				noteForNjiedi.Id_nb = "njiedi_note";
 				noteForNjiedi.IsPickable = true;
 				noteForNjiedi.IsDropable = false;
 
@@ -428,7 +435,7 @@ namespace DOL.GS.Quests.Midgard
 
 				askefruerPlans.Object_Type = (int) eObjectType.GenericItem;
 
-				askefruerPlans.ItemTemplateID = "askefruer_plans";
+				askefruerPlans.Id_nb = "askefruer_plans";
 				askefruerPlans.IsPickable = true;
 				askefruerPlans.IsDropable = false;
 
@@ -452,7 +459,7 @@ namespace DOL.GS.Quests.Midgard
 
 				translatedPlans.Object_Type = (int) eObjectType.GenericItem;
 
-				translatedPlans.ItemTemplateID = "translated_askefruer_plans";
+				translatedPlans.Id_nb = "translated_askefruer_plans";
 				translatedPlans.IsPickable = true;
 				translatedPlans.IsDropable = false;
 
@@ -480,8 +487,8 @@ namespace DOL.GS.Quests.Midgard
 				recruitsLegs.SPD_ABS = 19; // Absorption
 
 				recruitsLegs.Object_Type = (int) eObjectType.Studded;
-				recruitsLegs.Item_Type = (int) eInventorySlot.LegsArmor;
-				recruitsLegs.ItemTemplateID = "recruits_studded_legs_mid";
+				recruitsLegs.Item_Type = (int) eEquipmentItems.LEGS;
+				recruitsLegs.Id_nb = "recruits_studded_legs_mid";
 				recruitsLegs.Gold = 0;
 				recruitsLegs.Silver = 10;
 				recruitsLegs.Copper = 0;
@@ -502,7 +509,6 @@ namespace DOL.GS.Quests.Midgard
 				recruitsLegs.Bonus3Type = (int) eResist.Cold;
 
 				recruitsLegs.Quality = 100;
-				recruitsLegs.MaxQuality = 100;
 				recruitsLegs.Condition = 1000;
 				recruitsLegs.MaxCondition = 1000;
 				recruitsLegs.Durability = 1000;
@@ -532,8 +538,8 @@ namespace DOL.GS.Quests.Midgard
 				recruitsPants.SPD_ABS = 0; // Absorption
 
 				recruitsPants.Object_Type = (int) eObjectType.Cloth;
-				recruitsPants.Item_Type = (int) eInventorySlot.LegsArmor;
-				recruitsPants.ItemTemplateID = "recruits_quilted_pants";
+				recruitsPants.Item_Type = (int) eEquipmentItems.LEGS;
+				recruitsPants.Id_nb = "recruits_quilted_pants";
 				recruitsPants.Gold = 0;
 				recruitsPants.Silver = 10;
 				recruitsPants.Copper = 0;
@@ -554,7 +560,6 @@ namespace DOL.GS.Quests.Midgard
 				recruitsPants.Bonus3Type = (int) eResist.Cold;
 
 				recruitsPants.Quality = 100;
-				recruitsPants.MaxQuality = 100;
 				recruitsPants.Condition = 1000;
 				recruitsPants.MaxCondition = 1000;
 				recruitsPants.Durability = 1000;
@@ -577,6 +582,9 @@ namespace DOL.GS.Quests.Midgard
 			* a player right clicks on him or when he whispers to him.
 			*/
 			//We want to be notified whenever a player enters the world
+			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
 			GameEventMgr.AddHandler(GamePlayerEvent.GameEntered, new DOLEventHandler(PlayerEnterWorld));
 
 			GameEventMgr.AddHandler(dalikor, GameLivingEvent.Interact, new DOLEventHandler(TalkToDalikor));
@@ -620,6 +628,9 @@ namespace DOL.GS.Quests.Midgard
 			/* Removing hooks works just as adding them but instead of 
 			 * AddHandler, we call RemoveHandler, the parameters stay the same
 			 */
+			GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
 			GameEventMgr.RemoveHandler(GamePlayerEvent.GameEntered, new DOLEventHandler(PlayerEnterWorld));
 
 			GameEventMgr.RemoveHandler(dalikor, GameObjectEvent.Interact, new DOLEventHandler(TalkToDalikor));
@@ -718,7 +729,7 @@ namespace DOL.GS.Quests.Midgard
 							dalikor.SayTo(player, "Will you help out the elders and the rest of Mularn by [delivering] these plans to her?");
 							break;
 						case "delivering":
-							player.Out.SendCustomDialog("Will you take this package to the Frontiers for Dalikor?", new CustomDialogResponse(CheckPlayerAcceptQuest));
+							player.Out.SendQuestSubscribeCommand(dalikor, QuestMgr.GetIDForQuestType(typeof(Frontiers)), "Will you take this package to the Frontiers for Dalikor?");
 							break;
 					}
 				}
@@ -740,6 +751,21 @@ namespace DOL.GS.Quests.Midgard
 					}
 				}
 			}
+		}
+
+		protected static void SubscribeQuest(DOLEvent e, object sender, EventArgs args)
+		{
+			QuestEventArgs qargs = args as QuestEventArgs;
+			if (qargs == null)
+				return;
+
+			if (qargs.QuestID != QuestMgr.GetIDForQuestType(typeof(Frontiers)))
+				return;
+
+			if (e == GamePlayerEvent.AcceptQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x01);
+			else if (e == GamePlayerEvent.DeclineQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x00);
 		}
 
 		protected static void TalkToVorgar(DOLEvent e, object sender, EventArgs args)
@@ -1007,7 +1033,7 @@ namespace DOL.GS.Quests.Midgard
 			if (Step == 1 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == njiedi.Name && gArgs.Item.ItemTemplateID == noteForNjiedi.ItemTemplateID)
+				if (gArgs.Target.Name == njiedi.Name && gArgs.Item.Id_nb == noteForNjiedi.Id_nb)
 				{
 					RemoveItem(njiedi, player, noteForNjiedi);
 
@@ -1022,7 +1048,7 @@ namespace DOL.GS.Quests.Midgard
 			else if ((Step == 3 || Step == 2) && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == idora.Name && gArgs.Item.ItemTemplateID == askefruerPlans.ItemTemplateID)
+				if (gArgs.Target.Name == idora.Name && gArgs.Item.Id_nb == askefruerPlans.Id_nb)
 				{
 					RemoveItem(idora, player, askefruerPlans);
 
@@ -1040,7 +1066,7 @@ namespace DOL.GS.Quests.Midgard
 			else if (Step == 5 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == dalikor.Name && gArgs.Item.ItemTemplateID == translatedPlans.ItemTemplateID)
+				if (gArgs.Target.Name == dalikor.Name && gArgs.Item.Id_nb == translatedPlans.Id_nb)
 				{
 					RemoveItem(dalikor, player, translatedPlans);
 
@@ -1060,7 +1086,7 @@ namespace DOL.GS.Quests.Midgard
 		{
 			base.AbortQuest(); //Defined in Quest, changes the state, stores in DB etc ...
 
-			if (Step < 3 && m_questPlayer.Inventory.GetFirstItemByID(ticketToSvasudFaste.ItemTemplateID, eInventorySlot.Min_Inv, eInventorySlot.Max_Inv) == null)
+			if (Step < 3 && m_questPlayer.Inventory.GetFirstItemByID(ticketToSvasudFaste.Id_nb, eInventorySlot.Min_Inv, eInventorySlot.Max_Inv) == null)
 			{
 				m_questPlayer.RemoveMoney(Money.GetMoney(0, 0, 0, 6, 0), null);
 			}

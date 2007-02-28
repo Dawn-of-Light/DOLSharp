@@ -18,6 +18,8 @@
  */
 using System;
 using System.Collections;
+
+using DOL.Database;
 using DOL.GS.Effects;
 
 namespace DOL.GS.Spells
@@ -90,6 +92,26 @@ namespace DOL.GS.Spells
 			}
 		}
 
+		public override void OnEffectRestored(GameSpellEffect effect, int[] vars)
+		{
+			OnEffectStart(effect);
+		}
+
+		public override int OnRestoredEffectExpires(GameSpellEffect effect, int[] vars, bool noMessages)
+		{
+			return OnEffectExpires(effect, false);
+		}
+
+		public override PlayerXEffect getSavedEffect(GameSpellEffect e)
+		{
+			PlayerXEffect eff = new PlayerXEffect();
+			eff.Var1 = Spell.ID;
+			eff.Duration = e.RemainingTime;
+			eff.IsHandler = true;
+			eff.SpellLine = SpellLine.KeyName;
+			return eff;
+		}
+
 		public PveResurrectionIllness(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) {}
 	
 	}
@@ -120,7 +142,12 @@ namespace DOL.GS.Spells
 		/// <returns>The effect duration in milliseconds</returns>
 		protected override int CalculateEffectDuration(GameLiving target, double effectiveness)
 		{
-			return Spell.Duration;
+			double modifier = 1.0;
+			RealmAbilities.VeilRecoveryAbility ab = target.GetAbility(typeof(RealmAbilities.VeilRecoveryAbility)) as RealmAbilities.VeilRecoveryAbility;
+			if (ab != null)
+				modifier -= ((double)ab.Amount / 100);
+
+			return (int)((double)Spell.Duration * modifier); 
 		}
 
 		public AbstractIllnessSpellHandler(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) {}

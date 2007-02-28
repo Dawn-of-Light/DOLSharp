@@ -17,88 +17,21 @@
  *
  */
 using System;
-using System.Collections;
-using System.Reflection;
-using DOL.Database;
-using DOL.Events;
 using DOL.GS.PacketHandler;
-using DOL.GS.Database;
-using log4net;
+using DOL.Database;
 
 namespace DOL.GS.Trainer
 {
 	/// <summary>
 	/// Mystic Trainer
 	/// </summary>	
-	public class MysticTrainer : GameStandardTrainer
+	[NPCGuildScript("Mystic Trainer", eRealm.Midgard)]		// this attribute instructs DOL to use this script for all "Mystic Trainer" NPC's in Albion (multiple guilds are possible for one script)
+	public class MysticTrainer : GameTrainer
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
-		/// <summary>
-		/// This function is called at the server startup
-		/// </summary>	
-		[GameServerStartedEvent]
-		public static void OnServerStartup(DOLEvent e, object sender, EventArgs args)
+		public const string PRACTICE_WEAPON_ID = "trimmed_branch";
+		
+		public MysticTrainer() : base()
 		{
-			#region Training staff
-
-			StaffTemplate training_staff_template = new StaffTemplate();
-			training_staff_template.Name = "training staff";
-			training_staff_template.Level = 0;
-			training_staff_template.Durability = 100;
-			training_staff_template.Condition = 100;
-			training_staff_template.Quality = 90;
-			training_staff_template.Bonus = 0;
-			training_staff_template.DamagePerSecond = 12;
-			training_staff_template.Speed = 4500;
-			training_staff_template.Weight = 45;
-			training_staff_template.Model = 19;
-			training_staff_template.Realm = eRealm.Midgard;
-			training_staff_template.IsDropable = true; 
-			training_staff_template.IsTradable = false; 
-			training_staff_template.IsSaleable = false;
-			training_staff_template.MaterialLevel = eMaterialLevel.Bronze;
-				
-			if(!allStartupItems.Contains(training_staff_template))
-			{
-				allStartupItems.Add(training_staff_template);
-			
-				if (log.IsDebugEnabled)
-					log.Debug("Adding " + training_staff_template.Name + " to MysticTrainer gifts.");
-			}
-			#endregion
-		}
-
-		/// <summary>
-		/// This hash constrain all item template the trainer can give
-		/// </summary>	
-		protected static IList allStartupItems = new ArrayList();
-
-		/// <summary>
-		/// Gets all trainer gifts
-		/// </summary>
-		public override IList TrainerGifts
-		{
-			get { return allStartupItems; }
-		}
-
-		/// <summary>
-		/// Gets trainer classname
-		/// </summary>
-		public override string TrainerClassName
-		{
-			get { return "Mystic"; }
-		}
-
-		/// <summary>
-		/// Gets trained class
-		/// </summary>
-		public override eCharacterClass TrainedClass
-		{
-			get { return eCharacterClass.Mystic; }
 		}
 
 		/// <summary>
@@ -109,9 +42,28 @@ namespace DOL.GS.Trainer
  		public override bool Interact(GamePlayer player)
  		{		
  			if (!base.Interact(player)) return false;
+								
+			// check if class matches				
+			if (player.CharacterClass.ID == (int) eCharacterClass.Mystic) {
 
-			player.Out.SendMessage(this.Name + " says, \"[Runemaster] or [Spiritmaster]?\"", eChatType.CT_Say, eChatLoc.CL_PopupWindow);												
+				// popup the training window
+				player.Out.SendTrainerWindow();
+							
+				// player can be promoted
+				if (player.Level>=5) {
+					player.Out.SendMessage(this.Name + " says, \"You must now seek your training elsewhere. Which path would you like to follow? [Runemaster] or [Spiritmaster]?\"", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+				} else {
+					//player.Out.SendMessage(this.Name + " says, \"Select what you like to train.\"", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+				}
 
+				// ask for basic equipment if player doesnt own it
+				if (player.Inventory.GetFirstItemByID(PRACTICE_WEAPON_ID, eInventorySlot.Min_Inv, eInventorySlot.Max_Inv) == null) {
+					player.Out.SendMessage(this.Name + " says, \"Do you require a [practice branch]?\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
+				}
+				
+			} else {
+				player.Out.SendMessage(this.Name + " says, \"You must seek elsewhere for your training.\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
+			}
 			return true;
 		}
 
@@ -143,6 +95,13 @@ namespace DOL.GS.Trainer
 					player.Out.SendMessage(this.Name + " says, \"The path of a Spiritmaster is not available to your race. Please choose another.\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
 				}
 				return true;
+			case "practice branch":
+				if (player.Inventory.GetFirstItemByID(PRACTICE_WEAPON_ID, eInventorySlot.Min_Inv, eInventorySlot.Max_Inv) == null)
+				{
+					player.ReceiveItem(this,PRACTICE_WEAPON_ID);
+				}
+				return true;
+			
 			}
 			return true;			
 		}

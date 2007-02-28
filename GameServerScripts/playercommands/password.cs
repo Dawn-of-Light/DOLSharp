@@ -1,7 +1,7 @@
 /*
  * Author:		Nocto
  * Mod:			Kristopher Gilbert <ogre@fallenrealms.net>
- * Rev:			$Id: password.cs,v 1.4 2005/11/19 20:04:40 doulbousiouf Exp $
+ * Rev:			$Id: password.cs,v 1.3 2005/09/03 12:02:36 noret Exp $
  * Copyright:	2004 by Hired Goons, LLC
  * License:		http://www.gnu.org/licenses/gpl.txt
  * 
@@ -11,10 +11,10 @@
  */
 
 using System;
-using System.Reflection;
-using DOL.Database;
+using DOL.GS;
 using DOL.GS.PacketHandler;
-using DOL.GS.PacketHandler.v168;
+using DOL.GS.PacketHandler.Client.v168;
+
 using log4net;
 
 namespace DOL.GS.Scripts
@@ -27,7 +27,7 @@ namespace DOL.GS.Scripts
 		/// <summary>
 		/// Defines a logger for this class.
 		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
 		public int OnCommand(GameClient client, string[] args)
 		{
@@ -54,7 +54,7 @@ namespace DOL.GS.Scripts
 					client.Out.SendMessage("Your current password was incorrect.",
 						eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 					if (log.IsInfoEnabled)
-						log.Info(client.Player.Name + " (" + client.Account.AccountName +
+						log.Info(client.Player.Name + " (" + client.Account.Name +
 								") attempted to change password but failed!");
 					return 0;
 				}
@@ -76,7 +76,7 @@ namespace DOL.GS.Scripts
 			player.Client.Account.Password = LoginRequestHandler.CryptPassword(newPassword);
 			GameServer.Database.SaveObject(player.Client.Account);
 			if (log.IsInfoEnabled)
-				log.Info(player.Name + " (" + player.Client.Account.AccountName + ") changed password.");
+				log.Info(player.Name + " (" + player.Client.Account.Name + ") changed password.");
 		}
 	}
 }

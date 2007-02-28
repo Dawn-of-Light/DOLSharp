@@ -1,16 +1,13 @@
- //using DOL.GS.Database;
+ //using DOL.Database;
 //using DOL.GS.PacketHandler;
-
-using NHibernate.Mapping.Attributes;
 
 namespace DOL.GS.Scripts
 {
 	/// <summary>
-	/// This class holds all information that
-	/// EVERY fletching master npc in the game world needs!
+	/// the master for armorcrafting
 	/// </summary>
-	[Subclass(NameType=typeof(FletchingMaster), ExtendsType=typeof(GameCraftMaster))] 
-	public class FletchingMaster : GameCraftMaster
+	[NPCGuildScript("Fletchers Master")]
+	public class FletchingMaster : CraftNPC
 	{
 		private static readonly eCraftingSkill[] m_trainedSkills = 
 		{
@@ -38,29 +35,6 @@ namespace DOL.GS.Scripts
 		public override string GUILD_CRAFTERS
 		{
 			get { return "Fletchers"; }
-		}
-
-		public override eCharacterClass[] AllowedClass
-		{
-			get 
-			{
-				return new eCharacterClass[]
-					{
-						eCharacterClass.Friar,
-						eCharacterClass.Infiltrator,
-						eCharacterClass.Minstrel,
-						eCharacterClass.Scout,
-						eCharacterClass.Nightshade,
-						eCharacterClass.Ranger,
-						eCharacterClass.Vampiir,
-						eCharacterClass.Mercenary,
-						eCharacterClass.AlbionRogue,
-						eCharacterClass.Stalker,
-						eCharacterClass.MidgardRogue,
-						eCharacterClass.Shadowblade,
-						eCharacterClass.Hunter,
-					};
-			}
 		}
 
 		public override eCraftingSkill TheCraftingSkill

@@ -17,118 +17,22 @@
  *
  */
 using System;
-using System.Collections;
-using System.Reflection;
-using DOL.Database;
-using DOL.Events;
 using DOL.GS.PacketHandler;
-using DOL.GS.Database;
-using log4net;
+using DOL.Database;
 
 namespace DOL.GS.Trainer
 {
 	/// <summary>
 	/// Naturalist Trainer
 	/// </summary>	
-	public class NaturalistTrainer : GameStandardTrainer
+	[NPCGuildScript("Naturalist Trainer", eRealm.Hibernia)]		// this attribute instructs DOL to use this script for all "Naturalist Trainer" NPC's in Albion (multiple guilds are possible for one script)
+	public class NaturalistTrainer : GameTrainer
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		public const string PRACTICE_WEAPON_ID = "training_club";
+		public const string PRACTICE_SHIELD_ID = "training_shield";
 
-		/// <summary>
-		/// This function is called at the server startup
-		/// </summary>	
-		[GameServerStartedEvent]
-		public static void OnServerStartup(DOLEvent e, object sender, EventArgs args)
+		public NaturalistTrainer() : base()
 		{
-			#region Training club
-
-			BluntTemplate training_club_template_hib = new BluntTemplate();
-			training_club_template_hib.Name = "training club";
-			training_club_template_hib.Level = 0;
-			training_club_template_hib.Durability = 100;
-			training_club_template_hib.Condition = 100;
-			training_club_template_hib.Quality = 90;
-			training_club_template_hib.Bonus = 0;
-			training_club_template_hib.DamagePerSecond = 12;
-			training_club_template_hib.Speed = 4000;
-			training_club_template_hib.HandNeeded = eHandNeeded.RightHand;
-			training_club_template_hib.Weight = 35;
-			training_club_template_hib.Model = 449;
-			training_club_template_hib.Realm = eRealm.Hibernia;
-			training_club_template_hib.IsDropable = true; 
-			training_club_template_hib.IsTradable = false; 
-			training_club_template_hib.IsSaleable = false;
-			training_club_template_hib.MaterialLevel = eMaterialLevel.Bronze;
-
-			if(!allStartupItems.Contains(training_club_template_hib))
-			{
-				allStartupItems.Add(training_club_template_hib);
-			
-				if (log.IsDebugEnabled)
-					log.Debug("Adding " + training_club_template_hib.Name + " to NaturalistTrainer gifts.");
-			}
-			#endregion
-
-			#region Training shield
-
-			ShieldTemplate training_shield_template_hib = new ShieldTemplate();
-			training_shield_template_hib.Name = "training shield";
-			training_shield_template_hib.Level = 2;
-			training_shield_template_hib.Durability = 100;
-			training_shield_template_hib.Condition = 100;
-			training_shield_template_hib.Quality = 90;
-			training_shield_template_hib.Bonus = 0;
-			training_shield_template_hib.DamagePerSecond = 10;
-			training_shield_template_hib.Speed = 2000;
-			training_shield_template_hib.Size = eShieldSize.Small;
-			training_shield_template_hib.Weight = 32;
-			training_shield_template_hib.Model = 59;
-			training_shield_template_hib.Realm = eRealm.Hibernia;
-			training_shield_template_hib.IsDropable = true; 
-			training_shield_template_hib.IsTradable = false; 
-			training_shield_template_hib.IsSaleable = false;
-			training_shield_template_hib.MaterialLevel = eMaterialLevel.Bronze;
-
-			if(!allStartupItems.Contains(training_shield_template_hib))
-			{
-				allStartupItems.Add(training_shield_template_hib);
-			
-				if (log.IsDebugEnabled)
-					log.Debug("Adding " + training_shield_template_hib.Name + " to NaturalistTrainer gifts.");
-			}
-			#endregion
-		}
-
-		/// <summary>
-		/// This hash constrain all item template the trainer can give
-		/// </summary>	
-		protected static IList allStartupItems = new ArrayList();
-
-		/// <summary>
-		/// Gets all trainer gifts
-		/// </summary>
-		public override IList TrainerGifts
-		{
-			get { return allStartupItems; }
-		}
-
-		/// <summary>
-		/// Gets trainer classname
-		/// </summary>
-		public override string TrainerClassName
-		{
-			get { return "Naturalist"; }
-		}
-
-		/// <summary>
-		/// Gets trained class
-		/// </summary>
-		public override eCharacterClass TrainedClass
-		{
-			get { return eCharacterClass.Naturalist; }
 		}
 
 		/// <summary>
@@ -139,9 +43,30 @@ namespace DOL.GS.Trainer
  		public override bool Interact(GamePlayer player)
  		{		
  			if (!base.Interact(player)) return false;
+								
+			// check if class matches				
+			if (player.CharacterClass.ID == (int) eCharacterClass.Naturalist) {
 
-			player.Out.SendMessage(this.Name + " says, \"[Bard], [Druid] or [Warden]?\"", eChatType.CT_Say, eChatLoc.CL_PopupWindow);												
+				// popup the training window
+				player.Out.SendTrainerWindow();
+							
+				// player can be promoted
+				if (player.Level>=5) {
+					player.Out.SendMessage(this.Name + " says, \"You must now seek your training elsewhere. Which path would you like to follow? [Bard], [Druid] or [Warden]?\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+				} else {
+					//player.Out.SendMessage(this.Name + " says, \"Select what you like to train.\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+				}
 
+				// ask for basic equipment if player doesnt own it
+				if (player.Inventory.GetFirstItemByID(PRACTICE_WEAPON_ID, eInventorySlot.Min_Inv, eInventorySlot.Max_Inv) == null) {
+					player.Out.SendMessage(this.Name + " says, \"Do you require a [practice weapon]?\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+				}
+				if (player.Inventory.GetFirstItemByID(PRACTICE_SHIELD_ID, eInventorySlot.Min_Inv, eInventorySlot.Max_Inv) == null) {
+					player.Out.SendMessage(this.Name + " says, \"Do you require a [training shield]?\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+				}
+			} else {
+				player.Out.SendMessage(this.Name + " says, \"You must seek elsewhere for your training.\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
+			}
 			return true;
 		}
 
@@ -166,7 +91,8 @@ namespace DOL.GS.Trainer
 				}
 				return true;
 			case "Druid":
-				if(player.Race == (int) eRace.Celt || player.Race == (int) eRace.Firbolg || player.Race == (int) eRace.Sylvan){
+				if(player.Race == (int)eRace.Celt || player.Race == (int)eRace.Firbolg || player.Race == (int)eRace.Sylvan || player.Race == (int)eRace.HiberniaMinotaur)
+				{
 					player.Out.SendMessage(this.Name + " says, \"I can't tell you something about this class.\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
 				}
 				else{
@@ -181,6 +107,18 @@ namespace DOL.GS.Trainer
 				else
 				{
 					player.Out.SendMessage(this.Name + " says, \"The path of a Warden is not available to your race. Please choose another.\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+				}
+				return true;
+			case "practice weapon":
+				if (player.Inventory.GetFirstItemByID(PRACTICE_WEAPON_ID, eInventorySlot.Min_Inv, eInventorySlot.Max_Inv) == null)
+				{
+					player.ReceiveItem(this,PRACTICE_WEAPON_ID);
+				}
+				return true;
+			case "training shield":
+				if (player.Inventory.GetFirstItemByID(PRACTICE_SHIELD_ID, eInventorySlot.Min_Inv, eInventorySlot.Max_Inv) == null)
+				{
+					player.ReceiveItem(this,PRACTICE_SHIELD_ID);
 				}
 				return true;
 			}

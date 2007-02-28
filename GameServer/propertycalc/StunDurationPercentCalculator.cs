@@ -17,6 +17,7 @@
  *
  */
 using System;
+using DOL.GS.RealmAbilities;
 
 namespace DOL.GS.PropertyCalc
 {
@@ -32,17 +33,16 @@ namespace DOL.GS.PropertyCalc
 	[PropertyCalculator(eProperty.StunDuration)]
 	public class StunDurationPercentCalculator : PropertyCalculator
 	{
-		public override int CalcValue(GameLiving living, eProperty property) 
+		public override int CalcValue(GameLiving living, eProperty property)
 		{
 			int percent = 100
-				-living.BuffBonusCategory1[(int)property] // buff reduce the duration
-				+living.BuffBonusCategory3[(int)property]
-				-living.ItemBonus[(int)property];
+				- living.BuffBonusCategory1[(int)property] // buff reduce the duration
+				+ living.BuffBonusCategory3[(int)property]
+				- living.ItemBonus[(int)property]
+				- living.AbilityBonus[(int)property];
 
-			if(living is GamePlayer && ((GamePlayer)living).HasAbility(Abilities.Stoicism))
-			{
+			if (living.HasAbility(Abilities.Stoicism))
 				percent -= 25;
-			}
 
 			return Math.Max(1, percent);
 		}

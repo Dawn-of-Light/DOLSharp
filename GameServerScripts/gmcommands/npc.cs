@@ -23,8 +23,8 @@
 */
 
 using System;
+using System.Reflection;
 using System.Collections;
-using DOL.Database;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Scripts
@@ -96,7 +96,7 @@ namespace DOL.GS.Scripts
                         }
                         string action = string.Join(" ", args, 2, args.Length - 2);
                         action = "<" + npc.Name + " " + action + " >";
-						foreach (GamePlayer player in npc.GetInRadius(typeof(GamePlayer), WorldMgr.SAY_DISTANCE))
+						foreach (GamePlayer player in npc.GetPlayersInRadius(WorldMgr.SAY_DISTANCE))
 						{
 							player.Out.SendMessage(action, eChatType.CT_Emote, eChatLoc.CL_ChatWindow);
 						}
@@ -166,23 +166,40 @@ namespace DOL.GS.Scripts
 							speed = Convert.ToInt32(args[3]);
 						}
 
-						Point pos = Point.Zero;
+						int X=0;
+						int Y=0;
+						int Z=0;
 						switch (args[2].ToLower())
 						{
 							case "me":
 							{
-								pos = client.Player.Position;
+								X = client.Player.X;
+								Y = client.Player.Y;
+								Z = client.Player.Z;
 								break;
 							}
 
 							default:
 							{
+								//Check for players by name in visibility distance
+								foreach (GamePlayer targetplayer in npc.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+								{
+									if (targetplayer.Name.ToLower() == args[2].ToLower())
+									{
+										X = targetplayer.X;
+										Y = targetplayer.Y;
+										Z = targetplayer.Z;
+										break;
+									}
+								}
 								//Check for NPCs by name in visibility distance
-								foreach (GameObject target in npc.GetInRadius(typeof(GameObject), WorldMgr.VISIBILITY_DISTANCE))
+								foreach (GameNPC target in npc.GetNPCsInRadius(WorldMgr.VISIBILITY_DISTANCE))
 								{
 									if (target.Name.ToLower() == args[2].ToLower())
 									{
-										pos = target.Position;
+										X = target.X;
+										Y = target.Y;
+										Z = target.Z;
 										break;
 									}
 								}
@@ -190,13 +207,13 @@ namespace DOL.GS.Scripts
 							}
 						}
 
-						if(pos == Point.Zero)
+						if(X == 0 && Y == 0 && Z == 0)
 						{
 							client.Out.SendMessage("Can't find name "+ args[2].ToLower() +" near your target.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return 0;
 						}
 
-						npc.WalkTo(pos, speed);
+						npc.WalkTo(X, Y, Z, speed);
 						client.Out.SendMessage("Your target is walking to your location!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
                         break;
                     }
@@ -208,7 +225,7 @@ namespace DOL.GS.Scripts
                             return 0;
                         }
 						
-						GameObject target = null;
+						GameLiving target = null;
 						switch (args[2].ToLower())
 						{
 							case "me":
@@ -219,8 +236,17 @@ namespace DOL.GS.Scripts
 
 							default:
 							{
+								//Check for players by name in visibility distance
+								foreach (GamePlayer targetplayer in npc.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+								{
+									if (targetplayer.Name.ToLower() == args[2].ToLower())
+									{
+										target = targetplayer;
+										break;
+									}
+								}
 								//Check for NPCs by name in visibility distance
-								foreach (GameObject targetNpc in npc.GetInRadius(typeof(GameObject), WorldMgr.VISIBILITY_DISTANCE))
+								foreach (GameNPC targetNpc in npc.GetNPCsInRadius(WorldMgr.VISIBILITY_DISTANCE))
 								{
 									if (targetNpc.Name.ToLower() == args[2].ToLower())
 									{
@@ -238,7 +264,7 @@ namespace DOL.GS.Scripts
 							return 0;
 						}
 
-						npc.TurnTo(target.Position);
+						npc.TurnTo(target);
                         break;
                     }
 				case "follow":
@@ -249,7 +275,7 @@ namespace DOL.GS.Scripts
 						return 0;
 					}
 						
-					GameLivingBase target = null;
+					GameLiving target = null;
 					switch (args[2].ToLower())
 					{
 						case "me":
@@ -260,8 +286,17 @@ namespace DOL.GS.Scripts
 
 						default:
 						{
+							//Check for players by name in visibility distance
+							foreach (GamePlayer targetplayer in npc.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+							{
+								if (targetplayer.Name.ToLower() == args[2].ToLower())
+								{
+									target = targetplayer;
+									break;
+								}
+							}
 							//Check for NPCs by name in visibility distance
-							foreach (GameLivingBase targetNpc in npc.GetInRadius(typeof(GameLivingBase), WorldMgr.VISIBILITY_DISTANCE))
+							foreach (GameNPC targetNpc in npc.GetNPCsInRadius(WorldMgr.VISIBILITY_DISTANCE))
 							{
 								if (targetNpc.Name.ToLower() == args[2].ToLower())
 								{
@@ -301,7 +336,7 @@ namespace DOL.GS.Scripts
 						return 0;
 					}
 
-					GameObject target = null;
+					GameLiving target = null;
 					switch (args[2].ToLower())
 					{
 						case "self": 
@@ -318,8 +353,17 @@ namespace DOL.GS.Scripts
 
 						default:
 						{
+							//Check for players by name in visibility distance
+							foreach (GamePlayer targetplayer in npc.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+							{
+								if (targetplayer.Name.ToLower() == args[2].ToLower())
+								{
+									target = targetplayer;
+									break;
+								}
+							}
 							//Check for NPCs by name in visibility distance
-							foreach (GameObject targetNpc in npc.GetInRadius(typeof(GameObject), WorldMgr.VISIBILITY_DISTANCE))
+							foreach (GameNPC targetNpc in npc.GetNPCsInRadius(WorldMgr.VISIBILITY_DISTANCE))
 							{
 								if (targetNpc.Name.ToLower() == args[2].ToLower())
 								{

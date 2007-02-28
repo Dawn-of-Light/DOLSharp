@@ -77,7 +77,7 @@ namespace DOL.GS.Quests.Midgard
 
 		private static GameNPC dalikor = null;
 
-		private static GameMob[] general = new GameMob[3];
+		private static GameNPC[] general = new GameNPC[3];
 		private static String[] generalNames = {"Mitan", "Ostadi", "Seiki"};
 		private static GameLocation[] generalLocations = new GameLocation[3];
 
@@ -125,6 +125,8 @@ namespace DOL.GS.Quests.Midgard
 		[ScriptLoadedEvent]
 		public static void ScriptLoaded(DOLEvent e, object sender, EventArgs args)
 		{
+			if (!ServerProperties.Properties.LOAD_QUESTS)
+				return;
 			if (log.IsInfoEnabled)
 				log.Info("Quest \"" + questTitle + "\" initializing ...");
 			/* First thing we do in here is to search for the NPCs inside
@@ -150,23 +152,25 @@ namespace DOL.GS.Quests.Midgard
 			{
 				npcs = WorldMgr.GetNPCsByName(generalNames[i], eRealm.None);
 				if (npcs.Length > 0)
-					general[i] = npcs[0] as GameMob;
+					general[i] = npcs[0] as GameNPC;
 				else
 				{
 					if (log.IsWarnEnabled)
 						log.Warn("Could not find " + generalNames[i] + ", creating ...");
-					general[i] = new GameMob();
+					general[i] = new GameNPC();
 
 					general[i].Model = 678;
 
 					general[i].GuildName = "Part of " + questTitle + " Quest";
 					general[i].Name = generalNames[i];
-					general[i].Position = generalLocations[i].Position;
+					general[i].X = generalLocations[i].X;
+					general[i].Y = generalLocations[i].Y;
+					general[i].Z = generalLocations[i].Z;
 					general[i].Heading = generalLocations[i].Heading;
 					;
 
 					general[i].Realm = (byte) eRealm.None;
-					general[i].Region = generalLocations[i].Region;
+					general[i].CurrentRegionID = generalLocations[i].RegionID;
 					general[i].Size = 49;
 					general[i].Level = 2;
 
@@ -239,7 +243,7 @@ namespace DOL.GS.Quests.Midgard
 
 				askefruerWings.Object_Type = (int) eObjectType.GenericItem;
 
-				askefruerWings.ItemTemplateID = "askefruer_wings";
+				askefruerWings.Id_nb = "askefruer_wings";
 				askefruerWings.IsPickable = true;
 				askefruerWings.IsDropable = false;
 
@@ -263,7 +267,7 @@ namespace DOL.GS.Quests.Midgard
 
 				dustyOldMap.Object_Type = (int) eObjectType.GenericItem;
 
-				dustyOldMap.ItemTemplateID = "dusty_old_map";
+				dustyOldMap.Id_nb = "dusty_old_map";
 				dustyOldMap.IsPickable = true;
 				dustyOldMap.IsDropable = false;
 
@@ -292,8 +296,8 @@ namespace DOL.GS.Quests.Midgard
 				recruitsArms.SPD_ABS = 19; // Absorption
 
 				recruitsArms.Object_Type = (int) eObjectType.Studded;
-				recruitsArms.Item_Type = (int) eInventorySlot.ArmsArmor;
-				recruitsArms.ItemTemplateID = "recruits_studded_arms_mid";
+				recruitsArms.Item_Type = (int) eEquipmentItems.ARMS;
+				recruitsArms.Id_nb = "recruits_studded_arms_mid";
 				recruitsArms.Gold = 0;
 				recruitsArms.Silver = 4;
 				recruitsArms.Copper = 0;
@@ -310,7 +314,6 @@ namespace DOL.GS.Quests.Midgard
 				recruitsArms.Bonus2Type = (int) eResist.Body;
 
 				recruitsArms.Quality = 100;
-				recruitsArms.MaxQuality = 100;
 				recruitsArms.Condition = 1000;
 				recruitsArms.MaxCondition = 1000;
 				recruitsArms.Durability = 1000;
@@ -339,8 +342,8 @@ namespace DOL.GS.Quests.Midgard
 				recruitsSleeves.SPD_ABS = 0; // Absorption
 
 				recruitsSleeves.Object_Type = (int) eObjectType.Cloth;
-				recruitsSleeves.Item_Type = (int) eInventorySlot.ArmsArmor;
-				recruitsSleeves.ItemTemplateID = "recruits_quilted_sleeves";
+				recruitsSleeves.Item_Type = (int) eEquipmentItems.ARMS;
+				recruitsSleeves.Id_nb = "recruits_quilted_sleeves";
 				recruitsSleeves.Gold = 0;
 				recruitsSleeves.Silver = 4;
 				recruitsSleeves.Copper = 0;
@@ -357,7 +360,6 @@ namespace DOL.GS.Quests.Midgard
 				recruitsSleeves.Bonus2Type = (int) eResist.Body;
 
 				recruitsSleeves.Quality = 100;
-				recruitsSleeves.MaxQuality = 100;
 				recruitsSleeves.Condition = 1000;
 				recruitsSleeves.MaxCondition = 1000;
 				recruitsSleeves.Durability = 1000;
@@ -384,6 +386,9 @@ namespace DOL.GS.Quests.Midgard
 
 			GameEventMgr.AddHandler(dalikor, GameLivingEvent.Interact, new DOLEventHandler(TalkToDalikor));
 			GameEventMgr.AddHandler(dalikor, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToDalikor));
+
+			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
 
 			/* Now we bring to dalikor the possibility to give this quest to players */
 			dalikor.AddQuestToGive(typeof (Collection));
@@ -416,6 +421,9 @@ namespace DOL.GS.Quests.Midgard
 
 			GameEventMgr.RemoveHandler(dalikor, GameLivingEvent.Interact, new DOLEventHandler(TalkToDalikor));
 			GameEventMgr.RemoveHandler(dalikor, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToDalikor));
+
+			GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
 
 			/* Now we remove to dalikor the possibility to give this quest to players */
 			dalikor.RemoveQuestToGive(typeof (Collection));
@@ -493,7 +501,7 @@ namespace DOL.GS.Quests.Midgard
 
 							//If the player offered his "help", we send the quest dialog now!
 						case "do it":
-							player.Out.SendCustomDialog("Will you find and slay these three Fallen Askefruer and return their wings to Dalikor?", new CustomDialogResponse(CheckPlayerAcceptQuest));
+							player.Out.SendQuestSubscribeCommand(dalikor, QuestMgr.GetIDForQuestType(typeof(Collection)), "Will you find and slay these three Fallen Askefruer and return their wings to Dalikor?");
 							break;
 					}
 				}
@@ -523,6 +531,21 @@ namespace DOL.GS.Quests.Midgard
 					}
 				}
 			}
+		}
+
+		protected static void SubscribeQuest(DOLEvent e, object sender, EventArgs args)
+		{
+			QuestEventArgs qargs = args as QuestEventArgs;
+			if (qargs == null)
+				return;
+
+			if (qargs.QuestID != QuestMgr.GetIDForQuestType(typeof(Collection)))
+				return;
+
+			if (e == GamePlayerEvent.AcceptQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x01);
+			else if (e == GamePlayerEvent.DeclineQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x00);
 		}
 
 		protected static void PlayerLeftWorld(DOLEvent e, object sender, EventArgs args)
@@ -565,7 +588,7 @@ namespace DOL.GS.Quests.Midgard
 			UseSlotEventArgs uArgs = (UseSlotEventArgs) args;
 
 			InventoryItem item = player.Inventory.GetItem((eInventorySlot)uArgs.Slot);
-			if (item != null && item.ItemTemplateID == dustyOldMap.ItemTemplateID)
+			if (item != null && item.Id_nb == dustyOldMap.Id_nb)
 			{
 				if (quest.Step == 2)
 				{
@@ -737,7 +760,7 @@ namespace DOL.GS.Quests.Midgard
 			if (Step >= 6 && Step <= 8 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == dalikor.Name && gArgs.Item.ItemTemplateID == askefruerWings.ItemTemplateID)
+				if (gArgs.Target.Name == dalikor.Name && gArgs.Item.Id_nb == askefruerWings.Id_nb)
 				{
 					if (Step == 6)
 					{

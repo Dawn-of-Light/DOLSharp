@@ -67,7 +67,7 @@ namespace DOL.AI.Brain
 		GameNPC Body { get; }
 		GamePlayer Owner { get; }
 		void Attack(GameObject target);
-		void Follow(GamePlayer target);
+		void Follow(GameObject target);
 		void Stay();
 		void ComeHere();
 		void Goto(GameObject target);

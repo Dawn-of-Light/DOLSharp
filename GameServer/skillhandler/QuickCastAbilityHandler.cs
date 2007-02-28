@@ -17,7 +17,6 @@
  *
  */
 using System;
-using DOL.GS.Database;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
 
@@ -56,7 +55,7 @@ namespace DOL.GS.SkillHandler
 			}			
 
 			// Dead can't quick cast
-			if(!player.Alive)
+			if(!player.IsAlive)
 			{
 				player.Out.SendMessage("You can't quick cast when dead!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
@@ -70,7 +69,7 @@ namespace DOL.GS.SkillHandler
 			}
 
 			long quickcastChangeTick = player.TempProperties.getLongProperty(GamePlayer.QUICK_CAST_CHANGE_TICK, 0L);
-			long changeTime = player.Region.Time - quickcastChangeTick;
+			long changeTime = player.CurrentRegion.Time - quickcastChangeTick;
 			if(changeTime < DISABLE_DURATION)
 			{
 				player.Out.SendMessage("You must wait " + ((DISABLE_DURATION-changeTime)/1000) + " more second to attempt to quick cast!", eChatType.CT_System, eChatLoc.CL_SystemWindow);

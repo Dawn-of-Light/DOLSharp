@@ -20,7 +20,7 @@ using System;
 using System.Collections;
 using System.Reflection;
 using DOL.GS;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.GS.PacketHandler;
 using log4net;
 
@@ -46,8 +46,8 @@ namespace DOL.GS
 		bool Repairing { get; set; }
 		bool Combine { get; set; }
 		
-		bool AddItemToTrade(GenericItem itemForTrade);
-		void RemoveItemToTrade(GenericItem itemToRemove);
+		bool AddItemToTrade(InventoryItem itemForTrade);
+		void RemoveItemToTrade(InventoryItem itemToRemove);
 		void AddMoneyToTrade(long money);
 		
 		bool AcceptTrade();

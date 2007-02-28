@@ -17,8 +17,6 @@
  *
  */
 
-using DOL.Database;
-
 namespace DOL.GS.Scripts
 {
 	[CmdAttribute("&hood", //command to handle
@@ -29,7 +27,7 @@ namespace DOL.GS.Scripts
 	{
 		public int OnCommand(GameClient client, string[] args)
 		{
-			client.Player.Inventory.IsCloakHoodUp = !client.Player.Inventory.IsCloakHoodUp;
+			client.Player.IsCloakHoodUp = !client.Player.IsCloakHoodUp;
 			return 0;
 		}
 	}

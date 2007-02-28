@@ -17,7 +17,6 @@
  *
  */
 using System.Collections;
-using DOL.Database;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Scripts
@@ -31,15 +30,13 @@ namespace DOL.GS.Scripts
 			if (args.Length == 2)
 			{
 				int result = 0;
-				GameClient targetClient = WorldMgr.GetClientByPlayerName(args[1], false);
+				GameClient targetClient = WorldMgr.GuessClientByPlayerNameAndRealm(args[1], 0, true, out result);
 				if (targetClient != null)
 				{
 					targetPlayer = targetClient.Player;
 
-					if (targetPlayer.Region != client.Player.Region
-						|| targetPlayer.Position.CheckSquareDistance(client.Player.Position, (uint) (WorldMgr.YELL_DISTANCE*WorldMgr.YELL_DISTANCE))
-						|| targetPlayer.IsStealthed
-					    || !GameServer.ServerRules.IsSameRealm(client.Player, targetPlayer, true))
+					int dist = WorldMgr.GetDistance(client.Player, targetPlayer);
+					if (dist > WorldMgr.YELL_DISTANCE || dist < 0 || targetPlayer.IsStealthed || !GameServer.ServerRules.IsSameRealm(client.Player, targetPlayer, true))
 					{
 						client.Out.SendMessage("You don't see " + args[1] + " around here!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						return 0;
@@ -49,8 +46,8 @@ namespace DOL.GS.Scripts
 					client.Out.SendMessage("You target " + targetPlayer.GetName(0, true) + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return 1;
 				}
-				if (client.Account.PrivLevel != ePrivLevel.Player) {
-					IEnumerator en = client.Player.GetInRadius(typeof(GameNPC), 800).GetEnumerator();
+				if (client.Account.PrivLevel > 1) {
+					IEnumerator en = client.Player.GetNPCsInRadius(800).GetEnumerator();
 					while (en.MoveNext()) {
 						if (((GameObject)en.Current).Name == args[1]) {
 							client.Out.SendChangeTarget((GameObject)en.Current);
@@ -63,7 +60,7 @@ namespace DOL.GS.Scripts
 				client.Out.SendMessage("You don't see " + args[1] + " around here!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return 0;
 			}
-			if (client.Account.PrivLevel != ePrivLevel.Player) {
+			if (client.Account.PrivLevel > 1) {
 				client.Out.SendMessage("/target <player/mobname>", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			} else {
 				client.Out.SendMessage("/target <playername>", eChatType.CT_System, eChatLoc.CL_SystemWindow);

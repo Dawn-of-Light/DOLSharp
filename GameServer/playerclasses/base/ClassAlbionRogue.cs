@@ -52,7 +52,7 @@ namespace DOL.GS.Scripts
 
 			player.AddAbility(SkillBase.GetAbility(Abilities.Sprint));
 			player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 1));
-			player.AddAbility(SkillBase.GetAbility(Abilities.AlbArmor, (int)eArmorLevel.Low));
+			player.AddAbility(SkillBase.GetAbility(Abilities.AlbArmor, ArmorLevel.Leather));
 			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Slashing));
 			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Thrusting));
 			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Staves));

@@ -29,12 +29,12 @@ namespace DOL.Events
 		/// <summary>
 		/// The killer
 		/// </summary>
-		private GameLiving m_killer;
+		private GameObject m_killer;
 
 		/// <summary>
 		/// Constructs a new Dying event args
 		/// </summary>
-		public DyingEventArgs(GameLiving killer)
+		public DyingEventArgs(GameObject killer)
 		{
 			this.m_killer=killer;
 		}
@@ -42,7 +42,7 @@ namespace DOL.Events
 		/// <summary>
 		/// Gets the killer
 		/// </summary>
-		public GameLiving Killer
+		public GameObject Killer
 		{
 			get { return m_killer; }
 		}

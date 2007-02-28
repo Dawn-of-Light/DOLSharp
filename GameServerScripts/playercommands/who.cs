@@ -1,16 +1,16 @@
 /*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -43,7 +43,6 @@ using System;
 using System.Collections;
 using System.Reflection;
 using System.Text;
-using DOL.Database;
 using DOL.GS.PacketHandler;
 using log4net;
 
@@ -73,8 +72,8 @@ namespace DOL.GS.Scripts
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		private const int MAX_LIST_SIZE = 26;
-		private const string MESSAGE_LIST_TRUNCATED = "(Too many matches ({0}).  List truncated.)";
+		public const int MAX_LIST_SIZE = 26;
+		public const string MESSAGE_LIST_TRUNCATED = "(Too many matches ({0}).  List truncated.)";
 		private const string MESSAGE_NO_MATCHES = "No Matches.";
 		private const string MESSAGE_NO_ARGS = "Type /WHO HELP for variations on the WHO command.";
 		private const string MESSAGE_PLAYERS_ONLINE = "{0} player{1} currently online.";
@@ -91,10 +90,16 @@ namespace DOL.GS.Scripts
 			{
 				GamePlayer addPlayer = serverClient.Player;
                 if (addPlayer == null) continue;
+				if (serverClient.Account.PrivLevel > (int)ePrivLevel.Player && serverClient.Player.IsAnonymous == false)
+				{
+					clientsList.Add(addPlayer.Client);
+					continue;
+				}
 				if (addPlayer.Client != client // allways add self
-					&& client.Account.PrivLevel == ePrivLevel.Admin
+					&& client.Account.PrivLevel==(int)ePrivLevel.Player
 					&& (addPlayer.IsAnonymous
-					|| !GameServer.ServerRules.IsSameRealm(addPlayer, client.Player, true))) continue;
+					|| !GameServer.ServerRules.IsSameRealm(addPlayer, client.Player, true)))
+					continue;
 				clientsList.Add(addPlayer.Client);
 			}
 
@@ -114,13 +119,40 @@ namespace DOL.GS.Scripts
 			switch (args[1].ToLower())
 			{
 				case "all": // display all players, no filter
-					filters = null;
-					break;
-
+					{
+						filters = null;
+						break;
+					}
+				case "staff":
+				case "gm":
+				case "admin":
+					{
+						filters = new ArrayList(1);
+						filters.Add(new GMFilter());
+						break;
+					}
+				case "en":
+				case "cz":
+				case "de":
+				case "es":
+				case "fr":
+					{
+						filters = new ArrayList(1);
+						filters.Add(new LanguageFilter(args[1].ToLower()));
+						break;
+					}
+				case "cg":
+					{
+						filters = new ArrayList(1);
+						filters.Add(new ChatGroupFilter());
+						break;
+					}
 				default:
-					filters = new ArrayList();
-					AddFilters(filters, args, 1);
-					break;
+					{
+						filters = new ArrayList();
+						AddFilters(filters, args, 1);
+						break;
+					}
 			}
 
 
@@ -158,7 +190,7 @@ namespace DOL.GS.Scripts
 
 
 		// make /who line using GamePlayer
-		private string FormatLine(GamePlayer player, ePrivLevel PrivLevel)
+		private string FormatLine(GamePlayer player, uint PrivLevel)
 		{
 			/*
 			 * /setwho class | trade
@@ -176,38 +208,49 @@ namespace DOL.GS.Scripts
 			}
 
 			StringBuilder result = new StringBuilder(player.Name, 100);
-			if (player.Guild != null)
+			if (player.GuildName != "")
 			{
 				result.Append(" <");
-				result.Append(player.Guild.GuildName);
+				result.Append(player.GuildName);
 				result.Append(">");
 			}
 
 			// simle format for PvP
-			if (GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvP && PrivLevel == ePrivLevel.Player)
+			if (GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvP && PrivLevel == 1)
 				return result.ToString();
 
 			result.Append(" the Level ");
 			result.Append(player.Level);
-			if (player.CharacterClass != null)
+			if (player.ClassNameFlag)
 			{
 				result.Append(" ");
 				result.Append(player.CharacterClass.Name);
+			}
+			else if (player.CharacterClass != null)
+			{
+				result.Append(" ");
+				AbstractCraftingSkill skill = CraftingMgr.getSkillbyEnum(player.CraftingPrimarySkill);
+				result.Append(player.CraftTitle + " " + skill.Name);
 			}
 			else
 			{
 				if (log.IsErrorEnabled)
 					log.Error("no character class spec in who commandhandler for player " + player.Name);
 			}
-			if (player.Region.GetZone(player.Position) != null)
+			if (player.CurrentZone != null)
 			{
 				result.Append(" in ");
-				result.Append(player.Region.GetZone(player.Position).Description);
+				result.Append(player.CurrentZone.Description);
 			}
 			else
 			{
 				if (log.IsErrorEnabled)
 					log.Error("no currentzone in who commandhandler for player " + player.Name);
+			}
+			ChatGroup mychatgroup = (ChatGroup) player.TempProperties.getObjectProperty(ChatGroup.CHATGROUP_PROPERTY, null);
+			if (mychatgroup != null && (mychatgroup.Members.Contains(player) || mychatgroup.IsPublic))
+			{
+				result.Append(" [CG]");
 			}
 			if (player.IsAnonymous)
 			{
@@ -217,10 +260,25 @@ namespace DOL.GS.Scripts
 			{
 				result.Append(" <AFK>");
 			}
+			if (player.Advisor)
+			{
+				result.Append(" <ADV>");
+			}
+			if(player.Client.Account.PrivLevel == (int)ePrivLevel.GM)
+			{
+				result.Append(" <GM>");
+			}
+			if(player.Client.Account.PrivLevel == (int)ePrivLevel.Admin)
+			{
+				result.Append(" <Admin>");
+			}
+			if (ServerProperties.Properties.ALLOW_CHANGE_LANGUAGE)
+			{
+				result.Append(" <" + player.Client.Account.Language + ">");
+			}
 
 			return result.ToString();
 		}
-
 
 		private void AddFilters(ArrayList filters, string[] args, int skip)
 		{
@@ -232,11 +290,11 @@ namespace DOL.GS.Scripts
 				{
 					try
 					{
-						int currentNum = (int) Convert.ToUInt32(args[i]);
+						int currentNum = (int) System.Convert.ToUInt32(args[i]);
 						int nextNum = -1;
 						try
 						{
-							nextNum = (int) Convert.ToUInt32(args[i + 1]);
+							nextNum = (int) System.Convert.ToUInt32(args[i + 1]);
 						}
 						catch
 						{
@@ -289,13 +347,13 @@ namespace DOL.GS.Scripts
 			{
 				if (player.Name.ToLower().StartsWith(m_filterString))
 					return true;
-				if (player.Guild != null && player.Guild.GuildName.ToLower().IndexOf(m_filterString) != -1)
+				if (player.GuildName.ToLower().StartsWith(m_filterString))
 					return true;
 				if (GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvP)
 					return false;
 				if (player.CharacterClass.Name.ToLower().StartsWith(m_filterString))
 					return true;
-				if (player.Region.GetZone(player.Position) != null && player.Region.GetZone(player.Position).Description.ToLower().IndexOf(m_filterString) != -1)
+				if (player.CurrentZone != null && player.CurrentZone.Description.ToLower().StartsWith(m_filterString))
 					return true;
 				return false;
 			}
@@ -334,6 +392,52 @@ namespace DOL.GS.Scripts
 				if (player.Level != m_level)
 					return false;
 				return true;
+			}
+		}
+
+		private class GMFilter : IWhoFilter
+		{
+			public bool ApplyFilter(GamePlayer player)
+			{
+				if(!player.IsAnonymous && player.Client.Account.PrivLevel > (int)ePrivLevel.Player)
+					return true;
+				return false;
+			}
+		}
+
+		private class LanguageFilter : IWhoFilter
+		{
+			private string m_str;
+			public bool ApplyFilter(GamePlayer player)
+			{
+				if (!player.IsAnonymous && player.Client.Account.Language.ToLower() == m_str)
+					return true;
+				return false;
+			}
+			
+			public LanguageFilter(string language) 
+			{
+				m_str = language;
+			}
+		}
+
+		private class ChatGroupFilter : IWhoFilter 
+		{
+			public bool ApplyFilter(GamePlayer player)
+			{
+				ChatGroup cg = (ChatGroup)player.TempProperties.getObjectProperty(ChatGroup.CHATGROUP_PROPERTY, null);
+				//no chatgroup found
+				if (cg == null)
+					return false;
+
+				//always show your own cg
+				//TODO
+
+				//player is a cg leader, and the cg is public
+				if ((bool)cg.Members[player] == true && cg.IsPublic)
+					return true;
+
+				return false;
 			}
 		}
 

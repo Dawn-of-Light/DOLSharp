@@ -91,9 +91,10 @@ namespace DOL.GS.Quests.Albion
 		[ScriptLoadedEvent]
 		public static void ScriptLoaded(DOLEvent e, object sender, EventArgs args)
 		{
+			if (!ServerProperties.Properties.LOAD_QUESTS)
+				return;
 			if (log.IsInfoEnabled)
-				if (log.IsInfoEnabled)
-					log.Info("Quest \"" + questTitle + "\" initializing ...");
+				log.Info("Quest \"" + questTitle + "\" initializing ...");
 
 			#region NPC Declarations
 
@@ -103,15 +104,17 @@ namespace DOL.GS.Quests.Albion
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Lidmann Halsey, creating it ...");
-				Lidmann = new GameMob();
+				Lidmann = new GameNPC();
 				Lidmann.Model = 64;
 				Lidmann.Name = "Lidmann Halsey";
 				Lidmann.GuildName = "";
 				Lidmann.Realm = (byte)eRealm.Albion;
-				Lidmann.RegionId = 1;
+				Lidmann.CurrentRegionID = 1;
 				Lidmann.Size = 50;
 				Lidmann.Level = 50;
-				Lidmann.Position = new Point(466464, 634554, 1954);
+				Lidmann.X = 466464;
+				Lidmann.Y = 634554;
+				Lidmann.Z = 1954;
 				Lidmann.Heading = 1809;
 				Lidmann.AddToWorld();
 				if (SAVE_INTO_DATABASE)
@@ -130,15 +133,17 @@ namespace DOL.GS.Quests.Albion
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Uragaig , creating it ...");
-				Uragaig = new GameMob();
+				Uragaig = new GameNPC();
 				Uragaig.Model = 349;
 				Uragaig.Name = "Cailleach Uragaig";
 				Uragaig.GuildName = "";
 				Uragaig.Realm = (byte)eRealm.None;
-				Uragaig.RegionId = 1;
+				Uragaig.CurrentRegionID = 1;
 				Uragaig.Size = 55;
 				Uragaig.Level = 70;
-				Uragaig.Position = new Point(316218, 664484, 2736);
+				Uragaig.X = 316218;
+				Uragaig.Y = 664484;
+				Uragaig.Z = 2736;
 				Uragaig.Heading = 3072;
 				Uragaig.AddToWorld();
 				if (SAVE_INTO_DATABASE)
@@ -161,7 +166,7 @@ namespace DOL.GS.Quests.Albion
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Sealed Pouch , creating it ...");
 				sealed_pouch = new ItemTemplate();
-				sealed_pouch.ItemTemplateID = "sealed_pouch";
+				sealed_pouch.Id_nb = "sealed_pouch";
 				sealed_pouch.Name = "Sealed Pouch";
 				sealed_pouch.Level = 8;
 				sealed_pouch.Item_Type = 29;
@@ -174,7 +179,6 @@ namespace DOL.GS.Quests.Albion
 				sealed_pouch.Hand = 0;
 				sealed_pouch.Type_Damage = 0;
 				sealed_pouch.Quality = 100;
-				sealed_pouch.MaxQuality = 100;
 				sealed_pouch.Weight = 12;
 				if (SAVE_INTO_DATABASE)
 				{
@@ -188,7 +192,7 @@ namespace DOL.GS.Quests.Albion
 			if (MercenaryEpicBoots == null)
 			{
 				i = new ItemTemplate();
-				i.ItemTemplateID = "MercenaryEpicBoots";
+				i.Id_nb = "MercenaryEpicBoots";
 				i.Name = "Boots of the Shadowy Embers";
 				i.Level = 50;
 				i.Item_Type = 23;
@@ -199,7 +203,6 @@ namespace DOL.GS.Quests.Albion
 				i.SPD_ABS = 27;
 				i.Object_Type = 35;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -232,7 +235,7 @@ namespace DOL.GS.Quests.Albion
 			if (MercenaryEpicHelm == null)
 			{
 				i = new ItemTemplate();
-				i.ItemTemplateID = "MercenaryEpicHelm";
+				i.Id_nb = "MercenaryEpicHelm";
 				i.Name = "Coif of the Shadowy Embers";
 				i.Level = 50;
 				i.Item_Type = 21;
@@ -243,7 +246,6 @@ namespace DOL.GS.Quests.Albion
 				i.SPD_ABS = 27;
 				i.Object_Type = 35;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -276,7 +278,7 @@ namespace DOL.GS.Quests.Albion
 			if (MercenaryEpicGloves == null)
 			{
 				i = new ItemTemplate();
-				i.ItemTemplateID = "MercenaryEpicGloves";
+				i.Id_nb = "MercenaryEpicGloves";
 				i.Name = "Gauntlets of the Shadowy Embers";
 				i.Level = 50;
 				i.Item_Type = 22;
@@ -287,7 +289,6 @@ namespace DOL.GS.Quests.Albion
 				i.SPD_ABS = 27;
 				i.Object_Type = 35;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -319,7 +320,7 @@ namespace DOL.GS.Quests.Albion
 			if (MercenaryEpicVest == null)
 			{
 				i = new ItemTemplate();
-				i.ItemTemplateID = "MercenaryEpicVest";
+				i.Id_nb = "MercenaryEpicVest";
 				i.Name = "Haurberk of the Shadowy Embers";
 				i.Level = 50;
 				i.Item_Type = 25;
@@ -330,7 +331,6 @@ namespace DOL.GS.Quests.Albion
 				i.SPD_ABS = 27;
 				i.Object_Type = 35;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -362,7 +362,7 @@ namespace DOL.GS.Quests.Albion
 			if (MercenaryEpicLegs == null)
 			{
 				i = new ItemTemplate();
-				i.ItemTemplateID = "MercenaryEpicLegs";
+				i.Id_nb = "MercenaryEpicLegs";
 				i.Name = "Chausses of the Shadowy Embers";
 				i.Level = 50;
 				i.Item_Type = 27;
@@ -373,7 +373,6 @@ namespace DOL.GS.Quests.Albion
 				i.SPD_ABS = 27;
 				i.Object_Type = 35;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -405,7 +404,7 @@ namespace DOL.GS.Quests.Albion
 			if (MercenaryEpicArms == null)
 			{
 				i = new ItemTemplate();
-				i.ItemTemplateID = "MercenaryEpicArms";
+				i.Id_nb = "MercenaryEpicArms";
 				i.Name = "Sleeves of the Shadowy Embers";
 				i.Level = 50;
 				i.Item_Type = 28;
@@ -416,7 +415,6 @@ namespace DOL.GS.Quests.Albion
 				i.SPD_ABS = 27;
 				i.Object_Type = 35;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -448,7 +446,7 @@ namespace DOL.GS.Quests.Albion
 			if (ReaverEpicBoots == null)
 			{
 				i = new ItemTemplate();
-				i.ItemTemplateID = "ReaverEpicBoots";
+				i.Id_nb = "ReaverEpicBoots";
 				i.Name = "Boots of Murky Secrets";
 				i.Level = 50;
 				i.Item_Type = 23;
@@ -459,7 +457,6 @@ namespace DOL.GS.Quests.Albion
 				i.SPD_ABS = 27;
 				i.Object_Type = 35;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -492,7 +489,7 @@ namespace DOL.GS.Quests.Albion
 			if (ReaverEpicHelm == null)
 			{
 				i = new ItemTemplate();
-				i.ItemTemplateID = "ReaverEpicHelm";
+				i.Id_nb = "ReaverEpicHelm";
 				i.Name = "Coif of Murky Secrets";
 				i.Level = 50;
 				i.Item_Type = 21;
@@ -503,7 +500,6 @@ namespace DOL.GS.Quests.Albion
 				i.SPD_ABS = 27;
 				i.Object_Type = 35;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -536,7 +532,7 @@ namespace DOL.GS.Quests.Albion
 			if (ReaverEpicGloves == null)
 			{
 				i = new ItemTemplate();
-				i.ItemTemplateID = "ReaverEpicGloves";
+				i.Id_nb = "ReaverEpicGloves";
 				i.Name = "Gauntlets of Murky Secrets";
 				i.Level = 50;
 				i.Item_Type = 22;
@@ -547,7 +543,6 @@ namespace DOL.GS.Quests.Albion
 				i.SPD_ABS = 27;
 				i.Object_Type = 35;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -579,7 +574,7 @@ namespace DOL.GS.Quests.Albion
 			if (ReaverEpicVest == null)
 			{
 				i = new ItemTemplate();
-				i.ItemTemplateID = "ReaverEpicVest";
+				i.Id_nb = "ReaverEpicVest";
 				i.Name = "Hauberk of Murky Secrets";
 				i.Level = 50;
 				i.Item_Type = 25;
@@ -590,7 +585,6 @@ namespace DOL.GS.Quests.Albion
 				i.SPD_ABS = 27;
 				i.Object_Type = 35;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -622,7 +616,7 @@ namespace DOL.GS.Quests.Albion
 			if (ReaverEpicLegs == null)
 			{
 				i = new ItemTemplate();
-				i.ItemTemplateID = "ReaverEpicLegs";
+				i.Id_nb = "ReaverEpicLegs";
 				i.Name = "Chausses of Murky Secrets";
 				i.Level = 50;
 				i.Item_Type = 27;
@@ -633,7 +627,6 @@ namespace DOL.GS.Quests.Albion
 				i.SPD_ABS = 27;
 				i.Object_Type = 35;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -665,7 +658,7 @@ namespace DOL.GS.Quests.Albion
 			if (ReaverEpicArms == null)
 			{
 				i = new ItemTemplate();
-				i.ItemTemplateID = "ReaverEpicArms";
+				i.Id_nb = "ReaverEpicArms";
 				i.Name = "Sleeves of Murky Secrets";
 				i.Level = 50;
 				i.Item_Type = 28;
@@ -676,7 +669,6 @@ namespace DOL.GS.Quests.Albion
 				i.SPD_ABS = 27;
 				i.Object_Type = 35;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -707,7 +699,7 @@ namespace DOL.GS.Quests.Albion
 			if (InfiltratorEpicBoots == null)
 			{
 				InfiltratorEpicBoots = new ItemTemplate();
-				InfiltratorEpicBoots.ItemTemplateID = "InfiltratorEpicBoots";
+				InfiltratorEpicBoots.Id_nb = "InfiltratorEpicBoots";
 				InfiltratorEpicBoots.Name = "Shadow-Woven Boots";
 				InfiltratorEpicBoots.Level = 50;
 				InfiltratorEpicBoots.Item_Type = 23;
@@ -718,7 +710,6 @@ namespace DOL.GS.Quests.Albion
 				InfiltratorEpicBoots.SPD_ABS = 10;
 				InfiltratorEpicBoots.Object_Type = 33;
 				InfiltratorEpicBoots.Quality = 100;
-				InfiltratorEpicBoots.MaxQuality = 100;
 				InfiltratorEpicBoots.Weight = 22;
 				InfiltratorEpicBoots.Bonus = 35;
 				InfiltratorEpicBoots.MaxCondition = 50000;
@@ -748,7 +739,7 @@ namespace DOL.GS.Quests.Albion
 			if (InfiltratorEpicHelm == null)
 			{
 				InfiltratorEpicHelm = new ItemTemplate();
-				InfiltratorEpicHelm.ItemTemplateID = "InfiltratorEpicHelm";
+				InfiltratorEpicHelm.Id_nb = "InfiltratorEpicHelm";
 				InfiltratorEpicHelm.Name = "Shadow-Woven Coif";
 				InfiltratorEpicHelm.Level = 50;
 				InfiltratorEpicHelm.Item_Type = 21;
@@ -759,7 +750,6 @@ namespace DOL.GS.Quests.Albion
 				InfiltratorEpicHelm.SPD_ABS = 10;
 				InfiltratorEpicHelm.Object_Type = 33;
 				InfiltratorEpicHelm.Quality = 100;
-				InfiltratorEpicHelm.MaxQuality = 100;
 				InfiltratorEpicHelm.Weight = 22;
 				InfiltratorEpicHelm.Bonus = 35;
 				InfiltratorEpicHelm.MaxCondition = 50000;
@@ -789,7 +779,7 @@ namespace DOL.GS.Quests.Albion
 			if (InfiltratorEpicGloves == null)
 			{
 				InfiltratorEpicGloves = new ItemTemplate();
-				InfiltratorEpicGloves.ItemTemplateID = "InfiltratorEpicGloves";
+				InfiltratorEpicGloves.Id_nb = "InfiltratorEpicGloves";
 				InfiltratorEpicGloves.Name = "Shadow-Woven Gloves";
 				InfiltratorEpicGloves.Level = 50;
 				InfiltratorEpicGloves.Item_Type = 22;
@@ -800,7 +790,6 @@ namespace DOL.GS.Quests.Albion
 				InfiltratorEpicGloves.SPD_ABS = 10;
 				InfiltratorEpicGloves.Object_Type = 33;
 				InfiltratorEpicGloves.Quality = 100;
-				InfiltratorEpicGloves.MaxQuality = 100;
 				InfiltratorEpicGloves.Weight = 22;
 				InfiltratorEpicGloves.Bonus = 35;
 				InfiltratorEpicGloves.MaxCondition = 50000;
@@ -830,7 +819,7 @@ namespace DOL.GS.Quests.Albion
 			if (InfiltratorEpicVest == null)
 			{
 				InfiltratorEpicVest = new ItemTemplate();
-				InfiltratorEpicVest.ItemTemplateID = "InfiltratorEpicVest";
+				InfiltratorEpicVest.Id_nb = "InfiltratorEpicVest";
 				InfiltratorEpicVest.Name = "Shadow-Woven Jerkin";
 				InfiltratorEpicVest.Level = 50;
 				InfiltratorEpicVest.Item_Type = 25;
@@ -841,7 +830,6 @@ namespace DOL.GS.Quests.Albion
 				InfiltratorEpicVest.SPD_ABS = 10;
 				InfiltratorEpicVest.Object_Type = 33;
 				InfiltratorEpicVest.Quality = 100;
-				InfiltratorEpicVest.MaxQuality = 100;
 				InfiltratorEpicVest.Weight = 22;
 				InfiltratorEpicVest.Bonus = 35;
 				InfiltratorEpicVest.MaxCondition = 50000;
@@ -870,7 +858,7 @@ namespace DOL.GS.Quests.Albion
 			if (InfiltratorEpicLegs == null)
 			{
 				InfiltratorEpicLegs = new ItemTemplate();
-				InfiltratorEpicLegs.ItemTemplateID = "InfiltratorEpicLegs";
+				InfiltratorEpicLegs.Id_nb = "InfiltratorEpicLegs";
 				InfiltratorEpicLegs.Name = "Shadow-Woven Leggings";
 				InfiltratorEpicLegs.Level = 50;
 				InfiltratorEpicLegs.Item_Type = 27;
@@ -881,7 +869,6 @@ namespace DOL.GS.Quests.Albion
 				InfiltratorEpicLegs.SPD_ABS = 10;
 				InfiltratorEpicLegs.Object_Type = 33;
 				InfiltratorEpicLegs.Quality = 100;
-				InfiltratorEpicLegs.MaxQuality = 100;
 				InfiltratorEpicLegs.Weight = 22;
 				InfiltratorEpicLegs.Bonus = 35;
 				InfiltratorEpicLegs.MaxCondition = 50000;
@@ -910,7 +897,7 @@ namespace DOL.GS.Quests.Albion
 			if (InfiltratorEpicArms == null)
 			{
 				InfiltratorEpicArms = new ItemTemplate();
-				InfiltratorEpicArms.ItemTemplateID = "InfiltratorEpicArms";
+				InfiltratorEpicArms.Id_nb = "InfiltratorEpicArms";
 				InfiltratorEpicArms.Name = "Shadow-Woven Sleeves";
 				InfiltratorEpicArms.Level = 50;
 				InfiltratorEpicArms.Item_Type = 28;
@@ -921,7 +908,6 @@ namespace DOL.GS.Quests.Albion
 				InfiltratorEpicArms.SPD_ABS = 10;
 				InfiltratorEpicArms.Object_Type = 33;
 				InfiltratorEpicArms.Quality = 100;
-				InfiltratorEpicArms.MaxQuality = 100;
 				InfiltratorEpicArms.Weight = 22;
 				InfiltratorEpicArms.Bonus = 35;
 				InfiltratorEpicArms.MaxCondition = 50000;
@@ -949,7 +935,7 @@ namespace DOL.GS.Quests.Albion
 			if (CabalistEpicBoots == null)
 			{
 				CabalistEpicBoots = new ItemTemplate();
-				CabalistEpicBoots.ItemTemplateID = "CabalistEpicBoots";
+				CabalistEpicBoots.Id_nb = "CabalistEpicBoots";
 				CabalistEpicBoots.Name = "Warm Boots of the Construct";
 				CabalistEpicBoots.Level = 50;
 				CabalistEpicBoots.Item_Type = 23;
@@ -960,7 +946,6 @@ namespace DOL.GS.Quests.Albion
 				CabalistEpicBoots.SPD_ABS = 0;
 				CabalistEpicBoots.Object_Type = 32;
 				CabalistEpicBoots.Quality = 100;
-				CabalistEpicBoots.MaxQuality = 100;
 				CabalistEpicBoots.Weight = 22;
 				CabalistEpicBoots.Bonus = 35;
 				CabalistEpicBoots.MaxCondition = 50000;
@@ -990,7 +975,7 @@ namespace DOL.GS.Quests.Albion
 			if (CabalistEpicHelm == null)
 			{
 				i = new ItemTemplate();
-				i.ItemTemplateID = "CabalistEpicHelm";
+				i.Id_nb = "CabalistEpicHelm";
 				i.Name = "Warm Coif of the Construct";
 				i.Level = 50;
 				i.Item_Type = 21;
@@ -1001,7 +986,6 @@ namespace DOL.GS.Quests.Albion
 				i.SPD_ABS = 0;
 				i.Object_Type = 32;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -1032,7 +1016,7 @@ namespace DOL.GS.Quests.Albion
 			if (CabalistEpicGloves == null)
 			{
 				i = new ItemTemplate();
-				i.ItemTemplateID = "CabalistEpicGloves";
+				i.Id_nb = "CabalistEpicGloves";
 				i.Name = "Warm Gloves of the Construct";
 				i.Level = 50;
 				i.Item_Type = 22;
@@ -1043,7 +1027,6 @@ namespace DOL.GS.Quests.Albion
 				i.SPD_ABS = 0;
 				i.Object_Type = 32;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -1074,7 +1057,7 @@ namespace DOL.GS.Quests.Albion
 			if (CabalistEpicVest == null)
 			{
 				i = new ItemTemplate();
-				i.ItemTemplateID = "CabalistEpicVest";
+				i.Id_nb = "CabalistEpicVest";
 				i.Name = "Warm Robe of the Construct";
 				i.Level = 50;
 				i.Item_Type = 25;
@@ -1085,7 +1068,6 @@ namespace DOL.GS.Quests.Albion
 				i.SPD_ABS = 0;
 				i.Object_Type = 32;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -1116,7 +1098,7 @@ namespace DOL.GS.Quests.Albion
 			if (CabalistEpicLegs == null)
 			{
 				i = new ItemTemplate();
-				i.ItemTemplateID = "CabalistEpicLegs";
+				i.Id_nb = "CabalistEpicLegs";
 				i.Name = "Warm Leggings of the Construct";
 				i.Level = 50;
 				i.Item_Type = 27;
@@ -1127,7 +1109,6 @@ namespace DOL.GS.Quests.Albion
 				i.SPD_ABS = 0;
 				i.Object_Type = 32;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -1159,7 +1140,7 @@ namespace DOL.GS.Quests.Albion
 			if (CabalistEpicArms == null)
 			{
 				i = new ItemTemplate();
-				i.ItemTemplateID = "CabalistEpicArms";
+				i.Id_nb = "CabalistEpicArms";
 				i.Name = "Warm Sleeves of the Construct";
 				i.Level = 50;
 				i.Item_Type = 28;
@@ -1170,7 +1151,6 @@ namespace DOL.GS.Quests.Albion
 				i.SPD_ABS = 0;
 				i.Object_Type = 32;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -1202,7 +1182,7 @@ namespace DOL.GS.Quests.Albion
 			if (NecromancerEpicBoots == null)
 			{
 				i = new ItemTemplate();
-				i.ItemTemplateID = "NecromancerEpicBoots";
+				i.Id_nb = "NecromancerEpicBoots";
 				i.Name = "Boots of Forbidden Rites";
 				i.Level = 50;
 				i.Item_Type = 23;
@@ -1213,7 +1193,6 @@ namespace DOL.GS.Quests.Albion
 				i.SPD_ABS = 0;
 				i.Object_Type = 32;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -1245,7 +1224,7 @@ namespace DOL.GS.Quests.Albion
 			if (NecromancerEpicHelm == null)
 			{
 				i = new ItemTemplate();
-				i.ItemTemplateID = "NecromancerEpicHelm";
+				i.Id_nb = "NecromancerEpicHelm";
 				i.Name = "Cap of Forbidden Rites";
 				i.Level = 50;
 				i.Item_Type = 21;
@@ -1256,7 +1235,6 @@ namespace DOL.GS.Quests.Albion
 				i.SPD_ABS = 0;
 				i.Object_Type = 32;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -1288,7 +1266,7 @@ namespace DOL.GS.Quests.Albion
 			if (NecromancerEpicGloves == null)
 			{
 				i = new ItemTemplate();
-				i.ItemTemplateID = "NecromancerEpicGloves";
+				i.Id_nb = "NecromancerEpicGloves";
 				i.Name = "Gloves of Forbidden Rites";
 				i.Level = 50;
 				i.Item_Type = 22;
@@ -1299,7 +1277,6 @@ namespace DOL.GS.Quests.Albion
 				i.SPD_ABS = 0;
 				i.Object_Type = 32;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -1330,7 +1307,7 @@ namespace DOL.GS.Quests.Albion
 			if (NecromancerEpicVest == null)
 			{
 				i = new ItemTemplate();
-				i.ItemTemplateID = "NecromancerEpicVest";
+				i.Id_nb = "NecromancerEpicVest";
 				i.Name = "Robe of Forbidden Rites";
 				i.Level = 50;
 				i.Item_Type = 25;
@@ -1341,7 +1318,6 @@ namespace DOL.GS.Quests.Albion
 				i.SPD_ABS = 0;
 				i.Object_Type = 32;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -1373,7 +1349,7 @@ namespace DOL.GS.Quests.Albion
 			if (NecromancerEpicLegs == null)
 			{
 				i = new ItemTemplate();
-				i.ItemTemplateID = "NecromancerEpicLegs";
+				i.Id_nb = "NecromancerEpicLegs";
 				i.Name = "Leggings of Forbidden Rites";
 				i.Level = 50;
 				i.Item_Type = 27;
@@ -1384,7 +1360,6 @@ namespace DOL.GS.Quests.Albion
 				i.SPD_ABS = 0;
 				i.Object_Type = 32;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -1415,7 +1390,7 @@ namespace DOL.GS.Quests.Albion
 			if (NecromancerEpicArms == null)
 			{
 				i = new ItemTemplate();
-				i.ItemTemplateID = "NecromancerEpicArms";
+				i.Id_nb = "NecromancerEpicArms";
 				i.Name = "Sleeves of Forbidden Rites";
 				i.Level = 50;
 				i.Item_Type = 28;
@@ -1426,7 +1401,6 @@ namespace DOL.GS.Quests.Albion
 				i.SPD_ABS = 0;
 				i.Object_Type = 32;
 				i.Quality = 100;
-				i.MaxQuality = 100;
 				i.Weight = 22;
 				i.Bonus = 35;
 				i.MaxCondition = 50000;
@@ -1458,6 +1432,9 @@ namespace DOL.GS.Quests.Albion
 
 			#endregion
 
+			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
 			GameEventMgr.AddHandler(Lidmann, GameObjectEvent.Interact, new DOLEventHandler(TalkToLidmann));
 			GameEventMgr.AddHandler(Lidmann, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToLidmann));
 
@@ -1471,10 +1448,15 @@ namespace DOL.GS.Quests.Albion
 		[ScriptUnloadedEvent]
 		public static void ScriptUnloaded(DOLEvent e, object sender, EventArgs args)
 		{
+			if (!ServerProperties.Properties.LOAD_QUESTS)
+				return;
 			//if not loaded, don't worry
 			if (Lidmann == null)
 				return;
 			// remove handlers
+			GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
 			GameEventMgr.RemoveHandler(Lidmann, GameObjectEvent.Interact, new DOLEventHandler(TalkToLidmann));
 			GameEventMgr.RemoveHandler(Lidmann, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToLidmann));
 
@@ -1521,7 +1503,7 @@ namespace DOL.GS.Quests.Albion
 					switch (wArgs.Text)
 					{
 						case "services":
-							player.Out.SendCustomDialog("Will you help Lidmann [Defenders of Albion Level 50 Epic]?", new CustomDialogResponse(CheckPlayerAcceptQuest));
+							player.Out.SendQuestSubscribeCommand(Lidmann, QuestMgr.GetIDForQuestType(typeof(Shadows_50)), "Will you help Lidmann [Defenders of Albion Level 50 Epic]?");
 							break;
 					}
 				}
@@ -1587,6 +1569,21 @@ namespace DOL.GS.Quests.Albion
 			}
 		}
 
+		protected static void SubscribeQuest(DOLEvent e, object sender, EventArgs args)
+		{
+			QuestEventArgs qargs = args as QuestEventArgs;
+			if (qargs == null)
+				return;
+
+			if (qargs.QuestID != QuestMgr.GetIDForQuestType(typeof(Shadows_50)))
+				return;
+
+			if (e == GamePlayerEvent.AcceptQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x01);
+			else if (e == GamePlayerEvent.DeclineQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x00);
+		}
+
 		private static void CheckPlayerAcceptQuest(GamePlayer player, byte response)
 		{
 			if (Lidmann.CanGiveQuest(typeof(Shadows_50), player) <= 0)
@@ -1644,7 +1641,7 @@ namespace DOL.GS.Quests.Albion
 				if (gArgs.Target.Name == Uragaig.Name)
 				{
 					m_questPlayer.Out.SendMessage("Take the pouch to Lidmann Halsey", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					GiveItem(player, sealed_pouch);
+					GiveItem(m_questPlayer, sealed_pouch);
 					Step = 2;
 					return;
 				}
@@ -1653,7 +1650,7 @@ namespace DOL.GS.Quests.Albion
 			if (Step == 2 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs)args;
-				if (gArgs.Target.Name == Lidmann.Name && gArgs.Item.ItemTemplateID == sealed_pouch.ItemTemplateID)
+				if (gArgs.Target.Name == Lidmann.Name && gArgs.Item.Id_nb == sealed_pouch.Id_nb)
 				{
 					RemoveItem(Lidmann, player, sealed_pouch);
 					Lidmann.SayTo(player, "You have earned this Epic Armour!");

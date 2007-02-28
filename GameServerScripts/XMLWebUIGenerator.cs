@@ -16,12 +16,22 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
+using System;
+using System.Reflection;
+using System.IO;
+using DOL.Database;
+using DOL.Database.Attributes;
+using DOL.Database.Connection;
+using DOL.Events;
+using DOL.GS.PacketHandler;
+using log4net;
+
 namespace DOL.GS.Scripts
 {
 	/// <summary>
 	/// Generates an XML version of the web ui
 	/// </summary>
-	/*public class XMLWebUIGenerator
+	public class XMLWebUIGenerator
 	{
 		/// <summary>
 		/// Defines a logger for this class.
@@ -305,12 +315,11 @@ namespace DOL.GS.Scripts
 					pi.Race = plr.RaceName;
 					pi.Guild = plr.GuildName;
 					pi.Level = plr.Level;
-					pi.Alive = plr.Alive ? "yes" : "no";
+					pi.Alive = plr.IsAlive ? "yes" : "no";
 					pi.Realm = ((eRealm) plr.Realm).ToString();
-					pi.Region = plr.Region.Name;
-					Point pos = plr.Position;
-					pi.X = pos.X;
-					pi.Y = pos.Y;
+					pi.Region = plr.CurrentRegion.Name;
+					pi.X = plr.X;
+					pi.Y = plr.Y;
 				}
 
 				db.WriteDatabaseTables();
@@ -374,5 +383,5 @@ namespace DOL.GS.Scripts
 		{
 			Generate();
 		}
-	}*/
+	}
 }

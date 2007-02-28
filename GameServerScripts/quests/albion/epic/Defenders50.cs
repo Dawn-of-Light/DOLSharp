@@ -82,9 +82,10 @@ namespace DOL.GS.Quests.Albion
 		[ScriptLoadedEvent]
 		public static void ScriptLoaded(DOLEvent e, object sender, EventArgs args)
 		{
+			if (!ServerProperties.Properties.LOAD_QUESTS)
+				return;
 			if (log.IsInfoEnabled)
-				if (log.IsInfoEnabled)
-					log.Info("Quest \"" + questTitle + "\" initializing ...");
+				log.Info("Quest \"" + questTitle + "\" initializing ...");
 
 			#region defineNPCs
 
@@ -93,7 +94,7 @@ namespace DOL.GS.Quests.Albion
 			if (npcs.Length == 0)
 			{
 				
-				Lidmann = new GameMob();
+				Lidmann = new GameNPC();
 				Lidmann.Model = 64;
 				Lidmann.Name = "Lidmann Halsey";
                 
@@ -102,10 +103,12 @@ namespace DOL.GS.Quests.Albion
 
 				Lidmann.GuildName = "";
 				Lidmann.Realm = (byte) eRealm.Albion;
-				Lidmann.RegionId = 1;
+				Lidmann.CurrentRegionID = 1;
 				Lidmann.Size = 50;
 				Lidmann.Level = 50;
-				Lidmann.Position = new Point(466464, 634554, 1954);
+				Lidmann.X = 466464;
+				Lidmann.Y = 634554;
+				Lidmann.Z = 1954;
 				Lidmann.Heading = 1809;
 				Lidmann.AddToWorld();
 				if (SAVE_INTO_DATABASE)
@@ -124,15 +127,17 @@ namespace DOL.GS.Quests.Albion
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Uragaig , creating it ...");
-				Uragaig = new GameMob();
+				Uragaig = new GameNPC();
 				Uragaig.Model = 349;
 				Uragaig.Name = "Cailleach Uragaig";
 				Uragaig.GuildName = "";
 				Uragaig.Realm = (byte) eRealm.None;
-				Uragaig.RegionId = 1;
+				Uragaig.CurrentRegionID = 1;
 				Uragaig.Size = 55;
 				Uragaig.Level = 70;
-				Uragaig.Position = new Point(316218, 664484, 2736);
+				Uragaig.X = 316218;
+				Uragaig.Y = 664484;
+				Uragaig.Z = 2736;
 				Uragaig.Heading = 3072;
 				Uragaig.AddToWorld();
 				if (SAVE_INTO_DATABASE)
@@ -155,7 +160,7 @@ namespace DOL.GS.Quests.Albion
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Sealed Pouch , creating it ...");
 				sealed_pouch = new ItemTemplate();
-				sealed_pouch.ItemTemplateID = "sealed_pouch";
+				sealed_pouch.Id_nb = "sealed_pouch";
 				sealed_pouch.Name = "Sealed Pouch";
 				sealed_pouch.Level = 8;
 				sealed_pouch.Item_Type = 29;
@@ -168,7 +173,6 @@ namespace DOL.GS.Quests.Albion
 				sealed_pouch.Hand = 0;
 				sealed_pouch.Type_Damage = 0;
 				sealed_pouch.Quality = 100;
-				sealed_pouch.MaxQuality = 100;
 				sealed_pouch.Weight = 12;
 				if (SAVE_INTO_DATABASE)
 				{
@@ -182,7 +186,7 @@ namespace DOL.GS.Quests.Albion
                 if (ScoutEpicBoots == null)
                 {
                     i = new ItemTemplate();
-                    i.ItemTemplateID = "ScoutEpicBoots";
+                    i.Id_nb = "ScoutEpicBoots";
                     i.Name = "Brigandine Boots of Vigilant Defense";
                     i.Level = 50;
                     i.Item_Type = 23;
@@ -193,7 +197,6 @@ namespace DOL.GS.Quests.Albion
                     i.SPD_ABS = 19;
                     i.Object_Type = 34;
                     i.Quality = 100;
-                    i.MaxQuality = 100;
                     i.Weight = 22;
                     i.Bonus = 35;
                     i.MaxCondition = 50000;
@@ -225,7 +228,7 @@ namespace DOL.GS.Quests.Albion
                 if (ScoutEpicHelm == null)
                 {
                     i = new ItemTemplate();
-                    i.ItemTemplateID = "ScoutEpicHelm";
+                    i.Id_nb = "ScoutEpicHelm";
                     i.Name = "Brigandine Coif of Vigilant Defense";
                     i.Level = 50;
                     i.Item_Type = 21;
@@ -236,7 +239,6 @@ namespace DOL.GS.Quests.Albion
                     i.SPD_ABS = 19;
                     i.Object_Type = 34;
                     i.Quality = 100;
-                    i.MaxQuality = 100;
                     i.Weight = 22;
                     i.Bonus = 35;
                     i.MaxCondition = 50000;
@@ -269,7 +271,7 @@ namespace DOL.GS.Quests.Albion
                 if (ScoutEpicGloves == null)
                 {
                     i = new ItemTemplate();
-                    i.ItemTemplateID = "ScoutEpicGloves";
+                    i.Id_nb = "ScoutEpicGloves";
                     i.Name = "Brigandine Gloves of Vigilant Defense";
                     i.Level = 50;
                     i.Item_Type = 22;
@@ -280,7 +282,6 @@ namespace DOL.GS.Quests.Albion
                     i.SPD_ABS = 19;
                     i.Object_Type = 34;
                     i.Quality = 100;
-                    i.MaxQuality = 100;
                     i.Weight = 22;
                     i.Bonus = 35;
                     i.MaxCondition = 50000;
@@ -313,7 +314,7 @@ namespace DOL.GS.Quests.Albion
                 if (ScoutEpicVest == null)
                 {
                     i = new ItemTemplate();
-                    i.ItemTemplateID = "ScoutEpicVest";
+                    i.Id_nb = "ScoutEpicVest";
                     i.Name = "Brigandine Jerkin of Vigilant Defense";
                     i.Level = 50;
                     i.Item_Type = 25;
@@ -324,7 +325,6 @@ namespace DOL.GS.Quests.Albion
                     i.SPD_ABS = 19;
                     i.Object_Type = 34;
                     i.Quality = 100;
-                    i.MaxQuality = 100;
                     i.Weight = 22;
                     i.Bonus = 35;
                     i.MaxCondition = 50000;
@@ -356,7 +356,7 @@ namespace DOL.GS.Quests.Albion
                 if (ScoutEpicLegs == null)
                 {
                     i = new ItemTemplate();
-                    i.ItemTemplateID = "ScoutEpicLegs";
+                    i.Id_nb = "ScoutEpicLegs";
                     i.Name = "Brigandine Legs of Vigilant Defense";
                     i.Level = 50;
                     i.Item_Type = 27;
@@ -367,7 +367,6 @@ namespace DOL.GS.Quests.Albion
                     i.SPD_ABS = 19;
                     i.Object_Type = 34;
                     i.Quality = 100;
-                    i.MaxQuality = 100;
                     i.Weight = 22;
                     i.Bonus = 35;
                     i.MaxCondition = 50000;
@@ -398,7 +397,7 @@ namespace DOL.GS.Quests.Albion
                 if (ScoutEpicArms == null)
                 {
                     i = new ItemTemplate();
-                    i.ItemTemplateID = "ScoutEpicArms";
+                    i.Id_nb = "ScoutEpicArms";
                     i.Name = "Brigandine Sleeves of Vigilant Defense";
                     i.Level = 50;
                     i.Item_Type = 28;
@@ -409,7 +408,6 @@ namespace DOL.GS.Quests.Albion
                     i.SPD_ABS = 19;
                     i.Object_Type = 34;
                     i.Quality = 100;
-                    i.MaxQuality = 100;
                     i.Weight = 22;
                     i.Bonus = 35;
                     i.MaxCondition = 50000;
@@ -443,7 +441,7 @@ namespace DOL.GS.Quests.Albion
                 if (ArmsmanEpicBoots == null)
                 {
                     i = new ItemTemplate();
-                    i.ItemTemplateID = "ArmsmanEpicBoots";
+                    i.Id_nb = "ArmsmanEpicBoots";
                     i.Name = "Sabaton of the Stalwart Arm";
                     i.Level = 50;
                     i.Item_Type = 23;
@@ -454,7 +452,6 @@ namespace DOL.GS.Quests.Albion
                     i.SPD_ABS = 34;
                     i.Object_Type = 36;
                     i.Quality = 100;
-                    i.MaxQuality = 100;
                     i.Weight = 22;
                     i.Bonus = 35;
                     i.MaxCondition = 50000;
@@ -485,7 +482,7 @@ namespace DOL.GS.Quests.Albion
                 if (ArmsmanEpicHelm == null)
                 {
                     i = new ItemTemplate();
-                    i.ItemTemplateID = "ArmsmanEpicHelm";
+                    i.Id_nb = "ArmsmanEpicHelm";
                     i.Name = "Coif of the Stalwart Arm";
                     i.Level = 50;
                     i.Item_Type = 21;
@@ -496,7 +493,6 @@ namespace DOL.GS.Quests.Albion
                     i.SPD_ABS = 34;
                     i.Object_Type = 36;
                     i.Quality = 100;
-                    i.MaxQuality = 100;
                     i.Weight = 22;
                     i.Bonus = 35;
                     i.MaxCondition = 50000;
@@ -529,7 +525,7 @@ namespace DOL.GS.Quests.Albion
                 if (ArmsmanEpicGloves == null)
                 {
                     i = new ItemTemplate();
-                    i.ItemTemplateID = "ArmsmanEpicGloves";
+                    i.Id_nb = "ArmsmanEpicGloves";
                     i.Name = "Gloves of the Stalwart Arm";
                     i.Level = 50;
                     i.Item_Type = 22;
@@ -540,7 +536,6 @@ namespace DOL.GS.Quests.Albion
                     i.SPD_ABS = 34;
                     i.Object_Type = 36;
                     i.Quality = 100;
-                    i.MaxQuality = 100;
                     i.Weight = 22;
                     i.Bonus = 35;
                     i.MaxCondition = 50000;
@@ -572,7 +567,7 @@ namespace DOL.GS.Quests.Albion
                 if (ArmsmanEpicVest == null)
                 {
                     i = new ItemTemplate();
-                    i.ItemTemplateID = "ArmsmanEpicVest";
+                    i.Id_nb = "ArmsmanEpicVest";
                     i.Name = "Jerkin of the Stalwart Arm";
                     i.Level = 50;
                     i.Item_Type = 25;
@@ -583,7 +578,6 @@ namespace DOL.GS.Quests.Albion
                     i.SPD_ABS = 34;
                     i.Object_Type = 36;
                     i.Quality = 100;
-                    i.MaxQuality = 100;
                     i.Weight = 22;
                     i.Bonus = 35;
                     i.MaxCondition = 50000;
@@ -618,7 +612,7 @@ namespace DOL.GS.Quests.Albion
                 if (ArmsmanEpicLegs == null)
                 {
                     i = new ItemTemplate();
-                    i.ItemTemplateID = "ArmsmanEpicLegs";
+                    i.Id_nb = "ArmsmanEpicLegs";
                     i.Name = "Legs of the Stalwart Arm";
                     i.Level = 50;
                     i.Item_Type = 27;
@@ -629,7 +623,6 @@ namespace DOL.GS.Quests.Albion
                     i.SPD_ABS = 34;
                     i.Object_Type = 36;
                     i.Quality = 100;
-                    i.MaxQuality = 100;
                     i.Weight = 22;
                     i.Bonus = 35;
                     i.MaxCondition = 50000;
@@ -661,7 +654,7 @@ namespace DOL.GS.Quests.Albion
                 if (ArmsmanEpicArms == null)
                 {
                     i = new ItemTemplate();
-                    i.ItemTemplateID = "ArmsmanEpicArms";
+                    i.Id_nb = "ArmsmanEpicArms";
                     i.Name = "Sleeves of the Stalwart Arm";
                     i.Level = 50;
                     i.Item_Type = 28;
@@ -672,7 +665,6 @@ namespace DOL.GS.Quests.Albion
                     i.SPD_ABS = 34;
                     i.Object_Type = 36;
                     i.Quality = 100;
-                    i.MaxQuality = 100;
                     i.Weight = 22;
                     i.Bonus = 35;
                     i.MaxCondition = 50000;
@@ -703,7 +695,7 @@ namespace DOL.GS.Quests.Albion
                 if (FriarEpicBoots == null)
                 {
                     i = new ItemTemplate();
-                    i.ItemTemplateID = "FriarEpicBoots";
+                    i.Id_nb = "FriarEpicBoots";
                     i.Name = "Prayer-bound Boots";
                     i.Level = 50;
                     i.Item_Type = 23;
@@ -714,7 +706,6 @@ namespace DOL.GS.Quests.Albion
                     i.SPD_ABS = 10;
                     i.Object_Type = 33;
                     i.Quality = 100;
-                    i.MaxQuality = 100;
                     i.Weight = 22;
                     i.Bonus = 35;
                     i.MaxCondition = 50000;
@@ -747,7 +738,7 @@ namespace DOL.GS.Quests.Albion
                 if (FriarEpicHelm == null)
                 {
                     i = new ItemTemplate();
-                    i.ItemTemplateID = "FriarEpicHelm";
+                    i.Id_nb = "FriarEpicHelm";
                     i.Name = "Prayer-bound Coif";
                     i.Level = 50;
                     i.Item_Type = 21;
@@ -758,7 +749,6 @@ namespace DOL.GS.Quests.Albion
                     i.SPD_ABS = 10;
                     i.Object_Type = 33;
                     i.Quality = 100;
-                    i.MaxQuality = 100;
                     i.Weight = 22;
                     i.Bonus = 35;
                     i.MaxCondition = 50000;
@@ -791,7 +781,7 @@ namespace DOL.GS.Quests.Albion
                 if (FriarEpicGloves == null)
                 {
                     i = new ItemTemplate();
-                    i.ItemTemplateID = "FriarEpicGloves";
+                    i.Id_nb = "FriarEpicGloves";
                     i.Name = "Prayer-bound Gloves";
                     i.Level = 50;
                     i.Item_Type = 22;
@@ -802,7 +792,6 @@ namespace DOL.GS.Quests.Albion
                     i.SPD_ABS = 10;
                     i.Object_Type = 33;
                     i.Quality = 100;
-                    i.MaxQuality = 100;
                     i.Weight = 22;
                     i.Bonus = 35;
                     i.MaxCondition = 50000;
@@ -834,7 +823,7 @@ namespace DOL.GS.Quests.Albion
                 if (FriarEpicVest == null)
                 {
                     i = new ItemTemplate();
-                    i.ItemTemplateID = "FriarEpicVest";
+                    i.Id_nb = "FriarEpicVest";
                     i.Name = "Prayer-bound Jerkin";
                     i.Level = 50;
                     i.Item_Type = 25;
@@ -845,7 +834,6 @@ namespace DOL.GS.Quests.Albion
                     i.SPD_ABS = 10;
                     i.Object_Type = 33;
                     i.Quality = 100;
-                    i.MaxQuality = 100;
                     i.Weight = 22;
                     i.Bonus = 35;
                     i.MaxCondition = 50000;
@@ -878,7 +866,7 @@ namespace DOL.GS.Quests.Albion
                 if (FriarEpicLegs == null)
                 {
                     i = new ItemTemplate();
-                    i.ItemTemplateID = "FriarEpicLegs";
+                    i.Id_nb = "FriarEpicLegs";
                     i.Name = "Prayer-bound Legs";
                     i.Level = 50;
                     i.Item_Type = 27;
@@ -889,7 +877,6 @@ namespace DOL.GS.Quests.Albion
                     i.SPD_ABS = 10;
                     i.Object_Type = 33;
                     i.Quality = 100;
-                    i.MaxQuality = 100;
                     i.Weight = 22;
                     i.Bonus = 35;
                     i.MaxCondition = 50000;
@@ -921,7 +908,7 @@ namespace DOL.GS.Quests.Albion
                 if (FriarEpicArms == null)
                 {
                     i = new ItemTemplate();
-                    i.ItemTemplateID = "FriarEpicArms";
+                    i.Id_nb = "FriarEpicArms";
                     i.Name = "Prayer-bound Sleeves";
                     i.Level = 50;
                     i.Item_Type = 28;
@@ -932,7 +919,6 @@ namespace DOL.GS.Quests.Albion
                     i.SPD_ABS = 10;
                     i.Object_Type = 33;
                     i.Quality = 100;
-                    i.MaxQuality = 100;
                     i.Weight = 22;
                     i.Bonus = 35;
                     i.MaxCondition = 50000;
@@ -963,18 +949,17 @@ namespace DOL.GS.Quests.Albion
                 if (TheurgistEpicBoots == null)
                 {
                     i = new ItemTemplate();
-                    i.ItemTemplateID = "TheurgistEpicBoots";
+                    i.Id_nb = "TheurgistEpicBoots";
                     i.Name = "Boots of Shielding Power";
                     i.Level = 50;
                     i.Item_Type = 23;
                     i.Model = 143;
                     i.IsDropable = true;
                     i.IsPickable = true;
-                    i.DPS_AF = 48;
+                    i.DPS_AF = 50;
                     i.SPD_ABS = 0;
                     i.Object_Type = 32;
                     i.Quality = 100;
-                    i.MaxQuality = 100;
                     i.Weight = 22;
                     i.Bonus = 35;
                     i.MaxCondition = 50000;
@@ -1007,18 +992,17 @@ namespace DOL.GS.Quests.Albion
                 if (TheurgistEpicHelm == null)
                 {
                     i = new ItemTemplate();
-                    i.ItemTemplateID = "TheurgistEpicHelm";
+                    i.Id_nb = "TheurgistEpicHelm";
                     i.Name = "Coif of Shielding Power";
                     i.Level = 50;
                     i.Item_Type = 21;
                     i.Model = 1290; //NEED TO WORK ON..
                     i.IsDropable = true;
                     i.IsPickable = true;
-                    i.DPS_AF = 48;
+                    i.DPS_AF = 50;
                     i.SPD_ABS = 0;
                     i.Object_Type = 32;
                     i.Quality = 100;
-                    i.MaxQuality = 100;
                     i.Weight = 22;
                     i.Bonus = 35;
                     i.MaxCondition = 50000;
@@ -1051,18 +1035,17 @@ namespace DOL.GS.Quests.Albion
                 if (TheurgistEpicGloves == null)
                 {
                     i = new ItemTemplate();
-                    i.ItemTemplateID = "TheurgistEpicGloves";
+                    i.Id_nb = "TheurgistEpicGloves";
                     i.Name = "Gloves of Shielding Power";
                     i.Level = 50;
                     i.Item_Type = 22;
                     i.Model = 142;
                     i.IsDropable = true;
                     i.IsPickable = true;
-                    i.DPS_AF = 48;
+                    i.DPS_AF = 50;
                     i.SPD_ABS = 0;
                     i.Object_Type = 32;
                     i.Quality = 100;
-                    i.MaxQuality = 100;
                     i.Weight = 22;
                     i.Bonus = 35;
                     i.MaxCondition = 50000;
@@ -1094,18 +1077,17 @@ namespace DOL.GS.Quests.Albion
                 if (TheurgistEpicVest == null)
                 {
                     i = new ItemTemplate();
-                    i.ItemTemplateID = "TheurgistEpicVest";
+                    i.Id_nb = "TheurgistEpicVest";
                     i.Name = "Jerkin of Shielding Power";
                     i.Level = 50;
                     i.Item_Type = 25;
                     i.Model = 733;
                     i.IsDropable = true;
                     i.IsPickable = true;
-                    i.DPS_AF = 48;
+                    i.DPS_AF = 50;
                     i.SPD_ABS = 0;
                     i.Object_Type = 32;
                     i.Quality = 100;
-                    i.MaxQuality = 100;
                     i.Weight = 22;
                     i.Bonus = 35;
                     i.MaxCondition = 50000;
@@ -1135,18 +1117,17 @@ namespace DOL.GS.Quests.Albion
                 if (TheurgistEpicLegs == null)
                 {
                     i = new ItemTemplate();
-                    i.ItemTemplateID = "TheurgistEpicLegs";
+                    i.Id_nb = "TheurgistEpicLegs";
                     i.Name = "Legs of Shielding Power";
                     i.Level = 50;
                     i.Item_Type = 27;
                     i.Model = 140;
                     i.IsDropable = true;
                     i.IsPickable = true;
-                    i.DPS_AF = 48;
+                    i.DPS_AF = 50;
                     i.SPD_ABS = 0;
                     i.Object_Type = 32;
                     i.Quality = 100;
-                    i.MaxQuality = 100;
                     i.Weight = 22;
                     i.Bonus = 35;
                     i.MaxCondition = 50000;
@@ -1178,18 +1159,17 @@ namespace DOL.GS.Quests.Albion
 				if (TheurgistEpicArms == null)
 				{
 					i = new ItemTemplate();
-					i.ItemTemplateID = "TheurgistEpicArms";
+					i.Id_nb = "TheurgistEpicArms";
 					i.Name = "Sleeves of Shielding Power";
 					i.Level = 50;
 					i.Item_Type = 28;
 					i.Model = 141;
 					i.IsDropable = true;
 					i.IsPickable = true;
-					i.DPS_AF = 48;
+					i.DPS_AF = 50;
 					i.SPD_ABS = 0;
 					i.Object_Type = 32;
 					i.Quality = 100;
-					i.MaxQuality = 100;
 					i.Weight = 22;
 					i.Bonus = 35;
 					i.MaxCondition = 50000;
@@ -1216,6 +1196,9 @@ namespace DOL.GS.Quests.Albion
 
 			#endregion
 
+				GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+				GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
 			GameEventMgr.AddHandler(Lidmann, GameObjectEvent.Interact, new DOLEventHandler(TalkToLidmann));
 			GameEventMgr.AddHandler(Lidmann, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToLidmann));
 
@@ -1229,10 +1212,15 @@ namespace DOL.GS.Quests.Albion
 		[ScriptUnloadedEvent]
 		public static void ScriptUnloaded(DOLEvent e, object sender, EventArgs args)
 		{
+			if (!ServerProperties.Properties.LOAD_QUESTS)
+				return;
 			//if not loaded, don't worry
 			if (Lidmann == null)
 				return;
 			// remove handlers
+			GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
 			GameEventMgr.RemoveHandler(Lidmann, GameObjectEvent.Interact, new DOLEventHandler(TalkToLidmann));
 			GameEventMgr.RemoveHandler(Lidmann, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToLidmann));
 
@@ -1278,7 +1266,7 @@ namespace DOL.GS.Quests.Albion
 					switch (wArgs.Text)
 					{
 						case "services":
-							player.Out.SendCustomDialog("Will you help Lidmann [Defenders of Albion Level 50 Epic]?", new CustomDialogResponse(CheckPlayerAcceptQuest));
+							player.Out.SendQuestSubscribeCommand(Lidmann, QuestMgr.GetIDForQuestType(typeof(Defenders_50)), "Will you help Lidmann [Defenders of Albion Level 50 Epic]?");
 							break;
 					}
 				}
@@ -1344,6 +1332,21 @@ namespace DOL.GS.Quests.Albion
 			}
 		}
 
+		protected static void SubscribeQuest(DOLEvent e, object sender, EventArgs args)
+		{
+			QuestEventArgs qargs = args as QuestEventArgs;
+			if (qargs == null)
+				return;
+
+			if (qargs.QuestID != QuestMgr.GetIDForQuestType(typeof(Defenders_50)))
+				return;
+
+			if (e == GamePlayerEvent.AcceptQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x01);
+			else if (e == GamePlayerEvent.DeclineQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x00);
+		}
+
 		private static void CheckPlayerAcceptQuest(GamePlayer player, byte response)
 		{
 			if(Lidmann.CanGiveQuest(typeof (Defenders_50), player)  <= 0)
@@ -1402,7 +1405,7 @@ namespace DOL.GS.Quests.Albion
 					if (gArgs.Target.Name == Uragaig.Name)
 					{
 						m_questPlayer.Out.SendMessage("Take the pouch to Lidmann Halsey", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						GiveItem(player, sealed_pouch);
+						GiveItem(m_questPlayer, sealed_pouch);
 						Step = 2;
 						return;
 					}
@@ -1412,7 +1415,7 @@ namespace DOL.GS.Quests.Albion
 			if (Step == 2 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == Lidmann.Name && gArgs.Item.ItemTemplateID == sealed_pouch.ItemTemplateID)
+				if (gArgs.Target.Name == Lidmann.Name && gArgs.Item.Id_nb == sealed_pouch.Id_nb)
 				{
 					RemoveItem(Lidmann, player, sealed_pouch);
 					Lidmann.SayTo(player, "You have earned this Epic Armour!");

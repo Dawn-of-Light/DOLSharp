@@ -70,11 +70,11 @@ namespace DOL.GS.Scripts
 			}
 			if (player.Level >= 10) 
 			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.MidArmor, (int)eArmorLevel.Medium));
+				player.AddAbility(SkillBase.GetAbility(Abilities.MidArmor, ArmorLevel.Studded));
 			}
 			if (player.Level >= 20) 
 			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.MidArmor, (int)eArmorLevel.High));
+				player.AddAbility(SkillBase.GetAbility(Abilities.MidArmor, ArmorLevel.Chain));
 			}		
 		}
 	}

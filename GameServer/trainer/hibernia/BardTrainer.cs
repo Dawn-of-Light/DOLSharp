@@ -17,13 +17,7 @@
  *
  */
 using System;
-using System.Collections;
-using System.Reflection;
-using DOL.Database;
-using DOL.Events;
-using DOL.GS.Database;
 using DOL.GS.PacketHandler;
-using log4net;
 
 namespace DOL.GS.Trainer
 {
@@ -33,58 +27,10 @@ namespace DOL.GS.Trainer
 	[NPCGuildScript("Bard Trainer", eRealm.Hibernia)]		// this attribute instructs DOL to use this script for all "Bard Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class BardTrainer : GameTrainer
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		public const string WEAPON_ID1 = "bard_item";
 
-		/// <summary>
-		/// This hash constrain all item template the trainer can give
-		/// </summary>	
-		private static IDictionary allStartupItems = new Hashtable();
-
-		/// <summary>
-		/// This function is called at the server startup
-		/// </summary>	
-		[GameServerStartedEvent]
-		public static void OnServerStartup(DOLEvent e, object sender, EventArgs args)
-		{	
-			#region Bard Lute
-
-			Instrument bard_lute_template = new Instrument();
-			bard_lute_template.Name = "Bard Initiate Lute";
-			bard_lute_template.Level = 5;
-			bard_lute_template.Durability = 100;
-			bard_lute_template.Condition = 100;
-			bard_lute_template.Quality = 90;
-			bard_lute_template.Bonus = 10;
-			bard_lute_template.Type = eInstrumentType.Lute;
-			bard_lute_template.Weight = 45;
-			bard_lute_template.Model = 227;
-			bard_lute_template.Realm = eRealm.Hibernia;
-			bard_lute_template.IsDropable = true; 
-			bard_lute_template.IsTradable = false; 
-			bard_lute_template.IsSaleable = false;
-			bard_lute_template.MaterialLevel = eMaterialLevel.Bronze;
-			
-			bard_lute_template.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Instruments, 1));
-			
-			if(!allStartupItems.Contains("Bard_Initiate_Lute"))
-			{
-				allStartupItems.Add("Bard_Initiate_Lute", bard_lute_template);
-			
-				if (log.IsDebugEnabled)
-					log.Debug("Adding " + bard_lute_template.Name + " to BardTrainer gifts.");
-			}
-			#endregion
-		}
-
-		/// <summary>
-		/// Gets trainer classname
-		/// </summary>
-		public override string TrainerClassName
+		public BardTrainer() : base()
 		{
-			get { return "Bard"; }
 		}
 
 		/// <summary>
@@ -97,18 +43,22 @@ namespace DOL.GS.Trainer
  			if (!base.Interact(player)) return false;
 								
 			// check if class matches.				
-			if (player.CharacterClass.ID == (int) eCharacterClass.Bard)
-			{
+			if (player.CharacterClass.ID == (int) eCharacterClass.Bard) {
+
+				// popup the training window
 				player.Out.SendTrainerWindow();
+				//player.Out.SendMessage(this.Name + " says, \"Select what you like to train.\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);												
 				player.Out.SendMessage(this.Name + " says, \"Ahh, well met " + player.Name + ". Back for more lore and knowledge, eh.\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
-			} 
-			else if (CanPromotePlayer(player)) 
-			{
-				player.Out.SendMessage(this.Name + " says, \"Do you wish to walk the Path of Essence, pursuing a life of storytelling and [song]? Of brave deeds which grow braver with every telling?\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+
 			} 
 			else 
 			{
-				player.Out.SendMessage(this.Name + " says, \"You must seek elsewhere for your training.\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
+				// perhaps player can be promoted
+				if (CanPromotePlayer(player)) {
+					player.Out.SendMessage(this.Name + " says, \"Do you wish to walk the Path of Essence, pursuing a life of storytelling and [song]? Of brave deeds which grow braver with every telling?\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+				} else {
+					player.Out.SendMessage(this.Name + " says, \"You must seek elsewhere for your training.\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);							
+				}
 			}
 			return true;
  		}
@@ -134,12 +84,13 @@ namespace DOL.GS.Trainer
 			if (!base.WhisperReceive(source, text)) return false;			
 			GamePlayer player = source as GamePlayer;			
 	
-			switch (text) 
-			{
-				case "song":
-					if (CanPromotePlayer(player)) 
-						PromotePlayer(player, (int)eCharacterClass.Bard, "Welcome then, " + source.GetName(0, false) + ", to the Bard's life. Here, take this. Keep it well, " + source.GetName(0, false) + ", for the tools of our trade can be quite expensive.", new GenericItemTemplate[] {allStartupItems["Bard_Initiate_Lute"] as GenericItemTemplate});					
-					
+			switch (text) {
+			case "song":
+				// promote player to other class
+				if (CanPromotePlayer(player)) {
+					PromotePlayer(player, (int)eCharacterClass.Bard, "Welcome then, " + source.GetName(0, false) + ", to the Bard's life. Here, take this. Keep it well, " + source.GetName(0, false) + ", for the tools of our trade can be quite expensive.", null);					
+					player.ReceiveItem(this,WEAPON_ID1);
+				}
 				break;
 			}
 			return true;		

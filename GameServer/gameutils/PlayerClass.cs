@@ -17,7 +17,7 @@
  *
  */
 using System;
-using DOL.GS.Database;
+using DOL.Database;
 using System.Collections;
 using DOL.GS.PacketHandler;
 
@@ -30,8 +30,17 @@ namespace DOL.GS
 	public class PlayerClassAttribute : Attribute 
 	{
 		protected string m_name;
+		protected string m_femaleName;
 		protected string m_basename;
 		protected int m_id;
+
+		public PlayerClassAttribute(int id, string name, string basename, string femalename)
+		{
+			m_basename = basename;
+			m_name = name;
+			m_id = id;
+			m_femaleName = femalename;
+		} 
 
 		public PlayerClassAttribute(int id, string name, string basename)
 		{
@@ -61,6 +70,14 @@ namespace DOL.GS
 			get 
 			{
 				return m_basename;
+			}
+		}
+
+		public string FemaleName
+		{
+			get
+			{
+				return m_femaleName;
 			}
 		}
 	}
@@ -133,9 +150,15 @@ namespace DOL.GS
 		}
 		string GetTitle(int level);
 		void OnLevelUp(GamePlayer player);
+		void OnRealmLevelUp(GamePlayer player);
 		void OnSkillTrained(GamePlayer player, Specialization skill);
 		bool CanUseLefthandedWeapon(GamePlayer player);
 		IList AutoTrainableSkills();
+		string FemaleName
+		{
+			get;
+		}
+		void SwitchToFemaleName(); 
 	}
 
 	/// <summary>
@@ -172,6 +195,11 @@ namespace DOL.GS
 		/// Name of class
 		/// </summary>
 		protected string m_name;
+
+		/// <summary>
+		/// Female name of class
+		/// </summary>
+		protected string m_femaleName; 
 
 		/// <summary>
 		/// Base of this class
@@ -242,11 +270,23 @@ namespace DOL.GS
 				{
 					m_id = ((PlayerClassAttribute)attr).ID;
 					m_name = ((PlayerClassAttribute)attr).Name;
-					m_basename = ((PlayerClassAttribute)attr).BaseName;
+					m_basename = ((PlayerClassAttribute)attr).BaseName; 
+					if (Util.IsEmpty(((PlayerClassAttribute)attr).FemaleName) == false)
+						m_femaleName = ((PlayerClassAttribute)attr).FemaleName; 
 					break;
 				}
 			}
 		}
+
+		public void SwitchToFemaleName()
+		{
+			m_name = m_femaleName;
+		}
+
+		public string FemaleName
+		{
+			get { return m_femaleName; }
+		} 
 
 		public int BaseHP
 		{
@@ -330,12 +370,12 @@ namespace DOL.GS
 
 
 		/// <summary>
-		/// Add all skills & other things that are required for current level
+		/// Add all skills and other things that are required for current level
 		/// </summary>
 		/// <param name="player">player to modify</param>
 		public virtual void OnLevelUp(GamePlayer player)
 		{
-			if (!player.UsedLevelCommand)
+			if (!player.PlayerCharacter.UsedLevelCommand)
 			{
 				//Autotrain
 				IList playerSpecs = player.GetSpecList();
@@ -351,7 +391,7 @@ namespace DOL.GS
 							{
 								spec.Level = player.Level / 4;
 								player.CharacterClass.OnSkillTrained(player, spec);
-								player.Out.SendMessage("You autotrain " + spec.Name + " to level " + spec.Level, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								player.Out.SendDialogBox(eDialogCode.SimpleWarning, 0, 0, 0, 0, eDialogType.Ok, true, "You autotrain " + spec.Name + " to level " + spec.Level);
 								found = true;
 							}
 						}
@@ -359,21 +399,41 @@ namespace DOL.GS
 				}
 				if (found)
 				{
-					player.RefreshSpecDependendSkills(true);
+					player.RefreshSpecDependantSkills(true);
 					player.UpdateSpellLineLevels(true);
-					if (player.ObjectState == eObjectState.Active)
+					if (player.ObjectState == GameObject.eObjectState.Active)
 					{
 						player.Out.SendUpdatePlayerSkills();
 					}
 //					player.SaveIntoDatabase(); // saved in game player
 				}
-			} 
+			}
 		}
 
 		/// <summary>
-		/// Add all spell-lines & other things that are new when this skill is trained
+		/// Add various skills as the player levels his realm rank up
 		/// </summary>
 		/// <param name="player">player to modify</param>
+		public virtual void OnRealmLevelUp(GamePlayer player)
+		{
+			//we dont want to add things when players arent using their advanced class
+			if (player.CharacterClass.BaseName == player.CharacterClass.Name)
+				return;
+
+			//add rr5 realm abilities
+			if (player.RealmLevel >= 40)
+			{
+				Ability ab = SkillBase.getClassRealmAbility(player.CharacterClass.ID);
+				if (ab != null)
+					player.AddAbility(ab, true);
+			}
+		}
+
+		/// <summary>
+		/// Add all spell-lines and other things that are new when this skill is trained
+		/// </summary>
+		/// <param name="player">player to modify</param>
+		/// <param name="skill">The skill that is trained</param>
 		public virtual void OnSkillTrained(GamePlayer player, Specialization skill)
 		{
 		}

@@ -45,6 +45,7 @@ namespace DOL.GS.PropertyCalc
 				int manaBase = player.CalculateMaxMana(player.Level, player.GetModified((eProperty)player.CharacterClass.ManaStat));
 				int itemBonus = living.ItemBonus[(int)property];
 				int poolBonus = living.ItemBonus[(int)eProperty.PowerPool];
+				int abilityBonus = living.AbilityBonus[(int)property]; 
 
 				int itemCap = player.Level / 2 + 1;
 				int poolCap = player.Level / 2;
@@ -63,7 +64,7 @@ namespace DOL.GS.PropertyCalc
 				//A: I’m better off quoting Balance Boy directly here: ” Power pool is affected by
 				//your acuity stat, +power bonus, the Ethereal Bond Realm ability, and your level.
 				//The resulting power pool is adjusted by your power pool % increase bonus.
-				return (int)(manaBase + itemBonus + (manaBase + itemBonus) * poolBonus * 0.01);
+				return (int)(manaBase + itemBonus + abilityBonus + (manaBase + itemBonus + abilityBonus) * poolBonus * 0.01); 
 			}
 			else 
 			{

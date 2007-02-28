@@ -19,7 +19,7 @@
 using System;
 using DOL.AI.Brain;
 using DOL.GS.PacketHandler;
-using DOL.GS.Database;
+using DOL.Database;
 
 namespace DOL.GS.ServerRules
 {
@@ -34,8 +34,11 @@ namespace DOL.GS.ServerRules
 			return "standard PvE server rules";
 		}
 
-		public override bool IsAllowedToAttack(GameLiving attacker, GameLivingBase defender, bool quiet)
+		public override bool IsAllowedToAttack(GameLiving attacker, GameLiving defender, bool quiet)
 		{
+			if (!base.IsAllowedToAttack(attacker, defender, quiet))
+				return false;
+
 			// if controlled NPC - do checks for owner instead
 			if (attacker is GameNPC)
 			{
@@ -53,12 +56,21 @@ namespace DOL.GS.ServerRules
 					defender = controlled.Owner;
 			}
 
-			if (!base.IsAllowedToAttack(attacker, defender, quiet)) return false;
+			//"You can't attack yourself!"
+			if(attacker == defender)
+			{
+				if (quiet == false) MessageToLiving(attacker, "You can't attack yourself!");
+				return false;
+			}
 
 			if (attacker.Realm != 0 && defender.Realm != 0)
 			{
 				if (attacker is GamePlayer && ((GamePlayer)attacker).DuelTarget != defender)
 				{
+					// allow mobs to attack mobs
+					if (attacker.Realm == 0)
+						return true;
+
 					if(quiet == false) MessageToLiving(attacker, "You can not attack other players on this server!");
 					return false;
 				}
@@ -71,7 +83,7 @@ namespace DOL.GS.ServerRules
 			return true;
 		}
 
-		public override bool IsSameRealm(GameLiving source, GameLivingBase target, bool quiet)
+		public override bool IsSameRealm(GameLiving source, GameLiving target, bool quiet)
 		{
 			if(source == null || target == null) return false;
 
@@ -92,12 +104,22 @@ namespace DOL.GS.ServerRules
 					target = controlled.Owner;
 			}
 
-			if(base.IsSameRealm(source, target, quiet)) return true;
+			// clients with priv level > 1 are considered friendly by anyone
+			if(target is GamePlayer && ((GamePlayer)target).Client.Account.PrivLevel > 1) return true;
 
 			// mobs can heal mobs, players heal players/NPC
 			if(source.Realm == 0 && target.Realm == 0) return true;
 			if(source.Realm != 0 && target.Realm != 0) return true;
-			
+
+			//Peace flag NPCs are same realm
+			if (target is GameNPC)
+				if ((((GameNPC)target).Flags & (uint)GameNPC.eFlags.PEACE) != 0)
+					return true;
+
+			if (source is GameNPC)
+				if ((((GameNPC)source).Flags & (uint)GameNPC.eFlags.PEACE) != 0)
+					return true;
+
 			if(quiet == false) MessageToLiving(source, target.GetName(0, true) + " is not a member of your realm!");
 			return false;
 		}
@@ -106,11 +128,30 @@ namespace DOL.GS.ServerRules
 		/// Is player allowed to make the item
 		/// </summary>
 		/// <param name="player"></param>
-		/// <param name="point"></param>
 		/// <returns></returns>
-		public override bool IsAllowedToCraft(GamePlayer player, GenericItemTemplate item)
+		public override bool IsAllowedToCraft(GamePlayer player, ItemTemplate item)
 		{
-			return player.Realm == (byte)item.Realm;
+			return player.Realm == item.Realm;
+		}
+
+		public override bool IsAllowedCharsInAllRealms(GameClient client)
+		{
+			return true;
+		}
+
+		public override bool IsAllowedToGroup(GamePlayer source, GamePlayer target, bool quiet)
+		{			
+			return true;
+		}
+
+		public override bool IsAllowedToTrade(GameLiving source, GameLiving target, bool quiet)
+		{
+			return true;
+		}
+
+		public override bool IsAllowedToUnderstand(GameLiving source, GamePlayer target)
+		{
+			return true;
 		}
 
 		/// <summary>

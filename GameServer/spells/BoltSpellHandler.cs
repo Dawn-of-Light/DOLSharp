@@ -18,9 +18,10 @@
  */
 using System;
 using DOL.AI.Brain;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
+using DOL.GS.Keeps;
 using DOL.GS.SkillHandler;
 
 namespace DOL.GS.Spells
@@ -35,38 +36,69 @@ namespace DOL.GS.Spells
 		/// Fire bolt
 		/// </summary>
 		/// <param name="target"></param>
-		public override void FinishSpellCast(GameLivingBase target)
+		public override void FinishSpellCast(GameLiving target)
 		{
-			m_caster.ChangeMana(null, -CalculateNeededPower(target));
+			m_caster.Mana -= CalculateNeededPower(target);
+			if (target is Keeps.GameKeepDoor || target is Keeps.GameKeepComponent)
+			{
+				MessageToCaster("Your spell has no effect on the keep component!", eChatType.CT_SpellResisted);
+				return;
+			}
 			base.FinishSpellCast(target);
 		}
 
+		#region LOS Checks for Keeps
 		/// <summary>
-		/// Calculates chance of spell getting resisted
+		/// called when spell effect has to be started and applied to targets
 		/// </summary>
-		/// <param name="target">the target of the spell</param>
-		/// <returns>chance that spell will be resisted for specific target</returns>
-		public override int CalculateSpellResistChance(GameLiving target)
+		public override void StartSpell(GameLiving target)
 		{
-			return 0;
+			foreach (GameLiving targ in SelectTargets(target))
+			{
+				if (targ is GamePlayer && Spell.Target == "Frontal" && CheckLOS(Caster))
+				{
+					GamePlayer player = targ as GamePlayer;
+					player.Out.SendCheckLOS(Caster, player, new CheckLOSResponse(DealDamageCheckLOS));
+				}
+				else
+				{
+					DealDamage(targ);
+				}
+			}
 		}
 
-		/// <summary>
-		/// Apply effect on target or do spell action if non duration spell
-		/// </summary>
-		/// <param name="target">target that gets the effect</param>
-		/// <param name="effectiveness">factor from 0..1 (0%-100%)</param>
-		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
+		private bool CheckLOS(GameLiving living)
 		{
-			int ticksToTarget = m_caster.Position.GetDistance(target.Position) * 100 / 85; // 85 units per 1/10s
+			foreach (AbstractArea area in living.CurrentAreas)
+			{
+				if (area.CheckLOS)
+					return true;
+			}
+			return false;
+		}
+
+		private void DealDamageCheckLOS(GamePlayer player, ushort response, ushort targetOID)
+		{
+			if ((response & 0x100) == 0x100)
+			{
+				GameLiving target = (GameLiving)(Caster.CurrentRegion.GetObject(targetOID));
+				if (target != null)
+					DealDamage(target);
+			}
+		}
+
+		private void DealDamage(GameLiving target)
+		{
+			int ticksToTarget = WorldMgr.GetDistance(m_caster, target) * 100 / 85; // 85 units per 1/10s
 			int delay = 1 + ticksToTarget / 100;
-			foreach (GamePlayer player in target.GetInRadius(typeof(GamePlayer), WorldMgr.VISIBILITY_DISTANCE)) 
+			foreach (GamePlayer player in target.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
 				player.Out.SendSpellEffectAnimation(m_caster, target, m_spell.ClientEffect, (ushort)(delay), false, 1);
 			}
 			BoltOnTargetAction bolt = new BoltOnTargetAction(Caster, target, this);
 			bolt.Start(1 + ticksToTarget);
 		}
+		#endregion
 
 		/// <summary>
 		/// Delayed action when bolt reach the target
@@ -106,9 +138,9 @@ namespace DOL.GS.Spells
 				GameLiving target = m_boltTarget;
 				GameLiving caster = (GameLiving)m_actionSource;
 				if (target == null) return;
-				if (target.Region != caster.Region) return;
-				if (target.ObjectState != eObjectState.Active) return;
-				if (!target.Alive) return;
+				if (target.CurrentRegionID != caster.CurrentRegionID) return;
+				if (target.ObjectState != GameObject.eObjectState.Active) return;
+				if (!target.IsAlive) return;
 
 // TODO: find out how exactly this works
 //				if (target is GamePlayer && target.AttackState && target.InCombat)
@@ -140,8 +172,14 @@ namespace DOL.GS.Spells
 					ad.AttackResult = GameLiving.eAttackResult.Missed;
 					m_handler.MessageToCaster("You miss!", eChatType.CT_YouHit);
 					m_handler.MessageToLiving(target, caster.GetName(0, false) + " missed!", eChatType.CT_Missed);
-					target.OnAttackedByEnemy(ad, target);
+					target.OnAttackedByEnemy(ad);
 					target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, ad.AttackType, caster);
+					if(target is GameNPC)
+					{
+						IAggressiveBrain aggroBrain = ((GameNPC)target).Brain as IAggressiveBrain;
+						if (aggroBrain != null)
+							aggroBrain.AddToAggroList(caster, 1);
+					}
 					return;
 				}
 
@@ -151,15 +189,15 @@ namespace DOL.GS.Spells
 				if (target is GamePlayer) 
 				{ // mobs left out yet
 					GamePlayer player = (GamePlayer)target;
-					Weapon lefthand = player.Inventory.GetItem(eInventorySlot.LeftHandWeapon) as Weapon;
-					if (lefthand!=null && (player.AttackWeapon==null || player.ActiveWeaponSlot == GameLiving.eActiveWeaponSlot.Standard)) 
+					InventoryItem lefthand = player.Inventory.GetItem(eInventorySlot.LeftHandWeapon);
+					if (lefthand!=null && (player.AttackWeapon==null || player.AttackWeapon.Item_Type==Slot.RIGHTHAND || player.AttackWeapon.Item_Type==Slot.LEFTHAND)) 
 					{
-						if (target.IsObjectInFront(caster, 180) && lefthand is Shield) 
+						if (target.IsObjectInFront(caster, 180) && lefthand.Object_Type == (int)eObjectType.Shield) 
 						{
 							// TODO: shield size, which field to use?
 							// TODO: 30% chance to block arrows/bolts
 							double shield = 0.5 * player.GetModifiedSpecLevel(Specs.Shields);
-							double blockchance = ((player.GetModified(eProperty.Dexterity)*2)-100)/40.0 + shield + (0*3) + 5;
+							double blockchance = ((player.Dexterity*2)-100)/40.0 + shield + (0*3) + 5;
 							blockchance -= target.GetConLevel(caster) * 5;
 							if (blockchance >= 100) blockchance = 99;
 							if (blockchance <= 0) blockchance = 1;	
@@ -169,17 +207,17 @@ namespace DOL.GS.Spells
 							{	
 								// Engage raised block change to 85% if attacker is engageTarget and player is in attackstate							
 								// You cannot engage a mob that was attacked within the last X seconds...
-								if (engage.EngageTarget.LastAttackedByEnemyTick > engage.EngageTarget.Region.Time - EngageAbilityHandler.ENGAGE_ATTACK_DELAY_TICK) 
+								if (engage.EngageTarget.LastAttackedByEnemyTick > engage.EngageTarget.CurrentRegion.Time - EngageAbilityHandler.ENGAGE_ATTACK_DELAY_TICK) 
 								{
 									engage.EngageSource.Out.SendMessage(engage.EngageTarget.GetName(0,true)+" has been attacked recently and you are unable to engage.", eChatType.CT_System, eChatLoc.CL_SystemWindow);									
 								}  // Check if player has enough endurance left to engage
-								else if (engage.EngageSource.EndurancePercent < EngageAbilityHandler.ENGAGE_DURATION_LOST)
+								else if (engage.EngageSource.Endurance < EngageAbilityHandler.ENGAGE_DURATION_LOST)
 								{
 									engage.Cancel(false); // if player ran out of endurance cancel engage effect
 								} 
 								else 
 								{
-									engage.EngageSource.EndurancePercent -= EngageAbilityHandler.ENGAGE_DURATION_LOST;
+									engage.EngageSource.Endurance -= EngageAbilityHandler.ENGAGE_DURATION_LOST;
 									engage.EngageSource.Out.SendMessage("You concentrate on blocking the blow!", eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
 
 									if (blockchance<85)
@@ -207,9 +245,9 @@ namespace DOL.GS.Spells
 					if(target is GamePlayer)
 						ad.ArmorHitLocation = ((GamePlayer)target).CalculateArmorHitLocation();
 
-					Armor armor = null;
+					InventoryItem armor = null;
 					if (target.Inventory != null)
-						armor = (Armor) target.Inventory.GetItem((eInventorySlot)ad.ArmorHitLocation);
+						armor = target.Inventory.GetItem((eInventorySlot)ad.ArmorHitLocation);
 
 					double ws = (caster.Level * 8 * (1.0 + (caster.GetModified(eProperty.Dexterity) - 50)/200.0));
 

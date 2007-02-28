@@ -18,7 +18,6 @@
  */
 using System;
 using System.Collections;
-using DOL.GS.Database;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS
@@ -53,7 +52,7 @@ namespace DOL.GS
 		/// <returns>true if added successfully</returns>
 		public virtual bool AddPlayer(GamePlayer player) 
 		{
-			lock(this)
+			lock (m_groupMembers)// Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
 				if (m_groupMembers.Contains(player))
 					return false;
@@ -69,7 +68,7 @@ namespace DOL.GS
 		public GameClient[] GetClientsInTheGroup()
 		{
 			ArrayList clients = new ArrayList(8);
-			lock(this)
+			lock (m_groupMembers) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
 				for(int i=0; i < m_groupMembers.Count; i++)
 				{
@@ -86,7 +85,7 @@ namespace DOL.GS
 		public GamePlayer[] GetPlayersInTheGroup()
 		{
 			ArrayList players = new ArrayList(8);
-			lock(this)
+			lock (m_groupMembers.SyncRoot) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
 				for(int i=0; i < m_groupMembers.Count; i++)
 				{
@@ -103,7 +102,7 @@ namespace DOL.GS
 		/// <returns>true if removed, false if not</returns>
 		public virtual bool RemovePlayer(GamePlayer player)
 		{
-			lock(this)
+			lock (m_groupMembers) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
 				if (!m_groupMembers.Contains(player))
 					return false;
@@ -127,7 +126,7 @@ namespace DOL.GS
 		/// <param name="loc">message location</param>
 		public virtual void SendMessageToGroupMembers(string msg, eChatType type, eChatLoc loc)
 		{
-			lock(this)
+			lock (m_groupMembers) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
 				foreach(GamePlayer player in m_groupMembers)
 				{
@@ -143,7 +142,7 @@ namespace DOL.GS
 		/// <returns>true if the player is in the group</returns>
 		public virtual bool IsInTheGroup(GamePlayer player)
 		{
-			lock(this)
+			lock (m_groupMembers) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{	
 				return m_groupMembers.Contains(player);
 			}

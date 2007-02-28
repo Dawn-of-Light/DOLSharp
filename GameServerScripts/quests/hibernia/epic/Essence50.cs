@@ -105,6 +105,8 @@ namespace DOL.GS.Quests.Hibernia
 		[ScriptLoadedEvent]
 		public static void ScriptLoaded(DOLEvent e, object sender, EventArgs args)
 		{
+			if (!ServerProperties.Properties.LOAD_QUESTS)
+				return;
 			if (log.IsInfoEnabled)
 				log.Info("Quest \"" + questTitle + "\" initializing ...");
 
@@ -116,15 +118,17 @@ namespace DOL.GS.Quests.Hibernia
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Brigit , creating it ...");
-				Brigit = new GameMob();
+				Brigit = new GameNPC();
 				Brigit.Model = 384;
 				Brigit.Name = "Brigit";
 				Brigit.GuildName = "";
 				Brigit.Realm = (byte) eRealm.Hibernia;
-				Brigit.RegionId = 201;
+				Brigit.CurrentRegionID = 201;
 				Brigit.Size = 51;
 				Brigit.Level = 50;
-				Brigit.Position = new Point(33131, 32922, 8008);
+				Brigit.X = 33131;
+				Brigit.Y = 32922;
+				Brigit.Z = 8008;
 				Brigit.Heading = 3254;
 				Brigit.AddToWorld();
 				if (SAVE_INTO_DATABASE)
@@ -143,15 +147,17 @@ namespace DOL.GS.Quests.Hibernia
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Caithor , creating it ...");
-				Caithor = new GameMob();
+				Caithor = new GameNPC();
 				Caithor.Model = 339;
 				Caithor.Name = "Caithor";
 				Caithor.GuildName = "";
 				Caithor.Realm = (byte) eRealm.None;
-				Caithor.RegionId = 200;
+				Caithor.CurrentRegionID = 200;
 				Caithor.Size = 60;
 				Caithor.Level = 65;
-				Caithor.Position = new Point(470547, 531497, 4984);
+				Caithor.X = 470547;
+				Caithor.Y = 531497;
+				Caithor.Z = 4984;
 				Caithor.Heading = 3319;
 				Caithor.AddToWorld();
 				if (SAVE_INTO_DATABASE)
@@ -174,7 +180,7 @@ namespace DOL.GS.Quests.Hibernia
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Moonstone , creating it ...");
 				Moonstone = new ItemTemplate();
-				Moonstone.ItemTemplateID = "Moonstone";
+				Moonstone.Id_nb = "Moonstone";
 				Moonstone.Name = "Moonstone";
 				Moonstone.Level = 8;
 				Moonstone.Item_Type = 29;
@@ -187,7 +193,6 @@ namespace DOL.GS.Quests.Hibernia
 				Moonstone.Hand = 0;
 				Moonstone.Type_Damage = 0;
 				Moonstone.Quality = 100;
-				Moonstone.MaxQuality = 100;
 				Moonstone.Weight = 12;
 				if (SAVE_INTO_DATABASE)
 				{
@@ -202,7 +207,7 @@ namespace DOL.GS.Quests.Hibernia
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Bards Epic Boots , creating it ...");
 				BardEpicBoots = new ItemTemplate();
-				BardEpicBoots.ItemTemplateID = "BardEpicBoots";
+				BardEpicBoots.Id_nb = "BardEpicBoots";
 				BardEpicBoots.Name = "Moonsung Boots";
 				BardEpicBoots.Level = 50;
 				BardEpicBoots.Item_Type = 23;
@@ -213,7 +218,6 @@ namespace DOL.GS.Quests.Hibernia
 				BardEpicBoots.SPD_ABS = 19;
 				BardEpicBoots.Object_Type = 37;
 				BardEpicBoots.Quality = 100;
-				BardEpicBoots.MaxQuality = 100;
 				BardEpicBoots.Weight = 22;
 				BardEpicBoots.Bonus = 35;
 				BardEpicBoots.MaxCondition = 50000;
@@ -247,7 +251,7 @@ namespace DOL.GS.Quests.Hibernia
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Bards Epic Helm , creating it ...");
 				BardEpicHelm = new ItemTemplate();
-				BardEpicHelm.ItemTemplateID = "BardEpicHelm";
+				BardEpicHelm.Id_nb = "BardEpicHelm";
 				BardEpicHelm.Name = "Moonsung Coif";
 				BardEpicHelm.Level = 50;
 				BardEpicHelm.Item_Type = 21;
@@ -258,7 +262,6 @@ namespace DOL.GS.Quests.Hibernia
 				BardEpicHelm.SPD_ABS = 19;
 				BardEpicHelm.Object_Type = 37;
 				BardEpicHelm.Quality = 100;
-				BardEpicHelm.MaxQuality = 100;
 				BardEpicHelm.Weight = 22;
 				BardEpicHelm.Bonus = 35;
 				BardEpicHelm.MaxCondition = 50000;
@@ -293,7 +296,7 @@ namespace DOL.GS.Quests.Hibernia
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Bards Epic Gloves , creating it ...");
 				BardEpicGloves = new ItemTemplate();
-				BardEpicGloves.ItemTemplateID = "BardEpicGloves";
+				BardEpicGloves.Id_nb = "BardEpicGloves";
 				BardEpicGloves.Name = "Moonsung Gloves ";
 				BardEpicGloves.Level = 50;
 				BardEpicGloves.Item_Type = 22;
@@ -304,7 +307,6 @@ namespace DOL.GS.Quests.Hibernia
 				BardEpicGloves.SPD_ABS = 19;
 				BardEpicGloves.Object_Type = 37;
 				BardEpicGloves.Quality = 100;
-				BardEpicGloves.MaxQuality = 100;
 				BardEpicGloves.Weight = 22;
 				BardEpicGloves.Bonus = 35;
 				BardEpicGloves.MaxCondition = 50000;
@@ -337,7 +339,7 @@ namespace DOL.GS.Quests.Hibernia
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Bards Epic Vest , creating it ...");
 				BardEpicVest = new ItemTemplate();
-				BardEpicVest.ItemTemplateID = "BardEpicVest";
+				BardEpicVest.Id_nb = "BardEpicVest";
 				BardEpicVest.Name = "Moonsung Hauberk";
 				BardEpicVest.Level = 50;
 				BardEpicVest.Item_Type = 25;
@@ -348,7 +350,6 @@ namespace DOL.GS.Quests.Hibernia
 				BardEpicVest.SPD_ABS = 19;
 				BardEpicVest.Object_Type = 37;
 				BardEpicVest.Quality = 100;
-				BardEpicVest.MaxQuality = 100;
 				BardEpicVest.Weight = 22;
 				BardEpicVest.Bonus = 35;
 				BardEpicVest.MaxCondition = 50000;
@@ -381,7 +382,7 @@ namespace DOL.GS.Quests.Hibernia
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Bards Epic Legs , creating it ...");
 				BardEpicLegs = new ItemTemplate();
-				BardEpicLegs.ItemTemplateID = "BardEpicLegs";
+				BardEpicLegs.Id_nb = "BardEpicLegs";
 				BardEpicLegs.Name = "Moonsung Legs";
 				BardEpicLegs.Level = 50;
 				BardEpicLegs.Item_Type = 27;
@@ -392,7 +393,6 @@ namespace DOL.GS.Quests.Hibernia
 				BardEpicLegs.SPD_ABS = 19;
 				BardEpicLegs.Object_Type = 37;
 				BardEpicLegs.Quality = 100;
-				BardEpicLegs.MaxQuality = 100;
 				BardEpicLegs.Weight = 22;
 				BardEpicLegs.Bonus = 35;
 				BardEpicLegs.MaxCondition = 50000;
@@ -425,7 +425,7 @@ namespace DOL.GS.Quests.Hibernia
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Bard Epic Arms , creating it ...");
 				BardEpicArms = new ItemTemplate();
-				BardEpicArms.ItemTemplateID = "BardEpicArms";
+				BardEpicArms.Id_nb = "BardEpicArms";
 				BardEpicArms.Name = "Moonsung Sleeves";
 				BardEpicArms.Level = 50;
 				BardEpicArms.Item_Type = 28;
@@ -436,7 +436,6 @@ namespace DOL.GS.Quests.Hibernia
 				BardEpicArms.SPD_ABS = 19;
 				BardEpicArms.Object_Type = 37;
 				BardEpicArms.Quality = 100;
-				BardEpicArms.MaxQuality = 100;
 				BardEpicArms.Weight = 22;
 				BardEpicArms.Bonus = 35;
 				BardEpicArms.MaxCondition = 50000;
@@ -469,7 +468,7 @@ namespace DOL.GS.Quests.Hibernia
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Champions Epic Boots , creating it ...");
 				ChampionEpicBoots = new ItemTemplate();
-				ChampionEpicBoots.ItemTemplateID = "ChampionEpicBoots";
+				ChampionEpicBoots.Id_nb = "ChampionEpicBoots";
 				ChampionEpicBoots.Name = "Moonglow Boots";
 				ChampionEpicBoots.Level = 50;
 				ChampionEpicBoots.Item_Type = 23;
@@ -480,7 +479,6 @@ namespace DOL.GS.Quests.Hibernia
 				ChampionEpicBoots.SPD_ABS = 27;
 				ChampionEpicBoots.Object_Type = 38;
 				ChampionEpicBoots.Quality = 100;
-				ChampionEpicBoots.MaxQuality = 100;
 				ChampionEpicBoots.Weight = 22;
 				ChampionEpicBoots.Bonus = 35;
 				ChampionEpicBoots.MaxCondition = 50000;
@@ -514,7 +512,7 @@ namespace DOL.GS.Quests.Hibernia
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Champions Epic Helm , creating it ...");
 				ChampionEpicHelm = new ItemTemplate();
-				ChampionEpicHelm.ItemTemplateID = "ChampionEpicHelm";
+				ChampionEpicHelm.Id_nb = "ChampionEpicHelm";
 				ChampionEpicHelm.Name = "Moonglow Coif";
 				ChampionEpicHelm.Level = 50;
 				ChampionEpicHelm.Item_Type = 21;
@@ -525,7 +523,6 @@ namespace DOL.GS.Quests.Hibernia
 				ChampionEpicHelm.SPD_ABS = 27;
 				ChampionEpicHelm.Object_Type = 38;
 				ChampionEpicHelm.Quality = 100;
-				ChampionEpicHelm.MaxQuality = 100;
 				ChampionEpicHelm.Weight = 22;
 				ChampionEpicHelm.Bonus = 35;
 				ChampionEpicHelm.MaxCondition = 50000;
@@ -559,7 +556,7 @@ namespace DOL.GS.Quests.Hibernia
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Champions Epic Gloves , creating it ...");
 				ChampionEpicGloves = new ItemTemplate();
-				ChampionEpicGloves.ItemTemplateID = "ChampionEpicGloves";
+				ChampionEpicGloves.Id_nb = "ChampionEpicGloves";
 				ChampionEpicGloves.Name = "Moonglow Gloves ";
 				ChampionEpicGloves.Level = 50;
 				ChampionEpicGloves.Item_Type = 22;
@@ -570,7 +567,6 @@ namespace DOL.GS.Quests.Hibernia
 				ChampionEpicGloves.SPD_ABS = 27;
 				ChampionEpicGloves.Object_Type = 38;
 				ChampionEpicGloves.Quality = 100;
-				ChampionEpicGloves.MaxQuality = 100;
 				ChampionEpicGloves.Weight = 22;
 				ChampionEpicGloves.Bonus = 35;
 				ChampionEpicGloves.MaxCondition = 50000;
@@ -603,7 +599,7 @@ namespace DOL.GS.Quests.Hibernia
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Champions Epic Vest , creating it ...");
 				ChampionEpicVest = new ItemTemplate();
-				ChampionEpicVest.ItemTemplateID = "ChampionEpicVest";
+				ChampionEpicVest.Id_nb = "ChampionEpicVest";
 				ChampionEpicVest.Name = "Moonglow Brestplate";
 				ChampionEpicVest.Level = 50;
 				ChampionEpicVest.Item_Type = 25;
@@ -614,7 +610,6 @@ namespace DOL.GS.Quests.Hibernia
 				ChampionEpicVest.SPD_ABS = 27;
 				ChampionEpicVest.Object_Type = 38;
 				ChampionEpicVest.Quality = 100;
-				ChampionEpicVest.MaxQuality = 100;
 				ChampionEpicVest.Weight = 22;
 				ChampionEpicVest.Bonus = 35;
 				ChampionEpicVest.MaxCondition = 50000;
@@ -647,7 +642,7 @@ namespace DOL.GS.Quests.Hibernia
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Champions Epic Legs , creating it ...");
 				ChampionEpicLegs = new ItemTemplate();
-				ChampionEpicLegs.ItemTemplateID = "ChampionEpicLegs";
+				ChampionEpicLegs.Id_nb = "ChampionEpicLegs";
 				ChampionEpicLegs.Name = "Moonglow Legs";
 				ChampionEpicLegs.Level = 50;
 				ChampionEpicLegs.Item_Type = 27;
@@ -658,7 +653,6 @@ namespace DOL.GS.Quests.Hibernia
 				ChampionEpicLegs.SPD_ABS = 27;
 				ChampionEpicLegs.Object_Type = 38;
 				ChampionEpicLegs.Quality = 100;
-				ChampionEpicLegs.MaxQuality = 100;
 				ChampionEpicLegs.Weight = 22;
 				ChampionEpicLegs.Bonus = 35;
 				ChampionEpicLegs.MaxCondition = 50000;
@@ -691,7 +685,7 @@ namespace DOL.GS.Quests.Hibernia
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Champion Epic Arms , creating it ...");
 				ChampionEpicArms = new ItemTemplate();
-				ChampionEpicArms.ItemTemplateID = "ChampionEpicArms";
+				ChampionEpicArms.Id_nb = "ChampionEpicArms";
 				ChampionEpicArms.Name = "Moonglow Sleeves";
 				ChampionEpicArms.Level = 50;
 				ChampionEpicArms.Item_Type = 28;
@@ -702,7 +696,6 @@ namespace DOL.GS.Quests.Hibernia
 				ChampionEpicArms.SPD_ABS = 27;
 				ChampionEpicArms.Object_Type = 38;
 				ChampionEpicArms.Quality = 100;
-				ChampionEpicArms.MaxQuality = 100;
 				ChampionEpicArms.Weight = 22;
 				ChampionEpicArms.Bonus = 35;
 				ChampionEpicArms.MaxCondition = 50000;
@@ -734,7 +727,7 @@ namespace DOL.GS.Quests.Hibernia
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Nightshade Epic Boots , creating it ...");
 				NightshadeEpicBoots = new ItemTemplate();
-				NightshadeEpicBoots.ItemTemplateID = "NightshadeEpicBoots";
+				NightshadeEpicBoots.Id_nb = "NightshadeEpicBoots";
 				NightshadeEpicBoots.Name = "Moonlit Boots";
 				NightshadeEpicBoots.Level = 50;
 				NightshadeEpicBoots.Item_Type = 23;
@@ -745,7 +738,6 @@ namespace DOL.GS.Quests.Hibernia
 				NightshadeEpicBoots.SPD_ABS = 10;
 				NightshadeEpicBoots.Object_Type = 33;
 				NightshadeEpicBoots.Quality = 100;
-				NightshadeEpicBoots.MaxQuality = 100;
 				NightshadeEpicBoots.Weight = 22;
 				NightshadeEpicBoots.Bonus = 35;
 				NightshadeEpicBoots.MaxCondition = 50000;
@@ -779,7 +771,7 @@ namespace DOL.GS.Quests.Hibernia
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Nightshade Epic Helm , creating it ...");
 				NightshadeEpicHelm = new ItemTemplate();
-				NightshadeEpicHelm.ItemTemplateID = "NightshadeEpicHelm";
+				NightshadeEpicHelm.Id_nb = "NightshadeEpicHelm";
 				NightshadeEpicHelm.Name = "Moonlit Helm";
 				NightshadeEpicHelm.Level = 50;
 				NightshadeEpicHelm.Item_Type = 21;
@@ -790,7 +782,6 @@ namespace DOL.GS.Quests.Hibernia
 				NightshadeEpicHelm.SPD_ABS = 10;
 				NightshadeEpicHelm.Object_Type = 33;
 				NightshadeEpicHelm.Quality = 100;
-				NightshadeEpicHelm.MaxQuality = 100;
 				NightshadeEpicHelm.Weight = 22;
 				NightshadeEpicHelm.Bonus = 35;
 				NightshadeEpicHelm.MaxCondition = 50000;
@@ -824,7 +815,7 @@ namespace DOL.GS.Quests.Hibernia
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Nightshade Epic Gloves , creating it ...");
 				NightshadeEpicGloves = new ItemTemplate();
-				NightshadeEpicGloves.ItemTemplateID = "NightshadeEpicGloves";
+				NightshadeEpicGloves.Id_nb = "NightshadeEpicGloves";
 				NightshadeEpicGloves.Name = "Moonlit Gloves ";
 				NightshadeEpicGloves.Level = 50;
 				NightshadeEpicGloves.Item_Type = 22;
@@ -835,7 +826,6 @@ namespace DOL.GS.Quests.Hibernia
 				NightshadeEpicGloves.SPD_ABS = 10;
 				NightshadeEpicGloves.Object_Type = 33;
 				NightshadeEpicGloves.Quality = 100;
-				NightshadeEpicGloves.MaxQuality = 100;
 				NightshadeEpicGloves.Weight = 22;
 				NightshadeEpicGloves.Bonus = 35;
 				NightshadeEpicGloves.MaxCondition = 50000;
@@ -868,7 +858,7 @@ namespace DOL.GS.Quests.Hibernia
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Nightshade Epic Vest , creating it ...");
 				NightshadeEpicVest = new ItemTemplate();
-				NightshadeEpicVest.ItemTemplateID = "NightshadeEpicVest";
+				NightshadeEpicVest.Id_nb = "NightshadeEpicVest";
 				NightshadeEpicVest.Name = "Moonlit Leather Jerking";
 				NightshadeEpicVest.Level = 50;
 				NightshadeEpicVest.Item_Type = 25;
@@ -879,7 +869,6 @@ namespace DOL.GS.Quests.Hibernia
 				NightshadeEpicVest.SPD_ABS = 10;
 				NightshadeEpicVest.Object_Type = 33;
 				NightshadeEpicVest.Quality = 100;
-				NightshadeEpicVest.MaxQuality = 100;
 				NightshadeEpicVest.Weight = 22;
 				NightshadeEpicVest.Bonus = 35;
 				NightshadeEpicVest.MaxCondition = 50000;
@@ -909,7 +898,7 @@ namespace DOL.GS.Quests.Hibernia
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Nightshade Epic Legs , creating it ...");
 				NightshadeEpicLegs = new ItemTemplate();
-				NightshadeEpicLegs.ItemTemplateID = "NightshadeEpicLegs";
+				NightshadeEpicLegs.Id_nb = "NightshadeEpicLegs";
 				NightshadeEpicLegs.Name = "Moonlit Leggings";
 				NightshadeEpicLegs.Level = 50;
 				NightshadeEpicLegs.Item_Type = 27;
@@ -920,7 +909,6 @@ namespace DOL.GS.Quests.Hibernia
 				NightshadeEpicLegs.SPD_ABS = 10;
 				NightshadeEpicLegs.Object_Type = 33;
 				NightshadeEpicLegs.Quality = 100;
-				NightshadeEpicLegs.MaxQuality = 100;
 				NightshadeEpicLegs.Weight = 22;
 				NightshadeEpicLegs.Bonus = 35;
 				NightshadeEpicLegs.MaxCondition = 50000;
@@ -953,7 +941,7 @@ namespace DOL.GS.Quests.Hibernia
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Nightshade Epic Arms , creating it ...");
 				NightshadeEpicArms = new ItemTemplate();
-				NightshadeEpicArms.ItemTemplateID = "NightshadeEpicArms";
+				NightshadeEpicArms.Id_nb = "NightshadeEpicArms";
 				NightshadeEpicArms.Name = "Moonlit Sleeves";
 				NightshadeEpicArms.Level = 50;
 				NightshadeEpicArms.Item_Type = 28;
@@ -964,7 +952,6 @@ namespace DOL.GS.Quests.Hibernia
 				NightshadeEpicArms.SPD_ABS = 10;
 				NightshadeEpicArms.Object_Type = 33;
 				NightshadeEpicArms.Quality = 100;
-				NightshadeEpicArms.MaxQuality = 100;
 				NightshadeEpicArms.Weight = 22;
 				NightshadeEpicArms.Bonus = 35;
 				NightshadeEpicArms.MaxCondition = 50000;
@@ -996,7 +983,7 @@ namespace DOL.GS.Quests.Hibernia
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Enchanter Epic Boots , creating it ...");
 				EnchanterEpicBoots = new ItemTemplate();
-				EnchanterEpicBoots.ItemTemplateID = "EnchanterEpicBoots";
+				EnchanterEpicBoots.Id_nb = "EnchanterEpicBoots";
 				EnchanterEpicBoots.Name = "Moonspun Boots";
 				EnchanterEpicBoots.Level = 50;
 				EnchanterEpicBoots.Item_Type = 23;
@@ -1007,7 +994,6 @@ namespace DOL.GS.Quests.Hibernia
 				EnchanterEpicBoots.SPD_ABS = 0;
 				EnchanterEpicBoots.Object_Type = 32;
 				EnchanterEpicBoots.Quality = 100;
-				EnchanterEpicBoots.MaxQuality = 100;
 				EnchanterEpicBoots.Weight = 22;
 				EnchanterEpicBoots.Bonus = 35;
 				EnchanterEpicBoots.MaxCondition = 50000;
@@ -1041,7 +1027,7 @@ namespace DOL.GS.Quests.Hibernia
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Enchanter Epic Helm , creating it ...");
 				EnchanterEpicHelm = new ItemTemplate();
-				EnchanterEpicHelm.ItemTemplateID = "EnchanterEpicHelm";
+				EnchanterEpicHelm.Id_nb = "EnchanterEpicHelm";
 				EnchanterEpicHelm.Name = "Moonspun Cap";
 				EnchanterEpicHelm.Level = 50;
 				EnchanterEpicHelm.Item_Type = 21;
@@ -1052,7 +1038,6 @@ namespace DOL.GS.Quests.Hibernia
 				EnchanterEpicHelm.SPD_ABS = 0;
 				EnchanterEpicHelm.Object_Type = 32;
 				EnchanterEpicHelm.Quality = 100;
-				EnchanterEpicHelm.MaxQuality = 100;
 				EnchanterEpicHelm.Weight = 22;
 				EnchanterEpicHelm.Bonus = 35;
 				EnchanterEpicHelm.MaxCondition = 50000;
@@ -1086,7 +1071,7 @@ namespace DOL.GS.Quests.Hibernia
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Enchanter Epic Gloves , creating it ...");
 				EnchanterEpicGloves = new ItemTemplate();
-				EnchanterEpicGloves.ItemTemplateID = "EnchanterEpicGloves";
+				EnchanterEpicGloves.Id_nb = "EnchanterEpicGloves";
 				EnchanterEpicGloves.Name = "Moonspun Gloves ";
 				EnchanterEpicGloves.Level = 50;
 				EnchanterEpicGloves.Item_Type = 22;
@@ -1097,7 +1082,6 @@ namespace DOL.GS.Quests.Hibernia
 				EnchanterEpicGloves.SPD_ABS = 0;
 				EnchanterEpicGloves.Object_Type = 32;
 				EnchanterEpicGloves.Quality = 100;
-				EnchanterEpicGloves.MaxQuality = 100;
 				EnchanterEpicGloves.Weight = 22;
 				EnchanterEpicGloves.Bonus = 35;
 				EnchanterEpicGloves.MaxCondition = 50000;
@@ -1130,7 +1114,7 @@ namespace DOL.GS.Quests.Hibernia
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Enchanter Epic Vest , creating it ...");
 				EnchanterEpicVest = new ItemTemplate();
-				EnchanterEpicVest.ItemTemplateID = "EnchanterEpicVest";
+				EnchanterEpicVest.Id_nb = "EnchanterEpicVest";
 				EnchanterEpicVest.Name = "Moonspun Vest";
 				EnchanterEpicVest.Level = 50;
 				EnchanterEpicVest.Item_Type = 25;
@@ -1141,7 +1125,6 @@ namespace DOL.GS.Quests.Hibernia
 				EnchanterEpicVest.SPD_ABS = 0;
 				EnchanterEpicVest.Object_Type = 32;
 				EnchanterEpicVest.Quality = 100;
-				EnchanterEpicVest.MaxQuality = 100;
 				EnchanterEpicVest.Weight = 22;
 				EnchanterEpicVest.Bonus = 35;
 				EnchanterEpicVest.MaxCondition = 50000;
@@ -1171,7 +1154,7 @@ namespace DOL.GS.Quests.Hibernia
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Enchanter Epic Legs , creating it ...");
 				EnchanterEpicLegs = new ItemTemplate();
-				EnchanterEpicLegs.ItemTemplateID = "EnchanterEpicLegs";
+				EnchanterEpicLegs.Id_nb = "EnchanterEpicLegs";
 				EnchanterEpicLegs.Name = "Moonspun Pants";
 				EnchanterEpicLegs.Level = 50;
 				EnchanterEpicLegs.Item_Type = 27;
@@ -1182,7 +1165,6 @@ namespace DOL.GS.Quests.Hibernia
 				EnchanterEpicLegs.SPD_ABS = 0;
 				EnchanterEpicLegs.Object_Type = 32;
 				EnchanterEpicLegs.Quality = 100;
-				EnchanterEpicLegs.MaxQuality = 100;
 				EnchanterEpicLegs.Weight = 22;
 				EnchanterEpicLegs.Bonus = 35;
 				EnchanterEpicLegs.MaxCondition = 50000;
@@ -1215,7 +1197,7 @@ namespace DOL.GS.Quests.Hibernia
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Enchanter Epic Arms , creating it ...");
 				EnchanterEpicArms = new ItemTemplate();
-				EnchanterEpicArms.ItemTemplateID = "EnchanterEpicArms";
+				EnchanterEpicArms.Id_nb = "EnchanterEpicArms";
 				EnchanterEpicArms.Name = "Moonspun Sleeves";
 				EnchanterEpicArms.Level = 50;
 				EnchanterEpicArms.Item_Type = 28;
@@ -1226,7 +1208,6 @@ namespace DOL.GS.Quests.Hibernia
 				EnchanterEpicArms.SPD_ABS = 0;
 				EnchanterEpicArms.Object_Type = 32;
 				EnchanterEpicArms.Quality = 100;
-				EnchanterEpicArms.MaxQuality = 100;
 				EnchanterEpicArms.Weight = 22;
 				EnchanterEpicArms.Bonus = 35;
 				EnchanterEpicArms.MaxCondition = 50000;
@@ -1258,6 +1239,9 @@ namespace DOL.GS.Quests.Hibernia
 
 			#endregion
 
+			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
 			GameEventMgr.AddHandler(Brigit, GameObjectEvent.Interact, new DOLEventHandler(TalkToBrigit));
 			GameEventMgr.AddHandler(Brigit, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToBrigit));
 
@@ -1275,6 +1259,9 @@ namespace DOL.GS.Quests.Hibernia
 			if (Brigit == null)
 				return;
 			// remove handlers
+			GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
 			GameEventMgr.RemoveHandler(Brigit, GameObjectEvent.Interact, new DOLEventHandler(TalkToBrigit));
 			GameEventMgr.RemoveHandler(Brigit, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToBrigit));
 
@@ -1317,7 +1304,7 @@ namespace DOL.GS.Quests.Hibernia
 					switch (wArgs.Text)
 					{
 						case "services":
-							player.Out.SendCustomDialog("Will you help Brigit [Path of Essence Level 50 Epic]?", new CustomDialogResponse(CheckPlayerAcceptQuest));
+							player.Out.SendQuestSubscribeCommand(Brigit, QuestMgr.GetIDForQuestType(typeof(Essence_50)), "Will you help Brigit [Path of Essence Level 50 Epic]?");
 							break;
 					}
 				}
@@ -1383,6 +1370,21 @@ namespace DOL.GS.Quests.Hibernia
 			}
 		}
 
+		protected static void SubscribeQuest(DOLEvent e, object sender, EventArgs args)
+		{
+			QuestEventArgs qargs = args as QuestEventArgs;
+			if (qargs == null)
+				return;
+
+			if (qargs.QuestID != QuestMgr.GetIDForQuestType(typeof(Essence_50)))
+				return;
+
+			if (e == GamePlayerEvent.AcceptQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x01);
+			else if (e == GamePlayerEvent.DeclineQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x00);
+		}
+
 		private static void CheckPlayerAcceptQuest(GamePlayer player, byte response)
 		{
 			if(Brigit.CanGiveQuest(typeof (Essence_50), player)  <= 0)
@@ -1439,7 +1441,7 @@ namespace DOL.GS.Quests.Hibernia
 				if (gArgs.Target.Name == Caithor.Name)
 				{
 					m_questPlayer.Out.SendMessage("You collect the Moonstone from Caithor", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					GiveItem(player, Moonstone);
+					GiveItem(m_questPlayer, Moonstone);
 					Step = 2;
 					return;
 				}
@@ -1449,7 +1451,7 @@ namespace DOL.GS.Quests.Hibernia
 			if (Step == 2 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == Brigit.Name && gArgs.Item.ItemTemplateID == Moonstone.ItemTemplateID)
+				if (gArgs.Target.Name == Brigit.Name && gArgs.Item.Id_nb == Moonstone.Id_nb)
 				{
 					RemoveItem(Brigit, player, Moonstone);
 					Brigit.SayTo(player, "You have earned this Epic Armour!");

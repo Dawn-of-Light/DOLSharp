@@ -48,7 +48,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Stores the next execution tick and flags
 		/// </summary>
-		private int m_tick = TIMER_DISABLED;
+		private long m_tick = TIMER_DISABLED;
 		/// <summary>
 		/// Stores the timer intervals
 		/// </summary>
@@ -56,7 +56,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Stores the time where the timer was inserted
 		/// </summary>
-		private int m_targetTime = -1;
+		private long m_targetTime = -1;
 		/// <summary>
 		/// Stores the time manager used for this timer
 		/// </summary>
@@ -65,11 +65,11 @@ namespace DOL.GS
 		/// <summary>
 		/// Flags the timer as disabled
 		/// </summary>
-		public static readonly int TIMER_DISABLED = int.MinValue;
+		public static readonly long TIMER_DISABLED = long.MinValue;
 		/// <summary>
 		/// Flags the current tick timers as rescheduled
 		/// </summary>
-		public static readonly int TIMER_RESCHEDULED = 0x40000000;
+		public static readonly long TIMER_RESCHEDULED = 0x40000000;
 
 		/// <summary>
 		/// Constructs a new GameTimer
@@ -89,10 +89,10 @@ namespace DOL.GS
 		{
 			get
 			{
-				int ins = m_targetTime;
+				long ins = m_targetTime;
 				if (ins < 0)
 					return -1;
-				return (int)((uint)ins - (uint)m_time.CurrentTime);
+				return (int)((ulong)ins - (ulong)m_time.CurrentTime);
 			}
 		}
 
@@ -113,7 +113,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets the maximal allowed interval
 		/// </summary>
-		public int MaxInterval
+		public long MaxInterval
 		{
 			get { return m_time.MaxInterval; }
 		}
@@ -144,6 +144,14 @@ namespace DOL.GS
 			m_time.InsertTimer(this, initialDelay);
 		}
 
+//		/// <summary>
+//		/// Starts the timer using current interval
+//		/// </summary>
+//		public virtual void Start()
+//		{ not clear what it does, imo
+//			m_time.InsertTimer(this, Interval);
+//		}
+
 		/// <summary>
 		/// Stops the timer
 		/// </summary>
@@ -157,6 +165,18 @@ namespace DOL.GS
 		/// </summary>
 		protected abstract void OnTick();
 
+		private static long StopwatchFrequencyMilliseconds = Stopwatch.Frequency / 1000;
+		/// <summary>
+		/// Get the tick count, this is needed because Environment.TickCount resets to 0
+		/// when server has been up 48 days because it returned an int,
+		/// this is a long
+		/// </summary>
+		/// <returns></returns>
+		public static long GetTickCount()
+		{
+			return Stopwatch.GetTimestamp() / StopwatchFrequencyMilliseconds;
+		}
+
 		#region TimeManager
 
 		/// <summary>
@@ -168,6 +188,7 @@ namespace DOL.GS
 		/// </summary>
 		public sealed class TimeManager
 		{
+			private readonly object m_lockObject = new object();
 			/// <summary>
 			/// Defines a logger for this class.
 			/// </summary>
@@ -184,7 +205,7 @@ namespace DOL.GS
 			public static readonly int BUCKET_BITS = 4;
 			/// <summary>
 			/// The table arrays size in bits.
-			/// Table size in milliseconds is (1 << BUCKET_BITS + TABLE_BITS).
+			/// Table size in milliseconds is (1<<BUCKET_BITS + TABLE_BITS).
 			/// </summary>
 			public static readonly int TABLE_BITS = 17;
 			/// <summary>
@@ -243,7 +264,7 @@ namespace DOL.GS
 			/// </summary>
 			private readonly CacheBucket[] m_cachedBucket = new CacheBucket[1 << CACHE_BITS];
 			/// <summary>
-			/// Stores all timers. Array index = (TimerTick >> BUCKET_BITS) & TABLE_MASK
+			/// Stores all timers. Array index = (TimerTick>>BUCKET_BITS)&TABLE_MASK
 			/// </summary>
 			private readonly GameTimer[] m_buckets = new GameTimer[1 << TABLE_BITS];
 			/// <summary>
@@ -455,7 +476,7 @@ namespace DOL.GS
 					if (timer == null) return;
 
 					StringBuilder str = new StringBuilder("=== Timer already took ", 1024);
-					str.Append(Environment.TickCount - start).Append("ms\n");
+					str.Append(GetTickCount() - start).Append("ms\n");
 					str.Append(timer.ToString());
 					str.Append("\n\n");
 					str.Append("Timer thread:\n");
@@ -497,10 +518,11 @@ namespace DOL.GS
 			/// <returns>stacktrace</returns>
 			public StackTrace GetStacktrace()
 			{
-				lock (this)
+				if (m_timeThread == null)
+					return null;
+				
+				lock (m_lockObject)
 				{
-					if (m_timeThread == null)
-						return null;
 					return Util.GetThreadStack(m_timeThread);
 				}
 			}
@@ -513,18 +535,16 @@ namespace DOL.GS
 			/// <returns>success</returns>
 			public bool Start()
 			{
-				lock (this)
-				{
-					if (m_timeThread != null)
-						return false;
-					m_running = true;
-					m_timeThread = new Thread(new ThreadStart(TimeThread));
-					m_timeThread.Name = m_name;
-					m_timeThread.Priority = ThreadPriority.AboveNormal;
-					m_timeThread.IsBackground = true;
-					m_timeThread.Start();
-					return true;
-				}
+				if (m_timeThread != null)
+					return false;
+
+				m_running = true;
+				m_timeThread = new Thread(new ThreadStart(TimeThread));
+				m_timeThread.Name = m_name;
+				m_timeThread.Priority = ThreadPriority.AboveNormal;
+				m_timeThread.IsBackground = true;
+				m_timeThread.Start();
+				return true;
 			}
 
 			/// <summary>
@@ -533,11 +553,11 @@ namespace DOL.GS
 			/// <returns>success</returns>
 			public bool Stop()
 			{
-				lock (this)
-				{
-					if (m_timeThread == null)
-						return false;
+				if (m_timeThread == null)
+					return false;
 
+				lock (m_lockObject)
+				{
 					m_running = false;
 
 					if (!m_timeThread.Join(10000))
@@ -587,8 +607,8 @@ namespace DOL.GS
 
 				lock (m_buckets)
 				{
-					int timerTick = timer.m_tick;
-					int targetTick = m_tick + offsetTick;
+					long timerTick = timer.m_tick;
+					long targetTick = m_tick + offsetTick;
 					
 					if (timerTick == m_tick || (timerTick & TIMER_RESCHEDULED) != 0)
 					{
@@ -658,7 +678,7 @@ namespace DOL.GS
 			private void RemoveTimerUnsafe(GameTimer timer)
 			{
 				GameTimer t = timer;
-				int tick = t.m_tick;
+				long tick = t.m_tick;
 				if ((tick & TIMER_DISABLED) != 0)
 					return;
 
@@ -673,7 +693,7 @@ namespace DOL.GS
 				m_activeTimers--;
 
 				// check the cache first
-				int cachedIndex = tick & CACHE_MASK;
+				long cachedIndex = tick & CACHE_MASK;
 				CacheBucket bucket = m_cachedBucket[cachedIndex];
 				if (bucket.FirstTimer == t)
 				{
@@ -743,7 +763,7 @@ namespace DOL.GS
 				uint workStart, workEnd;
 				GameTimer chain, next, bucketTimer;
 
-				workStart = workEnd = (uint)Environment.TickCount;
+				workStart = workEnd = (uint)GetTickCount();
 				
 #if MonitorCallbacks
 				Timer t = new Timer(new TimerCallback(SlowTimerCallback), null, Timeout.Infinite, Timeout.Infinite);
@@ -771,7 +791,7 @@ namespace DOL.GS
 									{
 										GameTimer timer = next;
 										next = next.m_nextTimer;
-										int index2 = timer.m_tick;
+										long index2 = timer.m_tick;
 										if ((index2 & LONGTERM_MASK) != 0
 											&& ((index2 -= (1 << TABLE_BITS + BUCKET_BITS)) & LONGTERM_MASK) != 0)
 										{
@@ -820,7 +840,7 @@ namespace DOL.GS
 							{
 								try
 								{
-									int callbackStart = Environment.TickCount;
+									long callbackStart = GetTickCount();
 									
 #if MonitorCallbacks
 									m_currentTimer = current;
@@ -833,7 +853,7 @@ namespace DOL.GS
 #if MonitorCallbacks
 									m_currentTimer = null;
 									t.Change(Timeout.Infinite, Timeout.Infinite);
-									if (Environment.TickCount - callbackStart > 200)
+									if (GetTickCount() - callbackStart > 200)
 									{
 										lock (m_delayLog)
 										{
@@ -842,21 +862,21 @@ namespace DOL.GS
 									}
 #endif
 
-									if (Environment.TickCount - callbackStart > 100) 
+									if (GetTickCount() - callbackStart > 100) 
 									{
 										if (log.IsWarnEnabled)
 										{
 											string curStr;
 											try { curStr = current.ToString(); }
 											catch(Exception ee) { curStr = "error in timer.ToString(): " + current.GetType().FullName + "; " + ee.ToString(); }
-											string warning = "callback took "+(Environment.TickCount - callbackStart)+"ms! "+curStr;
+											string warning = "callback took "+(GetTickCount() - callbackStart)+"ms! "+curStr;
 											log.Warn(warning);
 										}
 									}
 
 #if CollectStatistic
 									// statistic
-									int start = Environment.TickCount;
+									int start = GetTickCount();
 									string callback;
 									if (current is RegionTimer)
 									{
@@ -878,7 +898,7 @@ namespace DOL.GS
 											m_timerCallbackStatistic[callback] = ((int)obj) + 1;
 										}
 									}
-									if (Environment.TickCount-start > 500) 
+									if (GetTickCount()-start > 500) 
 									{
 										if (log.IsWarnEnabled)
 											log.Warn("Ticker statistic "+callback+" took more than 500ms!");
@@ -914,8 +934,8 @@ namespace DOL.GS
 							lock (m_buckets)
 							{
 								next = current.m_nextTimer;
-								int tick = current.m_tick;
-								int interval = current.m_interval;
+								long tick = current.m_tick;
+								long interval = current.m_interval;
 
 								if ((tick & TIMER_DISABLED) != 0 || (interval == 0 && (tick & TIMER_RESCHEDULED) == 0))
 								{
@@ -985,13 +1005,13 @@ namespace DOL.GS
 
 
 
-						workEnd = (uint)Environment.TickCount;
+						workEnd = (uint)GetTickCount();
 						timeBalance += 1 - (int)(workEnd - workStart);
 
 						if (timeBalance > 0)
 						{
 							Thread.Sleep(timeBalance);
-							workStart = (uint)Environment.TickCount;
+							workStart = (uint)GetTickCount();
 							timeBalance -= (int)(workStart - workEnd);
 						}
 						else

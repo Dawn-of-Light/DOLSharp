@@ -18,6 +18,8 @@
  */
 using System;
 
+using DOL.GS.Keeps;
+
 namespace DOL.GS.PropertyCalc
 {
 	/// <summary>
@@ -50,11 +52,15 @@ namespace DOL.GS.PropertyCalc
 
 				return af;
 			}
-			/*else if (living is GameKeepDoor)
+			else if (living is GameKeepDoor || living is GameKeepComponent)
 			{
-				GameKeepDoor keepdoor = living as GameKeepDoor;
-				return 2000;
-			}*/
+				GameKeepComponent component = null;
+				if (living is GameKeepDoor)
+					component = (living as GameKeepDoor).Component;
+				if (living is GameKeepComponent)
+					component = living as GameKeepComponent;
+				return component.Keep.BaseLevel * 40;
+			}
 			else
 			{
 				return (int)( (1+(living.Level/170.0))*(living.Level<<1)*4.67 )

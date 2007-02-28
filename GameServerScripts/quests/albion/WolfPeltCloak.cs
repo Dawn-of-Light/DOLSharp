@@ -40,13 +40,10 @@
 
 using System;
 using System.Reflection;
-using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
-using NHibernate.Expression;
-using NHibernate.Mapping.Attributes;
 /* I suggest you declare yourself some namespaces for your quests
  * Like: DOL.GS.Quests.Albion
  *       DOL.GS.Quests.Midgard
@@ -58,27 +55,14 @@ using NHibernate.Mapping.Attributes;
 
 namespace DOL.GS.Quests.Albion
 {
-	/* The first thing we do, is to declare the quest requirement
-	* class linked with the new Quest. To do this, we derive 
-	* from the abstract class AbstractQuestDescriptor
-	*/
-	public class WolfPeltCloakDescriptor : AbstractQuestDescriptor
-	{
-		/* This is the type of the quest class linked with 
-		 * this requirement class, you must override the 
-		 * base methid like that
-		 */
-		public override Type LinkedQuestType
-		{
-			get { return typeof(WolfPeltCloak); }
-		}
-	}
-
-	/* The second thing we do, is to declare the class we create
-	 * as Quest. We must make it persistant using attributes, to
-	 * do this, we derive from the abstract class AbstractQuest
+	/* The first thing we do, is to declare the class we create
+	 * as Quest. To do this, we derive from the abstract class
+	 * AbstractQuest
+	 * 
+	 * This quest for example will be stored in the database with
+	 * the name: DOL.GS.Quests.Albion.WolfPeltCloak
 	 */
-	[Subclass(NameType = typeof(WolfPeltCloak), ExtendsType = typeof(AbstractQuest))]
+
 	public class WolfPeltCloak : BaseQuest
 	{
 		/// <summary>
@@ -98,15 +82,37 @@ namespace DOL.GS.Quests.Albion
 		 */
 
 		protected const string questTitle = "Wolf Pelt Cloak";
+		protected const int minimumLevel = 1;
+		protected const int maximumLevel = 50;
 
-		private static GameMob stewardWillie = null;
-		private static GameMob lynnet = null;
+		private static GameNPC stewardWillie = null;
+		private static GameNPC lynnet = null;
 
-		private static GameMob don = null;
+		private static GameNPC don = null;
 
-		private static CloakTemplate wolfPeltCloak = null;
-		private static GenericItemTemplate wolfFur = null;
-		private static GenericItemTemplate wolfHeadToken = null;
+		private static ItemTemplate wolfPeltCloak = null;
+		private static ItemTemplate wolfFur = null;
+		private static ItemTemplate wolfHeadToken = null;
+
+		/* We need to define the constructors from the base class here, else there might be problems
+		 * when loading this quest...
+		 */
+		public WolfPeltCloak() : base()
+		{
+		}
+
+		public WolfPeltCloak(GamePlayer questingPlayer) : this(questingPlayer, 1)
+		{
+		}
+
+		public WolfPeltCloak(GamePlayer questingPlayer, int step) : base(questingPlayer, step)
+		{
+		}
+
+		public WolfPeltCloak(GamePlayer questingPlayer, DBQuest dbQuest) : base(questingPlayer, dbQuest)
+		{
+		}
+
 
 		/* The following method is called automatically when this quest class
 		 * is loaded. You might notice that this method is the same as in standard
@@ -127,6 +133,8 @@ namespace DOL.GS.Quests.Albion
 		[ScriptLoadedEvent]
 		public static void ScriptLoaded(DOLEvent e, object sender, EventArgs args)
 		{
+			if (!ServerProperties.Properties.LOAD_QUESTS)
+				return;
 			if (log.IsInfoEnabled)
 				log.Info("Quest \"" + questTitle + "\" initializing ...");
 			/* First thing we do in here is to search for the NPCs inside
@@ -141,153 +149,150 @@ namespace DOL.GS.Quests.Albion
 
 			#region defineNPCs
 
-			stewardWillie = ResearchQuestObject(typeof(GameMob), WorldMgr.GetRegion(1), eRealm.Albion, "Steward Willie") as GameMob;
-			if (stewardWillie == null)
+			GameNPC[] npcs = WorldMgr.GetNPCsByName("Steward Willie", eRealm.Albion);
+
+			/* Whops, if the npcs array length is 0 then no Sir Quait exists in
+				* this users Mob Database, so we simply create one ;-)
+				* else we take the existing one. And if more than one exist, we take
+				* the first ...
+				*/
+			if (npcs.Length == 0)
 			{
-				stewardWillie = new GameMob();
+				stewardWillie = new GameNPC();
 				stewardWillie.Model = 27;
 				stewardWillie.Name = "Steward Willie";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + stewardWillie.Name + ", creating him ...");
 				stewardWillie.GuildName = "Part of " + questTitle;
 				stewardWillie.Realm = (byte) eRealm.Albion;
-				stewardWillie.Region =  WorldMgr.GetRegion(1)
-					;
+				stewardWillie.CurrentRegionID = 1;
 				stewardWillie.Size = 52;
 				stewardWillie.Level = 35;
-				stewardWillie.Position = new Point(503547, 474330, 2788);
+				stewardWillie.X = 503547;
+				stewardWillie.Y = 474330;
+				stewardWillie.Z = 2788;
 				stewardWillie.Heading = 3163;
-
-				StandardMobBrain newBrain = new StandardMobBrain();
-				newBrain.Body = stewardWillie;
-				newBrain.AggroLevel = 100;
-				newBrain.AggroRange = 0;
-				stewardWillie.OwnBrain = newBrain;
-
-				if(!stewardWillie.AddToWorld())
-				{
-					if (log.IsWarnEnabled)
-						log.Warn("Quest "+questTitle+" abort because a needed region is not in use in this server!");
-					return;
-				}
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(stewardWillie);
+					stewardWillie.SaveIntoDatabase();
+
+
+				stewardWillie.AddToWorld();
 			}
+			else
+				stewardWillie = npcs[0];
 
 			/* Now we do the same for the Lynnet.
 			*/
-			lynnet = ResearchQuestObject(typeof(GameMob), WorldMgr.GetRegion(1), eRealm.Albion, "Seamstress Lynnet") as GameMob;
-			if (lynnet == null)
+			npcs = WorldMgr.GetNPCsByName("Seamstress Lynnet", eRealm.Albion);
+			if (npcs.Length == 0)
 			{
-				lynnet = new GameMob();
+				lynnet = new GameNPC();
 				lynnet.Model = 5;
 				lynnet.Name = "Seamstress Lynnet";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + lynnet.Name + ", creating ...");
 				lynnet.GuildName = "Part of " + questTitle;
 				lynnet.Realm = (byte) eRealm.Albion; //Needs to be none, else we can't kill him ;-)
-				lynnet.Region = WorldMgr.GetRegion(1);
+				lynnet.CurrentRegionID = 1;
 
-				GameNpcInventory template = new GameNpcInventory();
-				template.AddItem(eInventorySlot.TorsoArmor, new NPCArmor(58, 30, 0));
-				lynnet.Inventory = template;
+				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
+				template.AddNPCEquipment(eInventorySlot.TorsoArmor, 58, 30);
+				lynnet.Inventory = template.CloseTemplate();
 
+//				lynnet.AddNPCEquipment((byte) eEquipmentItems.TORSO, 58, 30, 0, 0);
 				lynnet.Size = 48;
 				lynnet.Level = 15;
-				lynnet.Position = new Point(530112, 478662, 2200);
+				lynnet.X = 530112;
+				lynnet.Y = 478662;
+				lynnet.Z = 2200;
 				lynnet.Heading = 3203;
 
-				StandardMobBrain newBrain = new StandardMobBrain();
-				newBrain.Body = lynnet;
-				newBrain.AggroLevel = 100;
-				newBrain.AggroRange = 0;
-				lynnet.OwnBrain = newBrain;
-
-				if(!lynnet.AddToWorld())
-				{
-					if (log.IsWarnEnabled)
-						log.Warn("Quest "+questTitle+" abort because a needed region is not in use in this server!");
-					return;
-				}
-
-				//You don't have to store the created mob in the db if you don't want,
+				//You don't have to store the creted mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(lynnet);
-			}
+					lynnet.SaveIntoDatabase();
 
-			don = ResearchQuestObject(typeof(GameMob), WorldMgr.GetRegion(1), eRealm.Albion, "Brother Don") as GameMob;
-			if (don == null)
+				lynnet.AddToWorld();
+			}
+			else
+				lynnet = npcs[0];
+
+			npcs = WorldMgr.GetNPCsByName("Brother Don", eRealm.Albion);
+			if (npcs.Length == 0)
 			{
-				don = new GameMob();
+				don = new GameNPC();
 				don.Model = 34;
 				don.Name = "Brother Don";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + don.Name + ", creating ...");
 				don.GuildName = "Part of " + questTitle;
 				don.Realm = (byte) eRealm.Albion; //Needs to be none, else we can't kill him ;-)
-				don.Region = WorldMgr.GetRegion(1);
+				don.CurrentRegionID = 1;
 
-				GameNpcInventory template = new GameNpcInventory();
-				template.AddItem(eInventorySlot.TorsoArmor, new NPCArmor(58, 44, 0));
-				don.Inventory = template;
+				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
+				template.AddNPCEquipment(eInventorySlot.TorsoArmor, 58, 44);
+				don.Inventory = template.CloseTemplate();
 
+//				don.AddNPCEquipment((byte) eEquipmentItems.TORSO, 58, 44, 0, 0);
 				don.Size = 48;
 				don.Level = 15;
-				don.Position = new Point(505411, 495024, 2495);
+				don.X = 505411;
+				don.Y = 495024;
+				don.Z = 2495;
 				don.Heading = 2048;
-
-				StandardMobBrain newBrain = new StandardMobBrain();
-				newBrain.Body = don;
-				newBrain.AggroLevel = 100;
-				newBrain.AggroRange = 0;
-				don.OwnBrain = newBrain;
-
-				if(!don.AddToWorld())
-				{
-					if (log.IsWarnEnabled)
-						log.Warn("Quest "+questTitle+" abort because a needed region is not in use in this server!");
-					return;
-				}
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(don);
+					don.SaveIntoDatabase();
+
+				don.AddToWorld();
 			}
+			else
+				don = npcs[0];
 
 			#endregion
 
 			#region defineItems
 
-			wolfPeltCloak = GameServer.Database.SelectObject(typeof (CloakTemplate), Expression.Eq("Name", "Wolf Pelt Cloak")) as CloakTemplate;
+			wolfPeltCloak = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "wolf_pelt_cloak");
 			if (wolfPeltCloak == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Wolf Pelt Cloak, creating it ...");
-				wolfPeltCloak = new CloakTemplate();
+				wolfPeltCloak = new ItemTemplate();
 				wolfPeltCloak.Name = "Wolf Pelt Cloak";
 				wolfPeltCloak.Level = 3;
 				wolfPeltCloak.Weight = 3;
 				wolfPeltCloak.Model = 326;
 				wolfPeltCloak.Bonus = 1;
+				wolfPeltCloak.Bonus1 = 1;
+				wolfPeltCloak.Bonus1Type = (int) eStat.QUI;
+				;
 
-				wolfPeltCloak.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Quickness, 1));
-				//TODO how do you do negative numbers for magicalbonuses?
-				wolfPeltCloak.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Charisma, -1));
+				wolfPeltCloak.Bonus2 = -1;
+				wolfPeltCloak.Bonus2Type = (int) eStat.CHR;
 
-				wolfPeltCloak.Value = Money.GetMoney(0, 0, 0, 4, 3);
-
+				wolfPeltCloak.Object_Type = (int) eObjectType.Magical;
+				wolfPeltCloak.Item_Type = (int) eEquipmentItems.CLOAK;
+				wolfPeltCloak.Id_nb = "wolf_pelt_cloak";
+				wolfPeltCloak.Gold = 0;
+				wolfPeltCloak.Silver = 4;
+				wolfPeltCloak.Copper = 3;
+				wolfPeltCloak.IsPickable = true;
 				wolfPeltCloak.IsDropable = true;
-				wolfPeltCloak.IsSaleable = true;
-				wolfPeltCloak.IsTradable = true;
 				wolfPeltCloak.Color = 44;
+				wolfPeltCloak.Quality = 100;
+				wolfPeltCloak.Condition = 1000;
+				wolfPeltCloak.MaxCondition = 1000;
+				wolfPeltCloak.Durability = 1000;
+				wolfPeltCloak.MaxDurability = 1000;
 
 
 				//You don't have to store the created wolfPeltCloak in the db if you don't want,
@@ -297,18 +302,19 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(wolfPeltCloak);
 			}
 
-			wolfFur = GameServer.Database.SelectObject(typeof (GenericItemTemplate), Expression.Eq("Name", "Wolf Fur")) as GenericItemTemplate;
+			wolfFur = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "wolf_fur");
 			if (wolfFur == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Wolf Fur, creating it ...");
-				wolfFur = new GenericItemTemplate();
+				wolfFur = new ItemTemplate();
+				wolfFur.Object_Type = 0;
+				wolfFur.Id_nb = "wolf_fur";
 				wolfFur.Name = "Wolf Fur";
 				wolfFur.Level = 1;
 				wolfFur.Model = 57;
 				wolfFur.IsDropable = false;
-				wolfFur.IsSaleable = false;
-				wolfFur.IsTradable = false;
+				wolfFur.IsPickable = false;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -317,18 +323,19 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(wolfFur);
 			}
 
-			wolfHeadToken = GameServer.Database.SelectObject(typeof (GenericItemTemplate), Expression.Eq("Name", "Wolf Head Token")) as GenericItemTemplate;
+			wolfHeadToken = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "wolf_head_token");
 			if (wolfHeadToken == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Wolf Head Token, creating it ...");
-				wolfHeadToken = new GenericItemTemplate();
+				wolfHeadToken = new ItemTemplate();
+				wolfHeadToken.Object_Type = 0;
+				wolfHeadToken.Id_nb = "wolf_head_token";
 				wolfHeadToken.Name = "Wolf Head Token";
 				wolfHeadToken.Level = 1;
 				wolfHeadToken.Model = 1366;
 				wolfHeadToken.IsDropable = false;
-				wolfHeadToken.IsSaleable = false;
-				wolfHeadToken.IsTradable = false;
+				wolfHeadToken.IsPickable = false;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -346,20 +353,20 @@ namespace DOL.GS.Quests.Albion
 				* method. This means, the "TalkToXXX" method is called whenever
 				* a player right clicks on him or when he whispers to him.
 				*/
-			GameEventMgr.AddHandler(stewardWillie, GameObjectEvent.Interact, new DOLEventHandler(TalkToStewardWillie));
+
+			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
+			GameEventMgr.AddHandler(stewardWillie, GameLivingEvent.Interact, new DOLEventHandler(TalkToStewardWillie));
 			GameEventMgr.AddHandler(stewardWillie, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToStewardWillie));
 
-			GameEventMgr.AddHandler(don, GameObjectEvent.Interact, new DOLEventHandler(TalkToBrotherDon));
+			GameEventMgr.AddHandler(don, GameLivingEvent.Interact, new DOLEventHandler(TalkToBrotherDon));
 			GameEventMgr.AddHandler(don, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToBrotherDon));
 
-			GameEventMgr.AddHandler(lynnet, GameObjectEvent.Interact, new DOLEventHandler(TalkToSeamstressLynnet));
+			GameEventMgr.AddHandler(lynnet, GameLivingEvent.Interact, new DOLEventHandler(TalkToSeamstressLynnet));
 
-			/* Now we add some hooks to trigger the quest dialog reponse. */
-			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(QuestDialogResponse));
-			GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(QuestDialogResponse));
-
-			/* Now we bring to Ydenia the possibility to give this quest to players */
-			QuestMgr.AddQuestDescriptor(stewardWillie, typeof(WolfPeltCloakDescriptor));
+			/* Now we bring to stewardWillie the possibility to give this quest to players */
+			stewardWillie.AddQuestToGive(typeof (WolfPeltCloak));
 
 			if (log.IsInfoEnabled)
 				log.Info("Quest \"" + questTitle + "\" initialized");
@@ -384,19 +391,20 @@ namespace DOL.GS.Quests.Albion
 			/* Removing hooks works just as adding them but instead of 
 			 * AddHandler, we call RemoveHandler, the parameters stay the same
 			 */
+
+			GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
 			GameEventMgr.RemoveHandler(stewardWillie, GameObjectEvent.Interact, new DOLEventHandler(TalkToStewardWillie));
 			GameEventMgr.RemoveHandler(stewardWillie, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToStewardWillie));
 
-			GameEventMgr.RemoveHandler(don, GameObjectEvent.Interact, new DOLEventHandler(TalkToBrotherDon));
+			GameEventMgr.RemoveHandler(don, GameLivingEvent.Interact, new DOLEventHandler(TalkToBrotherDon));
 			GameEventMgr.RemoveHandler(don, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToBrotherDon));
 
 			GameEventMgr.RemoveHandler(lynnet, GameObjectEvent.Interact, new DOLEventHandler(TalkToSeamstressLynnet));
 
-			GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(QuestDialogResponse));
-			GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(QuestDialogResponse));
-
 			/* Now we remove to stewardWillie the possibility to give this quest to players */
-			QuestMgr.RemoveQuestDescriptor(stewardWillie, typeof(AgainstTheGrainDescriptor));
+			stewardWillie.RemoveQuestToGive(typeof (WolfPeltCloak));
 		}
 
 		/* This is the method we declared as callback for the hooks we set to
@@ -411,7 +419,7 @@ namespace DOL.GS.Quests.Albion
 			if (player == null)
 				return;
 
-			if (QuestMgr.CanGiveQuest(typeof(WolfPeltCloak), player, stewardWillie) <= 0)
+			if(stewardWillie.CanGiveQuest(typeof (WolfPeltCloak), player)  <= 0)
 				return;
 
 			//We also check if the player is already doing the quest
@@ -425,9 +433,9 @@ namespace DOL.GS.Quests.Albion
 				if (quest != null)
 				{
 					//If the player is already doing the quest, we ask if he found the fur!
-					if (player.Inventory.GetFirstItemByName(wolfFur.Name, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) != null)
+					if (player.Inventory.GetFirstItemByID(wolfFur.Id_nb, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) != null)
 						stewardWillie.SayTo(player, "Ah, well done! His Lordship will be pleased to know there is one less mongrel in the pack! Give me the fur so I can throw it with the others.");
-					else if (player.Inventory.GetFirstItemByName(wolfHeadToken.Name, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) != null)
+					else if (player.Inventory.GetFirstItemByID(wolfHeadToken.Id_nb, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) != null)
 						stewardWillie.SayTo(player, "Give the token to Seamstress Lynnet in Ludlow, she'll give ye your reward. Thank ye for your fine services to His Lordship.");
 					else
 						stewardWillie.SayTo(player, "Good! I know we ca'count on ye. I will reward ye for the pelt ye bring me from one of those vile beasts!");
@@ -460,11 +468,36 @@ namespace DOL.GS.Quests.Albion
 							break;
 							//If the player offered his "help", we send the quest dialog now!
 						case "serve him well":
-							QuestMgr.ProposeQuestToPlayer(typeof(WolfPeltCloak), "Do you accept the Wolf Pelt Cloak quest?", player, stewardWillie);
+							player.Out.SendQuestSubscribeCommand(stewardWillie, QuestMgr.GetIDForQuestType(typeof(WolfPeltCloak)), "Do you accept the Wolf Pelt Cloak quest?");
 							break;
 					}
 				}
+				else
+				{
+					switch (wArgs.Text)
+					{
+						case "abort":
+							player.Out.SendCustomDialog("Do you really want to abort this quest, \nall items gained during quest will be lost?", new CustomDialogResponse(CheckPlayerAbortQuest));
+							break;
+					}
+				}
+
 			}
+		}
+
+		protected static void SubscribeQuest(DOLEvent e, object sender, EventArgs args)
+		{
+			QuestEventArgs qargs = args as QuestEventArgs;
+			if (qargs == null)
+				return;
+
+			if (qargs.QuestID != QuestMgr.GetIDForQuestType(typeof(WolfPeltCloak)))
+				return;
+
+			if (e == GamePlayerEvent.AcceptQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x01);
+			else if (e == GamePlayerEvent.DeclineQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x00);
 		}
 
 		/* This is the method we declared as callback for the hooks we set to
@@ -479,7 +512,7 @@ namespace DOL.GS.Quests.Albion
 			if (player == null)
 				return;
 
-			if (QuestMgr.CanGiveQuest(typeof(WolfPeltCloak), player, stewardWillie) <= 0)
+			if(stewardWillie.CanGiveQuest(typeof (WolfPeltCloak), player)  <= 0)
 				return;
 
 			//We also check if the player is already doing the quest
@@ -513,7 +546,7 @@ namespace DOL.GS.Quests.Albion
 			if (e == GameObjectEvent.Interact)
 			{
 				//If the player qualifies, we begin talking...
-				if (player.Inventory.GetFirstItemByName(wolfPeltCloak.Name, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) != null)
+				if (player.Inventory.GetFirstItemByID(wolfPeltCloak.Id_nb, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) != null)
 					don.SayTo(player, "Hail! You don't perhaps have one of those fine wolf pelt cloaks? If you no longer have need of it, we could greatly use it at the [orphanage].");
 				return;
 			}
@@ -533,30 +566,74 @@ namespace DOL.GS.Quests.Albion
 			}
 		}
 
+		/// <summary>
+		/// This method checks if a player qualifies for this quest
+		/// </summary>
+		/// <returns>true if qualified, false if not</returns>
+		public override bool CheckQuestQualification(GamePlayer player)
+		{
+			// if the player is already doing the quest his level is no longer of relevance
+			if (player.IsDoingQuest(typeof (WolfPeltCloak)) != null)
+				return true;
+
+			// This checks below are only performed is player isn't doing quest already
+
+			if (player.Level < minimumLevel || player.Level > maximumLevel)
+				return false;
+
+			return true;
+		}
+
+
 		/* This is our callback hook that will be called when the player clicks
 		 * on any button in the quest offer dialog. We check if he accepts or
 		 * declines here...
 		 */
-		protected static void QuestDialogResponse(DOLEvent e, object sender, EventArgs args)
+
+		private static void CheckPlayerAbortQuest(GamePlayer player, byte response)
 		{
-			QuestEventArgs gArgs = args as QuestEventArgs;
+			WolfPeltCloak quest = player.IsDoingQuest(typeof (WolfPeltCloak)) as WolfPeltCloak;
 
-			if (gArgs != null && gArgs.QuestType.Equals(typeof(WolfPeltCloak)))
+			if (quest == null)
+				return;
+
+			if (response == 0x00)
 			{
-				GamePlayer player = gArgs.Player;
-				if (player == null) return;
+				SendSystemMessage(player, "Good, now go out there and finish your work!");
+			}
+			else
+			{
+				SendSystemMessage(player, "Aborting Quest " + questTitle + ". You can start over again if you want.");
+				quest.AbortQuest();
+			}
+		}
 
-				if (e == GamePlayerEvent.AcceptQuest)
-				{
-					if (QuestMgr.GiveQuestToPlayer(typeof(WolfPeltCloak), player, gArgs.Source as GameNPC))
-					{
-						stewardWillie.SayTo(player, "Good! I know we ca'count on ye. I will reward ye for the pelt ye bring me from one of those vile beasts!");
-					}
-				}
-				else if (e == GamePlayerEvent.DeclineQuest)
-				{
-					player.Out.SendMessage("Oh well, if you change your mind, please come back!", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
-				}
+		/* This is our callback hook that will be called when the player clicks
+		 * on any button in the quest offer dialog. We check if he accepts or
+		 * declines here...
+		 */
+
+		private static void CheckPlayerAcceptQuest(GamePlayer player, byte response)
+		{
+			//We recheck the qualification, because we don't talk to players
+			//who are not doing the quest
+			if(stewardWillie.CanGiveQuest(typeof (WolfPeltCloak), player)  <= 0)
+				return;
+
+			if (player.IsDoingQuest(typeof (WolfPeltCloak)) != null)
+				return;
+
+			if (response == 0x00)
+			{
+				SendReply(player, "Oh well, if you change your mind, please come back!");
+			}
+			else
+			{
+				//Check if we can add the quest
+				if (!stewardWillie.GiveQuest(typeof (WolfPeltCloak), player, 1))
+					return;
+
+				stewardWillie.SayTo(player, "Good! I know we ca'count on ye. I will reward ye for the pelt ye bring me from one of those vile beasts!");
 			}
 		}
 
@@ -589,9 +666,8 @@ namespace DOL.GS.Quests.Albion
 						return "[Step #2] Bring the fur back to Steward Willie in Humberton Fort.";
 					case 3:
 						return "[Step #3] Go to Seamstress Lynnie in Ludlow and bring her the wolf head token.";
-					default:
-						return "[Step #" + Step + "] No Description entered for this step!";
 				}
+				return base.Description;
 			}
 		}
 
@@ -606,11 +682,10 @@ namespace DOL.GS.Quests.Albion
 			if (e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target == don && gArgs.Item.QuestName == Name && gArgs.Item.Name == wolfPeltCloak.Name)
+				if (gArgs.Target.Name == don.Name && gArgs.Item.Id_nb == wolfPeltCloak.Id_nb)
 				{
-					RemoveItemFromPlayer(don, gArgs.Item);
-					
 					don.SayTo(player, "Thank you! Your service to the church will been noted!");
+					RemoveItem(don, m_questPlayer, wolfPeltCloak);
 					don.SayTo(player, "Well done! You've helped the children get over the harsh winter.");
 
 					//Give reward to player here ...
@@ -630,32 +705,31 @@ namespace DOL.GS.Quests.Albion
 				{
 					SendSystemMessage("You've killed the " + gArgs.Target.Name + " and flayed the fur from it.!");
 					wolfFur.Name = gArgs.Target.GetName(1, true) + " fur";
-					GiveItemToPlayer(CreateQuestItem(wolfFur));
-					ChangeQuestStep(2);
+					GiveItem(player, wolfFur);
+					Step = 2;
 					return;
 				}
 			}
 			else if (Step == 2 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target == stewardWillie && gArgs.Item.QuestName == Name && gArgs.Item.Name == wolfFur.Name)
+				if (gArgs.Target.Name == stewardWillie.Name && gArgs.Item.Id_nb == wolfFur.Id_nb)
 				{
-					RemoveItemFromPlayer(stewardWillie, gArgs.Item);
-					
 					stewardWillie.TurnTo(m_questPlayer);
 					stewardWillie.SayTo(m_questPlayer, "Take this token from His Lordship. If ye give it to Seamstress Lynnet in Ludlow, she'll give ye your reward. Thank ye for your fine services to His Lordship.");
 
-					GiveItemToPlayer(stewardWillie, CreateQuestItem(wolfHeadToken));
-					ChangeQuestStep(3);
+					RemoveItem(stewardWillie, player, wolfFur);
+					GiveItem(stewardWillie, player, wolfHeadToken);
+					Step = 3;
 					return;
 				}
 			}
 			else if (Step == 3 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target == lynnet && gArgs.Item.QuestName == Name && gArgs.Item.Name == wolfHeadToken.Name)
+				if (gArgs.Target.Name == lynnet.Name && gArgs.Item.Id_nb == wolfHeadToken.Id_nb)
 				{
-					RemoveItemFromPlayer(lynnet, gArgs.Item);
+					RemoveItem(lynnet, player, wolfHeadToken);
 					lynnet.SayTo(player, "Well done! Here's your fine wolf pelt cloak. Wear it with pride knowing you have helped his Lordship.");
 					FinishQuest();
 					return;
@@ -663,15 +737,26 @@ namespace DOL.GS.Quests.Albion
 			}
 		}
 
+		public override void AbortQuest()
+		{
+			base.AbortQuest(); //Defined in Quest, changes the state, stores in DB etc ...
+
+			RemoveItem(m_questPlayer, wolfFur, false);
+			RemoveItem(m_questPlayer, wolfHeadToken, false);
+		}
+
 		public override void FinishQuest()
 		{
+			base.FinishQuest(); //Defined in Quest, changes the state, stores in DB etc ...
+
 			//Give reward to player here ...
-			GiveItemToPlayer(lynnet, wolfPeltCloak.CreateInstance());
+
+			GiveItem(lynnet, m_questPlayer, wolfPeltCloak);
 
 			m_questPlayer.GainExperience(50, 0, 0, true);
 			m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 0, 30 + Util.Random(50)), "You recieve {0} for your service.");
 
-			base.FinishQuest(); //Defined in Quest, changes the state, stores in DB etc ...
 		}
+
 	}
 }

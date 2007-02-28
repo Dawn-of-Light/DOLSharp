@@ -18,7 +18,6 @@
  */
 using System;
 using DOL.GS;
-using DOL.GS.Database;
 using DOL.GS.PacketHandler;
 using System.Collections;
 using DOL.GS.Effects;
@@ -35,9 +34,9 @@ namespace DOL.GS.Spells
 		/// <summary>
 		/// called after normal spell cast is completed and effect has to be started
 		/// </summary>
-		public override void FinishSpellCast(GameLivingBase target)
+		public override void FinishSpellCast(GameLiving target)
 		{
-			m_caster.ChangeMana(null, -CalculateNeededPower(target));
+			Caster.Mana -= CalculateNeededPower(target);
 			base.FinishSpellCast(target);
 		}
 
@@ -48,9 +47,14 @@ namespace DOL.GS.Spells
 		/// <param name="effectiveness">factor from 0..1 (0%-100%)</param>
 		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
 		{
+			if (target.EffectList.GetOfType(typeof(ChargeEffect)) != null || target.TempProperties.getProperty("Charging", false))
+				return;
+
+			if (target is GamePlayer && (target as GamePlayer).IsRiding)
+				return;
+
 			if ((Spell.Pulse != 0 || Spell.CastTime != 0) && target.InCombat)
 			{
-				// how does ranger's instant speed works here?
 				MessageToLiving(target, "You've been in combat recently, the spell has no effect on you!", eChatType.CT_SpellResisted);
 				return;
 			}
@@ -74,7 +78,7 @@ namespace DOL.GS.Spells
 				SendUpdates(effect.Owner);
 			}
 
-			GameEventMgr.AddHandler(effect.Owner, GameLivingBaseEvent.AttackedByEnemy, new DOLEventHandler(OnAttack));
+			GameEventMgr.AddHandler(effect.Owner, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnAttack));
 			GameEventMgr.AddHandler(effect.Owner, GameLivingEvent.AttackFinished, new DOLEventHandler(OnAttack));
 			if (player != null)
 			GameEventMgr.AddHandler(player, GamePlayerEvent.StealthStateChanged, new DOLEventHandler(OnStealthStateChanged));
@@ -90,7 +94,7 @@ namespace DOL.GS.Spells
 		public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
 		{
 			GamePlayer player = effect.Owner as GamePlayer;
-			GameEventMgr.RemoveHandler(effect.Owner, GameLivingBaseEvent.AttackedByEnemy, new DOLEventHandler(OnAttack));
+			GameEventMgr.RemoveHandler(effect.Owner, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnAttack));
 			GameEventMgr.RemoveHandler(effect.Owner, GameLivingEvent.AttackFinished, new DOLEventHandler(OnAttack));
 			if (player != null)
 			GameEventMgr.RemoveHandler(player, GamePlayerEvent.StealthStateChanged, new DOLEventHandler(OnStealthStateChanged));
@@ -112,7 +116,7 @@ namespace DOL.GS.Spells
 		/// <param name="owner"></param>
 		protected virtual void SendUpdates(GameLiving owner)
 		{
-			if (owner.Mez || owner.Stun)
+			if (owner.IsMezzed || owner.IsStunned)
 				return;
 
 			if (owner is GamePlayer)
@@ -195,11 +199,17 @@ namespace DOL.GS.Spells
 
 				list.Add(" "); //empty line
 				list.Add("This spell's effect will not take hold while the target is in combat.");
+
 				return list;
 			}
 		}
 
-		// constructor
+		/// <summary>
+		/// The spell handler constructor
+		/// </summary>
+		/// <param name="caster"></param>
+		/// <param name="spell"></param>
+		/// <param name="line"></param>
 		public SpeedEnhancementSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
 	}
 }

@@ -24,7 +24,7 @@ namespace DOL.GS.Scripts
 	/// <summary>
 	/// 
 	/// </summary>
-	[PlayerClassAttribute((int)eCharacterClass.Armsman, "Armsman", "Fighter")]
+	[PlayerClassAttribute((int)eCharacterClass.Armsman, "Armsman", "Fighter", "Armswoman")]
 	public class ClassArmsman : ClassFighter
 	{
 		public ClassArmsman() : base() 
@@ -73,14 +73,14 @@ namespace DOL.GS.Scripts
 				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Shields));
 				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Polearms));
 				player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Polearms));
-				player.AddAbility(SkillBase.GetAbility(Abilities.AlbArmor, (int)eArmorLevel.High));
+				player.AddAbility(SkillBase.GetAbility(Abilities.AlbArmor, ArmorLevel.Chain));
 			}
 			if (player.Level >= 10)
 			{
 				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Two_Handed));
 				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Parry));
 				player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_TwoHanded));
-				player.AddAbility(SkillBase.GetAbility(Abilities.Shield, (int)eShieldSize.Large));
+				player.AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Large));
 			}
 			if (player.Level >= 11)
 			{
@@ -94,7 +94,7 @@ namespace DOL.GS.Scripts
 			{
 				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Crossbow));
 				player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Crossbow));
-				player.AddAbility(SkillBase.GetAbility(Abilities.AlbArmor, (int)eArmorLevel.VeryHigh));
+				player.AddAbility(SkillBase.GetAbility(Abilities.AlbArmor, ArmorLevel.Plate));
 				player.AddAbility(SkillBase.GetAbility(Abilities.Tireless));
 			}
 			if (player.Level >= 20) 

@@ -17,7 +17,6 @@
  *
  */
 using System;
-using System.Reflection;
 using DOL.Database;
 using DOL.GS.PacketHandler;
 
@@ -27,7 +26,7 @@ namespace DOL.GS.Scripts
 		"&area",
 		(uint) ePrivLevel.GM,
 		"various commands to help you with areas",
-		"/area create <type> <name> <radius> <broadcast(y/n)> <soundid>")]
+		"/area create <name> <type(circle/square>) <radius> <broadcast(y/n)> <soundid>")]
 	public class AreaCommandHandler : ICommandHandler
 	{
 		public int OnCommand(GameClient client, string[] args)
@@ -46,87 +45,65 @@ namespace DOL.GS.Scripts
 							ShowSyntax(client.Player);
 							return 1;
 						}
-
-						try
+						DBArea area = new DBArea();
+						area.Description = args[2];
+						if (args[3].ToLower() == "circle")
+							area.ClassType = "DOL.GS.Area.Circle";
+						else if (args[3].ToLower() == "square")
+							area.ClassType = "DOL.GS.Area.Square";
+						else
 						{
-							AbstractArea newArea = Assembly.GetAssembly(typeof (GameServer)).CreateInstance(args[2], false) as AbstractArea;
-							if(newArea == null)
-							{
-								client.Out.SendMessage("Area type are only DOL.GS.Square or DOL.GS.Circle !", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return -1;
-							}
-
-							Point centerSpot = client.Player.Position;
-							newArea.Description = args[3];
-							newArea.RegionID = client.Player.Region.RegionID;
-							if (args[5].ToLower() == "y")
-								newArea.IsBroadcastEnabled = true;
-							else 
-								newArea.IsBroadcastEnabled = false;
-
-							newArea.Sound = byte.Parse(args[6]);
-
-							ushort radius = Convert.ToUInt16(args[4]);
-							if (newArea is Square)
-							{
-								((Square)newArea).X = centerSpot.X - radius / 2;
-								((Square)newArea).Y = centerSpot.Y - radius / 2;
-								((Square)newArea).Width = radius;
-								((Square)newArea).Height = radius;
-							}
-							else if (newArea is Circle)
-							{
-								((Circle)newArea).X = centerSpot.X ;
-								((Circle)newArea).Y = centerSpot.Y;
-								((Circle)newArea).Radius = radius;
-							}
-
-							if(AreaMgr.RegisterArea(newArea))
-							{
-								GameServer.Database.AddNewObject(newArea);
-
-								client.Player.Out.SendMessage("Area created - Type : "+newArea.GetType(), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								
-								client.Player.Out.SendMessage("Details :", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								client.Player.Out.SendMessage("- Description = "+ newArea.Description, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								client.Player.Out.SendMessage("- IsBroacastEnabled = "+ newArea.IsBroadcastEnabled, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								client.Player.Out.SendMessage("- Sound = "+ newArea.Sound, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								client.Player.Out.SendMessage("- Region = "+ newArea.RegionID, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								
-								if(newArea is Square)
-								{
-									client.Player.Out.SendMessage("X = "+((Square)newArea).X, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-									client.Player.Out.SendMessage("Y = "+((Square)newArea).Y, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-									client.Player.Out.SendMessage("Width = "+((Square)newArea).Width, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-									client.Player.Out.SendMessage("Height = "+((Square)newArea).Height, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								}
-								else if(newArea is Circle)
-								{
-									client.Player.Out.SendMessage("X = "+((Circle)newArea).X, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-									client.Player.Out.SendMessage("Y = "+((Circle)newArea).Y, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-									client.Player.Out.SendMessage("Radius = "+((Circle)newArea).Radius, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								}	
-							}
-							else
-							{
-								client.Out.SendMessage("This area can't be registered.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							}
+							ShowSyntax(client.Player);
+							return 1;
 						}
-						catch (Exception e)
+						area.Radius = Convert.ToInt16(args[4]);
+						if (args[5].ToLower() == "y")
+							area.CanBroadcast = true;
+						else if (args[5].ToLower() == "n")
+							area.CanBroadcast = false;
+						else
 						{
-							client.Out.SendMessage(e.ToString(), eChatType.CT_System, eChatLoc.CL_PopupWindow);
-							client.Out.SendMessage("Type /area for command overview", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							ShowSyntax(client.Player);
+							return 1;
 						}
+						area.Sound = byte.Parse(args[6]);
+						area.Region = client.Player.CurrentRegionID;
 
-						break;
-					}	
+						AbstractArea newArea = null;
+						if (args[3].ToLower() == "circle")
+						{
+							area.X = client.Player.X;
+							area.Y = client.Player.Y;
+							area.Z = client.Player.Z;
+							newArea = new Area.Circle(area.Description, area.X, area.Y, client.Player.Z, area.Radius);
+						}
+						else if (args[3].ToLower() == "square")
+						{
+							area.X = client.Player.X - area.Radius / 2;
+							area.Y = client.Player.Y - area.Radius / 2;
+							area.Z = client.Player.Z - area.Radius / 2;
+							newArea = new Area.Square(area.Description, area.X, area.Y, area.Radius, area.Radius);
+						}
+						newArea.Sound = area.Sound;
+						newArea.CanBroadcast = area.CanBroadcast;
+						WorldMgr.GetRegion(client.Player.CurrentRegionID).AddArea(newArea);
+						GameServer.Database.AddNewObject(area);
+						SendMessage(client.Player, "Area created - Description:" + area.Description + " X:" + area.X +
+							" Y:" + area.Y + " Z:" + area.Z + " Radius:" + area.Radius + " Broadcast:" + area.CanBroadcast.ToString() +
+							" Sound:" + area.Sound);
+							break;
+					}
 			}
 			return 1;
 		}
 		public void ShowSyntax(GamePlayer player)
 		{
-			player.Out.SendMessage("Usage: /area", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			player.Out.SendMessage("/area create <type> <name> <radius> <broadcast(y/n)> <soundid>", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			SendMessage(player, "Usage: /area");
+			SendMessage(player, "/area create <name> <type(circle/square>) <radius> <broadcast(y/n)> <soundid>");
+		}
+		public void SendMessage(GamePlayer player, string message)
+		{
+			player.Out.SendMessage(message, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}
 	}
 }

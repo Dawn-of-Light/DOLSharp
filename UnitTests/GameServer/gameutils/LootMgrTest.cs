@@ -18,7 +18,7 @@
  */
 using System;
 using System.Collections;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.Tests;
 using NUnit.Framework;
 
@@ -38,15 +38,15 @@ namespace DOL.GS.Tests
 
 		[Test] public void TestLootGenerator()
 		{						
-			GameMob mob = new GameMob();
+			GameNPC mob = new GameNPC();
 			mob.Level = 6;
 			mob.Name="impling";
 
 			for (int i=0;i< 15; i++) 
 			{
 				Console.WriteLine("Loot "+i);
-				GenericItemTemplate[] loot = LootMgr.GetLoot(mob, null);
-                foreach (GenericItemTemplate item in loot)
+				ItemTemplate[] loot = LootMgr.GetLoot(mob, null);
+				foreach (ItemTemplate item in loot)
 				{
 					Console.WriteLine(mob.Name+" drops "+item.Name);
 				}	

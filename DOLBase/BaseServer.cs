@@ -21,7 +21,6 @@ using System.Collections;
 using System.Collections.Specialized;
 using System.Net;
 using System.Net.Sockets;
-using System.IO;
 using log4net;
 /*using DOL.NatTraversal.Interop;
 using DOL.NatTraversal;*/
@@ -223,17 +222,10 @@ namespace DOL
 		/// <returns>True if the server was successfully started</returns>
 		public virtual bool Start()
 		{
-			//Test if we have a valid port yet
-			//if not try  binding.
-			if(m_listen == null && !InitSocket())
-				return false;
-			/*if(log.IsDebugEnabled)
-				log.Debug("Checking for UPnP Router Support");
-			if(Configuration.EnableUPnP)
+			/*if(Configuration.EnableUPnP)
 			{
 				try
 				{
-
 					UPnPNat nat = new UPnPNat();
 					ArrayList list = new ArrayList();
 					foreach(PortMappingInfo info in nat.PortMappings)
@@ -286,6 +278,11 @@ namespace DOL
 						log.Debug("Unable to access the UPnP Internet Gateway Device");
 				}
 			}*/
+			//Test if we have a valid port yet
+			//if not try  binding.
+			if(m_listen == null && !InitSocket())
+				return false;
+
 			try
 			{
 				m_listen.Listen(100);
@@ -319,7 +316,8 @@ namespace DOL
 			Socket sock = null;
 			try
 			{
-				if (m_listen == null) {
+				if (m_listen == null)
+				{
 					return;
 				}
 				sock = m_listen.EndAccept(ar);
@@ -359,11 +357,13 @@ namespace DOL
 			catch
 			{
 				if (sock != null) // don't leave the socket open on exception
-					try {sock.Close();} catch {}
+					try { sock.Close(); }
+					catch { }
 			}
 			finally
 			{
-				if (m_listen != null) {
+				if (m_listen != null)
+				{
 					m_listen.BeginAccept(m_asyncAcceptCallback, this);
 				}
 			}
@@ -376,6 +376,7 @@ namespace DOL
 		{
 			if(log.IsDebugEnabled)
 				log.Debug("Stopping server! - Entering method");
+			
 			/*if(Configuration.EnableUPnP)
 			{
 				try
@@ -391,7 +392,7 @@ namespace DOL
 				catch(Exception ex)
 				{
 					if(log.IsDebugEnabled)
-						log.Debug("Failed to remove UPnP Mappings", ex);
+						log.Debug("Failed to rmeove UPnP Mappings", ex);
 				}
 			}*/
 
@@ -399,16 +400,17 @@ namespace DOL
 			{
 				if (m_listen != null)
 				{
-					m_listen.Close();
-					m_listen = null; //clear references
-					if(log.IsDebugEnabled)
+					Socket socket = m_listen;
+					m_listen = null;
+					socket.Close();
+					if (log.IsDebugEnabled)
 						log.Debug("Server is no longer listening for incoming connections!");
 				}
 			}
-			catch(Exception e)
+			catch (Exception e)
 			{
-				if(log.IsErrorEnabled)
-					log.Error("Stop",e);
+				if (log.IsErrorEnabled)
+					log.Error("Stop", e);
 			}
 			
 			if(m_clients != null)

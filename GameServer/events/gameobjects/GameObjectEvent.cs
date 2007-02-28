@@ -45,6 +45,23 @@ namespace DOL.Events
 		}
 
 		/// <summary>
+		/// The AddToWorld event is fired whenever the object is added to the world
+		/// </summary>
+		public static readonly GameObjectEvent AddToWorld = new GameObjectEvent("GameObject.AddToWorld");
+		/// <summary>
+		/// The RemoveFromWorld event is fired whenever the object is removed from the world
+		/// </summary>
+		public static readonly GameObjectEvent RemoveFromWorld = new GameObjectEvent("GameObject.RemoveFromWorld");
+		/// <summary>
+		/// The MoveTo event is fired whenever the object is moved to a new position by the MoveTo method
+		/// <seealso cref="MoveToEventArgs"/>
+		/// </summary>
+		public static readonly GameObjectEvent MoveTo = new GameObjectEvent("GameObject.MoveTo");
+		/// <summary>
+		/// The Delete event is fired whenever the object is deleted
+		/// </summary>
+		public static readonly GameObjectEvent Delete = new GameObjectEvent("GameObject.Delete");
+		/// <summary>
 		/// The Interact event is fired whenever a player interacts with this object
 		/// <seealso cref="InteractEventArgs"/>
 		/// </summary>
@@ -64,5 +81,10 @@ namespace DOL.Events
 		/// <seealso cref="ReceiveMoneyEventArgs"/>
 		/// </summary>
 		public static readonly GameObjectEvent ReceiveMoney = new GameObjectEvent("GameObjectEvent.ReceiveMoney");
+		/// <summary>
+		/// The TakeDamage event is fired whenever an object takes damage
+		/// <seealso cref="TakeDamageEventArgs"/>
+		/// </summary>
+		public static readonly GameObjectEvent TakeDamage = new GameObjectEvent("GameObject.TakeDamage");
 	}
 }

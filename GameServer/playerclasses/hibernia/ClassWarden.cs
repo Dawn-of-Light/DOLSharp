@@ -30,7 +30,7 @@ namespace DOL.GS.Scripts
 		public ClassWarden() : base() 
 		{
 			m_profession = "Path of Focus";
-			m_specializationMultiplier = 15;
+			m_specializationMultiplier = 18;
 			m_primaryStat = eStat.EMP;
 			m_secondaryStat = eStat.STR;
 			m_tertiaryStat = eStat.CON;
@@ -64,6 +64,7 @@ namespace DOL.GS.Scripts
 			// Specializations
 			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Blades));
 			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Blunt));
+			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Shields));
 
 			// Spell lines
 			player.AddSpellLine(SkillBase.GetSpellLine("Nurture Warden Spec"));
@@ -71,7 +72,7 @@ namespace DOL.GS.Scripts
 
 			if (player.Level >= 5) 
 			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Shield, (int)eShieldSize.Medium));
+				player.AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Large));
 			}
 			if (player.Level >= 7) 
 			{
@@ -79,7 +80,7 @@ namespace DOL.GS.Scripts
 			}
 			if (player.Level >= 10) 
 			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.HibArmor, (int)eArmorLevel.Medium));
+				player.AddAbility(SkillBase.GetAbility(Abilities.HibArmor, ArmorLevel.Reinforced));
 			}
 			if (player.Level >= 15)
 			{
@@ -88,7 +89,7 @@ namespace DOL.GS.Scripts
 			}
 			if (player.Level >= 20)
 			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.HibArmor, (int)eArmorLevel.High));
+				player.AddAbility(SkillBase.GetAbility(Abilities.HibArmor, ArmorLevel.Scale));
 			}
 		}
 	}

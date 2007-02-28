@@ -16,8 +16,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using DOL.Database;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Scripts
 {
@@ -32,7 +32,7 @@ namespace DOL.GS.Scripts
 			if (client.Player.TempProperties.getProperty(GamePlayer.AFK_MESSAGE, null) != null && args.Length == 1)
 			{
 				client.Player.TempProperties.removeProperty(GamePlayer.AFK_MESSAGE);
-				client.Out.SendMessage("Your AFK flag is now off.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Afk.Off"), eChatType.CT_System, eChatLoc.CL_SystemWindow);				
 			}
 			else
 			{
@@ -45,7 +45,7 @@ namespace DOL.GS.Scripts
 				{
 					client.Player.TempProperties.setProperty(GamePlayer.AFK_MESSAGE, "");
 				}
-				client.Out.SendMessage("Your AFK flag is now on.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Afk.On"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 
 			return 1;

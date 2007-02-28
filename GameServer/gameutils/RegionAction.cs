@@ -29,13 +29,13 @@ namespace DOL.GS
 		/// <summary>
 		/// The source of the action
 		/// </summary>
-		protected readonly GeometryEngineNode m_actionSource;
+		protected readonly GameObject m_actionSource;
 
 		/// <summary>
 		/// Constructs a new region action
 		/// </summary>
 		/// <param name="actionSource">The action source</param>
-		public RegionAction(GeometryEngineNode actionSource) : base(actionSource.Region.TimeManager)
+		public RegionAction(GameObject actionSource) : base(actionSource.CurrentRegion.TimeManager)
 		{
 			if (actionSource == null)
 				throw new ArgumentNullException("actionSource");

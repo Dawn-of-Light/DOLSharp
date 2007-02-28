@@ -36,8 +36,6 @@ using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
-using NHibernate.Expression;
-using NHibernate.Mapping.Attributes;
 /* I suggest you declare yourself some namespaces for your quests
  * Like: DOL.GS.Quests.Albion
  *       DOL.GS.Quests.Midgard
@@ -49,36 +47,12 @@ using NHibernate.Mapping.Attributes;
 
 namespace DOL.GS.Quests.Albion
 {
-	/* The first thing we do, is to declare the quest requirement
-	* class linked with the new Quest. To do this, we derive 
-	* from the abstract class AbstractQuestDescriptor
-	*/
-	public class YdeniasCrushDescriptor : AbstractQuestDescriptor
-	{
-		/* This is the type of the quest class linked with 
-		 * this requirement class, you must override the 
-		 * base methid like that
-		 */
-		public override Type LinkedQuestType
-		{
-			get { return typeof(YdeniasCrush); }
-		}
-
-		/* This value is used to retrieves how maximum level needed
-		 * to be able to make this quest. Override it only if you need, 
-		 * the default value is 50
-		 */
-		public override int MaxLevel
-		{
-			get { return 5; }
-		}
-	}
-
-	/* The second thing we do, is to declare the class we create
-	 * as Quest. We must make it persistant using attributes, to
-	 * do this, we derive from the abstract class AbstractQuest
+	/* The first thing we do, is to declare the class we create
+	 * as Quest. To do this, we derive from the abstract class
+	 * AbstractQuest
+	 * 	 
 	 */
-	[Subclass(NameType = typeof(YdeniasCrush), ExtendsType = typeof(AbstractQuest))]
+
 	public class YdeniasCrush : BaseQuest
 	{
 		/// <summary>
@@ -96,14 +70,35 @@ namespace DOL.GS.Quests.Albion
 		 * 
 		 */
 		protected const string questTitle = "Ydenia's Crush";
+		protected const int minimumLevel = 1;
+		protected const int maximumLevel = 5;
 
-		private static GameMob ydeniaPhilpott = null;
-		private static GameMob elvarTambor = null;
+		private static GameNPC ydeniaPhilpott = null;
+		private static GameNPC elvarTambor = null;
 
-		private static GenericItemTemplate letterToElvar= null;
-		private static GenericItemTemplate letterToYdenia = null;
+		private static ItemTemplate letterToElvar= null;
+		private static ItemTemplate letterToYdenia = null;
 
-		private static RingTemplate silverRingOfHealth = null;
+		private static ItemTemplate silverRingOfHealth = null;
+
+		/* We need to define the constructors from the base class here, else there might be problems
+		 * when loading this quest...
+		 */
+		public YdeniasCrush() : base()
+		{
+		}
+
+		public YdeniasCrush(GamePlayer questingPlayer) : this(questingPlayer, 1)
+		{
+		}
+
+		public YdeniasCrush(GamePlayer questingPlayer, int step) : base(questingPlayer, step)
+		{
+		}
+
+		public YdeniasCrush(GamePlayer questingPlayer, DBQuest dbQuest) : base(questingPlayer, dbQuest)
+		{
+		}
 
 		/* The following method is called automatically when this quest class
 		 * is loaded. You might notice that this method is the same as in standard
@@ -123,6 +118,8 @@ namespace DOL.GS.Quests.Albion
 		[ScriptLoadedEvent]
 		public static void ScriptLoaded(DOLEvent e, object sender, EventArgs args)
 		{
+			if (!ServerProperties.Properties.LOAD_QUESTS)
+				return;
 			if (log.IsInfoEnabled)
 				log.Info("Quest \"" + questTitle + "\" initializing ...");
 			/* First thing we do in here is to search for the NPCs inside
@@ -137,120 +134,124 @@ namespace DOL.GS.Quests.Albion
 
 			#region defineNPCS
 
-			ydeniaPhilpott = ResearchQuestObject(typeof(GameMob), WorldMgr.GetRegion(1), eRealm.Albion, "Ydenia Philpott") as GameMob;
-			if (ydeniaPhilpott == null)
+			GameNPC[] npcs = WorldMgr.GetNPCsByName("Ydenia Philpott", eRealm.Albion);
+
+			/* Whops, if the npcs array length is 0 then no npc exists in
+				* this users Mob Database, so we simply create one ;-)
+				* else we take the existing one. And if more than one exist, we take
+				* the first ...
+				*/
+			if (npcs.Length == 0)
 			{
-				ydeniaPhilpott = new GameMob();
+				ydeniaPhilpott = new GameNPC();
 				ydeniaPhilpott.Model = 6;
 				ydeniaPhilpott.Name = "Ydenia Philpott";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + ydeniaPhilpott.Name + ", creating him ...");
 				ydeniaPhilpott.GuildName = "Part of " + questTitle + " Quest";
 				ydeniaPhilpott.Realm = (byte) eRealm.Albion;
-				ydeniaPhilpott.Region = WorldMgr.GetRegion(1);
+				ydeniaPhilpott.CurrentRegionID = 1;
 
-				GameNpcInventory template = new GameNpcInventory();
-				template.AddItem(eInventorySlot.TwoHandWeapon, new NPCWeapon(227));
-				template.AddItem(eInventorySlot.HandsArmor, new NPCArmor(80));
-				template.AddItem(eInventorySlot.FeetArmor, new NPCArmor(54));
-				template.AddItem(eInventorySlot.TorsoArmor, new NPCArmor(51));
-				template.AddItem(eInventorySlot.Cloak, new NPCEquipment(57));
-				template.AddItem(eInventorySlot.LegsArmor, new NPCArmor(52));
-				template.AddItem(eInventorySlot.ArmsArmor, new NPCArmor(53));
-				ydeniaPhilpott.Inventory = template;
+				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
+				template.AddNPCEquipment(eInventorySlot.TwoHandWeapon, 227);
+				template.AddNPCEquipment(eInventorySlot.HandsArmor, 80);
+				template.AddNPCEquipment(eInventorySlot.FeetArmor, 54);
+				template.AddNPCEquipment(eInventorySlot.TorsoArmor, 51);
+				template.AddNPCEquipment(eInventorySlot.Cloak, 57);
+				template.AddNPCEquipment(eInventorySlot.LegsArmor, 52);
+				template.AddNPCEquipment(eInventorySlot.ArmsArmor, 53);
+				ydeniaPhilpott.Inventory = template.CloseTemplate();
 				ydeniaPhilpott.SwitchWeapon(GameLiving.eActiveWeaponSlot.TwoHanded);
 
 				ydeniaPhilpott.Size = 51;
 				ydeniaPhilpott.Level = 40;
-				ydeniaPhilpott.Position = new Point(559315, 510705, 2488);
+				ydeniaPhilpott.X = 559315;
+				ydeniaPhilpott.Y = 510705;
+				ydeniaPhilpott.Z = 2488;
 				ydeniaPhilpott.Heading = 3993;
-
-				StandardMobBrain newBrain = new StandardMobBrain();
-				newBrain.Body = ydeniaPhilpott;
-				newBrain.AggroLevel = 100;
-				newBrain.AggroRange = 0;
-				ydeniaPhilpott.OwnBrain = newBrain;
-
-				if(!ydeniaPhilpott.AddToWorld())
-				{
-					if (log.IsWarnEnabled)
-						log.Warn("Quest "+questTitle+" abort because a needed region is not in use in this server!");
-					return;
-				}
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(ydeniaPhilpott);
-			}
 
-			elvarTambor = ResearchQuestObject(typeof(GameMob), WorldMgr.GetRegion(1), eRealm.Albion, "Elvar Tambor") as GameMob;
-			if (elvarTambor == null)
+				if (SAVE_INTO_DATABASE)
+					ydeniaPhilpott.SaveIntoDatabase();
+
+				ydeniaPhilpott.AddToWorld();
+			}
+			else
+				ydeniaPhilpott = npcs[0];
+
+			npcs = WorldMgr.GetNPCsByName("Elvar Tambor", eRealm.Albion);
+			if (npcs.Length == 0)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Elvar Tambor, creating him ...");
-				elvarTambor = new GameMob();
+				elvarTambor = new GameNPC();
 				elvarTambor.Model = 9;
 				elvarTambor.Name = "Elvar Tambor";
 				elvarTambor.GuildName = "Part of " + questTitle + " Quest";
 				elvarTambor.Realm = (byte) eRealm.Albion;
-				elvarTambor.Region = WorldMgr.GetRegion(1);
+				elvarTambor.CurrentRegionID = 1;
 
-				GameNpcInventory template = new GameNpcInventory();
-				template.AddItem(eInventorySlot.RightHandWeapon, new NPCWeapon(3));
-				template.AddItem(eInventorySlot.HandsArmor, new NPCArmor(159, 67, 0));
-				template.AddItem(eInventorySlot.FeetArmor, new NPCArmor(160, 63, 0));
-				template.AddItem(eInventorySlot.TorsoArmor, new NPCArmor(156, 67, 0));
-				template.AddItem(eInventorySlot.LegsArmor, new NPCArmor(157, 63, 0));
-				template.AddItem(eInventorySlot.ArmsArmor, new NPCArmor(158, 67, 0));
-				elvarTambor.Inventory = template;
+				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
+				template.AddNPCEquipment(eInventorySlot.RightHandWeapon, 3);
+				template.AddNPCEquipment(eInventorySlot.HandsArmor, 159, 67);
+				template.AddNPCEquipment(eInventorySlot.FeetArmor, 160, 63);
+				template.AddNPCEquipment(eInventorySlot.TorsoArmor, 156, 67);
+				template.AddNPCEquipment(eInventorySlot.LegsArmor, 157, 63);
+				template.AddNPCEquipment(eInventorySlot.ArmsArmor, 158, 67);
+				elvarTambor.Inventory = template.CloseTemplate();
 				elvarTambor.SwitchWeapon(GameLiving.eActiveWeaponSlot.Standard);
 
 				elvarTambor.Size = 50;
 				elvarTambor.Level = 15;
-				elvarTambor.Position = new Point(574711, 529887, 2896);
+				elvarTambor.X = 574711;
+				elvarTambor.Y = 529887;
+				elvarTambor.Z = 2896;
 				elvarTambor.Heading = 2366;
-
-				StandardMobBrain newBrain = new StandardMobBrain();
-				newBrain.Body = elvarTambor;
-				newBrain.AggroLevel = 100;
-				newBrain.AggroRange = 0;
-				elvarTambor.OwnBrain = newBrain;
-
-				if(!elvarTambor.AddToWorld())
-				{
-					if (log.IsWarnEnabled)
-						log.Warn("Quest "+questTitle+" abort because a needed region is not in use in this server!");
-					return;
-				}
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(elvarTambor);
+					elvarTambor.SaveIntoDatabase();
+
+				elvarTambor.AddToWorld();
 			}
+			else
+				elvarTambor = npcs[0];
 
 			#endregion
 
 			#region defineItems
 
 			// item db check
-			letterToElvar = GameServer.Database.SelectObject(typeof (GenericItemTemplate), Expression.Eq("Name", "Letter to Elvar")) as GenericItemTemplate;
+			letterToElvar = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "letter_to_elvar_tambor");
 			if (letterToElvar == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Letter to Healvar, creating it ...");
-				letterToElvar = new GenericItemTemplate();
+				letterToElvar = new ItemTemplate();
 				letterToElvar.Name = "Letter to Elvar";
 				letterToElvar.Level = 0;
 				letterToElvar.Weight = 10;
 				letterToElvar.Model = 499;
 
+				letterToElvar.Object_Type = (int) eObjectType.GenericItem;
+				letterToElvar.Id_nb = "letter_to_elvar_tambor";
+				letterToElvar.Gold = 0;
+				letterToElvar.Silver = 0;
+				letterToElvar.Copper = 0;
+				letterToElvar.IsPickable = false;
 				letterToElvar.IsDropable = false;
-				letterToElvar.IsSaleable = false;
-				letterToElvar.IsTradable = false;
+				
+				letterToElvar.Quality = 100;
+				letterToElvar.Condition = 1000;
+				letterToElvar.MaxCondition = 1000;
+				letterToElvar.Durability = 1000;
+				letterToElvar.MaxDurability = 1000;
+
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -260,20 +261,31 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			letterToYdenia = GameServer.Database.SelectObject(typeof (GenericItemTemplate), Expression.Eq("Name", "Letter to Ydenia")) as GenericItemTemplate;
+			letterToYdenia = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "letter_to_yderia_philpott");
 			if (letterToYdenia == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Letter to Yderia creating it ...");
-				letterToYdenia = new GenericItemTemplate();
+				letterToYdenia = new ItemTemplate();
 				letterToYdenia.Name = "Letter to Ydenia";
 				letterToYdenia.Level = 0;
 				letterToYdenia.Weight = 10;
 				letterToYdenia.Model = 499;
 
+				letterToYdenia.Object_Type = (int) eObjectType.GenericItem;
+				letterToYdenia.Id_nb = "letter_to_yderia_philpott";
+				letterToYdenia.Gold = 0;
+				letterToYdenia.Silver = 0;
+				letterToYdenia.Copper = 0;
+				letterToYdenia.IsPickable = false;
 				letterToYdenia.IsDropable = false;
-				letterToYdenia.IsSaleable = false;
-				letterToYdenia.IsTradable = false;
+
+				letterToYdenia.Quality = 100;
+				letterToYdenia.Condition = 1000;
+				letterToYdenia.MaxCondition = 1000;
+				letterToYdenia.Durability = 1000;
+				letterToYdenia.MaxDurability = 1000;
+
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -283,27 +295,39 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			silverRingOfHealth = GameServer.Database.SelectObject(typeof(RingTemplate), Expression.Eq("Name", "Silver Ring of Health")) as RingTemplate;
+			silverRingOfHealth = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "silver_ring_of_health");
 			if (silverRingOfHealth == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Silver Ring of Health creating it ...");
-				silverRingOfHealth = new RingTemplate();
+				silverRingOfHealth = new ItemTemplate();
 				silverRingOfHealth.Name = "Silver Ring of Health";
 				silverRingOfHealth.Level = 3;
 				silverRingOfHealth.Weight = 1;
 				silverRingOfHealth.Model = 103;
 
-				silverRingOfHealth.Value = 30;
+				silverRingOfHealth.Object_Type = (int) eObjectType.Magical;
+				silverRingOfHealth.Item_Type = (int) eEquipmentItems.L_RING;
+				silverRingOfHealth.Id_nb = "silver_ring_of_health";
 
+				silverRingOfHealth.Gold = 0;
+				silverRingOfHealth.Silver = 0;
+				silverRingOfHealth.Copper = 30;
+				silverRingOfHealth.IsPickable = true;
 				silverRingOfHealth.IsDropable = true;
-				silverRingOfHealth.IsSaleable = true;
-				silverRingOfHealth.IsTradable = true;
 
 				silverRingOfHealth.Bonus = 1;
+				silverRingOfHealth.Bonus1Type = (int)eProperty.MaxHealth;
+				silverRingOfHealth.Bonus1 = 8;
+				silverRingOfHealth.Bonus2Type = (int)eProperty.Resist_Slash;
+				silverRingOfHealth.Bonus2 = 1;
 
-				silverRingOfHealth.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 8));
-				silverRingOfHealth.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Slash, 1));
+				silverRingOfHealth.Quality = 100;
+				silverRingOfHealth.Condition = 1000;
+				silverRingOfHealth.MaxCondition = 1000;
+				silverRingOfHealth.Durability = 1000;
+				silverRingOfHealth.MaxDurability = 1000;
+
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -321,19 +345,18 @@ namespace DOL.GS.Quests.Albion
 			* method. This means, the "TalkToXXX" method is called whenever
 			* a player right clicks on him or when he whispers to him.
 			*/
+
+			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
 			
-			GameEventMgr.AddHandler(ydeniaPhilpott, GameObjectEvent.Interact, new DOLEventHandler(TalkToYdeniaPhilpott));
+			GameEventMgr.AddHandler(ydeniaPhilpott, GameLivingEvent.Interact, new DOLEventHandler(TalkToYdeniaPhilpott));
 			GameEventMgr.AddHandler(ydeniaPhilpott, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToYdeniaPhilpott));
 
 			GameEventMgr.AddHandler(elvarTambor, GameObjectEvent.Interact, new DOLEventHandler(TalkToElvarTambor));
 			GameEventMgr.AddHandler(elvarTambor, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToElvarTambor));
 
-			/* Now we add some hooks to trigger the quest dialog reponse. */
-			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(QuestDialogResponse));
-			GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(QuestDialogResponse));
-
 			/* Now we bring to Ydenia the possibility to give this quest to players */
-			QuestMgr.AddQuestDescriptor(ydeniaPhilpott, typeof(YdeniasCrushDescriptor));
+			ydeniaPhilpott.AddQuestToGive(typeof (YdeniasCrush));
 
 			if (log.IsInfoEnabled)
 				log.Info("Quest \"" + questTitle + "\" initialized");
@@ -358,17 +381,18 @@ namespace DOL.GS.Quests.Albion
 			/* Removing hooks works just as adding them but instead of 
 			 * AddHandler, we call RemoveHandler, the parameters stay the same
 			 */
-			GameEventMgr.RemoveHandler(ydeniaPhilpott, GameObjectEvent.Interact, new DOLEventHandler(TalkToYdeniaPhilpott));
+
+			GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
+			GameEventMgr.RemoveHandler(ydeniaPhilpott, GameLivingEvent.Interact, new DOLEventHandler(TalkToYdeniaPhilpott));
 			GameEventMgr.RemoveHandler(ydeniaPhilpott, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToYdeniaPhilpott));
 
 			GameEventMgr.RemoveHandler(elvarTambor, GameObjectEvent.Interact, new DOLEventHandler(TalkToElvarTambor));
 			GameEventMgr.RemoveHandler(elvarTambor, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToElvarTambor));
 			
-			GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(QuestDialogResponse));
-			GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(QuestDialogResponse));
-
 			/* Now we remove to Ydenia the possibility to give this quest to players */
-			QuestMgr.RemoveQuestDescriptor(ydeniaPhilpott, typeof(AgainstTheGrainDescriptor));
+			ydeniaPhilpott.RemoveQuestToGive(typeof (YdeniasCrush));
 		}
 
 
@@ -384,7 +408,7 @@ namespace DOL.GS.Quests.Albion
 			if (player == null)
 				return;
 
-			if (QuestMgr.CanGiveQuest(typeof(YdeniasCrush), player, ydeniaPhilpott) <= 0)
+			if(ydeniaPhilpott.CanGiveQuest(typeof (YdeniasCrush), player)  <= 0)
 				return;
 
 			//We also check if the player is already doing the quest
@@ -430,7 +454,7 @@ namespace DOL.GS.Quests.Albion
 				
 							//If the player offered his help, we send the quest dialog now!
 						case "few silvers":
-							QuestMgr.ProposeQuestToPlayer(typeof(YdeniasCrush), "Will you deliver the letter to \nElvar Tambor for Ydenia?", player, ydeniaPhilpott);
+							player.Out.SendQuestSubscribeCommand(ydeniaPhilpott, QuestMgr.GetIDForQuestType(typeof(YdeniasCrush)), "Will you deliver the letter to \nElvar Tambor for Ydenia?\n[Level " + player.Level + "]");
 							break;
 					}
 				}
@@ -445,9 +469,28 @@ namespace DOL.GS.Quests.Albion
 								quest.FinishQuest();
 							}
 							break;
+
+						case "abort":
+							player.Out.SendCustomDialog("Do you really want to abort this quest, \nall items gained during quest will be lost?", new CustomDialogResponse(CheckPlayerAbortQuest));
+							break;
 					}
 				}
 			}
+		}
+
+		protected static void SubscribeQuest(DOLEvent e, object sender, EventArgs args)
+		{
+			QuestEventArgs qargs = args as QuestEventArgs;
+			if (qargs == null)
+				return;
+
+			if (qargs.QuestID != QuestMgr.GetIDForQuestType(typeof(YdeniasCrush)))
+				return;
+
+			if (e == GamePlayerEvent.AcceptQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x01);
+			else if (e == GamePlayerEvent.DeclineQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x00);
 		}
 
 
@@ -459,19 +502,19 @@ namespace DOL.GS.Quests.Albion
 		protected static void TalkToElvarTambor(DOLEvent e, object sender, EventArgs args)
 		{
 			//We get the player from the event arguments and check if he qualifies		
-			GamePlayer player = ((SourceEventArgs)args).Source as GamePlayer;
+			GamePlayer player = ((SourceEventArgs) args).Source as GamePlayer;
 			if (player == null)
 				return;
 
 			//We also check if the player is already doing the quest
-			YdeniasCrush quest = player.IsDoingQuest(typeof(YdeniasCrush)) as YdeniasCrush;
+			YdeniasCrush quest = player.IsDoingQuest(typeof (YdeniasCrush)) as YdeniasCrush;
 
 			elvarTambor.TurnTo(player);
-
+			
 			// The player whispered to NPC (clicked on the text inside the [])
 			if (e == GameLivingEvent.WhisperReceive)
 			{
-				WhisperReceiveEventArgs wArgs = (WhisperReceiveEventArgs)args;
+				WhisperReceiveEventArgs wArgs = (WhisperReceiveEventArgs) args;
 				if (quest != null)
 				{
 					switch (wArgs.Text)
@@ -483,10 +526,10 @@ namespace DOL.GS.Quests.Albion
 								player.GainExperience(10, 0, 0, true);
 								player.AddMoney(Money.GetMoney(0, 0, 0, 2, Util.Random(50)), "You are awarded 2 silver and some copper!");
 
-								// give letter  
-								GiveItemToPlayer(elvarTambor, CreateQuestItem(letterToYdenia, quest), player);
-								
-								quest.ChangeQuestStep(3);
+								// give letter                
+								GiveItem(elvarTambor, player, letterToYdenia);
+
+								quest.Step = 3;
 							}
 							break;
 					}
@@ -494,35 +537,79 @@ namespace DOL.GS.Quests.Albion
 			}
 		}
 
+		/// <summary>
+		/// This method checks if a player qualifies for this quest
+		/// </summary>
+		/// <returns>true if qualified, false if not</returns>
+		public override bool CheckQuestQualification(GamePlayer player)
+		{
+			// if the player is already doing the quest his level is no longer of relevance
+			if (player.IsDoingQuest(typeof (YdeniasCrush)) != null)
+				return true;
+
+			// This checks below are only performed is player isn't doing quest already
+
+			if (player.Level < minimumLevel || player.Level > maximumLevel)
+				return false;
+
+			return true;
+		}
+
+		
 		/* This is our callback hook that will be called when the player clicks
 		 * on any button in the quest offer dialog. We check if he accepts or
 		 * declines here...
 		 */
-		protected static void QuestDialogResponse(DOLEvent e, object sender, EventArgs args)
+
+		private static void CheckPlayerAbortQuest(GamePlayer player, byte response)
 		{
-			QuestEventArgs gArgs = args as QuestEventArgs;
+			YdeniasCrush quest = player.IsDoingQuest(typeof (YdeniasCrush)) as YdeniasCrush;
 
-			if (gArgs != null && gArgs.QuestType.Equals(typeof(YdeniasCrush)))
+			if (quest == null)
+				return;
+
+			if (response == 0x00)
 			{
-				GamePlayer player = gArgs.Player;
-				if (player == null) return;
-
-				if (e == GamePlayerEvent.AcceptQuest)
-				{
-					if (QuestMgr.GiveQuestToPlayer(typeof(YdeniasCrush), player, gArgs.Source as GameNPC))
-					{
-						GiveItemToPlayer(ydeniaPhilpott, CreateQuestItem(letterToElvar, player.IsDoingQuest(typeof (YdeniasCrush))), player);
-
-						SendReply(player, "Great!  Here you are!  Just take this letter to Elvar Tambor at Prydwen Keep.  I know he will be happy.");
-					}
-				}
-				else if (e == GamePlayerEvent.DeclineQuest)
-				{
-					player.Out.SendMessage("Oh well, if you change your mind, please come back!", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
-				}
+				SendSystemMessage(player, "Good, no go out there and finish your work!");
+			}
+			else
+			{
+				SendSystemMessage(player, "Aborting Quest " + questTitle + ". You can start over again if you want.");
+				quest.AbortQuest();
 			}
 		}
 
+		/* This is our callback hook that will be called when the player clicks
+		 * on any button in the quest offer dialog. We check if he accepts or
+		 * declines here...
+		 */
+
+		private static void CheckPlayerAcceptQuest(GamePlayer player, byte response)
+		{
+			//We recheck the qualification, because we don't talk to players
+			//who are not doing the quest
+			if(ydeniaPhilpott.CanGiveQuest(typeof (YdeniasCrush), player)  <= 0)
+				return;
+
+			if (player.IsDoingQuest(typeof (YdeniasCrush)) != null)
+				return;
+
+			if (response == 0x00)
+			{
+				SendReply(player, "Oh well, if you change your mind, please come back!");
+			}
+			else
+			{
+				//Check if we can add the quest!
+				if (!ydeniaPhilpott.GiveQuest(typeof (YdeniasCrush), player, 1))
+					return;
+
+				// give letter                
+				GiveItem(ydeniaPhilpott, player, letterToElvar);
+
+				SendReply(player, "Great!  Here you are!  Just take this letter to Elvar Tambor at Prydwen Keep.  I know he will be happy.");
+			}
+		}
 
 		/* Now we set the quest name.
 		 * If we don't override the base method, then the quest
@@ -555,9 +642,8 @@ namespace DOL.GS.Quests.Albion
 						return "[Step #3] Take Elvar's letter back to Ydenia in Cotswold Village.  She is in the tavern there.";
 					case 4:
 						return "[Step #4] Listen to Ydenia.  If she stops talking to you and becomes engrossed in her letter, ask her if she has [something] for you for your hard work.";
-					default:
-						return "[Step #" + Step + "] No Description entered for this step!";
 				}
+				return base.Description;
 			}
 		}
 
@@ -575,14 +661,14 @@ namespace DOL.GS.Quests.Albion
 				if(Step == 1)
 				{
 					GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-					if (gArgs.Target == elvarTambor && gArgs.Item.QuestName == Name && gArgs.Item.Name == letterToElvar.Name)
+					if (gArgs.Target.Name == elvarTambor.Name && gArgs.Item.Id_nb == letterToElvar.Id_nb)
 					{
-						RemoveItemFromPlayer(elvarTambor, gArgs.Item);
+						RemoveItem(elvarTambor, m_questPlayer, letterToElvar);
 
 						elvarTambor.TurnTo(m_questPlayer);
 						elvarTambor.SayTo(m_questPlayer, "Ah!  A letter from my Ydenia.  Thank you for delivering it to me.  I can't wait to see what she has to say.  I was just sitting here wondering if there was going to be someone who was traveling back to [Cotswold].");
 						
-						ChangeQuestStep(2);
+						Step = 2;
 						return;
 					}
 				}
@@ -590,29 +676,38 @@ namespace DOL.GS.Quests.Albion
 				if(Step == 3)
 				{
 					GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-					if (gArgs.Target == ydeniaPhilpott && gArgs.Item.QuestName == Name && gArgs.Item.Name == letterToYdenia.Name)
+					if (gArgs.Target.Name == ydeniaPhilpott.Name && gArgs.Item.Id_nb == letterToYdenia.Id_nb)
 					{
-						RemoveItemFromPlayer(ydeniaPhilpott, gArgs.Item);
+						RemoveItem(ydeniaPhilpott, m_questPlayer, letterToYdenia);
 
 						ydeniaPhilpott.TurnTo(m_questPlayer);
 						ydeniaPhilpott.SayTo(m_questPlayer, "Thank you friend!  Here, I have [something] for you.");
 						
-						ChangeQuestStep(4);
+						Step = 4;
 						return;
 					}
 				}
 			}
 		}
 
+		public override void AbortQuest()
+		{
+			base.AbortQuest(); //Defined in Quest, changes the state, stores in DB etc ...
+
+			RemoveItem(m_questPlayer, letterToElvar, false);
+			RemoveItem(m_questPlayer, letterToYdenia, false);
+		}
+
 		public override void FinishQuest()
 		{
+			base.FinishQuest(); //Defined in Quest, changes the state, stores in DB etc ...
+
 			//Give reward to player here ...
-			GiveItemToPlayer(ydeniaPhilpott, silverRingOfHealth.CreateInstance());
+
+			GiveItem(ydeniaPhilpott, m_questPlayer, silverRingOfHealth);
 
 			m_questPlayer.GainExperience(20 + (m_questPlayer.Level - 1) * 5, 0, 0, true);
 			m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 5, Util.Random(50)), "You are awarded 5 silver and some copper!");
-		
-			base.FinishQuest(); //Defined in Quest, changes the state, stores in DB etc ...
 		}
 	}
 }

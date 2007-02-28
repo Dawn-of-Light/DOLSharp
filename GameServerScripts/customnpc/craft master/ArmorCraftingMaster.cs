@@ -1,14 +1,13 @@
-using NHibernate.Mapping.Attributes;
+ //using DOL.Database;
 //using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Scripts
 {
 	/// <summary>
-	/// This class holds all information that
-	/// EVERY armor crafting master npc in the game world needs!
+	/// the master for armorcrafting
 	/// </summary>
-	[Subclass(NameType=typeof(ArmorCraftingMaster), ExtendsType=typeof(GameCraftMaster))] 
-	public class ArmorCraftingMaster : GameCraftMaster
+	[NPCGuildScript("Armorsmiths Master")]
+	public class ArmorCraftingMaster : CraftNPC
 	{
 		private static readonly eCraftingSkill[] m_trainedSkills = 
 		{
@@ -35,41 +34,6 @@ namespace DOL.GS.Scripts
 		public override string GUILD_CRAFTERS
 		{
 			get { return "Armorsmiths"; }
-		}
-
-		public override eCharacterClass[] AllowedClass
-		{
-			get
-			{
-				return new eCharacterClass[]
-					{
-						eCharacterClass.Armsman,
-						eCharacterClass.Cleric,
-						eCharacterClass.Mercenary,
-						eCharacterClass.Paladin,
-						eCharacterClass.Reaver,
-						eCharacterClass.Fighter,
-						eCharacterClass.Guardian,
-						eCharacterClass.Hero,
-						eCharacterClass.Blademaster,
-						eCharacterClass.Champion,
-						eCharacterClass.Naturalist,
-						eCharacterClass.Bard,
-						eCharacterClass.Druid,
-						eCharacterClass.Warden,
-						eCharacterClass.Viking,
-						eCharacterClass.Warrior,
-						eCharacterClass.Berserker,
-						eCharacterClass.Thane,
-						eCharacterClass.Skald,
-						eCharacterClass.Seer,
-						eCharacterClass.Shaman,
-						eCharacterClass.Healer,
-						eCharacterClass.Vampiir,
-						eCharacterClass.Savage,
-						eCharacterClass.Valkyrie,
-					};
-			}
 		}
 
 		public override eCraftingSkill TheCraftingSkill

@@ -37,8 +37,9 @@
 
 using System;
 using System.Reflection;
-using DOL.Database;
 using DOL.AI.Brain;
+using DOL.Database;
+using DOL.GS.PacketHandler;
 using log4net;
 /* I suggest you declare yourself some namespaces for your quests
  * Like: DOL.GS.Quests.Albion
@@ -74,9 +75,25 @@ namespace DOL.GS.Quests.Albion
 		 * 
 		 */
 
-		/// <summary>
-		/// Array of all Types of Quest that belong to this Sequel, in the order they are intendet to play.
-		/// </summary>
+		/* We need to define the constructors from the base class here, else there might be problems
+		 * when loading this quest...
+		 */
+		public BaseFrederickQuest() : base()
+		{
+		}
+
+		public BaseFrederickQuest(GamePlayer questingPlayer) : base(questingPlayer)
+		{
+		}
+
+		public BaseFrederickQuest(GamePlayer questingPlayer, int step) : base(questingPlayer, step)
+		{
+		}
+
+		public BaseFrederickQuest(GamePlayer questingPlayer, DBQuest dbQuest) : base(questingPlayer, dbQuest)
+		{
+		}
+
 		public static Type[] m_questSequel = new Type[]
 			{
 				typeof (ImportantDelivery), // level 1
@@ -91,6 +108,14 @@ namespace DOL.GS.Quests.Albion
 			};
 
 		/// <summary>
+		/// Array of all Types of Quest that belong to this Sequel, in the order they are intendet to play.
+		/// </summary>
+		public static Type[] QuestSequel
+		{
+			get { return m_questSequel; }
+		}
+
+		/// <summary>
 		/// Checks wether player is allowed to to do Quest of type questtype with current configuration of quests.
 		/// At the moment it is only checked wether player isn't still doing a quest thats before the given quest in the sequel
 		/// 
@@ -102,9 +127,9 @@ namespace DOL.GS.Quests.Albion
 		public static bool CheckPartAccessible(GamePlayer player, Type questType)
 		{
 			int currentIndex = -1;
-			for (int i = 0; i < m_questSequel.Length; i++)
+			for (int i = 0; i < QuestSequel.Length; i++)
 			{
-				if (questType == m_questSequel[i])
+				if (questType == QuestSequel[i])
 					currentIndex = i;
 			}
 
@@ -115,7 +140,7 @@ namespace DOL.GS.Quests.Albion
 			{
 				// player is still doing on of the parts before current part...
 				// parts belonging to one sequel should not be done overlapping.
-				if (player.IsDoingQuest(m_questSequel[i]) != null)
+				if (player.IsDoingQuest(QuestSequel[i]) != null)
 					return false;
 			}
 
@@ -123,48 +148,60 @@ namespace DOL.GS.Quests.Albion
 			return true;
 		}
 
-		public static GameMob GetMasterFrederick()
+		public static GameNPC GetMasterFrederick()
 		{
-			GameMob masterFrederick = ResearchQuestObject(typeof(GameMob), WorldMgr.GetRegion(1), eRealm.Albion, "Master Frederick") as GameMob;
-			if (masterFrederick == null)
+			GameNPC[] npcs = WorldMgr.GetNPCsByName("Master Frederick", eRealm.Albion);
+
+			GameNPC masterFrederick = null;
+
+			if (npcs.Length == 0)
 			{
-				masterFrederick = new GameMob();
+				masterFrederick = new GameNPC();
 				masterFrederick.Model = 32;
 				masterFrederick.Name = "Master Frederick";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + masterFrederick.Name + ", creating him ...");
 				masterFrederick.GuildName = "Part of Frederick Quests";
 				masterFrederick.Realm = (byte) eRealm.Albion;
-				masterFrederick.Region = WorldMgr.GetRegion(1);
+				masterFrederick.CurrentRegionID = 1;
 
-				GameNpcInventory template = new GameNpcInventory();
-				template.AddItem(eInventorySlot.TorsoArmor, new NPCArmor(41));
-				template.AddItem(eInventorySlot.LegsArmor, new NPCArmor(42));
-				template.AddItem(eInventorySlot.FeetArmor, new NPCArmor(40));
-				template.AddItem(eInventorySlot.Cloak, new NPCEquipment(91));
-				template.AddItem(eInventorySlot.RightHandWeapon, new NPCWeapon(4));
-				masterFrederick.Inventory = template;
+				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
+				template.AddNPCEquipment(eInventorySlot.TorsoArmor, 41);
+				template.AddNPCEquipment(eInventorySlot.LegsArmor, 42);
+				template.AddNPCEquipment(eInventorySlot.FeetArmor, 40);
+				template.AddNPCEquipment(eInventorySlot.Cloak, 91);
+				template.AddNPCEquipment(eInventorySlot.RightHandWeapon, 4);
+				masterFrederick.Inventory = template.CloseTemplate();
 				masterFrederick.SwitchWeapon(GameLiving.eActiveWeaponSlot.Standard);
+
+//				masterFrederick.AddNPCEquipment((byte) eVisibleItems.TORSO, 41, 0, 0, 0);
+//				masterFrederick.AddNPCEquipment((byte) eVisibleItems.LEG, 42, 0, 0, 0);
+//				masterFrederick.AddNPCEquipment((byte) eVisibleItems.BOOT, 40, 0, 0, 0);
+//				masterFrederick.AddNPCEquipment((byte) eVisibleItems.CLOAK, 91, 0, 0, 0);
+//				masterFrederick.AddNPCEquipment((byte) eVisibleItems.RIGHT_HAND, 4, 0, 0, 0);
 
 				masterFrederick.Size = 50;
 				masterFrederick.Level = 50;
-				masterFrederick.Position = new Point(567969, 509880, 2861);
+				masterFrederick.X = 567969;
+				masterFrederick.Y = 509880;
+				masterFrederick.Z = 2861;
 				masterFrederick.Heading = 65;
 
 				StandardMobBrain brain = new StandardMobBrain();
-				brain.Body = masterFrederick;
 				brain.AggroLevel = 0;
 				brain.AggroRange = 0;
-				masterFrederick.OwnBrain = brain;
-
-				if(!masterFrederick.AddToWorld()) { return null; }
+				masterFrederick.SetOwnBrain(brain);
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(masterFrederick);
+					masterFrederick.SaveIntoDatabase();
+
+				masterFrederick.AddToWorld();
 			}
+			else
+				masterFrederick = npcs[0];
 
 			return masterFrederick;
 		}

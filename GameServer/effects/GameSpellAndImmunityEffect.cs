@@ -17,7 +17,6 @@
  *
  */
 using System;
-using DOL.GS.Database;
 using DOL.GS.PacketHandler;
 using DOL.GS.Spells;
 
@@ -102,12 +101,12 @@ namespace DOL.GS.Effects
 				return;
 			}
 
-			lock (this)
+			lock (m_owner.EffectList) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
 				if (m_expired)
 				{
 					// do not allow removing immunity on alive living
-					if (!m_owner.Alive)
+					if (!m_owner.IsAlive)
 						m_owner.EffectList.Remove(this);
 					return;
 				}

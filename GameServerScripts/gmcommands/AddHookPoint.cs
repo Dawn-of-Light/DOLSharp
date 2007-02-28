@@ -16,9 +16,11 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-/*using System;
+using System;
+
+using DOL.Database;
+using DOL.GS.Keeps;
 using DOL.GS.PacketHandler;
-using DOL.GS.Database;
 
 namespace DOL.GS.Scripts
 {
@@ -50,11 +52,9 @@ namespace DOL.GS.Scripts
 				DBKeepHookPoint dbkeephp = new DBKeepHookPoint();
 				dbkeephp.HookPointID = id;
 				dbkeephp.KeepComponentSkinID = skin;
-				Point p = client.Player.Position;
-				Point c = compo.Position;
-				dbkeephp.X = p.X - c.X;
-				dbkeephp.Y = p.Y - c.Y;
-				dbkeephp.Z = p.Z - c.Z;
+				dbkeephp.X = client.Player.X - compo.X;
+				dbkeephp.Y = client.Player.Y - compo.Y;
+				dbkeephp.Z = client.Player.Z - compo.Z;
 				dbkeephp.Heading = compo.Heading;
 				GameServer.Database.AddNewObject(dbkeephp);
 			}
@@ -66,4 +66,4 @@ namespace DOL.GS.Scripts
 			return 1;
 		}
 	}
-}*/
+}

@@ -18,7 +18,7 @@
  */
 using System;
 using System.Net.Sockets;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.Events;
 using DOL.Tests;
 using NUnit.Framework;
@@ -63,14 +63,16 @@ namespace DOL.GS.Quests.Tests
 				Console.WriteLine(""+ task.Description);
 
 				// Check Notify Event handling
-                GenericItem item = new GenericItem();
+				InventoryItem item = new InventoryItem();
 				item.Name = task.ItemName;
 
-				GameMob mob = new GameMob();
+				GameNPC mob = new GameNPC();
 				mob.Name = task.MobName;
-				mob.Position = player.Position;
+				mob.X = player.X;
+				mob.Y = player.Y;
+				mob.Z = player.Z;
 				mob.Level = player.Level;
-				mob.RegionId = player.RegionId;
+				mob.CurrentRegionID = player.CurrentRegionID;
 				mob.AddToWorld();
 			
 				// First we kill mob

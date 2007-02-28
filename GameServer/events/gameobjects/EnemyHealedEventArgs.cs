@@ -28,6 +28,7 @@ namespace DOL.Events
 	{
 		private readonly GameLiving m_enemy;
 		private readonly GameObject m_healSource;
+		private readonly GameLiving.eHealthChangeType m_changeType;
 		private readonly int m_healAmount;
 
 		/// <summary>
@@ -35,11 +36,13 @@ namespace DOL.Events
 		/// </summary>
 		/// <param name="enemy">The healed enemy</param>
 		/// <param name="healSource">The heal source</param>
+		/// <param name="changeType">The health change type</param>
 		/// <param name="healAmount">The heal amount</param>
-		public EnemyHealedEventArgs(GameLiving enemy, GameObject healSource, int healAmount)
+		public EnemyHealedEventArgs(GameLiving enemy, GameObject healSource, GameLiving.eHealthChangeType changeType, int healAmount)
 		{
 			m_enemy = enemy;
 			m_healSource = healSource;
+			m_changeType = changeType;
 			m_healAmount = healAmount;
 		}
 
@@ -57,6 +60,14 @@ namespace DOL.Events
 		public GameObject HealSource
 		{
 			get { return m_healSource; }
+		}
+
+		/// <summary>
+		/// Gets the health change type
+		/// </summary>
+		public GameLiving.eHealthChangeType ChangeType
+		{
+			get { return m_changeType; }
 		}
 
 		/// <summary>

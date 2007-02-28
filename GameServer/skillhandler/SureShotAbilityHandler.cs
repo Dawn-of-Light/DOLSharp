@@ -17,10 +17,9 @@
  *
  */
 using System;
-using DOL.GS.Database;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
- 
+
 namespace DOL.GS.SkillHandler
 {
 	/// <summary>
@@ -32,23 +31,25 @@ namespace DOL.GS.SkillHandler
 		public void Execute(Ability ab, GamePlayer player)
 		{
 			SureShotEffect sureShot = (SureShotEffect)player.EffectList.GetOfType(typeof(SureShotEffect));
-			if (sureShot!=null)
+			if (sureShot != null)
 			{
 				sureShot.Cancel(false);
 				return;
 			}
 
-			if(!player.Alive)
+			if (!player.IsAlive)
 			{
 				player.Out.SendMessage("You can't switch to sure shot when dead!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
 			RapidFireEffect rapidFire = (RapidFireEffect)player.EffectList.GetOfType(typeof(RapidFireEffect));
-			if (rapidFire!=null)
-			{
+			if (rapidFire != null)
 				rapidFire.Cancel(false);
-			}
+
+			TrueshotEffect trueshot = (TrueshotEffect)player.EffectList.GetOfType(typeof(TrueshotEffect));
+			if (trueshot != null)
+				trueshot.Cancel(false);
 
 			new SureShotEffect().Start(player);
 		}

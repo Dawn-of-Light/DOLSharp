@@ -1,16 +1,13 @@
- //using DOL.GS.Database;
+ //using DOL.Database;
 //using DOL.GS.PacketHandler;
-
-using NHibernate.Mapping.Attributes;
 
 namespace DOL.GS.Scripts
 {
 	/// <summary>
-	/// This class holds all information that
-	/// EVERY Tailoring master npc in the game world needs!
+	/// the master for armorcrafting
 	/// </summary>
-	[Subclass(NameType=typeof(TailoringMaster), ExtendsType=typeof(GameCraftMaster))] 
-	public class TailoringMaster : GameCraftMaster
+	[NPCGuildScript("Tailors Master")]
+	public class TailoringMaster : CraftNPC
 	{
 		private static readonly eCraftingSkill[] m_trainedSkills = 
 		{
@@ -37,42 +34,6 @@ namespace DOL.GS.Scripts
 		public override string GUILD_CRAFTERS
 		{
 			get { return "Tailors"; }
-		}
-
-		public override eCharacterClass[] AllowedClass
-		{
-			get { return new eCharacterClass[]
-					{
-						eCharacterClass.Friar,
-						eCharacterClass.Scout,
-						eCharacterClass.Infiltrator,
-						eCharacterClass.Minstrel,
-						eCharacterClass.Elementalist,
-						eCharacterClass.Wizard,
-						eCharacterClass.Theurgist,
-						eCharacterClass.Mage,
-						eCharacterClass.Cabalist,
-						eCharacterClass.Sorcerer,
-						eCharacterClass.Stalker,
-						eCharacterClass.Nightshade,
-						eCharacterClass.Ranger,
-						eCharacterClass.Magician,
-						eCharacterClass.Enchanter,
-						eCharacterClass.Mentalist,
-						eCharacterClass.Eldritch,
-						eCharacterClass.MidgardRogue,
-						eCharacterClass.Shadowblade,
-						eCharacterClass.Hunter,
-						eCharacterClass.Mystic,
-						eCharacterClass.Runemaster,
-						eCharacterClass.Spiritmaster,
-						eCharacterClass.Heretic,
-						eCharacterClass.Necromancer,
-						eCharacterClass.Bainshee,
-						eCharacterClass.Valewalker,
-						eCharacterClass.Vampiir,
-					};
-			}
 		}
 
 		public override eCraftingSkill TheCraftingSkill

@@ -128,6 +128,8 @@ namespace DOL.GS.Quests.Midgard
 		[ScriptLoadedEvent]
 		public static void ScriptLoaded(DOLEvent e, object sender, EventArgs args)
 		{
+			if (!ServerProperties.Properties.LOAD_QUESTS)
+				return;
 			if (log.IsInfoEnabled)
 				log.Info("Quest \"" + questTitle + "\" initializing ...");
 			/* First thing we do in here is to search for the NPCs inside
@@ -147,18 +149,19 @@ namespace DOL.GS.Quests.Midgard
 			GameNPC[] npcs = WorldMgr.GetNPCsByName("Abohas", eRealm.Midgard);
 			if (npcs.Length == 0)
 			{
-				abohas = new GameMob();
+				abohas = new GameNPC();
 				abohas.Model = 215;
 				abohas.Name = "Abohas";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find" + abohas.Name + " , creating her ...");
 				abohas.GuildName = "Part of " + questTitle + " Quest";
 				abohas.Realm = (byte) eRealm.Midgard;
-				abohas.RegionId = 100;
+				abohas.CurrentRegionID = 100;
 				abohas.Size = 49;
 				abohas.Level = 21;
-				Zone z = WorldMgr.GetZone(100);
-				abohas.Position = z.ToRegionPosition(new Point(52274, 29985, 4960));
+				abohas.X = GameLocation.ConvertLocalXToGlobalX(52274, 100);
+				abohas.Y = GameLocation.ConvertLocalYToGlobalY(29985, 100);
+				abohas.Z = 4960;
 				abohas.Heading = 123;
 				//abohas.EquipmentTemplateID = "1707754";
 				//You don't have to store the created mob in the db if you don't want,
@@ -181,10 +184,12 @@ namespace DOL.GS.Quests.Midgard
 					log.Warn("Could not find " + harlfug.Name + ", creating her ...");
 				harlfug.GuildName = "Stable Master";
 				harlfug.Realm = (byte) eRealm.Midgard;
-				harlfug.RegionId = 100;
+				harlfug.CurrentRegionID = 100;
 				harlfug.Size = 52;
 				harlfug.Level = 41;
-				harlfug.Position = new Point(773458, 754240, 4600);
+				harlfug.X = 773458;
+				harlfug.Y = 754240;
+				harlfug.Z = 4600;
 				harlfug.Heading = 2707;
 				harlfug.EquipmentTemplateID = "5100798";
 
@@ -208,10 +213,12 @@ namespace DOL.GS.Quests.Midgard
 					log.Warn("Could not find " + gularg.Name + ", creating her ...");
 				gularg.GuildName = "Stable Master";
 				gularg.Realm = (byte) eRealm.Midgard;
-				gularg.RegionId = 100;
+				gularg.CurrentRegionID = 100;
 				gularg.Size = 50;
 				gularg.Level = 41;
-				gularg.Position = new Point(803766, 721959, 4686);
+				gularg.X = 803766;
+				gularg.Y = 721959;
+				gularg.Z = 4686;
 				gularg.Heading = 3925;
 				gularg.EquipmentTemplateID = "5100798";
 
@@ -236,10 +243,12 @@ namespace DOL.GS.Quests.Midgard
 					log.Warn("Could not find " + yolafson.Name + ", creating her ...");
 				yolafson.GuildName = "Stable Master";
 				yolafson.Realm = (byte) eRealm.Midgard;
-				yolafson.RegionId = 100;
+				yolafson.CurrentRegionID = 100;
 				yolafson.Size = 51;
 				yolafson.Level = 41;
-				yolafson.Position = new Point(805721, 700414, 4960);
+				yolafson.X = 805721;
+				yolafson.Y = 700414;
+				yolafson.Z = 4960;
 				yolafson.Heading = 1206;
 				yolafson.EquipmentTemplateID = "5100798";
 
@@ -274,7 +283,7 @@ namespace DOL.GS.Quests.Midgard
 
 				sackOfSupplies.Object_Type = (int) eObjectType.GenericItem;
 
-				sackOfSupplies.ItemTemplateID = "sack_of_supplies";
+				sackOfSupplies.Id_nb = "sack_of_supplies";
 				sackOfSupplies.IsPickable = true;
 				sackOfSupplies.IsDropable = false;
 
@@ -298,7 +307,7 @@ namespace DOL.GS.Quests.Midgard
 
 				crateOfVegetables.Object_Type = (int) eObjectType.GenericItem;
 
-				crateOfVegetables.ItemTemplateID = "crate_of_vegetables";
+				crateOfVegetables.Id_nb = "crate_of_vegetables";
 				crateOfVegetables.IsPickable = true;
 				crateOfVegetables.IsDropable = false;
 
@@ -323,8 +332,8 @@ namespace DOL.GS.Quests.Midgard
 				recruitsCloak.Model = 57;
 
 				recruitsCloak.Object_Type = (int) eObjectType.Cloth;
-				recruitsCloak.Item_Type = (int) eInventorySlot.Cloak;
-				recruitsCloak.ItemTemplateID = "recruits_cloak_mid";
+				recruitsCloak.Item_Type = (int) eEquipmentItems.CLOAK;
+				recruitsCloak.Id_nb = "recruits_cloak_mid";
 				recruitsCloak.Gold = 0;
 				recruitsCloak.Silver = 1;
 				recruitsCloak.Copper = 0;
@@ -341,7 +350,6 @@ namespace DOL.GS.Quests.Midgard
 				recruitsCloak.Bonus2Type = (int) eResist.Slash;
 
 				recruitsCloak.Quality = 100;
-				recruitsCloak.MaxQuality = 100;
 				recruitsCloak.Condition = 1000;
 				recruitsCloak.MaxCondition = 1000;
 				recruitsCloak.Durability = 1000;
@@ -363,7 +371,10 @@ namespace DOL.GS.Quests.Midgard
 			* method. This means, the "TalkToXXX" method is called whenever
 			* a player right clicks on him or when he whispers to him.
 			*/
-			//We want to be notified whenever a player enters the world            
+			//We want to be notified whenever a player enters the world
+			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
 			GameEventMgr.AddHandler(dalikor, GameLivingEvent.Interact, new DOLEventHandler(TalkToDalikor));
 			GameEventMgr.AddHandler(dalikor, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToDalikor));
 
@@ -400,6 +411,8 @@ namespace DOL.GS.Quests.Midgard
 			/* Removing hooks works just as adding them but instead of 
 			 * AddHandler, we call RemoveHandler, the parameters stay the same
 			 */
+			GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
 
 			GameEventMgr.RemoveHandler(dalikor, GameLivingEvent.Interact, new DOLEventHandler(TalkToDalikor));
 			GameEventMgr.RemoveHandler(dalikor, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToDalikor));
@@ -473,7 +486,7 @@ namespace DOL.GS.Quests.Midgard
 							break;
 							//If the player offered his "help", we send the quest dialog now!
 						case "proceed":
-							player.Out.SendCustomDialog("Are you ready to begin your training?", new CustomDialogResponse(CheckPlayerAcceptQuest));
+							player.Out.SendQuestSubscribeCommand(dalikor, QuestMgr.GetIDForQuestType(typeof(ImportantDelivery)), "Are you ready to begin your training?");
 							break;
 					}
 				}
@@ -510,6 +523,21 @@ namespace DOL.GS.Quests.Midgard
 					}
 				}
 			}
+		}
+
+		protected static void SubscribeQuest(DOLEvent e, object sender, EventArgs args)
+		{
+			QuestEventArgs qargs = args as QuestEventArgs;
+			if (qargs == null)
+				return;
+
+			if (qargs.QuestID != QuestMgr.GetIDForQuestType(typeof(ImportantDelivery)))
+				return;
+
+			if (e == GamePlayerEvent.AcceptQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x01);
+			else if (e == GamePlayerEvent.DeclineQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x00);
 		}
 
 		protected static void TalkToAbohas(DOLEvent e, object sender, EventArgs args)
@@ -757,7 +785,7 @@ namespace DOL.GS.Quests.Midgard
 			if (Step == 3 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == gularg.Name && gArgs.Item.ItemTemplateID == ticketToHaggerfel.ItemTemplateID)
+				if (gArgs.Target.Name == gularg.Name && gArgs.Item.Id_nb == ticketToHaggerfel.Id_nb)
 				{
 					Step = 4;
 					return;
@@ -767,7 +795,7 @@ namespace DOL.GS.Quests.Midgard
 			if (Step >= 3 && Step <= 4 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == abohas.Name && gArgs.Item.ItemTemplateID == sackOfSupplies.ItemTemplateID)
+				if (gArgs.Target.Name == abohas.Name && gArgs.Item.Id_nb == sackOfSupplies.Id_nb)
 				{
 					abohas.SayTo(player, "Oh, I see. Yes, from Dalikor. We've been waiting for these supplies for a while. It's good to have them. I don't suppose you're up for one more [errand], are you?");
 					RemoveItem(abohas, player, sackOfSupplies);
@@ -779,7 +807,7 @@ namespace DOL.GS.Quests.Midgard
 			if (Step == 6 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == yolafson.Name && gArgs.Item.ItemTemplateID == ticketToVasudheim.ItemTemplateID)
+				if (gArgs.Target.Name == yolafson.Name && gArgs.Item.Id_nb == ticketToVasudheim.Id_nb)
 				{
 					Step = 7;
 					return;
@@ -789,7 +817,7 @@ namespace DOL.GS.Quests.Midgard
 			if (Step >= 6 && Step <= 7 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == harlfug.Name && gArgs.Item.ItemTemplateID == crateOfVegetables.ItemTemplateID)
+				if (gArgs.Target.Name == harlfug.Name && gArgs.Item.Id_nb == crateOfVegetables.Id_nb)
 				{
 					harlfug.SayTo(player, "Ah, the vegetables I've been waiting for from Abohas. Thank you for delivering them to me. I couldn't find anyone to look after my stable so I could go and get them. Let me see, I think a [reward] is in order for your hard work.");
 					RemoveItem(harlfug, player, crateOfVegetables);

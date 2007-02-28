@@ -80,8 +80,8 @@ namespace DOL.GS.Quests.Midgard
 		private static GameStableMaster njiedi = null;
 		private static GameNPC hyndla = null;
 
-		private static GameMob askefruerTrainer = null;
-		private GameMob grifflet = null;
+		private static GameNPC askefruerTrainer = null;
+		private GameNPC grifflet = null;
 
 		private bool askefruerGriffinHandlerAttackStarted = false;
 
@@ -130,6 +130,8 @@ namespace DOL.GS.Quests.Midgard
 		[ScriptLoadedEvent]
 		public static void ScriptLoaded(DOLEvent e, object sender, EventArgs args)
 		{
+			if (!ServerProperties.Properties.LOAD_QUESTS)
+				return;
 			if (log.IsInfoEnabled)
 				log.Info("Quest \"" + questTitle + "\" initializing ...");
 			/* First thing we do in here is to search for the NPCs inside
@@ -149,19 +151,20 @@ namespace DOL.GS.Quests.Midgard
 			GameNPC[] npcs = WorldMgr.GetNPCsByName("Viking Hyndla", eRealm.Midgard);
 			if (npcs.Length == 0)
 			{
-				hyndla = new GameMob();
+				hyndla = new GameNPC();
 				hyndla.Model = 9;
 				hyndla.Name = "Viking Hyndla";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + hyndla.Name + ", creating ...");
 				hyndla.GuildName = "Part of " + questTitle + " Quest";
 				hyndla.Realm = (byte) eRealm.Midgard;
-				hyndla.RegionId = 100;
+				hyndla.CurrentRegionID = 100;
 
 				hyndla.Size = 50;
 				hyndla.Level = 40;
-				Zone z = WorldMgr.GetZone(100);
-				hyndla.Position = z.ToRegionPosition(new Point(53049, 58068, 4985));
+				hyndla.X = GameLocation.ConvertLocalXToGlobalX(53049, 100);
+				hyndla.Y = GameLocation.ConvertLocalYToGlobalY(58068, 100);
+				hyndla.Z = 4985;
 				hyndla.Heading = 150;
 
 				//You don't have to store the created mob in the db if you don't want,
@@ -185,7 +188,7 @@ namespace DOL.GS.Quests.Midgard
 					log.Warn("Could not find " + njiedi.Name + ", creating ...");
 				njiedi.GuildName = "Stable Master";
 				njiedi.Realm = (byte) eRealm.Midgard;
-				njiedi.RegionId = 100;
+				njiedi.CurrentRegionID = 100;
 				njiedi.Size = 51;
 				njiedi.Level = 50;
 
@@ -201,8 +204,9 @@ namespace DOL.GS.Quests.Midgard
 //				njiedi.AddNPCEquipment(Slot.FEET, 84, 10, 0, 0);
 //				njiedi.AddNPCEquipment(Slot.CLOAK, 57, 32, 0, 0);
 
-				Zone z = WorldMgr.GetZone(100);
-				njiedi.Position = z.ToRegionPosition(new Point(55561, 58225, 5005));
+				njiedi.X = GameLocation.ConvertLocalXToGlobalX(55561, 100);
+				njiedi.Y = GameLocation.ConvertLocalYToGlobalY(58225, 100);
+				njiedi.Z = 5005;
 				njiedi.Heading = 126;
 
 				StandardMobBrain brain = new StandardMobBrain();
@@ -225,16 +229,17 @@ namespace DOL.GS.Quests.Midgard
 			npcs = WorldMgr.GetNPCsByName("Askefruer Trainer", eRealm.None);
 			if (npcs.Length == 0)
 			{
-				askefruerTrainer = new GameMob();
+				askefruerTrainer = new GameNPC();
 
 				askefruerTrainer.Name = "Askefruer Trainer";
-				Zone z = WorldMgr.GetZone(100);
-				askefruerTrainer.Position = z.ToRegionPosition(new Point(54739, 18264, 5195));
+				askefruerTrainer.X = GameLocation.ConvertLocalXToGlobalX(54739, 100);
+				askefruerTrainer.Y = GameLocation.ConvertLocalYToGlobalY(18264, 100);
+				askefruerTrainer.Z = 5195;
 				askefruerTrainer.Heading = 79;
 				askefruerTrainer.Model = 678;
 				askefruerTrainer.GuildName = "Part of " + questTitle + " Quest";
 				askefruerTrainer.Realm = (byte) eRealm.None;
-				askefruerTrainer.RegionId = 100;
+				askefruerTrainer.CurrentRegionID = 100;
 				askefruerTrainer.Size = 49;
 				askefruerTrainer.Level = 3;
 
@@ -251,7 +256,7 @@ namespace DOL.GS.Quests.Midgard
 				askefruerTrainer.AddToWorld();
 			}
 			else
-				askefruerTrainer = (GameMob) npcs[0];
+				askefruerTrainer = npcs[0];
 
 			#endregion
 
@@ -270,7 +275,7 @@ namespace DOL.GS.Quests.Midgard
 
 				trainerWhip.Object_Type = (int) eObjectType.GenericItem;
 
-				trainerWhip.ItemTemplateID = "askefruer_whip";
+				trainerWhip.Id_nb = "askefruer_whip";
 				trainerWhip.IsPickable = true;
 				trainerWhip.IsDropable = false;
 
@@ -298,8 +303,8 @@ namespace DOL.GS.Quests.Midgard
 				recruitsVest.SPD_ABS = 19; // Absorption
 
 				recruitsVest.Object_Type = (int) eObjectType.Studded;
-				recruitsVest.Item_Type = (int) eInventorySlot.TorsoArmor;
-				recruitsVest.ItemTemplateID = "recruits_studded_vest_mid";
+				recruitsVest.Item_Type = (int) eEquipmentItems.TORSO;
+				recruitsVest.Id_nb = "recruits_studded_vest_mid";
 				recruitsVest.Gold = 0;
 				recruitsVest.Silver = 9;
 				recruitsVest.Copper = 0;
@@ -319,7 +324,6 @@ namespace DOL.GS.Quests.Midgard
 				recruitsVest.Bonus3Type = (int) eResist.Body;
 
 				recruitsVest.Quality = 100;
-				recruitsVest.MaxQuality = 100;
 				recruitsVest.Condition = 1000;
 				recruitsVest.MaxCondition = 1000;
 				recruitsVest.Durability = 1000;
@@ -349,8 +353,8 @@ namespace DOL.GS.Quests.Midgard
 				recruitsQuiltedVest.SPD_ABS = 0; // Absorption
 
 				recruitsQuiltedVest.Object_Type = (int) eObjectType.Cloth;
-				recruitsQuiltedVest.Item_Type = (int) eInventorySlot.TorsoArmor;
-				recruitsQuiltedVest.ItemTemplateID = "recruits_quilted_vest";
+				recruitsQuiltedVest.Item_Type = (int) eEquipmentItems.TORSO;
+				recruitsQuiltedVest.Id_nb = "recruits_quilted_vest";
 				recruitsQuiltedVest.Gold = 0;
 				recruitsQuiltedVest.Silver = 9;
 				recruitsQuiltedVest.Copper = 0;
@@ -367,7 +371,6 @@ namespace DOL.GS.Quests.Midgard
 				recruitsQuiltedVest.Bonus2Type = (int) eStat.DEX;
 
 				recruitsQuiltedVest.Quality = 100;
-				recruitsQuiltedVest.MaxQuality = 100;
 				recruitsQuiltedVest.Condition = 1000;
 				recruitsQuiltedVest.MaxCondition = 1000;
 				recruitsQuiltedVest.Durability = 1000;
@@ -390,6 +393,9 @@ namespace DOL.GS.Quests.Midgard
 			* a player right clicks on him or when he whispers to him.
 			*/
 			//We want to be notified whenever a player enters the world                        
+			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
 			GameEventMgr.AddHandler(GamePlayerEvent.GameEntered, new DOLEventHandler(PlayerEnterWorld));
 
 			GameEventMgr.AddHandler(dalikor, GameLivingEvent.Interact, new DOLEventHandler(TalkToDalikor));
@@ -430,6 +436,9 @@ namespace DOL.GS.Quests.Midgard
 			/* Removing hooks works just as adding them but instead of 
 			 * AddHandler, we call RemoveHandler, the parameters stay the same
 			 */
+			GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
 			GameEventMgr.RemoveHandler(GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
 
 			GameEventMgr.RemoveHandler(dalikor, GameLivingEvent.Interact, new DOLEventHandler(TalkToDalikor));
@@ -500,10 +509,10 @@ namespace DOL.GS.Quests.Midgard
 
 		protected static void CheckNearAskefruerTrainer(DOLEvent e, object sender, EventArgs args)
 		{
-			GameMob m_askefruerTrainer = (GameMob) sender;
+			GameNPC m_askefruerTrainer = (GameNPC) sender;
 
 			// if princess is dead no ned to checks ...
-			if (!m_askefruerTrainer.Alive || m_askefruerTrainer.ObjectState != GameObject.eObjectState.Active)
+			if (!m_askefruerTrainer.IsAlive || m_askefruerTrainer.ObjectState != GameObject.eObjectState.Active)
 				return;
 
 			foreach (GamePlayer player in m_askefruerTrainer.GetPlayersInRadius(1500))
@@ -538,19 +547,18 @@ namespace DOL.GS.Quests.Midgard
 
 		protected void initGrifflet()
 		{
-			grifflet = new GameMob();
+			grifflet = new GameNPC();
 
 			grifflet.Model = 1236;
 			grifflet.Name = "Grifflet";
 			grifflet.GuildName = "Part of " + m_questPlayer.GetName(0, false) + "'s " + questTitle + " Quest";
-			grifflet.Realm = (byte) eRealm.Peace;
-			grifflet.RegionId = askefruerTrainer.RegionId;
+			grifflet.Flags ^= (uint)GameNPC.eFlags.PEACE;
+			grifflet.CurrentRegionID = askefruerTrainer.CurrentRegionID;
 			grifflet.Size = 20;
 			grifflet.Level = 3;
-			Point pos = askefruerTrainer.Position;
-			pos.X += Util.Random(-150, 150);
-			pos.Y += Util.Random(-150, 150);
-			grifflet.Position = pos;
+			grifflet.X = askefruerTrainer.X + Util.Random(-150, 150);
+			grifflet.Y = askefruerTrainer.Y + Util.Random(-150, 150);
+			grifflet.Z = askefruerTrainer.Z;
 			grifflet.Heading = 93;
 			grifflet.MaxSpeedBase = 200;
 
@@ -633,7 +641,7 @@ namespace DOL.GS.Quests.Midgard
 
 							//If the player offered his "help", we send the quest dialog now!
 						case "assist":
-							player.Out.SendCustomDialog("Will you find out where the griffin egg has gone?", new CustomDialogResponse(CheckPlayerAcceptQuest));
+							player.Out.SendQuestSubscribeCommand(dalikor, QuestMgr.GetIDForQuestType(typeof(StolenEggs)), "Will you find out where the griffin egg has gone?");
 							break;
 					}
 				}
@@ -658,6 +666,21 @@ namespace DOL.GS.Quests.Midgard
 					}
 				}
 			}
+		}
+
+		protected static void SubscribeQuest(DOLEvent e, object sender, EventArgs args)
+		{
+			QuestEventArgs qargs = args as QuestEventArgs;
+			if (qargs == null)
+				return;
+
+			if (qargs.QuestID != QuestMgr.GetIDForQuestType(typeof(StolenEggs)))
+				return;
+
+			if (e == GamePlayerEvent.AcceptQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x01);
+			else if (e == GamePlayerEvent.DeclineQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x00);
 		}
 
 		/* This is the method we declared as callback for the hooks we set to
@@ -936,7 +959,7 @@ namespace DOL.GS.Quests.Midgard
 			if (Step == 5 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == njiedi.Name && gArgs.Item.ItemTemplateID == trainerWhip.ItemTemplateID)
+				if (gArgs.Target.Name == njiedi.Name && gArgs.Item.Id_nb == trainerWhip.Id_nb)
 				{
 					njiedi.SayTo(player, "A whip?! This is outrageous! I see they were just trying to torture him. These Askefruer are truly malicious creatures. I hope you wipe them out one day Eeinken. Here, take this as a sign of my [appreciation] for the return of the little one.");
 					RemoveItem(njiedi, player, trainerWhip);

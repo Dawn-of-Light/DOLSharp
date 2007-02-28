@@ -93,8 +93,8 @@ namespace DOL.GS.Quests.Midgard
 		private static GameNPC briedi = null;
 		private GameNPC briediClone = null;
 
-		private static GameMob princessAiyr = null;
-		private static GameMob[] askefruerSorceress = new GameMob[4];
+		private static GameNPC princessAiyr = null;
+		private static GameNPC[] askefruerSorceress = new GameNPC[4];
 
 		private bool princessAiyrAttackStarted = false;
 
@@ -150,6 +150,8 @@ namespace DOL.GS.Quests.Midgard
 		[ScriptLoadedEvent]
 		public static void ScriptLoaded(DOLEvent e, object sender, EventArgs args)
 		{
+			if (!ServerProperties.Properties.LOAD_QUESTS)
+				return;
 			if (log.IsInfoEnabled)
 				log.Info("Quest \"" + questTitle + "\" initializing ...");
 			/* First thing we do in here is to search for the NPCs inside
@@ -169,19 +171,20 @@ namespace DOL.GS.Quests.Midgard
             GameNPC[] npcs = WorldMgr.GetNPCsByName("Master Briedi", eRealm.Midgard);
 			if (npcs.Length == 0)
 			{
-				briedi = new GameMob();
+				briedi = new GameNPC();
 				briedi.Model = 157;
 				briedi.Name = "Master Briedi";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + briedi.Name + ", creating him ...");
 				briedi.GuildName = "Part of " + questTitle + " Quest";
 				briedi.Realm = (byte) eRealm.Midgard;
-				briedi.RegionId = 103;
+				briedi.CurrentRegionID = 103;
 
 				briedi.Size = 50;
 				briedi.Level = 45;
-				Zone z = WorldMgr.GetZone(103);
-				briedi.Position = z.ToRegionPosition(new Point(26240, 15706, 4489));
+				briedi.X = GameLocation.ConvertLocalXToGlobalX(26240, 103);
+				briedi.Y = GameLocation.ConvertLocalYToGlobalY(15706, 103);
+				briedi.Z = 4489;
 				briedi.Heading = 292;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
@@ -219,18 +222,19 @@ namespace DOL.GS.Quests.Midgard
 			npcs = WorldMgr.GetNPCsByName("Princess Aiyr", eRealm.None);
 			if (npcs.Length == 0)
 			{
-				princessAiyr = new GameMob();
+				princessAiyr = new GameNPC();
 
 				princessAiyr.Name = "Princess Aiyr";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + princessAiyr.Name + ", creating ...");
-				Zone z = WorldMgr.GetZone(100);
-				princessAiyr.Position = z.ToRegionPosition(new Point(39315, 38957, 5460));
+				princessAiyr.X = GameLocation.ConvertLocalXToGlobalX(39315, 100);
+				princessAiyr.Y = GameLocation.ConvertLocalYToGlobalY(38957, 100);
+				princessAiyr.Z = 5460;
 				princessAiyr.Heading = 1;
 				princessAiyr.Model = 678;
 				princessAiyr.GuildName = "Part of " + questTitle + " Quest";
 				princessAiyr.Realm = (byte) eRealm.None;
-				princessAiyr.RegionId = 100;
+				princessAiyr.CurrentRegionID = 100;
 				princessAiyr.Size = 49;
 				princessAiyr.Level = 3;
 
@@ -245,7 +249,7 @@ namespace DOL.GS.Quests.Midgard
 			}
 			else
 			{
-				princessAiyr = (GameMob) npcs[0];
+				princessAiyr = npcs[0];
 			}
 
 			int counter = 0;
@@ -253,7 +257,7 @@ namespace DOL.GS.Quests.Midgard
 			{
 				if (npc.Name == "askefruer sorceress")
 				{
-					askefruerSorceress[counter] = (GameMob) npc;
+					askefruerSorceress[counter] = npc;
 					counter++;
 				}
 				if (counter == askefruerSorceress.Length)
@@ -264,21 +268,20 @@ namespace DOL.GS.Quests.Midgard
 			{
 				if (askefruerSorceress[i] == null)
 				{
-					askefruerSorceress[i] = new GameMob();
+					askefruerSorceress[i] = new GameNPC();
 					askefruerSorceress[i].Model = 678;
 					askefruerSorceress[i].Name = "askefruer sorceress";
 					if (log.IsWarnEnabled)
 						log.Warn("Could not find " + askefruerSorceress[i].Name + ", creating ...");
 					askefruerSorceress[i].GuildName = "Part of " + questTitle + " Quest";
 					askefruerSorceress[i].Realm = (byte) eRealm.None;
-					askefruerSorceress[i].RegionId = 100;
+					askefruerSorceress[i].CurrentRegionID = 100;
 					askefruerSorceress[i].Size = 35;
 					askefruerSorceress[i].Level = 3;
-					Point pos = princessAiyr.Position;
-					pos.X += Util.Random(-150, 150);
-					pos.Y += Util.Random(-150, 150);
-					askefruerSorceress[i].Position = pos;
-					
+					askefruerSorceress[i].X = princessAiyr.X + Util.Random(-150, 150);
+					askefruerSorceress[i].Y = princessAiyr.Y + Util.Random(-150, 150);
+					askefruerSorceress[i].Z = princessAiyr.Z;
+
 					StandardMobBrain brain = new StandardMobBrain();
 					brain.AggroLevel = 30;
 					brain.AggroRange = 300;
@@ -313,7 +316,7 @@ namespace DOL.GS.Quests.Midgard
 
 				coastalWolfBlood.Object_Type = (int) eObjectType.GenericItem;
 
-				coastalWolfBlood.ItemTemplateID = "coastal_wolf_blood";
+				coastalWolfBlood.Id_nb = "coastal_wolf_blood";
 				coastalWolfBlood.IsPickable = true;
 				coastalWolfBlood.IsDropable = false;
 
@@ -337,7 +340,7 @@ namespace DOL.GS.Quests.Midgard
 
 				tatteredShirt.Object_Type = (int) eObjectType.GenericItem;
 
-				tatteredShirt.ItemTemplateID = "tattered_shirt";
+				tatteredShirt.Id_nb = "tattered_shirt";
 				tatteredShirt.IsPickable = true;
 				tatteredShirt.IsDropable = false;
 
@@ -361,7 +364,7 @@ namespace DOL.GS.Quests.Midgard
 
 				scrollBriedi.Object_Type = (int) eObjectType.GenericItem;
 
-				scrollBriedi.ItemTemplateID = "scroll_for_briedi";
+				scrollBriedi.Id_nb = "scroll_for_briedi";
 				scrollBriedi.IsPickable = true;
 				scrollBriedi.IsDropable = false;
 
@@ -385,7 +388,7 @@ namespace DOL.GS.Quests.Midgard
 
 				listBriedi.Object_Type = (int) eObjectType.GenericItem;
 
-				listBriedi.ItemTemplateID = "list_for_briedi";
+				listBriedi.Id_nb = "list_for_briedi";
 				listBriedi.IsPickable = true;
 				listBriedi.IsDropable = false;
 
@@ -409,7 +412,7 @@ namespace DOL.GS.Quests.Midgard
 
 				smieraGattoClaw.Object_Type = (int) eObjectType.GenericItem;
 
-				smieraGattoClaw.ItemTemplateID = "smiera_gatto_claw";
+				smieraGattoClaw.Id_nb = "smiera_gatto_claw";
 				smieraGattoClaw.IsPickable = true;
 				smieraGattoClaw.IsDropable = false;
 
@@ -433,7 +436,7 @@ namespace DOL.GS.Quests.Midgard
 
 				princessAiyrHead.Object_Type = (int) eObjectType.GenericItem;
 
-				princessAiyrHead.ItemTemplateID = "princess_ayir_head";
+				princessAiyrHead.Id_nb = "princess_ayir_head";
 				princessAiyrHead.IsPickable = true;
 				princessAiyrHead.IsDropable = false;
 
@@ -461,8 +464,8 @@ namespace DOL.GS.Quests.Midgard
 				recruitsHelm.SPD_ABS = 19; // Absorption
 
 				recruitsHelm.Object_Type = (int) eObjectType.Studded;
-				recruitsHelm.Item_Type = (int) eInventorySlot.HeadArmor;
-				recruitsHelm.ItemTemplateID = "recruits_studded_helm_mid";
+				recruitsHelm.Item_Type = (int) eEquipmentItems.HEAD;
+				recruitsHelm.Id_nb = "recruits_studded_helm_mid";
 				recruitsHelm.Gold = 0;
 				recruitsHelm.Silver = 9;
 				recruitsHelm.Copper = 0;
@@ -482,7 +485,6 @@ namespace DOL.GS.Quests.Midgard
 				recruitsHelm.Bonus3Type = (int) eProperty.MaxHealth;
 
 				recruitsHelm.Quality = 100;
-				recruitsHelm.MaxQuality = 100;
 				recruitsHelm.Condition = 1000;
 				recruitsHelm.MaxCondition = 1000;
 				recruitsHelm.Durability = 1000;
@@ -512,8 +514,8 @@ namespace DOL.GS.Quests.Midgard
 				recruitsCap.SPD_ABS = 0; // Absorption
 
 				recruitsCap.Object_Type = (int) eObjectType.Cloth;
-				recruitsCap.Item_Type = (int) eInventorySlot.HeadArmor;
-				recruitsCap.ItemTemplateID = "recruits_quilted_cap";
+				recruitsCap.Item_Type = (int) eEquipmentItems.HEAD;
+				recruitsCap.Id_nb = "recruits_quilted_cap";
 				recruitsCap.Gold = 0;
 				recruitsCap.Silver = 9;
 				recruitsCap.Copper = 0;
@@ -533,7 +535,6 @@ namespace DOL.GS.Quests.Midgard
 				recruitsCap.Bonus3Type = (int) eResist.Spirit;
 
 				recruitsCap.Quality = 100;
-				recruitsCap.MaxQuality = 100;
 				recruitsCap.Condition = 1000;
 				recruitsCap.MaxCondition = 1000;
 				recruitsCap.Durability = 1000;
@@ -559,8 +560,8 @@ namespace DOL.GS.Quests.Midgard
 				recruitsRing.Model = 103;
 
 				recruitsRing.Object_Type = (int) eObjectType.Magical;
-				recruitsRing.Item_Type = (int) eInventorySlot.RightRing;
-				recruitsRing.ItemTemplateID = "recruits_pewter_ring";
+				recruitsRing.Item_Type = (int) eEquipmentItems.R_RING;
+				recruitsRing.Id_nb = "recruits_pewter_ring";
 				recruitsRing.Gold = 0;
 				recruitsRing.Silver = 9;
 				recruitsRing.Copper = 0;
@@ -579,7 +580,6 @@ namespace DOL.GS.Quests.Midgard
 				recruitsRing.Bonus3Type = (int) eProperty.MaxHealth;
 
 				recruitsRing.Quality = 100;
-				recruitsRing.MaxQuality = 100;
 				recruitsRing.Condition = 1000;
 				recruitsRing.MaxCondition = 1000;
 				recruitsRing.Durability = 1000;
@@ -611,6 +611,9 @@ namespace DOL.GS.Quests.Midgard
 			GameEventMgr.AddHandler(briedi, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToMasterBriedi));
 
 			GameEventMgr.AddHandler(princessAiyr, GameNPCEvent.OnAICallback, new DOLEventHandler(CheckNearPrincessAyir));
+
+			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
 
 			/* Now we bring to dalikor the possibility to give this quest to players */
 			dalikor.AddQuestToGive(typeof (BeginningOfWar));
@@ -649,6 +652,9 @@ namespace DOL.GS.Quests.Midgard
 
 			GameEventMgr.RemoveHandler(princessAiyr, GameNPCEvent.OnAICallback, new DOLEventHandler(CheckNearPrincessAyir));
 
+			GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
 			/* Now we remove to dalikor the possibility to give this quest to players */
 			dalikor.RemoveQuestToGive(typeof (BeginningOfWar));
 
@@ -656,10 +662,10 @@ namespace DOL.GS.Quests.Midgard
 
 		protected static void CheckNearPrincessAyir(DOLEvent e, object sender, EventArgs args)
 		{
-			GameMob m_princessAyir = (GameMob) sender;
+			GameNPC m_princessAyir = (GameNPC) sender;
 
 			// if princess is dead no ned to checks ...
-			if (!m_princessAyir.Alive || m_princessAyir.ObjectState != GameObject.eObjectState.Active)
+			if (!m_princessAyir.IsAlive || m_princessAyir.ObjectState != GameObject.eObjectState.Active)
 				return;
 
 			foreach (GamePlayer player in m_princessAyir.GetPlayersInRadius(1000))
@@ -678,7 +684,7 @@ namespace DOL.GS.Quests.Midgard
 
 					if (quest.briediClone != null)
 					{
-						foreach (GameMob fairy in askefruerSorceress)
+						foreach (GameNPC fairy in askefruerSorceress)
 						{
 							aggroBrain = quest.briediClone.Brain as IAggressiveBrain;
 							if (aggroBrain != null)
@@ -763,7 +769,7 @@ namespace DOL.GS.Quests.Midgard
 							break;
 							//If the player offered his "help", we send the quest dialog now!
 						case "do that":
-							player.Out.SendCustomDialog("Will you take the letter to Master Briedi in Gotar for help with the Askefruer problem?", new CustomDialogResponse(CheckPlayerAcceptQuest));
+							player.Out.SendQuestSubscribeCommand(dalikor, QuestMgr.GetIDForQuestType(typeof(BeginningOfWar)), "Will you take the letter to Master Briedi in Gotar for help with the Askefruer problem?");
 							break;
 					}
 				}
@@ -818,7 +824,7 @@ namespace DOL.GS.Quests.Midgard
 							dalikor.SayTo(player, "Ah, I suppose I should have expected him to do that. He would not have left if the job wasn't completed. Still, is there any proof that you have defeated the Askefruer responsible for this?");
 							break;
 						case "reward":
-							dalikor.SayTo(player, "Yes, for you my young recruit, please take this helm and this ring. I know these magical items will help you as you make your way through this life. Be safe now "+player.Name+". We will speak again very soon.");
+							dalikor.SayTo(player, "Yes, for you my young recruit, please take this helm and this ring. I know these magical items will help you as you make your way through this life. Be safe now Vinde. We will speak again very soon.");
 							if (quest.Step == 19)
 							{
 								quest.FinishQuest();
@@ -831,6 +837,21 @@ namespace DOL.GS.Quests.Midgard
 					}
 				}
 			}
+		}
+
+		protected static void SubscribeQuest(DOLEvent e, object sender, EventArgs args)
+		{
+			QuestEventArgs qargs = args as QuestEventArgs;
+			if (qargs == null)
+				return;
+
+			if (qargs.QuestID != QuestMgr.GetIDForQuestType(typeof(BeginningOfWar)))
+				return;
+
+			if (e == GamePlayerEvent.AcceptQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x01);
+			else if (e == GamePlayerEvent.DeclineQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x00);
 		}
 
 		/* This is the method we declared as callback for the hooks we set to
@@ -966,7 +987,7 @@ namespace DOL.GS.Quests.Midgard
 
 		protected virtual void ResetMasterBriedi()
 		{
-			if (briediClone != null && (briediClone.Alive || briediClone.ObjectState == GameObject.eObjectState.Active))
+			if (briediClone != null && (briediClone.IsAlive || briediClone.ObjectState == GameObject.eObjectState.Active))
 			{
 				m_animSpellObjectQueue.Enqueue(briediClone);
 				m_animSpellTeleportTimerQueue.Enqueue(new RegionTimer(briediClone, new RegionTimerCallback(MakeAnimEmoteSequence), 500));
@@ -1010,19 +1031,18 @@ namespace DOL.GS.Quests.Midgard
 		{
 			if (briediClone == null)
 			{
-				briediClone = new GameMob();
+				briediClone = new GameNPC();
 				briediClone.Name = briedi.Name;
 				briediClone.Model = briedi.Model;
 				briediClone.GuildName = briedi.GuildName;
 				briediClone.Realm = briedi.Realm;
-				briediClone.Region = locationBriediClone.Region;
+				briediClone.CurrentRegionID = locationBriediClone.RegionID;
 				briediClone.Size = briedi.Size;
 				briediClone.Level = 15; // to make the figthing against fairy sorceress a bit more dramatic :)
 
-				Point pos = locationBriediClone.Position;
-				pos.X += Util.Random(-150, 150);
-				pos.Y += Util.Random(-150, 150);
-				briediClone.Position = pos;
+				briediClone.X = locationBriediClone.X + Util.Random(-150, 150);
+				briediClone.Y = locationBriediClone.X + Util.Random(-150, 150);
+				briediClone.Z = locationBriediClone.Y;
 				briediClone.Heading = locationBriediClone.Heading;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
@@ -1092,7 +1112,7 @@ namespace DOL.GS.Quests.Midgard
 			UseSlotEventArgs uArgs = (UseSlotEventArgs) args;
 
 			InventoryItem item = player.Inventory.GetItem((eInventorySlot)uArgs.Slot);
-			if (item != null && item.ItemTemplateID == listBriedi.ItemTemplateID)
+			if (item != null && item.Id_nb == listBriedi.Id_nb)
 			{
 				if (quest.Step >= 4 && quest.Step <= 8)
 				{
@@ -1303,7 +1323,7 @@ namespace DOL.GS.Quests.Midgard
 			if (Step == 2 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == briedi.Name && gArgs.Item.ItemTemplateID == scrollBriedi.ItemTemplateID)
+				if (gArgs.Target.Name == briedi.Name && gArgs.Item.Id_nb == scrollBriedi.Id_nb)
 				{
 					briedi.SayTo(m_questPlayer, "Hmph, what's this? A letter for me, eh? Well, let's see what it has to say.");
 					RemoveItem(briedi, player, scrollBriedi);
@@ -1356,21 +1376,21 @@ namespace DOL.GS.Quests.Midgard
 
 				if (gArgs.Target.Name == briedi.Name)
 				{
-					if (Step == 10 && gArgs.Item.ItemTemplateID == tatteredShirt.ItemTemplateID)
+					if (Step == 10 && gArgs.Item.Id_nb == tatteredShirt.Id_nb)
 					{
 						briedi.SayTo(m_questPlayer, "Uh huh, yes...Alright, now give me that claw from those smiera-gattos.");
 						RemoveItem(briedi, player, tatteredShirt);
 						Step = 11;
 						return;
 					}
-					else if (Step == 11 && gArgs.Item.ItemTemplateID == smieraGattoClaw.ItemTemplateID)
+					else if (Step == 11 && gArgs.Item.Id_nb == smieraGattoClaw.Id_nb)
 					{
 						briedi.SayTo(m_questPlayer, "Yes, this is a claw alright. Now, for the coastal wolf blood. You better have gotten me enough of this.");
 						RemoveItem(briedi, player, smieraGattoClaw);
 						Step = 12;
 						return;
 					}
-					else if (Step == 12 && gArgs.Item.ItemTemplateID == coastalWolfBlood.ItemTemplateID)
+					else if (Step == 12 && gArgs.Item.Id_nb == coastalWolfBlood.Id_nb)
 					{
 						briedi.SayTo(m_questPlayer, "Well, it's a little less than I was hoping for, but it will do. Now listen kid. You go back to that no good son of mine and tell him I'll go ahead and help him with his little problem. In fact, let me [expedite] your journey for you.");
 						RemoveItem(briedi, player, coastalWolfBlood);
@@ -1398,7 +1418,7 @@ namespace DOL.GS.Quests.Midgard
 			if (Step == 18 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == dalikor.Name && gArgs.Item.ItemTemplateID == princessAiyrHead.ItemTemplateID)
+				if (gArgs.Target.Name == dalikor.Name && gArgs.Item.Id_nb == princessAiyrHead.Id_nb)
 				{
 					dalikor.SayTo(m_questPlayer, "Interesting. I shall present this to the council as well. I do so hope this is the end of our Askefruer problems, but somehow, I sense it is not. Nevertheless, I have here a [reward] for you from the council.");
 					RemoveItem(dalikor, player, princessAiyrHead);

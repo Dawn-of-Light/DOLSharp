@@ -1,24 +1,29 @@
  /*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
+using System;
+using System.Collections;
 using System.Reflection;
+
 using DOL.Database;
+using DOL.GS.Keeps;
 using DOL.GS.PacketHandler;
+
 using log4net;
 
 namespace DOL.GS.Scripts
@@ -43,7 +48,7 @@ namespace DOL.GS.Scripts
 				client.Player.RepairItem(item.Item);
 				return 1;
 			}
-			/*GameKeepDoor door = client.Player.TargetObject as GameKeepDoor;
+			GameKeepDoor door = client.Player.TargetObject as GameKeepDoor;
 			if (door != null)
 			{
 				if (!PreFireChecks(client.Player, door)) return 1;
@@ -54,35 +59,77 @@ namespace DOL.GS.Scripts
 			{
 				if (!PreFireChecks(client.Player, component)) return 1;
 				StartRepair(client.Player, component);
-			}*/
+			}
+			GameSiegeWeapon weapon = client.Player.TargetObject as GameSiegeWeapon;
+			if (weapon != null)
+			{
+				if (!PreFireChecks(client.Player, weapon)) return 1;
+				StartRepair(client.Player, weapon);
+			}
 			return 1;
 		}
 
 		public static bool PreFireChecks(GamePlayer player, GameLiving obj)
 		{
+			if (obj == null)
+				return false;
+			if (player.Realm != obj.Realm)
+				return false;
+
+			if ((obj as GameLiving).InCombat)
+			{
+				player.Out.SendMessage("The can't repair object while it under attack!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return false;
+			}
+
+			if (obj is IKeepItem)
+			{
+				if (obj.CurrentRegion.Time - obj.LastAttackedByEnemyTick <= 60 * 1000)
+				{
+					player.Out.SendMessage("The can't repair the keep component while it under attack!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					return false;
+				}
+			}
+
 			if ((obj as GameLiving).HealthPercent == 100)
 			{
 				player.Out.SendMessage("The component is already at full health!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
+			if (obj is GameKeepComponent)
+			{
+				GameKeepComponent component = obj as GameKeepComponent;
+				if (component.IsRaized)
+				{
+					player.Out.SendMessage("You cannot repair a raized tower!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					return false;
+				}
+			}
+
 			if (player.IsCrafting)
 			{
 				player.Out.SendMessage("You must end your current action before you repair anything!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
-			if (player.IsMoving || player.Strafing)
+			if (player.IsMoving)
 			{
-				player.Out.SendMessage("You move and stop repairing.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage("You can't repair while moving", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
 
-			if (!player.Alive)
+			if (!player.IsAlive)
 			{
 				player.Out.SendMessage("You can't repair while dead.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
 
-			if (!player.Position.CheckSquareDistance(obj.Position, (uint) (WorldMgr.INTERACT_DISTANCE*WorldMgr.INTERACT_DISTANCE)))
+			if (player.IsSitting)
+			{
+				player.Out.SendMessage("You can't repair while sit.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return false;
+			}
+
+			if (!WorldMgr.CheckDistance(player, obj, WorldMgr.INTERACT_DISTANCE))
 			{
 				player.Out.SendMessage("You are too far away to repair this component.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
@@ -93,7 +140,7 @@ namespace DOL.GS.Scripts
 
 			if (playerswood < repairamount)
 			{
-				player.Out.SendMessage("You need another " + (playerswood - repairamount) + " units of wood!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage("You need another " + (repairamount - playerswood) + " units of wood!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
 
@@ -134,9 +181,10 @@ namespace DOL.GS.Scripts
 			player.CraftTimer.Stop();
 			player.Out.SendCloseTimerWindow();
 
-			if (Util.ChanceDouble(CalculateRepairChance(player, obj)))
+			if (Util.ChanceDouble(CalculateRepairChance(player,obj)))
 			{
-				/*if (obj is GameKeepDoor)
+				int start = obj.Health;
+				if (obj is GameKeepDoor)
 				{
 					GameKeepDoor door = obj as GameKeepDoor;
 					door.Repair((int)(door.MaxHealth * 0.15));
@@ -145,9 +193,22 @@ namespace DOL.GS.Scripts
 				{
 					GameKeepComponent component = obj as GameKeepComponent;
 					component.Repair((int)(component.MaxHealth * 0.15));
-				}*/
+				}
+				if (obj is GameSiegeWeapon)
+				{
+					GameSiegeWeapon weapon = obj as GameSiegeWeapon;
+					weapon.Repair();
+				}
+				int finish = obj.Health;
 				CalculatePlayersWood(player, (GetTotalWoodForLevel(obj.Level + 1)));
 				player.Out.SendMessage("You successfully repair the component by 15%!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				/*
+				 * - Realm points will now be awarded for successfully repairing a door or outpost piece.
+				 * Players will receive approximately 10% of the amount repaired in realm points. 
+				 * (Note that realm points for repairing a door or outpost piece will not work in the battlegrounds.)
+				 */
+				int amount = finish - start;
+				player.GainRealmPoints(amount / 10);
 			}
 			else
 			{
@@ -156,7 +217,7 @@ namespace DOL.GS.Scripts
 
 			return 0;
 		}
-		public static double CalculateRepairChance(GamePlayer player, GameLiving obj)
+		public static double CalculateRepairChance(GamePlayer player, GameObject obj)
 		{
 			double skill = player.GetCraftingSkillValue(eCraftingSkill.WoodWorking);
 			int skillneeded = (obj.Level + 1) * 50;
@@ -186,11 +247,11 @@ namespace DOL.GS.Scripts
 		public static int CalculatePlayersWood(GamePlayer player, int removeamount)
 		{
 			int amount = 0;
-			foreach (GenericItem item in player.Inventory.GetItemRange(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+			foreach (InventoryItem item in player.Inventory.GetItemRange(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
 			{
 				foreach (string name in WoodNames)
 				{
-					/*if (item.Name.Replace(" wooden boards", "").ToLower() == name)
+					if (item.Name.Replace(" wooden boards", "").ToLower() == name)
 					{
 						int woodvalue = GetWoodValue(item.Name.ToLower());
 						amount += item.Count * woodvalue;
@@ -209,7 +270,7 @@ namespace DOL.GS.Scripts
 							}
 						}
 						break;
-					}*/
+					}
 				}
 			}
 			return amount;

@@ -37,7 +37,6 @@ using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
-using NHibernate.Mapping.Attributes;
 /* I suggest you declare yourself some namespaces for your quests
  * Like: DOL.GS.Quests.Albion
  *       DOL.GS.Quests.Midgard
@@ -49,55 +48,12 @@ using NHibernate.Mapping.Attributes;
 
 namespace DOL.GS.Quests.Hibernia
 {
-	/* The first thing we do, is to declare the quest requirement
-	 * class linked with the new Quest. To do this, we derive 
-	 * from the abstract class AbstractQuestDescriptor
+	/* The first thing we do, is to declare the class we create
+	 * as Quest. To do this, we derive from the abstract class
+	 * AbstractQuest
+	 * 	 
 	 */
-	public class CityOfTirnaNogDescriptor : AbstractQuestDescriptor
-	{
-		/* This is the type of the quest class linked with 
-		 * this requirement class, you must override the 
-		 * base method like that
-		 */
-		public override Type LinkedQuestType
-		{
-			get { return typeof(CityOfTirnaNog); }
-		}
 
-		/* This value is used to retrieves how maximum level needed
-		 * to be able to make this quest. Override it only if you need, 
-		 * the default value is 50
-		 */
-		public override int MaxLevel
-		{
-			get { return 1; }
-		}
-
-		/* This method is used to know if the player is qualified to 
-		 * do the quest. The base method always test his level and
-		 * how many time the quest has been done. Override it only if 
-		 * you want to add a custom test (here we test also the class name)
-		 */
-		public override bool CheckQuestQualification(GamePlayer player)
-		{
-			// This checks below are only performed is player isn't doing quest already
-
-			if (player.HasFinishedQuest(typeof(ImportantDeliveryHib)) == 0)
-				return false;
-
-			if (!BaseAddirQuest.CheckPartAccessible(player, typeof(CityOfTirnaNog)))
-				return false;
-
-			return base.CheckQuestQualification(player);
-		}
-	}
-
-
-	/* The second thing we do, is to declare the class we create
-	 * as Quest. We must make it persistant using attributes, to
-	 * do this, we derive from the abstract class AbstractQuest
-	 */
-	[Subclass(NameType = typeof(CityOfTirnaNog), ExtendsType = typeof(AbstractQuest))] 
 	public class CityOfTirnaNog : BaseAddirQuest
 	{
 		/// <summary>
@@ -116,6 +72,8 @@ namespace DOL.GS.Quests.Hibernia
 		 */
 
 		protected const string questTitle = "City of Tir na Nog";
+		protected const int minimumLevel = 1;
+		protected const int maximumLevel = 1;
 
 		protected static GameLocation heroTrainer = new GameLocation("Hero Trainer", 201, 31555, 26198, 7767, 2462);
 		protected static GameLocation bladeMasterTrainer = new GameLocation("Blademaster Trainer", 201, 29819, 26485, 7767, 1403);
@@ -133,18 +91,39 @@ namespace DOL.GS.Quests.Hibernia
 		private GameNPC assistant = null;
 		private GameTimer assistantTimer = null;
 
-		private static GenericItemTemplate ticketToTirnaNog = null;
-		private static GenericItemTemplate ticketToMagMell = null;
+		private static ItemTemplate ticketToTirnaNog = null;
+		private static ItemTemplate ticketToMagMell = null;
 
-		private static GenericItemTemplate ticketToArdee = null;
+		private static ItemTemplate ticketToArdee = null;
 
-		private static GenericItemTemplate scrollHylvian = null;
-		private static GenericItemTemplate receiptFreagus = null;
-		private static GenericItemTemplate letterAddrir = null;
-		private static GenericItemTemplate assistantNecklace = null;
-		private static GenericItemTemplate chestOfCoins = null;
-		private static ShieldTemplate recruitsRoundShield = null;
-		private static BracerTemplate recruitsBracer = null;
+		private static ItemTemplate scrollHylvian = null;
+		private static ItemTemplate receiptFreagus = null;
+		private static ItemTemplate letterAddrir = null;
+		private static ItemTemplate assistantNecklace = null;
+		private static ItemTemplate chestOfCoins = null;
+		private static ItemTemplate recruitsRoundShield = null;
+		private static ItemTemplate recruitsBracer = null;
+
+
+		/* We need to define the constructors from the base class here, else there might be problems
+		 * when loading this quest...
+		 */
+		public CityOfTirnaNog() : base()
+		{
+		}
+
+		public CityOfTirnaNog(GamePlayer questingPlayer) : this(questingPlayer, 1)
+		{
+		}
+
+		public CityOfTirnaNog(GamePlayer questingPlayer, int step) : base(questingPlayer, step)
+		{
+		}
+
+		public CityOfTirnaNog(GamePlayer questingPlayer, DBQuest dbQuest) : base(questingPlayer, dbQuest)
+		{
+		}
+
 
 		/* The following method is called automatically when this quest class
 		 * is loaded. You might notice that this method is the same as in standard
@@ -164,6 +143,8 @@ namespace DOL.GS.Quests.Hibernia
 		[ScriptLoadedEvent]
 		public static void ScriptLoaded(DOLEvent e, object sender, EventArgs args)
 		{
+			if (!ServerProperties.Properties.LOAD_QUESTS)
+				return;
 			if (log.IsInfoEnabled)
 				log.Info("Quest \"" + questTitle + "\" initializing ...");
 			/* First thing we do in here is to search for the NPCs inside
@@ -183,17 +164,19 @@ namespace DOL.GS.Quests.Hibernia
 			GameNPC[] npcs = WorldMgr.GetNPCsByName("Bhreagar Hylvian", eRealm.Hibernia);
 			if (npcs.Length == 0)
 			{
-				hylvian = new GameMob();
+				hylvian = new GameNPC();
 				hylvian.Model = 384;
 				hylvian.Name = "Bhreagar Hylvian";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + hylvian.Name + ", creating ...");
 				hylvian.GuildName = "Part of " + questTitle + " Quest";
 				hylvian.Realm = (byte) eRealm.Hibernia;
-				hylvian.RegionId = 201;
+				hylvian.CurrentRegionID = 201;
 				hylvian.Size = 51;
 				hylvian.Level = 44;
-				hylvian.Position = new Point(33163, 31142, 8000);
+				hylvian.X = 33163;
+				hylvian.Y = 31142;
+				hylvian.Z = 8000;
 				hylvian.Heading = 11;
 				hylvian.EquipmentTemplateID = "7400147";
 				//You don't have to store the created mob in the db if you don't want,
@@ -217,10 +200,12 @@ namespace DOL.GS.Quests.Hibernia
 					log.Warn("Could not find " + freagus.Name + ", creating ...");
 				freagus.GuildName = "Stable Master";
 				freagus.Realm = (byte) eRealm.Hibernia;
-				freagus.RegionId = 200;
+				freagus.CurrentRegionID = 200;
 				freagus.Size = 48;
 				freagus.Level = 30;
-				freagus.Position = new Point(341008, 469180, 5200);
+				freagus.X = 341008;
+				freagus.Y = 469180;
+				freagus.Z = 5200;
 				freagus.Heading = 1934;
 				freagus.EquipmentTemplateID = "3800664";
 
@@ -244,11 +229,12 @@ namespace DOL.GS.Quests.Hibernia
 					log.Warn("Could not find " + gweonry.Name + ", creating ...");
 				gweonry.GuildName = "Stable Master";
 				gweonry.Realm = (byte) eRealm.Hibernia;
-				gweonry.RegionId = 200;
+				gweonry.CurrentRegionID = 200;
 				gweonry.Size = 48;
 				gweonry.Level = 30;
-				Zone z = WorldMgr.GetRegion(200).GetZone(200);
-				gweonry.Position = z.ToRegionPosition(new Point(16334, 3384, 5200));
+				gweonry.X = GameLocation.ConvertLocalXToGlobalX(16334, 200);
+				gweonry.Y = GameLocation.ConvertLocalYToGlobalY(3384, 200);
+				gweonry.Z = 5200;
 				gweonry.Heading = 245;
 				//gweonry.EquipmentTemplateID="3800664";
 
@@ -270,10 +256,10 @@ namespace DOL.GS.Quests.Hibernia
 			ticketToMagMell = CreateTicketTo("Mag Mell");
 			ticketToTirnaNog = CreateTicketTo("Tir na Nog");
 
-			scrollHylvian = (GenericItemTemplate) GameServer.Database.FindObjectByKey(typeof (GenericItemTemplate), "scroll_for_hylvian");
+			scrollHylvian = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "scroll_for_hylvian");
 			if (scrollHylvian == null)
 			{
-				scrollHylvian = new GenericItemTemplate();
+				scrollHylvian = new ItemTemplate();
 				scrollHylvian.Name = "Scroll for Vault Keeper Hylvian";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + scrollHylvian.Name + " , creating it ...");
@@ -281,11 +267,11 @@ namespace DOL.GS.Quests.Hibernia
 				scrollHylvian.Weight = 3;
 				scrollHylvian.Model = 498;
 
-				scrollHylvian.ItemTemplateID = "scroll_for_hylvian";
+				scrollHylvian.Object_Type = (int) eObjectType.GenericItem;
 
+				scrollHylvian.Id_nb = "scroll_for_hylvian";
+				scrollHylvian.IsPickable = true;
 				scrollHylvian.IsDropable = false;
-				scrollHylvian.IsSaleable = false;
-				scrollHylvian.IsTradable = false;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -295,10 +281,10 @@ namespace DOL.GS.Quests.Hibernia
 			}
 
 
-			receiptFreagus = (GenericItemTemplate) GameServer.Database.FindObjectByKey(typeof (GenericItemTemplate), "receipt_for_freagus");
+			receiptFreagus = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "receipt_for_freagus");
 			if (receiptFreagus == null)
 			{
-				receiptFreagus = new GenericItemTemplate();
+				receiptFreagus = new ItemTemplate();
 				receiptFreagus.Name = "Receipt for Freagus";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + receiptFreagus.Name + " , creating it ...");
@@ -306,11 +292,11 @@ namespace DOL.GS.Quests.Hibernia
 				receiptFreagus.Weight = 3;
 				receiptFreagus.Model = 498;
 
-				receiptFreagus.ItemTemplateID = "receipt_for_freagus";
+				receiptFreagus.Object_Type = (int) eObjectType.GenericItem;
 
+				receiptFreagus.Id_nb = "receipt_for_freagus";
+				receiptFreagus.IsPickable = true;
 				receiptFreagus.IsDropable = false;
-				receiptFreagus.IsSaleable = false;
-				receiptFreagus.IsTradable = false;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -319,10 +305,10 @@ namespace DOL.GS.Quests.Hibernia
 					GameServer.Database.AddNewObject(receiptFreagus);
 			}
 
-			chestOfCoins = (GenericItemTemplate) GameServer.Database.FindObjectByKey(typeof (GenericItemTemplate), "small_chest_of_coins");
+			chestOfCoins = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "small_chest_of_coins");
 			if (chestOfCoins == null)
 			{
-				chestOfCoins = new GenericItemTemplate();
+				chestOfCoins = new ItemTemplate();
 				chestOfCoins.Name = "Small Chest of Coins";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + chestOfCoins.Name + " , creating it ...");
@@ -330,11 +316,11 @@ namespace DOL.GS.Quests.Hibernia
 				chestOfCoins.Weight = 15;
 				chestOfCoins.Model = 602;
 
-				chestOfCoins.ItemTemplateID = "small_chest_of_coins";
+				chestOfCoins.Object_Type = (int) eObjectType.GenericItem;
 
+				chestOfCoins.Id_nb = "small_chest_of_coins";
+				chestOfCoins.IsPickable = true;
 				chestOfCoins.IsDropable = false;
-				chestOfCoins.IsSaleable = false;
-				chestOfCoins.IsTradable = false;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -343,10 +329,10 @@ namespace DOL.GS.Quests.Hibernia
 					GameServer.Database.AddNewObject(chestOfCoins);
 			}
 
-			letterAddrir = (GenericItemTemplate) GameServer.Database.FindObjectByKey(typeof (GenericItemTemplate), "letter_for_addrir");
+			letterAddrir = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "letter_for_addrir");
 			if (letterAddrir == null)
 			{
-				letterAddrir = new GenericItemTemplate();
+				letterAddrir = new ItemTemplate();
 				letterAddrir.Name = "Letter for Addrir";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + letterAddrir.Name + " , creating it ...");
@@ -354,11 +340,11 @@ namespace DOL.GS.Quests.Hibernia
 				letterAddrir.Weight = 3;
 				letterAddrir.Model = 498;
 
-				letterAddrir.ItemTemplateID = "letter_for_addrir";
+				letterAddrir.Object_Type = (int) eObjectType.GenericItem;
 
+				letterAddrir.Id_nb = "letter_for_addrir";
+				letterAddrir.IsPickable = true;
 				letterAddrir.IsDropable = false;
-				letterAddrir.IsSaleable = false;
-				letterAddrir.IsTradable = false;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -367,10 +353,10 @@ namespace DOL.GS.Quests.Hibernia
 					GameServer.Database.AddNewObject(letterAddrir);
 			}
 
-			assistantNecklace = (GenericItemTemplate) GameServer.Database.FindObjectByKey(typeof (GenericItemTemplate), "assistant_necklace");
+			assistantNecklace = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "assistant_necklace");
 			if (assistantNecklace == null)
 			{
-				assistantNecklace = new GenericItemTemplate();
+				assistantNecklace = new ItemTemplate();
 				assistantNecklace.Name = "Assistant's Necklace";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + assistantNecklace.Name + " , creating it ...");
@@ -378,11 +364,12 @@ namespace DOL.GS.Quests.Hibernia
 				assistantNecklace.Weight = 3;
 				assistantNecklace.Model = 101;
 
-				assistantNecklace.ItemTemplateID = "assistant_necklace";
+				assistantNecklace.Object_Type = (int) eObjectType.Magical;
+				assistantNecklace.Item_Type = (int) eEquipmentItems.NECK;
 
+				assistantNecklace.Id_nb = "assistant_necklace";
+				assistantNecklace.IsPickable = true;
 				assistantNecklace.IsDropable = false;
-				assistantNecklace.IsSaleable = false;
-				assistantNecklace.IsTradable = false;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -392,32 +379,46 @@ namespace DOL.GS.Quests.Hibernia
 			}
 
 			// item db check
-			recruitsRoundShield = (ShieldTemplate) GameServer.Database.FindObjectByKey(typeof (ShieldTemplate), "recruits_round_shield_hib");
+			recruitsRoundShield = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_round_shield_hib");
 			if (recruitsRoundShield == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Recruit's Round Shield, creating it ...");
-				recruitsRoundShield = new ShieldTemplate();
+				recruitsRoundShield = new ItemTemplate();
 				recruitsRoundShield.Name = "Recruit's Round Shield (Hib)";
 				recruitsRoundShield.Level = 4;
 
 				recruitsRoundShield.Weight = 31;
 				recruitsRoundShield.Model = 59; // studded Boots                
 
-				recruitsRoundShield.ItemTemplateID = "recruits_round_shield_hib";
-				recruitsRoundShield.Value = 400;
-
+				recruitsRoundShield.Object_Type = 0x2A; // (int)eObjectType.Shield;
+				recruitsRoundShield.Item_Type = (int) eEquipmentItems.LEFT_HAND;
+				recruitsRoundShield.Id_nb = "recruits_round_shield_hib";
+				recruitsRoundShield.Gold = 0;
+				recruitsRoundShield.Silver = 4;
+				recruitsRoundShield.Copper = 0;
+				recruitsRoundShield.IsPickable = true;
 				recruitsRoundShield.IsDropable = true;
-				recruitsRoundShield.IsSaleable = true;
-				recruitsRoundShield.IsTradable = true;
 				recruitsRoundShield.Color = 69;
-				recruitsRoundShield.Speed = 1;
-				recruitsRoundShield.DamagePerSecond = 1;
+				recruitsRoundShield.Hand = 2;
+				recruitsRoundShield.DPS_AF = 1;
+				recruitsRoundShield.SPD_ABS = 1;
+
+				recruitsRoundShield.Type_Damage = 1;
 
 				recruitsRoundShield.Bonus = 1; // default bonus
 
-				recruitsRoundShield.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 1));
-				recruitsRoundShield.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Body, 1));
+				recruitsRoundShield.Bonus1 = 1;
+				recruitsRoundShield.Bonus1Type = (int) eStat.STR;
+
+				recruitsRoundShield.Bonus2 = 1;
+				recruitsRoundShield.Bonus2Type = (int) eResist.Body;
+
+				recruitsRoundShield.Quality = 100;
+				recruitsRoundShield.Condition = 1000;
+				recruitsRoundShield.MaxCondition = 1000;
+				recruitsRoundShield.Durability = 1000;
+				recruitsRoundShield.MaxDurability = 1000;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -427,10 +428,10 @@ namespace DOL.GS.Quests.Hibernia
 			}
 
 			// item db check
-			recruitsBracer = (BracerTemplate) GameServer.Database.FindObjectByKey(typeof (BracerTemplate), "recruits_silver_bracer");
+			recruitsBracer = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_silver_bracer");
 			if (recruitsBracer == null)
 			{
-				recruitsBracer = new BracerTemplate();
+				recruitsBracer = new ItemTemplate();
 				recruitsBracer.Name = "Recruit's Silver Bracer";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + recruitsBracer.Name + ", creating it ...");
@@ -439,17 +440,34 @@ namespace DOL.GS.Quests.Hibernia
 				recruitsBracer.Weight = 10;
 				recruitsBracer.Model = 130;
 
-				recruitsBracer.ItemTemplateID = "recruits_silver_bracer";
-				recruitsBracer.Value = 400;
-
+				recruitsBracer.Object_Type = (int) eObjectType.Magical;
+				recruitsBracer.Item_Type = (int) eEquipmentItems.L_BRACER;
+				recruitsBracer.Id_nb = "recruits_silver_bracer";
+				recruitsBracer.Gold = 0;
+				recruitsBracer.Silver = 4;
+				recruitsBracer.Copper = 0;
+				recruitsBracer.IsPickable = true;
 				recruitsBracer.IsDropable = true;
-				recruitsBracer.IsSaleable = true;
-				recruitsBracer.IsTradable = true;
+				//recruitsBracer.Color = 36;
+				//recruitsBracer.Hand = 2;
+				//recruitsBracer.DPS_AF = 1;
+				//recruitsBracer.SPD_ABS = 1;
+
+				//recruitsBracer.Type_Damage = 1;
 
 				recruitsBracer.Bonus = 1; // default bonus
 
-				recruitsBracer.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 8));
-				recruitsBracer.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Crush, 1));
+				recruitsBracer.Bonus1 = 8;
+				recruitsBracer.Bonus1Type = (int) eProperty.MaxHealth;
+
+				recruitsBracer.Bonus2 = 1;
+				recruitsBracer.Bonus2Type = (int) eResist.Crush;
+
+				recruitsBracer.Quality = 100;
+				recruitsBracer.Condition = 1000;
+				recruitsBracer.MaxCondition = 1000;
+				recruitsBracer.Durability = 1000;
+				recruitsBracer.MaxDurability = 1000;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -467,7 +485,10 @@ namespace DOL.GS.Quests.Hibernia
 			* method. This means, the "TalkToXXX" method is called whenever
 			* a player right clicks on him or when he whispers to him.
 			*/
-			//We want to be notified whenever a player enters the world            
+			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
+			//We want to be notified whenever a player enters the world   
 			GameEventMgr.AddHandler(GamePlayerEvent.GameEntered, new DOLEventHandler(PlayerEnterWorld));
 
 			GameEventMgr.AddHandler(addrir, GameLivingEvent.Interact, new DOLEventHandler(TalkToAddrir));
@@ -482,7 +503,7 @@ namespace DOL.GS.Quests.Hibernia
 			GameEventMgr.AddHandler(gweonry, GameLivingEvent.Interact, new DOLEventHandler(TalkToGweonry));
 
 			/* Now we bring to freagus the possibility to give this quest to players */
-			QuestMgr.AddQuestDescriptor(freagus, typeof(CityOfTirnaNogDescriptor));
+			freagus.AddQuestToGive(typeof (CityOfTirnaNog));
 
 			if (log.IsInfoEnabled)
 				log.Info("Quest \"" + questTitle + "\" initialized");
@@ -502,13 +523,15 @@ namespace DOL.GS.Quests.Hibernia
 			/* If sirQuait has not been initialized, then we don't have to remove any
 			 * hooks from him ;-)
 			 */
-
 			if (addrir == null)
 				return;
 
 			/* Removing hooks works just as adding them but instead of 
 			 * AddHandler, we call RemoveHandler, the parameters stay the same
 			 */
+			GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
 			GameEventMgr.RemoveHandler(GamePlayerEvent.GameEntered, new DOLEventHandler(PlayerEnterWorld));
 
 			GameEventMgr.RemoveHandler(addrir, GameLivingEvent.Interact, new DOLEventHandler(TalkToAddrir));
@@ -523,7 +546,7 @@ namespace DOL.GS.Quests.Hibernia
 			GameEventMgr.RemoveHandler(gweonry, GameLivingEvent.Interact, new DOLEventHandler(TalkToGweonry));
 
 			/* Now we remove to freagus the possibility to give this quest to players */
-			QuestMgr.RemoveQuestDescriptor(freagus, typeof(CityOfTirnaNogDescriptor));
+			freagus.RemoveQuestToGive(typeof (CityOfTirnaNog));
 		}
 
 		/* This is the method we declared as callback for the hooks we set to
@@ -538,7 +561,7 @@ namespace DOL.GS.Quests.Hibernia
 			if (player == null)
 				return;
 
-			if (QuestMgr.CanGiveQuest(typeof(CityOfTirnaNog), player, freagus) <= 0)
+			if(freagus.CanGiveQuest(typeof (CityOfTirnaNog), player)  <= 0)
 				return;
 
 			//We also check if the player is already doing the quest
@@ -591,7 +614,7 @@ namespace DOL.GS.Quests.Hibernia
 			if (player == null)
 				return;
 
-			if (QuestMgr.CanGiveQuest(typeof(CityOfTirnaNog), player, freagus) <= 0)
+			if(freagus.CanGiveQuest(typeof (CityOfTirnaNog), player)  <= 0)
 				return;
 
 			//We also check if the player is already doing the quest
@@ -619,7 +642,7 @@ namespace DOL.GS.Quests.Hibernia
 			if (player == null)
 				return;
 
-			if (QuestMgr.CanGiveQuest(typeof(CityOfTirnaNog), player, freagus) <= 0)
+			if(freagus.CanGiveQuest(typeof (CityOfTirnaNog), player)  <= 0)
 				return;
 
 			//We also check if the player is already doing the quest
@@ -656,8 +679,8 @@ namespace DOL.GS.Quests.Hibernia
 							hylvian.SayTo(player, "Here you are my friend. Please be sure to take this receipt back to Freagus for me. Be safe, and if you need to deposit some items, be sure to come back to me. If you wish to return to Ardee faster, visit with Gweonry outside of the Tir na Nog east gates. He will have a horse ticket ready for you.");
 							if (quest.Step == 6)
 							{
-								player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, receiptFreagus.CreateInstance());
-								player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, ticketToArdee.CreateInstance());
+								GiveItem(hylvian, player, receiptFreagus);
+								GiveItem(hylvian, player, ticketToArdee);
 								quest.Step = 7;
 							}
 							break;
@@ -673,7 +696,7 @@ namespace DOL.GS.Quests.Hibernia
 			if (player == null)
 				return;
 
-			if (QuestMgr.CanGiveQuest(typeof(CityOfTirnaNog), player, freagus) <= 0)
+			if(freagus.CanGiveQuest(typeof (CityOfTirnaNog), player)  <= 0)
 				return;
 
 			//We also check if the player is already doing the quest
@@ -712,7 +735,7 @@ namespace DOL.GS.Quests.Hibernia
 							freagus.SayTo(player, "By the time I close my stable down for the evening, the vault keeper has already gone home. You have already helped me once Lirone, will you help me [again]?");
 							break;
 						case "again":
-							player.Out.SendCustomDialog("Will you travel to Tir na Nog for Freagus?", new CustomDialogResponse(CheckPlayerAcceptQuest));
+							player.Out.SendQuestSubscribeCommand(freagus, QuestMgr.GetIDForQuestType(typeof(CityOfTirnaNog)), "Will you travel to Tir na Nog for Freagus?");
 							break;
 					}
 				}
@@ -729,6 +752,10 @@ namespace DOL.GS.Quests.Hibernia
 						case "city":
 							freagus.SayTo(player, "Take the horse to Tir na Nog, then, once you enter, USE the necklace. Don't worry, I'm sure your journal there will help you out. Come back after you've visited the vault keeper.");
 							break;
+
+						case "abort":
+							player.Out.SendCustomDialog("Do you really want to abort this quest, \nall items gained during quest will be lost?", new CustomDialogResponse(CheckPlayerAbortQuest));
+							break;
 					}
 				}
 			}
@@ -741,7 +768,7 @@ namespace DOL.GS.Quests.Hibernia
 			if (player == null)
 				return;
 
-			if (QuestMgr.CanGiveQuest(typeof(CityOfTirnaNog), player, freagus) <= 0)
+			if(freagus.CanGiveQuest(typeof (CityOfTirnaNog), player)  <= 0)
 				return;
 
 			//We also check if the player is already doing the quest
@@ -864,7 +891,7 @@ namespace DOL.GS.Quests.Hibernia
 				return;
 
 			// assistant works only in tir na nog...
-			if (player.RegionId != 201)
+			if (player.CurrentRegionID != 201)
 				return;
 
 			CityOfTirnaNog quest = (CityOfTirnaNog) player.IsDoingQuest(typeof (CityOfTirnaNog));
@@ -873,8 +900,8 @@ namespace DOL.GS.Quests.Hibernia
 
 			UseSlotEventArgs uArgs = (UseSlotEventArgs) args;
 
-			GenericItem item = player.Inventory.GetItem((eInventorySlot)uArgs.Slot);
-			if (item != null && item.Name == assistantNecklace.Name)
+			InventoryItem item = player.Inventory.GetItem((eInventorySlot)uArgs.Slot);
+			if (item != null && item.Id_nb == assistantNecklace.Id_nb)
 			{
 				foreach (GamePlayer visPlayer in player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 				{
@@ -907,25 +934,21 @@ namespace DOL.GS.Quests.Hibernia
 		{
 			if (assistant != null && assistant.ObjectState == GameObject.eObjectState.Active)
 			{
-				Point pos = m_questPlayer.Position;
-				pos.X += 50;
-				pos.Y += 30;
-				assistant.MoveTo((ushort)m_questPlayer.RegionId, pos, (ushort)m_questPlayer.Heading);
+				assistant.MoveTo(m_questPlayer.CurrentRegionID, m_questPlayer.X + 50, m_questPlayer.Y + 30, m_questPlayer.Z, m_questPlayer.Heading);
 			}
 			else
 			{
-				assistant = new GameMob();
+				assistant = new GameNPC();
 				assistant.Model = 951;
 				assistant.Name = m_questPlayer.Name + "'s Assistant";
 				assistant.GuildName = "Part of " + questTitle + " Quest";
 				assistant.Realm = m_questPlayer.Realm;
-				assistant.RegionId = m_questPlayer.RegionId;
+				assistant.CurrentRegionID = m_questPlayer.CurrentRegionID;
 				assistant.Size = 25;
 				assistant.Level = 5;
-				Point pos = m_questPlayer.Position;
-				pos.X += 50;
-				pos.Y += 50;
-				assistant.Position = pos;
+				assistant.X = m_questPlayer.X + 50;
+				assistant.Y = m_questPlayer.Y + 50;
+				assistant.Z = m_questPlayer.Z;
 				assistant.Heading = m_questPlayer.Heading;
 
 				assistant.AddToWorld();
@@ -948,6 +971,69 @@ namespace DOL.GS.Quests.Hibernia
 			return 0;
 		}
 
+		/// <summary>
+		/// This method checks if a player qualifies for this quest
+		/// </summary>
+		/// <returns>true if qualified, false if not</returns>
+		public override bool CheckQuestQualification(GamePlayer player)
+		{
+			// if the player is already doing the quest his level is no longer of relevance
+			if (player.IsDoingQuest(typeof (CityOfTirnaNog)) != null)
+				return true;
+
+			// This checks below are only performed is player isn't doing quest already
+
+			if (player.HasFinishedQuest(typeof (ImportantDelivery)) == 0)
+				return false;
+
+			if (!CheckPartAccessible(player, typeof (CityOfTirnaNog)))
+				return false;
+
+			if (player.Level < minimumLevel || player.Level > maximumLevel)
+				return false;
+
+			return true;
+		}
+
+
+		/* This is our callback hook that will be called when the player clicks
+		 * on any button in the quest offer dialog. We check if he accepts or
+		 * declines here...
+		 */
+
+		private static void CheckPlayerAbortQuest(GamePlayer player, byte response)
+		{
+			CityOfTirnaNog quest = player.IsDoingQuest(typeof (CityOfTirnaNog)) as CityOfTirnaNog;
+
+			if (quest == null)
+				return;
+
+			if (response == 0x00)
+			{
+				SendSystemMessage(player, "Good, no go out there and finish your work!");
+			}
+			else
+			{
+				SendSystemMessage(player, "Aborting Quest " + questTitle + ". You can start over again if you want.");
+				quest.AbortQuest();
+			}
+		}
+
+		protected static void SubscribeQuest(DOLEvent e, object sender, EventArgs args)
+		{
+			QuestEventArgs qargs = args as QuestEventArgs;
+			if (qargs == null)
+				return;
+
+			if (qargs.QuestID != QuestMgr.GetIDForQuestType(typeof(CityOfTirnaNog)))
+				return;
+
+			if (e == GamePlayerEvent.AcceptQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x01);
+			else if (e == GamePlayerEvent.DeclineQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x00);
+		}
+
 		/* This is our callback hook that will be called when the player clicks
 		 * on any button in the quest offer dialog. We check if he accepts or
 		 * declines here...
@@ -957,7 +1043,7 @@ namespace DOL.GS.Quests.Hibernia
 		{
 			//We recheck the qualification, because we don't talk to players
 			//who are not doing the quest
-			if (QuestMgr.CanGiveQuest(typeof(CityOfTirnaNog), player, freagus) <= 0)
+			if(freagus.CanGiveQuest(typeof (CityOfTirnaNog), player)  <= 0)
 				return;
 
 			CityOfTirnaNog quest = player.IsDoingQuest(typeof (CityOfTirnaNog)) as CityOfTirnaNog;
@@ -972,14 +1058,15 @@ namespace DOL.GS.Quests.Hibernia
 			else
 			{
 				//Check if we can add the quest!
-				if (!QuestMgr.GiveQuestToPlayer(typeof(CityOfTirnaNog), player))
+				if (!freagus.GiveQuest(typeof (CityOfTirnaNog), player, 1))
 					return;
 
 				freagus.SayTo(player, "Ah! Wonderful. I have several things for you for your trip into [Tir na Nog].");
-				player.ReceiveItem(freagus, assistantNecklace.CreateInstance());
-				player.ReceiveItem(freagus, chestOfCoins.CreateInstance());
-				player.ReceiveItem(freagus, scrollHylvian.CreateInstance());
-				player.ReceiveItem(freagus, ticketToTirnaNog.CreateInstance());
+
+				GiveItem(freagus, player, assistantNecklace);
+				GiveItem(freagus, player, chestOfCoins);
+				GiveItem(freagus, player, scrollHylvian);
+				GiveItem(freagus, player, ticketToTirnaNog);
 				player.GainExperience(7, 0, 0, true);
 
 				GameEventMgr.AddHandler(player, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
@@ -1030,9 +1117,9 @@ namespace DOL.GS.Quests.Hibernia
 						return "[Step #9] Return to Mag Mell and hand Addrir the note. Wait for him to read the note from Freagus. If he stops speaking with you, ask if he is [finished] with the letter.";
 					case 10:
 						return "[Step #10] Wait for Addrir to reward you. If he stops speaking with you at any time, ask if there is a [reward] for your efforts.";
-					default:
-						return "[Step #" + Step + "] No Description entered for this step!";
+
 				}
+				return base.Description;
 			}
 		}
 
@@ -1046,10 +1133,10 @@ namespace DOL.GS.Quests.Hibernia
 			if (Step <= 4 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == hylvian.Name && gArgs.Item.Name == scrollHylvian.Name)
+				if (gArgs.Target.Name == hylvian.Name && gArgs.Item.Id_nb == scrollHylvian.Id_nb)
 				{
 					hylvian.SayTo(player, "Ah, from Freagus. He wishes to make a deposit. Alright then, if you will, please hand me the Small Chest of Coins.");
-					RemoveItemFromPlayer(hylvian, scrollHylvian);
+					RemoveItem(hylvian, player, scrollHylvian);
 					Step = 5;
 					return;
 				}
@@ -1058,10 +1145,10 @@ namespace DOL.GS.Quests.Hibernia
 			if (Step == 5 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == hylvian.Name && gArgs.Item.Name == chestOfCoins.Name)
+				if (gArgs.Target.Name == hylvian.Name && gArgs.Item.Id_nb == chestOfCoins.Id_nb)
 				{
 					hylvian.SayTo(player, "This chest is quite heavy. Business must be booming for Freagus. Now, if you will just wait but a moment, I will be sure to get a receipt for you to take back to him.");
-					RemoveItemFromPlayer(hylvian, chestOfCoins);
+					RemoveItem(hylvian, player, chestOfCoins);
 					Step = 6;
 
 					SendEmoteMessage(player, "Bhreagar begins to count the coins. When he is done, he pulls out a piece of parchment and writes a few things down. He then seals it with his personal seal.");
@@ -1072,15 +1159,15 @@ namespace DOL.GS.Quests.Hibernia
 			if (Step == 8 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == freagus.Name && gArgs.Item.Name == receiptFreagus.Name)
+				if (gArgs.Target.Name == freagus.Name && gArgs.Item.Id_nb == receiptFreagus.Id_nb)
 				{
 					freagus.SayTo(player, "Ah! My receipt. Thank you so much Lirone. Here, take this note back to Addrir in Mag Mell for me please. I would like to let him know what a fine person you are for assisting me twice now! Be safe on your journey back to Mag Mell.");
 
-					RemoveItemFromPlayer(freagus, receiptFreagus);
-					RemoveItemFromPlayer(freagus, assistantNecklace);
+					RemoveItem(freagus, player, receiptFreagus);
+					RemoveItem(freagus, player, assistantNecklace);
 
-					GiveItemToPlayer(freagus, ticketToMagMell.CreateInstance());
-					GiveItemToPlayer(freagus, letterAddrir.CreateInstance());
+					GiveItem(freagus, player, ticketToMagMell);
+					GiveItem(freagus, player, letterAddrir);
 					Step = 9;
 					return;
 				}
@@ -1089,13 +1176,13 @@ namespace DOL.GS.Quests.Hibernia
 			if (Step == 9 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == addrir.Name && gArgs.Item.Name == letterAddrir.Name)
+				if (gArgs.Target.Name == addrir.Name && gArgs.Item.Id_nb == letterAddrir.Id_nb)
 				{
 					addrir.SayTo(player, "Hmm...What's this?");
 					SendSystemMessage(player, "Addrir reads over the note carefully then returns his attentions to you.");
-					addrir.Emote(eEmote.Ponder);
+					player.Out.SendEmoteAnimation(addrir, eEmote.Ponder);
 
-					RemoveItemFromPlayer(addrir, letterAddrir);
+					RemoveItem(addrir, player, letterAddrir);
 					Step = 10;
 					return;
 				}
@@ -1103,15 +1190,39 @@ namespace DOL.GS.Quests.Hibernia
 
 		}
 
+		public override void AbortQuest()
+		{
+			base.AbortQuest(); //Defined in Quest, changes the state, stores in DB etc ...
+
+			RemoveItem(m_questPlayer, assistantNecklace, false);
+			RemoveItem(m_questPlayer, chestOfCoins, false);
+			RemoveItem(m_questPlayer, letterAddrir, false);
+			RemoveItem(m_questPlayer, scrollHylvian, false);
+			RemoveItem(m_questPlayer, ticketToArdee, false);
+			RemoveItem(m_questPlayer, ticketToMagMell, false);
+			RemoveItem(m_questPlayer, ticketToTirnaNog, false);
+
+			// remove the 7 xp you get on quest start for beeing so nice to bombard again.
+			m_questPlayer.GainExperience(-7, 0, 0, true);
+
+			if (assistantTimer != null)
+			{
+				assistantTimer.Start(1);
+			}
+
+			GameEventMgr.RemoveHandler(m_questPlayer, GamePlayerEvent.UseSlot, new DOLEventHandler(PlayerUseSlot));
+			GameEventMgr.RemoveHandler(m_questPlayer, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
+		}
+
 		public override void FinishQuest()
 		{
 			base.FinishQuest(); //Defined in Quest, changes the state, stores in DB etc ...
 
 			//Give reward to player here ...            
-			if (m_questPlayer.HasAbilityToUseItem(recruitsRoundShield.CreateInstance() as EquipableItem))
-				GiveItemToPlayer(addrir, recruitsRoundShield.CreateInstance());
+			if (m_questPlayer.HasAbilityToUseItem(recruitsRoundShield))
+				GiveItem(addrir, m_questPlayer, recruitsRoundShield);
 			else
-				GiveItemToPlayer(addrir, recruitsBracer.CreateInstance());
+				GiveItem(addrir, m_questPlayer, recruitsBracer);
 
 			m_questPlayer.GainExperience(26, 0, 0, true);
 			m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 2, Util.Random(50)), "You recieve {0} as a reward.");

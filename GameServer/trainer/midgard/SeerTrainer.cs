@@ -17,119 +17,25 @@
  *
  */
 using System;
-using System.Collections;
-using System.Reflection;
-using DOL.Database;
-using DOL.Events;
 using DOL.GS.PacketHandler;
-using DOL.GS.Database;
-using log4net;
+using DOL.Database;
 
 namespace DOL.GS.Trainer
 {
 	/// <summary>
 	/// Seer Trainer
 	/// </summary>	
-	public class SeerTrainer : GameStandardTrainer
+	[NPCGuildScript("Seer Trainer", eRealm.Midgard)]		// this attribute instructs DOL to use this script for all "Acolyte Trainer" NPC's in Albion (multiple guilds are possible for one script)
+	public class SeerTrainer : GameTrainer
 	{
 		/// <summary>
-		/// Defines a logger for this class.
+		/// The practice weapon template ID
 		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
+		public const string PRACTICE_WEAPON_ID = "training_hammer";
 		/// <summary>
-		/// This function is called at the server startup
-		/// </summary>	
-		[GameServerStartedEvent]
-		public static void OnServerStartup(DOLEvent e, object sender, EventArgs args)
-		{
-			#region Training hammer
-
-			HammerTemplate training_hammer_template = new HammerTemplate();
-			training_hammer_template.Name = "training hammer";
-			training_hammer_template.Level = 0;
-			training_hammer_template.Durability = 100;
-			training_hammer_template.Condition = 100;
-			training_hammer_template.Quality = 90;
-			training_hammer_template.Bonus = 0;
-			training_hammer_template.DamagePerSecond = 13;
-			training_hammer_template.Speed = 3000;
-			training_hammer_template.HandNeeded = eHandNeeded.RightHand;
-			training_hammer_template.Weight = 32;
-			training_hammer_template.Model = 321;
-			training_hammer_template.Realm = eRealm.Midgard;
-			training_hammer_template.IsDropable = true; 
-			training_hammer_template.IsTradable = false; 
-			training_hammer_template.IsSaleable = false;
-			training_hammer_template.MaterialLevel = eMaterialLevel.Bronze;
-			
-			if(!allStartupItems.Contains(training_hammer_template))
-			{
-				allStartupItems.Add(training_hammer_template);
-			
-				if (log.IsDebugEnabled)
-					log.Debug("Adding " + training_hammer_template.Name + " to SeerTrainer gifts.");
-			}
-			#endregion
-
-			#region Training shield
-
-			ShieldTemplate small_training_shield_template = new ShieldTemplate();
-			small_training_shield_template.Name = "small training shield";
-			small_training_shield_template.Level = 2;
-			small_training_shield_template.Durability = 100;
-			small_training_shield_template.Condition = 100;
-			small_training_shield_template.Quality = 100;
-			small_training_shield_template.Bonus = 0;
-			small_training_shield_template.DamagePerSecond = 10;
-			small_training_shield_template.Speed = 2000;
-			small_training_shield_template.Size = eShieldSize.Small;
-			small_training_shield_template.Weight = 32;
-			small_training_shield_template.Model = 59;
-			small_training_shield_template.Realm = eRealm.Midgard;
-			small_training_shield_template.IsDropable = true; 
-			small_training_shield_template.IsTradable = false; 
-			small_training_shield_template.IsSaleable = false;
-			small_training_shield_template.MaterialLevel = eMaterialLevel.Bronze;
-		
-			if(!allStartupItems.Contains(small_training_shield_template))
-			{
-				allStartupItems.Add(small_training_shield_template);
-			
-				if (log.IsDebugEnabled)
-					log.Debug("Adding " + small_training_shield_template.Name + " to SeerTrainer gifts.");
-			}
-			#endregion
-		}
-
-		/// <summary>
-		/// This hash constrain all item template the trainer can give
-		/// </summary>	
-		protected static IList allStartupItems = new ArrayList();
-
-		/// <summary>
-		/// Gets all trainer gifts
+		/// The practice shield template ID
 		/// </summary>
-		public override IList TrainerGifts
-		{
-			get { return allStartupItems; }
-		}
-
-		/// <summary>
-		/// Gets trainer classname
-		/// </summary>
-		public override string TrainerClassName
-		{
-			get { return "Seer"; }
-		}
-
-		/// <summary>
-		/// Gets trained class
-		/// </summary>
-		public override eCharacterClass TrainedClass
-		{
-			get { return eCharacterClass.Seer; }
-		}
+		public const string PRACTICE_SHIELD_ID = "small_training_shield";
 
 		/// <summary>
 		/// Interact with trainer
@@ -139,9 +45,30 @@ namespace DOL.GS.Trainer
  		public override bool Interact(GamePlayer player)
  		{		
  			if (!base.Interact(player)) return false;
+								
+			// check if class matches				
+			if (player.CharacterClass.ID == (int) eCharacterClass.Seer) {
 
-			player.Out.SendMessage(this.Name + " says, \"[Shaman] or [Healer]?\"", eChatType.CT_Say, eChatLoc.CL_PopupWindow);												
+				// popup the training window
+				player.Out.SendTrainerWindow();
+							
+				// player can be promoted
+				if (player.Level>=5) {
+					player.Out.SendMessage(this.Name + " says, \"You must now seek your training elsewhere. Which path would you like to follow? [Shaman] or [Healer]?\"", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+				} else {
+					//player.Out.SendMessage(this.Name + " says, \"Select what you like to train.\"", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+				}
 
+				// ask for basic equipment if player doesnt own it
+				if (player.Inventory.GetFirstItemByID(PRACTICE_WEAPON_ID, eInventorySlot.Min_Inv, eInventorySlot.Max_Inv) == null) {
+					player.Out.SendMessage(this.Name + " says, \"Do you require a [practice weapon]?\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
+				}
+				if (player.Inventory.GetFirstItemByID(PRACTICE_SHIELD_ID, eInventorySlot.Min_Inv, eInventorySlot.Max_Inv) == null) {
+					player.Out.SendMessage(this.Name + " says, \"Do you require a [training shield]?\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
+				}
+			} else {
+				player.Out.SendMessage(this.Name + " says, \"You must seek elsewhere for your training.\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
+			}
 			return true;
 		}
 
@@ -158,7 +85,8 @@ namespace DOL.GS.Trainer
 
 			switch (text) {
 			case "Shaman":
-				if(player.Race == (int) eRace.Frostalf || player.Race == (int) eRace.Kobold || player.Race == (int) eRace.Troll){
+				if(player.Race == (int)eRace.Frostalf || player.Race == (int)eRace.Kobold || player.Race == (int)eRace.Troll || player.Race == (int)eRace.MidgardMinotaur)
+				{
 					player.Out.SendMessage(this.Name + " says, \"I can't tell you something about this class.\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
 				}
 				else{
@@ -171,6 +99,18 @@ namespace DOL.GS.Trainer
 				}
 				else{
 					player.Out.SendMessage(this.Name + " says, \"The path of a Healer is not available to your race. Please choose another.\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
+				}
+				return true;
+			case "practice weapon":
+				if (player.Inventory.GetFirstItemByID(PRACTICE_WEAPON_ID, eInventorySlot.Min_Inv, eInventorySlot.Max_Inv) == null)
+				{
+					player.ReceiveItem(this,PRACTICE_WEAPON_ID);
+				}
+				return true;
+			case "training shield":
+				if (player.Inventory.GetFirstItemByID(PRACTICE_SHIELD_ID, eInventorySlot.Min_Inv, eInventorySlot.Max_Inv) == null)
+				{
+					player.ReceiveItem(this,PRACTICE_SHIELD_ID);
 				}
 				return true;
 			}

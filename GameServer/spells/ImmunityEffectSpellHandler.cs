@@ -19,7 +19,7 @@
 using System;
 using System.Collections;
 using DOL.AI.Brain;
-using DOL.GS.Database;
+using DOL.Database;
 using DOL.GS.Effects;
 
 namespace DOL.GS.Spells
@@ -32,9 +32,9 @@ namespace DOL.GS.Spells
 		/// <summary>
 		/// called when spell effect has to be started and applied to targets
 		/// </summary>
-		public override void FinishSpellCast(GameLivingBase target)
+		public override void FinishSpellCast(GameLiving target)
 		{
-			m_caster.ChangeMana(null, -CalculateNeededPower(target));
+			m_caster.Mana -= CalculateNeededPower(target);
 			base.FinishSpellCast(target);
 		}
 
@@ -42,6 +42,7 @@ namespace DOL.GS.Spells
 		/// Determines wether this spell is better than given one
 		/// </summary>
 		/// <param name="oldeffect"></param>
+		/// <param name="neweffect"></param>
 		/// <returns>true if this spell is better version than compare spell</returns>
 		public override bool IsNewEffectBetter(GameSpellEffect oldeffect, GameSpellEffect neweffect)
 		{
@@ -56,8 +57,8 @@ namespace DOL.GS.Spells
 		/// <param name="effectiveness">factor from 0..1 (0%-100%)</param>
 		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
 		{
-			Caster.LastAttackTick = Caster.Region.Time;
-			target.LastAttackedByEnemyTick = target.Region.Time;
+			Caster.LastAttackTick = Caster.CurrentRegion.Time;
+			target.LastAttackedByEnemyTick = target.CurrentRegion.Time;
 
 			base.ApplyEffectOnTarget(target, effectiveness);
 
@@ -108,7 +109,12 @@ namespace DOL.GS.Spells
 			return new GameSpellAndImmunityEffect(this, CalculateEffectDuration(target, effectiveness), 0, effectiveness);
 		}
 
-		// constructor
+		/// <summary>
+		/// constructor
+		/// </summary>
+		/// <param name="caster">The spell caster</param>
+		/// <param name="spell">The spell being cast</param>
+		/// <param name="spellLine">The spell's spellline</param>
 		public ImmunityEffectSpellHandler(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) {}
 	}
 }

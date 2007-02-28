@@ -155,5 +155,14 @@ namespace DOL
 			int size = ReadByte();
 			return ReadString(size);
 		}
+
+		public virtual uint ReadIntLowEndian()
+		{
+			byte v1 = (byte)ReadByte();
+			byte v2 = (byte)ReadByte();
+			byte v3 = (byte)ReadByte();
+			byte v4 = (byte)ReadByte();
+			return Marshal.ConvertToUInt32(v4, v3, v2, v1);
+		}
 	}
 }

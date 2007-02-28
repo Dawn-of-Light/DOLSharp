@@ -17,7 +17,6 @@
  *
  */
 using System;
-using DOL.GS.Database;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 
@@ -85,15 +84,15 @@ namespace DOL.GS.Spells
 			SendDamageMessages(ad);
 
 			// attacker must be null, attack result is 0x0A
-			foreach(GamePlayer player in ad.Target.GetInRadius(typeof(GamePlayer), WorldMgr.VISIBILITY_DISTANCE)) 
+			foreach(GamePlayer player in ad.Target.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE)) 
 			{
 				player.Out.SendCombatAnimation(null, ad.Target, 0, 0, 0, 0, 0x0A, ad.Target.HealthPercent);
 			}
 			// send animation before dealing damage else dead livings show no animation
-			ad.Target.OnAttackedByEnemy(ad, ad.Target);
+			ad.Target.OnAttackedByEnemy(ad);
 			ad.Attacker.DealDamage(ad);
 
-			if (--bleedValue <= 0 || !effect.Owner.Alive)
+			if (--bleedValue <= 0 || !effect.Owner.IsAlive)
 				effect.Cancel(false);
 			else effect.Owner.TempProperties.setProperty(BLEED_VALUE_PROPERTY, bleedValue);
 		}

@@ -32,8 +32,6 @@ using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
-using NHibernate.Expression;
-using NHibernate.Mapping.Attributes;
 /* I suggest you declare yourself some namespaces for your quests
  * Like: DOL.GS.Quests.Albion
  *       DOL.GS.Quests.Midgard
@@ -45,36 +43,12 @@ using NHibernate.Mapping.Attributes;
 
 namespace DOL.GS.Quests.Albion
 {
-	/* The first thing we do, is to declare the quest requirement
-	* class linked with the new Quest. To do this, we derive 
-	* from the abstract class AbstractQuestDescriptor
-	*/
-	public class TreviansBestFriendDescriptor : AbstractQuestDescriptor
-	{
-		/* This is the type of the quest class linked with 
-		 * this requirement class, you must override the 
-		 * base methid like that
-		 */
-		public override Type LinkedQuestType
-		{
-			get { return typeof(TreviansBestFriend); }
-		}
-
-		/* This value is used to retrieves the minimum level needed
-		 *  to be able to make this quest. Override it only if you need, 
-		 * the default value is 1
-		 */
-		public override int MinLevel
-		{
-			get { return 15; }
-		}
-	}
-
-	/* The second thing we do, is to declare the class we create
-	 * as Quest. We must make it persistant using attributes, to
-	 * do this, we derive from the abstract class AbstractQuest
+	/* The first thing we do, is to declare the class we create
+	 * as Quest. To do this, we derive from the abstract class
+	 * AbstractQuest
+	 * 	 
 	 */
-	[Subclass(NameType = typeof(TreviansBestFriend), ExtendsType = typeof(AbstractQuest))]
+
 	public class TreviansBestFriend : BaseQuest
 	{
 		/// <summary>
@@ -92,37 +66,59 @@ namespace DOL.GS.Quests.Albion
 		 * 
 		 */
 		protected const string questTitle = "Trevian's best Friend";
+		protected const int minimumLevel = 15;
+		protected const int maximumLevel = 50;
 
-		private static GameMob trevian = null;
-		private static GameMob puppy = null;
+		private static GameNPC trevian = null;
+		private static GameNPC puppy = null;
 
-		private static GameMob guardBrydus = null;
+		private static GameNPC guardBrydus = null;
 
 		// lilybet is not static since it must be created and deleted for each quest to allow multi users to do quest at the same time...
-		private GameMob lilybet = null;
+		private GameNPC lilybet = null;
 
 		private const string banditAbductorLeaderName = "Bandit Abductor Leader";
-		private static GameMob banditAbductorLeader = null;
+		private static GameNPC banditAbductorLeader = null;
 
 		private const string banditAbductorName = "Bandit Abductor Henchman";
-		private static GameMob banditAbductor1 = null;
-		private static GameMob banditAbductor2 = null;
+		private static GameNPC banditAbductor1 = null;
+		private static GameNPC banditAbductor2 = null;
 
 
-		private static CloakTemplate treviansHoodedCloak = null;
+		private static ItemTemplate treviansHoodedCloak = null;
 
-		private static FeetArmorTemplate bootsOfRescuer = null;
-		private static FeetArmorTemplate bootsOfBaneful = null;
-		private static FeetArmorTemplate bootsOfProtector = null;
+		private static ItemTemplate bootsOfRescuer = null;
+		private static ItemTemplate bootsOfBaneful = null;
+		private static ItemTemplate bootsOfProtector = null;
 
-		private static FeetArmorTemplate bootsOfErudition = null;
-		private static FeetArmorTemplate bootsOfReverence = null;
-		private static FeetArmorTemplate bootsOfShadow = null;
-		private static FeetArmorTemplate bootsOfEvanescent = null;
-		private static FeetArmorTemplate bootsOfInfluence = null;
-		private static FeetArmorTemplate bootsOfTheDevoted = null;
+		private static ItemTemplate bootsOfErudition = null;
+		private static ItemTemplate bootsOfReverence = null;
+		private static ItemTemplate bootsOfShadow = null;
+		private static ItemTemplate bootsOfEvanescent = null;
+		private static ItemTemplate bootsOfInfluence = null;
+		private static ItemTemplate bootsOfTheDevoted = null;
 
-		private static MagicalItemTemplate whistleReward = null; // anyone        
+		private static ItemTemplate whistleReward = null; // anyone        
+
+		/* We need to define the constructors from the base class here, else there might be problems
+		 * when loading this quest...
+		 */
+		public TreviansBestFriend() : base()
+		{
+		}
+
+		public TreviansBestFriend(GamePlayer questingPlayer) : this(questingPlayer, 1)
+		{
+		}
+
+		public TreviansBestFriend(GamePlayer questingPlayer, int step) : base(questingPlayer, step)
+		{
+		}
+
+		public TreviansBestFriend(GamePlayer questingPlayer, DBQuest dbQuest) : base(questingPlayer, dbQuest)
+		{
+		}
+
 
 		/* The following method is called automatically when this quest class
 		 * is loaded. You might notice that this method is the same as in standard
@@ -142,6 +138,8 @@ namespace DOL.GS.Quests.Albion
 		[ScriptLoadedEvent]
 		public static void ScriptLoaded(DOLEvent e, object sender, EventArgs args)
 		{
+			if (!ServerProperties.Properties.LOAD_QUESTS)
+				return;
 			if (log.IsInfoEnabled)
 				log.Info("Quest \"" + questTitle + "\" initializing ...");
 			/* First thing we do in here is to search for the NPCs inside
@@ -156,294 +154,231 @@ namespace DOL.GS.Quests.Albion
 
 			#region defineNPCS
 
-			trevian = ResearchQuestObject(typeof(GameMob), WorldMgr.GetRegion(1), eRealm.Albion, "Trevian") as GameMob;
-			if (trevian == null)
+			GameNPC[] npcs = WorldMgr.GetNPCsByName("Trevian", eRealm.Albion);
+
+			/* Whops, if the npcs array length is 0 then no npc exists in
+				* this users Mob Database, so we simply create one ;-)
+				* else we take the existing one. And if more than one exist, we take
+				* the first ...
+				*/
+			if (npcs.Length == 0)
 			{
-				trevian = new GameMob();
+				trevian = new GameNPC();
 				trevian.Model = 61;
 				trevian.Name = "Trevian";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + trevian.Name + ", creating him ...");
 				trevian.GuildName = "Part of " + questTitle + " Quest";
 				trevian.Realm = (byte) eRealm.Albion;
-				trevian.Region = WorldMgr.GetRegion(1);
+				trevian.CurrentRegionID = 1;
 
-				GameNpcInventory template = new GameNpcInventory();
-				template.AddItem(eInventorySlot.TorsoArmor, new NPCArmor(798, 36, 0));
-				template.AddItem(eInventorySlot.Cloak, new NPCEquipment(326, 44));
-				template.AddItem(eInventorySlot.TwoHandWeapon, new NPCWeapon(19));
-				trevian.Inventory = template;
+				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
+				template.AddNPCEquipment(eInventorySlot.TorsoArmor, 798, 36);
+				template.AddNPCEquipment(eInventorySlot.Cloak, 326, 44);
+				template.AddNPCEquipment(eInventorySlot.TwoHandWeapon, 19);
+				trevian.Inventory = template.CloseTemplate();
 				trevian.SwitchWeapon(GameLiving.eActiveWeaponSlot.TwoHanded);
 
+//				trevian.AddNPCEquipment((byte) eVisibleItems.TORSO, 798, 36, 0, 0);
+//				trevian.AddNPCEquipment((byte) eVisibleItems.CLOAK, 326, 44, 0, 0);
+//				trevian.AddNPCEquipment((byte) eVisibleItems.TWO_HANDED, 19, 0, 0, 0);
 				trevian.Size = 52;
 				trevian.Level = 20;
-				trevian.Position = new Point(456104, 633914, 1693);
+				trevian.X = 456104;
+				trevian.Y = 633914;
+				trevian.Z = 1693;
 				trevian.Heading = 289;
-
-				StandardMobBrain newBrain = new StandardMobBrain();
-				newBrain.Body = trevian;
-				newBrain.AggroLevel = 100;
-				newBrain.AggroRange = 0;
-				trevian.OwnBrain = newBrain;
-
-				if(!trevian.AddToWorld())
-				{
-					if (log.IsWarnEnabled)
-						log.Warn("Quest "+questTitle+" abort because a needed region is not in use in this server!");
-					return;
-				}
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(trevian);
-			}
 
-			puppy = ResearchQuestObject(typeof(GameMob), WorldMgr.GetRegion(1), eRealm.Albion, "Trevian's Puppy") as GameMob;
-			if (puppy == null)
+				if (SAVE_INTO_DATABASE)
+					trevian.SaveIntoDatabase();
+
+				trevian.AddToWorld();
+			}
+			else
+				trevian = npcs[0];
+
+			npcs = WorldMgr.GetNPCsByName("Trevian's Puppy", eRealm.Albion);
+			if (npcs.Length == 0)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Trevian's Puppy, creating him ...");
-				puppy = new GameMob();
+				puppy = new GameNPC();
 				puppy.Model = 459;
 				puppy.Name = "Trevian's Puppy";
 				puppy.GuildName = "Part of " + questTitle + " Quest";
 				puppy.Realm = (byte) eRealm.Albion;
-				puppy.Region = WorldMgr.GetRegion(1);
+				puppy.CurrentRegionID = 1;
 				puppy.Size = 22;
 				puppy.Level = 5;
-				puppy.Position = new Point(456051, 633858, 1728);
+				puppy.X = 456051;
+				puppy.Y = 633858;
+				puppy.Z = 1728;
 				puppy.Heading = 3781;
-
-				StandardMobBrain newBrain = new StandardMobBrain();
-				newBrain.Body = puppy;
-				newBrain.AggroLevel = 100;
-				newBrain.AggroRange = 0;
-				puppy.OwnBrain = newBrain;
-
-				if(!puppy.AddToWorld())
-				{
-					if (log.IsWarnEnabled)
-						log.Warn("Quest "+questTitle+" abort because a needed region is not in use in this server!");
-					return;
-				}
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(puppy);
-			}
+					puppy.SaveIntoDatabase();
 
-			guardBrydus = ResearchQuestObject(typeof(GameMob), WorldMgr.GetRegion(1), eRealm.Albion, "Guard Brydus") as GameMob;
-			if (guardBrydus == null)
+				puppy.AddToWorld();
+			}
+			else
+				puppy = npcs[0];
+
+			npcs = WorldMgr.GetNPCsByName("Guard Brydus", eRealm.Albion);
+			if (npcs.Length == 0)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Guard Brydus, creating him ...");
-				guardBrydus = new GameMob();
+				guardBrydus = new GameNPC();
 				guardBrydus.Model = 27;
 				guardBrydus.Name = "Guard Brydus";
 				guardBrydus.GuildName = "Part of " + questTitle + " Quest";
 				guardBrydus.Realm = (byte) eRealm.Albion;
-				guardBrydus.Region = WorldMgr.GetRegion(1);
+				guardBrydus.CurrentRegionID = 1;
 
-				GameNpcInventory template = new GameNpcInventory();
-				template.AddItem(eInventorySlot.TwoHandWeapon, new NPCWeapon(6));
-				template.AddItem(eInventorySlot.Cloak, new NPCEquipment(91));
-				guardBrydus.Inventory = template;
+				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
+				template.AddNPCEquipment(eInventorySlot.TwoHandWeapon, 6);
+				template.AddNPCEquipment(eInventorySlot.Cloak, 91);
+				guardBrydus.Inventory = template.CloseTemplate();
 				guardBrydus.SwitchWeapon(GameLiving.eActiveWeaponSlot.TwoHanded);
 
+//				guardBrydus.AddNPCEquipment((byte) eVisibleItems.TWO_HANDED, 6, 0, 0, 0);
+//				guardBrydus.AddNPCEquipment((byte) eVisibleItems.CLOAK, 91, 0, 0, 0);
 				guardBrydus.Size = 52;
 				guardBrydus.Level = 30;
-				guardBrydus.Position = new Point(436698, 650425, 2448);
+				guardBrydus.X = 436698;
+				guardBrydus.Y = 650425;
+				guardBrydus.Z = 2448;
 				guardBrydus.Heading = 184;
-
-				StandardMobBrain newBrain = new StandardMobBrain();
-				newBrain.Body = guardBrydus;
-				newBrain.AggroLevel = 100;
-				newBrain.AggroRange = 0;
-				guardBrydus.OwnBrain = newBrain;
-
-				if(!guardBrydus.AddToWorld())
-				{
-					if (log.IsWarnEnabled)
-						log.Warn("Quest "+questTitle+" abort because a needed region is not in use in this server!");
-					return;
-				}
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(guardBrydus);
+					guardBrydus.SaveIntoDatabase();
+
+				guardBrydus.AddToWorld();
 			}
+			else
+				guardBrydus = npcs[0];
 
 
 			// mob db check
-			banditAbductorLeader = ResearchQuestObject(typeof(GameMob), WorldMgr.GetRegion(1), eRealm.None, banditAbductorLeaderName) as GameMob;
-			if (banditAbductorLeader == null)
+			GameObject[] mobs = WorldMgr.GetObjectsByNameFromRegion(banditAbductorLeaderName, 1, eRealm.None, typeof (GameNPC));
+			if (mobs.Length == 0)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Mob " + banditAbductorLeaderName + ", creating him ...");
-				banditAbductorLeader = new GameMob();
+				banditAbductorLeader = new GameNPC();
 				banditAbductorLeader.Model = 18;
 				banditAbductorLeader.Name = banditAbductorLeaderName;
 				banditAbductorLeader.GuildName = "Part of " + questTitle + " Quest";
 				banditAbductorLeader.Realm = (byte) eRealm.None;
-				banditAbductorLeader.Region = WorldMgr.GetRegion(1);
 
-				GameNpcInventory template = new GameNpcInventory();
-				template.AddItem(eInventorySlot.RightHandWeapon, new NPCWeapon(4));
-				template.AddItem(eInventorySlot.Cloak, new NPCEquipment(57));
-				banditAbductorLeader.Inventory = template;
+				banditAbductorLeader.CurrentRegionID = 1;
+
+				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
+				template.AddNPCEquipment(eInventorySlot.RightHandWeapon, 4);
+				template.AddNPCEquipment(eInventorySlot.Cloak, 57);
+				banditAbductorLeader.Inventory = template.CloseTemplate();
 				banditAbductorLeader.SwitchWeapon(GameLiving.eActiveWeaponSlot.Standard);
+
+//				banditAbductorLeader.AddNPCEquipment((byte) eVisibleItems.RIGHT_HAND, 4, 0, 0, 0);
+//				banditAbductorLeader.AddNPCEquipment((byte) eVisibleItems.CLOAK, 57, 0, 0, 0);
 
 				banditAbductorLeader.Size = 52;
 				banditAbductorLeader.Level = 10;
-				banditAbductorLeader.Position = new Point(438629, 644884, 1904);
+				banditAbductorLeader.X = 438629;
+				banditAbductorLeader.Y = 644884;
+				banditAbductorLeader.Z = 1904;
 				banditAbductorLeader.Heading = 6;
-
-				banditAbductorLeader.RespawnInterval = -1; //auto respawn
-
-				StandardMobBrain newBrain = new StandardMobBrain();
-				newBrain.Body = banditAbductorLeader;
-				newBrain.AggroLevel = 0;
-				newBrain.AggroRange = 0;
-				banditAbductorLeader.OwnBrain = newBrain;
-
-				if(!banditAbductorLeader.AddToWorld())
-				{
-					if (log.IsWarnEnabled)
-						log.Warn("Quest "+questTitle+" abort because a needed region is not in use in this server!");
-					return;
-				}
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(banditAbductorLeader);
+					banditAbductorLeader.SaveIntoDatabase();
+
+				banditAbductorLeader.AddToWorld();
+
 			}
+			else
+				banditAbductorLeader = mobs[0] as GameNPC;
 
-			Region reg = WorldMgr.GetRegion(1);
-			if(reg == null)
-			{
-				if (log.IsWarnEnabled)
-					log.Warn("Quest "+questTitle+" abort because a needed region is not in use in this server!");
-				return;
-			}
-
-			foreach(GameMob obj in reg.GetAllObjects(typeof(GameMob)))
-			{
-				if(obj.Realm == (byte)eRealm.None && obj.Name == banditAbductorName)
-				{
-					if (banditAbductor1 == null)
-					{
-						banditAbductor1 = obj;
-						continue;
-					}
-					
-					if(banditAbductor2 == null)
-					{
-						banditAbductor2 = obj;
-						continue;
-					}
-					
-					break;
-				}
-			}
-
-			GameNpcInventory inventory = new GameNpcInventory();
-			inventory.AddItem(eInventorySlot.RightHandWeapon, new NPCWeapon(4));
-
-			if (banditAbductor1 == null)
+			mobs = WorldMgr.GetObjectsByNameFromRegion(banditAbductorName, 1, eRealm.None, typeof (GameNPC));
+			if (mobs.Length == 0)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Mob " + banditAbductorName + ", creating him ...");
-				banditAbductor1 = new GameMob();
+				banditAbductor1 = new GameNPC();
 				banditAbductor1.Model = 16;
 				banditAbductor1.Name = banditAbductorName;
 				banditAbductor1.GuildName = "Part of " + questTitle + " Quest";
 				banditAbductor1.Realm = (byte) eRealm.None;
-				banditAbductor1.Region = WorldMgr.GetRegion(1);
+				banditAbductor1.CurrentRegionID = 1;
 
-				banditAbductor1.Inventory = inventory;
+				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
+				template.AddNPCEquipment(eInventorySlot.RightHandWeapon, 4);
+				banditAbductor1.Inventory = template.CloseTemplate();
 				banditAbductor1.SwitchWeapon(GameLiving.eActiveWeaponSlot.Standard);
 
+//				banditAbductor1.AddNPCEquipment((byte) eVisibleItems.RIGHT_HAND, 4, 0, 0, 0);
 				banditAbductor1.Size = 50;
 				banditAbductor1.Level = 9;
-				Point pos = banditAbductorLeader.Position;
-				pos.X += 100;
-				pos.Y -= 100;
-				banditAbductor1.Position = pos;
+				banditAbductor1.X = banditAbductorLeader.X + 100;
+				banditAbductor1.Y = banditAbductorLeader.Y - 100;
+				banditAbductor1.Z = banditAbductorLeader.Z;
 				banditAbductor1.Heading = 50;
-
-				banditAbductor1.RespawnInterval = -1; //auto respawn
-
-				StandardMobBrain newBrain = new StandardMobBrain();
-				newBrain.Body = banditAbductor1;
-				newBrain.AggroLevel = 0;
-				newBrain.AggroRange = 0;
-				banditAbductor1.OwnBrain = newBrain;
-
-				if(!banditAbductor1.AddToWorld())
-				{
-					if (log.IsWarnEnabled)
-						log.Warn("Quest "+questTitle+" abort because a needed region is not in use in this server!");
-					return;
-				}
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(banditAbductor1);
-			}
+					banditAbductor1.SaveIntoDatabase();
 
-			if (banditAbductor2 == null)
-			{
+				banditAbductor1.AddToWorld();
+
 				// We add two of them ...
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Mob " + banditAbductorName + ", creating him ...");
-				banditAbductor2 = new GameMob();
+				banditAbductor2 = new GameNPC();
 				banditAbductor2.Model = 16;
 				banditAbductor2.Name = banditAbductorName;
 				banditAbductor2.GuildName = "Part of " + questTitle + " Quest";
 				banditAbductor2.Realm = (byte) eRealm.None;
-				banditAbductor2.Region = WorldMgr.GetRegion(1);
+				banditAbductor2.CurrentRegionID = 1;
 
-				banditAbductor1.Inventory = inventory;
-				banditAbductor1.SwitchWeapon(GameLiving.eActiveWeaponSlot.Standard);
+				template = new GameNpcInventoryTemplate();
+				template.AddNPCEquipment(eInventorySlot.RightHandWeapon, 4);
+				banditAbductor2.Inventory = template.CloseTemplate();
+				banditAbductor2.SwitchWeapon(GameLiving.eActiveWeaponSlot.Standard);
 
+//				banditAbductor2.AddNPCEquipment((byte) eVisibleItems.RIGHT_HAND, 4, 0, 0, 0);
 				banditAbductor2.Size = 50;
 				banditAbductor2.Level = 9;
-				Point pos = banditAbductorLeader.Position;
-				pos.X -= 150;
-				pos.Y -= 150;
-				banditAbductor2.Position = pos;
+				banditAbductor2.X = banditAbductorLeader.X - 150;
+				banditAbductor2.Y = banditAbductorLeader.Y - 150;
+				banditAbductor2.Z = banditAbductorLeader.Z;
 				banditAbductor2.Heading = 0;
-
-				banditAbductor2.RespawnInterval = -1; //auto respawn
-
-				StandardMobBrain newBrain = new StandardMobBrain();
-				newBrain.Body = banditAbductor2;
-				newBrain.AggroLevel = 0;
-				newBrain.AggroRange = 0;
-				banditAbductor2.OwnBrain = newBrain;
-
-				if(!banditAbductor2.AddToWorld())
-				{
-					if (log.IsWarnEnabled)
-						log.Warn("Quest "+questTitle+" abort because a needed region is not in use in this server!");
-					return;
-				}
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(banditAbductor2);
+					banditAbductor2.SaveIntoDatabase();
+
+				banditAbductor2.AddToWorld();
+			}
+			else
+			{
+				banditAbductor1 = mobs[0] as GameNPC;
+				banditAbductor2 = mobs[1] as GameNPC;
 			}
 
 			#endregion
@@ -451,22 +386,33 @@ namespace DOL.GS.Quests.Albion
 			#region defineItems
 
 			// item db check
-			treviansHoodedCloak = GameServer.Database.SelectObject(typeof (CloakTemplate), Expression.Eq("Name", "Trevians Hooded Cloak")) as CloakTemplate;
+			treviansHoodedCloak = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "trevians_hooded_cloak");
 			if (treviansHoodedCloak == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Trevians Hodded Cloak, creating it ...");
-				treviansHoodedCloak = new CloakTemplate();
+				treviansHoodedCloak = new ItemTemplate();
 				treviansHoodedCloak.Name = "Trevians Hooded Cloak";
 				treviansHoodedCloak.Level = 16;
 				treviansHoodedCloak.Weight = 2;
 				treviansHoodedCloak.Model = 326;
 
+				treviansHoodedCloak.Object_Type = (int) eObjectType.Cloth;
+				treviansHoodedCloak.Item_Type = (int) eEquipmentItems.CLOAK;
+				treviansHoodedCloak.Id_nb = "trevians_hooded_cloak";
+				treviansHoodedCloak.Gold = 0;
+				treviansHoodedCloak.Silver = 0;
+				treviansHoodedCloak.Copper = 0;
+				treviansHoodedCloak.IsPickable = false;
+				treviansHoodedCloak.IsDropable = false;
 				treviansHoodedCloak.Color = 44;
 
-				treviansHoodedCloak.IsDropable = false;
-				treviansHoodedCloak.IsSaleable = false;
-				treviansHoodedCloak.IsTradable = false;
+				treviansHoodedCloak.Quality = 100;
+				treviansHoodedCloak.Condition = 1000;
+				treviansHoodedCloak.MaxCondition = 1000;
+				treviansHoodedCloak.Durability = 1000;
+				treviansHoodedCloak.MaxDurability = 1000;
+
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -476,32 +422,52 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			bootsOfRescuer = GameServer.Database.SelectObject(typeof (FeetArmorTemplate),  Expression.Eq("Name", "Boots of Rescuer")) as FeetArmorTemplate;
+			bootsOfRescuer = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "boots_of_rescuer_alb");
 			if (bootsOfRescuer == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Trevians Hodded Cloak, creating it ...");
-				bootsOfRescuer = new FeetArmorTemplate();
+				bootsOfRescuer = new ItemTemplate();
 				bootsOfRescuer.Name = "Boots of Rescuer";
 				bootsOfRescuer.Level = 23;
 
 				bootsOfRescuer.Weight = 32;
 				bootsOfRescuer.Model = 215; // Special Plate Boots
 
-				bootsOfRescuer.ArmorFactor = 36;
-				bootsOfRescuer.ArmorLevel = eArmorLevel.VeryHigh;
+				bootsOfRescuer.DPS_AF = 36; // Armour
+				bootsOfRescuer.SPD_ABS = 34; // Absorption
 
+				bootsOfRescuer.Object_Type = (int) eObjectType.Plate; // Plate
+				bootsOfRescuer.Item_Type = (int) eEquipmentItems.FEET;
+
+				bootsOfRescuer.Id_nb = "boots_of_rescuer_alb";
+				bootsOfRescuer.Gold = 0;
+				bootsOfRescuer.Silver = 0;
+				bootsOfRescuer.Copper = 0;
+				bootsOfRescuer.IsPickable = true;
 				bootsOfRescuer.IsDropable = true;
-				bootsOfRescuer.IsSaleable = false;
-				bootsOfRescuer.IsTradable = true;
 				bootsOfRescuer.Color = 49; // red metal
 
 				bootsOfRescuer.Bonus = 10; // default bonus
 
-				bootsOfRescuer.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 7));
-				bootsOfRescuer.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 6));
-				bootsOfRescuer.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 6));
-				bootsOfRescuer.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Energy, 3));
+				bootsOfRescuer.Bonus1 = 7;
+				bootsOfRescuer.Bonus1Type = (int) eStat.STR;
+
+				bootsOfRescuer.Bonus2 = 6;
+				bootsOfRescuer.Bonus2Type = (int) eStat.CON;
+
+				bootsOfRescuer.Bonus3 = 6;
+				bootsOfRescuer.Bonus3Type = (int) eStat.DEX;
+
+				bootsOfRescuer.Bonus4 = 3;
+				bootsOfRescuer.Bonus4Type = (int) eResist.Energy;
+
+				bootsOfRescuer.Quality = 100;
+				bootsOfRescuer.Condition = 1000;
+				bootsOfRescuer.MaxCondition = 1000;
+				bootsOfRescuer.Durability = 1000;
+				bootsOfRescuer.MaxDurability = 1000;
+
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -511,32 +477,52 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			bootsOfBaneful = GameServer.Database.SelectObject(typeof (FeetArmorTemplate), Expression.Eq("Name", "Boots of Baneful")) as FeetArmorTemplate;
+			bootsOfBaneful = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "boots_of_baneful");
 			if (bootsOfBaneful == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Boots of Baneful, creating it ...");
-				bootsOfBaneful = new FeetArmorTemplate();
+				bootsOfBaneful = new ItemTemplate();
 				bootsOfBaneful.Name = "Boots of Baneful";
 				bootsOfBaneful.Level = 16;
 
 				bootsOfBaneful.Weight = 32;
 				bootsOfBaneful.Model = 200; // Special Chain Boots
 
-				bootsOfBaneful.ArmorFactor = 36;
-				bootsOfBaneful.ArmorLevel = eArmorLevel.VeryHigh;
+				bootsOfBaneful.DPS_AF = 36; // Armour
+				bootsOfBaneful.SPD_ABS = 27; // Absorption
 
+				bootsOfBaneful.Object_Type = (int) eObjectType.Plate;
+				bootsOfBaneful.Item_Type = (int) eEquipmentItems.FEET;
+				bootsOfBaneful.Id_nb = "boots_of_baneful";
+				bootsOfBaneful.Gold = 0;
+				bootsOfBaneful.Silver = 0;
+				bootsOfBaneful.Copper = 0;
+				bootsOfBaneful.IsPickable = true;
 				bootsOfBaneful.IsDropable = true;
-				bootsOfBaneful.IsSaleable = false;
-				bootsOfBaneful.IsTradable = false;
 				bootsOfBaneful.Color = 49; // red metal
 
 				bootsOfBaneful.Bonus = 10; // default bonus
 
-				bootsOfBaneful.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 6));
-				bootsOfBaneful.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 6));
-				bootsOfBaneful.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Body, 3));
-				bootsOfBaneful.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 10));
+				bootsOfBaneful.Bonus1 = 6;
+				bootsOfBaneful.Bonus1Type = (int) eStat.STR;
+
+
+				bootsOfBaneful.Bonus2 = 6;
+				bootsOfBaneful.Bonus2Type = (int) eStat.CON;
+
+				bootsOfBaneful.Bonus3 = 3;
+				bootsOfBaneful.Bonus3Type = (int) eResist.Body;
+
+				bootsOfBaneful.Bonus4 = 20;
+				bootsOfBaneful.Bonus4Type = 10; // Hit
+
+				bootsOfBaneful.Quality = 100;
+				bootsOfBaneful.Condition = 1000;
+				bootsOfBaneful.MaxCondition = 1000;
+				bootsOfBaneful.Durability = 1000;
+				bootsOfBaneful.MaxDurability = 1000;
+
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -546,32 +532,51 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			bootsOfProtector = GameServer.Database.SelectObject(typeof (FeetArmorTemplate), Expression.Eq("Name", "Boots of Protector")) as FeetArmorTemplate;
+			bootsOfProtector = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "boots_of_protector");
 			if (bootsOfProtector == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Boots of Protector, creating it ...");
-				bootsOfProtector = new FeetArmorTemplate();
+				bootsOfProtector = new ItemTemplate();
 				bootsOfProtector.Name = "Boots of Protector";
 				bootsOfProtector.Level = 16;
 
 				bootsOfProtector.Weight = 32;
 				bootsOfProtector.Model = 200; // Special Chain Boots
 
-				bootsOfProtector.ArmorFactor = 36;
-				bootsOfProtector.ArmorLevel = eArmorLevel.VeryHigh;
+				bootsOfProtector.DPS_AF = 36; // Armour
+				bootsOfProtector.SPD_ABS = 27; // Absorption
 
+				bootsOfProtector.Object_Type = (int) eObjectType.Plate;
+				bootsOfProtector.Item_Type = (int) eEquipmentItems.FEET;
+				bootsOfProtector.Id_nb = "boots_of_protector";
+				bootsOfProtector.Gold = 0;
+				bootsOfProtector.Silver = 0;
+				bootsOfProtector.Copper = 0;
+				bootsOfProtector.IsPickable = true;
 				bootsOfProtector.IsDropable = true;
-				bootsOfProtector.IsSaleable = false;
-				bootsOfProtector.IsTradable = true;
 				bootsOfProtector.Color = 49; // red metal
 
 				bootsOfProtector.Bonus = 10; // default bonus
 
-				bootsOfProtector.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Strength, 6));
-				bootsOfProtector.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Body, 2));
-				bootsOfProtector.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Spirit, 3));
-				bootsOfProtector.MagicalBonus.Add(new ItemMagicalBonus(eProperty.MaxHealth, 24));
+				bootsOfProtector.Bonus1 = 6;
+				bootsOfProtector.Bonus1Type = (int) eStat.STR;
+
+				bootsOfProtector.Bonus2 = 2;
+				bootsOfProtector.Bonus2Type = (int) eResist.Body;
+
+				bootsOfProtector.Bonus3 = 3;
+				bootsOfProtector.Bonus3Type = (int) eResist.Spirit;
+
+				bootsOfProtector.Bonus4 = 24;
+				bootsOfProtector.Bonus4Type = 10; // hit
+
+				bootsOfProtector.Quality = 100;
+				bootsOfProtector.Condition = 1000;
+				bootsOfProtector.MaxCondition = 1000;
+				bootsOfProtector.Durability = 1000;
+				bootsOfProtector.MaxDurability = 1000;
+
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -581,31 +586,48 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			bootsOfErudition = GameServer.Database.SelectObject(typeof (FeetArmorTemplate), Expression.Eq("Name", "Boots of Erudition")) as FeetArmorTemplate;
+			bootsOfErudition = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "boots_of_erudition");
 			if (bootsOfErudition == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Boots of Erudition creating it ...");
-				bootsOfErudition = new FeetArmorTemplate();
+				bootsOfErudition = new ItemTemplate();
 				bootsOfErudition.Name = "Boots of Erudition";
 				bootsOfErudition.Level = 16;
 
 				bootsOfErudition.Weight = 8;
 				bootsOfErudition.Model = 175; // Special Chain Boots
 
-				bootsOfErudition.ArmorFactor = 18;
-				bootsOfErudition.ArmorLevel = eArmorLevel.VeryLow;
+				bootsOfErudition.DPS_AF = 18; // Armour
+				bootsOfErudition.SPD_ABS = 0; // Absorption
 
+				bootsOfErudition.Object_Type = (int) eObjectType.Cloth;
+				bootsOfErudition.Item_Type = (int) eEquipmentItems.FEET;
+				bootsOfErudition.Id_nb = "boots_of_erudition";
+				bootsOfErudition.Gold = 0;
+				bootsOfErudition.Silver = 0;
+				bootsOfErudition.Copper = 0;
+				bootsOfErudition.IsPickable = true;
 				bootsOfErudition.IsDropable = true;
-				bootsOfErudition.IsSaleable = false;
-				bootsOfErudition.IsTradable = true;
 				bootsOfErudition.Color = 27; // red cloth
 
 				bootsOfErudition.Bonus = 10; // default bonus
 
-				bootsOfErudition.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 9));
-				bootsOfErudition.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Intelligence, 9));
-				bootsOfErudition.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Energy, 3));
+				bootsOfErudition.Bonus1 = 9;
+				bootsOfErudition.Bonus1Type = (int) eStat.DEX;
+
+				bootsOfErudition.Bonus2 = 9;
+				bootsOfErudition.Bonus2Type = (int) eStat.INT;
+
+				bootsOfErudition.Bonus3 = 3;
+				bootsOfErudition.Bonus3Type = (int) eResist.Energy;
+
+				bootsOfErudition.Quality = 100;
+				bootsOfErudition.Condition = 1000;
+				bootsOfErudition.MaxCondition = 1000;
+				bootsOfErudition.Durability = 1000;
+				bootsOfErudition.MaxDurability = 1000;
+
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -614,32 +636,51 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(bootsOfErudition);
 			}
 
-			bootsOfReverence = GameServer.Database.SelectObject(typeof (FeetArmorTemplate), Expression.Eq("Name", "Boots of Reverence")) as FeetArmorTemplate;
+			bootsOfReverence = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "boots_of_reverence");
 			if (bootsOfReverence == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Boots of Reverence, creating it ...");
-				bootsOfReverence = new FeetArmorTemplate();
+				bootsOfReverence = new ItemTemplate();
 				bootsOfReverence.Name = "Boots of Reverence";
 				bootsOfReverence.Level = 16;
 
 				bootsOfReverence.Weight = 18;
 				bootsOfReverence.Model = 225; // Special Studded Boots
 
-				bootsOfReverence.ArmorFactor = 36;
-				bootsOfReverence.ArmorLevel = eArmorLevel.Medium;
+				bootsOfReverence.DPS_AF = 36; // Armour
+				bootsOfReverence.SPD_ABS = 19; // Absorption
 
+				bootsOfReverence.Object_Type = (int) eObjectType.Studded; // Studded
+				bootsOfReverence.Item_Type = (int) eEquipmentItems.FEET; // LAYER_FEET
+				bootsOfReverence.Id_nb = "boots_of_reverence";
+				bootsOfReverence.Gold = 0;
+				bootsOfReverence.Silver = 0;
+				bootsOfReverence.Copper = 0;
+				bootsOfReverence.IsPickable = true;
 				bootsOfReverence.IsDropable = true;
-				bootsOfReverence.IsSaleable = false;
-				bootsOfReverence.IsTradable = true;
 				bootsOfReverence.Color = 9; // red leather
 
 				bootsOfReverence.Bonus = 10; // default bonus
 
-				bootsOfReverence.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Piety, 7));
-				bootsOfReverence.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Body, 3));
-				bootsOfReverence.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Cold , 3));
-				bootsOfReverence.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Heat, 3));
+				bootsOfReverence.Bonus1 = 7;
+				bootsOfReverence.Bonus1Type = (int) eStat.PIE;
+
+				bootsOfReverence.Bonus2 = 3;
+				bootsOfReverence.Bonus2Type = (int) eResist.Body; // con
+
+				bootsOfReverence.Bonus3 = 3;
+				bootsOfReverence.Bonus3Type = (int) eResist.Cold; // resist body
+
+				bootsOfReverence.Bonus4 = 3;
+				bootsOfReverence.Bonus4Type = (int) eResist.Heat; // hp
+
+				bootsOfReverence.Quality = 100;
+				bootsOfReverence.Condition = 1000;
+				bootsOfReverence.MaxCondition = 1000;
+				bootsOfReverence.Durability = 1000;
+				bootsOfReverence.MaxDurability = 1000;
+
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -648,32 +689,51 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(bootsOfReverence);
 			}
 
-			bootsOfShadow = GameServer.Database.SelectObject(typeof (FeetArmorTemplate), Expression.Eq("Name", "Boots of Shadow")) as FeetArmorTemplate;
+			bootsOfShadow = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "boots_of_shadow");
 			if (bootsOfShadow == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Boots of Shadow, creating it ...");
-				bootsOfShadow = new FeetArmorTemplate();
+				bootsOfShadow = new ItemTemplate();
 				bootsOfShadow.Name = "Boots of Shadow";
 				bootsOfShadow.Level = 16;
 
 				bootsOfShadow.Weight = 18;
 				bootsOfShadow.Model = 180; // Special Leather Boots
 
-				bootsOfShadow.ArmorFactor = 36;
-				bootsOfShadow.ArmorLevel = eArmorLevel.Low;
+				bootsOfShadow.DPS_AF = 36; // Armour
+				bootsOfShadow.SPD_ABS = 10; // Absorption
 
+				bootsOfShadow.Object_Type = (int) eObjectType.Leather; // Studded
+				bootsOfShadow.Item_Type = (int) eEquipmentItems.FEET; // LAYER_FEET
+				bootsOfShadow.Id_nb = "boots_of_shadow";
+				bootsOfShadow.Gold = 0;
+				bootsOfShadow.Silver = 0;
+				bootsOfShadow.Copper = 0;
+				bootsOfShadow.IsPickable = true;
 				bootsOfShadow.IsDropable = true;
-				bootsOfShadow.IsSaleable = false;
-				bootsOfShadow.IsTradable = true;
 				bootsOfShadow.Color = 9; // red leather
 
 				bootsOfShadow.Bonus = 10; // default bonus
 
-				bootsOfShadow.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 7));
-				bootsOfShadow.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Quickness, 6));
-				bootsOfShadow.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Body, 3));
-				bootsOfShadow.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Energy, 3));
+				bootsOfShadow.Bonus1 = 7;
+				bootsOfShadow.Bonus1Type = (int) eStat.DEX;
+
+				bootsOfShadow.Bonus2 = 6;
+				bootsOfShadow.Bonus2Type = (int) eStat.QUI;
+
+				bootsOfShadow.Bonus3 = 3;
+				bootsOfShadow.Bonus3Type = (int) eResist.Body;
+
+				bootsOfShadow.Bonus4 = 3;
+				bootsOfShadow.Bonus4Type = (int) eResist.Energy;
+
+				bootsOfShadow.Quality = 100;
+				bootsOfShadow.Condition = 1000;
+				bootsOfShadow.MaxCondition = 1000;
+				bootsOfShadow.Durability = 1000;
+				bootsOfShadow.MaxDurability = 1000;
+
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -682,32 +742,51 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(bootsOfShadow);
 			}
 
-			bootsOfEvanescent = GameServer.Database.SelectObject(typeof (FeetArmorTemplate), Expression.Eq("Name", "Boots of Evanescent")) as FeetArmorTemplate;
+			bootsOfEvanescent = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "boots_of_evanescent");
 			if (bootsOfEvanescent == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Boots of Evanescent, creating it ...");
-				bootsOfEvanescent = new FeetArmorTemplate();
+				bootsOfEvanescent = new ItemTemplate();
 				bootsOfEvanescent.Name = "Boots of Evanescent";
 				bootsOfEvanescent.Level = 16;
 
 				bootsOfEvanescent.Weight = 18;
 				bootsOfEvanescent.Model = 180; // Special Studded Boots
 
-				bootsOfEvanescent.ArmorFactor = 36;
-				bootsOfEvanescent.ArmorLevel = eArmorLevel.Low;
+				bootsOfEvanescent.DPS_AF = 36; // Armour
+				bootsOfEvanescent.SPD_ABS = 10; // Absorption
 
+				bootsOfEvanescent.Object_Type = (int) eObjectType.Leather; // Studded
+				bootsOfEvanescent.Item_Type = (int) eEquipmentItems.FEET; // LAYER_FEET
+				bootsOfEvanescent.Id_nb = "boots_of_evanescent";
+				bootsOfEvanescent.Gold = 0;
+				bootsOfEvanescent.Silver = 0;
+				bootsOfEvanescent.Copper = 0;
+				bootsOfEvanescent.IsPickable = true;
 				bootsOfEvanescent.IsDropable = true;
-				bootsOfEvanescent.IsSaleable = false;
-				bootsOfEvanescent.IsTradable = true;
 				bootsOfEvanescent.Color = 9; // red leather
 
 				bootsOfEvanescent.Bonus = 10; // default bonus
 
-				bootsOfEvanescent.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 7));
-				bootsOfEvanescent.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Quickness, 6));
-				bootsOfEvanescent.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Body, 3));
-				bootsOfEvanescent.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Energy, 3));
+				bootsOfEvanescent.Bonus1 = 7;
+				bootsOfEvanescent.Bonus1Type = (int) eStat.DEX;
+
+				bootsOfEvanescent.Bonus2 = 6;
+				bootsOfEvanescent.Bonus2Type = (int) eStat.QUI;
+
+				bootsOfEvanescent.Bonus3 = 3;
+				bootsOfEvanescent.Bonus3Type = (int) eResist.Body; // resist body
+
+				bootsOfEvanescent.Bonus4 = 3;
+				bootsOfEvanescent.Bonus4Type = (int) eResist.Energy; // hp
+
+				bootsOfEvanescent.Quality = 100;
+				bootsOfEvanescent.Condition = 1000;
+				bootsOfEvanescent.MaxCondition = 1000;
+				bootsOfEvanescent.Durability = 1000;
+				bootsOfEvanescent.MaxDurability = 1000;
+
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -716,31 +795,48 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(bootsOfEvanescent);
 			}
 
-			bootsOfInfluence = GameServer.Database.SelectObject(typeof (FeetArmorTemplate), Expression.Eq("Name", "Boots of Influence")) as FeetArmorTemplate;
+			bootsOfInfluence = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "boots_of_influence");
 			if (bootsOfInfluence == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Boots of Influence, creating it ...");
-				bootsOfInfluence = new FeetArmorTemplate();
+				bootsOfInfluence = new ItemTemplate();
 				bootsOfInfluence.Name = "Boots of Influence";
 				bootsOfInfluence.Level = 16;
 
 				bootsOfInfluence.Weight = 18;
 				bootsOfInfluence.Model = 225; // Special Studded Boots
 
-				bootsOfInfluence.ArmorFactor = 36;
-				bootsOfInfluence.ArmorLevel = eArmorLevel.Medium;
-				
+				bootsOfInfluence.DPS_AF = 36; // Armour
+				bootsOfInfluence.SPD_ABS = 19; // Absorption
+
+				bootsOfInfluence.Object_Type = (int) eObjectType.Studded; // Studded
+				bootsOfInfluence.Item_Type = (int) eEquipmentItems.FEET; // LAYER_FEET
+				bootsOfInfluence.Id_nb = "boots_of_influence";
+				bootsOfInfluence.Gold = 0;
+				bootsOfInfluence.Silver = 0;
+				bootsOfInfluence.Copper = 0;
+				bootsOfInfluence.IsPickable = true;
 				bootsOfInfluence.IsDropable = true;
-				bootsOfInfluence.IsSaleable = false;
-				bootsOfInfluence.IsTradable = true;
 				bootsOfInfluence.Color = 9; // red leather
 
 				bootsOfInfluence.Bonus = 10; // default bonus
 
-				bootsOfInfluence.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Dexterity, 9));
-				bootsOfInfluence.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Charisma, 9));
-				bootsOfInfluence.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Spirit, 3));
+				bootsOfInfluence.Bonus1 = 9;
+				bootsOfInfluence.Bonus1Type = (int) eStat.DEX;
+
+				bootsOfInfluence.Bonus2 = 9;
+				bootsOfInfluence.Bonus2Type = (int) eStat.CHR; // con
+
+				bootsOfInfluence.Bonus3 = 3;
+				bootsOfInfluence.Bonus3Type = (int) eResist.Spirit; // resist body                
+
+				bootsOfInfluence.Quality = 100;
+				bootsOfInfluence.Condition = 1000;
+				bootsOfInfluence.MaxCondition = 1000;
+				bootsOfInfluence.Durability = 1000;
+				bootsOfInfluence.MaxDurability = 1000;
+
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -749,32 +845,51 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(bootsOfInfluence);
 			}
 
-			bootsOfTheDevoted = GameServer.Database.SelectObject(typeof (FeetArmorTemplate), Expression.Eq("Name", "Boots of the Devoted")) as FeetArmorTemplate;
+			bootsOfTheDevoted = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "boots_of_the_devoted");
 			if (bootsOfTheDevoted == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Boots of the Devoted, creating it ...");
-				bootsOfTheDevoted = new FeetArmorTemplate();
+				bootsOfTheDevoted = new ItemTemplate();
 				bootsOfTheDevoted.Name = "Boots of the Devoted";
 				bootsOfTheDevoted.Level = 16;
 
 				bootsOfTheDevoted.Weight = 18;
 				bootsOfTheDevoted.Model = 180; // Special Leather Boots
 
-				bootsOfTheDevoted.ArmorFactor = 36;
-				bootsOfTheDevoted.ArmorLevel = eArmorLevel.Low;
-				
-				bootsOfTheDevoted.IsDropable = false;
-				bootsOfTheDevoted.IsSaleable = false;
-				bootsOfTheDevoted.IsTradable = true;
+				bootsOfTheDevoted.DPS_AF = 36; // Armour
+				bootsOfTheDevoted.SPD_ABS = 10; // Absorption
+
+				bootsOfTheDevoted.Object_Type = (int) eObjectType.Leather; // Studded
+				bootsOfTheDevoted.Item_Type = (int) eEquipmentItems.FEET; // LAYER_FEET
+				bootsOfTheDevoted.Id_nb = "boots_of_the_devoted";
+				bootsOfTheDevoted.Gold = 0;
+				bootsOfTheDevoted.Silver = 0;
+				bootsOfTheDevoted.Copper = 0;
+				bootsOfTheDevoted.IsPickable = true;
+				bootsOfTheDevoted.IsDropable = true;
 				bootsOfTheDevoted.Color = 9; // red leather
 
 				bootsOfTheDevoted.Bonus = 10; // default bonus
 
-				bootsOfTheDevoted.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Constitution, 7));
-				bootsOfTheDevoted.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Piety, 9));
-				bootsOfTheDevoted.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Cold, 3));
-				bootsOfTheDevoted.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Resist_Body, 2));
+				bootsOfTheDevoted.Bonus1 = 7;
+				bootsOfTheDevoted.Bonus1Type = (int) eStat.CON;
+
+				bootsOfTheDevoted.Bonus2 = 9;
+				bootsOfTheDevoted.Bonus2Type = (int) eStat.PIE;
+
+				bootsOfTheDevoted.Bonus3 = 3;
+				bootsOfTheDevoted.Bonus3Type = (int) eResist.Cold;
+
+				bootsOfTheDevoted.Bonus4 = 2;
+				bootsOfTheDevoted.Bonus4Type = (int) eResist.Body;
+
+				bootsOfTheDevoted.Quality = 100;
+				bootsOfTheDevoted.Condition = 1000;
+				bootsOfTheDevoted.MaxCondition = 1000;
+				bootsOfTheDevoted.Durability = 1000;
+				bootsOfTheDevoted.MaxDurability = 1000;
+
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -783,22 +898,33 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(bootsOfTheDevoted);
 			}
 
-			whistleReward = GameServer.Database.SelectObject(typeof(MagicalItemTemplate), Expression.Eq("Name", "Trevian's Whistle")) as MagicalItemTemplate;
+			whistleReward = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "trevians_whistle");
 			if (whistleReward == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Trevian's Whistle, creating it ...");
-				whistleReward = new MagicalItemTemplate();
+				whistleReward = new ItemTemplate();
 				whistleReward.Name = "Trevian's Whistle";
 				whistleReward.Level = 16;
 				whistleReward.Weight = 5;
 				whistleReward.Model = 1874;
 
+				whistleReward.Object_Type = 41; // CLoth
+				//whistleReward.Item_Type = 26; // LAYER_CLOAK
+				whistleReward.Id_nb = "trevians_whistle";
+				whistleReward.Gold = 0;
+				whistleReward.Silver = 0;
+				whistleReward.Copper = 0;
+				whistleReward.IsPickable = false;
 				whistleReward.IsDropable = false;
-				whistleReward.IsSaleable = false;
-				whistleReward.IsTradable = false;
 
-				//TODO add puppy charge
+
+				whistleReward.Quality = 100;
+				whistleReward.Condition = 1000;
+				whistleReward.MaxCondition = 1000;
+				whistleReward.Durability = 1000;
+				whistleReward.MaxDurability = 1000;
+
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -816,24 +942,24 @@ namespace DOL.GS.Quests.Albion
 			* method. This means, the "TalkToXXX" method is called whenever
 			* a player right clicks on him or when he whispers to him.
 			*/
+
+			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
 			//We want to be notified whenever a player enters the world
 			GameEventMgr.AddHandler(GamePlayerEvent.GameEntered, new DOLEventHandler(PlayerEnterWorld));
 
-			GameEventMgr.AddHandler(trevian, GameObjectEvent.Interact, new DOLEventHandler(TalkToTrevian));
+			GameEventMgr.AddHandler(trevian, GameLivingEvent.Interact, new DOLEventHandler(TalkToTrevian));
 			GameEventMgr.AddHandler(trevian, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToTrevian));
 
 			GameEventMgr.AddHandler(guardBrydus, GameObjectEvent.Interact, new DOLEventHandler(TalkToGuardBrydus));
 			GameEventMgr.AddHandler(guardBrydus, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToGuardBrydus));
 
-			GameEventMgr.AddHandler(banditAbductorLeader, GameObjectEvent.Interact, new DOLEventHandler(TalkToBanditAbductorLeader));
+			GameEventMgr.AddHandler(banditAbductorLeader, GameLivingEvent.Interact, new DOLEventHandler(TalkToBanditAbductorLeader));
 			GameEventMgr.AddHandler(banditAbductorLeader, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToBanditAbductorLeader));
 
-			/* Now we add some hooks to trigger the quest dialog reponse. */
-			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(QuestDialogResponse));
-			GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(QuestDialogResponse));
-
-			/* Now we bring to Ydenia the possibility to give this quest to players */
-			QuestMgr.AddQuestDescriptor(trevian, typeof(TreviansBestFriendDescriptor));
+			/* Now we bring to trevian the possibility to give this quest to players */
+			trevian.AddQuestToGive(typeof (TreviansBestFriend));
 
 			if (log.IsInfoEnabled)
 				log.Info("Quest \"" + questTitle + "\" initialized");
@@ -858,6 +984,10 @@ namespace DOL.GS.Quests.Albion
 			/* Removing hooks works just as adding them but instead of 
 			 * AddHandler, we call RemoveHandler, the parameters stay the same
 			 */
+
+			GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
 			GameEventMgr.RemoveHandler(GamePlayerEvent.GameEntered, new DOLEventHandler(PlayerEnterWorld));
 
 			GameEventMgr.RemoveHandler(trevian, GameObjectEvent.Interact, new DOLEventHandler(TalkToTrevian));
@@ -866,14 +996,11 @@ namespace DOL.GS.Quests.Albion
 			GameEventMgr.RemoveHandler(guardBrydus, GameObjectEvent.Interact, new DOLEventHandler(TalkToGuardBrydus));
 			GameEventMgr.RemoveHandler(guardBrydus, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToGuardBrydus));
 
-			GameEventMgr.RemoveHandler(banditAbductorLeader, GameObjectEvent.Interact, new DOLEventHandler(TalkToBanditAbductorLeader));
+			GameEventMgr.RemoveHandler(banditAbductorLeader, GameLivingEvent.Interact, new DOLEventHandler(TalkToBanditAbductorLeader));
 			GameEventMgr.RemoveHandler(banditAbductorLeader, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToBanditAbductorLeader));
 
-			GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(QuestDialogResponse));
-			GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(QuestDialogResponse));
-
 			/* Now we remove to trevian the possibility to give this quest to players */
-			QuestMgr.RemoveQuestDescriptor(trevian , typeof(TreviansBestFriendDescriptor));
+			trevian.RemoveQuestToGive(typeof (TreviansBestFriend));
 		}
 
 		protected static void PlayerLeftWorld(DOLEvent e, object sender, EventArgs args)
@@ -889,7 +1016,7 @@ namespace DOL.GS.Quests.Albion
 
 				if (quest.lilybet != null)
 				{
-					quest.lilybet.RemoveFromWorld();
+					quest.lilybet.Delete();
 				}
 			}
 		}
@@ -908,12 +1035,10 @@ namespace DOL.GS.Quests.Albion
 				if (quest.Step == 6)
 				{
 					quest.AddLilybet();
-					Point pos = player.Position;
-					pos.X += 100;
-					quest.lilybet.MoveTo(player.Region, pos, (ushort)player.Heading);
+					quest.lilybet.MoveTo(player.CurrentRegionID, player.X + 100, player.Y, player.Z, player.Heading);
 
-					GenericItem cloak = player.Inventory.GetItem(eInventorySlot.Cloak) as GenericItem;
-					if (cloak != null && cloak.QuestName == quest.Name && cloak.Name == treviansHoodedCloak.Name)
+					InventoryItem cloak = player.Inventory.GetItem(eInventorySlot.Cloak);
+					if (cloak != null && cloak.Id_nb == treviansHoodedCloak.Id_nb)
 					{
 						quest.lilybet.Follow(player, 100, 5000);
 					}
@@ -935,7 +1060,7 @@ namespace DOL.GS.Quests.Albion
 			if (player == null)
 				return;
 
-			if (QuestMgr.CanGiveQuest(typeof(TreviansBestFriend), player, trevian) <= 0)
+			if(trevian.CanGiveQuest(typeof (TreviansBestFriend), player)  <= 0)
 				return;
 
 			//We also check if the player is already doing the quest
@@ -953,12 +1078,12 @@ namespace DOL.GS.Quests.Albion
 				}
 				else
 				{
-					if (quest.Step >= 6 && quest.lilybet != null && quest.lilybet.Position.CheckSquareDistance(trevian.Position, 2000*2000))
+					if (quest.Step >= 6 && quest.lilybet != null && WorldMgr.GetDistance(quest.lilybet, trevian.X, trevian.Y, trevian.Z) < 2000)
 					{
 						trevian.SayTo(player, "Thank you so very much! I thought I would never see Lilybet again. She has been such a faithful companion to me considering I am an amateur Sorcerer; I could not bear the thought of [losing her]. Lilybet, go back to the Wharf for some much needed rest.");
-						quest.ChangeQuestStep(7);
+						quest.Step = 7;
 						quest.lilybet.StopFollow();
-						quest.lilybet.WalkTo(new Point(455433, 633010, 1736), quest.lilybet.MaxSpeed);
+						quest.lilybet.WalkTo(455433, 633010, 1736, quest.lilybet.MaxSpeed);
 					}
 					else if (quest.Step == 1) // resume talk with trevian 
 					{
@@ -1000,7 +1125,7 @@ namespace DOL.GS.Quests.Albion
 
 							//If the player offered his "help", we send the quest dialog now!
 						case "implore":
-							QuestMgr.ProposeQuestToPlayer(typeof(TreviansBestFriend), "Will you help Trevian find Lilybet?", player, trevian);
+							player.Out.SendQuestSubscribeCommand(trevian, QuestMgr.GetIDForQuestType(typeof(TreviansBestFriend)), "Will you help Trevian find Lilybet?");
 							break;
 					}
 				}
@@ -1018,7 +1143,7 @@ namespace DOL.GS.Quests.Albion
 							trevian.SayTo(player, "Guard Brydus is a guard at Caer Witrin, and he is in charge of some of the patrols in that area. He has eyes and ears in many places. Ask him about bandit abductors, as he may know where their camp is. If he tells you where it is, please travel to the camp immediately to try to [find] Lilybet.");
 							if (quest.Step == 1)
 							{
-								quest.ChangeQuestStep(2);
+								quest.Step = 2;
 							}
 							break;
 						case "find":
@@ -1031,9 +1156,12 @@ namespace DOL.GS.Quests.Albion
 							// add trevians cloak to inventory
 							if (quest.Step == 2)
 							{
-								GiveItemToPlayer(trevian, CreateQuestItem(treviansHoodedCloak, quest), player);
+								if (player.Inventory.GetFirstItemByID(treviansHoodedCloak.Id_nb, eInventorySlot.Min_Inv, eInventorySlot.Max_Inv) == null)
+								{
+									GiveItem(trevian, player, treviansHoodedCloak);
+								}
 								trevian.SayTo(player, "Be sure to have this item on you when you find Lilybet after defeating the bandit abductors. Do not lose the cloak. She will know that I sent you by you having this cloak. You will need to bring her back home as soon as you find him as I am sure that she will be disoriented and weak. Please go now as time is running out. I wish you the best on this journey.");
-								quest.ChangeQuestStep(3);
+								quest.Step = 3;
 							}
 							break;
 
@@ -1050,15 +1178,30 @@ namespace DOL.GS.Quests.Albion
 							if (quest.Step == 7)
 							{
 								quest.RemoveLylibet();
-
-								RemoveItemFromPlayer(trevian, player.Inventory.GetFirstItemByName(treviansHoodedCloak.Name, eInventorySlot.Min_Inv, eInventorySlot.Max_Inv), player);
-
 								quest.FinishQuest();
 							}
+							break;
+						case "abort":
+							player.Out.SendCustomDialog("Do you really want to abort this quest, \nall items gained during quest will be lost?", new CustomDialogResponse(CheckPlayerAbortQuest));
 							break;
 					}
 				}
 			}
+		}
+
+		protected static void SubscribeQuest(DOLEvent e, object sender, EventArgs args)
+		{
+			QuestEventArgs qargs = args as QuestEventArgs;
+			if (qargs == null)
+				return;
+
+			if (qargs.QuestID != QuestMgr.GetIDForQuestType(typeof(TreviansBestFriend)))
+				return;
+
+			if (e == GamePlayerEvent.AcceptQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x01);
+			else if (e == GamePlayerEvent.DeclineQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x00);
 		}
 
 		protected static void TalkToGuardBrydus(DOLEvent e, object sender, EventArgs args)
@@ -1068,7 +1211,7 @@ namespace DOL.GS.Quests.Albion
 			if (player == null)
 				return;
 
-			if (QuestMgr.CanGiveQuest(typeof(TreviansBestFriend), player, trevian) <= 0)
+			if(trevian.CanGiveQuest(typeof (TreviansBestFriend), player)  <= 0)
 				return;
 
 			//We also check if the player is already doing the quest
@@ -1100,7 +1243,7 @@ namespace DOL.GS.Quests.Albion
 							guardBrydus.SayTo(player, "Aye, try searching the areas to the north northeast, but take caution if ye plan on exploring and gallivanting around. Dangerous creatures lurk about in our realm in these troubled times. Creatures formidable even to veterans of my stature.");
 							if (quest.Step == 3)
 							{
-								quest.ChangeQuestStep(4);
+								quest.Step = 4;
 							}
 							break;
 					}
@@ -1115,7 +1258,7 @@ namespace DOL.GS.Quests.Albion
 			if (player == null)
 				return;
 
-			if (QuestMgr.CanGiveQuest(typeof(TreviansBestFriend), player, trevian) <= 0)
+			if(trevian.CanGiveQuest(typeof (TreviansBestFriend), player)  <= 0)
 				return;
 
 			//We also check if the player is already doing the quest
@@ -1157,6 +1300,7 @@ namespace DOL.GS.Quests.Albion
 							banditAbductorLeader.SayTo(player, "Haa, lets see if you are better than the others that came running to steal our little guarding dog. Get that bastard!");
 							AttackPlayer(player);
 							break;
+
 					}
 				}
 			}
@@ -1165,15 +1309,15 @@ namespace DOL.GS.Quests.Albion
 		protected static void TalkToLilybet(DOLEvent e, object sender, EventArgs args)
 		{
 			//We get the player from the event arguments and check if he qualifies		
-			GamePlayer player = ((SourceEventArgs)args).Source as GamePlayer;
+			GamePlayer player = ((SourceEventArgs) args).Source as GamePlayer;
 			if (player == null)
 				return;
 
-			if (QuestMgr.CanGiveQuest(typeof(TreviansBestFriend), player, trevian) <= 0)
+			if(trevian.CanGiveQuest(typeof (TreviansBestFriend), player)  <= 0)
 				return;
 
 			//We also check if the player is already doing the quest
-			TreviansBestFriend quest = player.IsDoingQuest(typeof(TreviansBestFriend)) as TreviansBestFriend;
+			TreviansBestFriend quest = player.IsDoingQuest(typeof (TreviansBestFriend)) as TreviansBestFriend;
 
 			//Did the player rightclick on NPC?
 			if (e == GameObjectEvent.Interact)
@@ -1181,13 +1325,13 @@ namespace DOL.GS.Quests.Albion
 				if (quest != null && quest.lilybet == sender)
 				{
 					quest.lilybet.TurnTo(player);
-					
-					Cloak cloak = player.Inventory.GetItem(eInventorySlot.Cloak) as Cloak;
-					if (cloak != null && cloak.QuestName == quest.Name && cloak.Name == treviansHoodedCloak.Name)
+					//If the player is already doing the quest, we ask if he found the sword!
+					InventoryItem cloak = player.Inventory.GetItem(eInventorySlot.Cloak);
+					if (cloak != null && cloak.Id_nb == treviansHoodedCloak.Id_nb)
 					{
 						SendSystemMessage(player, "Mistrust turning to caution, she looks at you anxiously, waiting for you to take her home to Trevian.");
 						quest.lilybet.Follow(player, 100, 5000);
-						quest.ChangeQuestStep(6);
+						quest.Step = 6;
 					}
 					else
 					{
@@ -1197,34 +1341,80 @@ namespace DOL.GS.Quests.Albion
 				}
 				return;
 			}
+
+		}
+
+		/// <summary>
+		/// This method checks if a player qualifies for this quest
+		/// </summary>
+		/// <returns>true if qualified, false if not</returns>
+		public override bool CheckQuestQualification(GamePlayer player)
+		{
+			// if the player is already doing the quest his level is no longer of relevance
+			if (player.IsDoingQuest(typeof (TreviansBestFriend)) != null)
+				return true;
+
+			// This checks below are only performed is player isn't doing quest already
+
+			if (player.Level < minimumLevel || player.Level > maximumLevel)
+				return false;
+
+			return true;
+		}
+
+
+		/* This is our callback hook that will be called when the player clicks
+		 * on any button in the quest offer dialog. We check if he accepts or
+		 * declines here...
+		 */
+
+		private static void CheckPlayerAbortQuest(GamePlayer player, byte response)
+		{
+			TreviansBestFriend quest = player.IsDoingQuest(typeof (TreviansBestFriend)) as TreviansBestFriend;
+
+			if (quest == null)
+				return;
+
+			if (response == 0x00)
+			{
+				SendSystemMessage(player, "Good, no go out there and finish your work!");
+			}
+			else
+			{
+				SendSystemMessage(player, "Aborting Quest " + questTitle + ". You can start over again if you want.");
+				quest.AbortQuest();
+			}
 		}
 
 		/* This is our callback hook that will be called when the player clicks
 		 * on any button in the quest offer dialog. We check if he accepts or
 		 * declines here...
 		 */
-		protected static void QuestDialogResponse(DOLEvent e, object sender, EventArgs args)
+
+		private static void CheckPlayerAcceptQuest(GamePlayer player, byte response)
 		{
-			QuestEventArgs gArgs = args as QuestEventArgs;
+			//We recheck the qualification, because we don't talk to players
+			//who are not doing the quest
+			if(trevian.CanGiveQuest(typeof (TreviansBestFriend), player)  <= 0)
+				return;
 
-			if (gArgs != null && gArgs.QuestType.Equals(typeof(TreviansBestFriend)))
+			if (player.IsDoingQuest(typeof (TreviansBestFriend)) != null)
+				return;
+
+			if (response == 0x00)
 			{
-				GamePlayer player = gArgs.Player;
-				if (player == null) return;
+				SendReply(player, "Oh well, if you change your mind, please come back!");
+			}
+			else
+			{
+				//Check if we can add the quest!
+				if (!trevian.GiveQuest(typeof (TreviansBestFriend), player, 1))
+					return;
 
-				if (e == GamePlayerEvent.AcceptQuest)
-				{
-					if (QuestMgr.GiveQuestToPlayer(typeof(TreviansBestFriend), player, gArgs.Source as GameNPC))
-					{
-						SendReply(player, "Thank you so much! You will not be sorry, friend. You are providing a noble service to Lilybet and me as well. I have faith that you will find her and return her [safely].");
+				SendReply(player, "Thank you so much! You will not be sorry, friend. You are providing a noble service to Lilybet and me as well. I have faith that you will find her and return her [safely].");
 
-						GameEventMgr.AddHandler(player, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
-					}
-				}
-				else if (e == GamePlayerEvent.DeclineQuest)
-				{
-					player.Out.SendMessage("Oh well, if you change your mind, please come back!", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
-				}
+				GameEventMgr.AddHandler(player, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
+
 			}
 		}
 
@@ -1276,66 +1466,63 @@ namespace DOL.GS.Quests.Albion
 		{
 			if (lilybet == null)
 			{
-				lilybet = new GameMob();
+				lilybet = new GameNPC();
 				lilybet.Model = 459;
 				lilybet.Name = "Lilybet";
 				lilybet.GuildName = "Part of " + questTitle + " Quest";
 				lilybet.Realm = (byte) eRealm.Albion;
-				lilybet.Region = WorldMgr.GetRegion(1);
+				lilybet.CurrentRegionID = 1;
 				lilybet.Size = 43;
 				lilybet.Level = 6;
-				Point pos = banditAbductorLeader.Position;
-				pos.X -= 300;
-				pos.Y -= 500;
-				lilybet.Position = pos;
+				lilybet.X = banditAbductorLeader.X - 300;
+				lilybet.Y = banditAbductorLeader.Y - 500;
+				lilybet.Z = banditAbductorLeader.Z;
 				lilybet.Heading = 330;
 
+
 				StandardMobBrain brain = new StandardMobBrain();
-				brain.Body = lilybet;
 				brain.AggroLevel = 0;
 				brain.AggroRange = 0;
-				lilybet.OwnBrain = brain;
+				lilybet.SetOwnBrain(brain);
 
 				lilybet.TurnTo(m_questPlayer);
+				lilybet.AddToWorld();
 				lilybet.MaxSpeedBase = m_questPlayer.MaxSpeedBase; // make her as fast as player so that she can keep track with player during follow.
 
-				lilybet.AddToWorld();
-				
-				GameEventMgr.AddHandler(lilybet, GameObjectEvent.Interact, new DOLEventHandler(TalkToLilybet));
+				GameEventMgr.AddHandler(lilybet, GameLivingEvent.Interact, new DOLEventHandler(TalkToLilybet));
 			}
 			else
 			{
 				// if lilybet is alive move here to origial position
-				if (lilybet.Alive)
+				if (lilybet.IsAlive)
 				{
-					Point pos = banditAbductorLeader.Position;
-					pos.X -= 300;
-					pos.Y -= 500;
-					lilybet.MoveTo(WorldMgr.GetRegion(1), pos, 330);
+					lilybet.MoveTo(1, banditAbductorLeader.X - 300, banditAbductorLeader.Y - 500, banditAbductorLeader.Z, 330);
 				}
 				else
 				{
 					// if she died respawn here to oiginal position
 					lilybet.Health = lilybet.MaxHealth;
 					lilybet.Mana = lilybet.MaxMana;
-					Point pos = banditAbductorLeader.Position;
-					pos.X -= 300;
-					pos.Y -= 500;
-					lilybet.Position = pos;
+					lilybet.Endurance = lilybet.MaxEndurance;
+					lilybet.X = banditAbductorLeader.X - 300;
+					lilybet.Y = banditAbductorLeader.Y - 500;
+					lilybet.Z = banditAbductorLeader.Z;
 
 					lilybet.AddToWorld();
 				}
+
+
 			}
 		}
 
 		private void CheckFreeLylibet()
 		{
-			if ((Step == 4 || Step == 5) && !banditAbductor1.Alive && !banditAbductor1.Alive && !banditAbductor2.Alive)
+			if ((Step == 4 || Step == 5) && !banditAbductor1.IsAlive && !banditAbductor1.IsAlive && !banditAbductor2.IsAlive)
 			{
 				SendSystemMessage("As the last of her captors are defeated, Lilybet creeps from out of hiding. ");
 				AddLilybet();
 
-				ChangeQuestStep(5);
+				Step = 5;
 			}
 		}
 
@@ -1343,9 +1530,9 @@ namespace DOL.GS.Quests.Albion
 		{
 			if (lilybet != null)
 			{
-				GameEventMgr.RemoveHandler(lilybet, GameObjectEvent.Interact, new DOLEventHandler(TalkToLilybet));
+				GameEventMgr.RemoveHandler(lilybet, GameLivingEvent.Interact, new DOLEventHandler(TalkToLilybet));
 
-				lilybet.RemoveFromWorld();
+				lilybet.Delete();
 				lilybet = null;
 			}
 		}
@@ -1387,9 +1574,8 @@ namespace DOL.GS.Quests.Albion
 						return "[Step #6] Return to Trevian as quickly as you can with Lilybet. If she will not follow you it is because you don't have Trevian's Hooded Cloak and she doesn't trust you. Return to Trevian to let him know what happened.";
 					case 7:
 						return "[Step #7] Speak with Trevian to let him know that Lilybet is safe now.";
-					default:
-						return "[Step #" + Step + "] No Description entered for this step!";
 				}
+				return base.Description;
 			}
 		}
 
@@ -1421,7 +1607,7 @@ namespace DOL.GS.Quests.Albion
 				}
 			}
 
-			if (e == GameLivingBaseEvent.AttackedByEnemy)
+			if (e == GameNPCEvent.AttackedByEnemy)
 			{
 				AttackedByEnemyEventArgs aArgs = (AttackedByEnemyEventArgs) args;
 
@@ -1431,56 +1617,72 @@ namespace DOL.GS.Quests.Albion
 					return;
 				}
 			}
+
+		}
+
+		public override void AbortQuest()
+		{
+			RemoveLylibet();
+
+			base.AbortQuest(); //Defined in Quest, changes the state, stores in DB etc ...
+
+			RemoveItem(m_questPlayer, treviansHoodedCloak, false);
+
+			GameEventMgr.RemoveHandler(m_questPlayer, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
 		}
 
 
 		public override void FinishQuest()
 		{
+			base.FinishQuest(); //Defined in Quest, changes the state, stores in DB etc ...
+
 			GameEventMgr.RemoveHandler(m_questPlayer, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
 			//Give reward to player here ...            
-			GiveItemToPlayer(trevian, whistleReward.CreateInstance());
+			GiveItem(trevian, m_questPlayer, whistleReward);
 
 			if (m_questPlayer.CharacterClass.ID == (byte) eCharacterClass.Armsman)
 			{
-				GiveItemToPlayer(trevian, bootsOfRescuer.CreateInstance());
+				GiveItem(trevian, m_questPlayer, bootsOfRescuer);
 			}
 			else if (m_questPlayer.CharacterClass.ID == (byte) eCharacterClass.Reaver)
 			{
-				GiveItemToPlayer(trevian, bootsOfBaneful.CreateInstance());
+				GiveItem(trevian, m_questPlayer, bootsOfBaneful);
 			}
 			else if (m_questPlayer.CharacterClass.ID == (byte) eCharacterClass.Paladin)
 			{
-				GiveItemToPlayer(trevian, bootsOfProtector.CreateInstance());
+				GiveItem(trevian, m_questPlayer, bootsOfProtector);
 			}
 			else if (m_questPlayer.CharacterClass.ID == (byte) eCharacterClass.Theurgist || m_questPlayer.CharacterClass.ID == (byte) eCharacterClass.Wizard || m_questPlayer.CharacterClass.ID == (byte) eCharacterClass.Sorcerer)
 			{
-				GiveItemToPlayer(trevian, bootsOfErudition.CreateInstance());
+				GiveItem(trevian, m_questPlayer, bootsOfErudition);
 			}
 			else if (m_questPlayer.CharacterClass.ID == (byte) eCharacterClass.Cleric)
 			{
-				GiveItemToPlayer(trevian, bootsOfReverence.CreateInstance());
+				GiveItem(trevian, m_questPlayer, bootsOfReverence);
 			}
 			else if (m_questPlayer.CharacterClass.ID == (byte) eCharacterClass.Scout)
 			{
-				GiveItemToPlayer(trevian, bootsOfShadow.CreateInstance());
+				GiveItem(trevian, m_questPlayer, bootsOfShadow);
 			}
 			else if (m_questPlayer.CharacterClass.ID == (byte) eCharacterClass.Infiltrator)
 			{
-				GiveItemToPlayer(trevian, bootsOfEvanescent.CreateInstance());
+				GiveItem(trevian, m_questPlayer, bootsOfEvanescent);
 			}
 			else if (m_questPlayer.CharacterClass.ID == (byte) eCharacterClass.Minstrel)
 			{
-				GiveItemToPlayer(trevian, bootsOfInfluence.CreateInstance());
+				GiveItem(trevian, m_questPlayer, bootsOfInfluence);
 			}
 			else if (m_questPlayer.CharacterClass.ID == (byte) eCharacterClass.Friar)
 			{
-				GiveItemToPlayer(trevian, bootsOfTheDevoted.CreateInstance());
+				GiveItem(trevian, m_questPlayer, bootsOfTheDevoted);
 			}
+
+			RemoveItem(trevian, m_questPlayer, treviansHoodedCloak);
 
 			m_questPlayer.GainExperience(500000, 0, 0, true);
 			m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, Util.Random(10) + 40, Util.Random(50)), "You recieve {0} as a reward for helping Trevian.");
 
-			base.FinishQuest(); //Defined in Quest, changes the state, stores in DB etc ...
 		}
+
 	}
 }

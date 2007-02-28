@@ -92,7 +92,7 @@ namespace DOL.GS.Scripts
 			}
 			if (player.Level >= 10)
 			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.AlbArmor, (int)eArmorLevel.High));
+				player.AddAbility(SkillBase.GetAbility(Abilities.AlbArmor, ArmorLevel.Chain));
 			}
 			if (player.Level >= 15)
 			{
@@ -102,7 +102,7 @@ namespace DOL.GS.Scripts
 			if (player.Level >= 17)
 			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.Protect, 2));
-				player.AddAbility(SkillBase.GetAbility(Abilities.Shield, (int)eShieldSize.Large));
+				player.AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Large));
 			}
 			if (player.Level >= 30)
 			{

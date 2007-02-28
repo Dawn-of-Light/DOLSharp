@@ -16,28 +16,29 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using DOL.Database;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Scripts
 {
 	[CmdAttribute(
 		"&dismount",
-		(uint) ePrivLevel.Player,
+		(uint)ePrivLevel.Player,
 		"Dismount your steed",
 		"/dismount")]
 	public class RideDismountCommandHandler : ICommandHandler
 	{
 		public int OnCommand(GameClient client, string[] args)
 		{
-			if (client.Player.Steed == null)
+			if (!client.Player.IsRiding)
 			{
-				client.Out.SendMessage("You are not riding any steed!",
-				                       eChatType.CT_System,
-				                       eChatLoc.CL_SystemWindow);
+				if (client.Player.IsOnHorse)
+					client.Player.IsOnHorse = false;
+				else
+					client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Dismount"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return 1;
 			}
-			client.Player.DismountSteed();
+			client.Player.DismountSteed(false);
 			return 1;
 		}
 	}

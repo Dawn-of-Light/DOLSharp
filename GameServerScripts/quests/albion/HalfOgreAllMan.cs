@@ -36,8 +36,6 @@ using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
-using NHibernate.Expression;
-using NHibernate.Mapping.Attributes;
 /* I suggest you declare yourself some namespaces for your quests
  * Like: DOL.GS.Quests.Albion
  *       DOL.GS.Quests.Midgard
@@ -49,36 +47,12 @@ using NHibernate.Mapping.Attributes;
 
 namespace DOL.GS.Quests.Albion
 {
-	/* The first thing we do, is to declare the quest requirement
-	* class linked with the new Quest. To do this, we derive 
-	* from the abstract class AbstractQuestDescriptor
-	*/
-	public class HalfOgreAllManDescriptor : AbstractQuestDescriptor
-	{
-		/* This is the type of the quest class linked with 
-		 * this requirement class, you must override the 
-		 * base methid like that
-		 */
-		public override Type LinkedQuestType
-		{
-			get { return typeof(HalfOgreAllMan); }
-		}
-
-		/* This value is used to retrieves the minimum level needed
-		 *  to be able to make this quest. Override it only if you need, 
-		 * the default value is 1
-		 */
-		public override int MinLevel
-		{
-			get { return 5; }
-		}
-	}
-
-	/* The second thing we do, is to declare the class we create
-	 * as Quest. We must make it persistant using attributes, to
-	 * do this, we derive from the abstract class AbstractQuest
+	/* The first thing we do, is to declare the class we create
+	 * as Quest. To do this, we derive from the abstract class
+	 * AbstractQuest
+	 * 	 
 	 */
-	[Subclass(NameType = typeof(HalfOgreAllMan), ExtendsType = typeof(AbstractQuest))]
+
 	public class HalfOgreAllMan : BaseQuest
 	{
 		/// <summary>
@@ -96,16 +70,18 @@ namespace DOL.GS.Quests.Albion
 		 * 
 		 */
 		protected const string questTitle = "Half Ogre, All Man";
+		protected const int minimumLevel = 5;
+		protected const int maximumLevel = 50;
 
-		private static GameMob madissair = null;
-		private static GameMob eileenMorton = null;
-		private static GameMob scribeVeral = null;
-		private static GameMob serawen = null;
+		private static GameNPC madissair = null;
+		private static GameNPC eileenMorton = null;
+		private static GameNPC scribeVeral = null;
+		private static GameNPC serawen = null;
 		
-		private static GenericItemTemplate sealedLovePoem = null;
-		private static GenericItemTemplate beautifulRedRose = null;
+		private static ItemTemplate sealedLovePoem = null;
+		private static ItemTemplate beautifulRedRose = null;
 
-		private static GenericItemTemplate adnilsMagicalOrb = null;
+		private static ItemTemplate adnilsMagicalOrb = null;
 		/*
 		2: "  (Adnil's Magical Orb dispenses advice to those seeking counsel on various matters. For advice on romance, /use the item. For advice on warfare, /use2. For general advice (yes and no questions), /interact with the item.)"
 		3: " "
@@ -122,6 +98,26 @@ namespace DOL.GS.Quests.Albion
 		14: "Cannot be traded to other players."
 		15: "Cannot be sold to merchants."
 		*/
+
+		
+		/* We need to define the constructors from the base class here, else there might be problems
+		 * when loading this quest...
+		 */
+		public HalfOgreAllMan() : base()
+		{
+		}
+
+		public HalfOgreAllMan(GamePlayer questingPlayer) : this(questingPlayer, 1)
+		{
+		}
+
+		public HalfOgreAllMan(GamePlayer questingPlayer, int step) : base(questingPlayer, step)
+		{
+		}
+
+		public HalfOgreAllMan(GamePlayer questingPlayer, DBQuest dbQuest) : base(questingPlayer, dbQuest)
+		{
+		}
 
 		/* The following method is called automatically when this quest class
 		 * is loaded. You might notice that this method is the same as in standard
@@ -141,8 +137,11 @@ namespace DOL.GS.Quests.Albion
 		[ScriptLoadedEvent]
 		public static void ScriptLoaded(DOLEvent e, object sender, EventArgs args)
 		{
+			if (!ServerProperties.Properties.LOAD_QUESTS)
+				return;
 			if (log.IsInfoEnabled)
 				log.Info("Quest \"" + questTitle + "\" initializing ...");
+
 			/* First thing we do in here is to search for the NPCs inside
 			* the world who comes from the certain Realm. If we find a the players,
 			* this means we don't have to create a new one.
@@ -155,207 +154,190 @@ namespace DOL.GS.Quests.Albion
 			
 			#region defineNPCS
 
-			madissair = ResearchQuestObject(typeof(GameMob), WorldMgr.GetRegion(1), eRealm.Albion, "Madissair") as GameMob;
-			if (madissair == null)
+			GameNPC[] npcs = WorldMgr.GetNPCsByName("Madissair", eRealm.Albion);
+			if (npcs.Length == 0)
 			{
-				madissair = new GameMob();
+				madissair = new GameNPC();
 				madissair.Model = 1105;
 				madissair.Name = "Madissair";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + madissair.Name + ", creating him ...");
 				madissair.GuildName = "Part of " + questTitle + " Quest";
 				madissair.Realm = (byte) eRealm.Albion;
-				madissair.Region = WorldMgr.GetRegion(1);
+				madissair.CurrentRegionID = 1;
 
-				GameNpcInventory template = new GameNpcInventory();
-				template.AddItem(eInventorySlot.RightHandWeapon, new NPCWeapon(8));
-				template.AddItem(eInventorySlot.FeetArmor, new NPCArmor(133));
-				template.AddItem(eInventorySlot.TorsoArmor, new NPCArmor(31));
-				template.AddItem(eInventorySlot.Cloak, new NPCEquipment(96));
-				template.AddItem(eInventorySlot.LegsArmor, new NPCArmor(32));
-				template.AddItem(eInventorySlot.ArmsArmor, new NPCArmor(33));
-				madissair.Inventory = template;
+				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
+				template.AddNPCEquipment(eInventorySlot.RightHandWeapon,8);
+				template.AddNPCEquipment(eInventorySlot.FeetArmor, 133);
+				template.AddNPCEquipment(eInventorySlot.TorsoArmor, 31);
+				template.AddNPCEquipment(eInventorySlot.Cloak, 96);
+				template.AddNPCEquipment(eInventorySlot.LegsArmor, 32);
+				template.AddNPCEquipment(eInventorySlot.ArmsArmor, 33);
+				madissair.Inventory = template.CloseTemplate();
 				madissair.SwitchWeapon(GameLiving.eActiveWeaponSlot.Standard);
 
 				madissair.Size = 50;
 				madissair.Level = 30;
-				madissair.Position = new Point(561064, 512291, 2407);
+				madissair.X = 561064;
+				madissair.Y = 512291;
+				madissair.Z = 2407;
 				madissair.Heading = 721;
-
-				StandardMobBrain newBrain = new StandardMobBrain();
-				newBrain.Body = madissair;
-				newBrain.AggroLevel = 100;
-				newBrain.AggroRange = 0;
-				madissair.OwnBrain = newBrain;
-
-				if(!madissair.AddToWorld())
-				{
-					if (log.IsWarnEnabled)
-						log.Warn("Quest "+questTitle+" abort because a needed region is not in use in this server!");
-					return;
-				}
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(madissair);
+					madissair.SaveIntoDatabase();
+
+				madissair.AddToWorld();
 			}
+			else
+				madissair = npcs[0];
 
 
-			eileenMorton = ResearchQuestObject(typeof(GameMob), WorldMgr.GetRegion(1), eRealm.Albion, "Eileen Morton") as GameMob;
-			if (eileenMorton == null)
+			npcs = WorldMgr.GetNPCsByName("Eileen Morton", eRealm.Albion);
+			if (npcs.Length == 0)
 			{
-				eileenMorton = new GameMob();
+				eileenMorton = new GameNPC();
 				eileenMorton.Model = 5;
 				eileenMorton.Name = "Eileen Morton";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + eileenMorton.Name + ", creating him ...");
 				eileenMorton.GuildName = "Part of " + questTitle + " Quest";
 				eileenMorton.Realm = (byte) eRealm.Albion;
-				eileenMorton.Region = WorldMgr.GetRegion(1);
+				eileenMorton.CurrentRegionID = 1;
 
-				GameNpcInventory template = new GameNpcInventory();
-				template.AddItem(eInventorySlot.TwoHandWeapon, new NPCWeapon(227));
-				template.AddItem(eInventorySlot.HandsArmor, new NPCArmor(137));
-				template.AddItem(eInventorySlot.TorsoArmor, new NPCArmor(51));
-				template.AddItem(eInventorySlot.LegsArmor, new NPCArmor(135));
-				template.AddItem(eInventorySlot.ArmsArmor, new NPCArmor(136));
-				eileenMorton.Inventory = template;
+				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
+				template.AddNPCEquipment(eInventorySlot.TwoHandWeapon, 227);
+				template.AddNPCEquipment(eInventorySlot.HandsArmor, 137);
+				template.AddNPCEquipment(eInventorySlot.TorsoArmor, 51);
+				template.AddNPCEquipment(eInventorySlot.LegsArmor, 135);
+				template.AddNPCEquipment(eInventorySlot.ArmsArmor, 136);
+				eileenMorton.Inventory = template.CloseTemplate();
 				eileenMorton.SwitchWeapon(GameLiving.eActiveWeaponSlot.TwoHanded);
 
 				eileenMorton.Size = 52;
 				eileenMorton.Level = 21;
-				eileenMorton.Position = new Point(559495, 510743, 2496);
+				eileenMorton.X = 559495;
+				eileenMorton.Y = 510743;
+				eileenMorton.Z = 2496;
 				eileenMorton.Heading = 716;
-
-				StandardMobBrain newBrain = new StandardMobBrain();
-				newBrain.Body = eileenMorton;
-				newBrain.AggroLevel = 100;
-				newBrain.AggroRange = 0;
-				eileenMorton.OwnBrain = newBrain;
-
-				if(!eileenMorton.AddToWorld())
-				{
-					if (log.IsWarnEnabled)
-						log.Warn("Quest "+questTitle+" abort because a needed region is not in use in this server!");
-					return;
-				}
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(eileenMorton);
+					eileenMorton.SaveIntoDatabase();
+
+				eileenMorton.AddToWorld();
 			}
+			else
+				eileenMorton = npcs[0];
 
 
-			scribeVeral = ResearchQuestObject(typeof(GameMob), WorldMgr.GetRegion(10), eRealm.Albion, "Scribe Veral") as GameMob;
-			if (scribeVeral == null)
+			npcs = WorldMgr.GetNPCsByName("Scribe Veral", eRealm.Albion);
+			if (npcs.Length == 0)
 			{
-				scribeVeral = new GameMob();
+				scribeVeral = new GameNPC();
 				scribeVeral.Model = 9;
 				scribeVeral.Name = "Scribe Veral";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + scribeVeral.Name + ", creating him ...");
 				scribeVeral.GuildName = "Part of " + questTitle + " Quest";
 				scribeVeral.Realm = (byte) eRealm.Albion;
-				scribeVeral.Region = WorldMgr.GetRegion(10);
+				scribeVeral.CurrentRegionID = 10;
 
-				GameNpcInventory template = new GameNpcInventory();
-				template.AddItem(eInventorySlot.HandsArmor, new NPCArmor(142, 43, 0));
-				template.AddItem(eInventorySlot.FeetArmor, new NPCArmor(143, 43, 0));
-				template.AddItem(eInventorySlot.TorsoArmor, new NPCArmor(2230));
-				scribeVeral.Inventory = template;
+				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
+				template.AddNPCEquipment(eInventorySlot.HandsArmor, 142, 43);
+				template.AddNPCEquipment(eInventorySlot.FeetArmor, 143, 43);
+				template.AddNPCEquipment(eInventorySlot.TorsoArmor, 2230);
+				scribeVeral.Inventory = template.CloseTemplate();
 				scribeVeral.SwitchWeapon(GameLiving.eActiveWeaponSlot.Standard);
 
 				scribeVeral.Size = 50;
 				scribeVeral.Level = 8;
-				scribeVeral.Position = new Point(35308, 21876, 8447);
+				scribeVeral.X = 35308;
+				scribeVeral.Y = 21876;
+				scribeVeral.Z = 8447;
 				scribeVeral.Heading = 284;
-
-				StandardMobBrain newBrain = new StandardMobBrain();
-				newBrain.Body = scribeVeral;
-				newBrain.AggroLevel = 100;
-				newBrain.AggroRange = 0;
-				scribeVeral.OwnBrain = newBrain;
-
-				if(!scribeVeral.AddToWorld())
-				{
-					if (log.IsWarnEnabled)
-						log.Warn("Quest "+questTitle+" abort because a needed region is not in use in this server!");
-					return;
-				}
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(scribeVeral);
+					scribeVeral.SaveIntoDatabase();
+
+				scribeVeral.AddToWorld();
 			}
+			else
+				scribeVeral = npcs[0];
 
 
-			serawen = ResearchQuestObject(typeof(GameMob), WorldMgr.GetRegion(10), eRealm.Albion, "Serawen") as GameMob;
-			if (serawen == null)
+			npcs = WorldMgr.GetNPCsByName("Serawen", eRealm.Albion);
+			if (npcs.Length == 0)
 			{
-				serawen = new GameMob();
+				serawen = new GameNPC();
 				serawen.Model = 45;
 				serawen.Name = "Serawen";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + serawen.Name + ", creating him ...");
 				serawen.GuildName = "Part of " + questTitle + " Quest";
 				serawen.Realm = (byte) eRealm.Albion;
-				serawen.Region = WorldMgr.GetRegion(10);
+				serawen.CurrentRegionID = 10;
 
-				GameNpcInventory template = new GameNpcInventory();
-				template.AddItem(eInventorySlot.TorsoArmor, new NPCArmor(2160));
-				serawen.Inventory = template;
+				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
+				template.AddNPCEquipment(eInventorySlot.TorsoArmor, 2160);
+				serawen.Inventory = template.CloseTemplate();
 				serawen.SwitchWeapon(GameLiving.eActiveWeaponSlot.Standard);
 
 				serawen.Size = 51;
 				serawen.Level = 30;
-				serawen.Position = new Point(35863, 27167, 8449);
+				serawen.X = 35863;
+				serawen.Y = 27167;
+				serawen.Z = 8449;
 				serawen.Heading = 3298;
-
-				StandardMobBrain newBrain = new StandardMobBrain();
-				newBrain.Body = serawen;
-				newBrain.AggroLevel = 100;
-				newBrain.AggroRange = 0;
-				serawen.OwnBrain = newBrain;
-
-				if(!serawen.AddToWorld())
-				{
-					if (log.IsWarnEnabled)
-						log.Warn("Quest "+questTitle+" abort because a needed region is not in use in this server!");
-					return;
-				}
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(serawen);
+					serawen.SaveIntoDatabase();
+
+				serawen.AddToWorld();
 			}
+			else
+				serawen = npcs[0];
 
 			#endregion
 			
 			#region defineItems
 
 			// item db check
-			sealedLovePoem = GameServer.Database.SelectObject(typeof (GenericItemTemplate), Expression.Eq("Name", "Sealed Love Poem")) as GenericItemTemplate;
+			sealedLovePoem = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "sealed_love_poem");
 			if (sealedLovePoem == null)
 			{
-				sealedLovePoem = new GenericItemTemplate();
+				sealedLovePoem = new ItemTemplate();
 				sealedLovePoem.Name = "Sealed Love Poem";
 				if (log.IsWarnEnabled)
-					log.Warn("Could not find " + sealedLovePoem.Name + ", creating it ...");
+					log.Warn("Could not find "+sealedLovePoem.Name+", creating it ...");
 				sealedLovePoem.Level = 0;
 				sealedLovePoem.Weight = 1;
 				sealedLovePoem.Model = 498;
 
+				sealedLovePoem.Object_Type = (int) eObjectType.GenericItem;
+				sealedLovePoem.Id_nb = "sealed_love_poem";
+				sealedLovePoem.Gold = 0;
+				sealedLovePoem.Silver = 0;
+				sealedLovePoem.Copper = 0;
+				sealedLovePoem.IsPickable = false;
 				sealedLovePoem.IsDropable = false;
-				sealedLovePoem.IsSaleable = false;
-				sealedLovePoem.IsTradable = false;
+				
+				sealedLovePoem.Quality = 100;
+				sealedLovePoem.Condition = 1000;
+				sealedLovePoem.MaxCondition = 1000;
+				sealedLovePoem.Durability = 1000;
+				sealedLovePoem.MaxDurability = 1000;
+
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -365,84 +347,106 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			beautifulRedRose = GameServer.Database.SelectObject(typeof (GenericItemTemplate), Expression.Eq("Name", "Beautiful Red Rose")) as GenericItemTemplate;
+			beautifulRedRose = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "beautiful_red_rose");
 			if (beautifulRedRose == null)
 			{
-				beautifulRedRose = new GenericItemTemplate();
+				beautifulRedRose = new ItemTemplate();
 				beautifulRedRose.Name = "Beautiful Red Rose";
 				if (log.IsWarnEnabled)
-					log.Warn("Could not find " + beautifulRedRose.Name + ", creating it ...");
+					log.Warn("Could not find "+beautifulRedRose.Name+", creating it ...");
 				beautifulRedRose.Level = 0;
 				beautifulRedRose.Weight = 1;
 				beautifulRedRose.Model = 618;
 
+				beautifulRedRose.Object_Type = (int) eObjectType.GenericItem;
+				beautifulRedRose.Id_nb = "beautiful_red_rose";
+				beautifulRedRose.Gold = 0;
+				beautifulRedRose.Silver = 0;
+				beautifulRedRose.Copper = 0;
+				beautifulRedRose.IsPickable = false;
 				beautifulRedRose.IsDropable = false;
-				beautifulRedRose.IsSaleable = false;
-				beautifulRedRose.IsTradable = false;
+				
+				beautifulRedRose.Quality = 100;
+				beautifulRedRose.Condition = 1000;
+				beautifulRedRose.MaxCondition = 1000;
+				beautifulRedRose.Durability = 1000;
+				beautifulRedRose.MaxDurability = 1000;
+
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
 					GameServer.Database.AddNewObject(beautifulRedRose);
+
+
+				// item db check
+				adnilsMagicalOrb = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "adnils_magical_orb");
+				if (adnilsMagicalOrb == null)
+				{
+					adnilsMagicalOrb = new ItemTemplate();
+					adnilsMagicalOrb.Name = "Adnil's Magical Orb";
+					if (log.IsWarnEnabled)
+						log.Warn("Could not find "+adnilsMagicalOrb.Name+", creating it ...");
+					adnilsMagicalOrb.Level = 0;
+					adnilsMagicalOrb.Weight = 1;
+					adnilsMagicalOrb.Model = 525;
+
+					adnilsMagicalOrb.Object_Type = (int) eObjectType.GenericItem;
+					adnilsMagicalOrb.Id_nb = "adnils_magical_orb";
+					adnilsMagicalOrb.Gold = 0;
+					adnilsMagicalOrb.Silver = 0;
+					adnilsMagicalOrb.Copper = 0;
+					adnilsMagicalOrb.IsPickable = false;
+					adnilsMagicalOrb.IsDropable = false;
+				
+					adnilsMagicalOrb.Quality = 100;
+					adnilsMagicalOrb.Condition = 1000;
+					adnilsMagicalOrb.MaxCondition = 1000;
+					adnilsMagicalOrb.Durability = 1000;
+					adnilsMagicalOrb.MaxDurability = 1000;
+
+
+					//You don't have to store the created item in the db if you don't want,
+					//it will be recreated each time it is not found, just comment the following
+					//line if you rather not modify your database
+					if (SAVE_INTO_DATABASE)
+						GameServer.Database.AddNewObject(adnilsMagicalOrb);
+				}
+
+				#endregion
+
+				/* Now we add some hooks to the npc we found.
+				* Actually, we want to know when a player interacts with him.
+				* So, we hook the right-click (interact) and the whisper method
+				* of npc and set the callback method to the "TalkToXXX"
+				* method. This means, the "TalkToXXX" method is called whenever
+				* a player right clicks on him or when he whispers to him.
+				*/
+
+				GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+				GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+
+				GameEventMgr.AddHandler(GamePlayerEvent.GameEntered, new DOLEventHandler(PlayerEnterWorld));
+			
+				GameEventMgr.AddHandler(madissair, GameObjectEvent.Interact, new DOLEventHandler(TalkToMadissair));
+				GameEventMgr.AddHandler(madissair, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToMadissair));
+
+				GameEventMgr.AddHandler(eileenMorton, GameObjectEvent.Interact, new DOLEventHandler(TalkToEileenMorton));
+				GameEventMgr.AddHandler(eileenMorton, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToEileenMorton));
+
+				GameEventMgr.AddHandler(scribeVeral, GameObjectEvent.Interact, new DOLEventHandler(TalkToScribeVeral));
+				GameEventMgr.AddHandler(scribeVeral, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToScribeVeral));
+
+				GameEventMgr.AddHandler(serawen, GameObjectEvent.Interact, new DOLEventHandler(TalkToSerawen));
+				GameEventMgr.AddHandler(serawen, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToSerawen));
+
+				/* Now we bring to Madissair the possibility to give this quest to players */
+				madissair.AddQuestToGive(typeof (HalfOgreAllMan));
+
+				if (log.IsInfoEnabled)
+					log.Info("Quest \"" + questTitle + "\" initialized");
 			}
-
-			// item db check
-			adnilsMagicalOrb = GameServer.Database.SelectObject(typeof (GenericItemTemplate), Expression.Eq("Name", "Adnil's Magical Orb")) as GenericItemTemplate;
-			if (adnilsMagicalOrb == null)
-			{
-				adnilsMagicalOrb = new GenericItemTemplate();
-				adnilsMagicalOrb.Name = "Adnil's Magical Orb";
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find "+adnilsMagicalOrb.Name+", creating it ...");
-				adnilsMagicalOrb.Level = 0;
-				adnilsMagicalOrb.Weight = 1;
-				adnilsMagicalOrb.Model = 525;
-
-				adnilsMagicalOrb.IsDropable = false;
-				adnilsMagicalOrb.IsSaleable = false;
-				adnilsMagicalOrb.IsTradable = false;
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(adnilsMagicalOrb);
-			}
-
-			#endregion
-
-			/* Now we add some hooks to the npc we found.
-			* Actually, we want to know when a player interacts with him.
-			* So, we hook the right-click (interact) and the whisper method
-			* of npc and set the callback method to the "TalkToXXX"
-			* method. This means, the "TalkToXXX" method is called whenever
-			* a player right clicks on him or when he whispers to him.
-			*/
-
-			GameEventMgr.AddHandler(GamePlayerEvent.GameEntered, new DOLEventHandler(PlayerEnterWorld));
-		
-			GameEventMgr.AddHandler(madissair, GameObjectEvent.Interact, new DOLEventHandler(TalkToMadissair));
-			GameEventMgr.AddHandler(madissair, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToMadissair));
-
-			GameEventMgr.AddHandler(eileenMorton, GameObjectEvent.Interact, new DOLEventHandler(TalkToEileenMorton));
-			GameEventMgr.AddHandler(eileenMorton, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToEileenMorton));
-
-			GameEventMgr.AddHandler(scribeVeral, GameObjectEvent.Interact, new DOLEventHandler(TalkToScribeVeral));
-			GameEventMgr.AddHandler(scribeVeral, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToScribeVeral));
-
-			GameEventMgr.AddHandler(serawen, GameObjectEvent.Interact, new DOLEventHandler(TalkToSerawen));
-			GameEventMgr.AddHandler(serawen, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToSerawen));
-
-			/* Now we add some hooks to trigger the quest dialog reponse. */
-			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(QuestDialogResponse));
-			GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(QuestDialogResponse));
-
-			/* Now we bring to Ydenia the possibility to give this quest to players */
-			QuestMgr.AddQuestDescriptor(madissair, typeof(HalfOgreAllManDescriptor));
-
-			if (log.IsInfoEnabled)
-				log.Info("Quest \"" + questTitle + "\" initialized");
 		}
 
 		/* The following method is called automatically when this quest class
@@ -464,6 +468,9 @@ namespace DOL.GS.Quests.Albion
 			/* Removing hooks works just as adding them but instead of 
 			 * AddHandler, we call RemoveHandler, the parameters stay the same
 			 */
+
+			GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
 			
 			GameEventMgr.RemoveHandler(GamePlayerEvent.GameEntered, new DOLEventHandler(PlayerEnterWorld));
 
@@ -479,11 +486,8 @@ namespace DOL.GS.Quests.Albion
 			GameEventMgr.RemoveHandler(serawen, GameObjectEvent.Interact, new DOLEventHandler(TalkToSerawen));
 			GameEventMgr.RemoveHandler(serawen, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToSerawen));
 
-			GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(QuestDialogResponse));
-			GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(QuestDialogResponse));
-
 			/* Now we remove to Madissair the possibility to give this quest to players */
-			QuestMgr.RemoveQuestDescriptor(madissair, typeof(HalfOgreAllManDescriptor));
+			madissair.RemoveQuestToGive(typeof (HalfOgreAllMan));
 		}
 
 		protected static void PlayerEnterWorld(DOLEvent e, object sender, EventArgs args)
@@ -526,7 +530,7 @@ namespace DOL.GS.Quests.Albion
 			if (player == null)
 				return;
 
-			if (QuestMgr.CanGiveQuest(typeof(HalfOgreAllMan), player, madissair) <= 0)
+			if(madissair.CanGiveQuest(typeof (HalfOgreAllMan), player)  <= 0)
 				return;
 
 			//We also check if the player is already doing the quest
@@ -590,7 +594,8 @@ namespace DOL.GS.Quests.Albion
 
 						case "through with it":
 							madissair.SayTo(player, "I can't approach her directly, but I've written a poem to express my feelings to her. The only problem is that I haven't figured out a way to deliver it anonymously.  I want her to read it and know who I am, but I'm afraid she won't like it, or me.  I'll gladly pay you if you would be willing to deliver it for me.");
-							QuestMgr.ProposeQuestToPlayer(typeof(HalfOgreAllMan), "Will you help Madissair \nwin Serawen's heart? \n[Level "+player.Level+"]", player, madissair);
+							//If the player offered his help, we send the quest dialog now!
+							player.Out.SendQuestSubscribeCommand(madissair, QuestMgr.GetIDForQuestType(typeof(HalfOgreAllMan)), "Will you help Madissair \nwin Serawen's heart? \n[Level " + player.Level + "]");
 							break;
 					}
 				}
@@ -624,7 +629,7 @@ namespace DOL.GS.Quests.Albion
 									
 									player.GainExperience((long)((player.ExperienceForNextLevel / (player.Level * 9)) * 1.7), 0, 0, true); //202 xp
 
-									quest.ChangeQuestStep(20);
+									quest.Step = 20;
 									break;
 							}
 							break;
@@ -647,7 +652,7 @@ namespace DOL.GS.Quests.Albion
 									
 									player.GainExperience((long)((player.ExperienceForNextLevel / (player.Level * 9)) * 1.35), 0, 0, true); //162 xp
 
-									quest.ChangeQuestStep(20);
+									quest.Step = 20;
 									break;
 							}
 							break;
@@ -665,7 +670,7 @@ namespace DOL.GS.Quests.Albion
 									
 									player.GainExperience((long)((player.ExperienceForNextLevel / (player.Level * 9)) * 1.7), 0, 0, true); //202 xp
 
-									quest.ChangeQuestStep(20);
+									quest.Step = 20;
 									break;
 							}
 							break;
@@ -689,7 +694,7 @@ namespace DOL.GS.Quests.Albion
 									
 									player.GainExperience((long)(player.ExperienceForNextLevel / (player.Level * 9)), 0, 0, true); //121 xp
 
-									quest.ChangeQuestStep(20);
+									quest.Step = 20;
 									break;
 							}
 							break;
@@ -701,6 +706,11 @@ namespace DOL.GS.Quests.Albion
 								quest.FinishQuest();	
 							}
 							break;
+					}
+
+					if(wArgs.Text == "abort")
+					{
+						player.Out.SendCustomDialog("Do you really want to abort this quest, \nall items gained during quest will be lost?", new CustomDialogResponse(CheckPlayerAbortQuest));
 					}
 				}
 			}
@@ -752,11 +762,11 @@ namespace DOL.GS.Quests.Albion
 							case "Madissair":
 								eileenMorton.SayTo(player, "And right now, that's a big assumption to make.  I think they would be nice together, but my opinion doesn't count.  Anyway, here's your rose. I wish you and Madissair good luck.");
 								
-								// give the rose  
-								GiveItemToPlayer(eileenMorton, CreateQuestItem(beautifulRedRose, quest), player);
-								
-								if(quest.Step == 2 ) quest.ChangeQuestStep(3);
-								else if(quest.Step == 4) quest.ChangeQuestStep(5);
+								// give the rose                
+								GiveItem(eileenMorton, player, beautifulRedRose);
+
+								if(quest.Step == 2 ) quest.Step = 3;
+								else if(quest.Step == 4) quest.Step = 5;
 								break;
 						}
 					}
@@ -810,7 +820,7 @@ namespace DOL.GS.Quests.Albion
 								SendMessage(player, "Scribe Veral sits down at the table, taking out a piece of paper, an inkwell, and a gaudy quill.  With sweeping gestures, he begins composing the perfect love poem.  He seems oblivious to your presence as he pens each line, finishing it with a theatrical flourish. The Scribe continues writing until he nears the bottom of the sheet, then sets aside the quill, deftly folds the paper, and hands it to you.", 0, eChatType.CT_Say, eChatLoc.CL_PopupWindow);
 								scribeVeral.SayTo(player, "There we are! This is sure to make her fall madly in love with your gentleman friend.  No payment is necessary. Just knowing that I've been able to help a young man is reward enough!");
 
-								GenericItem item = player.Inventory.GetFirstItemByName(sealedLovePoem.Name, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
+								InventoryItem item = player.Inventory.GetFirstItemByID(sealedLovePoem.Id_nb, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
 								if (item != null)
 								{
 									item.Name = "Rewritten Love Poem";
@@ -870,10 +880,10 @@ namespace DOL.GS.Quests.Albion
 
 							case "you here":
 								serawen.SayTo(player, "A gift for me? How thoughtful! Do you have it with you?");
-								if(quest.Step == 3) quest.ChangeQuestStep(10);
-								else if(quest.Step == 5) quest.ChangeQuestStep(6);
-								else if(quest.Step == 4) quest.ChangeQuestStep(7);
-								else if(quest.Step == 1) quest.ChangeQuestStep(9);
+								if(quest.Step == 3) quest.Step = 10;
+								else if(quest.Step == 5) quest.Step = 6;
+								else if(quest.Step == 4) quest.Step = 7;
+								else if(quest.Step == 1) quest.Step = 9;
 								break;
 						}
 					}
@@ -887,7 +897,7 @@ namespace DOL.GS.Quests.Albion
 
 							case "Geroth":
 								serawen.SayTo(player, "Oh, thank goodness! For a moment, I didn't know what to think. Geroth always warned me that there are a lot of lonely men who might try this sort of thing. I'm so glad to know someone like Geroth, with both a sense of judgment and a sense of  [humor].");
-								quest.ChangeQuestStep(18);
+								quest.Step = 18;
 								break;
 
 							case "humor":
@@ -903,7 +913,7 @@ namespace DOL.GS.Quests.Albion
 								serawen.SayTo(player, "Madissair? I've no interest in that oafish Half Ogre. Who's ever heard of a Half Ogre tailor, anyway? Tell him that if he behaves like this again, I'll ask Father to send him away. Father has no need of apprentices with designs on his daughter.");
 								SendMessage(player, "Serawen shudders with disgust as she imagines life with Madissair and then snorts in disdain at the idea of a Half Ogre tailor.", 0, eChatType.CT_Say, eChatLoc.CL_PopupWindow);
 								
-								quest.ChangeQuestStep(19);
+								quest.Step = 19;
 								break;
 						}
 					}
@@ -921,7 +931,7 @@ namespace DOL.GS.Quests.Albion
 
 							case "Geroth":
 								serawen.SayTo(player, "Oh, thank goodness! For a moment, I didn't know what to think. Geroth always warned me that there are a lot of lonely men who might try this sort of thing. I'm so glad to know someone like Geroth, with both a sense of judgment and a sense of  [humor].");
-								quest.ChangeQuestStep(18);
+								quest.Step = 18;
 								break;
 
 							case "humor":
@@ -937,7 +947,7 @@ namespace DOL.GS.Quests.Albion
 								SendMessage(player, "You agree to tell Madissair about Serawen's invitation.", 0, eChatType.CT_Say, eChatLoc.CL_PopupWindow);
 								serawen.SayTo(player, "Thank you, "+player.Name+". Please give Madissair my thanks, as well.");
 								
-								quest.ChangeQuestStep(16); // rose + rewrited
+								quest.Step = 16; // rose + rewrited
 								break;
 						}
 					}
@@ -955,7 +965,7 @@ namespace DOL.GS.Quests.Albion
 
 							case "Geroth":
 								serawen.SayTo(player, "Oh, thank goodness! For a moment, I didn't know what to think. Geroth always warned me that there are a lot of lonely men who might try this sort of thing. I'm so glad to know someone like Geroth, with both a sense of judgment and a sense of  [humor].");
-								quest.ChangeQuestStep(18);
+								quest.Step = 18;
 								break;
 
 							case "humor":
@@ -966,7 +976,7 @@ namespace DOL.GS.Quests.Albion
 								serawen.SayTo(player, "Madissair? I've no interest in that oafish Half Ogre. Who's ever heard of a Half Ogre tailor, anyway? Tell him that if he behaves like this again, I'll ask Father to send him away. Father has no need of apprentices with designs on his daughter.");
 								SendMessage(player, "Serawen shudders with disgust as she imagines life with Madissair and then snorts in disdain at the idea of a Half Ogre tailor.", 0, eChatType.CT_Say, eChatLoc.CL_PopupWindow);
 								
-								quest.ChangeQuestStep(19);
+								quest.Step = 19;
 								break;
 						}
 					}
@@ -984,7 +994,7 @@ namespace DOL.GS.Quests.Albion
 
 							case "Geroth":
 								serawen.SayTo(player, "Oh, thank goodness! For a moment, I didn't know what to think. Geroth always warned me that there are a lot of lonely men who might try this sort of thing. I'm so glad to know someone like Geroth, with both a sense of judgment and a sense of  [humor].");
-								quest.ChangeQuestStep(18);
+								quest.Step = 18;
 								break;
 
 							case "humor":
@@ -1004,7 +1014,7 @@ namespace DOL.GS.Quests.Albion
 								serawen.SayTo(player, "If we're careful, it won't happen.  When I was younger, I built a rope ladder so that I could sneak out of the house at night. I haven't had to use it in awhile, but it will serve just as well to help someone get in. I'll bring some food upstairs tonight, so we can have a private meeting. Father will never know! Will you deliver my [invitation] to Madissair?");
 								SendMessage(player, "You agree to deliver Serawen's invitation to Madissair.", 0, eChatType.CT_Say, eChatLoc.CL_PopupWindow);
 								
-								quest.ChangeQuestStep(13); // only rose
+								quest.Step = 13; // only rose
 								break;
 						}
 					}
@@ -1022,8 +1032,8 @@ namespace DOL.GS.Quests.Albion
 		
 			UseSlotEventArgs uArgs = (UseSlotEventArgs) args;
 
-			GenericItem item = player.Inventory.GetItem((eInventorySlot)uArgs.Slot) as GenericItem;
-			if (item != null && item.QuestName == quest.Name && item.Name == sealedLovePoem.Name)
+			InventoryItem item = player.Inventory.GetItem((eInventorySlot)uArgs.Slot);
+			if (item != null && item.Id_nb == sealedLovePoem.Id_nb)
 			{
 				if (quest.Step == 1)
 				{
@@ -1037,8 +1047,65 @@ namespace DOL.GS.Quests.Albion
 					item.Name = "Unsealed Love Poem";
 					player.Out.SendInventorySlotsUpdate(new int[] {item.SlotPosition});
 						
-					quest.ChangeQuestStep(2);
+					quest.Step = 2;
 				}
+			}
+		}
+
+		/// <summary>
+		/// This method checks if a player qualifies for this quest
+		/// </summary>
+		/// <returns>true if qualified, false if not</returns>
+		public override bool CheckQuestQualification(GamePlayer player)
+		{
+			// if the player is already doing the quest his level is no longer of relevance
+			if (player.IsDoingQuest(typeof (HalfOgreAllMan)) != null)
+				return true;
+
+			// This checks below are only performed is player isn't doing quest already
+
+			if (player.Level < minimumLevel || player.Level > maximumLevel)
+				return false;
+
+			return true;
+		}
+
+		
+		/* This is our callback hook that will be called when the player clicks
+		 * on any button in the quest offer dialog. We check if he accepts or
+		 * declines here...
+		 */
+
+		protected static void SubscribeQuest(DOLEvent e, object sender, EventArgs args)
+		{
+			QuestEventArgs qargs = args as QuestEventArgs;
+			if (qargs == null)
+				return;
+
+			if (qargs.QuestID != QuestMgr.GetIDForQuestType(typeof(HalfOgreAllMan)))
+				return;
+
+			if (e == GamePlayerEvent.AcceptQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x01);
+			else if (e == GamePlayerEvent.DeclineQuest)
+				CheckPlayerAcceptQuest(qargs.Player, 0x00);
+		}
+
+		private static void CheckPlayerAbortQuest(GamePlayer player, byte response)
+		{
+			HalfOgreAllMan quest = player.IsDoingQuest(typeof (HalfOgreAllMan)) as HalfOgreAllMan;
+
+			if (quest == null)
+				return;
+
+			if (response == 0x00)
+			{
+				SendSystemMessage(player, "Good, no go out there and finish your work!");
+			}
+			else
+			{
+				SendSystemMessage(player, "Aborting Quest " + questTitle + ". You can start over again if you want.");
+				quest.AbortQuest();
 			}
 		}
 
@@ -1046,33 +1113,34 @@ namespace DOL.GS.Quests.Albion
 		 * on any button in the quest offer dialog. We check if he accepts or
 		 * declines here...
 		 */
-		protected static void QuestDialogResponse(DOLEvent e, object sender, EventArgs args)
+
+		private static void CheckPlayerAcceptQuest(GamePlayer player, byte response)
 		{
-			QuestEventArgs gArgs = args as QuestEventArgs;
+			//We recheck the qualification, because we don't talk to players
+			//who are not doing the quest
+			if(madissair.CanGiveQuest(typeof (HalfOgreAllMan), player)  <= 0)
+				return;
 
-			if (gArgs != null && gArgs.QuestType.Equals(typeof(BuildingABetterBow)))
+			if (player.IsDoingQuest(typeof (HalfOgreAllMan)) != null)
+				return;
+
+			if (response == 0x00)
 			{
-				GamePlayer player = gArgs.Player;
-				if (player == null) return;
+				SendReply(player, "Oh well, if you change your mind, please come back!");
+			}
+			else
+			{
+				//Check if we can add the quest!
+				if (!madissair.GiveQuest(typeof (HalfOgreAllMan), player, 1))
+					return;
 
-				if (e == GamePlayerEvent.AcceptQuest)
-				{
-					if (QuestMgr.GiveQuestToPlayer(typeof(BuildingABetterBow), player, gArgs.Source as GameNPC))
-					{
-						// give the peom   
-						GiveItemToPlayer(madissair, CreateQuestItem(sealedLovePoem, player.IsDoingQuest(typeof (HalfOgreAllMan))), player);
-				
-						SendReply(player, "That's great! Let me find it for you.  Please promise that you won't break the seal on it. The contents are private, and for Serawen's [eyes only].");
+				// give the peom                
+				GiveItem(madissair, player, sealedLovePoem);
 
-						GameEventMgr.AddHandler(player, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
-						GameEventMgr.AddHandler(player, GamePlayerEvent.UseSlot, new DOLEventHandler(PlayerUseSlot));
-					}
-				}
-				else if (e == GamePlayerEvent.DeclineQuest)
-				{
+				SendReply(player, "That's great! Let me find it for you.  Please promise that you won't break the seal on it. The contents are private, and for Serawen's [eyes only].");
 
-					player.Out.SendMessage("Oh well, if you change your mind, please come back!", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
-				}
+				GameEventMgr.AddHandler(player, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
+				GameEventMgr.AddHandler(player, GamePlayerEvent.UseSlot, new DOLEventHandler(PlayerUseSlot));
 			}
 		}
 
@@ -1139,9 +1207,8 @@ namespace DOL.GS.Quests.Albion
 						return "[Step #5] Return to Madissair and let him know that Serawen have no interest in him.";
 					case 20:
 						return "[Step #6] If Madissair stops talking to you, ask him about the [magical orb] he offered you.";
-					default:
-						return "[Step #" + Step + "] No Description entered for this step!";
 				}
+				return base.Description;
 			}
 		}
 
@@ -1161,9 +1228,9 @@ namespace DOL.GS.Quests.Albion
 				{
 					case 2:
 					case 3:
-						if (gArgs.Target == scribeVeral && gArgs.Item.QuestName == Name && gArgs.Item.Name == sealedLovePoem.Name)
+						if (gArgs.Target.Name == scribeVeral.Name && gArgs.Item.Id_nb == sealedLovePoem.Id_nb)
 						{
-							scribeVeral.Emote(eEmote.Ponder);
+							m_questPlayer.Out.SendEmoteAnimation(scribeVeral, eEmote.Ponder);
 						
 							scribeVeral.TurnTo(m_questPlayer);
 							scribeVeral.SayTo(m_questPlayer, "Oh, my! This is...unusually bad. I've no doubt this young man is sincere, but we shall have to do something about this. You've come to the right place, my friend. Please excuse me while I fetch a pen and a fresh sheet of [paper].");
@@ -1172,84 +1239,97 @@ namespace DOL.GS.Quests.Albion
 
 					case 6: // rose + rewrite poem
 					case 10: // only rose
-						if (gArgs.Target == serawen && gArgs.Item.QuestName == Name && gArgs.Item.Name == beautifulRedRose.Name)
+						if (gArgs.Target.Name == serawen.Name && gArgs.Item.Id_nb == beautifulRedRose.Id_nb)
 						{
-							RemoveItemFromPlayer(serawen, gArgs.Item);
+							RemoveItem(serawen, m_questPlayer, beautifulRedRose);
 
 							serawen.TurnTo(m_questPlayer);
 							serawen.SayTo(m_questPlayer, "Oh, my! That's a gorgeous rose. Did the sender give you a note, or anything identifying himself?");
 							SendMessage(m_questPlayer, "Serawen accepts the flower from you, blushing.", 0, eChatType.CT_Say, eChatLoc.CL_PopupWindow);	
 							
-							if(Step == 6) ChangeQuestStep(8); // rose + rewrite poem
-							else if(Step == 10) ChangeQuestStep(11); // only rose
+							if(Step == 6) Step = 8; // rose + rewrite poem
+							else if(Step == 10) Step = 11; // only rose
 						}
 						break;
 
 					case 7 : // only rewrited letter
-						if (gArgs.Target == serawen && gArgs.Item.QuestName == Name && gArgs.Item.Name == sealedLovePoem.Name)
+						if (gArgs.Target.Name == serawen.Name && gArgs.Item.Id_nb == sealedLovePoem.Id_nb)
 						{
-							RemoveItemFromPlayer(serawen, gArgs.Item);
+							RemoveItem(serawen, m_questPlayer, sealedLovePoem);
 
 							serawen.TurnTo(m_questPlayer);
 							SendMessage(m_questPlayer, "You hand Serawen the poem and she glances at the seal, not recognizing it. She eagerly unfolds the poem, reading quickly.  As her eyes move down the page, she begins to smile.  When she reaches the end of the page, Serawen looks up at you, still smiling with appreciation.", 0, eChatType.CT_Say, eChatLoc.CL_PopupWindow);	
 							serawen.SayTo(m_questPlayer, "What a kind gesture! I've always hoped that I would be courted by a gallant man. Whoever sent this must have put a lot of effort into finding a talented scribe.  It really is a [beautiful] poem.");
 						
-							ChangeQuestStep(14);
+							Step = 14;
 						}
 						break;
 
 					case 8 : // rose + rewrited letter
-						if (gArgs.Target == serawen && gArgs.Item.QuestName == Name && gArgs.Item.Name == sealedLovePoem.Name)
+						if (gArgs.Target.Name == serawen.Name && gArgs.Item.Id_nb == sealedLovePoem.Id_nb)
 						{
-							RemoveItemFromPlayer(serawen, gArgs.Item);
+							RemoveItem(serawen, m_questPlayer, sealedLovePoem);
 
 							serawen.TurnTo(m_questPlayer);
 							SendMessage(m_questPlayer, "Serawen accepts the poem from you, inspecting the seal. She unfolds the paper eagerly, expecting it to be a note from the mysterious man who sent the rose.  When she realizes that the paper contains a poem, Serawen begins to smile.  She closes her eyes briefly and pauses to smell the rose.  After a moment, her eyes return to the paper as she reads the rest of the poem and nods approvingly.", 0, eChatType.CT_Say, eChatLoc.CL_PopupWindow);	
 							serawen.SayTo(m_questPlayer, "This is a very beautiful poem, "+m_questPlayer.Name+".  Whoever sent it is a true gentleman. I must admit, the idea of being courted by a mystery man is exciting and sounds like something straight out of a minstrel's [tale].");
 						
-							ChangeQuestStep(15);
+							Step = 15;
 						}
 						break;
 
 					case 9: // letter non open
-						if (gArgs.Target == serawen && gArgs.Item.QuestName == Name && gArgs.Item.Name == sealedLovePoem.Name)
+						if (gArgs.Target.Name == serawen.Name && gArgs.Item.Id_nb == sealedLovePoem.Id_nb)
 						{
-							RemoveItemFromPlayer(serawen, gArgs.Item);
+							RemoveItem(serawen, m_questPlayer, sealedLovePoem);
 
 							serawen.TurnTo(m_questPlayer);
 							SendMessage(m_questPlayer, "You hand Serawen the poem and she glances at the seal, not recognizing it. She eagerly unfolds the poem, reading quickly.  As her eyes move down the page, the corners of her mouth begin to fall. She does not quite frown, but it is clear that she had different expectations. Serawen chuckles nervously when she reads the last of the text.", 0, eChatType.CT_Say, eChatLoc.CL_PopupWindow);
 							serawen.SayTo(m_questPlayer, "Thank you...I think. I appreciate the sentiment, but the poem is simply horrible. I don't mean to offend your employer, but I hope he didn't think he'd win my affection with this. He seems to be quite a desperate [man], or did [Geroth] put you up to this?");
-							serawen.Emote(eEmote.Laugh);
+							m_questPlayer.Out.SendEmoteAnimation(serawen, eEmote.Laugh);
 
-							ChangeQuestStep(17);
+							Step = 17;
 						}
 						break;
 
 					case 11: // only rose
-						if (gArgs.Target == serawen && gArgs.Item.QuestName == Name && gArgs.Item.Name == sealedLovePoem.Name)
+						if (gArgs.Target.Name == serawen.Name && gArgs.Item.Id_nb == sealedLovePoem.Id_nb)
 						{
-							RemoveItemFromPlayer(serawen, gArgs.Item);
+							RemoveItem(serawen, m_questPlayer, sealedLovePoem);
 
 							serawen.TurnTo(m_questPlayer);
 							SendMessage(m_questPlayer, "Serawen accepts the poem from you, inspecting the seal. She unfolds the paper eagerly, expecting it to be a note from the mysterious man who sent the rose.  When she realizes that the paper contains a poem, Serawen begins to smile.  She closes her eyes briefly and pauses to smell the rose.  After a moment, her eyes return to the paper as she reads the rest of the poem and nods approvingly.", 0, eChatType.CT_Say, eChatLoc.CL_PopupWindow);	
 							serawen.SayTo(m_questPlayer, "This is a very sweet gesture.  Whoever sent it might not be the best of poets, but his sincerity shines through. There aren't many who would take this risk. I think most would hire someone to write a poem instead, but then it would lack his [voice].");
 
-							ChangeQuestStep(12);
+							Step = 12;
 						}
 						break;
 				}
 			}
 		}
 
+
+		public override void AbortQuest()
+		{
+			base.AbortQuest(); //Defined in Quest, changes the state, stores in DB etc ...
+
+			RemoveItem(m_questPlayer, sealedLovePoem, false);
+			RemoveItem(m_questPlayer, beautifulRedRose, false);
+
+			GameEventMgr.RemoveHandler(m_questPlayer, GamePlayerEvent.UseSlot, new DOLEventHandler(PlayerUseSlot));
+			GameEventMgr.RemoveHandler(m_questPlayer, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
+		}
+
 		public override void FinishQuest()
 		{
+			base.FinishQuest(); //Defined in Quest, changes the state, stores in DB etc ...
+
 			//Give reward to player here ...
-			GiveItemToPlayer(madissair, adnilsMagicalOrb.CreateInstance());
+
+			GiveItem(madissair, m_questPlayer, adnilsMagicalOrb);
 		
 			GameEventMgr.RemoveHandler(m_questPlayer, GamePlayerEvent.UseSlot, new DOLEventHandler(PlayerUseSlot));
 			GameEventMgr.RemoveHandler(m_questPlayer, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
-		
-			base.FinishQuest(); //Defined in Quest, changes the state, stores in DB etc ...
 		}
 	}
 }

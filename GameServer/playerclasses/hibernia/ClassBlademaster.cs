@@ -69,7 +69,7 @@ namespace DOL.GS.Scripts
 			{
 				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Shields));
 				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Celtic_Dual));
-				player.AddAbility(SkillBase.GetAbility(Abilities.Shield, (int)eShieldSize.Medium));
+				player.AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Medium));
 			}
 			if (player.Level >= 10) 
 			{
@@ -109,10 +109,6 @@ namespace DOL.GS.Scripts
 			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.Advanced_Evade));
 				player.AddAbility(SkillBase.GetAbility(Abilities.Stoicism));
-			}
-			if (player.Level >= 40) 
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Charge));
 			}
 		}
 	}
