@@ -55,28 +55,28 @@ namespace DOL.GS.Keeps
 	{
 		//Declare the inventory template
 		#region Albion
-		private static GameNpcInventoryTemplate Albion_Archer = new GameNpcInventoryTemplate();
-		private static GameNpcInventoryTemplate Albion_Caster = new GameNpcInventoryTemplate();
-		private static GameNpcInventoryTemplate Albion_Fighter = new GameNpcInventoryTemplate();
-		private static GameNpcInventoryTemplate Albion_Healer = new GameNpcInventoryTemplate();
-		private static GameNpcInventoryTemplate Albion_Stealther = new GameNpcInventoryTemplate();
-		private static GameNpcInventoryTemplate Albion_Lord = new GameNpcInventoryTemplate();
+		public static GameNpcInventoryTemplate Albion_Archer = new GameNpcInventoryTemplate();
+		public static GameNpcInventoryTemplate Albion_Caster = new GameNpcInventoryTemplate();
+		public static GameNpcInventoryTemplate Albion_Fighter = new GameNpcInventoryTemplate();
+		public static GameNpcInventoryTemplate Albion_Healer = new GameNpcInventoryTemplate();
+		public static GameNpcInventoryTemplate Albion_Stealther = new GameNpcInventoryTemplate();
+		public static GameNpcInventoryTemplate Albion_Lord = new GameNpcInventoryTemplate();
 		#endregion
 		#region Midgard
-		private static GameNpcInventoryTemplate Midgard_Archer = new GameNpcInventoryTemplate();
-		private static GameNpcInventoryTemplate Midgard_Caster = new GameNpcInventoryTemplate();
-		private static GameNpcInventoryTemplate Midgard_Fighter = new GameNpcInventoryTemplate();
-		private static GameNpcInventoryTemplate Midgard_Healer = new GameNpcInventoryTemplate();
-		private static GameNpcInventoryTemplate Midgard_Stealther = new GameNpcInventoryTemplate();
-		private static GameNpcInventoryTemplate Midgard_Lord = new GameNpcInventoryTemplate();
+		public static GameNpcInventoryTemplate Midgard_Archer = new GameNpcInventoryTemplate();
+		public static GameNpcInventoryTemplate Midgard_Caster = new GameNpcInventoryTemplate();
+		public static GameNpcInventoryTemplate Midgard_Fighter = new GameNpcInventoryTemplate();
+		public static GameNpcInventoryTemplate Midgard_Healer = new GameNpcInventoryTemplate();
+		public static GameNpcInventoryTemplate Midgard_Stealther = new GameNpcInventoryTemplate();
+		public static GameNpcInventoryTemplate Midgard_Lord = new GameNpcInventoryTemplate();
 		#endregion
 		#region Hibernia
-		private static GameNpcInventoryTemplate Hibernia_Archer = new GameNpcInventoryTemplate();
-		private static GameNpcInventoryTemplate Hibernia_Caster = new GameNpcInventoryTemplate();
-		private static GameNpcInventoryTemplate Hibernia_Fighter = new GameNpcInventoryTemplate();
-		private static GameNpcInventoryTemplate Hibernia_Healer = new GameNpcInventoryTemplate();
-		private static GameNpcInventoryTemplate Hibernia_Stealther = new GameNpcInventoryTemplate();
-		private static GameNpcInventoryTemplate Hibernia_Lord = new GameNpcInventoryTemplate();
+		public static GameNpcInventoryTemplate Hibernia_Archer = new GameNpcInventoryTemplate();
+		public static GameNpcInventoryTemplate Hibernia_Caster = new GameNpcInventoryTemplate();
+		public static GameNpcInventoryTemplate Hibernia_Fighter = new GameNpcInventoryTemplate();
+		public static GameNpcInventoryTemplate Hibernia_Healer = new GameNpcInventoryTemplate();
+		public static GameNpcInventoryTemplate Hibernia_Stealther = new GameNpcInventoryTemplate();
+		public static GameNpcInventoryTemplate Hibernia_Lord = new GameNpcInventoryTemplate();
 		#endregion
 
 		/// <summary>
