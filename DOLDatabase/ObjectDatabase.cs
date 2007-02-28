@@ -218,7 +218,7 @@ namespace DOL.Database
 						}
 						if (val is string)
 						{
-							Escape((string)val);
+							val = Escape(val.ToString());
 						}
 						values.Append('\'');
 						values.Append(val);
@@ -232,8 +232,8 @@ namespace DOL.Database
 				int res = connection.ExecuteNonQuery(sql);
 				if (res == 0)
 				{
-					if(log.IsErrorEnabled)
-						log.Error("Error adding object into " + dataObject.TableName + " ID=" + dataObject.ObjectId);
+					if (log.IsErrorEnabled)
+						log.Error("Error adding object into " + dataObject.TableName + " ID=" + dataObject.ObjectId + "Query = " + sql);
 					return;
 				}
 
