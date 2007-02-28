@@ -17,13 +17,7 @@
  *
  */
 using System;
-using System.Collections;
-using System.Reflection;
-using DOL.Database;
-using DOL.Events;
-using DOL.GS.Database;
 using DOL.GS.PacketHandler;
-using log4net;
 
 namespace DOL.GS.Trainer
 {
@@ -33,64 +27,10 @@ namespace DOL.GS.Trainer
 	[NPCGuildScript("Necromancer Trainer", eRealm.Albion)]		// this attribute instructs DOL to use this script for all "Necromancer Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class NecromancerTrainer : GameTrainer
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		public const string WEAPON_ID = "necromancer_item";
 
-		/// <summary>
-		/// This hash constrain all item template the trainer can give
-		/// </summary>	
-		private static IDictionary allStartupItems = new Hashtable();
-
-		/// <summary>
-		/// This function is called at the server startup
-		/// </summary>	
-		[GameServerStartedEvent]
-		public static void OnServerStartup(DOLEvent e, object sender, EventArgs args)
+		public NecromancerTrainer() : base()
 		{
-			#region Necromancer staff
-
-			StaffTemplate necromancer_item_template = new StaffTemplate();
-			necromancer_item_template.Name = "Necromancer's Staff";
-			necromancer_item_template.Level = 5;
-			necromancer_item_template.Durability=100;
-			necromancer_item_template.Condition = 100;
-			necromancer_item_template.Quality = 90;
-			necromancer_item_template.Bonus = 10;
-			necromancer_item_template.DamagePerSecond = 30;
-			necromancer_item_template.Speed = 4400;
-			necromancer_item_template.Weight = 45;
-			necromancer_item_template.Model = 821;
-			necromancer_item_template.Realm = eRealm.Albion;
-			necromancer_item_template.IsDropable = true; 
-			necromancer_item_template.IsTradable = false; 
-			necromancer_item_template.IsSaleable = false;
-			necromancer_item_template.MaterialLevel = eMaterialLevel.Bronze;
-			
-			necromancer_item_template.AllowedClass.Add(eCharacterClass.Necromancer);
-
-			necromancer_item_template.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Focus_DeathSight, 4));
-			necromancer_item_template.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Focus_PainWorking, 4));
-			necromancer_item_template.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Focus_DeathServant, 4));
-				
-				
-			if(!allStartupItems.Contains("Necromancer_s_Staff"))
-			{
-				allStartupItems.Add("Necromancer_s_Staff", necromancer_item_template);
-			
-				if (log.IsDebugEnabled)
-					log.Debug("Adding " + necromancer_item_template.Name + " to NecromancerTrainer gifts.");
-			}
-			#endregion
-		}
-
-		/// <summary>
-		/// Gets trainer classname
-		/// </summary>
-		public override string TrainerClassName
-		{
-			get { return "Necromancer"; }
 		}
 
 		/// <summary>
@@ -145,9 +85,10 @@ namespace DOL.GS.Trainer
 			switch (text) {
 			case "join the Temple of Arawn":
 				// promote player to other class
-				if (CanPromotePlayer(player)) 
-					PromotePlayer(player, (int)eCharacterClass.Necromancer, "Lord Arawn has accepted you into his Temple. Here is his gift to you. Use it well, Disciple.", new GenericItemTemplate[] {allStartupItems["Necromancer_s_Staff"] as GenericItemTemplate});
-					
+				if (CanPromotePlayer(player)) {
+					PromotePlayer(player, (int)eCharacterClass.Necromancer, "Lord Arawn has accepted you into his Temple. Here is his gift to you. Use it well, Disciple.", null);
+					player.ReceiveItem(this,WEAPON_ID);
+				}
 				break;
 			}
 			return true;		

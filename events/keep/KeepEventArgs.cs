@@ -17,7 +17,10 @@
  *
  */
 using System;
+
 using DOL.GS;
+using DOL.GS.Keeps;
+
 namespace DOL.Events
 {
 	/// <summary>
@@ -27,24 +30,43 @@ namespace DOL.Events
 	{
 
 		/// <summary>
-		/// The player
+		/// The keep
 		/// </summary>
-		private GamePlayer m_player;
+		private AbstractGameKeep m_keep;
+
+		/// <summary>
+		/// The realm
+		/// </summary>
+		private byte m_realm;
 
 		/// <summary>
 		/// Constructs a new KeepEventArgs
 		/// </summary>
-		public KeepEventArgs(GamePlayer player)
+		public KeepEventArgs(AbstractGameKeep keep)
 		{
-			this.m_player=player;
+			this.m_keep = keep;
+		}
+
+		public KeepEventArgs(AbstractGameKeep keep, byte realm)
+		{
+			this.m_keep = keep;
+			this.m_realm = realm;
 		}
 
 		/// <summary>
-		/// Gets the player
+		/// Gets the Keep
 		/// </summary>
-		public GamePlayer Player
+		public AbstractGameKeep Keep
 		{
-			get { return m_player; }
+			get { return m_keep; }
+		}
+
+		/// <summary>
+		/// Gets the Realm
+		/// </summary>
+		public byte Realm
+		{
+			get { return m_realm; }
 		}
 	}
 }

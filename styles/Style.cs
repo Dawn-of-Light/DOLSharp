@@ -17,8 +17,10 @@
  *
  */
 using System;
+using System.Collections.Generic;
+using DOL.Database.Attributes;
 using DOL.GS;
-using DOL.GS.Database;
+using DOL.Database;
 
 namespace DOL.GS.Styles
 {
@@ -32,7 +34,7 @@ namespace DOL.GS.Styles
 		/// <summary>
 		/// The opening type of a style
 		/// </summary>
-		public enum eOpening: int
+		public enum eOpening : int
 		{
 			/// <summary>
 			/// Offensive opening, depending on the attacker's actions
@@ -51,7 +53,7 @@ namespace DOL.GS.Styles
 		/// <summary>
 		/// The opening positions if the style is a position based style
 		/// </summary>
-		public enum eOpeningPosition: int
+		public enum eOpeningPosition : int
 		{
 			/// <summary>
 			/// Towards back of the target
@@ -70,7 +72,7 @@ namespace DOL.GS.Styles
 		/// <summary>
 		/// The required attack result of the style 
 		/// </summary>
-		public enum eAttackResult: int
+		public enum eAttackResult : int
 		{
 			/// <summary>
 			/// Any attack result is fine
@@ -107,26 +109,6 @@ namespace DOL.GS.Styles
 		}
 
 		/// <summary>
-		/// The type of special effect applied on the target if
-		/// the style gets executed successfully
-		/// </summary>
-		public enum eSpecialType: int
-		{
-			/// <summary>
-			/// No special effect
-			/// </summary>
-			None = 0,
-			/// <summary>
-			/// An effect, like a spell (eg. Bleeding)
-			/// </summary>
-			Effect = 1,
-			/// <summary>
-			/// Taunt/Detaunt
-			/// </summary>
-			Taunt = 2
-		}
-
-		/// <summary>
 		/// Special weapon type requirements
 		/// </summary>
 		public abstract class SpecialWeaponType
@@ -148,14 +130,29 @@ namespace DOL.GS.Styles
 		/// </summary>
 		protected DBStyle baseStyle = null;
 
+        /// <summary>
+        /// (readonly) The list of procs available for this style
+        /// </summary>
+        protected List<DBStyleXSpell> m_Procs;
+
 		/// <summary>
 		/// Constructs a new Style object based on a database Style object
 		/// </summary>
 		/// <param name="style">The database style object this object is based on</param>
-		public Style (DBStyle style) : base(style.Name, (ushort)style.ID, style.SpecLevelRequirement)
+		public Style(DBStyle style)
+			: base(style.Name, (ushort)style.ID, style.SpecLevelRequirement)
 		{
 			baseStyle = style;
+            m_Procs = new List<DBStyleXSpell>();
 		}
+
+        /// <summary>
+        /// (readonly)(procs) The list of procs available for this style
+        /// </summary>
+        public List<DBStyleXSpell> Procs
+        {
+            get { return m_Procs;  }
+        }
 
 		/// <summary>
 		/// (readonly) The Specialization's name required to execute this style
@@ -173,13 +170,13 @@ namespace DOL.GS.Styles
 			get { return baseStyle.SpecLevelRequirement; }
 		}
 
-//		/// <summary>
-//		/// (readonly) The icon of this style
-//		/// </summary>
-//		public int Icon
-//		{
-//			get { return baseStyle.Icon; }
-//		}
+		/// <summary>
+		/// (readonly) The icon of this style
+		/// </summary>
+		public int Icon
+		{
+			get { return baseStyle.Icon; }
+		}
 
 		/// <summary>
 		/// (readonly) The fatique cost of this style in % of player's total fatique
@@ -229,7 +226,7 @@ namespace DOL.GS.Styles
 		/// </summary>
 		public eAttackResult AttackResultRequirement
 		{
-			get { return (eAttackResult) baseStyle.AttackResultRequirement; }
+			get { return (eAttackResult)baseStyle.AttackResultRequirement; }
 		}
 
 		/// <summary>
@@ -241,46 +238,12 @@ namespace DOL.GS.Styles
 			get { return baseStyle.WeaponTypeRequirement; }
 		}
 
-//		/// <summary>
-//		/// The damage this style will add to the regular unstyled damage
-//		/// </summary>
-//		public int Damage
-//		{
-//			get { return baseStyle.Damage; }
-//		}
-
-//		/// <summary>
-//		/// (readonly) The addition to damage if the skill required for
-//		/// this style is below the level trained by the attacker.
-//		/// </summary>
-//		public int DamageAddPerLevel
-//		{
-//			get { return baseStyle.DamageAddPerLevel; }
-//		}
-
+		/// <summary>
+		/// (readonly) The growth rate of the style
+		/// </summary>
 		public double GrowthRate
 		{
 			get { return baseStyle.GrowthRate; }
-		}
-
-		/// <summary>
-		/// (readonly) The type of special effect applied to the target
-		/// if this style is executed successfully.
-		/// </summary>
-		public eSpecialType SpecialType
-		{
-			get { return (eSpecialType)baseStyle.SpecialType; }
-		}
-
-		/// <summary>
-		/// (readonly) Depending on the SpecialType. If the SpecialType
-		/// is an effect, then this contains the effect id to apply.
-		/// If the SpecialType is Taunt/Detaunt, then this contains the
-		/// strength of the taunt(above 0)/detaunt(below 0)
-		/// </summary>
-		public int SpecialValue
-		{
-			get { return baseStyle.SpecialValue; }
 		}
 
 		/// <summary>
@@ -315,18 +278,26 @@ namespace DOL.GS.Styles
 			get { return baseStyle.TwoHandAnimation; }
 		}
 
+        /// <summary>
+        /// (readonly) (procs) Tell if the proc should be select randomly
+        /// </summary>
+        public bool RandomProc
+        {
+            get { return baseStyle.RandomProc; }
+        }
+
 		/// <summary>
 		/// Gets name of required weapon type
 		/// </summary>
 		/// <returns>name of required weapon type</returns>
 		public virtual string GetRequiredWeaponName()
 		{
-			switch(WeaponTypeRequirement)
+			switch (WeaponTypeRequirement)
 			{
 				case SpecialWeaponType.DualWield:
 					// style line spec name
 					Specialization dwSpec = SkillBase.GetSpecialization(Spec);
-					if(dwSpec == null) return "unknown DW spec";
+					if (dwSpec == null) return "unknown DW spec";
 					else return dwSpec.Name;
 
 				case SpecialWeaponType.AnyWeapon:
@@ -335,7 +306,7 @@ namespace DOL.GS.Styles
 				default:
 					// spec name needed to use weapon type
 					string specKeyName = SkillBase.ObjectTypeToSpec((eObjectType)WeaponTypeRequirement);
-					if(specKeyName == null)
+					if (specKeyName == null)
 						return "unknown weapon type";
 					Specialization spec = SkillBase.GetSpecialization(specKeyName);
 					return spec.Name;

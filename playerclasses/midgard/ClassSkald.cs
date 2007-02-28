@@ -71,6 +71,7 @@ namespace DOL.GS.Scripts
 			{
 				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Battlesongs));
 				player.AddSpellLine(SkillBase.GetSpellLine("Battlesongs"));
+				player.AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Medium));
 			}
 			if (player.Level >= 12)
 			{
@@ -86,7 +87,7 @@ namespace DOL.GS.Scripts
 			}
 			if (player.Level >= 20)
 			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.MidArmor, (int)eArmorLevel.High));
+				player.AddAbility(SkillBase.GetAbility(Abilities.MidArmor, ArmorLevel.Chain));
 				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 1));
 			}
 		}

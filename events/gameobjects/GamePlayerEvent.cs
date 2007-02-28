@@ -1,16 +1,16 @@
 /*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -25,7 +25,7 @@ namespace DOL.Events
 	/// This class holds all possible player events.
 	/// Only constants defined here!
 	/// </summary>
-	public class GamePlayerEvent : DOLEvent
+	public class GamePlayerEvent : GameLivingEvent
 	{
 		/// <summary>
 		/// Constructs a new GamePlayer event
@@ -54,10 +54,6 @@ namespace DOL.Events
 		/// </summary>
 		public static readonly GamePlayerEvent RegionChanged = new GamePlayerEvent("GamePlayer.RegionChanged");
 		/// <summary>
-		/// The RegionChanged event is fired whenever the player changes the region
-		/// </summary>
-		public static readonly GamePlayerEvent Moving = new GamePlayerEvent("GamePlayer.Moving");
-		/// <summary>
 		/// The Released event is fired whenever the player has released
 		/// </summary>
 		public static readonly GamePlayerEvent Released = new GamePlayerEvent("GamePlayer.Released");
@@ -77,14 +73,6 @@ namespace DOL.Events
 		/// The MoveItem event is fired whenever the player wants to give away an item
 		/// </summary>
 		public static readonly GamePlayerEvent GiveMoney = new GamePlayerEvent("GamePlayer.GiveMoney");
-		/// <summary>
-		/// The GainedExperience event is fired whenever the living gains experience
-		/// </summary>
-		public static readonly GamePlayerEvent GainedExperience = new GamePlayerEvent("GamePlayer.GainedExperience");
-		/// <summary>
-		/// The GainRealmPoints event is fired whenever the living gains realm points
-		/// </summary>
-		public static readonly GamePlayerEvent GainedRealmPoints = new GamePlayerEvent("GamePlayer.GainedRealmPoints");
 		/// <summary>
 		/// The Quit event is fired whenever the player the player quits the game
 		/// </summary>
@@ -109,7 +97,7 @@ namespace DOL.Events
 		/// The CommandNpcRelease event is fired whenever the player commands to release controlled NPC
 		/// </summary>
 		public static readonly GamePlayerEvent CommandNpcRelease = new GamePlayerEvent("GamePlayer.CommandNpcRelease");
-        /// <summary>
+		/// <summary>
         /// The AcceptQuest event is fired whenever the player accepts a quest offer generated via BaseQuestPart.AddAction(eActionType.OfferQuest)
         /// </summary>
         public static readonly GamePlayerEvent AcceptQuest = new GamePlayerEvent("GamePlayer.AcceptQuest");
@@ -125,9 +113,25 @@ namespace DOL.Events
         /// The AbortQuest event is fired whenever the player aborts a quest generated via BaseQuestPart.AddAction(eActionType.OfferQuestAbort)
         /// </summary>
         public static readonly GamePlayerEvent AbortQuest = new GamePlayerEvent("GamePlayer.AbortQuest");
+		/// <summary>
+		/// The UseAbility event is fired whenever the player uses ability
+		/// </summary>
+		public static readonly GamePlayerEvent UseAbility = new GamePlayerEvent("GamePlayer.UseAbility");
+		/// <summary>
+		/// The RRLevelUp event is fired whenever the player gains a realm rank
+		/// </summary>
+		public static readonly GamePlayerEvent RRLevelUp = new GamePlayerEvent("GamePlayer.RRLevelUp");
+		/// <summary>
+		/// The RLLevelUp event is fired whenever the player gains a realm level
+		/// </summary>
+		public static readonly GamePlayerEvent RLLevelUp = new GamePlayerEvent("GamePlayer.RLLevelUp");
 
 		#region Statistics
 
+		/// <summary>
+		/// The KillsTotalPlayersChanged event is fired when any of the KillsxxxPlayersChanged property changes.
+		/// </summary>
+		public static readonly GamePlayerEvent KillsTotalPlayersChanged = new GamePlayerEvent("GamePlayer.KillsTotalPlayersChanged");
 		/// <summary>
 		/// The KillsAlbionPlayersChanged event is fired when KillsAlbionPlayers property changes.
 		/// </summary>
@@ -148,7 +152,7 @@ namespace DOL.Events
 		/// The KillsTotalSoloChanged event is fired when KillsAlbionSolo, KillsMidgardSolo or KillsHiberniaSolo properties changes.
 		/// </summary>
 		public static readonly GamePlayerEvent KillsTotalSoloChanged = new GamePlayerEvent("GamePlayer.KillsTotalSoloChanged");
-		
+
 		#endregion
 	}
 }

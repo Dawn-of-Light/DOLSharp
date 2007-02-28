@@ -17,13 +17,7 @@
  *
  */
 using System;
-using System.Collections;
-using System.Reflection;
-using DOL.Database;
-using DOL.Events;
-using DOL.GS.Database;
 using DOL.GS.PacketHandler;
-using log4net;
 
 namespace DOL.GS.Trainer
 {
@@ -33,59 +27,10 @@ namespace DOL.GS.Trainer
 	[NPCGuildScript("Enchanter Trainer", eRealm.Hibernia)]		// this attribute instructs DOL to use this script for all "Enchanter Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class EnchanterTrainer : GameTrainer
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		public const string WEAPON_ID1 = "enchanter_item";
 
-		/// <summary>
-		/// This hash constrain all item template the trainer can give
-		/// </summary>	
-		private static IDictionary allStartupItems = new Hashtable();
-
-		/// <summary>
-		/// This function is called at the server startup
-		/// </summary>	
-		[GameServerStartedEvent]
-		public static void OnServerStartup(DOLEvent e, object sender, EventArgs args)
-		{	
-			#region Enchanter staff
-
-			StaffTemplate enchanter_staff_template = new StaffTemplate();
-			enchanter_staff_template.Name = "Enchanter Staff of Focus";
-			enchanter_staff_template.Level = 5;
-			enchanter_staff_template.Durability = 100;
-			enchanter_staff_template.Condition = 100;
-			enchanter_staff_template.Quality = 90;
-			enchanter_staff_template.Bonus = 10;
-			enchanter_staff_template.DamagePerSecond = 30;
-			enchanter_staff_template.Speed = 4400;
-			enchanter_staff_template.Weight = 45;
-			enchanter_staff_template.Model = 19;
-			enchanter_staff_template.Realm = eRealm.Hibernia;
-			enchanter_staff_template.IsDropable = true; 
-			enchanter_staff_template.IsTradable = false; 
-			enchanter_staff_template.IsSaleable = false;
-			enchanter_staff_template.MaterialLevel = eMaterialLevel.Bronze;
-			
-			enchanter_staff_template.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Focus_Enchantments, 4));
-			
-			if(!allStartupItems.Contains("Enchanter_Staff_of_Focus"))
-			{
-				allStartupItems.Add("Enchanter_Staff_of_Focus", enchanter_staff_template);
-			
-				if (log.IsDebugEnabled)
-					log.Debug("Adding " + enchanter_staff_template.Name + " to EnchanterTrainer gifts.");
-			}
-			#endregion
-		}
-
-		/// <summary>
-		/// Gets trainer classname
-		/// </summary>
-		public override string TrainerClassName
+		public EnchanterTrainer() : base()
 		{
-			get { return "Enchanter"; }
 		}
 
 		/// <summary>
@@ -98,18 +43,22 @@ namespace DOL.GS.Trainer
  			if (!base.Interact(player)) return false;
 								
 			// check if class matches.				
-			if (player.CharacterClass.ID == (int) eCharacterClass.Enchanter)
-			{
+			if (player.CharacterClass.ID == (int) eCharacterClass.Enchanter) {
+
+				// popup the training window
 				player.Out.SendTrainerWindow();
+				//player.Out.SendMessage(this.Name + " says, \"Select what you like to train.\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);												
 				player.Out.SendMessage(this.Name + " says, \"You are a quick study, " + player.Name + ". But do not be too hasty. There is always more to learn.\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
+
 			} 
-			else if (CanPromotePlayer(player)) 
+			else 
 			{
-				player.Out.SendMessage(this.Name + " says, \"Do you choose to train as an Enchanter and follow the Path of Essence? Life as an [Enchanter] is as rewarding as it is dangerous, but it is yours for the asking.\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
-			} 
-			else
-			{
-				player.Out.SendMessage(this.Name + " says, \"You must seek elsewhere for your training.\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
+				// perhaps player can be promoted
+				if (CanPromotePlayer(player)) {
+					player.Out.SendMessage(this.Name + " says, \"Do you choose to train as an Enchanter and follow the Path of Essence? Life as an [Enchanter] is as rewarding as it is dangerous, but it is yours for the asking.\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+				} else {
+					player.Out.SendMessage(this.Name + " says, \"You must seek elsewhere for your training.\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);							
+				}
 			}
 			return true;
  		}
@@ -135,12 +84,13 @@ namespace DOL.GS.Trainer
 			if (!base.WhisperReceive(source, text)) return false;			
 			GamePlayer player = source as GamePlayer;			
 	
-			switch (text) 
-			{
-				case "Enchanter":
-					if (CanPromotePlayer(player)) 
-						PromotePlayer(player, (int)eCharacterClass.Enchanter, "Welcome, " + source.GetName(0, false) + ". From this day forth you shall be known as an Enchanter. Here, " + source.GetName(0, false) + ". Take this gift to aid you on your path.", new GenericItemTemplate[] {allStartupItems["Enchanter_Staff_of_Focus"] as GenericItemTemplate});
-				
+			switch (text) {
+			case "Enchanter":
+				// promote player to other class
+				if (CanPromotePlayer(player)) {
+					PromotePlayer(player, (int)eCharacterClass.Enchanter, "Welcome, " + source.GetName(0, false) + ". From this day forth you shall be known as an Enchanter. Here, " + source.GetName(0, false) + ". Take this gift to aid you on your path.", null);
+					player.ReceiveItem(this,WEAPON_ID1);
+				}
 				break;
 			}
 			return true;		

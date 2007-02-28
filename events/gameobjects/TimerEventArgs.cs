@@ -31,7 +31,6 @@ namespace DOL.Events
 		/// <summary>
 		/// Constructs a new TimerEventArgs
 		/// </summary>
-		/// <param name="text">the text being said</param>
 		public TimerEventArgs(GameLiving source, string timerId) : base (source)
 		{
 			this.timerId = timerId;

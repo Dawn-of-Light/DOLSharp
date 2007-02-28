@@ -30,9 +30,6 @@ namespace DOL.GS.Utils
 		public static long Abs(long x) {
 			return (x >= 0) ? x : -x;
 		}
-		public static double Abs(double x) {
-			return (x >= 0) ? x : -x;
-		}
 	}
 }
 

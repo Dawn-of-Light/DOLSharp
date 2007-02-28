@@ -38,7 +38,7 @@ namespace DOL.GS.Spells
 		public override void OnEffectStart(GameSpellEffect effect)
 		{
 			base.OnEffectStart(effect);
-			GameEventMgr.AddHandler(effect.Owner, GameLivingBaseEvent.AttackedByEnemy, new DOLEventHandler(OnAttacked));
+			GameEventMgr.AddHandler(effect.Owner, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnAttacked));
 		}
 
 		/// <summary>
@@ -50,7 +50,7 @@ namespace DOL.GS.Spells
 		/// <returns>immunity duration in milliseconds</returns>
 		public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
 		{
-			GameEventMgr.RemoveHandler(effect.Owner, GameLivingBaseEvent.AttackedByEnemy, new DOLEventHandler(OnAttacked));
+			GameEventMgr.RemoveHandler(effect.Owner, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnAttacked));
 			return base.OnEffectExpires(effect, noMessages);
 		}
 

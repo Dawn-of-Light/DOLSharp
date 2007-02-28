@@ -51,8 +51,8 @@ namespace DOL.GS.Scripts
 			player.AddSpellLine(SkillBase.GetSpellLine("Enhancement"));
 
 			player.AddAbility(SkillBase.GetAbility(Abilities.Sprint));
-			player.AddAbility(SkillBase.GetAbility(Abilities.AlbArmor, (int)eArmorLevel.Low));
-			player.AddAbility(SkillBase.GetAbility(Abilities.Shield, (int)eShieldSize.Small));
+			player.AddAbility(SkillBase.GetAbility(Abilities.AlbArmor, ArmorLevel.Leather));
+			player.AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Small));
 			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Crushing));
 			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Staves));
 		}

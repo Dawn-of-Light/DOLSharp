@@ -54,9 +54,13 @@ namespace DOL.GS.Scripts
 
 		public override void OnLevelUp(GamePlayer player) 
 		{
-			
 			base.OnLevelUp(player);
 
+			//Remove
+			player.RemoveSpellLine(SkillBase.GetSpellLine("Darkness"));
+			player.RemoveSpellLine(SkillBase.GetSpellLine("Suppression"));
+			player.RemoveSpecialization(Specs.Darkness);
+			player.RemoveSpecialization(Specs.Suppression);
 		
 			// Specializations
 			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Cursing));

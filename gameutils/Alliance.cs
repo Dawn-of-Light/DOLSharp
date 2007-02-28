@@ -16,185 +16,143 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System.Collections.Generic;
+using System.Collections;
 using System.Collections.Specialized;
 using System;
 using DOL.Database;
-using DOL.Database.DataAccessInterfaces;
-using DOL.Database.DataTransferObjects;
-using DOL.GS.PacketHandler;
 
 namespace DOL.GS
 {
 	/// <summary>
 	/// Alliance are the alliance between guild in game
 	/// </summary>
-	public class Alliance : IPersistentBusinessObject<AllianceEntity>
+	public class Alliance
 	{
-		public Alliance(AllianceEntity obj)
-		{
-			this.LoadFromTransferObject(obj);
-		}
-
+		protected ArrayList m_guilds;
+		protected DBAlliance m_dballiance;
 		public Alliance()
-		{ }
-
-		#region Declaraction
-		/// <summary>
-		/// The unique alliance identifier
-		/// </summary>
-		protected int m_id;
-
-		/// <summary>
-		/// Holds the alliance motd
-		/// </summary>
-		private string	m_amotd;
-
-		/// <summary>
-		/// Holds all alliance guilds
-		/// </summary>
-		protected IList<Guild> m_allianceGuilds = new List<Guild>();
-
-		/// <summary>
-		/// Holds the alliance leader
-		/// </summary>
-		protected Guild m_allianceLeader;
-
-		/// <summary>
-		/// Gets or sets the unique alliance identifier
-		/// </summary>
-		public int AllianceID
 		{
-			get	{ return m_id; }
-			set	{ m_id = value; }
+			m_dballiance = null;
+			m_guilds = new ArrayList(2);
 		}
-
-		/// <summary>
-		/// Gets or sets the alliance motd
-		/// </summary>
-		public string AMotd
-		{
-			get { return m_amotd; }
-			set	{ m_amotd = value; }
-		}
-
-		/// <summary>
-		/// Gets or sets all alliances guilds
-		/// </summary>
-		public IList<Guild> AllianceGuilds
+		public ArrayList Guilds
 		{
 			get
 			{
-				return m_allianceGuilds;
+				return m_guilds;
 			}
 			set
 			{
-				m_allianceGuilds = value;
+				m_guilds = value;
 			}
 		}
-
-		/// <summary>
-		/// Gets or sets the alliance leader
-		/// </summary>
-		public Guild AllianceLeader
+		public DBAlliance Dballiance
 		{
 			get
 			{
-				return m_allianceLeader;
+				return m_dballiance;
 			}
 			set
 			{
-				m_allianceLeader = value;
+				m_dballiance = value;
 			}
 		}
-		#endregion
 
-		#region AddGuildToAlliance / RemoveGuildFromAlliance
-		/// <summary>
-		/// Add a guild to the alliance
-		/// </summary>
-		/// <param name="guildToAdd">the guild to add</param>
-		public bool AddGuildToAlliance(Guild guildToAdd)
+		#region IList
+		public void AddGuild(Guild myguild)
 		{
-			if(guildToAdd.Alliance.AllianceLeader != guildToAdd || guildToAdd.Alliance.AllianceGuilds.Count > 1) return false; //can't join a alliance if already in another
-
-			if(m_allianceGuilds.Contains(guildToAdd)) return false; // already a member of this alliance
-			
-			GameServer.Database.DeleteObject(guildToAdd.Alliance);  //delete the empty alliance
-
-			guildToAdd.Alliance = this;
-			m_allianceGuilds.Add(guildToAdd);
-			GameServer.Database.SaveObject(guildToAdd);
-			return true;
-		}
-
-		/// <summary>
-		/// Remove a guild to the alliance
-		/// </summary>
-		/// <param name="guildToRemove">the guild to remove</param>
-		public bool RemoveGuildFromAlliance(Guild guildToRemove)
-		{
-			if(m_allianceLeader == guildToRemove) return false; //can't leave your own alliance
-
-			if(!m_allianceGuilds.Contains(guildToRemove)) 
-				return false;// guild not in the alliance
-			m_allianceGuilds.Remove(guildToRemove);
-
-
-			guildToRemove.Alliance = new Alliance();
-			guildToRemove.Alliance.AMotd = "Your guild have no alliances.";
-			guildToRemove.Alliance.AllianceLeader = guildToRemove;
-			guildToRemove.Alliance.AllianceGuilds.Add(guildToRemove);
-			
-			GameServer.DatabaseNew.Using<IGuildDao>().Update(guildToRemove.GetTransferObject());	// save the guild in a new empty alliance
-			
-			if(m_allianceGuilds.Count <= 1) // only the leader guild stay in the alliance => empty alliance
+			lock (Guilds.SyncRoot)
 			{
-				m_amotd = "Your guild have no alliances.";
-
-				SendMessageToAllianceMembers("Your alliance has been deleted!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				GameServer.Database.SaveObject(this);
+				myguild.alliance = this;
+				Guilds.Add(myguild);
+				myguild.theGuildDB.AllianceID = m_dballiance.ObjectId;
+				m_dballiance.DBguilds = null;
+				//sirru 23.12.06 Add the new object instead of trying to save it
+				GameServer.Database.AddNewObject(m_dballiance);
+				GameServer.Database.FillObjectRelations(m_dballiance);
+				//sirru 23.12.06 save changes to db for each guild
+				SaveIntoDatabase();
+				SendMessageToAllianceMembers(myguild.Name + " has joined the alliance of " + m_dballiance.AllianceName, PacketHandler.eChatType.CT_System, PacketHandler.eChatLoc.CL_SystemWindow);
 			}
-				
-			return true;
+		}
+		public void RemoveGuild(Guild myguild)
+		{
+			lock (Guilds.SyncRoot)
+			{
+				myguild.alliance = null;
+				Guilds.Remove(myguild);
+				myguild.theGuildDB.AllianceID = "";
+				m_dballiance.DBguilds = null;
+				GameServer.Database.SaveObject(m_dballiance);
+				GameServer.Database.FillObjectRelations(m_dballiance);
+				//sirru 23.12.06 save changes to db for each guild
+				myguild.SaveIntoDatabase();
+				SendMessageToAllianceMembers(myguild.Name + " has left the alliance of " + m_dballiance.AllianceName, PacketHandler.eChatType.CT_System, PacketHandler.eChatLoc.CL_SystemWindow);
+			}
+		}
+		public void Clear()
+		{
+			lock (Guilds.SyncRoot)
+			{
+				foreach (Guild guild in Guilds)
+				{
+					guild.alliance = null;
+					guild.theGuildDB.AllianceID = "";
+					//sirru 23.12.06 save changes to db
+					guild.SaveIntoDatabase();
+				}
+				Guilds.Clear();
+			}
+		}
+		public bool Contains(Guild myguild)
+		{
+			lock (Guilds.SyncRoot)
+			{
+				return Guilds.Contains(myguild);
+			}
 		}
 
 		#endregion
-		
-		#region SendMessageToAllianceMembers
+
 		/// <summary>
 		/// send message to all member of alliance
 		/// </summary>
-		public void SendMessageToAllianceMembers(string msg, eChatType type, eChatLoc loc)
+		public void SendMessageToAllianceMembers(string msg, PacketHandler.eChatType type, PacketHandler.eChatLoc loc)
 		{
-			lock (m_allianceGuilds)
+			lock (Guilds.SyncRoot)
 			{
-				foreach(Guild allie in m_allianceGuilds)
+				foreach (Guild guild in Guilds)
 				{
-					allie.SendMessageToGuildMembers(msg, type, loc);	// send the message to all others allies
+					guild.SendMessageToGuildMembers(msg, type, loc);
 				}
 			}
 		}
-		#endregion
 
-		#region Persistent
-
-		public void LoadFromTransferObject(AllianceEntity obj)
+		/// <summary>
+		/// Loads this alliance from an alliance table
+		/// </summary>
+		/// <param name="obj"></param>
+		public void LoadFromDatabase(DataObject obj)
 		{
-			this.AllianceID = obj.Id;
-			this.AMotd = obj.AMotd;
-			this.AllianceLeader = GuildMgr.GetGuildById(obj.AllianceLeader);
+			if (!(obj is DBAlliance))
+				return;
+
+			m_dballiance = (DBAlliance)obj;
 		}
 
-		public AllianceEntity GetTransferObject()
+		/// <summary>
+		/// Saves this alliance to database
+		/// </summary>
+		public void SaveIntoDatabase()
 		{
-			AllianceEntity obj = new AllianceEntity();
-			obj.AllianceLeader = this.AllianceLeader.GuildID;
-			obj.AMotd = this.AMotd;
-			obj.Id = this.AllianceID;
-			return obj;
+			GameServer.Database.SaveObject(m_dballiance);
+			lock (Guilds.SyncRoot)
+			{
+				foreach (Guild guild in Guilds)
+				{
+					guild.SaveIntoDatabase();
+				}
+			}
 		}
-
-		#endregion
 	}
 }

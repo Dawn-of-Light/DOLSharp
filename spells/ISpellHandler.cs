@@ -18,6 +18,8 @@
  */
 using System;
 using System.Collections;
+
+using DOL.Database;
 using DOL.GS.Effects;
 
 namespace DOL.GS.Spells
@@ -36,7 +38,7 @@ namespace DOL.GS.Spells
 		/// Starts the spell, without displaying cast message etc.
 		/// Should be used for StyleEffects, ...
 		/// </summary>
-		void StartSpell(GameLivingBase target);
+		void StartSpell(GameLiving target);
 
 		/// <summary>
 		/// Whenever the current casting sequence is to be interrupted
@@ -87,7 +89,16 @@ namespace DOL.GS.Spells
 		/// <returns></returns>
 		bool IsOverwritable(GameSpellEffect compare);
 
+		/// <summary>
+		/// Actions to take when the effect starts
+		/// </summary>
+		/// <param name="effect"></param>
 		void OnEffectStart(GameSpellEffect effect);
+
+		/// <summary>
+		/// Actions to take when the effect stops
+		/// </summary>
+		/// <param name="effect"></param>
 		void OnEffectPulse(GameSpellEffect effect);
 
 		/// <summary>
@@ -105,9 +116,24 @@ namespace DOL.GS.Spells
 		/// <param name="effect">The effect doing the pulses</param>
 		void OnSpellPulse(PulsingSpellEffect effect);
 
+		/// <summary>
+		/// The Spell Caster
+		/// </summary>
 		GameLiving Caster { get; }
+
+		/// <summary>
+		/// The Spell
+		/// </summary>
 		Spell Spell { get; }
+
+		/// <summary>
+		/// The SpellLine
+		/// </summary>
 		SpellLine SpellLine { get; }
+
+		/// <summary>
+		/// The DelveInfo
+		/// </summary>
 		IList DelveInfo{ get; }
 
 		/// <summary>
@@ -115,10 +141,9 @@ namespace DOL.GS.Spells
 		/// </summary>
 		event CastingCompleteCallback CastingCompleteEvent;
 
-		/// <summary>
-		/// Event raised when spell is done or canceled
-		/// </summary>
-		//event SpellEndsCallback SpellEndsEvent;
+		PlayerXEffect getSavedEffect(GameSpellEffect e);
+		void OnEffectRestored(GameSpellEffect effect, int[] RestoreVars);
+		int OnRestoredEffectExpires(GameSpellEffect effect, int[] RestoreVars, bool noMessages);
 	}
 
 	/// <summary>

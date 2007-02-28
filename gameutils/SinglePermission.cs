@@ -17,8 +17,7 @@
  *
  */
 using System.Collections;
-using DOL.GS.Database;
-using NHibernate.Expression;
+using DOL.Database;
 using log4net;
 
 namespace DOL.GS
@@ -35,29 +34,29 @@ namespace DOL.GS
 
 		public static bool HasPermission(GamePlayer player,string command)
 		{
-			if (GameServer.Database.SelectObject(typeof(DBSinglePermission), Expression.And(Expression.Eq("Command",command),Expression.Eq("PlayerID",player.Name))) != null)
-				return true;
-			
-			return false;
+			DataObject obj = GameServer.Database.SelectObject(typeof(DBSinglePermission), "Command = '" + GameServer.Database.Escape(command) + "' and PlayerID = '" + GameServer.Database.Escape(player.PlayerCharacter.ObjectId) + "'");
+			if (obj == null)
+				return false;
+			return true;
 		}
 
 		public static void setPermission(GamePlayer player,string command)
 		{
 			DBSinglePermission perm = new DBSinglePermission();
 			perm.Command = command;
-			perm.PlayerID = player.Name;
+			perm.PlayerID = player.PlayerCharacter.ObjectId;
 			GameServer.Database.AddNewObject(perm);
 		}
 
 		public static bool removePermission(GamePlayer player,string command)
 		{
-			object obj = GameServer.Database.SelectObject(typeof(DBSinglePermission), Expression.And(Expression.Eq("Command",command),Expression.Eq("PlayerID",player.Name)));
-			if (obj != null)
+			DataObject obj = GameServer.Database.SelectObject(typeof(DBSinglePermission), "Command = '" + GameServer.Database.Escape(command) + "' and PlayerID = '" + GameServer.Database.Escape(player.PlayerCharacter.ObjectId) + "'");
+			if (obj == null)
 			{
-				GameServer.Database.DeleteObject(obj);
-				return true;
+				return false;
 			}
-			return false;
+			GameServer.Database.DeleteObject(obj);
+			return true;
 		}
 	}
 }

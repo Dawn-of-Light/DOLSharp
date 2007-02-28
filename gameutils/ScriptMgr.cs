@@ -23,9 +23,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using DOL.AI.Brain;
 using DOL.Config;
-using DOL.Database;
-using DOL.GS.Database;
 using DOL.GS.PacketHandler;
 using DOL.GS.ServerRules;
 using DOL.GS.Spells;
@@ -153,7 +152,7 @@ namespace DOL
 						}
 					}
 
-					return (string[]) list.ToArray(typeof (string));
+					return (string[])list.ToArray(typeof(string));
 				}
 
 				/// <summary>
@@ -166,15 +165,15 @@ namespace DOL
 				private static ArrayList ParseDirectory(DirectoryInfo path, string filter, bool deep)
 				{
 					ArrayList files = new ArrayList();
-					
-					if(!path.Exists)
+
+					if (!path.Exists)
 						return files;
 
 					files.AddRange(path.GetFiles(filter));
-					
-					if(deep)
+
+					if (deep)
 					{
-						foreach(DirectoryInfo subdir in path.GetDirectories())
+						foreach (DirectoryInfo subdir in path.GetDirectories())
 							files.AddRange(ParseDirectory(subdir, filter, deep));
 					}
 
@@ -201,7 +200,7 @@ namespace DOL
 
 							try
 							{
-								object[] objs = type.GetCustomAttributes(typeof (CmdAttribute), false);
+								object[] objs = type.GetCustomAttributes(typeof(CmdAttribute), false);
 								foreach (CmdAttribute attrib in objs)
 								{
 									if (log.IsDebugEnabled)
@@ -212,7 +211,7 @@ namespace DOL
 									cmd.m_cmd = attrib.Cmd;
 									cmd.m_lvl = attrib.Level;
 									cmd.m_desc = attrib.Description;
-									cmd.m_cmdHandler = (ICommandHandler) Activator.CreateInstance(type);
+									cmd.m_cmdHandler = (ICommandHandler)Activator.CreateInstance(type);
 									m_cmds.Add(attrib.Cmd, cmd);
 									if (attrib.Aliases != null)
 										foreach (string alias in attrib.Aliases)
@@ -248,15 +247,12 @@ namespace DOL
 						//If there is no such command, return false
 						if (myCommand == null) return false;
 
-						if ((uint)client.Account.PrivLevel < myCommand.m_lvl)
+						if (client.Account.PrivLevel < myCommand.m_lvl)
 						{
-							if (!SinglePermission.HasPermission(client.Player,pars[0].Substring(1,pars[0].Length-1)))
+							if (!SinglePermission.HasPermission(client.Player, pars[0].Substring(1, pars[0].Length - 1)))
 							{
 								if (pars[0][0] == '&')
-								{
 									pars[0] = '/' + pars[0].Remove(0, 1);
-								}
-								
 								client.Out.SendMessage("You do not have enough priveleges to use " + pars[0], eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 								return true;
 							}
@@ -306,9 +302,15 @@ namespace DOL
 				/// <returns>Array of substrings</returns>
 				private static string[] ParseCmdLine(string cmdLine)
 				{
+					if (cmdLine == null)
+					{
+						throw new ArgumentNullException("cmdLine");
+					}
+
 					List<string> args = new List<string>();
 					int state = 0;
-					StringBuilder arg = new StringBuilder(cmdLine.Length);
+					StringBuilder arg = new StringBuilder(cmdLine.Length >> 1);
+					
 					for (int i = 0; i < cmdLine.Length; i++)
 					{
 						char c = cmdLine[i];
@@ -383,7 +385,7 @@ namespace DOL
 						string commandText = String.Join(" ", pars);
 						string targetName = "(no target)";
 						string playerName = (client.Player == null) ? "(player is null)" : client.Player.Name;
-						string accountName = (client.Account == null) ? "account is null" : client.Account.AccountName;
+						string accountName = (client.Account == null) ? "account is null" : client.Account.Name;
 
 						if (client.Player == null)
 						{
@@ -393,7 +395,7 @@ namespace DOL
 						{
 							targetName = client.Player.TargetObject.Name;
 							if (client.Player.TargetObject is GamePlayer)
-								targetName += "(" + ((GamePlayer) client.Player.TargetObject).Client.Account.AccountName + ")";
+								targetName += "(" + ((GamePlayer)client.Player.TargetObject).Client.Account.Name + ")";
 						}
 						GameServer.Instance.LogGMAction("Command: " + playerName + "(" + accountName + ") -> " + targetName + " - \"/" + commandText.Remove(0, 1) + "\"");
 
@@ -412,7 +414,7 @@ namespace DOL
 				/// <returns>True if succeeded</returns>
 				public static bool CompileScripts(bool compileVB, string path, string dllName, string[] asm_names)
 				{
-					if(!path.EndsWith(@"\") && !path.EndsWith(@"/"))
+					if (!path.EndsWith(@"\") && !path.EndsWith(@"/"))
 						path = path + "/";
 
 					//Reset the assemblies
@@ -429,37 +431,37 @@ namespace DOL
 					bool recompileRequired = true;
 
 					//This file should hold the script infos
-					FileInfo configFile = new FileInfo(dllName+".xml");
+					FileInfo configFile = new FileInfo(dllName + ".xml");
 
 					//If the script assembly is missing, recompile is required
-					if(!File.Exists(dllName))
+					if (!File.Exists(dllName))
 					{
-						if(log.IsDebugEnabled)
+						if (log.IsDebugEnabled)
 							log.Debug("Script assembly missing, recompile required!");
 					}
-					else 
+					else
 					{
 						//Script assembly found, check if we have a file modify info
-						if(configFile.Exists)
+						if (configFile.Exists)
 						{
 							//Ok, we have a config file containing the script file sizes and dates
 							//let's check if any script was modified since last compiling them
-							if(log.IsDebugEnabled)
+							if (log.IsDebugEnabled)
 								log.Debug("Found script info file");
 
 							try
 							{
 								XMLConfigFile config = XMLConfigFile.ParseXMLFile(configFile);
-								
+
 								//Assume no scripts changed
 								recompileRequired = false;
 
 								ArrayList precompiledScripts = new ArrayList(config.Children.Keys);
 
 								//Now test the files
-								foreach(FileInfo finfo in files)
+								foreach (FileInfo finfo in files)
 								{
-									if(config[finfo.FullName]["size"].GetInt(0) != finfo.Length
+									if (config[finfo.FullName]["size"].GetInt(0) != finfo.Length
 										|| config[finfo.FullName]["lastmodified"].GetLong(0) != finfo.LastWriteTime.ToFileTime())
 									{
 										//Recompile required
@@ -475,22 +477,22 @@ namespace DOL
 								{
 									log.Debug("At least one file was modified, recompile required!");
 								}
-							} 
-							catch(Exception e)
+							}
+							catch (Exception e)
 							{
-								if(log.IsErrorEnabled)
+								if (log.IsErrorEnabled)
 									log.Error("Error during script info file to scripts compare", e);
 							}
 						}
 						else
 						{
-							if(log.IsDebugEnabled)
-								log.Debug("Script info file missing, recompile required!");						
+							if (log.IsDebugEnabled)
+								log.Debug("Script info file missing, recompile required!");
 						}
 					}
 
 					//If we need no compiling, we load the existing assembly!
-					if(!recompileRequired)
+					if (!recompileRequired)
 					{
 						try
 						{
@@ -498,12 +500,12 @@ namespace DOL
 							if (!m_scripts.Contains(asm))
 								m_scripts.Add(asm);
 
-							if(log.IsDebugEnabled)
+							if (log.IsDebugEnabled)
 								log.Debug("Precompiled script assembly loaded");
 						}
-						catch(Exception e)
+						catch (Exception e)
 						{
-							if(log.IsErrorEnabled)
+							if (log.IsErrorEnabled)
 								log.Error("Error loading precompiled script assembly, recompile required!", e);
 						}
 
@@ -516,34 +518,33 @@ namespace DOL
 					}
 
 					//We need a recompile, if the dll exists, delete it firsthand
-					if(File.Exists(dllName))
+					if (File.Exists(dllName))
 						File.Delete(dllName);
 
 					CompilerResults res = null;
 					try
 					{
-						ICodeCompiler compiler = null;
+						CodeDomProvider compiler;
+
 						if (compileVB)
 						{
-							VBCodeProvider prov = new VBCodeProvider();
-							compiler = prov.CreateCompiler();
+							compiler = new VBCodeProvider();
 						}
 						else
 						{
-							CSharpCodeProvider prov = new CSharpCodeProvider();
-							compiler = prov.CreateCompiler();
+							compiler = new CSharpCodeProvider();
 						}
 						CompilerParameters param = new CompilerParameters(asm_names, dllName, true);
 						param.GenerateExecutable = false;
 						param.GenerateInMemory = false;
 						param.WarningLevel = 2;
-						param.CompilerOptions = @"/lib:."+Path.DirectorySeparatorChar+"lib";
-						
+						param.CompilerOptions = @"/lib:." + Path.DirectorySeparatorChar + "lib";
+
 						string[] filepaths = new string[files.Count];
-						for(int i = 0; i < files.Count; i++)
+						for (int i = 0; i < files.Count; i++)
 							filepaths[i] = ((FileInfo)files[i]).FullName;
 
-						res = compiler.CompileAssemblyFromFileBatch(param, filepaths);
+						res = compiler.CompileAssemblyFromFile(param, filepaths);
 
 						//After compiling, collect
 						GC.Collect();
@@ -596,14 +597,14 @@ namespace DOL
 						return ret;
 
 					XMLConfigFile newconfig = new XMLConfigFile();
-					foreach(FileInfo finfo in files)
+					foreach (FileInfo finfo in files)
 					{
 						newconfig[finfo.FullName]["size"].Set(finfo.Length);
-                        newconfig[finfo.FullName]["lastmodified"].Set(finfo.LastWriteTime.ToFileTime());
+						newconfig[finfo.FullName]["lastmodified"].Set(finfo.LastWriteTime.ToFileTime());
 					}
-					if(log.IsDebugEnabled)
+					if (log.IsDebugEnabled)
 						log.Debug("Writing script info file");
-					
+
 					newconfig.Save(configFile);
 
 					return true;
@@ -624,7 +625,7 @@ namespace DOL
 							if (!type.IsClass) continue;
 							if (type.GetInterface("DOL.GS.IAbilityActionHandler") == null) continue;
 
-							object[] objs = type.GetCustomAttributes(typeof (SkillHandlerAttribute), false);
+							object[] objs = type.GetCustomAttributes(typeof(SkillHandlerAttribute), false);
 							for (int i = 0; i < objs.Length; i++)
 							{
 								if (objs[i] is SkillHandlerAttribute)
@@ -632,7 +633,7 @@ namespace DOL
 									SkillHandlerAttribute attr = objs[i] as SkillHandlerAttribute;
 									abHandler[attr.KeyName] = type;
 									//DOLConsole.LogLine("Found ability action handler "+attr.KeyName+": "+type);
-//									break;
+									//									break;
 								}
 							}
 						}
@@ -655,7 +656,7 @@ namespace DOL
 							if (!type.IsClass) continue;
 							if (type.GetInterface("DOL.GS.ISpecActionHandler") == null) continue;
 
-							object[] objs = type.GetCustomAttributes(typeof (SkillHandlerAttribute), false);
+							object[] objs = type.GetCustomAttributes(typeof(SkillHandlerAttribute), false);
 							for (int i = 0; i < objs.Length; i++)
 							{
 								if (objs[i] is SkillHandlerAttribute)
@@ -689,12 +690,12 @@ namespace DOL
 
 							try
 							{
-								object[] objs = type.GetCustomAttributes(typeof (PlayerClassAttribute), false);
+								object[] objs = type.GetCustomAttributes(typeof(PlayerClassAttribute), false);
 								foreach (PlayerClassAttribute attrib in objs)
 								{
 									if (attrib.Name.Equals(name))
 									{
-										return (IClassSpec) Activator.CreateInstance(type);
+										return (IClassSpec)Activator.CreateInstance(type);
 									}
 								}
 							}
@@ -729,12 +730,12 @@ namespace DOL
 
 							try
 							{
-								object[] objs = type.GetCustomAttributes(typeof (PlayerClassAttribute), false);
+								object[] objs = type.GetCustomAttributes(typeof(PlayerClassAttribute), false);
 								foreach (PlayerClassAttribute attrib in objs)
 								{
 									if (attrib.ID == id)
 									{
-										return (IClassSpec) Activator.CreateInstance(type);
+										return (IClassSpec)Activator.CreateInstance(type);
 									}
 								}
 							}
@@ -766,16 +767,16 @@ namespace DOL
 						{
 							// Pick up a class
 							if (type.IsClass != true) continue;
-							if (!type.IsSubclassOf(typeof (GameNPC))) continue;
+							if (!type.IsSubclassOf(typeof(GameNPC))) continue;
 
 							try
 							{
-								object[] objs = type.GetCustomAttributes(typeof (NPCGuildScriptAttribute), false);
+								object[] objs = type.GetCustomAttributes(typeof(NPCGuildScriptAttribute), false);
 								if (objs.Length == 0) continue;
 
 								foreach (NPCGuildScriptAttribute attrib in objs)
 								{
-									if (attrib.Realm == eRealm.None || attrib.Realm == realm) 
+									if (attrib.Realm == eRealm.None || attrib.Realm == realm)
 									{
 										ht[attrib.GuildName] = type;
 									}
@@ -792,8 +793,8 @@ namespace DOL
 					return ht;
 				}
 
-				protected static Hashtable[] m_gs_guilds = new Hashtable[(int) eRealm._Last + 1];
-				protected static Hashtable[] m_script_guilds = new Hashtable[(int) eRealm._Last + 1];
+				protected static Hashtable[] m_gs_guilds = new Hashtable[(int)eRealm._Last + 1];
+				protected static Hashtable[] m_script_guilds = new Hashtable[(int)eRealm._Last + 1];
 
 				/// <summary>
 				/// searches for a npc guild script
@@ -806,7 +807,7 @@ namespace DOL
 					if (guild == null || guild.Length == 0) return null;
 
 					Type type = null;
-					if (m_script_guilds[(int) realm] == null)
+					if (m_script_guilds[(int)realm] == null)
 					{
 						Hashtable allScriptGuilds = new Hashtable();
 						foreach (Assembly asm in Scripts)
@@ -815,35 +816,55 @@ namespace DOL
 							if (scriptGuilds == null) continue;
 							foreach (DictionaryEntry entry in scriptGuilds)
 							{
-                                if (allScriptGuilds.ContainsKey(entry.Key)) continue; // guild is already found
+								if (allScriptGuilds.ContainsKey(entry.Key)) continue; // guild is already found
 								allScriptGuilds.Add(entry.Key, entry.Value);
 							}
 						}
-						m_script_guilds[(int) realm] = allScriptGuilds;
+						m_script_guilds[(int)realm] = allScriptGuilds;
 					}
 
 					//SmallHorse: First test if no realm-guild hashmap is null, then test further
 					//Also ... you can not use "nullobject as anytype" ... this crashes!
 					//You have to test against NULL result before casting it... read msdn doku
-					if (m_script_guilds[(int) realm] != null && m_script_guilds[(int) realm][guild] != null)
-						type = m_script_guilds[(int) realm][guild] as Type;
+					if (m_script_guilds[(int)realm] != null && m_script_guilds[(int)realm][guild] != null)
+						type = m_script_guilds[(int)realm][guild] as Type;
 
 					if (type == null)
 					{
-						if (m_gs_guilds[(int) realm] == null)
+						if (m_gs_guilds[(int)realm] == null)
 						{
-							Assembly gasm = Assembly.GetAssembly(typeof (GameServer));
-							m_gs_guilds[(int) realm] = FindAllNPCGuildScriptClasses(realm, gasm);
+							Assembly gasm = Assembly.GetAssembly(typeof(GameServer));
+							m_gs_guilds[(int)realm] = FindAllNPCGuildScriptClasses(realm, gasm);
 						}
 					}
 
 					//SmallHorse: First test if no realm-guild hashmap is null, then test further
 					//Also ... you can not use "nullobject as anytype" ... this crashes!
 					//You have to test against NULL result before casting it... read msdn doku
-					if (m_gs_guilds[(int) realm] != null && m_gs_guilds[(int) realm][guild] != null)
-						type = m_gs_guilds[(int) realm][guild] as Type;
+					if (m_gs_guilds[(int)realm] != null && m_gs_guilds[(int)realm][guild] != null)
+						type = m_gs_guilds[(int)realm][guild] as Type;
 
 					return type;
+				}
+
+
+				private static Type m_defaultControlledBrainType = typeof(ControlledNpc);
+				public static Type DefaultControlledBrainType
+				{
+					get { return m_defaultControlledBrainType; }
+					set { m_defaultControlledBrainType = value; }
+				}
+
+				/// <summary>
+				/// Constructs a new brain for player controlled npcs
+				/// </summary>
+				/// <param name="owner"></param>
+				/// <returns></returns>
+				public static IControlledBrain CreateControlledBrain(GamePlayer owner)
+				{
+					Type[] constructorParams = new Type[] { typeof(GamePlayer) };
+					ConstructorInfo handlerConstructor = m_defaultControlledBrainType.GetConstructor(constructorParams);
+					return (IControlledBrain)handlerConstructor.Invoke(new object[] { owner });
 				}
 
 
@@ -863,7 +884,7 @@ namespace DOL
 					// try to find it in assemblies when not in cache
 					if (handlerConstructor == null)
 					{
-						Type[] constructorParams = new Type[] {typeof(GameLiving), typeof(Spell), typeof(SpellLine)};
+						Type[] constructorParams = new Type[] { typeof(GameLiving), typeof(Spell), typeof(SpellLine) };
 						// first search in scripts
 						foreach (Assembly script in Scripts)
 						{
@@ -875,7 +896,7 @@ namespace DOL
 								// look for attribute
 								try
 								{
-									object[] objs = type.GetCustomAttributes(typeof (SpellHandlerAttribute), false);
+									object[] objs = type.GetCustomAttributes(typeof(SpellHandlerAttribute), false);
 									if (objs.Length == 0) continue;
 
 									foreach (SpellHandlerAttribute attrib in objs)
@@ -901,7 +922,7 @@ namespace DOL
 						if (handlerConstructor == null)
 						{
 							// second search in gameserver
-							foreach (Type type in Assembly.GetAssembly(typeof (GameServer)).GetTypes())
+							foreach (Type type in Assembly.GetAssembly(typeof(GameServer)).GetTypes())
 							{
 								if (type.IsClass != true) continue;
 								if (type.GetInterface("DOL.GS.Spells.ISpellHandler") == null) continue;
@@ -909,7 +930,7 @@ namespace DOL
 								// look for attribute
 								try
 								{
-									object[] objs = type.GetCustomAttributes(typeof (SpellHandlerAttribute), false);
+									object[] objs = type.GetCustomAttributes(typeof(SpellHandlerAttribute), false);
 									if (objs.Length == 0) continue;
 
 									foreach (SpellHandlerAttribute attrib in objs)
@@ -942,7 +963,7 @@ namespace DOL
 					{
 						try
 						{
-							return (ISpellHandler)handlerConstructor.Invoke(new object[] {caster, spell, line});
+							return (ISpellHandler)handlerConstructor.Invoke(new object[] { caster, spell, line });
 						}
 						catch (Exception e)
 						{
@@ -978,7 +999,7 @@ namespace DOL
 							// look for attribute
 							try
 							{
-								object[] objs = type.GetCustomAttributes(typeof (ServerRulesAttribute), false);
+								object[] objs = type.GetCustomAttributes(typeof(ServerRulesAttribute), false);
 								if (objs.Length == 0) continue;
 
 								foreach (ServerRulesAttribute attrib in objs)
@@ -1002,7 +1023,7 @@ namespace DOL
 					if (rules == null)
 					{
 						// second search in gameserver
-						foreach (Type type in Assembly.GetAssembly(typeof (GameServer)).GetTypes())
+						foreach (Type type in Assembly.GetAssembly(typeof(GameServer)).GetTypes())
 						{
 							if (type.IsClass == false) continue;
 							if (type.GetInterface("DOL.GS.ServerRules.IServerRules") == null) continue;
@@ -1010,7 +1031,7 @@ namespace DOL
 							// look for attribute
 							try
 							{
-								object[] objs = type.GetCustomAttributes(typeof (ServerRulesAttribute), false);
+								object[] objs = type.GetCustomAttributes(typeof(ServerRulesAttribute), false);
 								if (objs.Length == 0) continue;
 
 								foreach (ServerRulesAttribute attrib in objs)
@@ -1036,7 +1057,7 @@ namespace DOL
 					{
 						try
 						{
-							IServerRules rls = (IServerRules) Activator.CreateInstance(rules, null);
+							IServerRules rls = (IServerRules)Activator.CreateInstance(rules, null);
 							if (log.IsInfoEnabled)
 								log.Info("Found server rules for " + serverType + " server type (" + rls.RulesDescription() + ").");
 							return rls;
@@ -1086,50 +1107,19 @@ namespace DOL
 				{
 					if (baseType == null)
 						return new Type[0];
-					
+
 					ArrayList types = new ArrayList();
 					ArrayList asms = new ArrayList(Scripts);
-					asms.Add(typeof (GameServer).Assembly);
-					
-					foreach (Assembly asm in asms)
-					foreach (Type t in asm.GetTypes())
-					{
-						if (t.IsClass && baseType.IsAssignableFrom(t))
-							types.Add(t);
-					}
-					
-					return (Type[]) types.ToArray(typeof (Type));
-				}
-				public static object GetInstance(string type)
-				{
-					Type instanceType = null;
-					foreach (Assembly asm in ScriptMgr.Scripts)
-					{
-						instanceType = asm.GetType(type);
-						if (instanceType != null)
-							break;
-					}
-					if(instanceType==null) 
-					{
-						instanceType = Assembly.GetAssembly(typeof(GameServer)).GetType(type);
-					}
+					asms.Add(typeof(GameServer).Assembly);
 
-					if(instanceType==null)
-					{
-						if (log.IsErrorEnabled)
-							log.Error("Could not find class of type: "+type+"!!!");						
-						return null;
-					}
-					try	
-					{
-						return Activator.CreateInstance(instanceType);
-					}
-					catch
-					{
-						if (log.IsErrorEnabled)
-							log.Error("Could not find class of type: "+type+"!!!");						
-						return null;
-					}
+					foreach (Assembly asm in asms)
+						foreach (Type t in asm.GetTypes())
+						{
+							if (t.IsClass && baseType.IsAssignableFrom(t))
+								types.Add(t);
+						}
+
+					return (Type[])types.ToArray(typeof(Type));
 				}
 			}
 		}

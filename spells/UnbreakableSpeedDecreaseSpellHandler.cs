@@ -19,7 +19,6 @@
 using System;
 using System.Text;
 using DOL.GS;
-using DOL.GS.Database;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
 
@@ -31,6 +30,22 @@ namespace DOL.GS.Spells
 	[SpellHandler("UnbreakableSpeedDecrease")]
 	public class UnbreakableSpeedDecreaseSpellHandler : ImmunityEffectSpellHandler
 	{
+		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
+		{
+			if (target.HasAbility(Abilities.CCImmunity))
+			{
+				MessageToCaster(target.Name + " is immune to this effect!", eChatType.CT_SpellResisted);
+				return;
+			}
+			if (target.EffectList.GetOfType(typeof(ChargeEffect)) != null)
+			{
+				MessageToCaster(target.Name + " is moving to fast for this spell to have any effect!", eChatType.CT_SpellResisted);
+				return;
+			}
+
+			base.ApplyEffectOnTarget(target, effectiveness);
+		}
+
 		/// <summary>
 		/// When an applied effect starts,
 		/// duration spells only
@@ -103,7 +118,7 @@ namespace DOL.GS.Spells
 		/// <param name="owner"></param>
 		protected static void SendUpdates(GameLiving owner)
 		{
-			if (owner.Mez || owner.Stun)
+			if (owner.IsMezzed || owner.IsStunned)
 				return;
 
 			GamePlayer player = owner as GamePlayer;
@@ -133,7 +148,7 @@ namespace DOL.GS.Spells
 			/// Constructs a new RestoreSpeedTimer
 			/// </summary>
 			/// <param name="effect">The speed changing effect</param>
-			public RestoreSpeedTimer(GameSpellEffect effect) : base(effect.Owner.Region.TimeManager)
+			public RestoreSpeedTimer(GameSpellEffect effect) : base(effect.Owner.CurrentRegion.TimeManager)
 			{
 				m_effect = effect;
 			}

@@ -20,11 +20,15 @@ using System;
 using System.Collections;
 using System.Reflection;
 using System.Text;
+
 using DOL.AI.Brain;
-using DOL.GS.Database;
+using DOL.Database;
+using DOL.Events;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
+using DOL.GS.RealmAbilities;
 using DOL.GS.SkillHandler;
+
 using log4net;
 
 namespace DOL.GS.Spells
@@ -38,17 +42,41 @@ namespace DOL.GS.Spells
 		/// <summary>
 		/// Defines a logger for this class.
 		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		protected static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		private DelayedCastTimer m_castTimer;
+		/// <summary>
+		/// The spell that we want to handle
+		/// </summary>
 		protected Spell m_spell;
+		/// <summary>
+		/// The spell line the spell belongs to
+		/// </summary>
 		protected SpellLine m_spellLine;
+		/// <summary>
+		/// The caster of the spell
+		/// </summary>
 		protected GameLiving m_caster;
+		/// <summary>
+		/// Has the spell been interrupted
+		/// </summary>
 		protected bool m_interrupted = false;
+		/// <summary>
+		/// Shall we start the reuse timer
+		/// </summary>
 		protected bool m_startReuseTimer = true;
+		/// <summary>
+		/// The property key for the interrupt timeout
+		/// </summary>
 		protected const string INTERRUPT_TIMEOUT_PROPERTY = "CAST_INTERRUPT_TIMEOUT";
+		/// <summary>
+		/// The duration for the spell interrupt duration
+		/// </summary>
 		protected const int SPELL_INTERRUPT_DURATION = 2000; //2 sec for all spells?
 
+		/// <summary>
+		/// The CastingCompleteEvent
+		/// </summary>
 		public event CastingCompleteCallback CastingCompleteEvent;
 		//public event SpellEndsCallback SpellEndsEvent;
 
@@ -72,11 +100,11 @@ namespace DOL.GS.Spells
 		public override string ToString()
 		{
 			return new StringBuilder(128)
-				.Append("Caster=").Append(Caster==null ? "(null)" : Caster.Name)
+				.Append("Caster=").Append(Caster == null ? "(null)" : Caster.Name)
 				.Append(", IsCasting=").Append(IsCasting)
 				.Append(", m_interrupted=").Append(m_interrupted)
-				.Append("\nSpell: ").Append(Spell==null?"(null)":Spell.ToString())
-				.Append("\nSpellLine: ").Append(SpellLine==null?"(null)":SpellLine.ToString())
+				.Append("\nSpell: ").Append(Spell == null ? "(null)" : Spell.ToString())
+				.Append("\nSpellLine: ").Append(SpellLine == null ? "(null)" : SpellLine.ToString())
 				.ToString();
 		}
 
@@ -87,34 +115,30 @@ namespace DOL.GS.Spells
 		/// </summary>
 		public virtual void OnSpellPulse(PulsingSpellEffect effect)
 		{
-			if (Caster.Alive == false)
+			if (Caster.IsAlive == false)
 			{
 				effect.Cancel(false);
 				return;
 			}
-			if (Caster.ObjectState != eObjectState.Active)
+			if (Caster.ObjectState != GameObject.eObjectState.Active)
 				return;
-			if (Caster.Stun || Caster.Mez)
+			if (Caster.IsStunned || Caster.IsMezzed)
 				return;
 
 			// no instrument anymore = stop the song
-			if (m_spell.InstrumentRequirement != 0)
+			if (m_spell.InstrumentRequirement != 0 && !CheckInstrument())
 			{
-				Instrument instrument = GetCasterInstrument();
-				if (instrument == null || (int)instrument.Type != m_spell.InstrumentRequirement)
-				{
-					MessageToCaster("You stop playing your song.", eChatType.CT_Spell);
-					effect.Cancel(false);
-					return;
-				}
+				MessageToCaster("You stop playing your song.", eChatType.CT_Spell);
+				effect.Cancel(false);
+				return;
 			}
 
 			if (Caster.Mana > Spell.PulsePower)
 			{
-				Caster.ChangeMana(null, -Spell.PulsePower);
+				Caster.Mana -= Spell.PulsePower;
 				if (Spell.InstrumentRequirement != 0 || !HasPositiveEffect)
 					SendEffectAnimation(Caster, 0, true, 1); // pulsing auras or songs
-				StartSpell(Caster.TargetObject as GameLivingBase);
+				StartSpell(Caster.TargetObject as GameLiving);
 			}
 			else
 			{
@@ -126,18 +150,14 @@ namespace DOL.GS.Spells
 		/// Checks if caster holds the right instrument for this spell
 		/// </summary>
 		/// <returns>true if right instrument</returns>
-		protected Instrument GetCasterInstrument()
+		protected bool CheckInstrument()
 		{
-			if(Caster.Inventory != null)
+			InventoryItem instrument = Caster.AttackWeapon;
+			if (instrument == null || instrument.Object_Type != (int)eObjectType.Instrument || (instrument.DPS_AF != 4 && instrument.DPS_AF != m_spell.InstrumentRequirement))
 			{
-				switch (Caster.ActiveWeaponSlot)
-				{
-					case GameLiving.eActiveWeaponSlot.Standard : return Caster.Inventory.GetItem(eInventorySlot.RightHandWeapon) as Instrument;
-					case GameLiving.eActiveWeaponSlot.TwoHanded: return Caster.Inventory.GetItem(eInventorySlot.TwoHandWeapon) as Instrument;
-					case GameLiving.eActiveWeaponSlot.Distance : return Caster.Inventory.GetItem(eInventorySlot.DistanceWeapon) as Instrument;
-				}
+				return false;
 			}
-			return null;
+			return true;
 		}
 
 		/// <summary>
@@ -191,15 +211,16 @@ namespace DOL.GS.Spells
 		/// </summary>
 		public virtual void CastSpell()
 		{
+			m_caster.Notify(GameLivingEvent.CastSpell, m_caster, new CastSpellEventArgs(this));
 			// nightshade is unstealthed even if no target, target is same realm, target is too far
 			if (Caster is GamePlayer)
 			{
-				((GamePlayer) Caster).Stealth(false);
+				((GamePlayer)Caster).Stealth(false);
 			}
 
 			m_interrupted = false;
-			GameLivingBase target = Caster.TargetObject as GameLivingBase;
-			bool check = CheckBeginCast(target);
+			GameLiving target = Caster.TargetObject as GameLiving;
+
 			if (Spell.Pulse != 0 && CancelPulsingSpell(Caster, Spell.SpellType))
 			{
 				// is done even if caster is sitting
@@ -208,8 +229,13 @@ namespace DOL.GS.Spells
 				else
 					MessageToCaster("You stop playing your song.", eChatType.CT_Spell);
 			}
-			else if (GameServer.ServerRules.IsAllowedToCastSpell(Caster, target, Spell, m_spellLine) && check)
+			else if (GameServer.ServerRules.IsAllowedToCastSpell(Caster, target, Spell, m_spellLine) && CheckBeginCast(target))
 			{
+				if (m_caster is GamePlayer && (m_caster as GamePlayer).IsOnHorse && !HasPositiveEffect)
+				{
+					(m_caster as GamePlayer).IsOnHorse = false;
+				}
+
 				if (Spell.CastTime > 0)
 				{
 					// no instant cast
@@ -220,24 +246,27 @@ namespace DOL.GS.Spells
 						MessageToCaster("You begin playing " + Spell.Name + "!", eChatType.CT_Spell);
 
 					//set the time when casting to can not quickcast during a minimum time
-//					if (m_caster is GamePlayer && ((GamePlayer)m_caster).IsQuickCasting)
-//						((GamePlayer)m_caster).TempProperties.setProperty(GamePlayer.QUICK_CAST_CHANGE_TICK, GameTimer.CurrentTick);
+					//					if (m_caster is GamePlayer && ((GamePlayer)m_caster).IsQuickCasting)
+					//						((GamePlayer)m_caster).TempProperties.setProperty(GamePlayer.QUICK_CAST_CHANGE_TICK, GameTimer.CurrentTick);
 
 					m_castTimer = new DelayedCastTimer(Caster, this, target);
 					m_castTimer.Start(1 + CalculateCastingTime());
 					SendCastAnimation();
 
-					if (m_caster is GamePlayer)
+					if (m_caster is GamePlayer && ((GamePlayer)m_caster).IsStrafing)
 					{
-						if (m_caster.IsMoving || ((GamePlayer) m_caster).Strafing)
-						{
-							CasterMoves();
-						}
+						CasterMoves();
+					}
+
+					if (m_caster.IsMoving)
+					{
+						CasterMoves();
 					}
 				}
 				else
 				{
 					// instant cast
+					SendCastAnimation(0);
 					FinishSpellCast(target);
 				}
 			}
@@ -254,6 +283,8 @@ namespace DOL.GS.Spells
 		{
 			if (Spell.InstrumentRequirement != 0)
 				return; // song can be played while moving
+			if (Spell.MoveCast)
+				return;
 			MessageToCaster("You move and interrupt your spellcast!", eChatType.CT_System);
 			InterruptCasting();
 		}
@@ -267,18 +298,22 @@ namespace DOL.GS.Spells
 		/// <returns>true if casting was interrupted</returns>
 		public virtual bool CasterIsAttacked(GameLiving attacker)
 		{
-			if (Caster.EffectList.GetOfType(typeof (QuickCastEffect)) != null)
+			if (Spell.Uninterruptible)
+				return false;
+			if (Caster.EffectList.GetOfType(typeof(QuickCastEffect)) != null)
+				return false;
+			if (Caster.EffectList.GetOfType(typeof(MasteryofConcentrationEffect)) != null)
 				return false;
 			if (IsCasting)
 			{
 				double mod = Caster.GetConLevel(attacker);
 				double chance = 65;
-				chance += mod*10;
+				chance += mod * 10;
 				chance = Math.Max(1, chance);
 				chance = Math.Min(99, chance);
-				if (Util.Chance((int) chance))
+				if (Util.Chance((int)chance))
 				{
-					Caster.TempProperties.setProperty(INTERRUPT_TIMEOUT_PROPERTY, Caster.Region.Time + SPELL_INTERRUPT_DURATION);
+					Caster.TempProperties.setProperty(INTERRUPT_TIMEOUT_PROPERTY, Caster.CurrentRegion.Time + SPELL_INTERRUPT_DURATION);
 					MessageToCaster(attacker.GetName(0, true) + " is attacking you and your spell is interrupted!", eChatType.CT_SpellResisted);
 					InterruptCasting(); // always interrupt at the moment
 					return true;
@@ -294,14 +329,14 @@ namespace DOL.GS.Spells
 		/// </summary>
 		/// <param name="selectedTarget"></param>
 		/// <returns></returns>
-		public virtual bool CheckBeginCast(GameLivingBase selectedTarget)
+		public virtual bool CheckBeginCast(GameLiving selectedTarget)
 		{
-			if (m_caster.ObjectState != eObjectState.Active)
+			if (m_caster.ObjectState != GameLiving.eObjectState.Active)
 			{
 				return false;
 			}
 
-			if (!m_caster.Alive)
+			if (!m_caster.IsAlive)
 			{
 				MessageToCaster("You are dead and can't cast!", eChatType.CT_System);
 				return false;
@@ -309,14 +344,13 @@ namespace DOL.GS.Spells
 
 			if (m_spell.InstrumentRequirement != 0)
 			{
-				Instrument instrument = GetCasterInstrument();
-				if (instrument == null || (int)instrument.Type != m_spell.InstrumentRequirement)
+				if (!CheckInstrument())
 				{
 					MessageToCaster("You are not wielding the right type of instrument!", eChatType.CT_SpellResisted);
 					return false;
 				}
 			}
-			else if (m_caster.Sitting) // songs can be played if sitting
+			else if (m_caster.IsSitting) // songs can be played if sitting
 			{
 				//Purge can be cast while sitting but only if player has negative effect that
 				//don't allow standing up (like stun or mez)
@@ -333,58 +367,57 @@ namespace DOL.GS.Spells
 				}
 			}
 
-			if (m_spell.CastTime > 0 && m_caster is GamePlayer)
+			if (m_spell.CastTime > 0 && m_caster is GamePlayer && m_caster.EffectList.GetOfType(typeof(QuickCastEffect)) == null)
 			{
 				long leftseconds = Math.Max(
-					Caster.TempProperties.getLongProperty(INTERRUPT_TIMEOUT_PROPERTY, 0) - Caster.Region.Time,
+					Caster.TempProperties.getLongProperty(INTERRUPT_TIMEOUT_PROPERTY, 0) - Caster.CurrentRegion.Time,
 					Caster.SwingTimeLeft);
 				if (leftseconds > 0)
 				{
-					MessageToCaster("You must wait " + (leftseconds/1000+1).ToString() + " seconds to cast a spell!", eChatType.CT_System);
+					MessageToCaster("You must wait " + (leftseconds / 1000 + 1).ToString() + " seconds to cast a spell!", eChatType.CT_System);
 					return false;
 				}
 				Caster.TempProperties.removeProperty(INTERRUPT_TIMEOUT_PROPERTY);
 			}
 
-			if (m_spell.RecastDelay > 0 && m_caster is GamePlayer)
+			if (m_spell.RecastDelay > 0)
 			{
-				int left = ((GamePlayer) m_caster).GetSkillDisabledDuration(m_spell);
+				int left = m_caster.GetSkillDisabledDuration(m_spell);
 				if (left > 0)
 				{
-					MessageToCaster("You must wait " + (left/1000 + 1).ToString() + " seconds to use this spell!", eChatType.CT_System);
+					MessageToCaster("You must wait " + (left / 1000 + 1).ToString() + " seconds to use this spell!", eChatType.CT_System);
 					return false;
 				}
 			}
 
 			if (m_spell.Target == "Area")
 			{
-				if (!m_caster.GroundTarget.CheckDistance(m_caster.Position, CalculateSpellRange()))
+				if (!WorldMgr.CheckDistance(m_caster, m_caster.GroundTarget, CalculateSpellRange()))
 				{
 					MessageToCaster("Your area target is out of range.  Select a closer target.", eChatType.CT_SpellResisted);
 					return false;
 				}
-//				if (!Caster.GroundTargetInView)
-//				{
-//					MessageToCaster("Your ground target is not in view!", eChatType.CT_SpellResisted);
-//					return false;
-//				}
+				//				if (!Caster.GroundTargetInView)
+				//				{
+				//					MessageToCaster("Your ground target is not in view!", eChatType.CT_SpellResisted);
+				//					return false;
+				//				}
 			}
-			else if (m_spell.Target != "Self" && m_spell.Target != "Group" && m_spell.Range > 0)
+			else if (m_spell.Target != "Self" && m_spell.Target != "Group" && m_spell.Target != "Pet" && m_spell.Range > 0)
 			{
 				//all spells that need a target
 
-				if (selectedTarget == null || selectedTarget.ObjectState != eObjectState.Active)
+				if (selectedTarget == null || selectedTarget.ObjectState != GameLiving.eObjectState.Active)
 				{
 					MessageToCaster("You must select a target for this spell!", eChatType.CT_SpellResisted);
 					return false;
 				}
 
-				if (!m_caster.Position.CheckDistance(selectedTarget.Position, CalculateSpellRange()))
+				if (!WorldMgr.CheckDistance(m_caster, selectedTarget, CalculateSpellRange()))
 				{
 					MessageToCaster("That target is too far away!", eChatType.CT_SpellResisted);
 					return false;
 				}
-
 
 				switch (m_spell.Target.ToLower())
 				{
@@ -409,7 +442,7 @@ namespace DOL.GS.Spells
 						break;
 
 					case "corpse":
-						if (selectedTarget.Alive || !GameServer.ServerRules.IsSameRealm(Caster, selectedTarget, true))
+						if (selectedTarget.IsAlive || !GameServer.ServerRules.IsSameRealm(Caster, selectedTarget, true))
 						{
 							MessageToCaster("This spell only works on dead members of your realm!", eChatType.CT_SpellResisted);
 							return false;
@@ -438,13 +471,13 @@ namespace DOL.GS.Spells
 				}
 
 				//heals/buffs/rez need LOS only to start casting
-				if (!m_caster.TargetInView)
+				if (!m_caster.TargetInView && m_spell.Target.ToLower() != "pet")
 				{
 					MessageToCaster("Your target is not in view.", eChatType.CT_SpellResisted);
 					return false;
 				}
 
-				if (m_spell.Target != "Corpse" && !selectedTarget.Alive)
+				if (m_spell.Target != "Corpse" && !selectedTarget.IsAlive)
 				{
 					MessageToCaster(selectedTarget.GetName(0, true) + " is dead!", eChatType.CT_SpellResisted);
 					return false;
@@ -472,26 +505,26 @@ namespace DOL.GS.Spells
 				}
 			}
 
-//			if (m_caster is GamePlayer) 
-//			{
-////				if (this.CheckDisabled(spl)) {
-////					this.Out.SendMessage("You must wait for the "+spl.RecastDelay+" second recast delay to expire!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-////					return false;
-////				}
-////				if (((bool)this.TempProperties.getObjectProperty("MEZZED", false))!=false) {
-////					//TODO: Code for Realm Abilitys which nullify mez or stun.. eg purge
-////					return false;
-////				}
-////				if (((bool)this.TempProperties.getObjectProperty("STUNNED", false))!=false) {
-////					//TODO: Code for Realm Abilitys which nullify mez or stun.. eg purge
-////					return false;
-////				}
-//			} else {
-//				return true;
-//			}
+			//			if (m_caster is GamePlayer) 
+			//			{
+			////				if (this.CheckDisabled(spl)) {
+			////					this.Out.SendMessage("You must wait for the "+spl.RecastDelay+" second recast delay to expire!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			////					return false;
+			////				}
+			////				if (((bool)this.TempProperties.getObjectProperty("MEZZED", false))!=false) {
+			////					//TODO: Code for Realm Abilitys which nullify mez or stun.. eg purge
+			////					return false;
+			////				}
+			////				if (((bool)this.TempProperties.getObjectProperty("STUNNED", false))!=false) {
+			////					//TODO: Code for Realm Abilitys which nullify mez or stun.. eg purge
+			////					return false;
+			////				}
+			//			} else {
+			//				return true;
+			//			}
 
 			// Cancel engage if user starts attack
-			EngageEffect engage = (EngageEffect) m_caster.EffectList.GetOfType(typeof (EngageEffect));
+			EngageEffect engage = (EngageEffect)m_caster.EffectList.GetOfType(typeof(EngageEffect));
 			if (engage != null)
 			{
 				engage.Cancel(false);
@@ -500,7 +533,13 @@ namespace DOL.GS.Spells
 			return true;
 		}
 
-		public virtual void CheckLOSYouToPet(GamePlayer player, ushort response)
+		/// <summary>
+		/// Check the Line of Sight from you to your pet
+		/// </summary>
+		/// <param name="player">The player</param>
+		/// <param name="response">The result</param>
+		/// <param name="targetOID">The target OID</param>
+		public virtual void CheckLOSYouToPet(GamePlayer player, ushort response, ushort targetOID)
 		{
 			if (player == null) // Hmm
 				return;
@@ -510,7 +549,13 @@ namespace DOL.GS.Spells
 			InterruptCasting(); // break;
 		}
 
-		public virtual void CheckLOSYouToTarget(GamePlayer player, ushort response)
+		/// <summary>
+		/// Check the Line of Sight from you to your target
+		/// </summary>
+		/// <param name="player">The player</param>
+		/// <param name="response">The result</param>
+		/// <param name="targetOID">The target OID</param>
+		public virtual void CheckLOSYouToTarget(GamePlayer player, ushort response, ushort targetOID)
 		{
 			if (player == null) // Hmm
 				return;
@@ -520,7 +565,13 @@ namespace DOL.GS.Spells
 			InterruptCasting(); // break;
 		}
 
-		public virtual void CheckLOSPetToTarget(GamePlayer player, ushort response)
+		/// <summary>
+		/// Check the Line of Sight from your pet to your target
+		/// </summary>
+		/// <param name="player">The player</param>
+		/// <param name="response">The result</param>
+		/// <param name="targetOID">The target OID</param>
+		public virtual void CheckLOSPetToTarget(GamePlayer player, ushort response, ushort targetOID)
 		{
 			if (player == null) // Hmm
 				return;
@@ -536,19 +587,19 @@ namespace DOL.GS.Spells
 		/// </summary>
 		/// <param name="target"></param>
 		/// <returns></returns>
-		public virtual bool CheckEndCast(GameLivingBase target)
+		public virtual bool CheckEndCast(GameLiving target)
 		{
 			if (m_interrupted)
 			{
 				return false;
 			}
 
-			if (m_caster.ObjectState != eObjectState.Active)
+			if (m_caster.ObjectState != GameLiving.eObjectState.Active)
 			{
 				return false;
 			}
 
-			if (!m_caster.Alive)
+			if (!m_caster.IsAlive)
 			{
 				MessageToCaster("You are dead and can't cast!", eChatType.CT_System);
 				return false;
@@ -556,14 +607,13 @@ namespace DOL.GS.Spells
 
 			if (m_spell.InstrumentRequirement != 0)
 			{
-				Instrument instrument = GetCasterInstrument();
-				if (instrument == null || (int)instrument.Type != m_spell.InstrumentRequirement)
+				if (!CheckInstrument())
 				{
 					MessageToCaster("You are not wielding the right type of instrument!", eChatType.CT_SpellResisted);
 					return false;
 				}
 			}
-			else if (m_caster.Sitting) // songs can be played if sitting
+			else if (m_caster.IsSitting) // songs can be played if sitting
 			{
 				//Purge can be cast while sitting but only if player has negative effect that
 				//don't allow standing up (like stun or mez)
@@ -573,28 +623,35 @@ namespace DOL.GS.Spells
 
 			if (m_spell.Target == "Area")
 			{
-				if (!m_caster.GroundTarget.CheckDistance(m_caster.Position, CalculateSpellRange()))
+				if (!WorldMgr.CheckDistance(m_caster, m_caster.GroundTarget, CalculateSpellRange()))
 				{
 					MessageToCaster("Your area target is out of range.  Select a closer target.", eChatType.CT_SpellResisted);
 					return false;
 				}
-//				if (!Caster.GroundTargetInView)
-//				{
-//					MessageToCaster("Your ground target is not in view!", eChatType.CT_SpellResisted);
-//					return false;
-//				}
+				//				if (!Caster.GroundTargetInView)
+				//				{
+				//					MessageToCaster("Your ground target is not in view!", eChatType.CT_SpellResisted);
+				//					return false;
+				//				}
 			}
 			else if (m_spell.Target != "Self" && m_spell.Target != "Group" && m_spell.Range > 0)
 			{
 				//all spells that need a target
 
-				if (target == null || target.ObjectState != eObjectState.Active)
+				if (m_spell.Target == "Pet" && m_caster is GamePlayer &&
+					((GamePlayer)m_caster).ControlledNpc != null)
+				{
+					if (((GamePlayer)m_caster).ControlledNpc.Body != null)
+						target = ((GamePlayer)Caster).ControlledNpc.Body;
+				}
+
+				if (target == null || target.ObjectState != GameLiving.eObjectState.Active)
 				{
 					MessageToCaster("You must select a target for this spell!", eChatType.CT_SpellResisted);
 					return false;
 				}
 
-				if (!m_caster.Position.CheckDistance(target.Position, CalculateSpellRange()))
+				if (!WorldMgr.CheckDistance(m_caster, target, CalculateSpellRange()))
 				{
 					MessageToCaster("That target is too far away!", eChatType.CT_SpellResisted);
 					return false;
@@ -617,7 +674,7 @@ namespace DOL.GS.Spells
 						break;
 
 					case "Corpse":
-						if (target.Alive || !GameServer.ServerRules.IsSameRealm(Caster, target, true))
+						if (target.IsAlive || !GameServer.ServerRules.IsSameRealm(Caster, target, true))
 						{
 							MessageToCaster("This spell only works on dead members of your realm!", eChatType.CT_SpellResisted);
 							return false;
@@ -679,28 +736,58 @@ namespace DOL.GS.Spells
 		/// </summary>
 		/// <param name="target"></param>
 		/// <returns></returns>
-		public virtual int CalculateNeededPower(GameLivingBase target)
+		public virtual int CalculateNeededPower(GameLiving target)
 		{
-			double power = m_spell.Power*1.2;
+			double basepower = m_spell.Power; //<== defined a basevar first then modified this base-var to tell %-costs from absolut-costs
+
+			// percent of maxPower if less than zero
+			if (basepower < 0)
+				if (Caster is GamePlayer && ((GamePlayer)Caster).CharacterClass.ManaStat != eStat.UNDEFINED)
+				{
+					GamePlayer player = Caster as GamePlayer;
+					basepower = player.CalculateMaxMana(player.Level, player.GetBaseStat(player.CharacterClass.ManaStat)) * basepower * -0.01;
+				}
+				else
+					basepower = Caster.MaxMana * basepower * -0.01;
+
+			double power = basepower * 1.2; //<==NOW holding basepower*1.2 within 'power'
+
 			eProperty focusProp = SkillBase.SpecToFocus(SpellLine.Spec);
 			if (focusProp != eProperty.Undefined)
 			{
-				double focusBonus = Caster.GetModified(focusProp)*0.4;
+				double focusBonus = Caster.GetModified(focusProp) * 0.4;
 				if (Spell.Level > 0)
 					focusBonus /= Spell.Level;
 				if (focusBonus > 0.4)
 					focusBonus = 0.4;
 				else if (focusBonus < 0)
 					focusBonus = 0;
-				power -= m_spell.Power*focusBonus;
+				power -= basepower * focusBonus; //<== So i can finally use 'basepower' for both calculations: % and absolut
 			}
-			// percent of maxPower if less than zero
-			if (power < 0)
-				power = Caster.MaxMana*power*-0.01;
+			else if (Caster is GamePlayer && ((GamePlayer)Caster).CharacterClass.ClassType == eClassType.Hybrid)
+			{
+				double specBonus = 0;
+				if (Spell.Level != 0) specBonus = (((GamePlayer)Caster).GetBaseSpecLevel(SpellLine.Spec) * 0.4 / Spell.Level);
+
+				if (specBonus > 0.4)
+					specBonus = 0.4;
+				else if (specBonus < 0)
+					specBonus = 0;
+				power -= basepower * specBonus;
+			}
 			// doubled power usage if quickcasting
-			if (Caster.EffectList.GetOfType(typeof (QuickCastEffect)) != null && Spell.CastTime > 0)
+			if (Caster.EffectList.GetOfType(typeof(QuickCastEffect)) != null && Spell.CastTime > 0)
 				power *= 2;
-			return (int) power;
+			return (int)power; 
+		}
+
+		/// <summary>
+		/// Calculates the enduance cost of the spell
+		/// </summary>
+		/// <returns></returns>
+		public virtual int CalculateEnduranceCost()
+		{
+			return 5;
 		}
 
 		/// <summary>
@@ -709,7 +796,7 @@ namespace DOL.GS.Spells
 		/// <returns></returns>
 		public virtual int CalculateSpellRange()
 		{
-			return Math.Max(32, (int)(Spell.Range*Caster.GetModified(eProperty.SpellRange)*0.01));
+			return Math.Max(32, (int)(Spell.Range * Caster.GetModified(eProperty.SpellRange) * 0.01));
 		}
 
 		/// <summary>
@@ -722,7 +809,7 @@ namespace DOL.GS.Spells
 
 			if (IsCasting)
 			{
-				foreach (GamePlayer player in m_caster.GetInRadius(typeof(GamePlayer), WorldMgr.VISIBILITY_DISTANCE))
+				foreach (GamePlayer player in m_caster.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 				{
 					player.Out.SendInterruptAnimation(m_caster);
 				}
@@ -753,7 +840,7 @@ namespace DOL.GS.Spells
 			/// <summary>
 			/// The target object at the moment of CastSpell call
 			/// </summary>
-			private readonly GameLivingBase m_target;
+			private readonly GameLiving m_target;
 
 			/// <summary>
 			/// Constructs a new DelayedSpellTimer
@@ -761,7 +848,8 @@ namespace DOL.GS.Spells
 			/// <param name="actionSource">The caster</param>
 			/// <param name="handler">The spell handler</param>
 			/// <param name="target">The target object</param>
-			public DelayedCastTimer(GameLiving actionSource, SpellHandler handler, GameLivingBase target) : base(actionSource.Region.TimeManager)
+			public DelayedCastTimer(GameLiving actionSource, SpellHandler handler, GameLiving target)
+				: base(actionSource.CurrentRegion.TimeManager)
 			{
 				if (handler == null)
 					throw new ArgumentNullException("handler");
@@ -774,7 +862,7 @@ namespace DOL.GS.Spells
 			/// </summary>
 			protected override void OnTick()
 			{
-				GameLivingBase target = m_target;
+				GameLiving target = m_target;
 
 				try
 				{
@@ -810,14 +898,39 @@ namespace DOL.GS.Spells
 		public virtual int CalculateCastingTime()
 		{
 			int ticks = m_spell.CastTime;
-			if (m_caster is GamePlayer && Spell.InstrumentRequirement == 0) // dex has no effect on songs - can't play a song faster, right?
+			if (Spell.InstrumentRequirement != 0)
 			{
-				if (m_caster.EffectList.GetOfType(typeof (QuickCastEffect)) != null)
-				{
-					return 2000; //always 2 sec
-				}
-				ticks = (int)(ticks * (1.0 - Math.Min(0.6, (((GamePlayer)m_caster).GetModified(eProperty.Dexterity) - 60)/600.0)));
+				return ticks;
 			}
+			double percent = 1.0;
+			int dex = m_caster.GetModified(eProperty.Dexterity);
+
+			if (m_caster.EffectList.GetOfType(typeof(QuickCastEffect)) != null)
+			{
+				return 2000; //always 2 sec
+			}
+			//http://daoc.nisrv.com/modules.php?name=DD_DMG_Calculator
+			//Q: Would you please give more detail as to how dex affects a caster?
+			//For instance, I understand that when I have my dex maxed I will cast 25% faster.
+			//How does this work incrementally? And will a lurikeen be able to cast faster in the end than another race?
+			//A: From a dex of 50 to a dex of 250, the formula lets you cast 1% faster for each ten points.
+			//From a dex of 250 to the maximum possible (which as you know depends on your starting total),
+			//your speed increases 1% for every twenty points.
+
+			if (dex < 60)
+			{
+				//do nothing.  THis may prove inaccurate for level 10 trolls
+			}
+			else if (dex < 250)
+			{
+				percent = 1.0 - (dex - 60) * 0.15 * 0.01;
+			}
+			else
+			{
+				percent = 1.0 - ((dex - 60) * 0.15 + (dex - 250) * 0.05) * 0.01;
+			}
+			percent *= 1.0 - m_caster.GetModified(eProperty.CastingSpeed) * 0.01;
+			ticks = (int)(ticks * Math.Max(0.4, percent));
 			if (ticks < 1)
 				ticks = 1; // at least 1 tick
 			return ticks;
@@ -825,29 +938,53 @@ namespace DOL.GS.Spells
 
 		#region animations
 
+		/// <summary>
+		/// Sends the cast animation
+		/// </summary>
 		public virtual void SendCastAnimation()
 		{
-			ushort castTime = (ushort)(CalculateCastingTime()/100);
-			foreach (GamePlayer player in m_caster.GetInRadius(typeof(GamePlayer), WorldMgr.VISIBILITY_DISTANCE))
+			ushort castTime = (ushort)(CalculateCastingTime() / 100);
+			SendCastAnimation(castTime);
+		}
+
+		/// <summary>
+		/// Sends the cast animation
+		/// </summary>
+		/// <param name="castTime">The cast time</param>
+		public virtual void SendCastAnimation(ushort castTime)
+		{
+			foreach (GamePlayer player in m_caster.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
+				if (player == null)
+					continue;
 				player.Out.SendSpellCastAnimation(m_caster, m_spell.ClientEffect, castTime);
 			}
 		}
 
+		/// <summary>
+		/// Send the Effect Animation
+		/// </summary>
+		/// <param name="target">The target object</param>
+		/// <param name="boltDuration">The duration of a bolt</param>
+		/// <param name="noSound">sound?</param>
+		/// <param name="success">spell success?</param>
 		public virtual void SendEffectAnimation(GameLiving target, ushort boltDuration, bool noSound, byte success)
 		{
 			if (target == null)
 				target = m_caster;
 
-			foreach (GamePlayer player in target.GetInRadius(typeof(GamePlayer), WorldMgr.VISIBILITY_DISTANCE))
+			foreach (GamePlayer player in target.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
 				player.Out.SendSpellEffectAnimation(m_caster, target, m_spell.ClientEffect, boltDuration, noSound, success);
 			}
 		}
 
+		/// <summary>
+		/// Send the Interrupt Cast Animation
+		/// </summary>
 		public virtual void SendInterruptCastAnimation()
 		{
-			foreach (GamePlayer player in m_caster.GetInRadius(typeof(GamePlayer), WorldMgr.VISIBILITY_DISTANCE))
+			foreach (GamePlayer player in m_caster.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
 				player.Out.SendInterruptAnimation(m_caster);
 			}
@@ -858,16 +995,16 @@ namespace DOL.GS.Spells
 		/// <summary>
 		/// called after normal spell cast is completed and effect has to be started
 		/// </summary>
-		public virtual void FinishSpellCast(GameLivingBase target)
+		public virtual void FinishSpellCast(GameLiving target)
 		{
 			// endurance
-			m_caster.EndurancePercent -= 5;
+			m_caster.Endurance -= CalculateEnduranceCost();
 
 			// messages
-			if (Spell.InstrumentRequirement == 0)
+			if (Spell.InstrumentRequirement == 0 && Spell.ClientEffect != 0)
 			{
 				MessageToCaster("You cast a " + m_spell.Name + " spell!", eChatType.CT_Spell);
-				foreach (GamePlayer player in m_caster.GetInRadius(typeof(GamePlayer), WorldMgr.INFO_DISTANCE))
+				foreach (GamePlayer player in m_caster.GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
 				{
 					if (player != m_caster)
 						player.Out.SendMessage(m_caster.GetName(0, true) + " casts a spell!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
@@ -880,36 +1017,49 @@ namespace DOL.GS.Spells
 				PulsingSpellEffect effect = new PulsingSpellEffect(this);
 				effect.Start();
 				// show animation on caster for positive spells, negative shows on every StartSpell
-				if (m_spell.Target == "Self" || m_spell.Target == "Group")
+				if (m_spell.Target == "Self" || m_spell.Target == "Group" || m_spell.Target == "Pet")
 					SendEffectAnimation(Caster, 0, false, 1);
 			}
 
 			StartSpell(target); // and action
 
+			//Subspells
+			if (m_spell.SubSpellID > 0)
+			{
+				Spell spell = SkillBase.GetSpellByID(m_spell.SubSpellID);
+				//we need subspell ID to be 0, we don't want spells linking off the subspell
+				if (spell != null && spell.SubSpellID == 0)
+				{
+					ISpellHandler spellhandler = Scripts.ScriptMgr.CreateSpellHandler(m_caster, spell, SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells));
+					spellhandler.StartSpell(target);
+				}
+			}
+
 			//the quick cast is unallowed whenever you miss the spell	
 			//set the time when casting to can not quickcast during a minimum time
 			if (m_caster is GamePlayer)
 			{
-				QuickCastEffect quickcast = (QuickCastEffect) m_caster.EffectList.GetOfType(typeof (QuickCastEffect));
+				QuickCastEffect quickcast = (QuickCastEffect)m_caster.EffectList.GetOfType(typeof(QuickCastEffect));
 				if (quickcast != null && Spell.CastTime > 0)
 				{
-					((GamePlayer) m_caster).TempProperties.setProperty(GamePlayer.QUICK_CAST_CHANGE_TICK, m_caster.Region.Time);
-					((GamePlayer) m_caster).DisableSkill(SkillBase.GetAbility(Abilities.Quickcast), QuickCastAbilityHandler.DISABLE_DURATION);
+					((GamePlayer)m_caster).TempProperties.setProperty(GamePlayer.QUICK_CAST_CHANGE_TICK, m_caster.CurrentRegion.Time);
+					((GamePlayer)m_caster).DisableSkill(SkillBase.GetAbility(Abilities.Quickcast), QuickCastAbilityHandler.DISABLE_DURATION);
 					quickcast.Cancel(false);
 				}
 			}
 
 			// disable spells with recasttimer (Disables group of same type with same delay)
-			if (m_spell.RecastDelay > 0 && m_startReuseTimer && m_caster is GamePlayer)
+			if (m_spell.RecastDelay > 0 && m_startReuseTimer)
 			{
 				foreach (Spell sp in SkillBase.GetSpellList(m_spellLine.KeyName))
 				{
 					if (sp.SpellType == m_spell.SpellType && sp.RecastDelay == m_spell.RecastDelay && sp.Group == m_spell.Group)
 					{
-						((GamePlayer) m_caster).DisableSkill(sp, sp.RecastDelay);
+						m_caster.DisableSkill(sp, sp.RecastDelay);
 					}
 				}
 			}
+			GameEventMgr.Notify(GameLivingEvent.CastFinished, m_caster, new CastSpellEventArgs(this));
 		}
 
 		/// <summary>
@@ -917,29 +1067,37 @@ namespace DOL.GS.Spells
 		/// </summary>
 		/// <param name="castTarget"></param>
 		/// <returns></returns>
-		public virtual IList SelectTargets(GameLivingBase castTarget)
+		public virtual IList SelectTargets(GameObject castTarget)
 		{
 			ArrayList list = new ArrayList(8);
+			GameLiving target = castTarget as GameLiving;
 
 			switch (Spell.Target.ToLower())
 			{
-					// GTAoE
+				// GTAoE
 				case "area":
 					if (Spell.Radius > 0)
 					{
-						foreach (GameLivingBase living in Caster.Region.GetInRadius(typeof(GameLivingBase), Caster.GroundTarget, (ushort) Spell.Radius))
+						foreach (GamePlayer player in WorldMgr.GetPlayersCloseToSpot(Caster.CurrentRegionID, Caster.GroundTarget.X, Caster.GroundTarget.Y, Caster.GroundTarget.Z, (ushort)Spell.Radius))
 						{
-							if (GameServer.ServerRules.IsAllowedToAttack(Caster, living, true))
+							if (GameServer.ServerRules.IsAllowedToAttack(Caster, player, true))
 							{
-								list.Add(living);
+								list.Add(player);
+							}
+						}
+						foreach (GameNPC npc in WorldMgr.GetNPCsCloseToSpot(Caster.CurrentRegionID, Caster.GroundTarget.X, Caster.GroundTarget.Y, Caster.GroundTarget.Z, (ushort)Spell.Radius))
+						{
+							if (GameServer.ServerRules.IsAllowedToAttack(Caster, npc, true))
+							{
+								list.Add(npc);
 							}
 						}
 					}
 					break;
 
 				case "corpse":
-					if (castTarget != null && !castTarget.Alive)
-						list.Add(castTarget);
+					if (target != null && !target.IsAlive)
+						list.Add(target);
 					break;
 
 				case "pet":
@@ -958,60 +1116,99 @@ namespace DOL.GS.Spells
 				case "enemy":
 					if (Spell.Radius > 0)
 					{
-						if (castTarget == null || Spell.Range == 0)
-							castTarget = Caster;
-						foreach (GameLivingBase living in castTarget.GetInRadius(typeof(GameLivingBase), (ushort) Spell.Radius))
+						if (target == null || Spell.Range == 0)
+							target = Caster;
+						foreach (GamePlayer player in target.GetPlayersInRadius((ushort)Spell.Radius))
 						{
-							if (GameServer.ServerRules.IsAllowedToAttack(Caster, living, true))
+							if (GameServer.ServerRules.IsAllowedToAttack(Caster, player, true))
 							{
-								list.Add(living);
+								list.Add(player);
+							}
+						}
+						foreach (GameNPC npc in target.GetNPCsInRadius((ushort)Spell.Radius))
+						{
+							if (GameServer.ServerRules.IsAllowedToAttack(Caster, npc, true))
+							{
+								list.Add(npc);
 							}
 						}
 					}
 					else
 					{
-						if (castTarget != null && GameServer.ServerRules.IsAllowedToAttack(Caster, castTarget, true))
-							list.Add(castTarget);
+						if (target != null && GameServer.ServerRules.IsAllowedToAttack(Caster, target, true))
+							list.Add(target);
 					}
 					break;
 
 				case "realm":
 					if (Spell.Radius > 0)
 					{
-						if (castTarget == null || Spell.Range == 0)
-							castTarget = Caster;
-						foreach (GameLivingBase living in castTarget.GetInRadius(typeof(GameLivingBase), (ushort) Spell.Radius))
+						if (target == null || Spell.Range == 0)
+							target = Caster;
+						foreach (GamePlayer player in target.GetPlayersInRadius((ushort)Spell.Radius))
 						{
-							if (GameServer.ServerRules.IsSameRealm(Caster, living, true))
+							if (GameServer.ServerRules.IsSameRealm(Caster, player, true))
 							{
-								list.Add(living);
+								list.Add(player);
+							}
+						}
+						foreach (GameNPC npc in target.GetNPCsInRadius((ushort)Spell.Radius))
+						{
+							if (GameServer.ServerRules.IsSameRealm(Caster, npc, true))
+							{
+								list.Add(npc);
 							}
 						}
 					}
 					else
 					{
-						if (castTarget != null && GameServer.ServerRules.IsSameRealm(Caster, castTarget, true))
-							list.Add(castTarget);
+						if (target != null && GameServer.ServerRules.IsSameRealm(Caster, target, true))
+							list.Add(target);
 					}
 					break;
 
 				case "self":
-					list.Add(Caster);
-					break;
-
+					{
+						if (Spell.Radius > 0)
+						{
+							if (target == null || Spell.Range == 0)
+								target = Caster;
+							foreach (GamePlayer player in target.GetPlayersInRadius((ushort)Spell.Radius))
+							{
+								if (GameServer.ServerRules.IsSameRealm(Caster, player, true))
+								{
+									list.Add(player);
+								}
+							}
+							foreach (GameNPC npc in target.GetNPCsInRadius((ushort)Spell.Radius))
+							{
+								if (GameServer.ServerRules.IsSameRealm(Caster, npc, true))
+								{
+									list.Add(npc);
+								}
+							}
+						}
+						else
+						{
+							list.Add(Caster);
+						}
+						break;
+					}
 				case "group":
 					if (Caster is GamePlayer)
 					{
 						GamePlayer casterPlayer = (GamePlayer)Caster;
 						PlayerGroup group = casterPlayer.PlayerGroup;
 						int spellRange = CalculateSpellRange();
+						if (spellRange == 0)
+							spellRange = m_spell.Radius;
 						if (group == null)
 						{
 							list.Add(casterPlayer);
 							IControlledBrain npc = casterPlayer.ControlledNpc;
 							if (npc != null)
 							{
-								if (casterPlayer.Position.CheckDistance(npc.Body.Position, spellRange))
+								if (WorldMgr.CheckDistance(casterPlayer, npc.Body, spellRange))
 									list.Add(npc.Body);
 							}
 						}
@@ -1022,13 +1219,13 @@ namespace DOL.GS.Spells
 								foreach (GamePlayer groupPlayer in group)
 								{
 									// only players in range
-									if (casterPlayer.Position.CheckDistance(groupPlayer.Position, spellRange))
+									if (WorldMgr.CheckDistance(casterPlayer, groupPlayer, spellRange))
 										list.Add(groupPlayer);
 
 									IControlledBrain npc = groupPlayer.ControlledNpc;
 									if (npc != null)
 									{
-										if (casterPlayer.Position.CheckDistance(npc.Body.Position, spellRange))
+										if (WorldMgr.CheckDistance(casterPlayer, npc.Body, spellRange))
 											list.Add(npc.Body);
 									}
 								}
@@ -1049,17 +1246,22 @@ namespace DOL.GS.Spells
 		/// called when spell effect has to be started and applied to targets
 		/// </summary>
 		/// <param name="target">The current target object</param>
-		public virtual void StartSpell(GameLivingBase target)
+		public virtual void StartSpell(GameLiving target)
 		{
-			foreach (GameLivingBase spellTarget in SelectTargets(target))
-			{
-				GameLiving t = spellTarget as GameLiving;
-				if(t == null)
-				{
-					MessageToCaster("The spell fails to affect "+ spellTarget.GetName(0, false) +"!", eChatType.CT_SpellResisted);
-					continue;
-				}
+			if (target == null || (Spell.Radius > 0 && Spell.Range == 0))
+				target = Caster;
+			IList targets = SelectTargets(target);
 
+			foreach (GameLiving t in targets)
+			{
+				double effectiveness = 1.0;
+				if (Caster.EffectList.GetOfType(typeof(MasteryofConcentrationEffect)) != null)
+				{
+					GamePlayer playerCaster = Caster as GamePlayer;
+					RealmAbility ra = playerCaster.GetAbility(typeof(MasteryofConcentrationAbility)) as RealmAbility;
+					if (ra != null)
+						effectiveness = System.Math.Round((double)ra.Level * 25 / 100, 2);
+				}
 				if (Util.Chance(CalculateSpellResistChance(t)))
 				{
 					OnSpellResisted(t);
@@ -1068,22 +1270,22 @@ namespace DOL.GS.Spells
 
 				if (Spell.Radius == 0)
 				{
-					ApplyEffectOnTarget(t, 1.0);
+					ApplyEffectOnTarget(t, effectiveness);
 				}
 				else if (Spell.Target == "Area")
 				{
-					int dist = t.Position.GetDistance(Caster.GroundTarget);
+					int dist = WorldMgr.GetDistance(t, Caster.GroundTarget.X, Caster.GroundTarget.Y, Caster.GroundTarget.Z);
 					if (dist >= 0)
 					{
-						ApplyEffectOnTarget(t, (1 - dist/(double) Spell.Radius));
+						ApplyEffectOnTarget(t, (1 - dist / (double)Spell.Radius));
 					}
 				}
 				else
 				{
-					int dist = t.Position.GetDistance(target.Position);
+					int dist = WorldMgr.GetDistance(target, t);
 					if (dist >= 0)
 					{
-						ApplyEffectOnTarget(t, (1 - dist/(double) Spell.Radius));
+						ApplyEffectOnTarget(t, (1 - dist / (double)Spell.Radius));
 					}
 				}
 			}
@@ -1098,13 +1300,14 @@ namespace DOL.GS.Spells
 		protected virtual int CalculateEffectDuration(GameLiving target, double effectiveness)
 		{
 			double duration = Spell.Duration;
+			duration *= (1.0 + m_caster.GetModified(eProperty.SpellDuration) * 0.01);
 			if (Spell.InstrumentRequirement != 0)
 			{
-				Instrument instrument = GetCasterInstrument();
+				InventoryItem instrument = Caster.AttackWeapon;
 				if (instrument != null)
 				{
-					duration *= 1.0 + Math.Min(1.0, instrument.Level/(double)Caster.Level); // up to 200% duration for songs
-					duration *= instrument.Condition/100 * instrument.Quality/100;
+					duration *= 1.0 + Math.Min(1.0, instrument.Level / (double)Caster.Level); // up to 200% duration for songs
+					duration *= instrument.Condition / (double)instrument.MaxCondition * instrument.Quality / 100;
 				}
 			}
 
@@ -1133,12 +1336,19 @@ namespace DOL.GS.Spells
 		/// <param name="effectiveness">factor from 0..1 (0%-100%)</param>
 		public virtual void ApplyEffectOnTarget(GameLiving target, double effectiveness)
 		{
+			if (target is Keeps.GameKeepDoor || target is Keeps.GameKeepComponent)
+			{
+				MessageToCaster("Your spell has no effect on the keep component!", eChatType.CT_SpellResisted);
+				return;
+			}
+			if (m_spellLine.KeyName == GlobalSpellsLines.Item_Effects || m_spellLine.KeyName == GlobalSpellsLines.Combat_Styles_Effect || m_spellLine.KeyName == GlobalSpellsLines.Potions_Effects || m_spellLine.KeyName == Specs.Savagery || m_spellLine.KeyName == GlobalSpellsLines.Character_Abilities || m_spellLine.KeyName == "OffensiveProc")
+				effectiveness = 1.0; // TODO player.PlayerEffectiveness
 			if (effectiveness <= 0)
 				return; // no effect
 
-			if (Spell.Duration > 0 || Spell.Concentration > 0)
+			if ((Spell.Duration > 0 && Spell.Target != "Area") || Spell.Concentration > 0)
 			{
-				if (!target.Alive)
+				if (!target.IsAlive)
 					return;
 				eChatType noOverwrite = (Spell.Pulse == 0) ? eChatType.CT_SpellResisted : eChatType.CT_SpellPulse;
 				GameSpellEffect neweffect = CreateSpellEffect(target, effectiveness);
@@ -1150,13 +1360,13 @@ namespace DOL.GS.Spells
 					{
 						if (effect is GameSpellEffect)
 						{
-							GameSpellEffect gsp = (GameSpellEffect) effect;
+							GameSpellEffect gsp = (GameSpellEffect)effect;
 							if (gsp.SpellHandler.IsOverwritable(neweffect))
 							{
 								foundInList = true;
 								if (gsp is GameSpellAndImmunityEffect)
 								{
-									GameSpellAndImmunityEffect immunity = (GameSpellAndImmunityEffect) gsp;
+									GameSpellAndImmunityEffect immunity = (GameSpellAndImmunityEffect)gsp;
 									if (immunity.ImmunityState && immunity.Owner is GamePlayer)
 									{
 										SendEffectAnimation(target, 0, false, 0); //resisted effect
@@ -1219,17 +1429,18 @@ namespace DOL.GS.Spells
 		/// Determines wether this spell is better than given one
 		/// </summary>
 		/// <param name="oldeffect"></param>
+		/// <param name="neweffect"></param>
 		/// <returns>true if this spell is better version than compare spell</returns>
 		public virtual bool IsNewEffectBetter(GameSpellEffect oldeffect, GameSpellEffect neweffect)
 		{
 			Spell oldspell = oldeffect.Spell;
 			Spell newspell = neweffect.Spell;
-//			if (oldspell.SpellType != newspell.SpellType)
-//			{
-//				if (log.IsWarnEnabled)
-//					log.Warn("Spell effect compare with different types " + oldspell.SpellType + " <=> " + newspell.SpellType + "\n" + Environment.StackTrace);
-//				return false;
-//			}
+			//			if (oldspell.SpellType != newspell.SpellType)
+			//			{
+			//				if (log.IsWarnEnabled)
+			//					log.Warn("Spell effect compare with different types " + oldspell.SpellType + " <=> " + newspell.SpellType + "\n" + Environment.StackTrace);
+			//				return false;
+			//			}
 			if (oldspell.Concentration > 0)
 				return false;
 			if (newspell.Damage < oldspell.Damage)
@@ -1237,7 +1448,7 @@ namespace DOL.GS.Spells
 			if (newspell.Value < oldspell.Value)
 				return false;
 			//makes problems for immunity effects
-			if (oldeffect is GameSpellAndImmunityEffect == false || ((GameSpellAndImmunityEffect) oldeffect).ImmunityState == false)
+			if (oldeffect is GameSpellAndImmunityEffect == false || ((GameSpellAndImmunityEffect)oldeffect).ImmunityState == false)
 			{
 				if (neweffect.Duration <= oldeffect.RemainingTime)
 					return false;
@@ -1309,6 +1520,8 @@ namespace DOL.GS.Spells
 		/// <returns>chance that spell will be resisted for specific target</returns>
 		public virtual int CalculateSpellResistChance(GameLiving target)
 		{
+			if (m_spellLine.KeyName == GlobalSpellsLines.Combat_Styles_Effect)
+				return 0;
 			if (HasPositiveEffect)
 				return 0;
 			return 100 - CalculateToHitChance(target);
@@ -1324,12 +1537,12 @@ namespace DOL.GS.Spells
 			if (target is GameNPC)
 			{
 				IControlledBrain brain = ((GameNPC)target).Brain as IControlledBrain;
-				if(brain != null)
+				if (brain != null)
 				{
 					GamePlayer owner = brain.Owner;
 					if (owner != null && owner.ControlledNpc != null && target == owner.ControlledNpc.Body)
 					{
-						MessageToLiving(owner, "Your "+ target.Name +" resist the effect!", eChatType.CT_SpellResisted); 
+						MessageToLiving(owner, "Your " + target.Name + " resist the effect!", eChatType.CT_SpellResisted);
 					}
 				}
 			}
@@ -1338,7 +1551,7 @@ namespace DOL.GS.Spells
 				MessageToLiving(target, "You resist the effect!", eChatType.CT_SpellResisted);
 			}
 			MessageToCaster(target.GetName(0, true) + " resists the effect!", eChatType.CT_SpellResisted);
-			
+
 			if (Spell.Damage != 0)
 			{
 				// notify target about missed attack for spells with damage
@@ -1347,7 +1560,7 @@ namespace DOL.GS.Spells
 				ad.Target = target;
 				ad.AttackType = AttackData.eAttackType.Spell;
 				ad.AttackResult = GameLiving.eAttackResult.Missed;
-				target.OnAttackedByEnemy(ad, target);
+				target.OnAttackedByEnemy(ad);
 				target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, ad.AttackType, Caster);
 			}
 			else if (Spell.CastTime > 0)
@@ -1361,8 +1574,8 @@ namespace DOL.GS.Spells
 				if (aggroBrain != null)
 					aggroBrain.AddToAggroList(Caster, 1);
 			}
-			target.LastAttackedByEnemyTick = target.Region.Time;
-			Caster.LastAttackTick = Caster.Region.Time;
+			target.LastAttackedByEnemyTick = target.CurrentRegion.Time;
+			Caster.LastAttackTick = Caster.CurrentRegion.Time;
 		}
 
 		#region messages
@@ -1376,45 +1589,65 @@ namespace DOL.GS.Spells
 		{
 			if (m_caster is GamePlayer)
 			{
-				((GamePlayer) m_caster).Out.SendMessage(message, type, eChatLoc.CL_SystemWindow);
+				((GamePlayer)m_caster).Out.SendMessage(message, type, eChatLoc.CL_SystemWindow);
+			}
+			else if (m_caster is GameNPC && (m_caster as GameNPC).Brain is IControlledBrain && type == eChatType.CT_YouHit)
+			{
+				((m_caster as GameNPC).Brain as IControlledBrain).Owner.Out.SendMessage(message, type, eChatLoc.CL_SystemWindow);
 			}
 		}
 
 		/// <summary>
 		/// sends a message to a living
 		/// </summary>
+		/// <param name="living"></param>
 		/// <param name="message"></param>
 		/// <param name="type"></param>
 		public void MessageToLiving(GameLiving living, string message, eChatType type)
 		{
 			if (living is GamePlayer && message != null && message.Length > 0)
 			{
-				((GamePlayer) living).Out.SendMessage(message, type, eChatLoc.CL_SystemWindow);
+				((GamePlayer)living).Out.SendMessage(message, type, eChatLoc.CL_SystemWindow);
 			}
 		}
 
 		#endregion
 
+		/// <summary>
+		/// The Spell
+		/// </summary>
 		public Spell Spell
 		{
 			get { return m_spell; }
 		}
 
+		/// <summary>
+		/// The Spell Line
+		/// </summary>
 		public SpellLine SpellLine
 		{
 			get { return m_spellLine; }
 		}
 
+		/// <summary>
+		/// The Caster
+		/// </summary>
 		public GameLiving Caster
 		{
 			get { return m_caster; }
 		}
 
+		/// <summary>
+		/// Is the spell being cast?
+		/// </summary>
 		public bool IsCasting
 		{
 			get { return m_castTimer != null && m_castTimer.IsAlive; }
 		}
 
+		/// <summary>
+		/// Does the spell have a positive effect?
+		/// </summary>
 		public virtual bool HasPositiveEffect
 		{
 			get
@@ -1433,7 +1666,6 @@ namespace DOL.GS.Spells
 			get
 			{
 				ArrayList list = new ArrayList();
-
 				list.Add("Function: " + (Spell.SpellType == "" ? "(not implemented)" : Spell.SpellType));
 				list.Add(" "); //empty line
 				list.Add(Spell.Description);
@@ -1449,28 +1681,28 @@ namespace DOL.GS.Spells
 				list.Add("Target: " + Spell.Target);
 				if (Spell.Range != 0)
 					list.Add("Range: " + Spell.Range);
-				if (Spell.Duration >= ushort.MaxValue*1000)
+				if (Spell.Duration >= ushort.MaxValue * 1000)
 					list.Add("Duration: Permanent.");
 				else if (Spell.Duration > 60000)
-					list.Add(string.Format("Duration: {0}:{1} min", Spell.Duration/60000, (Spell.Duration%60000/1000).ToString("00")));
+					list.Add(string.Format("Duration: {0}:{1} min", Spell.Duration / 60000, (Spell.Duration % 60000 / 1000).ToString("00")));
 				else if (Spell.Duration != 0)
-					list.Add("Duration: " + (Spell.Duration/1000).ToString("0' sec';'Permanent.';'Permanent.'"));
+					list.Add("Duration: " + (Spell.Duration / 1000).ToString("0' sec';'Permanent.';'Permanent.'"));
 				if (Spell.Frequency != 0)
-					list.Add("Frequency: " + (Spell.Frequency*0.001).ToString("0.0"));
+					list.Add("Frequency: " + (Spell.Frequency * 0.001).ToString("0.0"));
 				if (Spell.Power != 0)
 					list.Add("Power cost: " + Spell.Power.ToString("0;0'%'"));
-				list.Add("Casting time: " + (Spell.CastTime*0.001).ToString("0.0## sec;-0.0## sec;'instant'"));
+				list.Add("Casting time: " + (Spell.CastTime * 0.001).ToString("0.0## sec;-0.0## sec;'instant'"));
 				if (Spell.RecastDelay > 60000)
-					list.Add("Recast time: " + (Spell.RecastDelay/60000).ToString() + ":" + (Spell.RecastDelay%60000/1000).ToString("00") + " min");
+					list.Add("Recast time: " + (Spell.RecastDelay / 60000).ToString() + ":" + (Spell.RecastDelay % 60000 / 1000).ToString("00") + " min");
 				else if (Spell.RecastDelay > 0)
-					list.Add("Recast time: " + (Spell.RecastDelay/1000).ToString() + " sec");
+					list.Add("Recast time: " + (Spell.RecastDelay / 1000).ToString() + " sec");
 				if (Spell.Concentration != 0)
 					list.Add("Concentration cost: " + Spell.Concentration);
 				if (Spell.Radius != 0)
 					list.Add("Radius: " + Spell.Radius);
 				if (Spell.DamageType != eDamageType.Natural)
 					list.Add("Damage: " + GlobalConstants.DamageTypeToName(Spell.DamageType));
-				
+
 				return list;
 			}
 		}
@@ -1489,8 +1721,8 @@ namespace DOL.GS.Spells
 				{
 					if (!(fx is GameSpellEffect))
 						continue;
-					GameSpellEffect effect = (GameSpellEffect) fx;
-					if (fx is GameSpellAndImmunityEffect && ((GameSpellAndImmunityEffect) fx).ImmunityState)
+					GameSpellEffect effect = (GameSpellEffect)fx;
+					if (fx is GameSpellAndImmunityEffect && ((GameSpellAndImmunityEffect)fx).ImmunityState)
 						continue; // ignore immunity effects
 					if (effect.SpellHandler.Spell != null && (effect.SpellHandler.Spell.SpellType == spellType))
 					{
@@ -1518,7 +1750,7 @@ namespace DOL.GS.Spells
 						continue;
 					if (gsp.SpellHandler != spellHandler)
 						continue;
-					if (gsp is GameSpellAndImmunityEffect && ((GameSpellAndImmunityEffect) gsp).ImmunityState)
+					if (gsp is GameSpellAndImmunityEffect && ((GameSpellAndImmunityEffect)gsp).ImmunityState)
 						continue; // ignore immunity effects
 					return gsp;
 				}
@@ -1566,29 +1798,35 @@ namespace DOL.GS.Spells
 		/// <param name="max">returns max variance</param>
 		public virtual void CalculateDamageVariance(GameLiving target, out double min, out double max)
 		{
+			if (m_spellLine.KeyName == GlobalSpellsLines.Item_Effects || m_spellLine.KeyName == GlobalSpellsLines.Combat_Styles_Effect)
+			{
+				min = max = 1.0;
+				return;
+			}
+
 			int speclevel = 1;
 			if (m_caster is GamePlayer)
 			{
-				speclevel = ((GamePlayer) m_caster).GetModifiedSpecLevel(m_spellLine.Spec);
+				speclevel = ((GamePlayer)m_caster).GetModifiedSpecLevel(m_spellLine.Spec);
 			}
 			min = 1.25;
 			max = 1.25;
 
 			if (target.Level > 0)
 			{
-				min = 0.25 + (speclevel - 1)/(double) target.Level;
+				min = 0.25 + (speclevel - 1) / (double)target.Level;
 			}
 
 			if (speclevel - 1 > target.Level)
 			{
-				double overspecBonus = (speclevel - 1 - target.Level)*0.005;
+				double overspecBonus = (speclevel - 1 - target.Level) * 0.005;
 				min += overspecBonus;
 				max += overspecBonus;
 			}
 
 			// add level mod
-			min += GetLevelModFactor()*(m_caster.Level - target.Level);
-			max += GetLevelModFactor()*(m_caster.Level - target.Level);
+			min += GetLevelModFactor() * (m_caster.Level - target.Level);
+			max += GetLevelModFactor() * (m_caster.Level - target.Level);
 			if (max < 0.25)
 				max = 0.25;
 			if (min > max)
@@ -1607,7 +1845,7 @@ namespace DOL.GS.Spells
 			GamePlayer player = Caster as GamePlayer;
 			if (player != null && player.CharacterClass.ManaStat != eStat.UNDEFINED)
 			{
-				int manaStatValue = player.GetModified((eProperty) player.CharacterClass.ManaStat);
+				int manaStatValue = player.GetModified((eProperty)player.CharacterClass.ManaStat);
 				spellDamage *= (manaStatValue + 200) / 275.0;
 				if (spellDamage < 0)
 					spellDamage = 0;
@@ -1621,13 +1859,39 @@ namespace DOL.GS.Spells
 		/// </summary>
 		/// <param name="target">spell target</param>
 		/// <returns>chance that the spell lands on target</returns>
-		public virtual int CalculateToHitChance(GameLivingBase target)
+		public virtual int CalculateToHitChance(GameLiving target)
 		{
-			int hitchance = 85 + ((Spell.Level - target.Level) >> 1);
-			if (!(m_caster is GamePlayer && target is GamePlayer))
+			int spellLevel = Spell.Level;
+			GameLiving caster = null;
+			if (m_caster is GameNPC && (m_caster as GameNPC).Brain is ControlledNpc)
+				caster = ((ControlledNpc)((GameNPC)m_caster).Brain).Owner;
+			else caster = m_caster;
+			int spellbonus = caster.GetModified(eProperty.SpellLevel);
+			spellLevel += spellbonus;
+			//Cap on lvl 50 for spell level
+			if (spellLevel > 50)
+				spellLevel = 50;
+
+			int speclevel = 1;
+			int manastat = 0;
+			int bonustohit = m_caster.GetModified(eProperty.ToHitBonus);
+			if (caster is GamePlayer)
+			{
+				GamePlayer player = caster as GamePlayer;
+				speclevel = player.GetBaseSpecLevel(m_spellLine.Spec);
+				if (player.CharacterClass.ManaStat != eStat.UNDEFINED)
+					manastat = player.GetModified((eProperty)player.CharacterClass.ManaStat);
+				bonustohit += (int)(speclevel * 0.1 + manastat * 0.01);
+			}
+			//Piercing Magic affects to-hit bonus too
+			GameSpellEffect resPierce = SpellHandler.FindEffectOnTarget(m_caster, "PenetrateResists");
+			if (resPierce != null)
+				bonustohit += (int)resPierce.Spell.Value;
+			int hitchance = 85 + ((spellLevel - target.Level) >> 1) + bonustohit;
+			if (!(caster is GamePlayer && target is GamePlayer))
 			{
 				// level mod
-				hitchance -= (int) (m_caster.GetConLevel(target)*10);
+				hitchance -= (int)(m_caster.GetConLevel(target) * 10);
 			}
 			return hitchance;
 		}
@@ -1654,53 +1918,160 @@ namespace DOL.GS.Spells
 			ad.Attacker = m_caster;
 			ad.Target = target;
 			ad.AttackType = AttackData.eAttackType.Spell;
+			ad.SpellHandler = this;
+			ad.AttackResult = GameLiving.eAttackResult.HitUnstyled;
 
 			double minVariance;
 			double maxVariance;
 
 			CalculateDamageVariance(target, out minVariance, out maxVariance);
 			double spellDamage = CalculateDamageBase();
-			if (Caster is GamePlayer)
-				spellDamage *= ((GamePlayer)Caster).PlayerEffectiveness;
-
-//			log.Info("100% damage="+spellDamage+"; minDamage="+(spellDamage*minVariance)+"; maxDamage="+(spellDamage*maxVariance));
-
-			int finalDamage = Util.Random((int) (minVariance*spellDamage), (int) (maxVariance*spellDamage));
+			GamePlayer player = null;
+			if (m_caster is GamePlayer)
+				player = m_caster as GamePlayer;
+			effectiveness += m_caster.GetModified(eProperty.SpellDamage) * 0.01;
+			double RelicDmg = 0;
+			if (player != null)
+			{
+				//Relic bonus is calculated before ra bonus
+				RelicDmg = RelicMgr.GetRelicBonusModifier(player.Realm, eRelicType.Magic) * 0.01;
+			}
+			effectiveness += RelicDmg;
+			if (player != null)
+				spellDamage *= player.PlayerEffectiveness;
+			int finalDamage = Util.Random((int)(minVariance * spellDamage), (int)(maxVariance * spellDamage));
 
 			int hitChance = CalculateToHitChance(ad.Target);
 			if (hitChance < 55)
 			{
-				finalDamage += (int) (finalDamage*(hitChance - 55)*0.01);
+				finalDamage += (int)(finalDamage * (hitChance - 55) * 0.01);
 				hitChance = 55;
+
 			}
 			else if (hitChance > 100)
 			{
-				finalDamage += (int) (finalDamage*(hitChance - 100)*0.01);
+				finalDamage += (int)(finalDamage * (hitChance - 100) * 0.01);
 				hitChance = 100;
-			}
-			// apply effectiveness
-			finalDamage = (int) (finalDamage*effectiveness);
 
-			int resistModifier = 0;
+			}
+			/*
+
+			double TOADmg = 1 + m_caster.GetModified(eProperty.SpellDamage) * 0.01;
+			double RelicDmg = 0;
+			if (living is GamePlayer)
+			{
+				//Relic bonus is calculated before ra bonus
+				RelicDmg = RelicMgr.GetRelicBonusModifier(living.Realm, eRelicType.Magic);
+			}
+
+			*/
+			// apply effectiveness
+			finalDamage = (int)(finalDamage * effectiveness);
+			if ((m_caster is GamePlayer || (m_caster is GameNPC && (m_caster as GameNPC).Brain is IControlledBrain && m_caster.Realm != 0)) && target is GamePlayer)
+				finalDamage = (int)((double)finalDamage * ServerProperties.Properties.PVP_DAMAGE);
+			else if ((m_caster is GamePlayer || (m_caster is GameNPC && (m_caster as GameNPC).Brain is IControlledBrain && m_caster.Realm != 0)) && target is GameNPC)
+				finalDamage = (int)((double)finalDamage * ServerProperties.Properties.PVE_DAMAGE);
+			if (target is GamePlayer)
+			{
+				GamePlayer playerTarget = target as GamePlayer;
+				if (playerTarget.EffectList.GetOfType(typeof(TheEmptyMindEffect)) != null)
+				{
+					RealmAbility ra = player.GetAbility(typeof(TheEmptyMindAbility)) as RealmAbility;
+					if (ra != null)
+					{
+						switch (ra.Level)
+						{
+							case 1: finalDamage = (int)(finalDamage * 0.9); break;
+							case 2: finalDamage = (int)(finalDamage * 0.8); break;
+							case 3: finalDamage = (int)(finalDamage * 0.7); break;
+						}
+					}
+				}
+			}
+			// Well the PenetrateResistBuff is NOT ResistPierce
+			GameSpellEffect penPierce = SpellHandler.FindEffectOnTarget(m_caster, "PenetrateResists");
+			if (penPierce != null)
+			{
+				finalDamage = (int)(finalDamage * (1.0 + penPierce.Spell.Value / 100.0));
+			}
+
 			int cdamage = 0;
 			if (finalDamage < 0)
 				finalDamage = 0;
 
-			resistModifier = finalDamage*ad.Target.GetResist(Spell.DamageType)/-100;
+			#region Resists
+			eProperty property = target.GetResistTypeForDamage(Spell.DamageType);
+			// The Daoc resistsystem is since 1.65 a 2category system.
+			// - First category are Item/Race/Buff/RvrBanners resists that are displayed in the characteroverview.
+			// - Second category are resists that are given through RAs like avoidance of magic, brilliance aura of deflection.
+			//   Those resist affect ONLY the spelldamage. Not the duration, not the effectiveness of debuffs.
+			// so calculation is (finaldamage * Category1Modification) * Category2Modification
+			// -> Remark for the future: VampirResistBuff is Category2 too.
+			// - avi
+
+			#region Primary Resists
+			int primaryResistModifier = ad.Target.GetResist(Spell.DamageType);
+
+			/* Resist Pierce	
+			 * Resipierce is a special bonus which has been introduced with ToA.
+			 * At the calculation of SpellDamage, it reduces the resistance that the victim recives
+			 * through ITEMBONUSES for the specified percentage.
+			 * http://de.daocpedia.eu/index.php/Resistenz_durchdringen (translated) 
+			 */
+			int resiPierce = Caster.GetModified(eProperty.ResistPierce);
+			if (resiPierce > 0) // dont pierce if there is nothing to pierce
+			{
+				//substract max ItemBonus of property of target, but atleast 0.
+				primaryResistModifier -= Math.Max(0, Math.Min(ad.Target.ItemBonus[(int)property], resiPierce));
+			}
+			#endregion
+
+			#region Secondary Resists
+			//Using the resist BuffBonusCategory2 - its unused in ResistCalculator
+			int secondaryResistModifier = target.BuffBonusCategory2[(int)property];
+
+			/*Variance by Memories of War				
+			 * - Memories of War: Upon reaching level 41, the Hero, Warrior and Armsman 
+			 * will begin to gain more magic resistance (spell damage reduction only) 
+			 * as they progress towards level 50. At each level beyond 41 they gain 
+			 * 2%-3% extra resistance per level. At level 50, they will have the full 15% benefit.
+			 * from http://www.camelotherald.com/article.php?id=208
+			 * 
+			 * - assume that "spell damage reduction only" indicates resistcategory 2
+			 */
+
+			if (ad.Target is GamePlayer && (ad.Target as GamePlayer).HasAbility(Abilities.MemoriesOfWar) && ad.Target.Level >= 40)
+			{
+				int levelbonus = Math.Min(target.Level - 40, 10);
+				secondaryResistModifier += (int)((levelbonus * 0.1 * 15));
+			}
+			#endregion
+
+			int resistModifier = 0;
+			//primary resists
+			resistModifier += (int)(finalDamage * (double)primaryResistModifier * -0.01);
+			//secondary resists
+			resistModifier += (int)((finalDamage + (double)resistModifier) * (double)secondaryResistModifier * -0.01);
+			//apply resists
 			finalDamage += resistModifier;
-			
+
+			#endregion
+
+
 			// cap to +200% of base damage
-			if (finalDamage > Spell.Damage*3)
+			if (finalDamage > Spell.Damage * 3 * effectiveness)
 			{
-				finalDamage = (int) (Spell.Damage*3);
+				finalDamage = (int)(Spell.Damage * 3 * effectiveness);
 			}
 
-			if (Util.Chance(m_caster.SpellCriticalChance) && (finalDamage >= 1))
-			{
-				int critmax = (ad.Target is GamePlayer) ? finalDamage/2 : finalDamage;
-				cdamage = Util.Random(finalDamage/10, critmax); //think min crit is 10% of damage
-			}
+			if (finalDamage < 0)
+				finalDamage = 0;
 
+			if (Util.Chance(Math.Min(50, m_caster.SpellCriticalChance)) && (finalDamage >= 1))
+			{
+				int critmax = (ad.Target is GamePlayer) ? finalDamage / 2 : finalDamage;
+				cdamage = Util.Random(finalDamage / 10, critmax); //think min crit is 10% of damage
+			}
 			ad.Damage = finalDamage;
 			ad.CriticalDamage = cdamage;
 			ad.DamageType = Spell.DamageType;
@@ -1747,17 +2118,38 @@ namespace DOL.GS.Spells
 			ad.AttackResult = GameLiving.eAttackResult.HitUnstyled;
 			if (showEffectAnimation)
 			{
-				SendEffectAnimation((GameLiving)ad.Target, 0, false, 1);
+				SendEffectAnimation(ad.Target, 0, false, 1);
 			}
-			foreach (GamePlayer player in ad.Target.GetInRadius(typeof(GamePlayer), WorldMgr.VISIBILITY_DISTANCE))
+			foreach (GamePlayer player in ad.Target.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
-				player.Out.SendCombatAnimation(ad.Attacker, ad.Target, 0, 0, 0, 0, (byte) attackResult, ad.Target.HealthPercent);
+				player.Out.SendCombatAnimation(ad.Attacker, ad.Target, 0, 0, 0, 0, (byte)attackResult, ad.Target.HealthPercent);
 			}
 			// send animation before dealing damage else dead livings show no animation
-			ad.Target.OnAttackedByEnemy(ad, ad.Target);
+			ad.Target.OnAttackedByEnemy(ad);
 			ad.Attacker.DealDamage(ad);
+			if (ad.Damage == 0 && ad.Target is GameNPC)
+			{
+				IAggressiveBrain aggroBrain = ((GameNPC)ad.Target).Brain as IAggressiveBrain;
+				if (aggroBrain != null)
+					aggroBrain.AddToAggroList(Caster, 1);
+			}
 		}
 
+		#endregion
+
+		#region saved effects
+		public virtual PlayerXEffect getSavedEffect(GameSpellEffect effect)
+		{
+			return null;
+		}
+
+		public virtual void OnEffectRestored(GameSpellEffect effect, int[] vars)
+		{ }
+
+		public virtual int OnRestoredEffectExpires(GameSpellEffect effect, int[] vars, bool noMessages)
+		{
+			return 0;
+		}
 		#endregion
 	}
 }

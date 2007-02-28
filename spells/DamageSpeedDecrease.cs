@@ -19,7 +19,6 @@
 using System;
 using System.Collections;
 using DOL.GS;
-using DOL.GS.Database;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 
@@ -29,7 +28,7 @@ namespace DOL.GS.Spells
 	/// Damages target and decreases speed after
 	/// </summary>
 	[SpellHandlerAttribute("DamageSpeedDecrease")]
-	public class DamageSpeedDecrease : SpeedDecreaseSpellHandler
+	public class DamageSpeedDecreaseSpellHandler : SpeedDecreaseSpellHandler
 	{
 		/// <summary>
 		/// Apply effect on target or do spell action if non duration spell
@@ -50,6 +49,11 @@ namespace DOL.GS.Spells
 		/// <param name="effectiveness"></param>
 		public override void OnDirectEffect(GameLiving target, double effectiveness)
 		{
+			if (target is Keeps.GameKeepDoor || target is Keeps.GameKeepComponent)
+			{
+				MessageToCaster("Your spell has no effect on the keep component!", eChatType.CT_SpellResisted);
+				return;
+			}
 			base.OnDirectEffect(target, effectiveness);
 			// calc damage
 			AttackData ad = CalculateDamageToTarget(target, effectiveness);
@@ -65,7 +69,7 @@ namespace DOL.GS.Spells
 		public virtual void StealLife(AttackData ad)
 		{
 			if(ad == null) return;
-			if(!m_caster.Alive) return;
+			if(!m_caster.IsAlive) return;
 
 			int heal = (ad.Damage + ad.CriticalDamage) * m_spell.LifeDrainReturn/100;
 			if (m_caster.IsDiseased)
@@ -74,7 +78,7 @@ namespace DOL.GS.Spells
 				heal >>= 1;
 			}
 			if(heal <= 0) return;
-			heal = m_caster.ChangeHealth(m_caster, heal, true);
+			heal = m_caster.ChangeHealth(m_caster, GameLiving.eHealthChangeType.Spell, heal);
 
 			if(heal > 0) 
 			{
@@ -164,6 +168,6 @@ namespace DOL.GS.Spells
 		}
 
 		// counstructor
-		public DamageSpeedDecrease(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
+		public DamageSpeedDecreaseSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
 	}
 }

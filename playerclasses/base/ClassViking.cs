@@ -49,7 +49,7 @@ namespace DOL.GS.Scripts
 
 			player.AddAbility(SkillBase.GetAbility(Abilities.Sprint));
 			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Staves));
-			player.AddAbility(SkillBase.GetAbility(Abilities.MidArmor, (int)eArmorLevel.Medium));
+			player.AddAbility(SkillBase.GetAbility(Abilities.MidArmor, ArmorLevel.Studded));
 			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Axes));
 			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Hammers));
 			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Swords));
@@ -57,7 +57,7 @@ namespace DOL.GS.Scripts
 			
 			if (player.Level >= 2)
 			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Shield, (int)eShieldSize.Small));
+				player.AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Small));
 			}
 		}
 	}

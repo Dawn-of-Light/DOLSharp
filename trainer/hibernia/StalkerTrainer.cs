@@ -17,90 +17,21 @@
  *
  */
 using System;
-using System.Collections;
-using System.Reflection;
-using DOL.Database;
-using DOL.Events;
 using DOL.GS.PacketHandler;
-using DOL.GS.Database;
-using log4net;
+using DOL.Database;
 
 namespace DOL.GS.Trainer
 {
 	/// <summary>
 	/// Stalker Trainer
 	/// </summary>	
-	public class StalkerTrainer : GameStandardTrainer
+	[NPCGuildScript("Stalker Trainer", eRealm.Hibernia)]		// this attribute instructs DOL to use this script for all "Stalker Trainer" NPC's in Albion (multiple guilds are possible for one script)
+	public class StalkerTrainer : GameTrainer
 	{
 		/// <summary>
-		/// Defines a logger for this class.
+		/// The practice weaopon template ID
 		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
-		/// <summary>
-		/// This function is called at the server startup
-		/// </summary>	
-		[GameServerStartedEvent]
-		public static void OnServerStartup(DOLEvent e, object sender, EventArgs args)
-		{	
-			#region Training dirk
-
-			PiercingTemplate training_dirk_template = new PiercingTemplate();
-			training_dirk_template.Name = "training dirk";
-			training_dirk_template.Level = 0;
-			training_dirk_template.Durability = 100;
-			training_dirk_template.Condition = 100;
-			training_dirk_template.Quality = 90;
-			training_dirk_template.Bonus = 0;
-			training_dirk_template.DamagePerSecond = 12;
-			training_dirk_template.Speed = 2200;
-			training_dirk_template.HandNeeded = eHandNeeded.LeftHand;
-			training_dirk_template.Weight = 9;
-			training_dirk_template.Model = 454;
-			training_dirk_template.Realm = eRealm.Hibernia;
-			training_dirk_template.IsDropable = true; 
-			training_dirk_template.IsTradable = false; 
-			training_dirk_template.IsSaleable = false;
-			training_dirk_template.MaterialLevel = eMaterialLevel.Bronze;
-
-			if(!allStartupItems.Contains(training_dirk_template))
-			{
-				allStartupItems.Add(training_dirk_template);
-			
-				if (log.IsDebugEnabled)
-					log.Debug("Adding " + training_dirk_template.Name + " to StalkerTrainer gifts.");
-			}
-			#endregion
-		}
-
-		/// <summary>
-		/// This hash constrain all item template the trainer can give
-		/// </summary>	
-		protected static IList allStartupItems = new ArrayList();
-
-		/// <summary>
-		/// Gets all trainer gifts
-		/// </summary>
-		public override IList TrainerGifts
-		{
-			get { return allStartupItems; }
-		}
-
-		/// <summary>
-		/// Gets trainer classname
-		/// </summary>
-		public override string TrainerClassName
-		{
-			get { return "Stalker"; }
-		}
-
-		/// <summary>
-		/// Gets trained class
-		/// </summary>
-		public override eCharacterClass TrainedClass
-		{
-			get { return eCharacterClass.Stalker; }
-		}
+		public const string PRACTICE_WEAPON_ID = "training_dirk";
 
 		/// <summary>
 		/// Interact with trainer
@@ -110,9 +41,28 @@ namespace DOL.GS.Trainer
  		public override bool Interact(GamePlayer player)
  		{		
  			if (!base.Interact(player)) return false;
+								
+			// check if class matches				
+			if (player.CharacterClass.ID == (int) eCharacterClass.Stalker) {
 
-			player.Out.SendMessage(this.Name + " says, \"[Ranger] or [Nightshades]?\"", eChatType.CT_Say, eChatLoc.CL_PopupWindow);												
+				// popup the training window
+				player.Out.SendTrainerWindow();
+							
+				// player can be promoted
+				if (player.Level>=5) {
+					player.Out.SendMessage(this.Name + " says, \"You must now seek your training elsewhere. Which path would you like to follow? [Ranger] or [Nightshades]?\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);												
+				} else {
+					//player.Out.SendMessage(this.Name + " says, \"Select what you like to train.\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);												
+				}
 
+				// ask for basic equipment if player doesnt own it
+				if (player.Inventory.GetFirstItemByID(PRACTICE_WEAPON_ID, eInventorySlot.Min_Inv, eInventorySlot.Max_Inv) == null) {
+					player.Out.SendMessage(this.Name + " says, \"Do you require a [practice weapon]?\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);																																			
+				}
+				
+			} else {
+				player.Out.SendMessage(this.Name + " says, \"You must seek elsewhere for your training.\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);							
+			}
 			return true;
 		}
 
@@ -144,6 +94,13 @@ namespace DOL.GS.Trainer
 					player.Out.SendMessage(this.Name + " says, \"The path of a Nightshade is not available to your race. Please choose another.\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
 				}
 				return true;
+			case "practice weapon":
+				if (player.Inventory.GetFirstItemByID(PRACTICE_WEAPON_ID, eInventorySlot.Min_Inv, eInventorySlot.Max_Inv) == null)
+				{
+					player.ReceiveItem(this,PRACTICE_WEAPON_ID);
+				}
+				return true;
+			
 			}
 			return true;			
 		}

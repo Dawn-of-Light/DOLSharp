@@ -89,8 +89,8 @@ namespace DOL.GS.Scripts
 			}
 			if (player.Level >= 10)
 			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.AlbArmor, (int)eArmorLevel.High));
-				player.AddAbility(SkillBase.GetAbility(Abilities.Shield, (int)eShieldSize.Large));
+				player.AddAbility(SkillBase.GetAbility(Abilities.AlbArmor, ArmorLevel.Chain));
+				player.AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Large));
 				player.AddAbility(SkillBase.GetAbility(Abilities.Intercept));
 			}
 			if (player.Level >= 14)
@@ -108,7 +108,7 @@ namespace DOL.GS.Scripts
 			}
 			if (player.Level >= 20)
 			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.AlbArmor, (int)eArmorLevel.VeryHigh));
+				player.AddAbility(SkillBase.GetAbility(Abilities.AlbArmor, ArmorLevel.Plate));
 			}
 		}
 	}

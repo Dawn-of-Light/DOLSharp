@@ -17,13 +17,7 @@
  *
  */
 using System;
-using System.Collections;
-using System.Reflection;
-using DOL.Database;
-using DOL.Events;
-using DOL.GS.Database;
 using DOL.GS.PacketHandler;
-using log4net;
 
 namespace DOL.GS.Trainer
 {
@@ -33,59 +27,9 @@ namespace DOL.GS.Trainer
 	[NPCGuildScript("Scout Trainer", eRealm.Albion)]		// this attribute instructs DOL to use this script for all "Scout Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class ScoutTrainer : GameTrainer
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
-		/// <summary>
-		/// This hash constrain all item template the trainer can give
-		/// </summary>	
-		private static IDictionary allStartupItems = new Hashtable();
-
-		/// <summary>
-		/// This function is called at the server startup
-		/// </summary>	
-		[GameServerStartedEvent]
-		public static void OnServerStartup(DOLEvent e, object sender, EventArgs args)
+		public const string WEAPON_ID1 = "scout_item";
+		public ScoutTrainer() : base()
 		{
-			#region Scout longbow
-
-			LongbowTemplate scout_item_template = new LongbowTemplate();
-			scout_item_template.Name = "Huntsman's Longbow";
-			scout_item_template.Level = 5;
-			scout_item_template.Durability=100;
-			scout_item_template.Condition = 100;
-			scout_item_template.Quality = 90;
-			scout_item_template.Bonus = 10;	
-			scout_item_template.DamagePerSecond = 30;
-			scout_item_template.Speed = 5400;
-			scout_item_template.Weight = 31;
-			scout_item_template.Model = 471;
-			scout_item_template.Realm = eRealm.Albion;
-			scout_item_template.IsDropable = true; 
-			scout_item_template.IsTradable = false; 
-			scout_item_template.IsSaleable = false;
-			scout_item_template.MaterialLevel = eMaterialLevel.Bronze;
-			
-			scout_item_template.MagicalBonus.Add(new ItemMagicalBonus(eProperty.Skill_Long_bows, 1));
-				
-			if(!allStartupItems.Contains("Huntsman_s_Longbow"))
-			{
-				allStartupItems.Add("Huntsman_s_Longbow", scout_item_template);
-			
-				if (log.IsDebugEnabled)
-					log.Debug("Adding " + scout_item_template.Name + " to ScoutTrainer gifts.");
-			}
-			#endregion
-		}
-
-		/// <summary>
-		/// Gets trainer classname
-		/// </summary>
-		public override string TrainerClassName
-		{
-			get { return "Scout"; }
 		}
 
 		/// <summary>
@@ -140,9 +84,10 @@ namespace DOL.GS.Trainer
 			switch (text) {
 			case "join the Defenders of Albion":
 				// promote player to other class
-				if (CanPromotePlayer(player)) 
-					PromotePlayer(player, (int)eCharacterClass.Scout, "Welcome young warrior! May your time in Albion's army be rewarding! Here is your Huntsman's Longbow. The bow is your guild weapon! Be sure to carry it with you always.", new GenericItemTemplate[] {allStartupItems["Huntsman_s_Longbow"] as GenericItemTemplate});
-					
+				if (CanPromotePlayer(player)) {
+					PromotePlayer(player, (int)eCharacterClass.Scout, "Welcome young warrior! May your time in Albion's army be rewarding! Here is your Huntsman's Longbow. The bow is your guild weapon! Be sure to carry it with you always.", null);
+					player.ReceiveItem(this,WEAPON_ID1);
+				}
 				break;
 			}
 			return true;		

@@ -19,6 +19,7 @@
 using System;
 using DOL.Events;
 using DOL.GS;
+using DOL.GS.Keeps;
 
 namespace DOL.Events
 {
@@ -26,7 +27,7 @@ namespace DOL.Events
 	/// This class holds all possible keep events.
 	/// Only constants defined here!
 	/// </summary>
-	/*public class KeepEvent : DOLEvent
+	public class KeepEvent : DOLEvent
 	{
 		public KeepEvent(string name) : base(name)
 		{			
@@ -51,5 +52,10 @@ namespace DOL.Events
 		/// The KeepTaken event is fired whenever the keep is taken by another realm (lord killed)	
 		/// </summary>
 		public static readonly KeepEvent KeepTaken = new KeepEvent("KeepEvent.KeepTaken");
-	}*/
+
+		/// <summary>
+		/// The TowerRaized event is fired when a tower is raized
+		/// </summary>
+		public static readonly KeepEvent TowerRaized = new KeepEvent("KeepEvent.TowerRaized");
+	}
 }

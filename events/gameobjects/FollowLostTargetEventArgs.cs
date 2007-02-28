@@ -25,13 +25,13 @@ namespace DOL.Events
 	/// </summary>
 	public class FollowLostTargetEventArgs : EventArgs
 	{
-		private readonly GameLivingBase m_lostTarget;
+		private readonly GameObject m_lostTarget;
 
 		/// <summary>
 		/// Constructs new FollowLostTargetEventArgs
 		/// </summary>
 		/// <param name="lostTarget">The lost follow target</param>
-		public FollowLostTargetEventArgs(GameLivingBase lostTarget)
+		public FollowLostTargetEventArgs(GameObject lostTarget)
 		{
 			m_lostTarget = lostTarget;
 		}
@@ -39,7 +39,7 @@ namespace DOL.Events
 		/// <summary>
 		/// Gets the lost follow target
 		/// </summary>
-		public GameLivingBase LostTarget
+		public GameObject LostTarget
 		{
 			get { return m_lostTarget; }
 		}

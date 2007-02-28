@@ -18,7 +18,6 @@
  */
 using System;
 using System.Collections;
-using DOL.GS.Database;
 using DOL.GS.PacketHandler;
 using DOL.GS.SkillHandler;
 using DOL.Events;
@@ -28,7 +27,7 @@ namespace DOL.GS.Effects
 	/// <summary>
 	/// The helper class for the berserk ability
 	/// </summary>
-	public class BerserkEffect : IGameEffect
+	public class BerserkEffect : StaticEffect, IGameEffect
 	{
 		/// <summary>
 		/// The ability description
@@ -63,7 +62,7 @@ namespace DOL.GS.Effects
 			StartTimers(); // start the timers before adding to the list!
 			m_player.EffectList.Add(this);
 
-			foreach (GamePlayer visiblePlayer in m_player.GetInRadius(typeof(GamePlayer), WorldMgr.VISIBILITY_DISTANCE))
+			foreach (GamePlayer visiblePlayer in m_player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
 				visiblePlayer.Out.SendEmoteAnimation(m_player, eEmote.MidgardFrenzy);
 			}
@@ -80,7 +79,7 @@ namespace DOL.GS.Effects
 			m_player.EffectList.Remove(this);
 
 			// TODO add proper transform animation
-			m_player.Model = (ushort)m_player.CreationModel;			
+			m_player.Model = (ushort)m_player.PlayerCharacter.CreationModel;			
 
 			// there is no animation on end of the effect
 			m_player.Out.SendMessage("Your berserker frenzy ends.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
