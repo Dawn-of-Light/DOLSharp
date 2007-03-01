@@ -714,10 +714,29 @@ namespace DOL.GS.ServerRules
 
 					campBonus = xpReward * campBonus;
 
-					if (!living.IsAlive)//Dead living gets 25% exp only
+					//outpost XP
+					//1.54 http://www.camelotherald.com/more/567.shtml
+					//- Players now receive an exp bonus when fighting within 16,000 
+					//units of a keep controlled by your realm or your guild.
+					//You get 20% bonus if your guild owns the keep or a 10% bonus 
+					//if your realm owns the keep.
+
+					long outpostXP = 0;
+
+					if (living is GamePlayer)
 					{
-						campBonus = (long)(campBonus * 0.25);
-						xpReward = (long)(xpReward * 0.25);
+						AbstractGameKeep keep = KeepMgr.getKeepCloseToSpot(living.CurrentRegionID, living, 16000);
+						if (keep != null)
+						{
+							byte bonus = 0;
+							if (keep.Guild != null && keep.Guild == (living as GamePlayer).Guild)
+								bonus = 20;
+							else if (GameServer.Instance.Configuration.ServerType == eGameServerType.GST_Normal &&
+								keep.Realm == living.Realm)
+								bonus = 10;
+
+							outpostXP = (xpReward / 100) * bonus;
+						}
 					}
 
 					long groupExp = 0;
@@ -731,8 +750,10 @@ namespace DOL.GS.ServerRules
 								groupExp += (long)(0.125 * xpReward * (int)plrGrpExp[player.PlayerGroup]);
 						}
 
-						xpReward += (long)campBonus + groupExp;
-						living.GainExperience(xpReward, (long)campBonus, groupExp, true, false);
+						xpReward += (long)campBonus + groupExp + outpostXP;
+						if (!living.IsAlive)//Dead living gets 25% exp only
+							xpReward = (long)(xpReward * 0.25);
+						living.GainExperience(xpReward, (long)campBonus, groupExp, outpostXP, true, false);
 					}
 				}
 			}
@@ -1012,7 +1033,33 @@ namespace DOL.GS.ServerRules
 					if (xpReward > expCap)
 						xpReward = expCap;
 
-					living.GainExperience(xpReward, 0, 0, true, false);
+					//outpost XP
+					//1.54 http://www.camelotherald.com/more/567.shtml
+					//- Players now receive an exp bonus when fighting within 16,000 
+					//units of a keep controlled by your realm or your guild.
+					//You get 20% bonus if your guild owns the keep or a 10% bonus 
+					//if your realm owns the keep.
+
+					long outpostXP = 0;
+
+					if (!BG && living is GamePlayer)
+					{
+						AbstractGameKeep keep = KeepMgr.getKeepCloseToSpot(living.CurrentRegionID, living, 16000);
+						if (keep != null)
+						{
+							byte bonus = 0;
+							if (keep.Guild != null && keep.Guild == (living as GamePlayer).Guild)
+								bonus = 20;
+							else if (GameServer.Instance.Configuration.ServerType == eGameServerType.GST_Normal &&
+								keep.Realm == living.Realm)
+								bonus = 10;
+
+							outpostXP = (xpReward / 100) * bonus;
+						}
+					}
+					xpReward += outpostXP;
+
+					living.GainExperience(xpReward);
 
 					//gold
 					if (living is GamePlayer)

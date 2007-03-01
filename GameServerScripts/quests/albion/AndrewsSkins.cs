@@ -631,7 +631,7 @@ namespace DOL.GS.Quests.Albion
 
 								GiveItem(verNuren, player, spoolOfLeatherworkingThread);
 
-								player.GainExperience(40, 0, 0, true);
+								player.GainExperience(40, true);
 								player.AddMoney(Money.GetMoney(0, 0, 0, 3, Util.Random(50)), "You are awarded 3 silver and some copper!");
 
 								quest.Step = 3;
@@ -786,7 +786,7 @@ namespace DOL.GS.Quests.Albion
 						georNadren.TurnTo(m_questPlayer);
 						georNadren.SayTo(m_questPlayer, "Excellent!  Why, there is enough here to make several suits of armor.  Thank you friend!  Now, I think you need to return to Andrew in Cotswold and let him know I received the skins.  Thank you again, and good journeys to you "+m_questPlayer.Name+".");
 						
-						m_questPlayer.GainExperience(40, 0, 0, true);
+						m_questPlayer.GainExperience(40, true);
 						m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 2, Util.Random(50)), "You are awarded 2 silver and some copper!");
 
 						Step = 4;
@@ -814,7 +814,7 @@ namespace DOL.GS.Quests.Albion
 
 			GiveItem(andrewWyatt, m_questPlayer, chokerOfTheBear);
 
-			m_questPlayer.GainExperience(80, 0, 0, true);
+			m_questPlayer.GainExperience(80, true);
 			m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 4, Util.Random(50)), "You are awarded 4 silver and some copper!");
 		}
 	}

@@ -558,7 +558,7 @@ namespace DOL.GS.Quests.Albion
 
 			//Give reward to player here ...
 			
-			m_questPlayer.GainExperience((long)(m_questPlayer.ExperienceForNextLevel / 15), 0, 0, true);
+			m_questPlayer.GainExperience((long)(m_questPlayer.ExperienceForNextLevel / 15), true);
 			m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 0, 67), "You are awarded 67 copper!");
 		}
 	}

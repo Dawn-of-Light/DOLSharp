@@ -1452,7 +1452,7 @@ namespace DOL.GS.Quests.Midgard
 			// make sure to clean up, should be needed , but just to make certain
 			ResetMasterBriedi();
 			//Give reward to player here ...              
-			m_questPlayer.GainExperience(507, 0, 0, true);
+			m_questPlayer.GainExperience(507, true);
 			m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 8, Util.Random(50)), "You recieve {0} as a reward.");
 			if (m_questPlayer.HasAbilityToUseItem(recruitsHelm))
 				GiveItem(dalikor, m_questPlayer, recruitsHelm);

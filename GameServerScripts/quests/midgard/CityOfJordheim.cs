@@ -994,7 +994,7 @@ namespace DOL.GS.Quests.Midgard
 				GiveItem(harlfug, player, assistantNecklace);
 				GiveItem(harlfug, player, chestOfCoins);
 				GiveItem(harlfug, player, scrollYuliwyf);
-				player.GainExperience(7, 0, 0, true);
+				player.GainExperience(7, true);
 
 				GameEventMgr.AddHandler(player, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
 				GameEventMgr.AddHandler(player, GamePlayerEvent.UseSlot, new DOLEventHandler(PlayerUseSlot));
@@ -1125,7 +1125,7 @@ namespace DOL.GS.Quests.Midgard
 			RemoveItem(m_questPlayer, ticketToMularn, false);
 
 			// remove the 7 xp you get on quest start for beeing so nice to bombard again.
-			m_questPlayer.GainExperience(-7, 0, 0, true);
+			m_questPlayer.GainExperience(-7, true);
 
 			if (assistantTimer != null)
 			{
@@ -1146,7 +1146,7 @@ namespace DOL.GS.Quests.Midgard
 			else
 				GiveItem(dalikor, m_questPlayer, recruitsBracer);
 
-			m_questPlayer.GainExperience(26, 0, 0, true);
+			m_questPlayer.GainExperience(26, true);
 			m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 2, Util.Random(50)), "You recieve {0} as a reward.");
 
 			GameEventMgr.RemoveHandler(m_questPlayer, GamePlayerEvent.UseSlot, new DOLEventHandler(PlayerUseSlot));

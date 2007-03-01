@@ -3325,7 +3325,7 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		/// <param name="expGroupBonus">group bonus to display</param>
 		/// <param name="sendMessage">should exp gain message be sent</param>
 		/// <param name="allowMultiply">should the xp amount be multiplied</param>
-		public virtual void GainExperience(long expTotal, long expCampBonus, long expGroupBonus, bool sendMessage, bool allowMultiply)
+		public virtual void GainExperience(long expTotal, long expCampBonus, long expGroupBonus, long expOutpostBonus, bool sendMessage, bool allowMultiply)
 		{
 			if (expTotal > 0) Notify(GameLivingEvent.GainedExperience, this, new GainedExperienceEventArgs(expTotal, expCampBonus, expGroupBonus, sendMessage));
 		}
@@ -3350,8 +3350,19 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		/// <param name="exp">base amount of xp to gain</param>
 		public void GainExperience(long exp)
 		{
-			GainExperience(exp, 0, 0, true, false);
+			GainExperience(exp, 0, 0, 0, true, false);
 		}
+
+		/// <summary>
+		/// Called when the living is gaining experience
+		/// </summary>
+		/// <param name="exp">base amount of xp to gain</param>
+		/// <param name="allowMultiply">Do we allow the xp to be multiplied</param>
+		public void GainExperience(long exp, bool allowMultiply)
+		{
+			GainExperience(exp, 0, 0, 0, true, allowMultiply);
+		}
+
 		/// <summary>
 		/// Called when an enemy of this living is killed
 		/// </summary>
