@@ -1258,7 +1258,7 @@ namespace DOL.GS.Quests.Midgard
 			}
 			Danica.SayTo(m_questPlayer, "May it serve you well, knowing that you have helped preserve the history of Midgard!");
 
-			m_questPlayer.GainExperience(1937768448, 0, 0, true);
+			m_questPlayer.GainExperience(1937768448, true);
 			//m_questPlayer.AddMoney(Money.GetMoney(0,0,0,2,Util.Random(50)), "You recieve {0} as a reward.");		
 		}
 

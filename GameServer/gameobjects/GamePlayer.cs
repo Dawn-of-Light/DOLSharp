@@ -3719,9 +3719,9 @@ namespace DOL.GS
 		/// <param name="expCampBonus">camp bonus to included in total exp</param>
 		/// <param name="expGroupBonus">group bonus included in total exp</param>
 		/// <param name="sendMessage">should exp gain message be sent</param>
-		public void GainExperience(long expTotal, long expCampBonus, long expGroupBonus, bool sendMessage)
+		public void GainExperience(long expTotal, long expCampBonus, long expGroupBonus, long expOutpostBonus, bool sendMessage)
 		{
-			GainExperience(expTotal, expCampBonus, expGroupBonus, sendMessage, true);
+			GainExperience(expTotal, expCampBonus, expGroupBonus,  expOutpostBonus, sendMessage, true);
 		}
 
 		/// <summary>
@@ -3732,7 +3732,7 @@ namespace DOL.GS
 		/// <param name="expGroupBonus">group bonus included in total exp</param>
 		/// <param name="sendMessage">should exp gain message be sent</param>
 		/// <param name="allowMultiply">should the xp amount be multiplied</param>
-		public override void GainExperience(long expTotal, long expCampBonus, long expGroupBonus, bool sendMessage, bool allowMultiply)
+		public override void GainExperience(long expTotal, long expCampBonus, long expGroupBonus, long expOutpostBonus, bool sendMessage, bool allowMultiply)
 		{
 			if (!GainXP)
 				return;
@@ -3741,7 +3741,7 @@ namespace DOL.GS
 			if (allowMultiply)
 				expTotal = (long)(expTotal * ServerProperties.Properties.XP_RATE);
 
-			base.GainExperience(expTotal, expCampBonus, expGroupBonus, sendMessage, allowMultiply);
+			base.GainExperience(expTotal, expCampBonus, expGroupBonus, expOutpostBonus, sendMessage, allowMultiply);
 
 			if (IsLevelSecondStage)
 			{
@@ -3761,6 +3761,7 @@ namespace DOL.GS
 				string totalExpStr = expTotal.ToString("N0", format);
 				string expCampBonusStr = "";
 				string expGroupBonusStr = "";
+				string expOutpostBonusStr = "";
 
 				if (expCampBonus > 0)
 				{
@@ -3769,6 +3770,10 @@ namespace DOL.GS
 				if (expGroupBonus > 0)
 				{
 					expGroupBonusStr = " (" + expGroupBonus.ToString("N0", format) + " group bonus)";
+				}
+				if (expOutpostBonus > 0)
+				{
+					expOutpostBonusStr = " (" + expOutpostBonus.ToString("NO", format) + " outpost bonus)";
 				}
 
 				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.GainExperience.YouGet", totalExpStr) + expCampBonusStr + expGroupBonusStr, eChatType.CT_Important, eChatLoc.CL_SystemWindow);
@@ -6114,7 +6119,7 @@ namespace DOL.GS
 					m_character.DeathCount++;
 
 					long xpLoss = (ExperienceForNextLevel - ExperienceForCurrentLevel) * xpLossPercent / 1000;
-					GainExperience(-xpLoss, 0, 0, false, true);
+					GainExperience(-xpLoss, 0, 0, 0, false, true);
 					TempProperties.setProperty(DEATH_EXP_LOSS_PROPERTY, xpLoss);
 
 					int conLoss = m_character.DeathCount;

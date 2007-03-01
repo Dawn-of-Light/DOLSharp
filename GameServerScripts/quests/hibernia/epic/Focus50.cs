@@ -1505,7 +1505,7 @@ namespace DOL.GS.Quests.Hibernia
 			}
 
 
-			m_questPlayer.GainExperience(1937768448, 0, 0, true);
+			m_questPlayer.GainExperience(1937768448, true);
 			//m_questPlayer.AddMoney(Money.GetMoney(0,0,0,2,Util.Random(50)), "You recieve {0} as a reward.");		
 		}
 

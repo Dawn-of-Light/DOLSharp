@@ -862,7 +862,7 @@ namespace DOL.GS.Quests.Albion
 			else
 				GiveItem(masterFrederick, m_questPlayer, recruitsQuiltedBoots);
 
-			m_questPlayer.GainExperience(40, 0, 0, true);
+			m_questPlayer.GainExperience(40, true);
 			m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 4, Util.Random(50)), "You recieve {0} as a reward.");
 
 			GameEventMgr.RemoveHandler(m_questPlayer, GamePlayerEvent.UseSlot, new DOLEventHandler(PlayerUseSlot));

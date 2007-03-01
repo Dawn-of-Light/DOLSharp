@@ -764,7 +764,7 @@ namespace DOL.GS.Quests.Albion
 			else
 				GiveItem(masterFrederick, m_questPlayer, recruitsSleeves);
 
-			m_questPlayer.GainExperience(240, 0, 0, true);
+			m_questPlayer.GainExperience(240, true);
 			m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 6, Util.Random(50)), "You recieve {0} as a reward.");
 
 			GameEventMgr.RemoveHandler(m_questPlayer, GamePlayerEvent.UseSlot, new DOLEventHandler(PlayerUseSlot));
