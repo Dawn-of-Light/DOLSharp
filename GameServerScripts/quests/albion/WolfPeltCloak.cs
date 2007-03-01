@@ -689,7 +689,7 @@ namespace DOL.GS.Quests.Albion
 					don.SayTo(player, "Well done! You've helped the children get over the harsh winter.");
 
 					//Give reward to player here ...
-					player.GainExperience(200, 0, 0, true);
+					player.GainExperience(200, true);
 
 					return;
 				}
@@ -753,7 +753,7 @@ namespace DOL.GS.Quests.Albion
 
 			GiveItem(lynnet, m_questPlayer, wolfPeltCloak);
 
-			m_questPlayer.GainExperience(50, 0, 0, true);
+			m_questPlayer.GainExperience(50, true);
 			m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 0, 30 + Util.Random(50)), "You recieve {0} for your service.");
 
 		}

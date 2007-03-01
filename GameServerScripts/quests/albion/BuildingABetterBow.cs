@@ -581,7 +581,7 @@ namespace DOL.GS.Quests.Albion
 			base.FinishQuest(); //Defined in Quest, changes the state, stores in DB etc ...
 
 			//Give reward to player here ...
-			m_questPlayer.GainExperience(145, 0, 0, true);
+			m_questPlayer.GainExperience(145, true);
 			m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 0, 50), "You are awarded 50 copper!");
 		}
 	}

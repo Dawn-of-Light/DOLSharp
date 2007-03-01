@@ -1132,7 +1132,7 @@ namespace DOL.GS.Quests.Albion
 			else
 				GiveItem(masterFrederick, m_questPlayer, recruitsPants);
 
-			m_questPlayer.GainExperience(240, 0, 0, true);
+			m_questPlayer.GainExperience(240, true);
 			m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 5, Util.Random(50)), "You recieve {0} as a reward.");
 
 		}

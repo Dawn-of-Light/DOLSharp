@@ -846,7 +846,7 @@ namespace DOL.GS.Quests.Midgard
 			//Give reward to player here ...            
 			GiveItem(harlfug, m_questPlayer, recruitsCloak);
 
-			m_questPlayer.GainExperience(12, 0, 0, true);
+			m_questPlayer.GainExperience(12, true);
 			m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 1, Util.Random(50)), "You recieve {0} as a reward.");
 
 		}
