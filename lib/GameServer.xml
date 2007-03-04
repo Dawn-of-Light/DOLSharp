@@ -9998,6 +9998,11 @@
             Disable Bug Reports
             </summary>
         </member>
+        <member name="F:DOL.GS.ServerProperties.Properties.USE_CUSTOM_START_LOCATIONS">
+            <summary>
+            Use Custom Start Locations
+            </summary>
+        </member>
         <member name="M:DOL.GS.ServerProperties.Properties.Load(DOL.GS.ServerProperties.ServerPropertyAttribute)">
             <summary>
             This method loads the property from the database and returns
