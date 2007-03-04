@@ -19246,6 +19246,11 @@
             <param name="withDistance">Get an ObjectDistance enumerator</param>
             <returns>IEnumerable to be used with foreach</returns>
         </member>
+        <member name="P:DOL.GS.Region.IsDungeon">
+            <summary>
+            Gets whether this region is a dungeon or not
+            </summary>
+        </member>
         <member name="P:DOL.GS.Region.NumPlayers">
             <summary>
             Gets the # of players in the region
@@ -21132,6 +21137,22 @@
         <member name="M:DOL.GS.Effects.GameEffectPlayerList.UpdateChangedEffects">
             <summary>
             Updates changed effects to the owner.
+            </summary>
+        </member>
+        <member name="T:DOL.GS.DatabaseConverters.Version005">
+            <summary>
+            Converts the database format to the version 5
+            </summary>
+        </member>
+        <member name="F:DOL.GS.DatabaseConverters.Version005.log">
+            <summary>
+            Defines a logger for this class.
+            </summary>
+        </member>
+        <member name="M:DOL.GS.DatabaseConverters.Version005.ConvertDatabase">
+            <summary>
+            This convert updates all old tables layouts to new ones
+            This is useful because of the introduced archive tables
             </summary>
         </member>
         <member name="T:DOL.GS.Trainer.SeerTrainer">
