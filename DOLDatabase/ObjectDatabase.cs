@@ -131,9 +131,12 @@ namespace DOL.Database
 			catch (Exception e)
 			{
 				if(log.IsErrorEnabled)
-					log.Error("Error saving table " + tableName,e);
+					log.Error("Error saving table " + tableName, e);
 			}
-			Thread.CurrentThread.Priority = oldprio;
+			finally
+			{
+				Thread.CurrentThread.Priority = oldprio;
+			}
 		}
 
 		public void ReloadDatabaseTable(Type objectType)
@@ -367,10 +370,7 @@ namespace DOL.Database
 						}
 						if (val is string)
 						{
-							val = ((String) val).Replace("\\", "\\\\");
-							val = ((String) val).Replace("\"", "\\\"");
-							val = ((String) val).Replace("'", "\\'");
-							val = ((String) val).Replace("’", "\\’");
+							val = Escape((string) val);
 						}
 						sb.Append("`" + bind.Member.Name + "` = ");
 						sb.Append('\'');
@@ -542,17 +542,15 @@ namespace DOL.Database
 					return obj;
 			}
 
+			// Escape PK value
+			key = Escape(key.ToString());
+			
 			for (int i = 0; i < members.Length; i++)
 			{
 				object[] keyAttrib = members[i].GetCustomAttributes(typeof (DOL.Database.Attributes.PrimaryKey), true);
 				if (keyAttrib.Length > 0)
 				{
-					string val = key.ToString();
-					val = val.Replace("\\", "\\\\");
-					val = val.Replace("\"", "\\\"");
-					val = val.Replace("'", "\\'");
-					val = val.Replace("’", "\\’");
-					whereClause = "`" + members[i].Name + "` = '" + val + "'";
+					whereClause = "`" + members[i].Name + "` = '" + key.ToString() + "'";
 					break;
 				}
 			}
