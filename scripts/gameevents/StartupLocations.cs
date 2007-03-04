@@ -50,6 +50,8 @@ namespace DOL.GS.GameEvents
 		[ScriptLoadedEvent]
 		public static void OnScriptCompiled(DOLEvent e, object sender, EventArgs args)
 		{
+			if (ServerProperties.Properties.USE_CUSTOM_START_LOCATIONS)
+				return;
 			bool result = InitLocationTables();
 			GameEventMgr.AddHandler(DatabaseEvent.CharacterCreated, new DOLEventHandler(CharacterCreation));
 			if (log.IsInfoEnabled)
@@ -60,6 +62,8 @@ namespace DOL.GS.GameEvents
 		[ScriptUnloadedEvent]
 		public static void OnScriptUnloaded(DOLEvent e, object sender, EventArgs args)
 		{
+			if (ServerProperties.Properties.USE_CUSTOM_START_LOCATIONS)
+				return;
 			GameEventMgr.RemoveHandler(DatabaseEvent.CharacterCreated, new DOLEventHandler(CharacterCreation));
 			ClassicLocations = null;
 			ShroudedIslesLocations = null;
