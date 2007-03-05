@@ -288,7 +288,7 @@ namespace DOL.GS.Scripts
 						info.Add(string.Format(" + Flags: {0} (0x{1})", ((GameNPC.eFlags)targetMob.Flags).ToString("G"), targetMob.Flags.ToString("X")));
 						info.Add(" + Active weapon slot: " + targetMob.ActiveWeaponSlot);
 						info.Add(" + Visible weapon slot: " + targetMob.VisibleActiveWeaponSlots);
-						info.Add(" + MaxSpeed: " + targetMob.MaxSpeedBase);
+						info.Add(" + Speed(current/max): " + targetMob.CurrentSpeed + "/" + targetMob.MaxSpeedBase);
 						info.Add(" + Health: " + targetMob.Health + "/" + targetMob.MaxHealth);
 						info.Add(" + Equipment Template ID: " + targetMob.EquipmentTemplateID);
 						info.Add(" + Inventory: " + targetMob.Inventory);
