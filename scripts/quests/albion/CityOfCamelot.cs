@@ -217,7 +217,7 @@ namespace DOL.GS.Quests.Albion
 
 			#region defineItems
 
-			ticketToCotswold = CreateTicketTo("Camelot Hills");
+			ticketToCotswold = CreateTicketTo("ticket to Camelot Hills", "");
 
 			scrollUrqhart = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "scroll_for_urqhart");
 			if (scrollUrqhart == null)

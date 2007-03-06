@@ -17458,11 +17458,11 @@
             Delve Info
             </summary>
         </member>
-        <member name="M:DOL.GS.Spells.DirectDamageDebuffSpellHandler.ApplyEffectOnTarget(DOL.GS.GameLiving,System.Double)">
+        <member name="M:DOL.GS.Spells.DirectDamageDebuffSpellHandler.OnDirectEffect(DOL.GS.GameLiving,System.Double)">
             <summary>
-            Apply effect on target or do spell action if non duration spell
+            execute direct effect
             </summary>
-            <param name="target">target that gets the effect</param>
+            <param name="target">target that gets the damage</param>
             <param name="effectiveness">factor from 0..1 (0%-100%)</param>
         </member>
         <member name="P:DOL.GS.Spells.DirectDamageDebuffSpellHandler.DelveInfo">

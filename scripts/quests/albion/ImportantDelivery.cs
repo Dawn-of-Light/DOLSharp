@@ -261,8 +261,8 @@ namespace DOL.GS.Quests.Albion
 
 			#region defineItems
 
-			ticketToLudlow = CreateTicketTo("Ludlow");
-			ticketToBombard = CreateTicketTo("North Camelot Gates");
+			ticketToLudlow = CreateTicketTo("ticket to Ludlow", "hs_northcamelotgates_ludlow");
+			ticketToBombard = CreateTicketTo("ticket to North Camelot Gates", "hs_ludlow_northcamelotgates");
 
 
 			sackOfSupplies = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "sack_of_supplies");
