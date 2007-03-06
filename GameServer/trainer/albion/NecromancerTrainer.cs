@@ -27,6 +27,11 @@ namespace DOL.GS.Trainer
 	[NPCGuildScript("Necromancer Trainer", eRealm.Albion)]		// this attribute instructs DOL to use this script for all "Necromancer Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class NecromancerTrainer : GameTrainer
 	{
+		public override eCharacterClass TrainedClass
+		{
+			get { return eCharacterClass.Necromancer; }
+		}
+
 		public const string WEAPON_ID = "necromancer_item";
 
 		public NecromancerTrainer() : base()
@@ -65,7 +70,7 @@ namespace DOL.GS.Trainer
 		/// </summary>
 		/// <param name="player"></param>
 		/// <returns></returns>
-		public bool CanPromotePlayer(GamePlayer player)
+		public override bool CanPromotePlayer(GamePlayer player)
 		{
 			return (player.Level>=5 && player.CharacterClass.ID == (int) eCharacterClass.Disciple && (player.Race == (int) eRace.Briton
    				|| player.Race == (int) eRace.Saracen || player.Race == (int) eRace.Inconnu));

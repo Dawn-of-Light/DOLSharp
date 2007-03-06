@@ -90,6 +90,13 @@ namespace DOL.AI.Brain
 
 			if (!Body.InCombat)
 				Body.TempProperties.removeProperty(GameLiving.LAST_ATTACK_DATA);
+
+			if (CanRandomWalk)
+			{
+				IPoint3D target = CalcRandomWalkTarget();
+				if (target != null)
+					Body.WalkTo(target, 50);
+			}
 		}
 
 		/// <summary>
@@ -872,6 +879,44 @@ namespace DOL.AI.Brain
 			}
 			return false;
 		}
+		#endregion
+
+		#region Random Walk
+		public virtual bool CanRandomWalk
+		{
+			get
+			{
+				if (Body.InCombat || Body.IsMoving || Body.IsCasting)
+					return false;
+				if (Body.Realm != 0)
+					return false;
+				if (Body.Name == "horse")
+					return false;
+				if (!char.IsLower(Body.Name[0]))
+					return false;
+				if (Body.CurrentRegion.IsDungeon)
+					return false;
+				//if (Body.Name.StartsWith("ambient"))
+					//return false;
+				if (Util.Chance(70))
+					return false;
+				return true;
+			}
+		}
+
+		public virtual IPoint3D CalcRandomWalkTarget()
+		{
+			int roamingRadius = 300;
+			roamingRadius = Util.Random(0, Math.Max(100, roamingRadius));
+
+			double angle = Util.Random(0, 360) / (2 * Math.PI);
+			double targetX = Body.SpawnX + Util.Random(-roamingRadius, roamingRadius);
+			double targetY = Body.SpawnY + Util.Random(-roamingRadius, roamingRadius);
+			//double targetZ = (Body.IsUnderwater) ? Body.SpawnZ : 0; /*(Body.Flags & (uint)GameNPC.eFlags.FLYING) == (uint)GameNPC.eFlags.FLYING ||  + Util.Random(-100, 100)*/
+
+			return new Point3D((int)targetX, (int)targetY, Body.SpawnZ);
+		}
+
 		#endregion
 	}
 }

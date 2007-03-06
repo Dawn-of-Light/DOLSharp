@@ -28,6 +28,11 @@ namespace DOL.GS.Trainer
 	[NPCGuildScript("Mystic Trainer", eRealm.Midgard)]		// this attribute instructs DOL to use this script for all "Mystic Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class MysticTrainer : GameTrainer
 	{
+		public override eCharacterClass TrainedClass
+		{
+			get { return eCharacterClass.Mystic; }
+		}
+
 		public const string PRACTICE_WEAPON_ID = "trimmed_branch";
 		
 		public MysticTrainer() : base()

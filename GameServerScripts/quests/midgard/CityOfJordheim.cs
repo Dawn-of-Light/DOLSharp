@@ -223,7 +223,7 @@ namespace DOL.GS.Quests.Midgard
 
 			#region defineItems
 
-			ticketToMularn = CreateTicketTo("Mularn");
+			ticketToMularn = CreateTicketTo("ticket to Mularn", "");
 
 			scrollYuliwyf = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "scroll_for_yuliwyf");
 			if (scrollYuliwyf == null)

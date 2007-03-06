@@ -88,6 +88,9 @@ namespace DOL.GS.Keeps
 					Component = new GameKeepComponent();
 					Component.Keep = keep;
 					Component.Keep.Banners.Add(obj.ObjectId, this);
+					if (this.Model == AlbionGuildModel || this.Model == MidgardGuildModel || this.Model == HiberniaGuildModel)
+						BannerType = eBannerType.Guild;
+					else BannerType = eBannerType.Realm;
 					if (BannerType == eBannerType.Guild && Component.Keep.Guild != null)
 						ChangeGuild();
 					else ChangeRealm();

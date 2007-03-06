@@ -27,8 +27,9 @@ namespace DOL.GS.Trainer
 	[NPCGuildScript("Shaman Trainer", eRealm.Midgard)]		// this attribute instructs DOL to use this script for all "Shaman Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class ShamanTrainer : GameTrainer
 	{
-		public ShamanTrainer() : base()
+		public override eCharacterClass TrainedClass
 		{
+			get { return eCharacterClass.Shaman; }
 		}
 
 		/// <summary>
@@ -63,7 +64,7 @@ namespace DOL.GS.Trainer
 		/// </summary>
 		/// <param name="player"></param>
 		/// <returns></returns>
-		public bool CanPromotePlayer(GamePlayer player) 
+		public override bool CanPromotePlayer(GamePlayer player) 
 		{
 			return (player.Level>=5 && player.CharacterClass.ID == (int) eCharacterClass.Seer && (player.Race == (int) eRace.Kobold || player.Race == (int) eRace.Frostalf
 				|| player.Race == (int)eRace.Troll));

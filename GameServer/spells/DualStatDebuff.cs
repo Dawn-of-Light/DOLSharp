@@ -31,7 +31,7 @@ namespace DOL.GS.Spells
 		public override int BonusCategory2 { get { return 3; } }
 
 		// constructor
-		public DualStatDebuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
+		public DualStatDebuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 	}
 
 	/// <summary>
@@ -40,11 +40,11 @@ namespace DOL.GS.Spells
 	[SpellHandlerAttribute("StrengthConstitutionDebuff")]
 	public class StrengthConDebuff : DualStatDebuff
 	{
-		public override eProperty Property1 { get { return eProperty.Strength; } }	
-		public override eProperty Property2 { get { return eProperty.Constitution; } }	
+		public override eProperty Property1 { get { return eProperty.Strength; } }
+		public override eProperty Property2 { get { return eProperty.Constitution; } }
 
 		// constructor
-		public StrengthConDebuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
+		public StrengthConDebuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 	}
 
 	/// <summary>
@@ -53,10 +53,18 @@ namespace DOL.GS.Spells
 	[SpellHandlerAttribute("DexterityQuicknessDebuff")]
 	public class DexterityQuiDebuff : DualStatDebuff
 	{
-		public override eProperty Property1 { get { return eProperty.Dexterity; } }	
-		public override eProperty Property2 { get { return eProperty.Quickness; } }	
+		public override eProperty Property1 { get { return eProperty.Dexterity; } }
+		public override eProperty Property2 { get { return eProperty.Quickness; } }
 
 		// constructor
-		public DexterityQuiDebuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
+		public DexterityQuiDebuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+	}
+
+	[SpellHandlerAttribute("WeaponSkillConstitutionDebuff")]
+	public class WeaponskillConDebuff : DualStatDebuff
+	{
+		public override eProperty Property1 { get { return eProperty.WeaponSkill; } }
+		public override eProperty Property2 { get { return eProperty.Constitution; } }
+		public WeaponskillConDebuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 	}
 }

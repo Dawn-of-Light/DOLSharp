@@ -252,9 +252,9 @@ namespace DOL.GS.Quests.Hibernia
 
 			#region defineItems
 
-			ticketToArdee = CreateTicketTo("Ardee");
-			ticketToMagMell = CreateTicketTo("Mag Mell");
-			ticketToTirnaNog = CreateTicketTo("Tir na Nog");
+			ticketToArdee = CreateTicketTo("ticket to Ardee", "");
+			ticketToMagMell = CreateTicketTo("ticket to Mag Mell", "");
+			ticketToTirnaNog = CreateTicketTo("ticket to Tir na Nog", "");
 
 			scrollHylvian = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "scroll_for_hylvian");
 			if (scrollHylvian == null)

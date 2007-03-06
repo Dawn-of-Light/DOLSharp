@@ -673,7 +673,7 @@ namespace DOL.GS.ServerRules
 					}
 					if (realmPoints > rpCap)
 						realmPoints = rpCap;
-					if (realmPoints != 0)
+					if (realmPoints > 0)
 					{
 						living.GainRealmPoints(realmPoints);
 					}
@@ -683,7 +683,7 @@ namespace DOL.GS.ServerRules
 					int bountyPoints = (int)(npcBPValue * damagePercent);
 					if (bountyPoints > bpCap)
 						bountyPoints = bpCap;
-					if (bountyPoints != 0)
+					if (bountyPoints > 0)
 					{
 						living.GainBountyPoints(bountyPoints);
 					}

@@ -358,27 +358,24 @@ namespace DOL.GS.Quests
 			}
 		}
 
-		protected static ItemTemplate CreateTicketTo(String location)
+		protected static ItemTemplate CreateTicketTo(String t_Name, String t_Id)
 		{
-			ItemTemplate ticket = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ticket_to_" + GameServer.Database.Escape(location.ToLower()));
+			ItemTemplate ticket = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), GameServer.Database.Escape(t_Id.ToLower()));
+
 			if (ticket == null)
 			{
 				if (log.IsWarnEnabled)
-					log.Warn("Could not find Ticket to " + location + ", creating it ...");
-				ticket = new ItemTemplate();
-				ticket.Name = "ticket to " + location;
+					log.Warn("Could not find " + t_Name + ", creating it ...");
 
+				ticket = new ItemTemplate();
+				ticket.Name = t_Name;
 				ticket.Weight = 0;
 				ticket.Model = 498;
-
 				ticket.Object_Type = (int)eObjectType.GenericItem;
 				ticket.Item_Type = 40;
-
-				ticket.Id_nb = "ticket_to_" + location.ToLower();
-				;
+				ticket.Id_nb = t_Id.ToLower();
 				ticket.IsPickable = true;
 				ticket.IsDropable = true;
-
 				ticket.Gold = 0;
 				ticket.Silver = 5;
 				ticket.Copper = 3;
@@ -387,10 +384,13 @@ namespace DOL.GS.Quests
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
+
 				GameServer.Database.AddNewObject(ticket);
+
 			}
 			return ticket;
 		}
+
 
 		//timer callbacks
 		protected virtual int MakeAnimSpellSequence(RegionTimer callingTimer)

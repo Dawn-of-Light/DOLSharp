@@ -29,9 +29,10 @@ namespace DOL.GS.Trainer
 	public class VikingTrainer : GameTrainer
 	{
 		public const string PRACTICE_WEAPON_ID = "training_axe";
-		
-		public VikingTrainer() : base()
+
+		public override eCharacterClass TrainedClass
 		{
+			get { return eCharacterClass.Viking; }
 		}
 
 		/// <summary>

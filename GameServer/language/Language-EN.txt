@@ -80,7 +80,8 @@ GamePlayer.Quit.CantQuitMount:				You have to dismount before you can quit.
 GamePlayer.Quit.CantQuitStanding:			You must be standing still to quit.
 GamePlayer.Quit.CantQuitCrafting:			You can't quit while you're crafting.
 GamePlayer.Quit.RecentlyInCombat:			You were recently in combat and must wait longer to quit.
-GamePlayer.Quit.YouWillQuit:				You will quit after sitting for {0} seconds.  Type '/stand' or move if you don't want to quit.
+GamePlayer.Quit.YouWillQuit1:				You will quit after sitting for {0} seconds...
+GamePlayer.Quit.YouWillQuit2:				You will quit after sitting for {0} seconds. Type '/stand' or move if you don't want to quit.
 GamePlayer.Release.NotDead:				You are not dead!
 GamePlayer.Release.CantReleaseDuel:			You can't alter your release on a duel death!
 GamePlayer.Release.NoLongerReleaseAuto:			You will no longer release automatically. ({0} more seconds)

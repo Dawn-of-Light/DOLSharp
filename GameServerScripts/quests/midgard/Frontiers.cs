@@ -247,8 +247,8 @@ namespace DOL.GS.Quests.Midgard
 			idora.GetSpotFromHeading(30, out tmpX, out tmpY);
 			locationIdora = new GameLocation(idora.CurrentZone.Description, idora.CurrentRegionID, (int) tmpX, (int) tmpY, idora.Z);
 
-			ticketToSvasudFaste = CreateTicketTo("Svasud Faste");
-			ticketToMularn = CreateTicketTo("Mularn");
+			ticketToSvasudFaste = CreateTicketTo("ticket to Svasud Faste", "hs_mularn_svasudfaste");
+			ticketToMularn = CreateTicketTo("ticket to Mularn", "hs_svasudfaste_mularn");
 
 			npcs = (GameNPC[]) WorldMgr.GetObjectsByName("Griffin Handler Njiedi", eRealm.Midgard, typeof (GameStableMaster));
 			if (npcs.Length == 0)

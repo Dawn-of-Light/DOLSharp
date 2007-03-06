@@ -64,7 +64,9 @@ namespace DOL.GS.Spells
 			{
 				GamePlayer player = null;
 				if (target is GamePlayer)
+				{
 					player = target as GamePlayer;
+				}
 				else
 				{
 					if (Caster is GamePlayer)
