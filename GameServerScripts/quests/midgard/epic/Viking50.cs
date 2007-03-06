@@ -1332,7 +1332,7 @@ namespace DOL.GS.Quests.Midgard
 				SavageEpicHelm.Name = "Kelgor's Battle Helm";
 				SavageEpicHelm.Level = 50;
 				SavageEpicHelm.Item_Type = 21;
-				SavageEpicHelm.Model = 824; //NEED TO WORK ON..
+				SavageEpicHelm.Model = 831; //NEED TO WORK ON..
 				SavageEpicHelm.IsDropable = true;
 				SavageEpicHelm.IsPickable = true;
 				SavageEpicHelm.DPS_AF = 100;

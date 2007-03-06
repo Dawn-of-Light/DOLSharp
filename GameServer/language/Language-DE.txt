@@ -80,7 +80,8 @@ GamePlayer.Quit.CantQuitMount:				Ihr müsst erst absteigen, bevor Ihr diese Welt
 GamePlayer.Quit.CantQuitStanding:			Ihr müsst erst einmal stehen bleiben, bevor Ihr diese Welt verlassen könnt.
 GamePlayer.Quit.CantQuitCrafting:			Ihr könnt diese Welt nicht verlassen, während Ihr arbeitet.
 GamePlayer.Quit.RecentlyInCombat:			Ihr habt gerade noch gekämpft und müsst etwas länger warten, bevor Ihr diese Welt verlassen könnt.
-GamePlayer.Quit.YouWillQuit:				Ihr werdet diese Welt in {0} Sekunden verlassen. Bewegt Euch einfach, falls Ihr noch hier bleiben wollt.
+GamePlayer.Quit.YouWillQuit1:				Ihr werdet diese Welt in {0} Sekunden verlassen...
+GamePlayer.Quit.YouWillQuit2:				Ihr werdet diese Welt in {0} Sekunden verlassen. Bewegt Euch einfach, falls Ihr noch hier bleiben wollt.
 GamePlayer.Release.NotDead:				Ihr seid nicht tot!
 GamePlayer.Release.CantReleaseDuel:			You can't alter your release on a duel death!
 GamePlayer.Release.NoLongerReleaseAuto:			Ihr werdet nicht länger automatisch wieder auferstehen. ({0} Sekunden)
@@ -315,7 +316,7 @@ Scripts.Players.Advice.AdvicersOn:			Es sind {0} Ratgeber online!
 
 # /Advisor
 Scripts.Players.Advisor.Off:				Eure Ratgeberkennung wurde ausgeschaltet.
-Scripts.Players.Advisor.On:				Ihr seid nun als Ratgeber in Eurem Reich aktiv. Das Ratgeber-System wird von Spielern betrieben und benutzt, die anderen Leuten bei Problemen mit dem Spiel helfen wollen. Bitte aktiviert diese Funktion nur dann, wenn Ihr anderen Spielern helfen wollt. Wenn Ihr wieder Eure Ruhe haben und nicht mehr als Ratgeber tätig sein wollt, gebt einfach erneut '/advisor' ein.
+Scripts.Players.Advisor.On:				Ihr seid nun als Ratgeber in Eurem Reich aktiv. Das Ratgeber-System wird von Spielern betrieben und benutzt, die anderen Leuten bei Problemen mit dem Spiel helfen wollen. Bitte aktiviert diese Funktion nur dann, wenn Ihr anderen Spielern helfen wollt.\nWenn Ihr wieder Eure Ruhe haben und nicht mehr als Ratgeber tätig sein wollt, gebt einfach erneut '/advisor' ein.
 
 # /Afk
 Scripts.Players.Afk.Off:				AFK ausgeschaltet.

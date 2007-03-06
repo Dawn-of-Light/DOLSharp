@@ -31,6 +31,10 @@ namespace DOL.GS
 	/// </summary>
 	public class GameTrainer : GameNPC
 	{
+		public virtual eCharacterClass TrainedClass 
+		{
+			get { return eCharacterClass.Unknown; }
+		}
 		/// <summary>
 		/// Constructs a new GameTrainer
 		/// </summary>
@@ -170,6 +174,17 @@ namespace DOL.GS
 			return base.ReceiveItem(source, item);
 		}
 
+		public virtual bool CanPromotePlayer(GamePlayer player)
+		{
+			return true;
+		}
+
+		public void PromotePlayer(GamePlayer player)
+		{
+			if (TrainedClass != eCharacterClass.Unknown)
+				PromotePlayer(player, (int)TrainedClass, "", null);
+		}
+
 		/// <summary>
 		/// Called to promote a player
 		/// </summary>
@@ -190,7 +205,8 @@ namespace DOL.GS
 			{
 				player.RemoveAllStyles();
 
-				player.Out.SendMessage(this.Name + " says, \"" + messageToPlayer + "\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+				if (messageToPlayer != "")
+					player.Out.SendMessage(this.Name + " says, \"" + messageToPlayer + "\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
 				player.Out.SendMessage("You have been upgraded to the " + player.CharacterClass.Name + " class!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 
 				player.CharacterClass.OnLevelUp(player);

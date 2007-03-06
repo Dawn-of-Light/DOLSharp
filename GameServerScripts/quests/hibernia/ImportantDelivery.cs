@@ -265,8 +265,9 @@ namespace DOL.GS.Quests.Hibernia
 
 			#region defineItems
 
-			ticketToTirnamBeo = CreateTicketTo("Tir na mBeo");
-			ticketToArdee = CreateTicketTo("Ardee");
+			ticketToTirnamBeo = CreateTicketTo("ticket to Tir na mBeo", "hs_magmell_tirnambeo");
+
+			ticketToArdee = CreateTicketTo("ticket to Ardee", "hs_tirnambeo_ardee");
 
 
 			sackOfSupplies = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "sack_of_supplies");

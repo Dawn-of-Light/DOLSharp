@@ -27,6 +27,11 @@ namespace DOL.GS.Trainer
 	[NPCGuildScript("Healer Trainer", eRealm.Midgard)]		// this attribute instructs DOL to use this script for all "Healer Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class HealerTrainer : GameTrainer
 	{
+		public override eCharacterClass TrainedClass
+		{
+			get { return eCharacterClass.Healer; }
+		}
+
 		public HealerTrainer() : base()
 		{
 		}
@@ -63,7 +68,7 @@ namespace DOL.GS.Trainer
 		/// </summary>
 		/// <param name="player"></param>
 		/// <returns></returns>
-		public bool CanPromotePlayer(GamePlayer player) 
+		public override bool CanPromotePlayer(GamePlayer player) 
 		{
 			return (player.Level>=5 && player.CharacterClass.ID == (int) eCharacterClass.Seer && (player.Race == (int) eRace.Dwarf || player.Race == (int) eRace.Frostalf
 				|| player.Race == (int) eRace.Norseman));

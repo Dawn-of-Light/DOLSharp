@@ -28,6 +28,11 @@ namespace DOL.GS.Trainer
 	[NPCGuildScript("Forester Trainer", eRealm.Hibernia)]		// this attribute instructs DOL to use this script for all "Forester Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class ForesterTrainer : GameTrainer
 	{
+		public override eCharacterClass TrainedClass
+		{
+			get { return eCharacterClass.Forester; }
+		}
+
 		public const string PRACTICE_WEAPON_ID = "training_staff";
 	
 		public ForesterTrainer() : base()

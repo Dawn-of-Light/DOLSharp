@@ -27,6 +27,11 @@ namespace DOL.GS.Trainer
 	[NPCGuildScript("Friar Trainer", eRealm.Albion)]		// this attribute instructs DOL to use this script for all "Friar Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class FriarTrainer : GameTrainer
 	{
+		public override eCharacterClass TrainedClass
+		{
+			get { return eCharacterClass.Friar; }
+		}
+
 		/// <summary>
 		/// The free starter armor from trainer
 		/// </summary>
@@ -64,7 +69,7 @@ namespace DOL.GS.Trainer
 		/// </summary>
 		/// <param name="player"></param>
 		/// <returns></returns>
-		public bool CanPromotePlayer(GamePlayer player)
+		public override bool CanPromotePlayer(GamePlayer player)
 		{
 			return (player.Level>=5 && player.CharacterClass.ID == (int) eCharacterClass.Acolyte && player.Race == (int) eRace.Briton);
 		}
