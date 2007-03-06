@@ -88,9 +88,10 @@ namespace DOL.GS.Effects
 			// other players will see attack mode after pos update packet is sent
 			if (!m_engageSource.AttackState)
 			{
+				m_engageSource.StartAttack(engageTarget);
 				m_engageSource.Out.SendAttackMode(true);
-				m_engageSource.Out.SendMessage("You enter combat mode to engage your target!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
-				m_engageSource.Out.SendMessage("You enter combat mode and target ["+engageTarget.GetName(0, false)+"]", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+				//m_engageSource.Out.SendMessage("You enter combat mode to engage your target!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+				//m_engageSource.Out.SendMessage("You enter combat mode and target ["+engageTarget.GetName(0, false)+"]", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 			}
 		}
 

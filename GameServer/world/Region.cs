@@ -282,6 +282,28 @@ namespace DOL.GS
 		}
 
 		/// <summary>
+		/// Gets whether this region is a dungeon or not
+		/// </summary>
+		public bool IsDungeon
+		{
+			get
+			{
+				const int dungeonOffset = 8192;
+				const int zoneCount = 1;
+
+				if (Zones.Count != zoneCount)
+					return false; //Dungeons only have 1 zone!
+
+				Zone zone = (Zone)Zones[0];
+
+				if (zone.XOffset == dungeonOffset && zone.YOffset == dungeonOffset)
+					return true; //Only dungeons got this offset
+
+				return false;
+			}
+		}
+
+		/// <summary>
 		/// Gets the # of players in the region
 		/// </summary>
 		public int NumPlayers

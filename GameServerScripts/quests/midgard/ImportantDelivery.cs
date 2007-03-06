@@ -266,8 +266,8 @@ namespace DOL.GS.Quests.Midgard
 
 			#region defineItems
 
-			ticketToHaggerfel = CreateTicketTo("Haggerfel");
-			ticketToVasudheim = CreateTicketTo("Vasudheim");
+			ticketToHaggerfel = CreateTicketTo("ticket to Haggerfel", "");
+			ticketToVasudheim = CreateTicketTo("ticket to Vasudheim", "");
 
 
 			sackOfSupplies = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "sack_of_supplies");

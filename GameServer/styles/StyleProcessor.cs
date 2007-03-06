@@ -26,6 +26,7 @@ using DOL.GS.Keeps;
 using DOL.GS.PacketHandler;
 using DOL.GS.Spells;
 using DOL.GS.Scripts;
+using DOL.GS.Effects;
 
 using log4net;
 
@@ -262,6 +263,11 @@ namespace DOL.GS.Styles
 						player.NextCombatStyle = style;
 						player.NextCombatBackupStyle = null;
 						player.Out.SendMessage("You prepare to perform a " + style.Name + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
+						// cancel engage effect if exist
+						EngageEffect effect = (EngageEffect)living.EffectList.GetOfType(typeof(EngageEffect));
+						if (effect != null)
+							effect.Cancel(false);
 
 						// unstealth only on primary style to not break
 						// stealth with non-stealth backup styles

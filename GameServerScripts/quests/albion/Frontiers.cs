@@ -254,8 +254,8 @@ namespace DOL.GS.Quests.Albion
 			alice.GetSpotFromHeading(30, out tmpX, out tmpY);
 			locationAlice = new GameLocation(alice.CurrentZone.Description, alice.CurrentRegionID, (int) tmpX, (int) tmpY, alice.Z);
 
-			dragonflyTicket = CreateTicketTo("Castle Sauvage");
-			horseTicket = CreateTicketTo("Camelot Hills");
+			dragonflyTicket = CreateTicketTo("ticket to Castle Sauvage", "");
+			horseTicket = CreateTicketTo("ticket to Camelot Hills", "");
 
 			npcs = (GameNPC[]) WorldMgr.GetObjectsByName("Dragonfly Handler Colm", eRealm.Albion, typeof (GameStableMaster));
 			if (npcs.Length == 0)

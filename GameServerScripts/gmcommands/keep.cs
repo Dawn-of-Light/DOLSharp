@@ -2153,16 +2153,29 @@ namespace DOL.GS.Scripts
 					}
 				case "addbanner":
 					{
+						GameKeepBanner.eBannerType bannerType = GameKeepBanner.eBannerType.Realm;
+						if (args.Length > 2)
+						{
+							switch (args[2].ToLower())
+							{
+								case "realm": bannerType = GameKeepBanner.eBannerType.Realm; break;
+								case "guild": bannerType = GameKeepBanner.eBannerType.Guild; break;
+							}
+						}
+
 						GameKeepComponent component = client.Player.TargetObject as GameKeepComponent;
 						if (component != null)
 						{
 							DBKeepPosition pos = PositionMgr.CreatePosition(typeof(GameKeepBanner), 0, client.Player, Guid.NewGuid().ToString(), component);
+							pos.TemplateType = (int)bannerType;
+							GameServer.Database.SaveObject(pos);
 							PositionMgr.AddPosition(pos);
 							PositionMgr.FillPositions();
 						}
 						else
 						{
 							GameKeepBanner banner = new GameKeepBanner();
+							banner.BannerType = bannerType;
 							banner.CurrentRegion = client.Player.CurrentRegion;
 							banner.X = client.Player.X;
 							banner.Y = client.Player.Y;
@@ -2181,6 +2194,7 @@ namespace DOL.GS.Scripts
 									break;
 								}
 							}
+
 							if (banner.Component.Keep.Guild != null)
 								banner.ChangeGuild();
 							else banner.ChangeRealm();

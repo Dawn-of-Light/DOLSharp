@@ -19,6 +19,7 @@ namespace DOL.GS.Scripts
 			eCraftingSkill.Tailoring,
 			eCraftingSkill.WeaponCrafting,
 			eCraftingSkill.MetalWorking,
+			eCraftingSkill.WoodWorking
 		};
 
 		public override eCraftingSkill[] TrainedSkills

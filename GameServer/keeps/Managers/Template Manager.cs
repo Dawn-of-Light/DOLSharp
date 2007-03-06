@@ -84,15 +84,62 @@ namespace DOL.GS.Keeps
 			else guard.IsMale = false;
 		}
 
+
+		#region Hastener Models
+		public static ushort AlbionHastener = 244;
+		public static ushort MidgardHastener = 16;
+		public static ushort HiberniaHastener = 1910;
+		#endregion
+
+		#region AlbionClassModels
+		public static ushort BritonMale = 32;
+		public static ushort BritonFemale = 35;
+		public static ushort HighlanderMale = 39;
+		public static ushort HighlanderFemale = 43;
+		public static ushort SaracenMale = 48;
+		public static ushort SaracenFemale = 52;
+		public static ushort AvalonianMale = 61;
+		public static ushort AvalonianFemale = 65;
+		public static ushort IcconuMale = 716;
+		public static ushort IcconuFemale = 724;
+		public static ushort HalfOgreMale = 1008;
+		public static ushort HalfOgreFemale = 1020;
+		#endregion
+		#region MidgardClassModels
+		public static ushort TrollMale = 137;
+		public static ushort TrollFemale = 145;
+		public static ushort NorseMale = 503;
+		public static ushort NorseFemale = 507;
+		public static ushort KoboldMale = 169;
+		public static ushort KoboldFemale = 177;
+		public static ushort DwarfMale = 185;
+		public static ushort DwarfFemale = 193;
+		public static ushort ValkynMale = 773;
+		public static ushort ValkynFemale = 781;
+		public static ushort FrostalfMale = 1051;
+		public static ushort FrostalfFemale = 1063;
+		#endregion
+		#region HiberniaClassModels
+		public static ushort FirbolgMale = 286;
+		public static ushort FirbolgFemale = 294;
+		public static ushort CeltMale = 302;
+		public static ushort CeltFemale = 310;
+		public static ushort LurikeenMale = 318;
+		public static ushort LurikeenFemale = 326;
+		public static ushort ElfMale = 334;
+		public static ushort ElfFemale = 342;
+		public static ushort SharMale = 1075;
+		public static ushort SharFemale = 1087;
+		public static ushort SylvianMale = 700;
+		public static ushort SylvianFemale = 708;
+		#endregion
+
 		/// <summary>
 		/// Sets a guards model
 		/// </summary>
 		/// <param name="guard">The guard object</param>
 		private static void SetGuardModel(GameKeepGuard guard)
 		{
-			ushort AlbionHastener = 244;
-			ushort MidgardHastener = 16;
-			ushort HiberniaHastener = 1910;
 
 			if (guard is FrontierHastener)
 			{
@@ -121,49 +168,6 @@ namespace DOL.GS.Keeps
 				}
 				return;
 			}
-
-			#region AlbionClassModels
-			ushort BritonMale = 32;
-			ushort BritonFemale = 35;
-			ushort HighlanderMale = 39;
-			ushort HighlanderFemale = 43;
-			ushort SaracenMale = 48;
-			ushort SaracenFemale = 52;
-			ushort AvalonianMale = 61;
-			ushort AvalonianFemale = 65;
-			ushort IcconuMale = 716;
-			ushort IcconuFemale = 724;
-			ushort HalfOgreMale = 1008;
-			ushort HalfOgreFemale = 1020;
-			#endregion
-			#region MidgardClassModels
-			ushort TrollMale = 137;
-			ushort TrollFemale = 145;
-			ushort NorseMale = 503;
-			ushort NorseFemale = 507;
-			ushort KoboldMale = 169;
-			ushort KoboldFemale = 177;
-			ushort DwarfMale = 185;
-			ushort DwarfFemale = 193;
-			ushort ValkynMale = 773;
-			ushort ValkynFemale = 781;
-			ushort FrostalfMale = 1051;
-			ushort FrostalfFemale = 1063;
-			#endregion
-			#region HiberniaClassModels
-			ushort FirbolgMale = 286;
-			ushort FirbolgFemale = 294;
-			ushort CeltMale = 302;
-			ushort CeltFemale = 310;
-			ushort LurikeenMale = 318;
-			ushort LurikeenFemale = 326;
-			ushort ElfMale = 334;
-			ushort ElfFemale = 342;
-			ushort SharMale = 1075;
-			ushort SharFemale = 1087;
-			ushort SylvianMale = 700;
-			ushort SylvianFemale = 708;
-			#endregion
 
 			switch ((eRealm)guard.Realm)
 			{

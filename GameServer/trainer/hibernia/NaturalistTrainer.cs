@@ -28,6 +28,11 @@ namespace DOL.GS.Trainer
 	[NPCGuildScript("Naturalist Trainer", eRealm.Hibernia)]		// this attribute instructs DOL to use this script for all "Naturalist Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class NaturalistTrainer : GameTrainer
 	{
+		public override eCharacterClass TrainedClass
+		{
+			get { return eCharacterClass.Naturalist; }
+		}
+
 		public const string PRACTICE_WEAPON_ID = "training_club";
 		public const string PRACTICE_SHIELD_ID = "training_shield";
 
