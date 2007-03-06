@@ -800,6 +800,7 @@ namespace DOL.GS
 			{
 				GameNPC npc = (GameNPC)m_actionSource;
 				npc.m_arriveAtTargetAction = null;
+				npc.StopMoving();
 				npc.Notify(GameNPCEvent.ArriveAtTarget, npc);
 			}
 		}
@@ -844,6 +845,9 @@ namespace DOL.GS
 		{
 			if (IsTurningDisabled)
 				return; // can't walk when turning is disabled
+
+			if (IsMoving)
+				StopMoving();
 
 			//Slow mobs down when they are hurt!
 			int maxSpeed = MaxSpeed;
@@ -2926,7 +2930,7 @@ namespace DOL.GS
 				foreach (Spell spell in this.Spells)
 				{
 					if (spell.CastTime == 0) continue;
-					if (spell.SpellType == "DirectDamage" || spell.SpellType == "Lifedrain")
+					if (spell.Damage > 0)
 					{
 						this.TargetObject = attackTarget;
 
@@ -3016,7 +3020,8 @@ namespace DOL.GS
 			}
 
 			//we allow spells that inherit from directdamage only to repeat
-			if (typeof(DirectDamageSpellHandler).IsInstanceOfType(handler) == false)
+			//if (typeof(DirectDamageSpellHandler).IsInstanceOfType(handler) == false)
+			if (handler.Spell.Damage <= 0)
 			{
 				StopSpellAttack();
 				return;

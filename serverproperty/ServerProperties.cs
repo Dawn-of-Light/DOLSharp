@@ -284,6 +284,12 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("disable_bug_reports", "Set to false to disable bug reporting, and true to enable bug reporting", false)]
 		public static readonly bool DISABLE_BUG_REPORTS;
+
+		/// <summary>
+		/// Use Custom Start Locations
+		/// </summary>
+		[ServerProperty("use_custom_start_locations", "Set to true if you will use another script to set your start locations", false)]
+		public static readonly bool USE_CUSTOM_START_LOCATIONS;
 		
 		/// <summary>
 		/// This method loads the property from the database and returns

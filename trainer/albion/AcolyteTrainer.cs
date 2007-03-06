@@ -28,6 +28,11 @@ namespace DOL.GS.Trainer
 	[NPCGuildScript("Acolyte Trainer", eRealm.Albion)]		// this attribute instructs DOL to use this script for all "Acolyte Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class AcolyteTrainer : GameTrainer
 	{
+		public override eCharacterClass TrainedClass
+		{
+			get { return eCharacterClass.Acolyte; }
+		}
+
 		public const string PRACTICE_WEAPON_ID = "training_mace";
 		public const string PRACTICE_SHIELD_ID = "small_training_shield";
 

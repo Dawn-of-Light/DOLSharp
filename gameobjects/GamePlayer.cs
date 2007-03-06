@@ -323,7 +323,7 @@ namespace DOL.GS
 				{
 					if (secondsleft == 15 || secondsleft == 10 || secondsleft == 5)
 					{
-						Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Quit.YouWillQuit", secondsleft), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+						Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Quit.YouWillQuit1", secondsleft), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 					}
 					return 1000;
 				}
@@ -595,7 +595,7 @@ namespace DOL.GS
 
 				if (secondsleft > 20)
 					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Quit.RecentlyInCombat"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Quit.YouWillQuit", secondsleft), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Quit.YouWillQuit2", secondsleft), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 			else
 			{
@@ -3734,7 +3734,7 @@ namespace DOL.GS
 		/// <param name="allowMultiply">should the xp amount be multiplied</param>
 		public override void GainExperience(long expTotal, long expCampBonus, long expGroupBonus, long expOutpostBonus, bool sendMessage, bool allowMultiply)
 		{
-			if (!GainXP)
+			if (!GainXP && expTotal > 0)
 				return;
 
 			//xp rate modifier
@@ -5438,8 +5438,12 @@ namespace DOL.GS
 				(weapon.SlotPosition == (int)eInventorySlot.DistanceWeapon
 					? CharacterClass.WeaponSkillRangedBase
 					: CharacterClass.WeaponSkillBase);
-			return ((Level * classbase * 0.02 * (1 + (GetWeaponStat(weapon) - 50) * 0.005)) * PlayerEffectiveness);
-			//return Math.Max(0, unbuffed * GetModified(eProperty.WeaponSkill) * 0.01);
+
+			//added for WS Poisons
+			double preBuff = ((Level * classbase * 0.02 * (1 + (GetWeaponStat(weapon) - 50) * 0.005)) * PlayerEffectiveness);
+
+			//return ((Level * classbase * 0.02 * (1 + (GetWeaponStat(weapon) - 50) * 0.005)) * PlayerEffectiveness);
+			return Math.Max(0, preBuff * GetModified(eProperty.WeaponSkill) * 0.01);
 		}
 
 		/// <summary>

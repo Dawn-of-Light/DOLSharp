@@ -28,6 +28,11 @@ namespace DOL.GS.Trainer
 	[NPCGuildScript("Mage Trainer", eRealm.Albion)]		// this attribute instructs DOL to use this script for all "Mage Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class MageTrainer : GameTrainer
 	{
+		public override eCharacterClass TrainedClass
+		{
+			get { return eCharacterClass.Mage; }
+		}
+
 		public const string PRACTICE_WEAPON_ID = "trimmed_branch";
 		
 		public MageTrainer() : base()

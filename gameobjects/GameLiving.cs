@@ -2459,7 +2459,10 @@ namespace DOL.GS
 			// cancel engage effect if exist
 			EngageEffect effect = (EngageEffect)EffectList.GetOfType(typeof(EngageEffect));
 			if (effect != null && effect.EngageSource == this)
-				effect.Cancel(false);
+			{
+				return;
+				//effect.Cancel(false);
+			}
 
 			InventoryItem weapon = AttackWeapon;
 			int speed = AttackSpeed(weapon);

@@ -27,6 +27,11 @@ namespace DOL.GS.Trainer
 	[NPCGuildScript("Mentalist Trainer", eRealm.Hibernia)]		// this attribute instructs DOL to use this script for all "Mentalist Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class MentalistTrainer : GameTrainer
 	{
+		public override eCharacterClass TrainedClass
+		{
+			get { return eCharacterClass.Mentalist; }
+		}
+
 		public const string WEAPON_ID1 = "mentalist_item";
 
 		public MentalistTrainer() : base()
@@ -68,7 +73,7 @@ namespace DOL.GS.Trainer
 		/// </summary>
 		/// <param name="player"></param>
 		/// <returns></returns>
-		public bool CanPromotePlayer(GamePlayer player) 
+		public override bool CanPromotePlayer(GamePlayer player) 
 		{
 			return (player.Level>=5 && player.CharacterClass.ID == (int) eCharacterClass.Magician && (player.Race == (int) eRace.Celt || player.Race == (int) eRace.Elf
 				|| player.Race == (int) eRace.Lurikeen || player.Race == (int) eRace.Shar));

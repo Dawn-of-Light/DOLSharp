@@ -28,6 +28,11 @@ namespace DOL.GS.Trainer
 	[NPCGuildScript("Rogue Trainer", eRealm.Midgard)]		// this attribute instructs DOL to use this script for all "Rogue Trainer" NPC's in Midgard (multiple guilds are possible for one script)
 	public class MidgardRogueTrainer : GameTrainer
 	{
+		public override eCharacterClass TrainedClass
+		{
+			get { return eCharacterClass.MidgardRogue; }
+		}
+
 		public const string PRACTICE_WEAPON_ID = "training_sword_mid";
 		
 		public MidgardRogueTrainer() : base()

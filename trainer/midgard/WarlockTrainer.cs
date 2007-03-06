@@ -27,9 +27,9 @@ namespace DOL.GS.Trainer
 	[NPCGuildScript("Warlock Trainer", eRealm.Midgard)]		// this attribute instructs DOL to use this script for all "Warlock Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class WarlockTrainer : GameTrainer
 	{
-		public WarlockTrainer()
-			: base()
+		public override eCharacterClass TrainedClass
 		{
+			get { return eCharacterClass.Warlock; }
 		}
 
 		/// <summary>
@@ -70,7 +70,7 @@ namespace DOL.GS.Trainer
 		/// </summary>
 		/// <param name="player"></param>
 		/// <returns></returns>
-		public bool CanPromotePlayer(GamePlayer player)
+		public override bool CanPromotePlayer(GamePlayer player)
 		{
 			return (player.Level >= 5 && player.CharacterClass.ID == (int)eCharacterClass.Mystic && (player.Race == (int)eRace.Frostalf || player.Race == (int)eRace.Norseman
 				|| player.Race == (int)eRace.Kobold));

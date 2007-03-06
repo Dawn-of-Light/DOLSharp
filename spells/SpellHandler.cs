@@ -218,6 +218,11 @@ namespace DOL.GS.Spells
 				((GamePlayer)Caster).Stealth(false);
 			}
 
+			// cancel engage effect if exist
+			EngageEffect effect = (EngageEffect)Caster.EffectList.GetOfType(typeof(EngageEffect));
+			if (effect != null)
+				effect.Cancel(false);
+
 			m_interrupted = false;
 			GameLiving target = Caster.TargetObject as GameLiving;
 

@@ -93,7 +93,7 @@ namespace DOL.GS.RealmAbilities
 	public class MasteryOfHealingAbility : RAPropertyEnhancer
 	{
 		public MasteryOfHealingAbility(DBAbility dba, int level)
-			: base(dba, level, eProperty.Undefined)
+			: base(dba, level, eProperty.HealingEffectiveness)
 		{
 		}
 

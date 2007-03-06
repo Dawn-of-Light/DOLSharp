@@ -28,6 +28,11 @@ namespace DOL.GS.Trainer
 	[NPCGuildScript("Guardian Trainer", eRealm.Hibernia)]		// this attribute instructs DOL to use this script for all "Guardian Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class GuardianTrainer : GameTrainer
 	{
+		public override eCharacterClass TrainedClass
+		{
+			get { return eCharacterClass.Guardian; }
+		}
+
 		public const string PRACTICE_WEAPON_ID = "training_sword_hib";
 		public const string PRACTICE_SHIELD_ID = "training_shield";
 

@@ -21,6 +21,7 @@ using System.Collections;
 using DOL.GS;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
+using DOL.GS.SkillHandler;
 
 namespace DOL.GS.Spells
 {
@@ -33,33 +34,22 @@ namespace DOL.GS.Spells
 
 		public override bool CheckBeginCast(GameLiving selectedTarget)
 		{
-			if (m_caster.Mana < CalculateNeededPower(selectedTarget))
+			if (!SavageAbilities.SavagePreFireChecks((GamePlayer)m_caster))
+				return false;
+
+			if (!SavageAbilities.CanUseSavageAbility(((GamePlayer)m_caster), m_spell.Power))
 			{
-				if (!HasEnoughHealth())
-				{
-					MessageToCaster("You don't have enough health to use this spell!", eChatType.CT_Spell);
-					return false;
-				}
-				else if (m_caster.Endurance == m_caster.MaxEndurance)
-				{
-					MessageToCaster("You already have full endurance!", eChatType.CT_Spell);
-					return false;
-				}
-				else
-					return true;
+				MessageToCaster("You don't have enought health to cast this spell!", eChatType.CT_SpellResisted);
+				return false;
 			}
 
-
+			if (m_caster.Endurance == m_caster.MaxEndurance)
+			{
+				MessageToCaster("You already have full endurance!", eChatType.CT_Spell);
+				return false;
+			}
 
 			return base.CheckBeginCast(selectedTarget);
-		}
-
-		protected virtual bool HasEnoughHealth()
-		{
-			int HealthLost = Convert.ToInt32(m_caster.MaxHealth * (Spell.Power * 0.01));
-			if (m_caster.Health <= HealthLost)
-				return false;
-			return true;
 		}
 
 		/// <summary>

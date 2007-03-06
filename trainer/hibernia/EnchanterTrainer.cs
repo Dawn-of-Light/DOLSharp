@@ -27,6 +27,11 @@ namespace DOL.GS.Trainer
 	[NPCGuildScript("Enchanter Trainer", eRealm.Hibernia)]		// this attribute instructs DOL to use this script for all "Enchanter Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class EnchanterTrainer : GameTrainer
 	{
+		public override eCharacterClass TrainedClass
+		{
+			get { return eCharacterClass.Enchanter; }
+		}
+
 		public const string WEAPON_ID1 = "enchanter_item";
 
 		public EnchanterTrainer() : base()
@@ -68,7 +73,7 @@ namespace DOL.GS.Trainer
 		/// </summary>
 		/// <param name="player"></param>
 		/// <returns></returns>
-		public bool CanPromotePlayer(GamePlayer player) 
+		public override bool CanPromotePlayer(GamePlayer player) 
 		{
 			return (player.Level>=5 && player.CharacterClass.ID == (int) eCharacterClass.Magician && (player.Race == (int) eRace.Elf || player.Race == (int) eRace.Lurikeen));
 		}

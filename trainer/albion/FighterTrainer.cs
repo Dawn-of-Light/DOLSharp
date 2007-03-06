@@ -28,6 +28,11 @@ namespace DOL.GS.Trainer
 	[NPCGuildScript("Fighter Trainer", eRealm.Albion)]		// this attribute instructs DOL to use this script for all "Fighter Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class FighterTrainer : GameTrainer
 	{
+		public override eCharacterClass TrainedClass
+		{
+			get { return eCharacterClass.Fighter; }
+		}
+
 		/// <summary>
 		/// The practice weapon template ID
 		/// </summary>

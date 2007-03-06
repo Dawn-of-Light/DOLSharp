@@ -59,8 +59,8 @@ namespace DOL.GS.SkillHandler
 			}
 
 			//Cancel old engage effects on player
-			EngageEffect engage = (EngageEffect) player.EffectList.GetOfType(typeof(EngageEffect));
-			if (engage!=null)
+			EngageEffect engage = (EngageEffect)player.EffectList.GetOfType(typeof(EngageEffect));
+			if (engage != null)
 			{
 				engage.Cancel(false);
 				return;
@@ -86,25 +86,25 @@ namespace DOL.GS.SkillHandler
 
 			GameLiving target = player.TargetObject as GameLiving;
 			if (target == null)
-			{				
+			{
 				player.Out.SendMessage("You can only engage mobs hostile to you.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
 			// You cannot engage a mob that was attacked within the last 5 seconds...
-			if (target.LastAttackedByEnemyTick > target.CurrentRegion.Time - EngageAbilityHandler.ENGAGE_ATTACK_DELAY_TICK) 
+			if (target.LastAttackedByEnemyTick > target.CurrentRegion.Time - EngageAbilityHandler.ENGAGE_ATTACK_DELAY_TICK)
 			{
-				player.Out.SendMessage(target.GetName(0,true)+" has been attacked recently and you are unable to engage.", eChatType.CT_System, eChatLoc.CL_SystemWindow);	
+				player.Out.SendMessage(target.GetName(0, true) + " has been attacked recently and you are unable to engage.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
-			if (!GameServer.ServerRules.IsAllowedToAttack(player,target,true))
+			if (!GameServer.ServerRules.IsAllowedToAttack(player, target, true))
 			{
-				player.Out.SendMessage("You are not allowed to engage "+target.GetName(0,false), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage("You are not allowed to engage " + target.GetName(0, false), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
-			}	
+			}
 
 			new EngageEffect().Start(player, target);
-		}                       
-    }
+		}
+	}
 }

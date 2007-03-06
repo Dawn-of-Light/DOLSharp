@@ -27,6 +27,11 @@ namespace DOL.GS.Trainer
 	[NPCGuildScript("Theurgist Trainer", eRealm.Albion)]		// this attribute instructs DOL to use this script for all "Theurgist Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class TheurgistTrainer : GameTrainer
 	{
+		public override eCharacterClass TrainedClass
+		{
+			get { return eCharacterClass.Theurgist; }
+		}
+
 		public const string WEAPON_ID = "theurgist_item";
 
 		public TheurgistTrainer() : base()
@@ -65,7 +70,7 @@ namespace DOL.GS.Trainer
 		/// </summary>
 		/// <param name="player"></param>
 		/// <returns></returns>
-		public bool CanPromotePlayer(GamePlayer player)
+		public override bool CanPromotePlayer(GamePlayer player)
 		{
 			return (player.Level>=5 && player.CharacterClass.ID == (int) eCharacterClass.Elementalist && (player.Race == (int) eRace.Briton
 				|| player.Race == (int) eRace.Avalonian || player.Race == (int) eRace.HalfOgre));
