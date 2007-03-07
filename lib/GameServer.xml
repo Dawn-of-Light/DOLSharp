@@ -21144,22 +21144,6 @@
             Updates changed effects to the owner.
             </summary>
         </member>
-        <member name="T:DOL.GS.DatabaseConverters.Version005">
-            <summary>
-            Converts the database format to the version 5
-            </summary>
-        </member>
-        <member name="F:DOL.GS.DatabaseConverters.Version005.log">
-            <summary>
-            Defines a logger for this class.
-            </summary>
-        </member>
-        <member name="M:DOL.GS.DatabaseConverters.Version005.ConvertDatabase">
-            <summary>
-            This convert updates all old tables layouts to new ones
-            This is useful because of the introduced archive tables
-            </summary>
-        </member>
         <member name="T:DOL.GS.Trainer.SeerTrainer">
             <summary>
             Seer Trainer
