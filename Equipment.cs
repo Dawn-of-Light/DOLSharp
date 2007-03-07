@@ -8808,7 +8808,7 @@ namespace DOL.GS.Scripts
 			if (player.Level < 50)
 				SendReply(player, "Please come back when you are level 50");
 			else SendReply(player, "Hello! " + player.Name + ", Are you interested in your [Armour] your [Weapons]\n " +
-				"Your [Horse] or your [Cloak]?");
+				"Your [Cloak]?");
 			return true;
 		}
 		#endregion Base Interact
@@ -8822,13 +8822,14 @@ namespace DOL.GS.Scripts
 			GamePlayer player = (GamePlayer)source;
 			switch (str)
 			{
+					/*
 				#region Horse
 				case "Horse":
 					{
 						GiveItem(player, EpicMount);
 					}
 					break;
-				#endregion Horse
+				#endregion Horse*/
 				#region Armour
 				case "Armour":
 					{
