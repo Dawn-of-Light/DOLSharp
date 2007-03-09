@@ -358,24 +358,27 @@ namespace DOL.GS.Quests
 			}
 		}
 
-		protected static ItemTemplate CreateTicketTo(String t_Name, String t_Id)
+		protected static ItemTemplate CreateTicketTo(String location)
 		{
-			ItemTemplate ticket = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), GameServer.Database.Escape(t_Id.ToLower()));
-
+			ItemTemplate ticket = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ticket_to_" + GameServer.Database.Escape(location.ToLower()));
 			if (ticket == null)
 			{
 				if (log.IsWarnEnabled)
-					log.Warn("Could not find " + t_Name + ", creating it ...");
-
+					log.Warn("Could not find " + location + ", creating it ...");
 				ticket = new ItemTemplate();
-				ticket.Name = t_Name;
+				ticket.Name = "ticket to " + location;
+
 				ticket.Weight = 0;
 				ticket.Model = 498;
+
 				ticket.Object_Type = (int)eObjectType.GenericItem;
 				ticket.Item_Type = 40;
-				ticket.Id_nb = t_Id.ToLower();
+
+				ticket.Id_nb = "ticket_to_" + location.ToLower();
+
 				ticket.IsPickable = true;
 				ticket.IsDropable = true;
+
 				ticket.Gold = 0;
 				ticket.Silver = 5;
 				ticket.Copper = 3;
@@ -384,13 +387,44 @@ namespace DOL.GS.Quests
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-
 				GameServer.Database.AddNewObject(ticket);
-
 			}
 			return ticket;
 		}
 
+		protected static ItemTemplate CreateTicketTo(String destination, String ticket_Id)
+		{
+			ItemTemplate ticket = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), GameServer.Database.Escape(ticket_Id.ToLower()));
+			if (ticket == null)
+			{
+				if (log.IsWarnEnabled)
+					log.Warn("Could not find " + destination + ", creating it ...");
+
+				ticket = new ItemTemplate();
+				ticket.Name = "ticket to " + destination;
+
+				ticket.Id_nb = ticket_Id.ToLower();
+
+				ticket.Model = 499;
+
+				ticket.Object_Type = (int)eObjectType.GenericItem;
+				ticket.Item_Type = 40;
+
+				ticket.IsPickable = true;
+				ticket.IsDropable = true;
+
+				ticket.Gold = 0;
+				ticket.Silver = 5;
+				ticket.Copper = 0;
+
+				ticket.PackSize = 1;
+				ticket.Weight = 0;
+
+				if (SAVE_INTO_DATABASE)
+					GameServer.Database.AddNewObject(ticket);
+			}
+			return ticket;
+		}
 
 		//timer callbacks
 		protected virtual int MakeAnimSpellSequence(RegionTimer callingTimer)
