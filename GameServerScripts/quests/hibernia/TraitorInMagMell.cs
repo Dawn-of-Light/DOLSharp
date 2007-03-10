@@ -53,7 +53,7 @@ namespace DOL.GS.Quests.Hibernia
 	 * 	 
 	 */
 
-	public class TraitorInMagMell : BaseAddirQuest
+	public class TraitorInMagMell : BaseAddrirQuest
 	{
 		/// <summary>
 		/// Defines a logger for this class.

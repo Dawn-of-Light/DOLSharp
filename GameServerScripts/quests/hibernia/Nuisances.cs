@@ -52,7 +52,7 @@ namespace DOL.GS.Quests.Hibernia
 	 * 	 
 	 */
 
-	public class Nuisances : BaseAddirQuest
+	public class Nuisances : BaseAddrirQuest
 	{
 		/// <summary>
 		/// Defines a logger for this class.
