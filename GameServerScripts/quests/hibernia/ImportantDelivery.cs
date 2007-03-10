@@ -54,7 +54,7 @@ namespace DOL.GS.Quests.Hibernia
 	 * 	 
 	 */
 
-	public class ImportantDelivery : BaseAddirQuest
+	public class ImportantDelivery : BaseAddrirQuest
 	{
 		/// <summary>
 		/// Defines a logger for this class.

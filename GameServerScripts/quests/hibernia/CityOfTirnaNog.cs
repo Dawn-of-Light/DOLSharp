@@ -54,7 +54,7 @@ namespace DOL.GS.Quests.Hibernia
 	 * 	 
 	 */
 
-	public class CityOfTirnaNog : BaseAddirQuest
+	public class CityOfTirnaNog : BaseAddrirQuest
 	{
 		/// <summary>
 		/// Defines a logger for this class.
