@@ -20,6 +20,7 @@ using System;
 using System.Reflection;
 using DOL.Database;
 using DOL.Events;
+using DOL.Language;
 using DOL.GS.Movement;
 using DOL.GS.PacketHandler;
 using log4net;
@@ -61,18 +62,20 @@ namespace DOL.GS
 
 				if (item.Name.ToLower().StartsWith("ticket to ") && item.Item_Type==40)
 				{
-					//String destination = item.Name.Substring(10);
-					String destination = item.Name.Substring(item.Name.IndexOf(" to "));
+					String destination = item.Name.Substring(10);
+//					String destination = item.Name.Substring(item.Name.IndexOf(" to "));
 					//PathPoint path = MovementMgr.Instance.LoadPath(this.Name+"=>"+destination);
 					PathPoint path = MovementMgr.Instance.LoadPath(item.Id_nb);
-					if (path != null)
+
+					if ((path != null) && ((Math.Abs(path.X - this.X)) < 500) && ((Math.Abs(path.Y - this.Y)) < 500))
 					{	
 						player.Inventory.RemoveCountFromStack(item, 1);
 
 						GameHorse horse = new GameHorse();
 						foreach (GameNPC npc in GetNPCsInRadius(400))
 						{ // Allow for SI mounts -Echostorm
-							if (npc.Name == "horse" || npc.Name == "Dragon Fly" || npc.Name == "Ampheretere" || npc.Name == "Gryphon")
+							if (npc.Name == LanguageMgr.GetTranslation(player.Client, "GameStableMaster.HorseName")
+								|| npc.Name == "Dragon Fly" || npc.Name == "Ampheretere" || npc.Name == "Gryphon")
 							{
 								horse.Model = npc.Model;
 								horse.Size = npc.Size;
@@ -97,7 +100,7 @@ namespace DOL.GS
 					}
 					else
 					{
-						player.Out.SendMessage("My horse doesn't know the way to " + destination + " yet.", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameStableMaster.UnknownWay", destination), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}
 				}
 			}
