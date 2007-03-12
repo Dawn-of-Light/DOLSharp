@@ -19,6 +19,10 @@ System.NoSense:						That would make no sense!
 System.MustSelectTarget:				You must select a target!
 System.ReleaseTimer:					Release Timer
 
+# GAMELIVING
+GameLiving.ReceiveItem:					{0} doesn't want this item!
+GameLiving.ReceiveMoney:				{0} doesn't want your money!
+
 # GAMEPLAYER
 GamePlayer.Attack.AlreadyDead:				{0} is already dead!
 GamePlayer.Attack.Blocked:				{0} blocks your attack!
