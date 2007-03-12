@@ -25,6 +25,7 @@ using System.Reflection;
 using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
+using DOL.Language;
 using DOL.GS.Effects;
 using DOL.GS.Keeps;
 using DOL.GS.PacketHandler;
@@ -4741,7 +4742,7 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 			}
 
 			if (source is GamePlayer)
-				((GamePlayer)source).Out.SendMessage(Name + " doesn't want this item!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				((GamePlayer)source).Out.SendMessage(LanguageMgr.GetTranslation(((GamePlayer)source).Client, "GameLiving.ReceiveItem", Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 			return base.ReceiveItem(source, item);
 		}
@@ -4760,7 +4761,7 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 			Notify(GameLivingEvent.ReceiveMoney, this, new ReceiveMoneyEventArgs(source, this, money));
 
 			if (source is GamePlayer)
-				((GamePlayer)source).Out.SendMessage(Name + " doesn't want your money!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				((GamePlayer)source).Out.SendMessage(LanguageMgr.GetTranslation(((GamePlayer)source).Client, "GameLiving.ReceiveMoney", Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 			//call base
 			return base.ReceiveMoney(source, money);
