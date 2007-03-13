@@ -53,7 +53,7 @@ namespace DOL.GS.Quests.Hibernia
 	 * 	 
 	 */
 
-	public abstract class BaseAddirQuest : BaseQuest
+	public abstract class BaseAddrirQuest : BaseQuest
 	{
 		/// <summary>
 		/// Defines a logger for this class.
@@ -73,19 +73,19 @@ namespace DOL.GS.Quests.Hibernia
 		/* We need to define the constructors from the base class here, else there might be problems
 		 * when loading this quest...
 		 */
-		public BaseAddirQuest() : base()
+		public BaseAddrirQuest() : base()
 		{
 		}
 
-		public BaseAddirQuest(GamePlayer questingPlayer) : base(questingPlayer)
+		public BaseAddrirQuest(GamePlayer questingPlayer) : base(questingPlayer)
 		{
 		}
 
-		public BaseAddirQuest(GamePlayer questingPlayer, int step) : base(questingPlayer, step)
+		public BaseAddrirQuest(GamePlayer questingPlayer, int step) : base(questingPlayer, step)
 		{
 		}
 
-		public BaseAddirQuest(GamePlayer questingPlayer, DBQuest dbQuest) : base(questingPlayer, dbQuest)
+		public BaseAddrirQuest(GamePlayer questingPlayer, DBQuest dbQuest) : base(questingPlayer, dbQuest)
 		{
 		}
 

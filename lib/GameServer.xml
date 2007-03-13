@@ -34646,5 +34646,10 @@
             Attack only on order
             </summary>
         </member>
+        <member name="T:DOL.GS.Keeps.MissionMaster">
+            <summary>
+            Represents a mission master
+            </summary>
+        </member>
     </members>
 </doc>
