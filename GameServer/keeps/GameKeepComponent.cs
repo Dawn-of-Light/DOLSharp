@@ -364,10 +364,7 @@ namespace DOL.GS.Keeps
 							else
 							{
 								IKeepItem guard = this.Keep.Guards[position.TemplateID] as IKeepItem;
-								if (guard.Position != position)
-								{
-									guard.MoveToPosition(position);
-								}
+								guard.MoveToPosition(position);
 							}
 						}
 						break;
@@ -438,7 +435,7 @@ namespace DOL.GS.Keeps
 		/// <summary>
 		/// broadcast life of keep component
 		/// </summary>
-		public override void  TakeDamage(GameObject source, eDamageType damageType, int damageAmount, int criticalAmount)
+		public override void TakeDamage(GameObject source, eDamageType damageType, int damageAmount, int criticalAmount)
 		{
 			this.Keep.LastAttackedByEnemyTick = this.CurrentRegion.Time;
 			base.TakeDamage(source, damageType, damageAmount, criticalAmount);
@@ -582,6 +579,14 @@ namespace DOL.GS.Keeps
 					client.Out.SendKeepComponentDetailUpdate(this);
 				}
 			}
+
+			//if a tower is repaired reload the guards so they arent on the floor
+			if (Keep is GameKeepTower && oldStatus == 0x02 && oldStatus != Status)
+			{
+				foreach (GameKeepComponent component in Keep.KeepComponents)
+					component.FillPositions();
+			}
+
 			RepairedHealth = Health;
 		}
 

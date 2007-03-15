@@ -32,9 +32,9 @@ namespace DOL.GS.RealmAbilities
 			if (level >= 3)
 				amount += 12;
 			if (level >= 4)
-				amount += 17;
+				amount += 18;
 			if (level >= 5)
-				amount += 28;
+				amount += 17;
 			return amount;
 		}
 	}

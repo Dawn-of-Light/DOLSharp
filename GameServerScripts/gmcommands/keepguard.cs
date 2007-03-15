@@ -108,6 +108,11 @@ namespace DOL.GS.Scripts
 									guard = new FrontierHastener();
 									break;
 								}
+							case "mission":
+								{
+									guard = new MissionMaster();
+									break;
+								}
 						}
 						if (guard == null)
 						{

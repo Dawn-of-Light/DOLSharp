@@ -787,32 +787,44 @@ namespace DOL.GS
 		/// <param name="forced">if true, will release even if not dead</param>
 		public virtual void Release(eReleaseType releaseCommand, bool forced)
 		{
-			if ((Level > 30 && m_character.BindRegion == 239) ||
-				(Level > 40 && m_character.BindRegion == 240))
+			//battlegrounds caps
+			foreach (AbstractGameKeep keep in KeepMgr.GetKeepsOfRegion(CurrentRegionID))
 			{
-				switch (Realm)
+				if (keep.BaseLevel < 50 && Level > keep.BaseLevel)
 				{
-					case 1: m_character.BindRegion = 1;
-						m_character.BindXpos = 560372;
-						m_character.BindYpos = 511823;
-						m_character.BindZpos = 2280;
-						m_character.BindHeading = 3006;
-						break;
-					case 2: m_character.BindRegion = 100;
-						m_character.BindXpos = 804577;
-						m_character.BindYpos = 723946;
-						m_character.BindZpos = 4680;
-						m_character.BindHeading = 3580;
-						break;
-					case 3: m_character.BindHeading = 200;
-						m_character.BindXpos = 345869;
-						m_character.BindYpos = 490556;
-						m_character.BindZpos = 5200;
-						m_character.BindHeading = 756;
-						break;
+					switch (Realm)
+					{
+						case 1:
+							{
+								m_character.BindRegion = 1;
+								m_character.BindXpos = 560372;
+								m_character.BindYpos = 511823;
+								m_character.BindZpos = 2280;
+								m_character.BindHeading = 3006;
+								break;
+							}
+						case 2:
+							{
+								m_character.BindRegion = 100;
+								m_character.BindXpos = 804577;
+								m_character.BindYpos = 723946;
+								m_character.BindZpos = 4680;
+								m_character.BindHeading = 3580;
+								break;
+							}
+						case 3:
+							{
+								m_character.BindHeading = 200;
+								m_character.BindXpos = 345869;
+								m_character.BindYpos = 490556;
+								m_character.BindZpos = 5200;
+								m_character.BindHeading = 756;
+								break;
+							}
+					}
+					break;
 				}
 			}
-
 
 			if (IsAlive)
 			{
@@ -904,137 +916,66 @@ namespace DOL.GS
 					{
 						switch (CurrentRegionID)
 						{
-								/*
-								//bg1-4
+							//battlegrounds
 							case 234:
-								{
-									break;
-								}
-								//bg5-9
 							case 235:
-								{
-									break;
-								}
-								//bg10-14
 							case 236:
-								{
-									break;
-								}
-								//bg15-19
 							case 237:
-								{
-									break;
-								}
-								//bg20-24
 							case 238:
-								{
-									break;
-								}
-								//bg25-29*/
 							case 239:
-								{
-									if (Realm == 1 && Level < 31)
-									{
-										relRegion = 239;
-										relX = 554286;
-										relY = 585101;
-										relZ = 6952;
-										relHeading = 2054;
-										break;
-									}
-									else if (Realm == 2 && Level < 31)
-									{
-										relRegion = 239;
-										relX = 581962;
-										relY = 538463;
-										relZ = 6776;
-										relHeading = 1020;
-										break;
-									}
-									else if (Realm == 3 && Level < 31)
-									{
-										relRegion = 239;
-										relX = 533554;
-										relY = 533948;
-										relZ = 6768;
-										relHeading = 3432;
-										break;
-									}
-									relRegion = (ushort)m_character.BindRegion;
-									relX = m_character.BindXpos;
-									relY = m_character.BindYpos;
-									relZ = m_character.BindZpos;
-									relHeading = (ushort)m_character.BindHeading;
-									break;
-								}
-								//bg30-34
 							case 240:
-								{
-									if (Realm == 1 && Level < 41)
-									{
-										relRegion = 240;
-										relX = 554459;
-										relY = 583463;
-										relZ = 6952;
-										relHeading = 2043;
-										break;
-									}
-									else if (Realm == 2 && Level < 41)
-									{
-										relRegion = 240;
-										relX = 533983;
-										relY = 535384;
-										relZ = 6728;
-										relHeading = 3585;
-										break;
-									}
-									else if (Realm == 3 && Level < 41)
-									{
-										relRegion = 240;
-										relX = 580495;
-										relY = 538801;
-										relZ = 6736;
-										relHeading = 518;
-										break;
-									}
-									relRegion = (ushort)m_character.BindRegion;
-									relX = m_character.BindXpos;
-									relY = m_character.BindYpos;
-									relZ = m_character.BindZpos;
-									relHeading = (ushort)m_character.BindHeading;
-									break;
-								}/*
-								//bg 35-39
 							case 241:
-								{
-									break;
-								}
-								//bg 40-45
 							case 242:
 								{
+									//get the bg cap
+									byte cap = 50;
+									foreach (AbstractGameKeep keep in KeepMgr.GetKeepsOfRegion(CurrentRegionID))
+									{
+										if (keep.BaseLevel < cap)
+										{
+											cap = keep.BaseLevel;
+											break;
+										}
+									}
+									//get the portal location
+									foreach (AbstractGameKeep keep in KeepMgr.GetKeepsOfRegion(CurrentRegionID))
+									{
+										if (keep.BaseLevel > 50 && keep.Realm == Realm)
+										{
+											relRegion = (ushort)keep.Region;
+											relX = keep.X;
+											relY = keep.Y;
+											relZ = keep.Z;
+											break;
+										}
+									}
 									break;
-								}*/
+								}
 								//nf
 							case 163:
 								{
 									if (m_character.BindRegion != 163)
 									{
 										relRegion = 163;
-										if (Realm == 1)
+										switch (Realm)
 										{
-											KeepMgr.GetBorderKeepLocation(1, out relX, out relY, out relZ, out relHeading);
-											break;
+											case 1:
+												{
+													KeepMgr.GetBorderKeepLocation(1, out relX, out relY, out relZ, out relHeading);
+													break;
+												}
+											case 2:
+												{
+													KeepMgr.GetBorderKeepLocation(3, out relX, out relY, out relZ, out relHeading);
+													break;
+												}
+											case 3:
+												{
+													KeepMgr.GetBorderKeepLocation(5, out relX, out relY, out relZ, out relHeading);
+													break;
+												}
 										}
-										else if (Realm == 2)
-										{
-											KeepMgr.GetBorderKeepLocation(3, out relX, out relY, out relZ, out relHeading);
-											break;
-										}
-										else if (Realm == 3)
-										{
-											KeepMgr.GetBorderKeepLocation(5, out relX, out relY, out relZ, out relHeading);
-											break;
-										}
+										break;
 									}
 									else
 									{

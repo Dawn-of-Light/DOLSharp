@@ -70,11 +70,14 @@ namespace DOL.GS.Keeps
 			}
 		}
 
-		public FrontiersPortalStone()
-			: base()
+		public override string Name
 		{
-			m_Model = 2603;
-			m_Name = "Frontiers Portal Stone";
+			get { return "Frontiers Portal Stone"; }
+		}
+
+		public override ushort Model
+		{
+			get { return 2603; }
 		}
 
 		public override bool Interact(GamePlayer player)
@@ -124,6 +127,7 @@ namespace DOL.GS.Keeps
 				m_flags = (uint)GameNPC.eFlags.PEACE + (uint)GameNPC.eFlags.DONTSHOWNAME;
 				m_size = 255;
 				m_Model = 0x783;
+				m_maxSpeedBase = 0;
 			}
 		}
 
@@ -141,6 +145,7 @@ namespace DOL.GS.Keeps
 			mob.Z = this.Z;
 			mob.Heading = this.Heading;
 			mob.Health = mob.MaxHealth;
+			mob.MaxSpeedBase = 0;
 			if (mob.AddToWorld())
 				sfx = mob;
 			return true;
