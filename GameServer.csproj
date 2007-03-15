@@ -554,6 +554,7 @@
     <Compile Include="keeps\Gameobjects\FrontiersPortalStone.cs" />
     <Compile Include="keeps\Gameobjects\Guards\Archer.cs" />
     <Compile Include="keeps\Gameobjects\Guards\Caster.cs" />
+    <Compile Include="keeps\Gameobjects\Guards\MissionMaster.cs" />
     <Compile Include="keeps\Gameobjects\Guards\Fighter.cs" />
     <Compile Include="keeps\Gameobjects\Guards\Hastener.cs" />
     <Compile Include="keeps\Gameobjects\Guards\Healer.cs" />

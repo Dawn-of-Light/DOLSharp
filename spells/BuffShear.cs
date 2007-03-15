@@ -153,7 +153,7 @@ namespace DOL.GS.Spells
 			//check for spell.
 			foreach(GameSpellEffect effect in target.EffectList.GetAllOfType(typeof(GameSpellEffect)))
 			{
-				if (effect.Spell.SpellType == ShearSpellType && effect.Spell.Concentration > 0)
+				if (effect.Spell.SpellType == ShearSpellType)
 				{
 					if (effect.Owner == effect.SpellHandler.Caster || effect.Spell.Value > Spell.Value)
 					{

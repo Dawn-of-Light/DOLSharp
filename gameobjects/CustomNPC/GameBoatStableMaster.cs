@@ -52,7 +52,7 @@ namespace DOL.GS
 			{
 				GamePlayer player = (GamePlayer)source;
 
-				if (item.Name.ToLower().StartsWith("ticket: ") && item.Item_Type == 40)
+				if (item.Name.ToLower().StartsWith("ticket to ") && item.Item_Type == 40)
 				{
 					foreach (GameNPC npc in GetNPCsInRadius(1500))
 					{
