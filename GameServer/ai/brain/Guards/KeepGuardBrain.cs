@@ -64,6 +64,8 @@ namespace DOL.AI.Brain
 		/// </summary>
 		protected override void CheckPlayerAggro()
 		{
+			if (Body is MissionMaster)
+				return;
 			if (Body.AttackState || Body.CurrentSpellHandler != null)
 				return;
 			foreach (GamePlayer player in Body.GetPlayersInRadius((ushort)AggroRange))
@@ -87,6 +89,8 @@ namespace DOL.AI.Brain
 		/// </summary>
 		protected override void CheckNPCAggro()
 		{
+			if (Body is MissionMaster)
+				return;
 			if (Body.AttackState || Body.CurrentSpellHandler != null)
 				return;
 			foreach (GameNPC npc in Body.GetNPCsInRadius((ushort)AggroRange))

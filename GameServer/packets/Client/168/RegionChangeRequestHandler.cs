@@ -41,7 +41,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			ushort JumpSpotID = packet.ReadShort();
-			ZonePoint zonePoint = (ZonePoint)GameServer.Database.SelectObject(typeof(ZonePoint), "Id = " + JumpSpotID + " AND Realm = " + client.Player.Realm);
+			ZonePoint zonePoint = (ZonePoint)GameServer.Database.SelectObject(typeof(ZonePoint), "Id = " + JumpSpotID + " AND (Realm = " + client.Player.Realm + " OR Realm = '0')");
 
 			if (zonePoint == null)
 			{

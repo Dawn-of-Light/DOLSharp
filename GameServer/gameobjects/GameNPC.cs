@@ -2968,10 +2968,8 @@ namespace DOL.GS
 		private void StopRetrySpellAttackTimer()
 		{
 			if (m_retrySpellAttackTimer != null && m_retrySpellAttackTimer.IsAlive)
-			{
 				m_retrySpellAttackTimer.Stop();
-				m_retrySpellAttackTimer = null;
-			}
+			m_retrySpellAttackTimer = null;
 		}
 
 		private int RetrySpellAttackCallback(RegionTimer callingTimer)
@@ -2999,7 +2997,22 @@ namespace DOL.GS
 		/// <param name="handler"></param>
 		public override void OnAfterSpellCastSequence(ISpellHandler handler)
 		{
+			StopSpellAttack();
+			//ive had to disable it for the moment
+			return;
 			if (TargetObject is GameLiving == false)
+			{
+				StopSpellAttack();
+				return;
+			}
+
+			if ((TargetObject as GameLiving).IsAlive == false)
+			{
+				StopSpellAttack();
+				return;
+			}
+
+			if (!GameServer.ServerRules.IsAllowedToAttack(this, TargetObject as GameLiving, false))
 			{
 				StopSpellAttack();
 				return;
@@ -3022,6 +3035,13 @@ namespace DOL.GS
 			//we allow spells that inherit from directdamage only to repeat
 			//if (typeof(DirectDamageSpellHandler).IsInstanceOfType(handler) == false)
 			if (handler.Spell.Damage <= 0)
+			{
+				StopSpellAttack();
+				return;
+			}
+
+			//stop attack if out of spell range
+			if (WorldMgr.GetDistance(this, TargetObject) > handler.Spell.Range)
 			{
 				StopSpellAttack();
 				return;

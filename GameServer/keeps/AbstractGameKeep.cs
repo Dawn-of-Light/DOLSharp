@@ -898,7 +898,6 @@ namespace DOL.GS.Keeps
 		/// <param name="realm"></param>
 		public void Reset(eRealm realm)
 		{
-
 			LastAttackedByEnemyTick = 0;
 
 			Realm = (byte)realm;

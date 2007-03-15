@@ -43,7 +43,7 @@ namespace DOL.GS.Scripts
 		//"'/keep addcomponent <compx> <compy> <comphead> <skin> <height>' to add component to current keep",
 		"'/keep save' to save keep into DB",
 		"'/keep addteleporter' to create a teleporter stone",
-		"'/keep addbanner' to create a banner",
+		"'/keep addbanner <realm|guild>' to create a banner",
 		"'/keep realm <newrealm>'")]
 	public class KeepCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
@@ -2160,6 +2160,11 @@ namespace DOL.GS.Scripts
 							{
 								case "realm": bannerType = GameKeepBanner.eBannerType.Realm; break;
 								case "guild": bannerType = GameKeepBanner.eBannerType.Guild; break;
+								default:
+									{
+										DisplayError(client, "Usage: /keep addbanner <realm|guild>", new object[] { });
+										return 0;
+									}
 							}
 						}
 
