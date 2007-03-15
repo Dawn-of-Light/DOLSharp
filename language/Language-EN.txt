@@ -469,6 +469,10 @@ Hib.ImportantDelivery.CheckPlayerAbortQuest.Abort:	Aborting Quest {0}. You can s
 Hib.ImportantDelivery.CheckPlayerAbortQuest.NoAbort:	Good, no go out there and finish your work!
 Hib.ImportantDelivery.CheckPlayerAcceptQuest.Accept:	Congratulations! You are now one step closer to understanding the world of Camelot! During this phase of your training, I will be sending you to different parts of the realm to deliver much needed supplies to various citizens. You will need to check your QUEST JOURNAL from time to time to see what you need to accomplish next on your quest. You can access the quest journal from the COMMAND button on your [character sheet].
 Hib.ImportantDelivery.CheckPlayerAcceptQuest.NoAccept:	Oh well, if you change your mind, please come back!
+Hib.ImportantDelivery.DefineItems.CrateOfVegetables:	Crate of Vegetables
+Hib.ImportantDelivery.DefineItems.RecruitsCloak:	Recruit's Cloak
+Hib.ImportantDelivery.DefineItems.RecruitsDiary:	Recruits Diary
+Hib.ImportantDelivery.DefineItems.SackOfSupplies:	Sack of Supplies
 Hib.ImportantDelivery.Description.Step1:		[Step #1] Listen to Addrir as he describes the mission to you. If he stops speaking with you, ask him what he can give you to [expedite] your training.
 Hib.ImportantDelivery.Description.Step2:		[Step #2] Listen to Addrir as he expalins your journal. If he stops speaking with you, ask him how the journal will help to [expedite] the tasks you will be doing.
 Hib.ImportantDelivery.Description.Step3:		[Step #3] Make your way southeast from Addrir. Find Stable Master Rumdor and hand him your ticket.
@@ -477,7 +481,6 @@ Hib.ImportantDelivery.Description.Step5:		[Step #5] Listen to what Aethic has to
 Hib.ImportantDelivery.Description.Step6:		[Step #6] Take the ticket Aethic gave you to Stable Master Truichon north-northwest of the building with the red-door. Hand him the ticket the same way you handed Aethic the supplies.
 Hib.ImportantDelivery.Description.Step7:		[Step #7] Hand Stable Master Freagus the Crate of Vegetables.
 Hib.ImportantDelivery.Description.Step8:		[Step #8] Listen to Stable Master Freagus some more. If he stops speaking with you, ask him if he has a [reward] for your hard work and service to Hibernia.
-Hib.ImportantDelivery.FinishQuest:			You recieve {0} as a reward.
 Hib.ImportantDelivery.Notify.RentingHorse:		Good day, {0}. If you are interested in renting a horse, purchase a ticket, then hand it to me. Have a safe trip!
 Hib.ImportantDelivery.Notify.Supplies:			Ah! The supplies I have been waiting for. Thank you {0}. These will help us tremendously in the coming weeks. I have another [errand] if you are up for it.
 Hib.ImportantDelivery.Notify.Vegetables:		Ah, the vegetables I've been waiting for from Aethic. Thank you for delivering them to me. I couldn't find anyone to look after my stable so I could go and get them. Let me see, I think a [reward] is in order for your hard work.
