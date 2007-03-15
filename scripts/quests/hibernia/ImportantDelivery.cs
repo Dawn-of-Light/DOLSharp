@@ -35,6 +35,7 @@ using System;
 using System.Reflection;
 using DOL.Database;
 using DOL.Events;
+using DOL.Language;
 using DOL.GS.PacketHandler;
 using log4net;
 /* I suggest you declare yourself some namespaces for your quests
@@ -87,7 +88,7 @@ namespace DOL.GS.Quests.Hibernia
 		private static ItemTemplate sackOfSupplies = null;
 		private static ItemTemplate crateOfVegetables = null;
 		private static ItemTemplate recruitsCloak = null;
-
+		private static ItemTemplate recruitsDiary = null;
 
 		/* We need to define the constructors from the base class here, else there might be problems
 		 * when loading this quest...
@@ -154,7 +155,7 @@ namespace DOL.GS.Quests.Hibernia
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find" + aethic.Name + " , creating ...");
 				aethic.GuildName = "Part of " + questTitle + " Quest";
-				aethic.Realm = (byte) eRealm.Hibernia;
+				aethic.Realm = (byte)eRealm.Hibernia;
 				aethic.CurrentRegionID = 200;
 				aethic.Size = 49;
 				aethic.Level = 21;
@@ -182,7 +183,7 @@ namespace DOL.GS.Quests.Hibernia
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + freagus.Name + ", creating ...");
 				freagus.GuildName = "Stable Master";
-				freagus.Realm = (byte) eRealm.Hibernia;
+				freagus.Realm = (byte)eRealm.Hibernia;
 				freagus.CurrentRegionID = 200;
 				freagus.Size = 48;
 				freagus.Level = 30;
@@ -265,10 +266,23 @@ namespace DOL.GS.Quests.Hibernia
 
 			#region defineItems
 
-			ticketToTirnamBeo = CreateTicketTo("ticket to Tir na mBeo", "hs_magmell_tirnambeo");
+			ticketToTirnamBeo = CreateTicketTo("Tir na mBeo", "hs_magmell_tirnambeo");
+			ticketToArdee = CreateTicketTo("Ardee", "hs_tirnambeo_ardee");
 
-			ticketToArdee = CreateTicketTo("ticket to Ardee", "hs_tirnambeo_ardee");
-
+			recruitsDiary = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "recruits_diary");
+			if (recruitsDiary == null)
+			{
+				recruitsDiary = new ItemTemplate();
+				recruitsDiary.Name = "Recruits Diary";
+				if (log.IsWarnEnabled)
+					log.Warn("Could not find " + recruitsDiary.Name + " , creating it ...");
+				recruitsDiary.Weight = 3;
+				recruitsDiary.Model = 500;
+				recruitsDiary.Object_Type = (int)eObjectType.GenericItem;
+				recruitsDiary.Id_nb = "recruits_diary";
+				recruitsDiary.IsPickable = true;
+				recruitsDiary.IsDropable = false;
+			}
 
 			sackOfSupplies = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "sack_of_supplies");
 			if (sackOfSupplies == null)
@@ -454,7 +468,7 @@ namespace DOL.GS.Quests.Hibernia
 				if (quest == null)
 				{
 					//Player is not doing the quest...
-					addrir.SayTo(player, "Greetings my young recruit. I am Addrir and I am here to help you find your way around this vast realm. In the process, you will be able to earn weapons, armor, coin and even some levels. I will start your training by asking you a simple [question].");
+					addrir.SayTo(player, LanguageMgr.GetTranslation(player.Client, "Hib.ImportantDelivery.TalkToAddrir.Greetings"));
 					return;
 				}
 				else
@@ -462,13 +476,13 @@ namespace DOL.GS.Quests.Hibernia
 					switch (quest.Step)
 					{
 						case 1:
-							addrir.SayTo(player, "This journal will help you from time to time while you are doing various tasks for me. I like to call it a smart journal. It was made by one of the eldritches for new recruits like you. It will help to [expedite] your training.");
+							addrir.SayTo(player, LanguageMgr.GetTranslation(player.Client, "Hib.ImportantDelivery.TalkToAddrir.Journal"));
 							break;
 						case 2:
-							addrir.SayTo(player, "Congratulations! You are now one step closer to understanding the world of Camelot! During this phase of your training, I will be sending you to different parts of the realm to deliver much needed supplies to various citizens. You will need to check your QUEST JOURNAL from time to time to see what you need to accomplish next on your quest. You can access the quest journal from the COMMAND button on your [character sheet].");
+							addrir.SayTo(player, LanguageMgr.GetTranslation(player.Client, "Hib.ImportantDelivery.TalkToAddrir.OneStepCloser"));
 							break;
 						case 3:
-							addrir.SayTo(player, "All you need to do is take this horse ticket to Rumdor here in Mag Mell, by the horse cart. Hand him the ticket and you'll be on your way to Tir na mBeo. Be swift my young recruit. Time is of the essence.");
+							addrir.SayTo(player, LanguageMgr.GetTranslation(player.Client, "Hib.ImportantDelivery.TalkToAddrir.HorseTicket"));
 							break;
 					}
 					return;
@@ -482,47 +496,50 @@ namespace DOL.GS.Quests.Hibernia
 				if (quest == null)
 				{
 					//Do some small talk :)
-					switch (wArgs.Text)
+					if (wArgs.Text == LanguageMgr.GetTranslation(player.Client, "Hib.ImportantDelivery.TalkToAddrir.CaseQuestion"))
 					{
-						case "question":
-							addrir.SayTo(player, "I will ask you whether or not you want to continue with your training. A dialog box will pop-up. All you need to do is either press Accept or Decline. Are you ready to [continue your training]?");
-							break;
-							//If the player offered his "help", we send the quest dialog now!
-						case "continue your training":
-							player.Out.SendQuestSubscribeCommand(addrir, QuestMgr.GetIDForQuestType(typeof(ImportantDelivery)), "Are you ready to begin your training?");
-							break;
+						addrir.SayTo(player, LanguageMgr.GetTranslation(player.Client, "Hib.ImportantDelivery.TalkToAddrir.Question"));
+					}
+					//If the player offered his "help", we send the quest dialog now!
+					if (wArgs.Text == LanguageMgr.GetTranslation(player.Client, "Hib.ImportantDelivery.TalkToAddrir.CaseTraining"))
+					{
+						player.Out.SendQuestSubscribeCommand(addrir, QuestMgr.GetIDForQuestType(typeof(ImportantDelivery)), LanguageMgr.GetTranslation(player.Client, "Hib.ImportantDelivery.TalkToAddrir.Training"));
 					}
 				}
 				else
 				{
-					switch (wArgs.Text)
+					if (wArgs.Text == LanguageMgr.GetTranslation(player.Client, "Hib.ImportantDelivery.TalkToAddrir.CaseCharSheet"))
 					{
-						case "character sheet":
-							addrir.SayTo(player, "Your character sheet houses all of your character's information, such as attributes, weapon skill, base class and profession. If at any time you want to see your character's statistics, press the far left icon on the menu bar (it looks like a person with circle around them) for more [information].");
-							break;
-						case "information":
-							addrir.SayTo(player, "I know this all seems a little overwhelming, but I have a special item here that will make this transition a smooth one. Please, take this [journal].");
-							if (quest.Step == 1)
-								quest.Step = 2;
-							break;
-						case "journal":
-							addrir.SayTo(player, "This journal will help you from time to time while you are doing various tasks for me. I like to call it a smart journal. It was made by one of the eldritches for new recruits like you. It will help to [expedite] your training.");
-							break;
-						case "expedite":
-							addrir.SayTo(player, "Now that I've given you a small introduction to the world of Hibernia, let's get started with your first task. I need for you to deliver this package of supplies to Aethic in Tir na mBeo. Don't worry, I have a special [horse ticket] for you.");
-							break;
-						case "horse ticket":
-							addrir.SayTo(player, "All you need to do is take this horse ticket to Rumdor here in Mag Mell, by the horse cart. Hand him the ticket and you'll be on your way to Tir na mBeo. Be swift my young recruit. Time is of the essence.");
-							if (quest.Step == 2)
-							{
-								GiveItem(addrir, player, ticketToTirnamBeo);
-								GiveItem(addrir, player, sackOfSupplies);
-								quest.Step = 3;
-							}
-							break;
-						case "abort":
-							player.Out.SendCustomDialog("Do you really want to abort this quest, \nall items gained during quest will be lost?", new CustomDialogResponse(CheckPlayerAbortQuest));
-							break;
+						addrir.SayTo(player, LanguageMgr.GetTranslation(player.Client, "Hib.ImportantDelivery.TalkToAddrir.CharSheet"));
+					}
+					if (wArgs.Text == LanguageMgr.GetTranslation(player.Client, "Hib.ImportantDelivery.TalkToAddrir.CaseInformation"))
+					{
+						addrir.SayTo(player, LanguageMgr.GetTranslation(player.Client, "Hib.ImportantDelivery.TalkToAddrir.Information"));
+						if (quest.Step == 1)
+							quest.Step = 2;
+					}
+					if (wArgs.Text == LanguageMgr.GetTranslation(player.Client, "Hib.ImportantDelivery.TalkToAddrir.CaseJournal"))
+					{
+						addrir.SayTo(player, LanguageMgr.GetTranslation(player.Client, "Hib.ImportantDelivery.TalkToAddrir.Journal"));
+						GiveItem(addrir, player, recruitsDiary);
+					}
+					if (wArgs.Text == LanguageMgr.GetTranslation(player.Client, "Hib.ImportantDelivery.TalkToAddrir.CaseExpedite"))
+					{
+						addrir.SayTo(player, LanguageMgr.GetTranslation(player.Client, "Hib.ImportantDelivery.TalkToAddrir.Expedite"));
+						GiveItem(addrir, player, sackOfSupplies);
+					}
+					if (wArgs.Text == LanguageMgr.GetTranslation(player.Client, "Hib.ImportantDelivery.TalkToAddrir.CaseHorseTicket"))
+					{
+						addrir.SayTo(player, LanguageMgr.GetTranslation(player.Client, "Hib.ImportantDelivery.TalkToAddrir.HorseTicket"));
+						if (quest.Step == 2)
+						{
+							GiveItem(addrir, player, ticketToTirnamBeo);
+							quest.Step = 3;
+						}
+					}
+					if (wArgs.Text == "abort")
+					{
+						addrir.SayTo(player, LanguageMgr.GetTranslation(player.Client, "Hib.ImportantDelivery.TalkToAddrir.Abort"));
 					}
 				}
 			}
@@ -552,13 +569,13 @@ namespace DOL.GS.Quests.Hibernia
 					{
 						case 3:
 						case 4:
-							aethic.SayTo(player, "Greetings traveler. I've not seen you around here before. You must be a new recruit. Well then, is there something I can help you with?");
+							aethic.SayTo(player, LanguageMgr.GetTranslation(player.Client, "Hib.ImportantDelivery.TalkToAethic.Greetings"));
 							break;
 						case 5:
-							aethic.SayTo(player, "Ah! The supplies I have been waiting for. Thank you Lirone. These will help us tremendously in the coming weeks. I have another [errand] if you are up for it.");
+							aethic.SayTo(player, LanguageMgr.GetTranslation(player.Client, "Hib.ImportantDelivery.TalkToAethic.Supplies", player.Name));
 							break;
 						case 6:
-							aethic.SayTo(player, "I need for you to deliver this crate of vegetables to Freagus in Ardee. I'm sure you can do the job. Take this horse ticket and give it to Stable Master Truichon. Hurry now, before the vegetables rot.");
+							aethic.SayTo(player, LanguageMgr.GetTranslation(player.Client, "Hib.ImportantDelivery.TalkToAethic.Vegetables"));
 							break;
 					}
 				}
@@ -572,18 +589,15 @@ namespace DOL.GS.Quests.Hibernia
 				if (quest != null)
 				{
 					//Do some small talk :)
-					switch (wArgs.Text)
+					if (wArgs.Text == LanguageMgr.GetTranslation(player.Client, "Hib.ImportantDelivery.TalkToAethic.CaseErrand"))
 					{
-						case "errand":
-							aethic.SayTo(player, "I need for you to deliver this crate of vegetables to Freagus in Ardee. I'm sure you can do the job. Take this horse ticket and give it to Stable Master Truichon. Hurry now, before the vegetables rot.");
-							if (quest.Step == 5)
-							{
-								GiveItem(aethic, player, ticketToArdee);
-								GiveItem(aethic, player, crateOfVegetables);
-
-								quest.Step = 6;
-							}
-							break;
+						addrir.SayTo(player, LanguageMgr.GetTranslation(player.Client, "Hib.ImportantDelivery.TalkToAethic.Errand"));
+						if (quest.Step == 5)
+						{
+							GiveItem(aethic, player, ticketToArdee);
+							GiveItem(aethic, player, crateOfVegetables);
+							quest.Step = 6;
+						}
 					}
 				}
 			}
@@ -611,11 +625,11 @@ namespace DOL.GS.Quests.Hibernia
 				{
 					if (quest.Step == 7)
 					{
-						freagus.SayTo(player, "Welcome to my stable friend. What can I do for you today?");
+						freagus.SayTo(player, LanguageMgr.GetTranslation(player.Client, "Hib.ImportantDelivery.TalkToFreagus.Welcome"));
 					}
 					else if (quest.Step == 8)
 					{
-						freagus.SayTo(player, "Ah! These must be from Aethic in Tir na mBeo. I have been waiting a while for a good crop to come in. My family, horses and I will be eating well for a while. My thanks to you Lirone. Here, let me see if I have a [reward] for your hard work.");
+						freagus.SayTo(player, LanguageMgr.GetTranslation(player.Client, "Hib.ImportantDelivery.TalkToFreagus.GoodCrop"));
 						quest.FinishQuest();
 					}
 
@@ -630,16 +644,15 @@ namespace DOL.GS.Quests.Hibernia
 				if (quest != null)
 				{
 					//Do some small talk :)
-					switch (wArgs.Text)
+					if (wArgs.Text == LanguageMgr.GetTranslation(player.Client, "Hib.ImportantDelivery.TalkToFreagus.CaseReward"))
 					{
-						case "reward":
-							freagus.SayTo(player, "It's a little tattered, but it will keep you warm in the cold months. Thank you again Lirone.");
-							freagus.SayTo(player, "Dont' go far friend. I have yet another errand that needs tending to.");
-							if (quest.Step == 8)
-							{
-								quest.FinishQuest();
-							}
-							break;
+						freagus.SayTo(player, LanguageMgr.GetTranslation(player.Client, "Hib.ImportantDelivery.TalkToFreagus.Reward", player.Name));
+						freagus.SayTo(player, LanguageMgr.GetTranslation(player.Client, "Hib.ImportantDelivery.TalkToFreagus.Errand"));
+						if (quest.Step == 8)
+						{
+							quest.FinishQuest();
+						}
+
 					}
 				}
 			}
@@ -681,11 +694,12 @@ namespace DOL.GS.Quests.Hibernia
 
 			if (response == 0x00)
 			{
-				SendSystemMessage(player, "Good, no go out there and finish your work!");
+				SendSystemMessage(player, LanguageMgr.GetTranslation(player.Client, "Hib.ImportantDelivery.CheckPlayerAbortQuest.NoAbort"));
 			}
 			else
 			{
-				SendSystemMessage(player, "Aborting Quest " + questTitle + ". You can start over again if you want.");
+				SendSystemMessage(player, LanguageMgr.GetTranslation(player.Client, "Hib.ImportantDelivery.CheckPlayerAbortQuest.Abort", questTitle));
+
 				quest.AbortQuest();
 			}
 		}
@@ -724,16 +738,20 @@ namespace DOL.GS.Quests.Hibernia
 
 			if (response == 0x00)
 			{
-				SendReply(player, "Oh well, if you change your mind, please come back!");
+				SendReply(player, LanguageMgr.GetTranslation(player.Client, "Hib.ImportantDelivery.CheckPlayerAcceptQuest.NoAccept"));
 			}
 			else
 			{
 				//Check if we can add the quest!
 				if (!addrir.GiveQuest(typeof (ImportantDelivery), player, 1))
 					return;
-
-				addrir.SayTo(player, "Congratulations! You are now one step closer to understanding the world of Camelot! During this phase of your training, I will be sending you to different parts of the realm to deliver much needed supplies to various citizens. You will need to check your QUEST JOURNAL from time to time to see what you need to accomplish next on your quest. You can access the quest journal from the COMMAND button on your [character sheet].");
+				addrir.SayTo(player, LanguageMgr.GetTranslation(player.Client, "Hib.ImportantDelivery.CheckPlayerAcceptQuest.Accept"));
 			}
+			//language manager support for items
+			recruitsDiary.Name = LanguageMgr.GetTranslation(player.Client, "Hib.ImportantDelivery.DefineItems.RecruitsDiary");
+			sackOfSupplies.Name = LanguageMgr.GetTranslation(player.Client, "Hib.ImportantDelivery.DefineItems.SackOfSupplies");
+			crateOfVegetables.Name = LanguageMgr.GetTranslation(player.Client, "Hib.ImportantDelivery.DefineItems.CrateOfVegetables");
+			recruitsCloak.Name = LanguageMgr.GetTranslation(player.Client, "Hib.ImportantDelivery.DefineItems.RecruitsCloak");
 		}
 
 		/* Now we set the quest name.
@@ -760,22 +778,21 @@ namespace DOL.GS.Quests.Hibernia
 				switch (Step)
 				{
 					case 1:
-						return "[Step #1] Listen to Addrir as he describes the mission to you. If he stops speaking with you, ask him what he can give you to [expedite] your training.";
+						return LanguageMgr.GetTranslation(m_questPlayer.Client, "Hib.ImportantDelivery.Description.Step1");
 					case 2:
-						return "[Step #2] Listen to Addrir as he expalins your journal. If he stops speaking with you, ask him how the journal will help to [expedite] the tasks you will be doing.";
+						return LanguageMgr.GetTranslation(m_questPlayer.Client, "Hib.ImportantDelivery.Description.Step2");
 					case 3:
-						return "[Step #3] Make your way southeast from Addrir. Find Stable Master Rumdor and hand him your ticket.";
+						return LanguageMgr.GetTranslation(m_questPlayer.Client, "Hib.ImportantDelivery.Description.Step3");
 					case 4:
-						return "[Step #4] Give you Sack of Supplies to Aethic in Tir na mBeo. You can do this the same way you handed Rumdor your ticket.";
+						return LanguageMgr.GetTranslation(m_questPlayer.Client, "Hib.ImportantDelivery.Description.Step4");
 					case 5:
-						return "[Step #5] Listen to what Aethic has to say.";
+						return LanguageMgr.GetTranslation(m_questPlayer.Client, "Hib.ImportantDelivery.Description.Step5");
 					case 6:
-						return "[Step #6] Take the ticket Aethic gave you to Stable Master Truichon north-northwest of the building with the red-door. Hand him the ticket the same way you handed Aethic the supplies.";
+						return LanguageMgr.GetTranslation(m_questPlayer.Client, "Hib.ImportantDelivery.Description.Step6");
 					case 7:
-						return "[Step #7] Hand Stable Master Freagus the Crate of Vegetables.";
+						return LanguageMgr.GetTranslation(m_questPlayer.Client, "Hib.ImportantDelivery.Description.Step7");
 					case 8:
-						return "[Step #8] Listen to Stable Master Freagus some more. If he stops speaking with you, ask him if he has a [reward] for your hard work and service to Hibernia.";
-
+						return LanguageMgr.GetTranslation(m_questPlayer.Client, "Hib.ImportantDelivery.Description.Step8");
 				}
 				return base.Description;
 			}
@@ -793,7 +810,7 @@ namespace DOL.GS.Quests.Hibernia
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
 				if (gArgs.Target.Name == rumdor.Name && gArgs.Item.Id_nb == ticketToTirnamBeo.Id_nb)
 				{
-					rumdor.SayTo(player, "Good day, Lirone. If you are interested in renting a horse, purchase a ticket, then hand it to me. Have a safe trip!");
+					rumdor.SayTo(player, LanguageMgr.GetTranslation(player.Client, "Hib.ImportantDelivery.Notify.RentingHorse", player.Name));
 					Step = 4;
 					return;
 				}
@@ -804,7 +821,7 @@ namespace DOL.GS.Quests.Hibernia
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
 				if (gArgs.Target.Name == aethic.Name && gArgs.Item.Id_nb == sackOfSupplies.Id_nb)
 				{
-					aethic.SayTo(player, "Ah! The supplies I have been waiting for. Thank you Lirone. These will help us tremendously in the coming weeks. I have another [errand] if you are up for it.");
+					aethic.SayTo(player, LanguageMgr.GetTranslation(player.Client, "Hib.ImportantDelivery.Notify.Supplies", player.Name));
 					RemoveItem(aethic, player, sackOfSupplies);
 					Step = 5;
 					return;
@@ -826,7 +843,7 @@ namespace DOL.GS.Quests.Hibernia
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
 				if (gArgs.Target.Name == freagus.Name && gArgs.Item.Id_nb == crateOfVegetables.Id_nb)
 				{
-					freagus.SayTo(player, "Ah, the vegetables I've been waiting for from Aethic. Thank you for delivering them to me. I couldn't find anyone to look after my stable so I could go and get them. Let me see, I think a [reward] is in order for your hard work.");
+					freagus.SayTo(player, LanguageMgr.GetTranslation(player.Client, "Hib.ImportantDelivery.Notify.Vegetables"));
 					RemoveItem(freagus, player, crateOfVegetables);
 					Step = 8;
 					return;
@@ -855,8 +872,6 @@ namespace DOL.GS.Quests.Hibernia
 
 			m_questPlayer.GainExperience(12);
 			m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 1, Util.Random(50)), "You recieve {0} as a reward.");
-
 		}
-
 	}
 }

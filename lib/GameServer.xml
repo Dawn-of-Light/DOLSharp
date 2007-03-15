@@ -30261,6 +30261,11 @@
             </summary>
             <param name="guard">The guard object</param>
         </member>
+        <member name="T:DOL.GS.Keeps.MissionMaster">
+            <summary>
+            Represents a mission master
+            </summary>
+        </member>
         <member name="T:DOL.GS.ChatGroup">
             <summary>
             Description résumée de ChatGroup.
@@ -34644,11 +34649,6 @@
         <member name="F:DOL.AI.Brain.eAggressionState.Passive">
             <summary>
             Attack only on order
-            </summary>
-        </member>
-        <member name="T:DOL.GS.Keeps.MissionMaster">
-            <summary>
-            Represents a mission master
             </summary>
         </member>
     </members>
