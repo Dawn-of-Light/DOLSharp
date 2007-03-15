@@ -40,7 +40,7 @@ namespace DOL.GS.Keeps
 
 		private static void SetGuardRespawn(GameKeepGuard guard)
 		{
-			if (guard is GuardLord || guard is FrontierHastener)
+			if (guard is GuardLord || guard is FrontierHastener || guard is MissionMaster)
 				guard.RespawnInterval = 1000;
 			else guard.RespawnInterval = Util.Random(5, 25) * 60 * 1000;
 		}
@@ -269,7 +269,7 @@ namespace DOL.GS.Keeps
 								}
 							}
 						}
-						else if (guard is GuardLord)
+						else if (guard is GuardLord || guard is MissionMaster)
 						{
 							if (guard.IsMale)
 							{
@@ -411,7 +411,7 @@ namespace DOL.GS.Keeps
 								}
 							}
 						}
-						else if (guard is GuardLord)
+						else if (guard is GuardLord || guard is MissionMaster)
 						{
 							if (guard.IsMale)
 							{
@@ -547,7 +547,7 @@ namespace DOL.GS.Keeps
 								}
 							}
 						}
-						else if (guard is GuardLord)
+						else if (guard is GuardLord || guard is MissionMaster)
 						{
 							if (guard.IsMale)
 							{
@@ -653,6 +653,10 @@ namespace DOL.GS.Keeps
 						{
 							guard.Name = "Infiltrator";
 						}
+						else if (guard is MissionMaster)
+						{
+							guard.Name = "Captain Commander";
+						}
 						break;
 					}
 				#endregion
@@ -682,6 +686,10 @@ namespace DOL.GS.Keeps
 						else if (guard is GuardStealther)
 						{
 							guard.Name = "Shadowblade";
+						}
+						else if (guard is MissionMaster)
+						{
+							guard.Name = "Hersir Commander";
 						}
 						break;
 					}
@@ -713,6 +721,10 @@ namespace DOL.GS.Keeps
 						{
 							guard.Name = "Nightshade";
 						}
+						else if (guard is MissionMaster)
+						{
+							guard.Name = "Champion Commander";
+						}
 						break;
 					}
 				#endregion
@@ -729,7 +741,7 @@ namespace DOL.GS.Keeps
 		/// <param name="guard">The guard object</param>
 		private static void SetBlockEvadeParryChance(GameKeepGuard guard)
 		{
-			if (guard is GuardLord)
+			if (guard is GuardLord || guard is MissionMaster)
 			{
 				guard.BlockChance = 10;
 				guard.EvadeChance = 10;

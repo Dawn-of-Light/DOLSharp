@@ -26,6 +26,10 @@ namespace DOL.GS.Quests
 
 			EnemyKilledEventArgs eargs = args as EnemyKilledEventArgs;
 
+			//we don't want mission masters to be considered realm guards because they are insta respawn
+			if (eargs.Target is Keeps.MissionMaster)
+				return;
+
 			if (m_targetType.IsInstanceOfType(eargs.Target) == false)
 				return;
 

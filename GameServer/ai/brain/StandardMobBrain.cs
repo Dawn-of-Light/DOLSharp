@@ -97,6 +97,17 @@ namespace DOL.AI.Brain
 				if (target != null)
 					Body.WalkTo(target, 50);
 			}
+			else
+			{
+				//if we are not doing an action, let us see if we should move somewhere
+				if (Body.CurrentSpellHandler == null && !Body.IsMoving && !Body.AttackState && !Body.InCombat)
+				{
+					if (Body.X != Body.SpawnX ||
+						Body.Y != Body.SpawnY ||
+						Body.Z != Body.SpawnZ)
+						Body.WalkToSpawn();
+				}
+			}
 		}
 
 		/// <summary>

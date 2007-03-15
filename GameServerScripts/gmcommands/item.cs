@@ -742,11 +742,11 @@ namespace DOL.GS.Scripts
 						{
 							int slot = (int) eInventorySlot.LastBackpack;
 
-							if (args.Length >= 6)
+							if (args.Length >= 7)
 							{
 								try
 								{
-									slot = Convert.ToInt32(args[5]);
+									slot = Convert.ToInt32(args[6]);
 								}
 								catch
 								{
@@ -763,14 +763,15 @@ namespace DOL.GS.Scripts
 							}
 							try
 							{
-								item.Gold = (short) (Convert.ToInt16(args[2])%1000);
-								item.Silver = (byte) (Convert.ToByte(args[3])%100);
-								item.Copper = (byte) (Convert.ToByte(args[4])%100);
+								item.Platinum = (short)(Convert.ToInt16(args[2])%1000);
+								item.Gold = (short) (Convert.ToInt16(args[3])%1000);
+								item.Silver = (byte) (Convert.ToByte(args[4])%100);
+								item.Copper = (byte) (Convert.ToByte(args[5])%100);
 								client.Out.SendInventoryItemsUpdate(new InventoryItem[] {item});
 							}
 							catch
 							{
-								client.Out.SendMessage("'/item price <gold> <silver> <copper> <slot #>' to change item price", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								client.Out.SendMessage("'/item price <plat> <gold> <silver> <copper> <slot #>' to change item price", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							}
 							break;
 						}
@@ -1492,6 +1493,7 @@ namespace DOL.GS.Scripts
 							temp.Bonus8Type = item.Bonus8Type;
 							temp.Bonus9Type = item.Bonus9Type;
 							temp.Bonus10Type = item.Bonus10Type;
+							temp.Platinum = item.Platinum;
 							temp.Gold = item.Gold;
 							temp.Silver = item.Silver;
 							temp.Copper = item.Copper;
