@@ -961,6 +961,7 @@
             <param name="expTotal">total amount of xp to gain</param>
             <param name="expCampBonus">camp bonus to display</param>
             <param name="expGroupBonus">group bonus to display</param>
+            <param name="expOutpostBonus">outpost bonux to display</param>
             <param name="sendMessage">should exp gain message be sent</param>
             <param name="allowMultiply">should the xp amount be multiplied</param>
         </member>
@@ -10001,6 +10002,16 @@
         <member name="F:DOL.GS.ServerProperties.Properties.USE_CUSTOM_START_LOCATIONS">
             <summary>
             Use Custom Start Locations
+            </summary>
+        </member>
+        <member name="F:DOL.GS.ServerProperties.Properties.USE_KEEP_BALANCING">
+            <summary>
+            Use Keep Balancing
+            </summary>
+        </member>
+        <member name="F:DOL.GS.ServerProperties.Properties.USE_ARCHIVING">
+            <summary>
+            Use Archiving
             </summary>
         </member>
         <member name="M:DOL.GS.ServerProperties.Properties.Load(DOL.GS.ServerProperties.ServerPropertyAttribute)">
@@ -23631,7 +23642,7 @@
             Holds the arguments for the GainedExperience event of GameLivings
             </summary>
         </member>
-        <member name="M:DOL.Events.GainedExperienceEventArgs.#ctor(System.Int64,System.Int64,System.Int64,System.Boolean)">
+        <member name="M:DOL.Events.GainedExperienceEventArgs.#ctor(System.Int64,System.Int64,System.Int64,System.Int64,System.Boolean,System.Boolean)">
             <summary>
             Constructs new ReceiveMoneyEventArgs
             </summary>
@@ -23655,9 +23666,19 @@
             Gets the amount of group bonus experience gained
             </summary>
         </member>
+        <member name="P:DOL.Events.GainedExperienceEventArgs.ExpOutpostBonus">
+            <summary>
+            gets the amount of outpost bonus experience gained
+            </summary>
+        </member>
         <member name="P:DOL.Events.GainedExperienceEventArgs.SendMessage">
             <summary>
             True if experience gain message was sent
+            </summary>
+        </member>
+        <member name="P:DOL.Events.GainedExperienceEventArgs.AllowMultiply">
+            <summary>
+            is the experience allowed to be multiplied
             </summary>
         </member>
         <member name="T:DOL.Events.DyingEventArgs">
