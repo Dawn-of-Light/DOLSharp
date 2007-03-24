@@ -10014,6 +10014,11 @@
             Use Archiving
             </summary>
         </member>
+        <member name="F:DOL.GS.ServerProperties.Properties.USE_LIVE_KEEP_BONUSES">
+            <summary>
+            Use Live Keep Bonuses
+            </summary>
+        </member>
         <member name="M:DOL.GS.ServerProperties.Properties.Load(DOL.GS.ServerProperties.ServerPropertyAttribute)">
             <summary>
             This method loads the property from the database and returns
@@ -20938,6 +20943,26 @@
             Crit propability is capped to 50% except for berserk 
             </summary>
         </member>
+        <member name="T:DOL.GS.Keeps.eKeepBonusType">
+            <summary>
+            Bonus for owning certain amount of keeps
+            The int value is the amount of keeps needed
+            </summary>
+        </member>
+        <member name="M:DOL.GS.Keeps.KeepBonusMgr.RealmHasBonus(DOL.GS.Keeps.eKeepBonusType,DOL.GS.PacketHandler.eRealm)">
+            <summary>
+            does a realm have the amount of keeps required for a certain bonus
+            </summary>
+            <param name="type">the type of bonus</param>
+            <param name="realm">the realm</param>
+            <returns>true if the realm has the required amount of keeps</returns>
+        </member>
+        <member name="M:DOL.GS.Keeps.KeepBonusMgr.UpdateCounts">
+            <summary>
+            Update the counts of the keeps that we store locally,
+            we do this for performance reasons
+            </summary>
+        </member>
         <member name="T:DOL.GS.Alliance">
             <summary>
             Alliance are the alliance between guild in game
@@ -28883,6 +28908,14 @@
             since zone.Region.getAreasOfZone(zone,x,y,z) is a bit confusing ...
             </summary>
             <param name="spot"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DOL.GS.Zone.GetRandomNPCByCon(DOL.GS.PacketHandler.eRealm,System.Int32,System.Int32)">
+            <summary>
+            Get's a random NPC based on a con level
+            </summary>
+            <param name="realm"></param>
+            <param name="conLevel">-3 grey, -2 green, -1 blue, 0 yellow, 1 - orange, 2 red, 3 purple</param>
             <returns></returns>
         </member>
         <member name="M:DOL.GS.Zone.GetRandomNPC(DOL.GS.PacketHandler.eRealm)">
