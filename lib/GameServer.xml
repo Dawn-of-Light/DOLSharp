@@ -3521,6 +3521,11 @@
             The maximum passengers the NPC can take
             </summary>
         </member>
+        <member name="P:DOL.GS.GameNPC.REQUIRED_PASSENGERS">
+            <summary>
+            The minimum number of passengers required to move
+            </summary>
+        </member>
         <member name="P:DOL.GS.GameNPC.SLOT_OFFSET">
             <summary>
             The slot offset for this NPC
@@ -10017,6 +10022,16 @@
         <member name="F:DOL.GS.ServerProperties.Properties.USE_LIVE_KEEP_BONUSES">
             <summary>
             Use Live Keep Bonuses
+            </summary>
+        </member>
+        <member name="F:DOL.GS.ServerProperties.Properties.USE_SUPPLY_CHAIN">
+            <summary>
+            Use Supply Chain
+            </summary>
+        </member>
+        <member name="F:DOL.GS.ServerProperties.Properties.DEATH_MESSAGES_ALL_REALMS">
+            <summary>
+            Death Messages All Realms
             </summary>
         </member>
         <member name="M:DOL.GS.ServerProperties.Properties.Load(DOL.GS.ServerProperties.ServerPropertyAttribute)">
