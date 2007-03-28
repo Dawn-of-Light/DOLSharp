@@ -954,7 +954,12 @@ namespace DOL
 
 				//Save the database
 				if (m_database != null)
+				{
 					m_database.WriteDatabaseTables();
+					//move inactive accounts, characters, quests TODO and inventoryitems to archive
+					if (ServerProperties.Properties.USE_ARCHIVING)
+						m_database.ArchiveTables();
+				}
 
 				m_serverRules = null;
 

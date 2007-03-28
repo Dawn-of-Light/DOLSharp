@@ -455,6 +455,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="gameobjects\CustomNPC\GameBoatStableMaster.cs" />
+    <Compile Include="gameobjects\GameBoat.cs" />
     <Compile Include="gameobjects\GameHorseBoat.cs" />
     <Compile Include="gameobjects\CustomNPC\CraftNPC.cs">
       <SubType>Code</SubType>
@@ -564,6 +565,7 @@
     <Compile Include="keeps\Gameobjects\Guards\Stealther.cs" />
     <Compile Include="keeps\Gameobjects\IKeepItem.cs" />
     <Compile Include="keeps\KeepArea.cs" />
+    <Compile Include="keeps\KeepBonusManager.cs" />
     <Compile Include="keeps\Managers\Clothing Manager.cs" />
     <Compile Include="keeps\Managers\RelicMgr.cs" />
     <Compile Include="keeps\Managers\Template Manager.cs" />
@@ -686,6 +688,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="quests\Missions\CaptureMission.cs" />
+    <Compile Include="quests\Missions\ScoutMission.cs" />
     <Compile Include="quests\Missions\KillMission.cs" />
     <Compile Include="quests\Missions\RaizeMission.cs">
       <SubType>Code</SubType>
