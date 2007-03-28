@@ -77,7 +77,7 @@ namespace DOL.GS.Keeps
 		{
 			get
 			{
-				return ((this is GameKeepTower && this.KeepComponents.Count > 1) || this.BaseLevel == 255);
+				return ((this is GameKeepTower && this.KeepComponents.Count > 1) || this.DBKeep.BaseLevel == 255);
 			}
 		}
 
@@ -273,13 +273,24 @@ namespace DOL.GS.Keeps
 			set	{ DBKeep.Level = value; }
 		}
 
+		private byte m_baseLevel = 0;
+
 		/// <summary>
 		/// The Base Keep Level
 		/// </summary>
 		public byte BaseLevel
 		{
-			get { return DBKeep.BaseLevel; }
-			set { DBKeep.BaseLevel = value; }
+			get
+			{
+				if (m_baseLevel == 0)
+					m_baseLevel = DBKeep.BaseLevel;
+				return m_baseLevel;
+			}
+			set
+			{
+				m_baseLevel = value;
+				//DBKeep.BaseLevel = value;
+			}
 		}
 
 		/// <summary>
@@ -551,7 +562,7 @@ namespace DOL.GS.Keeps
 				return false;
 			}
 
-			if (this.BaseLevel != 50)
+			if (this.DBKeep.BaseLevel != 50)
 			{
 				player.Out.SendMessage("This keep is not able to be claimed.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
@@ -943,6 +954,14 @@ namespace DOL.GS.Keeps
 			{
 				banner.ChangeRealm();
 			}
+
+			//update guard level for every keep
+			if (!IsPortalKeep && ServerProperties.Properties.USE_KEEP_BALANCING)
+				KeepMgr.UpdateBaseLevels();
+
+			//update the counts of keeps for the bonuses
+			if (ServerProperties.Properties.USE_LIVE_KEEP_BONUSES)
+				KeepBonusMgr.UpdateCounts();
 
 			SaveIntoDatabase();
 

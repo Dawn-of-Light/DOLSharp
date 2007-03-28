@@ -45,6 +45,15 @@ namespace DOL.GS.Quests
 					return;
 			}
 
+			//we don't want group events to trigger personal mission updates
+			if (MissionType == eMissionType.Personal && sender is GamePlayer)
+			{
+				GamePlayer player = sender as GamePlayer;
+
+				if (player.PlayerGroup != null)
+					return;
+			}
+
 			m_current++;
 			UpdateMission();
 			if (m_current == m_total)

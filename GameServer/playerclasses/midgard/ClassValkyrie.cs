@@ -48,7 +48,7 @@ namespace DOL.GS.Scripts
 			if (level >= 40) return "TODO";
 			if (level >= 35) return "Protector of Valhalla ";
 			if (level >= 30) return "TODO";
-			if (level >= 25) return "TODO";
+			if (level >= 25) return "Shieldmaiden";
 			if (level >= 20) return "TODO";
 			if (level >= 15) return "Servant of Midgard ";
 			if (level >= 10) return "Handmaiden ";

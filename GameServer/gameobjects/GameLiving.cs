@@ -2153,7 +2153,10 @@ namespace DOL.GS
 					// both hands are used for attack
 					mainHandAD = owner.MakeAttack(m_target, mainWeapon, style, m_effectiveness, m_interruptDuration, true);
 					if (style == null)
+					{
 						mainHandAD.AnimationId = 0x1F6; // both weapons swing animation
+					}
+
 				}
 				else
 				{
@@ -3327,11 +3330,12 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		/// <param name="expTotal">total amount of xp to gain</param>
 		/// <param name="expCampBonus">camp bonus to display</param>
 		/// <param name="expGroupBonus">group bonus to display</param>
+		/// <param name="expOutpostBonus">outpost bonux to display</param>
 		/// <param name="sendMessage">should exp gain message be sent</param>
 		/// <param name="allowMultiply">should the xp amount be multiplied</param>
 		public virtual void GainExperience(long expTotal, long expCampBonus, long expGroupBonus, long expOutpostBonus, bool sendMessage, bool allowMultiply)
 		{
-			if (expTotal > 0) Notify(GameLivingEvent.GainedExperience, this, new GainedExperienceEventArgs(expTotal, expCampBonus, expGroupBonus, sendMessage));
+			if (expTotal > 0) Notify(GameLivingEvent.GainedExperience, this, new GainedExperienceEventArgs(expTotal, expCampBonus, expGroupBonus, expOutpostBonus, sendMessage, allowMultiply));
 		}
 		/// <summary>
 		/// Called when this living gains realm points

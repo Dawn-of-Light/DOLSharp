@@ -236,6 +236,12 @@ namespace DOL.GS
 
 			foreach (DBCraftedXItem rawmaterial in craftItemData.RawMaterials)
 			{
+				if (rawmaterial.ItemTemplate == null)
+				{
+					player.Out.SendMessage("Cannot find an item by the ID of " + rawmaterial.IngredientId_nb + " please report this!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					log.Error("Cannot find an item by the ID of " + rawmaterial.IngredientId_nb);
+					return false;
+				}
 				switch (rawmaterial.ItemTemplate.Model)
 				{
 					case 522:	//"cloth square"
@@ -298,6 +304,12 @@ namespace DOL.GS
 				foreach (DBCraftedXItem rawmaterial in craftItemData.RawMaterials)
 				{
 					bool result = false;
+					if (rawmaterial.ItemTemplate == null)
+					{
+						player.Out.SendMessage("Cannot find an item by the ID of " + rawmaterial.IngredientId_nb + " please report this!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						log.Error("Cannot find an item by the ID of " + rawmaterial.IngredientId_nb);
+						return false;
+					}
 					int count = rawmaterial.Count;
 					foreach (InventoryItem item in player.Inventory.GetItemRange(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
 					{
@@ -704,6 +716,12 @@ namespace DOL.GS
 
 			if (Properties.CRAFTING_SPEED != 0)
 				craftingTime = (int)(craftingTime / Properties.CRAFTING_SPEED);
+
+			//keep bonuses reduction in crafting time
+			if (Keeps.KeepBonusMgr.RealmHasBonus(DOL.GS.Keeps.eKeepBonusType.Craft_Timers_5, (eRealm)player.Realm))
+				craftingTime -= (craftingTime * 100) / 5;
+			else if (Keeps.KeepBonusMgr.RealmHasBonus(DOL.GS.Keeps.eKeepBonusType.Craft_Timers_3, (eRealm)player.Realm))
+				craftingTime -= (craftingTime * 100) / 3;
 
 			int con = GetItemCon(player.GetCraftingSkillValue(m_eskill), ItemCraft.CraftingLevel);
 			double mod = 1.0;

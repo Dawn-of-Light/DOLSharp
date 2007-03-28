@@ -236,9 +236,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 				{
 					foreach (AbstractGameKeep k in list)
 					{
-						if (k.BaseLevel >= 50) continue;
+						if (k.DBKeep.BaseLevel >= 50) continue;
 
-						if (player.Level > k.BaseLevel)
+						if (player.Level > k.DBKeep.BaseLevel)
 						{
 							player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "PlayerInitRequestHandler.LevelCap"), eChatType.CT_YouWereHit, eChatLoc.CL_SystemWindow);
 							player.MoveTo((ushort)player.PlayerCharacter.BindRegion, player.PlayerCharacter.BindXpos, player.PlayerCharacter.BindYpos, player.PlayerCharacter.BindZpos, (ushort)player.PlayerCharacter.BindHeading);

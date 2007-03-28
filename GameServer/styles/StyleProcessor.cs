@@ -131,6 +131,11 @@ namespace DOL.GS.Styles
 						//check here if target is in front of attacker
 						if (!living.IsObjectInFront(target, 120))
 							return false;
+
+						//you can't use positional styles on keep doors or walls
+						if (living is GameKeepComponent || living is GameKeepDoor)
+							return false;
+
 						// get players angle on target
 						float angle = target.GetAngleToTarget(living);
 						//player.Out.SendDebugMessage("Positional check: "+style.OpeningRequirementValue+" angle "+angle+" target heading="+target.Heading);						

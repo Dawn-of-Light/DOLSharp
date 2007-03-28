@@ -83,7 +83,22 @@ namespace DOL.GS.Quests
 			if (kargs.Keep != m_keep)
 				return;
 
-			FinishMission();
+			GamePlayer testPlayer = null;
+			if (m_owner is GamePlayer)
+				testPlayer = m_owner as GamePlayer;
+			else if (m_owner is PlayerGroup)
+				testPlayer = (m_owner as PlayerGroup).Leader;
+
+			if (testPlayer != null)
+			{
+				foreach (AbstractArea area in testPlayer.CurrentAreas)
+				{
+					if (area is KeepArea && (area as KeepArea).Keep == m_keep)
+						FinishMission();
+				}
+			}
+
+			ExpireMission();
 		}
 
 		public override void FinishMission()
