@@ -76,7 +76,9 @@ namespace DOL.GS.Keeps
 					}
 				case "reconnoiter":
 					{
-						SayTo(player, "This type of mission is not yet implemented");
+						if (player.Mission != null)
+							player.Mission.ExpireMission();
+						player.Mission = new ScoutMission(player);
 						break;
 					}
 				case "assassination":
@@ -231,7 +233,7 @@ namespace DOL.GS.Keeps
 			if (player.Mission != null)
 				SayTo(player, player.Mission.Description);
 
-			if (player.PlayerGroup.Mission != null)
+			if (player.PlayerGroup != null && player.PlayerGroup.Mission != null)
 				SayTo(player, player.PlayerGroup.Mission.Description);
 
 			return true;

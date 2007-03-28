@@ -154,18 +154,24 @@ namespace DOL.Database
 
 		public int GetObjectCount(Type objectType)
 		{
+			return GetObjectCount(objectType, "");
+		}
+
+		public int GetObjectCount(Type objectType, string where)
+		{
 			string tableName = DataObject.GetTableName(objectType);
 			if (connection.IsSQLConnection)
 			{
-				object count = connection.ExecuteScalar("SELECT COUNT(*) FROM " + tableName);
-						if (count is Int64)
-							return (int)((Int64)count);
-						return (int)count;
+				string query = "SELECT COUNT(*) FROM " + tableName;
+				if (where != "")
+					query += " WHERE " + where;
+				object count = connection.ExecuteScalar(query);
+				if (count is Int64)
+					return (int)((Int64)count);
+				return (int)count;
 			}
-			DataTable table = GetDataSet(tableName).Tables[tableName];
-			return table.Rows.Count;
+			return 0;
 		}
-
 
 		private void SQLAddNewObject(DataObject dataObject)
 		{
@@ -255,6 +261,74 @@ namespace DOL.Database
 				if(log.IsErrorEnabled)
 					log.Error("Error while adding dataobject " + dataObject.TableName + " " + dataObject.ObjectId,e);
 			}
+		}
+
+		public void ArchiveTables()
+		{
+			if (!connection.IsSQLConnection)
+				return;
+			log.Info("Archiving Tables...");
+
+			//we do it in this order, because if we move account first, the rest of the queries fail
+			MoveObject(typeof(InventoryItemArchive), typeof(InventoryItem), "INNER JOIN `DOLCharacters` dc ON i.OwnerId = dc.DOLCharacters_ID INNER JOIN `Account` ac ON dc.AccountName = ac.Name WHERE DATE_SUB(CURDATE(), INTERVAL 30 DAY) > ac.LastLogin");
+			MoveObject(typeof(CharacterArchive), typeof(Character), "INNER JOIN `Account` ac ON d.AccountName = ac.Name WHERE DATE_SUB(CURDATE(), INTERVAL 30 DAY) > ac.LastLogin");
+			MoveObject(typeof(AccountArchive), typeof(Account), "WHERE DATE_SUB(CURDATE(), INTERVAL 30 DAY) > `LastLogin`");
+			log.Info("Archiving Complete!");
+		}
+
+		public void MoveObject(Type targetType, Type sourceType, string query)
+		{
+			if (!connection.IsSQLConnection)
+				return;
+
+			string targetTableName = DataObject.GetTableName(targetType);
+			string sourceTableName = DataObject.GetTableName(sourceType);
+
+			DataTableHandler targetHandler = tableDatasets[targetTableName] as DataTableHandler;
+			DataTableHandler sourceHandler = tableDatasets[sourceTableName] as DataTableHandler;
+
+			DataTable targetTable = targetHandler.DataSet.Tables[0] as DataTable;
+			DataTable sourceTable = targetHandler.DataSet.Tables[0] as DataTable;
+
+			//column names
+			string insertQuery = "INSERT INTO `" + targetTableName + "` (";
+
+			for (int i = 0; i < targetTable.Columns.Count; i++)
+			{
+				DataColumn targetColumn = targetTable.Columns[i] as DataColumn;
+				if (i == 0)
+					insertQuery += "`" + targetTableName + "_ID`";
+				else
+					insertQuery += "`" + targetColumn.ColumnName + "`";
+				if (i + 1 < targetTable.Columns.Count)
+					insertQuery += ",";
+			}
+
+			insertQuery += ") SELECT ";
+
+			//column values
+
+
+			string shortName = sourceTableName.Substring(0, 1).ToLower();
+
+			for (int i = 0; i < targetTable.Columns.Count; i++)
+			{
+				DataColumn targetColumn = targetTable.Columns[i] as DataColumn;
+				if (i == 0)
+					insertQuery += shortName + "." + sourceTableName + "_ID";
+				else
+					insertQuery += shortName + "." + targetColumn.ColumnName;
+				if (i + 1 < targetTable.Columns.Count)
+					insertQuery += ",";
+			}
+
+			insertQuery += " FROM `" + sourceTableName + "` " + shortName + " " + query;
+
+			//connection.ExecuteNonQuery("INSERT INTO `" + targetTableName + "` SELECT * FROM `" + sourceTableName + "` WHERE " + query);
+			connection.ExecuteNonQuery(insertQuery);
+
+			string deleteQuery = "DELETE " + shortName + " FROM `" + sourceTableName + "` " + shortName + " " + query;
+			connection.ExecuteNonQuery(deleteQuery);
 		}
 
 		/// <summary>

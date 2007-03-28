@@ -1168,6 +1168,57 @@ namespace DOL.GS
 		#region Get random NPC
 
 		/// <summary>
+		/// Get's a random NPC based on a con level
+		/// </summary>
+		/// <param name="realm"></param>
+		/// <param name="conLevel">-3 grey, -2 green, -1 blue, 0 yellow, 1 - orange, 2 red, 3 purple</param>
+		/// <returns></returns>
+		public GameNPC GetRandomNPCByCon(eRealm realm, int compareLevel, int conLevel)
+		{
+			if (!m_initialized) InitializeZone();
+			// select random starting subzone and iterate over all objects in subzone than in all subzone...
+			int currentSubZoneIndex = Util.Random(SUBZONE_NBR);
+			int startSubZoneIndex = currentSubZoneIndex;
+			GameNPC randomNPC = null;
+			GameNPC currentNPC = null;
+			do
+			{
+				SubNodeElement startElement = m_subZoneElements[currentSubZoneIndex][(int)eGameObjectType.NPC];
+				lock (startElement)
+				{
+					// if list is not empty
+					if (startElement != startElement.next)
+					{
+						SubNodeElement curElement = startElement.next;
+						do
+						{
+							currentNPC = (GameNPC)curElement.data;
+							if (currentNPC != null && currentNPC.ObjectState == GameObject.eObjectState.Active)
+							{
+								if ((int)GameObject.GetConLevel(compareLevel, currentNPC.Level) == conLevel && currentNPC.Realm == (byte)realm)
+								{
+									randomNPC = currentNPC;
+									break;
+								}
+							}
+							curElement = curElement.next;
+						} while ((randomNPC != null) && (curElement != startElement));
+					}
+				}
+
+				if (randomNPC == null)
+				{
+					if (++currentSubZoneIndex >= SUBZONE_NBR)
+					{
+						currentSubZoneIndex = 0;
+					}
+				}
+			} while ((randomNPC != null) && (currentSubZoneIndex != startSubZoneIndex));
+
+			return randomNPC;
+		}
+
+		/// <summary>
 		/// Get a random NPC belonging to a realm
 		/// </summary>
 		/// <param name="realm">The realm the NPC belong to</param>

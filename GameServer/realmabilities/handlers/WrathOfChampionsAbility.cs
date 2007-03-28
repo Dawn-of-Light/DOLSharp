@@ -76,6 +76,8 @@ namespace DOL.GS.RealmAbilities
 				t_player.TakeDamage(player, eDamageType.Spirit, dmgValue, 0);
 
 				// send a message
+				player.Out.SendMessage("You hit " + t_player.Name + " for " + dmgValue + " damage.", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+				t_player.Out.SendMessage(player.Name + " hits you for " + dmgValue + " damage.", eChatType.CT_YouWereHit, eChatLoc.CL_SystemWindow);
 
 				foreach (GamePlayer n_player in t_player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 				{

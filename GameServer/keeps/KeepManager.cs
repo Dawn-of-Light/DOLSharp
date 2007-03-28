@@ -103,6 +103,12 @@ namespace DOL.GS.Keeps
 				LoadHookPoints();
 				Logger.Info("Loaded " + m_keeps.Count + " keeps successfully");
 			}
+
+			if (ServerProperties.Properties.USE_KEEP_BALANCING)
+				UpdateBaseLevels();
+
+			if (ServerProperties.Properties.USE_LIVE_KEEP_BONUSES)
+				KeepBonusMgr.UpdateCounts();
 			return true;
 		}
 
@@ -470,6 +476,32 @@ namespace DOL.GS.Keeps
 						heading = 2585;
 						break;
 					}
+			}
+		}
+
+		public static int GetRealmBonusLevel(eRealm realm)
+		{
+			int keep = 7 - GetKeepCountByRealm(realm);
+			int tower = (28 - GetTowerCountByRealm(realm)) / 4;
+			return keep + tower;
+
+			//for every extra keep, lose a level, for every missing keep gain a level
+			//for every extra 4 towers, lose a level, for every missing 4 towers gain a level
+		}
+
+		public static void UpdateBaseLevels()
+		{
+			lock (m_keeps.SyncRoot)
+			{
+				foreach (AbstractGameKeep keep in m_keeps.Values)
+				{
+					if (keep.Region != 163) continue;
+					keep.BaseLevel = (byte)(keep.DBKeep.BaseLevel + KeepMgr.GetRealmBonusLevel((eRealm)keep.Realm));
+					foreach (GameKeepGuard guard in keep.Guards.Values)
+					{
+						TemplateMgr.SetGuardLevel(guard);
+					}
+				}
 			}
 		}
 	}

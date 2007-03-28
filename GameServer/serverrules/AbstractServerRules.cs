@@ -737,6 +737,13 @@ namespace DOL.GS.ServerRules
 
 							outpostXP = (xpReward / 100) * bonus;
 						}
+
+#warning this is a guess, I do not know the real way this is applied
+						//apply the keep bonus for experience
+						if (Keeps.KeepBonusMgr.RealmHasBonus(eKeepBonusType.Experience_5, (eRealm)living.Realm))
+							outpostXP += (xpReward / 100) * 5;
+						else if (Keeps.KeepBonusMgr.RealmHasBonus(eKeepBonusType.Experience_3, (eRealm)living.Realm))
+							outpostXP += (xpReward / 100) * 3;
 					}
 
 					long groupExp = 0;
@@ -950,7 +957,7 @@ namespace DOL.GS.ServerRules
 				bool BG = false;
 				foreach (AbstractGameKeep keep in KeepMgr.GetKeepsOfRegion(killedPlayer.CurrentRegionID))
 				{
-					if (keep.BaseLevel < 50)
+					if (keep.DBKeep.BaseLevel < 50)
 					{
 						BG = true;
 						break;
@@ -1008,7 +1015,7 @@ namespace DOL.GS.ServerRules
 					}
 					if (realmPoints > rpCap)
 						realmPoints = rpCap;
-					if (realmPoints != 0)
+					if (realmPoints > 0)
 					{
 						if (living is GamePlayer)
 							killedPlayer.LastDeathRealmPoints += realmPoints;
@@ -1020,7 +1027,15 @@ namespace DOL.GS.ServerRules
 					int bountyPoints = (int)(playerBPValue * damagePercent);
 					if (bountyPoints > bpCap)
 						bountyPoints = bpCap;
-					if (bountyPoints != 0)
+
+#warning this is guessed, i do not believe this is the right way, we will most likely need special messages to be sent
+					//apply the keep bonus for bounty points
+					if (Keeps.KeepBonusMgr.RealmHasBonus(eKeepBonusType.Bounty_Points_5, (eRealm)killer.Realm))
+						bountyPoints += (bountyPoints / 100) * 5;
+					else if (Keeps.KeepBonusMgr.RealmHasBonus(eKeepBonusType.Bounty_Points_3, (eRealm)killer.Realm))
+						bountyPoints += (bountyPoints / 100) * 3;
+
+					if (bountyPoints > 0)
 					{
 						living.GainBountyPoints(bountyPoints);
 					}

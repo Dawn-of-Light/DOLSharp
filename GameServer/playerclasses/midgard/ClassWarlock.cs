@@ -43,12 +43,12 @@ namespace DOL.GS.Scripts
 			if (level>=45) return "TODO";
 			if (level>=40) return "Hel's Chosen";
 			if (level>=35) return "TODO";
-			if (level>=30) return "TODO";
+			if (level >= 30) return "Warlock Advocate";
 			if (level>=25) return "TODO";
 			if (level>=20) return "TODO";
 			if (level>=15) return "Initiate of Hel";
-			if (level>=10) return "Conjurer"; 
-			if (level>=5) return "TODO"; 
+			if (level>=10) return "Conjurer";
+			if (level >= 5) return "Apprentice Conjurer"; 
 			return "None"; 
 		}
 

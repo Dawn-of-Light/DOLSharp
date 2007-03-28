@@ -290,6 +290,36 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("use_custom_start_locations", "Set to true if you will use another script to set your start locations", false)]
 		public static readonly bool USE_CUSTOM_START_LOCATIONS;
+
+		/// <summary>
+		/// Use Keep Balancing
+		/// </summary>
+		[ServerProperty("use_keep_balancing", "Set to true if you want keeps to be higher level in NF the less you have, and lower level the more you have", false)]
+		public static readonly bool USE_KEEP_BALANCING;
+
+		/// <summary>
+		/// Use Archiving
+		/// </summary>
+		[ServerProperty("use_archiving", "Set to true if you want to move old records to an archive table", false)]
+		public static readonly bool USE_ARCHIVING;
+
+		/// <summary>
+		/// Use Live Keep Bonuses
+		/// </summary>
+		[ServerProperty("use_live_keep_bonuses", "Set to true if you want to use the live keeps bonuses, for example 3% extra xp", false)]
+		public static readonly bool USE_LIVE_KEEP_BONUSES;
+
+		/// <summary>
+		/// Use Supply Chain
+		/// </summary>
+		[ServerProperty("use_supply_chain", "Set to true if you want to use the live supply chain for keep teleporting, set to false to allow teleporting to any keep that your realm controls (and towers)", false)]
+		public static readonly bool USE_SUPPLY_CHAIN;
+
+		/// <summary>
+		/// Death Messages All Realms
+		/// </summary>
+		[ServerProperty("death_messages_all_realms", "Set to true if you want all realms to see other realms death and kill messages", false)]
+		public static readonly bool DEATH_MESSAGES_ALL_REALMS;
 		
 		/// <summary>
 		/// This method loads the property from the database and returns

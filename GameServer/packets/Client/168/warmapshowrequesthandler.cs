@@ -95,7 +95,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 								{
 									//does keep have all towers intact?
 									//todo 5 second teleport
-									if (client.Account.PrivLevel > 1 || (keep as GameKeep).OwnsAllTowers)
+									if (client.Account.PrivLevel > 1 || ((keep as GameKeep).OwnsAllTowers && !keep.InCombat))
 									{
 										FrontiersPortalStone stone = keep.TeleportStone;
 										heading = stone.Heading;

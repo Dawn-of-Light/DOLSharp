@@ -313,6 +313,8 @@ namespace DOL.GS.PacketHandler
 						else
 						{
 							good = theKeep.OwnsAllTowers;
+							if (good)
+								good = !theKeep.InCombat;
 						}
 
 						if (good)
