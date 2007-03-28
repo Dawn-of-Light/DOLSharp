@@ -790,7 +790,7 @@ namespace DOL.GS
 			//battlegrounds caps
 			foreach (AbstractGameKeep keep in KeepMgr.GetKeepsOfRegion(CurrentRegionID))
 			{
-				if (keep.BaseLevel < 50 && Level > keep.BaseLevel)
+				if (keep.DBKeep.BaseLevel < 50 && Level > keep.DBKeep.BaseLevel)
 				{
 					switch (Realm)
 					{
@@ -931,16 +931,16 @@ namespace DOL.GS
 									byte cap = 50;
 									foreach (AbstractGameKeep keep in KeepMgr.GetKeepsOfRegion(CurrentRegionID))
 									{
-										if (keep.BaseLevel < cap)
+										if (keep.DBKeep.BaseLevel < cap)
 										{
-											cap = keep.BaseLevel;
+											cap = keep.DBKeep.BaseLevel;
 											break;
 										}
 									}
 									//get the portal location
 									foreach (AbstractGameKeep keep in KeepMgr.GetKeepsOfRegion(CurrentRegionID))
 									{
-										if (keep.BaseLevel > 50 && keep.Realm == Realm)
+										if (keep.DBKeep.BaseLevel > 50 && keep.Realm == Realm)
 										{
 											relRegion = (ushort)keep.Region;
 											relX = keep.X;
@@ -5976,7 +5976,8 @@ namespace DOL.GS
 				if (
 					(player != killer) && (
 											(killer != null && killer is GamePlayer && GameServer.ServerRules.IsSameRealm((GamePlayer)killer, player, true))
-											|| (GameServer.ServerRules.IsSameRealm(this, player, true)))
+											|| (GameServer.ServerRules.IsSameRealm(this, player, true))
+											|| ServerProperties.Properties.DEATH_MESSAGES_ALL_REALMS)
 					)
 					if (player == this)
 						player.Out.SendMessage(playerMessage, messageType, eChatLoc.CL_SystemWindow);
@@ -8796,6 +8797,34 @@ namespace DOL.GS
 		/// <returns>the GameInventoryItem on the ground</returns>
 		public GameInventoryItem CreateItemOnTheGround(InventoryItem item)
 		{
+			if (IsSwimming && CurrentZone.GetRealm() == (eRealm)Realm)
+			{
+				byte boatType = 255;
+				switch (item.Model)
+				{
+					case 2648: boatType = 0; break;
+					case 2646: boatType = 1; break;
+					case 2647: boatType = 2; break;
+				}
+
+				if (boatType != 255)
+				{
+					Out.SendMessage("You drop the " + item.Name + " in the water!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					GameBoat boat = new GameBoat(boatType);
+
+					int tx, ty;
+					GetSpotFromHeading(30, out tx, out ty);
+					boat.X = tx;
+					boat.Y = ty;
+					boat.Z = Z;
+					boat.Heading = Heading;
+					boat.CurrentRegionID = CurrentRegionID;
+
+					boat.AddToWorld();
+					return null;
+				}
+			}
+
 			GameInventoryItem gameItem = new GameInventoryItem(item); // fixed
 
 			int x, y;
@@ -8832,7 +8861,7 @@ namespace DOL.GS
 				return false;
 			}
 
-			if (!checkRange && !WorldMgr.CheckDistance(floorObject, this, WorldMgr.PICKUP_DISTANCE))
+			if ((floorObject is GameBoat == false) && !checkRange && !WorldMgr.CheckDistance(floorObject, this, WorldMgr.PICKUP_DISTANCE))
 			{
 				Out.SendMessage("The " + floorObject.Name + " is too far away to pick up!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
@@ -8957,6 +8986,19 @@ namespace DOL.GS
 					moneyObject.Delete();
 					return true;
 				}
+			}
+			else if (floorObject is GameBoat)
+			{
+				if (!WorldMgr.CheckDistance(this, floorObject, 1000))
+				{
+					Out.SendMessage("You are too far from the boat to board!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					return false;
+				}
+
+				if (!InCombat)
+					MountSteed(floorObject as GameBoat, false);
+
+				return true;
 			}
 			else if ((floorObject is GameNPC || floorObject is GameStaticItem) && floorObject.CurrentHouse != null)
 			{

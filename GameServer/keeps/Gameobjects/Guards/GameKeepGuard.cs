@@ -527,8 +527,13 @@ namespace DOL.GS.Keeps
 			list.Add("You examine " + GetName(0, false) + ".  " + GetPronoun(0, true) + " is " + GetAggroLevelString(player, false) + " and is a realm guard.");
 			if (this.Component != null)
 			{
+				string text = "";
 				if (this.Component.Keep.Level > 1 && GameServer.ServerRules.IsSameRealm(player, this, true))
-					list.Add(GetPronoun(0, true) + " has upgraded equipment (" + this.Component.Keep.Level + ").");
+					text = GetPronoun(0, true) + " has upgraded equipment (" + this.Component.Keep.Level + ").";
+				if (ServerProperties.Properties.USE_KEEP_BALANCING)
+					text += GetPronoun(0, true) + " has keep balancing level (" + (Component.Keep.BaseLevel - 50).ToString() + ")";
+				if (text != "")
+					list.Add(text);
 			}
 			return list;
 		}

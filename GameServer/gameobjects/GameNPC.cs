@@ -1752,6 +1752,14 @@ namespace DOL.GS
 		}
 
 		/// <summary>
+		/// The minimum number of passengers required to move
+		/// </summary>
+		public virtual int REQUIRED_PASSENGERS
+		{
+			get { return 1; }
+		}
+
+		/// <summary>
 		/// The slot offset for this NPC
 		/// </summary>
 		public virtual int SLOT_OFFSET
@@ -2747,7 +2755,21 @@ namespace DOL.GS
 					GameStaticItem loot;
 					if (GameMoney.IsItemMoney(lootTemplate.Name))
 					{
-						loot = new GameMoney(lootTemplate.Value, this);
+						long value = lootTemplate.Value;
+						if (Keeps.KeepBonusMgr.RealmHasBonus(DOL.GS.Keeps.eKeepBonusType.Coin_Drop_5, (eRealm)killer.Realm))
+							value += (value / 100) * 5;
+						else if (Keeps.KeepBonusMgr.RealmHasBonus(DOL.GS.Keeps.eKeepBonusType.Coin_Drop_3, (eRealm)killer.Realm))
+							value += (value / 100) * 3;
+
+						//this will need to be changed when the ML for increasing money is added
+						if (value != lootTemplate.Value)
+						{
+							GamePlayer killerPlayer = killer as GamePlayer;
+							if (killerPlayer != null)
+								killerPlayer.Out.SendMessage("You find an additional " + Money.GetString(value - lootTemplate.Value) + " thanks to your realm owning outposts!", eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
+						}
+
+						loot = new GameMoney(value, this);
 						loot.Name = lootTemplate.Name;
 						loot.Model = (ushort)lootTemplate.Model;
 					}
