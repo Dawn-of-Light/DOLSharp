@@ -23,6 +23,7 @@ using System.Text;
 
 using DOL.Database;
 using DOL.Events;
+using DOL.Language;
 using DOL.GS.Housing;
 using DOL.GS.PacketHandler;
 using DOL.GS.Utils;
@@ -537,7 +538,7 @@ namespace DOL.GS
 		public virtual IList GetExamineMessages(GamePlayer player)
 		{
 			IList list = new ArrayList(4);
-			list.Add("You target [" + GetName(0, false) + "]");
+			list.Add(LanguageMgr.GetTranslation(player.Client, "GameObject.GetExamineMessages.YouTarget", GetName(0, false)));
 			return list;
 		}
 
@@ -749,7 +750,7 @@ namespace DOL.GS
 		{
 			if (player.Client.Account.PrivLevel == 1 && !WorldMgr.CheckDistance(this, player, WorldMgr.INTERACT_DISTANCE))
 			{
-				player.Out.SendMessage("You are too far away to interact with " + GetName(0, false) + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameObject.GetExamineMessages.YouTarget", GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
 			Notify(GameObjectEvent.Interact, this, new InteractEventArgs(player));
