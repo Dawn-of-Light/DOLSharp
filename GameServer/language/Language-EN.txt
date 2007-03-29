@@ -23,6 +23,10 @@ System.ReleaseTimer:					Release Timer
 GameLiving.ReceiveItem:					{0} doesn't want this item!
 GameLiving.ReceiveMoney:				{0} doesn't want your money!
 
+# GAMEOBJECT
+GameObject.GetExamineMessages.YouTarget:		You target [{0}].
+GameObject.Interact.TooFarAway:				You are too far away to interact with {0}.
+
 # GAMEPLAYER
 GamePlayer.Attack.AlreadyDead:				{0} is already dead!
 GamePlayer.Attack.Blocked:				{0} blocks your attack!
