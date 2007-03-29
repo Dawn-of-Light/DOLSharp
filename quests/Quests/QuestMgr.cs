@@ -258,17 +258,6 @@ namespace DOL.GS.Quests
         }					
 
 		/// <summary>
-		/// Check if the player can do the global quest
-		/// </summary>
-		/// <param name="questType">The type of the quest</param>
-		/// <param name="target">The player who search a quest</param>
-		/// <returns>the number of time the quest can be done again</returns>
-		public static int CanGiveQuest(Type questType, GamePlayer target)
-		{
-			return CanGiveQuest(questType, target, null);
-		}
-
-		/// <summary>
 		/// Check if the npc can give the quest to the player
 		/// </summary>
 		/// <param name="questType">The type of the quest</param>
@@ -312,7 +301,7 @@ namespace DOL.GS.Quests
 		public static bool ProposeQuestToPlayer(Type questType, string sentence, GamePlayer player, GameNPC source)
 		{
 
-            if (CanGiveQuest(questType, player) > 0)
+            if (CanGiveQuest(questType, player, source) > 0)
             {
                 player.Out.SendQuestSubscribeCommand(source, QuestMgr.GetIDForQuestType(questType), sentence);
                 return true;
