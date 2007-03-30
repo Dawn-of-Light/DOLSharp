@@ -25,6 +25,7 @@ using DOL.AI;
 using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
+using DOL.Language;
 using DOL.GS.Effects;
 using DOL.GS.Movement;
 using DOL.GS.Quests;
@@ -2063,34 +2064,34 @@ namespace DOL.GS
 			{
 				aggroLevel = Faction.GetAggroToFaction(player);
 				if (aggroLevel > 75)
-					aggroLevelString = "aggressive";
+					aggroLevelString = LanguageMgr.GetTranslation(player.Client, "GameNPC.GetAggroLevelString.Aggressive1");
 				else if (aggroLevel > 50)
-					aggroLevelString = "hostile";
+					aggroLevelString = LanguageMgr.GetTranslation(player.Client, "GameNPC.GetAggroLevelString.Hostile1");
 				else if (aggroLevel > 25)
-					aggroLevelString = "neutral";
+					aggroLevelString = LanguageMgr.GetTranslation(player.Client, "GameNPC.GetAggroLevelString.Neutral1");
 				else
-					aggroLevelString = "friendly";
+					aggroLevelString = LanguageMgr.GetTranslation(player.Client, "GameNPC.GetAggroLevelString.Friendly1");
 			}
 			else
 			{
 				IAggressiveBrain aggroBrain = Brain as IAggressiveBrain;
 				if (GameServer.ServerRules.IsSameRealm(this, player, true))
 				{
-					if (firstLetterUppercase) aggroLevelString = "Friendly";
-					else aggroLevelString = "friendly";
+					if (firstLetterUppercase) aggroLevelString = LanguageMgr.GetTranslation(player.Client, "GameNPC.GetAggroLevelString.Friendly2");
+					else aggroLevelString = LanguageMgr.GetTranslation(player.Client, "GameNPC.GetAggroLevelString.Friendly1");
 				}
 				else if (aggroBrain != null && aggroBrain.AggroLevel > 0)
 				{
-					if (firstLetterUppercase) aggroLevelString = "Aggressive";
-					else aggroLevelString = "aggressive";
+					if (firstLetterUppercase) aggroLevelString = LanguageMgr.GetTranslation(player.Client, "GameNPC.GetAggroLevelString.Aggressive2");
+					else aggroLevelString = LanguageMgr.GetTranslation(player.Client, "GameNPC.GetAggroLevelString.Aggressive1");
 				}
 				else
 				{
-					if (firstLetterUppercase) aggroLevelString = "Neutral";
-					else aggroLevelString = "neutral";
+					if (firstLetterUppercase) aggroLevelString = LanguageMgr.GetTranslation(player.Client, "GameNPC.GetAggroLevelString.Neutral2");
+					else aggroLevelString = LanguageMgr.GetTranslation(player.Client, "GameNPC.GetAggroLevelString.Neutral1");
 				}
 			}
-			return aggroLevelString + " towards you.";
+			return LanguageMgr.GetTranslation(player.Client, "GameNPC.GetAggroLevelString.TowardsYou", aggroLevelString);
 		}
 
 		/// <summary>
@@ -2101,7 +2102,7 @@ namespace DOL.GS
 		public override IList GetExamineMessages(GamePlayer player)
 		{
 			IList list = base.GetExamineMessages(player);
-			list.Add("You examine " + GetName(0, false) + ".  " + GetPronoun(0, true) + " is " + GetAggroLevelString(player, false));
+			list.Add(LanguageMgr.GetTranslation(player.Client, "GameNPC.GetExamineMessages.YouExamine", GetName(0, false), GetPronoun(0, true), GetAggroLevelString(player, false)));
 			return list;
 		}
 
