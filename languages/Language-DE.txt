@@ -23,6 +23,10 @@ System.ReleaseTimer:					Automatischer Release
 GameLiving.ReceiveItem:					{0} will diesen Gegenstand nicht!
 GameLiving.ReceiveMoney:				{0} will Euer Geld nicht!
 
+# GAMEOBJECT
+GameObject.GetExamineMessages.YouTarget:		Es wird [{0}] als Ziel erfasst.
+GameObject.Interact.TooFarAway:				{0} ist zu weit entfernt.
+
 # GAMEPLAYER
 GamePlayer.Attack.AlreadyDead:				{0} ist bereits tot!
 GamePlayer.Attack.Blocked:				{0} blockiert Euren Angriff!
