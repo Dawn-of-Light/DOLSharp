@@ -22,6 +22,7 @@ using System.Reflection;
 using System.Threading;
 using DOL.AI.Brain;
 using DOL.Database;
+using DOL.Language;
 using DOL.GS.PacketHandler;
 using log4net;
 
@@ -55,8 +56,9 @@ namespace DOL.GS
 		public override IList GetExamineMessages(GamePlayer player)
 		{
 			IList list = base.GetExamineMessages(player);
-			list.Add("You examine " + GetName(0, false) + ".  " + GetPronoun(0, true) + " is " + GetAggroLevelString(player, false) + " and is a merchant.");
-			list.Add("[Right click to display a shop window]");
+			list.RemoveAt(list.Count - 1);
+			list.Add(LanguageMgr.GetTranslation(player.Client, "GameMerchant.GetExamineMessages.YouExamine", GetName(0, false), GetPronoun(0, true), GetAggroLevelString(player, false)));
+			list.Add(LanguageMgr.GetTranslation(player.Client, "GameMerchant.GetExamineMessages.RightClick")); 
 			return list;
 		}
 
@@ -80,14 +82,14 @@ namespace DOL.GS
 		/// <param name="player"></param>
 		public virtual void SendMerchantWindow(GamePlayer player)
 		{
-			ThreadPool.QueueUserWorkItem(new WaitCallback(SendMerchatWindowCallback), player);
+			ThreadPool.QueueUserWorkItem(new WaitCallback(SendMerchantWindowCallback), player);
 		}
 
 		/// <summary>
 		/// Sends merchant window from threadpool thread
 		/// </summary>
 		/// <param name="state">The game player to send to</param>
-		protected virtual void SendMerchatWindowCallback(object state)
+		protected virtual void SendMerchantWindowCallback(object state)
 		{
 			((GamePlayer)state).Out.SendMerchantWindow(m_tradeItems, eMerchantWindowType.Normal);
 		}
@@ -144,22 +146,22 @@ namespace DOL.GS
 
 				if (player.GetCurrentMoney() < totalValue)
 				{
-					player.Out.SendMessage("You need " + Money.GetString(totalValue) + " to buy this.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameMerchant.OnPlayerBuy.YouNeed", Money.GetString(totalValue)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return;
 				}
 
 				if (!player.Inventory.AddTemplate(template, amountToBuy, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
 				{
-					player.Out.SendMessage("Not enough inventory space to buy that.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameMerchant.OnPlayerBuy.NotInventorySpace"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return;
 				}
 
 				//Generate the buy message
 				string message;
 				if (amountToBuy > 1)
-					message = "You just bought " + amountToBuy + " pieces of " + template.GetName(1, false) + " for {0}.";
+					message = LanguageMgr.GetTranslation(player.Client, "GameMerchant.OnPlayerBuy.BoughtPieces", amountToBuy, template.GetName(1, false), Money.GetString(totalValue));
 				else
-					message = "You just bought " + template.GetName(1, false) + " for {0}.";
+					message = LanguageMgr.GetTranslation(player.Client, "GameMerchant.OnPlayerBuy.Bought", template.GetName(1, false), Money.GetString(totalValue));
 
 				// Check if player has enough money and subtract the money
 				if (!player.RemoveMoney(totalValue, message, eChatType.CT_Merchant, eChatLoc.CL_SystemWindow))
@@ -202,22 +204,22 @@ namespace DOL.GS
 
 				if (player.GetCurrentMoney() < totalValue)
 				{
-					player.Out.SendMessage("You need " + Money.GetString(totalValue) + " to buy this.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameMerchant.OnPlayerBuy.YouNeed", Money.GetString(totalValue)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return;
 				}
 
 				if (!player.Inventory.AddTemplate(template, amountToBuy, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
 				{
-					player.Out.SendMessage("Not enough inventory space to buy that.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameMerchant.OnPlayerBuy.NotInventorySpace"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return;
 				}
 
 				//Generate the buy message
 				string message;
 				if (amountToBuy > 1)
-					message = "You just bought " + amountToBuy + " pieces of " + template.GetName(1, false) + " for {0}.";
+					message = LanguageMgr.GetTranslation(player.Client, "GameMerchant.OnPlayerBuy.BoughtPieces", amountToBuy, template.GetName(1, false), Money.GetString(totalValue));
 				else
-					message = "You just bought " + template.GetName(1, false) + " for {0}.";
+					message = LanguageMgr.GetTranslation(player.Client, "GameMerchant.OnPlayerBuy.Bought", template.GetName(1, false), Money.GetString(totalValue));
 
 				// Check if player has enough money and subtract the money
 				if (!player.RemoveMoney(totalValue, message, eChatType.CT_Merchant, eChatLoc.CL_SystemWindow))
@@ -237,13 +239,13 @@ namespace DOL.GS
 		{
 			if (!item.IsDropable)
 			{
-				player.Out.SendMessage("This item can't be sold.", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameMerchant.OnPlayerSell.CantBeSold"), eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
 			if (!WorldMgr.CheckDistance(this, player, WorldMgr.PICKUP_DISTANCE)) // tested
 			{
-				player.Out.SendMessage(GetName(0, true) + " is too far away!", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameMerchant.OnPlayerSell.TooFarAway", GetName(0, true)), eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
@@ -251,18 +253,18 @@ namespace DOL.GS
 
 			if (itemValue == 0)
 			{
-				player.Out.SendMessage(GetName(0, true) + " isn't interested in " + item.GetName(0, false) + ".", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameMerchant.OnPlayerSell.IsntInterested", GetName(0, true), item.GetName(0, false)), eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
 			if (player.Inventory.RemoveItem(item))
 			{
-				string message = GetName(0, true) + " gives you " + Money.GetString(itemValue) + " for " + item.GetName(0, false) + ".";
+				string message = LanguageMgr.GetTranslation(player.Client, "GameMerchant.OnPlayerSell.GivesYou", GetName(0, true), Money.GetString(itemValue), item.GetName(0, false));
 				player.AddMoney(itemValue, message, eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
 				return;
 			}
 			else
-				player.Out.SendMessage("This item can't be sold.", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameMerchant.OnPlayerSell.CantBeSold"), eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
 		}
 
 		/// <summary>
@@ -301,11 +303,11 @@ namespace DOL.GS
 				string message;
 				if (val == 0)
 				{
-					message = GetName(0, true) + " isn't interested in " + item.GetName(0, false);
+					message = LanguageMgr.GetTranslation(player.Client, "GameMerchant.OnPlayerSell.IsntInterested", GetName(0, true), item.GetName(0, false));
 				}
 				else
 				{
-					message = GetName(0, true) + " offers you " + Money.GetString(val) + " for " + item.GetName(0, false);
+					message = LanguageMgr.GetTranslation(player.Client, "GameMerchant.OnPlayerAppraise.Offers", GetName(0, true), Money.GetString(val), item.GetName(0, false));
 				}
 				player.Out.SendMessage(message, eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
 			}
@@ -406,7 +408,7 @@ namespace DOL.GS
 
 	public class GameBountyMerchant : GameMerchant
 	{
-		protected override void SendMerchatWindowCallback(object state)
+		protected override void SendMerchantWindowCallback(object state)
 		{
 			((GamePlayer)state).Out.SendMerchantWindow(m_tradeItems, eMerchantWindowType.Bp);
 		}
@@ -434,20 +436,20 @@ namespace DOL.GS
 			{
 				if (player.BountyPoints < totalValue)
 				{
-					player.Out.SendMessage("You need " + totalValue + " BPs to buy this.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameMerchant.OnPlayerBuy.YouNeedBP", totalValue), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return;
 				}
 				if (!player.Inventory.AddTemplate(template, amountToBuy, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
 				{
-					player.Out.SendMessage("Not enough inventory space to buy that.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameMerchant.OnPlayerBuy.NotInventorySpace"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return;
 				}
 				//Generate the buy message
 				string message;
 				if (number > 1)
-					message = "You just bought " + totalValue + " pieces of " + template.GetName(1, false) + " for " + totalValue + " BPs.";
+					message = LanguageMgr.GetTranslation(player.Client, "GameMerchant.OnPlayerBuy.BoughtPiecesBP", totalValue, template.GetName(1, false));
 				else
-					message = "You just bought " + template.GetName(1, false) + " for " + totalValue + " BPs.";
+					message = LanguageMgr.GetTranslation(player.Client, "GameMerchant.OnPlayerBuy.BoughtBP", template.GetName(1, false), totalValue);
 				player.BountyPoints -= totalValue;
 				player.Out.SendUpdatePoints();
 				player.Out.SendMessage(message, eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
@@ -490,23 +492,24 @@ namespace DOL.GS
 			get { return m_countText; }
 		}
 
-		public override IList GetExamineMessages(GamePlayer player)
+		public override bool Interact(GamePlayer player)
 		{
-			IList list = base.GetExamineMessages(player);
-			list.Add("You examine " + GetName(0, false) + ".  " + GetPronoun(0, true) + " is " + GetAggroLevelString(player, false) + " and is a merchant.");
+			if (!base.Interact(player))
+				return false;
+
+			TurnTo(player, 10000);
 			string text = "";
 			if (moneyItem == null || moneyItem.Item == null || m_countText == null || m_countText == "")
-				text = "nothing";
+				text = LanguageMgr.GetTranslation(player.Client, "GameMerchant.GetExamineMessages.Nothing");
 			else
 			{
 				text = m_countText;
 			}
-			list.Add("You can buy items here for " + text + ".");
-			list.Add("[Right click to display a shop window]");
-			return list;
+			player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameMerchant.GetExamineMessages.BuyItemsFor", this.Name, text), eChatType.CT_Say, eChatLoc.CL_ChatWindow);
+			return true;
 		}
 
-		protected override void SendMerchatWindowCallback(object state)
+		protected override void SendMerchantWindowCallback(object state)
 		{
 			((GamePlayer)state).Out.SendMerchantWindow(m_tradeItems, eMerchantWindowType.Count);
 		}
@@ -536,20 +539,21 @@ namespace DOL.GS
 			{
 				if (player.Inventory.CountItemTemplate(m_moneyItem.Item.Id_nb, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) < totalValue)
 				{
-					player.Out.SendMessage("You need " + totalValue + " " + m_countText + " to buy this.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameMerchant.OnPlayerBuy.YouNeed2", totalValue, m_countText), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return;
 				}
 				if (!player.Inventory.AddTemplate(template, amountToBuy, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
 				{
-					player.Out.SendMessage("Not enough inventory space to buy that.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameMerchant.OnPlayerBuy.NotInventorySpace"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
 					return;
 				}
 				//Generate the buy message
 				string message;
 				if (amountToBuy > 1)
-					message = "You just bought " + amountToBuy + " pieces of " + template.GetName(1, false) + " for " + totalValue + " " + m_countText + ".";
+					message = LanguageMgr.GetTranslation(player.Client, "GameMerchant.OnPlayerBuy.BoughtPieces2", amountToBuy, template.GetName(1, false), totalValue, m_countText);
 				else
-					message = "You just bought " + template.GetName(1, false) + " for " + totalValue + " " + m_countText + ".";
+					message = LanguageMgr.GetTranslation(player.Client, "GameMerchant.OnPlayerBuy.Bought2", template.GetName(1, false), totalValue, m_countText);
 
 				System.Collections.IList items = (System.Collections.IList)player.Inventory.GetItemRange(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
 				int removed = 0;
@@ -576,7 +580,7 @@ namespace DOL.GS
 			: base()
 		{
 			m_moneyItem = GameInventoryItem.CreateFromTemplate("DiamondSeal");
-			m_countText = "diamond seals";
+			m_countText = m_moneyItem.Name;
 		}
 	}
 
@@ -586,7 +590,7 @@ namespace DOL.GS
 			: base()
 		{
 			m_moneyItem = GameInventoryItem.CreateFromTemplate("SapphireSeal");
-			m_countText = "sapphire seals";
+			m_countText = m_moneyItem.Name;
 		}
 
 	}
@@ -597,7 +601,7 @@ namespace DOL.GS
 			: base()
 		{
 			m_moneyItem = GameInventoryItem.CreateFromTemplate("EmeraldSeal");
-			m_countText = "emerald seals";
+			m_countText = m_moneyItem.Name;
 		}
 	}
 
@@ -607,7 +611,7 @@ namespace DOL.GS
 			: base()
 		{
 			m_moneyItem = GameInventoryItem.CreateFromTemplate("aurulite");
-			m_countText = "units of aurulite";
+			m_countText = m_moneyItem.Name;
 		}
 	}
 }

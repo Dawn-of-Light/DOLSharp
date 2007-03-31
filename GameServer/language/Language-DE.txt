@@ -24,10 +24,10 @@ GameLiving.ReceiveItem:					{0} will diesen Gegenstand nicht!
 GameLiving.ReceiveMoney:				{0} will Euer Geld nicht!
 
 # GAMEMERCHANT
-GameMerchant.GetExamineMessages.BuyItemsFor:		Ihr könnt hier Dinge für {0} kaufen.
+GameMerchant.GetExamineMessages.BuyItemsFor:		{0} sagt: "Ihr machen Geschäft mit {0}? Geben {0} einfach {1} für seine Dinge."
 GameMerchant.GetExamineMessages.Nothing:		Nichts
-GameMerchant.GetExamineMessages.RightClick:		Ein Rechtsklick zeigt Euch das Warenangebot.
-GameMerchant.GetExamineMessages.YouExamine:		Es interessiert Euch {0}. {1} ist Euch {2} gesonnen und treibt Handel.
+GameMerchant.GetExamineMessages.RightClick:		
+GameMerchant.GetExamineMessages.YouExamine:		Es interessiert Euch {0}. {1} steht Euch {2} und treibt Handel.
 GameMerchant.OnPlayerAppraise.Offers:			{0} bietet Euch {1} für {2}.
 GameMerchant.OnPlayerBuy.Bought:			Ihr habt gerade {0} gekauft für {1}.
 GameMerchant.OnPlayerBuy.Bought2:			Ihr habt gerade {0} gekauft für {1} {2}.
@@ -57,7 +57,7 @@ GameNPC.GetAggroLevelString.TowardsYou:			{0} gegenüber
 GameNPC.GetExamineMessages.YouExamine:			Es interessiert Euch {0}. {1} steht Euch {2}.
 
 # GAMEOBJECT
-GameObject.GetExamineMessages.YouTarget:		Es wird [{0}] als Ziel erfasst.
+GameObject.GetExamineMessages.YouTarget:		Es wird {0} als Ziel erfasst.
 GameObject.Interact.TooFarAway:				{0} ist zu weit entfernt.
 
 # GAMEPLAYER
