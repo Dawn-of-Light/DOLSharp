@@ -24,7 +24,7 @@ GameLiving.ReceiveItem:					{0} doesn't want this item!
 GameLiving.ReceiveMoney:				{0} doesn't want your money!
 
 # GAMEMERCHANT
-GameMerchant.GetExamineMessages.BuyItemsFor:		You can buy items here for {0}.
+GameMerchant.GetExamineMessages.BuyItemsFor:		{0} says, "You can buy items here for {1}."
 GameMerchant.GetExamineMessages.Nothing:		nothing
 GameMerchant.GetExamineMessages.RightClick:		[Right click to display a shop window]
 GameMerchant.GetExamineMessages.YouExamine:		You examine {0}. {1} is {2} and is a merchant.
