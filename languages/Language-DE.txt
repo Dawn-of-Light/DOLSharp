@@ -23,8 +23,41 @@ System.ReleaseTimer:					Automatischer Release
 GameLiving.ReceiveItem:					{0} will diesen Gegenstand nicht!
 GameLiving.ReceiveMoney:				{0} will Euer Geld nicht!
 
+# GAMEMERCHANT
+GameMerchant.GetExamineMessages.BuyItemsFor:		{0} sagt: "Ihr machen Geschäft mit {0}? Geben {0} einfach {1} für seine Dinge."
+GameMerchant.GetExamineMessages.Nothing:		Nichts
+GameMerchant.GetExamineMessages.RightClick:		
+GameMerchant.GetExamineMessages.YouExamine:		Es interessiert Euch {0}. {1} steht Euch {2} und treibt Handel.
+GameMerchant.OnPlayerAppraise.Offers:			{0} bietet Euch {1} für {2}.
+GameMerchant.OnPlayerBuy.Bought:			Ihr habt gerade {0} gekauft für {1}.
+GameMerchant.OnPlayerBuy.Bought2:			Ihr habt gerade {0} gekauft für {1} {2}.
+GameMerchant.OnPlayerBuy.BoughtBP:			Ihr habt gerade {0} gekauft für {1} Kopfgeldpunkte.
+GameMerchant.OnPlayerBuy.BoughtPieces:			Ihr habt gerade {0} {1} gekauft für {2}.
+GameMerchant.OnPlayerBuy.BoughtPieces2:			Ihr habt gerade {0} {1} gekauft für {2} {3].
+GameMerchant.OnPlayerBuy.BoughtPiecesBP:		Ihr habt gerade {0} {1} gekauft für {0} Kopfgeldpunkte.
+GameMerchant.OnPlayerBuy.NotInventorySpace:		Ihr habt nicht genug Platz in Eurem Inventar für diesen Einkauf.
+GameMerchant.OnPlayerBuy.YouNeed:			Ihr braucht {0} um dies zu kaufen.
+GameMerchant.OnPlayerBuy.YouNeed2:			Ihr braucht {0} {1} um dies zu kaufen.
+GameMerchant.OnPlayerBuy.YouNeedBP:			Ihr braucht {0} Kopfgeldpunkte um dies zu kaufen.
+GameMerchant.OnPlayerSell.CantBeSold:			Dieser Gegenstand kann nicht verkauft werden.
+GameMerchant.OnPlayerSell.GivesYou:			{0} gibt Euch {1} für {2}.
+GameMerchant.OnPlayerSell.IsntInterested:		{0} interessiert sich nicht für {1}.
+GameMerchant.OnPlayerSell.TooFarAway:			{0} ist zu weit entfernt!
+
+# GAMENPC
+GameNPC.GetAggroLevelString.Aggressive1:		ausgesprochen aggressiv
+GameNPC.GetAggroLevelString.Aggressive2:		Aggressiv
+GameNPC.GetAggroLevelString.Friendly1:			freundlich
+GameNPC.GetAggroLevelString.Friendly2:			Freundlich
+GameNPC.GetAggroLevelString.Hostile1:			feindlich
+GameNPC.GetAggroLevelString.Hostile2:			Feindlich
+GameNPC.GetAggroLevelString.Neutral1:			neutral
+GameNPC.GetAggroLevelString.Neutral2:			Neutral
+GameNPC.GetAggroLevelString.TowardsYou:			{0} gegenüber
+GameNPC.GetExamineMessages.YouExamine:			Es interessiert Euch {0}. {1} steht Euch {2}.
+
 # GAMEOBJECT
-GameObject.GetExamineMessages.YouTarget:		Es wird [{0}] als Ziel erfasst.
+GameObject.GetExamineMessages.YouTarget:		Es wird {0} als Ziel erfasst.
 GameObject.Interact.TooFarAway:				{0} ist zu weit entfernt.
 
 # GAMEPLAYER
