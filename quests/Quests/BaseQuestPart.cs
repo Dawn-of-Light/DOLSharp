@@ -143,7 +143,7 @@ namespace DOL.GS.Quests
         /// </summary>
         /// <param name="triggerType">triggertype</param>
         /// <param name="keyword">keyword (K), meaning depends on triggertype</param>
-        public void AddTrigger(eTriggerType triggerType, String keyword)
+        public void AddTrigger(eTriggerType triggerType, Object keyword)
         {
             AddTrigger(triggerType, keyword,null);
         }
@@ -153,7 +153,7 @@ namespace DOL.GS.Quests
         /// <param name="triggerType">triggertype</param>
         /// <param name="keyword">keyword (K), meaning depends on triggertype</param>
         /// <param name="var">variable (I), meaning depends on triggertype</param>
-        public void AddTrigger(eTriggerType triggerType, String keyword , Object var)
+        public void AddTrigger(eTriggerType triggerType, Object keyword , Object var)
         {           
             BaseQuestTrigger trigger = new BaseQuestTrigger(this,triggerType, keyword, var);
             AddTrigger(trigger);
