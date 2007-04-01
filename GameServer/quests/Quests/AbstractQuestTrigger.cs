@@ -31,7 +31,7 @@ namespace DOL.GS.Quests
         /// <summary>
         /// Trigger Variable
         /// </summary>
-        public object I
+        public Object I
         {
             get { return i; }
 			set { i = value; }
@@ -70,7 +70,7 @@ namespace DOL.GS.Quests
     	/// <param name="type">Triggertype</param>
     	/// <param name="keyword">keyword (K), meaning depends on triggertype</param>
     	/// <param name="var">variable (I), meaning depends on triggertype</param>
-    	public AbstractQuestTrigger(BaseQuestPart questPart,eTriggerType type, String keyword, object var)
+    	public AbstractQuestTrigger(BaseQuestPart questPart,eTriggerType type, Object keyword, Object var)
     	{
     		this.defaultNPC = questPart.NPC;
 			this.notifyHandler = new DOLEventHandler(questPart.Notify);

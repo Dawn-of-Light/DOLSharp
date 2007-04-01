@@ -255,6 +255,14 @@ namespace DOL.GS.Quests
 		/// </summary>
 		const string PLAYER = "{Player}";
         /// <summary>
+        /// Constant will be replaced by the players class in the outputmessages.
+        /// </summary>
+        const string CLASS = "{Class}";
+        /// <summary>
+        /// Constant will be replaced by the players race in the outputmessages.
+        /// </summary>
+        const string RACE = "{Race}";
+        /// <summary>
         /// Constant used to store timerid in RegionTimer.Properties
         /// </summary>
         const string TIMER_ID = "timerid";
@@ -1060,17 +1068,29 @@ namespace DOL.GS.Quests
 		{
 			if (message == null || player == null)
 				return message;
-
-			string playerMessage;
+			
 			int playerIndex = message.IndexOf(PLAYER);
-			if (playerIndex == 0)
-				playerMessage = message.Replace(PLAYER, player.GetName(0, true));
-			else if (playerIndex > 0)
-				playerMessage = message.Replace(PLAYER, player.GetName(0, false));
-			else
-				playerMessage = message;
+            if (playerIndex == 0)
+            {
+                message = message.Replace(PLAYER, player.GetName(0, true));
+            }
+            else if (playerIndex > 0)
+            {
+                message = message.Replace(PLAYER, player.GetName(0, false));
+            }
 
-			return playerMessage;
+            int raceIndex = message.IndexOf(RACE);
+            if (raceIndex >= 0)
+            {
+                message = message.Replace(RACE, player.RaceName);
+            }
+            int classIndex = message.IndexOf(CLASS);
+            if (classIndex >= 0)
+            {
+                message = message.Replace(CLASS, player.CharacterClass.Name);
+            }
+
+			return message;
 		}
     }
 }
