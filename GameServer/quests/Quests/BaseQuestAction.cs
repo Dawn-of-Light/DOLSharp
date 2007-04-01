@@ -363,7 +363,7 @@ namespace DOL.GS.Quests
                     }
                 case eActionType.GiveXP:
                     {
-						if (P is string)
+						if (P is string || P is int)
 							P = Convert.ToInt64(P);
 
                         if (!(P is Int64))
@@ -374,7 +374,7 @@ namespace DOL.GS.Quests
                 case eActionType.GiveGold:
                 case eActionType.TakeGold:
                     {
-						if (P is string)
+						if (P is string || P is int)
 							P = Convert.ToInt64(P);
 
                         if (!(P is Int64))
