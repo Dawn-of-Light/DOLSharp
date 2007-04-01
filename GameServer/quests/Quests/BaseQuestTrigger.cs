@@ -140,7 +140,7 @@ namespace DOL.GS.Quests
 		/// <param name="type">Triggertype</param>
 		/// <param name="keyword">keyword (K), meaning depends on triggertype</param>
 		/// <param name="var">variable (I), meaning depends on triggertype</param>
-        public BaseQuestTrigger(BaseQuestPart questPart, eTriggerType type, String keyword, object var) : base(questPart, type,keyword,var)
+        public BaseQuestTrigger(BaseQuestPart questPart, eTriggerType type, Object keyword, Object var) : base(questPart, type,keyword,var)
         {            
             //Do some pre error checking for wrong parameters
             switch (TriggerType)
