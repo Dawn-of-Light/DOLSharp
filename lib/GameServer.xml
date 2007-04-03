@@ -3038,6 +3038,18 @@
             <param name="forced">if true, mounting can't be prevented by handlers</param>
             <returns>true if mounted successfully</returns>
         </member>
+        <member name="M:DOL.GS.GameNPC.RiderMount(DOL.GS.GamePlayer,System.Boolean,System.Int32)">
+            <summary>
+            This function is called when a rider mounts this npc
+            Since only players can ride NPC's you should use the
+            GamePlayer.MountSteed function instead to make sure all
+            callbacks are called correctly
+            </summary>
+            <param name="rider">GamePlayer that is the rider</param>
+            <param name="forced">if true, mounting can't be prevented by handlers</param>
+            <param name="slot">The desired slot to mount</param>
+            <returns>true if mounted successfully</returns>
+        </member>
         <member name="M:DOL.GS.GameNPC.RiderDismount(System.Boolean,DOL.GS.GamePlayer)">
             <summary>
             Called to dismount a rider from this npc.
@@ -6007,7 +6019,7 @@
         </member>
         <member name="M:DOL.GS.PacketHandler.PacketLib188.#ctor(DOL.GS.GameClient)">
             <summary>
-            Constructs a new PacketLib for Version 1.87 clients
+            Constructs a new PacketLib for Version 1.88 clients
             </summary>
             <param name="client">the gameclient this lib is associated with</param>
         </member>
@@ -10068,6 +10080,16 @@
         <member name="F:DOL.GS.ServerProperties.Properties.DEATH_MESSAGES_ALL_REALMS">
             <summary>
             Death Messages All Realms
+            </summary>
+        </member>
+        <member name="F:DOL.GS.ServerProperties.Properties.LOG_EMAIL_ADDRESSES">
+            <summary>
+            Log Email Addresses
+            </summary>
+        </member>
+        <member name="F:DOL.GS.ServerProperties.Properties.BUG_REPORT_EMAIL_ADDRESSES">
+            <summary>
+            Bug Report Email Addresses
             </summary>
         </member>
         <member name="M:DOL.GS.ServerProperties.Properties.Load(DOL.GS.ServerProperties.ServerPropertyAttribute)">
@@ -22053,10 +22075,46 @@
             <param name="message">The message</param>
             <param name="guild">The guild</param>
         </member>
-        <member name="F:DOL.Mail.MailMgr.log">
+        <member name="T:DOL.Mail.GZipCompress">
+            <summary>
+            Contains functions to compress with the gzip algorithm.
+            </summary>
+        </member>
+        <member name="M:DOL.Mail.GZipCompress.compressMultipleFiles(System.Collections.Queue)">
+            <summary>
+            Compresses files with the gzip algorithm. 
+            Compressed files will have a path equal to the source file path + ".gz".
+            </summary>
+            <param name="filesPathsList">An array containing paths of the files to compress.</param>
+            <returns>True if files have been successfully compressed.</returns>
+        </member>
+        <member name="M:DOL.Mail.GZipCompress.compressFile(System.String,System.String)">
+            <summary>
+            Compresses a file with the gzip algorithm.
+            (If you want to keep the correct file name in the archive you must set the dest
+            path value equals to source + ".gz")
+            </summary>
+            <param name="source">The source file path.</param>
+            <param name="dest">The destination file path.</param>
+            <returns>True if the file have been successfully compressed.</returns>
+        </member>
+        <member name="F:DOL.Mail.MailMgr.Logger">
             <summary>
             Defines a logger for this class.
             </summary>
+        </member>
+        <member name="M:DOL.Mail.MailMgr.GetArchivedLogsUrls">
+            <summary>
+            Parses the log config file and extracts all archived logs.
+            </summary>
+            <returns>A Queue made of strings containing logs urls.</returns>
+        </member>
+        <member name="M:DOL.Mail.MailMgr.SendLogs(System.String)">
+            <summary>
+            Sends all logs to a given email address. MailMgr must be initialized.
+            </summary>
+            <param name="to">The destination email address.</param>
+            <returns>True if files have been successfully sent.</returns>
         </member>
         <member name="T:DOL.GS.Scripts.AbstractCommandHandler">
             <summary>
@@ -23208,6 +23266,21 @@
             <summary>
             table of player and aggrolevel (characterid/aggrolevel)
             </summary>
+        </member>
+        <member name="T:DOL.GS.ServerRules.TaskDungeonJumpPoint">
+            <summary>
+            Handles task dungeon jump points
+            </summary>
+        </member>
+        <member name="M:DOL.GS.ServerRules.TaskDungeonJumpPoint.IsAllowedToJump(DOL.Database.ZonePoint,DOL.GS.GamePlayer)">
+            <summary>
+            Decides whether player can jump to the target point.
+            All messages with reasons must be sent here.
+            Can change destination too.
+            </summary>
+            <param name="targetPoint">The jump destination</param>
+            <param name="player">The jumping player</param>
+            <returns>True if allowed</returns>
         </member>
         <member name="T:DOL.GS.Effects.NaturesWombEffect">
             <summary>

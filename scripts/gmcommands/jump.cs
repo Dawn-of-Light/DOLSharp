@@ -202,7 +202,7 @@ namespace DOL.GS.Scripts
 		public bool CheckExpansion(GameClient clientJumper, GameClient clientJumpee, ushort RegionID)
 		{
 			Region reg = WorldMgr.GetRegion(RegionID);
-			if (reg != null && reg.Expansion >= clientJumpee.ClientType)
+			if (reg != null && reg.Expansion > clientJumpee.ClientType)
 			{
 				clientJumper.Out.SendMessage(clientJumpee.Player.Name + " cannot jump to Destination region (" + reg.Description + ") because it is not supported by his/her client type.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				if (clientJumper != clientJumpee)
