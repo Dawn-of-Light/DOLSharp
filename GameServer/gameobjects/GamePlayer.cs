@@ -9698,31 +9698,31 @@ namespace DOL.GS
 				case eGameServerType.GST_Normal:
 					if (Realm == player.Realm)
 					{
-						message = string.Format("You examine {0}.  {1} is a member of the {2} class in your realm.", Name, GetPronoun(0, true), CharacterClass.Name);
+						message = string.Format(LanguageMgr.GetTranslation(player.Client, "GamePlayer.GetExamineMessages.RealmMember", Name, GetPronoun(0, true), CharacterClass.Name));
 					}
 					else
 					{
-						message = string.Format("You examine {0}.  {1} is a member of an enemy realm!", Name, GetPronoun(0, true));
+						message = string.Format(LanguageMgr.GetTranslation(player.Client, "GamePlayer.GetExamineMessages.EnemyRealmMember", Name, GetPronoun(0, true)));
 					}
 					break;
 
 				case eGameServerType.GST_PvP:
 					if (Guild == null)
 					{
-						message = string.Format("You examine {0}.  {1} is a neutral member with no guild allegiance.", Name, GetPronoun(0, true));
+						message = string.Format(LanguageMgr.GetTranslation(player.Client, "GamePlayer.GetExamineMessages.NeutralMember", Name, GetPronoun(0, true)));
 					}
 					else if (Guild == player.Guild)
 					{
-						message = string.Format("You examine {0}.  {1} is a member of the {2} class in your guild.", Name, GetPronoun(0, true), CharacterClass.Name);
+						message = string.Format(LanguageMgr.GetTranslation(player.Client, "GamePlayer.GetExamineMessages.YourGuildMember", Name, GetPronoun(0, true), CharacterClass.Name));
 					}
 					else
 					{
-						message = string.Format("You examine {0}.  {1} is a member of the {2} guild.", Name, GetPronoun(0, true), GuildName);
+						message = string.Format(LanguageMgr.GetTranslation(player.Client, "GamePlayer.GetExamineMessages.OtherGuildMember", Name, GetPronoun(0, true), GuildName));
 					}
 					break;
 
 				default:
-					message = "You examine " + Name + ".";
+					message = LanguageMgr.GetTranslation(player.Client, "GamePlayer.GetExamineMessages.YouExamine", Name);
 					break;
 			}
 
