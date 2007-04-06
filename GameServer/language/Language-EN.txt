@@ -161,8 +161,15 @@ GamePlayer.GetExamineMessages.YouExamine:		You examine {0}.
 GamePlayer.GetExamineMessages.YourGuildMember:		You examine {0}. {1} is a member of the {2} class in your guild.
 GamePlayer.IsCloakHoodUp.NoLongerWear:			You will no longer wear your hood up.		
 GamePlayer.IsCloakHoodUp.NowWear:			You will now wear your hood up.		
-GamePlayer.IsOnHorse.DismountSteed:			You dismount your steed.		
-GamePlayer.IsOnHorse.MountSteed:			You mount your steed.		
+GamePlayer.IsOnHorse.DismountSteed:			You dismount your steed.
+GamePlayer.IsOnHorse.MountSteed:			You mount your steed.
+GamePlayer.OnItemEquipped.Magic:			The magic of {0} flows through you.
+GamePlayer.OnItemEquipped.WieldBothHands:		You wield {0} in both hands.
+GamePlayer.OnItemEquipped.WieldLeftHand:		You wield {0} in your left hand.
+GamePlayer.OnItemEquipped.WieldRightHand:		You wield {0} in your right hand.
+GamePlayer.OnItemUnequipped.BothHandsFree:		You sheathe {0}. Both hands are now free.
+GamePlayer.OnItemUnequipped.LeftHandFree:		You sheathe {0} from your left hand.
+GamePlayer.OnItemUnequipped.RightHandFree:		You sheathe {0} from your right hand.
 GamePlayer.OnLevelUp.AttainedRank:			You have attained the rank of {0}!		
 GamePlayer.OnLevelUp.FreeLevelEligible:			You are eligible for a free level! Click on your trainer to receive it (or type /freelevel decline to discard your free level).		
 GamePlayer.OnLevelUp.HitsRaise:				Your hits raise by {0} points.	
@@ -289,6 +296,7 @@ GamePlayer.SwitchWeapon.SpellCancelled:			Your spell is cancelled!
 GamePlayer.UpdateEncumberance.Encumbered:		You are encumbered!			
 GamePlayer.UpdateEncumberance.EncumberedMoveSlowly:	You are encumbered and move more slowly.				
 GamePlayer.UpdateSpellLine.GainPower:			You gain power in the {0} spell list!		
+GamePlayer.UseSlot.AttemptToUse:			You attempt to use {0}.
 GamePlayer.UseSlot.AutoReleaseShot:			You will now automatically release your shot.		
 GamePlayer.UseSlot.AutoReleaseShotReload:		You will now automatically release your shot and reload.			
 GamePlayer.UseSlot.CantCallMountSeated:			You cannot call your mount while seated.		
@@ -301,6 +309,7 @@ GamePlayer.UseSlot.CantSeeTarget:			You can't see your target!
 GamePlayer.UseSlot.CantSummonRvR:			You cannot summon that mount in RvR zones.		
 GamePlayer.UseSlot.Can'tUseFromBackpack:		You can't use this item from your backpack. Equip it before!			
 GamePlayer.UseSlot.CantUseInCombat:			You can't use this item in combat!		
+GamePlayer.UseSlot.IllegalSourceObject:			Illegal source object. Readied {0}.
 GamePlayer.UseSlot.MustDismountBefore:			You must to dismount before.		
 GamePlayer.UseSlot.NoAutoReleaseShotReload:		You will no longer automatically release your shot or reload.			
 GamePlayer.UseSlot.NotEnouthPower:			You are not powerful enough to use this item's spell.		
