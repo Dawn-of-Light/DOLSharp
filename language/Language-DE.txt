@@ -161,7 +161,14 @@ GamePlayer.GetExamineMessages.YourGuildMember:		Es interessiert Euch {0}. {1} is
 GamePlayer.IsCloakHoodUp.NoLongerWear:			Ihr tragt Eure Kapuze nun nicht mehr auf dem Kopf.		
 GamePlayer.IsCloakHoodUp.NowWear:			Ihr tragt Eure Kapuze nun auf dem Kopf.		
 GamePlayer.IsOnHorse.DismountSteed:			Ihr steigt von Eurem Pferd ab.		
-GamePlayer.IsOnHorse.MountSteed:			Ihr besteigt Euer Pferd.		
+GamePlayer.IsOnHorse.MountSteed:			Ihr besteigt Euer Pferd.
+GamePlayer.OnItemEquipped.Magic:			{0} lässt reine Magie durch Euren Körper strömen.		
+GamePlayer.OnItemEquipped.WieldBothHands:		{0} liegt kampfbereit in Euren Händen.
+GamePlayer.OnItemEquipped.WieldLeftHand:		{0} liegt kampfbereit in Eurer linken Hand.
+GamePlayer.OnItemEquipped.WieldRightHand:		{0} liegt kampfbereit in Eurer rechten Hand.
+GamePlayer.OnItemUnequipped.BothHandsFree:		Es wird {0} von Euch weggesteckt, Ihr habt jetzt beide Hände frei.
+GamePlayer.OnItemUnequipped.LeftHandFree:		Es wird {0} von Euch weggesteckt, Eure linke Hand ist jetzt frei.
+GamePlayer.OnItemUnequipped.RightHandFree:		Es wird {0} von Euch weggesteckt, Eure rechte Hand ist jetzt frei.
 GamePlayer.OnLevelUp.AttainedRank:			Ihr habt den Rang eines {0} erreicht!		
 GamePlayer.OnLevelUp.FreeLevelEligible:			Ihr seid nun würdig, eine freie Stufe zu erhalten. Klickt auf Euren Ausbilder, um sie zu bekommen!		
 GamePlayer.OnLevelUp.HitsRaise:				Ihr erhaltet {0} zusätzliche Trefferpunkte.	
@@ -288,6 +295,7 @@ GamePlayer.SwitchWeapon.SpellCancelled:			Euer Zauberspruch wurde abgebrochen!
 GamePlayer.UpdateEncumberance.Encumbered:		Ihr seid überlastet!			
 GamePlayer.UpdateEncumberance.EncumberedMoveSlowly:	Ihr seid überlastet und bewegt Euch deshalb langsamer.				
 GamePlayer.UpdateSpellLine.GainPower:			Ihr erhaltet einen Eintrag in Eure "{0}"-Zauberliste!		
+GamePlayer.UseSlot.AttemptToUse:			Ihr versucht folgendes zu benutzen: {0}.
 GamePlayer.UseSlot.AutoReleaseShot:			Eurer Schuss wird nun automatisch freigegeben.		
 GamePlayer.UseSlot.AutoReleaseShotReload:		Eurer Schuss wird nun automatisch nachgeladen und freigegeben.			
 GamePlayer.UseSlot.CantCallMountSeated:			Ihr könnt Euer Pferd nicht rufen, während Ihr dasitzt.		
@@ -300,6 +308,7 @@ GamePlayer.UseSlot.CantSeeTarget:			Ihr könnt Euer Ziel nicht sehen!
 GamePlayer.UseSlot.CantSummonRvR:			Ihr könnt das Pferd nicht in RvR-Zonen rufen.		
 GamePlayer.UseSlot.Can'tUseFromBackpack:		Ihr müsst diesen Gegenstand erst anlegen, bevor Ihr ihn verwenden könnt!			
 GamePlayer.UseSlot.CantUseInCombat:			Ihr könnt diesen Gegenstand nicht im Kampf benutzen!		
+GamePlayer.UseSlot.IllegalSourceObject:			In dieser Position({0}) tragt Ihr nichts.
 GamePlayer.UseSlot.MustDismountBefore:			Ihr müsst vorher absteigen.		
 GamePlayer.UseSlot.NoAutoReleaseShotReload:		Eurer Schuss wird nun nicht länger automatisch nachgeladen und freigegeben.			
 GamePlayer.UseSlot.NotEnouthPower:			Ihr seit nicht mächtig genug, um den Zauber dieses Gegenstandes anwenden zu können.		
