@@ -6703,13 +6703,13 @@ namespace DOL.GS
 					else
 					{
 						// don't allow using empty slots
-						Out.SendMessage("Illegal source object. Readied " + slot, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.IllegalSourceObject", slot), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}
 					return;
 				}
 				if (useItem.Item_Type != Slot.RANGED && (slot != Slot.HORSE || type != 0))
 				{
-					Out.SendMessage("You attempt to use " + useItem.GetName(0, false), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.AttemptToUse", useItem.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 
 				switch (slot)
@@ -8534,20 +8534,19 @@ namespace DOL.GS
 			if (arguments is ItemEquippedArgs == false) return;
 			InventoryItem item = ((ItemEquippedArgs)arguments).Item;
 			if (item == null) return;
-
 			if (item.Item_Type >= Slot.RIGHTHAND && item.Item_Type <= Slot.RANGED)
 			{
 				if (item.Hand == 1) // 2h
 				{
-					Out.SendMessage(string.Format("You wield {0} in both hands.", item.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client, "GamePlayer.OnItemEquipped.WieldBothHands", item.GetName(0, false))), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 				else if (item.SlotPosition == Slot.LEFTHAND)
 				{
-					Out.SendMessage(string.Format("You wield {0} in your left hand.", item.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client, "GamePlayer.OnItemEquipped.WieldLeftHand", item.GetName(0, false))), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 				else
 				{
-					Out.SendMessage(string.Format("You wield {0} in your right hand.", item.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client, "GamePlayer.OnItemEquipped.WieldRightHand", item.GetName(0, false))), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 			}
 
@@ -8581,7 +8580,7 @@ namespace DOL.GS
 
 			if (!item.IsMagical) return;
 
-			Out.SendMessage(string.Format("The magic of {0} flows through you.", item.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client, "GamePlayer.OnItemEquipped.Magic", item.GetName(0, false))), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 			if (item.Bonus1 != 0) ItemBonus[item.Bonus1Type] += item.Bonus1;
 			if (item.Bonus2 != 0) ItemBonus[item.Bonus2Type] += item.Bonus2;
@@ -8629,8 +8628,8 @@ namespace DOL.GS
 		{
 			if (arguments is ItemUnequippedArgs == false) return;
 			InventoryItem item = ((ItemUnequippedArgs)arguments).Item;
-			int prevSlot = ((ItemUnequippedArgs)arguments).PreviousSlotPosition;
 			if (item == null) return;
+			int prevSlot = ((ItemUnequippedArgs)arguments).PreviousSlotPosition;
 
 			//			DOLConsole.WriteLine("unequipped item '" + item.Name + "' !");
 
@@ -8638,15 +8637,15 @@ namespace DOL.GS
 			{
 				if (item.Hand == 1) // 2h
 				{
-					Out.SendMessage(string.Format("You sheathe {0}. Both hands are now free.", item.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client, "GamePlayer.OnItemUnequipped.BothHandsFree", item.GetName(0, false))), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 				else if (prevSlot == Slot.LEFTHAND)
 				{
-					Out.SendMessage(string.Format("You sheathe {0} from your left hand.", item.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client, "GamePlayer.OnItemUnequipped.LeftHandFree", item.GetName(0, false))), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 				else
 				{
-					Out.SendMessage(string.Format("You sheathe {0} from your right hand.", item.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client, "GamePlayer.OnItemUnequipped.RightHandFree", item.GetName(0, false))), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 			}
 

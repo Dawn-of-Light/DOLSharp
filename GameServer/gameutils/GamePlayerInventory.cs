@@ -901,15 +901,15 @@ namespace DOL.GS
 				if (toItem != null)
 				{
 					if (toSlotEquipped) // item was equipped
-						Player.Notify(PlayerInventoryEvent.ItemUnequipped, this, new ItemUnequippedArgs(toItem, fromSlot));
-					else Player.Notify(PlayerInventoryEvent.ItemEquipped, this, new ItemEquippedArgs(toItem, fromSlot));
+						Player.Notify(PlayerInventoryEvent.ItemUnequipped, this, new ItemUnequippedArgs(toItem, toSlot));
+					else Player.Notify(PlayerInventoryEvent.ItemEquipped, this, new ItemEquippedArgs(toItem, toSlot));
 				}
 
 				if (fromItem != null)
 				{
 					if (fromSlotEquipped) // item was equipped
-						Player.Notify(PlayerInventoryEvent.ItemUnequipped, this, new ItemUnequippedArgs(fromItem, toSlot));
-					else Player.Notify(PlayerInventoryEvent.ItemEquipped, this, new ItemEquippedArgs(fromItem, toSlot));
+						Player.Notify(PlayerInventoryEvent.ItemUnequipped, this, new ItemUnequippedArgs(fromItem, fromSlot));
+					else Player.Notify(PlayerInventoryEvent.ItemEquipped, this, new ItemEquippedArgs(fromItem, fromSlot));
 				}
 			}
 
