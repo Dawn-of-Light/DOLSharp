@@ -398,8 +398,8 @@ Scripts.Players.Assist.NotValid:			Target is not valid.
 Scripts.Players.Assist.YouAssist:			You assist {0}.
 
 # /Autoloot
-Scripts.Players.Autoloot.Off:				Your autoloot is off. You will no longer attempt to automaticly loot anything that drops in your area.
-Scripts.Players.Autoloot.On:				Your autoloot is on. You will now attempt to automaticly loot anything that drops in your area.
+Scripts.Players.Autoloot.Off:				Your autoloot is off. You will no longer attempt to automatically loot anything that drops in your area.
+Scripts.Players.Autoloot.On:				Your autoloot is on. You will now attempt to automatically loot anything that drops in your area.
 
 # /Autosplit
 Scripts.Players.Autosplit.Coins:			The leader switched 

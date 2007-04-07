@@ -498,13 +498,20 @@
     <Compile Include="playertitles\BaneOfHiberniaTitle.cs" />
     <Compile Include="playertitles\BaneOfMidgardTitle.cs" />
     <Compile Include="playertitles\BattleEnforcerTitle.cs" />
+    <Compile Include="playertitles\DragonFoeTitle.cs" />
+    <Compile Include="playertitles\DragonScourgeTitle.cs" />
+    <Compile Include="playertitles\DragonSlayerTitle.cs" />
     <Compile Include="playertitles\ElderTitle.cs" />
+    <Compile Include="playertitles\FrontierChallengerTitle.cs" />
+    <Compile Include="playertitles\FrontierVindicatorTitle.cs" />
     <Compile Include="playertitles\Level20Title.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="playertitles\LoneEnforcerTitle.cs" />
     <Compile Include="playertitles\MasterEnforcerTitle.cs" />
     <Compile Include="playertitles\MasterSoldierTitle.cs" />
+    <Compile Include="playertitles\StrongholdChiefTitle.cs" />
+    <Compile Include="playertitles\StrongholdSoldierTitle.cs" />
     <Compile Include="playertitles\VeteranTitle.cs">
       <SubType>Code</SubType>
     </Compile>

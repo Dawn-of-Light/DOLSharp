@@ -584,6 +584,7 @@
     <Compile Include="packets\Client\168\CharacterSelectRequestHandler.cs" />
     <Compile Include="packets\Client\168\checklosrequesthandler.cs" />
     <Compile Include="packets\Client\168\ClientCrashPacketHandler.cs" />
+    <Compile Include="packets\Client\168\ShipHookpointInteract.cs" />
     <Compile Include="packets\Client\168\CryptKeyRequestHandler.cs" />
     <Compile Include="packets\Client\168\DestroyItemRequestHandler.cs" />
     <Compile Include="packets\Client\168\DetailDisplayHandler.cs" />
@@ -647,6 +648,7 @@
     <Compile Include="packets\Client\168\WorldInitRequestHandler.cs" />
     <Compile Include="packets\Client\168\QuestRemoveRequestHandler.cs" />
     <Compile Include="packets\Server\AbstractPacketLib.cs" />
+    <Compile Include="packets\Server\PacketLib188.cs" />
     <Compile Include="packets\Server\CryptLib168.cs" />
     <Compile Include="packets\Server\GSTCPPacketOut.cs" />
     <Compile Include="packets\Server\GSUDPPacketOut.cs" />
@@ -753,6 +755,7 @@
     <Compile Include="realmabilities\handlers\WildMinionAbility.cs" />
     <Compile Include="realmabilities\handlers\LifterAbility.cs" />
     <Compile Include="realmabilities\handlers\VeilRecoveryAbility.cs" />
+    <Compile Include="serverrules\TaskDungeonJumpPoint.cs" />
     <Compile Include="skillhandler\CamouflageSpecHandler.cs" />
     <Compile Include="realmabilities\handlers\ChargeAbility.cs" />
     <Compile Include="realmabilities\handlers\ConcentrationAbility.cs" />

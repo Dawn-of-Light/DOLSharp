@@ -1676,6 +1676,33 @@ namespace DOL.GS
 		}
 
 		/// <summary>
+		/// This function is called when a rider mounts this npc
+		/// Since only players can ride NPC's you should use the
+		/// GamePlayer.MountSteed function instead to make sure all
+		/// callbacks are called correctly
+		/// </summary>
+		/// <param name="rider">GamePlayer that is the rider</param>
+		/// <param name="forced">if true, mounting can't be prevented by handlers</param>
+		/// <param name="slot">The desired slot to mount</param>
+		/// <returns>true if mounted successfully</returns>
+		public virtual bool RiderMount(GamePlayer rider, bool forced, int slot)
+		{
+			int exists = RiderArrayLocation(rider);
+			if (exists != -1)
+				return false;
+
+			if (Riders[slot] != null)
+				return false;
+
+			//rider.MoveTo(CurrentRegionID, X, Y, Z, Heading);
+
+			Notify(GameNPCEvent.RiderMount, this, new RiderMountEventArgs(rider, this));
+			Riders[slot] = rider;
+			rider.Steed = this;
+			return true;
+		}
+
+		/// <summary>
 		/// Called to dismount a rider from this npc.
 		/// Since only players can ride NPC's you should use the
 		/// GamePlayer.MountSteed function instead to make sure all

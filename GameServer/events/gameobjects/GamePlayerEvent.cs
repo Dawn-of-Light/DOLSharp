@@ -152,7 +152,18 @@ namespace DOL.Events
 		/// The KillsTotalSoloChanged event is fired when KillsAlbionSolo, KillsMidgardSolo or KillsHiberniaSolo properties changes.
 		/// </summary>
 		public static readonly GamePlayerEvent KillsTotalSoloChanged = new GamePlayerEvent("GamePlayer.KillsTotalSoloChanged");
-
+		/// <summary>
+		/// The CapturedKeepsChanged event is fired when CapturedKeeps properties changes.
+		/// </summary>
+		public static readonly GamePlayerEvent CapturedKeepsChanged = new GamePlayerEvent("GamePlayer.CapturedKeepsChanged");
+		/// <summary>
+		/// The CapturedTowersChanged event is fired when CapturedTowers properties changes.
+		/// </summary>
+		public static readonly GamePlayerEvent CapturedTowersChanged = new GamePlayerEvent("GamePlayer.CapturedTowersChanged");
+		/// <summary>
+		/// The KillsDragonChanged event is fired when KillsDragon properties changes.
+		/// </summary>
+		public static readonly GamePlayerEvent KillsDragonChanged = new GamePlayerEvent("GamePlayer.KillsDragonChanged"); 
 		#endregion
 	}
 }

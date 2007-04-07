@@ -31,7 +31,14 @@ namespace DOL.GS
 
 		public virtual ushort Type()
 		{
-			return 0;
+			return 2;
+		}
+
+		private ushort m_emblem;
+		public ushort Emblem
+		{
+			get { return m_emblem; }
+			set { m_emblem = value; }
 		}
 
 		public override ushort Model

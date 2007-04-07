@@ -152,15 +152,38 @@ namespace DOL.GS.Scripts
 								return 0;
 							}
 							int curLevel = player.Level;
-							player.Level = newLevel;
-							if (curLevel < 40)
-								curLevel = 40;
-							for (int i = curLevel; i < 50; i++)
-								player.SkillSpecialtyPoints += player.CharacterClass.SpecPointsMultiplier * i / 20; 
+							if (newLevel == curLevel)
+								return 0;
+							bool curSecondStage = player.IsLevelSecondStage;
+							if (newLevel > curLevel && curSecondStage)
+							{
+								player.GainExperience(player.GetExperienceValueForLevel(++curLevel));
+							}
+							if (newLevel != curLevel || !curSecondStage)
+								player.Level = newLevel;
+
+							// If new level is more than 40, then we have
+							// to add the skill points from half-levels
+							if (newLevel > 40)
+							{
+								if (curLevel < 40)
+									curLevel = 40;
+								for (int i = curLevel; i < newLevel; i++)
+								{
+									// we skip the first add if was in level 2nd stage
+									if (curSecondStage)
+										curSecondStage = false;
+									else
+										player.SkillSpecialtyPoints += player.CharacterClass.SpecPointsMultiplier * i / 20;
+								}
+							}
+
 							client.Out.SendMessage("You changed " + player.Name + "'s level successfully to " + newLevel.ToString() + "!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 							player.Out.SendMessage(client.Player.Name + "(PrivLevel: " + client.Account.PrivLevel + ") has changed your level to " + newLevel.ToString() + "!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 							player.Out.SendUpdatePlayer();
-							player.SaveIntoDatabase();
+							player.Out.SendUpdatePoints();
+							player.UpdatePlayerStatus();
+							player.SaveIntoDatabase(); 
 						}
 
 						catch (Exception)

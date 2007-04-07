@@ -54,6 +54,16 @@ namespace DOL.GS.Scripts
 			GameServer.Database.AddNewObject(report);
 			client.Player.Out.SendMessage("Report submitted, if this is not a bug report it will be ignored!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
+			if (ServerProperties.Properties.BUG_REPORT_EMAIL_ADDRESSES != "")
+			{
+				if (client.Account.Mail == "")
+					client.Player.Out.SendMessage("If you enter your email address for your account with /email command, your bug reports will send an email to the staff!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+				else 
+				{
+					Mail.MailMgr.SendMail(ServerProperties.Properties.BUG_REPORT_EMAIL_ADDRESSES, GameServer.Instance.Configuration.ServerName + " bug report " + report.ID, report.Message, report.Submitter, client.Account.Mail);
+				}
+			}
+
 			return 1;
 		}
 	}
