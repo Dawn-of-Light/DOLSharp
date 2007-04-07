@@ -7452,6 +7452,25 @@ namespace DOL.GS
 			get { return Steed != null; }
 		}
 
+		public void SwitchSeat(int slot)
+		{
+			if (Steed == null)
+				return;
+
+			if (Steed.Riders[slot] != null)
+				return;
+
+			Out.SendMessage("You switch to seat " + slot + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
+			GameNPC steed = Steed;
+			steed.RiderDismount(true, this);
+			steed.RiderMount(this, true, slot);
+			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+			{
+				player.Out.SendRiding(this, steed, false);
+			}
+		}
+
 		#endregion
 
 		#region Add/Move/Remove
@@ -8818,6 +8837,9 @@ namespace DOL.GS
 					boat.Z = Z;
 					boat.Heading = Heading;
 					boat.CurrentRegionID = CurrentRegionID;
+					boat.Realm = Realm;
+					if (Guild != null)
+						boat.Emblem = (ushort)Guild.theGuildDB.Emblem;
 
 					boat.AddToWorld();
 					return null;
@@ -11304,6 +11326,7 @@ namespace DOL.GS
 			{
 				m_capturedKeeps = value;
 				m_character.CapturedKeeps = value;
+				Notify(GamePlayerEvent.CapturedKeepsChanged, this); 
 			}
 		}
 
@@ -11317,6 +11340,7 @@ namespace DOL.GS
 			{
 				m_capturedTowers = value;
 				m_character.CapturedTowers = value;
+				Notify(GamePlayerEvent.CapturedTowersChanged, this); 
 			}
 		}
 
@@ -11330,6 +11354,7 @@ namespace DOL.GS
 			{
 				m_killsDragon = value;
 				m_character.KillsDragon = value;
+				Notify(GamePlayerEvent.KillsDragonChanged, this); 
 			}
 		}
 

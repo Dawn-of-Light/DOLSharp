@@ -320,6 +320,18 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("death_messages_all_realms", "Set to true if you want all realms to see other realms death and kill messages", false)]
 		public static readonly bool DEATH_MESSAGES_ALL_REALMS;
+
+		/// <summary>
+		/// Log Email Addresses
+		/// </summary>
+		[ServerProperty("log_email_addresses", "set to the email addresses you want logs automatically emailed to, multiple addresses seperate with ;", "")]
+		public static readonly string LOG_EMAIL_ADDRESSES;
+
+		/// <summary>
+		/// Bug Report Email Addresses
+		/// </summary>
+		[ServerProperty("bug_report_email_addresses", "set to the email addresses you want bug reports sent to (bug reports will only send if the user has set an email address for his account, multiple addresses seperate with ;", "")]
+		public static readonly string BUG_REPORT_EMAIL_ADDRESSES;
 		
 		/// <summary>
 		/// This method loads the property from the database and returns
