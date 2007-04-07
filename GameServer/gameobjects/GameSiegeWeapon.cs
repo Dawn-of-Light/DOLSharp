@@ -479,11 +479,6 @@ namespace DOL.GS
 			TakeControl(player);
 			return true;
 		}
-		public override ushort Type()
-		{
-			//TODO
-			return base.Type();
-		}
 		public override void LoadFromDatabase(DataObject obj)
 		{
 			base.LoadFromDatabase(obj);

@@ -193,6 +193,12 @@ namespace DOL.GS
 
 		#region Constructor
 
+		private RegionData m_regionData;
+		public RegionData RegionData
+		{
+			get { return m_regionData; }
+		}
+
 		/// <summary>
 		/// Constructs a new empty Region
 		/// </summary>
@@ -200,6 +206,7 @@ namespace DOL.GS
 		/// <param name="data">The region data</param>
 		public Region(GameTimer.TimeManager time, RegionData data)
 		{
+			m_regionData = data;
 			m_objects = new GameObject[0];
 			m_objectsInRegion = 0;
 			m_nextObjectSlot = 0;

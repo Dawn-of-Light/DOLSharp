@@ -149,7 +149,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				GamePlayer player = (GamePlayer)m_actionSource;
 
 				Region reg = WorldMgr.GetRegion(m_zonePoint.Region);
-				if (reg != null && reg.Expansion >= player.Client.ClientType)
+				if (reg != null && reg.Expansion > player.Client.ClientType)
 				{
 					player.Out.SendMessage("Destination region (" + reg.Description + ") is not supported by your client type.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return;

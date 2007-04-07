@@ -54,11 +54,6 @@ namespace DOL.GS
 			SetOwnBrain(brain);
 		}
 
-		public override ushort Type()
-		{
-			return 2;
-		}
-
 		public override int MAX_PASSENGERS
 		{
 			get

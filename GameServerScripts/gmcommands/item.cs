@@ -23,7 +23,7 @@ using DOL.GS.PacketHandler;
 namespace DOL.GS.Scripts
 {
 	[Cmd("&item", //command to handle
-		(uint) ePrivLevel.GM, //minimum privelege level
+		(uint)ePrivLevel.GM, //minimum privelege level
 		"Various Item commands!", //command description
 		//usage
 		"Slot numbers are optional, if not included the default is 79 (the last backpack slot)",
@@ -60,6 +60,7 @@ namespace DOL.GS.Scripts
 		"'/item material <Material> <MaterialLevel> [slot #]' - change item material",
 		"'/item spell <Charges> <MaxCharges> <SpellID> [slot #]' - change item spell charges",
 		"'/item proc <SpellID> [slot #]' - change item proc",
+		"'/item poison <Charges> <MaxCharges> <SpellID> [slot #]' - change item poison",
 		"'/item realm <num> [slot #]' - change items realm",
 		"'/item savetemplate <TemplateID> [slot #]' - create a new template",
 		"'/item templateid <TemplateID> [slot #] - change an items template ID'",
@@ -99,7 +100,7 @@ namespace DOL.GS.Scripts
 							//Create a new object
 							try
 							{
-								ItemTemplate template = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), GameServer.Database.Escape(args[2]));
+								ItemTemplate template = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), GameServer.Database.Escape(args[2]));
 								if (template == null)
 								{
 									client.Out.SendMessage("ItemTemplate with id " + args[2] + " could not be found!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -126,7 +127,7 @@ namespace DOL.GS.Scripts
 									if (item.IsStackable)
 									{
 										item.Count = count;
-										item.Weight = item.Count*item.Weight;
+										item.Weight = item.Count * item.Weight;
 									}
 									if (client.Player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, item))
 									{
@@ -146,7 +147,7 @@ namespace DOL.GS.Scripts
 						}
 					case "count":
 						{
-							int slot = (int) eInventorySlot.LastBackpack;
+							int slot = (int)eInventorySlot.LastBackpack;
 
 							if (args.Length >= 4)
 							{
@@ -159,7 +160,7 @@ namespace DOL.GS.Scripts
 								}
 							}
 
-							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot) slot);
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)slot);
 
 							if (item == null)
 							{
@@ -175,15 +176,15 @@ namespace DOL.GS.Scripts
 							{
 								if (Convert.ToInt32(args[2]) < 1)
 								{
-									item.Weight = item.Weight/item.Count;
+									item.Weight = item.Weight / item.Count;
 									item.Count = 1;
 								}
 								else
 								{
-									item.Weight = Convert.ToInt32(args[2])*item.Weight/item.Count;
+									item.Weight = Convert.ToInt32(args[2]) * item.Weight / item.Count;
 									item.Count = Convert.ToInt32(args[2]);
 								}
-								client.Out.SendInventoryItemsUpdate(new InventoryItem[] {item});
+								client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
 								client.Player.UpdateEncumberance();
 							}
 							catch
@@ -194,7 +195,7 @@ namespace DOL.GS.Scripts
 						}
 					case "maxcount":
 						{
-							int slot = (int) eInventorySlot.LastBackpack;
+							int slot = (int)eInventorySlot.LastBackpack;
 
 							if (args.Length >= 4)
 							{
@@ -207,7 +208,7 @@ namespace DOL.GS.Scripts
 								}
 							}
 
-							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot) slot);
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)slot);
 
 							if (item == null)
 							{
@@ -228,7 +229,7 @@ namespace DOL.GS.Scripts
 						}
 					case "packsize":
 						{
-							int slot = (int) eInventorySlot.LastBackpack;
+							int slot = (int)eInventorySlot.LastBackpack;
 
 							if (args.Length >= 4)
 							{
@@ -241,7 +242,7 @@ namespace DOL.GS.Scripts
 								}
 							}
 
-							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot) slot);
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)slot);
 
 							if (item == null)
 							{
@@ -262,7 +263,7 @@ namespace DOL.GS.Scripts
 						}
 					case "info":
 						{
-							ItemTemplate obj = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), GameServer.Database.Escape(args[2]));
+							ItemTemplate obj = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), GameServer.Database.Escape(args[2]));
 
 							if (obj == null)
 							{
@@ -278,7 +279,7 @@ namespace DOL.GS.Scripts
 							client.Out.SendMessage("         Slot: " + GlobalConstants.SlotToName(obj.Item_Type), eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							client.Out.SendMessage("        Realm: " + obj.Realm, eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							client.Out.SendMessage("  Value/Price: " + obj.Gold + "g " + obj.Silver + "s " + obj.Copper + "c", eChatType.CT_System, eChatLoc.CL_PopupWindow);
-							client.Out.SendMessage("       Weight: " + (obj.Weight/10.0f) + "lbs", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+							client.Out.SendMessage("       Weight: " + (obj.Weight / 10.0f) + "lbs", eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							client.Out.SendMessage("      Quality: " + obj.Quality + "%", eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							client.Out.SendMessage("   Durability: " + obj.Durability + "/" + obj.MaxDurability + "(max)", eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							client.Out.SendMessage("    Condition: " + obj.Condition + "/" + obj.MaxCondition + "(max)", eChatType.CT_System, eChatLoc.CL_PopupWindow);
@@ -288,8 +289,8 @@ namespace DOL.GS.Scripts
 							if (GlobalConstants.IsWeapon(obj.Object_Type))
 							{
 								client.Out.SendMessage("         Hand: " + GlobalConstants.ItemHandToName(obj.Hand), eChatType.CT_System, eChatLoc.CL_PopupWindow);
-								client.Out.SendMessage("Damage/Second: " + (obj.DPS_AF/10.0f), eChatType.CT_System, eChatLoc.CL_PopupWindow);
-								client.Out.SendMessage("        Speed: " + (obj.SPD_ABS/10.0f), eChatType.CT_System, eChatLoc.CL_PopupWindow);
+								client.Out.SendMessage("Damage/Second: " + (obj.DPS_AF / 10.0f), eChatType.CT_System, eChatLoc.CL_PopupWindow);
+								client.Out.SendMessage("        Speed: " + (obj.SPD_ABS / 10.0f), eChatType.CT_System, eChatLoc.CL_PopupWindow);
 								client.Out.SendMessage("  Damage type: " + GlobalConstants.WeaponDamageTypeToName(obj.Type_Damage), eChatType.CT_System, eChatLoc.CL_PopupWindow);
 								client.Out.SendMessage("        Bonus: " + obj.Bonus, eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							}
@@ -299,12 +300,12 @@ namespace DOL.GS.Scripts
 								client.Out.SendMessage("    Absorbage: " + obj.SPD_ABS, eChatType.CT_System, eChatLoc.CL_PopupWindow);
 								client.Out.SendMessage("        Bonus: " + obj.Bonus, eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							}
-							else if (obj.Object_Type == (int) eObjectType.Shield)
+							else if (obj.Object_Type == (int)eObjectType.Shield)
 							{
 								client.Out.SendMessage("  Shield type: " + GlobalConstants.ShieldTypeToName(obj.DPS_AF), eChatType.CT_System, eChatLoc.CL_PopupWindow);
 								client.Out.SendMessage("        Bonus: " + obj.Bonus, eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							}
-							else if (obj.Object_Type == (int) eObjectType.Arrow || obj.Object_Type == (int) eObjectType.Bolt)
+							else if (obj.Object_Type == (int)eObjectType.Arrow || obj.Object_Type == (int)eObjectType.Bolt)
 							{
 								client.Out.SendMessage(" Ammunition #: " + obj.DPS_AF, eChatType.CT_System, eChatLoc.CL_PopupWindow);
 								client.Out.SendMessage("       Damage: " + GlobalConstants.AmmunitionTypeToDamageName(obj.SPD_ABS), eChatType.CT_System, eChatLoc.CL_PopupWindow);
@@ -312,7 +313,7 @@ namespace DOL.GS.Scripts
 								client.Out.SendMessage("     Accuracy: " + GlobalConstants.AmmunitionTypeToAccuracyName(obj.SPD_ABS), eChatType.CT_System, eChatLoc.CL_PopupWindow);
 								client.Out.SendMessage("        Bonus: " + obj.Bonus, eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							}
-							else if (obj.Object_Type == (int) eObjectType.Instrument)
+							else if (obj.Object_Type == (int)eObjectType.Instrument)
 							{
 								client.Out.SendMessage("   Instrument: " + GlobalConstants.InstrumentTypeToName(obj.DPS_AF), eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							}
@@ -320,7 +321,7 @@ namespace DOL.GS.Scripts
 						}
 					case "model":
 						{
-							int slot = (int) eInventorySlot.LastBackpack;
+							int slot = (int)eInventorySlot.LastBackpack;
 
 							if (args.Length >= 4)
 							{
@@ -330,11 +331,11 @@ namespace DOL.GS.Scripts
 								}
 								catch
 								{
-									slot = (int) eInventorySlot.LastBackpack;
+									slot = (int)eInventorySlot.LastBackpack;
 								}
 							}
 
-							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot) slot);
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)slot);
 
 							if (item == null)
 							{
@@ -345,8 +346,8 @@ namespace DOL.GS.Scripts
 							try
 							{
 								item.Model = Convert.ToUInt16(args[2]);
-								client.Out.SendInventoryItemsUpdate(new InventoryItem[] {item});
-								if (item.SlotPosition < (int) eInventorySlot.FirstBackpack)
+								client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
+								if (item.SlotPosition < (int)eInventorySlot.FirstBackpack)
 									client.Player.UpdateEquipmentAppearance();
 							}
 							catch
@@ -357,7 +358,7 @@ namespace DOL.GS.Scripts
 						}
 					case "extension":
 						{
-							int slot = (int) eInventorySlot.LastBackpack;
+							int slot = (int)eInventorySlot.LastBackpack;
 
 							if (args.Length >= 4)
 							{
@@ -367,11 +368,11 @@ namespace DOL.GS.Scripts
 								}
 								catch
 								{
-									slot = (int) eInventorySlot.LastBackpack;
+									slot = (int)eInventorySlot.LastBackpack;
 								}
 							}
 
-							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot) slot);
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)slot);
 
 							if (item == null)
 							{
@@ -381,8 +382,8 @@ namespace DOL.GS.Scripts
 							try
 							{
 								item.Extension = Convert.ToByte(args[2]);
-								client.Out.SendInventoryItemsUpdate(new InventoryItem[] {item});
-								if (item.SlotPosition < (int) eInventorySlot.FirstBackpack)
+								client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
+								if (item.SlotPosition < (int)eInventorySlot.FirstBackpack)
 									client.Player.UpdateEquipmentAppearance();
 							}
 							catch
@@ -393,7 +394,7 @@ namespace DOL.GS.Scripts
 						}
 					case "color":
 						{
-							int slot = (int) eInventorySlot.LastBackpack;
+							int slot = (int)eInventorySlot.LastBackpack;
 
 							if (args.Length >= 4)
 							{
@@ -403,11 +404,11 @@ namespace DOL.GS.Scripts
 								}
 								catch
 								{
-									slot = (int) eInventorySlot.LastBackpack;
+									slot = (int)eInventorySlot.LastBackpack;
 								}
 							}
 
-							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot) slot);
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)slot);
 
 							if (item == null)
 							{
@@ -418,8 +419,8 @@ namespace DOL.GS.Scripts
 							try
 							{
 								item.Color = Convert.ToUInt16(args[2]);
-								client.Out.SendInventoryItemsUpdate(new InventoryItem[] {item});
-								if (item.SlotPosition < (int) eInventorySlot.FirstBackpack)
+								client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
+								if (item.SlotPosition < (int)eInventorySlot.FirstBackpack)
 									client.Player.UpdateEquipmentAppearance();
 							}
 							catch
@@ -430,7 +431,7 @@ namespace DOL.GS.Scripts
 						}
 					case "effect":
 						{
-							int slot = (int) eInventorySlot.LastBackpack;
+							int slot = (int)eInventorySlot.LastBackpack;
 
 							if (args.Length >= 4)
 							{
@@ -440,11 +441,11 @@ namespace DOL.GS.Scripts
 								}
 								catch
 								{
-									slot = (int) eInventorySlot.LastBackpack;
+									slot = (int)eInventorySlot.LastBackpack;
 								}
 							}
 
-							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot) slot);
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)slot);
 
 							if (item == null)
 							{
@@ -454,8 +455,8 @@ namespace DOL.GS.Scripts
 							try
 							{
 								item.Effect = Convert.ToUInt16(args[2]);
-								client.Out.SendInventoryItemsUpdate(new InventoryItem[] {item});
-								if (item.SlotPosition < (int) eInventorySlot.FirstBackpack)
+								client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
+								if (item.SlotPosition < (int)eInventorySlot.FirstBackpack)
 									client.Player.UpdateEquipmentAppearance();
 							}
 							catch
@@ -466,7 +467,7 @@ namespace DOL.GS.Scripts
 						}
 					case "type":
 						{
-							int slot = (int) eInventorySlot.LastBackpack;
+							int slot = (int)eInventorySlot.LastBackpack;
 
 							if (args.Length >= 4)
 							{
@@ -476,11 +477,11 @@ namespace DOL.GS.Scripts
 								}
 								catch
 								{
-									slot = (int) eInventorySlot.LastBackpack;
+									slot = (int)eInventorySlot.LastBackpack;
 								}
 							}
 
-							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot) slot);
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)slot);
 
 							if (item == null)
 							{
@@ -490,7 +491,7 @@ namespace DOL.GS.Scripts
 							try
 							{
 								item.Item_Type = Convert.ToInt32(args[2]);
-								client.Out.SendInventoryItemsUpdate(new InventoryItem[] {item});
+								client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
 							}
 							catch
 							{
@@ -500,7 +501,7 @@ namespace DOL.GS.Scripts
 						}
 					case "object":
 						{
-							int slot = (int) eInventorySlot.LastBackpack;
+							int slot = (int)eInventorySlot.LastBackpack;
 
 							if (args.Length >= 4)
 							{
@@ -510,11 +511,11 @@ namespace DOL.GS.Scripts
 								}
 								catch
 								{
-									slot = (int) eInventorySlot.LastBackpack;
+									slot = (int)eInventorySlot.LastBackpack;
 								}
 							}
 
-							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot) slot);
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)slot);
 
 							if (item == null)
 							{
@@ -524,7 +525,7 @@ namespace DOL.GS.Scripts
 							try
 							{
 								item.Object_Type = Convert.ToInt32(args[2]);
-								client.Out.SendInventoryItemsUpdate(new InventoryItem[] {item});
+								client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
 							}
 							catch
 							{
@@ -534,7 +535,7 @@ namespace DOL.GS.Scripts
 						}
 					case "hand":
 						{
-							int slot = (int) eInventorySlot.LastBackpack;
+							int slot = (int)eInventorySlot.LastBackpack;
 
 							if (args.Length >= 4)
 							{
@@ -544,11 +545,11 @@ namespace DOL.GS.Scripts
 								}
 								catch
 								{
-									slot = (int) eInventorySlot.LastBackpack;
+									slot = (int)eInventorySlot.LastBackpack;
 								}
 							}
 
-							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot) slot);
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)slot);
 
 							if (item == null)
 							{
@@ -558,7 +559,7 @@ namespace DOL.GS.Scripts
 							try
 							{
 								item.Hand = Convert.ToInt32(args[2]);
-								client.Out.SendInventoryItemsUpdate(new InventoryItem[] {item});
+								client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
 							}
 							catch
 							{
@@ -568,7 +569,7 @@ namespace DOL.GS.Scripts
 						}
 					case "damagetype":
 						{
-							int slot = (int) eInventorySlot.LastBackpack;
+							int slot = (int)eInventorySlot.LastBackpack;
 
 							if (args.Length >= 4)
 							{
@@ -578,11 +579,11 @@ namespace DOL.GS.Scripts
 								}
 								catch
 								{
-									slot = (int) eInventorySlot.LastBackpack;
+									slot = (int)eInventorySlot.LastBackpack;
 								}
 							}
 
-							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot) slot);
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)slot);
 
 							if (item == null)
 							{
@@ -592,7 +593,7 @@ namespace DOL.GS.Scripts
 							try
 							{
 								item.Type_Damage = Convert.ToInt32(args[2]);
-								client.Out.SendInventoryItemsUpdate(new InventoryItem[] {item});
+								client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
 							}
 							catch
 							{
@@ -602,7 +603,7 @@ namespace DOL.GS.Scripts
 						}
 					case "name":
 						{
-							int slot = (int) eInventorySlot.LastBackpack;
+							int slot = (int)eInventorySlot.LastBackpack;
 
 							if (args.Length >= 4)
 							{
@@ -612,11 +613,11 @@ namespace DOL.GS.Scripts
 								}
 								catch
 								{
-									slot = (int) eInventorySlot.LastBackpack;
+									slot = (int)eInventorySlot.LastBackpack;
 								}
 							}
 
-							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot) slot);
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)slot);
 
 							if (item == null)
 							{
@@ -626,7 +627,7 @@ namespace DOL.GS.Scripts
 							try
 							{
 								item.Name = args[2];
-								client.Out.SendInventoryItemsUpdate(new InventoryItem[] {item});
+								client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
 							}
 							catch
 							{
@@ -635,42 +636,8 @@ namespace DOL.GS.Scripts
 							break;
 						}
 					case "craftername":
-					{
-						int slot = (int) eInventorySlot.LastBackpack;
-
-						if (args.Length >= 4)
 						{
-							try
-							{
-								slot = Convert.ToInt32(args[3]);
-							}
-							catch
-							{
-								slot = (int) eInventorySlot.LastBackpack;
-							}
-						}
-
-						InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot) slot);
-
-						if (item == null)
-						{
-							client.Out.SendMessage("No item in slot " + slot + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 0;
-						}
-						try
-						{
-							item.CrafterName = args[2];
-							client.Out.SendInventoryItemsUpdate(new InventoryItem[] {item});
-						}
-						catch
-						{
-							client.Out.SendMessage("'/item craftername <CrafterName> <slot #>' to change item crafter name.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						}
-						break;
-					}
-					case "emblem":
-						{
-							int slot = (int) eInventorySlot.LastBackpack;
+							int slot = (int)eInventorySlot.LastBackpack;
 
 							if (args.Length >= 4)
 							{
@@ -680,11 +647,45 @@ namespace DOL.GS.Scripts
 								}
 								catch
 								{
-									slot = (int) eInventorySlot.LastBackpack;
+									slot = (int)eInventorySlot.LastBackpack;
 								}
 							}
 
-							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot) slot);
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)slot);
+
+							if (item == null)
+							{
+								client.Out.SendMessage("No item in slot " + slot + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return 0;
+							}
+							try
+							{
+								item.CrafterName = args[2];
+								client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
+							}
+							catch
+							{
+								client.Out.SendMessage("'/item craftername <CrafterName> <slot #>' to change item crafter name.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							}
+							break;
+						}
+					case "emblem":
+						{
+							int slot = (int)eInventorySlot.LastBackpack;
+
+							if (args.Length >= 4)
+							{
+								try
+								{
+									slot = Convert.ToInt32(args[3]);
+								}
+								catch
+								{
+									slot = (int)eInventorySlot.LastBackpack;
+								}
+							}
+
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)slot);
 
 							if (item == null)
 							{
@@ -694,8 +695,8 @@ namespace DOL.GS.Scripts
 							try
 							{
 								item.Emblem = Convert.ToInt32(args[2]);
-								client.Out.SendInventoryItemsUpdate(new InventoryItem[] {item});
-								if (item.SlotPosition < (int) eInventorySlot.FirstBackpack)
+								client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
+								if (item.SlotPosition < (int)eInventorySlot.FirstBackpack)
 									client.Player.UpdateEquipmentAppearance();
 							}
 							catch
@@ -706,7 +707,7 @@ namespace DOL.GS.Scripts
 						}
 					case "level":
 						{
-							int slot = (int) eInventorySlot.LastBackpack;
+							int slot = (int)eInventorySlot.LastBackpack;
 
 							if (args.Length >= 4)
 							{
@@ -716,11 +717,11 @@ namespace DOL.GS.Scripts
 								}
 								catch
 								{
-									slot = (int) eInventorySlot.LastBackpack;
+									slot = (int)eInventorySlot.LastBackpack;
 								}
 							}
 
-							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot) slot);
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)slot);
 
 							if (item == null)
 							{
@@ -730,7 +731,7 @@ namespace DOL.GS.Scripts
 							try
 							{
 								item.Level = Convert.ToUInt16(args[2]);
-								client.Out.SendInventoryItemsUpdate(new InventoryItem[] {item});
+								client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
 							}
 							catch
 							{
@@ -740,21 +741,21 @@ namespace DOL.GS.Scripts
 						}
 					case "price":
 						{
-							int slot = (int) eInventorySlot.LastBackpack;
+							int slot = (int)eInventorySlot.LastBackpack;
 
-							if (args.Length >= 7)
+							if (args.Length >= 6)
 							{
 								try
 								{
-									slot = Convert.ToInt32(args[6]);
+									slot = Convert.ToInt32(args[5]);
 								}
 								catch
 								{
-									slot = (int) eInventorySlot.LastBackpack;
+									slot = (int)eInventorySlot.LastBackpack;
 								}
 							}
 
-							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot) slot);
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)slot);
 
 							if (item == null)
 							{
@@ -763,21 +764,20 @@ namespace DOL.GS.Scripts
 							}
 							try
 							{
-								item.Platinum = (short)(Convert.ToInt16(args[2])%1000);
-								item.Gold = (short) (Convert.ToInt16(args[3])%1000);
-								item.Silver = (byte) (Convert.ToByte(args[4])%100);
-								item.Copper = (byte) (Convert.ToByte(args[5])%100);
-								client.Out.SendInventoryItemsUpdate(new InventoryItem[] {item});
+								item.Gold = (short)(Convert.ToInt16(args[2]) % 1000);
+								item.Silver = (byte)(Convert.ToByte(args[3]) % 100);
+								item.Copper = (byte)(Convert.ToByte(args[4]) % 100);
+								client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
 							}
 							catch
 							{
-								client.Out.SendMessage("'/item price <plat> <gold> <silver> <copper> <slot #>' to change item price", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								client.Out.SendMessage("'/item price <gold> <silver> <copper> <slot #>' to change item price", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							}
 							break;
 						}
 					case "condition":
 						{
-							int slot = (int) eInventorySlot.LastBackpack;
+							int slot = (int)eInventorySlot.LastBackpack;
 
 							if (args.Length >= 5)
 							{
@@ -787,11 +787,11 @@ namespace DOL.GS.Scripts
 								}
 								catch
 								{
-									slot = (int) eInventorySlot.LastBackpack;
+									slot = (int)eInventorySlot.LastBackpack;
 								}
 							}
 
-							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot) slot);
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)slot);
 
 							if (item == null)
 							{
@@ -804,7 +804,7 @@ namespace DOL.GS.Scripts
 								int maxcon = Convert.ToInt32(args[3]);
 								item.Condition = con;
 								item.MaxCondition = maxcon;
-								client.Out.SendInventoryItemsUpdate(new InventoryItem[] {item});
+								client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
 							}
 							catch
 							{
@@ -814,7 +814,7 @@ namespace DOL.GS.Scripts
 						}
 					case "durability":
 						{
-							int slot = (int) eInventorySlot.LastBackpack;
+							int slot = (int)eInventorySlot.LastBackpack;
 
 							if (args.Length >= 5)
 							{
@@ -824,11 +824,11 @@ namespace DOL.GS.Scripts
 								}
 								catch
 								{
-									slot = (int) eInventorySlot.LastBackpack;
+									slot = (int)eInventorySlot.LastBackpack;
 								}
 							}
 
-							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot) slot);
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)slot);
 
 							if (item == null)
 							{
@@ -842,7 +842,7 @@ namespace DOL.GS.Scripts
 								item.Durability = Dur;
 								item.MaxDurability = MaxDur;
 
-								client.Out.SendInventoryItemsUpdate(new InventoryItem[] {item});
+								client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
 							}
 							catch
 							{
@@ -852,7 +852,7 @@ namespace DOL.GS.Scripts
 						}
 					case "quality":
 						{
-							int slot = (int) eInventorySlot.LastBackpack;
+							int slot = (int)eInventorySlot.LastBackpack;
 
 							if (args.Length >= 4)
 							{
@@ -862,11 +862,11 @@ namespace DOL.GS.Scripts
 								}
 								catch
 								{
-									slot = (int) eInventorySlot.LastBackpack;
+									slot = (int)eInventorySlot.LastBackpack;
 								}
 							}
 
-							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot) slot);
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)slot);
 
 							if (item == null)
 							{
@@ -879,7 +879,7 @@ namespace DOL.GS.Scripts
 								int Qua = Convert.ToInt32(args[2]);
 								item.Quality = Qua;
 
-								client.Out.SendInventoryItemsUpdate(new InventoryItem[] {item});
+								client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
 							}
 							catch
 							{
@@ -889,7 +889,7 @@ namespace DOL.GS.Scripts
 						}
 					case "bonus":
 						{
-							int slot = (int) eInventorySlot.LastBackpack;
+							int slot = (int)eInventorySlot.LastBackpack;
 
 							if (args.Length >= 4)
 							{
@@ -899,11 +899,11 @@ namespace DOL.GS.Scripts
 								}
 								catch
 								{
-									slot = (int) eInventorySlot.LastBackpack;
+									slot = (int)eInventorySlot.LastBackpack;
 								}
 							}
 
-							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot) slot);
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)slot);
 
 							if (item == null)
 							{
@@ -915,7 +915,7 @@ namespace DOL.GS.Scripts
 								int Bonus = Convert.ToInt32(args[2]);
 								item.Bonus = Bonus;
 
-								client.Out.SendInventoryItemsUpdate(new InventoryItem[] {item});
+								client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
 							}
 							catch
 							{
@@ -925,7 +925,7 @@ namespace DOL.GS.Scripts
 						}
 					case "mbonus":
 						{
-							int slot = (int) eInventorySlot.LastBackpack;
+							int slot = (int)eInventorySlot.LastBackpack;
 							int num = 0;
 							int bonusType = 0;
 							int bonusValue = 0;
@@ -938,11 +938,11 @@ namespace DOL.GS.Scripts
 								}
 								catch
 								{
-									slot = (int) eInventorySlot.LastBackpack;
+									slot = (int)eInventorySlot.LastBackpack;
 								}
 							}
 
-							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot) slot);
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)slot);
 
 							if (item == null)
 							{
@@ -962,7 +962,7 @@ namespace DOL.GS.Scripts
 								bonusType = Convert.ToInt32(args[3]);
 								if (bonusType < 0 || bonusType >= (int)eProperty.MaxProperty)
 								{
-									client.Out.SendMessage("Bonus type should be in range from 0 to "+(int)(eProperty.MaxProperty-1), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									client.Out.SendMessage("Bonus type should be in range from 0 to " + (int)(eProperty.MaxProperty - 1), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 									break;
 								}
 							}
@@ -1045,7 +1045,7 @@ namespace DOL.GS.Scripts
 										client.Out.SendMessage("Unknown bonus number: " + num, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 										return 1;
 								}
-								if (item.SlotPosition < (int) eInventorySlot.FirstBackpack)
+								if (item.SlotPosition < (int)eInventorySlot.FirstBackpack)
 								{
 									client.Out.SendCharStatsUpdate();
 									client.Out.SendCharResistsUpdate();
@@ -1059,7 +1059,7 @@ namespace DOL.GS.Scripts
 						}
 					case "weight":
 						{
-							int slot = (int) eInventorySlot.LastBackpack;
+							int slot = (int)eInventorySlot.LastBackpack;
 
 							if (args.Length >= 4)
 							{
@@ -1069,11 +1069,11 @@ namespace DOL.GS.Scripts
 								}
 								catch
 								{
-									slot = (int) eInventorySlot.LastBackpack;
+									slot = (int)eInventorySlot.LastBackpack;
 								}
 							}
 
-							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot) slot);
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)slot);
 
 							if (item == null)
 							{
@@ -1083,7 +1083,7 @@ namespace DOL.GS.Scripts
 							try
 							{
 								item.Weight = Convert.ToInt32(args[2]);
-								client.Out.SendInventoryItemsUpdate(new InventoryItem[] {item});
+								client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
 							}
 							catch
 							{
@@ -1095,7 +1095,7 @@ namespace DOL.GS.Scripts
 					case "dps":
 					case "af":
 						{
-							int slot = (int) eInventorySlot.LastBackpack;
+							int slot = (int)eInventorySlot.LastBackpack;
 
 							if (args.Length >= 4)
 							{
@@ -1105,11 +1105,11 @@ namespace DOL.GS.Scripts
 								}
 								catch
 								{
-									slot = (int) eInventorySlot.LastBackpack;
+									slot = (int)eInventorySlot.LastBackpack;
 								}
 							}
 
-							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot) slot);
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)slot);
 
 							if (item == null)
 							{
@@ -1119,7 +1119,7 @@ namespace DOL.GS.Scripts
 							try
 							{
 								item.DPS_AF = Convert.ToByte(args[2]);
-								client.Out.SendInventoryItemsUpdate(new InventoryItem[] {item});
+								client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
 							}
 							catch
 							{
@@ -1131,7 +1131,7 @@ namespace DOL.GS.Scripts
 					case "spd":
 					case "abs":
 						{
-							int slot = (int) eInventorySlot.LastBackpack;
+							int slot = (int)eInventorySlot.LastBackpack;
 
 							if (args.Length >= 4)
 							{
@@ -1141,11 +1141,11 @@ namespace DOL.GS.Scripts
 								}
 								catch
 								{
-									slot = (int) eInventorySlot.LastBackpack;
+									slot = (int)eInventorySlot.LastBackpack;
 								}
 							}
 
-							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot) slot);
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)slot);
 
 							if (item == null)
 							{
@@ -1155,7 +1155,7 @@ namespace DOL.GS.Scripts
 							try
 							{
 								item.SPD_ABS = Convert.ToByte(args[2]);
-								client.Out.SendInventoryItemsUpdate(new InventoryItem[] {item});
+								client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
 							}
 							catch
 							{
@@ -1165,7 +1165,7 @@ namespace DOL.GS.Scripts
 						}
 					case "isdropable":
 						{
-							int slot = (int) eInventorySlot.LastBackpack;
+							int slot = (int)eInventorySlot.LastBackpack;
 
 							if (args.Length >= 4)
 							{
@@ -1175,11 +1175,11 @@ namespace DOL.GS.Scripts
 								}
 								catch
 								{
-									slot = (int) eInventorySlot.LastBackpack;
+									slot = (int)eInventorySlot.LastBackpack;
 								}
 							}
 
-							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot) slot);
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)slot);
 
 							if (item == null)
 							{
@@ -1199,7 +1199,7 @@ namespace DOL.GS.Scripts
 						}
 					case "ispickable":
 						{
-							int slot = (int) eInventorySlot.LastBackpack;
+							int slot = (int)eInventorySlot.LastBackpack;
 
 							if (args.Length >= 4)
 							{
@@ -1209,11 +1209,11 @@ namespace DOL.GS.Scripts
 								}
 								catch
 								{
-									slot = (int) eInventorySlot.LastBackpack;
+									slot = (int)eInventorySlot.LastBackpack;
 								}
 							}
 
-							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot) slot);
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)slot);
 
 							if (item == null)
 							{
@@ -1269,7 +1269,7 @@ namespace DOL.GS.Scripts
 						}
 					case "spell":
 						{
-							int slot = (int) eInventorySlot.LastBackpack;
+							int slot = (int)eInventorySlot.LastBackpack;
 
 							if (args.Length >= 6)
 							{
@@ -1279,11 +1279,11 @@ namespace DOL.GS.Scripts
 								}
 								catch
 								{
-									slot = (int) eInventorySlot.LastBackpack;
+									slot = (int)eInventorySlot.LastBackpack;
 								}
 							}
 
-							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot) slot);
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)slot);
 
 							if (item == null)
 							{
@@ -1300,7 +1300,7 @@ namespace DOL.GS.Scripts
 								item.MaxCharges = MaxCharges;
 								item.SpellID = SpellID;
 
-								client.Out.SendInventoryItemsUpdate(new InventoryItem[] {item});
+								client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
 							}
 							catch
 							{
@@ -1309,42 +1309,8 @@ namespace DOL.GS.Scripts
 							break;
 						}
 					case "proc":
-					{
-						int slot = (int) eInventorySlot.LastBackpack;
-
-						if (args.Length >= 4)
 						{
-							try
-							{
-								slot = Convert.ToInt32(args[3]);
-							}
-							catch
-							{
-								slot = (int) eInventorySlot.LastBackpack;
-							}
-						}
-
-						InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot) slot);
-
-						if (item == null)
-						{
-							client.Out.SendMessage("No item in slot " + slot + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 0;
-						}
-						try
-						{
-							item.ProcSpellID = Convert.ToInt32(args[2]);
-							client.Out.SendInventoryItemsUpdate(new InventoryItem[] {item});
-						}
-						catch
-						{
-							client.Out.SendMessage("'/item proc <ProcSpellID> <slot #>' to change proc type", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						}
-						break;
-					}
-					case "realm":
-						{
-							int slot = (int) eInventorySlot.LastBackpack;
+							int slot = (int)eInventorySlot.LastBackpack;
 
 							if (args.Length >= 4)
 							{
@@ -1354,11 +1320,86 @@ namespace DOL.GS.Scripts
 								}
 								catch
 								{
-									slot = (int) eInventorySlot.LastBackpack;
+									slot = (int)eInventorySlot.LastBackpack;
 								}
 							}
 
-							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot) slot);
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)slot);
+
+							if (item == null)
+							{
+								client.Out.SendMessage("No item in slot " + slot + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return 0;
+							}
+							try
+							{
+								item.ProcSpellID = Convert.ToInt32(args[2]);
+								client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
+							}
+							catch
+							{
+								client.Out.SendMessage("'/item proc <ProcSpellID> <slot #>' to change proc type", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							}
+							break;
+						}
+					case "poison":
+						{
+							int slot = (int)eInventorySlot.LastBackpack;
+
+							if (args.Length >= 6)
+							{
+								try
+								{
+									slot = Convert.ToInt32(args[5]);
+								}
+								catch
+								{
+									slot = (int)eInventorySlot.LastBackpack;
+								}
+							}
+
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)slot);
+
+							if (item == null)
+							{
+								client.Out.SendMessage("No item in slot " + slot + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return 0;
+							}
+
+							try
+							{
+								int Charges = Convert.ToInt32(args[2]);
+								int MaxCharges = Convert.ToInt32(args[3]);
+								int SpellID = Convert.ToInt32(args[4]);
+								item.PoisonCharges = Charges;
+								item.PoisonMaxCharges = MaxCharges;
+								item.PoisonSpellID = SpellID;
+
+								client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
+							}
+							catch
+							{
+								client.Out.SendMessage("'/item poison <Charges> <MaxCharges> <SpellID> [slot #]' to change item poison", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							}
+							break;
+						}
+					case "realm":
+						{
+							int slot = (int)eInventorySlot.LastBackpack;
+
+							if (args.Length >= 4)
+							{
+								try
+								{
+									slot = Convert.ToInt32(args[3]);
+								}
+								catch
+								{
+									slot = (int)eInventorySlot.LastBackpack;
+								}
+							}
+
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)slot);
 
 							if (item == null)
 							{
@@ -1414,7 +1455,7 @@ namespace DOL.GS.Scripts
 						}
 					case "savetemplate":
 						{
-							int slot = (int) eInventorySlot.LastBackpack;
+							int slot = (int)eInventorySlot.LastBackpack;
 							string name = "";
 
 							if (args.Length >= 4)
@@ -1425,12 +1466,12 @@ namespace DOL.GS.Scripts
 								}
 								catch
 								{
-									slot = (int) eInventorySlot.LastBackpack;
+									slot = (int)eInventorySlot.LastBackpack;
 								}
 
-								if (slot > (int) eInventorySlot.LastBackpack)
+								if (slot > (int)eInventorySlot.LastBackpack)
 								{
-									slot = (int) eInventorySlot.LastBackpack;
+									slot = (int)eInventorySlot.LastBackpack;
 								}
 
 								if (slot < 0)
@@ -1450,7 +1491,7 @@ namespace DOL.GS.Scripts
 								return 0;
 							}
 
-							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot) slot);
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)slot);
 
 							if (item == null)
 							{
@@ -1461,7 +1502,7 @@ namespace DOL.GS.Scripts
 							//{
 
 
-							ItemTemplate temp = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), GameServer.Database.Escape(name));
+							ItemTemplate temp = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), GameServer.Database.Escape(name));
 
 							bool add = false;
 
@@ -1493,7 +1534,6 @@ namespace DOL.GS.Scripts
 							temp.Bonus8Type = item.Bonus8Type;
 							temp.Bonus9Type = item.Bonus9Type;
 							temp.Bonus10Type = item.Bonus10Type;
-							temp.Platinum = item.Platinum;
 							temp.Gold = item.Gold;
 							temp.Silver = item.Silver;
 							temp.Copper = item.Copper;
@@ -1529,6 +1569,9 @@ namespace DOL.GS.Scripts
 							temp.SpellID = item.SpellID;
 							temp.ProcSpellID = item.ProcSpellID;
 							temp.Realm = item.Realm;
+							temp.PoisonCharges = item.PoisonCharges;
+							temp.PoisonMaxCharges = item.PoisonMaxCharges;
+							temp.PoisonSpellID = item.PoisonSpellID;
 
 							if (add)
 							{

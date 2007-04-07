@@ -124,12 +124,6 @@ namespace DOL.GS
 			}
 		}
 
-		public override ushort Type()
-		{
-			//changes for realm
-			return 18;
-		}
-
 		public override bool RiderMount(GamePlayer rider, bool forced)
 		{
 			if (!base.RiderMount(rider, forced))
