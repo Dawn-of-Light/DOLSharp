@@ -755,7 +755,6 @@
     <Compile Include="realmabilities\handlers\WildMinionAbility.cs" />
     <Compile Include="realmabilities\handlers\LifterAbility.cs" />
     <Compile Include="realmabilities\handlers\VeilRecoveryAbility.cs" />
-    <Compile Include="serverrules\TaskDungeonJumpPoint.cs" />
     <Compile Include="skillhandler\CamouflageSpecHandler.cs" />
     <Compile Include="realmabilities\handlers\ChargeAbility.cs" />
     <Compile Include="realmabilities\handlers\ConcentrationAbility.cs" />
