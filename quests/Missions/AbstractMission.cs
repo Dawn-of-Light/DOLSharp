@@ -58,6 +58,7 @@ namespace DOL.GS.Quests
 			Personal = 1,
 			Group = 2,
 			Realm = 3,
+			Task = 4,
 		}
 
 		public eMissionType MissionType
@@ -121,6 +122,7 @@ namespace DOL.GS.Quests
 					case eMissionType.Personal: return "Personal Mission";
 					case eMissionType.Group: return "Group Mission";
 					case eMissionType.Realm: return "Realm Mission";
+					case eMissionType.Task: return "Task";
 					case eMissionType.None: return "Unknown Mission";
 					default: return "MISSION NAME UNDEFINED!";
 				}
@@ -262,7 +264,7 @@ namespace DOL.GS.Quests
 			m_customProperties.Clear();
 		}
 
-		public void UpdateMission()
+		public virtual void UpdateMission()
 		{
 			foreach (GamePlayer player in Targets)
 			{

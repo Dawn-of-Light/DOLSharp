@@ -2993,10 +2993,9 @@ namespace DOL.GS.PacketHandler
 			pak.WriteInt((uint)obj.Y);
 			pak.WriteShort(obj.Model);
 			int flag = (obj.Type() | (obj.Realm == 3 ? 0x40 : obj.Realm << 4) | obj.Level << 9);
-			if (obj is GameBoat)
-				flag = obj.Type();
-			pak.WriteShort((ushort)flag);
-			pak.WriteInt(0);//(0x0002-for Ship,0x7D42-for catapult,0x9602,0x9612,0x9622-for ballista)
+			pak.WriteShort((ushort)flag); //(0x0002-for Ship,0x7D42-for catapult,0x9602,0x9612,0x9622-for ballista)
+			pak.WriteShort(obj.Emblem);//emblem
+			pak.WriteShort(0);
 			pak.WriteInt(0);
 			pak.WritePascalString(obj.Name);
 			pak.WriteByte(0); // trailing ?
