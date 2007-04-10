@@ -253,15 +253,20 @@ namespace DOL.GS.Quests
 		/// <summary>
 		/// Player Constant will be replaced by players name in output messages.
 		/// </summary>
-		const string PLAYER = "{Player}";
+		const string PLAYER = "<Player>";
+
+        /// <summary>
+        /// @deprecated
+        /// </summary>
+        const string PLAYER_OLD = "{Player}";
         /// <summary>
         /// Constant will be replaced by the players class in the outputmessages.
         /// </summary>
-        const string CLASS = "{Class}";
+        const string CLASS = "<Class>";
         /// <summary>
         /// Constant will be replaced by the players race in the outputmessages.
         /// </summary>
-        const string RACE = "{Race}";
+        const string RACE = "<Race>";
         /// <summary>
         /// Constant used to store timerid in RegionTimer.Properties
         /// </summary>
@@ -1079,16 +1084,19 @@ namespace DOL.GS.Quests
                 message = message.Replace(PLAYER, player.GetName(0, false));
             }
 
-            int raceIndex = message.IndexOf(RACE);
-            if (raceIndex >= 0)
+            // {PLAYER} is deprecated
+            int playerIndex = message.IndexOf(PLAYER_OLD);
+            if (playerIndex == 0)
             {
-                message = message.Replace(RACE, player.RaceName);
+                message = message.Replace(PLAYER_OLD, player.GetName(0, true));
             }
-            int classIndex = message.IndexOf(CLASS);
-            if (classIndex >= 0)
+            else if (playerIndex > 0)
             {
-                message = message.Replace(CLASS, player.CharacterClass.Name);
+                message = message.Replace(PLAYER_OLD, player.GetName(0, false));
             }
+            
+            message = message.Replace(RACE, player.RaceName);
+            message = message.Replace(CLASS, player.CharacterClass.Name);            
 
 			return message;
 		}
