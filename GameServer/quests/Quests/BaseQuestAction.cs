@@ -1085,7 +1085,7 @@ namespace DOL.GS.Quests
             }
 
             // {PLAYER} is deprecated
-            int playerIndex = message.IndexOf(PLAYER_OLD);
+            playerIndex = message.IndexOf(PLAYER_OLD);
             if (playerIndex == 0)
             {
                 message = message.Replace(PLAYER_OLD, player.GetName(0, true));
