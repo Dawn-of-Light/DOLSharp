@@ -52,6 +52,12 @@ namespace DOL.GS.Scripts
 							client.Out.SendMessage("You added " + targetClient.Player.Name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						break;
 					}
+                case "all":
+                    {
+                        if (client.Player.CurrentHouse.AddToPerm(null, ePermsTypes.All, 1))
+                            client.Out.SendMessage("You added Everybody !", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                        break;
+                    }
 			}
 
 			return 1;
