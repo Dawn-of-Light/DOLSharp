@@ -20,10 +20,8 @@
 using System;
 using System.Collections;
 using System.Reflection;
-
 using DOL.GS.PacketHandler;
 using DOL.Database;
-
 using log4net;
 
 namespace DOL.GS.Housing
@@ -291,14 +289,18 @@ namespace DOL.GS.Housing
 			return true;
 		}
 
-		public bool IsInPerm(string name, ePermsTypes type, int lvl)
-		{
-			// todo modify when type is account, to check if name == one of charnames on the account
-			foreach (DBHouseCharsXPerms perm in CharsPermissions)
-				if (perm.Name == name && perm.Type == (byte)type && perm.PermLevel == lvl)
-					return true;
-			return false;
-		}
+        public bool IsInPerm(string name, ePermsTypes type, int lvl)
+        {
+            // todo modify when type is account, to check if name == one of charnames on the account
+            foreach (DBHouseCharsXPerms perm in CharsPermissions)
+            {
+                if (type == ePermsTypes.All && perm.Type == (byte)type && perm.PermLevel == lvl)
+                    return true;
+                if (perm.Name == name && perm.Type == (byte)type && perm.PermLevel == lvl)
+                    return true;
+            }
+            return false;
+        }
 
 		public bool CanPayRent(GamePlayer p)
 		{
@@ -308,6 +310,8 @@ namespace DOL.GS.Housing
 			{
 				if (perm.PayRent == 0)// optim
 					continue;
+                if (IsInPerm(null, ePermsTypes.All, perm.PermLevel))
+                    return true;
 				if (IsInPerm(p.Name, ePermsTypes.Player, perm.PermLevel))
 					return true;
 				if (IsInPerm(p.Name, ePermsTypes.Account, perm.PermLevel))
@@ -324,6 +328,8 @@ namespace DOL.GS.Housing
 			{
 				if (perm.Enter == 0)// optim
 					continue;
+                if (IsInPerm(null, ePermsTypes.All, perm.PermLevel))
+                    return true;
 				if (IsInPerm(p.Name, ePermsTypes.Player, perm.PermLevel))
 					return true;
 				if (IsInPerm(p.Name, ePermsTypes.Account, perm.PermLevel))
@@ -340,6 +346,8 @@ namespace DOL.GS.Housing
 			{
 				if ((perm.Interior & 0x01) == 0)// optim
 					continue;
+                if (IsInPerm(null, ePermsTypes.All, perm.PermLevel))
+                    return true;
 				if (IsInPerm(p.Name, ePermsTypes.Player, perm.PermLevel))
 					return true;
 				if (IsInPerm(p.Name, ePermsTypes.Account, perm.PermLevel))
@@ -356,6 +364,8 @@ namespace DOL.GS.Housing
 			{
 				if ((perm.Interior & 0x02) == 0)// optim
 					continue;
+                if (IsInPerm(null, ePermsTypes.All, perm.PermLevel))
+                    return true;
 				if (IsInPerm(p.Name, ePermsTypes.Player, perm.PermLevel))
 					return true;
 				if (IsInPerm(p.Name, ePermsTypes.Account, perm.PermLevel))
@@ -372,6 +382,8 @@ namespace DOL.GS.Housing
 			{
 				if ((perm.Garden & 0x01) == 0)// optim
 					continue;
+                if (IsInPerm(null, ePermsTypes.All, perm.PermLevel))
+                    return true;
 				if (IsInPerm(p.Name, ePermsTypes.Player, perm.PermLevel))
 					return true;
 				if (IsInPerm(p.Name, ePermsTypes.Account, perm.PermLevel))
@@ -388,6 +400,8 @@ namespace DOL.GS.Housing
 			{
 				if ((perm.Garden & 0x02) == 0)// optim
 					continue;
+                if (IsInPerm(null, ePermsTypes.All, perm.PermLevel))
+                    return true;
 				if (IsInPerm(p.Name, ePermsTypes.Player, perm.PermLevel))
 					return true;
 				if (IsInPerm(p.Name, ePermsTypes.Account, perm.PermLevel))
@@ -404,6 +418,8 @@ namespace DOL.GS.Housing
 			{
 				if (perm.Appearance == 0)// optim
 					continue;
+                if (IsInPerm(null, ePermsTypes.All, perm.PermLevel))
+                    return true;
 				if (IsInPerm(p.Name, ePermsTypes.Player, perm.PermLevel))
 					return true;
 				if (IsInPerm(p.Name, ePermsTypes.Account, perm.PermLevel))
@@ -420,6 +436,8 @@ namespace DOL.GS.Housing
 			{
 				if (perm.Vault1 == 0)// optim
 					continue;
+                if (IsInPerm(null, ePermsTypes.All, perm.PermLevel))
+                    return true;
 				if (IsInPerm(p.Name, ePermsTypes.Player, perm.PermLevel))
 					return true;
 				if (IsInPerm(p.Name, ePermsTypes.Account, perm.PermLevel))
@@ -436,6 +454,8 @@ namespace DOL.GS.Housing
 			{
 				if (perm.Vault1 == 0)// optim
 					continue;
+                if (IsInPerm(null, ePermsTypes.All, perm.PermLevel))
+                    return true;
 				if (IsInPerm(p.Name, ePermsTypes.Player, perm.PermLevel))
 					return true;
 				if (IsInPerm(p.Name, ePermsTypes.Account, perm.PermLevel))
