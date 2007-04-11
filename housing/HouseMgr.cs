@@ -162,7 +162,6 @@ namespace DOL.GS.Housing
 			house.SendUpdate();
 		}
 
-
 		public static void RemoveHouse(House house)
 		{
 			Logger.Debug("House " + house.UniqueID + " removed");
@@ -175,23 +174,47 @@ namespace DOL.GS.Housing
 
 			}
 			foreach (GamePlayer player in house.GetAllPlayersInHouse())
-			{
 				player.LeaveHouse();
-			}
 
 			house.OwnerIDs = null;
-
-			//house.LastPaid = null;
 			house.KeptMoney = 0;
-			house.Name = ""; // not null !
+			house.Name = ""; // not null ! 
 			house.Emblem = 0;
 			house.Model = 0;
-			house.DatabaseItem.CreationTime = DateTime.Now;
-			house.SaveIntoDatabase();
+            house.DatabaseItem.CreationTime = DateTime.MinValue;
+            house.DatabaseItem.LastPaid = DateTime.MinValue;
+
+            #region Remove indoor/outdoor items & permissions
+            DataObject[] objs;
+
+            // Remove all indoor items
+            objs = GameServer.Database.SelectObjects(typeof(DBHouseIndoorItem), "HouseNumber = " + house.HouseNumber);
+            if (objs.Length > 0)
+                foreach (DataObject item in objs)
+                    GameServer.Database.DeleteObject(item);
+
+            // Remove all outdoor items
+            objs = GameServer.Database.SelectObjects(typeof(DBHouseOutdoorItem), "HouseNumber = " + house.HouseNumber);
+            if (objs.Length > 0)
+                foreach (DataObject item in objs)
+                    GameServer.Database.DeleteObject(item);
+
+            // Remove all permissions
+            objs = GameServer.Database.SelectObjects(typeof(DBHousePermissions), "HouseNumber = " + house.HouseNumber);
+            if (objs.Length > 0)
+                foreach (DataObject item in objs)
+                    GameServer.Database.DeleteObject(item);
+
+            // Remove all char x permissions
+            objs = GameServer.Database.SelectObjects(typeof(DBHouseCharsXPerms), "HouseNumber = " + house.HouseNumber);
+            if (objs.Length > 0)
+                foreach (DataObject item in objs)
+                    GameServer.Database.DeleteObject(item);
+            #endregion
+
+            house.SaveIntoDatabase();
 			hash.Remove(house.HouseNumber);
 			GameLotMarker.SpawnLotMarker(house.DatabaseItem);
-
-
 		}
 
 		public static bool IsOwner(DBHouse house, GamePlayer player)
@@ -317,10 +340,9 @@ namespace DOL.GS.Housing
 					}
 				}
 			}
+
 			foreach (House h in todel) // here we remove houses
-			{
 				RemoveHouse(h);
-			}
 		}
 
 		internal static void SpecialBuy(GamePlayer gamePlayer, ushort item_slot, byte item_count, byte menu_id)
