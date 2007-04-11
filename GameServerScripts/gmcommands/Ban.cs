@@ -21,6 +21,7 @@ using System.Net;
 using System.Reflection;
 using DOL.Database;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 using log4net;
 
 namespace DOL.GS.Scripts
@@ -28,9 +29,11 @@ namespace DOL.GS.Scripts
 	[CmdAttribute(
 		"&ban",
 		(uint) ePrivLevel.GM,
-		"Ban an account, user name, IP",
-		"/ban <type> <ip/pseudo/compte>")]
-	public class BanCommandHandler : ICommandHandler
+		"Usage of /ban command :",
+        "/ban ip [reason] : Ban target's IP adress",
+        "/ban account [reason] : Ban target's account",
+		"/ban both [reason] : Ban target's account and its related IP adress")]
+    public class BanCommandHandler : AbstractCommandHandler,ICommandHandler
 	{
 		/// <summary>
 		/// Defines a logger for this class.
@@ -39,98 +42,94 @@ namespace DOL.GS.Scripts
 
 		public int OnCommand(GameClient client, string[] args)
 		{
-			//GamePlayer player = client.Player;
+            if (args.Length < 2)
+                return DisplaySyntax(client);
+
 			GamePlayer player = client.Player.TargetObject as GamePlayer;
 			if (player == null)
 			{
-				client.Out.SendMessage("You must select a target!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.GM.Ban.MustTarget"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return 0;
 			}
 
 			try
 			{
-				if (args.Length < 2)
-				{
-					client.Out.SendMessage("Usage of /ban :", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					client.Out.SendMessage("/ban ip <reason> : ban an IP.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					client.Out.SendMessage("/ban account <reason> : ban an account.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					client.Out.SendMessage("/ban account+ip <reason> : ban an account and this IP.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return 0;
-				}
-
-				string TypeOfBan = args[1];
-				DataObject[] objs;
+                DataObject[] objs;
 				DBBannedAccount b = new DBBannedAccount();
-				string idban = System.Guid.NewGuid().ToString();
 				string accip = ((IPEndPoint) player.Client.Socket.RemoteEndPoint).Address.ToString();
 				string accname = GameServer.Database.Escape(player.Client.Account.Name);
 				string reason;
 
 				if (args.Length >= 3)
 					reason = String.Join(" ", args, 2, args.Length - 2);
-				else
-					reason = "No Reason.";
+				else reason = "No Reason.";
 
-				switch (TypeOfBan)
+                switch (args[1].ToLower())
 				{
-					case "account+ip":
-						objs = GameServer.Database.SelectObjects(typeof (DBBannedAccount), "Type ='" + GameServer.Database.Escape(TypeOfBan) + "' AND Account ='" + GameServer.Database.Escape(accname) + "' AND Ip ='" + GameServer.Database.Escape(accip) + "'");
-						if (objs.Length > 0)
-						{
-							client.Out.SendMessage("this Account+Ip has already been banned.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-							return 0;
-						}
-
-						b.Type = "Account+Ip";
-						client.Out.SendMessage("Account " + accname + " and IP +" + accip + " banned.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-						break;
-
 					case "account":
-						objs = GameServer.Database.SelectObjects(typeof(DBBannedAccount), "(Type ='Account' AND Account ='" + GameServer.Database.Escape(accname) + "') OR (Type ='Account+Ip' AND Account ='" + GameServer.Database.Escape(accname) + "')");
+						//objs = GameServer.Database.SelectObjects(typeof(DBBannedAccount), "(Type ='Account' AND Account ='" + GameServer.Database.Escape(accname) + "') OR (Type ='Account+Ip' AND Account ='" + GameServer.Database.Escape(accname) + "')");
+                        objs = GameServer.Database.SelectObjects(typeof(DBBannedAccount), "((Type='A' OR Type='B') AND Account ='" + GameServer.Database.Escape(accname) + "')");
 						if (objs.Length > 0)
 						{
-							client.Out.SendMessage("this account has already been banned.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+                            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.GM.Ban.AAlreadyBanned"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 							return 0;
 						}
 
-						b.Type = "Account";
-						client.Out.SendMessage("Account " + accname + " banned.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+						b.Type = "A";
+						client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.GM.Ban.ABanned", accname), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 						break;
 
 					case "ip":
-						objs = GameServer.Database.SelectObjects(typeof (DBBannedAccount), "(Type ='Ip' AND Ip ='" + GameServer.Database.Escape(accip) + "') OR (Type ='Account+Ip' AND Ip ='" + GameServer.Database.Escape(accip) + "')");
+						//objs = GameServer.Database.SelectObjects(typeof (DBBannedAccount), "(Type ='Ip' AND Ip ='" + GameServer.Database.Escape(accip) + "') OR (Type ='Account+Ip' AND Ip ='" + GameServer.Database.Escape(accip) + "')");
+                        objs = GameServer.Database.SelectObjects(typeof(DBBannedAccount), "((Type='I' OR Type='B') AND Ip ='" + GameServer.Database.Escape(accip) + "')");
 						if (objs.Length > 0)
 						{
-							client.Out.SendMessage("this IP adress has already been banned.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-							return 0;
+                            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.GM.Ban.IAlreadyBanned"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+							return 1;
 						}
 
-						b.Type = "Ip";
-						client.Out.SendMessage("IP address " + accip + " banned.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+						b.Type = "I";
+                        client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.GM.Ban.IBanned", accip), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 						break;
+
+                    case "both":
+                        //objs = GameServer.Database.SelectObjects(typeof(DBBannedAccount), "Type ='" + GameServer.Database.Escape(TypeOfBan) + "' AND Account ='" + GameServer.Database.Escape(accname) + "' AND Ip ='" + GameServer.Database.Escape(accip) + "'");
+                        objs = GameServer.Database.SelectObjects(typeof(DBBannedAccount), "Type='B' AND Account ='" + GameServer.Database.Escape(accname) + "' AND Ip ='" + GameServer.Database.Escape(accip) + "'");
+                        if (objs.Length > 0)
+                        {
+                            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.GM.Ban.BAlreadyBanned"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+                            return 0;
+                        }
+
+                        b.Type = "B";
+                        client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.GM.Ban.BBanned", accname, accip), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+                        break;
+
+                    default:
+                        return DisplaySyntax(client);
 				}
 
-				b.IDBan = idban;
 				b.Author = client.Player.PlayerCharacter.Name;
 				b.Ip = accip;
 				b.Account = accname;
-				b.DateTime = DateTime.Now.ToString();
+				b.DateBan = DateTime.Now;
 				b.Reason = reason;
 				GameServer.Database.AddNewObject(b);
 				GameServer.Database.SaveObject(b);
+
 				if (log.IsInfoEnabled)
-					log.Info("Ban added [" + TypeOfBan + "]: " + accname + "(" + accip + ")");
+                    log.Info("Ban added [" + args[1].ToLower() + "]: " + accname + "(" + accip + ")");
+
+                return 1;
 			}
 			catch (Exception e)
 			{
 				if (log.IsErrorEnabled)
 					log.Error("/ban Exception", e);
-				client.Out.SendMessage("Exception! Usage:", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				client.Out.SendMessage("/ban ip <reason> : ban an IP.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				client.Out.SendMessage("/ban account <reason> : ban an account.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				client.Out.SendMessage("/ban account+ip <reason> : ban an account and this IP.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
-			return 1;
+
+            // if not returned here, there is an error
+            return DisplaySyntax(client);
 		}
 	}
 }
