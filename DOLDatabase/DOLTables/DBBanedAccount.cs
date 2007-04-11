@@ -16,6 +16,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
+
+using System;
 using DOL.Database;
 using DOL.Database.Attributes;
 
@@ -27,14 +29,14 @@ namespace DOL.Database
 	[DataTable(TableName="Ban")]
 	public class DBBannedAccount : DataObject
 	{
-		private string	m_idban;
 		private string	m_author;
-		private string	m_type;
+        private string  m_type;
 		private string	m_ip;
 		private string	m_account;
-		private string  m_datetime;
+        private DateTime m_dateban;
 		private string	m_reason;
 		
+        /*
 		/// <summary>
 		/// Create Banned account or IP
 		/// </summary>
@@ -50,6 +52,7 @@ namespace DOL.Database
 				m_idban = value;
 			}
 		}
+        */
 
 		/// <summary>
 		/// Who have ban player
@@ -70,8 +73,8 @@ namespace DOL.Database
 		/// <summary>
 		/// type of ban (ip, account or both)
 		/// </summary>
-		[DataElement(AllowDbNull=false, Index=true)]
-		public string Type
+		[DataElement(AllowDbNull=false)]
+        public string Type
 		{
 			get
 			{
@@ -119,15 +122,15 @@ namespace DOL.Database
 		/// When have been ban this account/IP
 		/// </summary>
 		[DataElement(AllowDbNull=false)]
-		public string DateTime
+		public DateTime DateBan
 		{
 			get
 			{
-				return m_datetime;
+				return m_dateban;
 			}
 			set
 			{
-				m_datetime=value;
+                m_dateban = value;
 			}
 		}
 

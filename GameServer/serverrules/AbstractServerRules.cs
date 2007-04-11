@@ -57,7 +57,8 @@ namespace DOL.GS.ServerRules
 
 			// Ban account
 			DataObject[] objs;
-			objs = GameServer.Database.SelectObjects(typeof(DBBannedAccount), "(Type ='Account' AND Account ='" + GameServer.Database.Escape(username) + "') OR (Type ='Account+Ip' AND Account ='" + GameServer.Database.Escape(username) + "')");
+			//objs = GameServer.Database.SelectObjects(typeof(DBBannedAccount), "(Type ='Account' AND Account ='" + GameServer.Database.Escape(username) + "') OR (Type ='Account+Ip' AND Account ='" + GameServer.Database.Escape(username) + "')");
+            objs = GameServer.Database.SelectObjects(typeof(DBBannedAccount), "((Type='A' OR Type='B') AND Account ='" + GameServer.Database.Escape(username) + "')");
 			if (objs.Length > 0)
 			{
 				client.Out.SendLoginDenied(eLoginError.AccountIsBannedFromThisServerType);
@@ -65,7 +66,8 @@ namespace DOL.GS.ServerRules
 			}
 
 			// Ban IP Adress
-			objs = GameServer.Database.SelectObjects(typeof(DBBannedAccount), "(Type = 'Ip' AND Ip ='" + GameServer.Database.Escape(accip) + "') OR (Type ='Account+Ip' AND Ip ='" + GameServer.Database.Escape(accip) + "')");
+			//objs = GameServer.Database.SelectObjects(typeof(DBBannedAccount), "(Type = 'Ip' AND Ip ='" + GameServer.Database.Escape(accip) + "') OR (Type ='Account+Ip' AND Ip ='" + GameServer.Database.Escape(accip) + "')");
+            objs = GameServer.Database.SelectObjects(typeof(DBBannedAccount), "((Type='I' OR Type='B') AND Ip ='" + GameServer.Database.Escape(accip) + "')");
 			if (objs.Length > 0)
 			{
 				client.Out.SendLoginDenied(eLoginError.AccountIsBannedFromThisServerType);
