@@ -72,12 +72,14 @@ namespace DOL.Language
 					continue;
 				if (line.IndexOf(':') == -1)
 					continue;
-				string[] splitted = new string[2];
+
+                // Maybe use Regex here ?
+                string[] splitted = new string[2];
 				splitted[0] = line.Substring(0, line.IndexOf(':'));
 				splitted[1] = line.Substring(line.IndexOf(':') + 1);
 
 				splitted[1] = splitted[1].Replace("\t", "");
-				log.Debug("Index : " + splitted[0] + " sentence : '" + splitted[1] + "'");
+				//log.Debug("Index : " + splitted[0] + " sentence : '" + splitted[1] + "'");
 				LangsSentences[(int)l][splitted[0]] = splitted[1];
 			}
 			// Now we can set the short/long name
