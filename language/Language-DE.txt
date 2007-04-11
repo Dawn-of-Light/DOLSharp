@@ -372,6 +372,16 @@ Scripts.Events.PlayerEnterExit.Entered:			{0} betritt gerade das Spiel!
 Scripts.Events.PlayerEnterExit.Left:			{0} verlässt gerade das Spiel!
 Scripts.Events.PlayerEnterExit.Staff:			[Spielleitung] {0}
 
+# GMCommands
+# /Ban
+Scripts.GM.Ban.AAlreadyBanned:				Der Account ist bereits gesperrt!
+Scripts.GM.Ban.ABanned:					Der Account {0} wurde gesperrt.
+Scripts.GM.Ban.BAlreadyBanned:				Dieser Account/IP-Adresse ist bereits gesperrt!
+Scripts.GM.Ban.BBanned:					Der Account {0} und die IP-Adresse {1} wurde gesperrt.
+Scripts.GM.Ban.IAlreadyBanned:				Diese IP-Adresse ist bereits gesperrt!
+Scripts.GM.Ban.IBanned:					Die IP-Adresse {0} wurde gesperrt.
+Scripts.GM.Ban.MustTarget:				Ihr müsst erst ein Ziel auswählen!
+
 # PlayerCommands
 # /Advice
 Scripts.Players.Advice.Advice:				[Anfrage{0}] {1}: "{2}"

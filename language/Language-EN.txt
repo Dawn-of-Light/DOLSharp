@@ -367,19 +367,19 @@ AbstractArea.Left:					(Region) You have left {0}!
 # SCRIPTS
 # GameEvents
 # /Playerenterexit
-Scripts.Events.PlayerEnterExit.Entered:		{0} just entered the game!
-Scripts.Events.PlayerEnterExit.Left:		{0} just left the game!
-Scripts.Events.PlayerEnterExit.Staff:		[Staff Member] {0}
+Scripts.Events.PlayerEnterExit.Entered:			{0} just entered the game!
+Scripts.Events.PlayerEnterExit.Left:			{0} just left the game!
+Scripts.Events.PlayerEnterExit.Staff:			[Staff Member] {0}
 
 # GMCommands
 # /Ban
-Scripts.GM.Ban.MustTarget:					You must select a target!
 Scripts.GM.Ban.AAlreadyBanned:				This account has already been banned.
-Scripts.GM.Ban.IAlreadyBanned:				This IP has already been banned.
+Scripts.GM.Ban.ABanned:					Account {0} has been banned.
 Scripts.GM.Ban.BAlreadyBanned:				These account and IP have already been banned.
-Scripts.GM.Ban.ABanned:						Account {0} has been banned.
-Scripts.GM.Ban.IBanned:						IP {0} has been banned.
-Scripts.GM.Ban.BBanned:						Account {0} and IP {1} have been banned.
+Scripts.GM.Ban.BBanned:					Account {0} and IP {1} have been banned.
+Scripts.GM.Ban.IAlreadyBanned:				This IP has already been banned.
+Scripts.GM.Ban.IBanned:					IP {0} has been banned.
+Scripts.GM.Ban.MustTarget:				You must select a target!
 
 # PlayerCommands
 # /Advice
@@ -388,11 +388,11 @@ Scripts.Players.Advice.AdvicersOn:			There are {0} advisors online!
 
 # /Advisor
 Scripts.Players.Advisor.Off:				You will no longer receive messages from the advice channel.
-Scripts.Players.Advisor.On:					You will now receive messages from the advice channel.
+Scripts.Players.Advisor.On:				You will now receive messages from the advice channel.
 
 # /Afk
-Scripts.Players.Afk.Off:					Your AFK flag is now off.
-Scripts.Players.Afk.On:						Your AFK flag is now on.
+Scripts.Players.Afk.Off:				Your AFK flag is now off.
+Scripts.Players.Afk.On:					Your AFK flag is now on.
 
 # /Anonymous
 Scripts.Players.Anonymous.Error:			Anonymous mode is disabled.
@@ -400,8 +400,8 @@ Scripts.Players.Anonymous.Off:				You are no longer anonymous.
 Scripts.Players.Anonymous.On:				You are now anonymous.
 
 # /Assist
-Scripts.Players.Assist.CantAssistYourself:	You can't assist yourself.
-Scripts.Players.Assist.DoesntHaveTarget:	 doesn't currently have a target.
+Scripts.Players.Assist.CantAssistYourself:		You can't assist yourself.
+Scripts.Players.Assist.DoesntHaveTarget:	 	doesn't currently have a target.
 Scripts.Players.Assist.DontSee:				You don't see {0} around here!
 Scripts.Players.Assist.NoTarget:			You have no target.
 Scripts.Players.Assist.NotValid:			Target is not valid.
@@ -427,8 +427,8 @@ Scripts.Players.Boot.NoOneOnline:			No one with that name is online to Kick!
 Scripts.Players.Boot.YouRemoved:			You have been removed from the house by {0}!
 
 # /Bountyrent
-Scripts.Players.Bountyrent.InHouseError:	You have to be in your house to use this command!
-Scripts.Players.Bountyrent.NoHouseError:	You don't own a house!
+Scripts.Players.Bountyrent.InHouseError:		You have to be in your house to use this command!
+Scripts.Players.Bountyrent.NoHouseError:		You don't own a house!
 
 # /Broadcast
 Scripts.Players.Broadcast.Message:			[Broadcast] {0} : {1}
