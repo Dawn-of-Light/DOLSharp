@@ -709,12 +709,6 @@
             <param name="slot"></param>
             <returns></returns>
         </member>
-        <member name="M:DOL.GS.GameLiving.GetKeepBonuses">
-            <summary>
-            Calculates keep bonuses
-            </summary>
-            <returns></returns>
-        </member>
         <member name="M:DOL.GS.GameLiving.GetWeaponSkill(DOL.Database.InventoryItem)">
             <summary>
             Gets the weaponskill of weapon
@@ -4379,6 +4373,14 @@
             <param name="spellHandler"></param>
             <returns>first occurance of effect in target's effect list or null</returns>
         </member>
+        <member name="M:DOL.GS.Spells.SpellHandler.FindEffectOnTarget(DOL.GS.GameLiving,System.Type)">
+            <summary>
+            Find effect by spell handler
+            </summary>
+            <param name="target"></param>
+            <param name="spellHandler"></param>
+            <returns>first occurance of effect in target's effect list or null</returns>
+        </member>
         <member name="M:DOL.GS.Spells.SpellHandler.FindPulsingSpellOnTarget(DOL.GS.GameLiving,DOL.GS.Spells.ISpellHandler)">
             <summary>
             Find pulsing spell by spell handler
@@ -4816,27 +4818,29 @@
             RR4: now its a list of effects to remove
             </summary>
         </member>
-        <member name="T:DOL.GS.Spells.SavageSlashResistHandler">
+        <member name="T:DOL.GS.Spells.RangeShield">
             <summary>
-            Summary description for SavageHasteHandler.
+            Summary description for RangeShield.
             </summary>
         </member>
-        <member name="T:DOL.GS.Spells.SlashResistBuff">
+        <member name="T:DOL.GS.Spells.BladeturnSpellHandler">
             <summary>
-            Slash buff
+            
             </summary>
         </member>
-        <member name="T:DOL.GS.Spells.AbstractResistBuff">
+        <member name="M:DOL.GS.Spells.BladeturnSpellHandler.FinishSpellCast(DOL.GS.GameLiving)">
             <summary>
-            Base class for all resist buffs, needed to set effectiveness
+            Execute buff spell
             </summary>
         </member>
-        <member name="M:DOL.GS.Spells.AbstractResistBuff.ApplyEffectOnTarget(DOL.GS.GameLiving,System.Double)">
+        <member name="M:DOL.GS.Spells.BladeturnSpellHandler.OnEffectExpires(DOL.GS.Effects.GameSpellEffect,System.Boolean)">
             <summary>
-            Apply effect on target or do spell action if non duration spell
+            When an applied effect expires.
+            Duration spells only.
             </summary>
-            <param name="target">target that gets the effect</param>
-            <param name="effectiveness">factor from 0..1 (0%-100%)</param>
+            <param name="effect">The expired effect</param>
+            <param name="noMessages">true, when no messages should be sent to player and surrounding</param>
+            <returns>immunity duration in milliseconds</returns>
         </member>
         <member name="T:DOL.GS.Quests.AbstractQuestAction">
             <summary>
@@ -6499,6 +6503,30 @@
             <param name="source"></param>
             <param name="text"></param>
             <returns></returns>
+        </member>
+        <member name="T:DOL.GS.Spells.PrimerSpellHandler">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:DOL.GS.Spells.PrimerSpellHandler.log">
+            <summary>
+            Defines a logger for this class.
+            </summary>
+        </member>
+        <member name="M:DOL.GS.Spells.PrimerSpellHandler.FinishSpellCast(DOL.GS.GameLiving)">
+            <summary>
+            Cast Powerless
+            </summary>
+            <param name="target"></param>
+        </member>
+        <member name="M:DOL.GS.Spells.PrimerSpellHandler.OnMove(DOL.Events.DOLEvent,System.Object,System.EventArgs)">
+            <summary>
+            Handles attacks on player/by player
+            </summary>
+            <param name="e"></param>
+            <param name="sender"></param>
+            <param name="arguments"></param>
         </member>
         <member name="T:DOL.GS.SkillHandler.RapidFireAbilityHandler">
             <summary>
@@ -8409,6 +8437,81 @@
             <param name="noMessages">true, when no messages should be sent to player and surrounding</param>
             <returns>immunity duration in milliseconds</returns>
         </member>
+        <member name="M:DOL.GS.Spells.VampBuffShear.FinishSpellCast(DOL.GS.GameLiving)">
+            <summary>
+            called after normal spell cast is completed and effect has to be started
+            </summary>
+        </member>
+        <member name="M:DOL.GS.Spells.VampBuffShear.OnDirectEffect(DOL.GS.GameLiving,System.Double)">
+            <summary>
+            execute non duration spell effect on target
+            </summary>
+            <param name="target"></param>
+            <param name="effectiveness"></param>
+        </member>
+        <member name="M:DOL.GS.Spells.VampiirArmorDebuff.FinishSpellCast(DOL.GS.GameLiving)">
+            <summary>
+            called after normal spell cast is completed and effect has to be started
+            </summary>
+        </member>
+        <member name="T:DOL.GS.Spells.ResurrectSpellHandler">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:DOL.GS.Spells.ResurrectSpellHandler.OnDirectEffect(DOL.GS.GameLiving,System.Double)">
+            <summary>
+            execute non duration spell effect on target
+            </summary>
+            <param name="target"></param>
+            <param name="effectiveness"></param>
+        </member>
+        <member name="M:DOL.GS.Spells.ResurrectSpellHandler.CalculateNeededPower(DOL.GS.GameLiving)">
+            <summary>
+            Calculates the power to cast the spell
+            </summary>
+            <param name="target"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DOL.GS.Spells.ResurrectSpellHandler.ResurrectResponceHandler(DOL.GS.GamePlayer,System.Byte)">
+            <summary>
+            Resurrects target if it accepts
+            </summary>
+            <param name="player"></param>
+            <param name="response"></param>
+        </member>
+        <member name="M:DOL.GS.Spells.ResurrectSpellHandler.ResurrectLiving(DOL.GS.GameLiving)">
+            <summary>
+            Resurrects living
+            </summary>
+            <param name="living"></param>
+        </member>
+        <member name="M:DOL.GS.Spells.ResurrectSpellHandler.ResurrectExpiredCallback(DOL.GS.RegionTimer)">
+            <summary>
+            Cancels resurrection after some time
+            </summary>
+            <param name="callingTimer"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DOL.GS.Spells.ResurrectSpellHandler.CheckBeginCast(DOL.GS.GameLiving)">
+            <summary>
+            All checks before any casting begins
+            </summary>
+            <param name="target"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DOL.GS.Spells.ResurrectSpellHandler.CheckEndCast(DOL.GS.GameLiving)">
+            <summary>
+            Checks after casting before spell is executed
+            </summary>
+            <param name="target"></param>
+            <returns></returns>
+        </member>
+        <member name="P:DOL.GS.Spells.ResurrectSpellHandler.DelveInfo">
+            <summary>
+            Delve Info
+            </summary>
+        </member>
         <member name="T:DOL.GS.SkillHandler.InterceptAbilityHandler">
             <summary>
             Handler for Intercept ability clicks
@@ -8941,6 +9044,11 @@
         <member name="F:DOL.GS.Quests.BaseQuestAction.PLAYER">
             <summary>
             Player Constant will be replaced by players name in output messages.
+            </summary>
+        </member>
+        <member name="F:DOL.GS.Quests.BaseQuestAction.PLAYER_OLD">
+            <summary>
+            @deprecated
             </summary>
         </member>
         <member name="F:DOL.GS.Quests.BaseQuestAction.CLASS">
@@ -10810,10 +10918,99 @@
             </summary>
             <returns>Short info about the timer</returns>
         </member>
-        <member name="T:DOL.GS.Spells.SavageCrushResistHandler">
+        <member name="T:DOL.GS.Spells.UninterruptableSpellHandler">
             <summary>
-            Summary description for SavageHasteHandler.
+            
             </summary>
+        </member>
+        <member name="F:DOL.GS.Spells.UninterruptableSpellHandler.log">
+            <summary>
+            Defines a logger for this class.
+            </summary>
+        </member>
+        <member name="M:DOL.GS.Spells.UninterruptableSpellHandler.CalculateNeededPower(DOL.GS.GameLiving)">
+            <summary>
+            Calculates the power to cast the spell
+            </summary>
+            <param name="target"></param>
+            <returns></returns>
+        </member>
+        <member name="F:DOL.GS.Spells.ValkyrieOffensiveProcSpellHandler.SINGLE_WEAPON_BASE_CHANCE">
+            <summary>
+            Constants data change this to modify chance increase or decrease
+            </summary>
+        </member>
+        <member name="M:DOL.GS.Spells.HereticPropertyChangingSpell.FinishSpellCast(DOL.GS.GameLiving)">
+            <summary>
+            Execute property changing spell
+            </summary>
+            <param name="target"></param>
+        </member>
+        <member name="M:DOL.GS.Spells.HereticPropertyChangingSpell.OnEffectStart(DOL.GS.Effects.GameSpellEffect)">
+            <summary>
+            start changing effect on target
+            </summary>
+            <param name="effect"></param>
+        </member>
+        <member name="M:DOL.GS.Spells.HereticPropertyChangingSpell.OnEffectExpires(DOL.GS.Effects.GameSpellEffect,System.Boolean)">
+            <summary>
+            Remove the changes from target and send some messages
+            </summary>
+            <param name="effect"></param>
+            <param name="noMessages">true, when no messages should be sent</param>
+            <returns>immunity duration</returns>
+        </member>
+        <member name="P:DOL.GS.Spells.HereticPropertyChangingSpell.Property1">
+            <summary>
+            Property 1 which bonus value has to be changed
+            </summary>
+        </member>
+        <member name="P:DOL.GS.Spells.HereticPropertyChangingSpell.Property2">
+            <summary>
+            Property 2 which bonus value has to be changed
+            </summary>
+        </member>
+        <member name="P:DOL.GS.Spells.HereticPropertyChangingSpell.Property3">
+            <summary>
+            Property 3 which bonus value has to be changed
+            </summary>
+        </member>
+        <member name="P:DOL.GS.Spells.HereticPropertyChangingSpell.BonusCategory1">
+            <summary>
+            Bonus Category where to change the Property1
+            </summary>
+        </member>
+        <member name="P:DOL.GS.Spells.HereticPropertyChangingSpell.BonusCategory2">
+            <summary>
+            Bonus Category where to change the Property2
+            </summary>
+        </member>
+        <member name="P:DOL.GS.Spells.HereticPropertyChangingSpell.BonusCategory3">
+            <summary>
+            Bonus Category where to change the Property3
+            </summary>
+        </member>
+        <member name="M:DOL.GS.Spells.HereticSingleStatBuff.SendUpdates(DOL.GS.GameLiving)">
+            <summary>
+            send updates about the changes
+            </summary>
+            <param name="target"></param>
+        </member>
+        <member name="M:DOL.GS.Spells.HereticSingleStatBuff.ApplyEffectOnTarget(DOL.GS.GameLiving,System.Double)">
+            <summary>
+            Apply effect on target or do spell action if non duration spell
+            </summary>
+            <param name="target">target that gets the effect</param>
+            <param name="effectiveness">factor from 0..1 (0%-100%)</param>
+        </member>
+        <member name="M:DOL.GS.Spells.HereticSingleStatBuff.IsOverwritable(DOL.GS.Effects.GameSpellEffect)">
+            <summary>
+            Determines wether this spell is compatible with given spell
+            and therefore overwritable by better versions
+            spells that are overwritable cannot stack
+            </summary>
+            <param name="compare"></param>
+            <returns></returns>
         </member>
         <member name="T:DOL.GS.ServerRules.PvPServerRules">
             <summary>
@@ -12844,15 +13041,16 @@
             <param name="target">the target of the spell</param>
             <returns>chance that spell will be resisted for specific target</returns>
         </member>
-        <member name="T:DOL.GS.Spells.SavageParryHandler">
+        <member name="T:DOL.GS.Spells.SpreadHealSpellHandler">
             <summary>
-            Summary description for SavageHasteHandler.
+            
             </summary>
         </member>
-        <member name="T:DOL.GS.Spells.ParryChanceBuff">
+        <member name="M:DOL.GS.Spells.SpreadHealSpellHandler.StartSpell(DOL.GS.GameLiving)">
             <summary>
-            Parry chance buff
+            Execute heal spell
             </summary>
+            <param name="target"></param>
         </member>
         <member name="T:DOL.GS.RealmAbilities.VanishAbility">
             <summary>
@@ -15531,6 +15729,16 @@
             <param name="compare"></param>
             <returns></returns>
         </member>
+        <member name="F:DOL.GS.Spells.BeFriendSpellHandler.log">
+            <summary>
+            Defines a logger for this class.
+            </summary>
+        </member>
+        <member name="M:DOL.GS.Spells.BeFriendSpellHandler.StartSpell(DOL.GS.GameLiving)">
+            <summary>
+            called when spell effect has to be started and applied to targets
+            </summary>
+        </member>
         <member name="T:DOL.GS.Quests.BaseQuestPart">
              <summary>
              BaseQuestParts are the core element of the new questsystem,
@@ -17451,6 +17659,18 @@
             <param name="text"></param>
             <returns></returns>
         </member>
+        <member name="T:DOL.GS.Spells.AbstractResistBuff">
+            <summary>
+            Base class for all resist buffs, needed to set effectiveness
+            </summary>
+        </member>
+        <member name="M:DOL.GS.Spells.AbstractResistBuff.ApplyEffectOnTarget(DOL.GS.GameLiving,System.Double)">
+            <summary>
+            Apply effect on target or do spell action if non duration spell
+            </summary>
+            <param name="target">target that gets the effect</param>
+            <param name="effectiveness">factor from 0..1 (0%-100%)</param>
+        </member>
         <member name="T:DOL.GS.Spells.BodyResistBuff">
             <summary>
             Body resistance buff
@@ -17494,6 +17714,11 @@
         <member name="T:DOL.GS.Spells.CrushSlashThrustBuff">
             <summary>
             Crush/Slash/Thrust resistance buff
+            </summary>
+        </member>
+        <member name="T:DOL.GS.Spells.SlashResistBuff">
+            <summary>
+            Slash buff
             </summary>
         </member>
         <member name="T:DOL.GS.Spells.ThrustResistBuff">
@@ -17652,16 +17877,17 @@
             The event type to hook on
             </summary>
         </member>
-        <member name="T:DOL.GS.Spells.HealthToEndurance">
+        <member name="T:DOL.GS.Spells.RangeSpellHandler">
             <summary>
-            Damage Over Time spell handler
+            
             </summary>
         </member>
-        <member name="M:DOL.GS.Spells.HealthToEndurance.FinishSpellCast(DOL.GS.GameLiving)">
+        <member name="M:DOL.GS.Spells.RangeSpellHandler.CalculateNeededPower(DOL.GS.GameLiving)">
             <summary>
-            Execute damage over time spell
+            Calculates the power to cast the spell
             </summary>
             <param name="target"></param>
+            <returns></returns>
         </member>
         <member name="T:DOL.GS.Spells.PowerHealSpellHandler">
              <summary>
@@ -17779,6 +18005,91 @@
             UnresistableStun 
             </summary>
         </member>
+        <member name="M:DOL.GS.Spells.HereticImmunityEffectSpellHandler.FinishSpellCast(DOL.GS.GameLiving)">
+            <summary>
+            called when spell effect has to be started and applied to targets
+            </summary>
+        </member>
+        <member name="M:DOL.GS.Spells.HereticImmunityEffectSpellHandler.IsNewEffectBetter(DOL.GS.Effects.GameSpellEffect,DOL.GS.Effects.GameSpellEffect)">
+            <summary>
+            Determines wether this spell is better than given one
+            </summary>
+            <param name="oldeffect"></param>
+            <returns>true if this spell is better version than compare spell</returns>
+        </member>
+        <member name="M:DOL.GS.Spells.HereticImmunityEffectSpellHandler.ApplyEffectOnTarget(DOL.GS.GameLiving,System.Double)">
+            <summary>
+            Apply effect on target or do spell action if non duration spell
+            </summary>
+            <param name="target">target that gets the effect</param>
+            <param name="effectiveness">factor from 0..1 (0%-100%)</param>
+        </member>
+        <member name="M:DOL.GS.Spells.HereticImmunityEffectSpellHandler.CreateSpellEffect(DOL.GS.GameLiving,System.Double)">
+            <summary>
+            Creates the corresponding spell effect for the spell
+            </summary>
+            <param name="target"></param>
+            <param name="effectiveness"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DOL.GS.Spells.HereticSpeedDecreaseSpellHandler.SendUpdates(DOL.GS.GameLiving)">
+            <summary>
+            Sends updates on effect start/stop
+            </summary>
+            <param name="owner"></param>
+        </member>
+        <member name="T:DOL.GS.Spells.HereticSpeedDecreaseSpellHandler.RestoreSpeedTimer">
+            <summary>
+            Slowly restores the livings speed
+            </summary>
+        </member>
+        <member name="F:DOL.GS.Spells.HereticSpeedDecreaseSpellHandler.RestoreSpeedTimer.m_effect">
+            <summary>
+            The speed changing effect
+            </summary>
+        </member>
+        <member name="M:DOL.GS.Spells.HereticSpeedDecreaseSpellHandler.RestoreSpeedTimer.#ctor(DOL.GS.Effects.GameSpellEffect)">
+            <summary>
+            Constructs a new RestoreSpeedTimer
+            </summary>
+            <param name="effect">The speed changing effect</param>
+        </member>
+        <member name="M:DOL.GS.Spells.HereticSpeedDecreaseSpellHandler.RestoreSpeedTimer.OnTick">
+            <summary>
+            Called on every timer tick
+            </summary>
+        </member>
+        <member name="M:DOL.GS.Spells.HereticSpeedDecreaseSpellHandler.RestoreSpeedTimer.ToString">
+            <summary>
+            Returns short information about the timer
+            </summary>
+            <returns>Short info about the timer</returns>
+        </member>
+        <member name="T:DOL.GS.Spells.BainsheePulseDmgSpellHandler">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:DOL.GS.Spells.BainsheePulseDmgSpellHandler.FinishSpellCast(DOL.GS.GameLiving)">
+            <summary>
+            Execute direct damage spell
+            </summary>
+            <param name="target"></param>
+        </member>
+        <member name="M:DOL.GS.Spells.BainsheePulseDmgSpellHandler.OnDirectEffect(DOL.GS.GameLiving,System.Double)">
+            <summary>
+            execute direct effect
+            </summary>
+            <param name="target">target that gets the damage</param>
+            <param name="effectiveness">factor from 0..1 (0%-100%)</param>
+        </member>
+        <member name="M:DOL.GS.Spells.BainsheePulseDmgSpellHandler.CalculateSpellResistChance(DOL.GS.GameLiving)">
+            <summary>
+            Calculates chance of spell getting resisted
+            </summary>
+            <param name="target">the target of the spell</param>
+            <returns>chance that spell will be resisted for specific target</returns>
+        </member>
         <member name="T:DOL.GS.Spells.AmnesiaSpellHandler">
             <summary>
             
@@ -17822,6 +18133,35 @@
             <summary>
             Defines a logger for this class.
             </summary>
+        </member>
+        <member name="M:DOL.SkillHandler.PropertyChangingAbility.GetAmountForLevel(System.Int32)">
+            <summary>
+            Get the Amount of Bonus for this ability at a particular level
+            </summary>
+            <param name="level">The level</param>
+            <returns>The amount</returns>
+        </member>
+        <member name="M:DOL.SkillHandler.PropertyChangingAbility.SendUpdates(DOL.GS.GameLiving)">
+            <summary>
+            send updates about the changes
+            </summary>
+            <param name="target"></param>
+        </member>
+        <member name="P:DOL.SkillHandler.PropertyChangingAbility.Amount">
+            <summary>
+            The bonus amount at this abilities level
+            </summary>
+        </member>
+        <member name="P:DOL.SkillHandler.PropertyChangingAbility.ValueUnit">
+            <summary>
+            Unit for values like %
+            </summary>
+        </member>
+        <member name="M:DOL.SkillHandler.StatChangingAbility.SendUpdates(DOL.GS.GameLiving)">
+            <summary>
+            send updates about the changes
+            </summary>
+            <param name="target"></param>
         </member>
         <member name="T:DOL.Config.ResourceUtil">
             <summary>
@@ -19673,6 +20013,33 @@
             <param name="noMessages">true, when no messages should be sent to player and surrounding</param>
             <returns>immunity duration in milliseconds</returns>
         </member>
+        <member name="T:DOL.GS.Spells.PetMesmerizeSpellHandler">
+            <summary>
+            PetMezz 
+            </summary>
+        </member>
+        <member name="T:DOL.GS.Spells.MesmerizeSpellHandler">
+            <summary>
+            Mezz 
+            </summary>
+        </member>
+        <member name="M:DOL.GS.Spells.MesmerizeSpellHandler.OnEffectExpires(DOL.GS.Effects.GameSpellEffect,System.Boolean)">
+            <summary>
+            When an applied effect expires.
+            Duration spells only.
+            </summary>
+            <param name="effect">The expired effect</param>
+            <param name="noMessages">true, when no messages should be sent to player and surrounding</param>
+            <returns>immunity duration in milliseconds</returns>
+        </member>
+        <member name="M:DOL.GS.Spells.MesmerizeSpellHandler.CalculateEffectDuration(DOL.GS.GameLiving,System.Double)">
+            <summary>
+            Calculates the effect duration in milliseconds
+            </summary>
+            <param name="target">The effect target</param>
+            <param name="effectiveness">The effect effectiveness</param>
+            <returns>The effect duration in milliseconds</returns>
+        </member>
         <member name="T:DOL.GS.SkillHandler.QuickCastAbilityHandler">
             <summary>
             Handler for Sprint Ability clicks
@@ -21357,22 +21724,6 @@
             <param name="text"></param>
             <returns></returns>
         </member>
-        <member name="T:DOL.GS.Spells.SavageDamageHandler">
-            <summary>
-            Summary description for SavageHasteHandler.
-            </summary>
-        </member>
-        <member name="T:DOL.GS.Spells.MeleeDamageBuff">
-            <summary>
-            Melee damage buff
-            </summary>
-        </member>
-        <member name="M:DOL.GS.Spells.MeleeDamageBuff.SendUpdates(DOL.GS.GameLiving)">
-            <summary>
-            send updates about the changes
-            </summary>
-            <param name="target"></param>
-        </member>
         <member name="T:DOL.GS.Spells.EnduranceHealSpellHandler">
              <summary>
             
@@ -22451,16 +22802,6 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="T:DOL.GS.Spells.SavageEvadeHandler">
-            <summary>
-            Summary description for SavageHasteHandler.
-            </summary>
-        </member>
-        <member name="T:DOL.GS.Spells.EvadeChanceBuff">
-            <summary>
-            Evade chance buff
-            </summary>
-        </member>
         <member name="T:DOL.GS.Spells.BoltSpellHandler">
             <summary>
             Spell Handler for firing bolts
@@ -23266,21 +23607,6 @@
             <summary>
             table of player and aggrolevel (characterid/aggrolevel)
             </summary>
-        </member>
-        <member name="T:DOL.GS.ServerRules.TaskDungeonJumpPoint">
-            <summary>
-            Handles task dungeon jump points
-            </summary>
-        </member>
-        <member name="M:DOL.GS.ServerRules.TaskDungeonJumpPoint.IsAllowedToJump(DOL.Database.ZonePoint,DOL.GS.GamePlayer)">
-            <summary>
-            Decides whether player can jump to the target point.
-            All messages with reasons must be sent here.
-            Can change destination too.
-            </summary>
-            <param name="targetPoint">The jump destination</param>
-            <param name="player">The jumping player</param>
-            <returns>True if allowed</returns>
         </member>
         <member name="T:DOL.GS.Effects.NaturesWombEffect">
             <summary>
@@ -24159,43 +24485,10 @@
             
             </summary>
         </member>
-        <member name="T:DOL.GS.Spells.SavageHasteHandler">
+        <member name="T:DOL.GS.Spells.PowerlessSpellHandler">
             <summary>
-            Summary description for SavageHasteHandler.
+            
             </summary>
-        </member>
-        <member name="T:DOL.GS.Spells.CombatSpeedBuff">
-            <summary>
-            Combat speed buff
-            </summary>
-        </member>
-        <member name="M:DOL.GS.Spells.CombatSpeedBuff.SendUpdates(DOL.GS.GameLiving)">
-            <summary>
-            send updates about the changes
-            </summary>
-            <param name="target"></param>
-        </member>
-        <member name="T:DOL.GS.Spells.MesmerizeSpellHandler">
-            <summary>
-            Mezz 
-            </summary>
-        </member>
-        <member name="M:DOL.GS.Spells.MesmerizeSpellHandler.OnEffectExpires(DOL.GS.Effects.GameSpellEffect,System.Boolean)">
-            <summary>
-            When an applied effect expires.
-            Duration spells only.
-            </summary>
-            <param name="effect">The expired effect</param>
-            <param name="noMessages">true, when no messages should be sent to player and surrounding</param>
-            <returns>immunity duration in milliseconds</returns>
-        </member>
-        <member name="M:DOL.GS.Spells.MesmerizeSpellHandler.CalculateEffectDuration(DOL.GS.GameLiving,System.Double)">
-            <summary>
-            Calculates the effect duration in milliseconds
-            </summary>
-            <param name="target">The effect target</param>
-            <param name="effectiveness">The effect effectiveness</param>
-            <returns>The effect duration in milliseconds</returns>
         </member>
         <member name="T:DOL.GS.SkillHandler.CriticalShotAbilityHandler">
             <summary>
@@ -25253,62 +25546,63 @@
             <param name="text"></param>
             <returns></returns>
         </member>
-        <member name="T:DOL.GS.Spells.ResurrectSpellHandler">
+        <member name="T:DOL.GS.Spells.WeaponSkillBuff">
             <summary>
-            
+            WeaponSkill buff
             </summary>
         </member>
-        <member name="M:DOL.GS.Spells.ResurrectSpellHandler.OnDirectEffect(DOL.GS.GameLiving,System.Double)">
+        <member name="F:DOL.GS.Spells.VampiirWeaponSkillBuff.log">
             <summary>
-            execute non duration spell effect on target
+            Defines a logger for this class.
             </summary>
-            <param name="target"></param>
-            <param name="effectiveness"></param>
         </member>
-        <member name="M:DOL.GS.Spells.ResurrectSpellHandler.CalculateNeededPower(DOL.GS.GameLiving)">
+        <member name="M:DOL.GS.Spells.HereticAbstractDamageAddSpellHandler.EventHandler(DOL.Events.DOLEvent,System.Object,System.EventArgs)">
             <summary>
-            Calculates the power to cast the spell
+            The event handler of given event type
             </summary>
-            <param name="target"></param>
-            <returns></returns>
         </member>
-        <member name="M:DOL.GS.Spells.ResurrectSpellHandler.ResurrectResponceHandler(DOL.GS.GamePlayer,System.Byte)">
+        <member name="F:DOL.GS.Spells.HereticAbstractDamageAddSpellHandler.m_minDamageSpread">
             <summary>
-            Resurrects target if it accepts
+            Holds min damage spread based on spec level caster
+            had the moment spell was casted
             </summary>
-            <param name="player"></param>
-            <param name="response"></param>
         </member>
-        <member name="M:DOL.GS.Spells.ResurrectSpellHandler.ResurrectLiving(DOL.GS.GameLiving)">
+        <member name="M:DOL.GS.Spells.HereticAbstractDamageAddSpellHandler.FinishSpellCast(DOL.GS.GameLiving)">
             <summary>
-            Resurrects living
-            </summary>
-            <param name="living"></param>
-        </member>
-        <member name="M:DOL.GS.Spells.ResurrectSpellHandler.ResurrectExpiredCallback(DOL.GS.RegionTimer)">
-            <summary>
-            Cancels resurrection after some time
-            </summary>
-            <param name="callingTimer"></param>
-            <returns></returns>
-        </member>
-        <member name="M:DOL.GS.Spells.ResurrectSpellHandler.CheckBeginCast(DOL.GS.GameLiving)">
-            <summary>
-            All checks before any casting begins
+            called when spell effect has to be started and applied to targets
             </summary>
             <param name="target"></param>
-            <returns></returns>
         </member>
-        <member name="M:DOL.GS.Spells.ResurrectSpellHandler.CheckEndCast(DOL.GS.GameLiving)">
+        <member name="M:DOL.GS.Spells.HereticAbstractDamageAddSpellHandler.StartSpell(DOL.GS.GameLiving)">
             <summary>
-            Checks after casting before spell is executed
+            called when spell effect has to be started and applied to targets
             </summary>
-            <param name="target"></param>
-            <returns></returns>
         </member>
-        <member name="P:DOL.GS.Spells.ResurrectSpellHandler.DelveInfo">
+        <member name="M:DOL.GS.Spells.HereticAbstractDamageAddSpellHandler.ApplyEffectOnTarget(DOL.GS.GameLiving,System.Double)">
             <summary>
-            Delve Info
+            Apply effect on target or do spell action if non duration spell
+            </summary>
+            <param name="target">target that gets the effect</param>
+            <param name="effectiveness">factor from 0..1 (0%-100%)</param>
+        </member>
+        <member name="M:DOL.GS.Spells.HereticAbstractDamageAddSpellHandler.OnEffectStart(DOL.GS.Effects.GameSpellEffect)">
+            <summary>
+            When an applied effect starts
+            duration spells only
+            </summary>
+            <param name="effect"></param>
+        </member>
+        <member name="M:DOL.GS.Spells.HereticAbstractDamageAddSpellHandler.OnEffectExpires(DOL.GS.Effects.GameSpellEffect,System.Boolean)">
+            <summary>
+            Remove the changes from target and send some messages
+            </summary>
+            <param name="effect"></param>
+            <param name="noMessages">true, when no messages should be sent</param>
+            <returns>immunity duration</returns>
+        </member>
+        <member name="P:DOL.GS.Spells.HereticAbstractDamageAddSpellHandler.EventType">
+            <summary>
+            The event type to hook on
             </summary>
         </member>
         <member name="T:DOL.GS.Spells.CharmSpellHandler">
@@ -26820,6 +27114,70 @@
             
             </summary>
         </member>
+        <member name="T:DOL.GS.Spells.MonsterRez">
+            <summary>
+            Summary description for ReanimateCorpe.
+            </summary>
+        </member>
+        <member name="T:DOL.GS.Spells.SummonMonster">
+            <summary>
+            Summary description for ReanimateCorpe.
+            </summary>
+        </member>
+        <member name="T:DOL.GS.Spells.MonsterDoT">
+            <summary>
+            Summary description for MonsterDoT.
+            </summary>
+        </member>
+        <member name="T:DOL.GS.Spells.MonsterDisease">
+            <summary>
+            Summary description for MonsterDoT.
+            </summary>
+        </member>
+        <member name="T:DOL.GS.Spells.DiseaseSpellHandler">
+            <summary>
+            Disease always debuffs the target by 7.5% movement
+            and 15% total hit points, and prevents health regeneration.
+            http://www.camelotherald.com/article.php?id=63
+            Here they say hit points but spell description states that
+            it is strength, what should I use hmm...
+            </summary>
+        </member>
+        <member name="M:DOL.GS.Spells.DiseaseSpellHandler.FinishSpellCast(DOL.GS.GameLiving)">
+            <summary>
+            called after normal spell cast is completed and effect has to be started
+            </summary>
+        </member>
+        <member name="M:DOL.GS.Spells.DiseaseSpellHandler.OnEffectStart(DOL.GS.Effects.GameSpellEffect)">
+            <summary>
+            When an applied effect starts
+            duration spells only
+            </summary>
+            <param name="effect"></param>
+        </member>
+        <member name="M:DOL.GS.Spells.DiseaseSpellHandler.OnEffectExpires(DOL.GS.Effects.GameSpellEffect,System.Boolean)">
+            <summary>
+            When an applied effect expires.
+            Duration spells only.
+            </summary>
+            <param name="effect">The expired effect</param>
+            <param name="noMessages">true, when no messages should be sent to player and surrounding</param>
+            <returns>immunity duration in milliseconds</returns>
+        </member>
+        <member name="M:DOL.GS.Spells.DiseaseSpellHandler.CalculateEffectDuration(DOL.GS.GameLiving,System.Double)">
+            <summary>
+            Calculates the effect duration in milliseconds
+            </summary>
+            <param name="target">The effect target</param>
+            <param name="effectiveness">The effect effectiveness</param>
+            <returns>The effect duration in milliseconds</returns>
+        </member>
+        <member name="M:DOL.GS.Spells.DiseaseSpellHandler.SendUpdates(DOL.GS.Effects.GameSpellEffect)">
+            <summary>
+            Sends needed updates on start/stop
+            </summary>
+            <param name="effect"></param>
+        </member>
         <member name="T:DOL.GS.ServerRules.PvEServerRules">
             <summary>
             Set of rules for "PvE" server type.
@@ -28069,9 +28427,41 @@
             Used for Critical Strike line.
             </summary>
         </member>
-        <member name="T:DOL.GS.Spells.SavageThrustResistHandler">
+        <member name="T:DOL.GS.Spells.ChamberSpellHandler">
             <summary>
-            Summary description for SavageHasteHandler.
+            
+            </summary>
+        </member>
+        <member name="F:DOL.GS.Spells.ChamberSpellHandler.log">
+            <summary>
+            Defines a logger for this class.
+            </summary>
+        </member>
+        <member name="M:DOL.GS.Spells.ChamberSpellHandler.FinishSpellCast(DOL.GS.GameLiving)">
+            <summary>
+            Fire bolt
+            </summary>
+            <param name="target"></param>
+        </member>
+        <member name="T:DOL.GS.Spells.HealthToEndurance">
+            <summary>
+            Damage Over Time spell handler
+            </summary>
+        </member>
+        <member name="M:DOL.GS.Spells.HealthToEndurance.FinishSpellCast(DOL.GS.GameLiving)">
+            <summary>
+            Execute damage over time spell
+            </summary>
+            <param name="target"></param>
+        </member>
+        <member name="F:DOL.GS.Spells.FearSpellHandler.log">
+            <summary>
+            Defines a logger for this class.
+            </summary>
+        </member>
+        <member name="M:DOL.GS.Spells.FearSpellHandler.StartSpell(DOL.GS.GameLiving)">
+            <summary>
+            called when spell effect has to be started and applied to targets
             </summary>
         </member>
         <member name="T:DOL.GS.SkillHandler.GuardAbilityHandler">
@@ -29308,12 +29698,34 @@
             </summary>
             <param name="target"></param>
         </member>
+        <member name="T:DOL.GS.Spells.CombatSpeedBuff">
+            <summary>
+            Combat speed buff
+            </summary>
+        </member>
+        <member name="M:DOL.GS.Spells.CombatSpeedBuff.SendUpdates(DOL.GS.GameLiving)">
+            <summary>
+            send updates about the changes
+            </summary>
+            <param name="target"></param>
+        </member>
         <member name="T:DOL.GS.Spells.FatigueConsumptionBuff">
             <summary>
             Fatigue reduction buff
             </summary>
         </member>
         <member name="M:DOL.GS.Spells.FatigueConsumptionBuff.SendUpdates(DOL.GS.GameLiving)">
+            <summary>
+            send updates about the changes
+            </summary>
+            <param name="target"></param>
+        </member>
+        <member name="T:DOL.GS.Spells.MeleeDamageBuff">
+            <summary>
+            Melee damage buff
+            </summary>
+        </member>
+        <member name="M:DOL.GS.Spells.MeleeDamageBuff.SendUpdates(DOL.GS.GameLiving)">
             <summary>
             send updates about the changes
             </summary>
@@ -29340,9 +29752,14 @@
             DPS buff
             </summary>
         </member>
-        <member name="T:DOL.GS.Spells.WeaponSkillBuff">
+        <member name="T:DOL.GS.Spells.EvadeChanceBuff">
             <summary>
-            WeaponSkill buff
+            Evade chance buff
+            </summary>
+        </member>
+        <member name="T:DOL.GS.Spells.ParryChanceBuff">
+            <summary>
+            Parry chance buff
             </summary>
         </member>
         <member name="T:DOL.GS.Spells.StealthSkillBuff">
@@ -29374,6 +29791,27 @@
             <summary>
             Dex/Qui stat specline debuff
             </summary>
+        </member>
+        <member name="T:DOL.GS.Spells.WarlockSpeedDecreaseSpellHandler">
+            <summary>
+            Spell handler for speed decreasing spells
+            </summary>
+        </member>
+        <member name="M:DOL.GS.Spells.WarlockSpeedDecreaseSpellHandler.OnEffectStart(DOL.GS.Effects.GameSpellEffect)">
+            <summary>
+            When an applied effect starts
+            duration spells only
+            </summary>
+            <param name="effect"></param>
+        </member>
+        <member name="M:DOL.GS.Spells.WarlockSpeedDecreaseSpellHandler.OnEffectExpires(DOL.GS.Effects.GameSpellEffect,System.Boolean)">
+            <summary>
+            When an applied effect expires.
+            Duration spells only.
+            </summary>
+            <param name="effect">The expired effect</param>
+            <param name="noMessages">true, when no messages should be sent to player and surrounding</param>
+            <returns>immunity duration in milliseconds</returns>
         </member>
         <member name="T:DOL.GS.Spells.PetConversionSpellHandler">
             <summary>
@@ -31365,11 +31803,12 @@
             <param name="attackType">The attack type</param>
             <returns>true if interrupted successfully</returns>
         </member>
-        <member name="M:DOL.GS.GamePlayer.CalculateArmorHitLocation">
+        <member name="M:DOL.GS.GamePlayer.CalculateArmorHitLocation(DOL.GS.AttackData)">
             <summary>
             Calc Armor hit location when player is hit by enemy
             </summary>
             <returns>slotnumber where enemy hits</returns>
+            attackdata(ad) changed 
         </member>
         <member name="M:DOL.GS.GamePlayer.WeaponSpecLevel(DOL.Database.InventoryItem)">
             <summary>
@@ -31399,12 +31838,6 @@
             calculate item armor factor influenced by quality, con and duration
             </summary>
             <param name="slot"></param>
-            <returns></returns>
-        </member>
-        <member name="M:DOL.GS.GamePlayer.GetKeepBonuses">
-            <summary>
-            Calculates keep bonuses
-            </summary>
             <returns></returns>
         </member>
         <member name="M:DOL.GS.GamePlayer.GetArmorAbsorb(DOL.GS.eArmorSlot)">
@@ -33683,69 +34116,6 @@
             <param name="target"></param>
             <param name="amount">amount of hit points to heal</param>
             <returns>true if heal was done</returns>
-        </member>
-        <member name="T:DOL.GS.Spells.DiseaseSpellHandler">
-            <summary>
-            Disease always debuffs the target by 7.5% movement
-            and 15% total hit points, and prevents health regeneration.
-            http://www.camelotherald.com/article.php?id=63
-            Here they say hit points but spell description states that
-            it is strength, what should I use hmm...
-            </summary>
-        </member>
-        <member name="M:DOL.GS.Spells.DiseaseSpellHandler.FinishSpellCast(DOL.GS.GameLiving)">
-            <summary>
-            called after normal spell cast is completed and effect has to be started
-            </summary>
-        </member>
-        <member name="M:DOL.GS.Spells.DiseaseSpellHandler.OnEffectStart(DOL.GS.Effects.GameSpellEffect)">
-            <summary>
-            When an applied effect starts
-            duration spells only
-            </summary>
-            <param name="effect"></param>
-        </member>
-        <member name="M:DOL.GS.Spells.DiseaseSpellHandler.OnEffectExpires(DOL.GS.Effects.GameSpellEffect,System.Boolean)">
-            <summary>
-            When an applied effect expires.
-            Duration spells only.
-            </summary>
-            <param name="effect">The expired effect</param>
-            <param name="noMessages">true, when no messages should be sent to player and surrounding</param>
-            <returns>immunity duration in milliseconds</returns>
-        </member>
-        <member name="M:DOL.GS.Spells.DiseaseSpellHandler.CalculateEffectDuration(DOL.GS.GameLiving,System.Double)">
-            <summary>
-            Calculates the effect duration in milliseconds
-            </summary>
-            <param name="target">The effect target</param>
-            <param name="effectiveness">The effect effectiveness</param>
-            <returns>The effect duration in milliseconds</returns>
-        </member>
-        <member name="M:DOL.GS.Spells.DiseaseSpellHandler.SendUpdates(DOL.GS.Effects.GameSpellEffect)">
-            <summary>
-            Sends needed updates on start/stop
-            </summary>
-            <param name="effect"></param>
-        </member>
-        <member name="T:DOL.GS.Spells.BladeturnSpellHandler">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="M:DOL.GS.Spells.BladeturnSpellHandler.FinishSpellCast(DOL.GS.GameLiving)">
-            <summary>
-            Execute buff spell
-            </summary>
-        </member>
-        <member name="M:DOL.GS.Spells.BladeturnSpellHandler.OnEffectExpires(DOL.GS.Effects.GameSpellEffect,System.Boolean)">
-            <summary>
-            When an applied effect expires.
-            Duration spells only.
-            </summary>
-            <param name="effect">The expired effect</param>
-            <param name="noMessages">true, when no messages should be sent to player and surrounding</param>
-            <returns>immunity duration in milliseconds</returns>
         </member>
         <member name="T:DOL.GS.RealmAbilities.RAStatEnhancer">
             <summary>
