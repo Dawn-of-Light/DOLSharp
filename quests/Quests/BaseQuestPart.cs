@@ -1,12 +1,21 @@
 ﻿/*
- * Created by SharpDevelop.
- * User: Hugo
- * Date: 31.10.2005
- * Time: 22:05
+ * DAWN OF LIGHT - The first free open source DAoC server emulator
  * 
- * To change this template use Tools | Options | Coding | Edit Standard Headers.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
  */
-
 using System;
 using DOL.GS.PacketHandler;
 using System.Collections;
@@ -154,8 +163,20 @@ namespace DOL.GS.Quests
         /// <param name="keyword">keyword (K), meaning depends on triggertype</param>
         /// <param name="var">variable (I), meaning depends on triggertype</param>
         public void AddTrigger(eTriggerType triggerType, Object keyword , Object var)
-        {           
-            BaseQuestTrigger trigger = new BaseQuestTrigger(this,triggerType, keyword, var);
+        {
+            IQuestTrigger trigger = null;
+
+            Type type = QuestMgr.GetTypeForTriggerType(triggerType);
+            if (type != null)
+            {
+                trigger =(IQuestTrigger) Activator.CreateInstance(type, new object[] { this, triggerType, keyword, var });
+            }
+            else
+            {
+                if (log.IsErrorEnabled)
+                    log.Error("No registered trigger found for TriggerType " + triggerType);
+            }
+
             AddTrigger(trigger);
         }
 
@@ -217,9 +238,21 @@ namespace DOL.GS.Quests
         /// <param name="p">First Action Variable, meaning depends on ActionType</param>
         /// <param name="q">Second Action Variable, meaning depends on ActionType</param>
         public void AddAction(eActionType actionType, Object p, Object q)
-        {
-            IQuestAction action = new BaseQuestAction(this,actionType, p, q);
-            AddAction(action);
+        {            
+            IQuestAction action = null;
+            
+            Type type = QuestMgr.GetTypeForActionType(actionType);
+            if (type != null)
+            {
+                action =(IQuestAction) Activator.CreateInstance(type, new object[] { this, actionType, p, q });
+                AddAction(action);
+            }
+            else
+            {
+                if (log.IsErrorEnabled)
+                    log.Error("No registered action found for ActionType " + actionType);
+            }
+            
         }
 
         /// <summary>
@@ -291,8 +324,21 @@ namespace DOL.GS.Quests
         /// <param name="requirementN">First Requirement Variable, meaning depends on RequirementType</param>
         /// <param name="requirementV">Second Requirement Variable, meaning depends on RequirementType</param>
         /// <param name="requirementComparator">Comparator used if some values are veeing compared</param>        
-        public void AddRequirement(eRequirementType requirementType, Object requirementN, Object requirementV,eComparator requirementComparator) {            
-            IQuestRequirement requ = new BaseQuestRequirement(this,requirementType,requirementN,requirementV,requirementComparator);
+        public void AddRequirement(eRequirementType requirementType, Object requirementN, Object requirementV,eComparator requirementComparator) {
+
+            IQuestRequirement requ = null;
+
+            Type type = QuestMgr.GetTypeForRequirementType(requirementType);
+            if (type != null)
+            {
+                requ = (IQuestRequirement) Activator.CreateInstance(type, new object[] { this, requirementType, requirementN, requirementV,requirementComparator });
+            }
+            else
+            {
+                if (log.IsErrorEnabled)
+                    log.Error("No registered requirement found for RequirementType " + requirementType);
+            }
+
             AddRequirement(requ);
 		}
 
@@ -343,6 +389,8 @@ namespace DOL.GS.Quests
             }
             else if (e == GameLivingEvent.Dying)
             {
+                //TODO if multiple players are doing a quest and are nearby (a group) they will get multiple notify calls.... not good.
+
                 //all players in visible distance will get notify.
                 GameLiving living = sender as GameLiving;
                 if (sender!=null){
@@ -357,7 +405,10 @@ namespace DOL.GS.Quests
             if (player != null)
                 Notify(e, sender, args, player);
             else
-                log.Warn("BaseQuestPart: Event without player occured." + e);
+            {
+                if (log.IsWarnEnabled)
+                    log.Warn("BaseQuestPart: Event without player occured." + e);
+            }
         }
 
         /// <summary>
