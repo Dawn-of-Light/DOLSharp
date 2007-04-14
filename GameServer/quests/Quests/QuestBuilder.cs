@@ -62,14 +62,13 @@ namespace DOL.GS.Quests
 
         /// <summary>
         /// Adds an interact QuestPart that will display some sort of text, depending on texttype.
-        /// </summary>
-        /// <param name="step">QuestStep Player must have to fire interaction. 
-        /// -1 means Player does not have quest defined by questType
-        /// 0 means Player has quest defined by questType
-        /// >0 meanst Player has quest defined by questType and is at the given QuestStep</param>
+        /// </summary>        
         /// <param name="textType"> Type of text should be displayed: Emote, Dialog, Direct Say, Brodcast, ...</param>
         /// <param name="triggerKeyword">Keyword Player must whisper to NPc to fire interaction, (player must click on word in brackets)</param>
         /// <param name="message">Actual message being displayed</param>
+        /// <param name="minstep">Minium Queststep needed for interaction</param>
+        /// <param name="maxstep">Maximum Queststep allowed for interaction</param>
+        /// <param name="npc">NPc to interact with</param>
         /// <returns>generated BaseQuestPart be altered further via AddTrigger, AddRequirement, AddAction</returns>
         public BaseQuestPart AddInteraction(GameNPC npc, int minstep, int maxstep, eTextType textType, String triggerKeyword, String message)
         {            
