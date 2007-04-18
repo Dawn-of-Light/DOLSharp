@@ -19,7 +19,57 @@ System.NoSense:								Cela n'aurait aucun sens !
 System.MustSelectTarget:					Vous devez selectionner une cible !
 System.ReleaseTimer:						Délai de résurrection
 
+# GAMELIVING
+GameLiving.ReceiveItem:						{0} ne veut pas de cet item !
+GameLiving.ReceiveMoney:					{0} ne veut pas de votre argent !
+
+# GAMEMERCHANT
+GameMerchant.GetExamineMessages.BuyItemsFor:	{0} dit, "Vous pouvez acheter des objets ici pour {1}."
+GameMerchant.GetExamineMessages.Nothing:		rien
+GameMerchant.GetExamineMessages.RightClick:		[Cliquez-droit pour afficher une fenêtre de marchandage]
+GameMerchant.GetExamineMessages.YouExamine:		Vous examinez {0}. C'est un marchand {1}.
+GameMerchant.OnPlayerAppraise.Offers:			{0} vous offre {1} pour {2}.
+GameMerchant.OnPlayerBuy.Bought:				Vous venez d'acheter {0} pour {1}.
+GameMerchant.OnPlayerBuy.Bought2:				Vous venez d'acheter {0} pour {1} {2}.
+GameMerchant.OnPlayerBuy.BoughtBP:				Vous venez d'acheter {0} pour {1} BPs.
+GameMerchant.OnPlayerBuy.BoughtPieces:			Vous venez d'acheter {0} pieces de {1} pour {2}.
+GameMerchant.OnPlayerBuy.BoughtPieces2:			Vous venez d'acheter {0} pieces de {1} pour {2} {3].
+GameMerchant.OnPlayerBuy.BoughtPiecesBP:		Vous venez d'acheter {0} pieces de {1} pour {0} BPs.
+GameMerchant.OnPlayerBuy.NotInventorySpace:		Pas assez de place dans votre inventaire pour acheter cela.
+GameMerchant.OnPlayerBuy.YouNeed:				Vous avez besoin de {0} pour acheter cela.
+GameMerchant.OnPlayerBuy.YouNeed2:				Vous avez besoin de {0} {1} pour acheter cela.
+GameMerchant.OnPlayerBuy.YouNeedBP:				Vous avez besoin de {0} BPs pour acheter cela.
+GameMerchant.OnPlayerSell.CantBeSold:			Cet item ne peut être vendu.
+GameMerchant.OnPlayerSell.GivesYou:				{0} vous donne {1} pour {2}.
+GameMerchant.OnPlayerSell.IsntInterested:		{0} n'est pas interessé par {1}.
+GameMerchant.OnPlayerSell.TooFarAway:			{0} est trop loin !
+
+# GAMENPC
+GameNPC.GetAggroLevelString.Aggressive1:		aggressif
+GameNPC.GetAggroLevelString.Aggressive2:		Aggressif
+GameNPC.GetAggroLevelString.Friendly1:			amical
+GameNPC.GetAggroLevelString.Friendly2:			Amical
+GameNPC.GetAggroLevelString.Hostile1:			hostile
+GameNPC.GetAggroLevelString.Hostile2:			Hostile
+GameNPC.GetAggroLevelString.Neutral1:			neutre
+GameNPC.GetAggroLevelString.Neutral2:			Neutre
+GameNPC.GetAggroLevelString.TowardsYou:			{0} envers vous
+GameNPC.GetExamineMessages.YouExamine:			Vous examinez {0}. Il est {1}.
+
+
+# GAMEOBJECT
+GameObject.GetExamineMessages.YouTarget:		Vous ciblez [{0}].
+GameObject.Interact.TooFarAway:					Vous êtes trop loin pour interagir avec {0}.
+
 # GAMEPLAYER
+GamePlayer.AddAbility.YouLearn:					Vous apprenez l'abilité {0} !
+GamePlayer.AddSpecialisation.YouLearn:			Vous apprenez la competence {0} !
+GamePlayer.AddSpellLine.YouLearn:				Vous apprenez la liste de sort {0} !		
+GamePlayer.ApplyPoison.CantApplyRecentCombat:	Vous avez été en combat recemment et ne pouvez pas appliquer de poison pour le moment.
+GamePlayer.ApplyPoison.CantPoisonWeapon:		Vous ne pouvez pas empoisonner cette arme.
+GamePlayer.ApplyPoison.CantUsePoison:			Vous ne pouvez pas utiliser ce poison.
+GamePlayer.ApplyPoison.CantUsePoisons:			Vous ne pouvez pas utiliser les poisons.
+GamePlayer.ApplyPoison.PoisonsAppliedWeapons:	Les poisons ne peuvent être appliqués que sur des armes.
 GamePlayer.Attack.AlreadyDead:				{0} est déjà mort !
 GamePlayer.Attack.Blocked:					{0} bloque votre attaque !
 GamePlayer.Attack.CantBeAttacked:			Ceci ne peut pas être attaqué !
@@ -39,12 +89,12 @@ GamePlayer.Attack.InterceptHit:				{0} {1}{2} et touchez pour {3}{4} dommages !
 GamePlayer.Attack.Intercepted:				{0} se place devant {1} et prend le coup !
 GamePlayer.Attack.InterceptedHit:			{0} {1}{2} mais touchez {3} pour {4}{5} dommages !
 GamePlayer.Attack.Interrupted:				{0} vous attaque et votre {1} est interrompu !
-GamePlayer.Attack.Location.Torso:			torse
 GamePlayer.Attack.Location.Arm:				bras
+GamePlayer.Attack.Location.Foot:			pied
+GamePlayer.Attack.Location.Hand:			main
 GamePlayer.Attack.Location.Head:			tête
 GamePlayer.Attack.Location.Leg:				jambe
-GamePlayer.Attack.Location.Hand:			main
-GamePlayer.Attack.Location.Foot:			pied
+GamePlayer.Attack.Location.Torso:			torse
 GamePlayer.Attack.Miss:						Vous manquez !
 GamePlayer.Attack.Missed:					{0} vous attaque mais manque son coup !
 GamePlayer.Attack.MustSelectQuiver:			Vous devez selectionner un emplacement de votre carquois !
@@ -63,6 +113,20 @@ GamePlayer.Attack.Type.Throw:				jet
 GamePlayer.Attack.WithYour:					avec votre
 GamePlayer.Attack.YouAttack:				Vous attaquez
 GamePlayer.Attack.YouShot:					Vous tirez
+GamePlayer.Bind.Bound:						Vous êtes maintenant lié à cet endroit.
+GamePlayer.Bind.CantBindDead:				Vous ne pouvez pas vous lier etant mort !	
+GamePlayer.Bind.CantHere:					Vous ne pouvez pas vous lier ici !
+GamePlayer.Bind.LastBindPoint:				Dernier point de liaison : {0}.
+GamePlayer.Bind.MustWait:					Vous devez attendre {0} secondes pour vous lier à nouveau !
+GamePlayer.CastSpell.AlreadyCastFollow:		Vous incanter déja un sort ! Vous vous preparez à incanter celui-ci à la suite.
+GamePlayer.CastSpell.AlreadyCastNoQueue:	Vous incanter déja un sort, pour activer la suite de sort, utilisez '/noqueue'.
+GamePlayer.CastSpell.AlreadyPlaySong:		Vous jouez déja un morceau !
+GamePlayer.CastSpell.CantCastMezzed:		Vous ne pouvez pas incanter lorsque vous êtes endormi !
+GamePlayer.CastSpell.CantCastStunned:		Vous ne pouvez pas incanter lorsque vous êtes assomé !
+GamePlayer.CommandNpcAttack.TooFarAwayForPet:			Votre cible est trop loin pour être attaquée par votre familier.
+GamePlayer.CommandNpcGoTarget.MustSelectDestination:	Vous devez selectionner une destination pour votre créature.
+GamePlayer.CraftItem.DontHaveAbilityMake:	Vous n'avez pas l'abilité pour faire cet item.
+GamePlayer.CurrentTitle.TitleCleared:		Vous n'avez plus de titre.
 GamePlayer.Die.CorpseLies:					{0} est mort. {1} corps gît sur le sol.
 GamePlayer.Die.DeadRVR:						Vous êtes mort au combat pour votre royaume et ne perdez aucune expérience !
 GamePlayer.Die.DeathN1:						Ceci est votre première mort pour ce niveau. Vos pertes d'expérience et de constitutions sont grandement réduites.
@@ -70,43 +134,89 @@ GamePlayer.Die.DeathN2:						Ceci est votre seconde mort pour ce niveau.  Vos pe
 GamePlayer.Die.DuelDefeated:				{0} a été vaincu en duel par {1} !
 GamePlayer.Die.Killed:						{0} vient de se faire tuer !
 GamePlayer.Die.KilledBy:					{0} vient de se faire tuer par {1} !
-GamePlayer.Die.KilledByLocation:			{0} vient de se faire tuer par {1} à {2} !
+GamePlayer.Die.KilledByLocation:			{0} vient de se faire tuer par {1} à {2} !	
 GamePlayer.Die.KilledLocation:				{0} vient de se faire tuer à {1} !
+GamePlayer.Die.LoseExperience:				Vous perdez de l'experience !
 GamePlayer.Die.ReleaseToReturn:				Vous êtes mort.  Tapez /release pour retourner à votre pierre des âmes.
 GamePlayer.Die.YouKilled:					Vous venez de tuer {0} !
-GamePlayer.SendReceive.sends:				 envoie, 
+GamePlayer.DrowningTimerCallback.CannotBreath:		Vous ne pouvez pas respirer sous l'eau et buvez la tasse !
+GamePlayer.DrowningTimerCallback.Take5%Damage:		Vous perdez 5% de votre total de points de vie.
+GamePlayer.DuelStop.DuelEnds:				Votre duel se termine !
+GamePlayer.GainBountyPoints.YouGet:			Vous obtenez {0} primes de royaume !
+GamePlayer.GainExperience.CannotRaise:		Vous ne pouvez pas atteindre le niveau 6 tant que vous n'avez pas choisi une spécialisation.
+GamePlayer.GainExperience.TalkToTrainer:	Parlez à votre entraineur pour plus d'informations.
+GamePlayer.GainExperience.YouGet:			Vous obtenez {0} points d'expérience.
+GamePlayer.GainRealmPoints.Earned:			{0} a gagné 1,000,000 de points de royaume dans {1}
+GamePlayer.GainRealmPoints.GainBonus:		Vous gagnez un bonus de +{0} dans toutes vos spécialisations!
+GamePlayer.GainRealmPoints.GainedLevel:		Vous avez gagné un niveau de royaume !
+GamePlayer.GainRealmPoints.GainedRank:		Vous avez gagné un nouveau rang et un nouveau titre de royaume !
+GamePlayer.GainRealmPoints.NewRealmTitle:	Votre nouveau titre de royaume est {0}
+GamePlayer.GainRealmPoints.ReachedRank:		{0} a atteint le rang de royaume {1:#L#} dans {2}!
+GamePlayer.GainRealmPoints.YouGet:			Vous gagnez {0} points de royaume !
+GamePlayer.GetExamineMessages.EnemyRealmMember:	Vous examinez {0}. {1} est membre d'un royaume ennemi !
+GamePlayer.GetExamineMessages.NeutralMember:	Vous examinez {0}. {1} ne fait parti d'aucune guilde.
+GamePlayer.GetExamineMessages.OtherGuildMember:	Vous examinez {0}. {1} est membre de la guilde: {2}.
+GamePlayer.GetExamineMessages.RealmMember:		Vous examinez {0}. {1} est un membre de la classe {2} de votre royaume.
+GamePlayer.GetExamineMessages.YouExamine:		Vous examinez {0}.
+GamePlayer.GetExamineMessages.YourGuildMember:	Vous examinez {0}. {1} est un membre de la classe {2} de votre guilde.
+GamePlayer.IsCloakHoodUp.NowWear:			Vous mettez votre capuche.
+GamePlayer.IsCloakHoodUp.NoLongerWear:		Vous retirez votre capuche.
+GamePlayer.IsOnHorse.DismountSteed:			Vous descendez de votre cheval.
+GamePlayer.IsOnHorse.MountSteed:			Vous montez sur votre cheval.
+GamePlayer.OnItemEquipped.Magic:			La magie de {0} coule dans vos veines.
+GamePlayer.OnItemEquipped.WieldBothHands:	Tu manies {0} de tes mains.
+GamePlayer.OnItemEquipped.WieldLeftHand:	Tu manies {0} de votre main gauche.
+GamePlayer.OnItemEquipped.WieldRightHand:	Tu manies {0} de votre main droite.
+GamePlayer.OnItemUnequipped.BothHandsFree:	Vous rengainez {0}. Vous mains sont desormais libres.
+GamePlayer.OnItemUnequipped.LeftHandFree:	Vous rengainez {0} de votre main gauche.
+GamePlayer.OnItemUnequipped.RightHandFree:	Vous rengainez {0} de votre main droite.
+GamePlayer.OnLevelUp.AttainedRank:			Vous avez atteint le rang de {0} !
+GamePlayer.OnLevelUp.FreeLevelEligible:		Vous êtes eligible pour un niveau gratuit! Cliquez sur votre entraineur pour le recevoir (ou tapez '/freelevel decline' pour refuser votre niveau gratuit.)
+GamePlayer.OnLevelUp.HitsRaise:				Vos points de vie ont augmentés de {0}.
+GamePlayer.OnLevelUp.PowerRaise:			Vos points de mana ont augmentés de {0}.
+GamePlayer.OnLevelUp.Reached:				{0} a atteint le niveau {1} dans {2}!
+GamePlayer.OnLevelUp.SecondStage:			Vous avez atteint la deuxième étape de votre niveau {0} !
+GamePlayer.OnLevelUp.StatRaise:				Vos statistiques augmentent !
+GamePlayer.OnLevelUp.YouAchived:			Vous avez achevé le niveau {0}!
+GamePlayer.OnLevelUp.YouGetSpec:			Vous obtenez {0} points de spécialisation à dépenser pour ce niveau!
+GamePlayer.OnLevelUp.YouRaise:				Vous avez atteint le niveau {0}!
+GamePlayer.OnLinkdeath.Linkdead:			{0} a été deconnecté par le serveur !
+GamePlayer.OnPlayerMove.CannotCallMount:	Vous bougez et ne pouvez pas appeler votre monture !
+GamePlayer.OnPlayerMove.InterruptCrafting:	Vous bougez, et interrompez votre fabrication.
+GamePlayer.OnSkillTrained.TrainsInVarious:	{0} s'entraine dans différentes spécialisations.
+GamePlayer.OnSkillTrained.YouHave:			Il vous reste {0} points de spécialisation pour ce niveau.
+GamePlayer.OnSkillTrained.YouSpend:			Vous dépensez {0} points et vous vous spécialisez mieux dans {1}.
+GamePlayer.OpenSelfCraft.AlreadySelfCrafting:	Vous êtes déjà en train d'enchanter.
+GamePlayer.OpenSelfCraft.CanOnlyCraftBackpack:	Vous ne pouvez combiner que des objets dans votre sac!
+GamePlayer.PickupObject.MustHaveTarget:			Vous devez avoir une cible pour ramasser quelquechose !
+GamePlayer.PickupObject.LootDoesntBelongYou:	Ce butin ne vous appartient pas - vous ne pouvez pas le prendre.
+GamePlayer.PickupObject.CantGetThat:			Vous ne pouvez pas ramasser ça !
+GamePlayer.PickupObject.BackpackFull:			Votre sac à dos est plein, vous devez faire de la place.
+GamePlayer.PickupObject.NoOneGroupWantsMoney:	Personne dans le groupe ne veut de l'argent.
+GamePlayer.Pray.AlreadyPraying:				Vous priez déjà !
+GamePlayer.Pray.Begin:						Vous commencez vos prières.
+GamePlayer.Pray.CantPrayNow:				Vous ne pouvez pas prier maintenant !
+GamePlayer.Pray.GainBack:					Vos prières ont été entendues, vous regagnez de l'expérience !
+GamePlayer.Pray.MustGetCloser:				Vous devez vous approcher de votre tombe pour prier !
+GamePlayer.Pray.MustStandingStill:			Vous devez être immobile pour prier.
+GamePlayer.Pray.NeedTarget:					Vous devez sélectionner une tombe pour prier !
+GamePlayer.Pray.SelectGrave:				Sélectionnez votre tombe pour prier !
+GamePlayer.Pronoun.Female.Objective:		elle
+GamePlayer.Pronoun.Female.Possessive:		sa
+GamePlayer.Pronoun.Female.Subjective:		elle
+GamePlayer.Pronoun.Male.Objective:			lui
+GamePlayer.Pronoun.Male.Possessive:			son
+GamePlayer.Pronoun.Male.Subjective:			il
+GamePlayer.Quit.CantQuitCrafting:			Vous ne pouvez pas quitter pendant une fabrication.
 GamePlayer.Quit.CantQuitDead:				Vous ne pouvez pas quitter maintenant, vous êtes mort !  Tapez '/release' pour ressusciter.
 GamePlayer.Quit.CantQuitMount:				Vous devez descendre de votre monture avant de quitter.
 GamePlayer.Quit.CantQuitStanding:			Vous devez être immobile pour quitter.
-GamePlayer.Quit.CantQuitCrafting:			Vous ne pouvez pas quitter pendant une fabrication.
 GamePlayer.Quit.RecentlyInCombat:			Vous étiez récemment en combat, vous devez attendre plus longtemps pour quitter.
-GamePlayer.Quit.YouWillQuit:				Vous quitterez en restant assis après {0} secondes.  Tapez '/stand' ou bougez pour ne pas quitter.
-GamePlayer.Release.NotDead:					Vous n'êtes pas mort !
-GamePlayer.Release.CantReleaseDuel:			Vous ne pouvez altérer votre résurrection pour une mort en duel!
-GamePlayer.Release.NoLongerReleaseAuto:		Vous ne ressusciterez plus automatiquement ({0} secondes restantes)
-GamePlayer.Release.WillReleaseAuto:			Vous ressusciterez automatiquement dans {0} secondes!
-GamePlayer.Release.WillReleaseAutoCity:		Vous ressusciterez automatiquement à la ville dans {0} secondes!
-GamePlayer.Release.YouRelease:				Vous ramenez votre corps à la vie !
-GamePlayer.Release.GraveErected:			Une pierre tombale a été érigée à l'endroit de votre mort.
-GamePlayer.Release.ReturnToPray:			Retournez prier sur votre tombe (/pray) pour regagner de l'expérience.
-GamePlayer.Release.LostConstitution:		Vous avez perdu un peu de constitution, allez voir un guérisseur pour la restaurer.
-GamePlayer.Release.SurroundingChange:		Votre environnement change subitement.
-GamePlayer.Release.NoValidBindpoint:		Vous n'êtes lié à aucune pierre des âmes valide, vous ressucitez donc ici !
-GamePlayer.Release.WillReleaseIn:			Vous ressusciterez dans {0} secondes.
-GamePlayer.Pray.CantPrayNow:				Vous ne pouvez pas prier maintenant !
-GamePlayer.Pray.NeedTarget:					Vous devez sélectionner une tombe pour prier !
-GamePlayer.Pray.SelectGrave:				Sélectionnez votre tombe pour prier !
-GamePlayer.Pray.MustGetCloser:				Vous devez vous approcher de votre tombe pour prier !
-GamePlayer.Pray.MustStandingStill:			Vous devez être immobile pour prier.
-GamePlayer.Pray.AlreadyPraying:				Vous priez déjà !
-GamePlayer.Pray.Begin:						Vous commencez vos prières.
-GamePlayer.Pray.GainBack:					Vos prières ont été entendues, vous regagnez de l'expérience !
-GamePlayer.AddSpecialisation.YouLearn:		Vous apprenez la compétence {0} !
-GamePlayer.RemoveSpecialization.YouLose:	Vous perdez la compétence {0} !
-GamePlayer.RemoveSpellLine.YouLose:			Vous perdez la ligne de sorts {0} !
-GamePlayer.AddSpellLine.YouLearn:			Vous apprenez la ligne de sorts {0} !
-GamePlayer.AddAbility.YouLearn:				Vous apprenez la capacité {0} !
-GamePlayer.RemoveAbility.YouLose:			Vous perdez la capacité {0} !
+GamePlayer.Quit.YouWillQuit1:				Vous quitterez en restant assis après {0} secondes.	
+GamePlayer.Quit.YouWillQuit2:				Vous quitterez en restant assis après {0} secondes.  Tapez '/stand' ou bougez pour ne pas quitter.
+GamePlayer.RealmTitle.UnknownRealm:			Royaume inconnu
+GamePlayer.ReceiveTradeItem.CantTrade:			Vous ne pouvez pas échanger cet objet !
+GamePlayer.ReceiveTradeItem.StillSelfcrafting:	Vous êtes encore en train d'enchanter.
 GamePlayer.RefreshSpec.YouLearn:			Vous apprenez le style de combat {0} !
 GamePlayer.RefreshSpec.AfterStyle:			Ce style peut uniquement être utilisé après avoir exécuté le style {0}.
 GamePlayer.RefreshSpec.AfterMissed:			Ce style est mieux utilisé après que votre dernière attaque soit manquée.
@@ -121,34 +231,44 @@ GamePlayer.RefreshSpec.TargetBlocked:		Ce style est mieux utilisé après que la d
 GamePlayer.RefreshSpec.TargetEvaded:		Ce style est mieux utilisé après que la dernière attaque de votre cible soit évitée.
 GamePlayer.RefreshSpec.TargetFumbles:		Ce style est mieux utilisé après que la dernière attaque de votre cible soit complètement ratée.
 GamePlayer.RefreshSpec.TargetStyle:			Ce style est mieux utilisé après que la dernière attaque de votre cible soit un style.
-GamePlayer.UpdateSpellLine.GainPower:		Vous gagnez de la puissance dans la ligne de sorts {0}.
-GamePlayer.OnSkillTrained.YouSpend:			Vous dépensez {0} points et vous vous spécialisez mieux dans {1}.
-GamePlayer.OnSkillTrained.YouHave:			Il vous reste {0} points de spécialisation pour ce niveau.
-GamePlayer.OnSkillTrained.TrainsInVarious:	{0} s'entraine dans différentes spécialisations.
-GamePlayer.GainRealmPoints.YouGet:			Vous gagnez {0} points de royaume !
-GamePlayer.GainRealmPoints.GainedLevel:		Vous avez gagné un niveau de royaume !
-GamePlayer.GainRealmPoints.GainedRank:		Vous avez gagné un nouveau rang et un nouveau titre de royaume !
-GamePlayer.GainRealmPoints.NewRealmTitle:	Votre nouveau titre de royaume est {0}
-GamePlayer.GainRealmPoints.GainBonus:		Vous gagnez un bonus de +{0} dans toutes vos spécialisations!
-GamePlayer.GainRealmPoints.ReachedRank:		{0} a atteint le rang de royaume {1:#L#} dans {2}!
-GamePlayer.GainRealmPoints.Earned:			{0} a gagné 1,000,000 de points de royaume dans {1}
-GamePlayer.GainBountyPoints.YouGet:			Vous obtenez {0} primes de royaume !
-GamePlayer.GainExperience.YouGet:			Vous obtenez {0} points d'expérience.
-GamePlayer.GainExperience.CannotRaise:		Vous ne pouvez pas atteindre le niveau 6 tant que vous n'avez pas choisi une spécialisation.
-GamePlayer.GainExperience.TalkToTrainer:	Parlez à votre entraineur pour plus d'informations.
-GamePlayer.OnLevelUp.YouRaise:				Vous avez atteint le niveau {0}!
-GamePlayer.OnLevelUp.YouAchived:			Vous avez achevé le niveau {0}!
-GamePlayer.OnLevelUp.FreeLevelEligible:		Vous êtes eligible pour un niveau gratuit! Cliquez sur votre entraineur pour le recevoir (ou tapez '/freelevel decline' pour refuser votre niveau gratuit.)
-GamePlayer.OnLevelUp.Reached:				{0} a atteint le niveau {1} dans {2}!
-GamePlayer.OnLevelUp.StatRaise:				Vos statistiques augmentent !
-GamePlayer.OnLevelUp.AttainedRank:			Vous avez atteint le rang de {0} !
-GamePlayer.OnLevelUp.YouGetSpec:			Vous obtenez {0} points de spécialisation à dépenser pour ce niveau!
-GamePlayer.OnLevelUp.HitsRaise:				Vos points de vie ont augmentés de {0}.
-GamePlayer.OnLevelUp.PowerRaise:			Vos points de mana ont augmentés de {0}.
-GamePlayer.OnLevelUp.SecondStage:			Vous avez atteint la deuxième étape de votre niveau {0} !
-GamePlayer.IsCloakHoodUp.NowWear:			Vous mettez votre capuche.
-GamePlayer.IsCloakHoodUp.NoLongerWear:		Vous retirez votre capuche.
-GamePlayer.SwitchWeapon.SpellCancelled:		Votre sort est annulé !
+GamePlayer.Release.CantReleaseDuel:			Vous ne pouvez altérer votre résurrection pour une mort en duel!
+GamePlayer.Release.GraveErected:			Une pierre tombale a été érigée à l'endroit de votre mort.
+GamePlayer.Release.LostConstitution:		Vous avez perdu un peu de constitution, allez voir un guérisseur pour la restaurer.
+GamePlayer.Release.NoLongerReleaseAuto:		Vous ne ressusciterez plus automatiquement ({0} secondes restantes)
+GamePlayer.Release.NotDead:					Vous n'êtes pas mort !
+GamePlayer.Release.NoValidBindpoint:		Vous n'êtes lié à aucune pierre des âmes valide, vous ressucitez donc ici !
+GamePlayer.Release.ReturnToPray:			Retournez prier sur votre tombe (/pray) pour regagner de l'expérience.
+GamePlayer.Release.SurroundingChange:		Votre environnement change subitement.
+GamePlayer.Release.WillReleaseAuto:			Vous ressusciterez automatiquement dans {0} secondes!
+GamePlayer.Release.WillReleaseAutoCity:		Vous ressusciterez automatiquement à la ville dans {0} secondes!
+GamePlayer.Release.WillReleaseIn:			Vous ressusciterez dans {0} secondes.
+GamePlayer.Release.YouRelease:				Vous ramenez votre corps à la vie !
+GamePlayer.RemoveAbility.YouLose:			Vous perdez la capacité {0} !
+GamePlayer.RemoveSpecialization.YouLose:	Vous perdez la compétence {0} !
+GamePlayer.RemoveSpellLine.YouLose:			Vous perdez la ligne de sorts {0} !
+GamePlayer.SaveIntoDatabase.CharacterSaved:	Votre personnage a été sauvegardé.
+GamePlayer.SetControlledNpc.ReleaseTarget:				Vous relachez le controle de votre cible.
+GamePlayer.Shade.AlreadyShade:				Vous êtes déjà dissimulé!
+GamePlayer.Shade.NoLongerShade:				Vous ne vous dissimulez plus d'avantage!
+GamePlayer.Sit.InterruptCallMount:			Vous vous asseyez et arrêtez d'appeler votre monture !
+GamePlayer.Sit.AlreadySitting:				Vous êtes déjà assis !
+GamePlayer.Sit.NotSitting:					Vous n'êtes pas assis !
+GamePlayer.Sit.CantSitDead:					Vous ne pouvez pas vous assoir alors que vous êtes mort !
+GamePlayer.Sit.CantSitStunned:				Vous ne pouvez pas vous assoir alors que vous êtes assomé!
+GamePlayer.Sit.CantSitMezzed:				Vous ne pouvez pas vous assoir alors que vous êtes endormi!
+GamePlayer.Sit.MustStandingStill:			Vous devez être immobile pour vous assoir !
+GamePlayer.Sit.MustDismount:				Vous devez d'abord descendre de votre monture !
+GamePlayer.Sit.YouSitDown:					Vous vous asseyez. Tapez '/stand' ou bougez pour vous lever.
+GamePlayer.Sit.YouStandUp:					vous vous levez.
+GamePlayer.Sit.NoLongerWaitingQuit:			Vous n'attendez plus de quitter.
+GamePlayer.Spell.NotEnoughPowerful:			Vous n'êtes pas assez puissant pour utiliser le sortilège de cet objet.
+GamePlayer.Spell.NotImplemented:			{0} ({1}) n'est pas encore implementé sur ce serveur.
+GamePlayer.Spell.Proc.NotImplemented:		L'effet réactif d'ID {0} n'est pas encore implementé sur ce serveur.
+GamePlayer.Sprint.CantSprintDead:			Vous ne pouvez pas sprinter, vous êtes mort !
+GamePlayer.Sprint.CantSprintHidden:			Vous ne pouvez pas sprinter tout en étant dissimulé !
+GamePlayer.Sprint.NoLongerReady:			Vous n'êtes plus prêt à sprinter.
+GamePlayer.Sprint.PrepareSprint:			Vous vous préparez à sprinter.
+GamePlayer.Sprint.TooFatigued:				Vous êtes trop fatigué pour sprinter !
 GamePlayer.StartAttack.YouMustWait:			Vous devez attendre {0} secondes pour tenter une attaque !
 GamePlayer.StartAttack.YouCantCombat:		Vous ne pouvez pas attaquer en étant mort !
 GamePlayer.StartAttack.CantAttackStunned:	Vous ne pouvez pas attaquer lorsque vous êtes assomé !
@@ -166,36 +286,15 @@ GamePlayer.StartAttack.SpellCancelled:		Votre sort est annulé !
 GamePlayer.StartAttack.TargetInRange:		, la cible est à proximité
 GamePlayer.StartAttack.TargetOutOfRange:	, la cible est hors de portée
 GamePlayer.StartAttack.YouPrepare:			Vous préparez votre {0} ({1}.{2}s pour tirer{3})
-GamePlayer.OnLinkdeath.Linkdead:			{0} a été deconnecté par le serveur !
-GamePlayer.Bind.LastBindPoint:				Dernier Bind : {0}.
-GamePlayer.Bind.CantBindDead:				Vous ne pouvez pas vous lier à une pierre des âmes alors que vous êtes mort !
-GamePlayer.Bind.MustWait:					Vous devez attendre {0} secondes avant de vous lier à nouveau !
-GamePlayer.Bind.Bound:						Vous êtes maintenant lié à cet endroit.
-GamePlayer.Bind.CantHere:					Vous ne pouvez pas vous lier ici !
-GamePlayer.Spell.NotEnoughPowerful:			Vous n'êtes pas assez puissant pour utiliser le sortilège de cet objet.
-GamePlayer.Spell.NotImplemented:			{0} ({1}) n'est pas encore implementé sur ce serveur.
-GamePlayer.Spell.Proc.NotImplemented:		L'effet réactif d'ID {0} n'est pas encore implementé sur ce serveur.
-GamePlayer.RealmTitle.UnknownRealm:			Royaume inconnu
-GamePlayer.SwitchQuiver.ShootWith:			Vous attaquerez avec: {0}.
+GamePlayer.Stealth.NowHidden:				Vous êtes caché.
+GamePlayer.Stealth.NoLongerHidden:			Vous n'êtes plus caché.
 GamePlayer.SwitchQuiver.NoMoreAmmo:			Vous n'avez plus de munitions dans votre carquois !
 GamePlayer.SwitchQuiver.NotUseQuiver:		Vous n'utiliserez pas votre carquois.
-GamePlayer.Pronoun.Male.Subjective:			il
-GamePlayer.Pronoun.Male.Possessive:			son
-GamePlayer.Pronoun.Male.Objective:			lui
-GamePlayer.Pronoun.Female.Subjective:		elle
-GamePlayer.Pronoun.Female.Possessive:		sa
-GamePlayer.Pronoun.Female.Objective:		elle
-GamePlayer.IsOnHorse.DismountSteed:			Vous descendez de votre cheval.
-GamePlayer.IsOnHorse.MountSteed:			Vous montez sur votre cheval.
-GamePlayer.Die.LoseExperience:				Vous perdez de l'expérience !
-GamePlayer.DuelStop.DuelEnds:				Votre duel prend fin!
-GamePlayer.CastSpell.CantCastStunned:		Vous ne pouvez pas incanter lorsque vous êtes assomé !
-GamePlayer.CastSpell.CantCastMezzed:		Vous ne pouvez pas incanter lorsque vous êtes endormi !
-GamePlayer.CastSpell.AlreadyPlaySong:		Vous êtes déjà en train de jouer un morceau!
-GamePlayer.CastSpell.AlreadyCastFollow:		Vous incantez déjà un sort. Vous preparez celui-ci à la suite.
-GamePlayer.CastSpell.AlreadyCastNoQueue:	Vous incantez déjà un sort, pour activer la suite de sorts, tapez '/noqueue'!
-GamePlayer.ReceiveTradeItem.StillSelfcrafting:	Vous êtes encore en train d'enchanter.
-GamePlayer.ReceiveTradeItem.CantTrade:		Vous ne pouvez pas échanger cet objet !
+GamePlayer.SwitchQuiver.ShootWith:			Vous attaquerez avec: {0}.
+GamePlayer.SwitchWeapon.SpellCancelled:		Votre sort est annulé !
+GamePlayer.UpdateEncumberance.Encumbered:				Vous êtes encombré.
+GamePlayer.UpdateEncumberance.EncumberedMoveSlowly:		Vous êtes encombré, et bougez lentement.
+GamePlayer.UpdateSpellLine.GainPower:		Vous gagnez de la puissance dans la ligne de sorts {0}.
 GamePlayer.UseSlot.CantFire:				Vous ne pouvez pas lancer ou utiliser cet objet.
 GamePlayer.UseSlot.CantMountWhileDead:		Vous ne pouvez pas monter sur votre cheval, vous êtes mort !
 GamePlayer.UseSlot.MustDismountBefore:		Vous devez d'abord descendre de votre cheval.
@@ -213,51 +312,7 @@ GamePlayer.UseSlot.NoAutoReleaseShotReload:	Vous ne tirerez ou ne rechargerez pl
 GamePlayer.UseSlot.CantUseInCombat:			Vous ne pouvez pas utiliser cet objet en combat !
 GamePlayer.UseSlot.NotEnouthPower:			Vous n'êtes pas assez puissant pour utiliser le sortilège de cet objet.
 GamePlayer.UseSlot.Can'tUseFromBackpack:	Vous ne pouvez pas utiliser cet objet directement dans votre sac à dos. Equipez le avant !
-GamePlayer.ApplyPoison.CantUsePoisons:		Vous ne pouvez pas utiliser de poison.
-GamePlayer.ApplyPoison.PoisonsAppliedWeapons:	Les poisons ne sont utilisables que sur une arme !
-GamePlayer.ApplyPoison.CantPoisonWeapon:	Vous ne pouvez pas empoisonner cette arme !
-GamePlayer.ApplyPoison.CantUsePoison:		Vous ne pouvez pas utiliser ce poison !
-GamePlayer.ApplyPoison.CantApplyRecentCombat:	Vous étiez en combat récemment, vous ne pouvez pas appliquer ce poison pour le moment !
 GamePlayer.Whisper.SelectTarget:			Sélectionnez une cible à qui chuchoter.
-GamePlayer.DrowningTimerCallback.CannotBreath:	Vous ne pouvez pas respirer sous l'eau, vous perdez de la vie !
-GamePlayer.DrowningTimerCallback.Take5%Damage:	Vous perdez 5% de votre maximum de points de vie!
-GamePlayer.Sprint.TooFatigued:				Vous êtes trop fatigué pour sprinter !
-GamePlayer.Sprint.CantSprintHidden:			Vous ne pouvez pas sprinter tout en étant dissimulé !
-GamePlayer.Sprint.CantSprintDead:			Vous ne pouvez pas sprinter, vous êtes mort !
-GamePlayer.Sprint.PrepareSprint:			Vous vous préparez à sprinter.
-GamePlayer.Sprint.NoLongerReady:			Vous n'êtes plus prêt à sprinter.
-GamePlayer.OnPlayerMove.InterruptCrafting:	Vous bougez, et interrompez votre fabrication.
-GamePlayer.OnPlayerMove.CannotCallMount:	Vous bougez et ne pouvez pas appeler votre monture !
-GamePlayer.Sit.InterruptCallMount:			Vous vous asseyez et arrêtez d'appeler votre monture !
-GamePlayer.Sit.AlreadySitting:				Vous êtes déjà assis !
-GamePlayer.Sit.NotSitting:					Vous n'êtes pas assis !
-GamePlayer.Sit.CantSitDead:					Vous ne pouvez pas vous assoir alors que vous êtes mort !
-GamePlayer.Sit.CantSitStunned:				Vous ne pouvez pas vous assoir alors que vous êtes assomé!
-GamePlayer.Sit.CantSitMezzed:				Vous ne pouvez pas vous assoir alors que vous êtes endormi!
-GamePlayer.Sit.MustStandingStill:			Vous devez être immobile pour vous assoir !
-GamePlayer.Sit.MustDismount:				Vous devez d'abord descendre de votre monture !
-GamePlayer.Sit.YouSitDown:					Vous vous asseyez. Tapez '/stand' ou bougez pour vous lever.
-GamePlayer.Sit.YouStandUp:					vous vous levez.
-GamePlayer.Sit.NoLongerWaitingQuit:			Vous n'attendez plus de quitter.
-GamePlayer.UpdateEncumberance.EncumberedMoveSlowly:		Vous êtes encombré, et bougez lentement.
-GamePlayer.UpdateEncumberance.Encumbered:	Vous êtes encombré.
-GamePlayer.PickupObject.MustHaveTarget:		Vous devez avoir une cible pour ramasser quelquechose !
-GamePlayer.PickupObject.LootDoesntBelongYou:			Ce butin ne vous appartient pas - vous ne pouvez pas le prendre.
-GamePlayer.PickupObject.CantGetThat:		Vous ne pouvez pas ramasser ça !
-GamePlayer.PickupObject.BackpackFull:		Votre sac à dos est plein, vous devez faire de la place.
-GamePlayer.PickupObject.NoOneGroupWantsMoney:			Personne dans le groupe ne veut de l'argent.
-GamePlayer.SaveIntoDatabase.CharacterSaved:	Votre personnage a été sauvegardé.
-GamePlayer.Stealth.NowHidden:				Vous êtes caché.
-GamePlayer.Stealth.NoLongerHidden:			Vous n'êtes plus caché.
-GamePlayer.CraftItem.DontHaveAbilityMake:	Vous avez pas les capacités pour faire cet objet.
-GamePlayer.OpenSelfCraft.AlreadySelfCrafting:			Vous êtes déjà en train d'enchanter.
-GamePlayer.OpenSelfCraft.CanOnlyCraftBackpack:			Vous ne pouvez combiner que des objets dans votre sac!
-GamePlayer.SetControlledNpc.ReleaseTarget:				Vous relachez le controle de votre cible.
-GamePlayer.CommandNpcAttack.TooFarAwayForPet:			Votre cible est trop loin pour l'attaquer avec votre pet!
-GamePlayer.CommandNpcGoTarget.MustSelectDestination:	Vous devez sélectionner une destination pour votre créature contrôlée.
-GamePlayer.Shade.AlreadyShade:				Vous êtes déjà dissimulé!
-GamePlayer.Shade.NoLongerShade:				Vous ne vous dissimulez plus d'avantage!
-GamePlayer.CurrentTitle.TitleCleared:		Votre titre a été effacé.
 
 # HOUSING
 HouseEnterLeave.TooFarAway:					Vous êtes trop loin pour entrer dans la maison {0}.
@@ -279,28 +334,37 @@ HousingPlaceItemHandler.IndoorObjectPlaced:	Objet interieur placé. {0} places re
 HousingPlaceItemHandler.NoHookpoint:		Il n'y a plus de point d'ancrage !
 HousingPlaceItemHandler.PutMoney:			Vous déposez de l'argent sur le compte de votre maison.
 
-# GameServer\world
-# AbstractArea
-AbstractArea.Entered:					(Region) Vous êtes entrés dans {0}!
-AbstractArea.Left:					(Region) Vous avez quitté {0}!
+# /PlayerPositionUpdateHandler
+PlayerPositionUpdateHandler.Endurance:			Vous perdez de l'endurance !
+PlayerPositionUpdateHandler.Entered:			Vous êtes entré dans {0}.
+PlayerPositionUpdateHandler.FallingDamage:		Vous encaissez des dégats de chute!
+PlayerPositionUpdateHandler.FallPercent:		Vous prenez{0}% de votre total de points de vie.
+PlayerPositionUpdateHandler.SafeFall:			Les dommages ont été réduits grâce à votre abilité de chute contrôlée!
+PlayerPositionUpdateHandler.UnknownZone:		Zone inconnue, retour à votre bind.
 
-# GameServer\packets\Client\168
+# /gameobjects/CustomNPC
+# /GameStableMaster
+GameStableMaster.HorseName:						horse
+GameStableMaster.UnknownWay:					Mon cheval ne connait pas la route vers {0}.
+
+# /Blacksmith
+Scripts.Blacksmith.YouExamine:					Vous examinez {0}. C'est un forgeron {1}.
+Scripts.Blacksmith.GiveObject:					[Donnez lui un objet à reparer]
+Scripts.Blacksmith.Say:							Je peux reparer armes et armures pour vous, donnez moi juste l'objet que vous souhaitez reparer et je verrais ce que je peux faire, pour un petit coût bien entendu.
+
+# /packets/Client/168
 # /PlayerInitRequestHandler
 PlayerInitRequestHandler.AllianceMessage:		Message d'Alliance: {0}
-PlayerInitRequestHandler.FreeLevel:			Vous êtes éligible pour un niveau gratuit! Cliquez sur votre entraineur pour le recevoir (ou tapez /freelevel decline pour refuser votre niveau gratuit).
+PlayerInitRequestHandler.FreeLevel:				Vous êtes éligible pour un niveau gratuit! Cliquez sur votre entraineur pour le recevoir (ou tapez /freelevel decline pour refuser votre niveau gratuit).
 PlayerInitRequestHandler.GuildMessage:			Message de Guilde: 
-PlayerInitRequestHandler.LevelCap:			Vous avez excédé la limite de niveau pour ce champs de bataille!
+PlayerInitRequestHandler.LevelCap:				Vous avez excédé la limite de niveau pour ce champs de bataille!
 PlayerInitRequestHandler.OfficerMessage:		Message Officiers: {0}
 PlayerInitRequestHandler.SaferLocation:			Cette zone n'est actuellement pas sécurisée et vous êtes transporté vers un endroit plus sûr.
 
-# /PlayerPositionUpdateHandler
-PlayerPositionUpdateHandler.Endurance:			Vous avez perdu de l'endurance!
-PlayerPositionUpdateHandler.Entered:			Vous êtes entrés dans {0}.
-PlayerPositionUpdateHandler.FallingDamage:		Vous encaissez des dommages de chute!
-PlayerPositionUpdateHandler.FallPercent:		Vous perdez {0}% de votre maximum de points de vie.
-PlayerPositionUpdateHandler.SafeFall:			Les dommages ont été réduits grâce à votre abilité de chute contrôlée!
-PlayerPositionUpdateHandler.UnknownZone:		Zone inconnue, déplacement vers votre pierre des âmes.
-
+# /world
+# AbstractArea
+AbstractArea.Entered:							(Region) Vous êtes entrés dans {0}!
+AbstractArea.Left:								(Region) Vous avez quitté {0}!
 
 # SCRIPTS
 # GameEvents
@@ -311,13 +375,13 @@ Scripts.Events.PlayerEnterExit.Staff:			[Staff Member] {0}
 
 # GMCommands
 # /ban
-Scripts.GM.Ban.MustTarget:					Vous devez selectionner une cible !
 Scripts.GM.Ban.AAlreadyBanned:				Ce compte a déjà été banni.
-Scripts.GM.Ban.IAlreadyBanned:				Cette adresse IP a déjà été bannie.
-Scripts.GM.Ban.BAlreadyBanned:				Ce compte et cette IP ont déjà été bannis.
 Scripts.GM.Ban.ABanned:						Le compte {0} a été banni.
-Scripts.GM.Ban.IBanned:						L'adresse IP {0} a été bannie.
+Scripts.GM.Ban.BAlreadyBanned:				Ce compte et cette IP ont déjà été bannis.
 Scripts.GM.Ban.BBanned:						Le compte {0} et l'adresse IP {1} ont été bannis.
+Scripts.GM.Ban.IAlreadyBanned:				Cette adresse IP a déjà été bannie.
+Scripts.GM.Ban.IBanned:						L'adresse IP {0} a été bannie.
+Scripts.GM.Ban.MustTarget:					Vous devez selectionner une cible !
 
 # PlayerCommands
 # /Advice
@@ -433,27 +497,27 @@ Scripts.Players.Duel.ChallengesYou:			{0} vous défie en duel! /duel accept pour 
 Scripts.Players.Duel.DuelOptions:			/duel options : challenge/decline/cancel/surrender/accept
 Scripts.Players.Duel.EnemyRealm:			Vous ne pouvez pas défier un membre d'un royaume ennemi.
 Scripts.Players.Duel.NeedTarget:			Vous devez cibler quelqu'un pour le défier!
-Scripts.Players.Duel.ConsideringDuel:			Vous n'êtes pas défié en duel.
+Scripts.Players.Duel.ConsideringDuel:		Vous n'êtes pas défié en duel.
 Scripts.Players.Duel.NotInDuel:				Vous n'êtes pas en duel!
-Scripts.Players.Duel.PlayerVsPlayer:			{0} se rend à {1}!
+Scripts.Players.Duel.PlayerVsPlayer:		{0} se rend à {1}!
 Scripts.Players.Duel.SafeZone:				Vous êtes dans une zone sécurisée et ne pouvez vous battre en duel ici!
 Scripts.Players.Duel.TargetAccept:			{0} accepte le duel.  Le combat peut commencer!
 Scripts.Players.Duel.TargetAlreadyChallenging:		{0} a déjà défié quelqu'un en duel.
 Scripts.Players.Duel.TargetAlreadyConsidering:		{0} est déjà défié par quelqu'un d'autre.
 Scripts.Players.Duel.TargetCancel:			{0} son invitation au duel.	
-Scripts.Players.Duel.TargetDeclines:			{0} décline votre invitation.
+Scripts.Players.Duel.TargetDeclines:		{0} décline votre invitation.
 Scripts.Players.Duel.TargetHealth:			Votre cible doit avoir sa vie au maximum.
-Scripts.Players.Duel.TargetInCombat:			{0} est en combat.
+Scripts.Players.Duel.TargetInCombat:		{0} est en combat.
 Scripts.Players.Duel.TargetInDuel:			{0} est déjà en duel.
 Scripts.Players.Duel.TargetInGroup:			{0} est dans un groupe.
-Scripts.Players.Duel.TargetSurrender:			{0} se rend à vous!
+Scripts.Players.Duel.TargetSurrender:		{0} se rend à vous!
 Scripts.Players.Duel.YouAccept:				Vous acceptez le duel!  Le combat peut commencer!
-Scripts.Players.Duel.YouAlreadyChallenging:		Vous avez déjà défié {0} en duel. Annulez cette invitation pour défier quelqu'un d'autre.
-Scripts.Players.Duel.YouAlreadyConsidering:		Vous êtes déjà défié en duel par {0}. Refusez son invitation avant de défier quelqu'un d'autre.
+Scripts.Players.Duel.YouAlreadyChallenging:	Vous avez déjà défié {0} en duel. Annulez cette invitation pour défier quelqu'un d'autre.
+Scripts.Players.Duel.YouAlreadyConsidering:	Vous êtes déjà défié en duel par {0}. Refusez son invitation avant de défier quelqu'un d'autre.
 Scripts.Players.Duel.YouCancel:				Vous annulez votre invitation au duel.
 Scripts.Players.Duel.YouChallenge:			Vous défiez {0} en duel!
 Scripts.Players.Duel.YouDecline:			Vous refuser l'invitation au duel de {0}.
-Scripts.Players.Duel.YouHaventChallenged:		Vous n'avez défié personne à un duel.
+Scripts.Players.Duel.YouHaventChallenged:	Vous n'avez défié personne à un duel.
 Scripts.Players.Duel.YouHealth:				Vous devez avoir votre maximum de points de vie.
 Scripts.Players.Duel.YouInCombat:			Vous êtes en combat.
 Scripts.Players.Duel.YouInDuel:				Vous êtes déjà en duel.
