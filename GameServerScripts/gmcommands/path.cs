@@ -227,7 +227,7 @@ namespace DOL.GS.Scripts
 			// set the new path
 			((GameNPC)client.Player.TargetObject).CurrentWayPoint = (PathPoint)client.Player.TempProperties.getObjectProperty(TEMP_PATH_FIRST, null);
 
-			MovementMgr.Instance.MoveOnPath(((GameNPC)client.Player.TargetObject), speed);
+			((GameNPC)client.Player.TargetObject).MoveOnPath(speed);
 			return 1;
 		}
 
@@ -295,7 +295,7 @@ namespace DOL.GS.Scripts
 				return 0;
 			}
 			string pathname = String.Join(" ", args, 2, args.Length - 2);
-			PathPoint path = MovementMgr.Instance.LoadPath(pathname);
+			PathPoint path = MovementMgr.LoadPath(pathname);
 			if (path != null)
 			{
 				RemoveAllTempPathObjects(client);
@@ -329,7 +329,7 @@ namespace DOL.GS.Scripts
 				return 0;
 			}
 			string pathname = String.Join(" ", args, 2, args.Length - 2);
-			MovementMgr.Instance.SavePath(pathname, path);
+			MovementMgr.SavePath(pathname, path);
 			DisplayMessage(client, "Path saved as '{0}'", pathname);
 			return 1;
 		}
@@ -386,7 +386,7 @@ namespace DOL.GS.Scripts
 				return 0;
 			}
 			//MovementMgr.Instance.SavePath(merchant.Name + "=>" + target, path);
-			MovementMgr.Instance.SavePath(pathname, path); 
+			MovementMgr.SavePath(pathname, path); 
 			return 1;
 		}
 

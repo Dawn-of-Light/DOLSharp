@@ -38,8 +38,8 @@ namespace DOL.AI.Brain
 		public override bool Start()
 		{
 			if (!base.Start()) return false;
-			Body.CurrentWayPoint = MovementMgr.Instance.LoadPath(Body.InternalID + " Rounds");
-			MovementMgr.Instance.MoveOnPath(Body, Body.MaxSpeed);
+			Body.CurrentWayPoint = MovementMgr.LoadPath(Body.InternalID + " Rounds");
+			Body.MoveOnPath(Body.MaxSpeed);
 			return true;
 		}
 		/// <summary>
@@ -69,7 +69,7 @@ namespace DOL.AI.Brain
 		{
 			GameLiving living = base.CalculateNextAttackTarget();
 			if (living == null)
-				MovementMgr.Instance.MoveOnPath(Body, Body.MaxSpeed);
+				Body.MoveOnPath(Body.MaxSpeed);
 			return living;
 		}
 	}

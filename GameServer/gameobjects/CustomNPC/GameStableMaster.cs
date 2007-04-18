@@ -65,7 +65,7 @@ namespace DOL.GS
 					String destination = item.Name.Substring(10);
 //					String destination = item.Name.Substring(item.Name.IndexOf(" to "));
 					//PathPoint path = MovementMgr.Instance.LoadPath(this.Name+"=>"+destination);
-					PathPoint path = MovementMgr.Instance.LoadPath(item.Id_nb);
+					PathPoint path = MovementMgr.LoadPath(item.Id_nb);
 
 					if ((path != null) && ((Math.Abs(path.X - this.X)) < 500) && ((Math.Abs(path.Y - this.Y)) < 500))
 					{	
@@ -175,7 +175,7 @@ namespace DOL.GS
 			protected override void OnTick()
 			{
 				GameNPC horse = (GameNPC)m_actionSource;
-				MovementMgr.Instance.MoveOnPath(horse, horse.MaxSpeed);
+				horse.MoveOnPath(horse.MaxSpeed);
 			}
 		}
 	}

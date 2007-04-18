@@ -147,8 +147,15 @@ namespace DOL.Language
 			}
 			else
 			{
-				translated = string.Format(translated, args);
-			}
+                try
+                {
+                    translated = string.Format(translated, args);
+                }
+                catch
+                {
+                    log.Error("Parameters number error, ID: "+TranslationID+" (Arg count="+args.Length+")");
+                }
+            }
 			return translated;
 		}
 
