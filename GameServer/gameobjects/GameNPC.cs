@@ -413,7 +413,7 @@ namespace DOL.GS
 				BroadcastUpdate();
 			}
 		}
-
+        /*
 		/// <summary>
 		/// Gets sets the currentwaypoint that npc has to wander to
 		/// </summary>
@@ -422,6 +422,7 @@ namespace DOL.GS
 			get { return m_currentWayPoint; }
 			set { m_currentWayPoint = value; }
 		}
+        */
 		/// <summary>
 		/// Stores the currentwaypoint that npc has to wander to
 		/// </summary>
@@ -1173,6 +1174,185 @@ namespace DOL.GS
 		}
 
 		#endregion
+        #region Path (Movement)
+        /// <summary>
+        /// Gets sets the currentwaypoint that npc has to wander to
+        /// </summary>
+        public PathPoint CurrentWayPoint
+        {
+            get { return m_currentWayPoint; }
+            set { m_currentWayPoint = value; }
+        }
+        /*
+        /// <summary>
+        /// Stores the currentwaypoint that npc has to wander to
+        /// </summary>
+        protected PathPoint m_currentWayPoint = null;
+        /// <summary>
+        /// Gets sets the speed for traveling on path
+        /// </summary>
+        public int PathingNormalSpeed
+        {
+            get { return m_pathingNormalSpeed; }
+            set { m_pathingNormalSpeed = value; }
+        }
+        /// <summary>
+        /// Stores the speed for traveling on path
+        /// </summary>
+        protected int m_pathingNormalSpeed;
+        */
+        /// <summary>
+        /// Gets if npc moving on path
+        /// </summary>
+        public bool IsMovingOnPath
+        {
+            get { return m_IsMovingOnPath; }
+        }
+        /// <summary>
+        /// Stores if npc moving on path
+        /// </summary>
+        protected bool m_IsMovingOnPath = false;
+
+        /// <summary>
+        /// let the npc travel on its path
+        /// </summary>
+        /// <param name="speed">Speed on path</param>
+        public void MoveOnPath(int speed)
+        {
+            if (IsMovingOnPath)
+                StopMoveOnPath();
+
+            if (CurrentWayPoint == null)
+            {
+                if (log.IsWarnEnabled)
+                    log.Warn("No path to travel on for " + Name);
+                return;
+            }
+            PathingNormalSpeed = speed;
+
+            //if (Point3D.GetDistance(npc.CurrentWayPoint, npc)<100)
+            //not sure because here use point3D get distance but why??
+            if (WorldMgr.CheckDistance(CurrentWayPoint, this, 100))
+            {
+                if (CurrentWayPoint.Type == ePathType.Path_Reverse && CurrentWayPoint.FiredFlag)
+                    CurrentWayPoint = CurrentWayPoint.Prev;
+                else
+                    CurrentWayPoint = CurrentWayPoint.Next;
+                if ((CurrentWayPoint.Type == ePathType.Loop) && (CurrentWayPoint.Next == null))
+                {
+                    CurrentWayPoint = MovementMgr.FindFirstPathPoint(CurrentWayPoint);
+                }
+            }
+            if (CurrentWayPoint != null)
+            {
+                GameEventMgr.AddHandler(this, GameNPCEvent.CloseToTarget, new DOLEventHandler(OnCloseToWaypoint));
+                WalkTo(CurrentWayPoint, Math.Min(speed, CurrentWayPoint.MaxSpeed));
+                m_IsMovingOnPath = true;
+            }
+            else
+            {
+                StopMoveOnPath();
+            }
+        }
+
+        /// <summary>
+        /// Stop move on path
+        /// </summary>
+        public void StopMoveOnPath()
+        {
+            if (!IsMovingOnPath)
+                return;
+
+            GameEventMgr.RemoveHandler(this, GameNPCEvent.CloseToTarget, new DOLEventHandler(OnCloseToWaypoint));
+            Notify(GameNPCEvent.PathMoveEnds, this);
+            m_IsMovingOnPath = false;
+        }
+
+        /// <summary>
+        /// decides what to do on reached waypoint in path
+        /// </summary>
+        /// <param name="e"></param>
+        /// <param name="n"></param>
+        /// <param name="args"></param>
+        protected void OnCloseToWaypoint(DOLEvent e, object n, EventArgs args)
+        {
+            if (!IsMovingOnPath || n != this)
+                return;
+
+            if (CurrentWayPoint != null)
+            {
+                WaypointDelayAction waitTimer = new WaypointDelayAction(this);
+                waitTimer.Start(Math.Max(1, CurrentWayPoint.WaitTime * 100));
+            }
+            else
+                StopMoveOnPath();
+        }
+
+        /// <summary>
+        /// Delays movement to the next waypoint
+        /// </summary>
+        protected class WaypointDelayAction : RegionAction
+        {
+            /// <summary>
+            /// Constructs a new WaypointDelayAction
+            /// </summary>
+            /// <param name="actionSource"></param>
+            public WaypointDelayAction(GameObject actionSource)
+                : base(actionSource)
+            {
+            }
+
+            /// <summary>
+            /// Called on every timer tick
+            /// </summary>
+            protected override void OnTick()
+            {
+                GameNPC npc = (GameNPC)m_actionSource;
+                if (!npc.IsMovingOnPath)
+                    return;
+                PathPoint oldPathPoint = npc.CurrentWayPoint;
+                PathPoint nextPathPoint = npc.CurrentWayPoint.Next;
+                if ((npc.CurrentWayPoint.Type == ePathType.Path_Reverse) && (npc.CurrentWayPoint.FiredFlag))
+                    nextPathPoint = npc.CurrentWayPoint.Prev;
+
+                if (nextPathPoint == null)
+                {
+                    switch (npc.CurrentWayPoint.Type)
+                    {
+                        case ePathType.Loop:
+                            npc.CurrentWayPoint = MovementMgr.FindFirstPathPoint(npc.CurrentWayPoint);
+                            break;
+                        case ePathType.Once:
+                            npc.CurrentWayPoint = null;//to stop
+                            break;
+                        case ePathType.Path_Reverse://invert sens when go to end of path
+                            if (oldPathPoint.FiredFlag)
+                                npc.CurrentWayPoint = npc.CurrentWayPoint.Next;
+                            else
+                                npc.CurrentWayPoint = npc.CurrentWayPoint.Prev;
+                            break;
+                    }
+                }
+                else
+                {
+                    if ((npc.CurrentWayPoint.Type == ePathType.Path_Reverse) && (npc.CurrentWayPoint.FiredFlag))
+                        npc.CurrentWayPoint = npc.CurrentWayPoint.Prev;
+                    else
+                        npc.CurrentWayPoint = npc.CurrentWayPoint.Next;
+                }
+                oldPathPoint.FiredFlag = !oldPathPoint.FiredFlag;
+
+                if (npc.CurrentWayPoint != null)
+                {
+                    npc.WalkTo(npc.CurrentWayPoint, Math.Min(npc.PathingNormalSpeed, npc.CurrentWayPoint.MaxSpeed));
+                }
+                else
+                {
+                    npc.StopMoveOnPath();
+                }
+            }
+        }
+        #endregion
 		#region Inventory/LoadfromDB
 		private NpcTemplate m_npcTemplate;
 		/// <summary>
@@ -2129,7 +2309,7 @@ namespace DOL.GS
 		public override IList GetExamineMessages(GamePlayer player)
 		{
 			IList list = base.GetExamineMessages(player);
-			list.Add(LanguageMgr.GetTranslation(player.Client, "GameNPC.GetExamineMessages.YouExamine", GetName(0, false), GetPronoun(0, true), GetAggroLevelString(player, false)));
+			list.Add(LanguageMgr.GetTranslation(player.Client, "GameNPC.GetExamineMessages.YouExamine", GetName(0, false), /*GetPronoun(0, true),*/ GetAggroLevelString(player, false)));
 			return list;
 		}
 

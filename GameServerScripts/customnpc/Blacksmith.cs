@@ -21,6 +21,7 @@ using System;
 using System.Collections;
 using DOL.Database;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Scripts
 {
@@ -43,9 +44,13 @@ namespace DOL.GS.Scripts
 			 * [Give him an object to be repaired]
 			 */
 			IList list = new ArrayList();
-			list.Add("You target [" + GetName(0, false) + "]");
-			list.Add("You examine " + GetName(0, false) + "  " + GetPronoun(0, true) + " is " + GetAggroLevelString(player, false) + " and is a smith.");
+			//list.Add("You target [" + GetName(0, false) + "]");
+            /*
+            list.Add("You examine " + GetName(0, false) + "  " + GetPronoun(0, true) + " is " + GetAggroLevelString(player, false) + " and is a smith.");
 			list.Add("[Give him an object to be repaired]");
+            */
+            list.Add(LanguageMgr.GetTranslation(player.Client, "Scripts.Blacksmith.YouExamine", GetName(0, false), GetAggroLevelString(player, false)));
+            list.Add(LanguageMgr.GetTranslation(player.Client, "Scripts.Blacksmith.GiveObject")); 
 			return list;
 		}
 
@@ -60,7 +65,9 @@ namespace DOL.GS.Scripts
 				return false;
 
 			TurnTo(player, 1000);
-			SayTo(player, eChatLoc.CL_ChatWindow, "I can repair weapons or armor for you, Just hand me the item you want repaired and I'll see what I can do, for a small fee of course.");
+
+            SayTo(player, eChatLoc.CL_ChatWindow, LanguageMgr.GetTranslation(player.Client, "Scripts.Blacksmith.Say"));
+			//SayTo(player, eChatLoc.CL_ChatWindow, "I can repair weapons or armor for you, Just hand me the item you want repaired and I'll see what I can do, for a small fee of course.");
 			return true;
 		}
 
