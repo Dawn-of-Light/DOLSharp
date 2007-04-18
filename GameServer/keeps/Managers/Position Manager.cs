@@ -353,7 +353,7 @@ namespace DOL.GS.Keeps
 				GameServer.Database.DeleteObject(pp);
 			}
 
-			PathPoint root = MovementMgr.Instance.FindFirstPathPoint(path);
+			PathPoint root = MovementMgr.FindFirstPathPoint(path);
 
 			//Set the current pathpoint to the rootpoint!
 			path = root;
