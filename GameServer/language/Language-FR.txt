@@ -27,7 +27,7 @@ GameLiving.ReceiveMoney:					{0} ne veut pas de votre argent !
 GameMerchant.GetExamineMessages.BuyItemsFor:	{0} dit, "Vous pouvez acheter des objets ici pour {1}."
 GameMerchant.GetExamineMessages.Nothing:		rien
 GameMerchant.GetExamineMessages.RightClick:		[Cliquez-droit pour afficher une fenêtre de marchandage]
-GameMerchant.GetExamineMessages.YouExamine:		Vous examinez {0}. C'est un marchand {1}.
+GameMerchant.GetExamineMessages.YouExamine:		Vous examinez {0}. C'est un marchand {2}.
 GameMerchant.OnPlayerAppraise.Offers:			{0} vous offre {1} pour {2}.
 GameMerchant.OnPlayerBuy.Bought:				Vous venez d'acheter {0} pour {1}.
 GameMerchant.OnPlayerBuy.Bought2:				Vous venez d'acheter {0} pour {1} {2}.
@@ -54,7 +54,7 @@ GameNPC.GetAggroLevelString.Hostile2:			Hostile
 GameNPC.GetAggroLevelString.Neutral1:			neutre
 GameNPC.GetAggroLevelString.Neutral2:			Neutre
 GameNPC.GetAggroLevelString.TowardsYou:			{0} envers vous
-GameNPC.GetExamineMessages.YouExamine:			Vous examinez {0}. Il est {1}.
+GameNPC.GetExamineMessages.YouExamine:			Vous examinez {0}. Il est {2}.
 
 
 # GAMEOBJECT
@@ -247,6 +247,9 @@ GamePlayer.RemoveAbility.YouLose:			Vous perdez la capacité {0} !
 GamePlayer.RemoveSpecialization.YouLose:	Vous perdez la compétence {0} !
 GamePlayer.RemoveSpellLine.YouLose:			Vous perdez la ligne de sorts {0} !
 GamePlayer.SaveIntoDatabase.CharacterSaved:	Votre personnage a été sauvegardé.
+GamePlayer.Say:								Vous dites
+GamePlayer.Says:							dit
+GamePlayer.SendReceive.sends:				 envoie, 
 GamePlayer.SetControlledNpc.ReleaseTarget:				Vous relachez le controle de votre cible.
 GamePlayer.Shade.AlreadyShade:				Vous êtes déjà dissimulé!
 GamePlayer.Shade.NoLongerShade:				Vous ne vous dissimulez plus d'avantage!
@@ -295,6 +298,7 @@ GamePlayer.SwitchWeapon.SpellCancelled:		Votre sort est annulé !
 GamePlayer.UpdateEncumberance.Encumbered:				Vous êtes encombré.
 GamePlayer.UpdateEncumberance.EncumberedMoveSlowly:		Vous êtes encombré, et bougez lentement.
 GamePlayer.UpdateSpellLine.GainPower:		Vous gagnez de la puissance dans la ligne de sorts {0}.
+GamePlayer.UseSlot.AttemptToUse:			Vous essayez d'utiliser {0}.
 GamePlayer.UseSlot.CantFire:				Vous ne pouvez pas lancer ou utiliser cet objet.
 GamePlayer.UseSlot.CantMountWhileDead:		Vous ne pouvez pas monter sur votre cheval, vous êtes mort !
 GamePlayer.UseSlot.MustDismountBefore:		Vous devez d'abord descendre de votre cheval.
@@ -348,9 +352,10 @@ GameStableMaster.HorseName:						horse
 GameStableMaster.UnknownWay:					Mon cheval ne connait pas la route vers {0}.
 
 # /Blacksmith
-Scripts.Blacksmith.YouExamine:					Vous examinez {0}. C'est un forgeron {1}.
+Scripts.Blacksmith.CantRepairStacked:			{0} ne peut pas reparer d'objets empilés.
 Scripts.Blacksmith.GiveObject:					[Donnez lui un objet à reparer]
 Scripts.Blacksmith.Say:							Je peux reparer armes et armures pour vous, donnez moi juste l'objet que vous souhaitez reparer et je verrais ce que je peux faire, pour un petit coût bien entendu.
+Scripts.Blacksmith.YouExamine:					Vous examinez {0}. C'est un forgeron {1}.
 
 # /packets/Client/168
 # /PlayerInitRequestHandler
@@ -360,6 +365,9 @@ PlayerInitRequestHandler.GuildMessage:			Message de Guilde:
 PlayerInitRequestHandler.LevelCap:				Vous avez excédé la limite de niveau pour ce champs de bataille!
 PlayerInitRequestHandler.OfficerMessage:		Message Officiers: {0}
 PlayerInitRequestHandler.SaferLocation:			Cette zone n'est actuellement pas sécurisée et vous êtes transporté vers un endroit plus sûr.
+
+# /PlayerMoveItemRequestHandler
+PlayerMoveItemRequestHandler.TooFarAway:		Vous êtes trop loin pour donner quoi que ce soit à {0}.
 
 # /world
 # AbstractArea

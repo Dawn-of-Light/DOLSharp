@@ -7243,7 +7243,8 @@ namespace DOL.GS
 			if (!base.SayReceive(source, str))
 				return false;
 			if (GameServer.ServerRules.IsAllowedToUnderstand(source, this))
-				Out.SendMessage(source.GetName(0, false) + " says, \"" + str + "\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
+				//Out.SendMessage(source.GetName(0, false) + " says, \"" + str + "\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
+                Out.SendMessage(source.GetName(0, false) + " " + LanguageMgr.GetTranslation(Client, "GamePlayer.Says") + ", \"" + str + "\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
 			else
 				Out.SendMessage(source.GetName(0, false) + " says something in a language you don't understand.", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
 			return true;
@@ -7260,7 +7261,7 @@ namespace DOL.GS
 				return false;
 			if (!base.Say(str))
 				return false;
-			Out.SendMessage("You say, \"" + str + "\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
+			Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Say") + ", \"" + str + "\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
 			return true;
 		}
 
@@ -9703,6 +9704,11 @@ namespace DOL.GS
 				}
 		}
 
+        public string GetName(GamePlayer target)
+        {
+            return GameServer.ServerRules.GetPlayerName(this, target);
+        }
+
 		/// <summary>
 		/// Adds messages to ArrayList which are sent when object is targeted
 		/// </summary>
@@ -9718,32 +9724,22 @@ namespace DOL.GS
 			{
 				case eGameServerType.GST_Normal:
 					if (Realm == player.Realm)
-					{
-						message = string.Format(LanguageMgr.GetTranslation(player.Client, "GamePlayer.GetExamineMessages.RealmMember", Name, GetPronoun(0, true), CharacterClass.Name));
-					}
+                        message = string.Format(LanguageMgr.GetTranslation(player.Client, "GamePlayer.GetExamineMessages.RealmMember", player.GetName(this), GetPronoun(Client, 0, true), CharacterClass.Name));
 					else
-					{
-						message = string.Format(LanguageMgr.GetTranslation(player.Client, "GamePlayer.GetExamineMessages.EnemyRealmMember", Name, GetPronoun(0, true)));
-					}
+                        message = string.Format(LanguageMgr.GetTranslation(player.Client, "GamePlayer.GetExamineMessages.EnemyRealmMember", player.GetName(this), GetPronoun(Client, 0, true)));
 					break;
 
 				case eGameServerType.GST_PvP:
 					if (Guild == null)
-					{
-						message = string.Format(LanguageMgr.GetTranslation(player.Client, "GamePlayer.GetExamineMessages.NeutralMember", Name, GetPronoun(0, true)));
-					}
+						message = string.Format(LanguageMgr.GetTranslation(player.Client, "GamePlayer.GetExamineMessages.NeutralMember", player.GetName(this), GetPronoun(Client, 0, true)));
 					else if (Guild == player.Guild)
-					{
-						message = string.Format(LanguageMgr.GetTranslation(player.Client, "GamePlayer.GetExamineMessages.YourGuildMember", Name, GetPronoun(0, true), CharacterClass.Name));
-					}
+                        message = string.Format(LanguageMgr.GetTranslation(player.Client, "GamePlayer.GetExamineMessages.YourGuildMember", player.GetName(this), GetPronoun(Client, 0, true), CharacterClass.Name));
 					else
-					{
-						message = string.Format(LanguageMgr.GetTranslation(player.Client, "GamePlayer.GetExamineMessages.OtherGuildMember", Name, GetPronoun(0, true), GuildName));
-					}
+                        message = string.Format(LanguageMgr.GetTranslation(player.Client, "GamePlayer.GetExamineMessages.OtherGuildMember", player.GetName(this), GetPronoun(Client, 0, true), GuildName));
 					break;
 
 				default:
-					message = LanguageMgr.GetTranslation(player.Client, "GamePlayer.GetExamineMessages.YouExamine", Name);
+                    message = LanguageMgr.GetTranslation(player.Client, "GamePlayer.GetExamineMessages.YouExamine", player.GetName(this));
 					break;
 			}
 
