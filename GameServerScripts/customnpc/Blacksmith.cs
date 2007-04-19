@@ -83,7 +83,7 @@ namespace DOL.GS.Scripts
 
 			if (item.Count != 1)
 			{
-				player.Out.SendMessage(GetName(0, false) + " can't repair stacked objets.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Scripts.Blacksmith.CantRepairStacked", GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
 			switch (item.Object_Type)
