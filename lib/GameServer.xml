@@ -23078,6 +23078,15 @@
             <param name="player">player</param>
             <returns>true if object prevents player from hiding</returns>
         </member>
+        <member name="M:DOL.GS.SkillHandler.SpellCastingAbilityHandler.CheckPreconditions(DOL.GS.GameLiving,System.Int64)">
+            <summary>
+            Checks for any of the given conditions and returns true if there was any
+            prints messages
+            </summary>
+            <param name="living"></param>
+            <param name="bitmask"></param>
+            <returns></returns>
+        </member>
         <member name="T:DOL.GS.PropertyCalc.ArcheryRangePercentCalculator">
              <summary>
              The Archery Range bonus percent calculator
