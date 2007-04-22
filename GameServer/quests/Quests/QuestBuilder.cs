@@ -205,6 +205,12 @@ namespace DOL.GS.Quests
             return questPart;
         }
 
+        public BaseQuestPart CreateQuestPart(GameNPC npc, int maxExecutions)
+        {
+            BaseQuestPart questPart = new BaseQuestPart(questType, npc,maxExecutions);
+            return questPart;
+        }
+
         public BaseQuestPart CreateQuestPart(GameNPC npc, eTextType textType, string message)
         {
             BaseQuestPart questPart = new BaseQuestPart(questType, npc);

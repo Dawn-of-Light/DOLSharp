@@ -23,6 +23,7 @@ using DOL.GS.PacketHandler;
 using DOL.GS.Scripts;
 using DOL.Database;
 using DOL.GS.Movement;
+using DOL.Events;
 
 namespace DOL.GS.Quests
 {
@@ -173,6 +174,24 @@ namespace DOL.GS.Quests
             message = message.Replace(CLASS, player.CharacterClass.Name);
 
             return message;
+        }
+
+        public static GamePlayer GuessGamePlayerFromNotify(DOLEvent e, object sender, EventArgs args)
+        {
+            GamePlayer player = null;
+            if (sender is GamePlayer)
+                player = sender as GamePlayer;
+            else if (e == GameLivingEvent.WhisperReceive || e == GameObjectEvent.Interact)
+            {
+                player = ((SourceEventArgs)args).Source as GamePlayer;
+            }
+            else if (e == AreaEvent.PlayerEnter || e == AreaEvent.PlayerLeave)
+            {
+                AreaEventArgs aArgs = (AreaEventArgs)args;
+                player = aArgs.GameObject as GamePlayer;
+            }
+
+            return player;
         }
     }
 }
