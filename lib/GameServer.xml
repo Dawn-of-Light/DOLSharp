@@ -4906,30 +4906,30 @@
             set is disabled
             </summary>
         </member>
-        <member name="M:DOL.SkillHandler.PropertyChangingAbility.GetAmountForLevel(System.Int32)">
+        <member name="M:DOL.GS.SkillHandler.PropertyChangingAbility.GetAmountForLevel(System.Int32)">
             <summary>
             Get the Amount of Bonus for this ability at a particular level
             </summary>
             <param name="level">The level</param>
             <returns>The amount</returns>
         </member>
-        <member name="M:DOL.SkillHandler.PropertyChangingAbility.SendUpdates(DOL.GS.GameLiving)">
+        <member name="M:DOL.GS.SkillHandler.PropertyChangingAbility.SendUpdates(DOL.GS.GameLiving)">
             <summary>
             send updates about the changes
             </summary>
             <param name="target"></param>
         </member>
-        <member name="P:DOL.SkillHandler.PropertyChangingAbility.Amount">
+        <member name="P:DOL.GS.SkillHandler.PropertyChangingAbility.Amount">
             <summary>
             The bonus amount at this abilities level
             </summary>
         </member>
-        <member name="P:DOL.SkillHandler.PropertyChangingAbility.ValueUnit">
+        <member name="P:DOL.GS.SkillHandler.PropertyChangingAbility.ValueUnit">
             <summary>
             Unit for values like %
             </summary>
         </member>
-        <member name="M:DOL.SkillHandler.StatChangingAbility.SendUpdates(DOL.GS.GameLiving)">
+        <member name="M:DOL.GS.SkillHandler.StatChangingAbility.SendUpdates(DOL.GS.GameLiving)">
             <summary>
             send updates about the changes
             </summary>
@@ -28892,6 +28892,11 @@
             Vampiir Strength Ability
             </summary>
         </member>
+        <member name="F:DOL.GS.Abilities.VampiirBolt">
+            <summary>
+            Vampiir Bolt Ability
+            </summary>
+        </member>
         <member name="F:DOL.GS.Abilities.Volley">
             <summary>
             Volley Ability
@@ -36668,6 +36673,11 @@
             if no target go to saved pathpoint to continue the round
             </summary>
             <returns>the best target</returns>
+        </member>
+        <member name="T:DOL.GS.SkillHandler.VampiirBoltAbilityHandler">
+            <summary>
+            Handler for Vampiir Bolt clicks
+            </summary>
         </member>
     </members>
 </doc>
