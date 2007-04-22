@@ -178,7 +178,7 @@ namespace DOL.GS.Quests.Midgard
 					log.Warn("Could not find " + briedi.Name + ", creating him ...");
 				briedi.GuildName = "Part of " + questTitle + " Quest";
 				briedi.Realm = (byte) eRealm.Midgard;
-				briedi.CurrentRegionID = 103;
+				briedi.CurrentRegionID = 100;
 
 				briedi.Size = 50;
 				briedi.Level = 45;
@@ -193,10 +193,10 @@ namespace DOL.GS.Quests.Midgard
 				template.AddNPCEquipment(eInventorySlot.ArmsArmor, 350);
 				template.AddNPCEquipment(eInventorySlot.HandsArmor, 351);
 				template.AddNPCEquipment(eInventorySlot.FeetArmor, 352);
-				template.AddNPCEquipment(eInventorySlot.TwoHandWeapon, 640);
+				template.AddNPCEquipment(eInventorySlot.TwoHandWeapon, 640);                
 				briedi.Inventory = template.CloseTemplate();
 				briedi.SwitchWeapon(GameLiving.eActiveWeaponSlot.TwoHanded);
-                briedi.AddToWorld();
+                
 
 //				briedi.AddNPCEquipment((byte) eEquipmentItems.TORSO, 348, 0, 0, 0);
 //				briedi.AddNPCEquipment((byte) eEquipmentItems.LEGS, 349, 0, 0, 0);
@@ -212,8 +212,7 @@ namespace DOL.GS.Quests.Midgard
                 {
                     briedi.SaveIntoDatabase();
                 }
-
-				
+                briedi.AddToWorld();
 			}
 			else
 				briedi = npcs[0];
