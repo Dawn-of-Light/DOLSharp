@@ -27,7 +27,7 @@ GameLiving.ReceiveMoney:				{0} will Euer Geld nicht!
 GameMerchant.GetExamineMessages.BuyItemsFor:		{0} sagt: "Ihr machen Geschäft mit {0}? Geben {0} einfach {1} für seine Dinge."
 GameMerchant.GetExamineMessages.Nothing:		Nichts
 GameMerchant.GetExamineMessages.RightClick:		
-GameMerchant.GetExamineMessages.YouExamine:		Es interessiert Euch {0}. {1} steht Euch {2} und treibt Handel.
+GameMerchant.GetExamineMessages.YouExamine:		Es interessiert Euch {0}. Er/Sie steht Euch {1} und treibt Handel.
 GameMerchant.OnPlayerAppraise.Offers:			{0} bietet Euch {1} für {2}.
 GameMerchant.OnPlayerBuy.Bought:			Ihr habt gerade {0} gekauft für {1}.
 GameMerchant.OnPlayerBuy.Bought2:			Ihr habt gerade {0} gekauft für {1} {2}.
@@ -54,7 +54,7 @@ GameNPC.GetAggroLevelString.Hostile2:			Feindlich
 GameNPC.GetAggroLevelString.Neutral1:			neutral
 GameNPC.GetAggroLevelString.Neutral2:			Neutral
 GameNPC.GetAggroLevelString.TowardsYou:			{0} gegenüber
-GameNPC.GetExamineMessages.YouExamine:			Es interessiert Euch {0}. {1} steht Euch {2}.
+GameNPC.GetExamineMessages.YouExamine:			Es interessiert Euch {0}. Er/Sie steht Euch {1}.
 
 # GAMEOBJECT
 GameObject.GetExamineMessages.YouTarget:		Es wird {0} als Ziel erfasst.
@@ -246,6 +246,9 @@ GamePlayer.RemoveAbility.YouLose:			Ihr verliert die "{0}"-Fähigkeit!
 GamePlayer.RemoveSpecialization.YouLose:		Ihr verliert die "{0}"-Fähigkeit!			
 GamePlayer.RemoveSpellLine.YouLose:			Ihr verliert die Zauber der "{0}"-Liste!		
 GamePlayer.SaveIntoDatabase.CharacterSaved:		Euer Charakter wurde gespeichert.			
+GamePlayer.Say.YouSay:					Ihr sagt: "{0}"
+GamePlayer.SayReceive.Says:				{0} sagt: "{1}"
+GamePlayer.SayReceive.FalseLanguage:			{0} sagt etwas in einer Sprache, die Ihr nicht versteht.
 GamePlayer.SendReceive.sends:				sendet: 	
 GamePlayer.SetControlledNpc.ReleaseTarget:		Ihr verliert die Kontrolle über Euer Wesen.			
 GamePlayer.Shade.AlreadyShade:				Ihr seid bereits ein Schatten!	
@@ -315,7 +318,6 @@ GamePlayer.UseSlot.NotEnouthPower:			Ihr seit nicht mächtig genug, um den Zauber
 GamePlayer.UseSlot.StopCallingMount:			Ihr ruft nicht mehr nach Eurem Pferd.		
 GamePlayer.UseSlot.WhistleMount:			Ihr pfeift nach Eurem Pferd.		
 GamePlayer.Whisper.SelectTarget:			Wählt jemanden aus, dem Ihr etwas zuflüstern wollt!		
-
 					
 # HOUSING
 HouseEnterLeave.TooFarAway:				Ihr seid zu weit von diesem Haus entfernt, um es zu betreten!
@@ -360,12 +362,34 @@ PlayerInitRequestHandler.LevelCap:			Ihr habt für dieses Schlachtfeld die Stufen
 PlayerInitRequestHandler.OfficerMessage:		Offiziersnachricht: {0}
 PlayerInitRequestHandler.SaferLocation:			Diese Gegend ist im Moment nicht sicher. Ihr werdet an einen sicheren Ort versetzt.
 
+# /PlayerMoveItemRequestHandler
+PlayerMoveItemRequestHandler.TooFarAway:		Ihr seit zu weit weg, um {0} etwas zu geben.
+
 # /world
 # AbstractArea
 AbstractArea.Entered:					(Region) Ihr seid nun {0}!
 AbstractArea.Left:					(Region) Ihr seid nun nicht mehr {0}!
 
 # SCRIPTS
+# CustomNPC
+# /Blacksmith
+Scripts.Blacksmith.CantRepairThat:			So was kann ich nicht reparieren.
+Scripts.Blacksmith.GiveObject:				(Gebt {0} einen Gegenstand zum Reparieren.)
+Scripts.Blacksmith.InvalidItem:				Falscher Gegenstand.
+Scripts.Blacksmith.ItsDone:				So es ist getan. Euer {0} ist zum Kampf bereit!
+Scripts.Blacksmith.NoNeedRepair:			Dieser Gegenstand befindet sich bereits in einem tadellosen Zustand.
+Scripts.Blacksmith.NotEnoughMoney:			Ihr habe nicht genug Geld für die Reparatur.
+Scripts.Blacksmith.ObjectCantRepaired:			Dieser Gegenstand kann nicht repariert werden.
+Scripts.Blacksmith.ObjectRatherOld:			Uhh, {0} ist schon ziemlich alt. Ich werde nicht mehr in der Lage sein, eine erneute Reparatur durchzuführen. Gebt also gut darauf acht!
+Scripts.Blacksmith.RepairAccept:			Wollt Ihr {0} reparieren lassen?
+Scripts.Blacksmith.RepairCost:				Es wir Euch {0} kosten, um {1} reparieren zu lassen.
+Scripts.Blacksmith.RepairFinished:			So es ist getan. Euer {0} ist praktisch wie neu. Kommt zurück, wenn Ihr mich wieder braucht!
+Scripts.Blacksmith.Say:					Ich kann Eure Waffen und Rüstungen reparieren. Gebt mir einfach die Gegenstände, die ich reparieren soll, und ich will sehen, was ich tun kann. Keine Sorge, ich verlange nicht viel für meine Dienste.
+Scripts.Blacksmith.StackedObjets:			{0} kann immer nur einen Gegenstand reparieren.
+Scripts.Blacksmith.YouExamine:				Es interessiert Euch {0}. {1} steht Euch {2} und arbeitet als Schmied.
+Scripts.Blacksmith.YouPay:				Ihr bezahlt {0} {1}.
+Scripts.Blacksmith.YouTarget:				Es wird {0} als Ziel erfasst.
+
 # GameEvents
 # /Playerenterexit
 Scripts.Events.PlayerEnterExit.Entered:			{0} betritt gerade das Spiel!

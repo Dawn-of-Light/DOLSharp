@@ -7243,10 +7243,9 @@ namespace DOL.GS
 			if (!base.SayReceive(source, str))
 				return false;
 			if (GameServer.ServerRules.IsAllowedToUnderstand(source, this))
-				//Out.SendMessage(source.GetName(0, false) + " says, \"" + str + "\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
-                Out.SendMessage(source.GetName(0, false) + " " + LanguageMgr.GetTranslation(Client, "GamePlayer.Says") + ", \"" + str + "\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.SayReceive.Says", source.GetName(0, false), str), eChatType.CT_Say, eChatLoc.CL_ChatWindow);
 			else
-				Out.SendMessage(source.GetName(0, false) + " says something in a language you don't understand.", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.SayReceive.FalseLanguage", source.GetName(0, false)), eChatType.CT_Say, eChatLoc.CL_ChatWindow);
 			return true;
 		}
 
@@ -7261,7 +7260,7 @@ namespace DOL.GS
 				return false;
 			if (!base.Say(str))
 				return false;
-			Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Say") + ", \"" + str + "\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
+			Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Say.YouSay", str), eChatType.CT_Say, eChatLoc.CL_ChatWindow);
 			return true;
 		}
 
