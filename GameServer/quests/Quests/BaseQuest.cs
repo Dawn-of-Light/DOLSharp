@@ -190,6 +190,7 @@ namespace DOL.GS.Quests
 				questParts.Add(questPart);
 
 			questPart.QuestPartAdded = true;
+            questPart.ID = questParts.Count; // fake id but ids only have to be unique quest wide its enough to use the number in the list as id.
 		}
 
 		/// <summary>

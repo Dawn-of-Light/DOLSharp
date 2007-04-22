@@ -50,6 +50,8 @@ namespace DOL.GS.Quests
 	public class BaseQuestPart
     {
 
+        public const string NUMBER_OF_EXECUTIONS = "quest.numberOfExecutions";
+
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         #region Variables
@@ -60,12 +62,22 @@ namespace DOL.GS.Quests
 		private IList requirements;              
         private IList actions;        
         private IList triggers;
+        
+        private int maxNumberOfExecutions;
+        private int id;
 
+       	
         private bool questpartAdded;        
 
         #endregion
 
         #region Properties        
+
+        public int ID
+        {
+            get { return id; }
+            set { id = value; }
+        }
 
         /// <summary>
         /// Type of quest this questpart belnogs to
@@ -83,6 +95,11 @@ namespace DOL.GS.Quests
         {
             get { return npc; }
             set { npc = value; }
+        }
+
+        public int MaxNumberOfExecutions
+        {
+            get { return maxNumberOfExecutions; }
         }
 
         /// <summary>
@@ -128,10 +145,20 @@ namespace DOL.GS.Quests
         /// </summary>
         /// <param name="questType">type of Quest this QuestPart will belong to.</param>
         /// <param name="npc">NPC associated with his questpart typically NPC talking to or mob killing, etc...</param>        
-        public BaseQuestPart(Type questType, GameNPC npc)
+        public BaseQuestPart(Type questType, GameNPC npc) 
+            : this (questType,npc,-1) { }
+
+        /// <summary>
+        /// Creates a QuestPart for the given questtype with the default npc.
+        /// </summary>
+        /// <param name="questType">type of Quest this QuestPart will belong to.</param>
+        /// <param name="npc">NPC associated with his questpart typically NPC talking to or mob killing, etc...</param>        
+        /// <param name="executions">Maximum number of executions the questpart should be execute during one quest for each player</param>
+        public BaseQuestPart(Type questType, GameNPC npc, int executions)
         {
             this.QuestType = questType;
             this.NPC = npc;
+            this.maxNumberOfExecutions = executions;            
         }
 
         #region Triggers         
@@ -373,42 +400,40 @@ namespace DOL.GS.Quests
         /// <param name="sender"></param>
         /// <param name="args"></param>
         public void Notify(DOLEvent e, object sender, EventArgs args)
-        {
-            GamePlayer player = null;
+        {            
+            GamePlayer player = QuestPartUtils.GuessGamePlayerFromNotify(e,sender,args);
             
-            if (sender is GamePlayer)
-                player = sender as GamePlayer;
-            else if (e == GameLivingEvent.WhisperReceive || e == GameObjectEvent.Interact )
-            {
-                player = ((SourceEventArgs)args).Source as GamePlayer;
-            }
-            else if (e == AreaEvent.PlayerEnter || e == AreaEvent.PlayerLeave)
-            {
-                AreaEventArgs aArgs = (AreaEventArgs)args;
-                player = aArgs.GameObject as GamePlayer;
-            }
-            else if (e == GameLivingEvent.Dying)
+            if (e == GameLivingEvent.Dying)
             {
                 //TODO if multiple players are doing a quest and are nearby (a group) they will get multiple notify calls.... not good.
-
                 //all players in visible distance will get notify.
                 GameLiving living = sender as GameLiving;
                 if (sender!=null){
                     foreach (GamePlayer vizPlayer in living.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
                     {
-                        Notify(e, sender, args, vizPlayer);
+                        AbstractQuest vizQuest = vizPlayer.IsDoingQuest(QuestType);
+                        if (vizQuest != null)
+                        {
+                            if (vizPlayer == sender)
+                                Notify(vizQuest, e, sender, args, vizPlayer);
+                            else
+                                Notify(vizQuest, e, sender, args, vizPlayer);
+                        }
                     }
-                    return;
                 }
+                return;
             }
 
             if (player != null)
-                Notify(e, sender, args, player);
+            {
+                AbstractQuest quest = player.IsDoingQuest(QuestType);
+                Notify(quest, e, sender, args, player);
+            }
             else
             {
                 if (log.IsWarnEnabled)
                     log.Warn("BaseQuestPart: Event without player occured." + e);
-            }
+            }            
         }
 
         /// <summary>
@@ -416,22 +441,36 @@ namespace DOL.GS.Quests
         /// or a automatically added eventhandler for the trigers fires
         /// </summary>
         /// <param name="e">DolEvent of notify call</param>
+        /// <param name="quest">the quest this questpart belongs to</param>
         /// <param name="sender">Sender of notify call</param>
         /// <param name="args">EventArgs of notify call</param>
         /// <param name="player">GamePlayer this call is related to, can be null</param>
-        public void Notify(DOLEvent e, object sender, EventArgs args, GamePlayer player)
+        public bool Notify(AbstractQuest quest,DOLEvent e, object sender, EventArgs args, GamePlayer player)
         {
-			// if we have no actions simply skip it, nothing to do so nothing to check...
-			if (actions == null)
-				return;
+            bool result = false;
 
-            if (CheckTriggers(e,sender,args,player) && CheckRequirements(e, sender, args, player))
+            int executions = 0;
+            if (quest != null && quest.GetCustomProperty(this.ID + "_" + NUMBER_OF_EXECUTIONS) != null)
             {
-                foreach (IQuestAction action in actions)
+                executions = Convert.ToInt32(quest.GetCustomProperty(ID + "_" + NUMBER_OF_EXECUTIONS));                
+            }
+
+            if (MaxNumberOfExecutions < 0 || executions < this.MaxNumberOfExecutions)
+            {
+                if (CheckTriggers(e, sender, args, player) && CheckRequirements(e, sender, args, player))
                 {
-                    action.Perform(e, sender, args, player);
+                    foreach (IQuestAction action in actions)
+                    {
+                        action.Perform(e, sender, args, player);
+                    }
+                    result = true;
+                    
+                    if (quest!=null)
+                        quest.SetCustomProperty(this.ID + "_" + NUMBER_OF_EXECUTIONS, Convert.ToString(executions + 1));                    
                 }
-            }            
-		}        
+            }
+
+            return result;
+		}
 	}
 }

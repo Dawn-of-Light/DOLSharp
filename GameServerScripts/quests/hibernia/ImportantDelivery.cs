@@ -233,34 +233,36 @@ namespace DOL.GS.Quests.Hibernia
 			else
 				rumdor = npcs[0];
 
-			npcs = WorldMgr.GetNPCsByName("Truichon", eRealm.Hibernia);
-			if (npcs.Length == 0)
-			{
-				truichon = new GameStableMaster();
-				truichon.Model = 361;
-				truichon.Name = "Truichon";
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find " + truichon.Name + ", creating ...");
-				truichon.GuildName = "Stable Master";
-				truichon.Realm = (byte) eRealm.Hibernia;
-				truichon.CurrentRegionID = 1;
-				truichon.Size = 50;
-				truichon.Level = 33;
-				truichon.X = 343464;
-				truichon.Y = 526708;
-				truichon.Z = 5448;
-				truichon.Heading = 68;
-				//truichon.EquipmentTemplateID = "5448";
+			GameObject[] objects = WorldMgr.GetObjectsByName("Truichon", eRealm.Hibernia,typeof(GameStableMaster));
+            if (npcs.Length == 0)
+            {
+                truichon = new GameStableMaster();
+                truichon.Model = 361;
+                truichon.Name = "Truichon";
+                if (log.IsWarnEnabled)
+                    log.Warn("Could not find " + truichon.Name + ", creating ...");
+                truichon.GuildName = "Stable Master";
+                truichon.Realm = (byte)eRealm.Hibernia;
+                truichon.CurrentRegionID = 1;
+                truichon.Size = 50;
+                truichon.Level = 33;
+                truichon.X = 343464;
+                truichon.Y = 526708;
+                truichon.Z = 5448;
+                truichon.Heading = 68;
+                //truichon.EquipmentTemplateID = "5448";
 
-				//You don't have to store the created mob in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					truichon.SaveIntoDatabase();
-				truichon.AddToWorld();
-			}
-			else
-				truichon = npcs[0];
+                //You don't have to store the created mob in the db if you don't want,
+                //it will be recreated each time it is not found, just comment the following
+                //line if you rather not modify your database
+                if (SAVE_INTO_DATABASE)
+                    truichon.SaveIntoDatabase();
+                truichon.AddToWorld();
+            }
+            else
+            {
+                truichon =(GameStableMaster) npcs[0];
+            }
 
 			#endregion
 
@@ -269,7 +271,7 @@ namespace DOL.GS.Quests.Hibernia
 			ticketToTirnamBeo = CreateTicketTo("Tir na mBeo", "hs_magmell_tirnambeo");
 			ticketToArdee = CreateTicketTo("Ardee", "hs_tirnambeo_ardee");
 
-			recruitsDiary = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "recruits_diary");
+            recruitsDiary = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "recruits_diary");
 			if (recruitsDiary == null)
 			{
 				recruitsDiary = new ItemTemplate();
@@ -282,6 +284,9 @@ namespace DOL.GS.Quests.Hibernia
 				recruitsDiary.Id_nb = "recruits_diary";
 				recruitsDiary.IsPickable = true;
 				recruitsDiary.IsDropable = false;
+
+                if (SAVE_INTO_DATABASE)
+                    GameServer.Database.AddNewObject(recruitsDiary);
 			}
 
 			sackOfSupplies = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "sack_of_supplies");
