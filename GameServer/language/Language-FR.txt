@@ -247,8 +247,8 @@ GamePlayer.RemoveAbility.YouLose:			Vous perdez la capacité {0} !
 GamePlayer.RemoveSpecialization.YouLose:	Vous perdez la compétence {0} !
 GamePlayer.RemoveSpellLine.YouLose:			Vous perdez la ligne de sorts {0} !
 GamePlayer.SaveIntoDatabase.CharacterSaved:	Votre personnage a été sauvegardé.
-GamePlayer.Say:								Vous dites
-GamePlayer.Says:							dit
+GamePlayer.Say.YouSay:						Vous dites, "{0}"
+GamePlayer.SayReceive.Says:					{0} dit, "{1}"
 GamePlayer.SendReceive.sends:				 envoie, 
 GamePlayer.SetControlledNpc.ReleaseTarget:				Vous relachez le controle de votre cible.
 GamePlayer.Shade.AlreadyShade:				Vous êtes déjà dissimulé!
