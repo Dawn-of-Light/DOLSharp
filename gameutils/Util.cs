@@ -147,17 +147,24 @@ namespace DOL.GS
 		public static string FormatStackTrace(StackTrace trace)
 		{
 			StringBuilder str = new StringBuilder(128);
-			for (int i = 0; i < trace.FrameCount; i++)
+			if (trace == null)
 			{
-				StackFrame frame = trace.GetFrame(i);
-				Type declType = frame.GetMethod().DeclaringType;
-				str.Append("   at ")
-					.Append(declType == null ? "(null)" : declType.FullName).Append('.')
-					.Append(frame.GetMethod().Name).Append(" in ")
-					.Append(frame.GetFileName())
-					.Append("  line:").Append(frame.GetFileLineNumber())
-					.Append(" col:").Append(frame.GetFileColumnNumber())
-					.Append("\n");
+				str.Append("(null)");
+			}
+			else
+			{
+				for (int i = 0; i < trace.FrameCount; i++)
+				{
+					StackFrame frame = trace.GetFrame(i);
+					Type declType = frame.GetMethod().DeclaringType;
+					str.Append("   at ")
+						.Append(declType == null ? "(null)" : declType.FullName).Append('.')
+						.Append(frame.GetMethod().Name).Append(" in ")
+						.Append(frame.GetFileName())
+						.Append("  line:").Append(frame.GetFileLineNumber())
+						.Append(" col:").Append(frame.GetFileColumnNumber())
+						.Append("\n");
+				}
 			}
 			return str.ToString();
 		}

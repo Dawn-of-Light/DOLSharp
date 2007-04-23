@@ -20,6 +20,7 @@ using System;
 using System.Collections;
 using System.Collections.Specialized;
 using System.Reflection;
+using System.Threading;
 using DOL.Database;
 using log4net;
 
@@ -631,7 +632,7 @@ namespace DOL.GS
 		/// <returns>true if successfull false if not</returns>
 		public virtual bool MoveItem(eInventorySlot fromSlot,eInventorySlot toSlot, int itemCount)
 		{
-			lock (m_changedSlots.SyncRoot) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
+			lock (m_items.SyncRoot) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
 				fromSlot = GetValidInventorySlot(fromSlot);
 				toSlot = GetValidInventorySlot(toSlot);
@@ -793,28 +794,33 @@ namespace DOL.GS
 
 				if (!fits) return false;
 
-				// add new items
+				// Add new items
 				BeginChanges();
 
-				foreach (DictionaryEntry de in changedSlots)
+				try
 				{
-					int slot = (int)de.Key;
-					int value = (int)de.Value;
-					if (value > 0) // existing item should be changed
+					foreach (DictionaryEntry de in changedSlots)
 					{
-						InventoryItem item = (InventoryItem)m_items[slot];
-						AddCountToStack(item, value);
-					}
-					else if (value < 0) // new item should be added
-					{
-						InventoryItem item = new InventoryItem(template);
-						item.Count = -value;
-						item.Weight = (template.Weight / itemcount) * -value;
-						AddItem((eInventorySlot)slot, item);
+						int slot = (int)de.Key;
+						int value = (int)de.Value;
+						if (value > 0) // existing item should be changed
+						{
+							InventoryItem item = (InventoryItem)m_items[slot];
+							AddCountToStack(item, value);
+						}
+						else if (value < 0) // new item should be added
+						{
+							InventoryItem item = new InventoryItem(template);
+							item.Count = -value;
+							item.Weight = (template.Weight / itemcount) * -value;
+							AddItem((eInventorySlot)slot, item);
+						}
 					}
 				}
-
-				CommitChanges();
+				finally
+				{
+					CommitChanges();
+				}
 
 				return true;
 			}
@@ -879,25 +885,30 @@ namespace DOL.GS
 
 				BeginChanges();
 
-				foreach (DictionaryEntry de in changedSlots)
+				try
 				{
-					InventoryItem item = (InventoryItem)de.Key;
-					if (de.Value == null)
+					foreach (DictionaryEntry de in changedSlots)
 					{
-						if (!RemoveItem(item))
+						InventoryItem item = (InventoryItem)de.Key;
+						if (de.Value == null)
+						{
+							if (!RemoveItem(item))
+							{
+								CommitChanges();
+								throw new Exception("Error removing item.");
+							}
+						}
+						else if (!RemoveCountFromStack(item, (int)de.Value))
 						{
 							CommitChanges();
-							throw new Exception("Error removing item.");
+							throw new Exception("Error removing count from stack.");
 						}
 					}
-					else if (!RemoveCountFromStack(item, (int)de.Value))
-					{
-						CommitChanges();
-						throw new Exception("Error removing count from stack.");
-					}
 				}
-
-				CommitChanges();
+				finally
+				{
+					CommitChanges();
+				}
 
 				return true;
 			}
@@ -940,8 +951,8 @@ namespace DOL.GS
 		{
 			InventoryItem newFromItem = (InventoryItem)m_items[toSlot];
 			InventoryItem newToItem = (InventoryItem)m_items[fromSlot];
-			m_items[fromSlot]=newFromItem;
-			m_items[toSlot]=newToItem;
+			m_items[fromSlot] = newFromItem;
+			m_items[toSlot] = newToItem;
 
 			if (newFromItem != null)
 				newFromItem.SlotPosition = fromSlot;
@@ -966,14 +977,14 @@ namespace DOL.GS
 			get
 			{
 				InventoryItem item = null;
-				int weight=0;
+				int weight = 0;
 				lock (m_items.SyncRoot) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 				{
 					foreach(eInventorySlot slot in EQUIP_SLOTS)
 					{
 						item = m_items[(int)slot] as InventoryItem;
-						if(item!=null)
-							weight+=item.Weight;
+						if(item != null)
+							weight += item.Weight;
 					}
 				}
 				return weight/10;
@@ -987,7 +998,7 @@ namespace DOL.GS
 		/// </summary>
 		public void BeginChanges()
 		{
-			System.Threading.Interlocked.Increment(ref m_changesCounter);
+			Interlocked.Increment(ref m_changesCounter);
 		}
 
 		/// <summary>
@@ -995,14 +1006,14 @@ namespace DOL.GS
 		/// </summary>
 		public void CommitChanges()
 		{
-			System.Threading.Interlocked.Decrement(ref m_changesCounter);
-			if (m_changesCounter < 0)
+			int changes = Interlocked.Decrement(ref m_changesCounter);
+			if (changes < 0)
 			{
 				if (log.IsErrorEnabled)
 					log.Error("Inventory changes counter is bellow zero (forgot to use BeginChanges?)!\n\n" + Environment.StackTrace);
-				m_changesCounter = 0;
+				Thread.VolatileWrite(ref m_changesCounter, 0);
 			}
-			if (m_changesCounter <= 0 && m_changedSlots.Count > 0)
+			if (changes <= 0 && m_changedSlots.Count > 0)
 			{
 				UpdateChangedSlots();
 			}
