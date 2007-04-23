@@ -140,7 +140,8 @@ namespace DOL.GS.Effects
 			IList fx = null;
 
 			if (m_effects == null)
-				return; lock (m_effects)
+				return;
+			lock (m_effects)
 			{
 				fx = (ArrayList)m_effects.Clone();
 				m_effects.Clear();
@@ -198,21 +199,27 @@ namespace DOL.GS.Effects
 			GamePlayer player = m_owner as GamePlayer;
 			if (player == null)
 				return;
-			if (m_effects == null || m_effects.Count < 1)
+			if (m_effects == null)
 				return;
-			foreach (IGameEffect eff in m_effects)
+			lock (m_effects)
 			{
-				if (eff is GameSpellEffect)
-				{ 
-					GameSpellEffect gse = eff as GameSpellEffect;
-					if (gse.Concentration > 0 && gse.SpellHandler.Caster != player)
+				if (m_effects.Count < 1)
+					return;
+
+				foreach (IGameEffect eff in m_effects)
+				{
+					if (eff is GameSpellEffect)
+					{
+						GameSpellEffect gse = eff as GameSpellEffect;
+						if (gse.Concentration > 0 && gse.SpellHandler.Caster != player)
+							continue;
+					}
+					PlayerXEffect effx = eff.getSavedEffect();
+					if (effx == null)
 						continue;
+					effx.ChardID = player.PlayerCharacter.ObjectId;
+					GameServer.Database.AddNewObject(effx);
 				}
-				PlayerXEffect effx = eff.getSavedEffect();
-				if (effx == null)
-					continue;
-				effx.ChardID = player.PlayerCharacter.ObjectId;
-				GameServer.Database.AddNewObject(effx);
 			}
 		}
 
@@ -275,7 +282,7 @@ namespace DOL.GS.Effects
 		public virtual IGameEffect GetOfType(Type effectType)
 		{
 			if (m_effects == null) return null;
-			lock (m_effects.SyncRoot)
+			lock (m_effects)
 			{
 				foreach (IGameEffect effect in m_effects)
 					if (effect.GetType().Equals(effectType)) return effect;
