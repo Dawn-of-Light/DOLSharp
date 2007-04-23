@@ -109,6 +109,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				// handle connection
 				lock (this)
 				{
+					// Make sure that client won't quit
 					lock (client)
 					{
 						GameClient.eClientState state = client.ClientState;

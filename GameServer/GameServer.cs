@@ -437,11 +437,13 @@ namespace DOL
 					{
 						s.BeginReceiveFrom(server.UDPBuffer, 0, MAX_UDPBUF, SocketFlags.None, ref tempRemoteEP, m_udpReceiveCallback, server);
 					}
-					catch (SocketException)
+					catch (SocketException e)
 					{
+						log.Fatal(string.Format("Failed to resume receiving UDP packets. UDP is DEAD now. (code: {0}  socketCode: {1})", e.ErrorCode, e.SocketErrorCode), e);
 					}
-					catch (ObjectDisposedException)
+					catch (ObjectDisposedException e)
 					{
+						log.Fatal("Object disposed.", e);
 					}
 					catch (Exception e)
 					{
