@@ -28,8 +28,6 @@ namespace DOL.GS
 {
 	public class GameNpcInventoryTemplate : GameLivingInventory
 	{
-		private readonly object m_LockObject = new object();
-
 		/// <summary>
 		/// Defines a logger for this class.
 		/// </summary>
@@ -135,7 +133,7 @@ namespace DOL.GS
 		/// <returns>true if added</returns>
 		public bool AddNPCEquipment(eInventorySlot slot, int model, int color, int effect, int extension)
 		{
-			lock (m_items)
+			lock (m_items.SyncRoot)
 			{
 				lock (m_usedInventoryItems.SyncRoot)
 				{
@@ -169,7 +167,7 @@ namespace DOL.GS
 		/// <returns>true if removed</returns>
 		public bool RemoveNPCEquipment(eInventorySlot slot)
 		{
-			lock (m_items)
+			lock (m_items.SyncRoot)
 			{
 				slot = GetValidInventorySlot(slot);
 				if (slot == eInventorySlot.Invalid) return false;
@@ -188,7 +186,7 @@ namespace DOL.GS
 		/// <returns>Invetory template instance that should be used</returns>
 		public GameNpcInventoryTemplate CloseTemplate()
 		{
-			lock (m_items)
+			lock (m_items.SyncRoot)
 			{
 				lock (m_usedInventoryTemplates.SyncRoot)
 				{
@@ -227,7 +225,7 @@ namespace DOL.GS
 		/// <returns>Open copy of this template</returns>
 		public GameNpcInventoryTemplate CloneTemplate()
 		{
-			lock (m_LockObject)
+			lock (m_items.SyncRoot)
 			{
 				GameNpcInventoryTemplate clone = new GameNpcInventoryTemplate();
 				clone.m_changedSlots = (ArrayList)m_changedSlots.Clone();
@@ -254,7 +252,7 @@ namespace DOL.GS
 		/// <returns>success</returns>
 		public override bool LoadFromDatabase(string templateID)
 		{
-			lock (m_LockObject)
+			lock (m_items.SyncRoot)
 			{
 				try
 				{
@@ -303,7 +301,7 @@ namespace DOL.GS
 		/// <returns>success</returns>
 		public override bool SaveIntoDatabase(string templateID)
 		{
-			lock (m_LockObject)
+			lock (m_items.SyncRoot)
 			{
 				try
 				{

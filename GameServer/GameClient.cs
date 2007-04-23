@@ -35,8 +35,6 @@ namespace DOL
 		/// </summary>
 		public class GameClient : ClientBase
 		{
-			private readonly object m_LockObject = new object();
-
 			/// <summary>
 			/// Defines a logger for this class.
 			/// </summary>
@@ -285,7 +283,7 @@ namespace DOL
 			/// </summary>
 			protected internal void Quit()
 			{
-				lock (m_LockObject)
+				lock (this)
 				{
 					try
 					{
