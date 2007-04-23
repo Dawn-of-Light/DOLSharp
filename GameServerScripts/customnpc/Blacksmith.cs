@@ -69,16 +69,8 @@ namespace DOL.GS.Scripts
 		public override bool ReceiveItem(GameLiving source, InventoryItem item)
 		{
 			GamePlayer player = source as GamePlayer;
-//			if (player == null || item == null)
-//				return false;
-
-			if (player == null)
+			if (player == null || item == null)
 				return false;
-			if (item == null)
-			{
-				player.Out.SendMessage("Nur etwas aus dem Inventory!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return false;
-			}
 
 			if (item.Count != 1)
 			{
