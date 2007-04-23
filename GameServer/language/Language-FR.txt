@@ -8,26 +8,26 @@
 # Please try to keep ID's alphabetical order
 
 # LANGUAGEMGR
-System.LanguagesName.English:				Anglais
-System.LanguagesName.French:				Français
-System.LanguagesName.German:				Allemand
-System.LanguagesName.Spanish:				Espagnol
-System.LanguagesName.Czech:					Tchèque
+System.LanguagesName.English:					Anglais
+System.LanguagesName.French:					Français
+System.LanguagesName.German:					Allemand
+System.LanguagesName.Spanish:					Espagnol
+System.LanguagesName.Czech:						Tchèque
 
 # SYSTEM
-System.NoSense:								Cela n'aurait aucun sens !
-System.MustSelectTarget:					Vous devez selectionner une cible !
-System.ReleaseTimer:						Délai de résurrection
+System.NoSense:									Cela n'aurait aucun sens !
+System.MustSelectTarget:						Vous devez selectionner une cible !
+System.ReleaseTimer:							Délai de résurrection
 
 # GAMELIVING
-GameLiving.ReceiveItem:						{0} ne veut pas de cet item !
-GameLiving.ReceiveMoney:					{0} ne veut pas de votre argent !
+GameLiving.ReceiveItem:							{0} ne veut pas de cet item !
+GameLiving.ReceiveMoney:						{0} ne veut pas de votre argent !
 
 # GAMEMERCHANT
 GameMerchant.GetExamineMessages.BuyItemsFor:	{0} dit, "Vous pouvez acheter des objets ici pour {1}."
 GameMerchant.GetExamineMessages.Nothing:		rien
 GameMerchant.GetExamineMessages.RightClick:		[Cliquez-droit pour afficher une fenêtre de marchandage]
-GameMerchant.GetExamineMessages.YouExamine:		Vous examinez {0}. C'est un marchand {2}.
+GameMerchant.GetExamineMessages.YouExamine:		Vous observez {0}. C'est un marchand {2}.
 GameMerchant.OnPlayerAppraise.Offers:			{0} vous offre {1} pour {2}.
 GameMerchant.OnPlayerBuy.Bought:				Vous venez d'acheter {0} pour {1}.
 GameMerchant.OnPlayerBuy.Bought2:				Vous venez d'acheter {0} pour {1} {2}.
@@ -54,7 +54,7 @@ GameNPC.GetAggroLevelString.Hostile2:			Hostile
 GameNPC.GetAggroLevelString.Neutral1:			neutre
 GameNPC.GetAggroLevelString.Neutral2:			Neutre
 GameNPC.GetAggroLevelString.TowardsYou:			{0} envers vous
-GameNPC.GetExamineMessages.YouExamine:			Vous examinez {0}. Il est {2}.
+GameNPC.GetExamineMessages.YouExamine:			Vous observez {0}. Il est {2}.
 
 
 # GAMEOBJECT
@@ -153,20 +153,20 @@ GamePlayer.GainRealmPoints.GainedRank:		Vous avez gagné un nouveau rang et un no
 GamePlayer.GainRealmPoints.NewRealmTitle:	Votre nouveau titre de royaume est {0}
 GamePlayer.GainRealmPoints.ReachedRank:		{0} a atteint le rang de royaume {1:#L#} dans {2}!
 GamePlayer.GainRealmPoints.YouGet:			Vous gagnez {0} points de royaume !
-GamePlayer.GetExamineMessages.EnemyRealmMember:	Vous examinez {0}. {1} est membre d'un royaume ennemi !
-GamePlayer.GetExamineMessages.NeutralMember:	Vous examinez {0}. {1} ne fait parti d'aucune guilde.
-GamePlayer.GetExamineMessages.OtherGuildMember:	Vous examinez {0}. {1} est membre de la guilde: {2}.
-GamePlayer.GetExamineMessages.RealmMember:		Vous examinez {0}. {1} est un membre de la classe {2} de votre royaume.
-GamePlayer.GetExamineMessages.YouExamine:		Vous examinez {0}.
-GamePlayer.GetExamineMessages.YourGuildMember:	Vous examinez {0}. {1} est un membre de la classe {2} de votre guilde.
+GamePlayer.GetExamineMessages.EnemyRealmMember:	Vous observez {0}. {1} est membre d'un royaume ennemi !
+GamePlayer.GetExamineMessages.NeutralMember:	Vous observez {0}. {1} ne fait parti d'aucune guilde.
+GamePlayer.GetExamineMessages.OtherGuildMember:	Vous observez {0}. {1} est membre de la guilde: {2}.
+GamePlayer.GetExamineMessages.RealmMember:		Vous observez {0}. {1} est un membre de la classe {2} de votre royaume.
+GamePlayer.GetExamineMessages.YouExamine:		Vous observez {0}.
+GamePlayer.GetExamineMessages.YourGuildMember:	Vous observez {0}. {1} est un membre de la classe {2} de votre guilde.
 GamePlayer.IsCloakHoodUp.NowWear:			Vous mettez votre capuche.
 GamePlayer.IsCloakHoodUp.NoLongerWear:		Vous retirez votre capuche.
 GamePlayer.IsOnHorse.DismountSteed:			Vous descendez de votre cheval.
 GamePlayer.IsOnHorse.MountSteed:			Vous montez sur votre cheval.
 GamePlayer.OnItemEquipped.Magic:			La magie de {0} coule dans vos veines.
-GamePlayer.OnItemEquipped.WieldBothHands:	Tu manies {0} de tes mains.
-GamePlayer.OnItemEquipped.WieldLeftHand:	Tu manies {0} de votre main gauche.
-GamePlayer.OnItemEquipped.WieldRightHand:	Tu manies {0} de votre main droite.
+GamePlayer.OnItemEquipped.WieldBothHands:	Vous maniez {0} de vos deux mains.
+GamePlayer.OnItemEquipped.WieldLeftHand:	Vous maniez {0} de votre main gauche.
+GamePlayer.OnItemEquipped.WieldRightHand:	Vous maniez {0} de votre main droite.
 GamePlayer.OnItemUnequipped.BothHandsFree:	Vous rengainez {0}. Vous mains sont desormais libres.
 GamePlayer.OnItemUnequipped.LeftHandFree:	Vous rengainez {0} de votre main gauche.
 GamePlayer.OnItemUnequipped.RightHandFree:	Vous rengainez {0} de votre main droite.
@@ -250,7 +250,7 @@ GamePlayer.SaveIntoDatabase.CharacterSaved:	Votre personnage a été sauvegardé.
 GamePlayer.Say.YouSay:						Vous dites, "{0}"
 GamePlayer.SayReceive.Says:					{0} dit, "{1}"
 GamePlayer.SendReceive.sends:				 envoie, 
-GamePlayer.SetControlledNpc.ReleaseTarget:				Vous relachez le controle de votre cible.
+GamePlayer.SetControlledNpc.ReleaseTarget:	Vous relachez le controle de votre cible.
 GamePlayer.Shade.AlreadyShade:				Vous êtes déjà dissimulé!
 GamePlayer.Shade.NoLongerShade:				Vous ne vous dissimulez plus d'avantage!
 GamePlayer.Sit.InterruptCallMount:			Vous vous asseyez et arrêtez d'appeler votre monture !
@@ -339,23 +339,36 @@ HousingPlaceItemHandler.NoHookpoint:		Il n'y a plus de point d'ancrage !
 HousingPlaceItemHandler.PutMoney:			Vous déposez de l'argent sur le compte de votre maison.
 
 # /PlayerPositionUpdateHandler
-PlayerPositionUpdateHandler.Endurance:			Vous perdez de l'endurance !
-PlayerPositionUpdateHandler.Entered:			Vous êtes entré dans {0}.
-PlayerPositionUpdateHandler.FallingDamage:		Vous encaissez des dégats de chute!
-PlayerPositionUpdateHandler.FallPercent:		Vous prenez{0}% de votre total de points de vie.
-PlayerPositionUpdateHandler.SafeFall:			Les dommages ont été réduits grâce à votre abilité de chute contrôlée!
-PlayerPositionUpdateHandler.UnknownZone:		Zone inconnue, retour à votre bind.
+PlayerPositionUpdateHandler.Endurance:		Vous perdez de l'endurance !
+PlayerPositionUpdateHandler.Entered:		Vous êtes entré dans {0}.
+PlayerPositionUpdateHandler.FallingDamage:	Vous encaissez des dégats de chute!
+PlayerPositionUpdateHandler.FallPercent:	Vous prenez{0}% de votre total de points de vie.
+PlayerPositionUpdateHandler.SafeFall:		Les dommages ont été réduits grâce à votre abilité de chute contrôlée!
+PlayerPositionUpdateHandler.UnknownZone:	Zone inconnue, retour à votre bind.
 
 # /gameobjects/CustomNPC
 # /GameStableMaster
-GameStableMaster.HorseName:						horse
-GameStableMaster.UnknownWay:					Mon cheval ne connait pas la route vers {0}.
+GameStableMaster.HorseName:					horse
+GameStableMaster.UnknownWay:				Mon cheval ne connait pas la route vers {0}.
 
 # /Blacksmith
-Scripts.Blacksmith.CantRepairStacked:			{0} ne peut pas reparer d'objets empilés.
-Scripts.Blacksmith.GiveObject:					[Donnez lui un objet à reparer]
-Scripts.Blacksmith.Say:							Je peux reparer armes et armures pour vous, donnez moi juste l'objet que vous souhaitez reparer et je verrais ce que je peux faire, pour un petit coût bien entendu.
-Scripts.Blacksmith.YouExamine:					Vous examinez {0}. C'est un forgeron {1}.
+Scripts.Blacksmith.CantRepairStacked:		{0} ne peut pas reparer d'objets empilés.
+Scripts.Blacksmith.GiveObject:				[Donnez lui un objet à reparer]
+
+Scripts.Blacksmith.InvalidItem:				Objet invalide.
+Scripts.Blacksmith.ItsDone:					C'est fait. Votre {0} est prêt(e) pour le combat !
+Scripts.Blacksmith.NoNeedRepair:			Cet objet n'a pas besoin d'être réparé.
+Scripts.Blacksmith.NotEnoughMoney:			Vous n'avez pas assez d'argent.
+Scripts.Blacksmith.ObjectCantRepaired:		Cet objet ne peut pas être réparé.
+Scripts.Blacksmith.ObjectRatherOld:			Uhh, Cet objet est déja relativement vieux, je ne serais pas en mesure de le réparer de nouveau, faites-y attention !
+Scripts.Blacksmith.RepairAccept:			Acceptez vous de réparer {0}?
+Scripts.Blacksmith.RepairCost:				Cela vous coutera {0} pour réparer {1}.
+Scripts.Blacksmith.RepairFinished:			Bien, c'est terminé. Votre {0} est comme neuf. Revenez si vous avez à nouveau besoin de mes services !
+Scripts.Blacksmith.Say:						Je peux reparer armes et armures pour vous, donnez moi juste l'objet que vous souhaitez reparer et je verrais ce que je peux faire, pour un petit coût bien entendu.
+Scripts.Blacksmith.StackedObjets:			{0} ne peut pas réparer d'objets empilés.
+Scripts.Blacksmith.YouExamine:				Vous observez {0}. C'est un forgeron {1}.
+Scripts.Blacksmith.YouPay:					Vous payez {0} {1}.
+Scripts.Blacksmith.YouTarget:				Vous ciblez [{0}].
 
 # /packets/Client/168
 # /PlayerInitRequestHandler
@@ -377,9 +390,9 @@ AbstractArea.Left:								(Region) Vous avez quitté {0}!
 # SCRIPTS
 # GameEvents
 # /Playerenterexit
-Scripts.Events.PlayerEnterExit.Entered:			{0} vient d'entrer en jeu!
-Scripts.Events.PlayerEnterExit.Left:			{0} vient de quitter le jeu!
-Scripts.Events.PlayerEnterExit.Staff:			[Staff Member] {0}
+Scripts.Events.PlayerEnterExit.Entered:		{0} vient d'entrer en jeu!
+Scripts.Events.PlayerEnterExit.Left:		{0} vient de quitter le jeu!
+Scripts.Events.PlayerEnterExit.Staff:		[Membre du staff] {0}
 
 # GMCommands
 # /ban
@@ -410,16 +423,16 @@ Scripts.Players.Anonymous.Off:				Vous n'êtes plus anonyme.
 Scripts.Players.Anonymous.On:				Vous êtes maintenant anonyme.
 
 # /Assist
-Scripts.Players.Assist.CantAssistYourself:		Vous ne pouvez pas vous assister vous-même.
-Scripts.Players.Assist.DoesntHaveTarget:		 n'a pas de cible actuellement.
+Scripts.Players.Assist.CantAssistYourself:	Vous ne pouvez pas vous assister vous-même.
+Scripts.Players.Assist.DoesntHaveTarget:	 n'a pas de cible actuellement.
 Scripts.Players.Assist.DontSee:				Vous ne voyez pas {0} aux alentours!
 Scripts.Players.Assist.NoTarget:			Vous n'avez pas de cible.
 Scripts.Players.Assist.NotValid:			La cible n'est pas valide.
 Scripts.Players.Assist.YouAssist:			Vous assistez {0}.
 
 # /Autoloot
-Scripts.Players.Autoloot.Off:				Your autoloot is off. You will no longer attempt to automatically loot anything that drops in your area.
-Scripts.Players.Autoloot.On:				Your autoloot is on. You will now attempt to automatically loot anything that drops in your area.
+Scripts.Players.Autoloot.Off:				Votre autoloot est desactivé. Vous ne ramasserez plus automatiquement les drops alentours.
+Scripts.Players.Autoloot.On:				Votre autoloot est activé. Vous ramasserez désormais automatiquement les drops alentours.
 
 # /Autosplit
 Scripts.Players.Autosplit.Coins:			The leader switched 
@@ -433,12 +446,12 @@ Scripts.Players.Autosplit.Self:				{0} switched
 # /Boot
 Scripts.Players.Boot.InHouseError:			Vous devez être dans votre maison pour utiliser cette commande!
 Scripts.Players.Boot.NoHouseError:			Vous ne possédez pas de maison!
-Scripts.Players.Boot.NoOneOnline:			Aucun joueur de ce nom n'est en ligne!
+Scripts.Players.Boot.NoOneOnline:			Aucun joueur portant ce nom n'est en ligne!
 Scripts.Players.Boot.YouRemoved:			Vous avez été éjecté de la maison par {0}!
 
 # /Bountyrent
-Scripts.Players.Bountyrent.InHouseError:		Vous devez être dans votre maison pour utiliser cette commande!
-Scripts.Players.Bountyrent.NoHouseError:		Vous ne possédez pas de maison!
+Scripts.Players.Bountyrent.InHouseError:	Vous devez être dans votre maison pour utiliser cette commande!
+Scripts.Players.Bountyrent.NoHouseError:	Vous ne possédez pas de maison!
 
 # /Broadcast
 Scripts.Players.Broadcast.Message:			[Region] {0} : {1}
