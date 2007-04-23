@@ -373,21 +373,20 @@ AbstractArea.Left:					(Region) Ihr seid nun nicht mehr {0}!
 # SCRIPTS
 # CustomNPC
 # /Blacksmith
+Scripts.Blacksmith.AbortRepair:				Ihr weigert Euch {0} reparieren zu lassen.
 Scripts.Blacksmith.CantRepairThat:			So was kann ich nicht reparieren.
 Scripts.Blacksmith.GiveObject:				(Gebt {0} einen Gegenstand zum Reparieren.)
 Scripts.Blacksmith.InvalidItem:				Falscher Gegenstand.
-Scripts.Blacksmith.ItsDone:				So es ist getan. Euer {0} ist zum Kampf bereit!
+Scripts.Blacksmith.ItsDone:				Hier, bitte, {0} ist bereit zum Einsatz.
 Scripts.Blacksmith.NoNeedRepair:			Dieser Gegenstand befindet sich bereits in einem tadellosen Zustand.
 Scripts.Blacksmith.NotEnoughMoney:			Ihr habe nicht genug Geld für die Reparatur.
 Scripts.Blacksmith.ObjectCantRepaired:			Dieser Gegenstand kann nicht repariert werden.
 Scripts.Blacksmith.ObjectRatherOld:			Uhh, {0} ist schon ziemlich alt. Ich werde nicht mehr in der Lage sein, eine erneute Reparatur durchzuführen. Gebt also gut darauf acht!
-Scripts.Blacksmith.RepairAccept:			Wollt Ihr {0} reparieren lassen?
-Scripts.Blacksmith.RepairCost:				Es wir Euch {0} kosten, um {1} reparieren zu lassen.
-Scripts.Blacksmith.RepairFinished:			So es ist getan. Euer {0} ist praktisch wie neu. Kommt zurück, wenn Ihr mich wieder braucht!
+Scripts.Blacksmith.RepairCostAccept:			Es wird Euch {0} kosten, {1} reparieren zu lassen. Seid Ihr damit einverstanden?
 Scripts.Blacksmith.Say:					Ich kann Eure Waffen und Rüstungen reparieren. Gebt mir einfach die Gegenstände, die ich reparieren soll, und ich will sehen, was ich tun kann. Keine Sorge, ich verlange nicht viel für meine Dienste.
 Scripts.Blacksmith.StackedObjets:			{0} kann immer nur einen Gegenstand reparieren.
 Scripts.Blacksmith.YouExamine:				Es interessiert Euch {0}. {1} steht Euch {2} und arbeitet als Schmied.
-Scripts.Blacksmith.YouPay:				Ihr bezahlt {0} {1}.
+Scripts.Blacksmith.YouPay:				{0} erhält von Euch {1}.
 Scripts.Blacksmith.YouTarget:				Es wird {0} als Ziel erfasst.
 
 # GameEvents

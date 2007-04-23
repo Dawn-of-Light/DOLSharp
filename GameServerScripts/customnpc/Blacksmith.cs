@@ -69,8 +69,16 @@ namespace DOL.GS.Scripts
 		public override bool ReceiveItem(GameLiving source, InventoryItem item)
 		{
 			GamePlayer player = source as GamePlayer;
-			if (player == null || item == null)
+//			if (player == null || item == null)
+//				return false;
+
+			if (player == null)
 				return false;
+			if (item == null)
+			{
+				player.Out.SendMessage("Nur etwas aus dem Inventory!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return false;
+			}
 
 			if (item.Count != 1)
 			{
@@ -97,8 +105,7 @@ namespace DOL.GS.Scripts
 				{
 					player.TempProperties.setProperty(REPAIR_ITEM_WEAK, new WeakRef(item));
 					long NeededMoney = ((item.MaxCondition - item.Condition) * item.Value) / item.MaxCondition;
-					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Scripts.Blacksmith.RepairCost", Money.GetString(NeededMoney), item.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					player.Client.Out.SendCustomDialog(LanguageMgr.GetTranslation(player.Client, "Scripts.Blacksmith.RepairAccept", item.Name), new CustomDialogResponse(BlacksmithDialogResponse));
+					player.Client.Out.SendCustomDialog(LanguageMgr.GetTranslation(player.Client, "Scripts.Blacksmith.RepairCostAccept", Money.GetString(NeededMoney), item.Name), new CustomDialogResponse(BlacksmithDialogResponse));
 				}
 			}
 			else
@@ -117,11 +124,14 @@ namespace DOL.GS.Scripts
 					new WeakRef(null)
 					);
 			player.TempProperties.removeProperty(REPAIR_ITEM_WEAK);
+			InventoryItem item = (InventoryItem)itemWeak.Target;
 
 			if (response != 0x01)
+			{
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Scripts.Blacksmith.AbortRepair", item.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
+			}
 
-			InventoryItem item = (InventoryItem)itemWeak.Target;
 
 			if (item == null || item.SlotPosition == (int)eInventorySlot.Ground
 				|| item.OwnerID == null || item.OwnerID != player.InternalID)
@@ -151,7 +161,7 @@ namespace DOL.GS.Scripts
 			{
 				item.Condition = item.MaxCondition;
 				item.Durability -= (ToRecoverCond + 1);
-				SayTo(player, LanguageMgr.GetTranslation(player.Client, "Scripts.Blacksmith.RepairFinished", item.Name));
+//				SayTo(player, LanguageMgr.GetTranslation(player.Client, "Scripts.Blacksmith.RepairFinished", item.Name));
 			}
 			/*
 			// Add some random Quality +1/-1 stuff to make smithing more interesting
@@ -170,7 +180,7 @@ namespace DOL.GS.Scripts
 			}*/
 
 			player.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
-			SayTo(player, LanguageMgr.GetTranslation(player.Client, "Scripts.Blacksmith.ItsDone", item.Name));
+			player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Scripts.Blacksmith.ItsDone", item.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			return;
 		}
 		#endregion Receive item
