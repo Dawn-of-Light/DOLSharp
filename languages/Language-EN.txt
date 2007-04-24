@@ -54,7 +54,7 @@ GameNPC.GetAggroLevelString.Hostile2:			Hostile
 GameNPC.GetAggroLevelString.Neutral1:			neutral
 GameNPC.GetAggroLevelString.Neutral2:			Neutral
 GameNPC.GetAggroLevelString.TowardsYou:			{0} towards you
-GameNPC.GetExamineMessages.YouExamine:			You examine {0}. {1} is {2}.
+GameNPC.GetExamineMessages.YouExamine:			You examine {0}.{1} is {2}.
 
 
 # GAMEOBJECT
@@ -246,8 +246,11 @@ GamePlayer.Release.YouRelease:				You release your corpse unto death.
 GamePlayer.RemoveAbility.YouLose:			You lose the {0} ability!		
 GamePlayer.RemoveSpecialization.YouLose:		You lose the {0} skill!			
 GamePlayer.RemoveSpellLine.YouLose:			You lose the {0} spell line!		
-GamePlayer.SaveIntoDatabase.CharacterSaved:		Your character has been saved.			
-GamePlayer.SendReceive.sends:				 sends, 	
+GamePlayer.SaveIntoDatabase.CharacterSaved:		Your character has been saved.
+GamePlayer.Say.YouSay:					You say, "{0}"
+GamePlayer.SayReceive.Says:				{0} says, "{1}"
+GamePlayer.SayReceive.FalseLanguage:			{0} says something in a language you don't understand.
+GamePlayer.SendReceive.sends:				 sends, 
 GamePlayer.SetControlledNpc.ReleaseTarget:		You release control of your controlled target.			
 GamePlayer.Shade.AlreadyShade:				You are already a shade!	
 GamePlayer.Shade.NoLongerShade:				You are no longer a shade!	
@@ -359,12 +362,33 @@ PlayerInitRequestHandler.LevelCap:			You have exceeded the level cap of this bat
 PlayerInitRequestHandler.OfficerMessage:		Officer Message: {0}
 PlayerInitRequestHandler.SaferLocation:			This area isn't currently secure and you are being transported to a safer location.
 
+# /PlayerMoveItemRequestHandler
+PlayerMoveItemRequestHandler.TooFarAway:		You are too far away to give anything to {0}.
+
 # /world
 # AbstractArea
 AbstractArea.Entered:					(Region) You have entered {0}!
 AbstractArea.Left:					(Region) You have left {0}!
 
 # SCRIPTS
+# CustomNPC
+# /Blacksmith
+Scripts.Blacksmith.AbortRepair:				You refuse letting you repair the {0}.
+Scripts.Blacksmith.CantRepairThat:			I can't repair that.
+Scripts.Blacksmith.GiveObject:				[Give {0} an object to be repaired]
+Scripts.Blacksmith.InvalidItem:				Invalid item.
+Scripts.Blacksmith.ItsDone:				It's done. Your {0} is ready for combat!
+Scripts.Blacksmith.NoNeedRepair:			This object doesn't need to be repaired.
+Scripts.Blacksmith.NotEnoughMoney:			You don't have enough money.
+Scripts.Blacksmith.ObjectCantRepaired:			This object can't be repaired.
+Scripts.Blacksmith.ObjectRatherOld:			Uhh, that {0} was already rather old, I won't be able to repair it once again, so be careful!
+Scripts.Blacksmith.RepairCostAccept:			It will cost {0} to repair the {1}. Do you accept this?
+Scripts.Blacksmith.Say:					I can repair weapons or armor for you, Just hand me the item you want repaired and I'll see what I can do, for a small fee of course.
+Scripts.Blacksmith.StackedObjets:			{0} can't repair stacked objets.
+Scripts.Blacksmith.YouExamine:				You examine {0}. {1} is {2} and is a smith.
+Scripts.Blacksmith.YouPay:				You pay {0} {1}.
+Scripts.Blacksmith.YouTarget:				You target [{0}].
+
 # GameEvents
 # /Playerenterexit
 Scripts.Events.PlayerEnterExit.Entered:			{0} just entered the game!

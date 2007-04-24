@@ -21,6 +21,7 @@ using System;
 using System.Collections;
 using DOL.Database;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Scripts
 {
@@ -38,14 +39,10 @@ namespace DOL.GS.Scripts
 		/// <returns>list with string messages</returns>
 		public override IList GetExamineMessages(GamePlayer player)
 		{
-			/*
-			 * You examine Elvar Ironhand. He is friendly and is a smith.
-			 * [Give him an object to be repaired]
-			 */
 			IList list = new ArrayList();
-			list.Add("You target [" + GetName(0, false) + "]");
-			list.Add("You examine " + GetName(0, false) + "  " + GetPronoun(0, true) + " is " + GetAggroLevelString(player, false) + " and is a smith.");
-			list.Add("[Give him an object to be repaired]");
+			list.Add(LanguageMgr.GetTranslation(player.Client, "Scripts.Blacksmith.YouTarget", GetName(0, false)));
+			list.Add(LanguageMgr.GetTranslation(player.Client, "Scripts.Blacksmith.YouExamine", GetName(0, false), GetPronoun(0, true), GetAggroLevelString(player, false)));
+            list.Add(LanguageMgr.GetTranslation(player.Client, "Scripts.Blacksmith.GiveObject", GetPronoun(0, true))); 
 			return list;
 		}
 
@@ -60,7 +57,8 @@ namespace DOL.GS.Scripts
 				return false;
 
 			TurnTo(player, 1000);
-			SayTo(player, eChatLoc.CL_ChatWindow, "I can repair weapons or armor for you, Just hand me the item you want repaired and I'll see what I can do, for a small fee of course.");
+
+			SayTo(player, eChatLoc.CL_PopupWindow, LanguageMgr.GetTranslation(player.Client, "Scripts.Blacksmith.Say"));
 			return true;
 		}
 
@@ -76,7 +74,7 @@ namespace DOL.GS.Scripts
 
 			if (item.Count != 1)
 			{
-				player.Out.SendMessage(GetName(0, false) + " can't repair stacked objets.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Scripts.Blacksmith.StackedObjets", GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
 			switch (item.Object_Type)
@@ -85,29 +83,29 @@ namespace DOL.GS.Scripts
 				case (int)eObjectType.Magical:
 				case (int)eObjectType.Instrument:
 				case (int)eObjectType.Poison:
-					SayTo(player, "I can't repair that.");
+					SayTo(player, LanguageMgr.GetTranslation(player.Client, "Scripts.Blacksmith.CantRepairThat"));
 					return false;
 			}
 			if (item.Condition < item.MaxCondition)
 			{
 				if (item.Durability <= 0)
 				{
-					player.Out.SendMessage("This object can't be repaired.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Scripts.Blacksmith.ObjectCantRepaired"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return false;
 				}
 				else
 				{
 					player.TempProperties.setProperty(REPAIR_ITEM_WEAK, new WeakRef(item));
 					long NeededMoney = ((item.MaxCondition - item.Condition) * item.Value) / item.MaxCondition;
-					player.Out.SendMessage("It will cost " + Money.GetString(NeededMoney) + " to repair the " + item.Name, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					player.Client.Out.SendCustomDialog("Do you accept to repair the " + item.Name, new CustomDialogResponse(BlacksmithDialogResponse));
+					player.Client.Out.SendCustomDialog(LanguageMgr.GetTranslation(player.Client, "Scripts.Blacksmith.RepairCostAccept", Money.GetString(NeededMoney), item.Name), new CustomDialogResponse(BlacksmithDialogResponse));
 				}
 			}
 			else
 			{
-				player.Out.SendMessage("This object doesn't need to be repaired.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Scripts.Blacksmith.NoNeedRepair"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 			return false;
+
 		}
 
 		protected void BlacksmithDialogResponse(GamePlayer player, byte response)
@@ -118,16 +116,19 @@ namespace DOL.GS.Scripts
 					new WeakRef(null)
 					);
 			player.TempProperties.removeProperty(REPAIR_ITEM_WEAK);
+			InventoryItem item = (InventoryItem)itemWeak.Target;
 
 			if (response != 0x01)
+			{
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Scripts.Blacksmith.AbortRepair", item.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
+			}
 
-			InventoryItem item = (InventoryItem)itemWeak.Target;
 
 			if (item == null || item.SlotPosition == (int)eInventorySlot.Ground
 				|| item.OwnerID == null || item.OwnerID != player.InternalID)
 			{
-				player.Out.SendMessage("Invalid item.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Scripts.Blacksmith.InvalidItem"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
@@ -136,23 +137,23 @@ namespace DOL.GS.Scripts
 
 			if (!player.RemoveMoney(cost))
 			{
-				player.Out.SendMessage("You don't have enough money.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Scripts.Blacksmith.NotEnoughMoney"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
-			player.Out.SendMessage("You pay " + GetName(0, false) + " " + Money.GetString((long)cost) + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Scripts.Blacksmith.YouPay", GetName(0, false), Money.GetString((long)cost)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 			if (ToRecoverCond + 1 >= item.Durability)
 			{
 				item.Condition = item.Condition + item.Durability;
 				item.Durability = 0;
-				SayTo(player, "Uhh, that " + item.Name + " was already rather old, I won't be able to repair it once again, so be careful!");
+				SayTo(player, LanguageMgr.GetTranslation(player.Client, "Scripts.Blacksmith.ObjectRatherOld", item.Name));
 			}
 			else
 			{
 				item.Condition = item.MaxCondition;
 				item.Durability -= (ToRecoverCond + 1);
-				SayTo(player, "Well, it's finished. Your " + item.Name + " is practically new. Come back if you need my service once again!");
+//				SayTo(player, LanguageMgr.GetTranslation(player.Client, "Scripts.Blacksmith.RepairFinished", item.Name));
 			}
 			/*
 			// Add some random Quality +1/-1 stuff to make smithing more interesting
@@ -171,10 +172,9 @@ namespace DOL.GS.Scripts
 			}*/
 
 			player.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
-			SayTo(player, "It's done. Your " + item.Name + " is ready for combat!");
+			player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Scripts.Blacksmith.ItsDone", item.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			return;
 		}
-
 		#endregion Receive item
 	}
 }

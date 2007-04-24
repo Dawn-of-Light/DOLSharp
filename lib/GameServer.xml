@@ -3036,6 +3036,30 @@
             </summary>
             <param name="add"></param>
         </member>
+        <member name="F:DOL.GS.GameNPC.m_IsMovingOnPath">
+            <summary>
+            Stores if npc moving on path
+            </summary>
+        </member>
+        <member name="M:DOL.GS.GameNPC.MoveOnPath(System.Int32)">
+            <summary>
+            let the npc travel on its path
+            </summary>
+            <param name="speed">Speed on path</param>
+        </member>
+        <member name="M:DOL.GS.GameNPC.StopMoveOnPath">
+            <summary>
+            Stop move on path
+            </summary>
+        </member>
+        <member name="M:DOL.GS.GameNPC.OnCloseToWaypoint(DOL.Events.DOLEvent,System.Object,System.EventArgs)">
+            <summary>
+            decides what to do on reached waypoint in path
+            </summary>
+            <param name="e"></param>
+            <param name="n"></param>
+            <param name="args"></param>
+        </member>
         <member name="M:DOL.GS.GameNPC.LoadEquipmentTemplateFromDatabase(System.String)">
             <summary>
             Loads the equipment template of this npc
@@ -3556,11 +3580,6 @@
             Gets or sets the current speed of the npc
             </summary>
         </member>
-        <member name="P:DOL.GS.GameNPC.CurrentWayPoint">
-            <summary>
-            Gets sets the currentwaypoint that npc has to wander to
-            </summary>
-        </member>
         <member name="P:DOL.GS.GameNPC.PathingNormalSpeed">
             <summary>
             Gets sets the speed for traveling on path
@@ -3620,6 +3639,16 @@
         <member name="P:DOL.GS.GameNPC.CurrentFollowTarget">
             <summary>
             Gets the NPC current follow target
+            </summary>
+        </member>
+        <member name="P:DOL.GS.GameNPC.CurrentWayPoint">
+            <summary>
+            Gets sets the currentwaypoint that npc has to wander to
+            </summary>
+        </member>
+        <member name="P:DOL.GS.GameNPC.IsMovingOnPath">
+            <summary>
+            Gets if npc moving on path
             </summary>
         </member>
         <member name="P:DOL.GS.GameNPC.NPCTemplate">
@@ -3851,6 +3880,22 @@
             <summary>
             This function is called when the npc is close to its target
             It will fire the CloseToTarget event
+            </summary>
+        </member>
+        <member name="T:DOL.GS.GameNPC.WaypointDelayAction">
+            <summary>
+            Delays movement to the next waypoint
+            </summary>
+        </member>
+        <member name="M:DOL.GS.GameNPC.WaypointDelayAction.#ctor(DOL.GS.GameObject)">
+            <summary>
+            Constructs a new WaypointDelayAction
+            </summary>
+            <param name="actionSource"></param>
+        </member>
+        <member name="M:DOL.GS.GameNPC.WaypointDelayAction.OnTick">
+            <summary>
+            Called on every timer tick
             </summary>
         </member>
         <member name="M:DOL.GS.GameTrainer.#ctor">
@@ -8965,16 +9010,6 @@
             Defines a logger for this class.
             </summary>
         </member>
-        <member name="F:DOL.GS.Movement.MovementMgr.m_instance">
-            <summary>
-            Holds the MovementMgr instance
-            </summary>
-        </member>
-        <member name="M:DOL.GS.Movement.MovementMgr.#ctor">
-            <summary>
-            Constructs a new MovementMgr instance
-            </summary>
-        </member>
         <member name="M:DOL.GS.Movement.MovementMgr.LoadPath(System.String)">
             <summary>
             loads a path from database
@@ -8995,47 +9030,6 @@
             </summary>
             <param name="path">One of the pathpoints</param>
             <returns>The first pathpoint in the chain or null</returns>
-        </member>
-        <member name="M:DOL.GS.Movement.MovementMgr.MoveOnPath(DOL.GS.GameNPC,System.Int32)">
-            <summary>
-            let the npc travel on its path
-            </summary>
-            <param name="npc"></param>
-            <param name="speed"></param>
-        </member>
-        <member name="F:DOL.GS.Movement.MovementMgr.m_closeToWaypointEvent">
-            <summary>
-            The OnCloseToWaypoint delegate
-            </summary>
-        </member>
-        <member name="M:DOL.GS.Movement.MovementMgr.OnCloseToWaypoint(DOL.Events.DOLEvent,System.Object,System.EventArgs)">
-            <summary>
-            decides what to do on reached waypoint in path
-            </summary>
-            <param name="e"></param>
-            <param name="n"></param>
-            <param name="args"></param>
-        </member>
-        <member name="P:DOL.GS.Movement.MovementMgr.Instance">
-            <summary>
-            The MovementMgr instance
-            </summary>
-        </member>
-        <member name="T:DOL.GS.Movement.MovementMgr.WaypointDelayAction">
-            <summary>
-            Delays movement to the next waypoint
-            </summary>
-        </member>
-        <member name="M:DOL.GS.Movement.MovementMgr.WaypointDelayAction.#ctor(DOL.GS.GameObject)">
-            <summary>
-            Constructs a new WaypointDelayAction
-            </summary>
-            <param name="actionSource"></param>
-        </member>
-        <member name="M:DOL.GS.Movement.MovementMgr.WaypointDelayAction.OnTick">
-            <summary>
-            Called on every timer tick
-            </summary>
         </member>
         <member name="T:DOL.GS.GameLivingInventory">
             <summary>
@@ -12549,6 +12543,14 @@
             <param name="questType">type of Quest this QuestPart will belong to.</param>
             <param name="npc">NPC associated with his questpart typically NPC talking to or mob killing, etc...</param>        
         </member>
+        <member name="M:DOL.GS.Quests.BaseQuestPart.#ctor(System.Type,DOL.GS.GameNPC,System.Int32)">
+            <summary>
+            Creates a QuestPart for the given questtype with the default npc.
+            </summary>
+            <param name="questType">type of Quest this QuestPart will belong to.</param>
+            <param name="npc">NPC associated with his questpart typically NPC talking to or mob killing, etc...</param>        
+            <param name="executions">Maximum number of executions the questpart should be execute during one quest for each player</param>
+        </member>
         <member name="M:DOL.GS.Quests.BaseQuestPart.AddTrigger(DOL.GS.Quests.eTriggerType)">
             <summary>
             Adds a trigger to the questpart for details about parameters look at documentation of used triggertype
@@ -12669,12 +12671,13 @@
             <param name="sender"></param>
             <param name="args"></param>
         </member>
-        <member name="M:DOL.GS.Quests.BaseQuestPart.Notify(DOL.Events.DOLEvent,System.Object,System.EventArgs,DOL.GS.GamePlayer)">
+        <member name="M:DOL.GS.Quests.BaseQuestPart.Notify(DOL.GS.Quests.AbstractQuest,DOL.Events.DOLEvent,System.Object,System.EventArgs,DOL.GS.GamePlayer)">
             <summary>
             This method is called by the BaseQuest whenever a event associated with the Quest accurs
             or a automatically added eventhandler for the trigers fires
             </summary>
             <param name="e">DolEvent of notify call</param>
+            <param name="quest">the quest this questpart belongs to</param>
             <param name="sender">Sender of notify call</param>
             <param name="args">EventArgs of notify call</param>
             <param name="player">GamePlayer this call is related to, can be null</param>
@@ -34310,6 +34313,11 @@
             <param name="ab">The used ability</param>
             <param name="player">The player that used the ability</param>
         </member>
+        <member name="T:DOL.GS.SkillHandler.VampiirBoltAbilityHandler">
+            <summary>
+            Handler for Vampiir Bolt clicks
+            </summary>
+        </member>
         <member name="T:DOL.GS.Effects.TrueshotEffect">
             <summary>
             Trueshot grants 50% more range for next archery attack
@@ -36673,11 +36681,6 @@
             if no target go to saved pathpoint to continue the round
             </summary>
             <returns>the best target</returns>
-        </member>
-        <member name="T:DOL.GS.SkillHandler.VampiirBoltAbilityHandler">
-            <summary>
-            Handler for Vampiir Bolt clicks
-            </summary>
         </member>
     </members>
 </doc>
