@@ -1764,6 +1764,11 @@
             returns if this living is alive
             </summary>
         </member>
+        <member name="P:DOL.GS.GameLiving.IsSilenced">
+            <summary>
+            Is the living silenced
+            </summary>
+        </member>
         <member name="P:DOL.GS.GameLiving.InCombat">
             <summary>
             Check this flag to see wether this living is involved in combat
