@@ -8884,7 +8884,7 @@ namespace DOL.GS
 
 			if ((floorObject is GameBoat == false) && !checkRange && !WorldMgr.CheckDistance(floorObject, this, WorldMgr.PICKUP_DISTANCE))
 			{
-				Out.SendMessage("The " + floorObject.Name + " is too far away to pick up!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.ObjectTooFarAway", floorObject.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
 
@@ -8920,7 +8920,7 @@ namespace DOL.GS
 						}
 						if (eligibleMembers.Count <= 0)
 						{
-							Out.SendMessage("No one in group wants the " + floorItem.Name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.NoOneWantsThis", floorObject.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return false;
 						}
 
@@ -8937,9 +8937,8 @@ namespace DOL.GS
 								eligibleMember.Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.BackpackFull"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return false;
 							}
-							Message.SystemToOthers(this, Name + " picks up " + floorItem.Item.GetName(1, false), eChatType.CT_System);
-							group.SendMessageToGroupMembers("(Autosplit) " + floorItem.Item.GetName(1, true) + " goes to " + eligibleMember.Name, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							//							Out.SendMessage("You get " + floorItem.Item.GetName(1, false) + " and put it in your backpack.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							Message.SystemToOthers(this, LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.GroupMemberPicksUp", Name, floorItem.Item.GetName(1, false)), eChatType.CT_System);
+							group.SendMessageToGroupMembers(LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.Autosplit", floorItem.Item.GetName(1, true), eligibleMember.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						}
 					}
 					else
@@ -8956,8 +8955,8 @@ namespace DOL.GS
 							return false;
 						}
 
-						Out.SendMessage("You get " + floorItem.Item.GetName(1, false) + " and put it in your backpack.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						Message.SystemToOthers(this, Name + " picks up " + floorItem.Item.GetName(1, false), eChatType.CT_System);
+						Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.YouGet", floorItem.Item.GetName(1, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						Message.SystemToOthers(this, LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.GroupMemberPicksUp", Name, floorItem.Item.GetName(1, false)), eChatType.CT_System);
 					}
 					floorItem.RemoveFromWorld();
 				}
@@ -8996,13 +8995,13 @@ namespace DOL.GS
 
 						foreach (GamePlayer eligibleMember in eligibleMembers)
 						{
-							eligibleMember.AddMoney(moneyObject.TotalCopper / eligibleMembers.Count, "Your share of the loot is {0}.");
+							eligibleMember.AddMoney(moneyObject.TotalCopper / eligibleMembers.Count, LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.YourLootShare"));
 						}
 					}
 					else
 					{
 						//Add money only to picking player
-						AddMoney(moneyObject.TotalCopper, "You pick up {0}.");
+						AddMoney(moneyObject.TotalCopper, LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.YouPickUp"));
 					}
 					moneyObject.Delete();
 					return true;
@@ -9012,7 +9011,7 @@ namespace DOL.GS
 			{
 				if (!WorldMgr.CheckDistance(this, floorObject, 1000))
 				{
-					Out.SendMessage("You are too far from the boat to board!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.TooFarFromBoat"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return false;
 				}
 
