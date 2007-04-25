@@ -85,8 +85,8 @@ GamePlayer.Attack.HitsYou:				{0} trifft Euch mit {1}{2} Schaden!
 GamePlayer.Attack.HitsYouCritical:			{0} trifft Euch kritisch mit {1} zusätzlichen Schaden!		
 GamePlayer.Attack.HitsYour:				{0} trifft {1} mit {2}{3} Schaden!	
 GamePlayer.Attack.Intercepted:				{0} stellt sich vor {1} und fängt den Schlag ab!	
-GamePlayer.Attack.InterceptedHit:			Ihr {0} {1}{2} an aber trefft {3} für {4}{5} Schaden!		
-GamePlayer.Attack.InterceptHit:				Ihr {0} {1}{2} an und trefft für {3}{4} Schaden!	
+GamePlayer.Attack.InterceptedHit:			{0} {1}{2} an aber trefft {3} für {4}{5} Schaden!		
+GamePlayer.Attack.InterceptHit:				{0} {1}{2} an und trefft für {3}{4} Schaden!	
 GamePlayer.Attack.Interrupted:				{0} greift Euch an und Euer {1} wurde unterbrochen!	
 GamePlayer.Attack.Location.Arm:				Euren Arm	
 GamePlayer.Attack.Location.Foot:			Euren Fuß		
@@ -110,7 +110,7 @@ GamePlayer.Attack.TooTired:				Es ist Euch zu anstrengend, das Ziel noch länger 
 GamePlayer.Attack.Type.Shot:				Schuss	
 GamePlayer.Attack.Type.Throw:				Wurf	
 GamePlayer.Attack.WithYour:				mit Eure(r/m)	
-GamePlayer.Attack.YouAttack:				Ihr attackiert	
+GamePlayer.Attack.YouAttack:				Ihr greift	
 GamePlayer.Attack.YouShot:				Ihr schießt	
 GamePlayer.Bind.Bound:					Eure Seele ist nun an diesen Ort gebunden.
 GamePlayer.Bind.CantBindDead:				Ihr könnt Euch nicht binden, wenn Ihr tot seid!	
@@ -187,11 +187,19 @@ GamePlayer.OnSkillTrained.YouHave:			Ihr habt {0} Punkte übrig.
 GamePlayer.OnSkillTrained.YouSpend:			Ihr verteilt {0} Punkte und spezialisiert Euch weiter im Bereich "{1}".		
 GamePlayer.OpenSelfCraft.AlreadySelfCrafting:		Ihr seid gerade beim Arbeiten.			
 GamePlayer.OpenSelfCraft.CanOnlyCraftBackpack:		Ihr könnt nur Gegenstände in Eurem Inventar bearbeiten!			
+GamePlayer.PickupObject.Autosplit:			(Automatisch) {0} bekommt {1}.
 GamePlayer.PickupObject.BackpackFull:			Euer Rucksack ist voll. Ihr solltet erst etwas weglegen.		
 GamePlayer.PickupObject.CantGetThat:			Ihr könnt das nicht bekommen!		
+GamePlayer.PickupObject.GroupMemberPicksUp:		{0} hebt {1} auf.
 GamePlayer.PickupObject.LootDoesntBelongYou:		Die Beute gehört Euch nicht - Also Finger weg!			
 GamePlayer.PickupObject.MustHaveTarget:			Ihr müsst erst etwas auswählen, um es nehmen zu können!		
 GamePlayer.PickupObject.NoOneGroupWantsMoney:		Niemand in der Gruppe will das Geld haben.			
+GamePlayer.PickupObject.NoOneWantsThis:			Keiner in der Gruppe will den Gegenstand [{0}].
+GamePlayer.PickupObject.ObjectTooFarAway:		[{0}] zu weit weg, um es aufzuheben!
+GamePlayer.PickupObject.TooFarFromBoat:			Ihr seit zu weit weg vom Boot um einzusteigen!
+GamePlayer.PickupObject.YouGet:				Ihr steckt {0} in Euren Rucksack.
+GamePlayer.PickupObject.YouPickUp:			Ihr hebt {0} auf.
+GamePlayer.PickupObject.YourLootShare:			Euer Anteil an der Beute ist [{0}].
 GamePlayer.Pray.AlreadyPraying:				Ihr betet bereits!	
 GamePlayer.Pray.Begin:					Ihr beginnt zu beten!
 GamePlayer.Pray.CantPrayNow:				Ihr könnt jetzt nicht beten!	
@@ -568,6 +576,7 @@ Hib.ImportantDelivery.Description.Step5:		Schritt 5: Hört zu, was Aethic Euch zu
 Hib.ImportantDelivery.Description.Step6:		Schritt 6: Nehmt das Ticket von Aethic und gebt es Stallmeister Truichon. Macht das genauso wieder, wie vorhin mit den Vorräten für Aethic. Ihr findet den Stall von Truichon, wenn Ihr nach Norden geht. Ihr habt dort vorhin Euer Pferd abgegeben.
 Hib.ImportantDelivery.Description.Step7:		Schritt 7: Gebt Stallmeister Freagus die Kiste mit Gemüse.
 Hib.ImportantDelivery.Description.Step8:		Schritt 8: Hört Stallmeister Freagus eine Weile zu. Falls er aufhört, mit Euch zu reden, fragt ihn nach Eurer [Belohnung] für die harte Arbeit und Eure Dienste für Hibernia.
+Hib.ImportantDelivery.FinishQuest.RecieveReward:	Ihr erhaltet {0} als Belohnung.
 Hib.ImportantDelivery.Notify.RentingHorse:		Guten Tag, {0}. Falls Ihr daran interessiert seid ein Reitpferd zu mieten, dann kauft ein Ticket und gebt es mir. Ich wünsche Euch einen sicheren Weg!
 Hib.ImportantDelivery.Notify.Supplies:			Ah! Die Vorräte, auf die ich schon warte. Ich danke Euch {0}. Diese werden uns auf alle Fälle in den kommenden Wochen weiter helfen. Ich habe einen weiteren [Auftrag]. Seit Ihr daran interessiert?
 Hib.ImportantDelivery.Notify.Vegetables:		Ah! Das muss von Aethic aus Tir na mBeo sein. Ich habe schon eine ganze Weile auf gutes Gemüse gewartet. Meine Familie, mein Pferd und ich werden eine ganze Zeit damit auskommen. Meinen Dank an Euch. Hier nehmt diese [Belohnung] für Eure harte Arbeit.
