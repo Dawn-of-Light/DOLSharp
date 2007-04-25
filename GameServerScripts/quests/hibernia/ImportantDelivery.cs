@@ -876,7 +876,7 @@ namespace DOL.GS.Quests.Hibernia
 			GiveItem(freagus, m_questPlayer, recruitsCloak);
 
 			m_questPlayer.GainExperience(12);
-			m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 1, Util.Random(50)), "You recieve {0} as a reward.");
+			m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 1, Util.Random(50)), LanguageMgr.GetTranslation(m_questPlayer.Client, "Hib.ImportantDelivery.FinishQuest.RecieveReward"));
 		}
 	}
 }
