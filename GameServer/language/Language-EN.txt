@@ -188,11 +188,19 @@ GamePlayer.OnSkillTrained.YouHave:			You have {0} specialization points left thi
 GamePlayer.OnSkillTrained.YouSpend:			You spend {0} points and specialize further in {1}		
 GamePlayer.OpenSelfCraft.AlreadySelfCrafting:		You are already selfcrafting.			
 GamePlayer.OpenSelfCraft.CanOnlyCraftBackpack:		You can only self-craft items in your backpack!			
-GamePlayer.PickupObject.BackpackFull:			Your backpack is full. You must drop something first.		
-GamePlayer.PickupObject.CantGetThat:			You can't get that!		
-GamePlayer.PickupObject.LootDoesntBelongYou:		That loot doesn't belong to you - you can't pick it up.			
-GamePlayer.PickupObject.MustHaveTarget:			You must have a target to get something!		
-GamePlayer.PickupObject.NoOneGroupWantsMoney:		No one in group wants the money.			
+GamePlayer.PickupObject.Autosplit:			(Autosplit) {0} goes to {1}.
+GamePlayer.PickupObject.BackpackFull:			Your backpack is full. You must drop something first.
+GamePlayer.PickupObject.CantGetThat:			You can't get that!
+GamePlayer.PickupObject.GroupMemberPicksUp:		{0} picks up {1}.
+GamePlayer.PickupObject.LootDoesntBelongYou:		That loot doesn't belong to you - you can't pick it up.
+GamePlayer.PickupObject.MustHaveTarget:			You must have a target to get something!
+GamePlayer.PickupObject.NoOneGroupWantsMoney:		No one in group wants the money.
+GamePlayer.PickupObject.NoOneWantsThis:			No one in group wants the {0}.
+GamePlayer.PickupObject.ObjectTooFarAway:		The {0} is too far away to pick up!
+GamePlayer.PickupObject.TooFarFromBoat:			You are too far from the boat to board!
+GamePlayer.PickupObject.YouGet:				You get {0} and put it in your backpack.
+GamePlayer.PickupObject.YouPickUp:			You pick up {0}.
+GamePlayer.PickupObject.YourLootShare:			Your share of the loot is {0}.
 GamePlayer.Pray.AlreadyPraying:				You are already praying!	
 GamePlayer.Pray.Begin:					You begin your prayers!
 GamePlayer.Pray.CantPrayNow:				You can't pray now!	
@@ -568,6 +576,7 @@ Hib.ImportantDelivery.Description.Step5:		[Step #5] Listen to what Aethic has to
 Hib.ImportantDelivery.Description.Step6:		[Step #6] Take the ticket Aethic gave you to Stable Master Truichon north-northwest of the building with the red-door. Hand him the ticket the same way you handed Aethic the supplies.
 Hib.ImportantDelivery.Description.Step7:		[Step #7] Hand Stable Master Freagus the Crate of Vegetables.
 Hib.ImportantDelivery.Description.Step8:		[Step #8] Listen to Stable Master Freagus some more. If he stops speaking with you, ask him if he has a [reward] for your hard work and service to Hibernia.
+Hib.ImportantDelivery.FinishQuest.RecieveReward:	You recieve {0} as a reward.
 Hib.ImportantDelivery.Notify.RentingHorse:		Good day, {0}. If you are interested in renting a horse, purchase a ticket, then hand it to me. Have a safe trip!
 Hib.ImportantDelivery.Notify.Supplies:			Ah! The supplies I have been waiting for. Thank you {0}. These will help us tremendously in the coming weeks. I have another [errand] if you are up for it.
 Hib.ImportantDelivery.Notify.Vegetables:		Ah, the vegetables I've been waiting for from Aethic. Thank you for delivering them to me. I couldn't find anyone to look after my stable so I could go and get them. Let me see, I think a [reward] is in order for your hard work.
