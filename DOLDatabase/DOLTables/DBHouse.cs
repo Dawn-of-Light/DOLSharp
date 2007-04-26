@@ -58,6 +58,7 @@ namespace DOL
 			private string m_ownerids;
 			private DateTime m_lastpaid;
 			private long m_keptmoney;
+			private bool m_nopurge;
 
 			static bool m_autoSave;
 
@@ -444,6 +445,20 @@ namespace DOL
 				{
 					Dirty = true;
 					m_keptmoney = value;
+				}
+			}
+
+			[DataElement(AllowDbNull = true)]
+			public bool NoPurge
+			{
+				get
+				{
+					return m_nopurge;
+				}
+				set
+				{
+					Dirty = true;
+					m_nopurge = value;
 				}
 			}
 

@@ -57,6 +57,8 @@ namespace DOL.Database
 		private int m_npcTemplateID;
 		private int m_bodyType;
 
+		private int m_inHouse;
+
 		static bool m_autoSave;
 
 		/// <summary>
@@ -72,6 +74,7 @@ namespace DOL.Database
 			m_respawnInterval = -1; // randow respawn by default
 			m_guild = "";
 			m_bodyType = 0;
+			m_inHouse = -1;
 		}
 
 		/// <summary>
@@ -433,6 +436,16 @@ namespace DOL.Database
 		{
 			get { return m_bodyType; }
 			set { Dirty = true; m_bodyType = value; }
+		}
+
+		/// <summary>
+		/// The mob's current house
+		/// </summary>
+		[DataElement(AllowDbNull = false)]
+		public int HouseNumber
+		{
+			get { return m_inHouse; }
+			set { Dirty = true; m_inHouse = value; }
 		}
 	}
 }

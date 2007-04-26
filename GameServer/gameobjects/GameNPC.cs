@@ -32,6 +32,7 @@ using DOL.GS.Quests;
 using DOL.GS.PacketHandler;
 using DOL.GS.Spells;
 using DOL.GS.Utils;
+using DOL.GS.Housing;
 using log4net;
 
 namespace DOL.GS
@@ -261,6 +262,15 @@ namespace DOL.GS
 			set { m_bodyType = value; }
 		}
 
+		private int m_houseNumber;
+		/// <summary>
+		/// The NPC's current house
+		/// </summary>
+		public int HouseNumber
+		{
+			get { return m_houseNumber; }
+			set { m_houseNumber = value; }
+		}
 		#endregion
 		#region Flags/Position/SpawnPosition/UpdateTick
 		/// <summary>
@@ -1462,6 +1472,7 @@ namespace DOL.GS
 				}
 			}
 			m_bodyType = npc.BodyType;
+			m_houseNumber = npc.HouseNumber;
 		}
 
 		/// <summary>
@@ -1505,6 +1516,7 @@ namespace DOL.GS
 			mob.Flags = Flags;
 			mob.Speed = MaxSpeedBase;
 			mob.RespawnInterval = m_respawnInterval / 1000;
+			mob.HouseNumber = HouseNumber;
 			IAggressiveBrain aggroBrain = Brain as IAggressiveBrain;
 			if (aggroBrain != null)
 			{
@@ -2056,6 +2068,14 @@ namespace DOL.GS
 				Mana = MaxMana;
 			else if (Mana > 0 && MaxMana > 0)
 				StartPowerRegeneration();
+
+
+			if (m_houseNumber > 0)
+			{
+				log.Info("NPC '" + Name + "' added to house N°" + m_houseNumber);
+				CurrentHouse = HouseMgr.GetHouse(m_houseNumber);
+				log.Info("Confirmed number: "+CurrentHouse.HouseNumber.ToString());
+			}
 			return true;
 		}
 
