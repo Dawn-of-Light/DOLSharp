@@ -212,6 +212,12 @@ namespace DOL.GS.Housing
 			set { m_databaseItem.KeptMoney = value; }
 		}
 
+		public bool NoPurge
+		{
+			get { return m_databaseItem.NoPurge; }
+			set { m_databaseItem.NoPurge = value; }
+		}
+
 		private int m_uniqueID;
 
 		public int UniqueID
