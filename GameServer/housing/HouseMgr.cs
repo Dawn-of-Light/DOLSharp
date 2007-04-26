@@ -323,7 +323,7 @@ namespace DOL.GS.Housing
 				foreach (DictionaryEntry Entry in (Hashtable)(regs.Value))
 				{
 					House house = (House)Entry.Value;
-					if (house.OwnerIDs == null || house.OwnerIDs == "")
+					if ((house.OwnerIDs == null && house.OwnerIDs == "") || house.NoPurge) // Replaced OR by AND to fix table problems due to old method bugs
 						continue;
 					Diff = DateTime.Now - house.LastPaid;
 					if (Diff.Days >= 7)

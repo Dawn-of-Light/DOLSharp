@@ -77,24 +77,24 @@ namespace DOL.GS.PacketHandler.Client.v168
 				}
 
 				//Is the item we want to move in our backpack?
-				if(fromSlot>=(ushort)eInventorySlot.FirstBackpack && fromSlot<=(ushort)eInventorySlot.LastBackpack)
+				if (fromSlot >= (ushort)eInventorySlot.FirstBackpack && fromSlot <= (ushort)eInventorySlot.LastBackpack)
 				{
-					if(!WorldMgr.CheckDistance(obj, client.Player, WorldMgr.GIVE_ITEM_DISTANCE))
+					if (!WorldMgr.CheckDistance(obj, client.Player, WorldMgr.GIVE_ITEM_DISTANCE))
 					{
-                        if (obj is GamePlayer)
-                            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "PlayerMoveItemRequestHandler.TooFarAway", client.Player.GetName((GamePlayer)obj)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                        else
-                            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "PlayerMoveItemRequestHandler.TooFarAway", obj.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                        //client.Out.SendMessage("You are too far away to give anything to " + obj.GetName(0, false) + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						client.Out.SendInventorySlotsUpdate(new int[] {fromSlot});
+						if (obj is GamePlayer)
+							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "PlayerMoveItemRequestHandler.TooFarAway", client.Player.GetName((GamePlayer)obj)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						else
+							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "PlayerMoveItemRequestHandler.TooFarAway", obj.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						//client.Out.SendMessage("You are too far away to give anything to " + obj.GetName(0, false) + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						client.Out.SendInventorySlotsUpdate(new int[] { fromSlot });
 						return 0;
 					}
 
 					InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)fromSlot);
-					if(item == null)
+					if (item == null)
 					{
-						client.Out.SendInventorySlotsUpdate(new int[] {fromSlot});
-						client.Out.SendMessage("Invalid item (slot# "+fromSlot+").",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+						client.Out.SendInventorySlotsUpdate(new int[] { fromSlot });
+						client.Out.SendMessage("Invalid item (slot# " + fromSlot + ").", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						return 0;
 					}
 
@@ -102,33 +102,33 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 					//If the item has been removed by the event handlers, return;
 					//item = client.Player.Inventory.GetItem((eInventorySlot)fromSlot);
-					if(item == null || item.OwnerID == null)
+					if (item == null || item.OwnerID == null)
 					{
-						client.Out.SendInventorySlotsUpdate(new int[] {fromSlot});
+						client.Out.SendInventorySlotsUpdate(new int[] { fromSlot });
 						return 0;
 					}
 
-					if(!item.IsDropable && !(obj is GameNPC && (obj.GetType().ToString() == "DOL.GS.Scripts.Blacksmith" || obj.GetType().ToString() == "DOL.GS.Scripts.Recharger")))
+					if (!item.IsDropable && !(obj is GameNPC && (obj.GetType().ToString() == "DOL.GS.Scripts.Blacksmith" || obj.GetType().ToString() == "DOL.GS.Scripts.Recharger")))
 					{
-						client.Out.SendInventorySlotsUpdate(new int[] {fromSlot});
-						client.Out.SendMessage("You can not remove this item!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+						client.Out.SendInventorySlotsUpdate(new int[] { fromSlot });
+						client.Out.SendMessage("You can not remove this item!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						return 0;
 					}
 
-					if(tradeTarget!=null)
+					if (tradeTarget != null)
 					{
-						tradeTarget.ReceiveTradeItem(client.Player,item);
-						client.Out.SendInventorySlotsUpdate(new int[] {fromSlot});
+						tradeTarget.ReceiveTradeItem(client.Player, item);
+						client.Out.SendInventorySlotsUpdate(new int[] { fromSlot });
 						return 1;
 					}
 
-					if(obj.ReceiveItem(client.Player, item))
+					if (obj.ReceiveItem(client.Player, item))
 					{
-						client.Out.SendInventorySlotsUpdate(new int[] {fromSlot});
+						client.Out.SendInventorySlotsUpdate(new int[] { fromSlot });
 						return 0;
 					}
 
-					client.Out.SendInventorySlotsUpdate(new int[] {fromSlot});
+					client.Out.SendInventorySlotsUpdate(new int[] { fromSlot });
 					return 0;
 				}
 
