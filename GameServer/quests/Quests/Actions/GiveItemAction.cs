@@ -26,7 +26,7 @@ using DOL.Database;
 
 namespace DOL.GS.Quests.Actions
 {
-    [QuestActionAttribute(ActionType = eActionType.GiveItem,DefaultValueQ=eDefaultValueConstants.NPC,IsNullableQ=true)]
+    [QuestActionAttribute(ActionType = eActionType.GiveItem,IsNullableQ=true)]
     class GiveItemAction : AbstractQuestAction<ItemTemplate,GameNPC>
     {               
 
@@ -42,18 +42,15 @@ namespace DOL.GS.Quests.Actions
 
         public override void Perform(DOLEvent e, object sender, EventArgs args, GamePlayer player)
         {
-            GameNPC npc = Q;
-            ItemTemplate item = P;
-
-            InventoryItem inventoryItem = new InventoryItem(item);
+            InventoryItem inventoryItem = new InventoryItem(P);
             player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, inventoryItem);
-            if (npc == null)
+            if (Q == null)
             {
-                player.Out.SendMessage("You receive " + item.Name + ".", eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
+                player.Out.SendMessage("You receive " + inventoryItem.Name + ".", eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
             }
             else
             {
-                player.Out.SendMessage("You receive " + item.Name + " from " + npc.GetName(0, false) + ".", eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
+                player.Out.SendMessage("You receive " + inventoryItem.Name + " from " + Q.GetName(0, false) + ".", eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
             }            
         }
     }
