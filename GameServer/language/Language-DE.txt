@@ -326,7 +326,7 @@ GamePlayer.UseSlot.NotEnouthPower:			Ihr seit nicht mächtig genug, um den Zauber
 GamePlayer.UseSlot.StopCallingMount:			Ihr ruft nicht mehr nach Eurem Pferd.		
 GamePlayer.UseSlot.WhistleMount:			Ihr pfeift nach Eurem Pferd.		
 GamePlayer.Whisper.SelectTarget:			Wählt jemanden aus, dem Ihr etwas zuflüstern wollt!		
-					
+
 # HOUSING
 HouseEnterLeave.TooFarAway:				Ihr seid zu weit von diesem Haus entfernt, um es zu betreten!
 HouseEnterLeave.CantEnter:				Ihr könnt dieses Haus nicht betreten!
@@ -346,6 +346,19 @@ HousingPlaceItemHandler.HasNoPorch:			Dieses Haus hat garkeine Veranda.
 HousingPlaceItemHandler.IndoorObjectPlaced:		Inneneinrichtung aufgestellt. {0} freie Plätze verbleidend.
 HousingPlaceItemHandler.NoHookpoint:			Ihr kann nichts platziert werden!
 HousingPlaceItemHandler.PutMoney:			Ihr leistet eine Anzahlung auf Euer Haus.
+
+# TRAINER
+# /GameTrainer
+GameTrainer.AddGift.NotEnoughSpace:			Es ist nicht genug Platz in Eurem Gepäck für das Geschenk. Bitte legt erst etwas raus.
+GameTrainer.GetExamineMessages.RightClick:		
+GameTrainer.GetExamineMessages.YouExamine:		Es interessiert Euch {0}. {1} steht Euch {2} und bildet als {3} den Nachwuchs aus.
+GameTrainer.GetExamineMessages.YouTarget:		Es wird {0} als Ziel erfasst.
+GameTrainer.PromotePlayer.Accepted:			{0} hat Euch als Mitglied akzeptiert!
+GameTrainer.PromotePlayer.Says:				{0} sagt: "{1}"
+GameTrainer.PromotePlayer.Upgraded:			Ihr wurdet befördert und gehört nun der {0}-Klasse an!
+GameTrainer.ReceiveItem.RespecFull:			Ein schöner {0}! Ich gewähre Euch eine volle Fähigkeitenrespezialisierung. Gebt "/respec all" ein.
+GameTrainer.ReceiveItem.RespecRealm:			Danke, ich gewähre Euch eine Reichsfähigkeitenrespezialisierung. Gebt "/respec realm" ein.
+GameTrainer.ReceiveItem.RespecSingle:			Danke, ich gewähre Euch eine einzelne Fähigkeitsrespezialisierung. Gebt "/respec <Zauberlinie>"
 
 # /PlayerPositionUpdateHandler
 PlayerPositionUpdateHandler.Endurance:			Ihr verliert Ausdauer!
