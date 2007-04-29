@@ -19,9 +19,10 @@
 using System;
 using System.Collections;
 using DOL.AI.Brain;
-using DOL.Events;
-using DOL.GS.PacketHandler;
 using DOL.Database;
+using DOL.Events;
+using DOL.Language;
+using DOL.GS.PacketHandler;
 using DOL.GS.RealmAbilities;
 
 namespace DOL.GS
@@ -42,7 +43,7 @@ namespace DOL.GS
 		{
 		}
 
-		#region GetExamineMessages/GetAggroLevelString
+		#region GetExamineMessages
 		/// <summary>
 		/// Adds messages to ArrayList which are sent when object is targeted
 		/// </summary>
@@ -50,38 +51,37 @@ namespace DOL.GS
 		/// <returns>list with string messages</returns>
 		public override IList GetExamineMessages(GamePlayer player)
 		{
+			string TrainerClassName = "";
+			switch (ServerProperties.Properties.SERV_LANGUAGE)
+			{
+				case "EN":
+					{
+						int index = -1;
+						if (GuildName.Length > 0)
+							index = GuildName.IndexOf(" Trainer");
+						if (index >= 0)
+							TrainerClassName = GuildName.Substring(0, index);
+					}
+					break;
+				case "DE":
+					TrainerClassName = GuildName;
+					break;
+				default:
+					{
+						int index = -1;
+						if (GuildName.Length > 0)
+							index = GuildName.IndexOf(" Trainer");
+						if (index >= 0)
+							TrainerClassName = GuildName.Substring(0, index);
+					}
+					break;
+			}
+
 			IList list = new ArrayList();
-			//			IList list = base.GetExamineMessages(player, messageList);
-			list.Add("You target [" + GetName(0, false) + "]");
-			list.Add("You examine " + GetName(0, false) + ".  " + GetPronoun(0, true) + " is " + GetAggroLevelString(player, false) + " and trains members of the " + TrainerClassName + " class.");
-			//			list.Add("[Right click to display a train window]");
+			list.Add(LanguageMgr.GetTranslation(player.Client, "GameTrainer.GetExamineMessages.YouTarget", GetName(0, false)));
+			list.Add(LanguageMgr.GetTranslation(player.Client, "GameTrainer.GetExamineMessages.YouExamine", GetName(0, false), GetPronoun(0, true), GetAggroLevelString(player, false), TrainerClassName));
+			list.Add(LanguageMgr.GetTranslation(player.Client, "GameTrainer.GetExamineMessages.RightClick"));
 			return list;
-		}
-		/// <summary>
-		/// How friendly this NPC is to player
-		/// </summary>
-		/// <param name="player">GamePlayer that is examining this object</param>
-		/// <param name="firstLetterUppercase"></param>
-		/// <returns>aggro state as string</returns>
-		public override string GetAggroLevelString(GamePlayer player, bool firstLetterUppercase)
-		{
-			// TODO: findout if trainers can be aggro at all
-
-			if (GameServer.ServerRules.IsSameRealm(this, player, true))
-			{
-				if (firstLetterUppercase) return "Friendly";
-				else return "friendly";
-			}
-			IAggressiveBrain aggroBrain = Brain as IAggressiveBrain;
-			if (aggroBrain != null && aggroBrain.AggroLevel > 0)
-			{
-				if (firstLetterUppercase) return "Aggressive";
-				else return "aggressive";
-			}
-
-			if (firstLetterUppercase) return "Neutral";
-			else return "neutral";
-
 		}
 		#endregion
 
@@ -150,21 +150,21 @@ namespace DOL.GS
 						{
 							player.Inventory.RemoveCountFromStack(item, 1);
 							player.RespecAmountSingleSkill++;
-							player.Out.SendMessage("Thanks, I added a single spec respec to use /respec <linename>", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+							player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameTrainer.ReceiveItem.RespecSingle"), eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							return true;
 						}
 					case "respec_full":
 						{
 							player.Inventory.RemoveCountFromStack(item, 1);
 							player.RespecAmountAllSkill++;
-							player.Out.SendMessage("A nice " + item.Name + "! I added a full respec to use /respec all", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+							player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameTrainer.ReceiveItem.RespecFull", item.Name), eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							return true;
 						}
 					case "respec_realm":
 						{
 							player.Inventory.RemoveCountFromStack(item, 1);
 							player.RespecAmountRealmSkill++;
-							player.Out.SendMessage("Thanks, I added a realm respec to use /respec realm", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+							player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameTrainer.ReceiveItem.RespecRealm"), eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							return true;
 						}
 				}
@@ -206,8 +206,8 @@ namespace DOL.GS
 				player.RemoveAllStyles();
 
 				if (messageToPlayer != "")
-					player.Out.SendMessage(this.Name + " says, \"" + messageToPlayer + "\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
-				player.Out.SendMessage("You have been upgraded to the " + player.CharacterClass.Name + " class!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameTrainer.PromotePlayer.Says", this.Name, messageToPlayer), eChatType.CT_System, eChatLoc.CL_PopupWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameTrainer.PromotePlayer.Upgraded", player.CharacterClass.Name), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 
 				player.CharacterClass.OnLevelUp(player);
 				player.UpdateSpellLineLevels(true);
@@ -227,7 +227,7 @@ namespace DOL.GS
 				}
 
 				// after gifts
-				player.Out.SendMessage("You have been accepted by the " + player.CharacterClass.Profession + "!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameTrainer.PromotePlayer.Accepted", player.CharacterClass.Profession), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 
 				Notify(GameTrainerEvent.PlayerPromoted, this, new PlayerPromotedEventArgs(player, oldClass));
 
@@ -235,19 +235,6 @@ namespace DOL.GS
 				return true;
 			}
 			return false;
-		}
-
-		/// <summary>
-		/// Holds trainer classname
-		/// </summary>
-		private string m_trainerClassName = "";
-
-		/// <summary>
-		/// Gets trainer classname
-		/// </summary>
-		public string TrainerClassName
-		{
-			get { return m_trainerClassName; }
 		}
 
 		/// <summary>
@@ -261,26 +248,10 @@ namespace DOL.GS
 			ItemTemplate temp = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), template);
 			if (!player.Inventory.AddTemplate(temp, 1, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
 			{
-				player.Out.SendMessage("Not enough inventory space to receive your gift. Please make room.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameTrainer.AddGift.NotEnoughSpace"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
 			return true;
-		}
-
-		/// <summary>
-		/// Get class name from guild name
-		/// </summary>
-		/// <param name="obj"></param>
-		public override void LoadFromDatabase(DataObject obj)
-		{
-			base.LoadFromDatabase(obj);
-			// "Fighter Trainer"
-			int index = -1;
-			if (GuildName.Length > 0)
-				index = GuildName.IndexOf(" Trainer");
-
-			if (index >= 0)
-				m_trainerClassName = GuildName.Substring(0, index);
 		}
 	}
 }
