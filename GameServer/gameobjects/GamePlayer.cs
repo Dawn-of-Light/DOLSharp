@@ -9001,7 +9001,7 @@ namespace DOL.GS
 					else
 					{
 						//Add money only to picking player
-						AddMoney(moneyObject.TotalCopper, LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.YouPickUp"));
+						AddMoney(moneyObject.TotalCopper, LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.YouPickUp", moneyObject.TotalCopper.ToString()));
 					}
 					moneyObject.Delete();
 					return true;

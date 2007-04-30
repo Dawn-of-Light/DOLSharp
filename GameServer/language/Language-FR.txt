@@ -188,11 +188,19 @@ GamePlayer.OnSkillTrained.YouHave:			Il vous reste {0} points de spécialisation 
 GamePlayer.OnSkillTrained.YouSpend:			Vous dépensez {0} points et vous vous spécialisez mieux dans {1}.
 GamePlayer.OpenSelfCraft.AlreadySelfCrafting:	Vous êtes déjà en train d'enchanter.
 GamePlayer.OpenSelfCraft.CanOnlyCraftBackpack:	Vous ne pouvez combiner que des objets dans votre sac!
-GamePlayer.PickupObject.MustHaveTarget:			Vous devez avoir une cible pour ramasser quelquechose !
-GamePlayer.PickupObject.LootDoesntBelongYou:	Ce butin ne vous appartient pas - vous ne pouvez pas le prendre.
-GamePlayer.PickupObject.CantGetThat:			Vous ne pouvez pas ramasser ça !
+GamePlayer.PickupObject.Autosplit:				(Autosplit) {0} va à {1}.
 GamePlayer.PickupObject.BackpackFull:			Votre sac à dos est plein, vous devez faire de la place.
+GamePlayer.PickupObject.CantGetThat:			Vous ne pouvez pas ramasser ça !
+GamePlayer.PickupObject.GroupMemberPicksUp:		{0} ramasse {1}.
+GamePlayer.PickupObject.LootDoesntBelongYou:	Ce butin ne vous appartient pas - vous ne pouvez pas le prendre.
+GamePlayer.PickupObject.MustHaveTarget:			Vous devez avoir une cible pour ramasser quelquechose !
 GamePlayer.PickupObject.NoOneGroupWantsMoney:	Personne dans le groupe ne veut de l'argent.
+GamePlayer.PickupObject.NoOneWantsThis:			Personne dans le groupe ne veut {0}.
+GamePlayer.PickupObject.ObjectTooFarAway:		{0} est trop loin pour être ramassé !
+GamePlayer.PickupObject.TooFarFromBoat:			Vous êtes trop loin du bateau pour embarquer !
+GamePlayer.PickupObject.YouGet:					Vous ramassez {0} et le mettez dans votre sac.
+GamePlayer.PickupObject.YouPickUp:				Vous ramassez {0}.
+GamePlayer.PickupObject.YourLootShare:			votre part du butin est {0}.
 GamePlayer.Pray.AlreadyPraying:				Vous priez déjà !
 GamePlayer.Pray.Begin:						Vous commencez vos prières.
 GamePlayer.Pray.CantPrayNow:				Vous ne pouvez pas prier maintenant !
@@ -339,6 +347,19 @@ HousingPlaceItemHandler.HasNoPorch:			Cette maison n'a pas de porche !
 HousingPlaceItemHandler.IndoorObjectPlaced:	Objet interieur placé. {0} places restantes.
 HousingPlaceItemHandler.NoHookpoint:		Il n'y a plus de point d'ancrage !
 HousingPlaceItemHandler.PutMoney:			Vous déposez de l'argent sur le compte de votre maison.
+
+# TRAINER
+# /GameTrainer
+GameTrainer.AddGift.NotEnoughSpace:			Plus de place dans votre inventaire pour recevoir votre cadeau. Faites de la place !
+GameTrainer.GetExamineMessages.RightClick:	[Cliquez-droit pour afficher une fenêtre d'entrainement]
+GameTrainer.GetExamineMessages.YouExamine:	Vous observez {0}. {1} est {2} et entraine les membres de la classe {3}.
+GameTrainer.GetExamineMessages.YouTarget:	Vous ciblez [{0}].
+GameTrainer.PromotePlayer.Accepted:			Vous avez été accepté par le {0}!
+GameTrainer.PromotePlayer.Says:				{0} dit, "{1}"
+GameTrainer.PromotePlayer.Upgraded:			vous avez été promu à la classe de {0} !
+GameTrainer.ReceiveItem.RespecFull:			Un superbe {0}! J'ai recu une possibilité de respécialisation totale. Pour utiliser: /respec all.
+GameTrainer.ReceiveItem.RespecRealm:		Merci, j'ai recu une possibilité de respécialisation de royaume. Pour utiliser: /respec realm.
+GameTrainer.ReceiveItem.RespecSingle:		Merci, j'ai recu une possibilité de respécialisation simple. Pour utiliser: /respec <linename>
 
 # /PlayerPositionUpdateHandler
 PlayerPositionUpdateHandler.Endurance:		Vous perdez de l'endurance !
