@@ -914,6 +914,38 @@ namespace DOL.GS
 					}
 				default:
 					{
+						//Tutorial
+						if (m_character.BindRegion == 27)
+						{
+							switch (Realm)
+							{
+								case 1:
+									{
+										relRegion = 1; // Cotsworlds
+										relX = 8192 + 553251;
+										relY = 8192 + 502936;
+										relZ = 2280;
+										break;
+									}
+								case 2:
+									{
+										relRegion = 100; // Mularn
+										relX = 8192 + 795621;
+										relY = 8192 + 719590;
+										relZ = 4680;
+										break;
+									}
+								case 3:
+									{
+										relRegion = 200; // MagMell
+										relX = 8192 + 338652;
+										relY = 8192 + 482335;
+										relZ = 5200;
+										break;
+									}
+							}
+							break;
+						}
 						switch (CurrentRegionID)
 						{
 							//battlegrounds
