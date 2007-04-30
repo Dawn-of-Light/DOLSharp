@@ -22280,6 +22280,28 @@
             EmblemDialogReponseHandler is the response of client wend when we close the emblem selection dialogue.
             </summary>
         </member>
+        <member name="T:DOL.GS.LootMultiList">
+            <summary>
+            A LootList that manages several LootLists together
+            </summary>
+        </member>
+        <member name="F:DOL.GS.LootMultiList.lists">
+            <summary>
+            The LootLists that should be used together
+            </summary>
+        </member>
+        <member name="M:DOL.GS.LootMultiList.AddList(DOL.GS.LootList)">
+            <summary>
+            Adds another list to those used together
+            </summary>
+            <param name="list"></param>
+        </member>
+        <member name="M:DOL.GS.LootMultiList.GetLoot">
+            <summary>
+            Generates the loot by collecting the loots from the individual lists
+            </summary>
+            <returns>Returns the collected loot</returns>
+        </member>
         <member name="T:DOL.GS.Scripts.AbstractCommandHandler">
             <summary>
             Providing some basic command handler functionality
@@ -32687,6 +32709,11 @@
             Bug Report Email Addresses
             </summary>
         </member>
+        <member name="F:DOL.GS.ServerProperties.Properties.ALLOW_CATA_SLASH_LEVEL">
+            <summary>
+            Allow Cata Slash Level
+            </summary>
+        </member>
         <member name="M:DOL.GS.ServerProperties.Properties.Load(DOL.GS.ServerProperties.ServerPropertyAttribute)">
             <summary>
             This method loads the property from the database and returns
@@ -36667,28 +36694,6 @@
             if no target go to saved pathpoint to continue the round
             </summary>
             <returns>the best target</returns>
-        </member>
-        <member name="T:DOL.GS.LootMultiList">
-            <summary>
-            A LootList that manages several LootLists together
-            </summary>
-        </member>
-        <member name="F:DOL.GS.LootMultiList.lists">
-            <summary>
-            The LootLists that should be used together
-            </summary>
-        </member>
-        <member name="M:DOL.GS.LootMultiList.AddList(DOL.GS.LootList)">
-            <summary>
-            Adds another list to those used together
-            </summary>
-            <param name="list"></param>
-        </member>
-        <member name="M:DOL.GS.LootMultiList.GetLoot">
-            <summary>
-            Generates the loot by collecting the loots from the individual lists
-            </summary>
-            <returns>Returns the collected loot</returns>
         </member>
     </members>
 </doc>
