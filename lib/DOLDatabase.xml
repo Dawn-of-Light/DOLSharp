@@ -2388,6 +2388,11 @@ public static MySqlDataAdapter CreateCustomerAdapter(MySqlConnection conn)
             The mob's body type
             </summary>
         </member>
+        <member name="P:DOL.Database.Mob.HouseNumber">
+            <summary>
+            The mob's current house
+            </summary>
+        </member>
         <member name="T:DOL.Database.DBLootTemplate">
             <summary>
             Database Storage of Tasks

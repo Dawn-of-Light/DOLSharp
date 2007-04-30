@@ -25,6 +25,7 @@ using DOL.Database;
 using DOL.GS.PacketHandler;
 using DOL.GS.Utils;
 using DOL.GS.Quests;
+using DOL.GS.Housing;
 
 namespace DOL.GS.Scripts
 {
@@ -314,6 +315,34 @@ namespace DOL.GS.Scripts
 						}
 					}
 					break;
+				#region TEST : CurrentHouse
+				case "house":
+					{
+						int house;
+						House H;
+						try
+						{
+							house = Convert.ToInt32(args[2]);
+							H = HouseMgr.GetHouse(house);
+
+							if (H != null)
+							{
+								targetMob.HouseNumber = house;
+								targetMob.CurrentHouse = H;
+								targetMob.SaveIntoDatabase();
+								client.Out.SendMessage("Mob house changed to: " + house, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							}
+							else
+								client.Out.SendMessage("House number "+house+" doesn't exists !", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						}
+						catch (Exception)
+						{
+							client.Out.SendMessage("Type /mob for command overview.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							return 1;
+						}
+					}
+					break;
+				#endregion
 				case "realm":
 					{
 						byte realm;

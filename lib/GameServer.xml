@@ -3548,6 +3548,11 @@
             The NPC's body type
             </summary>
         </member>
+        <member name="P:DOL.GS.GameNPC.HouseNumber">
+            <summary>
+            The NPC's current house
+            </summary>
+        </member>
         <member name="P:DOL.GS.GameNPC.Flags">
             <summary>
             Gets or Sets the flags of this npc
@@ -3915,14 +3920,6 @@
             <param name="player">GamePlayer that is examining this object</param>
             <returns>list with string messages</returns>
         </member>
-        <member name="M:DOL.GS.GameTrainer.GetAggroLevelString(DOL.GS.GamePlayer,System.Boolean)">
-            <summary>
-            How friendly this NPC is to player
-            </summary>
-            <param name="player">GamePlayer that is examining this object</param>
-            <param name="firstLetterUppercase"></param>
-            <returns>aggro state as string</returns>
-        </member>
         <member name="M:DOL.GS.GameTrainer.Interact(DOL.GS.GamePlayer)">
             <summary>
             Interact with trainer
@@ -3956,11 +3953,6 @@
             <param name="gifts">Array of inventory items as promotion gifts</param>
             <returns>true if successfull</returns>
         </member>
-        <member name="F:DOL.GS.GameTrainer.m_trainerClassName">
-            <summary>
-            Holds trainer classname
-            </summary>
-        </member>
         <member name="M:DOL.GS.GameTrainer.addGift(System.String,DOL.GS.GamePlayer)">
             <summary>
             Add a gift to the player
@@ -3968,17 +3960,6 @@
             <param name="template">the template ID of the item</param>
             <param name="player">the player to give it to</param>
             <returns>true if succesful</returns>
-        </member>
-        <member name="M:DOL.GS.GameTrainer.LoadFromDatabase(DOL.Database.DataObject)">
-            <summary>
-            Get class name from guild name
-            </summary>
-            <param name="obj"></param>
-        </member>
-        <member name="P:DOL.GS.GameTrainer.TrainerClassName">
-            <summary>
-            Gets trainer classname
-            </summary>
         </member>
         <member name="M:DOL.GS.Trainer.SavageTrainer.Interact(DOL.GS.GamePlayer)">
             <summary>
