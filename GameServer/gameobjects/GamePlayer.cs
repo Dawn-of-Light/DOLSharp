@@ -9027,7 +9027,7 @@ namespace DOL.GS
 
 						foreach (GamePlayer eligibleMember in eligibleMembers)
 						{
-							eligibleMember.AddMoney(moneyObject.TotalCopper / eligibleMembers.Count, LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.YourLootShare"));
+							eligibleMember.AddMoney(moneyObject.TotalCopper / eligibleMembers.Count, LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.YourLootShare", (moneyObject.TotalCopper / eligibleMembers.Count).ToString()));
 						}
 					}
 					else
