@@ -1131,7 +1131,7 @@ namespace DOL.GS.Scripts
 								}
 								List<Character> chars = new List<Character>();
 								chars.AddRange((Character[])GameServer.Database.SelectObjects(typeof(Character), "AccountName = '" + GameServer.Database.Escape(accountname) + "'"));
-								chars.AddRange((Character[])GameServer.Database.SelectObjects(typeof(Character), "AccountName = '" + GameServer.Database.Escape(accountname) + "'"));
+								chars.AddRange((Character[])GameServer.Database.SelectObjects(typeof(CharacterArchive), "AccountName = '" + GameServer.Database.Escape(accountname) + "'"));
 
 								foreach (Character ply in chars)
 								{
