@@ -98,6 +98,7 @@ namespace DOL.GS.Scripts
 			if (player.Level >= 15)
 			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.Guard, 3));
+				player.AddAbility(SkillBase.GetAbility(Abilities.Tireless));
 			}
 		}
 	}

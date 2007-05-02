@@ -59,10 +59,50 @@ namespace DOL.GS
 		protected readonly int m_subSpellID = 0;
 		protected readonly bool m_moveCast = false;
 		protected readonly bool m_uninterruptible = false;
-
-
+		protected readonly int m_healthPenalty = 0;
+		// warlocks
+		protected readonly bool m_isprimary = false;
+		protected readonly bool m_issecondary = false;
+		protected bool m_inchamber = false;
+		protected bool m_costpower = true;
+		protected readonly bool m_allowbolt = false;
+		protected int m_overriderange = 0;
+		
 		#region member access properties
+		#region warlocks
+		public bool IsPrimary
+		{
+			get { return m_isprimary; }
+		}
 
+		public bool IsSecondary
+		{
+			get { return m_issecondary; }
+		}
+
+		public bool InChamber
+		{
+			get { return m_inchamber; }
+			set { m_inchamber = value; }
+		}
+
+		public bool CostPower
+		{
+			get { return m_costpower; }
+			set { m_costpower = value; }
+		}
+
+		public bool AllowBolt
+		{
+			get { return m_allowbolt; }
+		}
+
+		public int OverrideRange
+		{
+			get { return m_overriderange; }
+			set { m_overriderange = value; }
+		}
+		#endregion
 		public ushort ClientEffect
 		{
 			get { return m_effectID; }
@@ -214,6 +254,11 @@ namespace DOL.GS
 			get { return m_uninterruptible; }
 		}
 
+		public int HealthPenalty
+		{
+			get { return m_healthPenalty; }
+		}
+
 		#endregion
 
 		/// <summary>
@@ -265,6 +310,16 @@ namespace DOL.GS
 			m_subSpellID = dbspell.SubSpellID;
 			m_moveCast = dbspell.MoveCast;
 			m_uninterruptible = dbspell.Uninterruptible;
+			m_healthPenalty = dbspell.HealthPenalty;
+			// warlocks
+			m_isprimary = dbspell.IsPrimary;
+			m_issecondary = dbspell.IsSecondary;
+			m_allowbolt = dbspell.AllowBolt;
+		}
+		// add for warlocks
+		public virtual Spell Copy()
+		{
+			return (Spell)MemberwiseClone();
 		}
 	}
 }

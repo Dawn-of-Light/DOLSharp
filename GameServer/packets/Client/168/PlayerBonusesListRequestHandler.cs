@@ -143,7 +143,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 			info.Add(" ");
 			info.Add("Outpost Bonuses");
-			info.Add(string.Format("{0:+0;-0}%", client.Player.GetKeepBonuses() * 100));
+			info.Add("TODO, this needs to be written");
 			client.Out.SendCustomTextWindow("Bonuses (snapshot)", info);
 
 			return 1;

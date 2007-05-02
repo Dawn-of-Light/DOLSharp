@@ -162,6 +162,7 @@ namespace DOL
 			private bool m_autoloot;
 			private int m_lastfreeLevel;
 			private DateTime m_lastfreeleveled;
+			private bool m_showXFireInfo;
 
 			private string m_guildNote = "";
 
@@ -195,7 +196,8 @@ namespace DOL
 				m_spellQueue = true;
 				m_gainXP = true;
 				m_gainRP = true;
-				m_autoloot = false;
+				m_autoloot = true;
+				m_showXFireInfo = false;
 			}
 
 			/// <summary>
@@ -1890,6 +1892,20 @@ namespace DOL
 				{
 					Dirty = true;
 					m_guildNote = value;
+				}
+			}
+
+			[DataElement(AllowDbNull = true)]
+			public bool ShowXFireInfo
+			{
+				get
+				{
+					return m_showXFireInfo;
+				}
+				set
+				{
+					Dirty = true;
+					m_showXFireInfo = value;
 				}
 			}
 		}

@@ -58,60 +58,60 @@ namespace DOL.GS.GameEvents
 			Hashtable usedSlots = new Hashtable();
 			ArrayList equipItems = new ArrayList();
 			ArrayList inventoryItems = new ArrayList();
-			switch (charArgs.Character.Class)
+			switch ((eCharacterClass)charArgs.Character.Class)
 			{
 					//Alb Classes
-				case 14:
+				case eCharacterClass.Fighter:
 					equipItems.Add("practice_sword");
 					equipItems.Add("small_training_shield");
 					break; //Fighter
-				case 15:
+				case eCharacterClass.Elementalist:
 					equipItems.Add("trimmed_branch");
 					break; //Elementalist
-				case 16:
+				case eCharacterClass.Acolyte:
 					equipItems.Add("training_mace");
 					equipItems.Add("small_training_shield");
 					break; //Acolyte
-				case 17:
+				case eCharacterClass.AlbionRogue:
 					equipItems.Add("practice_dirk");
 					break; //Alb Rouge
-				case 18:
+				case eCharacterClass.Mage:
 					equipItems.Add("trimmed_branch");
 					break; //Mage
-				case 20:
+				case eCharacterClass.Disciple:
 					equipItems.Add("trimmed_branch");
 					break; //Disciple
 					//Mid Classes
-				case 35:
+				case eCharacterClass.Viking:
 					equipItems.Add("training_axe");
 					inventoryItems.Add("small_training_shield");
 					break; //Viking
-				case 36:
+				case eCharacterClass.Mystic:
 					equipItems.Add("trimmed_branch");
 					break; //Mystic
-				case 37:
+				case eCharacterClass.Seer:
 					equipItems.Add("training_hammer");
 					equipItems.Add("small_training_shield");
 					break; //Seer
-				case 38:
+				case eCharacterClass.MidgardRogue:
 					equipItems.Add("training_sword_mid");
 					break; //Mid Rogue
 					//Hib Classes
-				case 51:
+				case eCharacterClass.Magician:
 					equipItems.Add("training_staff");
 					break; //Magician
-				case 52:
+				case eCharacterClass.Guardian:
 					equipItems.Add("training_sword_hib");
 					equipItems.Add("training_shield");
 					break; //Guardian
-				case 53:
+				case eCharacterClass.Naturalist:
 					equipItems.Add("training_club");
 					equipItems.Add("training_shield");
 					break; //Naturalist
-				case 54:
+				case eCharacterClass.Stalker:
 					equipItems.Add("training_dirk");
 					break; //Stalker
-				case 57:
+				case eCharacterClass.Forester:
 					equipItems.Add("training_staff");
 					break; //Forester?
 				default:

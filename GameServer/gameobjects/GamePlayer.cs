@@ -285,6 +285,12 @@ namespace DOL.GS
 			}
 		}
 
+		private bool m_canUseSlashLevel = false;
+		public bool CanUseSlashLevel
+		{
+			get { return m_canUseSlashLevel; }
+		}
+
 		/// <summary>
 		/// quit timer
 		/// </summary>
@@ -500,6 +506,8 @@ namespace DOL.GS
 			Stealth(false);
 			if (IsOnHorse)
 				IsOnHorse = false;
+			if (InWraithForm)
+				InWraithForm = false;
 			GameEventMgr.RemoveHandler(this, GameLivingEvent.AttackFinished, new DOLEventHandler(RangeAttackHandler));
 			GameEventMgr.RemoveHandler(m_inventory, PlayerInventoryEvent.ItemEquipped, new DOLEventHandler(OnItemEquipped));
 			GameEventMgr.RemoveHandler(m_inventory, PlayerInventoryEvent.ItemUnequipped, new DOLEventHandler(OnItemUnequipped));
@@ -532,6 +540,9 @@ namespace DOL.GS
 
 			if (InHouse)
 				CurrentHouse.Exit(this, true);
+
+			if (CurrentRegion.IsInstance)
+				MoveTo((ushort)PlayerCharacter.BindRegion, PlayerCharacter.BindXpos, PlayerCharacter.BindYpos, PlayerCharacter.BindZpos, (ushort)PlayerCharacter.BindHeading);
 
 			// cancel all effects until saving of running effects is done
 			try
@@ -573,6 +584,11 @@ namespace DOL.GS
 				if (CraftTimer != null && CraftTimer.IsAlive)
 				{
 					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Quit.CantQuitCrafting"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					return false;
+				}
+				if (CurrentRegion.IsInstance)
+				{
+					Out.SendMessage("You cannot quit in an instance!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return false;
 				}
 
@@ -2182,6 +2198,8 @@ namespace DOL.GS
 		/// <returns>true if removed</returns>
 		public bool RemoveSpellLine(SpellLine line)
 		{
+			if (!m_spelllines.Contains(line))
+				return false;
 			lock (m_specialization.SyncRoot)
 			{
 				m_spelllines.Remove(line);
@@ -2465,7 +2483,7 @@ namespace DOL.GS
 			foreach (NamedSkill skill in skills)
 			{
 				m_skillList.Remove(skill);
-				m_abilities[skill.KeyName] = null;
+				m_abilities.Remove(skill.KeyName);
 			}
 		}
 
@@ -3714,6 +3732,26 @@ namespace DOL.GS
 			if (allowMultiply)
 				expTotal = (long)(expTotal * ServerProperties.Properties.XP_RATE);
 
+			//catacombs characters get 50% boost if they are elligable for slash level
+			switch ((eCharacterClass)CharacterClass.ID)
+			{
+				case eCharacterClass.Heretic:
+				case eCharacterClass.Valkyrie:
+				case eCharacterClass.Warlock:
+				case eCharacterClass.Bainshee:
+				case eCharacterClass.Vampiir:
+					{
+						//we don't want to allow catacombs classes to use free levels and
+						//have a 50% bonus
+						if (!ServerProperties.Properties.ALLOW_CATA_SLASH_LEVEL && CanUseSlashLevel && Level < 20)
+						{
+							expTotal = (long)(expTotal * 1.5);
+						}
+						break;
+					}
+			}
+
+
 			base.GainExperience(expTotal, expCampBonus, expGroupBonus, expOutpostBonus, sendMessage, allowMultiply);
 
 			if (IsLevelSecondStage)
@@ -4452,7 +4490,13 @@ namespace DOL.GS
 				else
 					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.StartAttack.CombatTarget", attackTarget.GetName(0, false)), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 			}
-
+			// vampiir
+			if (CharacterClass is ClassVampiir)
+			{
+				GameSpellEffect removeEffect = SpellHandler.FindEffectOnTarget(this, "VampiirSpeedEnhancement");
+				if (removeEffect != null)
+					removeEffect.Cancel(false);
+			}
 			base.StartAttack(attackTarget);
 
 			if (IsCasting)
@@ -4804,6 +4848,13 @@ namespace DOL.GS
 				case eAttackResult.HitStyle:
 				case eAttackResult.HitUnstyled:
 					{
+						// vampiir
+						if (CharacterClass is ClassVampiir)
+						{
+							this.Mana += (7 * this.MaxMana) / 100;
+							if (this.Mana > this.MaxMana)
+								this.Mana = this.MaxMana;
+						}
 						//only miss when strafing when attacking a player
 						//30% chance to miss
 						if (IsStrafing && ad.Target is GamePlayer && Util.Chance(30))
@@ -5182,6 +5233,13 @@ namespace DOL.GS
 						break;
 					}
 			}
+			// vampiir
+			if (CharacterClass is ClassVampiir)
+			{
+				GameSpellEffect removeEffect = SpellHandler.FindEffectOnTarget(this, "VampiirSpeedEnhancement");
+				if (removeEffect != null)
+					removeEffect.Cancel(false);
+			}
 			base.OnAttackedByEnemy(ad);
 		}
 
@@ -5308,14 +5366,18 @@ namespace DOL.GS
 				return eaf;
 			}
 		}
-
 		/// <summary>
 		/// Calc Armor hit location when player is hit by enemy
 		/// </summary>
 		/// <returns>slotnumber where enemy hits</returns>
-		public virtual eArmorSlot CalculateArmorHitLocation()
+		/// attackdata(ad) changed 
+		public virtual eArmorSlot CalculateArmorHitLocation(AttackData ad)
 		{
-
+			if (ad.Style != null)
+			{
+				if (ad.Style.ArmorHitLocation != eArmorSlot.UNKNOWN)
+					return ad.Style.ArmorHitLocation;
+			}
 			int chancehit = Util.Random(1, 100);
 			if (chancehit <= 40)
 			{
@@ -5482,53 +5544,12 @@ namespace DOL.GS
 
 			eaf += GetModified(eProperty.ArmorFactor);
 
+			GameSpellEffect effect = SpellHandler.FindEffectOnTarget(this, typeof(VampiirArmorDebuff));
+			if (effect != null && slot == (effect.SpellHandler as VampiirArmorDebuff).Slot)
+			{
+				eaf -= (int)(effect.SpellHandler as VampiirArmorDebuff).Spell.Value;
+			}
 			return eaf;
-		}
-
-		/// <summary>
-		/// Calculates keep bonuses
-		/// </summary>
-		/// <returns></returns>
-		public override double GetKeepBonuses()
-		{
-			//TODO : Get bonus on NF
-			//todo : type of bonus
-			/*
-			///keeps
-			8 keeps : +3% money
-			9 keeps : +3% xp
-			10 keeps : +3% rp
-			11 keeps : -3% crafting time
-			12 keeps : +5% money
-			13 keeps : +5% xp
-			14 keeps : +5% rp
-			15 keeps : -5% crafting time
-			16 keeps : +5% mana
-			17 keeps : +3% endu
-			18 keeps : +??% regen mana
-			19 keeps : +??% life regen
-			20 keeps : +5% critik fight
-			21 keeps : +5% spell critik
-			///reliks
-			own relik strength nohing
-			1 relik strenght +10%
-			2 relik strenght +20%
-
-			own relik mananohing
-			1 relik mana +10%
-			2 relik mana +20%
-			*/
-			/*int bonus = 0;
-			bonus += KeepMgr.GetKeepConqueredByRealmCount((eRealm)this.Realm);
-			if ( this.Guild != null)
-				if (this.Guild.ClaimedKeep != null)
-				{
-					bonus += 2* this.Guild.ClaimedKeep.DifficultyLevel;
-					if ( this.Guild.ClaimedKeep.CurrentRegion == this.CurrentRegion)
-						bonus += 3* this.Guild.ClaimedKeep.DifficultyLevel;
-				}
-			return bonus * 0.01;*/
-			return 0;
 		}
 
 		/// <summary>
@@ -5541,8 +5562,14 @@ namespace DOL.GS
 			if (slot == eArmorSlot.UNKNOWN) return 0;
 			InventoryItem item = Inventory.GetItem((eInventorySlot)slot);
 			if (item == null) return 0;
-
-			return (item.SPD_ABS + GetModified(eProperty.ArmorAbsorbtion)) * 0.01;
+			// vampiir random armor debuff change ~
+			double eaf = (item.SPD_ABS + GetModified(eProperty.ArmorAbsorbtion)) * 0.01;
+			GameSpellEffect effect = SpellHandler.FindEffectOnTarget(this, typeof(VampiirArmorDebuff));
+			if (effect != null && slot == (effect.SpellHandler as VampiirArmorDebuff).Slot)
+			{
+				eaf -= (int)(effect.SpellHandler as VampiirArmorDebuff).Spell.Value;
+			}
+			return eaf; 
 		}
 
 		/// <summary>
@@ -6388,7 +6415,22 @@ namespace DOL.GS
 			{
 				Spell nextSpell = m_nextSpell;
 				SpellLine nextSpellLine = m_nextSpellLine;
+				// warlock
+				if (nextSpell != null)
+				{
+					if (nextSpell.IsSecondary)
+					{
+						GameSpellEffect effect = SpellHandler.FindEffectOnTarget(this, "Powerless");
+						if (effect == null)
+							effect = SpellHandler.FindEffectOnTarget(this, "Range");
+						if (effect == null)
+							effect = SpellHandler.FindEffectOnTarget(this, "Uninterruptable");
 
+						if (effect != null)
+							effect.Cancel(false);
+					}
+
+				}
 				m_runningSpellHandler = null;
 				m_nextSpell = null;			// avoid restarting nextspell by reentrance from spellhandler
 				m_nextSpellLine = null;
@@ -6421,39 +6463,225 @@ namespace DOL.GS
 				return;
 			}
 
-			lock (m_spellQueueAccessMonitor)
+			if (IsSilenced)
 			{
-				if (m_runningSpellHandler != null && spell.CastTime > 0)
-				{
-					if (m_runningSpellHandler.Spell.InstrumentRequirement != 0)
-					{
-						Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CastSpell.AlreadyPlaySong"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-						return;
-					}
-					if (SpellQueue)
-					{
-						Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CastSpell.AlreadyCastFollow"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-						m_nextSpell = spell;
-						m_nextSpellLine = line;
-					}
-					else Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CastSpell.AlreadyCastNoQueue"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-					return;
-				}
+				Out.SendMessage("You are fumbling for your words, and cannot cast!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+				return;
 			}
 
+			lock (m_spellQueueAccessMonitor)
+			{
+				// warlock queue stuff
+				if (m_runningSpellHandler != null)
+				{
+					if (spell.CastTime > 0 && !(m_runningSpellHandler is ChamberSpellHandler) && spell.SpellType != "Chamber")
+					{
+						if (m_runningSpellHandler.Spell.InstrumentRequirement != 0)
+						{
+							Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CastSpell.AlreadyPlaySong"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+							return;
+						}
+						if (SpellQueue)
+						{
+							Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CastSpell.AlreadyCastFollow"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+							m_nextSpell = spell;
+							m_nextSpellLine = line;
+						}
+						else Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CastSpell.AlreadyCastNoQueue"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+						return;
+					}
+					else if (m_runningSpellHandler is PrimerSpellHandler)
+					{
+						if (!spell.IsSecondary)
+						{
+							Out.SendMessage("Only a secondary spell can follow up the spell your are casting!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+						}
+						else
+						{
+							if (SpellQueue && !(m_runningSpellHandler is ChamberSpellHandler))
+							{
+								Spell cloneSpell = null;
+								if (m_runningSpellHandler is PowerlessSpellHandler)
+								{
+									cloneSpell = spell.Copy();
+									cloneSpell.CostPower = false;
+									m_nextSpell = cloneSpell;
+									m_nextSpellLine = line;
+								}
+								else if (m_runningSpellHandler is RangeSpellHandler)
+								{
+									cloneSpell = spell.Copy();
+									cloneSpell.CostPower = false;
+									cloneSpell.OverrideRange = m_runningSpellHandler.Spell.Range;
+									m_nextSpell = cloneSpell;
+									m_nextSpellLine = line;
+								}
+								else if (m_runningSpellHandler is UninterruptableSpellHandler)
+								{
+									cloneSpell = spell.Copy();
+									cloneSpell.CostPower = false;
+									m_nextSpell = cloneSpell;
+									m_nextSpellLine = line;
+								}
+								Out.SendMessage("You prepare a secondary spell!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+							}
+							return;
+						}
+					}
+					else if (m_runningSpellHandler is ChamberSpellHandler)
+					{
+						ChamberSpellHandler chamber = (ChamberSpellHandler)m_runningSpellHandler;
+						if (IsMoving || IsStrafing)
+						{
+							m_runningSpellHandler = null;
+							return;
+						}
+						if (spell.IsPrimary)
+						{
+							if (spell.SpellType == "Bolt" && !chamber.Spell.AllowBolt)
+							{
+								Out.SendMessage("This spell cannot be stored in this chamber.", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+								return;
+							}
+							if (chamber.PrimarySpell == null)
+							{
+								Spell cloneSpell = spell.Copy();
+								cloneSpell.InChamber = true;
+								cloneSpell.CostPower = false;
+								chamber.PrimarySpell = cloneSpell;
+								chamber.PrimarySpellLine = line;
+								Out.SendMessage("You load " + spell.Name + " into your " + ((ChamberSpellHandler)m_runningSpellHandler).Spell.Name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								Out.SendMessage("Select the second spell for your " + ((ChamberSpellHandler)m_runningSpellHandler).Spell.Name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							}
+							else
+							{
+								Out.SendMessage("This spell cannot be stored in this chamber.", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+							}
+						}
+						else if (spell.IsSecondary)
+						{
+							if (chamber.PrimarySpell != null)
+							{
+								if (chamber.SecondarySpell == null)
+								{
+									Spell cloneSpell = spell.Copy();
+									cloneSpell.CostPower = false;
+									cloneSpell.OverrideRange = chamber.PrimarySpell.Range;
+									chamber.SecondarySpell = cloneSpell;
+									chamber.SecondarySpellLine = line;
+									Out.SendMessage("You load " + spell.Name + " into your " + ((ChamberSpellHandler)m_runningSpellHandler).Spell.Name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
+								}
+								else
+								{
+									Out.SendMessage("You have already chosen your spells for this chamber.", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+
+								}
+							}
+							else
+							{
+								Out.SendMessage("You must store a primary spell first!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+
+							}
+						}
+
+					}
+					else if (!(m_runningSpellHandler is ChamberSpellHandler) && spell.SpellType == "Chamber")
+					{
+						Out.SendMessage("You may not ready this spell as a followup!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+						return;
+					}
+				}
+			}
 			ISpellHandler spellhandler = ScriptMgr.CreateSpellHandler(this, spell, line);
 			if (spellhandler != null)
 			{
 				if (spell.CastTime > 0)
 				{
-					m_runningSpellHandler = spellhandler;
-					m_runningSpellHandler.CastingCompleteEvent += new CastingCompleteCallback(OnAfterSpellCastSequence);
-					spellhandler.CastSpell();
+					GameSpellEffect effect = SpellHandler.FindEffectOnTarget(this, "Chamber", spell.Name);
+
+					if (effect != null && spell.Name == effect.Spell.Name)
+					{
+						spellhandler.CastSpell();
+					}
+					else
+					{
+						if (spellhandler is ChamberSpellHandler && m_runningSpellHandler == null)
+						{
+							((ChamberSpellHandler)spellhandler).EffectSlot = ChamberSpellHandler.GetEffectSlot(spellhandler.Spell.Name);
+							m_runningSpellHandler = spellhandler;
+							m_runningSpellHandler.CastingCompleteEvent += new CastingCompleteCallback(OnAfterSpellCastSequence);
+							spellhandler.CastSpell();
+						}
+						else if (m_runningSpellHandler == null)
+						{
+							m_runningSpellHandler = spellhandler;
+							m_runningSpellHandler.CastingCompleteEvent += new CastingCompleteCallback(OnAfterSpellCastSequence);
+							spellhandler.CastSpell();
+						}
+					}
 				}
 				else
 				{
-					// insta cast no queue and no callback
-					spellhandler.CastSpell();
+					if (spell.IsSecondary)
+					{
+						GameSpellEffect effect = SpellHandler.FindEffectOnTarget(this, "Powerless");
+						if (effect == null)
+							effect = SpellHandler.FindEffectOnTarget(this, "Range");
+						if (effect == null)
+							effect = SpellHandler.FindEffectOnTarget(this, "Uninterruptable");
+
+						if (m_runningSpellHandler == null && effect == null)
+							Out.SendMessage("You cannot cast this spell directly!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+						else if (m_runningSpellHandler != null)
+						{
+							if (m_runningSpellHandler.Spell.IsPrimary)
+							{
+								lock (m_spellQueueAccessMonitor)
+								{
+									if (SpellQueue && !(m_runningSpellHandler is ChamberSpellHandler))
+									{
+										Out.SendMessage("You prepare this as a secondary spell!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+										m_nextSpell = spell;
+										m_nextSpellLine = line;
+									}
+								}
+							}
+							else if (!(m_runningSpellHandler is ChamberSpellHandler))
+								Out.SendMessage("You cannot cast this spell directly!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+						}
+						else if (effect != null)
+						{
+							Spell cloneSpell = null;
+							if (effect.SpellHandler is PowerlessSpellHandler)
+							{
+								cloneSpell = spell.Copy();
+								cloneSpell.CostPower = false;
+								spellhandler = ScriptMgr.CreateSpellHandler(this, cloneSpell, line);
+								spellhandler.CastSpell();
+								effect.Cancel(false);
+							}
+							else if (effect.SpellHandler is RangeSpellHandler)
+							{
+								cloneSpell = spell.Copy();
+								cloneSpell.CostPower = false;
+								cloneSpell.OverrideRange = effect.Spell.Range;
+								spellhandler = ScriptMgr.CreateSpellHandler(this, cloneSpell, line);
+								spellhandler.CastSpell();
+								effect.Cancel(false);
+							}
+							else if (effect.SpellHandler is UninterruptableSpellHandler)
+							{
+								cloneSpell = spell.Copy();
+								cloneSpell.CostPower = false;
+								spellhandler = ScriptMgr.CreateSpellHandler(this, cloneSpell, line);
+								spellhandler.CastSpell();
+								effect.Cancel(false);
+							}
+						}
+					}
+					else
+						spellhandler.CastSpell();
 				}
 			}
 			else
@@ -6805,6 +7033,13 @@ namespace DOL.GS
 								Out.SendTimerWindow("Summoning Mount", 5);
 								foreach (GamePlayer plr in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 									plr.Out.SendEmoteAnimation(this, eEmote.Horse_whistle);
+								// vampiir ~
+								GameSpellEffect effects = SpellHandler.FindEffectOnTarget(this, "VampiirSpeedEnhancement");
+								GameSpellEffect effect = SpellHandler.FindEffectOnTarget(this, "SpeedEnhancement");
+								if (effects != null)
+									effects.Cancel(false);
+								if (effect != null)
+									effect.Cancel(false);
 								Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.WhistleMount"), eChatType.CT_Emote, eChatLoc.CL_SystemWindow);
 								m_whistleMountTimer = new RegionTimer(this);
 								m_whistleMountTimer.Callback = new RegionTimerCallback(WhistleMountTimerCallback);
@@ -7256,10 +7491,7 @@ namespace DOL.GS
 			}
 			else
 			{
-				eChatType type = eChatType.CT_Send;
-				if (this.Client.Account.PrivLevel > 1)
-					type = eChatType.CT_Staff;
-				Out.SendMessage("You send, " + "\"" + str + "\" to " + target.Name, type, eChatLoc.CL_ChatWindow);
+				Out.SendMessage("You send, " + "\"" + str + "\" to " + target.Name, eChatType.CT_Send, eChatLoc.CL_ChatWindow);
 			}
 			return true;
 		}
@@ -7667,6 +7899,112 @@ namespace DOL.GS
 			{
 				//Set our new region
 				CurrentRegionID = regionID;
+				//Send the region update packet, the rest will be handled
+				//by the packethandlers
+				Out.SendRegionChanged();
+			}
+			else
+			{
+				//Add the player to the new coordinates
+				Out.SendPlayerJump(false);
+				LastNPCUpdate = Environment.TickCount;
+				CurrentUpdateArray.SetAll(false);
+				foreach (GameNPC npc in GetNPCsInRadius(WorldMgr.VISIBILITY_DISTANCE))
+				{
+					if (WorldMgr.GetDistance(npc.X, npc.Y, npc.Z, m_originalX, m_originalY, m_originalZ) <= WorldMgr.VISIBILITY_DISTANCE)
+						continue;
+
+					Out.SendNPCCreate(npc);
+					if (npc.Inventory != null)
+						Out.SendLivingEquipmentUpdate(npc);
+					//Send health update only if mob-health is not 100%
+					if (npc.HealthPercent != 100)
+						Out.SendObjectUpdate(npc);
+					CurrentUpdateArray[npc.ObjectID - 1] = true;
+				}
+				//Create player visible to all others
+				foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+				{
+					if (player != this)
+					{
+						player.Out.SendPlayerCreate(this);
+					}
+				}
+				UpdateEquipmentAppearance();
+
+				if (this.IsUnderwater)
+					this.IsDiving = true;
+			}
+			return true;
+		}
+
+		public bool MoveToInstance(Region rgn, int x, int y, int z, ushort heading)
+		{
+			if (IsOnHorse)
+				IsOnHorse = false;
+			//If the region doesn't exist, return false
+			if (rgn == null)
+			{
+				log.Error("rgn is null in MoveToInstance");
+				return false;
+			}
+			//If the x,y inside this region don't point to a zone
+			//return false
+			if (rgn.GetZone(x, y) == null)
+			{
+				log.Error("rgn.GetZone is null in MoveToInstance");
+				return false;
+			}
+
+			Diving(waterBreath.Normal);
+
+			if (SiegeWeapon != null)
+				SiegeWeapon.ReleaseControl();
+
+			if (rgn.ID != CurrentRegionID)
+			{
+				if (!RemoveFromWorld())
+					return false;
+				//notify event
+				CurrentRegion.Notify(RegionEvent.PlayerLeave, CurrentRegion, new RegionPlayerEventArgs(this));
+
+				CancelAllConcentrationEffects(true);
+				CommandNpcRelease();
+			}
+			else
+			{
+				//Just remove the player visible, but leave his OID intact!
+				//If player doesn't change region
+				DismountSteed(true);
+				foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+				{
+					if (player != this)
+					{
+						player.Out.SendObjectRemove(this);
+					}
+				}
+			}
+
+			//Remove the last update tick property, to prevent speedhack messages during zoning and teleporting!
+			TempProperties.removeProperty(PlayerPositionUpdateHandler.LASTUPDATETICK);
+
+			//Set the new destination
+			//Current Speed = 0 when moved ... else X,Y,Z continue to be modified
+			CurrentSpeed = 0;
+			MovementStartTick = Environment.TickCount;
+			int m_originalX = X;
+			int m_originalY = Y;
+			int m_originalZ = Z;
+			X = x;
+			Y = y;
+			Z = z;
+			Heading = heading;
+
+			//If the destination is in another region
+			if (rgn != CurrentRegion)
+			{
+				//Set our new region
+				CurrentRegion = rgn;
 				//Send the region update packet, the rest will be handled
 				//by the packethandlers
 				Out.SendRegionChanged();
@@ -8679,8 +9017,8 @@ namespace DOL.GS
 		{
 			if (arguments is ItemUnequippedArgs == false) return;
 			InventoryItem item = ((ItemUnequippedArgs)arguments).Item;
-			if (item == null) return;
 			int prevSlot = ((ItemUnequippedArgs)arguments).PreviousSlotPosition;
+			if (item == null) return;
 
 			//			DOLConsole.WriteLine("unequipped item '" + item.Name + "' !");
 
@@ -9576,6 +9914,20 @@ namespace DOL.GS
 			if (t == null)
 				t = PlayerTitleMgr.ClearTitle;
 			m_currentTitle = t;
+
+			//let's only check if we can use /level once shall we, 
+			//this is nice because i want to check the property often for the new catacombs classes
+			
+			//find all characters in the database
+			foreach (Character plr in Client.Account.Characters)
+			{
+				//where the level of one of the characters if 50
+				if (plr.Level == 50)
+				{
+					m_canUseSlashLevel = true;
+					break;
+				}
+			}
 		}
 
 		/// <summary>
@@ -10082,8 +10434,8 @@ namespace DOL.GS
 			//Hard cap is 1900
 			if (range > 1900)
 				range = 1900;
-
-
+			// vampiir stealth range, uncomment when add eproperty stealthrange i suppose
+			//range += GetModified(eProperty.StealthRange);
 			return WorldMgr.CheckDistance(this, enemy, range);
 		}
 
@@ -11644,6 +11996,55 @@ namespace DOL.GS
 			}
 		}
 
+		#endregion
+
+		#region Bainshee
+		protected bool m_InWraithForm = false;
+
+		public bool InWraithForm
+		{
+			get { return m_InWraithForm; }
+			set {
+				m_InWraithForm = value;
+				if (m_InWraithForm)
+				{
+					switch (Race)
+					{
+						case 9: Model = 1883; break; //Celt   
+						case 11: Model = 1885; break; //Elf
+						case 12: Model = 1884; break; //Lurikeen
+
+					}
+					WraithFormTime();
+				}
+				else
+				{
+					Model = (ushort)m_client.Account.Characters[m_client.ActiveCharIndex].CreationModel;
+				}
+			}
+		}
+
+		protected RegionTimer WraithTimer;
+
+		protected virtual int WraithForm(RegionTimer timer)
+		{
+			InWraithForm = false;
+
+			timer.Stop();
+			timer = null;
+			return 0;
+		}
+
+
+		protected void WraithFormTime()
+		{
+			if (WraithTimer != null)
+			{
+				WraithTimer.Stop();
+			}
+			WraithTimer = null;
+			WraithTimer = new RegionTimer(this, new RegionTimerCallback(WraithForm), 30000);
+		}
 		#endregion
 
 		/// <summary>

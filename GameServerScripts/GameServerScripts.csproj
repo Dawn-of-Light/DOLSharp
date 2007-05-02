@@ -161,6 +161,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="customnpc\Recharger.cs" />
+    <Compile Include="customnpc\TaskMaster.cs" />
     <Compile Include="customnpc\TownCrier.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -198,6 +199,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="gameevents\TutorialJumpPointHandler.cs" />
+    <Compile Include="gameevents\XFireSupport.cs" />
     <Compile Include="globals.cs">
       <SubType>Code</SubType>
     </Compile>

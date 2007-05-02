@@ -18,6 +18,7 @@
  */
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 
 using DOL.Database;
@@ -831,7 +832,11 @@ namespace DOL.GS.Scripts
 
 								if (showOffline)
 								{
-									foreach (Character ply in (Character[])GameServer.Database.SelectObjects(typeof(Character), "GuildID = '" + GameServer.Database.Escape(client.Player.GuildID) + "'"))
+									List<Character> chars = new List<Character>();
+									chars.AddRange((Character[])GameServer.Database.SelectObjects(typeof(Character), "GuildID = '" + GameServer.Database.Escape(client.Player.GuildID) + "'"));
+									chars.AddRange((Character[])GameServer.Database.SelectObjects(typeof(CharacterArchive), "GuildID = '" + GameServer.Database.Escape(client.Player.GuildID) + "'"));
+
+									foreach (Character ply in chars)
 									{
 										string keyStr = "";
 										switch (sort)
@@ -1114,25 +1119,31 @@ namespace DOL.GS.Scripts
 								{
 									Character c = (Character)GameServer.Database.SelectObject(typeof(Character), "Name = '" + GameServer.Database.Escape(playername) + "'");
 									if (c == null)
+										c = (Character)GameServer.Database.SelectObject(typeof(CharacterArchive), "Name = '" + GameServer.Database.Escape(playername) + "'");
+
+									if (c == null)
 									{
 										client.Out.SendMessage("No player by the name " + playername + " found.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 										return 1;
 									}
+
 									accountname = c.AccountName;
 								}
-								Character[] chars = (Character[])GameServer.Database.SelectObjects(typeof(Character), "AccountName = '" + GameServer.Database.Escape(accountname) + "'");
-								foreach (Character c in chars)
+								List<Character> chars = new List<Character>();
+								chars.AddRange((Character[])GameServer.Database.SelectObjects(typeof(Character), "AccountName = '" + GameServer.Database.Escape(accountname) + "'"));
+								chars.AddRange((Character[])GameServer.Database.SelectObjects(typeof(CharacterArchive), "AccountName = '" + GameServer.Database.Escape(accountname) + "'"));
+
+								foreach (Character ply in chars)
 								{
-									c.GuildID = "";
-									c.GuildRank = 0;
-									GameServer.Database.SaveObject(c);
+									ply.GuildID = "";
+									ply.GuildRank = 0;
+									GameServer.Database.SaveObject(ply);
 								}
 								break;
 							}
 							else if (args.Length == 3)
 							{
-								GameClient targetClient =
-									WorldMgr.GetClientByPlayerName(args[2], false, true);
+								GameClient targetClient = WorldMgr.GetClientByPlayerName(args[2], false, true);
 								if (targetClient != null)
 								{
 									return OnCommand(client, new string[] { "gc", "remove", args[2] });
@@ -1140,6 +1151,13 @@ namespace DOL.GS.Scripts
 								else
 								{
 									Character c = (Character)GameServer.Database.SelectObject(typeof(Character), "Name = '" + GameServer.Database.Escape(args[2]) + "'");
+									if (c == null)
+										c = (Character)GameServer.Database.SelectObject(typeof(CharacterArchive), "Name = '" + GameServer.Database.Escape(args[2]) + "'");
+									if (c == null)
+									{
+										client.Out.SendMessage(c.Name + " does not exist.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+										return 1;
+									}
 									if (c.GuildID != client.Player.GuildID)
 									{
 										client.Out.SendMessage(c.Name + " is not a member of your guild.", eChatType.CT_System, eChatLoc.CL_SystemWindow);

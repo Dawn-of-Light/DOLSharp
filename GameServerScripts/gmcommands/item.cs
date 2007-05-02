@@ -100,7 +100,7 @@ namespace DOL.GS.Scripts
 							//Create a new object
 							try
 							{
-								ItemTemplate template = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), GameServer.Database.Escape(args[2]));
+								ItemTemplate template = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), args[2]);
 								if (template == null)
 								{
 									client.Out.SendMessage("ItemTemplate with id " + args[2] + " could not be found!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -263,7 +263,7 @@ namespace DOL.GS.Scripts
 						}
 					case "info":
 						{
-							ItemTemplate obj = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), GameServer.Database.Escape(args[2]));
+							ItemTemplate obj = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), args[2]);
 
 							if (obj == null)
 							{
@@ -1502,7 +1502,7 @@ namespace DOL.GS.Scripts
 							//{
 
 
-							ItemTemplate temp = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), GameServer.Database.Escape(name));
+							ItemTemplate temp = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), name);
 
 							bool add = false;
 

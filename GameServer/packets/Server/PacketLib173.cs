@@ -50,6 +50,83 @@ namespace DOL.GS.PacketHandler
 		{
 		}
 
+
+		public override void SendWarlockChamberEffect(GamePlayer player)
+		{
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.VisualEffect));
+
+			pak.WriteShort((ushort)player.ObjectID);
+			pak.WriteByte((byte)3);
+
+			SortedList sortList = new SortedList();
+			sortList.Add(1, null);
+			sortList.Add(2, null);
+			sortList.Add(3, null);
+			sortList.Add(4, null);
+			sortList.Add(5, null);
+			lock (player.EffectList)
+			{
+				foreach (IGameEffect fx in player.EffectList)
+				{
+					if (fx is GameSpellEffect)
+					{
+						GameSpellEffect effect = (GameSpellEffect)fx;
+						if (effect.SpellHandler.Spell != null && (effect.SpellHandler.Spell.SpellType == "Chamber"))
+						{
+							ChamberSpellHandler chamber = (ChamberSpellHandler)effect.SpellHandler;
+							sortList[chamber.EffectSlot] = effect;
+						}
+					}
+				}
+				foreach (GameSpellEffect effect in sortList.Values)
+				{
+					if (effect == null)
+					{
+						pak.WriteByte((byte)0);
+					}
+					else
+					{
+						ChamberSpellHandler chamber = (ChamberSpellHandler)effect.SpellHandler;
+						if (chamber.PrimarySpell != null && chamber.SecondarySpell == null)
+						{
+							pak.WriteByte((byte)3);
+						}
+						else if (chamber.PrimarySpell != null && chamber.SecondarySpell != null)
+						{
+							if (chamber.SecondarySpell.SpellType == "Lifedrain")
+								pak.WriteByte(0x11);
+							else if (chamber.SecondarySpell.SpellType.IndexOf("SpeedDecrease") != -1)
+								pak.WriteByte(0x33);
+							else if (chamber.SecondarySpell.SpellType == "PowerRegenBuff")
+								pak.WriteByte(0x77);
+							else if (chamber.SecondarySpell.SpellType == "DirectDamage")
+								pak.WriteByte(0x66);
+							else if (chamber.SecondarySpell.SpellType == "SpreadHeal")
+								pak.WriteByte(0x55);
+							else if (chamber.SecondarySpell.SpellType == "Nearsight")
+								pak.WriteByte(0x44);
+							else if (chamber.SecondarySpell.SpellType == "DamageOverTime")
+								pak.WriteByte(0x22);
+						}
+					}
+				}
+			}
+			//pak.WriteByte(0x11); 
+			//pak.WriteByte(0x22); 
+			//pak.WriteByte(0x33); 
+			//pak.WriteByte(0x44); 
+			//pak.WriteByte(0x55); 
+			pak.WriteInt(0);
+
+			foreach (GamePlayer plr in player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+			{
+				if (player != plr)
+					plr.Client.PacketProcessor.SendTCP(pak);
+			}
+
+			SendTCP(pak);
+		}
+
 		public override void SendUpdateIcons(IList changedEffects, ref int lastUpdateEffectsCount)
 		{
 			if (m_gameClient.Player == null) return;
@@ -151,7 +228,7 @@ namespace DOL.GS.PacketHandler
 					GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.ClientRegions));
 					for (int i = 0; i < 4; i++)
 					{
-						while (index < count && m_gameClient.ClientType <= entries[index].expansion)
+						while (index < count && (int)m_gameClient.ClientType <= entries[index].expansion)
 						{
 							index++;
 						}
@@ -279,7 +356,7 @@ namespace DOL.GS.PacketHandler
 							pak.WriteByte((byte)((((characters[j].Race & 0xF0) << 2) + (characters[j].Race & 0x0F)) | (characters[j].Gender << 4)));
 							pak.WriteShortLowEndian((ushort)characters[j].CurrentModel);
 							pak.WriteByte((byte)characters[j].Region);
-							if (reg == null || m_gameClient.ClientType > reg.Expansion)
+							if (reg == null || (int)m_gameClient.ClientType > reg.Expansion)
 								pak.WriteByte(0x00);
 							else
 								pak.WriteByte((byte)(reg.Expansion + 1)); //0x04-Cata zone, 0x05 - DR zone

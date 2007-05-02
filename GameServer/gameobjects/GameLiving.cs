@@ -910,14 +910,6 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Calculates keep bonuses
-		/// </summary>
-		/// <returns></returns>
-		public virtual double GetKeepBonuses()
-		{
-			return 0;
-		}
-		/// <summary>
 		/// Gets the weaponskill of weapon
 		/// </summary>
 		public virtual double GetWeaponSkill(InventoryItem weapon)
@@ -1015,6 +1007,20 @@ namespace DOL.GS
 		{
 			get { return Health > 0; }
 		}
+
+		protected bool m_silenced = false;
+		/// <summary>
+		/// Is the living silenced
+		/// </summary>
+		public bool IsSilenced
+		{
+			get { return m_silenced; }
+			set
+			{
+				m_silenced = value;
+			}
+		}
+
 		/// <summary>
 		/// Check this flag to see wether this living is involved in combat
 		/// </summary>
@@ -2644,7 +2650,7 @@ namespace DOL.GS
 				GamePlayer player = this as GamePlayer;
 				if (player != null)
 				{
-					if ((player.HasAbility(Abilities.Evade) && IsObjectInFront(ad.Attacker, 180)) || player.HasAbility(Abilities.Advanced_Evade) || player.EffectList.GetOfType(typeof(CombatAwarenessEffect)) != null)
+					if (IsObjectInFront(ad.Attacker, 180) || player.HasAbility(Abilities.Advanced_Evade) || player.EffectList.GetOfType(typeof(CombatAwarenessEffect)) != null)
 						evadeChance = GetModified(eProperty.EvadeChance);
 				}
 				else if (IsObjectInFront(ad.Attacker, 180))
@@ -2694,7 +2700,7 @@ namespace DOL.GS
 					double parryChance = double.MinValue;
 					if (player != null)
 					{
-						if (player.HasSpecialization(Specs.Parry) && IsObjectInFront(ad.Attacker, 120) && AttackWeapon != null)
+						if (IsObjectInFront(ad.Attacker, 120) && AttackWeapon != null)
 						{
 							parryChance = GetModified(eProperty.ParryChance);
 						}
@@ -2869,7 +2875,7 @@ namespace DOL.GS
 			int armorBonus = 0;
 			if (ad.Target is GamePlayer)
 			{
-				ad.ArmorHitLocation = ((GamePlayer)ad.Target).CalculateArmorHitLocation();
+				ad.ArmorHitLocation = ((GamePlayer)ad.Target).CalculateArmorHitLocation(ad);
 				InventoryItem armor = null;
 				if (ad.Target.Inventory != null)
 					armor = ad.Target.Inventory.GetItem((eInventorySlot)ad.ArmorHitLocation);
@@ -5042,7 +5048,9 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		/// </summary>
 		public ISpellHandler CurrentSpellHandler
 		{
+			// change for warlock
 			get { return m_runningSpellHandler; }
+			set { m_runningSpellHandler = value; }
 		}
 
 		/// <summary>
