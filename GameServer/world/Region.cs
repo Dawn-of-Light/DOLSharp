@@ -199,6 +199,13 @@ namespace DOL.GS
 			get { return m_regionData; }
 		}
 
+		private byte m_instanceLevel = 0;
+		public byte InstanceLevel
+		{
+			get { return m_instanceLevel; }
+			set { m_instanceLevel = value; }
+		}
+
 		/// <summary>
 		/// Constructs a new empty Region
 		/// </summary>
@@ -285,6 +292,22 @@ namespace DOL.GS
 					default:
 						return false;
 				}
+			}
+		}
+
+		/// <summary>
+		/// Is the Region instanced
+		/// </summary>
+		public bool IsInstance
+		{
+			get
+			{
+				foreach (Region r in WorldMgr.Regions.Values)
+				{
+					if (r.ID != ID && r.Description == Description)
+						return true;
+				}
+				return false;
 			}
 		}
 
@@ -576,6 +599,13 @@ namespace DOL.GS
 						try
 						{
 							myMob.LoadFromDatabase(mob);
+							//instance information
+							if (m_instanceLevel != 0)
+							{
+								myMob.CurrentRegion = this;
+								myMob.Level = m_instanceLevel;
+								myMob.RespawnInterval = -1;
+							}
 							if (myMob is GameMerchant)
 							{
 								myMerchantCount++;

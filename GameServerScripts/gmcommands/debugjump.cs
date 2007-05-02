@@ -66,7 +66,7 @@ namespace DOL.GS.Scripts
 				client.Out.SendMessage("Unknown region (" + RegionID.ToString() + ").", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
-			else if (reg.Expansion >= client.ClientType)
+			else if (reg.Expansion >= (int)client.ClientType)
 			{
 				client.Out.SendMessage("Region (" + reg.Description + ") is not supported by your client.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;

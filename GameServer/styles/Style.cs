@@ -130,10 +130,10 @@ namespace DOL.GS.Styles
 		/// </summary>
 		protected DBStyle baseStyle = null;
 
-        /// <summary>
-        /// (readonly) The list of procs available for this style
-        /// </summary>
-        protected List<DBStyleXSpell> m_Procs;
+		/// <summary>
+		/// (readonly) The list of procs available for this style
+		/// </summary>
+		protected List<DBStyleXSpell> m_Procs;
 
 		/// <summary>
 		/// Constructs a new Style object based on a database Style object
@@ -143,16 +143,16 @@ namespace DOL.GS.Styles
 			: base(style.Name, (ushort)style.ID, style.SpecLevelRequirement)
 		{
 			baseStyle = style;
-            m_Procs = new List<DBStyleXSpell>();
+			m_Procs = new List<DBStyleXSpell>();
 		}
 
-        /// <summary>
-        /// (readonly)(procs) The list of procs available for this style
-        /// </summary>
-        public List<DBStyleXSpell> Procs
-        {
-            get { return m_Procs;  }
-        }
+		/// <summary>
+		/// (readonly)(procs) The list of procs available for this style
+		/// </summary>
+		public List<DBStyleXSpell> Procs
+		{
+			get { return m_Procs; }
+		}
 
 		/// <summary>
 		/// (readonly) The Specialization's name required to execute this style
@@ -278,13 +278,18 @@ namespace DOL.GS.Styles
 			get { return baseStyle.TwoHandAnimation; }
 		}
 
-        /// <summary>
-        /// (readonly) (procs) Tell if the proc should be select randomly
-        /// </summary>
-        public bool RandomProc
-        {
-            get { return baseStyle.RandomProc; }
-        }
+		/// <summary>
+		/// (readonly) (procs) Tell if the proc should be select randomly
+		/// </summary>
+		public bool RandomProc
+		{
+			get { return baseStyle.RandomProc; }
+		}
+
+		public eArmorSlot ArmorHitLocation
+		{
+			get { return (eArmorSlot)baseStyle.ArmorHitLocation; }
+		}
 
 		/// <summary>
 		/// Gets name of required weapon type

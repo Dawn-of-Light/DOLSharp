@@ -64,6 +64,9 @@ namespace DOL.GS.PacketHandler
 			if (playerToCreate.CurrentHouse != m_gameClient.Player.CurrentHouse)
 				return;
 
+			if (playerToCreate.CurrentRegion != m_gameClient.Player.CurrentRegion)
+				return;
+
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.PlayerCreate172));
 			pak.WriteShort((ushort)playerToCreate.Client.SessionID);
 			pak.WriteShort((ushort)playerToCreate.ObjectID);
@@ -203,6 +206,8 @@ namespace DOL.GS.PacketHandler
 
 		public override void SendLivingEquipmentUpdate(GameLiving living)
 		{
+			if (m_gameClient.Player == null || living.CurrentHouse != m_gameClient.Player.CurrentHouse || living.CurrentRegion != m_gameClient.Player.CurrentRegion)
+				return;
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.EquipmentUpdate));
 			ICollection items = null;
 			if (living.Inventory != null)

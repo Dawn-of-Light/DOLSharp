@@ -34,19 +34,7 @@ namespace DOL.GS.Spells
 		/// <param name="effectiveness">factor from 0..1 (0%-100%)</param>
 		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
 		{
-			if (Spell.Level > 0)
-			{
-				int specLevel = 0;
-				if (Caster is GamePlayer)
-				{
-					specLevel = ((GamePlayer)Caster).GetModifiedSpecLevel(m_spellLine.Spec);
-				}
-				effectiveness = 0.75 + (specLevel - 1) * 0.5 / Spell.Level;
-				effectiveness = Math.Max(0.75, effectiveness);
-				effectiveness = Math.Min(1.25, effectiveness);
-			}
-
-			base.ApplyEffectOnTarget(target, effectiveness);
+			base.ApplyEffectOnTarget(target, 1);
 		}
 
 		protected override void SendUpdates(GameLiving target)

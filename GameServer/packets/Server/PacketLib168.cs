@@ -87,6 +87,9 @@ namespace DOL.GS.PacketHandler
 			SendTCP(pak);
 		}
 
+		public virtual void SendWarlockChamberEffect(GamePlayer player)
+		{ }
+
 		public virtual void SendLoginDenied(eLoginError et)
 		{
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.LoginDenied));
@@ -224,7 +227,7 @@ namespace DOL.GS.PacketHandler
 							pak.WriteByte((byte)((((characters[j].Race & 0xF0) << 2) + (characters[j].Race & 0x0F)) | (characters[j].Gender << 4)));
 							pak.WriteShortLowEndian((ushort)characters[j].CurrentModel);
 							pak.WriteByte((byte)characters[j].Region);
-							if (reg == null || m_gameClient.ClientType > reg.Expansion)
+							if (reg == null || (int)m_gameClient.ClientType > reg.Expansion)
 								pak.WriteByte(0x00);
 							else
 								pak.WriteByte((byte)(reg.Expansion + 1)); //0x04-Cata zone, 0x05 - DR zone
@@ -428,7 +431,7 @@ namespace DOL.GS.PacketHandler
 				GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.ClientRegions));
 				for (int i = 0; i < 4; i++)
 				{
-					while (index < count && (entries[index].id > byte.MaxValue || m_gameClient.ClientType <= entries[index].expansion))
+					while (index < count && (entries[index].id > byte.MaxValue || (int)m_gameClient.ClientType <= entries[index].expansion))
 					{ //skip high ID regions added with catacombs
 						index++;
 					}
@@ -598,6 +601,9 @@ namespace DOL.GS.PacketHandler
 			if (playerToCreate.CurrentHouse != m_gameClient.Player.CurrentHouse)
 				return;
 
+			if (playerToCreate.CurrentRegion != m_gameClient.Player.CurrentRegion)
+				return;
+
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.PlayerCreate));
 			pak.WriteShort((ushort)playerToCreate.Client.SessionID);
 			pak.WriteShort((ushort)playerToCreate.ObjectID);
@@ -660,6 +666,9 @@ namespace DOL.GS.PacketHandler
 					log.Warn("SendObjectUpdate: obj zone == null:" + obj.InternalID);
 				return;
 			}
+
+			if (m_gameClient.Player == null || obj.CurrentHouse != m_gameClient.Player.CurrentHouse || obj.CurrentRegion != m_gameClient.Player.CurrentRegion)
+				return;
 			ushort XOffsetInZone = (ushort)(obj.X - z.XOffset);
 			ushort YOffsetInZone = (ushort)(obj.Y - z.YOffset);
 			ushort XOffsetInTargetZone = 0;
@@ -846,7 +855,7 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendNPCCreate(GameNPC npc)
 		{
-			if (m_gameClient.Player == null || npc.CurrentHouse != m_gameClient.Player.CurrentHouse)
+			if (m_gameClient.Player == null || npc.CurrentHouse != m_gameClient.Player.CurrentHouse || npc.CurrentRegion != m_gameClient.Player.CurrentRegion)
 				return;
 
 			if (npc is GameMovingObject)
@@ -916,6 +925,8 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendLivingEquipmentUpdate(GameLiving living)
 		{
+			if (m_gameClient.Player == null || living.CurrentHouse != m_gameClient.Player.CurrentHouse || living.CurrentRegion != m_gameClient.Player.CurrentRegion)
+				return;
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.EquipmentUpdate));
 
 			pak.WriteShort((ushort)living.ObjectID);
@@ -3133,6 +3144,9 @@ namespace DOL.GS.PacketHandler
 		public virtual void SendPlayerFreeLevelUpdate()
 		{
 		}
+
+		public virtual void SendXFireInfo(byte flag)
+		{ }
 
 		/// <summary>
 		/// The bow prepare animation

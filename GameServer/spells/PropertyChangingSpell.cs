@@ -42,7 +42,29 @@ namespace DOL.GS.Spells
 			m_caster.Mana -= CalculateNeededPower(target);
 			base.FinishSpellCast(target);
 		}
-
+		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
+		{
+			// vampiir, they cannot be buffed except with resists/armor factor/ haste / power regen 
+			GamePlayer vampiir = target as GamePlayer;
+			if (vampiir != null && HasPositiveEffect && vampiir.CharacterClass.ID == (int)eCharacterClass.Vampiir && m_caster != vampiir)
+			{
+				//restrictions
+				if (!(this is EnduranceRegenSpellHandler 
+					|| this is AbstractResistBuff
+					|| this is CombatSpeedBuff
+					|| this is PropertyChangingSpell))
+				{
+					GamePlayer caster = m_caster as GamePlayer;
+					if (caster != null)
+					{
+						caster.Out.SendMessage("Your buff has no effect on the Vampiir!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					}
+					vampiir.Out.SendMessage("This buff has no effect on you!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					return;
+				}
+			}
+			base.ApplyEffectOnTarget(target, effectiveness);
+		}
 		/// <summary>
 		/// start changing effect on target
 		/// </summary>

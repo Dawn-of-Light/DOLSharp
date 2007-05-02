@@ -243,7 +243,7 @@ namespace DOL.GS.Spells
 
 					double damage = m_handler.Spell.Damage / 2; // another half is physical damage
 					if(target is GamePlayer)
-						ad.ArmorHitLocation = ((GamePlayer)target).CalculateArmorHitLocation();
+						ad.ArmorHitLocation = ((GamePlayer)target).CalculateArmorHitLocation(ad);
 
 					InventoryItem armor = null;
 					if (target.Inventory != null)

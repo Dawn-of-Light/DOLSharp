@@ -241,4 +241,71 @@ namespace DOL.GS.Spells
 		// constructor
 		public AbstractBuffShear(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
 	}
+
+	[SpellHandlerAttribute("RandomBuffShear")]
+	public class RandomBuffShear : SpellHandler
+	{
+
+		/// <summary>
+		/// called after normal spell cast is completed and effect has to be started
+		/// </summary>
+		public override void FinishSpellCast(GameLiving target)
+		{
+			m_caster.Mana -= CalculateNeededPower(target);
+			base.FinishSpellCast(target);
+		}
+
+		/// <summary>
+		/// execute non duration spell effect on target
+		/// </summary>
+		/// <param name="target"></param>
+		/// <param name="effectiveness"></param>
+		public override void OnDirectEffect(GameLiving target, double effectiveness)
+		{
+			base.OnDirectEffect(target, effectiveness);
+			if (target == null) return;
+			if (!target.IsAlive || target.ObjectState != GameLiving.eObjectState.Active) return;
+
+			target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, AttackData.eAttackType.Spell, Caster);
+			if (target is GameNPC)
+			{
+				GameNPC npc = (GameNPC)target;
+				IAggressiveBrain aggroBrain = npc.Brain as IAggressiveBrain;
+				if (aggroBrain != null)
+					aggroBrain.AddToAggroList(Caster, 1);
+			}
+
+			//check for spell.
+			foreach (GameSpellEffect effect in target.EffectList.GetAllOfType(typeof(GameSpellEffect)))
+			{
+				foreach (Type buffType in buffs)
+				{
+					if (effect.SpellHandler.GetType().IsInstanceOfType(buffType))
+					{
+						SendEffectAnimation(target, 0, false, 1);
+						effect.Cancel(false);
+						MessageToCaster("Your spell rips away some of your target's enhancing magic.", eChatType.CT_Spell);
+						MessageToLiving(target, "Some of your enhancing magic has been ripped away by a spell!", eChatType.CT_Spell);
+						return;
+					}
+				}
+			}
+
+			SendEffectAnimation(target, 0, false, 0);
+			MessageToCaster("No enhancement of that type found on the target.", eChatType.CT_SpellResisted);
+
+			/*
+			if (!noMessages) 
+			{
+				MessageToLiving(effect.Owner, effect.Spell.Message3, eChatType.CT_SpellExpires);
+				Message.SystemToArea(effect.Owner, Util.MakeSentence(effect.Spell.Message4, effect.Owner.GetName(0, false)), eChatType.CT_SpellExpires, effect.Owner);
+			}
+			*/
+		}
+
+		private static Type[] buffs = new Type[] { typeof(AcuityBuff), typeof(StrengthBuff), typeof(DexterityBuff), typeof(ConstitutionBuff), typeof(StrengthConBuff), typeof(DexterityQuiBuff) };
+
+		// constructor
+		public RandomBuffShear(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+	}
 }

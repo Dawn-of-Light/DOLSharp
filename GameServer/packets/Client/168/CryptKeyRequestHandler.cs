@@ -27,7 +27,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 		{
 			int rc4 = packet.ReadByte();
 			byte clientType = (byte)packet.ReadByte();
-			client.ClientType = clientType & 0x0F;
+			client.ClientType = (GameClient.eClientType)(clientType & 0x0F);
 			client.ClientAddons = (GameClient.eClientAddons)(clientType & 0xF0);
 			byte major = (byte)packet.ReadByte();
 			byte minor = (byte)packet.ReadByte();

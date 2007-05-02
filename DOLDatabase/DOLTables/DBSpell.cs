@@ -63,7 +63,11 @@ namespace DOL.Database
 		protected int m_subSpellID = 0;
 		protected bool m_moveCast = false;
 		protected bool m_uninterruptible = false;
-
+		protected int m_healthPenalty = 0;
+		// warlock
+		protected bool m_isprimary;
+		protected bool m_issecondary;
+		protected bool m_allowbolt;
 		static bool m_autoSave;
 
 		public DBSpell()
@@ -539,5 +543,58 @@ namespace DOL.Database
 				m_uninterruptible = value;
 			}
 		}
+
+		[DataElement(AllowDbNull = true)]
+		public int HealthPenalty
+		{
+			get { return m_healthPenalty; }
+			set
+			{
+				Dirty = true;
+				m_healthPenalty = value;
+			}
+		}
+
+		#region warlock
+		[DataElement(AllowDbNull = true)]
+		public bool IsPrimary
+		{
+			get
+			{
+				return (bool)m_isprimary;
+			}
+			set
+			{
+				Dirty = true;
+				m_isprimary = (bool)value;
+			}
+		}
+		[DataElement(AllowDbNull = true)]
+		public bool IsSecondary
+		{
+			get
+			{
+				return (bool)m_issecondary;
+			}
+			set
+			{
+				Dirty = true;
+				m_issecondary = (bool)value;
+			}
+		}
+		[DataElement(AllowDbNull = true)]
+		public bool AllowBolt
+		{
+			get
+			{
+				return (bool)m_allowbolt;
+			}
+			set
+			{
+				Dirty = true;
+				m_allowbolt = (bool)value;
+			}
+		}
+		#endregion
 	}
 }

@@ -130,6 +130,11 @@ namespace DOL.Database
 		/// Randomly cast a proc
 		/// </summary>
 		protected bool m_RandomProc;
+
+		/// <summary>
+		/// The armor location this style should hit, taken from eInventorySlot
+		/// </summary>
+		protected int m_armorHitLocation;
 		
 		static bool m_autoSave;
 
@@ -320,6 +325,16 @@ namespace DOL.Database
 		{
 			get { return m_RandomProc; }
 			set { m_RandomProc = value; Dirty = true; }
+		}
+
+		/// <summary>
+		/// What armor location should this style hit, take from eInventorySlot
+		/// </summary>
+		[DataElement(AllowDbNull = true)]
+		public int ArmorHitLocation
+		{
+			get { return m_armorHitLocation; }
+			set { m_armorHitLocation = value; Dirty = true; }
 		}
 
 		/// <summary>

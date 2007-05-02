@@ -536,7 +536,7 @@ namespace DOL
 			/// <summary>
 			/// Holds client software type
 			/// </summary>
-			protected int m_clientType = -1;
+			protected eClientType m_clientType = eClientType.Unknown;
 			/// <summary>
 			/// Holds installed client addons
 			/// </summary>
@@ -544,7 +544,7 @@ namespace DOL
 			/// <summary>
 			/// Gets/sets client software type (classic/SI/ToA/Catacombs)
 			/// </summary>
-			public int ClientType
+			public eClientType ClientType
 			{
 				get { return m_clientType; }
 				set { m_clientType = value; }

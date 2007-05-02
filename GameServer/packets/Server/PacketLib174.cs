@@ -147,7 +147,7 @@ namespace DOL.GS.PacketHandler
 							pak.WriteByte((byte)((((characters[j].Race & 0xF0) << 2) + (characters[j].Race & 0x0F)) | (characters[j].Gender << 4)));
 							pak.WriteShortLowEndian((ushort)characters[j].CurrentModel);
 							pak.WriteByte((byte)characters[j].Region);
-							if (reg == null || m_gameClient.ClientType > reg.Expansion)
+							if (reg == null || (int)m_gameClient.ClientType > reg.Expansion)
 								pak.WriteByte(0x00);
 							else
 								pak.WriteByte((byte)(reg.Expansion + 1)); //0x04-Cata zone, 0x05 - DR zone
@@ -286,6 +286,9 @@ namespace DOL.GS.PacketHandler
 			}
 
 			if (playerToCreate.CurrentHouse != m_gameClient.Player.CurrentHouse)
+				return;
+
+			if (playerToCreate.CurrentRegion != m_gameClient.Player.CurrentRegion)
 				return;
 
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.PlayerCreate172));
@@ -518,6 +521,8 @@ namespace DOL.GS.PacketHandler
 		}
 		public override void SendLivingEquipmentUpdate(GameLiving living)
 		{
+			if (m_gameClient.Player == null || living.CurrentHouse != m_gameClient.Player.CurrentHouse || living.CurrentRegion != m_gameClient.Player.CurrentRegion)
+				return;
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.EquipmentUpdate));
 			ICollection items = null;
 			if (living.Inventory != null)

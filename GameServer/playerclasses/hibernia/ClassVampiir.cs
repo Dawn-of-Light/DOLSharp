@@ -83,7 +83,7 @@ namespace DOL.GS.Scripts
 				player.AddSpellLine(SkillBase.GetSpellLine("Dementia"));
 				player.AddSpellLine(SkillBase.GetSpellLine("Shadow Mastery"));
 				player.AddSpellLine(SkillBase.GetSpellLine("Vampiiric Embrace"));
-				//player.AddAbility(SkillBase.GetAbility(Abilities.VampiirBolt));
+				player.AddAbility(SkillBase.GetAbility(Abilities.VampiirBolt, 0));
 			}
 			if (player.Level >= 6)
 			{
@@ -95,6 +95,7 @@ namespace DOL.GS.Scripts
 			if (player.Level >= 10)
 			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.SafeFall, 1));
+				player.AddAbility(SkillBase.GetAbility(Abilities.VampiirBolt, 1));
 			}
 			if (player.Level >= 15)
 			{
@@ -103,6 +104,7 @@ namespace DOL.GS.Scripts
 			if (player.Level >= 20)
 			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.SafeFall, 2));
+				player.AddAbility(SkillBase.GetAbility(Abilities.VampiirBolt, 2));
 			}
 			if (player.Level >= 25)
 			{
@@ -111,14 +113,25 @@ namespace DOL.GS.Scripts
 			if (player.Level >= 30)
 			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.SafeFall, 3));
+				player.AddAbility(SkillBase.GetAbility(Abilities.VampiirBolt, 3));
+			}
+			if (player.Level >= 35)
+			{
+				player.AddAbility(SkillBase.GetAbility(Abilities.VampiirBolt, 4));
 			}
 			if (player.Level >= 40)
 			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.SafeFall, 4));
+				player.AddAbility(SkillBase.GetAbility(Abilities.VampiirBolt, 5));
+			}
+			if (player.Level >= 45)
+			{
+				player.AddAbility(SkillBase.GetAbility(Abilities.VampiirBolt, 6));
 			}
 			if (player.Level >= 50)
 			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.SafeFall, 5));
+				player.AddAbility(SkillBase.GetAbility(Abilities.VampiirBolt, 7));
 			}
 		}
 	}

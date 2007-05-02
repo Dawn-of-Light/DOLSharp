@@ -119,7 +119,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 							return 1;
 						}
 						if (log.IsInfoEnabled)
-							log.Info(string.Format("({0})User {1} logging on! ({2} type:{3} add:{4})", ipAddress, username, client.Version.ToString(), client.ClientType.ToString(), client.ClientAddons.ToString("G")));
+							log.Info(string.Format("({0})User {1} logging on! ({2} type:{3} add:{4})", ipAddress, username, client.Version.ToString(), ((GameClient.eClientType)client.ClientType).ToString(), client.ClientAddons.ToString("G")));
 						// check client already connected
 						GameClient findclient = WorldMgr.GetClientByAccountName(username, true);
 						if(findclient != null)

@@ -44,14 +44,17 @@ namespace DOL.GS.Scripts
 		{
 			base.OnLevelUp(player);
 
-			// Specializations
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Light));
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Mana));
-						
+			if (this is ClassBainshee == false)
+			{
+				// Specializations
+				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Light));
+				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Mana));
 
-			// Spell lines
-			player.AddSpellLine(SkillBase.GetSpellLine("Way of the Sun"));
-			player.AddSpellLine(SkillBase.GetSpellLine("Way of the Moon"));
+
+				// Spell lines
+				player.AddSpellLine(SkillBase.GetSpellLine("Way of the Sun"));
+				player.AddSpellLine(SkillBase.GetSpellLine("Way of the Moon"));
+			}
 
 			// Abilities
 			player.AddAbility(SkillBase.GetAbility(Abilities.Sprint));
