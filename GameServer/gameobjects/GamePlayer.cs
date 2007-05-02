@@ -9027,13 +9027,13 @@ namespace DOL.GS
 
 						foreach (GamePlayer eligibleMember in eligibleMembers)
 						{
-							eligibleMember.AddMoney(moneyObject.TotalCopper / eligibleMembers.Count, LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.YourLootShare", (moneyObject.TotalCopper / eligibleMembers.Count).ToString()));
+							eligibleMember.AddMoney(moneyObject.TotalCopper / eligibleMembers.Count, LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.YourLootShare", Money.GetString(moneyObject.TotalCopper / eligibleMembers.Count)));
 						}
 					}
 					else
 					{
 						//Add money only to picking player
-						AddMoney(moneyObject.TotalCopper, LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.YouPickUp", moneyObject.TotalCopper.ToString()));
+						AddMoney(moneyObject.TotalCopper, LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.YouPickUp", Money.GetString(moneyObject.TotalCopper)));
 					}
 					moneyObject.Delete();
 					return true;
