@@ -74,12 +74,7 @@ namespace DOL.GS.Scripts
 			player.AddSpellLine(SkillBase.GetSpellLine("Hexing"));
 			player.AddSpellLine(SkillBase.GetSpellLine("Witchcraft"));
 
-			if(player.Level >= 5)
-			{
-				// Abilities
-				player.AddAbility(SkillBase.GetAbility(Abilities.Quickcast));
-			}
-			if (player.Level >= 15)
+			if (player.Level >= 6)
 			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.Tireless));
 			}

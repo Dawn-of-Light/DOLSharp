@@ -166,7 +166,7 @@ namespace DOL.GS.Spells
 		/// <param name="living">owner of pulsing spell</param>
 		/// <param name="spellType">type of spell to cancel</param>
 		/// <returns>true if any spells were canceled</returns>
-		public static bool CancelPulsingSpell(GameLiving living, string spellType)
+		public virtual bool CancelPulsingSpell(GameLiving living, string spellType)
 		{
 			lock (living.ConcentrationEffects)
 			{
@@ -363,16 +363,16 @@ namespace DOL.GS.Spells
 				return false;
 			}
 
-			if (m_caster.AttackState)
+			if (m_caster.AttackState && m_spell.CastTime != 0)
 			{
-				if (m_spell.CastTime != 0)
+				if ((m_caster is GamePlayer && (m_caster as GamePlayer).CharacterClass.ID == (int)eCharacterClass.Vampiir) == false)
 				{
 					m_caster.StopAttack();
 					return false;
 				}
 			}
 
-			if (m_spell.CastTime > 0 && m_caster is GamePlayer && m_caster.EffectList.GetOfType(typeof(QuickCastEffect)) == null)
+			if (!m_spell.Uninterruptible && m_spell.CastTime > 0 && m_caster is GamePlayer && m_caster.EffectList.GetOfType(typeof(QuickCastEffect)) == null)
 			{
 				long leftseconds = Math.Max(
 					Caster.TempProperties.getLongProperty(INTERRUPT_TIMEOUT_PROPERTY, 0) - Caster.CurrentRegion.Time,
@@ -408,7 +408,7 @@ namespace DOL.GS.Spells
 				//					return false;
 				//				}
 			}
-			else if (m_spell.Target != "Self" && m_spell.Target != "Group" && m_spell.Target != "Pet" && m_spell.Range > 0)
+			else if (m_spell.Target.ToLower() != "self" && m_spell.Target.ToLower() != "group" && m_spell.Target.ToLower() != "pet" && m_spell.Target.ToLower() != "cone" && m_spell.Range > 0)
 			{
 				//all spells that need a target
 
@@ -510,23 +510,11 @@ namespace DOL.GS.Spells
 				}
 			}
 
-			//			if (m_caster is GamePlayer) 
-			//			{
-			////				if (this.CheckDisabled(spl)) {
-			////					this.Out.SendMessage("You must wait for the "+spl.RecastDelay+" second recast delay to expire!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			////					return false;
-			////				}
-			////				if (((bool)this.TempProperties.getObjectProperty("MEZZED", false))!=false) {
-			////					//TODO: Code for Realm Abilitys which nullify mez or stun.. eg purge
-			////					return false;
-			////				}
-			////				if (((bool)this.TempProperties.getObjectProperty("STUNNED", false))!=false) {
-			////					//TODO: Code for Realm Abilitys which nullify mez or stun.. eg purge
-			////					return false;
-			////				}
-			//			} else {
-			//				return true;
-			//			}
+			if (m_spell.HealthPenalty > 0 && m_caster.HealthPercent < 10 + m_spell.HealthPenalty)
+			{
+				MessageToCaster("You don't have enought health to cast this spell!", eChatType.CT_SpellResisted);
+				return false;
+			}
 
 			// Cancel engage if user starts attack
 			EngageEffect engage = (EngageEffect)m_caster.EffectList.GetOfType(typeof(EngageEffect));
@@ -639,11 +627,11 @@ namespace DOL.GS.Spells
 				//					return false;
 				//				}
 			}
-			else if (m_spell.Target != "Self" && m_spell.Target != "Group" && m_spell.Range > 0)
+			else if (m_spell.Target.ToLower() != "self" && m_spell.Target.ToLower() != "group" && m_spell.Target.ToLower() != "cone" && m_spell.Range > 0)
 			{
 				//all spells that need a target
 
-				if (m_spell.Target == "Pet" && m_caster is GamePlayer &&
+				if (m_spell.Target.ToLower() == "pet" && m_caster is GamePlayer &&
 					((GamePlayer)m_caster).ControlledNpc != null)
 				{
 					if (((GamePlayer)m_caster).ControlledNpc.Body != null)
@@ -743,6 +731,11 @@ namespace DOL.GS.Spells
 		/// <returns></returns>
 		public virtual int CalculateNeededPower(GameLiving target)
 		{
+			// warlock
+			GameSpellEffect effect = SpellHandler.FindEffectOnTarget(m_caster, "Powerless");
+			if (effect != null)
+				return 0;
+
 			double basepower = m_spell.Power; //<== defined a basevar first then modified this base-var to tell %-costs from absolut-costs
 
 			// percent of maxPower if less than zero
@@ -907,6 +900,18 @@ namespace DOL.GS.Spells
 			{
 				return ticks;
 			}
+			// warlocks !
+			GamePlayer player = m_caster as GamePlayer;
+			if (player != null)
+			{
+				if (player.CharacterClass.ID == (int)eCharacterClass.Warlock)
+				{
+					if (!(Spell.SpellType == "Uninterruptable" || Spell.SpellType == "Range" || Spell.SpellType == "Powerless"))
+					{
+						return ticks;
+					}
+				}
+			}
 			double percent = 1.0;
 			int dex = m_caster.GetModified(eProperty.Dexterity);
 
@@ -994,7 +999,16 @@ namespace DOL.GS.Spells
 				player.Out.SendInterruptAnimation(m_caster);
 			}
 		}
+		public virtual void SendEffectAnimation(GameLiving target, ushort clientEffect, ushort boltDuration, bool noSound, byte success)
+		{
+			if (target == null)
+				target = m_caster;
 
+			foreach (GamePlayer player in target.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+			{
+				player.Out.SendSpellEffectAnimation(m_caster, target, clientEffect, boltDuration, noSound, success);
+			}
+		}
 		#endregion
 
 		/// <summary>
@@ -1002,11 +1016,15 @@ namespace DOL.GS.Spells
 		/// </summary>
 		public virtual void FinishSpellCast(GameLiving target)
 		{
+			//turn into wraith
+			if (m_caster is GamePlayer && ((m_caster as GamePlayer).CharacterClass.ID == (int)eCharacterClass.Bainshee) && (!(m_caster as GamePlayer).InWraithForm))
+				(m_caster as GamePlayer).InWraithForm = true; ;
+			
 			// endurance
 			m_caster.Endurance -= CalculateEnduranceCost();
 
 			// messages
-			if (Spell.InstrumentRequirement == 0 && Spell.ClientEffect != 0)
+			if (Spell.InstrumentRequirement == 0 && Spell.ClientEffect != 0 && Spell.CastTime > 0)
 			{
 				MessageToCaster("You cast a " + m_spell.Name + " spell!", eChatType.CT_Spell);
 				foreach (GamePlayer player in m_caster.GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
@@ -1064,6 +1082,7 @@ namespace DOL.GS.Spells
 					}
 				}
 			}
+
 			GameEventMgr.Notify(GameLivingEvent.CastFinished, m_caster, new CastSpellEventArgs(this));
 		}
 
@@ -1200,48 +1219,80 @@ namespace DOL.GS.Spells
 						break;
 					}
 				case "group":
-					if (Caster is GamePlayer)
 					{
-						GamePlayer casterPlayer = (GamePlayer)Caster;
-						PlayerGroup group = casterPlayer.PlayerGroup;
-						int spellRange = CalculateSpellRange();
-						if (spellRange == 0)
-							spellRange = m_spell.Radius;
-						if (group == null)
+						if (Caster is GamePlayer)
 						{
-							list.Add(casterPlayer);
-							IControlledBrain npc = casterPlayer.ControlledNpc;
-							if (npc != null)
+							GamePlayer casterPlayer = (GamePlayer)Caster;
+							PlayerGroup group = casterPlayer.PlayerGroup;
+							int spellRange = CalculateSpellRange();
+							if (spellRange == 0)
+								spellRange = m_spell.Radius;
+							if (group == null)
 							{
-								if (WorldMgr.CheckDistance(casterPlayer, npc.Body, spellRange))
-									list.Add(npc.Body);
-							}
-						}
-						else
-						{
-							lock (group)
-							{
-								foreach (GamePlayer groupPlayer in group)
+								list.Add(casterPlayer);
+								IControlledBrain npc = casterPlayer.ControlledNpc;
+								if (npc != null)
 								{
-									// only players in range
-									if (WorldMgr.CheckDistance(casterPlayer, groupPlayer, spellRange))
-										list.Add(groupPlayer);
-
-									IControlledBrain npc = groupPlayer.ControlledNpc;
-									if (npc != null)
+									if (WorldMgr.CheckDistance(casterPlayer, npc.Body, spellRange))
+										list.Add(npc.Body);
+								}
+							}
+							else
+							{
+								lock (group)
+								{
+									foreach (GamePlayer groupPlayer in group)
 									{
-										if (WorldMgr.CheckDistance(casterPlayer, npc.Body, spellRange))
-											list.Add(npc.Body);
+										// only players in range
+										if (WorldMgr.CheckDistance(casterPlayer, groupPlayer, spellRange))
+											list.Add(groupPlayer);
+
+										IControlledBrain npc = groupPlayer.ControlledNpc;
+										if (npc != null)
+										{
+											if (WorldMgr.CheckDistance(casterPlayer, npc.Body, spellRange))
+												list.Add(npc.Body);
+										}
 									}
 								}
 							}
 						}
+						else
+						{
+							list.Add(Caster);
+						}
+						break;
 					}
-					else
+				case "cone":
 					{
-						list.Add(Caster);
+						target = Caster;
+						foreach (GamePlayer player in target.GetPlayersInRadius((ushort)Spell.Range))
+						{
+							if (player == (GamePlayer)Caster)
+								continue;
+
+							if (!m_caster.IsObjectInFront(player, 100))
+								continue;
+
+							if (!GameServer.ServerRules.IsAllowedToAttack(Caster, player, true))
+								continue;
+
+							list.Add(player);
+						}
+
+						foreach (GameNPC npc in target.GetNPCsInRadius((ushort)Spell.Range))
+						{
+							if (!m_caster.IsObjectInFront(npc, 100))
+								continue;
+
+							if (!GameServer.ServerRules.IsAllowedToAttack(Caster, npc, true))
+								continue;
+
+							list.Add(npc);
+
+						}
+						break;
 					}
-					break;
 
 			}
 			return list;
@@ -1266,6 +1317,13 @@ namespace DOL.GS.Spells
 					RealmAbility ra = playerCaster.GetAbility(typeof(MasteryofConcentrationAbility)) as RealmAbility;
 					if (ra != null)
 						effectiveness = System.Math.Round((double)ra.Level * 25 / 100, 2);
+				}
+				// warlock
+				GameSpellEffect affect = SpellHandler.FindEffectOnTarget(Caster, "Uninterruptable");
+				if (affect != null)
+				{
+					int nerf = (int)(Spell.LifeDrainReturn * .01);
+					effectiveness *= nerf;
 				}
 				if (Util.Chance(CalculateSpellResistChance(t)))
 				{
@@ -1515,6 +1573,15 @@ namespace DOL.GS.Spells
 		/// <returns>immunity duration in milliseconds</returns>
 		public virtual int OnEffectExpires(GameSpellEffect effect, bool noMessages)
 		{
+			if (m_spell.HealthPenalty > 0)
+			{
+				double max = Caster.MaxHealth;
+				int take = (int)(max * (m_spell.HealthPenalty / 100));
+				int remain = Caster.Health - take;
+				if (Caster.Health - take < 1)
+					return 0;
+				Caster.TakeDamage(null, eDamageType.Natural, take, 0);
+			}
 			return 0;
 		}
 
@@ -1711,7 +1778,27 @@ namespace DOL.GS.Spells
 				return list;
 			}
 		}
+		// warlock add
+		public static GameSpellEffect FindEffectOnTarget(GameLiving target, string spellType, string spellName)
+		{
+			lock (target.EffectList)
+			{
+				foreach (IGameEffect fx in target.EffectList)
+				{
+					if (!(fx is GameSpellEffect))
+						continue;
+					GameSpellEffect effect = (GameSpellEffect)fx;
+					if (fx is GameSpellAndImmunityEffect && ((GameSpellAndImmunityEffect)fx).ImmunityState)
+						continue; // ignore immunity effects
 
+					if (effect.SpellHandler.Spell != null && (effect.SpellHandler.Spell.SpellType == spellType) && (effect.SpellHandler.Spell.Name == spellName))
+					{
+						return effect;
+					}
+				}
+			}
+			return null;
+		}
 		/// <summary>
 		/// Find effect by spell type
 		/// </summary>
@@ -1754,6 +1841,34 @@ namespace DOL.GS.Spells
 					if (gsp == null)
 						continue;
 					if (gsp.SpellHandler != spellHandler)
+						continue;
+					if (gsp is GameSpellAndImmunityEffect && ((GameSpellAndImmunityEffect)gsp).ImmunityState)
+						continue; // ignore immunity effects
+					return gsp;
+				}
+			}
+			return null;
+		}
+
+		/// <summary>
+		/// Find effect by spell handler
+		/// </summary>
+		/// <param name="target"></param>
+		/// <param name="spellHandler"></param>
+		/// <returns>first occurance of effect in target's effect list or null</returns>
+		public static GameSpellEffect FindEffectOnTarget(GameLiving target, Type spellHandler)
+		{
+			if (spellHandler.IsInstanceOfType(typeof(SpellHandler)) == false)
+				return null;
+
+			lock (target.EffectList)
+			{
+				foreach (IGameEffect effect in target.EffectList)
+				{
+					GameSpellEffect gsp = effect as GameSpellEffect;
+					if (gsp == null)
+						continue;
+					if (gsp.SpellHandler.GetType().IsInstanceOfType(spellHandler) == false)
 						continue;
 					if (gsp is GameSpellAndImmunityEffect && ((GameSpellAndImmunityEffect)gsp).ImmunityState)
 						continue; // ignore immunity effects

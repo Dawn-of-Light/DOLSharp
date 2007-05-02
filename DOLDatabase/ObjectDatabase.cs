@@ -288,7 +288,7 @@ namespace DOL.Database
 			DataTableHandler sourceHandler = tableDatasets[sourceTableName] as DataTableHandler;
 
 			DataTable targetTable = targetHandler.DataSet.Tables[0] as DataTable;
-			DataTable sourceTable = targetHandler.DataSet.Tables[0] as DataTable;
+			DataTable sourceTable = sourceHandler.DataSet.Tables[0] as DataTable;
 
 			//column names
 			string insertQuery = "INSERT INTO `" + targetTableName + "` (";

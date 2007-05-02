@@ -332,6 +332,18 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("bug_report_email_addresses", "set to the email addresses you want bug reports sent to (bug reports will only send if the user has set an email address for his account, multiple addresses seperate with ;", "")]
 		public static readonly string BUG_REPORT_EMAIL_ADDRESSES;
+
+		/// <summary>
+		/// Allow Cata Slash Level
+		/// </summary>
+		[ServerProperty("allow_cata_slash_level", "Allow catacombs classes to use /level command", false)]
+		public static readonly bool ALLOW_CATA_SLASH_LEVEL;
+
+		/// <summary>
+		/// Allow Roam
+		/// </summary>
+		[ServerProperty("allow_roam", "Allow mobs to roam on the server", true)]
+		public static readonly bool ALLOW_ROAM;
 		
 		/// <summary>
 		/// This method loads the property from the database and returns

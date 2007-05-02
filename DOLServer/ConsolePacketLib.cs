@@ -68,6 +68,7 @@ namespace DOLGameServerConsole
 
 		public byte GetPacketCode(ePackets packetCode) { return 0; }
 		public void SendTCP(GSTCPPacketOut packet) { }
+		public void SendWarlockChamberEffect(GamePlayer player) { }
 		public void SendTCP(byte[] buf) { }
 		public void SendTCPRaw(GSTCPPacketOut packet) { }
 		public void SendUDP(GSUDPPacketOut packet) { }
@@ -206,6 +207,7 @@ namespace DOLGameServerConsole
 		public void SendRvRGuildBanner(GamePlayer player, bool show) { }
 		public void SendPlayerFreeLevelUpdate() { }
 		public void SendStarterHelp() { }
+		public void SendXFireInfo(byte flag) { }
 		/// <summary>
 		/// The bow prepare animation
 		/// </summary>

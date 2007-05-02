@@ -418,6 +418,9 @@ namespace DOL.GS.PacketHandler
 			if (playerToCreate.CurrentHouse != m_gameClient.Player.CurrentHouse)
 				return;
 
+			if (playerToCreate.CurrentRegion != m_gameClient.Player.CurrentRegion)
+				return;
+
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.PlayerCreate172));
 			pak.WriteShort((ushort)playerToCreate.Client.SessionID);
 			pak.WriteShort((ushort)playerToCreate.ObjectID);

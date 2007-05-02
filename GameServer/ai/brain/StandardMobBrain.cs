@@ -897,6 +897,10 @@ namespace DOL.AI.Brain
 		{
 			get
 			{
+				if (!DOL.GS.ServerProperties.Properties.ALLOW_ROAM)
+					return false;
+				if (Body.MaxSpeedBase == 0)
+					return false;
 				if (Body.InCombat || Body.IsMoving || Body.IsCasting)
 					return false;
 				if (Body.Realm != 0)

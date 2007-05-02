@@ -40,5 +40,16 @@ namespace DOL.GS.PacketHandler
 			: base(client)
 		{
 		}
+
+		public override void SendXFireInfo(byte flag)
+		{
+			if (m_gameClient == null || m_gameClient.Player == null)
+				return;
+			GSTCPPacketOut pak = new GSTCPPacketOut((byte)ePackets.XFire);
+			pak.WriteShort((ushort)m_gameClient.Player.ObjectID);
+			pak.WriteByte(flag);
+			pak.WriteByte(0x00);
+			SendTCP(pak);
+		}
 	}
 }

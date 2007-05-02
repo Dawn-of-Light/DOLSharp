@@ -54,7 +54,7 @@ GameNPC.GetAggroLevelString.Hostile2:			Hostile
 GameNPC.GetAggroLevelString.Neutral1:			neutral
 GameNPC.GetAggroLevelString.Neutral2:			Neutral
 GameNPC.GetAggroLevelString.TowardsYou:			{0} towards you
-GameNPC.GetExamineMessages.YouExamine:			You examine {0}.{1} is {2}.
+GameNPC.GetExamineMessages.YouExamine:			You examine {0}. {1} is {2}.
 
 
 # GAMEOBJECT

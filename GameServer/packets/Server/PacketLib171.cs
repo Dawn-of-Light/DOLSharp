@@ -108,7 +108,7 @@ namespace DOL.GS.PacketHandler
 
 		public override void SendNPCCreate(GameNPC npc)
 		{
-			if (m_gameClient.Player == null || npc.CurrentHouse != m_gameClient.Player.CurrentHouse)
+			if (m_gameClient.Player == null || npc.CurrentHouse != m_gameClient.Player.CurrentHouse || npc.CurrentRegion != m_gameClient.Player.CurrentRegion)
 				return;
 
 			if (npc is GameMovingObject)

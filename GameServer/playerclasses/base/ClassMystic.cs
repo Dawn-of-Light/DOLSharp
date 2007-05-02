@@ -44,13 +44,16 @@ namespace DOL.GS.Scripts
 		{
 			base.OnLevelUp(player);
 
-			// Specializations
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Darkness));
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Suppression));			
+			if (this is ClassWarlock == false)
+			{
+				// Specializations
+				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Darkness));
+				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Suppression));
 
-			// Spell lines
-			player.AddSpellLine(SkillBase.GetSpellLine("Darkness"));
-			player.AddSpellLine(SkillBase.GetSpellLine("Suppression"));
+				// Spell lines
+				player.AddSpellLine(SkillBase.GetSpellLine("Darkness"));
+				player.AddSpellLine(SkillBase.GetSpellLine("Suppression"));
+			}
 
 			// Abilities
 			player.AddAbility(SkillBase.GetAbility(Abilities.Sprint));
