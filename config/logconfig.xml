@@ -37,9 +37,8 @@
 
 	<!-- Define our file output -->
 	<appender name="GameServerLogFile" type="log4net.Appender.RollingFileAppender" >
-		<appendtofile value="true" />
+		<appendtofile value="false" />
 		<file value="./logs/GameServer.log" />
-		<rollingStyle value="Date" />
 		<maximumFileSize value="100MB" />
 		<datePattern value="yyyy-MM-dd" />
 		<Layout type="log4net.Layout.PatternLayout">
@@ -49,8 +48,7 @@
 	<!-- Define our ERROR Logger -->
 	<appender name="ErrorLogFile" type="log4net.Appender.RollingFileAppender" >
 		<file value="./logs/Error.log" />
-		<appendToFile value="true" />
-		<rollingStyle value="Size" />
+		<appendToFile value="false" />
 		<maxSizeRollBackups value="10" />
 		<maximumFileSize value="1MB" />
 		<staticLogFileName value="true" />

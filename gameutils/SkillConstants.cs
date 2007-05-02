@@ -279,6 +279,10 @@ namespace DOL.GS
 		/// </summary>
 		public const string VampiirStrength = "Vampiir Strength";
 		/// <summary>
+		/// Vampiir Bolt Ability
+		/// </summary>
+		public const string VampiirBolt = "Vampiir Bolt";
+		/// <summary>
 		/// Volley Ability
 		/// </summary>
 		public const string Volley = "Volley";

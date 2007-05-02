@@ -41,7 +41,7 @@ namespace DOL.GS
 		/// </summary>
 		ArrayList m_fixedItemDrops;
 
-		public LootList() : this(1){}
+		public LootList() : this(1) { }
 
 		public LootList(int dropCount)
 		{
@@ -67,7 +67,7 @@ namespace DOL.GS
 
 		public void AddRandom(int chance, ItemTemplate loot)
 		{
-			LootEntry entry = new LootEntry(chance,loot);
+			LootEntry entry = new LootEntry(chance, loot);
 			m_randomItemDrops.Add(entry);
 		}
 
@@ -77,17 +77,17 @@ namespace DOL.GS
 		/// <param name="list"></param>
 		public void AddAll(LootList list)
 		{
-			if (list.m_randomItemDrops!=null) 
+			if (list.m_randomItemDrops != null)
 			{
 				m_randomItemDrops.AddRange(list.m_randomItemDrops);
 			}
 
-			if (list.m_fixedItemDrops!=null) 
+			if (list.m_fixedItemDrops != null)
 			{
 				m_fixedItemDrops.AddRange(list.m_fixedItemDrops);
 			}
 
-			if (list.m_dropCount>m_dropCount)
+			if (list.m_dropCount > m_dropCount)
 				m_dropCount = list.m_dropCount;
 		}
 
@@ -96,33 +96,33 @@ namespace DOL.GS
 		/// </summary>
 		/// <returns></returns>
 		public ItemTemplate[] GetLoot()
-		{			
+		{
 			ArrayList loot = new ArrayList(m_fixedItemDrops.Count + m_dropCount);
 			loot.AddRange(m_fixedItemDrops);
-			
+
 			// to randomly select an itemtemplate from list depending on chance. 
 			// a virtual space ranging from 0 -> mrandomitemsdrops.Count *100 is created,
 			// then a random number withing this range is picked, and then chances of each itemtemplate are summed up until we  reach the random number.
-			
-			// determine which is smaller dropCount or number of items to drop and use smaller one.
 
+			// determine which is smaller dropCount or number of items to drop and use smaller one.
+			/*
 			foreach (LootEntry e in m_randomItemDrops)
 			{
 				if (Util.Chance(e.Chance))
 					loot.Add(e.ItemTemplate);
-			}
-			/*
-			int maxTries = Math.Min(m_dropCount,m_randomItemDrops.Count);
-			int randomRange = m_randomItemDrops.Count*100;
-			for (int i=0;i< maxTries;i++)
+			}*/
+
+			int maxTries = Math.Min(m_dropCount, m_randomItemDrops.Count);
+			int randomRange = m_randomItemDrops.Count * 100;
+			for (int i = 0; i < maxTries; i++)
 			{
 				//int randomRange = m_randomItemDrops.Count*100;
 				int randomShot = Util.Random(randomRange);
-				for (int j=0;j < m_randomItemDrops.Count;j++)
+				for (int j = 0; j < m_randomItemDrops.Count; j++)
 				{
 					LootEntry entry = m_randomItemDrops[j] as LootEntry;
-					randomShot-=entry.Chance;
-					if (randomShot<=0)
+					randomShot -= entry.Chance;
+					if (randomShot <= 0)
 					{
 						loot.Add(entry.ItemTemplate);
 						m_randomItemDrops.RemoveAt(j);
@@ -130,7 +130,7 @@ namespace DOL.GS
 						break;
 					}
 				}
-			}*/
+			}
 			return (ItemTemplate[])loot.ToArray(typeof(ItemTemplate));
 		}
 	}
@@ -143,7 +143,7 @@ namespace DOL.GS
 		int m_chance;
 		ItemTemplate m_itemTemplate;
 
-		public LootEntry (int chance, ItemTemplate item)
+		public LootEntry(int chance, ItemTemplate item)
 		{
 			m_chance = chance;
 			m_itemTemplate = item;
@@ -151,11 +151,11 @@ namespace DOL.GS
 
 		public ItemTemplate ItemTemplate
 		{
-			get {return m_itemTemplate;}
+			get { return m_itemTemplate; }
 		}
 		public int Chance
 		{
-			get {return m_chance;}
+			get { return m_chance; }
 		}
 	}
 }

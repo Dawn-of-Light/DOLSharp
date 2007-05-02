@@ -26,7 +26,7 @@ using log4net;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandler(PacketHandlerType.TCP,0x38^168,"Handles the player region change")]
+	[PacketHandler(PacketHandlerType.TCP, 0x38 ^ 168, "Handles the player region change")]
 	public class PlayerRegionChangeRequestHandler : IPacketHandler
 	{
 		/// <summary>
@@ -41,7 +41,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			ushort JumpSpotID = packet.ReadShort();
-			ZonePoint zonePoint = (ZonePoint)GameServer.Database.SelectObject(typeof(ZonePoint), "Id = " + JumpSpotID + " AND (Realm = " + client.Player.Realm + " OR Realm = '0')");
+			ZonePoint zonePoint = (ZonePoint)GameServer.Database.SelectObject(typeof(ZonePoint), "`Id` = '" + JumpSpotID + "' AND (`Realm` = '" + client.Player.Realm + "' OR `Realm` = '0' OR `Realm` = NULL)");
 
 			if (zonePoint == null)
 			{
@@ -68,8 +68,11 @@ namespace DOL.GS.PacketHandler.Client.v168
 			Region reg = WorldMgr.GetRegion(zonePoint.Region);
 			if (reg != null && reg.IsDisabled)
 			{
-				client.Out.SendMessage("This region has been disabled", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 1;
+				if ((client.Player.Mission is Quests.TaskDungeonMission && (client.Player.Mission as Quests.TaskDungeonMission).TaskRegion.Description == reg.Description) == false)
+				{
+					client.Out.SendMessage("This region has been disabled", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					return 1;
+				}
 			}
 
 			IJumpPointHandler check = null;
@@ -133,7 +136,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 			/// <param name="actionSource">The action source</param>
 			/// <param name="zonePoint">The target zone point</param>
 			/// <param name="checker">The jump point checker instance</param>
-			public RegionChangeRequestHandler(GamePlayer actionSource, ZonePoint zonePoint, IJumpPointHandler checker) : base(actionSource)
+			public RegionChangeRequestHandler(GamePlayer actionSource, ZonePoint zonePoint, IJumpPointHandler checker)
+				: base(actionSource)
 			{
 				if (zonePoint == null)
 					throw new ArgumentNullException("zonePoint");
@@ -149,7 +153,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				GamePlayer player = (GamePlayer)m_actionSource;
 
 				Region reg = WorldMgr.GetRegion(m_zonePoint.Region);
-				if (reg != null && reg.Expansion > player.Client.ClientType)
+				if (reg != null && reg.Expansion > (int)player.Client.ClientType)
 				{
 					player.Out.SendMessage("Destination region (" + reg.Description + ") is not supported by your client type.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return;
@@ -165,12 +169,21 @@ namespace DOL.GS.PacketHandler.Client.v168
 					catch (Exception e)
 					{
 						if (log.IsErrorEnabled)
-							log.Error("Jump point handler ("+m_zonePoint.ClassType+")", e);
-						player.Out.SendMessage("exception in jump point ("+m_zonePoint.Id+") handler...", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							log.Error("Jump point handler (" + m_zonePoint.ClassType + ")", e);
+						player.Out.SendMessage("exception in jump point (" + m_zonePoint.Id + ") handler...", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						return;
 					}
 				}
-				player.MoveTo(m_zonePoint.Region, m_zonePoint.X, m_zonePoint.Y, m_zonePoint.Z, m_zonePoint.Heading);
+				Region r = WorldMgr.GetRegion(m_zonePoint.Region);
+				if (r != null && r.IsInstance && player.Mission is Quests.TaskDungeonMission)
+					player.MoveToInstance((player.Mission as Quests.TaskDungeonMission).TaskRegion, m_zonePoint.X, m_zonePoint.Y, m_zonePoint.Z, m_zonePoint.Heading);
+				else
+				{
+					//this will work for release and zoning out, the behaviour here is to expire the mission
+					if (player.CurrentRegion.IsInstance && player.Mission != null)
+						player.Mission.ExpireMission();
+					player.MoveTo(m_zonePoint.Region, m_zonePoint.X, m_zonePoint.Y, m_zonePoint.Z, m_zonePoint.Heading);
+				}
 			}
 		}
 	}

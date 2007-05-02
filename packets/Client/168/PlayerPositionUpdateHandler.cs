@@ -175,8 +175,18 @@ namespace DOL.GS.PacketHandler.Client.v168
 				{
 					client.Player.MaxLastZ = int.MinValue;
 				}
+
+				/*
+				 * "You have entered Burial Tomb."
+				 * "Burial Tomb"
+				 * "Current area is adjusted for one level 1 player."
+				 * "Current area has a 50% instance bonus."
+				 */
+
 				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "PlayerPositionUpdateHandler.Entered", newZone.Description), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				client.Out.SendMessage(newZone.Description, eChatType.CT_ScreenCenterSmaller, eChatLoc.CL_SystemWindow);
+				if (newZone.ZoneRegion.InstanceLevel > 0)
+					client.Out.SendMessage("Current area is adjusted for a level " + newZone.ZoneRegion.InstanceLevel + " encounter.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				client.Player.LastPositionUpdateZone = newZone;
 			}
 

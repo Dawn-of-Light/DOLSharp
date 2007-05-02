@@ -67,7 +67,7 @@ namespace DOL.GS.Scripts
 			// Spell lines
 			player.AddSpellLine(SkillBase.GetSpellLine(Specs.EtherealShriek));
 			player.AddSpellLine(SkillBase.GetSpellLine(Specs.PhantasmalWail));
-			player.AddSpellLine(SkillBase.GetSpellLine(Specs.SpectralGuard));
+			player.AddSpellLine(SkillBase.GetSpellLine("Spectral Guard"));
 			player.RemoveSpellLine(SkillBase.GetSpellLine("Way of the Moon"));
 			player.RemoveSpellLine(SkillBase.GetSpellLine("Way of the Sun"));
             player.RemoveSpecialization(Specs.Light);

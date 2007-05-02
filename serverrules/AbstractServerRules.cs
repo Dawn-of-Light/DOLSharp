@@ -1289,6 +1289,11 @@ namespace DOL.GS.ServerRules
 			//stat.Add("Realm Guard Kills Hibernia: " + player.RealmGuardTotalKills.ToString("N0"));
 			//stat.Add("Total Realm Guard Kills: " + player.RealmGuardTotalKills.ToString("N0"));
 			#endregion
+			stat.Add(" ");
+			#region PvE
+			stat.Add("PvE Report");
+			stat.Add("Dragon Kills: " + player.KillsDragon.ToString("N0"));
+			#endregion 
 			return stat;
 		}
 

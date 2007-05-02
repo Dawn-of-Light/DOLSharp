@@ -55,6 +55,7 @@ namespace DOL.GS.PacketHandler
 		PlayerCreate172 = 0x4B,
 		VisualEffect = 0x4C,
 		ControlledHorse = 0x4E,
+		XFire = 0x5C,
 		KeepComponentInteractResponse = 0x61,
 		KeepClaim = 0x62,
 		KeepComponentHookpointStore = 0x63,
@@ -423,7 +424,8 @@ namespace DOL.GS.PacketHandler
 		void SendUDP(GSUDPPacketOut packet);
 		void SendUDP(byte[] buf);
 		void SendUDPRaw(GSUDPPacketOut packet);
-
+		// warlock
+		void SendWarlockChamberEffect(GamePlayer player);
 		void SendVersionAndCryptKey();
 		void SendLoginDenied(eLoginError et);
 		void SendLoginGranted();
@@ -561,6 +563,7 @@ namespace DOL.GS.PacketHandler
 		void CheckLengthHybridSkillsPacket(ref GSTCPPacketOut pak, ref int maxSkills, ref int first);
 		void SendListCastersSpell();
 		void SendCrash(string str);
+		void SendXFireInfo(byte flag);
 		/// <summary>
 		/// The bow prepare animation
 		/// </summary>
