@@ -82,6 +82,12 @@ namespace DOL.GS.Quests.Midgard
 		private static ItemTemplate BonedancerEpicLegs = null;
 		private static ItemTemplate BonedancerEpicArms = null;
 		private static ItemTemplate BonedancerEpicVest = null;
+		private static ItemTemplate WarlockEpicBoots = null;
+		private static ItemTemplate WarlockEpicHelm = null;
+		private static ItemTemplate WarlockEpicGloves = null;
+		private static ItemTemplate WarlockEpicLegs = null;
+		private static ItemTemplate WarlockEpicArms = null;
+		private static ItemTemplate WarlockEpicVest = null;
 
 		// Constructors
 		public Mystic_50() : base()
@@ -964,7 +970,307 @@ namespace DOL.GS.Quests.Midgard
 				}
 
 			}
-//Item Descriptions End
+			#region Warlock
+			WarlockEpicBoots = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "WarlockEpicBoots");
+			if (WarlockEpicBoots == null)
+			{
+				if (log.IsWarnEnabled)
+					log.Warn("Could not find Warlock Epic Boots , creating it ...");
+				WarlockEpicBoots = new ItemTemplate();
+				WarlockEpicBoots.Id_nb = "WarlockEpicBoots";
+				WarlockEpicBoots.Name = "Bewitched Soothsayer Boots";
+				WarlockEpicBoots.Level = 50;
+				WarlockEpicBoots.Item_Type = 23;
+				WarlockEpicBoots.Model = 2937;
+				WarlockEpicBoots.IsDropable = true;
+				WarlockEpicBoots.IsPickable = true;
+				WarlockEpicBoots.DPS_AF = 50;
+				WarlockEpicBoots.SPD_ABS = 0;
+				WarlockEpicBoots.Object_Type = 32;
+				WarlockEpicBoots.Quality = 100;
+				WarlockEpicBoots.Weight = 22;
+				WarlockEpicBoots.Bonus = 35;
+				WarlockEpicBoots.MaxCondition = 50000;
+				WarlockEpicBoots.MaxDurability = 50000;
+				WarlockEpicBoots.Condition = 50000;
+				WarlockEpicBoots.Durability = 50000;
+
+				/*
+				 *   Constitution: 16 pts
+				 *   Matter Resist: 8%
+				 *   Hits: 48 pts
+				 *   Heat Resist: 10%
+				 */
+
+				WarlockEpicBoots.Bonus1 = 16;
+				WarlockEpicBoots.Bonus1Type = (int)eStat.CON;
+
+				WarlockEpicBoots.Bonus2 = 8;
+				WarlockEpicBoots.Bonus2Type = (int)eResist.Matter;
+
+				WarlockEpicBoots.Bonus3 = 48;
+				WarlockEpicBoots.Bonus3Type = (int)eProperty.MaxHealth;
+
+				WarlockEpicBoots.Bonus4 = 10;
+				WarlockEpicBoots.Bonus4Type = (int)eResist.Heat;
+
+				if (SAVE_INTO_DATABASE)
+				{
+					GameServer.Database.AddNewObject(WarlockEpicBoots);
+				}
+
+			}
+			//end item
+			WarlockEpicHelm = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "WarlockEpicHelm");
+			if (WarlockEpicHelm == null)
+			{
+				if (log.IsWarnEnabled)
+					log.Warn("Could not find Warlock Epic Helm , creating it ...");
+				WarlockEpicHelm = new ItemTemplate();
+				WarlockEpicHelm.Id_nb = "WarlockEpicHelm";
+				WarlockEpicHelm.Name = "Bewitched Soothsayer Cap";
+				WarlockEpicHelm.Level = 50;
+				WarlockEpicHelm.Item_Type = 21;
+				WarlockEpicHelm.Model = 825; //NEED TO WORK ON..
+				WarlockEpicHelm.IsDropable = true;
+				WarlockEpicHelm.IsPickable = true;
+				WarlockEpicHelm.DPS_AF = 50;
+				WarlockEpicHelm.SPD_ABS = 0;
+				WarlockEpicHelm.Object_Type = 32;
+				WarlockEpicHelm.Quality = 100;
+				WarlockEpicHelm.Weight = 22;
+				WarlockEpicHelm.Bonus = 35;
+				WarlockEpicHelm.MaxCondition = 50000;
+				WarlockEpicHelm.MaxDurability = 50000;
+				WarlockEpicHelm.Condition = 50000;
+				WarlockEpicHelm.Durability = 50000;
+
+				/*
+				 *   Piety: 13 pts
+				 *   Power: 4 pts
+				 *   Cursing: +4 pts
+				 *   Hexing: +4 pts
+				 */
+
+				WarlockEpicHelm.Bonus1 = 13;
+				WarlockEpicHelm.Bonus1Type = (int)eStat.PIE;
+
+				WarlockEpicHelm.Bonus2 = 4;
+				WarlockEpicHelm.Bonus2Type = (int)eProperty.MaxMana;
+
+				WarlockEpicHelm.Bonus3 = 4;
+				WarlockEpicHelm.Bonus3Type = (int)eProperty.Skill_Cursing;
+
+				WarlockEpicHelm.Bonus4 = 4;
+				WarlockEpicHelm.Bonus4Type = (int)eProperty.Skill_Hexing;
+
+
+				if (SAVE_INTO_DATABASE)
+				{
+					GameServer.Database.AddNewObject(WarlockEpicHelm);
+				}
+
+			}
+			//end item
+			WarlockEpicGloves = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "WarlockEpicGloves");
+			if (WarlockEpicGloves == null)
+			{
+				if (log.IsWarnEnabled)
+					log.Warn("Could not find Warlock Epic Gloves , creating it ...");
+				WarlockEpicGloves = new ItemTemplate();
+				WarlockEpicGloves.Id_nb = "WarlockEpicGloves";
+				WarlockEpicGloves.Name = "Bewitched Soothsayer Gloves ";
+				WarlockEpicGloves.Level = 50;
+				WarlockEpicGloves.Item_Type = 22;
+				WarlockEpicGloves.Model = 2936;
+				WarlockEpicGloves.IsDropable = true;
+				WarlockEpicGloves.IsPickable = true;
+				WarlockEpicGloves.DPS_AF = 50;
+				WarlockEpicGloves.SPD_ABS = 0;
+				WarlockEpicGloves.Object_Type = 32;
+				WarlockEpicGloves.Quality = 100;
+				WarlockEpicGloves.Weight = 22;
+				WarlockEpicGloves.Bonus = 35;
+				WarlockEpicGloves.MaxCondition = 50000;
+				WarlockEpicGloves.MaxDurability = 50000;
+				WarlockEpicGloves.Condition = 50000;
+				WarlockEpicGloves.Durability = 50000;
+
+				/*
+				 *   Constitution: 13 pts
+				 *   Piety: 12 pts
+				 *   Power: 4 pts
+				 *   Hexing: +4 pts
+				 */
+
+				WarlockEpicGloves.Bonus1 = 13;
+				WarlockEpicGloves.Bonus1Type = (int)eStat.CON;
+
+				WarlockEpicGloves.Bonus2 = 12;
+				WarlockEpicGloves.Bonus2Type = (int)eStat.PIE;
+
+				WarlockEpicGloves.Bonus3 = 4;
+				WarlockEpicGloves.Bonus3Type = (int)eProperty.MaxMana;
+
+				WarlockEpicGloves.Bonus4 = 4;
+				WarlockEpicGloves.Bonus4Type = (int)eProperty.Skill_Hexing;
+
+				if (SAVE_INTO_DATABASE)
+				{
+					GameServer.Database.AddNewObject(WarlockEpicGloves);
+				}
+			}
+
+			WarlockEpicVest = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "WarlockEpicVest");
+			if (WarlockEpicVest == null)
+			{
+				if (log.IsWarnEnabled)
+					log.Warn("Could not find Warlock Epic Vest , creating it ...");
+				WarlockEpicVest = new ItemTemplate();
+				WarlockEpicVest.Id_nb = "WarlockEpicVest";
+				WarlockEpicVest.Name = "Bewitched Soothsayer Vest";
+				WarlockEpicVest.Level = 50;
+				WarlockEpicVest.Item_Type = 25;
+				WarlockEpicVest.Model = 2933;
+				WarlockEpicVest.IsDropable = true;
+				WarlockEpicVest.IsPickable = true;
+				WarlockEpicVest.DPS_AF = 50;
+				WarlockEpicVest.SPD_ABS = 0;
+				WarlockEpicVest.Object_Type = 32;
+				WarlockEpicVest.Quality = 100;
+				WarlockEpicVest.Weight = 22;
+				WarlockEpicVest.Bonus = 35;
+				WarlockEpicVest.MaxCondition = 50000;
+				WarlockEpicVest.MaxDurability = 50000;
+				WarlockEpicVest.Condition = 50000;
+				WarlockEpicVest.Durability = 50000;
+
+				/*
+				 *   Constitution: 12 pts
+				 *   Piety: 13 pts
+				 *   Slash Resist: 12%
+				 *   Hits: 24 pts
+				 */
+
+				WarlockEpicVest.Bonus1 = 12;
+				WarlockEpicVest.Bonus1Type = (int)eStat.CON;
+
+				WarlockEpicVest.Bonus2 = 13;
+				WarlockEpicVest.Bonus2Type = (int)eStat.PIE;
+
+				WarlockEpicVest.Bonus3 = 12;
+				WarlockEpicVest.Bonus3Type = (int)eResist.Slash;
+
+				WarlockEpicVest.Bonus4 = 24;
+				WarlockEpicVest.Bonus4Type = (int)eProperty.MaxHealth;
+
+				if (SAVE_INTO_DATABASE)
+				{
+					GameServer.Database.AddNewObject(WarlockEpicVest);
+				}
+			}
+
+			WarlockEpicLegs = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "WarlockEpicLegs");
+			if (WarlockEpicLegs == null)
+			{
+				if (log.IsWarnEnabled)
+					log.Warn("Could not find Warlock Epic Legs , creating it ...");
+				WarlockEpicLegs = new ItemTemplate();
+				WarlockEpicLegs.Id_nb = "WarlockEpicLegs";
+				WarlockEpicLegs.Name = "Bewitched Soothsayer Pants";
+				WarlockEpicLegs.Level = 50;
+				WarlockEpicLegs.Item_Type = 27;
+				WarlockEpicLegs.Model = 2934;
+				WarlockEpicLegs.IsDropable = true;
+				WarlockEpicLegs.IsPickable = true;
+				WarlockEpicLegs.DPS_AF = 50;
+				WarlockEpicLegs.SPD_ABS = 0;
+				WarlockEpicLegs.Object_Type = 32;
+				WarlockEpicLegs.Quality = 100;
+				WarlockEpicLegs.Weight = 22;
+				WarlockEpicLegs.Bonus = 35;
+				WarlockEpicLegs.MaxCondition = 50000;
+				WarlockEpicLegs.MaxDurability = 50000;
+				WarlockEpicLegs.Condition = 50000;
+				WarlockEpicLegs.Durability = 50000;
+
+				/*
+				 *   Constitution: 13 pts
+				 *   Piety: 13 pts
+				 *   Crush Resist: 12%
+				 *   Hits: 24 pts
+				 */
+
+				WarlockEpicLegs.Bonus1 = 13;
+				WarlockEpicLegs.Bonus1Type = (int)eStat.CON;
+
+				WarlockEpicLegs.Bonus2 = 13;
+				WarlockEpicLegs.Bonus2Type = (int)eStat.PIE;
+
+				WarlockEpicLegs.Bonus3 = 12;
+				WarlockEpicLegs.Bonus3Type = (int)eResist.Crush;
+
+				WarlockEpicLegs.Bonus4 = 24;
+				WarlockEpicLegs.Bonus4Type = (int)eProperty.MaxHealth;
+
+				if (SAVE_INTO_DATABASE)
+				{
+					GameServer.Database.AddNewObject(WarlockEpicLegs);
+				}
+
+			}
+
+			WarlockEpicArms = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "WarlockEpicArms");
+			if (WarlockEpicArms == null)
+			{
+				if (log.IsWarnEnabled)
+					log.Warn("Could not find Warlock Epic Arms , creating it ...");
+				WarlockEpicArms = new ItemTemplate();
+				WarlockEpicArms.Id_nb = "WarlockEpicArms";
+				WarlockEpicArms.Name = "Bewitched Soothsayer Sleeves";
+				WarlockEpicArms.Level = 50;
+				WarlockEpicArms.Item_Type = 28;
+				WarlockEpicArms.Model = 1189;
+				WarlockEpicArms.IsDropable = true;
+				WarlockEpicArms.IsPickable = true;
+				WarlockEpicArms.DPS_AF = 50;
+				WarlockEpicArms.SPD_ABS = 0;
+				WarlockEpicArms.Object_Type = 32;
+				WarlockEpicArms.Quality = 100;
+				WarlockEpicArms.Weight = 22;
+				WarlockEpicArms.Bonus = 35;
+				WarlockEpicArms.MaxCondition = 50000;
+				WarlockEpicArms.MaxDurability = 50000;
+				WarlockEpicArms.Condition = 50000;
+				WarlockEpicArms.Durability = 50000;
+
+				/*
+				 *   Piety: 9 pts
+				 *   Thrust Resist: 6%
+				 *   Power: 12 pts
+				 *   Heat Resist: 8%
+				 */
+
+				WarlockEpicArms.Bonus1 = 9;
+				WarlockEpicArms.Bonus1Type = (int)eStat.PIE;
+
+				WarlockEpicArms.Bonus2 = 6;
+				WarlockEpicArms.Bonus2Type = (int)eResist.Thrust;
+
+				WarlockEpicArms.Bonus3 = 12;
+				WarlockEpicArms.Bonus3Type = (int)eProperty.MaxMana;
+
+				WarlockEpicArms.Bonus4 = 8;
+				WarlockEpicArms.Bonus4Type = (int)eResist.Heat;
+
+				if (SAVE_INTO_DATABASE)
+				{
+					GameServer.Database.AddNewObject(WarlockEpicArms);
+				}
+
+			}
+			#endregion
+			//Item Descriptions End
 
 			#endregion
 
@@ -1080,7 +1386,8 @@ namespace DOL.GS.Quests.Midgard
 
 			if (player.CharacterClass.ID != (byte) eCharacterClass.Spiritmaster &&
 				player.CharacterClass.ID != (byte) eCharacterClass.Runemaster &&
-				player.CharacterClass.ID != (byte) eCharacterClass.Bonedancer)
+				player.CharacterClass.ID != (byte) eCharacterClass.Bonedancer &&
+				player.CharacterClass.ID != (byte) eCharacterClass.Warlock)
 				return false;
 
 			// This checks below are only performed is player isn't doing quest already
@@ -1229,32 +1536,48 @@ namespace DOL.GS.Quests.Midgard
 		{
 			base.FinishQuest(); //Defined in Quest, changes the state, stores in DB etc ...
 
-			if (m_questPlayer.CharacterClass.ID == (byte) eCharacterClass.Spiritmaster)
+			switch ((eCharacterClass)m_questPlayer.CharacterClass.ID)
 			{
-				GiveItem(m_questPlayer, SpiritmasterEpicArms);
-				GiveItem(m_questPlayer, SpiritmasterEpicBoots);
-				GiveItem(m_questPlayer, SpiritmasterEpicGloves);
-				GiveItem(m_questPlayer, SpiritmasterEpicHelm);
-				GiveItem(m_questPlayer, SpiritmasterEpicLegs);
-				GiveItem(m_questPlayer, SpiritmasterEpicVest);
-			}
-			else if (m_questPlayer.CharacterClass.ID == (byte) eCharacterClass.Runemaster)
-			{
-				GiveItem(m_questPlayer, RunemasterEpicArms);
-				GiveItem(m_questPlayer, RunemasterEpicBoots);
-				GiveItem(m_questPlayer, RunemasterEpicGloves);
-				GiveItem(m_questPlayer, RunemasterEpicHelm);
-				GiveItem(m_questPlayer, RunemasterEpicLegs);
-				GiveItem(m_questPlayer, RunemasterEpicVest);
-			}
-			else if (m_questPlayer.CharacterClass.ID == (byte) eCharacterClass.Bonedancer)
-			{
-				GiveItem(m_questPlayer, BonedancerEpicArms);
-				GiveItem(m_questPlayer, BonedancerEpicBoots);
-				GiveItem(m_questPlayer, BonedancerEpicGloves);
-				GiveItem(m_questPlayer, BonedancerEpicHelm);
-				GiveItem(m_questPlayer, BonedancerEpicLegs);
-				GiveItem(m_questPlayer, BonedancerEpicVest);
+				case eCharacterClass.Spiritmaster:
+					{
+						GiveItem(m_questPlayer, SpiritmasterEpicArms);
+						GiveItem(m_questPlayer, SpiritmasterEpicBoots);
+						GiveItem(m_questPlayer, SpiritmasterEpicGloves);
+						GiveItem(m_questPlayer, SpiritmasterEpicHelm);
+						GiveItem(m_questPlayer, SpiritmasterEpicLegs);
+						GiveItem(m_questPlayer, SpiritmasterEpicVest);
+						break;
+					}
+				case eCharacterClass.Runemaster:
+					{
+						GiveItem(m_questPlayer, RunemasterEpicArms);
+						GiveItem(m_questPlayer, RunemasterEpicBoots);
+						GiveItem(m_questPlayer, RunemasterEpicGloves);
+						GiveItem(m_questPlayer, RunemasterEpicHelm);
+						GiveItem(m_questPlayer, RunemasterEpicLegs);
+						GiveItem(m_questPlayer, RunemasterEpicVest);
+						break;
+					}
+				case eCharacterClass.Bonedancer:
+					{
+						GiveItem(m_questPlayer, BonedancerEpicArms);
+						GiveItem(m_questPlayer, BonedancerEpicBoots);
+						GiveItem(m_questPlayer, BonedancerEpicGloves);
+						GiveItem(m_questPlayer, BonedancerEpicHelm);
+						GiveItem(m_questPlayer, BonedancerEpicLegs);
+						GiveItem(m_questPlayer, BonedancerEpicVest);
+						break;
+					}
+				case eCharacterClass.Warlock:
+					{
+						GiveItem(m_questPlayer, WarlockEpicArms);
+						GiveItem(m_questPlayer, WarlockEpicBoots);
+						GiveItem(m_questPlayer, WarlockEpicGloves);
+						GiveItem(m_questPlayer, WarlockEpicHelm);
+						GiveItem(m_questPlayer, WarlockEpicLegs);
+						GiveItem(m_questPlayer, WarlockEpicVest);
+						break;
+					}
 			}
 			Danica.SayTo(m_questPlayer, "May it serve you well, knowing that you have helped preserve the history of Midgard!");
 

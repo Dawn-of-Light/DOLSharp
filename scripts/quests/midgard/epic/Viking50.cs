@@ -89,6 +89,12 @@ namespace DOL.GS.Quests.Midgard
 		private static ItemTemplate SavageEpicVest = null;
 		private static ItemTemplate SavageEpicLegs = null;
 		private static ItemTemplate SavageEpicArms = null;
+		private static ItemTemplate ValkyrieEpicBoots = null;
+		private static ItemTemplate ValkyrieEpicHelm = null;
+		private static ItemTemplate ValkyrieEpicGloves = null;
+		private static ItemTemplate ValkyrieEpicVest = null;
+		private static ItemTemplate ValkyrieEpicLegs = null;
+		private static ItemTemplate ValkyrieEpicArms = null;
 
 		// Constructors
 		public Viking_50() : base()
@@ -1532,7 +1538,308 @@ namespace DOL.GS.Quests.Midgard
 				}
 
 			}
-//Savage Epic Sleeves End
+			#region Valkyrie
+			ValkyrieEpicBoots = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ValkyrieEpicBoots");
+			if (ValkyrieEpicBoots == null)
+			{
+				if (log.IsWarnEnabled)
+					log.Warn("Could not find Valkyrie Epic Boots , creating it ...");
+				ValkyrieEpicBoots = new ItemTemplate();
+				ValkyrieEpicBoots.Id_nb = "ValkyrieEpicBoots";
+				ValkyrieEpicBoots.Name = "Battle Maiden's Boots";
+				ValkyrieEpicBoots.Level = 50;
+				ValkyrieEpicBoots.Item_Type = 23;
+				ValkyrieEpicBoots.Model = 2932;
+				ValkyrieEpicBoots.IsDropable = true;
+				ValkyrieEpicBoots.IsPickable = true;
+				ValkyrieEpicBoots.DPS_AF = 100;
+				ValkyrieEpicBoots.SPD_ABS = 27;
+				ValkyrieEpicBoots.Object_Type = 35;
+				ValkyrieEpicBoots.Quality = 100;
+				ValkyrieEpicBoots.Weight = 22;
+				ValkyrieEpicBoots.Bonus = 35;
+				ValkyrieEpicBoots.MaxCondition = 50000;
+				ValkyrieEpicBoots.MaxDurability = 50000;
+				ValkyrieEpicBoots.Durability = 50000;
+				ValkyrieEpicBoots.Condition = 50000;
+
+				/*
+				 *   Constitution: 7 pts
+				 *   Dexterity: 13 pts
+				 *   Quickness: 13 pts
+				 *   Body Resist: 8%
+				 */
+
+				ValkyrieEpicBoots.Bonus1 = 7;
+				ValkyrieEpicBoots.Bonus1Type = (int)eStat.CON;
+
+				ValkyrieEpicBoots.Bonus2 = 13;
+				ValkyrieEpicBoots.Bonus2Type = (int)eStat.DEX;
+
+				ValkyrieEpicBoots.Bonus3 = 13;
+				ValkyrieEpicBoots.Bonus3Type = (int)eStat.QUI;
+
+				ValkyrieEpicBoots.Bonus4 = 8;
+				ValkyrieEpicBoots.Bonus4Type = (int)eResist.Body;
+
+				if (SAVE_INTO_DATABASE)
+				{
+					GameServer.Database.AddNewObject(ValkyrieEpicBoots);
+				}
+
+			}
+			//end item
+			ValkyrieEpicHelm = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ValkyrieEpicHelm");
+			if (ValkyrieEpicHelm == null)
+			{
+				if (log.IsWarnEnabled)
+					log.Warn("Could not find Valkyrie Epic Helm , creating it ...");
+				ValkyrieEpicHelm = new ItemTemplate();
+				ValkyrieEpicHelm.Id_nb = "ValkyrieEpicHelm";
+				ValkyrieEpicHelm.Name = "Battle Maiden's Coif";
+				ValkyrieEpicHelm.Level = 50;
+				ValkyrieEpicHelm.Item_Type = 21;
+				ValkyrieEpicHelm.Model = 2951; //NEED TO WORK ON..
+				ValkyrieEpicHelm.IsDropable = true;
+				ValkyrieEpicHelm.IsPickable = true;
+				ValkyrieEpicHelm.DPS_AF = 100;
+				ValkyrieEpicHelm.SPD_ABS = 27;
+				ValkyrieEpicHelm.Object_Type = 35;
+				ValkyrieEpicHelm.Quality = 100;
+				ValkyrieEpicHelm.Weight = 22;
+				ValkyrieEpicHelm.Bonus = 35;
+				ValkyrieEpicHelm.MaxCondition = 50000;
+				ValkyrieEpicHelm.MaxDurability = 50000;
+				ValkyrieEpicHelm.Condition = 50000;
+				ValkyrieEpicHelm.Durability = 50000;
+
+				/*
+				 *   Sword: +4 pts
+				 *   Constitution: 18 pts
+				 *   Cold Resist: 4%
+				 *   Energy Resist: 6%
+				 */
+
+				ValkyrieEpicHelm.Bonus1 = 4;
+				ValkyrieEpicHelm.Bonus1Type = (int)eProperty.Skill_Sword;
+
+				ValkyrieEpicHelm.Bonus2 = 18;
+				ValkyrieEpicHelm.Bonus2Type = (int)eStat.CON;
+
+				ValkyrieEpicHelm.Bonus3 = 4;
+				ValkyrieEpicHelm.Bonus3Type = (int)eResist.Cold;
+
+				ValkyrieEpicHelm.Bonus4 = 6;
+				ValkyrieEpicHelm.Bonus4Type = (int)eResist.Energy;
+
+				if (SAVE_INTO_DATABASE)
+				{
+					GameServer.Database.AddNewObject(ValkyrieEpicHelm);
+				}
+
+			}
+			//end item
+			ValkyrieEpicGloves = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ValkyrieEpicGloves");
+			if (ValkyrieEpicGloves == null)
+			{
+				if (log.IsWarnEnabled)
+					log.Warn("Could not find Valkyrie Epic Gloves , creating it ...");
+				ValkyrieEpicGloves = new ItemTemplate();
+				ValkyrieEpicGloves.Id_nb = "ValkyrieEpicGloves";
+				ValkyrieEpicGloves.Name = "Battle Maiden's Gloves";
+				ValkyrieEpicGloves.Level = 50;
+				ValkyrieEpicGloves.Item_Type = 22;
+				ValkyrieEpicGloves.Model = 2932;
+				ValkyrieEpicGloves.IsDropable = true;
+				ValkyrieEpicGloves.IsPickable = true;
+				ValkyrieEpicGloves.DPS_AF = 100;
+				ValkyrieEpicGloves.SPD_ABS = 27;
+				ValkyrieEpicGloves.Object_Type = 35;
+				ValkyrieEpicGloves.Quality = 100;
+				ValkyrieEpicGloves.Weight = 22;
+				ValkyrieEpicGloves.Bonus = 35;
+				ValkyrieEpicGloves.MaxCondition = 50000;
+				ValkyrieEpicGloves.MaxDurability = 50000;
+				ValkyrieEpicGloves.Condition = 50000;
+				ValkyrieEpicGloves.Durability = 50000;
+
+				/*
+				 *   Spear: +3 pts
+				 *   Parry: +3 pts
+				 *   Strength: 19 pts
+				 *   Odin's Will: +3 pts
+				 */
+
+				ValkyrieEpicGloves.Bonus1 = 3;
+				ValkyrieEpicGloves.Bonus1Type = (int)eProperty.Skill_Spear;
+
+				ValkyrieEpicGloves.Bonus2 = 3;
+				ValkyrieEpicGloves.Bonus2Type = (int)eProperty.Skill_Parry;
+
+				ValkyrieEpicGloves.Bonus3 = 19;
+				ValkyrieEpicGloves.Bonus3Type = (int)eStat.STR;
+
+				ValkyrieEpicGloves.Bonus4 = 3;
+				ValkyrieEpicGloves.Bonus4Type = (int)eProperty.Skill_OdinsWill;
+
+				if (SAVE_INTO_DATABASE)
+				{
+					GameServer.Database.AddNewObject(ValkyrieEpicGloves);
+				}
+
+			}
+
+			ValkyrieEpicVest = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ValkyrieEpicVest");
+			if (ValkyrieEpicVest == null)
+			{
+				if (log.IsWarnEnabled)
+					log.Warn("Could not find Valkyrie Epic Vest , creating it ...");
+				ValkyrieEpicVest = new ItemTemplate();
+				ValkyrieEpicVest.Id_nb = "ValkyrieEpicVest";
+				ValkyrieEpicVest.Name = "Battle Maiden's Hauberk";
+				ValkyrieEpicVest.Level = 50;
+				ValkyrieEpicVest.Item_Type = 25;
+				ValkyrieEpicVest.Model = 2928;
+				ValkyrieEpicVest.IsDropable = true;
+				ValkyrieEpicVest.IsPickable = true;
+				ValkyrieEpicVest.DPS_AF = 100;
+				ValkyrieEpicVest.SPD_ABS = 27;
+				ValkyrieEpicVest.Object_Type = 35;
+				ValkyrieEpicVest.Quality = 100;
+				ValkyrieEpicVest.Weight = 22;
+				ValkyrieEpicVest.Bonus = 35;
+				ValkyrieEpicVest.MaxCondition = 50000;
+				ValkyrieEpicVest.MaxDurability = 50000;
+				ValkyrieEpicVest.Condition = 50000;
+				ValkyrieEpicVest.Durability = 50000;
+
+				/*
+				 *   Strength: 13 pts
+				 *   Constitution: 13 pts
+				 *   Slash Resist: 6%
+				 *   Hits: 30 pts
+				 */
+
+				ValkyrieEpicVest.Bonus1 = 13;
+				ValkyrieEpicVest.Bonus1Type = (int)eStat.STR;
+
+				ValkyrieEpicVest.Bonus2 = 13;
+				ValkyrieEpicVest.Bonus2Type = (int)eStat.CON;
+
+				ValkyrieEpicVest.Bonus3 = 6;
+				ValkyrieEpicVest.Bonus3Type = (int)eResist.Matter;
+
+				ValkyrieEpicVest.Bonus4 = 30;
+				ValkyrieEpicVest.Bonus4Type = (int)eProperty.MaxHealth;
+
+				if (SAVE_INTO_DATABASE)
+				{
+					GameServer.Database.AddNewObject(ValkyrieEpicVest);
+				}
+
+			}
+
+			ValkyrieEpicLegs = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ValkyrieEpicLegs");
+			if (ValkyrieEpicLegs == null)
+			{
+				if (log.IsWarnEnabled)
+					log.Warn("Could not find Valkyrie Epic Legs , creating it ...");
+				ValkyrieEpicLegs = new ItemTemplate();
+				ValkyrieEpicLegs.Id_nb = "ValkyrieEpicLegs";
+				ValkyrieEpicLegs.Name = "Battle Maiden's Legs";
+				ValkyrieEpicLegs.Level = 50;
+				ValkyrieEpicLegs.Item_Type = 27;
+				ValkyrieEpicLegs.Model = 2929;
+				ValkyrieEpicLegs.IsDropable = true;
+				ValkyrieEpicLegs.IsPickable = true;
+				ValkyrieEpicLegs.DPS_AF = 100;
+				ValkyrieEpicLegs.SPD_ABS = 27;
+				ValkyrieEpicLegs.Object_Type = 35;
+				ValkyrieEpicLegs.Quality = 100;
+				ValkyrieEpicLegs.Weight = 22;
+				ValkyrieEpicLegs.Bonus = 35;
+				ValkyrieEpicLegs.MaxCondition = 50000;
+				ValkyrieEpicLegs.MaxDurability = 50000;
+				ValkyrieEpicLegs.Condition = 50000;
+				ValkyrieEpicLegs.Durability = 50000;
+
+				/*
+				 *   Constitution: 19 pts
+				 *   Piety: 15 pts
+				 *   Crush Resist: 8%
+				 *   Heat Resist: 8%
+				 */
+
+				ValkyrieEpicLegs.Bonus1 = 19;
+				ValkyrieEpicLegs.Bonus1Type = (int)eStat.CON;
+
+				ValkyrieEpicLegs.Bonus2 = 15;
+				ValkyrieEpicLegs.Bonus2Type = (int)eStat.PIE;
+
+				ValkyrieEpicLegs.Bonus3 = 8;
+				ValkyrieEpicLegs.Bonus3Type = (int)eResist.Crush;
+
+				ValkyrieEpicLegs.Bonus4 = 8;
+				ValkyrieEpicLegs.Bonus4Type = (int)eResist.Heat;
+
+				if (SAVE_INTO_DATABASE)
+				{
+					GameServer.Database.AddNewObject(ValkyrieEpicLegs);
+				}
+
+			}
+
+			ValkyrieEpicArms = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ValkyrieEpicArms");
+			if (ValkyrieEpicArms == null)
+			{
+				if (log.IsWarnEnabled)
+					log.Warn("Could not find Valkyrie Epic Arms , creating it ...");
+				ValkyrieEpicArms = new ItemTemplate();
+				ValkyrieEpicArms.Id_nb = "ValkyrieEpicArms";
+				ValkyrieEpicArms.Name = "Battle Maiden's Sleeves";
+				ValkyrieEpicArms.Level = 50;
+				ValkyrieEpicArms.Item_Type = 28;
+				ValkyrieEpicArms.Model = 2930;
+				ValkyrieEpicArms.IsDropable = true;
+				ValkyrieEpicArms.IsPickable = true;
+				ValkyrieEpicArms.DPS_AF = 100;
+				ValkyrieEpicArms.SPD_ABS = 27;
+				ValkyrieEpicArms.Object_Type = 35;
+				ValkyrieEpicArms.Quality = 100;
+				ValkyrieEpicArms.Weight = 22;
+				ValkyrieEpicArms.Bonus = 35;
+				ValkyrieEpicArms.MaxCondition = 50000;
+				ValkyrieEpicArms.MaxDurability = 50000;
+				ValkyrieEpicArms.Condition = 50000;
+				ValkyrieEpicArms.Durability = 50000;
+
+				/*
+				 *   Strength: 18 pts
+				 *   Quickness: 16 pts
+				 *   Thrust Resist: 8%
+				 *   Spirit Resist: 8%
+				 */
+
+				ValkyrieEpicArms.Bonus1 = 18;
+				ValkyrieEpicArms.Bonus1Type = (int)eStat.STR;
+
+				ValkyrieEpicArms.Bonus2 = 16;
+				ValkyrieEpicArms.Bonus2Type = (int)eStat.QUI;
+
+				ValkyrieEpicArms.Bonus3 = 8;
+				ValkyrieEpicArms.Bonus3Type = (int)eResist.Thrust;
+
+				ValkyrieEpicArms.Bonus4 = 8;
+				ValkyrieEpicArms.Bonus4Type = (int)eResist.Spirit;
+
+				if (SAVE_INTO_DATABASE)
+				{
+					GameServer.Database.AddNewObject(ValkyrieEpicArms);
+				}
+
+			}
+			#endregion
+			//Savage Epic Sleeves End
 //Item Descriptions End
 
 			#endregion
@@ -1679,7 +1986,8 @@ namespace DOL.GS.Quests.Midgard
 				player.CharacterClass.ID != (byte) eCharacterClass.Berserker &&
 				player.CharacterClass.ID != (byte) eCharacterClass.Thane &&
 				player.CharacterClass.ID != (byte) eCharacterClass.Skald &&
-				player.CharacterClass.ID != (byte) eCharacterClass.Savage)
+				player.CharacterClass.ID != (byte) eCharacterClass.Savage &&
+				player.CharacterClass.ID != (byte) eCharacterClass.Valkyrie)
 				return false;
 
 			// This checks below are only performed is player isn't doing quest already
@@ -1837,50 +2145,68 @@ namespace DOL.GS.Quests.Midgard
 		{
 			base.FinishQuest(); //Defined in Quest, changes the state, stores in DB etc ...
 
-			if (m_questPlayer.CharacterClass.ID == (byte) eCharacterClass.Warrior)
+			switch ((eCharacterClass)m_questPlayer.CharacterClass.ID)
 			{
-				GiveItem(m_questPlayer, WarriorEpicArms);
-				GiveItem(m_questPlayer, WarriorEpicBoots);
-				GiveItem(m_questPlayer, WarriorEpicGloves);
-				GiveItem(m_questPlayer, WarriorEpicHelm);
-				GiveItem(m_questPlayer, WarriorEpicLegs);
-				GiveItem(m_questPlayer, WarriorEpicVest);
-			}
-			else if (m_questPlayer.CharacterClass.ID == (byte) eCharacterClass.Berserker)
-			{
-				GiveItem(m_questPlayer, BerserkerEpicArms);
-				GiveItem(m_questPlayer, BerserkerEpicBoots);
-				GiveItem(m_questPlayer, BerserkerEpicGloves);
-				GiveItem(m_questPlayer, BerserkerEpicHelm);
-				GiveItem(m_questPlayer, BerserkerEpicLegs);
-				GiveItem(m_questPlayer, BerserkerEpicVest);
-			}
-			else if (m_questPlayer.CharacterClass.ID == (byte) eCharacterClass.Thane)
-			{
-				GiveItem(m_questPlayer, ThaneEpicArms);
-				GiveItem(m_questPlayer, ThaneEpicBoots);
-				GiveItem(m_questPlayer, ThaneEpicGloves);
-				GiveItem(m_questPlayer, ThaneEpicHelm);
-				GiveItem(m_questPlayer, ThaneEpicLegs);
-				GiveItem(m_questPlayer, ThaneEpicVest);
-			}
-			else if (m_questPlayer.CharacterClass.ID == (byte) eCharacterClass.Skald)
-			{
-				GiveItem(m_questPlayer, SkaldEpicArms);
-				GiveItem(m_questPlayer, SkaldEpicBoots);
-				GiveItem(m_questPlayer, SkaldEpicGloves);
-				GiveItem(m_questPlayer, SkaldEpicHelm);
-				GiveItem(m_questPlayer, SkaldEpicLegs);
-				GiveItem(m_questPlayer, SkaldEpicVest);
-			}
-			else if (m_questPlayer.CharacterClass.ID == (byte) eCharacterClass.Savage)
-			{
-				GiveItem(m_questPlayer, SavageEpicArms);
-				GiveItem(m_questPlayer, SavageEpicBoots);
-				GiveItem(m_questPlayer, SavageEpicGloves);
-				GiveItem(m_questPlayer, SavageEpicHelm);
-				GiveItem(m_questPlayer, SavageEpicLegs);
-				GiveItem(m_questPlayer, SavageEpicVest);
+				case eCharacterClass.Warrior:
+					{
+						GiveItem(m_questPlayer, WarriorEpicArms);
+						GiveItem(m_questPlayer, WarriorEpicBoots);
+						GiveItem(m_questPlayer, WarriorEpicGloves);
+						GiveItem(m_questPlayer, WarriorEpicHelm);
+						GiveItem(m_questPlayer, WarriorEpicLegs);
+						GiveItem(m_questPlayer, WarriorEpicVest);
+						break;
+					}
+				case eCharacterClass.Berserker:
+					{
+						GiveItem(m_questPlayer, BerserkerEpicArms);
+						GiveItem(m_questPlayer, BerserkerEpicBoots);
+						GiveItem(m_questPlayer, BerserkerEpicGloves);
+						GiveItem(m_questPlayer, BerserkerEpicHelm);
+						GiveItem(m_questPlayer, BerserkerEpicLegs);
+						GiveItem(m_questPlayer, BerserkerEpicVest);
+						break;
+					}
+				case eCharacterClass.Thane:
+					{
+						GiveItem(m_questPlayer, ThaneEpicArms);
+						GiveItem(m_questPlayer, ThaneEpicBoots);
+						GiveItem(m_questPlayer, ThaneEpicGloves);
+						GiveItem(m_questPlayer, ThaneEpicHelm);
+						GiveItem(m_questPlayer, ThaneEpicLegs);
+						GiveItem(m_questPlayer, ThaneEpicVest);
+						break;
+					}
+				case eCharacterClass.Skald:
+					{
+						GiveItem(m_questPlayer, SkaldEpicArms);
+						GiveItem(m_questPlayer, SkaldEpicBoots);
+						GiveItem(m_questPlayer, SkaldEpicGloves);
+						GiveItem(m_questPlayer, SkaldEpicHelm);
+						GiveItem(m_questPlayer, SkaldEpicLegs);
+						GiveItem(m_questPlayer, SkaldEpicVest);
+						break;
+					}
+				case eCharacterClass.Savage:
+					{
+						GiveItem(m_questPlayer, SavageEpicArms);
+						GiveItem(m_questPlayer, SavageEpicBoots);
+						GiveItem(m_questPlayer, SavageEpicGloves);
+						GiveItem(m_questPlayer, SavageEpicHelm);
+						GiveItem(m_questPlayer, SavageEpicLegs);
+						GiveItem(m_questPlayer, SavageEpicVest);
+						break;
+					}
+				case eCharacterClass.Valkyrie:
+					{
+						GiveItem(m_questPlayer, ValkyrieEpicArms);
+						GiveItem(m_questPlayer, ValkyrieEpicBoots);
+						GiveItem(m_questPlayer, ValkyrieEpicGloves);
+						GiveItem(m_questPlayer, ValkyrieEpicHelm);
+						GiveItem(m_questPlayer, ValkyrieEpicLegs);
+						GiveItem(m_questPlayer, ValkyrieEpicVest);
+						break;
+					}
 			}
 
 			m_questPlayer.GainExperience(1937768448, true);

@@ -67,7 +67,19 @@ namespace DOL.GS.Quests.Hibernia
 		private static ItemTemplate ValewalkerEpicGloves = null; //Subterranean Gloves 
 		private static ItemTemplate ValewalkerEpicVest = null; //Subterranean Hauberk 
 		private static ItemTemplate ValewalkerEpicLegs = null; //Subterranean Legs 
-		private static ItemTemplate ValewalkerEpicArms = null; //Subterranean Sleeves         
+		private static ItemTemplate ValewalkerEpicArms = null; //Subterranean Sleeves  
+		private static ItemTemplate VampiirEpicBoots = null;
+		private static ItemTemplate VampiirEpicHelm = null;
+		private static ItemTemplate VampiirEpicGloves = null;
+		private static ItemTemplate VampiirEpicVest = null;
+		private static ItemTemplate VampiirEpicLegs = null;
+		private static ItemTemplate VampiirEpicArms = null;
+		private static ItemTemplate BainsheeEpicBoots = null;
+		private static ItemTemplate BainsheeEpicHelm = null;
+		private static ItemTemplate BainsheeEpicGloves = null;
+		private static ItemTemplate BainsheeEpicVest = null;
+		private static ItemTemplate BainsheeEpicLegs = null;
+		private static ItemTemplate BainsheeEpicArms = null;
 
 		// Constructors
 		public Harmony_50()
@@ -1408,6 +1420,627 @@ namespace DOL.GS.Quests.Hibernia
 
 			}
 
+			#region Vampiir
+			VampiirEpicBoots = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "VampiirEpicBoots");
+			if (VampiirEpicBoots == null)
+			{
+				i = new ItemTemplate();
+				i.Id_nb = "VampiirEpicBoots";
+				i.Name = "Archfiend Etched Boots";
+				i.Level = 50;
+				i.Item_Type = 23;
+				i.Model = 2927;
+				i.IsDropable = true;
+				i.IsPickable = true;
+				i.DPS_AF = 100;
+				i.SPD_ABS = 10;
+				i.Object_Type = (int)eObjectType.Leather;
+				i.Quality = 100;
+				i.Weight = 22;
+				i.Bonus = 35;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
+
+				/*
+				 *   Strength: 12 pts
+				 *   Dexterity: 15 pts
+				 *   Thrust Resist: 10%
+				 *   Hits: 24 pts
+				 */
+
+				i.Bonus1 = 12;
+				i.Bonus1Type = (int)eStat.STR;
+
+				i.Bonus2 = 15;
+				i.Bonus2Type = (int)eStat.DEX;
+
+				i.Bonus3 = 10;
+				i.Bonus3Type = (int)eResist.Thrust;
+
+				i.Bonus4 = 24;
+				i.Bonus4Type = (int)eProperty.MaxHealth;
+				{
+					GameServer.Database.AddNewObject(i);
+				}
+				VampiirEpicBoots = i;
+
+			}
+			//end item
+			//Misty Glade Coif
+			VampiirEpicHelm = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "VampiirEpicHelm");
+			if (VampiirEpicHelm == null)
+			{
+				i = new ItemTemplate();
+				i.Id_nb = "VampiirEpicHelm";
+				i.Name = "Archfiend Etched Helm";
+				i.Level = 50;
+				i.Item_Type = 21;
+				i.Model = 1292; //NEED TO WORK ON..
+				i.IsDropable = true;
+				i.IsPickable = true;
+				i.DPS_AF = 100;
+				i.SPD_ABS = 10;
+				i.Object_Type = (int)eObjectType.Leather;
+				i.Quality = 100;
+				i.Weight = 22;
+				i.Bonus = 35;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
+
+				/*
+				 *   Strength: 6 pts
+				 *   Constitution: 16 pts
+				 *   Dexterity: 6 pts
+				 *   Hits: 30 pts
+				 */
+
+				i.Bonus1 = 6;
+				i.Bonus1Type = (int)eStat.STR;
+
+				i.Bonus2 = 16;
+				i.Bonus2Type = (int)eStat.CON;
+
+				i.Bonus3 = 6;
+				i.Bonus3Type = (int)eStat.DEX;
+
+				i.Bonus4 = 30;
+				i.Bonus4Type = (int)eProperty.MaxHealth;
+				{
+					GameServer.Database.AddNewObject(i);
+				}
+				VampiirEpicHelm = i;
+
+			}
+			//end item
+			//Misty Glade Gloves
+			VampiirEpicGloves = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "VampiirEpicGloves");
+			if (VampiirEpicGloves == null)
+			{
+				i = new ItemTemplate();
+				i.Id_nb = "VampiirEpicGloves";
+				i.Name = "Archfiend Etched Gloves";
+				i.Level = 50;
+				i.Item_Type = 22;
+				i.Model = 2926;
+				i.IsDropable = true;
+				i.IsPickable = true;
+				i.DPS_AF = 100;
+				i.SPD_ABS = 10;
+				i.Object_Type = (int)eObjectType.Leather;
+				i.Quality = 100;
+				i.Weight = 22;
+				i.Bonus = 35;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
+
+				/*
+				 *   Dexterity: 12 pts
+				 *   Quickness: 13 pts
+				 *   Dementia: +2 pts
+				 *   Shadow Mastery: +5 pts
+				 */
+
+				i.Bonus1 = 12;
+				i.Bonus1Type = (int)eStat.DEX;
+
+				i.Bonus2 = 13;
+				i.Bonus2Type = (int)eStat.QUI;
+
+				i.Bonus3 = 2;
+				i.Bonus3Type = (int)eProperty.Skill_Dementia;
+
+				i.Bonus4 = 5;
+				i.Bonus4Type = (int)eProperty.Skill_ShadowMastery;
+				{
+					GameServer.Database.AddNewObject(i);
+				}
+				VampiirEpicGloves = i;
+
+			}
+			//Misty Glade Hauberk
+			VampiirEpicVest = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "VampiirEpicVest");
+			if (VampiirEpicVest == null)
+			{
+				i = new ItemTemplate();
+				i.Id_nb = "VampiirEpicVest";
+				i.Name = "Archfiend Etched Vest";
+				i.Level = 50;
+				i.Item_Type = 25;
+				i.Model = 2923;
+				i.IsDropable = true;
+				i.IsPickable = true;
+				i.DPS_AF = 100;
+				i.SPD_ABS = 10;
+				i.Object_Type = (int)eObjectType.Leather;
+				i.Quality = 100;
+				i.Weight = 22;
+				i.Bonus = 35;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
+
+				/*
+				 *   Strength: 10 pts
+				 *   Dexterity: 10 pts
+				 *   Quickness: 10 pts
+				 *   Hits: 30 pts
+				 */
+
+				i.Bonus1 = 10;
+				i.Bonus1Type = (int)eStat.STR;
+
+				i.Bonus2 = 10;
+				i.Bonus2Type = (int)eStat.DEX;
+
+				i.Bonus3 = 10;
+				i.Bonus3Type = (int)eStat.QUI;
+
+				i.Bonus4 = 30;
+				i.Bonus4Type = (int)eProperty.MaxHealth;
+				{
+					GameServer.Database.AddNewObject(i);
+				}
+				VampiirEpicVest = i;
+
+			}
+			//Misty Glade Legs
+			VampiirEpicLegs = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "VampiirEpicLegs");
+			if (VampiirEpicLegs == null)
+			{
+				i = new ItemTemplate();
+				i.Id_nb = "VampiirEpicLegs";
+				i.Name = "Archfiend Etched Leggings";
+				i.Level = 50;
+				i.Item_Type = 27;
+				i.Model = 2924;
+				i.IsDropable = true;
+				i.IsPickable = true;
+				i.DPS_AF = 100;
+				i.SPD_ABS = 10;
+				i.Object_Type = (int)eObjectType.Leather;
+				i.Quality = 100;
+				i.Weight = 22;
+				i.Bonus = 35;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
+
+				/*
+				 *   Constitution: 16 pts
+				 *   Dexterity: 15 pts
+				 *   Crush Resist: 10%
+				 *   Slash Resist: 10%
+				 */
+
+				i.Bonus1 = 16;
+				i.Bonus1Type = (int)eStat.CON ;
+
+				i.Bonus2 = 15;
+				i.Bonus2Type = (int)eStat.DEX;
+
+				i.Bonus3 = 10;
+				i.Bonus3Type = (int)eResist.Crush;
+
+				i.Bonus4 = 10;
+				i.Bonus4Type = (int)eResist.Slash;
+				{
+					GameServer.Database.AddNewObject(i);
+				}
+				VampiirEpicLegs = i;
+
+			}
+			//Misty Glade Sleeves
+			VampiirEpicArms = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "VampiirEpicArms");
+			if (VampiirEpicArms == null)
+			{
+				i = new ItemTemplate();
+				i.Id_nb = "VampiirEpicArms";
+				i.Name = "Archfiend Etched Sleeves";
+				i.Level = 50;
+				i.Item_Type = 28;
+				i.Model = 2925;
+				i.IsDropable = true;
+				i.IsPickable = true;
+				i.DPS_AF = 100;
+				i.SPD_ABS = 10;
+				i.Object_Type = (int)eObjectType.Leather;
+				i.Quality = 100;
+				i.Weight = 22;
+				i.Bonus = 35;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
+
+				/*
+				 *   Strength: 15 pts
+				 *   Dexterity: 15 pts
+				 *   Cold Resist: 6%
+				 *   Vampiiric Embrace: +4 pts
+				 */
+
+				i.Bonus1 = 15;
+				i.Bonus1Type = (int)eStat.STR;
+
+				i.Bonus2 = 15;
+				i.Bonus2Type = (int)eStat.DEX;
+
+				i.Bonus3 = 6;
+				i.Bonus3Type = (int)eResist.Cold;
+
+				i.Bonus4 = 4;
+				i.Bonus4Type = (int)eProperty.Skill_VampiiricEmbrace;
+				{
+					GameServer.Database.AddNewObject(i);
+				}
+				VampiirEpicArms = i;
+
+			}
+			#endregion
+			#region Bainshee
+			BainsheeEpicBoots = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "BainsheeEpicBoots");
+			if (BainsheeEpicBoots == null)
+			{
+				i = new ItemTemplate();
+				i.Id_nb = "BainsheeEpicBoots";
+				i.Name = "Boots of the Keening Spirit";
+				i.Level = 50;
+				i.Item_Type = 23;
+				i.Model = 2952;
+				i.IsDropable = true;
+				i.IsPickable = true;
+				i.DPS_AF = 50;
+				i.SPD_ABS = 0;
+				i.Object_Type = 32;
+				i.Quality = 100;
+				i.Weight = 22;
+				i.Bonus = 35;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
+
+				/*
+				 *   Intelligence: 18 pts
+				 *   Cold Resist: 6%
+				 *   Hits: 40 pts
+				 *   Heat Resist: 6%
+				 *  int cap 5
+				 * hit cap 40
+				 */
+
+				i.Bonus1 = 18;
+				i.Bonus1Type = (int)eStat.INT;
+
+				i.Bonus2 = 6;
+				i.Bonus2Type = (int)eResist.Cold;
+
+				i.Bonus3 = 40;
+				i.Bonus3Type = (int)eProperty.MaxHealth;
+
+				i.Bonus4 = 6;
+				i.Bonus4Type = (int)eResist.Heat;
+
+				i.Bonus5 = 5;
+				i.Bonus5Type = (int)eProperty.IntCapBonus;
+
+				i.Bonus6 = 40;
+				i.Bonus6Type = (int)eProperty.MaxHealthCapBonus;
+
+				{
+					GameServer.Database.AddNewObject(i);
+				}
+				BainsheeEpicBoots = i;
+
+			}
+			//end item
+			//Misty Glade Coif
+			BainsheeEpicHelm = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "BainsheeEpicHelm");
+			if (BainsheeEpicHelm == null)
+			{
+				i = new ItemTemplate();
+				i.Id_nb = "BainsheeEpicHelm";
+				i.Name = "Wreath of the Keening Spirit";
+				i.Level = 50;
+				i.Item_Type = 21;
+				i.Model = 1292; //NEED TO WORK ON..
+				i.IsDropable = true;
+				i.IsPickable = true;
+				i.DPS_AF = 50;
+				i.SPD_ABS = 0;
+				i.Object_Type = 32;
+				i.Quality = 100;
+				i.Weight = 22;
+				i.Bonus = 35;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
+
+				/*
+				 *   Constitution: 18 pts
+				 *   Body Resist: 6%
+				 *   Hits: 40 pts
+				 *   Energy Resist: 6%
+				 *   Hit Points bonus cap: 40
+				 *   Constitution attribute cap: 5
+				 */
+
+				i.Bonus1 = 18;
+				i.Bonus1Type = (int)eStat.CON;
+
+				i.Bonus2 = 6;
+				i.Bonus2Type = (int)eResist.Body;
+
+				i.Bonus3 = 40;
+				i.Bonus3Type = (int)eProperty.MaxHealth;
+
+				i.Bonus4 = 6;
+				i.Bonus4Type = (int)eResist.Energy;
+
+				i.Bonus5 = 40;
+				i.Bonus4Type = (int)eProperty.MaxHealthCapBonus;
+
+				i.Bonus6 = 5;
+				i.Bonus4Type = (int)eProperty.ConCapBonus;
+				{
+					GameServer.Database.AddNewObject(i);
+				}
+				BainsheeEpicHelm = i;
+
+			}
+			//end item
+			//Misty Glade Gloves
+			BainsheeEpicGloves = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "BainsheeEpicGloves");
+			if (BainsheeEpicGloves == null)
+			{
+				i = new ItemTemplate();
+				i.Id_nb = "BainsheeEpicGloves";
+				i.Name = "Gloves of the Keening Spirit";
+				i.Level = 50;
+				i.Item_Type = 22;
+				i.Model = 2950;
+				i.IsDropable = true;
+				i.IsPickable = true;
+				i.DPS_AF = 50;
+				i.SPD_ABS = 0;
+				i.Object_Type = 32;
+				i.Quality = 100;
+				i.Weight = 22;
+				i.Bonus = 35;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
+
+				/*
+				 *   Dexterity: 18 pts
+				 *   Matter Resist: 6%
+				 *   Spirit Resist: 6%
+				 *   Power bonus cap: 6
+				 *   Dexterity attribute cap: 5
+				 *   Power Pool: 6%
+				 */
+
+				i.Bonus1 = 18;
+				i.Bonus1Type = (int)eStat.DEX;
+
+				i.Bonus2 = 6;
+				i.Bonus2Type = (int)eResist.Matter;
+
+				i.Bonus3 = 6;
+				i.Bonus3Type = (int)eResist.Spirit;
+
+				i.Bonus4 = 6;
+				i.Bonus4Type = (int)eProperty.MaxMana;
+
+				i.Bonus5 = 5;
+				i.Bonus5Type = (int)eProperty.DexCapBonus;
+
+				i.Bonus6 = 6;
+				i.Bonus6Type = (int)eProperty.PowerPool;
+
+				{
+					GameServer.Database.AddNewObject(i);
+				}
+				BainsheeEpicGloves = i;
+
+			}
+			//Keening Spirit Hauberk
+			BainsheeEpicVest = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "BainsheeEpicVest");
+			if (BainsheeEpicVest == null)
+			{
+				i = new ItemTemplate();
+				i.Id_nb = "BainsheeEpicVest";
+				i.Name = "Robe of the Keening Spirit";
+				i.Level = 50;
+				i.Item_Type = 25;
+				i.Model = 2922;
+				i.IsDropable = true;
+				i.IsPickable = true;
+				i.DPS_AF = 50;
+				i.SPD_ABS = 0;
+				i.Object_Type = 32;
+				i.Quality = 100;
+				i.Weight = 22;
+				i.Bonus = 35;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
+
+				/*
+				 *   Intelligence: 15 pts
+				 *   Crush Resist: 7%
+				 *   Hits: 40 pts
+				 *   ALL Magic Skills: +3
+				 *   Intelligence attribute cap: 5
+				 *   Hit Points bonus cap: 40
+				 */
+
+				i.Bonus1 = 15;
+				i.Bonus1Type = (int)eStat.INT;
+
+				i.Bonus2 = 7;
+				i.Bonus2Type = (int)eResist.Crush;
+
+				i.Bonus3 = 40;
+				i.Bonus3Type = (int)eProperty.MaxHealth;
+
+				i.Bonus4 = 3;
+				i.Bonus4Type = (int)eProperty.AllMagicSkills;
+
+				i.Bonus5 = 5;
+				i.Bonus5Type = (int)eProperty.IntCapBonus;
+
+				i.Bonus6 = 40;
+				i.Bonus6Type = (int)eProperty.MaxHealthCapBonus;
+				{
+					GameServer.Database.AddNewObject(i);
+				}
+				BainsheeEpicVest = i;
+
+			}
+			//Keening Spirit Legs
+			BainsheeEpicLegs = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "BainsheeEpicLegs");
+			if (BainsheeEpicLegs == null)
+			{
+				i = new ItemTemplate();
+				i.Id_nb = "BainsheeEpicLegs";
+				i.Name = "Pants of the Keening Spirit";
+				i.Level = 50;
+				i.Item_Type = 27;
+				i.Model = 2949;
+				i.IsDropable = true;
+				i.IsPickable = true;
+				i.DPS_AF = 50;
+				i.SPD_ABS = 0;
+				i.Object_Type = 32;
+				i.Quality = 100;
+				i.Weight = 22;
+				i.Bonus = 35;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
+
+				/*
+				 *   Constitution: 15 pts
+				 *   Thrust Resist: 7%
+				 *   Power Pool: 6%
+				 *   Intelligence attribute cap: 5
+				 *   Constitution attribute cap: 5
+				 *   Power bonus cap: 6
+				 */
+
+				i.Bonus1 = 15;
+				i.Bonus1Type = (int)eStat.CON;
+
+				i.Bonus2 = 7;
+				i.Bonus2Type = (int)eResist.Thrust;
+
+				i.Bonus3 = 6;
+				i.Bonus3Type = (int)eProperty.PowerPool;
+
+				i.Bonus4 = 5;
+				i.Bonus4Type = (int)eProperty.IntCapBonus;
+
+				i.Bonus5 = 5;
+				i.Bonus5Type = (int)eProperty.ConCapBonus;
+
+				i.Bonus6 = 6;
+				i.Bonus6Type = (int)eProperty.PowerPoolCapBonus;
+				{
+					GameServer.Database.AddNewObject(i);
+				}
+				BainsheeEpicLegs = i;
+
+			}
+			//Keening Spirit Sleeves
+			BainsheeEpicArms = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "BainsheeEpicArms");
+			if (BainsheeEpicArms == null)
+			{
+				i = new ItemTemplate();
+				i.Id_nb = "BainsheeEpicArms";
+				i.Name = "Sleeves of the Keening Spirit";
+				i.Level = 50;
+				i.Item_Type = 28;
+				i.Model = 2948;
+				i.IsDropable = true;
+				i.IsPickable = true;
+				i.DPS_AF = 50;
+				i.SPD_ABS = 0;
+				i.Object_Type = 32;
+				i.Quality = 100;
+				i.Weight = 22;
+				i.Bonus = 35;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
+
+				/*
+				 *   Dexterity: 15 pts
+				 *   Slash Resist: 7%
+				 *   ALL Magic Skills: +3
+				 *   Power Pool: 6%
+				 *   Dexterity attribute cap: 5
+				 *   Power bonus cap: 6
+				 */
+
+				i.Bonus1 = 15;
+				i.Bonus1Type = (int)eStat.DEX;
+
+				i.Bonus2 = 7;
+				i.Bonus2Type = (int)eResist.Slash;
+
+				i.Bonus3 = 3;
+				i.Bonus3Type = (int)eProperty.AllMagicSkills;
+
+				i.Bonus4 = 6;
+				i.Bonus4Type = (int)eProperty.PowerPool;
+
+				i.Bonus5 = 7;
+				i.Bonus5Type = (int)eProperty.DexCapBonus;
+
+				i.Bonus6 = 6;
+				i.Bonus6Type = (int)eProperty.PowerPoolCapBonus;
+				{
+					GameServer.Database.AddNewObject(i);
+				}
+				BainsheeEpicArms = i;
+
+			}
+			#endregion
+
 			//Blademaster Epic Sleeves End
 			//Item Descriptions End
 
@@ -1503,7 +2136,9 @@ namespace DOL.GS.Quests.Hibernia
 				player.CharacterClass.ID != (byte)eCharacterClass.Druid &&
 				player.CharacterClass.ID != (byte)eCharacterClass.Valewalker &&
 				player.CharacterClass.ID != (byte)eCharacterClass.Animist &&
-				player.CharacterClass.ID != (byte)eCharacterClass.Mentalist)
+				player.CharacterClass.ID != (byte)eCharacterClass.Mentalist &&
+				player.CharacterClass.ID != (byte)eCharacterClass.Vampiir &&
+				player.CharacterClass.ID != (byte)eCharacterClass.Bainshee)
 				return false;
 
 			// This checks below are only performed is player isn't doing quest already
@@ -1645,50 +2280,78 @@ namespace DOL.GS.Quests.Hibernia
 		{
 			base.FinishQuest(); //Defined in Quest, changes the state, stores in DB etc ...
 
-			if (m_questPlayer.CharacterClass.ID == (byte)eCharacterClass.Blademaster)
+			switch ((eCharacterClass)m_questPlayer.CharacterClass.ID)
 			{
-				GiveItem(m_questPlayer, BlademasterEpicArms);
-				GiveItem(m_questPlayer, BlademasterEpicBoots);
-				GiveItem(m_questPlayer, BlademasterEpicGloves);
-				GiveItem(m_questPlayer, BlademasterEpicHelm);
-				GiveItem(m_questPlayer, BlademasterEpicLegs);
-				GiveItem(m_questPlayer, BlademasterEpicVest);
-			}
-			else if (m_questPlayer.CharacterClass.ID == (byte)eCharacterClass.Animist)
-			{
-				GiveItem(m_questPlayer, AnimistEpicArms);
-				GiveItem(m_questPlayer, AnimistEpicBoots);
-				GiveItem(m_questPlayer, AnimistEpicGloves);
-				GiveItem(m_questPlayer, AnimistEpicHelm);
-				GiveItem(m_questPlayer, AnimistEpicLegs);
-				GiveItem(m_questPlayer, AnimistEpicVest);
-			}
-			else if (m_questPlayer.CharacterClass.ID == (byte)eCharacterClass.Mentalist)
-			{
-				GiveItem(m_questPlayer, MentalistEpicArms);
-				GiveItem(m_questPlayer, MentalistEpicBoots);
-				GiveItem(m_questPlayer, MentalistEpicGloves);
-				GiveItem(m_questPlayer, MentalistEpicHelm);
-				GiveItem(m_questPlayer, MentalistEpicLegs);
-				GiveItem(m_questPlayer, MentalistEpicVest);
-			}
-			else if (m_questPlayer.CharacterClass.ID == (byte)eCharacterClass.Druid)
-			{
-				GiveItem(m_questPlayer, DruidEpicArms);
-				GiveItem(m_questPlayer, DruidEpicBoots);
-				GiveItem(m_questPlayer, DruidEpicGloves);
-				GiveItem(m_questPlayer, DruidEpicHelm);
-				GiveItem(m_questPlayer, DruidEpicLegs);
-				GiveItem(m_questPlayer, DruidEpicVest);
-			}
-			else if (m_questPlayer.CharacterClass.ID == (byte)eCharacterClass.Valewalker)
-			{
-				GiveItem(m_questPlayer, ValewalkerEpicArms);
-				GiveItem(m_questPlayer, ValewalkerEpicBoots);
-				GiveItem(m_questPlayer, ValewalkerEpicGloves);
-				GiveItem(m_questPlayer, ValewalkerEpicHelm);
-				GiveItem(m_questPlayer, ValewalkerEpicLegs);
-				GiveItem(m_questPlayer, ValewalkerEpicVest);
+				case eCharacterClass.Blademaster:
+					{
+						GiveItem(m_questPlayer, BlademasterEpicArms);
+						GiveItem(m_questPlayer, BlademasterEpicBoots);
+						GiveItem(m_questPlayer, BlademasterEpicGloves);
+						GiveItem(m_questPlayer, BlademasterEpicHelm);
+						GiveItem(m_questPlayer, BlademasterEpicLegs);
+						GiveItem(m_questPlayer, BlademasterEpicVest);
+						break;
+					}
+				case eCharacterClass.Animist:
+					{
+						GiveItem(m_questPlayer, AnimistEpicArms);
+						GiveItem(m_questPlayer, AnimistEpicBoots);
+						GiveItem(m_questPlayer, AnimistEpicGloves);
+						GiveItem(m_questPlayer, AnimistEpicHelm);
+						GiveItem(m_questPlayer, AnimistEpicLegs);
+						GiveItem(m_questPlayer, AnimistEpicVest);
+						break;
+					}
+				case eCharacterClass.Mentalist:
+					{
+						GiveItem(m_questPlayer, MentalistEpicArms);
+						GiveItem(m_questPlayer, MentalistEpicBoots);
+						GiveItem(m_questPlayer, MentalistEpicGloves);
+						GiveItem(m_questPlayer, MentalistEpicHelm);
+						GiveItem(m_questPlayer, MentalistEpicLegs);
+						GiveItem(m_questPlayer, MentalistEpicVest);
+						break;
+					}
+				case eCharacterClass.Druid:
+					{
+						GiveItem(m_questPlayer, DruidEpicArms);
+						GiveItem(m_questPlayer, DruidEpicBoots);
+						GiveItem(m_questPlayer, DruidEpicGloves);
+						GiveItem(m_questPlayer, DruidEpicHelm);
+						GiveItem(m_questPlayer, DruidEpicLegs);
+						GiveItem(m_questPlayer, DruidEpicVest);
+						break;
+					}
+				case eCharacterClass.Valewalker:
+					{
+						GiveItem(m_questPlayer, ValewalkerEpicArms);
+						GiveItem(m_questPlayer, ValewalkerEpicBoots);
+						GiveItem(m_questPlayer, ValewalkerEpicGloves);
+						GiveItem(m_questPlayer, ValewalkerEpicHelm);
+						GiveItem(m_questPlayer, ValewalkerEpicLegs);
+						GiveItem(m_questPlayer, ValewalkerEpicVest);
+						break;
+					}
+				case eCharacterClass.Vampiir:
+					{
+						GiveItem(m_questPlayer, VampiirEpicArms);
+						GiveItem(m_questPlayer, VampiirEpicBoots);
+						GiveItem(m_questPlayer, VampiirEpicGloves);
+						GiveItem(m_questPlayer, VampiirEpicHelm);
+						GiveItem(m_questPlayer, VampiirEpicLegs);
+						GiveItem(m_questPlayer, VampiirEpicVest);
+						break;
+					}
+				case eCharacterClass.Bainshee:
+					{
+						GiveItem(m_questPlayer, BainsheeEpicArms);
+						GiveItem(m_questPlayer, BainsheeEpicBoots);
+						GiveItem(m_questPlayer, BainsheeEpicGloves);
+						GiveItem(m_questPlayer, BainsheeEpicHelm);
+						GiveItem(m_questPlayer, BainsheeEpicLegs);
+						GiveItem(m_questPlayer, BainsheeEpicVest);
+						break;
+					}
 			}
 
 			m_questPlayer.GainExperience(1937768448, true);
