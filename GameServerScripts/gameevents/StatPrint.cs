@@ -149,6 +149,13 @@ namespace DOL.GS.GameEvents
 				m_lastBytesOut = Statistics.BytesOut;
 				m_lastPacketsIn = Statistics.PacketsIn;
 				m_lastPacketsOut = Statistics.PacketsOut;
+				
+				// Get threadpool info
+				int iocpCurrent, iocpMin, iocpMax;
+				int poolCurrent, poolMin, poolMax;
+				ThreadPool.GetAvailableThreads(out poolCurrent, out iocpCurrent);
+				ThreadPool.GetMinThreads(out poolMin, out iocpMin);
+				ThreadPool.GetMaxThreads(out poolMax, out iocpMax);
 
 				if (log.IsInfoEnabled)
 				{
@@ -158,7 +165,9 @@ namespace DOL.GS.GameEvents
 						.Append("  Down=").Append(inRate/1024).Append( "kb/s (" ).Append(Statistics.BytesIn/1024/1024).Append( "MB)" )
 						.Append("  Up=").Append(outRate/1024).Append( "kb/s (" ).Append(Statistics.BytesOut/1024/1024).Append( "MB)" )
 						.Append("  In=").Append(inPckRate).Append( "pck/s (" ).Append(Statistics.PacketsIn/1000).Append( "K)" )
-						.Append("  Out=").Append(outPckRate).Append( "pck/s (" ).Append(Statistics.PacketsOut/1000).Append( "K)" );
+						.Append("  Out=").Append(outPckRate).Append( "pck/s (" ).Append(Statistics.PacketsOut/1000).Append( "K)" )
+						.AppendFormat("  Pool={0}/{1}({2})", poolCurrent, poolMax, poolMin)
+						.AppendFormat("  IOCP={0}/{1}({2})", iocpCurrent, iocpMax, iocpMin);
 
 					lock (m_timerStatsByMgr.SyncRoot)
 					{

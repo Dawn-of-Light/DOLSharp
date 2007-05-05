@@ -321,6 +321,7 @@ namespace DOL
 					return;
 				}
 				sock = m_listen.EndAccept(ar);
+				sock.NoDelay = true;
 
 				ClientBase client = null;
 				try
