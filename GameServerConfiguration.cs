@@ -19,6 +19,7 @@
 using System;
 using System.IO;
 using System.Net;
+using System.Net.Sockets;
 using System.Reflection;
 using DOL.Config;
 using DOL.Database.Connection;
@@ -96,6 +97,11 @@ namespace DOL.GS
 		/// The max client count.
 		/// </summary>
 		protected int m_maxClientCount;
+
+		/// <summary>
+		/// The endpoint to send UDP packets from.
+		/// </summary>
+		protected IPEndPoint m_udpOutEndpoint;
 
 		#endregion
 		#region Logging
@@ -223,6 +229,19 @@ namespace DOL.GS
 			m_cpuCount = root["Server"]["CpuCount"].GetInt(m_cpuCount);
 			if (m_cpuCount < 1)
 				m_cpuCount = 1;
+			
+			// Parse UDP out endpoint
+			IPAddress	address = null;
+			int			port = -1;
+			string		addressStr = root["Server"]["UDPOutIP"].GetString(string.Empty);
+			string		portStr = root["Server"]["UDPOutPort"].GetString(string.Empty);
+			if (IPAddress.TryParse(addressStr, out address)
+				&& int.TryParse(portStr, out port)
+				&& IPEndPoint.MaxPort >= port
+				&& IPEndPoint.MinPort <= port)
+			{
+				m_udpOutEndpoint = new IPEndPoint(address, port);
+			}
 		}
 
 		/// <summary>
@@ -303,6 +322,13 @@ namespace DOL.GS
 			root["Server"]["DBConnectionString"].Set(m_dbConnectionString);
 			root["Server"]["DBAutosave"].Set(m_autoSave);
 			root["Server"]["DBAutosaveInterval"].Set(m_saveInterval);
+
+			// Store UDP out endpoint
+			if (m_udpOutEndpoint != null)
+			{
+				root["Server"]["UDPOutIP"].Set(m_udpOutEndpoint.Address.ToString());
+				root["Server"]["UDPOutPort"].Set(m_udpOutEndpoint.Port.ToString());
+			}
 		}
 		#endregion
 		#region Constructors
@@ -557,6 +583,16 @@ namespace DOL.GS
 		{
 			get { return m_maxClientCount; }
 			set { m_maxClientCount = value; }
+		}
+		
+		/// <summary>
+		/// Gets or sets UDP address and port to send UDP packets from.
+		/// If <code>null</code> then <see cref="Socket"/> decides where to bind.
+		/// </summary>
+		public IPEndPoint UDPOutEndpoint
+		{
+			get { return m_udpOutEndpoint; }
+			set { m_udpOutEndpoint = value; }
 		}
 	}
 }
