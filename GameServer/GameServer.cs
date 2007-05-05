@@ -84,12 +84,17 @@ namespace DOL
 			/// <summary>
 			/// Socket that listens for UDP packets
 			/// </summary>
-			protected Socket m_udplisten;
+			protected Socket m_udpListen;
+
+			/// <summary>
+			/// Socket that sends UDP packets
+			/// </summary>
+			protected Socket m_udpOutSocket;
 
 			/// <summary>
 			/// Receive buffer for UDP
 			/// </summary>
-			protected byte[] m_pudpbuf;
+			protected byte[] m_udpBuf;
 
 			/// <summary>
 			/// Maximum UDP buffer size
@@ -305,7 +310,7 @@ namespace DOL
 			{
 				get
 				{
-					return m_udplisten;
+					return m_udpListen;
 				}
 			}
 
@@ -316,7 +321,7 @@ namespace DOL
 			{
 				get
 				{
-					return m_pudpbuf;
+					return m_udpBuf;
 				}
 			}
 
@@ -326,22 +331,30 @@ namespace DOL
 			/// <returns>true if successfull</returns>
 			protected bool StartUDP()
 			{
+				bool ret = true;
 				try
 				{
-					//open our udp socket
-					m_udplisten = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-					m_udplisten.Bind(new IPEndPoint(Configuration.UDPIp, Configuration.UDPPort));
-					EndPoint tempRemoteEP = new IPEndPoint(IPAddress.Any, 0);
-					m_udplisten.BeginReceiveFrom(m_pudpbuf, 0, MAX_UDPBUF, SocketFlags.None, ref tempRemoteEP, m_udpReceiveCallback, this);
+					// Open our udp socket
+					m_udpListen = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+					m_udpListen.Bind(new IPEndPoint(Configuration.UDPIp, Configuration.UDPPort));
+					
+					// Bind out UDP socket
+					m_udpOutSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+					if (Configuration.UDPOutEndpoint != null)
+					{
+						m_udpOutSocket.Bind(Configuration.UDPOutEndpoint);
+					}
+
+					ret = BeginReceiveUDP(m_udpListen, this);
 				}
 				catch (Exception e)
 				{
 					if (log.IsErrorEnabled)
 						log.Error("StartUDP", e);
-					return false;
+					ret = false;
 				}
 
-				return true;
+				return ret;
 			}
 
 			/// <summary>
@@ -369,6 +382,7 @@ namespace DOL
 				{
 					//Creates a temporary EndPoint to pass to EndReceiveFrom.
 					EndPoint tempRemoteEP = new IPEndPoint(IPAddress.Any, 0);
+					bool receiving = false;
 					try
 					{
 						// Handle the packet
@@ -394,6 +408,10 @@ namespace DOL
 
 								GSPacketIn pakin = new GSPacketIn(read - GSPacketIn.HDR_SIZE);
 								pakin.Load(server.UDPBuffer, read);
+
+								//Get the next message
+								BeginReceiveUDP(s, server);
+								receiving = true;
 
 								client = WorldMgr.GetClientFromID(pakin.SessionID);
 
@@ -429,28 +447,48 @@ namespace DOL
 						if (log.IsErrorEnabled)
 							log.Error("RecvFromCallback", e);
 					}
-					//Get the next message
-					//Even if we have errors, we need to continue with UDP
-					tempRemoteEP = new IPEndPoint(IPAddress.Any, 0);
-					Thread.MemoryBarrier();
-					try
+					finally
 					{
-						s.BeginReceiveFrom(server.UDPBuffer, 0, MAX_UDPBUF, SocketFlags.None, ref tempRemoteEP, m_udpReceiveCallback, server);
-					}
-					catch (SocketException e)
-					{
-						log.Fatal(string.Format("Failed to resume receiving UDP packets. UDP is DEAD now. (code: {0}  socketCode: {1})", e.ErrorCode, e.SocketErrorCode), e);
-					}
-					catch (ObjectDisposedException e)
-					{
-						log.Fatal("Object disposed.", e);
-					}
-					catch (Exception e)
-					{
-						if (log.IsErrorEnabled)
-							log.Error("UDP Recv", e);
+						if (!receiving)
+						{
+							//Get the next message
+							//Even if we have errors, we need to continue with UDP
+							BeginReceiveUDP(s, server);
+						}
 					}
 				}
+			}
+
+			/// <summary>
+			/// Starts receiving UDP packets.
+			/// </summary>
+			/// <param name="s">Socket to receive packets.</param>
+			/// <param name="server">Server instance used to receive packets.</param>
+			private bool BeginReceiveUDP(Socket s, GameServer server)
+			{
+				bool ret = false;
+				EndPoint tempRemoteEP;
+				tempRemoteEP = new IPEndPoint(IPAddress.Any, 0);
+				try
+				{
+					s.BeginReceiveFrom(server.UDPBuffer, 0, MAX_UDPBUF, SocketFlags.None, ref tempRemoteEP, m_udpReceiveCallback, server);
+					ret = true;
+				}
+				catch (SocketException e)
+				{
+					log.Fatal(string.Format("Failed to resume receiving UDP packets. UDP is DEAD now. (code: {0}  socketCode: {1})", e.ErrorCode, e.SocketErrorCode), e);
+				}
+				catch (ObjectDisposedException e)
+				{
+					log.Fatal("Tried to start UDP. Object disposed.", e);
+				}
+				catch (Exception e)
+				{
+					if (log.IsErrorEnabled)
+						log.Error("UDP Recv", e);
+				}
+
+				return ret;
 			}
 
 			/// <summary>
@@ -480,11 +518,11 @@ namespace DOL
 			{
 				int start = Environment.TickCount;
 
-				m_udplisten.BeginSendTo(bytes, 0, count, SocketFlags.None, clientEndpoint, callback, m_udplisten);
+				m_udpOutSocket.BeginSendTo(bytes, 0, count, SocketFlags.None, clientEndpoint, callback, m_udpOutSocket);
 
 				int took = Environment.TickCount - start;
 				if (took > 100 && log.IsWarnEnabled)
-					log.WarnFormat("m_udplisten.BeginSendTo took {0}ms! (UDP to {1})", took, clientEndpoint.ToString());
+					log.WarnFormat("m_udpListen.BeginSendTo took {0}ms! (UDP to {1})", took, clientEndpoint.ToString());
 			}
 
 			/// <summary>
@@ -935,10 +973,15 @@ namespace DOL
 				base.Stop();
 
 				//Close the UDP connection
-				if (m_udplisten != null)
+				if (m_udpListen != null)
 				{
-					m_udplisten.Close();
-					m_udplisten = null;
+					m_udpListen.Close();
+					m_udpListen = null;
+				}
+				if (m_udpOutSocket != null)
+				{
+					m_udpOutSocket.Close();
+					m_udpOutSocket = null;
 				}
 
 				//Stop all mobMgrs
@@ -1234,7 +1277,7 @@ namespace DOL
 				{
 					LoadInvalidNames();
 
-					m_pudpbuf = new byte[MAX_UDPBUF];
+					m_udpBuf = new byte[MAX_UDPBUF];
 					m_udpReceiveCallback = new AsyncCallback(RecvFromCallback);
 					m_udpSendCallback = new AsyncCallback(SendToCallback);
 
