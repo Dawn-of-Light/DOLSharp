@@ -19473,6 +19473,11 @@
             Called on every timer tick
             </summary>
         </member>
+        <member name="F:DOL.GS.PacketHandler.Client.v168.PlayerMarketSearchRequestHandler.log">
+            <summary>
+            Defines a logger for this class.
+            </summary>
+        </member>
         <member name="F:DOL.GS.PacketHandler.Client.v168.CharacterListUpdateRequestHandler.log">
             <summary>
             Defines a logger for this class.
@@ -36832,11 +36837,6 @@
             if no target go to saved pathpoint to continue the round
             </summary>
             <returns>the best target</returns>
-        </member>
-        <member name="F:DOL.GS.PacketHandler.Client.v168.PlayerMarketSearchRequestHandler.log">
-            <summary>
-            Defines a logger for this class.
-            </summary>
         </member>
     </members>
 </doc>
