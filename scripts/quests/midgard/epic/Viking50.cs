@@ -1649,7 +1649,7 @@ namespace DOL.GS.Quests.Midgard
 				ValkyrieEpicGloves.Name = "Battle Maiden's Gloves";
 				ValkyrieEpicGloves.Level = 50;
 				ValkyrieEpicGloves.Item_Type = 22;
-				ValkyrieEpicGloves.Model = 2932;
+				ValkyrieEpicGloves.Model = 2931;
 				ValkyrieEpicGloves.IsDropable = true;
 				ValkyrieEpicGloves.IsPickable = true;
 				ValkyrieEpicGloves.DPS_AF = 100;

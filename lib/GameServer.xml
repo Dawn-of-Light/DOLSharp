@@ -7337,6 +7337,11 @@
             The max client count.
             </summary>
         </member>
+        <member name="F:DOL.GS.GameServerConfiguration.m_udpOutEndpoint">
+            <summary>
+            The endpoint to send UDP packets from.
+            </summary>
+        </member>
         <member name="F:DOL.GS.GameServerConfiguration.m_gmActionsLoggerName">
             <summary>
             The logger name where to log the gm+ commandos
@@ -7487,6 +7492,12 @@
         <member name="P:DOL.GS.GameServerConfiguration.MaxClientCount">
             <summary>
             Gets or sets the max cout of clients allowed
+            </summary>
+        </member>
+        <member name="P:DOL.GS.GameServerConfiguration.UDPOutEndpoint">
+            <summary>
+            Gets or sets UDP address and port to send UDP packets from.
+            If <code>null</code> then <see cref="T:System.Net.Sockets.Socket"/> decides where to bind.
             </summary>
         </member>
         <member name="T:DOL.Events.RegionPlayerEventArgs">
@@ -16266,6 +16277,17 @@
             <param name="player">GamePlayer this call is related to, can be null</param>
             <returns>true if all Requirements forQuestPart where fullfilled, else false</returns>
         </member>
+        <member name="T:DOL.GS.Scripts.ClassMauler">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:DOL.GS.Scripts.ClassMauler.OnLevelUp(DOL.GS.GamePlayer)">
+            <summary>
+            Update all skills and add new for current level
+            </summary>
+            <param name="player"></param>
+        </member>
         <member name="F:DOL.GS.PacketHandler.Client.v168.PlayerCreationRequestHandler.log">
             <summary>
             Defines a logger for this class.
@@ -18657,6 +18679,33 @@
             <param name="text"></param>
             <returns></returns>
         </member>
+        <member name="T:DOL.GS.Trainer.AlbionMaulerTrainer">
+            <summary>
+            Mauler Trainer
+            </summary>	
+        </member>
+        <member name="M:DOL.GS.Trainer.AlbionMaulerTrainer.Interact(DOL.GS.GamePlayer)">
+            <summary>
+            Interact with trainer
+            </summary>
+            <param name="player"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DOL.GS.Trainer.AlbionMaulerTrainer.CanPromotePlayer(DOL.GS.GamePlayer)">
+            <summary>
+            checks wether a player can be promoted or not
+            </summary>
+            <param name="player"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DOL.GS.Trainer.AlbionMaulerTrainer.WhisperReceive(DOL.GS.GameLiving,System.String)">
+            <summary>
+            Talk to trainer
+            </summary>
+            <param name="source"></param>
+            <param name="text"></param>
+            <returns></returns>
+        </member>
         <member name="T:DOL.GS.Spells.SpreadhealSpellHandler">
             <summary>
             
@@ -19825,6 +19874,33 @@
             </summary>
             <param name="player"></param>
             <param name="item"></param>
+        </member>
+        <member name="T:DOL.GS.Trainer.MidgardMaulerTrainer">
+            <summary>
+            Mauler Trainer
+            </summary>	
+        </member>
+        <member name="M:DOL.GS.Trainer.MidgardMaulerTrainer.Interact(DOL.GS.GamePlayer)">
+            <summary>
+            Interact with trainer
+            </summary>
+            <param name="player"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DOL.GS.Trainer.MidgardMaulerTrainer.CanPromotePlayer(DOL.GS.GamePlayer)">
+            <summary>
+            checks wether a player can be promoted or not
+            </summary>
+            <param name="player"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DOL.GS.Trainer.MidgardMaulerTrainer.WhisperReceive(DOL.GS.GameLiving,System.String)">
+            <summary>
+            Talk to trainer
+            </summary>
+            <param name="source"></param>
+            <param name="text"></param>
+            <returns></returns>
         </member>
         <member name="T:DOL.GS.Trainer.WardenTrainer">
             <summary>
@@ -22325,12 +22401,17 @@
             Holds the startSystemTick when server is up.
             </summary>
         </member>
-        <member name="F:DOL.GS.GameServer.m_udplisten">
+        <member name="F:DOL.GS.GameServer.m_udpListen">
             <summary>
             Socket that listens for UDP packets
             </summary>
         </member>
-        <member name="F:DOL.GS.GameServer.m_pudpbuf">
+        <member name="F:DOL.GS.GameServer.m_udpOutSocket">
+            <summary>
+            Socket that sends UDP packets
+            </summary>
+        </member>
+        <member name="F:DOL.GS.GameServer.m_udpBuf">
             <summary>
             Receive buffer for UDP
             </summary>
@@ -22392,6 +22473,13 @@
             UDP event handler. Called when a UDP packet is waiting to be read
             </summary>
             <param name="ar"></param>
+        </member>
+        <member name="M:DOL.GS.GameServer.BeginReceiveUDP(System.Net.Sockets.Socket,DOL.GS.GameServer)">
+            <summary>
+            Starts receiving UDP packets.
+            </summary>
+            <param name="s">Socket to receive packets.</param>
+            <param name="server">Server instance used to receive packets.</param>
         </member>
         <member name="F:DOL.GS.GameServer.m_udpSendCallback">
             <summary>
@@ -22903,6 +22991,33 @@
             <returns></returns>
         </member>
         <member name="M:DOL.GS.Trainer.MidgardRogueTrainer.WhisperReceive(DOL.GS.GameLiving,System.String)">
+            <summary>
+            Talk to trainer
+            </summary>
+            <param name="source"></param>
+            <param name="text"></param>
+            <returns></returns>
+        </member>
+        <member name="T:DOL.GS.Trainer.HiberniaMaulerTrainer">
+            <summary>
+            Mauler Trainer
+            </summary>	
+        </member>
+        <member name="M:DOL.GS.Trainer.HiberniaMaulerTrainer.Interact(DOL.GS.GamePlayer)">
+            <summary>
+            Interact with trainer
+            </summary>
+            <param name="player"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DOL.GS.Trainer.HiberniaMaulerTrainer.CanPromotePlayer(DOL.GS.GamePlayer)">
+            <summary>
+            checks wether a player can be promoted or not
+            </summary>
+            <param name="player"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DOL.GS.Trainer.HiberniaMaulerTrainer.WhisperReceive(DOL.GS.GameLiving,System.String)">
             <summary>
             Talk to trainer
             </summary>
@@ -28736,6 +28851,16 @@
             Instruments (doesn't exist on live but better this than hardcoded classes that can use instruments)
             </summary>
         </member>
+        <member name="F:DOL.GS.Abilities.Weapon_MaulerStaff">
+            <summary>
+            Maulers Staff Weapons
+            </summary>
+        </member>
+        <member name="F:DOL.GS.Abilities.Weapon_FistWraps">
+            <summary>
+            Fist Wraps Weapons
+            </summary>
+        </member>
         <member name="F:DOL.GS.Abilities.Advanced_Evade">
             <summary>
             Advanced Evade Ability
@@ -29349,6 +29474,31 @@
         <member name="F:DOL.GS.Specs.Witchcraft">
             <summary>
             Witchcraft Magic Spec
+            </summary>
+        </member>
+        <member name="F:DOL.GS.Specs.Aura_Manipulation">
+            <summary>
+            Mauler Aura Manipulation Spec
+            </summary>
+        </member>
+        <member name="F:DOL.GS.Specs.Magnetism">
+            <summary>
+            Mauler Magnetism Spec
+            </summary>
+        </member>
+        <member name="F:DOL.GS.Specs.Power_Strikes">
+            <summary>
+            Mauler Power Strikes Spec
+            </summary>
+        </member>
+        <member name="F:DOL.GS.Specs.Mauler_Staff">
+            <summary>
+            Mauler Mauler Staff Spec
+            </summary>
+        </member>
+        <member name="F:DOL.GS.Specs.Fist_Wraps">
+            <summary>
+            Mauler Fist Wraps Spec
             </summary>
         </member>
         <member name="T:DOL.GS.NpcTemplateMgr">
@@ -32695,6 +32845,11 @@
         <member name="F:DOL.GS.ServerProperties.Properties.ALLOW_ROAM">
             <summary>
             Allow Roam
+            </summary>
+        </member>
+        <member name="F:DOL.GS.ServerProperties.Properties.ALLOW_MAULERS">
+            <summary>
+            Allow Maulers
             </summary>
         </member>
         <member name="M:DOL.GS.ServerProperties.Properties.Load(DOL.GS.ServerProperties.ServerPropertyAttribute)">
@@ -36677,6 +36832,11 @@
             if no target go to saved pathpoint to continue the round
             </summary>
             <returns>the best target</returns>
+        </member>
+        <member name="F:DOL.GS.PacketHandler.Client.v168.PlayerMarketSearchRequestHandler.log">
+            <summary>
+            Defines a logger for this class.
+            </summary>
         </member>
     </members>
 </doc>
