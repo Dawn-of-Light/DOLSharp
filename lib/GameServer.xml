@@ -36838,5 +36838,10 @@
             </summary>
             <returns>the best target</returns>
         </member>
+        <member name="F:DOL.GS.PacketHandler.Client.v168.PlayerSetMarketPriceHandler.log">
+            <summary>
+            Defines a logger for this class.
+            </summary>
+        </member>
     </members>
 </doc>
