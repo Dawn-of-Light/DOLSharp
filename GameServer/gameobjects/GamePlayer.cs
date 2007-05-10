@@ -4870,7 +4870,8 @@ namespace DOL.GS
 
 						string hitWeapon = "";
 						if (weapon != null)
-							hitWeapon = GlobalConstants.NameToShortName(weapon.Name);
+//							hitWeapon = GlobalConstants.NameToShortName(weapon.Name);
+							hitWeapon = weapon.Name;
 
 						if (hitWeapon.Length > 0)
 							hitWeapon = " " + LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.WithYour") + " " + hitWeapon;
