@@ -85,8 +85,8 @@ GamePlayer.Attack.HitsYou:				{0} trifft Euch mit {1}{2} Schaden!
 GamePlayer.Attack.HitsYouCritical:			{0} trifft Euch kritisch mit {1} zusätzlichen Schaden!		
 GamePlayer.Attack.HitsYour:				{0} trifft {1} mit {2}{3} Schaden!	
 GamePlayer.Attack.Intercepted:				{0} stellt sich vor {1} und fängt den Schlag ab!	
-GamePlayer.Attack.InterceptedHit:			{0} {1}{2} an aber trefft {3} für {4}{5} Schaden!		
-GamePlayer.Attack.InterceptHit:				{0} {1}{2} an und trefft für {3}{4} Schaden!	
+GamePlayer.Attack.InterceptedHit:			{0} {1}{2} an aber trefft {3} für {4}{5} Schaden!
+GamePlayer.Attack.InterceptHit:				{0} {1} wird getroffen und {2} richtet {3}{4} Punkte Schaden an!	
 GamePlayer.Attack.Interrupted:				{0} greift Euch an und Euer {1} wurde unterbrochen!	
 GamePlayer.Attack.Location.Arm:				Euren Arm	
 GamePlayer.Attack.Location.Foot:			Euren Fuß		
@@ -109,8 +109,8 @@ GamePlayer.Attack.TooFarAway:				{0} ist zu weit weg für einen Angriff!
 GamePlayer.Attack.TooTired:				Es ist Euch zu anstrengend, das Ziel noch länger anzuvisieren!	
 GamePlayer.Attack.Type.Shot:				Schuss	
 GamePlayer.Attack.Type.Throw:				Wurf	
-GamePlayer.Attack.WithYour:				mit Eure(r/m)	
-GamePlayer.Attack.YouAttack:				Ihr greift	
+GamePlayer.Attack.WithYour:				
+GamePlayer.Attack.YouAttack:				Ihr greift an,
 GamePlayer.Attack.YouShot:				Ihr schießt	
 GamePlayer.Bind.Bound:					Eure Seele ist nun an diesen Ort gebunden.
 GamePlayer.Bind.CantBindDead:				Ihr könnt Euch nicht binden, wenn Ihr tot seid!	
