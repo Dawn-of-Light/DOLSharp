@@ -4869,8 +4869,22 @@ namespace DOL.GS
 						if (ad.Modifier < 0) modmessage = " (" + ad.Modifier + ")";
 
 						string hitWeapon = "";
-						if (weapon != null)
-							hitWeapon = GlobalConstants.NameToShortName(weapon.Name);
+
+						switch (ServerProperties.Properties.SERV_LANGUAGE)
+						{
+							case "EN":
+								if (weapon != null)
+									hitWeapon = GlobalConstants.NameToShortName(weapon.Name);
+								break;
+							case "DE":
+								if (weapon != null)
+									hitWeapon = weapon.Name;
+								break;
+							default:
+								if (weapon != null)
+									hitWeapon = GlobalConstants.NameToShortName(weapon.Name);
+								break;
+						}													
 
 						if (hitWeapon.Length > 0)
 							hitWeapon = " " + LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.WithYour") + " " + hitWeapon;
