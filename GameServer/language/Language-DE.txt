@@ -482,6 +482,8 @@ Scripts.Players.Broadcast.NoText:			Hmmm...Ihr solltet aufhören, dauernd mit Euc
 
 # /Cancelstyle
 Scripts.Players.Cancelstyle.Set:			Kampfstil-Abbruch {0}geschaltet.
+Scripts.Players.Cancelstyle.On:				an
+Scripts.Players.Cancelstyle.Off:			aus
 
 # /Chatgroup
 Scripts.Players.Chatgroup.Help.Help:			/cg help - Zeigt die Hilfe zur Befehlsformulierung an
