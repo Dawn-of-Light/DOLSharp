@@ -29,7 +29,9 @@ namespace DOL.GS.Scripts
 		public int OnCommand(GameClient client, string[] args)
 		{
 			client.Player.CancelStyle = !client.Player.CancelStyle;
-			client.Out.SendMessage(string.Format(LanguageMgr.GetTranslation(client, "Scripts.Players.Cancelstyle.Set"), (client.Player.CancelStyle ? "ON" : "OFF")), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			client.Out.SendMessage(string.Format(LanguageMgr.GetTranslation(client, "Scripts.Players.Cancelstyle.Set", 
+				(client.Player.CancelStyle ? LanguageMgr.GetTranslation(client, "Scripts.Players.Cancelstyle.On") : LanguageMgr.GetTranslation(client, "Scripts.Players.Cancelstyle.Off")))),
+				eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			return 1;
 		}
 	}

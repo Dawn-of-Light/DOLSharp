@@ -482,6 +482,8 @@ Scripts.Players.Broadcast.NoText:			You must broadcast something...
 
 # /Cancelstyle
 Scripts.Players.Cancelstyle.Set:			Cancel Style now set to {0}.
+Scripts.Players.Cancelstyle.On:				ON
+Scripts.Players.Cancelstyle.Off:			OFF
 
 # /Chatgroup
 Scripts.Players.Chatgroup.Help.Help:			/cg help - Displays all chat group commands
