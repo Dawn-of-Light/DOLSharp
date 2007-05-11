@@ -18206,6 +18206,11 @@
             Called on every timer tick
             </summary>
         </member>
+        <member name="F:DOL.GS.PacketHandler.Client.v168.PlayerSetMarketPriceHandler.log">
+            <summary>
+            Defines a logger for this class.
+            </summary>
+        </member>
         <member name="T:DOL.GS.Keeps.FrontierHastener">
             <summary>
             Represents a keep hastener
@@ -36837,11 +36842,6 @@
             if no target go to saved pathpoint to continue the round
             </summary>
             <returns>the best target</returns>
-        </member>
-        <member name="F:DOL.GS.PacketHandler.Client.v168.PlayerSetMarketPriceHandler.log">
-            <summary>
-            Defines a logger for this class.
-            </summary>
         </member>
     </members>
 </doc>
