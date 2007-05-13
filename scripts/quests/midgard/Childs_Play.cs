@@ -136,8 +136,11 @@ namespace DOL.GS.Quests.Midgard {
 	{
 	if (!ServerProperties.Properties.LOAD_QUESTS)
 		return;
-	if (WorldMgr.GetRegion(489).IsDisabled)
+	
+	Region reg = WorldMgr.GetRegion(489);
+	if (reg == null || (reg != null && reg.IsDisabled))
 		return;
+
 	if (log.IsInfoEnabled)
 		log.Info("Quest \"" + questTitle + "\" initializing ...");
 
