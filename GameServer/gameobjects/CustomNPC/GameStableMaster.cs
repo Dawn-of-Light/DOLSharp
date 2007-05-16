@@ -102,33 +102,33 @@ namespace DOL.GS
 								break;
 							case eRace.Dwarf: horse.Size = 42; //Dwarf
 								break;
-							case 8: horse.Size = 38; //Kobold
+							case eRace.Kobold: horse.Size = 38; //Kobold
 								break;
-							case 9: horse.Size = 50; //Celt
+							case eRace.Celt: horse.Size = 50; //Celt
 								break;
-							case 10: horse.Size = 50; //Firbolg
+							case eRace.Firbolg: horse.Size = 50; //Firbolg
 								break;
-							case 11: horse.Size = 55; //Elf
+							case eRace.Elf: horse.Size = 55; //Elf
 								break;
-							case 12: horse.Size = 31; //Lurikeen
+							case eRace.Lurikeen: horse.Size = 31; //Lurikeen
 								break;
-							case 13: horse.Size = 45; //Inconnu
+							case eRace.Inconnu: horse.Size = 45; //Inconnu
 								break;
-							case 14: horse.Size = 52; //Valkyn
+							case eRace.Valkyn: horse.Size = 52; //Valkyn
 								break;
-							case 15: horse.Size = 55; //Sylvan
+							case eRace.Sylvan: horse.Size = 55; //Sylvan
 								break;
-							case 16: horse.Size = 65; //HalfOgre
+							case eRace.HalfOgre: horse.Size = 65; //HalfOgre
 								break;
-							case 17: horse.Size = 48; //Frostalf
+							case eRace.Frostalf: horse.Size = 48; //Frostalf
 								break;
-							case 18: horse.Size = 48; //Shar
+							case eRace.Shar: horse.Size = 48; //Shar
 								break;
-							case 19: horse.Size = 65; //AlbionMinotaur
+							case eRace.AlbionMinotaur: horse.Size = 65; //AlbionMinotaur
 								break;
-							case 20: horse.Size = 65; //MidgardMinotaur
+							case eRace.MidgardMinotaur: horse.Size = 65; //MidgardMinotaur
 								break;
-							case 21: horse.Size = 65; //HiberniaMinotaur
+							case eRace.HiberniaMinotaur: horse.Size = 65; //HiberniaMinotaur
 								break;
 
 						}
