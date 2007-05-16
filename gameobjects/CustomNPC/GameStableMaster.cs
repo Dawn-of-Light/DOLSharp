@@ -54,24 +54,25 @@ namespace DOL.GS
 		/// <returns>true if the item was successfully received</returns>
 		public override bool ReceiveItem(GameLiving source, InventoryItem item)
 		{
-			if(source==null || item==null) return false;
+			if (source == null || item == null) return false;
 
-			if(source is GamePlayer)
+			if (source is GamePlayer)
 			{
 				GamePlayer player = (GamePlayer)source;
 
-				if (item.Name.ToLower().StartsWith("ticket to ") && item.Item_Type==40)
+				if (item.Name.ToLower().StartsWith("ticket to ") && item.Item_Type == 40)
 				{
 					String destination = item.Name.Substring(10);
-//					String destination = item.Name.Substring(item.Name.IndexOf(" to "));
+					//					String destination = item.Name.Substring(item.Name.IndexOf(" to "));
 					//PathPoint path = MovementMgr.Instance.LoadPath(this.Name+"=>"+destination);
 					PathPoint path = MovementMgr.LoadPath(item.Id_nb);
 
 					if ((path != null) && ((Math.Abs(path.X - this.X)) < 500) && ((Math.Abs(path.Y - this.Y)) < 500))
-					{	
+					{
 						player.Inventory.RemoveCountFromStack(item, 1);
 
 						GameHorse horse = new GameHorse();
+						eRace user_race = (eRace)player.Race;
 						foreach (GameNPC npc in GetNPCsInRadius(400))
 						{ // Allow for SI mounts -Echostorm
 							if (npc.Name == LanguageMgr.GetTranslation(player.Client, "GameStableMaster.HorseName")
@@ -85,6 +86,53 @@ namespace DOL.GS
 								break;
 							}
 						}
+						switch (user_race)
+						{
+							case eRace.Briton: horse.Size = 50; //Briton
+								break;
+							case eRace.Avalonian: horse.Size = 55; //Avalonian
+								break;
+							case eRace.Highlander: horse.Size = 55; //Highlander
+								break;
+							case eRace.Saracen: horse.Size = 50; //Saracen
+								break;
+							case eRace.Norseman: horse.Size = 55; //Norseman
+								break;
+							case eRace.Troll: horse.Size = 67; //Troll
+								break;
+							case eRace.Dwarf: horse.Size = 42; //Dwarf
+								break;
+							case 8: horse.Size = 38; //Kobold
+								break;
+							case 9: horse.Size = 50; //Celt
+								break;
+							case 10: horse.Size = 50; //Firbolg
+								break;
+							case 11: horse.Size = 55; //Elf
+								break;
+							case 12: horse.Size = 31; //Lurikeen
+								break;
+							case 13: horse.Size = 45; //Inconnu
+								break;
+							case 14: horse.Size = 52; //Valkyn
+								break;
+							case 15: horse.Size = 55; //Sylvan
+								break;
+							case 16: horse.Size = 65; //HalfOgre
+								break;
+							case 17: horse.Size = 48; //Frostalf
+								break;
+							case 18: horse.Size = 48; //Shar
+								break;
+							case 19: horse.Size = 65; //AlbionMinotaur
+								break;
+							case 20: horse.Size = 65; //MidgardMinotaur
+								break;
+							case 21: horse.Size = 65; //HiberniaMinotaur
+								break;
+
+						}
+
 						horse.Realm = source.Realm;
 						horse.X = path.X;
 						horse.Y = path.Y;
@@ -93,7 +141,7 @@ namespace DOL.GS
 						horse.Heading = Point2D.GetHeadingToLocation(path, path.Next);
 						horse.AddToWorld();
 						horse.CurrentWayPoint = path;
-						GameEventMgr.AddHandler(horse, GameNPCEvent.PathMoveEnds, new DOLEventHandler(OnHorseAtPathEnd));					
+						GameEventMgr.AddHandler(horse, GameNPCEvent.PathMoveEnds, new DOLEventHandler(OnHorseAtPathEnd));
 						new MountHorseAction(player, horse).Start(400);
 						new HorseRideAction(horse).Start(4000);
 						return true;
@@ -106,6 +154,12 @@ namespace DOL.GS
 			}
 
 			return base.ReceiveItem(source, item);
+		}
+		private void SendReply(GamePlayer target, string msg)
+		{
+			target.Out.SendMessage(
+				msg,
+				eChatType.CT_System, eChatLoc.CL_PopupWindow);
 		}
 
 		/// <summary>
@@ -139,7 +193,8 @@ namespace DOL.GS
 			/// </summary>
 			/// <param name="actionSource">The action source</param>
 			/// <param name="horse">The target horse</param>
-			public MountHorseAction(GamePlayer actionSource, GameNPC horse) : base(actionSource)
+			public MountHorseAction(GamePlayer actionSource, GameNPC horse)
+				: base(actionSource)
 			{
 				if (horse == null)
 					throw new ArgumentNullException("horse");
@@ -165,7 +220,8 @@ namespace DOL.GS
 			/// Constructs a new HorseStartAction
 			/// </summary>
 			/// <param name="actionSource"></param>
-			public HorseRideAction(GameNPC actionSource) : base(actionSource)
+			public HorseRideAction(GameNPC actionSource)
+				: base(actionSource)
 			{
 			}
 

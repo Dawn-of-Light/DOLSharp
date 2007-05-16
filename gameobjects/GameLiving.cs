@@ -2659,7 +2659,7 @@ namespace DOL.GS
 					if (res != 0)
 						evadeChance = res;
 				}
-				if (evadeChance != double.MinValue)
+				if (evadeChance != double.MinValue && (evadeChance > 0 || this.HasAbility(Abilities.Evade)))
 				{
 					evadeChance *= 0.001;
 					evadeChance += 0.01 * attackerConLevel; // 1% per con level distance multiplied by evade level
@@ -3970,7 +3970,8 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		/// <param name="selfRegenerationTimer">timer calling this function</param>
 		protected virtual int PowerRegenerationTimerCallback(RegionTimer selfRegenerationTimer)
 		{
-			if (this is GamePlayer && ((GamePlayer)this).CharacterClass.ID == (int)eCharacterClass.Vampiir)
+			if (this is GamePlayer && (((GamePlayer)this).CharacterClass.ID == (int)eCharacterClass.Vampiir 
+				|| ((GamePlayer)this).CharacterClass is ClassMauler))
 			{
 				double MinMana = MaxMana * 0.15;
 				if (Mana < MinMana) return 0;

@@ -160,6 +160,14 @@ namespace DOL.GS
 		/// Instruments (doesn't exist on live but better this than hardcoded classes that can use instruments)
 		/// </summary>
 		public const string Weapon_Instruments = "Weaponry: Instruments";
+		/// <summary>
+		/// Maulers Staff Weapons
+		/// </summary>
+		public const string Weapon_MaulerStaff = "Weaponry: Staff";
+		/// <summary>
+		/// Fist Wraps Weapons
+		/// </summary>
+		public const string Weapon_FistWraps = "Weaponry: Fist Wraps";
 
 		// other
 		/// <summary>
@@ -662,5 +670,25 @@ namespace DOL.GS
 		/// Witchcraft Magic Spec
 		/// </summary>
 		public const string Witchcraft  = "Witchcraft"; //Warlock
+		/// <summary>
+		/// Mauler Aura Manipulation Spec
+		/// </summary>
+		public const string Aura_Manipulation = "Aura Manipulation";
+		/// <summary>
+		/// Mauler Magnetism Spec
+		/// </summary>
+		public const string Magnetism = "Magnetism";
+		/// <summary>
+		/// Mauler Power Strikes Spec
+		/// </summary>
+		public const string Power_Strikes = "Power Strikes";
+		/// <summary>
+		/// Mauler Mauler Staff Spec
+		/// </summary>
+		public const string Mauler_Staff = "Mauler Staff";
+		/// <summary>
+		/// Mauler Fist Wraps Spec
+		/// </summary>
+		public const string Fist_Wraps = "Fist Wraps";
 	}		
 }

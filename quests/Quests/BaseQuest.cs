@@ -60,7 +60,7 @@ namespace DOL.GS.Quests
 		/// <summary>
 		/// Global Constant for all quests to define wether npcs and items should be saved in db or not.
 		/// </summary>
-		public static bool SAVE_INTO_DATABASE = false;
+		public static bool SAVE_INTO_DATABASE = true;
 
 		public static Queue m_sayTimerQueue = new Queue();
 		public static Queue m_sayObjectQueue = new Queue();
@@ -251,6 +251,11 @@ namespace DOL.GS.Quests
 
 		protected static void RemoveItem(GameLiving target, GamePlayer player, ItemTemplate itemTemplate, bool notify)
 		{
+			if (itemTemplate == null)
+			{
+				log.Error("itemtemplate is null in RemoveItem:" + Environment.StackTrace);
+				return;
+			}
 			lock (player.Inventory)
 			{
 				InventoryItem item = player.Inventory.GetFirstItemByID(itemTemplate.Id_nb, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);

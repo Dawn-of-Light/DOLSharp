@@ -704,17 +704,15 @@ namespace DOL.GS
 							break;
 					}
 				}
-
-				if (valid)
-				{
-					base.MoveItem(fromSlot, toSlot, itemCount);
-					fromItem = (InventoryItem)m_items[(int)fromSlot];
-					toItem = (InventoryItem)m_items[(int)toSlot];
-				}
 			}
 
 			if (valid)
 			{
+				//moved this out of the lock, because base called lock too EEK
+				base.MoveItem(fromSlot, toSlot, itemCount);
+				fromItem = (InventoryItem)m_items[(int)fromSlot];
+				toItem = (InventoryItem)m_items[(int)toSlot];
+
 				foreach (int updatedSlot in updatedSlots)
 				{
 					if ((updatedSlot >= (int)eInventorySlot.RightHandWeapon && updatedSlot <= (int)eInventorySlot.DistanceWeapon)

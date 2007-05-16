@@ -375,6 +375,7 @@ namespace DOL.GS.Keeps
 			foreach (GameKeepGuard guard in this.Keep.Guards.Values)
 			{
 				if (guard.HookPoint != null) continue;
+				if (guard.Position == null) continue;
 				if (guard.Position.Height > guard.Component.Height)
 					guard.RemoveFromWorld();
 				else
@@ -387,6 +388,7 @@ namespace DOL.GS.Keeps
 
 			foreach (GameKeepBanner banner in this.Keep.Banners.Values)
 			{
+				if (banner.Position == null) continue;
 				if (banner.Position.Height > banner.Component.Height)
 					banner.RemoveFromWorld();
 				else

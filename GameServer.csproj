@@ -584,6 +584,8 @@
     <Compile Include="packets\Client\168\CharacterSelectRequestHandler.cs" />
     <Compile Include="packets\Client\168\checklosrequesthandler.cs" />
     <Compile Include="packets\Client\168\ClientCrashPacketHandler.cs" />
+    <Compile Include="packets\Client\168\PlayerMarketSearchRequestHandler.cs" />
+    <Compile Include="packets\Client\168\PlayerSetMarketPrice.cs" />
     <Compile Include="packets\Client\168\ShipHookpointInteract.cs" />
     <Compile Include="packets\Client\168\CryptKeyRequestHandler.cs" />
     <Compile Include="packets\Client\168\DestroyItemRequestHandler.cs" />
@@ -679,6 +681,7 @@
     <Compile Include="packets\Server\PacketLib187.cs" />
     <Compile Include="packets\Server\PacketLibAttribute.cs" />
     <Compile Include="packets\Server\PacketProcessor.cs" />
+    <Compile Include="playerclasses\ClassMauler.cs" />
     <Compile Include="propertycalc\CriticalSpellHitChanceCalculator.cs" />
     <Compile Include="propertycalc\CriticalArcheryHitChanceCalculator.cs" />
     <Compile Include="propertycalc\CriticalMeleeHitChanceCalculator.cs" />
@@ -1692,6 +1695,7 @@
     <Compile Include="trainer\albion\AcolyteTrainer.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="trainer\albion\AlbionMaulerTrainer.cs" />
     <Compile Include="trainer\albion\AlbionRogueTrainer.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -1785,6 +1789,7 @@
     <Compile Include="trainer\hibernia\HeroTrainer.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="trainer\hibernia\HiberniaMaulerTrainer.cs" />
     <Compile Include="trainer\hibernia\MagicianTrainer.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -1824,6 +1829,7 @@
     <Compile Include="trainer\midgard\HunterTrainer.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="trainer\midgard\MidgardMaulerTrainer.cs" />
     <Compile Include="trainer\midgard\MidgardRogueTrainer.cs">
       <SubType>Code</SubType>
     </Compile>
