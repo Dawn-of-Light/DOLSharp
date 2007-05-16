@@ -26,8 +26,8 @@ namespace DOL.GS
 	/// <summary>
 	/// Denotes a class as a DOL Character class
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Class)]
-	public class PlayerClassAttribute : Attribute 
+	[AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
+	public class PlayerClassAttribute : Attribute
 	{
 		protected string m_name;
 		protected string m_femaleName;
@@ -40,7 +40,7 @@ namespace DOL.GS
 			m_name = name;
 			m_id = id;
 			m_femaleName = femalename;
-		} 
+		}
 
 		public PlayerClassAttribute(int id, string name, string basename)
 		{
@@ -49,25 +49,25 @@ namespace DOL.GS
 			m_id = id;
 		}
 
-		public int ID 
+		public int ID
 		{
-			get 
+			get
 			{
 				return m_id;
 			}
 		}
 
-		public string Name 
+		public string Name
 		{
-			get 
+			get
 			{
 				return m_name;
 			}
 		}
 
-		public string BaseName 
+		public string BaseName
 		{
-			get 
+			get
 			{
 				return m_basename;
 			}
@@ -158,7 +158,7 @@ namespace DOL.GS
 		{
 			get;
 		}
-		void SwitchToFemaleName(); 
+		void SwitchToFemaleName();
 	}
 
 	/// <summary>
@@ -199,7 +199,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Female name of class
 		/// </summary>
-		protected string m_femaleName; 
+		protected string m_femaleName;
 
 		/// <summary>
 		/// Base of this class
@@ -264,15 +264,15 @@ namespace DOL.GS
 
 			// initialize members from attributes
 			Attribute[] attrs = Attribute.GetCustomAttributes(this.GetType(), typeof(PlayerClassAttribute));
-			foreach(Attribute attr in attrs)
+			foreach (Attribute attr in attrs)
 			{
 				if (attr is PlayerClassAttribute)
 				{
 					m_id = ((PlayerClassAttribute)attr).ID;
 					m_name = ((PlayerClassAttribute)attr).Name;
-					m_basename = ((PlayerClassAttribute)attr).BaseName; 
+					m_basename = ((PlayerClassAttribute)attr).BaseName;
 					if (Util.IsEmpty(((PlayerClassAttribute)attr).FemaleName) == false)
-						m_femaleName = ((PlayerClassAttribute)attr).FemaleName; 
+						m_femaleName = ((PlayerClassAttribute)attr).FemaleName;
 					break;
 				}
 			}
@@ -286,7 +286,7 @@ namespace DOL.GS
 		public string FemaleName
 		{
 			get { return m_femaleName; }
-		} 
+		}
 
 		public int BaseHP
 		{
@@ -380,7 +380,7 @@ namespace DOL.GS
 				//Autotrain
 				IList playerSpecs = player.GetSpecList();
 				bool found = false;
-//				lock (playerSpecs.SyncRoot)
+				//				lock (playerSpecs.SyncRoot)
 				{
 					foreach (Specialization spec in playerSpecs)
 					{
@@ -405,7 +405,7 @@ namespace DOL.GS
 					{
 						player.Out.SendUpdatePlayerSkills();
 					}
-//					player.SaveIntoDatabase(); // saved in game player
+					//					player.SaveIntoDatabase(); // saved in game player
 				}
 			}
 		}
@@ -453,7 +453,8 @@ namespace DOL.GS
 	/// </summary>
 	public class DefaultCharacterClass : CharacterClassSpec
 	{
-		public DefaultCharacterClass() : base()
+		public DefaultCharacterClass()
+			: base()
 		{
 			m_id = 0;
 			m_name = "Unknown";

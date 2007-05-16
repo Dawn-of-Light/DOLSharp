@@ -344,6 +344,12 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("allow_roam", "Allow mobs to roam on the server", true)]
 		public static readonly bool ALLOW_ROAM;
+
+		/// <summary>
+		/// Allow Maulers
+		/// </summary>
+		[ServerProperty("allow_maulers", "Allow maulers to be created on the server", false)]
+		public static readonly bool ALLOW_MAULERS;
 		
 		/// <summary>
 		/// This method loads the property from the database and returns

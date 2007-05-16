@@ -3138,15 +3138,67 @@ namespace DOL.GS.PacketHandler
 		}
 
 		public virtual void SendRvRGuildBanner(GamePlayer player, bool show)
-		{
-		}
+		{ }
 
 		public virtual void SendPlayerFreeLevelUpdate()
-		{
-		}
+		{ }
 
 		public virtual void SendXFireInfo(byte flag)
 		{ }
+
+		public virtual void SendMarketExplorerWindow()
+		{
+			/*
+			 * 0:01:18.360 S=>C 0x1F market merchant (count:-1 page:0 pages:0 unk1:0x00)
+			 * itemCount = byte
+			 * page = byte
+			 * maxPages = byte
+			 * unk1 = byte
+			 * 
+			 * if (itemCount > 0)
+			 * for each item
+			 * item.index = byte
+			 * item.level = ReadByte();
+			 * item.value1 = ReadByte(); // DPS_AF
+			 * item.value2 = ReadByte(); // SPD_ABS
+			 * item.hand = ReadByte();
+			 * item.damageAndObjectType = ReadByte(); // Hand + ObjectType ?
+			 * item.canUse = ReadByte();
+			 * item.weight = ReadShort();
+			 * item.condition = ReadByte();
+			 * item.durability = ReadByte();
+			 * item.quality = ReadByte();
+			 * item.bonus = ReadByte();
+			 * item.model = ReadShort();
+			 * item.color = ReadShort();
+			 * item.effect = ReadShort();
+			 * item.lot = ReadShort();
+			 * item.price = ReadInt();
+			 * item.name = ReadPascalString(); // max length = 0x2F ?
+			 */
+			GSTCPPacketOut pak = new GSTCPPacketOut((byte)ePackets.MarketExplorerWindow);
+			if (true)
+			{
+				pak.WriteByte(255);
+				pak.Fill(0, 3);
+			}
+			else
+			{
+				pak.Fill(0, 4);
+			}
+			SendTCP(pak);
+		}
+
+		public virtual void SendConsignmentMerchantMoney(ushort mithril, ushort plat, ushort gold, byte silver, byte copper)
+		{
+			GSTCPPacketOut pak = new GSTCPPacketOut((byte)ePackets.ConsignmentMerchantMoney);
+			pak.WriteByte(copper);
+			pak.WriteByte(silver);
+			pak.WriteShort(gold);
+			pak.WriteShort(mithril);
+			pak.WriteShort(plat);
+			SendTCP(pak);
+		}
 
 		/// <summary>
 		/// The bow prepare animation

@@ -62,6 +62,10 @@ namespace DOL.GS
 		CelticSpear = 23,
 		Scythe = 26,
 
+		//Mauler weapons
+		MaulerStaff = 27,
+		FistWraps = 28,
+
 		//Armor
 		_FirstArmor = 31,
 		GenericArmor = 31,
@@ -745,6 +749,7 @@ namespace DOL.GS
 		Sorcerer = 8,
 		Theurgist = 5,
 		Wizard = 7,
+		Mauler_Alb = 60,
 
 		//hib classes
 		Animist = 55,
@@ -762,6 +767,7 @@ namespace DOL.GS
 		Valewalker = 56,
 		Vampiir = 58,
 		Warden = 46,
+		Mauler_Hib = 62,
 
 		//mid classes
 		Berserker = 31,
@@ -778,6 +784,7 @@ namespace DOL.GS
 		Valkyrie = 34,
 		Warlock = 59,
 		Warrior = 22,
+		Mauler_Mid = 61,
 	}
 
 	/// <summary>

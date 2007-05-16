@@ -1032,10 +1032,13 @@ namespace DOL.GS.ServerRules
 
 #warning this is guessed, i do not believe this is the right way, we will most likely need special messages to be sent
 					//apply the keep bonus for bounty points
-					if (Keeps.KeepBonusMgr.RealmHasBonus(eKeepBonusType.Bounty_Points_5, (eRealm)killer.Realm))
-						bountyPoints += (bountyPoints / 100) * 5;
-					else if (Keeps.KeepBonusMgr.RealmHasBonus(eKeepBonusType.Bounty_Points_3, (eRealm)killer.Realm))
-						bountyPoints += (bountyPoints / 100) * 3;
+					if (killer != null)
+					{
+						if (Keeps.KeepBonusMgr.RealmHasBonus(eKeepBonusType.Bounty_Points_5, (eRealm)killer.Realm))
+							bountyPoints += (bountyPoints / 100) * 5;
+						else if (Keeps.KeepBonusMgr.RealmHasBonus(eKeepBonusType.Bounty_Points_3, (eRealm)killer.Realm))
+							bountyPoints += (bountyPoints / 100) * 3;
+					}
 
 					if (bountyPoints > 0)
 					{
