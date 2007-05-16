@@ -41,6 +41,8 @@ namespace DOL.GS.PacketHandler
 		MerchantWindow = 0x17,
 		HouseDecorationRotate = 0x18,
 		SpellEffectAnimation = 0x1B,
+		ConsignmentMerchantMoney = 0x1E,
+		MarketExplorerWindow = 0x1F,
 		PositionAndObjectID = 0x20,
 		DebugMode = 0x21,
 		CryptKey = 0x22,
@@ -553,6 +555,8 @@ namespace DOL.GS.PacketHandler
 		void SendHousePayRentDialog(string title);
 		void SendToggleHousePoints(House house);
 		void SendRentReminder(House house);
+		void SendMarketExplorerWindow();
+		void SendConsignmentMerchantMoney(ushort mithril, ushort plat, ushort gold, byte silver, byte copper);
 
 		void SendStarterHelp();
         void SendPlayerFreeLevelUpdate();

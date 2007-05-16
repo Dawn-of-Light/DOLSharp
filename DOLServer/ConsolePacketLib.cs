@@ -208,6 +208,8 @@ namespace DOLGameServerConsole
 		public void SendPlayerFreeLevelUpdate() { }
 		public void SendStarterHelp() { }
 		public void SendXFireInfo(byte flag) { }
+		public void SendMarketExplorerWindow() { }
+		public void SendConsignmentMerchantMoney(ushort mithril, ushort plat, ushort gold, byte silver, byte copper) { }
 		/// <summary>
 		/// The bow prepare animation
 		/// </summary>

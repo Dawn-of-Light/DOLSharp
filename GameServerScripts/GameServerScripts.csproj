@@ -646,12 +646,17 @@
     <Compile Include="quests\hibernia\TraitorInMagMell.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="quests\midgard\Amoras_Aid.cs" />
+    <Compile Include="quests\midgard\A_Beary_Bad_Problem.cs" />
+    <Compile Include="quests\midgard\Bad_Food.cs" />
     <Compile Include="quests\midgard\BaseDalikorQuest.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="quests\midgard\Bear Skins.cs" />
     <Compile Include="quests\midgard\BeginningOfWar.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="quests\midgard\Childs_Play.cs" />
     <Compile Include="quests\midgard\CityOfJordheim.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -673,12 +678,15 @@
     <Compile Include="quests\midgard\epic\Viking50.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="quests\midgard\Essence_of_Life.cs" />
     <Compile Include="quests\midgard\Frontiers.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="quests\midgard\ImportantDelivery.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="quests\midgard\Learn_The_Hunt.cs" />
+    <Compile Include="quests\midgard\Mauler_Invasion.cs" />
     <Compile Include="quests\midgard\Nuisances.cs">
       <SubType>Code</SubType>
     </Compile>

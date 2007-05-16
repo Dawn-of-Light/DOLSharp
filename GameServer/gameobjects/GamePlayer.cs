@@ -2200,7 +2200,7 @@ namespace DOL.GS
 		{
 			if (!m_spelllines.Contains(line))
 				return false;
-			lock (m_specialization.SyncRoot)
+			lock (m_spelllines.SyncRoot)
 			{
 				m_spelllines.Remove(line);
 			}
@@ -3740,6 +3740,9 @@ namespace DOL.GS
 				case eCharacterClass.Warlock:
 				case eCharacterClass.Bainshee:
 				case eCharacterClass.Vampiir:
+				case eCharacterClass.Mauler_Alb:
+				case eCharacterClass.Mauler_Hib:
+				case eCharacterClass.Mauler_Mid:
 					{
 						//we don't want to allow catacombs classes to use free levels and
 						//have a 50% bonus
@@ -4499,7 +4502,7 @@ namespace DOL.GS
 			}
 			base.StartAttack(attackTarget);
 
-			if (IsCasting)
+			if (IsCasting && !m_runningSpellHandler.Spell.Uninterruptible)
 			{
 				StopCurrentSpellcast();
 				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.StartAttack.SpellCancelled"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
@@ -10119,24 +10122,32 @@ namespace DOL.GS
 			switch (GameServer.Instance.Configuration.ServerType)
 			{
 				case eGameServerType.GST_Normal:
-					if (Realm == player.Realm)
-                        message = string.Format(LanguageMgr.GetTranslation(player.Client, "GamePlayer.GetExamineMessages.RealmMember", player.GetName(this), GetPronoun(Client, 0, true), CharacterClass.Name));
-					else
-                        message = string.Format(LanguageMgr.GetTranslation(player.Client, "GamePlayer.GetExamineMessages.EnemyRealmMember", player.GetName(this), GetPronoun(Client, 0, true)));
-					break;
+					{
+						if (Realm == player.Realm || Client.Account.PrivLevel > 1 || player.Client.Account.PrivLevel > 1)
+							message = string.Format(LanguageMgr.GetTranslation(player.Client, "GamePlayer.GetExamineMessages.RealmMember", player.GetName(this), GetPronoun(Client, 0, true), CharacterClass.Name));
+						else
+							message = string.Format(LanguageMgr.GetTranslation(player.Client, "GamePlayer.GetExamineMessages.EnemyRealmMember", player.GetName(this), GetPronoun(Client, 0, true)));
+						break;
+					}
 
 				case eGameServerType.GST_PvP:
-					if (Guild == null)
-						message = string.Format(LanguageMgr.GetTranslation(player.Client, "GamePlayer.GetExamineMessages.NeutralMember", player.GetName(this), GetPronoun(Client, 0, true)));
-					else if (Guild == player.Guild)
-                        message = string.Format(LanguageMgr.GetTranslation(player.Client, "GamePlayer.GetExamineMessages.YourGuildMember", player.GetName(this), GetPronoun(Client, 0, true), CharacterClass.Name));
-					else
-                        message = string.Format(LanguageMgr.GetTranslation(player.Client, "GamePlayer.GetExamineMessages.OtherGuildMember", player.GetName(this), GetPronoun(Client, 0, true), GuildName));
-					break;
+					{
+						if (Client.Account.PrivLevel > 1 || player.Client.Account.PrivLevel > 1)
+							message = string.Format(LanguageMgr.GetTranslation(player.Client, "GamePlayer.GetExamineMessages.YourGuildMember", player.GetName(this), GetPronoun(Client, 0, true), CharacterClass.Name));
+						else if (Guild == null)
+							message = string.Format(LanguageMgr.GetTranslation(player.Client, "GamePlayer.GetExamineMessages.NeutralMember", player.GetName(this), GetPronoun(Client, 0, true)));
+						else if (Guild == player.Guild || Client.Account.PrivLevel > 1 || player.Client.Account.PrivLevel > 1)
+							message = string.Format(LanguageMgr.GetTranslation(player.Client, "GamePlayer.GetExamineMessages.YourGuildMember", player.GetName(this), GetPronoun(Client, 0, true), CharacterClass.Name));
+						else
+							message = string.Format(LanguageMgr.GetTranslation(player.Client, "GamePlayer.GetExamineMessages.OtherGuildMember", player.GetName(this), GetPronoun(Client, 0, true), GuildName));
+						break;
+					}
 
 				default:
-                    message = LanguageMgr.GetTranslation(player.Client, "GamePlayer.GetExamineMessages.YouExamine", player.GetName(this));
-					break;
+					{
+						message = LanguageMgr.GetTranslation(player.Client, "GamePlayer.GetExamineMessages.YouExamine", player.GetName(this));
+						break;
+					}
 			}
 
 			list.Add(message);

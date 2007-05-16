@@ -280,7 +280,7 @@ namespace DOL.GS.Spells
 			{
 				foreach (Type buffType in buffs)
 				{
-					if (effect.SpellHandler.GetType().IsInstanceOfType(buffType))
+					if (effect.SpellHandler.Equals(buffType))
 					{
 						SendEffectAnimation(target, 0, false, 1);
 						effect.Cancel(false);

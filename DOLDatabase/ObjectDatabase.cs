@@ -30,6 +30,7 @@ using log4net;
 using MySql.Data.Types;
 using DataTable = System.Data.DataTable;
 using MySql.Data.MySqlClient;
+using System.Globalization;
 
 namespace DOL.Database
 {
@@ -42,6 +43,8 @@ namespace DOL.Database
 		/// Defines a logger for this class.
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+		private static NumberFormatInfo nfi = new CultureInfo("en-US", false).NumberFormat;
 
 		private Hashtable tableDatasets;
 		private DataConnection connection;
@@ -225,7 +228,15 @@ namespace DOL.Database
 						{
 							val = ((DateTime) val).ToString(dateFormat);
 						}
-						if (val is string)
+						else if (val is float)
+						{
+							val = ((float)val).ToString(nfi);
+						}
+						else if (val is double)
+						{
+							val = ((double)val).ToString(nfi);
+						}
+						else if (val is string)
 						{
 							val = Escape(val.ToString());
 						}
@@ -436,15 +447,23 @@ namespace DOL.Database
 
 						if (val is bool)
 						{
-							val = ((bool) val) ? (byte) 1 : (byte) 0;
+							val = ((bool)val) ? (byte)1 : (byte)0;
 						}
 						else if (val is DateTime)
 						{
-							val = ((DateTime) val).ToString(dateFormat);
+							val = ((DateTime)val).ToString(dateFormat);
 						}
-						if (val is string)
+						else if (val is float)
 						{
-							val = Escape((string) val);
+							val = ((float)val).ToString(nfi);
+						}
+						else if (val is double)
+						{
+							val = ((double)val).ToString(nfi);
+						}
+						else if (val is string)
+						{
+							val = Escape(val.ToString());
 						}
 						sb.Append("`" + bind.Member.Name + "` = ");
 						sb.Append('\'');
