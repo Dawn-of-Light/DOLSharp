@@ -31,8 +31,11 @@ namespace DOL.GS.Scripts
 					case eCharacterClass.Warlock:
 					case eCharacterClass.Vampiir:
 					case eCharacterClass.Bainshee:
+					case eCharacterClass.Mauler_Alb:
+					case eCharacterClass.Mauler_Hib:
+					case eCharacterClass.Mauler_Mid:
 						{
-							client.Player.Out.SendMessage("Catacombs classes cannot use /level command.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							client.Player.Out.SendMessage("Your class cannot use /level command.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return 0;
 						}
 				}

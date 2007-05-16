@@ -4,7 +4,7 @@
 *Source         : http://camelot.allakhazam.com
 *Date           : 8 December 2004
 *Quest Name     : Feast of the Decadent (level 50)
-*Quest Classes  : Cabalist, Reaver, Mercenary, Necromancer and Infiltrator (Guild of Shadows)
+*Quest Classes  : Cabalist, Reaver, Mercenary, Necromancer and Infiltrator (Guild of Shadows), Heretic
 *Quest Version  : v1
 *
 *ToDo:
@@ -67,6 +67,12 @@ namespace DOL.GS.Quests.Albion
 		private static ItemTemplate NecromancerEpicVest = null; //Subterranean Hauberk 
 		private static ItemTemplate NecromancerEpicLegs = null; //Subterranean Legs 
 		private static ItemTemplate NecromancerEpicArms = null; //Subterranean Sleeves
+		private static ItemTemplate HereticEpicBoots = null;
+		private static ItemTemplate HereticEpicHelm = null;
+		private static ItemTemplate HereticEpicGloves = null;
+		private static ItemTemplate HereticEpicVest = null;
+		private static ItemTemplate HereticEpicLegs = null;
+		private static ItemTemplate HereticEpicArms = null;
 
 		// Constructors
 		public Shadows_50()
@@ -160,6 +166,7 @@ namespace DOL.GS.Quests.Albion
 
 			#region Item Declarations
 
+			#region misc
 			sealed_pouch = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "sealed_pouch");
 			if (sealed_pouch == null)
 			{
@@ -184,10 +191,11 @@ namespace DOL.GS.Quests.Albion
 				{
 					GameServer.Database.AddNewObject(sealed_pouch);
 				}
-
 			}
+			#endregion
 			// end item
 			ItemTemplate i = null;
+			#region Mercenary
 			MercenaryEpicBoots = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "MercenaryEpicBoots");
 			if (MercenaryEpicBoots == null)
 			{
@@ -439,8 +447,9 @@ namespace DOL.GS.Quests.Albion
 				}
 
 				MercenaryEpicArms = i;
-
 			}
+			#endregion
+			#region Reaver
 			//Reaver Epic Sleeves End
 			ReaverEpicBoots = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ReaverEpicBoots");
 			if (ReaverEpicBoots == null)
@@ -693,8 +702,9 @@ namespace DOL.GS.Quests.Albion
 				}
 
 				ReaverEpicArms = i;
-
 			}
+			#endregion
+			#region Infiltrator
 			InfiltratorEpicBoots = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "InfiltratorEpicBoots");
 			if (InfiltratorEpicBoots == null)
 			{
@@ -931,6 +941,8 @@ namespace DOL.GS.Quests.Albion
 				}
 
 			}
+			#endregion
+			#region Cabalist
 			CabalistEpicBoots = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "CabalistEpicBoots");
 			if (CabalistEpicBoots == null)
 			{
@@ -1176,8 +1188,8 @@ namespace DOL.GS.Quests.Albion
 				CabalistEpicArms = i;
 
 			}
-
-
+			#endregion
+			#region Necromancer
 			NecromancerEpicBoots = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NecromancerEpicBoots");
 			if (NecromancerEpicBoots == null)
 			{
@@ -1426,9 +1438,289 @@ namespace DOL.GS.Quests.Albion
 				NecromancerEpicArms = i;
 				//Item Descriptions End
 			}
+			#endregion
+			#region Heretic
+			HereticEpicBoots = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "HereticEpicBoots");
+			if (HereticEpicBoots == null)
+			{
+				i = new ItemTemplate();
+				i.Id_nb = "HereticEpicBoots";
+				i.Name = "Boots of the Zealous Renegade";
+				i.Level = 50;
+				i.Item_Type = 23;
+				i.Model = 143;
+				i.IsDropable = true;
+				i.IsPickable = true;
+				i.DPS_AF = 50;
+				i.SPD_ABS = 0;
+				i.Object_Type = 32;
+				i.Quality = 100;
+				i.Weight = 22;
+				i.Bonus = 35;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
 
-			//Reaver Epic Sleeves End
-			//Item Descriptions End
+				/*
+				 *   Strength: 16 pts
+				 *   Constitution: 18 pts
+				 *   Slash Resist: 8%
+				 *   Heat Resist: 8%
+				 */
+
+				i.Bonus1 = 16;
+				i.Bonus1Type = (int)eStat.STR;
+
+				i.Bonus2 = 18;
+				i.Bonus2Type = (int)eStat.CON;
+
+				i.Bonus3 = 8;
+				i.Bonus3Type = (int)eResist.Slash;
+
+				i.Bonus4 = 8;
+				i.Bonus4Type = (int)eResist.Heat;
+				{
+					GameServer.Database.AddNewObject(i);
+				}
+
+				HereticEpicBoots = i;
+			}
+			//end item
+			//of Forbidden Rites Coif
+			HereticEpicHelm = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "HereticEpicHelm");
+			if (HereticEpicHelm == null)
+			{
+				i = new ItemTemplate();
+				i.Id_nb = "HereticEpicHelm";
+				i.Name = "Cap of the Zealous Renegade";
+				i.Level = 50;
+				i.Item_Type = 21;
+				i.Model = 1290; //NEED TO WORK ON..
+				i.IsDropable = true;
+				i.IsPickable = true;
+				i.DPS_AF = 50;
+				i.SPD_ABS = 0;
+				i.Object_Type = 32;
+				i.Quality = 100;
+				i.Weight = 22;
+				i.Bonus = 35;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
+
+				/*
+				 *   Piety: 15 pts
+				 *   Thrust Resist: 6%
+				 *   Cold Resist: 4%
+				 *   Hits: 48 pts
+				 */
+
+				i.Bonus1 = 15;
+				i.Bonus1Type = (int)eStat.PIE;
+
+				i.Bonus2 = 6;
+				i.Bonus2Type = (int)eResist.Thrust;
+
+				i.Bonus3 = 4;
+				i.Bonus3Type = (int)eResist.Cold;
+
+				i.Bonus4 = 48;
+				i.Bonus4Type = (int)eProperty.MaxHealth;
+				{
+					GameServer.Database.AddNewObject(i);
+				}
+				HereticEpicHelm = i;
+
+			}
+			//end item
+			//of Forbidden Rites Gloves
+			HereticEpicGloves = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "HereticEpicGloves");
+			if (HereticEpicGloves == null)
+			{
+				i = new ItemTemplate();
+				i.Id_nb = "HereticEpicGloves";
+				i.Name = "Gloves of the Zealous Renegade";
+				i.Level = 50;
+				i.Item_Type = 22;
+				i.Model = 142;
+				i.IsDropable = true;
+				i.IsPickable = true;
+				i.DPS_AF = 50;
+				i.SPD_ABS = 0;
+				i.Object_Type = 32;
+				i.Quality = 100;
+				i.Weight = 22;
+				i.Bonus = 35;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
+
+				/*
+				 *   Strength: 9 pts
+				 *   Power: 14 pts
+				 *   Cold Resist: 8%
+				 */
+				i.Bonus1 = 9;
+				i.Bonus1Type = (int)eStat.STR;
+
+				i.Bonus2 = 14;
+				i.Bonus2Type = (int)eProperty.MaxMana;
+
+				i.Bonus3 = 8;
+				i.Bonus3Type = (int)eResist.Cold;
+
+				{
+					GameServer.Database.AddNewObject(i);
+				}
+				HereticEpicGloves = i;
+
+			}
+			//of Forbidden Rites Hauberk
+			HereticEpicVest = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "HereticEpicVest");
+			if (HereticEpicVest == null)
+			{
+				i = new ItemTemplate();
+				i.Id_nb = "HereticEpicVest";
+				i.Name = "Robe of the Zealous Renegade";
+				i.Level = 50;
+				i.Item_Type = 25;
+				i.Model = 2921;
+				i.IsDropable = true;
+				i.IsPickable = true;
+				i.DPS_AF = 50;
+				i.SPD_ABS = 0;
+				i.Object_Type = 32;
+				i.Quality = 100;
+				i.Weight = 22;
+				i.Bonus = 35;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
+
+				/*
+				 *   Crush: +4 pts
+				 *   Constitution: 16 pts
+				 *   Dexterity: 15 pts
+				 *   Cold Resist: 8%
+				 */
+
+				i.Bonus1 = 4;
+				i.Bonus1Type = (int)eProperty.Skill_Crushing;
+
+				i.Bonus2 = 16;
+				i.Bonus2Type = (int)eStat.CON;
+
+				i.Bonus3 = 15;
+				i.Bonus3Type = (int)eStat.DEX;
+
+				i.Bonus4 = 8;
+				i.Bonus4Type = (int)eResist.Cold;
+				{
+					GameServer.Database.AddNewObject(i);
+				}
+
+				HereticEpicVest = i;
+
+			}
+			//of Forbidden Rites Legs
+			HereticEpicLegs = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "HereticEpicLegs");
+			if (HereticEpicLegs == null)
+			{
+				i = new ItemTemplate();
+				i.Id_nb = "HereticEpicLegs";
+				i.Name = "Pants of the Zealous Renegade";
+				i.Level = 50;
+				i.Item_Type = 27;
+				i.Model = 140;
+				i.IsDropable = true;
+				i.IsPickable = true;
+				i.DPS_AF = 50;
+				i.SPD_ABS = 0;
+				i.Object_Type = 32;
+				i.Quality = 100;
+				i.Weight = 22;
+				i.Bonus = 35;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
+
+				/*
+				 *   Strength: 19 pts
+				 *   Constitution: 15 pts
+				 *   Crush Resist: 8%
+				 *   Matter Resist: 8%
+				 */
+
+				i.Bonus1 = 19;
+				i.Bonus1Type = (int)eStat.STR;
+
+				i.Bonus2 = 15;
+				i.Bonus2Type = (int)eStat.CON;
+
+				i.Bonus3 = 8;
+				i.Bonus3Type = (int)eResist.Crush;
+
+				i.Bonus4 = 8;
+				i.Bonus4Type = (int)eResist.Matter;
+				{
+					GameServer.Database.AddNewObject(i);
+				}
+				HereticEpicLegs = i;
+
+			}
+			//of Forbidden Rites Sleeves
+			HereticEpicArms = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "HereticEpicArms");
+			if (HereticEpicArms == null)
+			{
+				i = new ItemTemplate();
+				i.Id_nb = "HereticEpicArms";
+				i.Name = "Sleeves of the Zealous Renegade";
+				i.Level = 50;
+				i.Item_Type = 28;
+				i.Model = 141;
+				i.IsDropable = true;
+				i.IsPickable = true;
+				i.DPS_AF = 50;
+				i.SPD_ABS = 0;
+				i.Object_Type = 32;
+				i.Quality = 100;
+				i.Weight = 22;
+				i.Bonus = 35;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
+
+				/*
+				 *   Piety: 16 pts
+				 *   Thrust Resist: 8%
+				 *   Body Resist: 8%
+				 *   Flexible: 6 pts
+				 */
+
+				i.Bonus1 = 16;
+				i.Bonus1Type = (int)eStat.PIE;
+
+				i.Bonus2 = 8;
+				i.Bonus2Type = (int)eResist.Thrust;
+
+				i.Bonus3 = 8;
+				i.Bonus3Type = (int)eResist.Body;
+
+				i.Bonus4 = 6;
+				i.Bonus4Type = (int)eProperty.Skill_Flexible_Weapon;
+				{
+					GameServer.Database.AddNewObject(i);
+				}
+				HereticEpicArms = i;
+				//Item Descriptions End
+			}
+			#endregion
 
 			#endregion
 
@@ -1530,7 +1822,8 @@ namespace DOL.GS.Quests.Albion
 				player.CharacterClass.ID != (byte)eCharacterClass.Mercenary &&
 				player.CharacterClass.ID != (byte)eCharacterClass.Cabalist &&
 				player.CharacterClass.ID != (byte)eCharacterClass.Necromancer &&
-				player.CharacterClass.ID != (byte)eCharacterClass.Infiltrator)
+				player.CharacterClass.ID != (byte)eCharacterClass.Infiltrator &&
+				player.CharacterClass.ID != (byte)eCharacterClass.Heretic)
 				return false;
 
 			// This checks below are only performed is player isn't doing quest already
@@ -1671,50 +1964,68 @@ namespace DOL.GS.Quests.Albion
 		{
 			base.FinishQuest(); //Defined in Quest, changes the state, stores in DB etc ...
 
-			if (m_questPlayer.CharacterClass.ID == (byte)eCharacterClass.Reaver)
+			switch ((eCharacterClass)m_questPlayer.CharacterClass.ID)
 			{
-				GiveItem(m_questPlayer, ReaverEpicArms);
-				GiveItem(m_questPlayer, ReaverEpicBoots);
-				GiveItem(m_questPlayer, ReaverEpicGloves);
-				GiveItem(m_questPlayer, ReaverEpicHelm);
-				GiveItem(m_questPlayer, ReaverEpicLegs);
-				GiveItem(m_questPlayer, ReaverEpicVest);
-			}
-			else if (m_questPlayer.CharacterClass.ID == (byte)eCharacterClass.Mercenary)
-			{
-				GiveItem(m_questPlayer, MercenaryEpicArms);
-				GiveItem(m_questPlayer, MercenaryEpicBoots);
-				GiveItem(m_questPlayer, MercenaryEpicGloves);
-				GiveItem(m_questPlayer, MercenaryEpicHelm);
-				GiveItem(m_questPlayer, MercenaryEpicLegs);
-				GiveItem(m_questPlayer, MercenaryEpicVest);
-			}
-			else if (m_questPlayer.CharacterClass.ID == (byte)eCharacterClass.Cabalist)
-			{
-				GiveItem(m_questPlayer, CabalistEpicArms);
-				GiveItem(m_questPlayer, CabalistEpicBoots);
-				GiveItem(m_questPlayer, CabalistEpicGloves);
-				GiveItem(m_questPlayer, CabalistEpicHelm);
-				GiveItem(m_questPlayer, CabalistEpicLegs);
-				GiveItem(m_questPlayer, CabalistEpicVest);
-			}
-			else if (m_questPlayer.CharacterClass.ID == (byte)eCharacterClass.Infiltrator)
-			{
-				GiveItem(m_questPlayer, InfiltratorEpicArms);
-				GiveItem(m_questPlayer, InfiltratorEpicBoots);
-				GiveItem(m_questPlayer, InfiltratorEpicGloves);
-				GiveItem(m_questPlayer, InfiltratorEpicHelm);
-				GiveItem(m_questPlayer, InfiltratorEpicLegs);
-				GiveItem(m_questPlayer, InfiltratorEpicVest);
-			}
-			else if (m_questPlayer.CharacterClass.ID == (byte)eCharacterClass.Necromancer)
-			{
-				GiveItem(m_questPlayer, NecromancerEpicArms);
-				GiveItem(m_questPlayer, NecromancerEpicBoots);
-				GiveItem(m_questPlayer, NecromancerEpicGloves);
-				GiveItem(m_questPlayer, NecromancerEpicHelm);
-				GiveItem(m_questPlayer, NecromancerEpicLegs);
-				GiveItem(m_questPlayer, NecromancerEpicVest);
+				case eCharacterClass.Reaver:
+					{
+						GiveItem(m_questPlayer, ReaverEpicArms);
+						GiveItem(m_questPlayer, ReaverEpicBoots);
+						GiveItem(m_questPlayer, ReaverEpicGloves);
+						GiveItem(m_questPlayer, ReaverEpicHelm);
+						GiveItem(m_questPlayer, ReaverEpicLegs);
+						GiveItem(m_questPlayer, ReaverEpicVest);
+						break;
+					}
+				case eCharacterClass.Mercenary:
+					{
+						GiveItem(m_questPlayer, MercenaryEpicArms);
+						GiveItem(m_questPlayer, MercenaryEpicBoots);
+						GiveItem(m_questPlayer, MercenaryEpicGloves);
+						GiveItem(m_questPlayer, MercenaryEpicHelm);
+						GiveItem(m_questPlayer, MercenaryEpicLegs);
+						GiveItem(m_questPlayer, MercenaryEpicVest);
+						break;
+					}
+				case eCharacterClass.Cabalist:
+					{
+						GiveItem(m_questPlayer, CabalistEpicArms);
+						GiveItem(m_questPlayer, CabalistEpicBoots);
+						GiveItem(m_questPlayer, CabalistEpicGloves);
+						GiveItem(m_questPlayer, CabalistEpicHelm);
+						GiveItem(m_questPlayer, CabalistEpicLegs);
+						GiveItem(m_questPlayer, CabalistEpicVest);
+						break;
+					}
+				case eCharacterClass.Infiltrator:
+					{
+						GiveItem(m_questPlayer, InfiltratorEpicArms);
+						GiveItem(m_questPlayer, InfiltratorEpicBoots);
+						GiveItem(m_questPlayer, InfiltratorEpicGloves);
+						GiveItem(m_questPlayer, InfiltratorEpicHelm);
+						GiveItem(m_questPlayer, InfiltratorEpicLegs);
+						GiveItem(m_questPlayer, InfiltratorEpicVest);
+						break;
+					}
+				case eCharacterClass.Necromancer:
+					{
+						GiveItem(m_questPlayer, NecromancerEpicArms);
+						GiveItem(m_questPlayer, NecromancerEpicBoots);
+						GiveItem(m_questPlayer, NecromancerEpicGloves);
+						GiveItem(m_questPlayer, NecromancerEpicHelm);
+						GiveItem(m_questPlayer, NecromancerEpicLegs);
+						GiveItem(m_questPlayer, NecromancerEpicVest);
+						break;
+					}
+				case eCharacterClass.Heretic:
+					{
+						GiveItem(m_questPlayer, HereticEpicArms);
+						GiveItem(m_questPlayer, HereticEpicBoots);
+						GiveItem(m_questPlayer, HereticEpicGloves);
+						GiveItem(m_questPlayer, HereticEpicHelm);
+						GiveItem(m_questPlayer, HereticEpicLegs);
+						GiveItem(m_questPlayer, HereticEpicVest);
+						break;
+					}
 			}
 
 			m_questPlayer.GainExperience(1937768448, true);

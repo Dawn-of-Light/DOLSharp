@@ -365,10 +365,15 @@ namespace DOL.GS.Spells
 
 			if (m_caster.AttackState && m_spell.CastTime != 0)
 			{
-				if ((m_caster is GamePlayer && (m_caster as GamePlayer).CharacterClass.ID == (int)eCharacterClass.Vampiir) == false)
+				if (m_caster is GamePlayer)
 				{
-					m_caster.StopAttack();
-					return false;
+					GamePlayer player = m_caster as GamePlayer;
+					if ((player.CharacterClass.ID == (int)eCharacterClass.Vampiir) == false
+						&& player.CharacterClass is Scripts.ClassMauler == false)
+					{
+						m_caster.StopAttack();
+						return false;
+					}
 				}
 			}
 
