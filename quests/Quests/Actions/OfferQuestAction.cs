@@ -21,27 +21,28 @@ using System.Collections.Generic;
 using System.Text;
 using DOL.GS.PacketHandler;
 using DOL.Events;
-using DOL.GS.Quests.Attributes;
+using DOL.GS.Behaviour.Attributes;using DOL.GS.Behaviour;
+using DOL.GS.Behaviour;
 
 namespace DOL.GS.Quests.Actions
 {
-    [QuestActionAttribute(ActionType = eActionType.OfferQuest,DefaultValueP=eDefaultValueConstants.QuestType)]
-    class OfferQuestAction : AbstractQuestAction<Type,String>
+    [ActionAttribute(ActionType = eActionType.OfferQuest)]
+    public class OfferQuestAction : AbstractAction<Type,String>
     {               
 
-        public OfferQuestAction(BaseQuestPart questPart, eActionType actionType, Object p, Object q)
-            : base(questPart, actionType, p, q) {                
+        public OfferQuestAction(GameNPC defaultNPC, eActionType actionType, Object p, Object q)
+            : base(defaultNPC, eActionType.OfferQuest, p, q)
+        {                
         }
 
-
-        public OfferQuestAction(BaseQuestPart questPart,  Type questType, String offerMessage)
-            : this(questPart, eActionType.OfferQuest, (object)questType, (object)offerMessage) { }
+        public OfferQuestAction(GameNPC defaultNPC, Type questType, String offerMessage)
+            : this(defaultNPC, eActionType.OfferQuest, (object)questType, (object)offerMessage) { }
         
 
-
-        public override void Perform(DOLEvent e, object sender, EventArgs args, GamePlayer player)
+        public override void Perform(DOLEvent e, object sender, EventArgs args)
         {
-            string message = QuestPartUtils.GetPersonalizedMessage(Q, player);
+            GamePlayer player = BehaviourUtils.GuessGamePlayerFromNotify(e, sender, args);
+            string message = BehaviourUtils.GetPersonalizedMessage(Q, player);
             QuestMgr.ProposeQuestToPlayer(P, message, player, NPC);
         }
     }

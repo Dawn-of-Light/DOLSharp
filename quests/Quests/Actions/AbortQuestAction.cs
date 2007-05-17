@@ -21,25 +21,26 @@ using System.Collections.Generic;
 using System.Text;
 using DOL.GS.PacketHandler;
 using DOL.Events;
-using DOL.GS.Quests.Attributes;
+using DOL.GS.Behaviour.Attributes;using DOL.GS.Behaviour;
 
 namespace DOL.GS.Quests.Actions
 {
-    [QuestActionAttribute(ActionType = eActionType.AbortQuest,DefaultValueP=eDefaultValueConstants.QuestType)]
-    class AbortQuestAction: AbstractQuestAction<Type,Unused>
+    [ActionAttribute(ActionType = eActionType.AbortQuest)]
+    public class AbortQuestAction: AbstractAction<Type,Unused>
     {
 
-        public AbortQuestAction(BaseQuestPart questPart,eActionType actionType, Object p, Object q)
-            : base(questPart, actionType, p, q) 
+        public AbortQuestAction(GameNPC defaultNPC, Object p, Object q)
+            : base(defaultNPC, eActionType.AbortQuest, p, q) 
         { }
 
-        public AbortQuestAction(BaseQuestPart questPart, Type questType)
-            : this(questPart, eActionType.AbortQuest, (object)questType, (object)null)
+        public AbortQuestAction(GameNPC defaultNPC, Type questType)
+            : this(defaultNPC, (object)questType, (object)null)
         { }
 
 
-        public override void Perform(DOLEvent e, object sender, EventArgs args, GamePlayer player)
+        public override void Perform(DOLEvent e, object sender, EventArgs args)
         {
+            GamePlayer player = BehaviourUtils.GuessGamePlayerFromNotify(e, sender, args);
             AbstractQuest playerQuest = player.IsDoingQuest(P);
             if (playerQuest != null)
             {
