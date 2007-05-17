@@ -23,7 +23,7 @@ using DOL.Database;
 using log4net;
 using System.Reflection;
 using DOL.GS.Scripts;
-using DOL.GS.Quests.Attributes;
+using DOL.GS.Behaviour.Attributes;using DOL.GS.Behaviour;
 
 namespace DOL.GS.Quests.Triggers
 {	
@@ -32,29 +32,25 @@ namespace DOL.GS.Quests.Triggers
     /// This can be eTriggerAction.Interact, eTriggerAction.GiveItem, eTriggerAction.Attack, etc...
     /// Additional there are two variables to add the needed parameters for the triggertype (Item to give for GiveItem, NPC to interact for Interact, etc...). To fire a QuestAction at least one of the added triggers must be fulfilled. 
     /// </summary>
-    [QuestTriggerAttribute(TriggerType=eTriggerType.DeclineQuest,DefaultValueI=eDefaultValueConstants.QuestType)]
-    public class DeclineQuestTrigger : AbstractQuestTrigger<Unused,Type>
+    [TriggerAttribute(TriggerType=eTriggerType.DeclineQuest)]
+    public class DeclineQuestTrigger : AbstractTrigger<Unused,Type>
     {
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		/// <summary>
 		/// Creates a new questtrigger and does some simple triggertype parameter compatibility checking
-		/// </summary>
-		/// <param name="questPart">Parent QuestPart of this Trigger</param>
-		/// <param name="type">Triggertype</param>
+		/// </summary>		
 		/// <param name="k">keyword (K), meaning depends on triggertype</param>
 		/// <param name="i">variable (I), meaning depends on triggertype</param>
-        public DeclineQuestTrigger(BaseQuestPart questPart, eTriggerType type, Object k, Object i)
-            : base(questPart, type, k, i)
+        public DeclineQuestTrigger(GameNPC defaultNPC, DOLEventHandler notifyHandler, Object k, Object i)
+            : base(defaultNPC, notifyHandler, eTriggerType.DeclineQuest, k, i)
         { }
 
         /// <summary>
         /// Creates a new questtrigger and does some simple triggertype parameter compatibility checking
-        /// </summary>
-        /// <param name="questPart">Parent QuestPart of this Trigger</param>        
-        /// <param name="i">variable (I), meaning depends on triggertype</param>
-        public DeclineQuestTrigger(BaseQuestPart questPart, Type i)
-            : this(questPart, eTriggerType.DeclineQuest, (object)null,(object) i)
+        /// </summary>        
+        public DeclineQuestTrigger(GameNPC defaultNPC, DOLEventHandler notifyHandler, Type questType)
+            : this(defaultNPC,notifyHandler, (object)null,(object) questType)
         { }
 
         /// <summary>
@@ -66,12 +62,13 @@ namespace DOL.GS.Quests.Triggers
         /// <param name="args">EventArgs of notify call</param>
         /// <param name="player">GamePlayer this call is related to, can be null</param>
         /// <returns>true if QuestPart should be executes, else false</returns>
-        public override bool Check(DOLEvent e, object sender, EventArgs args, GamePlayer player)
+        public override bool Check(DOLEvent e, object sender, EventArgs args)
         {
             bool result = false;
 
             if (e == GamePlayerEvent.DeclineQuest)
-            {                
+            {
+                GamePlayer player = BehaviourUtils.GuessGamePlayerFromNotify(e, sender, args);
                 QuestEventArgs qArgs = (QuestEventArgs)args;
                 result = (qArgs.Player.ObjectID == player.ObjectID && QuestMgr.GetQuestTypeForID(qArgs.QuestID).Equals(I));
             }

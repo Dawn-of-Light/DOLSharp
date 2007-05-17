@@ -23,7 +23,7 @@ using DOL.Database;
 using log4net;
 using System.Reflection;
 using DOL.GS.Scripts;
-using DOL.GS.Quests.Attributes;
+using DOL.GS.Behaviour.Attributes;using DOL.GS.Behaviour;
 
 namespace DOL.GS.Quests.Triggers
 {	
@@ -32,29 +32,27 @@ namespace DOL.GS.Quests.Triggers
     /// This can be eTriggerAction.Interact, eTriggerAction.GiveItem, eTriggerAction.Attack, etc...
     /// Additional there are two variables to add the needed parameters for the triggertype (Item to give for GiveItem, NPC to interact for Interact, etc...). To fire a QuestAction at least one of the added triggers must be fulfilled. 
     /// </summary>
-    [QuestTriggerAttribute(TriggerType=eTriggerType.AbortQuest,DefaultValueI=eDefaultValueConstants.QuestType)]
-    public class AbortQuestTrigger : AbstractQuestTrigger<Unused,Type>
+    [TriggerAttribute(TriggerType=eTriggerType.AbortQuest)]
+    public class AbortQuestTrigger : AbstractTrigger<Unused,Type>
     {
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		/// <summary>
 		/// Creates a new questtrigger and does some simple triggertype parameter compatibility checking
-		/// </summary>
-		/// <param name="questPart">Parent QuestPart of this Trigger</param>
+		/// </summary>		
 		/// <param name="type">Triggertype</param>
 		/// <param name="k">keyword (K), meaning depends on triggertype</param>
 		/// <param name="i">variable (I), meaning depends on triggertype</param>
-        public AbortQuestTrigger(BaseQuestPart questPart, eTriggerType type, Object k, Object i)
-            : base(questPart, type, k, i)
+        public AbortQuestTrigger(GameNPC defaultNPC, DOLEventHandler notifyHandler, Object k, Object i)
+            : base(defaultNPC,notifyHandler, eTriggerType.AbortQuest, k, i)
         { }
 
         /// <summary>
         /// Creates a new questtrigger and does some simple triggertype parameter compatibility checking
-        /// </summary>
-        /// <param name="questPart">Parent QuestPart of this Trigger</param>               
+        /// </summary>        
         /// <param name="i">variable (I), meaning depends on triggertype</param>
-        public AbortQuestTrigger(BaseQuestPart questPart, Type i)
-            : this(questPart, eTriggerType.AbortQuest, (object)null,(object) i)
+        public AbortQuestTrigger(GameNPC defaultNPC, DOLEventHandler notifyHandler, Type questType)
+            : this(defaultNPC,notifyHandler, (object)null,(object) questType)
         { }
 
         /// <summary>
@@ -66,12 +64,13 @@ namespace DOL.GS.Quests.Triggers
         /// <param name="args">EventArgs of notify call</param>
         /// <param name="player">GamePlayer this call is related to, can be null</param>
         /// <returns>true if QuestPart should be executes, else false</returns>
-        public override bool Check(DOLEvent e, object sender, EventArgs args, GamePlayer player)
+        public override bool Check(DOLEvent e, object sender, EventArgs args)
         {
             bool result = false;
-
+            
             if (e == GamePlayerEvent.AbortQuest)
-            {                
+            {
+                GamePlayer player = BehaviourUtils.GuessGamePlayerFromNotify(e, sender, args);
                 QuestEventArgs qArgs = (QuestEventArgs)args;
                 result = (qArgs.Player.ObjectID == player.ObjectID && QuestMgr.GetQuestTypeForID(qArgs.QuestID).Equals(I));
             }

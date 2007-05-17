@@ -260,7 +260,7 @@ namespace DOL.GS.GameEvents
 
 		//This function is called whenever the event is stopped
 		//It should be used to clean up!
-		[ScriptLoadedEvent]
+		[ScriptUnloadedEvent]
 		public static void OnScriptUnload(DOLEvent e, object sender, EventArgs args)
 		{
 			if (!ServerProperties.Properties.LOAD_EXAMPLES)

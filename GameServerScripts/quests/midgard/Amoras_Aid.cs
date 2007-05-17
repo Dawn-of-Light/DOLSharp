@@ -33,15 +33,17 @@ using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
 using DOL.GS.Quests;
+using DOL.GS.Behaviour;
+using DOL.GS.Behaviour.Attributes;
 using DOL.AI.Brain;
 
-namespace DOL.GS.Quests.Midgard {
+	namespace DOL.GS.Quests.Midgard {
 	
      /* The first thing we do, is to declare the class we create
 	 * as Quest. To do this, we derive from the abstract class
 	 * BaseQuest	  	 
 	 */
-	public class Amorasaid : BaseQuest
+	public class Amorasaidmistyc : BaseQuest
 	{
 		/// <summary>
 		/// Defines a logger for this class.
@@ -59,7 +61,7 @@ namespace DOL.GS.Quests.Midgard {
 		*
 		*/
 
-		protected const string questTitle = "Amora's Aid";
+		protected const string questTitle = "Amora's Aid for Mistyc";
 
 		protected const int minimumLevel = 1;
 		protected const int maximumLevel = 50;
@@ -81,19 +83,19 @@ namespace DOL.GS.Quests.Midgard {
 		/* 
 		* Constructor
 		*/
-		public Amorasaid() : base()
+		public Amorasaidmistyc() : base()
 		{
 		}
 
-		public Amorasaid(GamePlayer questingPlayer) : this(questingPlayer, 1)
+		public Amorasaidmistyc(GamePlayer questingPlayer) : this(questingPlayer, 1)
 		{
 		}
 
-		public Amorasaid(GamePlayer questingPlayer, int step) : base(questingPlayer, step)
+		public Amorasaidmistyc(GamePlayer questingPlayer, int step) : base(questingPlayer, step)
 		{
 		}
 
-		public Amorasaid(GamePlayer questingPlayer, DBQuest dbQuest) : base(questingPlayer, dbQuest)
+		public Amorasaidmistyc(GamePlayer questingPlayer, DBQuest dbQuest) : base(questingPlayer, dbQuest)
 	{
 	}
 
@@ -325,100 +327,100 @@ namespace DOL.GS.Quests.Midgard {
 		
 		#region defineQuestParts
 
-		QuestBuilder builder = QuestMgr.getBuilder(typeof(Amorasaid));
-			BaseQuestPart a;
-			a = builder.CreateQuestPart(Lycla,-1);
+		QuestBuilder builder = QuestMgr.getBuilder(typeof(Amorasaidmistyc));
+			QuestBehaviour a;
+			a = builder.CreateBehaviour(Lycla,-1);
 				a.AddTrigger(eTriggerType.Interact,null,Lycla);
-			a.AddRequirement(eRequirementType.QuestGivable,"DOL.GS.Quests.Midgard.Amorasaidmistyc",Lycla);
-			a.AddRequirement(eRequirementType.QuestPending,"DOL.GS.Quests.Midgard.Amorasaidmistyc",(eComparator)5);
+			a.AddRequirement(eRequirementType.QuestGivable,typeof(DOL.GS.Quests.Midgard.Amorasaidmistyc),Lycla);
+			a.AddRequirement(eRequirementType.QuestPending,typeof(DOL.GS.Quests.Midgard.Amorasaidmistyc),null,(eComparator)5);
 			a.AddAction(eActionType.Talk,"The lady Amora here in Fort Atla has been here for several weeks because she is [unable] to travel.",Lycla);
-			AddQuestPart(a);
-			a = builder.CreateQuestPart(Lycla,-1);
+			AddBehaviour(a);
+			a = builder.CreateBehaviour(Lycla,-1);
 				a.AddTrigger(eTriggerType.Whisper,"unable",Lycla);
-			a.AddRequirement(eRequirementType.QuestGivable,"DOL.GS.Quests.Midgard.Amorasaidmistyc",Lycla);
-			a.AddRequirement(eRequirementType.QuestPending,"DOL.GS.Quests.Midgard.Amorasaidmistyc",(eComparator)5);
+			a.AddRequirement(eRequirementType.QuestGivable,typeof(DOL.GS.Quests.Midgard.Amorasaidmistyc),Lycla);
+			a.AddRequirement(eRequirementType.QuestPending,typeof(DOL.GS.Quests.Midgard.Amorasaidmistyc),null,(eComparator)5);
 			a.AddAction(eActionType.Talk,"Her daughter, Magnild has fallen [ill].",Lycla);
-			AddQuestPart(a);
-			a = builder.CreateQuestPart(Lycla,-1);
+			AddBehaviour(a);
+			a = builder.CreateBehaviour(Lycla,-1);
 				a.AddTrigger(eTriggerType.Whisper,"ill",Lycla);
-			a.AddRequirement(eRequirementType.QuestGivable,"DOL.GS.Quests.Midgard.Amorasaidmistyc",Lycla);
-			a.AddRequirement(eRequirementType.QuestPending,"DOL.GS.Quests.Midgard.Amorasaidmistyc",(eComparator)5);
+			a.AddRequirement(eRequirementType.QuestGivable,typeof(DOL.GS.Quests.Midgard.Amorasaidmistyc),Lycla);
+			a.AddRequirement(eRequirementType.QuestPending,typeof(DOL.GS.Quests.Midgard.Amorasaidmistyc),null,(eComparator)5);
 			a.AddAction(eActionType.Talk,"They have been staying in one of the homes here in town to keep the poor girl warm. Please help them, they are in great need.",Lycla);
-			a.AddAction(eActionType.OfferQuest,"DOL.GS.Quests.Midgard.Amorasaidmistyc","The Lady Amora needs your help in curing her sick daughter.");
-			AddQuestPart(a);
-			a = builder.CreateQuestPart(Lycla,-1);
-				a.AddTrigger(eTriggerType.DeclineQuest,null,"DOL.GS.Quests.Midgard.Amorasaidmistyc");
+			a.AddAction(eActionType.OfferQuest,typeof(DOL.GS.Quests.Midgard.Amorasaidmistyc),"The Lady Amora needs your help in curing her sick daughter.");
+			AddBehaviour(a);
+			a = builder.CreateBehaviour(Lycla,-1);
+				a.AddTrigger(eTriggerType.DeclineQuest,null,typeof(DOL.GS.Quests.Midgard.Amorasaidmistyc));
 			a.AddAction(eActionType.Talk,"No problem. See you.",Lycla);
-			AddQuestPart(a);
-			a = builder.CreateQuestPart(Lycla,-1);
-				a.AddTrigger(eTriggerType.AcceptQuest,null,"DOL.GS.Quests.Midgard.Amorasaidmistyc");
-			a.AddAction(eActionType.GiveQuest,"DOL.GS.Quests.Midgard.Amorasaidmistyc",Lycla);
-			AddQuestPart(a);
-			a = builder.CreateQuestPart(Amora,-1);
+			AddBehaviour(a);
+			a = builder.CreateBehaviour(Lycla,-1);
+				a.AddTrigger(eTriggerType.AcceptQuest,null,typeof(DOL.GS.Quests.Midgard.Amorasaidmistyc));
+			a.AddAction(eActionType.GiveQuest,typeof(DOL.GS.Quests.Midgard.Amorasaidmistyc),Lycla);
+			AddBehaviour(a);
+			a = builder.CreateBehaviour(Amora,-1);
 				a.AddTrigger(eTriggerType.Interact,null,Amora);
-			a.AddRequirement(eRequirementType.QuestStep,"DOL.GS.Quests.Midgard.Amorasaidmistyc",1,(eComparator)3);
+			a.AddRequirement(eRequirementType.QuestStep,typeof(DOL.GS.Quests.Midgard.Amorasaidmistyc),1,(eComparator)3);
 			a.AddAction(eActionType.Talk,"Be still Magnild, all will be alright soon and you will be well once again.",Amora);
 			a.AddAction(eActionType.Talk,"Hello stranger, may I ask your [name]?",Amora);
-			AddQuestPart(a);
-			a = builder.CreateQuestPart(Amora,-1);
+			AddBehaviour(a);
+			a = builder.CreateBehaviour(Amora,-1);
 				a.AddTrigger(eTriggerType.Whisper,"name",Amora);
-			a.AddRequirement(eRequirementType.QuestStep,"DOL.GS.Quests.Midgard.Amorasaidmistyc",1,(eComparator)3);
+			a.AddRequirement(eRequirementType.QuestStep,typeof(DOL.GS.Quests.Midgard.Amorasaidmistyc),1,(eComparator)3);
 			a.AddAction(eActionType.Talk,"It is a pleasure to meet you. I am so glad you have come to aid me and [Magnild].",Amora);
-			AddQuestPart(a);
-			a = builder.CreateQuestPart(Amora,-1);
+			AddBehaviour(a);
+			a = builder.CreateBehaviour(Amora,-1);
 				a.AddTrigger(eTriggerType.Whisper,"Magnild",Amora);
-			a.AddRequirement(eRequirementType.QuestStep,"DOL.GS.Quests.Midgard.Amorasaidmistyc",1,(eComparator)3);
+			a.AddRequirement(eRequirementType.QuestStep,typeof(DOL.GS.Quests.Midgard.Amorasaidmistyc),1,(eComparator)3);
 			a.AddAction(eActionType.Talk,"Yes, my poor darling Magnild was bitten by a [water snake] while traveling into town. Unfortunately, the bite has not healed and she is not feeling very well at all.",Amora);
-			AddQuestPart(a);
-			a = builder.CreateQuestPart(Amora,-1);
+			AddBehaviour(a);
+			a = builder.CreateBehaviour(Amora,-1);
 				a.AddTrigger(eTriggerType.Whisper,"water snake",Amora);
-			a.AddRequirement(eRequirementType.QuestStep,"DOL.GS.Quests.Midgard.Amorasaidmistyc",1,(eComparator)3);
+			a.AddRequirement(eRequirementType.QuestStep,typeof(DOL.GS.Quests.Midgard.Amorasaidmistyc),1,(eComparator)3);
 			a.AddAction(eActionType.Talk,"Oh, it seems the venom of the snake was very powerful. I have sent word to t he healer and she has told me she needs five vials of [snake venom] to cure the child.",Amora);
-			AddQuestPart(a);
-			a = builder.CreateQuestPart(Amora,-1);
+			AddBehaviour(a);
+			a = builder.CreateBehaviour(Amora,-1);
 				a.AddTrigger(eTriggerType.Whisper,"snake venom",Amora);
-			a.AddRequirement(eRequirementType.QuestStep,"DOL.GS.Quests.Midgard.Amorasaidmistyc",1,(eComparator)3);
+			a.AddRequirement(eRequirementType.QuestStep,typeof(DOL.GS.Quests.Midgard.Amorasaidmistyc),1,(eComparator)3);
 			a.AddAction(eActionType.Talk,"I do not feel right leaving Magnild [here alone] this ill, so I fear I can't hunt the snakes myself.",Amora);
-			AddQuestPart(a);
-			a = builder.CreateQuestPart(Amora,-1);
+			AddBehaviour(a);
+			a = builder.CreateBehaviour(Amora,-1);
 				a.AddTrigger(eTriggerType.Whisper,"here alone",Amora);
-			a.AddRequirement(eRequirementType.QuestStep,"DOL.GS.Quests.Midgard.Amorasaidmistyc",1,(eComparator)3);
+			a.AddRequirement(eRequirementType.QuestStep,typeof(DOL.GS.Quests.Midgard.Amorasaidmistyc),1,(eComparator)3);
 			a.AddAction(eActionType.Talk,"Please go outside the city and [collect] the five vials of venom and take them to Kari, the healer.",Amora);
-			AddQuestPart(a);
-			a = builder.CreateQuestPart(Amora,-1);
+			AddBehaviour(a);
+			a = builder.CreateBehaviour(Amora,-1);
 				a.AddTrigger(eTriggerType.Whisper,"collect",Amora);
-			a.AddRequirement(eRequirementType.QuestStep,"DOL.GS.Quests.Midgard.Amorasaidmistyc",1,(eComparator)3);
+			a.AddRequirement(eRequirementType.QuestStep,typeof(DOL.GS.Quests.Midgard.Amorasaidmistyc),1,(eComparator)3);
 			a.AddAction(eActionType.Talk,"I am indebted to you always if you do the for me.",Amora);
-			a.AddAction(eActionType.SetQuestStep,"DOL.GS.Quests.Midgard.Amorasaidmistyc",2);
-			AddQuestPart(a);
-			a = builder.CreateQuestPart(Lycla,-1);
-				a.AddTrigger(eTriggerType.EnemyKilled,"water snake");
-			a.AddRequirement(eRequirementType.QuestStep,"DOL.GS.Quests.Midgard.Amorasaidmistyc",2,(eComparator)3);
+			a.AddAction(eActionType.SetQuestStep,typeof(DOL.GS.Quests.Midgard.Amorasaidmistyc),2);
+			AddBehaviour(a);
+			a = builder.CreateBehaviour(Lycla,-1);
+				a.AddTrigger(eTriggerType.EnemyKilled,"water snake",null);
+			a.AddRequirement(eRequirementType.QuestStep,typeof(DOL.GS.Quests.Midgard.Amorasaidmistyc),2,(eComparator)3);
 			a.AddRequirement(eRequirementType.InventoryItem,snakevenom,4,(eComparator)1);
-			a.AddAction(eActionType.GiveItem,snakevenom);
-			AddQuestPart(a);
-			a = builder.CreateQuestPart(Lycla,-1);
-				a.AddTrigger(eTriggerType.EnemyKilled,"water snake");
-			a.AddRequirement(eRequirementType.QuestStep,"DOL.GS.Quests.Midgard.Amorasaidmistyc",2,(eComparator)3);
+			a.AddAction(eActionType.GiveItem,snakevenom,null);
+			AddBehaviour(a);
+			a = builder.CreateBehaviour(Lycla,-1);
+				a.AddTrigger(eTriggerType.EnemyKilled,"water snake",null);
+			a.AddRequirement(eRequirementType.QuestStep,typeof(DOL.GS.Quests.Midgard.Amorasaidmistyc),2,(eComparator)3);
 			a.AddRequirement(eRequirementType.InventoryItem,snakevenom,4,(eComparator)3);
-			a.AddAction(eActionType.SetQuestStep,"DOL.GS.Quests.Midgard.Amorasaidmistyc",3);
-			a.AddAction(eActionType.GiveItem,snakevenom);
-			AddQuestPart(a);
-			a = builder.CreateQuestPart(Kari,-1);
+			a.AddAction(eActionType.SetQuestStep,typeof(DOL.GS.Quests.Midgard.Amorasaidmistyc),3);
+			a.AddAction(eActionType.GiveItem,snakevenom,null);
+			AddBehaviour(a);
+			a = builder.CreateBehaviour(Kari,-1);
 				a.AddTrigger(eTriggerType.Interact,null,Kari);
-			a.AddRequirement(eRequirementType.QuestStep,"DOL.GS.Quests.Midgard.Amorasaidmistyc",3,(eComparator)3);
+			a.AddRequirement(eRequirementType.QuestStep,typeof(DOL.GS.Quests.Midgard.Amorasaidmistyc),3,(eComparator)3);
 			a.AddAction(eActionType.Talk,"Ahh, you look as if you have been having a rough time. Have you brought me the vials of snake venom?",Kari);
 			a.AddAction(eActionType.TakeItem,snakevenom,5);
 			a.AddAction(eActionType.Talk,"\"I shall begin [work] at once in making the potion to cure the sick girl, hopefully all my training will not fail me.",Kari);
-			AddQuestPart(a);
-			a = builder.CreateQuestPart(Kari,-1);
+			AddBehaviour(a);
+			a = builder.CreateBehaviour(Kari,-1);
 				a.AddTrigger(eTriggerType.Whisper,"work",Kari);
-			a.AddRequirement(eRequirementType.QuestStep,"DOL.GS.Quests.Midgard.Amorasaidmistyc",3,(eComparator)3);
+			a.AddRequirement(eRequirementType.QuestStep,typeof(DOL.GS.Quests.Midgard.Amorasaidmistyc),3,(eComparator)3);
 			a.AddAction(eActionType.Talk,"You have aided in this situation beyond what is expected. I thnk you.",Kari);
-			a.AddAction(eActionType.GiveXP,10);
-			a.AddAction(eActionType.GiveGold,42);
-			a.AddAction(eActionType.FinishQuest,"DOL.GS.Quests.Midgard.Amorasaidmistyc");
-			AddQuestPart(a);
+			a.AddAction(eActionType.GiveXP,10,null);
+			a.AddAction(eActionType.GiveGold,42,null);
+			a.AddAction(eActionType.FinishQuest,typeof(DOL.GS.Quests.Midgard.Amorasaidmistyc),null);
+			AddBehaviour(a);
 			
 			#endregion
 
@@ -426,7 +428,7 @@ namespace DOL.GS.Quests.Midgard {
 			
 			// Custom Scriptloaded Code End
 
-			Lycla.AddQuestToGive(typeof (Amorasaid));
+			Lycla.AddQuestToGive(typeof (Amorasaidmistyc));
 			if (log.IsInfoEnabled)
 				log.Info("Quest \"" + questTitle + "\" initialized");
 		}
@@ -446,8 +448,8 @@ namespace DOL.GS.Quests.Midgard {
 			 */
 			if (Lycla == null)
 				return;
-			/* Now we remove to SirQuait the possibility to give this quest to players */			
-			Lycla.RemoveQuestToGive(typeof (Amorasaid));
+			/* Now we remove the possibility to give this quest to players */			
+			Lycla.RemoveQuestToGive(typeof (Amorasaidmistyc));
 		}
 
 		/* Now we set the quest name.
@@ -495,7 +497,7 @@ namespace DOL.GS.Quests.Midgard {
 		public override bool CheckQuestQualification(GamePlayer player)
 		{		
 			// if the player is already doing the quest his level is no longer of relevance
-			if (player.IsDoingQuest(typeof (Amorasaid)) != null)
+			if (player.IsDoingQuest(typeof (Amorasaidmistyc)) != null)
 				return true;
 				
 			// Custom Code Begin
@@ -505,6 +507,17 @@ namespace DOL.GS.Quests.Midgard {
 		
 			if (player.Level > maximumLevel || player.Level < minimumLevel )
 				return false;
+		
+			if (
+		
+			player.CharacterClass.ID != (byte) eCharacterClass.Mystic && 
+			player.CharacterClass.ID != (byte) eCharacterClass.Runemaster && 
+			player.CharacterClass.ID != (byte) eCharacterClass.Spiritmaster && 
+			player.CharacterClass.ID != (byte) eCharacterClass.Warlock && 
+			player.CharacterClass.ID != (byte) eCharacterClass.Bonedancer && 
+				true) {
+				return false;			
+			}
 		
 			return true;
 		}

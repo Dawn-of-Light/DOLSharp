@@ -33,9 +33,11 @@ using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
 using DOL.GS.Quests;
+using DOL.GS.Behaviour;
+using DOL.GS.Behaviour.Attributes;
 using DOL.AI.Brain;
 
-namespace DOL.GS.Quests.Midgard {
+	namespace DOL.GS.Quests.Midgard {
 	
      /* The first thing we do, is to declare the class we create
 	 * as Quest. To do this, we derive from the abstract class
@@ -238,53 +240,53 @@ namespace DOL.GS.Quests.Midgard {
 		#region defineQuestParts
 
 		QuestBuilder builder = QuestMgr.getBuilder(typeof(Learnthehunt));
-			BaseQuestPart a;
-			a = builder.CreateQuestPart(Aegan,-1);
+			QuestBehaviour a;
+			a = builder.CreateBehaviour(Aegan,-1);
 				a.AddTrigger(eTriggerType.Interact,null,Aegan);
-			a.AddRequirement(eRequirementType.QuestGivable,"DOL.GS.Quests.Midgard.Learnthehunt",Aegan);
-			a.AddRequirement(eRequirementType.QuestPending,"DOL.GS.Quests.Midgard.Learnthehunt",(eComparator)5);
+			a.AddRequirement(eRequirementType.QuestGivable,typeof(DOL.GS.Quests.Midgard.Learnthehunt),Aegan);
+			a.AddRequirement(eRequirementType.QuestPending,typeof(DOL.GS.Quests.Midgard.Learnthehunt),null,(eComparator)5);
 			a.AddAction(eActionType.Talk,"Greetings, are you [worthy of the hunt]?",Aegan);
-			AddQuestPart(a);
-			a = builder.CreateQuestPart(Aegan,-1);
+			AddBehaviour(a);
+			a = builder.CreateBehaviour(Aegan,-1);
 				a.AddTrigger(eTriggerType.Whisper,"worthy of the hunt",Aegan);
-			a.AddRequirement(eRequirementType.QuestGivable,"DOL.GS.Quests.Midgard.Learnthehunt",Aegan);
-			a.AddRequirement(eRequirementType.QuestPending,"DOL.GS.Quests.Midgard.Learnthehunt",(eComparator)5);
+			a.AddRequirement(eRequirementType.QuestGivable,typeof(DOL.GS.Quests.Midgard.Learnthehunt),Aegan);
+			a.AddRequirement(eRequirementType.QuestPending,typeof(DOL.GS.Quests.Midgard.Learnthehunt),null,(eComparator)5);
 			a.AddAction(eActionType.Talk,"Oh ho! Another bright young come to help Midgard fend off her enemies, eh? Wonderful, that's what I say! Wonderful! With the rise of the Albion and Hibernia armies,Midgard will need all the she can get!",Aegan);
 			a.AddAction(eActionType.Talk,"I have spent a great deal of my life hunting the [maulers] of this region",Aegan);
-			AddQuestPart(a);
-			a = builder.CreateQuestPart(Aegan,-1);
+			AddBehaviour(a);
+			a = builder.CreateBehaviour(Aegan,-1);
 				a.AddTrigger(eTriggerType.Whisper,"maulers",Aegan);
-			a.AddRequirement(eRequirementType.QuestGivable,"DOL.GS.Quests.Midgard.Learnthehunt",Aegan);
-			a.AddRequirement(eRequirementType.QuestPending,"DOL.GS.Quests.Midgard.Learnthehunt",(eComparator)5);
+			a.AddRequirement(eRequirementType.QuestGivable,typeof(DOL.GS.Quests.Midgard.Learnthehunt),Aegan);
+			a.AddRequirement(eRequirementType.QuestPending,typeof(DOL.GS.Quests.Midgard.Learnthehunt),null,(eComparator)5);
 			a.AddAction(eActionType.Talk,"Bring me the claws of a mauler cub and I shall reward you",Aegan);
-			a.AddAction(eActionType.OfferQuest,"DOL.GS.Quests.Midgard.Learnthehunt","Accept Learn the Hunt quest?");
-			AddQuestPart(a);
-			a = builder.CreateQuestPart(Aegan,-1);
-				a.AddTrigger(eTriggerType.DeclineQuest,null,"DOL.GS.Quests.Midgard.Learnthehunt");
+			a.AddAction(eActionType.OfferQuest,typeof(DOL.GS.Quests.Midgard.Learnthehunt),"Accept Learn the Hunt quest?");
+			AddBehaviour(a);
+			a = builder.CreateBehaviour(Aegan,-1);
+				a.AddTrigger(eTriggerType.DeclineQuest,null,typeof(DOL.GS.Quests.Midgard.Learnthehunt));
 			a.AddAction(eActionType.Talk,"No problem. See you.",Aegan);
-			AddQuestPart(a);
-			a = builder.CreateQuestPart(Aegan,-1);
-				a.AddTrigger(eTriggerType.AcceptQuest,null,"DOL.GS.Quests.Midgard.Learnthehunt");
-			a.AddAction(eActionType.GiveQuest,"DOL.GS.Quests.Midgard.Learnthehunt",Aegan);
-			a.AddAction(eActionType.SetQuestStep,"DOL.GS.Quests.Midgard.Learnthehunt",2);
-			AddQuestPart(a);
-			a = builder.CreateQuestPart(Aegan,-1);
-				a.AddTrigger(eTriggerType.EnemyKilled,"black mauler cub");
-			a.AddRequirement(eRequirementType.QuestStep,"DOL.GS.Quests.Midgard.Learnthehunt",1,(eComparator)2);
-			a.AddRequirement(eRequirementType.QuestStep,"DOL.GS.Quests.Midgard.Learnthehunt",7,(eComparator)1);
-			a.AddAction(eActionType.GiveItem,clawofblackmauler);
-			a.AddAction(eActionType.IncQuestStep,"DOL.GS.Quests.Midgard.Learnthehunt");
-			AddQuestPart(a);
-			a = builder.CreateQuestPart(Aegan,-1);
+			AddBehaviour(a);
+			a = builder.CreateBehaviour(Aegan,-1);
+				a.AddTrigger(eTriggerType.AcceptQuest,null,typeof(DOL.GS.Quests.Midgard.Learnthehunt));
+			a.AddAction(eActionType.GiveQuest,typeof(DOL.GS.Quests.Midgard.Learnthehunt),Aegan);
+			a.AddAction(eActionType.SetQuestStep,typeof(DOL.GS.Quests.Midgard.Learnthehunt),2);
+			AddBehaviour(a);
+			a = builder.CreateBehaviour(Aegan,-1);
+				a.AddTrigger(eTriggerType.EnemyKilled,"black mauler cub",null);
+			a.AddRequirement(eRequirementType.QuestStep,typeof(DOL.GS.Quests.Midgard.Learnthehunt),1,(eComparator)2);
+			a.AddRequirement(eRequirementType.QuestStep,typeof(DOL.GS.Quests.Midgard.Learnthehunt),7,(eComparator)1);
+			a.AddAction(eActionType.GiveItem,clawofblackmauler,null);
+			a.AddAction(eActionType.IncQuestStep,typeof(DOL.GS.Quests.Midgard.Learnthehunt),null);
+			AddBehaviour(a);
+			a = builder.CreateBehaviour(Aegan,-1);
 				a.AddTrigger(eTriggerType.Interact,null,Aegan);
-			a.AddRequirement(eRequirementType.QuestStep,"DOL.GS.Quests.Midgard.Learnthehunt",7,(eComparator)3);
+			a.AddRequirement(eRequirementType.QuestStep,typeof(DOL.GS.Quests.Midgard.Learnthehunt),7,(eComparator)3);
 			a.AddAction(eActionType.Talk,"You are doing well! Continue to pass me the bear claws!",Aegan);
 			a.AddAction(eActionType.Talk,"You have proven yourself well youngster! I hope the coin serves you well.",Aegan);
-			a.AddAction(eActionType.GiveXP,20);
-			a.AddAction(eActionType.GiveGold,100);
-			a.AddAction(eActionType.FinishQuest,"DOL.GS.Quests.Midgard.Learnthehunt");
+			a.AddAction(eActionType.GiveXP,20,null);
+			a.AddAction(eActionType.GiveGold,100,null);
+			a.AddAction(eActionType.FinishQuest,typeof(DOL.GS.Quests.Midgard.Learnthehunt),null);
 			a.AddAction(eActionType.TakeItem,clawofblackmauler,5);
-			AddQuestPart(a);
+			AddBehaviour(a);
 			
 			#endregion
 
@@ -312,7 +314,7 @@ namespace DOL.GS.Quests.Midgard {
 			 */
 			if (Aegan == null)
 				return;
-			/* Now we remove to SirQuait the possibility to give this quest to players */			
+			/* Now we remove the possibility to give this quest to players */			
 			Aegan.RemoveQuestToGive(typeof (Learnthehunt));
 		}
 

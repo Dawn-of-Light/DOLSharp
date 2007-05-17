@@ -21,27 +21,28 @@ using System.Collections.Generic;
 using System.Text;
 using DOL.GS.PacketHandler;
 using DOL.Events;
-using DOL.GS.Quests.Attributes;
+using DOL.GS.Behaviour.Attributes;using DOL.GS.Behaviour;
 
 namespace DOL.GS.Quests.Actions
 {
-    [QuestActionAttribute(ActionType = eActionType.OfferQuestAbort,DefaultValueP=eDefaultValueConstants.QuestType)]
-    class OfferQuestAbortAction : AbstractQuestAction<Type,String>
+    [ActionAttribute(ActionType = eActionType.OfferQuestAbort)]
+    public class OfferQuestAbortAction : AbstractAction<Type,String>
     {               
 
-        public OfferQuestAbortAction(BaseQuestPart questPart, eActionType actionType, Object p, Object q)
-            : base(questPart, actionType, p, q) {
+        public OfferQuestAbortAction(GameNPC defaultNPC, Object p, Object q)
+            : base(defaultNPC, eActionType.OfferQuestAbort, p, q)
+        {
         }
 
 
-        public OfferQuestAbortAction(BaseQuestPart questPart,  Type questType, String offerAbortMessage)
-            : this(questPart, eActionType.OfferQuestAbort, (object)questType, (object)offerAbortMessage) { }
+        public OfferQuestAbortAction(GameNPC defaultNPC, Type questType, String offerAbortMessage)
+            : this(defaultNPC, (object)questType, (object)offerAbortMessage) { }
         
 
-
-        public override void Perform(DOLEvent e, object sender, EventArgs args, GamePlayer player)
+        public override void Perform(DOLEvent e, object sender, EventArgs args)
         {
-            string message = QuestPartUtils.GetPersonalizedMessage(Q, player);
+            GamePlayer player = BehaviourUtils.GuessGamePlayerFromNotify(e, sender, args);
+            string message = BehaviourUtils.GetPersonalizedMessage(Q, player);
             QuestMgr.AbortQuestToPlayer(P, message, player, NPC);
         }
     }

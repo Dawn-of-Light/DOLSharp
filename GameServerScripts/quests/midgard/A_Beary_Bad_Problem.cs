@@ -33,9 +33,11 @@ using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
 using DOL.GS.Quests;
+using DOL.GS.Behaviour;
+using DOL.GS.Behaviour.Attributes;
 using DOL.AI.Brain;
 
-namespace DOL.GS.Quests.Midgard {
+	namespace DOL.GS.Quests.Midgard {
 	
      /* The first thing we do, is to declare the class we create
 	 * as Quest. To do this, we derive from the abstract class
@@ -316,41 +318,41 @@ namespace DOL.GS.Quests.Midgard {
 		#region defineQuestParts
 
 		QuestBuilder builder = QuestMgr.getBuilder(typeof(Abearybadproblem));
-			BaseQuestPart a;
-			a = builder.CreateQuestPart(VikingKreimhilde,-1);
+			QuestBehaviour a;
+			a = builder.CreateBehaviour(VikingKreimhilde,-1);
 				a.AddTrigger(eTriggerType.Interact,null,VikingKreimhilde);
-			a.AddRequirement(eRequirementType.QuestGivable,"DOL.GS.Quests.Midgard.Abearybadproblem",VikingKreimhilde);
-			a.AddRequirement(eRequirementType.QuestPending,"DOL.GS.Quests.Midgard.Abearybadproblem",(eComparator)5);
+			a.AddRequirement(eRequirementType.QuestGivable,typeof(DOL.GS.Quests.Midgard.Abearybadproblem),VikingKreimhilde);
+			a.AddRequirement(eRequirementType.QuestPending,typeof(DOL.GS.Quests.Midgard.Abearybadproblem),null,(eComparator)5);
 			a.AddAction(eActionType.Talk,"So you're one of the new arrivals, eh? Sorry, I overheard your conversation with your trainer over there.",VikingKreimhilde);
 			a.AddAction(eActionType.Talk,"What you were told about our lack of local Viking guards is quite true, I'm afraid. King Eirik has spread out our defenses quite thin, leaving folks around these parts pretty nervous about their safety. Not that he can be blamed, we just have too many foes to worry about in these trying times. ",VikingKreimhilde);
 			a.AddAction(eActionType.Talk,"If you're truly willing to help like you say, then I could use your help. The population of \"natural\" wildlife has been getting out of hand lately, and there are more and more accounts of unfortunate \"incidents\" involving out townsfolk and wild animals. Recently, a young boy was savagely attacked by a black mauler bear while hiking with his family in the nearby mountains to the north.",VikingKreimhilde);
 			a.AddAction(eActionType.Talk,"I've had a few people already volunteer to help thin out the nearby bear population. Would you be willing to help out, as well?",VikingKreimhilde);
-			a.AddAction(eActionType.OfferQuest,"DOL.GS.Quests.Midgard.Abearybadproblem","Accept A beary Bad Problem Quest?");
-			AddQuestPart(a);
-			a = builder.CreateQuestPart(VikingKreimhilde,-1);
-				a.AddTrigger(eTriggerType.AcceptQuest,null,"DOL.GS.Quests.Midgard.Abearybadproblem");
-			a.AddAction(eActionType.GiveQuest,"DOL.GS.Quests.Midgard.Abearybadproblem",VikingKreimhilde);
-			a.AddAction(eActionType.SetQuestStep,"DOL.GS.Quests.Midgard.Abearybadproblem",1);
-			AddQuestPart(a);
-			a = builder.CreateQuestPart(VikingKreimhilde,-1);
-				a.AddTrigger(eTriggerType.DeclineQuest,null,"DOL.GS.Quests.Midgard.Abearybadproblem");
-			AddQuestPart(a);
-			a = builder.CreateQuestPart(VikingKreimhilde,-1);
-				a.AddTrigger(eTriggerType.EnemyKilled,"black mauler cub");
-			a.AddRequirement(eRequirementType.QuestStep,"DOL.GS.Quests.Midgard.Abearybadproblem",1,(eComparator)3);
-			a.AddAction(eActionType.GiveItem,blackmaulercubpelt);
-			a.AddAction(eActionType.SetQuestStep,"DOL.GS.Quests.Midgard.Abearybadproblem",2);
-			AddQuestPart(a);
-			a = builder.CreateQuestPart(VikingKreimhilde,-1);
+			a.AddAction(eActionType.OfferQuest,typeof(DOL.GS.Quests.Midgard.Abearybadproblem),"Accept A beary Bad Problem Quest?");
+			AddBehaviour(a);
+			a = builder.CreateBehaviour(VikingKreimhilde,-1);
+				a.AddTrigger(eTriggerType.AcceptQuest,null,typeof(DOL.GS.Quests.Midgard.Abearybadproblem));
+			a.AddAction(eActionType.GiveQuest,typeof(DOL.GS.Quests.Midgard.Abearybadproblem),VikingKreimhilde);
+			a.AddAction(eActionType.SetQuestStep,typeof(DOL.GS.Quests.Midgard.Abearybadproblem),1);
+			AddBehaviour(a);
+			a = builder.CreateBehaviour(VikingKreimhilde,-1);
+				a.AddTrigger(eTriggerType.DeclineQuest,null,typeof(DOL.GS.Quests.Midgard.Abearybadproblem));
+			AddBehaviour(a);
+			a = builder.CreateBehaviour(VikingKreimhilde,-1);
+				a.AddTrigger(eTriggerType.EnemyKilled,"black mauler cub",null);
+			a.AddRequirement(eRequirementType.QuestStep,typeof(DOL.GS.Quests.Midgard.Abearybadproblem),1,(eComparator)3);
+			a.AddAction(eActionType.GiveItem,blackmaulercubpelt,null);
+			a.AddAction(eActionType.SetQuestStep,typeof(DOL.GS.Quests.Midgard.Abearybadproblem),2);
+			AddBehaviour(a);
+			a = builder.CreateBehaviour(VikingKreimhilde,-1);
 				a.AddTrigger(eTriggerType.Interact,null,VikingKreimhilde);
-			a.AddRequirement(eRequirementType.QuestStep,"DOL.GS.Quests.Midgard.Abearybadproblem",2,(eComparator)3);
+			a.AddRequirement(eRequirementType.QuestStep,typeof(DOL.GS.Quests.Midgard.Abearybadproblem),2,(eComparator)3);
 			a.AddAction(eActionType.Talk,"Good Job!",VikingKreimhilde);
-			a.AddAction(eActionType.GiveXP,22);
-			a.AddAction(eActionType.GiveGold,23);
-			a.AddAction(eActionType.TakeItem,blackmaulercubpelt);
+			a.AddAction(eActionType.GiveXP,22,null);
+			a.AddAction(eActionType.GiveGold,23,null);
+			a.AddAction(eActionType.TakeItem,blackmaulercubpelt,null);
 			a.AddAction(eActionType.GiveItem,silverringofhealth,VikingKreimhilde);
-			a.AddAction(eActionType.FinishQuest,"DOL.GS.Quests.Midgard.Abearybadproblem");
-			AddQuestPart(a);
+			a.AddAction(eActionType.FinishQuest,typeof(DOL.GS.Quests.Midgard.Abearybadproblem),null);
+			AddBehaviour(a);
 			
 			#endregion
 
@@ -378,7 +380,7 @@ namespace DOL.GS.Quests.Midgard {
 			 */
 			if (VikingKreimhilde == null)
 				return;
-			/* Now we remove to SirQuait the possibility to give this quest to players */			
+			/* Now we remove the possibility to give this quest to players */			
 			VikingKreimhilde.RemoveQuestToGive(typeof (Abearybadproblem));
 		}
 
