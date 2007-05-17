@@ -117,6 +117,7 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="behaviour\examples\TestBehaviour.cs" />
     <Compile Include="customnpc\Blacksmith.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -619,6 +620,7 @@
     <Compile Include="quests\albion\YdeniasCrush.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="quests\examples\church.cs" />
     <Compile Include="quests\examples\HelpSirQuait.cs">
       <SubType>Code</SubType>
     </Compile>

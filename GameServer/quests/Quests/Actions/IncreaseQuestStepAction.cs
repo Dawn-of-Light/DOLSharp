@@ -21,26 +21,27 @@ using System.Collections.Generic;
 using System.Text;
 using DOL.GS.PacketHandler;
 using DOL.Events;
-using DOL.GS.Quests.Attributes;
+using DOL.GS.Behaviour.Attributes;using DOL.GS.Behaviour;
 
 namespace DOL.GS.Quests.Actions
 {
-    [QuestActionAttribute(ActionType = eActionType.IncQuestStep,DefaultValueP=eDefaultValueConstants.QuestType)]
-    class IncreaseQuestStepAction: AbstractQuestAction<Type,Unused>
+    [ActionAttribute(ActionType = eActionType.IncQuestStep)]
+    public class IncreaseQuestStepAction: AbstractAction<Type,Unused>
     {
 
-        public IncreaseQuestStepAction(BaseQuestPart questPart,eActionType actionType, Object p, Object q)
-            : base(questPart, actionType, p, q) 
+        public IncreaseQuestStepAction(GameNPC defaultNPC,  Object p, Object q)
+            : base(defaultNPC, eActionType.IncQuestStep, p, q) 
         {        
         }
 
-        public IncreaseQuestStepAction(BaseQuestPart questPart, Type p)
-            : this(questPart, eActionType.IncQuestStep, (object)p,(object) null)
+        public IncreaseQuestStepAction(GameNPC defaultNPC, Type questType)
+            : this(defaultNPC, (object)questType, (object)null)
         { }
 
 
-        public override void Perform(DOLEvent e, object sender, EventArgs args, GamePlayer player)
+        public override void Perform(DOLEvent e, object sender, EventArgs args)
         {
+            GamePlayer player = BehaviourUtils.GuessGamePlayerFromNotify(e, sender, args);
             AbstractQuest playerQuest = player.IsDoingQuest(P);
             if (playerQuest != null)
             {

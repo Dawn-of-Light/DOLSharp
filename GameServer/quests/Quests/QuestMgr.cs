@@ -26,7 +26,7 @@ using DOL.Events;
 using DOL.GS.PacketHandler;
 using DOL.GS.Scripts;
 using log4net;
-using DOL.GS.Quests.Attributes;
+using DOL.GS.Behaviour.Attributes;using DOL.GS.Behaviour;
 
 namespace DOL.GS.Quests
 {				
@@ -86,76 +86,11 @@ namespace DOL.GS.Quests
                             log.Info("Registering quest: " + type.FullName);
                         RegisterQuestType(type);
                     }
-                    
-                    if (typeof(IQuestAction).IsAssignableFrom(type))
-                    {
-                        
-                        QuestActionAttribute attr = GetQuestActionAttribute(type);
-                        if (attr != null)
-                        {
-                            if (log.IsInfoEnabled)
-                                log.Info("Registering QuestAction: " + type.FullName);
-                            RegisterQuestAction(attr.ActionType, type);
-                        }
-                    }
-
-                    if (typeof(IQuestTrigger).IsAssignableFrom(type))
-                    {
-                        
-                        QuestTriggerAttribute attr = getQuestTriggerAttribute(type);
-                        if (attr != null)
-                        {
-                            if (log.IsInfoEnabled)
-                                log.Info("Registering QuestTrigger: " + type.FullName);
-                            RegisterQuestTrigger(attr.TriggerType, type);
-                        }
-                    }
-
-                    if (typeof(IQuestRequirement).IsAssignableFrom(type))
-                    {
-                        
-                        QuestRequirementAttribute attr = getQuestRequirementAttribute(type);
-                        if (attr != null)
-                        {
-                            if (log.IsInfoEnabled)
-                                log.Info("Registering QuestRequirement: " + type.FullName);
-                            RegisterQuestRequirement(attr.RequirementType, type);
-                        }
-                    }
                 }
             }
             return true;
         }
-
-        public static QuestActionAttribute GetQuestActionAttribute(Type type)
-        {
-            foreach (Attribute attr in type.GetCustomAttributes(false))
-            {
-                if (attr is QuestActionAttribute)
-                    return (QuestActionAttribute)attr;
-            }
-            return null;
-        }
-
-        public static QuestTriggerAttribute getQuestTriggerAttribute(Type type)
-        {
-            foreach (Attribute attr in type.GetCustomAttributes(false))
-            {
-                if (attr is QuestTriggerAttribute)
-                    return (QuestTriggerAttribute)attr;
-            }
-            return null;
-        }
-
-        public static QuestRequirementAttribute getQuestRequirementAttribute(Type type)
-        {
-            foreach (Attribute attr in type.GetCustomAttributes(false))
-            {
-                if (attr is QuestRequirementAttribute)
-                    return (QuestRequirementAttribute)attr;
-            }
-            return null;
-        }
+        
 
 		#region Function
 		
@@ -309,55 +244,7 @@ namespace DOL.GS.Quests
                 return;
             }
             m_questTypeMap.Add(typeId, type);
-        }
-
-        public static void RegisterQuestAction(eActionType actionType, Type type)
-        {
-            if (m_questActionMap.Contains(actionType))
-            {
-                if (log.IsErrorEnabled)
-                    log.Error(actionType + " is already registered, only one Type can be declared for each ActionType. Duplicate declaration found in :" + m_questActionMap[actionType] + " and " + type);
-                return;
-            }
-            m_questActionMap.Add(actionType, type);
-        }
-
-        public static Type GetTypeForActionType(eActionType actionType)
-        {
-            return (Type) m_questActionMap[actionType];
-        }
-
-        public static void RegisterQuestTrigger(eTriggerType triggerType, Type type)
-        {
-            if (m_questTriggerMap.Contains(triggerType))
-            {
-                if (log.IsErrorEnabled)
-                    log.Error(triggerType + " is already registered, only one Type can be declared for each TriggerType. Duplicate declaration found in :" + m_questTriggerMap[triggerType] + " and " + type);
-                return;
-            }
-            m_questTriggerMap.Add(triggerType, type);
-        }
-
-        public static Type GetTypeForTriggerType(eTriggerType triggerType)
-        {
-            return (Type)m_questTriggerMap[triggerType];
-        }
-
-        public static void RegisterQuestRequirement(eRequirementType requirementType, Type type)
-        {
-            if (m_questRequirementMap.Contains(requirementType))
-            {
-                if (log.IsErrorEnabled)
-                    log.Error(requirementType + " is already registered, only one Type can be declared for each Requirement. Duplicate declaration found in :" + m_questRequirementMap[requirementType] + " and " + type);
-                return;
-            }
-            m_questRequirementMap.Add(requirementType, type);
-        }
-
-        public static Type GetTypeForRequirementType(eRequirementType requirementType)
-        {
-            return (Type)m_questRequirementMap[requirementType];
-        }
+        }        
 
         /// <summary>
         /// Returns a short id for the quest type. 
@@ -500,11 +387,5 @@ namespace DOL.GS.Quests
 		#endregion
 		
     }
-
-    /// <summary>
-    /// Helper Class to Flag parameters in the generic Definition as unused
-    /// </summary>
-    public class Unused
-    {
-    }
+    
 }

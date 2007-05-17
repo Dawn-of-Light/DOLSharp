@@ -32,6 +32,7 @@ using DOL.Database;
 using DOL.GS.PacketHandler;
 using log4net;
 using DOL.Events;
+using DOL.GS.Behaviour;
 /* I suggest you declare yourself some namespaces for your quests
  * Like: DOL.GS.Quests.Albion
  *       DOL.GS.Quests.Midgard
@@ -47,8 +48,7 @@ namespace DOL.GS.Quests
 	/// <summary>
 	/// BaseQuest provides some helper classes for writing quests and
 	/// integrates a new QuestPart Based QuestSystem.
-	/// </summary>
-	/// <seealso cref="DOL.GS.Quests.BaseQuestPart"/>
+	/// </summary>	
 	public abstract class BaseQuest : AbstractQuest
 	{
 		/// <summary>
@@ -132,41 +132,25 @@ namespace DOL.GS.Quests
 			{
 				for (int i = questParts.Count - 1; i >= 0; i--)
 				{
-					RemoveQuestPart((BaseQuestPart)questParts[i]);
+					RemoveBehaviour((QuestBehaviour)questParts[i]);
 				}
 			}
 			questParts = null;
 		}
 
-		// Base QuestPart methods
-
-		/// <summary>
-		/// Registers all needed handlers for the given questPart,
-		/// this will not add the questpart to the quest. For this case use AddQuestPart
-		/// </summary>
-		/// <param name="questPart">QuestPart to register handlers for</param>
-		protected static void RegisterQuestPart(BaseQuestPart questPart)
-		{
-			if (questPart.Triggers == null)
-				log.Warn("QuestPart without any triggers added, this questpart will never be notified.\n Details: " + questPart);
-
-			foreach (IQuestTrigger trigger in questPart.Triggers)
-			{
-				trigger.Register();
-			}
-		}
+		// Base QuestPart methods		
 
 		/// <summary>
 		/// Remove all registered handlers for this quest,
 		/// this will not remove the questPart from the quest.
 		/// </summary>
 		/// <param name="questPart">QuestPart to remove handlers from</param>
-		protected static void UnRegisterQuestPart(BaseQuestPart questPart)
+		protected static void UnRegisterBehaviour(QuestBehaviour questPart)
 		{
 			if (questPart.Triggers == null)
 				return;
 
-			foreach (IQuestTrigger trigger in questPart.Triggers)
+			foreach (IBehaviourTrigger trigger in questPart.Triggers)
 			{
 				trigger.Unregister();
 			}
@@ -176,20 +160,14 @@ namespace DOL.GS.Quests
 		/// be added as InteractQuestPart as NotifyQuestPart or both and also register the needed event handler.
 		/// </summary>
 		/// <param name="questPart">QuestPart to be added</param>
-		public static void AddQuestPart(BaseQuestPart questPart)
-		{
-			if (questPart.QuestPartAdded)
-				log.Error("QuestPart " + questPart + " was already added to Quest.");
-
-			RegisterQuestPart(questPart);
-
+		public static void AddBehaviour(QuestBehaviour questPart)
+		{						
 			if (questParts == null)
 				questParts = new ArrayList();
 
 			if (!questParts.Contains(questPart))
 				questParts.Add(questPart);
-
-			questPart.QuestPartAdded = true;
+			
             questPart.ID = questParts.Count; // fake id but ids only have to be unique quest wide its enough to use the number in the list as id.
 		}
 
@@ -197,14 +175,13 @@ namespace DOL.GS.Quests
 		/// Remove the given questpart from the quest and also unregister the handlers
 		/// </summary>
 		/// <param name="questPart">QuestPart to be removed</param>
-		public static void RemoveQuestPart(BaseQuestPart questPart)
+		public static void RemoveBehaviour(QuestBehaviour questPart)
 		{
 			if (questParts == null)
 				return;
 
-			UnRegisterQuestPart(questPart);
-			questParts.Remove(questPart);
-			questPart.QuestPartAdded = false;
+			UnRegisterBehaviour(questPart);
+			questParts.Remove(questPart);			
 		}
 
 		/// <summary>
@@ -218,7 +195,7 @@ namespace DOL.GS.Quests
 			if (questParts == null)
 				return;
 
-			foreach (BaseQuestPart questPart in questParts)
+			foreach (QuestBehaviour questPart in questParts)
 			{
 				questPart.Notify(e, sender, args);
 			}

@@ -66,11 +66,11 @@ namespace DOL.Events
 		/// </summary>
 		public static readonly GamePlayerEvent Linkdeath = new GamePlayerEvent("GamePlayer.Linkdeath");
 		/// <summary>
-		/// The MoveItem event is fired whenever the player wants to give away an item
+		/// The GiveItem event is fired whenever the player wants to give away an item
 		/// </summary>
 		public static readonly GamePlayerEvent GiveItem = new GamePlayerEvent("GamePlayer.GiveItem");
 		/// <summary>
-		/// The MoveItem event is fired whenever the player wants to give away an item
+		/// The GiveMoney event is fired whenever the player wants to give away money
 		/// </summary>
 		public static readonly GamePlayerEvent GiveMoney = new GamePlayerEvent("GamePlayer.GiveMoney");
 		/// <summary>

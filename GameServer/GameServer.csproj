@@ -129,6 +129,12 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="behaviour\AbstractTrigger.cs" />
+    <Compile Include="behaviour\AbstractRequirement.cs" />
+    <Compile Include="behaviour\Actions\AnimationAction.cs" />
+    <Compile Include="behaviour\BaseBehaviour.cs" />
+    <Compile Include="behaviour\BehaviourBuilder.cs" />
+    <Compile Include="behaviour\BehaviourMgr.cs" />
     <Compile Include="Crafting\AbstractCraftingSkill.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -358,10 +364,10 @@
     <Compile Include="events\gameobjects\QuestEventArgs.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="events\gameobjects\ReceiveItemEventArgs.cs">
+    <Compile Include="events\gameobjects\ReceiveMoneyEventArgs.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="events\gameobjects\ReceiveMoneyEventArgs.cs">
+    <Compile Include="events\gameobjects\ReceiveItemEventArgs.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="events\gameobjects\RiderDismountEventArgs.cs">
@@ -699,82 +705,82 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="quests\Missions\TaskDungeonMission.cs" />
-    <Compile Include="quests\Quests\Actions\AnimationAction.cs" />
     <Compile Include="quests\Quests\Actions\AbortQuestAction.cs" />
-    <Compile Include="quests\Quests\Actions\AttackAction.cs" />
-    <Compile Include="quests\Quests\Actions\MonsterSpawnAction.cs" />
-    <Compile Include="quests\Quests\Actions\SetMonsterPathAction.cs" />
-    <Compile Include="quests\Quests\Actions\WalkToSpawnAction.cs" />
-    <Compile Include="quests\Quests\Actions\MonsterUnspawnAction.cs" />
-    <Compile Include="quests\Quests\Actions\MoveToAction.cs" />
-    <Compile Include="quests\Quests\Actions\SetGuildNameAction.cs" />
-    <Compile Include="quests\Quests\Actions\WalkToAction.cs" />
-    <Compile Include="quests\Quests\Actions\TimerAction.cs" />
-    <Compile Include="quests\Quests\Actions\CustomTimerAction.cs" />
-    <Compile Include="quests\Quests\Actions\TeleportAction.cs" />
-    <Compile Include="quests\Quests\Actions\MessageAction.cs" />
-    <Compile Include="quests\Quests\Actions\CustomDialogAction.cs" />
-    <Compile Include="quests\Quests\Actions\WhisperAction.cs" />
-    <Compile Include="quests\Quests\Actions\TalkAction.cs" />
-    <Compile Include="quests\Quests\Actions\TakeGoldAction.cs" />
-    <Compile Include="quests\Quests\Actions\GiveGoldAction.cs" />
-    <Compile Include="quests\Quests\Actions\GiveXPAction.cs" />
-    <Compile Include="quests\Quests\Actions\ReplaceItemAction.cs" />
-    <Compile Include="quests\Quests\Actions\DestroyItemAction.cs" />
-    <Compile Include="quests\Quests\Actions\DropItemAction.cs" />
-    <Compile Include="quests\Quests\Actions\TakeItemAction.cs" />
-    <Compile Include="quests\Quests\Actions\GiveItemAction.cs" />
+    <Compile Include="behaviour\Actions\AttackAction.cs" />
+    <Compile Include="behaviour\Actions\MonsterSpawnAction.cs" />
+    <Compile Include="behaviour\Actions\SetMonsterPathAction.cs" />
+    <Compile Include="behaviour\Actions\WalkToSpawnAction.cs" />
+    <Compile Include="behaviour\Actions\MonsterUnspawnAction.cs" />
+    <Compile Include="behaviour\Actions\MoveToAction.cs" />
+    <Compile Include="behaviour\Actions\SetGuildNameAction.cs" />
+    <Compile Include="behaviour\Actions\WalkToAction.cs" />
+    <Compile Include="behaviour\Actions\TimerAction.cs" />
+    <Compile Include="behaviour\Actions\CustomTimerAction.cs" />
+    <Compile Include="behaviour\Actions\TeleportAction.cs" />
+    <Compile Include="behaviour\Actions\MessageAction.cs" />
+    <Compile Include="behaviour\Actions\CustomDialogAction.cs" />
+    <Compile Include="behaviour\Actions\WhisperAction.cs" />
+    <Compile Include="behaviour\Actions\TalkAction.cs" />
+    <Compile Include="behaviour\Actions\TakeGoldAction.cs" />
+    <Compile Include="behaviour\Actions\GiveGoldAction.cs" />
+    <Compile Include="behaviour\Actions\GiveXPAction.cs" />
+    <Compile Include="behaviour\Actions\ReplaceItemAction.cs" />
+    <Compile Include="behaviour\Actions\DestroyItemAction.cs" />
+    <Compile Include="behaviour\Actions\DropItemAction.cs" />
+    <Compile Include="behaviour\Actions\TakeItemAction.cs" />
+    <Compile Include="behaviour\Actions\GiveItemAction.cs" />
     <Compile Include="quests\Quests\Actions\OfferQuestAbortAction.cs" />
     <Compile Include="quests\Quests\Actions\OfferQuestAction.cs" />
     <Compile Include="quests\Quests\Actions\GiveQuestAction.cs" />
     <Compile Include="quests\Quests\Actions\FinishQuestAction.cs" />
     <Compile Include="quests\Quests\Actions\IncreaseQuestStepAction.cs" />
     <Compile Include="quests\Quests\Actions\SetQuestStepAction.cs" />
-    <Compile Include="quests\Quests\Attributes\QuestRequirementAttribute.cs" />
-    <Compile Include="quests\Quests\Attributes\QuestTriggerAttribute.cs" />
-    <Compile Include="quests\Quests\Attributes\QuestActionAttribute.cs" />
-    <Compile Include="quests\Quests\QuestPartUtils.cs" />
-    <Compile Include="quests\Quests\Requirements\ClassRequirement.cs" />
-    <Compile Include="quests\Quests\Requirements\RandomChanceRequirement.cs" />
-    <Compile Include="quests\Quests\Requirements\RaceRequirement.cs" />
-    <Compile Include="quests\Quests\Requirements\LevelRequirement.cs" />
-    <Compile Include="quests\Quests\Requirements\HealthMaxRequirement.cs" />
-    <Compile Include="quests\Quests\Requirements\HealthRequirement.cs" />
-    <Compile Include="quests\Quests\Requirements\GenderRequirement.cs" />
-    <Compile Include="quests\Quests\Requirements\ManaMaxRequirement.cs" />
-    <Compile Include="quests\Quests\Requirements\ManaRequirement.cs" />
-    <Compile Include="quests\Quests\Requirements\EnduranceRequirement.cs" />
-    <Compile Include="quests\Quests\Requirements\EncumbranceMaxRequirement.cs" />
-    <Compile Include="quests\Quests\Requirements\EncumbranceRequirement.cs" />
-    <Compile Include="quests\Quests\Requirements\GoldRequirement.cs" />
-    <Compile Include="quests\Quests\Requirements\RegionRequirement.cs" />
-    <Compile Include="quests\Quests\Requirements\RealmLevelRequirement.cs" />
-    <Compile Include="quests\Quests\Requirements\RealmRequirement.cs" />
-    <Compile Include="quests\Quests\Requirements\DistanceRequirement.cs" />
-    <Compile Include="quests\Quests\Requirements\GroupNumberRequirement.cs" />
-    <Compile Include="quests\Quests\Requirements\GroupLevelRequirement.cs" />
-    <Compile Include="quests\Quests\Requirements\EquippedItemRequirement.cs" />
-    <Compile Include="quests\Quests\Requirements\GuildRequirement.cs" />
-    <Compile Include="quests\Quests\Requirements\RealmPointsRequirement.cs" />
+    <Compile Include="behaviour\Attributes\RequirementAttribute.cs" />
+    <Compile Include="behaviour\Attributes\TriggerAttribute.cs" />
+    <Compile Include="behaviour\Attributes\ActionAttribute.cs" />
+    <Compile Include="behaviour\AbstractAction.cs" />
+    <Compile Include="behaviour\BehaviourUtils.cs" />
+    <Compile Include="behaviour\Requirements\ClassRequirement.cs" />
+    <Compile Include="behaviour\Requirements\RandomChanceRequirement.cs" />
+    <Compile Include="behaviour\Requirements\RaceRequirement.cs" />
+    <Compile Include="behaviour\Requirements\LevelRequirement.cs" />
+    <Compile Include="behaviour\Requirements\HealthMaxRequirement.cs" />
+    <Compile Include="behaviour\Requirements\HealthRequirement.cs" />
+    <Compile Include="behaviour\Requirements\GenderRequirement.cs" />
+    <Compile Include="behaviour\Requirements\ManaMaxRequirement.cs" />
+    <Compile Include="behaviour\Requirements\ManaRequirement.cs" />
+    <Compile Include="behaviour\Requirements\EnduranceRequirement.cs" />
+    <Compile Include="behaviour\Requirements\EncumbranceMaxRequirement.cs" />
+    <Compile Include="behaviour\Requirements\EncumbranceRequirement.cs" />
+    <Compile Include="behaviour\Requirements\GoldRequirement.cs" />
+    <Compile Include="behaviour\Requirements\RegionRequirement.cs" />
+    <Compile Include="behaviour\Requirements\RealmLevelRequirement.cs" />
+    <Compile Include="behaviour\Requirements\RealmRequirement.cs" />
+    <Compile Include="behaviour\Requirements\DistanceRequirement.cs" />
+    <Compile Include="behaviour\Requirements\GroupNumberRequirement.cs" />
+    <Compile Include="behaviour\Requirements\GroupLevelRequirement.cs" />
+    <Compile Include="behaviour\Requirements\EquippedItemRequirement.cs" />
+    <Compile Include="behaviour\Requirements\GuildRequirement.cs" />
+    <Compile Include="behaviour\Requirements\RealmPointsRequirement.cs" />
     <Compile Include="quests\Quests\Requirements\QuestGivableRequirement.cs" />
     <Compile Include="quests\Quests\Requirements\QuestPendingRequirement.cs" />
     <Compile Include="quests\Quests\Requirements\QuestCompletedRequirement.cs" />
     <Compile Include="quests\Quests\Requirements\QuestStepRequirement.cs" />
-    <Compile Include="quests\Quests\Requirements\InventoryItemRequirement.cs" />
+    <Compile Include="behaviour\Requirements\InventoryItemRequirement.cs" />
     <Compile Include="quests\Quests\Triggers\AcceptQuestTrigger.cs" />
     <Compile Include="quests\Quests\Triggers\AbortQuestTrigger.cs" />
     <Compile Include="quests\Quests\Triggers\ContinueQuestTrigger.cs" />
-    <Compile Include="quests\Quests\Triggers\ItemUsedTrigger.cs" />
-    <Compile Include="quests\Quests\Triggers\TimerTrigger.cs" />
-    <Compile Include="quests\Quests\Triggers\LeaveAreaTrigger.cs" />
-    <Compile Include="quests\Quests\Triggers\EnterAreaTrigger.cs" />
-    <Compile Include="quests\Quests\Triggers\PlayerKilledTrigger.cs" />
-    <Compile Include="quests\Quests\Triggers\EnemyDyingTrigger.cs" />
-    <Compile Include="quests\Quests\Triggers\EnemyKilledTrigger.cs" />
+    <Compile Include="behaviour\Triggers\ItemUsedTrigger.cs" />
+    <Compile Include="behaviour\Triggers\TimerTrigger.cs" />
+    <Compile Include="behaviour\Triggers\LeaveAreaTrigger.cs" />
+    <Compile Include="behaviour\Triggers\EnterAreaTrigger.cs" />
+    <Compile Include="behaviour\Triggers\PlayerKilledTrigger.cs" />
+    <Compile Include="behaviour\Triggers\EnemyDyingTrigger.cs" />
+    <Compile Include="behaviour\Triggers\EnemyKilledTrigger.cs" />
     <Compile Include="quests\Quests\Triggers\DeclineQuestTrigger.cs" />
-    <Compile Include="quests\Quests\Triggers\GiveItemTrigger.cs" />
-    <Compile Include="quests\Quests\Triggers\WhisperTrigger.cs" />
-    <Compile Include="quests\Quests\Triggers\InteractTrigger.cs" />
+    <Compile Include="behaviour\Triggers\GiveItemTrigger.cs" />
+    <Compile Include="behaviour\Triggers\WhisperTrigger.cs" />
+    <Compile Include="behaviour\Triggers\InteractTrigger.cs" />
     <Compile Include="realmabilities\effects\AdrenalineRushEffect.cs" />
     <Compile Include="realmabilities\effects\AmelioratingMelodiesEffect.cs" />
     <Compile Include="realmabilities\effects\BarrierOfFortitudeEffect.cs" />
@@ -1382,22 +1388,19 @@
     <Compile Include="quests\Quests\AbstractQuest.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="quests\Quests\AbstractQuestAction.cs" />
-    <Compile Include="quests\Quests\AbstractQuestRequirement.cs" />
-    <Compile Include="quests\Quests\AbstractQuestTrigger.cs" />
     <Compile Include="quests\Tasks\AbstractTask.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="quests\Quests\BaseQuest.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="quests\Quests\BaseQuestPart.cs" />
+    <Compile Include="quests\Quests\QuestBehaviour.cs" />
     <Compile Include="quests\Tasks\CraftTask.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="quests\Quests\IQuestAction.cs" />
-    <Compile Include="quests\Quests\IQuestRequirement.cs" />
-    <Compile Include="quests\Quests\IQuestTrigger.cs" />
+    <Compile Include="behaviour\IBehaviourAction.cs" />
+    <Compile Include="behaviour\IBehaviourRequirement.cs" />
+    <Compile Include="behaviour\IBehaviourTrigger.cs" />
     <Compile Include="quests\Tasks\KillTask.cs">
       <SubType>Code</SubType>
     </Compile>

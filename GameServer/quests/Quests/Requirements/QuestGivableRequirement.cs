@@ -23,7 +23,7 @@ using DOL.Database;
 using log4net;
 using System.Reflection;
 using DOL.GS.Scripts;
-using DOL.GS.Quests.Attributes;
+using DOL.GS.Behaviour.Attributes;using DOL.GS.Behaviour;
 
 namespace DOL.GS.Quests.Requirements
 {
@@ -33,33 +33,31 @@ namespace DOL.GS.Quests.Requirements
 	/// Level of player, Step of Quest, Class of Player, etc... There are also some variables to add
 	/// additional parameters. To fire a QuestAction ALL requirements must be fulfilled.         
 	/// </summary>
-    [QuestRequirementAttribute(RequirementType=eRequirementType.QuestGivable,DefaultValueN=eDefaultValueConstants.QuestType,DefaultValueV=eDefaultValueConstants.NPC)]
-	public class QuestGivableRequirement : AbstractQuestRequirement<Type,GameNPC>
+    [RequirementAttribute(RequirementType=eRequirementType.QuestGivable,DefaultValueV=eDefaultValueConstants.NPC)]
+	public class QuestGivableRequirement : AbstractRequirement<Type,GameNPC>
 	{
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		/// <summary>
 		/// Creates a new QuestRequirement and does some basich compativilite checks for the parameters
-		/// </summary>
-		/// <param name="questPart">Parent QuestPart of this Requirement</param>
+		/// </summary>		
 		/// <param name="type">RequirementType</param>
 		/// <param name="n">First Requirement Variable, meaning depends on RequirementType</param>
 		/// <param name="v">Second Requirement Variable, meaning depends on RequirementType</param>
 		/// <param name="comp">Comparator used if some values are veeing compared</param>
-        public QuestGivableRequirement(BaseQuestPart questPart, eRequirementType type, Object n, Object v, eComparator comp)
-            : base(questPart, type, n, v, comp)
+        public QuestGivableRequirement(GameNPC defaultNPC, Object n, Object v, eComparator comp)
+            : base(defaultNPC, eRequirementType.QuestGivable, n, v, comp)
 		{
 		}
 
         /// <summary>
 		/// Creates a new QuestRequirement and does some basich compativilite checks for the parameters
-		/// </summary>
-		/// <param name="questPart">Parent QuestPart of this Requirement</param>		
+		/// </summary>		
 		/// <param name="n">First Requirement Variable, meaning depends on RequirementType</param>
 		/// <param name="v">Second Requirement Variable, meaning depends on RequirementType</param>
 		/// <param name="comp">Comparator used if some values are veeing compared</param>
-        public QuestGivableRequirement(BaseQuestPart questPart, Type n, GameNPC v, eComparator comp)
-            : this(questPart, eRequirementType.QuestGivable, (object)n, (object)v, comp)
+        public QuestGivableRequirement(GameNPC defaultNPC, Type questType, GameNPC v, eComparator comp)
+            : this(defaultNPC, (object)questType, (object)v, comp)
 		{   			
 		}
 
@@ -71,9 +69,10 @@ namespace DOL.GS.Quests.Requirements
 		/// <param name="args">EventArgs of notify call</param>
 		/// <param name="player">GamePlayer this call is related to, can be null</param>
 		/// <returns>true if all Requirements forQuestPart where fullfilled, else false</returns>
-		public override bool Check(DOLEvent e, object sender, EventArgs args, GamePlayer player)
+		public override bool Check(DOLEvent e, object sender, EventArgs args)
 		{
 			bool result = true;
+            GamePlayer player = BehaviourUtils.GuessGamePlayerFromNotify(e, sender, args);
 
             if (Comparator == eComparator.Not)
                 result = QuestMgr.CanGiveQuest(N, player, V) <= 0;

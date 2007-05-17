@@ -33,9 +33,11 @@ using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
 using DOL.GS.Quests;
+using DOL.GS.Behaviour;
+using DOL.GS.Behaviour.Attributes;
 using DOL.AI.Brain;
 
-namespace DOL.GS.Quests.Midgard {
+	namespace DOL.GS.Quests.Midgard {
 	
      /* The first thing we do, is to declare the class we create
 	 * as Quest. To do this, we derive from the abstract class
@@ -136,11 +138,6 @@ namespace DOL.GS.Quests.Midgard {
 	{
 	if (!ServerProperties.Properties.LOAD_QUESTS)
 		return;
-	
-	Region reg = WorldMgr.GetRegion(489);
-	if (reg == null || (reg != null && reg.IsDisabled))
-		return;
-
 	if (log.IsInfoEnabled)
 		log.Info("Quest \"" + questTitle + "\" initializing ...");
 
@@ -1625,43 +1622,43 @@ namespace DOL.GS.Quests.Midgard {
 		#region defineQuestParts
 
 		QuestBuilder builder = QuestMgr.getBuilder(typeof(childsplay));
-			BaseQuestPart a;
-			a = builder.CreateQuestPart(Charles,-1);
+			QuestBehaviour a;
+			a = builder.CreateBehaviour(Charles,-1);
 				a.AddTrigger(eTriggerType.Interact,null,Charles);
-			a.AddRequirement(eRequirementType.QuestGivable,"DOL.GS.Quests.Midgard.childsplay",Charles);
-			a.AddRequirement(eRequirementType.QuestPending,"DOL.GS.Quests.Midgard.childsplay",(eComparator)5);
+			a.AddRequirement(eRequirementType.QuestGivable,typeof(DOL.GS.Quests.Midgard.childsplay),Charles);
+			a.AddRequirement(eRequirementType.QuestPending,typeof(DOL.GS.Quests.Midgard.childsplay),null,(eComparator)5);
 			a.AddAction(eActionType.Talk,"Hello there, Viking. Have you ever gotten tired of playing the same game over and over? That's what it's like here. All the adults say we can do is sit here and play 'Truth or Dare.' Sure, it was fun at first, but most of us have gotten bored and Raymond's too chicken to do any of the [dares] I think of for him.",Charles);
-			AddQuestPart(a);
-			a = builder.CreateQuestPart(Charles,-1);
+			AddBehaviour(a);
+			a = builder.CreateBehaviour(Charles,-1);
 				a.AddTrigger(eTriggerType.Whisper,"dares",Charles);
-			a.AddRequirement(eRequirementType.QuestGivable,"DOL.GS.Quests.Midgard.childsplay",Charles);
-			a.AddRequirement(eRequirementType.QuestPending,"DOL.GS.Quests.Midgard.childsplay",(eComparator)5);
+			a.AddRequirement(eRequirementType.QuestGivable,typeof(DOL.GS.Quests.Midgard.childsplay),Charles);
+			a.AddRequirement(eRequirementType.QuestPending,typeof(DOL.GS.Quests.Midgard.childsplay),null,(eComparator)5);
 			a.AddAction(eActionType.Talk,"It was a lot more fun when we could play 'Spin the Elixir' in the tavern basement with the girls, but Tiff's parents caught us there and we've been treated like babies ever since. I bet this game would be a whole lot better if you could [join] us. I'd even kick Raymond out and think up the bestest dare ever, just for you.",Charles);
-			AddQuestPart(a);
-			a = builder.CreateQuestPart(Charles,-1);
+			AddBehaviour(a);
+			a = builder.CreateBehaviour(Charles,-1);
 				a.AddTrigger(eTriggerType.Whisper,"join",Charles);
-			a.AddRequirement(eRequirementType.QuestGivable,"DOL.GS.Quests.Midgard.childsplay",Charles);
-			a.AddRequirement(eRequirementType.QuestPending,"DOL.GS.Quests.Midgard.childsplay",(eComparator)5);
+			a.AddRequirement(eRequirementType.QuestGivable,typeof(DOL.GS.Quests.Midgard.childsplay),Charles);
+			a.AddRequirement(eRequirementType.QuestPending,typeof(DOL.GS.Quests.Midgard.childsplay),null,(eComparator)5);
 			a.AddAction(eActionType.Talk,"Hmm. Give me a minute. I know just the thing. The guards keep talking about a big, scary statue in the demon dungeon beyond the limits of town. I dare you to go in and touch it, and come back out without getting eaten by a monster! What do you say?",Charles);
-			a.AddAction(eActionType.OfferQuest,"DOL.GS.Quests.Midgard.childsplay","Will you join Charles's game of 'Truth or Dare'? [Level 1]");
-			AddQuestPart(a);
-			a = builder.CreateQuestPart(Charles,-1);
-				a.AddTrigger(eTriggerType.DeclineQuest,null,"DOL.GS.Quests.Midgard.childsplay");
+			a.AddAction(eActionType.OfferQuest,typeof(DOL.GS.Quests.Midgard.childsplay),"Will you join Charles's game of 'Truth or Dare'? [Level 1]");
+			AddBehaviour(a);
+			a = builder.CreateBehaviour(Charles,-1);
+				a.AddTrigger(eTriggerType.DeclineQuest,null,typeof(DOL.GS.Quests.Midgard.childsplay));
 			a.AddAction(eActionType.Talk,"No Problem. See you.",Charles);
-			AddQuestPart(a);
-			a = builder.CreateQuestPart(Charles,-1);
-				a.AddTrigger(eTriggerType.AcceptQuest,null,"DOL.GS.Quests.Midgard.childsplay");
+			AddBehaviour(a);
+			a = builder.CreateBehaviour(Charles,-1);
+				a.AddTrigger(eTriggerType.AcceptQuest,null,typeof(DOL.GS.Quests.Midgard.childsplay));
 			a.AddAction(eActionType.Talk,"Great, we'll, uh, wait right here while you go do it. See, Raymond, not everyone's a big chicken like you. Chicken!",Charles);
-			a.AddAction(eActionType.GiveQuest,"DOL.GS.Quests.Midgard.childsplay",Charles);
-			AddQuestPart(a);
-			a = builder.CreateQuestPart(Charles,-1);
+			a.AddAction(eActionType.GiveQuest,typeof(DOL.GS.Quests.Midgard.childsplay),Charles);
+			AddBehaviour(a);
+			a = builder.CreateBehaviour(Charles,-1);
 				a.AddTrigger(eTriggerType.EnterArea,null,Statua);
-			a.AddAction(eActionType.IncQuestStep,"DOL.GS.Quests.Midgard.childsplay");
-			AddQuestPart(a);
-			a = builder.CreateQuestPart(Charles,-1);
+			a.AddAction(eActionType.IncQuestStep,typeof(DOL.GS.Quests.Midgard.childsplay),null);
+			AddBehaviour(a);
+			a = builder.CreateBehaviour(Charles,-1);
 				a.AddTrigger(eTriggerType.Interact,null,Charles);
-			a.AddRequirement(eRequirementType.QuestStep,"DOL.GS.Quests.Midgard.childsplay",2,(eComparator)3);
-			a.AddRequirement(eRequirementType.Class,35);
+			a.AddRequirement(eRequirementType.QuestStep,typeof(DOL.GS.Quests.Midgard.childsplay),2,(eComparator)3);
+			a.AddRequirement(eRequirementType.Class,35,null);
 			a.AddAction(eActionType.Talk,"You made it back alive! I mean, uh, welcome back! How was the statue? Did you get scared? Does this mean you're going to stay and play the game with us again? If you are, you can have these. I don't need them anymore.",Charles);
 			a.AddAction(eActionType.GiveItem,daringstuddedboots,Charles);
 			a.AddAction(eActionType.GiveItem,daringstuddedcap,Charles);
@@ -1669,14 +1666,14 @@ namespace DOL.GS.Quests.Midgard {
 			a.AddAction(eActionType.GiveItem,daringstuddedjerkin,Charles);
 			a.AddAction(eActionType.GiveItem,daringstuddedleggings,Charles);
 			a.AddAction(eActionType.GiveItem,daringstuddedsleeves,Charles);
-			a.AddAction(eActionType.GiveGold,67);
-			a.AddAction(eActionType.GiveXP,2);
-			a.AddAction(eActionType.FinishQuest,"DOL.GS.Quests.Midgard.childsplay");
-			AddQuestPart(a);
-			a = builder.CreateQuestPart(Charles,-1);
+			a.AddAction(eActionType.GiveGold,67,null);
+			a.AddAction(eActionType.GiveXP,2,null);
+			a.AddAction(eActionType.FinishQuest,typeof(DOL.GS.Quests.Midgard.childsplay),null);
+			AddBehaviour(a);
+			a = builder.CreateBehaviour(Charles,-1);
 				a.AddTrigger(eTriggerType.Interact,null,Charles);
-			a.AddRequirement(eRequirementType.QuestStep,"DOL.GS.Quests.Midgard.childsplay",2,(eComparator)3);
-			a.AddRequirement(eRequirementType.Class,37);
+			a.AddRequirement(eRequirementType.QuestStep,typeof(DOL.GS.Quests.Midgard.childsplay),2,(eComparator)3);
+			a.AddRequirement(eRequirementType.Class,37,null);
 			a.AddAction(eActionType.Talk,"You made it back alive! I mean, uh, welcome back! How was the statue? Did you get scared? Does this mean you're going to stay and play the game with us again? If you are, you can have these. I don't need them anymore.",Charles);
 			a.AddAction(eActionType.GiveItem,daringleatherboots,Charles);
 			a.AddAction(eActionType.GiveItem,daringleathercap,Charles);
@@ -1684,14 +1681,14 @@ namespace DOL.GS.Quests.Midgard {
 			a.AddAction(eActionType.GiveItem,daringleatherjerkin,Charles);
 			a.AddAction(eActionType.GiveItem,daringleatherleggings,Charles);
 			a.AddAction(eActionType.GiveItem,daringleathersleeves,Charles);
-			a.AddAction(eActionType.GiveGold,67);
-			a.AddAction(eActionType.GiveXP,2);
-			a.AddAction(eActionType.FinishQuest,"DOL.GS.Quests.Midgard.childsplay");
-			AddQuestPart(a);
-			a = builder.CreateQuestPart(Charles,-1);
+			a.AddAction(eActionType.GiveGold,67,null);
+			a.AddAction(eActionType.GiveXP,2,null);
+			a.AddAction(eActionType.FinishQuest,typeof(DOL.GS.Quests.Midgard.childsplay),null);
+			AddBehaviour(a);
+			a = builder.CreateBehaviour(Charles,-1);
 				a.AddTrigger(eTriggerType.Interact,null,Charles);
-			a.AddRequirement(eRequirementType.QuestStep,"DOL.GS.Quests.Midgard.childsplay",2,(eComparator)3);
-			a.AddRequirement(eRequirementType.Class,38);
+			a.AddRequirement(eRequirementType.QuestStep,typeof(DOL.GS.Quests.Midgard.childsplay),2,(eComparator)3);
+			a.AddRequirement(eRequirementType.Class,38,null);
 			a.AddAction(eActionType.Talk,"You made it back alive! I mean, uh, welcome back! How was the statue? Did you get scared? Does this mean you're going to stay and play the game with us again? If you are, you can have these. I don't need them anymore.",Charles);
 			a.AddAction(eActionType.GiveItem,daringleatherboots,Charles);
 			a.AddAction(eActionType.GiveItem,daringleathercap,Charles);
@@ -1699,14 +1696,14 @@ namespace DOL.GS.Quests.Midgard {
 			a.AddAction(eActionType.GiveItem,daringleatherjerkin,Charles);
 			a.AddAction(eActionType.GiveItem,daringleatherleggings,Charles);
 			a.AddAction(eActionType.GiveItem,daringleathersleeves,Charles);
-			a.AddAction(eActionType.GiveXP,2);
-			a.AddAction(eActionType.GiveGold,67);
-			a.AddAction(eActionType.FinishQuest,"DOL.GS.Quests.Midgard.childsplay");
-			AddQuestPart(a);
-			a = builder.CreateQuestPart(Charles,-1);
+			a.AddAction(eActionType.GiveXP,2,null);
+			a.AddAction(eActionType.GiveGold,67,null);
+			a.AddAction(eActionType.FinishQuest,typeof(DOL.GS.Quests.Midgard.childsplay),null);
+			AddBehaviour(a);
+			a = builder.CreateBehaviour(Charles,-1);
 				a.AddTrigger(eTriggerType.Interact,null,Charles);
-			a.AddRequirement(eRequirementType.QuestStep,"DOL.GS.Quests.Midgard.childsplay",2,(eComparator)3);
-			a.AddRequirement(eRequirementType.Class,36);
+			a.AddRequirement(eRequirementType.QuestStep,typeof(DOL.GS.Quests.Midgard.childsplay),2,(eComparator)3);
+			a.AddRequirement(eRequirementType.Class,36,null);
 			a.AddAction(eActionType.Talk,"You made it back alive! I mean, uh, welcome back! How was the statue? Did you get scared? Does this mean you're going to stay and play the game with us again? If you are, you can have these. I don't need them anymore.",Charles);
 			a.AddAction(eActionType.GiveItem,daringpaddedboots,Charles);
 			a.AddAction(eActionType.GiveItem,daringpaddedcap,Charles);
@@ -1714,10 +1711,10 @@ namespace DOL.GS.Quests.Midgard {
 			a.AddAction(eActionType.GiveItem,daringpaddedpants,Charles);
 			a.AddAction(eActionType.GiveItem,daringpaddedvest,Charles);
 			a.AddAction(eActionType.GiveItem,daringpaddedsleeves,Charles);
-			a.AddAction(eActionType.GiveXP,2);
-			a.AddAction(eActionType.GiveGold,67);
-			a.AddAction(eActionType.FinishQuest,"DOL.GS.Quests.Midgard.childsplay");
-			AddQuestPart(a);
+			a.AddAction(eActionType.GiveXP,2,null);
+			a.AddAction(eActionType.GiveGold,67,null);
+			a.AddAction(eActionType.FinishQuest,typeof(DOL.GS.Quests.Midgard.childsplay),null);
+			AddBehaviour(a);
 			
 			#endregion
 
@@ -1749,7 +1746,7 @@ namespace DOL.GS.Quests.Midgard {
 			 */
 			if (Charles == null)
 				return;
-			/* Now we remove to SirQuait the possibility to give this quest to players */			
+			/* Now we remove the possibility to give this quest to players */			
 			Charles.RemoveQuestToGive(typeof (childsplay));
 		}
 
