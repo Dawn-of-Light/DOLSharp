@@ -42,6 +42,7 @@ using log4net;
 using log4net.Config;
 using log4net.Core;
 using DOL.GS.Quests;
+using DOL.GS.Behaviour;
 
 namespace DOL
 {
@@ -703,10 +704,15 @@ namespace DOL
 				if (!InitComponent(PlayerTitleMgr.Init(), "Player Titles Manager"))
 					return false;
 
+                //---------------------------------------------------------------
+                //Load behaviour manager
+                if (!InitComponent(BehaviourMgr.Init(), "Behaviour Manager"))
+                    return false;
+
                 //Load the quest managers if enabled
                 if (ServerProperties.Properties.LOAD_QUESTS)
                 {
-                    if (!InitComponent(QuestMgr.Init(), "Quest Managers"))
+                    if (!InitComponent(QuestMgr.Init(), "Quest Manager"))
                         return false;
                 }
 				//---------------------------------------------------------------
