@@ -32926,6 +32926,11 @@
             Allow Maulers
             </summary>
         </member>
+        <member name="F:DOL.GS.ServerProperties.Properties.LOG_ALL_GM_COMMANDS">
+            <summary>
+            Log All GM commands
+            </summary>
+        </member>
         <member name="M:DOL.GS.ServerProperties.Properties.Load(DOL.GS.ServerProperties.ServerPropertyAttribute)">
             <summary>
             This method loads the property from the database and returns
