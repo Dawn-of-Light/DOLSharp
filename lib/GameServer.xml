@@ -7524,6 +7524,16 @@
             Holds the arguments for the ReceiveItem event of GameLivings
             </summary>
         </member>
+        <member name="T:DOL.Events.SourceEventArgs">
+            <summary>
+            Zusammenfassung für SourceEventArgs.
+            </summary>
+        </member>
+        <member name="P:DOL.Events.SourceEventArgs.Source">
+            <summary>
+            Gets the GameLiving source who was saying something
+            </summary>
+        </member>
         <member name="M:DOL.Events.ReceiveItemEventArgs.#ctor(DOL.GS.GameLiving,DOL.GS.GameLiving,DOL.Database.InventoryItem)">
             <summary>
             Constructs new ReceiveItemEventArgs
@@ -7531,11 +7541,6 @@
             <param name="source">the source of the item</param>
             <param name="target">the target of the item</param>
             <param name="item">the item to transfer</param>
-        </member>
-        <member name="P:DOL.Events.ReceiveItemEventArgs.Source">
-            <summary>
-            Gets the GameLiving who gives the item
-            </summary>
         </member>
         <member name="P:DOL.Events.ReceiveItemEventArgs.Target">
             <summary>
@@ -19513,16 +19518,6 @@
         <member name="T:DOL.Events.TimerEventArgs">
             <summary>
             Holds the arguments for the Timer event of GameObjects
-            </summary>
-        </member>
-        <member name="T:DOL.Events.SourceEventArgs">
-            <summary>
-            Zusammenfassung für SourceEventArgs.
-            </summary>
-        </member>
-        <member name="P:DOL.Events.SourceEventArgs.Source">
-            <summary>
-            Gets the GameLiving source who was saying something
             </summary>
         </member>
         <member name="M:DOL.Events.TimerEventArgs.#ctor(DOL.GS.GameLiving,System.String)">
