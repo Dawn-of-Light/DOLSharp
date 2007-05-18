@@ -350,14 +350,8 @@ namespace DOL.GS.PacketHandler
 					}
 					
 					Buffer.BlockCopy(buf, 0, m_tcpSendBuffer, 0, buf.Length);
-					
-					int start = Environment.TickCount;
-					
-					m_client.Socket.BeginSend(m_tcpSendBuffer, 0, buf.Length, SocketFlags.None, m_asyncTcpCallback, m_client);
-					
-					int took = Environment.TickCount - start;
-					if (took > 100 && log.IsWarnEnabled)
-						log.WarnFormat("SendTCP.BeginSend took {0}ms! (TCP to client: {1})", took, m_client);
+
+					ThreadPool.QueueUserWorkItem(SendTCPInternal, buf.Length);
 				}
 				catch (Exception e)
 				{
@@ -368,6 +362,22 @@ namespace DOL.GS.PacketHandler
 					GameServer.Instance.Disconnect(m_client);
 				}
 			}
+		}
+
+		/// <summary>
+		/// Sends the TCP on threadpool thread.
+		/// </summary>
+		/// <param name="state">The state.</param>
+		private void SendTCPInternal(object state)
+		{
+			int len = (int) state;
+			int start = Environment.TickCount;
+
+			m_client.Socket.BeginSend(m_tcpSendBuffer, 0, len, SocketFlags.None, m_asyncTcpCallback, m_client);
+
+			int took = Environment.TickCount - start;
+			if (took > 100 && log.IsWarnEnabled)
+				log.WarnFormat("SendTCP.BeginSend took {0}ms! (TCP to client: {1})", took, m_client);
 		}
 
 		/// <summary>
@@ -419,7 +429,7 @@ namespace DOL.GS.PacketHandler
 				}
 				
 				int start = Environment.TickCount;
-					
+
 				client.Socket.BeginSend(data, 0, count, SocketFlags.None, m_asyncTcpCallback, client);
 					
 				int took = Environment.TickCount - start;
@@ -516,22 +526,25 @@ namespace DOL.GS.PacketHandler
 		/// Send the packet via UDP
 		/// </summary>
 		/// <param name="packet">Packet to be sent</param>
-		public virtual void SendUDP(GSUDPPacketOut packet)
+		/// <param name="isForced">Force UDP packet if <code>true</code>, else packet can be sent over TCP</param>
+		public virtual void SendUDP(GSUDPPacketOut packet, bool isForced)
 		{
 			//Fix the packet size
 			packet.WritePacketLength();
 			SaveSentPacket(packet);
-			SendUDP(packet.GetBuffer());
+			SendUDP(packet.GetBuffer(), isForced);
 		}
 
 		/// <summary>
 		/// Send the packet via UDP
 		/// </summary>
 		/// <param name="buf">Packet to be sent</param>
-		public void SendUDP(byte[] buf)
+		/// <param name="isForced">Force UDP packet if <code>true</code>, else packet can be sent over TCP</param>
+		public void SendUDP(byte[] buf, bool isForced)
 		{
 			//No udp available, send via TCP instead!
-			if (m_client.UDPEndPoint == null)
+			bool flagLostUDP = false;
+			if (m_client.UDPEndPoint == null || !(isForced && m_client.UDPConfirm))
 			{
 				//DOLConsole.WriteWarning("Trying to send UDP when UDP isn't initialized!");
 				byte[] newbuf = new byte[buf.Length - 2];
@@ -541,11 +554,18 @@ namespace DOL.GS.PacketHandler
 				SendTCP(newbuf);
 				return;
 			}
-			
+			else if(m_client.ClientState == GameClient.eClientState.Playing)
+			{
+				if ((DateTime.Now.Ticks - m_client.UDPPingTime) > 500000000L) // really 24s, not 50s
+				{
+					flagLostUDP = true;
+					m_client.UDPConfirm = false;
+				}
+			}
 			if (m_udpSendBuffer == null)
 				return;
-			
-			//increase our UDP counter when it reaches 0xFFFF 
+
+			//increase our UDP counter when it reaches 0xFFFF
 			//and increases, it will automaticallys switch back to 0x00
 			m_udpCounter++;
 
@@ -569,12 +589,25 @@ namespace DOL.GS.PacketHandler
 					m_sendingUdp = true;
 				}
 			}
-			
+
 			Buffer.BlockCopy(buf, 0, m_udpSendBuffer, 0, buf.Length);
 
+			ThreadPool.QueueUserWorkItem(SendUDPInternal, buf.Length);
+
+			if (flagLostUDP)
+				m_client.Out.SendMessage("UDP lost", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+		}
+
+		/// <summary>
+		/// Sends the UDP on threadpool thread.
+		/// </summary>
+		/// <param name="state">The state.</param>
+		private void SendUDPInternal(object state)
+		{
+			int len = (int) state;
 			try
 			{
-				GameServer.Instance.SendUDP(m_udpSendBuffer, buf.Length, m_client.UDPEndPoint, m_asyncUdpCallback);
+				GameServer.Instance.SendUDP(m_udpSendBuffer, len, m_client.UDPEndPoint, m_asyncUdpCallback);
 			}
 			catch (Exception e)
 			{
@@ -651,7 +684,7 @@ namespace DOL.GS.PacketHandler
 		/// <param name="packet">Packet to be sent</param>
 		public void SendUDPRaw(GSUDPPacketOut packet)
 		{
-			SendUDP((byte[]) packet.GetBuffer().Clone());
+			SendUDP((byte[]) packet.GetBuffer().Clone(), false);
 		}
 		
 		#endregion

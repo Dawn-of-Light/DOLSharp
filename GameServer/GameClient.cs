@@ -83,6 +83,18 @@ namespace DOL
 			/// </summary>
 			protected int m_sessionID = 0;
 			/// <summary>
+			/// Holds the time of the last UDP ping
+			/// </summary>
+			protected string m_localIP = "";
+			/// <summary>
+			/// Holds the time of the last UDP ping
+			/// </summary>
+			protected long m_udpPingTime = DateTime.Now.Ticks;
+			/// <summary>
+			/// This variable holds the UDP endpoint of this client
+			/// </summary>
+			protected volatile bool	m_udpConfirm;
+			/// <summary>
 			/// Constructor for a game client
 			/// </summary>
 			/// <param name="srvr">The server that's communicating with this client</param>
@@ -437,6 +449,33 @@ namespace DOL
 			{
 				get { return m_pingTime; }
 				set { m_pingTime = value; }
+			}
+
+			/// <summary>
+			/// UDP address for this client
+			/// </summary>
+			public string LocalIP
+			{
+				get { return m_localIP; }
+				set { m_localIP = value; }
+			}
+
+			/// <summary>
+			/// Gets/Sets the time of last UDP ping packet
+			/// </summary>
+			public long UDPPingTime
+			{
+				get { return m_udpPingTime; }
+				set { m_udpPingTime = value; }
+			}
+
+			/// <summary>
+			/// UDP confirm flag from this client
+			/// </summary>
+			public bool UDPConfirm
+			{
+				get { return m_udpConfirm; }
+				set { m_udpConfirm = value; }
 			}
 
 			/// <summary>
