@@ -423,6 +423,7 @@ namespace DOL
 									if (client.UDPEndPoint == null)
 									{
 										client.UDPEndPoint = sender;
+										client.UDPConfirm = false;
 									}
 									//Only handle the packet if it comes from a valid client
 									if (client.UDPEndPoint.Equals(sender))
@@ -1103,6 +1104,7 @@ namespace DOL
 			{
 				GameClient client = new GameClient(this);
 				GameEventMgr.Notify(GameClientEvent.Created, client);
+				client.UDPConfirm = false;
 				return client;
 			}
 
