@@ -6880,6 +6880,13 @@
             </summary>
             <param name="packet">Packet to be sent</param>
         </member>
+        <member name="M:DOL.GS.PacketHandler.AbstractPacketLib.SendUDP(DOL.GS.PacketHandler.GSUDPPacketOut,System.Boolean)">
+            <summary>
+            Send the packet via UDP
+            </summary>
+            <param name="packet">Packet to be sent</param>
+            <param name="isForced">Force UDP packet if <code>true</code>, else packet can be sent over TCP</param>
+        </member>
         <member name="M:DOL.GS.PacketHandler.AbstractPacketLib.SendUDP(System.Byte[])">
             <summary>
             Send the packet via UDP
@@ -14842,6 +14849,11 @@
             <param name="player">GamePlayer this call is related to, can be null</param>
             <returns>true if all Requirements fordefaultNPC where fullfilled, else false</returns>
         </member>
+        <member name="F:DOL.GS.PacketHandler.v168.UDPInitRequestHandler.log">
+            <summary>
+            Defines a logger for this class.
+            </summary>
+        </member>
         <member name="T:DOL.GS.PacketHandler.Client.v168.RemoveConcentrationEffectHandler">
             <summary>
             Called when player removes concentration spell in conc window
@@ -18042,6 +18054,21 @@
             This variable holds the sessionid
             </summary>
         </member>
+        <member name="F:DOL.GS.GameClient.m_localIP">
+            <summary>
+            Holds the time of the last UDP ping
+            </summary>
+        </member>
+        <member name="F:DOL.GS.GameClient.m_udpPingTime">
+            <summary>
+            Holds the time of the last UDP ping
+            </summary>
+        </member>
+        <member name="F:DOL.GS.GameClient.m_udpConfirm">
+            <summary>
+            This variable holds the UDP endpoint of this client
+            </summary>
+        </member>
         <member name="M:DOL.GS.GameClient.#ctor(DOL.BaseServer)">
             <summary>
             Constructor for a game client
@@ -18150,6 +18177,21 @@
         <member name="P:DOL.GS.GameClient.PingTime">
             <summary>
             Gets/Sets the time of last ping packet
+            </summary>
+        </member>
+        <member name="P:DOL.GS.GameClient.LocalIP">
+            <summary>
+            UDP address for this client
+            </summary>
+        </member>
+        <member name="P:DOL.GS.GameClient.UDPPingTime">
+            <summary>
+            Gets/Sets the time of last UDP ping packet
+            </summary>
+        </member>
+        <member name="P:DOL.GS.GameClient.UDPConfirm">
+            <summary>
+            UDP confirm flag from this client
             </summary>
         </member>
         <member name="P:DOL.GS.GameClient.Out">
@@ -27475,6 +27517,12 @@
             </summary>
             <param name="buf">Buffer containing the data to be sent</param>
         </member>
+        <member name="M:DOL.GS.PacketHandler.PacketProcessor.SendTCPInternal(System.Object)">
+            <summary>
+            Sends the TCP on threadpool thread.
+            </summary>
+            <param name="state">The state.</param>
+        </member>
         <member name="F:DOL.GS.PacketHandler.PacketProcessor.m_asyncTcpCallback">
             <summary>
             Holds the TCP AsyncCallback delegate
@@ -27527,17 +27575,25 @@
             Indicates whether UDP data is currently being sent
             </summary>
         </member>
-        <member name="M:DOL.GS.PacketHandler.PacketProcessor.SendUDP(DOL.GS.PacketHandler.GSUDPPacketOut)">
+        <member name="M:DOL.GS.PacketHandler.PacketProcessor.SendUDP(DOL.GS.PacketHandler.GSUDPPacketOut,System.Boolean)">
             <summary>
             Send the packet via UDP
             </summary>
             <param name="packet">Packet to be sent</param>
+            <param name="isForced">Force UDP packet if <code>true</code>, else packet can be sent over TCP</param>
         </member>
-        <member name="M:DOL.GS.PacketHandler.PacketProcessor.SendUDP(System.Byte[])">
+        <member name="M:DOL.GS.PacketHandler.PacketProcessor.SendUDP(System.Byte[],System.Boolean)">
             <summary>
             Send the packet via UDP
             </summary>
             <param name="buf">Packet to be sent</param>
+            <param name="isForced">Force UDP packet if <code>true</code>, else packet can be sent over TCP</param>
+        </member>
+        <member name="M:DOL.GS.PacketHandler.PacketProcessor.SendUDPInternal(System.Object)">
+            <summary>
+            Sends the UDP on threadpool thread.
+            </summary>
+            <param name="state">The state.</param>
         </member>
         <member name="M:DOL.GS.PacketHandler.PacketProcessor.AsyncUdpSendCallback(System.IAsyncResult)">
             <summary>
