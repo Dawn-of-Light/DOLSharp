@@ -34,6 +34,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
+			client.UDPConfirm = false;
 			new WorldInitAction(client.Player).Start(1);
 			return 1;
 		}
@@ -88,7 +89,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					}
 				}
 
-				player.Client.ClientState=GameClient.eClientState.WorldEnter;
+				player.Client.ClientState = GameClient.eClientState.WorldEnter;
 				// 0x88 - Position
 				// 0x6D - FriendList
 				// 0x15 - Encumberance update
