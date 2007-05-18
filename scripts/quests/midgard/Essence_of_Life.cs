@@ -33,9 +33,11 @@ using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
 using DOL.GS.Quests;
+using DOL.GS.Behaviour;
+using DOL.GS.Behaviour.Attributes;
 using DOL.AI.Brain;
 
-namespace DOL.GS.Quests.Midgard {
+	namespace DOL.GS.Quests.Midgard {
 	
      /* The first thing we do, is to declare the class we create
 	 * as Quest. To do this, we derive from the abstract class
@@ -101,8 +103,6 @@ namespace DOL.GS.Quests.Midgard {
 	public static void ScriptLoaded(DOLEvent e, object sender, EventArgs args)
 	{
 	if (!ServerProperties.Properties.LOAD_QUESTS)
-		return;
-	if (WorldMgr.GetRegion(243).IsDisabled)
 		return;
 	if (log.IsInfoEnabled)
 		log.Info("Quest \"" + questTitle + "\" initializing ...");
@@ -361,51 +361,51 @@ namespace DOL.GS.Quests.Midgard {
 		#region defineQuestParts
 
 		QuestBuilder builder = QuestMgr.getBuilder(typeof(essenceoflife));
-			BaseQuestPart a;
-			a = builder.CreateQuestPart(Ballach,-1);
+			QuestBehaviour a;
+			a = builder.CreateBehaviour(Ballach,-1);
 				a.AddTrigger(eTriggerType.Interact,null,Ballach);
-			a.AddRequirement(eRequirementType.QuestGivable,"DOL.GS.Quests.Midgard.essenceoflife",Ballach);
+			a.AddRequirement(eRequirementType.QuestGivable,typeof(DOL.GS.Quests.Midgard.essenceoflife),Ballach);
 			a.AddAction(eActionType.Talk,"Greetings Guardian. I have some [business] that needs tended to. There is some coin involved in it for you.",Ballach);
-			AddQuestPart(a);
-			a = builder.CreateQuestPart(Ballach,-1);
+			AddBehaviour(a);
+			a = builder.CreateBehaviour(Ballach,-1);
 				a.AddTrigger(eTriggerType.Whisper,"business",Ballach);
-			a.AddRequirement(eRequirementType.QuestGivable,"DOL.GS.Quests.Midgard.essenceoflife",Ballach);
+			a.AddRequirement(eRequirementType.QuestGivable,typeof(DOL.GS.Quests.Midgard.essenceoflife),Ballach);
 			a.AddAction(eActionType.Talk,"I am running low on Essence of Life. Do you think you could retrieve some for me?",Ballach);
-			a.AddAction(eActionType.OfferQuest,"DOL.GS.Quests.Midgard.essenceoflife","Will you aid Ballach and retrieve some Essence of Life? [Levels 1-4]");
-			AddQuestPart(a);
-			a = builder.CreateQuestPart(Ballach,-1);
-				a.AddTrigger(eTriggerType.DeclineQuest,null,"DOL.GS.Quests.Midgard.essenceoflife");
+			a.AddAction(eActionType.OfferQuest,typeof(DOL.GS.Quests.Midgard.essenceoflife),"Will you aid Ballach and retrieve some Essence of Life? [Levels 1-4]");
+			AddBehaviour(a);
+			a = builder.CreateBehaviour(Ballach,-1);
+				a.AddTrigger(eTriggerType.DeclineQuest,null,typeof(DOL.GS.Quests.Midgard.essenceoflife));
 			a.AddAction(eActionType.Talk,"No problem. See you.",Ballach);
-			AddQuestPart(a);
-			a = builder.CreateQuestPart(Ballach,-1);
-				a.AddTrigger(eTriggerType.AcceptQuest,null,"DOL.GS.Quests.Midgard.essenceoflife");
-			a.AddAction(eActionType.GiveQuest,"DOL.GS.Quests.Midgard.essenceoflife",Ballach);
+			AddBehaviour(a);
+			a = builder.CreateBehaviour(Ballach,-1);
+				a.AddTrigger(eTriggerType.AcceptQuest,null,typeof(DOL.GS.Quests.Midgard.essenceoflife));
+			a.AddAction(eActionType.GiveQuest,typeof(DOL.GS.Quests.Midgard.essenceoflife),Ballach);
 			a.AddAction(eActionType.Talk,"Thank you very much for offering to help. Here, take this enchanted flask. You will need to find a grave in the Burial Grounds. When you find one, use the flask and capture the essence of life that rests in the buried persons remains.",Ballach);
 			a.AddAction(eActionType.GiveItem,enchantedflask,Ballach);
-			AddQuestPart(a);
-			a = builder.CreateQuestPart(AmbientRatStatua,-1);
+			AddBehaviour(a);
+			a = builder.CreateBehaviour(AmbientRatStatua,-1);
 				a.AddTrigger(eTriggerType.ItemUsed,null,enchantedflask);
 			a.AddRequirement(eRequirementType.Distance,AmbientRatStatua,1000,(eComparator)1);
 			a.AddAction(eActionType.Timer,"flask",4000);
 			a.AddAction(eActionType.Message,"You fill the flask",(eTextType)1);
-			AddQuestPart(a);
-			a = builder.CreateQuestPart(Ballach,-1);
-				a.AddTrigger(eTriggerType.Timer,"flask");
+			AddBehaviour(a);
+			a = builder.CreateBehaviour(Ballach,-1);
+				a.AddTrigger(eTriggerType.Timer,"flask",null);
 			a.AddAction(eActionType.ReplaceItem,enchantedflask,Flaskofetherealessence);
-			a.AddAction(eActionType.IncQuestStep,"DOL.GS.Quests.Midgard.essenceoflife");
-			AddQuestPart(a);
-			a = builder.CreateQuestPart(Ballach,-1);
+			a.AddAction(eActionType.IncQuestStep,typeof(DOL.GS.Quests.Midgard.essenceoflife),null);
+			AddBehaviour(a);
+			a = builder.CreateBehaviour(Ballach,-1);
 				a.AddTrigger(eTriggerType.Interact,null,Ballach);
-			a.AddRequirement(eRequirementType.QuestStep,"DOL.GS.Quests.Midgard.essenceoflife",2,(eComparator)3);
+			a.AddRequirement(eRequirementType.QuestStep,typeof(DOL.GS.Quests.Midgard.essenceoflife),2,(eComparator)3);
 			a.AddAction(eActionType.Talk,"Did you collect the essence for me? If so, hand me the flask.",Ballach);
-			AddQuestPart(a);
-			a = builder.CreateQuestPart(Ballach,-1);
+			AddBehaviour(a);
+			a = builder.CreateBehaviour(Ballach,-1);
 				a.AddTrigger(eTriggerType.GiveItem,Ballach,Flaskofetherealessence);
 			a.AddAction(eActionType.Talk,"Thank you for taking on this task for me. You have replenished my supply. Here, take this small monetary reward.",Ballach);
-			a.AddAction(eActionType.GiveXP,60);
-			a.AddAction(eActionType.GiveGold,18);
-			a.AddAction(eActionType.FinishQuest,"DOL.GS.Quests.Midgard.essenceoflife");
-			AddQuestPart(a);
+			a.AddAction(eActionType.GiveXP,60,null);
+			a.AddAction(eActionType.GiveGold,18,null);
+			a.AddAction(eActionType.FinishQuest,typeof(DOL.GS.Quests.Midgard.essenceoflife),null);
+			AddBehaviour(a);
 			
 			#endregion
 
@@ -433,7 +433,7 @@ namespace DOL.GS.Quests.Midgard {
 			 */
 			if (Ballach == null)
 				return;
-			/* Now we remove to SirQuait the possibility to give this quest to players */			
+			/* Now we remove the possibility to give this quest to players */			
 			Ballach.RemoveQuestToGive(typeof (essenceoflife));
 		}
 
