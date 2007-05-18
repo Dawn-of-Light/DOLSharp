@@ -87,7 +87,17 @@ namespace DOL.GS.PacketHandler
 		/// <param name="packet">Packet to be sent</param>
 		public virtual void SendUDP(GSUDPPacketOut packet)
 		{
-			m_gameClient.PacketProcessor.SendUDP(packet);
+			SendUDP(packet, false);
+		}
+
+		/// <summary>
+		/// Send the packet via UDP
+		/// </summary>
+		/// <param name="packet">Packet to be sent</param>
+		/// <param name="isForced">Force UDP packet if <code>true</code>, else packet can be sent over TCP</param>
+		public virtual void SendUDP(GSUDPPacketOut packet, bool isForced)
+		{
+			m_gameClient.PacketProcessor.SendUDP(packet, isForced);
 		}
 
 		/// <summary>
@@ -96,7 +106,7 @@ namespace DOL.GS.PacketHandler
 		/// <param name="buf">Packet to be sent</param>
 		public void SendUDP(byte[] buf)
 		{
-			m_gameClient.PacketProcessor.SendUDP(buf);
+			m_gameClient.PacketProcessor.SendUDP(buf, false);
 		}
 
 		/// <summary>

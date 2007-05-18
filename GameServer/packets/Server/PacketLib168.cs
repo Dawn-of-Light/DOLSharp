@@ -537,7 +537,7 @@ namespace DOL.GS.PacketHandler
 				pak.FillString(ip, 22);
 				pak.WriteShort(playerRegion.ServerPort);
 			}
-			SendUDP(pak);
+			SendUDP(pak, true);
 		}
 
 		public virtual void SendTime()
