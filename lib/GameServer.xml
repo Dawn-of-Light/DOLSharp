@@ -14849,7 +14849,7 @@
             <param name="player">GamePlayer this call is related to, can be null</param>
             <returns>true if all Requirements fordefaultNPC where fullfilled, else false</returns>
         </member>
-        <member name="F:DOL.GS.PacketHandler.v168.UDPInitRequestHandler.log">
+        <member name="F:DOL.GS.PacketHandler.Client.v168.UDPInitRequestHandler.log">
             <summary>
             Defines a logger for this class.
             </summary>
