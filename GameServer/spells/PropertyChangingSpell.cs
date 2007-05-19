@@ -49,10 +49,9 @@ namespace DOL.GS.Spells
 			if (vampiir != null && HasPositiveEffect && vampiir.CharacterClass.ID == (int)eCharacterClass.Vampiir && m_caster != vampiir)
 			{
 				//restrictions
-				if (!(this is EnduranceRegenSpellHandler 
-					|| this is AbstractResistBuff
-					|| this is CombatSpeedBuff
-					|| this is PropertyChangingSpell))
+				if (this is PropertyChangingSpell
+					&& this is ArmorFactorBuff == false
+					&& this is CombatSpeedBuff == false)
 				{
 					GamePlayer caster = m_caster as GamePlayer;
 					if (caster != null)
@@ -148,7 +147,8 @@ namespace DOL.GS.Spells
 				m_buffCheckAction.Stop();
 				m_buffCheckAction = null;
 			}
-			return 0;
+
+			return base.OnEffectExpires(effect, noMessages);
 		}
 
 		protected virtual void SendUpdates(GameLiving target)

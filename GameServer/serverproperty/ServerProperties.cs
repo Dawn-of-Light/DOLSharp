@@ -350,6 +350,12 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("allow_maulers", "Allow maulers to be created on the server", false)]
 		public static readonly bool ALLOW_MAULERS;
+
+		/// <summary>
+		/// Log All GM commands
+		/// </summary>
+		[ServerProperty("log_all_gm_commands", "Log all GM commands on the server", false)]
+		public static readonly bool LOG_ALL_GM_COMMANDS;
 		
 		/// <summary>
 		/// This method loads the property from the database and returns

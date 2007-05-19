@@ -688,9 +688,11 @@
     </Compile>
     <Compile Include="quests\midgard\Learn_The_Hunt.cs" />
     <Compile Include="quests\midgard\Mauler_Invasion.cs" />
+    <Compile Include="quests\midgard\Mead_Run.cs" />
     <Compile Include="quests\midgard\Nuisances.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="quests\midgard\Rindas_Lost_Key.cs" />
     <Compile Include="quests\midgard\StolenEggs.cs">
       <SubType>Code</SubType>
     </Compile>

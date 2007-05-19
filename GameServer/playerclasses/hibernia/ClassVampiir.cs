@@ -41,11 +41,11 @@ namespace DOL.GS.Scripts
 
 		public override string GetTitle(int level)
 		{
-			if (level >= 50) return "TODO";
-			if (level >= 45) return "TODO";
+			if (level >= 50) return "Vampiir Warrior";
+			if (level >= 45) return "Vampiir Guardian";
 			if (level >= 40) return "Vampiir Hunter";
 			if (level >= 35) return "Vampiir Stalker";
-			if (level >= 30) return "TODO";
+			if (level >= 30) return "Vampiir Prowler";
 			if (level >= 25) return "Vampiir Seeker";
 			if (level >= 20) return "Vampiir Protector";
 			if (level >= 15) return "Vampiir Adept";
