@@ -4852,7 +4852,10 @@ namespace DOL.GS
 				case eAttackResult.HitUnstyled:
 					{
 						// vampiir
-						if (CharacterClass is ClassVampiir)
+						if (CharacterClass is ClassVampiir
+							&& target is GameKeepComponent == false 
+							&& target is GameKeepDoor == false
+							&& target is GameSiegeWeapon == false)
 						{
 							this.Mana += (7 * this.MaxMana) / 100;
 							if (this.Mana > this.MaxMana)

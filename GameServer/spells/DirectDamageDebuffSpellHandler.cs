@@ -113,6 +113,13 @@ namespace DOL.GS.Spells
 			}
 		}
 
+		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
+		{
+			base.ApplyEffectOnTarget(target, effectiveness);
+			if ((Spell.Duration > 0 && Spell.Target != "Area") || Spell.Concentration > 0)
+				OnDirectEffect(target, effectiveness);
+		}
+
 		private void DealDamage(GameLiving target, double effectiveness)
 		{
 			if (!target.IsAlive || target.ObjectState != GameLiving.eObjectState.Active) return;
@@ -127,9 +134,9 @@ namespace DOL.GS.Spells
 			SendDamageMessages(ad);
 			DamageTarget(ad, true);
 			target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, ad.AttackType, Caster);
-
+			/*
 			if (target.IsAlive)
-				base.ApplyEffectOnTarget(target, effectiveness);
+				base.ApplyEffectOnTarget(target, effectiveness);*/
 		}
 		/*
 		 * We need to send resist spell los check packets because spell resist is calculated first, and
