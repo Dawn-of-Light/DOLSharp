@@ -314,11 +314,12 @@ namespace DOL.GS.PacketHandler
 
 			pak.WriteByte(0);
 
+			//Why don't we and mythic use this class bonus byte?
 			//pak.Fill(0, 9);
-			if (m_gameClient.Player.CharacterClass.ID == (int)eCharacterClass.Vampiir)
-				pak.WriteByte((byte)(m_gameClient.Player.Level - 5)); // Vampire bonuses
-			else
-				pak.WriteByte(0x00); // FF if resists packet
+			//if (m_gameClient.Player.CharacterClass.ID == (int)eCharacterClass.Vampiir)
+			//	pak.WriteByte((byte)(m_gameClient.Player.Level - 5)); // Vampire bonuses
+			//else
+			pak.WriteByte(0x00); // FF if resists packet
 			pak.WriteByte((byte) m_gameClient.Player.TotalConstitutionLostAtDeath);
 			pak.WriteShort((ushort) m_gameClient.Player.MaxHealth);
 			pak.WriteShort(0);
