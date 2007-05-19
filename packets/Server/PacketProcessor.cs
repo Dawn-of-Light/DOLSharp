@@ -264,6 +264,9 @@ namespace DOL.GS.PacketHandler
 		/// </summary>
 		public virtual void OnDisconnect()
 		{
+			// Flush packets queue
+			SendTCPInternal(m_client);
+
 			byte[] tcp = m_tcpSendBuffer;
 			byte[] udp = m_udpSendBuffer;
 			m_tcpSendBuffer = m_udpSendBuffer = null;
@@ -330,17 +333,15 @@ namespace DOL.GS.PacketHandler
 					}
 				}
 
-				buf = m_encoding.EncryptPacket(buf, false);
-
 				try
 				{
 					Statistics.BytesOut += buf.Length;
 					Statistics.PacketsOut++;
 					lock (m_tcpQueue.SyncRoot)
 					{
+						m_tcpQueue.Enqueue(buf);
 						if (m_sendingTcp)
 						{
-							m_tcpQueue.Enqueue(buf);
 							return;
 						}
 						else
@@ -348,10 +349,8 @@ namespace DOL.GS.PacketHandler
 							m_sendingTcp = true;
 						}
 					}
-					
-					Buffer.BlockCopy(buf, 0, m_tcpSendBuffer, 0, buf.Length);
 
-					ThreadPool.QueueUserWorkItem(SendTCPInternal, buf.Length);
+					ThreadPool.QueueUserWorkItem(SendTCPInternal, m_client);
 				}
 				catch (Exception e)
 				{
@@ -370,14 +369,55 @@ namespace DOL.GS.PacketHandler
 		/// <param name="state">The state.</param>
 		private void SendTCPInternal(object state)
 		{
-			int len = (int) state;
-			int start = Environment.TickCount;
+			GameClient client = (GameClient)state;
+			try
+			{
+				PacketProcessor pakProc = client.PacketProcessor;
+				Queue q = pakProc.m_tcpQueue;
 
-			m_client.Socket.BeginSend(m_tcpSendBuffer, 0, len, SocketFlags.None, m_asyncTcpCallback, m_client);
+				int count = 0;
+				byte[] data = pakProc.m_tcpSendBuffer;
 
-			int took = Environment.TickCount - start;
-			if (took > 100 && log.IsWarnEnabled)
-				log.WarnFormat("SendTCP.BeginSend took {0}ms! (TCP to client: {1})", took, m_client);
+				if (data == null)
+					return;
+
+				lock (q.SyncRoot)
+				{
+					if (q.Count > 0)
+					{
+//						log.WarnFormat("sending queued packets count: {0}", q.Count);
+						count = CombinePackets(data, q, data.Length, client, false);
+					}
+					if (count <= 0)
+					{
+						pakProc.m_sendingTcp = false;
+						return;
+					}
+				}
+
+				int start = Environment.TickCount;
+
+				client.Socket.BeginSend(data, 0, count, SocketFlags.None, m_asyncTcpCallback, client);
+
+				int took = Environment.TickCount - start;
+				if (took > 100 && log.IsWarnEnabled)
+					log.WarnFormat("AsyncTcpSendCallback.BeginSend took {0}ms! (TCP to client: {1})", took, client.ToString());
+			}
+			catch (ObjectDisposedException)
+			{
+				GameServer.Instance.Disconnect(client);
+			}
+			catch (SocketException)
+			{
+				GameServer.Instance.Disconnect(client);
+			}
+			catch (Exception e)
+			{
+				// assure that no exception is thrown into the upper layers and interrupt game loops!
+				if (log.IsErrorEnabled)
+					log.Error("AsyncSendCallback. client: " + client.ToString(), e);
+				GameServer.Instance.Disconnect(client);
+			}
 		}
 
 		/// <summary>
@@ -402,39 +442,8 @@ namespace DOL.GS.PacketHandler
 
 			try
 			{
-				PacketProcessor pakProc = client.PacketProcessor;
-				Queue q = pakProc.m_tcpQueue;
-
 				int sent = client.Socket.EndSend(ar);
-				
-				int count = 0;
-				byte[] data = pakProc.m_tcpSendBuffer;
-				
-				if (data == null)
-					return;
-
-				lock (q.SyncRoot)
-				{
-					if (q.Count > 0)
-					{
-//						log.WarnFormat("async sent {0} bytes, sending queued packets count: {1}", sent, q.Count);
-						count = CombinePackets(data, q, data.Length, client);
-					}
-					if (count <= 0)
-					{
-//						log.WarnFormat("async sent {0} bytes", sent);
-						pakProc.m_sendingTcp = false;
-						return;
-					}
-				}
-				
-				int start = Environment.TickCount;
-
-				client.Socket.BeginSend(data, 0, count, SocketFlags.None, m_asyncTcpCallback, client);
-					
-				int took = Environment.TickCount - start;
-				if (took > 100 && log.IsWarnEnabled)
-					log.WarnFormat("AsyncTcpSendCallback.BeginSend took {0}ms! (TCP to client: {1})", took, client.ToString());
+				client.PacketProcessor.SendTCPInternal(client);
 			}
 			catch (ObjectDisposedException)
 			{
@@ -460,13 +469,16 @@ namespace DOL.GS.PacketHandler
 		/// <param name="q">The queued packets.</param>
 		/// <param name="length">The max stream len.</param>
 		/// <param name="client">The client.</param>
+		/// <param name="isUdp">UDP packets if <code>true</code>, TCP otherwise.</param>
 		/// <returns>The count of bytes writen.</returns>
-		private static int CombinePackets(byte[] buf, Queue q, int length, GameClient client)
+		private static int CombinePackets(byte[] buf, Queue q, int length, GameClient client, bool isUdp)
 		{
 			int i = 0;
 			do
 			{
 				byte[] pak = (byte[]) q.Peek();
+				pak = client.PacketProcessor.m_encoding.EncryptPacket(pak, isUdp);
+
 				if (i + pak.Length > buf.Length)
 				{
 					if (i == 0)
@@ -510,7 +522,7 @@ namespace DOL.GS.PacketHandler
 		/// <summary>
 		/// This variable holds the current UDP counter for this sender
 		/// </summary>
-		protected ushort m_udpCounter;
+		protected volatile ushort m_udpCounter;
 
 		/// <summary>
 		/// Holds the async udp send callback delegate
@@ -542,10 +554,13 @@ namespace DOL.GS.PacketHandler
 		/// <param name="isForced">Force UDP packet if <code>true</code>, else packet can be sent over TCP</param>
 		public void SendUDP(byte[] buf, bool isForced)
 		{
+//			log.FatalFormat("Send UDP: {0}", isForced);
+
 			//No udp available, send via TCP instead!
 			bool flagLostUDP = false;
-			if (m_client.UDPEndPoint == null || !(isForced && m_client.UDPConfirm))
+			if (m_client.UDPEndPoint == null || !(isForced || m_client.UDPConfirm))
 			{
+//				log.FatalFormat("UDP sent over TCP");
 				//DOLConsole.WriteWarning("Trying to send UDP when UDP isn't initialized!");
 				byte[] newbuf = new byte[buf.Length - 2];
 				newbuf[0] = buf[0];
@@ -572,16 +587,15 @@ namespace DOL.GS.PacketHandler
 			//fill the udpCounter
 			buf[2] = (byte) (m_udpCounter >> 8);
 			buf[3] = (byte) m_udpCounter;
-			buf = m_encoding.EncryptPacket(buf, true);
 
 			Statistics.BytesOut += buf.Length;
 			Statistics.PacketsOut++;
 
 			lock (m_udpQueue.SyncRoot)
 			{
+				m_udpQueue.Enqueue(buf);
 				if (m_sendingUdp)
 				{
-					m_udpQueue.Enqueue(buf);
 					return;
 				}
 				else
@@ -590,9 +604,7 @@ namespace DOL.GS.PacketHandler
 				}
 			}
 
-			Buffer.BlockCopy(buf, 0, m_udpSendBuffer, 0, buf.Length);
-
-			ThreadPool.QueueUserWorkItem(SendUDPInternal, buf.Length);
+			ThreadPool.QueueUserWorkItem(SendUDPInternal);
 
 			if (flagLostUDP)
 				m_client.Out.SendMessage("UDP lost", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
@@ -604,22 +616,39 @@ namespace DOL.GS.PacketHandler
 		/// <param name="state">The state.</param>
 		private void SendUDPInternal(object state)
 		{
-			int len = (int) state;
 			try
 			{
-				GameServer.Instance.SendUDP(m_udpSendBuffer, len, m_client.UDPEndPoint, m_asyncUdpCallback);
+				int count = 0;
+				byte[] data = m_udpSendBuffer;
+
+				if (data == null)
+					return;
+
+				lock (m_udpQueue.SyncRoot)
+				{
+					if (m_udpQueue.Count > 0)
+					{
+//						log.WarnFormat("sending queued UDP packets count: {0}", m_udpQueue.Count);
+						count = CombinePackets(data, m_udpQueue, data.Length, m_client, true);
+					}
+					if (count <= 0)
+					{
+						m_sendingUdp = false;
+						return;
+					}
+				}
+
+				int start = Environment.TickCount;
+
+				GameServer.Instance.SendUDP(data, count, m_client.UDPEndPoint, m_asyncUdpCallback);
+
+				int took = Environment.TickCount - start;
+				if (took > 100 && log.IsWarnEnabled)
+					log.WarnFormat("AsyncUdpSendCallback.BeginSend took {0}ms! (TCP to client: {1})", took, m_client.ToString());
 			}
 			catch (Exception e)
 			{
-				int count;
-				lock (m_udpQueue.SyncRoot)
-				{
-					count = m_udpQueue.Count;
-					m_udpQueue.Clear();
-					m_sendingUdp = false;
-				}
-				if (log.IsErrorEnabled)
-					log.ErrorFormat("trying to send UDP (" + count + ")", e);
+				UdpSendError(e);
 			}
 		}
 
@@ -633,49 +662,29 @@ namespace DOL.GS.PacketHandler
 			{
 				Socket s = (Socket) ar.AsyncState;
 				int sent = s.EndSendTo(ar);
-				
-				int count = 0;
-				byte[] data = m_udpSendBuffer;
-				
-				if (data == null)
-					return;
-
-				lock (m_udpQueue.SyncRoot)
-				{
-					if (m_udpQueue.Count > 0)
-					{
-//						log.WarnFormat("async UDP sent {0} bytes, sending queued packets count: {1}", sent, m_udpQueue.Count);
-						count = CombinePackets(data, m_udpQueue, data.Length, m_client);
-					}
-					if (count <= 0)
-					{
-//						log.WarnFormat("async UDP sent {0} bytes", sent);
-						m_sendingUdp = false;
-						return;
-					}
-				}
-				
-				int start = Environment.TickCount;
-				
-				GameServer.Instance.SendUDP(data, count, m_client.UDPEndPoint, m_asyncUdpCallback);
-				
-				int took = Environment.TickCount - start;
-				if (took > 100 && log.IsWarnEnabled)
-					log.WarnFormat("AsyncUdpSendCallback.BeginSend took {0}ms! (TCP to client: {1})", took, m_client.ToString());
-				
+				SendUDPInternal(null);
 			}
 			catch (Exception e)
 			{
-				int count;
-				lock (m_udpQueue.SyncRoot)
-				{
-					count = m_udpQueue.Count;
-					m_udpQueue.Clear();
-					m_sendingUdp = false;
-				}
-				if (log.IsErrorEnabled)
-					log.Error("AsyncUdpSendCallback (" + count + ")", e);
+				UdpSendError(e);
 			}
+		}
+
+		/// <summary>
+		/// Clears UDP queue and sending flag.
+		/// </summary>
+		/// <param name="e">Exception.</param>
+		private void UdpSendError(Exception e)
+		{
+			int count;
+			lock (m_udpQueue.SyncRoot)
+			{
+				count = m_udpQueue.Count;
+				m_udpQueue.Clear();
+				m_sendingUdp = false;
+			}
+			if (log.IsErrorEnabled)
+				log.ErrorFormat("trying to send UDP (" + count + ")", e);
 		}
 
 		/// <summary>
