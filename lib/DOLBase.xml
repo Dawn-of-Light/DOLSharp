@@ -4,5 +4,1769 @@
         <name>DOLBase</name>
     </assembly>
     <members>
+        <member name="T:DOL.FTP.FTPFileTransferType">
+            <summary>
+            The FTP transfer type
+            </summary>
+        </member>
+        <member name="F:DOL.FTP.FTPFileTransferType.ASCII">
+            <summary>
+            Transfer will be in ASCII mode
+            </summary>
+        </member>
+        <member name="F:DOL.FTP.FTPFileTransferType.Binary">
+            <summary>
+            Transfer will be in BINARY mode
+            </summary>
+        </member>
+        <member name="T:DOL.ClientBase">
+            <summary>
+            Base class for connected clients
+            </summary>
+        </member>
+        <member name="F:DOL.ClientBase.log">
+            <summary>
+            Defines a logger for this class.
+            </summary>
+        </member>
+        <member name="F:DOL.ClientBase.m_sock">
+            <summary>
+            Socket that holds the client connection
+            </summary>
+        </member>
+        <member name="F:DOL.ClientBase.m_pbuf">
+            <summary>
+            Packet buffer, holds incoming packet data
+            </summary>
+        </member>
+        <member name="F:DOL.ClientBase.m_srvr">
+            <summary>
+            Pointer to the server the client is connected to
+            </summary>
+        </member>
+        <member name="F:DOL.ClientBase.m_pBufEnd">
+            <summary>
+            Current offset into the buffer
+            </summary>
+        </member>
+        <member name="M:DOL.ClientBase.OnRecv(System.Int32)">
+            <summary>
+            Called when data has been received from the connection
+            </summary>
+            <param name="num_bytes">Number of bytes received in m_pbuf</param>
+        </member>
+        <member name="M:DOL.ClientBase.OnConnect">
+            <summary>
+            Called after the client connection has been accepted
+            </summary>
+        </member>
+        <member name="M:DOL.ClientBase.OnDisconnect">
+            <summary>
+            Called right after the client has been disconnected
+            </summary>
+        </member>
+        <member name="M:DOL.ClientBase.#ctor(DOL.BaseServer)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="srvr">Pointer to the server the client is connected to</param>
+        </member>
+        <member name="F:DOL.ClientBase.m_recvCallback">
+            <summary>
+            Holds the receive callback delegate
+            </summary>
+        </member>
+        <member name="M:DOL.ClientBase.BeginRecv">
+            <summary>
+            Tells the client to begin receiving data
+            </summary>
+        </member>
+        <member name="M:DOL.ClientBase.RecvCallback(System.IAsyncResult)">
+            <summary>
+            Called when a client has received data or the connection has been closed
+            </summary>
+            <param name="ar">Results of the receive operation</param>
+        </member>
+        <member name="M:DOL.ClientBase.CloseConnections">
+            <summary>
+            Closes the client connection
+            </summary>
+        </member>
+        <member name="M:DOL.ClientBase.Disconnect">
+            <summary>
+            Closes the client connection
+            </summary>
+        </member>
+        <member name="P:DOL.ClientBase.Server">
+            <summary>
+            Gets the server that the client is connected to
+            </summary>
+        </member>
+        <member name="P:DOL.ClientBase.Socket">
+            <summary>
+            Gets or sets the socket the client is using
+            </summary>
+        </member>
+        <member name="P:DOL.ClientBase.PacketBuf">
+            <summary>
+            Gets the packet buffer for the client
+            </summary>
+        </member>
+        <member name="P:DOL.ClientBase.PacketBufSize">
+            <summary>
+            Gets or sets the offset into the receive buffer
+            </summary>
+        </member>
+        <member name="P:DOL.ClientBase.TcpEndpoint">
+            <summary>
+            Gets the client's TCP endpoint string, if connected
+            </summary>
+        </member>
+        <member name="T:DOL.Marshal">
+            <summary>
+            Provides basic functionality to convert data types
+            </summary>
+        </member>
+        <member name="M:DOL.Marshal.ConvertToString(System.Byte[])">
+            <summary>
+            Converts a byte c-style string byte-array 
+            to a c# string
+            </summary>
+            <param name="cstyle">the bytes</param>
+            <returns>the string</returns>
+        </member>
+        <member name="M:DOL.Marshal.ConvertToInt32(System.Byte[])">
+            <summary>
+            Converts 4 bytes to an integer value
+            in high to low order
+            </summary>
+            <param name="val">the bytes</param>
+            <returns>the integer value</returns>
+        </member>
+        <member name="M:DOL.Marshal.ConvertToInt32(System.Byte[],System.Int32)">
+            <summary>
+            Converts 4 bytes to an integer value
+            in high to low order
+            </summary>
+            <param name="val">the bytes</param>
+            <param name="startIndex">where to read the values from</param>
+            <returns>the integer value</returns>
+        </member>
+        <member name="M:DOL.Marshal.ConvertToInt32(System.Byte,System.Byte,System.Byte,System.Byte)">
+            <summary>
+            Converts 4 bytes to an integer value
+            in high to low order
+            </summary>
+            <param name="v1">the first bytes</param>
+            <param name="v2">the second bytes</param>
+            <param name="v3">the third bytes</param>
+            <param name="v4">the fourth bytes</param>
+            <returns>the integer value</returns>
+        </member>
+        <member name="M:DOL.Marshal.ConvertToUInt32(System.Byte[])">
+            <summary>
+            Converts 4 bytes to an unsigned integer value
+            in high to low order
+            </summary>
+            <param name="val">the bytes</param>
+            <returns>the integer value</returns>
+        </member>
+        <member name="M:DOL.Marshal.ConvertToUInt32(System.Byte[],System.Int32)">
+            <summary>
+            Converts 4 bytes to an unsigned integer value
+            in high to low order
+            </summary>
+            <param name="val">the bytes</param>
+            <param name="startIndex">where to read the values from</param>
+            <returns>the integer value</returns>
+        </member>
+        <member name="M:DOL.Marshal.ConvertToUInt32(System.Byte,System.Byte,System.Byte,System.Byte)">
+            <summary>
+            Converts 4 bytes to an unsigned integer value
+            in high to low order
+            </summary>
+            <param name="v1">the first bytes</param>
+            <param name="v2">the second bytes</param>
+            <param name="v3">the third bytes</param>
+            <param name="v4">the fourth bytes</param>
+            <returns>the integer value</returns>
+        </member>
+        <member name="M:DOL.Marshal.ConvertToInt16(System.Byte[])">
+            <summary>
+            Converts 2 bytes to an short value
+            in high to low order
+            </summary>
+            <param name="val">the bytes</param>
+            <returns>the integer value</returns>
+        </member>
+        <member name="M:DOL.Marshal.ConvertToInt16(System.Byte[],System.Int32)">
+            <summary>
+            Converts 2 bytes to an short value
+            in high to low order
+            </summary>
+            <param name="val">the bytes</param>
+            <param name="startIndex">where to read the values from</param>
+            <returns>the integer value</returns>
+        </member>
+        <member name="M:DOL.Marshal.ConvertToInt16(System.Byte,System.Byte)">
+            <summary>
+            Converts 2 bytes to an short value
+            in high to low order
+            </summary>
+            <param name="v1">the first bytes</param>
+            <param name="v2">the second bytes</param>
+            <returns>the integer value</returns>
+        </member>
+        <member name="M:DOL.Marshal.ConvertToUInt16(System.Byte[])">
+            <summary>
+            Converts 2 bytes to an unsigned short value
+            in high to low order
+            </summary>
+            <param name="val">the bytes</param>
+            <returns>the integer value</returns>
+        </member>
+        <member name="M:DOL.Marshal.ConvertToUInt16(System.Byte[],System.Int32)">
+            <summary>
+            Converts 2 bytes to an unsigned short value
+            in high to low order
+            </summary>
+            <param name="val">the bytes</param>
+            <param name="startIndex">where to read the values from</param>
+            <returns>the integer value</returns>
+        </member>
+        <member name="M:DOL.Marshal.ConvertToUInt16(System.Byte,System.Byte)">
+            <summary>
+            Converts 2 bytes to an integer value
+            in high to low order
+            </summary>
+            <param name="v1">the first bytes</param>
+            <param name="v2">the second bytes</param>
+            <returns>the integer value</returns>
+        </member>
+        <member name="M:DOL.Marshal.ToHexDump(System.String,System.Byte[])">
+            <summary>
+            Converts a byte array into a hex dump
+            </summary>
+            <param name="description">Dump description</param>
+            <param name="dump">byte array</param>
+            <returns>the converted hex dump</returns>
+        </member>
+        <member name="M:DOL.Marshal.ToHexDump(System.String,System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Converts a byte array into a hex dump
+            </summary>
+            <param name="description">Dump description</param>
+            <param name="dump">byte array</param>
+            <param name="start">dump start offset</param>
+            <param name="count">dump bytes count</param>
+            <returns>the converted hex dump</returns>
+        </member>
+        <member name="T:DOL.BaseServerConfiguration">
+            <summary>
+            This is a server configuration
+            </summary>
+        </member>
+        <member name="F:DOL.BaseServerConfiguration.m_port">
+            <summary>
+            The port the server should listen to
+            </summary>
+        </member>
+        <member name="F:DOL.BaseServerConfiguration.m_ip">
+            <summary>
+            The ip address the server should use for listening
+            </summary>
+        </member>
+        <member name="F:DOL.BaseServerConfiguration.m_regionIP">
+            <summary>
+            The region IP
+            </summary>
+        </member>
+        <member name="F:DOL.BaseServerConfiguration.m_regionPort">
+            <summary>
+            The region port
+            </summary>
+        </member>
+        <member name="F:DOL.BaseServerConfiguration.m_udpIP">
+            <summary>
+            The UDP IP
+            </summary>
+        </member>
+        <member name="F:DOL.BaseServerConfiguration.m_udpPort">
+            <summary>
+            The UDP port
+            </summary>
+        </member>
+        <member name="F:DOL.BaseServerConfiguration.m_enableUPnP">
+            <summary>
+            Enable uPnP features
+            </summary>
+        </member>
+        <member name="F:DOL.BaseServerConfiguration.m_detectRegionIP">
+            <summary>
+            Auto Detect the RegionIP
+            </summary>
+        </member>
+        <member name="M:DOL.BaseServerConfiguration.LoadFromConfig(DOL.Config.ConfigElement)">
+            <summary>
+            Loads the config values from a specific config element
+            </summary>
+            <param name="root">the root config element</param>
+        </member>
+        <member name="M:DOL.BaseServerConfiguration.LoadFromXMLFile(System.IO.FileInfo)">
+            <summary>
+            Load the configuration from a XML source file
+            </summary>
+            <param name="configFile">The file to load from</param>
+        </member>
+        <member name="M:DOL.BaseServerConfiguration.SaveToConfig(DOL.Config.ConfigElement)">
+            <summary>
+            Saves the values into a specific config element
+            </summary>
+            <param name="root">the root config element</param>
+        </member>
+        <member name="M:DOL.BaseServerConfiguration.SaveToXMLFile(System.IO.FileInfo)">
+            <summary>
+            Save the configuration to a XML file
+            </summary>
+            <param name="configFile">The file to save</param>
+        </member>
+        <member name="M:DOL.BaseServerConfiguration.#ctor">
+            <summary>
+            Constructs a server configuration with default values
+            </summary>
+        </member>
+        <member name="P:DOL.BaseServerConfiguration.Port">
+            <summary>
+            Sets or gets the port for the server
+            </summary>
+        </member>
+        <member name="P:DOL.BaseServerConfiguration.Ip">
+            <summary>
+            Sets or gets the IP address for the server
+            </summary>
+        </member>
+        <member name="P:DOL.BaseServerConfiguration.RegionIp">
+            <summary>
+            Gets or sets the region ip
+            </summary>
+        </member>
+        <member name="P:DOL.BaseServerConfiguration.RegionPort">
+            <summary>
+            Gets or sets the region port
+            </summary>
+        </member>
+        <member name="P:DOL.BaseServerConfiguration.UDPIp">
+            <summary>
+            Gets or sets the UDP ip
+            </summary>
+        </member>
+        <member name="P:DOL.BaseServerConfiguration.UDPPort">
+            <summary>
+            Gets or sets the UDP port
+            </summary>
+        </member>
+        <member name="P:DOL.BaseServerConfiguration.DetectRegionIP">
+            <summary>
+            Detects the RegionIP for servers that are behind a supported IGD
+            </summary>
+        </member>
+        <member name="T:DOL.FTP.FTPMode">
+            <summary>
+            FTP Modes
+            </summary>
+        </member>
+        <member name="F:DOL.FTP.FTPMode.Passive">
+            <summary>
+            Ftp connection in passive mode
+            </summary>
+        </member>
+        <member name="F:DOL.FTP.FTPMode.Active">
+            <summary>
+            Ftp connection in active mode
+            </summary>
+        </member>
+        <member name="T:DOL.MPK.MPK">
+            <summary>
+            Summary description for MPKDirectory.
+            </summary>
+        </member>
+        <member name="F:DOL.MPK.MPK.MAGIC">
+            <summary>
+            The magic at the top of the file
+            </summary>
+        </member>
+        <member name="F:DOL.MPK.MPK.m_crc">
+            <summary>
+            CRC32 of the deflated directory
+            </summary>
+        </member>
+        <member name="F:DOL.MPK.MPK.m_sizeDir">
+            <summary>
+            Compressed size of the directory section
+            </summary>
+        </member>
+        <member name="F:DOL.MPK.MPK.m_sizeName">
+            <summary>
+            Compressed size of the name section
+            </summary>
+        </member>
+        <member name="F:DOL.MPK.MPK.m_numFiles">
+            <summary>
+            Number of files in the directory
+            </summary>
+        </member>
+        <member name="F:DOL.MPK.MPK.m_name">
+            <summary>
+            Name of the archive
+            </summary>
+        </member>
+        <member name="F:DOL.MPK.MPK.m_files">
+            <summary>
+            Holds all of the files in the MPK
+            </summary>
+        </member>
+        <member name="M:DOL.MPK.MPK.#ctor(System.String,System.Boolean)">
+            <summary>
+            Creates a new MPK file
+            </summary>
+            <param name="fname">The filename</param>
+            <param name="create">if true, creates the file, else parses an existing file</param>
+        </member>
+        <member name="M:DOL.MPK.MPK.#ctor">
+            <summary>
+            Creates a new MPK file
+            </summary>
+        </member>
+        <member name="M:DOL.MPK.MPK.GetEnumerator">
+            <summary>
+            Gets a list of all the files inside this MPK
+            </summary>
+            <returns>An IDictionaryEnumerator containing entries as filename, MPKFile pairs</returns>
+        </member>
+        <member name="M:DOL.MPK.MPK.AddFile(DOL.MPK.MPKFile)">
+            <summary>
+            Adds a file to the MPK
+            </summary>
+            <param name="file">The file to add</param>
+            <returns>true if successfull, false if the file is already contained</returns>
+        </member>
+        <member name="M:DOL.MPK.MPK.RemoveFile(System.String)">
+            <summary>
+            Removes a file from the MPK
+            </summary>
+            <param name="fname">The file to remove</param>
+            <returns>true if the file was successfully removed, false if it wasn't in the MPK</returns>
+        </member>
+        <member name="M:DOL.MPK.MPK.RemoveFile(DOL.MPK.MPKFile)">
+            <summary>
+            Removes a file from the MPK
+            </summary>
+            <param name="file">The file to remove</param>
+            <returns>true if the file was successfully removed, false if it wasn't in the MPK</returns>
+        </member>
+        <member name="M:DOL.MPK.MPK.Save">
+            <summary>
+            Saves the MPK
+            </summary>
+        </member>
+        <member name="M:DOL.MPK.MPK.Write(System.String)">
+            <summary>
+            Writes the MPK to a specific filename
+            </summary>
+            <param name="fname"></param>
+        </member>
+        <member name="M:DOL.MPK.MPK.Extract(System.String,System.String)">
+            <summary>
+            Extracts all files from this MPK into a directory
+            </summary>
+            <param name="dirname">The directory where to put the files</param>
+            <param name="fname">The MPK file to extract</param>
+        </member>
+        <member name="M:DOL.MPK.MPK.Extract(System.String)">
+            <summary>
+            Extracts all files from this MPK
+            </summary>
+            <param name="dirname">The directory where to put the files</param>
+        </member>
+        <member name="M:DOL.MPK.MPK.Read(System.String)">
+            <summary>
+            Reads a MPK file
+            </summary>
+            <param name="fname">The MPK filename to read</param>
+        </member>
+        <member name="M:DOL.MPK.MPK.ReadArchive(System.IO.BinaryReader)">
+            <summary>
+            Reads a MPK from a binary reader
+            </summary>
+            <param name="rdr">The binary reader pointing to the MPK</param>
+        </member>
+        <member name="M:DOL.MPK.MPK.Display">
+            <summary>
+            Displays debug information about this MPK
+            </summary>
+        </member>
+        <member name="M:DOL.MPK.MPK.Create(System.String)">
+            <summary>
+            Creates a new MPK file
+            </summary>
+            <param name="fname">The mpk filename</param>
+        </member>
+        <member name="E:DOL.MPK.MPK.InvalidFile">
+            <summary>
+            The event to fire if an invalid file was found
+            </summary>
+        </member>
+        <member name="P:DOL.MPK.MPK.Name">
+            <summary>
+            The name of this file
+            </summary>
+        </member>
+        <member name="P:DOL.MPK.MPK.CRC">
+            <summary>
+            The CRC of the MPK file
+            </summary>
+        </member>
+        <member name="P:DOL.MPK.MPK.DirectorySize">
+            <summary>
+            The directory size of this MPK
+            </summary>
+        </member>
+        <member name="P:DOL.MPK.MPK.Count">
+            <summary>
+            The filecount in this MPK
+            </summary>
+        </member>
+        <member name="P:DOL.MPK.MPK.Item(System.String)">
+            <summary>
+            Gets a specific MPK file from this MPK
+            </summary>
+        </member>
+        <member name="T:DOL.MPK.MPK.InvalidFileEventHandler">
+            <summary>
+            Delegate to be called when an invalid file was found inside the MPK
+            </summary>
+        </member>
+        <member name="T:DOL.FTP.FTPAsynchronousConnection">
+            <summary>
+            Summary description for FTPAsynchronousConnection.
+            </summary>
+        </member>
+        <member name="T:DOL.FTP.FTPConnection">
+            <summary>
+            Summary description for FTPConnection.
+            </summary>
+        </member>
+        <member name="M:DOL.FTP.FTPConnection.#ctor">
+            <summary>
+            Creates a new ftp connection
+            </summary>
+        </member>
+        <member name="M:DOL.FTP.FTPConnection.Open(System.String,System.String,System.String)">
+            <summary>
+            Opens a new ftp connection
+            </summary>
+            <param name="pRemoteHost">The remote hostname</param>
+            <param name="pUser">The remote user</param>
+            <param name="pPassword">The remote password</param>
+        </member>
+        <member name="M:DOL.FTP.FTPConnection.Open(System.String,System.String,System.String,DOL.FTP.FTPMode)">
+            <summary>
+            Opens a new ftp connection
+            </summary>
+            <param name="pRemoteHost">The remote hostname</param>
+            <param name="pUser">The remote user</param>
+            <param name="pPassword">The remote password</param>
+            <param name="pMode">The ftp mode</param>
+        </member>
+        <member name="M:DOL.FTP.FTPConnection.Open(System.String,System.Int32,System.String,System.String)">
+            <summary>
+            Opens a new ftp connection
+            </summary>
+            <param name="pRemoteHost">The remote hostname</param>
+            <param name="pRemotePort">The remote port</param>
+            <param name="pUser">The remote user</param>
+            <param name="pPassword">The remote password</param>
+        </member>
+        <member name="M:DOL.FTP.FTPConnection.Open(System.String,System.Int32,System.String,System.String,DOL.FTP.FTPMode)">
+            <summary>
+            Opens a new ftp connection
+            </summary>
+            <param name="pRemoteHost">The remote hostname</param>
+            <param name="pRemotePort">The remote port</param>
+            <param name="pUser">The remote user</param>
+            <param name="pPassword">The remote password</param>
+            <param name="pMode">The ftp mode</param>
+        </member>
+        <member name="M:DOL.FTP.FTPConnection.Close">
+            <summary>
+            Closes a connection to the remote server
+            </summary>
+        </member>
+        <member name="M:DOL.FTP.FTPConnection.Dir(System.String)">
+            <summary>
+            Returns a list of remote directories
+            </summary>
+            <param name="pMask">The mask for the query</param>
+            <returns>An ArrayList of directories</returns>
+        </member>
+        <member name="M:DOL.FTP.FTPConnection.Dir">
+            <summary>
+            Reads the remote directory
+            </summary>
+            <returns>An ArrayList with the remote directory contents</returns>
+        </member>
+        <member name="M:DOL.FTP.FTPConnection.SendStream(System.IO.Stream,System.String,DOL.FTP.FTPFileTransferType)">
+            <summary>
+            Sends a stream to a remote file
+            </summary>
+            <param name="pStream">The stream to send</param>
+            <param name="pRemoteFileName">The remote file name</param>
+            <param name="pType">The transfer type</param>
+        </member>
+        <member name="M:DOL.FTP.FTPConnection.SendFile(System.String,DOL.FTP.FTPFileTransferType)">
+            <summary>
+            Sends a file to the remote server
+            </summary>
+            <param name="pLocalFileName">The local filename</param>
+            <param name="pType">The transfer type</param>
+        </member>
+        <member name="M:DOL.FTP.FTPConnection.SendFile(System.String,System.String,DOL.FTP.FTPFileTransferType)">
+            <summary>
+            Sends a file to the remote server
+            </summary>
+            <param name="pLocalFileName">The local filename</param>
+            <param name="pRemoteFileName">The remote filename</param>
+            <param name="pType">The transfer type</param>
+        </member>
+        <member name="M:DOL.FTP.FTPConnection.GetStream(System.String,System.IO.Stream,DOL.FTP.FTPFileTransferType)">
+            <summary>
+            Connects a stream to remote file
+            </summary>
+            <param name="pRemoteFileName">The remote file name</param>
+            <param name="pStream">The stream to connect to the remote file</param>
+            <param name="pType">The transfer type</param>
+        </member>
+        <member name="M:DOL.FTP.FTPConnection.GetFile(System.String,DOL.FTP.FTPFileTransferType)">
+            <summary>
+            Retrieves a remote file
+            </summary>
+            <param name="pRemoteFileName">The remote file name</param>
+            <param name="pType">The transfer type</param>
+        </member>
+        <member name="M:DOL.FTP.FTPConnection.GetFile(System.String,System.String,DOL.FTP.FTPFileTransferType)">
+            <summary>
+            Retrieves a remote file
+            </summary>
+            <param name="pRemoteFileName">The remote file name</param>
+            <param name="pLocalFileName">The local file name</param>
+            <param name="pType">The transfer type</param>
+        </member>
+        <member name="M:DOL.FTP.FTPConnection.DeleteFile(System.String)">
+            <summary>
+            Deletes a remote file
+            </summary>
+            <param name="pRemoteFileName">The remote filename</param>
+        </member>
+        <member name="M:DOL.FTP.FTPConnection.SetCurrentDirectory(System.String)">
+            <summary>
+            Sets the remote directory
+            </summary>
+            <param name="pRemotePath">The remote path to set</param>
+        </member>
+        <member name="M:DOL.FTP.FTPConnection.MakeDir(System.String)">
+            <summary>
+            Creates a remote directory
+            </summary>
+            <param name="pDirectoryName">The remote directory to create</param>
+        </member>
+        <member name="M:DOL.FTP.FTPConnection.RemoveDir(System.String)">
+            <summary>
+            Removes a remote directory
+            </summary>
+            <param name="pDirectoryName">The remote directory to remove</param>
+        </member>
+        <member name="M:DOL.FTP.FTPConnection.SendCommand(System.String)">
+            <summary>
+            Sends a specific command to the remote server
+            </summary>
+            <param name="pCommand">The command name</param>
+            <returns>An array containing the response</returns>
+        </member>
+        <member name="P:DOL.FTP.FTPConnection.MessageList">
+            <summary>
+            The message list containing all the remote messages
+            </summary>
+        </member>
+        <member name="P:DOL.FTP.FTPConnection.LogMessages">
+            <summary>
+            Sets or gets if messages should be logged
+            </summary>
+        </member>
+        <member name="M:DOL.FTP.FTPAsynchronousConnection.#ctor">
+            <summary>
+            Creates a new asynchronous FTP connection
+            </summary>
+        </member>
+        <member name="M:DOL.FTP.FTPAsynchronousConnection.Open(System.String,System.String,System.String)">
+            <summary>
+            Opens a new FTP connection to a remote host
+            </summary>
+            <param name="pRemoteHost">The remote host address</param>
+            <param name="pUser">The remote username</param>
+            <param name="pPassword">The remote password</param>
+        </member>
+        <member name="M:DOL.FTP.FTPAsynchronousConnection.Open(System.String,System.String,System.String,DOL.FTP.FTPMode)">
+            <summary>
+            Opens a new FTP connection to a remote host
+            </summary>
+            <param name="pRemoteHost">The remote host address</param>
+            <param name="pUser">The remote username</param>
+            <param name="pPassword">The remote password</param>
+            <param name="pMode">The ftp mode</param>
+        </member>
+        <member name="M:DOL.FTP.FTPAsynchronousConnection.Open(System.String,System.Int32,System.String,System.String)">
+            <summary>
+            Opens a new FTP connection to a remote host
+            </summary>
+            <param name="pRemoteHost">The remote host address</param>
+            <param name="pRemotePort">The remote port</param>
+            <param name="pUser">The remote username</param>
+            <param name="pPassword">The remote password</param>
+        </member>
+        <member name="M:DOL.FTP.FTPAsynchronousConnection.Open(System.String,System.Int32,System.String,System.String,DOL.FTP.FTPMode)">
+            <summary>
+            Opens a new FTP connection to a remote host
+            </summary>
+            <param name="pRemoteHost">The remote host address</param>
+            <param name="pRemotePort">The remote port</param>
+            <param name="pUser">The remote username</param>
+            <param name="pPassword">The remote password</param>
+            <param name="pMode">The ftp mode</param>
+        </member>
+        <member name="M:DOL.FTP.FTPAsynchronousConnection.GetFile(System.String,DOL.FTP.FTPFileTransferType)">
+            <summary>
+            Retrieves a remote file
+            </summary>
+            <param name="pRemoteFileName">The remote filename</param>
+            <param name="pType">The transfer type</param>
+        </member>
+        <member name="M:DOL.FTP.FTPAsynchronousConnection.GetFile(System.String,System.String,DOL.FTP.FTPFileTransferType)">
+            <summary>
+            Retrieves a remote file
+            </summary>
+            <param name="pRemoteFileName">The remote filename</param>
+            <param name="pLocalFileName">The local filename</param>
+            <param name="pType">The transfer type</param>
+        </member>
+        <member name="M:DOL.FTP.FTPAsynchronousConnection.SendFile(System.String,DOL.FTP.FTPFileTransferType)">
+            <summary>
+            Sends a file to the remote host
+            </summary>
+            <param name="pLocalFileName">The local filename</param>
+            <param name="pType">The transfer type</param>
+        </member>
+        <member name="M:DOL.FTP.FTPAsynchronousConnection.SendFile(System.String,System.String,DOL.FTP.FTPFileTransferType)">
+            <summary>
+            Sends a file to the remote host
+            </summary>
+            <param name="pLocalFileName">The local filename</param>
+            <param name="pRemoteFileName">The remote filename</param>
+            <param name="pType">The transfer type</param>
+        </member>
+        <member name="M:DOL.FTP.FTPAsynchronousConnection.DeleteFile(System.String)">
+            <summary>
+            Deletes a remote file
+            </summary>
+            <param name="pRemoteFileName">The remote filename</param>
+        </member>
+        <member name="M:DOL.FTP.FTPAsynchronousConnection.SetCurrentDirectory(System.String)">
+            <summary>
+            Sets the current remote directory
+            </summary>
+            <param name="pRemotePath">The remote path to set</param>
+        </member>
+        <member name="M:DOL.FTP.FTPAsynchronousConnection.MakeDir(System.String)">
+            <summary>
+            Creates a directory on the remote server
+            </summary>
+            <param name="pDirectoryName">The directory name to create</param>
+        </member>
+        <member name="M:DOL.FTP.FTPAsynchronousConnection.RemoveDir(System.String)">
+            <summary>
+            Removes a remote directory
+            </summary>
+            <param name="pDirectoryName">The directory name to remove</param>
+        </member>
+        <member name="M:DOL.FTP.FTPAsynchronousConnection.Close">
+            <summary>
+            Closes the FTP connection to the remote server
+            </summary>
+        </member>
+        <member name="T:DOL.WeakMulticastDelegate">
+            <summary>
+            This class implements weakreference delegates which
+            enable the target to be garbage collected
+            </summary>
+        </member>
+        <member name="F:DOL.WeakMulticastDelegate.log">
+            <summary>
+            Defines a logger for this class.
+            </summary>
+        </member>
+        <member name="F:DOL.WeakMulticastDelegate.weakRef">
+            <summary>
+            A weak reference to the target for this delegate
+            </summary>
+        </member>
+        <member name="F:DOL.WeakMulticastDelegate.method">
+            <summary>
+            The method info of the target
+            </summary>
+        </member>
+        <member name="F:DOL.WeakMulticastDelegate.prev">
+            <summary>
+            The previous weak multicast delegate in the list
+            </summary>
+        </member>
+        <member name="M:DOL.WeakMulticastDelegate.#ctor(System.Delegate)">
+            <summary>
+            Creates a new weak multicast delegate based on
+            a normal delegate
+            </summary>
+            <param name="realDelegate">the normal delegate</param>
+        </member>
+        <member name="M:DOL.WeakMulticastDelegate.Combine(DOL.WeakMulticastDelegate,System.Delegate)">
+            <summary>
+            Combines a weak multicast delegate with a normal delegate
+            </summary>
+            <param name="weakDelegate">the weak multicast delegate</param>
+            <param name="realDelegate">the normal delegate</param>
+            <returns>the new combinded weak multicast delegate</returns>
+        </member>
+        <member name="M:DOL.WeakMulticastDelegate.CombineUnique(DOL.WeakMulticastDelegate,System.Delegate)">
+            <summary>
+            Combines a weak multicast delegate with a normal delegate
+            and makes sure the normal delegate has not been added yet.
+            </summary>
+            <param name="weakDelegate">the weak multicast delegate</param>
+            <param name="realDelegate">the normal delegate</param>
+            <returns>the new combined weak multicast delegate</returns>
+        </member>
+        <member name="M:DOL.WeakMulticastDelegate.Combine(System.Delegate)">
+            <summary>
+            Combines this weak multicast delegate with a normal delegate
+            </summary>
+            <param name="realDelegate">the normal delegate</param>
+            <returns>this delegate</returns>
+        </member>
+        <member name="M:DOL.WeakMulticastDelegate.Equals(System.Delegate)">
+            <summary>
+            Compares this weak multicast delegate with a normal delegate
+            and returns wether their targets are equal
+            </summary>
+            <param name="realDelegate">the normal delegate</param>
+            <returns>true if equal, false if not equal</returns>
+        </member>
+        <member name="M:DOL.WeakMulticastDelegate.CombineUnique(System.Delegate)">
+            <summary>
+            Combines this weak multicast delegate with a normal delegate
+            Makes sure the delegate target has not been added yet
+            </summary>
+            <param name="realDelegate">the real delegate</param>
+            <returns>the new weak multicast delegate</returns>
+        </member>
+        <member name="M:DOL.WeakMulticastDelegate.op_Addition(DOL.WeakMulticastDelegate,System.Delegate)">
+            <summary>
+            Combines a weak multicast delegate with a normal delegate
+            </summary>
+            <param name="d">the weak multicast delegate</param>
+            <param name="realD">the real delegate</param>
+            <returns>the new weak multicast delegate</returns>
+        </member>
+        <member name="M:DOL.WeakMulticastDelegate.op_Subtraction(DOL.WeakMulticastDelegate,System.Delegate)">
+            <summary>
+            Removes a normal delegate from a weak multicast delegate
+            </summary>
+            <param name="d">the weak multicast delegate</param>
+            <param name="realD">the real delegate</param>
+            <returns>the new weak multicast delegate</returns>
+        </member>
+        <member name="M:DOL.WeakMulticastDelegate.Remove(DOL.WeakMulticastDelegate,System.Delegate)">
+            <summary>
+            Removes a normal delegate from a weak multicast delegate
+            </summary>
+            <param name="weakDelegate">the weak multicast delegate</param>
+            <param name="realDelegate">the normal delegate</param>
+            <returns>the new weak multicast delegate</returns>
+        </member>
+        <member name="M:DOL.WeakMulticastDelegate.Remove(System.Delegate)">
+            <summary>
+            Removes a normal delegate from this weak multicast delegate
+            </summary>
+            <param name="realDelegate">the normal delegate</param>
+            <returns>the new weak multicast delegate</returns>
+        </member>
+        <member name="M:DOL.WeakMulticastDelegate.Invoke(System.Object[])">
+            <summary>
+            Invokes the delegate with the given arguments
+            If one target throws an exception the other targets
+            won't be handled anymore.
+            </summary>
+            <param name="args">the argument array to pass to the target</param>
+        </member>
+        <member name="M:DOL.WeakMulticastDelegate.InvokeSafe(System.Object[])">
+            <summary>
+            Invokes the delegate with the given arguments
+            If one target throws an exception the other targets
+            won't be affected.
+            </summary>
+            <param name="args">the argument array to pass to the target</param>
+        </member>
+        <member name="M:DOL.WeakMulticastDelegate.Dump">
+            <summary>
+            Dumps the delegates in this multicast delegate to a string
+            </summary>
+            <returns>The string containing the formated dump</returns>
+        </member>
+        <member name="M:DOL.WeakMulticastDelegate.ToString">
+            <summary>
+            Gets string representation of delegate
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:DOL.MPK.MPKFile">
+            <summary>
+            Summary description for MPKFile.
+            </summary>
+        </member>
+        <member name="M:DOL.MPK.MPKFile.#ctor(System.Byte[],System.Byte[],DOL.MPK.MPKFileHeader)">
+            <summary>
+            Constructs a new MPK file entry
+            </summary>
+            <param name="compData">The compressed data of this file entry</param>
+            <param name="data">The uncompressed data of this file entry</param>
+            <param name="hdr">The file entry header</param>
+        </member>
+        <member name="M:DOL.MPK.MPKFile.#ctor(System.String)">
+            <summary>
+            Creates a new MPK file entry
+            </summary>
+            <param name="fname">The file name of the MPK file entry</param>
+        </member>
+        <member name="M:DOL.MPK.MPKFile.Display">
+            <summary>
+            Displays header information of this MPK file entry
+            </summary>
+        </member>
+        <member name="M:DOL.MPK.MPKFile.Load(System.String)">
+            <summary>
+            Loads a MPK file
+            </summary>
+            <param name="fname">The filename to load</param>
+        </member>
+        <member name="M:DOL.MPK.MPKFile.Save(System.String)">
+            <summary>
+            Saves an MPK file
+            </summary>
+            <param name="dir">The directory where to save the file</param>
+        </member>
+        <member name="P:DOL.MPK.MPKFile.Header">
+            <summary>
+            Gets the MPK header
+            </summary>
+        </member>
+        <member name="P:DOL.MPK.MPKFile.Data">
+            <summary>
+            Gets the unencrypted Data in the MPK
+            </summary>
+        </member>
+        <member name="P:DOL.MPK.MPKFile.CompressedData">
+            <summary>
+            Gets the compressed data in the MPK
+            </summary>
+        </member>
+        <member name="T:DOL.MPK.MPKFileHeader">
+            <summary>
+            Summary description for MPKFileHeader.
+            </summary>
+        </member>
+        <member name="F:DOL.MPK.MPKFileHeader.MAX_SIZE">
+            <summary>
+            Maximum size of a file header
+            </summary>
+        </member>
+        <member name="F:DOL.MPK.MPKFileHeader.m_name">
+            <summary>
+            Name of the file
+            </summary>
+        </member>
+        <member name="F:DOL.MPK.MPKFileHeader.m_time">
+            <summary>
+            Time the entry was created
+            </summary>
+        </member>
+        <member name="F:DOL.MPK.MPKFileHeader.m_unk">
+            <summary>
+            Unknown, always 4?
+            </summary>
+        </member>
+        <member name="F:DOL.MPK.MPKFileHeader.m_off">
+            <summary>
+            Offset of the file in file memory space
+            </summary>
+        </member>
+        <member name="F:DOL.MPK.MPKFileHeader.m_size">
+            <summary>
+            Size of the uncompressed file
+            </summary>
+        </member>
+        <member name="F:DOL.MPK.MPKFileHeader.m_dirOff">
+            <summary>
+            Offset of the file header in the directory memory space
+            </summary>
+        </member>
+        <member name="F:DOL.MPK.MPKFileHeader.m_compSize">
+            <summary>
+            Compressed size of the file
+            </summary>
+        </member>
+        <member name="F:DOL.MPK.MPKFileHeader.m_crc">
+            <summary>
+            Checksum for the compressed file
+            </summary>
+        </member>
+        <member name="M:DOL.MPK.MPKFileHeader.#ctor">
+            <summary>
+            Creates a new MPK file header
+            </summary>
+        </member>
+        <member name="M:DOL.MPK.MPKFileHeader.#ctor(System.IO.BinaryReader)">
+            <summary>
+            Creates a new MPK file header
+            </summary>
+            <param name="rdr">The binary reader pointing to the MPK header</param>
+        </member>
+        <member name="M:DOL.MPK.MPKFileHeader.Write(System.IO.BinaryWriter)">
+            <summary>
+            Writes a new MPK header into a file
+            </summary>
+            <param name="file"></param>
+        </member>
+        <member name="M:DOL.MPK.MPKFileHeader.Read(System.IO.BinaryReader)">
+            <summary>
+            Reads a new MPK header from a binary reader
+            </summary>
+            <param name="rdr">The binary reader pointing to the MPK header</param>
+        </member>
+        <member name="M:DOL.MPK.MPKFileHeader.Display">
+            <summary>
+            Displays debug information about this MPK file header
+            </summary>
+        </member>
+        <member name="P:DOL.MPK.MPKFileHeader.Name">
+            <summary>
+            Gets or sets the name
+            </summary>
+        </member>
+        <member name="P:DOL.MPK.MPKFileHeader.TimeStamp">
+            <summary>
+            Gets or sets the timestamp of the MPK
+            </summary>
+        </member>
+        <member name="P:DOL.MPK.MPKFileHeader.Size">
+            <summary>
+            Gets or sets the size
+            </summary>
+        </member>
+        <member name="P:DOL.MPK.MPKFileHeader.Offset">
+            <summary>
+            Gets or sets the offset inside the MPK
+            </summary>
+        </member>
+        <member name="P:DOL.MPK.MPKFileHeader.DirectoryOffset">
+            <summary>
+            Gets or sets the Directory offset inside the MPK
+            </summary>
+        </member>
+        <member name="P:DOL.MPK.MPKFileHeader.CompressedSize">
+            <summary>
+            Gets or sets the compressed size
+            </summary>
+        </member>
+        <member name="P:DOL.MPK.MPKFileHeader.CRC">
+            <summary>
+            Gets or sets the CRC32 checksum of the MPK
+            </summary>
+        </member>
+        <member name="T:DOL.Config.ConfigElement">
+            <summary>
+            This class represents a configuration element
+            It can hold one value and/or several children elements
+            </summary>
+        </member>
+        <member name="F:DOL.Config.ConfigElement.m_parent">
+            <summary>
+            The parent element of this element
+            </summary>
+        </member>
+        <member name="F:DOL.Config.ConfigElement.m_children">
+            <summary>
+            All the children elements
+            </summary>
+        </member>
+        <member name="F:DOL.Config.ConfigElement.m_value">
+            <summary>
+            The value of this element
+            </summary>
+        </member>
+        <member name="M:DOL.Config.ConfigElement.#ctor(DOL.Config.ConfigElement)">
+            <summary>
+            Constructs a new config element with the given parent.
+            </summary>
+            <param name="parent">The parent element of the newly created element</param>
+        </member>
+        <member name="M:DOL.Config.ConfigElement.GetNewConfigElement(DOL.Config.ConfigElement)">
+            <summary>
+            Creates and returns a new configuration element.
+            Can be used to create own configuration elements by
+            overwriting this method
+            </summary>
+            <param name="parent">The parent element of the newly created element</param>
+            <returns>The newly created config element</returns>
+        </member>
+        <member name="M:DOL.Config.ConfigElement.GetString">
+            <summary>
+            Gets the value of this config element as string
+            </summary>
+            <returns>The string representing the value of this element</returns>
+        </member>
+        <member name="M:DOL.Config.ConfigElement.GetString(System.String)">
+            <summary>
+            Gets the value of this config element as string
+            and if no value is set returns the default value
+            </summary>
+            <param name="defaultValue">The default to return in case no value is set</param>
+            <returns>The value of this element or the given default value if no value is set</returns>
+        </member>
+        <member name="M:DOL.Config.ConfigElement.GetInt">
+            <summary>
+            Gets the value of this config element as integer
+            </summary>
+            <returns>The integer representing the value of this element</returns>
+        </member>
+        <member name="M:DOL.Config.ConfigElement.GetInt(System.Int32)">
+            <summary>
+            Gets the value of this config element integer
+            and if no value is set returns the default value
+            </summary>
+            <param name="defaultValue">The default to return in case no value is set</param>
+            <returns>The value of this element or the given default value if no value is set</returns>
+        </member>
+        <member name="M:DOL.Config.ConfigElement.GetLong">
+            <summary>
+            Gets the value of this config element as long
+            </summary>
+            <returns>The long representing the value of this element</returns>
+        </member>
+        <member name="M:DOL.Config.ConfigElement.GetLong(System.Int64)">
+            <summary>
+            Gets the value of this config element as long
+            and if no value is set returns the default value
+            </summary>
+            <param name="defaultValue">The default to return in case no value is set</param>
+            <returns>The value of this element or the given default value if no value is set</returns>
+        </member>
+        <member name="M:DOL.Config.ConfigElement.GetBoolean">
+            <summary>
+            Gets the value of this config element as boolean
+            </summary>
+            <returns>The boolean representing the value of this element</returns>
+        </member>
+        <member name="M:DOL.Config.ConfigElement.GetBoolean(System.Boolean)">
+            <summary>
+            Gets the value of this config element as boolean
+            and if no value is set returns the default value
+            </summary>
+            <param name="defaultValue">The default to return in case no value is set</param>
+            <returns>The value of this element or the given default value if no value is set</returns>
+        </member>
+        <member name="M:DOL.Config.ConfigElement.Set(System.Object)">
+            <summary>
+            Sets the value of this config element
+            </summary>
+            <param name="value">The value for element</param>
+        </member>
+        <member name="P:DOL.Config.ConfigElement.Item(System.String)">
+            <summary>
+            Returns the child element with the specified key
+            </summary>
+        </member>
+        <member name="P:DOL.Config.ConfigElement.Parent">
+            <summary>
+            Gets the parent element of this config element
+            </summary>
+        </member>
+        <member name="P:DOL.Config.ConfigElement.HasChildren">
+            <summary>
+            Returns if this element has children
+            </summary>
+        </member>
+        <member name="P:DOL.Config.ConfigElement.Children">
+            <summary>
+            Returns a Hashtable with the children of this element
+            </summary>
+        </member>
+        <member name="T:DOL.Config.XMLConfigFile">
+            <summary>
+            Reads and parses an XML file
+            </summary>
+        </member>
+        <member name="M:DOL.Config.XMLConfigFile.#ctor">
+            <summary>
+            Constructs a new XML config file
+            </summary>
+        </member>
+        <member name="M:DOL.Config.XMLConfigFile.#ctor(DOL.Config.ConfigElement)">
+            <summary>
+            Constructs a new XML config file element
+            </summary>
+            <param name="parent">The parent of the XML config file element</param>
+        </member>
+        <member name="M:DOL.Config.XMLConfigFile.IsBadXMLElementName(System.String)">
+            <summary>
+            Test wether the given string contains invalid xml characters 
+            </summary>
+            <param name="name">The name to test</param>
+            <returns>true if invalid characters are contained, false if the element is ok</returns>
+        </member>
+        <member name="M:DOL.Config.XMLConfigFile.SaveElement(System.Xml.XmlTextWriter,System.String,DOL.Config.ConfigElement)">
+            <summary>
+            Saves a single config element in an xml stream
+            </summary>
+            <param name="writer">the xml text writer</param>
+            <param name="name">the name for this element</param>
+            <param name="element">the element to save</param>
+        </member>
+        <member name="M:DOL.Config.XMLConfigFile.Save(System.IO.FileInfo)">
+            <summary>
+            Saves this config file
+            </summary>
+            <param name="configFile">The filename</param>
+        </member>
+        <member name="M:DOL.Config.XMLConfigFile.ParseXMLFile(System.IO.FileInfo)">
+            <summary>
+            Loads the xml configuration from a file
+            </summary>
+            <param name="configFile">The config file</param>
+            <returns>The parsed config</returns>
+        </member>
+        <member name="T:DOL.FTP.FTPFile">
+            <summary>
+            This class represents a FTP file
+            </summary>
+        </member>
+        <member name="M:DOL.FTP.FTPFile.#ctor">
+            <summary>
+            Creates a new FTP file
+            </summary>
+        </member>
+        <member name="P:DOL.FTP.FTPFile.Name">
+            <summary>
+            Sets the name of the file
+            </summary>
+        </member>
+        <member name="T:DOL.PacketIn">
+            <summary>
+            Class reads data from incoming incoming packets
+            </summary>
+        </member>
+        <member name="M:DOL.PacketIn.#ctor">
+            <summary>
+            Default constructor
+            </summary>
+        </member>
+        <member name="M:DOL.PacketIn.#ctor(System.Int32)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="size">Size of the internal buffer</param>
+        </member>
+        <member name="M:DOL.PacketIn.#ctor(System.Byte[])">
+            <summary>
+            Constructor
+            </summary>
+            <param name="buf">Buffer containing packet data to read from</param>
+        </member>
+        <member name="M:DOL.PacketIn.#ctor(System.Byte[],System.Boolean)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="buf">Buffer containing packet data to read from</param>
+            <param name="canwrite">True if writing to the buffer is allowed</param>
+        </member>
+        <member name="M:DOL.PacketIn.#ctor(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="buf">Buffer containing packet data to read from</param>
+            <param name="start">Starting index into buf</param>
+            <param name="size">Number of bytes to read from buf</param>
+        </member>
+        <member name="M:DOL.PacketIn.#ctor(System.Byte[],System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="buf">Buffer containing packet data to read from</param>
+            <param name="start">Starting index into buf</param>
+            <param name="size">Number of bytes to read from buf</param>
+            <param name="canwrite">True if writing to the buffer is allowed</param>
+        </member>
+        <member name="M:DOL.PacketIn.#ctor(System.Byte[],System.Int32,System.Int32,System.Boolean,System.Boolean)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="buf">Buffer containing packet data to read from</param>
+            <param name="start">Starting index into buf</param>
+            <param name="size">Number of bytes to read from buf</param>
+            <param name="canwrite">True if writing to the buffer is allowed</param>
+            <param name="getbuf">True if you can retrieve a copy of the internal buffer</param>
+        </member>
+        <member name="M:DOL.PacketIn.ReadShort">
+            <summary>
+            Reads in 2 bytes and converts it from network to host byte order
+            </summary>
+            <returns>A 2 byte (short) value</returns>
+        </member>
+        <member name="M:DOL.PacketIn.ReadShortLowEndian">
+            <summary>
+            Reads in 2 bytes
+            </summary>
+            <returns>A 2 byte (short) value in network byte order</returns>
+        </member>
+        <member name="M:DOL.PacketIn.ReadInt">
+            <summary>
+            Reads in 4 bytes and converts it from network to host byte order
+            </summary>
+            <returns>A 4 byte value</returns>
+        </member>
+        <member name="M:DOL.PacketIn.Skip(System.Int64)">
+            <summary>
+            Skips 'num' bytes ahead in the stream
+            </summary>
+            <param name="num">Number of bytes to skip ahead</param>
+        </member>
+        <member name="M:DOL.PacketIn.ReadString(System.Int32)">
+            <summary>
+            Reads a null-terminated string from the stream
+            </summary>
+            <param name="maxlen">Maximum number of bytes to read in</param>
+            <returns>A string of maxlen or less</returns>
+        </member>
+        <member name="M:DOL.PacketIn.ReadPascalString">
+            <summary>
+            Reads in a pascal style string
+            </summary>
+            <returns>A string from the stream</returns>
+        </member>
+        <member name="T:DOL.WeakRef">
+            <summary>
+            This class is a weakreference wrapper
+            because mono gc crashes with null targets
+            </summary>
+        </member>
+        <member name="M:DOL.WeakRef.#ctor(System.Object)">
+            <summary>
+            Creates a new weak reference wrapper for MONO because
+            MONO gc crashes with null targets
+            </summary>
+            <param name="target">The target of this weak reference</param>
+        </member>
+        <member name="M:DOL.WeakRef.#ctor(System.Object,System.Boolean)">
+            <summary>
+            Creates a new weak reference wrapper for MONO because
+            MONO gc crashes with null targets
+            </summary>
+            <param name="target">The target of this weak reference</param>
+            <param name="trackResurrection">Track the resurrection of the target</param>
+        </member>
+        <member name="P:DOL.WeakRef.Target">
+            <summary>
+            Gets or sets the target of this weak reference
+            </summary>
+        </member>
+        <member name="T:DOL.Statistics">
+            <summary>
+            This class is used to hold statistics about DOL usage
+            </summary>
+        </member>
+        <member name="F:DOL.Statistics.MemMobCount">
+            <summary>
+            The total mob count
+            </summary>
+        </member>
+        <member name="F:DOL.Statistics.MemPlayerCount">
+            <summary>
+            The total player count
+            </summary>
+        </member>
+        <member name="F:DOL.Statistics.MemAccCount">
+            <summary>
+            The total account count
+            </summary>
+        </member>
+        <member name="F:DOL.Statistics.MemCharCount">
+            <summary>
+            The total character count
+            </summary>
+        </member>
+        <member name="F:DOL.Statistics.MemPacketInObj">
+            <summary>
+            The total incoming packet objects count
+            </summary>
+        </member>
+        <member name="F:DOL.Statistics.MemPacketOutObj">
+            <summary>
+            The total outgoing packet objects count
+            </summary>
+        </member>
+        <member name="F:DOL.Statistics.MemSpellHandlerObj">
+            <summary>
+            The total spellhandler objects
+            </summary>
+        </member>
+        <member name="F:DOL.Statistics.BytesOut">
+            <summary>
+            The total bytes sent
+            </summary>
+        </member>
+        <member name="F:DOL.Statistics.BytesIn">
+            <summary>
+            The total bytes received
+            </summary>
+        </member>
+        <member name="F:DOL.Statistics.PacketsOut">
+            <summary>
+            The total outgoing packets
+            </summary>
+        </member>
+        <member name="F:DOL.Statistics.PacketsIn">
+            <summary>
+            The total incoming packets
+            </summary>
+        </member>
+        <member name="T:DOL.eGameServerStatus">
+            <summary>
+            The status of the gameserver
+            </summary>
+        </member>
+        <member name="F:DOL.eGameServerStatus.GSS_Open">
+            <summary>
+            Server is open for connections
+            </summary>
+        </member>
+        <member name="F:DOL.eGameServerStatus.GSS_Closed">
+            <summary>
+            Server is closed and won't accept connections
+            </summary>
+        </member>
+        <member name="F:DOL.eGameServerStatus.GSS_Down">
+            <summary>
+            Server is down
+            </summary>
+        </member>
+        <member name="F:DOL.eGameServerStatus.GSS_Full">
+            <summary>
+            Server is full, no more connections accepted
+            </summary>
+        </member>
+        <member name="F:DOL.eGameServerStatus.GSS_Unknown">
+            <summary>
+            Unknown server status
+            </summary>
+        </member>
+        <member name="F:DOL.eGameServerStatus.GSS_Banned">
+            <summary>
+            Server is banned for the user
+            </summary>
+        </member>
+        <member name="F:DOL.eGameServerStatus.GSS_NotInvited">
+            <summary>
+            User is not invited
+            </summary>
+        </member>
+        <member name="F:DOL.eGameServerStatus._GSS_Count">
+            <summary>
+            The count of server stati
+            </summary>
+        </member>
+        <member name="T:DOL.eGameServerType">
+            <summary>
+            The different game server types
+            </summary>
+        </member>
+        <member name="F:DOL.eGameServerType.GST_Normal">
+            <summary>
+            Normal server
+            </summary>
+        </member>
+        <member name="F:DOL.eGameServerType.GST_Test">
+            <summary>
+            Test server
+            </summary>
+        </member>
+        <member name="F:DOL.eGameServerType.GST_PvP">
+            <summary>
+            Player vs Player
+            </summary>
+        </member>
+        <member name="F:DOL.eGameServerType.GST_PvE">
+            <summary>
+            Player vs Monsters
+            </summary>
+        </member>
+        <member name="F:DOL.eGameServerType.GST_Roleplay">
+            <summary>
+            Roleplaying server
+            </summary>
+        </member>
+        <member name="F:DOL.eGameServerType.GST_Casual">
+            <summary>
+            Casual server
+            </summary>
+        </member>
+        <member name="F:DOL.eGameServerType.GST_Unknown">
+            <summary>
+            Unknown server type
+            </summary>
+        </member>
+        <member name="F:DOL.eGameServerType._GST_Count">
+            <summary>
+            The count of server types
+            </summary>
+        </member>
+        <member name="T:DOL.BaseServer">
+            <summary>
+            Base class for a server using overlapped socket IO
+            </summary>
+        </member>
+        <member name="F:DOL.BaseServer.log">
+            <summary>
+            Defines a logger for this class.
+            </summary>
+        </member>
+        <member name="F:DOL.BaseServer.m_clients">
+            <summary>
+            Hash table of clients
+            </summary>
+        </member>
+        <member name="F:DOL.BaseServer.m_listen">
+            <summary>
+            Socket that receives connections
+            </summary>
+        </member>
+        <member name="F:DOL.BaseServer.m_config">
+            <summary>
+            The configuration of this server
+            </summary>
+        </member>
+        <member name="M:DOL.BaseServer.#ctor">
+            <summary>
+            Default Constructor
+            </summary>
+        </member>
+        <member name="M:DOL.BaseServer.#ctor(DOL.BaseServerConfiguration)">
+            <summary>
+            Constructor that takes a server configuration as parameter
+            </summary>
+            <param name="config">The configuraion for the server</param>
+        </member>
+        <member name="M:DOL.BaseServer.GetNewClient">
+            <summary>
+            Creates a new client object
+            </summary>
+            <returns>A new client object</returns>
+        </member>
+        <member name="M:DOL.BaseServer.AcquirePacketBuffer">
+            <summary>
+            Used to get packet buffer.
+            </summary>
+            <returns>byte array that will be used as packet buffer.</returns>
+        </member>
+        <member name="M:DOL.BaseServer.ReleasePacketBuffer(System.Byte[])">
+            <summary>
+            Releases previously acquired packet buffer.
+            </summary>
+            <param name="buf"></param>
+        </member>
+        <member name="M:DOL.BaseServer.InitSocket">
+            <summary>
+            Initializes and binds the socket, doesn't listen yet!
+            </summary>
+            <returns>true if bound</returns>
+        </member>
+        <member name="M:DOL.BaseServer.Start">
+            <summary>
+            Starts the server
+            </summary>
+            <returns>True if the server was successfully started</returns>
+        </member>
+        <member name="F:DOL.BaseServer.m_asyncAcceptCallback">
+            <summary>
+            Holds the async accept callback delegate
+            </summary>
+        </member>
+        <member name="M:DOL.BaseServer.AcceptCallback(System.IAsyncResult)">
+            <summary>
+            Called when a client is trying to connect to the server
+            </summary>
+            <param name="ar">Async result of the operation</param>
+        </member>
+        <member name="M:DOL.BaseServer.Stop">
+            <summary>
+            Stops the server
+            </summary>
+        </member>
+        <member name="M:DOL.BaseServer.Disconnect(DOL.ClientBase)">
+            <summary>
+            Disconnects a client
+            </summary>
+            <param name="client">Client to be disconnected</param>
+            <returns>True if the client was disconnected, false if it doesn't exist</returns>
+        </member>
+        <member name="P:DOL.BaseServer.Configuration">
+            <summary>
+            Retrieves the server configuration
+            </summary>
+        </member>
+        <member name="P:DOL.BaseServer.ClientCount">
+            <summary>
+            Returns the number of clients currently connected to the server
+            </summary>
+        </member>
+        <member name="T:DOL.PacketOut">
+            <summary>
+            Writes data to an outgoing packet stream
+            </summary>
+        </member>
+        <member name="M:DOL.PacketOut.#ctor">
+            <summary>
+            Default Constructor
+            </summary>
+        </member>
+        <member name="M:DOL.PacketOut.#ctor(System.Int32)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="size">Size of the internal buffer</param>
+        </member>
+        <member name="M:DOL.PacketOut.#ctor(System.Byte[])">
+            <summary>
+            Constructor
+            </summary>
+            <param name="buf">Buffer to write to</param>
+        </member>
+        <member name="M:DOL.PacketOut.#ctor(System.Byte[],System.Boolean)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="buf">Buffer to write to</param>
+            <param name="canwrite">True if you can write to the buffer</param>
+        </member>
+        <member name="M:DOL.PacketOut.#ctor(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="buf">Buffer to write to</param>
+            <param name="start">Starting index into buf</param>
+            <param name="size"></param>
+        </member>
+        <member name="M:DOL.PacketOut.#ctor(System.Byte[],System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="buf">Buffer to write to</param>
+            <param name="start">Starting index into buf</param>
+            <param name="size">Size of the internal buffer</param>
+            <param name="canwrite">True if you can write to the buffer</param>
+        </member>
+        <member name="M:DOL.PacketOut.#ctor(System.Byte[],System.Int32,System.Int32,System.Boolean,System.Boolean)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="buf">Buffer to write to</param>
+            <param name="start">Starting index into buf</param>
+            <param name="size">Size of the internal buffer</param>
+            <param name="canwrite">True if you can write to the buffer</param>
+            <param name="getbuf">True if you can retrieve the internal buffer</param>
+        </member>
+        <member name="M:DOL.PacketOut.WriteShort(System.UInt16)">
+            <summary>
+            Writes a 2 byte (short) value to the stream in network byte order
+            </summary>
+            <param name="val">Value to write</param>
+        </member>
+        <member name="M:DOL.PacketOut.WriteShortLowEndian(System.UInt16)">
+            <summary>
+            Writes a 2 byte (short) value to the stream in host byte order
+            </summary>
+            <param name="val">Value to write</param>
+        </member>
+        <member name="M:DOL.PacketOut.WriteInt(System.UInt32)">
+            <summary>
+            Writes a 4 byte value to the stream in host byte order
+            </summary>
+            <param name="val">Value to write</param>
+        </member>
+        <member name="M:DOL.PacketOut.CalcChecksum">
+            <summary>
+            Calculates the checksum for the internal buffer
+            </summary>
+            <returns>The checksum of the internal buffer</returns>
+        </member>
+        <member name="M:DOL.PacketOut.Fill(System.Byte,System.Int32)">
+            <summary>
+            Writes the supplied value to the stream for a specified number of bytes
+            </summary>
+            <param name="val">Value to write</param>
+            <param name="num">Number of bytes to write</param>
+        </member>
+        <member name="M:DOL.PacketOut.WritePacketLength">
+            <summary>
+            Writes the length of the patcket at the beginning of the stream
+            </summary>
+            <returns>Length of the packet</returns>
+        </member>
+        <member name="M:DOL.PacketOut.WritePascalString(System.String)">
+            <summary>
+            Writes a pascal style string to the stream
+            </summary>
+            <param name="str">String to write</param>
+        </member>
+        <member name="M:DOL.PacketOut.WriteString(System.String)">
+            <summary>
+            Writes a C-style string to the stream
+            </summary>
+            <param name="str">String to write</param>
+        </member>
+        <member name="M:DOL.PacketOut.WriteStringBytes(System.String)">
+            <summary>
+            Writes exactly the bytes from the string without any trailing 0
+            </summary>
+            <param name="str">the string to write</param>
+        </member>
+        <member name="M:DOL.PacketOut.WriteString(System.String,System.Int32)">
+            <summary>
+            Writes up to maxlen bytes to the stream from the supplied string
+            </summary>
+            <param name="str">String to write</param>
+            <param name="maxlen">Maximum number of bytes to be written</param>
+        </member>
+        <member name="M:DOL.PacketOut.FillString(System.String,System.Int32)">
+            <summary>
+            Writes len number of bytes from str to the stream
+            </summary>
+            <param name="str">String to write</param>
+            <param name="len">Number of bytes to write</param>
+        </member>
     </members>
 </doc>

@@ -27534,7 +27534,7 @@
             </summary>
             <param name="ar"></param>
         </member>
-        <member name="M:DOL.GS.PacketHandler.PacketProcessor.CombinePackets(System.Byte[],System.Collections.Queue,System.Int32,DOL.GS.GameClient)">
+        <member name="M:DOL.GS.PacketHandler.PacketProcessor.CombinePackets(System.Byte[],System.Collections.Queue,System.Int32,DOL.GS.GameClient,System.Boolean)">
             <summary>
             Combines queued packets in one stream.
             </summary>
@@ -27542,6 +27542,7 @@
             <param name="q">The queued packets.</param>
             <param name="length">The max stream len.</param>
             <param name="client">The client.</param>
+            <param name="isUdp">UDP packets if <code>true</code>, TCP otherwise.</param>
             <returns>The count of bytes writen.</returns>
         </member>
         <member name="M:DOL.GS.PacketHandler.PacketProcessor.SendTCPRaw(DOL.GS.PacketHandler.GSTCPPacketOut)">
@@ -27600,6 +27601,12 @@
             Finishes an asynchronous UDP transaction
             </summary>
             <param name="ar"></param>
+        </member>
+        <member name="M:DOL.GS.PacketHandler.PacketProcessor.UdpSendError(System.Exception)">
+            <summary>
+            Clears UDP queue and sending flag.
+            </summary>
+            <param name="e">Exception.</param>
         </member>
         <member name="M:DOL.GS.PacketHandler.PacketProcessor.SendUDPRaw(DOL.GS.PacketHandler.GSUDPPacketOut)">
             <summary>
