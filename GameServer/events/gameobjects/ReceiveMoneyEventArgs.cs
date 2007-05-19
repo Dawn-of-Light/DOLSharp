@@ -25,9 +25,8 @@ namespace DOL.Events
 	/// <summary>
 	/// Holds the arguments for the ReceiveItem event of GameLivings
 	/// </summary>
-	public class ReceiveItemEventArgs : EventArgs
+	public class ReceiveItemEventArgs : SourceEventArgs
 	{
-		private GameLiving source;
 		private GameLiving target;
 		private InventoryItem item;
 
@@ -38,18 +37,10 @@ namespace DOL.Events
 		/// <param name="target">the target of the item</param>
 		/// <param name="item">the item to transfer</param>
 		public ReceiveItemEventArgs(GameLiving source, GameLiving target, InventoryItem item)
+			: base(source)
 		{
-			this.source = source;
 			this.target = target;
 			this.item = item;
-		}
-
-		/// <summary>
-		/// Gets the GameLiving who gives the item
-		/// </summary>
-		public GameLiving Source
-		{
-			get { return source; }
 		}
 
 		/// <summary>

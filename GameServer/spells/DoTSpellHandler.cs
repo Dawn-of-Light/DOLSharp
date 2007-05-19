@@ -191,7 +191,7 @@ namespace DOL.GS.Spells
 			// calc damage
 			AttackData ad = CalculateDamageToTarget(target, effectiveness);
 			SendDamageMessages(ad);
-			DamageTarget(ad, true);
+			DamageTarget(ad, false);
 		}
 
 		public override double CalculateDamageBase()
