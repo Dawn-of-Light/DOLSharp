@@ -459,8 +459,8 @@ namespace DOL
 
 			try
 			{
-				client.CloseConnections();
 				client.OnDisconnect();
+				client.CloseConnections();
 			}
 			catch(Exception e)
 			{
