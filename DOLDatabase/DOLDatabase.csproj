@@ -476,6 +476,6 @@
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
-    <PostBuildEvent>xcopy /y /s /q /i $(TargetPath) $(SolutionDir)$(ConfigurationName)\lib\</PostBuildEvent>
+    <PostBuildEvent>xcopy /y /s /q /i "$(TargetPath)" "$(SolutionDir)$(ConfigurationName)\lib\"</PostBuildEvent>
   </PropertyGroup>
 </Project>
