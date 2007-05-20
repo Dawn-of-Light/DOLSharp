@@ -20,7 +20,7 @@ using System;
 using System.Reflection;
 using log4net;
 
-namespace DOL.GS.PacketHandler.v168
+namespace DOL.GS.PacketHandler.Client.v168
 {
 	/// <summary>
 	/// Handles the ping packet
