@@ -27685,6 +27685,24 @@
             Called on every timer tick
             </summary>
         </member>
+        <member name="T:DOL.GS.PacketHandler.Client.v168.UDPPingRequestHandler">
+            <summary>
+            Handles the ping packet
+            </summary>
+        </member>
+        <member name="F:DOL.GS.PacketHandler.Client.v168.UDPPingRequestHandler.log">
+            <summary>
+            Defines a logger for this class.
+            </summary>
+        </member>
+        <member name="M:DOL.GS.PacketHandler.Client.v168.UDPPingRequestHandler.HandlePacket(DOL.GS.GameClient,DOL.GS.GSPacketIn)">
+            <summary>
+            Called when the packet has been received
+            </summary>
+            <param name="client">Client that sent the packet</param>
+            <param name="packet">Packet data</param>
+            <returns>Non zero if function was successfull</returns>
+        </member>
         <member name="T:DOL.GS.PacketHandler.Client.v168.PlayerDismountRequestHandler.DismountRequestHandler">
             <summary>
             Handles player dismount requests
