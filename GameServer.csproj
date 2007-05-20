@@ -648,6 +648,7 @@
     <Compile Include="packets\Client\168\RemoveConcentrationEffectHandler.cs" />
     <Compile Include="packets\Client\168\SiegeWeaponActionHandler.cs" />
     <Compile Include="packets\Client\168\UDPInitRequestHandler.cs" />
+    <Compile Include="packets\Client\168\UDPPingRequestHandler.cs" />
     <Compile Include="packets\Client\168\UseSkillHandler.cs" />
     <Compile Include="packets\Client\168\UseSlotHandler.cs" />
     <Compile Include="packets\Client\168\UseSpellHandler.cs" />
