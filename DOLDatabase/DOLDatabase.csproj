@@ -467,11 +467,15 @@
     <Content Include="MySQL\mysqlclient\docs\MySqlParameterCollection.xml" />
     <Content Include="MySQL\mysqlclient\docs\MySqlTransaction.xml" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="MySQL\mysqlclient\Strings.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PostBuildEvent>copy /y $(TargetPath) $(SolutionDir)\$(ConfigurationName)\lib</PostBuildEvent>
   </PropertyGroup>
 </Project>
