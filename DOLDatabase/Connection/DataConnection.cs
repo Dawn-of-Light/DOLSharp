@@ -18,6 +18,7 @@
  */
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Odbc;
 using System.Data.OleDb;
@@ -122,19 +123,35 @@ namespace DOL.Database.Connection
 			return s;
 		}
 
+		private readonly Stack<MySqlConnection> m_connectionPool = new Stack<MySqlConnection>();
+
 		private MySqlConnection GetMySqlConnection()
 		{
-			MySqlConnection conn = new MySqlConnection(connString);
-			long start1 = Environment.TickCount;
-			conn.Open();
-			if (Environment.TickCount - start1 > 1000)
+			// Get connection from pool
+			MySqlConnection conn = null;
+			lock (m_connectionPool)
 			{
-				if (log.IsWarnEnabled)
-					log.Warn("Gaining SQL connection took " + (Environment.TickCount - start1) + "ms");
+				if (m_connectionPool.Count > 0)
+				{
+					conn = m_connectionPool.Pop();
+				}
+			}
+
+			if (conn == null)
+			{
+				conn = new MySqlConnection(connString);
+				long start1 = Environment.TickCount;
+				conn.Open();
+				if (Environment.TickCount - start1 > 1000)
+				{
+					if (log.IsWarnEnabled)
+						log.Warn("Gaining SQL connection took " + (Environment.TickCount - start1) + "ms");
+				}
+				log.Info("New DB connection created, pooled connections: " + m_connectionPool.Count);
 			}
 			return conn;
 		}
-
+ 
 		/// <summary>
 		/// Execute a non query like update or delete
 		/// </summary>
@@ -163,15 +180,15 @@ namespace DOL.Database.Connection
 					else if (Environment.TickCount - start > 500 && log.IsWarnEnabled)
 						log.Warn("SQL NonQuery took " + (Environment.TickCount - start) + "ms!\n" + sqlcommand);
 
+					lock (m_connectionPool)
+					{
+						m_connectionPool.Push(conn);
+					}
 				}
 				catch (Exception e)
 				{
-					throw e;
-				}
-				finally 
-				{
-					if (conn != null && conn.State != ConnectionState.Closed)
-						conn.Close();
+					conn.Close();
+					throw;
 				}
 				return affected;
 			}
@@ -186,7 +203,7 @@ namespace DOL.Database.Connection
 		/// </summary>
 		/// <param name="sqlcommand"></param>
 		/// <returns></returns>
-		public void ExecuteSelect(string sqlcommand,QueryCallback callback)
+		public void ExecuteSelect(string sqlcommand, QueryCallback callback)
 		{
 			if (connType == ConnectionType.DATABASE_MYSQL)
 			{
@@ -208,18 +225,20 @@ namespace DOL.Database.Connection
 						log.Warn("SQL Select took " + (Environment.TickCount - start) + "ms!\n" + sqlcommand);
 
 					callback(reader);
+					
+					reader.Close();
+					
+					lock (m_connectionPool)
+					{
+						m_connectionPool.Push(conn);
+					}
 				}
 				catch (Exception e)
 				{
 					if (log.IsErrorEnabled)
 						log.Error("ExecuteSelect: \"" + sqlcommand + "\"\n", e);
 					conn.Close();
-					throw e;
-				}
-				finally
-				{
-					if (conn != null && conn.State != ConnectionState.Closed)
-						conn.Close();
+					throw;
 				}
 				return;
 			}
@@ -249,6 +268,11 @@ namespace DOL.Database.Connection
 					long start = Environment.TickCount;
 					obj = cmd.ExecuteScalar();
 
+					lock (m_connectionPool)
+					{
+						m_connectionPool.Push(conn);
+					}
+
 					if (log.IsDebugEnabled)
 						log.Debug("SQL Select exec time " + (Environment.TickCount - start) + "ms");
 					else if (Environment.TickCount - start > 500 && log.IsWarnEnabled)
@@ -259,12 +283,7 @@ namespace DOL.Database.Connection
 					if (log.IsErrorEnabled)
 						log.Error("ExecuteSelect: \"" + sqlcommand + "\"\n", e);
 					conn.Close();
-					throw e;
-				}
-				finally
-				{
-					if (conn != null && conn.State != ConnectionState.Closed)
-						conn.Close();
+					throw;
 				}
 				return obj;
 			}
