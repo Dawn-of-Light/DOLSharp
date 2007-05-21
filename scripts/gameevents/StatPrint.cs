@@ -39,12 +39,14 @@ namespace DOL.GS.GameEvents
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		private static volatile Timer m_timer = null;
+		private static volatile Timer m_mgrTimer = null;
 		private static long m_lastBytesIn = 0;
 		private static long m_lastBytesOut = 0;
 		private static long m_lastPacketsIn = 0;
 		private static long m_lastPacketsOut = 0;
 		private static long m_lastMeasureTick = DateTime.Now.Ticks;
 		private static int m_statFrequency = 30000; // 30s
+		private static int m_mgrFrequency = 500; // 1s
 		private static PerformanceCounter m_systemCpuUsedCounter;
 		private static PerformanceCounter m_processCpuUsedCounter;
 		private static Hashtable m_timerStatsByMgr;
@@ -58,6 +60,7 @@ namespace DOL.GS.GameEvents
 		{
 			m_timerStatsByMgr = new Hashtable();
 			m_timer = new Timer(new TimerCallback(PrintStats), null, 10000, 0);
+			m_mgrTimer = new Timer(new TimerCallback(CheckTimeManagers), null, 20000, 0);
 			try
 			{
 				m_systemCpuUsedCounter = new PerformanceCounter("Processor", "% processor time", "_total");
@@ -195,6 +198,27 @@ namespace DOL.GS.GameEvents
 					log.Info(stats);
 				}
 
+				CheckTimeManagers(null);
+			}
+			catch (Exception e)
+			{
+				log.Error("stats log callback", e);
+			}
+			finally
+			{
+				m_lastMeasureTick = DateTime.Now.Ticks;
+				m_timer.Change(m_statFrequency, Timeout.Infinite);
+			}
+		}
+
+		/// <summary>
+		/// Checks the time managers.
+		/// </summary>
+		/// <param name="state">state object</param>
+		private static void CheckTimeManagers(object state)
+		{
+			try
+			{
 				if (log.IsFatalEnabled)
 				{
 					lock (m_timerStatsByMgr.SyncRoot)
@@ -220,15 +244,14 @@ namespace DOL.GS.GameEvents
 			}
 			catch (Exception e)
 			{
-				log.Error("stats log callback", e);
+				log.Error("Checking time managers", e);
 			}
 			finally
 			{
-				m_lastMeasureTick = DateTime.Now.Ticks;
-				m_timer.Change(m_statFrequency, Timeout.Infinite);
+				m_mgrTimer.Change(m_mgrFrequency, 0);
 			}
 		}
-		
+
 		public class TimerStats
 		{
 			public long InvokedCount;

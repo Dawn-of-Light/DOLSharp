@@ -20,7 +20,57 @@ System.NoSense:								Non ha senso!
 System.MustSelectTarget:					Devi selezionare un bersaglio!
 System.ReleaseTimer:						Release Timer
 
+# GAMELIVING
+GameLiving.ReceiveItem:					{0} doesn't want this item!
+GameLiving.ReceiveMoney:				{0} doesn't want your money!
+
+# GAMEMERCHANT
+GameMerchant.GetExamineMessages.BuyItemsFor:		{0} dice, "Puoi comprare questi oggetti per {1}."
+GameMerchant.GetExamineMessages.Nothing:		niente
+GameMerchant.GetExamineMessages.RightClick:		[Clicca col pulsante destro per visualizzare gli articoli]
+GameMerchant.GetExamineMessages.YouExamine:		Esamini {0}. {1} e' {2} ed e' un mercante.
+GameMerchant.OnPlayerAppraise.Offers:			{0} ti offre {1} per {2}.
+GameMerchant.OnPlayerBuy.Bought:			Hai comprato {0} per {1}.
+GameMerchant.OnPlayerBuy.Bought2:			Hai comprato {0} per {1} {2}.
+GameMerchant.OnPlayerBuy.BoughtBP:			Hai comprato {0} per {1} BPs.
+GameMerchant.OnPlayerBuy.BoughtPieces:			Hai comprato {0} pieces of {1} per {2}.
+GameMerchant.OnPlayerBuy.BoughtPieces2:			Hai comprato {0} pieces of {1} per {2} {3].
+GameMerchant.OnPlayerBuy.BoughtPiecesBP:		Hai comprato {0} pieces of {1} per {0} BPs.
+GameMerchant.OnPlayerBuy.NotInventorySpace:		Non hai abbastanza spazio nell'inventario per comprare questo oggetto.
+GameMerchant.OnPlayerBuy.YouNeed:			Hai bisogno di {0} per comprare questo oggetto.
+GameMerchant.OnPlayerBuy.YouNeed2:			Hai bisogno di {0} {1} per comprare questo oggetto.
+GameMerchant.OnPlayerBuy.YouNeedBP:			Hai bisogno di {0} BPs per comprare questo oggetto.
+GameMerchant.OnPlayerSell.CantBeSold:			Questo oggetto non puo' essere venduto.
+GameMerchant.OnPlayerSell.GivesYou:			{0} ti da' {1} per {2}.
+GameMerchant.OnPlayerSell.IsntInterested:		{0} non e' interessato a {1}.
+GameMerchant.OnPlayerSell.TooFarAway:			{0} e' troppo lontano!
+
+# GAMENPC
+GameNPC.GetAggroLevelString.Aggressive1:		aggressivo
+GameNPC.GetAggroLevelString.Aggressive2:		Aggressivo
+GameNPC.GetAggroLevelString.Friendly1:			amichevole
+GameNPC.GetAggroLevelString.Friendly2:			Amichevole
+GameNPC.GetAggroLevelString.Hostile1:			ostile
+GameNPC.GetAggroLevelString.Hostile2:			Ostile
+GameNPC.GetAggroLevelString.Neutral1:			neutrale
+GameNPC.GetAggroLevelString.Neutral2:			Neutrale
+GameNPC.GetAggroLevelString.TowardsYou:			{0} verso di te
+GameNPC.GetExamineMessages.YouExamine:			Esamini {0}. {1} e' {2}.
+
+
+# GAMEOBJECT
+GameObject.GetExamineMessages.YouTarget:		Selezioni [{0}].
+GameObject.Interact.TooFarAway:				Sei troppo lontano per interagire con {0}.
+
 # GAMEPLAYER
+GamePlayer.AddAbility.YouLearn:				Impari l'abilita' {0} !
+GamePlayer.AddSpecialisation.YouLearn:		Impari lo stile {0} !
+GamePlayer.AddSpellLine.YouLearn:			Impari gli incantesimi {0} !
+GamePlayer.ApplyPoison.CantApplyRecentCombat:	Sei stato in combattimento di recente e non puoi ancora applicare veleni!
+GamePlayer.ApplyPoison.CantPoisonWeapon:	Non puoi avvelenare quest'arma!
+GamePlayer.ApplyPoison.CantUsePoison:		Non puoi usare questo veleno.
+GamePlayer.ApplyPoison.CantUsePoisons:		Non puoi usare veleni.
+GamePlayer.ApplyPoison.PoisonsAppliedWeapons:	I veleni possono essere usati solamente sulle armi.
 GamePlayer.Attack.AlreadyDead:				{0} e' gia' morto!
 GamePlayer.Attack.Blocked:					{0} blocca il tuo attacco!
 GamePlayer.Attack.CantBeAttacked:			Non puo' essere attaccato!
@@ -64,6 +114,20 @@ GamePlayer.Attack.Type.Throw:				lanci
 GamePlayer.Attack.WithYour:					con il tuo
 GamePlayer.Attack.YouAttack:				Attacchi
 GamePlayer.Attack.YouShot:					Colpisci		
+GamePlayer.Bind.LastBindPoint:				Ultimo punto di rinascita : {0}.
+GamePlayer.Bind.CantBindDead:				Non puoi impostare un punto di rinascita quando sei morto!
+GamePlayer.Bind.MustWait:					Devi aspettare {0} secondi per poter impostare un nuovo punto di rinascita!
+GamePlayer.Bind.Bound:						Hai impostato il tuo punto di rinascita in questo luogo.
+GamePlayer.Bind.CantHere:					Non puoi impostare un punto di rinascita in questo luogo!
+GamePlayer.CastSpell.CantCastStunned:		Non puoi lanciare incantesimi quando sei bloccato!
+GamePlayer.CastSpell.CantCastMezzed:		Non puoi lanciare incantesimi quando sei incantato!
+GamePlayer.CastSpell.AlreadyPlaySong:		Stai gia' suonando una canzone!
+GamePlayer.CastSpell.AlreadyCastFollow:		Stai gia' lanciando un incantesimo! Prepari questo incantesimo come seguente!
+GamePlayer.CastSpell.AlreadyCastNoQueue:	Stai gia' lanciando un incantesimo, per abilitare la successione di incantesimi digita '/noqueue'!
+GamePlayer.CommandNpcAttack.TooFarAwayForPet:			Il tuo bersaglio e' troppo lontano per poter essere attaccato dal tuo pet!
+GamePlayer.CommandNpcGoTarget.MustSelectDestination:	Devi scegliere una destinazione per il tuo pet.
+GamePlayer.CraftItem.DontHaveAbilityMake:	Non hai l'abilita' di costruire questo oggetto.
+GamePlayer.CurrentTitle.TitleCleared:		Il tuo titolo e' stato reimpostato.
 GamePlayer.Die.CorpseLies:					{0} e' morto. {1} cadavere giace sul terreno.
 GamePlayer.Die.DeadRVR:						Sei morto combattendo per il tuo reame e non perdi esperienza!
 GamePlayer.Die.DeathN1:						Questa e' la tua prima morte per questo livello. La tua perdita di esperienza e costituzione sono notevolmente ridotte.
@@ -71,29 +135,73 @@ GamePlayer.Die.DeathN2:						Questa e' la tua seconda morte per questo livello. 
 GamePlayer.Die.DuelDefeated:				{0} e' stato sconfitto in duello da {1} !
 GamePlayer.Die.Killed:						{0} e' stato ucciso !
 GamePlayer.Die.KilledBy:					{0} e' stato ucciso da {1}.
-GamePlayer.Die.KilledByLocation:			{0} e' stato ucciso {1} a {2}.
+GamePlayer.Die.KilledByLocation:			{0} e' stato ucciso da {1} a {2}.
 GamePlayer.Die.KilledLocation:				{0} e' stato ucciso a {1} !
+GamePlayer.Die.LoseExperience:				Perdi un po' di esperienza!
 GamePlayer.Die.ReleaseToReturn:				Sei stato ucciso.  Digita '/release' per ritornare al tuo ultimo punto di rinascita.
 GamePlayer.Die.YouKilled:					Hai ucciso {0}!
-GamePlayer.SendReceive.sends:				 scrive, 
-GamePlayer.Quit.CantQuitDead:				Non puoi uscire adesso, sei morto.  Digita '/release' per rilasciare il tuo cadavere.
-GamePlayer.Quit.CantQuitMount:				Devi smontare prima di uscire.
-GamePlayer.Quit.CantQuitStanding:			Devi rimanere ancora in piedi per uscire.
-GamePlayer.Quit.CantQuitCrafting:			Non puoi uscire mentre costruisci.
-GamePlayer.Quit.RecentlyInCombat:			Sei stato recentemente in combattimento e devi aspettare ancora per poter uscire.
-GamePlayer.Quit.YouWillQuit:				Uscirai dopo essere rimasto seduto per {0} secondi.  Digita '/stand' oppure muoviti se non vuoi uscire.
-GamePlayer.Release.NotDead:					Non sei morto!
-GamePlayer.Release.CantReleaseDuel:			Non puoi modificare il tuo rilascio durante un duello!
-GamePlayer.Release.NoLongerReleaseAuto:		Non verrai piu' rilasciato automaticamente. (ancora {0} secondi)
-GamePlayer.Release.WillReleaseAuto:			Ora verrai rilasciato automaticamente tra {0} secondi!
-GamePlayer.Release.WillReleaseAutoCity:		Ora verrai rilasciato automaticamente nella tua citta' di appartenenza tra {0} secondi!
-GamePlayer.Release.YouRelease:				Rilasci il tuo corpo nella morte.
-GamePlayer.Release.GraveErected:			Una tomba e' stata eretta dove sei caduto.
-GamePlayer.Release.ReturnToPray:			Ritorna qui e digita '/pray' sulla tua tomba per recuperare l'esperienza perduta.
-GamePlayer.Release.LostConstitution:		Hai perso costituzione, vai da un guaritore per recuperarla!
-GamePlayer.Release.SurroundingChange:		Il paesaggio intorno a te cambia improvvisamente!
-GamePlayer.Release.NoValidBindpoint:		Non hai impostato un punto di rinascita valido! Rinascerai qui!
-GamePlayer.Release.WillReleaseIn:			Sarai rilasciato automaticamente tra {0} secondi.
+GamePlayer.DrowningTimerCallback.CannotBreath:				Non puoi respirare sottacqua e subisci un danno!
+GamePlayer.DrowningTimerCallback.Take5%Damage:				Subisci il 5% dei tuoi punti ferita massimi di danno.
+GamePlayer.DuelStop.DuelEnds:				Il tuo duello e' finito!
+GamePlayer.GainBountyPoints.YouGet:			Ottieni {0} punti taglia!
+GamePlayer.GainExperience.CannotRaise:		Non puoi reclamare il livello 6 finche' non scegli una classe!
+GamePlayer.GainExperience.TalkToTrainer:	Parla con il tuo allenatore per ricevere maggiori informazioni.
+GamePlayer.GainExperience.YouGet:			Ottieni {0} punti esperienza.
+GamePlayer.GainRealmPoints.Earned:			{0} ha guadagnato 1.000.000 di punti reame a {1}
+GamePlayer.GainRealmPoints.GainBonus:		Ottieni un bonus di +{0} in tutte le specializzazioni!
+GamePlayer.GainRealmPoints.GainedLevel:		Hai ottenuto un livello reame!
+GamePlayer.GainRealmPoints.GainedRank:		Hai ottenuto un nuovo rango e titolo reame!
+GamePlayer.GainRealmPoints.NewRealmTitle:	Il tuo nuovo titolo reame e' {0}!
+GamePlayer.GainRealmPoints.ReachedRank:		{0} ha raggiunto il rango reame {1:#L#} a {2}!
+GamePlayer.GainRealmPoints.YouGet:			Ottieni {0} punti reame!
+GamePlayer.GetExamineMessages.EnemyRealmMember:		Esamini {0}. {1} e' un membro di un reame nemico!
+GamePlayer.GetExamineMessages.NeutralMember:		Esamini {0}. {1} e' un membro neutrale senza alleanza di gilda.
+GamePlayer.GetExamineMessages.OtherGuildMember:		Esamini {0}. {1} e' un membro della gilda {2}.
+GamePlayer.GetExamineMessages.RealmMember:		Esamini {0}. {1} e' un membro della classe {2} nel tuo reame.
+GamePlayer.GetExamineMessages.YouExamine:		Esamini {0}.
+GamePlayer.GetExamineMessages.YourGuildMember:		Esamini {0}. {1} e' un membro della classe {2} nella tua gilda.
+GamePlayer.IsCloakHoodUp.NowWear:			Abbassi il cappuccio sul tuo capo.
+GamePlayer.IsCloakHoodUp.NoLongerWear:		Alzi il cappuccio dal tuo capo.
+GamePlayer.IsOnHorse.DismountSteed:			Smonti dalla cavalcatura.
+GamePlayer.IsOnHorse.MountSteed:			Monti sulla cavalcatura.
+GamePlayer.OnItemEquipped.Magic:			La magia di {0} scorre dentro di te.
+GamePlayer.OnItemEquipped.WieldBothHands:		Impugni {0} con entrambe le mani.
+GamePlayer.OnItemEquipped.WieldLeftHand:		Impugni {0} nella tua mano sinistra.
+GamePlayer.OnItemEquipped.WieldRightHand:		Impugni {0} nella tua mano destra.
+GamePlayer.OnItemUnequipped.BothHandsFree:		Rinfoderi {0}. Entrambe le tue mani sono ora libere.
+GamePlayer.OnItemUnequipped.LeftHandFree:		Rinfoderi {0} dalla tua mano sinistra.
+GamePlayer.OnItemUnequipped.RightHandFree:		Rinfoderi {0} dalla tua mano destra.
+GamePlayer.OnLevelUp.YouRaise:				Il tuo livello sale a {0}!
+GamePlayer.OnLevelUp.YouAchived:			Hai raggiunto il livello {0}!
+GamePlayer.OnLevelUp.FreeLevelEligible:		Ora puoi acquisire un livello gratuito! Clicca sul tuo allenatore per riceverlo (oppure digita '/freelevel decline' per rinunciare al livello gratuito).
+GamePlayer.OnLevelUp.Reached:				{0} ha raggiunto il livello {1} a {2}!
+GamePlayer.OnLevelUp.StatRaise:				Le tue statistiche aumentano!
+GamePlayer.OnLevelUp.AttainedRank:			Sei stato eletto al rango {0}!
+GamePlayer.OnLevelUp.YouGetSpec:			Hai ottenuto altri {0} punti specializzazione da spendere in questo livello!
+GamePlayer.OnLevelUp.HitsRaise:				I tuoi punti ferita aumentano di {0}.
+GamePlayer.OnLevelUp.PowerRaise:			I tuoi punti potere aumentano di {0}.
+GamePlayer.OnLevelUp.SecondStage:			Sali al livello {0} Stage 2!
+GamePlayer.OnLinkdeath.Linkdead:			{0} ha perso la connessione!
+GamePlayer.OnPlayerMove.InterruptCrafting:	Ti muovi e interrompi la costruzione.
+GamePlayer.OnPlayerMove.CannotCallMount:	Ti muovi e non puoi chiamare la tua cavalcatura.
+GamePlayer.OnSkillTrained.YouSpend:			Spendi {0} punti e ti specializzi maggiormente in {1}
+GamePlayer.OnSkillTrained.YouHave:			Ti sono rimasti {0} punti di specializzazione per questo livello.
+GamePlayer.OnSkillTrained.TrainsInVarious:	{0} impara in varie specializzazioni.
+GamePlayer.OpenSelfCraft.AlreadySelfCrafting:			Stai gia' costruendo.
+GamePlayer.OpenSelfCraft.CanOnlyCraftBackpack:			Puoi costruire solamente oggetti nel tuo zaino!
+GamePlayer.PickupObject.Autosplit:			(Autosplit) {0} assegnato a {1}.
+GamePlayer.PickupObject.BackpackFull:			Il tuo zaino e' pieno. Devi prima lasciare qualcosa.
+GamePlayer.PickupObject.CantGetThat:			Non puoi prenderlo!
+GamePlayer.PickupObject.GroupMemberPicksUp:		{0} raccoglie {1}.
+GamePlayer.PickupObject.LootDoesntBelongYou:		Questo oggetto non ti appartiene - non puoi raccoglierlo.
+GamePlayer.PickupObject.MustHaveTarget:			Devi avere un bersaglio per raccogliere qualcosa!
+GamePlayer.PickupObject.NoOneGroupWantsMoney:		Nessuno nel gruppo vuole denaro.
+GamePlayer.PickupObject.NoOneWantsThis:			Nessuno nel gruppo vuole l'oggetto {0}.
+GamePlayer.PickupObject.ObjectTooFarAway:		L'oggetto {0} e' troppo lontano per essere raccolto!
+GamePlayer.PickupObject.TooFarFromBoat:			Sei troppo lontano dalla nave per salirvi!
+GamePlayer.PickupObject.YouGet:				Prendi {0} e lo metti nel tuo zaino.
+GamePlayer.PickupObject.YouPickUp:			Raccogli {0}.
+GamePlayer.PickupObject.YourLootShare:			La tua parte di bottino e' {0}.
 GamePlayer.Pray.CantPrayNow:				Non puoi pregare adesso!
 GamePlayer.Pray.NeedTarget:					Devi selezionare una tomba sulla quale pregare!
 GamePlayer.Pray.SelectGrave:				Seleziona la tua tomba sulla quale pregare!
@@ -102,12 +210,22 @@ GamePlayer.Pray.MustStandingStill:			Devi essere in piedi per pregare.
 GamePlayer.Pray.AlreadyPraying:				Stai gia' pregando!
 GamePlayer.Pray.Begin:						Incominci le tue preghiere!
 GamePlayer.Pray.GainBack:					Preghi sulla tua tomba e recuperi l'esperienza perduta!
-GamePlayer.AddSpecialisation.YouLearn:		Impari lo stile {0} !
-GamePlayer.RemoveSpecialization.YouLose:	Perdi lo stile {0} !
-GamePlayer.AddSpellLine.YouLearn:			Impari gli incantesimi {0} !
-GamePlayer.RemoveSpellLine.YouLose:			Perdi gli incantesimi {0} !
-GamePlayer.AddAbility.YouLearn:				Impari l'abilita' {0} !
-GamePlayer.RemoveAbility.YouLose:			Perdi l'abilita' {0} !
+GamePlayer.Pronoun.Male.Subjective:			lui
+GamePlayer.Pronoun.Male.Possessive:			suo
+GamePlayer.Pronoun.Male.Objective:			lo
+GamePlayer.Pronoun.Female.Subjective:		lei
+GamePlayer.Pronoun.Female.Possessive:		suo
+GamePlayer.Pronoun.Female.Objective:		la
+GamePlayer.Quit.CantQuitCrafting:			Non puoi uscire mentre costruisci.
+GamePlayer.Quit.CantQuitDead:				Non puoi uscire adesso, sei morto.  Digita '/release' per rilasciare il tuo cadavere.
+GamePlayer.Quit.CantQuitMount:				Devi smontare prima di uscire.
+GamePlayer.Quit.CantQuitStanding:			Devi rimanere ancora in piedi per uscire.
+GamePlayer.Quit.RecentlyInCombat:			Sei stato recentemente in combattimento e devi aspettare ancora per poter uscire.
+GamePlayer.Quit.YouWillQuit1:				Uscirai dopo essere rimasto seduto per {0} secondi...
+GamePlayer.Quit.YouWillQuit2:				Uscirai dopo essere rimasto seduto per {0} secondi.  Digita '/stand' oppure muoviti se non vuoi uscire.
+GamePlayer.RealmTitle.UnknownRealm:			Reame non valido
+GamePlayer.ReceiveTradeItem.StillSelfcrafting:	Stai gia' costruendo.
+GamePlayer.ReceiveTradeItem.CantTrade:		Non puoi vendere questo oggetto!
 GamePlayer.RefreshSpec.YouLearn:			Impari lo stile di combattimento {0} !
 GamePlayer.RefreshSpec.AfterStyle:			Questo stile puo' essere usato solamente dopo {0}.
 GamePlayer.RefreshSpec.AfterMissed:			Questo stile e' usato meglio dopo che il tuo ultimo attacco e' stato mancato.
@@ -122,143 +240,94 @@ GamePlayer.RefreshSpec.TargetBlocked:		Questo stile e' usato meglio dopo che l'u
 GamePlayer.RefreshSpec.TargetEvaded:		Questo stile e' usato meglio dopo che l'ultimo attacco del tuo bersaglio e' stato schivato.
 GamePlayer.RefreshSpec.TargetFumbles:		Questo stile e' usato meglio dopo che l'ultimo attacco del tuo bersaglio e' stato annaspato.
 GamePlayer.RefreshSpec.TargetStyle:			Questo stile e' usato meglio dopo che l'ultimo attacco del tuo bersaglio e' uno stile di combattimento.
-GamePlayer.UpdateSpellLine.GainPower:		Acquisisci potere negli incantesimi {0} !
-GamePlayer.OnSkillTrained.YouSpend:			Spendi {0} punti e ti specializzi maggiormente in {1}
-GamePlayer.OnSkillTrained.YouHave:			Ti sono rimasti {0} punti di specializzazione per questo livello.
-GamePlayer.OnSkillTrained.TrainsInVarious:	{0} impara in varie specializzazioni.
-GamePlayer.GainRealmPoints.YouGet:			Ottieni {0} punti reame!
-GamePlayer.GainRealmPoints.GainedLevel:		Hai ottenuto un livello reame!
-GamePlayer.GainRealmPoints.GainedRank:		Hai ottenuto un nuovo rango e titolo reame!
-GamePlayer.GainRealmPoints.NewRealmTitle:	Il tuo nuovo titolo reame e' {0}!
-GamePlayer.GainRealmPoints.GainBonus:		Ottieni un bonus di +{0} in tutte le specializzazioni!
-GamePlayer.GainRealmPoints.ReachedRank:		{0} ha raggiunto il rango reame {1:#L#} a {2}!
-GamePlayer.GainRealmPoints.Earned:			{0} ha guadagnato 1.000.000 di punti reame a {1}
-GamePlayer.GainBountyPoints.YouGet:			Ottieni {0} punti taglia!
-GamePlayer.GainExperience.YouGet:			Ottieni {0} punti esperienza.
-GamePlayer.GainExperience.CannotRaise:		Non puoi reclamare il livello 6 finche' non scegli una classe!
-GamePlayer.GainExperience.TalkToTrainer:	Parla con il tuo allenatore per ricevere maggiori informazioni.
-GamePlayer.OnLevelUp.YouRaise:				Il tuo livello sale a {0}!
-GamePlayer.OnLevelUp.YouAchived:			Hai raggiunto il livello {0}!
-GamePlayer.OnLevelUp.FreeLevelEligible:		Ora puoi acquisire un livello gratuito! Clicca sul tuo allenatore per riceverlo (oppure digita '/freelevel decline' per rinunciare al livello gratuito).
-GamePlayer.OnLevelUp.Reached:				{0} ha raggiunto il livello {1} a {2}!
-GamePlayer.OnLevelUp.StatRaise:				Le tue statistiche aumentano!
-GamePlayer.OnLevelUp.AttainedRank:			Sei stato eletto al rango {0}!
-GamePlayer.OnLevelUp.YouGetSpec:			Hai ottenuto altri {0} punti specializzazione da spendere in questo livello!
-GamePlayer.OnLevelUp.HitsRaise:				I tuoi punti ferita aumentano di {0}.
-GamePlayer.OnLevelUp.PowerRaise:			I tuoi punti potere aumentano di {0}.
-GamePlayer.OnLevelUp.SecondStage:			Sali al livello {0} Stage 2!
-GamePlayer.IsCloakHoodUp.NowWear:			Abbassi il cappuccio sul tuo capo.
-GamePlayer.IsCloakHoodUp.NoLongerWear:		Alzi il cappuccio dal tuo capo.
-GamePlayer.SwitchWeapon.SpellCancelled:		Il tuo incantesimo e' stato annullato!
-GamePlayer.StartAttack.YouMustWait:			Devi aspettare altri {0} secondi per tentare un nuovo attacco!
-GamePlayer.StartAttack.YouCantCombat:		Non puoi entrare in combattimento quando giaci a terra!
-GamePlayer.StartAttack.CantAttackStunned:	Non puoi attaccare quando sei bloccato!
-GamePlayer.StartAttack.CantAttackmesmerized:Non puoi attaccare quando sei incantato!
-GamePlayer.StartAttack.YouMustWaitAgain:	Devi aspettare altri {0} secondi prima di poter attaccare nuovamente.
-GamePlayer.StartAttack.CannotWithoutWeapon:	Non puoi entrare in combattimento senza un'arma!
-GamePlayer.StartAttack.CannotMelee:			Non puoi entrare in corpo-a-corpo con uno strumento musicale!
-GamePlayer.StartAttack.SelectQuiver:		Devi selezionare lo slot della faretra da usare!
-GamePlayer.StartAttack.CantUseQuiver:		Non puoi utilizzare i colpi della faretra con quest'arma!
-GamePlayer.StartAttack.TiredShot:			Sei troppo stanco per poter effettuare un colpo critico!
-GamePlayer.StartAttack.TiredUse:			Sei troppo stanco per poter usare {0}!
-GamePlayer.StartAttack.CombatNoTarget:		Entri in combattimento ma non hai alcun bersaglio selezionato!
-GamePlayer.StartAttack.CombatTarget:		Entri in combattimento e selezioni [{0}]
-GamePlayer.StartAttack.SpellCancelled:		Il tuo incantesimo e' stato annullato!
-GamePlayer.StartAttack.TargetInRange:		, il bersaglio e' nel raggio
-GamePlayer.StartAttack.TargetOutOfRange:	, il bersaglio e' fuori dal raggio
-GamePlayer.StartAttack.YouPrepare:			Prepari {0} ({1}.{2}s per colpire{3})
-GamePlayer.OnLinkdeath.Linkdead:			{0} ha perso la connessione!
-GamePlayer.Bind.LastBindPoint:				Ultimo punto di rinascita : {0}.
-GamePlayer.Bind.CantBindDead:				Non puoi impostare un punto di rinascita quando sei morto!
-GamePlayer.Bind.MustWait:					Devi aspettare {0} secondi per poter impostare un nuovo punto di rinascita!
-GamePlayer.Bind.Bound:						Hai impostato il tuo punto di rinascita in questo luogo.
-GamePlayer.Bind.CantHere:					Non puoi impostare un punto di rinascita in questo luogo!
-GamePlayer.Spell.NotEnoughPowerful:			Non sei abbastanza potente da poter utilizzare l'incantesimo di questo oggetto.
-GamePlayer.Spell.NotImplemented:			{0} ({1}) non ancora implementato su questo server.
-GamePlayer.Spell.Proc.NotImplemented:		L'effetto reattivo con ID {0} non e' ancora implementato su questo server.
-GamePlayer.RealmTitle.UnknownRealm:			Reame non valido
-GamePlayer.SwitchQuiver.ShootWith:			Colpirai con: {0}.
-GamePlayer.SwitchQuiver.NoMoreAmmo:			Non hai piu' colpi nella tua faretra!
-GamePlayer.SwitchQuiver.NotUseQuiver:		Non usi piu' la tua faretra.
-GamePlayer.Pronoun.Male.Subjective:			lui
-GamePlayer.Pronoun.Male.Possessive:			suo
-GamePlayer.Pronoun.Male.Objective:			lo
-GamePlayer.Pronoun.Female.Subjective:		lei
-GamePlayer.Pronoun.Female.Possessive:		suo
-GamePlayer.Pronoun.Female.Objective:		la
-GamePlayer.IsOnHorse.DismountSteed:			Smonti dalla cavalcatura.
-GamePlayer.IsOnHorse.MountSteed:			Monti sulla cavalcatura.
-GamePlayer.Die.LoseExperience:				Perdi un po' di esperienza!
-GamePlayer.DuelStop.DuelEnds:				Il tuo duello e' finito!
-GamePlayer.CastSpell.CantCastStunned:		Non puoi lanciare incantesimi quando sei bloccato!
-GamePlayer.CastSpell.CantCastMezzed:		Non puoi lanciare incantesimi quando sei incantato!
-GamePlayer.CastSpell.AlreadyPlaySong:		Stai gia' suonando una canzone!
-GamePlayer.CastSpell.AlreadyCastFollow:		Stai gia' lanciando un incantesimo! Prepari questo incantesimo come seguente!
-GamePlayer.CastSpell.AlreadyCastNoQueue:	Stai gia' lanciando un incantesimo, per abilitare la successione di incantesimi digita '/noqueue'!
-GamePlayer.ReceiveTradeItem.StillSelfcrafting:	Stai gia' costruendo.
-GamePlayer.ReceiveTradeItem.CantTrade:		Non puoi vendere questo oggetto!
-GamePlayer.UseSlot.CantFire:				Non puoi usare questo oggetto!
-GamePlayer.UseSlot.CantMountWhileDead:		Non puoi montare sulla cavalcatura quando sei morto.
-GamePlayer.UseSlot.MustDismountBefore:		Devi prima smontare dalla cavalcatura.
-GamePlayer.UseSlot.CantSummonRvR:			Non puoi richiamare questa cavalcatura nelle zone RvR.
-GamePlayer.UseSlot.CantMountMoving:			Non puoi montare sulla cavalcatura mentre ti muovi.
-GamePlayer.UseSlot.CantCallMountSeated:		Non puoi richiamare la cavalcatura mentre stai seduto.
-GamePlayer.UseSlot.CantMountSteath:			Non puoi montare sulla cavalcatura mentre sei invisibile.
-GamePlayer.UseSlot.CantMountCombat:			Non puoi montare sulla cavalcatura mentre sei in combattimento.
-GamePlayer.UseSlot.StopCallingMount:		Smetti di richiamare la tua cavalcatura.
-GamePlayer.UseSlot.WhistleMount:			Fischi per richiamare la tua cavalcatura.
-GamePlayer.UseSlot.CantSeeTarget:			Non riesci a vedere il bersaglio!
-GamePlayer.UseSlot.AutoReleaseShot:			Rilasci automaticamente il colpo.
-GamePlayer.UseSlot.AutoReleaseShotReload:	Rilasci automaticamente il colpo e ricarichi.
-GamePlayer.UseSlot.NoAutoReleaseShotReload:	Non rilasci piu' automaticamente il colpo o ricarichi.
-GamePlayer.UseSlot.CantUseInCombat:			Non puoi usare questo oggetto in combattimento!
-GamePlayer.UseSlot.NotEnouthPower:			Non sei abbastanza potente da poter utilizzare l'incantesimo di questo oggetto.
-GamePlayer.UseSlot.Can'tUseFromBackpack:	Non puoi usare questo oggetto direttamente dal tuo zaino. Devi prima indossarlo!
-GamePlayer.ApplyPoison.CantUsePoisons:		Non puoi usare veleni.
-GamePlayer.ApplyPoison.PoisonsAppliedWeapons:	I veleni possono essere usati solamente sulle armi.
-GamePlayer.ApplyPoison.CantPoisonWeapon:	Non puoi avvelenare quest'arma!
-GamePlayer.ApplyPoison.CantUsePoison:		Non puoi usare questo veleno.
-GamePlayer.ApplyPoison.CantApplyRecentCombat:	Sei stato in combattimento di recente e non puoi ancora applicare veleni!
-GamePlayer.Whisper.SelectTarget:			Seleziona il bersaglio a cui sussurrare!
-GamePlayer.DrowningTimerCallback.CannotBreath:				Non puoi respirare sottacqua e subisci un danno!
-GamePlayer.DrowningTimerCallback.Take5%Damage:				Subisci il 5% dei tuoi punti ferita massimi di danno.
-GamePlayer.Sprint.TooFatigued:				Sei troppo affaticato per scattare!
-GamePlayer.Sprint.CantSprintHidden:			Non puoi scattare mentre sei invisibile!
-GamePlayer.Sprint.CantSprintDead:			Non puoi scattare quando sei morto!
-GamePlayer.Sprint.PrepareSprint:			Ti prepari a scattare!
-GamePlayer.Sprint.NoLongerReady:			Smetti di scattare.
-GamePlayer.OnPlayerMove.InterruptCrafting:	Ti muovi e interrompi la costruzione.
-GamePlayer.OnPlayerMove.CannotCallMount:	Ti muovi e non puoi chiamare la tua cavalcatura.
-GamePlayer.Sit.InterruptCallMount:			Tenti di sederti e interrompi la chiamata della cavalcatura!
+GamePlayer.Release.NotDead:					Non sei morto!
+GamePlayer.Release.CantReleaseDuel:			Non puoi modificare il tuo rilascio durante un duello!
+GamePlayer.Release.NoLongerReleaseAuto:		Non verrai piu' rilasciato automaticamente. (ancora {0} secondi)
+GamePlayer.Release.WillReleaseAuto:			Ora verrai rilasciato automaticamente tra {0} secondi!
+GamePlayer.Release.WillReleaseAutoCity:		Ora verrai rilasciato automaticamente nella tua citta' di appartenenza tra {0} secondi!
+GamePlayer.Release.YouRelease:				Rilasci il tuo corpo nella morte.
+GamePlayer.Release.GraveErected:			Una tomba e' stata eretta dove sei caduto.
+GamePlayer.Release.ReturnToPray:			Ritorna qui e digita '/pray' sulla tua tomba per recuperare l'esperienza perduta.
+GamePlayer.Release.LostConstitution:		Hai perso costituzione, vai da un guaritore per recuperarla!
+GamePlayer.Release.SurroundingChange:		Il paesaggio intorno a te cambia improvvisamente!
+GamePlayer.Release.NoValidBindpoint:		Non hai impostato un punto di rinascita valido! Rinascerai qui!
+GamePlayer.Release.WillReleaseIn:			Sarai rilasciato automaticamente tra {0} secondi.
+GamePlayer.RemoveSpecialization.YouLose:	Perdi lo stile {0} !
+GamePlayer.RemoveSpellLine.YouLose:			Perdi gli incantesimi {0} !
+GamePlayer.RemoveAbility.YouLose:			Perdi l'abilita' {0} !
+GamePlayer.SaveIntoDatabase.CharacterSaved:	Il tuo personaggio e' stato salvato.
+GamePlayer.Say.YouSay:					Dici, "{0}"
+GamePlayer.SayReceive.Says:				{0} dice, "{1}"
+GamePlayer.SayReceive.FalseLanguage:			{0} dice qualcosa in un linguaggio che non comprendi.
+GamePlayer.SendReceive.sends:				 scrive, 
+GamePlayer.SetControlledNpc.ReleaseTarget:				Rilasci il controllo del tuo bersaglio.
+GamePlayer.Shade.AlreadyShade:				Sei gia' un'ombra!
+GamePlayer.Shade.NoLongerShade:				Non sei piu' un'ombra!
 GamePlayer.Sit.AlreadySitting:				Sei gia' seduto!
-GamePlayer.Sit.NotSitting:					Non sei seduto!
 GamePlayer.Sit.CantSitDead:					Non puoi sederti quando sei morto!
 GamePlayer.Sit.CantSitStunned:				Non puoi riposarti quando sei bloccato!
 GamePlayer.Sit.CantSitMezzed:				Non puoi riposarti quando sei incantato!
-GamePlayer.Sit.MustStandingStill:			Devi rimanere ancora in piedi prima di poterti sedere.
+GamePlayer.Sit.InterruptCallMount:			Tenti di sederti e interrompi la chiamata della cavalcatura!
 GamePlayer.Sit.MustDismount:				Devi prima smontare dalla cavalcatura.
+GamePlayer.Sit.MustStandingStill:			Devi rimanere ancora in piedi prima di poterti sedere.
+GamePlayer.Sit.NoLongerWaitingQuit:			Non stai piu' aspettando di uscire.
+GamePlayer.Sit.NotSitting:					Non sei seduto!
 GamePlayer.Sit.YouSitDown:					Ti siedi.  Digita '/stand' oppure muoviti per alzarti.
 GamePlayer.Sit.YouStandUp:					Ti alzi.
-GamePlayer.Sit.NoLongerWaitingQuit:			Non stai piu' aspettando di uscire.
-GamePlayer.UpdateEncumberance.EncumberedMoveSlowly:		Sei sovrappeso e ti muovi piu' lentamente.
-GamePlayer.UpdateEncumberance.Encumbered:	Sei sovrappeso!
-GamePlayer.PickupObject.MustHaveTarget:		Devi avere un bersaglio per raccogliere qualcosa!
-GamePlayer.PickupObject.LootDoesntBelongYou:			Questo oggetto non ti appartiene - non puoi raccoglierlo.
-GamePlayer.PickupObject.CantGetThat:		Non puoi prenderlo!
-GamePlayer.PickupObject.BackpackFull:		Il tuo zaino e' pieno. Devi prima lasciare qualcosa.
-GamePlayer.PickupObject.NoOneGroupWantsMoney:			Nessuno nel gruppo vuole denaro.
-GamePlayer.SaveIntoDatabase.CharacterSaved:	Il tuo personaggio e' stato salvato.
-GamePlayer.Stealth.NowHidden:				Ora sei invisibile!
+GamePlayer.Spell.NotEnoughPowerful:			Non sei abbastanza potente da poter utilizzare l'incantesimo di questo oggetto.
+GamePlayer.Spell.NotImplemented:			{0} ({1}) non ancora implementato su questo server.
+GamePlayer.Spell.Proc.NotImplemented:		L'effetto reattivo con ID {0} non e' ancora implementato su questo server.
+GamePlayer.Sprint.CantSprintDead:			Non puoi scattare quando sei morto!
+GamePlayer.Sprint.CantSprintHidden:			Non puoi scattare mentre sei invisibile!
+GamePlayer.Sprint.NoLongerReady:			Smetti di scattare.
+GamePlayer.Sprint.PrepareSprint:			Ti prepari a scattare!
+GamePlayer.Sprint.TooFatigued:				Sei troppo affaticato per scattare!
+GamePlayer.StartAttack.CannotMelee:			Non puoi entrare in corpo-a-corpo con uno strumento musicale!
+GamePlayer.StartAttack.CannotWithoutWeapon:	Non puoi entrare in combattimento senza un'arma!
+GamePlayer.StartAttack.CantAttackmesmerized:Non puoi attaccare quando sei incantato!
+GamePlayer.StartAttack.CantAttackStunned:	Non puoi attaccare quando sei bloccato!
+GamePlayer.StartAttack.CantUseQuiver:		Non puoi utilizzare i colpi della faretra con quest'arma!
+GamePlayer.StartAttack.CombatNoTarget:		Entri in combattimento ma non hai alcun bersaglio selezionato!
+GamePlayer.StartAttack.CombatTarget:		Entri in combattimento e selezioni [{0}]
+GamePlayer.StartAttack.SelectQuiver:		Devi selezionare lo slot della faretra da usare!
+GamePlayer.StartAttack.SpellCancelled:		Il tuo incantesimo e' stato annullato!
+GamePlayer.StartAttack.TargetInRange:		, il bersaglio e' nel raggio
+GamePlayer.StartAttack.TargetOutOfRange:	, il bersaglio e' fuori dal raggio
+GamePlayer.StartAttack.TiredShot:			Sei troppo stanco per poter effettuare un colpo critico!
+GamePlayer.StartAttack.TiredUse:			Sei troppo stanco per poter usare {0}!
+GamePlayer.StartAttack.YouCantCombat:		Non puoi entrare in combattimento quando giaci a terra!
+GamePlayer.StartAttack.YouMustWait:			Devi aspettare altri {0} secondi per tentare un nuovo attacco!
+GamePlayer.StartAttack.YouMustWaitAgain:	Devi aspettare altri {0} secondi prima di poter attaccare nuovamente.
+GamePlayer.StartAttack.YouPrepare:			Prepari {0} ({1}.{2}s per colpire{3})
 GamePlayer.Stealth.NoLongerHidden:			Non sei piu' invisibile!
-GamePlayer.CraftItem.DontHaveAbilityMake:	Non hai l'abilita' di costruire questo oggetto.
-GamePlayer.OpenSelfCraft.AlreadySelfCrafting:			Stai gia' costruendo.
-GamePlayer.OpenSelfCraft.CanOnlyCraftBackpack:			Puoi costruire solamente oggetti nel tuo zaino!
-GamePlayer.SetControlledNpc.ReleaseTarget:				Rilasci il controllo del tuo bersaglio.
-GamePlayer.CommandNpcAttack.TooFarAwayForPet:			Il tuo bersaglio e' troppo lontano per poter essere attaccato dal tuo pet!
-GamePlayer.CommandNpcGoTarget.MustSelectDestination:	Devi scegliere una destinazione per il tuo pet.
-GamePlayer.Shade.AlreadyShade:				Sei gia' un'ombra!
-GamePlayer.Shade.NoLongerShade:				Non sei piu' un'ombra!
-GamePlayer.CurrentTitle.TitleCleared:		Il tuo titolo e' stato reimpostato.
+GamePlayer.Stealth.NowHidden:				Ora sei invisibile!
+GamePlayer.SwitchQuiver.ShootWith:			Colpirai con: {0}.
+GamePlayer.SwitchQuiver.NoMoreAmmo:			Non hai piu' colpi nella tua faretra!
+GamePlayer.SwitchQuiver.NotUseQuiver:		Non usi piu' la tua faretra.
+GamePlayer.SwitchWeapon.SpellCancelled:		Il tuo incantesimo e' stato annullato!
+GamePlayer.UpdateEncumberance.Encumbered:	Sei sovrappeso!
+GamePlayer.UpdateEncumberance.EncumberedMoveSlowly:		Sei sovrappeso e ti muovi piu' lentamente.
+GamePlayer.UpdateSpellLine.GainPower:		Acquisisci potere negli incantesimi {0} !
+GamePlayer.UseSlot.AttemptToUse:			Cerchi di usare {0}.
+GamePlayer.UseSlot.AutoReleaseShot:			Rilasci automaticamente il colpo.
+GamePlayer.UseSlot.AutoReleaseShotReload:	Rilasci automaticamente il colpo e ricarichi.
+GamePlayer.UseSlot.CantFire:				Non puoi usare questo oggetto!
+GamePlayer.UseSlot.CantCallMountSeated:		Non puoi richiamare la cavalcatura mentre stai seduto.
+GamePlayer.UseSlot.CantMountCombat:			Non puoi montare sulla cavalcatura mentre sei in combattimento.
+GamePlayer.UseSlot.CantMountMoving:			Non puoi montare sulla cavalcatura mentre ti muovi.
+GamePlayer.UseSlot.CantMountSteath:			Non puoi montare sulla cavalcatura mentre sei invisibile.
+GamePlayer.UseSlot.CantMountWhileDead:		Non puoi montare sulla cavalcatura quando sei morto.
+GamePlayer.UseSlot.CantSeeTarget:			Non riesci a vedere il bersaglio!
+GamePlayer.UseSlot.CantSummonRvR:			Non puoi richiamare questa cavalcatura nelle zone RvR.
+GamePlayer.UseSlot.Can'tUseFromBackpack:	Non puoi usare questo oggetto direttamente dal tuo zaino. Devi prima indossarlo!
+GamePlayer.UseSlot.CantUseInCombat:			Non puoi usare questo oggetto in combattimento!
+GamePlayer.UseSlot.IllegalSourceObject:		Oggetto non valido. Preparato {0}.
+GamePlayer.UseSlot.MustDismountBefore:		Devi prima smontare dalla cavalcatura.
+GamePlayer.UseSlot.NoAutoReleaseShotReload:	Non rilasci piu' automaticamente il colpo o ricarichi.
+GamePlayer.UseSlot.NotEnouthPower:			Non sei abbastanza potente da poter utilizzare l'incantesimo di questo oggetto.
+GamePlayer.UseSlot.StopCallingMount:		Smetti di richiamare la tua cavalcatura.
+GamePlayer.UseSlot.WhistleMount:			Fischi per richiamare la tua cavalcatura.
+GamePlayer.Whisper.SelectTarget:			Seleziona il bersaglio a cui sussurrare!
 					
 # HOUSING
 HouseEnterLeave.TooFarAway:					Sei troppo lontano per poter entrare nella casa {0}.
@@ -280,19 +349,18 @@ HousingPlaceItemHandler.IndoorObjectPlaced:	Oggetto interno posizionato. {0} slo
 HousingPlaceItemHandler.NoHookpoint:		Ora non ci sono hookpoints !
 HousingPlaceItemHandler.PutMoney:			Depositi il denaro nella tua casa.
 
-# GameServer\world
-# AbstractArea
-AbstractArea.Entered:						(Regione) Sei entrato in {0}!
-AbstractArea.Left:							(Regione) Hai lasciato {0}!
-
-# GameServer\packets\Client\168
-# /PlayerInitRequestHandler
-PlayerInitRequestHandler.AllianceMessage:		Messaggio di Alleanza: {0}
-PlayerInitRequestHandler.FreeLevel:				Sei idoneo per un livello gratuito! Clicca sul tuo allenatore per riceverlo (oppure digita /freelevel decline per rifiutarlo).
-PlayerInitRequestHandler.GuildMessage:			Messaggio di Gilda: 
-PlayerInitRequestHandler.LevelCap:				Hai superato il limite massimo del livello di questo battleground!
-PlayerInitRequestHandler.OfficerMessage:		Messaggio degli Ufficiali: {0}
-PlayerInitRequestHandler.SaferLocation:			Quest'area non e' attualmente sicura e stai per essere trasportato in un luogo piu' sicuro.
+# TRAINER
+# /GameTrainer
+GameTrainer.AddGift.NotEnoughSpace:			Non hai spazio nell'inventario per ricevere il tuo dono. Per favore recupera lo spazio.
+GameTrainer.GetExamineMessages.RightClick:		[Clicca col pulsante destro per visualizzare la finestra di allenamento]
+GameTrainer.GetExamineMessages.YouExamine:		Esamini {0}. {1} e' {2} ed allena i membri della classe {3}.
+GameTrainer.GetExamineMessages.YouTarget:		Selezioni [{0}].
+GameTrainer.PromotePlayer.Accepted:			Sei stato accettato da {0}!
+GameTrainer.PromotePlayer.Says:				{0} dice: "{1}"
+GameTrainer.PromotePlayer.Upgraded:			Sei stato promosso alla classe {0}!
+GameTrainer.ReceiveItem.RespecFull:			Un simpatico {0}! Ti ho aggiunto un full respec da usare con /respec all.
+GameTrainer.ReceiveItem.RespecRealm:			Grazie, ti ho aggiunto un realm respec da usare con /respec realm.
+GameTrainer.ReceiveItem.RespecSingle:			Grazie, ti ho aggiunto un single spec respec da usare con /respec <linename>
 
 # /PlayerPositionUpdateHandler
 PlayerPositionUpdateHandler.Endurance:			Perdi endurance!
@@ -302,15 +370,72 @@ PlayerPositionUpdateHandler.FallPercent:		Perdi il {0}% dei tuoi punti ferita ma
 PlayerPositionUpdateHandler.SafeFall:			Il danno e' stato diminuito dalla tua abilita' Safe Fall!
 PlayerPositionUpdateHandler.UnknownZone:		Zona sconosciuta, stai per essere trasportato al tuo punto di rinascita.
 
+# /gameobjects/CustomNPC
+# /GameStableMaster
+GameStableMaster.HorseName:				cavallo
+GameStableMaster.UnknownWay:				Il mio cavallo non conosce ancora la strada per {0}.
+
+# /packets/Client/168
+# /PlayerInitRequestHandler
+PlayerInitRequestHandler.AllianceMessage:		Messaggio di Alleanza: {0}
+PlayerInitRequestHandler.FreeLevel:				Sei idoneo per un livello gratuito! Clicca sul tuo allenatore per riceverlo (oppure digita /freelevel decline per rifiutarlo).
+PlayerInitRequestHandler.GuildMessage:			Messaggio di Gilda: 
+PlayerInitRequestHandler.LevelCap:				Hai superato il limite massimo del livello di questo battleground!
+PlayerInitRequestHandler.OfficerMessage:		Messaggio degli Ufficiali: {0}
+PlayerInitRequestHandler.SaferLocation:			Quest'area non e' attualmente sicura e stai per essere trasportato in un luogo piu' sicuro.
+
+# /PlayerMoveItemRequestHandler
+PlayerMoveItemRequestHandler.TooFarAway:		Sei troppo lontano per dare qualcosa a {0}.
+
+# GameServer\world
+# AbstractArea
+AbstractArea.Entered:						(Regione) Sei entrato in {0}!
+AbstractArea.Left:							(Regione) Hai lasciato {0}!
 
 # SCRIPTS
+# CustomNPC
+# /Blacksmith
+Scripts.Blacksmith.AbortRepair:				Rifiuti di riparare il {0}.
+Scripts.Blacksmith.CantRepairThat:			Non posso ripararlo.
+Scripts.Blacksmith.GiveObject:				[Dai un oggetto a {0} per ripararlo]
+Scripts.Blacksmith.InvalidItem:				Oggetto non valido.
+Scripts.Blacksmith.ItsDone:				Fatto. Il tuo {0} e' pronto per la battaglia!
+Scripts.Blacksmith.NoNeedRepair:			Questo oggetto non ha bisogno di essere riparato.
+Scripts.Blacksmith.NotEnoughMoney:			Non hai abbastanza denaro.
+Scripts.Blacksmith.ObjectCantRepaired:			Questo oggetto non puo' essere riparato.
+Scripts.Blacksmith.ObjectRatherOld:			Uhh, questo {0} e' gia' troppo usurato, non saro' piu' in grado di ripararlo ancora, quindi stai attento!
+Scripts.Blacksmith.RepairCostAccept:			Costa {0} riparare il {1}. Accetti?
+Scripts.Blacksmith.Say:							Posso riparare le tue armi e armature, basta passarmi l'oggetto che vuoi riparare e vedro' cosa posso fare, per un piccolo compenso ovviamente.
+Scripts.Blacksmith.StackedObjets:			{0} non puo' riparare oggetti impilati.
+Scripts.Blacksmith.YouExamine:					Esamini {0}. {1} e' {2} ed e' un fabbro.
+Scripts.Blacksmith.YouPay:				Paghi {0} {1}.
+Scripts.Blacksmith.YouTarget:				Selezioni [{0}].
+
 # GameEvents
 # /Playerenterexit
 Scripts.Events.PlayerEnterExit.Entered:			{0} e' appena entrato in gioco!
 Scripts.Events.PlayerEnterExit.Left:			{0} e' appena uscito dal gioco!
 Scripts.Events.PlayerEnterExit.Staff:			[Staff Member] {0}
 
+# GMCommands
+# /Ban
+Scripts.GM.Ban.AAlreadyBanned:				Questo account e' gia' stato bannato.
+Scripts.GM.Ban.ABanned:					L'account {0} e' stato bannato.
+Scripts.GM.Ban.BAlreadyBanned:				Questi account e IP sono stati bannati.
+Scripts.GM.Ban.BBanned:					L'account {0} e l'IP {1} sono stati bannati.
+Scripts.GM.Ban.IAlreadyBanned:				Questo IP e' gia' stato bannato.
+Scripts.GM.Ban.IBanned:					L'IP {0} e' stato bannato.
+Scripts.GM.Ban.MustTarget:				Devi selezionare un bersaglio!
+
 # PlayerCommands
+# /Advice
+Scripts.Players.Advice.Advice:				[ADVICE{0}] {1}: "{2}"
+Scripts.Players.Advice.AdvicersOn:			Ci sono {0} advisors online!
+
+# /Advisor
+Scripts.Players.Advisor.Off:				Non riceverai piu' messaggi dal canale advice.
+Scripts.Players.Advisor.On:				Da ora riceverai i messaggi dal canale advice.
+
 # /Afk
 Scripts.Players.Afk.Off:						Non sei piu' segnalato come AFK.
 Scripts.Players.Afk.On:							Ora sei segnalato come AFK.
@@ -443,7 +568,6 @@ Scripts.Players.Duel.YouInDuel:				Sei gia' in duello.
 Scripts.Players.Duel.YouInGroup:			Sei in un gruppo.
 Scripts.Players.Duel.YouSurrender:			Ti arrendi a {0}!
 
-# SCRIPTS
 # /Language
 Scripts.Players.Language.Set:				Cambi la lingua dei messaggi del server in {0}.
 Scripts.Players.Language.Current:			La tua lingua e' attualmente impostata in: {0}.
