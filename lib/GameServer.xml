@@ -3446,6 +3446,21 @@
             <param name="changeType"></param>
             <param name="healAmount"></param>
         </member>
+        <member name="F:DOL.GS.GameNPC.m_nextSpellIndex">
+            <summary>
+            The next spell
+            </summary>
+        </member>
+        <member name="F:DOL.GS.GameNPC.m_nextSpell">
+            <summary>
+            The next spell
+            </summary>
+        </member>
+        <member name="F:DOL.GS.GameNPC.m_nextSpellLine">
+            <summary>
+            The next spell line
+            </summary>
+        </member>
         <member name="M:DOL.GS.GameNPC.StartSpellAttack(DOL.GS.GameObject)">
             <summary>
             start to cast spell attack in continue until takken melee damage
