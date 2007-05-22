@@ -3166,11 +3166,64 @@ namespace DOL.GS
 		private RegionTimer m_retrySpellAttackTimer = null;
 
 		/// <summary>
+		/// The next spell
+		/// </summary>
+		protected int m_nextSpellIndex = -1;
+		/// <summary>
+		/// The next spell
+		/// </summary>
+		protected Spell m_nextSpell;
+		/// <summary>
+		/// The next spell line
+		/// </summary>
+		protected SpellLine m_nextSpellLine;
+		public Spell NextSpell
+		{
+			get
+			{
+				if (this.Spells.Count == 0)
+					return null;
+				else
+				{
+					if ((m_nextSpellIndex == -1 || m_nextSpellIndex == this.Spells.Count - 1))
+						m_nextSpellIndex = 0;
+					else
+						m_nextSpellIndex++;
+					Spell nextSpell = null;
+					for (int i = m_nextSpellIndex; i < this.Spells.Count; i++)
+					{
+						Spell spell = this.Spells[i] as Spell;
+						if (spell.CastTime == 0) continue;
+						if (spell.Damage > 0)
+						{
+							nextSpell = spell;
+							break;
+						}
+					}
+					if (nextSpell == null && m_nextSpellIndex > 0)
+					{
+						for (int i = 0; i < m_nextSpellIndex; i++)
+						{
+							Spell spell = this.Spells[i] as Spell;
+							if (spell.CastTime == 0) continue;
+							if (spell.Damage > 0)
+							{
+								nextSpell = spell;
+								break;
+							}
+						}
+					}
+					return nextSpell;
+				}
+			}
+		}
+
+		/// <summary>
 		/// start to cast spell attack in continue until takken melee damage
 		/// </summary>
 		/// <param name="attackTarget"></param>
 		/// <returns></returns>
-		public virtual bool StartSpellAttack(GameObject attackTarget)
+		/*public virtual bool StartSpellAttack(GameObject attackTarget)
 		{
 			if (Spells == null || Spells.Count < 1)
 				return false;
@@ -3198,6 +3251,77 @@ namespace DOL.GS
 							this.CastSpell(spell, spellline);
 						}
 						return true;
+					}
+				}
+			}
+			return false;
+		}*/
+		public virtual bool StartSpellAttack(GameObject attackTarget)
+		{
+			if (Spells == null || Spells.Count < 1)
+			{
+				StopRetrySpellAttackTimer();
+				StopSpellAttack();
+				return false;
+			}
+			if (this == null || this.ObjectState != eObjectState.Active || !this.IsAlive || attackTarget == null || attackTarget.ObjectState != eObjectState.Active || (attackTarget is GameLiving && !(attackTarget as GameLiving).IsAlive))
+			{
+				StopRetrySpellAttackTimer();
+				StopSpellAttack();
+				return false;
+			}
+
+			if (!WorldMgr.CheckDistance(attackTarget, this, AttackRange))
+			{
+				if (this.Brain is IControlledBrain)
+				{
+					if (!IsCasting)
+					{
+						Spell nextSpell = NextSpell;
+						if (nextSpell == null)
+							return false;
+						this.TargetObject = attackTarget;
+						if (WorldMgr.GetDistance(this, attackTarget) > nextSpell.Range)
+						{
+							Follow(attackTarget, nextSpell.Range - 5, 5000);
+							StartRetrySpellAttackTimer();
+							return true;
+						}
+						else
+						{
+							StopRetrySpellAttackTimer();
+							StopMoving();
+							TurnTo(this.TargetObject);
+							this.CastSpell(nextSpell, m_nextSpellLine);
+							return true;
+						}
+					}
+					return true;
+				}
+				else
+				{
+					foreach (Spell spell in this.Spells)
+					{
+						if (spell.CastTime == 0) continue;
+						if (spell.Damage > 0)
+						{
+							this.TargetObject = attackTarget;
+
+							if (WorldMgr.GetDistance(this, attackTarget) > spell.Range)
+							{
+								Follow(attackTarget, spell.Range, 5000);
+								StartRetrySpellAttackTimer();
+							}
+							else
+							{
+								StopRetrySpellAttackTimer();
+								StopMoving();
+								TurnTo(this.TargetObject);
+								SpellLine spellline = SkillBase.GetSpellLine(GlobalSpellsLines.Mob_Spells);
+								this.CastSpell(spell, spellline);
+							}
+							return true;
+						}
 					}
 				}
 			}
@@ -3245,7 +3369,7 @@ namespace DOL.GS
 		/// Callback after spell execution finished and next spell can be processed
 		/// </summary>
 		/// <param name="handler"></param>
-		public override void OnAfterSpellCastSequence(ISpellHandler handler)
+		/*public override void OnAfterSpellCastSequence(ISpellHandler handler)
 		{
 			StopSpellAttack();
 			//ive had to disable it for the moment
@@ -3299,6 +3423,40 @@ namespace DOL.GS
 
 			m_runningSpellHandler = handler;
 			handler.CastSpell();
+		}*/
+		public override void OnAfterSpellCastSequence(ISpellHandler handler)
+		{
+			StopSpellAttack();
+			if (this == null || this.ObjectState != eObjectState.Active || !this.IsAlive || this.TargetObject == null || (this.TargetObject is GameLiving && this.TargetObject.ObjectState != eObjectState.Active || !(this.TargetObject as GameLiving).IsAlive))
+				return;
+			if (this.Brain is IControlledBrain)
+			{
+				if (this == null || (!this.IsAlive) || this.ObjectState != eObjectState.Active || this.TargetObject == null || this.TargetObject.ObjectState != eObjectState.Active || (this.TargetObject is GameLiving && !(this.TargetObject as GameLiving).IsAlive))
+					return;
+				Spell nextSpell = NextSpell;
+				if (nextSpell != null && this.CurrentRegion.Time - LastAttackedByEnemyTick > 10 * 1000)
+				{
+					if (WorldMgr.GetDistance(this, this.TargetObject) > nextSpell.Range)
+					{
+						Follow(this.TargetObject, nextSpell.Range - 5, 5000);
+						StartRetrySpellAttackTimer();
+					}
+					else
+					{
+						StopRetrySpellAttackTimer();
+						StopMoving();
+						TurnTo(this.TargetObject);
+						this.CastSpell(nextSpell, m_nextSpellLine);
+					}
+				}
+				return;
+			}
+			else
+			{
+				StopSpellAttack();
+				//ive had to disable it for the moment
+				return;
+			}
 		}
 
 		/// <summary>
@@ -3446,6 +3604,8 @@ namespace DOL.GS
 				m_ownBrain = new StandardMobBrain();
 				m_ownBrain.Body = this;
 			}
+
+			m_nextSpellLine = SkillBase.GetSpellLine(GlobalSpellsLines.Mob_Spells);
 		}
 
 		/// <summary>
