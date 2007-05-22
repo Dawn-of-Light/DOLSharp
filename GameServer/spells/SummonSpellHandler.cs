@@ -119,6 +119,7 @@ namespace DOL.GS.Spells
 				if (summoned.Level > Spell.Value) summoned.Level = (byte)Spell.Value;
 				summoned.AddToWorld();
 				effect.Start(summoned);
+				controlledBrain.Body.Buff();
 				controlledBrain.Attack(target);
 			}
 			else

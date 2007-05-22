@@ -75,6 +75,21 @@ namespace DOL.AI.Brain
 			m_aggroLevel = 99;
 			m_aggroMaxRange = 1500;
 		}
+		
+		/// <summary>
+		/// Checks if this NPC is a permanent/charmed or timed pet
+		/// </summary>
+		/*public bool CanReceiveOrder
+		{
+			get
+			{
+				DOL.GS.Effects.GameSpellEffect summon = DOL.GS.Spells.SpellHandler.FindEffectOnTarget(this.Body, "Summon");
+				if (summon == null)
+					return true;
+				else
+					return (summon.Duration >= 65535);
+			}
+		}*/
 
 		/// <summary>
 		/// The number of seconds/10 this brain will stay active even when no player is close
