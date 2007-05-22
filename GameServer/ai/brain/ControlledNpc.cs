@@ -79,7 +79,7 @@ namespace DOL.AI.Brain
 		/// <summary>
 		/// Checks if this NPC is a permanent/charmed or timed pet
 		/// </summary>
-		/*public bool CanReceiveOrder
+		public bool CanReceiveOrder
 		{
 			get
 			{
@@ -89,7 +89,7 @@ namespace DOL.AI.Brain
 				else
 					return (summon.Duration >= 65535);
 			}
-		}*/
+		}
 
 		/// <summary>
 		/// The number of seconds/10 this brain will stay active even when no player is close
@@ -231,7 +231,8 @@ namespace DOL.AI.Brain
 		protected void FollowOwner()
 		{
 			Body.StopAttack();
-			Body.Follow(Owner, MIN_OWNER_FOLLOW_DIST, MAX_OWNER_FOLLOW_DIST);
+			if (CanReceiveOrder)
+				Body.Follow(Owner, MIN_OWNER_FOLLOW_DIST, MAX_OWNER_FOLLOW_DIST);
 		}
 
 		#endregion
