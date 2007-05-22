@@ -13463,6 +13463,11 @@
             <param name="sender"></param>
             <param name="arguments"></param>
         </member>
+        <member name="P:DOL.AI.Brain.ControlledNpc.CanReceiveOrder">
+            <summary>
+            Checks if this NPC is a permanent/charmed or timed pet
+            </summary>
+        </member>
         <member name="P:DOL.AI.Brain.ControlledNpc.NoPlayersStopDelay">
             <summary>
             The number of seconds/10 this brain will stay active even when no player is close
