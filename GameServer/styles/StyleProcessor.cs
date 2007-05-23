@@ -20,6 +20,7 @@ using System;
 using System.Collections;
 using System.Reflection;
 
+using DOL.Language;
 using DOL.AI.Brain;
 using DOL.Database;
 using DOL.GS.Keeps;
@@ -194,14 +195,15 @@ namespace DOL.GS.Styles
 				if (!living.IsAlive)
 				{
 					if (player != null)
-						player.Out.SendMessage("You can't enter combat mode while lying down!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "StyleProcessor.TryToUseStyle.CantCombatMode"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+					
 					return;
 				}
 				//Can't use styles with range weapon
 				if (living.ActiveWeaponSlot == GameLiving.eActiveWeaponSlot.Distance)
 				{
 					if (player != null)
-						player.Out.SendMessage("You can't enter melee combat mode with a fired weapon!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "StyleProcessor.TryToUseStyle.CantMeleeCombat"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 					return;
 				}
 
@@ -215,7 +217,7 @@ namespace DOL.GS.Styles
 				if (living.TargetObject == null)
 				{
 					if (player != null)
-						player.Out.SendMessage("You must have a target for your next attack style!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "StyleProcessor.TryToUseStyle.MustHaveTarget"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return;
 				}
 
@@ -226,9 +228,9 @@ namespace DOL.GS.Styles
 					if (player != null)
 					{
 						if (style.WeaponTypeRequirement == Style.SpecialWeaponType.DualWield)
-							player.Out.SendMessage("You must be dual wielding to use this style!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "StyleProcessor.TryToUseStyle.DualWielding"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						else
-							player.Out.SendMessage("This style requires a " + style.GetRequiredWeaponName() + " weapon!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "StyleProcessor.TryToUseStyle.StyleRequires", style.GetRequiredWeaponName()), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}
 					return;
 				}
@@ -238,7 +240,7 @@ namespace DOL.GS.Styles
 					int fatCost = CalculateEnduranceCost(player, style, weapon.SPD_ABS);
 					if (player.Endurance < fatCost)
 					{
-						player.Out.SendMessage("You are too fatigued to use this style!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "StyleProcessor.TryToUseStyle.Fatigued"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						return;
 					}
 				}
@@ -260,14 +262,14 @@ namespace DOL.GS.Styles
 							|| lastAD.Style == null
 							|| lastAD.Style.ID != style.OpeningRequirementValue)
 							{
-								player.Out.SendMessage("You must perform the " + preRequireStyle.Name + " style before this one!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "StyleProcessor.TryToUseStyle.PerformStyleBefore", preRequireStyle.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return;
 							}
 						}
 
 						player.NextCombatStyle = style;
 						player.NextCombatBackupStyle = null;
-						player.Out.SendMessage("You prepare to perform a " + style.Name + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "StyleProcessor.TryToUseStyle.PreparePerform", style.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 						// cancel engage effect if exist
 						EngageEffect effect = (EngageEffect)living.EffectList.GetOfType(typeof(EngageEffect));
@@ -285,7 +287,7 @@ namespace DOL.GS.Styles
 						if (player.NextCombatBackupStyle != null)
 						{
 							//All styles set, can't change anything now
-							player.Out.SendMessage("You have already selected your styles for this round!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "StyleProcessor.TryToUseStyle.AlreadySelectedStyles"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						}
 						else
 						{
@@ -295,13 +297,13 @@ namespace DOL.GS.Styles
 								if (player.CancelStyle)
 								{
 									//If yes, we cancel the style
-									player.Out.SendMessage("You are no longer preparing to use your " + player.NextCombatStyle.Name + " style!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "StyleProcessor.TryToUseStyle.NoLongerPreparing", player.NextCombatStyle.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 									player.NextCombatStyle = null;
 									player.NextCombatBackupStyle = null;
 								}
 								else
 								{
-									player.Out.SendMessage("You are already preparing to use this style!  Type /cancelstyle to enable style cancelling.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "StyleProcessor.TryToUseStyle.AlreadyPreparing"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								}
 							}
 							else
@@ -314,13 +316,13 @@ namespace DOL.GS.Styles
 									|| lastAD.Style == null
 									|| lastAD.Style.ID != style.OpeningRequirementValue)
 									{
-										player.Out.SendMessage("You must perform the " + preRequireStyle.Name + " style before this one!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+										player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "StyleProcessor.TryToUseStyle.PerformStyleBefore", preRequireStyle.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 										return;
 									}
 								}
 								//If no, set the secondary backup style
 								player.NextCombatBackupStyle = style;
-								player.Out.SendMessage("You are now preparing to perform a " + style.Name + " style as a backup for " + player.NextCombatStyle.Name + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "StyleProcessor.TryToUseStyle.BackupStyle", style.Name, player.NextCombatStyle.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							}
 						}
 					}
@@ -386,7 +388,7 @@ namespace DOL.GS.Styles
 
 						//"You must be hidden to perform this style!"
 						//Print a style-fail message
-						player.Out.SendMessage("You fail to execute your " + attackData.Style.Name + " perfectly!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "StyleProcessor.ExecuteStyle.ExecuteFail", attackData.Style.Name), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 					}
 					return false;
 				}
@@ -418,19 +420,19 @@ namespace DOL.GS.Styles
 					//PA: 75 + (CSSkill * 9) + Damage Cap 
 					//BSII: 45 + (CSSkill * 6) + Damage Cap 
 					//BS: 5 + (CSSkill * 14 / 3) + Damage Cap
-					if (attackData.Style.Name == ("Backstab"))
+					if (attackData.Style.Name == (LanguageMgr.GetTranslation(player.Client, "StyleProcessor.ExecuteStyle.StyleNameBackstab")))
 					{
-						player.Out.SendMessage("You inflict a critical strike in the back of your target  ", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "StyleProcessor.ExecuteStyle.BackStrike"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 						attackData.Damage += 5 + (player.GetModifiedSpecLevel(Specs.Critical_Strike) * 14 / 3);
 					}
-					else if (attackData.Style.Name == ("Backstab II"))
+					else if (attackData.Style.Name == (LanguageMgr.GetTranslation(player.Client, "StyleProcessor.ExecuteStyle.StyleNameBackstabII")))
 					{
-						player.Out.SendMessage("You inflict a critical strike in the back of your target  ", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "StyleProcessor.ExecuteStyle.BackStrike"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 						attackData.Damage += 45 + (player.GetModifiedSpecLevel(Specs.Critical_Strike) * 6);
 					}
-					else if (attackData.Style.Name == ("Perforate Artery"))
+					else if (attackData.Style.Name == (LanguageMgr.GetTranslation(player.Client, "StyleProcessor.ExecuteStyle.StyleNamePerforateArtery")))
 					{
-						player.Out.SendMessage("You inflict a critical strike in the throat of your target  ", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "StyleProcessor.ExecuteStyle.ThroatStrike"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 						attackData.Damage += 75 + (player.GetModifiedSpecLevel(Specs.Critical_Strike) * 9);
 					}
 
@@ -439,7 +441,7 @@ namespace DOL.GS.Styles
 						// reduce players endurance
 						player.Endurance -= fatCost;
 						string damageAmount = (attackData.StyleDamage > 0) ? " (+" + attackData.StyleDamage + ")" : "";
-						player.Out.SendMessage("You perform your " + attackData.Style.Name + " perfectly!" + damageAmount, eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "StyleProcessor.ExecuteStyle.PerformPerfectly", attackData.Style.Name, damageAmount), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 					}
 
 					if (living is GameNPC)
@@ -448,7 +450,7 @@ namespace DOL.GS.Styles
 						if (brain != null && brain.Owner != null && brain.Owner.ControlledNpc == living)
 						{
 							string damageAmount = (attackData.StyleDamage > 0) ? " (+" + attackData.StyleDamage + ")" : "";
-							brain.Owner.Out.SendMessage("Your " + living.Name + " performs " + attackData.Style.Name + " perfectly!" + damageAmount, eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+							brain.Owner.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "StyleProcessor.ExecuteStyle.PerformsPerfectly", living.Name, attackData.Style.Name, damageAmount), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 						}
 					}
 
