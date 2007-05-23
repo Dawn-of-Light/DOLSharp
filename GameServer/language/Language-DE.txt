@@ -347,6 +347,33 @@ HousingPlaceItemHandler.IndoorObjectPlaced:		Inneneinrichtung aufgestellt. {0} f
 HousingPlaceItemHandler.NoHookpoint:			Ihr kann nichts platziert werden!
 HousingPlaceItemHandler.PutMoney:			Ihr leistet eine Anzahlung auf Euer Haus.
 
+# Styles
+# /StyleProcessor
+StyleProcessor.ExecuteStyle.BackStrike:			You inflict a critical strike in the back of your target 
+StyleProcessor.ExecuteStyle.ExecuteFail:		Ihr führt den Kampfstil "{0}" nicht richtig aus!
+StyleProcessor.ExecuteStyle.PerformPerfectly:		Ihr führt den Kampfstil "{0}" perfekt aus.{1}
+StyleProcessor.ExecuteStyle.PerformsPerfectly:		Your {0} performs {1} perfectly! {2}
+
+# ---->	Anpassung ---					---Muss mit dem Namen in der Styles-Tabelle übereinstimmen!---
+StyleProcessor.ExecuteStyle.StyleNameBackstab:		Backstab
+StyleProcessor.ExecuteStyle.StyleNameBackstabII:	BackstabII
+StyleProcessor.ExecuteStyle.StyleNamePerforateArtery:	Perforate Artery
+# <----
+
+StyleProcessor.ExecuteStyle.ThroatStrike:		You inflict a critical strike in the throat of your target 
+StyleProcessor.TryToUseStyle.AlreadyPreparing:		Ihr bereitet bereits einen Kampfstil vor! Gebt /cancelstyle ein, um den Kampfstil-Abbruch zu aktivieren.
+StyleProcessor.TryToUseStyle.AlreadySelectedStyles:	Ihr habt bereits Eure Kampfstile für diese Runde ausgewählt!
+StyleProcessor.TryToUseStyle.BackupStyle:		Ihr bereitet nun den Kampfstil "{0}" als Reserve für den Kampstil "{1}" vor!
+StyleProcessor.TryToUseStyle.CantCombatMode:		Ihr könnt Euch nicht kampfbereit machen, während Ihr liegt!
+StyleProcessor.TryToUseStyle.CantMeleeCombat:		Ihr könnt Euch nicht in den Nahkampf stürzen mit einer Schusswaffe!
+StyleProcessor.TryToUseStyle.DualWielding:		You must be dual wielding to use this style!
+StyleProcessor.TryToUseStyle.Fatigued:			Ihr seid zu erschöpft, um diesen Kampfstil einzusetzen!
+StyleProcessor.TryToUseStyle.MustHaveTarget:		Ihr benödigt ein Ziel für Euren nächsten Kampstil!
+StyleProcessor.TryToUseStyle.NoLongerPreparing:		Ihr bereitet den Kampfstil "{0}" nicht mehr vor!
+StyleProcessor.TryToUseStyle.PerformStyleBefore:	Vor diesem Kampfstil müsst Ihr erst den Kampfstil "{0}" einsetzen!
+StyleProcessor.TryToUseStyle.PreparePerform:		Ihr bereitet den Kampfstil "{0}" vor!
+StyleProcessor.TryToUseStyle.StyleRequires:		Dieser Kampstil erfordert eine {0}-Waffe!
+
 # TRAINER
 # /GameTrainer
 GameTrainer.AddGift.NotEnoughSpace:			Es ist nicht genug Platz in Eurem Gepäck für das Geschenk. Bitte legt erst etwas raus.
@@ -372,6 +399,7 @@ PlayerPositionUpdateHandler.UnknownZone:		Unbekannte Zone! Ihr werdet zu Eurem l
 # /GameStableMaster
 # ---->	Anpassung ---					---Muss an die Bezeichnung eurer Reitpferde angepasst werden!---
 GameStableMaster.HorseName:				Reitpferd
+# <----
 GameStableMaster.UnknownWay:				Tut mir leid, dieses Ticket nach {0} ist hier nicht gültig.
 
 # /packets/Client/168

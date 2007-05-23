@@ -348,6 +348,29 @@ HousingPlaceItemHandler.IndoorObjectPlaced:		Indoor Object placed. {0} slots rem
 HousingPlaceItemHandler.NoHookpoint:			No hookpoints now !
 HousingPlaceItemHandler.PutMoney:			You put money in your house.
 
+# Styles
+# /StyleProcessor
+StyleProcessor.ExecuteStyle.BackStrike:			You inflict a critical strike in the back of your target 
+StyleProcessor.ExecuteStyle.ExecuteFail:		You fail to execute your {0} perfectly!
+StyleProcessor.ExecuteStyle.PerformPerfectly:		You perform your {0} perfectly! {1}
+StyleProcessor.ExecuteStyle.PerformsPerfectly:		Your {0} performs {1} perfectly! {2}
+StyleProcessor.ExecuteStyle.StyleNameBackstab:		Backstab
+StyleProcessor.ExecuteStyle.StyleNameBackstabII:	BackstabII
+StyleProcessor.ExecuteStyle.StyleNamePerforateArtery:	Perforate Artery
+StyleProcessor.ExecuteStyle.ThroatStrike:		You inflict a critical strike in the throat of your target 
+StyleProcessor.TryToUseStyle.AlreadyPreparing:		You are already preparing to use this style! Type /cancelstyle to enable style cancelling.
+StyleProcessor.TryToUseStyle.AlreadySelectedStyles:	You have already selected your styles for this round!
+StyleProcessor.TryToUseStyle.BackupStyle:		You are now preparing to perform a {0} style as a backup for {1}!
+StyleProcessor.TryToUseStyle.CantCombatMode:		You can't enter combat mode while lying down!
+StyleProcessor.TryToUseStyle.CantMeleeCombat:		You can't enter melee combat mode with a fired weapon!
+StyleProcessor.TryToUseStyle.DualWielding:		You must be dual wielding to use this style!
+StyleProcessor.TryToUseStyle.Fatigued:			You are too fatigued to use this style!
+StyleProcessor.TryToUseStyle.MustHaveTarget:		You must have a target for your next attack style!
+StyleProcessor.TryToUseStyle.NoLongerPreparing:		You are no longer preparing to use your {0} style!
+StyleProcessor.TryToUseStyle.PerformStyleBefore:	You must perform the {0} style before this one!
+StyleProcessor.TryToUseStyle.PreparePerform:		You prepare to perform a {0}!
+StyleProcessor.TryToUseStyle.StyleRequires:		This style requires a {0} weapon!
+
 # TRAINER
 # /GameTrainer
 GameTrainer.AddGift.NotEnoughSpace:			Not Space inventory space to receive your gift. Please make room.
