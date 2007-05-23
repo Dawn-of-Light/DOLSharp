@@ -349,6 +349,29 @@ HousingPlaceItemHandler.IndoorObjectPlaced:	Oggetto interno posizionato. {0} slo
 HousingPlaceItemHandler.NoHookpoint:		Ora non ci sono hookpoints !
 HousingPlaceItemHandler.PutMoney:			Depositi il denaro nella tua casa.
 
+# Styles
+# /StyleProcessor
+StyleProcessor.ExecuteStyle.BackStrike:			Infliggi un colpo critico alle spalle del tuo bersaglio
+StyleProcessor.ExecuteStyle.ExecuteFail:		Non sei riuscito ad eseguire {0} perfettamente!
+StyleProcessor.ExecuteStyle.PerformPerfectly:		Esegui {0} perfettamente! {1}
+StyleProcessor.ExecuteStyle.PerformsPerfectly:		Il tuo {0} esegue {1} perfettamente! {2}
+StyleProcessor.ExecuteStyle.StyleNameBackstab:		Backstab
+StyleProcessor.ExecuteStyle.StyleNameBackstabII:	BackstabII
+StyleProcessor.ExecuteStyle.StyleNamePerforateArtery:	Perforate Artery
+StyleProcessor.ExecuteStyle.ThroatStrike:		Infliggi un colpo critico nella gola del tuo bersaglio 
+StyleProcessor.TryToUseStyle.AlreadyPreparing:		Ti stai gia' preparando ad usare questo stile! Digita /cancelstyle per abilitare l'annullamento dello stile.
+StyleProcessor.TryToUseStyle.AlreadySelectedStyles:	Hai gia' scelto lo stile per questo turno!
+StyleProcessor.TryToUseStyle.BackupStyle:		Ti prepari ad eseguire lo stile {0} come riserva per {1}!
+StyleProcessor.TryToUseStyle.CantCombatMode:		Non puoi entrare in combattimento mentre sei a terra!
+StyleProcessor.TryToUseStyle.CantMeleeCombat:		Non puoi entrare in combattimento con un'arma sguainata!
+StyleProcessor.TryToUseStyle.DualWielding:		Devi utilizzare due armi per utilizzare questo stile!
+StyleProcessor.TryToUseStyle.Fatigued:			Sei troppo affaticato per usare questo stile!
+StyleProcessor.TryToUseStyle.MustHaveTarget:		Devi selezionare un bersaglio per il tuo prossimo stile di attacco!
+StyleProcessor.TryToUseStyle.NoLongerPreparing:		Non ti stai piu' preparando ad usare lo stile {0}!
+StyleProcessor.TryToUseStyle.PerformStyleBefore:	Devi eseguire lo stile {0} prima di questo!
+StyleProcessor.TryToUseStyle.PreparePerform:		Ti prepari ad eseguire {0}!
+StyleProcessor.TryToUseStyle.StyleRequires:		Questo stile richiede un'arma {0}!
+
 # TRAINER
 # /GameTrainer
 GameTrainer.AddGift.NotEnoughSpace:			Non hai spazio nell'inventario per ricevere il tuo dono. Per favore recupera lo spazio.
