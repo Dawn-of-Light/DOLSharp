@@ -907,7 +907,8 @@ namespace DOL.AI.Brain
 					return false;
 				if (Body.Name == "horse")
 					return false;
-				if (!char.IsLower(Body.Name[0]))
+//				if (!char.IsLower(Body.Name[0]))
+				if (!char.IsLower(Body.Name[0]) && (DOL.GS.ServerProperties.Properties.SERV_LANGUAGE != "DE"))
 					return false;
 				if (Body.CurrentRegion.IsDungeon)
 					return false;
