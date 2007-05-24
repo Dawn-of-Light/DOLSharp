@@ -37,6 +37,8 @@ namespace DOL.GS.GameEvents
 		/// Defines a logger for this class.
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
+		private static readonly int INITIAL_DELAY = 60000;
 		
 		private static long m_lastBytesIn = 0;
 		private static long m_lastBytesOut = 0;
@@ -78,7 +80,7 @@ namespace DOL.GS.GameEvents
 			}
 			// 1 min * INTERVAL
 			m_statFrequency *= ServerProperties.Properties.STATSAVE_INTERVAL;
-			m_timer = new Timer(new TimerCallback(SaveStats), null, 60000, m_statFrequency);
+			m_timer = new Timer(new TimerCallback(SaveStats), null, INITIAL_DELAY, Timeout.Infinite);
 		}
 
 		/// <summary>
@@ -101,34 +103,50 @@ namespace DOL.GS.GameEvents
 		
 		public static void SaveStats(object state)
 		{
-			long time = System.DateTime.Now.Ticks - m_lastMeasureTick;
-			time /= 10000000L;
-			long inRate = (Statistics.BytesIn - m_lastBytesIn) / time;
-			long outRate = (Statistics.BytesOut - m_lastBytesOut) / time;
+			try
+			{
+				long ticks = DateTime.Now.Ticks;
+				long time = ticks - m_lastMeasureTick;
+				m_lastMeasureTick = ticks;
+				time /= 10000000L;
+				if (time < 1)
+				{
+					log.Warn("Time has not changed since last call of SaveStats");
+					time = 1; // prevent division by zero?
+				}
+				long inRate = (Statistics.BytesIn - m_lastBytesIn) / time;
+				long outRate = (Statistics.BytesOut - m_lastBytesOut) / time;
 
-			m_lastBytesIn = Statistics.BytesIn;
-			m_lastBytesOut = Statistics.BytesOut;
+				m_lastBytesIn = Statistics.BytesIn;
+				m_lastBytesOut = Statistics.BytesOut;
 
-			int clients = WorldMgr.GetAllPlayingClientsCount();
+				int clients = WorldMgr.GetAllPlayingClientsCount();
 
-			float cpu = 0;
-			if (m_systemCpuUsedCounter != null)
-				cpu = m_systemCpuUsedCounter.NextValue(); 
-			if (m_processCpuUsedCounter != null)
-				cpu = m_processCpuUsedCounter.NextValue();
+				float cpu = 0;
+				if (m_systemCpuUsedCounter != null)
+					cpu = m_systemCpuUsedCounter.NextValue(); 
+				if (m_processCpuUsedCounter != null)
+					cpu = m_processCpuUsedCounter.NextValue();
 
-			long totalmem = GC.GetTotalMemory(false);
+				long totalmem = GC.GetTotalMemory(false);
 			
-			DBServerStats newstat = new DBServerStats();
-			newstat.CPU = cpu;
-			newstat.Clients = clients;
-			newstat.Upload = (int)outRate/1024;
-			newstat.Download = (int)inRate / 1024;
-			newstat.Memory = totalmem / 1024;
-			GameServer.Database.AddNewObject(newstat);
-			GameServer.Database.SaveObject(newstat);
-			
-			m_lastMeasureTick = DateTime.Now.Ticks;
+				DBServerStats newstat = new DBServerStats();
+				newstat.CPU = cpu;
+				newstat.Clients = clients;
+				newstat.Upload = (int)outRate/1024;
+				newstat.Download = (int)inRate / 1024;
+				newstat.Memory = totalmem / 1024;
+				GameServer.Database.AddNewObject(newstat);
+				GameServer.Database.SaveObject(newstat);
+			}
+			catch (Exception e)
+			{
+				log.Error("Updating server stats", e);
+			}
+			finally
+			{
+				m_timer.Change(m_statFrequency, Timeout.Infinite);
+			}
 		}
 	}
 }

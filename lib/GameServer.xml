@@ -18842,6 +18842,48 @@
             <param name="realm"></param>
             <returns></returns>
         </member>
+        <member name="M:DOL.GS.Keeps.KeepMgr.IsEnemy(DOL.GS.Keeps.AbstractGameKeep,DOL.GS.GamePlayer,System.Boolean)">
+            <summary>
+            Main checking method to see if a player is an enemy of the keep
+            </summary>
+            <param name="keep">The keep checking</param>
+            <param name="target">The target player</param>
+            <param name="checkGroup">Do we check the players group for a friend</param>
+            <returns>true if the player is an enemy of the keep</returns>
+        </member>
+        <member name="M:DOL.GS.Keeps.KeepMgr.IsEnemy(DOL.GS.Keeps.AbstractGameKeep,DOL.GS.GamePlayer)">
+            <summary>
+            Convinience method for checking if a player is an enemy of a keep
+            This sets checkGroup to true in the main method
+            </summary>
+            <param name="keep">The keep checking</param>
+            <param name="target">The target player</param>
+            <returns>true if the player is an enemy of the keep</returns>
+        </member>
+        <member name="M:DOL.GS.Keeps.KeepMgr.IsEnemy(DOL.GS.Keeps.GameKeepGuard,DOL.GS.GamePlayer)">
+            <summary>
+            Checks if a keep guard is an enemy of the player
+            </summary>
+            <param name="checker">The guard checker</param>
+            <param name="target">The player target</param>
+            <returns>true if the player is an enemy of the guard</returns>
+        </member>
+        <member name="M:DOL.GS.Keeps.KeepMgr.IsEnemy(DOL.GS.Keeps.GameKeepDoor,DOL.GS.GamePlayer)">
+            <summary>
+            Checks if a keep door is an enemy of the player
+            </summary>
+            <param name="checker">The door checker</param>
+            <param name="target">The player target</param>
+            <returns>true if the player is an enemy of the door</returns>
+        </member>
+        <member name="M:DOL.GS.Keeps.KeepMgr.IsEnemy(DOL.GS.Keeps.GameKeepComponent,DOL.GS.GamePlayer)">
+            <summary>
+            Checks if a keep component is an enemy of the player
+            </summary>
+            <param name="checker">The component checker</param>
+            <param name="target">The player target</param>
+            <returns>true if the player is an enemy of the component</returns>
+        </member>
         <member name="M:DOL.GS.Keeps.KeepMgr.GetHeightFromLevel(System.Byte)">
             <summary>
             Gets a component height from a level
@@ -31341,6 +31383,71 @@
             This is rather difficult since we don't know which events other triggers use.
             </remarks>
         </member>
+        <member name="F:DOL.GS.PacketHandler.PacketLib185.log">
+            <summary>
+            Defines a logger for this class.
+            </summary>
+        </member>
+        <member name="M:DOL.GS.PacketHandler.PacketLib185.#ctor(DOL.GS.GameClient)">
+            <summary>
+            Constructs a new PacketLib for Version 1.85 clients
+            </summary>
+            <param name="client">the gameclient this lib is associated with</param>
+        </member>
+        <member name="F:DOL.GS.PacketHandler.PacketLib186.log">
+            <summary>
+            Defines a logger for this class.
+            </summary>
+        </member>
+        <member name="M:DOL.GS.PacketHandler.PacketLib186.#ctor(DOL.GS.GameClient)">
+            <summary>
+            Constructs a new PacketLib for Version 1.86 clients
+            </summary>
+            <param name="client">the gameclient this lib is associated with</param>
+        </member>
+        <member name="P:DOL.GS.PacketHandler.PacketLib186.BowPrepare">
+            <summary>
+            The bow prepare animation
+            </summary>
+        </member>
+        <member name="P:DOL.GS.PacketHandler.PacketLib186.BowShoot">
+            <summary>
+            The bow shoot animation
+            </summary>
+        </member>
+        <member name="F:DOL.GS.PacketHandler.PacketLib187.log">
+            <summary>
+            Defines a logger for this class.
+            </summary>
+        </member>
+        <member name="M:DOL.GS.PacketHandler.PacketLib187.#ctor(DOL.GS.GameClient)">
+            <summary>
+            Constructs a new PacketLib for Version 1.87 clients
+            </summary>
+            <param name="client">the gameclient this lib is associated with</param>
+        </member>
+        <member name="F:DOL.GS.PacketHandler.PacketLib188.log">
+            <summary>
+            Defines a logger for this class.
+            </summary>
+        </member>
+        <member name="M:DOL.GS.PacketHandler.PacketLib188.#ctor(DOL.GS.GameClient)">
+            <summary>
+            Constructs a new PacketLib for Version 1.88 clients
+            </summary>
+            <param name="client">the gameclient this lib is associated with</param>
+        </member>
+        <member name="F:DOL.GS.PacketHandler.PacketLib189.log">
+            <summary>
+            Defines a logger for this class.
+            </summary>
+        </member>
+        <member name="M:DOL.GS.PacketHandler.PacketLib189.#ctor(DOL.GS.GameClient)">
+            <summary>
+            Constructs a new PacketLib for Version 1.88 clients
+            </summary>
+            <param name="client">the gameclient this lib is associated with</param>
+        </member>
         <member name="F:DOL.GS.PacketHandler.Client.v168.PlayerHeadingUpdateHandler.log">
             <summary>
             Defines a logger for this class.
@@ -33370,60 +33477,6 @@
             <param name="args">EventArgs of notify call</param>
             <param name="player">GamePlayer this call is related to, can be null</param>
             <returns>true if all Requirements fordefaultNPC where fullfilled, else false</returns>
-        </member>
-        <member name="F:DOL.GS.PacketHandler.PacketLib185.log">
-            <summary>
-            Defines a logger for this class.
-            </summary>
-        </member>
-        <member name="M:DOL.GS.PacketHandler.PacketLib185.#ctor(DOL.GS.GameClient)">
-            <summary>
-            Constructs a new PacketLib for Version 1.85 clients
-            </summary>
-            <param name="client">the gameclient this lib is associated with</param>
-        </member>
-        <member name="F:DOL.GS.PacketHandler.PacketLib186.log">
-            <summary>
-            Defines a logger for this class.
-            </summary>
-        </member>
-        <member name="M:DOL.GS.PacketHandler.PacketLib186.#ctor(DOL.GS.GameClient)">
-            <summary>
-            Constructs a new PacketLib for Version 1.86 clients
-            </summary>
-            <param name="client">the gameclient this lib is associated with</param>
-        </member>
-        <member name="P:DOL.GS.PacketHandler.PacketLib186.BowPrepare">
-            <summary>
-            The bow prepare animation
-            </summary>
-        </member>
-        <member name="P:DOL.GS.PacketHandler.PacketLib186.BowShoot">
-            <summary>
-            The bow shoot animation
-            </summary>
-        </member>
-        <member name="F:DOL.GS.PacketHandler.PacketLib187.log">
-            <summary>
-            Defines a logger for this class.
-            </summary>
-        </member>
-        <member name="M:DOL.GS.PacketHandler.PacketLib187.#ctor(DOL.GS.GameClient)">
-            <summary>
-            Constructs a new PacketLib for Version 1.87 clients
-            </summary>
-            <param name="client">the gameclient this lib is associated with</param>
-        </member>
-        <member name="F:DOL.GS.PacketHandler.PacketLib188.log">
-            <summary>
-            Defines a logger for this class.
-            </summary>
-        </member>
-        <member name="M:DOL.GS.PacketHandler.PacketLib188.#ctor(DOL.GS.GameClient)">
-            <summary>
-            Constructs a new PacketLib for Version 1.88 clients
-            </summary>
-            <param name="client">the gameclient this lib is associated with</param>
         </member>
         <member name="T:DOL.Events.UseSlotEventArgs">
             <summary>
