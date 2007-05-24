@@ -380,7 +380,7 @@ namespace DOL
 					pars[0] = myCommand.m_cmd;
 
 					//Log the command usage
-					if ((ServerProperties.Properties.LOG_ALL_GM_COMMANDS && client.Account.PrivLevel > 1) || myCommand.m_lvl > 1)
+					if (client.Account == null || ((ServerProperties.Properties.LOG_ALL_GM_COMMANDS && client.Account.PrivLevel > 1) || myCommand.m_lvl > 1))
 					{
 						string commandText = String.Join(" ", pars);
 						string targetName = "(no target)";

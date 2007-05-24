@@ -290,16 +290,43 @@ namespace DOL.GS.ServerRules
 				return true;
 
 			// "friendly" NPCs can't attack "friendly" players
-			if (defender is GameNPC && defender.Realm != 0 && attacker.Realm != 0 && KeepMgr.IsEnemy(defender as GameNPC, attacker) == false)
+			if (defender is GameNPC && defender.Realm != 0 && attacker.Realm != 0 && defender is GameKeepGuard == false)
 			{
 				if (quiet == false) MessageToLiving(attacker, "You can't attack a friendly NPC!");
 				return false;
 			}
 			// "friendly" NPCs can't be attacked by "friendly" players
-			if (attacker is GameNPC && attacker.Realm != 0 && defender.Realm != 0 && KeepMgr.IsEnemy(attacker as GameNPC, defender) == false)
+			if (attacker is GameNPC && attacker.Realm != 0 && defender.Realm != 0 && attacker is GameKeepGuard == false)
 			{
 				return false;
 			}
+
+			#region Keep Guards
+			//guard vs guard / npc
+			if (attacker is GameKeepGuard)
+			{
+				if (defender is GameKeepGuard)
+					return false;
+
+				if (defender is GameNPC && (defender as GameNPC).Brain is IControlledBrain == false)
+					return false;
+			}
+
+			//player vs guard
+			if (defender is GameKeepGuard && attacker is GamePlayer
+				&& KeepMgr.IsEnemy(defender as GameKeepGuard, attacker as GamePlayer) == false)
+			{
+				if (quiet == false) MessageToLiving(attacker, "You can't attack a friendly NPC!");
+				return false;
+			}
+
+			//guard vs player
+			if (attacker is GameKeepGuard && defender is GamePlayer
+				&& KeepMgr.IsEnemy(attacker as GameKeepGuard, defender as GamePlayer) == false)
+			{
+				return false;
+			}
+			#endregion
 
 			return true;
 		}
@@ -363,16 +390,30 @@ namespace DOL.GS.ServerRules
 
 			// mobs can heal mobs, players heal players/NPC
 			if (source.Realm == 0 && target.Realm == 0) return true;
-			if (source.Realm != 0 && target.Realm != 0)
+
+			//keep guards
+			if (source is GameKeepGuard && target is GamePlayer)
 			{
-				if (source is GameNPC && KeepMgr.IsEnemy(source as GameNPC, target) ||
-					target is GameNPC && KeepMgr.IsEnemy(target as GameNPC, source))
-				{ }
-				else
-				{
+				if (!KeepMgr.IsEnemy(source as GameKeepGuard, target as GamePlayer))
 					return true;
-				}
 			}
+
+			if (target is GameKeepGuard && source is GamePlayer)
+			{
+				if (!KeepMgr.IsEnemy(target as GameKeepGuard, source as GamePlayer))
+					return true;
+			}
+
+			//doors need special handling
+			if (target is GameKeepDoor && source is GamePlayer)
+				return KeepMgr.IsEnemy(target as GameKeepDoor, source as GamePlayer);
+
+			if (source is GameKeepDoor && target is GamePlayer)
+				return KeepMgr.IsEnemy(source as GameKeepDoor, target as GamePlayer);
+
+			//components need special handling
+			if (target is GameKeepComponent && source is GamePlayer)
+				return KeepMgr.IsEnemy(target as GameKeepComponent, source as GamePlayer);
 
 			//Peace flag NPCs are same realm
 			if (target is GameNPC)

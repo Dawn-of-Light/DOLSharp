@@ -696,9 +696,12 @@
     <Compile Include="quests\midgard\StolenEggs.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="quests\midgard\Sveabone_Hilt_Sword.cs" />
+    <Compile Include="quests\midgard\The_Birthday_Gift.cs" />
     <Compile Include="quests\midgard\TraitorInMularn.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="quests\midgard\Trial_of_Strength.cs" />
     <Compile Include="WebUIGenerator.cs">
       <SubType>Code</SubType>
     </Compile>
