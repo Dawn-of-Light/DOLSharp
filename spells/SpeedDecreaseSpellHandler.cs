@@ -37,8 +37,18 @@ namespace DOL.GS.Spells
 		/// <param name="effect"></param>
 		public override void OnEffectStart(GameSpellEffect effect)
 		{
+			// Cannot apply if the effect owner has a charging effect
+			if (effect.Owner.EffectList.GetOfType(typeof(ChargeEffect)) != null || effect.Owner.TempProperties.getProperty("Charging", false))
+			{
+				MessageToCaster(effect.Owner.Name + " is moving too fast for this spell to have any effect!", eChatType.CT_SpellResisted);
+				return;
+			}
 			base.OnEffectStart(effect);
 			GameEventMgr.AddHandler(effect.Owner, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnAttacked));
+			// Cancels mezz on the effect owner, if applied
+			GameSpellEffect mezz = SpellHandler.FindEffectOnTarget(effect.Owner, "Mesmerize");
+			if (mezz != null)
+				mezz.Cancel(false);
 		}
 
 		/// <summary>
