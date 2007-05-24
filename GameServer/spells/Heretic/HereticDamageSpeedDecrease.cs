@@ -68,18 +68,6 @@ namespace DOL.GS.Spells
         }
 
 
-        public override void SendDamageMessages(AttackData ad)
-        {
-            MessageToCaster("You hit " + ad.Target.GetName(0, false) + " for " + ad.Damage + " damage!", eChatType.CT_Spell);
-        }
-
-
-        public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
-        {
-            base.ApplyEffectOnTarget(target, effectiveness);
-        }
-
-
         protected override GameSpellEffect CreateSpellEffect(GameLiving target, double effectiveness)
         {
             base.CreateSpellEffect(target, effectiveness);

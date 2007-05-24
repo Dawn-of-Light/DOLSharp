@@ -1738,7 +1738,7 @@ namespace DOL.GS
 				m_specToSkill[Specs.VampiiricEmbrace] = eProperty.Skill_VampiiricEmbrace;
 				m_specToSkill[Specs.EtherealShriek] = eProperty.Skill_EtherealShriek;
 				m_specToSkill[Specs.PhantasmalWail] = eProperty.Skill_PhantasmalWail;
-				m_specToSkill[Specs.SpectralGuard] = eProperty.Skill_SpectralForce;
+				m_specToSkill[Specs.SpectralForce] = eProperty.Skill_SpectralForce;
 
 				//Other
 				m_specToSkill[Specs.Critical_Strike] = eProperty.Skill_Critical_Strike;
@@ -1802,7 +1802,7 @@ namespace DOL.GS
 				// Catacombs
 				m_specToFocus[Specs.EtherealShriek] = eProperty.Focus_EtherealShriek;
 				m_specToFocus[Specs.PhantasmalWail] = eProperty.Focus_PhantasmalWail;
-				m_specToFocus[Specs.SpectralGuard] = eProperty.Focus_SpectralForce;
+				m_specToFocus[Specs.SpectralForce] = eProperty.Focus_SpectralForce;
 				m_specToFocus[Specs.Cursing] = eProperty.Focus_Cursing;
 				m_specToFocus[Specs.Hexing] = eProperty.Focus_Hexing;
 				m_specToFocus[Specs.Witchcraft] = eProperty.Focus_Witchcraft;

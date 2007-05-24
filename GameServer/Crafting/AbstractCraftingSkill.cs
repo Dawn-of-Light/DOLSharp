@@ -719,9 +719,9 @@ namespace DOL.GS
 
 			//keep bonuses reduction in crafting time
 			if (Keeps.KeepBonusMgr.RealmHasBonus(DOL.GS.Keeps.eKeepBonusType.Craft_Timers_5, (eRealm)player.Realm))
-				craftingTime -= (craftingTime * 100) / 5;
+				craftingTime = (int)(craftingTime / 1.05);
 			else if (Keeps.KeepBonusMgr.RealmHasBonus(DOL.GS.Keeps.eKeepBonusType.Craft_Timers_3, (eRealm)player.Realm))
-				craftingTime -= (craftingTime * 100) / 3;
+				craftingTime = (int)(craftingTime / 1.03);
 
 			int con = GetItemCon(player.GetCraftingSkillValue(m_eskill), ItemCraft.CraftingLevel);
 			double mod = 1.0;

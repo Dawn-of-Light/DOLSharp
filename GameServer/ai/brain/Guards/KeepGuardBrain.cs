@@ -70,16 +70,14 @@ namespace DOL.AI.Brain
 				return;
 			foreach (GamePlayer player in Body.GetPlayersInRadius((ushort)AggroRange))
 			{
-				if (GameServer.ServerRules.IsAllowedToAttack(Body, player, false))
+				if (GameServer.ServerRules.IsAllowedToAttack(Body, player, false)
+					&& KeepMgr.IsEnemy(Body as GameKeepGuard, player))
 				{
-					if (KeepMgr.IsEnemy(Body as GameKeepGuard, player))
-					{
-						if (Body is GuardStealther == false && player.IsStealthed)
-							continue;
-						Body.StartAttack(player);
-						AddToAggroList(player, player.EffectiveLevel << 1);
-						return;
-					}
+					if (Body is GuardStealther == false && player.IsStealthed)
+						continue;
+					Body.StartAttack(player);
+					AddToAggroList(player, player.EffectiveLevel << 1);
+					return;
 				}
 			}
 		}
@@ -95,16 +93,15 @@ namespace DOL.AI.Brain
 				return;
 			foreach (GameNPC npc in Body.GetNPCsInRadius((ushort)AggroRange))
 			{
+				if (npc.Brain is IControlledBrain == false)
+					continue;
 				if (npc is GameKeepGuard) continue;
-				if (GameServer.ServerRules.IsAllowedToAttack(Body, npc, false))
+				if (GameServer.ServerRules.IsAllowedToAttack(Body, npc, false)
+					&& KeepMgr.IsEnemy(Body as GameKeepGuard, (npc.Brain as IControlledBrain).Owner))
 				{
-					if (npc is GameSiegeWeapon) continue;
-					if (KeepMgr.IsEnemy(Body as GameKeepGuard, npc))
-					{
-						Body.StartAttack(npc);
-						AddToAggroList(npc, (npc.Level + 1) << 1);
-						return;
-					}
+					Body.StartAttack(npc);
+					AddToAggroList(npc, (npc.Level + 1) << 1);
+					return;
 				}
 			}
 		}
@@ -131,7 +128,14 @@ namespace DOL.AI.Brain
 
 		public override int CalculateAggroLevelToTarget(GameLiving target)
 		{
-			if (KeepMgr.IsEnemy(Body, target))
+			GamePlayer checkPlayer = null;
+			if (target is GameNPC && (target as GameNPC).Brain is IControlledBrain)
+				checkPlayer = ((target as GameNPC).Brain as IControlledBrain).Owner;
+			if (target is GamePlayer)
+				checkPlayer = target as GamePlayer; ;
+			if (checkPlayer == null)
+				return 0;
+			if (KeepMgr.IsEnemy(Body as GameKeepGuard, checkPlayer))
 				return AggroLevel;
 			return 0;
 		}
