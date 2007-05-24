@@ -65,13 +65,6 @@ namespace DOL.GS.Spells
 			if (min > max) min = max;
 			if (min < 0) min = 0;
 		}
-
-
-		public override void SendDamageMessages(AttackData ad)
-		{
-			MessageToCaster("You hit "+ad.Target.GetName(0, false)+" for " + ad.Damage + " damage!", eChatType.CT_Spell);
-		}
-
 		
 		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
 		{

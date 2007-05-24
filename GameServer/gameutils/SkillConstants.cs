@@ -655,9 +655,9 @@ namespace DOL.GS
 		/// </summary>
 		public const string Soulrending   = "Soulrending"; //Reaver
 		/// <summary>
-		/// Spectral Guard Magic Spec
+		/// Spectral Force Magic Spec
 		/// </summary>
-		public const string SpectralGuard = "Spectral Guard"; //Bainshee
+		public const string SpectralForce = "Spectral Force"; //Bainshee
 		/// <summary>
 		/// Vampiiric Embrace Magic Spec
 		/// </summary>

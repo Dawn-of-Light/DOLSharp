@@ -94,6 +94,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				if (player.Steed != null && player.Steed.MAX_PASSENGERS > 1)
 				{
 					if (player.Steed is GameHorseBoat) return;
+					if (player.Steed is GameBoat && player.GroundTarget.Z > player.CurrentZone.ZoneRegion.WaterLevel) return;
 					if (player.Steed.MAX_PASSENGERS > 8 && player.Steed.CurrentRiders.Length < player.Steed.REQUIRED_PASSENGERS)
 					{
 						player.Out.SendMessage("The " + player.Steed.Name + " does not yet have enough passengers to move!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
