@@ -32,7 +32,7 @@ namespace DOL.GS.RealmAbilities
 
 			switch (Level)
 			{
-				case 2: m_resurrectValue = 20; break;
+				case 2: m_resurrectValue = 50; break;
 				case 3: m_resurrectValue = 100; break;
 			}
 			GameLiving resurrectionCaster = targetPlayer.TempProperties.getObjectProperty(RESURRECT_CASTER_PROPERTY, null) as GameLiving;

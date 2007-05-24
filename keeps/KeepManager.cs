@@ -343,16 +343,16 @@ namespace DOL.GS.Keeps
 			}
 		}
 
-		public static bool IsEnemy(AbstractGameKeep keep, GameLiving target)
+		/// <summary>
+		/// Main checking method to see if a player is an enemy of the keep
+		/// </summary>
+		/// <param name="keep">The keep checking</param>
+		/// <param name="target">The target player</param>
+		/// <param name="checkGroup">Do we check the players group for a friend</param>
+		/// <returns>true if the player is an enemy of the keep</returns>
+		public static bool IsEnemy(AbstractGameKeep keep, GamePlayer target, bool checkGroup)
 		{
-			if (target is GamePlayer)
-			{
-				if ((target as GamePlayer).Client.Account.PrivLevel != 1)
-					return false;
-			}
-			else return false;
-
-			if (target.Realm == 0)
+			if (target.Client.Account.PrivLevel != 1)
 				return false;
 
 			switch (GameServer.Instance.Configuration.ServerType)
@@ -361,7 +361,24 @@ namespace DOL.GS.Keeps
 					return keep.Realm != target.Realm;
 				case eGameServerType.GST_PvP:
 					{
-						return keep.Guild != null && keep.Guild != (target as GamePlayer).Guild;
+						//friendly player in group
+						if (checkGroup && target.PlayerGroup != null)
+						{
+							foreach (GamePlayer player in target.PlayerGroup.GetPlayersInTheGroup())
+							{
+								if (!IsEnemy(keep, target, false))
+									return false;
+							}
+						}
+
+						//guild alliance
+						if (keep.Guild != null && keep.Guild.alliance != null)
+						{
+							if (keep.Guild.alliance.Guilds.Contains(target.Guild))
+								return false;
+						}
+
+						return keep.Guild != target.Guild;
 					}
 				case eGameServerType.GST_PvE:
 					return !(target is GamePlayer);
@@ -369,32 +386,49 @@ namespace DOL.GS.Keeps
 			return true;
 		}
 
-		public static bool IsEnemy(GameNPC checker, GameLiving target)
+		/// <summary>
+		/// Convinience method for checking if a player is an enemy of a keep
+		/// This sets checkGroup to true in the main method
+		/// </summary>
+		/// <param name="keep">The keep checking</param>
+		/// <param name="target">The target player</param>
+		/// <returns>true if the player is an enemy of the keep</returns>
+		public static bool IsEnemy(AbstractGameKeep keep, GamePlayer target)
 		{
-			if (checker is GameKeepGuard == false)
-				return false;
+			return IsEnemy(keep, target, true);
+		}
 
-			if (target is GamePlayer)
-			{
-				if ((target as GamePlayer).Client.Account.PrivLevel != 1)
-					return false;
-			}
+		/// <summary>
+		/// Checks if a keep guard is an enemy of the player
+		/// </summary>
+		/// <param name="checker">The guard checker</param>
+		/// <param name="target">The player target</param>
+		/// <returns>true if the player is an enemy of the guard</returns>
+		public static bool IsEnemy(GameKeepGuard checker, GamePlayer target)
+		{
+			return IsEnemy(checker.Component.Keep, target);
+		}
 
-			if (target.Realm == 0)
-				return false;
+		/// <summary>
+		/// Checks if a keep door is an enemy of the player
+		/// </summary>
+		/// <param name="checker">The door checker</param>
+		/// <param name="target">The player target</param>
+		/// <returns>true if the player is an enemy of the door</returns>
+		public static bool IsEnemy(GameKeepDoor checker, GamePlayer target)
+		{
+			return IsEnemy(checker.Component.Keep, target);
+		}
 
-			switch (GameServer.Instance.Configuration.ServerType)
-			{
-				case eGameServerType.GST_Normal:
-					return checker.Realm != target.Realm;
-				case eGameServerType.GST_PvP:
-					{
-						return checker.GuildName != "" &&checker.GuildName != target.GuildName;
-					}
-				case eGameServerType.GST_PvE:
-					return !(target is GamePlayer);
-			}
-			return true;
+		/// <summary>
+		/// Checks if a keep component is an enemy of the player
+		/// </summary>
+		/// <param name="checker">The component checker</param>
+		/// <param name="target">The player target</param>
+		/// <returns>true if the player is an enemy of the component</returns>
+		public static bool IsEnemy(GameKeepComponent checker, GamePlayer target)
+		{
+			return IsEnemy(checker.Keep, target);
 		}
 
 		/// <summary>

@@ -686,6 +686,7 @@
     <Compile Include="packets\Server\PacketLib185.cs" />
     <Compile Include="packets\Server\PacketLib186.cs" />
     <Compile Include="packets\Server\PacketLib187.cs" />
+    <Compile Include="packets\Server\PacketLib189.cs" />
     <Compile Include="packets\Server\PacketLibAttribute.cs" />
     <Compile Include="packets\Server\PacketProcessor.cs" />
     <Compile Include="playerclasses\ClassMauler.cs" />
