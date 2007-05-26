@@ -154,7 +154,8 @@ namespace DOL.GS
 		{
 			base.LoadFromConfig(root);
 
-			m_rootDirectory = root["Server"]["RootDirectory"].GetString(m_rootDirectory);
+			// Removed to not confuse users
+//			m_rootDirectory = root["Server"]["RootDirectory"].GetString(m_rootDirectory);
 
 			m_logConfigFile = root["Server"]["LogConfigFile"].GetString(m_logConfigFile);
 			m_regionConfigFile = root["Server"]["RegionConfigFile"].GetString(m_regionConfigFile);
@@ -253,7 +254,8 @@ namespace DOL.GS
 			base.SaveToConfig(root);
 			root["Server"]["ServerName"].Set(m_ServerName);
 			root["Server"]["ServerNameShort"].Set(m_ServerNameShort);
-			root["Server"]["RootDirectory"].Set(m_rootDirectory);
+			// Removed to not confuse users
+//			root["Server"]["RootDirectory"].Set(m_rootDirectory);
 			root["Server"]["LogConfigFile"].Set(m_logConfigFile);
 			root["Server"]["RegionConfigFile"].Set(m_regionConfigFile);
 			root["Server"]["ZoneConfigFile"].Set(m_zoneConfigFile);
