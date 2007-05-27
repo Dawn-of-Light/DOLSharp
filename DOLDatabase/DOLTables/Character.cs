@@ -695,7 +695,7 @@ namespace DOL
 			/// <summary>
 			/// ID of the guild this character is in
 			/// </summary>
-			[DataElement(AllowDbNull = true)]
+			[DataElement(AllowDbNull = true, Index = true)]
 			public string GuildID
 			{
 				get
