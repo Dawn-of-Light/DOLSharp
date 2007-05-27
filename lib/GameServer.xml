@@ -27579,12 +27579,6 @@
             </summary>
             <param name="buf">Buffer containing the data to be sent</param>
         </member>
-        <member name="M:DOL.GS.PacketHandler.PacketProcessor.SendTCPInternal(System.Object)">
-            <summary>
-            Sends the TCP on threadpool thread.
-            </summary>
-            <param name="state">The state.</param>
-        </member>
         <member name="F:DOL.GS.PacketHandler.PacketProcessor.m_asyncTcpCallback">
             <summary>
             Holds the TCP AsyncCallback delegate
@@ -27596,7 +27590,7 @@
             </summary>
             <param name="ar"></param>
         </member>
-        <member name="M:DOL.GS.PacketHandler.PacketProcessor.CombinePackets(System.Byte[],System.Collections.Queue,System.Int32,DOL.GS.GameClient,System.Boolean)">
+        <member name="M:DOL.GS.PacketHandler.PacketProcessor.CombinePackets(System.Byte[],System.Collections.Queue,System.Int32,DOL.GS.GameClient)">
             <summary>
             Combines queued packets in one stream.
             </summary>
@@ -27604,7 +27598,6 @@
             <param name="q">The queued packets.</param>
             <param name="length">The max stream len.</param>
             <param name="client">The client.</param>
-            <param name="isUdp">UDP packets if <code>true</code>, TCP otherwise.</param>
             <returns>The count of bytes writen.</returns>
         </member>
         <member name="M:DOL.GS.PacketHandler.PacketProcessor.SendTCPRaw(DOL.GS.PacketHandler.GSTCPPacketOut)">
@@ -27652,23 +27645,11 @@
             <param name="buf">Packet to be sent</param>
             <param name="isForced">Force UDP packet if <code>true</code>, else packet can be sent over TCP</param>
         </member>
-        <member name="M:DOL.GS.PacketHandler.PacketProcessor.SendUDPInternal(System.Object)">
-            <summary>
-            Sends the UDP on threadpool thread.
-            </summary>
-            <param name="state">The state.</param>
-        </member>
         <member name="M:DOL.GS.PacketHandler.PacketProcessor.AsyncUdpSendCallback(System.IAsyncResult)">
             <summary>
             Finishes an asynchronous UDP transaction
             </summary>
             <param name="ar"></param>
-        </member>
-        <member name="M:DOL.GS.PacketHandler.PacketProcessor.UdpSendError(System.Exception)">
-            <summary>
-            Clears UDP queue and sending flag.
-            </summary>
-            <param name="e">Exception.</param>
         </member>
         <member name="M:DOL.GS.PacketHandler.PacketProcessor.SendUDPRaw(DOL.GS.PacketHandler.GSUDPPacketOut)">
             <summary>
