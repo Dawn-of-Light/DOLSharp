@@ -118,6 +118,8 @@ namespace DOL.GS.ServerRules
 
 			// clients with priv level > 1 are considered friendly by anyone
 			if(target is GamePlayer && ((GamePlayer)target).Client.Account.PrivLevel > 1) return true;
+			// checking as a gm, targets are considered friendly
+			if (source is GamePlayer && ((GamePlayer)source).Client.Account.PrivLevel > 1) return true;
 
 			//Peace flag NPCs are same realm
 			if (target is GameNPC)
