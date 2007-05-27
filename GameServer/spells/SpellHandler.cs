@@ -1587,7 +1587,7 @@ namespace DOL.GS.Spells
 			if (m_spell.HealthPenalty > 0)
 			{
 				double max = Caster.MaxHealth;
-				int take = (int)(max * (m_spell.HealthPenalty / 100));
+				int take = (int)(max * (m_spell.HealthPenalty / 100.0));
 				int remain = Caster.Health - take;
 				if (Caster.Health - take < 1)
 					return 0;
