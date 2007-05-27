@@ -522,6 +522,7 @@
     <Compile Include="quests\albion\AgainstTheGrain.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="quests\albion\Aiding_Guard_Alakyrr.cs" />
     <Compile Include="quests\albion\AMessageToTheManes.cs" />
     <Compile Include="quests\albion\AndrewsSkins.cs">
       <SubType>Code</SubType>
@@ -543,6 +544,7 @@
     <Compile Include="quests\albion\BuildingABetterBow.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="quests\albion\Cellar_Infestation.cs" />
     <Compile Include="quests\albion\CityOfCamelot.cs">
       <SubType>Code</SubType>
     </Compile>

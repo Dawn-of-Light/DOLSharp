@@ -63,7 +63,8 @@ namespace DOL.GS.Scripts
 		"/WHO <class> lists players with of class <class>",
 		"/WHO <location> lists players in the <location> area",
 		"/WHO <level> lists players of level <level>",
-		"/WHO <level> <level> lists players in level range"
+		"/WHO <level> <level> lists players in level range",
+		"/WHO <language> lists players with a specific language"
 		)]
 	public class WhoCommandHandler : ICommandHandler
 	{
@@ -136,6 +137,7 @@ namespace DOL.GS.Scripts
 				case "de":
 				case "es":
 				case "fr":
+				case "it":
 					{
 						filters = new ArrayList(1);
 						filters.Add(new LanguageFilter(args[1].ToLower()));
