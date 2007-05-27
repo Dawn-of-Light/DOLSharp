@@ -115,6 +115,8 @@ namespace DOL
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
+		private static readonly int SEND_BUFF_SIZE = 16 * 1024;
+
 		/// <summary>
 		/// Hash table of clients
 		/// </summary>
@@ -321,7 +323,7 @@ namespace DOL
 					return;
 				}
 				sock = m_listen.EndAccept(ar);
-				sock.NoDelay = true;
+				sock.SendBufferSize = SEND_BUFF_SIZE;
 
 				ClientBase client = null;
 				try
