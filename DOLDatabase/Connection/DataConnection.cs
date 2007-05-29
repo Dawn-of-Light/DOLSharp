@@ -24,6 +24,7 @@ using System.Data.Odbc;
 using System.Data.OleDb;
 using System.Data.SqlClient;
 using System.IO;
+using System.Net.Sockets;
 using System.Text;
 using log4net;
 using MySql.Data.MySqlClient;
@@ -125,6 +126,10 @@ namespace DOL.Database.Connection
 
 		private readonly Stack<MySqlConnection> m_connectionPool = new Stack<MySqlConnection>();
 
+		/// <summary>
+		/// Gets connection from connection pool.
+		/// </summary>
+		/// <returns>Connection.</returns>
 		private MySqlConnection GetMySqlConnection()
 		{
 			// Get connection from pool
@@ -139,8 +144,8 @@ namespace DOL.Database.Connection
 
 			if (conn == null)
 			{
-				conn = new MySqlConnection(connString);
 				long start1 = Environment.TickCount;
+				conn = new MySqlConnection(connString);
 				conn.Open();
 				if (Environment.TickCount - start1 > 1000)
 				{
@@ -151,7 +156,20 @@ namespace DOL.Database.Connection
 			}
 			return conn;
 		}
- 
+
+
+		/// <summary>
+		/// Releases the connection to connection pool.
+		/// </summary>
+		/// <param name="conn">The connection to relase.</param>
+		private void ReleaseConnection(MySqlConnection conn)
+		{
+			lock (m_connectionPool)
+			{
+				m_connectionPool.Push(conn);
+			}
+		}
+		
 		/// <summary>
 		/// Execute a non query like update or delete
 		/// </summary>
@@ -166,35 +184,75 @@ namespace DOL.Database.Connection
 					log.Debug("SQL: " + sqlcommand);
 				}
 
-				MySqlConnection conn = GetMySqlConnection();
-				MySqlCommand cmd = new MySqlCommand(sqlcommand, conn);
-
-				int affected = 0;
-				try
+				int		affected = 0;
+				bool	repeat = false;
+				do
 				{
-					long start = Environment.TickCount;
-					affected = cmd.ExecuteNonQuery();
+					MySqlConnection conn = GetMySqlConnection();
+					MySqlCommand cmd = new MySqlCommand(sqlcommand, conn);
 
-					if (log.IsDebugEnabled)
-						log.Debug("SQL NonQuery exec time " + (Environment.TickCount - start) + "ms");
-					else if (Environment.TickCount - start > 500 && log.IsWarnEnabled)
-						log.Warn("SQL NonQuery took " + (Environment.TickCount - start) + "ms!\n" + sqlcommand);
-
-					lock (m_connectionPool)
+					try
 					{
-						m_connectionPool.Push(conn);
+						long start = Environment.TickCount;
+						affected = cmd.ExecuteNonQuery();
+
+						if (log.IsDebugEnabled)
+							log.Debug("SQL NonQuery exec time " + (Environment.TickCount - start) + "ms");
+						else if (Environment.TickCount - start > 500 && log.IsWarnEnabled)
+							log.Warn("SQL NonQuery took " + (Environment.TickCount - start) + "ms!\n" + sqlcommand);
+
+						ReleaseConnection(conn);
+						
+						repeat = false;
 					}
-				}
-				catch (Exception e)
-				{
-					conn.Close();
-					throw;
-				}
+					catch (Exception e)
+					{
+						conn.Close();
+
+						if (!HandleException(e))
+						{
+							throw;
+						}
+						repeat = true;
+					}
+				} while (repeat);
 				return affected;
 			}
 			if (log.IsWarnEnabled)
 				log.Warn("SQL NonQuery's not supported for this connection type");
 			return 0;
+		}
+
+		/// <summary>
+		/// Handles the exception.
+		/// </summary>
+		/// <param name="e">The exception.</param>
+		/// <returns><code>true</code> if operation should be repeated, <code>false</code> otherwise.</returns>
+		private static bool HandleException(Exception e)
+		{
+			bool			ret = false;
+			SocketException socketException = e.InnerException == null ? null : e.InnerException.InnerException as SocketException;
+			if (socketException != null)
+			{
+				// Handle socket exception. Error codes:
+				// 10052 = Network dropped connection on reset.
+				// 10054 = Connection reset by peer.
+				// 10057 = Socket is not connected.
+				// 10058 = Cannot send after socket shutdown.
+				switch (socketException.ErrorCode)
+				{
+					case 10052:
+					case 10054:
+					case 10057:
+					case 10058:
+					{
+						ret = true;
+						break;
+					}
+				}
+				log.WarnFormat("Socket exception: ({0}) {1}; repeat: {2}", socketException.ErrorCode, socketException.Message, ret);
+			}
+			return ret;
 		}
 
 		/// <summary>
@@ -211,35 +269,47 @@ namespace DOL.Database.Connection
 				{
 					log.Debug("SQL: " + sqlcommand);
 				}
-				MySqlConnection conn = GetMySqlConnection();
-				MySqlCommand cmd = new MySqlCommand(sqlcommand, conn);
-
-				try
+				bool repeat = false;
+				MySqlConnection conn = null;
+				do
 				{
-					long start = Environment.TickCount;
-					MySqlDataReader reader = cmd.ExecuteReader(/*CommandBehavior.CloseConnection*/);
-
-					if (log.IsDebugEnabled)
-						log.Debug("SQL Select exec time " + (Environment.TickCount - start) + "ms");
-					else if (Environment.TickCount - start > 500 && log.IsWarnEnabled)
-						log.Warn("SQL Select took " + (Environment.TickCount - start) + "ms!\n" + sqlcommand);
-
-					callback(reader);
-					
-					reader.Close();
-					
-					lock (m_connectionPool)
+					try
 					{
-						m_connectionPool.Push(conn);
+						conn = GetMySqlConnection();
+
+						long start = Environment.TickCount;
+
+						MySqlCommand cmd = new MySqlCommand(sqlcommand, conn);
+						MySqlDataReader reader = cmd.ExecuteReader( /*CommandBehavior.CloseConnection*/);
+						callback(reader);
+
+						reader.Close();
+
+						if (log.IsDebugEnabled)
+							log.Debug("SQL Select exec time " + (Environment.TickCount - start) + "ms");
+						else if (Environment.TickCount - start > 500 && log.IsWarnEnabled)
+							log.Warn("SQL Select took " + (Environment.TickCount - start) + "ms!\n" + sqlcommand);
+
+						ReleaseConnection(conn);
+						
+						repeat = false;
 					}
-				}
-				catch (Exception e)
-				{
-					if (log.IsErrorEnabled)
-						log.Error("ExecuteSelect: \"" + sqlcommand + "\"\n", e);
-					conn.Close();
-					throw;
-				}
+					catch (Exception e)
+					{
+						if (conn != null)
+						{
+							conn.Close();
+						}
+						if (!HandleException(e))
+						{
+							if (log.IsErrorEnabled)
+								log.Error("ExecuteSelect: \"" + sqlcommand + "\"\n", e);
+							throw;
+						}
+						repeat = true;
+					}
+				} while (repeat);
+				
 				return;
 			}
 			if (log.IsWarnEnabled)
@@ -259,32 +329,44 @@ namespace DOL.Database.Connection
 				{
 					log.Debug("SQL: " + sqlcommand);
 				}
-				MySqlConnection conn = GetMySqlConnection();
-				MySqlCommand cmd = new MySqlCommand(sqlcommand, conn);
+
 				object obj = null;
-
-				try
+				bool repeat = false;
+				MySqlConnection conn = null;
+				do
 				{
-					long start = Environment.TickCount;
-					obj = cmd.ExecuteScalar();
-
-					lock (m_connectionPool)
+					try
 					{
-						m_connectionPool.Push(conn);
-					}
+						conn = GetMySqlConnection();
+						MySqlCommand cmd = new MySqlCommand(sqlcommand, conn);
 
-					if (log.IsDebugEnabled)
-						log.Debug("SQL Select exec time " + (Environment.TickCount - start) + "ms");
-					else if (Environment.TickCount - start > 500 && log.IsWarnEnabled)
-						log.Warn("SQL Select took " + (Environment.TickCount - start) + "ms!\n" + sqlcommand);
-				}
-				catch (Exception e)
-				{
-					if (log.IsErrorEnabled)
-						log.Error("ExecuteSelect: \"" + sqlcommand + "\"\n", e);
-					conn.Close();
-					throw;
-				}
+						long start = Environment.TickCount;
+						obj = cmd.ExecuteScalar();
+
+						ReleaseConnection(conn);
+
+						if (log.IsDebugEnabled)
+							log.Debug("SQL Select exec time " + (Environment.TickCount - start) + "ms");
+						else if (Environment.TickCount - start > 500 && log.IsWarnEnabled)
+							log.Warn("SQL Select took " + (Environment.TickCount - start) + "ms!\n" + sqlcommand);
+
+						repeat = false;
+					}
+					catch (Exception e)
+					{
+						if (conn != null)
+						{
+							conn.Close();
+						}
+						if (!HandleException(e))
+						{
+							if (log.IsErrorEnabled)
+								log.Error("ExecuteSelect: \"" + sqlcommand + "\"\n", e);
+							throw;
+						}
+						repeat = true;
+					}
+				} while (repeat);
 				return obj;
 			}
 			if (log.IsWarnEnabled)

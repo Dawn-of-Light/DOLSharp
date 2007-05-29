@@ -17,11 +17,13 @@
  *
  */
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 using DOL.Database;
 using log4net;
 
@@ -34,6 +36,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 		/// Defines a logger for this class.
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
+		private readonly Dictionary<string, LockCount> m_locks = new Dictionary<string, LockCount>();
 
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
@@ -70,7 +74,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				packet.Skip(27);
 			else
 				packet.Skip(31);
-			string username = packet.ReadString(20);
+			string userName = packet.ReadString(20);
 			/*
 			if (c2 == 0 && c3 == 0x05000000 && c4 == 0xF4000000)
 			{
@@ -89,7 +93,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			// check connection allowed with serverrules
 			try
 			{
-				if(!GameServer.ServerRules.IsAllowedToConnect(client, username))
+				if(!GameServer.ServerRules.IsAllowedToConnect(client, userName))
 				{
 					if (log.IsInfoEnabled)
 						log.Info(ipAddress + " disconnected because IsAllowedToConnect returned false!");
@@ -103,197 +107,197 @@ namespace DOL.GS.PacketHandler.Client.v168
 					log.Error("Error shutting down Client after IsAllowedToConnect failed!",e);
 			}
 
+			// Handle connection
+			EnterLock(userName);
+			
 			try
 			{
 				Account playerAccount;
-				// handle connection
-				lock (this)
+				// Make sure that client won't quit
+				lock (client)
 				{
-					// Make sure that client won't quit
-					lock (client)
+					GameClient.eClientState state = client.ClientState;
+					if (state != GameClient.eClientState.NotConnected)
 					{
-						GameClient.eClientState state = client.ClientState;
-						if (state != GameClient.eClientState.NotConnected)
+						log.DebugFormat("wrong client state on connect {0} {1}", userName, state.ToString());
+						return 1;
+					}
+					if (log.IsInfoEnabled)
+						log.Info(string.Format("({0})User {1} logging on! ({2} type:{3} add:{4})", ipAddress, userName, client.Version.ToString(), ((GameClient.eClientType)client.ClientType).ToString(), client.ClientAddons.ToString("G")));
+					// check client already connected
+					GameClient findclient = WorldMgr.GetClientByAccountName(userName, true);
+					if(findclient != null)
+					{
+						if(findclient.ClientState == GameClient.eClientState.Connecting)
 						{
-							log.DebugFormat("wrong client state on connect {0} {1}", username, state.ToString());
+							if (log.IsInfoEnabled)
+								log.Info("User is already connecting, ignored.");
+							client.Out.SendLoginDenied(eLoginError.AccountAlreadyLoggedIn);
 							return 1;
-						}
-						if (log.IsInfoEnabled)
-							log.Info(string.Format("({0})User {1} logging on! ({2} type:{3} add:{4})", ipAddress, username, client.Version.ToString(), ((GameClient.eClientType)client.ClientType).ToString(), client.ClientAddons.ToString("G")));
-						// check client already connected
-						GameClient findclient = WorldMgr.GetClientByAccountName(username, true);
-						if(findclient != null)
-						{
-							if(findclient.ClientState == GameClient.eClientState.Connecting)
-							{
-								if (log.IsInfoEnabled)
-									log.Info("User is already connecting, ignored.");
-								return 1;
-							} // in login
+						} // in login
 
-							if(findclient.ClientState == GameClient.eClientState.Linkdead)
+						if(findclient.ClientState == GameClient.eClientState.Linkdead)
+						{
+							if (log.IsInfoEnabled)
+								log.Info("User is still being logged out from linkdeath!");
+							client.Out.SendLoginDenied(eLoginError.AccountIsInLogoutProcedure);
+						}
+						else
+						{
+							if (log.IsInfoEnabled)
+								log.Info("User already logged in!");
+							client.Out.SendLoginDenied(eLoginError.AccountAlreadyLoggedIn);
+						}
+						GameServer.Instance.Disconnect(client);
+						return 1;
+					}
+					/*
+					if (loggerUsing)
+						client.LoggerUsing = true;
+					else
+						client.LoggerUsing = false;
+					 */
+
+					bool goodname = true;
+					foreach (char c in userName.ToLower().ToCharArray())
+					{
+						if ((c < '0' || c > '9') && (c < 'a' || c > 'z'))
+						{
+							goodname = false;
+							break;
+						}
+					}
+
+					// Yes! Stoping!
+					if (!goodname)
+					{
+						if (log.IsInfoEnabled)
+							log.Info("Invalid symbols in account name \"" + userName + "\" found!");
+						client.Out.SendLoginDenied(eLoginError.AccountInvalid);
+						GameServer.Instance.Disconnect(client);
+						return 1;
+					}
+					else
+					{
+						playerAccount = (Account)GameServer.Database.FindObjectByKey(typeof(Account), userName);
+
+						//if we cant find the account, lets check the archive
+						if (playerAccount == null)
+						{
+							log.Debug("Cannot find account in normal table, trying archive table");
+							playerAccount = (AccountArchive)GameServer.Database.FindObjectByKey(typeof(AccountArchive), userName);
+							//if we found the account in the archive, reactivate it
+							if (playerAccount != null)
 							{
-								if (log.IsInfoEnabled)
-									log.Info("User is still being logged out from linkdeath!");
-								client.Out.SendLoginDenied(eLoginError.AccountIsInLogoutProcedure);
+								log.Debug("Reactivating account " + playerAccount.Name + "...");
+								GameServer.Database.MoveObject(typeof(Account), typeof(AccountArchive), "WHERE `Name` = '" + GameServer.Database.Escape(playerAccount.Name) + "'");
+
+								log.Debug("Reactivating characters for " + playerAccount.Name + "...");
+								GameServer.Database.MoveObject(typeof(Character), typeof(CharacterArchive), "WHERE `AccountName` = '" + GameServer.Database.Escape(playerAccount.Name) + "'");
+
+								log.Debug("Reactivating inventory for " + playerAccount.Name + "...");
+								Character[] chars = (Character[])GameServer.Database.SelectObjects(typeof(Character), "`AccountName` = '" + GameServer.Database.Escape(playerAccount.Name) + "'");
+								foreach (Character c in chars)
+								{
+									GameServer.Database.MoveObject(typeof(InventoryItem), typeof(InventoryItemArchive), "WHERE `OwnerID` = '" + c.ObjectId + "'");
+								}
+
+								log.Debug("Finished reactivating account " + playerAccount.Name);
+
+								playerAccount = (Account)GameServer.Database.FindObjectByKey(typeof(Account), userName);
+							}
+						}
+
+						client.PingTime = DateTime.Now.Ticks;
+
+						if (playerAccount == null)
+						{
+							//check autocreate ...
+							
+							if (GameServer.Instance.Configuration.AutoAccountCreation)
+							{
+								// autocreate account
+
+
+								playerAccount = new Account();
+								playerAccount.Name = userName;
+								playerAccount.Password = CryptPassword(password);
+								playerAccount.Realm = 0;
+								playerAccount.CreationDate = DateTime.Now;
+								playerAccount.LastLogin = DateTime.Now;
+								playerAccount.LastLoginIP = ipAddress;
+								playerAccount.Language = ServerProperties.Properties.SERV_LANGUAGE;
+
+								if (GameServer.Database.GetObjectCount(typeof(Account)) == 0)
+								{
+									playerAccount.PrivLevel = 3;
+									if (log.IsInfoEnabled)
+										log.Info("New admin account created: " + userName);
+								}
+								else
+								{
+									playerAccount.PrivLevel = 1;
+									if (log.IsInfoEnabled)
+										log.Info("New account created: " + userName);
+								}
+
+								GameServer.Database.AddNewObject(playerAccount);
 							}
 							else
 							{
 								if (log.IsInfoEnabled)
-									log.Info("User already logged in!");
-								client.Out.SendLoginDenied(eLoginError.AccountAlreadyLoggedIn);
+									log.Info("No such account found and autocreation deactivated!");
+								client.Out.SendLoginDenied(eLoginError.AccountNotFound);
+								GameServer.Instance.Disconnect(client);
+								return 1;
 							}
-							GameServer.Instance.Disconnect(client);
-							return 1;
 						}
-						/*
-						if (loggerUsing)
-							client.LoggerUsing = true;
 						else
-							client.LoggerUsing = false;
-						 */
-
-                        bool goodname = true;
-                        foreach (char c in username.ToLower().ToCharArray())
-                        {
-                            if ((c < '0' || c > '9') && (c < 'a' || c > 'z'))
-                            {
-                                goodname = false;
-                                break;
-                            }
-                        }
-
-                        // Yes! Stoping!
-                        if (!goodname)
-                        {
-                            if (log.IsInfoEnabled)
-                                log.Info("Invalid symbols in account name \"" + username + "\" found!");
-                            client.Out.SendLoginDenied(eLoginError.AccountInvalid);
-                            GameServer.Instance.Disconnect(client);
-                            return 1;
-                        }
-                        else
-                        {
-                            playerAccount = (Account)GameServer.Database.FindObjectByKey(typeof(Account), username);
-
-							//if we cant find the account, lets check the archive
-							if (playerAccount == null)
-							{
-								log.Debug("Cannot find account in normal table, trying archive table");
-								playerAccount = (AccountArchive)GameServer.Database.FindObjectByKey(typeof(AccountArchive), username);
-								//if we found the account in the archive, reactivate it
-								if (playerAccount != null)
-								{
-									log.Debug("Reactivating account " + playerAccount.Name + "...");
-									GameServer.Database.MoveObject(typeof(Account), typeof(AccountArchive), "WHERE `Name` = '" + GameServer.Database.Escape(playerAccount.Name) + "'");
-
-									log.Debug("Reactivating characters for " + playerAccount.Name + "...");
-									GameServer.Database.MoveObject(typeof(Character), typeof(CharacterArchive), "WHERE `AccountName` = '" + GameServer.Database.Escape(playerAccount.Name) + "'");
-
-									log.Debug("Reactivating inventory for " + playerAccount.Name + "...");
-									Character[] chars = (Character[])GameServer.Database.SelectObjects(typeof(Character), "`AccountName` = '" + GameServer.Database.Escape(playerAccount.Name) + "'");
-									foreach (Character c in chars)
-									{
-										GameServer.Database.MoveObject(typeof(InventoryItem), typeof(InventoryItemArchive), "WHERE `OwnerID` = '" + c.ObjectId + "'");
-									}
-
-									log.Debug("Finished reactivating account " + playerAccount.Name);
-
-									playerAccount = (Account)GameServer.Database.FindObjectByKey(typeof(Account), username);
-								}
-							}
-
-                            client.PingTime = DateTime.Now.Ticks;
-
-                            if (playerAccount == null)
-                            {
-                                //check autocreate ...
-                                
-                                if (GameServer.Instance.Configuration.AutoAccountCreation)
-                                {
-                                    // autocreate account
-
-
-                                    playerAccount = new Account();
-                                    playerAccount.Name = username;
-                                    playerAccount.Password = CryptPassword(password);
-                                    playerAccount.Realm = 0;
-                                    playerAccount.CreationDate = DateTime.Now;
-                                    playerAccount.LastLogin = DateTime.Now;
-                                    playerAccount.LastLoginIP = ipAddress;
-                                    playerAccount.Language = ServerProperties.Properties.SERV_LANGUAGE;
-
-                                    if (GameServer.Database.GetObjectCount(typeof(Account)) == 0)
-                                    {
-                                        playerAccount.PrivLevel = 3;
-                                        if (log.IsInfoEnabled)
-                                            log.Info("New admin account created: " + username);
-                                    }
-                                    else
-                                    {
-                                        playerAccount.PrivLevel = 1;
-                                        if (log.IsInfoEnabled)
-                                            log.Info("New account created: " + username);
-                                    }
-
-                                    GameServer.Database.AddNewObject(playerAccount);
-                                }
-                                else
-                                {
-                                    if (log.IsInfoEnabled)
-                                        log.Info("No such account found and autocreation deactivated!");
-                                    client.Out.SendLoginDenied(eLoginError.AccountNotFound);
-                                    GameServer.Instance.Disconnect(client);
-                                    return 1;
-                                }
-                            }
-                            else
-                            {
-                                //							// autoconvert all
-                                //							foreach (Account acc in GameServer.Database.SelectAllObjects(typeof(Account))) {
-                                //								if (acc.Password != null && !acc.Password.StartsWith("##")) {
-                                //									acc.Password = CryptPassword(acc.Password);
-                                //									GameServer.Database.SaveObject(acc);
-                                //								}
-                                //							}
-
-                                // check password
-								if (!playerAccount.Password.StartsWith("##"))
-								{
-									playerAccount.Password = CryptPassword(playerAccount.Password);
-								}
-                                if (!CryptPassword(password).Equals(playerAccount.Password))
-                                {
-                                    if (log.IsInfoEnabled)
-                                        log.Info("(" + client.TcpEndpoint + ") Wrong password!");
-                                    client.Out.SendLoginDenied(eLoginError.WrongPassword);
-                                    GameServer.Instance.Disconnect(client);
-                                    return 1;
-                                }
-                                // save player infos
-                                playerAccount.LastLogin = DateTime.Now;
-                                playerAccount.LastLoginIP = ipAddress;
-                                if (playerAccount.Language == null || playerAccount.Language == "")
-                                    playerAccount.Language = ServerProperties.Properties.SERV_LANGUAGE;
-
-                                GameServer.Database.SaveObject(playerAccount);
-                            }
-                        }
-						//Save the account table
-						client.Account = playerAccount;
-
-						// create session ID here to disable double login bug
-						if (WorldMgr.CreateSessionID(client) < 0)
 						{
-							if (log.IsInfoEnabled)
-								log.InfoFormat("Too many clients connected, denied login to " + playerAccount.Name);
-							client.Out.SendLoginDenied(eLoginError.TooManyPlayersLoggedIn);
-							client.Disconnect();
-							return 1;
+//							// autoconvert all
+//							foreach (Account acc in GameServer.Database.SelectAllObjects(typeof(Account))) {
+//								if (acc.Password != null && !acc.Password.StartsWith("##")) {
+//									acc.Password = CryptPassword(acc.Password);
+//									GameServer.Database.SaveObject(acc);
+//								}
+//							}
+
+							// check password
+							if (!playerAccount.Password.StartsWith("##"))
+							{
+								playerAccount.Password = CryptPassword(playerAccount.Password);
+							}
+							if (!CryptPassword(password).Equals(playerAccount.Password))
+							{
+								if (log.IsInfoEnabled)
+									log.Info("(" + client.TcpEndpoint + ") Wrong password!");
+								client.Out.SendLoginDenied(eLoginError.WrongPassword);
+								GameServer.Instance.Disconnect(client);
+								return 1;
+							}
+							// save player infos
+							playerAccount.LastLogin = DateTime.Now;
+							playerAccount.LastLoginIP = ipAddress;
+							if (playerAccount.Language == null || playerAccount.Language == "")
+								playerAccount.Language = ServerProperties.Properties.SERV_LANGUAGE;
+
+							GameServer.Database.SaveObject(playerAccount);
 						}
-						client.Out.SendLoginGranted();
-						client.ClientState = GameClient.eClientState.Connecting;
 					}
+					//Save the account table
+					client.Account = playerAccount;
+
+					// create session ID here to disable double login bug
+					if (WorldMgr.CreateSessionID(client) < 0)
+					{
+						if (log.IsInfoEnabled)
+							log.InfoFormat("Too many clients connected, denied login to " + playerAccount.Name);
+						client.Out.SendLoginDenied(eLoginError.TooManyPlayersLoggedIn);
+						client.Disconnect();
+						return 1;
+					}
+					client.Out.SendLoginGranted();
+					client.ClientState = GameClient.eClientState.Connecting;
 				}
 
 			}
@@ -310,6 +314,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 					log.Error("LoginRequestHandler", e);
 				client.Out.SendLoginDenied(eLoginError.CannotAccessUserAccount);
 				GameServer.Instance.Disconnect(client);
+			}
+			finally
+			{
+				ExitLock(userName);
 			}
 
 			return 1;
@@ -330,6 +338,92 @@ namespace DOL.GS.PacketHandler.Client.v168
 				crypted.Append(bytes[i].ToString("X"));
 			}
 			return crypted.ToString();
+		}
+
+		/// <summary>
+		/// Acquires the lock on account.
+		/// </summary>
+		/// <param name="accountName">Name of the account.</param>
+		private void EnterLock(string accountName)
+		{
+			// Safety check
+			if (accountName == null)
+			{
+				accountName = string.Empty;
+				log.Warn("(Enter) No account name");
+			}
+
+			LockCount lockObj = null;
+			lock (m_locks)
+			{
+				// Get/create lock object
+				if (!m_locks.TryGetValue(accountName, out lockObj))
+				{
+					lockObj = new LockCount();
+					m_locks.Add(accountName, lockObj);
+				}
+
+				if (lockObj == null)
+				{
+					log.Error("(Enter) No lock object for account: '" + accountName + "'");
+				}
+				else
+				{
+					// Increase count of locks
+					lockObj.count++;
+				}
+			}
+
+			if (lockObj != null)
+			{
+				Monitor.Enter(lockObj);
+			}
+		}
+
+		/// <summary>
+		/// Releases the lock on account.
+		/// </summary>
+		/// <param name="accountName">Name of the account.</param>
+		private void ExitLock(string accountName)
+		{
+			// Safety check
+			if (accountName == null)
+			{
+				accountName = string.Empty;
+				log.Warn("(Exit) No account name");
+			}
+
+			LockCount lockObj = null;
+			lock (m_locks)
+			{
+				// Get lock object
+				if (!m_locks.TryGetValue(accountName, out lockObj))
+				{
+					log.Error("(Exit) No lock object for account: '" + accountName + "'");
+				}
+
+				// Remove lock object if no more locks on it
+				if (lockObj != null)
+				{
+					if (--lockObj.count <= 0)
+					{
+						m_locks.Remove(accountName);
+					}
+				}
+			}
+
+			Monitor.Exit(lockObj);
+		}
+		
+		/// <summary>
+		/// This class is used as lock object. Contains the count of locks held.
+		/// </summary>
+		private class LockCount
+		{
+			/// <summary>
+			/// Count of locks held.
+			/// </summary>
+			public int count;
 		}
 
 /*
