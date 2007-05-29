@@ -41,6 +41,7 @@
 		<file value="./logs/GameServer.log" />
 		<maximumFileSize value="100MB" />
 		<datePattern value="yyyy-MM-dd" />
+		<immediateFlush value="false"/>
 		<Layout type="log4net.Layout.PatternLayout">
 			<param name="ConversionPattern" value="%d - [%t] - %-5p - %c - %m%n" />
 		</Layout>
