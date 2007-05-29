@@ -594,3 +594,58 @@ Scripts.Players.Duel.YouSurrender:			Ti arrendi a {0}!
 # /Language
 Scripts.Players.Language.Set:				Cambi la lingua dei messaggi del server in {0}.
 Scripts.Players.Language.Current:			La tua lingua e' attualmente impostata in: {0}.
+
+# /Range
+Scripts.Players.Range.NeedTarget:			Distanza dal bersaglio: Non hai selezionato un bersaglio.
+Scripts.Players.Range.Result:				Distanza dal bersaglio: {0} unita'. {1}
+Scripts.Players.Range.InvalidObject:				Questo comando funziona solo sugli oggetti.
+
+# QUESTS
+# /ImportantDelivery
+Hib.ImportantDelivery.CheckPlayerAbortQuest.Abort:	Annullamento della Quest {0}. Puoi ricominciarla se lo desideri.
+Hib.ImportantDelivery.CheckPlayerAbortQuest.NoAbort:	Bene, ora va' via da qua e finisci il tuo lavoro!
+Hib.ImportantDelivery.CheckPlayerAcceptQuest.Accept:	Congratulazioni! Ora sei un passo piu' vicino alla comprensione del mondo di Camelot! Durante questa fase del tuo allenamento, ti inviero' in differenti zone del reame per consegnare merci estremamente necessarie a vari cittadini. Avrai bisogno di controllare il tuo QUEST JOURNAL di tanto in tanto per vedere di cosa hai bisogno per avanzare nella quest. Puoi accedere al quest journal dal bottone COMMAND nella tua [scheda del personaggio].
+Hib.ImportantDelivery.CheckPlayerAcceptQuest.NoAccept:	Oh bene, se cambi idea, per favore ritorna qui!
+Hib.ImportantDelivery.DefineItems.CrateOfVegetables:	Cesto di Vegetali
+Hib.ImportantDelivery.DefineItems.RecruitsCloak:	Mantello della Recluta
+Hib.ImportantDelivery.DefineItems.RecruitsDiary:	Diario delle Reclute
+Hib.ImportantDelivery.DefineItems.SackOfSupplies:	Sacco di Merci
+Hib.ImportantDelivery.Description.Step1:		[Step #1] Ascolta Addrir, ti descrivera' la missione. Quando smette di parlarti, chiedigli che cosa puo' darti per [accelerare] il tuo allenamento.
+Hib.ImportantDelivery.Description.Step2:		[Step #2] Ascolta Addrir, ti spieghera' il tuo giornale. Quando smette di parlarti, chiedigli come il giornale ti aiutera' ad [accelerare] i compiti che stai per fare.
+Hib.ImportantDelivery.Description.Step3:		[Step #3] Dirigiti a sud-est da Addrir. Cerca allo Stable Master Rumdor e consegnagli il tuo biglietto.
+Hib.ImportantDelivery.Description.Step4:		[Step #4] Consegna il Sacco di Merci ad Aethic in Tir na mBeo. Puoi farlo nello stesso modo in cui hai dato il biglietto a Rumdor.
+Hib.ImportantDelivery.Description.Step5:		[Step #5] Ascolta cosa ha da dirti Aethic.
+Hib.ImportantDelivery.Description.Step6:		[Step #6] Porta il biglietto che ti ha dato Aethic allo Stable Master Truichon, a nord-ovest dell'edificio con il portone rosso. Consegnagli il biglietto nello stesso modo in cui hai dato ad Aethic le merci.
+Hib.ImportantDelivery.Description.Step7:		[Step #7] Porta il Cesto di Vegetali allo Stable Master Freagus.
+Hib.ImportantDelivery.Description.Step8:		[Step #8] Ascolta ancora lo Stable Master Freagus. Quando smette di parlarti, chiedigli se ha una [ricompensa] per il tuo duro lavoro ed il servizio reso ad Hibernia.
+Hib.ImportantDelivery.FinishQuest.RecieveReward:	Ricevi {0} come ricompensa.
+Hib.ImportantDelivery.Notify.RentingHorse:		Buon giorno, {0}. Se sei interessato a noleggiare un cavallo, compra un biglietto, poi consegnamelo. Godrai un viaggio sicuro!
+Hib.ImportantDelivery.Notify.Supplies:			Ah! Le merci che aspettavo. Grazie {0}. Questi ci aiuteranno enormemente nelle prossime settimane. Avrei un'altra [richiesta] se sei pronto.
+Hib.ImportantDelivery.Notify.Vegetables:		Ah, i vegetali che aspettavo da Aethic. Grazie per avermeli portati. Non sono riuscito a trovare nessuno che badasse alla mia stalla per poter andare a prenderli di persona. Fammi vedere, penso che una [ricompensa] e' d'obbligo per il tuo duro lavoro.
+Hib.ImportantDelivery.TalkToAddrir.Abort:		Desideri davvero abbandonare questa quest? Tutti gli oggetti raccolti durante la quest saranno perduti.
+Hib.ImportantDelivery.TalkToAddrir.CaseCharSheet:	scheda del personaggio
+Hib.ImportantDelivery.TalkToAddrir.CaseExpedite:	accelerare
+Hib.ImportantDelivery.TalkToAddrir.CaseHorseTicket:	biglietto
+Hib.ImportantDelivery.TalkToAddrir.CaseInformation:	informazioni
+Hib.ImportantDelivery.TalkToAddrir.CaseJournal:		giornale
+Hib.ImportantDelivery.TalkToAddrir.CaseQuestion:	richiesta
+Hib.ImportantDelivery.TalkToAddrir.CaseTraining:	continuare il tuo allenamento
+Hib.ImportantDelivery.TalkToAddrir.CharSheet:		La scheda del tuo personaggio contiene tutte le informazioni del tuo personaggio, come attributi, abilita' nelle armi, classe di partenza e professione. Se in qualsiasi momento vuoi vedere le statistiche del tuo personaggio, premi l'ultima icona a sinistra nella barra del menu (assomiglia ad una persona con un cerchio attorno) per maggiore [informazioni].
+Hib.ImportantDelivery.TalkToAddrir.Expedite:		Ora che ti ho dato una piccola introduzione al mondo di Hibernia, iniziamo con il tuo primo incarico. Ho bisogno che tu consegni questo pacchetto di merci ad Aethic in Tir na mBeo. Non preoccuparti, ho un [biglietto] speciale per te.
+Hib.ImportantDelivery.TalkToAddrir.Greetings:		Salve mia giovane recluta. Sono Addrir e sono qui per aiutarti a trovare la strada in questo vasto reame. Durante questa processo, potrai guadagnare armi, armature, denaro ed anche qualche livello. Inizieremo il tuo allenamento con una semplice [domanda].
+Hib.ImportantDelivery.TalkToAddrir.HorseTicket:		Tutto cio' che devi fare e' portare questo biglietto a Rumdor qui in Mag Mell, vicino il carro. Consegnagli il biglietto e ti troverai sulla strada per Tir na mBeo. Sii veloce mia giovane recluta. Il tempo e' tutto.
+Hib.ImportantDelivery.TalkToAddrir.Information:		Lo so che tutto cio' sembra un po' sconvolgente, ma ho un oggetto speciale qui che rendera' piacevole questa transizione. Per favore, prendi questo [giornale].
+Hib.ImportantDelivery.TalkToAddrir.Journal:		Questo giornale ti aiutera' di tanto in tanto mentre farai vari incarichi per me. Mi piace chiamarlo un giornale intelligente. Fu creato da uno degli eldritch per le nuove reclute come te. Ti aiutera' ad [accelerare] il tuo allenamento.
+Hib.ImportantDelivery.TalkToAddrir.OneStepCloser:	Congratulazioni! Ora sei un passo piu' vicino alla comprensione del mondo di Camelot! Durante questa fase del tuo allenamento, ti inviero' in differenti zone del reame per consegnare merci estremamente necessarie a vari cittadini. Avrai bisogno di controllare il tuo QUEST JOURNAL di tanto in tanto per vedere di cosa hai bisogno per avanzare nella quest. Puoi accedere al quest journal dal bottone COMMAND nella tua [scheda del personaggio].
+Hib.ImportantDelivery.TalkToAddrir.Question:		Ti chiedero' se vuoi continuare o meno il tuo allenamento. Una finestra di dialogo si aprira'. Tutto quello che devi fare e' premere il pulsante Accetat o Rifiuta. Sei pronto per [continuare il tuo allenamento]?
+Hib.ImportantDelivery.TalkToAddrir.Training:		Sei pronto ad iniziare il tuo allenamento?
+Hib.ImportantDelivery.TalkToAethic.CaseErrand:		richiesta
+Hib.ImportantDelivery.TalkToAethic.Errand:		Ho bisogno che tu consegni questo cesto di vegetali a Freagus in Ardee. Sono sicuro che sei in grado di fare questo lavoro. Prendi questo biglietto e dallo allo Stable Master Truichon. Svelto ora, prima che i vegetali marciscano.
+Hib.ImportantDelivery.TalkToAethic.Greetings:		Salve viaggiatore. Non ti ho mai visto in giro prima d'ora. Devi essere una nuova recluta. Bene allora, posso aiutarti in qualcosa?
+Hib.ImportantDelivery.TalkToAethic.Supplies:		Ah! Le merci che aspettavo. Grazie {0}. Queste ci aiuteranno enormemente nelle prossime settimane. Avrei un'altra [richiesta] se sei pronto.
+Hib.ImportantDelivery.TalkToAethic.Vegetables:		Ho bisogno che tu consegni questo cesto di vegetali a Freagus in Ardee. Sono sicuro che sei in grado di fare questo lavoro. Prendi questo biglietto e dallo allo Stable Master Truichon. Svelto ora, prima che i vegetali marciscano.
+Hib.ImportantDelivery.TalkToFreagus.CaseReward:		ricompensa
+Hib.ImportantDelivery.TalkToFreagus.Errand:		Non andare lontano amico. Ho ancora altre richieste che bisogna soddisfare.
+Hib.ImportantDelivery.TalkToFreagus.GoodCrop:		Ah! Questi devono venire da Aethic in Tir na mBeo. Ne ho aspettato di tempo per avere un buon raccolto. la mia famiglia, i cavalli ed io mangeremobene per un po'. I miei ringraziamenti a te {0}. Ora, lasciami controllare se ho una [ricompensa] per il tuo duro lavoro.
+Hib.ImportantDelivery.TalkToFreagus.Reward:		E' un po' stracciata, ma ti terra' caldo nei mesi invernali. Grazie ancora {0}.
+Hib.ImportantDelivery.TalkToFreagus.Welcome:		Benvenuto nella mia stalla, amico. Cosa posso fare per te oggi?
