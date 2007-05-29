@@ -16,6 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
+using DOL.Language;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Scripts
@@ -29,13 +30,16 @@ namespace DOL.GS.Scripts
 	{
 		public int OnCommand(GameClient client, string[] args)
 		{
-			if (client.Player.TargetObject != null)
+			GameLiving living = client.Player.TargetObject as GameLiving;
+			if (client.Player.TargetObject == null)
+				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Range.NeedTarget"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			else if (living == null || (living != null && client.Account.PrivLevel > 1))
 			{
 				int range = WorldMgr.GetDistance(client.Player, client.Player.TargetObject);
-				client.Out.SendMessage("Range to target: " + range + " units." + (client.Player.TargetInView ? "" : " (Target not visible)"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Range.Result", range, (client.Player.TargetInView ? "" : " (Target not visible)")), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 			else
-				client.Out.SendMessage("Range to target: You don't have a target set.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Range.InvalidObject"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			return 0;
 		}
 	}

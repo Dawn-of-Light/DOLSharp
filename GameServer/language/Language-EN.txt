@@ -596,6 +596,11 @@ Scripts.Players.Duel.YouSurrender:			You surrender to {0}!
 Scripts.Players.Language.Current:			Your language is currently set to: {0}.
 Scripts.Players.Language.Set:				You change your server display language to {0}.
 
+# /Range
+Scripts.Players.Range.NeedTarget:			Range to target: You don't have a valid target set.
+Scripts.Players.Range.Result:				Range to target: {0} units. {1}
+Scripts.Players.Range.InvalidObject:				This command only works on objects.
+
 # QUESTS
 # /ImportantDelivery
 Hib.ImportantDelivery.CheckPlayerAbortQuest.Abort:	Aborting Quest {0}. You can start over again if you want.
