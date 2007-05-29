@@ -601,6 +601,11 @@ Scripts.Players.Duel.YouSurrender:			Ihr ergebt Euch {0}!
 Scripts.Players.Language.Current:			Die aktuell auf dem Server angezeigte Sprache ist: {0}.
 Scripts.Players.Language.Set:				Ihr ändert die vom Server angezeigte Sprache auf {0}.
 
+# /Range
+Scripts.Players.Range.NeedTarget:			Entfernung zum Ziel: Du hast Dein Ziel nicht gewält.
+Scripts.Players.Range.Result:				Entfernung zum Ziel: {0} Einheiten. {1}
+Scripts.Players.Range.InvalidObject:				Dieses Befehl funktionniert nur auf Obieckte.
+
 # QUESTS
 # /ImportantDelivery(Wichtige Lieferung)
 Hib.ImportantDelivery.CheckPlayerAbortQuest.Abort:	Auftrag {0} abgebrochen. Ihr könnt jeder Zeit wieder beginnen.
