@@ -12,12 +12,44 @@ System.LanguagesName.Czech:				Czech
 System.LanguagesName.English:				English
 System.LanguagesName.French:				French
 System.LanguagesName.German:				German
+System.LanguagesName.Italian:				Italian
 System.LanguagesName.Spanish:				Spanish
 
 # SYSTEM
 System.NoSense:						That would make no sense!
 System.MustSelectTarget:				You must select a target!
 System.ReleaseTimer:					Release Timer
+
+# CRAFTING
+# (All)
+Crafting.CheckTool.AlchemyKit:				alchemy kit
+Crafting.CheckTool.MortarAndPestle:			mortar and pestle
+Crafting.CheckTool.NotHaveTools:			You do not have the tools to make the {0}.
+Crafting.CheckTool.PlaningTool:				planing tool
+Crafting.CheckTool.SewingKit:				sewing kit
+Crafting.CheckTool.SmithsHammer:			smith's hammer
+Crafting.CheckTool.SpellcraftKit:			spellcraft kit
+
+# /AbstractCraftingSkill
+AbstractCraftingSkill.BuildCraftedItem.Masterpiece:	Congratulation, you make a masterpiece !
+AbstractCraftingSkill.BuildCraftedItem.Successfully:	You successfully make the {0}! ({1})
+AbstractCraftingSkill.CheckRawMaterial.NoIngredients:	You do not have the ingredients to make the {0}.
+AbstractCraftingSkill.CheckRawMaterial.YouAreMissing:	You are missing :
+
+AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoClothworkingSkill:		You don't have the minimum necessary Clothworking skill ({0}) to create the {1}!
+AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoLeathercraftingSkill:	You don't have the minimum necessary Leathercrafting skill ({0}) to create the {1}!
+AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoMetalworkingSkill:		You don't have the minimum necessary Metalworking skill ({0}) to create the {1}!
+AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoWoodworkingSkill:		You don't have the minimum necessary Woodworking skill ({0}) to create the {1}!
+
+AbstractCraftingSkill.CraftItem.BeginWork:		You begin work on the {0} ({1}%).
+AbstractCraftingSkill.CraftItem.ChanceToGainPoint:	Chance to gain point in your primary crafting skill is {0}%.
+AbstractCraftingSkill.CraftItem.CurrentlyMaking:	Currently Making: {0}
+AbstractCraftingSkill.CraftItem.MoveAndInterrupt:	You move and interrupt your crafting.
+AbstractCraftingSkill.CraftItem.StopWork:		You stop your current work.
+AbstractCraftingSkill.LooseRawMaterial.Count:		You lose ({0}) {1}.
+AbstractCraftingSkill.LooseRawMaterial.Materials:	You fail to make the {0}, and lose some materials!
+AbstractCraftingSkill.MakeItem.LoseNoMaterials:		You fail to make the {0} but lose no materials!
+AbstractCraftingSkill.MakeItem.NotAllMaterials:		You have not all needed raw materials to create this item.
 
 # GAMELIVING
 GameLiving.ReceiveItem:					{0} doesn't want this item!
@@ -597,9 +629,10 @@ Scripts.Players.Language.Current:			Your language is currently set to: {0}.
 Scripts.Players.Language.Set:				You change your server display language to {0}.
 
 # /Range
+Scripts.Players.Range.InvalidObject:			This command only works on objects.
 Scripts.Players.Range.NeedTarget:			Range to target: You don't have a valid target set.
+Scripts.Players.Range.NotVisible:			 (Target not visible)
 Scripts.Players.Range.Result:				Range to target: {0} units. {1}
-Scripts.Players.Range.InvalidObject:				This command only works on objects.
 
 # QUESTS
 # /ImportantDelivery

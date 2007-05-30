@@ -36,7 +36,7 @@ namespace DOL.GS.Scripts
 			else if (living == null || (living != null && client.Account.PrivLevel > 1))
 			{
 				int range = WorldMgr.GetDistance(client.Player, client.Player.TargetObject);
-				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Range.Result", range, (client.Player.TargetInView ? "" : " (Target not visible)")), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Range.Result", range, (client.Player.TargetInView ? "" : LanguageMgr.GetTranslation(client, "Scripts.Players.Range.NotVisible"))), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 			else
 				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Range.InvalidObject"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
