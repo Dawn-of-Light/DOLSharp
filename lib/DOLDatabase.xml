@@ -6999,12 +6999,31 @@ public void ReadMyData(string myConnString) {
             <param name="s">the string</param>
             <returns>the string with escaped character</returns>
         </member>
+        <member name="M:DOL.Database.Connection.DataConnection.GetMySqlConnection">
+            <summary>
+            Gets connection from connection pool.
+            </summary>
+            <returns>Connection.</returns>
+        </member>
+        <member name="M:DOL.Database.Connection.DataConnection.ReleaseConnection(MySql.Data.MySqlClient.MySqlConnection)">
+            <summary>
+            Releases the connection to connection pool.
+            </summary>
+            <param name="conn">The connection to relase.</param>
+        </member>
         <member name="M:DOL.Database.Connection.DataConnection.ExecuteNonQuery(System.String)">
             <summary>
             Execute a non query like update or delete
             </summary>
             <param name="sqlcommand"></param>
             <returns>number of rows affected</returns>
+        </member>
+        <member name="M:DOL.Database.Connection.DataConnection.HandleException(System.Exception)">
+            <summary>
+            Handles the exception.
+            </summary>
+            <param name="e">The exception.</param>
+            <returns><code>true</code> if operation should be repeated, <code>false</code> otherwise.</returns>
         </member>
         <member name="M:DOL.Database.Connection.DataConnection.ExecuteSelect(System.String,DOL.Database.Connection.QueryCallback)">
             <summary>

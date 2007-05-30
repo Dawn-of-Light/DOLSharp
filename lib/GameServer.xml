@@ -14928,6 +14928,28 @@
             Defines a logger for this class.
             </summary>
         </member>
+        <member name="M:DOL.GS.PacketHandler.Client.v168.LoginRequestHandler.EnterLock(System.String)">
+            <summary>
+            Acquires the lock on account.
+            </summary>
+            <param name="accountName">Name of the account.</param>
+        </member>
+        <member name="M:DOL.GS.PacketHandler.Client.v168.LoginRequestHandler.ExitLock(System.String)">
+            <summary>
+            Releases the lock on account.
+            </summary>
+            <param name="accountName">Name of the account.</param>
+        </member>
+        <member name="T:DOL.GS.PacketHandler.Client.v168.LoginRequestHandler.LockCount">
+            <summary>
+            This class is used as lock object. Contains the count of locks held.
+            </summary>
+        </member>
+        <member name="F:DOL.GS.PacketHandler.Client.v168.LoginRequestHandler.LockCount.count">
+            <summary>
+            Count of locks held.
+            </summary>
+        </member>
         <member name="T:DOL.GS.PacketHandler.Client.v168.HousingPickupItemHandler">
             <summary>
             Handle housing pickup item requests from the client.
