@@ -21,6 +21,7 @@ using System.Collections;
 using System.Collections.Specialized;
 using System.Reflection;
 using DOL.Database;
+using DOL.Language;
 using DOL.GS.ServerProperties;
 using DOL.GS.PacketHandler;
 using log4net;
@@ -148,20 +149,20 @@ namespace DOL.GS
 			{
 				player.CraftTimer.Stop();
 				player.Out.SendCloseTimerWindow();
-				player.Out.SendMessage("You stop your current work.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.CraftItem.StopWork"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return 0;
 			}
 
 			if (player.IsMoving || player.IsStrafing)
 			{
-				player.Out.SendMessage("You move and interrupt your crafting.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.CraftItem.MoveAndInterrupt"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return 0;
 			}
 
 			int craftingTime = GetCraftingTime(player, item);
-			player.Out.SendMessage("You begin work on the " + item.ItemTemplate.Name + " (" + CalculateChanceToMakeItem(player, item).ToString() + "%).", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			player.Out.SendMessage("Chance to gain point in your primary crafting skill is " + CalculateChanceToGainPoint(player, item) + "%.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			player.Out.SendTimerWindow("Currently Making: " + item.ItemTemplate.Name, craftingTime);
+			player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.CraftItem.BeginWork", item.ItemTemplate.Name, CalculateChanceToMakeItem(player, item).ToString()), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.CraftItem.ChanceToGainPoint", CalculateChanceToGainPoint(player, item)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			player.Out.SendTimerWindow(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.CraftItem.CurrentlyMaking", item.ItemTemplate.Name), craftingTime);
 			player.CraftTimer = new RegionTimer(player);
 			player.CraftTimer.Callback = new RegionTimerCallback(MakeItem);
 			player.CraftTimer.Properties.setProperty(PLAYER_CRAFTER, player);
@@ -193,7 +194,7 @@ namespace DOL.GS
 			{
 				if (!RemoveUsedMaterials(player, item))
 				{
-					player.Out.SendMessage("You have not all needed raw materials to create this item.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.MakeItem.NotAllMaterials"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return 0;
 				}
 
@@ -203,7 +204,7 @@ namespace DOL.GS
 			}
 			else
 			{
-				player.Out.SendMessage("You fail to make the " + item.ItemTemplate.Name + " but lose no materials!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.MakeItem.LoseNoMaterials", item.ItemTemplate.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				player.Out.SendPlaySound(eSoundType.Craft, 0x02);
 			}
 
@@ -249,7 +250,7 @@ namespace DOL.GS
 						{
 							if (player.GetCraftingSkillValue(eCraftingSkill.ClothWorking) < minimumLevel)
 							{
-								player.Out.SendMessage("You don't have the minimum necessary Clothworking skill (" + minimumLevel + ") to create the " + craftItemData.ItemTemplate.Name + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoClothworkingSkill", minimumLevel, craftItemData.ItemTemplate.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return false;
 							}
 							break;
@@ -259,7 +260,7 @@ namespace DOL.GS
 						{
 							if (player.GetCraftingSkillValue(eCraftingSkill.LeatherCrafting) < minimumLevel)
 							{
-								player.Out.SendMessage("You don't have the minimum necessary Leathercrafting skill (" + minimumLevel + ") to create the " + craftItemData.ItemTemplate.Name + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoLeathercraftingSkill", minimumLevel, craftItemData.ItemTemplate.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return false;
 							}
 							break;
@@ -269,7 +270,7 @@ namespace DOL.GS
 						{
 							if (player.GetCraftingSkillValue(eCraftingSkill.MetalWorking) < minimumLevel)
 							{
-								player.Out.SendMessage("You don't have the minimum necessary Metalworking skill (" + minimumLevel + ") to create the " + craftItemData.ItemTemplate.Name + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoMetalworkingSkill", minimumLevel, craftItemData.ItemTemplate.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return false;
 							}
 							break;
@@ -279,7 +280,7 @@ namespace DOL.GS
 						{
 							if (player.GetCraftingSkillValue(eCraftingSkill.WoodWorking) < minimumLevel)
 							{
-								player.Out.SendMessage("You don't have the minimum necessary Woodworking skill (" + minimumLevel + ") to create the " + craftItemData.ItemTemplate.Name + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoWoodworkingSkill", minimumLevel, craftItemData.ItemTemplate.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return false;
 							}
 							break;
@@ -335,8 +336,8 @@ namespace DOL.GS
 
 				if (missingMaterials != null)
 				{
-					player.Out.SendMessage("You do not have the ingredients to make the " + craftItemData.ItemTemplate.Name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					player.Out.SendMessage("You are missing :", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.CheckRawMaterial.NoIngredients", craftItemData.ItemTemplate.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.CheckRawMaterial.YouAreMissing"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					foreach (DBCraftedXItem rawmaterial in missingMaterials)
 					{
 						player.Out.SendMessage("(" + rawmaterial.Count + ") " + rawmaterial.ItemTemplate.Name, eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -557,11 +558,11 @@ namespace DOL.GS
 				}
 				player.Inventory.CommitChanges();
 
-				player.Out.SendMessage("You successfully make the " + craftItemData.ItemTemplate.Name + "! (" + newItem.Quality + ")", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.BuildCraftedItem.Successfully", craftItemData.ItemTemplate.Name, newItem.Quality), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 
 				if (newItem.Quality == 100)
 				{
-					player.Out.SendMessage("Congratulation, you make a masterpiece !", eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.BuildCraftedItem.Masterpiece"), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
 					player.Out.SendPlaySound(eSoundType.Craft, 0x04);
 				}
 				else
@@ -579,7 +580,7 @@ namespace DOL.GS
 		/// <returns></returns>
 		public bool LooseRawMaterial(GamePlayer player, DBCraftedItem craftItemData)
 		{
-			player.Out.SendMessage("You fail to make the " + craftItemData.ItemTemplate.Name + ", and lose some materials!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.LooseRawMaterial.Materials", craftItemData.ItemTemplate.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 			Hashtable dataSlots = new Hashtable(5);
 
@@ -596,7 +597,7 @@ namespace DOL.GS
 
 					if (count <= 0) continue; // don't remove this material
 
-					player.Out.SendMessage("You lose (" + count + ") " + itemMaterial.ItemTemplate.Name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.LooseRawMaterial.Count", count, itemMaterial.ItemTemplate.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 					bool result = false;
 					foreach (InventoryItem item in player.Inventory.GetItemRange(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
