@@ -113,6 +113,13 @@ namespace DOL.GS.Quests
         public override void Notify(DOLEvent e, object sender, EventArgs args)
         {            
             GamePlayer player = BehaviourUtils.GuessGamePlayerFromNotify(e, sender, args);
+
+            if (player == null)
+            {
+                if (log.IsDebugEnabled)
+                    log.Debug("Couldn't guess player for EventArgs " + args + ". Triggers with this eventargs type won't work within quests.");
+                return;
+            }
             AbstractQuest quest = player.IsDoingQuest(QuestType);
             
             int executions = 0;
