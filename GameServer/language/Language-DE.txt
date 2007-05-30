@@ -12,12 +12,44 @@ System.LanguagesName.Czech:				Tschechisch
 System.LanguagesName.English:				Englisch
 System.LanguagesName.French:				Französisch
 System.LanguagesName.German:				Deutsch
+System.LanguagesName.Italian:				Italienisch
 System.LanguagesName.Spanish:				Spanisch
 
 # SYSTEM
 System.NoSense:						Das würde keinen Sinn machen!
 System.MustSelectTarget:				Ihr müsst ein Ziel auswählen!
 System.ReleaseTimer:					Automatischer Release
+
+# CRAFTING
+# (All)
+Crafting.CheckTool.AlchemyKit:				Alchimiekasten
+Crafting.CheckTool.MortarAndPestle:			Mörser mit Pistill
+Crafting.CheckTool.NotHaveTools:			Ihr habt nicht das notwendig Werkzeug um {0} herzustellen.
+Crafting.CheckTool.PlaningTool:				Hobel
+Crafting.CheckTool.SewingKit:				Nähset
+Crafting.CheckTool.SmithsHammer:			Schmiedehammer
+Crafting.CheckTool.SpellcraftKit:			Bannzauberkasten
+
+# /AbstractCraftingSkill
+AbstractCraftingSkill.BuildCraftedItem.Masterpiece:	Gratulation! Das war ein Meisterstück.
+AbstractCraftingSkill.BuildCraftedItem.Successfully:	Ihr habt {0} vollendet! ({1})
+AbstractCraftingSkill.CheckRawMaterial.NoIngredients:	Ihr habt nicht die Zutaten zur Herstellung von {0}.
+AbstractCraftingSkill.CheckRawMaterial.YouAreMissing:	Euch fehlt:
+
+AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoClothworkingSkill:		Ihr erfüllt nicht die Mindestvorraussetzung in Stoffhandwerk ({0}) zur Herstellung von {1}!
+AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoLeathercraftingSkill:	Ihr erfüllt nicht die Mindestvorraussetzung in Lederhandwerk ({0}) zur Herstellung von {1}!
+AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoMetalworkingSkill:		Ihr erfüllt nicht die Mindestvorraussetzung in Schmiedekunst ({0}) zur Herstellung von {1}!
+AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoWoodworkingSkill:		Ihr erfüllt nicht die Mindestvorraussetzung in Schreinerei ({0}) zur Herstellung von {1}!
+
+AbstractCraftingSkill.CraftItem.BeginWork:		Ihr beginnt mit der Arbeit an {0} ({1}%).
+AbstractCraftingSkill.CraftItem.ChanceToGainPoint:	Die Chance Punkte in Eurem primären Handwerk zu erhalten beträgt {0}%.
+AbstractCraftingSkill.CraftItem.CurrentlyMaking:	Aktuelle Herstellung: {0}
+AbstractCraftingSkill.CraftItem.MoveAndInterrupt:	Ihr bewegt Euch znd unterbrecht damit Eure Arbeit.
+AbstractCraftingSkill.CraftItem.StopWork:		Ihr brecht Eure momentane Arbeit ab.
+AbstractCraftingSkill.LooseRawMaterial.Count:		Ihr verliert ({0}) {1}.
+AbstractCraftingSkill.LooseRawMaterial.Materials:	Ihr habt die Herstellung von {0} nicht geschafft und verliert einiges Material!
+AbstractCraftingSkill.MakeItem.LoseNoMaterials:		Ihr habt die Herstellung von {0} nicht geschafft, aber verliert kein Material!
+AbstractCraftingSkill.MakeItem.NotAllMaterials:		Ihr habt nicht alles Ausgangsmaterial um diesen Gegenstand herzustellen.
 
 # GAMELIVING
 GameLiving.ReceiveItem:					{0} will diesen Gegenstand nicht!
@@ -602,9 +634,10 @@ Scripts.Players.Language.Current:			Die aktuell auf dem Server angezeigte Sprach
 Scripts.Players.Language.Set:				Ihr ändert die vom Server angezeigte Sprache auf {0}.
 
 # /Range
-Scripts.Players.Range.NeedTarget:			Entfernung zum Ziel: Du hast Dein Ziel nicht gewält.
-Scripts.Players.Range.Result:				Entfernung zum Ziel: {0} Einheiten. {1}
-Scripts.Players.Range.InvalidObject:				Dieses Befehl funktionniert nur auf Obieckte.
+Scripts.Players.Range.InvalidObject:			Dieser Befehl ist nur bei Gegenständen gültig.
+Scripts.Players.Range.NeedTarget:			Distanz zum Ziel: Ihr habt kein Ziel ausgewählt.
+Scripts.Players.Range.NotVisible:			 (Ziel nicht sichtbar)
+Scripts.Players.Range.Result:				Distanz zum Ziel: {0} Einheiten. {1}
 
 # QUESTS
 # /ImportantDelivery(Wichtige Lieferung)

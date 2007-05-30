@@ -19,6 +19,7 @@
 using System;
 using System.Collections;
 using DOL.Database;
+using DOL.Language;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS
@@ -105,9 +106,9 @@ namespace DOL.GS
 		{
 			if (!base.CheckTool(player, craftItemData)) return false;
 
-			if (player.Inventory.GetFirstItemByName("spellcraft kit", eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) == null)
+			if (player.Inventory.GetFirstItemByName(LanguageMgr.GetTranslation(player.Client, "Crafting.CheckTool.SpellcraftKit"), eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) == null)
 			{
-				player.Out.SendMessage("You do not have the tools to make the " + craftItemData.ItemTemplate.Name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Crafting.CheckTool.NotHaveTools", craftItemData.ItemTemplate.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				player.Out.SendMessage("You must find a spellcraft kit!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
