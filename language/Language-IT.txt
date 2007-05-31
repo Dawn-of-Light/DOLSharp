@@ -290,7 +290,12 @@ GamePlayer.SaveIntoDatabase.CharacterSaved:	Il tuo personaggio e' stato salvato.
 GamePlayer.Say.YouSay:					Dici, "{0}"
 GamePlayer.SayReceive.Says:				{0} dice, "{1}"
 GamePlayer.SayReceive.FalseLanguage:			{0} dice qualcosa in un linguaggio che non comprendi.
-GamePlayer.SendReceive.sends:				 scrive, 
+GamePlayer.SendReceive.sends:				{0} scrive, {1}
+GamePlayer.SendReceive.FalseLanguage:			{0} sends something in a language you don't understand.
+GamePlayer.SendReceive.Afk:				{0} is currently AFK.
+GamePlayer.SendReceive.AfkMessage:			<AFK> {0} sends, "{1}"
+GamePlayer.Send.target.DontUnderstandYou:		{0} doesn't seem to understand you!
+GamePlayer.Send.YouSendTo:				You send, "{0}" to {1}.
 GamePlayer.SetControlledNpc.ReleaseTarget:				Rilasci il controllo del tuo bersaglio.
 GamePlayer.Shade.AlreadyShade:				Sei gia' un'ombra!
 GamePlayer.Shade.NoLongerShade:				Non sei piu' un'ombra!

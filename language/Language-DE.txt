@@ -289,8 +289,13 @@ GamePlayer.SaveIntoDatabase.CharacterSaved:		Euer Charakter wurde gespeichert.
 GamePlayer.Say.YouSay:					Ihr sagt: "{0}"
 GamePlayer.SayReceive.Says:				{0} sagt: "{1}"
 GamePlayer.SayReceive.FalseLanguage:			{0} sagt etwas in einer Sprache, die Ihr nicht versteht.
-GamePlayer.SendReceive.sends:				 sendet: 	
-GamePlayer.SetControlledNpc.ReleaseTarget:		Ihr verliert die Kontrolle über Euer Wesen.			
+GamePlayer.SendReceive.sends:				{0} sendet: {1}
+GamePlayer.SendReceive.FalseLanguage:			{0} sendet etwas in einer Sprache, die Ihr nicht versteht.
+GamePlayer.SendReceive.Afk:				{0} ist momentan im AFK-Modus.
+GamePlayer.SendReceive.AfkMessage:			<AFK> {0} sendet: "{1}"
+GamePlayer.Send.target.DontUnderstandYou:		{0} scheint Euch nicht zu verstehen!
+GamePlayer.Send.YouSendTo:				Ihr sendet: "{0}" an {1}.
+GamePlayer.SetControlledNpc.ReleaseTarget:		Ihr verliert die Kontrolle über Euer Wesen.
 GamePlayer.Shade.AlreadyShade:				Ihr seid bereits ein Schatten!	
 GamePlayer.Shade.NoLongerShade:				Ihr seid nicht länger ein Schatten!	
 GamePlayer.Sit.AlreadySitting:				Ihr sitzt bereits!	
