@@ -18,11 +18,13 @@
  */
 using System;
 using System.Collections;
+using System.Reflection;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 using DOL.GS.Scripts;
+using log4net;
 
 namespace DOL.GS.Spells
 {
@@ -31,6 +33,11 @@ namespace DOL.GS.Spells
 	/// </summary>
 	public abstract class BaseProcSpellHandler : SpellHandler
 	{
+		/// <summary>
+		/// Defines a logger for this class.
+		/// </summary>
+		protected static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
 		/// <summary>
 		/// Constructs new proc spell handler
 		/// </summary>
@@ -184,21 +191,33 @@ namespace DOL.GS.Spells
 				if (Spell.Concentration != 0) list.Add("Concentration cost: " + Spell.Concentration);
 				if (Spell.Radius != 0) list.Add("Radius: " + Spell.Radius);
 
-				// add subspell specific informations
-				list.Add(" "); //empty line
-				list.Add("Sub-spell informations: ");
-				list.Add(" "); //empty line
-				ISpellHandler subSpellHandler = ScriptMgr.CreateSpellHandler(Caster, m_procSpell, m_procSpellLine);
-				if (subSpellHandler == null)
+				// Recursion check
+				byte nextDelveDepth = (byte)(DelveInfoDepth + 1);
+				if (nextDelveDepth > MAX_DELVE_RECURSION)
 				{
-					list.Add("unable to create subspell handler: '" + SubSpellLineName + "', " + m_spell.Value);
-					return list;
+					list.Add("(recursion - see server logs)");
+					log.ErrorFormat("Spell delve info recursion limit reached. Source spell ID: {0}, Sub-spell ID: {1}", m_spell.ID, m_procSpell.ID);
 				}
-				IList subSpellDelve = subSpellHandler.DelveInfo;
-				if (subSpellDelve.Count > 0)
+				else
 				{
-					subSpellDelve.RemoveAt(0);
-					list.AddRange(subSpellDelve);
+					// add subspell specific informations
+					list.Add(" "); //empty line
+					list.Add("Sub-spell informations: ");
+					list.Add(" "); //empty line
+					ISpellHandler subSpellHandler = ScriptMgr.CreateSpellHandler(Caster, m_procSpell, m_procSpellLine);
+					if (subSpellHandler == null)
+					{
+						list.Add("unable to create subspell handler: '" + SubSpellLineName + "', " + m_spell.Value);
+						return list;
+					}
+					subSpellHandler.DelveInfoDepth = nextDelveDepth;
+					// Get delve info of sub-spell
+					IList subSpellDelve = subSpellHandler.DelveInfo;
+					if (subSpellDelve.Count > 0)
+					{
+						subSpellDelve.RemoveAt(0);
+						list.AddRange(subSpellDelve);
+					}
 				}
 
 				return list;

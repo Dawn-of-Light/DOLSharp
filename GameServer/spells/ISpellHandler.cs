@@ -134,7 +134,12 @@ namespace DOL.GS.Spells
 		/// <summary>
 		/// The DelveInfo
 		/// </summary>
-		IList DelveInfo{ get; }
+		IList DelveInfo { get; }
+
+		/// <summary>
+		/// Current depth of delve info
+		/// </summary>
+		byte DelveInfoDepth { get; set; }
 
 		/// <summary>
 		/// Event raised when casting sequence is completed and execution of spell can start
