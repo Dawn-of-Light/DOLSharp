@@ -18,7 +18,7 @@ System.LanguagesName.Czech:					Czech
 System.NoSense:								Eso no tiene sentido!
 
 # GAMEPLAYER
-GamePlayer.SendReceive.sends:				 envía, 
+GamePlayer.SendReceive.sends:				{0} envía, {1}
 GamePlayer.Quit.CantQuitDead:				No puedes salir ahora debido a que estás muerto. Escribe '/release' para revivir tu cuerpo.
 GamePlayer.Quit.CantQuitMount:				Has de desmontar antes de poder salir.
 GamePlayer.Quit.CantQuitStanding:			Has de estar parado para salir.

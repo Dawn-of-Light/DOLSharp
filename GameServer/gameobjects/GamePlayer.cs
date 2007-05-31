@@ -7452,10 +7452,10 @@ namespace DOL.GS
 				type = eChatType.CT_Staff;
 
 			if (GameServer.ServerRules.IsAllowedToUnderstand(source, this))
-				Out.SendMessage(source.Name + LanguageMgr.GetTranslation(Client, "GamePlayer.SendReceive.sends") + "\"" + str + "\"", type, eChatLoc.CL_ChatWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.SendReceive.Sends", source.Name, str), type, eChatLoc.CL_ChatWindow);
 			else
 			{
-				Out.SendMessage(source.Name + " sends something in a language you don't understand.", eChatType.CT_Send, eChatLoc.CL_ChatWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.SendReceive.FalseLanguage", source.Name), eChatType.CT_Send, eChatLoc.CL_ChatWindow);
 				return true;
 			}
 
@@ -7464,11 +7464,11 @@ namespace DOL.GS
 			{
 				if (afkmessage == "")
 				{
-					source.Out.SendMessage(Name + " is currently AFK.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					source.Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.SendReceive.Afk", Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 				else
 				{
-					source.Out.SendMessage("<AFK> " + Name + LanguageMgr.GetTranslation(Client, "GamePlayer.SendReceive.sends") + "\"" + afkmessage + "\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
+					source.Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.SendReceive.AfkMessage", Name, afkmessage), eChatType.CT_Say, eChatLoc.CL_ChatWindow);
 				}
 			}
 
@@ -7506,12 +7506,12 @@ namespace DOL.GS
 				return false;
 			if (!target.SendReceive(this, str))
 			{
-				Out.SendMessage(target.Name + " doesn't seem to understand you!", eChatType.CT_Send, eChatLoc.CL_ChatWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Send.target.DontUnderstandYou", target.Name), eChatType.CT_Send, eChatLoc.CL_ChatWindow);
 				return false;
 			}
 			else
 			{
-				Out.SendMessage("You send, " + "\"" + str + "\" to " + target.Name, eChatType.CT_Send, eChatLoc.CL_ChatWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Send.YouSendTo", str, target.Name), eChatType.CT_Send, eChatLoc.CL_ChatWindow);
 			}
 			return true;
 		}
