@@ -258,7 +258,7 @@ GamePlayer.SaveIntoDatabase.CharacterSaved:	Votre personnage a été sauvegardé.
 GamePlayer.Say.YouSay:						Vous dites, "{0}"
 GamePlayer.SayReceive.Says:					{0} dit, "{1}"
 GamePlayer.SayReceive.FalseLanguage:		{0} dit quelquechose dans une langue que vous ne comprenez pas.
-GamePlayer.SendReceive.sends:				 envoie, 
+GamePlayer.SendReceive.Sends:				{0} envoie, "{1}"
 GamePlayer.SetControlledNpc.ReleaseTarget:	Vous relachez le controle de votre cible.
 GamePlayer.Shade.AlreadyShade:				Vous êtes déjà dissimulé!
 GamePlayer.Shade.NoLongerShade:				Vous ne vous dissimulez plus d'avantage!

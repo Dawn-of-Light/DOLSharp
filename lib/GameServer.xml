@@ -4243,6 +4243,11 @@
             The DelveInfo
             </summary>
         </member>
+        <member name="P:DOL.GS.Spells.ISpellHandler.DelveInfoDepth">
+            <summary>
+            Current depth of delve info
+            </summary>
+        </member>
         <member name="E:DOL.GS.Spells.ISpellHandler.CastingCompleteEvent">
             <summary>
             Event raised when casting sequence is completed and execution of spell can start
@@ -4261,6 +4266,11 @@
         <member name="F:DOL.GS.Spells.SpellHandler.log">
             <summary>
             Defines a logger for this class.
+            </summary>
+        </member>
+        <member name="F:DOL.GS.Spells.SpellHandler.MAX_DELVE_RECURSION">
+            <summary>
+            Maximum number of sub-spells to get delve info for.
             </summary>
         </member>
         <member name="F:DOL.GS.Spells.SpellHandler.m_spell">
@@ -4286,6 +4296,11 @@
         <member name="F:DOL.GS.Spells.SpellHandler.m_startReuseTimer">
             <summary>
             Shall we start the reuse timer
+            </summary>
+        </member>
+        <member name="F:DOL.GS.Spells.SpellHandler.m_delveInfoDepth">
+            <summary>
+            Stores the current delve info depth
             </summary>
         </member>
         <member name="M:DOL.GS.Spells.SpellHandler.#ctor(DOL.GS.GameLiving,DOL.GS.Spell,DOL.GS.SpellLine)">
@@ -4685,6 +4700,11 @@
         <member name="P:DOL.GS.Spells.SpellHandler.HasPositiveEffect">
             <summary>
             Does the spell have a positive effect?
+            </summary>
+        </member>
+        <member name="P:DOL.GS.Spells.SpellHandler.DelveInfoDepth">
+            <summary>
+            Current depth of delve info
             </summary>
         </member>
         <member name="P:DOL.GS.Spells.SpellHandler.DelveInfo">
@@ -30750,6 +30770,11 @@
         <member name="T:DOL.GS.Spells.BaseProcSpellHandler">
             <summary>
             Base class for proc spell handler
+            </summary>
+        </member>
+        <member name="F:DOL.GS.Spells.BaseProcSpellHandler.log">
+            <summary>
+            Defines a logger for this class.
             </summary>
         </member>
         <member name="M:DOL.GS.Spells.BaseProcSpellHandler.#ctor(DOL.GS.GameLiving,DOL.GS.Spell,DOL.GS.SpellLine)">

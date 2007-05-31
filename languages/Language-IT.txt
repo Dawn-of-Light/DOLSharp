@@ -20,6 +20,37 @@ System.NoSense:								Non ha senso!
 System.MustSelectTarget:					Devi selezionare un bersaglio!
 System.ReleaseTimer:						Release Timer
 
+# CRAFTING
+# (All)
+Crafting.CheckTool.AlchemyKit:				alchemy kit
+Crafting.CheckTool.MortarAndPestle:			mortar and pestle
+Crafting.CheckTool.NotHaveTools:			You do not have the tools to make the {0}.
+Crafting.CheckTool.PlaningTool:				planing tool
+Crafting.CheckTool.SewingKit:				sewing kit
+Crafting.CheckTool.SmithsHammer:			smith's hammer
+Crafting.CheckTool.SpellcraftKit:			spellcraft kit
+
+# /AbstractCraftingSkill
+AbstractCraftingSkill.BuildCraftedItem.Masterpiece:	Congratulation, you make a masterpiece !
+AbstractCraftingSkill.BuildCraftedItem.Successfully:	You successfully make the {0}! ({1})
+AbstractCraftingSkill.CheckRawMaterial.NoIngredients:	You do not have the ingredients to make the {0}.
+AbstractCraftingSkill.CheckRawMaterial.YouAreMissing:	You are missing :
+
+AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoClothworkingSkill:		You don't have the minimum necessary Clothworking skill ({0}) to create the {1}!
+AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoLeathercraftingSkill:	You don't have the minimum necessary Leathercrafting skill ({0}) to create the {1}!
+AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoMetalworkingSkill:		You don't have the minimum necessary Metalworking skill ({0}) to create the {1}!
+AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoWoodworkingSkill:		You don't have the minimum necessary Woodworking skill ({0}) to create the {1}!
+
+AbstractCraftingSkill.CraftItem.BeginWork:		You begin work on the {0} ({1}%).
+AbstractCraftingSkill.CraftItem.ChanceToGainPoint:	Chance to gain point in your primary crafting skill is {0}%.
+AbstractCraftingSkill.CraftItem.CurrentlyMaking:	Currently Making: {0}
+AbstractCraftingSkill.CraftItem.MoveAndInterrupt:	You move and interrupt your crafting.
+AbstractCraftingSkill.CraftItem.StopWork:		You stop your current work.
+AbstractCraftingSkill.LooseRawMaterial.Count:		You lose ({0}) {1}.
+AbstractCraftingSkill.LooseRawMaterial.Materials:	You fail to make the {0}, and lose some materials!
+AbstractCraftingSkill.MakeItem.LoseNoMaterials:		You fail to make the {0} but lose no materials!
+AbstractCraftingSkill.MakeItem.NotAllMaterials:		You have not all needed raw materials to create this item.
+
 # GAMELIVING
 GameLiving.ReceiveItem:					{0} doesn't want this item!
 GameLiving.ReceiveMoney:				{0} doesn't want your money!
@@ -259,7 +290,12 @@ GamePlayer.SaveIntoDatabase.CharacterSaved:	Il tuo personaggio e' stato salvato.
 GamePlayer.Say.YouSay:					Dici, "{0}"
 GamePlayer.SayReceive.Says:				{0} dice, "{1}"
 GamePlayer.SayReceive.FalseLanguage:			{0} dice qualcosa in un linguaggio che non comprendi.
-GamePlayer.SendReceive.sends:				 scrive, 
+GamePlayer.SendReceive.sends:				{0} scrive, {1}
+GamePlayer.SendReceive.FalseLanguage:			{0} sends something in a language you don't understand.
+GamePlayer.SendReceive.Afk:				{0} is currently AFK.
+GamePlayer.SendReceive.AfkMessage:			<AFK> {0} sends, "{1}"
+GamePlayer.Send.target.DontUnderstandYou:		{0} doesn't seem to understand you!
+GamePlayer.Send.YouSendTo:				You send, "{0}" to {1}.
 GamePlayer.SetControlledNpc.ReleaseTarget:				Rilasci il controllo del tuo bersaglio.
 GamePlayer.Shade.AlreadyShade:				Sei gia' un'ombra!
 GamePlayer.Shade.NoLongerShade:				Non sei piu' un'ombra!
@@ -599,6 +635,7 @@ Scripts.Players.Language.Current:			La tua lingua e' attualmente impostata in: {
 Scripts.Players.Range.NeedTarget:			Distanza dal bersaglio: Non hai selezionato un bersaglio.
 Scripts.Players.Range.Result:				Distanza dal bersaglio: {0} unita'. {1}
 Scripts.Players.Range.InvalidObject:				Questo comando funziona solo sugli oggetti.
+Scripts.Players.Range.NotVisible:			 (Target not visible)
 
 # QUESTS
 # /ImportantDelivery
