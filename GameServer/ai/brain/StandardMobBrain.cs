@@ -434,7 +434,6 @@ namespace DOL.AI.Brain
 		public virtual int CalculateAggroLevelToTarget(GameLiving target)
 		{
 			if (GameServer.ServerRules.IsSameRealm(Body, target, true)) return 0;
-			if (AggroLevel >= 100) return 100;
 			if (target.IsObjectGreyCon(Body)) return 0;	// only attack if green+ to target
 			//if (Level <= 3) return 0;	// workaround, dont aggro for newbie mobs
 			if (Body.Faction != null && target is GamePlayer)
@@ -442,6 +441,7 @@ namespace DOL.AI.Brain
 				GamePlayer player = (GamePlayer)target;
 				AggroLevel = Body.Faction.GetAggroToFaction(player);
 			}
+			if (AggroLevel >= 100) return 100;
 			return AggroLevel;
 		}
 
