@@ -44,6 +44,11 @@ namespace DOL.GS.Spells
 		/// </summary>
 		protected static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
+		/// <summary>
+		/// Maximum number of sub-spells to get delve info for.
+		/// </summary>
+		protected static readonly byte MAX_DELVE_RECURSION = 5;
+
 		private DelayedCastTimer m_castTimer;
 		/// <summary>
 		/// The spell that we want to handle
@@ -65,6 +70,12 @@ namespace DOL.GS.Spells
 		/// Shall we start the reuse timer
 		/// </summary>
 		protected bool m_startReuseTimer = true;
+
+		/// <summary>
+		/// Stores the current delve info depth
+		/// </summary>
+		private byte m_delveInfoDepth;
+
 		/// <summary>
 		/// The property key for the interrupt timeout
 		/// </summary>
@@ -1739,6 +1750,15 @@ namespace DOL.GS.Spells
 					return true;
 				return false;
 			}
+		}
+
+		/// <summary>
+		/// Current depth of delve info
+		/// </summary>
+		public byte DelveInfoDepth
+		{
+			get { return m_delveInfoDepth; }
+			set { m_delveInfoDepth = value; }
 		}
 
 		/// <summary>
