@@ -109,7 +109,7 @@ namespace DOL.GS
 			if (player.Inventory.GetFirstItemByName(LanguageMgr.GetTranslation(player.Client, "Crafting.CheckTool.SpellcraftKit"), eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) == null)
 			{
 				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Crafting.CheckTool.NotHaveTools", craftItemData.ItemTemplate.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				player.Out.SendMessage("You must find a spellcraft kit!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Crafting.CheckTool.FindSpellcraftKit"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
 
@@ -129,7 +129,7 @@ namespace DOL.GS
 			{
 				if (player.GetCraftingSkillValue(eCraftingSkill.SpellCrafting) % 100 == 99)
 				{
-					player.Out.SendMessage("You must see your trainer to raise your Spellcraft further!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Crafting.GainCraftingSkillPoints.RaiseSpellcraft"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 					return;
 				}
 			}
