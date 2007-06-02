@@ -19,8 +19,9 @@
 using System.Collections.Specialized;
 using System.Collections;
 using System.Reflection;
-using DOL.GS.PacketHandler;
 using DOL.Database;
+using DOL.Language;
+using DOL.GS.PacketHandler;
 using log4net;
 
 namespace DOL.GS
@@ -48,8 +49,8 @@ namespace DOL.GS
 				}
 			}
 
-			player.Out.SendMessage("You do not have the tools to make the "+craftItemData.ItemTemplate.Name+".",eChatType.CT_System,eChatLoc.CL_SystemWindow);
-			player.Out.SendMessage("You must find a alchemy table!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+			player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Crafting.CheckTool.NotHaveTools", craftItemData.ItemTemplate.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Crafting.CheckTool.FindAlchemyTable"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			
 			return false;
 		}
