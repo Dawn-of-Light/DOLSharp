@@ -23,14 +23,27 @@ System.ReleaseTimer:					Release Timer
 # CRAFTING
 # (All)
 Crafting.CheckTool.AlchemyKit:				alchemy kit
+Crafting.CheckTool.FindAlchemyTable:			You must find a alchemy table!
+Crafting.CheckTool.FindForge:				You must find a forge!
+Crafting.CheckTool.FindLathe:				You must find a lathe!
+Crafting.CheckTool.FindPlaningTool:			You must find a planing tool!
+Crafting.CheckTool.FindSewingKit:			You must find a sewing kit!
+Crafting.CheckTool.FindSmithTool:			You must find a smith tool!
+Crafting.CheckTool.FindSpellcraftKit:			You must find a spellcraft kit!
 Crafting.CheckTool.MortarAndPestle:			mortar and pestle
 Crafting.CheckTool.NotHaveTools:			You do not have the tools to make the {0}.
 Crafting.CheckTool.PlaningTool:				planing tool
 Crafting.CheckTool.SewingKit:				sewing kit
 Crafting.CheckTool.SmithsHammer:			smith's hammer
 Crafting.CheckTool.SpellcraftKit:			spellcraft kit
+Crafting.GainCraftingSkillPoints.RaiseArmorcraft:	You must see your trainer to raise your Armorcraft further!
+Crafting.GainCraftingSkillPoints.RaiseFletching:	You must see your trainer to raise your Fletching further!
+Crafting.GainCraftingSkillPoints.RaiseSpellcraft:	You must see your trainer to raise your Spellcraft further!
+Crafting.GainCraftingSkillPoints.RaiseTailoring:	You must see your trainer to raise your Tailoring further!
+Crafting.GainCraftingSkillPoints.RaiseWeaponcraft:	You must see your trainer to raise your Weaponcraft further!
 
 # /AbstractCraftingSkill
+AbstractCraftingSkill.BuildCraftedItem.BackpackFull:	Your backpack is full. {0} is created on the ground.
 AbstractCraftingSkill.BuildCraftedItem.Masterpiece:	Congratulation, you make a masterpiece !
 AbstractCraftingSkill.BuildCraftedItem.Successfully:	You successfully make the {0}! ({1})
 AbstractCraftingSkill.CheckRawMaterial.NoIngredients:	You do not have the ingredients to make the {0}.

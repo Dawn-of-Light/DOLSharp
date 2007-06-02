@@ -552,7 +552,7 @@ namespace DOL.GS
 						else					// Create new item on the ground
 						{
 							player.CreateItemOnTheGround(newItem);
-							player.Out.SendDialogBox(eDialogCode.SimpleWarning, 0, 0, 0, 0, eDialogType.Ok, true, "Your backpack is full. " + craftItemData.ItemTemplate.Name + " is created on the ground.");
+							player.Out.SendDialogBox(eDialogCode.SimpleWarning, 0, 0, 0, 0, eDialogType.Ok, true, LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.BuildCraftedItem.BackpackFull", craftItemData.ItemTemplate.Name));
 						}
 					}
 				}
