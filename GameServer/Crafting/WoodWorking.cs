@@ -52,7 +52,7 @@ namespace DOL.GS
 			if (player.Inventory.GetFirstItemByName(LanguageMgr.GetTranslation(player.Client, "Crafting.CheckTool.PlaningTool"), eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) == null)
 			{
 				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Crafting.CheckTool.NotHaveTools", craftItemData.ItemTemplate.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				player.Out.SendMessage("You must find a planing tool!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Crafting.CheckTool.FindPlaningTool"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
 

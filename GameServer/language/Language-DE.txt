@@ -23,14 +23,27 @@ System.ReleaseTimer:					Automatischer Release
 # CRAFTING
 # (All)
 Crafting.CheckTool.AlchemyKit:				Alchimiekasten
+Crafting.CheckTool.FindAlchemyTable:			Ihr müsst Euch in die Nähe eines Alchimietisches begeben!
+Crafting.CheckTool.FindForge:				Ihr müsst Euch in die Nähe einer Schmiede begeben!
+Crafting.CheckTool.FindLathe:				Ihr müsst Euch in die Nähe einer Werkbank begeben!
+Crafting.CheckTool.FindPlaningTool:			Ihr benödigt noch einen Hobel!
+Crafting.CheckTool.FindSewingKit:			Ihr benödigt noch ein Nähset!
+Crafting.CheckTool.FindSmithTool:			Ihr benödigt noch einen Schmiedehammer!
+Crafting.CheckTool.FindSpellcraftKit:			Ihr benödigt noch einen Bannzauberkasten!
 Crafting.CheckTool.MortarAndPestle:			Mörser mit Pistill
 Crafting.CheckTool.NotHaveTools:			Ihr habt nicht das notwendig Werkzeug um {0} herzustellen.
 Crafting.CheckTool.PlaningTool:				Hobel
 Crafting.CheckTool.SewingKit:				Nähset
 Crafting.CheckTool.SmithsHammer:			Schmiedehammer
 Crafting.CheckTool.SpellcraftKit:			Bannzauberkasten
+Crafting.GainCraftingSkillPoints.RaiseArmorcraft:	Ihr müsst Euch zu Eurem Ausbilder begeben, um Eure Fertigkeiten als Rüstungsschmied zu verbessern!
+Crafting.GainCraftingSkillPoints.RaiseFletching:	Ihr müsst Euch zu Eurem Ausbilder begeben, um Eure Fertigkeiten als Pfeilhersteller zu verbessern!
+Crafting.GainCraftingSkillPoints.RaiseSpellcraft:	Ihr müsst Euch zu Eurem Ausbilder begeben, um Eure Fertigkeiten als Bannzauberer zu verbessern!
+Crafting.GainCraftingSkillPoints.RaiseTailoring:	Ihr müsst Euch zu Eurem Ausbilder begeben, um Eure Fertigkeiten als Schneider zu verbessern!
+Crafting.GainCraftingSkillPoints.RaiseWeaponcraft:	Ihr müsst Euch zu Eurem Ausbilder begeben, um Eure Fertigkeiten als Rüstungsschmied zu verbessern!
 
 # /AbstractCraftingSkill
+AbstractCraftingSkill.BuildCraftedItem.BackpackFull:	Euer Rucksack ist voll. {0} wurde auf dem Boden abgelegt.
 AbstractCraftingSkill.BuildCraftedItem.Masterpiece:	Gratulation! Das war ein Meisterstück.
 AbstractCraftingSkill.BuildCraftedItem.Successfully:	Ihr habt {0} vollendet! ({1})
 AbstractCraftingSkill.CheckRawMaterial.NoIngredients:	Ihr habt nicht die Zutaten zur Herstellung von {0}.
