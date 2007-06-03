@@ -175,7 +175,8 @@ namespace DOL.GS.ServerRules
 		/// <returns>true if attack is allowed</returns>
 		public virtual bool IsAllowedToAttack(GameLiving attacker, GameLiving defender, bool quiet)
 		{
-			if (attacker == null || defender == null) return false;
+			if (attacker == null || defender == null)
+				return false;
 
 			//dead things can't attack
 			if (!defender.IsAlive || !attacker.IsAlive )
@@ -221,15 +222,17 @@ namespace DOL.GS.ServerRules
 			if (playerDefender != null && playerDefender.Client.Account.PrivLevel > 1)
 				return false;
 
+			//safe area support for defender
 			foreach (AbstractArea area in defender.CurrentAreas)
 			{
-				if (area.IsSafeArea)
-				{
-					if (quiet == false) MessageToLiving(attacker, "You can't attack someone in a safe area!");
-					return false;
-				}
+				if (!area.IsSafeArea)
+					continue;
+
+				if (quiet == false) MessageToLiving(attacker, "You can't attack someone in a safe area!");
+				return false;
 			}
 
+			//safe area support for attacker
 			foreach (AbstractArea area in attacker.CurrentAreas)
 			{
 				if (area.IsSafeArea)
@@ -238,6 +241,10 @@ namespace DOL.GS.ServerRules
 					return false;
 				}
 			}
+
+			//I don't want mobs attacking guards
+			if (defender is GameKeepGuard && attacker is GameNPC && attacker.Realm == 0)
+				return false;
 
 			return true;
 		}
