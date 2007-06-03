@@ -61,7 +61,10 @@ namespace DOL.GS.Scripts
 				if (CheckExpansion(client, clientc, clientc.Player.CurrentRegionID))
 				{
 					client.Out.SendMessage("/Jump to " + clientc.Player.CurrentRegion, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					client.Player.MoveTo(clientc.Player.CurrentRegionID, clientc.Player.X, clientc.Player.Y, clientc.Player.Z, client.Player.Heading);
+					if (clientc.Player.CurrentHouse != null)
+						clientc.Player.CurrentHouse.Enter(client.Player);
+					else
+						client.Player.MoveTo(clientc.Player.CurrentRegionID, clientc.Player.X, clientc.Player.Y, clientc.Player.Z, client.Player.Heading);
 					return 1;
 				}
 				return 1;
@@ -93,7 +96,10 @@ namespace DOL.GS.Scripts
 						return 1;
 					}
 					client.Out.SendMessage("/Jump to " + clientc.Player.CurrentRegion, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					client.Player.MoveTo(clientc.Player.CurrentRegionID, clientc.Player.X, clientc.Player.Y, clientc.Player.Z, client.Player.Heading);
+					if (clientc.Player.CurrentHouse != null)
+						clientc.Player.CurrentHouse.Enter(client.Player);
+					else
+						client.Player.MoveTo(clientc.Player.CurrentRegionID, clientc.Player.X, clientc.Player.Y, clientc.Player.Z, client.Player.Heading);
 					return 1;
 				}
 				return 1;
@@ -177,7 +183,10 @@ namespace DOL.GS.Scripts
 				{
 					if (CheckExpansion(clientto, clientc, clientto.Player.CurrentRegionID))
 					{
-						clientc.Player.MoveTo(clientto.Player.CurrentRegionID, clientto.Player.X, clientto.Player.Y, clientto.Player.Z, client.Player.Heading);
+						if (clientto.Player.CurrentHouse != null)
+							clientto.Player.CurrentHouse.Enter(clientc.Player);
+						else
+							clientc.Player.MoveTo(clientto.Player.CurrentRegionID, clientto.Player.X, clientto.Player.Y, clientto.Player.Z, client.Player.Heading);
 						return 1;
 					}
 					return 0;
