@@ -125,17 +125,35 @@ namespace DOL.GS
 
 		public int Range
 		{
-			get { return m_range; }
+			get
+			{
+				if (m_overriderange != 0)
+					return m_overriderange;
+				else
+					return m_range;
+			}
 		}
 
 		public int Power
 		{
-			get { return m_power; }
+			get
+			{
+				if (!m_costpower)
+					return 0;
+				else
+					return m_power;
+			}
 		}
 
 		public int CastTime
 		{
-			get { return m_casttime; }
+			get
+			{
+				if (m_inchamber)
+					return 0;
+				else
+					return m_casttime;
+			}
 		}
 
 		public double Damage

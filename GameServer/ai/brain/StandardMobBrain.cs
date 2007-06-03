@@ -68,29 +68,25 @@ namespace DOL.AI.Brain
 		/// </summary>
 		public override void Think()
 		{
+			//If the npc is not casting, and we have spells, we run a check to see if we should cast any of them
 			if (!Body.IsCasting && Body.Spells != null && Body.Spells.Count > 0)
 				CheckSpells();
 
-			if (Body.IsMoving && !Body.InCombat)
+			//If the npc is not in combat, we remove the last attack data temporary property and stop thinking
+			if (!Body.InCombat)
 			{
 				Body.TempProperties.removeProperty(GameLiving.LAST_ATTACK_DATA);
 				return;
 			}
 
+			//If we have an aggrolevel above 0, we check for players and npcs in the area to attack
 			if (AggroLevel > 0)
 			{
 				CheckPlayerAggro();
 				CheckNPCAggro();
 			}
 
-
-			if (!Body.AttackState && !Body.IsCasting && !Body.IsMoving
-				&& Body.Heading != Body.SpawnHeading)
-				Body.TurnTo(Body.SpawnHeading);
-
-			if (!Body.InCombat)
-				Body.TempProperties.removeProperty(GameLiving.LAST_ATTACK_DATA);
-
+			//If this NPC can randomly walk around, we allow it to walk around
 			if (CanRandomWalk)
 			{
 				IPoint3D target = CalcRandomWalkTarget();
@@ -99,14 +95,20 @@ namespace DOL.AI.Brain
 			}
 			else
 			{
-				//if we are not doing an action, let us see if we should move somewhere
-				if (Body.CurrentSpellHandler == null && !Body.IsMoving && !Body.AttackState && !Body.InCombat)
+				//If the npc can move, and the npc is not casting, not moving, and not attacking or in combat
+				if (Body.MaxSpeedBase > 0 && Body.CurrentSpellHandler == null && !Body.IsMoving && !Body.AttackState && !Body.InCombat)
 				{
+					//If the npc is not at it's spawn position, we tell it to walk to it's spawn position
 					if (Body.X != Body.SpawnX ||
 						Body.Y != Body.SpawnY ||
 						Body.Z != Body.SpawnZ)
 						Body.WalkToSpawn();
 				}
+
+				//If we are not attacking, and not casting, and not moving, and we aren't facing our spawn heading, we turn to the spawn heading
+				if (!Body.AttackState && !Body.IsCasting && !Body.IsMoving
+					&& Body.Heading != Body.SpawnHeading)
+					Body.TurnTo(Body.SpawnHeading);
 			}
 		}
 
