@@ -163,7 +163,15 @@ namespace DOL.Events
 		/// <summary>
 		/// The KillsDragonChanged event is fired when KillsDragon properties changes.
 		/// </summary>
-		public static readonly GamePlayerEvent KillsDragonChanged = new GamePlayerEvent("GamePlayer.KillsDragonChanged"); 
+		public static readonly GamePlayerEvent KillsDragonChanged = new GamePlayerEvent("GamePlayer.KillsDragonChanged");
+		/// <summary>
+		/// The KillsEpicBossChanged event is fired when KillsEpicBoss properties changes.
+		/// </summary>
+		public static readonly GamePlayerEvent KillsEpicBossChanged = new GamePlayerEvent("GamePlayer.KillsEpicBossChanged");
+		/// <summary>
+		/// The KillsLegionChanged event is fired when KillsLegion properties changes.
+		/// </summary>
+		public static readonly GamePlayerEvent KillsLegionChanged = new GamePlayerEvent("GamePlayer.KillsLegionChanged");
 		#endregion
 	}
 }

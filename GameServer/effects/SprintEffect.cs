@@ -75,14 +75,14 @@ namespace DOL.GS.Effects
 		/// <summary>
 		/// Stop the effect on target
 		/// </summary>
-		public void Stop()
+		public override void Stop()
 		{
+			base.Stop();
 			if (m_tickTimer != null)
 			{
 				m_tickTimer.Stop();
 				m_tickTimer = null;
 			}
-			m_player.EffectList.Remove(this);
 		}
 
 		/// <summary>
@@ -123,25 +123,26 @@ namespace DOL.GS.Effects
 		/// <summary>
 		/// Called when effect must be canceled
 		/// </summary>
-		public void Cancel(bool playerCancel)
+		public override void Cancel(bool playerCancel)
 		{
+			base.Cancel(playerCancel);
 			m_player.Sprint(false);
 		}
 
 		/// <summary>
 		/// Name of the effect
 		/// </summary>
-		public string Name { get { return "Sprint"; } }
+		public override string Name { get { return "Sprint"; } }
 
 		/// <summary>
 		/// Remaining Time of the effect in milliseconds
 		/// </summary>
-		public int RemainingTime { get { return 1000; } } // always 1 for blink effect
+		public override int RemainingTime { get { return 1000; } } // always 1 for blink effect
 
 		/// <summary>
 		/// Icon to show on players, can be id
 		/// </summary>
-		public ushort Icon { get { return 0x199; } }
+		public override ushort Icon { get { return 0x199; } }
 
 		/// <summary>
 		/// unique id for identification in effect list
@@ -151,6 +152,6 @@ namespace DOL.GS.Effects
 		/// <summary>
 		/// Delve Info
 		/// </summary>
-		public IList DelveInfo { get { return new ArrayList(0); } }
+		public override IList DelveInfo { get { return new ArrayList(0); } }
 	}
 }
