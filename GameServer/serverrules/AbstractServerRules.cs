@@ -259,6 +259,18 @@ namespace DOL.GS.ServerRules
 		/// <returns>true if allowed</returns>
 		public virtual bool IsAllowedToCastSpell(GameLiving caster, GameLiving target, Spell spell, SpellLine spellLine)
 		{
+			//we only allow certain spell targets to be cast when targeting a keep component
+			if (target is GameKeepComponent || target is GameKeepDoor)
+			{
+				switch (spell.Target.ToLower())
+				{ 
+					case "self":
+					case "group":
+					case "pet":
+						break;
+					default: return false;
+				}
+			}
 			return true;
 		}
 

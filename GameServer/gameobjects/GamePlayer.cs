@@ -9918,6 +9918,8 @@ namespace DOL.GS
 			m_capturedTowers = m_character.CapturedTowers;
 			m_killsDragon = m_character.KillsDragon;
 			m_deathsPvP = m_character.DeathsPvP;
+			m_killsLegion = m_character.KillsLegion;
+			m_killsEpicBoss = m_character.KillsEpicBoss;
 
 			m_gainXP = m_character.GainXP;
 			m_gainRP = m_character.GainRP;
@@ -10194,6 +10196,9 @@ namespace DOL.GS
 		{
 			if (IsStealthed == newState)
 				return;
+
+			if (IsOnHorse)
+				IsOnHorse = false;
 
 			UncoverStealthAction action = (UncoverStealthAction)TempProperties.getObjectProperty(UNCOVER_STEALTH_ACTION_PROP, null);
 			if (newState)
@@ -11774,6 +11779,43 @@ namespace DOL.GS
 			{
 				m_deathsPvP = value;
 				m_character.DeathsPvP = value;
+			}
+		}
+
+		/// <summary>
+		/// Stores the count of killed Legions
+		/// </summary>
+		private int m_killsLegion;
+		/// <summary>
+		/// Stores the count of killed Epic Boss
+		/// </summary>
+		private int m_killsEpicBoss;
+
+		/// <summary>
+		/// Gets or sets the count of killed Legions.
+		/// </summary>
+		public int KillsLegion
+		{
+			get { return m_killsLegion; }
+			set
+			{
+				m_killsLegion = value;
+				m_character.KillsLegion = value;
+				Notify(GamePlayerEvent.KillsLegionChanged, this);
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets the count of killed Epic Boss.
+		/// </summary>
+		public int KillsEpicBoss
+		{
+			get { return m_killsEpicBoss; }
+			set
+			{
+				m_killsEpicBoss = value;
+				m_character.KillsEpicBoss = value;
+				Notify(GamePlayerEvent.KillsEpicBossChanged, this);
 			}
 		}
 

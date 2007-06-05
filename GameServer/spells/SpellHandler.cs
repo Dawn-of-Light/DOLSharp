@@ -532,12 +532,6 @@ namespace DOL.GS.Spells
 				return false;
 			}
 
-			if (!HasPositiveEffect && selectedTarget is Keeps.GameKeepDoor || selectedTarget is Keeps.GameKeepComponent)
-			{
-				MessageToCaster("You cannot cast this spell on a keep component!", eChatType.CT_SpellResisted);
-				return false;
-			}
-
 			// Cancel engage if user starts attack
 			EngageEffect engage = (EngageEffect)m_caster.EffectList.GetOfType(typeof(EngageEffect));
 			if (engage != null)

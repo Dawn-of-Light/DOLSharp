@@ -369,7 +369,8 @@ namespace DOL.GS
 					string[] allowedclasses = fromItem.AllowedClasses.Split(';');
 					foreach (string allowed in allowedclasses)
 					{
-						if (m_player.CharacterClass.ID.ToString() == allowed)
+						if (m_player.CharacterClass.ID.ToString() == allowed
+							|| m_player.Client.Account.PrivLevel > 1)
 						{
 							valid = true;
 							break;
