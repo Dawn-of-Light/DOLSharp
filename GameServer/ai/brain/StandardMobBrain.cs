@@ -72,12 +72,13 @@ namespace DOL.AI.Brain
 			if (!Body.IsCasting && Body.Spells != null && Body.Spells.Count > 0)
 				CheckSpells();
 
-			//If the npc is not in combat, we remove the last attack data temporary property and stop thinking
-			if (!Body.InCombat)
-			{
-				Body.TempProperties.removeProperty(GameLiving.LAST_ATTACK_DATA);
+			//If the npc is moving, we don't need to think.
+			if (Body.IsMoving)
 				return;
-			}
+
+			//If the npc is not in combat, we remove the last attack data temporary property
+			if (!Body.InCombat)
+				Body.TempProperties.removeProperty(GameLiving.LAST_ATTACK_DATA);
 
 			//If we have an aggrolevel above 0, we check for players and npcs in the area to attack
 			if (AggroLevel > 0)
@@ -828,8 +829,6 @@ namespace DOL.AI.Brain
 			if (Body.IsCasting)
 				return;
 
-			ArrayList procs = new ArrayList();
-
 			foreach (Spell spell in this.Body.Spells)
 			{
 				if (spell.SpellType != type)
@@ -871,25 +870,34 @@ namespace DOL.AI.Brain
 			}
 		}
 
+		/// <summary>
+		/// Checks if the living target has a spell effect
+		/// </summary>
+		/// <param name="target">The target living object</param>
+		/// <param name="spell">The spell to check</param>
+		/// <returns>True if the living has the effect</returns>
 		private bool LivingHasEffect(GameLiving target, Spell spell)
 		{
 			if (target == null)
 				return true;
 
+			//Check through each effect in the target's effect list
 			foreach (IGameEffect effect in target.EffectList)
 			{
-				if (effect is GameSpellEffect)
-				{
-					GameSpellEffect speffect = effect as GameSpellEffect;
-					if (speffect.Spell.SpellType == spell.SpellType)
-					{
-						if (speffect.Spell.EffectGroup == spell.EffectGroup)
-						{
-							return true;
-						}
-					}
-				}
+				//If the effect we are checking is not a gamespelleffect keep going
+				if (effect is GameSpellEffect == false)
+					continue;
+
+				GameSpellEffect speffect = effect as GameSpellEffect;
+				//if the effect's spell's spelltype is not the same as the checking spell's spelltype keep going
+				if (speffect.Spell.SpellType != spell.SpellType)
+					continue;
+
+				//if the effect's spell's effectgroup is the same as the checking spell's spellgroup return the answer true
+				if (speffect.Spell.EffectGroup == spell.EffectGroup)
+					return true;
 			}
+			//the answer is no, the effect has not been found
 			return false;
 		}
 		#endregion

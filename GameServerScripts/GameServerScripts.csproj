@@ -501,10 +501,16 @@
     <Compile Include="playertitles\BaneOfHiberniaTitle.cs" />
     <Compile Include="playertitles\BaneOfMidgardTitle.cs" />
     <Compile Include="playertitles\BattleEnforcerTitle.cs" />
+    <Compile Include="playertitles\DemonBaneTitle.cs" />
+    <Compile Include="playertitles\DemonScourgeTitle.cs" />
+    <Compile Include="playertitles\DemonSlayerTitle.cs" />
     <Compile Include="playertitles\DragonFoeTitle.cs" />
     <Compile Include="playertitles\DragonScourgeTitle.cs" />
     <Compile Include="playertitles\DragonSlayerTitle.cs" />
+    <Compile Include="playertitles\DreadVanquisherTitle.cs" />
     <Compile Include="playertitles\ElderTitle.cs" />
+    <Compile Include="playertitles\EpicChallengerTitle.cs" />
+    <Compile Include="playertitles\EpicVictorTitle.cs" />
     <Compile Include="playertitles\FrontierChallengerTitle.cs" />
     <Compile Include="playertitles\FrontierVindicatorTitle.cs" />
     <Compile Include="playertitles\Level20Title.cs">

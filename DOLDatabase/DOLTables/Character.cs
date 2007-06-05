@@ -1798,6 +1798,30 @@ namespace DOL
 				set { m_deathsPvP = value; Dirty = true; }
 			}
 
+			private int m_killsLegion;
+			private int m_killsEpicBoss;
+
+
+			/// <summary>
+			/// Amount of killed Legions
+			/// </summary>
+			[DataElement(AllowDbNull = true)]
+			public int KillsLegion
+			{
+				get { return m_killsLegion; }
+				set { m_killsLegion = value; Dirty = true; }
+			}
+
+			/// <summary>
+			/// Amount of killed EpicDungeon Boss
+			/// </summary>
+			[DataElement(AllowDbNull = true)]
+			public int KillsEpicBoss
+			{
+				get { return m_killsEpicBoss; }
+				set { m_killsEpicBoss = value; Dirty = true; }
+			} 
+
 			#endregion
 
 			/// <summary>

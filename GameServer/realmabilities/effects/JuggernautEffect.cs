@@ -14,7 +14,6 @@ namespace DOL.GS.Effects
 	{
 		private const String m_delveString = "Increases the effective level of the pet by the listed number (capped at level 70).";
 		private GameNPC m_living;
-		private Int64 m_startTick;
 		private Int32 m_effectDuration;
 		private RegionTimer m_expireTimer;
 		private byte m_value;

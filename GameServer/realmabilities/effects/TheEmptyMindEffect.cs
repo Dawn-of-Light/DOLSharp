@@ -94,15 +94,14 @@ namespace DOL.GS.Effects
 			StartTimers(); // start the timers before adding to the list!
 			m_player.EffectList.Add(this);
 		}
-
+		
 		/// <summary>
 		/// Called when effect must be canceled
 		/// </summary>
-		public void Cancel(bool playerCancel)
+		public override void Cancel(bool playerCanceled)
 		{
+			base.Cancel(playerCanceled);
 			StopTimers();
-
-			m_player.EffectList.Remove(this);
 
 			// there is no animation on end of the effect
 			m_player.Out.SendMessage("Your clearheaded state leaves you.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
