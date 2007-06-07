@@ -206,7 +206,7 @@ namespace DOL.GS
 			if (item.OwnerID != m_player.InternalID)
 			{
 				if (log.IsErrorEnabled)
-					log.Error(m_player.Name + ": PlayerInventory -> tried to remove item with wrong owner (" + item.OwnerID + ")\n\n" + Environment.StackTrace);
+					log.Error(m_player.Name + ": PlayerInventory -> tried to remove item with wrong owner (" + (item.OwnerID ?? "null") + ")\n\n" + Environment.StackTrace);
 				return false;
 			}
 
