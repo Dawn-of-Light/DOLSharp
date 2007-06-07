@@ -124,13 +124,14 @@ namespace DOL.Database.Connection
 			return s;
 		}
 
-		private readonly Stack<MySqlConnection> m_connectionPool = new Stack<MySqlConnection>();
+		private readonly Queue<MySqlConnection> m_connectionPool = new Queue<MySqlConnection>();
 
 		/// <summary>
 		/// Gets connection from connection pool.
 		/// </summary>
+		/// <param name="isNewConnection">Set to <code>true</code> if new connection is created.</param>
 		/// <returns>Connection.</returns>
-		private MySqlConnection GetMySqlConnection()
+		private MySqlConnection GetMySqlConnection(out bool isNewConnection)
 		{
 			// Get connection from pool
 			MySqlConnection conn = null;
@@ -138,12 +139,17 @@ namespace DOL.Database.Connection
 			{
 				if (m_connectionPool.Count > 0)
 				{
-					conn = m_connectionPool.Pop();
+					conn = m_connectionPool.Dequeue();
 				}
 			}
 
-			if (conn == null)
+			if (conn != null)
 			{
+				isNewConnection = false;
+			}
+			else
+			{
+				isNewConnection = true;
 				long start1 = Environment.TickCount;
 				conn = new MySqlConnection(connString);
 				conn.Open();
@@ -152,7 +158,7 @@ namespace DOL.Database.Connection
 					if (log.IsWarnEnabled)
 						log.Warn("Gaining SQL connection took " + (Environment.TickCount - start1) + "ms");
 				}
-				log.Info("New DB connection created, pooled connections: " + m_connectionPool.Count);
+				log.Info("New DB connection created");
 			}
 			return conn;
 		}
@@ -166,7 +172,7 @@ namespace DOL.Database.Connection
 		{
 			lock (m_connectionPool)
 			{
-				m_connectionPool.Push(conn);
+				m_connectionPool.Enqueue(conn);
 			}
 		}
 		
@@ -184,11 +190,12 @@ namespace DOL.Database.Connection
 					log.Debug("SQL: " + sqlcommand);
 				}
 
-				int		affected = 0;
-				bool	repeat = false;
+				int affected = 0;
+				bool repeat = false;
 				do
 				{
-					MySqlConnection conn = GetMySqlConnection();
+					bool isNewConnection;
+					MySqlConnection conn = GetMySqlConnection(out isNewConnection);
 					MySqlCommand cmd = new MySqlCommand(sqlcommand, conn);
 
 					try
@@ -202,20 +209,21 @@ namespace DOL.Database.Connection
 							log.Warn("SQL NonQuery took " + (Environment.TickCount - start) + "ms!\n" + sqlcommand);
 
 						ReleaseConnection(conn);
-						
+
 						repeat = false;
 					}
 					catch (Exception e)
 					{
 						conn.Close();
 
-						if (!HandleException(e))
+						if (!HandleException(e) || isNewConnection)
 						{
 							throw;
 						}
 						repeat = true;
 					}
 				} while (repeat);
+				
 				return affected;
 			}
 			if (log.IsWarnEnabled)
@@ -232,6 +240,11 @@ namespace DOL.Database.Connection
 		{
 			bool			ret = false;
 			SocketException socketException = e.InnerException == null ? null : e.InnerException.InnerException as SocketException;
+			if (socketException == null)
+			{
+				socketException = e.InnerException as SocketException;
+			}
+
 			if (socketException != null)
 			{
 				// Handle socket exception. Error codes:
@@ -273,9 +286,10 @@ namespace DOL.Database.Connection
 				MySqlConnection conn = null;
 				do
 				{
+					bool isNewConnection = true;
 					try
 					{
-						conn = GetMySqlConnection();
+						conn = GetMySqlConnection(out isNewConnection);
 
 						long start = Environment.TickCount;
 
@@ -291,7 +305,7 @@ namespace DOL.Database.Connection
 							log.Warn("SQL Select took " + (Environment.TickCount - start) + "ms!\n" + sqlcommand);
 
 						ReleaseConnection(conn);
-						
+
 						repeat = false;
 					}
 					catch (Exception e)
@@ -300,7 +314,7 @@ namespace DOL.Database.Connection
 						{
 							conn.Close();
 						}
-						if (!HandleException(e))
+						if (!HandleException(e) || isNewConnection)
 						{
 							if (log.IsErrorEnabled)
 								log.Error("ExecuteSelect: \"" + sqlcommand + "\"\n", e);
@@ -335,9 +349,10 @@ namespace DOL.Database.Connection
 				MySqlConnection conn = null;
 				do
 				{
+					bool isNewConnection = true;
 					try
 					{
-						conn = GetMySqlConnection();
+						conn = GetMySqlConnection(out isNewConnection);
 						MySqlCommand cmd = new MySqlCommand(sqlcommand, conn);
 
 						long start = Environment.TickCount;
@@ -358,7 +373,7 @@ namespace DOL.Database.Connection
 						{
 							conn.Close();
 						}
-						if (!HandleException(e))
+						if (!HandleException(e) || isNewConnection)
 						{
 							if (log.IsErrorEnabled)
 								log.Error("ExecuteSelect: \"" + sqlcommand + "\"\n", e);
