@@ -306,27 +306,27 @@ using DOL.AI.Brain;
 				bottleofmead.Color = 0;
 				bottleofmead.Bonus = 35; // default bonus				
 				bottleofmead.Bonus1 = 0;
-				bottleofmead.Bonus1Type = (int) 0;
+				bottleofmead.Bonus1Type = (int)0;
 				bottleofmead.Bonus2 = 0;
-				bottleofmead.Bonus2Type = (int) 0;
+				bottleofmead.Bonus2Type = (int)0;
 				bottleofmead.Bonus3 = 0;
-				bottleofmead.Bonus3Type = (int) 0;
+				bottleofmead.Bonus3Type = (int)0;
 				bottleofmead.Bonus4 = 0;
-				bottleofmead.Bonus4Type = (int) 0;
+				bottleofmead.Bonus4Type = (int)0;
 				bottleofmead.Bonus5 = 0;
-				bottleofmead.Bonus5Type = (int) 0;
+				bottleofmead.Bonus5Type = (int)0;
 				bottleofmead.Bonus6 = 0;
-				bottleofmead.Bonus6Type = (int) 0;
+				bottleofmead.Bonus6Type = (int)0;
 				bottleofmead.Bonus7 = 0;
-				bottleofmead.Bonus7Type = (int) 0;
+				bottleofmead.Bonus7Type = (int)0;
 				bottleofmead.Bonus8 = 0;
-				bottleofmead.Bonus8Type = (int) 0;
+				bottleofmead.Bonus8Type = (int)0;
 				bottleofmead.Bonus9 = 0;
-				bottleofmead.Bonus9Type = (int) 0;
+				bottleofmead.Bonus9Type = (int)0;
 				bottleofmead.Bonus10 = 0;
-				bottleofmead.Bonus10Type = (int) 0;
+				bottleofmead.Bonus10Type = (int)0;
 				bottleofmead.ExtraBonus = 0;
-				bottleofmead.ExtraBonusType = (int) 0;
+				bottleofmead.ExtraBonusType = (int)0;
 				bottleofmead.Effect = 0;
 				bottleofmead.Emblem = 0;
 				bottleofmead.Charges = 0;
@@ -338,7 +338,7 @@ using DOL.AI.Brain;
 				bottleofmead.MaxCount = 1;
 				bottleofmead.PackSize = 1;
 				bottleofmead.Extension = 0;
-				bottleofmead.Quality = 99;				
+				bottleofmead.Quality = 99;
 				bottleofmead.Condition = 100;
 				bottleofmead.MaxCondition = 100;
 				bottleofmead.Durability = 100;
@@ -350,13 +350,13 @@ using DOL.AI.Brain;
 				bottleofmead.SpellID1 = 0;
 				bottleofmead.MaxCharges1 = 0;
 				bottleofmead.Charges1 = 0;
-				
+
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
 					GameServer.Database.AddNewObject(bottleofmead);
-				}
+			}
 			
 
 			#endregion

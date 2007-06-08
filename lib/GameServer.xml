@@ -3446,6 +3446,11 @@
             <param name="changeType"></param>
             <param name="healAmount"></param>
         </member>
+        <member name="F:DOL.GS.GameNPC.m_sequenceSpellAttackTimer">
+            <summary>
+            Timer used for the spell casting sequence
+            </summary>
+        </member>
         <member name="F:DOL.GS.GameNPC.m_nextSpellIndex">
             <summary>
             The next spell
@@ -3467,6 +3472,14 @@
             </summary>
             <param name="attackTarget"></param>
             <returns></returns>
+        </member>
+        <member name="M:DOL.GS.GameNPC.LaunchSpell(DOL.GS.Spell,DOL.GS.SpellLine)">
+            <summary>
+            Method to launch a spell
+            </summary>
+            <param name="spellLevel">The spell level</param>
+            <param name="spellLineName">The spell line</param>
+            <param name="guard">The guard caster</param>
         </member>
         <member name="M:DOL.GS.GameNPC.StopSpellAttack">
             <summary>
@@ -8349,6 +8362,14 @@
             <summary>
             Checks for Abilities the NPC can use
             </summary>
+        </member>
+        <member name="M:DOL.AI.Brain.StandardMobBrain.LivingHasEffect(DOL.GS.GameLiving,DOL.GS.Spell)">
+            <summary>
+            Checks if the living target has a spell effect
+            </summary>
+            <param name="target">The target living object</param>
+            <param name="spell">The spell to check</param>
+            <returns>True if the living has the effect</returns>
         </member>
         <member name="P:DOL.AI.Brain.StandardMobBrain.ThinkInterval">
             <summary>
@@ -20106,6 +20127,10 @@
             <param name="min">store min variance here</param>
             <param name="max">store max variance here</param>
         </member>
+        <member name="M:DOL.AI.Brain.FearBrain.CalculateFleeTarget(DOL.GS.GameLiving)">
+            <summary>Calculate flee target.</summary>
+            <param>The target to flee.</param>
+        </member>
         <member name="T:DOL.GS.Spells.BainsheePulseDmgSpellHandler">
             <summary>
             
@@ -21219,16 +21244,6 @@
             The timer that reduce the endurance every interval
             </summary>
         </member>
-        <member name="F:DOL.GS.Effects.SprintEffect.m_player">
-            <summary>
-            The owner of the effect
-            </summary>
-        </member>
-        <member name="F:DOL.GS.Effects.SprintEffect.m_id">
-            <summary>
-            The internal unique effect ID
-            </summary>
-        </member>
         <member name="F:DOL.GS.Effects.SprintEffect.m_idleTicks">
             <summary>
             The amount of timer ticks player was not moving
@@ -21239,7 +21254,7 @@
             Creates a new sprint effect
             </summary>
         </member>
-        <member name="M:DOL.GS.Effects.SprintEffect.Start(DOL.GS.GamePlayer)">
+        <member name="M:DOL.GS.Effects.SprintEffect.Start(DOL.GS.GameLiving)">
             <summary>
             Start the sprinting on player
             </summary>
@@ -21274,16 +21289,6 @@
         <member name="P:DOL.GS.Effects.SprintEffect.Icon">
             <summary>
             Icon to show on players, can be id
-            </summary>
-        </member>
-        <member name="P:DOL.GS.Effects.SprintEffect.InternalID">
-            <summary>
-            unique id for identification in effect list
-            </summary>
-        </member>
-        <member name="P:DOL.GS.Effects.SprintEffect.DelveInfo">
-            <summary>
-            Delve Info
             </summary>
         </member>
         <member name="T:DOL.AI.Brain.LordBrain">
@@ -23823,10 +23828,11 @@
             This is our gameclient!
             </summary>
         </member>
-        <member name="F:DOL.GS.GamePlayer.m_character">
+        <member name="F:DOL.GS.GamePlayer.my_character">
             <summary>
             This holds the character this player is
             based on!
+            (renamed and private, cause if derive is needed overwrite PlayerCharacter)
             </summary>
         </member>
         <member name="F:DOL.GS.GamePlayer.m_guildid">
@@ -23861,11 +23867,6 @@
         <member name="F:DOL.GS.GamePlayer.m_targetInView">
             <summary>
             true if the targetObject is visible
-            </summary>
-        </member>
-        <member name="F:DOL.GS.GamePlayer.m_isAnonymous">
-            <summary>
-            Holds the anonymous flag for this player
             </summary>
         </member>
         <member name="F:DOL.GS.GamePlayer.AFK_MESSAGE">
@@ -23995,14 +23996,10 @@
             Called when player revive
             </summary>
         </member>
-        <member name="F:DOL.GS.GamePlayer.m_totalConLostAtDeath">
-            <summary>
-            Holds the total amount of constitution lost at deaths
-            </summary>
-        </member>
         <member name="M:DOL.GS.GamePlayer.ChangeBaseStat(DOL.GS.eStat,System.Int16)">
             <summary>
             Change a stat value
+            (delegate to PlayerCharacter)
             </summary>
             <param name="stat">The stat to change</param>
             <param name="val">The new value</param>
@@ -24091,11 +24088,6 @@
             Players class
             </summary>
         </member>
-        <member name="F:DOL.GS.GamePlayer.m_race">
-            <summary>
-            Holds the player's race id
-            </summary>
-        </member>
         <member name="M:DOL.GS.GamePlayer.SetCharacterClass(System.Int32)">
             <summary>
             Set the character class to a specific one
@@ -24149,26 +24141,6 @@
         <member name="F:DOL.GS.GamePlayer.m_statBonusPercent">
             <summary>
             Temporary Stats Boni in percent
-            </summary>
-        </member>
-        <member name="F:DOL.GS.GamePlayer.m_respecAmountAllSkill">
-            <summary>
-            Holds amount of full skill respecs
-            </summary>
-        </member>
-        <member name="F:DOL.GS.GamePlayer.m_respecAmountSingleSkill">
-            <summary>
-            Holds amount of single-line skill respecs
-            </summary>
-        </member>
-        <member name="F:DOL.GS.GamePlayer.m_respecAmountRealmSkill">
-            <summary>
-            Holds amount of realm skill respecs
-            </summary>
-        </member>
-        <member name="F:DOL.GS.GamePlayer.m_isLevelRespecUsed">
-            <summary>
-            Holds level respec usage flag
             </summary>
         </member>
         <member name="M:DOL.GS.GamePlayer.AddSpecialization(DOL.GS.Specialization)">
@@ -24360,31 +24332,6 @@
             </summary>
             <returns>New effects list instance</returns>
         </member>
-        <member name="F:DOL.GS.GamePlayer.m_bntyPts">
-            <summary>
-            Character's bounty points
-            </summary>
-        </member>
-        <member name="F:DOL.GS.GamePlayer.m_realmPts">
-            <summary>
-            Character's realm points
-            </summary>
-        </member>
-        <member name="F:DOL.GS.GamePlayer.m_skillSpecPts">
-            <summary>
-            Character's skill points
-            </summary>
-        </member>
-        <member name="F:DOL.GS.GamePlayer.m_realmSpecPts">
-            <summary>
-            Character's realm special points
-            </summary>
-        </member>
-        <member name="F:DOL.GS.GamePlayer.m_realmLevel">
-            <summary>
-            Character's realm rank
-            </summary>
-        </member>
         <member name="F:DOL.GS.GamePlayer.REALM_RANK_NAMES">
             <summary>
             Holds all realm rank names
@@ -24479,11 +24426,6 @@
             <param name="sendMessage">should exp gain message be sent</param>
             <param name="allowMultiply">should the xp amount be multiplied</param>
         </member>
-        <member name="F:DOL.GS.GamePlayer.m_isLevelSecondStage">
-            <summary>
-            Holds second stage of current level flag
-            </summary>
-        </member>
         <member name="M:DOL.GS.GamePlayer.OnLevelUp(System.Int32)">
             <summary>
             Called when this player levels
@@ -24515,16 +24457,6 @@
             Decides which style living will use in this moment
             </summary>
             <returns>Style to use or null if none</returns>
-        </member>
-        <member name="F:DOL.GS.GamePlayer.m_safetyFlag">
-            <summary>
-            Stores PvP safety flag
-            </summary>
-        </member>
-        <member name="F:DOL.GS.GamePlayer.m_spellQueue">
-            <summary>
-            Holds the SpellQueue flag
-            </summary>
         </member>
         <member name="M:DOL.GS.GamePlayer.SwitchWeapon(DOL.GS.GameLiving.eActiveWeaponSlot)">
             <summary>
@@ -25497,71 +25429,6 @@
             Updates player's current title to him and everyone around.
             </summary>
         </member>
-        <member name="F:DOL.GS.GamePlayer.m_killsAlbionPlayers">
-            <summary>
-            Stores the count of albion players killed.
-            </summary>
-        </member>
-        <member name="F:DOL.GS.GamePlayer.m_killsMidgardPlayers">
-            <summary>
-            Stores the count of midgard players killed.
-            </summary>
-        </member>
-        <member name="F:DOL.GS.GamePlayer.m_killsHiberniaPlayers">
-            <summary>
-            Stores the count of hibernia players killed.
-            </summary>
-        </member>
-        <member name="F:DOL.GS.GamePlayer.m_killsAlbionDeathBlows">
-            <summary>
-            Stores the count of death blows on albion players.
-            </summary>
-        </member>
-        <member name="F:DOL.GS.GamePlayer.m_killsMidgardDeathBlows">
-            <summary>
-            Stores the count of death blows on midgard players.
-            </summary>
-        </member>
-        <member name="F:DOL.GS.GamePlayer.m_killsHiberniaDeathBlows">
-            <summary>
-            Stores the count of death blows on hibernia players.
-            </summary>
-        </member>
-        <member name="F:DOL.GS.GamePlayer.m_killsAlbionSolo">
-            <summary>
-            Stores the count of killed solo albion players.
-            </summary>
-        </member>
-        <member name="F:DOL.GS.GamePlayer.m_killsMidgardSolo">
-            <summary>
-            Stores the count of killed solo midgard players.
-            </summary>
-        </member>
-        <member name="F:DOL.GS.GamePlayer.m_killsHiberniaSolo">
-            <summary>
-            Stores the count of killed solo hibernia players.
-            </summary>
-        </member>
-        <member name="F:DOL.GS.GamePlayer.m_capturedKeeps">
-            <summary>
-            Stores the count of captured keeps.
-            </summary>
-        </member>
-        <member name="F:DOL.GS.GamePlayer.m_capturedTowers">
-            <summary>
-            Stores the count of captured towers.
-            </summary>
-        </member>
-        <member name="F:DOL.GS.GamePlayer.m_killsDragon">
-            <summary>
-            Stores the count of killed dragons
-            </summary>
-        </member>
-        <member name="F:DOL.GS.GamePlayer.m_deathsPvP">
-            <summary>
-            Stores the count of PvP deaths
-            </summary>
-        </member>
         <member name="M:DOL.GS.GamePlayer.ToString">
             <summary>
             Returns the string representation of the GamePlayer
@@ -25619,26 +25486,37 @@
         <member name="P:DOL.GS.GamePlayer.IsAnonymous">
             <summary>
             Gets or sets the anonymous flag for this player
+            (delegate to property in PlayerCharacter)
             </summary>
         </member>
         <member name="P:DOL.GS.GamePlayer.GainXP">
             <summary>
             Gets or sets the gain XP flag for this player
+            (delegate to property in PlayerCharacter)
             </summary>
         </member>
         <member name="P:DOL.GS.GamePlayer.GainRP">
             <summary>
             Gets or sets the gain RP flag for this player
+            (delegate to property in PlayerCharacter)
+            </summary>
+        </member>
+        <member name="P:DOL.GS.GamePlayer.GuildNote">
+            <summary>
+            gets or sets the guildnote for this player
+            (delegate to property in PlayerCharacter)
             </summary>
         </member>
         <member name="P:DOL.GS.GamePlayer.Autoloot">
             <summary>
-            Gets or sets the gain XP flag for this player
+            Gets or sets the autoloot flag for this player
+            (delegate to property in PlayerCharacter)
             </summary>
         </member>
         <member name="P:DOL.GS.GamePlayer.Advisor">
             <summary>
             Gets or sets the advisor flag for this player
+            (delegate to property in PlayerCharacter)
             </summary>
         </member>
         <member name="P:DOL.GS.GamePlayer.QuitTime">
@@ -25664,22 +25542,26 @@
         <member name="P:DOL.GS.GamePlayer.LastName">
             <summary>
             The lastname of this player
+            (delegate to PlayerCharacter)
             </summary>
         </member>
         <member name="P:DOL.GS.GamePlayer.GuildName">
             <summary>
             Gets or sets the guildname of this player
+            (delegate to PlayerCharacter)
             </summary>
         </member>
         <member name="P:DOL.GS.GamePlayer.Name">
             <summary>
             Gets or sets the name of the player
+            (delegate to PlayerCharacter)
             </summary>
         </member>
         <member name="P:DOL.GS.GamePlayer.Model">
             <summary>
             Sets or gets the model of the player. If the player is
             active in the world, the modelchange will be visible
+            (delegate to PlayerCharacter)
             </summary>
         </member>
         <member name="P:DOL.GS.GamePlayer.FreeLevelState">
@@ -25690,6 +25572,7 @@
         <member name="P:DOL.GS.GamePlayer.TotalConstitutionLostAtDeath">
             <summary>
             Gets/sets the player efficacy percent
+            (delegate to PlayerCharacter)
             </summary>
         </member>
         <member name="P:DOL.GS.GamePlayer.Constitution">
@@ -25780,6 +25663,7 @@
         <member name="P:DOL.GS.GamePlayer.Race">
             <summary>
             Gets or sets this player's race id
+            (delegate to PlayerCharacter)
             </summary>
         </member>
         <member name="P:DOL.GS.GamePlayer.CharacterClass">
@@ -25790,21 +25674,25 @@
         <member name="P:DOL.GS.GamePlayer.RespecAmountAllSkill">
             <summary>
             Gets/Sets amount of full skill respecs
+            (delegate to PlayerCharacter)
             </summary>
         </member>
         <member name="P:DOL.GS.GamePlayer.RespecAmountSingleSkill">
             <summary>
             Gets/Sets amount of single-line respecs
+            (delegate to PlayerCharacter)
             </summary>
         </member>
         <member name="P:DOL.GS.GamePlayer.RespecAmountRealmSkill">
             <summary>
             Gets/Sets amount of realm skill respecs
+            (delegate to PlayerCharacter)
             </summary>
         </member>
         <member name="P:DOL.GS.GamePlayer.IsLevelRespecUsed">
             <summary>
             Gets/Sets level respec usage flag
+            (delegate to PlayerCharacter)
             </summary>
         </member>
         <member name="P:DOL.GS.GamePlayer.CanUseLefthandedWeapon">
@@ -25821,21 +25709,25 @@
         <member name="P:DOL.GS.GamePlayer.BountyPoints">
             <summary>
             Gets/sets player bounty points
+            (delegate to PlayerCharacter)
             </summary>
         </member>
         <member name="P:DOL.GS.GamePlayer.RealmPoints">
             <summary>
             Gets/sets player realm points
+            (delegate to PlayerCharacter)
             </summary>
         </member>
         <member name="P:DOL.GS.GamePlayer.SkillSpecialtyPoints">
             <summary>
             Gets/sets player skill specialty points
+            (delegate to PlayerCharacter)
             </summary>
         </member>
         <member name="P:DOL.GS.GamePlayer.RealmSpecialtyPoints">
             <summary>
             Gets/sets player realm specialty points
+            (delegate to PlayerCharacter)
             </summary>
         </member>
         <member name="P:DOL.GS.GamePlayer.RealmLevel">
@@ -25872,6 +25764,7 @@
         <member name="P:DOL.GS.GamePlayer.Experience">
             <summary>
             Gets or sets the current xp of this player
+            (TODO: Exp is setted in GainExp() and therefore NOT delegated to PlayerCharacter)  (VaNaTiC)
             </summary>
         </member>
         <member name="P:DOL.GS.GamePlayer.ExperienceForNextLevel">
@@ -25898,11 +25791,13 @@
         <member name="P:DOL.GS.GamePlayer.Level">
             <summary>
             Gets or sets the level of the player
+            (delegate to PlayerCharacter)
             </summary>
         </member>
         <member name="P:DOL.GS.GamePlayer.IsLevelSecondStage">
             <summary>
             Is this player in second stage of current level
+            (delegate to PlayerCharacter)
             </summary>
         </member>
         <member name="P:DOL.GS.GamePlayer.NextCombatStyle">
@@ -25918,21 +25813,25 @@
         <member name="P:DOL.GS.GamePlayer.CancelStyle">
             <summary>
             Gets or Sets the cancel style flag
+            (delegate to PlayerCharacter)
             </summary>
         </member>
         <member name="P:DOL.GS.GamePlayer.SafetyFlag">
             <summary>
             Gets/Sets safety flag
+            (delegate to PlayerCharacter)
             </summary>
         </member>
         <member name="P:DOL.GS.GamePlayer.IsCloakHoodUp">
             <summary>
             Sets/gets the living's cloak hood state
+            (delegate to PlayerCharacter)
             </summary>
         </member>
         <member name="P:DOL.GS.GamePlayer.SpellQueue">
             <summary>
             Gets or sets the players SpellQueue option
+            (delegate to PlayerCharacter)
             </summary>
         </member>
         <member name="P:DOL.GS.GamePlayer.RangeAttackAmmo">
@@ -26038,11 +25937,13 @@
         <member name="P:DOL.GS.GamePlayer.GuildID">
             <summary>
             Gets or sets the database guildid of this player
+            (delegate to PlayerCharacter)
             </summary>
         </member>
         <member name="P:DOL.GS.GamePlayer.ClassNameFlag">
             <summary>
             Gets or sets the player's guild flag
+            (delegate to PlayerCharacter)
             </summary>
         </member>
         <member name="P:DOL.GS.GamePlayer.PlayerGroup">
@@ -26068,6 +25969,7 @@
         <member name="P:DOL.GS.GamePlayer.Friends">
             <summary>
             Gets or sets the friends of this player
+            (delegate to PlayerCharacter)
             </summary>
         </member>
         <member name="P:DOL.GS.GamePlayer.CurrentAreas">
@@ -26153,6 +26055,7 @@
         <member name="P:DOL.GS.GamePlayer.MaxSpeedBase">
             <summary>
             Gets or sets the max speed of this player
+            (delegate to PlayerCharacter)
             </summary>
         </member>
         <member name="P:DOL.GS.GamePlayer.IsMoving">
@@ -26290,66 +26193,91 @@
         <member name="P:DOL.GS.GamePlayer.KillsAlbionPlayers">
             <summary>
             Gets or sets the count of albion players killed.
+            (delegate to PlayerCharacter)
             </summary>
         </member>
         <member name="P:DOL.GS.GamePlayer.KillsMidgardPlayers">
             <summary>
             Gets or sets the count of midgard players killed.
+            (delegate to PlayerCharacter)
             </summary>
         </member>
         <member name="P:DOL.GS.GamePlayer.KillsHiberniaPlayers">
             <summary>
             Gets or sets the count of hibernia players killed.
+            (delegate to PlayerCharacter)
             </summary>
         </member>
         <member name="P:DOL.GS.GamePlayer.KillsAlbionDeathBlows">
             <summary>
             Gets or sets the count of death blows on albion players.
+            (delegate to PlayerCharacter)
             </summary>
         </member>
         <member name="P:DOL.GS.GamePlayer.KillsMidgardDeathBlows">
             <summary>
             Gets or sets the count of death blows on midgard players.
+            (delegate to PlayerCharacter)
             </summary>
         </member>
         <member name="P:DOL.GS.GamePlayer.KillsHiberniaDeathBlows">
             <summary>
             Gets or sets the count of death blows on hibernia players.
+            (delegate to PlayerCharacter)
             </summary>
         </member>
         <member name="P:DOL.GS.GamePlayer.KillsAlbionSolo">
             <summary>
             Gets or sets the count of killed solo albion players.
+            (delegate to PlayerCharacter)
             </summary>
         </member>
         <member name="P:DOL.GS.GamePlayer.KillsMidgardSolo">
             <summary>
             Gets or sets the count of killed solo midgard players.
+            (delegate to PlayerCharacter)
             </summary>
         </member>
         <member name="P:DOL.GS.GamePlayer.KillsHiberniaSolo">
             <summary>
             Gets or sets the count of killed solo hibernia players.
+            (delegate to PlayerCharacter)
             </summary>
         </member>
         <member name="P:DOL.GS.GamePlayer.CapturedKeeps">
             <summary>
             Gets or sets the count of captured keeps.
+            (delegate to PlayerCharacter)
             </summary>
         </member>
         <member name="P:DOL.GS.GamePlayer.CapturedTowers">
             <summary>
             Gets or sets the count of captured towers.
+            (delegate to PlayerCharacter)
             </summary>
         </member>
         <member name="P:DOL.GS.GamePlayer.KillsDragon">
             <summary>
             Gets or sets the count of dragons killed.
+            (delegate to PlayerCharacter)
             </summary>
         </member>
         <member name="P:DOL.GS.GamePlayer.DeathsPvP">
             <summary>
             Gets or sets the pvp deaths
+            (delegate to PlayerCharacter)
+            </summary>
+        </member>
+        <member name="P:DOL.GS.GamePlayer.KillsLegion">
+            <summary>
+            Gets or sets the count of killed Legions.
+            (delegate to PlayerCharacter)
+            </summary>
+        </member>
+        <member name="P:DOL.GS.GamePlayer.KillsEpicBoss">
+            <summary>
+            Gets or sets the count of killed Epic Boss.
+            (delegate to PlayerCharacter)
             </summary>
         </member>
         <member name="P:DOL.GS.GamePlayer.IsCarryingGuildBanner">
@@ -26700,6 +26628,16 @@
         <member name="F:DOL.Events.GamePlayerEvent.KillsDragonChanged">
             <summary>
             The KillsDragonChanged event is fired when KillsDragon properties changes.
+            </summary>
+        </member>
+        <member name="F:DOL.Events.GamePlayerEvent.KillsEpicBossChanged">
+            <summary>
+            The KillsEpicBossChanged event is fired when KillsEpicBoss properties changes.
+            </summary>
+        </member>
+        <member name="F:DOL.Events.GamePlayerEvent.KillsLegionChanged">
+            <summary>
+            The KillsLegionChanged event is fired when KillsLegion properties changes.
             </summary>
         </member>
         <member name="T:DOL.GS.Effects.BerserkEffect">

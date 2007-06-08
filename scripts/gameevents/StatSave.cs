@@ -80,7 +80,24 @@ namespace DOL.GS.GameEvents
 			}
 			// 1 min * INTERVAL
 			m_statFrequency *= ServerProperties.Properties.STATSAVE_INTERVAL;
-			m_timer = new Timer(new TimerCallback(SaveStats), null, INITIAL_DELAY, Timeout.Infinite);
+			lock (typeof(StatSave))
+			{
+				m_timer = new Timer(new TimerCallback(SaveStats), null, INITIAL_DELAY, Timeout.Infinite);
+			}
+		}
+
+		[ScriptUnloadedEvent]
+		public static void OnScriptUnloaded(DOLEvent e, object sender, EventArgs args)
+		{
+			lock (typeof(StatPrint))
+			{
+				if (m_timer != null)
+				{
+					m_timer.Change(Timeout.Infinite, Timeout.Infinite);
+					m_timer.Dispose();
+					m_timer = null;
+				}
+			}
 		}
 
 		/// <summary>
@@ -145,7 +162,13 @@ namespace DOL.GS.GameEvents
 			}
 			finally
 			{
-				m_timer.Change(m_statFrequency, Timeout.Infinite);
+				lock (typeof(StatSave))
+				{
+					if (m_timer != null)
+					{
+						m_timer.Change(m_statFrequency, Timeout.Infinite);
+					}
+				}
 			}
 		}
 	}

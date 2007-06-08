@@ -1409,7 +1409,7 @@ namespace DOL.GS.Quests.Hibernia
 		//Set quest name
 		public override string Name
 		{
-			get { return "Unnatural Powers (Level 50 Path of Focus Epic)"; }
+			get { return "The Moonstone Twin (Level 50 Path of Essence Epic)"; }
 		}
 
 		// Define Steps

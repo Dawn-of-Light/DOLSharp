@@ -23,14 +23,27 @@ System.ReleaseTimer:					Release Timer
 # CRAFTING
 # (All)
 Crafting.CheckTool.AlchemyKit:				alchemy kit
+Crafting.CheckTool.FindAlchemyTable:			You must find a alchemy table!
+Crafting.CheckTool.FindForge:				You must find a forge!
+Crafting.CheckTool.FindLathe:				You must find a lathe!
+Crafting.CheckTool.FindPlaningTool:			You must find a planing tool!
+Crafting.CheckTool.FindSewingKit:			You must find a sewing kit!
+Crafting.CheckTool.FindSmithTool:			You must find a smith tool!
+Crafting.CheckTool.FindSpellcraftKit:			You must find a spellcraft kit!
 Crafting.CheckTool.MortarAndPestle:			mortar and pestle
 Crafting.CheckTool.NotHaveTools:			You do not have the tools to make the {0}.
 Crafting.CheckTool.PlaningTool:				planing tool
 Crafting.CheckTool.SewingKit:				sewing kit
 Crafting.CheckTool.SmithsHammer:			smith's hammer
 Crafting.CheckTool.SpellcraftKit:			spellcraft kit
+Crafting.GainCraftingSkillPoints.RaiseArmorcraft:	You must see your trainer to raise your Armorcraft further!
+Crafting.GainCraftingSkillPoints.RaiseFletching:	You must see your trainer to raise your Fletching further!
+Crafting.GainCraftingSkillPoints.RaiseSpellcraft:	You must see your trainer to raise your Spellcraft further!
+Crafting.GainCraftingSkillPoints.RaiseTailoring:	You must see your trainer to raise your Tailoring further!
+Crafting.GainCraftingSkillPoints.RaiseWeaponcraft:	You must see your trainer to raise your Weaponcraft further!
 
 # /AbstractCraftingSkill
+AbstractCraftingSkill.BuildCraftedItem.BackpackFull:	Your backpack is full. {0} is created on the ground.
 AbstractCraftingSkill.BuildCraftedItem.Masterpiece:	Congratulation, you make a masterpiece !
 AbstractCraftingSkill.BuildCraftedItem.Successfully:	You successfully make the {0}! ({1})
 AbstractCraftingSkill.CheckRawMaterial.NoIngredients:	You do not have the ingredients to make the {0}.
@@ -65,7 +78,7 @@ GameMerchant.OnPlayerBuy.Bought:			You just bought {0} for {1}.
 GameMerchant.OnPlayerBuy.Bought2:			You just bought {0} for {1} {2}.
 GameMerchant.OnPlayerBuy.BoughtBP:			You just bought {0} for {1} BPs.
 GameMerchant.OnPlayerBuy.BoughtPieces:			You just bought {0} pieces of {1} for {2}.
-GameMerchant.OnPlayerBuy.BoughtPieces2:			You just bought {0} pieces of {1} for {2} {3].
+GameMerchant.OnPlayerBuy.BoughtPieces2:			You just bought {0} pieces of {1} for {2} {3}.
 GameMerchant.OnPlayerBuy.BoughtPiecesBP:		You just bought {0} pieces of {1} for {0} BPs.
 GameMerchant.OnPlayerBuy.NotInventorySpace:		Not enough inventory space to buy that.
 GameMerchant.OnPlayerBuy.YouNeed:			You need {0} to buy this.
@@ -435,6 +448,9 @@ GameStableMaster.HorseName:				horse
 GameStableMaster.UnknownWay:				My horse doesn't know the way to {0} yet.
 
 # /packets/Client/168
+# /DoorRequestHandler.cs
+DoorRequestHandler.OnTick.TooFarAway:			The {0} is too far away!
+
 # /PlayerInitRequestHandler
 PlayerInitRequestHandler.AllianceMessage:		Alliance Message: {0}
 PlayerInitRequestHandler.FreeLevel:			You are eligible for a free level! Click on your trainer to receive it (or type /freelevel decline to discard your free level).

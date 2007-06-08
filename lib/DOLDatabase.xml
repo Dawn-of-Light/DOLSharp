@@ -6999,10 +6999,11 @@ public void ReadMyData(string myConnString) {
             <param name="s">the string</param>
             <returns>the string with escaped character</returns>
         </member>
-        <member name="M:DOL.Database.Connection.DataConnection.GetMySqlConnection">
+        <member name="M:DOL.Database.Connection.DataConnection.GetMySqlConnection(System.Boolean@)">
             <summary>
             Gets connection from connection pool.
             </summary>
+            <param name="isNewConnection">Set to <code>true</code> if new connection is created.</param>
             <returns>Connection.</returns>
         </member>
         <member name="M:DOL.Database.Connection.DataConnection.ReleaseConnection(MySql.Data.MySqlClient.MySqlConnection)">
@@ -7735,6 +7736,16 @@ public void ReadMyData(string myConnString) {
         <member name="P:DOL.Database.Character.DeathsPvP">
             <summary>
             Amount of PvP deaths
+            </summary>
+        </member>
+        <member name="P:DOL.Database.Character.KillsLegion">
+            <summary>
+            Amount of killed Legions
+            </summary>
+        </member>
+        <member name="P:DOL.Database.Character.KillsEpicBoss">
+            <summary>
+            Amount of killed EpicDungeon Boss
             </summary>
         </member>
         <member name="P:DOL.Database.Character.GainXP">

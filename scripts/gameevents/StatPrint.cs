@@ -56,29 +56,32 @@ namespace DOL.GS.GameEvents
 		[GameServerStartedEvent]
 		public static void OnScriptCompiled(DOLEvent e, object sender, EventArgs args)
 		{
-			m_timerStatsByMgr = new Hashtable();
-			m_timer = new Timer(new TimerCallback(PrintStats), null, 10000, 0);
-			try
+			lock (typeof(StatPrint))
 			{
-				m_systemCpuUsedCounter = new PerformanceCounter("Processor", "% processor time", "_total");
-				m_systemCpuUsedCounter.NextValue();
-			}
-			catch (Exception ex)
-			{
-				m_systemCpuUsedCounter = null;
-				if (log.IsWarnEnabled)
-					log.Warn(ex.GetType().Name + " SystemCpuUsedCounter won't be available: " + ex.Message);
-			}
-			try
-			{
-				m_processCpuUsedCounter = new PerformanceCounter("Process", "% processor time", GetProcessCounterName());
-				m_processCpuUsedCounter.NextValue();
-			}
-			catch (Exception ex)
-			{
-				m_processCpuUsedCounter = null;
-				if (log.IsWarnEnabled)
-					log.Warn(ex.GetType().Name + " ProcessCpuUsedCounter won't be available: " + ex.Message);
+				m_timerStatsByMgr = new Hashtable();
+				m_timer = new Timer(new TimerCallback(PrintStats), null, 10000, 0);
+				try
+				{
+					m_systemCpuUsedCounter = new PerformanceCounter("Processor", "% processor time", "_total");
+					m_systemCpuUsedCounter.NextValue();
+				}
+				catch (Exception ex)
+				{
+					m_systemCpuUsedCounter = null;
+					if (log.IsWarnEnabled)
+						log.Warn(ex.GetType().Name + " SystemCpuUsedCounter won't be available: " + ex.Message);
+				}
+				try
+				{
+					m_processCpuUsedCounter = new PerformanceCounter("Process", "% processor time", GetProcessCounterName());
+					m_processCpuUsedCounter.NextValue();
+				}
+				catch (Exception ex)
+				{
+					m_processCpuUsedCounter = null;
+					if (log.IsWarnEnabled)
+						log.Warn(ex.GetType().Name + " ProcessCpuUsedCounter won't be available: " + ex.Message);
+				}
 			}
 		}
 		
@@ -103,22 +106,24 @@ namespace DOL.GS.GameEvents
 		[ScriptUnloadedEvent]
 		public static void OnScriptUnloaded(DOLEvent e, object sender, EventArgs args)
 		{
-			Timer t = m_timer;
-			m_timer = null;
-			if (t != null)
+			lock (typeof(StatPrint))
 			{
-				t.Change(Timeout.Infinite, Timeout.Infinite);
-				t.Dispose();
-			}
-			if (m_systemCpuUsedCounter != null)
-			{
-				m_systemCpuUsedCounter.Close();
-				m_systemCpuUsedCounter = null;
-			}
-			if (m_processCpuUsedCounter != null)
-			{
-				m_processCpuUsedCounter.Close();
-				m_processCpuUsedCounter = null;
+				if (m_timer != null)
+				{
+					m_timer.Change(Timeout.Infinite, Timeout.Infinite);
+					m_timer.Dispose();
+					m_timer = null;
+				}
+				if (m_systemCpuUsedCounter != null)
+				{
+					m_systemCpuUsedCounter.Close();
+					m_systemCpuUsedCounter = null;
+				}
+				if (m_processCpuUsedCounter != null)
+				{
+					m_processCpuUsedCounter.Close();
+					m_processCpuUsedCounter = null;
+				}
 			}
 		}
 
@@ -224,11 +229,16 @@ namespace DOL.GS.GameEvents
 			}
 			finally
 			{
-				m_lastMeasureTick = DateTime.Now.Ticks;
-				m_timer.Change(m_statFrequency, Timeout.Infinite);
+				lock (typeof(StatPrint))
+				{
+					if (m_timer != null)
+					{
+						m_timer.Change(m_statFrequency, 0);
+					}
+				}
 			}
 		}
-		
+
 		public class TimerStats
 		{
 			public long InvokedCount;
