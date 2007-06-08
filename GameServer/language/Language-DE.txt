@@ -57,7 +57,7 @@ AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoWoodworkingSkill:		I
 AbstractCraftingSkill.CraftItem.BeginWork:		Ihr beginnt mit der Arbeit an {0} ({1}%).
 AbstractCraftingSkill.CraftItem.ChanceToGainPoint:	Die Chance Punkte in Eurem primären Handwerk zu erhalten beträgt {0}%.
 AbstractCraftingSkill.CraftItem.CurrentlyMaking:	Aktuelle Herstellung: {0}
-AbstractCraftingSkill.CraftItem.MoveAndInterrupt:	Ihr bewegt Euch znd unterbrecht damit Eure Arbeit.
+AbstractCraftingSkill.CraftItem.MoveAndInterrupt:	Ihr bewegt Euch und unterbrecht damit Eure Arbeit.
 AbstractCraftingSkill.CraftItem.StopWork:		Ihr brecht Eure momentane Arbeit ab.
 AbstractCraftingSkill.LooseRawMaterial.Count:		Ihr verliert ({0}) {1}.
 AbstractCraftingSkill.LooseRawMaterial.Materials:	Ihr habt die Herstellung von {0} nicht geschafft und verliert einiges Material!
@@ -453,6 +453,9 @@ GameStableMaster.HorseName:				Reitpferd
 GameStableMaster.UnknownWay:				Tut mir leid, dieses Ticket nach {0} ist hier nicht gültig.
 
 # /packets/Client/168
+# /DoorRequestHandler.cs
+DoorRequestHandler.OnTick.TooFarAway:			Ihr seid zu weit weg von [{0}]!
+
 # /PlayerInitRequestHandler
 PlayerInitRequestHandler.AllianceMessage:		Allianznachricht: {0}
 PlayerInitRequestHandler.FreeLevel:			Ihr seid nun würdig, eine freie Stufe zu erhalten. Klickt auf Euren Ausbilder, um sie zu bekommen!
