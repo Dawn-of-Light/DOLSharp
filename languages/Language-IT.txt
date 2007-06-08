@@ -435,6 +435,9 @@ GameStableMaster.HorseName:				cavallo
 GameStableMaster.UnknownWay:				Il mio cavallo non conosce ancora la strada per {0}.
 
 # /packets/Client/168
+# /DoorRequestHandler.cs
+DoorRequestHandler.OnTick.TooFarAway:                   La {0} e' troppo lontana!
+
 # /PlayerInitRequestHandler
 PlayerInitRequestHandler.AllianceMessage:		Messaggio di Alleanza: {0}
 PlayerInitRequestHandler.FreeLevel:				Sei idoneo per un livello gratuito! Clicca sul tuo allenatore per riceverlo (oppure digita /freelevel decline per rifiutarlo).
