@@ -19,6 +19,7 @@ using System;
  */
 
 using DOL.Database;
+using DOL.Language;
 using DOL.GS.Keeps;
 
 namespace DOL.GS.PacketHandler.Client.v168
@@ -112,7 +113,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 					{
 						if (!WorldMgr.CheckDistance(player, mydoor, WorldMgr.PICKUP_DISTANCE))
 						{
-							player.Out.SendMessage("The " + mydoor.Name + " is too far away!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "DoorRequestHandler.OnTick.TooFarAway", mydoor.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
+							
 							return;
 						}
 						if (m_doorState == 0x01)
