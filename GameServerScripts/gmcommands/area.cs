@@ -17,6 +17,7 @@
  *
  */
 using System;
+using System.Reflection;
 using DOL.Database;
 using DOL.GS.PacketHandler;
 
@@ -47,15 +48,22 @@ namespace DOL.GS.Scripts
 						}
 						DBArea area = new DBArea();
 						area.Description = args[2];
-						if (args[3].ToLower() == "circle")
-							area.ClassType = "DOL.GS.Area.Circle";
-						else if (args[3].ToLower() == "square")
-							area.ClassType = "DOL.GS.Area.Square";
-						else
+
+						switch (args[3].ToLower())
 						{
-							ShowSyntax(client.Player);
-							return 1;
+							case "circle": area.ClassType = "DOL.GS.Area+Circle"; break;
+							case "square": area.ClassType = "DOL.GS.Area+Square"; break;
+							case "safe":
+							case "safearea": area.ClassType = "DOL.GS.Area+SafeArea"; break;
+							case "bind":
+							case "bindarea": area.ClassType = "DOL.GS.Area+BindArea"; break;
+							default:
+								{
+									ShowSyntax(client.Player);
+									return 1;
+								}
 						}
+
 						area.Radius = Convert.ToInt16(args[4]);
 						if (args[5].ToLower() == "y")
 							area.CanBroadcast = true;
@@ -69,21 +77,10 @@ namespace DOL.GS.Scripts
 						area.Sound = byte.Parse(args[6]);
 						area.Region = client.Player.CurrentRegionID;
 
-						AbstractArea newArea = null;
-						if (args[3].ToLower() == "circle")
-						{
-							area.X = client.Player.X;
-							area.Y = client.Player.Y;
-							area.Z = client.Player.Z;
-							newArea = new Area.Circle(area.Description, area.X, area.Y, client.Player.Z, area.Radius);
-						}
-						else if (args[3].ToLower() == "square")
-						{
-							area.X = client.Player.X - area.Radius / 2;
-							area.Y = client.Player.Y - area.Radius / 2;
-							area.Z = client.Player.Z - area.Radius / 2;
-							newArea = new Area.Square(area.Description, area.X, area.Y, area.Radius, area.Radius);
-						}
+						Assembly gasm = Assembly.GetExecutingAssembly();
+						AbstractArea newArea = (AbstractArea)gasm.CreateInstance(area.ClassType, false);
+						newArea.LoadFromDatabase(area);
+
 						newArea.Sound = area.Sound;
 						newArea.CanBroadcast = area.CanBroadcast;
 						WorldMgr.GetRegion(client.Player.CurrentRegionID).AddArea(newArea);
@@ -99,7 +96,7 @@ namespace DOL.GS.Scripts
 		public void ShowSyntax(GamePlayer player)
 		{
 			SendMessage(player, "Usage: /area");
-			SendMessage(player, "/area create <name> <type(circle/square>) <radius> <broadcast(y/n)> <soundid>");
+			SendMessage(player, "/area create <name> <type(circle/square/safearea/bindarea>) <radius> <broadcast(y/n)> <soundid>");
 		}
 		public void SendMessage(GamePlayer player, string message)
 		{

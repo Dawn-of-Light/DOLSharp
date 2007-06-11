@@ -1,6 +1,7 @@
 using System;
 using DOL.Database;
 using DOL.GS.Effects;
+using DOL.GS.PacketHandler;
 
 namespace DOL.GS.RealmAbilities
 {
@@ -18,15 +19,24 @@ namespace DOL.GS.RealmAbilities
 		public override void Execute(GameLiving living)
 		{
 			if (CheckPreconditions(living, DEAD | SITTING | MEZZED | STUNNED)) return;
-
-
-
 			GamePlayer player = living as GamePlayer;
+
 			if (player != null)
 			{
+				if (player.TempProperties.getProperty("Charging", false)
+					|| player.EffectList.CountOfType(typeof(SpeedOfSoundEffect)) > 0
+					|| player.EffectList.CountOfType(typeof(ArmsLengthEffect)) > 0
+					|| player.EffectList.CountOfType(typeof(ChargeEffect)) > 0)
+				{
+					player.Out.SendMessage("You already an effect of that type!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+					return;
+				}
+
+				GameSpellEffect speed = Spells.SpellHandler.FindEffectOnTarget(player, "SpeedEnhancement");
+				if (speed != null)
+					speed.Cancel(false);
+				new ArmsLengthEffect().Start(player);
 				SendCasterSpellEffectAndCastMessage(player, 7068, true);
-				ArmsLengthEffect effect = new ArmsLengthEffect();
-				effect.Start(player);
 			}
 			DisableSkill(living);
 		}

@@ -203,6 +203,7 @@
     <Compile Include="dbconverters\Version002.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="dbconverters\Version005.cs" />
     <Compile Include="effects\BerserkEffect.cs">
       <SubType>Code</SubType>
     </Compile>

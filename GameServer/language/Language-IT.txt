@@ -65,7 +65,7 @@ GameMerchant.OnPlayerBuy.Bought:			Hai comprato {0} per {1}.
 GameMerchant.OnPlayerBuy.Bought2:			Hai comprato {0} per {1} {2}.
 GameMerchant.OnPlayerBuy.BoughtBP:			Hai comprato {0} per {1} BPs.
 GameMerchant.OnPlayerBuy.BoughtPieces:			Hai comprato {0} pieces of {1} per {2}.
-GameMerchant.OnPlayerBuy.BoughtPieces2:			Hai comprato {0} pieces of {1} per {2} {3].
+GameMerchant.OnPlayerBuy.BoughtPieces2:			Hai comprato {0} pieces of {1} per {2} {3}.
 GameMerchant.OnPlayerBuy.BoughtPiecesBP:		Hai comprato {0} pieces of {1} per {0} BPs.
 GameMerchant.OnPlayerBuy.NotInventorySpace:		Non hai abbastanza spazio nell'inventario per comprare questo oggetto.
 GameMerchant.OnPlayerBuy.YouNeed:			Hai bisogno di {0} per comprare questo oggetto.
@@ -435,6 +435,9 @@ GameStableMaster.HorseName:				cavallo
 GameStableMaster.UnknownWay:				Il mio cavallo non conosce ancora la strada per {0}.
 
 # /packets/Client/168
+# /DoorRequestHandler.cs
+DoorRequestHandler.OnTick.TooFarAway:                   La {0} e' troppo lontana!
+
 # /PlayerInitRequestHandler
 PlayerInitRequestHandler.AllianceMessage:		Messaggio di Alleanza: {0}
 PlayerInitRequestHandler.FreeLevel:				Sei idoneo per un livello gratuito! Clicca sul tuo allenatore per riceverlo (oppure digita /freelevel decline per rifiutarlo).
