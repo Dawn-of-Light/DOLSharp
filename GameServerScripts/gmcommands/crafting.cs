@@ -126,7 +126,7 @@ namespace DOL.GS.Scripts
 								targetPlayer.GainCraftingSkill(craftingSkillID, amount);
 								targetPlayer.Out.SendUpdateCraftingSkills();
 								client.Out.SendMessage("Crafting skill " + skill.Name + " correctly changed.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								client.Out.SendMessage(targetPlayer.Name + " have now " + targetPlayer.GetCraftingSkillValue(craftingSkillID) + " in " + skill.Name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								client.Out.SendMessage(targetPlayer.Name + " now has " + targetPlayer.GetCraftingSkillValue(craftingSkillID) + " in " + skill.Name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							}
 						}
 						catch (Exception)

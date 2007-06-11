@@ -462,8 +462,7 @@ namespace DOL.GS.Scripts
 						mob.MaxSpeedBase = 200;
 						mob.GuildName = "";
 						mob.Size = 50;
-						if ((mob.Flags & (uint)GameNPC.eFlags.PEACE) == 0)
-							mob.Flags ^= (uint)GameNPC.eFlags.PEACE;
+						mob.Flags |= (uint)GameNPC.eFlags.PEACE;
 						mob.AddToWorld();
 						mob.SaveIntoDatabase();
 						client.Out.SendMessage("Mob created: OID=" + mob.ObjectID, eChatType.CT_System, eChatLoc.CL_SystemWindow);

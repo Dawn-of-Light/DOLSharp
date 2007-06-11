@@ -4138,8 +4138,14 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 				int maxmana = MaxMana;
 				m_mana = Math.Min(value, maxmana);
 				m_mana = Math.Max(m_mana, 0);
-
-				if (IsAlive && m_mana < maxmana)
+				
+				//if (IsAlive && m_mana < maxmana)
+				if (IsAlive && (m_mana < maxmana ||
+					(this is GamePlayer && (
+						((GamePlayer)this).CharacterClass.ID == (int)eCharacterClass.Vampiir
+						|| ((GamePlayer)this).CharacterClass is ClassMauler)
+					)
+				))
 				{
 					StartPowerRegeneration();
 				}

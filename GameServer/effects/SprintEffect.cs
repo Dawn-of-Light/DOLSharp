@@ -34,16 +34,6 @@ namespace DOL.GS.Effects
 		RegionTimer m_tickTimer;
 
 		/// <summary>
-		/// The owner of the effect
-		/// </summary>
-		GamePlayer m_player;
-
-		/// <summary>
-		/// The internal unique effect ID
-		/// </summary>
-		ushort m_id;
-
-		/// <summary>
 		/// The amount of timer ticks player was not moving
 		/// </summary>
 		int m_idleTicks = 0;
@@ -58,18 +48,17 @@ namespace DOL.GS.Effects
 		/// <summary>
 		/// Start the sprinting on player
 		/// </summary>
-		public void Start(GamePlayer player)
+		public override void Start(GameLiving target)
 		{
-			m_player = player;
+			base.Start(target);
 			if (m_tickTimer != null)
 			{
 				m_tickTimer.Stop();
 				m_tickTimer = null;
 			}
-			m_tickTimer = new RegionTimer(player);
+			m_tickTimer = new RegionTimer(target);
 			m_tickTimer.Callback = new RegionTimerCallback(PulseCallback);
 			m_tickTimer.Start(1000);
-			player.EffectList.Add(this);
 		}
 
 		/// <summary>
@@ -94,11 +83,11 @@ namespace DOL.GS.Effects
 		{
 			int nextInterval;
 
-			if (m_player.IsMoving)
+			if (m_owner.IsMoving)
 				m_idleTicks = 0;
 			else m_idleTicks++;
 
-			if (m_player.Endurance - 5 <= 0 || m_idleTicks >= 6)
+			if (m_owner.Endurance - 5 <= 0 || m_idleTicks >= 6)
 			{
 				Cancel(false);
 				nextInterval = 0;
@@ -106,15 +95,15 @@ namespace DOL.GS.Effects
 			else
 			{
 				nextInterval = Util.Random(600, 1400);
-				if (m_player.IsMoving)
+				if (m_owner.IsMoving)
 				{
 					int amount = 5;
 
-					LongWindAbility ra = m_player.GetAbility(typeof(LongWindAbility)) as LongWindAbility;
+					LongWindAbility ra = m_owner.GetAbility(typeof(LongWindAbility)) as LongWindAbility;
 					if (ra != null)
 						amount = 5 - ra.GetAmountForLevel(ra.Level);
 
-					m_player.Endurance -= amount;
+					m_owner.Endurance -= amount;
 				}
 			}
 			return nextInterval;
@@ -126,7 +115,8 @@ namespace DOL.GS.Effects
 		public override void Cancel(bool playerCancel)
 		{
 			base.Cancel(playerCancel);
-			m_player.Sprint(false);
+			if (m_owner is GamePlayer)
+				(m_owner as GamePlayer).Sprint(false);
 		}
 
 		/// <summary>
@@ -143,15 +133,5 @@ namespace DOL.GS.Effects
 		/// Icon to show on players, can be id
 		/// </summary>
 		public override ushort Icon { get { return 0x199; } }
-
-		/// <summary>
-		/// unique id for identification in effect list
-		/// </summary>
-		public ushort InternalID { get { return m_id; } set { m_id = value; } }
-
-		/// <summary>
-		/// Delve Info
-		/// </summary>
-		public override IList DelveInfo { get { return new ArrayList(0); } }
 	}
 }

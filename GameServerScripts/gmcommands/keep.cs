@@ -33,7 +33,7 @@ namespace DOL.GS.Scripts
 		"Various keep creation commands!", //command description
 		"'/keep fastcreate <type> <id> <name>' to create a keep with base template",
 		"'/keep fastcreate ' to show all template available in fast create",
-		"'/keep create <keepid> <baselevel> <name>' to create a keep",
+		"'/keep create <keepid> <baselevel> <radius (set to 0 for default)> <name>' to create a keep",
 	   "'/keep towercreate <keepid> <baselevel> <name>' to create a tower",
 		"'/keep remove'",
 		"'/keep name <Name>' to change name",
@@ -44,7 +44,8 @@ namespace DOL.GS.Scripts
 		"'/keep save' to save keep into DB",
 		"'/keep addteleporter' to create a teleporter stone",
 		"'/keep addbanner <realm|guild>' to create a banner",
-		"'/keep realm <newrealm>'")]
+		"'/keep realm <newrealm>'",
+		"'/keep radius <newRadius (set to 0 for default)>' to change the radius of a keep")]
 	public class KeepCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		protected string TEMP_KEEP_LAST = "TEMP_KEEP_LAST";
@@ -1901,7 +1902,7 @@ namespace DOL.GS.Scripts
 					}
 				case "create":
 					{
-						if (args.Length < 5)
+						if (args.Length < 6)
 						{
 							DisplaySyntax(client);
 							return 1;
@@ -1944,8 +1945,19 @@ namespace DOL.GS.Scripts
 							return 1;
 						}
 
+						int radius = 0;
+						try
+						{
+							radius = Convert.ToInt32(args[4]);
+						}
+						catch
+						{
+							DisplaySyntax(client);
+							return 1;
+						}
+
 						DBKeep keep = new DBKeep();
-						keep.Name = String.Join(" ", args, 4, args.Length - 4);
+						keep.Name = String.Join(" ", args, 5, args.Length - 5);
 						keep.KeepID = keepid;
 						keep.Level = 0;
 						keep.Region = client.Player.CurrentRegionID;
@@ -1958,6 +1970,9 @@ namespace DOL.GS.Scripts
 
 						GameKeep k = new GameKeep();
 						k.Load(keep);
+
+						if (radius > 0)
+							k.Area.ChangeRadius(radius);
 
 						foreach (IDoor door in DoorMgr.getDoorsCloseToSpot((ushort)keep.Region, keep.X, keep.Y, keep.Z, 3000))
 						{
@@ -2026,7 +2041,7 @@ namespace DOL.GS.Scripts
 							return 1;
 						}
 						myKeep.Name = String.Join(" ", args, 2, args.Length - 2);
-						client.Out.SendMessage("You change the name of current keep to " + myKeep.Name, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						client.Out.SendMessage("You change the name of the current keep to " + myKeep.Name, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					} break;
 				case "keepid":
 					{
@@ -2051,7 +2066,7 @@ namespace DOL.GS.Scripts
 							return 1;
 						}
 						myKeep.KeepID = keepid;
-						client.Out.SendMessage("You change the id of current keep to " + keepid, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						client.Out.SendMessage("You change the id of the current keep to " + keepid, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 					} break;
 				case "level":
@@ -2077,7 +2092,7 @@ namespace DOL.GS.Scripts
 							return 1;
 						}
 						myKeep.ChangeLevel(keepLevel);
-						client.Out.SendMessage("You change the level of current keep to " + keepLevel, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						client.Out.SendMessage("You change the level of the current keep to " + keepLevel, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 					} break;
 				case "baselevel":
@@ -2115,7 +2130,33 @@ namespace DOL.GS.Scripts
 							return 1;
 						}
 						myKeep.Reset(realm);
-						client.Out.SendMessage("You change the realm of current keep to " + GlobalConstants.RealmToName(realm), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						client.Out.SendMessage("You change the realm of the current keep to " + GlobalConstants.RealmToName(realm), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						break;
+					}
+				case "radius":
+					{
+						if (args.Length < 3)
+						{
+							DisplaySyntax(client);
+							return 1;
+						}
+						if (myKeep == null)
+						{
+							client.Out.SendMessage("You must create a keep first", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							return 1;
+						}
+						int radius = 0;
+						try
+						{
+							radius = Convert.ToInt32(args[2]);
+						}
+						catch
+						{
+							DisplaySyntax(client);
+							return 1;
+						}
+						myKeep.Area.ChangeRadius(radius);
+						client.Out.SendMessage("You change the radius of the current keep to " + radius, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						break;
 					}
 				case "save":

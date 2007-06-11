@@ -16,25 +16,17 @@ namespace DOL.GS
 		{
 			try
 			{
+				Assembly gasm = Assembly.GetExecutingAssembly();
 				DataObject[] DBAreas = GameServer.Database.SelectAllObjects(typeof(DBArea));
 				foreach (DBArea thisArea in DBAreas)
 				{
-					AbstractArea area = null;
-					if (thisArea.ClassType == "DOL.GS.Area.Square")
-						area = new Area.Square(thisArea.Description, thisArea.X, thisArea.Y, thisArea.Radius, thisArea.Radius);
-					else if (thisArea.ClassType == "DOL.GS.Area.Circle")
-						area = new Area.Circle(thisArea.Description, thisArea.X, thisArea.Y, thisArea.Z, thisArea.Radius);
-					else if (thisArea.ClassType == "DOL.GS.Area.BindArea")
+					AbstractArea area = (AbstractArea)gasm.CreateInstance(thisArea.ClassType, false);
+					if (area == null)
 					{
-						BindPoint bp = new BindPoint();
-						bp.Radius = (ushort)thisArea.Radius;
-						bp.X = thisArea.X;
-						bp.Y = thisArea.Y;
-						bp.Z = thisArea.Z;
-						bp.Region = thisArea.Region;
-						area = new Area.BindArea(thisArea.Description, bp);
+						log.Debug("area type " + thisArea.ClassType + " cannot be created, skipping");
+						continue;
 					}
-					if (area == null) throw new Exception("area is null");
+					area.LoadFromDatabase(thisArea);
 					area.Sound = thisArea.Sound;
 					area.CanBroadcast = thisArea.CanBroadcast;
 					area.CheckLOS = thisArea.CheckLOS;

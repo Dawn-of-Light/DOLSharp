@@ -23,7 +23,11 @@ namespace DOL.GS.RealmAbilities
 				 player.Out.SendMessage("You cannot use this ability while speed warped!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				 return;
 			 }*/
-			if (player.EffectList.CountOfType(typeof(SpeedOfSoundEffect)) > 0)
+
+			if (player.TempProperties.getProperty("Charging", false)
+				|| player.EffectList.CountOfType(typeof(SpeedOfSoundEffect)) > 0
+				|| player.EffectList.CountOfType(typeof(ArmsLengthEffect)) > 0
+				|| player.EffectList.CountOfType(typeof(ChargeEffect)) > 0)
 			{
 				player.Out.SendMessage("You already an effect of that type!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
 				return;
