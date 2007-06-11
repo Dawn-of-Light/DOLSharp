@@ -44,7 +44,7 @@ namespace DOL.GS.Spells
 
 		public virtual double DPSCap(int Level)
 		{
-			return (1.2 + 0.3 * Level)*0.7;
+			return (1.2 + 0.3 * Level) * 0.7;
 		}
 
 		/// <summary>
@@ -77,10 +77,10 @@ namespace DOL.GS.Spells
 			double damage = dps * atkArgs.AttackData.WeaponSpeed * spread * 0.001; // attack speed is 10 times higher (2.5spd=25)
 			double damageResisted = damage * target.GetResist(Spell.DamageType) * -0.01;
 
-			if(Spell.Damage < 0)
+			if (Spell.Damage < 0)
 			{
 				damage = atkArgs.AttackData.Damage * Spell.Damage / -100.0;
-				damageResisted =  damage * target.GetResist(Spell.DamageType) * -0.01;
+				damageResisted = damage * target.GetResist(Spell.DamageType) * -0.01;
 			}
 
 			AttackData ad = new AttackData();
@@ -95,7 +95,7 @@ namespace DOL.GS.Spells
 			if (ad.Attacker is GameNPC)
 			{
 				IControlledBrain brain = ((GameNPC)ad.Attacker).Brain as IControlledBrain;
-				if(brain != null)
+				if (brain != null)
 				{
 					GamePlayer owner = brain.Owner;
 					if (owner != null && owner.ControlledNpc != null && ad.Attacker == owner.ControlledNpc.Body)
@@ -114,17 +114,17 @@ namespace DOL.GS.Spells
 			MessageToLiving(target, String.Format("{0} does {1} extra damage to you!", attacker.GetName(0, false), ad.Damage), eChatType.CT_Spell);
 			target.OnAttackedByEnemy(ad);
 			attacker.DealDamage(ad);
-			foreach(GamePlayer player in ad.Attacker.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+			foreach (GamePlayer player in ad.Attacker.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
-				if(player == null) continue;
+				if (player == null) continue;
 				player.Out.SendCombatAnimation(null, target, 0, 0, 0, 0, 0x0A, target.HealthPercent);
 			}
-//			log.Debug(String.Format("spell damage: {0}; damage: {1}; resisted damage: {2}; damage type {3}; minSpread {4}.", Spell.Damage, ad.Damage, ad.Modifier, ad.DamageType, m_minDamageSpread));
-//			log.Debug(String.Format("dpsCap: {0}; dps: {1}; dmg {2}; spread: {6}; resDmg: {3}; atkSpeed: {4}; resist: {5}.", dpsCap, dps, damage, damageResisted, attacker.AttackSpeed(null), ad.Target.GetResist(Spell.DamageType), spread));
+			//			log.Debug(String.Format("spell damage: {0}; damage: {1}; resisted damage: {2}; damage type {3}; minSpread {4}.", Spell.Damage, ad.Damage, ad.Modifier, ad.DamageType, m_minDamageSpread));
+			//			log.Debug(String.Format("dpsCap: {0}; dps: {1}; dmg {2}; spread: {6}; resDmg: {3}; atkSpeed: {4}; resist: {5}.", dpsCap, dps, damage, damageResisted, attacker.AttackSpeed(null), ad.Target.GetResist(Spell.DamageType), spread));
 		}
 
 		// constructor
-		public DamageAddSpellHandler(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) {}
+		public DamageAddSpellHandler(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) { }
 	}
 
 	/// <summary>
@@ -166,10 +166,10 @@ namespace DOL.GS.Spells
 			double damage = Spell.Damage * target.AttackSpeed(target.AttackWeapon) * spread * 0.00001;
 			double damageResisted = damage * target.GetResist(Spell.DamageType) * -0.01;
 
-			if(Spell.Damage < 0)
+			if (Spell.Damage < 0)
 			{
 				damage = args.AttackData.Damage * Spell.Damage / -100.0;
-				damageResisted =  damage * target.GetResist(Spell.DamageType) * -0.01;
+				damageResisted = damage * target.GetResist(Spell.DamageType) * -0.01;
 			}
 
 			AttackData ad = new AttackData();
@@ -184,7 +184,7 @@ namespace DOL.GS.Spells
 			if (ad.Attacker is GameNPC)
 			{
 				IControlledBrain brain = ((GameNPC)ad.Attacker).Brain as IControlledBrain;
-				if(brain != null)
+				if (brain != null)
 				{
 					GamePlayer owner = brain.Owner;
 					if (owner != null && owner.ControlledNpc != null && ad.Attacker == owner.ControlledNpc.Body)
@@ -201,18 +201,18 @@ namespace DOL.GS.Spells
 			MessageToLiving(target, String.Format("{0} does {1} extra damage to you!", attacker.GetName(0, false), ad.Damage), eChatType.CT_Spell);
 			target.OnAttackedByEnemy(ad);
 			attacker.DealDamage(ad);
-			foreach(GamePlayer player in attacker.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+			foreach (GamePlayer player in attacker.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
-				if(player == null)
+				if (player == null)
 					continue;
 				player.Out.SendCombatAnimation(null, target, 0, 0, 0, 0, 0x14, target.HealthPercent);
 			}
-//			log.Debug(String.Format("spell damage: {0}; damage: {1}; resisted damage: {2}; damage type {3}; minSpread {4}.", Spell.Damage, ad.Damage, ad.Modifier, ad.DamageType, m_minDamageSpread));
-//			log.Debug(String.Format("dmg {0}; spread: {4}; resDmg: {1}; atkSpeed: {2}; resist: {3}.", damage, damageResisted, target.AttackSpeed(null), ad.Target.GetResist(Spell.DamageType), spread));
+			//			log.Debug(String.Format("spell damage: {0}; damage: {1}; resisted damage: {2}; damage type {3}; minSpread {4}.", Spell.Damage, ad.Damage, ad.Modifier, ad.DamageType, m_minDamageSpread));
+			//			log.Debug(String.Format("dmg {0}; spread: {4}; resDmg: {1}; atkSpeed: {2}; resist: {3}.", damage, damageResisted, target.AttackSpeed(null), ad.Target.GetResist(Spell.DamageType), spread));
 		}
 
 		// constructor
-		public DamageShieldSpellHandler(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) {}
+		public DamageShieldSpellHandler(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) { }
 	}
 
 	/// <summary>
@@ -258,7 +258,7 @@ namespace DOL.GS.Spells
 				m_minDamageSpread = 50;
 				if (Spell.Level > 0)
 				{
-					m_minDamageSpread += (lineSpec-1) * 50 / Spell.Level;
+					m_minDamageSpread += (lineSpec - 1) * 50 / Spell.Level;
 					if (m_minDamageSpread > 100) m_minDamageSpread = 100;
 					else if (m_minDamageSpread < 50) m_minDamageSpread = 50;
 				}
@@ -291,9 +291,27 @@ namespace DOL.GS.Spells
 			{
 				chatType = eChatType.CT_Spell;
 			}
+
 			MessageToLiving(effect.Owner, Spell.Message1, chatType);
 			Message.SystemToArea(effect.Owner, Util.MakeSentence(Spell.Message2, effect.Owner.GetName(0, true)), chatType, effect.Owner);
 			GameEventMgr.AddHandler(effect.Owner, EventType, new DOLEventHandler(EventHandler));
+			GameEventMgr.AddHandlerUnique(effect.Owner, GameNPCEvent.Dying, new DOLEventHandler(CancelPetDmgShieldCallBack));
+			GameEventMgr.AddHandlerUnique(Caster, GamePlayerEvent.Moving, new DOLEventHandler(CancelPetDmgShieldCallBack));
+			GameEventMgr.AddHandlerUnique(Caster, GamePlayerEvent.CommandNpcRelease, new DOLEventHandler(CancelPetDmgShieldCallBack));
+		}
+
+		public void CancelPetDmgShieldCallBack(DOLEvent ev, object sender, EventArgs args)
+		{
+			if (Spell.SpellType.Equals("DamageShield") && Spell.Target.ToLower().Equals("pet"))
+			{
+				if (Spell.Pulse != 0 && CancelPulsingSpell(Caster, Spell.SpellType))
+				{
+					MessageToCaster(String.Format("{0} was cancelled !", Spell.Name), eChatType.CT_SpellExpires);
+				}
+			}
+			GameEventMgr.RemoveHandler(GamePlayerEvent.Moving, new DOLEventHandler(CancelPetDmgShieldCallBack));
+			GameEventMgr.RemoveHandler(GameNPCEvent.Dying, new DOLEventHandler(CancelPetDmgShieldCallBack));
+			GameEventMgr.RemoveHandler(GamePlayerEvent.CommandNpcRelease, new DOLEventHandler(CancelPetDmgShieldCallBack));
 		}
 
 		/// <summary>
@@ -337,6 +355,6 @@ namespace DOL.GS.Spells
 		}
 
 		// constructor
-		public AbstractDamageAddSpellHandler(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) {}
+		public AbstractDamageAddSpellHandler(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) { }
 	}
 }

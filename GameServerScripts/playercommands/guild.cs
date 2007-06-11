@@ -105,6 +105,7 @@ namespace DOL.GS.Scripts
 					client.Out.SendMessage("'/gc promote <rank#> [name]' to promote player to a superior rank", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					client.Out.SendMessage("'/gc demote <rank#> [name]' to set the rank from 0 to 10 of the player to an inferior rank", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					client.Out.SendMessage("'/gc remove <playername>' to remove the player from the guild", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					client.Out.SendMessage("'/gc removeaccount <accountname>' to remove every character of the account from the guild", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					client.Out.SendMessage("'/gc emblem' to set emblem", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					client.Out.SendMessage("'/gc edit' to show list of all option in guild edit", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					client.Out.SendMessage("'/gc leader [name]' to set leader successor", eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -393,7 +394,7 @@ namespace DOL.GS.Scripts
 
 							if (!client.Player.Guild.GotAccess(client.Player, eGuildRank.Remove))
 							{
-								client.Out.SendMessage("You dont have the priviledges for that!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								client.Out.SendMessage("You dont have the privileges for that!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return 1;
 							}
 
@@ -402,31 +403,122 @@ namespace DOL.GS.Scripts
 								client.Out.SendMessage("Usage: /guild remove <PlayerName>", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return 1;
 							}
-							string playername = String.Join(" ", args, 2, args.Length - 2);
-							GameClient myclient = WorldMgr.GetClientByPlayerName(playername, true, false);
-							if (myclient == null)
+
+							object obj = null;
+							//string playername = String.Join(" ", args, 2, args.Length - 2);
+							string playername = args[2];
+							if (playername == "")
+								obj = client.Player.TargetObject as GamePlayer;
+							else
+							{
+								GameClient myclient = WorldMgr.GetClientByPlayerName(playername, true, false);
+								if (myclient == null)
+								{
+									// Patch 1.84: look for offline players
+									obj = (Character)GameServer.Database.SelectObject(typeof(Character), "Name='" + GameServer.Database.Escape(playername) + "'");
+								}
+								else
+									obj = myclient.Player;
+							}
+							if (obj == null)
 							{
 								client.Out.SendMessage("This player name does not exist", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return 1;
 							}
-							if (myclient == null)
+
+							string guildId = "";
+							byte guildRank = 1;
+							string plyName = "";
+							GamePlayer ply = obj as GamePlayer;
+							Character ch = obj as Character;
+							if (obj is GamePlayer)
 							{
-								client.Out.SendMessage("This player name does not exist", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return 1;
+								plyName = ply.Name;
+								guildId = ply.GuildID;
+								guildRank = ply.GuildRank.RankLevel;
 							}
-							if (myclient.Player.GuildName != client.Player.GuildName)
+							else
+							{
+								plyName = ch.Name;
+								guildId = ch.GuildID;
+								guildRank = (byte)ch.GuildRank;
+							}
+							if (guildId != client.Player.GuildID)
 							{
 								client.Out.SendMessage("Player is not a member of your guild!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return 1;
 							}
-							string message1 = "[Guild]: " + client.Player.Name + " has removed " + myclient.Player.Name + " from the guild";
-							foreach (GamePlayer ply in client.Player.Guild.ListOnlineMembers())
+							
+							string message1 = "[Guild]: " + client.Player.Name + " has removed " + plyName + " from the guild";
+							foreach (GamePlayer plyon in client.Player.Guild.ListOnlineMembers())
 							{
-								ply.Out.SendMessage(message1, eChatType.CT_Guild, eChatLoc.CL_ChatWindow);
+								plyon.Out.SendMessage(message1, eChatType.CT_Guild, eChatLoc.CL_ChatWindow);
 							}
-							client.Player.Guild.RemovePlayer(client.Player.Name, myclient.Player);
+							if (obj is GamePlayer)
+								client.Player.Guild.RemovePlayer(client.Player.Name, ply);
+							else
+							{
+								ch.GuildID = "";
+								ch.GuildRank = 9;
+								GameServer.Database.SaveObject(ch);
+							}
 						}
 						break;
+
+					// --------------------------------------------------------------------------------
+					// REMOVE ACCOUNT (Patch 1.84)
+					// --------------------------------------------------------------------------------
+					case "removeaccount":
+						{
+							if (client.Player.Guild == null)
+							{
+								client.Out.SendMessage("You have to be a member of a guild, before you can use any of the commands!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return 1;
+							}
+
+							if (!client.Player.Guild.GotAccess(client.Player, eGuildRank.Remove))
+							{
+								client.Out.SendMessage("You dont have the privileges for that!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return 1;
+							}
+
+							if (args.Length < 3)
+							{
+								client.Out.SendMessage("Usage: /guild removeaccount <AccountName>", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return 1;
+							}
+							
+							string playername = String.Join(" ", args, 2, args.Length - 2);
+							// Patch 1.84: look for offline players
+							Character[] chs = (Character[])GameServer.Database.SelectObjects(typeof(Character), "AccountName='" + GameServer.Database.Escape(playername) + "' AND GuildID='" + GameServer.Database.Escape(client.Player.GuildID) + "'");
+							if (chs != null && chs.GetLength(0) > 0)
+							{
+								GameClient myclient = WorldMgr.GetClientByAccountName(playername, false);
+								string plys = "";
+								bool isOnline = (myclient != null);
+								foreach (Character ch in chs)
+								{
+									plys += (plys != "" ? "," : "") + ch.Name;
+									if (isOnline && ch.Name == myclient.Player.Name)
+										client.Player.Guild.RemovePlayer(client.Player.Name, myclient.Player);
+									else
+									{
+										ch.GuildID = "";
+										ch.GuildRank = 9;
+										GameServer.Database.SaveObject(ch);
+									}
+								}
+								string message1 = "[Guild]: " + client.Player.Name + " has removed " + plys + " from the guild";
+								foreach (GamePlayer ply in client.Player.Guild.ListOnlineMembers())
+								{
+									ply.Out.SendMessage(message1, eChatType.CT_Guild, eChatLoc.CL_ChatWindow);
+								}
+							}
+							else
+								client.Out.SendMessage("There are no characters from this account in your guild!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						}
+						break;
+
 
 					// --------------------------------------------------------------------------------
 					// INFO
@@ -710,43 +802,80 @@ namespace DOL.GS.Scripts
 							}
 							if (!client.Player.Guild.GotAccess(client.Player, eGuildRank.Promote))
 							{
-								client.Out.SendMessage("You dont have the priviledges for that!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								client.Out.SendMessage("You dont have the privileges for that!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return 1;
 							}
-							GamePlayer obj = client.Player.TargetObject as GamePlayer;
-							if (args.Length > 3)
+
+							object obj = null;
+							string playername = args[3];
+							if (playername == "")
+								obj = client.Player.TargetObject as GamePlayer;
+							else
 							{
-								GameClient temp = WorldMgr.GetClientByPlayerName(args[3], true, false);
-								if (temp != null && GameServer.ServerRules.IsAllowedToGroup(client.Player, temp.Player, true))
-									obj = temp.Player;
+								GameClient myclient = WorldMgr.GetClientByPlayerName(playername, true, false);
+								if (myclient == null)
+								{
+									// Patch 1.84: look for offline players
+									obj = (Character)GameServer.Database.SelectObject(typeof(Character), "Name='" + GameServer.Database.Escape(playername) + "'");
+								}
+								else
+									obj = myclient.Player;
 							}
 							if (obj == null)
 							{
 								client.Out.SendMessage("You must select a player!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return 1;
 							}
-							if (obj.Guild != client.Player.Guild)
+
+							string guildId = "";
+							ushort guildRank = 1;
+							string plyName = "";
+							GamePlayer ply = obj as GamePlayer;
+							Character ch = obj as Character;
+							if (obj is GamePlayer)
 							{
-								client.Out.SendMessage(obj.Name + " is not in your guild!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								plyName = ply.Name;
+								guildId = ply.GuildID;
+								guildRank = ply.GuildRank.RankLevel;
+							}
+							else
+							{
+								plyName = ch.Name;
+								guildId = ch.GuildID;
+								guildRank = ch.GuildRank;
+							}
+							if (guildId != client.Player.GuildID)
+							{
+								client.Out.SendMessage(plyName + " is not in your guild!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return 1;
 							}
-							int newrank = obj.GuildRank.RankLevel;
+
+							ushort newrank = guildRank;
 							try
 							{
-								newrank = Convert.ToInt32(args[2]);
+								newrank = Convert.ToUInt16(args[2]);
 							}
 							catch
 							{
 								client.Out.SendMessage("You must promote to a number : /gc promote <ranklevel>", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							}
-							if ((newrank >= obj.GuildRank.RankLevel) || (newrank < 1))
+							if ((newrank >= guildRank) || (newrank < 1))
 							{
 								client.Out.SendMessage("You can only promote to an inferior rank.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return 1;
 							}
-							obj.GuildRank = obj.Guild.GetRankByID(newrank);
-							obj.SaveIntoDatabase();
-							obj.Out.SendMessage("You are promoted to " + newrank.ToString(), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							if (obj is GamePlayer)
+							{
+								ply.GuildRank = client.Player.Guild.GetRankByID(newrank);
+								ply.SaveIntoDatabase();
+								ply.Out.SendMessage("You are promoted to " + newrank.ToString(), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							}
+							else
+							{
+								ch.GuildRank = newrank;
+								GameServer.Database.SaveObject(ch);
+								client.Out.SendMessage(plyName + " has been promoted to " + newrank.ToString(), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							}
 						}
 						break;
 					// --------------------------------------------------------------------------------
@@ -767,38 +896,74 @@ namespace DOL.GS.Scripts
 							}
 							if (!client.Player.Guild.GotAccess(client.Player, eGuildRank.Demote))
 							{
-								client.Out.SendMessage("You dont have the priviledges for that!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								client.Out.SendMessage("You dont have the privileges for that!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return 1;
 							}
-							GamePlayer obj = client.Player.TargetObject as GamePlayer;
-							if (args.Length > 3)
+							
+							object obj = null;
+							string playername = args[3];
+							if (playername == "")
+								obj = client.Player.TargetObject as GamePlayer;
+							else
 							{
-								GameClient temp = WorldMgr.GetClientByPlayerName(args[3], true, false);
-								if (temp != null && GameServer.ServerRules.IsAllowedToGroup(client.Player, temp.Player, true))
-									obj = temp.Player;
+								GameClient myclient = WorldMgr.GetClientByPlayerName(playername, true, false);
+								if (myclient == null)
+								{
+									// Patch 1.84: look for offline players
+									obj = (Character)GameServer.Database.SelectObject(typeof(Character), "Name='" + GameServer.Database.Escape(playername) + "'");
+								}
+								else
+									obj = myclient.Player;
 							}
 							if (obj == null)
 							{
 								client.Out.SendMessage("You must select a player!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return 1;
 							}
-							if (obj.Guild != client.Player.Guild)
+							
+							string guildId = "";
+							ushort guildRank = 1;
+							string plyName = "";
+							GamePlayer ply = obj as GamePlayer;
+							Character ch = obj as Character;
+							if (obj is GamePlayer)
 							{
-								client.Out.SendMessage(obj.Name + " is not in your guild!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								plyName = ply.Name;
+								guildId = ply.GuildID;
+								guildRank = ply.GuildRank.RankLevel;
+							}
+							else
+							{
+								plyName = ch.Name;
+								guildId = ch.GuildID;
+								guildRank = ch.GuildRank;
+							}
+							if (guildId != client.Player.GuildID)
+							{
+								client.Out.SendMessage(plyName + " is not in your guild!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return 1;
 							}
 
 							try
 							{
 								ushort newrank = Convert.ToUInt16(args[2]);
-								if (newrank < obj.GuildRank.RankLevel || newrank > 10)
+								if (newrank < guildRank || newrank > 10)
 								{
 									client.Out.SendMessage("You can demote to a superior rank", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 									return 1;
 								}
-								obj.GuildRank = obj.Guild.GetRankByID(newrank);
-								obj.SaveIntoDatabase();
-								obj.Out.SendMessage("You are demoted to " + newrank.ToString(), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								if (obj is GamePlayer)
+								{
+									ply.GuildRank = client.Player.Guild.GetRankByID(newrank);
+									ply.SaveIntoDatabase();
+									ply.Out.SendMessage("You are demoted to " + newrank.ToString(), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								}
+								else
+								{
+									ch.GuildRank = newrank;
+									GameServer.Database.SaveObject(ch);
+									client.Out.SendMessage(plyName + " has been demoted to " + newrank.ToString(), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								}
 							}
 							catch 
 							{

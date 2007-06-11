@@ -409,7 +409,7 @@ namespace DOL.Database
 		}
 
 		/// <summary>
-		/// The Mob's Respawn Interval
+		/// The Mob's Respawn Interval in seconds
 		/// </summary>
 		[DataElement(AllowDbNull = false)]
 		public int RespawnInterval

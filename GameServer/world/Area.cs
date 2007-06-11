@@ -18,6 +18,7 @@
  */
 using DOL.Events;
 using DOL.GS.PacketHandler;
+using DOL.Database;
 
 namespace DOL.GS
 {		
@@ -49,6 +50,10 @@ namespace DOL.GS
 			/// The height of this Area 
 			/// </summary>
 			protected int m_Height;
+
+			public Square()
+				: base()
+			{ }
 
 			public Square(string desc, int x, int y, int width, int height): base(desc)
 			{
@@ -151,6 +156,16 @@ namespace DOL.GS
 
 				return true;
 			}
+
+			public override void LoadFromDatabase(DBArea area)
+			{
+				m_dbArea = area;
+				m_Description = area.Description;
+				m_X = area.X;
+				m_Y = area.Y;
+				m_Width = area.Radius;
+				m_Height = area.Radius;
+			}
 		}
 
 		public class Circle : AbstractArea
@@ -177,6 +192,11 @@ namespace DOL.GS
 			protected int m_Radius;
 
 			protected long m_distSq;
+
+			public Circle()
+				: base()
+			{
+			}
 
 			public Circle( string desc, int x, int y, int z, int radius) : base(desc)
 			{															
@@ -292,22 +312,65 @@ namespace DOL.GS
 			{
 				return IsContaining(p.X, p.Y, p.Z, checkZ);
 			}
+
+			public override void LoadFromDatabase(DBArea area)
+			{
+				m_Description = area.Description;
+				m_X = area.X;
+				m_Y = area.Y;
+				m_Z = area.Z;
+				m_Radius = area.Radius;
+				m_RadiusRadius = area.Radius * area.Radius;
+			}
 		}
 
 		public class BindArea : Circle
 		{
-			protected Database.BindPoint m_dbBindPoint;
+			protected BindPoint m_dbBindPoint;
 
-			public BindArea(string desc, Database.BindPoint dbBindPoint)
+			public BindArea()
+				: base()
+			{
+			}
+
+			public BindArea(string desc, BindPoint dbBindPoint)
 				: base(desc, dbBindPoint.X, dbBindPoint.Y, dbBindPoint.Z, dbBindPoint.Radius)
 			{
 				m_dbBindPoint = dbBindPoint;
 				m_displayMessage = false;
 			}
 
-			public Database.BindPoint BindPoint
+			public BindPoint BindPoint
 			{
 				get { return m_dbBindPoint; }
+			}
+
+			public override void LoadFromDatabase(DBArea area)
+			{
+				base.LoadFromDatabase(area);
+
+				m_dbBindPoint = new BindPoint();
+				m_dbBindPoint.Radius = (ushort)area.Radius;
+				m_dbBindPoint.X = area.X;
+				m_dbBindPoint.Y = area.Y;
+				m_dbBindPoint.Z = area.Z;
+				m_dbBindPoint.Region = area.Region;
+			}
+		}
+
+		public class SafeArea : Circle
+		{
+			public SafeArea()
+				: base()
+			{
+				m_safeArea = true;
+			}
+
+			public SafeArea(string desc, int x, int y, int z, int radius)
+				: base
+				(desc, x, y, z, radius)
+			{
+				m_safeArea = true;
 			}
 		}
 	}

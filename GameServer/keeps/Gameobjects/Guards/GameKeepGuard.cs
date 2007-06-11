@@ -530,7 +530,7 @@ namespace DOL.GS.Keeps
 				string text = "";
 				if (this.Component.Keep.Level > 1 && GameServer.ServerRules.IsSameRealm(player, this, true))
 					text = GetPronoun(0, true) + " has upgraded equipment (" + this.Component.Keep.Level + ").";
-				if (ServerProperties.Properties.USE_KEEP_BALANCING)
+				if (ServerProperties.Properties.USE_KEEP_BALANCING && this.Component.Keep.Region == 163)
 					text += GetPronoun(0, true) + " has keep balancing level (" + (Component.Keep.BaseLevel - 50).ToString() + ")";
 				if (text != "")
 					list.Add(text);

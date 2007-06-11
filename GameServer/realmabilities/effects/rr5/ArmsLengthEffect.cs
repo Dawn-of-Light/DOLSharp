@@ -19,6 +19,7 @@ namespace DOL.GS.Effects
 		public override void Start(GameLiving target)
 		{
 			base.Start(target);
+			target.TempProperties.setProperty("Charging", true);
 			target.BuffBonusMultCategory1.Set((int)eProperty.MaxSpeed, this, 2.5);
 			if (target is GamePlayer)
 			{
@@ -29,6 +30,7 @@ namespace DOL.GS.Effects
 		public override void Stop()
 		{
 			base.Stop();
+			Owner.TempProperties.removeProperty("Charging");
 			Owner.BuffBonusMultCategory1.Remove((int)eProperty.MaxSpeed, this);
 			if (Owner is GamePlayer)
 			{

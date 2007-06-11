@@ -19,7 +19,7 @@ namespace DOL.GS.PropertyCalc
 		public override int CalcValue(GameLiving living, eProperty property) 
 		{
 			// base 10% chance of critical for all with ranged weapons plus ra bonus
-			return 10 + living.BuffBonusCategory4[(int)property];
+			return 10 + living.BuffBonusCategory4[(int)property] + living.AbilityBonus[(int)property];
 		}
 	}
 }

@@ -79,6 +79,11 @@ namespace DOL.GS
 			bool needSmithHammer = false;
 			foreach (DBCraftedXItem rawmaterial in craftItemData.RawMaterials)
 			{
+				if (rawmaterial.ItemTemplate == null)
+				{
+					log.Error("rawmaterial " + rawmaterial.IngredientId_nb + " for recipe " + craftItemData.CraftedItemID + " cannot find the itemtemplate to match");
+					continue;
+				}
 				if(rawmaterial.ItemTemplate.Model == 519) // metal bar
 				{
 					needSmithHammer = true;
