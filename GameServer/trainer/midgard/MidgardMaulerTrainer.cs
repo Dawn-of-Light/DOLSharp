@@ -106,7 +106,7 @@ namespace DOL.GS.Trainer
 
 		public override bool AddToWorld()
 		{
-			if (ServerProperties.Properties.ALLOW_MAULERS)
+			if (!ServerProperties.Properties.ALLOW_MAULERS)
 				return false;
 			return base.AddToWorld();
 		}
