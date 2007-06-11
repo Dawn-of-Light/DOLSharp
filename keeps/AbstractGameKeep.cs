@@ -39,6 +39,7 @@ namespace DOL.GS.Keeps
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		public FrontiersPortalStone TeleportStone;
+		public KeepArea Area;
 
 		/// <summary>
 		/// The time interval in milliseconds that defines how
@@ -422,20 +423,27 @@ namespace DOL.GS.Keeps
 			InitialiseTimers();
 			LoadFromDatabase(keep);
 			GameEventMgr.AddHandler(CurrentRegion, RegionEvent.PlayerEnter, new DOLEventHandler(SendKeepInit));
-			int radius;
-			if (this is GameKeep)
+			KeepArea area = null;
+			//see if any keep areas for this keep have already been added via DBArea
+			foreach (AbstractArea a in CurrentRegion.GetAreasOfSpot(keep.X, keep.Y, keep.Z))
 			{
-				radius = 3000;
+				if (a is KeepArea && a.Description == keep.Name)
+				{
+					log.Debug("Found a DBArea entry for " + keep.Name + ", loading that instead of creating a new one.");
+					area = a as KeepArea;
+					break;
+				}
 			}
-			else
+
+			if (area == null)
 			{
-				radius = 1500;
+				area = new KeepArea(this);
+				area.CanBroadcast = true;
+				area.CheckLOS = true;
+				CurrentRegion.AddArea(area);
 			}
-			KeepArea area = new KeepArea(this.Name, this.X, this.Y, 0, radius);
-			area.CanBroadcast = true;
-			area.CheckLOS = true;
 			area.Keep = this;
-			CurrentRegion.AddArea(area);
+			this.Area = area;
 		}
 
 		public void Unload(KeepArea area)

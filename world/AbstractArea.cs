@@ -17,6 +17,7 @@
  *
  */
 using System;
+using DOL.Database;
 using DOL.Events;
 using DOL.Language;
 using DOL.GS;
@@ -30,6 +31,7 @@ namespace DOL.GS
 	/// </summary>
 	public abstract class AbstractArea : IArea
 	{
+		protected DBArea m_dbArea = null;
 		protected bool m_canBroadcast = false;
 		/// <summary>
 		/// Variable holding whether or not players can broadcast in this area
@@ -98,6 +100,11 @@ namespace DOL.GS
 		public AbstractArea(string desc)
 		{
 			m_Description = desc;
+		}
+
+		public AbstractArea()
+			: base()
+		{
 		}
 
 		/// <summary>
@@ -198,5 +205,7 @@ namespace DOL.GS
 			}
 			player.Notify(AreaEvent.PlayerEnter, this, new AreaEventArgs(this, player));
 		}
+
+		public abstract void LoadFromDatabase(DBArea area);
 	}
 }

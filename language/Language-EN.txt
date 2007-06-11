@@ -78,7 +78,7 @@ GameMerchant.OnPlayerBuy.Bought:			You just bought {0} for {1}.
 GameMerchant.OnPlayerBuy.Bought2:			You just bought {0} for {1} {2}.
 GameMerchant.OnPlayerBuy.BoughtBP:			You just bought {0} for {1} BPs.
 GameMerchant.OnPlayerBuy.BoughtPieces:			You just bought {0} pieces of {1} for {2}.
-GameMerchant.OnPlayerBuy.BoughtPieces2:			You just bought {0} pieces of {1} for {2} {3].
+GameMerchant.OnPlayerBuy.BoughtPieces2:			You just bought {0} pieces of {1} for {2} {3}.
 GameMerchant.OnPlayerBuy.BoughtPiecesBP:		You just bought {0} pieces of {1} for {0} BPs.
 GameMerchant.OnPlayerBuy.NotInventorySpace:		Not enough inventory space to buy that.
 GameMerchant.OnPlayerBuy.YouNeed:			You need {0} to buy this.

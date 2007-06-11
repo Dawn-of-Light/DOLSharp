@@ -376,7 +376,7 @@ namespace DOL.GS.Keeps
 
 			IList list = base.GetExamineMessages(player);
 			string text = "You select the " + Name + ".";
-			if (GameServer.ServerRules.IsSameRealm(player, this, true) || player.Client.Account.PrivLevel != 1)
+			if (!KeepMgr.IsEnemy(this, player))
 				text = text + " It belongs to your realm.";
 			else
 			{
@@ -505,7 +505,8 @@ namespace DOL.GS.Keeps
 			if (m_component.Keep is GameKeepTower)
 			{
 				GameKeepTower tower = m_component.Keep as GameKeepTower;
-				ownerKeepID = tower.Keep.KeepID;
+				if (tower.Keep != null)
+					ownerKeepID = tower.Keep.KeepID;
 				towerIndex = tower.KeepID >> 8;
 			}
 			else
